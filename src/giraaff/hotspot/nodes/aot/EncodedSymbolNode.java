@@ -21,12 +21,12 @@ public final class EncodedSymbolNode extends FloatingNode implements Canonicaliz
     // @def
     public static final NodeClass<EncodedSymbolNode> TYPE = NodeClass.create(EncodedSymbolNode.class);
 
-    @OptionalInput
+    @Node.OptionalInput
     // @field
     protected ValueNode ___value;
 
-    // @cons
-    public EncodedSymbolNode(@InjectedNodeParameter Stamp __stamp, ValueNode __value)
+    // @cons EncodedSymbolNode
+    public EncodedSymbolNode(@Node.InjectedNodeParameter Stamp __stamp, ValueNode __value)
     {
         super(TYPE, __stamp);
         this.___value = __value;
@@ -46,6 +46,6 @@ public final class EncodedSymbolNode extends FloatingNode implements Canonicaliz
         return this;
     }
 
-    @NodeIntrinsic
+    @Node.NodeIntrinsic
     public static native Word encode(Object __constant);
 }

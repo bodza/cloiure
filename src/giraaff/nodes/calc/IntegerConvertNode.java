@@ -6,7 +6,6 @@ import jdk.vm.ci.meta.Constant;
 import jdk.vm.ci.meta.ConstantReflectionProvider;
 
 import giraaff.core.common.type.ArithmeticOpTable;
-import giraaff.core.common.type.ArithmeticOpTable.IntegerConvertOp;
 import giraaff.core.common.type.IntegerStamp;
 import giraaff.core.common.type.Stamp;
 import giraaff.graph.NodeClass;
@@ -30,9 +29,9 @@ public abstract class IntegerConvertNode<OP, REV> extends UnaryNode implements A
     public static final NodeClass<IntegerConvertNode> TYPE = NodeClass.create(IntegerConvertNode.class);
 
     // @field
-    protected final SerializableIntegerConvertFunction<OP> ___getOp;
+    protected final IntegerConvertNode.SerializableIntegerConvertFunction<OP> ___getOp;
     // @field
-    protected final SerializableIntegerConvertFunction<REV> ___getReverseOp;
+    protected final IntegerConvertNode.SerializableIntegerConvertFunction<REV> ___getReverseOp;
 
     // @field
     protected final int ___inputBits;
@@ -40,12 +39,12 @@ public abstract class IntegerConvertNode<OP, REV> extends UnaryNode implements A
     protected final int ___resultBits;
 
     // @iface IntegerConvertNode.SerializableIntegerConvertFunction
-    protected interface SerializableIntegerConvertFunction<T> extends Function<ArithmeticOpTable, IntegerConvertOp<T>>
+    protected interface SerializableIntegerConvertFunction<T> extends Function<ArithmeticOpTable, ArithmeticOpTable.IntegerConvertOp<T>>
     {
     }
 
-    // @cons
-    protected IntegerConvertNode(NodeClass<? extends IntegerConvertNode<OP, REV>> __c, SerializableIntegerConvertFunction<OP> __getOp, SerializableIntegerConvertFunction<REV> __getReverseOp, int __inputBits, int __resultBits, ValueNode __input)
+    // @cons IntegerConvertNode
+    protected IntegerConvertNode(NodeClass<? extends IntegerConvertNode<OP, REV>> __c, IntegerConvertNode.SerializableIntegerConvertFunction<OP> __getOp, IntegerConvertNode.SerializableIntegerConvertFunction<REV> __getReverseOp, int __inputBits, int __resultBits, ValueNode __input)
     {
         super(__c, __getOp.apply(ArithmeticOpTable.forStamp(__input.stamp(NodeView.DEFAULT))).foldStamp(__inputBits, __resultBits, __input.stamp(NodeView.DEFAULT)), __input);
         this.___getOp = __getOp;
@@ -64,13 +63,13 @@ public abstract class IntegerConvertNode<OP, REV> extends UnaryNode implements A
         return this.___resultBits;
     }
 
-    protected final IntegerConvertOp<OP> getOp(ValueNode __forValue)
+    protected final ArithmeticOpTable.IntegerConvertOp<OP> getOp(ValueNode __forValue)
     {
         return this.___getOp.apply(ArithmeticOpTable.forStamp(__forValue.stamp(NodeView.DEFAULT)));
     }
 
     @Override
-    public final IntegerConvertOp<OP> getArithmeticOp()
+    public final ArithmeticOpTable.IntegerConvertOp<OP> getArithmeticOp()
     {
         return getOp(getValue());
     }
@@ -84,7 +83,7 @@ public abstract class IntegerConvertNode<OP, REV> extends UnaryNode implements A
     @Override
     public Constant reverse(Constant __c, ConstantReflectionProvider __constantReflection)
     {
-        IntegerConvertOp<REV> __reverse = this.___getReverseOp.apply(ArithmeticOpTable.forStamp(stamp(NodeView.DEFAULT)));
+        ArithmeticOpTable.IntegerConvertOp<REV> __reverse = this.___getReverseOp.apply(ArithmeticOpTable.forStamp(stamp(NodeView.DEFAULT)));
         return __reverse.foldConstant(getResultBits(), getInputBits(), __c);
     }
 
@@ -105,7 +104,7 @@ public abstract class IntegerConvertNode<OP, REV> extends UnaryNode implements A
         return this;
     }
 
-    protected static <T> ValueNode findSynonym(IntegerConvertOp<T> __operation, ValueNode __value, int __inputBits, int __resultBits, Stamp __stamp)
+    protected static <T> ValueNode findSynonym(ArithmeticOpTable.IntegerConvertOp<T> __operation, ValueNode __value, int __inputBits, int __resultBits, Stamp __stamp)
     {
         if (__inputBits == __resultBits)
         {

@@ -14,11 +14,8 @@ import jdk.vm.ci.code.ValueUtil;
 import jdk.vm.ci.meta.JavaConstant;
 import jdk.vm.ci.meta.Value;
 
-import giraaff.lir.LIRInstruction.OperandFlag;
-import giraaff.lir.LIRInstruction.OperandMode;
-import giraaff.lir.StandardOp.LoadConstantOp;
-import giraaff.lir.StandardOp.MoveOp;
-import giraaff.lir.StandardOp.ValueMoveOp;
+import giraaff.lir.LIRInstruction;
+import giraaff.lir.StandardOp;
 import giraaff.lir.asm.CompilationResultBuilder;
 import giraaff.lir.gen.LIRGenerationResult;
 
@@ -66,30 +63,34 @@ public abstract class LIRInstruction
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
+    // @iface LIRInstruction.Use
     public static @interface Use
     {
-        OperandFlag[] value() default OperandFlag.REG;
+        LIRInstruction.OperandFlag[] value() default LIRInstruction.OperandFlag.REG;
     }
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
+    // @iface LIRInstruction.Alive
     public static @interface Alive
     {
-        OperandFlag[] value() default OperandFlag.REG;
+        LIRInstruction.OperandFlag[] value() default LIRInstruction.OperandFlag.REG;
     }
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
+    // @iface LIRInstruction.Temp
     public static @interface Temp
     {
-        OperandFlag[] value() default OperandFlag.REG;
+        LIRInstruction.OperandFlag[] value() default LIRInstruction.OperandFlag.REG;
     }
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
+    // @iface LIRInstruction.Def
     public static @interface Def
     {
-        OperandFlag[] value() default OperandFlag.REG;
+        LIRInstruction.OperandFlag[] value() default LIRInstruction.OperandFlag.REG;
     }
 
     ///
@@ -145,22 +146,22 @@ public abstract class LIRInstruction
     // For validity checking of the operand flags defined by instruction subclasses.
     ///
     // @def
-    protected static final EnumMap<OperandMode, EnumSet<OperandFlag>> ALLOWED_FLAGS;
+    protected static final EnumMap<LIRInstruction.OperandMode, EnumSet<LIRInstruction.OperandFlag>> ALLOWED_FLAGS;
 
     static
     {
-        ALLOWED_FLAGS = new EnumMap<>(OperandMode.class);
-        ALLOWED_FLAGS.put(OperandMode.USE, EnumSet.of(OperandFlag.REG, OperandFlag.STACK, OperandFlag.COMPOSITE, OperandFlag.CONST, OperandFlag.ILLEGAL, OperandFlag.HINT, OperandFlag.UNINITIALIZED));
-        ALLOWED_FLAGS.put(OperandMode.ALIVE, EnumSet.of(OperandFlag.REG, OperandFlag.STACK, OperandFlag.COMPOSITE, OperandFlag.CONST, OperandFlag.ILLEGAL, OperandFlag.HINT, OperandFlag.UNINITIALIZED, OperandFlag.OUTGOING));
-        ALLOWED_FLAGS.put(OperandMode.TEMP, EnumSet.of(OperandFlag.REG, OperandFlag.STACK, OperandFlag.COMPOSITE, OperandFlag.ILLEGAL, OperandFlag.HINT));
-        ALLOWED_FLAGS.put(OperandMode.DEF, EnumSet.of(OperandFlag.REG, OperandFlag.STACK, OperandFlag.COMPOSITE, OperandFlag.ILLEGAL, OperandFlag.HINT));
+        ALLOWED_FLAGS = new EnumMap<>(LIRInstruction.OperandMode.class);
+        ALLOWED_FLAGS.put(LIRInstruction.OperandMode.USE, EnumSet.of(LIRInstruction.OperandFlag.REG, LIRInstruction.OperandFlag.STACK, LIRInstruction.OperandFlag.COMPOSITE, LIRInstruction.OperandFlag.CONST, LIRInstruction.OperandFlag.ILLEGAL, LIRInstruction.OperandFlag.HINT, LIRInstruction.OperandFlag.UNINITIALIZED));
+        ALLOWED_FLAGS.put(LIRInstruction.OperandMode.ALIVE, EnumSet.of(LIRInstruction.OperandFlag.REG, LIRInstruction.OperandFlag.STACK, LIRInstruction.OperandFlag.COMPOSITE, LIRInstruction.OperandFlag.CONST, LIRInstruction.OperandFlag.ILLEGAL, LIRInstruction.OperandFlag.HINT, LIRInstruction.OperandFlag.UNINITIALIZED, LIRInstruction.OperandFlag.OUTGOING));
+        ALLOWED_FLAGS.put(LIRInstruction.OperandMode.TEMP, EnumSet.of(LIRInstruction.OperandFlag.REG, LIRInstruction.OperandFlag.STACK, LIRInstruction.OperandFlag.COMPOSITE, LIRInstruction.OperandFlag.ILLEGAL, LIRInstruction.OperandFlag.HINT));
+        ALLOWED_FLAGS.put(LIRInstruction.OperandMode.DEF, EnumSet.of(LIRInstruction.OperandFlag.REG, LIRInstruction.OperandFlag.STACK, LIRInstruction.OperandFlag.COMPOSITE, LIRInstruction.OperandFlag.ILLEGAL, LIRInstruction.OperandFlag.HINT));
     }
 
     ///
     // The flags of the base and index value of an address.
     ///
     // @def
-    protected static final EnumSet<OperandFlag> ADDRESS_FLAGS = EnumSet.of(OperandFlag.REG, OperandFlag.ILLEGAL);
+    protected static final EnumSet<LIRInstruction.OperandFlag> ADDRESS_FLAGS = EnumSet.of(LIRInstruction.OperandFlag.REG, LIRInstruction.OperandFlag.ILLEGAL);
 
     // @field
     private final LIRInstructionClass<?> ___instructionClass;
@@ -174,7 +175,7 @@ public abstract class LIRInstruction
     ///
     // Constructs a new LIR instruction.
     ///
-    // @cons
+    // @cons LIRInstruction
     public LIRInstruction(LIRInstructionClass<? extends LIRInstruction> __c)
     {
         super();
@@ -294,21 +295,21 @@ public abstract class LIRInstruction
     }
 
     @SuppressWarnings("unused")
-    public final Value forEachRegisterHint(Value __value, OperandMode __mode, InstructionValueProcedure __proc)
+    public final Value forEachRegisterHint(Value __value, LIRInstruction.OperandMode __mode, InstructionValueProcedure __proc)
     {
         return this.___instructionClass.forEachRegisterHint(this, __mode, __proc);
     }
 
     @SuppressWarnings("unused")
-    public final Value forEachRegisterHint(Value __value, OperandMode __mode, ValueProcedure __proc)
+    public final Value forEachRegisterHint(Value __value, LIRInstruction.OperandMode __mode, ValueProcedure __proc)
     {
         return this.___instructionClass.forEachRegisterHint(this, __mode, __proc);
     }
 
     ///
-    // Returns {@code true} if the instruction is a {@link MoveOp}.
+    // Returns {@code true} if the instruction is a {@link StandardOp.MoveOp}.
     //
-    // This function is preferred to {@code instanceof MoveOp} since the type check is more
+    // This function is preferred to {@code instanceof StandardOp.MoveOp} since the type check is more
     // expensive than reading a field from {@link LIRInstructionClass}.
     ///
     public final boolean isMoveOp()
@@ -317,10 +318,10 @@ public abstract class LIRInstruction
     }
 
     ///
-    // Returns {@code true} if the instruction is a {@link ValueMoveOp}.
+    // Returns {@code true} if the instruction is a {@link StandardOp.ValueMoveOp}.
     //
-    // This function is preferred to {@code instanceof ValueMoveOp} since the type check is more
-    // expensive than reading a field from {@link LIRInstructionClass}.
+    // This function is preferred to {@code instanceof StandardOp.ValueMoveOp} since the type check is
+    // more expensive than reading a field from {@link LIRInstructionClass}.
     ///
     public final boolean isValueMoveOp()
     {
@@ -328,10 +329,10 @@ public abstract class LIRInstruction
     }
 
     ///
-    // Returns {@code true} if the instruction is a {@link LoadConstantOp}.
+    // Returns {@code true} if the instruction is a {@link StandardOp.LoadConstantOp}.
     //
-    // This function is preferred to {@code instanceof LoadConstantOp} since the type check is more
-    // expensive than reading a field from {@link LIRInstructionClass}.
+    // This function is preferred to {@code instanceof StandardOp.LoadConstantOp} since the type check is
+    // more expensive than reading a field from {@link LIRInstructionClass}.
     ///
     public final boolean isLoadConstantOp()
     {

@@ -18,16 +18,16 @@ public final class UnsignedRemNode extends IntegerDivRemNode implements LIRLower
     // @def
     public static final NodeClass<UnsignedRemNode> TYPE = NodeClass.create(UnsignedRemNode.class);
 
-    // @cons
+    // @cons UnsignedRemNode
     public UnsignedRemNode(ValueNode __x, ValueNode __y)
     {
         this(TYPE, __x, __y);
     }
 
-    // @cons
+    // @cons UnsignedRemNode
     protected UnsignedRemNode(NodeClass<? extends UnsignedRemNode> __c, ValueNode __x, ValueNode __y)
     {
-        super(__c, __x.stamp(NodeView.DEFAULT).unrestricted(), Op.REM, Type.UNSIGNED, __x, __y);
+        super(__c, __x.stamp(NodeView.DEFAULT).unrestricted(), IntegerDivRemNode.DivRemOp.REM, IntegerDivRemNode.Signedness.UNSIGNED, __x, __y);
     }
 
     public static ValueNode create(ValueNode __x, ValueNode __y, NodeView __view)

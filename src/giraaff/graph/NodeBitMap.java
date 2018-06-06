@@ -20,7 +20,7 @@ public final class NodeBitMap extends NodeIdAccessor implements NodeIterable<Nod
     // @field
     private int ___counter;
 
-    // @cons
+    // @cons NodeBitMap
     public NodeBitMap(Graph __graph)
     {
         super(__graph);
@@ -38,7 +38,7 @@ public final class NodeBitMap extends NodeIdAccessor implements NodeIterable<Nod
         return this.___counter;
     }
 
-    // @cons
+    // @cons NodeBitMap
     private NodeBitMap(NodeBitMap __other)
     {
         super(__other.___graph);
@@ -257,7 +257,7 @@ public final class NodeBitMap extends NodeIdAccessor implements NodeIterable<Nod
         // @field
         private Node ___currentNode;
 
-        // @cons
+        // @cons NodeBitMap.MarkedNodeIterator
         MarkedNodeIterator()
         {
             super();
@@ -315,7 +315,7 @@ public final class NodeBitMap extends NodeIdAccessor implements NodeIterable<Nod
     @Override
     public Iterator<Node> iterator()
     {
-        return new MarkedNodeIterator();
+        return new NodeBitMap.MarkedNodeIterator();
     }
 
     public NodeBitMap copy()

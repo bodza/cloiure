@@ -21,7 +21,7 @@ public final class BytecodeTableSwitch extends BytecodeSwitch
     // @param stream the {@code BytecodeStream} containing the switch instruction
     // @param bci the index in the stream of the switch instruction
     ///
-    // @cons
+    // @cons BytecodeTableSwitch
     public BytecodeTableSwitch(BytecodeStream __stream, int __bci)
     {
         super(__stream, __bci);

@@ -27,7 +27,7 @@ public final class SSAMoveResolver extends MoveResolver
     // @field
     private final int ___firstVirtualStackIndex;
 
-    // @cons
+    // @cons SSAMoveResolver
     public SSAMoveResolver(LinearScan __allocator)
     {
         super(__allocator);

@@ -6,12 +6,10 @@ import jdk.vm.ci.meta.PrimitiveConstant;
 import jdk.vm.ci.meta.Value;
 
 import giraaff.core.common.type.ArithmeticOpTable;
-import giraaff.core.common.type.ArithmeticOpTable.BinaryOp;
-import giraaff.core.common.type.ArithmeticOpTable.BinaryOp.Mul;
 import giraaff.core.common.type.IntegerStamp;
 import giraaff.core.common.type.Stamp;
 import giraaff.graph.NodeClass;
-import giraaff.graph.spi.Canonicalizable.BinaryCommutative;
+import giraaff.graph.spi.Canonicalizable;
 import giraaff.graph.spi.CanonicalizerTool;
 import giraaff.lir.gen.ArithmeticLIRGeneratorTool;
 import giraaff.nodes.ConstantNode;
@@ -20,18 +18,18 @@ import giraaff.nodes.ValueNode;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
 // @class MulNode
-public class MulNode extends BinaryArithmeticNode<Mul> implements NarrowableArithmeticNode, BinaryCommutative<ValueNode>
+public class MulNode extends BinaryArithmeticNode<ArithmeticOpTable.BinaryOp.Mul> implements NarrowableArithmeticNode, Canonicalizable.BinaryCommutative<ValueNode>
 {
     // @def
     public static final NodeClass<MulNode> TYPE = NodeClass.create(MulNode.class);
 
-    // @cons
+    // @cons MulNode
     public MulNode(ValueNode __x, ValueNode __y)
     {
         this(TYPE, __x, __y);
     }
 
-    // @cons
+    // @cons MulNode
     protected MulNode(NodeClass<? extends MulNode> __c, ValueNode __x, ValueNode __y)
     {
         super(__c, ArithmeticOpTable::getMul, __x, __y);
@@ -39,7 +37,7 @@ public class MulNode extends BinaryArithmeticNode<Mul> implements NarrowableArit
 
     public static ValueNode create(ValueNode __x, ValueNode __y, NodeView __view)
     {
-        BinaryOp<Mul> __op = ArithmeticOpTable.forStamp(__x.stamp(__view)).getMul();
+        ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.Mul> __op = ArithmeticOpTable.forStamp(__x.stamp(__view)).getMul();
         Stamp __stamp = __op.foldStamp(__x.stamp(__view), __y.stamp(__view));
         ConstantNode __tryConstantFold = tryConstantFold(__op, __x, __y, __stamp, __view);
         if (__tryConstantFold != null)
@@ -69,12 +67,12 @@ public class MulNode extends BinaryArithmeticNode<Mul> implements NarrowableArit
             // if this fails we only swap
             return new MulNode(__forY, __forX);
         }
-        BinaryOp<Mul> __op = getOp(__forX, __forY);
+        ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.Mul> __op = getOp(__forX, __forY);
         NodeView __view = NodeView.from(__tool);
         return canonical(this, __op, stamp(__view), __forX, __forY, __view);
     }
 
-    private static ValueNode canonical(MulNode __self, BinaryOp<Mul> __op, Stamp __stamp, ValueNode __forX, ValueNode __forY, NodeView __view)
+    private static ValueNode canonical(MulNode __self, ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.Mul> __op, Stamp __stamp, ValueNode __forX, ValueNode __forY, NodeView __view)
     {
         if (__forY.isConstant())
         {

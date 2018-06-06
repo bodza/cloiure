@@ -1,6 +1,6 @@
 package giraaff.nodes;
 
-import giraaff.core.common.type.ArithmeticOpTable.Op;
+import giraaff.core.common.type.ArithmeticOpTable;
 
 ///
 // An {@code ArithmeticOperation} is an operation that does primitive value arithmetic without side effect.
@@ -8,5 +8,5 @@ import giraaff.core.common.type.ArithmeticOpTable.Op;
 // @iface ArithmeticOperation
 public interface ArithmeticOperation
 {
-    Op getArithmeticOp();
+    ArithmeticOpTable.ArithmeticOp getArithmeticOp();
 }

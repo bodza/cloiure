@@ -19,7 +19,7 @@ public abstract class AbstractNewObjectNode extends DeoptimizingFixedWithNextNod
     // @field
     protected final boolean ___fillContents;
 
-    // @cons
+    // @cons AbstractNewObjectNode
     protected AbstractNewObjectNode(NodeClass<? extends AbstractNewObjectNode> __c, Stamp __stamp, boolean __fillContents, FrameState __stateBefore)
     {
         super(__c, __stamp, __stateBefore);

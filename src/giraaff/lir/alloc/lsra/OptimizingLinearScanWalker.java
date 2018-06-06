@@ -7,14 +7,12 @@ import jdk.vm.ci.meta.AllocatableValue;
 import giraaff.core.common.GraalOptions;
 import giraaff.core.common.cfg.AbstractBlockBase;
 import giraaff.lir.LIRValueUtil;
-import giraaff.lir.alloc.lsra.Interval.RegisterBinding;
-import giraaff.lir.alloc.lsra.Interval.RegisterPriority;
-import giraaff.lir.alloc.lsra.Interval.State;
+import giraaff.lir.alloc.lsra.Interval;
 
 // @class OptimizingLinearScanWalker
 public final class OptimizingLinearScanWalker extends LinearScanWalker
 {
-    // @cons
+    // @cons OptimizingLinearScanWalker
     OptimizingLinearScanWalker(LinearScan __allocator, Interval __unhandledFixedFirst, Interval __unhandledAnyFirst)
     {
         super(__allocator, __unhandledFixedFirst, __unhandledAnyFirst);
@@ -27,7 +25,7 @@ public final class OptimizingLinearScanWalker extends LinearScanWalker
         {
             return;
         }
-        this.___unhandledLists.addToListSortedByStartAndUsePositions(RegisterBinding.Stack, __interval);
+        this.___unhandledLists.addToListSortedByStartAndUsePositions(Interval.RegisterBinding.Stack, __interval);
     }
 
     @Override
@@ -52,17 +50,17 @@ public final class OptimizingLinearScanWalker extends LinearScanWalker
             loop: while (__changed)
             {
                 __changed = false;
-                for (Interval __active = this.___activeLists.get(RegisterBinding.Any); !__active.isEndMarker(); __active = __active.___next)
+                for (Interval __active = this.___activeLists.get(Interval.RegisterBinding.Any); !__active.isEndMarker(); __active = __active.___next)
                 {
-                    if (optimize(__nextBlock, __block, __active, RegisterBinding.Any))
+                    if (optimize(__nextBlock, __block, __active, Interval.RegisterBinding.Any))
                     {
                         __changed = true;
                         break loop;
                     }
                 }
-                for (Interval __active = this.___activeLists.get(RegisterBinding.Stack); !__active.isEndMarker(); __active = __active.___next)
+                for (Interval __active = this.___activeLists.get(Interval.RegisterBinding.Stack); !__active.isEndMarker(); __active = __active.___next)
                 {
-                    if (optimize(__nextBlock, __block, __active, RegisterBinding.Stack))
+                    if (optimize(__nextBlock, __block, __active, Interval.RegisterBinding.Stack))
                     {
                         __changed = true;
                         break loop;
@@ -72,7 +70,7 @@ public final class OptimizingLinearScanWalker extends LinearScanWalker
         }
     }
 
-    private boolean optimize(int __currentPos, AbstractBlockBase<?> __currentBlock, Interval __currentInterval, RegisterBinding __binding)
+    private boolean optimize(int __currentPos, AbstractBlockBase<?> __currentBlock, Interval __currentInterval, Interval.RegisterBinding __binding)
     {
         if (!__currentInterval.isSplitChild())
         {
@@ -120,7 +118,7 @@ public final class OptimizingLinearScanWalker extends LinearScanWalker
         if (GraalOptions.lsraOptSplitOnly)
         {
             // just add the split interval to the unhandled list
-            this.___unhandledLists.addToListSortedByStartAndUsePositions(RegisterBinding.Any, __splitPart);
+            this.___unhandledLists.addToListSortedByStartAndUsePositions(Interval.RegisterBinding.Any, __splitPart);
         }
         else
         {
@@ -132,8 +130,8 @@ public final class OptimizingLinearScanWalker extends LinearScanWalker
             {
                 __splitPart.assignLocation(__predecessorLocation);
                 // activate interval
-                this.___activeLists.addToListSortedByCurrentFromPositions(RegisterBinding.Stack, __splitPart);
-                __splitPart.___state = State.Active;
+                this.___activeLists.addToListSortedByCurrentFromPositions(Interval.RegisterBinding.Stack, __splitPart);
+                __splitPart.___state = Interval.IntervalState.Active;
 
                 splitStackInterval(__splitPart);
             }
@@ -149,7 +147,7 @@ public final class OptimizingLinearScanWalker extends LinearScanWalker
         spillExcludeActiveFixed();
         // spillBlockUnhandledFixed(cur);
         spillBlockInactiveFixed(__interval);
-        spillCollectActiveAny(RegisterPriority.LiveAtLoopEnd);
+        spillCollectActiveAny(Interval.RegisterPriority.LiveAtLoopEnd);
         spillCollectInactiveAny(__interval);
 
         // the register must be free at least until this position
@@ -168,7 +166,7 @@ public final class OptimizingLinearScanWalker extends LinearScanWalker
         splitAndSpillIntersectingIntervals(__reg);
 
         // activate interval
-        this.___activeLists.addToListSortedByCurrentFromPositions(RegisterBinding.Any, __interval);
-        __interval.___state = State.Active;
+        this.___activeLists.addToListSortedByCurrentFromPositions(Interval.RegisterBinding.Any, __interval);
+        __interval.___state = Interval.IntervalState.Active;
     }
 }

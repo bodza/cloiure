@@ -15,8 +15,7 @@ import giraaff.api.replacements.Snippet;
 import giraaff.api.replacements.Snippet.ConstantParameter;
 import giraaff.core.common.GraalOptions;
 import giraaff.core.common.spi.ForeignCallDescriptor;
-import giraaff.graph.Node.ConstantNodeParameter;
-import giraaff.graph.Node.NodeIntrinsic;
+import giraaff.graph.Node;
 import giraaff.hotspot.HotSpotRuntime;
 import giraaff.hotspot.meta.HotSpotProviders;
 import giraaff.hotspot.meta.HotSpotRegistersProvider;
@@ -37,9 +36,6 @@ import giraaff.nodes.java.MonitorExitNode;
 import giraaff.nodes.java.RawMonitorEnterNode;
 import giraaff.nodes.spi.LoweringTool;
 import giraaff.replacements.SnippetTemplate;
-import giraaff.replacements.SnippetTemplate.AbstractTemplates;
-import giraaff.replacements.SnippetTemplate.Arguments;
-import giraaff.replacements.SnippetTemplate.SnippetInfo;
 import giraaff.replacements.Snippets;
 import giraaff.word.Word;
 
@@ -124,14 +120,14 @@ import giraaff.word.Word;
 // @class MonitorSnippets
 public final class MonitorSnippets implements Snippets
 {
-    // @cons
+    // @cons MonitorSnippets
     private MonitorSnippets()
     {
         super();
     }
 
     @Snippet
-    public static void monitorenter(Object __object, KlassPointer __hub, @ConstantParameter int __lockDepth, @ConstantParameter Register __threadRegister, @ConstantParameter Register __stackPointerRegister)
+    public static void monitorenter(Object __object, KlassPointer __hub, @Snippet.ConstantParameter int __lockDepth, @Snippet.ConstantParameter Register __threadRegister, @Snippet.ConstantParameter Register __stackPointerRegister)
     {
         // load the mark word - this includes a null-check on object
         final Word __mark = HotSpotReplacementsUtil.loadWordFromObject(__object, HotSpotRuntime.markOffset);
@@ -324,7 +320,7 @@ public final class MonitorSnippets implements Snippets
     // Calls straight out to the monitorenter stub.
     ///
     @Snippet
-    public static void monitorenterStub(Object __object, @ConstantParameter int __lockDepth)
+    public static void monitorenterStub(Object __object, @Snippet.ConstantParameter int __lockDepth)
     {
         if (__object == null)
         {
@@ -336,7 +332,7 @@ public final class MonitorSnippets implements Snippets
     }
 
     @Snippet
-    public static void monitorexit(Object __object, @ConstantParameter int __lockDepth, @ConstantParameter Register __threadRegister)
+    public static void monitorexit(Object __object, @Snippet.ConstantParameter int __lockDepth, @Snippet.ConstantParameter Register __threadRegister)
     {
         final Word __mark = HotSpotReplacementsUtil.loadWordFromObject(__object, HotSpotRuntime.markOffset);
         if (HotSpotRuntime.useBiasedLocking)
@@ -436,30 +432,30 @@ public final class MonitorSnippets implements Snippets
     // Calls straight out to the monitorexit stub.
     ///
     @Snippet
-    public static void monitorexitStub(Object __object, @ConstantParameter int __lockDepth)
+    public static void monitorexitStub(Object __object, @Snippet.ConstantParameter int __lockDepth)
     {
         final Word __lock = CurrentLockNode.currentLock(__lockDepth);
         monitorexitStubC(MONITOREXIT, __object, __lock);
         EndLockScopeNode.endLockScope();
     }
 
-    // @class MonitorSnippets.Templates
-    public static final class Templates extends AbstractTemplates
+    // @class MonitorSnippets.MonitorTemplates
+    public static final class MonitorTemplates extends SnippetTemplate.AbstractTemplates
     {
         // @field
-        private final SnippetInfo ___monitorenter = snippet(MonitorSnippets.class, "monitorenter");
+        private final SnippetTemplate.SnippetInfo ___monitorenter = snippet(MonitorSnippets.class, "monitorenter");
         // @field
-        private final SnippetInfo ___monitorexit = snippet(MonitorSnippets.class, "monitorexit");
+        private final SnippetTemplate.SnippetInfo ___monitorexit = snippet(MonitorSnippets.class, "monitorexit");
         // @field
-        private final SnippetInfo ___monitorenterStub = snippet(MonitorSnippets.class, "monitorenterStub");
+        private final SnippetTemplate.SnippetInfo ___monitorenterStub = snippet(MonitorSnippets.class, "monitorenterStub");
         // @field
-        private final SnippetInfo ___monitorexitStub = snippet(MonitorSnippets.class, "monitorexitStub");
+        private final SnippetTemplate.SnippetInfo ___monitorexitStub = snippet(MonitorSnippets.class, "monitorexitStub");
 
         // @field
         private final boolean ___useFastLocking;
 
-        // @cons
-        public Templates(HotSpotProviders __providers, TargetDescription __target, boolean __useFastLocking)
+        // @cons MonitorSnippets.MonitorTemplates
+        public MonitorTemplates(HotSpotProviders __providers, TargetDescription __target, boolean __useFastLocking)
         {
             super(__providers, __providers.getSnippetReflection(), __target);
             this.___useFastLocking = __useFastLocking;
@@ -469,10 +465,10 @@ public final class MonitorSnippets implements Snippets
         {
             StructuredGraph __graph = __monitorenterNode.graph();
 
-            Arguments __args;
+            SnippetTemplate.Arguments __args;
             if (this.___useFastLocking)
             {
-                __args = new Arguments(this.___monitorenter, __graph.getGuardsStage(), __tool.getLoweringStage());
+                __args = new SnippetTemplate.Arguments(this.___monitorenter, __graph.getGuardsStage(), __tool.getLoweringStage());
                 __args.add("object", __monitorenterNode.object());
                 __args.add("hub", __monitorenterNode.getHub());
                 __args.addConst("lockDepth", __monitorenterNode.getMonitorId().getLockDepth());
@@ -481,7 +477,7 @@ public final class MonitorSnippets implements Snippets
             }
             else
             {
-                __args = new Arguments(this.___monitorenterStub, __graph.getGuardsStage(), __tool.getLoweringStage());
+                __args = new SnippetTemplate.Arguments(this.___monitorenterStub, __graph.getGuardsStage(), __tool.getLoweringStage());
                 __args.add("object", __monitorenterNode.object());
                 __args.addConst("lockDepth", __monitorenterNode.getMonitorId().getLockDepth());
             }
@@ -493,14 +489,14 @@ public final class MonitorSnippets implements Snippets
         {
             StructuredGraph __graph = __monitorexitNode.graph();
 
-            Arguments __args;
+            SnippetTemplate.Arguments __args;
             if (this.___useFastLocking)
             {
-                __args = new Arguments(this.___monitorexit, __graph.getGuardsStage(), __tool.getLoweringStage());
+                __args = new SnippetTemplate.Arguments(this.___monitorexit, __graph.getGuardsStage(), __tool.getLoweringStage());
             }
             else
             {
-                __args = new Arguments(this.___monitorexitStub, __graph.getGuardsStage(), __tool.getLoweringStage());
+                __args = new SnippetTemplate.Arguments(this.___monitorexitStub, __graph.getGuardsStage(), __tool.getLoweringStage());
             }
             __args.add("object", __monitorexitNode.object());
             __args.addConst("lockDepth", __monitorexitNode.getMonitorId().getLockDepth());
@@ -515,9 +511,9 @@ public final class MonitorSnippets implements Snippets
     // @def
     public static final ForeignCallDescriptor MONITOREXIT = new ForeignCallDescriptor("monitorexit", void.class, Object.class, Word.class);
 
-    @NodeIntrinsic(ForeignCallNode.class)
-    private static native void monitorenterStubC(@ConstantNodeParameter ForeignCallDescriptor __descriptor, Object __object, Word __lock);
+    @Node.NodeIntrinsic(ForeignCallNode.class)
+    private static native void monitorenterStubC(@Node.ConstantNodeParameter ForeignCallDescriptor __descriptor, Object __object, Word __lock);
 
-    @NodeIntrinsic(ForeignCallNode.class)
-    public static native void monitorexitStubC(@ConstantNodeParameter ForeignCallDescriptor __descriptor, Object __object, Word __lock);
+    @Node.NodeIntrinsic(ForeignCallNode.class)
+    public static native void monitorexitStubC(@Node.ConstantNodeParameter ForeignCallDescriptor __descriptor, Object __object, Word __lock);
 }

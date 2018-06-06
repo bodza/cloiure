@@ -1,6 +1,7 @@
 package giraaff.nodes.java;
 
 import giraaff.core.common.type.Stamp;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.nodes.FixedWithNextNode;
 import giraaff.nodes.ValueNode;
@@ -14,7 +15,7 @@ public abstract class AccessArrayNode extends FixedWithNextNode
     // @def
     public static final NodeClass<AccessArrayNode> TYPE = NodeClass.create(AccessArrayNode.class);
 
-    @Input
+    @Node.Input
     // @field
     protected ValueNode ___array;
 
@@ -28,7 +29,7 @@ public abstract class AccessArrayNode extends FixedWithNextNode
     //
     // @param array the instruction that produces the array object value
     ///
-    // @cons
+    // @cons AccessArrayNode
     public AccessArrayNode(NodeClass<? extends AccessArrayNode> __c, Stamp __stamp, ValueNode __array)
     {
         super(__c, __stamp);

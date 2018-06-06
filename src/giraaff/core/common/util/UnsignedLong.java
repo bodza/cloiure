@@ -6,7 +6,7 @@ public final class UnsignedLong
     // @field
     private final long ___value;
 
-    // @cons
+    // @cons UnsignedLong
     public UnsignedLong(long __value)
     {
         super();

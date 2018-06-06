@@ -23,7 +23,7 @@ import giraaff.phases.tiers.MidTierContext;
 // @class MidTier
 public final class MidTier extends PhaseSuite<MidTierContext>
 {
-    // @cons
+    // @cons MidTier
     public MidTier()
     {
         super();

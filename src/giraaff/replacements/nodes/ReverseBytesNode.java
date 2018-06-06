@@ -23,7 +23,7 @@ public final class ReverseBytesNode extends UnaryNode implements LIRLowerable
     // @def
     public static final NodeClass<ReverseBytesNode> TYPE = NodeClass.create(ReverseBytesNode.class);
 
-    // @cons
+    // @cons ReverseBytesNode
     public ReverseBytesNode(ValueNode __value)
     {
         super(TYPE, StampFactory.forKind(__value.getStackKind()), __value);

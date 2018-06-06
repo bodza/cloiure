@@ -19,7 +19,7 @@ import giraaff.util.GraalError;
 public final class SimpleStackSlotAllocator extends AllocationPhase
 {
     @Override
-    protected void run(TargetDescription __target, LIRGenerationResult __lirGenRes, AllocationContext __context)
+    protected void run(TargetDescription __target, LIRGenerationResult __lirGenRes, AllocationPhase.AllocationContext __context)
     {
         allocateStackSlots((FrameMapBuilderTool) __lirGenRes.getFrameMapBuilder(), __lirGenRes);
         __lirGenRes.buildFrameMap();

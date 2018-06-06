@@ -52,13 +52,13 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
     // @def
     public static final NodeClass<IfNode> TYPE = NodeClass.create(IfNode.class);
 
-    @Successor
+    @Node.Successor
     // @field
     AbstractBeginNode ___trueSuccessor;
-    @Successor
+    @Node.Successor
     // @field
     AbstractBeginNode ___falseSuccessor;
-    @Input(InputType.Condition)
+    @Node.Input(InputType.ConditionI)
     // @field
     LogicNode ___condition;
     // @field
@@ -75,13 +75,13 @@ public final class IfNode extends ControlSplitNode implements Simplifiable, LIRL
         this.___condition = __x;
     }
 
-    // @cons
+    // @cons IfNode
     public IfNode(LogicNode __condition, FixedNode __trueSuccessor, FixedNode __falseSuccessor, double __trueSuccessorProbability)
     {
         this(__condition, BeginNode.begin(__trueSuccessor), BeginNode.begin(__falseSuccessor), __trueSuccessorProbability);
     }
 
-    // @cons
+    // @cons IfNode
     public IfNode(LogicNode __condition, AbstractBeginNode __trueSuccessor, AbstractBeginNode __falseSuccessor, double __trueSuccessorProbability)
     {
         super(TYPE, StampFactory.forVoid());

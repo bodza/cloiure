@@ -2,6 +2,7 @@ package giraaff.hotspot.nodes.aot;
 
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.hotspot.nodes.type.MethodCountersPointerStamp;
 import giraaff.nodes.DeoptimizingFixedWithNextNode;
@@ -17,11 +18,11 @@ public final class ResolveMethodAndLoadCountersNode extends DeoptimizingFixedWit
 
     // @field
     ResolvedJavaMethod ___method;
-    @Input
+    @Node.Input
     // @field
     ValueNode ___hub;
 
-    // @cons
+    // @cons ResolveMethodAndLoadCountersNode
     public ResolveMethodAndLoadCountersNode(ResolvedJavaMethod __method, ValueNode __hub)
     {
         super(TYPE, MethodCountersPointerStamp.methodCountersNonNull());

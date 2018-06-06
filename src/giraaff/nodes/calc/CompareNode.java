@@ -37,7 +37,7 @@ public abstract class CompareNode extends BinaryOpLogicNode implements Canonical
     // @param x the instruction producing the first input to the instruction
     // @param y the instruction that produces the second input to this instruction
     ///
-    // @cons
+    // @cons CompareNode
     protected CompareNode(NodeClass<? extends CompareNode> __c, CanonicalCondition __condition, ValueNode __x, ValueNode __y)
     {
         super(__c, __x, __y);

@@ -12,7 +12,7 @@ public final class OSRStartNode extends StartNode implements Lowerable
     // @def
     public static final NodeClass<OSRStartNode> TYPE = NodeClass.create(OSRStartNode.class);
 
-    // @cons
+    // @cons OSRStartNode
     public OSRStartNode()
     {
         super(TYPE);

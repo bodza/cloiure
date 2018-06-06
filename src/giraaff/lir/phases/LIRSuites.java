@@ -7,24 +7,24 @@ import giraaff.lir.Variable;
 import giraaff.lir.VirtualStackSlot;
 import giraaff.lir.gen.LIRGenerationResult;
 import giraaff.lir.gen.LIRGeneratorTool;
-import giraaff.lir.phases.AllocationPhase.AllocationContext;
-import giraaff.lir.phases.PostAllocationOptimizationPhase.PostAllocationOptimizationContext;
-import giraaff.lir.phases.PreAllocationOptimizationPhase.PreAllocationOptimizationContext;
+import giraaff.lir.phases.AllocationPhase;
+import giraaff.lir.phases.PostAllocationOptimizationPhase;
+import giraaff.lir.phases.PreAllocationOptimizationPhase;
 
 // @class LIRSuites
 public final class LIRSuites
 {
     // @field
-    private final LIRPhaseSuite<PreAllocationOptimizationContext> ___preAllocOptStage;
+    private final LIRPhaseSuite<PreAllocationOptimizationPhase.PreAllocationOptimizationContext> ___preAllocOptStage;
     // @field
-    private final LIRPhaseSuite<AllocationContext> ___allocStage;
+    private final LIRPhaseSuite<AllocationPhase.AllocationContext> ___allocStage;
     // @field
-    private final LIRPhaseSuite<PostAllocationOptimizationContext> ___postAllocStage;
+    private final LIRPhaseSuite<PostAllocationOptimizationPhase.PostAllocationOptimizationContext> ___postAllocStage;
     // @field
     private boolean ___immutable;
 
-    // @cons
-    public LIRSuites(LIRPhaseSuite<PreAllocationOptimizationContext> __preAllocOptStage, LIRPhaseSuite<AllocationContext> __allocStage, LIRPhaseSuite<PostAllocationOptimizationContext> __postAllocStage)
+    // @cons LIRSuites
+    public LIRSuites(LIRPhaseSuite<PreAllocationOptimizationPhase.PreAllocationOptimizationContext> __preAllocOptStage, LIRPhaseSuite<AllocationPhase.AllocationContext> __allocStage, LIRPhaseSuite<PostAllocationOptimizationPhase.PostAllocationOptimizationContext> __postAllocStage)
     {
         super();
         this.___preAllocOptStage = __preAllocOptStage;
@@ -32,7 +32,7 @@ public final class LIRSuites
         this.___postAllocStage = __postAllocStage;
     }
 
-    // @cons
+    // @cons LIRSuites
     public LIRSuites(LIRSuites __other)
     {
         this(__other.getPreAllocationOptimizationStage().copy(), __other.getAllocationStage().copy(), __other.getPostAllocationOptimizationStage().copy());
@@ -46,7 +46,7 @@ public final class LIRSuites
     // {@link LIRGeneratorTool#newVariable variables}, {@link LIRGenerationResult#getFrameMap stack
     // slots} and {@link LIRGenerationResult#getFrameMapBuilder virtual stack slots}.
     ///
-    public LIRPhaseSuite<PreAllocationOptimizationContext> getPreAllocationOptimizationStage()
+    public LIRPhaseSuite<PreAllocationOptimizationPhase.PreAllocationOptimizationContext> getPreAllocationOptimizationStage()
     {
         return this.___preAllocOptStage;
     }
@@ -58,7 +58,7 @@ public final class LIRSuites
     // After the {@link AllocationStage} there should be no more {@link Variable}s and
     // {@link VirtualStackSlot}s.
     ///
-    public LIRPhaseSuite<AllocationContext> getAllocationStage()
+    public LIRPhaseSuite<AllocationPhase.AllocationContext> getAllocationStage()
     {
         return this.___allocStage;
     }
@@ -71,7 +71,7 @@ public final class LIRSuites
     // {@link VirtualStackSlot}s or {@link StackSlot}s. Blocks might be removed from
     // {@link LIR#codeEmittingOrder()} by overwriting them with {@code null}.
     ///
-    public LIRPhaseSuite<PostAllocationOptimizationContext> getPostAllocationOptimizationStage()
+    public LIRPhaseSuite<PostAllocationOptimizationPhase.PostAllocationOptimizationContext> getPostAllocationOptimizationStage()
     {
         return this.___postAllocStage;
     }

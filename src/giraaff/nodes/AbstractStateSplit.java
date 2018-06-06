@@ -1,6 +1,7 @@
 package giraaff.nodes;
 
 import giraaff.core.common.type.Stamp;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.nodeinfo.InputType;
 
@@ -13,7 +14,7 @@ public abstract class AbstractStateSplit extends FixedWithNextNode implements St
     // @def
     public static final NodeClass<AbstractStateSplit> TYPE = NodeClass.create(AbstractStateSplit.class);
 
-    @OptionalInput(InputType.State)
+    @Node.OptionalInput(InputType.StateI)
     // @field
     protected FrameState ___stateAfter;
 
@@ -36,13 +37,13 @@ public abstract class AbstractStateSplit extends FixedWithNextNode implements St
         return true;
     }
 
-    // @cons
+    // @cons AbstractStateSplit
     protected AbstractStateSplit(NodeClass<? extends AbstractStateSplit> __c, Stamp __stamp)
     {
         this(__c, __stamp, null);
     }
 
-    // @cons
+    // @cons AbstractStateSplit
     protected AbstractStateSplit(NodeClass<? extends AbstractStateSplit> __c, Stamp __stamp, FrameState __stateAfter)
     {
         super(__c, __stamp);

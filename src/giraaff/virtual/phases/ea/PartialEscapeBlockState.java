@@ -14,7 +14,7 @@ import giraaff.nodes.virtual.AllocatedObjectNode;
 import giraaff.nodes.virtual.CommitAllocationNode;
 import giraaff.nodes.virtual.LockState;
 import giraaff.nodes.virtual.VirtualObjectNode;
-import giraaff.virtual.phases.ea.EffectList.Effect;
+import giraaff.virtual.phases.ea.EffectList;
 
 // @class PartialEscapeBlockState
 public abstract class PartialEscapeBlockState<T extends PartialEscapeBlockState<T>> extends EffectsBlockState<T>
@@ -59,37 +59,37 @@ public abstract class PartialEscapeBlockState<T extends PartialEscapeBlockState<
     // Usage count for the objectStates array, to avoid unneessary copying.
     ///
     // @field
-    private RefCount ___arrayRefCount;
+    private PartialEscapeBlockState.RefCount ___arrayRefCount;
 
     ///
-    // Final subclass of PartialEscapeBlockState, for performance and to make everything behave
-    // nicely with generics.
+    // Final subclass of PartialEscapeBlockState, for performance and to make everything
+    // behave nicely with generics.
     ///
-    // @class PartialEscapeBlockState.Final
-    public static final class Final extends PartialEscapeBlockState<Final>
+    // @class PartialEscapeBlockState.FinalState
+    public static final class FinalState extends PartialEscapeBlockState<PartialEscapeBlockState.FinalState>
     {
-        // @cons
-        public Final()
+        // @cons PartialEscapeBlockState.FinalState
+        public FinalState()
         {
             super();
         }
 
-        // @cons
-        public Final(Final __other)
+        // @cons PartialEscapeBlockState.FinalState
+        public FinalState(PartialEscapeBlockState.FinalState __other)
         {
             super(__other);
         }
     }
 
-    // @cons
+    // @cons PartialEscapeBlockState
     protected PartialEscapeBlockState()
     {
         super();
         this.___objectStates = EMPTY_ARRAY;
-        this.___arrayRefCount = new RefCount();
+        this.___arrayRefCount = new PartialEscapeBlockState.RefCount();
     }
 
-    // @cons
+    // @cons PartialEscapeBlockState
     protected PartialEscapeBlockState(PartialEscapeBlockState<T> __other)
     {
         super(__other);
@@ -126,7 +126,7 @@ public abstract class PartialEscapeBlockState<T extends PartialEscapeBlockState<
         {
             this.___objectStates = this.___objectStates.clone();
             this.___arrayRefCount.___refCount--;
-            this.___arrayRefCount = new RefCount();
+            this.___arrayRefCount = new PartialEscapeBlockState.RefCount();
         }
         return this.___objectStates;
     }
@@ -196,7 +196,7 @@ public abstract class PartialEscapeBlockState<T extends PartialEscapeBlockState<
 
         __materializeEffects.addVirtualizationDelta(-(__objects.size() + __otherAllocations.size()));
         // @closure
-        __materializeEffects.add("materializeBefore", new Effect()
+        __materializeEffects.add("materializeBefore", new EffectList.Effect()
         {
             @Override
             public void apply(StructuredGraph __graph, ArrayList<Node> __obsoleteNodes)
@@ -310,7 +310,7 @@ public abstract class PartialEscapeBlockState<T extends PartialEscapeBlockState<
         {
             this.___objectStates = Arrays.copyOf(this.___objectStates, Math.max(__objectId * 2, 4));
             this.___arrayRefCount.___refCount--;
-            this.___arrayRefCount = new RefCount();
+            this.___arrayRefCount = new PartialEscapeBlockState.RefCount();
             return this.___objectStates;
         }
         else

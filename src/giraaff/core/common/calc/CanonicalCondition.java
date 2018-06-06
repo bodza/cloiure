@@ -14,6 +14,7 @@ public enum CanonicalCondition
     // @field
     private final Condition ___condition;
 
+    // @cons CanonicalCondition
     CanonicalCondition(Condition __condition)
     {
         this.___condition = __condition;

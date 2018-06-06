@@ -49,7 +49,7 @@ public final class InstanceOfDynamicNode extends BinaryOpLogicNode implements Ca
         return create(__assumptions, __constantReflection, __mirror, __object, __allowNull, false);
     }
 
-    // @cons
+    // @cons InstanceOfDynamicNode
     protected InstanceOfDynamicNode(ValueNode __mirror, ValueNode __object, boolean __allowNull, boolean __exact)
     {
         super(TYPE, __mirror, __object);

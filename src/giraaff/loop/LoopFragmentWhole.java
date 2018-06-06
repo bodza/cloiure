@@ -4,7 +4,6 @@ import org.graalvm.collections.EconomicSet;
 
 import giraaff.core.common.cfg.Loop;
 import giraaff.graph.Graph;
-import giraaff.graph.Graph.DuplicationReplacement;
 import giraaff.graph.Node;
 import giraaff.graph.NodeBitMap;
 import giraaff.nodes.EndNode;
@@ -18,13 +17,13 @@ import giraaff.nodes.cfg.Block;
 // @class LoopFragmentWhole
 public final class LoopFragmentWhole extends LoopFragment
 {
-    // @cons
+    // @cons LoopFragmentWhole
     public LoopFragmentWhole(LoopEx __loop)
     {
         super(__loop);
     }
 
-    // @cons
+    // @cons LoopFragmentWhole
     public LoopFragmentWhole(LoopFragmentWhole __original)
     {
         super(null, __original);
@@ -63,12 +62,12 @@ public final class LoopFragmentWhole extends LoopFragment
     }
 
     @Override
-    protected DuplicationReplacement getDuplicationReplacement()
+    protected Graph.DuplicationReplacement getDuplicationReplacement()
     {
         final FixedNode __entry = loop().entryPoint();
         final Graph __graph = this.graph();
         // @closure
-        return new DuplicationReplacement()
+        return new Graph.DuplicationReplacement()
         {
             // @field
             private EndNode ___endNode;

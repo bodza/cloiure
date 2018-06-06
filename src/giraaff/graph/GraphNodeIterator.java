@@ -13,13 +13,13 @@ final class GraphNodeIterator implements Iterator<Node>
     // @field
     private int ___index;
 
-    // @cons
+    // @cons GraphNodeIterator
     GraphNodeIterator(Graph __graph)
     {
         this(__graph, 0);
     }
 
-    // @cons
+    // @cons GraphNodeIterator
     GraphNodeIterator(Graph __graph, int __index)
     {
         super();

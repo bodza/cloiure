@@ -8,7 +8,7 @@ import jdk.vm.ci.code.CodeUtil;
 // @class NumUtil
 public final class NumUtil
 {
-    // @cons
+    // @cons NumUtil
     private NumUtil()
     {
         super();

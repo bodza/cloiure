@@ -14,7 +14,7 @@ public abstract class AbstractEndNode extends FixedNode implements LIRLowerable
     // @def
     public static final NodeClass<AbstractEndNode> TYPE = NodeClass.create(AbstractEndNode.class);
 
-    // @cons
+    // @cons AbstractEndNode
     protected AbstractEndNode(NodeClass<? extends AbstractEndNode> __c)
     {
         super(__c, StampFactory.forVoid());

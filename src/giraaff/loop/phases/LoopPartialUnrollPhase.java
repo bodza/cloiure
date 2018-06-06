@@ -15,7 +15,7 @@ public final class LoopPartialUnrollPhase extends LoopPhase<LoopPolicies>
     // @field
     private final CanonicalizerPhase ___canonicalizer;
 
-    // @cons
+    // @cons LoopPartialUnrollPhase
     public LoopPartialUnrollPhase(LoopPolicies __policies, CanonicalizerPhase __canonicalizer)
     {
         super(__policies);

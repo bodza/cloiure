@@ -23,20 +23,20 @@ import giraaff.nodes.spi.LoweringTool;
 import giraaff.nodes.spi.VirtualizableAllocation;
 import giraaff.nodes.spi.VirtualizerTool;
 
-// @NodeInfo.allowedUsageTypes "Extension, Memory"
+// @NodeInfo.allowedUsageTypes "InputType.Extension, InputType.Memory"
 // @class CommitAllocationNode
 public final class CommitAllocationNode extends FixedWithNextNode implements VirtualizableAllocation, Lowerable, Simplifiable, MemoryCheckpoint.Single
 {
     // @def
     public static final NodeClass<CommitAllocationNode> TYPE = NodeClass.create(CommitAllocationNode.class);
 
-    @Input
+    @Node.Input
     // @field
     NodeInputList<VirtualObjectNode> ___virtualObjects = new NodeInputList<>(this);
-    @Input
+    @Node.Input
     // @field
     NodeInputList<ValueNode> ___values = new NodeInputList<>(this);
-    @Input(InputType.Association)
+    @Node.Input(InputType.Association)
     // @field
     NodeInputList<MonitorIdNode> ___locks = new NodeInputList<>(this);
     // @field
@@ -44,7 +44,7 @@ public final class CommitAllocationNode extends FixedWithNextNode implements Vir
     // @field
     protected ArrayList<Boolean> ___ensureVirtual = new ArrayList<>();
 
-    // @cons
+    // @cons CommitAllocationNode
     public CommitAllocationNode()
     {
         super(TYPE, StampFactory.forVoid());

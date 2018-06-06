@@ -11,7 +11,7 @@ public abstract class PreAllocationOptimizationPhase extends LIRPhase<PreAllocat
         // @field
         public final LIRGeneratorTool ___lirGen;
 
-        // @cons
+        // @cons PreAllocationOptimizationPhase.PreAllocationOptimizationContext
         public PreAllocationOptimizationContext(LIRGeneratorTool __lirGen)
         {
             super();

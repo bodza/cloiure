@@ -7,11 +7,11 @@ import giraaff.graph.NodeClass;
 // Base class for nodes that contain "virtual" state, like FrameState and VirtualObjectState.
 // Subclasses of this class will be treated in a special way by the scheduler.
 ///
-// @NodeInfo.allowedUsageTypes "State"
+// @NodeInfo.allowedUsageTypes "InputType.StateI"
 // @class VirtualState
 public abstract class VirtualState extends Node
 {
-    // @cons
+    // @cons VirtualState
     protected VirtualState(NodeClass<? extends VirtualState> __c)
     {
         super(__c);
@@ -34,13 +34,13 @@ public abstract class VirtualState extends Node
 
     public abstract VirtualState duplicateWithVirtualState();
 
-    public abstract void applyToNonVirtual(NodeClosure<? super ValueNode> __closure);
+    public abstract void applyToNonVirtual(VirtualState.NodeClosure<? super ValueNode> __closure);
 
     ///
     // Performs a <b>pre-order</b> iteration over all elements reachable from this state that
     // are a subclass of {@link VirtualState}.
     ///
-    public abstract void applyToVirtual(VirtualClosure __closure);
+    public abstract void applyToVirtual(VirtualState.VirtualClosure __closure);
 
     public abstract boolean isPartOfThisState(VirtualState __state);
 

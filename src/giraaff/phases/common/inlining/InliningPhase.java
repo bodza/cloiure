@@ -26,19 +26,19 @@ public final class InliningPhase extends AbstractInliningPhase
     // @field
     private int ___maxMethodPerInlining = Integer.MAX_VALUE;
 
-    // @cons
+    // @cons InliningPhase
     public InliningPhase(CanonicalizerPhase __canonicalizer)
     {
         this(new GreedyInliningPolicy(null), __canonicalizer);
     }
 
-    // @cons
+    // @cons InliningPhase
     public InliningPhase(Map<Invoke, Double> __hints, CanonicalizerPhase __canonicalizer)
     {
         this(new GreedyInliningPolicy(__hints), __canonicalizer);
     }
 
-    // @cons
+    // @cons InliningPhase
     public InliningPhase(InliningPolicy __policy, CanonicalizerPhase __canonicalizer)
     {
         super();

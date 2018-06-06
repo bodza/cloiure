@@ -1,7 +1,6 @@
 package giraaff.nodes.calc;
 
 import giraaff.core.common.type.ArithmeticOpTable;
-import giraaff.core.common.type.ArithmeticOpTable.UnaryOp.Not;
 import giraaff.core.common.type.Stamp;
 import giraaff.graph.NodeClass;
 import giraaff.graph.spi.CanonicalizerTool;
@@ -15,12 +14,12 @@ import giraaff.nodes.spi.StampInverter;
 // Binary negation of long or integer values.
 ///
 // @class NotNode
-public final class NotNode extends UnaryArithmeticNode<Not> implements ArithmeticLIRLowerable, NarrowableArithmeticNode, StampInverter
+public final class NotNode extends UnaryArithmeticNode<ArithmeticOpTable.UnaryOp.Not> implements ArithmeticLIRLowerable, NarrowableArithmeticNode, StampInverter
 {
     // @def
     public static final NodeClass<NotNode> TYPE = NodeClass.create(NotNode.class);
 
-    // @cons
+    // @cons NotNode
     protected NotNode(ValueNode __x)
     {
         super(TYPE, ArithmeticOpTable::getNot, __x);

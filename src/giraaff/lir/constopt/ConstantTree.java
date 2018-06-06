@@ -40,7 +40,7 @@ public final class ConstantTree extends PrintableDominatorOptimizationProblem<Co
         // @field
         private int ___numMat;
 
-        // @cons
+        // @cons ConstantTree.NodeCost
         public NodeCost(double __bestCost, List<UseEntry> __usages, int __numMat)
         {
             super();
@@ -94,10 +94,10 @@ public final class ConstantTree extends PrintableDominatorOptimizationProblem<Co
     // @field
     private final BlockMap<List<UseEntry>> ___blockMap;
 
-    // @cons
+    // @cons ConstantTree
     public ConstantTree(AbstractControlFlowGraph<?> __cfg, DefUseTree __tree)
     {
-        super(Flags.class, __cfg);
+        super(ConstantTree.Flags.class, __cfg);
         this.___blockMap = new BlockMap<>(__cfg);
         __tree.forEach(__u -> getOrInitList(__u.getBlock()).add(__u));
     }
@@ -126,19 +126,19 @@ public final class ConstantTree extends PrintableDominatorOptimizationProblem<Co
     ///
     // Returns the cost object associated with {@code block}. If there is none, a new cost object is created.
     ///
-    NodeCost getOrInitCost(AbstractBlockBase<?> __block)
+    ConstantTree.NodeCost getOrInitCost(AbstractBlockBase<?> __block)
     {
-        NodeCost __cost = getCost(__block);
+        ConstantTree.NodeCost __cost = getCost(__block);
         if (__cost == null)
         {
-            __cost = new NodeCost(__block.probability(), this.___blockMap.get(__block), 1);
+            __cost = new ConstantTree.NodeCost(__block.probability(), this.___blockMap.get(__block), 1);
             setCost(__block, __cost);
         }
         return __cost;
     }
 
     @Override
-    public String getName(Flags __type)
+    public String getName(ConstantTree.Flags __type)
     {
         switch (__type)
         {
@@ -157,7 +157,7 @@ public final class ConstantTree extends PrintableDominatorOptimizationProblem<Co
     @Override
     public void forEachPropertyPair(AbstractBlockBase<?> __block, BiConsumer<String, String> __action)
     {
-        if (get(Flags.SUBTREE, __block) && (__block.getDominator() == null || !get(Flags.SUBTREE, __block.getDominator())))
+        if (get(ConstantTree.Flags.SUBTREE, __block) && (__block.getDominator() == null || !get(ConstantTree.Flags.SUBTREE, __block.getDominator())))
         {
             __action.accept("hasDefinition", "true");
         }
@@ -166,28 +166,28 @@ public final class ConstantTree extends PrintableDominatorOptimizationProblem<Co
 
     public long subTreeSize()
     {
-        return stream(Flags.SUBTREE).count();
+        return stream(ConstantTree.Flags.SUBTREE).count();
     }
 
     public AbstractBlockBase<?> getStartBlock()
     {
-        return stream(Flags.SUBTREE).findFirst().get();
+        return stream(ConstantTree.Flags.SUBTREE).findFirst().get();
     }
 
     public void markBlocks()
     {
         for (AbstractBlockBase<?> __block : getBlocks())
         {
-            if (get(Flags.USAGE, __block))
+            if (get(ConstantTree.Flags.USAGE, __block))
             {
-                setDominatorPath(Flags.SUBTREE, __block);
+                setDominatorPath(ConstantTree.Flags.SUBTREE, __block);
             }
         }
     }
 
     public boolean isMarked(AbstractBlockBase<?> __block)
     {
-        return get(Flags.SUBTREE, __block);
+        return get(ConstantTree.Flags.SUBTREE, __block);
     }
 
     public boolean isLeafBlock(AbstractBlockBase<?> __block)
@@ -206,7 +206,7 @@ public final class ConstantTree extends PrintableDominatorOptimizationProblem<Co
 
     public void setSolution(AbstractBlockBase<?> __block)
     {
-        set(Flags.MATERIALIZE, __block);
+        set(ConstantTree.Flags.MATERIALIZE, __block);
     }
 
     public int size()

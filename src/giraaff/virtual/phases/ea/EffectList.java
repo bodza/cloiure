@@ -9,8 +9,8 @@ import giraaff.nodes.StructuredGraph;
 import giraaff.util.GraalError;
 
 ///
-// An {@link EffectList} can be used to maintain a list of {@link Effect}s and backtrack to a
-// previous state by truncating the list.
+// An {@link EffectList} can be used to maintain a list of {@link EffectList.Effect}s and backtrack
+// to a previous state by truncating the list.
 ///
 // @class EffectList
 public class EffectList implements Iterable<EffectList.Effect>
@@ -32,7 +32,7 @@ public class EffectList implements Iterable<EffectList.Effect>
     }
 
     // @iface EffectList.SimpleEffect
-    public interface SimpleEffect extends Effect
+    public interface SimpleEffect extends EffectList.Effect
     {
         @Override
         default void apply(StructuredGraph __graph, ArrayList<Node> __obsoleteNodes)
@@ -44,16 +44,16 @@ public class EffectList implements Iterable<EffectList.Effect>
     }
 
     // @def
-    private static final Effect[] EMPTY_ARRAY = new Effect[0];
+    private static final EffectList.Effect[] EMPTY_ARRAY = new EffectList.Effect[0];
     // @def
     private static final String[] EMPTY_STRING_ARRAY = new String[0];
 
     // @field
-    private Effect[] ___effects = EMPTY_ARRAY;
+    private EffectList.Effect[] ___effects = EMPTY_ARRAY;
     // @field
     private int ___size;
 
-    // @cons
+    // @cons EffectList
     public EffectList()
     {
         super();
@@ -72,12 +72,12 @@ public class EffectList implements Iterable<EffectList.Effect>
         }
     }
 
-    public void add(String __name, SimpleEffect __effect)
+    public void add(String __name, EffectList.SimpleEffect __effect)
     {
-        add(__name, (Effect) __effect);
+        add(__name, (EffectList.Effect) __effect);
     }
 
-    public void add(String __name, Effect __effect)
+    public void add(String __name, EffectList.Effect __effect)
     {
         enlarge(1);
         this.___effects[this.___size++] = __effect;
@@ -114,10 +114,10 @@ public class EffectList implements Iterable<EffectList.Effect>
     }
 
     @Override
-    public Iterator<Effect> iterator()
+    public Iterator<EffectList.Effect> iterator()
     {
         // @closure
-        return new Iterator<Effect>()
+        return new Iterator<EffectList.Effect>()
         {
             // @field
             int ___index;
@@ -131,7 +131,7 @@ public class EffectList implements Iterable<EffectList.Effect>
             }
 
             @Override
-            public Effect next()
+            public EffectList.Effect next()
             {
                 return EffectList.this.___effects[this.___index++];
             }
@@ -144,7 +144,7 @@ public class EffectList implements Iterable<EffectList.Effect>
         };
     }
 
-    public Effect get(int __index)
+    public EffectList.Effect get(int __index)
     {
         if (__index >= this.___size)
         {
@@ -168,7 +168,7 @@ public class EffectList implements Iterable<EffectList.Effect>
         boolean __message = false;
         for (int __i = 0; __i < size(); __i++)
         {
-            Effect __effect = this.___effects[__i];
+            EffectList.Effect __effect = this.___effects[__i];
             if (__effect.isCfgKill() == __cfgKills)
             {
                 if (!__message)

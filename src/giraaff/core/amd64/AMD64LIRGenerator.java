@@ -15,11 +15,7 @@ import jdk.vm.ci.meta.VMConstant;
 import jdk.vm.ci.meta.Value;
 import jdk.vm.ci.meta.ValueKind;
 
-import giraaff.asm.amd64.AMD64Assembler.AMD64BinaryArithmetic;
-import giraaff.asm.amd64.AMD64Assembler.AMD64MIOp;
-import giraaff.asm.amd64.AMD64Assembler.AMD64RMOp;
-import giraaff.asm.amd64.AMD64Assembler.ConditionFlag;
-import giraaff.asm.amd64.AMD64Assembler.OperandSize;
+import giraaff.asm.amd64.AMD64Assembler;
 import giraaff.core.common.LIRKind;
 import giraaff.core.common.NumUtil;
 import giraaff.core.common.calc.Condition;
@@ -30,8 +26,7 @@ import giraaff.lir.LIRFrameState;
 import giraaff.lir.LIRInstruction;
 import giraaff.lir.LIRValueUtil;
 import giraaff.lir.LabelRef;
-import giraaff.lir.StandardOp.JumpOp;
-import giraaff.lir.StandardOp.SaveRegistersOp;
+import giraaff.lir.StandardOp;
 import giraaff.lir.SwitchStrategy;
 import giraaff.lir.Variable;
 import giraaff.lir.amd64.AMD64AddressValue;
@@ -43,19 +38,11 @@ import giraaff.lir.amd64.AMD64BinaryConsumer;
 import giraaff.lir.amd64.AMD64ByteSwapOp;
 import giraaff.lir.amd64.AMD64Call;
 import giraaff.lir.amd64.AMD64ControlFlow;
-import giraaff.lir.amd64.AMD64ControlFlow.BranchOp;
-import giraaff.lir.amd64.AMD64ControlFlow.CondMoveOp;
-import giraaff.lir.amd64.AMD64ControlFlow.CondSetOp;
-import giraaff.lir.amd64.AMD64ControlFlow.ReturnOp;
-import giraaff.lir.amd64.AMD64ControlFlow.StrategySwitchOp;
-import giraaff.lir.amd64.AMD64ControlFlow.TableSwitchOp;
 import giraaff.lir.amd64.AMD64LFenceOp;
 import giraaff.lir.amd64.AMD64Move;
-import giraaff.lir.amd64.AMD64Move.CompareAndSwapOp;
-import giraaff.lir.amd64.AMD64Move.MembarOp;
-import giraaff.lir.amd64.AMD64Move.StackLeaOp;
 import giraaff.lir.gen.LIRGenerationResult;
 import giraaff.lir.gen.LIRGenerator;
+import giraaff.lir.gen.LIRGeneratorTool;
 import giraaff.phases.util.Providers;
 import giraaff.util.GraalError;
 
@@ -65,8 +52,8 @@ import giraaff.util.GraalError;
 // @class AMD64LIRGenerator
 public abstract class AMD64LIRGenerator extends LIRGenerator
 {
-    // @cons
-    public AMD64LIRGenerator(LIRKindTool __lirKindTool, AMD64ArithmeticLIRGenerator __arithmeticLIRGen, MoveFactory __moveFactory, Providers __providers, LIRGenerationResult __lirGenRes)
+    // @cons AMD64LIRGenerator
+    public AMD64LIRGenerator(LIRKindTool __lirKindTool, AMD64ArithmeticLIRGenerator __arithmeticLIRGen, LIRGeneratorTool.MoveFactory __moveFactory, Providers __providers, LIRGenerationResult __lirGenRes)
     {
         super(__lirKindTool, __arithmeticLIRGen, __moveFactory, __providers, __lirGenRes);
     }
@@ -95,7 +82,7 @@ public abstract class AMD64LIRGenerator extends LIRGenerator
     public Variable emitAddress(AllocatableValue __stackslot)
     {
         Variable __result = newVariable(LIRKind.value(target().arch.getWordKind()));
-        append(new StackLeaOp(__result, __stackslot));
+        append(new AMD64Move.StackLeaOp(__result, __stackslot));
         return __result;
     }
 
@@ -125,10 +112,10 @@ public abstract class AMD64LIRGenerator extends LIRGenerator
         AMD64AddressValue __addressValue = asAddressValue(__address);
         RegisterValue __raxRes = AMD64.rax.asValue(__kind);
         emitMove(__raxRes, __expectedValue);
-        append(new CompareAndSwapOp(__memKind, __raxRes, __addressValue, __raxRes, asAllocatable(__newValue)));
+        append(new AMD64Move.CompareAndSwapOp(__memKind, __raxRes, __addressValue, __raxRes, asAllocatable(__newValue)));
 
         Variable __result = newVariable(__trueValue.getValueKind());
-        append(new CondMoveOp(__result, Condition.EQ, asAllocatable(__trueValue), __falseValue));
+        append(new AMD64ControlFlow.CondMoveOp(__result, Condition.EQ, asAllocatable(__trueValue), __falseValue));
         return __result;
     }
 
@@ -141,7 +128,7 @@ public abstract class AMD64LIRGenerator extends LIRGenerator
         AMD64AddressValue __addressValue = asAddressValue(__address);
         RegisterValue __raxRes = AMD64.rax.asValue(__kind);
         emitMove(__raxRes, __expectedValue);
-        append(new CompareAndSwapOp(__memKind, __raxRes, __addressValue, __raxRes, asAllocatable(__newValue)));
+        append(new AMD64Move.CompareAndSwapOp(__memKind, __raxRes, __addressValue, __raxRes, asAllocatable(__newValue)));
         Variable __result = newVariable(__kind);
         emitMove(__result, __raxRes);
         return __result;
@@ -152,8 +139,8 @@ public abstract class AMD64LIRGenerator extends LIRGenerator
         AMD64Kind __memKind = (AMD64Kind) __kind.getPlatformKind();
         RegisterValue __raxValue = AMD64.rax.asValue(__kind);
         emitMove(__raxValue, __expectedValue);
-        append(new CompareAndSwapOp(__memKind, __raxValue, __address, __raxValue, asAllocatable(__newValue)));
-        append(new BranchOp(__condition, __trueLabel, __falseLabel, __trueLabelProbability));
+        append(new AMD64Move.CompareAndSwapOp(__memKind, __raxValue, __address, __raxValue, asAllocatable(__newValue)));
+        append(new AMD64ControlFlow.BranchOp(__condition, __trueLabel, __falseLabel, __trueLabelProbability));
     }
 
     @Override
@@ -185,27 +172,27 @@ public abstract class AMD64LIRGenerator extends LIRGenerator
     @Override
     public void emitJump(LabelRef __label)
     {
-        append(new JumpOp(__label));
+        append(new StandardOp.JumpOp(__label));
     }
 
     @Override
     public void emitCompareBranch(PlatformKind __cmpKind, Value __left, Value __right, Condition __cond, LabelRef __trueLabel, LabelRef __falseLabel, double __trueLabelProbability)
     {
         __cond = emitCompare(__cmpKind, __left, __right, __cond);
-        append(new BranchOp(__cond, __trueLabel, __falseLabel, __trueLabelProbability));
+        append(new AMD64ControlFlow.BranchOp(__cond, __trueLabel, __falseLabel, __trueLabelProbability));
     }
 
     @Override
     public void emitOverflowCheckBranch(LabelRef __overflow, LabelRef __noOverflow, LIRKind __cmpLIRKind, double __overflowProbability)
     {
-        append(new BranchOp(ConditionFlag.Overflow, __overflow, __noOverflow, __overflowProbability));
+        append(new AMD64ControlFlow.BranchOp(AMD64Assembler.ConditionFlag.Overflow, __overflow, __noOverflow, __overflowProbability));
     }
 
     @Override
     public void emitIntegerTestBranch(Value __left, Value __right, LabelRef __trueDestination, LabelRef __falseDestination, double __trueDestinationProbability)
     {
         emitIntegerTest(__left, __right);
-        append(new BranchOp(Condition.EQ, __trueDestination, __falseDestination, __trueDestinationProbability));
+        append(new AMD64ControlFlow.BranchOp(Condition.EQ, __trueDestination, __falseDestination, __trueDestinationProbability));
     }
 
     @Override
@@ -216,15 +203,15 @@ public abstract class AMD64LIRGenerator extends LIRGenerator
         Variable __result = newVariable(__trueValue.getValueKind());
         if (LIRValueUtil.isIntConstant(__trueValue, 1) && LIRValueUtil.isIntConstant(__falseValue, 0))
         {
-            append(new CondSetOp(__result, __cond));
+            append(new AMD64ControlFlow.CondSetOp(__result, __cond));
         }
         else if (LIRValueUtil.isIntConstant(__trueValue, 0) && LIRValueUtil.isIntConstant(__falseValue, 1))
         {
-            append(new CondSetOp(__result, __cond.negate()));
+            append(new AMD64ControlFlow.CondSetOp(__result, __cond.negate()));
         }
         else
         {
-            append(new CondMoveOp(__result, __cond, load(__trueValue), loadNonConst(__falseValue)));
+            append(new AMD64ControlFlow.CondMoveOp(__result, __cond, load(__trueValue), loadNonConst(__falseValue)));
         }
         return __result;
     }
@@ -234,28 +221,28 @@ public abstract class AMD64LIRGenerator extends LIRGenerator
     {
         emitIntegerTest(__left, __right);
         Variable __result = newVariable(__trueValue.getValueKind());
-        append(new CondMoveOp(__result, Condition.EQ, load(__trueValue), loadNonConst(__falseValue)));
+        append(new AMD64ControlFlow.CondMoveOp(__result, Condition.EQ, load(__trueValue), loadNonConst(__falseValue)));
         return __result;
     }
 
     private void emitIntegerTest(Value __a, Value __b)
     {
-        OperandSize __size = __a.getPlatformKind() == AMD64Kind.QWORD ? OperandSize.QWORD : OperandSize.DWORD;
+        AMD64Assembler.OperandSize __size = __a.getPlatformKind() == AMD64Kind.QWORD ? AMD64Assembler.OperandSize.QWORD : AMD64Assembler.OperandSize.DWORD;
         if (LIRValueUtil.isJavaConstant(__b) && NumUtil.is32bit(LIRValueUtil.asJavaConstant(__b).asLong()))
         {
-            append(new AMD64BinaryConsumer.ConstOp(AMD64MIOp.TEST, __size, asAllocatable(__a), (int) LIRValueUtil.asJavaConstant(__b).asLong()));
+            append(new AMD64BinaryConsumer.ConsumerConstOp(AMD64Assembler.AMD64MIOp.TEST, __size, asAllocatable(__a), (int) LIRValueUtil.asJavaConstant(__b).asLong()));
         }
         else if (LIRValueUtil.isJavaConstant(__a) && NumUtil.is32bit(LIRValueUtil.asJavaConstant(__a).asLong()))
         {
-            append(new AMD64BinaryConsumer.ConstOp(AMD64MIOp.TEST, __size, asAllocatable(__b), (int) LIRValueUtil.asJavaConstant(__a).asLong()));
+            append(new AMD64BinaryConsumer.ConsumerConstOp(AMD64Assembler.AMD64MIOp.TEST, __size, asAllocatable(__b), (int) LIRValueUtil.asJavaConstant(__a).asLong()));
         }
         else if (ValueUtil.isAllocatableValue(__b))
         {
-            append(new AMD64BinaryConsumer.Op(AMD64RMOp.TEST, __size, asAllocatable(__b), asAllocatable(__a)));
+            append(new AMD64BinaryConsumer.ConsumerOp(AMD64Assembler.AMD64RMOp.TEST, __size, asAllocatable(__b), asAllocatable(__a)));
         }
         else
         {
-            append(new AMD64BinaryConsumer.Op(AMD64RMOp.TEST, __size, asAllocatable(__a), asAllocatable(__b)));
+            append(new AMD64BinaryConsumer.ConsumerOp(AMD64Assembler.AMD64RMOp.TEST, __size, asAllocatable(__a), asAllocatable(__b)));
         }
     }
 
@@ -268,27 +255,27 @@ public abstract class AMD64LIRGenerator extends LIRGenerator
     ///
     private boolean emitCompareMemory(AMD64Kind __cmpKind, Value __a, AMD64AddressValue __b, LIRFrameState __state)
     {
-        OperandSize __size;
+        AMD64Assembler.OperandSize __size;
         switch (__cmpKind)
         {
             case BYTE:
             {
-                __size = OperandSize.BYTE;
+                __size = AMD64Assembler.OperandSize.BYTE;
                 break;
             }
             case WORD:
             {
-                __size = OperandSize.WORD;
+                __size = AMD64Assembler.OperandSize.WORD;
                 break;
             }
             case DWORD:
             {
-                __size = OperandSize.DWORD;
+                __size = AMD64Assembler.OperandSize.DWORD;
                 break;
             }
             case QWORD:
             {
-                __size = OperandSize.QWORD;
+                __size = AMD64Assembler.OperandSize.QWORD;
                 break;
             }
             default:
@@ -305,17 +292,17 @@ public abstract class AMD64LIRGenerator extends LIRGenerator
         }
     }
 
-    protected boolean emitCompareMemoryConOp(OperandSize __size, ConstantValue __a, AMD64AddressValue __b, LIRFrameState __state)
+    protected boolean emitCompareMemoryConOp(AMD64Assembler.OperandSize __size, ConstantValue __a, AMD64AddressValue __b, LIRFrameState __state)
     {
         if (JavaConstant.isNull(__a.getConstant()))
         {
-            append(new AMD64BinaryConsumer.MemoryConstOp(AMD64BinaryArithmetic.CMP, __size, __b, 0, __state));
+            append(new AMD64BinaryConsumer.MemoryConstOp(AMD64Assembler.AMD64BinaryArithmetic.CMP, __size, __b, 0, __state));
             return true;
         }
-        else if (__a.getConstant() instanceof VMConstant && __size == OperandSize.DWORD)
+        else if (__a.getConstant() instanceof VMConstant && __size == AMD64Assembler.OperandSize.DWORD)
         {
             VMConstant __vc = (VMConstant) __a.getConstant();
-            append(new AMD64BinaryConsumer.MemoryVMConstOp(AMD64BinaryArithmetic.CMP.getMIOpcode(__size, false), __b, __vc, __state));
+            append(new AMD64BinaryConsumer.MemoryVMConstOp(AMD64Assembler.AMD64BinaryArithmetic.CMP.getMIOpcode(__size, false), __b, __vc, __state));
             return true;
         }
         else
@@ -323,7 +310,7 @@ public abstract class AMD64LIRGenerator extends LIRGenerator
             long __value = __a.getJavaConstant().asLong();
             if (NumUtil.is32bit(__value))
             {
-                append(new AMD64BinaryConsumer.MemoryConstOp(AMD64BinaryArithmetic.CMP, __size, __b, (int) __value, __state));
+                append(new AMD64BinaryConsumer.MemoryConstOp(AMD64Assembler.AMD64BinaryArithmetic.CMP, __size, __b, (int) __value, __state));
                 return true;
             }
             else
@@ -333,9 +320,9 @@ public abstract class AMD64LIRGenerator extends LIRGenerator
         }
     }
 
-    private boolean emitCompareRegMemoryOp(OperandSize __size, AllocatableValue __a, AMD64AddressValue __b, LIRFrameState __state)
+    private boolean emitCompareRegMemoryOp(AMD64Assembler.OperandSize __size, AllocatableValue __a, AMD64AddressValue __b, LIRFrameState __state)
     {
-        AMD64RMOp __op = AMD64BinaryArithmetic.CMP.getRMOpcode(__size);
+        AMD64Assembler.AMD64RMOp __op = AMD64Assembler.AMD64BinaryArithmetic.CMP.getRMOpcode(__size);
         append(new AMD64BinaryConsumer.MemoryRMOp(__op, __size, __a, __b, __state));
         return false;
     }
@@ -374,7 +361,7 @@ public abstract class AMD64LIRGenerator extends LIRGenerator
         int __necessaryBarriers = target().arch.requiredBarriers(__barriers);
         if (target().isMP && __necessaryBarriers != 0)
         {
-            append(new MembarOp(__necessaryBarriers));
+            append(new AMD64Move.MembarOp(__necessaryBarriers));
         }
     }
 
@@ -434,12 +421,12 @@ public abstract class AMD64LIRGenerator extends LIRGenerator
             __operand = resultOperandFor(__kind, __input.getValueKind());
             emitMove(__operand, __input);
         }
-        append(new ReturnOp(__operand));
+        append(new AMD64ControlFlow.ReturnOp(__operand));
     }
 
-    protected StrategySwitchOp createStrategySwitchOp(SwitchStrategy __strategy, LabelRef[] __keyTargets, LabelRef __defaultTarget, Variable __key, AllocatableValue __temp)
+    protected AMD64ControlFlow.StrategySwitchOp createStrategySwitchOp(SwitchStrategy __strategy, LabelRef[] __keyTargets, LabelRef __defaultTarget, Variable __key, AllocatableValue __temp)
     {
-        return new StrategySwitchOp(__strategy, __keyTargets, __defaultTarget, __key, __temp);
+        return new AMD64ControlFlow.StrategySwitchOp(__strategy, __keyTargets, __defaultTarget, __key, __temp);
     }
 
     @Override
@@ -453,7 +440,7 @@ public abstract class AMD64LIRGenerator extends LIRGenerator
     @Override
     protected void emitTableSwitch(int __lowKey, LabelRef __defaultTarget, LabelRef[] __targets, Value __key)
     {
-        append(new TableSwitchOp(__lowKey, __defaultTarget, __targets, __key, newVariable(LIRKind.value(target().arch.getWordKind())), newVariable(__key.getValueKind())));
+        append(new AMD64ControlFlow.TableSwitchOp(__lowKey, __defaultTarget, __targets, __key, newVariable(LIRKind.value(target().arch.getWordKind())), newVariable(__key.getValueKind())));
     }
 
     public void emitLFence()

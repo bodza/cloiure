@@ -31,7 +31,7 @@ public final class TypeReference
     // @field
     private final boolean ___exactReference;
 
-    // @cons
+    // @cons TypeReference
     private TypeReference(ResolvedJavaType __type, boolean __exactReference)
     {
         super();

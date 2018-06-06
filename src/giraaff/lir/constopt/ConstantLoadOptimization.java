@@ -19,10 +19,9 @@ import giraaff.lir.LIR;
 import giraaff.lir.LIRInsertionBuffer;
 import giraaff.lir.LIRInstruction;
 import giraaff.lir.LIRValueUtil;
-import giraaff.lir.StandardOp.LoadConstantOp;
+import giraaff.lir.StandardOp;
 import giraaff.lir.Variable;
-import giraaff.lir.constopt.ConstantTree.Flags;
-import giraaff.lir.constopt.ConstantTree.NodeCost;
+import giraaff.lir.constopt.ConstantTree;
 import giraaff.lir.gen.LIRGenerationResult;
 import giraaff.lir.gen.LIRGeneratorTool;
 import giraaff.lir.phases.LIRPhase;
@@ -37,14 +36,14 @@ import giraaff.lir.phases.PreAllocationOptimizationPhase;
 public final class ConstantLoadOptimization extends PreAllocationOptimizationPhase
 {
     @Override
-    protected void run(TargetDescription __target, LIRGenerationResult __lirGenRes, PreAllocationOptimizationContext __context)
+    protected void run(TargetDescription __target, LIRGenerationResult __lirGenRes, PreAllocationOptimizationPhase.PreAllocationOptimizationContext __context)
     {
         LIRGeneratorTool __lirGen = __context.___lirGen;
-        new Optimization(__lirGenRes.getLIR(), __lirGen).apply();
+        new ConstantLoadOptimization.CLOptimization(__lirGenRes.getLIR(), __lirGen).apply();
     }
 
-    // @class ConstantLoadOptimization.Optimization
-    private static final class Optimization
+    // @class ConstantLoadOptimization.CLOptimization
+    private static final class CLOptimization
     {
         // @field
         private final LIR ___lir;
@@ -61,8 +60,8 @@ public final class ConstantLoadOptimization extends PreAllocationOptimizationPha
         // @field
         private final BlockMap<LIRInsertionBuffer> ___insertionBuffers;
 
-        // @cons
-        private Optimization(LIR __lir, LIRGeneratorTool __lirGen)
+        // @cons ConstantLoadOptimization.CLOptimization
+        private CLOptimization(LIR __lir, LIRGeneratorTool __lirGen)
         {
             super();
             this.___lir = __lir;
@@ -108,11 +107,11 @@ public final class ConstantLoadOptimization extends PreAllocationOptimizationPha
 
         private static boolean isConstantLoad(LIRInstruction __inst)
         {
-            if (!LoadConstantOp.isLoadConstantOp(__inst))
+            if (!StandardOp.LoadConstantOp.isLoadConstantOp(__inst))
             {
                 return false;
             }
-            return LIRValueUtil.isVariable(LoadConstantOp.asLoadConstantOp(__inst).getResult());
+            return LIRValueUtil.isVariable(StandardOp.LoadConstantOp.asLoadConstantOp(__inst).getResult());
         }
 
         private void addUsageToBlockMap(UseEntry __entry)
@@ -192,10 +191,10 @@ public final class ConstantLoadOptimization extends PreAllocationOptimizationPha
         private void createConstantTree(DefUseTree __tree)
         {
             ConstantTree __constTree = new ConstantTree(this.___lir.getControlFlowGraph(), __tree);
-            __constTree.set(Flags.SUBTREE, __tree.getBlock());
-            __tree.forEach(__u -> __constTree.set(Flags.USAGE, __u.getBlock()));
+            __constTree.set(ConstantTree.Flags.SUBTREE, __tree.getBlock());
+            __tree.forEach(__u -> __constTree.set(ConstantTree.Flags.USAGE, __u.getBlock()));
 
-            if (__constTree.get(Flags.USAGE, __tree.getBlock()))
+            if (__constTree.get(ConstantTree.Flags.USAGE, __tree.getBlock()))
             {
                 // usage in the definition block -> no optimization
                 return;
@@ -203,7 +202,7 @@ public final class ConstantLoadOptimization extends PreAllocationOptimizationPha
 
             __constTree.markBlocks();
 
-            NodeCost __cost = ConstantTreeAnalyzer.analyze(__constTree, __tree.getBlock());
+            ConstantTree.NodeCost __cost = ConstantTreeAnalyzer.analyze(__constTree, __tree.getBlock());
             int __usageCount = __cost.getUsages().size();
 
             if (__cost.getNumMaterializations() > 1 || __cost.getBestCost() < __tree.getBlock().probability())
@@ -227,9 +226,9 @@ public final class ConstantLoadOptimization extends PreAllocationOptimizationPha
             while (!__worklist.isEmpty())
             {
                 AbstractBlockBase<?> __block = __worklist.pollLast();
-                if (__constTree.get(Flags.CANDIDATE, __block))
+                if (__constTree.get(ConstantTree.Flags.CANDIDATE, __block))
                 {
-                    __constTree.set(Flags.MATERIALIZE, __block);
+                    __constTree.set(ConstantTree.Flags.MATERIALIZE, __block);
                     // create and insert load
                     insertLoad(__tree.getConstant(), __tree.getVariable().getValueKind(), __block, __constTree.getCost(__block).getUsages());
                 }

@@ -20,7 +20,7 @@ import giraaff.phases.common.DeadCodeEliminationPhase;
 // @class GraphEffectList
 public final class GraphEffectList extends EffectList
 {
-    // @cons
+    // @cons GraphEffectList
     public GraphEffectList()
     {
         super();
@@ -117,7 +117,7 @@ public final class GraphEffectList extends EffectList
     public void addVirtualMapping(FrameState __node, EscapeObjectState __state)
     {
         // @closure
-        add("add virtual mapping", new Effect()
+        add("add virtual mapping", new EffectList.Effect()
         {
             @Override
             public void apply(StructuredGraph __graph, ArrayList<Node> __obsoleteNodes)
@@ -164,7 +164,7 @@ public final class GraphEffectList extends EffectList
     public void killIfBranch(IfNode __ifNode, boolean __constantCondition)
     {
         // @closure
-        add("kill if branch", new Effect()
+        add("kill if branch", new EffectList.Effect()
         {
             @Override
             public void apply(StructuredGraph __graph, ArrayList<Node> __obsoleteNodes)
@@ -183,7 +183,7 @@ public final class GraphEffectList extends EffectList
     public void replaceWithSink(FixedWithNextNode __node, ControlSinkNode __sink)
     {
         // @closure
-        add("kill if branch", new Effect()
+        add("kill if branch", new EffectList.Effect()
         {
             @Override
             public void apply(StructuredGraph __graph, ArrayList<Node> __obsoleteNodes)
@@ -247,7 +247,7 @@ public final class GraphEffectList extends EffectList
     public void replaceFirstInput(Node __node, Node __oldInput, Node __newInput)
     {
         // @closure
-        add("replace first input", new Effect()
+        add("replace first input", new EffectList.Effect()
         {
             @Override
             public void apply(StructuredGraph __graph, ArrayList<Node> __obsoleteNodes)

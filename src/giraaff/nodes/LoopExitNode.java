@@ -8,7 +8,7 @@ import giraaff.graph.spi.Simplifiable;
 import giraaff.graph.spi.SimplifierTool;
 import giraaff.nodeinfo.InputType;
 
-// @NodeInfo.allowedUsageTypes "Association"
+// @NodeInfo.allowedUsageTypes "InputType.Association"
 // @class LoopExitNode
 public final class LoopExitNode extends BeginStateSplitNode implements IterableNodeType, Simplifiable
 {
@@ -18,11 +18,11 @@ public final class LoopExitNode extends BeginStateSplitNode implements IterableN
     // The declared type of the field cannot be LoopBeginNode, because loop explosion during partial
     // evaluation can temporarily assign a non-loop begin. This node will then be deleted shortly
     // after - but we still must not have type system violations for that short amount of time.
-    @Input(InputType.Association)
+    @Node.Input(InputType.Association)
     // @field
     AbstractBeginNode ___loopBegin;
 
-    // @cons
+    // @cons LoopExitNode
     public LoopExitNode(LoopBeginNode __loop)
     {
         super(TYPE);

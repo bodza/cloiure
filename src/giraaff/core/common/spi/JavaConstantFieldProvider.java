@@ -15,7 +15,7 @@ import giraaff.util.GraalError;
 // @class JavaConstantFieldProvider
 public abstract class JavaConstantFieldProvider implements ConstantFieldProvider
 {
-    // @cons
+    // @cons JavaConstantFieldProvider
     protected JavaConstantFieldProvider(MetaAccessProvider __metaAccess)
     {
         super();
@@ -31,7 +31,7 @@ public abstract class JavaConstantFieldProvider implements ConstantFieldProvider
     }
 
     @Override
-    public <T> T readConstantField(ResolvedJavaField __field, ConstantFieldTool<T> __tool)
+    public <T> T readConstantField(ResolvedJavaField __field, ConstantFieldProvider.ConstantFieldTool<T> __tool)
     {
         if (isStableField(__field, __tool))
         {
@@ -52,7 +52,7 @@ public abstract class JavaConstantFieldProvider implements ConstantFieldProvider
         return null;
     }
 
-    protected <T> T foldStableArray(JavaConstant __value, ResolvedJavaField __field, ConstantFieldTool<T> __tool)
+    protected <T> T foldStableArray(JavaConstant __value, ResolvedJavaField __field, ConstantFieldProvider.ConstantFieldTool<T> __tool)
     {
         return __tool.foldStableArray(__value, getArrayDimension(__field.getType()), isDefaultStableField(__field, __tool));
     }
@@ -75,19 +75,19 @@ public abstract class JavaConstantFieldProvider implements ConstantFieldProvider
     }
 
     @SuppressWarnings("unused")
-    protected boolean isStableFieldValueConstant(ResolvedJavaField __field, JavaConstant __value, ConstantFieldTool<?> __tool)
+    protected boolean isStableFieldValueConstant(ResolvedJavaField __field, JavaConstant __value, ConstantFieldProvider.ConstantFieldTool<?> __tool)
     {
         return !__value.isDefaultForKind();
     }
 
     @SuppressWarnings("unused")
-    protected boolean isFinalFieldValueConstant(ResolvedJavaField __field, JavaConstant __value, ConstantFieldTool<?> __tool)
+    protected boolean isFinalFieldValueConstant(ResolvedJavaField __field, JavaConstant __value, ConstantFieldProvider.ConstantFieldTool<?> __tool)
     {
         return !__value.isDefaultForKind() || GraalOptions.trustFinalDefaultFields;
     }
 
     @SuppressWarnings("unused")
-    protected boolean isStableField(ResolvedJavaField __field, ConstantFieldTool<?> __tool)
+    protected boolean isStableField(ResolvedJavaField __field, ConstantFieldProvider.ConstantFieldTool<?> __tool)
     {
         if (isSyntheticEnumSwitchMap(__field))
         {
@@ -104,7 +104,7 @@ public abstract class JavaConstantFieldProvider implements ConstantFieldProvider
         return false;
     }
 
-    protected boolean isDefaultStableField(ResolvedJavaField __field, ConstantFieldTool<?> __tool)
+    protected boolean isDefaultStableField(ResolvedJavaField __field, ConstantFieldProvider.ConstantFieldTool<?> __tool)
     {
         if (isSyntheticEnumSwitchMap(__field))
         {
@@ -114,7 +114,7 @@ public abstract class JavaConstantFieldProvider implements ConstantFieldProvider
     }
 
     @SuppressWarnings("unused")
-    protected boolean isFinalField(ResolvedJavaField __field, ConstantFieldTool<?> __tool)
+    protected boolean isFinalField(ResolvedJavaField __field, ConstantFieldProvider.ConstantFieldTool<?> __tool)
     {
         return __field.isFinal();
     }

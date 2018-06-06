@@ -41,7 +41,7 @@ public final class HotSpotWordTypes extends WordTypes
     // @field
     private final ResolvedJavaType ___methodCountersPointerType;
 
-    // @cons
+    // @cons HotSpotWordTypes
     public HotSpotWordTypes(MetaAccessProvider __metaAccess, JavaKind __wordKind)
     {
         super(__metaAccess, __wordKind);

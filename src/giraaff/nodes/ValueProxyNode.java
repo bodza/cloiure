@@ -16,13 +16,13 @@ public final class ValueProxyNode extends ProxyNode implements Canonicalizable, 
     // @def
     public static final NodeClass<ValueProxyNode> TYPE = NodeClass.create(ValueProxyNode.class);
 
-    @Input
+    @Node.Input
     // @field
     ValueNode ___value;
     // @field
     private final boolean ___loopPhiProxy;
 
-    // @cons
+    // @cons ValueProxyNode
     public ValueProxyNode(ValueNode __value, LoopExitNode __loopExit)
     {
         super(TYPE, __value.stamp(NodeView.DEFAULT), __loopExit);

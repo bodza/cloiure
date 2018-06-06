@@ -3,7 +3,7 @@ package giraaff.asm.amd64;
 // @class AMD64AsmOptions
 public final class AMD64AsmOptions
 {
-    // @cons
+    // @cons AMD64AsmOptions
     private AMD64AsmOptions()
     {
         super();

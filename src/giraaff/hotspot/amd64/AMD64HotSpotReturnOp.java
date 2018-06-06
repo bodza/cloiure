@@ -5,22 +5,22 @@ import jdk.vm.ci.code.Register;
 import jdk.vm.ci.meta.Value;
 
 import giraaff.asm.amd64.AMD64MacroAssembler;
-import giraaff.lir.LIRInstruction.OperandFlag;
+import giraaff.lir.LIRInstruction;
 import giraaff.lir.LIRInstructionClass;
-import giraaff.lir.Opcode;
+import giraaff.lir.LIROpcode;
 import giraaff.lir.asm.CompilationResultBuilder;
 
 ///
 // Returns from a function.
 ///
-@Opcode
+@LIROpcode
 // @class AMD64HotSpotReturnOp
 final class AMD64HotSpotReturnOp extends AMD64HotSpotEpilogueBlockEndOp
 {
     // @def
     public static final LIRInstructionClass<AMD64HotSpotReturnOp> TYPE = LIRInstructionClass.create(AMD64HotSpotReturnOp.class);
 
-    @Use({OperandFlag.REG, OperandFlag.ILLEGAL})
+    @LIRInstruction.Use({LIRInstruction.OperandFlag.REG, LIRInstruction.OperandFlag.ILLEGAL})
     // @field
     protected Value ___value;
     // @field
@@ -30,7 +30,7 @@ final class AMD64HotSpotReturnOp extends AMD64HotSpotEpilogueBlockEndOp
     // @field
     private final Register ___scratchForSafepointOnReturn;
 
-    // @cons
+    // @cons AMD64HotSpotReturnOp
     AMD64HotSpotReturnOp(Value __value, boolean __isStub, Register __thread, Register __scratchForSafepointOnReturn)
     {
         super(TYPE);

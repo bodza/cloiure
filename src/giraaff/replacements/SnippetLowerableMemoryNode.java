@@ -3,6 +3,7 @@ package giraaff.replacements;
 import org.graalvm.word.LocationIdentity;
 
 import giraaff.core.common.type.Stamp;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.graph.NodeInputList;
 import giraaff.nodeinfo.InputType;
@@ -26,19 +27,19 @@ public final class SnippetLowerableMemoryNode extends FixedWithNextNode implemen
         void lower(SnippetLowerableMemoryNode __node, LoweringTool __tool);
     }
 
-    @Input
+    @Node.Input
     // @field
     protected NodeInputList<ValueNode> ___arguments;
-    @OptionalInput(InputType.Memory)
+    @Node.OptionalInput(InputType.Memory)
     // @field
     protected MemoryNode ___lastLocationAccess;
     // @field
     private final LocationIdentity ___locationIdentity;
     // @field
-    SnippetLowering ___lowering;
+    SnippetLowerableMemoryNode.SnippetLowering ___lowering;
 
-    // @cons
-    public SnippetLowerableMemoryNode(SnippetLowering __lowering, LocationIdentity __locationIdentity, Stamp __stamp, ValueNode... __arguments)
+    // @cons SnippetLowerableMemoryNode
+    public SnippetLowerableMemoryNode(SnippetLowerableMemoryNode.SnippetLowering __lowering, LocationIdentity __locationIdentity, Stamp __stamp, ValueNode... __arguments)
     {
         super(TYPE, __stamp);
         this.___arguments = new NodeInputList<>(this, __arguments);

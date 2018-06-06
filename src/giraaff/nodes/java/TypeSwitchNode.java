@@ -40,7 +40,7 @@ public final class TypeSwitchNode extends SwitchNode implements LIRLowerable, Si
     // @field
     protected final Constant[] ___hubs;
 
-    // @cons
+    // @cons TypeSwitchNode
     public TypeSwitchNode(ValueNode __value, AbstractBeginNode[] __successors, ResolvedJavaType[] __keys, double[] __keyProbabilities, int[] __keySuccessors, ConstantReflectionProvider __constantReflection)
     {
         super(TYPE, __value, __successors, __keySuccessors, __keyProbabilities);

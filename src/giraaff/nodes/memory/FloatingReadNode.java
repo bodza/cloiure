@@ -25,24 +25,24 @@ public final class FloatingReadNode extends FloatingAccessNode implements LIRLow
     // @def
     public static final NodeClass<FloatingReadNode> TYPE = NodeClass.create(FloatingReadNode.class);
 
-    @OptionalInput(InputType.Memory)
+    @Node.OptionalInput(InputType.Memory)
     // @field
     MemoryNode ___lastLocationAccess;
 
-    // @cons
+    // @cons FloatingReadNode
     public FloatingReadNode(AddressNode __address, LocationIdentity __location, MemoryNode __lastLocationAccess, Stamp __stamp)
     {
-        this(__address, __location, __lastLocationAccess, __stamp, null, BarrierType.NONE);
+        this(__address, __location, __lastLocationAccess, __stamp, null, HeapAccess.BarrierType.NONE);
     }
 
-    // @cons
+    // @cons FloatingReadNode
     public FloatingReadNode(AddressNode __address, LocationIdentity __location, MemoryNode __lastLocationAccess, Stamp __stamp, GuardingNode __guard)
     {
-        this(__address, __location, __lastLocationAccess, __stamp, __guard, BarrierType.NONE);
+        this(__address, __location, __lastLocationAccess, __stamp, __guard, HeapAccess.BarrierType.NONE);
     }
 
-    // @cons
-    public FloatingReadNode(AddressNode __address, LocationIdentity __location, MemoryNode __lastLocationAccess, Stamp __stamp, GuardingNode __guard, BarrierType __barrierType)
+    // @cons FloatingReadNode
+    public FloatingReadNode(AddressNode __address, LocationIdentity __location, MemoryNode __lastLocationAccess, Stamp __stamp, GuardingNode __guard, HeapAccess.BarrierType __barrierType)
     {
         super(TYPE, __address, __location, __stamp, __guard, __barrierType);
         this.___lastLocationAccess = __lastLocationAccess;

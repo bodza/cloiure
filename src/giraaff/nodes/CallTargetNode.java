@@ -10,12 +10,13 @@ import giraaff.core.common.type.Stamp;
 import giraaff.core.common.type.StampFactory;
 import giraaff.core.common.type.StampPair;
 import giraaff.core.common.type.TypeReference;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.graph.NodeInputList;
 import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
-// @NodeInfo.allowedUsageTypes "Extension"
+// @NodeInfo.allowedUsageTypes "InputType.Extension"
 // @class CallTargetNode
 public abstract class CallTargetNode extends ValueNode implements LIRLowerable
 {
@@ -30,6 +31,7 @@ public abstract class CallTargetNode extends ValueNode implements LIRLowerable
         Static(true),
         Virtual(false);
 
+        // @cons CallTargetNode.InvokeKind
         InvokeKind(boolean __direct)
         {
             this.___direct = __direct;
@@ -55,22 +57,22 @@ public abstract class CallTargetNode extends ValueNode implements LIRLowerable
 
         public boolean isInterface()
         {
-            return this == InvokeKind.Interface;
+            return this == CallTargetNode.InvokeKind.Interface;
         }
     }
 
-    @Input
+    @Node.Input
     // @field
     protected NodeInputList<ValueNode> ___arguments;
     // @field
     protected ResolvedJavaMethod ___targetMethod;
     // @field
-    protected InvokeKind ___invokeKind;
+    protected CallTargetNode.InvokeKind ___invokeKind;
     // @field
     protected final StampPair ___returnStamp;
 
-    // @cons
-    protected CallTargetNode(NodeClass<? extends CallTargetNode> __c, ValueNode[] __arguments, ResolvedJavaMethod __targetMethod, InvokeKind __invokeKind, StampPair __returnStamp)
+    // @cons CallTargetNode
+    protected CallTargetNode(NodeClass<? extends CallTargetNode> __c, ValueNode[] __arguments, ResolvedJavaMethod __targetMethod, CallTargetNode.InvokeKind __invokeKind, StampPair __returnStamp)
     {
         super(__c, StampFactory.forVoid());
         this.___targetMethod = __targetMethod;
@@ -128,12 +130,12 @@ public abstract class CallTargetNode extends ValueNode implements LIRLowerable
         return this.___targetMethod;
     }
 
-    public InvokeKind invokeKind()
+    public CallTargetNode.InvokeKind invokeKind()
     {
         return this.___invokeKind;
     }
 
-    public void setInvokeKind(InvokeKind __kind)
+    public void setInvokeKind(CallTargetNode.InvokeKind __kind)
     {
         this.___invokeKind = __kind;
     }

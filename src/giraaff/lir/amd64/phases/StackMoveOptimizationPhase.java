@@ -14,35 +14,34 @@ import giraaff.core.common.cfg.AbstractBlockBase;
 import giraaff.lir.LIR;
 import giraaff.lir.LIRInstruction;
 import giraaff.lir.RedundantMoveElimination;
-import giraaff.lir.amd64.AMD64Move.AMD64MultiStackMove;
-import giraaff.lir.amd64.AMD64Move.AMD64StackMove;
+import giraaff.lir.amd64.AMD64Move;
 import giraaff.lir.gen.LIRGenerationResult;
 import giraaff.lir.phases.LIRPhase;
 import giraaff.lir.phases.PostAllocationOptimizationPhase;
 
 ///
-// Replaces sequential {@link AMD64StackMove}s of the same type with a single
-// {@link AMD64MultiStackMove} to avoid storing/restoring the scratch register multiple times.
+// Replaces sequential {@link AMD64Move.AMD64StackMove}s of the same type with a single
+// {@link AMD64Move.AMD64MultiStackMove} to avoid storing/restoring the scratch register multiple times.
 //
 // Note: this phase must be inserted <b>after</b> {@link RedundantMoveElimination} phase because
-// {@link AMD64MultiStackMove} are not probably detected.
+// {@link AMD64Move.AMD64MultiStackMove} are not probably detected.
 ///
 // @class StackMoveOptimizationPhase
 public final class StackMoveOptimizationPhase extends PostAllocationOptimizationPhase
 {
     @Override
-    protected void run(TargetDescription __target, LIRGenerationResult __lirGenRes, PostAllocationOptimizationContext __context)
+    protected void run(TargetDescription __target, LIRGenerationResult __lirGenRes, PostAllocationOptimizationPhase.PostAllocationOptimizationContext __context)
     {
         LIR __lir = __lirGenRes.getLIR();
         for (AbstractBlockBase<?> __block : __lir.getControlFlowGraph().getBlocks())
         {
             ArrayList<LIRInstruction> __instructions = __lir.getLIRforBlock(__block);
-            new Closure().process(__instructions);
+            new StackMoveOptimizationPhase.Closure0().process(__instructions);
         }
     }
 
-    // @class StackMoveOptimizationPhase.Closure
-    private static class Closure
+    // @class StackMoveOptimizationPhase.Closure0
+    private static class Closure0
     {
         // @def
         private static final int NONE = -1;
@@ -68,7 +67,7 @@ public final class StackMoveOptimizationPhase extends PostAllocationOptimization
 
                 if (isStackMove(__inst))
                 {
-                    AMD64StackMove __move = asStackMove(__inst);
+                    AMD64Move.AMD64StackMove __move = asStackMove(__inst);
 
                     if (this.___reg != null && !this.___reg.equals(__move.getScratchRegister()))
                     {
@@ -112,7 +111,7 @@ public final class StackMoveOptimizationPhase extends PostAllocationOptimization
             int __size = this.___dst.size();
             if (__size > 1)
             {
-                AMD64MultiStackMove __multiMove = new AMD64MultiStackMove(this.___dst.toArray(new AllocatableValue[__size]), this.___src.toArray(new AllocatableValue[__size]), this.___reg, this.___slot);
+                AMD64Move.AMD64MultiStackMove __multiMove = new AMD64Move.AMD64MultiStackMove(this.___dst.toArray(new AllocatableValue[__size]), this.___src.toArray(new AllocatableValue[__size]), this.___reg, this.___slot);
                 // replace first instruction
                 __instructions.set(this.___begin, __multiMove);
                 // and null out others
@@ -129,13 +128,13 @@ public final class StackMoveOptimizationPhase extends PostAllocationOptimization
         }
     }
 
-    private static AMD64StackMove asStackMove(LIRInstruction __inst)
+    private static AMD64Move.AMD64StackMove asStackMove(LIRInstruction __inst)
     {
-        return (AMD64StackMove) __inst;
+        return (AMD64Move.AMD64StackMove) __inst;
     }
 
     private static boolean isStackMove(LIRInstruction __inst)
     {
-        return __inst instanceof AMD64StackMove;
+        return __inst instanceof AMD64Move.AMD64StackMove;
     }
 }

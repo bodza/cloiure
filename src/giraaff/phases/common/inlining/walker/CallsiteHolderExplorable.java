@@ -57,7 +57,7 @@ public final class CallsiteHolderExplorable extends CallsiteHolder
     // @field
     private final ComputeInliningRelevance ___computeInliningRelevance;
 
-    // @cons
+    // @cons CallsiteHolderExplorable
     public CallsiteHolderExplorable(StructuredGraph __graph, double __probability, double __relevance, BitSet __freshlyInstantiatedArguments, LinkedList<Invoke> __invokes)
     {
         super();

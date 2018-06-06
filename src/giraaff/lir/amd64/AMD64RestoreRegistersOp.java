@@ -7,15 +7,15 @@ import jdk.vm.ci.code.ValueUtil;
 import jdk.vm.ci.meta.AllocatableValue;
 
 import giraaff.asm.amd64.AMD64MacroAssembler;
-import giraaff.lir.LIRInstruction.OperandFlag;
+import giraaff.lir.LIRInstruction;
 import giraaff.lir.LIRInstructionClass;
-import giraaff.lir.Opcode;
+import giraaff.lir.LIROpcode;
 import giraaff.lir.asm.CompilationResultBuilder;
 
 ///
 // Restores registers from stack slots.
 ///
-@Opcode
+@LIROpcode
 // @class AMD64RestoreRegistersOp
 public final class AMD64RestoreRegistersOp extends AMD64LIRInstruction
 {
@@ -25,7 +25,7 @@ public final class AMD64RestoreRegistersOp extends AMD64LIRInstruction
     ///
     // The slots from which the registers are restored.
     ///
-    @Use(OperandFlag.STACK)
+    @LIRInstruction.Use(LIRInstruction.OperandFlag.STACK)
     // @field
     protected final AllocatableValue[] ___slots;
 
@@ -35,13 +35,13 @@ public final class AMD64RestoreRegistersOp extends AMD64LIRInstruction
     // @field
     private final AMD64SaveRegistersOp ___save;
 
-    // @cons
+    // @cons AMD64RestoreRegistersOp
     public AMD64RestoreRegistersOp(AllocatableValue[] __values, AMD64SaveRegistersOp __save)
     {
         this(TYPE, __values, __save);
     }
 
-    // @cons
+    // @cons AMD64RestoreRegistersOp
     protected AMD64RestoreRegistersOp(LIRInstructionClass<? extends AMD64RestoreRegistersOp> __c, AllocatableValue[] __values, AMD64SaveRegistersOp __save)
     {
         super(__c);

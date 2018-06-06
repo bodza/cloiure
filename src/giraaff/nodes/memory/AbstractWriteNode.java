@@ -13,20 +13,20 @@ import giraaff.nodes.ValueNodeUtil;
 import giraaff.nodes.extended.GuardingNode;
 import giraaff.nodes.memory.address.AddressNode;
 
-// @NodeInfo.allowedUsageTypes "Memory, Guard"
+// @NodeInfo.allowedUsageTypes "InputType.Memory, InputType.Guard"
 // @class AbstractWriteNode
 public abstract class AbstractWriteNode extends FixedAccessNode implements StateSplit, MemoryCheckpoint.Single, MemoryAccess, GuardingNode
 {
     // @def
     public static final NodeClass<AbstractWriteNode> TYPE = NodeClass.create(AbstractWriteNode.class);
 
-    @Input
+    @Node.Input
     // @field
     ValueNode ___value;
-    @OptionalInput(InputType.State)
+    @Node.OptionalInput(InputType.StateI)
     // @field
     FrameState ___stateAfter;
-    @OptionalInput(InputType.Memory)
+    @Node.OptionalInput(InputType.Memory)
     // @field
     Node ___lastLocationAccess;
 
@@ -54,8 +54,8 @@ public abstract class AbstractWriteNode extends FixedAccessNode implements State
         return this.___value;
     }
 
-    // @cons
-    protected AbstractWriteNode(NodeClass<? extends AbstractWriteNode> __c, AddressNode __address, LocationIdentity __location, ValueNode __value, BarrierType __barrierType)
+    // @cons AbstractWriteNode
+    protected AbstractWriteNode(NodeClass<? extends AbstractWriteNode> __c, AddressNode __address, LocationIdentity __location, ValueNode __value, HeapAccess.BarrierType __barrierType)
     {
         super(__c, __address, __location, StampFactory.forVoid(), __barrierType);
         this.___value = __value;

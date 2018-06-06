@@ -1,5 +1,6 @@
 package giraaff.nodes;
 
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.graph.spi.Canonicalizable;
 import giraaff.graph.spi.CanonicalizerTool;
@@ -14,11 +15,11 @@ public final class LogicNegationNode extends LogicNode implements Canonicalizabl
     // @def
     public static final NodeClass<LogicNegationNode> TYPE = NodeClass.create(LogicNegationNode.class);
 
-    @Input(InputType.Condition)
+    @Node.Input(InputType.ConditionI)
     // @field
     LogicNode ___value;
 
-    // @cons
+    // @cons LogicNegationNode
     public LogicNegationNode(LogicNode __value)
     {
         super(TYPE);

@@ -5,8 +5,9 @@ import jdk.vm.ci.code.ValueUtil;
 import jdk.vm.ci.meta.Value;
 
 import giraaff.asm.amd64.AMD64MacroAssembler;
+import giraaff.lir.LIRInstruction;
 import giraaff.lir.LIRInstructionClass;
-import giraaff.lir.Opcode;
+import giraaff.lir.LIROpcode;
 import giraaff.lir.amd64.AMD64LIRInstruction;
 import giraaff.lir.asm.CompilationResultBuilder;
 
@@ -14,21 +15,21 @@ import giraaff.lir.asm.CompilationResultBuilder;
 // Performs a hard-coded tail call to the specified target, which normally should be an
 // {@link InstalledCode} instance.
 ///
-@Opcode
+@LIROpcode
 // @class AMD64TailcallOp
 public final class AMD64TailcallOp extends AMD64LIRInstruction
 {
     // @def
     public static final LIRInstructionClass<AMD64TailcallOp> TYPE = LIRInstructionClass.create(AMD64TailcallOp.class);
 
-    @Use
+    @LIRInstruction.Use
     // @field
     protected Value ___target;
-    @Alive
+    @LIRInstruction.Alive
     // @field
     protected Value[] ___parameters;
 
-    // @cons
+    // @cons AMD64TailcallOp
     public AMD64TailcallOp(Value[] __parameters, Value __target)
     {
         super(TYPE);

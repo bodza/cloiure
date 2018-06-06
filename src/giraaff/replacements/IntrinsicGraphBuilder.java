@@ -18,7 +18,6 @@ import giraaff.core.common.type.StampFactory;
 import giraaff.core.common.type.StampPair;
 import giraaff.core.common.type.TypeReference;
 import giraaff.nodes.CallTargetNode;
-import giraaff.nodes.CallTargetNode.InvokeKind;
 import giraaff.nodes.FixedNode;
 import giraaff.nodes.FixedWithNextNode;
 import giraaff.nodes.FrameState;
@@ -26,12 +25,10 @@ import giraaff.nodes.ParameterNode;
 import giraaff.nodes.ReturnNode;
 import giraaff.nodes.StateSplit;
 import giraaff.nodes.StructuredGraph;
-import giraaff.nodes.StructuredGraph.AllowAssumptions;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.graphbuilderconf.GraphBuilderContext;
 import giraaff.nodes.graphbuilderconf.IntrinsicContext;
 import giraaff.nodes.graphbuilderconf.InvocationPlugin;
-import giraaff.nodes.graphbuilderconf.InvocationPlugin.Receiver;
 import giraaff.nodes.spi.StampProvider;
 import giraaff.util.GraalError;
 
@@ -40,7 +37,7 @@ import giraaff.util.GraalError;
 // {@link InvocationPlugin} for the method.
 ///
 // @class IntrinsicGraphBuilder
-public final class IntrinsicGraphBuilder implements GraphBuilderContext, Receiver
+public final class IntrinsicGraphBuilder implements GraphBuilderContext, InvocationPlugin.Receiver
 {
     // @field
     protected final MetaAccessProvider ___metaAccess;
@@ -65,14 +62,14 @@ public final class IntrinsicGraphBuilder implements GraphBuilderContext, Receive
     // @field
     protected ValueNode ___returnValue;
 
-    // @cons
+    // @cons IntrinsicGraphBuilder
     public IntrinsicGraphBuilder(MetaAccessProvider __metaAccess, ConstantReflectionProvider __constantReflection, ConstantFieldProvider __constantFieldProvider, StampProvider __stampProvider, Bytecode __code, int __invokeBci)
     {
-        this(__metaAccess, __constantReflection, __constantFieldProvider, __stampProvider, __code, __invokeBci, AllowAssumptions.YES);
+        this(__metaAccess, __constantReflection, __constantFieldProvider, __stampProvider, __code, __invokeBci, StructuredGraph.AllowAssumptions.YES);
     }
 
-    // @cons
-    protected IntrinsicGraphBuilder(MetaAccessProvider __metaAccess, ConstantReflectionProvider __constantReflection, ConstantFieldProvider __constantFieldProvider, StampProvider __stampProvider, Bytecode __code, int __invokeBci, AllowAssumptions __allowAssumptions)
+    // @cons IntrinsicGraphBuilder
+    protected IntrinsicGraphBuilder(MetaAccessProvider __metaAccess, ConstantReflectionProvider __constantReflection, ConstantFieldProvider __constantFieldProvider, StampProvider __stampProvider, Bytecode __code, int __invokeBci, StructuredGraph.AllowAssumptions __allowAssumptions)
     {
         super();
         this.___metaAccess = __metaAccess;
@@ -81,7 +78,7 @@ public final class IntrinsicGraphBuilder implements GraphBuilderContext, Receive
         this.___stampProvider = __stampProvider;
         this.___code = __code;
         this.___method = __code.getMethod();
-        this.___graph = new StructuredGraph.Builder(__allowAssumptions).method(this.___method).build();
+        this.___graph = new StructuredGraph.GraphBuilder(__allowAssumptions).method(this.___method).build();
         this.___invokeBci = __invokeBci;
         this.___lastInstr = this.___graph.start();
 
@@ -161,7 +158,7 @@ public final class IntrinsicGraphBuilder implements GraphBuilderContext, Receive
     }
 
     @Override
-    public void handleReplacedInvoke(InvokeKind __invokeKind, ResolvedJavaMethod __targetMethod, ValueNode[] __args, boolean __forceInlineEverything)
+    public void handleReplacedInvoke(CallTargetNode.InvokeKind __invokeKind, ResolvedJavaMethod __targetMethod, ValueNode[] __args, boolean __forceInlineEverything)
     {
         throw GraalError.shouldNotReachHere();
     }
@@ -234,9 +231,9 @@ public final class IntrinsicGraphBuilder implements GraphBuilderContext, Receive
     }
 
     @Override
-    public InvokeKind getInvokeKind()
+    public CallTargetNode.InvokeKind getInvokeKind()
     {
-        return this.___method.isStatic() ? InvokeKind.Static : InvokeKind.Virtual;
+        return this.___method.isStatic() ? CallTargetNode.InvokeKind.Static : CallTargetNode.InvokeKind.Virtual;
     }
 
     @Override
@@ -277,7 +274,7 @@ public final class IntrinsicGraphBuilder implements GraphBuilderContext, Receive
 
     public StructuredGraph buildGraph(InvocationPlugin __plugin)
     {
-        Receiver __receiver = this.___method.isStatic() ? null : this;
+        InvocationPlugin.Receiver __receiver = this.___method.isStatic() ? null : this;
         if (__plugin.execute(this, this.___method, __receiver, this.___arguments))
         {
             append(new ReturnNode(this.___returnValue));

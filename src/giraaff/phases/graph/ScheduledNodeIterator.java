@@ -5,12 +5,12 @@ import java.util.ListIterator;
 import giraaff.graph.Node;
 import giraaff.nodes.FixedNode;
 import giraaff.nodes.FixedWithNextNode;
-import giraaff.nodes.StructuredGraph.ScheduleResult;
+import giraaff.nodes.StructuredGraph;
 import giraaff.nodes.cfg.Block;
 
 ///
 // Iterates over a list of nodes, which usually comes from
-// {@link ScheduleResult#getBlockToNodesMap()}.
+// {@link StructuredGraph.ScheduleResult#getBlockToNodesMap()}.
 //
 // While iterating, it is possible to {@link #insert(FixedNode, FixedWithNextNode) insert} and
 // {@link #replaceCurrent(FixedWithNextNode) replace} nodes.
@@ -25,7 +25,7 @@ public abstract class ScheduledNodeIterator
     // @field
     private ListIterator<Node> ___iterator;
 
-    public void processNodes(Block __block, ScheduleResult __schedule)
+    public void processNodes(Block __block, StructuredGraph.ScheduleResult __schedule)
     {
         this.___lastFixed = __block.getBeginNode();
         this.___reconnect = null;

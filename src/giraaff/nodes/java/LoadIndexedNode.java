@@ -40,7 +40,7 @@ public class LoadIndexedNode extends AccessIndexedNode implements Virtualizable,
     // @param index the instruction producing the index
     // @param elementKind the element type
     ///
-    // @cons
+    // @cons LoadIndexedNode
     public LoadIndexedNode(Assumptions __assumptions, ValueNode __array, ValueNode __index, JavaKind __elementKind)
     {
         this(TYPE, createStamp(__assumptions, __array, __elementKind), __array, __index, __elementKind);
@@ -56,7 +56,7 @@ public class LoadIndexedNode extends AccessIndexedNode implements Virtualizable,
         return new LoadIndexedNode(__assumptions, __array, __index, __elementKind);
     }
 
-    // @cons
+    // @cons LoadIndexedNode
     protected LoadIndexedNode(NodeClass<? extends LoadIndexedNode> __c, Stamp __stamp, ValueNode __array, ValueNode __index, JavaKind __elementKind)
     {
         super(__c, __stamp, __array, __index, __elementKind);

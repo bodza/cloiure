@@ -26,7 +26,7 @@ public final class IntegerAddExactNode extends AddNode implements IntegerExactAr
     // @def
     public static final NodeClass<IntegerAddExactNode> TYPE = NodeClass.create(IntegerAddExactNode.class);
 
-    // @cons
+    // @cons IntegerAddExactNode
     public IntegerAddExactNode(ValueNode __x, ValueNode __y)
     {
         super(TYPE, __x, __y);

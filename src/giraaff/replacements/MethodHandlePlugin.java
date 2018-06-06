@@ -9,7 +9,6 @@ import giraaff.core.common.GraalOptions;
 import giraaff.core.common.type.StampPair;
 import giraaff.graph.NodeInputList;
 import giraaff.nodes.CallTargetNode;
-import giraaff.nodes.CallTargetNode.InvokeKind;
 import giraaff.nodes.InvokeNode;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.graphbuilderconf.GraphBuilderContext;
@@ -24,7 +23,7 @@ public final class MethodHandlePlugin implements NodePlugin
     // @field
     private final boolean ___safeForDeoptimization;
 
-    // @cons
+    // @cons MethodHandlePlugin
     public MethodHandlePlugin(MethodHandleAccessProvider __methodHandleAccess, boolean __safeForDeoptimization)
     {
         super();
@@ -51,8 +50,8 @@ public final class MethodHandlePlugin implements NodePlugin
         IntrinsicMethod __intrinsicMethod = this.___methodHandleAccess.lookupMethodHandleIntrinsic(__method);
         if (__intrinsicMethod != null)
         {
-            InvokeKind __invokeKind = __b.getInvokeKind();
-            if (__invokeKind != InvokeKind.Static)
+            CallTargetNode.InvokeKind __invokeKind = __b.getInvokeKind();
+            if (__invokeKind != CallTargetNode.InvokeKind.Static)
             {
                 __args[0] = __b.nullCheckedValue(__args[0]);
             }

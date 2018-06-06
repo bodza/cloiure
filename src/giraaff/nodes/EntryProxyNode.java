@@ -1,5 +1,6 @@
 package giraaff.nodes;
 
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.nodeinfo.InputType;
 import giraaff.nodes.calc.FloatingNode;
@@ -16,14 +17,14 @@ public final class EntryProxyNode extends FloatingNode implements ValueProxy
     // @def
     public static final NodeClass<EntryProxyNode> TYPE = NodeClass.create(EntryProxyNode.class);
 
-    @Input(InputType.Association)
+    @Node.Input(InputType.Association)
     // @field
     EntryMarkerNode ___proxyPoint;
-    @Input
+    @Node.Input
     // @field
     ValueNode ___value;
 
-    // @cons
+    // @cons EntryProxyNode
     public EntryProxyNode(ValueNode __value, EntryMarkerNode __proxyPoint)
     {
         super(TYPE, __value.stamp(NodeView.DEFAULT).unrestricted());

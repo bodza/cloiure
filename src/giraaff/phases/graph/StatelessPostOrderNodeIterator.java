@@ -31,7 +31,7 @@ public abstract class StatelessPostOrderNodeIterator
     // @field
     private final FixedNode ___start;
 
-    // @cons
+    // @cons StatelessPostOrderNodeIterator
     public StatelessPostOrderNodeIterator(FixedNode __start)
     {
         super();

@@ -72,7 +72,7 @@ public abstract class SwitchStrategy
     // implementing the {@link #conditionalJump(int, Condition, Label)} method.
     ///
     // @class SwitchStrategy.BaseSwitchClosure
-    public abstract static class BaseSwitchClosure implements SwitchClosure
+    public abstract static class BaseSwitchClosure implements SwitchStrategy.SwitchClosure
     {
         // @field
         private final CompilationResultBuilder ___crb;
@@ -83,7 +83,7 @@ public abstract class SwitchStrategy
         // @field
         private final LabelRef ___defaultTarget;
 
-        // @cons
+        // @cons SwitchStrategy.BaseSwitchClosure
         public BaseSwitchClosure(CompilationResultBuilder __crb, Assembler __masm, LabelRef[] __keyTargets, LabelRef __defaultTarget)
         {
             super();
@@ -158,7 +158,7 @@ public abstract class SwitchStrategy
     ///
     // @class SwitchStrategy.EffortClosure
     // @closure
-    private final class EffortClosure implements SwitchClosure
+    private final class EffortClosure implements SwitchStrategy.SwitchClosure
     {
         // @field
         private int ___defaultEffort;
@@ -171,7 +171,7 @@ public abstract class SwitchStrategy
         // @field
         private final LabelRef[] ___keyTargets;
 
-        // @cons
+        // @cons SwitchStrategy.EffortClosure
         EffortClosure(LabelRef[] __keyTargets)
         {
             super();
@@ -227,9 +227,9 @@ public abstract class SwitchStrategy
     // @field
     private double ___averageEffort = -1;
     // @field
-    private EffortClosure ___effortClosure;
+    private SwitchStrategy.EffortClosure ___effortClosure;
 
-    // @cons
+    // @cons SwitchStrategy
     public SwitchStrategy(double[] __keyProbabilities)
     {
         super();
@@ -284,7 +284,7 @@ public abstract class SwitchStrategy
         // @field
         private final Constant[] ___keyConstants;
 
-        // @cons
+        // @cons SwitchStrategy.SequentialStrategy
         public SequentialStrategy(final double[] __keyProbabilities, Constant[] __keyConstants)
         {
             super(__keyProbabilities);
@@ -314,7 +314,7 @@ public abstract class SwitchStrategy
         }
 
         @Override
-        public void run(SwitchClosure __closure)
+        public void run(SwitchStrategy.SwitchClosure __closure)
         {
             for (int __i = 0; __i < this.___keyConstants.length - 1; __i++)
             {
@@ -336,7 +336,7 @@ public abstract class SwitchStrategy
         // @field
         protected final JavaConstant[] ___keyConstants;
 
-        // @cons
+        // @cons SwitchStrategy.PrimitiveStrategy
         protected PrimitiveStrategy(double[] __keyProbabilities, JavaConstant[] __keyConstants)
         {
             super(__keyProbabilities);
@@ -353,7 +353,7 @@ public abstract class SwitchStrategy
         // Looks for the end of a stretch of key constants that are successive numbers and have the
         // same target.
         ///
-        protected int getSliceEnd(SwitchClosure __closure, int __pos)
+        protected int getSliceEnd(SwitchStrategy.SwitchClosure __closure, int __pos)
         {
             int __slice = __pos;
             while (__slice < (this.___keyConstants.length - 1) && this.___keyConstants[__slice + 1].asLong() == this.___keyConstants[__slice].asLong() + 1 && __closure.isSameTarget(__slice, __slice + 1))
@@ -369,12 +369,12 @@ public abstract class SwitchStrategy
     // creates comparisons for these ranges.
     ///
     // @class SwitchStrategy.RangesStrategy
-    public static final class RangesStrategy extends PrimitiveStrategy
+    public static final class RangesStrategy extends SwitchStrategy.PrimitiveStrategy
     {
         // @field
         private final Integer[] ___indexes;
 
-        // @cons
+        // @cons SwitchStrategy.RangesStrategy
         public RangesStrategy(final double[] __keyProbabilities, JavaConstant[] __keyConstants)
         {
             super(__keyProbabilities, __keyConstants);
@@ -397,7 +397,7 @@ public abstract class SwitchStrategy
         }
 
         @Override
-        public void run(SwitchClosure __closure)
+        public void run(SwitchStrategy.SwitchClosure __closure)
         {
             int __depth = 0;
             __closure.conditionalJump(0, Condition.LT, true);
@@ -448,7 +448,7 @@ public abstract class SwitchStrategy
     // This strategy recursively subdivides the list of keys to create a binary search based on probabilities.
     ///
     // @class SwitchStrategy.BinaryStrategy
-    public static final class BinaryStrategy extends PrimitiveStrategy
+    public static final class BinaryStrategy extends SwitchStrategy.PrimitiveStrategy
     {
         // @def
         private static final double MIN_PROBABILITY = 0.00001;
@@ -456,7 +456,7 @@ public abstract class SwitchStrategy
         // @field
         private final double[] ___probabilitySums;
 
-        // @cons
+        // @cons SwitchStrategy.BinaryStrategy
         public BinaryStrategy(double[] __keyProbabilities, JavaConstant[] __keyConstants)
         {
             super(__keyProbabilities, __keyConstants);
@@ -470,7 +470,7 @@ public abstract class SwitchStrategy
         }
 
         @Override
-        public void run(SwitchClosure __closure)
+        public void run(SwitchStrategy.SwitchClosure __closure)
         {
             recurseBinarySwitch(__closure, 0, this.___keyConstants.length - 1, 0);
         }
@@ -481,7 +481,7 @@ public abstract class SwitchStrategy
         // than zero, then we always know that the value is equal to or bigger than the left key.
         // This does not hold for the right key, as there may be a gap afterwards.
         ///
-        private void recurseBinarySwitch(SwitchClosure __closure, int __left, int __right, int __startDepth)
+        private void recurseBinarySwitch(SwitchStrategy.SwitchClosure __closure, int __left, int __right, int __startDepth)
         {
             int __depth = __startDepth;
             boolean __leftBorder = __left == 0;
@@ -582,14 +582,14 @@ public abstract class SwitchStrategy
         }
     }
 
-    public abstract void run(SwitchClosure __closure);
+    public abstract void run(SwitchStrategy.SwitchClosure __closure);
 
     private static SwitchStrategy[] getStrategies(double[] __keyProbabilities, JavaConstant[] __keyConstants, LabelRef[] __keyTargets)
     {
-        SwitchStrategy[] __strategies = new SwitchStrategy[] { new SequentialStrategy(__keyProbabilities, __keyConstants), new RangesStrategy(__keyProbabilities, __keyConstants), new BinaryStrategy(__keyProbabilities, __keyConstants) };
+        SwitchStrategy[] __strategies = new SwitchStrategy[] { new SwitchStrategy.SequentialStrategy(__keyProbabilities, __keyConstants), new SwitchStrategy.RangesStrategy(__keyProbabilities, __keyConstants), new SwitchStrategy.BinaryStrategy(__keyProbabilities, __keyConstants) };
         for (SwitchStrategy __strategy : __strategies)
         {
-            __strategy.___effortClosure = __strategy.new EffortClosure(__keyTargets);
+            __strategy.___effortClosure = __strategy.new EffortClosure(__keyTargets); // %% ouch!
             __strategy.run(__strategy.___effortClosure);
             __strategy.___averageEffort = __strategy.___effortClosure.getAverageEffort();
             __strategy.___effortClosure = null;

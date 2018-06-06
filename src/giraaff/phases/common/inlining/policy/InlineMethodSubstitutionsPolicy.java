@@ -14,7 +14,7 @@ import giraaff.phases.common.inlining.walker.MethodInvocation;
 public final class InlineMethodSubstitutionsPolicy extends InlineEverythingPolicy
 {
     @Override
-    public Decision isWorthInlining(Replacements __replacements, MethodInvocation __invocation, int __inliningDepth, boolean __fullyProcessed)
+    public InliningPolicy.Decision isWorthInlining(Replacements __replacements, MethodInvocation __invocation, int __inliningDepth, boolean __fullyProcessed)
     {
         CallTargetNode __callTarget = __invocation.callee().invoke().callTarget();
         if (__callTarget instanceof MethodCallTargetNode)
@@ -22,9 +22,9 @@ public final class InlineMethodSubstitutionsPolicy extends InlineEverythingPolic
             ResolvedJavaMethod __calleeMethod = ((MethodCallTargetNode) __callTarget).targetMethod();
             if (__replacements.hasSubstitution(__calleeMethod, __invocation.callee().invoke().bci()))
             {
-                return Decision.YES;
+                return InliningPolicy.Decision.YES;
             }
         }
-        return Decision.NO;
+        return InliningPolicy.Decision.NO;
     }
 }

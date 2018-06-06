@@ -9,6 +9,7 @@ import jdk.vm.ci.code.ValueUtil;
 import jdk.vm.ci.meta.Value;
 
 import giraaff.asm.amd64.AMD64MacroAssembler;
+import giraaff.lir.LIRInstruction;
 import giraaff.lir.LIRInstructionClass;
 import giraaff.lir.asm.CompilationResultBuilder;
 
@@ -18,11 +19,11 @@ public final class AMD64VZeroUpper extends AMD64LIRInstruction
     // @def
     public static final LIRInstructionClass<AMD64VZeroUpper> TYPE = LIRInstructionClass.create(AMD64VZeroUpper.class);
 
-    @Temp
+    @LIRInstruction.Temp
     // @field
     protected final RegisterValue[] ___xmmRegisters;
 
-    // @cons
+    // @cons AMD64VZeroUpper
     public AMD64VZeroUpper(Value[] __exclude)
     {
         super(TYPE);

@@ -12,7 +12,7 @@ public final class FilteredNodeIterable<T extends Node> implements NodeIterable<
     // @field
     protected NodePredicate ___predicate = NodePredicates.alwaysTrue();
 
-    // @cons
+    // @cons FilteredNodeIterable
     public FilteredNodeIterable(NodeIterable<T> __nodeIterable)
     {
         super();

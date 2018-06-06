@@ -9,14 +9,15 @@ import jdk.vm.ci.meta.Constant;
 import jdk.vm.ci.meta.JavaConstant;
 
 import giraaff.core.amd64.AMD64MoveFactory;
+import giraaff.core.amd64.AMD64MoveFactoryBase;
 import giraaff.lir.LIRInstruction;
 import giraaff.lir.amd64.AMD64LIRInstruction;
 
 // @class AMD64HotSpotMoveFactory
 public final class AMD64HotSpotMoveFactory extends AMD64MoveFactory
 {
-    // @cons
-    public AMD64HotSpotMoveFactory(BackupSlotProvider __backupSlotProvider)
+    // @cons AMD64HotSpotMoveFactory
+    public AMD64HotSpotMoveFactory(AMD64MoveFactoryBase.BackupSlotProvider __backupSlotProvider)
     {
         super(__backupSlotProvider);
     }

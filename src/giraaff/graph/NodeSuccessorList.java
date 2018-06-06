@@ -2,30 +2,30 @@ package giraaff.graph;
 
 import java.util.List;
 
-import giraaff.graph.Edges.Type;
+import giraaff.graph.Edges;
 
 // @class NodeSuccessorList
 public final class NodeSuccessorList<T extends Node> extends NodeList<T>
 {
-    // @cons
+    // @cons NodeSuccessorList
     public NodeSuccessorList(Node __self, int __initialSize)
     {
         super(__self, __initialSize);
     }
 
-    // @cons
+    // @cons NodeSuccessorList
     protected NodeSuccessorList(Node __self)
     {
         super(__self);
     }
 
-    // @cons
+    // @cons NodeSuccessorList
     public NodeSuccessorList(Node __self, T[] __elements)
     {
         super(__self, __elements);
     }
 
-    // @cons
+    // @cons NodeSuccessorList
     public NodeSuccessorList(Node __self, List<? extends T> __elements)
     {
         super(__self, __elements);
@@ -38,8 +38,8 @@ public final class NodeSuccessorList<T extends Node> extends NodeList<T>
     }
 
     @Override
-    public Type getEdgesType()
+    public Edges.EdgesType getEdgesType()
     {
-        return Type.Successors;
+        return Edges.EdgesType.Successors;
     }
 }

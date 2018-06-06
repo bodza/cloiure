@@ -24,7 +24,7 @@ public final class DynamicNewArrayNode extends AbstractNewArrayNode implements C
     // @def
     public static final NodeClass<DynamicNewArrayNode> TYPE = NodeClass.create(DynamicNewArrayNode.class);
 
-    @Input
+    @Node.Input
     // @field
     ValueNode ___elementType;
 
@@ -32,7 +32,7 @@ public final class DynamicNewArrayNode extends AbstractNewArrayNode implements C
     // Class pointer to void.class needs to be exposed earlier than this node is lowered so that it
     // can be replaced by the AOT machinery. If it's not needed for lowering this input can be ignored.
     ///
-    @OptionalInput
+    @Node.OptionalInput
     // @field
     ValueNode ___voidClass;
 
@@ -43,14 +43,14 @@ public final class DynamicNewArrayNode extends AbstractNewArrayNode implements C
     // @field
     protected final JavaKind ___knownElementKind;
 
-    // @cons
+    // @cons DynamicNewArrayNode
     public DynamicNewArrayNode(ValueNode __elementType, ValueNode __length, boolean __fillContents)
     {
         this(TYPE, __elementType, __length, __fillContents, null, null, null);
     }
 
-    // @cons
-    public DynamicNewArrayNode(@InjectedNodeParameter MetaAccessProvider __metaAccess, ValueNode __elementType, ValueNode __length, boolean __fillContents, JavaKind __knownElementKind)
+    // @cons DynamicNewArrayNode
+    public DynamicNewArrayNode(@Node.InjectedNodeParameter MetaAccessProvider __metaAccess, ValueNode __elementType, ValueNode __length, boolean __fillContents, JavaKind __knownElementKind)
     {
         this(TYPE, __elementType, __length, __fillContents, __knownElementKind, null, __metaAccess);
     }
@@ -65,7 +65,7 @@ public final class DynamicNewArrayNode extends AbstractNewArrayNode implements C
         return StampFactory.objectNonNull();
     }
 
-    // @cons
+    // @cons DynamicNewArrayNode
     protected DynamicNewArrayNode(NodeClass<? extends DynamicNewArrayNode> __c, ValueNode __elementType, ValueNode __length, boolean __fillContents, JavaKind __knownElementKind, FrameState __stateBefore, MetaAccessProvider __metaAccess)
     {
         super(__c, computeStamp(__knownElementKind, __metaAccess), __length, __fillContents, __stateBefore);
@@ -115,16 +115,16 @@ public final class DynamicNewArrayNode extends AbstractNewArrayNode implements C
         return __elementType.getJavaKind() == JavaKind.Void;
     }
 
-    @NodeIntrinsic
-    private static native Object newArray(Class<?> __componentType, int __length, @ConstantNodeParameter boolean __fillContents);
+    @Node.NodeIntrinsic
+    private static native Object newArray(Class<?> __componentType, int __length, @Node.ConstantNodeParameter boolean __fillContents);
 
     public static Object newArray(Class<?> __componentType, int __length)
     {
         return newArray(__componentType, __length, true);
     }
 
-    @NodeIntrinsic
-    private static native Object newArray(Class<?> __componentType, int __length, @ConstantNodeParameter boolean __fillContents, @ConstantNodeParameter JavaKind __knownElementKind);
+    @Node.NodeIntrinsic
+    private static native Object newArray(Class<?> __componentType, int __length, @Node.ConstantNodeParameter boolean __fillContents, @Node.ConstantNodeParameter JavaKind __knownElementKind);
 
     public static Object newArray(Class<?> __componentType, int __length, JavaKind __knownElementKind)
     {

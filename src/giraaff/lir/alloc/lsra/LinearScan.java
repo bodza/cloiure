@@ -21,21 +21,20 @@ import giraaff.core.common.cfg.AbstractBlockBase;
 import giraaff.core.common.cfg.BlockMap;
 import giraaff.lir.LIR;
 import giraaff.lir.LIRInstruction;
-import giraaff.lir.LIRInstruction.OperandMode;
 import giraaff.lir.LIRValueUtil;
 import giraaff.lir.Variable;
 import giraaff.lir.VirtualStackSlot;
 import giraaff.lir.framemap.FrameMapBuilder;
 import giraaff.lir.gen.LIRGenerationResult;
-import giraaff.lir.gen.LIRGeneratorTool.MoveFactory;
-import giraaff.lir.phases.AllocationPhase.AllocationContext;
+import giraaff.lir.gen.LIRGeneratorTool;
+import giraaff.lir.phases.AllocationPhase;
 import giraaff.lir.phases.LIRPhase;
 import giraaff.util.GraalError;
 
 ///
 // An implementation of the linear scan register allocator algorithm described in
-// <a href="http://doi.acm.org/10.1145/1064979.1064998" > "Optimized Interval Splitting in a Linear
-// Scan Register Allocator"</a> by Christian Wimmer and Hanspeter Moessenboeck.
+// <a href="http://doi.acm.org/10.1145/1064979.1064998">"Optimized Interval Splitting in a Linear Scan Register Allocator"</a>
+// by Christian Wimmer and Hanspeter Moessenboeck.
 ///
 // @class LinearScan
 public class LinearScan
@@ -93,10 +92,10 @@ public class LinearScan
     // @field
     private final RegisterAllocationConfig ___regAllocConfig;
     // @field
-    private final MoveFactory ___moveFactory;
+    private final LIRGeneratorTool.MoveFactory ___moveFactory;
 
     // @field
-    private final BlockMap<BlockData> ___blockData;
+    private final BlockMap<LinearScan.BlockData> ___blockData;
 
     ///
     // List of blocks in linear-scan order. This is only correct as long as the CFG does not change.
@@ -167,8 +166,8 @@ public class LinearScan
     // @field
     private final LIRGenerationResult ___res;
 
-    // @cons
-    protected LinearScan(TargetDescription __target, LIRGenerationResult __res, MoveFactory __spillMoveFactory, RegisterAllocationConfig __regAllocConfig, AbstractBlockBase<?>[] __sortedBlocks, boolean __neverSpillConstants)
+    // @cons LinearScan
+    protected LinearScan(TargetDescription __target, LIRGenerationResult __res, LIRGeneratorTool.MoveFactory __spillMoveFactory, RegisterAllocationConfig __regAllocConfig, AbstractBlockBase<?>[] __sortedBlocks, boolean __neverSpillConstants)
     {
         super();
         this.___ir = __res.getLIR();
@@ -210,7 +209,7 @@ public class LinearScan
         return __instructions.get(__instructions.size() - 1).id();
     }
 
-    public MoveFactory getSpillMoveFactory()
+    public LIRGeneratorTool.MoveFactory getSpillMoveFactory()
     {
         return this.___moveFactory;
     }
@@ -255,18 +254,18 @@ public class LinearScan
         return this.___firstVariableNumber - 1;
     }
 
-    public BlockData getBlockData(AbstractBlockBase<?> __block)
+    public LinearScan.BlockData getBlockData(AbstractBlockBase<?> __block)
     {
         return this.___blockData.get(__block);
     }
 
     void initBlockData(AbstractBlockBase<?> __block)
     {
-        this.___blockData.put(__block, new BlockData());
+        this.___blockData.put(__block, new LinearScan.BlockData());
     }
 
     // @closure
-    static final IntervalPredicate IS_PRECOLORED_INTERVAL = new IntervalPredicate()
+    static final LinearScan.IntervalPredicate IS_PRECOLORED_INTERVAL = new LinearScan.IntervalPredicate()
     {
         @Override
         public boolean apply(Interval __i)
@@ -276,7 +275,7 @@ public class LinearScan
     };
 
     // @closure
-    static final IntervalPredicate IS_VARIABLE_INTERVAL = new IntervalPredicate()
+    static final LinearScan.IntervalPredicate IS_VARIABLE_INTERVAL = new LinearScan.IntervalPredicate()
     {
         @Override
         public boolean apply(Interval __i)
@@ -286,7 +285,7 @@ public class LinearScan
     };
 
     // @closure
-    static final IntervalPredicate IS_STACK_INTERVAL = new IntervalPredicate()
+    static final LinearScan.IntervalPredicate IS_STACK_INTERVAL = new LinearScan.IntervalPredicate()
     {
         @Override
         public boolean apply(Interval __i)
@@ -386,8 +385,8 @@ public class LinearScan
     }
 
     ///
-    // Gets the size of the {@link BlockData#liveIn} and {@link BlockData#liveOut} sets for a basic
-    // block. These sets do not include any operands allocated as a result of creating
+    // Gets the size of the {@link LinearScan.BlockData#liveIn} and {@link LinearScan.BlockData#liveOut} sets
+    // for a basic block. These sets do not include any operands allocated as a result of creating
     // {@linkplain #createDerivedInterval(Interval) derived intervals}.
     ///
     public int liveSetSize()
@@ -534,7 +533,7 @@ public class LinearScan
         return __newFirst;
     }
 
-    Pair<Interval, Interval> createUnhandledLists(IntervalPredicate __isList1, IntervalPredicate __isList2)
+    Pair<Interval, Interval> createUnhandledLists(LinearScan.IntervalPredicate __isList1, LinearScan.IntervalPredicate __isList2)
     {
         Interval __list1 = this.___intervalEndMarker;
         Interval __list2 = this.___intervalEndMarker;
@@ -677,7 +676,7 @@ public class LinearScan
         return __interval.spillSlot();
     }
 
-    boolean isMaterialized(AllocatableValue __operand, int __opId, OperandMode __mode)
+    boolean isMaterialized(AllocatableValue __operand, int __opId, LIRInstruction.OperandMode __mode)
     {
         Interval __interval = intervalFor(__operand);
 
@@ -695,7 +694,7 @@ public class LinearScan
         return attributes(ValueUtil.asRegister(__operand)).isCallerSave();
     }
 
-    protected void allocate(TargetDescription __target, LIRGenerationResult __lirGenRes, AllocationContext __context)
+    protected void allocate(TargetDescription __target, LIRGenerationResult __lirGenRes, AllocationPhase.AllocationContext __context)
     {
         createLifetimeAnalysisPhase().apply(__target, __lirGenRes, __context);
 

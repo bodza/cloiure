@@ -25,7 +25,7 @@ public class PhaseContext
     // @field
     private final StampProvider ___stampProvider;
 
-    // @cons
+    // @cons PhaseContext
     public PhaseContext(MetaAccessProvider __metaAccess, ConstantReflectionProvider __constantReflection, ConstantFieldProvider __constantFieldProvider, LoweringProvider __lowerer, Replacements __replacements, StampProvider __stampProvider)
     {
         super();
@@ -37,7 +37,7 @@ public class PhaseContext
         this.___stampProvider = __stampProvider;
     }
 
-    // @cons
+    // @cons PhaseContext
     public PhaseContext(Providers __providers)
     {
         this(__providers.getMetaAccess(), __providers.getConstantReflection(), __providers.getConstantFieldProvider(), __providers.getLowerer(), __providers.getReplacements(), __providers.getStampProvider());

@@ -11,26 +11,26 @@ import giraaff.nodes.extended.ValueAnchorNode;
 import giraaff.nodes.spi.Lowerable;
 import giraaff.nodes.spi.LoweringTool;
 
-// @NodeInfo.allowedUsageTypes "Guard"
+// @NodeInfo.allowedUsageTypes "InputType.Guard"
 // @class ConditionAnchorNode
 public final class ConditionAnchorNode extends FixedWithNextNode implements Canonicalizable.Unary<Node>, Lowerable, GuardingNode
 {
     // @def
     public static final NodeClass<ConditionAnchorNode> TYPE = NodeClass.create(ConditionAnchorNode.class);
 
-    @Input(InputType.Condition)
+    @Node.Input(InputType.ConditionI)
     // @field
     LogicNode ___condition;
     // @field
     protected boolean ___negated;
 
-    // @cons
+    // @cons ConditionAnchorNode
     public ConditionAnchorNode(LogicNode __condition)
     {
         this(__condition, false);
     }
 
-    // @cons
+    // @cons ConditionAnchorNode
     public ConditionAnchorNode(LogicNode __condition, boolean __negated)
     {
         super(TYPE, StampFactory.forVoid());

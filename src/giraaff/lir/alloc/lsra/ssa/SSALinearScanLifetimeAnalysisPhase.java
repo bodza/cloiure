@@ -6,12 +6,9 @@ import jdk.vm.ci.meta.AllocatableValue;
 import jdk.vm.ci.meta.Value;
 
 import giraaff.lir.LIRInstruction;
-import giraaff.lir.LIRInstruction.OperandFlag;
-import giraaff.lir.LIRInstruction.OperandMode;
-import giraaff.lir.StandardOp.LabelOp;
+import giraaff.lir.StandardOp;
 import giraaff.lir.ValueConsumer;
 import giraaff.lir.alloc.lsra.Interval;
-import giraaff.lir.alloc.lsra.Interval.RegisterPriority;
 import giraaff.lir.alloc.lsra.LinearScan;
 import giraaff.lir.alloc.lsra.LinearScanLifetimeAnalysisPhase;
 import giraaff.lir.ssa.SSAUtil;
@@ -19,20 +16,20 @@ import giraaff.lir.ssa.SSAUtil;
 // @class SSALinearScanLifetimeAnalysisPhase
 public final class SSALinearScanLifetimeAnalysisPhase extends LinearScanLifetimeAnalysisPhase
 {
-    // @cons
+    // @cons SSALinearScanLifetimeAnalysisPhase
     SSALinearScanLifetimeAnalysisPhase(LinearScan __linearScan)
     {
         super(__linearScan);
     }
 
     @Override
-    protected void addRegisterHint(final LIRInstruction __op, final Value __targetValue, OperandMode __mode, EnumSet<OperandFlag> __flags, final boolean __hintAtDef)
+    protected void addRegisterHint(final LIRInstruction __op, final Value __targetValue, LIRInstruction.OperandMode __mode, EnumSet<LIRInstruction.OperandFlag> __flags, final boolean __hintAtDef)
     {
         super.addRegisterHint(__op, __targetValue, __mode, __flags, __hintAtDef);
 
-        if (__hintAtDef && __op instanceof LabelOp)
+        if (__hintAtDef && __op instanceof StandardOp.LabelOp)
         {
-            LabelOp __label = (LabelOp) __op;
+            StandardOp.LabelOp __label = (StandardOp.LabelOp) __op;
 
             Interval __to = this.___allocator.getOrCreateInterval((AllocatableValue) __targetValue);
 
@@ -60,14 +57,14 @@ public final class SSALinearScanLifetimeAnalysisPhase extends LinearScanLifetime
     }
 
     @Override
-    protected RegisterPriority registerPriorityOfOutputOperand(LIRInstruction __op)
+    protected Interval.RegisterPriority registerPriorityOfOutputOperand(LIRInstruction __op)
     {
-        if (__op instanceof LabelOp)
+        if (__op instanceof StandardOp.LabelOp)
         {
-            LabelOp __label = (LabelOp) __op;
+            StandardOp.LabelOp __label = (StandardOp.LabelOp) __op;
             if (__label.isPhiIn())
             {
-                return RegisterPriority.None;
+                return Interval.RegisterPriority.None;
             }
         }
         return super.registerPriorityOfOutputOperand(__op);

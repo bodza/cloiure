@@ -14,7 +14,7 @@ public final class IterativeNodeWorkList extends NodeWorkList
     // @field
     private NodeBitMap ___inQueue;
 
-    // @cons
+    // @cons IterativeNodeWorkList
     public IterativeNodeWorkList(Graph __graph, boolean __fill, int __iterationLimitPerNode)
     {
         super(__graph, __fill);

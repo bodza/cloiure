@@ -19,16 +19,16 @@ public final class SignedDivNode extends IntegerDivRemNode implements LIRLowerab
     // @def
     public static final NodeClass<SignedDivNode> TYPE = NodeClass.create(SignedDivNode.class);
 
-    // @cons
+    // @cons SignedDivNode
     protected SignedDivNode(ValueNode __x, ValueNode __y)
     {
         this(TYPE, __x, __y);
     }
 
-    // @cons
+    // @cons SignedDivNode
     protected SignedDivNode(NodeClass<? extends SignedDivNode> __c, ValueNode __x, ValueNode __y)
     {
-        super(__c, IntegerStamp.OPS.getDiv().foldStamp(__x.stamp(NodeView.DEFAULT), __y.stamp(NodeView.DEFAULT)), Op.DIV, Type.SIGNED, __x, __y);
+        super(__c, IntegerStamp.OPS.getDiv().foldStamp(__x.stamp(NodeView.DEFAULT), __y.stamp(NodeView.DEFAULT)), IntegerDivRemNode.DivRemOp.DIV, IntegerDivRemNode.Signedness.SIGNED, __x, __y);
     }
 
     public static ValueNode create(ValueNode __x, ValueNode __y, NodeView __view)

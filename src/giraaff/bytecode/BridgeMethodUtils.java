@@ -9,13 +9,13 @@ import giraaff.bytecode.Bytecodes;
 
 ///
 // Utilities for working around the absence of method annotations and parameter annotations on
-// bridge methods where the bridged methods have method annotations or parameter annotations. Not
-// all Java compilers copy method annotations and parameter annotations to bridge methods.
+// bridge methods where the bridged methods have method annotations or parameter annotations.
+// Not all Java compilers copy method annotations and parameter annotations to bridge methods.
 ///
 // @class BridgeMethodUtils
 public final class BridgeMethodUtils
 {
-    // @cons
+    // @cons BridgeMethodUtils
     private BridgeMethodUtils()
     {
         super();

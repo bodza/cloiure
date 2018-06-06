@@ -8,7 +8,7 @@ public final class SingletonNodeWorkList extends NodeWorkList
     // @field
     private final NodeBitMap ___visited;
 
-    // @cons
+    // @cons SingletonNodeWorkList
     public SingletonNodeWorkList(Graph __graph)
     {
         super(__graph, false);

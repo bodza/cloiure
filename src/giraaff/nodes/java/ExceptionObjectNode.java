@@ -23,14 +23,14 @@ import giraaff.nodeinfo.InputType;
 // The entry to an exception handler with the exception coming from a call (as opposed to a local
 // throw instruction or implicit exception).
 ///
-// @NodeInfo.allowedUsageTypes "Memory"
+// @NodeInfo.allowedUsageTypes "InputType.Memory"
 // @class ExceptionObjectNode
 public final class ExceptionObjectNode extends BeginStateSplitNode implements Lowerable, MemoryCheckpoint.Single
 {
     // @def
     public static final NodeClass<ExceptionObjectNode> TYPE = NodeClass.create(ExceptionObjectNode.class);
 
-    // @cons
+    // @cons ExceptionObjectNode
     public ExceptionObjectNode(MetaAccessProvider __metaAccess)
     {
         super(TYPE, StampFactory.objectNonNull(TypeReference.createTrustedWithoutAssumptions(__metaAccess.lookupJavaType(Throwable.class))));

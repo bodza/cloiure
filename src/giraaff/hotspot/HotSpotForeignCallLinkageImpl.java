@@ -1,7 +1,6 @@
 package giraaff.hotspot;
 
 import jdk.vm.ci.code.CallingConvention;
-import jdk.vm.ci.code.CallingConvention.Type;
 import jdk.vm.ci.code.CodeCacheProvider;
 import jdk.vm.ci.code.InstalledCode;
 import jdk.vm.ci.code.Register;
@@ -20,7 +19,7 @@ import org.graalvm.word.LocationIdentity;
 
 import giraaff.core.common.spi.ForeignCallDescriptor;
 import giraaff.core.target.Backend;
-import giraaff.hotspot.HotSpotForeignCallLinkage.RegisterEffect;
+import giraaff.hotspot.HotSpotForeignCallLinkage;
 import giraaff.hotspot.HotSpotRuntime;
 import giraaff.hotspot.meta.HotSpotForeignCallsProvider;
 import giraaff.hotspot.stubs.Stub;
@@ -58,10 +57,10 @@ public final class HotSpotForeignCallLinkageImpl extends HotSpotForeignCallTarge
     private final CallingConvention ___incomingCallingConvention;
 
     // @field
-    private final RegisterEffect ___effect;
+    private final HotSpotForeignCallLinkage.RegisterEffect ___effect;
 
     // @field
-    private final Transition ___transition;
+    private final HotSpotForeignCallLinkage.Transition ___transition;
 
     ///
     // The registers and stack slots defined/killed by the call.
@@ -92,7 +91,7 @@ public final class HotSpotForeignCallLinkageImpl extends HotSpotForeignCallTarge
     //            Deoptimization will not return to a point before a call that cannot be re-executed.
     // @param killedLocations the memory locations killed by the call
     ///
-    public static HotSpotForeignCallLinkage create(MetaAccessProvider __metaAccess, CodeCacheProvider __codeCache, WordTypes __wordTypes, HotSpotForeignCallsProvider __foreignCalls, ForeignCallDescriptor __descriptor, long __address, RegisterEffect __effect, Type __outgoingCcType, Type __incomingCcType, Transition __transition, boolean __reexecutable, LocationIdentity... __killedLocations)
+    public static HotSpotForeignCallLinkage create(MetaAccessProvider __metaAccess, CodeCacheProvider __codeCache, WordTypes __wordTypes, HotSpotForeignCallsProvider __foreignCalls, ForeignCallDescriptor __descriptor, long __address, HotSpotForeignCallLinkage.RegisterEffect __effect, CallingConvention.Type __outgoingCcType, CallingConvention.Type __incomingCcType, HotSpotForeignCallLinkage.Transition __transition, boolean __reexecutable, LocationIdentity... __killedLocations)
     {
         CallingConvention __outgoingCc = createCallingConvention(__metaAccess, __codeCache, __wordTypes, __foreignCalls, __descriptor, __outgoingCcType);
         CallingConvention __incomingCc = __incomingCcType == null ? null : createCallingConvention(__metaAccess, __codeCache, __wordTypes, __foreignCalls, __descriptor, __incomingCcType);
@@ -107,7 +106,7 @@ public final class HotSpotForeignCallLinkageImpl extends HotSpotForeignCallTarge
     ///
     // Gets a calling convention for a given descriptor and call type.
     ///
-    public static CallingConvention createCallingConvention(MetaAccessProvider __metaAccess, CodeCacheProvider __codeCache, WordTypes __wordTypes, ValueKindFactory<?> __valueKindFactory, ForeignCallDescriptor __descriptor, Type __ccType)
+    public static CallingConvention createCallingConvention(MetaAccessProvider __metaAccess, CodeCacheProvider __codeCache, WordTypes __wordTypes, ValueKindFactory<?> __valueKindFactory, ForeignCallDescriptor __descriptor, CallingConvention.Type __ccType)
     {
         Class<?>[] __argumentTypes = __descriptor.getArgumentTypes();
         JavaType[] __parameterTypes = new JavaType[__argumentTypes.length];
@@ -130,8 +129,8 @@ public final class HotSpotForeignCallLinkageImpl extends HotSpotForeignCallTarge
         return __javaType;
     }
 
-    // @cons
-    public HotSpotForeignCallLinkageImpl(ForeignCallDescriptor __descriptor, long __address, RegisterEffect __effect, Transition __transition, CallingConvention __outgoingCallingConvention, CallingConvention __incomingCallingConvention, boolean __reexecutable, LocationIdentity... __killedLocations)
+    // @cons HotSpotForeignCallLinkageImpl
+    public HotSpotForeignCallLinkageImpl(ForeignCallDescriptor __descriptor, long __address, HotSpotForeignCallLinkage.RegisterEffect __effect, HotSpotForeignCallLinkage.Transition __transition, CallingConvention __outgoingCallingConvention, CallingConvention __incomingCallingConvention, boolean __reexecutable, LocationIdentity... __killedLocations)
     {
         super(__address);
         this.___descriptor = __descriptor;
@@ -153,7 +152,7 @@ public final class HotSpotForeignCallLinkageImpl extends HotSpotForeignCallTarge
     @Override
     public boolean isGuaranteedSafepoint()
     {
-        return this.___transition == Transition.SAFEPOINT;
+        return this.___transition == HotSpotForeignCallLinkage.Transition.SAFEPOINT;
     }
 
     @Override
@@ -253,25 +252,25 @@ public final class HotSpotForeignCallLinkageImpl extends HotSpotForeignCallTarge
     @Override
     public boolean destroysRegisters()
     {
-        return this.___effect == RegisterEffect.DESTROYS_REGISTERS;
+        return this.___effect == HotSpotForeignCallLinkage.RegisterEffect.DESTROYS_REGISTERS;
     }
 
     @Override
     public boolean needsDebugInfo()
     {
-        return this.___transition == Transition.SAFEPOINT;
+        return this.___transition == HotSpotForeignCallLinkage.Transition.SAFEPOINT;
     }
 
     @Override
     public boolean mayContainFP()
     {
-        return this.___transition != Transition.LEAF_NOFP;
+        return this.___transition != HotSpotForeignCallLinkage.Transition.LEAF_NOFP;
     }
 
     @Override
     public boolean needsJavaFrameAnchor()
     {
-        if (this.___transition == Transition.SAFEPOINT || this.___transition == Transition.STACK_INSPECTABLE_LEAF)
+        if (this.___transition == HotSpotForeignCallLinkage.Transition.SAFEPOINT || this.___transition == HotSpotForeignCallLinkage.Transition.STACK_INSPECTABLE_LEAF)
         {
             if (this.___stub != null)
             {

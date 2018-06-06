@@ -38,12 +38,10 @@ import giraaff.nodes.NodeView;
 import giraaff.nodes.PhiNode;
 import giraaff.nodes.ProxyNode;
 import giraaff.nodes.StructuredGraph;
-import giraaff.nodes.StructuredGraph.ScheduleResult;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.ValuePhiNode;
 import giraaff.nodes.ValueProxyNode;
 import giraaff.nodes.VirtualState;
-import giraaff.nodes.VirtualState.NodeClosure;
 import giraaff.nodes.cfg.Block;
 import giraaff.nodes.spi.LoweringProvider;
 import giraaff.nodes.spi.NodeWithState;
@@ -107,7 +105,7 @@ public abstract class PartialEscapeClosure<BlockT extends PartialEscapeBlockStat
 
     // @class PartialEscapeClosure.CollectVirtualObjectsClosure
     // @closure
-    private final class CollectVirtualObjectsClosure extends NodeClosure<ValueNode>
+    private final class CollectVirtualObjectsClosure extends VirtualState.NodeClosure<ValueNode>
     {
         // @field
         private final EconomicSet<VirtualObjectNode> ___virtual;
@@ -116,7 +114,7 @@ public abstract class PartialEscapeClosure<BlockT extends PartialEscapeBlockStat
         // @field
         private final BlockT ___state;
 
-        // @cons
+        // @cons PartialEscapeClosure.CollectVirtualObjectsClosure
         private CollectVirtualObjectsClosure(EconomicSet<VirtualObjectNode> __virtual, GraphEffectList __effects, BlockT __state)
         {
             super();
@@ -150,39 +148,39 @@ public abstract class PartialEscapeClosure<BlockT extends PartialEscapeBlockStat
     }
 
     ///
-    // Final subclass of PartialEscapeClosure, for performance and to make everything behave nicely
-    // with generics.
+    // Final subclass of PartialEscapeClosure, for performance and to make everything
+    // behave nicely with generics.
     ///
-    // @class PartialEscapeClosure.Final
-    public static final class Final extends PartialEscapeClosure<PartialEscapeBlockState.Final>
+    // @class PartialEscapeClosure.FinalClosure
+    public static final class FinalClosure extends PartialEscapeClosure<PartialEscapeBlockState.FinalState>
     {
-        // @cons
-        public Final(ScheduleResult __schedule, MetaAccessProvider __metaAccess, ConstantReflectionProvider __constantReflection, ConstantFieldProvider __constantFieldProvider, LoweringProvider __loweringProvider)
+        // @cons PartialEscapeClosure.FinalClosure
+        public FinalClosure(StructuredGraph.ScheduleResult __schedule, MetaAccessProvider __metaAccess, ConstantReflectionProvider __constantReflection, ConstantFieldProvider __constantFieldProvider, LoweringProvider __loweringProvider)
         {
             super(__schedule, __metaAccess, __constantReflection, __constantFieldProvider, __loweringProvider);
         }
 
         @Override
-        protected PartialEscapeBlockState.Final getInitialState()
+        protected PartialEscapeBlockState.FinalState getInitialState()
         {
-            return new PartialEscapeBlockState.Final();
+            return new PartialEscapeBlockState.FinalState();
         }
 
         @Override
-        protected PartialEscapeBlockState.Final cloneState(PartialEscapeBlockState.Final __oldState)
+        protected PartialEscapeBlockState.FinalState cloneState(PartialEscapeBlockState.FinalState __oldState)
         {
-            return new PartialEscapeBlockState.Final(__oldState);
+            return new PartialEscapeBlockState.FinalState(__oldState);
         }
     }
 
-    // @cons
-    public PartialEscapeClosure(ScheduleResult __schedule, MetaAccessProvider __metaAccess, ConstantReflectionProvider __constantReflection, ConstantFieldProvider __constantFieldProvider)
+    // @cons PartialEscapeClosure
+    public PartialEscapeClosure(StructuredGraph.ScheduleResult __schedule, MetaAccessProvider __metaAccess, ConstantReflectionProvider __constantReflection, ConstantFieldProvider __constantFieldProvider)
     {
         this(__schedule, __metaAccess, __constantReflection, __constantFieldProvider, null);
     }
 
-    // @cons
-    public PartialEscapeClosure(ScheduleResult __schedule, MetaAccessProvider __metaAccess, ConstantReflectionProvider __constantReflection, ConstantFieldProvider __constantFieldProvider, LoweringProvider __loweringProvider)
+    // @cons PartialEscapeClosure
+    public PartialEscapeClosure(StructuredGraph.ScheduleResult __schedule, MetaAccessProvider __metaAccess, ConstantReflectionProvider __constantReflection, ConstantFieldProvider __constantFieldProvider, LoweringProvider __loweringProvider)
     {
         super(__schedule, __schedule.getCFG());
         StructuredGraph __graph = __schedule.getCFG().___graph;
@@ -415,7 +413,7 @@ public abstract class PartialEscapeClosure<BlockT extends PartialEscapeBlockStat
         {
             FrameState __frameState = getUniqueFramestate(__nodeWithState, __fs);
             EconomicSet<VirtualObjectNode> __virtual = EconomicSet.create(Equivalence.IDENTITY_WITH_SYSTEM_HASHCODE);
-            __frameState.applyToNonVirtual(new CollectVirtualObjectsClosure(__virtual, __effects, __state));
+            __frameState.applyToNonVirtual(new PartialEscapeClosure.CollectVirtualObjectsClosure(__virtual, __effects, __state));
             collectLockedVirtualObjects(__state, __virtual);
             collectReferencedVirtualObjects(__state, __virtual);
             addVirtualMappings(__frameState, __virtual, __state, __effects);
@@ -679,14 +677,14 @@ public abstract class PartialEscapeClosure<BlockT extends PartialEscapeBlockStat
     }
 
     @Override
-    protected MergeProcessor createMergeProcessor(Block __merge)
+    protected PartialEscapeClosure<BlockT>.PEMergeProcessor createMergeProcessor(Block __merge)
     {
-        return new MergeProcessor(__merge);
+        return new PartialEscapeClosure<BlockT>.PEMergeProcessor(__merge);
     }
 
-    // @class PartialEscapeClosure.MergeProcessor
+    // @class PartialEscapeClosure<BlockT>.PEMergeProcessor
     // @closure
-    protected class MergeProcessor extends EffectsClosure<BlockT>.MergeProcessor
+    protected class PEMergeProcessor extends EffectsClosure<BlockT>.MergeProcessor
     {
         // @field
         private EconomicMap<Object, ValuePhiNode> ___materializedPhis;
@@ -697,8 +695,8 @@ public abstract class PartialEscapeClosure<BlockT extends PartialEscapeBlockStat
         // @field
         private final boolean ___needsCaching;
 
-        // @cons
-        public MergeProcessor(Block __mergeBlock)
+        // @cons PartialEscapeClosure<BlockT>.PEMergeProcessor
+        public PEMergeProcessor(Block __mergeBlock)
         {
             super(__mergeBlock);
             // merge will only be called multiple times for loop headers

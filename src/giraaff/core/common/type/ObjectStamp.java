@@ -11,7 +11,7 @@ import giraaff.core.common.spi.LIRKindTool;
 // @class ObjectStamp
 public class ObjectStamp extends AbstractObjectStamp
 {
-    // @cons
+    // @cons ObjectStamp
     public ObjectStamp(ResolvedJavaType __type, boolean __exactType, boolean __nonNull, boolean __alwaysNull)
     {
         super(__type, __exactType, __nonNull, __alwaysNull);

@@ -9,7 +9,7 @@ import giraaff.nodes.spi.StampProvider;
 // @class HotSpotStampProvider
 public final class HotSpotStampProvider implements StampProvider
 {
-    // @cons
+    // @cons HotSpotStampProvider
     public HotSpotStampProvider()
     {
         super();

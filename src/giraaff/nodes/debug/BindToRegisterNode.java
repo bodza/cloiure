@@ -1,6 +1,7 @@
 package giraaff.nodes.debug;
 
 import giraaff.core.common.type.StampFactory;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.lir.StandardOp;
 import giraaff.nodes.FixedWithNextNode;
@@ -14,11 +15,11 @@ public final class BindToRegisterNode extends FixedWithNextNode implements LIRLo
     // @def
     public static final NodeClass<BindToRegisterNode> TYPE = NodeClass.create(BindToRegisterNode.class);
 
-    @Input
+    @Node.Input
     // @field
     ValueNode ___value;
 
-    // @cons
+    // @cons BindToRegisterNode
     public BindToRegisterNode(ValueNode __value)
     {
         super(TYPE, StampFactory.forVoid());

@@ -4,8 +4,7 @@ import java.util.EnumSet;
 
 import jdk.vm.ci.meta.Value;
 
-import giraaff.lir.LIRInstruction.OperandFlag;
-import giraaff.lir.LIRInstruction.OperandMode;
+import giraaff.lir.LIRInstruction;
 
 ///
 // Functional interface for iterating over a list of values, possibly returning a value to replace
@@ -24,5 +23,5 @@ public interface InstructionValueProcedure
     // @param flags A set of flags for the value.
     // @return The new value to replace the value that was passed in.
     ///
-    Value doValue(LIRInstruction __instruction, Value __value, OperandMode __mode, EnumSet<OperandFlag> __flags);
+    Value doValue(LIRInstruction __instruction, Value __value, LIRInstruction.OperandMode __mode, EnumSet<LIRInstruction.OperandFlag> __flags);
 }

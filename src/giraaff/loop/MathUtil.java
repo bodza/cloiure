@@ -18,7 +18,7 @@ import giraaff.nodes.calc.UnsignedDivNode;
 // @class MathUtil
 public final class MathUtil
 {
-    // @cons
+    // @cons MathUtil
     private MathUtil()
     {
         super();

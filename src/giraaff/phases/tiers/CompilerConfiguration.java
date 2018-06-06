@@ -1,9 +1,9 @@
 package giraaff.phases.tiers;
 
-import giraaff.lir.phases.AllocationPhase.AllocationContext;
+import giraaff.lir.phases.AllocationPhase;
 import giraaff.lir.phases.LIRPhaseSuite;
-import giraaff.lir.phases.PostAllocationOptimizationPhase.PostAllocationOptimizationContext;
-import giraaff.lir.phases.PreAllocationOptimizationPhase.PreAllocationOptimizationContext;
+import giraaff.lir.phases.PostAllocationOptimizationPhase;
+import giraaff.lir.phases.PreAllocationOptimizationPhase;
 import giraaff.phases.PhaseSuite;
 
 // @iface CompilerConfiguration
@@ -15,9 +15,9 @@ public interface CompilerConfiguration
 
     PhaseSuite<LowTierContext> createLowTier();
 
-    LIRPhaseSuite<PreAllocationOptimizationContext> createPreAllocationOptimizationStage();
+    LIRPhaseSuite<PreAllocationOptimizationPhase.PreAllocationOptimizationContext> createPreAllocationOptimizationStage();
 
-    LIRPhaseSuite<AllocationContext> createAllocationStage();
+    LIRPhaseSuite<AllocationPhase.AllocationContext> createAllocationStage();
 
-    LIRPhaseSuite<PostAllocationOptimizationContext> createPostAllocationOptimizationStage();
+    LIRPhaseSuite<PostAllocationOptimizationPhase.PostAllocationOptimizationContext> createPostAllocationOptimizationStage();
 }

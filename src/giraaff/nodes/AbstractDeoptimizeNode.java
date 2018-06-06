@@ -4,6 +4,7 @@ import jdk.vm.ci.meta.MetaAccessProvider;
 
 import giraaff.core.common.type.StampFactory;
 import giraaff.graph.IterableNodeType;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.nodeinfo.InputType;
 
@@ -19,11 +20,11 @@ public abstract class AbstractDeoptimizeNode extends ControlSinkNode implements 
     // @def
     public static final NodeClass<AbstractDeoptimizeNode> TYPE = NodeClass.create(AbstractDeoptimizeNode.class);
 
-    @OptionalInput(InputType.State)
+    @Node.OptionalInput(InputType.StateI)
     // @field
     FrameState ___stateBefore;
 
-    // @cons
+    // @cons AbstractDeoptimizeNode
     protected AbstractDeoptimizeNode(NodeClass<? extends AbstractDeoptimizeNode> __c, FrameState __stateBefore)
     {
         super(__c, StampFactory.forVoid());

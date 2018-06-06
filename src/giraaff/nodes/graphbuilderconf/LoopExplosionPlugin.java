@@ -40,5 +40,5 @@ public interface LoopExplosionPlugin extends GraphBuilderPlugin
         MERGE_EXPLODE
     }
 
-    LoopExplosionKind loopExplosionKind(ResolvedJavaMethod __method);
+    LoopExplosionPlugin.LoopExplosionKind loopExplosionKind(ResolvedJavaMethod __method);
 }

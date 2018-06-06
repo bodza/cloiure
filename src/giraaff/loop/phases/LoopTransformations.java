@@ -8,12 +8,11 @@ import jdk.vm.ci.code.BailoutException;
 
 import giraaff.core.common.GraalOptions;
 import giraaff.core.common.calc.CanonicalCondition;
-import giraaff.graph.Graph.Mark;
+import giraaff.graph.Graph;
 import giraaff.graph.Node;
 import giraaff.graph.Position;
 import giraaff.loop.CountedLoopInfo;
 import giraaff.loop.InductionVariable;
-import giraaff.loop.InductionVariable.Direction;
 import giraaff.loop.LoopEx;
 import giraaff.loop.LoopFragmentInside;
 import giraaff.loop.LoopFragmentWhole;
@@ -47,7 +46,7 @@ import giraaff.util.GraalError;
 // @class LoopTransformations
 public abstract class LoopTransformations
 {
-    // @cons
+    // @cons LoopTransformations
     private LoopTransformations()
     {
         super();
@@ -66,7 +65,7 @@ public abstract class LoopTransformations
         int __initialNodeCount = __graph.getNodeCount();
         while (!__loopBegin.isDeleted())
         {
-            Mark __mark = __graph.getMark();
+            Graph.NodeMark __mark = __graph.getMark();
             peel(__loop);
             __canonicalizer.applyIncremental(__graph, __context, __mark);
             __loop.invalidateFragments();
@@ -408,7 +407,7 @@ public abstract class LoopTransformations
             throw GraalError.shouldNotReachHere();
         }
         // re-wire the condition with the new limit
-        if (__preIv.direction() == Direction.Up)
+        if (__preIv.direction() == InductionVariable.Direction.Up)
         {
             __compareNode.replaceFirstInput(__ub, __graph.unique(new ConditionalNode(__graph.unique(new IntegerLessThanNode(__newLimit, __ub)), __newLimit, __ub)));
         }

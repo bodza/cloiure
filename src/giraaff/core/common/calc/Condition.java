@@ -66,6 +66,7 @@ public enum Condition
     // @field
     public final String ___operator;
 
+    // @cons Condition
     Condition(String __operator)
     {
         this.___operator = __operator;
@@ -81,7 +82,7 @@ public enum Condition
         // @field
         private final boolean ___negate;
 
-        // @cons
+        // @cons Condition.CanonicalizedCondition
         private CanonicalizedCondition(CanonicalCondition __canonicalCondition, boolean __mirror, boolean __negate)
         {
             super();
@@ -106,7 +107,7 @@ public enum Condition
         }
     }
 
-    public CanonicalizedCondition canonicalize()
+    public Condition.CanonicalizedCondition canonicalize()
     {
         CanonicalCondition __canonicalCondition;
         switch (this)
@@ -136,7 +137,7 @@ public enum Condition
             default:
                 throw GraalError.shouldNotReachHere();
         }
-        return new CanonicalizedCondition(__canonicalCondition, canonicalMirror(), canonicalNegate());
+        return new Condition.CanonicalizedCondition(__canonicalCondition, canonicalMirror(), canonicalNegate());
     }
 
     ///

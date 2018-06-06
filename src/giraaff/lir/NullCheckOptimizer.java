@@ -5,8 +5,7 @@ import java.util.ArrayList;
 import jdk.vm.ci.code.TargetDescription;
 
 import giraaff.core.common.cfg.AbstractBlockBase;
-import giraaff.lir.StandardOp.ImplicitNullCheck;
-import giraaff.lir.StandardOp.NullCheck;
+import giraaff.lir.StandardOp;
 import giraaff.lir.gen.LIRGenerationResult;
 import giraaff.lir.phases.PostAllocationOptimizationPhase;
 
@@ -14,7 +13,7 @@ import giraaff.lir.phases.PostAllocationOptimizationPhase;
 public final class NullCheckOptimizer extends PostAllocationOptimizationPhase
 {
     @Override
-    protected void run(TargetDescription __target, LIRGenerationResult __lirGenRes, PostAllocationOptimizationContext __context)
+    protected void run(TargetDescription __target, LIRGenerationResult __lirGenRes, PostAllocationOptimizationPhase.PostAllocationOptimizationContext __context)
     {
         LIR __ir = __lirGenRes.getLIR();
         AbstractBlockBase<?>[] __blocks = __ir.codeEmittingOrder();
@@ -38,10 +37,10 @@ public final class NullCheckOptimizer extends PostAllocationOptimizationPhase
                 {
                     LIRInstruction __instruction = __list.get(__i);
 
-                    if (__instruction instanceof ImplicitNullCheck && __lastInstruction instanceof NullCheck)
+                    if (__instruction instanceof StandardOp.ImplicitNullCheck && __lastInstruction instanceof StandardOp.NullCheck)
                     {
-                        NullCheck __nullCheck = (NullCheck) __lastInstruction;
-                        ImplicitNullCheck __implicitNullCheck = (ImplicitNullCheck) __instruction;
+                        StandardOp.NullCheck __nullCheck = (StandardOp.NullCheck) __lastInstruction;
+                        StandardOp.ImplicitNullCheck __implicitNullCheck = (StandardOp.ImplicitNullCheck) __instruction;
                         if (__implicitNullCheck.makeNullCheckFor(__nullCheck.getCheckedValue(), __nullCheck.getState(), __implicitNullCheckLimit))
                         {
                             __list.remove(__i - 1);

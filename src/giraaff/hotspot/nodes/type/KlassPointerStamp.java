@@ -46,13 +46,13 @@ public final class KlassPointerStamp extends MetaspacePointerStamp
         return KLASS_ALWAYS_NULL;
     }
 
-    // @cons
+    // @cons KlassPointerStamp
     private KlassPointerStamp(boolean __nonNull, boolean __alwaysNull)
     {
         this(__nonNull, __alwaysNull, null);
     }
 
-    // @cons
+    // @cons KlassPointerStamp
     private KlassPointerStamp(boolean __nonNull, boolean __alwaysNull, CompressEncoding __encoding)
     {
         super(__nonNull, __alwaysNull);

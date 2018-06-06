@@ -25,7 +25,7 @@ public abstract class DominatorOptimizationProblem<E extends Enum<E>, C>
     // @field
     private BlockMap<C> ___costs;
 
-    // @cons
+    // @cons DominatorOptimizationProblem
     protected DominatorOptimizationProblem(Class<E> __flagType, AbstractControlFlowGraph<?> __cfg)
     {
         super();

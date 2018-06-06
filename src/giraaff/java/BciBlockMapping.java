@@ -78,7 +78,7 @@ public final class BciBlockMapping
         // @field
         int ___loopEnd;
         // @field
-        List<BciBlock> ___successors;
+        List<BciBlockMapping.BciBlock> ___successors;
         // @field
         private int ___predecessorCount;
 
@@ -89,29 +89,29 @@ public final class BciBlockMapping
         // @field
         long ___loops;
         // @field
-        JSRData ___jsrData;
+        BciBlockMapping.BciBlock.JSRData ___jsrData;
 
         // @class BciBlockMapping.BciBlock.JSRData
         public static final class JSRData implements Cloneable
         {
             // @field
-            public EconomicMap<JsrScope, BciBlock> ___jsrAlternatives;
+            public EconomicMap<JsrScope, BciBlockMapping.BciBlock> ___jsrAlternatives;
             // @field
             public JsrScope ___jsrScope = JsrScope.EMPTY_SCOPE;
             // @field
-            public BciBlock ___jsrSuccessor;
+            public BciBlockMapping.BciBlock ___jsrSuccessor;
             // @field
             public int ___jsrReturnBci;
             // @field
-            public BciBlock ___retSuccessor;
+            public BciBlockMapping.BciBlock ___retSuccessor;
             // @field
             public boolean ___endsWithRet = false;
 
-            public JSRData copy()
+            public BciBlockMapping.BciBlock.JSRData copy()
             {
                 try
                 {
-                    return (JSRData) this.clone();
+                    return (BciBlockMapping.BciBlock.JSRData) this.clone();
                 }
                 catch (CloneNotSupportedException __e)
                 {
@@ -120,7 +120,7 @@ public final class BciBlockMapping
             }
         }
 
-        // @cons
+        // @cons BciBlockMapping.BciBlock
         BciBlock(int __startBci)
         {
             super();
@@ -143,9 +143,9 @@ public final class BciBlockMapping
             return this.___loops;
         }
 
-        public BciBlock exceptionDispatchBlock()
+        public BciBlockMapping.BciBlock exceptionDispatchBlock()
         {
-            if (this.___successors.size() > 0 && this.___successors.get(this.___successors.size() - 1) instanceof ExceptionDispatchBlock)
+            if (this.___successors.size() > 0 && this.___successors.get(this.___successors.size() - 1) instanceof BciBlockMapping.ExceptionDispatchBlock)
             {
                 return this.___successors.get(this.___successors.size() - 1);
             }
@@ -171,11 +171,11 @@ public final class BciBlockMapping
             return this.___successors.size();
         }
 
-        public BciBlock copy()
+        public BciBlockMapping.BciBlock copy()
         {
             try
             {
-                BciBlock __block = (BciBlock) super.clone();
+                BciBlockMapping.BciBlock __block = (BciBlockMapping.BciBlock) super.clone();
                 if (__block.___jsrData != null)
                 {
                     __block.___jsrData = __block.___jsrData.copy();
@@ -204,7 +204,7 @@ public final class BciBlockMapping
             return this.___isExceptionEntry;
         }
 
-        public BciBlock getSuccessor(int __index)
+        public BciBlockMapping.BciBlock getSuccessor(int __index)
         {
             return this.___successors.get(__index);
         }
@@ -240,7 +240,7 @@ public final class BciBlockMapping
                 @Override
                 public Iterator<Integer> iterator()
                 {
-                    return idIterator(BciBlock.this.___loops);
+                    return idIterator(BciBlockMapping.BciBlock.this.___loops);
                 }
             };
         }
@@ -278,16 +278,16 @@ public final class BciBlockMapping
             return 1D;
         }
 
-        public BciBlock getPostdominator()
+        public BciBlockMapping.BciBlock getPostdominator()
         {
             return null;
         }
 
-        private JSRData getOrCreateJSRData()
+        private BciBlockMapping.BciBlock.JSRData getOrCreateJSRData()
         {
             if (this.___jsrData == null)
             {
-                this.___jsrData = new JSRData();
+                this.___jsrData = new BciBlockMapping.BciBlock.JSRData();
             }
             return this.___jsrData;
         }
@@ -321,12 +321,12 @@ public final class BciBlockMapping
             }
         }
 
-        void setRetSuccessor(BciBlock __bciBlock)
+        void setRetSuccessor(BciBlockMapping.BciBlock __bciBlock)
         {
             this.getOrCreateJSRData().___retSuccessor = __bciBlock;
         }
 
-        public BciBlock getRetSuccessor()
+        public BciBlockMapping.BciBlock getRetSuccessor()
         {
             if (this.___jsrData == null)
             {
@@ -338,7 +338,7 @@ public final class BciBlockMapping
             }
         }
 
-        public BciBlock getJsrSuccessor()
+        public BciBlockMapping.BciBlock getJsrSuccessor()
         {
             if (this.___jsrData == null)
             {
@@ -362,7 +362,7 @@ public final class BciBlockMapping
             }
         }
 
-        public EconomicMap<JsrScope, BciBlock> getJsrAlternatives()
+        public EconomicMap<JsrScope, BciBlockMapping.BciBlock> getJsrAlternatives()
         {
             if (this.___jsrData == null)
             {
@@ -376,7 +376,7 @@ public final class BciBlockMapping
 
         public void initJsrAlternatives()
         {
-            JSRData __data = this.getOrCreateJSRData();
+            BciBlockMapping.BciBlock.JSRData __data = this.getOrCreateJSRData();
             if (__data.___jsrAlternatives == null)
             {
                 __data.___jsrAlternatives = EconomicMap.create(Equivalence.DEFAULT);
@@ -388,7 +388,7 @@ public final class BciBlockMapping
             this.getOrCreateJSRData().___jsrScope = __nextScope;
         }
 
-        void setJsrSuccessor(BciBlock __clone)
+        void setJsrSuccessor(BciBlockMapping.BciBlock __clone)
         {
             this.getOrCreateJSRData().___jsrSuccessor = __clone;
         }
@@ -403,7 +403,7 @@ public final class BciBlockMapping
             return this.___successors.size();
         }
 
-        public List<BciBlock> getSuccessors()
+        public List<BciBlockMapping.BciBlock> getSuccessors()
         {
             return this.___successors;
         }
@@ -413,7 +413,7 @@ public final class BciBlockMapping
             this.___id = __i;
         }
 
-        public void addSuccessor(BciBlock __sux)
+        public void addSuccessor(BciBlockMapping.BciBlock __sux)
         {
             this.___successors.add(__sux);
             __sux.___predecessorCount++;
@@ -421,7 +421,7 @@ public final class BciBlockMapping
 
         public void clearSucccessors()
         {
-            for (BciBlock __sux : this.___successors)
+            for (BciBlockMapping.BciBlock __sux : this.___successors)
             {
                 __sux.___predecessorCount--;
             }
@@ -435,7 +435,7 @@ public final class BciBlockMapping
     }
 
     // @class BciBlockMapping.ExceptionDispatchBlock
-    public static final class ExceptionDispatchBlock extends BciBlock
+    public static final class ExceptionDispatchBlock extends BciBlockMapping.BciBlock
     {
         // @field
         public final ExceptionHandler ___handler;
@@ -445,7 +445,7 @@ public final class BciBlockMapping
         ///
         // Constructor for a normal dispatcher.
         ///
-        // @cons
+        // @cons BciBlockMapping.ExceptionDispatchBlock
         ExceptionDispatchBlock(ExceptionHandler __handler, int __deoptBci)
         {
             super(__handler.getHandlerBCI());
@@ -457,7 +457,7 @@ public final class BciBlockMapping
         ///
         // Constructor for the method unwind dispatcher.
         ///
-        // @cons
+        // @cons BciBlockMapping.ExceptionDispatchBlock
         ExceptionDispatchBlock(int __deoptBci)
         {
             super(__deoptBci);
@@ -477,7 +477,7 @@ public final class BciBlockMapping
     // The blocks found in this method, in reverse postorder.
     ///
     // @field
-    private BciBlock[] ___blocks;
+    private BciBlockMapping.BciBlock[] ___blocks;
     // @field
     public final Bytecode ___code;
     // @field
@@ -486,9 +486,9 @@ public final class BciBlockMapping
     // @field
     private final ExceptionHandler[] ___exceptionHandlers;
     // @field
-    private BciBlock ___startBlock;
+    private BciBlockMapping.BciBlock ___startBlock;
     // @field
-    private BciBlock[] ___loopHeaders;
+    private BciBlockMapping.BciBlock[] ___loopHeaders;
 
     // @def
     private static final int LOOP_HEADER_MAX_CAPACITY = Long.SIZE;
@@ -501,7 +501,7 @@ public final class BciBlockMapping
     ///
     // Creates a new BlockMap instance from {@code code}.
     ///
-    // @cons
+    // @cons BciBlockMapping
     private BciBlockMapping(Bytecode __code)
     {
         super();
@@ -509,7 +509,7 @@ public final class BciBlockMapping
         this.___exceptionHandlers = __code.getExceptionHandlers();
     }
 
-    public BciBlock[] getBlocks()
+    public BciBlockMapping.BciBlock[] getBlocks()
     {
         return this.___blocks;
     }
@@ -520,7 +520,7 @@ public final class BciBlockMapping
     public void build(BytecodeStream __stream)
     {
         int __codeSize = this.___code.getCodeSize();
-        BciBlock[] __blockMap = new BciBlock[__codeSize];
+        BciBlockMapping.BciBlock[] __blockMap = new BciBlockMapping.BciBlock[__codeSize];
         makeExceptionEntries(__blockMap);
         iterateOverBytecodes(__blockMap, __stream);
         if (this.___hasJsrBytecodes)
@@ -537,22 +537,22 @@ public final class BciBlockMapping
         this.___startBlock = __blockMap[0];
     }
 
-    private void makeExceptionEntries(BciBlock[] __blockMap)
+    private void makeExceptionEntries(BciBlockMapping.BciBlock[] __blockMap)
     {
         // start basic blocks at all exception handler blocks and mark them as exception entries
         for (ExceptionHandler __h : this.___exceptionHandlers)
         {
-            BciBlock __xhandler = makeBlock(__blockMap, __h.getHandlerBCI());
+            BciBlockMapping.BciBlock __xhandler = makeBlock(__blockMap, __h.getHandlerBCI());
             __xhandler.___isExceptionEntry = true;
         }
     }
 
-    private void iterateOverBytecodes(BciBlock[] __blockMap, BytecodeStream __stream)
+    private void iterateOverBytecodes(BciBlockMapping.BciBlock[] __blockMap, BytecodeStream __stream)
     {
         // iterate over the bytecodes top to bottom.
         // mark the entrypoints of basic blocks and build lists of successors for
         // all bytecodes that end basic blocks (i.e. goto, ifs, switches, throw, jsr, returns, ret)
-        BciBlock __current = null;
+        BciBlockMapping.BciBlock __current = null;
         __stream.setBCI(0);
         while (__stream.currentBC() != Bytecodes.END)
         {
@@ -560,7 +560,7 @@ public final class BciBlockMapping
 
             if (__current == null || __blockMap[__bci] != null)
             {
-                BciBlock __b = makeBlock(__blockMap, __bci);
+                BciBlockMapping.BciBlock __b = makeBlock(__blockMap, __bci);
                 if (__current != null)
                 {
                     addSuccessor(__blockMap, __current.___endBci, __b);
@@ -583,7 +583,7 @@ public final class BciBlockMapping
                 case Bytecodes.ATHROW:
                 {
                     __current = null;
-                    ExceptionDispatchBlock __handler = handleExceptions(__blockMap, __bci);
+                    BciBlockMapping.ExceptionDispatchBlock __handler = handleExceptions(__blockMap, __bci);
                     if (__handler != null)
                     {
                         addSuccessor(__blockMap, __bci, __handler);
@@ -640,7 +640,7 @@ public final class BciBlockMapping
                     {
                         throw new BailoutException("jsr target bci 0 not allowed");
                     }
-                    BciBlock __b1 = makeBlock(__blockMap, __target);
+                    BciBlockMapping.BciBlock __b1 = makeBlock(__blockMap, __target);
                     __current.setJsrSuccessor(__b1);
                     __current.setJsrReturnBci(__stream.nextBCI());
                     __current = null;
@@ -661,7 +661,7 @@ public final class BciBlockMapping
                 {
                     __current = null;
                     addSuccessor(__blockMap, __bci, makeBlock(__blockMap, __stream.nextBCI()));
-                    ExceptionDispatchBlock __handler = handleExceptions(__blockMap, __bci);
+                    BciBlockMapping.ExceptionDispatchBlock __handler = handleExceptions(__blockMap, __bci);
                     if (__handler != null)
                     {
                         addSuccessor(__blockMap, __bci, __handler);
@@ -686,7 +686,7 @@ public final class BciBlockMapping
                 case Bytecodes.PUTFIELD:
                 case Bytecodes.GETFIELD:
                 {
-                    ExceptionDispatchBlock __handler = handleExceptions(__blockMap, __bci);
+                    BciBlockMapping.ExceptionDispatchBlock __handler = handleExceptions(__blockMap, __bci);
                     if (__handler != null)
                     {
                         __current = null;
@@ -699,12 +699,12 @@ public final class BciBlockMapping
         }
     }
 
-    private BciBlock makeBlock(BciBlock[] __blockMap, int __startBci)
+    private BciBlockMapping.BciBlock makeBlock(BciBlockMapping.BciBlock[] __blockMap, int __startBci)
     {
-        BciBlock __oldBlock = __blockMap[__startBci];
+        BciBlockMapping.BciBlock __oldBlock = __blockMap[__startBci];
         if (__oldBlock == null)
         {
-            BciBlock __newBlock = new BciBlock(__startBci);
+            BciBlockMapping.BciBlock __newBlock = new BciBlockMapping.BciBlock(__startBci);
             this.___blocksNotYetAssignedId++;
             __blockMap[__startBci] = __newBlock;
             return __newBlock;
@@ -713,10 +713,10 @@ public final class BciBlockMapping
         {
             // Backward branch into the middle of an already processed block.
             // Add the correct fall-through successor.
-            BciBlock __newBlock = new BciBlock(__startBci);
+            BciBlockMapping.BciBlock __newBlock = new BciBlockMapping.BciBlock(__startBci);
             this.___blocksNotYetAssignedId++;
             __newBlock.___endBci = __oldBlock.___endBci;
-            for (BciBlock __oldSuccessor : __oldBlock.getSuccessors())
+            for (BciBlockMapping.BciBlock __oldSuccessor : __oldBlock.getSuccessors())
             {
                 __newBlock.addSuccessor(__oldSuccessor);
             }
@@ -737,7 +737,7 @@ public final class BciBlockMapping
         }
     }
 
-    private void addSwitchSuccessors(BciBlock[] __blockMap, int __predBci, BytecodeSwitch __bswitch)
+    private void addSwitchSuccessors(BciBlockMapping.BciBlock[] __blockMap, int __predBci, BytecodeSwitch __bswitch)
     {
         // adds distinct targets to the successor list
         Collection<Integer> __targets = new TreeSet<>();
@@ -752,9 +752,9 @@ public final class BciBlockMapping
         }
     }
 
-    private static void addSuccessor(BciBlock[] __blockMap, int __predBci, BciBlock __sux)
+    private static void addSuccessor(BciBlockMapping.BciBlock[] __blockMap, int __predBci, BciBlockMapping.BciBlock __sux)
     {
-        BciBlock __predecessor = __blockMap[__predBci];
+        BciBlockMapping.BciBlock __predecessor = __blockMap[__predBci];
         if (__sux.___isExceptionEntry)
         {
             throw new BailoutException("exception handler can be reached by both normal and exceptional control flow");
@@ -763,9 +763,9 @@ public final class BciBlockMapping
     }
 
     // @field
-    private final ArrayList<BciBlock> ___jsrVisited = new ArrayList<>();
+    private final ArrayList<BciBlockMapping.BciBlock> ___jsrVisited = new ArrayList<>();
 
-    private void createJsrAlternatives(BciBlock[] __blockMap, BciBlock __block)
+    private void createJsrAlternatives(BciBlockMapping.BciBlock[] __blockMap, BciBlockMapping.BciBlock __block)
     {
         this.___jsrVisited.add(__block);
         JsrScope __scope = __block.getJsrScope();
@@ -780,7 +780,7 @@ public final class BciBlockMapping
         {
             for (int __i = 0; __i < __block.getSuccessorCount(); __i++)
             {
-                BciBlock __successor = __block.getSuccessor(__i);
+                BciBlockMapping.BciBlock __successor = __block.getSuccessor(__i);
                 JsrScope __nextScope = __scope;
                 if (__successor == __block.getJsrSuccessor())
                 {
@@ -796,7 +796,7 @@ public final class BciBlockMapping
                 }
                 if (!__nextScope.isEmpty())
                 {
-                    BciBlock __clone;
+                    BciBlockMapping.BciBlock __clone;
                     if (__successor.getJsrAlternatives() != null && __successor.getJsrAlternatives().containsKey(__nextScope))
                     {
                         __clone = __successor.getJsrAlternatives().get(__nextScope);
@@ -821,7 +821,7 @@ public final class BciBlockMapping
                 }
             }
         }
-        for (BciBlock __successor : __block.getSuccessors())
+        for (BciBlockMapping.BciBlock __successor : __block.getSuccessors())
         {
             if (!this.___jsrVisited.contains(__successor))
             {
@@ -830,9 +830,9 @@ public final class BciBlockMapping
         }
     }
 
-    private ExceptionDispatchBlock handleExceptions(BciBlock[] __blockMap, int __bci)
+    private BciBlockMapping.ExceptionDispatchBlock handleExceptions(BciBlockMapping.BciBlock[] __blockMap, int __bci)
     {
-        ExceptionDispatchBlock __lastHandler = null;
+        BciBlockMapping.ExceptionDispatchBlock __lastHandler = null;
         int __dispatchBlocks = 0;
 
         for (int __i = this.___exceptionHandlers.length - 1; __i >= 0; __i--)
@@ -850,7 +850,7 @@ public final class BciBlockMapping
 
                 // We do not reuse exception dispatch blocks, because nested exception handlers
                 // might have problems reasoning about the correct frame state.
-                ExceptionDispatchBlock __curHandler = new ExceptionDispatchBlock(__h, __bci);
+                BciBlockMapping.ExceptionDispatchBlock __curHandler = new BciBlockMapping.ExceptionDispatchBlock(__h, __bci);
                 __dispatchBlocks++;
                 __curHandler.addSuccessor(__blockMap[__h.getHandlerBCI()]);
                 if (__lastHandler != null)
@@ -867,12 +867,12 @@ public final class BciBlockMapping
     // @field
     private boolean ___loopChanges;
 
-    private void fixLoopBits(BciBlock[] __blockMap)
+    private void fixLoopBits(BciBlockMapping.BciBlock[] __blockMap)
     {
         do
         {
             this.___loopChanges = false;
-            for (BciBlock __b : this.___blocks)
+            for (BciBlockMapping.BciBlock __b : this.___blocks)
             {
                 __b.___visited = false;
             }
@@ -889,10 +889,10 @@ public final class BciBlockMapping
         } while (this.___loopChanges);
     }
 
-    private void computeBlockOrder(BciBlock[] __blockMap)
+    private void computeBlockOrder(BciBlockMapping.BciBlock[] __blockMap)
     {
         int __maxBlocks = this.___blocksNotYetAssignedId;
-        this.___blocks = new BciBlock[this.___blocksNotYetAssignedId];
+        this.___blocks = new BciBlockMapping.BciBlock[this.___blocksNotYetAssignedId];
         long __loop = computeBlockOrder(__blockMap[0]);
 
         if (__loop != 0)
@@ -906,11 +906,11 @@ public final class BciBlockMapping
         // Purge null entries for unreached blocks and sort blocks such that loop bodies are always
         // consecutively in the array.
         int __blockCount = __maxBlocks - this.___blocksNotYetAssignedId + 1;
-        BciBlock[] __newBlocks = new BciBlock[__blockCount];
+        BciBlockMapping.BciBlock[] __newBlocks = new BciBlockMapping.BciBlock[__blockCount];
         int __next = 0;
         for (int __i = 0; __i < this.___blocks.length; ++__i)
         {
-            BciBlock __b = this.___blocks[__i];
+            BciBlockMapping.BciBlock __b = this.___blocks[__i];
             if (__b != null)
             {
                 __b.setId(__next);
@@ -924,20 +924,20 @@ public final class BciBlockMapping
 
         // Add unwind block.
         int __deoptBci = this.___code.getMethod().isSynchronized() ? BytecodeFrame.UNWIND_BCI : BytecodeFrame.AFTER_EXCEPTION_BCI;
-        ExceptionDispatchBlock __unwindBlock = new ExceptionDispatchBlock(__deoptBci);
+        BciBlockMapping.ExceptionDispatchBlock __unwindBlock = new BciBlockMapping.ExceptionDispatchBlock(__deoptBci);
         __unwindBlock.setId(__newBlocks.length - 1);
         __newBlocks[__newBlocks.length - 1] = __unwindBlock;
 
         this.___blocks = __newBlocks;
     }
 
-    private int handleLoopHeader(BciBlock[] __newBlocks, int __nextStart, int __i, BciBlock __loopHeader)
+    private int handleLoopHeader(BciBlockMapping.BciBlock[] __newBlocks, int __nextStart, int __i, BciBlockMapping.BciBlock __loopHeader)
     {
         int __next = __nextStart;
         int __endOfLoop = __nextStart - 1;
         for (int __j = __i + 1; __j < this.___blocks.length; ++__j)
         {
-            BciBlock __other = this.___blocks[__j];
+            BciBlockMapping.BciBlock __other = this.___blocks[__j];
             if (__other != null && (__other.___loops & (1L << __loopHeader.___loopId)) != 0)
             {
                 __other.setId(__next);
@@ -957,7 +957,7 @@ public final class BciBlockMapping
     ///
     // Get the header block for a loop index.
     ///
-    public BciBlock getLoopHeader(int __index)
+    public BciBlockMapping.BciBlock getLoopHeader(int __index)
     {
         return this.___loopHeaders[__index];
     }
@@ -972,7 +972,7 @@ public final class BciBlockMapping
     // Mark the block as a loop header, using the next available loop number. Also checks for corner
     // cases that we don't want to compile.
     ///
-    private void makeLoopHeader(BciBlock __block)
+    private void makeLoopHeader(BciBlockMapping.BciBlock __block)
     {
         if (!__block.___isLoopHeader)
         {
@@ -994,7 +994,7 @@ public final class BciBlockMapping
             __block.___loops = 1L << this.___nextLoop;
             if (this.___loopHeaders == null)
             {
-                this.___loopHeaders = new BciBlock[LOOP_HEADER_INITIAL_CAPACITY];
+                this.___loopHeaders = new BciBlockMapping.BciBlock[LOOP_HEADER_INITIAL_CAPACITY];
             }
             else if (this.___nextLoop >= this.___loopHeaders.length)
             {
@@ -1007,11 +1007,11 @@ public final class BciBlockMapping
     }
 
     ///
-    // Depth-first traversal of the control flow graph. The flag {@linkplain BciBlock#visited} is
-    // used to visit every block only once. The flag {@linkplain BciBlock#active} is used to detect
+    // Depth-first traversal of the control flow graph. The flag {@linkplain BciBlockMapping.BciBlock#visited} is
+    // used to visit every block only once. The flag {@linkplain BciBlockMapping.BciBlock#active} is used to detect
     // cycles (backward edges).
     ///
-    private long computeBlockOrder(BciBlock __block)
+    private long computeBlockOrder(BciBlockMapping.BciBlock __block)
     {
         if (__block.___visited)
         {
@@ -1036,7 +1036,7 @@ public final class BciBlockMapping
         __block.___active = true;
 
         long __loops = 0;
-        for (BciBlock __successor : __block.getSuccessors())
+        for (BciBlockMapping.BciBlock __successor : __block.getSuccessors())
         {
             // Recursively process successors.
             __loops |= computeBlockOrder(__successor);
@@ -1061,7 +1061,7 @@ public final class BciBlockMapping
         return __loops;
     }
 
-    private long fixLoopBits(BciBlock[] __blockMap, BciBlock __block)
+    private long fixLoopBits(BciBlockMapping.BciBlock[] __blockMap, BciBlockMapping.BciBlock __block)
     {
         if (__block.___visited)
         {
@@ -1078,7 +1078,7 @@ public final class BciBlockMapping
 
         __block.___visited = true;
         long __loops = __block.___loops;
-        for (BciBlock __successor : __block.getSuccessors())
+        for (BciBlockMapping.BciBlock __successor : __block.getSuccessors())
         {
             // Recursively process successors.
             __loops |= fixLoopBits(__blockMap, __successor);
@@ -1104,19 +1104,19 @@ public final class BciBlockMapping
         return __map;
     }
 
-    public BciBlock[] getLoopHeaders()
+    public BciBlockMapping.BciBlock[] getLoopHeaders()
     {
         return this.___loopHeaders;
     }
 
-    public BciBlock getStartBlock()
+    public BciBlockMapping.BciBlock getStartBlock()
     {
         return this.___startBlock;
     }
 
-    public ExceptionDispatchBlock getUnwindBlock()
+    public BciBlockMapping.ExceptionDispatchBlock getUnwindBlock()
     {
-        return (ExceptionDispatchBlock) this.___blocks[this.___blocks.length - 1];
+        return (BciBlockMapping.ExceptionDispatchBlock) this.___blocks[this.___blocks.length - 1];
     }
 
     public int getLoopCount()

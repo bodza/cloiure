@@ -2,7 +2,7 @@ package giraaff.core.amd64;
 
 import jdk.vm.ci.meta.JavaConstant;
 
-import giraaff.asm.amd64.AMD64Address.Scale;
+import giraaff.asm.amd64.AMD64Address;
 import giraaff.core.common.NumUtil;
 import giraaff.core.common.type.AbstractPointerStamp;
 import giraaff.core.common.type.IntegerStamp;
@@ -13,10 +13,10 @@ import giraaff.nodes.calc.AddNode;
 import giraaff.nodes.calc.LeftShiftNode;
 import giraaff.nodes.calc.NegateNode;
 import giraaff.nodes.memory.address.AddressNode;
-import giraaff.phases.common.AddressLoweringPhase.AddressLowering;
+import giraaff.phases.common.AddressLoweringPhase;
 
 // @class AMD64AddressLowering
-public class AMD64AddressLowering extends AddressLowering
+public class AMD64AddressLowering extends AddressLoweringPhase.AddressLowering
 {
     // @def
     private static final int ADDRESS_BITS = 64;
@@ -75,7 +75,7 @@ public class AMD64AddressLowering extends AddressLowering
             if (__shift.getY().isConstant())
             {
                 int __amount = __ret.getScale().___log2 + __shift.getY().asJavaConstant().asInt();
-                Scale __scale = Scale.fromShift(__amount);
+                AMD64Address.Scale __scale = AMD64Address.Scale.fromShift(__amount);
                 if (__scale != null)
                 {
                     __ret.setIndex(__shift.getX());
@@ -85,7 +85,7 @@ public class AMD64AddressLowering extends AddressLowering
             }
         }
 
-        if (__ret.getScale() == Scale.Times1)
+        if (__ret.getScale() == AMD64Address.Scale.Times1)
         {
             if (__ret.getIndex() == null && __ret.getBase() instanceof AddNode)
             {

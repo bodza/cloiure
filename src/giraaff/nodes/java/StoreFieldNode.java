@@ -3,6 +3,7 @@ package giraaff.nodes.java;
 import jdk.vm.ci.meta.ResolvedJavaField;
 
 import giraaff.core.common.type.StampFactory;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.nodeinfo.InputType;
 import giraaff.nodes.FrameState;
@@ -22,10 +23,10 @@ public final class StoreFieldNode extends AccessFieldNode implements StateSplit,
     // @def
     public static final NodeClass<StoreFieldNode> TYPE = NodeClass.create(StoreFieldNode.class);
 
-    @Input
+    @Node.Input
     // @field
     ValueNode ___value;
-    @OptionalInput(InputType.State)
+    @Node.OptionalInput(InputType.StateI)
     // @field
     FrameState ___stateAfter;
 
@@ -53,14 +54,14 @@ public final class StoreFieldNode extends AccessFieldNode implements StateSplit,
         return this.___value;
     }
 
-    // @cons
+    // @cons StoreFieldNode
     public StoreFieldNode(ValueNode __object, ResolvedJavaField __field, ValueNode __value)
     {
         super(TYPE, StampFactory.forVoid(), __object, __field);
         this.___value = __value;
     }
 
-    // @cons
+    // @cons StoreFieldNode
     public StoreFieldNode(ValueNode __object, ResolvedJavaField __field, ValueNode __value, FrameState __stateAfter)
     {
         super(TYPE, StampFactory.forVoid(), __object, __field);

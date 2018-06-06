@@ -28,16 +28,16 @@ public abstract class IntegerLowerThanNode extends CompareNode
     public static final NodeClass<IntegerLowerThanNode> TYPE = NodeClass.create(IntegerLowerThanNode.class);
 
     // @field
-    private final LowerOp ___op;
+    private final IntegerLowerThanNode.LowerOp ___op;
 
-    // @cons
-    protected IntegerLowerThanNode(NodeClass<? extends CompareNode> __c, ValueNode __x, ValueNode __y, LowerOp __op)
+    // @cons IntegerLowerThanNode
+    protected IntegerLowerThanNode(NodeClass<? extends CompareNode> __c, ValueNode __x, ValueNode __y, IntegerLowerThanNode.LowerOp __op)
     {
         super(__c, __op.getCondition(), __x, __y);
         this.___op = __op;
     }
 
-    protected LowerOp getOp()
+    protected IntegerLowerThanNode.LowerOp getOp()
     {
         return this.___op;
     }
@@ -121,7 +121,7 @@ public abstract class IntegerLowerThanNode extends CompareNode
     }
 
     // @class IntegerLowerThanNode.LowerOp
-    public abstract static class LowerOp extends CompareOp
+    public abstract static class LowerOp extends CompareNode.CompareOp
     {
         @Override
         public LogicNode canonical(ConstantReflectionProvider __constantReflection, MetaAccessProvider __metaAccess, Integer __smallestCompareWidth, CanonicalCondition __condition, ValueNode __forX, ValueNode __forY, NodeView __view)
@@ -368,8 +368,8 @@ public abstract class IntegerLowerThanNode extends CompareNode
             // and an empty stamp in the negative case: if x |<| x is true, then either x has no
             // value or any value...
             //
-            // This does not use upper/lowerBound from LowerOp because it's about the (signed)
-            // addition not the comparison.
+            // This does not use upper/lowerBound from IntegerLowerThanNode.LowerOp, because it's about
+            // the (signed) addition not the comparison.
             if (__mirrored)
             {
                 if (__a.contains(0))

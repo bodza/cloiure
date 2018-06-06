@@ -11,7 +11,7 @@ import giraaff.nodes.StructuredGraph;
 // @class LoopUnswitchingPhase
 public final class LoopUnswitchingPhase extends ContextlessLoopPhase<LoopPolicies>
 {
-    // @cons
+    // @cons LoopUnswitchingPhase
     public LoopUnswitchingPhase(LoopPolicies __policies)
     {
         super(__policies);

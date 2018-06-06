@@ -4,7 +4,7 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 import giraaff.core.common.type.StampPair;
 import giraaff.graph.NodeClass;
-import giraaff.nodes.CallTargetNode.InvokeKind;
+import giraaff.nodes.CallTargetNode;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.spi.Virtualizable;
 import giraaff.nodes.spi.VirtualizerTool;
@@ -19,8 +19,8 @@ public final class VirtualizableInvokeMacroNode extends MacroStateSplitNode impl
     // @def
     public static final NodeClass<VirtualizableInvokeMacroNode> TYPE = NodeClass.create(VirtualizableInvokeMacroNode.class);
 
-    // @cons
-    public VirtualizableInvokeMacroNode(InvokeKind __invokeKind, ResolvedJavaMethod __targetMethod, int __bci, StampPair __returnStamp, ValueNode... __arguments)
+    // @cons VirtualizableInvokeMacroNode
+    public VirtualizableInvokeMacroNode(CallTargetNode.InvokeKind __invokeKind, ResolvedJavaMethod __targetMethod, int __bci, StampPair __returnStamp, ValueNode... __arguments)
     {
         super(TYPE, __invokeKind, __targetMethod, __bci, __returnStamp, __arguments);
     }

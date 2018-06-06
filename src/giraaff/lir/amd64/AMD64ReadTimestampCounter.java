@@ -6,29 +6,29 @@ import jdk.vm.ci.meta.AllocatableValue;
 
 import giraaff.asm.amd64.AMD64MacroAssembler;
 import giraaff.core.common.LIRKind;
-import giraaff.lir.LIRInstruction.OperandFlag;
+import giraaff.lir.LIRInstruction;
 import giraaff.lir.LIRInstructionClass;
-import giraaff.lir.Opcode;
+import giraaff.lir.LIROpcode;
 import giraaff.lir.asm.CompilationResultBuilder;
 
 ///
 // AMD64 rdtsc operation. The result is in EDX:EAX.
 ///
-@Opcode
+@LIROpcode
 // @class AMD64ReadTimestampCounter
 public final class AMD64ReadTimestampCounter extends AMD64LIRInstruction
 {
     // @def
     public static final LIRInstructionClass<AMD64ReadTimestampCounter> TYPE = LIRInstructionClass.create(AMD64ReadTimestampCounter.class);
 
-    @Def({OperandFlag.REG})
+    @LIRInstruction.Def({LIRInstruction.OperandFlag.REG})
     // @field
     protected AllocatableValue ___highResult;
-    @Def({OperandFlag.REG})
+    @LIRInstruction.Def({LIRInstruction.OperandFlag.REG})
     // @field
     protected AllocatableValue ___lowResult;
 
-    // @cons
+    // @cons AMD64ReadTimestampCounter
     public AMD64ReadTimestampCounter()
     {
         super(TYPE);

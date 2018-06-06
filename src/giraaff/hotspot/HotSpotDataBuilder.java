@@ -10,10 +10,7 @@ import jdk.vm.ci.meta.JavaConstant;
 import jdk.vm.ci.meta.SerializableConstant;
 import jdk.vm.ci.meta.VMConstant;
 
-import giraaff.code.DataSection.Data;
-import giraaff.code.DataSection.Patches;
-import giraaff.code.DataSection.SerializableData;
-import giraaff.code.DataSection.ZeroData;
+import giraaff.code.DataSection;
 import giraaff.lir.asm.DataBuilder;
 import giraaff.util.GraalError;
 
@@ -23,7 +20,7 @@ public final class HotSpotDataBuilder extends DataBuilder
     // @field
     private final TargetDescription ___target;
 
-    // @cons
+    // @cons HotSpotDataBuilder
     public HotSpotDataBuilder(TargetDescription __target)
     {
         super();
@@ -31,12 +28,12 @@ public final class HotSpotDataBuilder extends DataBuilder
     }
 
     @Override
-    public Data createDataItem(Constant __constant)
+    public DataSection.Data createDataItem(Constant __constant)
     {
         if (JavaConstant.isNull(__constant))
         {
             int __size = HotSpotCompressedNullConstant.COMPRESSED_NULL.equals(__constant) ? 4 : this.___target.wordSize;
-            return ZeroData.create(__size, __size);
+            return DataSection.ZeroData.create(__size, __size);
         }
         else if (__constant instanceof VMConstant)
         {
@@ -49,10 +46,10 @@ public final class HotSpotDataBuilder extends DataBuilder
             HotSpotConstant __c = (HotSpotConstant) __vmConstant;
             int __size = __c.isCompressed() ? 4 : this.___target.wordSize;
             // @closure
-            return new Data(__size, __size)
+            return new DataSection.Data(__size, __size)
             {
                 @Override
-                protected void emit(ByteBuffer __buffer, Patches __patches)
+                protected void emit(ByteBuffer __buffer, DataSection.Patches __patches)
                 {
                     int __position = __buffer.position();
                     if (getSize() == Integer.BYTES)
@@ -69,7 +66,7 @@ public final class HotSpotDataBuilder extends DataBuilder
         }
         else if (__constant instanceof SerializableConstant)
         {
-            return new SerializableData((SerializableConstant) __constant);
+            return new DataSection.SerializableData((SerializableConstant) __constant);
         }
         else
         {

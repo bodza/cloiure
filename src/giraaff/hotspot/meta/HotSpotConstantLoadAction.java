@@ -11,6 +11,7 @@ public enum HotSpotConstantLoadAction
     // @field
     private int ___value;
 
+    // @cons HotSpotConstantLoadAction
     HotSpotConstantLoadAction(int __value)
     {
         this.___value = __value;

@@ -15,8 +15,7 @@ import org.graalvm.word.WordFactory;
 import giraaff.core.common.spi.ForeignCallDescriptor;
 import giraaff.core.common.type.ObjectStamp;
 import giraaff.core.common.type.TypeReference;
-import giraaff.graph.Node.ConstantNodeParameter;
-import giraaff.graph.Node.NodeIntrinsic;
+import giraaff.graph.Node;
 import giraaff.graph.spi.CanonicalizerTool;
 import giraaff.hotspot.HotSpotRuntime;
 import giraaff.hotspot.nodes.ComputeObjectAddressNode;
@@ -47,7 +46,7 @@ import giraaff.word.Word;
 // @class HotSpotReplacementsUtil
 public final class HotSpotReplacementsUtil
 {
-    // @cons
+    // @cons HotSpotReplacementsUtil
     private HotSpotReplacementsUtil()
     {
         super();
@@ -56,7 +55,7 @@ public final class HotSpotReplacementsUtil
     // @class HotSpotReplacementsUtil.HotSpotOptimizingLocationIdentity
     abstract static class HotSpotOptimizingLocationIdentity extends NamedLocationIdentity implements CanonicalizableLocation
     {
-        // @cons
+        // @cons HotSpotReplacementsUtil.HotSpotOptimizingLocationIdentity
         HotSpotOptimizingLocationIdentity(String __name)
         {
             super(__name, true);
@@ -254,7 +253,7 @@ public final class HotSpotReplacementsUtil
     public static final LocationIdentity KLASS_ACCESS_FLAGS_LOCATION = NamedLocationIdentity.immutable("Klass::_access_flags");
 
     // @closure
-    public static final LocationIdentity KLASS_LAYOUT_HELPER_LOCATION = new HotSpotOptimizingLocationIdentity("Klass::_layout_helper")
+    public static final LocationIdentity KLASS_LAYOUT_HELPER_LOCATION = new HotSpotReplacementsUtil.HotSpotOptimizingLocationIdentity("Klass::_layout_helper")
     {
         @Override
         public ValueNode canonicalizeRead(ValueNode __read, AddressNode __location, ValueNode __object, CanonicalizerTool __tool)
@@ -277,7 +276,7 @@ public final class HotSpotReplacementsUtil
         }
     };
 
-    @NodeIntrinsic(value = KlassLayoutHelperNode.class)
+    @Node.NodeIntrinsic(value = KlassLayoutHelperNode.class)
     public static native int readLayoutHelper(KlassPointer __object);
 
     ///
@@ -310,7 +309,7 @@ public final class HotSpotReplacementsUtil
     public static final LocationIdentity HUB_WRITE_LOCATION = NamedLocationIdentity.mutable("Hub:write");
 
     // @closure
-    public static final LocationIdentity HUB_LOCATION = new HotSpotOptimizingLocationIdentity("Hub")
+    public static final LocationIdentity HUB_LOCATION = new HotSpotReplacementsUtil.HotSpotOptimizingLocationIdentity("Hub")
     {
         @Override
         public ValueNode canonicalizeRead(ValueNode __read, AddressNode __location, ValueNode __object, CanonicalizerTool __tool)
@@ -325,7 +324,7 @@ public final class HotSpotReplacementsUtil
     };
 
     // @closure
-    public static final LocationIdentity COMPRESSED_HUB_LOCATION = new HotSpotOptimizingLocationIdentity("CompressedHub")
+    public static final LocationIdentity COMPRESSED_HUB_LOCATION = new HotSpotReplacementsUtil.HotSpotOptimizingLocationIdentity("CompressedHub")
     {
         @Override
         public ValueNode canonicalizeRead(ValueNode __read, AddressNode __location, ValueNode __object, CanonicalizerTool __tool)
@@ -432,24 +431,24 @@ public final class HotSpotReplacementsUtil
     // @param register a register which must not be available to the register allocator
     // @return the value of {@code register} as a word
     ///
-    public static final Word registerAsWord(@ConstantNodeParameter Register __register)
+    public static final Word registerAsWord(@Node.ConstantNodeParameter Register __register)
     {
         return registerAsWord(__register, true, false);
     }
 
-    @NodeIntrinsic(value = ReadRegisterNode.class)
-    public static native Word registerAsWord(@ConstantNodeParameter Register __register, @ConstantNodeParameter boolean __directUse, @ConstantNodeParameter boolean __incoming);
+    @Node.NodeIntrinsic(value = ReadRegisterNode.class)
+    public static native Word registerAsWord(@Node.ConstantNodeParameter Register __register, @Node.ConstantNodeParameter boolean __directUse, @Node.ConstantNodeParameter boolean __incoming);
 
-    @NodeIntrinsic(value = WriteRegisterNode.class)
-    public static native void writeRegisterAsWord(@ConstantNodeParameter Register __register, Word __value);
+    @Node.NodeIntrinsic(value = WriteRegisterNode.class)
+    public static native void writeRegisterAsWord(@Node.ConstantNodeParameter Register __register, Word __value);
 
-    @NodeIntrinsic(value = RawLoadNode.class)
-    private static native Word loadWordFromObjectIntrinsic(Object __object, long __offset, @ConstantNodeParameter LocationIdentity __locationIdentity, @ConstantNodeParameter JavaKind __wordKind);
+    @Node.NodeIntrinsic(value = RawLoadNode.class)
+    private static native Word loadWordFromObjectIntrinsic(Object __object, long __offset, @Node.ConstantNodeParameter LocationIdentity __locationIdentity, @Node.ConstantNodeParameter JavaKind __wordKind);
 
-    @NodeIntrinsic(value = RawLoadNode.class)
-    private static native KlassPointer loadKlassFromObjectIntrinsic(Object __object, long __offset, @ConstantNodeParameter LocationIdentity __locationIdentity, @ConstantNodeParameter JavaKind __wordKind);
+    @Node.NodeIntrinsic(value = RawLoadNode.class)
+    private static native KlassPointer loadKlassFromObjectIntrinsic(Object __object, long __offset, @Node.ConstantNodeParameter LocationIdentity __locationIdentity, @Node.ConstantNodeParameter JavaKind __wordKind);
 
-    @NodeIntrinsic(value = LoadHubNode.class)
+    @Node.NodeIntrinsic(value = LoadHubNode.class)
     public static native KlassPointer loadHubIntrinsic(Object __object);
 
     // @Fold
@@ -479,7 +478,7 @@ public final class HotSpotReplacementsUtil
     public static final LocationIdentity KLASS_MODIFIER_FLAGS_LOCATION = NamedLocationIdentity.immutable("Klass::_modifier_flags");
 
     // @closure
-    public static final LocationIdentity CLASS_KLASS_LOCATION = new HotSpotOptimizingLocationIdentity("Class._klass")
+    public static final LocationIdentity CLASS_KLASS_LOCATION = new HotSpotReplacementsUtil.HotSpotOptimizingLocationIdentity("Class._klass")
     {
         @Override
         public ValueNode canonicalizeRead(ValueNode __read, AddressNode __location, ValueNode __object, CanonicalizerTool __tool)
@@ -489,7 +488,7 @@ public final class HotSpotReplacementsUtil
     };
 
     // @closure
-    public static final LocationIdentity CLASS_ARRAY_KLASS_LOCATION = new HotSpotOptimizingLocationIdentity("Class._array_klass")
+    public static final LocationIdentity CLASS_ARRAY_KLASS_LOCATION = new HotSpotReplacementsUtil.HotSpotOptimizingLocationIdentity("Class._array_klass")
     {
         @Override
         public ValueNode canonicalizeRead(ValueNode __read, AddressNode __location, ValueNode __object, CanonicalizerTool __tool)
@@ -519,8 +518,8 @@ public final class HotSpotReplacementsUtil
     // @def
     public static final LocationIdentity TLAB_SLOW_ALLOCATIONS_LOCATION = NamedLocationIdentity.mutable("TlabSlowAllocations");
 
-    @NodeIntrinsic(ForeignCallNode.class)
-    public static native int identityHashCode(@ConstantNodeParameter ForeignCallDescriptor __descriptor, Object __object);
+    @Node.NodeIntrinsic(ForeignCallNode.class)
+    public static native int identityHashCode(@Node.ConstantNodeParameter ForeignCallDescriptor __descriptor, Object __object);
 
     // @Fold
     public static final long referentOffset()
@@ -536,7 +535,7 @@ public final class HotSpotReplacementsUtil
     }
 
     // @closure
-    public static final LocationIdentity OBJ_ARRAY_KLASS_ELEMENT_KLASS_LOCATION = new HotSpotOptimizingLocationIdentity("ObjArrayKlass::_element_klass")
+    public static final LocationIdentity OBJ_ARRAY_KLASS_ELEMENT_KLASS_LOCATION = new HotSpotReplacementsUtil.HotSpotOptimizingLocationIdentity("ObjArrayKlass::_element_klass")
     {
         @Override
         public ValueNode canonicalizeRead(ValueNode __read, AddressNode __location, ValueNode __object, CanonicalizerTool __tool)

@@ -13,9 +13,6 @@ import giraaff.nodes.debug.StringToBytesNode;
 import giraaff.nodes.java.NewArrayNode;
 import giraaff.nodes.spi.LoweringTool;
 import giraaff.replacements.SnippetTemplate;
-import giraaff.replacements.SnippetTemplate.AbstractTemplates;
-import giraaff.replacements.SnippetTemplate.Arguments;
-import giraaff.replacements.SnippetTemplate.SnippetInfo;
 import giraaff.replacements.Snippets;
 import giraaff.replacements.nodes.CStringConstant;
 import giraaff.word.Word;
@@ -37,7 +34,7 @@ public final class StringToBytesSnippets implements Snippets
     }
 
     @Snippet
-    public static byte[] transform(@ConstantParameter String __compilationTimeString)
+    public static byte[] transform(@Snippet.ConstantParameter String __compilationTimeString)
     {
         int __i = __compilationTimeString.length();
         byte[] __array = (byte[]) NewArrayNode.newUninitializedArray(byte.class, __i);
@@ -50,14 +47,14 @@ public final class StringToBytesSnippets implements Snippets
         return __array;
     }
 
-    // @class StringToBytesSnippets.Templates
-    public static final class Templates extends AbstractTemplates
+    // @class StringToBytesSnippets.StringToBytesTemplates
+    public static final class StringToBytesTemplates extends SnippetTemplate.AbstractTemplates
     {
         // @field
-        private final SnippetInfo ___create;
+        private final SnippetTemplate.SnippetInfo ___create;
 
-        // @cons
-        public Templates(HotSpotProviders __providers, TargetDescription __target)
+        // @cons StringToBytesSnippets.StringToBytesTemplates
+        public StringToBytesTemplates(HotSpotProviders __providers, TargetDescription __target)
         {
             super(__providers, __providers.getSnippetReflection(), __target);
             this.___create = snippet(StringToBytesSnippets.class, "transform", NamedLocationIdentity.getArrayLocation(JavaKind.Byte));
@@ -65,7 +62,7 @@ public final class StringToBytesSnippets implements Snippets
 
         public void lower(StringToBytesNode __stringToBytesNode, LoweringTool __tool)
         {
-            Arguments __args = new Arguments(this.___create, __stringToBytesNode.graph().getGuardsStage(), __tool.getLoweringStage());
+            SnippetTemplate.Arguments __args = new SnippetTemplate.Arguments(this.___create, __stringToBytesNode.graph().getGuardsStage(), __tool.getLoweringStage());
             __args.addConst("compilationTimeString", __stringToBytesNode.getValue());
             SnippetTemplate __template = template(__stringToBytesNode, __args);
             __template.instantiate(this.___providers.getMetaAccess(), __stringToBytesNode, SnippetTemplate.DEFAULT_REPLACER, __args);

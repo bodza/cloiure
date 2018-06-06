@@ -18,9 +18,6 @@ import giraaff.nodes.memory.address.OffsetAddressNode;
 import giraaff.nodes.util.GraphUtil;
 import giraaff.phases.Phase;
 
-///
-// Created by adinn on 09/05/17.
-///
 // @class AddressLoweringByUsePhase
 public final class AddressLoweringByUsePhase extends Phase
 {
@@ -33,10 +30,10 @@ public final class AddressLoweringByUsePhase extends Phase
     }
 
     // @field
-    private final AddressLoweringByUse ___lowering;
+    private final AddressLoweringByUsePhase.AddressLoweringByUse ___lowering;
 
-    // @cons
-    public AddressLoweringByUsePhase(AddressLoweringByUse __lowering)
+    // @cons AddressLoweringByUsePhase
+    public AddressLoweringByUsePhase(AddressLoweringByUsePhase.AddressLoweringByUse __lowering)
     {
         super();
         this.___lowering = __lowering;

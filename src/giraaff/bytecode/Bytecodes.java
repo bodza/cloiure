@@ -3,16 +3,14 @@ package giraaff.bytecode;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
-import giraaff.bytecode.Bytecodes.Flags;
-
 ///
 // Definitions of the standard Java bytecodes defined by
-// <a href= "http://java.sun.com/docs/books/jvms/second_edition/html/VMSpecTOC.doc.html"> Java Virtual Machine Specification</a>.
+// <a href= "http://java.sun.com/docs/books/jvms/second_edition/html/VMSpecTOC.doc.html">Java Virtual Machine Specification</a>.
 ///
 // @class Bytecodes
 public final class Bytecodes
 {
-    // @cons
+    // @cons Bytecodes
     private Bytecodes()
     {
         super();
@@ -183,8 +181,8 @@ public final class Bytecodes
     ///
     // A collection of flags describing various bytecode attributes.
     ///
-    // @class Bytecodes.Flags
-    static final class Flags
+    // @class Bytecodes.BytecodeFlags
+    static final class BytecodeFlags
     {
         ///
         // Denotes an instruction that ends a basic block and does not let control flow fall through
@@ -258,7 +256,7 @@ public final class Bytecodes
         int __allFlags = 0;
         try
         {
-            for (Field __field : Flags.class.getDeclaredFields())
+            for (Field __field : Bytecodes.BytecodeFlags.class.getDeclaredFields())
             {
                 int __flagsFilter = Modifier.FINAL | Modifier.STATIC;
                 if ((__field.getModifiers() & __flagsFilter) == __flagsFilter && !__field.isSynthetic())
@@ -282,7 +280,7 @@ public final class Bytecodes
     private static final String[] nameArray = new String[256];
 
     ///
-    // An array that maps from a bytecode value to the set of {@link Flags} for the corresponding instruction.
+    // An array that maps from a bytecode value to the set of {@link Bytecodes.BytecodeFlags} for the corresponding instruction.
     ///
     // @def
     private static final int[] flagsArray = new int[256];
@@ -315,51 +313,51 @@ public final class Bytecodes
         def(LCONST_1        , "lconst_1"        , "b"    ,  2);
         def(BIPUSH          , "bipush"          , "bc"   ,  1);
         def(SIPUSH          , "sipush"          , "bcc"  ,  1);
-        def(LDC             , "ldc"             , "bi"   ,  1, Flags.TRAP);
-        def(LDC_W           , "ldc_w"           , "bii"  ,  1, Flags.TRAP);
-        def(LDC2_W          , "ldc2_w"          , "bii"  ,  2, Flags.TRAP);
-        def(ILOAD           , "iload"           , "bi"   ,  1, Flags.LOAD);
-        def(LLOAD           , "lload"           , "bi"   ,  2, Flags.LOAD);
-        def(ALOAD           , "aload"           , "bi"   ,  1, Flags.LOAD);
-        def(ILOAD_0         , "iload_0"         , "b"    ,  1, Flags.LOAD);
-        def(ILOAD_1         , "iload_1"         , "b"    ,  1, Flags.LOAD);
-        def(ILOAD_2         , "iload_2"         , "b"    ,  1, Flags.LOAD);
-        def(ILOAD_3         , "iload_3"         , "b"    ,  1, Flags.LOAD);
-        def(LLOAD_0         , "lload_0"         , "b"    ,  2, Flags.LOAD);
-        def(LLOAD_1         , "lload_1"         , "b"    ,  2, Flags.LOAD);
-        def(LLOAD_2         , "lload_2"         , "b"    ,  2, Flags.LOAD);
-        def(LLOAD_3         , "lload_3"         , "b"    ,  2, Flags.LOAD);
-        def(ALOAD_0         , "aload_0"         , "b"    ,  1, Flags.LOAD);
-        def(ALOAD_1         , "aload_1"         , "b"    ,  1, Flags.LOAD);
-        def(ALOAD_2         , "aload_2"         , "b"    ,  1, Flags.LOAD);
-        def(ALOAD_3         , "aload_3"         , "b"    ,  1, Flags.LOAD);
-        def(IALOAD          , "iaload"          , "b"    , -1, Flags.TRAP);
-        def(LALOAD          , "laload"          , "b"    ,  0, Flags.TRAP);
-        def(AALOAD          , "aaload"          , "b"    , -1, Flags.TRAP);
-        def(BALOAD          , "baload"          , "b"    , -1, Flags.TRAP);
-        def(CALOAD          , "caload"          , "b"    , -1, Flags.TRAP);
-        def(SALOAD          , "saload"          , "b"    , -1, Flags.TRAP);
-        def(ISTORE          , "istore"          , "bi"   , -1, Flags.STORE);
-        def(LSTORE          , "lstore"          , "bi"   , -2, Flags.STORE);
-        def(ASTORE          , "astore"          , "bi"   , -1, Flags.STORE);
-        def(ISTORE_0        , "istore_0"        , "b"    , -1, Flags.STORE);
-        def(ISTORE_1        , "istore_1"        , "b"    , -1, Flags.STORE);
-        def(ISTORE_2        , "istore_2"        , "b"    , -1, Flags.STORE);
-        def(ISTORE_3        , "istore_3"        , "b"    , -1, Flags.STORE);
-        def(LSTORE_0        , "lstore_0"        , "b"    , -2, Flags.STORE);
-        def(LSTORE_1        , "lstore_1"        , "b"    , -2, Flags.STORE);
-        def(LSTORE_2        , "lstore_2"        , "b"    , -2, Flags.STORE);
-        def(LSTORE_3        , "lstore_3"        , "b"    , -2, Flags.STORE);
-        def(ASTORE_0        , "astore_0"        , "b"    , -1, Flags.STORE);
-        def(ASTORE_1        , "astore_1"        , "b"    , -1, Flags.STORE);
-        def(ASTORE_2        , "astore_2"        , "b"    , -1, Flags.STORE);
-        def(ASTORE_3        , "astore_3"        , "b"    , -1, Flags.STORE);
-        def(IASTORE         , "iastore"         , "b"    , -3, Flags.TRAP);
-        def(LASTORE         , "lastore"         , "b"    , -4, Flags.TRAP);
-        def(AASTORE         , "aastore"         , "b"    , -3, Flags.TRAP);
-        def(BASTORE         , "bastore"         , "b"    , -3, Flags.TRAP);
-        def(CASTORE         , "castore"         , "b"    , -3, Flags.TRAP);
-        def(SASTORE         , "sastore"         , "b"    , -3, Flags.TRAP);
+        def(LDC             , "ldc"             , "bi"   ,  1, Bytecodes.BytecodeFlags.TRAP);
+        def(LDC_W           , "ldc_w"           , "bii"  ,  1, Bytecodes.BytecodeFlags.TRAP);
+        def(LDC2_W          , "ldc2_w"          , "bii"  ,  2, Bytecodes.BytecodeFlags.TRAP);
+        def(ILOAD           , "iload"           , "bi"   ,  1, Bytecodes.BytecodeFlags.LOAD);
+        def(LLOAD           , "lload"           , "bi"   ,  2, Bytecodes.BytecodeFlags.LOAD);
+        def(ALOAD           , "aload"           , "bi"   ,  1, Bytecodes.BytecodeFlags.LOAD);
+        def(ILOAD_0         , "iload_0"         , "b"    ,  1, Bytecodes.BytecodeFlags.LOAD);
+        def(ILOAD_1         , "iload_1"         , "b"    ,  1, Bytecodes.BytecodeFlags.LOAD);
+        def(ILOAD_2         , "iload_2"         , "b"    ,  1, Bytecodes.BytecodeFlags.LOAD);
+        def(ILOAD_3         , "iload_3"         , "b"    ,  1, Bytecodes.BytecodeFlags.LOAD);
+        def(LLOAD_0         , "lload_0"         , "b"    ,  2, Bytecodes.BytecodeFlags.LOAD);
+        def(LLOAD_1         , "lload_1"         , "b"    ,  2, Bytecodes.BytecodeFlags.LOAD);
+        def(LLOAD_2         , "lload_2"         , "b"    ,  2, Bytecodes.BytecodeFlags.LOAD);
+        def(LLOAD_3         , "lload_3"         , "b"    ,  2, Bytecodes.BytecodeFlags.LOAD);
+        def(ALOAD_0         , "aload_0"         , "b"    ,  1, Bytecodes.BytecodeFlags.LOAD);
+        def(ALOAD_1         , "aload_1"         , "b"    ,  1, Bytecodes.BytecodeFlags.LOAD);
+        def(ALOAD_2         , "aload_2"         , "b"    ,  1, Bytecodes.BytecodeFlags.LOAD);
+        def(ALOAD_3         , "aload_3"         , "b"    ,  1, Bytecodes.BytecodeFlags.LOAD);
+        def(IALOAD          , "iaload"          , "b"    , -1, Bytecodes.BytecodeFlags.TRAP);
+        def(LALOAD          , "laload"          , "b"    ,  0, Bytecodes.BytecodeFlags.TRAP);
+        def(AALOAD          , "aaload"          , "b"    , -1, Bytecodes.BytecodeFlags.TRAP);
+        def(BALOAD          , "baload"          , "b"    , -1, Bytecodes.BytecodeFlags.TRAP);
+        def(CALOAD          , "caload"          , "b"    , -1, Bytecodes.BytecodeFlags.TRAP);
+        def(SALOAD          , "saload"          , "b"    , -1, Bytecodes.BytecodeFlags.TRAP);
+        def(ISTORE          , "istore"          , "bi"   , -1, Bytecodes.BytecodeFlags.STORE);
+        def(LSTORE          , "lstore"          , "bi"   , -2, Bytecodes.BytecodeFlags.STORE);
+        def(ASTORE          , "astore"          , "bi"   , -1, Bytecodes.BytecodeFlags.STORE);
+        def(ISTORE_0        , "istore_0"        , "b"    , -1, Bytecodes.BytecodeFlags.STORE);
+        def(ISTORE_1        , "istore_1"        , "b"    , -1, Bytecodes.BytecodeFlags.STORE);
+        def(ISTORE_2        , "istore_2"        , "b"    , -1, Bytecodes.BytecodeFlags.STORE);
+        def(ISTORE_3        , "istore_3"        , "b"    , -1, Bytecodes.BytecodeFlags.STORE);
+        def(LSTORE_0        , "lstore_0"        , "b"    , -2, Bytecodes.BytecodeFlags.STORE);
+        def(LSTORE_1        , "lstore_1"        , "b"    , -2, Bytecodes.BytecodeFlags.STORE);
+        def(LSTORE_2        , "lstore_2"        , "b"    , -2, Bytecodes.BytecodeFlags.STORE);
+        def(LSTORE_3        , "lstore_3"        , "b"    , -2, Bytecodes.BytecodeFlags.STORE);
+        def(ASTORE_0        , "astore_0"        , "b"    , -1, Bytecodes.BytecodeFlags.STORE);
+        def(ASTORE_1        , "astore_1"        , "b"    , -1, Bytecodes.BytecodeFlags.STORE);
+        def(ASTORE_2        , "astore_2"        , "b"    , -1, Bytecodes.BytecodeFlags.STORE);
+        def(ASTORE_3        , "astore_3"        , "b"    , -1, Bytecodes.BytecodeFlags.STORE);
+        def(IASTORE         , "iastore"         , "b"    , -3, Bytecodes.BytecodeFlags.TRAP);
+        def(LASTORE         , "lastore"         , "b"    , -4, Bytecodes.BytecodeFlags.TRAP);
+        def(AASTORE         , "aastore"         , "b"    , -3, Bytecodes.BytecodeFlags.TRAP);
+        def(BASTORE         , "bastore"         , "b"    , -3, Bytecodes.BytecodeFlags.TRAP);
+        def(CASTORE         , "castore"         , "b"    , -3, Bytecodes.BytecodeFlags.TRAP);
+        def(SASTORE         , "sastore"         , "b"    , -3, Bytecodes.BytecodeFlags.TRAP);
         def(POP             , "pop"             , "b"    , -1);
         def(POP2            , "pop2"            , "b"    , -2);
         def(DUP             , "dup"             , "b"    ,  1);
@@ -369,16 +367,16 @@ public final class Bytecodes
         def(DUP2_X1         , "dup2_x1"         , "b"    ,  2);
         def(DUP2_X2         , "dup2_x2"         , "b"    ,  2);
         def(SWAP            , "swap"            , "b"    ,  0);
-        def(IADD            , "iadd"            , "b"    , -1, Flags.COMMUTATIVE | Flags.ASSOCIATIVE);
-        def(LADD            , "ladd"            , "b"    , -2, Flags.COMMUTATIVE | Flags.ASSOCIATIVE);
+        def(IADD            , "iadd"            , "b"    , -1, Bytecodes.BytecodeFlags.COMMUTATIVE | Bytecodes.BytecodeFlags.ASSOCIATIVE);
+        def(LADD            , "ladd"            , "b"    , -2, Bytecodes.BytecodeFlags.COMMUTATIVE | Bytecodes.BytecodeFlags.ASSOCIATIVE);
         def(ISUB            , "isub"            , "b"    , -1);
         def(LSUB            , "lsub"            , "b"    , -2);
-        def(IMUL            , "imul"            , "b"    , -1, Flags.COMMUTATIVE | Flags.ASSOCIATIVE);
-        def(LMUL            , "lmul"            , "b"    , -2, Flags.COMMUTATIVE | Flags.ASSOCIATIVE);
-        def(IDIV            , "idiv"            , "b"    , -1, Flags.TRAP);
-        def(LDIV            , "ldiv"            , "b"    , -2, Flags.TRAP);
-        def(IREM            , "irem"            , "b"    , -1, Flags.TRAP);
-        def(LREM            , "lrem"            , "b"    , -2, Flags.TRAP);
+        def(IMUL            , "imul"            , "b"    , -1, Bytecodes.BytecodeFlags.COMMUTATIVE | Bytecodes.BytecodeFlags.ASSOCIATIVE);
+        def(LMUL            , "lmul"            , "b"    , -2, Bytecodes.BytecodeFlags.COMMUTATIVE | Bytecodes.BytecodeFlags.ASSOCIATIVE);
+        def(IDIV            , "idiv"            , "b"    , -1, Bytecodes.BytecodeFlags.TRAP);
+        def(LDIV            , "ldiv"            , "b"    , -2, Bytecodes.BytecodeFlags.TRAP);
+        def(IREM            , "irem"            , "b"    , -1, Bytecodes.BytecodeFlags.TRAP);
+        def(LREM            , "lrem"            , "b"    , -2, Bytecodes.BytecodeFlags.TRAP);
         def(INEG            , "ineg"            , "b"    ,  0);
         def(LNEG            , "lneg"            , "b"    ,  0);
         def(ISHL            , "ishl"            , "b"    , -1);
@@ -387,66 +385,66 @@ public final class Bytecodes
         def(LSHR            , "lshr"            , "b"    , -1);
         def(IUSHR           , "iushr"           , "b"    , -1);
         def(LUSHR           , "lushr"           , "b"    , -1);
-        def(IAND            , "iand"            , "b"    , -1, Flags.COMMUTATIVE | Flags.ASSOCIATIVE);
-        def(LAND            , "land"            , "b"    , -2, Flags.COMMUTATIVE | Flags.ASSOCIATIVE);
-        def(IOR             , "ior"             , "b"    , -1, Flags.COMMUTATIVE | Flags.ASSOCIATIVE);
-        def(LOR             , "lor"             , "b"    , -2, Flags.COMMUTATIVE | Flags.ASSOCIATIVE);
-        def(IXOR            , "ixor"            , "b"    , -1, Flags.COMMUTATIVE | Flags.ASSOCIATIVE);
-        def(LXOR            , "lxor"            , "b"    , -2, Flags.COMMUTATIVE | Flags.ASSOCIATIVE);
-        def(IINC            , "iinc"            , "bic"  ,  0, Flags.LOAD | Flags.STORE);
+        def(IAND            , "iand"            , "b"    , -1, Bytecodes.BytecodeFlags.COMMUTATIVE | Bytecodes.BytecodeFlags.ASSOCIATIVE);
+        def(LAND            , "land"            , "b"    , -2, Bytecodes.BytecodeFlags.COMMUTATIVE | Bytecodes.BytecodeFlags.ASSOCIATIVE);
+        def(IOR             , "ior"             , "b"    , -1, Bytecodes.BytecodeFlags.COMMUTATIVE | Bytecodes.BytecodeFlags.ASSOCIATIVE);
+        def(LOR             , "lor"             , "b"    , -2, Bytecodes.BytecodeFlags.COMMUTATIVE | Bytecodes.BytecodeFlags.ASSOCIATIVE);
+        def(IXOR            , "ixor"            , "b"    , -1, Bytecodes.BytecodeFlags.COMMUTATIVE | Bytecodes.BytecodeFlags.ASSOCIATIVE);
+        def(LXOR            , "lxor"            , "b"    , -2, Bytecodes.BytecodeFlags.COMMUTATIVE | Bytecodes.BytecodeFlags.ASSOCIATIVE);
+        def(IINC            , "iinc"            , "bic"  ,  0, Bytecodes.BytecodeFlags.LOAD | Bytecodes.BytecodeFlags.STORE);
         def(I2L             , "i2l"             , "b"    ,  1);
         def(L2I             , "l2i"             , "b"    , -1);
         def(I2B             , "i2b"             , "b"    ,  0);
         def(I2C             , "i2c"             , "b"    ,  0);
         def(I2S             , "i2s"             , "b"    ,  0);
         def(LCMP            , "lcmp"            , "b"    , -3);
-        def(IFEQ            , "ifeq"            , "boo"  , -1, Flags.FALL_THROUGH | Flags.BRANCH);
-        def(IFNE            , "ifne"            , "boo"  , -1, Flags.FALL_THROUGH | Flags.BRANCH);
-        def(IFLT            , "iflt"            , "boo"  , -1, Flags.FALL_THROUGH | Flags.BRANCH);
-        def(IFGE            , "ifge"            , "boo"  , -1, Flags.FALL_THROUGH | Flags.BRANCH);
-        def(IFGT            , "ifgt"            , "boo"  , -1, Flags.FALL_THROUGH | Flags.BRANCH);
-        def(IFLE            , "ifle"            , "boo"  , -1, Flags.FALL_THROUGH | Flags.BRANCH);
-        def(IF_ICMPEQ       , "if_icmpeq"       , "boo"  , -2, Flags.COMMUTATIVE | Flags.FALL_THROUGH | Flags.BRANCH);
-        def(IF_ICMPNE       , "if_icmpne"       , "boo"  , -2, Flags.COMMUTATIVE | Flags.FALL_THROUGH | Flags.BRANCH);
-        def(IF_ICMPLT       , "if_icmplt"       , "boo"  , -2, Flags.FALL_THROUGH | Flags.BRANCH);
-        def(IF_ICMPGE       , "if_icmpge"       , "boo"  , -2, Flags.FALL_THROUGH | Flags.BRANCH);
-        def(IF_ICMPGT       , "if_icmpgt"       , "boo"  , -2, Flags.FALL_THROUGH | Flags.BRANCH);
-        def(IF_ICMPLE       , "if_icmple"       , "boo"  , -2, Flags.FALL_THROUGH | Flags.BRANCH);
-        def(IF_ACMPEQ       , "if_acmpeq"       , "boo"  , -2, Flags.COMMUTATIVE | Flags.FALL_THROUGH | Flags.BRANCH);
-        def(IF_ACMPNE       , "if_acmpne"       , "boo"  , -2, Flags.COMMUTATIVE | Flags.FALL_THROUGH | Flags.BRANCH);
-        def(GOTO            , "goto"            , "boo"  ,  0, Flags.STOP | Flags.BRANCH);
-        def(JSR             , "jsr"             , "boo"  ,  0, Flags.STOP | Flags.BRANCH);
-        def(RET             , "ret"             , "bi"   ,  0, Flags.STOP);
-        def(TABLESWITCH     , "tableswitch"     , ""     , -1, Flags.STOP);
-        def(LOOKUPSWITCH    , "lookupswitch"    , ""     , -1, Flags.STOP);
-        def(IRETURN         , "ireturn"         , "b"    , -1, Flags.TRAP | Flags.STOP);
-        def(LRETURN         , "lreturn"         , "b"    , -2, Flags.TRAP | Flags.STOP);
-        def(ARETURN         , "areturn"         , "b"    , -1, Flags.TRAP | Flags.STOP);
-        def(RETURN          , "return"          , "b"    ,  0, Flags.TRAP | Flags.STOP);
-        def(GETSTATIC       , "getstatic"       , "bjj"  ,  1, Flags.TRAP | Flags.FIELD_READ);
-        def(PUTSTATIC       , "putstatic"       , "bjj"  , -1, Flags.TRAP | Flags.FIELD_WRITE);
-        def(GETFIELD        , "getfield"        , "bjj"  ,  0, Flags.TRAP | Flags.FIELD_READ);
-        def(PUTFIELD        , "putfield"        , "bjj"  , -2, Flags.TRAP | Flags.FIELD_WRITE);
-        def(INVOKEVIRTUAL   , "invokevirtual"   , "bjj"  , -1, Flags.TRAP | Flags.INVOKE);
-        def(INVOKESPECIAL   , "invokespecial"   , "bjj"  , -1, Flags.TRAP | Flags.INVOKE);
-        def(INVOKESTATIC    , "invokestatic"    , "bjj"  ,  0, Flags.TRAP | Flags.INVOKE);
-        def(INVOKEINTERFACE , "invokeinterface" , "bjja_", -1, Flags.TRAP | Flags.INVOKE);
-        def(INVOKEDYNAMIC   , "invokedynamic"   , "bjjjj",  0, Flags.TRAP | Flags.INVOKE);
-        def(NEW             , "new"             , "bii"  ,  1, Flags.TRAP);
-        def(NEWARRAY        , "newarray"        , "bc"   ,  0, Flags.TRAP);
-        def(ANEWARRAY       , "anewarray"       , "bii"  ,  0, Flags.TRAP);
-        def(ARRAYLENGTH     , "arraylength"     , "b"    ,  0, Flags.TRAP);
-        def(ATHROW          , "athrow"          , "b"    , -1, Flags.TRAP | Flags.STOP);
-        def(CHECKCAST       , "checkcast"       , "bii"  ,  0, Flags.TRAP);
-        def(INSTANCEOF      , "instanceof"      , "bii"  ,  0, Flags.TRAP);
-        def(MONITORENTER    , "monitorenter"    , "b"    , -1, Flags.TRAP);
-        def(MONITOREXIT     , "monitorexit"     , "b"    , -1, Flags.TRAP);
+        def(IFEQ            , "ifeq"            , "boo"  , -1, Bytecodes.BytecodeFlags.FALL_THROUGH | Bytecodes.BytecodeFlags.BRANCH);
+        def(IFNE            , "ifne"            , "boo"  , -1, Bytecodes.BytecodeFlags.FALL_THROUGH | Bytecodes.BytecodeFlags.BRANCH);
+        def(IFLT            , "iflt"            , "boo"  , -1, Bytecodes.BytecodeFlags.FALL_THROUGH | Bytecodes.BytecodeFlags.BRANCH);
+        def(IFGE            , "ifge"            , "boo"  , -1, Bytecodes.BytecodeFlags.FALL_THROUGH | Bytecodes.BytecodeFlags.BRANCH);
+        def(IFGT            , "ifgt"            , "boo"  , -1, Bytecodes.BytecodeFlags.FALL_THROUGH | Bytecodes.BytecodeFlags.BRANCH);
+        def(IFLE            , "ifle"            , "boo"  , -1, Bytecodes.BytecodeFlags.FALL_THROUGH | Bytecodes.BytecodeFlags.BRANCH);
+        def(IF_ICMPEQ       , "if_icmpeq"       , "boo"  , -2, Bytecodes.BytecodeFlags.COMMUTATIVE | Bytecodes.BytecodeFlags.FALL_THROUGH | Bytecodes.BytecodeFlags.BRANCH);
+        def(IF_ICMPNE       , "if_icmpne"       , "boo"  , -2, Bytecodes.BytecodeFlags.COMMUTATIVE | Bytecodes.BytecodeFlags.FALL_THROUGH | Bytecodes.BytecodeFlags.BRANCH);
+        def(IF_ICMPLT       , "if_icmplt"       , "boo"  , -2, Bytecodes.BytecodeFlags.FALL_THROUGH | Bytecodes.BytecodeFlags.BRANCH);
+        def(IF_ICMPGE       , "if_icmpge"       , "boo"  , -2, Bytecodes.BytecodeFlags.FALL_THROUGH | Bytecodes.BytecodeFlags.BRANCH);
+        def(IF_ICMPGT       , "if_icmpgt"       , "boo"  , -2, Bytecodes.BytecodeFlags.FALL_THROUGH | Bytecodes.BytecodeFlags.BRANCH);
+        def(IF_ICMPLE       , "if_icmple"       , "boo"  , -2, Bytecodes.BytecodeFlags.FALL_THROUGH | Bytecodes.BytecodeFlags.BRANCH);
+        def(IF_ACMPEQ       , "if_acmpeq"       , "boo"  , -2, Bytecodes.BytecodeFlags.COMMUTATIVE | Bytecodes.BytecodeFlags.FALL_THROUGH | Bytecodes.BytecodeFlags.BRANCH);
+        def(IF_ACMPNE       , "if_acmpne"       , "boo"  , -2, Bytecodes.BytecodeFlags.COMMUTATIVE | Bytecodes.BytecodeFlags.FALL_THROUGH | Bytecodes.BytecodeFlags.BRANCH);
+        def(GOTO            , "goto"            , "boo"  ,  0, Bytecodes.BytecodeFlags.STOP | Bytecodes.BytecodeFlags.BRANCH);
+        def(JSR             , "jsr"             , "boo"  ,  0, Bytecodes.BytecodeFlags.STOP | Bytecodes.BytecodeFlags.BRANCH);
+        def(RET             , "ret"             , "bi"   ,  0, Bytecodes.BytecodeFlags.STOP);
+        def(TABLESWITCH     , "tableswitch"     , ""     , -1, Bytecodes.BytecodeFlags.STOP);
+        def(LOOKUPSWITCH    , "lookupswitch"    , ""     , -1, Bytecodes.BytecodeFlags.STOP);
+        def(IRETURN         , "ireturn"         , "b"    , -1, Bytecodes.BytecodeFlags.TRAP | Bytecodes.BytecodeFlags.STOP);
+        def(LRETURN         , "lreturn"         , "b"    , -2, Bytecodes.BytecodeFlags.TRAP | Bytecodes.BytecodeFlags.STOP);
+        def(ARETURN         , "areturn"         , "b"    , -1, Bytecodes.BytecodeFlags.TRAP | Bytecodes.BytecodeFlags.STOP);
+        def(RETURN          , "return"          , "b"    ,  0, Bytecodes.BytecodeFlags.TRAP | Bytecodes.BytecodeFlags.STOP);
+        def(GETSTATIC       , "getstatic"       , "bjj"  ,  1, Bytecodes.BytecodeFlags.TRAP | Bytecodes.BytecodeFlags.FIELD_READ);
+        def(PUTSTATIC       , "putstatic"       , "bjj"  , -1, Bytecodes.BytecodeFlags.TRAP | Bytecodes.BytecodeFlags.FIELD_WRITE);
+        def(GETFIELD        , "getfield"        , "bjj"  ,  0, Bytecodes.BytecodeFlags.TRAP | Bytecodes.BytecodeFlags.FIELD_READ);
+        def(PUTFIELD        , "putfield"        , "bjj"  , -2, Bytecodes.BytecodeFlags.TRAP | Bytecodes.BytecodeFlags.FIELD_WRITE);
+        def(INVOKEVIRTUAL   , "invokevirtual"   , "bjj"  , -1, Bytecodes.BytecodeFlags.TRAP | Bytecodes.BytecodeFlags.INVOKE);
+        def(INVOKESPECIAL   , "invokespecial"   , "bjj"  , -1, Bytecodes.BytecodeFlags.TRAP | Bytecodes.BytecodeFlags.INVOKE);
+        def(INVOKESTATIC    , "invokestatic"    , "bjj"  ,  0, Bytecodes.BytecodeFlags.TRAP | Bytecodes.BytecodeFlags.INVOKE);
+        def(INVOKEINTERFACE , "invokeinterface" , "bjja_", -1, Bytecodes.BytecodeFlags.TRAP | Bytecodes.BytecodeFlags.INVOKE);
+        def(INVOKEDYNAMIC   , "invokedynamic"   , "bjjjj",  0, Bytecodes.BytecodeFlags.TRAP | Bytecodes.BytecodeFlags.INVOKE);
+        def(NEW             , "new"             , "bii"  ,  1, Bytecodes.BytecodeFlags.TRAP);
+        def(NEWARRAY        , "newarray"        , "bc"   ,  0, Bytecodes.BytecodeFlags.TRAP);
+        def(ANEWARRAY       , "anewarray"       , "bii"  ,  0, Bytecodes.BytecodeFlags.TRAP);
+        def(ARRAYLENGTH     , "arraylength"     , "b"    ,  0, Bytecodes.BytecodeFlags.TRAP);
+        def(ATHROW          , "athrow"          , "b"    , -1, Bytecodes.BytecodeFlags.TRAP | Bytecodes.BytecodeFlags.STOP);
+        def(CHECKCAST       , "checkcast"       , "bii"  ,  0, Bytecodes.BytecodeFlags.TRAP);
+        def(INSTANCEOF      , "instanceof"      , "bii"  ,  0, Bytecodes.BytecodeFlags.TRAP);
+        def(MONITORENTER    , "monitorenter"    , "b"    , -1, Bytecodes.BytecodeFlags.TRAP);
+        def(MONITOREXIT     , "monitorexit"     , "b"    , -1, Bytecodes.BytecodeFlags.TRAP);
         def(WIDE            , "wide"            , ""     ,  0);
-        def(MULTIANEWARRAY  , "multianewarray"  , "biic" ,  1, Flags.TRAP);
-        def(IFNULL          , "ifnull"          , "boo"  , -1, Flags.FALL_THROUGH | Flags.BRANCH);
-        def(IFNONNULL       , "ifnonnull"       , "boo"  , -1, Flags.FALL_THROUGH | Flags.BRANCH);
-        def(GOTO_W          , "goto_w"          , "boooo",  0, Flags.STOP | Flags.BRANCH);
-        def(JSR_W           , "jsr_w"           , "boooo",  0, Flags.STOP | Flags.BRANCH);
+        def(MULTIANEWARRAY  , "multianewarray"  , "biic" ,  1, Bytecodes.BytecodeFlags.TRAP);
+        def(IFNULL          , "ifnull"          , "boo"  , -1, Bytecodes.BytecodeFlags.FALL_THROUGH | Bytecodes.BytecodeFlags.BRANCH);
+        def(IFNONNULL       , "ifnonnull"       , "boo"  , -1, Bytecodes.BytecodeFlags.FALL_THROUGH | Bytecodes.BytecodeFlags.BRANCH);
+        def(GOTO_W          , "goto_w"          , "boooo",  0, Bytecodes.BytecodeFlags.STOP | Bytecodes.BytecodeFlags.BRANCH);
+        def(JSR_W           , "jsr_w"           , "boooo",  0, Bytecodes.BytecodeFlags.STOP | Bytecodes.BytecodeFlags.BRANCH);
     }
 
     ///
@@ -457,7 +455,7 @@ public final class Bytecodes
     ///
     public static boolean isCommutative(int __opcode)
     {
-        return (flagsArray[__opcode & 0xff] & Flags.COMMUTATIVE) != 0;
+        return (flagsArray[__opcode & 0xff] & Bytecodes.BytecodeFlags.COMMUTATIVE) != 0;
     }
 
     ///
@@ -547,7 +545,7 @@ public final class Bytecodes
     ///
     public static boolean canTrap(int __opcode)
     {
-        return (flagsArray[__opcode & 0xff] & Flags.TRAP) != 0;
+        return (flagsArray[__opcode & 0xff] & Bytecodes.BytecodeFlags.TRAP) != 0;
     }
 
     ///
@@ -560,7 +558,7 @@ public final class Bytecodes
     ///
     public static boolean isLoad(int __opcode)
     {
-        return (flagsArray[__opcode & 0xff] & Flags.LOAD) != 0;
+        return (flagsArray[__opcode & 0xff] & Bytecodes.BytecodeFlags.LOAD) != 0;
     }
 
     ///
@@ -572,7 +570,7 @@ public final class Bytecodes
     ///
     public static boolean isStop(int __opcode)
     {
-        return (flagsArray[__opcode & 0xff] & Flags.STOP) != 0;
+        return (flagsArray[__opcode & 0xff] & Bytecodes.BytecodeFlags.STOP) != 0;
     }
 
     ///
@@ -584,7 +582,7 @@ public final class Bytecodes
     ///
     public static boolean isInvoke(int __opcode)
     {
-        return (flagsArray[__opcode & 0xff] & Flags.INVOKE) != 0;
+        return (flagsArray[__opcode & 0xff] & Bytecodes.BytecodeFlags.INVOKE) != 0;
     }
 
     ///
@@ -596,7 +594,7 @@ public final class Bytecodes
     ///
     public static boolean isStore(int __opcode)
     {
-        return (flagsArray[__opcode & 0xff] & Flags.STORE) != 0;
+        return (flagsArray[__opcode & 0xff] & Bytecodes.BytecodeFlags.STORE) != 0;
     }
 
     ///
@@ -607,7 +605,7 @@ public final class Bytecodes
     ///
     public static boolean isBlockEnd(int __opcode)
     {
-        return (flagsArray[__opcode & 0xff] & (Flags.STOP | Flags.FALL_THROUGH)) != 0;
+        return (flagsArray[__opcode & 0xff] & (Bytecodes.BytecodeFlags.STOP | Bytecodes.BytecodeFlags.FALL_THROUGH)) != 0;
     }
 
     ///
@@ -620,7 +618,7 @@ public final class Bytecodes
     ///
     public static boolean isBranch(int __opcode)
     {
-        return (flagsArray[__opcode & 0xff] & Flags.BRANCH) != 0;
+        return (flagsArray[__opcode & 0xff] & Bytecodes.BytecodeFlags.BRANCH) != 0;
     }
 
     ///
@@ -630,7 +628,7 @@ public final class Bytecodes
     ///
     public static boolean isConditionalBranch(int __opcode)
     {
-        return (flagsArray[__opcode & 0xff] & Flags.FALL_THROUGH) != 0;
+        return (flagsArray[__opcode & 0xff] & Bytecodes.BytecodeFlags.FALL_THROUGH) != 0;
     }
 
     ///
@@ -700,7 +698,7 @@ public final class Bytecodes
     //
     // @param name instruction name (lower case)
     // @param format encodes the length of the instruction
-    // @param flags the set of {@link Flags} associated with the instruction
+    // @param flags the set of {@link Bytecodes.BytecodeFlags} associated with the instruction
     ///
     private static void def(int __opcode, String __name, String __format, int __stackEffect, int __flags)
     {

@@ -23,11 +23,11 @@ public final class IdentityHashCodeNode extends FixedWithNextNode implements Can
     // @def
     public static final NodeClass<IdentityHashCodeNode> TYPE = NodeClass.create(IdentityHashCodeNode.class);
 
-    @Input
+    @Node.Input
     // @field
     ValueNode ___object;
 
-    // @cons
+    // @cons IdentityHashCodeNode
     public IdentityHashCodeNode(ValueNode __object)
     {
         super(TYPE, StampFactory.forInteger(32));
@@ -67,6 +67,6 @@ public final class IdentityHashCodeNode extends FixedWithNextNode implements Can
         __tool.getLowerer().lower(this, __tool);
     }
 
-    @NodeIntrinsic
+    @Node.NodeIntrinsic
     public static native int identityHashCode(Object __object);
 }

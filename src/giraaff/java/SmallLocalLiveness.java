@@ -1,6 +1,6 @@
 package giraaff.java;
 
-import giraaff.java.BciBlockMapping.BciBlock;
+import giraaff.java.BciBlockMapping;
 
 // @class SmallLocalLiveness
 public final class SmallLocalLiveness extends LocalLiveness
@@ -20,8 +20,8 @@ public final class SmallLocalLiveness extends LocalLiveness
     // @field
     private final int ___maxLocals;
 
-    // @cons
-    public SmallLocalLiveness(BciBlock[] __blocks, int __maxLocals, int __loopCount)
+    // @cons SmallLocalLiveness
+    public SmallLocalLiveness(BciBlockMapping.BciBlock[] __blocks, int __maxLocals, int __loopCount)
     {
         super(__blocks);
         this.___maxLocals = __maxLocals;
@@ -70,7 +70,7 @@ public final class SmallLocalLiveness extends LocalLiveness
             this.___localsLiveKill[__blockID] |= __bit;
         }
 
-        BciBlock __block = this.___blocks[__blockID];
+        BciBlockMapping.BciBlock __block = this.___blocks[__blockID];
         long __tmp = __block.___loops;
         int __pos = 0;
         while (__tmp != 0)
@@ -85,14 +85,14 @@ public final class SmallLocalLiveness extends LocalLiveness
     }
 
     @Override
-    public boolean localIsLiveIn(BciBlock __block, int __local)
+    public boolean localIsLiveIn(BciBlockMapping.BciBlock __block, int __local)
     {
         int __blockID = __block.getId();
         return __blockID >= Integer.MAX_VALUE ? false : (this.___localsLiveIn[__blockID] & (1L << __local)) != 0L;
     }
 
     @Override
-    public boolean localIsLiveOut(BciBlock __block, int __local)
+    public boolean localIsLiveOut(BciBlockMapping.BciBlock __block, int __local)
     {
         int __blockID = __block.getId();
         return __blockID >= Integer.MAX_VALUE ? false : (this.___localsLiveOut[__blockID] & (1L << __local)) != 0L;

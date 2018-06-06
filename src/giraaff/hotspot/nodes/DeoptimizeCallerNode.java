@@ -4,6 +4,7 @@ import jdk.vm.ci.meta.DeoptimizationAction;
 import jdk.vm.ci.meta.DeoptimizationReason;
 
 import giraaff.core.common.type.StampFactory;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.hotspot.HotSpotLIRGenerator;
 import giraaff.nodes.ControlSinkNode;
@@ -24,7 +25,7 @@ public final class DeoptimizeCallerNode extends ControlSinkNode implements LIRLo
     // @field
     protected final DeoptimizationReason ___reason;
 
-    // @cons
+    // @cons DeoptimizeCallerNode
     public DeoptimizeCallerNode(DeoptimizationAction __action, DeoptimizationReason __reason)
     {
         super(TYPE, StampFactory.forVoid());
@@ -38,6 +39,6 @@ public final class DeoptimizeCallerNode extends ControlSinkNode implements LIRLo
         ((HotSpotLIRGenerator) __gen.getLIRGeneratorTool()).emitDeoptimizeCaller(this.___action, this.___reason);
     }
 
-    @NodeIntrinsic
-    public static native void deopt(@ConstantNodeParameter DeoptimizationAction __action, @ConstantNodeParameter DeoptimizationReason __reason);
+    @Node.NodeIntrinsic
+    public static native void deopt(@Node.ConstantNodeParameter DeoptimizationAction __action, @Node.ConstantNodeParameter DeoptimizationReason __reason);
 }

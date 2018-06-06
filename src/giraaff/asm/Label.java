@@ -30,13 +30,13 @@ public final class Label
         return this.___position;
     }
 
-    // @cons
+    // @cons Label
     public Label()
     {
         super();
     }
 
-    // @cons
+    // @cons Label
     public Label(int __id)
     {
         super();

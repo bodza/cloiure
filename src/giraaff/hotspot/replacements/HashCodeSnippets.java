@@ -13,16 +13,13 @@ import giraaff.nodes.StructuredGraph;
 import giraaff.nodes.extended.BranchProbabilityNode;
 import giraaff.nodes.spi.LoweringTool;
 import giraaff.replacements.SnippetTemplate;
-import giraaff.replacements.SnippetTemplate.AbstractTemplates;
-import giraaff.replacements.SnippetTemplate.Arguments;
-import giraaff.replacements.SnippetTemplate.SnippetInfo;
 import giraaff.replacements.Snippets;
 import giraaff.word.Word;
 
 // @class HashCodeSnippets
 public final class HashCodeSnippets implements Snippets
 {
-    // @cons
+    // @cons HashCodeSnippets
     private HashCodeSnippets()
     {
         super();
@@ -55,14 +52,14 @@ public final class HashCodeSnippets implements Snippets
         return HotSpotReplacementsUtil.identityHashCode(HotSpotForeignCallsProviderImpl.IDENTITY_HASHCODE, __x);
     }
 
-    // @class HashCodeSnippets.Templates
-    public static final class Templates extends AbstractTemplates
+    // @class HashCodeSnippets.HashCodeTemplates
+    public static final class HashCodeTemplates extends SnippetTemplate.AbstractTemplates
     {
         // @field
-        private final SnippetInfo ___identityHashCodeSnippet = snippet(HashCodeSnippets.class, "identityHashCodeSnippet", HotSpotReplacementsUtil.MARK_WORD_LOCATION);
+        private final SnippetTemplate.SnippetInfo ___identityHashCodeSnippet = snippet(HashCodeSnippets.class, "identityHashCodeSnippet", HotSpotReplacementsUtil.MARK_WORD_LOCATION);
 
-        // @cons
-        public Templates(HotSpotProviders __providers, TargetDescription __target)
+        // @cons HashCodeSnippets.HashCodeTemplates
+        public HashCodeTemplates(HotSpotProviders __providers, TargetDescription __target)
         {
             super(__providers, __providers.getSnippetReflection(), __target);
         }
@@ -70,7 +67,7 @@ public final class HashCodeSnippets implements Snippets
         public void lower(IdentityHashCodeNode __node, LoweringTool __tool)
         {
             StructuredGraph __graph = __node.graph();
-            Arguments __args = new Arguments(this.___identityHashCodeSnippet, __graph.getGuardsStage(), __tool.getLoweringStage());
+            SnippetTemplate.Arguments __args = new SnippetTemplate.Arguments(this.___identityHashCodeSnippet, __graph.getGuardsStage(), __tool.getLoweringStage());
             __args.add("thisObj", __node.___object);
             SnippetTemplate __template = template(__node, __args);
             __template.instantiate(this.___providers.getMetaAccess(), __node, SnippetTemplate.DEFAULT_REPLACER, __args);

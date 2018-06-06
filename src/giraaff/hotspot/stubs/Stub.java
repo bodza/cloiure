@@ -81,7 +81,7 @@ public abstract class Stub
     //
     // @param linkage linkage details for a call to the stub
     ///
-    // @cons
+    // @cons Stub
     public Stub(HotSpotProviders __providers, HotSpotForeignCallLinkage __linkage)
     {
         super();

@@ -5,20 +5,20 @@ import jdk.vm.ci.meta.Constant;
 import jdk.vm.ci.meta.Value;
 
 import giraaff.lir.LIRInstruction;
-import giraaff.lir.gen.LIRGeneratorTool.MoveFactory;
+import giraaff.lir.gen.LIRGeneratorTool;
 
 ///
-// Wrapper for {@link MoveFactory} that checks that the instructions created adhere to the contract
-// of {@link MoveFactory}.
+// Wrapper for {@link LIRGeneratorTool.MoveFactory} that checks that the instructions created
+// adhere to the contract of {@link LIRGeneratorTool.MoveFactory}.
 ///
 // @class VerifyingMoveFactory
-public final class VerifyingMoveFactory implements MoveFactory
+public final class VerifyingMoveFactory implements LIRGeneratorTool.MoveFactory
 {
     // @field
-    private final MoveFactory ___inner;
+    private final LIRGeneratorTool.MoveFactory ___inner;
 
-    // @cons
-    public VerifyingMoveFactory(MoveFactory __inner)
+    // @cons VerifyingMoveFactory
+    public VerifyingMoveFactory(LIRGeneratorTool.MoveFactory __inner)
     {
         super();
         this.___inner = __inner;

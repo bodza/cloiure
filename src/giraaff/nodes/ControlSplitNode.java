@@ -14,7 +14,7 @@ public abstract class ControlSplitNode extends FixedNode implements IterableNode
     // @def
     public static final NodeClass<ControlSplitNode> TYPE = NodeClass.create(ControlSplitNode.class);
 
-    // @cons
+    // @cons ControlSplitNode
     protected ControlSplitNode(NodeClass<? extends ControlSplitNode> __c, Stamp __stamp)
     {
         super(__c, __stamp);

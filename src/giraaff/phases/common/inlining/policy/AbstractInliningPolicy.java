@@ -24,7 +24,7 @@ public abstract class AbstractInliningPolicy implements InliningPolicy
     // @field
     protected final Map<Invoke, Double> ___hints;
 
-    // @cons
+    // @cons AbstractInliningPolicy
     public AbstractInliningPolicy(Map<Invoke, Double> __hints)
     {
         super();

@@ -6,7 +6,6 @@ import jdk.vm.ci.meta.AllocatableValue;
 
 import giraaff.core.common.LIRKind;
 import giraaff.lir.LIRInstruction;
-import giraaff.lir.LIRInstruction.OperandFlag;
 import giraaff.lir.LIRInstructionClass;
 import giraaff.lir.VirtualStackSlot;
 import giraaff.lir.asm.CompilationResultBuilder;
@@ -25,7 +24,7 @@ public final class HotSpotLockStack extends LIRInstruction
     // @def
     private static final AllocatableValue[] EMPTY = new AllocatableValue[0];
 
-    @Def({OperandFlag.STACK})
+    @LIRInstruction.Def({LIRInstruction.OperandFlag.STACK})
     // @field
     private AllocatableValue[] ___locks;
     // @field
@@ -33,7 +32,7 @@ public final class HotSpotLockStack extends LIRInstruction
     // @field
     private final LIRKind ___slotKind;
 
-    // @cons
+    // @cons HotSpotLockStack
     public HotSpotLockStack(FrameMapBuilder __frameMapBuilder, LIRKind __slotKind)
     {
         super(TYPE);

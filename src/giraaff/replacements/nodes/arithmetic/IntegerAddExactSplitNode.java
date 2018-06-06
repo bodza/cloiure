@@ -18,7 +18,7 @@ public final class IntegerAddExactSplitNode extends IntegerExactArithmeticSplitN
     // @def
     public static final NodeClass<IntegerAddExactSplitNode> TYPE = NodeClass.create(IntegerAddExactSplitNode.class);
 
-    // @cons
+    // @cons IntegerAddExactSplitNode
     public IntegerAddExactSplitNode(Stamp __stamp, ValueNode __x, ValueNode __y, AbstractBeginNode __next, AbstractBeginNode __overflowSuccessor)
     {
         super(TYPE, __stamp, __x, __y, __next, __overflowSuccessor);

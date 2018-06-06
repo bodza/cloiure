@@ -19,7 +19,7 @@ public final class PiArrayNode extends PiNode implements ArrayLengthProvider
     // @def
     public static final NodeClass<PiArrayNode> TYPE = NodeClass.create(PiArrayNode.class);
 
-    @Input
+    @Node.Input
     // @field
     ValueNode ___length;
 
@@ -29,7 +29,7 @@ public final class PiArrayNode extends PiNode implements ArrayLengthProvider
         return this.___length;
     }
 
-    // @cons
+    // @cons PiArrayNode
     public PiArrayNode(ValueNode __object, ValueNode __length, Stamp __stamp)
     {
         super(TYPE, __object, __stamp, null);
@@ -49,25 +49,25 @@ public final class PiArrayNode extends PiNode implements ArrayLengthProvider
     ///
     // Changes the stamp of an object inside a snippet to be the stamp of the node replaced by the snippet.
     ///
-    @NodeIntrinsic(Placeholder.class)
+    @Node.NodeIntrinsic(PiArrayNode.ArrayPlaceholder.class)
     public static native Object piArrayCastToSnippetReplaceeStamp(Object __object, int __length);
 
     ///
     // A placeholder node in a snippet that will be replaced with a {@link PiArrayNode} when the
     // snippet is instantiated.
     ///
-    // @class PiArrayNode.Placeholder
-    public static final class Placeholder extends PiNode.Placeholder
+    // @class PiArrayNode.ArrayPlaceholder
+    public static final class ArrayPlaceholder extends PiNode.Placeholder
     {
         // @def
-        public static final NodeClass<Placeholder> TYPE = NodeClass.create(Placeholder.class);
+        public static final NodeClass<PiArrayNode.ArrayPlaceholder> TYPE = NodeClass.create(PiArrayNode.ArrayPlaceholder.class);
 
-        @Input
+        @Node.Input
         // @field
         ValueNode ___length;
 
-        // @cons
-        protected Placeholder(ValueNode __object, ValueNode __length)
+        // @cons PiArrayNode.ArrayPlaceholder
+        protected ArrayPlaceholder(ValueNode __object, ValueNode __length)
         {
             super(TYPE, __object);
             this.___length = __length;

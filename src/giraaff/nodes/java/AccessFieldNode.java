@@ -3,6 +3,7 @@ package giraaff.nodes.java;
 import jdk.vm.ci.meta.ResolvedJavaField;
 
 import giraaff.core.common.type.Stamp;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.nodes.FixedWithNextNode;
 import giraaff.nodes.ValueNode;
@@ -18,7 +19,7 @@ public abstract class AccessFieldNode extends FixedWithNextNode implements Lower
     // @def
     public static final NodeClass<AccessFieldNode> TYPE = NodeClass.create(AccessFieldNode.class);
 
-    @OptionalInput
+    @Node.OptionalInput
     // @field
     ValueNode ___object;
 
@@ -36,7 +37,7 @@ public abstract class AccessFieldNode extends FixedWithNextNode implements Lower
     // @param object the instruction producing the receiver object
     // @param field the compiler interface representation of the field
     ///
-    // @cons
+    // @cons AccessFieldNode
     public AccessFieldNode(NodeClass<? extends AccessFieldNode> __c, Stamp __stamp, ValueNode __object, ResolvedJavaField __field)
     {
         super(__c, __stamp);

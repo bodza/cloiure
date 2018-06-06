@@ -13,7 +13,7 @@ import giraaff.core.common.type.IntegerStamp;
 import giraaff.core.common.type.Stamp;
 import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
-import giraaff.graph.spi.Canonicalizable.BinaryCommutative;
+import giraaff.graph.spi.Canonicalizable;
 import giraaff.graph.spi.CanonicalizerTool;
 import giraaff.nodes.ConstantNode;
 import giraaff.nodes.LogicConstantNode;
@@ -25,15 +25,15 @@ import giraaff.nodes.util.GraphUtil;
 import giraaff.util.GraalError;
 
 // @class IntegerEqualsNode
-public final class IntegerEqualsNode extends CompareNode implements BinaryCommutative<ValueNode>
+public final class IntegerEqualsNode extends CompareNode implements Canonicalizable.BinaryCommutative<ValueNode>
 {
     // @def
     public static final NodeClass<IntegerEqualsNode> TYPE = NodeClass.create(IntegerEqualsNode.class);
 
     // @def
-    private static final IntegerEqualsOp OP = new IntegerEqualsOp();
+    private static final IntegerEqualsNode.IntegerEqualsOp OP = new IntegerEqualsNode.IntegerEqualsOp();
 
-    // @cons
+    // @cons IntegerEqualsNode
     public IntegerEqualsNode(ValueNode __x, ValueNode __y)
     {
         super(TYPE, CanonicalCondition.EQ, __x, __y);
@@ -96,7 +96,7 @@ public final class IntegerEqualsNode extends CompareNode implements BinaryCommut
     }
 
     // @class IntegerEqualsNode.IntegerEqualsOp
-    public static final class IntegerEqualsOp extends CompareOp
+    public static final class IntegerEqualsOp extends CompareNode.CompareOp
     {
         @Override
         protected LogicNode optimizeNormalizeCompare(ConstantReflectionProvider __constantReflection, MetaAccessProvider __metaAccess, Integer __smallestCompareWidth, Constant __constant, NormalizeCompareNode __normalizeNode, boolean __mirrored, NodeView __view)

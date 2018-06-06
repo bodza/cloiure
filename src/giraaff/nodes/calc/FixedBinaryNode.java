@@ -1,6 +1,7 @@
 package giraaff.nodes.calc;
 
 import giraaff.core.common.type.Stamp;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.graph.spi.Canonicalizable;
 import giraaff.nodes.DeoptimizingFixedWithNextNode;
@@ -12,14 +13,14 @@ public abstract class FixedBinaryNode extends DeoptimizingFixedWithNextNode impl
     // @def
     public static final NodeClass<FixedBinaryNode> TYPE = NodeClass.create(FixedBinaryNode.class);
 
-    @Input
+    @Node.Input
     // @field
     protected ValueNode ___x;
-    @Input
+    @Node.Input
     // @field
     protected ValueNode ___y;
 
-    // @cons
+    // @cons FixedBinaryNode
     public FixedBinaryNode(NodeClass<? extends FixedBinaryNode> __c, Stamp __stamp, ValueNode __x, ValueNode __y)
     {
         super(__c, __stamp);

@@ -18,7 +18,7 @@ public final class ParameterNode extends AbstractLocalNode implements IterableNo
     // @field
     private Stamp ___uncheckedStamp;
 
-    // @cons
+    // @cons ParameterNode
     public ParameterNode(int __index, StampPair __stamp)
     {
         super(TYPE, __index, __stamp.getTrustedStamp());

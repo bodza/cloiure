@@ -1,18 +1,18 @@
 package giraaff.nodes;
 
 import giraaff.core.common.type.StampFactory;
-import giraaff.graph.Node.IndirectCanonicalization;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.nodes.calc.FloatingNode;
 
-// @NodeInfo.allowedUsageTypes "Condition"
+// @NodeInfo.allowedUsageTypes "InputType.ConditionI"
 // @class LogicNode
-public abstract class LogicNode extends FloatingNode implements IndirectCanonicalization
+public abstract class LogicNode extends FloatingNode implements Node.IndirectCanonicalization
 {
     // @def
     public static final NodeClass<LogicNode> TYPE = NodeClass.create(LogicNode.class);
 
-    // @cons
+    // @cons LogicNode
     public LogicNode(NodeClass<? extends LogicNode> __c)
     {
         super(__c, StampFactory.forVoid());

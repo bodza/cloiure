@@ -18,7 +18,7 @@ public class PhaseSuite<C> extends BasePhase<C>
     // @field
     private boolean ___immutable;
 
-    // @cons
+    // @cons PhaseSuite
     public PhaseSuite()
     {
         super();

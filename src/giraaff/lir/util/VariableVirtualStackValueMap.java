@@ -13,7 +13,7 @@ public final class VariableVirtualStackValueMap<K extends Value, T> extends Valu
     // @field
     private final Object[] ___slots;
 
-    // @cons
+    // @cons VariableVirtualStackValueMap
     public VariableVirtualStackValueMap(int __initialVariableCapacity, int __initialStackSlotCapacity)
     {
         super();
@@ -32,7 +32,7 @@ public final class VariableVirtualStackValueMap<K extends Value, T> extends Valu
         {
             return get(this.___slots, LIRValueUtil.asVirtualStackSlot(__value).getId());
         }
-        throw GraalError.shouldNotReachHere("Unsupported Value: " + __value);
+        throw GraalError.shouldNotReachHere("unsupported Value: " + __value);
     }
 
     @Override
@@ -48,7 +48,7 @@ public final class VariableVirtualStackValueMap<K extends Value, T> extends Valu
         }
         else
         {
-            throw GraalError.shouldNotReachHere("Unsupported Value: " + __value);
+            throw GraalError.shouldNotReachHere("unsupported Value: " + __value);
         }
     }
 
@@ -65,7 +65,7 @@ public final class VariableVirtualStackValueMap<K extends Value, T> extends Valu
         }
         else
         {
-            throw GraalError.shouldNotReachHere("Unsupported Value: " + __value);
+            throw GraalError.shouldNotReachHere("unsupported Value: " + __value);
         }
     }
 

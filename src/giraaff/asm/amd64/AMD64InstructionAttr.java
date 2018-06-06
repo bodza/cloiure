@@ -10,7 +10,7 @@ import jdk.vm.ci.code.TargetDescription;
 // @class AMD64InstructionAttr
 public final class AMD64InstructionAttr
 {
-    // @cons
+    // @cons AMD64InstructionAttr
     AMD64InstructionAttr(int __inVectorLen, boolean __inRexVexW, boolean __inLegacyMode, boolean __inNoRegMask, boolean __inUsesVl, TargetDescription __target)
     {
         super();

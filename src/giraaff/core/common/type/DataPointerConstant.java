@@ -12,7 +12,7 @@ public abstract class DataPointerConstant implements SerializableConstant
     // @field
     private final int ___alignment;
 
-    // @cons
+    // @cons DataPointerConstant
     protected DataPointerConstant(int __alignment)
     {
         super();

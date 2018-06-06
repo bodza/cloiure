@@ -40,7 +40,7 @@ public final class ObjectState
     // @field
     boolean ___copyOnWrite;
 
-    // @cons
+    // @cons ObjectState
     public ObjectState(ValueNode[] __entries, List<MonitorIdNode> __locks, boolean __ensureVirtualized)
     {
         this(__entries, (LockState) null, __ensureVirtualized);
@@ -50,7 +50,7 @@ public final class ObjectState
         }
     }
 
-    // @cons
+    // @cons ObjectState
     public ObjectState(ValueNode[] __entries, LockState __locks, boolean __ensureVirtualized)
     {
         super();
@@ -59,7 +59,7 @@ public final class ObjectState
         this.___ensureVirtualized = __ensureVirtualized;
     }
 
-    // @cons
+    // @cons ObjectState
     public ObjectState(ValueNode __materializedValue, LockState __locks, boolean __ensureVirtualized)
     {
         super();
@@ -68,7 +68,7 @@ public final class ObjectState
         this.___ensureVirtualized = __ensureVirtualized;
     }
 
-    // @cons
+    // @cons ObjectState
     private ObjectState(ObjectState __other)
     {
         super();

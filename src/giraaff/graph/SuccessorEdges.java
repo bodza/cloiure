@@ -2,16 +2,16 @@ package giraaff.graph;
 
 import java.util.ArrayList;
 
-import giraaff.graph.Edges.Type;
-import giraaff.graph.NodeClass.EdgeInfo;
+import giraaff.graph.Edges;
+import giraaff.graph.NodeClass;
 
 // @class SuccessorEdges
 public final class SuccessorEdges extends Edges
 {
-    // @cons
-    public SuccessorEdges(int __directCount, ArrayList<EdgeInfo> __edges)
+    // @cons SuccessorEdges
+    public SuccessorEdges(int __directCount, ArrayList<NodeClass.EdgeInfo> __edges)
     {
-        super(Type.Successors, __directCount, __edges);
+        super(Edges.EdgesType.Successors, __directCount, __edges);
     }
 
     @Override

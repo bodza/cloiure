@@ -3,7 +3,6 @@ package giraaff.nodes.calc;
 import jdk.vm.ci.code.CodeUtil;
 
 import giraaff.core.common.type.ArithmeticOpTable;
-import giraaff.core.common.type.ArithmeticOpTable.ShiftOp.Shr;
 import giraaff.core.common.type.IntegerStamp;
 import giraaff.core.common.type.Stamp;
 import giraaff.graph.NodeClass;
@@ -15,12 +14,12 @@ import giraaff.nodes.ValueNode;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
 // @class RightShiftNode
-public final class RightShiftNode extends ShiftNode<Shr>
+public final class RightShiftNode extends ShiftNode<ArithmeticOpTable.ShiftOp.Shr>
 {
     // @def
     public static final NodeClass<RightShiftNode> TYPE = NodeClass.create(RightShiftNode.class);
 
-    // @cons
+    // @cons RightShiftNode
     public RightShiftNode(ValueNode __x, ValueNode __y)
     {
         super(TYPE, ArithmeticOpTable::getShr, __x, __y);
@@ -28,7 +27,7 @@ public final class RightShiftNode extends ShiftNode<Shr>
 
     public static ValueNode create(ValueNode __x, ValueNode __y, NodeView __view)
     {
-        ArithmeticOpTable.ShiftOp<Shr> __op = ArithmeticOpTable.forStamp(__x.stamp(__view)).getShr();
+        ArithmeticOpTable.ShiftOp<ArithmeticOpTable.ShiftOp.Shr> __op = ArithmeticOpTable.forStamp(__x.stamp(__view)).getShr();
         Stamp __stamp = __op.foldStamp(__x.stamp(__view), (IntegerStamp) __y.stamp(__view));
         ValueNode __value = ShiftNode.canonical(__op, __stamp, __x, __y, __view);
         if (__value != null)
@@ -52,7 +51,7 @@ public final class RightShiftNode extends ShiftNode<Shr>
         return canonical(this, getArithmeticOp(), stamp(__view), __forX, __forY, __view);
     }
 
-    private static ValueNode canonical(RightShiftNode __rightShiftNode, ArithmeticOpTable.ShiftOp<Shr> __op, Stamp __stamp, ValueNode __forX, ValueNode __forY, NodeView __view)
+    private static ValueNode canonical(RightShiftNode __rightShiftNode, ArithmeticOpTable.ShiftOp<ArithmeticOpTable.ShiftOp.Shr> __op, Stamp __stamp, ValueNode __forX, ValueNode __forY, NodeView __view)
     {
         RightShiftNode __self = __rightShiftNode;
         if (__forX.stamp(__view) instanceof IntegerStamp && ((IntegerStamp) __forX.stamp(__view)).isPositive())

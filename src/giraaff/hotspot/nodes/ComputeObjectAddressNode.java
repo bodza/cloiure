@@ -3,6 +3,7 @@ package giraaff.hotspot.nodes;
 import jdk.vm.ci.meta.JavaKind;
 
 import giraaff.core.common.type.StampFactory;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.nodes.FixedWithNextNode;
 import giraaff.nodes.ValueNode;
@@ -20,14 +21,14 @@ public final class ComputeObjectAddressNode extends FixedWithNextNode implements
     // @def
     public static final NodeClass<ComputeObjectAddressNode> TYPE = NodeClass.create(ComputeObjectAddressNode.class);
 
-    @Input
+    @Node.Input
     // @field
     ValueNode ___object;
-    @Input
+    @Node.Input
     // @field
     ValueNode ___offset;
 
-    // @cons
+    // @cons ComputeObjectAddressNode
     public ComputeObjectAddressNode(ValueNode __obj, ValueNode __offset)
     {
         super(TYPE, StampFactory.forKind(JavaKind.Long));
@@ -35,7 +36,7 @@ public final class ComputeObjectAddressNode extends FixedWithNextNode implements
         this.___offset = __offset;
     }
 
-    @NodeIntrinsic
+    @Node.NodeIntrinsic
     public static native long get(Object __array, long __offset);
 
     @Override

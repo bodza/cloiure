@@ -12,6 +12,7 @@ import giraaff.graph.NodeClass;
 import giraaff.lir.gen.LIRGeneratorTool;
 import giraaff.nodes.NodeView;
 import giraaff.nodes.ValueNode;
+import giraaff.nodes.memory.HeapAccess;
 import giraaff.nodes.memory.address.AddressNode;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
@@ -26,14 +27,14 @@ public final class LogicCompareAndSwapNode extends AbstractCompareAndSwapNode
     // @def
     public static final NodeClass<LogicCompareAndSwapNode> TYPE = NodeClass.create(LogicCompareAndSwapNode.class);
 
-    // @cons
+    // @cons LogicCompareAndSwapNode
     public LogicCompareAndSwapNode(ValueNode __address, ValueNode __expectedValue, ValueNode __newValue, LocationIdentity __location)
     {
-        this((AddressNode) __address, __location, __expectedValue, __newValue, BarrierType.NONE);
+        this((AddressNode) __address, __location, __expectedValue, __newValue, HeapAccess.BarrierType.NONE);
     }
 
-    // @cons
-    public LogicCompareAndSwapNode(AddressNode __address, LocationIdentity __location, ValueNode __expectedValue, ValueNode __newValue, BarrierType __barrierType)
+    // @cons LogicCompareAndSwapNode
+    public LogicCompareAndSwapNode(AddressNode __address, LocationIdentity __location, ValueNode __expectedValue, ValueNode __newValue, HeapAccess.BarrierType __barrierType)
     {
         super(TYPE, __address, __location, __expectedValue, __newValue, __barrierType, StampFactory.forKind(JavaKind.Boolean.getStackKind()));
     }

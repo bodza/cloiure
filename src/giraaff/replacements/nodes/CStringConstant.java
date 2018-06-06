@@ -8,8 +8,7 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 import giraaff.core.common.type.DataPointerConstant;
 import giraaff.core.common.type.StampFactory;
-import giraaff.graph.Node.ConstantNodeParameter;
-import giraaff.graph.Node.NodeIntrinsic;
+import giraaff.graph.Node;
 import giraaff.nodes.ConstantNode;
 import giraaff.nodes.graphbuilderconf.GraphBuilderContext;
 import giraaff.word.Word;
@@ -26,7 +25,7 @@ public final class CStringConstant extends DataPointerConstant
     // @field
     private final String ___string;
 
-    // @cons
+    // @cons CStringConstant
     public CStringConstant(String __string)
     {
         super(1);
@@ -59,6 +58,6 @@ public final class CStringConstant extends DataPointerConstant
         return true;
     }
 
-    @NodeIntrinsic
-    public static native Word cstring(@ConstantNodeParameter String __string);
+    @Node.NodeIntrinsic
+    public static native Word cstring(@Node.ConstantNodeParameter String __string);
 }

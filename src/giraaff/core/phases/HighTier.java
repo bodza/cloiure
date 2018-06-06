@@ -11,7 +11,6 @@ import giraaff.phases.PhaseSuite;
 import giraaff.phases.common.CanonicalizerPhase;
 import giraaff.phases.common.ConvertDeoptimizeToGuardPhase;
 import giraaff.phases.common.DeadCodeEliminationPhase;
-import giraaff.phases.common.DeadCodeEliminationPhase.Optionality;
 import giraaff.phases.common.IncrementalCanonicalizerPhase;
 import giraaff.phases.common.IterativeConditionalEliminationPhase;
 import giraaff.phases.common.LoweringPhase;
@@ -24,7 +23,7 @@ import giraaff.virtual.phases.ea.PartialEscapePhase;
 // @class HighTier
 public final class HighTier extends PhaseSuite<HighTierContext>
 {
-    // @cons
+    // @cons HighTier
     public HighTier()
     {
         super();
@@ -34,7 +33,7 @@ public final class HighTier extends PhaseSuite<HighTierContext>
         if (GraalOptions.inline)
         {
             appendPhase(new InliningPhase(__canonicalizer));
-            appendPhase(new DeadCodeEliminationPhase(Optionality.Optional));
+            appendPhase(new DeadCodeEliminationPhase(DeadCodeEliminationPhase.Optionality.Optional));
         }
 
         if (GraalOptions.optConvertDeoptsToGuards)

@@ -6,6 +6,7 @@ import jdk.vm.ci.meta.MetaAccessProvider;
 import giraaff.core.common.type.ObjectStamp;
 import giraaff.core.common.type.Stamp;
 import giraaff.core.common.type.TypeReference;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.graph.spi.Canonicalizable;
 import giraaff.graph.spi.CanonicalizerTool;
@@ -29,7 +30,7 @@ public final class LoadHubNode extends FloatingNode implements Lowerable, Canoni
     // @def
     public static final NodeClass<LoadHubNode> TYPE = NodeClass.create(LoadHubNode.class);
 
-    @Input
+    @Node.Input
     // @field
     ValueNode ___value;
 
@@ -54,13 +55,13 @@ public final class LoadHubNode extends FloatingNode implements Lowerable, Canoni
         return new LoadHubNode(__stamp, __value);
     }
 
-    // @cons
-    public LoadHubNode(@InjectedNodeParameter StampProvider __stampProvider, ValueNode __value)
+    // @cons LoadHubNode
+    public LoadHubNode(@Node.InjectedNodeParameter StampProvider __stampProvider, ValueNode __value)
     {
         this(hubStamp(__stampProvider, __value), __value);
     }
 
-    // @cons
+    // @cons LoadHubNode
     public LoadHubNode(Stamp __stamp, ValueNode __value)
     {
         super(TYPE, __stamp);

@@ -12,7 +12,7 @@ import giraaff.core.common.type.Stamp;
 import giraaff.core.common.type.StampFactory;
 import giraaff.core.common.type.StampPair;
 import giraaff.graph.NodeClass;
-import giraaff.nodes.CallTargetNode.InvokeKind;
+import giraaff.nodes.CallTargetNode;
 import giraaff.nodes.NodeView;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.java.LoadFieldNode;
@@ -30,8 +30,8 @@ public abstract class BasicObjectCloneNode extends MacroStateSplitNode implement
     // @def
     public static final NodeClass<BasicObjectCloneNode> TYPE = NodeClass.create(BasicObjectCloneNode.class);
 
-    // @cons
-    public BasicObjectCloneNode(NodeClass<? extends MacroNode> __c, InvokeKind __invokeKind, ResolvedJavaMethod __targetMethod, int __bci, StampPair __returnStamp, ValueNode... __arguments)
+    // @cons BasicObjectCloneNode
+    public BasicObjectCloneNode(NodeClass<? extends MacroNode> __c, CallTargetNode.InvokeKind __invokeKind, ResolvedJavaMethod __targetMethod, int __bci, StampPair __returnStamp, ValueNode... __arguments)
     {
         super(__c, __invokeKind, __targetMethod, __bci, __returnStamp, __arguments);
         updateStamp(computeStamp(getObject()));

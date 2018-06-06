@@ -2,7 +2,7 @@ package giraaff.java;
 
 import giraaff.bytecode.BytecodeStream;
 import giraaff.bytecode.Bytecodes;
-import giraaff.java.BciBlockMapping.BciBlock;
+import giraaff.java.BciBlockMapping;
 
 ///
 // Encapsulates the liveness calculation, so that subclasses for locals <= 64 and locals > 64 can be implemented.
@@ -11,17 +11,17 @@ import giraaff.java.BciBlockMapping.BciBlock;
 public abstract class LocalLiveness
 {
     // @field
-    protected final BciBlock[] ___blocks;
+    protected final BciBlockMapping.BciBlock[] ___blocks;
 
-    public static LocalLiveness compute(BytecodeStream __stream, BciBlock[] __blocks, int __maxLocals, int __loopCount)
+    public static LocalLiveness compute(BytecodeStream __stream, BciBlockMapping.BciBlock[] __blocks, int __maxLocals, int __loopCount)
     {
         LocalLiveness __liveness = __maxLocals <= 64 ? new SmallLocalLiveness(__blocks, __maxLocals, __loopCount) : new LargeLocalLiveness(__blocks, __maxLocals, __loopCount);
         __liveness.computeLiveness(__stream);
         return __liveness;
     }
 
-    // @cons
-    protected LocalLiveness(BciBlock[] __blocks)
+    // @cons LocalLiveness
+    protected LocalLiveness(BciBlockMapping.BciBlock[] __blocks)
     {
         super();
         this.___blocks = __blocks;
@@ -29,7 +29,7 @@ public abstract class LocalLiveness
 
     void computeLiveness(BytecodeStream __stream)
     {
-        for (BciBlock __block : this.___blocks)
+        for (BciBlockMapping.BciBlock __block : this.___blocks)
         {
             computeLocalLiveness(__stream, __block);
         }
@@ -41,14 +41,14 @@ public abstract class LocalLiveness
             __changed = false;
             for (int __i = this.___blocks.length - 1; __i >= 0; __i--)
             {
-                BciBlock __block = this.___blocks[__i];
+                BciBlockMapping.BciBlock __block = this.___blocks[__i];
                 int __blockID = __block.getId();
 
                 boolean __blockChanged = (__iteration == 0);
                 if (__block.getSuccessorCount() > 0)
                 {
                     int __oldCardinality = liveOutCardinality(__blockID);
-                    for (BciBlock __sux : __block.getSuccessors())
+                    for (BciBlockMapping.BciBlock __sux : __block.getSuccessors())
                     {
                         propagateLiveness(__blockID, __sux.getId());
                     }
@@ -68,7 +68,7 @@ public abstract class LocalLiveness
     ///
     // Returns whether the local is live at the beginning of the given block.
     ///
-    public abstract boolean localIsLiveIn(BciBlock __block, int __local);
+    public abstract boolean localIsLiveIn(BciBlockMapping.BciBlock __block, int __local);
 
     ///
     // Returns whether the local is set in the given loop.
@@ -78,7 +78,7 @@ public abstract class LocalLiveness
     ///
     // Returns whether the local is live at the end of the given block.
     ///
-    public abstract boolean localIsLiveOut(BciBlock __block, int __local);
+    public abstract boolean localIsLiveOut(BciBlockMapping.BciBlock __block, int __local);
 
     ///
     // Returns the number of live locals at the end of the given block.
@@ -105,7 +105,7 @@ public abstract class LocalLiveness
     ///
     protected abstract void storeOne(int __blockID, int __local);
 
-    private void computeLocalLiveness(BytecodeStream __stream, BciBlock __block)
+    private void computeLocalLiveness(BytecodeStream __stream, BciBlockMapping.BciBlock __block)
     {
         if (__block.isExceptionDispatch())
         {

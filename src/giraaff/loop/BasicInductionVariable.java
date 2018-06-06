@@ -28,7 +28,7 @@ public final class BasicInductionVariable extends InductionVariable
     // @field
     private BinaryArithmeticNode<?> ___op;
 
-    // @cons
+    // @cons BasicInductionVariable
     public BasicInductionVariable(LoopEx __loop, ValuePhiNode __phi, ValueNode __init, ValueNode __rawStride, BinaryArithmeticNode<?> __op)
     {
         super(__loop);
@@ -56,20 +56,20 @@ public final class BasicInductionVariable extends InductionVariable
     }
 
     @Override
-    public Direction direction()
+    public InductionVariable.Direction direction()
     {
         Stamp __stamp = this.___rawStride.stamp(NodeView.DEFAULT);
         if (__stamp instanceof IntegerStamp)
         {
             IntegerStamp __integerStamp = (IntegerStamp) __stamp;
-            Direction __dir = null;
+            InductionVariable.Direction __dir = null;
             if (__integerStamp.isStrictlyPositive())
             {
-                __dir = Direction.Up;
+                __dir = InductionVariable.Direction.Up;
             }
             else if (__integerStamp.isStrictlyNegative())
             {
-                __dir = Direction.Down;
+                __dir = InductionVariable.Direction.Down;
             }
             if (__dir != null)
             {

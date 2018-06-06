@@ -2,16 +2,14 @@ package giraaff.virtual.phases.ea;
 
 import org.graalvm.collections.EconomicSet;
 
-import giraaff.graph.Graph.NodeEventScope;
+import giraaff.graph.Graph;
 import giraaff.graph.Node;
 import giraaff.graph.spi.Simplifiable;
 import giraaff.nodes.StructuredGraph;
-import giraaff.nodes.StructuredGraph.ScheduleResult;
 import giraaff.nodes.cfg.ControlFlowGraph;
 import giraaff.phases.BasePhase;
 import giraaff.phases.common.CanonicalizerPhase;
 import giraaff.phases.common.DeadCodeEliminationPhase;
-import giraaff.phases.common.DeadCodeEliminationPhase.Optionality;
 import giraaff.phases.common.util.HashSetNodeEventListener;
 import giraaff.phases.graph.ReentrantBlockIterator;
 import giraaff.phases.schedule.SchedulePhase;
@@ -37,13 +35,13 @@ public abstract class EffectsPhase<PhaseContextT extends PhaseContext> extends B
     // @field
     private final boolean ___unscheduled;
 
-    // @cons
+    // @cons EffectsPhase
     protected EffectsPhase(int __maxIterations, CanonicalizerPhase __canonicalizer)
     {
         this(__maxIterations, __canonicalizer, false);
     }
 
-    // @cons
+    // @cons EffectsPhase
     protected EffectsPhase(int __maxIterations, CanonicalizerPhase __canonicalizer, boolean __unscheduled)
     {
         super();
@@ -63,7 +61,7 @@ public abstract class EffectsPhase<PhaseContextT extends PhaseContext> extends B
         boolean __changed = false;
         for (int __iteration = 0; __iteration < this.___maxIterations; __iteration++)
         {
-            ScheduleResult __schedule;
+            StructuredGraph.ScheduleResult __schedule;
             ControlFlowGraph __cfg;
             if (this.___unscheduled)
             {
@@ -76,19 +74,19 @@ public abstract class EffectsPhase<PhaseContextT extends PhaseContext> extends B
                 __schedule = __graph.getLastSchedule();
                 __cfg = __schedule.getCFG();
             }
-            Closure<?> __closure = createEffectsClosure(__context, __schedule, __cfg);
+            EffectsPhase.Closure<?> __closure = createEffectsClosure(__context, __schedule, __cfg);
             ReentrantBlockIterator.apply(__closure, __cfg.getStartBlock());
 
             if (__closure.needsApplyEffects())
             {
                 // apply the effects collected during this iteration
                 HashSetNodeEventListener __listener = new HashSetNodeEventListener();
-                try (NodeEventScope __nes = __graph.trackNodeEvents(__listener))
+                try (Graph.NodeEventScope __nes = __graph.trackNodeEvents(__listener))
                 {
                     __closure.applyEffects();
                 }
 
-                new DeadCodeEliminationPhase(Optionality.Required).apply(__graph);
+                new DeadCodeEliminationPhase(DeadCodeEliminationPhase.Optionality.Required).apply(__graph);
 
                 EconomicSet<Node> __changedNodes = __listener.getNodes();
                 for (Node __node : __graph.getNodes())
@@ -121,5 +119,5 @@ public abstract class EffectsPhase<PhaseContextT extends PhaseContext> extends B
         }
     }
 
-    protected abstract Closure<?> createEffectsClosure(PhaseContextT __context, ScheduleResult __schedule, ControlFlowGraph __cfg);
+    protected abstract EffectsPhase.Closure<?> createEffectsClosure(PhaseContextT __context, StructuredGraph.ScheduleResult __schedule, ControlFlowGraph __cfg);
 }

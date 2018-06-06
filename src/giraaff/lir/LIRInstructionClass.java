@@ -8,11 +8,8 @@ import jdk.vm.ci.meta.Value;
 
 import giraaff.core.common.Fields;
 import giraaff.core.common.FieldsScanner;
-import giraaff.lir.LIRInstruction.OperandFlag;
-import giraaff.lir.LIRInstruction.OperandMode;
-import giraaff.lir.StandardOp.LoadConstantOp;
-import giraaff.lir.StandardOp.MoveOp;
-import giraaff.lir.StandardOp.ValueMoveOp;
+import giraaff.lir.LIRInstruction;
+import giraaff.lir.StandardOp;
 import giraaff.util.GraalError;
 
 // @class LIRInstructionClass
@@ -27,13 +24,13 @@ public final class LIRInstructionClass<T> extends LIRIntrospection<T>
     private static final Class<LIRInstruction> INSTRUCTION_CLASS = LIRInstruction.class;
 
     // @field
-    private final Values ___uses;
+    private final LIRIntrospection.Values ___uses;
     // @field
-    private final Values ___alives;
+    private final LIRIntrospection.Values ___alives;
     // @field
-    private final Values ___temps;
+    private final LIRIntrospection.Values ___temps;
     // @field
-    private final Values ___defs;
+    private final LIRIntrospection.Values ___defs;
 
     // @field
     private final boolean ___isMoveOp;
@@ -47,24 +44,24 @@ public final class LIRInstructionClass<T> extends LIRIntrospection<T>
     // @field
     private int ___opcodeIndex;
 
-    // @cons
+    // @cons LIRInstructionClass
     private LIRInstructionClass(Class<T> __clazz)
     {
         this(__clazz, new FieldsScanner.DefaultCalcOffset());
     }
 
-    // @cons
+    // @cons LIRInstructionClass
     public LIRInstructionClass(Class<T> __clazz, FieldsScanner.CalcOffset __calcOffset)
     {
         super(__clazz);
 
-        LIRInstructionFieldsScanner __ifs = new LIRInstructionFieldsScanner(__calcOffset);
+        LIRInstructionClass.LIRInstructionFieldsScanner __ifs = new LIRInstructionClass.LIRInstructionFieldsScanner(__calcOffset);
         __ifs.scan(__clazz);
 
-        this.___uses = new Values(__ifs.___valueAnnotations.get(LIRInstruction.Use.class));
-        this.___alives = new Values(__ifs.___valueAnnotations.get(LIRInstruction.Alive.class));
-        this.___temps = new Values(__ifs.___valueAnnotations.get(LIRInstruction.Temp.class));
-        this.___defs = new Values(__ifs.___valueAnnotations.get(LIRInstruction.Def.class));
+        this.___uses = new LIRIntrospection.Values(__ifs.___valueAnnotations.get(LIRInstruction.Use.class));
+        this.___alives = new LIRIntrospection.Values(__ifs.___valueAnnotations.get(LIRInstruction.Alive.class));
+        this.___temps = new LIRIntrospection.Values(__ifs.___valueAnnotations.get(LIRInstruction.Temp.class));
+        this.___defs = new LIRIntrospection.Values(__ifs.___valueAnnotations.get(LIRInstruction.Def.class));
 
         this.___data = new Fields(__ifs.___data);
 
@@ -78,9 +75,9 @@ public final class LIRInstructionClass<T> extends LIRIntrospection<T>
             this.___opcodeIndex = __ifs.___data.indexOf(__ifs.___opcodeField);
         }
 
-        this.___isMoveOp = MoveOp.class.isAssignableFrom(__clazz);
-        this.___isValueMoveOp = ValueMoveOp.class.isAssignableFrom(__clazz);
-        this.___isLoadConstantOp = LoadConstantOp.class.isAssignableFrom(__clazz);
+        this.___isMoveOp = StandardOp.MoveOp.class.isAssignableFrom(__clazz);
+        this.___isValueMoveOp = StandardOp.ValueMoveOp.class.isAssignableFrom(__clazz);
+        this.___isLoadConstantOp = StandardOp.LoadConstantOp.class.isAssignableFrom(__clazz);
     }
 
     @SuppressWarnings("unchecked")
@@ -104,32 +101,32 @@ public final class LIRInstructionClass<T> extends LIRIntrospection<T>
     }
 
     // @class LIRInstructionClass.LIRInstructionFieldsScanner
-    private static final class LIRInstructionFieldsScanner extends LIRFieldsScanner
+    private static final class LIRInstructionFieldsScanner extends LIRIntrospection.LIRFieldsScanner
     {
         // @field
         private String ___opcodeConstant;
 
         ///
-        // Field (if any) annotated by {@link Opcode}.
+        // Field (if any) annotated by {@link LIROpcode}.
         ///
         // @field
         private FieldsScanner.FieldInfo ___opcodeField;
 
-        // @cons
+        // @cons LIRInstructionClass.LIRInstructionFieldsScanner
         LIRInstructionFieldsScanner(FieldsScanner.CalcOffset __calc)
         {
             super(__calc);
 
-            this.___valueAnnotations.put(LIRInstruction.Use.class, new OperandModeAnnotation());
-            this.___valueAnnotations.put(LIRInstruction.Alive.class, new OperandModeAnnotation());
-            this.___valueAnnotations.put(LIRInstruction.Temp.class, new OperandModeAnnotation());
-            this.___valueAnnotations.put(LIRInstruction.Def.class, new OperandModeAnnotation());
+            this.___valueAnnotations.put(LIRInstruction.Use.class, new LIRIntrospection.OperandModeAnnotation());
+            this.___valueAnnotations.put(LIRInstruction.Alive.class, new LIRIntrospection.OperandModeAnnotation());
+            this.___valueAnnotations.put(LIRInstruction.Temp.class, new LIRIntrospection.OperandModeAnnotation());
+            this.___valueAnnotations.put(LIRInstruction.Def.class, new LIRIntrospection.OperandModeAnnotation());
         }
 
         @Override
-        protected EnumSet<OperandFlag> getFlags(Field __field)
+        protected EnumSet<LIRInstruction.OperandFlag> getFlags(Field __field)
         {
-            EnumSet<OperandFlag> __result = EnumSet.noneOf(OperandFlag.class);
+            EnumSet<LIRInstruction.OperandFlag> __result = EnumSet.noneOf(LIRInstruction.OperandFlag.class);
             // Unfortunately, annotations cannot have class hierarchies or implement interfaces,
             // so we have to duplicate the code for every operand mode.
             // Unfortunately, annotations cannot have an EnumSet property, so we have to convert
@@ -159,7 +156,7 @@ public final class LIRInstructionClass<T> extends LIRIntrospection<T>
 
         public void scan(Class<?> __clazz)
         {
-            if (__clazz.getAnnotation(Opcode.class) != null)
+            if (__clazz.getAnnotation(LIROpcode.class) != null)
             {
                 this.___opcodeConstant = null;
             }
@@ -182,7 +179,7 @@ public final class LIRInstructionClass<T> extends LIRIntrospection<T>
         {
             super.scanField(__field, __offset);
 
-            if (__field.getAnnotation(Opcode.class) != null)
+            if (__field.getAnnotation(LIROpcode.class) != null)
             {
                 this.___opcodeField = this.___data.get(this.___data.size() - 1);
             }
@@ -195,7 +192,7 @@ public final class LIRInstructionClass<T> extends LIRIntrospection<T>
         return new Fields[] { this.___data, this.___uses, this.___alives, this.___temps, this.___defs };
     }
 
-    Values getValues(OperandMode __mode)
+    LIRIntrospection.Values getValues(LIRInstruction.OperandMode __mode)
     {
         switch (__mode)
         {
@@ -208,7 +205,7 @@ public final class LIRInstructionClass<T> extends LIRIntrospection<T>
             case DEF:
                 return this.___defs;
             default:
-                throw GraalError.shouldNotReachHere("unknown OperandMode: " + __mode);
+                throw GraalError.shouldNotReachHere("unknown LIRInstruction.OperandMode: " + __mode);
         }
     }
 
@@ -228,52 +225,52 @@ public final class LIRInstructionClass<T> extends LIRIntrospection<T>
 
     final void forEachUse(LIRInstruction __obj, InstructionValueProcedure __proc)
     {
-        forEach(__obj, this.___uses, OperandMode.USE, __proc);
+        forEach(__obj, this.___uses, LIRInstruction.OperandMode.USE, __proc);
     }
 
     final void forEachAlive(LIRInstruction __obj, InstructionValueProcedure __proc)
     {
-        forEach(__obj, this.___alives, OperandMode.ALIVE, __proc);
+        forEach(__obj, this.___alives, LIRInstruction.OperandMode.ALIVE, __proc);
     }
 
     final void forEachTemp(LIRInstruction __obj, InstructionValueProcedure __proc)
     {
-        forEach(__obj, this.___temps, OperandMode.TEMP, __proc);
+        forEach(__obj, this.___temps, LIRInstruction.OperandMode.TEMP, __proc);
     }
 
     final void forEachDef(LIRInstruction __obj, InstructionValueProcedure __proc)
     {
-        forEach(__obj, this.___defs, OperandMode.DEF, __proc);
+        forEach(__obj, this.___defs, LIRInstruction.OperandMode.DEF, __proc);
     }
 
     final void visitEachUse(LIRInstruction __obj, InstructionValueConsumer __proc)
     {
-        visitEach(__obj, this.___uses, OperandMode.USE, __proc);
+        visitEach(__obj, this.___uses, LIRInstruction.OperandMode.USE, __proc);
     }
 
     final void visitEachAlive(LIRInstruction __obj, InstructionValueConsumer __proc)
     {
-        visitEach(__obj, this.___alives, OperandMode.ALIVE, __proc);
+        visitEach(__obj, this.___alives, LIRInstruction.OperandMode.ALIVE, __proc);
     }
 
     final void visitEachTemp(LIRInstruction __obj, InstructionValueConsumer __proc)
     {
-        visitEach(__obj, this.___temps, OperandMode.TEMP, __proc);
+        visitEach(__obj, this.___temps, LIRInstruction.OperandMode.TEMP, __proc);
     }
 
     final void visitEachDef(LIRInstruction __obj, InstructionValueConsumer __proc)
     {
-        visitEach(__obj, this.___defs, OperandMode.DEF, __proc);
+        visitEach(__obj, this.___defs, LIRInstruction.OperandMode.DEF, __proc);
     }
 
-    final Value forEachRegisterHint(LIRInstruction __obj, OperandMode __mode, InstructionValueProcedure __proc)
+    final Value forEachRegisterHint(LIRInstruction __obj, LIRInstruction.OperandMode __mode, InstructionValueProcedure __proc)
     {
-        Values __hints;
-        if (__mode == OperandMode.USE)
+        LIRIntrospection.Values __hints;
+        if (__mode == LIRInstruction.OperandMode.USE)
         {
             __hints = this.___defs;
         }
-        else if (__mode == OperandMode.DEF)
+        else if (__mode == LIRInstruction.OperandMode.DEF)
         {
             __hints = this.___uses;
         }

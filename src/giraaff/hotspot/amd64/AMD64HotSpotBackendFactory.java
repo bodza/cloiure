@@ -34,7 +34,7 @@ import giraaff.hotspot.meta.HotSpotSnippetReflectionProvider;
 import giraaff.hotspot.meta.HotSpotStampProvider;
 import giraaff.hotspot.meta.HotSpotSuitesProvider;
 import giraaff.hotspot.word.HotSpotWordTypes;
-import giraaff.nodes.graphbuilderconf.GraphBuilderConfiguration.Plugins;
+import giraaff.nodes.graphbuilderconf.GraphBuilderConfiguration;
 import giraaff.nodes.spi.LoweringProvider;
 import giraaff.nodes.spi.Replacements;
 import giraaff.phases.common.AddressLoweringPhase;
@@ -47,7 +47,7 @@ import giraaff.word.WordTypes;
 // @class AMD64HotSpotBackendFactory
 public final class AMD64HotSpotBackendFactory implements HotSpotBackendFactory
 {
-    // @cons
+    // @cons AMD64HotSpotBackendFactory
     public AMD64HotSpotBackendFactory()
     {
         super();
@@ -73,16 +73,16 @@ public final class AMD64HotSpotBackendFactory implements HotSpotBackendFactory
         HotSpotSnippetReflectionProvider __snippetReflection = createSnippetReflection(__graalRuntime, __constantReflection, __wordTypes);
         BytecodeProvider __bytecodeProvider = new ClassfileBytecodeProvider(__metaAccess, __snippetReflection);
         HotSpotReplacementsImpl __replacements = createReplacements(__p, __snippetReflection, __bytecodeProvider);
-        Plugins __plugins = createGraphBuilderPlugins(__compilerConfiguration, __target, __constantReflection, __foreignCalls, __lowerer, __metaAccess, __snippetReflection, __replacements, __wordTypes, __stampProvider);
+        GraphBuilderConfiguration.Plugins __plugins = createGraphBuilderPlugins(__compilerConfiguration, __target, __constantReflection, __foreignCalls, __lowerer, __metaAccess, __snippetReflection, __replacements, __wordTypes, __stampProvider);
         __replacements.setGraphBuilderPlugins(__plugins);
         HotSpotSuitesProvider __suites = createSuites(__graalRuntime, __compilerConfiguration, __plugins, __registers, __replacements);
         HotSpotProviders __providers = new HotSpotProviders(__metaAccess, __codeCache, __constantReflection, __constantFieldProvider, __foreignCalls, __lowerer, __replacements, __suites, __registers, __snippetReflection, __wordTypes, __plugins);
         return createBackend(__graalRuntime, __providers);
     }
 
-    protected Plugins createGraphBuilderPlugins(CompilerConfiguration __compilerConfiguration, TargetDescription __target, HotSpotConstantReflectionProvider __constantReflection, HotSpotHostForeignCallsProvider __foreignCalls, LoweringProvider __lowerer, HotSpotMetaAccessProvider __metaAccess, HotSpotSnippetReflectionProvider __snippetReflection, HotSpotReplacementsImpl __replacements, HotSpotWordTypes __wordTypes, HotSpotStampProvider __stampProvider)
+    protected GraphBuilderConfiguration.Plugins createGraphBuilderPlugins(CompilerConfiguration __compilerConfiguration, TargetDescription __target, HotSpotConstantReflectionProvider __constantReflection, HotSpotHostForeignCallsProvider __foreignCalls, LoweringProvider __lowerer, HotSpotMetaAccessProvider __metaAccess, HotSpotSnippetReflectionProvider __snippetReflection, HotSpotReplacementsImpl __replacements, HotSpotWordTypes __wordTypes, HotSpotStampProvider __stampProvider)
     {
-        Plugins __plugins = HotSpotGraphBuilderPlugins.create(__compilerConfiguration, __wordTypes, __metaAccess, __constantReflection, __snippetReflection, __foreignCalls, __lowerer, __stampProvider, __replacements);
+        GraphBuilderConfiguration.Plugins __plugins = HotSpotGraphBuilderPlugins.create(__compilerConfiguration, __wordTypes, __metaAccess, __constantReflection, __snippetReflection, __foreignCalls, __lowerer, __stampProvider, __replacements);
         AMD64GraphBuilderPlugins.register(__plugins, __replacements.getDefaultReplacementBytecodeProvider(), (AMD64) __target.arch);
         return __plugins;
     }
@@ -107,7 +107,7 @@ public final class AMD64HotSpotBackendFactory implements HotSpotBackendFactory
         return new AMD64HotSpotForeignCallsProvider(__runtime, __metaAccess, __codeCache, __wordTypes, __nativeABICallerSaveRegisters);
     }
 
-    protected HotSpotSuitesProvider createSuites(HotSpotGraalRuntime __runtime, CompilerConfiguration __compilerConfiguration, Plugins __plugins, HotSpotRegistersProvider __registers, Replacements __replacements)
+    protected HotSpotSuitesProvider createSuites(HotSpotGraalRuntime __runtime, CompilerConfiguration __compilerConfiguration, GraphBuilderConfiguration.Plugins __plugins, HotSpotRegistersProvider __registers, Replacements __replacements)
     {
         return new AddressLoweringHotSpotSuitesProvider(new AMD64HotSpotSuitesCreator(__compilerConfiguration, __plugins), __runtime, new AddressLoweringPhase(new AMD64HotSpotAddressLowering(__registers.getHeapBaseRegister())));
     }

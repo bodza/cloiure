@@ -28,7 +28,7 @@ import giraaff.code.DataSection;
 // @class HotSpotCompiledCodeBuilder
 public final class HotSpotCompiledCodeBuilder
 {
-    // @cons
+    // @cons HotSpotCompiledCodeBuilder
     private HotSpotCompiledCodeBuilder()
     {
         super();
@@ -120,7 +120,7 @@ public final class HotSpotCompiledCodeBuilder
         __sites.addAll(__result.getDataPatches());
         __sites.addAll(__result.getMarks());
 
-        Collections.sort(__sites, new SiteComparator());
+        Collections.sort(__sites, new HotSpotCompiledCodeBuilder.SiteComparator());
         return __sites.toArray(new Site[__sites.size()]);
     }
 }

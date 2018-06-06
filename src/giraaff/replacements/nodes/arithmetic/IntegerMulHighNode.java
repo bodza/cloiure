@@ -5,7 +5,6 @@ import jdk.vm.ci.meta.PrimitiveConstant;
 import jdk.vm.ci.meta.Value;
 
 import giraaff.core.common.type.ArithmeticOpTable;
-import giraaff.core.common.type.ArithmeticOpTable.BinaryOp.MulHigh;
 import giraaff.graph.NodeClass;
 import giraaff.graph.spi.Canonicalizable;
 import giraaff.graph.spi.CanonicalizerTool;
@@ -17,12 +16,12 @@ import giraaff.nodes.calc.BinaryArithmeticNode;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
 // @class IntegerMulHighNode
-public final class IntegerMulHighNode extends BinaryArithmeticNode<MulHigh> implements Canonicalizable.BinaryCommutative<ValueNode>
+public final class IntegerMulHighNode extends BinaryArithmeticNode<ArithmeticOpTable.BinaryOp.MulHigh> implements Canonicalizable.BinaryCommutative<ValueNode>
 {
     // @def
     public static final NodeClass<IntegerMulHighNode> TYPE = NodeClass.create(IntegerMulHighNode.class);
 
-    // @cons
+    // @cons IntegerMulHighNode
     public IntegerMulHighNode(ValueNode __x, ValueNode __y)
     {
         super(TYPE, ArithmeticOpTable::getMulHigh, __x, __y);

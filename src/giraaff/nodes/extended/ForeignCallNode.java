@@ -15,6 +15,7 @@ import giraaff.core.common.spi.ForeignCallLinkage;
 import giraaff.core.common.spi.ForeignCallsProvider;
 import giraaff.core.common.type.Stamp;
 import giraaff.core.common.type.StampFactory;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.graph.NodeInputList;
 import giraaff.nodeinfo.InputType;
@@ -30,17 +31,17 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 ///
 // Node for a {@linkplain ForeignCallDescriptor foreign} call.
 ///
-// @NodeInfo.allowedUsageTypes "Memory"
+// @NodeInfo.allowedUsageTypes "InputType.Memory"
 // @class ForeignCallNode
 public final class ForeignCallNode extends AbstractMemoryCheckpoint implements LIRLowerable, DeoptimizingNode.DeoptDuring, MemoryCheckpoint.Multi
 {
     // @def
     public static final NodeClass<ForeignCallNode> TYPE = NodeClass.create(ForeignCallNode.class);
 
-    @Input
+    @Node.Input
     // @field
     protected NodeInputList<ValueNode> ___arguments;
-    @OptionalInput(InputType.State)
+    @Node.OptionalInput(InputType.StateI)
     // @field
     protected FrameState ___stateDuring;
     // @field
@@ -51,7 +52,7 @@ public final class ForeignCallNode extends AbstractMemoryCheckpoint implements L
     // @field
     protected int ___bci = BytecodeFrame.UNKNOWN_BCI;
 
-    public static boolean intrinsify(GraphBuilderContext __b, ResolvedJavaMethod __targetMethod, @InjectedNodeParameter Stamp __returnStamp, @InjectedNodeParameter ForeignCallsProvider __foreignCalls, ForeignCallDescriptor __descriptor, ValueNode... __arguments)
+    public static boolean intrinsify(GraphBuilderContext __b, ResolvedJavaMethod __targetMethod, @Node.InjectedNodeParameter Stamp __returnStamp, @Node.InjectedNodeParameter ForeignCallsProvider __foreignCalls, ForeignCallDescriptor __descriptor, ValueNode... __arguments)
     {
         ForeignCallNode __node = new ForeignCallNode(__foreignCalls, __descriptor, __arguments);
         __node.setStamp(__returnStamp);
@@ -89,13 +90,13 @@ public final class ForeignCallNode extends AbstractMemoryCheckpoint implements L
         return true;
     }
 
-    // @cons
+    // @cons ForeignCallNode
     public ForeignCallNode(ForeignCallsProvider __foreignCalls, ForeignCallDescriptor __descriptor, ValueNode... __arguments)
     {
         this(TYPE, __foreignCalls, __descriptor, __arguments);
     }
 
-    // @cons
+    // @cons ForeignCallNode
     public ForeignCallNode(ForeignCallsProvider __foreignCalls, ForeignCallDescriptor __descriptor, Stamp __stamp, List<ValueNode> __arguments)
     {
         super(TYPE, __stamp);
@@ -104,7 +105,7 @@ public final class ForeignCallNode extends AbstractMemoryCheckpoint implements L
         this.___foreignCalls = __foreignCalls;
     }
 
-    // @cons
+    // @cons ForeignCallNode
     public ForeignCallNode(ForeignCallsProvider __foreignCalls, ForeignCallDescriptor __descriptor, Stamp __stamp)
     {
         super(TYPE, __stamp);
@@ -113,7 +114,7 @@ public final class ForeignCallNode extends AbstractMemoryCheckpoint implements L
         this.___foreignCalls = __foreignCalls;
     }
 
-    // @cons
+    // @cons ForeignCallNode
     protected ForeignCallNode(NodeClass<? extends ForeignCallNode> __c, ForeignCallsProvider __foreignCalls, ForeignCallDescriptor __descriptor, ValueNode... __arguments)
     {
         super(__c, StampFactory.forKind(JavaKind.fromJavaClass(__descriptor.getResultType())));

@@ -29,7 +29,7 @@ public final class IsNullNode extends UnaryOpLogicNode implements LIRLowerable, 
     // @def
     public static final NodeClass<IsNullNode> TYPE = NodeClass.create(IsNullNode.class);
 
-    // @cons
+    // @cons IsNullNode
     public IsNullNode(ValueNode __object)
     {
         super(TYPE, __object);

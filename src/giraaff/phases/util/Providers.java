@@ -36,7 +36,7 @@ public class Providers implements CodeGenProviders
     // @field
     private final StampProvider ___stampProvider;
 
-    // @cons
+    // @cons Providers
     public Providers(MetaAccessProvider __metaAccess, CodeCacheProvider __codeCache, ConstantReflectionProvider __constantReflection, ConstantFieldProvider __constantFieldProvider, ForeignCallsProvider __foreignCalls, LoweringProvider __lowerer, Replacements __replacements, StampProvider __stampProvider)
     {
         super();
@@ -50,13 +50,13 @@ public class Providers implements CodeGenProviders
         this.___stampProvider = __stampProvider;
     }
 
-    // @cons
+    // @cons Providers
     public Providers(Providers __copyFrom)
     {
         this(__copyFrom.getMetaAccess(), __copyFrom.getCodeCache(), __copyFrom.getConstantReflection(), __copyFrom.getConstantFieldProvider(), __copyFrom.getForeignCalls(), __copyFrom.getLowerer(), __copyFrom.getReplacements(), __copyFrom.getStampProvider());
     }
 
-    // @cons
+    // @cons Providers
     public Providers(PhaseContext __copyFrom)
     {
         this(__copyFrom.getMetaAccess(), null, __copyFrom.getConstantReflection(), __copyFrom.getConstantFieldProvider(), null, __copyFrom.getLowerer(), __copyFrom.getReplacements(), __copyFrom.getStampProvider());

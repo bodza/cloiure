@@ -1,6 +1,7 @@
 package giraaff.hotspot.nodes;
 
 import giraaff.core.common.type.StampFactory;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.nodes.FixedWithNextNode;
 import giraaff.nodes.ValueNode;
@@ -17,11 +18,11 @@ public final class FastAcquireBiasedLockNode extends FixedWithNextNode implement
     // @def
     public static final NodeClass<FastAcquireBiasedLockNode> TYPE = NodeClass.create(FastAcquireBiasedLockNode.class);
 
-    @Input
+    @Node.Input
     // @field
     ValueNode ___object;
 
-    // @cons
+    // @cons FastAcquireBiasedLockNode
     public FastAcquireBiasedLockNode(ValueNode __object)
     {
         super(TYPE, StampFactory.forVoid());
@@ -39,6 +40,6 @@ public final class FastAcquireBiasedLockNode extends FixedWithNextNode implement
         // this is just a marker node, so it generates nothing
     }
 
-    @NodeIntrinsic
+    @Node.NodeIntrinsic
     public static native void mark(Object __object);
 }

@@ -5,6 +5,7 @@ import jdk.vm.ci.meta.Value;
 
 import giraaff.core.common.LIRKind;
 import giraaff.core.common.type.StampFactory;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.nodes.FixedWithNextNode;
 import giraaff.nodes.StateSplit;
@@ -23,16 +24,16 @@ public final class DirectStoreNode extends FixedWithNextNode implements LIRLower
     // @def
     public static final NodeClass<DirectStoreNode> TYPE = NodeClass.create(DirectStoreNode.class);
 
-    @Input
+    @Node.Input
     // @field
     protected ValueNode ___address;
-    @Input
+    @Node.Input
     // @field
     protected ValueNode ___value;
     // @field
     protected final JavaKind ___kind;
 
-    // @cons
+    // @cons DirectStoreNode
     public DirectStoreNode(ValueNode __address, ValueNode __value, JavaKind __kind)
     {
         super(TYPE, StampFactory.forVoid());
@@ -59,6 +60,6 @@ public final class DirectStoreNode extends FixedWithNextNode implements LIRLower
         return this.___value;
     }
 
-    @NodeIntrinsic
-    public static native void storeBoolean(long __address, boolean __value, @ConstantNodeParameter JavaKind __kind);
+    @Node.NodeIntrinsic
+    public static native void storeBoolean(long __address, boolean __value, @Node.ConstantNodeParameter JavaKind __kind);
 }

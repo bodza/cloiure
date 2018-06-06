@@ -26,13 +26,13 @@ public final class EnsureVirtualizedNode extends FixedWithNextNode implements Vi
     // @def
     public static final NodeClass<EnsureVirtualizedNode> TYPE = NodeClass.create(EnsureVirtualizedNode.class);
 
-    @Input
+    @Node.Input
     // @field
     ValueNode ___object;
     // @field
     private final boolean ___localOnly;
 
-    // @cons
+    // @cons EnsureVirtualizedNode
     public EnsureVirtualizedNode(ValueNode __object, boolean __localOnly)
     {
         super(TYPE, StampFactory.forVoid());

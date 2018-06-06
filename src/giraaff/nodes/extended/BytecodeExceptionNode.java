@@ -7,6 +7,7 @@ import org.graalvm.word.LocationIdentity;
 import giraaff.core.common.spi.ForeignCallDescriptor;
 import giraaff.core.common.type.StampFactory;
 import giraaff.core.common.type.TypeReference;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.graph.NodeInputList;
 import giraaff.nodes.ValueNode;
@@ -27,11 +28,11 @@ public final class BytecodeExceptionNode extends AbstractMemoryCheckpoint implem
 
     // @field
     protected final Class<? extends Throwable> ___exceptionClass;
-    @Input
+    @Node.Input
     // @field
     NodeInputList<ValueNode> ___arguments;
 
-    // @cons
+    // @cons BytecodeExceptionNode
     public BytecodeExceptionNode(MetaAccessProvider __metaAccess, Class<? extends Throwable> __exceptionClass, ValueNode... __arguments)
     {
         super(TYPE, StampFactory.objectNonNull(TypeReference.createExactTrusted(__metaAccess.lookupJavaType(__exceptionClass))));

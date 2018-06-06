@@ -34,12 +34,12 @@ public abstract class CompressionNode extends UnaryNode implements ConvertNode, 
     }
 
     // @field
-    protected final CompressionOp ___op;
+    protected final CompressionNode.CompressionOp ___op;
     // @field
     protected final CompressEncoding ___encoding;
 
-    // @cons
-    public CompressionNode(NodeClass<? extends UnaryNode> __c, CompressionOp __op, ValueNode __input, Stamp __stamp, CompressEncoding __encoding)
+    // @cons CompressionNode
+    public CompressionNode(NodeClass<? extends UnaryNode> __c, CompressionNode.CompressionOp __op, ValueNode __input, Stamp __stamp, CompressEncoding __encoding)
     {
         super(__c, __stamp, __input);
         this.___op = __op;
@@ -92,7 +92,7 @@ public abstract class CompressionNode extends UnaryNode implements ConvertNode, 
 
     protected abstract Stamp mkStamp(Stamp __input);
 
-    public CompressionOp getOp()
+    public CompressionNode.CompressionOp getOp()
     {
         return this.___op;
     }

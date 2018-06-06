@@ -3,6 +3,7 @@ package giraaff.nodes.java;
 import org.graalvm.word.LocationIdentity;
 
 import giraaff.graph.IterableNodeType;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.extended.MonitorExit;
@@ -28,11 +29,11 @@ public final class MonitorExitNode extends AccessMonitorNode implements Virtuali
     // Non-null for the monitor exit introduced due to a synchronized root method and null in all
     // other cases.
     ///
-    @OptionalInput
+    @Node.OptionalInput
     // @field
     ValueNode ___escapedReturnValue;
 
-    // @cons
+    // @cons MonitorExitNode
     public MonitorExitNode(ValueNode __object, MonitorIdNode __monitorId, ValueNode __escapedReturnValue)
     {
         super(TYPE, __object, __monitorId);

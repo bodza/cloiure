@@ -1,6 +1,7 @@
 package giraaff.hotspot.nodes;
 
 import giraaff.core.common.type.StampFactory;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.hotspot.HotSpotNodeLIRBuilder;
 import giraaff.nodes.FixedWithNextNode;
@@ -18,11 +19,11 @@ public final class PatchReturnAddressNode extends FixedWithNextNode implements L
     // @def
     public static final NodeClass<PatchReturnAddressNode> TYPE = NodeClass.create(PatchReturnAddressNode.class);
 
-    @Input
+    @Node.Input
     // @field
     ValueNode ___address;
 
-    // @cons
+    // @cons PatchReturnAddressNode
     public PatchReturnAddressNode(ValueNode __address)
     {
         super(TYPE, StampFactory.forVoid());
@@ -35,6 +36,6 @@ public final class PatchReturnAddressNode extends FixedWithNextNode implements L
         ((HotSpotNodeLIRBuilder) __gen).emitPatchReturnAddress(this.___address);
     }
 
-    @NodeIntrinsic
+    @Node.NodeIntrinsic
     public static native void patchReturnAddress(Word __address);
 }

@@ -1,10 +1,10 @@
 package giraaff.nodes;
 
 import giraaff.core.common.type.StampFactory;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.nodeinfo.InputType;
 import giraaff.nodes.memory.address.AddressNode;
-import giraaff.nodes.memory.address.AddressNode.Address;
 import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
@@ -14,11 +14,11 @@ public final class PrefetchAllocateNode extends FixedWithNextNode implements LIR
     // @def
     public static final NodeClass<PrefetchAllocateNode> TYPE = NodeClass.create(PrefetchAllocateNode.class);
 
-    @Input(InputType.Association)
+    @Node.Input(InputType.Association)
     // @field
     AddressNode ___address;
 
-    // @cons
+    // @cons PrefetchAllocateNode
     public PrefetchAllocateNode(ValueNode __address)
     {
         super(TYPE, StampFactory.forVoid());
@@ -31,6 +31,6 @@ public final class PrefetchAllocateNode extends FixedWithNextNode implements LIR
         __gen.getLIRGeneratorTool().emitPrefetchAllocate(__gen.operand(this.___address));
     }
 
-    @NodeIntrinsic
-    public static native void prefetch(Address __address);
+    @Node.NodeIntrinsic
+    public static native void prefetch(AddressNode.Address __address);
 }

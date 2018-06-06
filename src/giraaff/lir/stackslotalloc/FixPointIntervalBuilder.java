@@ -17,8 +17,6 @@ import giraaff.lir.InstructionValueConsumer;
 import giraaff.lir.InstructionValueProcedure;
 import giraaff.lir.LIR;
 import giraaff.lir.LIRInstruction;
-import giraaff.lir.LIRInstruction.OperandFlag;
-import giraaff.lir.LIRInstruction.OperandMode;
 import giraaff.lir.LIRValueUtil;
 import giraaff.lir.VirtualStackSlot;
 
@@ -41,7 +39,7 @@ final class FixPointIntervalBuilder
     // @field
     private final EconomicSet<LIRInstruction> ___usePos = EconomicSet.create(Equivalence.IDENTITY);
 
-    // @cons
+    // @cons FixPointIntervalBuilder
     FixPointIntervalBuilder(LIR __lir, StackInterval[] __stackSlotMap, int __maxOpId)
     {
         super();
@@ -107,7 +105,7 @@ final class FixPointIntervalBuilder
             markOutInterval(__outSet, getBlockEnd(__instructions));
 
             // process instructions
-            BlockClosure __closure = new BlockClosure((BitSet) __outSet.clone());
+            FixPointIntervalBuilder.BlockClosure __closure = new FixPointIntervalBuilder.BlockClosure((BitSet) __outSet.clone());
             for (int __i = __instructions.size() - 1; __i >= 0; __i--)
             {
                 LIRInstruction __inst = __instructions.get(__i);
@@ -151,7 +149,7 @@ final class FixPointIntervalBuilder
         // @field
         private final BitSet ___currentSet;
 
-        // @cons
+        // @cons FixPointIntervalBuilder.BlockClosure
         private BlockClosure(BitSet __set)
         {
             super();
@@ -180,7 +178,7 @@ final class FixPointIntervalBuilder
         InstructionValueConsumer useConsumer = new InstructionValueConsumer()
         {
             @Override
-            public void visitValue(LIRInstruction __inst, Value __operand, OperandMode __mode, EnumSet<OperandFlag> __flags)
+            public void visitValue(LIRInstruction __inst, Value __operand, LIRInstruction.OperandMode __mode, EnumSet<LIRInstruction.OperandFlag> __flags)
             {
                 if (LIRValueUtil.isVirtualStackSlot(__operand))
                 {
@@ -188,7 +186,7 @@ final class FixPointIntervalBuilder
                     addUse(__vslot, __inst, __flags);
                     addRegisterHint(__inst, __vslot, __mode, __flags, false);
                     FixPointIntervalBuilder.this.___usePos.add(__inst);
-                    BlockClosure.this.___currentSet.set(__vslot.getId());
+                    FixPointIntervalBuilder.BlockClosure.this.___currentSet.set(__vslot.getId());
                 }
             }
         };
@@ -197,7 +195,7 @@ final class FixPointIntervalBuilder
         InstructionValueConsumer defConsumer = new InstructionValueConsumer()
         {
             @Override
-            public void visitValue(LIRInstruction __inst, Value __operand, OperandMode __mode, EnumSet<OperandFlag> __flags)
+            public void visitValue(LIRInstruction __inst, Value __operand, LIRInstruction.OperandMode __mode, EnumSet<LIRInstruction.OperandFlag> __flags)
             {
                 if (LIRValueUtil.isVirtualStackSlot(__operand))
                 {
@@ -205,15 +203,15 @@ final class FixPointIntervalBuilder
                     addDef(__vslot, __inst);
                     addRegisterHint(__inst, __vslot, __mode, __flags, true);
                     FixPointIntervalBuilder.this.___usePos.add(__inst);
-                    BlockClosure.this.___currentSet.clear(__vslot.getId());
+                    FixPointIntervalBuilder.BlockClosure.this.___currentSet.clear(__vslot.getId());
                 }
             }
         };
 
-        private void addUse(VirtualStackSlot __stackSlot, LIRInstruction __inst, EnumSet<OperandFlag> __flags)
+        private void addUse(VirtualStackSlot __stackSlot, LIRInstruction __inst, EnumSet<LIRInstruction.OperandFlag> __flags)
         {
             StackInterval __interval = getOrCreateInterval(__stackSlot);
-            if (__flags.contains(OperandFlag.UNINITIALIZED))
+            if (__flags.contains(LIRInstruction.OperandFlag.UNINITIALIZED))
             {
                 // Stack slot is marked uninitialized so we have to assume it is live all the time.
                 __interval.addFrom(0);
@@ -231,15 +229,15 @@ final class FixPointIntervalBuilder
             __interval.addFrom(__inst.id());
         }
 
-        void addRegisterHint(final LIRInstruction __op, VirtualStackSlot __targetValue, OperandMode __mode, EnumSet<OperandFlag> __flags, final boolean __hintAtDef)
+        void addRegisterHint(final LIRInstruction __op, VirtualStackSlot __targetValue, LIRInstruction.OperandMode __mode, EnumSet<LIRInstruction.OperandFlag> __flags, final boolean __hintAtDef)
         {
-            if (__flags.contains(OperandFlag.HINT))
+            if (__flags.contains(LIRInstruction.OperandFlag.HINT))
             {
                 // @closure
                 InstructionValueProcedure proc = new InstructionValueProcedure()
                 {
                     @Override
-                    public Value doValue(LIRInstruction __instruction, Value __registerHint, OperandMode __vaueMode, EnumSet<OperandFlag> __valueFlags)
+                    public Value doValue(LIRInstruction __instruction, Value __registerHint, LIRInstruction.OperandMode __vaueMode, EnumSet<LIRInstruction.OperandFlag> __valueFlags)
                     {
                         if (LIRValueUtil.isVirtualStackSlot(__registerHint))
                         {

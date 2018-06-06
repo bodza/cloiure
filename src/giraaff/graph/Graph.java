@@ -8,7 +8,7 @@ import org.graalvm.collections.Equivalence;
 import org.graalvm.collections.UnmodifiableEconomicMap;
 
 import giraaff.core.common.GraalOptions;
-import giraaff.graph.Node.ValueNumberable;
+import giraaff.graph.Node;
 import giraaff.graph.iterators.NodeIterable;
 
 ///
@@ -55,10 +55,10 @@ public class Graph
     int ___compressions;
 
     // @field
-    NodeEventListener ___nodeEventListener;
+    Graph.NodeEventListener ___nodeEventListener;
 
     ///
-    // Used to global value number {@link ValueNumberable} {@linkplain NodeClass#isLeafNode() leaf} nodes.
+    // Used to global value number {@link Node.ValueNumberable} {@linkplain NodeClass#isLeafNode() leaf} nodes.
     ///
     // @field
     private EconomicMap<Node, Node>[] ___cachedLeafNodes;
@@ -89,7 +89,7 @@ public class Graph
     // threads so it's only safe to read them.
     ///
     // @field
-    private FreezeState ___freezeState = FreezeState.Unfrozen;
+    private Graph.FreezeState ___freezeState = Graph.FreezeState.Unfrozen;
 
     // @def
     private static final int INITIAL_NODES_SIZE = 32;
@@ -97,7 +97,7 @@ public class Graph
     ///
     // Creates an empty Graph.
     ///
-    // @cons
+    // @cons Graph
     public Graph()
     {
         super();
@@ -242,7 +242,7 @@ public class Graph
     }
 
     ///
-    // The type of events sent to a {@link NodeEventListener}.
+    // The type of events sent to a {@link Graph.NodeEventListener}.
     ///
     // @enum Graph.NodeEvent
     public enum NodeEvent
@@ -283,7 +283,7 @@ public class Graph
         // @param e an event
         // @param node the node related to {@code e}
         ///
-        final void event(NodeEvent __e, Node __node)
+        final void event(Graph.NodeEvent __e, Node __node)
         {
             switch (__e)
             {
@@ -317,7 +317,7 @@ public class Graph
         // @param e an event
         // @param node the node related to {@code e}
         ///
-        public void changed(NodeEvent __e, Node __node)
+        public void changed(Graph.NodeEvent __e, Node __node)
         {
         }
 
@@ -357,15 +357,15 @@ public class Graph
     }
 
     // @class Graph.ChainedNodeEventListener
-    private static final class ChainedNodeEventListener extends NodeEventListener
+    private static final class ChainedNodeEventListener extends Graph.NodeEventListener
     {
         // @field
-        NodeEventListener ___head;
+        Graph.NodeEventListener ___head;
         // @field
-        NodeEventListener ___next;
+        Graph.NodeEventListener ___next;
 
-        // @cons
-        ChainedNodeEventListener(NodeEventListener __head, NodeEventListener __next)
+        // @cons Graph.ChainedNodeEventListener
+        ChainedNodeEventListener(Graph.NodeEventListener __head, Graph.NodeEventListener __next)
         {
             super();
             this.___head = __head;
@@ -375,33 +375,33 @@ public class Graph
         @Override
         public void nodeAdded(Node __node)
         {
-            this.___head.event(NodeEvent.NODE_ADDED, __node);
-            this.___next.event(NodeEvent.NODE_ADDED, __node);
+            this.___head.event(Graph.NodeEvent.NODE_ADDED, __node);
+            this.___next.event(Graph.NodeEvent.NODE_ADDED, __node);
         }
 
         @Override
         public void inputChanged(Node __node)
         {
-            this.___head.event(NodeEvent.INPUT_CHANGED, __node);
-            this.___next.event(NodeEvent.INPUT_CHANGED, __node);
+            this.___head.event(Graph.NodeEvent.INPUT_CHANGED, __node);
+            this.___next.event(Graph.NodeEvent.INPUT_CHANGED, __node);
         }
 
         @Override
         public void usagesDroppedToZero(Node __node)
         {
-            this.___head.event(NodeEvent.ZERO_USAGES, __node);
-            this.___next.event(NodeEvent.ZERO_USAGES, __node);
+            this.___head.event(Graph.NodeEvent.ZERO_USAGES, __node);
+            this.___next.event(Graph.NodeEvent.ZERO_USAGES, __node);
         }
 
         @Override
         public void nodeRemoved(Node __node)
         {
-            this.___head.event(NodeEvent.NODE_REMOVED, __node);
-            this.___next.event(NodeEvent.NODE_REMOVED, __node);
+            this.___head.event(Graph.NodeEvent.NODE_REMOVED, __node);
+            this.___next.event(Graph.NodeEvent.NODE_REMOVED, __node);
         }
 
         @Override
-        public void changed(NodeEvent __e, Node __node)
+        public void changed(Graph.NodeEvent __e, Node __node)
         {
             this.___head.event(__e, __node);
             this.___next.event(__e, __node);
@@ -409,14 +409,14 @@ public class Graph
     }
 
     ///
-    // Registers a given {@link NodeEventListener} with the enclosing graph until this object is {@linkplain #close() closed}.
+    // Registers a given {@link Graph.NodeEventListener} with the enclosing graph until this object is {@linkplain #close() closed}.
     ///
     // @class Graph.NodeEventScope
     // @closure
     public final class NodeEventScope implements AutoCloseable
     {
-        // @cons
-        NodeEventScope(NodeEventListener __listener)
+        // @cons Graph.NodeEventScope
+        NodeEventScope(Graph.NodeEventListener __listener)
         {
             super();
             if (Graph.this.___nodeEventListener == null)
@@ -425,16 +425,16 @@ public class Graph
             }
             else
             {
-                Graph.this.___nodeEventListener = new ChainedNodeEventListener(__listener, Graph.this.___nodeEventListener);
+                Graph.this.___nodeEventListener = new Graph.ChainedNodeEventListener(__listener, Graph.this.___nodeEventListener);
             }
         }
 
         @Override
         public void close()
         {
-            if (Graph.this.___nodeEventListener instanceof ChainedNodeEventListener)
+            if (Graph.this.___nodeEventListener instanceof Graph.ChainedNodeEventListener)
             {
-                Graph.this.___nodeEventListener = ((ChainedNodeEventListener) Graph.this.___nodeEventListener).___next;
+                Graph.this.___nodeEventListener = ((Graph.ChainedNodeEventListener) Graph.this.___nodeEventListener).___next;
             }
             else
             {
@@ -444,18 +444,18 @@ public class Graph
     }
 
     ///
-    // Registers a given {@link NodeEventListener} with this graph. This should be used in
+    // Registers a given {@link Graph.NodeEventListener} with this graph. This should be used in
     // conjunction with try-with-resources statement as follows:
     //
     // <pre>
-    // try (NodeEventScope nes = graph.trackNodeEvents(listener)) {
+    // try (Graph.NodeEventScope nes = graph.trackNodeEvents(listener)) {
     //     // make changes to the graph
     // }
     // </pre>
     ///
-    public NodeEventScope trackNodeEvents(NodeEventListener __listener)
+    public Graph.NodeEventScope trackNodeEvents(Graph.NodeEventListener __listener)
     {
-        return new NodeEventScope(__listener);
+        return new Graph.NodeEventScope(__listener);
     }
 
     ///
@@ -464,7 +464,7 @@ public class Graph
     //
     // @return a node similar to {@code node} if one exists, otherwise {@code node}
     ///
-    public <T extends Node & ValueNumberable> T unique(T __node)
+    public <T extends Node & Node.ValueNumberable> T unique(T __node)
     {
         return uniqueHelper(__node);
     }
@@ -588,7 +588,7 @@ public class Graph
         }
     }
 
-    public boolean isNew(Mark __mark, Node __node)
+    public boolean isNew(Graph.NodeMark __mark, Node __node)
     {
         return __node.___id >= __mark.getValue();
     }
@@ -596,14 +596,14 @@ public class Graph
     ///
     // A snapshot of the {@linkplain Graph#getNodeCount() live node count} in a graph.
     ///
-    // @class Graph.Mark
-    public static final class Mark extends NodeIdAccessor
+    // @class Graph.NodeMark
+    public static final class NodeMark extends NodeIdAccessor
     {
         // @field
         private final int ___value;
 
-        // @cons
-        Mark(Graph __graph)
+        // @cons Graph.NodeMark
+        NodeMark(Graph __graph)
         {
             super(__graph);
             this.___value = __graph.nodeIdCount();
@@ -612,9 +612,9 @@ public class Graph
         @Override
         public boolean equals(Object __obj)
         {
-            if (__obj instanceof Mark)
+            if (__obj instanceof Graph.NodeMark)
             {
-                Mark __other = (Mark) __obj;
+                Graph.NodeMark __other = (Graph.NodeMark) __obj;
                 return __other.getValue() == getValue() && __other.getGraph() == getGraph();
             }
             return false;
@@ -656,15 +656,15 @@ public class Graph
     ///
     // Gets a mark that can be used with {@link #getNewNodes}.
     ///
-    public Mark getMark()
+    public Graph.NodeMark getMark()
     {
-        return new Mark(this);
+        return new Graph.NodeMark(this);
     }
 
     ///
     // Returns an {@link Iterable} providing all nodes added since the last {@link Graph#getMark() mark}.
     ///
-    public NodeIterable<Node> getNewNodes(Mark __mark)
+    public NodeIterable<Node> getNewNodes(Graph.NodeMark __mark)
     {
         final int __index = __mark == null ? 0 : __mark.getValue();
         // @closure
@@ -706,9 +706,9 @@ public class Graph
     static final class PlaceHolderNode extends Node
     {
         // @def
-        public static final NodeClass<PlaceHolderNode> TYPE = NodeClass.create(PlaceHolderNode.class);
+        public static final NodeClass<Graph.PlaceHolderNode> TYPE = NodeClass.create(Graph.PlaceHolderNode.class);
 
-        // @cons
+        // @cons Graph.PlaceHolderNode
         protected PlaceHolderNode()
         {
             super(TYPE);
@@ -895,7 +895,7 @@ public class Graph
 
         if (this.___nodeEventListener != null)
         {
-            this.___nodeEventListener.event(NodeEvent.NODE_ADDED, __node);
+            this.___nodeEventListener.event(Graph.NodeEvent.NODE_ADDED, __node);
         }
         afterRegister(__node);
     }
@@ -969,7 +969,7 @@ public class Graph
 
         if (this.___nodeEventListener != null)
         {
-            this.___nodeEventListener.event(NodeEvent.NODE_ADDED, __node);
+            this.___nodeEventListener.event(Graph.NodeEvent.NODE_ADDED, __node);
         }
 
         // nodes aren't removed from the type cache here - they will be removed during iteration
@@ -1003,14 +1003,14 @@ public class Graph
     ///
     public UnmodifiableEconomicMap<Node, Node> addDuplicates(Iterable<? extends Node> __newNodes, final Graph __oldGraph, int __estimatedNodeCount, EconomicMap<Node, Node> __replacementsMap)
     {
-        DuplicationReplacement __replacements;
+        Graph.DuplicationReplacement __replacements;
         if (__replacementsMap == null)
         {
             __replacements = null;
         }
         else
         {
-            __replacements = new MapReplacement(__replacementsMap);
+            __replacements = new Graph.MapReplacement(__replacementsMap);
         }
         return addDuplicates(__newNodes, __oldGraph, __estimatedNodeCount, __replacements);
     }
@@ -1022,12 +1022,12 @@ public class Graph
     }
 
     // @class Graph.MapReplacement
-    private static final class MapReplacement implements DuplicationReplacement
+    private static final class MapReplacement implements Graph.DuplicationReplacement
     {
         // @field
         private final EconomicMap<Node, Node> ___map;
 
-        // @cons
+        // @cons Graph.MapReplacement
         MapReplacement(EconomicMap<Node, Node> __map)
         {
             super();
@@ -1042,18 +1042,18 @@ public class Graph
         }
     }
 
-    public EconomicMap<Node, Node> addDuplicates(Iterable<? extends Node> __newNodes, final Graph __oldGraph, int __estimatedNodeCount, DuplicationReplacement __replacements)
+    public EconomicMap<Node, Node> addDuplicates(Iterable<? extends Node> __newNodes, final Graph __oldGraph, int __estimatedNodeCount, Graph.DuplicationReplacement __replacements)
     {
         return NodeClass.addGraphDuplicate(this, __oldGraph, __estimatedNodeCount, __newNodes, __replacements);
     }
 
     public boolean isFrozen()
     {
-        return this.___freezeState != FreezeState.Unfrozen;
+        return this.___freezeState != Graph.FreezeState.Unfrozen;
     }
 
     public void freeze()
     {
-        this.___freezeState = FreezeState.DeepFreeze;
+        this.___freezeState = Graph.FreezeState.DeepFreeze;
     }
 }

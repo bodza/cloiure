@@ -12,7 +12,7 @@ import giraaff.nodes.LoopBeginNode;
 ///
 // Placeholder node to denote to snippet preparation that the following loop must be completely unrolled.
 //
-// @see VarargsParameter
+// @see Snippet.VarargsParameter
 ///
 // @class ExplodeLoopNode
 public final class ExplodeLoopNode extends FixedWithNextNode
@@ -20,7 +20,7 @@ public final class ExplodeLoopNode extends FixedWithNextNode
     // @def
     public static final NodeClass<ExplodeLoopNode> TYPE = NodeClass.create(ExplodeLoopNode.class);
 
-    // @cons
+    // @cons ExplodeLoopNode
     public ExplodeLoopNode()
     {
         super(TYPE, StampFactory.forVoid());
@@ -51,6 +51,6 @@ public final class ExplodeLoopNode extends FixedWithNextNode
     ///
     // A call to this method must be placed immediately prior to the loop that is to be exploded.
     ///
-    @NodeIntrinsic
+    @Node.NodeIntrinsic
     public static native void explodeLoop();
 }

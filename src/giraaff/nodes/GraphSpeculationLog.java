@@ -23,7 +23,7 @@ public final class GraphSpeculationLog implements SpeculationLog
     // @field
     private final EconomicMap<SpeculationReason, JavaConstant> ___speculations;
 
-    // @cons
+    // @cons GraphSpeculationLog
     public GraphSpeculationLog(SpeculationLog __log)
     {
         super();

@@ -5,6 +5,7 @@ import jdk.vm.ci.meta.DeoptimizationReason;
 import jdk.vm.ci.meta.Value;
 
 import giraaff.core.common.type.Stamp;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.graph.spi.Simplifiable;
 import giraaff.nodes.AbstractBeginNode;
@@ -26,20 +27,20 @@ public abstract class IntegerExactArithmeticSplitNode extends ControlSplitNode i
     // @def
     public static final NodeClass<IntegerExactArithmeticSplitNode> TYPE = NodeClass.create(IntegerExactArithmeticSplitNode.class);
 
-    @Successor
+    @Node.Successor
     // @field
     AbstractBeginNode ___next;
-    @Successor
+    @Node.Successor
     // @field
     AbstractBeginNode ___overflowSuccessor;
-    @Input
+    @Node.Input
     // @field
     ValueNode ___x;
-    @Input
+    @Node.Input
     // @field
     ValueNode ___y;
 
-    // @cons
+    // @cons IntegerExactArithmeticSplitNode
     protected IntegerExactArithmeticSplitNode(NodeClass<? extends IntegerExactArithmeticSplitNode> __c, Stamp __stamp, ValueNode __x, ValueNode __y, AbstractBeginNode __next, AbstractBeginNode __overflowSuccessor)
     {
         super(__c, __stamp);

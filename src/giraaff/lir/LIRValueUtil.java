@@ -131,7 +131,7 @@ public final class LIRValueUtil
             }
             else
             {
-                throw new IllegalArgumentException("Not a Register or Value: " + __o);
+                throw new IllegalArgumentException("not a Register or Value: " + __o);
             }
         }
         return __registers;

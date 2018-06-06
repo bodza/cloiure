@@ -16,7 +16,7 @@ public final class StubStartNode extends StartNode
     // @field
     protected final Stub ___stub;
 
-    // @cons
+    // @cons StubStartNode
     public StubStartNode(Stub __stub)
     {
         super(TYPE);

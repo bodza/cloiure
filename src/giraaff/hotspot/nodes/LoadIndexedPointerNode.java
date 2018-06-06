@@ -13,7 +13,7 @@ public final class LoadIndexedPointerNode extends LoadIndexedNode
     // @def
     public static final NodeClass<LoadIndexedPointerNode> TYPE = NodeClass.create(LoadIndexedPointerNode.class);
 
-    // @cons
+    // @cons LoadIndexedPointerNode
     public LoadIndexedPointerNode(Stamp __stamp, ValueNode __array, ValueNode __index)
     {
         super(TYPE, __stamp, __array, __index, JavaKind.Illegal);

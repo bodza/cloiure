@@ -24,7 +24,7 @@ public final class Variable extends AllocatableValue
     ///
     // Creates a new variable.
     ///
-    // @cons
+    // @cons Variable
     public Variable(ValueKind<?> __kind, int __index)
     {
         super(__kind);

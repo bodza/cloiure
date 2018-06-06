@@ -20,19 +20,19 @@ public final class ControlFlowAnchorNode extends FixedWithNextNode implements LI
     }
 
     // @field
-    protected Unique ___unique;
+    protected ControlFlowAnchorNode.Unique ___unique;
 
-    // @cons
+    // @cons ControlFlowAnchorNode
     public ControlFlowAnchorNode()
     {
         super(TYPE, StampFactory.forVoid());
-        this.___unique = new Unique();
+        this.___unique = new ControlFlowAnchorNode.Unique();
     }
 
     ///
     // Used by MacroSubstitution.
     ///
-    // @cons
+    // @cons ControlFlowAnchorNode
     public ControlFlowAnchorNode(@SuppressWarnings("unused") Invoke __invoke)
     {
         this();

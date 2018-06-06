@@ -51,7 +51,7 @@ public abstract class PostOrderNodeIterator<T extends MergeableState<T>>
     // @field
     protected T ___state;
 
-    // @cons
+    // @cons PostOrderNodeIterator
     public PostOrderNodeIterator(FixedNode __start, T __initialState)
     {
         super();

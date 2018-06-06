@@ -11,15 +11,13 @@ import jdk.vm.ci.meta.Value;
 
 import giraaff.asm.Label;
 import giraaff.asm.amd64.AMD64Address;
-import giraaff.asm.amd64.AMD64Address.Scale;
-import giraaff.asm.amd64.AMD64Assembler.ConditionFlag;
-import giraaff.asm.amd64.AMD64Assembler.OperandSize;
+import giraaff.asm.amd64.AMD64Assembler;
 import giraaff.asm.amd64.AMD64MacroAssembler;
 import giraaff.core.common.LIRKind;
 import giraaff.core.common.NumUtil;
-import giraaff.lir.LIRInstruction.OperandFlag;
+import giraaff.lir.LIRInstruction;
 import giraaff.lir.LIRInstructionClass;
-import giraaff.lir.Opcode;
+import giraaff.lir.LIROpcode;
 import giraaff.lir.asm.CompilationResultBuilder;
 import giraaff.lir.gen.LIRGeneratorTool;
 
@@ -27,7 +25,7 @@ import giraaff.lir.gen.LIRGeneratorTool;
 // Emits code which compares two arrays of the same length. If the CPU supports any vector
 // instructions specialized code is emitted to leverage these instructions.
 ///
-@Opcode
+@LIROpcode
 // @class AMD64ArrayEqualsOp
 public final class AMD64ArrayEqualsOp extends AMD64LIRInstruction
 {
@@ -41,39 +39,39 @@ public final class AMD64ArrayEqualsOp extends AMD64LIRInstruction
     // @field
     private final int ___arrayIndexScale;
 
-    @Def({OperandFlag.REG})
+    @LIRInstruction.Def({LIRInstruction.OperandFlag.REG})
     // @field
     protected Value ___resultValue;
-    @Alive({OperandFlag.REG})
+    @LIRInstruction.Alive({LIRInstruction.OperandFlag.REG})
     // @field
     protected Value ___array1Value;
-    @Alive({OperandFlag.REG})
+    @LIRInstruction.Alive({LIRInstruction.OperandFlag.REG})
     // @field
     protected Value ___array2Value;
-    @Alive({OperandFlag.REG})
+    @LIRInstruction.Alive({LIRInstruction.OperandFlag.REG})
     // @field
     protected Value ___lengthValue;
-    @Temp({OperandFlag.REG})
+    @LIRInstruction.Temp({LIRInstruction.OperandFlag.REG})
     // @field
     protected Value ___temp1;
-    @Temp({OperandFlag.REG})
+    @LIRInstruction.Temp({LIRInstruction.OperandFlag.REG})
     // @field
     protected Value ___temp2;
-    @Temp({OperandFlag.REG})
+    @LIRInstruction.Temp({LIRInstruction.OperandFlag.REG})
     // @field
     protected Value ___temp3;
-    @Temp({OperandFlag.REG})
+    @LIRInstruction.Temp({LIRInstruction.OperandFlag.REG})
     // @field
     protected Value ___temp4;
 
-    @Temp({OperandFlag.REG, OperandFlag.ILLEGAL})
+    @LIRInstruction.Temp({LIRInstruction.OperandFlag.REG, LIRInstruction.OperandFlag.ILLEGAL})
     // @field
     protected Value ___vectorTemp1;
-    @Temp({OperandFlag.REG, OperandFlag.ILLEGAL})
+    @LIRInstruction.Temp({LIRInstruction.OperandFlag.REG, LIRInstruction.OperandFlag.ILLEGAL})
     // @field
     protected Value ___vectorTemp2;
 
-    // @cons
+    // @cons AMD64ArrayEqualsOp
     public AMD64ArrayEqualsOp(LIRGeneratorTool __tool, JavaKind __kind, Value __result, Value __array1, Value __array2, Value __length)
     {
         super(TYPE);
@@ -193,34 +191,34 @@ public final class AMD64ArrayEqualsOp extends AMD64LIRInstruction
         // compare 16-byte vectors
         __masm.andl(__result, SSE4_1_VECTOR_SIZE - 1); // tail count (in bytes)
         __masm.andl(__length, ~(SSE4_1_VECTOR_SIZE - 1)); // vector count (in bytes)
-        __masm.jcc(ConditionFlag.Zero, __compareTail);
+        __masm.jcc(AMD64Assembler.ConditionFlag.Zero, __compareTail);
 
-        __masm.leaq(__array1, new AMD64Address(__array1, __length, Scale.Times1, 0));
-        __masm.leaq(__array2, new AMD64Address(__array2, __length, Scale.Times1, 0));
+        __masm.leaq(__array1, new AMD64Address(__array1, __length, AMD64Address.Scale.Times1, 0));
+        __masm.leaq(__array2, new AMD64Address(__array2, __length, AMD64Address.Scale.Times1, 0));
         __masm.negq(__length);
 
         // align the main loop
         __masm.align(__crb.___target.wordSize * 2);
         __masm.bind(__loop);
-        __masm.movdqu(__vector1, new AMD64Address(__array1, __length, Scale.Times1, 0));
-        __masm.movdqu(__vector2, new AMD64Address(__array2, __length, Scale.Times1, 0));
+        __masm.movdqu(__vector1, new AMD64Address(__array1, __length, AMD64Address.Scale.Times1, 0));
+        __masm.movdqu(__vector2, new AMD64Address(__array2, __length, AMD64Address.Scale.Times1, 0));
         __masm.pxor(__vector1, __vector2);
         __masm.ptest(__vector1, __vector1);
-        __masm.jcc(ConditionFlag.NotZero, __falseLabel);
+        __masm.jcc(AMD64Assembler.ConditionFlag.NotZero, __falseLabel);
 
         __masm.bind(__loopCheck);
         __masm.addq(__length, SSE4_1_VECTOR_SIZE);
-        __masm.jcc(ConditionFlag.NotZero, __loop);
+        __masm.jcc(AMD64Assembler.ConditionFlag.NotZero, __loop);
 
         __masm.testl(__result, __result);
-        __masm.jcc(ConditionFlag.Zero, __trueLabel);
+        __masm.jcc(AMD64Assembler.ConditionFlag.Zero, __trueLabel);
 
         // Compare the remaining bytes with an unaligned memory load aligned to the end of the array.
-        __masm.movdqu(__vector1, new AMD64Address(__array1, __result, Scale.Times1, -SSE4_1_VECTOR_SIZE));
-        __masm.movdqu(__vector2, new AMD64Address(__array2, __result, Scale.Times1, -SSE4_1_VECTOR_SIZE));
+        __masm.movdqu(__vector1, new AMD64Address(__array1, __result, AMD64Address.Scale.Times1, -SSE4_1_VECTOR_SIZE));
+        __masm.movdqu(__vector2, new AMD64Address(__array2, __result, AMD64Address.Scale.Times1, -SSE4_1_VECTOR_SIZE));
         __masm.pxor(__vector1, __vector2);
         __masm.ptest(__vector1, __vector1);
-        __masm.jcc(ConditionFlag.NotZero, __falseLabel);
+        __masm.jcc(AMD64Assembler.ConditionFlag.NotZero, __falseLabel);
         __masm.jmp(__trueLabel);
 
         __masm.bind(__compareTail);
@@ -258,34 +256,34 @@ public final class AMD64ArrayEqualsOp extends AMD64LIRInstruction
         // compare 16-byte vectors
         __masm.andl(__result, AVX_VECTOR_SIZE - 1); // tail count (in bytes)
         __masm.andl(__length, ~(AVX_VECTOR_SIZE - 1)); // vector count (in bytes)
-        __masm.jcc(ConditionFlag.Zero, __compareTail);
+        __masm.jcc(AMD64Assembler.ConditionFlag.Zero, __compareTail);
 
-        __masm.leaq(__array1, new AMD64Address(__array1, __length, Scale.Times1, 0));
-        __masm.leaq(__array2, new AMD64Address(__array2, __length, Scale.Times1, 0));
+        __masm.leaq(__array1, new AMD64Address(__array1, __length, AMD64Address.Scale.Times1, 0));
+        __masm.leaq(__array2, new AMD64Address(__array2, __length, AMD64Address.Scale.Times1, 0));
         __masm.negq(__length);
 
         // align the main loop
         __masm.align(__crb.___target.wordSize * 2);
         __masm.bind(__loop);
-        __masm.vmovdqu(__vector1, new AMD64Address(__array1, __length, Scale.Times1, 0));
-        __masm.vmovdqu(__vector2, new AMD64Address(__array2, __length, Scale.Times1, 0));
+        __masm.vmovdqu(__vector1, new AMD64Address(__array1, __length, AMD64Address.Scale.Times1, 0));
+        __masm.vmovdqu(__vector2, new AMD64Address(__array2, __length, AMD64Address.Scale.Times1, 0));
         __masm.vpxor(__vector1, __vector1, __vector2);
         __masm.vptest(__vector1, __vector1);
-        __masm.jcc(ConditionFlag.NotZero, __falseLabel);
+        __masm.jcc(AMD64Assembler.ConditionFlag.NotZero, __falseLabel);
 
         __masm.bind(__loopCheck);
         __masm.addq(__length, AVX_VECTOR_SIZE);
-        __masm.jcc(ConditionFlag.NotZero, __loop);
+        __masm.jcc(AMD64Assembler.ConditionFlag.NotZero, __loop);
 
         __masm.testl(__result, __result);
-        __masm.jcc(ConditionFlag.Zero, __trueLabel);
+        __masm.jcc(AMD64Assembler.ConditionFlag.Zero, __trueLabel);
 
         // Compare the remaining bytes with an unaligned memory load aligned to the end of the array.
-        __masm.vmovdqu(__vector1, new AMD64Address(__array1, __result, Scale.Times1, -AVX_VECTOR_SIZE));
-        __masm.vmovdqu(__vector2, new AMD64Address(__array2, __result, Scale.Times1, -AVX_VECTOR_SIZE));
+        __masm.vmovdqu(__vector1, new AMD64Address(__array1, __result, AMD64Address.Scale.Times1, -AVX_VECTOR_SIZE));
+        __masm.vmovdqu(__vector2, new AMD64Address(__array2, __result, AMD64Address.Scale.Times1, -AVX_VECTOR_SIZE));
         __masm.vpxor(__vector1, __vector1, __vector2);
         __masm.vptest(__vector1, __vector1);
-        __masm.jcc(ConditionFlag.NotZero, __falseLabel);
+        __masm.jcc(AMD64Assembler.ConditionFlag.NotZero, __falseLabel);
         __masm.jmp(__trueLabel);
 
         __masm.bind(__compareTail);
@@ -312,30 +310,30 @@ public final class AMD64ArrayEqualsOp extends AMD64LIRInstruction
 
         __masm.andl(__result, VECTOR_SIZE - 1); // tail count (in bytes)
         __masm.andl(__length, ~(VECTOR_SIZE - 1)); // vector count (in bytes)
-        __masm.jcc(ConditionFlag.Zero, __compareTail);
+        __masm.jcc(AMD64Assembler.ConditionFlag.Zero, __compareTail);
 
-        __masm.leaq(__array1, new AMD64Address(__array1, __length, Scale.Times1, 0));
-        __masm.leaq(__array2, new AMD64Address(__array2, __length, Scale.Times1, 0));
+        __masm.leaq(__array1, new AMD64Address(__array1, __length, AMD64Address.Scale.Times1, 0));
+        __masm.leaq(__array2, new AMD64Address(__array2, __length, AMD64Address.Scale.Times1, 0));
         __masm.negq(__length);
 
         // align the main loop
         __masm.align(__crb.___target.wordSize * 2);
         __masm.bind(__loop);
-        __masm.movq(__temp, new AMD64Address(__array1, __length, Scale.Times1, 0));
-        __masm.cmpq(__temp, new AMD64Address(__array2, __length, Scale.Times1, 0));
-        __masm.jcc(ConditionFlag.NotEqual, __falseLabel);
+        __masm.movq(__temp, new AMD64Address(__array1, __length, AMD64Address.Scale.Times1, 0));
+        __masm.cmpq(__temp, new AMD64Address(__array2, __length, AMD64Address.Scale.Times1, 0));
+        __masm.jcc(AMD64Assembler.ConditionFlag.NotEqual, __falseLabel);
 
         __masm.bind(__loopCheck);
         __masm.addq(__length, VECTOR_SIZE);
-        __masm.jccb(ConditionFlag.NotZero, __loop);
+        __masm.jccb(AMD64Assembler.ConditionFlag.NotZero, __loop);
 
         __masm.testl(__result, __result);
-        __masm.jcc(ConditionFlag.Zero, __trueLabel);
+        __masm.jcc(AMD64Assembler.ConditionFlag.Zero, __trueLabel);
 
         // Compare the remaining bytes with an unaligned memory load aligned to the end of the array.
-        __masm.movq(__temp, new AMD64Address(__array1, __result, Scale.Times1, -VECTOR_SIZE));
-        __masm.cmpq(__temp, new AMD64Address(__array2, __result, Scale.Times1, -VECTOR_SIZE));
-        __masm.jccb(ConditionFlag.NotEqual, __falseLabel);
+        __masm.movq(__temp, new AMD64Address(__array1, __result, AMD64Address.Scale.Times1, -VECTOR_SIZE));
+        __masm.cmpq(__temp, new AMD64Address(__array2, __result, AMD64Address.Scale.Times1, -VECTOR_SIZE));
+        __masm.jccb(AMD64Assembler.ConditionFlag.NotEqual, __falseLabel);
         __masm.jmpb(__trueLabel);
 
         __masm.bind(__compareTail);
@@ -356,10 +354,10 @@ public final class AMD64ArrayEqualsOp extends AMD64LIRInstruction
         {
             // Compare trailing 4 bytes, if any.
             __masm.testl(__result, 4);
-            __masm.jccb(ConditionFlag.Zero, __compare2Bytes);
+            __masm.jccb(AMD64Assembler.ConditionFlag.Zero, __compare2Bytes);
             __masm.movl(__temp, new AMD64Address(__array1, 0));
             __masm.cmpl(__temp, new AMD64Address(__array2, 0));
-            __masm.jccb(ConditionFlag.NotEqual, __falseLabel);
+            __masm.jccb(AMD64Assembler.ConditionFlag.NotEqual, __falseLabel);
             if (this.___kind.getByteCount() <= 2)
             {
                 // Move array pointers forward.
@@ -369,11 +367,11 @@ public final class AMD64ArrayEqualsOp extends AMD64LIRInstruction
                 // Compare trailing 2 bytes, if any.
                 __masm.bind(__compare2Bytes);
                 __masm.testl(__result, 2);
-                __masm.jccb(ConditionFlag.Zero, __compare1Byte);
+                __masm.jccb(AMD64Assembler.ConditionFlag.Zero, __compare1Byte);
                 __masm.movzwl(__temp, new AMD64Address(__array1, 0));
                 __masm.movzwl(__length, new AMD64Address(__array2, 0));
                 __masm.cmpl(__temp, __length);
-                __masm.jccb(ConditionFlag.NotEqual, __falseLabel);
+                __masm.jccb(AMD64Assembler.ConditionFlag.NotEqual, __falseLabel);
 
                 // The one-byte tail compare is only required for boolean and byte arrays.
                 if (this.___kind.getByteCount() <= 1)
@@ -385,11 +383,11 @@ public final class AMD64ArrayEqualsOp extends AMD64LIRInstruction
                     // Compare trailing byte, if any.
                     __masm.bind(__compare1Byte);
                     __masm.testl(__result, 1);
-                    __masm.jccb(ConditionFlag.Zero, __trueLabel);
+                    __masm.jccb(AMD64Assembler.ConditionFlag.Zero, __trueLabel);
                     __masm.movzbl(__temp, new AMD64Address(__array1, 0));
                     __masm.movzbl(__length, new AMD64Address(__array2, 0));
                     __masm.cmpl(__temp, __length);
-                    __masm.jccb(ConditionFlag.NotEqual, __falseLabel);
+                    __masm.jccb(AMD64Assembler.ConditionFlag.NotEqual, __falseLabel);
                 }
                 else
                 {

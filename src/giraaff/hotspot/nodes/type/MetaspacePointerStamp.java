@@ -13,7 +13,7 @@ import giraaff.util.GraalError;
 // @class MetaspacePointerStamp
 public abstract class MetaspacePointerStamp extends AbstractPointerStamp
 {
-    // @cons
+    // @cons MetaspacePointerStamp
     protected MetaspacePointerStamp(boolean __nonNull, boolean __alwaysNull)
     {
         super(__nonNull, __alwaysNull);

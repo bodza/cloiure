@@ -12,7 +12,7 @@ public class GenericContext
     // @field
     private ArrayList<Object> ___context;
 
-    // @cons
+    // @cons GenericContext
     public GenericContext()
     {
         super();

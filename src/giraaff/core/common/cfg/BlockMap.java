@@ -7,7 +7,7 @@ public final class BlockMap<T>
     private final T[] ___data;
 
     @SuppressWarnings("unchecked")
-    // @cons
+    // @cons BlockMap
     public BlockMap(AbstractControlFlowGraph<?> __cfg)
     {
         super();

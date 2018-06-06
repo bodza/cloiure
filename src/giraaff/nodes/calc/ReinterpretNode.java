@@ -32,13 +32,13 @@ public final class ReinterpretNode extends UnaryNode implements ArithmeticLIRLow
     // @def
     public static final NodeClass<ReinterpretNode> TYPE = NodeClass.create(ReinterpretNode.class);
 
-    // @cons
+    // @cons ReinterpretNode
     protected ReinterpretNode(JavaKind __to, ValueNode __value)
     {
         this(StampFactory.forKind(__to), __value);
     }
 
-    // @cons
+    // @cons ReinterpretNode
     protected ReinterpretNode(Stamp __to, ValueNode __value)
     {
         super(TYPE, getReinterpretStamp(__to, __value.stamp(NodeView.DEFAULT)), __value);

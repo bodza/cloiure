@@ -20,22 +20,22 @@ import giraaff.nodes.cfg.Block;
 // @class ReentrantBlockIterator
 public final class ReentrantBlockIterator
 {
-    // @cons
+    // @cons ReentrantBlockIterator
     private ReentrantBlockIterator()
     {
         super();
     }
 
-    // @class ReentrantBlockIterator.LoopInfo
-    public static final class LoopInfo<StateT>
+    // @class ReentrantBlockIterator.BlockLoopInfo
+    public static final class BlockLoopInfo<StateT>
     {
         // @field
         public final List<StateT> ___endStates;
         // @field
         public final List<StateT> ___exitStates;
 
-        // @cons
-        public LoopInfo(int __endCount, int __exitCount)
+        // @cons ReentrantBlockIterator.BlockLoopInfo
+        public BlockLoopInfo(int __endCount, int __exitCount)
         {
             super();
             this.___endStates = new ArrayList<>(__endCount);
@@ -57,12 +57,12 @@ public final class ReentrantBlockIterator
         protected abstract List<StateT> processLoop(Loop<Block> __loop, StateT __initialState);
     }
 
-    public static <StateT> LoopInfo<StateT> processLoop(BlockIteratorClosure<StateT> __closure, Loop<Block> __loop, StateT __initialState)
+    public static <StateT> ReentrantBlockIterator.BlockLoopInfo<StateT> processLoop(ReentrantBlockIterator.BlockIteratorClosure<StateT> __closure, Loop<Block> __loop, StateT __initialState)
     {
         EconomicMap<FixedNode, StateT> __blockEndStates = apply(__closure, __loop.getHeader(), __initialState, __block -> !(__block.getLoop() == __loop || __block.isLoopHeader()));
 
         Block[] __predecessors = __loop.getHeader().getPredecessors();
-        LoopInfo<StateT> __info = new LoopInfo<>(__predecessors.length - 1, __loop.getExits().size());
+        ReentrantBlockIterator.BlockLoopInfo<StateT> __info = new ReentrantBlockIterator.BlockLoopInfo<>(__predecessors.length - 1, __loop.getExits().size());
         for (int __i = 1; __i < __predecessors.length; __i++)
         {
             StateT __endState = __blockEndStates.get(__predecessors[__i].getEndNode());
@@ -78,12 +78,12 @@ public final class ReentrantBlockIterator
         return __info;
     }
 
-    public static <StateT> void apply(BlockIteratorClosure<StateT> __closure, Block __start)
+    public static <StateT> void apply(ReentrantBlockIterator.BlockIteratorClosure<StateT> __closure, Block __start)
     {
         apply(__closure, __start, __closure.getInitialState(), null);
     }
 
-    public static <StateT> EconomicMap<FixedNode, StateT> apply(BlockIteratorClosure<StateT> __closure, Block __start, StateT __initialState, Predicate<Block> __stopAtBlock)
+    public static <StateT> EconomicMap<FixedNode, StateT> apply(ReentrantBlockIterator.BlockIteratorClosure<StateT> __closure, Block __start, StateT __initialState, Predicate<Block> __stopAtBlock)
     {
         Deque<Block> __blockQueue = new ArrayDeque<>();
         // States are stored on EndNodes before merges, and on BeginNodes after ControlSplitNodes.
@@ -181,7 +181,7 @@ public final class ReentrantBlockIterator
         return true;
     }
 
-    private static <StateT> Block processMultipleSuccessors(BlockIteratorClosure<StateT> __closure, Deque<Block> __blockQueue, EconomicMap<FixedNode, StateT> __states, StateT __state, Block[] __successors)
+    private static <StateT> Block processMultipleSuccessors(ReentrantBlockIterator.BlockIteratorClosure<StateT> __closure, Deque<Block> __blockQueue, EconomicMap<FixedNode, StateT> __states, StateT __state, Block[] __successors)
     {
         for (int __i = 1; __i < __successors.length; __i++)
         {
@@ -203,7 +203,7 @@ public final class ReentrantBlockIterator
         return __mergedStates;
     }
 
-    private static <StateT> void recurseIntoLoop(BlockIteratorClosure<StateT> __closure, Deque<Block> __blockQueue, EconomicMap<FixedNode, StateT> __states, StateT __state, Block __successor)
+    private static <StateT> void recurseIntoLoop(ReentrantBlockIterator.BlockIteratorClosure<StateT> __closure, Deque<Block> __blockQueue, EconomicMap<FixedNode, StateT> __states, StateT __state, Block __successor)
     {
         // recurse into the loop
         Loop<Block> __loop = __successor.getLoop();

@@ -43,13 +43,12 @@ import giraaff.nodes.java.MonitorIdNode;
 import giraaff.nodes.util.GraphUtil;
 import giraaff.phases.Phase;
 import giraaff.phases.common.DeadCodeEliminationPhase;
-import giraaff.phases.common.DeadCodeEliminationPhase.Optionality;
 import giraaff.util.GraalError;
 
 // @class OnStackReplacementPhase
 public final class OnStackReplacementPhase extends Phase
 {
-    // @cons
+    // @cons OnStackReplacementPhase
     public OnStackReplacementPhase()
     {
         super();
@@ -163,7 +162,7 @@ public final class OnStackReplacementPhase extends Phase
                     __osrLocal = __graph.addOrUnique(new OSRLocalNode(__i, __unrestrictedStamp));
                 }
                 // Speculate on the OSRLocal stamps that could be more precise.
-                OSRLocalSpeculationReason __reason = new OSRLocalSpeculationReason(__osrState.___bci, __narrowedStamp, __i);
+                OnStackReplacementPhase.OSRLocalSpeculationReason __reason = new OnStackReplacementPhase.OSRLocalSpeculationReason(__osrState.___bci, __narrowedStamp, __i);
                 if (__graph.getSpeculationLog().maySpeculate(__reason) && __osrLocal instanceof OSRLocalNode && __value.getStackKind().equals(JavaKind.Object) && !__narrowedStamp.isUnrestricted())
                 {
                     // Add guard.
@@ -183,7 +182,7 @@ public final class OnStackReplacementPhase extends Phase
 
         __osr.replaceAtUsages(InputType.Guard, __osrStart);
         GraphUtil.killCFG(__start);
-        new DeadCodeEliminationPhase(Optionality.Required).apply(__graph);
+        new DeadCodeEliminationPhase(DeadCodeEliminationPhase.Optionality.Required).apply(__graph);
 
         if (__currentOSRWithLocks)
         {
@@ -221,7 +220,7 @@ public final class OnStackReplacementPhase extends Phase
                 }
             }
         }
-        new DeadCodeEliminationPhase(Optionality.Required).apply(__graph);
+        new DeadCodeEliminationPhase(DeadCodeEliminationPhase.Optionality.Required).apply(__graph);
         // There must not be any parameter nodes left after OSR compilation.
     }
 
@@ -271,7 +270,7 @@ public final class OnStackReplacementPhase extends Phase
         // @field
         private int ___localIndex;
 
-        // @cons
+        // @cons OnStackReplacementPhase.OSRLocalSpeculationReason
         OSRLocalSpeculationReason(int __bci, Stamp __speculatedStamp, int __localIndex)
         {
             super();
@@ -283,9 +282,9 @@ public final class OnStackReplacementPhase extends Phase
         @Override
         public boolean equals(Object __obj)
         {
-            if (__obj instanceof OSRLocalSpeculationReason)
+            if (__obj instanceof OnStackReplacementPhase.OSRLocalSpeculationReason)
             {
-                OSRLocalSpeculationReason __that = (OSRLocalSpeculationReason) __obj;
+                OnStackReplacementPhase.OSRLocalSpeculationReason __that = (OnStackReplacementPhase.OSRLocalSpeculationReason) __obj;
                 return this.___bci == __that.___bci && this.___speculatedStamp.equals(__that.___speculatedStamp) && this.___localIndex == __that.___localIndex;
             }
             return false;

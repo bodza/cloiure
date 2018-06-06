@@ -14,11 +14,11 @@ public enum InputType
     ///
     // Inputs that reference a condition.
     ///
-    Condition,
+    ConditionI,
     ///
     // Inputs that reference a frame state.
     ///
-    State,
+    StateI,
     ///
     // Inputs that reference a guard (guards, begin nodes).
     ///

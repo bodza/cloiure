@@ -19,7 +19,7 @@ public final class DynamicNewInstanceNode extends AbstractNewObjectNode implemen
     // @def
     public static final NodeClass<DynamicNewInstanceNode> TYPE = NodeClass.create(DynamicNewInstanceNode.class);
 
-    @Input
+    @Node.Input
     // @field
     ValueNode ___clazz;
 
@@ -27,17 +27,17 @@ public final class DynamicNewInstanceNode extends AbstractNewObjectNode implemen
     // Class pointer to class.class needs to be exposed earlier than this node is lowered so that it
     // can be replaced by the AOT machinery. If it's not needed for lowering this input can be ignored.
     ///
-    @OptionalInput
+    @Node.OptionalInput
     // @field
     ValueNode ___classClass;
 
-    // @cons
+    // @cons DynamicNewInstanceNode
     public DynamicNewInstanceNode(ValueNode __clazz, boolean __fillContents)
     {
         this(TYPE, __clazz, __fillContents, null);
     }
 
-    // @cons
+    // @cons DynamicNewInstanceNode
     protected DynamicNewInstanceNode(NodeClass<? extends DynamicNewInstanceNode> __c, ValueNode __clazz, boolean __fillContents, FrameState __stateBefore)
     {
         super(__c, StampFactory.objectNonNull(), __fillContents, __stateBefore);

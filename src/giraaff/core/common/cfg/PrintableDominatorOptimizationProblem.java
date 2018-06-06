@@ -8,7 +8,7 @@ import java.util.function.BiConsumer;
 // @class PrintableDominatorOptimizationProblem
 public abstract class PrintableDominatorOptimizationProblem<E extends Enum<E>, C extends PropertyConsumable> extends DominatorOptimizationProblem<E, C> implements PrintableCFG
 {
-    // @cons
+    // @cons PrintableDominatorOptimizationProblem
     protected PrintableDominatorOptimizationProblem(Class<E> __keyType, AbstractControlFlowGraph<?> __cfg)
     {
         super(__keyType, __cfg);

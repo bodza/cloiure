@@ -11,7 +11,7 @@ import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.graph.spi.Canonicalizable;
 import giraaff.graph.spi.CanonicalizerTool;
-import giraaff.nodes.CallTargetNode.InvokeKind;
+import giraaff.nodes.CallTargetNode;
 import giraaff.nodes.ConstantNode;
 import giraaff.nodes.InvokeNode;
 import giraaff.nodes.ValueNode;
@@ -25,8 +25,8 @@ public final class CallSiteTargetNode extends MacroStateSplitNode implements Can
     // @def
     public static final NodeClass<CallSiteTargetNode> TYPE = NodeClass.create(CallSiteTargetNode.class);
 
-    // @cons
-    public CallSiteTargetNode(InvokeKind __invokeKind, ResolvedJavaMethod __targetMethod, int __bci, StampPair __returnStamp, ValueNode __receiver)
+    // @cons CallSiteTargetNode
+    public CallSiteTargetNode(CallTargetNode.InvokeKind __invokeKind, ResolvedJavaMethod __targetMethod, int __bci, StampPair __returnStamp, ValueNode __receiver)
     {
         super(TYPE, __invokeKind, __targetMethod, __bci, __returnStamp, __receiver);
     }

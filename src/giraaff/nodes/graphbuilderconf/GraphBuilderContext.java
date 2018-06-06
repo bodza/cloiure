@@ -16,7 +16,6 @@ import giraaff.core.common.type.Stamp;
 import giraaff.core.common.type.StampFactory;
 import giraaff.core.common.type.StampPair;
 import giraaff.nodes.CallTargetNode;
-import giraaff.nodes.CallTargetNode.InvokeKind;
 import giraaff.nodes.ConstantNode;
 import giraaff.nodes.FixedGuardNode;
 import giraaff.nodes.LogicNode;
@@ -150,7 +149,7 @@ public interface GraphBuilderContext extends GraphBuilderTool
     // @param forceInlineEverything specifies if all invocations encountered in the scope of
     //            handling the replaced invoke are to be force inlined
     ///
-    void handleReplacedInvoke(InvokeKind __invokeKind, ResolvedJavaMethod __targetMethod, ValueNode[] __args, boolean __forceInlineEverything);
+    void handleReplacedInvoke(CallTargetNode.InvokeKind __invokeKind, ResolvedJavaMethod __targetMethod, ValueNode[] __args, boolean __forceInlineEverything);
 
     void handleReplacedInvoke(CallTargetNode __callTarget, JavaKind __resultType);
 
@@ -213,7 +212,7 @@ public interface GraphBuilderContext extends GraphBuilderTool
     ///
     // Gets the kind of invocation currently being parsed.
     ///
-    InvokeKind getInvokeKind();
+    CallTargetNode.InvokeKind getInvokeKind();
 
     ///
     // Gets the return type of the invocation currently being parsed.
@@ -303,7 +302,7 @@ public interface GraphBuilderContext extends GraphBuilderTool
         int getInlinedDepth();
     }
 
-    default ExternalInliningContext getExternalInliningContext()
+    default GraphBuilderContext.ExternalInliningContext getExternalInliningContext()
     {
         return null;
     }

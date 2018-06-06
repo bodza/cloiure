@@ -35,7 +35,7 @@ final class NodeUsageIterator implements Iterator<Node>
         }
     }
 
-    // @cons
+    // @cons NodeUsageIterator
     NodeUsageIterator(Node __node)
     {
         super();

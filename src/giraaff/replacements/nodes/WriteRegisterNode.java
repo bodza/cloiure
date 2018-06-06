@@ -4,6 +4,7 @@ import jdk.vm.ci.code.Register;
 import jdk.vm.ci.meta.Value;
 
 import giraaff.core.common.type.StampFactory;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.nodes.FixedWithNextNode;
 import giraaff.nodes.ValueNode;
@@ -28,11 +29,11 @@ public final class WriteRegisterNode extends FixedWithNextNode implements LIRLow
     ///
     // The new value assigned to the register.
     ///
-    @Input
+    @Node.Input
     // @field
     ValueNode ___value;
 
-    // @cons
+    // @cons WriteRegisterNode
     public WriteRegisterNode(Register __register, ValueNode __value)
     {
         super(TYPE, StampFactory.forVoid());

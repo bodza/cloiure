@@ -1,5 +1,6 @@
 package giraaff.hotspot.nodes.aot;
 
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.hotspot.meta.HotSpotConstantLoadAction;
 import giraaff.nodes.DeoptimizingFixedWithNextNode;
@@ -14,13 +15,13 @@ public final class ResolveConstantNode extends DeoptimizingFixedWithNextNode imp
     // @def
     public static final NodeClass<ResolveConstantNode> TYPE = NodeClass.create(ResolveConstantNode.class);
 
-    @Input
+    @Node.Input
     // @field
     ValueNode ___value;
     // @field
     protected HotSpotConstantLoadAction ___action;
 
-    // @cons
+    // @cons ResolveConstantNode
     public ResolveConstantNode(ValueNode __value, HotSpotConstantLoadAction __action)
     {
         super(TYPE, __value.stamp(NodeView.DEFAULT));
@@ -28,7 +29,7 @@ public final class ResolveConstantNode extends DeoptimizingFixedWithNextNode imp
         this.___action = __action;
     }
 
-    // @cons
+    // @cons ResolveConstantNode
     public ResolveConstantNode(ValueNode __value)
     {
         super(TYPE, __value.stamp(NodeView.DEFAULT));

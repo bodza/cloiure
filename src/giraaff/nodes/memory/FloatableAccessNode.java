@@ -17,20 +17,20 @@ public abstract class FloatableAccessNode extends FixedAccessNode
     // @def
     public static final NodeClass<FloatableAccessNode> TYPE = NodeClass.create(FloatableAccessNode.class);
 
-    // @cons
+    // @cons FloatableAccessNode
     protected FloatableAccessNode(NodeClass<? extends FloatableAccessNode> __c, AddressNode __address, LocationIdentity __location, Stamp __stamp)
     {
         super(__c, __address, __location, __stamp);
     }
 
-    // @cons
-    protected FloatableAccessNode(NodeClass<? extends FloatableAccessNode> __c, AddressNode __address, LocationIdentity __location, Stamp __stamp, GuardingNode __guard, BarrierType __barrierType)
+    // @cons FloatableAccessNode
+    protected FloatableAccessNode(NodeClass<? extends FloatableAccessNode> __c, AddressNode __address, LocationIdentity __location, Stamp __stamp, GuardingNode __guard, HeapAccess.BarrierType __barrierType)
     {
         super(__c, __address, __location, __stamp, __guard, __barrierType, false, null);
     }
 
-    // @cons
-    protected FloatableAccessNode(NodeClass<? extends FloatableAccessNode> __c, AddressNode __address, LocationIdentity __location, Stamp __stamp, GuardingNode __guard, BarrierType __barrierType, boolean __nullCheck, FrameState __stateBefore)
+    // @cons FloatableAccessNode
+    protected FloatableAccessNode(NodeClass<? extends FloatableAccessNode> __c, AddressNode __address, LocationIdentity __location, Stamp __stamp, GuardingNode __guard, HeapAccess.BarrierType __barrierType, boolean __nullCheck, FrameState __stateBefore)
     {
         super(__c, __address, __location, __stamp, __guard, __barrierType, __nullCheck, __stateBefore);
     }
@@ -52,6 +52,6 @@ public abstract class FloatableAccessNode extends FixedAccessNode
     ///
     public boolean canFloat()
     {
-        return !this.___forceFixed && getLocationIdentity().isSingle() && getBarrierType() == BarrierType.NONE;
+        return !this.___forceFixed && getLocationIdentity().isSingle() && getBarrierType() == HeapAccess.BarrierType.NONE;
     }
 }

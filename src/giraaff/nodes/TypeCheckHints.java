@@ -34,7 +34,7 @@ public final class TypeCheckHints
         // @field
         public final boolean ___positive;
 
-        // @cons
+        // @cons TypeCheckHints.Hint
         Hint(ResolvedJavaType __type, boolean __positive)
         {
             super();
@@ -44,7 +44,7 @@ public final class TypeCheckHints
     }
 
     // @def
-    private static final Hint[] NO_HINTS = {};
+    private static final TypeCheckHints.Hint[] NO_HINTS = {};
 
     ///
     // If non-null, then this is the only type that could pass the type check because the target of
@@ -58,7 +58,7 @@ public final class TypeCheckHints
     // The most likely types that the type check instruction will see.
     ///
     // @field
-    public final Hint[] ___hints;
+    public final TypeCheckHints.Hint[] ___hints;
 
     ///
     // The profile from which this information was derived.
@@ -84,7 +84,7 @@ public final class TypeCheckHints
     //            will be null
     // @param maxHints the maximum length of {@link #hints}
     ///
-    // @cons
+    // @cons TypeCheckHints
     public TypeCheckHints(TypeReference __targetType, JavaTypeProfile __profile, Assumptions __assumptions, double __minHintHitProbability, int __maxHints)
     {
         super();
@@ -102,24 +102,24 @@ public final class TypeCheckHints
         this.___hintHitProbability = __hitProbability[0];
     }
 
-    private static Hint[] makeHints(TypeReference __targetType, JavaTypeProfile __profile, double __minHintHitProbability, int __maxHints, Double[] __hitProbability)
+    private static TypeCheckHints.Hint[] makeHints(TypeReference __targetType, JavaTypeProfile __profile, double __minHintHitProbability, int __maxHints, Double[] __hitProbability)
     {
         double __hitProb = 0.0d;
-        Hint[] __hintsBuf = NO_HINTS;
+        TypeCheckHints.Hint[] __hintsBuf = NO_HINTS;
         if (__profile != null)
         {
             double __notRecordedTypes = __profile.getNotRecordedProbability();
             ProfiledType[] __ptypes = __profile.getTypes();
             if (__notRecordedTypes < (1D - __minHintHitProbability) && __ptypes != null && __ptypes.length > 0)
             {
-                __hintsBuf = new Hint[__ptypes.length];
+                __hintsBuf = new TypeCheckHints.Hint[__ptypes.length];
                 int __hintCount = 0;
                 for (ProfiledType __ptype : __ptypes)
                 {
                     if (__targetType != null)
                     {
                         ResolvedJavaType __hintType = __ptype.getType();
-                        __hintsBuf[__hintCount++] = new Hint(__hintType, __targetType.getType().isAssignableFrom(__hintType));
+                        __hintsBuf[__hintCount++] = new TypeCheckHints.Hint(__hintType, __targetType.getType().isAssignableFrom(__hintType));
                         __hitProb += __ptype.getProbability();
                     }
                     if (__hintCount == __maxHints)

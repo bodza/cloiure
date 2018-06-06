@@ -17,7 +17,7 @@ public final class LogicConstantNode extends LogicNode implements LIRLowerable
     // @field
     protected final boolean ___value;
 
-    // @cons
+    // @cons LogicConstantNode
     public LogicConstantNode(boolean __value)
     {
         super(TYPE);

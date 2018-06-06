@@ -11,6 +11,7 @@ import java.lang.annotation.Target;
 ///
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
+// @iface Snippet
 public @interface Snippet
 {
     ///
@@ -28,6 +29,7 @@ public @interface Snippet
     ///
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.PARAMETER)
+    // @iface Snippet.VarargsParameter
     public @interface VarargsParameter
     {
     }
@@ -37,6 +39,7 @@ public @interface Snippet
     ///
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.PARAMETER)
+    // @iface Snippet.ConstantParameter
     public @interface ConstantParameter
     {
     }
@@ -46,6 +49,7 @@ public @interface Snippet
     ///
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.PARAMETER)
+    // @iface Snippet.NonNullParameter
     public @interface NonNullParameter
     {
     }

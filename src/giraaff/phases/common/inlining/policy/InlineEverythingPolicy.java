@@ -22,8 +22,8 @@ public class InlineEverythingPolicy implements InliningPolicy
     }
 
     @Override
-    public Decision isWorthInlining(Replacements __replacements, MethodInvocation __invocation, int __inliningDepth, boolean __fullyProcessed)
+    public InliningPolicy.Decision isWorthInlining(Replacements __replacements, MethodInvocation __invocation, int __inliningDepth, boolean __fullyProcessed)
     {
-        return Decision.YES;
+        return InliningPolicy.Decision.YES;
     }
 }

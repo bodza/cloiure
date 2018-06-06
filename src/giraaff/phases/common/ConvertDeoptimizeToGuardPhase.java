@@ -32,7 +32,7 @@ import giraaff.nodes.calc.CompareNode;
 import giraaff.nodes.spi.LoweringProvider;
 import giraaff.nodes.util.GraphUtil;
 import giraaff.phases.BasePhase;
-import giraaff.phases.common.DeadCodeEliminationPhase.Optionality;
+import giraaff.phases.common.DeadCodeEliminationPhase;
 import giraaff.phases.tiers.PhaseContext;
 
 ///
@@ -69,7 +69,7 @@ public final class ConvertDeoptimizeToGuardPhase extends BasePhase<PhaseContext>
             }
         }
 
-        new DeadCodeEliminationPhase(Optionality.Optional).apply(__graph);
+        new DeadCodeEliminationPhase(DeadCodeEliminationPhase.Optionality.Optional).apply(__graph);
     }
 
     private void trySplitFixedGuard(FixedGuardNode __fixedGuard, PhaseContext __context)

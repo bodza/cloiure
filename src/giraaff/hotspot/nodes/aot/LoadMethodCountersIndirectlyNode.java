@@ -26,13 +26,13 @@ public final class LoadMethodCountersIndirectlyNode extends FloatingNode impleme
     // @def
     public static final NodeClass<LoadMethodCountersIndirectlyNode> TYPE = NodeClass.create(LoadMethodCountersIndirectlyNode.class);
 
-    @OptionalInput
+    @Node.OptionalInput
     // @field
     protected ValueNode ___value;
     // @field
     protected Constant ___constant;
 
-    // @cons
+    // @cons LoadMethodCountersIndirectlyNode
     public LoadMethodCountersIndirectlyNode(ValueNode __value)
     {
         super(TYPE, MethodCountersPointerStamp.methodCounters());
@@ -65,6 +65,6 @@ public final class LoadMethodCountersIndirectlyNode extends FloatingNode impleme
         __gen.setResult(this, __result);
     }
 
-    @NodeIntrinsic
+    @Node.NodeIntrinsic
     public static native MethodCountersPointer loadMethodCounters(MethodPointer __methodPointer);
 }

@@ -29,7 +29,7 @@ public final class MethodPointerStamp extends MetaspacePointerStamp
         return METHOD_NON_NULL;
     }
 
-    // @cons
+    // @cons MethodPointerStamp
     private MethodPointerStamp(boolean __nonNull, boolean __alwaysNull)
     {
         super(__nonNull, __alwaysNull);

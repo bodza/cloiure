@@ -8,20 +8,20 @@ import giraaff.nodes.memory.MemoryCheckpoint;
 ///
 // The start node of a graph.
 ///
-// @NodeInfo.allowedUsageTypes "Memory"
+// @NodeInfo.allowedUsageTypes "InputType.Memory"
 // @class StartNode
 public class StartNode extends BeginStateSplitNode implements MemoryCheckpoint.Single
 {
     // @def
     public static final NodeClass<StartNode> TYPE = NodeClass.create(StartNode.class);
 
-    // @cons
+    // @cons StartNode
     protected StartNode(NodeClass<? extends StartNode> __c)
     {
         super(__c);
     }
 
-    // @cons
+    // @cons StartNode
     public StartNode()
     {
         super(TYPE);

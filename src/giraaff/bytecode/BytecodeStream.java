@@ -22,7 +22,7 @@ public final class BytecodeStream
     //
     // @param code the array of bytes that contains the bytecode
     ///
-    // @cons
+    // @cons BytecodeStream
     public BytecodeStream(byte[] __code)
     {
         super();

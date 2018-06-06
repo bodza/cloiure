@@ -11,9 +11,9 @@ import giraaff.asm.amd64.AMD64Address;
 import giraaff.asm.amd64.AMD64MacroAssembler;
 import giraaff.core.common.CompressEncoding;
 import giraaff.hotspot.HotSpotRuntime;
-import giraaff.lir.LIRInstruction.OperandFlag;
+import giraaff.lir.LIRInstruction;
 import giraaff.lir.LIRInstructionClass;
-import giraaff.lir.StandardOp.LoadConstantOp;
+import giraaff.lir.StandardOp;
 import giraaff.lir.amd64.AMD64LIRInstruction;
 import giraaff.lir.asm.CompilationResultBuilder;
 import giraaff.util.GraalError;
@@ -21,25 +21,25 @@ import giraaff.util.GraalError;
 // @class AMD64HotSpotMove
 public final class AMD64HotSpotMove
 {
-    // @cons
+    // @cons AMD64HotSpotMove
     private AMD64HotSpotMove()
     {
         super();
     }
 
     // @class AMD64HotSpotMove.HotSpotLoadObjectConstantOp
-    public static final class HotSpotLoadObjectConstantOp extends AMD64LIRInstruction implements LoadConstantOp
+    public static final class HotSpotLoadObjectConstantOp extends AMD64LIRInstruction implements StandardOp.LoadConstantOp
     {
         // @def
-        public static final LIRInstructionClass<HotSpotLoadObjectConstantOp> TYPE = LIRInstructionClass.create(HotSpotLoadObjectConstantOp.class);
+        public static final LIRInstructionClass<AMD64HotSpotMove.HotSpotLoadObjectConstantOp> TYPE = LIRInstructionClass.create(AMD64HotSpotMove.HotSpotLoadObjectConstantOp.class);
 
-        @Def({OperandFlag.REG, OperandFlag.STACK})
+        @LIRInstruction.Def({LIRInstruction.OperandFlag.REG, LIRInstruction.OperandFlag.STACK})
         // @field
         private AllocatableValue ___result;
         // @field
         private final HotSpotObjectConstant ___input;
 
-        // @cons
+        // @cons AMD64HotSpotMove.HotSpotLoadObjectConstantOp
         public HotSpotLoadObjectConstantOp(AllocatableValue __result, HotSpotObjectConstant __input)
         {
             super(TYPE);
@@ -115,13 +115,13 @@ public final class AMD64HotSpotMove
     public static final class BaseMove extends AMD64LIRInstruction
     {
         // @def
-        public static final LIRInstructionClass<BaseMove> TYPE = LIRInstructionClass.create(BaseMove.class);
+        public static final LIRInstructionClass<AMD64HotSpotMove.BaseMove> TYPE = LIRInstructionClass.create(AMD64HotSpotMove.BaseMove.class);
 
-        @Def({OperandFlag.REG, OperandFlag.HINT})
+        @LIRInstruction.Def({LIRInstruction.OperandFlag.REG, LIRInstruction.OperandFlag.HINT})
         // @field
         protected AllocatableValue ___result;
 
-        // @cons
+        // @cons AMD64HotSpotMove.BaseMove
         public BaseMove(AllocatableValue __result)
         {
             super(TYPE);
@@ -137,18 +137,18 @@ public final class AMD64HotSpotMove
     }
 
     // @class AMD64HotSpotMove.HotSpotLoadMetaspaceConstantOp
-    public static final class HotSpotLoadMetaspaceConstantOp extends AMD64LIRInstruction implements LoadConstantOp
+    public static final class HotSpotLoadMetaspaceConstantOp extends AMD64LIRInstruction implements StandardOp.LoadConstantOp
     {
         // @def
-        public static final LIRInstructionClass<HotSpotLoadMetaspaceConstantOp> TYPE = LIRInstructionClass.create(HotSpotLoadMetaspaceConstantOp.class);
+        public static final LIRInstructionClass<AMD64HotSpotMove.HotSpotLoadMetaspaceConstantOp> TYPE = LIRInstructionClass.create(AMD64HotSpotMove.HotSpotLoadMetaspaceConstantOp.class);
 
-        @Def({OperandFlag.REG, OperandFlag.STACK})
+        @LIRInstruction.Def({LIRInstruction.OperandFlag.REG, LIRInstruction.OperandFlag.STACK})
         // @field
         private AllocatableValue ___result;
         // @field
         private final HotSpotMetaspaceConstant ___input;
 
-        // @cons
+        // @cons AMD64HotSpotMove.HotSpotLoadMetaspaceConstantOp
         public HotSpotLoadMetaspaceConstantOp(AllocatableValue __result, HotSpotMetaspaceConstant __input)
         {
             super(TYPE);

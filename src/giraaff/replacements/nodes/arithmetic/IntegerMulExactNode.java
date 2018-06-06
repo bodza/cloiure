@@ -23,7 +23,7 @@ public final class IntegerMulExactNode extends MulNode implements IntegerExactAr
     // @def
     public static final NodeClass<IntegerMulExactNode> TYPE = NodeClass.create(IntegerMulExactNode.class);
 
-    // @cons
+    // @cons IntegerMulExactNode
     public IntegerMulExactNode(ValueNode __x, ValueNode __y)
     {
         super(TYPE, __x, __y);

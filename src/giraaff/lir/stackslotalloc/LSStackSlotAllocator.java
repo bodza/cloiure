@@ -18,8 +18,6 @@ import giraaff.core.common.GraalOptions;
 import giraaff.core.common.cfg.AbstractBlockBase;
 import giraaff.lir.LIR;
 import giraaff.lir.LIRInstruction;
-import giraaff.lir.LIRInstruction.OperandFlag;
-import giraaff.lir.LIRInstruction.OperandMode;
 import giraaff.lir.LIRValueUtil;
 import giraaff.lir.ValueProcedure;
 import giraaff.lir.VirtualStackSlot;
@@ -36,14 +34,14 @@ import giraaff.lir.phases.LIRPhase;
 // Remark: The analysis works under the assumption that a stack slot is no longer live after its last usage.
 // If an {@link LIRInstruction instruction} transfers the raw address of the stack slot to another location, e.g.
 // a registers, and this location is referenced later on, the {@link giraaff.lir.LIRInstruction.Use usage} of the
-// stack slot must be marked with the {@link OperandFlag#UNINITIALIZED}. Otherwise the stack slot might be reused
-// and its content destroyed.
+// stack slot must be marked with the {@link LIRInstruction.OperandFlag#UNINITIALIZED}. Otherwise the stack slot
+// might be reused and its content destroyed.
 ///
 // @class LSStackSlotAllocator
 public final class LSStackSlotAllocator extends AllocationPhase
 {
     @Override
-    protected void run(TargetDescription __target, LIRGenerationResult __lirGenRes, AllocationContext __context)
+    protected void run(TargetDescription __target, LIRGenerationResult __lirGenRes, AllocationPhase.AllocationContext __context)
     {
         allocateStackSlots((FrameMapBuilderTool) __lirGenRes.getFrameMapBuilder(), __lirGenRes);
         __lirGenRes.buildFrameMap();
@@ -53,7 +51,7 @@ public final class LSStackSlotAllocator extends AllocationPhase
     {
         if (__builder.getNumberOfStackSlots() > 0)
         {
-            new Allocator(__res.getLIR(), __builder).allocate();
+            new LSStackSlotAllocator.Allocator(__res.getLIR(), __builder).allocate();
         }
     }
 
@@ -75,7 +73,7 @@ public final class LSStackSlotAllocator extends AllocationPhase
         // @field
         private final int ___maxOpId;
 
-        // @cons
+        // @cons LSStackSlotAllocator.Allocator
         private Allocator(LIR __lir, FrameMapBuilderTool __frameMapBuilder)
         {
             super();
@@ -205,30 +203,30 @@ public final class LSStackSlotAllocator extends AllocationPhase
             Illegal;
         }
 
-        private SlotSize forKind(ValueKind<?> __kind)
+        private LSStackSlotAllocator.Allocator.SlotSize forKind(ValueKind<?> __kind)
         {
             switch (this.___frameMapBuilder.getFrameMap().spillSlotSize(__kind))
             {
                 case 1:
-                    return SlotSize.Size1;
+                    return LSStackSlotAllocator.Allocator.SlotSize.Size1;
                 case 2:
-                    return SlotSize.Size2;
+                    return LSStackSlotAllocator.Allocator.SlotSize.Size2;
                 case 4:
-                    return SlotSize.Size4;
+                    return LSStackSlotAllocator.Allocator.SlotSize.Size4;
                 case 8:
-                    return SlotSize.Size8;
+                    return LSStackSlotAllocator.Allocator.SlotSize.Size8;
                 default:
-                    return SlotSize.Illegal;
+                    return LSStackSlotAllocator.Allocator.SlotSize.Illegal;
             }
         }
 
         // @field
-        private EnumMap<SlotSize, Deque<StackSlot>> ___freeSlots;
+        private EnumMap<LSStackSlotAllocator.Allocator.SlotSize, Deque<StackSlot>> ___freeSlots;
 
         ///
         // @return The list of free stack slots for {@code size} or {@code null} if there is none.
         ///
-        private Deque<StackSlot> getOrNullFreeSlots(SlotSize __size)
+        private Deque<StackSlot> getOrNullFreeSlots(LSStackSlotAllocator.Allocator.SlotSize __size)
         {
             if (this.___freeSlots == null)
             {
@@ -240,7 +238,7 @@ public final class LSStackSlotAllocator extends AllocationPhase
         ///
         // @return the list of free stack slots for {@code size}. If there is none a list is created.
         ///
-        private Deque<StackSlot> getOrInitFreeSlots(SlotSize __size)
+        private Deque<StackSlot> getOrInitFreeSlots(LSStackSlotAllocator.Allocator.SlotSize __size)
         {
             Deque<StackSlot> __freeList;
             if (this.___freeSlots != null)
@@ -249,7 +247,7 @@ public final class LSStackSlotAllocator extends AllocationPhase
             }
             else
             {
-                this.___freeSlots = new EnumMap<>(SlotSize.class);
+                this.___freeSlots = new EnumMap<>(LSStackSlotAllocator.Allocator.SlotSize.class);
                 __freeList = null;
             }
             if (__freeList == null)
@@ -265,8 +263,8 @@ public final class LSStackSlotAllocator extends AllocationPhase
         ///
         private StackSlot findFreeSlot(SimpleVirtualStackSlot __slot)
         {
-            SlotSize __size = forKind(__slot.getValueKind());
-            if (__size == SlotSize.Illegal)
+            LSStackSlotAllocator.Allocator.SlotSize __size = forKind(__slot.getValueKind());
+            if (__size == LSStackSlotAllocator.Allocator.SlotSize.Illegal)
             {
                 return null;
             }
@@ -283,8 +281,8 @@ public final class LSStackSlotAllocator extends AllocationPhase
         ///
         private void freeSlot(StackSlot __slot)
         {
-            SlotSize __size = forKind(__slot.getValueKind());
-            if (__size == SlotSize.Illegal)
+            LSStackSlotAllocator.Allocator.SlotSize __size = forKind(__slot.getValueKind());
+            if (__size == LSStackSlotAllocator.Allocator.SlotSize.Illegal)
             {
                 return;
             }
@@ -353,7 +351,7 @@ public final class LSStackSlotAllocator extends AllocationPhase
         ValueProcedure assignSlot = new ValueProcedure()
         {
             @Override
-            public Value doValue(Value __value, OperandMode __mode, EnumSet<OperandFlag> __flags)
+            public Value doValue(Value __value, LIRInstruction.OperandMode __mode, EnumSet<LIRInstruction.OperandFlag> __flags)
             {
                 if (LIRValueUtil.isVirtualStackSlot(__value))
                 {

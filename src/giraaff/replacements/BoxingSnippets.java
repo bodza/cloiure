@@ -19,9 +19,6 @@ import giraaff.nodes.extended.UnboxNode;
 import giraaff.nodes.spi.LoweringTool;
 import giraaff.phases.util.Providers;
 import giraaff.replacements.SnippetTemplate;
-import giraaff.replacements.SnippetTemplate.AbstractTemplates;
-import giraaff.replacements.SnippetTemplate.Arguments;
-import giraaff.replacements.SnippetTemplate.SnippetInfo;
 
 // @class BoxingSnippets
 public final class BoxingSnippets implements Snippets
@@ -139,16 +136,16 @@ public final class BoxingSnippets implements Snippets
         return null;
     }
 
-    // @class BoxingSnippets.Templates
-    public static final class Templates extends AbstractTemplates
+    // @class BoxingSnippets.BoxingTemplates
+    public static final class BoxingTemplates extends SnippetTemplate.AbstractTemplates
     {
         // @field
-        private final EnumMap<JavaKind, SnippetInfo> ___boxSnippets = new EnumMap<>(JavaKind.class);
+        private final EnumMap<JavaKind, SnippetTemplate.SnippetInfo> ___boxSnippets = new EnumMap<>(JavaKind.class);
         // @field
-        private final EnumMap<JavaKind, SnippetInfo> ___unboxSnippets = new EnumMap<>(JavaKind.class);
+        private final EnumMap<JavaKind, SnippetTemplate.SnippetInfo> ___unboxSnippets = new EnumMap<>(JavaKind.class);
 
-        // @cons
-        public Templates(Providers __providers, SnippetReflectionProvider __snippetReflection, TargetDescription __target)
+        // @cons BoxingSnippets.BoxingTemplates
+        public BoxingTemplates(Providers __providers, SnippetReflectionProvider __snippetReflection, TargetDescription __target)
         {
             super(__providers, __snippetReflection, __target);
             for (JavaKind __kind : new JavaKind[] { JavaKind.Boolean, JavaKind.Byte, JavaKind.Char, JavaKind.Int, JavaKind.Long, JavaKind.Short })
@@ -168,7 +165,7 @@ public final class BoxingSnippets implements Snippets
             }
             else
             {
-                Arguments __args = new Arguments(this.___boxSnippets.get(__box.getBoxingKind()), __box.graph().getGuardsStage(), __tool.getLoweringStage());
+                SnippetTemplate.Arguments __args = new SnippetTemplate.Arguments(this.___boxSnippets.get(__box.getBoxingKind()), __box.graph().getGuardsStage(), __tool.getLoweringStage());
                 __args.add("value", __box.getValue());
 
                 SnippetTemplate __template = template(__box, __args);
@@ -178,7 +175,7 @@ public final class BoxingSnippets implements Snippets
 
         public void lower(UnboxNode __unbox, LoweringTool __tool)
         {
-            Arguments __args = new Arguments(this.___unboxSnippets.get(__unbox.getBoxingKind()), __unbox.graph().getGuardsStage(), __tool.getLoweringStage());
+            SnippetTemplate.Arguments __args = new SnippetTemplate.Arguments(this.___unboxSnippets.get(__unbox.getBoxingKind()), __unbox.graph().getGuardsStage(), __tool.getLoweringStage());
             __args.add("value", __unbox.getValue());
 
             SnippetTemplate __template = template(__unbox, __args);

@@ -8,6 +8,7 @@ import org.graalvm.word.LocationIdentity;
 import giraaff.core.common.spi.ForeignCallDescriptor;
 import giraaff.core.common.type.PrimitiveStamp;
 import giraaff.core.common.type.StampFactory;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.hotspot.HotSpotGraalRuntime;
 import giraaff.hotspot.HotSpotRuntime;
@@ -29,32 +30,32 @@ import giraaff.nodes.spi.Lowerable;
 import giraaff.nodes.spi.LoweringTool;
 import giraaff.word.Word;
 
-// @NodeInfo.allowedUsageTypes "Memory, Value"
+// @NodeInfo.allowedUsageTypes "InputType.Memory, InputType.Value"
 // @class CheckcastArrayCopyCallNode
 public final class CheckcastArrayCopyCallNode extends AbstractMemoryCheckpoint implements Lowerable, MemoryCheckpoint.Single
 {
     // @def
     public static final NodeClass<CheckcastArrayCopyCallNode> TYPE = NodeClass.create(CheckcastArrayCopyCallNode.class);
 
-    @Input
+    @Node.Input
     // @field
     ValueNode ___src;
-    @Input
+    @Node.Input
     // @field
     ValueNode ___srcPos;
-    @Input
+    @Node.Input
     // @field
     ValueNode ___dest;
-    @Input
+    @Node.Input
     // @field
     ValueNode ___destPos;
-    @Input
+    @Node.Input
     // @field
     ValueNode ___length;
-    @Input
+    @Node.Input
     // @field
     ValueNode ___destElemKlass;
-    @Input
+    @Node.Input
     // @field
     ValueNode ___superCheckOffset;
 
@@ -64,8 +65,8 @@ public final class CheckcastArrayCopyCallNode extends AbstractMemoryCheckpoint i
     // @field
     protected final HotSpotGraalRuntime ___runtime;
 
-    // @cons
-    protected CheckcastArrayCopyCallNode(@InjectedNodeParameter HotSpotGraalRuntime __runtime, ValueNode __src, ValueNode __srcPos, ValueNode __dest, ValueNode __destPos, ValueNode __length, ValueNode __superCheckOffset, ValueNode __destElemKlass, boolean __uninit)
+    // @cons CheckcastArrayCopyCallNode
+    protected CheckcastArrayCopyCallNode(@Node.InjectedNodeParameter HotSpotGraalRuntime __runtime, ValueNode __src, ValueNode __srcPos, ValueNode __dest, ValueNode __destPos, ValueNode __length, ValueNode __superCheckOffset, ValueNode __destElemKlass, boolean __uninit)
     {
         super(TYPE, StampFactory.forKind(JavaKind.Int));
         this.___src = __src;
@@ -148,6 +149,6 @@ public final class CheckcastArrayCopyCallNode extends AbstractMemoryCheckpoint i
         return LocationIdentity.any();
     }
 
-    @NodeIntrinsic
-    public static native int checkcastArraycopy(Object __src, int __srcPos, Object __dest, int __destPos, int __length, Word __superCheckOffset, Object __destElemKlass, @ConstantNodeParameter boolean __uninit);
+    @Node.NodeIntrinsic
+    public static native int checkcastArraycopy(Object __src, int __srcPos, Object __dest, int __destPos, int __length, Word __superCheckOffset, Object __destElemKlass, @Node.ConstantNodeParameter boolean __uninit);
 }

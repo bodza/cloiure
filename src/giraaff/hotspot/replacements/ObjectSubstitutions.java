@@ -3,8 +3,7 @@ package giraaff.hotspot.replacements;
 import giraaff.api.replacements.ClassSubstitution;
 import giraaff.api.replacements.MethodSubstitution;
 import giraaff.core.common.spi.ForeignCallDescriptor;
-import giraaff.graph.Node.ConstantNodeParameter;
-import giraaff.graph.Node.NodeIntrinsic;
+import giraaff.graph.Node;
 import giraaff.hotspot.meta.HotSpotHostForeignCallsProvider;
 import giraaff.nodes.extended.ForeignCallNode;
 

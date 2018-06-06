@@ -29,5 +29,5 @@ public interface HeapAccess
     ///
     // Gets the write barrier type for that particular access.
     ///
-    BarrierType getBarrierType();
+    HeapAccess.BarrierType getBarrierType();
 }

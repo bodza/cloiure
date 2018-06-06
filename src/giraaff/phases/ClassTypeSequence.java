@@ -10,7 +10,7 @@ final class ClassTypeSequence implements JavaType, CharSequence
     // @field
     private final Class<?> ___clazz;
 
-    // @cons
+    // @cons ClassTypeSequence
     ClassTypeSequence(Class<?> __clazz)
     {
         super();

@@ -30,8 +30,8 @@ import giraaff.nodes.calc.UnsignedDivNode;
 import giraaff.nodes.calc.UnsignedRemNode;
 import giraaff.nodes.calc.UnsignedRightShiftNode;
 import giraaff.nodes.calc.XorNode;
-import giraaff.nodes.memory.HeapAccess.BarrierType;
-import giraaff.nodes.memory.address.AddressNode.Address;
+import giraaff.nodes.memory.HeapAccess;
+import giraaff.nodes.memory.address.AddressNode;
 import giraaff.util.GraalError;
 import giraaff.util.UnsafeAccess;
 
@@ -40,7 +40,7 @@ public abstract class Word implements SignedWord, UnsignedWord, Pointer
 {
     static
     {
-        BoxFactoryImpl.initialize();
+        Word.BoxFactoryImpl.initialize();
     }
 
     public static void ensureInitialized()
@@ -49,26 +49,27 @@ public abstract class Word implements SignedWord, UnsignedWord, Pointer
     }
 
     ///
-    // Links a method to a canonical operation represented by an {@link Opcode} val.
+    // Links a method to a canonical operation represented by an {@link Word.WordOpcode} val.
     ///
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.METHOD)
+    // @iface Word.Operation
     public @interface Operation
     {
         Class<? extends ValueNode> node() default ValueNode.class;
 
         boolean rightOperandIsInt() default false;
 
-        Opcode opcode() default Opcode.NODE_CLASS;
+        Word.WordOpcode opcode() default Word.WordOpcode.NODE_CLASS;
 
         Condition condition() default Condition.EQ;
     }
 
     ///
-    // The canonical {@link Operation} represented by a method in the {@link Word} class.
+    // The canonical {@link Word.Operation} represented by a method in the {@link Word} class.
     ///
-    // @enum Word.Opcode
-    public enum Opcode
+    // @enum Word.WordOpcode
+    public enum WordOpcode
     {
         NODE_CLASS,
         COMPARISON,
@@ -97,7 +98,7 @@ public abstract class Word implements SignedWord, UnsignedWord, Pointer
     {
         static void initialize()
         {
-            boxFactory = new BoxFactoryImpl();
+            boxFactory = new Word.BoxFactoryImpl();
         }
 
         @SuppressWarnings("unchecked")
@@ -124,7 +125,7 @@ public abstract class Word implements SignedWord, UnsignedWord, Pointer
     }
 
     @Override
-    @Operation(opcode = Opcode.TO_RAW_VALUE)
+    @Word.Operation(opcode = Word.WordOpcode.TO_RAW_VALUE)
     public long rawValue()
     {
         return unbox();
@@ -136,7 +137,7 @@ public abstract class Word implements SignedWord, UnsignedWord, Pointer
     // tracked. Depending on the arithmetic on the pointer and the capabilities of the backend to
     // deal with derived references, this may work correctly, or result in a compiler error.
     ///
-    @Operation(opcode = Opcode.OBJECT_TO_TRACKED)
+    @Word.Operation(opcode = Word.WordOpcode.OBJECT_TO_TRACKED)
     public static native Word objectToTrackedPointer(Object __val);
 
     ///
@@ -151,1178 +152,1178 @@ public abstract class Word implements SignedWord, UnsignedWord, Pointer
     // If the result value should not be alive across a safepoint, it's better to use
     // {@link #objectToTrackedPointer(Object)} instead.
     ///
-    @Operation(opcode = Opcode.OBJECT_TO_UNTRACKED)
+    @Word.Operation(opcode = Word.WordOpcode.OBJECT_TO_UNTRACKED)
     public static native Word objectToUntrackedPointer(Object __val);
 
-    @Operation(opcode = Opcode.FROM_ADDRESS)
-    public static native Word fromAddress(Address __address);
+    @Word.Operation(opcode = Word.WordOpcode.FROM_ADDRESS)
+    public static native Word fromAddress(AddressNode.Address __address);
 
     @Override
-    @Operation(opcode = Opcode.TO_OBJECT)
+    @Word.Operation(opcode = Word.WordOpcode.TO_OBJECT)
     public native Object toObject();
 
     @Override
-    @Operation(opcode = Opcode.TO_OBJECT_NON_NULL)
+    @Word.Operation(opcode = Word.WordOpcode.TO_OBJECT_NON_NULL)
     public native Object toObjectNonNull();
 
     @Override
-    @Operation(node = AddNode.class)
+    @Word.Operation(node = AddNode.class)
     public Word add(SignedWord __val)
     {
         return add((Word) __val);
     }
 
     @Override
-    @Operation(node = AddNode.class)
+    @Word.Operation(node = AddNode.class)
     public Word add(UnsignedWord __val)
     {
         return add((Word) __val);
     }
 
     @Override
-    @Operation(node = AddNode.class)
+    @Word.Operation(node = AddNode.class)
     public Word add(int __val)
     {
         return add(intParam(__val));
     }
 
-    @Operation(node = AddNode.class)
+    @Word.Operation(node = AddNode.class)
     public Word add(Word __val)
     {
         return box(unbox() + __val.unbox());
     }
 
     @Override
-    @Operation(node = SubNode.class)
+    @Word.Operation(node = SubNode.class)
     public Word subtract(SignedWord __val)
     {
         return subtract((Word) __val);
     }
 
     @Override
-    @Operation(node = SubNode.class)
+    @Word.Operation(node = SubNode.class)
     public Word subtract(UnsignedWord __val)
     {
         return subtract((Word) __val);
     }
 
     @Override
-    @Operation(node = SubNode.class)
+    @Word.Operation(node = SubNode.class)
     public Word subtract(int __val)
     {
         return subtract(intParam(__val));
     }
 
-    @Operation(node = SubNode.class)
+    @Word.Operation(node = SubNode.class)
     public Word subtract(Word __val)
     {
         return box(unbox() - __val.unbox());
     }
 
     @Override
-    @Operation(node = MulNode.class)
+    @Word.Operation(node = MulNode.class)
     public Word multiply(SignedWord __val)
     {
         return multiply((Word) __val);
     }
 
     @Override
-    @Operation(node = MulNode.class)
+    @Word.Operation(node = MulNode.class)
     public Word multiply(UnsignedWord __val)
     {
         return multiply((Word) __val);
     }
 
     @Override
-    @Operation(node = MulNode.class)
+    @Word.Operation(node = MulNode.class)
     public Word multiply(int __val)
     {
         return multiply(intParam(__val));
     }
 
-    @Operation(node = MulNode.class)
+    @Word.Operation(node = MulNode.class)
     public Word multiply(Word __val)
     {
         return box(unbox() * __val.unbox());
     }
 
     @Override
-    @Operation(node = SignedDivNode.class)
+    @Word.Operation(node = SignedDivNode.class)
     public Word signedDivide(SignedWord __val)
     {
         return signedDivide((Word) __val);
     }
 
     @Override
-    @Operation(node = SignedDivNode.class)
+    @Word.Operation(node = SignedDivNode.class)
     public Word signedDivide(int __val)
     {
         return signedDivide(intParam(__val));
     }
 
-    @Operation(node = SignedDivNode.class)
+    @Word.Operation(node = SignedDivNode.class)
     public Word signedDivide(Word __val)
     {
         return box(unbox() / __val.unbox());
     }
 
     @Override
-    @Operation(node = UnsignedDivNode.class)
+    @Word.Operation(node = UnsignedDivNode.class)
     public Word unsignedDivide(UnsignedWord __val)
     {
         return unsignedDivide((Word) __val);
     }
 
     @Override
-    @Operation(node = UnsignedDivNode.class)
+    @Word.Operation(node = UnsignedDivNode.class)
     public Word unsignedDivide(int __val)
     {
         return signedDivide(intParam(__val));
     }
 
-    @Operation(node = UnsignedDivNode.class)
+    @Word.Operation(node = UnsignedDivNode.class)
     public Word unsignedDivide(Word __val)
     {
         return box(Long.divideUnsigned(unbox(), __val.unbox()));
     }
 
     @Override
-    @Operation(node = SignedRemNode.class)
+    @Word.Operation(node = SignedRemNode.class)
     public Word signedRemainder(SignedWord __val)
     {
         return signedRemainder((Word) __val);
     }
 
     @Override
-    @Operation(node = SignedRemNode.class)
+    @Word.Operation(node = SignedRemNode.class)
     public Word signedRemainder(int __val)
     {
         return signedRemainder(intParam(__val));
     }
 
-    @Operation(node = SignedRemNode.class)
+    @Word.Operation(node = SignedRemNode.class)
     public Word signedRemainder(Word __val)
     {
         return box(unbox() % __val.unbox());
     }
 
     @Override
-    @Operation(node = UnsignedRemNode.class)
+    @Word.Operation(node = UnsignedRemNode.class)
     public Word unsignedRemainder(UnsignedWord __val)
     {
         return unsignedRemainder((Word) __val);
     }
 
     @Override
-    @Operation(node = UnsignedRemNode.class)
+    @Word.Operation(node = UnsignedRemNode.class)
     public Word unsignedRemainder(int __val)
     {
         return signedRemainder(intParam(__val));
     }
 
-    @Operation(node = UnsignedRemNode.class)
+    @Word.Operation(node = UnsignedRemNode.class)
     public Word unsignedRemainder(Word __val)
     {
         return box(Long.remainderUnsigned(unbox(), __val.unbox()));
     }
 
     @Override
-    @Operation(node = LeftShiftNode.class, rightOperandIsInt = true)
+    @Word.Operation(node = LeftShiftNode.class, rightOperandIsInt = true)
     public Word shiftLeft(UnsignedWord __val)
     {
         return shiftLeft((Word) __val);
     }
 
     @Override
-    @Operation(node = LeftShiftNode.class, rightOperandIsInt = true)
+    @Word.Operation(node = LeftShiftNode.class, rightOperandIsInt = true)
     public Word shiftLeft(int __val)
     {
         return shiftLeft(intParam(__val));
     }
 
-    @Operation(node = LeftShiftNode.class, rightOperandIsInt = true)
+    @Word.Operation(node = LeftShiftNode.class, rightOperandIsInt = true)
     public Word shiftLeft(Word __val)
     {
         return box(unbox() << __val.unbox());
     }
 
     @Override
-    @Operation(node = RightShiftNode.class, rightOperandIsInt = true)
+    @Word.Operation(node = RightShiftNode.class, rightOperandIsInt = true)
     public Word signedShiftRight(UnsignedWord __val)
     {
         return signedShiftRight((Word) __val);
     }
 
     @Override
-    @Operation(node = RightShiftNode.class, rightOperandIsInt = true)
+    @Word.Operation(node = RightShiftNode.class, rightOperandIsInt = true)
     public Word signedShiftRight(int __val)
     {
         return signedShiftRight(intParam(__val));
     }
 
-    @Operation(node = RightShiftNode.class, rightOperandIsInt = true)
+    @Word.Operation(node = RightShiftNode.class, rightOperandIsInt = true)
     public Word signedShiftRight(Word __val)
     {
         return box(unbox() >> __val.unbox());
     }
 
     @Override
-    @Operation(node = UnsignedRightShiftNode.class, rightOperandIsInt = true)
+    @Word.Operation(node = UnsignedRightShiftNode.class, rightOperandIsInt = true)
     public Word unsignedShiftRight(UnsignedWord __val)
     {
         return unsignedShiftRight((Word) __val);
     }
 
     @Override
-    @Operation(node = UnsignedRightShiftNode.class, rightOperandIsInt = true)
+    @Word.Operation(node = UnsignedRightShiftNode.class, rightOperandIsInt = true)
     public Word unsignedShiftRight(int __val)
     {
         return unsignedShiftRight(intParam(__val));
     }
 
-    @Operation(node = UnsignedRightShiftNode.class, rightOperandIsInt = true)
+    @Word.Operation(node = UnsignedRightShiftNode.class, rightOperandIsInt = true)
     public Word unsignedShiftRight(Word __val)
     {
         return box(unbox() >>> __val.unbox());
     }
 
     @Override
-    @Operation(node = AndNode.class)
+    @Word.Operation(node = AndNode.class)
     public Word and(SignedWord __val)
     {
         return and((Word) __val);
     }
 
     @Override
-    @Operation(node = AndNode.class)
+    @Word.Operation(node = AndNode.class)
     public Word and(UnsignedWord __val)
     {
         return and((Word) __val);
     }
 
     @Override
-    @Operation(node = AndNode.class)
+    @Word.Operation(node = AndNode.class)
     public Word and(int __val)
     {
         return and(intParam(__val));
     }
 
-    @Operation(node = AndNode.class)
+    @Word.Operation(node = AndNode.class)
     public Word and(Word __val)
     {
         return box(unbox() & __val.unbox());
     }
 
     @Override
-    @Operation(node = OrNode.class)
+    @Word.Operation(node = OrNode.class)
     public Word or(SignedWord __val)
     {
         return or((Word) __val);
     }
 
     @Override
-    @Operation(node = OrNode.class)
+    @Word.Operation(node = OrNode.class)
     public Word or(UnsignedWord __val)
     {
         return or((Word) __val);
     }
 
     @Override
-    @Operation(node = OrNode.class)
+    @Word.Operation(node = OrNode.class)
     public Word or(int __val)
     {
         return or(intParam(__val));
     }
 
-    @Operation(node = OrNode.class)
+    @Word.Operation(node = OrNode.class)
     public Word or(Word __val)
     {
         return box(unbox() | __val.unbox());
     }
 
     @Override
-    @Operation(node = XorNode.class)
+    @Word.Operation(node = XorNode.class)
     public Word xor(SignedWord __val)
     {
         return xor((Word) __val);
     }
 
     @Override
-    @Operation(node = XorNode.class)
+    @Word.Operation(node = XorNode.class)
     public Word xor(UnsignedWord __val)
     {
         return xor((Word) __val);
     }
 
     @Override
-    @Operation(node = XorNode.class)
+    @Word.Operation(node = XorNode.class)
     public Word xor(int __val)
     {
         return xor(intParam(__val));
     }
 
-    @Operation(node = XorNode.class)
+    @Word.Operation(node = XorNode.class)
     public Word xor(Word __val)
     {
         return box(unbox() ^ __val.unbox());
     }
 
     @Override
-    @Operation(opcode = Opcode.NOT)
+    @Word.Operation(opcode = Word.WordOpcode.NOT)
     public Word not()
     {
         return box(~unbox());
     }
 
     @Override
-    @Operation(opcode = Opcode.IS_NULL)
+    @Word.Operation(opcode = Word.WordOpcode.IS_NULL)
     public boolean isNull()
     {
         return equal(WordFactory.zero());
     }
 
     @Override
-    @Operation(opcode = Opcode.IS_NON_NULL)
+    @Word.Operation(opcode = Word.WordOpcode.IS_NON_NULL)
     public boolean isNonNull()
     {
         return notEqual(WordFactory.zero());
     }
 
     @Override
-    @Operation(opcode = Opcode.COMPARISON, condition = Condition.EQ)
+    @Word.Operation(opcode = Word.WordOpcode.COMPARISON, condition = Condition.EQ)
     public boolean equal(ComparableWord __val)
     {
         return equal((Word) __val);
     }
 
     @Override
-    @Operation(opcode = Opcode.COMPARISON, condition = Condition.EQ)
+    @Word.Operation(opcode = Word.WordOpcode.COMPARISON, condition = Condition.EQ)
     public boolean equal(SignedWord __val)
     {
         return equal((Word) __val);
     }
 
     @Override
-    @Operation(opcode = Opcode.COMPARISON, condition = Condition.EQ)
+    @Word.Operation(opcode = Word.WordOpcode.COMPARISON, condition = Condition.EQ)
     public boolean equal(UnsignedWord __val)
     {
         return equal((Word) __val);
     }
 
     @Override
-    @Operation(opcode = Opcode.COMPARISON, condition = Condition.EQ)
+    @Word.Operation(opcode = Word.WordOpcode.COMPARISON, condition = Condition.EQ)
     public boolean equal(int __val)
     {
         return equal(intParam(__val));
     }
 
-    @Operation(opcode = Opcode.COMPARISON, condition = Condition.EQ)
+    @Word.Operation(opcode = Word.WordOpcode.COMPARISON, condition = Condition.EQ)
     public boolean equal(Word __val)
     {
         return unbox() == __val.unbox();
     }
 
     @Override
-    @Operation(opcode = Opcode.COMPARISON, condition = Condition.NE)
+    @Word.Operation(opcode = Word.WordOpcode.COMPARISON, condition = Condition.NE)
     public boolean notEqual(ComparableWord __val)
     {
         return notEqual((Word) __val);
     }
 
     @Override
-    @Operation(opcode = Opcode.COMPARISON, condition = Condition.NE)
+    @Word.Operation(opcode = Word.WordOpcode.COMPARISON, condition = Condition.NE)
     public boolean notEqual(SignedWord __val)
     {
         return notEqual((Word) __val);
     }
 
     @Override
-    @Operation(opcode = Opcode.COMPARISON, condition = Condition.NE)
+    @Word.Operation(opcode = Word.WordOpcode.COMPARISON, condition = Condition.NE)
     public boolean notEqual(UnsignedWord __val)
     {
         return notEqual((Word) __val);
     }
 
     @Override
-    @Operation(opcode = Opcode.COMPARISON, condition = Condition.NE)
+    @Word.Operation(opcode = Word.WordOpcode.COMPARISON, condition = Condition.NE)
     public boolean notEqual(int __val)
     {
         return notEqual(intParam(__val));
     }
 
-    @Operation(opcode = Opcode.COMPARISON, condition = Condition.NE)
+    @Word.Operation(opcode = Word.WordOpcode.COMPARISON, condition = Condition.NE)
     public boolean notEqual(Word __val)
     {
         return unbox() != __val.unbox();
     }
 
     @Override
-    @Operation(opcode = Opcode.COMPARISON, condition = Condition.LT)
+    @Word.Operation(opcode = Word.WordOpcode.COMPARISON, condition = Condition.LT)
     public boolean lessThan(SignedWord __val)
     {
         return lessThan((Word) __val);
     }
 
     @Override
-    @Operation(opcode = Opcode.COMPARISON, condition = Condition.LT)
+    @Word.Operation(opcode = Word.WordOpcode.COMPARISON, condition = Condition.LT)
     public boolean lessThan(int __val)
     {
         return lessThan(intParam(__val));
     }
 
-    @Operation(opcode = Opcode.COMPARISON, condition = Condition.LT)
+    @Word.Operation(opcode = Word.WordOpcode.COMPARISON, condition = Condition.LT)
     public boolean lessThan(Word __val)
     {
         return unbox() < __val.unbox();
     }
 
     @Override
-    @Operation(opcode = Opcode.COMPARISON, condition = Condition.LE)
+    @Word.Operation(opcode = Word.WordOpcode.COMPARISON, condition = Condition.LE)
     public boolean lessOrEqual(SignedWord __val)
     {
         return lessOrEqual((Word) __val);
     }
 
     @Override
-    @Operation(opcode = Opcode.COMPARISON, condition = Condition.LE)
+    @Word.Operation(opcode = Word.WordOpcode.COMPARISON, condition = Condition.LE)
     public boolean lessOrEqual(int __val)
     {
         return lessOrEqual(intParam(__val));
     }
 
-    @Operation(opcode = Opcode.COMPARISON, condition = Condition.LE)
+    @Word.Operation(opcode = Word.WordOpcode.COMPARISON, condition = Condition.LE)
     public boolean lessOrEqual(Word __val)
     {
         return unbox() <= __val.unbox();
     }
 
     @Override
-    @Operation(opcode = Opcode.COMPARISON, condition = Condition.GT)
+    @Word.Operation(opcode = Word.WordOpcode.COMPARISON, condition = Condition.GT)
     public boolean greaterThan(SignedWord __val)
     {
         return greaterThan((Word) __val);
     }
 
     @Override
-    @Operation(opcode = Opcode.COMPARISON, condition = Condition.GT)
+    @Word.Operation(opcode = Word.WordOpcode.COMPARISON, condition = Condition.GT)
     public boolean greaterThan(int __val)
     {
         return greaterThan(intParam(__val));
     }
 
-    @Operation(opcode = Opcode.COMPARISON, condition = Condition.GT)
+    @Word.Operation(opcode = Word.WordOpcode.COMPARISON, condition = Condition.GT)
     public boolean greaterThan(Word __val)
     {
         return unbox() > __val.unbox();
     }
 
     @Override
-    @Operation(opcode = Opcode.COMPARISON, condition = Condition.GE)
+    @Word.Operation(opcode = Word.WordOpcode.COMPARISON, condition = Condition.GE)
     public boolean greaterOrEqual(SignedWord __val)
     {
         return greaterOrEqual((Word) __val);
     }
 
     @Override
-    @Operation(opcode = Opcode.COMPARISON, condition = Condition.GE)
+    @Word.Operation(opcode = Word.WordOpcode.COMPARISON, condition = Condition.GE)
     public boolean greaterOrEqual(int __val)
     {
         return greaterOrEqual(intParam(__val));
     }
 
-    @Operation(opcode = Opcode.COMPARISON, condition = Condition.GE)
+    @Word.Operation(opcode = Word.WordOpcode.COMPARISON, condition = Condition.GE)
     public boolean greaterOrEqual(Word __val)
     {
         return unbox() >= __val.unbox();
     }
 
     @Override
-    @Operation(opcode = Opcode.COMPARISON, condition = Condition.BT)
+    @Word.Operation(opcode = Word.WordOpcode.COMPARISON, condition = Condition.BT)
     public boolean belowThan(UnsignedWord __val)
     {
         return belowThan((Word) __val);
     }
 
     @Override
-    @Operation(opcode = Opcode.COMPARISON, condition = Condition.BT)
+    @Word.Operation(opcode = Word.WordOpcode.COMPARISON, condition = Condition.BT)
     public boolean belowThan(int __val)
     {
         return belowThan(intParam(__val));
     }
 
-    @Operation(opcode = Opcode.COMPARISON, condition = Condition.BT)
+    @Word.Operation(opcode = Word.WordOpcode.COMPARISON, condition = Condition.BT)
     public boolean belowThan(Word __val)
     {
         return UnsignedMath.belowThan(unbox(), __val.unbox());
     }
 
     @Override
-    @Operation(opcode = Opcode.COMPARISON, condition = Condition.BE)
+    @Word.Operation(opcode = Word.WordOpcode.COMPARISON, condition = Condition.BE)
     public boolean belowOrEqual(UnsignedWord __val)
     {
         return belowOrEqual((Word) __val);
     }
 
     @Override
-    @Operation(opcode = Opcode.COMPARISON, condition = Condition.BE)
+    @Word.Operation(opcode = Word.WordOpcode.COMPARISON, condition = Condition.BE)
     public boolean belowOrEqual(int __val)
     {
         return belowOrEqual(intParam(__val));
     }
 
-    @Operation(opcode = Opcode.COMPARISON, condition = Condition.BE)
+    @Word.Operation(opcode = Word.WordOpcode.COMPARISON, condition = Condition.BE)
     public boolean belowOrEqual(Word __val)
     {
         return UnsignedMath.belowOrEqual(unbox(), __val.unbox());
     }
 
     @Override
-    @Operation(opcode = Opcode.COMPARISON, condition = Condition.AT)
+    @Word.Operation(opcode = Word.WordOpcode.COMPARISON, condition = Condition.AT)
     public boolean aboveThan(UnsignedWord __val)
     {
         return aboveThan((Word) __val);
     }
 
     @Override
-    @Operation(opcode = Opcode.COMPARISON, condition = Condition.AT)
+    @Word.Operation(opcode = Word.WordOpcode.COMPARISON, condition = Condition.AT)
     public boolean aboveThan(int __val)
     {
         return aboveThan(intParam(__val));
     }
 
-    @Operation(opcode = Opcode.COMPARISON, condition = Condition.AT)
+    @Word.Operation(opcode = Word.WordOpcode.COMPARISON, condition = Condition.AT)
     public boolean aboveThan(Word __val)
     {
         return UnsignedMath.aboveThan(unbox(), __val.unbox());
     }
 
     @Override
-    @Operation(opcode = Opcode.COMPARISON, condition = Condition.AE)
+    @Word.Operation(opcode = Word.WordOpcode.COMPARISON, condition = Condition.AE)
     public boolean aboveOrEqual(UnsignedWord __val)
     {
         return aboveOrEqual((Word) __val);
     }
 
     @Override
-    @Operation(opcode = Opcode.COMPARISON, condition = Condition.AE)
+    @Word.Operation(opcode = Word.WordOpcode.COMPARISON, condition = Condition.AE)
     public boolean aboveOrEqual(int __val)
     {
         return aboveOrEqual(intParam(__val));
     }
 
-    @Operation(opcode = Opcode.COMPARISON, condition = Condition.AE)
+    @Word.Operation(opcode = Word.WordOpcode.COMPARISON, condition = Condition.AE)
     public boolean aboveOrEqual(Word __val)
     {
         return UnsignedMath.aboveOrEqual(unbox(), __val.unbox());
     }
 
     @Override
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public byte readByte(WordBase __offset, LocationIdentity __locationIdentity)
     {
         return UnsafeAccess.UNSAFE.getByte(add((Word) __offset).unbox());
     }
 
     @Override
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public char readChar(WordBase __offset, LocationIdentity __locationIdentity)
     {
         return UnsafeAccess.UNSAFE.getChar(add((Word) __offset).unbox());
     }
 
     @Override
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public short readShort(WordBase __offset, LocationIdentity __locationIdentity)
     {
         return UnsafeAccess.UNSAFE.getShort(add((Word) __offset).unbox());
     }
 
     @Override
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public int readInt(WordBase __offset, LocationIdentity __locationIdentity)
     {
         return UnsafeAccess.UNSAFE.getInt(add((Word) __offset).unbox());
     }
 
     @Override
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public long readLong(WordBase __offset, LocationIdentity __locationIdentity)
     {
         return UnsafeAccess.UNSAFE.getLong(add((Word) __offset).unbox());
     }
 
     @Override
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public float readFloat(WordBase __offset, LocationIdentity __locationIdentity)
     {
         return UnsafeAccess.UNSAFE.getFloat(add((Word) __offset).unbox());
     }
 
     @Override
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public double readDouble(WordBase __offset, LocationIdentity __locationIdentity)
     {
         return UnsafeAccess.UNSAFE.getDouble(add((Word) __offset).unbox());
     }
 
     @Override
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public <T extends WordBase> T readWord(WordBase __offset, LocationIdentity __locationIdentity)
     {
         return box(UnsafeAccess.UNSAFE.getAddress(add((Word) __offset).unbox()));
     }
 
     @Override
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public native Object readObject(WordBase __offset, LocationIdentity __locationIdentity);
 
     @Override
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public byte readByte(int __offset, LocationIdentity __locationIdentity)
     {
         return readByte(WordFactory.signed(__offset), __locationIdentity);
     }
 
     @Override
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public char readChar(int __offset, LocationIdentity __locationIdentity)
     {
         return readChar(WordFactory.signed(__offset), __locationIdentity);
     }
 
     @Override
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public short readShort(int __offset, LocationIdentity __locationIdentity)
     {
         return readShort(WordFactory.signed(__offset), __locationIdentity);
     }
 
     @Override
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public int readInt(int __offset, LocationIdentity __locationIdentity)
     {
         return readInt(WordFactory.signed(__offset), __locationIdentity);
     }
 
     @Override
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public long readLong(int __offset, LocationIdentity __locationIdentity)
     {
         return readLong(WordFactory.signed(__offset), __locationIdentity);
     }
 
     @Override
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public float readFloat(int __offset, LocationIdentity __locationIdentity)
     {
         return readFloat(WordFactory.signed(__offset), __locationIdentity);
     }
 
     @Override
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public double readDouble(int __offset, LocationIdentity __locationIdentity)
     {
         return readDouble(WordFactory.signed(__offset), __locationIdentity);
     }
 
     @Override
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public <T extends WordBase> T readWord(int __offset, LocationIdentity __locationIdentity)
     {
         return readWord(WordFactory.signed(__offset), __locationIdentity);
     }
 
     @Override
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public Object readObject(int __offset, LocationIdentity __locationIdentity)
     {
         return readObject(WordFactory.signed(__offset), __locationIdentity);
     }
 
     @Override
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public void writeByte(WordBase __offset, byte __val, LocationIdentity __locationIdentity)
     {
         UnsafeAccess.UNSAFE.putByte(add((Word) __offset).unbox(), __val);
     }
 
     @Override
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public void writeChar(WordBase __offset, char __val, LocationIdentity __locationIdentity)
     {
         UnsafeAccess.UNSAFE.putChar(add((Word) __offset).unbox(), __val);
     }
 
     @Override
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public void writeShort(WordBase __offset, short __val, LocationIdentity __locationIdentity)
     {
         UnsafeAccess.UNSAFE.putShort(add((Word) __offset).unbox(), __val);
     }
 
     @Override
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public void writeInt(WordBase __offset, int __val, LocationIdentity __locationIdentity)
     {
         UnsafeAccess.UNSAFE.putInt(add((Word) __offset).unbox(), __val);
     }
 
     @Override
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public void writeLong(WordBase __offset, long __val, LocationIdentity __locationIdentity)
     {
         UnsafeAccess.UNSAFE.putLong(add((Word) __offset).unbox(), __val);
     }
 
     @Override
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public void writeFloat(WordBase __offset, float __val, LocationIdentity __locationIdentity)
     {
         UnsafeAccess.UNSAFE.putFloat(add((Word) __offset).unbox(), __val);
     }
 
     @Override
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public void writeDouble(WordBase __offset, double __val, LocationIdentity __locationIdentity)
     {
         UnsafeAccess.UNSAFE.putDouble(add((Word) __offset).unbox(), __val);
     }
 
     @Override
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public void writeWord(WordBase __offset, WordBase __val, LocationIdentity __locationIdentity)
     {
         UnsafeAccess.UNSAFE.putAddress(add((Word) __offset).unbox(), ((Word) __val).unbox());
     }
 
     @Override
-    @Operation(opcode = Opcode.INITIALIZE)
+    @Word.Operation(opcode = Word.WordOpcode.INITIALIZE)
     public void initializeLong(WordBase __offset, long __val, LocationIdentity __locationIdentity)
     {
         UnsafeAccess.UNSAFE.putLong(add((Word) __offset).unbox(), __val);
     }
 
     @Override
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public native void writeObject(WordBase __offset, Object __val, LocationIdentity __locationIdentity);
 
     @Override
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public void writeByte(int __offset, byte __val, LocationIdentity __locationIdentity)
     {
         writeByte(WordFactory.signed(__offset), __val, __locationIdentity);
     }
 
     @Override
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public void writeChar(int __offset, char __val, LocationIdentity __locationIdentity)
     {
         writeChar(WordFactory.signed(__offset), __val, __locationIdentity);
     }
 
     @Override
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public void writeShort(int __offset, short __val, LocationIdentity __locationIdentity)
     {
         writeShort(WordFactory.signed(__offset), __val, __locationIdentity);
     }
 
     @Override
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public void writeInt(int __offset, int __val, LocationIdentity __locationIdentity)
     {
         writeInt(WordFactory.signed(__offset), __val, __locationIdentity);
     }
 
     @Override
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public void writeLong(int __offset, long __val, LocationIdentity __locationIdentity)
     {
         writeLong(WordFactory.signed(__offset), __val, __locationIdentity);
     }
 
     @Override
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public void writeFloat(int __offset, float __val, LocationIdentity __locationIdentity)
     {
         writeFloat(WordFactory.signed(__offset), __val, __locationIdentity);
     }
 
     @Override
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public void writeDouble(int __offset, double __val, LocationIdentity __locationIdentity)
     {
         writeDouble(WordFactory.signed(__offset), __val, __locationIdentity);
     }
 
     @Override
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public void writeWord(int __offset, WordBase __val, LocationIdentity __locationIdentity)
     {
         writeWord(WordFactory.signed(__offset), __val, __locationIdentity);
     }
 
     @Override
-    @Operation(opcode = Opcode.INITIALIZE)
+    @Word.Operation(opcode = Word.WordOpcode.INITIALIZE)
     public void initializeLong(int __offset, long __val, LocationIdentity __locationIdentity)
     {
         initializeLong(WordFactory.signed(__offset), __val, __locationIdentity);
     }
 
     @Override
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public void writeObject(int __offset, Object __val, LocationIdentity __locationIdentity)
     {
         writeObject(WordFactory.signed(__offset), __val, __locationIdentity);
     }
 
     @Override
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public byte readByte(WordBase __offset)
     {
         return UnsafeAccess.UNSAFE.getByte(add((Word) __offset).unbox());
     }
 
     @Override
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public char readChar(WordBase __offset)
     {
         return UnsafeAccess.UNSAFE.getChar(add((Word) __offset).unbox());
     }
 
     @Override
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public short readShort(WordBase __offset)
     {
         return UnsafeAccess.UNSAFE.getShort(add((Word) __offset).unbox());
     }
 
     @Override
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public int readInt(WordBase __offset)
     {
         return UnsafeAccess.UNSAFE.getInt(add((Word) __offset).unbox());
     }
 
     @Override
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public long readLong(WordBase __offset)
     {
         return UnsafeAccess.UNSAFE.getLong(add((Word) __offset).unbox());
     }
 
     @Override
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public float readFloat(WordBase __offset)
     {
         return UnsafeAccess.UNSAFE.getFloat(add((Word) __offset).unbox());
     }
 
     @Override
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public double readDouble(WordBase __offset)
     {
         return UnsafeAccess.UNSAFE.getDouble(add((Word) __offset).unbox());
     }
 
     @Override
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public <T extends WordBase> T readWord(WordBase __offset)
     {
         return box(UnsafeAccess.UNSAFE.getAddress(add((Word) __offset).unbox()));
     }
 
     @Override
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public native Object readObject(WordBase __offset);
 
-    @Operation(opcode = Opcode.READ_HEAP)
-    public native Object readObject(WordBase __offset, BarrierType __barrierType);
+    @Word.Operation(opcode = Word.WordOpcode.READ_HEAP)
+    public native Object readObject(WordBase __offset, HeapAccess.BarrierType __barrierType);
 
     @Override
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public byte readByte(int __offset)
     {
         return readByte(WordFactory.signed(__offset));
     }
 
     @Override
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public char readChar(int __offset)
     {
         return readChar(WordFactory.signed(__offset));
     }
 
     @Override
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public short readShort(int __offset)
     {
         return readShort(WordFactory.signed(__offset));
     }
 
     @Override
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public int readInt(int __offset)
     {
         return readInt(WordFactory.signed(__offset));
     }
 
     @Override
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public long readLong(int __offset)
     {
         return readLong(WordFactory.signed(__offset));
     }
 
     @Override
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public float readFloat(int __offset)
     {
         return readFloat(WordFactory.signed(__offset));
     }
 
     @Override
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public double readDouble(int __offset)
     {
         return readDouble(WordFactory.signed(__offset));
     }
 
     @Override
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public <T extends WordBase> T readWord(int __offset)
     {
         return readWord(WordFactory.signed(__offset));
     }
 
     @Override
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public Object readObject(int __offset)
     {
         return readObject(WordFactory.signed(__offset));
     }
 
-    @Operation(opcode = Opcode.READ_HEAP)
-    public Object readObject(int __offset, BarrierType __barrierType)
+    @Word.Operation(opcode = Word.WordOpcode.READ_HEAP)
+    public Object readObject(int __offset, HeapAccess.BarrierType __barrierType)
     {
         return readObject(WordFactory.signed(__offset), __barrierType);
     }
 
     @Override
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public void writeByte(WordBase __offset, byte __val)
     {
         UnsafeAccess.UNSAFE.putByte(add((Word) __offset).unbox(), __val);
     }
 
     @Override
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public void writeChar(WordBase __offset, char __val)
     {
         UnsafeAccess.UNSAFE.putChar(add((Word) __offset).unbox(), __val);
     }
 
     @Override
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public void writeShort(WordBase __offset, short __val)
     {
         UnsafeAccess.UNSAFE.putShort(add((Word) __offset).unbox(), __val);
     }
 
     @Override
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public void writeInt(WordBase __offset, int __val)
     {
         UnsafeAccess.UNSAFE.putInt(add((Word) __offset).unbox(), __val);
     }
 
     @Override
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public void writeLong(WordBase __offset, long __val)
     {
         UnsafeAccess.UNSAFE.putLong(add((Word) __offset).unbox(), __val);
     }
 
     @Override
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public void writeFloat(WordBase __offset, float __val)
     {
         UnsafeAccess.UNSAFE.putFloat(add((Word) __offset).unbox(), __val);
     }
 
     @Override
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public void writeDouble(WordBase __offset, double __val)
     {
         UnsafeAccess.UNSAFE.putDouble(add((Word) __offset).unbox(), __val);
     }
 
     @Override
-    @Operation(opcode = Opcode.CAS_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.CAS_POINTER)
     public native int compareAndSwapInt(WordBase __offset, int __expectedValue, int __newValue, LocationIdentity __locationIdentity);
 
     @Override
-    @Operation(opcode = Opcode.CAS_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.CAS_POINTER)
     public native long compareAndSwapLong(WordBase __offset, long __expectedValue, long __newValue, LocationIdentity __locationIdentity);
 
     @Override
-    @Operation(opcode = Opcode.CAS_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.CAS_POINTER)
     public native <T extends WordBase> T compareAndSwapWord(WordBase __offset, T __expectedValue, T __newValue, LocationIdentity __locationIdentity);
 
     @Override
-    @Operation(opcode = Opcode.CAS_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.CAS_POINTER)
     public native Object compareAndSwapObject(WordBase __offset, Object __expectedValue, Object __newValue, LocationIdentity __locationIdentity);
 
     @Override
-    @Operation(opcode = Opcode.CAS_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.CAS_POINTER)
     public boolean logicCompareAndSwapInt(WordBase __offset, int __expectedValue, int __newValue, LocationIdentity __locationIdentity)
     {
         return UnsafeAccess.UNSAFE.compareAndSwapInt(this.toObject(), ((Word) __offset).unbox(), __expectedValue, __newValue);
     }
 
     @Override
-    @Operation(opcode = Opcode.CAS_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.CAS_POINTER)
     public boolean logicCompareAndSwapLong(WordBase __offset, long __expectedValue, long __newValue, LocationIdentity __locationIdentity)
     {
         return UnsafeAccess.UNSAFE.compareAndSwapLong(this.toObject(), ((Word) __offset).unbox(), __expectedValue, __newValue);
     }
 
     @Override
-    @Operation(opcode = Opcode.CAS_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.CAS_POINTER)
     public native boolean logicCompareAndSwapWord(WordBase __offset, WordBase __expectedValue, WordBase __newValue, LocationIdentity __locationIdentity);
 
     @Override
-    @Operation(opcode = Opcode.CAS_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.CAS_POINTER)
     public boolean logicCompareAndSwapObject(WordBase __offset, Object __expectedValue, Object __newValue, LocationIdentity __locationIdentity)
     {
         return UnsafeAccess.UNSAFE.compareAndSwapObject(this.toObject(), ((Word) __offset).unbox(), __expectedValue, __newValue);
     }
 
     @Override
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public void writeWord(WordBase __offset, WordBase __val)
     {
         UnsafeAccess.UNSAFE.putAddress(add((Word) __offset).unbox(), ((Word) __val).unbox());
     }
 
     @Override
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public native void writeObject(WordBase __offset, Object __val);
 
     @Override
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public void writeByte(int __offset, byte __val)
     {
         writeByte(WordFactory.signed(__offset), __val);
     }
 
     @Override
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public void writeChar(int __offset, char __val)
     {
         writeChar(WordFactory.signed(__offset), __val);
     }
 
     @Override
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public void writeShort(int __offset, short __val)
     {
         writeShort(WordFactory.signed(__offset), __val);
     }
 
     @Override
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public void writeInt(int __offset, int __val)
     {
         writeInt(WordFactory.signed(__offset), __val);
     }
 
     @Override
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public void writeLong(int __offset, long __val)
     {
         writeLong(WordFactory.signed(__offset), __val);
     }
 
     @Override
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public void writeFloat(int __offset, float __val)
     {
         writeFloat(WordFactory.signed(__offset), __val);
     }
 
     @Override
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public void writeDouble(int __offset, double __val)
     {
         writeDouble(WordFactory.signed(__offset), __val);
     }
 
     @Override
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public void writeWord(int __offset, WordBase __val)
     {
         writeWord(WordFactory.signed(__offset), __val);
     }
 
     @Override
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public void writeObject(int __offset, Object __val)
     {
         writeObject(WordFactory.signed(__offset), __val);
     }
 
     @Override
-    @Operation(opcode = Opcode.CAS_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.CAS_POINTER)
     public int compareAndSwapInt(int __offset, int __expectedValue, int __newValue, LocationIdentity __locationIdentity)
     {
         return compareAndSwapInt(WordFactory.signed(__offset), __expectedValue, __newValue, __locationIdentity);
     }
 
     @Override
-    @Operation(opcode = Opcode.CAS_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.CAS_POINTER)
     public long compareAndSwapLong(int __offset, long __expectedValue, long __newValue, LocationIdentity __locationIdentity)
     {
         return compareAndSwapLong(WordFactory.signed(__offset), __expectedValue, __newValue, __locationIdentity);
     }
 
     @Override
-    @Operation(opcode = Opcode.CAS_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.CAS_POINTER)
     public <T extends WordBase> T compareAndSwapWord(int __offset, T __expectedValue, T __newValue, LocationIdentity __locationIdentity)
     {
         return compareAndSwapWord(WordFactory.signed(__offset), __expectedValue, __newValue, __locationIdentity);
     }
 
     @Override
-    @Operation(opcode = Opcode.CAS_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.CAS_POINTER)
     public Object compareAndSwapObject(int __offset, Object __expectedValue, Object __newValue, LocationIdentity __locationIdentity)
     {
         return compareAndSwapObject(WordFactory.signed(__offset), __expectedValue, __newValue, __locationIdentity);
     }
 
     @Override
-    @Operation(opcode = Opcode.CAS_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.CAS_POINTER)
     public boolean logicCompareAndSwapInt(int __offset, int __expectedValue, int __newValue, LocationIdentity __locationIdentity)
     {
         return logicCompareAndSwapInt(WordFactory.signed(__offset), __expectedValue, __newValue, __locationIdentity);
     }
 
     @Override
-    @Operation(opcode = Opcode.CAS_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.CAS_POINTER)
     public boolean logicCompareAndSwapLong(int __offset, long __expectedValue, long __newValue, LocationIdentity __locationIdentity)
     {
         return logicCompareAndSwapLong(WordFactory.signed(__offset), __expectedValue, __newValue, __locationIdentity);
     }
 
     @Override
-    @Operation(opcode = Opcode.CAS_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.CAS_POINTER)
     public boolean logicCompareAndSwapWord(int __offset, WordBase __expectedValue, WordBase __newValue, LocationIdentity __locationIdentity)
     {
         return logicCompareAndSwapWord(WordFactory.signed(__offset), __expectedValue, __newValue, __locationIdentity);
     }
 
     @Override
-    @Operation(opcode = Opcode.CAS_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.CAS_POINTER)
     public boolean logicCompareAndSwapObject(int __offset, Object __expectedValue, Object __newValue, LocationIdentity __locationIdentity)
     {
         return logicCompareAndSwapObject(WordFactory.signed(__offset), __expectedValue, __newValue, __locationIdentity);
@@ -1370,7 +1371,7 @@ final class HostedWord extends Word
     // @field
     private final long ___rawValue;
 
-    // @cons
+    // @cons HostedWord
     private HostedWord(long __rawValue)
     {
         super();

@@ -12,12 +12,11 @@ import giraaff.lir.alloc.lsra.LinearScan;
 import giraaff.lir.alloc.lsra.LinearScanResolveDataFlowPhase;
 import giraaff.lir.alloc.lsra.MoveResolver;
 import giraaff.lir.ssa.SSAUtil;
-import giraaff.lir.ssa.SSAUtil.PhiValueVisitor;
 
 // @class SSALinearScanResolveDataFlowPhase
 final class SSALinearScanResolveDataFlowPhase extends LinearScanResolveDataFlowPhase
 {
-    // @cons
+    // @cons SSALinearScanResolveDataFlowPhase
     SSALinearScanResolveDataFlowPhase(LinearScan __allocator)
     {
         super(__allocator);
@@ -39,7 +38,7 @@ final class SSALinearScanResolveDataFlowPhase extends LinearScanResolveDataFlowP
             int __phiOutId = __midBlock != null ? __fromBlockLastInstructionId : __instructions.get(__phiOutIdx).id();
 
             // @closure
-            PhiValueVisitor visitor = new PhiValueVisitor()
+            SSAUtil.PhiValueVisitor visitor = new SSAUtil.PhiValueVisitor()
             {
                 @Override
                 public void visit(Value __phiIn, Value __phiOut)

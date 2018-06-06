@@ -10,19 +10,19 @@ import jdk.vm.ci.meta.AllocatableValue;
 import org.graalvm.collections.EconomicSet;
 
 import giraaff.asm.amd64.AMD64MacroAssembler;
-import giraaff.lir.LIRInstruction.OperandFlag;
+import giraaff.lir.LIRInstruction;
 import giraaff.lir.LIRInstructionClass;
-import giraaff.lir.Opcode;
-import giraaff.lir.StandardOp.SaveRegistersOp;
+import giraaff.lir.LIROpcode;
+import giraaff.lir.StandardOp;
 import giraaff.lir.asm.CompilationResultBuilder;
 import giraaff.lir.framemap.FrameMap;
 
 ///
 // Saves registers to stack slots.
 ///
-@Opcode
+@LIROpcode
 // @class AMD64SaveRegistersOp
-public final class AMD64SaveRegistersOp extends AMD64LIRInstruction implements SaveRegistersOp
+public final class AMD64SaveRegistersOp extends AMD64LIRInstruction implements StandardOp.SaveRegistersOp
 {
     // @def
     public static final LIRInstructionClass<AMD64SaveRegistersOp> TYPE = LIRInstructionClass.create(AMD64SaveRegistersOp.class);
@@ -36,7 +36,7 @@ public final class AMD64SaveRegistersOp extends AMD64LIRInstruction implements S
     ///
     // The slots to which the registers are saved.
     ///
-    @Def(OperandFlag.STACK)
+    @LIRInstruction.Def(LIRInstruction.OperandFlag.STACK)
     // @field
     protected final AllocatableValue[] ___slots;
 
@@ -51,13 +51,13 @@ public final class AMD64SaveRegistersOp extends AMD64LIRInstruction implements S
     // @param savedRegisterLocations the slots to which the registers are saved
     // @param supportsRemove determines if registers can be {@linkplain #remove(EconomicSet) pruned}
     ///
-    // @cons
+    // @cons AMD64SaveRegistersOp
     public AMD64SaveRegistersOp(Register[] __savedRegisters, AllocatableValue[] __savedRegisterLocations, boolean __supportsRemove)
     {
         this(TYPE, __savedRegisters, __savedRegisterLocations, __supportsRemove);
     }
 
-    // @cons
+    // @cons AMD64SaveRegistersOp
     public AMD64SaveRegistersOp(LIRInstructionClass<? extends AMD64SaveRegistersOp> __c, Register[] __savedRegisters, AllocatableValue[] __savedRegisterLocations, boolean __supportsRemove)
     {
         super(__c);

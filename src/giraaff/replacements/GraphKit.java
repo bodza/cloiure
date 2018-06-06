@@ -19,13 +19,13 @@ import giraaff.core.common.spi.ConstantFieldProvider;
 import giraaff.core.common.type.StampFactory;
 import giraaff.core.common.type.StampPair;
 import giraaff.graph.Graph;
-import giraaff.graph.Node.ValueNumberable;
+import giraaff.graph.Node;
 import giraaff.java.FrameStateBuilder;
 import giraaff.java.GraphBuilderPhase;
 import giraaff.nodes.AbstractBeginNode;
 import giraaff.nodes.AbstractMergeNode;
 import giraaff.nodes.BeginNode;
-import giraaff.nodes.CallTargetNode.InvokeKind;
+import giraaff.nodes.CallTargetNode;
 import giraaff.nodes.EndNode;
 import giraaff.nodes.FixedNode;
 import giraaff.nodes.FixedWithNextNode;
@@ -41,17 +41,14 @@ import giraaff.nodes.UnwindNode;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.calc.FloatingNode;
 import giraaff.nodes.graphbuilderconf.GraphBuilderConfiguration;
-import giraaff.nodes.graphbuilderconf.GraphBuilderConfiguration.Plugins;
 import giraaff.nodes.graphbuilderconf.GraphBuilderTool;
 import giraaff.nodes.graphbuilderconf.IntrinsicContext;
-import giraaff.nodes.graphbuilderconf.IntrinsicContext.CompilationContext;
 import giraaff.nodes.java.ExceptionObjectNode;
 import giraaff.nodes.java.MethodCallTargetNode;
 import giraaff.nodes.spi.StampProvider;
 import giraaff.nodes.type.StampTool;
 import giraaff.phases.OptimisticOptimizations;
 import giraaff.phases.common.DeadCodeEliminationPhase;
-import giraaff.phases.common.DeadCodeEliminationPhase.Optionality;
 import giraaff.phases.common.inlining.InliningUtil;
 import giraaff.phases.util.Providers;
 import giraaff.util.GraalError;
@@ -77,19 +74,19 @@ public final class GraphKit implements GraphBuilderTool
     protected FixedWithNextNode ___lastFixedNode;
 
     // @field
-    private final List<Structure> ___structures;
+    private final List<GraphKit.Structure> ___structures;
 
     // @class GraphKit.Structure
     protected abstract static class Structure
     {
     }
 
-    // @cons
-    public GraphKit(ResolvedJavaMethod __stubMethod, Providers __providers, WordTypes __wordTypes, Plugins __graphBuilderPlugins)
+    // @cons GraphKit
+    public GraphKit(ResolvedJavaMethod __stubMethod, Providers __providers, WordTypes __wordTypes, GraphBuilderConfiguration.Plugins __graphBuilderPlugins)
     {
         super();
         this.___providers = __providers;
-        this.___graph = new StructuredGraph.Builder().method(__stubMethod).build();
+        this.___graph = new StructuredGraph.GraphBuilder().method(__stubMethod).build();
         this.___graph.disableUnsafeAccessTracking();
         this.___wordTypes = __wordTypes;
         this.___graphBuilderPlugins = __graphBuilderPlugins;
@@ -97,7 +94,7 @@ public final class GraphKit implements GraphBuilderTool
 
         this.___structures = new ArrayList<>();
         // Add a dummy element, so that the access of the last element never leads to an exception.
-        this.___structures.add(new Structure() {});
+        this.___structures.add(new GraphKit.Structure() {});
     }
 
     @Override
@@ -141,7 +138,7 @@ public final class GraphKit implements GraphBuilderTool
     //
     // @return a node similar to {@code node} if one exists, otherwise {@code node}
     ///
-    public <T extends FloatingNode & ValueNumberable> T unique(T __node)
+    public <T extends FloatingNode & Node.ValueNumberable> T unique(T __node)
     {
         return this.___graph.unique(changeToWord(__node));
     }
@@ -186,7 +183,7 @@ public final class GraphKit implements GraphBuilderTool
 
     public InvokeNode createInvoke(Class<?> __declaringClass, String __name, ValueNode... __args)
     {
-        return createInvoke(__declaringClass, __name, InvokeKind.Static, null, BytecodeFrame.UNKNOWN_BCI, __args);
+        return createInvoke(__declaringClass, __name, CallTargetNode.InvokeKind.Static, null, BytecodeFrame.UNKNOWN_BCI, __args);
     }
 
     ///
@@ -197,9 +194,9 @@ public final class GraphKit implements GraphBuilderTool
     // @param name the name of the invoked method
     // @param args the arguments to the invocation
     ///
-    public InvokeNode createInvoke(Class<?> __declaringClass, String __name, InvokeKind __invokeKind, FrameStateBuilder __frameStateBuilder, int __bci, ValueNode... __args)
+    public InvokeNode createInvoke(Class<?> __declaringClass, String __name, CallTargetNode.InvokeKind __invokeKind, FrameStateBuilder __frameStateBuilder, int __bci, ValueNode... __args)
     {
-        boolean __isStatic = __invokeKind == InvokeKind.Static;
+        boolean __isStatic = __invokeKind == CallTargetNode.InvokeKind.Static;
         ResolvedJavaMethod __method = findMethod(__declaringClass, __name, __isStatic);
         return createInvoke(__method, __invokeKind, __frameStateBuilder, __bci, __args);
     }
@@ -234,7 +231,7 @@ public final class GraphKit implements GraphBuilderTool
     ///
     // Creates and appends an {@link InvokeNode} for a call to a given method with a given set of arguments.
     ///
-    public InvokeNode createInvoke(ResolvedJavaMethod __method, InvokeKind __invokeKind, FrameStateBuilder __frameStateBuilder, int __bci, ValueNode... __args)
+    public InvokeNode createInvoke(ResolvedJavaMethod __method, CallTargetNode.InvokeKind __invokeKind, FrameStateBuilder __frameStateBuilder, int __bci, ValueNode... __args)
     {
         Signature __signature = __method.getSignature();
         JavaType __returnType = __signature.getReturnType(null);
@@ -261,7 +258,7 @@ public final class GraphKit implements GraphBuilderTool
         return __invoke;
     }
 
-    public InvokeWithExceptionNode createInvokeWithExceptionAndUnwind(ResolvedJavaMethod __method, InvokeKind __invokeKind, FrameStateBuilder __frameStateBuilder, int __invokeBci, int __exceptionEdgeBci, ValueNode... __args)
+    public InvokeWithExceptionNode createInvokeWithExceptionAndUnwind(ResolvedJavaMethod __method, CallTargetNode.InvokeKind __invokeKind, FrameStateBuilder __frameStateBuilder, int __invokeBci, int __exceptionEdgeBci, ValueNode... __args)
     {
         InvokeWithExceptionNode __result = startInvokeWithException(__method, __invokeKind, __frameStateBuilder, __invokeBci, __exceptionEdgeBci, __args);
         exceptionPart();
@@ -281,7 +278,7 @@ public final class GraphKit implements GraphBuilderTool
         return __result;
     }
 
-    protected MethodCallTargetNode createMethodCallTarget(InvokeKind __invokeKind, ResolvedJavaMethod __targetMethod, ValueNode[] __args, StampPair __returnStamp, @SuppressWarnings("unused") int __bci)
+    protected MethodCallTargetNode createMethodCallTarget(CallTargetNode.InvokeKind __invokeKind, ResolvedJavaMethod __targetMethod, ValueNode[] __args, StampPair __returnStamp, @SuppressWarnings("unused") int __bci)
     {
         return new MethodCallTargetNode(__invokeKind, __targetMethod, __args, __returnStamp, null);
     }
@@ -349,32 +346,32 @@ public final class GraphKit implements GraphBuilderTool
         ResolvedJavaMethod __method = ((MethodCallTargetNode) __invoke.callTarget()).targetMethod();
 
         MetaAccessProvider __metaAccess = this.___providers.getMetaAccess();
-        Plugins __plugins = new Plugins(this.___graphBuilderPlugins);
+        GraphBuilderConfiguration.Plugins __plugins = new GraphBuilderConfiguration.Plugins(this.___graphBuilderPlugins);
         GraphBuilderConfiguration __config = GraphBuilderConfiguration.getSnippetDefault(__plugins);
 
-        StructuredGraph __calleeGraph = new StructuredGraph.Builder().method(__method).build();
-        IntrinsicContext __initialReplacementContext = new IntrinsicContext(__method, __method, this.___providers.getReplacements().getDefaultReplacementBytecodeProvider(), CompilationContext.INLINE_AFTER_PARSING);
-        GraphBuilderPhase.Instance __instance = createGraphBuilderInstance(__metaAccess, this.___providers.getStampProvider(), this.___providers.getConstantReflection(), this.___providers.getConstantFieldProvider(), __config, OptimisticOptimizations.NONE, __initialReplacementContext);
+        StructuredGraph __calleeGraph = new StructuredGraph.GraphBuilder().method(__method).build();
+        IntrinsicContext __initialReplacementContext = new IntrinsicContext(__method, __method, this.___providers.getReplacements().getDefaultReplacementBytecodeProvider(), IntrinsicContext.CompilationContext.INLINE_AFTER_PARSING);
+        GraphBuilderPhase.GraphBuilderInstance __instance = createGraphBuilderInstance(__metaAccess, this.___providers.getStampProvider(), this.___providers.getConstantReflection(), this.___providers.getConstantFieldProvider(), __config, OptimisticOptimizations.NONE, __initialReplacementContext);
         __instance.apply(__calleeGraph);
 
         // Remove all frame states from inlinee.
         __calleeGraph.clearAllStateAfter();
-        new DeadCodeEliminationPhase(Optionality.Required).apply(__calleeGraph);
+        new DeadCodeEliminationPhase(DeadCodeEliminationPhase.Optionality.Required).apply(__calleeGraph);
 
         InliningUtil.inline(__invoke, __calleeGraph, false, __method, __reason, __phase);
     }
 
-    protected GraphBuilderPhase.Instance createGraphBuilderInstance(MetaAccessProvider __metaAccess, StampProvider __stampProvider, ConstantReflectionProvider __constantReflection, ConstantFieldProvider __constantFieldProvider, GraphBuilderConfiguration __graphBuilderConfig, OptimisticOptimizations __optimisticOpts, IntrinsicContext __initialIntrinsicContext)
+    protected GraphBuilderPhase.GraphBuilderInstance createGraphBuilderInstance(MetaAccessProvider __metaAccess, StampProvider __stampProvider, ConstantReflectionProvider __constantReflection, ConstantFieldProvider __constantFieldProvider, GraphBuilderConfiguration __graphBuilderConfig, OptimisticOptimizations __optimisticOpts, IntrinsicContext __initialIntrinsicContext)
     {
-        return new GraphBuilderPhase.Instance(__metaAccess, __stampProvider, __constantReflection, __constantFieldProvider, __graphBuilderConfig, __optimisticOpts, __initialIntrinsicContext);
+        return new GraphBuilderPhase.GraphBuilderInstance(__metaAccess, __stampProvider, __constantReflection, __constantFieldProvider, __graphBuilderConfig, __optimisticOpts, __initialIntrinsicContext);
     }
 
-    protected void pushStructure(Structure __structure)
+    protected void pushStructure(GraphKit.Structure __structure)
     {
         this.___structures.add(__structure);
     }
 
-    protected <T extends Structure> T getTopStructure(Class<T> __expectedClass)
+    protected <T extends GraphKit.Structure> T getTopStructure(Class<T> __expectedClass)
     {
         return __expectedClass.cast(this.___structures.get(this.___structures.size() - 1));
     }
@@ -394,10 +391,10 @@ public final class GraphKit implements GraphBuilderTool
     }
 
     // @class GraphKit.IfStructure
-    static final class IfStructure extends Structure
+    static final class IfStructure extends GraphKit.Structure
     {
         // @field
-        protected IfState ___state;
+        protected GraphKit.IfState ___state;
         // @field
         protected FixedNode ___thenPart;
         // @field
@@ -421,17 +418,17 @@ public final class GraphKit implements GraphBuilderTool
         IfNode __node = append(new IfNode(__condition, __thenSuccessor, __elseSuccessor, __trueProbability));
         this.___lastFixedNode = null;
 
-        IfStructure __s = new IfStructure();
-        __s.___state = IfState.CONDITION;
+        GraphKit.IfStructure __s = new GraphKit.IfStructure();
+        __s.___state = GraphKit.IfState.CONDITION;
         __s.___thenPart = __thenSuccessor;
         __s.___elsePart = __elseSuccessor;
         pushStructure(__s);
         return __node;
     }
 
-    private IfStructure saveLastIfNode()
+    private GraphKit.IfStructure saveLastIfNode()
     {
-        IfStructure __s = getTopStructure(IfStructure.class);
+        GraphKit.IfStructure __s = getTopStructure(GraphKit.IfStructure.class);
         switch (__s.___state)
         {
             case CONDITION:
@@ -455,16 +452,16 @@ public final class GraphKit implements GraphBuilderTool
 
     public void thenPart()
     {
-        IfStructure __s = saveLastIfNode();
+        GraphKit.IfStructure __s = saveLastIfNode();
         this.___lastFixedNode = (FixedWithNextNode) __s.___thenPart;
-        __s.___state = IfState.THEN_PART;
+        __s.___state = GraphKit.IfState.THEN_PART;
     }
 
     public void elsePart()
     {
-        IfStructure __s = saveLastIfNode();
+        GraphKit.IfStructure __s = saveLastIfNode();
         this.___lastFixedNode = (FixedWithNextNode) __s.___elsePart;
-        __s.___state = IfState.ELSE_PART;
+        __s.___state = GraphKit.IfState.ELSE_PART;
     }
 
     ///
@@ -475,7 +472,7 @@ public final class GraphKit implements GraphBuilderTool
     ///
     public AbstractMergeNode endIf()
     {
-        IfStructure __s = saveLastIfNode();
+        GraphKit.IfStructure __s = saveLastIfNode();
 
         FixedWithNextNode __thenPart = __s.___thenPart instanceof FixedWithNextNode ? (FixedWithNextNode) __s.___thenPart : null;
         FixedWithNextNode __elsePart = __s.___elsePart instanceof FixedWithNextNode ? (FixedWithNextNode) __s.___elsePart : null;
@@ -509,13 +506,13 @@ public final class GraphKit implements GraphBuilderTool
         {
             // Both parts ended with a control sink, so no nodes can be added after the if.
         }
-        __s.___state = IfState.FINISHED;
+        __s.___state = GraphKit.IfState.FINISHED;
         popStructure();
         return __merge;
     }
 
     // @class GraphKit.InvokeWithExceptionStructure
-    static final class InvokeWithExceptionStructure extends Structure
+    static final class InvokeWithExceptionStructure extends GraphKit.Structure
     {
         // @enum GraphKit.InvokeWithExceptionStructure.State
         protected enum State
@@ -527,7 +524,7 @@ public final class GraphKit implements GraphBuilderTool
         }
 
         // @field
-        protected State ___state;
+        protected GraphKit.InvokeWithExceptionStructure.State ___state;
         // @field
         protected ExceptionObjectNode ___exceptionObject;
         // @field
@@ -536,7 +533,7 @@ public final class GraphKit implements GraphBuilderTool
         protected FixedNode ___exceptionEdge;
     }
 
-    public InvokeWithExceptionNode startInvokeWithException(ResolvedJavaMethod __method, InvokeKind __invokeKind, FrameStateBuilder __frameStateBuilder, int __invokeBci, int __exceptionEdgeBci, ValueNode... __args)
+    public InvokeWithExceptionNode startInvokeWithException(ResolvedJavaMethod __method, CallTargetNode.InvokeKind __invokeKind, FrameStateBuilder __frameStateBuilder, int __invokeBci, int __exceptionEdgeBci, ValueNode... __args)
     {
         Signature __signature = __method.getSignature();
         JavaType __returnType = __signature.getReturnType(null);
@@ -577,8 +574,8 @@ public final class GraphKit implements GraphBuilderTool
         }
         this.___lastFixedNode = null;
 
-        InvokeWithExceptionStructure __s = new InvokeWithExceptionStructure();
-        __s.___state = InvokeWithExceptionStructure.State.INVOKE;
+        GraphKit.InvokeWithExceptionStructure __s = new GraphKit.InvokeWithExceptionStructure();
+        __s.___state = GraphKit.InvokeWithExceptionStructure.State.INVOKE;
         __s.___noExceptionEdge = __noExceptionEdge;
         __s.___exceptionEdge = __exceptionObject;
         __s.___exceptionObject = __exceptionObject;
@@ -587,9 +584,9 @@ public final class GraphKit implements GraphBuilderTool
         return __invoke;
     }
 
-    private InvokeWithExceptionStructure saveLastInvokeWithExceptionNode()
+    private GraphKit.InvokeWithExceptionStructure saveLastInvokeWithExceptionNode()
     {
-        InvokeWithExceptionStructure __s = getTopStructure(InvokeWithExceptionStructure.class);
+        GraphKit.InvokeWithExceptionStructure __s = getTopStructure(GraphKit.InvokeWithExceptionStructure.class);
         switch (__s.___state)
         {
             case INVOKE:
@@ -613,21 +610,21 @@ public final class GraphKit implements GraphBuilderTool
 
     public void noExceptionPart()
     {
-        InvokeWithExceptionStructure __s = saveLastInvokeWithExceptionNode();
+        GraphKit.InvokeWithExceptionStructure __s = saveLastInvokeWithExceptionNode();
         this.___lastFixedNode = (FixedWithNextNode) __s.___noExceptionEdge;
-        __s.___state = InvokeWithExceptionStructure.State.NO_EXCEPTION_EDGE;
+        __s.___state = GraphKit.InvokeWithExceptionStructure.State.NO_EXCEPTION_EDGE;
     }
 
     public void exceptionPart()
     {
-        InvokeWithExceptionStructure __s = saveLastInvokeWithExceptionNode();
+        GraphKit.InvokeWithExceptionStructure __s = saveLastInvokeWithExceptionNode();
         this.___lastFixedNode = (FixedWithNextNode) __s.___exceptionEdge;
-        __s.___state = InvokeWithExceptionStructure.State.EXCEPTION_EDGE;
+        __s.___state = GraphKit.InvokeWithExceptionStructure.State.EXCEPTION_EDGE;
     }
 
     public ExceptionObjectNode exceptionObject()
     {
-        InvokeWithExceptionStructure __s = getTopStructure(InvokeWithExceptionStructure.class);
+        GraphKit.InvokeWithExceptionStructure __s = getTopStructure(GraphKit.InvokeWithExceptionStructure.class);
         return __s.___exceptionObject;
     }
 
@@ -639,7 +636,7 @@ public final class GraphKit implements GraphBuilderTool
     ///
     public AbstractMergeNode endInvokeWithException()
     {
-        InvokeWithExceptionStructure __s = saveLastInvokeWithExceptionNode();
+        GraphKit.InvokeWithExceptionStructure __s = saveLastInvokeWithExceptionNode();
         FixedWithNextNode __noExceptionEdge = __s.___noExceptionEdge instanceof FixedWithNextNode ? (FixedWithNextNode) __s.___noExceptionEdge : null;
         FixedWithNextNode __exceptionEdge = __s.___exceptionEdge instanceof FixedWithNextNode ? (FixedWithNextNode) __s.___exceptionEdge : null;
         AbstractMergeNode __merge = null;
@@ -662,7 +659,7 @@ public final class GraphKit implements GraphBuilderTool
         {
             this.___lastFixedNode = __exceptionEdge;
         }
-        __s.___state = InvokeWithExceptionStructure.State.FINISHED;
+        __s.___state = GraphKit.InvokeWithExceptionStructure.State.FINISHED;
         popStructure();
         return __merge;
     }

@@ -9,7 +9,7 @@ import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.graph.spi.Canonicalizable;
 import giraaff.graph.spi.CanonicalizerTool;
-import giraaff.nodes.CallTargetNode.InvokeKind;
+import giraaff.nodes.CallTargetNode;
 import giraaff.nodes.ConstantNode;
 import giraaff.nodes.ValueNode;
 
@@ -23,8 +23,8 @@ public abstract class PureFunctionMacroNode extends MacroStateSplitNode implemen
     // @def
     public static final NodeClass<PureFunctionMacroNode> TYPE = NodeClass.create(PureFunctionMacroNode.class);
 
-    // @cons
-    public PureFunctionMacroNode(NodeClass<? extends MacroNode> __c, InvokeKind __invokeKind, ResolvedJavaMethod __targetMethod, int __bci, StampPair __returnStamp, ValueNode... __arguments)
+    // @cons PureFunctionMacroNode
+    public PureFunctionMacroNode(NodeClass<? extends MacroNode> __c, CallTargetNode.InvokeKind __invokeKind, ResolvedJavaMethod __targetMethod, int __bci, StampPair __returnStamp, ValueNode... __arguments)
     {
         super(__c, __invokeKind, __targetMethod, __bci, __returnStamp, __arguments);
     }

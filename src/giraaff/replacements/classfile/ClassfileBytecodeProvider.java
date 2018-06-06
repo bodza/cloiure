@@ -44,15 +44,15 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider
     // @field
     private final EconomicMap<String, Class<?>> ___classes = EconomicMap.create();
     // @field
-    private final EconomicMap<ResolvedJavaType, FieldsCache> ___fields = EconomicMap.create();
+    private final EconomicMap<ResolvedJavaType, ClassfileBytecodeProvider.FieldsCache> ___fields = EconomicMap.create();
     // @field
-    private final EconomicMap<ResolvedJavaType, MethodsCache> ___methods = EconomicMap.create();
+    private final EconomicMap<ResolvedJavaType, ClassfileBytecodeProvider.MethodsCache> ___methods = EconomicMap.create();
     // @field
     final MetaAccessProvider ___metaAccess;
     // @field
     final SnippetReflectionProvider ___snippetReflection;
 
-    // @cons
+    // @cons ClassfileBytecodeProvider
     public ClassfileBytecodeProvider(MetaAccessProvider __metaAccess, SnippetReflectionProvider __snippetReflection)
     {
         super();
@@ -62,7 +62,7 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider
         this.___loader = __cl == null ? ClassLoader.getSystemClassLoader() : __cl;
     }
 
-    // @cons
+    // @cons ClassfileBytecodeProvider
     public ClassfileBytecodeProvider(MetaAccessProvider __metaAccess, SnippetReflectionProvider __snippetReflection, ClassLoader __loader)
     {
         super();
@@ -179,7 +179,7 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider
         // @field
         final String ___type;
 
-        // @cons
+        // @cons ClassfileBytecodeProvider.FieldKey
         FieldKey(String __name, String __type)
         {
             super();
@@ -190,9 +190,9 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider
         @Override
         public boolean equals(Object __obj)
         {
-            if (__obj instanceof FieldKey)
+            if (__obj instanceof ClassfileBytecodeProvider.FieldKey)
             {
-                FieldKey __that = (FieldKey) __obj;
+                ClassfileBytecodeProvider.FieldKey __that = (ClassfileBytecodeProvider.FieldKey) __obj;
                 return __that.___name.equals(this.___name) && __that.___type.equals(this.___type);
             }
             return false;
@@ -216,7 +216,7 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider
         // @field
         final String ___descriptor;
 
-        // @cons
+        // @cons ClassfileBytecodeProvider.MethodKey
         MethodKey(String __name, String __descriptor)
         {
             super();
@@ -227,9 +227,9 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider
         @Override
         public boolean equals(Object __obj)
         {
-            if (__obj instanceof MethodKey)
+            if (__obj instanceof ClassfileBytecodeProvider.MethodKey)
             {
-                MethodKey __that = (MethodKey) __obj;
+                ClassfileBytecodeProvider.MethodKey __that = (ClassfileBytecodeProvider.MethodKey) __obj;
                 return __that.___name.equals(this.___name) && __that.___descriptor.equals(this.___descriptor);
             }
             return false;
@@ -249,13 +249,13 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider
     static final class MethodsCache
     {
         // @field
-        volatile EconomicMap<MethodKey, ResolvedJavaMethod> ___constructors;
+        volatile EconomicMap<ClassfileBytecodeProvider.MethodKey, ResolvedJavaMethod> ___constructors;
         // @field
-        volatile EconomicMap<MethodKey, ResolvedJavaMethod> ___methods;
+        volatile EconomicMap<ClassfileBytecodeProvider.MethodKey, ResolvedJavaMethod> ___methods;
 
         ResolvedJavaMethod lookup(ResolvedJavaType __type, String __name, String __descriptor)
         {
-            MethodKey __key = new MethodKey(__name, __descriptor);
+            ClassfileBytecodeProvider.MethodKey __key = new ClassfileBytecodeProvider.MethodKey(__name, __descriptor);
 
             if (__name.equals("<clinit>"))
             {
@@ -283,12 +283,12 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider
             }
         }
 
-        private static EconomicMap<MethodKey, ResolvedJavaMethod> createMethodMap(ResolvedJavaMethod[] __methodArray)
+        private static EconomicMap<ClassfileBytecodeProvider.MethodKey, ResolvedJavaMethod> createMethodMap(ResolvedJavaMethod[] __methodArray)
         {
-            EconomicMap<MethodKey, ResolvedJavaMethod> __map = EconomicMap.create();
+            EconomicMap<ClassfileBytecodeProvider.MethodKey, ResolvedJavaMethod> __map = EconomicMap.create();
             for (ResolvedJavaMethod __m : __methodArray)
             {
-                __map.put(new MethodKey(__m.getName(), __m.getSignature().toMethodDescriptor()), __m);
+                __map.put(new ClassfileBytecodeProvider.MethodKey(__m.getName(), __m.getSignature().toMethodDescriptor()), __m);
             }
             return __map;
         }
@@ -301,13 +301,13 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider
     static final class FieldsCache
     {
         // @field
-        volatile EconomicMap<FieldKey, ResolvedJavaField> ___instanceFields;
+        volatile EconomicMap<ClassfileBytecodeProvider.FieldKey, ResolvedJavaField> ___instanceFields;
         // @field
-        volatile EconomicMap<FieldKey, ResolvedJavaField> ___staticFields;
+        volatile EconomicMap<ClassfileBytecodeProvider.FieldKey, ResolvedJavaField> ___staticFields;
 
         ResolvedJavaField lookup(ResolvedJavaType __type, String __name, String __fieldType, boolean __isStatic)
         {
-            FieldKey __key = new FieldKey(__name, __fieldType);
+            ClassfileBytecodeProvider.FieldKey __key = new ClassfileBytecodeProvider.FieldKey(__name, __fieldType);
 
             if (__isStatic)
             {
@@ -329,12 +329,12 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider
             }
         }
 
-        private static EconomicMap<FieldKey, ResolvedJavaField> createFieldMap(ResolvedJavaField[] __fieldArray)
+        private static EconomicMap<ClassfileBytecodeProvider.FieldKey, ResolvedJavaField> createFieldMap(ResolvedJavaField[] __fieldArray)
         {
-            EconomicMap<FieldKey, ResolvedJavaField> __map = EconomicMap.create();
+            EconomicMap<ClassfileBytecodeProvider.FieldKey, ResolvedJavaField> __map = EconomicMap.create();
             for (ResolvedJavaField __f : __fieldArray)
             {
-                __map.put(new FieldKey(__f.getName(), __f.getType().getName()), __f);
+                __map.put(new ClassfileBytecodeProvider.FieldKey(__f.getName(), __f.getType().getName()), __f);
             }
             return __map;
         }
@@ -345,12 +345,12 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider
     //
     // Synchronized since the cache is lazily created.
     ///
-    private synchronized MethodsCache getMethods(ResolvedJavaType __type)
+    private synchronized ClassfileBytecodeProvider.MethodsCache getMethods(ResolvedJavaType __type)
     {
-        MethodsCache __methodsCache = this.___methods.get(__type);
+        ClassfileBytecodeProvider.MethodsCache __methodsCache = this.___methods.get(__type);
         if (__methodsCache == null)
         {
-            __methodsCache = new MethodsCache();
+            __methodsCache = new ClassfileBytecodeProvider.MethodsCache();
             this.___methods.put(__type, __methodsCache);
         }
         return __methodsCache;
@@ -361,12 +361,12 @@ public final class ClassfileBytecodeProvider implements BytecodeProvider
     //
     // Synchronized since the cache is lazily created.
     ///
-    private synchronized FieldsCache getFields(ResolvedJavaType __type)
+    private synchronized ClassfileBytecodeProvider.FieldsCache getFields(ResolvedJavaType __type)
     {
-        FieldsCache __fieldsCache = this.___fields.get(__type);
+        ClassfileBytecodeProvider.FieldsCache __fieldsCache = this.___fields.get(__type);
         if (__fieldsCache == null)
         {
-            __fieldsCache = new FieldsCache();
+            __fieldsCache = new ClassfileBytecodeProvider.FieldsCache();
             this.___fields.put(__type, __fieldsCache);
         }
         return __fieldsCache;

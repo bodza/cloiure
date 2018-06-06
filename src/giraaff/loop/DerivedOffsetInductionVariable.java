@@ -19,7 +19,7 @@ public final class DerivedOffsetInductionVariable extends DerivedInductionVariab
     // @field
     private final BinaryArithmeticNode<?> ___value;
 
-    // @cons
+    // @cons DerivedOffsetInductionVariable
     public DerivedOffsetInductionVariable(LoopEx __loop, InductionVariable __base, ValueNode __offset, BinaryArithmeticNode<?> __value)
     {
         super(__loop, __base);
@@ -33,7 +33,7 @@ public final class DerivedOffsetInductionVariable extends DerivedInductionVariab
     }
 
     @Override
-    public Direction direction()
+    public InductionVariable.Direction direction()
     {
         return this.___base.direction();
     }

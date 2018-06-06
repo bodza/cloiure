@@ -36,7 +36,7 @@ public final class InliningIterator
     // @field
     private final NodeBitMap ___queuedNodes;
 
-    // @cons
+    // @cons InliningIterator
     public InliningIterator(StructuredGraph __graph)
     {
         super();

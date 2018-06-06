@@ -1,6 +1,7 @@
 package giraaff.nodes.debug;
 
 import giraaff.core.common.type.StampFactory;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.nodes.FixedWithNextNode;
 import giraaff.nodes.ValueNode;
@@ -13,11 +14,11 @@ public final class BlackholeNode extends FixedWithNextNode implements LIRLowerab
     // @def
     public static final NodeClass<BlackholeNode> TYPE = NodeClass.create(BlackholeNode.class);
 
-    @Input
+    @Node.Input
     // @field
     ValueNode ___value;
 
-    // @cons
+    // @cons BlackholeNode
     public BlackholeNode(ValueNode __value)
     {
         super(TYPE, StampFactory.forVoid());

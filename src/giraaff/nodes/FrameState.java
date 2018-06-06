@@ -12,6 +12,7 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
 import giraaff.bytecode.Bytecode;
 import giraaff.core.common.type.StampFactory;
 import giraaff.graph.IterableNodeType;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.graph.NodeInputList;
 import giraaff.graph.iterators.NodeIterable;
@@ -39,15 +40,15 @@ public final class FrameState extends VirtualState implements IterableNodeType
     // {@link #values} of the {@link FrameState}.
     ///
     // @def
-    public static final ValueNode TWO_SLOT_MARKER = new TwoSlotMarker();
+    public static final ValueNode TWO_SLOT_MARKER = new FrameState.TwoSlotMarker();
 
     // @class FrameState.TwoSlotMarker
     private static final class TwoSlotMarker extends ValueNode
     {
         // @def
-        public static final NodeClass<TwoSlotMarker> TYPE = NodeClass.create(TwoSlotMarker.class);
+        public static final NodeClass<FrameState.TwoSlotMarker> TYPE = NodeClass.create(FrameState.TwoSlotMarker.class);
 
-        // @cons
+        // @cons FrameState.TwoSlotMarker
         protected TwoSlotMarker()
         {
             super(TYPE, StampFactory.forKind(JavaKind.Illegal));
@@ -69,22 +70,22 @@ public final class FrameState extends VirtualState implements IterableNodeType
     // @field
     protected final boolean ___duringCall;
 
-    @OptionalInput(value = InputType.State)
+    @Node.OptionalInput(value = InputType.StateI)
     // @field
     FrameState ___outerFrameState;
 
     ///
     // Contains the locals, the expressions and the locked objects, in this order.
     ///
-    @OptionalInput
+    @Node.OptionalInput
     // @field
     NodeInputList<ValueNode> ___values;
 
-    @Input(InputType.Association)
+    @Node.Input(InputType.Association)
     // @field
     NodeInputList<MonitorIdNode> ___monitorIds;
 
-    @OptionalInput(InputType.State)
+    @Node.OptionalInput(InputType.StateI)
     // @field
     NodeInputList<EscapeObjectState> ___virtualObjectMappings;
 
@@ -100,7 +101,7 @@ public final class FrameState extends VirtualState implements IterableNodeType
     // @field
     protected final Bytecode ___code;
 
-    // @cons
+    // @cons FrameState
     public FrameState(FrameState __outerFrameState, Bytecode __code, int __bci, int __localsSize, int __stackSize, int __lockSize, boolean __rethrowException, boolean __duringCall, List<MonitorIdNode> __monitorIds, List<EscapeObjectState> __virtualObjectMappings)
     {
         super(TYPE);
@@ -136,7 +137,7 @@ public final class FrameState extends VirtualState implements IterableNodeType
         this.___duringCall = __duringCall;
     }
 
-    // @cons
+    // @cons FrameState
     public FrameState(FrameState __outerFrameState, Bytecode __code, int __bci, List<ValueNode> __values, int __localsSize, int __stackSize, boolean __rethrowException, boolean __duringCall, List<MonitorIdNode> __monitorIds, List<EscapeObjectState> __virtualObjectMappings)
     {
         this(__outerFrameState, __code, __bci, __localsSize, __stackSize, __values.size() - __localsSize - __stackSize, __rethrowException, __duringCall, __monitorIds, __virtualObjectMappings);
@@ -146,7 +147,7 @@ public final class FrameState extends VirtualState implements IterableNodeType
         }
     }
 
-    // @cons
+    // @cons FrameState
     public FrameState(int __bci)
     {
         this(null, null, __bci, 0, 0, 0, false, false, null, Collections.<EscapeObjectState> emptyList());
@@ -159,14 +160,14 @@ public final class FrameState extends VirtualState implements IterableNodeType
     //
     // @param bci this must be {@link BytecodeFrame#AFTER_BCI}
     ///
-    // @cons
+    // @cons FrameState
     public FrameState(int __bci, ValueNode __returnValueOrExceptionObject)
     {
         this(null, null, __bci, 0, __returnValueOrExceptionObject.getStackKind().getSlotCount(), 0, __returnValueOrExceptionObject instanceof ExceptionObjectNode, false, null, Collections.<EscapeObjectState> emptyList());
         this.___values.initialize(0, __returnValueOrExceptionObject);
     }
 
-    // @cons
+    // @cons FrameState
     public FrameState(FrameState __outerFrameState, Bytecode __code, int __bci, ValueNode[] __locals, ValueNode[] __stack, int __stackSize, ValueNode[] __locks, List<MonitorIdNode> __monitorIds, boolean __rethrowException, boolean __duringCall)
     {
         this(__outerFrameState, __code, __bci, __locals.length, __stackSize, __locks.length, __rethrowException, __duringCall, __monitorIds, Collections.<EscapeObjectState> emptyList());
@@ -516,7 +517,7 @@ public final class FrameState extends VirtualState implements IterableNodeType
     }
 
     @Override
-    public void applyToNonVirtual(NodeClosure<? super ValueNode> __closure)
+    public void applyToNonVirtual(VirtualState.NodeClosure<? super ValueNode> __closure)
     {
         for (ValueNode __value : this.___values)
         {
@@ -552,7 +553,7 @@ public final class FrameState extends VirtualState implements IterableNodeType
     }
 
     @Override
-    public void applyToVirtual(VirtualClosure __closure)
+    public void applyToVirtual(VirtualState.VirtualClosure __closure)
     {
         __closure.apply(this);
         if (this.___virtualObjectMappings != null)

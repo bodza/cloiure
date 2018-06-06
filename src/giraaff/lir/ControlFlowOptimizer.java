@@ -18,20 +18,20 @@ public final class ControlFlowOptimizer extends PostAllocationOptimizationPhase
     // Performs control flow optimizations on the given LIR graph.
     ///
     @Override
-    protected void run(TargetDescription __target, LIRGenerationResult __lirGenRes, PostAllocationOptimizationContext __context)
+    protected void run(TargetDescription __target, LIRGenerationResult __lirGenRes, PostAllocationOptimizationPhase.PostAllocationOptimizationContext __context)
     {
         LIR __lir = __lirGenRes.getLIR();
-        new Optimizer(__lir).deleteEmptyBlocks(__lir.codeEmittingOrder());
+        new ControlFlowOptimizer.CFOptimizer(__lir).deleteEmptyBlocks(__lir.codeEmittingOrder());
     }
 
-    // @class ControlFlowOptimizer.Optimizer
-    private static final class Optimizer
+    // @class ControlFlowOptimizer.CFOptimizer
+    private static final class CFOptimizer
     {
         // @field
         private final LIR ___lir;
 
-        // @cons
-        private Optimizer(LIR __lir)
+        // @cons ControlFlowOptimizer.CFOptimizer
+        private CFOptimizer(LIR __lir)
         {
             super();
             this.___lir = __lir;

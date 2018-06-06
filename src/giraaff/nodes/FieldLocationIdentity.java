@@ -11,7 +11,7 @@ public final class FieldLocationIdentity extends LocationIdentity implements For
     // @field
     private final ResolvedJavaField ___inner;
 
-    // @cons
+    // @cons FieldLocationIdentity
     public FieldLocationIdentity(ResolvedJavaField __inner)
     {
         super();

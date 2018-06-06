@@ -36,7 +36,7 @@ public class NamedLocationIdentity extends LocationIdentity implements FormatWit
     // @field
     private final boolean ___immutable;
 
-    // @cons
+    // @cons NamedLocationIdentity
     protected NamedLocationIdentity(String __name, boolean __immutable)
     {
         super();

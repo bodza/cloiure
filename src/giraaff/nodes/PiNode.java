@@ -39,7 +39,7 @@ public class PiNode extends FloatingGuardedNode implements LIRLowerable, Virtual
     // @def
     public static final NodeClass<PiNode> TYPE = NodeClass.create(PiNode.class);
 
-    @Input
+    @Node.Input
     // @field
     ValueNode ___object;
     // @field
@@ -50,7 +50,7 @@ public class PiNode extends FloatingGuardedNode implements LIRLowerable, Virtual
         return this.___object;
     }
 
-    // @cons
+    // @cons PiNode
     protected PiNode(NodeClass<? extends PiNode> __c, ValueNode __object, Stamp __stamp, GuardingNode __guard)
     {
         super(__c, __stamp, __guard);
@@ -59,25 +59,25 @@ public class PiNode extends FloatingGuardedNode implements LIRLowerable, Virtual
         inferStamp();
     }
 
-    // @cons
+    // @cons PiNode
     public PiNode(ValueNode __object, Stamp __stamp)
     {
         this(__object, __stamp, null);
     }
 
-    // @cons
+    // @cons PiNode
     public PiNode(ValueNode __object, Stamp __stamp, ValueNode __guard)
     {
         this(TYPE, __object, __stamp, (GuardingNode) __guard);
     }
 
-    // @cons
+    // @cons PiNode
     public PiNode(ValueNode __object, ValueNode __guard)
     {
         this(__object, AbstractPointerStamp.pointerNonNull(__object.stamp(NodeView.DEFAULT)), __guard);
     }
 
-    // @cons
+    // @cons PiNode
     public PiNode(ValueNode __object, ResolvedJavaType __toType, boolean __exactType, boolean __nonNull)
     {
         this(__object, StampFactory.object(__exactType ? TypeReference.createExactTrusted(__toType) : TypeReference.createWithoutAssumptions(__toType), __nonNull || StampTool.isPointerNonNull(__object.stamp(NodeView.DEFAULT))));
@@ -266,40 +266,40 @@ public class PiNode extends FloatingGuardedNode implements LIRLowerable, Virtual
         return asNonNullClassIntrinsic(__object, Object.class, false, true);
     }
 
-    @NodeIntrinsic(PiNode.class)
-    private static native Class<?> asNonNullClassIntrinsic(Object __object, @ConstantNodeParameter Class<?> __toType, @ConstantNodeParameter boolean __exactType, @ConstantNodeParameter boolean __nonNull);
+    @Node.NodeIntrinsic(PiNode.class)
+    private static native Class<?> asNonNullClassIntrinsic(Object __object, @Node.ConstantNodeParameter Class<?> __toType, @Node.ConstantNodeParameter boolean __exactType, @Node.ConstantNodeParameter boolean __nonNull);
 
     ///
     // Changes the stamp of an object inside a snippet to be the stamp of the node replaced by the snippet.
     ///
-    @NodeIntrinsic(PiNode.Placeholder.class)
+    @Node.NodeIntrinsic(PiNode.Placeholder.class)
     public static native Object piCastToSnippetReplaceeStamp(Object __object);
 
     ///
     // Changes the stamp of an object and ensures the newly stamped value is non-null and does not
     // float above a given guard.
     ///
-    @NodeIntrinsic
+    @Node.NodeIntrinsic
     public static native Object piCastNonNull(Object __object, GuardingNode __guard);
 
     ///
     // Changes the stamp of an object and ensures the newly stamped value is non-null and does not
     // float above a given guard.
     ///
-    @NodeIntrinsic
+    @Node.NodeIntrinsic
     public static native Class<?> piCastNonNullClass(Class<?> __type, GuardingNode __guard);
 
     ///
     // Changes the stamp of an object to represent a given type and to indicate that the object is
     // not null.
     ///
-    public static Object piCastNonNull(Object __object, @ConstantNodeParameter Class<?> __toType)
+    public static Object piCastNonNull(Object __object, @Node.ConstantNodeParameter Class<?> __toType)
     {
         return piCast(__object, __toType, false, true);
     }
 
-    @NodeIntrinsic
-    public static native Object piCast(Object __object, @ConstantNodeParameter Class<?> __toType, @ConstantNodeParameter boolean __exactType, @ConstantNodeParameter boolean __nonNull);
+    @Node.NodeIntrinsic
+    public static native Object piCast(Object __object, @Node.ConstantNodeParameter Class<?> __toType, @Node.ConstantNodeParameter boolean __exactType, @Node.ConstantNodeParameter boolean __nonNull);
 
     ///
     // A placeholder node in a snippet that will be replaced with a {@link PiNode} when the snippet
@@ -309,9 +309,9 @@ public class PiNode extends FloatingGuardedNode implements LIRLowerable, Virtual
     public static class Placeholder extends FloatingGuardedNode
     {
         // @def
-        public static final NodeClass<Placeholder> TYPE = NodeClass.create(Placeholder.class);
+        public static final NodeClass<PiNode.Placeholder> TYPE = NodeClass.create(PiNode.Placeholder.class);
 
-        @Input
+        @Node.Input
         // @field
         ValueNode ___object;
 
@@ -320,14 +320,14 @@ public class PiNode extends FloatingGuardedNode implements LIRLowerable, Virtual
             return this.___object;
         }
 
-        // @cons
-        protected Placeholder(NodeClass<? extends Placeholder> __c, ValueNode __object)
+        // @cons PiNode.Placeholder
+        protected Placeholder(NodeClass<? extends PiNode.Placeholder> __c, ValueNode __object)
         {
-            super(__c, PlaceholderStamp.SINGLETON, null);
+            super(__c, PiNode.PlaceholderStamp.SINGLETON, null);
             this.___object = __object;
         }
 
-        // @cons
+        // @cons PiNode.Placeholder
         public Placeholder(ValueNode __object)
         {
             this(TYPE, __object);
@@ -346,21 +346,21 @@ public class PiNode extends FloatingGuardedNode implements LIRLowerable, Virtual
     }
 
     ///
-    // A stamp for {@link Placeholder} nodes which are only used in snippets. It is replaced by an
+    // A stamp for {@link PiNode.Placeholder} nodes which are only used in snippets. It is replaced by an
     // actual stamp when the snippet is instantiated.
     ///
     // @class PiNode.PlaceholderStamp
     public static final class PlaceholderStamp extends ObjectStamp
     {
         // @def
-        private static final PlaceholderStamp SINGLETON = new PlaceholderStamp();
+        private static final PiNode.PlaceholderStamp SINGLETON = new PiNode.PlaceholderStamp();
 
-        public static PlaceholderStamp singleton()
+        public static PiNode.PlaceholderStamp singleton()
         {
             return SINGLETON;
         }
 
-        // @cons
+        // @cons PiNode.PlaceholderStamp
         private PlaceholderStamp()
         {
             super(null, false, false, false);

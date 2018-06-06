@@ -14,7 +14,7 @@ import org.graalvm.collections.EconomicSet;
 
 import giraaff.asm.Label;
 import giraaff.core.common.cfg.AbstractBlockBase;
-import giraaff.lir.LIRInstruction.OperandFlag;
+import giraaff.lir.LIRInstruction;
 import giraaff.lir.asm.CompilationResultBuilder;
 import giraaff.lir.framemap.FrameMap;
 import giraaff.util.GraalError;
@@ -56,10 +56,10 @@ public final class StandardOp
     public static final class LabelOp extends LIRInstruction
     {
         // @def
-        public static final LIRInstructionClass<LabelOp> TYPE = LIRInstructionClass.create(LabelOp.class);
+        public static final LIRInstructionClass<StandardOp.LabelOp> TYPE = LIRInstructionClass.create(StandardOp.LabelOp.class);
 
         // @def
-        public static final EnumSet<OperandFlag> incomingFlags = EnumSet.of(OperandFlag.REG, OperandFlag.STACK);
+        public static final EnumSet<LIRInstruction.OperandFlag> incomingFlags = EnumSet.of(LIRInstruction.OperandFlag.REG, LIRInstruction.OperandFlag.STACK);
 
         ///
         // In the LIR, every register and variable must be defined before it is used. For method
@@ -69,7 +69,7 @@ public final class StandardOp
         // between the label at the beginning of a block an an actual definition in the second
         // instruction of a block, the registers are defined here in the label.
         ///
-        @Def({OperandFlag.REG, OperandFlag.STACK})
+        @LIRInstruction.Def({LIRInstruction.OperandFlag.REG, LIRInstruction.OperandFlag.STACK})
         // @field
         private Value[] ___incomingValues;
         // @field
@@ -79,7 +79,7 @@ public final class StandardOp
         // @field
         private int ___numbPhis;
 
-        // @cons
+        // @cons StandardOp.LabelOp
         public LabelOp(Label __label, boolean __align)
         {
             super(TYPE);
@@ -171,7 +171,7 @@ public final class StandardOp
         {
             for (int __i = 0; __i < this.___incomingValues.length; __i++)
             {
-                this.___incomingValues[__i] = __proc.doValue(this, this.___incomingValues[__i], OperandMode.DEF, incomingFlags);
+                this.___incomingValues[__i] = __proc.doValue(this, this.___incomingValues[__i], LIRInstruction.OperandMode.DEF, incomingFlags);
             }
         }
     }
@@ -180,29 +180,29 @@ public final class StandardOp
     // LIR operation that is an unconditional jump to a {@link #destination()}.
     ///
     // @class StandardOp.JumpOp
-    public static final class JumpOp extends LIRInstruction implements BlockEndOp
+    public static final class JumpOp extends LIRInstruction implements StandardOp.BlockEndOp
     {
         // @def
-        public static final LIRInstructionClass<JumpOp> TYPE = LIRInstructionClass.create(JumpOp.class);
+        public static final LIRInstructionClass<StandardOp.JumpOp> TYPE = LIRInstructionClass.create(StandardOp.JumpOp.class);
 
         // @def
-        public static final EnumSet<OperandFlag> outgoingFlags = EnumSet.of(OperandFlag.REG, OperandFlag.STACK, OperandFlag.CONST, OperandFlag.OUTGOING);
+        public static final EnumSet<LIRInstruction.OperandFlag> outgoingFlags = EnumSet.of(LIRInstruction.OperandFlag.REG, LIRInstruction.OperandFlag.STACK, LIRInstruction.OperandFlag.CONST, LIRInstruction.OperandFlag.OUTGOING);
 
-        @Alive({OperandFlag.REG, OperandFlag.STACK, OperandFlag.CONST, OperandFlag.OUTGOING})
+        @LIRInstruction.Alive({LIRInstruction.OperandFlag.REG, LIRInstruction.OperandFlag.STACK, LIRInstruction.OperandFlag.CONST, LIRInstruction.OperandFlag.OUTGOING})
         // @field
         private Value[] ___outgoingValues;
 
         // @field
         private final LabelRef ___destination;
 
-        // @cons
+        // @cons StandardOp.JumpOp
         public JumpOp(LabelRef __destination)
         {
             this(TYPE, __destination);
         }
 
-        // @cons
-        protected JumpOp(LIRInstructionClass<? extends JumpOp> __c, LabelRef __destination)
+        // @cons StandardOp.JumpOp
+        protected JumpOp(LIRInstructionClass<? extends StandardOp.JumpOp> __c, LabelRef __destination)
         {
             super(__c);
             this.___destination = __destination;
@@ -252,8 +252,8 @@ public final class StandardOp
     ///
     // Marker interface for a LIR operation that is a conditional jump.
     ///
-    // @iface StandardOp.BranchOp
-    public interface BranchOp extends BlockEndOp
+    // @iface StandardOp.StandardBranchOp
+    public interface StandardBranchOp extends StandardOp.BlockEndOp
     {
     }
 
@@ -265,9 +265,9 @@ public final class StandardOp
     {
         AllocatableValue getResult();
 
-        static MoveOp asMoveOp(LIRInstruction __op)
+        static StandardOp.MoveOp asMoveOp(LIRInstruction __op)
         {
-            return (MoveOp) __op;
+            return (StandardOp.MoveOp) __op;
         }
 
         static boolean isMoveOp(LIRInstruction __op)
@@ -280,13 +280,13 @@ public final class StandardOp
     // Marker interface for a LIR operation that moves some non-constant value to another location.
     ///
     // @iface StandardOp.ValueMoveOp
-    public interface ValueMoveOp extends MoveOp
+    public interface ValueMoveOp extends StandardOp.MoveOp
     {
         AllocatableValue getInput();
 
-        static ValueMoveOp asValueMoveOp(LIRInstruction __op)
+        static StandardOp.ValueMoveOp asValueMoveOp(LIRInstruction __op)
         {
-            return (ValueMoveOp) __op;
+            return (StandardOp.ValueMoveOp) __op;
         }
 
         static boolean isValueMoveOp(LIRInstruction __op)
@@ -299,13 +299,13 @@ public final class StandardOp
     // Marker interface for a LIR operation that loads a {@link #getConstant()}.
     ///
     // @iface StandardOp.LoadConstantOp
-    public interface LoadConstantOp extends MoveOp
+    public interface LoadConstantOp extends StandardOp.MoveOp
     {
         Constant getConstant();
 
-        static LoadConstantOp asLoadConstantOp(LIRInstruction __op)
+        static StandardOp.LoadConstantOp asLoadConstantOp(LIRInstruction __op)
         {
-            return (LoadConstantOp) __op;
+            return (StandardOp.LoadConstantOp) __op;
         }
 
         static boolean isLoadConstantOp(LIRInstruction __op)
@@ -354,7 +354,7 @@ public final class StandardOp
     public static final class NoOp extends LIRInstruction
     {
         // @def
-        public static final LIRInstructionClass<NoOp> TYPE = LIRInstructionClass.create(NoOp.class);
+        public static final LIRInstructionClass<StandardOp.NoOp> TYPE = LIRInstructionClass.create(StandardOp.NoOp.class);
 
         ///
         // The block in which this instruction is located.
@@ -368,7 +368,7 @@ public final class StandardOp
         // @field
         final int ___index;
 
-        // @cons
+        // @cons StandardOp.NoOp
         public NoOp(AbstractBlockBase<?> __block, int __index)
         {
             super(TYPE);
@@ -398,18 +398,18 @@ public final class StandardOp
         }
     }
 
-    @Opcode
+    @LIROpcode
     // @class StandardOp.BlackholeOp
     public static final class BlackholeOp extends LIRInstruction
     {
         // @def
-        public static final LIRInstructionClass<BlackholeOp> TYPE = LIRInstructionClass.create(BlackholeOp.class);
+        public static final LIRInstructionClass<StandardOp.BlackholeOp> TYPE = LIRInstructionClass.create(StandardOp.BlackholeOp.class);
 
-        @Use({OperandFlag.REG, OperandFlag.STACK, OperandFlag.CONST})
+        @LIRInstruction.Use({LIRInstruction.OperandFlag.REG, LIRInstruction.OperandFlag.STACK, LIRInstruction.OperandFlag.CONST})
         // @field
         private Value ___value;
 
-        // @cons
+        // @cons StandardOp.BlackholeOp
         public BlackholeOp(Value __value)
         {
             super(TYPE);
@@ -427,13 +427,13 @@ public final class StandardOp
     public static final class BindToRegisterOp extends LIRInstruction
     {
         // @def
-        public static final LIRInstructionClass<BindToRegisterOp> TYPE = LIRInstructionClass.create(BindToRegisterOp.class);
+        public static final LIRInstructionClass<StandardOp.BindToRegisterOp> TYPE = LIRInstructionClass.create(StandardOp.BindToRegisterOp.class);
 
-        @Use({OperandFlag.REG})
+        @LIRInstruction.Use({LIRInstruction.OperandFlag.REG})
         // @field
         private Value ___value;
 
-        // @cons
+        // @cons StandardOp.BindToRegisterOp
         public BindToRegisterOp(Value __value)
         {
             super(TYPE);
@@ -447,14 +447,14 @@ public final class StandardOp
         }
     }
 
-    @Opcode
+    @LIROpcode
     // @class StandardOp.SpillRegistersOp
     public static final class SpillRegistersOp extends LIRInstruction
     {
         // @def
-        public static final LIRInstructionClass<SpillRegistersOp> TYPE = LIRInstructionClass.create(SpillRegistersOp.class);
+        public static final LIRInstructionClass<StandardOp.SpillRegistersOp> TYPE = LIRInstructionClass.create(StandardOp.SpillRegistersOp.class);
 
-        // @cons
+        // @cons StandardOp.SpillRegistersOp
         public SpillRegistersOp()
         {
             super(TYPE);
@@ -474,19 +474,19 @@ public final class StandardOp
     }
 
     // @class StandardOp.StackMove
-    public static final class StackMove extends LIRInstruction implements ValueMoveOp
+    public static final class StackMove extends LIRInstruction implements StandardOp.ValueMoveOp
     {
         // @def
-        public static final LIRInstructionClass<StackMove> TYPE = LIRInstructionClass.create(StackMove.class);
+        public static final LIRInstructionClass<StandardOp.StackMove> TYPE = LIRInstructionClass.create(StandardOp.StackMove.class);
 
-        @Def({OperandFlag.STACK, OperandFlag.HINT})
+        @LIRInstruction.Def({LIRInstruction.OperandFlag.STACK, LIRInstruction.OperandFlag.HINT})
         // @field
         protected AllocatableValue ___result;
-        @Use({OperandFlag.STACK})
+        @LIRInstruction.Use({LIRInstruction.OperandFlag.STACK})
         // @field
         protected AllocatableValue ___input;
 
-        // @cons
+        // @cons StandardOp.StackMove
         public StackMove(AllocatableValue __result, AllocatableValue __input)
         {
             super(TYPE);

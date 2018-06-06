@@ -15,7 +15,7 @@ public final class ResolvedJavaMethodBytecode implements Bytecode
     // @field
     private final ResolvedJavaMethod ___method;
 
-    // @cons
+    // @cons ResolvedJavaMethodBytecode
     public ResolvedJavaMethodBytecode(ResolvedJavaMethod __method)
     {
         super();

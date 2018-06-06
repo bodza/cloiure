@@ -1,6 +1,7 @@
 package giraaff.nodes.extended;
 
 import giraaff.core.common.type.Stamp;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.nodes.FixedWithNextNode;
 import giraaff.nodes.NodeView;
@@ -15,7 +16,7 @@ public class FixedValueAnchorNode extends FixedWithNextNode implements LIRLowera
     // @def
     public static final NodeClass<FixedValueAnchorNode> TYPE = NodeClass.create(FixedValueAnchorNode.class);
 
-    @Input
+    @Node.Input
     // @field
     ValueNode ___object;
     // @field
@@ -26,20 +27,20 @@ public class FixedValueAnchorNode extends FixedWithNextNode implements LIRLowera
         return this.___object;
     }
 
-    // @cons
+    // @cons FixedValueAnchorNode
     protected FixedValueAnchorNode(NodeClass<? extends FixedValueAnchorNode> __c, ValueNode __object)
     {
         super(__c, __object.stamp(NodeView.DEFAULT));
         this.___object = __object;
     }
 
-    // @cons
+    // @cons FixedValueAnchorNode
     public FixedValueAnchorNode(ValueNode __object)
     {
         this(TYPE, __object);
     }
 
-    // @cons
+    // @cons FixedValueAnchorNode
     public FixedValueAnchorNode(ValueNode __object, Stamp __predefinedStamp)
     {
         super(TYPE, __predefinedStamp);
@@ -60,7 +61,7 @@ public class FixedValueAnchorNode extends FixedWithNextNode implements LIRLowera
         }
     }
 
-    @NodeIntrinsic
+    @Node.NodeIntrinsic
     public static native Object getObject(Object __object);
 
     @Override

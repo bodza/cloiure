@@ -12,7 +12,7 @@ public abstract class PrimitiveStamp extends ArithmeticStamp
     // @field
     private final int ___bits;
 
-    // @cons
+    // @cons PrimitiveStamp
     protected PrimitiveStamp(int __bits, ArithmeticOpTable __ops)
     {
         super(__ops);

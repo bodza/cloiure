@@ -41,7 +41,7 @@ public final class LIRInsertionBuffer
     // @field
     private final List<LIRInstruction> ___ops;
 
-    // @cons
+    // @cons LIRInsertionBuffer
     public LIRInsertionBuffer()
     {
         super();

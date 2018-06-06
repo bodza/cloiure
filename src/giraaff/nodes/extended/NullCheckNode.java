@@ -1,24 +1,25 @@
 package giraaff.nodes.extended;
 
 import giraaff.core.common.type.StampFactory;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.nodes.DeoptimizingFixedWithNextNode;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
-// @NodeInfo.allowedUsageTypes "Guard"
+// @NodeInfo.allowedUsageTypes "InputType.Guard"
 // @class NullCheckNode
 public final class NullCheckNode extends DeoptimizingFixedWithNextNode implements LIRLowerable, GuardingNode
 {
     // @def
     public static final NodeClass<NullCheckNode> TYPE = NodeClass.create(NullCheckNode.class);
 
-    @Input
+    @Node.Input
     // @field
     ValueNode ___object;
 
-    // @cons
+    // @cons NullCheckNode
     public NullCheckNode(ValueNode __object)
     {
         super(TYPE, StampFactory.forVoid());
@@ -42,6 +43,6 @@ public final class NullCheckNode extends DeoptimizingFixedWithNextNode implement
         return true;
     }
 
-    @NodeIntrinsic
+    @Node.NodeIntrinsic
     public static native void nullCheck(Object __object);
 }

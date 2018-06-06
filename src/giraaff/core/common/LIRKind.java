@@ -65,7 +65,7 @@ public final class LIRKind extends ValueKind<LIRKind>
     // @def
     public static final LIRKind Illegal = unknownReference(ValueKind.Illegal.getPlatformKind());
 
-    // @cons
+    // @cons LIRKind
     private LIRKind(PlatformKind __platformKind, int __referenceMask, int __referenceCompressionMask, AllocatableValue __derivedReferenceBase)
     {
         super(__platformKind);

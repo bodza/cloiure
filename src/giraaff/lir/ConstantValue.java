@@ -14,7 +14,7 @@ public final class ConstantValue extends Value
     // @field
     private final Constant ___constant;
 
-    // @cons
+    // @cons ConstantValue
     public ConstantValue(ValueKind<?> __kind, Constant __constant)
     {
         super(__kind);

@@ -10,7 +10,7 @@ import giraaff.nodes.StructuredGraph;
 // @class BasePhase
 public abstract class BasePhase<C>
 {
-    // @cons
+    // @cons BasePhase
     protected BasePhase()
     {
         super();

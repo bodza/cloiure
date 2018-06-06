@@ -1,5 +1,6 @@
 package giraaff.nodes.debug;
 
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.nodes.NodeView;
 import giraaff.nodes.ValueNode;
@@ -13,11 +14,11 @@ public final class OpaqueNode extends FloatingNode implements LIRLowerable
     // @def
     public static final NodeClass<OpaqueNode> TYPE = NodeClass.create(OpaqueNode.class);
 
-    @Input
+    @Node.Input
     // @field
     protected ValueNode ___value;
 
-    // @cons
+    // @cons OpaqueNode
     public OpaqueNode(ValueNode __value)
     {
         super(TYPE, __value.stamp(NodeView.DEFAULT).unrestricted());

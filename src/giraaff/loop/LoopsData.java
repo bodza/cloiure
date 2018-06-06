@@ -26,7 +26,7 @@ public final class LoopsData
     // @field
     private final List<LoopEx> ___loops;
 
-    // @cons
+    // @cons LoopsData
     public LoopsData(final StructuredGraph __graph)
     {
         super();

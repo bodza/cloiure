@@ -21,7 +21,7 @@ public abstract class AbstractObjectStamp extends AbstractPointerStamp
     // @field
     private final boolean ___exactType;
 
-    // @cons
+    // @cons AbstractObjectStamp
     protected AbstractObjectStamp(ResolvedJavaType __type, boolean __exactType, boolean __nonNull, boolean __alwaysNull)
     {
         super(__nonNull, __alwaysNull);

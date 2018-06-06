@@ -9,7 +9,7 @@ import org.graalvm.collections.EconomicSet;
 
 import giraaff.core.common.calc.CanonicalCondition;
 import giraaff.graph.Node;
-import giraaff.nodes.CallTargetNode.InvokeKind;
+import giraaff.nodes.CallTargetNode;
 import giraaff.nodes.ConstantNode;
 import giraaff.nodes.FixedGuardNode;
 import giraaff.nodes.Invoke;
@@ -38,7 +38,7 @@ public final class TypeGuardInlineInfo extends AbstractInlineInfo
     // @field
     private Inlineable ___inlineableElement;
 
-    // @cons
+    // @cons TypeGuardInlineInfo
     public TypeGuardInlineInfo(Invoke __invoke, ResolvedJavaMethod __concrete, ResolvedJavaType __type)
     {
         super(__invoke);
@@ -93,7 +93,7 @@ public final class TypeGuardInlineInfo extends AbstractInlineInfo
     public void tryToDevirtualizeInvoke(Providers __providers)
     {
         createGuard(graph(), __providers);
-        InliningUtil.replaceInvokeCallTarget(this.___invoke, graph(), InvokeKind.Special, this.___concrete);
+        InliningUtil.replaceInvokeCallTarget(this.___invoke, graph(), CallTargetNode.InvokeKind.Special, this.___concrete);
     }
 
     private void createGuard(StructuredGraph __graph, Providers __providers)

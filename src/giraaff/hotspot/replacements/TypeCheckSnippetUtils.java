@@ -94,7 +94,7 @@ public final class TypeCheckSnippetUtils
         // @field
         public final boolean[] ___isPositive;
 
-        // @cons
+        // @cons TypeCheckSnippetUtils.Hints
         Hints(ConstantNode[] __hints, boolean[] __hintIsPositive)
         {
             super();
@@ -103,7 +103,7 @@ public final class TypeCheckSnippetUtils
         }
     }
 
-    static Hints createHints(TypeCheckHints __hints, MetaAccessProvider __metaAccess, boolean __positiveOnly, StructuredGraph __graph)
+    static TypeCheckSnippetUtils.Hints createHints(TypeCheckHints __hints, MetaAccessProvider __metaAccess, boolean __positiveOnly, StructuredGraph __graph)
     {
         ConstantNode[] __hubs = new ConstantNode[__hints.___hints.length];
         boolean[] __isPositive = new boolean[__hints.___hints.length];
@@ -122,7 +122,7 @@ public final class TypeCheckSnippetUtils
             __hubs = Arrays.copyOf(__hubs, __index);
             __isPositive = Arrays.copyOf(__isPositive, __index);
         }
-        return new Hints(__hubs, __isPositive);
+        return new TypeCheckSnippetUtils.Hints(__hubs, __isPositive);
     }
 
     static KlassPointer loadSecondarySupersElement(Word __metaspaceArray, int __index)

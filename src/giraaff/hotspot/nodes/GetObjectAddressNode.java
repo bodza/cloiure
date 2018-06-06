@@ -5,6 +5,7 @@ import jdk.vm.ci.meta.JavaKind;
 
 import giraaff.core.common.LIRKind;
 import giraaff.core.common.type.StampFactory;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.nodes.FixedWithNextNode;
 import giraaff.nodes.ValueNode;
@@ -23,18 +24,18 @@ public final class GetObjectAddressNode extends FixedWithNextNode implements LIR
     // @def
     public static final NodeClass<GetObjectAddressNode> TYPE = NodeClass.create(GetObjectAddressNode.class);
 
-    @Input
+    @Node.Input
     // @field
     ValueNode ___object;
 
-    // @cons
+    // @cons GetObjectAddressNode
     public GetObjectAddressNode(ValueNode __obj)
     {
         super(TYPE, StampFactory.forKind(JavaKind.Long));
         this.___object = __obj;
     }
 
-    @NodeIntrinsic
+    @Node.NodeIntrinsic
     public static native long get(Object __array);
 
     @Override

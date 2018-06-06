@@ -16,10 +16,10 @@ public abstract class BinaryOpLogicNode extends LogicNode implements LIRLowerabl
     // @def
     public static final NodeClass<BinaryOpLogicNode> TYPE = NodeClass.create(BinaryOpLogicNode.class);
 
-    @Input
+    @Node.Input
     // @field
     protected ValueNode ___x;
-    @Input
+    @Node.Input
     // @field
     protected ValueNode ___y;
 
@@ -35,7 +35,7 @@ public abstract class BinaryOpLogicNode extends LogicNode implements LIRLowerabl
         return this.___y;
     }
 
-    // @cons
+    // @cons BinaryOpLogicNode
     public BinaryOpLogicNode(NodeClass<? extends BinaryOpLogicNode> __c, ValueNode __x, ValueNode __y)
     {
         super(__c);

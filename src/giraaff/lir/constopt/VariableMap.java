@@ -17,7 +17,7 @@ final class VariableMap<T>
     // @field
     private final ArrayList<T> ___content;
 
-    // @cons
+    // @cons VariableMap
     VariableMap()
     {
         super();

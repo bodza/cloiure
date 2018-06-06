@@ -12,7 +12,7 @@ public final class StampPair
     // @field
     private final Stamp ___uncheckedStamp;
 
-    // @cons
+    // @cons StampPair
     private StampPair(Stamp __trustedStamp, Stamp __uncheckedStamp)
     {
         super();

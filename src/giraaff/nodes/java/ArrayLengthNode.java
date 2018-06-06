@@ -4,6 +4,7 @@ import jdk.vm.ci.meta.ConstantReflectionProvider;
 import jdk.vm.ci.meta.JavaConstant;
 
 import giraaff.core.common.type.StampFactory;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.graph.spi.Canonicalizable;
 import giraaff.graph.spi.CanonicalizerTool;
@@ -28,7 +29,7 @@ public final class ArrayLengthNode extends FixedWithNextNode implements Canonica
     // @def
     public static final NodeClass<ArrayLengthNode> TYPE = NodeClass.create(ArrayLengthNode.class);
 
-    @Input
+    @Node.Input
     // @field
     ValueNode ___array;
 
@@ -43,7 +44,7 @@ public final class ArrayLengthNode extends FixedWithNextNode implements Canonica
         return this.___array;
     }
 
-    // @cons
+    // @cons ArrayLengthNode
     public ArrayLengthNode(ValueNode __array)
     {
         super(TYPE, StampFactory.positiveInt());
@@ -147,7 +148,7 @@ public final class ArrayLengthNode extends FixedWithNextNode implements Canonica
         __tool.getLowerer().lower(this, __tool);
     }
 
-    @NodeIntrinsic
+    @Node.NodeIntrinsic
     public static native int arrayLength(Object __array);
 
     @Override

@@ -5,7 +5,7 @@ import jdk.vm.ci.code.Register;
 import jdk.vm.ci.code.TargetDescription;
 
 import giraaff.asm.Label;
-import giraaff.asm.amd64.AMD64Address.Scale;
+import giraaff.asm.amd64.AMD64Address;
 import giraaff.asm.amd64.AMD64AsmOptions;
 import giraaff.core.common.NumUtil;
 
@@ -15,7 +15,7 @@ import giraaff.core.common.NumUtil;
 // @class AMD64MacroAssembler
 public final class AMD64MacroAssembler extends AMD64Assembler
 {
-    // @cons
+    // @cons AMD64MacroAssembler
     public AMD64MacroAssembler(TargetDescription __target)
     {
         super(__target);
@@ -267,7 +267,7 @@ public final class AMD64MacroAssembler extends AMD64Assembler
     {
         if (NumUtil.isInt(__src))
         {
-            AMD64MIOp.MOV.emit(this, OperandSize.QWORD, __dst, (int) __src);
+            AMD64Assembler.AMD64MIOp.MOV.emit(this, AMD64Assembler.OperandSize.QWORD, __dst, (int) __src);
         }
         else
         {
@@ -277,13 +277,13 @@ public final class AMD64MacroAssembler extends AMD64Assembler
         }
     }
 
-    public final void setl(ConditionFlag __cc, Register __dst)
+    public final void setl(AMD64Assembler.ConditionFlag __cc, Register __dst)
     {
         setb(__cc, __dst);
         movzbl(__dst, __dst);
     }
 
-    public final void setq(ConditionFlag __cc, Register __dst)
+    public final void setq(AMD64Assembler.ConditionFlag __cc, Register __dst)
     {
         setb(__cc, __dst);
         movzbq(__dst, __dst);

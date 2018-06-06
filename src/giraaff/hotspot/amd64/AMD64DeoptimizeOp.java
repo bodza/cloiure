@@ -4,15 +4,15 @@ import giraaff.asm.amd64.AMD64MacroAssembler;
 import giraaff.hotspot.HotSpotHostBackend;
 import giraaff.lir.LIRFrameState;
 import giraaff.lir.LIRInstructionClass;
-import giraaff.lir.Opcode;
-import giraaff.lir.StandardOp.BlockEndOp;
+import giraaff.lir.LIROpcode;
+import giraaff.lir.StandardOp;
 import giraaff.lir.amd64.AMD64BlockEndOp;
 import giraaff.lir.amd64.AMD64Call;
 import giraaff.lir.asm.CompilationResultBuilder;
 
-@Opcode
+@LIROpcode
 // @class AMD64DeoptimizeOp
-final class AMD64DeoptimizeOp extends AMD64BlockEndOp implements BlockEndOp
+final class AMD64DeoptimizeOp extends AMD64BlockEndOp implements StandardOp.BlockEndOp
 {
     // @def
     public static final LIRInstructionClass<AMD64DeoptimizeOp> TYPE = LIRInstructionClass.create(AMD64DeoptimizeOp.class);
@@ -21,7 +21,7 @@ final class AMD64DeoptimizeOp extends AMD64BlockEndOp implements BlockEndOp
     // @field
     private LIRFrameState ___state;
 
-    // @cons
+    // @cons AMD64DeoptimizeOp
     AMD64DeoptimizeOp(LIRFrameState __state)
     {
         super(TYPE);

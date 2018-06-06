@@ -47,13 +47,13 @@ public final class ConstantNode extends FloatingNode implements LIRLowerable
     //
     // @param value the constant
     ///
-    // @cons
+    // @cons ConstantNode
     public ConstantNode(Constant __value, Stamp __stamp)
     {
         this(__value, __stamp, 0, false);
     }
 
-    // @cons
+    // @cons ConstantNode
     private ConstantNode(Constant __value, Stamp __stamp, int __stableDimension, boolean __isDefaultStable)
     {
         super(TYPE, __stamp);

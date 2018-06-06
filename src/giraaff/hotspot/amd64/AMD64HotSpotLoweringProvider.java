@@ -12,7 +12,7 @@ import giraaff.hotspot.meta.HotSpotRegistersProvider;
 // @class AMD64HotSpotLoweringProvider
 public final class AMD64HotSpotLoweringProvider extends DefaultHotSpotLoweringProvider
 {
-    // @cons
+    // @cons AMD64HotSpotLoweringProvider
     public AMD64HotSpotLoweringProvider(HotSpotGraalRuntime __runtime, MetaAccessProvider __metaAccess, ForeignCallsProvider __foreignCalls, HotSpotRegistersProvider __registers, HotSpotConstantReflectionProvider __constantReflection, TargetDescription __target)
     {
         super(__runtime, __metaAccess, __foreignCalls, __registers, __constantReflection, __target);

@@ -3,15 +3,15 @@ package giraaff.lir.amd64;
 import jdk.vm.ci.amd64.AMD64;
 import jdk.vm.ci.meta.AllocatableValue;
 
-import giraaff.asm.amd64.AMD64Assembler.OperandSize;
+import giraaff.asm.amd64.AMD64Assembler;
 import giraaff.asm.amd64.AMD64MacroAssembler;
 import giraaff.core.common.LIRKind;
-import giraaff.lir.LIRInstruction.OperandFlag;
+import giraaff.lir.LIRInstruction;
 import giraaff.lir.LIRInstructionClass;
-import giraaff.lir.Opcode;
+import giraaff.lir.LIROpcode;
 import giraaff.lir.asm.CompilationResultBuilder;
 
-@Opcode
+@LIROpcode
 // @class AMD64SignExtendOp
 public final class AMD64SignExtendOp extends AMD64LIRInstruction
 {
@@ -19,21 +19,21 @@ public final class AMD64SignExtendOp extends AMD64LIRInstruction
     public static final LIRInstructionClass<AMD64SignExtendOp> TYPE = LIRInstructionClass.create(AMD64SignExtendOp.class);
 
     // @field
-    private final OperandSize ___size;
+    private final AMD64Assembler.OperandSize ___size;
 
-    @Def({OperandFlag.REG})
+    @LIRInstruction.Def({LIRInstruction.OperandFlag.REG})
     // @field
     protected AllocatableValue ___highResult;
-    @Def({OperandFlag.REG})
+    @LIRInstruction.Def({LIRInstruction.OperandFlag.REG})
     // @field
     protected AllocatableValue ___lowResult;
 
-    @Use({OperandFlag.REG})
+    @LIRInstruction.Use({LIRInstruction.OperandFlag.REG})
     // @field
     protected AllocatableValue ___input;
 
-    // @cons
-    public AMD64SignExtendOp(OperandSize __size, LIRKind __resultKind, AllocatableValue __input)
+    // @cons AMD64SignExtendOp
+    public AMD64SignExtendOp(AMD64Assembler.OperandSize __size, LIRKind __resultKind, AllocatableValue __input)
     {
         super(TYPE);
         this.___size = __size;
@@ -56,7 +56,7 @@ public final class AMD64SignExtendOp extends AMD64LIRInstruction
     @Override
     public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
     {
-        if (this.___size == OperandSize.DWORD)
+        if (this.___size == AMD64Assembler.OperandSize.DWORD)
         {
             __masm.cdql();
         }

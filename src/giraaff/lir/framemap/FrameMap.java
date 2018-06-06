@@ -83,7 +83,7 @@ public abstract class FrameMap
     // Creates a new frame map for the specified method. The given registerConfig is optional, in
     // case null is passed the default RegisterConfig from the CodeCacheProvider will be used.
     ///
-    // @cons
+    // @cons FrameMap
     public FrameMap(CodeCacheProvider __codeCache, RegisterConfig __registerConfig)
     {
         super();

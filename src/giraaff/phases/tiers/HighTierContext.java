@@ -13,7 +13,7 @@ public final class HighTierContext extends PhaseContext
     // @field
     private final OptimisticOptimizations ___optimisticOpts;
 
-    // @cons
+    // @cons HighTierContext
     public HighTierContext(Providers __providers, PhaseSuite<HighTierContext> __graphBuilderSuite, OptimisticOptimizations __optimisticOpts)
     {
         super(__providers);

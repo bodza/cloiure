@@ -12,7 +12,7 @@ public final class PredicatedProxyNodeIterator<T extends Node> extends NodeItera
     // @field
     private final NodePredicate ___predicate;
 
-    // @cons
+    // @cons PredicatedProxyNodeIterator
     public PredicatedProxyNodeIterator(Iterator<T> __iterator, NodePredicate __predicate)
     {
         super();

@@ -16,18 +16,16 @@ import giraaff.nodes.LoopBeginNode;
 import giraaff.nodes.LoopExitNode;
 import giraaff.nodes.StateSplit;
 import giraaff.nodes.StructuredGraph;
-import giraaff.nodes.StructuredGraph.GuardsStage;
 import giraaff.nodes.util.GraphUtil;
 import giraaff.phases.Phase;
 import giraaff.phases.graph.ReentrantNodeIterator;
-import giraaff.phases.graph.ReentrantNodeIterator.NodeIteratorClosure;
 import giraaff.util.GraalError;
 
 ///
 // This phase transfers {@link FrameState} nodes from {@link StateSplit} nodes to
 // {@link DeoptimizingNode DeoptimizingNodes}.
 //
-// This allow to enter the {@link GuardsStage#AFTER_FSA AFTER_FSA} stage of the graph where no new
+// This allow to enter the {@link StructuredGraph.GuardsStage#AFTER_FSA AFTER_FSA} stage of the graph where no new
 // node that may cause deoptimization can be introduced anymore.
 //
 // This Phase processes the graph in post order, assigning the {@link FrameState} from the last
@@ -37,7 +35,7 @@ import giraaff.util.GraalError;
 public final class FrameStateAssignmentPhase extends Phase
 {
     // @class FrameStateAssignmentPhase.FrameStateAssignmentClosure
-    private static final class FrameStateAssignmentClosure extends NodeIteratorClosure<FrameState>
+    private static final class FrameStateAssignmentClosure extends ReentrantNodeIterator.NodeIteratorClosure<FrameState>
     {
         @Override
         protected FrameState processNode(FixedNode __node, FrameState __previousState)
@@ -119,8 +117,8 @@ public final class FrameStateAssignmentPhase extends Phase
     {
         if (__graph.getGuardsStage().areFrameStatesAtSideEffects())
         {
-            ReentrantNodeIterator.apply(new FrameStateAssignmentClosure(), __graph.start(), null);
-            __graph.setGuardsStage(GuardsStage.AFTER_FSA);
+            ReentrantNodeIterator.apply(new FrameStateAssignmentPhase.FrameStateAssignmentClosure(), __graph.start(), null);
+            __graph.setGuardsStage(StructuredGraph.GuardsStage.AFTER_FSA);
             __graph.getNodes(FrameState.TYPE).filter(__state -> __state.hasNoUsages()).forEach(GraphUtil::killWithUnusedFloatingInputs);
         }
     }

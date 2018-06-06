@@ -51,7 +51,7 @@ public final class MethodInvocation
     // @field
     private final int ___sizeFreshArgs;
 
-    // @cons
+    // @cons MethodInvocation
     public MethodInvocation(InlineInfo __info, double __probability, double __relevance, BitSet __freshlyInstantiatedArguments)
     {
         super();

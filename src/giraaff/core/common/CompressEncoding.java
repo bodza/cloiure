@@ -11,7 +11,7 @@ public final class CompressEncoding
     // @field
     private final int ___shift;
 
-    // @cons
+    // @cons CompressEncoding
     public CompressEncoding(long __base, int __shift)
     {
         super();

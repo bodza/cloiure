@@ -18,8 +18,8 @@ public abstract class LoweredCallTargetNode extends CallTargetNode
     // @field
     protected final CallingConvention.Type ___callType;
 
-    // @cons
-    protected LoweredCallTargetNode(NodeClass<? extends LoweredCallTargetNode> __c, ValueNode[] __arguments, StampPair __returnStamp, JavaType[] __signature, ResolvedJavaMethod __target, CallingConvention.Type __callType, InvokeKind __invokeKind)
+    // @cons LoweredCallTargetNode
+    protected LoweredCallTargetNode(NodeClass<? extends LoweredCallTargetNode> __c, ValueNode[] __arguments, StampPair __returnStamp, JavaType[] __signature, ResolvedJavaMethod __target, CallingConvention.Type __callType, CallTargetNode.InvokeKind __invokeKind)
     {
         super(__c, __arguments, __target, __invokeKind, __returnStamp);
         this.___signature = __signature;

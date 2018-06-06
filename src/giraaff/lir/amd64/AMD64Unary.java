@@ -5,16 +5,13 @@ import jdk.vm.ci.meta.AllocatableValue;
 import jdk.vm.ci.meta.Value;
 
 import giraaff.asm.amd64.AMD64Address;
-import giraaff.asm.amd64.AMD64Assembler.AMD64MOp;
-import giraaff.asm.amd64.AMD64Assembler.AMD64MROp;
-import giraaff.asm.amd64.AMD64Assembler.AMD64RMOp;
-import giraaff.asm.amd64.AMD64Assembler.OperandSize;
+import giraaff.asm.amd64.AMD64Assembler;
 import giraaff.asm.amd64.AMD64MacroAssembler;
 import giraaff.lir.LIRFrameState;
-import giraaff.lir.LIRInstruction.OperandFlag;
+import giraaff.lir.LIRInstruction;
 import giraaff.lir.LIRInstructionClass;
-import giraaff.lir.Opcode;
-import giraaff.lir.StandardOp.ImplicitNullCheck;
+import giraaff.lir.LIROpcode;
+import giraaff.lir.StandardOp;
 import giraaff.lir.asm.CompilationResultBuilder;
 
 ///
@@ -30,23 +27,23 @@ public final class AMD64Unary
     public static final class MOp extends AMD64LIRInstruction
     {
         // @def
-        public static final LIRInstructionClass<MOp> TYPE = LIRInstructionClass.create(MOp.class);
+        public static final LIRInstructionClass<AMD64Unary.MOp> TYPE = LIRInstructionClass.create(AMD64Unary.MOp.class);
 
-        @Opcode
+        @LIROpcode
         // @field
-        private final AMD64MOp ___opcode;
+        private final AMD64Assembler.AMD64MOp ___opcode;
         // @field
-        private final OperandSize ___size;
+        private final AMD64Assembler.OperandSize ___size;
 
-        @Def({OperandFlag.REG, OperandFlag.HINT})
+        @LIRInstruction.Def({LIRInstruction.OperandFlag.REG, LIRInstruction.OperandFlag.HINT})
         // @field
         protected AllocatableValue ___result;
-        @Use({OperandFlag.REG, OperandFlag.STACK})
+        @LIRInstruction.Use({LIRInstruction.OperandFlag.REG, LIRInstruction.OperandFlag.STACK})
         // @field
         protected AllocatableValue ___value;
 
-        // @cons
-        public MOp(AMD64MOp __opcode, OperandSize __size, AllocatableValue __result, AllocatableValue __value)
+        // @cons AMD64Unary.MOp
+        public MOp(AMD64Assembler.AMD64MOp __opcode, AMD64Assembler.OperandSize __size, AllocatableValue __result, AllocatableValue __value)
         {
             super(TYPE);
             this.___opcode = __opcode;
@@ -71,23 +68,23 @@ public final class AMD64Unary
     public static final class RMOp extends AMD64LIRInstruction
     {
         // @def
-        public static final LIRInstructionClass<RMOp> TYPE = LIRInstructionClass.create(RMOp.class);
+        public static final LIRInstructionClass<AMD64Unary.RMOp> TYPE = LIRInstructionClass.create(AMD64Unary.RMOp.class);
 
-        @Opcode
+        @LIROpcode
         // @field
-        private final AMD64RMOp ___opcode;
+        private final AMD64Assembler.AMD64RMOp ___opcode;
         // @field
-        private final OperandSize ___size;
+        private final AMD64Assembler.OperandSize ___size;
 
-        @Def({OperandFlag.REG})
+        @LIRInstruction.Def({LIRInstruction.OperandFlag.REG})
         // @field
         protected AllocatableValue ___result;
-        @Use({OperandFlag.REG, OperandFlag.STACK})
+        @LIRInstruction.Use({LIRInstruction.OperandFlag.REG, LIRInstruction.OperandFlag.STACK})
         // @field
         protected AllocatableValue ___value;
 
-        // @cons
-        public RMOp(AMD64RMOp __opcode, OperandSize __size, AllocatableValue __result, AllocatableValue __value)
+        // @cons AMD64Unary.RMOp
+        public RMOp(AMD64Assembler.AMD64RMOp __opcode, AMD64Assembler.OperandSize __size, AllocatableValue __result, AllocatableValue __value)
         {
             super(TYPE);
             this.___opcode = __opcode;
@@ -118,23 +115,23 @@ public final class AMD64Unary
     public static final class MROp extends AMD64LIRInstruction
     {
         // @def
-        public static final LIRInstructionClass<MROp> TYPE = LIRInstructionClass.create(MROp.class);
+        public static final LIRInstructionClass<AMD64Unary.MROp> TYPE = LIRInstructionClass.create(AMD64Unary.MROp.class);
 
-        @Opcode
+        @LIROpcode
         // @field
-        private final AMD64MROp ___opcode;
+        private final AMD64Assembler.AMD64MROp ___opcode;
         // @field
-        private final OperandSize ___size;
+        private final AMD64Assembler.OperandSize ___size;
 
-        @Def({OperandFlag.REG, OperandFlag.STACK})
+        @LIRInstruction.Def({LIRInstruction.OperandFlag.REG, LIRInstruction.OperandFlag.STACK})
         // @field
         protected AllocatableValue ___result;
-        @Use({OperandFlag.REG})
+        @LIRInstruction.Use({LIRInstruction.OperandFlag.REG})
         // @field
         protected AllocatableValue ___value;
 
-        // @cons
-        public MROp(AMD64MROp __opcode, OperandSize __size, AllocatableValue __result, AllocatableValue __value)
+        // @cons AMD64Unary.MROp
+        public MROp(AMD64Assembler.AMD64MROp __opcode, AMD64Assembler.OperandSize __size, AllocatableValue __result, AllocatableValue __value)
         {
             super(TYPE);
             this.___opcode = __opcode;
@@ -162,21 +159,21 @@ public final class AMD64Unary
     // Instruction with a {@link AMD64AddressValue memory} operand.
     ///
     // @class AMD64Unary.MemoryOp
-    public static final class MemoryOp extends AMD64LIRInstruction implements ImplicitNullCheck
+    public static final class MemoryOp extends AMD64LIRInstruction implements StandardOp.ImplicitNullCheck
     {
         // @def
-        public static final LIRInstructionClass<MemoryOp> TYPE = LIRInstructionClass.create(MemoryOp.class);
+        public static final LIRInstructionClass<AMD64Unary.MemoryOp> TYPE = LIRInstructionClass.create(AMD64Unary.MemoryOp.class);
 
-        @Opcode
+        @LIROpcode
         // @field
-        private final AMD64RMOp ___opcode;
+        private final AMD64Assembler.AMD64RMOp ___opcode;
         // @field
-        private final OperandSize ___size;
+        private final AMD64Assembler.OperandSize ___size;
 
-        @Def({OperandFlag.REG})
+        @LIRInstruction.Def({LIRInstruction.OperandFlag.REG})
         // @field
         protected AllocatableValue ___result;
-        @Use({OperandFlag.COMPOSITE})
+        @LIRInstruction.Use({LIRInstruction.OperandFlag.COMPOSITE})
         // @field
         protected AMD64AddressValue ___input;
 
@@ -184,8 +181,8 @@ public final class AMD64Unary
         // @field
         protected LIRFrameState ___state;
 
-        // @cons
-        public MemoryOp(AMD64RMOp __opcode, OperandSize __size, AllocatableValue __result, AMD64AddressValue __input, LIRFrameState __state)
+        // @cons AMD64Unary.MemoryOp
+        public MemoryOp(AMD64Assembler.AMD64RMOp __opcode, AMD64Assembler.OperandSize __size, AllocatableValue __result, AMD64AddressValue __input, LIRFrameState __state)
         {
             super(TYPE);
             this.___opcode = __opcode;

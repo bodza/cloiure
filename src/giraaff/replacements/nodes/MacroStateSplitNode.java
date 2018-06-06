@@ -5,9 +5,10 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
 import org.graalvm.word.LocationIdentity;
 
 import giraaff.core.common.type.StampPair;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.nodeinfo.InputType;
-import giraaff.nodes.CallTargetNode.InvokeKind;
+import giraaff.nodes.CallTargetNode;
 import giraaff.nodes.FrameState;
 import giraaff.nodes.Invoke;
 import giraaff.nodes.InvokeNode;
@@ -28,12 +29,12 @@ public abstract class MacroStateSplitNode extends MacroNode implements StateSpli
     // @def
     public static final NodeClass<MacroStateSplitNode> TYPE = NodeClass.create(MacroStateSplitNode.class);
 
-    @OptionalInput(InputType.State)
+    @Node.OptionalInput(InputType.StateI)
     // @field
     protected FrameState ___stateAfter;
 
-    // @cons
-    protected MacroStateSplitNode(NodeClass<? extends MacroNode> __c, InvokeKind __invokeKind, ResolvedJavaMethod __targetMethod, int __bci, StampPair __returnStamp, ValueNode... __arguments)
+    // @cons MacroStateSplitNode
+    protected MacroStateSplitNode(NodeClass<? extends MacroNode> __c, CallTargetNode.InvokeKind __invokeKind, ResolvedJavaMethod __targetMethod, int __bci, StampPair __returnStamp, ValueNode... __arguments)
     {
         super(__c, __invokeKind, __targetMethod, __bci, __returnStamp, __arguments);
     }

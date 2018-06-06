@@ -22,13 +22,13 @@ public final class DynamicPiNode extends PiNode
     // @def
     public static final NodeClass<DynamicPiNode> TYPE = NodeClass.create(DynamicPiNode.class);
 
-    @Input
+    @Node.Input
     // @field
     ValueNode ___typeMirror;
     // @field
     private final boolean ___exact;
 
-    // @cons
+    // @cons DynamicPiNode
     protected DynamicPiNode(ValueNode __object, GuardingNode __guard, ValueNode __typeMirror, boolean __exact)
     {
         super(TYPE, __object, StampFactory.object(), __guard);

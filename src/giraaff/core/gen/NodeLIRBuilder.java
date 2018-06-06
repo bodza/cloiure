@@ -27,14 +27,12 @@ import giraaff.graph.iterators.NodeIterable;
 import giraaff.lir.LIRFrameState;
 import giraaff.lir.LIRInstruction;
 import giraaff.lir.LabelRef;
-import giraaff.lir.StandardOp.JumpOp;
-import giraaff.lir.StandardOp.LabelOp;
+import giraaff.lir.StandardOp;
 import giraaff.lir.SwitchStrategy;
 import giraaff.lir.Variable;
 import giraaff.lir.framemap.FrameMapBuilder;
 import giraaff.lir.gen.LIRGenerator;
 import giraaff.lir.gen.LIRGeneratorTool;
-import giraaff.lir.gen.LIRGeneratorTool.BlockScope;
 import giraaff.nodes.AbstractBeginNode;
 import giraaff.nodes.AbstractEndNode;
 import giraaff.nodes.AbstractMergeNode;
@@ -86,7 +84,7 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
     // @field
     private ValueNode ___currentInstruction;
 
-    // @cons
+    // @cons NodeLIRBuilder
     public NodeLIRBuilder(StructuredGraph __graph, LIRGeneratorTool __gen)
     {
         super();
@@ -251,7 +249,7 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
     @SuppressWarnings("try")
     public void doBlock(Block __block, StructuredGraph __graph, BlockMap<List<Node>> __blockMap)
     {
-        try (BlockScope __blockScope = this.___gen.getBlockScope(__block))
+        try (LIRGeneratorTool.BlockScope __blockScope = this.___gen.getBlockScope(__block))
         {
             if (__block == this.___gen.getResult().getLIR().getControlFlowGraph().getStartBlock())
             {
@@ -264,7 +262,7 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
                 if (__begin instanceof AbstractMergeNode)
                 {
                     AbstractMergeNode __merge = (AbstractMergeNode) __begin;
-                    LabelOp __label = (LabelOp) this.___gen.getResult().getLIR().getLIRforBlock(__block).get(0);
+                    StandardOp.LabelOp __label = (StandardOp.LabelOp) this.___gen.getResult().getLIR().getLIRforBlock(__block).get(0);
                     __label.setPhiValues(createPhiIn(__merge));
                 }
             }
@@ -309,9 +307,9 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
                 NodeIterable<Node> __successors = __block.getEndNode().successors();
                 if (__block.getSuccessorCount() != 1)
                 {
-                    // If we have more than one successor, we cannot just use the first one. Since
-                    // successors are unordered, this would be a random choice.
-                    throw new GraalError("Block without BlockEndOp: " + __block.getEndNode());
+                    // If we have more than one successor, we cannot just use the first one.
+                    // Since successors are unordered, this would be a random choice.
+                    throw new GraalError("Block without StandardOp.BlockEndOp: " + __block.getEndNode());
                 }
                 this.___gen.emitJump(getLIRBlock((FixedNode) __successors.first()));
             }
@@ -374,7 +372,7 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
     public void visitEndNode(AbstractEndNode __end)
     {
         AbstractMergeNode __merge = __end.merge();
-        JumpOp __jump = newJumpOp(getLIRBlock(__merge));
+        StandardOp.JumpOp __jump = newJumpOp(getLIRBlock(__merge));
         __jump.setPhiValues(createPhiOut(__merge, __end));
         append(__jump);
     }
@@ -387,9 +385,9 @@ public abstract class NodeLIRBuilder implements NodeLIRBuilderTool
     {
     }
 
-    protected JumpOp newJumpOp(LabelRef __ref)
+    protected StandardOp.JumpOp newJumpOp(LabelRef __ref)
     {
-        return new JumpOp(__ref);
+        return new StandardOp.JumpOp(__ref);
     }
 
     protected LIRKind getPhiKind(PhiNode __phi)

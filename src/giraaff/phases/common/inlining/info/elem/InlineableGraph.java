@@ -13,11 +13,9 @@ import giraaff.nodes.Invoke;
 import giraaff.nodes.NodeView;
 import giraaff.nodes.ParameterNode;
 import giraaff.nodes.StructuredGraph;
-import giraaff.nodes.StructuredGraph.AllowAssumptions;
 import giraaff.nodes.ValueNode;
 import giraaff.phases.common.CanonicalizerPhase;
 import giraaff.phases.common.DeadCodeEliminationPhase;
-import giraaff.phases.common.DeadCodeEliminationPhase.Optionality;
 import giraaff.phases.common.inlining.InliningUtil;
 import giraaff.phases.graph.FixedNodeProbabilityCache;
 import giraaff.phases.tiers.HighTierContext;
@@ -41,7 +39,7 @@ public final class InlineableGraph implements Inlineable
     // @field
     private FixedNodeProbabilityCache ___probabilites = new FixedNodeProbabilityCache();
 
-    // @cons
+    // @cons InlineableGraph
     public InlineableGraph(final ResolvedJavaMethod __method, final Invoke __invoke, final HighTierContext __context, CanonicalizerPhase __canonicalizer)
     {
         super();
@@ -167,7 +165,7 @@ public final class InlineableGraph implements Inlineable
     ///
     private static StructuredGraph parseBytecodes(ResolvedJavaMethod __method, HighTierContext __context, CanonicalizerPhase __canonicalizer, StructuredGraph __caller)
     {
-        StructuredGraph __newGraph = new StructuredGraph.Builder(AllowAssumptions.ifNonNull(__caller.getAssumptions())).method(__method).build();
+        StructuredGraph __newGraph = new StructuredGraph.GraphBuilder(StructuredGraph.AllowAssumptions.ifNonNull(__caller.getAssumptions())).method(__method).build();
         if (!__caller.isUnsafeAccessTrackingEnabled())
         {
             __newGraph.disableUnsafeAccessTracking();
@@ -177,7 +175,7 @@ public final class InlineableGraph implements Inlineable
             __context.getGraphBuilderSuite().apply(__newGraph, __context);
         }
 
-        new DeadCodeEliminationPhase(Optionality.Optional).apply(__newGraph);
+        new DeadCodeEliminationPhase(DeadCodeEliminationPhase.Optionality.Optional).apply(__newGraph);
 
         __canonicalizer.apply(__newGraph, __context);
 

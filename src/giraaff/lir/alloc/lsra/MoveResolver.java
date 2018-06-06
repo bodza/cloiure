@@ -89,7 +89,7 @@ public class MoveResolver
         return this.___allocator;
     }
 
-    // @cons
+    // @cons MoveResolver
     protected MoveResolver(LinearScan __allocator)
     {
         super();

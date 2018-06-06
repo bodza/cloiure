@@ -6,7 +6,7 @@ package giraaff.core.common.util;
 // @class TypeConversion
 public final class TypeConversion
 {
-    // @cons
+    // @cons TypeConversion
     private TypeConversion()
     {
         super();

@@ -14,7 +14,7 @@ import org.graalvm.collections.EconomicSet;
 import giraaff.asm.Assembler;
 import giraaff.asm.Label;
 import giraaff.asm.amd64.AMD64Address;
-import giraaff.asm.amd64.AMD64Assembler.ConditionFlag;
+import giraaff.asm.amd64.AMD64Assembler;
 import giraaff.asm.amd64.AMD64MacroAssembler;
 import giraaff.code.CompilationResult;
 import giraaff.core.common.GraalOptions;
@@ -49,7 +49,7 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // @class AMD64HotSpotBackend
 public final class AMD64HotSpotBackend extends HotSpotHostBackend
 {
-    // @cons
+    // @cons AMD64HotSpotBackend
     public AMD64HotSpotBackend(HotSpotGraalRuntime __runtime, HotSpotProviders __providers)
     {
         super(__runtime, __providers);
@@ -115,7 +115,7 @@ public final class AMD64HotSpotBackend extends HotSpotHostBackend
         // @field
         final boolean ___omitFrame;
 
-        // @cons
+        // @cons AMD64HotSpotBackend.HotSpotFrameContext
         HotSpotFrameContext(boolean __isStub, boolean __omitFrame)
         {
             super();
@@ -202,7 +202,7 @@ public final class AMD64HotSpotBackend extends HotSpotHostBackend
 
         Stub __stub = __gen.getStub();
         Assembler __masm = createAssembler(__frameMap);
-        HotSpotFrameContext __frameContext = new HotSpotFrameContext(__stub != null, __omitFrame);
+        AMD64HotSpotBackend.HotSpotFrameContext __frameContext = new AMD64HotSpotBackend.HotSpotFrameContext(__stub != null, __omitFrame);
         DataBuilder __dataBuilder = new HotSpotDataBuilder(getCodeCache().getTarget());
         CompilationResultBuilder __crb = __factory.createBuilder(getCodeCache(), getForeignCalls(), __frameMap, __masm, __dataBuilder, __frameContext, __compilationResult);
         __crb.setTotalFrameSize(__frameMap.totalFrameSize());
@@ -265,7 +265,7 @@ public final class AMD64HotSpotBackend extends HotSpotHostBackend
             {
                 __asm.cmpq(__inlineCacheKlass, __src);
             }
-            AMD64Call.directConditionalJmp(__crb, __asm, getForeignCalls().lookupForeignCall(IC_MISS_HANDLER), ConditionFlag.NotEqual);
+            AMD64Call.directConditionalJmp(__crb, __asm, getForeignCalls().lookupForeignCall(IC_MISS_HANDLER), AMD64Assembler.ConditionFlag.NotEqual);
         }
 
         __asm.align(HotSpotRuntime.codeEntryAlignment);
@@ -290,7 +290,7 @@ public final class AMD64HotSpotBackend extends HotSpotHostBackend
     public void emitCodeSuffix(ResolvedJavaMethod __installedCodeOwner, CompilationResultBuilder __crb, AMD64MacroAssembler __asm, FrameMap __frameMap)
     {
         HotSpotProviders __providers = getProviders();
-        HotSpotFrameContext __frameContext = (HotSpotFrameContext) __crb.___frameContext;
+        AMD64HotSpotBackend.HotSpotFrameContext __frameContext = (AMD64HotSpotBackend.HotSpotFrameContext) __crb.___frameContext;
         if (!__frameContext.___isStub)
         {
             HotSpotForeignCallsProvider __foreignCalls = __providers.getForeignCalls();

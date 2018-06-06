@@ -21,7 +21,7 @@ public final class StateSplitProxyNode extends FixedValueAnchorNode implements C
     // @def
     public static final NodeClass<StateSplitProxyNode> TYPE = NodeClass.create(StateSplitProxyNode.class);
 
-    @OptionalInput(InputType.State)
+    @Node.OptionalInput(InputType.StateI)
     // @field
     FrameState ___stateAfter;
     ///
@@ -30,13 +30,13 @@ public final class StateSplitProxyNode extends FixedValueAnchorNode implements C
     // @field
     private final boolean ___delayElimination;
 
-    // @cons
+    // @cons StateSplitProxyNode
     public StateSplitProxyNode(ValueNode __object)
     {
         this(__object, false);
     }
 
-    // @cons
+    // @cons StateSplitProxyNode
     public StateSplitProxyNode(ValueNode __object, boolean __delayElimination)
     {
         super(TYPE, __object);

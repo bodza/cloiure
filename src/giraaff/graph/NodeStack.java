@@ -11,13 +11,13 @@ public final class NodeStack
     // @field
     public int ___tos;
 
-    // @cons
+    // @cons NodeStack
     public NodeStack()
     {
         this(DEFAULT_INITIAL_SIZE);
     }
 
-    // @cons
+    // @cons NodeStack
     public NodeStack(int __initialSize)
     {
         super();

@@ -3,6 +3,7 @@ package giraaff.nodes.java;
 import jdk.vm.ci.meta.JavaKind;
 
 import giraaff.core.common.type.Stamp;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.spi.Lowerable;
@@ -18,7 +19,7 @@ public abstract class AccessIndexedNode extends AccessArrayNode implements Lower
     // @def
     public static final NodeClass<AccessIndexedNode> TYPE = NodeClass.create(AccessIndexedNode.class);
 
-    @Input
+    @Node.Input
     // @field
     protected ValueNode ___index;
     // @field
@@ -37,7 +38,7 @@ public abstract class AccessIndexedNode extends AccessArrayNode implements Lower
     // @param index the instruction producing the index
     // @param elementKind the kind of the elements of the array
     ///
-    // @cons
+    // @cons AccessIndexedNode
     protected AccessIndexedNode(NodeClass<? extends AccessIndexedNode> __c, Stamp __stamp, ValueNode __array, ValueNode __index, JavaKind __elementKind)
     {
         super(__c, __stamp, __array);

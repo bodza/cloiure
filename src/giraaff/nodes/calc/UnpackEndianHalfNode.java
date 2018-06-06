@@ -26,7 +26,7 @@ public final class UnpackEndianHalfNode extends UnaryNode implements Lowerable
     // @field
     private final boolean ___firstHalf;
 
-    // @cons
+    // @cons UnpackEndianHalfNode
     protected UnpackEndianHalfNode(ValueNode __value, boolean __firstHalf)
     {
         super(TYPE, StampFactory.forKind(JavaKind.Int), __value);

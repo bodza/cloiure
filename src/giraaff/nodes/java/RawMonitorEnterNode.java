@@ -3,6 +3,7 @@ package giraaff.nodes.java;
 import org.graalvm.word.LocationIdentity;
 
 import giraaff.graph.IterableNodeType;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.extended.MonitorEnter;
@@ -23,11 +24,11 @@ public final class RawMonitorEnterNode extends AccessMonitorNode implements Virt
     // @def
     public static final NodeClass<RawMonitorEnterNode> TYPE = NodeClass.create(RawMonitorEnterNode.class);
 
-    @Input
+    @Node.Input
     // @field
     ValueNode ___hub;
 
-    // @cons
+    // @cons RawMonitorEnterNode
     public RawMonitorEnterNode(ValueNode __object, ValueNode __hub, MonitorIdNode __monitorId)
     {
         super(TYPE, __object, __monitorId);

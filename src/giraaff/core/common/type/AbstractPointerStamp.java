@@ -15,7 +15,7 @@ public abstract class AbstractPointerStamp extends Stamp
     // @field
     private final boolean ___alwaysNull;
 
-    // @cons
+    // @cons AbstractPointerStamp
     protected AbstractPointerStamp(boolean __nonNull, boolean __alwaysNull)
     {
         super();

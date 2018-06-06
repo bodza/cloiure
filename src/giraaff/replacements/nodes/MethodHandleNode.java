@@ -23,7 +23,6 @@ import giraaff.graph.NodeClass;
 import giraaff.graph.spi.Simplifiable;
 import giraaff.graph.spi.SimplifierTool;
 import giraaff.nodes.CallTargetNode;
-import giraaff.nodes.CallTargetNode.InvokeKind;
 import giraaff.nodes.FixedGuardNode;
 import giraaff.nodes.FixedNode;
 import giraaff.nodes.FixedWithNextNode;
@@ -55,8 +54,8 @@ public final class MethodHandleNode extends MacroStateSplitNode implements Simpl
     // @field
     protected final IntrinsicMethod ___intrinsicMethod;
 
-    // @cons
-    public MethodHandleNode(IntrinsicMethod __intrinsicMethod, InvokeKind __invokeKind, ResolvedJavaMethod __targetMethod, int __bci, StampPair __returnStamp, ValueNode... __arguments)
+    // @cons MethodHandleNode
+    public MethodHandleNode(IntrinsicMethod __intrinsicMethod, CallTargetNode.InvokeKind __invokeKind, ResolvedJavaMethod __targetMethod, int __bci, StampPair __returnStamp, ValueNode... __arguments)
     {
         super(TYPE, __invokeKind, __targetMethod, __bci, __returnStamp, __arguments);
         this.___intrinsicMethod = __intrinsicMethod;
@@ -74,7 +73,7 @@ public final class MethodHandleNode extends MacroStateSplitNode implements Simpl
     // @param arguments arguments to the original {@link MethodHandle} call
     // @return a more direct invocation derived from the {@link MethodHandle} call or null
     ///
-    public static InvokeNode tryResolveTargetInvoke(GraphAdder __adder, MethodHandleAccessProvider __methodHandleAccess, IntrinsicMethod __intrinsicMethod, ResolvedJavaMethod __original, int __bci, StampPair __returnStamp, ValueNode... __arguments)
+    public static InvokeNode tryResolveTargetInvoke(MethodHandleNode.GraphAdder __adder, MethodHandleAccessProvider __methodHandleAccess, IntrinsicMethod __intrinsicMethod, ResolvedJavaMethod __original, int __bci, StampPair __returnStamp, ValueNode... __arguments)
     {
         switch (__intrinsicMethod)
         {
@@ -99,7 +98,7 @@ public final class MethodHandleNode extends MacroStateSplitNode implements Simpl
         // @field
         private final StructuredGraph ___graph;
 
-        // @cons
+        // @cons MethodHandleNode.GraphAdder
         public GraphAdder(StructuredGraph __graph)
         {
             super();
@@ -137,7 +136,7 @@ public final class MethodHandleNode extends MacroStateSplitNode implements Simpl
 
         final FixedNode __before = this;
         // @closure
-        GraphAdder adder = new GraphAdder(graph())
+        MethodHandleNode.GraphAdder adder = new MethodHandleNode.GraphAdder(graph())
         {
             @Override
             public <T extends ValueNode> T add(T __node)
@@ -188,7 +187,7 @@ public final class MethodHandleNode extends MacroStateSplitNode implements Simpl
     //
     // @return invoke node for the {@link java.lang.invoke.MethodHandle} target
     ///
-    private static InvokeNode getInvokeBasicTarget(GraphAdder __adder, IntrinsicMethod __intrinsicMethod, MethodHandleAccessProvider __methodHandleAccess, ResolvedJavaMethod __original, int __bci, StampPair __returnStamp, ValueNode[] __arguments)
+    private static InvokeNode getInvokeBasicTarget(MethodHandleNode.GraphAdder __adder, IntrinsicMethod __intrinsicMethod, MethodHandleAccessProvider __methodHandleAccess, ResolvedJavaMethod __original, int __bci, StampPair __returnStamp, ValueNode[] __arguments)
     {
         ValueNode __methodHandleNode = getReceiver(__arguments);
         if (__methodHandleNode.isConstant())
@@ -206,7 +205,7 @@ public final class MethodHandleNode extends MacroStateSplitNode implements Simpl
     //
     // @return invoke node for the member name target
     ///
-    private static InvokeNode getLinkToTarget(GraphAdder __adder, IntrinsicMethod __intrinsicMethod, MethodHandleAccessProvider __methodHandleAccess, ResolvedJavaMethod __original, int __bci, StampPair __returnStamp, ValueNode[] __arguments)
+    private static InvokeNode getLinkToTarget(MethodHandleNode.GraphAdder __adder, IntrinsicMethod __intrinsicMethod, MethodHandleAccessProvider __methodHandleAccess, ResolvedJavaMethod __original, int __bci, StampPair __returnStamp, ValueNode[] __arguments)
     {
         ValueNode __memberNameNode = getMemberName(__arguments);
         if (__memberNameNode.isConstant())
@@ -223,7 +222,7 @@ public final class MethodHandleNode extends MacroStateSplitNode implements Simpl
     //
     // @return invoke node for the member name target
     ///
-    private static InvokeNode getTargetInvokeNode(GraphAdder __adder, IntrinsicMethod __intrinsicMethod, int __bci, StampPair __returnStamp, ValueNode[] __originalArguments, ResolvedJavaMethod __target, ResolvedJavaMethod __original)
+    private static InvokeNode getTargetInvokeNode(MethodHandleNode.GraphAdder __adder, IntrinsicMethod __intrinsicMethod, int __bci, StampPair __returnStamp, ValueNode[] __originalArguments, ResolvedJavaMethod __target, ResolvedJavaMethod __original)
     {
         if (__target == null)
         {
@@ -298,16 +297,15 @@ public final class MethodHandleNode extends MacroStateSplitNode implements Simpl
     // @param index of the argument to be cast
     // @param type the type the argument should be cast to
     ///
-    private static void maybeCastArgument(GraphAdder __adder, ValueNode[] __arguments, int __index, JavaType __type)
+    private static void maybeCastArgument(MethodHandleNode.GraphAdder __adder, ValueNode[] __arguments, int __index, JavaType __type)
     {
         ValueNode __argument = __arguments[__index];
         if (__type instanceof ResolvedJavaType && !((ResolvedJavaType) __type).isJavaLangObject())
         {
             Assumptions __assumptions = __adder.getAssumptions();
             TypeReference __targetType = TypeReference.create(__assumptions, (ResolvedJavaType) __type);
-            // When an argument is a Word type, we can have a mismatch of primitive/object types
-            // here. Not inserting a PiNode is a safe fallback, and Word types need no additional
-            // type information anyway.
+            // When an argument is a Word type, we can have a mismatch of primitive/object types here.
+            // Not inserting a PiNode is a safe fallback, and Word types need no additional type information anyway.
             if (__targetType != null && !__targetType.getType().isPrimitive() && !__argument.getStackKind().isPrimitive())
             {
                 ResolvedJavaType __argumentType = StampTool.typeOrNull(__argument.stamp(NodeView.DEFAULT));
@@ -349,7 +347,7 @@ public final class MethodHandleNode extends MacroStateSplitNode implements Simpl
     ///
     private static InvokeNode createTargetInvokeNode(Assumptions __assumptions, IntrinsicMethod __intrinsicMethod, ResolvedJavaMethod __target, ResolvedJavaMethod __original, int __bci, StampPair __returnStamp, ValueNode[] __arguments)
     {
-        InvokeKind __targetInvokeKind = __target.isStatic() ? InvokeKind.Static : InvokeKind.Special;
+        CallTargetNode.InvokeKind __targetInvokeKind = __target.isStatic() ? CallTargetNode.InvokeKind.Static : CallTargetNode.InvokeKind.Special;
         JavaType __targetReturnType = __target.getSignature().getReturnType(null);
 
         // MethodHandleLinkTo* nodes have a trailing MemberName argument which needs to be popped.

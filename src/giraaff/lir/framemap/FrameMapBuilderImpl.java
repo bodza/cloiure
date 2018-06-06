@@ -34,7 +34,7 @@ public class FrameMapBuilderImpl extends FrameMapBuilderTool
     // @field
     private int ___numStackSlots;
 
-    // @cons
+    // @cons FrameMapBuilderImpl
     public FrameMapBuilderImpl(FrameMap __frameMap, CodeCacheProvider __codeCache, RegisterConfig __registerConfig)
     {
         super();

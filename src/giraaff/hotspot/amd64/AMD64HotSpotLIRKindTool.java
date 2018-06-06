@@ -8,7 +8,7 @@ import giraaff.core.common.LIRKind;
 // @class AMD64HotSpotLIRKindTool
 public final class AMD64HotSpotLIRKindTool extends AMD64LIRKindTool
 {
-    // @cons
+    // @cons AMD64HotSpotLIRKindTool
     public AMD64HotSpotLIRKindTool()
     {
         super();

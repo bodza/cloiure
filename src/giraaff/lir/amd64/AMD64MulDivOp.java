@@ -6,14 +6,13 @@ import jdk.vm.ci.meta.AllocatableValue;
 import jdk.vm.ci.meta.Value;
 
 import giraaff.asm.amd64.AMD64Address;
-import giraaff.asm.amd64.AMD64Assembler.AMD64MOp;
-import giraaff.asm.amd64.AMD64Assembler.OperandSize;
+import giraaff.asm.amd64.AMD64Assembler;
 import giraaff.asm.amd64.AMD64MacroAssembler;
 import giraaff.core.common.LIRKind;
 import giraaff.lir.LIRFrameState;
-import giraaff.lir.LIRInstruction.OperandFlag;
+import giraaff.lir.LIRInstruction;
 import giraaff.lir.LIRInstructionClass;
-import giraaff.lir.Opcode;
+import giraaff.lir.LIROpcode;
 import giraaff.lir.asm.CompilationResultBuilder;
 
 ///
@@ -26,27 +25,27 @@ public final class AMD64MulDivOp extends AMD64LIRInstruction
     // @def
     public static final LIRInstructionClass<AMD64MulDivOp> TYPE = LIRInstructionClass.create(AMD64MulDivOp.class);
 
-    @Opcode
+    @LIROpcode
     // @field
-    private final AMD64MOp ___opcode;
+    private final AMD64Assembler.AMD64MOp ___opcode;
     // @field
-    private final OperandSize ___size;
+    private final AMD64Assembler.OperandSize ___size;
 
-    @Def({OperandFlag.REG})
+    @LIRInstruction.Def({LIRInstruction.OperandFlag.REG})
     // @field
     protected AllocatableValue ___highResult;
-    @Def({OperandFlag.REG})
+    @LIRInstruction.Def({LIRInstruction.OperandFlag.REG})
     // @field
     protected AllocatableValue ___lowResult;
 
-    @Use({OperandFlag.REG, OperandFlag.ILLEGAL})
+    @LIRInstruction.Use({LIRInstruction.OperandFlag.REG, LIRInstruction.OperandFlag.ILLEGAL})
     // @field
     protected AllocatableValue ___highX;
-    @Use({OperandFlag.REG})
+    @LIRInstruction.Use({LIRInstruction.OperandFlag.REG})
     // @field
     protected AllocatableValue ___lowX;
 
-    @Use({OperandFlag.REG, OperandFlag.STACK})
+    @LIRInstruction.Use({LIRInstruction.OperandFlag.REG, LIRInstruction.OperandFlag.STACK})
     // @field
     protected AllocatableValue ___y;
 
@@ -54,14 +53,14 @@ public final class AMD64MulDivOp extends AMD64LIRInstruction
     // @field
     protected LIRFrameState ___state;
 
-    // @cons
-    public AMD64MulDivOp(AMD64MOp __opcode, OperandSize __size, LIRKind __resultKind, AllocatableValue __x, AllocatableValue __y)
+    // @cons AMD64MulDivOp
+    public AMD64MulDivOp(AMD64Assembler.AMD64MOp __opcode, AMD64Assembler.OperandSize __size, LIRKind __resultKind, AllocatableValue __x, AllocatableValue __y)
     {
         this(__opcode, __size, __resultKind, Value.ILLEGAL, __x, __y, null);
     }
 
-    // @cons
-    public AMD64MulDivOp(AMD64MOp __opcode, OperandSize __size, LIRKind __resultKind, AllocatableValue __highX, AllocatableValue __lowX, AllocatableValue __y, LIRFrameState __state)
+    // @cons AMD64MulDivOp
+    public AMD64MulDivOp(AMD64Assembler.AMD64MOp __opcode, AMD64Assembler.OperandSize __size, LIRKind __resultKind, AllocatableValue __highX, AllocatableValue __lowX, AllocatableValue __y, LIRFrameState __state)
     {
         super(TYPE);
         this.___opcode = __opcode;

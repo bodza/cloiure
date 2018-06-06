@@ -14,7 +14,7 @@ public abstract class AMD64LIRInstruction extends LIRInstruction
     // @def
     public static final LIRInstructionClass<AMD64LIRInstruction> TYPE = LIRInstructionClass.create(AMD64LIRInstruction.class);
 
-    // @cons
+    // @cons AMD64LIRInstruction
     protected AMD64LIRInstruction(LIRInstructionClass<? extends AMD64LIRInstruction> __c)
     {
         super(__c);

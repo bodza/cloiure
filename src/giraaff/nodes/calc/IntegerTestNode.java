@@ -5,7 +5,7 @@ import jdk.vm.ci.meta.TriState;
 import giraaff.core.common.type.IntegerStamp;
 import giraaff.core.common.type.Stamp;
 import giraaff.graph.NodeClass;
-import giraaff.graph.spi.Canonicalizable.BinaryCommutative;
+import giraaff.graph.spi.Canonicalizable;
 import giraaff.graph.spi.CanonicalizerTool;
 import giraaff.nodes.BinaryOpLogicNode;
 import giraaff.nodes.LogicConstantNode;
@@ -18,12 +18,12 @@ import giraaff.nodes.ValueNode;
 // both x and y.
 ///
 // @class IntegerTestNode
-public final class IntegerTestNode extends BinaryOpLogicNode implements BinaryCommutative<ValueNode>
+public final class IntegerTestNode extends BinaryOpLogicNode implements Canonicalizable.BinaryCommutative<ValueNode>
 {
     // @def
     public static final NodeClass<IntegerTestNode> TYPE = NodeClass.create(IntegerTestNode.class);
 
-    // @cons
+    // @cons IntegerTestNode
     public IntegerTestNode(ValueNode __x, ValueNode __y)
     {
         super(TYPE, __x, __y);

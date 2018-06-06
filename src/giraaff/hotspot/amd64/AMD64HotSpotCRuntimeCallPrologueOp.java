@@ -6,11 +6,11 @@ import jdk.vm.ci.code.Register;
 import giraaff.asm.amd64.AMD64Address;
 import giraaff.asm.amd64.AMD64MacroAssembler;
 import giraaff.lir.LIRInstructionClass;
-import giraaff.lir.Opcode;
+import giraaff.lir.LIROpcode;
 import giraaff.lir.amd64.AMD64LIRInstruction;
 import giraaff.lir.asm.CompilationResultBuilder;
 
-@Opcode
+@LIROpcode
 // @class AMD64HotSpotCRuntimeCallPrologueOp
 final class AMD64HotSpotCRuntimeCallPrologueOp extends AMD64LIRInstruction
 {
@@ -22,7 +22,7 @@ final class AMD64HotSpotCRuntimeCallPrologueOp extends AMD64LIRInstruction
     // @field
     private final Register ___thread;
 
-    // @cons
+    // @cons AMD64HotSpotCRuntimeCallPrologueOp
     AMD64HotSpotCRuntimeCallPrologueOp(int __threadLastJavaSpOffset, Register __thread)
     {
         super(TYPE);

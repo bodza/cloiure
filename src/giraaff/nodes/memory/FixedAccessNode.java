@@ -4,6 +4,7 @@ import org.graalvm.word.LocationIdentity;
 
 import giraaff.core.common.type.Stamp;
 import giraaff.graph.IterableNodeType;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.nodeinfo.InputType;
 import giraaff.nodes.DeoptimizingFixedWithNextNode;
@@ -21,11 +22,11 @@ public abstract class FixedAccessNode extends DeoptimizingFixedWithNextNode impl
     // @def
     public static final NodeClass<FixedAccessNode> TYPE = NodeClass.create(FixedAccessNode.class);
 
-    @OptionalInput(InputType.Guard)
+    @Node.OptionalInput(InputType.Guard)
     // @field
     protected GuardingNode ___guard;
 
-    @Input(InputType.Association)
+    @Node.Input(InputType.Association)
     // @field
     AddressNode ___address;
     // @field
@@ -34,7 +35,7 @@ public abstract class FixedAccessNode extends DeoptimizingFixedWithNextNode impl
     // @field
     protected boolean ___nullCheck;
     // @field
-    protected BarrierType ___barrierType;
+    protected HeapAccess.BarrierType ___barrierType;
 
     @Override
     public AddressNode getAddress()
@@ -65,20 +66,20 @@ public abstract class FixedAccessNode extends DeoptimizingFixedWithNextNode impl
         this.___nullCheck = __check;
     }
 
-    // @cons
+    // @cons FixedAccessNode
     protected FixedAccessNode(NodeClass<? extends FixedAccessNode> __c, AddressNode __address, LocationIdentity __location, Stamp __stamp)
     {
-        this(__c, __address, __location, __stamp, BarrierType.NONE);
+        this(__c, __address, __location, __stamp, HeapAccess.BarrierType.NONE);
     }
 
-    // @cons
-    protected FixedAccessNode(NodeClass<? extends FixedAccessNode> __c, AddressNode __address, LocationIdentity __location, Stamp __stamp, BarrierType __barrierType)
+    // @cons FixedAccessNode
+    protected FixedAccessNode(NodeClass<? extends FixedAccessNode> __c, AddressNode __address, LocationIdentity __location, Stamp __stamp, HeapAccess.BarrierType __barrierType)
     {
         this(__c, __address, __location, __stamp, null, __barrierType, false, null);
     }
 
-    // @cons
-    protected FixedAccessNode(NodeClass<? extends FixedAccessNode> __c, AddressNode __address, LocationIdentity __location, Stamp __stamp, GuardingNode __guard, BarrierType __barrierType, boolean __nullCheck, FrameState __stateBefore)
+    // @cons FixedAccessNode
+    protected FixedAccessNode(NodeClass<? extends FixedAccessNode> __c, AddressNode __address, LocationIdentity __location, Stamp __stamp, GuardingNode __guard, HeapAccess.BarrierType __barrierType, boolean __nullCheck, FrameState __stateBefore)
     {
         super(__c, __stamp, __stateBefore);
         this.___address = __address;
@@ -108,7 +109,7 @@ public abstract class FixedAccessNode extends DeoptimizingFixedWithNextNode impl
     }
 
     @Override
-    public BarrierType getBarrierType()
+    public HeapAccess.BarrierType getBarrierType()
     {
         return this.___barrierType;
     }

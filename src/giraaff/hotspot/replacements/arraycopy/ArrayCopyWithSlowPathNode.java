@@ -3,12 +3,13 @@ package giraaff.hotspot.replacements.arraycopy;
 import jdk.vm.ci.code.BytecodeFrame;
 import jdk.vm.ci.meta.JavaKind;
 
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.nodes.ValueNode;
 import giraaff.replacements.SnippetTemplate;
 import giraaff.replacements.nodes.BasicArrayCopyNode;
 
-// @NodeInfo.allowedUsageTypes "Memory"
+// @NodeInfo.allowedUsageTypes "InputType.Memory"
 // @class ArrayCopyWithSlowPathNode
 public final class ArrayCopyWithSlowPathNode extends BasicArrayCopyNode
 {
@@ -18,15 +19,15 @@ public final class ArrayCopyWithSlowPathNode extends BasicArrayCopyNode
     // @field
     private final SnippetTemplate.SnippetInfo ___snippet;
 
-    // @cons
+    // @cons ArrayCopyWithSlowPathNode
     public ArrayCopyWithSlowPathNode(ValueNode __src, ValueNode __srcPos, ValueNode __dest, ValueNode __destPos, ValueNode __length, SnippetTemplate.SnippetInfo __snippet, JavaKind __elementKind)
     {
         super(TYPE, __src, __srcPos, __dest, __destPos, __length, __elementKind, BytecodeFrame.INVALID_FRAMESTATE_BCI);
         this.___snippet = __snippet;
     }
 
-    @NodeIntrinsic
-    public static native void arraycopy(Object __nonNullSrc, int __srcPos, Object __nonNullDest, int __destPos, int __length, @ConstantNodeParameter SnippetTemplate.SnippetInfo __snippet, @ConstantNodeParameter JavaKind __elementKind);
+    @Node.NodeIntrinsic
+    public static native void arraycopy(Object __nonNullSrc, int __srcPos, Object __nonNullDest, int __destPos, int __length, @Node.ConstantNodeParameter SnippetTemplate.SnippetInfo __snippet, @Node.ConstantNodeParameter JavaKind __elementKind);
 
     public SnippetTemplate.SnippetInfo getSnippet()
     {

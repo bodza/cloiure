@@ -1,5 +1,6 @@
 package giraaff.nodes.extended;
 
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.graph.iterators.NodePredicates;
 import giraaff.graph.spi.Simplifiable;
@@ -47,14 +48,14 @@ public final class BranchProbabilityNode extends FloatingNode implements Simplif
     // @def
     public static final double VERY_SLOW_PATH_PROBABILITY = 1 - VERY_FAST_PATH_PROBABILITY;
 
-    @Input
+    @Node.Input
     // @field
     ValueNode ___probability;
-    @Input
+    @Node.Input
     // @field
     ValueNode ___condition;
 
-    // @cons
+    // @cons BranchProbabilityNode
     public BranchProbabilityNode(ValueNode __probability, ValueNode __condition)
     {
         super(TYPE, __condition.stamp(NodeView.DEFAULT));
@@ -156,7 +157,7 @@ public final class BranchProbabilityNode extends FloatingNode implements Simplif
     // @param condition the simple condition without any && or || operators
     // @return the condition
     ///
-    @NodeIntrinsic
+    @Node.NodeIntrinsic
     public static native boolean probability(double __probability, boolean __condition);
 
     @Override

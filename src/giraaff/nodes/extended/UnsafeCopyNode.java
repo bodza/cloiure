@@ -5,8 +5,7 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 import org.graalvm.word.LocationIdentity;
 
-import giraaff.graph.Node.ConstantNodeParameter;
-import giraaff.graph.Node.NodeIntrinsic;
+import giraaff.graph.Node;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.graphbuilderconf.GraphBuilderContext;
 
@@ -24,6 +23,6 @@ public final class UnsafeCopyNode
         return true;
     }
 
-    @NodeIntrinsic
-    public static native void copy(Object __srcObject, long __srcOffset, Object __destObject, long __destOffset, @ConstantNodeParameter JavaKind __kind, @ConstantNodeParameter LocationIdentity __locationIdentity);
+    @Node.NodeIntrinsic
+    public static native void copy(Object __srcObject, long __srcOffset, Object __destObject, long __destOffset, @Node.ConstantNodeParameter JavaKind __kind, @Node.ConstantNodeParameter LocationIdentity __locationIdentity);
 }

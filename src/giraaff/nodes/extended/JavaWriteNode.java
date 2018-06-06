@@ -8,6 +8,7 @@ import giraaff.graph.NodeClass;
 import giraaff.nodes.StateSplit;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.memory.AbstractWriteNode;
+import giraaff.nodes.memory.HeapAccess;
 import giraaff.nodes.memory.MemoryAccess;
 import giraaff.nodes.memory.MemoryCheckpoint;
 import giraaff.nodes.memory.address.AddressNode;
@@ -29,8 +30,8 @@ public final class JavaWriteNode extends AbstractWriteNode implements Lowerable,
     // @field
     protected final boolean ___compressible;
 
-    // @cons
-    public JavaWriteNode(JavaKind __writeKind, AddressNode __address, LocationIdentity __location, ValueNode __value, BarrierType __barrierType, boolean __compressible)
+    // @cons JavaWriteNode
+    public JavaWriteNode(JavaKind __writeKind, AddressNode __address, LocationIdentity __location, ValueNode __value, HeapAccess.BarrierType __barrierType, boolean __compressible)
     {
         super(TYPE, __address, __location, __value, __barrierType);
         this.___writeKind = __writeKind;

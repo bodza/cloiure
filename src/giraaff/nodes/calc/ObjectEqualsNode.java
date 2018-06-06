@@ -33,9 +33,9 @@ public final class ObjectEqualsNode extends PointerEqualsNode implements Virtual
     public static final NodeClass<ObjectEqualsNode> TYPE = NodeClass.create(ObjectEqualsNode.class);
 
     // @def
-    private static final ObjectEqualsOp OP = new ObjectEqualsOp();
+    private static final ObjectEqualsNode.ObjectEqualsOp OP = new ObjectEqualsNode.ObjectEqualsOp();
 
-    // @cons
+    // @cons ObjectEqualsNode
     public ObjectEqualsNode(ValueNode __x, ValueNode __y)
     {
         super(TYPE, __x, __y);
@@ -82,7 +82,7 @@ public final class ObjectEqualsNode extends PointerEqualsNode implements Virtual
     }
 
     // @class ObjectEqualsNode.ObjectEqualsOp
-    public static final class ObjectEqualsOp extends PointerEqualsOp
+    public static final class ObjectEqualsOp extends PointerEqualsNode.PointerEqualsOp
     {
         @Override
         protected LogicNode canonicalizeSymmetricConstant(ConstantReflectionProvider __constantReflection, MetaAccessProvider __metaAccess, Integer __smallestCompareWidth, CanonicalCondition __condition, Constant __constant, ValueNode __nonConstant, boolean __mirrored, NodeView __view)

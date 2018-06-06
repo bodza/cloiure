@@ -6,13 +6,12 @@ import jdk.vm.ci.meta.MetaAccessProvider;
 import jdk.vm.ci.meta.ResolvedJavaField;
 
 import giraaff.core.common.spi.ConstantFieldProvider;
-import giraaff.core.common.spi.ConstantFieldProvider.ConstantFieldTool;
 import giraaff.nodes.ConstantNode;
 
 // @class ConstantFoldUtil
 public final class ConstantFoldUtil
 {
-    // @cons
+    // @cons ConstantFoldUtil
     private ConstantFoldUtil()
     {
         super();
@@ -29,7 +28,7 @@ public final class ConstantFoldUtil
         }
 
         // @closure
-        return __fieldProvider.readConstantField(__field, new ConstantFieldTool<ConstantNode>()
+        return __fieldProvider.readConstantField(__field, new ConstantFieldProvider.ConstantFieldTool<ConstantNode>()
         {
             @Override
             public JavaConstant readValue()

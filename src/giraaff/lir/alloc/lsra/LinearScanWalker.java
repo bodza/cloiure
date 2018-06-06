@@ -12,16 +12,13 @@ import jdk.vm.ci.code.ValueUtil;
 import jdk.vm.ci.meta.Value;
 
 import giraaff.core.common.GraalOptions;
-import giraaff.core.common.alloc.RegisterAllocationConfig.AllocatableRegisters;
+import giraaff.core.common.alloc.RegisterAllocationConfig;
 import giraaff.core.common.cfg.AbstractBlockBase;
 import giraaff.core.common.util.Util;
 import giraaff.lir.LIRInstruction;
 import giraaff.lir.LIRValueUtil;
-import giraaff.lir.StandardOp.ValueMoveOp;
-import giraaff.lir.alloc.lsra.Interval.RegisterBinding;
-import giraaff.lir.alloc.lsra.Interval.RegisterPriority;
-import giraaff.lir.alloc.lsra.Interval.SpillState;
-import giraaff.lir.alloc.lsra.Interval.State;
+import giraaff.lir.StandardOp;
+import giraaff.lir.alloc.lsra.Interval;
 import giraaff.util.GraalError;
 
 // @class LinearScanWalker
@@ -72,7 +69,7 @@ class LinearScanWalker extends IntervalWalker
         return this.___allocator.blockForId(__opId);
     }
 
-    // @cons
+    // @cons LinearScanWalker
     LinearScanWalker(LinearScan __allocator, Interval __unhandledFixedFirst, Interval __unhandledAnyFirst)
     {
         super(__allocator, __unhandledFixedFirst, __unhandledAnyFirst);
@@ -173,7 +170,7 @@ class LinearScanWalker extends IntervalWalker
 
     void freeExcludeActiveFixed()
     {
-        Interval __interval = this.___activeLists.get(RegisterBinding.Fixed);
+        Interval __interval = this.___activeLists.get(Interval.RegisterBinding.Fixed);
         while (!__interval.isEndMarker())
         {
             excludeFromUse(__interval);
@@ -183,7 +180,7 @@ class LinearScanWalker extends IntervalWalker
 
     void freeExcludeActiveAny()
     {
-        Interval __interval = this.___activeLists.get(RegisterBinding.Any);
+        Interval __interval = this.___activeLists.get(Interval.RegisterBinding.Any);
         while (!__interval.isEndMarker())
         {
             excludeFromUse(__interval);
@@ -193,7 +190,7 @@ class LinearScanWalker extends IntervalWalker
 
     void freeCollectInactiveFixed(Interval __current)
     {
-        Interval __interval = this.___inactiveLists.get(RegisterBinding.Fixed);
+        Interval __interval = this.___inactiveLists.get(Interval.RegisterBinding.Fixed);
         while (!__interval.isEndMarker())
         {
             if (__current.to() <= __interval.currentFrom())
@@ -210,7 +207,7 @@ class LinearScanWalker extends IntervalWalker
 
     void freeCollectInactiveAny(Interval __current)
     {
-        Interval __interval = this.___inactiveLists.get(RegisterBinding.Any);
+        Interval __interval = this.___inactiveLists.get(Interval.RegisterBinding.Any);
         while (!__interval.isEndMarker())
         {
             setUsePos(__interval, __interval.currentIntersectsAt(__current), true);
@@ -218,13 +215,13 @@ class LinearScanWalker extends IntervalWalker
         }
     }
 
-    void freeCollectUnhandled(RegisterBinding __kind, Interval __current)
+    void freeCollectUnhandled(Interval.RegisterBinding __kind, Interval __current)
     {
         Interval __interval = this.___unhandledLists.get(__kind);
         while (!__interval.isEndMarker())
         {
             setUsePos(__interval, __interval.intersectsAt(__current), true);
-            if (__kind == RegisterBinding.Fixed && __current.to() <= __interval.from())
+            if (__kind == Interval.RegisterBinding.Fixed && __current.to() <= __interval.from())
             {
                 setUsePos(__interval, __interval.from(), true);
             }
@@ -234,7 +231,7 @@ class LinearScanWalker extends IntervalWalker
 
     void spillExcludeActiveFixed()
     {
-        Interval __interval = this.___activeLists.get(RegisterBinding.Fixed);
+        Interval __interval = this.___activeLists.get(Interval.RegisterBinding.Fixed);
         while (!__interval.isEndMarker())
         {
             excludeFromUse(__interval);
@@ -244,7 +241,7 @@ class LinearScanWalker extends IntervalWalker
 
     void spillBlockUnhandledFixed(Interval __current)
     {
-        Interval __interval = this.___unhandledLists.get(RegisterBinding.Fixed);
+        Interval __interval = this.___unhandledLists.get(Interval.RegisterBinding.Fixed);
         while (!__interval.isEndMarker())
         {
             setBlockPos(__interval, __interval.intersectsAt(__current));
@@ -254,7 +251,7 @@ class LinearScanWalker extends IntervalWalker
 
     void spillBlockInactiveFixed(Interval __current)
     {
-        Interval __interval = this.___inactiveLists.get(RegisterBinding.Fixed);
+        Interval __interval = this.___inactiveLists.get(Interval.RegisterBinding.Fixed);
         while (!__interval.isEndMarker())
         {
             if (__current.to() > __interval.currentFrom())
@@ -266,9 +263,9 @@ class LinearScanWalker extends IntervalWalker
         }
     }
 
-    void spillCollectActiveAny(RegisterPriority __registerPriority)
+    void spillCollectActiveAny(Interval.RegisterPriority __registerPriority)
     {
-        Interval __interval = this.___activeLists.get(RegisterBinding.Any);
+        Interval __interval = this.___activeLists.get(Interval.RegisterBinding.Any);
         while (!__interval.isEndMarker())
         {
             setUsePos(__interval, Math.min(__interval.nextUsage(__registerPriority, this.___currentPosition), __interval.to()), false);
@@ -278,12 +275,12 @@ class LinearScanWalker extends IntervalWalker
 
     void spillCollectInactiveAny(Interval __current)
     {
-        Interval __interval = this.___inactiveLists.get(RegisterBinding.Any);
+        Interval __interval = this.___inactiveLists.get(Interval.RegisterBinding.Any);
         while (!__interval.isEndMarker())
         {
             if (__interval.currentIntersects(__current))
             {
-                setUsePos(__interval, Math.min(__interval.nextUsage(RegisterPriority.LiveAtLoopEnd, this.___currentPosition), __interval.to()), false);
+                setUsePos(__interval, Math.min(__interval.nextUsage(Interval.RegisterPriority.LiveAtLoopEnd, this.___currentPosition), __interval.to()), false);
             }
             __interval = __interval.___next;
         }
@@ -384,7 +381,7 @@ class LinearScanWalker extends IntervalWalker
                     {
                         // Loop optimization: if a loop-end marker is found between min- and max-position,
                         // then split before this loop.
-                        int __loopEndPos = __interval.nextUsageExact(RegisterPriority.LiveAtLoopEnd, this.___allocator.getLastLirInstructionId(__minBlock) + 2);
+                        int __loopEndPos = __interval.nextUsageExact(Interval.RegisterPriority.LiveAtLoopEnd, this.___allocator.getLastLirInstructionId(__minBlock) + 2);
 
                         if (__loopEndPos < __maxSplitPos)
                         {
@@ -423,7 +420,7 @@ class LinearScanWalker extends IntervalWalker
     {
         int __optimalSplitPos = findOptimalSplitPos(__interval, __minSplitPos, __maxSplitPos, true);
 
-        if (__optimalSplitPos == __interval.to() && __interval.nextUsage(RegisterPriority.MustHaveRegister, __minSplitPos) == Integer.MAX_VALUE)
+        if (__optimalSplitPos == __interval.to() && __interval.nextUsage(Interval.RegisterPriority.MustHaveRegister, __minSplitPos) == Integer.MAX_VALUE)
         {
             // the split position would be just before the end of the interval
             // . no split at all necessary
@@ -444,7 +441,7 @@ class LinearScanWalker extends IntervalWalker
 
         __splitPart.setInsertMoveWhenActivated(__moveNecessary);
 
-        this.___unhandledLists.addToListSortedByStartAndUsePositions(RegisterBinding.Any, __splitPart);
+        this.___unhandledLists.addToListSortedByStartAndUsePositions(Interval.RegisterBinding.Any, __splitPart);
     }
 
     // split an interval at the optimal position between minSplitPos and
@@ -455,13 +452,13 @@ class LinearScanWalker extends IntervalWalker
     {
         // calculate allowed range of splitting position
         int __maxSplitPos = this.___currentPosition;
-        int __previousUsage = __interval.previousUsage(RegisterPriority.ShouldHaveRegister, __maxSplitPos);
+        int __previousUsage = __interval.previousUsage(Interval.RegisterPriority.ShouldHaveRegister, __maxSplitPos);
         if (__previousUsage == this.___currentPosition)
         {
             // If there is a usage with ShouldHaveRegister priority at the current position fall
             // back to MustHaveRegister priority. This only happens if register priority was
             // downgraded to MustHaveRegister in #allocLockedRegister.
-            __previousUsage = __interval.previousUsage(RegisterPriority.MustHaveRegister, __maxSplitPos);
+            __previousUsage = __interval.previousUsage(Interval.RegisterPriority.MustHaveRegister, __maxSplitPos);
         }
         int __minSplitPos = Math.max(__previousUsage + 1, __interval.from());
 
@@ -483,7 +480,7 @@ class LinearScanWalker extends IntervalWalker
 
                 if (ValueUtil.isRegister(__parent.location()))
                 {
-                    if (__parent.firstUsage(RegisterPriority.ShouldHaveRegister) == Integer.MAX_VALUE)
+                    if (__parent.firstUsage(Interval.RegisterPriority.ShouldHaveRegister) == Integer.MAX_VALUE)
                     {
                         // parent is never used, so kick it out of its assigned register
                         this.___allocator.assignSpillSlot(__parent);
@@ -541,19 +538,19 @@ class LinearScanWalker extends IntervalWalker
                     if (GraalOptions.lirOptLSRAOptimizeSpillPosition)
                     {
                         // find best spill position in dominator the tree
-                        __interval.setSpillState(SpillState.SpillInDominator);
+                        __interval.setSpillState(Interval.SpillState.SpillInDominator);
                     }
                     else
                     {
                         // store at definition of the interval
-                        __interval.setSpillState(SpillState.StoreAtDefinition);
+                        __interval.setSpillState(Interval.SpillState.StoreAtDefinition);
                     }
                 }
                 else
                 {
                     // The interval is currently spilled only once, so for now there is no reason to
                     // store the interval at the definition.
-                    __interval.setSpillState(SpillState.OneSpillStore);
+                    __interval.setSpillState(Interval.SpillState.OneSpillStore);
                 }
                 break;
             }
@@ -568,12 +565,12 @@ class LinearScanWalker extends IntervalWalker
                     if (GraalOptions.lirOptLSRAOptimizeSpillPosition)
                     {
                         // the interval is spilled more then once
-                        __interval.setSpillState(SpillState.SpillInDominator);
+                        __interval.setSpillState(Interval.SpillState.SpillInDominator);
                     }
                     else
                     {
                         // It is better to store it to memory at the definition.
-                        __interval.setSpillState(SpillState.StoreAtDefinition);
+                        __interval.setSpillState(Interval.SpillState.StoreAtDefinition);
                     }
                 }
                 break;
@@ -605,21 +602,21 @@ class LinearScanWalker extends IntervalWalker
     void splitStackInterval(Interval __interval)
     {
         int __minSplitPos = this.___currentPosition + 1;
-        int __maxSplitPos = Math.min(__interval.firstUsage(RegisterPriority.ShouldHaveRegister), __interval.to());
+        int __maxSplitPos = Math.min(__interval.firstUsage(Interval.RegisterPriority.ShouldHaveRegister), __interval.to());
 
         splitBeforeUsage(__interval, __minSplitPos, __maxSplitPos);
     }
 
     void splitWhenPartialRegisterAvailable(Interval __interval, int __registerAvailableUntil)
     {
-        int __minSplitPos = Math.max(__interval.previousUsage(RegisterPriority.ShouldHaveRegister, __registerAvailableUntil), __interval.from() + 1);
+        int __minSplitPos = Math.max(__interval.previousUsage(Interval.RegisterPriority.ShouldHaveRegister, __registerAvailableUntil), __interval.from() + 1);
         splitBeforeUsage(__interval, __minSplitPos, __registerAvailableUntil);
     }
 
     void splitAndSpillInterval(Interval __interval)
     {
         int __currentPos = this.___currentPosition;
-        if (__interval.___state == State.Inactive)
+        if (__interval.___state == Interval.IntervalState.Inactive)
         {
             // The interval is currently inactive, so no spill slot is needed for now.
             // When the split part is activated, the interval has a new chance to get a register,
@@ -631,7 +628,7 @@ class LinearScanWalker extends IntervalWalker
             // Search the position where the interval must have a register and split at the optimal position before.
             // The new created part is added to the unhandled list and will get a register when it is activated.
             int __minSplitPos = __currentPos + 1;
-            int __maxSplitPos = Math.min(__interval.nextUsage(RegisterPriority.MustHaveRegister, __minSplitPos), __interval.to());
+            int __maxSplitPos = Math.min(__interval.nextUsage(Interval.RegisterPriority.MustHaveRegister, __minSplitPos), __interval.to());
 
             splitBeforeUsage(__interval, __minSplitPos, __maxSplitPos);
 
@@ -732,8 +729,8 @@ class LinearScanWalker extends IntervalWalker
     void allocLockedRegister(Interval __interval)
     {
         // the register must be free at least until this position
-        int __firstUsage = __interval.firstUsage(RegisterPriority.MustHaveRegister);
-        int __firstShouldHaveUsage = __interval.firstUsage(RegisterPriority.ShouldHaveRegister);
+        int __firstUsage = __interval.firstUsage(Interval.RegisterPriority.MustHaveRegister);
+        int __firstShouldHaveUsage = __interval.firstUsage(Interval.RegisterPriority.ShouldHaveRegister);
         int __regNeededUntil = Math.min(__firstUsage, __interval.from() + 1);
         int __intervalTo = __interval.to();
 
@@ -743,7 +740,7 @@ class LinearScanWalker extends IntervalWalker
         // closer than the next use of the current interval, but if we can't spill the current
         // interval we weaken this strategy and also allow spilling of intervals that have a
         // non-mandatory requirements (no MustHaveRegister use position).
-        for (RegisterPriority __registerPriority = RegisterPriority.LiveAtLoopEnd; true; __registerPriority = RegisterPriority.MustHaveRegister)
+        for (Interval.RegisterPriority __registerPriority = Interval.RegisterPriority.LiveAtLoopEnd; true; __registerPriority = Interval.RegisterPriority.MustHaveRegister)
         {
             // collect current usage of registers
             initUseLists(false);
@@ -777,7 +774,7 @@ class LinearScanWalker extends IntervalWalker
             {
                 if (__firstUsage <= __interval.from() + 1)
                 {
-                    if (__registerPriority.equals(RegisterPriority.LiveAtLoopEnd))
+                    if (__registerPriority.equals(Interval.RegisterPriority.LiveAtLoopEnd))
                     {
                         // Tool of last resort: we can not spill the current interval so we try
                         // to spill an active interval that has a usage but do not require a register.
@@ -834,7 +831,7 @@ class LinearScanWalker extends IntervalWalker
 
     void initVarsForAlloc(Interval __interval)
     {
-        AllocatableRegisters __allocatableRegisters = this.___allocator.getRegisterAllocationConfig().getAllocatableRegisters(__interval.kind().getPlatformKind());
+        RegisterAllocationConfig.AllocatableRegisters __allocatableRegisters = this.___allocator.getRegisterAllocationConfig().getAllocatableRegisters(__interval.kind().getPlatformKind());
         this.___availableRegs = __allocatableRegisters.___allocatableRegisters;
         this.___minReg = __allocatableRegisters.___minRegisterNumber;
         this.___maxReg = __allocatableRegisters.___maxRegisterNumber;
@@ -842,9 +839,9 @@ class LinearScanWalker extends IntervalWalker
 
     static boolean isMove(LIRInstruction __op, Interval __from, Interval __to)
     {
-        if (ValueMoveOp.isValueMoveOp(__op))
+        if (StandardOp.ValueMoveOp.isValueMoveOp(__op))
         {
-            ValueMoveOp __move = ValueMoveOp.asValueMoveOp(__op);
+            StandardOp.ValueMoveOp __move = StandardOp.ValueMoveOp.asValueMoveOp(__op);
             if (LIRValueUtil.isVariable(__move.getInput()) && LIRValueUtil.isVariable(__move.getResult()))
             {
                 return __move.getInput() != null && __move.getInput().equals(__from.___operand) && __move.getResult() != null && __move.getResult().equals(__to.___operand);
@@ -870,7 +867,7 @@ class LinearScanWalker extends IntervalWalker
             return;
         }
 
-        if (__interval.spillState() != SpillState.NoOptimization || __registerHint.spillState() != SpillState.NoOptimization)
+        if (__interval.spillState() != Interval.SpillState.NoOptimization || __registerHint.spillState() != Interval.SpillState.NoOptimization)
         {
             // combining the stack slots for intervals where spill move optimization is applied
             // is not benefitial and would cause problems

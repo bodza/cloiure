@@ -3,9 +3,10 @@ package giraaff.core.amd64;
 import jdk.vm.ci.meta.AllocatableValue;
 import jdk.vm.ci.meta.Value;
 
-import giraaff.asm.amd64.AMD64Address.Scale;
+import giraaff.asm.amd64.AMD64Address;
 import giraaff.core.common.LIRKind;
 import giraaff.core.common.type.IntegerStamp;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.graph.spi.Simplifiable;
 import giraaff.graph.spi.SimplifierTool;
@@ -30,32 +31,32 @@ public final class AMD64AddressNode extends AddressNode implements Simplifiable,
     // @def
     public static final NodeClass<AMD64AddressNode> TYPE = NodeClass.create(AMD64AddressNode.class);
 
-    @OptionalInput
+    @Node.OptionalInput
     // @field
     private ValueNode ___base;
 
-    @OptionalInput
+    @Node.OptionalInput
     // @field
     private ValueNode ___index;
     // @field
-    private Scale ___scale;
+    private AMD64Address.Scale ___scale;
 
     // @field
     private int ___displacement;
 
-    // @cons
+    // @cons AMD64AddressNode
     public AMD64AddressNode(ValueNode __base)
     {
         this(__base, null);
     }
 
-    // @cons
+    // @cons AMD64AddressNode
     public AMD64AddressNode(ValueNode __base, ValueNode __index)
     {
         super(TYPE);
         this.___base = __base;
         this.___index = __index;
-        this.___scale = Scale.Times1;
+        this.___scale = AMD64Address.Scale.Times1;
     }
 
     public void canonicalizeIndex(SimplifierTool __tool)
@@ -100,7 +101,7 @@ public final class AMD64AddressNode extends AddressNode implements Simplifiable,
         {
             __indexReference = null;
         }
-        else if (this.___scale.equals(Scale.Times1))
+        else if (this.___scale.equals(AMD64Address.Scale.Times1))
         {
             __indexReference = LIRKind.derivedBaseFromValue(__indexValue);
         }
@@ -152,12 +153,12 @@ public final class AMD64AddressNode extends AddressNode implements Simplifiable,
         this.___index = __index;
     }
 
-    public Scale getScale()
+    public AMD64Address.Scale getScale()
     {
         return this.___scale;
     }
 
-    public void setScale(Scale __scale)
+    public void setScale(AMD64Address.Scale __scale)
     {
         this.___scale = __scale;
     }

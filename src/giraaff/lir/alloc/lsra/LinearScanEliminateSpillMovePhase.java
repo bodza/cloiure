@@ -10,30 +10,30 @@ import giraaff.core.common.GraalOptions;
 import giraaff.core.common.cfg.AbstractBlockBase;
 import giraaff.lir.LIRInsertionBuffer;
 import giraaff.lir.LIRInstruction;
-import giraaff.lir.StandardOp.MoveOp;
-import giraaff.lir.alloc.lsra.Interval.SpillState;
-import giraaff.lir.alloc.lsra.LinearScan.IntervalPredicate;
+import giraaff.lir.StandardOp;
+import giraaff.lir.alloc.lsra.Interval;
+import giraaff.lir.alloc.lsra.LinearScan;
 import giraaff.lir.gen.LIRGenerationResult;
-import giraaff.lir.phases.AllocationPhase.AllocationContext;
+import giraaff.lir.phases.AllocationPhase;
 import giraaff.lir.phases.LIRPhase;
 
 // @class LinearScanEliminateSpillMovePhase
 public class LinearScanEliminateSpillMovePhase extends LinearScanAllocationPhase
 {
     // @closure
-    private static final IntervalPredicate mustStoreAtDefinition = new LinearScan.IntervalPredicate()
+    private static final LinearScan.IntervalPredicate mustStoreAtDefinition = new LinearScan.IntervalPredicate()
     {
         @Override
         public boolean apply(Interval __i)
         {
-            return __i.isSplitParent() && __i.spillState() == SpillState.StoreAtDefinition;
+            return __i.isSplitParent() && __i.spillState() == Interval.SpillState.StoreAtDefinition;
         }
     };
 
     // @field
     protected final LinearScan ___allocator;
 
-    // @cons
+    // @cons LinearScanEliminateSpillMovePhase
     protected LinearScanEliminateSpillMovePhase(LinearScan __allocator)
     {
         super();
@@ -41,7 +41,7 @@ public class LinearScanEliminateSpillMovePhase extends LinearScanAllocationPhase
     }
 
     @Override
-    protected void run(TargetDescription __target, LIRGenerationResult __lirGenRes, AllocationContext __context)
+    protected void run(TargetDescription __target, LIRGenerationResult __lirGenRes, AllocationPhase.AllocationContext __context)
     {
         eliminateSpillMoves(__lirGenRes);
     }
@@ -77,7 +77,7 @@ public class LinearScanEliminateSpillMovePhase extends LinearScanAllocationPhase
 
                 if (__opId == -1)
                 {
-                    MoveOp __move = MoveOp.asMoveOp(__op);
+                    StandardOp.MoveOp __move = StandardOp.MoveOp.asMoveOp(__op);
                     // Remove move from register to stack if the stack slot is guaranteed to
                     // be correct. Only moves that have been inserted by LinearScan can be removed.
                     if (GraalOptions.lirOptLSRAEliminateSpillMoves && canEliminateSpillMove(__block, __move))
@@ -125,7 +125,7 @@ public class LinearScanEliminateSpillMovePhase extends LinearScanAllocationPhase
     // @param block The block {@code move} is located in.
     // @param move Spill move.
     ///
-    protected boolean canEliminateSpillMove(AbstractBlockBase<?> __block, MoveOp __move)
+    protected boolean canEliminateSpillMove(AbstractBlockBase<?> __block, StandardOp.MoveOp __move)
     {
         Interval __curInterval = this.___allocator.intervalFor(__move.getResult());
 

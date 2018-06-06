@@ -7,6 +7,7 @@ import jdk.vm.ci.meta.Value;
 import giraaff.core.common.LIRKind;
 import giraaff.core.common.type.Stamp;
 import giraaff.core.common.type.StampFactory;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.nodes.FixedWithNextNode;
 import giraaff.nodes.NodeView;
@@ -43,7 +44,7 @@ public final class ReadRegisterNode extends FixedWithNextNode implements LIRLowe
     // @field
     protected final boolean ___incoming;
 
-    // @cons
+    // @cons ReadRegisterNode
     public ReadRegisterNode(Register __register, JavaKind __kind, boolean __directUse, boolean __incoming)
     {
         super(TYPE, StampFactory.forKind(__kind));
@@ -52,8 +53,8 @@ public final class ReadRegisterNode extends FixedWithNextNode implements LIRLowe
         this.___incoming = __incoming;
     }
 
-    // @cons
-    public ReadRegisterNode(@InjectedNodeParameter Stamp __stamp, Register __register, boolean __directUse, boolean __incoming)
+    // @cons ReadRegisterNode
+    public ReadRegisterNode(@Node.InjectedNodeParameter Stamp __stamp, Register __register, boolean __directUse, boolean __incoming)
     {
         super(TYPE, __stamp);
         this.___register = __register;

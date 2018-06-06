@@ -3,6 +3,7 @@ package giraaff.hotspot.nodes;
 import jdk.vm.ci.meta.Value;
 
 import giraaff.core.common.type.StampFactory;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.hotspot.HotSpotLIRGenerator;
 import giraaff.lir.VirtualStackSlot;
@@ -24,8 +25,8 @@ public final class CurrentLockNode extends FixedWithNextNode implements LIRLower
     // @field
     protected int ___lockDepth;
 
-    // @cons
-    public CurrentLockNode(@InjectedNodeParameter WordTypes __wordTypes, int __lockDepth)
+    // @cons CurrentLockNode
+    public CurrentLockNode(@Node.InjectedNodeParameter WordTypes __wordTypes, int __lockDepth)
     {
         super(TYPE, StampFactory.forKind(__wordTypes.getWordKind()));
         this.___lockDepth = __lockDepth;
@@ -41,6 +42,6 @@ public final class CurrentLockNode extends FixedWithNextNode implements LIRLower
         __gen.setResult(this, __result);
     }
 
-    @NodeIntrinsic
-    public static native Word currentLock(@ConstantNodeParameter int __lockDepth);
+    @Node.NodeIntrinsic
+    public static native Word currentLock(@Node.ConstantNodeParameter int __lockDepth);
 }

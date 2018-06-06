@@ -6,7 +6,7 @@ public abstract class PostAllocationOptimizationPhase extends LIRPhase<PostAlloc
     // @class PostAllocationOptimizationPhase.PostAllocationOptimizationContext
     public static final class PostAllocationOptimizationContext
     {
-        // @cons
+        // @cons PostAllocationOptimizationPhase.PostAllocationOptimizationContext
         public PostAllocationOptimizationContext()
         {
             super();

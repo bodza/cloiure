@@ -20,7 +20,7 @@ import giraaff.bytecode.ResolvedJavaMethodBytecode;
 import giraaff.core.common.GraalOptions;
 import giraaff.core.common.type.StampFactory;
 import giraaff.core.common.type.StampPair;
-import giraaff.java.BciBlockMapping.BciBlock;
+import giraaff.java.BciBlockMapping;
 import giraaff.nodes.AbstractMergeNode;
 import giraaff.nodes.ConstantNode;
 import giraaff.nodes.FrameState;
@@ -35,16 +35,16 @@ import giraaff.nodes.StructuredGraph;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.ValuePhiNode;
 import giraaff.nodes.calc.FloatingNode;
-import giraaff.nodes.graphbuilderconf.GraphBuilderConfiguration.Plugins;
+import giraaff.nodes.graphbuilderconf.GraphBuilderConfiguration;
 import giraaff.nodes.graphbuilderconf.GraphBuilderTool;
-import giraaff.nodes.graphbuilderconf.IntrinsicContext.SideEffectsState;
+import giraaff.nodes.graphbuilderconf.IntrinsicContext;
 import giraaff.nodes.graphbuilderconf.ParameterPlugin;
 import giraaff.nodes.java.MonitorIdNode;
 import giraaff.nodes.util.GraphUtil;
 import giraaff.util.GraalError;
 
 // @class FrameStateBuilder
-public final class FrameStateBuilder implements SideEffectsState
+public final class FrameStateBuilder implements IntrinsicContext.SideEffectsState
 {
     // @def
     private static final ValueNode[] EMPTY_ARRAY = new ValueNode[0];
@@ -94,7 +94,7 @@ public final class FrameStateBuilder implements SideEffectsState
     // @param method the method whose frame is simulated
     // @param graph the target graph of Graal nodes created by the builder
     ///
-    // @cons
+    // @cons FrameStateBuilder
     public FrameStateBuilder(GraphBuilderTool __tool, ResolvedJavaMethod __method, StructuredGraph __graph)
     {
         this(__tool, new ResolvedJavaMethodBytecode(__method), __graph);
@@ -106,7 +106,7 @@ public final class FrameStateBuilder implements SideEffectsState
     // @param code the bytecode in which the frame exists
     // @param graph the target graph of Graal nodes created by the builder
     ///
-    // @cons
+    // @cons FrameStateBuilder
     public FrameStateBuilder(GraphBuilderTool __tool, Bytecode __code, StructuredGraph __graph)
     {
         super();
@@ -156,7 +156,7 @@ public final class FrameStateBuilder implements SideEffectsState
         }
     }
 
-    public void initializeForMethodStart(Assumptions __assumptions, boolean __eagerResolve, Plugins __plugins)
+    public void initializeForMethodStart(Assumptions __assumptions, boolean __eagerResolve, GraphBuilderConfiguration.Plugins __plugins)
     {
         int __javaIndex = 0;
         int __index = 0;
@@ -245,7 +245,7 @@ public final class FrameStateBuilder implements SideEffectsState
         }
     }
 
-    // @cons
+    // @cons FrameStateBuilder
     private FrameStateBuilder(FrameStateBuilder __other)
     {
         super();
@@ -621,7 +621,7 @@ public final class FrameStateBuilder implements SideEffectsState
         return false;
     }
 
-    public void clearNonLiveLocals(BciBlock __block, LocalLiveness __liveness, boolean __liveIn)
+    public void clearNonLiveLocals(BciBlockMapping.BciBlock __block, LocalLiveness __liveness, boolean __liveIn)
     {
         // (lstadler) if somebody is tempted to remove/disable this clearing code: it's possible to
         // remove it for normal compilations, but not for OSR compilations - otherwise dead object

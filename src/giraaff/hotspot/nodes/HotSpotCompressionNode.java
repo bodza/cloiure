@@ -20,20 +20,20 @@ public final class HotSpotCompressionNode extends CompressionNode
     // @def
     public static final NodeClass<HotSpotCompressionNode> TYPE = NodeClass.create(HotSpotCompressionNode.class);
 
-    // @cons
-    public HotSpotCompressionNode(CompressionOp __op, ValueNode __input, CompressEncoding __encoding)
+    // @cons HotSpotCompressionNode
+    public HotSpotCompressionNode(CompressionNode.CompressionOp __op, ValueNode __input, CompressEncoding __encoding)
     {
         super(TYPE, __op, __input, HotSpotNarrowOopStamp.mkStamp(__op, __input.stamp(NodeView.DEFAULT), __encoding), __encoding);
     }
 
     public static HotSpotCompressionNode compress(ValueNode __input, CompressEncoding __encoding)
     {
-        return __input.graph().unique(new HotSpotCompressionNode(CompressionOp.Compress, __input, __encoding));
+        return __input.graph().unique(new HotSpotCompressionNode(CompressionNode.CompressionOp.Compress, __input, __encoding));
     }
 
     public static CompressionNode uncompress(ValueNode __input, CompressEncoding __encoding)
     {
-        return __input.graph().unique(new HotSpotCompressionNode(CompressionOp.Uncompress, __input, __encoding));
+        return __input.graph().unique(new HotSpotCompressionNode(CompressionNode.CompressionOp.Uncompress, __input, __encoding));
     }
 
     @Override

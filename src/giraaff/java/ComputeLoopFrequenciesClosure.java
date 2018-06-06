@@ -21,7 +21,7 @@ public final class ComputeLoopFrequenciesClosure extends ReentrantNodeIterator.N
     // @def
     private static final ComputeLoopFrequenciesClosure INSTANCE = new ComputeLoopFrequenciesClosure();
 
-    // @cons
+    // @cons ComputeLoopFrequenciesClosure
     private ComputeLoopFrequenciesClosure()
     {
         super();
@@ -99,5 +99,5 @@ public final class ComputeLoopFrequenciesClosure extends ReentrantNodeIterator.N
     }
 
     // @def
-    public static final ComputeLoopFrequencyPhase PHASE_INSTANCE = new ComputeLoopFrequencyPhase();
+    public static final ComputeLoopFrequenciesClosure.ComputeLoopFrequencyPhase PHASE_INSTANCE = new ComputeLoopFrequenciesClosure.ComputeLoopFrequencyPhase();
 }

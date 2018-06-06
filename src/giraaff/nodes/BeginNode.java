@@ -12,13 +12,13 @@ public final class BeginNode extends AbstractBeginNode implements Simplifiable
     // @def
     public static final NodeClass<BeginNode> TYPE = NodeClass.create(BeginNode.class);
 
-    // @cons
+    // @cons BeginNode
     public BeginNode()
     {
         super(TYPE, StampFactory.forVoid());
     }
 
-    // @cons
+    // @cons BeginNode
     public BeginNode(Stamp __stamp)
     {
         super(TYPE, __stamp);

@@ -3,6 +3,7 @@ package giraaff.nodes.java;
 import jdk.vm.ci.code.MemoryBarriers;
 
 import giraaff.core.common.type.StampFactory;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.nodes.FixedWithNextNode;
 import giraaff.nodes.ValueNode;
@@ -19,11 +20,11 @@ public final class FinalFieldBarrierNode extends FixedWithNextNode implements Vi
     // @def
     public static final NodeClass<FinalFieldBarrierNode> TYPE = NodeClass.create(FinalFieldBarrierNode.class);
 
-    @OptionalInput
+    @Node.OptionalInput
     // @field
     private ValueNode ___value;
 
-    // @cons
+    // @cons FinalFieldBarrierNode
     public FinalFieldBarrierNode(ValueNode __value)
     {
         super(TYPE, StampFactory.forVoid());

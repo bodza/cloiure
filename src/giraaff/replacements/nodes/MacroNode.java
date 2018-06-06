@@ -10,14 +10,13 @@ import giraaff.core.common.type.StampPair;
 import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.graph.NodeInputList;
-import giraaff.nodes.CallTargetNode.InvokeKind;
+import giraaff.nodes.CallTargetNode;
 import giraaff.nodes.FixedNode;
 import giraaff.nodes.FixedWithNextNode;
 import giraaff.nodes.FrameState;
 import giraaff.nodes.Invokable;
 import giraaff.nodes.InvokeNode;
 import giraaff.nodes.StructuredGraph;
-import giraaff.nodes.StructuredGraph.GuardsStage;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.java.MethodCallTargetNode;
 import giraaff.nodes.spi.Lowerable;
@@ -50,7 +49,7 @@ public abstract class MacroNode extends FixedWithNextNode implements Lowerable, 
     // @def
     public static final NodeClass<MacroNode> TYPE = NodeClass.create(MacroNode.class);
 
-    @Input
+    @Node.Input
     // @field
     protected NodeInputList<ValueNode> ___arguments;
 
@@ -61,10 +60,10 @@ public abstract class MacroNode extends FixedWithNextNode implements Lowerable, 
     // @field
     protected final StampPair ___returnStamp;
     // @field
-    protected final InvokeKind ___invokeKind;
+    protected final CallTargetNode.InvokeKind ___invokeKind;
 
-    // @cons
-    protected MacroNode(NodeClass<? extends MacroNode> __c, InvokeKind __invokeKind, ResolvedJavaMethod __targetMethod, int __bci, StampPair __returnStamp, ValueNode... __arguments)
+    // @cons MacroNode
+    protected MacroNode(NodeClass<? extends MacroNode> __c, CallTargetNode.InvokeKind __invokeKind, ResolvedJavaMethod __targetMethod, int __bci, StampPair __returnStamp, ValueNode... __arguments)
     {
         super(__c, __returnStamp.getTrustedStamp());
         this.___arguments = new NodeInputList<>(this, __arguments);
@@ -139,7 +138,7 @@ public abstract class MacroNode extends FixedWithNextNode implements Lowerable, 
         {
             new RemoveValueProxyPhase().apply(__replacementGraph);
         }
-        GuardsStage __guardsStage = graph().getGuardsStage();
+        StructuredGraph.GuardsStage __guardsStage = graph().getGuardsStage();
         if (!__guardsStage.allowsFloatingGuards())
         {
             new GuardLoweringPhase().apply(__replacementGraph, null);

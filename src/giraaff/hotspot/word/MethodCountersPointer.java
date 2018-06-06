@@ -8,9 +8,9 @@ import giraaff.hotspot.word.HotSpotOperation.HotspotOpcode;
 // @class MethodCountersPointer
 public abstract class MethodCountersPointer extends MetaspacePointer
 {
-    @HotSpotOperation(opcode = HotspotOpcode.POINTER_EQ)
+    @HotSpotOperation(opcode = HotSpotOperation.HotspotOpcode.POINTER_EQ)
     public abstract boolean equal(MethodCountersPointer __other);
 
-    @HotSpotOperation(opcode = HotspotOpcode.POINTER_NE)
+    @HotSpotOperation(opcode = HotSpotOperation.HotspotOpcode.POINTER_NE)
     public abstract boolean notEqual(MethodCountersPointer __other);
 }

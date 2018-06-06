@@ -33,8 +33,8 @@ public final class GraphBuilderConfiguration
         // {@code copyFrom} become the {@linkplain InvocationPlugins#getParent() default}
         // {@linkplain #getInvocationPlugins() invocation plugins} in this object.
         ///
-        // @cons
-        public Plugins(Plugins __copyFrom)
+        // @cons GraphBuilderConfiguration.Plugins
+        public Plugins(GraphBuilderConfiguration.Plugins __copyFrom)
         {
             super();
             this.___invocationPlugins = new InvocationPlugins(__copyFrom.___invocationPlugins);
@@ -52,7 +52,7 @@ public final class GraphBuilderConfiguration
         // @param invocationPlugins the {@linkplain #getInvocationPlugins() invocation plugins} in
         //            this object
         ///
-        // @cons
+        // @cons GraphBuilderConfiguration.Plugins
         public Plugins(InvocationPlugins __invocationPlugins)
         {
             super();
@@ -201,11 +201,11 @@ public final class GraphBuilderConfiguration
     // @field
     private final boolean ___unresolvedIsError;
     // @field
-    private final BytecodeExceptionMode ___bytecodeExceptionMode;
+    private final GraphBuilderConfiguration.BytecodeExceptionMode ___bytecodeExceptionMode;
     // @field
     private final ResolvedJavaType[] ___skippedExceptionTypes;
     // @field
-    private final Plugins ___plugins;
+    private final GraphBuilderConfiguration.Plugins ___plugins;
 
     // @enum GraphBuilderConfiguration.BytecodeExceptionMode
     public enum BytecodeExceptionMode
@@ -228,8 +228,8 @@ public final class GraphBuilderConfiguration
         Profile
     }
 
-    // @cons
-    protected GraphBuilderConfiguration(boolean __eagerResolving, boolean __unresolvedIsError, BytecodeExceptionMode __bytecodeExceptionMode, ResolvedJavaType[] __skippedExceptionTypes, Plugins __plugins)
+    // @cons GraphBuilderConfiguration
+    protected GraphBuilderConfiguration(boolean __eagerResolving, boolean __unresolvedIsError, GraphBuilderConfiguration.BytecodeExceptionMode __bytecodeExceptionMode, ResolvedJavaType[] __skippedExceptionTypes, GraphBuilderConfiguration.Plugins __plugins)
     {
         super();
         this.___eagerResolving = __eagerResolving;
@@ -246,7 +246,7 @@ public final class GraphBuilderConfiguration
     ///
     public GraphBuilderConfiguration copy()
     {
-        Plugins __newPlugins = new Plugins(this.___plugins);
+        GraphBuilderConfiguration.Plugins __newPlugins = new GraphBuilderConfiguration.Plugins(this.___plugins);
         return new GraphBuilderConfiguration(this.___eagerResolving, this.___unresolvedIsError, this.___bytecodeExceptionMode, this.___skippedExceptionTypes, __newPlugins);
     }
 
@@ -271,7 +271,7 @@ public final class GraphBuilderConfiguration
         return new GraphBuilderConfiguration(this.___eagerResolving, this.___unresolvedIsError, this.___bytecodeExceptionMode, __newSkippedExceptionTypes, this.___plugins);
     }
 
-    public GraphBuilderConfiguration withBytecodeExceptionMode(BytecodeExceptionMode __newBytecodeExceptionMode)
+    public GraphBuilderConfiguration withBytecodeExceptionMode(GraphBuilderConfiguration.BytecodeExceptionMode __newBytecodeExceptionMode)
     {
         return new GraphBuilderConfiguration(this.___eagerResolving, this.___unresolvedIsError, __newBytecodeExceptionMode, this.___skippedExceptionTypes, this.___plugins);
     }
@@ -286,19 +286,19 @@ public final class GraphBuilderConfiguration
         return this.___eagerResolving;
     }
 
-    public BytecodeExceptionMode getBytecodeExceptionMode()
+    public GraphBuilderConfiguration.BytecodeExceptionMode getBytecodeExceptionMode()
     {
         return this.___bytecodeExceptionMode;
     }
 
-    public static GraphBuilderConfiguration getDefault(Plugins __plugins)
+    public static GraphBuilderConfiguration getDefault(GraphBuilderConfiguration.Plugins __plugins)
     {
-        return new GraphBuilderConfiguration(false, false, BytecodeExceptionMode.Profile, EMPTY, __plugins);
+        return new GraphBuilderConfiguration(false, false, GraphBuilderConfiguration.BytecodeExceptionMode.Profile, EMPTY, __plugins);
     }
 
-    public static GraphBuilderConfiguration getSnippetDefault(Plugins __plugins)
+    public static GraphBuilderConfiguration getSnippetDefault(GraphBuilderConfiguration.Plugins __plugins)
     {
-        return new GraphBuilderConfiguration(true, true, BytecodeExceptionMode.OmitAll, EMPTY, __plugins);
+        return new GraphBuilderConfiguration(true, true, GraphBuilderConfiguration.BytecodeExceptionMode.OmitAll, EMPTY, __plugins);
     }
 
     ///
@@ -309,7 +309,7 @@ public final class GraphBuilderConfiguration
         return this.___unresolvedIsError;
     }
 
-    public Plugins getPlugins()
+    public GraphBuilderConfiguration.Plugins getPlugins()
     {
         return this.___plugins;
     }

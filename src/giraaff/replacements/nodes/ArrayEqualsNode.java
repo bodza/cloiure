@@ -42,26 +42,26 @@ public final class ArrayEqualsNode extends FixedWithNextNode implements LIRLower
     protected final JavaKind ___kind;
 
     /// One array to be tested for equality.
-    @Input
+    @Node.Input
     // @field
     ValueNode ___array1;
 
     /// The other array to be tested for equality.
-    @Input
+    @Node.Input
     // @field
     ValueNode ___array2;
 
     /// Length of both arrays.
-    @Input
+    @Node.Input
     // @field
     ValueNode ___length;
 
-    @OptionalInput(InputType.Memory)
+    @Node.OptionalInput(InputType.Memory)
     // @field
     MemoryNode ___lastLocationAccess;
 
-    // @cons
-    public ArrayEqualsNode(ValueNode __array1, ValueNode __array2, ValueNode __length, @ConstantNodeParameter JavaKind __kind)
+    // @cons ArrayEqualsNode
+    public ArrayEqualsNode(ValueNode __array1, ValueNode __array2, ValueNode __length, @Node.ConstantNodeParameter JavaKind __kind)
     {
         super(TYPE, StampFactory.forKind(JavaKind.Boolean));
         this.___kind = __kind;
@@ -168,8 +168,8 @@ public final class ArrayEqualsNode extends FixedWithNextNode implements LIRLower
         }
     }
 
-    @NodeIntrinsic
-    public static native boolean equals(Object __array1, Object __array2, int __length, @ConstantNodeParameter JavaKind __kind);
+    @Node.NodeIntrinsic
+    public static native boolean equals(Object __array1, Object __array2, int __length, @Node.ConstantNodeParameter JavaKind __kind);
 
     public static boolean equals(boolean[] __array1, boolean[] __array2, int __length)
     {

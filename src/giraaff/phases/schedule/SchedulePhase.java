@@ -35,9 +35,7 @@ import giraaff.nodes.PhiNode;
 import giraaff.nodes.ProxyNode;
 import giraaff.nodes.StartNode;
 import giraaff.nodes.StaticDeoptimizingNode;
-import giraaff.nodes.StaticDeoptimizingNode.GuardPriority;
 import giraaff.nodes.StructuredGraph;
-import giraaff.nodes.StructuredGraph.ScheduleResult;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.calc.ConvertNode;
 import giraaff.nodes.calc.IsNullNode;
@@ -74,31 +72,31 @@ public final class SchedulePhase extends Phase
     }
 
     // @field
-    private final SchedulingStrategy ___selectedStrategy;
+    private final SchedulePhase.SchedulingStrategy ___selectedStrategy;
 
     // @field
     private final boolean ___immutableGraph;
 
-    // @cons
+    // @cons SchedulePhase
     public SchedulePhase()
     {
         this(false);
     }
 
-    // @cons
+    // @cons SchedulePhase
     public SchedulePhase(boolean __immutableGraph)
     {
-        this(GraalOptions.optScheduleOutOfLoops ? SchedulingStrategy.LATEST_OUT_OF_LOOPS : SchedulingStrategy.LATEST, __immutableGraph);
+        this(GraalOptions.optScheduleOutOfLoops ? SchedulePhase.SchedulingStrategy.LATEST_OUT_OF_LOOPS : SchedulePhase.SchedulingStrategy.LATEST, __immutableGraph);
     }
 
-    // @cons
-    public SchedulePhase(SchedulingStrategy __strategy)
+    // @cons SchedulePhase
+    public SchedulePhase(SchedulePhase.SchedulingStrategy __strategy)
     {
         this(__strategy, false);
     }
 
-    // @cons
-    public SchedulePhase(SchedulingStrategy __strategy, boolean __immutableGraph)
+    // @cons SchedulePhase
+    public SchedulePhase(SchedulePhase.SchedulingStrategy __strategy, boolean __immutableGraph)
     {
         super();
         this.___selectedStrategy = __strategy;
@@ -108,18 +106,18 @@ public final class SchedulePhase extends Phase
     @Override
     protected void run(StructuredGraph __graph)
     {
-        Instance __inst = new Instance();
+        SchedulePhase.ScheduleInstance __inst = new SchedulePhase.ScheduleInstance();
         __inst.run(__graph, this.___selectedStrategy, this.___immutableGraph);
     }
 
-    public static void run(StructuredGraph __graph, SchedulingStrategy __strategy, ControlFlowGraph __cfg)
+    public static void run(StructuredGraph __graph, SchedulePhase.SchedulingStrategy __strategy, ControlFlowGraph __cfg)
     {
-        Instance __inst = new Instance(__cfg);
+        SchedulePhase.ScheduleInstance __inst = new SchedulePhase.ScheduleInstance(__cfg);
         __inst.run(__graph, __strategy, false);
     }
 
-    // @class SchedulePhase.Instance
-    public static final class Instance
+    // @class SchedulePhase.ScheduleInstance
+    public static final class ScheduleInstance
     {
         // @def
         private static final double IMPLICIT_NULL_CHECK_OPPORTUNITY_PROBABILITY_FACTOR = 2;
@@ -133,20 +131,20 @@ public final class SchedulePhase extends Phase
         // @field
         protected NodeMap<Block> ___nodeToBlockMap;
 
-        // @cons
-        public Instance()
+        // @cons SchedulePhase.ScheduleInstance
+        public ScheduleInstance()
         {
             this(null);
         }
 
-        // @cons
-        public Instance(ControlFlowGraph __cfg)
+        // @cons SchedulePhase.ScheduleInstance
+        public ScheduleInstance(ControlFlowGraph __cfg)
         {
             super();
             this.___cfg = __cfg;
         }
 
-        public void run(StructuredGraph __graph, SchedulingStrategy __selectedStrategy, boolean __immutableGraph)
+        public void run(StructuredGraph __graph, SchedulePhase.SchedulingStrategy __selectedStrategy, boolean __immutableGraph)
         {
             if (this.___cfg == null)
             {
@@ -159,7 +157,7 @@ public final class SchedulePhase extends Phase
             this.___nodeToBlockMap = __currentNodeMap;
             this.___blockToNodesMap = __earliestBlockToNodesMap;
 
-            scheduleEarliestIterative(__earliestBlockToNodesMap, __currentNodeMap, __visited, __graph, __immutableGraph, __selectedStrategy == SchedulingStrategy.EARLIEST_WITH_GUARD_ORDER);
+            scheduleEarliestIterative(__earliestBlockToNodesMap, __currentNodeMap, __visited, __graph, __immutableGraph, __selectedStrategy == SchedulePhase.SchedulingStrategy.EARLIEST_WITH_GUARD_ORDER);
 
             if (!__selectedStrategy.isEarliest())
             {
@@ -177,10 +175,10 @@ public final class SchedulePhase extends Phase
             }
             this.___cfg.setNodeToBlock(__currentNodeMap);
 
-            __graph.setLastSchedule(new ScheduleResult(this.___cfg, this.___nodeToBlockMap, this.___blockToNodesMap));
+            __graph.setLastSchedule(new StructuredGraph.ScheduleResult(this.___cfg, this.___nodeToBlockMap, this.___blockToNodesMap));
         }
 
-        private BlockMap<ArrayList<FloatingReadNode>> calcLatestBlocks(SchedulingStrategy __strategy, NodeMap<Block> __currentNodeMap, BlockMap<List<Node>> __earliestBlockToNodesMap, NodeBitMap __visited, BlockMap<List<Node>> __latestBlockToNodesMap, boolean __immutableGraph)
+        private BlockMap<ArrayList<FloatingReadNode>> calcLatestBlocks(SchedulePhase.SchedulingStrategy __strategy, NodeMap<Block> __currentNodeMap, BlockMap<List<Node>> __earliestBlockToNodesMap, NodeBitMap __visited, BlockMap<List<Node>> __latestBlockToNodesMap, boolean __immutableGraph)
         {
             BlockMap<ArrayList<FloatingReadNode>> __watchListMap = new BlockMap<>(this.___cfg);
             Block[] __reversePostOrder = this.___cfg.reversePostOrder();
@@ -525,7 +523,7 @@ public final class SchedulePhase extends Phase
             }
         }
 
-        protected void calcLatestBlock(Block __earliestBlock, SchedulingStrategy __strategy, Node __currentNode, NodeMap<Block> __currentNodeMap, LocationIdentity __constrainingLocation, BlockMap<ArrayList<FloatingReadNode>> __watchListMap, BlockMap<List<Node>> __latestBlockToNodesMap, NodeBitMap __visited, boolean __immutableGraph)
+        protected void calcLatestBlock(Block __earliestBlock, SchedulePhase.SchedulingStrategy __strategy, Node __currentNode, NodeMap<Block> __currentNodeMap, LocationIdentity __constrainingLocation, BlockMap<ArrayList<FloatingReadNode>> __watchListMap, BlockMap<List<Node>> __latestBlockToNodesMap, NodeBitMap __visited, boolean __immutableGraph)
         {
             Block __latestBlock = null;
             if (!__currentNode.hasUsages())
@@ -545,7 +543,7 @@ public final class SchedulePhase extends Phase
                     __latestBlock = calcBlockForUsage(__currentNode, __usage, __latestBlock, __currentNodeMap);
                 }
 
-                if (__strategy == SchedulingStrategy.FINAL_SCHEDULE || __strategy == SchedulingStrategy.LATEST_OUT_OF_LOOPS)
+                if (__strategy == SchedulePhase.SchedulingStrategy.FINAL_SCHEDULE || __strategy == SchedulePhase.SchedulingStrategy.LATEST_OUT_OF_LOOPS)
                 {
                     Block __currentBlock = __latestBlock;
                     while (__currentBlock.getLoopDepth() > __earliestBlock.getLoopDepth() && __currentBlock != __earliestBlock.getDominator())
@@ -680,7 +678,7 @@ public final class SchedulePhase extends Phase
         // Micro block that is allocated for each fixed node and captures all floating nodes that
         // need to be scheduled immediately after the corresponding fixed node.
         ///
-        // @class SchedulePhase.Instance.MicroBlock
+        // @class SchedulePhase.ScheduleInstance.MicroBlock
         private static final class MicroBlock
         {
             // @field
@@ -688,11 +686,11 @@ public final class SchedulePhase extends Phase
             // @field
             private int ___nodeCount;
             // @field
-            private NodeEntry ___head;
+            private SchedulePhase.ScheduleInstance.NodeEntry ___head;
             // @field
-            private NodeEntry ___tail;
+            private SchedulePhase.ScheduleInstance.NodeEntry ___tail;
 
-            // @cons
+            // @cons SchedulePhase.ScheduleInstance.MicroBlock
             MicroBlock(int __id)
             {
                 super();
@@ -704,7 +702,7 @@ public final class SchedulePhase extends Phase
             ///
             public void add(Node __node)
             {
-                NodeEntry __newTail = new NodeEntry(__node);
+                SchedulePhase.ScheduleInstance.NodeEntry __newTail = new SchedulePhase.ScheduleInstance.NodeEntry(__node);
                 if (this.___tail == null)
                 {
                     this.___tail = this.___head = __newTail;
@@ -728,7 +726,7 @@ public final class SchedulePhase extends Phase
             private int getActualNodeCount()
             {
                 int __count = 0;
-                for (NodeEntry __e = this.___head; __e != null; __e = __e.___next)
+                for (SchedulePhase.ScheduleInstance.NodeEntry __e = this.___head; __e != null; __e = __e.___next)
                 {
                     __count++;
                 }
@@ -746,7 +744,7 @@ public final class SchedulePhase extends Phase
             ///
             // First node of the linked list of nodes of this micro block.
             ///
-            public NodeEntry getFirstNode()
+            public SchedulePhase.ScheduleInstance.NodeEntry getFirstNode()
             {
                 return this.___head;
             }
@@ -756,7 +754,7 @@ public final class SchedulePhase extends Phase
             //
             // @param newBlock the new block for the nodes
             ///
-            public void prependChildrenTo(MicroBlock __newBlock)
+            public void prependChildrenTo(SchedulePhase.ScheduleInstance.MicroBlock __newBlock)
             {
                 if (this.___tail != null)
                 {
@@ -778,15 +776,15 @@ public final class SchedulePhase extends Phase
         ///
         // Entry in the linked list of nodes.
         ///
-        // @class SchedulePhase.Instance.NodeEntry
+        // @class SchedulePhase.ScheduleInstance.NodeEntry
         private static final class NodeEntry
         {
             // @field
             private final Node ___node;
             // @field
-            private NodeEntry ___next;
+            private SchedulePhase.ScheduleInstance.NodeEntry ___next;
 
-            // @cons
+            // @cons SchedulePhase.ScheduleInstance.NodeEntry
             NodeEntry(Node __node)
             {
                 super();
@@ -794,7 +792,7 @@ public final class SchedulePhase extends Phase
                 this.___next = null;
             }
 
-            public NodeEntry getNext()
+            public SchedulePhase.ScheduleInstance.NodeEntry getNext()
             {
                 return this.___next;
             }
@@ -807,17 +805,17 @@ public final class SchedulePhase extends Phase
 
         private void scheduleEarliestIterative(BlockMap<List<Node>> __blockToNodes, NodeMap<Block> __nodeToBlock, NodeBitMap __visited, StructuredGraph __graph, boolean __immutableGraph, boolean __withGuardOrder)
         {
-            NodeMap<MicroBlock> __entries = __graph.createNodeMap();
+            NodeMap<SchedulePhase.ScheduleInstance.MicroBlock> __entries = __graph.createNodeMap();
             NodeStack __stack = new NodeStack();
 
             // Initialize with fixed nodes.
-            MicroBlock __startBlock = null;
+            SchedulePhase.ScheduleInstance.MicroBlock __startBlock = null;
             int __nextId = 1;
             for (Block __b : this.___cfg.reversePostOrder())
             {
                 for (FixedNode __current : __b.getBeginNode().getBlockNodes())
                 {
-                    MicroBlock __microBlock = new MicroBlock(__nextId++);
+                    SchedulePhase.ScheduleInstance.MicroBlock __microBlock = new SchedulePhase.ScheduleInstance.MicroBlock(__nextId++);
                     __entries.set(__current, __microBlock);
                     boolean __isNew = __visited.checkAndMarkInc(__current);
                     if (__startBlock == null)
@@ -832,7 +830,7 @@ public final class SchedulePhase extends Phase
                 // Now process guards.
                 if (GraalOptions.guardPriorities && __withGuardOrder)
                 {
-                    EnumMap<GuardPriority, List<GuardNode>> __guardsByPriority = new EnumMap<>(GuardPriority.class);
+                    EnumMap<StaticDeoptimizingNode.GuardPriority, List<GuardNode>> __guardsByPriority = new EnumMap<>(StaticDeoptimizingNode.GuardPriority.class);
                     for (GuardNode __guard : __graph.getNodes(GuardNode.TYPE))
                     {
                         __guardsByPriority.computeIfAbsent(__guard.computePriority(), __p -> new ArrayList<>()).add(__guard);
@@ -842,7 +840,7 @@ public final class SchedulePhase extends Phase
                     {
                         processNodes(__visited, __entries, __stack, __startBlock, __guards);
                     }
-                    GuardOrder.resortGuards(__graph, __entries, __stack);
+                    SchedulePhase.ScheduleInstance.GuardOrder.resortGuards(__graph, __entries, __stack);
                 }
                 else
                 {
@@ -914,7 +912,7 @@ public final class SchedulePhase extends Phase
                 if (__fixedNode instanceof ControlSplitNode)
                 {
                     ControlSplitNode __controlSplitNode = (ControlSplitNode) __fixedNode;
-                    MicroBlock __endBlock = __entries.get(__fixedNode);
+                    SchedulePhase.ScheduleInstance.MicroBlock __endBlock = __entries.get(__fixedNode);
                     AbstractBeginNode __primarySuccessor = __controlSplitNode.getPrimarySuccessor();
                     if (__primarySuccessor != null)
                     {
@@ -930,7 +928,7 @@ public final class SchedulePhase extends Phase
                 int __totalCount = 0;
                 for (FixedNode __current : __b.getBeginNode().getBlockNodes())
                 {
-                    MicroBlock __microBlock = __entries.get(__current);
+                    SchedulePhase.ScheduleInstance.MicroBlock __microBlock = __entries.get(__current);
                     __totalCount += __microBlock.getNodeCount() + 1;
                 }
 
@@ -940,10 +938,10 @@ public final class SchedulePhase extends Phase
 
                 for (FixedNode __current : __b.getBeginNode().getBlockNodes())
                 {
-                    MicroBlock __microBlock = __entries.get(__current);
+                    SchedulePhase.ScheduleInstance.MicroBlock __microBlock = __entries.get(__current);
                     __nodeToBlock.set(__current, __b);
                     __nodes.add(__current);
-                    NodeEntry __next = __microBlock.getFirstNode();
+                    SchedulePhase.ScheduleInstance.NodeEntry __next = __microBlock.getFirstNode();
                     while (__next != null)
                     {
                         Node __nextNode = __next.getNode();
@@ -955,7 +953,7 @@ public final class SchedulePhase extends Phase
             }
         }
 
-        private static void processNodes(NodeBitMap __visited, NodeMap<MicroBlock> __entries, NodeStack __stack, MicroBlock __startBlock, Iterable<? extends Node> __nodes)
+        private static void processNodes(NodeBitMap __visited, NodeMap<SchedulePhase.ScheduleInstance.MicroBlock> __entries, NodeStack __stack, SchedulePhase.ScheduleInstance.MicroBlock __startBlock, Iterable<? extends Node> __nodes)
         {
             for (Node __node : __nodes)
             {
@@ -966,12 +964,12 @@ public final class SchedulePhase extends Phase
             }
         }
 
-        private static void processStackPhi(NodeStack __stack, PhiNode __phiNode, NodeMap<MicroBlock> __nodeToBlock, NodeBitMap __visited)
+        private static void processStackPhi(NodeStack __stack, PhiNode __phiNode, NodeMap<SchedulePhase.ScheduleInstance.MicroBlock> __nodeToBlock, NodeBitMap __visited)
         {
             __stack.pop();
             if (__visited.checkAndMarkInc(__phiNode))
             {
-                MicroBlock __mergeBlock = __nodeToBlock.get(__phiNode.merge());
+                SchedulePhase.ScheduleInstance.MicroBlock __mergeBlock = __nodeToBlock.get(__phiNode.merge());
                 __nodeToBlock.set(__phiNode, __mergeBlock);
                 AbstractMergeNode __merge = __phiNode.merge();
                 for (int __i = 0; __i < __merge.forwardEndCount(); ++__i)
@@ -985,7 +983,7 @@ public final class SchedulePhase extends Phase
             }
         }
 
-        private static void processStackProxy(NodeStack __stack, ProxyNode __proxyNode, NodeMap<MicroBlock> __nodeToBlock, NodeBitMap __visited)
+        private static void processStackProxy(NodeStack __stack, ProxyNode __proxyNode, NodeMap<SchedulePhase.ScheduleInstance.MicroBlock> __nodeToBlock, NodeBitMap __visited)
         {
             __stack.pop();
             if (__visited.checkAndMarkInc(__proxyNode))
@@ -999,7 +997,7 @@ public final class SchedulePhase extends Phase
             }
         }
 
-        private static void processStack(Node __first, MicroBlock __startBlock, NodeMap<MicroBlock> __nodeToMicroBlock, NodeBitMap __visited, NodeStack __stack)
+        private static void processStack(Node __first, SchedulePhase.ScheduleInstance.MicroBlock __startBlock, NodeMap<SchedulePhase.ScheduleInstance.MicroBlock> __nodeToMicroBlock, NodeBitMap __visited, NodeStack __stack)
         {
             __stack.push(__first);
             Node __current = __first;
@@ -1015,10 +1013,10 @@ public final class SchedulePhase extends Phase
                 }
                 else
                 {
-                    MicroBlock __currentBlock = __nodeToMicroBlock.get(__current);
+                    SchedulePhase.ScheduleInstance.MicroBlock __currentBlock = __nodeToMicroBlock.get(__current);
                     if (__currentBlock == null)
                     {
-                        MicroBlock __earliestBlock = processInputs(__nodeToMicroBlock, __stack, __startBlock, __current);
+                        SchedulePhase.ScheduleInstance.MicroBlock __earliestBlock = processInputs(__nodeToMicroBlock, __stack, __startBlock, __current);
                         if (__earliestBlock == null)
                         {
                             // We need to delay until inputs are processed.
@@ -1046,29 +1044,30 @@ public final class SchedulePhase extends Phase
             }
         }
 
-        // @class SchedulePhase.Instance.GuardOrder
+        // @class SchedulePhase.ScheduleInstance.GuardOrder
         private static final class GuardOrder
         {
             ///
             // After an earliest schedule, this will re-sort guards to honor their
             // {@linkplain StaticDeoptimizingNode#computePriority() priority}.
             //
-            // Note that this only changes the order of nodes within {@linkplain MicroBlock
-            // micro-blocks}, nodes will not be moved from one micro-block to another.
+            // Note that this only changes the order of nodes within
+            // {@linkplain SchedulePhase.ScheduleInstance.MicroBlock micro-blocks},
+            // nodes will not be moved from one micro-block to another.
             ///
-            private static void resortGuards(StructuredGraph __graph, NodeMap<MicroBlock> __entries, NodeStack __stack)
+            private static void resortGuards(StructuredGraph __graph, NodeMap<SchedulePhase.ScheduleInstance.MicroBlock> __entries, NodeStack __stack)
             {
-                EconomicSet<MicroBlock> __blocksWithGuards = EconomicSet.create(Equivalence.IDENTITY);
+                EconomicSet<SchedulePhase.ScheduleInstance.MicroBlock> __blocksWithGuards = EconomicSet.create(Equivalence.IDENTITY);
                 for (GuardNode __guard : __graph.getNodes(GuardNode.TYPE))
                 {
-                    MicroBlock __block = __entries.get(__guard);
+                    SchedulePhase.ScheduleInstance.MicroBlock __block = __entries.get(__guard);
                     __blocksWithGuards.add(__block);
                 }
-                NodeMap<GuardPriority> __priorities = __graph.createNodeMap();
+                NodeMap<StaticDeoptimizingNode.GuardPriority> __priorities = __graph.createNodeMap();
                 NodeBitMap __blockNodes = __graph.createNodeBitMap();
-                for (MicroBlock __block : __blocksWithGuards)
+                for (SchedulePhase.ScheduleInstance.MicroBlock __block : __blocksWithGuards)
                 {
-                    MicroBlock __newBlock = resortGuards(__block, __stack, __blockNodes, __priorities);
+                    SchedulePhase.ScheduleInstance.MicroBlock __newBlock = resortGuards(__block, __stack, __blockNodes, __priorities);
                     if (__newBlock != null)
                     {
                         __block.___head = __newBlock.___head;
@@ -1084,23 +1083,23 @@ public final class SchedulePhase extends Phase
             // data-structures which are allocated once by the callers of this method. They should
             // be in their "initial"/"empty" state when calling this method and when it returns.
             ///
-            private static MicroBlock resortGuards(MicroBlock __block, NodeStack __stack, NodeBitMap __blockNodes, NodeMap<GuardPriority> __priorities)
+            private static SchedulePhase.ScheduleInstance.MicroBlock resortGuards(SchedulePhase.ScheduleInstance.MicroBlock __block, NodeStack __stack, NodeBitMap __blockNodes, NodeMap<StaticDeoptimizingNode.GuardPriority> __priorities)
             {
                 if (!propagatePriority(__block, __stack, __priorities, __blockNodes))
                 {
                     return null;
                 }
 
-                Function<GuardNode, GuardPriority> __transitiveGuardPriorityGetter = __priorities::get;
+                Function<GuardNode, StaticDeoptimizingNode.GuardPriority> __transitiveGuardPriorityGetter = __priorities::get;
                 Comparator<GuardNode> __globalGuardPriorityComparator = Comparator.comparing(__transitiveGuardPriorityGetter).thenComparing(GuardNode::computePriority).thenComparingInt(Node::hashCode);
 
                 SortedSet<GuardNode> __availableGuards = new TreeSet<>(__globalGuardPriorityComparator);
-                MicroBlock __newBlock = new MicroBlock(__block.getId());
+                SchedulePhase.ScheduleInstance.MicroBlock __newBlock = new SchedulePhase.ScheduleInstance.MicroBlock(__block.getId());
 
                 NodeBitMap __sorted = __blockNodes;
                 __sorted.invert();
 
-                for (NodeEntry __e = __block.___head; __e != null; __e = __e.___next)
+                for (SchedulePhase.ScheduleInstance.NodeEntry __e = __block.___head; __e != null; __e = __e.___next)
                 {
                     checkIfAvailable(__e.___node, __stack, __sorted, __newBlock, __availableGuards, false);
                 }
@@ -1124,9 +1123,9 @@ public final class SchedulePhase extends Phase
 
             ///
             // This checks if {@code n} can be scheduled, if it is the case, it schedules it now by
-            // calling {@link #addNodeToResort(Node, NodeStack, NodeBitMap, MicroBlock, boolean)}.
+            // calling {@link #addNodeToResort(Node, NodeStack, NodeBitMap, SchedulePhase.ScheduleInstance.MicroBlock, boolean)}.
             ///
-            private static void checkIfAvailable(Node __n, NodeStack __stack, NodeBitMap __sorted, Instance.MicroBlock __newBlock, SortedSet<GuardNode> __availableGuardNodes, boolean __pushUsages)
+            private static void checkIfAvailable(Node __n, NodeStack __stack, NodeBitMap __sorted, SchedulePhase.ScheduleInstance.MicroBlock __newBlock, SortedSet<GuardNode> __availableGuardNodes, boolean __pushUsages)
             {
                 if (__sorted.isMarked(__n))
                 {
@@ -1153,7 +1152,7 @@ public final class SchedulePhase extends Phase
             // Add a node to the re-sorted micro-block. This also pushes nodes that need to be
             // (re-)examined on the stack.
             ///
-            private static void addNodeToResort(Node __n, NodeStack __stack, NodeBitMap __sorted, MicroBlock __newBlock, boolean __pushUsages)
+            private static void addNodeToResort(Node __n, NodeStack __stack, NodeBitMap __sorted, SchedulePhase.ScheduleInstance.MicroBlock __newBlock, boolean __pushUsages)
             {
                 __sorted.mark(__n);
                 __newBlock.add(__n);
@@ -1178,16 +1177,16 @@ public final class SchedulePhase extends Phase
             //
             // This method returns {@code false} if no re-ordering is necessary in this micro-block.
             ///
-            private static boolean propagatePriority(MicroBlock __block, NodeStack __stack, NodeMap<GuardPriority> __priorities, NodeBitMap __blockNodes)
+            private static boolean propagatePriority(SchedulePhase.ScheduleInstance.MicroBlock __block, NodeStack __stack, NodeMap<StaticDeoptimizingNode.GuardPriority> __priorities, NodeBitMap __blockNodes)
             {
-                GuardPriority __lowestPriority = GuardPriority.highest();
-                for (NodeEntry __e = __block.___head; __e != null; __e = __e.___next)
+                StaticDeoptimizingNode.GuardPriority __lowestPriority = StaticDeoptimizingNode.GuardPriority.highest();
+                for (SchedulePhase.ScheduleInstance.NodeEntry __e = __block.___head; __e != null; __e = __e.___next)
                 {
                     __blockNodes.mark(__e.___node);
                     if (__e.___node instanceof GuardNode)
                     {
                         GuardNode __guard = (GuardNode) __e.___node;
-                        GuardPriority __priority = __guard.computePriority();
+                        StaticDeoptimizingNode.GuardPriority __priority = __guard.computePriority();
                         if (__lowestPriority != null)
                         {
                             if (__priority.isLowerPriorityThan(__lowestPriority))
@@ -1213,14 +1212,14 @@ public final class SchedulePhase extends Phase
                 do
                 {
                     Node __current = __stack.pop();
-                    GuardPriority __priority = __priorities.get(__current);
+                    StaticDeoptimizingNode.GuardPriority __priority = __priorities.get(__current);
                     for (Node __input : __current.inputs())
                     {
                         if (!__blockNodes.isMarked(__input))
                         {
                             continue;
                         }
-                        GuardPriority __inputPriority = __priorities.get(__input);
+                        StaticDeoptimizingNode.GuardPriority __inputPriority = __priorities.get(__input);
                         if (__inputPriority == null || __inputPriority.isLowerPriorityThan(__priority))
                         {
                             __priorities.set(__input, __priority);
@@ -1237,17 +1236,17 @@ public final class SchedulePhase extends Phase
         // null if there were still unprocessed inputs, otherwise returns the earliest block given
         // node can be scheduled in.
         ///
-        private static MicroBlock processInputs(NodeMap<MicroBlock> __nodeToBlock, NodeStack __stack, MicroBlock __startBlock, Node __current)
+        private static SchedulePhase.ScheduleInstance.MicroBlock processInputs(NodeMap<SchedulePhase.ScheduleInstance.MicroBlock> __nodeToBlock, NodeStack __stack, SchedulePhase.ScheduleInstance.MicroBlock __startBlock, Node __current)
         {
             if (__current.getNodeClass().isLeafNode())
             {
                 return __startBlock;
             }
 
-            MicroBlock __earliestBlock = __startBlock;
+            SchedulePhase.ScheduleInstance.MicroBlock __earliestBlock = __startBlock;
             for (Node __input : __current.inputs())
             {
-                MicroBlock __inputBlock = __nodeToBlock.get(__input);
+                SchedulePhase.ScheduleInstance.MicroBlock __inputBlock = __nodeToBlock.get(__input);
                 if (__inputBlock == null)
                 {
                     __earliestBlock = null;

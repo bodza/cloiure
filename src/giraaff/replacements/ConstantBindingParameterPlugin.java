@@ -28,7 +28,7 @@ public final class ConstantBindingParameterPlugin implements ParameterPlugin
     // equal to that of a non-null object in {@code constantArgs} (from which the
     // {@link ConstantNode} is created if it isn't already a {@link ConstantNode}).
     ///
-    // @cons
+    // @cons ConstantBindingParameterPlugin
     public ConstantBindingParameterPlugin(Object[] __constantArgs, MetaAccessProvider __metaAccess, SnippetReflectionProvider __snippetReflection)
     {
         super();

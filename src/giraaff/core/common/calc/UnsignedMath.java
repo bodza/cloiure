@@ -7,7 +7,7 @@ package giraaff.core.common.calc;
 // @class UnsignedMath
 public final class UnsignedMath
 {
-    // @cons
+    // @cons UnsignedMath
     private UnsignedMath()
     {
         super();

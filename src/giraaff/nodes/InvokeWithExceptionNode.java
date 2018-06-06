@@ -16,7 +16,7 @@ import giraaff.nodes.util.GraphUtil;
 
 import giraaff.nodeinfo.InputType;
 
-// @NodeInfo.allowedUsageTypes "Memory"
+// @NodeInfo.allowedUsageTypes "InputType.Memory"
 // @class InvokeWithExceptionNode
 public final class InvokeWithExceptionNode extends ControlSplitNode implements Invoke, MemoryCheckpoint.Single, LIRLowerable, UncheckedInterfaceProvider
 {
@@ -26,22 +26,22 @@ public final class InvokeWithExceptionNode extends ControlSplitNode implements I
     // @def
     private static final double EXCEPTION_PROBA = 1e-5;
 
-    @Successor
+    @Node.Successor
     // @field
     AbstractBeginNode ___next;
-    @Successor
+    @Node.Successor
     // @field
     AbstractBeginNode ___exceptionEdge;
-    @OptionalInput
+    @Node.OptionalInput
     // @field
     ValueNode ___classInit;
-    @Input(InputType.Extension)
+    @Node.Input(InputType.Extension)
     // @field
     CallTargetNode ___callTarget;
-    @OptionalInput(InputType.State)
+    @Node.OptionalInput(InputType.StateI)
     // @field
     FrameState ___stateDuring;
-    @OptionalInput(InputType.State)
+    @Node.OptionalInput(InputType.StateI)
     // @field
     FrameState ___stateAfter;
     // @field
@@ -53,7 +53,7 @@ public final class InvokeWithExceptionNode extends ControlSplitNode implements I
     // @field
     protected double ___exceptionProbability;
 
-    // @cons
+    // @cons InvokeWithExceptionNode
     public InvokeWithExceptionNode(CallTargetNode __callTarget, AbstractBeginNode __exceptionEdge, int __bci)
     {
         super(TYPE, __callTarget.returnStamp().getTrustedStamp());

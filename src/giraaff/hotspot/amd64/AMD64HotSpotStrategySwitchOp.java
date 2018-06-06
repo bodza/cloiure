@@ -20,7 +20,7 @@ final class AMD64HotSpotStrategySwitchOp extends AMD64ControlFlow.StrategySwitch
     // @def
     public static final LIRInstructionClass<AMD64HotSpotStrategySwitchOp> TYPE = LIRInstructionClass.create(AMD64HotSpotStrategySwitchOp.class);
 
-    // @cons
+    // @cons AMD64HotSpotStrategySwitchOp
     AMD64HotSpotStrategySwitchOp(SwitchStrategy __strategy, LabelRef[] __keyTargets, LabelRef __defaultTarget, Value __key, Value __scratch)
     {
         super(TYPE, __strategy, __keyTargets, __defaultTarget, __key, __scratch);
@@ -29,14 +29,14 @@ final class AMD64HotSpotStrategySwitchOp extends AMD64ControlFlow.StrategySwitch
     @Override
     public void emitCode(final CompilationResultBuilder __crb, final AMD64MacroAssembler __masm)
     {
-        this.___strategy.run(new HotSpotSwitchClosure(ValueUtil.asRegister(this.___key), __crb, __masm));
+        this.___strategy.run(new AMD64HotSpotStrategySwitchOp.HotSpotSwitchClosure(ValueUtil.asRegister(this.___key), __crb, __masm));
     }
 
     // @class AMD64HotSpotStrategySwitchOp.HotSpotSwitchClosure
     // @closure
-    public final class HotSpotSwitchClosure extends SwitchClosure
+    public final class HotSpotSwitchClosure extends AMD64ControlFlow.StrategySwitchOp.AMD64SwitchClosure
     {
-        // @cons
+        // @cons AMD64HotSpotStrategySwitchOp.HotSpotSwitchClosure
         protected HotSpotSwitchClosure(Register __keyRegister, CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
         {
             super(__keyRegister, __crb, __masm);

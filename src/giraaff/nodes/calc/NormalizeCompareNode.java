@@ -24,7 +24,7 @@ public final class NormalizeCompareNode extends BinaryNode implements IterableNo
     // @def
     public static final NodeClass<NormalizeCompareNode> TYPE = NodeClass.create(NormalizeCompareNode.class);
 
-    // @cons
+    // @cons NormalizeCompareNode
     public NormalizeCompareNode(ValueNode __x, ValueNode __y, JavaKind __kind)
     {
         super(TYPE, StampFactory.forInteger(__kind, -1, 1), __x, __y);

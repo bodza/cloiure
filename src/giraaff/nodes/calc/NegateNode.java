@@ -1,7 +1,6 @@
 package giraaff.nodes.calc;
 
 import giraaff.core.common.type.ArithmeticOpTable;
-import giraaff.core.common.type.ArithmeticOpTable.UnaryOp.Neg;
 import giraaff.core.common.type.Stamp;
 import giraaff.graph.NodeClass;
 import giraaff.graph.spi.CanonicalizerTool;
@@ -15,12 +14,12 @@ import giraaff.nodes.spi.StampInverter;
 // The {@code NegateNode} node negates its operand.
 ///
 // @class NegateNode
-public final class NegateNode extends UnaryArithmeticNode<Neg> implements NarrowableArithmeticNode, StampInverter
+public final class NegateNode extends UnaryArithmeticNode<ArithmeticOpTable.UnaryOp.Neg> implements NarrowableArithmeticNode, StampInverter
 {
     // @def
     public static final NodeClass<NegateNode> TYPE = NodeClass.create(NegateNode.class);
 
-    // @cons
+    // @cons NegateNode
     public NegateNode(ValueNode __value)
     {
         super(TYPE, ArithmeticOpTable::getNeg, __value);
@@ -49,7 +48,7 @@ public final class NegateNode extends UnaryArithmeticNode<Neg> implements Narrow
 
     protected static ValueNode findSynonym(ValueNode __forValue, NodeView __view)
     {
-        ArithmeticOpTable.UnaryOp<Neg> __negOp = ArithmeticOpTable.forStamp(__forValue.stamp(__view)).getNeg();
+        ArithmeticOpTable.UnaryOp<ArithmeticOpTable.UnaryOp.Neg> __negOp = ArithmeticOpTable.forStamp(__forValue.stamp(__view)).getNeg();
         ValueNode __synonym = UnaryArithmeticNode.findSynonym(__forValue, __negOp);
         if (__synonym != null)
         {

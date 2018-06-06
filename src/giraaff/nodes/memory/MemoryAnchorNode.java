@@ -5,19 +5,19 @@ import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.graph.spi.Canonicalizable;
 import giraaff.graph.spi.CanonicalizerTool;
-import giraaff.nodeinfo.StructuralInput.Memory;
+import giraaff.nodeinfo.StructuralInput;
 import giraaff.nodes.FixedWithNextNode;
 import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
-// @NodeInfo.allowedUsageTypes "Memory"
+// @NodeInfo.allowedUsageTypes "InputType.Memory"
 // @class MemoryAnchorNode
 public final class MemoryAnchorNode extends FixedWithNextNode implements LIRLowerable, MemoryNode, Canonicalizable
 {
     // @def
     public static final NodeClass<MemoryAnchorNode> TYPE = NodeClass.create(MemoryAnchorNode.class);
 
-    // @cons
+    // @cons MemoryAnchorNode
     public MemoryAnchorNode()
     {
         super(TYPE, StampFactory.forVoid());
@@ -35,6 +35,6 @@ public final class MemoryAnchorNode extends FixedWithNextNode implements LIRLowe
         return __tool.allUsagesAvailable() && hasNoUsages() ? null : this;
     }
 
-    @NodeIntrinsic
-    public static native Memory anchor();
+    @Node.NodeIntrinsic
+    public static native StructuralInput.Memory anchor();
 }

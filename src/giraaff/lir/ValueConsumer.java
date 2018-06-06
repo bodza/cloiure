@@ -4,8 +4,7 @@ import java.util.EnumSet;
 
 import jdk.vm.ci.meta.Value;
 
-import giraaff.lir.LIRInstruction.OperandFlag;
-import giraaff.lir.LIRInstruction.OperandMode;
+import giraaff.lir.LIRInstruction;
 
 ///
 // Non-modifying version of {@link ValueProcedure}.
@@ -21,10 +20,10 @@ public interface ValueConsumer extends InstructionValueConsumer
     // @param mode The operand mode for the value.
     // @param flags A set of flags for the value.
     ///
-    void visitValue(Value __value, OperandMode __mode, EnumSet<OperandFlag> __flags);
+    void visitValue(Value __value, LIRInstruction.OperandMode __mode, EnumSet<LIRInstruction.OperandFlag> __flags);
 
     @Override
-    default void visitValue(LIRInstruction __instruction, Value __value, OperandMode __mode, EnumSet<OperandFlag> __flags)
+    default void visitValue(LIRInstruction __instruction, Value __value, LIRInstruction.OperandMode __mode, EnumSet<LIRInstruction.OperandFlag> __flags)
     {
         visitValue(__value, __mode, __flags);
     }

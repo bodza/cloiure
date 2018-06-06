@@ -7,7 +7,7 @@ import jdk.vm.ci.meta.MetaAccessProvider;
 import giraaff.api.replacements.SnippetReflectionProvider;
 import giraaff.core.common.spi.ConstantFieldProvider;
 import giraaff.hotspot.word.HotSpotWordTypes;
-import giraaff.nodes.graphbuilderconf.GraphBuilderConfiguration.Plugins;
+import giraaff.nodes.graphbuilderconf.GraphBuilderConfiguration;
 import giraaff.nodes.spi.LoweringProvider;
 import giraaff.nodes.spi.Replacements;
 import giraaff.phases.tiers.SuitesProvider;
@@ -29,10 +29,10 @@ public final class HotSpotProviders extends Providers
     // @field
     private final HotSpotWordTypes ___wordTypes;
     // @field
-    private final Plugins ___graphBuilderPlugins;
+    private final GraphBuilderConfiguration.Plugins ___graphBuilderPlugins;
 
-    // @cons
-    public HotSpotProviders(MetaAccessProvider __metaAccess, HotSpotCodeCacheProvider __codeCache, ConstantReflectionProvider __constantReflection, ConstantFieldProvider __constantField, HotSpotForeignCallsProvider __foreignCalls, LoweringProvider __lowerer, Replacements __replacements, SuitesProvider __suites, HotSpotRegistersProvider __registers, SnippetReflectionProvider __snippetReflection, HotSpotWordTypes __wordTypes, Plugins __graphBuilderPlugins)
+    // @cons HotSpotProviders
+    public HotSpotProviders(MetaAccessProvider __metaAccess, HotSpotCodeCacheProvider __codeCache, ConstantReflectionProvider __constantReflection, ConstantFieldProvider __constantField, HotSpotForeignCallsProvider __foreignCalls, LoweringProvider __lowerer, Replacements __replacements, SuitesProvider __suites, HotSpotRegistersProvider __registers, SnippetReflectionProvider __snippetReflection, HotSpotWordTypes __wordTypes, GraphBuilderConfiguration.Plugins __graphBuilderPlugins)
     {
         super(__metaAccess, __codeCache, __constantReflection, __constantField, __foreignCalls, __lowerer, __replacements, new HotSpotStampProvider());
         this.___suites = __suites;
@@ -69,7 +69,7 @@ public final class HotSpotProviders extends Providers
         return this.___snippetReflection;
     }
 
-    public Plugins getGraphBuilderPlugins()
+    public GraphBuilderConfiguration.Plugins getGraphBuilderPlugins()
     {
         return this.___graphBuilderPlugins;
     }

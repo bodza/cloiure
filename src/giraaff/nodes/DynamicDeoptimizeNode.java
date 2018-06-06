@@ -18,14 +18,14 @@ public final class DynamicDeoptimizeNode extends AbstractDeoptimizeNode implemen
     // @def
     public static final NodeClass<DynamicDeoptimizeNode> TYPE = NodeClass.create(DynamicDeoptimizeNode.class);
 
-    @Input
+    @Node.Input
     // @field
     ValueNode ___actionAndReason;
-    @Input
+    @Node.Input
     // @field
     ValueNode ___speculation;
 
-    // @cons
+    // @cons DynamicDeoptimizeNode
     public DynamicDeoptimizeNode(ValueNode __actionAndReason, ValueNode __speculation)
     {
         super(TYPE, null);

@@ -4,8 +4,7 @@ import java.util.EnumSet;
 
 import jdk.vm.ci.meta.Value;
 
-import giraaff.lir.LIRInstruction.OperandFlag;
-import giraaff.lir.LIRInstruction.OperandMode;
+import giraaff.lir.LIRInstruction;
 
 ///
 // Similar to {@link InstructionValueProcedure} but without an {@link LIRInstruction} parameter.
@@ -22,10 +21,10 @@ public interface ValueProcedure extends InstructionValueProcedure
     // @param flags A set of flags for the value.
     // @return The new value to replace the value that was passed in.
     ///
-    Value doValue(Value __value, OperandMode __mode, EnumSet<OperandFlag> __flags);
+    Value doValue(Value __value, LIRInstruction.OperandMode __mode, EnumSet<LIRInstruction.OperandFlag> __flags);
 
     @Override
-    default Value doValue(LIRInstruction __instruction, Value __value, OperandMode __mode, EnumSet<OperandFlag> __flags)
+    default Value doValue(LIRInstruction __instruction, Value __value, LIRInstruction.OperandMode __mode, EnumSet<LIRInstruction.OperandFlag> __flags)
     {
         return doValue(__value, __mode, __flags);
     }

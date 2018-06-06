@@ -6,7 +6,7 @@ import java.util.Iterator;
 import giraaff.core.common.Fields;
 import giraaff.core.common.FieldsScanner;
 import giraaff.graph.Node;
-import giraaff.graph.NodeClass.EdgeInfo;
+import giraaff.graph.NodeClass;
 import giraaff.util.UnsafeAccess;
 
 ///
@@ -19,8 +19,8 @@ public abstract class Edges extends Fields
     ///
     // Constants denoting whether a set of edges are inputs or successors.
     ///
-    // @enum Edges.Type
-    public enum Type
+    // @enum Edges.EdgesType
+    public enum EdgesType
     {
         Inputs,
         Successors;
@@ -29,21 +29,21 @@ public abstract class Edges extends Fields
     // @field
     private final int ___directCount;
     // @field
-    private final Type ___type;
+    private final Edges.EdgesType ___type;
 
-    // @cons
-    public Edges(Type __type, int __directCount, ArrayList<? extends FieldsScanner.FieldInfo> __edges)
+    // @cons Edges
+    public Edges(Edges.EdgesType __type, int __directCount, ArrayList<? extends FieldsScanner.FieldInfo> __edges)
     {
         super(__edges);
         this.___type = __type;
         this.___directCount = __directCount;
     }
 
-    public static void translateInto(Edges __edges, ArrayList<EdgeInfo> __infos)
+    public static void translateInto(Edges __edges, ArrayList<NodeClass.EdgeInfo> __infos)
     {
         for (int __index = 0; __index < __edges.getCount(); __index++)
         {
-            __infos.add(new EdgeInfo(__edges.___offsets[__index], __edges.getName(__index), __edges.getType(__index), __edges.getDeclaringClass(__index)));
+            __infos.add(new NodeClass.EdgeInfo(__edges.___offsets[__index], __edges.getName(__index), __edges.getType(__index), __edges.getDeclaringClass(__index)));
         }
     }
 
@@ -112,7 +112,7 @@ public abstract class Edges extends Fields
     public void clear(Node __node)
     {
         final long[] __curOffsets = this.___offsets;
-        final Type __curType = this.___type;
+        final Edges.EdgesType __curType = this.___type;
         int __index = 0;
         int __curDirectCount = getDirectCount();
         while (__index < __curDirectCount)
@@ -126,7 +126,7 @@ public abstract class Edges extends Fields
             if (__list != null)
             {
                 int __size = __list.___initialSize;
-                NodeList<Node> __newList = __curType == Edges.Type.Inputs ? new NodeInputList<>(__node, __size) : new NodeSuccessorList<>(__node, __size);
+                NodeList<Node> __newList = __curType == Edges.EdgesType.Inputs ? new NodeInputList<>(__node, __size) : new NodeSuccessorList<>(__node, __size);
 
                 // replacing with a new list object is the expected behavior!
                 initializeList(__node, __index, __newList);
@@ -145,14 +145,14 @@ public abstract class Edges extends Fields
     {
         int __index = getDirectCount();
         final long[] __curOffsets = this.___offsets;
-        final Edges.Type __curType = this.___type;
+        final Edges.EdgesType __curType = this.___type;
         while (__index < getCount())
         {
             NodeList<Node> __list = getNodeList(__prototype, __curOffsets, __index);
             if (__list != null)
             {
                 int __size = __list.___initialSize;
-                NodeList<Node> __newList = __curType == Edges.Type.Inputs ? new NodeInputList<>(__node, __size) : new NodeSuccessorList<>(__node, __size);
+                NodeList<Node> __newList = __curType == Edges.EdgesType.Inputs ? new NodeInputList<>(__node, __size) : new NodeSuccessorList<>(__node, __size);
                 initializeList(__node, __index, __newList);
             }
             __index++;
@@ -170,7 +170,7 @@ public abstract class Edges extends Fields
     {
         int __index = 0;
         final long[] __curOffsets = this.___offsets;
-        final Type __curType = this.___type;
+        final Edges.EdgesType __curType = this.___type;
         int __curDirectCount = getDirectCount();
         while (__index < __curDirectCount)
         {
@@ -184,7 +184,7 @@ public abstract class Edges extends Fields
             NodeList<Node> __fromList = getNodeList(__fromNode, __curOffsets, __index);
             if (__list == null || __list == __fromList)
             {
-                __list = __curType == Edges.Type.Inputs ? new NodeInputList<>(__toNode, __fromList) : new NodeSuccessorList<>(__toNode, __fromList);
+                __list = __curType == Edges.EdgesType.Inputs ? new NodeInputList<>(__toNode, __fromList) : new NodeSuccessorList<>(__toNode, __fromList);
                 initializeList(__toNode, __index, __list);
             }
             else
@@ -294,7 +294,7 @@ public abstract class Edges extends Fields
         ///
         // Creates an iterator that will iterate over some given edges in a given node.
         ///
-        // @cons
+        // @cons Edges.EdgesIterator
         EdgesIterator(Node __node, Edges __edges)
         {
             super();
@@ -388,12 +388,12 @@ public abstract class Edges extends Fields
             @Override
             public Iterator<Position> iterator()
             {
-                return new EdgesIterator(__node, Edges.this);
+                return new Edges.EdgesIterator(__node, Edges.this);
             }
         };
     }
 
-    public Type type()
+    public Edges.EdgesType type()
     {
         return this.___type;
     }

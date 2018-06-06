@@ -3,6 +3,7 @@ package giraaff.nodes.java;
 import org.graalvm.word.LocationIdentity;
 
 import giraaff.core.common.type.Stamp;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.nodeinfo.InputType;
 import giraaff.nodes.FrameState;
@@ -10,6 +11,7 @@ import giraaff.nodes.NodeView;
 import giraaff.nodes.StateSplit;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.memory.FixedAccessNode;
+import giraaff.nodes.memory.HeapAccess;
 import giraaff.nodes.memory.LIRLowerableAccess;
 import giraaff.nodes.memory.MemoryCheckpoint;
 import giraaff.nodes.memory.address.AddressNode;
@@ -17,20 +19,20 @@ import giraaff.nodes.memory.address.AddressNode;
 ///
 // Low-level atomic compare-and-swap operation.
 ///
-// @NodeInfo.allowedUsageTypes "Value, Memory"
+// @NodeInfo.allowedUsageTypes "InputType.Value, InputType.Memory"
 // @class AbstractCompareAndSwapNode
 public abstract class AbstractCompareAndSwapNode extends FixedAccessNode implements StateSplit, LIRLowerableAccess, MemoryCheckpoint.Single
 {
     // @def
     public static final NodeClass<AbstractCompareAndSwapNode> TYPE = NodeClass.create(AbstractCompareAndSwapNode.class);
 
-    @Input
+    @Node.Input
     // @field
     ValueNode ___expectedValue;
-    @Input
+    @Node.Input
     // @field
     ValueNode ___newValue;
-    @OptionalInput(InputType.State)
+    @Node.OptionalInput(InputType.StateI)
     // @field
     FrameState ___stateAfter;
 
@@ -63,8 +65,8 @@ public abstract class AbstractCompareAndSwapNode extends FixedAccessNode impleme
         return this.___newValue;
     }
 
-    // @cons
-    public AbstractCompareAndSwapNode(NodeClass<? extends AbstractCompareAndSwapNode> __c, AddressNode __address, LocationIdentity __location, ValueNode __expectedValue, ValueNode __newValue, BarrierType __barrierType, Stamp __stamp)
+    // @cons AbstractCompareAndSwapNode
+    public AbstractCompareAndSwapNode(NodeClass<? extends AbstractCompareAndSwapNode> __c, AddressNode __address, LocationIdentity __location, ValueNode __expectedValue, ValueNode __newValue, HeapAccess.BarrierType __barrierType, Stamp __stamp)
     {
         super(__c, __address, __location, __stamp, __barrierType);
         this.___expectedValue = __expectedValue;

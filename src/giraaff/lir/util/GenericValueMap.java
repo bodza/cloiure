@@ -11,7 +11,7 @@ public final class GenericValueMap<T> extends ValueMap<Value, T>
     // @field
     private final EconomicMap<Value, T> ___data;
 
-    // @cons
+    // @cons GenericValueMap
     public GenericValueMap()
     {
         super();

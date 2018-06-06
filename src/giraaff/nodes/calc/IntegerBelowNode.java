@@ -22,9 +22,9 @@ public final class IntegerBelowNode extends IntegerLowerThanNode
     public static final NodeClass<IntegerBelowNode> TYPE = NodeClass.create(IntegerBelowNode.class);
 
     // @def
-    private static final BelowOp OP = new BelowOp();
+    private static final IntegerBelowNode.BelowOp OP = new IntegerBelowNode.BelowOp();
 
-    // @cons
+    // @cons IntegerBelowNode
     public IntegerBelowNode(ValueNode __x, ValueNode __y)
     {
         super(TYPE, __x, __y, OP);
@@ -58,7 +58,7 @@ public final class IntegerBelowNode extends IntegerLowerThanNode
     }
 
     // @class IntegerBelowNode.BelowOp
-    public static final class BelowOp extends LowerOp
+    public static final class BelowOp extends IntegerLowerThanNode.LowerOp
     {
         @Override
         protected CompareNode duplicateModified(ValueNode __newX, ValueNode __newY, NodeView __view)

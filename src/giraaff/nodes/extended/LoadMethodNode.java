@@ -30,7 +30,7 @@ public final class LoadMethodNode extends FixedWithNextNode implements Lowerable
     // @def
     public static final NodeClass<LoadMethodNode> TYPE = NodeClass.create(LoadMethodNode.class);
 
-    @Input
+    @Node.Input
     // @field
     ValueNode ___hub;
     // @field
@@ -49,8 +49,8 @@ public final class LoadMethodNode extends FixedWithNextNode implements Lowerable
         return this.___hub;
     }
 
-    // @cons
-    public LoadMethodNode(@InjectedNodeParameter Stamp __stamp, ResolvedJavaMethod __method, ResolvedJavaType __receiverType, ResolvedJavaType __callerType, ValueNode __hub)
+    // @cons LoadMethodNode
+    public LoadMethodNode(@Node.InjectedNodeParameter Stamp __stamp, ResolvedJavaMethod __method, ResolvedJavaType __receiverType, ResolvedJavaType __callerType, ValueNode __hub)
     {
         super(TYPE, __stamp);
         this.___receiverType = __receiverType;

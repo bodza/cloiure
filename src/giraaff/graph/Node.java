@@ -12,8 +12,8 @@ import java.util.function.Predicate;
 
 import giraaff.core.common.type.AbstractPointerStamp;
 import giraaff.core.common.type.Stamp;
-import giraaff.graph.Edges.Type;
-import giraaff.graph.Graph.NodeEventListener;
+import giraaff.graph.Edges;
+import giraaff.graph.Graph;
 import giraaff.graph.iterators.NodeIterable;
 import giraaff.graph.iterators.NodePredicate;
 import giraaff.graph.spi.Simplifiable;
@@ -23,16 +23,14 @@ import giraaff.util.GraalError;
 import giraaff.util.UnsafeAccess;
 
 ///
-// This class is the base class for all nodes. It represents a node that can be inserted in a
-// {@link Graph}.
+// This class is the base class for all nodes. It represents a node that can be inserted in a {@link Graph}.
 //
-// Once a node has been added to a graph, it has a graph-unique {@link #id()}. Edges in the
-// subclasses are represented with annotated fields. There are two kind of edges : {@link Input} and
-// {@link Successor}. If a field, of a type compatible with {@link Node}, annotated with either
-// {@link Input} and {@link Successor} is not null, then there is an edge from this node to the node
-// this field points to.
+// Once a node has been added to a graph, it has a graph-unique {@link #id()}. Edges in the subclasses are
+// represented with annotated fields. There are two kind of edges : {@link Node.Input} and {@link Node.Successor}.
+// If a field, of a type compatible with {@link Node}, annotated with either {@link Node.Input} and
+// {@link Node.Successor} is not null, then there is an edge from this node to the node this field points to.
 //
-// Nodes which are be value numberable should implement the {@link ValueNumberable} interface.
+// Nodes which are be value numberable should implement the {@link Node.ValueNumberable} interface.
 ///
 // @class Node
 public abstract class Node implements Cloneable, NodeInterface
@@ -55,6 +53,7 @@ public abstract class Node implements Cloneable, NodeInterface
     ///
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
+    // @iface Node.Input
     public static @interface Input
     {
         InputType value() default InputType.Value;
@@ -68,6 +67,7 @@ public abstract class Node implements Cloneable, NodeInterface
     ///
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
+    // @iface Node.OptionalInput
     public static @interface OptionalInput
     {
         InputType value() default InputType.Value;
@@ -75,23 +75,25 @@ public abstract class Node implements Cloneable, NodeInterface
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
+    // @iface Node.Successor
     public static @interface Successor
     {
     }
 
     ///
-    // Denotes that a parameter of an {@linkplain NodeIntrinsic intrinsic} method must be a compile
+    // Denotes that a parameter of an {@linkplain Node.NodeIntrinsic intrinsic} method must be a compile
     // time constant at all call sites to the intrinsic method.
     ///
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.PARAMETER)
+    // @iface Node.ConstantNodeParameter
     public static @interface ConstantNodeParameter
     {
     }
 
     ///
-    // Denotes an injected parameter in a {@linkplain NodeIntrinsic node intrinsic} constructor. If
-    // the constructor is called as part of node intrinsification, the node intrinsifier will inject
+    // Denotes an injected parameter in a {@linkplain Node.NodeIntrinsic node intrinsic} constructor.
+    // If the constructor is called as part of node intrinsification, the node intrinsifier will inject
     // an argument for the annotated parameter. Injected parameters must precede all non-injected
     // parameters in a constructor. If the type of the annotated parameter is {@link Stamp}, the
     // {@linkplain Stamp#javaType type} of the injected stamp is the return type of the annotated
@@ -99,6 +101,7 @@ public abstract class Node implements Cloneable, NodeInterface
     ///
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.PARAMETER)
+    // @iface Node.InjectedNodeParameter
     public static @interface InjectedNodeParameter
     {
     }
@@ -114,20 +117,21 @@ public abstract class Node implements Cloneable, NodeInterface
     //
     // <li>A {@code GraphBuilderContext} parameter.</li>
     // <li>A {@code ResolvedJavaMethod} parameter.</li>
-    // <li>A sequence of zero or more {@linkplain InjectedNodeParameter injected} parameters.</li>
+    // <li>A sequence of zero or more {@linkplain Node.InjectedNodeParameter injected} parameters.</li>
     // <li>Remaining parameters that match the declared parameters of the annotated method.</li>
     // </ol>
     // A constructor corresponding to an annotated method is defined in the class denoted by
     // {@link #value()}. In order, its signature is as follows:
     // <ol>
-    // <li>A sequence of zero or more {@linkplain InjectedNodeParameter injected} parameters.</li>
+    // <li>A sequence of zero or more {@linkplain Node.InjectedNodeParameter injected} parameters.</li>
     // <li>Remaining parameters that match the declared parameters of the annotated method.</li>
     //
     // There must be exactly one such factory method or constructor corresponding to a
-    // {@link NodeIntrinsic} annotated method.
+    // {@link Node.NodeIntrinsic} annotated method.
     ///
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.METHOD)
+    // @iface Node.NodeIntrinsic
     public static @interface NodeIntrinsic
     {
         ///
@@ -135,11 +139,11 @@ public abstract class Node implements Cloneable, NodeInterface
         // used to intrinsify a call to the annotated method. The default value is the class in
         // which the annotated method is declared.
         ///
-        Class<?> value() default NodeIntrinsic.class;
+        Class<?> value() default Node.NodeIntrinsic.class;
 
         ///
         // If {@code true}, the factory method or constructor selected by the annotation must have
-        // an {@linkplain InjectedNodeParameter injected} {@link Stamp} parameter. Calling
+        // an {@linkplain Node.InjectedNodeParameter injected} {@link Stamp} parameter. Calling
         // {@link AbstractPointerStamp#nonNull()} on the injected stamp is guaranteed to return {@code true}.
         ///
         boolean injectedStampIsNonNull() default false;
@@ -204,7 +208,7 @@ public abstract class Node implements Cloneable, NodeInterface
     // @def
     public static final int NOT_ITERABLE = -1;
 
-    // @cons
+    // @cons Node
     public Node(NodeClass<? extends Node> __c)
     {
         super();
@@ -270,7 +274,7 @@ public abstract class Node implements Cloneable, NodeInterface
     //
     // @param visitor the visitor to be applied to the inputs
     ///
-    public void applyInputs(EdgeVisitor __visitor)
+    public void applyInputs(Node.EdgeVisitor __visitor)
     {
         this.___nodeClass.applyInputs(this, __visitor);
     }
@@ -280,7 +284,7 @@ public abstract class Node implements Cloneable, NodeInterface
     //
     // @param visitor the visitor to be applied to the successors
     ///
-    public void applySuccessors(EdgeVisitor __visitor)
+    public void applySuccessors(Node.EdgeVisitor __visitor)
     {
         this.___nodeClass.applySuccessors(this, __visitor);
     }
@@ -813,7 +817,7 @@ public abstract class Node implements Cloneable, NodeInterface
     {
         if (this.___graph != null)
         {
-            NodeEventListener __listener = this.___graph.___nodeEventListener;
+            Graph.NodeEventListener __listener = this.___graph.___nodeEventListener;
             if (__listener != null)
             {
                 __listener.event(Graph.NodeEvent.INPUT_CHANGED, __node);
@@ -825,7 +829,7 @@ public abstract class Node implements Cloneable, NodeInterface
     {
         if (this.___graph != null)
         {
-            NodeEventListener __listener = this.___graph.___nodeEventListener;
+            Graph.NodeEventListener __listener = this.___graph.___nodeEventListener;
             if (__listener != null && __node.isAlive())
             {
                 __listener.event(Graph.NodeEvent.ZERO_USAGES, __node);
@@ -943,7 +947,7 @@ public abstract class Node implements Cloneable, NodeInterface
     // @param type the type of edges to process
     // @param edgesToCopy if {@code type} is in this set, the edges are copied otherwise they are cleared
     ///
-    private void copyOrClearEdgesForClone(Node __newNode, Edges.Type __type, EnumSet<Edges.Type> __edgesToCopy)
+    private void copyOrClearEdgesForClone(Node __newNode, Edges.EdgesType __type, EnumSet<Edges.EdgesType> __edgesToCopy)
     {
         if (__edgesToCopy.contains(__type))
         {
@@ -957,13 +961,13 @@ public abstract class Node implements Cloneable, NodeInterface
     }
 
     // @def
-    public static final EnumSet<Edges.Type> WithNoEdges = EnumSet.noneOf(Edges.Type.class);
+    public static final EnumSet<Edges.EdgesType> WithNoEdges = EnumSet.noneOf(Edges.EdgesType.class);
     // @def
-    public static final EnumSet<Edges.Type> WithAllEdges = EnumSet.allOf(Edges.Type.class);
+    public static final EnumSet<Edges.EdgesType> WithAllEdges = EnumSet.allOf(Edges.EdgesType.class);
     // @def
-    public static final EnumSet<Edges.Type> WithOnlyInputEdges = EnumSet.of(Type.Inputs);
+    public static final EnumSet<Edges.EdgesType> WithOnlyInputEdges = EnumSet.of(Edges.EdgesType.Inputs);
     // @def
-    public static final EnumSet<Edges.Type> WithOnlySucessorEdges = EnumSet.of(Type.Successors);
+    public static final EnumSet<Edges.EdgesType> WithOnlySucessorEdges = EnumSet.of(Edges.EdgesType.Successors);
 
     ///
     // Makes a copy of this node in(to) a given graph.
@@ -975,7 +979,7 @@ public abstract class Node implements Cloneable, NodeInterface
     //            list for an edge list)
     // @return the copy of this node
     ///
-    final Node clone(Graph __into, EnumSet<Edges.Type> __edgesToCopy)
+    final Node clone(Graph __into, EnumSet<Edges.EdgesType> __edgesToCopy)
     {
         final NodeClass<? extends Node> __nodeClassTmp = getNodeClass();
         boolean __useIntoLeafNodeCache = false;
@@ -998,8 +1002,8 @@ public abstract class Node implements Cloneable, NodeInterface
             __newNode = (Node) UnsafeAccess.UNSAFE.allocateInstance(getClass());
             __newNode.___nodeClass = __nodeClassTmp;
             __nodeClassTmp.getData().copy(this, __newNode);
-            copyOrClearEdgesForClone(__newNode, Type.Inputs, __edgesToCopy);
-            copyOrClearEdgesForClone(__newNode, Type.Successors, __edgesToCopy);
+            copyOrClearEdgesForClone(__newNode, Edges.EdgesType.Inputs, __edgesToCopy);
+            copyOrClearEdgesForClone(__newNode, Edges.EdgesType.Successors, __edgesToCopy);
         }
         catch (Exception __e)
         {
@@ -1039,7 +1043,7 @@ public abstract class Node implements Cloneable, NodeInterface
 
     ///
     // Returns an iterator that will provide all control-flow successors of this node. Normally this
-    // will be the contents of all fields annotated with {@link Successor}, but some node classes
+    // will be the contents of all fields annotated with {@link Node.Successor}, but some node classes
     // (like EndNode) may return different nodes.
     ///
     public Iterable<? extends Node> cfgSuccessors()
@@ -1063,8 +1067,8 @@ public abstract class Node implements Cloneable, NodeInterface
     }
 
     ///
-    // Do not overwrite the equality test of a node in subclasses. Equality tests must rely solely
-    // on identity.
+    // Do not overwrite the equality test of a node in subclasses.
+    // Equality tests must rely solely on identity.
     ///
 
     @Deprecated
@@ -1074,9 +1078,9 @@ public abstract class Node implements Cloneable, NodeInterface
     }
 
     ///
-    // Determines if this node's {@link NodeClass#getData() data} fields are equal to the data
-    // fields of another node of the same type. Primitive fields are compared by value and
-    // non-primitive fields are compared by {@link Objects#equals(Object, Object)}.
+    // Determines if this node's {@link NodeClass#getData() data} fields are equal to the
+    // data fields of another node of the same type. Primitive fields are compared by value
+    // and non-primitive fields are compared by {@link Objects#equals(Object, Object)}.
     //
     // The result of this method undefined if {@code other.getClass() != this.getClass()}.
     //
@@ -1090,7 +1094,7 @@ public abstract class Node implements Cloneable, NodeInterface
 
     ///
     // Determines if this node is equal to the other node while ignoring differences in
-    // {@linkplain Successor control-flow} edges.
+    // {@linkplain Node.Successor control-flow} edges.
     ///
     public boolean dataFlowEquals(Node __other)
     {

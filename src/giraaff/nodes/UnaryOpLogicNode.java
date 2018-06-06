@@ -3,6 +3,7 @@ package giraaff.nodes;
 import jdk.vm.ci.meta.TriState;
 
 import giraaff.core.common.type.Stamp;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.graph.spi.Canonicalizable;
 import giraaff.nodes.spi.LIRLowerable;
@@ -14,7 +15,7 @@ public abstract class UnaryOpLogicNode extends LogicNode implements LIRLowerable
     // @def
     public static final NodeClass<UnaryOpLogicNode> TYPE = NodeClass.create(UnaryOpLogicNode.class);
 
-    @Input
+    @Node.Input
     // @field
     protected ValueNode ___value;
 
@@ -24,7 +25,7 @@ public abstract class UnaryOpLogicNode extends LogicNode implements LIRLowerable
         return this.___value;
     }
 
-    // @cons
+    // @cons UnaryOpLogicNode
     public UnaryOpLogicNode(NodeClass<? extends UnaryOpLogicNode> __c, ValueNode __value)
     {
         super(__c);

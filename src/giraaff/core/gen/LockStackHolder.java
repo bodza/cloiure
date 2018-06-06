@@ -3,7 +3,7 @@ package giraaff.core.gen;
 // @class LockStackHolder
 public abstract class LockStackHolder
 {
-    // @cons
+    // @cons LockStackHolder
     protected LockStackHolder()
     {
         super();

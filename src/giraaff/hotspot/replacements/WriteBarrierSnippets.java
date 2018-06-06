@@ -14,8 +14,7 @@ import giraaff.api.replacements.Snippet;
 import giraaff.api.replacements.Snippet.ConstantParameter;
 import giraaff.core.common.CompressEncoding;
 import giraaff.core.common.spi.ForeignCallDescriptor;
-import giraaff.graph.Node.ConstantNodeParameter;
-import giraaff.graph.Node.NodeIntrinsic;
+import giraaff.graph.Node;
 import giraaff.hotspot.HotSpotRuntime;
 import giraaff.hotspot.meta.HotSpotProviders;
 import giraaff.hotspot.meta.HotSpotRegistersProvider;
@@ -38,16 +37,12 @@ import giraaff.nodes.extended.FixedValueAnchorNode;
 import giraaff.nodes.extended.ForeignCallNode;
 import giraaff.nodes.extended.MembarNode;
 import giraaff.nodes.extended.NullCheckNode;
-import giraaff.nodes.memory.HeapAccess.BarrierType;
+import giraaff.nodes.memory.HeapAccess;
 import giraaff.nodes.memory.address.AddressNode;
-import giraaff.nodes.memory.address.AddressNode.Address;
 import giraaff.nodes.memory.address.OffsetAddressNode;
 import giraaff.nodes.spi.LoweringTool;
 import giraaff.nodes.type.NarrowOopStamp;
 import giraaff.replacements.SnippetTemplate;
-import giraaff.replacements.SnippetTemplate.AbstractTemplates;
-import giraaff.replacements.SnippetTemplate.Arguments;
-import giraaff.replacements.SnippetTemplate.SnippetInfo;
 import giraaff.replacements.Snippets;
 import giraaff.replacements.nodes.DirectStoreNode;
 import giraaff.word.Word;
@@ -83,13 +78,13 @@ public final class WriteBarrierSnippets implements Snippets
     }
 
     @Snippet
-    public static void serialPreciseWriteBarrier(Address __address)
+    public static void serialPreciseWriteBarrier(AddressNode.Address __address)
     {
         serialWriteBarrier(Word.fromAddress(__address));
     }
 
     @Snippet
-    public static void serialArrayRangeWriteBarrier(Address __address, int __length, @ConstantParameter int __elementStride)
+    public static void serialArrayRangeWriteBarrier(AddressNode.Address __address, int __length, @Snippet.ConstantParameter int __elementStride)
     {
         if (__length == 0)
         {
@@ -107,7 +102,7 @@ public final class WriteBarrierSnippets implements Snippets
     }
 
     @Snippet
-    public static void g1PreWriteBarrier(Address __address, Object __object, Object __expectedObject, @ConstantParameter boolean __doLoad, @ConstantParameter boolean __nullCheck, @ConstantParameter Register __threadRegister)
+    public static void g1PreWriteBarrier(AddressNode.Address __address, Object __object, Object __expectedObject, @Snippet.ConstantParameter boolean __doLoad, @Snippet.ConstantParameter boolean __nullCheck, @Snippet.ConstantParameter Register __threadRegister)
     {
         if (__nullCheck)
         {
@@ -126,7 +121,7 @@ public final class WriteBarrierSnippets implements Snippets
             // The load is always issued except the cases of CAS and referent field.
             if (BranchProbabilityNode.probability(BranchProbabilityNode.LIKELY_PROBABILITY, __doLoad))
             {
-                __previousOop = Word.objectToTrackedPointer(__field.readObject(0, BarrierType.NONE));
+                __previousOop = Word.objectToTrackedPointer(__field.readObject(0, HeapAccess.BarrierType.NONE));
             }
             // If the previous value is null the barrier should not be issued.
             if (BranchProbabilityNode.probability(BranchProbabilityNode.FREQUENT_PROBABILITY, __previousOop.notEqual(0)))
@@ -152,7 +147,7 @@ public final class WriteBarrierSnippets implements Snippets
     }
 
     @Snippet
-    public static void g1PostWriteBarrier(Address __address, Object __object, Object __value, @ConstantParameter boolean __usePrecise, @ConstantParameter Register __threadRegister)
+    public static void g1PostWriteBarrier(AddressNode.Address __address, Object __object, Object __value, @Snippet.ConstantParameter boolean __usePrecise, @Snippet.ConstantParameter Register __threadRegister)
     {
         Word __thread = HotSpotReplacementsUtil.registerAsWord(__threadRegister);
         Object __fixedValue = FixedValueAnchorNode.getObject(__value);
@@ -224,7 +219,7 @@ public final class WriteBarrierSnippets implements Snippets
     }
 
     @Snippet
-    public static void g1ArrayRangePreWriteBarrier(Address __address, int __length, @ConstantParameter int __elementStride, @ConstantParameter Register __threadRegister)
+    public static void g1ArrayRangePreWriteBarrier(AddressNode.Address __address, int __length, @Snippet.ConstantParameter int __elementStride, @Snippet.ConstantParameter Register __threadRegister)
     {
         Word __thread = HotSpotReplacementsUtil.registerAsWord(__threadRegister);
         byte __markingValue = __thread.readByte(HotSpotRuntime.g1SATBQueueMarkingOffset);
@@ -242,7 +237,7 @@ public final class WriteBarrierSnippets implements Snippets
         for (int __i = 0; __i < __length; __i++)
         {
             Word __arrElemPtr = WordFactory.pointer(__start + __i * __scale);
-            Pointer __oop = Word.objectToTrackedPointer(__arrElemPtr.readObject(0, BarrierType.NONE));
+            Pointer __oop = Word.objectToTrackedPointer(__arrElemPtr.readObject(0, HeapAccess.BarrierType.NONE));
             if (__oop.notEqual(0))
             {
                 if (__indexValue != 0)
@@ -262,7 +257,7 @@ public final class WriteBarrierSnippets implements Snippets
     }
 
     @Snippet
-    public static void g1ArrayRangePostWriteBarrier(Address __address, int __length, @ConstantParameter int __elementStride, @ConstantParameter Register __threadRegister)
+    public static void g1ArrayRangePostWriteBarrier(AddressNode.Address __address, int __length, @Snippet.ConstantParameter int __elementStride, @Snippet.ConstantParameter Register __threadRegister)
     {
         if (__length == 0)
         {
@@ -310,7 +305,7 @@ public final class WriteBarrierSnippets implements Snippets
         }
     }
 
-    private static long getPointerToFirstArrayElement(Address __address, int __length, int __elementStride)
+    private static long getPointerToFirstArrayElement(AddressNode.Address __address, int __length, int __elementStride)
     {
         long __result = Word.fromAddress(__address).rawValue();
         if (__elementStride < 0)
@@ -321,7 +316,7 @@ public final class WriteBarrierSnippets implements Snippets
         return __result;
     }
 
-    private static long getPointerToLastArrayElement(Address __address, int __length, int __elementStride)
+    private static long getPointerToLastArrayElement(AddressNode.Address __address, int __length, int __elementStride)
     {
         long __result = Word.fromAddress(__address).rawValue();
         if (__elementStride < 0)
@@ -339,40 +334,40 @@ public final class WriteBarrierSnippets implements Snippets
     // @def
     public static final ForeignCallDescriptor G1WBPRECALL = new ForeignCallDescriptor("write_barrier_pre", void.class, Object.class);
 
-    @NodeIntrinsic(ForeignCallNode.class)
-    private static native void g1PreBarrierStub(@ConstantNodeParameter ForeignCallDescriptor __descriptor, Object __object);
+    @Node.NodeIntrinsic(ForeignCallNode.class)
+    private static native void g1PreBarrierStub(@Node.ConstantNodeParameter ForeignCallDescriptor __descriptor, Object __object);
 
     // @def
     public static final ForeignCallDescriptor G1WBPOSTCALL = new ForeignCallDescriptor("write_barrier_post", void.class, Word.class);
 
-    @NodeIntrinsic(ForeignCallNode.class)
-    public static native void g1PostBarrierStub(@ConstantNodeParameter ForeignCallDescriptor __descriptor, Word __card);
+    @Node.NodeIntrinsic(ForeignCallNode.class)
+    public static native void g1PostBarrierStub(@Node.ConstantNodeParameter ForeignCallDescriptor __descriptor, Word __card);
 
-    // @class WriteBarrierSnippets.Templates
-    public static final class Templates extends AbstractTemplates
+    // @class WriteBarrierSnippets.WriteBarrierTemplates
+    public static final class WriteBarrierTemplates extends SnippetTemplate.AbstractTemplates
     {
         // @field
-        private final SnippetInfo ___serialImpreciseWriteBarrier = snippet(WriteBarrierSnippets.class, "serialImpreciseWriteBarrier", GC_CARD_LOCATION);
+        private final SnippetTemplate.SnippetInfo ___serialImpreciseWriteBarrier = snippet(WriteBarrierSnippets.class, "serialImpreciseWriteBarrier", GC_CARD_LOCATION);
         // @field
-        private final SnippetInfo ___serialPreciseWriteBarrier = snippet(WriteBarrierSnippets.class, "serialPreciseWriteBarrier", GC_CARD_LOCATION);
+        private final SnippetTemplate.SnippetInfo ___serialPreciseWriteBarrier = snippet(WriteBarrierSnippets.class, "serialPreciseWriteBarrier", GC_CARD_LOCATION);
         // @field
-        private final SnippetInfo ___serialArrayRangeWriteBarrier = snippet(WriteBarrierSnippets.class, "serialArrayRangeWriteBarrier");
+        private final SnippetTemplate.SnippetInfo ___serialArrayRangeWriteBarrier = snippet(WriteBarrierSnippets.class, "serialArrayRangeWriteBarrier");
         // @field
-        private final SnippetInfo ___g1PreWriteBarrier = snippet(WriteBarrierSnippets.class, "g1PreWriteBarrier", GC_INDEX_LOCATION, GC_LOG_LOCATION);
+        private final SnippetTemplate.SnippetInfo ___g1PreWriteBarrier = snippet(WriteBarrierSnippets.class, "g1PreWriteBarrier", GC_INDEX_LOCATION, GC_LOG_LOCATION);
         // @field
-        private final SnippetInfo ___g1ReferentReadBarrier = snippet(WriteBarrierSnippets.class, "g1PreWriteBarrier", GC_INDEX_LOCATION, GC_LOG_LOCATION);
+        private final SnippetTemplate.SnippetInfo ___g1ReferentReadBarrier = snippet(WriteBarrierSnippets.class, "g1PreWriteBarrier", GC_INDEX_LOCATION, GC_LOG_LOCATION);
         // @field
-        private final SnippetInfo ___g1PostWriteBarrier = snippet(WriteBarrierSnippets.class, "g1PostWriteBarrier", GC_CARD_LOCATION, GC_INDEX_LOCATION, GC_LOG_LOCATION);
+        private final SnippetTemplate.SnippetInfo ___g1PostWriteBarrier = snippet(WriteBarrierSnippets.class, "g1PostWriteBarrier", GC_CARD_LOCATION, GC_INDEX_LOCATION, GC_LOG_LOCATION);
         // @field
-        private final SnippetInfo ___g1ArrayRangePreWriteBarrier = snippet(WriteBarrierSnippets.class, "g1ArrayRangePreWriteBarrier", GC_INDEX_LOCATION, GC_LOG_LOCATION);
+        private final SnippetTemplate.SnippetInfo ___g1ArrayRangePreWriteBarrier = snippet(WriteBarrierSnippets.class, "g1ArrayRangePreWriteBarrier", GC_INDEX_LOCATION, GC_LOG_LOCATION);
         // @field
-        private final SnippetInfo ___g1ArrayRangePostWriteBarrier = snippet(WriteBarrierSnippets.class, "g1ArrayRangePostWriteBarrier", GC_CARD_LOCATION, GC_INDEX_LOCATION, GC_LOG_LOCATION);
+        private final SnippetTemplate.SnippetInfo ___g1ArrayRangePostWriteBarrier = snippet(WriteBarrierSnippets.class, "g1ArrayRangePostWriteBarrier", GC_CARD_LOCATION, GC_INDEX_LOCATION, GC_LOG_LOCATION);
 
         // @field
         private final CompressEncoding ___oopEncoding;
 
-        // @cons
-        public Templates(HotSpotProviders __providers, TargetDescription __target, CompressEncoding __oopEncoding)
+        // @cons WriteBarrierSnippets.WriteBarrierTemplates
+        public WriteBarrierTemplates(HotSpotProviders __providers, TargetDescription __target, CompressEncoding __oopEncoding)
         {
             super(__providers, __providers.getSnippetReflection(), __target);
             this.___oopEncoding = __oopEncoding;
@@ -380,15 +375,15 @@ public final class WriteBarrierSnippets implements Snippets
 
         public void lower(SerialWriteBarrier __writeBarrier, LoweringTool __tool)
         {
-            Arguments __args;
+            SnippetTemplate.Arguments __args;
             if (__writeBarrier.usePrecise())
             {
-                __args = new Arguments(this.___serialPreciseWriteBarrier, __writeBarrier.graph().getGuardsStage(), __tool.getLoweringStage());
+                __args = new SnippetTemplate.Arguments(this.___serialPreciseWriteBarrier, __writeBarrier.graph().getGuardsStage(), __tool.getLoweringStage());
                 __args.add("address", __writeBarrier.getAddress());
             }
             else
             {
-                __args = new Arguments(this.___serialImpreciseWriteBarrier, __writeBarrier.graph().getGuardsStage(), __tool.getLoweringStage());
+                __args = new SnippetTemplate.Arguments(this.___serialImpreciseWriteBarrier, __writeBarrier.graph().getGuardsStage(), __tool.getLoweringStage());
                 OffsetAddressNode __address = (OffsetAddressNode) __writeBarrier.getAddress();
                 __args.add("object", __address.getBase());
             }
@@ -397,7 +392,7 @@ public final class WriteBarrierSnippets implements Snippets
 
         public void lower(SerialArrayRangeWriteBarrier __arrayRangeWriteBarrier, LoweringTool __tool)
         {
-            Arguments __args = new Arguments(this.___serialArrayRangeWriteBarrier, __arrayRangeWriteBarrier.graph().getGuardsStage(), __tool.getLoweringStage());
+            SnippetTemplate.Arguments __args = new SnippetTemplate.Arguments(this.___serialArrayRangeWriteBarrier, __arrayRangeWriteBarrier.graph().getGuardsStage(), __tool.getLoweringStage());
             __args.add("address", __arrayRangeWriteBarrier.getAddress());
             __args.add("length", __arrayRangeWriteBarrier.getLength());
             __args.addConst("elementStride", __arrayRangeWriteBarrier.getElementStride());
@@ -406,7 +401,7 @@ public final class WriteBarrierSnippets implements Snippets
 
         public void lower(G1PreWriteBarrier __writeBarrierPre, HotSpotRegistersProvider __registers, LoweringTool __tool)
         {
-            Arguments __args = new Arguments(this.___g1PreWriteBarrier, __writeBarrierPre.graph().getGuardsStage(), __tool.getLoweringStage());
+            SnippetTemplate.Arguments __args = new SnippetTemplate.Arguments(this.___g1PreWriteBarrier, __writeBarrierPre.graph().getGuardsStage(), __tool.getLoweringStage());
             AddressNode __address = __writeBarrierPre.getAddress();
             __args.add("address", __address);
             if (__address instanceof OffsetAddressNode)
@@ -433,7 +428,7 @@ public final class WriteBarrierSnippets implements Snippets
 
         public void lower(G1ReferentFieldReadBarrier __readBarrier, HotSpotRegistersProvider __registers, LoweringTool __tool)
         {
-            Arguments __args = new Arguments(this.___g1ReferentReadBarrier, __readBarrier.graph().getGuardsStage(), __tool.getLoweringStage());
+            SnippetTemplate.Arguments __args = new SnippetTemplate.Arguments(this.___g1ReferentReadBarrier, __readBarrier.graph().getGuardsStage(), __tool.getLoweringStage());
             AddressNode __address = __readBarrier.getAddress();
             __args.add("address", __address);
             if (__address instanceof OffsetAddressNode)
@@ -466,7 +461,7 @@ public final class WriteBarrierSnippets implements Snippets
                 __graph.removeFixed(__writeBarrierPost);
                 return;
             }
-            Arguments __args = new Arguments(this.___g1PostWriteBarrier, __graph.getGuardsStage(), __tool.getLoweringStage());
+            SnippetTemplate.Arguments __args = new SnippetTemplate.Arguments(this.___g1PostWriteBarrier, __graph.getGuardsStage(), __tool.getLoweringStage());
             AddressNode __address = __writeBarrierPost.getAddress();
             __args.add("address", __address);
             if (__address instanceof OffsetAddressNode)
@@ -492,7 +487,7 @@ public final class WriteBarrierSnippets implements Snippets
 
         public void lower(G1ArrayRangePreWriteBarrier __arrayRangeWriteBarrier, HotSpotRegistersProvider __registers, LoweringTool __tool)
         {
-            Arguments __args = new Arguments(this.___g1ArrayRangePreWriteBarrier, __arrayRangeWriteBarrier.graph().getGuardsStage(), __tool.getLoweringStage());
+            SnippetTemplate.Arguments __args = new SnippetTemplate.Arguments(this.___g1ArrayRangePreWriteBarrier, __arrayRangeWriteBarrier.graph().getGuardsStage(), __tool.getLoweringStage());
             __args.add("address", __arrayRangeWriteBarrier.getAddress());
             __args.add("length", __arrayRangeWriteBarrier.getLength());
             __args.addConst("elementStride", __arrayRangeWriteBarrier.getElementStride());
@@ -502,7 +497,7 @@ public final class WriteBarrierSnippets implements Snippets
 
         public void lower(G1ArrayRangePostWriteBarrier __arrayRangeWriteBarrier, HotSpotRegistersProvider __registers, LoweringTool __tool)
         {
-            Arguments __args = new Arguments(this.___g1ArrayRangePostWriteBarrier, __arrayRangeWriteBarrier.graph().getGuardsStage(), __tool.getLoweringStage());
+            SnippetTemplate.Arguments __args = new SnippetTemplate.Arguments(this.___g1ArrayRangePostWriteBarrier, __arrayRangeWriteBarrier.graph().getGuardsStage(), __tool.getLoweringStage());
             __args.add("address", __arrayRangeWriteBarrier.getAddress());
             __args.add("length", __arrayRangeWriteBarrier.getLength());
             __args.addConst("elementStride", __arrayRangeWriteBarrier.getElementStride());

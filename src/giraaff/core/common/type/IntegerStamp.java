@@ -14,10 +14,7 @@ import jdk.vm.ci.meta.SerializableConstant;
 import giraaff.core.common.LIRKind;
 import giraaff.core.common.NumUtil;
 import giraaff.core.common.spi.LIRKindTool;
-import giraaff.core.common.type.ArithmeticOpTable.BinaryOp;
-import giraaff.core.common.type.ArithmeticOpTable.IntegerConvertOp;
-import giraaff.core.common.type.ArithmeticOpTable.ShiftOp;
-import giraaff.core.common.type.ArithmeticOpTable.UnaryOp;
+import giraaff.core.common.type.ArithmeticOpTable;
 import giraaff.util.GraalError;
 
 ///
@@ -38,7 +35,7 @@ public final class IntegerStamp extends PrimitiveStamp
     // @field
     private final long ___upMask;
 
-    // @cons
+    // @cons IntegerStamp
     private IntegerStamp(int __bits, long __lowerBound, long __upperBound, long __downMask, long __upMask)
     {
         super(__bits, OPS);
@@ -653,7 +650,7 @@ public final class IntegerStamp extends PrimitiveStamp
     // @def
     public static final ArithmeticOpTable OPS = new ArithmeticOpTable(
         // @closure
-        new UnaryOp.Neg()
+        new ArithmeticOpTable.UnaryOp.Neg()
         {
             @Override
             public Constant foldConstant(Constant __value)
@@ -689,7 +686,7 @@ public final class IntegerStamp extends PrimitiveStamp
         },
 
         // @closure
-        new BinaryOp.Add(true, true)
+        new ArithmeticOpTable.BinaryOp.Add(true, true)
         {
             @Override
             public Constant foldConstant(Constant __const1, Constant __const2)
@@ -771,7 +768,7 @@ public final class IntegerStamp extends PrimitiveStamp
         },
 
         // @closure
-        new BinaryOp.Sub(true, false)
+        new ArithmeticOpTable.BinaryOp.Sub(true, false)
         {
             @Override
             public Constant foldConstant(Constant __const1, Constant __const2)
@@ -803,7 +800,7 @@ public final class IntegerStamp extends PrimitiveStamp
         },
 
         // @closure
-        new BinaryOp.Mul(true, true)
+        new ArithmeticOpTable.BinaryOp.Mul(true, true)
         {
             @Override
             public Constant foldConstant(Constant __const1, Constant __const2)
@@ -890,7 +887,6 @@ public final class IntegerStamp extends PrimitiveStamp
                     //          [minNeg     maxNeg minPos     maxPos]
                     //
                     //          where maxNeg = min(0,y) && minPos = max(0,x)
-                    //
                     //
                     //                 |minNegA  maxNegA    minPosA  maxPosA
                     //         _______ |____________________________________
@@ -995,7 +991,7 @@ public final class IntegerStamp extends PrimitiveStamp
         },
 
         // @closure
-        new BinaryOp.MulHigh(true, true)
+        new ArithmeticOpTable.BinaryOp.MulHigh(true, true)
         {
             @Override
             public Constant foldConstant(Constant __const1, Constant __const2)
@@ -1077,7 +1073,7 @@ public final class IntegerStamp extends PrimitiveStamp
         },
 
         // @closure
-        new BinaryOp.UMulHigh(true, true)
+        new ArithmeticOpTable.BinaryOp.UMulHigh(true, true)
         {
             @Override
             public Constant foldConstant(Constant __const1, Constant __const2)
@@ -1187,7 +1183,7 @@ public final class IntegerStamp extends PrimitiveStamp
         },
 
         // @closure
-        new BinaryOp.Div(true, false)
+        new ArithmeticOpTable.BinaryOp.Div(true, false)
         {
             @Override
             public Constant foldConstant(Constant __const1, Constant __const2)
@@ -1240,7 +1236,7 @@ public final class IntegerStamp extends PrimitiveStamp
         },
 
         // @closure
-        new BinaryOp.Rem(false, false)
+        new ArithmeticOpTable.BinaryOp.Rem(false, false)
         {
             @Override
             public Constant foldConstant(Constant __const1, Constant __const2)
@@ -1297,7 +1293,7 @@ public final class IntegerStamp extends PrimitiveStamp
         },
 
         // @closure
-        new UnaryOp.Not()
+        new ArithmeticOpTable.UnaryOp.Not()
         {
             @Override
             public Constant foldConstant(Constant __c)
@@ -1321,7 +1317,7 @@ public final class IntegerStamp extends PrimitiveStamp
         },
 
         // @closure
-        new BinaryOp.And(true, true)
+        new ArithmeticOpTable.BinaryOp.And(true, true)
         {
             @Override
             public Constant foldConstant(Constant __const1, Constant __const2)
@@ -1358,7 +1354,7 @@ public final class IntegerStamp extends PrimitiveStamp
         },
 
         // @closure
-        new BinaryOp.Or(true, true)
+        new ArithmeticOpTable.BinaryOp.Or(true, true)
         {
             @Override
             public Constant foldConstant(Constant __const1, Constant __const2)
@@ -1393,7 +1389,7 @@ public final class IntegerStamp extends PrimitiveStamp
         },
 
         // @closure
-        new BinaryOp.Xor(true, true)
+        new ArithmeticOpTable.BinaryOp.Xor(true, true)
         {
             @Override
             public Constant foldConstant(Constant __const1, Constant __const2)
@@ -1439,7 +1435,7 @@ public final class IntegerStamp extends PrimitiveStamp
         },
 
         // @closure
-        new ShiftOp.Shl()
+        new ArithmeticOpTable.ShiftOp.Shl()
         {
             @Override
             public Constant foldConstant(Constant __value, int __amount)
@@ -1518,7 +1514,7 @@ public final class IntegerStamp extends PrimitiveStamp
         },
 
         // @closure
-        new ShiftOp.Shr()
+        new ArithmeticOpTable.ShiftOp.Shr()
         {
             @Override
             public Constant foldConstant(Constant __value, int __amount)
@@ -1576,7 +1572,7 @@ public final class IntegerStamp extends PrimitiveStamp
         },
 
         // @closure
-        new ShiftOp.UShr()
+        new ArithmeticOpTable.ShiftOp.UShr()
         {
             @Override
             public Constant foldConstant(Constant __value, int __amount)
@@ -1639,7 +1635,7 @@ public final class IntegerStamp extends PrimitiveStamp
         },
 
         // @closure
-        new UnaryOp.Abs()
+        new ArithmeticOpTable.UnaryOp.Abs()
         {
             @Override
             public Constant foldConstant(Constant __value)
@@ -1675,7 +1671,7 @@ public final class IntegerStamp extends PrimitiveStamp
         },
 
         // @closure
-        new IntegerConvertOp.ZeroExtend()
+        new ArithmeticOpTable.IntegerConvertOp.ZeroExtend()
         {
             @Override
             public Constant foldConstant(int __inputBits, int __resultBits, Constant __c)
@@ -1723,7 +1719,7 @@ public final class IntegerStamp extends PrimitiveStamp
         },
 
         // @closure
-        new IntegerConvertOp.SignExtend()
+        new ArithmeticOpTable.IntegerConvertOp.SignExtend()
         {
             @Override
             public Constant foldConstant(int __inputBits, int __resultBits, Constant __c)
@@ -1762,7 +1758,7 @@ public final class IntegerStamp extends PrimitiveStamp
         },
 
         // @closure
-        new IntegerConvertOp.Narrow()
+        new ArithmeticOpTable.IntegerConvertOp.Narrow()
         {
             @Override
             public Constant foldConstant(int __inputBits, int __resultBits, Constant __c)

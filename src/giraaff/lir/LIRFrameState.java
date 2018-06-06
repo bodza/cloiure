@@ -12,7 +12,7 @@ public final class LIRFrameState
     // @field
     public final LabelRef ___exceptionEdge;
 
-    // @cons
+    // @cons LIRFrameState
     public LIRFrameState(LabelRef __exceptionEdge)
     {
         super();

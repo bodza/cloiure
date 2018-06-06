@@ -5,6 +5,7 @@ import jdk.vm.ci.meta.JavaKind;
 
 import giraaff.core.common.type.StampFactory;
 import giraaff.graph.IterableNodeType;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.nodeinfo.InputType;
 import giraaff.nodes.memory.MemoryMapNode;
@@ -17,10 +18,10 @@ public final class ReturnNode extends ControlSinkNode implements LIRLowerable, I
     // @def
     public static final NodeClass<ReturnNode> TYPE = NodeClass.create(ReturnNode.class);
 
-    @OptionalInput
+    @Node.OptionalInput
     // @field
     ValueNode ___result;
-    @OptionalInput(InputType.Extension)
+    @Node.OptionalInput(InputType.Extension)
     // @field
     MemoryMapNode ___memoryMap;
 
@@ -29,13 +30,13 @@ public final class ReturnNode extends ControlSinkNode implements LIRLowerable, I
         return this.___result;
     }
 
-    // @cons
+    // @cons ReturnNode
     public ReturnNode(ValueNode __result)
     {
         this(__result, null);
     }
 
-    // @cons
+    // @cons ReturnNode
     public ReturnNode(ValueNode __result, MemoryMapNode __memoryMap)
     {
         super(TYPE, StampFactory.forVoid());

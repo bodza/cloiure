@@ -7,6 +7,7 @@ import jdk.vm.ci.meta.ResolvedJavaType;
 import org.graalvm.word.LocationIdentity;
 
 import giraaff.core.common.type.StampFactory;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.graph.NodeInputList;
 import giraaff.nodeinfo.InputType;
@@ -46,15 +47,15 @@ public class BasicArrayCopyNode extends AbstractMemoryCheckpoint implements Virt
     // @def
     static final int LENGTH_ARG = 4;
 
-    @Input
+    @Node.Input
     // @field
     NodeInputList<ValueNode> ___args;
 
-    @OptionalInput(InputType.State)
+    @Node.OptionalInput(InputType.StateI)
     // @field
     FrameState ___stateDuring;
 
-    @OptionalInput(InputType.Memory)
+    @Node.OptionalInput(InputType.Memory)
     // @field
     protected MemoryNode ___lastLocationAccess;
 
@@ -64,7 +65,7 @@ public class BasicArrayCopyNode extends AbstractMemoryCheckpoint implements Virt
     // @field
     protected int ___bci;
 
-    // @cons
+    // @cons BasicArrayCopyNode
     public BasicArrayCopyNode(NodeClass<? extends AbstractMemoryCheckpoint> __type, ValueNode __src, ValueNode __srcPos, ValueNode __dest, ValueNode __destPos, ValueNode __length, JavaKind __elementKind, int __bci)
     {
         super(__type, StampFactory.forKind(JavaKind.Void));
@@ -73,7 +74,7 @@ public class BasicArrayCopyNode extends AbstractMemoryCheckpoint implements Virt
         this.___elementKind = __elementKind != JavaKind.Illegal ? __elementKind : null;
     }
 
-    // @cons
+    // @cons BasicArrayCopyNode
     public BasicArrayCopyNode(NodeClass<? extends AbstractMemoryCheckpoint> __type, ValueNode __src, ValueNode __srcPos, ValueNode __dest, ValueNode __destPos, ValueNode __length, JavaKind __elementKind)
     {
         super(__type, StampFactory.forKind(JavaKind.Void));

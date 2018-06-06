@@ -23,7 +23,7 @@ import giraaff.util.GraalError;
 // @class AMD64NodeLIRBuilder
 public abstract class AMD64NodeLIRBuilder extends NodeLIRBuilder
 {
-    // @cons
+    // @cons AMD64NodeLIRBuilder
     public AMD64NodeLIRBuilder(StructuredGraph __graph, LIRGeneratorTool __gen)
     {
         super(__graph, __gen);

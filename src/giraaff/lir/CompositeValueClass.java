@@ -7,17 +7,15 @@ import java.util.EnumSet;
 import giraaff.core.common.FieldIntrospection;
 import giraaff.core.common.Fields;
 import giraaff.core.common.FieldsScanner;
-import giraaff.lir.CompositeValue.Component;
-import giraaff.lir.LIRInstruction.OperandFlag;
-import giraaff.lir.LIRIntrospection.LIRFieldsScanner;
-import giraaff.lir.LIRIntrospection.OperandModeAnnotation;
-import giraaff.lir.LIRIntrospection.Values;
+import giraaff.lir.CompositeValue;
+import giraaff.lir.LIRInstruction;
+import giraaff.lir.LIRIntrospection;
 import giraaff.util.GraalError;
 
 ///
 // Lazily associated metadata for every {@link CompositeValue} type. The metadata includes:
 //
-// <li>The offsets of fields annotated with {@link Component} as well as methods for iterating over
+// <li>The offsets of fields annotated with {@link CompositeValue.Component} as well as methods for iterating over
 // such fields.</li>
 ///
 // @class CompositeValueClass
@@ -43,34 +41,34 @@ public final class CompositeValueClass<T> extends FieldIntrospection<T>
     }
 
     // @field
-    private final Values ___values;
+    private final LIRIntrospection.Values ___values;
 
-    // @cons
+    // @cons CompositeValueClass
     private CompositeValueClass(Class<T> __clazz)
     {
         super(__clazz);
 
-        CompositeValueFieldsScanner __vfs = new CompositeValueFieldsScanner(new FieldsScanner.DefaultCalcOffset());
+        CompositeValueClass.CompositeValueFieldsScanner __vfs = new CompositeValueClass.CompositeValueFieldsScanner(new FieldsScanner.DefaultCalcOffset());
         __vfs.scan(__clazz, CompositeValue.class, false);
 
-        this.___values = new Values(__vfs.___valueAnnotations.get(CompositeValue.Component.class));
+        this.___values = new LIRIntrospection.Values(__vfs.___valueAnnotations.get(CompositeValue.Component.class));
         this.___data = new Fields(__vfs.___data);
     }
 
     // @class CompositeValueClass.CompositeValueFieldsScanner
-    private static final class CompositeValueFieldsScanner extends LIRFieldsScanner
+    private static final class CompositeValueFieldsScanner extends LIRIntrospection.LIRFieldsScanner
     {
-        // @cons
+        // @cons CompositeValueClass.CompositeValueFieldsScanner
         CompositeValueFieldsScanner(FieldsScanner.CalcOffset __calc)
         {
             super(__calc);
-            this.___valueAnnotations.put(CompositeValue.Component.class, new OperandModeAnnotation());
+            this.___valueAnnotations.put(CompositeValue.Component.class, new LIRIntrospection.OperandModeAnnotation());
         }
 
         @Override
-        protected EnumSet<OperandFlag> getFlags(Field __field)
+        protected EnumSet<LIRInstruction.OperandFlag> getFlags(Field __field)
         {
-            EnumSet<OperandFlag> __result = EnumSet.noneOf(OperandFlag.class);
+            EnumSet<LIRInstruction.OperandFlag> __result = EnumSet.noneOf(LIRInstruction.OperandFlag.class);
             if (__field.isAnnotationPresent(CompositeValue.Component.class))
             {
                 __result.addAll(Arrays.asList(__field.getAnnotation(CompositeValue.Component.class).value()));

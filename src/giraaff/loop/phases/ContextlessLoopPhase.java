@@ -7,7 +7,7 @@ import giraaff.phases.tiers.PhaseContext;
 // @class ContextlessLoopPhase
 public abstract class ContextlessLoopPhase<P extends LoopPolicies> extends LoopPhase<P>
 {
-    // @cons
+    // @cons ContextlessLoopPhase
     public ContextlessLoopPhase(P __policies)
     {
         super(__policies);

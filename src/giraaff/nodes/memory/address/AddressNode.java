@@ -1,7 +1,7 @@
 package giraaff.nodes.memory.address;
 
 import giraaff.core.common.type.StampFactory;
-import giraaff.graph.Node.IndirectCanonicalization;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.nodeinfo.StructuralInput;
 import giraaff.nodes.ValueNode;
@@ -10,14 +10,14 @@ import giraaff.nodes.calc.FloatingNode;
 ///
 // Base class for nodes that deal with addressing calculation.
 ///
-// @NodeInfo.allowedUsageTypes "Association"
+// @NodeInfo.allowedUsageTypes "InputType.Association"
 // @class AddressNode
-public abstract class AddressNode extends FloatingNode implements IndirectCanonicalization
+public abstract class AddressNode extends FloatingNode implements Node.IndirectCanonicalization
 {
     // @def
     public static final NodeClass<AddressNode> TYPE = NodeClass.create(AddressNode.class);
 
-    // @cons
+    // @cons AddressNode
     protected AddressNode(NodeClass<? extends AddressNode> __c)
     {
         super(__c, StampFactory.pointer());

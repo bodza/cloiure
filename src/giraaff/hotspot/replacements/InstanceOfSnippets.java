@@ -19,7 +19,6 @@ import giraaff.hotspot.meta.HotSpotProviders;
 import giraaff.hotspot.nodes.type.KlassPointerStamp;
 import giraaff.hotspot.replacements.HotSpotReplacementsUtil;
 import giraaff.hotspot.replacements.TypeCheckSnippetUtils;
-import giraaff.hotspot.replacements.TypeCheckSnippetUtils.Hints;
 import giraaff.hotspot.word.KlassPointer;
 import giraaff.nodes.ConstantNode;
 import giraaff.nodes.DeoptimizeNode;
@@ -35,8 +34,7 @@ import giraaff.nodes.java.InstanceOfDynamicNode;
 import giraaff.nodes.java.InstanceOfNode;
 import giraaff.nodes.spi.LoweringTool;
 import giraaff.replacements.InstanceOfSnippetsTemplates;
-import giraaff.replacements.SnippetTemplate.Arguments;
-import giraaff.replacements.SnippetTemplate.SnippetInfo;
+import giraaff.replacements.SnippetTemplate;
 import giraaff.replacements.Snippets;
 import giraaff.replacements.nodes.ExplodeLoopNode;
 import giraaff.util.GraalError;
@@ -52,7 +50,7 @@ import giraaff.util.GraalError;
 // @class InstanceOfSnippets
 public final class InstanceOfSnippets implements Snippets
 {
-    // @cons
+    // @cons InstanceOfSnippets
     private InstanceOfSnippets()
     {
         super();
@@ -63,7 +61,7 @@ public final class InstanceOfSnippets implements Snippets
     // types. This snippet deoptimizes on hint miss paths.
     ///
     @Snippet
-    public static Object instanceofWithProfile(Object __object, @VarargsParameter KlassPointer[] __hints, @VarargsParameter boolean[] __hintIsPositive, Object __trueValue, Object __falseValue, @ConstantParameter boolean __nullSeen)
+    public static Object instanceofWithProfile(Object __object, @Snippet.VarargsParameter KlassPointer[] __hints, @Snippet.VarargsParameter boolean[] __hintIsPositive, Object __trueValue, Object __falseValue, @Snippet.ConstantParameter boolean __nullSeen)
     {
         if (BranchProbabilityNode.probability(BranchProbabilityNode.NOT_FREQUENT_PROBABILITY, __object == null))
         {
@@ -117,7 +115,7 @@ public final class InstanceOfSnippets implements Snippets
     // A test against a primary type.
     ///
     @Snippet
-    public static Object instanceofPrimary(KlassPointer __hub, Object __object, @ConstantParameter int __superCheckOffset, Object __trueValue, Object __falseValue)
+    public static Object instanceofPrimary(KlassPointer __hub, Object __object, @Snippet.ConstantParameter int __superCheckOffset, Object __trueValue, Object __falseValue)
     {
         if (BranchProbabilityNode.probability(BranchProbabilityNode.NOT_FREQUENT_PROBABILITY, __object == null))
         {
@@ -136,7 +134,7 @@ public final class InstanceOfSnippets implements Snippets
     // A test against a restricted secondary type type.
     ///
     @Snippet
-    public static Object instanceofSecondary(KlassPointer __hub, Object __object, @VarargsParameter KlassPointer[] __hints, @VarargsParameter boolean[] __hintIsPositive, Object __trueValue, Object __falseValue)
+    public static Object instanceofSecondary(KlassPointer __hub, Object __object, @Snippet.VarargsParameter KlassPointer[] __hints, @Snippet.VarargsParameter boolean[] __hintIsPositive, Object __trueValue, Object __falseValue)
     {
         if (BranchProbabilityNode.probability(BranchProbabilityNode.NOT_FREQUENT_PROBABILITY, __object == null))
         {
@@ -166,7 +164,7 @@ public final class InstanceOfSnippets implements Snippets
     // Type test used when the type being tested against is not known at compile time.
     ///
     @Snippet
-    public static Object instanceofDynamic(KlassPointer __hub, Object __object, Object __trueValue, Object __falseValue, @ConstantParameter boolean __allowNull)
+    public static Object instanceofDynamic(KlassPointer __hub, Object __object, Object __trueValue, Object __falseValue, @Snippet.ConstantParameter boolean __allowNull)
     {
         if (BranchProbabilityNode.probability(BranchProbabilityNode.NOT_FREQUENT_PROBABILITY, __object == null))
         {
@@ -193,7 +191,7 @@ public final class InstanceOfSnippets implements Snippets
     }
 
     @Snippet
-    public static Object isAssignableFrom(@NonNullParameter Class<?> __thisClassNonNull, Class<?> __otherClass, Object __trueValue, Object __falseValue)
+    public static Object isAssignableFrom(@Snippet.NonNullParameter Class<?> __thisClassNonNull, Class<?> __otherClass, Object __trueValue, Object __falseValue)
     {
         if (__otherClass == null)
         {
@@ -227,30 +225,30 @@ public final class InstanceOfSnippets implements Snippets
         return __falseValue;
     }
 
-    // @class InstanceOfSnippets.Templates
-    public static final class Templates extends InstanceOfSnippetsTemplates
+    // @class InstanceOfSnippets.InstanceOfTemplates
+    public static final class InstanceOfTemplates extends InstanceOfSnippetsTemplates
     {
         // @field
-        private final SnippetInfo ___instanceofWithProfile = snippet(InstanceOfSnippets.class, "instanceofWithProfile");
+        private final SnippetTemplate.SnippetInfo ___instanceofWithProfile = snippet(InstanceOfSnippets.class, "instanceofWithProfile");
         // @field
-        private final SnippetInfo ___instanceofExact = snippet(InstanceOfSnippets.class, "instanceofExact");
+        private final SnippetTemplate.SnippetInfo ___instanceofExact = snippet(InstanceOfSnippets.class, "instanceofExact");
         // @field
-        private final SnippetInfo ___instanceofPrimary = snippet(InstanceOfSnippets.class, "instanceofPrimary");
+        private final SnippetTemplate.SnippetInfo ___instanceofPrimary = snippet(InstanceOfSnippets.class, "instanceofPrimary");
         // @field
-        private final SnippetInfo ___instanceofSecondary = snippet(InstanceOfSnippets.class, "instanceofSecondary", HotSpotReplacementsUtil.SECONDARY_SUPER_CACHE_LOCATION);
+        private final SnippetTemplate.SnippetInfo ___instanceofSecondary = snippet(InstanceOfSnippets.class, "instanceofSecondary", HotSpotReplacementsUtil.SECONDARY_SUPER_CACHE_LOCATION);
         // @field
-        private final SnippetInfo ___instanceofDynamic = snippet(InstanceOfSnippets.class, "instanceofDynamic", HotSpotReplacementsUtil.SECONDARY_SUPER_CACHE_LOCATION);
+        private final SnippetTemplate.SnippetInfo ___instanceofDynamic = snippet(InstanceOfSnippets.class, "instanceofDynamic", HotSpotReplacementsUtil.SECONDARY_SUPER_CACHE_LOCATION);
         // @field
-        private final SnippetInfo ___isAssignableFrom = snippet(InstanceOfSnippets.class, "isAssignableFrom", HotSpotReplacementsUtil.SECONDARY_SUPER_CACHE_LOCATION);
+        private final SnippetTemplate.SnippetInfo ___isAssignableFrom = snippet(InstanceOfSnippets.class, "isAssignableFrom", HotSpotReplacementsUtil.SECONDARY_SUPER_CACHE_LOCATION);
 
-        // @cons
-        public Templates(HotSpotProviders __providers, TargetDescription __target)
+        // @cons InstanceOfSnippets.InstanceOfTemplates
+        public InstanceOfTemplates(HotSpotProviders __providers, TargetDescription __target)
         {
             super(__providers, __providers.getSnippetReflection(), __target);
         }
 
         @Override
-        protected Arguments makeArguments(InstanceOfUsageReplacer __replacer, LoweringTool __tool)
+        protected SnippetTemplate.Arguments makeArguments(InstanceOfSnippetsTemplates.InstanceOfUsageReplacer __replacer, LoweringTool __tool)
         {
             if (__replacer.___instanceOf instanceof InstanceOfNode)
             {
@@ -263,34 +261,34 @@ public final class InstanceOfSnippets implements Snippets
                 final HotSpotResolvedObjectType __type = (HotSpotResolvedObjectType) __instanceOf.type().getType();
                 ConstantNode __hub = ConstantNode.forConstant(KlassPointerStamp.klassNonNull(), __type.klass(), this.___providers.getMetaAccess(), __instanceOf.graph());
 
-                Arguments __args;
+                SnippetTemplate.Arguments __args;
 
                 StructuredGraph __graph = __instanceOf.graph();
                 if (__hintInfo.___hintHitProbability >= 1.0 && __hintInfo.___exact == null)
                 {
-                    Hints __hints = TypeCheckSnippetUtils.createHints(__hintInfo, this.___providers.getMetaAccess(), false, __graph);
-                    __args = new Arguments(this.___instanceofWithProfile, __graph.getGuardsStage(), __tool.getLoweringStage());
+                    TypeCheckSnippetUtils.Hints __hints = TypeCheckSnippetUtils.createHints(__hintInfo, this.___providers.getMetaAccess(), false, __graph);
+                    __args = new SnippetTemplate.Arguments(this.___instanceofWithProfile, __graph.getGuardsStage(), __tool.getLoweringStage());
                     __args.add("object", __object);
                     __args.addVarargs("hints", KlassPointer.class, KlassPointerStamp.klassNonNull(), __hints.___hubs);
                     __args.addVarargs("hintIsPositive", boolean.class, StampFactory.forKind(JavaKind.Boolean), __hints.___isPositive);
                 }
                 else if (__hintInfo.___exact != null)
                 {
-                    __args = new Arguments(this.___instanceofExact, __graph.getGuardsStage(), __tool.getLoweringStage());
+                    __args = new SnippetTemplate.Arguments(this.___instanceofExact, __graph.getGuardsStage(), __tool.getLoweringStage());
                     __args.add("object", __object);
                     __args.add("exactHub", ConstantNode.forConstant(KlassPointerStamp.klassNonNull(), ((HotSpotResolvedObjectType) __hintInfo.___exact).klass(), this.___providers.getMetaAccess(), __graph));
                 }
                 else if (__type.isPrimaryType())
                 {
-                    __args = new Arguments(this.___instanceofPrimary, __graph.getGuardsStage(), __tool.getLoweringStage());
+                    __args = new SnippetTemplate.Arguments(this.___instanceofPrimary, __graph.getGuardsStage(), __tool.getLoweringStage());
                     __args.add("hub", __hub);
                     __args.add("object", __object);
                     __args.addConst("superCheckOffset", __type.superCheckOffset());
                 }
                 else
                 {
-                    Hints __hints = TypeCheckSnippetUtils.createHints(__hintInfo, this.___providers.getMetaAccess(), false, __graph);
-                    __args = new Arguments(this.___instanceofSecondary, __graph.getGuardsStage(), __tool.getLoweringStage());
+                    TypeCheckSnippetUtils.Hints __hints = TypeCheckSnippetUtils.createHints(__hintInfo, this.___providers.getMetaAccess(), false, __graph);
+                    __args = new SnippetTemplate.Arguments(this.___instanceofSecondary, __graph.getGuardsStage(), __tool.getLoweringStage());
                     __args.add("hub", __hub);
                     __args.add("object", __object);
                     __args.addVarargs("hints", KlassPointer.class, KlassPointerStamp.klassNonNull(), __hints.___hubs);
@@ -309,7 +307,7 @@ public final class InstanceOfSnippets implements Snippets
                 InstanceOfDynamicNode __instanceOf = (InstanceOfDynamicNode) __replacer.___instanceOf;
                 ValueNode __object = __instanceOf.getObject();
 
-                Arguments __args = new Arguments(this.___instanceofDynamic, __instanceOf.graph().getGuardsStage(), __tool.getLoweringStage());
+                SnippetTemplate.Arguments __args = new SnippetTemplate.Arguments(this.___instanceofDynamic, __instanceOf.graph().getGuardsStage(), __tool.getLoweringStage());
                 __args.add("hub", __instanceOf.getMirrorOrHub());
                 __args.add("object", __object);
                 __args.add("trueValue", __replacer.___trueValue);
@@ -320,7 +318,7 @@ public final class InstanceOfSnippets implements Snippets
             else if (__replacer.___instanceOf instanceof ClassIsAssignableFromNode)
             {
                 ClassIsAssignableFromNode __isAssignable = (ClassIsAssignableFromNode) __replacer.___instanceOf;
-                Arguments __args = new Arguments(this.___isAssignableFrom, __isAssignable.graph().getGuardsStage(), __tool.getLoweringStage());
+                SnippetTemplate.Arguments __args = new SnippetTemplate.Arguments(this.___isAssignableFrom, __isAssignable.graph().getGuardsStage(), __tool.getLoweringStage());
                 __args.add("thisClassNonNull", __isAssignable.getThisClass());
                 __args.add("otherClass", __isAssignable.getOtherClass());
                 __args.add("trueValue", __replacer.___trueValue);

@@ -5,6 +5,7 @@ import jdk.vm.ci.meta.Value;
 import org.graalvm.word.LocationIdentity;
 
 import giraaff.core.common.type.Stamp;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.nodeinfo.InputType;
 import giraaff.nodes.FrameState;
@@ -12,6 +13,7 @@ import giraaff.nodes.NodeView;
 import giraaff.nodes.StateSplit;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.memory.FixedAccessNode;
+import giraaff.nodes.memory.HeapAccess;
 import giraaff.nodes.memory.LIRLowerableAccess;
 import giraaff.nodes.memory.MemoryCheckpoint;
 import giraaff.nodes.memory.address.AddressNode;
@@ -21,22 +23,22 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // Represents the lowered version of an atomic read-and-write operation like
 // {@link sun.misc.Unsafe#getAndSetInt(Object, long, int)}.
 ///
-// @NodeInfo.allowedUsageTypes "Memory"
+// @NodeInfo.allowedUsageTypes "InputType.Memory"
 // @class LoweredAtomicReadAndWriteNode
 public final class LoweredAtomicReadAndWriteNode extends FixedAccessNode implements StateSplit, LIRLowerableAccess, MemoryCheckpoint.Single
 {
     // @def
     public static final NodeClass<LoweredAtomicReadAndWriteNode> TYPE = NodeClass.create(LoweredAtomicReadAndWriteNode.class);
 
-    @Input
+    @Node.Input
     // @field
     ValueNode ___newValue;
-    @OptionalInput(InputType.State)
+    @Node.OptionalInput(InputType.StateI)
     // @field
     FrameState ___stateAfter;
 
-    // @cons
-    public LoweredAtomicReadAndWriteNode(AddressNode __address, LocationIdentity __location, ValueNode __newValue, BarrierType __barrierType)
+    // @cons LoweredAtomicReadAndWriteNode
+    public LoweredAtomicReadAndWriteNode(AddressNode __address, LocationIdentity __location, ValueNode __newValue, HeapAccess.BarrierType __barrierType)
     {
         super(TYPE, __address, __location, __newValue.stamp(NodeView.DEFAULT).unrestricted(), __barrierType);
         this.___newValue = __newValue;

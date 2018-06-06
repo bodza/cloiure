@@ -31,23 +31,23 @@ public interface StaticDeoptimizingNode extends ValueNodeInterface
         Profile,
         None;
 
-        public boolean isHigherPriorityThan(GuardPriority __other)
+        public boolean isHigherPriorityThan(StaticDeoptimizingNode.GuardPriority __other)
         {
             return this.compareTo(__other) < 0;
         }
 
-        public boolean isLowerPriorityThan(GuardPriority __other)
+        public boolean isLowerPriorityThan(StaticDeoptimizingNode.GuardPriority __other)
         {
             return this.compareTo(__other) > 0;
         }
 
-        public static GuardPriority highest()
+        public static StaticDeoptimizingNode.GuardPriority highest()
         {
             return Speculation;
         }
     }
 
-    default GuardPriority computePriority()
+    default StaticDeoptimizingNode.GuardPriority computePriority()
     {
         if (getSpeculation() != null && getSpeculation().isNonNull())
         {

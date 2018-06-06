@@ -22,10 +22,10 @@ import jdk.vm.ci.meta.PlatformKind;
 import jdk.vm.ci.meta.PrimitiveConstant;
 import jdk.vm.ci.meta.Value;
 
-import giraaff.asm.amd64.AMD64Address.Scale;
+import giraaff.asm.amd64.AMD64Address;
 import giraaff.core.amd64.AMD64ArithmeticLIRGenerator;
 import giraaff.core.amd64.AMD64LIRGenerator;
-import giraaff.core.amd64.AMD64MoveFactoryBase.BackupSlotProvider;
+import giraaff.core.amd64.AMD64MoveFactoryBase;
 import giraaff.core.common.CompressEncoding;
 import giraaff.core.common.LIRKind;
 import giraaff.core.common.spi.ForeignCallDescriptor;
@@ -46,16 +46,15 @@ import giraaff.lir.LIRFrameState;
 import giraaff.lir.LIRInstruction;
 import giraaff.lir.LIRInstructionClass;
 import giraaff.lir.LabelRef;
-import giraaff.lir.StandardOp.NoOp;
+import giraaff.lir.StandardOp;
 import giraaff.lir.SwitchStrategy;
 import giraaff.lir.Variable;
 import giraaff.lir.VirtualStackSlot;
 import giraaff.lir.amd64.AMD64AddressValue;
 import giraaff.lir.amd64.AMD64CCall;
-import giraaff.lir.amd64.AMD64ControlFlow.StrategySwitchOp;
+import giraaff.lir.amd64.AMD64ControlFlow;
 import giraaff.lir.amd64.AMD64FrameMapBuilder;
 import giraaff.lir.amd64.AMD64Move;
-import giraaff.lir.amd64.AMD64Move.MoveFromRegOp;
 import giraaff.lir.amd64.AMD64PrefetchOp;
 import giraaff.lir.amd64.AMD64ReadTimestampCounter;
 import giraaff.lir.amd64.AMD64RestoreRegistersOp;
@@ -64,6 +63,7 @@ import giraaff.lir.amd64.AMD64VZeroUpper;
 import giraaff.lir.asm.CompilationResultBuilder;
 import giraaff.lir.framemap.FrameMapBuilder;
 import giraaff.lir.gen.LIRGenerationResult;
+import giraaff.lir.gen.LIRGeneratorTool;
 import giraaff.util.GraalError;
 
 ///
@@ -75,20 +75,20 @@ public final class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements
     // @field
     private HotSpotLockStackHolder ___lockStackHolder;
 
-    // @cons
+    // @cons AMD64HotSpotLIRGenerator
     protected AMD64HotSpotLIRGenerator(HotSpotProviders __providers, LIRGenerationResult __lirGenRes)
     {
-        this(__providers, __lirGenRes, new BackupSlotProvider(__lirGenRes.getFrameMapBuilder()));
+        this(__providers, __lirGenRes, new AMD64MoveFactoryBase.BackupSlotProvider(__lirGenRes.getFrameMapBuilder()));
     }
 
-    // @cons
-    private AMD64HotSpotLIRGenerator(HotSpotProviders __providers, LIRGenerationResult __lirGenRes, BackupSlotProvider __backupSlotProvider)
+    // @cons AMD64HotSpotLIRGenerator
+    private AMD64HotSpotLIRGenerator(HotSpotProviders __providers, LIRGenerationResult __lirGenRes, AMD64MoveFactoryBase.BackupSlotProvider __backupSlotProvider)
     {
         this(new AMD64HotSpotLIRKindTool(), new AMD64ArithmeticLIRGenerator(), new AMD64HotSpotMoveFactory(__backupSlotProvider), __providers, __lirGenRes);
     }
 
-    // @cons
-    protected AMD64HotSpotLIRGenerator(LIRKindTool __lirKindTool, AMD64ArithmeticLIRGenerator __arithmeticLIRGen, MoveFactory __moveFactory, HotSpotProviders __providers, LIRGenerationResult __lirGenRes)
+    // @cons AMD64HotSpotLIRGenerator
+    protected AMD64HotSpotLIRGenerator(LIRKindTool __lirKindTool, AMD64ArithmeticLIRGenerator __arithmeticLIRGen, LIRGeneratorTool.MoveFactory __moveFactory, HotSpotProviders __providers, LIRGenerationResult __lirGenRes)
     {
         super(__lirKindTool, __arithmeticLIRGen, __moveFactory, __providers, __lirGenRes);
     }
@@ -107,7 +107,7 @@ public final class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements
     final class SaveRbp
     {
         // @field
-        final NoOp ___placeholder;
+        final StandardOp.NoOp ___placeholder;
 
         ///
         // The slot reserved for saving RBP.
@@ -115,8 +115,8 @@ public final class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements
         // @field
         final StackSlot ___reservedSlot;
 
-        // @cons
-        SaveRbp(NoOp __placeholder)
+        // @cons AMD64HotSpotLIRGenerator.SaveRbp
+        SaveRbp(StandardOp.NoOp __placeholder)
         {
             super();
             this.___placeholder = __placeholder;
@@ -142,22 +142,22 @@ public final class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements
                 __dst = AMD64HotSpotLIRGenerator.this.newVariable(LIRKind.value(AMD64Kind.QWORD));
             }
 
-            this.___placeholder.replace(AMD64HotSpotLIRGenerator.this.getResult().getLIR(), new MoveFromRegOp(AMD64Kind.QWORD, __dst, AMD64.rbp.asValue(LIRKind.value(AMD64Kind.QWORD))));
+            this.___placeholder.replace(AMD64HotSpotLIRGenerator.this.getResult().getLIR(), new AMD64Move.MoveFromRegOp(AMD64Kind.QWORD, __dst, AMD64.rbp.asValue(LIRKind.value(AMD64Kind.QWORD))));
             return __dst;
         }
     }
 
     // @field
-    private SaveRbp ___saveRbp;
+    private AMD64HotSpotLIRGenerator.SaveRbp ___saveRbp;
 
     protected void emitSaveRbp()
     {
-        NoOp __placeholder = new NoOp(getCurrentBlock(), getResult().getLIR().getLIRforBlock(getCurrentBlock()).size());
+        StandardOp.NoOp __placeholder = new StandardOp.NoOp(getCurrentBlock(), getResult().getLIR().getLIRforBlock(getCurrentBlock()).size());
         append(__placeholder);
-        this.___saveRbp = new SaveRbp(__placeholder);
+        this.___saveRbp = new AMD64HotSpotLIRGenerator.SaveRbp(__placeholder);
     }
 
-    protected SaveRbp getSaveRbp()
+    protected AMD64HotSpotLIRGenerator.SaveRbp getSaveRbp()
     {
         return this.___saveRbp;
     }
@@ -171,13 +171,13 @@ public final class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements
     private static final class RescueSlotDummyOp extends LIRInstruction
     {
         // @def
-        public static final LIRInstructionClass<RescueSlotDummyOp> TYPE = LIRInstructionClass.create(RescueSlotDummyOp.class);
+        public static final LIRInstructionClass<AMD64HotSpotLIRGenerator.RescueSlotDummyOp> TYPE = LIRInstructionClass.create(AMD64HotSpotLIRGenerator.RescueSlotDummyOp.class);
 
-        @Alive({OperandFlag.STACK, OperandFlag.UNINITIALIZED})
+        @LIRInstruction.Alive({LIRInstruction.OperandFlag.STACK, LIRInstruction.OperandFlag.UNINITIALIZED})
         // @field
         private AllocatableValue ___slot;
 
-        // @cons
+        // @cons AMD64HotSpotLIRGenerator.RescueSlotDummyOp
         RescueSlotDummyOp(FrameMapBuilder __frameMapBuilder, LIRKind __kind)
         {
             super(TYPE);
@@ -196,19 +196,19 @@ public final class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements
     }
 
     // @field
-    private RescueSlotDummyOp ___rescueSlotOp;
+    private AMD64HotSpotLIRGenerator.RescueSlotDummyOp ___rescueSlotOp;
 
     private AllocatableValue getOrInitRescueSlot()
     {
         return getOrInitRescueSlotOp().getSlot();
     }
 
-    private RescueSlotDummyOp getOrInitRescueSlotOp()
+    private AMD64HotSpotLIRGenerator.RescueSlotDummyOp getOrInitRescueSlotOp()
     {
         if (this.___rescueSlotOp == null)
         {
             // create dummy instruction to keep the rescue slot alive
-            this.___rescueSlotOp = new RescueSlotDummyOp(getResult().getFrameMapBuilder(), getLIRKindTool().getWordKind());
+            this.___rescueSlotOp = new AMD64HotSpotLIRGenerator.RescueSlotDummyOp(getResult().getFrameMapBuilder(), getLIRKindTool().getWordKind());
         }
         return this.___rescueSlotOp;
     }
@@ -296,9 +296,9 @@ public final class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements
             // AVX-SSE transition.
             //
             // We exclude the argument registers from the zeroing LIR instruction since it violates
-            // the LIR semantics of @Temp that values must not be live. Note that the emitted
-            // machine instruction actually zeros _all_ XMM registers which is fine since we know
-            // that their upper half is not used.
+            // the LIR semantics of @LIRInstruction.Temp that values must not be live. Note that the
+            // emitted machine instruction actually zeros _all_ XMM registers which is fine since we
+            // know that their upper half is not used.
             append(new AMD64VZeroUpper(__arguments));
         }
         super.emitForeignCallOp(__linkage, __result, __arguments, __temps, __info);
@@ -658,7 +658,7 @@ public final class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements
             if (__encoding.getShift() <= 3)
             {
                 LIRKind __wordKind = LIRKind.unknownReference(target().arch.getWordKind());
-                __uncompressed = new AMD64AddressValue(__wordKind, getProviders().getRegisters().getHeapBaseRegister().asValue(__wordKind), asAllocatable(__address), Scale.fromInt(1 << __encoding.getShift()), 0);
+                __uncompressed = new AMD64AddressValue(__wordKind, getProviders().getRegisters().getHeapBaseRegister().asValue(__wordKind), asAllocatable(__address), AMD64Address.Scale.fromInt(1 << __encoding.getShift()), 0);
             }
             else
             {
@@ -677,7 +677,7 @@ public final class AMD64HotSpotLIRGenerator extends AMD64LIRGenerator implements
     }
 
     @Override
-    protected StrategySwitchOp createStrategySwitchOp(SwitchStrategy __strategy, LabelRef[] __keyTargets, LabelRef __defaultTarget, Variable __key, AllocatableValue __temp)
+    protected AMD64ControlFlow.StrategySwitchOp createStrategySwitchOp(SwitchStrategy __strategy, LabelRef[] __keyTargets, LabelRef __defaultTarget, Variable __key, AllocatableValue __temp)
     {
         return new AMD64HotSpotStrategySwitchOp(__strategy, __keyTargets, __defaultTarget, __key, __temp);
     }

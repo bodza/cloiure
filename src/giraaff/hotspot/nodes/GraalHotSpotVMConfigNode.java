@@ -31,7 +31,7 @@ public final class GraalHotSpotVMConfigNode extends FloatingNode implements LIRL
     ///
     // Constructor for {@link #areConfigValuesConstant()}.
     ///
-    // @cons
+    // @cons GraalHotSpotVMConfigNode
     public GraalHotSpotVMConfigNode()
     {
         super(TYPE, StampFactory.forKind(JavaKind.Boolean));
@@ -43,8 +43,8 @@ public final class GraalHotSpotVMConfigNode extends FloatingNode implements LIRL
     //
     // @param markId id of the config value
     ///
-    // @cons
-    public GraalHotSpotVMConfigNode(@InjectedNodeParameter Stamp __stamp, int __markId)
+    // @cons GraalHotSpotVMConfigNode
+    public GraalHotSpotVMConfigNode(@Node.InjectedNodeParameter Stamp __stamp, int __markId)
     {
         super(TYPE, __stamp);
         this.___markId = __markId;
@@ -56,7 +56,7 @@ public final class GraalHotSpotVMConfigNode extends FloatingNode implements LIRL
     // @param markId id of the config value
     // @param kind explicit type of the node
     ///
-    // @cons
+    // @cons GraalHotSpotVMConfigNode
     public GraalHotSpotVMConfigNode(int __markId, JavaKind __kind)
     {
         super(TYPE, StampFactory.forKind(__kind));
@@ -69,17 +69,17 @@ public final class GraalHotSpotVMConfigNode extends FloatingNode implements LIRL
         __gen.setResult(this, ((HotSpotLIRGenerator) __gen.getLIRGeneratorTool()).emitLoadConfigValue(this.___markId, __gen.getLIRGeneratorTool().getLIRKind(this.___stamp)));
     }
 
-    @NodeIntrinsic
+    @Node.NodeIntrinsic
     private static native boolean areConfigValuesConstant();
 
-    @NodeIntrinsic
-    private static native long loadLongConfigValue(@ConstantNodeParameter int __markId);
+    @Node.NodeIntrinsic
+    private static native long loadLongConfigValue(@Node.ConstantNodeParameter int __markId);
 
-    @NodeIntrinsic
-    private static native int loadIntConfigValue(@ConstantNodeParameter int __markId);
+    @Node.NodeIntrinsic
+    private static native int loadIntConfigValue(@Node.ConstantNodeParameter int __markId);
 
-    @NodeIntrinsic
-    private static native byte loadByteConfigValue(@ConstantNodeParameter int __markId);
+    @Node.NodeIntrinsic
+    private static native byte loadByteConfigValue(@Node.ConstantNodeParameter int __markId);
 
     public static long cardTableAddress()
     {

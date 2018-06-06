@@ -12,7 +12,7 @@ import giraaff.word.Word;
 // @class HotSpotUnsafeSubstitutions
 public final class HotSpotUnsafeSubstitutions
 {
-    // @cons
+    // @cons HotSpotUnsafeSubstitutions
     private HotSpotUnsafeSubstitutions()
     {
         super();

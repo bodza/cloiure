@@ -33,7 +33,7 @@ public final class WordCastNode extends FixedWithNextNode implements LIRLowerabl
     // @def
     public static final NodeClass<WordCastNode> TYPE = NodeClass.create(WordCastNode.class);
 
-    @Input
+    @Node.Input
     // @field
     ValueNode ___input;
     // @field
@@ -64,13 +64,13 @@ public final class WordCastNode extends FixedWithNextNode implements LIRLowerabl
         return new WordCastNode(StampFactory.forKind(__wordKind), __input, false);
     }
 
-    // @cons
+    // @cons WordCastNode
     protected WordCastNode(Stamp __stamp, ValueNode __input)
     {
         this(__stamp, __input, true);
     }
 
-    // @cons
+    // @cons WordCastNode
     protected WordCastNode(Stamp __stamp, ValueNode __input, boolean __trackedPointer)
     {
         super(TYPE, __stamp);

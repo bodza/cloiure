@@ -7,6 +7,7 @@ import jdk.vm.ci.meta.ResolvedJavaField;
 import org.graalvm.word.LocationIdentity;
 
 import giraaff.core.common.type.StampFactory;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.nodeinfo.InputType;
 import giraaff.nodes.FrameState;
@@ -30,28 +31,28 @@ public final class RawStoreNode extends UnsafeAccessNode implements StateSplit, 
     // @def
     public static final NodeClass<RawStoreNode> TYPE = NodeClass.create(RawStoreNode.class);
 
-    @Input
+    @Node.Input
     // @field
     ValueNode ___value;
-    @OptionalInput(InputType.State)
+    @Node.OptionalInput(InputType.StateI)
     // @field
     FrameState ___stateAfter;
     // @field
     private final boolean ___needsBarrier;
 
-    // @cons
+    // @cons RawStoreNode
     public RawStoreNode(ValueNode __object, ValueNode __offset, ValueNode __value, JavaKind __accessKind, LocationIdentity __locationIdentity)
     {
         this(__object, __offset, __value, __accessKind, __locationIdentity, true);
     }
 
-    // @cons
+    // @cons RawStoreNode
     public RawStoreNode(ValueNode __object, ValueNode __offset, ValueNode __value, JavaKind __accessKind, LocationIdentity __locationIdentity, boolean __needsBarrier)
     {
         this(__object, __offset, __value, __accessKind, __locationIdentity, __needsBarrier, null, false);
     }
 
-    // @cons
+    // @cons RawStoreNode
     public RawStoreNode(ValueNode __object, ValueNode __offset, ValueNode __value, JavaKind __accessKind, LocationIdentity __locationIdentity, boolean __needsBarrier, FrameState __stateAfter, boolean __forceAnyLocation)
     {
         super(TYPE, StampFactory.forVoid(), __object, __offset, __accessKind, __locationIdentity, __forceAnyLocation);
@@ -60,11 +61,11 @@ public final class RawStoreNode extends UnsafeAccessNode implements StateSplit, 
         this.___stateAfter = __stateAfter;
     }
 
-    @NodeIntrinsic
-    public static native Object storeObject(Object __object, long __offset, Object __value, @ConstantNodeParameter JavaKind __kind, @ConstantNodeParameter LocationIdentity __locationIdentity, @ConstantNodeParameter boolean __needsBarrier);
+    @Node.NodeIntrinsic
+    public static native Object storeObject(Object __object, long __offset, Object __value, @Node.ConstantNodeParameter JavaKind __kind, @Node.ConstantNodeParameter LocationIdentity __locationIdentity, @Node.ConstantNodeParameter boolean __needsBarrier);
 
-    @NodeIntrinsic
-    public static native Object storeChar(Object __object, long __offset, char __value, @ConstantNodeParameter JavaKind __kind, @ConstantNodeParameter LocationIdentity __locationIdentity);
+    @Node.NodeIntrinsic
+    public static native Object storeChar(Object __object, long __offset, char __value, @Node.ConstantNodeParameter JavaKind __kind, @Node.ConstantNodeParameter LocationIdentity __locationIdentity);
 
     public boolean needsBarrier()
     {

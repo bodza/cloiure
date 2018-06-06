@@ -16,9 +16,6 @@ import org.graalvm.collections.Pair;
 import giraaff.core.common.cfg.AbstractControlFlowGraph;
 import giraaff.core.common.cfg.BlockMap;
 import giraaff.core.common.type.ArithmeticOpTable;
-import giraaff.core.common.type.ArithmeticOpTable.BinaryOp;
-import giraaff.core.common.type.ArithmeticOpTable.BinaryOp.And;
-import giraaff.core.common.type.ArithmeticOpTable.BinaryOp.Or;
 import giraaff.core.common.type.IntegerStamp;
 import giraaff.core.common.type.ObjectStamp;
 import giraaff.core.common.type.Stamp;
@@ -50,7 +47,6 @@ import giraaff.nodes.ProxyNode;
 import giraaff.nodes.ShortCircuitOrNode;
 import giraaff.nodes.StaticDeoptimizingNode;
 import giraaff.nodes.StructuredGraph;
-import giraaff.nodes.StructuredGraph.ScheduleResult;
 import giraaff.nodes.UnaryOpLogicNode;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.ValuePhiNode;
@@ -71,7 +67,6 @@ import giraaff.nodes.spi.StampInverter;
 import giraaff.nodes.util.GraphUtil;
 import giraaff.phases.BasePhase;
 import giraaff.phases.schedule.SchedulePhase;
-import giraaff.phases.schedule.SchedulePhase.SchedulingStrategy;
 import giraaff.phases.tiers.PhaseContext;
 
 // @class ConditionalEliminationPhase
@@ -82,13 +77,13 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
     // @field
     private final boolean ___moveGuards;
 
-    // @cons
+    // @cons ConditionalEliminationPhase
     public ConditionalEliminationPhase(boolean __fullSchedule)
     {
         this(__fullSchedule, true);
     }
 
-    // @cons
+    // @cons ConditionalEliminationPhase
     public ConditionalEliminationPhase(boolean __fullSchedule, boolean __moveGuards)
     {
         super();
@@ -106,10 +101,10 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
         {
             if (this.___moveGuards)
             {
-                __cfg.visitDominatorTree(new MoveGuardsUpwards(), __graph.hasValueProxies());
+                __cfg.visitDominatorTree(new ConditionalEliminationPhase.MoveGuardsUpwards(), __graph.hasValueProxies());
             }
-            SchedulePhase.run(__graph, SchedulingStrategy.EARLIEST_WITH_GUARD_ORDER, __cfg);
-            ScheduleResult __r = __graph.getLastSchedule();
+            SchedulePhase.run(__graph, SchedulePhase.SchedulingStrategy.EARLIEST_WITH_GUARD_ORDER, __cfg);
+            StructuredGraph.ScheduleResult __r = __graph.getLastSchedule();
             __blockToNodes = __r.getBlockToNodesMap();
             __nodeToBlock = __r.getNodeToBlockMap();
         }
@@ -129,7 +124,7 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
 
     protected ControlFlowGraph.RecursiveVisitor<?> createVisitor(StructuredGraph __graph, @SuppressWarnings("unused") ControlFlowGraph __cfg, BlockMap<List<Node>> __blockToNodes, NodeMap<Block> __nodeToBlock, PhaseContext __context)
     {
-        return new Instance(__graph, __blockToNodes, __nodeToBlock, __context);
+        return new ConditionalEliminationPhase.ConditionalEliminationInstance(__graph, __blockToNodes, __nodeToBlock, __context);
     }
 
     // @class ConditionalEliminationPhase.MoveGuardsUpwards
@@ -219,9 +214,9 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
     private static final class PhiInfoElement
     {
         // @field
-        private EconomicMap<EndNode, InfoElement> ___infoElements;
+        private EconomicMap<EndNode, ConditionalEliminationPhase.InfoElement> ___infoElements;
 
-        public void set(EndNode __end, InfoElement __infoElement)
+        public void set(EndNode __end, ConditionalEliminationPhase.InfoElement __infoElement)
         {
             if (this.___infoElements == null)
             {
@@ -230,7 +225,7 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
             this.___infoElements.put(__end, __infoElement);
         }
 
-        public InfoElement get(EndNode __end)
+        public ConditionalEliminationPhase.InfoElement get(EndNode __end)
         {
             if (this.___infoElements == null)
             {
@@ -240,11 +235,11 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
         }
     }
 
-    // @class ConditionalEliminationPhase.Instance
-    public static final class Instance implements ControlFlowGraph.RecursiveVisitor<Integer>
+    // @class ConditionalEliminationPhase.ConditionalEliminationInstance
+    public static final class ConditionalEliminationInstance implements ControlFlowGraph.RecursiveVisitor<Integer>
     {
         // @field
-        protected final NodeMap<InfoElement> ___map;
+        protected final NodeMap<ConditionalEliminationPhase.InfoElement> ___map;
         // @field
         protected final BlockMap<List<Node>> ___blockToNodes;
         // @field
@@ -256,7 +251,7 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
         // @field
         protected final StructuredGraph ___graph;
         // @field
-        protected final EconomicMap<MergeNode, EconomicMap<ValuePhiNode, PhiInfoElement>> ___mergeMaps;
+        protected final EconomicMap<MergeNode, EconomicMap<ValuePhiNode, ConditionalEliminationPhase.PhiInfoElement>> ___mergeMaps;
 
         ///
         // Tests which may be eliminated because post dominating tests to prove a broader condition.
@@ -264,8 +259,8 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
         // @field
         private Deque<DeoptimizingGuard> ___pendingTests;
 
-        // @cons
-        public Instance(StructuredGraph __graph, BlockMap<List<Node>> __blockToNodes, NodeMap<Block> __nodeToBlock, PhaseContext __context)
+        // @cons ConditionalEliminationPhase.ConditionalEliminationInstance
+        public ConditionalEliminationInstance(StructuredGraph __graph, BlockMap<List<Node>> __blockToNodes, NodeMap<Block> __nodeToBlock, PhaseContext __context)
         {
             super();
             this.___graph = __graph;
@@ -452,10 +447,10 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
 
         protected void introducePisForPhis(MergeNode __merge)
         {
-            EconomicMap<ValuePhiNode, PhiInfoElement> __mergeMap = this.___mergeMaps.get(__merge);
+            EconomicMap<ValuePhiNode, ConditionalEliminationPhase.PhiInfoElement> __mergeMap = this.___mergeMaps.get(__merge);
             if (__mergeMap != null)
             {
-                MapCursor<ValuePhiNode, PhiInfoElement> __entries = __mergeMap.getEntries();
+                MapCursor<ValuePhiNode, ConditionalEliminationPhase.PhiInfoElement> __entries = __mergeMap.getEntries();
                 while (__entries.advance())
                 {
                     ValuePhiNode __phi = __entries.getKey();
@@ -464,13 +459,13 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
                     {
                         continue;
                     }
-                    PhiInfoElement __phiInfoElements = __entries.getValue();
+                    ConditionalEliminationPhase.PhiInfoElement __phiInfoElements = __entries.getValue();
                     Stamp __bestPossibleStamp = null;
                     for (int __i = 0; __i < __phi.valueCount(); ++__i)
                     {
                         ValueNode __valueAt = __phi.valueAt(__i);
                         Stamp __curBestStamp = __valueAt.stamp(NodeView.DEFAULT);
-                        InfoElement __infoElement = __phiInfoElements.get(__merge.forwardEndAt(__i));
+                        ConditionalEliminationPhase.InfoElement __infoElement = __phiInfoElements.get(__merge.forwardEndAt(__i));
                         if (__infoElement != null)
                         {
                             __curBestStamp = __curBestStamp.join(__infoElement.getStamp());
@@ -542,7 +537,7 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
                                 }
                                 else
                                 {
-                                    InfoElement __infoElement = __phiInfoElements.get(__merge.forwardEndAt(__i));
+                                    ConditionalEliminationPhase.InfoElement __infoElement = __phiInfoElements.get(__merge.forwardEndAt(__i));
                                     Stamp __curBestStamp = __infoElement.getStamp();
                                     ValueNode __input = __infoElement.getProxifiedInput();
                                     if (__input == null)
@@ -568,11 +563,11 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
             {
                 MergeNode __merge = (MergeNode) __abstractMerge;
 
-                EconomicMap<ValuePhiNode, PhiInfoElement> __mergeMap = this.___mergeMaps.get(__merge);
+                EconomicMap<ValuePhiNode, ConditionalEliminationPhase.PhiInfoElement> __mergeMap = this.___mergeMaps.get(__merge);
                 for (ValuePhiNode __phi : __merge.valuePhis())
                 {
                     ValueNode __valueAt = __phi.valueAt(__end);
-                    InfoElement __infoElement = this.getInfoElements(__valueAt);
+                    ConditionalEliminationPhase.InfoElement __infoElement = this.getInfoElements(__valueAt);
                     while (__infoElement != null)
                     {
                         Stamp __newStamp = __infoElement.getStamp();
@@ -584,10 +579,10 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
                                 this.___mergeMaps.put(__merge, __mergeMap);
                             }
 
-                            PhiInfoElement __phiInfoElement = __mergeMap.get(__phi);
+                            ConditionalEliminationPhase.PhiInfoElement __phiInfoElement = __mergeMap.get(__phi);
                             if (__phiInfoElement == null)
                             {
-                                __phiInfoElement = new PhiInfoElement();
+                                __phiInfoElement = new ConditionalEliminationPhase.PhiInfoElement();
                                 __mergeMap.put(__phi, __phiInfoElement);
                             }
 
@@ -641,7 +636,7 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
                         {
                             // This 'and' proves something about some of the bits in and.getX().
                             // It's equivalent to or'ing in the mask value since those values are known to be set.
-                            BinaryOp<Or> __op = ArithmeticOpTable.forStamp(__x.stamp(NodeView.DEFAULT)).getOr();
+                            ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.Or> __op = ArithmeticOpTable.forStamp(__x.stamp(NodeView.DEFAULT)).getOr();
                             IntegerStamp __newStampX = (IntegerStamp) __op.foldStamp(getSafeStamp(__andX), getOtherSafeStamp(__y));
                             registerNewStamp(__andX, __newStampX, __guard);
                         }
@@ -655,13 +650,13 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
             registerCondition(__condition, __negated, __guard);
         }
 
-        Pair<InfoElement, Stamp> recursiveFoldStamp(Node __node)
+        Pair<ConditionalEliminationPhase.InfoElement, Stamp> recursiveFoldStamp(Node __node)
         {
             if (__node instanceof UnaryNode)
             {
                 UnaryNode __unary = (UnaryNode) __node;
                 ValueNode __value = __unary.getValue();
-                InfoElement __infoElement = getInfoElements(__value);
+                ConditionalEliminationPhase.InfoElement __infoElement = getInfoElements(__value);
                 while (__infoElement != null)
                 {
                     Stamp __result = __unary.foldStamp(__infoElement.getStamp());
@@ -679,7 +674,7 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
                 ValueNode __x = __binary.getX();
                 if (__y.isConstant())
                 {
-                    InfoElement __infoElement = getInfoElements(__x);
+                    ConditionalEliminationPhase.InfoElement __infoElement = getInfoElements(__x);
                     while (__infoElement != null)
                     {
                         Stamp __result = __binary.foldStamp(__infoElement.___stamp, __y.stamp(NodeView.DEFAULT));
@@ -724,11 +719,11 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
         ///
         // Recursively try to fold stamps within this expression using information from
         // {@link #getInfoElements(ValueNode)}. It's only safe to use constants and one
-        // {@link InfoElement} otherwise more than one guard would be required.
+        // {@link ConditionalEliminationPhase.InfoElement}, otherwise more than one guard would be required.
         //
-        // @return the pair of the @{link InfoElement} used and the stamp produced for the whole expression
+        // @return the pair of the @{link ConditionalEliminationPhase.InfoElement} used and the stamp produced for the whole expression
         ///
-        Pair<InfoElement, Stamp> recursiveFoldStampFromInfo(Node __node)
+        Pair<ConditionalEliminationPhase.InfoElement, Stamp> recursiveFoldStampFromInfo(Node __node)
         {
             return recursiveFoldStamp(__node);
         }
@@ -750,7 +745,7 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
         //     ...
         // </pre>
         ///
-        protected boolean foldPendingTest(DeoptimizingGuard __thisGuard, ValueNode __original, Stamp __newStamp, GuardRewirer __rewireGuardFunction)
+        protected boolean foldPendingTest(DeoptimizingGuard __thisGuard, ValueNode __original, Stamp __newStamp, ConditionalEliminationPhase.GuardRewirer __rewireGuardFunction)
         {
             for (DeoptimizingGuard __pendingGuard : this.___pendingTests)
             {
@@ -782,7 +777,7 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
                         AndNode __and = (AndNode) __x;
                         if (__and.getY() == __y && __and.getX() == __original)
                         {
-                            BinaryOp<And> __andOp = ArithmeticOpTable.forStamp(__newStamp).getAnd();
+                            ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.And> __andOp = ArithmeticOpTable.forStamp(__newStamp).getAnd();
                             __result = __binaryOpLogicNode.tryFold(__andOp.foldStamp(__newStamp, getOtherSafeStamp(__y)), getOtherSafeStamp(__y));
                         }
                     }
@@ -825,12 +820,12 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
                     return true;
                 }
             }
-            InputFilter __v = new InputFilter(__knownToBeAbove);
+            ConditionalEliminationPhase.InputFilter __v = new ConditionalEliminationPhase.InputFilter(__knownToBeAbove);
             __n.applyInputs(__v);
             return __v.___ok;
         }
 
-        protected boolean foldGuard(DeoptimizingGuard __thisGuard, DeoptimizingGuard __otherGuard, boolean __outcome, Stamp __guardedValueStamp, GuardRewirer __rewireGuardFunction)
+        protected boolean foldGuard(DeoptimizingGuard __thisGuard, DeoptimizingGuard __otherGuard, boolean __outcome, Stamp __guardedValueStamp, ConditionalEliminationPhase.GuardRewirer __rewireGuardFunction)
         {
             DeoptimizationAction __action = StaticDeoptimizingNode.mergeActions(__otherGuard.getAction(), __thisGuard.getAction());
             if (__action != null && __otherGuard.getSpeculation() == __thisGuard.getSpeculation())
@@ -848,7 +843,7 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
 
                 // for the second case, the action of the deopt is copied from there:
                 __thisGuard.setAction(__action);
-                GuardRewirer __rewirer = (__guard, __result, __innerGuardedValueStamp, __newInput) ->
+                ConditionalEliminationPhase.GuardRewirer __rewirer = (__guard, __result, __innerGuardedValueStamp, __newInput) ->
                 {
                     // 'result' is 'outcome', 'guard' is 'otherGuard'
                     boolean __mustDeopt = __result == __otherGuard.isNegated();
@@ -879,7 +874,7 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
             }
         }
 
-        protected InfoElement getInfoElements(ValueNode __proxiedValue)
+        protected ConditionalEliminationPhase.InfoElement getInfoElements(ValueNode __proxiedValue)
         {
             ValueNode __value = GraphUtil.skipPi(__proxiedValue);
             if (__value == null)
@@ -889,19 +884,19 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
             return this.___map.getAndGrow(__value);
         }
 
-        protected boolean rewireGuards(GuardingNode __guard, boolean __result, ValueNode __proxifiedInput, Stamp __guardedValueStamp, GuardRewirer __rewireGuardFunction)
+        protected boolean rewireGuards(GuardingNode __guard, boolean __result, ValueNode __proxifiedInput, Stamp __guardedValueStamp, ConditionalEliminationPhase.GuardRewirer __rewireGuardFunction)
         {
             return __rewireGuardFunction.rewire(__guard, __result, __guardedValueStamp, __proxifiedInput);
         }
 
-        protected boolean tryProveCondition(LogicNode __node, GuardRewirer __rewireGuardFunction)
+        protected boolean tryProveCondition(LogicNode __node, ConditionalEliminationPhase.GuardRewirer __rewireGuardFunction)
         {
             return tryProveGuardCondition(null, __node, __rewireGuardFunction);
         }
 
-        private InfoElement nextElement(InfoElement __current)
+        private ConditionalEliminationPhase.InfoElement nextElement(ConditionalEliminationPhase.InfoElement __current)
         {
-            InfoElement __parent = __current.getParent();
+            ConditionalEliminationPhase.InfoElement __parent = __current.getParent();
             if (__parent != null)
             {
                 return __parent;
@@ -918,9 +913,9 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
             return null;
         }
 
-        protected boolean tryProveGuardCondition(DeoptimizingGuard __thisGuard, LogicNode __node, GuardRewirer __rewireGuardFunction)
+        protected boolean tryProveGuardCondition(DeoptimizingGuard __thisGuard, LogicNode __node, ConditionalEliminationPhase.GuardRewirer __rewireGuardFunction)
         {
-            InfoElement __infoElement = getInfoElements(__node);
+            ConditionalEliminationPhase.InfoElement __infoElement = getInfoElements(__node);
             while (__infoElement != null)
             {
                 Stamp __stamp = __infoElement.getStamp();
@@ -948,7 +943,7 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
                     }
                     __infoElement = nextElement(__infoElement);
                 }
-                Pair<InfoElement, Stamp> __foldResult = recursiveFoldStampFromInfo(__value);
+                Pair<ConditionalEliminationPhase.InfoElement, Stamp> __foldResult = recursiveFoldStampFromInfo(__value);
                 if (__foldResult != null)
                 {
                     TriState __result = __unaryLogicNode.tryFold(__foldResult.getRight());
@@ -984,7 +979,7 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
 
                 if (__y.isConstant())
                 {
-                    Pair<InfoElement, Stamp> __foldResult = recursiveFoldStampFromInfo(__x);
+                    Pair<ConditionalEliminationPhase.InfoElement, Stamp> __foldResult = recursiveFoldStampFromInfo(__x);
                     if (__foldResult != null)
                     {
                         TriState __result = __binaryOpLogicNode.tryFold(__foldResult.getRight(), __y.stamp(NodeView.DEFAULT));
@@ -1041,7 +1036,7 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
                         {
                             // This 'and' proves something about some of the bits in and.getX().
                             // It's equivalent to or'ing in the mask value since those values are known to be set.
-                            BinaryOp<Or> __op = ArithmeticOpTable.forStamp(__x.stamp(NodeView.DEFAULT)).getOr();
+                            ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.Or> __op = ArithmeticOpTable.forStamp(__x.stamp(NodeView.DEFAULT)).getOr();
                             IntegerStamp __newStampX = (IntegerStamp) __op.foldStamp(getSafeStamp(__and.getX()), getOtherSafeStamp(__y));
                             if (foldPendingTest(__thisGuard, __and.getX(), __newStampX, __rewireGuardFunction))
                             {
@@ -1133,7 +1128,7 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
                 {
                     __proxiedValue = __value;
                 }
-                this.___map.setAndGrow(__value, new InfoElement(__stamp, __guard, __proxiedValue, this.___map.getAndGrow(__value)));
+                this.___map.setAndGrow(__value, new ConditionalEliminationPhase.InfoElement(__stamp, __guard, __proxiedValue, this.___map.getAndGrow(__value)));
                 this.___undoOperations.push(__value);
                 if (__propagateThroughPis && __value instanceof PiNode)
                 {
@@ -1237,7 +1232,7 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
     // @iface ConditionalEliminationPhase.InfoElementProvider
     protected interface InfoElementProvider
     {
-        Iterable<InfoElement> getInfoElements(ValueNode __value);
+        Iterable<ConditionalEliminationPhase.InfoElement> getInfoElements(ValueNode __value);
     }
 
     ///
@@ -1251,7 +1246,7 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
         // @field
         private ValueNode ___value;
 
-        // @cons
+        // @cons ConditionalEliminationPhase.InputFilter
         InputFilter(ValueNode __value)
         {
             super();
@@ -1315,10 +1310,10 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
         // @field
         private final ValueNode ___proxifiedInput;
         // @field
-        private final InfoElement ___parent;
+        private final ConditionalEliminationPhase.InfoElement ___parent;
 
-        // @cons
-        public InfoElement(Stamp __stamp, GuardingNode __guard, ValueNode __proxifiedInput, InfoElement __parent)
+        // @cons ConditionalEliminationPhase.InfoElement
+        public InfoElement(Stamp __stamp, GuardingNode __guard, ValueNode __proxifiedInput, ConditionalEliminationPhase.InfoElement __parent)
         {
             super();
             this.___stamp = __stamp;
@@ -1327,7 +1322,7 @@ public final class ConditionalEliminationPhase extends BasePhase<PhaseContext>
             this.___parent = __parent;
         }
 
-        public InfoElement getParent()
+        public ConditionalEliminationPhase.InfoElement getParent()
         {
             return this.___parent;
         }

@@ -26,7 +26,7 @@ import giraaff.hotspot.nodes.HotSpotIndirectCallTargetNode;
 import giraaff.lir.LIRFrameState;
 import giraaff.lir.Variable;
 import giraaff.lir.gen.LIRGeneratorTool;
-import giraaff.nodes.CallTargetNode.InvokeKind;
+import giraaff.nodes.CallTargetNode;
 import giraaff.nodes.DirectCallTargetNode;
 import giraaff.nodes.IndirectCallTargetNode;
 import giraaff.nodes.ParameterNode;
@@ -40,7 +40,7 @@ import giraaff.nodes.ValueNode;
 // @class AMD64HotSpotNodeLIRBuilder
 public final class AMD64HotSpotNodeLIRBuilder extends AMD64NodeLIRBuilder implements HotSpotNodeLIRBuilder
 {
-    // @cons
+    // @cons AMD64HotSpotNodeLIRBuilder
     public AMD64HotSpotNodeLIRBuilder(StructuredGraph __graph, LIRGeneratorTool __gen)
     {
         super(__graph, __gen);
@@ -102,7 +102,7 @@ public final class AMD64HotSpotNodeLIRBuilder extends AMD64NodeLIRBuilder implem
     @Override
     protected void emitDirectCall(DirectCallTargetNode __callTarget, Value __result, Value[] __parameters, Value[] __temps, LIRFrameState __callState)
     {
-        InvokeKind __invokeKind = ((HotSpotDirectCallTargetNode) __callTarget).invokeKind();
+        CallTargetNode.InvokeKind __invokeKind = ((HotSpotDirectCallTargetNode) __callTarget).invokeKind();
         if (__invokeKind.isIndirect())
         {
             append(new AMD64HotspotDirectVirtualCallOp(__callTarget.targetMethod(), __result, __parameters, __temps, __callState, __invokeKind));

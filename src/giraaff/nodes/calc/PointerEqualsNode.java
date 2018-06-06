@@ -12,7 +12,7 @@ import giraaff.core.common.type.ObjectStamp;
 import giraaff.core.common.type.Stamp;
 import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
-import giraaff.graph.spi.Canonicalizable.BinaryCommutative;
+import giraaff.graph.spi.Canonicalizable;
 import giraaff.graph.spi.CanonicalizerTool;
 import giraaff.nodes.LogicConstantNode;
 import giraaff.nodes.LogicNode;
@@ -24,15 +24,15 @@ import giraaff.nodes.type.StampTool;
 import giraaff.nodes.util.GraphUtil;
 
 // @class PointerEqualsNode
-public class PointerEqualsNode extends CompareNode implements BinaryCommutative<ValueNode>
+public class PointerEqualsNode extends CompareNode implements Canonicalizable.BinaryCommutative<ValueNode>
 {
     // @def
     public static final NodeClass<PointerEqualsNode> TYPE = NodeClass.create(PointerEqualsNode.class);
 
     // @def
-    private static final PointerEqualsOp OP = new PointerEqualsOp();
+    private static final PointerEqualsNode.PointerEqualsOp OP = new PointerEqualsNode.PointerEqualsOp();
 
-    // @cons
+    // @cons PointerEqualsNode
     public PointerEqualsNode(ValueNode __x, ValueNode __y)
     {
         this(TYPE, __x, __y);
@@ -48,7 +48,7 @@ public class PointerEqualsNode extends CompareNode implements BinaryCommutative<
         return new PointerEqualsNode(__x, __y);
     }
 
-    // @cons
+    // @cons PointerEqualsNode
     protected PointerEqualsNode(NodeClass<? extends PointerEqualsNode> __c, ValueNode __x, ValueNode __y)
     {
         super(__c, CanonicalCondition.EQ, __x, __y);
@@ -67,7 +67,7 @@ public class PointerEqualsNode extends CompareNode implements BinaryCommutative<
     }
 
     // @class PointerEqualsNode.PointerEqualsOp
-    public static class PointerEqualsOp extends CompareOp
+    public static class PointerEqualsOp extends CompareNode.CompareOp
     {
         ///
         // Determines if this is a comparison used to determine whether dispatching on a receiver

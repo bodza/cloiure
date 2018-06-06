@@ -1,7 +1,7 @@
 package giraaff.phases.tiers;
 
 import giraaff.lir.alloc.RegisterAllocationPhase;
-import giraaff.lir.phases.AllocationPhase.AllocationContext;
+import giraaff.lir.phases.AllocationPhase;
 import giraaff.lir.phases.LIRPhase;
 import giraaff.lir.phases.LIRPhaseSuite;
 import giraaff.lir.phases.LIRSuites;
@@ -34,7 +34,7 @@ public final class Suites
         return this.___lowTier;
     }
 
-    // @cons
+    // @cons Suites
     public Suites(PhaseSuite<HighTierContext> __highTier, PhaseSuite<MidTierContext> __midTier, PhaseSuite<LowTierContext> __lowTier)
     {
         super();

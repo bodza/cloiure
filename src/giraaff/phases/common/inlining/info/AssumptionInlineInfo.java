@@ -6,7 +6,7 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
 import org.graalvm.collections.EconomicSet;
 
 import giraaff.graph.Node;
-import giraaff.nodes.CallTargetNode.InvokeKind;
+import giraaff.nodes.CallTargetNode;
 import giraaff.nodes.Invoke;
 import giraaff.phases.common.inlining.InliningUtil;
 import giraaff.phases.util.Providers;
@@ -21,7 +21,7 @@ public final class AssumptionInlineInfo extends ExactInlineInfo
     // @field
     private final AssumptionResult<?> ___takenAssumption;
 
-    // @cons
+    // @cons AssumptionInlineInfo
     public AssumptionInlineInfo(Invoke __invoke, ResolvedJavaMethod __concrete, AssumptionResult<?> __takenAssumption)
     {
         super(__invoke, __concrete);
@@ -39,6 +39,6 @@ public final class AssumptionInlineInfo extends ExactInlineInfo
     public void tryToDevirtualizeInvoke(Providers __providers)
     {
         this.___takenAssumption.recordTo(this.___invoke.asNode().graph().getAssumptions());
-        InliningUtil.replaceInvokeCallTarget(this.___invoke, graph(), InvokeKind.Special, this.___concrete);
+        InliningUtil.replaceInvokeCallTarget(this.___invoke, graph(), CallTargetNode.InvokeKind.Special, this.___concrete);
     }
 }

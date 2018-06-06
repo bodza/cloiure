@@ -13,7 +13,7 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
 import org.graalvm.collections.EconomicSet;
 
 import giraaff.code.CompilationResult;
-import giraaff.core.LIRGenerationPhase.LIRGenerationContext;
+import giraaff.core.LIRGenerationPhase;
 import giraaff.core.common.alloc.ComputeBlockOrder;
 import giraaff.core.common.alloc.RegisterAllocationConfig;
 import giraaff.core.common.cfg.AbstractBlockBase;
@@ -25,12 +25,11 @@ import giraaff.lir.framemap.FrameMap;
 import giraaff.lir.framemap.FrameMapBuilder;
 import giraaff.lir.gen.LIRGenerationResult;
 import giraaff.lir.gen.LIRGeneratorTool;
-import giraaff.lir.phases.AllocationPhase.AllocationContext;
+import giraaff.lir.phases.AllocationPhase;
 import giraaff.lir.phases.LIRSuites;
-import giraaff.lir.phases.PostAllocationOptimizationPhase.PostAllocationOptimizationContext;
-import giraaff.lir.phases.PreAllocationOptimizationPhase.PreAllocationOptimizationContext;
+import giraaff.lir.phases.PostAllocationOptimizationPhase;
+import giraaff.lir.phases.PreAllocationOptimizationPhase;
 import giraaff.nodes.StructuredGraph;
-import giraaff.nodes.StructuredGraph.ScheduleResult;
 import giraaff.nodes.cfg.Block;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 import giraaff.phases.OptimisticOptimizations;
@@ -50,14 +49,14 @@ import giraaff.util.GraalError;
 // @class GraalCompiler
 public final class GraalCompiler
 {
-    // @cons
+    // @cons GraalCompiler
     private GraalCompiler()
     {
         super();
     }
 
     ///
-    // Encapsulates all the inputs to a {@linkplain GraalCompiler#compile(Request) compilation}.
+    // Encapsulates all the inputs to a {@linkplain GraalCompiler#compile(GraalCompiler.Request) compilation}.
     ///
     // @class GraalCompiler.Request
     public static final class Request
@@ -89,7 +88,7 @@ public final class GraalCompiler
         // @param graph the graph to be compiled
         // @param installedCodeOwner the method the compiled code will be associated with once installed. This argument can be null.
         ///
-        // @cons
+        // @cons GraalCompiler.Request
         public Request(StructuredGraph __graph, ResolvedJavaMethod __installedCodeOwner, Providers __providers, Backend __backend, PhaseSuite<HighTierContext> __graphBuilderSuite, OptimisticOptimizations __optimisticOpts, ProfilingInfo __profilingInfo, Suites __suites, LIRSuites __lirSuites, CompilationResult __compilationResult, CompilationResultBuilderFactory __factory)
         {
             super();
@@ -117,7 +116,7 @@ public final class GraalCompiler
     ///
     public static CompilationResult compileGraph(StructuredGraph __graph, ResolvedJavaMethod __installedCodeOwner, Providers __providers, Backend __backend, PhaseSuite<HighTierContext> __graphBuilderSuite, OptimisticOptimizations __optimisticOpts, ProfilingInfo __profilingInfo, Suites __suites, LIRSuites __lirSuites, CompilationResult __compilationResult, CompilationResultBuilderFactory __factory)
     {
-        return compile(new Request(__graph, __installedCodeOwner, __providers, __backend, __graphBuilderSuite, __optimisticOpts, __profilingInfo, __suites, __lirSuites, __compilationResult, __factory));
+        return compile(new GraalCompiler.Request(__graph, __installedCodeOwner, __providers, __backend, __graphBuilderSuite, __optimisticOpts, __profilingInfo, __suites, __lirSuites, __compilationResult, __factory));
     }
 
     ///
@@ -125,7 +124,7 @@ public final class GraalCompiler
     //
     // @return the result of the compilation
     ///
-    public static CompilationResult compile(Request __r)
+    public static CompilationResult compile(GraalCompiler.Request __r)
     {
         emitFrontEnd(__r.___providers, __r.___backend, __r.___graph, __r.___graphBuilderSuite, __r.___optimisticOpts, __r.___profilingInfo, __r.___suites);
         emitBackEnd(__r.___graph, null, __r.___installedCodeOwner, __r.___backend, __r.___compilationResult, __r.___factory, null, __r.___lirSuites);
@@ -176,7 +175,7 @@ public final class GraalCompiler
 
     private static LIRGenerationResult emitLIR0(Backend __backend, StructuredGraph __graph, Object __stub, RegisterConfig __registerConfig, LIRSuites __lirSuites)
     {
-        ScheduleResult __schedule = __graph.getLastSchedule();
+        StructuredGraph.ScheduleResult __schedule = __graph.getLastSchedule();
         Block[] __blocks = __schedule.getCFG().getBlocks();
         Block __startBlock = __schedule.getCFG().getStartBlock();
 
@@ -190,7 +189,7 @@ public final class GraalCompiler
         NodeLIRBuilderTool __nodeLirGen = __backend.newNodeLIRBuilder(__graph, __lirGen);
 
         // LIR generation
-        LIRGenerationContext __context = new LIRGenerationContext(__lirGen, __nodeLirGen, __graph, __schedule);
+        LIRGenerationPhase.LIRGenerationContext __context = new LIRGenerationPhase.LIRGenerationContext(__lirGen, __nodeLirGen, __graph, __schedule);
         new LIRGenerationPhase().apply(__backend.getTarget(), __lirGenRes, __context);
 
         return emitLowLevel(__backend.getTarget(), __lirGenRes, __lirGen, __lirSuites, __backend.newRegisterAllocationConfig(__registerConfig));
@@ -198,13 +197,13 @@ public final class GraalCompiler
 
     public static LIRGenerationResult emitLowLevel(TargetDescription __target, LIRGenerationResult __lirGenRes, LIRGeneratorTool __lirGen, LIRSuites __lirSuites, RegisterAllocationConfig __registerAllocationConfig)
     {
-        PreAllocationOptimizationContext __preAllocOptContext = new PreAllocationOptimizationContext(__lirGen);
+        PreAllocationOptimizationPhase.PreAllocationOptimizationContext __preAllocOptContext = new PreAllocationOptimizationPhase.PreAllocationOptimizationContext(__lirGen);
         __lirSuites.getPreAllocationOptimizationStage().apply(__target, __lirGenRes, __preAllocOptContext);
 
-        AllocationContext __allocContext = new AllocationContext(__lirGen.getSpillMoveFactory(), __registerAllocationConfig);
+        AllocationPhase.AllocationContext __allocContext = new AllocationPhase.AllocationContext(__lirGen.getSpillMoveFactory(), __registerAllocationConfig);
         __lirSuites.getAllocationStage().apply(__target, __lirGenRes, __allocContext);
 
-        PostAllocationOptimizationContext __postAllocOptContext = new PostAllocationOptimizationContext();
+        PostAllocationOptimizationPhase.PostAllocationOptimizationContext __postAllocOptContext = new PostAllocationOptimizationPhase.PostAllocationOptimizationContext();
         __lirSuites.getPostAllocationOptimizationStage().apply(__target, __lirGenRes, __postAllocOptContext);
 
         return __lirGenRes;

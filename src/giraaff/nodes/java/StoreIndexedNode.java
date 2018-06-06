@@ -4,6 +4,7 @@ import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.ResolvedJavaType;
 
 import giraaff.core.common.type.StampFactory;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.nodeinfo.InputType;
 import giraaff.nodes.FrameState;
@@ -25,10 +26,10 @@ public final class StoreIndexedNode extends AccessIndexedNode implements StateSp
     // @def
     public static final NodeClass<StoreIndexedNode> TYPE = NodeClass.create(StoreIndexedNode.class);
 
-    @Input
+    @Node.Input
     // @field
     ValueNode ___value;
-    @OptionalInput(InputType.State)
+    @Node.OptionalInput(InputType.StateI)
     // @field
     FrameState ___stateAfter;
 
@@ -56,7 +57,7 @@ public final class StoreIndexedNode extends AccessIndexedNode implements StateSp
         return this.___value;
     }
 
-    // @cons
+    // @cons StoreIndexedNode
     public StoreIndexedNode(ValueNode __array, ValueNode __index, JavaKind __elementKind, ValueNode __value)
     {
         super(TYPE, StampFactory.forVoid(), __array, __index, __elementKind);

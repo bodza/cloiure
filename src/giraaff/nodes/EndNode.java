@@ -2,14 +2,14 @@ package giraaff.nodes;
 
 import giraaff.graph.NodeClass;
 
-// @NodeInfo.allowedUsageTypes "Association"
+// @NodeInfo.allowedUsageTypes "InputType.Association"
 // @class EndNode
 public final class EndNode extends AbstractEndNode
 {
     // @def
     public static final NodeClass<EndNode> TYPE = NodeClass.create(EndNode.class);
 
-    // @cons
+    // @cons EndNode
     public EndNode()
     {
         super(TYPE);

@@ -1,8 +1,6 @@
 package giraaff.nodes.calc;
 
 import giraaff.core.common.type.ArithmeticOpTable;
-import giraaff.core.common.type.ArithmeticOpTable.BinaryOp;
-import giraaff.core.common.type.ArithmeticOpTable.BinaryOp.Rem;
 import giraaff.core.common.type.Stamp;
 import giraaff.graph.NodeClass;
 import giraaff.lir.gen.ArithmeticLIRGeneratorTool;
@@ -14,18 +12,18 @@ import giraaff.nodes.spi.LoweringTool;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
 // @class RemNode
-public final class RemNode extends BinaryArithmeticNode<Rem> implements Lowerable
+public final class RemNode extends BinaryArithmeticNode<ArithmeticOpTable.BinaryOp.Rem> implements Lowerable
 {
     // @def
     public static final NodeClass<RemNode> TYPE = NodeClass.create(RemNode.class);
 
-    // @cons
+    // @cons RemNode
     protected RemNode(ValueNode __x, ValueNode __y)
     {
         this(TYPE, __x, __y);
     }
 
-    // @cons
+    // @cons RemNode
     protected RemNode(NodeClass<? extends RemNode> __c, ValueNode __x, ValueNode __y)
     {
         super(__c, ArithmeticOpTable::getRem, __x, __y);
@@ -33,7 +31,7 @@ public final class RemNode extends BinaryArithmeticNode<Rem> implements Lowerabl
 
     public static ValueNode create(ValueNode __forX, ValueNode __forY, NodeView __view)
     {
-        BinaryOp<Rem> __op = ArithmeticOpTable.forStamp(__forX.stamp(__view)).getRem();
+        ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.Rem> __op = ArithmeticOpTable.forStamp(__forX.stamp(__view)).getRem();
         Stamp __stamp = __op.foldStamp(__forX.stamp(__view), __forY.stamp(__view));
         ConstantNode __tryConstantFold = tryConstantFold(__op, __forX, __forY, __stamp, __view);
         if (__tryConstantFold != null)

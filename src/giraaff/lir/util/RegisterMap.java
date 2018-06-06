@@ -13,7 +13,7 @@ public final class RegisterMap<T>
     // @field
     private final Architecture ___arch;
 
-    // @cons
+    // @cons RegisterMap
     public RegisterMap(Architecture __arch)
     {
         super();

@@ -7,6 +7,7 @@ import jdk.vm.ci.meta.MetaAccessProvider;
 import jdk.vm.ci.meta.ResolvedJavaType;
 
 import giraaff.core.common.type.StampFactory;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.graph.spi.Canonicalizable;
 import giraaff.graph.spi.CanonicalizerTool;
@@ -26,7 +27,7 @@ public final class UnboxNode extends FixedWithNextNode implements Virtualizable,
     // @def
     public static final NodeClass<UnboxNode> TYPE = NodeClass.create(UnboxNode.class);
 
-    @Input
+    @Node.Input
     // @field
     protected ValueNode ___value;
     // @field
@@ -38,7 +39,7 @@ public final class UnboxNode extends FixedWithNextNode implements Virtualizable,
         return this.___value;
     }
 
-    // @cons
+    // @cons UnboxNode
     public UnboxNode(ValueNode __value, JavaKind __boxingKind)
     {
         super(TYPE, StampFactory.forKind(__boxingKind.getStackKind()));

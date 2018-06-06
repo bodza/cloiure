@@ -25,7 +25,7 @@ public abstract class VirtualObjectNode extends ValueNode implements LIRLowerabl
     // @field
     private int ___objectId = -1;
 
-    // @cons
+    // @cons VirtualObjectNode
     protected VirtualObjectNode(NodeClass<? extends VirtualObjectNode> __c, ResolvedJavaType __type, boolean __hasIdentity)
     {
         super(__c, StampFactory.objectNonNull(TypeReference.createExactTrusted(__type)));

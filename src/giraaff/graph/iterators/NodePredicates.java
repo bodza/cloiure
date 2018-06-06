@@ -6,11 +6,11 @@ import giraaff.graph.Node;
 public abstract class NodePredicates
 {
     // @def
-    private static final TautologyPredicate TAUTOLOGY = new TautologyPredicate();
+    private static final NodePredicates.TautologyPredicate TAUTOLOGY = new NodePredicates.TautologyPredicate();
     // @def
-    private static final ContradictionPredicate CONTRADICTION = new ContradictionPredicate();
+    private static final NodePredicates.ContradictionPredicate CONTRADICTION = new NodePredicates.ContradictionPredicate();
     // @def
-    private static final IsNullPredicate IS_NULL = new IsNullPredicate();
+    private static final NodePredicates.IsNullPredicate IS_NULL = new NodePredicates.IsNullPredicate();
 
     public static NodePredicate alwaysTrue()
     {
@@ -27,14 +27,14 @@ public abstract class NodePredicates
         return IS_NULL;
     }
 
-    public static NegativeTypePredicate isNotA(Class<? extends Node> __clazz)
+    public static NodePredicates.NegativeTypePredicate isNotA(Class<? extends Node> __clazz)
     {
-        return new NegativeTypePredicate(__clazz);
+        return new NodePredicates.NegativeTypePredicate(__clazz);
     }
 
-    public static PositiveTypePredicate isA(Class<? extends Node> __clazz)
+    public static NodePredicates.PositiveTypePredicate isA(Class<? extends Node> __clazz)
     {
-        return new PositiveTypePredicate(__clazz);
+        return new NodePredicates.PositiveTypePredicate(__clazz);
     }
 
     // @class NodePredicates.TautologyPredicate
@@ -77,7 +77,7 @@ public abstract class NodePredicates
         // @field
         private final NodePredicate ___b;
 
-        // @cons
+        // @cons NodePredicates.AndPredicate
         AndPredicate(NodePredicate __a, NodePredicate __b)
         {
             super();
@@ -98,7 +98,7 @@ public abstract class NodePredicates
         // @field
         private final NodePredicate ___a;
 
-        // @cons
+        // @cons NodePredicates.NotPredicate
         NotPredicate(NodePredicate __n)
         {
             super();
@@ -134,23 +134,23 @@ public abstract class NodePredicates
         // @field
         private final Class<?> ___type;
         // @field
-        private PositiveTypePredicate ___or;
+        private NodePredicates.PositiveTypePredicate ___or;
 
-        // @cons
+        // @cons NodePredicates.PositiveTypePredicate
         PositiveTypePredicate(Class<?> __type)
         {
             super();
             this.___type = __type;
         }
 
-        // @cons
-        public PositiveTypePredicate(NegativeTypePredicate __a)
+        // @cons NodePredicates.PositiveTypePredicate
+        public PositiveTypePredicate(NodePredicates.NegativeTypePredicate __a)
         {
             super();
             this.___type = __a.___type;
             if (__a.___nor != null)
             {
-                this.___or = new PositiveTypePredicate(__a.___nor);
+                this.___or = new NodePredicates.PositiveTypePredicate(__a.___nor);
             }
         }
 
@@ -160,11 +160,11 @@ public abstract class NodePredicates
             return this.___type.isInstance(__n) || (this.___or != null && this.___or.apply(__n));
         }
 
-        public PositiveTypePredicate or(Class<? extends Node> __clazz)
+        public NodePredicates.PositiveTypePredicate or(Class<? extends Node> __clazz)
         {
             if (this.___or == null)
             {
-                this.___or = new PositiveTypePredicate(__clazz);
+                this.___or = new NodePredicates.PositiveTypePredicate(__clazz);
             }
             else
             {
@@ -176,7 +176,7 @@ public abstract class NodePredicates
         @Override
         public NodePredicate negate()
         {
-            return new NegativeTypePredicate(this);
+            return new NodePredicates.NegativeTypePredicate(this);
         }
     }
 
@@ -186,23 +186,23 @@ public abstract class NodePredicates
         // @field
         private final Class<?> ___type;
         // @field
-        private NegativeTypePredicate ___nor;
+        private NodePredicates.NegativeTypePredicate ___nor;
 
-        // @cons
+        // @cons NodePredicates.NegativeTypePredicate
         NegativeTypePredicate(Class<?> __type)
         {
             super();
             this.___type = __type;
         }
 
-        // @cons
-        public NegativeTypePredicate(PositiveTypePredicate __a)
+        // @cons NodePredicates.NegativeTypePredicate
+        public NegativeTypePredicate(NodePredicates.PositiveTypePredicate __a)
         {
             super();
             this.___type = __a.___type;
             if (__a.___or != null)
             {
-                this.___nor = new NegativeTypePredicate(__a.___or);
+                this.___nor = new NodePredicates.NegativeTypePredicate(__a.___or);
             }
         }
 
@@ -212,11 +212,11 @@ public abstract class NodePredicates
             return !this.___type.isInstance(__n) && (this.___nor == null || this.___nor.apply(__n));
         }
 
-        public NegativeTypePredicate nor(Class<? extends Node> __clazz)
+        public NodePredicates.NegativeTypePredicate nor(Class<? extends Node> __clazz)
         {
             if (this.___nor == null)
             {
-                this.___nor = new NegativeTypePredicate(__clazz);
+                this.___nor = new NodePredicates.NegativeTypePredicate(__clazz);
             }
             else
             {
@@ -228,7 +228,7 @@ public abstract class NodePredicates
         @Override
         public NodePredicate negate()
         {
-            return new PositiveTypePredicate(this);
+            return new NodePredicates.PositiveTypePredicate(this);
         }
     }
 }

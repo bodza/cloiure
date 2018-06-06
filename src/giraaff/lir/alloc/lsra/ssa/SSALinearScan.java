@@ -10,14 +10,14 @@ import giraaff.lir.alloc.lsra.LinearScanLifetimeAnalysisPhase;
 import giraaff.lir.alloc.lsra.LinearScanResolveDataFlowPhase;
 import giraaff.lir.alloc.lsra.MoveResolver;
 import giraaff.lir.gen.LIRGenerationResult;
-import giraaff.lir.gen.LIRGeneratorTool.MoveFactory;
+import giraaff.lir.gen.LIRGeneratorTool;
 import giraaff.lir.ssa.SSAUtil;
 
 // @class SSALinearScan
 public final class SSALinearScan extends LinearScan
 {
-    // @cons
-    public SSALinearScan(TargetDescription __target, LIRGenerationResult __res, MoveFactory __spillMoveFactory, RegisterAllocationConfig __regAllocConfig, AbstractBlockBase<?>[] __sortedBlocks, boolean __neverSpillConstants)
+    // @cons SSALinearScan
+    public SSALinearScan(TargetDescription __target, LIRGenerationResult __res, LIRGeneratorTool.MoveFactory __spillMoveFactory, RegisterAllocationConfig __regAllocConfig, AbstractBlockBase<?>[] __sortedBlocks, boolean __neverSpillConstants)
     {
         super(__target, __res, __spillMoveFactory, __regAllocConfig, __sortedBlocks, __neverSpillConstants);
     }

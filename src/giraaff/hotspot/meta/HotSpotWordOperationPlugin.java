@@ -26,7 +26,7 @@ import giraaff.nodes.calc.IsNullNode;
 import giraaff.nodes.calc.PointerEqualsNode;
 import giraaff.nodes.graphbuilderconf.GraphBuilderContext;
 import giraaff.nodes.java.LoadIndexedNode;
-import giraaff.nodes.memory.HeapAccess.BarrierType;
+import giraaff.nodes.memory.HeapAccess;
 import giraaff.nodes.memory.ReadNode;
 import giraaff.nodes.memory.address.AddressNode;
 import giraaff.nodes.type.StampTool;
@@ -40,7 +40,7 @@ import giraaff.word.WordTypes;
 // @class HotSpotWordOperationPlugin
 final class HotSpotWordOperationPlugin extends WordOperationPlugin
 {
-    // @cons
+    // @cons HotSpotWordOperationPlugin
     HotSpotWordOperationPlugin(SnippetReflectionProvider __snippetReflection, WordTypes __wordTypes)
     {
         super(__snippetReflection, __wordTypes);
@@ -87,13 +87,13 @@ final class HotSpotWordOperationPlugin extends WordOperationPlugin
             case POINTER_EQ:
             case POINTER_NE:
             {
-                HotspotOpcode __opcode = __operation.opcode();
+                HotSpotOperation.HotspotOpcode __opcode = __operation.opcode();
                 ValueNode __left = __args[0];
                 ValueNode __right = __args[1];
 
                 PointerEqualsNode __comparison = __b.add(new PointerEqualsNode(__left, __right));
-                ValueNode __eqValue = __b.add(ConstantNode.forBoolean(__opcode == HotspotOpcode.POINTER_EQ));
-                ValueNode __neValue = __b.add(ConstantNode.forBoolean(__opcode == HotspotOpcode.POINTER_NE));
+                ValueNode __eqValue = __b.add(ConstantNode.forBoolean(__opcode == HotSpotOperation.HotspotOpcode.POINTER_EQ));
+                ValueNode __neValue = __b.add(ConstantNode.forBoolean(__opcode == HotSpotOperation.HotspotOpcode.POINTER_NE));
                 __b.addPush(__returnKind, ConditionalNode.create(__comparison, __eqValue, __neValue, NodeView.DEFAULT));
                 break;
             }
@@ -138,7 +138,7 @@ final class HotSpotWordOperationPlugin extends WordOperationPlugin
                 {
                     __location = this.___snippetReflection.asObject(LocationIdentity.class, __args[2].asJavaConstant());
                 }
-                ReadNode __read = __b.add(new ReadNode(__address, __location, __readStamp, BarrierType.NONE));
+                ReadNode __read = __b.add(new ReadNode(__address, __location, __readStamp, HeapAccess.BarrierType.NONE));
                 __b.push(__returnKind, __read);
                 break;
             }

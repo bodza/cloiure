@@ -1,8 +1,6 @@
 package giraaff.lir.alloc.lsra;
 
-import giraaff.lir.alloc.lsra.Interval.RegisterBinding;
-import giraaff.lir.alloc.lsra.Interval.RegisterBindingLists;
-import giraaff.lir.alloc.lsra.Interval.State;
+import giraaff.lir.alloc.lsra.Interval;
 
 // @class IntervalWalker
 public class IntervalWalker
@@ -14,19 +12,19 @@ public class IntervalWalker
     // Sorted list of intervals, not live before the current position.
     ///
     // @field
-    protected RegisterBindingLists ___unhandledLists;
+    protected Interval.RegisterBindingLists ___unhandledLists;
 
     ///
     // Sorted list of intervals, live at the current position.
     ///
     // @field
-    protected RegisterBindingLists ___activeLists;
+    protected Interval.RegisterBindingLists ___activeLists;
 
     ///
     // Sorted list of intervals in a life time hole at the current position.
     ///
     // @field
-    protected RegisterBindingLists ___inactiveLists;
+    protected Interval.RegisterBindingLists ___inactiveLists;
 
     ///
     // The current position (intercept point through the intervals).
@@ -38,7 +36,7 @@ public class IntervalWalker
     // The binding of the current interval being processed.
     ///
     // @field
-    protected RegisterBinding ___currentBinding;
+    protected Interval.RegisterBinding ___currentBinding;
 
     ///
     // Processes the {@code currentInterval} interval in an attempt to allocate a physical register
@@ -65,45 +63,45 @@ public class IntervalWalker
     // Creates a new interval walker.
     //
     // @param allocator the register allocator context
-    // @param unhandledFixed the list of unhandled {@linkplain RegisterBinding#Fixed fixed} intervals
-    // @param unhandledAny the list of unhandled {@linkplain RegisterBinding#Any non-fixed} intervals
+    // @param unhandledFixed the list of unhandled {@linkplain Interval.RegisterBinding#Fixed fixed} intervals
+    // @param unhandledAny the list of unhandled {@linkplain Interval.RegisterBinding#Any non-fixed} intervals
     ///
-    // @cons
+    // @cons IntervalWalker
     IntervalWalker(LinearScan __allocator, Interval __unhandledFixed, Interval __unhandledAny)
     {
         super();
         this.___allocator = __allocator;
 
-        this.___unhandledLists = new RegisterBindingLists(__unhandledFixed, __unhandledAny, __allocator.___intervalEndMarker);
-        this.___activeLists = new RegisterBindingLists(__allocator.___intervalEndMarker, __allocator.___intervalEndMarker, __allocator.___intervalEndMarker);
-        this.___inactiveLists = new RegisterBindingLists(__allocator.___intervalEndMarker, __allocator.___intervalEndMarker, __allocator.___intervalEndMarker);
+        this.___unhandledLists = new Interval.RegisterBindingLists(__unhandledFixed, __unhandledAny, __allocator.___intervalEndMarker);
+        this.___activeLists = new Interval.RegisterBindingLists(__allocator.___intervalEndMarker, __allocator.___intervalEndMarker, __allocator.___intervalEndMarker);
+        this.___inactiveLists = new Interval.RegisterBindingLists(__allocator.___intervalEndMarker, __allocator.___intervalEndMarker, __allocator.___intervalEndMarker);
         this.___currentPosition = -1;
     }
 
     protected void removeFromList(Interval __interval)
     {
-        if (__interval.___state == State.Active)
+        if (__interval.___state == Interval.IntervalState.Active)
         {
-            this.___activeLists.remove(RegisterBinding.Any, __interval);
+            this.___activeLists.remove(Interval.RegisterBinding.Any, __interval);
         }
         else
         {
-            this.___inactiveLists.remove(RegisterBinding.Any, __interval);
+            this.___inactiveLists.remove(Interval.RegisterBinding.Any, __interval);
         }
     }
 
-    private void walkTo(State __state, int __from)
+    private void walkTo(Interval.IntervalState __state, int __from)
     {
-        for (RegisterBinding __binding : RegisterBinding.VALUES)
+        for (Interval.RegisterBinding __binding : Interval.RegisterBinding.VALUES)
         {
             walkTo(__state, __from, __binding);
         }
     }
 
-    private void walkTo(State __state, int __from, RegisterBinding __binding)
+    private void walkTo(Interval.IntervalState __state, int __from, Interval.RegisterBinding __binding)
     {
         Interval __prevprev = null;
-        Interval __prev = (__state == State.Active) ? this.___activeLists.get(__binding) : this.___inactiveLists.get(__binding);
+        Interval __prev = (__state == Interval.IntervalState.Active) ? this.___activeLists.get(__binding) : this.___inactiveLists.get(__binding);
         Interval __next = __prev;
         while (__next.currentFrom() <= __from)
         {
@@ -118,14 +116,14 @@ public class IntervalWalker
             }
 
             // also handle move from inactive list to active list
-            __rangeHasChanged = __rangeHasChanged || (__state == State.Inactive && __cur.currentFrom() <= __from);
+            __rangeHasChanged = __rangeHasChanged || (__state == Interval.IntervalState.Inactive && __cur.currentFrom() <= __from);
 
             if (__rangeHasChanged)
             {
                 // remove cur from list
                 if (__prevprev == null)
                 {
-                    if (__state == State.Active)
+                    if (__state == Interval.IntervalState.Active)
                     {
                         this.___activeLists.set(__binding, __next);
                     }
@@ -139,11 +137,11 @@ public class IntervalWalker
                     __prevprev.___next = __next;
                 }
                 __prev = __next;
-                Interval.State __newState;
+                Interval.IntervalState __newState;
                 if (__cur.currentAtEnd())
                 {
                     // move to handled state (not maintained as a list)
-                    __newState = State.Handled;
+                    __newState = Interval.IntervalState.Handled;
                     __cur.___state = __newState;
                 }
                 else
@@ -152,13 +150,13 @@ public class IntervalWalker
                     {
                         // sort into active list
                         this.___activeLists.addToListSortedByCurrentFromPositions(__binding, __cur);
-                        __newState = State.Active;
+                        __newState = Interval.IntervalState.Active;
                     }
                     else
                     {
                         // sort into inactive list
                         this.___inactiveLists.addToListSortedByCurrentFromPositions(__binding, __cur);
-                        __newState = State.Inactive;
+                        __newState = Interval.IntervalState.Inactive;
                     }
                     __cur.___state = __newState;
                     if (__prev == __cur)
@@ -188,18 +186,18 @@ public class IntervalWalker
     ///
     private Interval nextInterval(int __toOpId)
     {
-        RegisterBinding __binding;
+        Interval.RegisterBinding __binding;
         Interval __any = this.___unhandledLists.___any;
         Interval __fixed = this.___unhandledLists.___fixed;
 
         if (!__any.isEndMarker())
         {
             // intervals may start at same position . prefer fixed interval
-            __binding = !__fixed.isEndMarker() && __fixed.from() <= __any.from() ? RegisterBinding.Fixed : RegisterBinding.Any;
+            __binding = !__fixed.isEndMarker() && __fixed.from() <= __any.from() ? Interval.RegisterBinding.Fixed : Interval.RegisterBinding.Any;
         }
         else if (!__fixed.isEndMarker())
         {
-            __binding = RegisterBinding.Fixed;
+            __binding = Interval.RegisterBinding.Fixed;
         }
         else
         {
@@ -238,14 +236,14 @@ public class IntervalWalker
             updateUnhandledStackIntervals(__opId);
 
             // call walkTo even if currentPosition == id
-            walkTo(State.Active, __opId);
-            walkTo(State.Inactive, __opId);
+            walkTo(Interval.IntervalState.Active, __opId);
+            walkTo(Interval.IntervalState.Inactive, __opId);
 
-            __currentInterval.___state = State.Active;
+            __currentInterval.___state = Interval.IntervalState.Active;
             if (activateCurrent(__currentInterval))
             {
                 this.___activeLists.addToListSortedByCurrentFromPositions(this.___currentBinding, __currentInterval);
-                intervalMoved(__currentInterval, State.Unhandled, State.Active);
+                intervalMoved(__currentInterval, Interval.IntervalState.Unhandled, Interval.IntervalState.Active);
             }
         }
         // set currentPosition prior to call of walkTo
@@ -257,12 +255,12 @@ public class IntervalWalker
             updateUnhandledStackIntervals(__toOpId);
 
             // call walkTo if still in range
-            walkTo(State.Active, __toOpId);
-            walkTo(State.Inactive, __toOpId);
+            walkTo(Interval.IntervalState.Active, __toOpId);
+            walkTo(Interval.IntervalState.Inactive, __toOpId);
         }
     }
 
-    private void intervalMoved(Interval __interval, State __from, State __to)
+    private void intervalMoved(Interval __interval, Interval.IntervalState __from, Interval.IntervalState __to)
     {
         // intervalMoved() is called whenever an interval moves from one interval list to another.
         // In the implementation of this method it is prohibited to move the interval to any list.
@@ -272,28 +270,28 @@ public class IntervalWalker
     // Move {@linkplain #unhandledLists unhandled} stack intervals to
     // {@linkplain IntervalWalker #activeLists active}.
     //
-    // Note that for {@linkplain RegisterBinding#Fixed fixed} and {@linkplain RegisterBinding#Any
+    // Note that for {@linkplain Interval.RegisterBinding#Fixed fixed} and {@linkplain Interval.RegisterBinding#Any
     // any} intervals this is done in {@link #nextInterval(int)}.
     ///
     private void updateUnhandledStackIntervals(int __opId)
     {
-        Interval __currentInterval = this.___unhandledLists.get(RegisterBinding.Stack);
+        Interval __currentInterval = this.___unhandledLists.get(Interval.RegisterBinding.Stack);
         while (!__currentInterval.isEndMarker() && __currentInterval.from() <= __opId)
         {
             Interval __next = __currentInterval.___next;
             if (__currentInterval.to() > __opId)
             {
-                __currentInterval.___state = State.Active;
-                this.___activeLists.addToListSortedByCurrentFromPositions(RegisterBinding.Stack, __currentInterval);
-                intervalMoved(__currentInterval, State.Unhandled, State.Active);
+                __currentInterval.___state = Interval.IntervalState.Active;
+                this.___activeLists.addToListSortedByCurrentFromPositions(Interval.RegisterBinding.Stack, __currentInterval);
+                intervalMoved(__currentInterval, Interval.IntervalState.Unhandled, Interval.IntervalState.Active);
             }
             else
             {
-                __currentInterval.___state = State.Handled;
-                intervalMoved(__currentInterval, State.Unhandled, State.Handled);
+                __currentInterval.___state = Interval.IntervalState.Handled;
+                intervalMoved(__currentInterval, Interval.IntervalState.Unhandled, Interval.IntervalState.Handled);
             }
             __currentInterval = __next;
         }
-        this.___unhandledLists.set(RegisterBinding.Stack, __currentInterval);
+        this.___unhandledLists.set(Interval.RegisterBinding.Stack, __currentInterval);
     }
 }

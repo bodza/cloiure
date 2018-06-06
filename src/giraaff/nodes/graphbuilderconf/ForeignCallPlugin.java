@@ -18,7 +18,7 @@ public final class ForeignCallPlugin implements InvocationPlugin
     // @field
     private final ForeignCallDescriptor ___descriptor;
 
-    // @cons
+    // @cons ForeignCallPlugin
     public ForeignCallPlugin(ForeignCallsProvider __foreignCalls, ForeignCallDescriptor __descriptor)
     {
         super();

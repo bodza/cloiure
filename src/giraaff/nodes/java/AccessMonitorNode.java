@@ -1,6 +1,7 @@
 package giraaff.nodes.java;
 
 import giraaff.core.common.type.StampFactory;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.nodeinfo.InputType;
 import giraaff.nodes.DeoptimizingNode;
@@ -15,20 +16,20 @@ import giraaff.nodes.memory.MemoryCheckpoint;
 // The Java bytecode specification allows non-balanced locking. Graal does not handle such cases
 // and throws a {@link BailoutException} instead during graph building.
 ///
-// @NodeInfo.allowedUsageTypes "Memory"
+// @NodeInfo.allowedUsageTypes "InputType.Memory"
 // @class AccessMonitorNode
 public abstract class AccessMonitorNode extends AbstractMemoryCheckpoint implements MemoryCheckpoint, DeoptimizingNode.DeoptBefore, DeoptimizingNode.DeoptAfter
 {
     // @def
     public static final NodeClass<AccessMonitorNode> TYPE = NodeClass.create(AccessMonitorNode.class);
 
-    @OptionalInput(InputType.State)
+    @Node.OptionalInput(InputType.StateI)
     // @field
     FrameState ___stateBefore;
-    @Input
+    @Node.Input
     // @field
     ValueNode ___object;
-    @Input(InputType.Association)
+    @Node.Input(InputType.Association)
     // @field
     MonitorIdNode ___monitorId;
 
@@ -72,7 +73,7 @@ public abstract class AccessMonitorNode extends AbstractMemoryCheckpoint impleme
     //
     // @param object the instruction producing the object
     ///
-    // @cons
+    // @cons AccessMonitorNode
     protected AccessMonitorNode(NodeClass<? extends AccessMonitorNode> __c, ValueNode __object, MonitorIdNode __monitorId)
     {
         super(__c, StampFactory.forVoid());

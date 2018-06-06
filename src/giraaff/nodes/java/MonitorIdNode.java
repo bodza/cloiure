@@ -13,7 +13,7 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // the frame states together. It is thus referenced from the {@link MonitorEnterNode},
 // from the {@link MonitorExitNode} and from the {@link FrameState}.
 ///
-// @NodeInfo.allowedUsageTypes "Association"
+// @NodeInfo.allowedUsageTypes "InputType.Association"
 // @class MonitorIdNode
 public final class MonitorIdNode extends ValueNode implements IterableNodeType, LIRLowerable
 {
@@ -25,13 +25,13 @@ public final class MonitorIdNode extends ValueNode implements IterableNodeType, 
     // @field
     protected boolean ___eliminated;
 
-    // @cons
+    // @cons MonitorIdNode
     public MonitorIdNode(int __lockDepth)
     {
         this(TYPE, __lockDepth);
     }
 
-    // @cons
+    // @cons MonitorIdNode
     protected MonitorIdNode(NodeClass<? extends MonitorIdNode> __c, int __lockDepth)
     {
         super(__c, StampFactory.forVoid());

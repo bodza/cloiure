@@ -12,8 +12,9 @@ import giraaff.core.common.LIRKind;
 import giraaff.core.common.NumUtil;
 import giraaff.hotspot.HotSpotRuntime;
 import giraaff.lir.LIRFrameState;
+import giraaff.lir.LIRInstruction;
 import giraaff.lir.LIRInstructionClass;
-import giraaff.lir.Opcode;
+import giraaff.lir.LIROpcode;
 import giraaff.lir.amd64.AMD64LIRInstruction;
 import giraaff.lir.asm.CompilationResultBuilder;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
@@ -21,7 +22,7 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 ///
 // Emits a safepoint poll.
 ///
-@Opcode
+@LIROpcode
 // @class AMD64HotSpotSafepointOp
 public final class AMD64HotSpotSafepointOp extends AMD64LIRInstruction
 {
@@ -31,14 +32,14 @@ public final class AMD64HotSpotSafepointOp extends AMD64LIRInstruction
     // @State
     // @field
     protected LIRFrameState ___state;
-    @Temp({OperandFlag.REG, OperandFlag.ILLEGAL})
+    @LIRInstruction.Temp({LIRInstruction.OperandFlag.REG, LIRInstruction.OperandFlag.ILLEGAL})
     // @field
     private AllocatableValue ___temp;
 
     // @field
     private final Register ___thread;
 
-    // @cons
+    // @cons AMD64HotSpotSafepointOp
     public AMD64HotSpotSafepointOp(LIRFrameState __state, NodeLIRBuilderTool __tool, Register __thread)
     {
         super(TYPE);

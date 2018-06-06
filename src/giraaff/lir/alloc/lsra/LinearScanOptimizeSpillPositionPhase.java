@@ -9,11 +9,10 @@ import giraaff.core.common.cfg.AbstractBlockBase;
 import giraaff.core.common.cfg.AbstractControlFlowGraph;
 import giraaff.lir.LIRInsertionBuffer;
 import giraaff.lir.LIRInstruction;
-import giraaff.lir.LIRInstruction.OperandMode;
 import giraaff.lir.LIRValueUtil;
-import giraaff.lir.alloc.lsra.Interval.SpillState;
+import giraaff.lir.alloc.lsra.Interval;
 import giraaff.lir.gen.LIRGenerationResult;
-import giraaff.lir.phases.AllocationPhase.AllocationContext;
+import giraaff.lir.phases.AllocationPhase;
 
 // @class LinearScanOptimizeSpillPositionPhase
 public final class LinearScanOptimizeSpillPositionPhase extends LinearScanAllocationPhase
@@ -21,7 +20,7 @@ public final class LinearScanOptimizeSpillPositionPhase extends LinearScanAlloca
     // @field
     private final LinearScan ___allocator;
 
-    // @cons
+    // @cons LinearScanOptimizeSpillPositionPhase
     LinearScanOptimizeSpillPositionPhase(LinearScan __allocator)
     {
         super();
@@ -29,7 +28,7 @@ public final class LinearScanOptimizeSpillPositionPhase extends LinearScanAlloca
     }
 
     @Override
-    protected void run(TargetDescription __target, LIRGenerationResult __lirGenRes, AllocationContext __context)
+    protected void run(TargetDescription __target, LIRGenerationResult __lirGenRes, AllocationPhase.AllocationContext __context)
     {
         optimizeSpillPosition(__lirGenRes);
     }
@@ -52,7 +51,7 @@ public final class LinearScanOptimizeSpillPositionPhase extends LinearScanAlloca
 
     private void optimizeInterval(LIRInsertionBuffer[] __insertionBuffers, Interval __interval, LIRGenerationResult __res)
     {
-        if (__interval == null || !__interval.isSplitParent() || __interval.spillState() != SpillState.SpillInDominator)
+        if (__interval == null || !__interval.isSplitParent() || __interval.spillState() != Interval.SpillState.SpillInDominator)
         {
             return;
         }
@@ -87,7 +86,7 @@ public final class LinearScanOptimizeSpillPositionPhase extends LinearScanAlloca
         if (__spillBlock == null)
         {
             // no spill interval
-            __interval.setSpillState(SpillState.StoreAtDefinition);
+            __interval.setSpillState(Interval.SpillState.StoreAtDefinition);
             return;
         }
         // move out of loops
@@ -109,14 +108,14 @@ public final class LinearScanOptimizeSpillPositionPhase extends LinearScanAlloca
         if (__defBlock.equals(__spillBlock))
         {
             // definition is the best choice
-            __interval.setSpillState(SpillState.StoreAtDefinition);
+            __interval.setSpillState(Interval.SpillState.StoreAtDefinition);
             return;
         }
 
         if (__defBlock.probability() <= __spillBlock.probability())
         {
             // better spill block has the same probability -> do nothing
-            __interval.setSpillState(SpillState.StoreAtDefinition);
+            __interval.setSpillState(Interval.SpillState.StoreAtDefinition);
             return;
         }
 
@@ -129,7 +128,7 @@ public final class LinearScanOptimizeSpillPositionPhase extends LinearScanAlloca
         }
         int __spillOpId = this.___allocator.getFirstLirInstructionId(__spillBlock);
         // insert spill move
-        AllocatableValue __fromLocation = __interval.getSplitChildAtOpId(__spillOpId, OperandMode.DEF, this.___allocator).location();
+        AllocatableValue __fromLocation = __interval.getSplitChildAtOpId(__spillOpId, LIRInstruction.OperandMode.DEF, this.___allocator).location();
         AllocatableValue __toLocation = LinearScan.canonicalSpillOpr(__interval);
         LIRInstruction __move = this.___allocator.getSpillMoveFactory().createMove(__toLocation, __fromLocation);
         __move.setId(LinearScan.DOMINATOR_SPILL_MOVE_ID);
@@ -151,7 +150,7 @@ public final class LinearScanOptimizeSpillPositionPhase extends LinearScanAlloca
         // @field
         AbstractBlockBase<?> ___block;
 
-        // @cons
+        // @cons LinearScanOptimizeSpillPositionPhase.IntervalBlockIterator
         IntervalBlockIterator(Interval __interval)
         {
             super();
@@ -202,7 +201,7 @@ public final class LinearScanOptimizeSpillPositionPhase extends LinearScanAlloca
             @Override
             public Iterator<AbstractBlockBase<?>> iterator()
             {
-                return new IntervalBlockIterator(__interval);
+                return new LinearScanOptimizeSpillPositionPhase.IntervalBlockIterator(__interval);
             }
         };
     }

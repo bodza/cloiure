@@ -15,8 +15,6 @@ import org.graalvm.word.LocationIdentity;
 import giraaff.core.common.LIRKind;
 import giraaff.hotspot.HotSpotBackend;
 import giraaff.hotspot.HotSpotForeignCallLinkage;
-import giraaff.hotspot.HotSpotForeignCallLinkage.RegisterEffect;
-import giraaff.hotspot.HotSpotForeignCallLinkage.Transition;
 import giraaff.hotspot.HotSpotForeignCallLinkageImpl;
 import giraaff.hotspot.HotSpotGraalRuntime;
 import giraaff.hotspot.HotSpotRuntime;
@@ -30,7 +28,7 @@ public final class AMD64HotSpotForeignCallsProvider extends HotSpotHostForeignCa
     // @field
     private final Value[] ___nativeABICallerSaveRegisters;
 
-    // @cons
+    // @cons AMD64HotSpotForeignCallsProvider
     public AMD64HotSpotForeignCallsProvider(HotSpotGraalRuntime __runtime, MetaAccessProvider __metaAccess, CodeCacheProvider __codeCache, WordTypes __wordTypes, Value[] __nativeABICallerSaveRegisters)
     {
         super(__runtime, __metaAccess, __codeCache, __wordTypes);
@@ -49,8 +47,8 @@ public final class AMD64HotSpotForeignCallsProvider extends HotSpotHostForeignCa
         RegisterValue __exception = AMD64.rax.asValue(LIRKind.reference(__word));
         RegisterValue __exceptionPc = AMD64.rdx.asValue(LIRKind.value(__word));
         CallingConvention __exceptionCc = new CallingConvention(0, Value.ILLEGAL, __exception, __exceptionPc);
-        register(new HotSpotForeignCallLinkageImpl(HotSpotBackend.EXCEPTION_HANDLER, 0L, RegisterEffect.PRESERVES_REGISTERS, Transition.LEAF_NOFP, __exceptionCc, null, NOT_REEXECUTABLE, LocationIdentity.any()));
-        register(new HotSpotForeignCallLinkageImpl(HotSpotBackend.EXCEPTION_HANDLER_IN_CALLER, HotSpotForeignCallLinkage.JUMP_ADDRESS, RegisterEffect.PRESERVES_REGISTERS, Transition.LEAF_NOFP, __exceptionCc, null, NOT_REEXECUTABLE, LocationIdentity.any()));
+        register(new HotSpotForeignCallLinkageImpl(HotSpotBackend.EXCEPTION_HANDLER, 0L, HotSpotForeignCallLinkage.RegisterEffect.PRESERVES_REGISTERS, HotSpotForeignCallLinkage.Transition.LEAF_NOFP, __exceptionCc, null, NOT_REEXECUTABLE, LocationIdentity.any()));
+        register(new HotSpotForeignCallLinkageImpl(HotSpotBackend.EXCEPTION_HANDLER_IN_CALLER, HotSpotForeignCallLinkage.JUMP_ADDRESS, HotSpotForeignCallLinkage.RegisterEffect.PRESERVES_REGISTERS, HotSpotForeignCallLinkage.Transition.LEAF_NOFP, __exceptionCc, null, NOT_REEXECUTABLE, LocationIdentity.any()));
 
         super.initialize(__providers);
     }

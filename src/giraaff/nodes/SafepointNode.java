@@ -16,7 +16,7 @@ public final class SafepointNode extends DeoptimizingFixedWithNextNode implement
     // @def
     public static final NodeClass<SafepointNode> TYPE = NodeClass.create(SafepointNode.class);
 
-    // @cons
+    // @cons SafepointNode
     public SafepointNode()
     {
         super(TYPE, StampFactory.forVoid());

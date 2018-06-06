@@ -25,7 +25,7 @@ public class FieldsScanner
     // Determines the offset (in bytes) of a field using {@link Unsafe#objectFieldOffset(Field)}.
     ///
     // @class FieldsScanner.DefaultCalcOffset
-    public static final class DefaultCalcOffset implements CalcOffset
+    public static final class DefaultCalcOffset implements FieldsScanner.CalcOffset
     {
         @Override
         public long getOffset(Field __field)
@@ -38,7 +38,7 @@ public class FieldsScanner
     // Describes a field in a class during {@linkplain FieldsScanner scanning}.
     ///
     // @class FieldsScanner.FieldInfo
-    public static class FieldInfo implements Comparable<FieldInfo>
+    public static class FieldInfo implements Comparable<FieldsScanner.FieldInfo>
     {
         // @field
         public final long ___offset;
@@ -49,7 +49,7 @@ public class FieldsScanner
         // @field
         public final Class<?> ___declaringClass;
 
-        // @cons
+        // @cons FieldsScanner.FieldInfo
         public FieldInfo(long __offset, String __name, Class<?> __type, Class<?> __declaringClass)
         {
             super();
@@ -63,7 +63,7 @@ public class FieldsScanner
         // Sorts fields in ascending order by their {@link #offset}s.
         ///
         @Override
-        public int compareTo(FieldInfo __o)
+        public int compareTo(FieldsScanner.FieldInfo __o)
         {
             return this.___offset < __o.___offset ? -1 : (this.___offset > __o.___offset ? 1 : 0);
         }
@@ -79,7 +79,7 @@ public class FieldsScanner
     // @field
     public final ArrayList<FieldsScanner.FieldInfo> ___data = new ArrayList<>();
 
-    // @cons
+    // @cons FieldsScanner
     public FieldsScanner(FieldsScanner.CalcOffset __calc)
     {
         super();

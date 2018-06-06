@@ -16,7 +16,7 @@ import giraaff.util.GraalError;
 // @class StampFactory
 public final class StampFactory
 {
-    // @cons
+    // @cons StampFactory
     private StampFactory()
     {
         super();

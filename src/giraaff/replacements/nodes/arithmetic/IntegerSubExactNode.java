@@ -24,7 +24,7 @@ public final class IntegerSubExactNode extends SubNode implements IntegerExactAr
     // @def
     public static final NodeClass<IntegerSubExactNode> TYPE = NodeClass.create(IntegerSubExactNode.class);
 
-    // @cons
+    // @cons IntegerSubExactNode
     public IntegerSubExactNode(ValueNode __x, ValueNode __y)
     {
         super(TYPE, __x, __y);

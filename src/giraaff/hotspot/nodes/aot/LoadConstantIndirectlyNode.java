@@ -26,7 +26,7 @@ public final class LoadConstantIndirectlyNode extends FloatingNode implements Ca
     // @def
     public static final NodeClass<LoadConstantIndirectlyNode> TYPE = NodeClass.create(LoadConstantIndirectlyNode.class);
 
-    @OptionalInput
+    @Node.OptionalInput
     // @field
     protected ValueNode ___value;
     // @field
@@ -34,7 +34,7 @@ public final class LoadConstantIndirectlyNode extends FloatingNode implements Ca
     // @field
     protected HotSpotConstantLoadAction ___action;
 
-    // @cons
+    // @cons LoadConstantIndirectlyNode
     public LoadConstantIndirectlyNode(ValueNode __value)
     {
         super(TYPE, __value.stamp(NodeView.DEFAULT));
@@ -43,7 +43,7 @@ public final class LoadConstantIndirectlyNode extends FloatingNode implements Ca
         this.___action = HotSpotConstantLoadAction.RESOLVE;
     }
 
-    // @cons
+    // @cons LoadConstantIndirectlyNode
     public LoadConstantIndirectlyNode(ValueNode __value, HotSpotConstantLoadAction __action)
     {
         super(TYPE, __value.stamp(NodeView.DEFAULT));
@@ -81,12 +81,12 @@ public final class LoadConstantIndirectlyNode extends FloatingNode implements Ca
         __gen.setResult(this, __result);
     }
 
-    @NodeIntrinsic
-    public static native KlassPointer loadKlass(KlassPointer __klassPointer, @ConstantNodeParameter HotSpotConstantLoadAction __action);
+    @Node.NodeIntrinsic
+    public static native KlassPointer loadKlass(KlassPointer __klassPointer, @Node.ConstantNodeParameter HotSpotConstantLoadAction __action);
 
-    @NodeIntrinsic
+    @Node.NodeIntrinsic
     public static native KlassPointer loadKlass(KlassPointer __klassPointer);
 
-    @NodeIntrinsic
+    @Node.NodeIntrinsic
     public static native Object loadObject(Object __object);
 }

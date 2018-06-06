@@ -17,7 +17,7 @@ import giraaff.graph.Graph;
 import giraaff.graph.Node;
 import giraaff.graph.NodeBitMap;
 import giraaff.graph.iterators.NodePredicate;
-import giraaff.loop.InductionVariable.Direction;
+import giraaff.loop.InductionVariable;
 import giraaff.nodes.AbstractBeginNode;
 import giraaff.nodes.AbstractEndNode;
 import giraaff.nodes.ConstantNode;
@@ -68,7 +68,7 @@ public final class LoopEx
     // @field
     private EconomicMap<Node, InductionVariable> ___ivs;
 
-    // @cons
+    // @cons LoopEx
     LoopEx(Loop<Block> __loop, LoopsData __data)
     {
         super();
@@ -168,9 +168,9 @@ public final class LoopEx
     private final class InvariantPredicate implements NodePredicate
     {
         // @field
-        private final Graph.Mark ___mark;
+        private final Graph.NodeMark ___mark;
 
-        // @cons
+        // @cons LoopEx.InvariantPredicate
         InvariantPredicate()
         {
             super();
@@ -193,7 +193,7 @@ public final class LoopEx
     {
         int __count = 0;
         StructuredGraph __graph = loopBegin().graph();
-        InvariantPredicate __invariant = new InvariantPredicate();
+        LoopEx.InvariantPredicate __invariant = new LoopEx.InvariantPredicate();
         for (BinaryArithmeticNode<?> __binary : whole().nodes().filter(BinaryArithmeticNode.class))
         {
             if (!__binary.isAssociative())
@@ -283,14 +283,14 @@ public final class LoopEx
                     }
                     IntegerStamp __initStamp = (IntegerStamp) __iv.initNode().stamp(NodeView.DEFAULT);
                     IntegerStamp __limitStamp = (IntegerStamp) __limit.stamp(NodeView.DEFAULT);
-                    if (__iv.direction() == Direction.Up)
+                    if (__iv.direction() == InductionVariable.Direction.Up)
                     {
                         if (__initStamp.upperBound() > __limitStamp.lowerBound())
                         {
                             return false;
                         }
                     }
-                    else if (__iv.direction() == Direction.Down)
+                    else if (__iv.direction() == InductionVariable.Direction.Down)
                     {
                         if (__initStamp.lowerBound() < __limitStamp.upperBound())
                         {
@@ -305,26 +305,26 @@ public final class LoopEx
                 }
                 case LE:
                     __oneOff = true;
-                    if (__iv.direction() != Direction.Up)
+                    if (__iv.direction() != InductionVariable.Direction.Up)
                     {
                         return false;
                     }
                     break;
                 case LT:
-                    if (__iv.direction() != Direction.Up)
+                    if (__iv.direction() != InductionVariable.Direction.Up)
                     {
                         return false;
                     }
                     break;
                 case GE:
                     __oneOff = true;
-                    if (__iv.direction() != Direction.Down)
+                    if (__iv.direction() != InductionVariable.Direction.Down)
                     {
                         return false;
                     }
                     break;
                 case GT:
-                    if (__iv.direction() != Direction.Down)
+                    if (__iv.direction() != InductionVariable.Direction.Down)
                     {
                         return false;
                     }

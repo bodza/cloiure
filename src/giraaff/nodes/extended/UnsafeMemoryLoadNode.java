@@ -5,6 +5,7 @@ import jdk.vm.ci.meta.JavaKind;
 import org.graalvm.word.LocationIdentity;
 
 import giraaff.core.common.type.StampFactory;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.nodes.FixedWithNextNode;
 import giraaff.nodes.ValueNode;
@@ -20,7 +21,7 @@ public final class UnsafeMemoryLoadNode extends FixedWithNextNode implements Low
     // @def
     public static final NodeClass<UnsafeMemoryLoadNode> TYPE = NodeClass.create(UnsafeMemoryLoadNode.class);
 
-    @Input
+    @Node.Input
     // @field
     protected ValueNode ___address;
     // @field
@@ -28,7 +29,7 @@ public final class UnsafeMemoryLoadNode extends FixedWithNextNode implements Low
     // @field
     protected final LocationIdentity ___locationIdentity;
 
-    // @cons
+    // @cons UnsafeMemoryLoadNode
     public UnsafeMemoryLoadNode(ValueNode __address, JavaKind __kind, LocationIdentity __locationIdentity)
     {
         super(TYPE, StampFactory.forKind(__kind.getStackKind()));

@@ -9,7 +9,7 @@ import giraaff.nodes.FrameState;
 import giraaff.nodes.Invoke;
 import giraaff.nodes.StateSplit;
 import giraaff.nodes.StructuredGraph;
-import giraaff.nodes.graphbuilderconf.IntrinsicContext.CompilationContext;
+import giraaff.nodes.graphbuilderconf.IntrinsicContext;
 import giraaff.nodes.java.ExceptionObjectNode;
 
 ///
@@ -43,19 +43,19 @@ public final class IntrinsicContext
     final BytecodeProvider ___bytecodeProvider;
 
     // @field
-    final CompilationContext ___compilationContext;
+    final IntrinsicContext.CompilationContext ___compilationContext;
 
     // @field
     final boolean ___allowPartialIntrinsicArgumentMismatch;
 
-    // @cons
-    public IntrinsicContext(ResolvedJavaMethod __method, ResolvedJavaMethod __intrinsic, BytecodeProvider __bytecodeProvider, CompilationContext __compilationContext)
+    // @cons IntrinsicContext
+    public IntrinsicContext(ResolvedJavaMethod __method, ResolvedJavaMethod __intrinsic, BytecodeProvider __bytecodeProvider, IntrinsicContext.CompilationContext __compilationContext)
     {
         this(__method, __intrinsic, __bytecodeProvider, __compilationContext, false);
     }
 
-    // @cons
-    public IntrinsicContext(ResolvedJavaMethod __method, ResolvedJavaMethod __intrinsic, BytecodeProvider __bytecodeProvider, CompilationContext __compilationContext, boolean __allowPartialIntrinsicArgumentMismatch)
+    // @cons IntrinsicContext
+    public IntrinsicContext(ResolvedJavaMethod __method, ResolvedJavaMethod __intrinsic, BytecodeProvider __bytecodeProvider, IntrinsicContext.CompilationContext __compilationContext, boolean __allowPartialIntrinsicArgumentMismatch)
     {
         super();
         this.___originalMethod = __method;
@@ -111,12 +111,12 @@ public final class IntrinsicContext
 
     public boolean isPostParseInlined()
     {
-        return this.___compilationContext.equals(CompilationContext.INLINE_AFTER_PARSING);
+        return this.___compilationContext.equals(IntrinsicContext.CompilationContext.INLINE_AFTER_PARSING);
     }
 
     public boolean isCompilationRoot()
     {
-        return this.___compilationContext.equals(CompilationContext.ROOT_COMPILATION);
+        return this.___compilationContext.equals(IntrinsicContext.CompilationContext.ROOT_COMPILATION);
     }
 
     ///
@@ -165,7 +165,7 @@ public final class IntrinsicContext
         void addSideEffect(StateSplit __sideEffect);
     }
 
-    public FrameState createFrameState(StructuredGraph __graph, SideEffectsState __sideEffects, StateSplit __forStateSplit)
+    public FrameState createFrameState(StructuredGraph __graph, IntrinsicContext.SideEffectsState __sideEffects, StateSplit __forStateSplit)
     {
         if (__forStateSplit.hasSideEffect())
         {

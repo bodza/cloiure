@@ -1,5 +1,6 @@
 package giraaff.hotspot.nodes;
 
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.nodeinfo.InputType;
 import giraaff.nodes.ValueNode;
@@ -12,17 +13,17 @@ public abstract class ArrayRangeWriteBarrier extends WriteBarrier implements Low
     // @def
     public static final NodeClass<ArrayRangeWriteBarrier> TYPE = NodeClass.create(ArrayRangeWriteBarrier.class);
 
-    @Input(InputType.Association)
+    @Node.Input(InputType.Association)
     // @field
     AddressNode ___address;
-    @Input
+    @Node.Input
     // @field
     ValueNode ___length;
 
     // @field
     private final int ___elementStride;
 
-    // @cons
+    // @cons ArrayRangeWriteBarrier
     protected ArrayRangeWriteBarrier(NodeClass<? extends ArrayRangeWriteBarrier> __c, AddressNode __address, ValueNode __length, int __elementStride)
     {
         super(__c);

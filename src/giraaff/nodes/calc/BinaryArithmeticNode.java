@@ -5,7 +5,6 @@ import java.util.function.Function;
 import jdk.vm.ci.meta.Constant;
 
 import giraaff.core.common.type.ArithmeticOpTable;
-import giraaff.core.common.type.ArithmeticOpTable.BinaryOp;
 import giraaff.core.common.type.Stamp;
 import giraaff.graph.Graph;
 import giraaff.graph.Node;
@@ -31,28 +30,28 @@ public abstract class BinaryArithmeticNode<OP> extends BinaryNode implements Ari
     public static final NodeClass<BinaryArithmeticNode> TYPE = NodeClass.create(BinaryArithmeticNode.class);
 
     // @iface BinaryArithmeticNode.SerializableBinaryFunction
-    protected interface SerializableBinaryFunction<T> extends Function<ArithmeticOpTable, BinaryOp<T>>
+    protected interface SerializableBinaryFunction<T> extends Function<ArithmeticOpTable, ArithmeticOpTable.BinaryOp<T>>
     {
     }
 
     // @field
-    protected final SerializableBinaryFunction<OP> ___getOp;
+    protected final BinaryArithmeticNode.SerializableBinaryFunction<OP> ___getOp;
 
-    // @cons
-    protected BinaryArithmeticNode(NodeClass<? extends BinaryArithmeticNode<OP>> __c, SerializableBinaryFunction<OP> __getOp, ValueNode __x, ValueNode __y)
+    // @cons BinaryArithmeticNode
+    protected BinaryArithmeticNode(NodeClass<? extends BinaryArithmeticNode<OP>> __c, BinaryArithmeticNode.SerializableBinaryFunction<OP> __getOp, ValueNode __x, ValueNode __y)
     {
         super(__c, __getOp.apply(ArithmeticOpTable.forStamp(__x.stamp(NodeView.DEFAULT))).foldStamp(__x.stamp(NodeView.DEFAULT), __y.stamp(NodeView.DEFAULT)), __x, __y);
         this.___getOp = __getOp;
     }
 
-    protected final BinaryOp<OP> getOp(ValueNode __forX, ValueNode __forY)
+    protected final ArithmeticOpTable.BinaryOp<OP> getOp(ValueNode __forX, ValueNode __forY)
     {
         ArithmeticOpTable __table = ArithmeticOpTable.forStamp(__forX.stamp(NodeView.DEFAULT));
         return this.___getOp.apply(__table);
     }
 
     @Override
-    public final BinaryOp<OP> getArithmeticOp()
+    public final ArithmeticOpTable.BinaryOp<OP> getArithmeticOp()
     {
         return getOp(getX(), getY());
     }
@@ -75,7 +74,7 @@ public abstract class BinaryArithmeticNode<OP> extends BinaryNode implements Ari
     }
 
     @SuppressWarnings("unused")
-    public static <OP> ConstantNode tryConstantFold(BinaryOp<OP> __op, ValueNode __forX, ValueNode __forY, Stamp __stamp, NodeView __view)
+    public static <OP> ConstantNode tryConstantFold(ArithmeticOpTable.BinaryOp<OP> __op, ValueNode __forX, ValueNode __forY, Stamp __stamp, NodeView __view)
     {
         if (__forX.isConstant() && __forY.isConstant())
         {
@@ -157,17 +156,17 @@ public abstract class BinaryArithmeticNode<OP> extends BinaryNode implements Ari
         }
     }
 
-    private static ReassociateMatch findReassociate(BinaryNode __binary, NodePredicate __criterion)
+    private static BinaryArithmeticNode.ReassociateMatch findReassociate(BinaryNode __binary, NodePredicate __criterion)
     {
         boolean __resultX = __criterion.apply(__binary.getX());
         boolean __resultY = __criterion.apply(__binary.getY());
         if (__resultX && !__resultY)
         {
-            return ReassociateMatch.x;
+            return BinaryArithmeticNode.ReassociateMatch.x;
         }
         if (!__resultX && __resultY)
         {
-            return ReassociateMatch.y;
+            return BinaryArithmeticNode.ReassociateMatch.y;
         }
         return null;
     }
@@ -188,12 +187,12 @@ public abstract class BinaryArithmeticNode<OP> extends BinaryNode implements Ari
     // Tries to re-associate values which satisfy the criterion. For example with a constantness
     // criterion: {@code (a + 2) + 1 => a + (1 + 2)}.
     //
-    // This method accepts only {@linkplain BinaryOp#isAssociative() associative} operations such as
-    // +, -, *, &, | and ^.
+    // This method accepts only {@linkplain ArithmeticOpTable.BinaryOp#isAssociative() associative}
+    // operations such as +, -, *, &, | and ^.
     ///
     public static ValueNode reassociate(BinaryArithmeticNode<?> __node, NodePredicate __criterion, ValueNode __forX, ValueNode __forY, NodeView __view)
     {
-        ReassociateMatch __match1 = findReassociate(__node, __criterion);
+        BinaryArithmeticNode.ReassociateMatch __match1 = findReassociate(__node, __criterion);
         if (__match1 == null)
         {
             return __node;
@@ -217,7 +216,7 @@ public abstract class BinaryArithmeticNode<OP> extends BinaryNode implements Ari
             }
         }
         BinaryNode __other = (BinaryNode) __otherValue;
-        ReassociateMatch __match2 = findReassociate(__other, __criterion);
+        BinaryArithmeticNode.ReassociateMatch __match2 = findReassociate(__other, __criterion);
         if (__match2 == null)
         {
             return __node;
@@ -228,20 +227,20 @@ public abstract class BinaryArithmeticNode<OP> extends BinaryNode implements Ari
         boolean __invertM2 = false;
         if (__addSub)
         {
-            __invertM2 = __match2 == ReassociateMatch.y;
+            __invertM2 = __match2 == BinaryArithmeticNode.ReassociateMatch.y;
             __invertA = !__invertM2;
         }
         else if (__subAdd)
         {
-            __invertA = __invertM2 = __match1 == ReassociateMatch.x;
+            __invertA = __invertM2 = __match1 == BinaryArithmeticNode.ReassociateMatch.x;
             __invertM1 = !__invertM2;
         }
         else if (__node instanceof SubNode && __other instanceof SubNode)
         {
-            __invertA = __match1 == ReassociateMatch.x ^ __match2 == ReassociateMatch.x;
-            __aSub = __match1 == ReassociateMatch.y && __match2 == ReassociateMatch.y;
-            __invertM1 = __match1 == ReassociateMatch.y && __match2 == ReassociateMatch.x;
-            __invertM2 = __match1 == ReassociateMatch.x && __match2 == ReassociateMatch.x;
+            __invertA = __match1 == BinaryArithmeticNode.ReassociateMatch.x ^ __match2 == BinaryArithmeticNode.ReassociateMatch.x;
+            __aSub = __match1 == BinaryArithmeticNode.ReassociateMatch.y && __match2 == BinaryArithmeticNode.ReassociateMatch.y;
+            __invertM1 = __match1 == BinaryArithmeticNode.ReassociateMatch.y && __match2 == BinaryArithmeticNode.ReassociateMatch.x;
+            __invertM2 = __match1 == BinaryArithmeticNode.ReassociateMatch.x && __match2 == BinaryArithmeticNode.ReassociateMatch.x;
         }
         ValueNode __m1 = __match1.getValue(__node);
         ValueNode __m2 = __match2.getValue(__other);

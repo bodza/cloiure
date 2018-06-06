@@ -2,14 +2,14 @@ package giraaff.lir.phases;
 
 import giraaff.core.common.GraalOptions;
 import giraaff.lir.alloc.lsra.LinearScanPhase;
-import giraaff.lir.phases.AllocationPhase.AllocationContext;
+import giraaff.lir.phases.AllocationPhase;
 import giraaff.lir.stackslotalloc.LSStackSlotAllocator;
 import giraaff.lir.stackslotalloc.SimpleStackSlotAllocator;
 
 // @class AllocationStage
-public final class AllocationStage extends LIRPhaseSuite<AllocationContext>
+public final class AllocationStage extends LIRPhaseSuite<AllocationPhase.AllocationContext>
 {
-    // @cons
+    // @cons AllocationStage
     public AllocationStage()
     {
         super();

@@ -6,15 +6,16 @@ import giraaff.core.common.alloc.RegisterAllocationConfig;
 import giraaff.lir.alloc.RegisterAllocationPhase;
 import giraaff.lir.alloc.lsra.ssa.SSALinearScan;
 import giraaff.lir.gen.LIRGenerationResult;
-import giraaff.lir.gen.LIRGeneratorTool.MoveFactory;
+import giraaff.lir.gen.LIRGeneratorTool;
+import giraaff.lir.phases.AllocationPhase;
 
 // @class LinearScanPhase
 public final class LinearScanPhase extends RegisterAllocationPhase
 {
     @Override
-    protected void run(TargetDescription __target, LIRGenerationResult __lirGenRes, AllocationContext __context)
+    protected void run(TargetDescription __target, LIRGenerationResult __lirGenRes, AllocationPhase.AllocationContext __context)
     {
-        MoveFactory __spillMoveFactory = __context.___spillMoveFactory;
+        LIRGeneratorTool.MoveFactory __spillMoveFactory = __context.___spillMoveFactory;
         RegisterAllocationConfig __registerAllocationConfig = __context.___registerAllocationConfig;
         final LinearScan __allocator = new SSALinearScan(__target, __lirGenRes, __spillMoveFactory, __registerAllocationConfig, __lirGenRes.getLIR().linearScanOrder(), getNeverSpillConstants());
         __allocator.allocate(__target, __lirGenRes, __context);

@@ -45,11 +45,11 @@ public final class ClassGetHubNode extends FloatingNode implements Lowerable, Ca
     // @def
     public static final NodeClass<ClassGetHubNode> TYPE = NodeClass.create(ClassGetHubNode.class);
 
-    @Input
+    @Node.Input
     // @field
     protected ValueNode ___clazz;
 
-    // @cons
+    // @cons ClassGetHubNode
     public ClassGetHubNode(ValueNode __clazz)
     {
         super(TYPE, KlassPointerStamp.klass());
@@ -123,10 +123,10 @@ public final class ClassGetHubNode extends FloatingNode implements Lowerable, Ca
         __tool.getLowerer().lower(this, __tool);
     }
 
-    @NodeIntrinsic
+    @Node.NodeIntrinsic
     public static native KlassPointer readClass(Class<?> __clazzNonNull);
 
-    @NodeIntrinsic(PiNode.class)
+    @Node.NodeIntrinsic(PiNode.class)
     public static native KlassPointer piCastNonNull(Object __object, GuardingNode __anchor);
 
     @Override

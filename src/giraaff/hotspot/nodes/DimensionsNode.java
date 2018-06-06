@@ -6,6 +6,7 @@ import jdk.vm.ci.meta.Value;
 
 import giraaff.core.common.NumUtil;
 import giraaff.core.common.type.StampFactory;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.lir.VirtualStackSlot;
 import giraaff.lir.gen.LIRGeneratorTool;
@@ -27,8 +28,8 @@ public final class DimensionsNode extends FixedWithNextNode implements LIRLowera
     // @field
     protected final int ___rank;
 
-    // @cons
-    public DimensionsNode(@InjectedNodeParameter WordTypes __wordTypes, int __rank)
+    // @cons DimensionsNode
+    public DimensionsNode(@Node.InjectedNodeParameter WordTypes __wordTypes, int __rank)
     {
         super(TYPE, StampFactory.forKind(__wordTypes.getWordKind()));
         this.___rank = __rank;
@@ -46,6 +47,6 @@ public final class DimensionsNode extends FixedWithNextNode implements LIRLowera
         __gen.setResult(this, __result);
     }
 
-    @NodeIntrinsic
-    public static native Word allocaDimsArray(@ConstantNodeParameter int __rank);
+    @Node.NodeIntrinsic
+    public static native Word allocaDimsArray(@Node.ConstantNodeParameter int __rank);
 }

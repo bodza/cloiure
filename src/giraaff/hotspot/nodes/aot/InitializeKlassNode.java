@@ -2,6 +2,7 @@ package giraaff.hotspot.nodes.aot;
 
 import org.graalvm.word.LocationIdentity;
 
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.nodes.DeoptimizingFixedWithNextNode;
 import giraaff.nodes.NodeView;
@@ -10,18 +11,18 @@ import giraaff.nodes.memory.MemoryCheckpoint;
 import giraaff.nodes.spi.Lowerable;
 import giraaff.nodes.spi.LoweringTool;
 
-// @NodeInfo.allowedUsageTypes "Memory"
+// @NodeInfo.allowedUsageTypes "InputType.Memory"
 // @class InitializeKlassNode
 public final class InitializeKlassNode extends DeoptimizingFixedWithNextNode implements Lowerable, MemoryCheckpoint.Single
 {
     // @def
     public static final NodeClass<InitializeKlassNode> TYPE = NodeClass.create(InitializeKlassNode.class);
 
-    @Input
+    @Node.Input
     // @field
     ValueNode ___value;
 
-    // @cons
+    // @cons InitializeKlassNode
     public InitializeKlassNode(ValueNode __value)
     {
         super(TYPE, __value.stamp(NodeView.DEFAULT));

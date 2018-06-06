@@ -56,7 +56,7 @@ public final class AMD64FrameMap extends FrameMap
     // @field
     private StackSlot ___rbpSpillSlot;
 
-    // @cons
+    // @cons AMD64FrameMap
     public AMD64FrameMap(CodeCacheProvider __codeCache, RegisterConfig __registerConfig)
     {
         super(__codeCache, __registerConfig);

@@ -13,7 +13,7 @@ public final class DerivedConvertedInductionVariable extends DerivedInductionVar
     // @field
     private final ValueNode ___value;
 
-    // @cons
+    // @cons DerivedConvertedInductionVariable
     public DerivedConvertedInductionVariable(LoopEx __loop, InductionVariable __base, Stamp __stamp, ValueNode __value)
     {
         super(__loop, __base);
@@ -28,7 +28,7 @@ public final class DerivedConvertedInductionVariable extends DerivedInductionVar
     }
 
     @Override
-    public Direction direction()
+    public InductionVariable.Direction direction()
     {
         return this.___base.direction();
     }

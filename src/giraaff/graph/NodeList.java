@@ -24,7 +24,7 @@ public abstract class NodeList<T extends Node> extends AbstractList<T> implement
     // @field
     protected final int ___initialSize;
 
-    // @cons
+    // @cons NodeList
     protected NodeList(Node __self)
     {
         super();
@@ -33,7 +33,7 @@ public abstract class NodeList<T extends Node> extends AbstractList<T> implement
         this.___initialSize = 0;
     }
 
-    // @cons
+    // @cons NodeList
     protected NodeList(Node __self, int __initialSize)
     {
         super();
@@ -43,7 +43,7 @@ public abstract class NodeList<T extends Node> extends AbstractList<T> implement
         this.___nodes = new Node[__initialSize];
     }
 
-    // @cons
+    // @cons NodeList
     protected NodeList(Node __self, T[] __elements)
     {
         super();
@@ -66,7 +66,7 @@ public abstract class NodeList<T extends Node> extends AbstractList<T> implement
         }
     }
 
-    // @cons
+    // @cons NodeList
     protected NodeList(Node __self, List<? extends T> __elements)
     {
         super();
@@ -89,7 +89,7 @@ public abstract class NodeList<T extends Node> extends AbstractList<T> implement
         }
     }
 
-    // @cons
+    // @cons NodeList
     protected NodeList(Node __self, Collection<? extends NodeInterface> __elements)
     {
         super();
@@ -121,7 +121,7 @@ public abstract class NodeList<T extends Node> extends AbstractList<T> implement
 
     protected abstract void update(T __oldNode, T __newNode);
 
-    public abstract Edges.Type getEdgesType();
+    public abstract Edges.EdgesType getEdgesType();
 
     @Override
     public final int size()
@@ -317,7 +317,7 @@ public abstract class NodeList<T extends Node> extends AbstractList<T> implement
     @Override
     public Iterator<T> iterator()
     {
-        return new NodeListIterator<>(this, 0);
+        return new NodeList.NodeListIterator<>(this, 0);
     }
 
     @Override
@@ -452,9 +452,9 @@ public abstract class NodeList<T extends Node> extends AbstractList<T> implement
         return null;
     }
 
-    public SubList<T> subList(int __startIndex)
+    public NodeList.SubList<T> subList(int __startIndex)
     {
-        return new SubList<>(this, __startIndex);
+        return new NodeList.SubList<>(this, __startIndex);
     }
 
     // @class NodeList.SubList
@@ -465,7 +465,7 @@ public abstract class NodeList<T extends Node> extends AbstractList<T> implement
         // @field
         private final int ___offset;
 
-        // @cons
+        // @cons NodeList.SubList
         private SubList(NodeList<R> __list, int __offset)
         {
             super();
@@ -485,15 +485,15 @@ public abstract class NodeList<T extends Node> extends AbstractList<T> implement
             return this.___list.size() - this.___offset;
         }
 
-        public SubList<R> subList(int __startIndex)
+        public NodeList.SubList<R> subList(int __startIndex)
         {
-            return new SubList<>(this.___list, __startIndex + this.___offset);
+            return new NodeList.SubList<>(this.___list, __startIndex + this.___offset);
         }
 
         @Override
         public Iterator<R> iterator()
         {
-            return new NodeListIterator<>(this.___list, this.___offset);
+            return new NodeList.NodeListIterator<>(this.___list, this.___offset);
         }
     }
 
@@ -507,7 +507,7 @@ public abstract class NodeList<T extends Node> extends AbstractList<T> implement
         // @field
         private int ___index;
 
-        // @cons
+        // @cons NodeList.NodeListIterator
         private NodeListIterator(NodeList<R> __list, int __startIndex)
         {
             super();

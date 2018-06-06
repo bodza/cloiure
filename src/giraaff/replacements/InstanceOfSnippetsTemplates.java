@@ -25,9 +25,7 @@ import giraaff.nodes.java.InstanceOfNode;
 import giraaff.nodes.spi.LoweringTool;
 import giraaff.nodes.util.GraphUtil;
 import giraaff.phases.util.Providers;
-import giraaff.replacements.SnippetTemplate.AbstractTemplates;
-import giraaff.replacements.SnippetTemplate.Arguments;
-import giraaff.replacements.SnippetTemplate.UsageReplacer;
+import giraaff.replacements.SnippetTemplate;
 
 ///
 // Helper class for lowering {@link InstanceOfNode}s with snippets. The majority of the complexity
@@ -43,9 +41,9 @@ import giraaff.replacements.SnippetTemplate.UsageReplacer;
 // by the {@link IfNode}.
 ///
 // @class InstanceOfSnippetsTemplates
-public abstract class InstanceOfSnippetsTemplates extends AbstractTemplates
+public abstract class InstanceOfSnippetsTemplates extends SnippetTemplate.AbstractTemplates
 {
-    // @cons
+    // @cons InstanceOfSnippetsTemplates
     public InstanceOfSnippetsTemplates(Providers __providers, SnippetReflectionProvider __snippetReflection, TargetDescription __target)
     {
         super(__providers, __snippetReflection, __target);
@@ -54,18 +52,18 @@ public abstract class InstanceOfSnippetsTemplates extends AbstractTemplates
     ///
     // Gets the arguments used to retrieve and instantiate an instanceof snippet template.
     ///
-    protected abstract Arguments makeArguments(InstanceOfUsageReplacer __replacer, LoweringTool __tool);
+    protected abstract SnippetTemplate.Arguments makeArguments(InstanceOfSnippetsTemplates.InstanceOfUsageReplacer __replacer, LoweringTool __tool);
 
     public void lower(FloatingNode __instanceOf, LoweringTool __tool)
     {
         List<Node> __usages = __instanceOf.usages().snapshot();
 
-        Instantiation __instantiation = new Instantiation();
+        InstanceOfSnippetsTemplates.Instantiation __instantiation = new InstanceOfSnippetsTemplates.Instantiation();
         for (Node __usage : __usages)
         {
             final StructuredGraph __graph = (StructuredGraph) __usage.graph();
 
-            InstanceOfUsageReplacer __replacer = createReplacer(__instanceOf, __instantiation, __usage, __graph);
+            InstanceOfSnippetsTemplates.InstanceOfUsageReplacer __replacer = createReplacer(__instanceOf, __instantiation, __usage, __graph);
 
             if (__instantiation.isInitialized())
             {
@@ -74,7 +72,7 @@ public abstract class InstanceOfSnippetsTemplates extends AbstractTemplates
             }
             else
             {
-                Arguments __args = makeArguments(__replacer, __tool);
+                SnippetTemplate.Arguments __args = makeArguments(__replacer, __tool);
                 template(__instanceOf, __args).instantiate(this.___providers.getMetaAccess(), __instanceOf, __replacer, __tool, __args);
             }
         }
@@ -89,9 +87,9 @@ public abstract class InstanceOfSnippetsTemplates extends AbstractTemplates
     // Gets the specific replacer object used to replace the usage of an instanceof node with the
     // result of an instantiated instanceof snippet.
     ///
-    protected InstanceOfUsageReplacer createReplacer(FloatingNode __instanceOf, Instantiation __instantiation, Node __usage, final StructuredGraph __graph)
+    protected InstanceOfSnippetsTemplates.InstanceOfUsageReplacer createReplacer(FloatingNode __instanceOf, InstanceOfSnippetsTemplates.Instantiation __instantiation, Node __usage, final StructuredGraph __graph)
     {
-        InstanceOfUsageReplacer __replacer;
+        InstanceOfSnippetsTemplates.InstanceOfUsageReplacer __replacer;
         if (!canMaterialize(__usage))
         {
             ValueNode __trueValue = ConstantNode.forInt(1, __graph);
@@ -102,12 +100,12 @@ public abstract class InstanceOfSnippetsTemplates extends AbstractTemplates
                 __trueValue = __instantiation.___trueValue;
                 __falseValue = __instantiation.___falseValue;
             }
-            __replacer = new NonMaterializationUsageReplacer(__instantiation, __trueValue, __falseValue, __instanceOf, __usage);
+            __replacer = new InstanceOfSnippetsTemplates.NonMaterializationUsageReplacer(__instantiation, __trueValue, __falseValue, __instanceOf, __usage);
         }
         else
         {
             ConditionalNode __c = (ConditionalNode) __usage;
-            __replacer = new MaterializationUsageReplacer(__instantiation, __c.trueValue(), __c.falseValue(), __instanceOf, __c);
+            __replacer = new InstanceOfSnippetsTemplates.MaterializationUsageReplacer(__instantiation, __c.trueValue(), __c.falseValue(), __instanceOf, __c);
         }
         return __replacer;
     }
@@ -203,10 +201,10 @@ public abstract class InstanceOfSnippetsTemplates extends AbstractTemplates
     // Replaces a usage of an {@link InstanceOfNode} or {@link InstanceOfDynamicNode}.
     ///
     // @class InstanceOfSnippetsTemplates.InstanceOfUsageReplacer
-    public abstract static class InstanceOfUsageReplacer implements UsageReplacer
+    public abstract static class InstanceOfUsageReplacer implements SnippetTemplate.UsageReplacer
     {
         // @field
-        public final Instantiation ___instantiation;
+        public final InstanceOfSnippetsTemplates.Instantiation ___instantiation;
         // @field
         public final FloatingNode ___instanceOf;
         // @field
@@ -214,8 +212,8 @@ public abstract class InstanceOfSnippetsTemplates extends AbstractTemplates
         // @field
         public final ValueNode ___falseValue;
 
-        // @cons
-        public InstanceOfUsageReplacer(Instantiation __instantiation, FloatingNode __instanceOf, ValueNode __trueValue, ValueNode __falseValue)
+        // @cons InstanceOfSnippetsTemplates.InstanceOfUsageReplacer
+        public InstanceOfUsageReplacer(InstanceOfSnippetsTemplates.Instantiation __instantiation, FloatingNode __instanceOf, ValueNode __trueValue, ValueNode __falseValue)
         {
             super();
             this.___instantiation = __instantiation;
@@ -235,13 +233,13 @@ public abstract class InstanceOfSnippetsTemplates extends AbstractTemplates
     // not materialize the result of the type test.
     ///
     // @class InstanceOfSnippetsTemplates.NonMaterializationUsageReplacer
-    public static final class NonMaterializationUsageReplacer extends InstanceOfUsageReplacer
+    public static final class NonMaterializationUsageReplacer extends InstanceOfSnippetsTemplates.InstanceOfUsageReplacer
     {
         // @field
         private final Node ___usage;
 
-        // @cons
-        public NonMaterializationUsageReplacer(Instantiation __instantiation, ValueNode __trueValue, ValueNode __falseValue, FloatingNode __instanceOf, Node __usage)
+        // @cons InstanceOfSnippetsTemplates.NonMaterializationUsageReplacer
+        public NonMaterializationUsageReplacer(InstanceOfSnippetsTemplates.Instantiation __instantiation, ValueNode __trueValue, ValueNode __falseValue, FloatingNode __instanceOf, Node __usage)
         {
             super(__instantiation, __instanceOf, __trueValue, __falseValue);
             this.___usage = __usage;
@@ -267,13 +265,13 @@ public abstract class InstanceOfSnippetsTemplates extends AbstractTemplates
     // materializes the result of the type test.
     ///
     // @class InstanceOfSnippetsTemplates.MaterializationUsageReplacer
-    public static final class MaterializationUsageReplacer extends InstanceOfUsageReplacer
+    public static final class MaterializationUsageReplacer extends InstanceOfSnippetsTemplates.InstanceOfUsageReplacer
     {
         // @field
         public final ConditionalNode ___usage;
 
-        // @cons
-        public MaterializationUsageReplacer(Instantiation __instantiation, ValueNode __trueValue, ValueNode __falseValue, FloatingNode __instanceOf, ConditionalNode __usage)
+        // @cons InstanceOfSnippetsTemplates.MaterializationUsageReplacer
+        public MaterializationUsageReplacer(InstanceOfSnippetsTemplates.Instantiation __instantiation, ValueNode __trueValue, ValueNode __falseValue, FloatingNode __instanceOf, ConditionalNode __usage)
         {
             super(__instantiation, __instanceOf, __trueValue, __falseValue);
             this.___usage = __usage;

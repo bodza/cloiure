@@ -8,8 +8,7 @@ import org.graalvm.word.WordFactory;
 import giraaff.api.replacements.Snippet;
 import giraaff.api.replacements.Snippet.ConstantParameter;
 import giraaff.core.common.spi.ForeignCallDescriptor;
-import giraaff.graph.Node.ConstantNodeParameter;
-import giraaff.graph.Node.NodeIntrinsic;
+import giraaff.graph.Node;
 import giraaff.hotspot.HotSpotForeignCallLinkage;
 import giraaff.hotspot.HotSpotRuntime;
 import giraaff.hotspot.meta.HotSpotProviders;
@@ -33,7 +32,7 @@ import giraaff.word.Word;
 // @class NewArrayStub
 public final class NewArrayStub extends SnippetStub
 {
-    // @cons
+    // @cons NewArrayStub
     public NewArrayStub(HotSpotProviders __providers, HotSpotForeignCallLinkage __linkage)
     {
         super("newArray", __providers, __linkage);
@@ -59,7 +58,7 @@ public final class NewArrayStub extends SnippetStub
     // @param intArrayHub the hub for {@code int[].class}
     ///
     @Snippet
-    private static Object newArray(KlassPointer __hub, int __length, boolean __fillContents, @ConstantParameter KlassPointer __intArrayHub, @ConstantParameter Register __threadRegister)
+    private static Object newArray(KlassPointer __hub, int __length, boolean __fillContents, @Snippet.ConstantParameter KlassPointer __intArrayHub, @Snippet.ConstantParameter Register __threadRegister)
     {
         int __layoutHelper = HotSpotReplacementsUtil.readLayoutHelper(__hub);
         int __log2ElementSize = (__layoutHelper >> HotSpotRuntime.layoutHelperLog2ElementSizeShift) & HotSpotRuntime.layoutHelperLog2ElementSizeMask;
@@ -86,6 +85,6 @@ public final class NewArrayStub extends SnippetStub
     // @def
     public static final ForeignCallDescriptor NEW_ARRAY_C = StubUtil.newDescriptor(NewArrayStub.class, "newArrayC", void.class, Word.class, KlassPointer.class, int.class);
 
-    @NodeIntrinsic(StubForeignCallNode.class)
-    public static native void newArrayC(@ConstantNodeParameter ForeignCallDescriptor __newArrayC, Word __thread, KlassPointer __hub, int __length);
+    @Node.NodeIntrinsic(StubForeignCallNode.class)
+    public static native void newArrayC(@Node.ConstantNodeParameter ForeignCallDescriptor __newArrayC, Word __thread, KlassPointer __hub, int __length);
 }

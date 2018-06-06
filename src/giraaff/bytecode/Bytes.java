@@ -6,7 +6,7 @@ package giraaff.bytecode;
 // @class Bytes
 public final class Bytes
 {
-    // @cons
+    // @cons Bytes
     private Bytes()
     {
         super();

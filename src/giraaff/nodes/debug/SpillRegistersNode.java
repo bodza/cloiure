@@ -16,7 +16,7 @@ public final class SpillRegistersNode extends FixedWithNextNode implements LIRLo
     // @field
     protected Object ___unique;
 
-    // @cons
+    // @cons SpillRegistersNode
     public SpillRegistersNode()
     {
         super(TYPE, StampFactory.forVoid());

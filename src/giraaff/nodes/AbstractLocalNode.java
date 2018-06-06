@@ -13,7 +13,7 @@ public abstract class AbstractLocalNode extends FloatingNode
     // @field
     protected final int ___index;
 
-    // @cons
+    // @cons AbstractLocalNode
     protected AbstractLocalNode(NodeClass<? extends AbstractLocalNode> __c, int __index, Stamp __stamp)
     {
         super(__c, __stamp);

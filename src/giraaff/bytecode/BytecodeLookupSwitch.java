@@ -21,7 +21,7 @@ public final class BytecodeLookupSwitch extends BytecodeSwitch
     // @param stream the {@code BytecodeStream} containing the switch instruction
     // @param bci the index in the stream of the switch instruction
     ///
-    // @cons
+    // @cons BytecodeLookupSwitch
     public BytecodeLookupSwitch(BytecodeStream __stream, int __bci)
     {
         super(__stream, __bci);

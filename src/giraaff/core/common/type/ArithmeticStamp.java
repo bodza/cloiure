@@ -13,7 +13,7 @@ public abstract class ArithmeticStamp extends Stamp
     // @field
     private final ArithmeticOpTable ___ops;
 
-    // @cons
+    // @cons ArithmeticStamp
     protected ArithmeticStamp(ArithmeticOpTable __ops)
     {
         super();

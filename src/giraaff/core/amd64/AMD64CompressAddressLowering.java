@@ -59,12 +59,12 @@ public abstract class AMD64CompressAddressLowering extends AMD64AddressLowering
     public static final class HeapBaseNode extends FloatingNode implements LIRLowerable
     {
         // @def
-        public static final NodeClass<HeapBaseNode> TYPE = NodeClass.create(HeapBaseNode.class);
+        public static final NodeClass<AMD64CompressAddressLowering.HeapBaseNode> TYPE = NodeClass.create(AMD64CompressAddressLowering.HeapBaseNode.class);
 
         // @field
         private final Register ___heapBaseRegister;
 
-        // @cons
+        // @cons AMD64CompressAddressLowering.HeapBaseNode
         public HeapBaseNode(Register __heapBaseRegister)
         {
             super(TYPE, StampFactory.pointer());

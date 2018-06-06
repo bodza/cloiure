@@ -22,7 +22,7 @@ public abstract class Loop<T extends AbstractBlockBase<T>>
     // @field
     private final List<T> ___exits;
 
-    // @cons
+    // @cons Loop
     protected Loop(Loop<T> __parent, int __index, T __header)
     {
         super();

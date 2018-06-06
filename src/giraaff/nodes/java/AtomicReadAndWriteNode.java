@@ -5,6 +5,7 @@ import jdk.vm.ci.meta.JavaKind;
 import org.graalvm.word.LocationIdentity;
 
 import giraaff.core.common.type.StampFactory;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.memory.AbstractMemoryCheckpoint;
@@ -22,13 +23,13 @@ public final class AtomicReadAndWriteNode extends AbstractMemoryCheckpoint imple
     // @def
     public static final NodeClass<AtomicReadAndWriteNode> TYPE = NodeClass.create(AtomicReadAndWriteNode.class);
 
-    @Input
+    @Node.Input
     // @field
     ValueNode ___object;
-    @Input
+    @Node.Input
     // @field
     ValueNode ___offset;
-    @Input
+    @Node.Input
     // @field
     ValueNode ___newValue;
 
@@ -37,7 +38,7 @@ public final class AtomicReadAndWriteNode extends AbstractMemoryCheckpoint imple
     // @field
     protected final LocationIdentity ___locationIdentity;
 
-    // @cons
+    // @cons AtomicReadAndWriteNode
     public AtomicReadAndWriteNode(ValueNode __object, ValueNode __offset, ValueNode __newValue, JavaKind __valueKind, LocationIdentity __locationIdentity)
     {
         super(TYPE, StampFactory.forKind(__newValue.getStackKind()));

@@ -11,13 +11,9 @@ import jdk.vm.ci.meta.JavaType;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 import jdk.vm.ci.meta.Signature;
 
+import giraaff.bytecode.Bytecodes;
 import giraaff.replacements.classfile.Classfile;
 import giraaff.replacements.classfile.ClassfileConstant;
-import giraaff.replacements.classfile.ClassfileConstant.ClassRef;
-import giraaff.replacements.classfile.ClassfileConstant.ExecutableRef;
-import giraaff.replacements.classfile.ClassfileConstant.FieldRef;
-import giraaff.replacements.classfile.ClassfileConstant.Primitive;
-import giraaff.replacements.classfile.ClassfileConstant.Utf8;
 import giraaff.util.GraalError;
 
 // @class ClassfileConstantPool
@@ -28,29 +24,7 @@ final class ClassfileConstantPool implements ConstantPool
     // @field
     final ClassfileBytecodeProvider ___context;
 
-    // @class ClassfileConstantPool.Bytecodes
-    public static final class Bytecodes
-    {
-        // @cons
-        private Bytecodes()
-        {
-            super();
-        }
-
-        // @defs
-        public static final int
-            GETSTATIC       = 178, // 0xB2
-            PUTSTATIC       = 179, // 0xB3
-            GETFIELD        = 180, // 0xB4
-            PUTFIELD        = 181, // 0xB5
-            INVOKEVIRTUAL   = 182, // 0xB6
-            INVOKESPECIAL   = 183, // 0xB7
-            INVOKESTATIC    = 184, // 0xB8
-            INVOKEINTERFACE = 185, // 0xB9
-            INVOKEDYNAMIC   = 186; // 0xBA
-    }
-
-    // @cons
+    // @cons ClassfileConstantPool
     ClassfileConstantPool(DataInputStream __stream, ClassfileBytecodeProvider __context) throws IOException
     {
         super();
@@ -154,7 +128,7 @@ final class ClassfileConstantPool implements ConstantPool
     @Override
     public JavaField lookupField(int __index, ResolvedJavaMethod __method, int __opcode)
     {
-        return get(FieldRef.class, __index).resolve(this, __opcode);
+        return get(ClassfileConstant.FieldRef.class, __index).resolve(this, __opcode);
     }
 
     @Override
@@ -164,19 +138,19 @@ final class ClassfileConstantPool implements ConstantPool
         {
             throw new GraalError("INVOKEDYNAMIC not supported by" + ClassfileBytecodeProvider.class.getSimpleName());
         }
-        return get(ExecutableRef.class, __index).resolve(this, __opcode);
+        return get(ClassfileConstant.ExecutableRef.class, __index).resolve(this, __opcode);
     }
 
     @Override
     public JavaType lookupType(int __index, int __opcode)
     {
-        return get(ClassRef.class, __index).resolve(this);
+        return get(ClassfileConstant.ClassRef.class, __index).resolve(this);
     }
 
     @Override
     public String lookupUtf8(int __index)
     {
-        return ((Utf8) this.___entries[__index]).___value;
+        return ((ClassfileConstant.Utf8) this.___entries[__index]).___value;
     }
 
     @Override
@@ -189,9 +163,9 @@ final class ClassfileConstantPool implements ConstantPool
     public Object lookupConstant(int __index)
     {
         ClassfileConstant __c = this.___entries[__index];
-        if (__c instanceof Primitive)
+        if (__c instanceof ClassfileConstant.Primitive)
         {
-            Primitive __p = (Primitive) __c;
+            ClassfileConstant.Primitive __p = (ClassfileConstant.Primitive) __c;
             return __p.___value;
         }
         switch (__c.___tag)

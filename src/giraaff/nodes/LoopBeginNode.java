@@ -33,7 +33,7 @@ public final class LoopBeginNode extends AbstractMergeNode implements IterableNo
     // @field
     protected int ___inversionCount;
     // @field
-    protected LoopType ___loopType;
+    protected LoopBeginNode.LoopType ___loopType;
     // @field
     protected int ___unrollFactor;
 
@@ -52,11 +52,11 @@ public final class LoopBeginNode extends AbstractMergeNode implements IterableNo
     // @field
     boolean ___canEndsSafepoint;
 
-    @OptionalInput(InputType.Guard)
+    @Node.OptionalInput(InputType.Guard)
     // @field
     GuardingNode ___overflowGuard;
 
-    // @cons
+    // @cons LoopBeginNode
     public LoopBeginNode()
     {
         super(TYPE);
@@ -65,43 +65,43 @@ public final class LoopBeginNode extends AbstractMergeNode implements IterableNo
         this.___unswitches = 0;
         this.___splits = 0;
         this.___canEndsSafepoint = true;
-        this.___loopType = LoopType.SIMPLE_LOOP;
+        this.___loopType = LoopBeginNode.LoopType.SIMPLE_LOOP;
         this.___unrollFactor = 1;
     }
 
     public boolean isSimpleLoop()
     {
-        return (this.___loopType == LoopType.SIMPLE_LOOP);
+        return (this.___loopType == LoopBeginNode.LoopType.SIMPLE_LOOP);
     }
 
     public void setPreLoop()
     {
-        this.___loopType = LoopType.PRE_LOOP;
+        this.___loopType = LoopBeginNode.LoopType.PRE_LOOP;
     }
 
     public boolean isPreLoop()
     {
-        return (this.___loopType == LoopType.PRE_LOOP);
+        return (this.___loopType == LoopBeginNode.LoopType.PRE_LOOP);
     }
 
     public void setMainLoop()
     {
-        this.___loopType = LoopType.MAIN_LOOP;
+        this.___loopType = LoopBeginNode.LoopType.MAIN_LOOP;
     }
 
     public boolean isMainLoop()
     {
-        return (this.___loopType == LoopType.MAIN_LOOP);
+        return (this.___loopType == LoopBeginNode.LoopType.MAIN_LOOP);
     }
 
     public void setPostLoop()
     {
-        this.___loopType = LoopType.POST_LOOP;
+        this.___loopType = LoopBeginNode.LoopType.POST_LOOP;
     }
 
     public boolean isPostLoop()
     {
-        return (this.___loopType == LoopType.POST_LOOP);
+        return (this.___loopType == LoopBeginNode.LoopType.POST_LOOP);
     }
 
     public int getUnrollFactor()

@@ -12,7 +12,7 @@ public final class LoadExceptionObjectNode extends AbstractStateSplit implements
     // @def
     public static final NodeClass<LoadExceptionObjectNode> TYPE = NodeClass.create(LoadExceptionObjectNode.class);
 
-    // @cons
+    // @cons LoadExceptionObjectNode
     public LoadExceptionObjectNode(Stamp __stamp)
     {
         super(TYPE, __stamp);

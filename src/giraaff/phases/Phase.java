@@ -8,7 +8,7 @@ import giraaff.nodes.StructuredGraph;
 // @class Phase
 public abstract class Phase extends BasePhase<Object>
 {
-    // @cons
+    // @cons Phase
     protected Phase()
     {
         super();

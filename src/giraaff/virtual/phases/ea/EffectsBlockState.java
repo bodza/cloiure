@@ -16,14 +16,14 @@ public abstract class EffectsBlockState<T extends EffectsBlockState<T>>
     // @field
     private boolean ___dead;
 
-    // @cons
+    // @cons EffectsBlockState
     public EffectsBlockState()
     {
         super();
         // emtpy
     }
 
-    // @cons
+    // @cons EffectsBlockState
     public EffectsBlockState(EffectsBlockState<T> __other)
     {
         super();

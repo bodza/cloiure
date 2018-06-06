@@ -4,7 +4,7 @@ import jdk.vm.ci.meta.ResolvedJavaMethod;
 import jdk.vm.ci.meta.ResolvedJavaType;
 
 import giraaff.graph.Node;
-import giraaff.nodes.CallTargetNode.InvokeKind;
+import giraaff.nodes.CallTargetNode;
 import giraaff.nodes.java.MethodCallTargetNode;
 import giraaff.nodes.spi.Lowerable;
 import giraaff.nodes.type.StampTool;
@@ -101,7 +101,7 @@ public interface Invoke extends StateSplit, Lowerable, DeoptimizingNode.DeoptDur
         return __receiverType;
     }
 
-    default InvokeKind getInvokeKind()
+    default CallTargetNode.InvokeKind getInvokeKind()
     {
         return callTarget().invokeKind();
     }

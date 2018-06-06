@@ -42,7 +42,7 @@ public final class Block extends AbstractBlockBase<Block>
     // @field
     private LocationSet ___killLocationsBetweenThisAndDominator;
 
-    // @cons
+    // @cons Block
     public Block(AbstractBeginNode __node)
     {
         super();
@@ -148,15 +148,15 @@ public final class Block extends AbstractBlockBase<Block>
         return this.___postdominator;
     }
 
-    // @class Block.NodeIterator
+    // @class Block.FixedNodeIterator
     // @closure
-    private final class NodeIterator implements Iterator<FixedNode>
+    private final class FixedNodeIterator implements Iterator<FixedNode>
     {
         // @field
         private FixedNode ___cur;
 
-        // @cons
-        NodeIterator()
+        // @cons Block.FixedNodeIterator
+        FixedNodeIterator()
         {
             super();
             this.___cur = Block.this.getBeginNode();
@@ -203,7 +203,7 @@ public final class Block extends AbstractBlockBase<Block>
             @Override
             public Iterator<FixedNode> iterator()
             {
-                return new NodeIterator();
+                return new Block.FixedNodeIterator();
             }
         };
     }

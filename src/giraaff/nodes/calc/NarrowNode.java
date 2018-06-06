@@ -3,9 +3,6 @@ package giraaff.nodes.calc;
 import jdk.vm.ci.code.CodeUtil;
 
 import giraaff.core.common.type.ArithmeticOpTable;
-import giraaff.core.common.type.ArithmeticOpTable.IntegerConvertOp;
-import giraaff.core.common.type.ArithmeticOpTable.IntegerConvertOp.Narrow;
-import giraaff.core.common.type.ArithmeticOpTable.IntegerConvertOp.SignExtend;
 import giraaff.core.common.type.IntegerStamp;
 import giraaff.core.common.type.PrimitiveStamp;
 import giraaff.graph.NodeClass;
@@ -19,18 +16,18 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // The {@code NarrowNode} converts an integer to a narrower integer.
 ///
 // @class NarrowNode
-public final class NarrowNode extends IntegerConvertNode<Narrow, SignExtend>
+public final class NarrowNode extends IntegerConvertNode<ArithmeticOpTable.IntegerConvertOp.Narrow, ArithmeticOpTable.IntegerConvertOp.SignExtend>
 {
     // @def
     public static final NodeClass<NarrowNode> TYPE = NodeClass.create(NarrowNode.class);
 
-    // @cons
+    // @cons NarrowNode
     public NarrowNode(ValueNode __input, int __resultBits)
     {
         this(__input, PrimitiveStamp.getBits(__input.stamp(NodeView.DEFAULT)), __resultBits);
     }
 
-    // @cons
+    // @cons NarrowNode
     public NarrowNode(ValueNode __input, int __inputBits, int __resultBits)
     {
         super(TYPE, ArithmeticOpTable::getNarrow, ArithmeticOpTable::getSignExtend, __inputBits, __resultBits, __input);
@@ -43,7 +40,7 @@ public final class NarrowNode extends IntegerConvertNode<Narrow, SignExtend>
 
     public static ValueNode create(ValueNode __input, int __inputBits, int __resultBits, NodeView __view)
     {
-        IntegerConvertOp<Narrow> __signExtend = ArithmeticOpTable.forStamp(__input.stamp(__view)).getNarrow();
+        ArithmeticOpTable.IntegerConvertOp<ArithmeticOpTable.IntegerConvertOp.Narrow> __signExtend = ArithmeticOpTable.forStamp(__input.stamp(__view)).getNarrow();
         ValueNode __synonym = findSynonym(__signExtend, __input, __inputBits, __resultBits, __signExtend.foldStamp(__inputBits, __resultBits, __input.stamp(__view)));
         if (__synonym != null)
         {

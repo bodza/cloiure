@@ -9,8 +9,7 @@ import java.util.EnumSet;
 import jdk.vm.ci.meta.Value;
 import jdk.vm.ci.meta.ValueKind;
 
-import giraaff.lir.LIRInstruction.OperandFlag;
-import giraaff.lir.LIRInstruction.OperandMode;
+import giraaff.lir.LIRInstruction;
 
 ///
 // Base class to represent values that need to be stored in more than one register. This is mainly
@@ -22,12 +21,13 @@ public abstract class CompositeValue extends Value
 {
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
+    // @iface CompositeValue.Component
     public static @interface Component
     {
-        OperandFlag[] value() default OperandFlag.REG;
+        LIRInstruction.OperandFlag[] value() default LIRInstruction.OperandFlag.REG;
     }
 
-    // @cons
+    // @cons CompositeValue
     public CompositeValue(ValueKind<?> __kind)
     {
         super(__kind);
@@ -39,14 +39,14 @@ public abstract class CompositeValue extends Value
     //
     // @return the original CompositeValue or a copy with any modified values
     ///
-    public abstract CompositeValue forEachComponent(LIRInstruction __inst, OperandMode __mode, InstructionValueProcedure __proc);
+    public abstract CompositeValue forEachComponent(LIRInstruction __inst, LIRInstruction.OperandMode __mode, InstructionValueProcedure __proc);
 
     ///
     // A helper method to visit {@link Value}[] ensuring that a copy of the array is made if it's needed.
     //
     // @return the original {@code values} array or a copy if values changed
     ///
-    protected Value[] visitValueArray(LIRInstruction __inst, Value[] __values, OperandMode __mode, InstructionValueProcedure __proc, EnumSet<OperandFlag> __flags)
+    protected Value[] visitValueArray(LIRInstruction __inst, Value[] __values, LIRInstruction.OperandMode __mode, InstructionValueProcedure __proc, EnumSet<LIRInstruction.OperandFlag> __flags)
     {
         Value[] __newValues = null;
         for (int __i = 0; __i < __values.length; __i++)
@@ -65,7 +65,7 @@ public abstract class CompositeValue extends Value
         return __newValues != null ? __newValues : __values;
     }
 
-    protected abstract void visitEachComponent(LIRInstruction __inst, OperandMode __mode, InstructionValueConsumer __proc);
+    protected abstract void visitEachComponent(LIRInstruction __inst, LIRInstruction.OperandMode __mode, InstructionValueConsumer __proc);
 
     @Override
     public int hashCode()

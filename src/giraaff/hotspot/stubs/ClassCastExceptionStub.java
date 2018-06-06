@@ -13,7 +13,7 @@ import giraaff.util.GraalError;
 // @class ClassCastExceptionStub
 public final class ClassCastExceptionStub extends CreateExceptionStub
 {
-    // @cons
+    // @cons ClassCastExceptionStub
     public ClassCastExceptionStub(HotSpotProviders __providers, HotSpotForeignCallLinkage __linkage)
     {
         super("createClassCastException", __providers, __linkage);
@@ -27,7 +27,7 @@ public final class ClassCastExceptionStub extends CreateExceptionStub
     }
 
     @Snippet
-    private static Object createClassCastException(@Snippet.NonNullParameter Object __object, KlassPointer __targetKlass, @ConstantParameter Register __threadRegister)
+    private static Object createClassCastException(@Snippet.NonNullParameter Object __object, KlassPointer __targetKlass, @Snippet.ConstantParameter Register __threadRegister)
     {
         KlassPointer __objKlass = HotSpotReplacementsUtil.loadHub(__object);
         return createException(__threadRegister, ClassCastException.class, __objKlass, __targetKlass);

@@ -5,26 +5,27 @@ import jdk.vm.ci.code.ValueUtil;
 import jdk.vm.ci.meta.Value;
 
 import giraaff.asm.amd64.AMD64MacroAssembler;
+import giraaff.lir.LIRInstruction;
 import giraaff.lir.LIRInstructionClass;
-import giraaff.lir.Opcode;
+import giraaff.lir.LIROpcode;
 import giraaff.lir.asm.CompilationResultBuilder;
 import giraaff.util.GraalError;
 
-@Opcode
+@LIROpcode
 // @class AMD64ByteSwapOp
 public final class AMD64ByteSwapOp extends AMD64LIRInstruction
 {
     // @def
     public static final LIRInstructionClass<AMD64ByteSwapOp> TYPE = LIRInstructionClass.create(AMD64ByteSwapOp.class);
 
-    @Def({OperandFlag.REG, OperandFlag.HINT})
+    @LIRInstruction.Def({LIRInstruction.OperandFlag.REG, LIRInstruction.OperandFlag.HINT})
     // @field
     protected Value ___result;
-    @Use
+    @LIRInstruction.Use
     // @field
     protected Value ___input;
 
-    // @cons
+    // @cons AMD64ByteSwapOp
     public AMD64ByteSwapOp(Value __result, Value __input)
     {
         super(TYPE);

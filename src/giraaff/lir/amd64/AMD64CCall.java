@@ -5,7 +5,7 @@ import jdk.vm.ci.code.ValueUtil;
 import jdk.vm.ci.meta.Value;
 
 import giraaff.asm.amd64.AMD64MacroAssembler;
-import giraaff.lir.LIRInstruction.OperandFlag;
+import giraaff.lir.LIRInstruction;
 import giraaff.lir.LIRInstructionClass;
 import giraaff.lir.asm.CompilationResultBuilder;
 
@@ -15,20 +15,20 @@ public final class AMD64CCall extends AMD64LIRInstruction
     // @def
     public static final LIRInstructionClass<AMD64CCall> TYPE = LIRInstructionClass.create(AMD64CCall.class);
 
-    @Def({OperandFlag.REG, OperandFlag.ILLEGAL})
+    @LIRInstruction.Def({LIRInstruction.OperandFlag.REG, LIRInstruction.OperandFlag.ILLEGAL})
     // @field
     protected Value ___result;
-    @Use({OperandFlag.REG, OperandFlag.STACK})
+    @LIRInstruction.Use({LIRInstruction.OperandFlag.REG, LIRInstruction.OperandFlag.STACK})
     // @field
     protected Value[] ___parameters;
-    @Use({OperandFlag.REG})
+    @LIRInstruction.Use({LIRInstruction.OperandFlag.REG})
     // @field
     protected Value ___functionPtr;
-    @Use({OperandFlag.REG})
+    @LIRInstruction.Use({LIRInstruction.OperandFlag.REG})
     // @field
     protected Value ___numberOfFloatingPointArguments;
 
-    // @cons
+    // @cons AMD64CCall
     public AMD64CCall(Value __result, Value __functionPtr, Value __numberOfFloatingPointArguments, Value[] __parameters)
     {
         super(TYPE);

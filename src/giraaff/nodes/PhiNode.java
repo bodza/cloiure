@@ -22,11 +22,11 @@ public abstract class PhiNode extends FloatingNode implements Canonicalizable
     // @def
     public static final NodeClass<PhiNode> TYPE = NodeClass.create(PhiNode.class);
 
-    @Input(InputType.Association)
+    @Node.Input(InputType.Association)
     // @field
     protected AbstractMergeNode ___merge;
 
-    // @cons
+    // @cons PhiNode
     protected PhiNode(NodeClass<? extends PhiNode> __c, Stamp __stamp, AbstractMergeNode __merge)
     {
         super(__c, __stamp);

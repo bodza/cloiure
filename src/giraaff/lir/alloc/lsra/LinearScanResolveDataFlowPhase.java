@@ -9,7 +9,7 @@ import giraaff.core.common.cfg.AbstractBlockBase;
 import giraaff.lir.LIRInstruction;
 import giraaff.lir.StandardOp;
 import giraaff.lir.gen.LIRGenerationResult;
-import giraaff.lir.phases.AllocationPhase.AllocationContext;
+import giraaff.lir.phases.AllocationPhase;
 
 ///
 // Phase 6: resolve data flow
@@ -22,7 +22,7 @@ public class LinearScanResolveDataFlowPhase extends LinearScanAllocationPhase
     // @field
     protected final LinearScan ___allocator;
 
-    // @cons
+    // @cons LinearScanResolveDataFlowPhase
     protected LinearScanResolveDataFlowPhase(LinearScan __allocator)
     {
         super();
@@ -30,7 +30,7 @@ public class LinearScanResolveDataFlowPhase extends LinearScanAllocationPhase
     }
 
     @Override
-    protected void run(TargetDescription __target, LIRGenerationResult __lirGenRes, AllocationContext __context)
+    protected void run(TargetDescription __target, LIRGenerationResult __lirGenRes, AllocationPhase.AllocationContext __context)
     {
         resolveDataFlow();
     }

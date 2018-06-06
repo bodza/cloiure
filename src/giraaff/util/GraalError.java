@@ -125,7 +125,7 @@ public class GraalError extends Error
     //
     // @param msg the message that will be associated with the error
     ///
-    // @cons
+    // @cons GraalError
     public GraalError(String __msg)
     {
         super(__msg);
@@ -138,7 +138,7 @@ public class GraalError extends Error
     // @param msg the message that will be associated with the error, in String.format syntax
     // @param args parameters to String.format
     ///
-    // @cons
+    // @cons GraalError
     public GraalError(String __msg, Object... __args)
     {
         super(String.format(__msg, __args));
@@ -149,7 +149,7 @@ public class GraalError extends Error
     //
     // @param cause the original exception that contains additional information on this error
     ///
-    // @cons
+    // @cons GraalError
     public GraalError(Throwable __cause)
     {
         super(__cause);

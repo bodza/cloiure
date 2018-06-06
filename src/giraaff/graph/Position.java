@@ -27,7 +27,7 @@ public final class Position
     // @field
     private final int ___subIndex;
 
-    // @cons
+    // @cons Position
     public Position(Edges __edges, int __index, int __subIndex)
     {
         super();

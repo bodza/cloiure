@@ -15,7 +15,7 @@ import giraaff.nodes.extended.ArrayRangeWrite;
 import giraaff.nodes.java.AbstractCompareAndSwapNode;
 import giraaff.nodes.java.LoweredAtomicReadAndWriteNode;
 import giraaff.nodes.memory.FixedAccessNode;
-import giraaff.nodes.memory.HeapAccess.BarrierType;
+import giraaff.nodes.memory.HeapAccess;
 import giraaff.nodes.memory.ReadNode;
 import giraaff.nodes.memory.WriteNode;
 import giraaff.nodes.memory.address.AddressNode;
@@ -26,7 +26,7 @@ import giraaff.util.GraalError;
 // @class WriteBarrierAdditionPhase
 public final class WriteBarrierAdditionPhase extends Phase
 {
-    // @cons
+    // @cons WriteBarrierAdditionPhase
     public WriteBarrierAdditionPhase()
     {
         super();
@@ -66,7 +66,7 @@ public final class WriteBarrierAdditionPhase extends Phase
 
     private void addReadNodeBarriers(ReadNode __node, StructuredGraph __graph)
     {
-        if (__node.getBarrierType() == BarrierType.PRECISE)
+        if (__node.getBarrierType() == HeapAccess.BarrierType.PRECISE)
         {
             G1ReferentFieldReadBarrier __barrier = __graph.add(new G1ReferentFieldReadBarrier(__node.getAddress(), __node, false));
             __graph.addAfterFixed(__node, __barrier);
@@ -101,7 +101,7 @@ public final class WriteBarrierAdditionPhase extends Phase
 
     private void addWriteNodeBarriers(WriteNode __node, StructuredGraph __graph)
     {
-        BarrierType __barrierType = __node.getBarrierType();
+        HeapAccess.BarrierType __barrierType = __node.getBarrierType();
         switch (__barrierType)
         {
             case NONE:
@@ -112,7 +112,7 @@ public final class WriteBarrierAdditionPhase extends Phase
             case IMPRECISE:
             case PRECISE:
             {
-                boolean __precise = __barrierType == BarrierType.PRECISE;
+                boolean __precise = __barrierType == HeapAccess.BarrierType.PRECISE;
                 if (HotSpotRuntime.useG1GC)
                 {
                     if (!__node.getLocationIdentity().isInit())
@@ -134,7 +134,7 @@ public final class WriteBarrierAdditionPhase extends Phase
 
     private void addAtomicReadWriteNodeBarriers(LoweredAtomicReadAndWriteNode __node, StructuredGraph __graph)
     {
-        BarrierType __barrierType = __node.getBarrierType();
+        HeapAccess.BarrierType __barrierType = __node.getBarrierType();
         switch (__barrierType)
         {
             case NONE:
@@ -145,7 +145,7 @@ public final class WriteBarrierAdditionPhase extends Phase
             case IMPRECISE:
             case PRECISE:
             {
-                boolean __precise = __barrierType == BarrierType.PRECISE;
+                boolean __precise = __barrierType == HeapAccess.BarrierType.PRECISE;
                 if (HotSpotRuntime.useG1GC)
                 {
                     addG1PreWriteBarrier(__node, __node.getAddress(), null, true, __node.getNullCheck(), __graph);
@@ -164,7 +164,7 @@ public final class WriteBarrierAdditionPhase extends Phase
 
     private void addCASBarriers(AbstractCompareAndSwapNode __node, StructuredGraph __graph)
     {
-        BarrierType __barrierType = __node.getBarrierType();
+        HeapAccess.BarrierType __barrierType = __node.getBarrierType();
         switch (__barrierType)
         {
             case NONE:
@@ -175,7 +175,7 @@ public final class WriteBarrierAdditionPhase extends Phase
             case IMPRECISE:
             case PRECISE:
             {
-                boolean __precise = __barrierType == BarrierType.PRECISE;
+                boolean __precise = __barrierType == HeapAccess.BarrierType.PRECISE;
                 if (HotSpotRuntime.useG1GC)
                 {
                     addG1PreWriteBarrier(__node, __node.getAddress(), __node.getExpectedValue(), false, false, __graph);

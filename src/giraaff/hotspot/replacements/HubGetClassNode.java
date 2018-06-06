@@ -30,12 +30,12 @@ public final class HubGetClassNode extends FloatingNode implements Lowerable, Ca
     // @def
     public static final NodeClass<HubGetClassNode> TYPE = NodeClass.create(HubGetClassNode.class);
 
-    @Input
+    @Node.Input
     // @field
     protected ValueNode ___hub;
 
-    // @cons
-    public HubGetClassNode(@InjectedNodeParameter MetaAccessProvider __metaAccess, ValueNode __hub)
+    // @cons HubGetClassNode
+    public HubGetClassNode(@Node.InjectedNodeParameter MetaAccessProvider __metaAccess, ValueNode __hub)
     {
         super(TYPE, StampFactory.objectNonNull(TypeReference.createWithoutAssumptions(__metaAccess.lookupJavaType(Class.class))));
         this.___hub = __hub;
@@ -74,7 +74,7 @@ public final class HubGetClassNode extends FloatingNode implements Lowerable, Ca
         __tool.getLowerer().lower(this, __tool);
     }
 
-    @NodeIntrinsic
+    @Node.NodeIntrinsic
     public static native Class<?> readClass(KlassPointer __hub);
 
     @Override

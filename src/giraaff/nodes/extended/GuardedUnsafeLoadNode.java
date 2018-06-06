@@ -4,6 +4,7 @@ import jdk.vm.ci.meta.JavaKind;
 
 import org.graalvm.word.LocationIdentity;
 
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.nodeinfo.InputType;
 import giraaff.nodes.ValueNode;
@@ -14,11 +15,11 @@ public final class GuardedUnsafeLoadNode extends RawLoadNode implements GuardedN
     // @def
     public static final NodeClass<GuardedUnsafeLoadNode> TYPE = NodeClass.create(GuardedUnsafeLoadNode.class);
 
-    @OptionalInput(InputType.Guard)
+    @Node.OptionalInput(InputType.Guard)
     // @field
     protected GuardingNode ___guard;
 
-    // @cons
+    // @cons GuardedUnsafeLoadNode
     public GuardedUnsafeLoadNode(ValueNode __object, ValueNode __offset, JavaKind __accessKind, LocationIdentity __locationIdentity, GuardingNode __guard)
     {
         super(TYPE, __object, __offset, __accessKind, __locationIdentity);

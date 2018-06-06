@@ -25,26 +25,26 @@ import giraaff.nodes.util.GraphUtil;
 ///
 // A call to the VM via a regular stub.
 ///
-// @NodeInfo.allowedUsageTypes "Memory"
+// @NodeInfo.allowedUsageTypes "InputType.Memory"
 // @class InitializeKlassStubCall
 public final class InitializeKlassStubCall extends AbstractMemoryCheckpoint implements LIRLowerable, Canonicalizable, DeoptimizingNode.DeoptBefore, MemoryCheckpoint.Single
 {
     // @def
     public static final NodeClass<InitializeKlassStubCall> TYPE = NodeClass.create(InitializeKlassStubCall.class);
 
-    @OptionalInput
+    @Node.OptionalInput
     // @field
     protected ValueNode ___value;
-    @Input
+    @Node.Input
     // @field
     protected ValueNode ___string;
-    @OptionalInput(InputType.State)
+    @Node.OptionalInput(InputType.StateI)
     // @field
     protected FrameState ___stateBefore;
     // @field
     protected Constant ___constant;
 
-    // @cons
+    // @cons InitializeKlassStubCall
     protected InitializeKlassStubCall(ValueNode __value, ValueNode __string)
     {
         super(TYPE, __value.stamp(NodeView.DEFAULT));
@@ -52,7 +52,7 @@ public final class InitializeKlassStubCall extends AbstractMemoryCheckpoint impl
         this.___string = __string;
     }
 
-    @NodeIntrinsic
+    @Node.NodeIntrinsic
     public static native KlassPointer initializeKlass(KlassPointer __value, Object __string);
 
     @Override

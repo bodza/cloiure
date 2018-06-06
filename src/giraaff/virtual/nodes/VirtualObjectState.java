@@ -6,6 +6,7 @@ import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.graph.NodeInputList;
 import giraaff.nodes.ValueNode;
+import giraaff.nodes.VirtualState;
 import giraaff.nodes.virtual.EscapeObjectState;
 import giraaff.nodes.virtual.VirtualObjectNode;
 
@@ -18,7 +19,7 @@ public final class VirtualObjectState extends EscapeObjectState implements Node.
     // @def
     public static final NodeClass<VirtualObjectState> TYPE = NodeClass.create(VirtualObjectState.class);
 
-    @OptionalInput
+    @Node.OptionalInput
     // @field
     NodeInputList<ValueNode> ___values;
 
@@ -27,14 +28,14 @@ public final class VirtualObjectState extends EscapeObjectState implements Node.
         return this.___values;
     }
 
-    // @cons
+    // @cons VirtualObjectState
     public VirtualObjectState(VirtualObjectNode __object, ValueNode[] __values)
     {
         super(TYPE, __object);
         this.___values = new NodeInputList<>(this, __values);
     }
 
-    // @cons
+    // @cons VirtualObjectState
     public VirtualObjectState(VirtualObjectNode __object, List<ValueNode> __values)
     {
         super(TYPE, __object);
@@ -48,7 +49,7 @@ public final class VirtualObjectState extends EscapeObjectState implements Node.
     }
 
     @Override
-    public void applyToNonVirtual(NodeClosure<? super ValueNode> __closure)
+    public void applyToNonVirtual(VirtualState.NodeClosure<? super ValueNode> __closure)
     {
         for (ValueNode __value : this.___values)
         {

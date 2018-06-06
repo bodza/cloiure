@@ -33,7 +33,7 @@ public abstract class HotSpotHostBackend extends HotSpotBackend
     // @def
     public static final ForeignCallDescriptor UNCOMMON_TRAP_HANDLER = new ForeignCallDescriptor("uncommonTrapHandler", void.class);
 
-    // @cons
+    // @cons HotSpotHostBackend
     public HotSpotHostBackend(HotSpotGraalRuntime __runtime, HotSpotProviders __providers)
     {
         super(__runtime, __providers);

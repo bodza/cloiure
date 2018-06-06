@@ -20,7 +20,7 @@ public final class AddressLoweringHotSpotSuitesProvider extends HotSpotSuitesPro
     // @field
     private final Phase ___addressLowering;
 
-    // @cons
+    // @cons AddressLoweringHotSpotSuitesProvider
     public AddressLoweringHotSpotSuitesProvider(SuitesCreator __defaultSuitesCreator, HotSpotGraalRuntime __runtime, Phase __addressLowering)
     {
         super(__defaultSuitesCreator, __runtime);

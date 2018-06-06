@@ -58,7 +58,7 @@ import giraaff.nodes.virtual.VirtualObjectNode;
 // @class GraphUtil
 public final class GraphUtil
 {
-    // @cons
+    // @cons GraphUtil
     private GraphUtil()
     {
         super();
@@ -272,7 +272,7 @@ public final class GraphUtil
     ///
     // Removes all nodes created after the {@code mark}, assuming no "old" nodes point to "new" nodes.
     ///
-    public static void removeNewNodes(Graph __graph, Graph.Mark __mark)
+    public static void removeNewNodes(Graph __graph, Graph.NodeMark __mark)
     {
         for (Node __n : __graph.getNewNodes(__mark))
         {
@@ -722,7 +722,7 @@ public final class GraphUtil
         // @field
         private final LoweringProvider ___loweringProvider;
 
-        // @cons
+        // @cons GraphUtil.DefaultSimplifierTool
         DefaultSimplifierTool(MetaAccessProvider __metaAccess, ConstantReflectionProvider __constantReflection, ConstantFieldProvider __constantFieldProvider, boolean __canonicalizeReads, Assumptions __assumptions, LoweringProvider __loweringProvider)
         {
             super();
@@ -815,7 +815,7 @@ public final class GraphUtil
 
     public static SimplifierTool getDefaultSimplifier(MetaAccessProvider __metaAccess, ConstantReflectionProvider __constantReflection, ConstantFieldProvider __constantFieldProvider, boolean __canonicalizeReads, Assumptions __assumptions, LoweringProvider __loweringProvider)
     {
-        return new DefaultSimplifierTool(__metaAccess, __constantReflection, __constantFieldProvider, __canonicalizeReads, __assumptions, __loweringProvider);
+        return new GraphUtil.DefaultSimplifierTool(__metaAccess, __constantReflection, __constantFieldProvider, __canonicalizeReads, __assumptions, __loweringProvider);
     }
 
     public static Constant foldIfConstantAndRemove(ValueNode __node, ValueNode __constant)

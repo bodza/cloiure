@@ -4,7 +4,7 @@ import jdk.vm.ci.code.Register;
 
 import org.graalvm.collections.EconomicMap;
 
-import giraaff.asm.amd64.AMD64Address.Scale;
+import giraaff.asm.amd64.AMD64Address;
 import giraaff.core.amd64.AMD64AddressNode;
 import giraaff.core.amd64.AMD64CompressAddressLowering;
 import giraaff.core.common.CompressEncoding;
@@ -42,7 +42,7 @@ public final class AMD64HotSpotAddressLowering extends AMD64CompressAddressLower
     // @field
     private final Register ___heapBaseRegister;
 
-    // @cons
+    // @cons AMD64HotSpotAddressLowering
     public AMD64HotSpotAddressLowering(Register __heapBaseRegister)
     {
         super();
@@ -61,7 +61,7 @@ public final class AMD64HotSpotAddressLowering extends AMD64CompressAddressLower
     protected final boolean improveUncompression(AMD64AddressNode __addr, CompressionNode __compression, ValueNode __other)
     {
         CompressEncoding __encoding = __compression.getEncoding();
-        Scale __scale = Scale.fromShift(__encoding.getShift());
+        AMD64Address.Scale __scale = AMD64Address.Scale.fromShift(__encoding.getShift());
         if (__scale == null)
         {
             return false;
@@ -71,7 +71,7 @@ public final class AMD64HotSpotAddressLowering extends AMD64CompressAddressLower
         {
             if (__other == null)
             {
-                ValueNode __base = __compression.graph().unique(new HeapBaseNode(this.___heapBaseRegister));
+                ValueNode __base = __compression.graph().unique(new AMD64CompressAddressLowering.HeapBaseNode(this.___heapBaseRegister));
                 __addr.setBase(__base);
             }
             else

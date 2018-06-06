@@ -15,13 +15,13 @@ public abstract class AbstractMemoryCheckpoint extends AbstractStateSplit implem
     // @def
     public static final NodeClass<AbstractMemoryCheckpoint> TYPE = NodeClass.create(AbstractMemoryCheckpoint.class);
 
-    // @cons
+    // @cons AbstractMemoryCheckpoint
     protected AbstractMemoryCheckpoint(NodeClass<? extends AbstractMemoryCheckpoint> __c, Stamp __stamp)
     {
         this(__c, __stamp, null);
     }
 
-    // @cons
+    // @cons AbstractMemoryCheckpoint
     protected AbstractMemoryCheckpoint(NodeClass<? extends AbstractMemoryCheckpoint> __c, Stamp __stamp, FrameState __stateAfter)
     {
         super(__c, __stamp, __stateAfter);

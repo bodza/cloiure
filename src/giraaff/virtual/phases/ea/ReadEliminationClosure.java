@@ -40,9 +40,7 @@ import giraaff.nodes.memory.ReadNode;
 import giraaff.nodes.memory.WriteNode;
 import giraaff.nodes.type.StampTool;
 import giraaff.nodes.util.GraphUtil;
-import giraaff.virtual.phases.ea.ReadEliminationBlockState.CacheEntry;
-import giraaff.virtual.phases.ea.ReadEliminationBlockState.LoadCacheEntry;
-import giraaff.virtual.phases.ea.ReadEliminationBlockState.UnsafeLoadCacheEntry;
+import giraaff.virtual.phases.ea.ReadEliminationBlockState;
 
 ///
 // This closure initially handled a set of nodes that is disjunct from {@link PEReadEliminationClosure},
@@ -54,7 +52,7 @@ public final class ReadEliminationClosure extends EffectsClosure<ReadElimination
     // @field
     private final boolean ___considerGuards;
 
-    // @cons
+    // @cons ReadEliminationClosure
     public ReadEliminationClosure(ControlFlowGraph __cfg, boolean __considerGuards)
     {
         super(null, __cfg);
@@ -81,7 +79,7 @@ public final class ReadEliminationClosure extends EffectsClosure<ReadElimination
             else
             {
                 ValueNode __object = GraphUtil.unproxify(__access.object());
-                LoadCacheEntry __identifier = new LoadCacheEntry(__object, new FieldLocationIdentity(__access.field()));
+                ReadEliminationBlockState.LoadCacheEntry __identifier = new ReadEliminationBlockState.LoadCacheEntry(__object, new FieldLocationIdentity(__access.field()));
                 ValueNode __cachedValue = __state.getCacheEntry(__identifier);
                 if (__node instanceof LoadFieldNode)
                 {
@@ -116,7 +114,7 @@ public final class ReadEliminationClosure extends EffectsClosure<ReadElimination
             if (__read.getLocationIdentity().isSingle())
             {
                 ValueNode __object = GraphUtil.unproxify(__read.getAddress());
-                LoadCacheEntry __identifier = new LoadCacheEntry(__object, __read.getLocationIdentity());
+                ReadEliminationBlockState.LoadCacheEntry __identifier = new ReadEliminationBlockState.LoadCacheEntry(__object, __read.getLocationIdentity());
                 ValueNode __cachedValue = __state.getCacheEntry(__identifier);
                 if (__cachedValue != null && areValuesReplaceable(__read, __cachedValue, this.___considerGuards))
                 {
@@ -136,7 +134,7 @@ public final class ReadEliminationClosure extends EffectsClosure<ReadElimination
             if (__write.getLocationIdentity().isSingle())
             {
                 ValueNode __object = GraphUtil.unproxify(__write.getAddress());
-                LoadCacheEntry __identifier = new LoadCacheEntry(__object, __write.getLocationIdentity());
+                ReadEliminationBlockState.LoadCacheEntry __identifier = new ReadEliminationBlockState.LoadCacheEntry(__object, __write.getLocationIdentity());
                 ValueNode __cachedValue = __state.getCacheEntry(__identifier);
 
                 ValueNode __value = getScalarAlias(__write.value());
@@ -164,7 +162,7 @@ public final class ReadEliminationClosure extends EffectsClosure<ReadElimination
                     if (__load.getLocationIdentity().isSingle())
                     {
                         ValueNode __object = GraphUtil.unproxify(__load.object());
-                        UnsafeLoadCacheEntry __identifier = new UnsafeLoadCacheEntry(__object, __load.offset(), __load.getLocationIdentity());
+                        ReadEliminationBlockState.UnsafeLoadCacheEntry __identifier = new ReadEliminationBlockState.UnsafeLoadCacheEntry(__object, __load.offset(), __load.getLocationIdentity());
                         ValueNode __cachedValue = __state.getCacheEntry(__identifier);
                         if (__cachedValue != null && areValuesReplaceable(__load, __cachedValue, this.___considerGuards))
                         {
@@ -184,7 +182,7 @@ public final class ReadEliminationClosure extends EffectsClosure<ReadElimination
                     if (__write.getLocationIdentity().isSingle())
                     {
                         ValueNode __object = GraphUtil.unproxify(__write.object());
-                        UnsafeLoadCacheEntry __identifier = new UnsafeLoadCacheEntry(__object, __write.offset(), __write.getLocationIdentity());
+                        ReadEliminationBlockState.UnsafeLoadCacheEntry __identifier = new ReadEliminationBlockState.UnsafeLoadCacheEntry(__object, __write.offset(), __write.getLocationIdentity());
                         ValueNode __cachedValue = __state.getCacheEntry(__identifier);
 
                         ValueNode __value = getScalarAlias(__write.value());
@@ -248,7 +246,7 @@ public final class ReadEliminationClosure extends EffectsClosure<ReadElimination
     {
         if (__exitNode.graph().hasValueProxies())
         {
-            MapCursor<CacheEntry<?>, ValueNode> __entry = __exitState.getReadCache().getEntries();
+            MapCursor<ReadEliminationBlockState.CacheEntry<?>, ValueNode> __entry = __exitState.getReadCache().getEntries();
             while (__entry.advance())
             {
                 if (__initialState.getReadCache().get(__entry.getKey()) != __entry.getValue())
@@ -268,9 +266,9 @@ public final class ReadEliminationClosure extends EffectsClosure<ReadElimination
     }
 
     @Override
-    protected MergeProcessor createMergeProcessor(Block __merge)
+    protected EffectsClosure<ReadEliminationBlockState>.MergeProcessor createMergeProcessor(Block __merge)
     {
-        return new ReadEliminationMergeProcessor(__merge);
+        return new ReadEliminationClosure.ReadEliminationMergeProcessor(__merge);
     }
 
     // @class ReadEliminationClosure.ReadEliminationMergeProcessor
@@ -280,13 +278,13 @@ public final class ReadEliminationClosure extends EffectsClosure<ReadElimination
         // @field
         private final EconomicMap<Object, ValuePhiNode> ___materializedPhis = EconomicMap.create(Equivalence.DEFAULT);
 
-        // @cons
+        // @cons ReadEliminationClosure.ReadEliminationMergeProcessor
         ReadEliminationMergeProcessor(Block __mergeBlock)
         {
             super(__mergeBlock);
         }
 
-        protected ValuePhiNode getCachedPhi(CacheEntry<?> __virtual, Stamp __stamp)
+        protected ValuePhiNode getCachedPhi(ReadEliminationBlockState.CacheEntry<?> __virtual, Stamp __stamp)
         {
             ValuePhiNode __result = this.___materializedPhis.get(__virtual);
             if (__result == null)
@@ -300,10 +298,10 @@ public final class ReadEliminationClosure extends EffectsClosure<ReadElimination
         @Override
         protected void merge(List<ReadEliminationBlockState> __states)
         {
-            MapCursor<CacheEntry<?>, ValueNode> __cursor = __states.get(0).___readCache.getEntries();
+            MapCursor<ReadEliminationBlockState.CacheEntry<?>, ValueNode> __cursor = __states.get(0).___readCache.getEntries();
             while (__cursor.advance())
             {
-                CacheEntry<?> __key = __cursor.getKey();
+                ReadEliminationBlockState.CacheEntry<?> __key = __cursor.getKey();
                 ValueNode __value = __cursor.getValue();
                 boolean __phi = false;
                 for (int __i = 1; __i < __states.size(); __i++)
@@ -344,7 +342,7 @@ public final class ReadEliminationClosure extends EffectsClosure<ReadElimination
             {
                 if (__phi.getStackKind() == JavaKind.Object)
                 {
-                    for (CacheEntry<?> __entry : __states.get(0).___readCache.getKeys())
+                    for (ReadEliminationBlockState.CacheEntry<?> __entry : __states.get(0).___readCache.getKeys())
                     {
                         if (__entry.___object == getPhiValueAt(__phi, 0))
                         {
@@ -355,7 +353,7 @@ public final class ReadEliminationClosure extends EffectsClosure<ReadElimination
             }
         }
 
-        private void mergeReadCachePhi(PhiNode __phi, CacheEntry<?> __identifier, List<ReadEliminationBlockState> __states)
+        private void mergeReadCachePhi(PhiNode __phi, ReadEliminationBlockState.CacheEntry<?> __identifier, List<ReadEliminationBlockState> __states)
         {
             ValueNode[] __values = new ValueNode[__states.size()];
             __values[0] = __states.get(0).getCacheEntry(__identifier.duplicateWithObject(getPhiValueAt(__phi, 0)));
@@ -372,7 +370,7 @@ public final class ReadEliminationClosure extends EffectsClosure<ReadElimination
                     __values[__i] = __value;
                 }
 
-                CacheEntry<?> __newIdentifier = __identifier.duplicateWithObject(__phi);
+                ReadEliminationBlockState.CacheEntry<?> __newIdentifier = __identifier.duplicateWithObject(__phi);
                 PhiNode __phiNode = getCachedPhi(__newIdentifier, __values[0].stamp(NodeView.DEFAULT).unrestricted());
                 this.___mergeEffects.addFloatingNode(__phiNode, "mergeReadCachePhi");
                 for (int __i = 0; __i < __values.length; __i++)
@@ -389,11 +387,11 @@ public final class ReadEliminationClosure extends EffectsClosure<ReadElimination
     {
         if (__initialState.___readCache.size() > 0)
         {
-            LoopKillCache __loopKilledLocations = this.___loopLocationKillCache.get(__loop);
+            EffectsClosure.LoopKillCache __loopKilledLocations = this.___loopLocationKillCache.get(__loop);
             // we have fully processed this loop the first time, remember to cache it the next time it is visited
             if (__loopKilledLocations == null)
             {
-                __loopKilledLocations = new LoopKillCache(1); // 1.visit
+                __loopKilledLocations = new EffectsClosure.LoopKillCache(1); // 1.visit
                 this.___loopLocationKillCache.put(__loop, __loopKilledLocations);
             }
             else
@@ -408,11 +406,11 @@ public final class ReadEliminationClosure extends EffectsClosure<ReadElimination
                 {
                     // we have fully processed this loop >1 times, update the killed locations
                     EconomicSet<LocationIdentity> __forwardEndLiveLocations = EconomicSet.create(Equivalence.DEFAULT);
-                    for (CacheEntry<?> __entry : __initialState.___readCache.getKeys())
+                    for (ReadEliminationBlockState.CacheEntry<?> __entry : __initialState.___readCache.getKeys())
                     {
                         __forwardEndLiveLocations.add(__entry.getIdentity());
                     }
-                    for (CacheEntry<?> __entry : __mergedStates.___readCache.getKeys())
+                    for (ReadEliminationBlockState.CacheEntry<?> __entry : __mergedStates.___readCache.getKeys())
                     {
                         __forwardEndLiveLocations.remove(__entry.getIdentity());
                     }
@@ -432,13 +430,13 @@ public final class ReadEliminationClosure extends EffectsClosure<ReadElimination
     protected ReadEliminationBlockState stripKilledLoopLocations(Loop<Block> __loop, ReadEliminationBlockState __originalInitialState)
     {
         ReadEliminationBlockState __initialState = super.stripKilledLoopLocations(__loop, __originalInitialState);
-        LoopKillCache __loopKilledLocations = this.___loopLocationKillCache.get(__loop);
+        EffectsClosure.LoopKillCache __loopKilledLocations = this.___loopLocationKillCache.get(__loop);
         if (__loopKilledLocations != null && __loopKilledLocations.loopKillsLocations())
         {
-            Iterator<CacheEntry<?>> __it = __initialState.___readCache.getKeys().iterator();
+            Iterator<ReadEliminationBlockState.CacheEntry<?>> __it = __initialState.___readCache.getKeys().iterator();
             while (__it.hasNext())
             {
-                CacheEntry<?> __entry = __it.next();
+                ReadEliminationBlockState.CacheEntry<?> __entry = __it.next();
                 if (__loopKilledLocations.containsLocation(__entry.getIdentity()))
                 {
                     __it.remove();

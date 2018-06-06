@@ -18,7 +18,7 @@ public final class DerivedScaledInductionVariable extends DerivedInductionVariab
     // @field
     private final ValueNode ___value;
 
-    // @cons
+    // @cons DerivedScaledInductionVariable
     public DerivedScaledInductionVariable(LoopEx __loop, InductionVariable __base, ValueNode __scale, ValueNode __value)
     {
         super(__loop, __base);
@@ -26,7 +26,7 @@ public final class DerivedScaledInductionVariable extends DerivedInductionVariab
         this.___value = __value;
     }
 
-    // @cons
+    // @cons DerivedScaledInductionVariable
     public DerivedScaledInductionVariable(LoopEx __loop, InductionVariable __base, NegateNode __value)
     {
         super(__loop, __base);
@@ -46,7 +46,7 @@ public final class DerivedScaledInductionVariable extends DerivedInductionVariab
     }
 
     @Override
-    public Direction direction()
+    public InductionVariable.Direction direction()
     {
         Stamp __stamp = this.___scale.stamp(NodeView.DEFAULT);
         if (__stamp instanceof IntegerStamp)

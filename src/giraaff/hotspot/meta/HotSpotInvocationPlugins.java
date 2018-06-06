@@ -15,7 +15,7 @@ import giraaff.nodes.graphbuilderconf.InvocationPlugins;
 // @class HotSpotInvocationPlugins
 final class HotSpotInvocationPlugins extends InvocationPlugins
 {
-    // @cons
+    // @cons HotSpotInvocationPlugins
     HotSpotInvocationPlugins()
     {
         super();

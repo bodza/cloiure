@@ -92,17 +92,17 @@ public interface LIRGeneratorTool extends ValueKindFactory<LIRKind>
 
     boolean hasBlockEnd(AbstractBlockBase<?> __block);
 
-    MoveFactory getMoveFactory();
+    LIRGeneratorTool.MoveFactory getMoveFactory();
 
     ///
-    // Get a special {@link MoveFactory} for spill moves.
+    // Get a special {@link LIRGeneratorTool.MoveFactory} for spill moves.
     //
     // The instructions returned by this factory must only depend on the input values. References
     // to values that require interaction with register allocation are strictly forbidden.
     ///
-    MoveFactory getSpillMoveFactory();
+    LIRGeneratorTool.MoveFactory getSpillMoveFactory();
 
-    BlockScope getBlockScope(AbstractBlockBase<?> __block);
+    LIRGeneratorTool.BlockScope getBlockScope(AbstractBlockBase<?> __block);
 
     Value emitConstant(LIRKind __kind, Constant __constant);
 

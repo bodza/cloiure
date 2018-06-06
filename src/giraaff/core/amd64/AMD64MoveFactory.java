@@ -16,19 +16,13 @@ import giraaff.lir.LIRValueUtil;
 import giraaff.lir.amd64.AMD64AddressValue;
 import giraaff.lir.amd64.AMD64LIRInstruction;
 import giraaff.lir.amd64.AMD64Move;
-import giraaff.lir.amd64.AMD64Move.AMD64StackMove;
-import giraaff.lir.amd64.AMD64Move.LeaDataOp;
-import giraaff.lir.amd64.AMD64Move.LeaOp;
-import giraaff.lir.amd64.AMD64Move.MoveFromConstOp;
-import giraaff.lir.amd64.AMD64Move.MoveFromRegOp;
-import giraaff.lir.amd64.AMD64Move.MoveToRegOp;
 import giraaff.util.GraalError;
 
 // @class AMD64MoveFactory
 public abstract class AMD64MoveFactory extends AMD64MoveFactoryBase
 {
-    // @cons
-    public AMD64MoveFactory(BackupSlotProvider __backupSlotProvider)
+    // @cons AMD64MoveFactory
+    public AMD64MoveFactory(AMD64MoveFactoryBase.BackupSlotProvider __backupSlotProvider)
     {
         super(__backupSlotProvider);
     }
@@ -71,7 +65,7 @@ public abstract class AMD64MoveFactory extends AMD64MoveFactoryBase
     {
         if (__src instanceof AMD64AddressValue)
         {
-            return new LeaOp(__dst, (AMD64AddressValue) __src, AMD64Assembler.OperandSize.QWORD);
+            return new AMD64Move.LeaOp(__dst, (AMD64AddressValue) __src, AMD64Assembler.OperandSize.QWORD);
         }
         else if (LIRValueUtil.isConstantValue(__src))
         {
@@ -79,18 +73,18 @@ public abstract class AMD64MoveFactory extends AMD64MoveFactoryBase
         }
         else if (ValueUtil.isRegister(__src) || LIRValueUtil.isStackSlotValue(__dst))
         {
-            return new MoveFromRegOp((AMD64Kind) __dst.getPlatformKind(), __dst, (AllocatableValue) __src);
+            return new AMD64Move.MoveFromRegOp((AMD64Kind) __dst.getPlatformKind(), __dst, (AllocatableValue) __src);
         }
         else
         {
-            return new MoveToRegOp((AMD64Kind) __dst.getPlatformKind(), __dst, (AllocatableValue) __src);
+            return new AMD64Move.MoveToRegOp((AMD64Kind) __dst.getPlatformKind(), __dst, (AllocatableValue) __src);
         }
     }
 
     @Override
     public AMD64LIRInstruction createStackMove(AllocatableValue __result, AllocatableValue __input, Register __scratchRegister, AllocatableValue __backupSlot)
     {
-        return new AMD64StackMove(__result, __input, __scratchRegister, __backupSlot);
+        return new AMD64Move.AMD64StackMove(__result, __input, __scratchRegister, __backupSlot);
     }
 
     @Override
@@ -98,11 +92,11 @@ public abstract class AMD64MoveFactory extends AMD64MoveFactoryBase
     {
         if (__src instanceof JavaConstant)
         {
-            return new MoveFromConstOp(__dst, (JavaConstant) __src);
+            return new AMD64Move.MoveFromConstOp(__dst, (JavaConstant) __src);
         }
         else if (__src instanceof DataPointerConstant)
         {
-            return new LeaDataOp(__dst, (DataPointerConstant) __src);
+            return new AMD64Move.LeaDataOp(__dst, (DataPointerConstant) __src);
         }
         else
         {
@@ -115,7 +109,7 @@ public abstract class AMD64MoveFactory extends AMD64MoveFactoryBase
     {
         if (__input instanceof JavaConstant)
         {
-            return new MoveFromConstOp(__result, (JavaConstant) __input);
+            return new AMD64Move.MoveFromConstOp(__result, (JavaConstant) __input);
         }
         else
         {

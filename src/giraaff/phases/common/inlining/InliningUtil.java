@@ -21,9 +21,7 @@ import org.graalvm.collections.UnmodifiableEconomicMap;
 import giraaff.core.common.type.Stamp;
 import giraaff.core.common.type.StampFactory;
 import giraaff.core.common.type.TypeReference;
-import giraaff.graph.Graph.DuplicationReplacement;
-import giraaff.graph.Graph.Mark;
-import giraaff.graph.Graph.NodeEventScope;
+import giraaff.graph.Graph;
 import giraaff.graph.Node;
 import giraaff.graph.NodeInputList;
 import giraaff.graph.NodeMap;
@@ -33,7 +31,6 @@ import giraaff.nodes.AbstractEndNode;
 import giraaff.nodes.AbstractMergeNode;
 import giraaff.nodes.BeginNode;
 import giraaff.nodes.CallTargetNode;
-import giraaff.nodes.CallTargetNode.InvokeKind;
 import giraaff.nodes.DeoptimizeNode;
 import giraaff.nodes.EndNode;
 import giraaff.nodes.FixedGuardNode;
@@ -54,7 +51,6 @@ import giraaff.nodes.ReturnNode;
 import giraaff.nodes.StartNode;
 import giraaff.nodes.StateSplit;
 import giraaff.nodes.StructuredGraph;
-import giraaff.nodes.StructuredGraph.GuardsStage;
 import giraaff.nodes.UnwindNode;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.calc.IsNullNode;
@@ -74,13 +70,13 @@ import giraaff.util.GraalError;
 // @class InliningUtil
 public final class InliningUtil extends ValueMergeUtil
 {
-    // @cons
+    // @cons InliningUtil
     private InliningUtil()
     {
         super();
     }
 
-    public static void replaceInvokeCallTarget(Invoke __invoke, StructuredGraph __graph, InvokeKind __invokeKind, ResolvedJavaMethod __targetMethod)
+    public static void replaceInvokeCallTarget(Invoke __invoke, StructuredGraph __graph, CallTargetNode.InvokeKind __invokeKind, ResolvedJavaMethod __targetMethod)
     {
         MethodCallTargetNode __oldCallTarget = (MethodCallTargetNode) __invoke.callTarget();
         MethodCallTargetNode __newCallTarget = __graph.add(new MethodCallTargetNode(__invokeKind, __targetMethod, __oldCallTarget.arguments().toArray(new ValueNode[0]), __oldCallTarget.returnStamp(), __oldCallTarget.getProfile()));
@@ -208,7 +204,7 @@ public final class InliningUtil extends ValueMergeUtil
 
         final AbstractBeginNode __prevBegin = AbstractBeginNode.prevBegin(__invokeNode);
         // @closure
-        DuplicationReplacement localReplacement = new DuplicationReplacement()
+        Graph.DuplicationReplacement localReplacement = new Graph.DuplicationReplacement()
         {
             @Override
             public Node replacement(Node __node)
@@ -225,7 +221,7 @@ public final class InliningUtil extends ValueMergeUtil
             }
         };
 
-        Mark __mark = __graph.getMark();
+        Graph.NodeMark __mark = __graph.getMark();
         // Instead, attach the inlining log of the child graph to the current inlining log.
         EconomicMap<Node, Node> __duplicates = __graph.addDuplicates(__nodes, __inlineGraph, __inlineGraph.getNodeCount(), localReplacement);
 
@@ -302,9 +298,9 @@ public final class InliningUtil extends ValueMergeUtil
     public static EconomicSet<Node> inlineForCanonicalization(Invoke __invoke, StructuredGraph __inlineGraph, boolean __receiverNullCheck, ResolvedJavaMethod __inlineeMethod, Consumer<UnmodifiableEconomicMap<Node, Node>> __duplicatesConsumer, String __reason, String __phase)
     {
         HashSetNodeEventListener __listener = new HashSetNodeEventListener();
-        // This code assumes that Graph.addDuplicates doesn't trigger the NodeEventListener to track
+        // This code assumes that Graph.addDuplicates doesn't trigger the Graph.NodeEventListener to track
         // only nodes which were modified into the process of inlining the graph into the current graph.
-        try (NodeEventScope __nes = __invoke.asNode().graph().trackNodeEvents(__listener))
+        try (Graph.NodeEventScope __nes = __invoke.asNode().graph().trackNodeEvents(__listener))
         {
             UnmodifiableEconomicMap<Node, Node> __duplicates = InliningUtil.inline(__invoke, __inlineGraph, __receiverNullCheck, __inlineeMethod, __reason, __phase);
             if (__duplicatesConsumer != null)
@@ -528,13 +524,13 @@ public final class InliningUtil extends ValueMergeUtil
             __frameState.replaceAndDelete(__stateAfterException);
             return __stateAfterException;
         }
-        else if ((__frameState.___bci == BytecodeFrame.UNWIND_BCI && __frameState.graph().getGuardsStage() == GuardsStage.FLOATING_GUARDS) || __frameState.___bci == BytecodeFrame.AFTER_EXCEPTION_BCI)
+        else if ((__frameState.___bci == BytecodeFrame.UNWIND_BCI && __frameState.graph().getGuardsStage() == StructuredGraph.GuardsStage.FLOATING_GUARDS) || __frameState.___bci == BytecodeFrame.AFTER_EXCEPTION_BCI)
         {
             // This path converts the frame states relevant for exception unwinding to deoptimization.
             // This is only allowed in configurations when Graal compiles code for speculative execution
             // (e.g. JIT compilation in HotSpot) but not when compiled code must be deoptimization free
             // (e.g. AOT compilation for native image generation). There is currently no global flag in StructuredGraph
-            // to distinguish such modes, but the GuardsStage during inlining indicates the mode in which Graal operates.
+            // to distinguish such modes, but the StructuredGraph.GuardsStage during inlining indicates the mode in which Graal operates.
             handleMissingAfterExceptionFrameState(__frameState, __invoke, __replacements, __alwaysDuplicateStateAfter);
             return __frameState;
         }
@@ -672,7 +668,7 @@ public final class InliningUtil extends ValueMergeUtil
 
     private static DeoptimizeNode addDeoptimizeNode(StructuredGraph __graph, DeoptimizationAction __action, DeoptimizationReason __reason)
     {
-        GraalError.guarantee(__graph.getGuardsStage() == GuardsStage.FLOATING_GUARDS, "Cannot introduce speculative deoptimization when Graal is used with fixed guards");
+        GraalError.guarantee(__graph.getGuardsStage() == StructuredGraph.GuardsStage.FLOATING_GUARDS, "Cannot introduce speculative deoptimization when Graal is used with fixed guards");
         return __graph.add(new DeoptimizeNode(__action, __reason));
     }
 
@@ -688,7 +684,7 @@ public final class InliningUtil extends ValueMergeUtil
         ValueNode __newReceiver = __oldReceiver;
         if (__newReceiver.getStackKind() == JavaKind.Object)
         {
-            if (__invoke.getInvokeKind() == InvokeKind.Special)
+            if (__invoke.getInvokeKind() == CallTargetNode.InvokeKind.Special)
             {
                 Stamp __paramStamp = __newReceiver.stamp(NodeView.DEFAULT);
                 Stamp __stamp = __paramStamp.join(StampFactory.object(TypeReference.create(__graph.getAssumptions(), __callTarget.targetMethod().getDeclaringClass())));
@@ -732,7 +728,7 @@ public final class InliningUtil extends ValueMergeUtil
         StructuredGraph __graph = __invoke.asNode().graph();
         if (!__concrete.equals(((MethodCallTargetNode) __invoke.callTarget()).targetMethod()))
         {
-            InliningUtil.replaceInvokeCallTarget(__invoke, __graph, InvokeKind.Special, __concrete);
+            InliningUtil.replaceInvokeCallTarget(__invoke, __graph, CallTargetNode.InvokeKind.Special, __concrete);
         }
 
         FixedWithNextNode __macroNode = createMacroNodeInstance(__macroNodeClass, __invoke);

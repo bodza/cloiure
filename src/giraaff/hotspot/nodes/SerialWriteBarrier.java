@@ -9,13 +9,13 @@ public final class SerialWriteBarrier extends ObjectWriteBarrier
     // @def
     public static final NodeClass<SerialWriteBarrier> TYPE = NodeClass.create(SerialWriteBarrier.class);
 
-    // @cons
+    // @cons SerialWriteBarrier
     public SerialWriteBarrier(AddressNode __address, boolean __precise)
     {
         this(TYPE, __address, __precise);
     }
 
-    // @cons
+    // @cons SerialWriteBarrier
     protected SerialWriteBarrier(NodeClass<? extends SerialWriteBarrier> __c, AddressNode __address, boolean __precise)
     {
         super(__c, __address, null, __precise);

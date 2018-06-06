@@ -16,14 +16,14 @@ public final class NodeMap<T> extends NodeIdAccessor implements EconomicMap<Node
     // @field
     protected Object[] ___values;
 
-    // @cons
+    // @cons NodeMap
     public NodeMap(Graph __graph)
     {
         super(__graph);
         this.___values = new Object[__graph.nodeIdCount()];
     }
 
-    // @cons
+    // @cons NodeMap
     public NodeMap(NodeMap<T> __copyFrom)
     {
         super(__copyFrom.___graph);

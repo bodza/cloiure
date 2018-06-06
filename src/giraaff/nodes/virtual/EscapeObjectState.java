@@ -1,16 +1,16 @@
 package giraaff.nodes.virtual;
 
-import giraaff.graph.Node.ValueNumberable;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.nodes.VirtualState;
 
 // @class EscapeObjectState
-public abstract class EscapeObjectState extends VirtualState implements ValueNumberable
+public abstract class EscapeObjectState extends VirtualState implements Node.ValueNumberable
 {
     // @def
     public static final NodeClass<EscapeObjectState> TYPE = NodeClass.create(EscapeObjectState.class);
 
-    @Input
+    @Node.Input
     // @field
     protected VirtualObjectNode ___object;
 
@@ -19,7 +19,7 @@ public abstract class EscapeObjectState extends VirtualState implements ValueNum
         return this.___object;
     }
 
-    // @cons
+    // @cons EscapeObjectState
     public EscapeObjectState(NodeClass<? extends EscapeObjectState> __c, VirtualObjectNode __object)
     {
         super(__c);
@@ -36,7 +36,7 @@ public abstract class EscapeObjectState extends VirtualState implements ValueNum
     }
 
     @Override
-    public void applyToVirtual(VirtualClosure __closure)
+    public void applyToVirtual(VirtualState.VirtualClosure __closure)
     {
         __closure.apply(this);
     }

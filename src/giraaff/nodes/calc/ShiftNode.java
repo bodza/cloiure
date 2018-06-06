@@ -5,7 +5,6 @@ import java.util.function.Function;
 import jdk.vm.ci.meta.JavaConstant;
 
 import giraaff.core.common.type.ArithmeticOpTable;
-import giraaff.core.common.type.ArithmeticOpTable.ShiftOp;
 import giraaff.core.common.type.IntegerStamp;
 import giraaff.core.common.type.Stamp;
 import giraaff.graph.NodeClass;
@@ -17,7 +16,7 @@ import giraaff.nodes.ValueNode;
 import giraaff.nodes.spi.ArithmeticLIRLowerable;
 
 ///
-// The {@code ShiftOp} class represents shift operations.
+// The {@code ArithmeticOpTable.ShiftOp} class represents shift operations.
 ///
 // @class ShiftNode
 public abstract class ShiftNode<OP> extends BinaryNode implements ArithmeticOperation, ArithmeticLIRLowerable, NarrowableArithmeticNode
@@ -27,12 +26,12 @@ public abstract class ShiftNode<OP> extends BinaryNode implements ArithmeticOper
     public static final NodeClass<ShiftNode> TYPE = NodeClass.create(ShiftNode.class);
 
     // @iface ShiftNode.SerializableShiftFunction
-    protected interface SerializableShiftFunction<T> extends Function<ArithmeticOpTable, ShiftOp<T>>
+    protected interface SerializableShiftFunction<T> extends Function<ArithmeticOpTable, ArithmeticOpTable.ShiftOp<T>>
     {
     }
 
     // @field
-    protected final SerializableShiftFunction<OP> ___getOp;
+    protected final ShiftNode.SerializableShiftFunction<OP> ___getOp;
 
     ///
     // Creates a new shift operation.
@@ -40,20 +39,20 @@ public abstract class ShiftNode<OP> extends BinaryNode implements ArithmeticOper
     // @param x the first input value
     // @param s the second input value
     ///
-    // @cons
-    protected ShiftNode(NodeClass<? extends ShiftNode<OP>> __c, SerializableShiftFunction<OP> __getOp, ValueNode __x, ValueNode __s)
+    // @cons ShiftNode
+    protected ShiftNode(NodeClass<? extends ShiftNode<OP>> __c, ShiftNode.SerializableShiftFunction<OP> __getOp, ValueNode __x, ValueNode __s)
     {
         super(__c, __getOp.apply(ArithmeticOpTable.forStamp(__x.stamp(NodeView.DEFAULT))).foldStamp(__x.stamp(NodeView.DEFAULT), (IntegerStamp) __s.stamp(NodeView.DEFAULT)), __x, __s);
         this.___getOp = __getOp;
     }
 
-    protected final ShiftOp<OP> getOp(ValueNode __forValue)
+    protected final ArithmeticOpTable.ShiftOp<OP> getOp(ValueNode __forValue)
     {
         return this.___getOp.apply(ArithmeticOpTable.forStamp(__forValue.stamp(NodeView.DEFAULT)));
     }
 
     @Override
-    public final ShiftOp<OP> getArithmeticOp()
+    public final ArithmeticOpTable.ShiftOp<OP> getArithmeticOp()
     {
         return getOp(getX());
     }
@@ -77,7 +76,7 @@ public abstract class ShiftNode<OP> extends BinaryNode implements ArithmeticOper
     }
 
     @SuppressWarnings("unused")
-    public static <OP> ValueNode canonical(ShiftOp<OP> __op, Stamp __stamp, ValueNode __forX, ValueNode __forY, NodeView __view)
+    public static <OP> ValueNode canonical(ArithmeticOpTable.ShiftOp<OP> __op, Stamp __stamp, ValueNode __forX, ValueNode __forY, NodeView __view)
     {
         if (__forX.isConstant() && __forY.isConstant())
         {

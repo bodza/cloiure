@@ -25,7 +25,7 @@ public final class StackInterval
     // @field
     private StackSlot ___location;
 
-    // @cons
+    // @cons StackInterval
     public StackInterval(VirtualStackSlot __operand, ValueKind<?> __kind)
     {
         super();

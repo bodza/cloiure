@@ -13,7 +13,7 @@ import giraaff.core.common.cfg.AbstractBlockBase;
 import giraaff.lir.LIRInsertionBuffer;
 import giraaff.lir.LIRInstruction;
 import giraaff.lir.LIRValueUtil;
-import giraaff.lir.gen.LIRGeneratorTool.MoveFactory;
+import giraaff.lir.gen.LIRGeneratorTool;
 
 ///
 // Converts phi instructions into moves.
@@ -53,7 +53,7 @@ public final class PhiResolver
         // The operands whose values are defined by the {@linkplain #operand source} operand.
         ///
         // @field
-        final ArrayList<PhiResolverNode> ___destinations;
+        final ArrayList<PhiResolver.PhiResolverNode> ___destinations;
 
         ///
         // Denotes if a move instruction has already been emitted to initialize the value of {@link #operand}.
@@ -73,7 +73,7 @@ public final class PhiResolver
         // @field
         boolean ___startNode;
 
-        // @cons
+        // @cons PhiResolver.PhiResolverNode
         PhiResolverNode(Value __operand)
         {
             super();
@@ -85,7 +85,7 @@ public final class PhiResolver
     // @field
     private final LIRGeneratorTool ___gen;
     // @field
-    private final MoveFactory ___moveFactory;
+    private final LIRGeneratorTool.MoveFactory ___moveFactory;
     // @field
     private final LIRInsertionBuffer ___buffer;
     // @field
@@ -95,21 +95,21 @@ public final class PhiResolver
     // The operand loop header phi for the operand currently being process in {@link #dispose()}.
     ///
     // @field
-    private PhiResolverNode ___loop;
+    private PhiResolver.PhiResolverNode ___loop;
 
     // @field
     private Value ___temp;
 
     // @field
-    private final ArrayList<PhiResolverNode> ___variableOperands = new ArrayList<>(3);
+    private final ArrayList<PhiResolver.PhiResolverNode> ___variableOperands = new ArrayList<>(3);
     // @field
-    private final ArrayList<PhiResolverNode> ___otherOperands = new ArrayList<>(3);
+    private final ArrayList<PhiResolver.PhiResolverNode> ___otherOperands = new ArrayList<>(3);
 
     ///
     // Maps operands to nodes.
     ///
     // @field
-    private final EconomicMap<Value, PhiResolverNode> ___operandToNodeMap = EconomicMap.create(Equivalence.DEFAULT);
+    private final EconomicMap<Value, PhiResolver.PhiResolverNode> ___operandToNodeMap = EconomicMap.create(Equivalence.DEFAULT);
 
     public static PhiResolver create(LIRGeneratorTool __gen)
     {
@@ -124,7 +124,7 @@ public final class PhiResolver
         return new PhiResolver(__gen, __buffer, __instructions, __insertBefore);
     }
 
-    // @cons
+    // @cons PhiResolver
     protected PhiResolver(LIRGeneratorTool __gen, LIRInsertionBuffer __buffer, List<LIRInstruction> __instructions, int __insertBefore)
     {
         super();
@@ -142,7 +142,7 @@ public final class PhiResolver
         // resolve any cycles in moves from and to variables
         for (int __i = this.___variableOperands.size() - 1; __i >= 0; __i--)
         {
-            PhiResolverNode __node = this.___variableOperands.get(__i);
+            PhiResolver.PhiResolverNode __node = this.___variableOperands.get(__i);
             if (!__node.___visited)
             {
                 this.___loop = null;
@@ -154,7 +154,7 @@ public final class PhiResolver
         // generate move for move from non variable to arbitrary destination
         for (int __i = this.___otherOperands.size() - 1; __i >= 0; __i--)
         {
-            PhiResolverNode __node = this.___otherOperands.get(__i);
+            PhiResolver.PhiResolverNode __node = this.___otherOperands.get(__i);
             for (int __j = __node.___destinations.size() - 1; __j >= 0; __j--)
             {
                 emitMove(__node.___destinations.get(__j).___operand, __node.___operand);
@@ -168,15 +168,15 @@ public final class PhiResolver
         sourceNode(__src).___destinations.add(destinationNode(__dst));
     }
 
-    private PhiResolverNode createNode(Value __operand, boolean __source)
+    private PhiResolver.PhiResolverNode createNode(Value __operand, boolean __source)
     {
-        PhiResolverNode __node;
+        PhiResolver.PhiResolverNode __node;
         if (LIRValueUtil.isVariable(__operand))
         {
             __node = this.___operandToNodeMap.get(__operand);
             if (__node == null)
             {
-                __node = new PhiResolverNode(__operand);
+                __node = new PhiResolver.PhiResolverNode(__operand);
                 this.___operandToNodeMap.put(__operand, __node);
             }
             // Make sure that all variables show up in the list when they are used as the source of a move.
@@ -190,13 +190,13 @@ public final class PhiResolver
         }
         else
         {
-            __node = new PhiResolverNode(__operand);
+            __node = new PhiResolver.PhiResolverNode(__operand);
             this.___otherOperands.add(__node);
         }
         return __node;
     }
 
-    private PhiResolverNode destinationNode(Value __opr)
+    private PhiResolver.PhiResolverNode destinationNode(Value __opr)
     {
         return createNode(__opr, false);
     }
@@ -214,7 +214,7 @@ public final class PhiResolver
     // ie. cycle a := b, b := a start with node a
     // Call graph: move(a, NULL) -> move(b, a) -> move(a, b)
     // Generates moves in this order: move b to temp, move a to b, move temp to a
-    private void move(PhiResolverNode __dest, PhiResolverNode __src)
+    private void move(PhiResolver.PhiResolverNode __dest, PhiResolver.PhiResolverNode __src)
     {
         if (!__dest.___visited)
         {
@@ -259,7 +259,7 @@ public final class PhiResolver
         emitMove(this.___temp, __src);
     }
 
-    private PhiResolverNode sourceNode(Value __opr)
+    private PhiResolver.PhiResolverNode sourceNode(Value __opr)
     {
         return createNode(__opr, true);
     }

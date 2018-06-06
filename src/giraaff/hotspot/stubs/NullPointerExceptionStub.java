@@ -14,7 +14,7 @@ import giraaff.util.GraalError;
 // @class NullPointerExceptionStub
 public final class NullPointerExceptionStub extends CreateExceptionStub
 {
-    // @cons
+    // @cons NullPointerExceptionStub
     public NullPointerExceptionStub(HotSpotProviders __providers, HotSpotForeignCallLinkage __linkage)
     {
         super("createNullPointerException", __providers, __linkage);
@@ -28,7 +28,7 @@ public final class NullPointerExceptionStub extends CreateExceptionStub
     }
 
     @Snippet
-    private static Object createNullPointerException(@ConstantParameter Register __threadRegister)
+    private static Object createNullPointerException(@Snippet.ConstantParameter Register __threadRegister)
     {
         return createException(__threadRegister, NullPointerException.class);
     }

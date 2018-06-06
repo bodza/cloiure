@@ -9,7 +9,7 @@ public final class LoopFragmentInsideBefore extends LoopFragmentInside
     // @field
     private final FixedNode ___point;
 
-    // @cons
+    // @cons LoopFragmentInsideBefore
     public LoopFragmentInsideBefore(LoopEx __loop, FixedNode __point)
     {
         super(__loop);
@@ -17,7 +17,7 @@ public final class LoopFragmentInsideBefore extends LoopFragmentInside
     }
 
     // duplicates lazily
-    // @cons
+    // @cons LoopFragmentInsideBefore
     public LoopFragmentInsideBefore(LoopFragmentInsideBefore __original)
     {
         super(__original);

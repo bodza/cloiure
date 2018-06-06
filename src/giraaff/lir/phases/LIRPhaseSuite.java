@@ -17,7 +17,7 @@ public class LIRPhaseSuite<C> extends LIRPhase<C>
     // @field
     private boolean ___immutable;
 
-    // @cons
+    // @cons LIRPhaseSuite
     public LIRPhaseSuite()
     {
         super();

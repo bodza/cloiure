@@ -23,8 +23,7 @@ import org.graalvm.collections.Equivalence;
 import giraaff.asm.AbstractAddress;
 import giraaff.asm.Assembler;
 import giraaff.code.CompilationResult;
-import giraaff.code.DataSection.Data;
-import giraaff.code.DataSection.RawData;
+import giraaff.code.DataSection;
 import giraaff.core.common.NumUtil;
 import giraaff.core.common.cfg.AbstractBlockBase;
 import giraaff.core.common.spi.ForeignCallsProvider;
@@ -53,7 +52,7 @@ public final class CompilationResultBuilder
         // @field
         public final LabelRef ___exceptionEdge;
 
-        // @cons
+        // @cons CompilationResultBuilder.ExceptionInfo
         ExceptionInfo(int __pcOffset, LabelRef __exceptionEdge)
         {
             super();
@@ -96,24 +95,24 @@ public final class CompilationResultBuilder
     public final FrameContext ___frameContext;
 
     // @field
-    private List<ExceptionInfo> ___exceptionInfoList;
+    private List<CompilationResultBuilder.ExceptionInfo> ___exceptionInfoList;
 
     // @field
-    private final EconomicMap<Constant, Data> ___dataCache;
+    private final EconomicMap<Constant, DataSection.Data> ___dataCache;
 
     // @field
     private Consumer<LIRInstruction> ___beforeOp;
     // @field
     private Consumer<LIRInstruction> ___afterOp;
 
-    // @cons
+    // @cons CompilationResultBuilder
     public CompilationResultBuilder(CodeCacheProvider __codeCache, ForeignCallsProvider __foreignCalls, FrameMap __frameMap, Assembler __asm, DataBuilder __dataBuilder, FrameContext __frameContext, CompilationResult __compilationResult)
     {
         this(__codeCache, __foreignCalls, __frameMap, __asm, __dataBuilder, __frameContext, __compilationResult, EconomicMap.create(Equivalence.DEFAULT));
     }
 
-    // @cons
-    public CompilationResultBuilder(CodeCacheProvider __codeCache, ForeignCallsProvider __foreignCalls, FrameMap __frameMap, Assembler __asm, DataBuilder __dataBuilder, FrameContext __frameContext, CompilationResult __compilationResult, EconomicMap<Constant, Data> __dataCache)
+    // @cons CompilationResultBuilder
+    public CompilationResultBuilder(CodeCacheProvider __codeCache, ForeignCallsProvider __foreignCalls, FrameMap __frameMap, Assembler __asm, DataBuilder __dataBuilder, FrameContext __frameContext, CompilationResult __compilationResult, EconomicMap<Constant, DataSection.Data> __dataCache)
     {
         super();
         this.___target = __codeCache.getTarget();
@@ -150,7 +149,7 @@ public final class CompilationResultBuilder
         // record exception handlers if they exist
         if (this.___exceptionInfoList != null)
         {
-            for (ExceptionInfo __ei : this.___exceptionInfoList)
+            for (CompilationResultBuilder.ExceptionInfo __ei : this.___exceptionInfoList)
             {
                 this.___compilationResult.recordExceptionHandler(__ei.___codeOffset, __ei.___exceptionEdge.label().position());
             }
@@ -176,7 +175,7 @@ public final class CompilationResultBuilder
                 {
                     this.___exceptionInfoList = new ArrayList<>(4);
                 }
-                this.___exceptionInfoList.add(new ExceptionInfo(__pcOffset, __info.___exceptionEdge));
+                this.___exceptionInfoList.add(new CompilationResultBuilder.ExceptionInfo(__pcOffset, __info.___exceptionEdge));
             }
         }
     }
@@ -197,7 +196,7 @@ public final class CompilationResultBuilder
         }
     }
 
-    public AbstractAddress recordDataSectionReference(Data __data)
+    public AbstractAddress recordDataSectionReference(DataSection.Data __data)
     {
         DataSectionReference __reference = this.___compilationResult.getDataSection().insertData(__data);
         int __instructionStart = this.___asm.position();
@@ -212,20 +211,20 @@ public final class CompilationResultBuilder
 
     public AbstractAddress recordDataReferenceInCode(Constant __constant, int __alignment)
     {
-        Data __data = createDataItem(__constant);
+        DataSection.Data __data = createDataItem(__constant);
         __data.updateAlignment(__alignment);
         return recordDataSectionReference(__data);
     }
 
-    public AbstractAddress recordDataReferenceInCode(Data __data, int __alignment)
+    public AbstractAddress recordDataReferenceInCode(DataSection.Data __data, int __alignment)
     {
         __data.updateAlignment(__alignment);
         return recordDataSectionReference(__data);
     }
 
-    public Data createDataItem(Constant __constant)
+    public DataSection.Data createDataItem(Constant __constant)
     {
-        Data __data = this.___dataCache.get(__constant);
+        DataSection.Data __data = this.___dataCache.get(__constant);
         if (__data == null)
         {
             __data = this.___dataBuilder.createDataItem(__constant);
@@ -236,7 +235,7 @@ public final class CompilationResultBuilder
 
     public AbstractAddress recordDataReferenceInCode(byte[] __data, int __alignment)
     {
-        return recordDataSectionReference(new RawData(__data, __alignment));
+        return recordDataSectionReference(new DataSection.RawData(__data, __alignment));
     }
 
     ///

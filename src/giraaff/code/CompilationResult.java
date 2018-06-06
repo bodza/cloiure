@@ -79,7 +79,7 @@ public final class CompilationResult
     // @field
     private boolean ___hasUnsafeAccess;
 
-    // @cons
+    // @cons CompilationResult
     public CompilationResult()
     {
         super();

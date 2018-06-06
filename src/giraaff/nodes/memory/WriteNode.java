@@ -22,14 +22,14 @@ public final class WriteNode extends AbstractWriteNode implements LIRLowerableAc
     // @def
     public static final NodeClass<WriteNode> TYPE = NodeClass.create(WriteNode.class);
 
-    // @cons
-    public WriteNode(AddressNode __address, LocationIdentity __location, ValueNode __value, BarrierType __barrierType)
+    // @cons WriteNode
+    public WriteNode(AddressNode __address, LocationIdentity __location, ValueNode __value, HeapAccess.BarrierType __barrierType)
     {
         super(TYPE, __address, __location, __value, __barrierType);
     }
 
-    // @cons
-    protected WriteNode(NodeClass<? extends WriteNode> __c, AddressNode __address, LocationIdentity __location, ValueNode __value, BarrierType __barrierType)
+    // @cons WriteNode
+    protected WriteNode(NodeClass<? extends WriteNode> __c, AddressNode __address, LocationIdentity __location, ValueNode __value, HeapAccess.BarrierType __barrierType)
     {
         super(__c, __address, __location, __value, __barrierType);
     }

@@ -1,6 +1,7 @@
 package giraaff.nodes;
 
 import giraaff.core.common.type.Stamp;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 
 ///
@@ -12,7 +13,7 @@ public abstract class FixedWithNextNode extends FixedNode
     // @def
     public static final NodeClass<FixedWithNextNode> TYPE = NodeClass.create(FixedWithNextNode.class);
 
-    @Successor
+    @Node.Successor
     // @field
     protected FixedNode ___next;
 
@@ -27,7 +28,7 @@ public abstract class FixedWithNextNode extends FixedNode
         this.___next = __x;
     }
 
-    // @cons
+    // @cons FixedWithNextNode
     public FixedWithNextNode(NodeClass<? extends FixedWithNextNode> __c, Stamp __stamp)
     {
         super(__c, __stamp);

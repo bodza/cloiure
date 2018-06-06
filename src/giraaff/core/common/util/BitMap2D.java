@@ -23,7 +23,7 @@ public final class BitMap2D
         return true;
     }
 
-    // @cons
+    // @cons BitMap2D
     public BitMap2D(int __sizeInSlots, int __bitsPerSlot)
     {
         super();

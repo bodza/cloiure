@@ -25,7 +25,7 @@ public final class ClassIsAssignableFromNode extends BinaryOpLogicNode implement
     // @def
     public static final NodeClass<ClassIsAssignableFromNode> TYPE = NodeClass.create(ClassIsAssignableFromNode.class);
 
-    // @cons
+    // @cons ClassIsAssignableFromNode
     public ClassIsAssignableFromNode(ValueNode __thisClass, ValueNode __otherClass)
     {
         super(TYPE, __thisClass, __otherClass);

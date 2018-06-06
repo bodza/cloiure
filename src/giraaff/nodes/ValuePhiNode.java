@@ -1,6 +1,7 @@
 package giraaff.nodes;
 
 import giraaff.core.common.type.Stamp;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.graph.NodeInputList;
 import giraaff.nodes.spi.ArrayLengthProvider;
@@ -16,24 +17,24 @@ public final class ValuePhiNode extends PhiNode implements ArrayLengthProvider
     // @def
     public static final NodeClass<ValuePhiNode> TYPE = NodeClass.create(ValuePhiNode.class);
 
-    @Input
+    @Node.Input
     // @field
     protected NodeInputList<ValueNode> ___values;
 
-    // @cons
+    // @cons ValuePhiNode
     public ValuePhiNode(Stamp __stamp, AbstractMergeNode __merge)
     {
         this(TYPE, __stamp, __merge);
     }
 
-    // @cons
+    // @cons ValuePhiNode
     protected ValuePhiNode(NodeClass<? extends ValuePhiNode> __c, Stamp __stamp, AbstractMergeNode __merge)
     {
         super(__c, __stamp, __merge);
         this.___values = new NodeInputList<>(this);
     }
 
-    // @cons
+    // @cons ValuePhiNode
     public ValuePhiNode(Stamp __stamp, AbstractMergeNode __merge, ValueNode[] __values)
     {
         super(TYPE, __stamp, __merge);

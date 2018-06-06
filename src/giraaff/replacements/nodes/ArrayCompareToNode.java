@@ -42,31 +42,31 @@ public final class ArrayCompareToNode extends FixedWithNextNode implements LIRLo
     protected final JavaKind ___kind2;
 
     /// One array to be tested for equality.
-    @Input
+    @Node.Input
     // @field
     ValueNode ___array1;
 
     /// The other array to be tested for equality.
-    @Input
+    @Node.Input
     // @field
     ValueNode ___array2;
 
     /// Length of one array.
-    @Input
+    @Node.Input
     // @field
     ValueNode ___length1;
 
     /// Length of the other array.
-    @Input
+    @Node.Input
     // @field
     ValueNode ___length2;
 
-    @OptionalInput(InputType.Memory)
+    @Node.OptionalInput(InputType.Memory)
     // @field
     MemoryNode ___lastLocationAccess;
 
-    // @cons
-    public ArrayCompareToNode(ValueNode __array1, ValueNode __array2, ValueNode __length1, ValueNode __length2, @ConstantNodeParameter JavaKind __kind1, @ConstantNodeParameter JavaKind __kind2)
+    // @cons ArrayCompareToNode
+    public ArrayCompareToNode(ValueNode __array1, ValueNode __array2, ValueNode __length1, ValueNode __length2, @Node.ConstantNodeParameter JavaKind __kind1, @Node.ConstantNodeParameter JavaKind __kind2)
     {
         super(TYPE, StampFactory.forKind(JavaKind.Int));
         this.___kind1 = __kind1;
@@ -105,8 +105,8 @@ public final class ArrayCompareToNode extends FixedWithNextNode implements LIRLo
         }
     }
 
-    @NodeIntrinsic
-    public static native int compareTo(Object __array1, Object __array2, int __length1, int __length2, @ConstantNodeParameter JavaKind __kind1, @ConstantNodeParameter JavaKind __kind2);
+    @Node.NodeIntrinsic
+    public static native int compareTo(Object __array1, Object __array2, int __length1, int __length2, @Node.ConstantNodeParameter JavaKind __kind1, @Node.ConstantNodeParameter JavaKind __kind2);
 
     @Override
     public void generate(NodeLIRBuilderTool __gen)

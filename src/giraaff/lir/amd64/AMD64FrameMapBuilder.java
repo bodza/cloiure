@@ -10,7 +10,7 @@ import giraaff.lir.framemap.FrameMapBuilderImpl;
 // @class AMD64FrameMapBuilder
 public final class AMD64FrameMapBuilder extends FrameMapBuilderImpl
 {
-    // @cons
+    // @cons AMD64FrameMapBuilder
     public AMD64FrameMapBuilder(FrameMap __frameMap, CodeCacheProvider __codeCache, RegisterConfig __registerConfig)
     {
         super(__frameMap, __codeCache, __registerConfig);

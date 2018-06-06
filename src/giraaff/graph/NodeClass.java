@@ -19,17 +19,11 @@ import giraaff.core.common.FieldIntrospection;
 import giraaff.core.common.Fields;
 import giraaff.core.common.FieldsScanner;
 import giraaff.graph.Edges;
-import giraaff.graph.Edges.Type;
-import giraaff.graph.Graph.DuplicationReplacement;
+import giraaff.graph.Graph;
 import giraaff.graph.InputEdges;
 import giraaff.graph.Node;
-import giraaff.graph.Node.EdgeVisitor;
-import giraaff.graph.Node.Input;
-import giraaff.graph.Node.OptionalInput;
-import giraaff.graph.Node.Successor;
 import giraaff.graph.iterators.NodeIterable;
 import giraaff.graph.spi.Canonicalizable;
-import giraaff.graph.spi.Canonicalizable.BinaryCommutative;
 import giraaff.graph.spi.Simplifiable;
 import giraaff.nodeinfo.InputType;
 import giraaff.util.GraalError;
@@ -38,7 +32,7 @@ import giraaff.util.UnsafeAccess;
 ///
 // Metadata for every {@link Node} type. The metadata includes:
 //
-// <li>The offsets of fields annotated with {@link Input} and {@link Successor} as well as methods
+// <li>The offsets of fields annotated with {@link Node.Input} and {@link Node.Successor} as well as methods
 // for iterating over such fields.</li>
 // <li>The identifier for an {@link IterableNodeType} class.</li>
 ///
@@ -142,7 +136,7 @@ public final class NodeClass<T> extends FieldIntrospection<T>
     private final boolean ___isCanonicalizable;
 
     ///
-    // Determines if this node type implements {@link BinaryCommutative}.
+    // Determines if this node type implements {@link Canonicalizable.BinaryCommutative}.
     ///
     // @field
     private final boolean ___isCommutative;
@@ -158,24 +152,24 @@ public final class NodeClass<T> extends FieldIntrospection<T>
     // @field
     private final int ___leafId;
 
-    // @cons
+    // @cons NodeClass
     public NodeClass(Class<T> __clazz, NodeClass<? super T> __superNodeClass)
     {
         this(__clazz, __superNodeClass, new FieldsScanner.DefaultCalcOffset(), null, 0);
     }
 
-    // @cons
+    // @cons NodeClass
     public NodeClass(Class<T> __clazz, NodeClass<? super T> __superNodeClass, FieldsScanner.CalcOffset __calcOffset, int[] __presetIterableIds, int __presetIterableId)
     {
         super(__clazz);
         this.___superNodeClass = __superNodeClass;
 
         this.___isCanonicalizable = Canonicalizable.class.isAssignableFrom(__clazz);
-        this.___isCommutative = BinaryCommutative.class.isAssignableFrom(__clazz);
+        this.___isCommutative = Canonicalizable.BinaryCommutative.class.isAssignableFrom(__clazz);
 
         this.___isSimplifiable = Simplifiable.class.isAssignableFrom(__clazz);
 
-        NodeFieldsScanner __fs = new NodeFieldsScanner(__calcOffset, __superNodeClass);
+        NodeClass.NodeFieldsScanner __fs = new NodeClass.NodeFieldsScanner(__calcOffset, __superNodeClass);
         __fs.scan(__clazz, __clazz.getSuperclass(), false);
 
         this.___successors = new SuccessorEdges(__fs.___directSuccessors, __fs.___successors);
@@ -225,7 +219,7 @@ public final class NodeClass<T> extends FieldIntrospection<T>
         }
     }
 
-    public static long computeIterationMask(Type __type, int __directCount, long[] __offsets)
+    public static long computeIterationMask(Edges.EdgesType __type, int __directCount, long[] __offsets)
     {
         long __mask = 0;
         if (__offsets.length > NodeClass.MAX_EDGES)
@@ -329,7 +323,7 @@ public final class NodeClass<T> extends FieldIntrospection<T>
     }
 
     ///
-    // Determines if this node type implements {@link BinaryCommutative}.
+    // Determines if this node type implements {@link Canonicalizable.BinaryCommutative}.
     ///
     public boolean isCommutative()
     {
@@ -360,7 +354,7 @@ public final class NodeClass<T> extends FieldIntrospection<T>
     // @class NodeClass.EdgeInfo
     protected static class EdgeInfo extends FieldsScanner.FieldInfo
     {
-        // @cons
+        // @cons NodeClass.EdgeInfo
         public EdgeInfo(long __offset, String __name, Class<?> __type, Class<?> __declaringClass)
         {
             super(__offset, __name, __type, __declaringClass);
@@ -391,17 +385,17 @@ public final class NodeClass<T> extends FieldIntrospection<T>
     }
 
     ///
-    // Describes a field representing an {@linkplain Type#Inputs input} edge in a node.
+    // Describes a field representing an {@linkplain Edges.EdgesType#Inputs input} edge in a node.
     ///
     // @class NodeClass.InputInfo
-    protected static final class InputInfo extends EdgeInfo
+    protected static final class InputInfo extends NodeClass.EdgeInfo
     {
         // @field
         final InputType ___inputType;
         // @field
         final boolean ___optional;
 
-        // @cons
+        // @cons NodeClass.InputInfo
         public InputInfo(long __offset, String __name, Class<?> __type, Class<?> __declaringClass, InputType __inputType, boolean __optional)
         {
             super(__offset, __name, __type, __declaringClass);
@@ -414,15 +408,15 @@ public final class NodeClass<T> extends FieldIntrospection<T>
     protected static final class NodeFieldsScanner extends FieldsScanner
     {
         // @field
-        public final ArrayList<InputInfo> ___inputs = new ArrayList<>();
+        public final ArrayList<NodeClass.InputInfo> ___inputs = new ArrayList<>();
         // @field
-        public final ArrayList<EdgeInfo> ___successors = new ArrayList<>();
+        public final ArrayList<NodeClass.EdgeInfo> ___successors = new ArrayList<>();
         // @field
         int ___directInputs;
         // @field
         int ___directSuccessors;
 
-        // @cons
+        // @cons NodeClass.NodeFieldsScanner
         protected NodeFieldsScanner(FieldsScanner.CalcOffset __calc, NodeClass<?> __superNodeClass)
         {
             super(__calc);
@@ -439,9 +433,9 @@ public final class NodeClass<T> extends FieldIntrospection<T>
         @Override
         protected void scanField(Field __field, long __offset)
         {
-            Input __inputAnnotation = getAnnotationTimed(__field, Node.Input.class);
-            OptionalInput __optionalInputAnnotation = getAnnotationTimed(__field, Node.OptionalInput.class);
-            Successor __successorAnnotation = getAnnotationTimed(__field, Successor.class);
+            Node.Input __inputAnnotation = getAnnotationTimed(__field, Node.Input.class);
+            Node.OptionalInput __optionalInputAnnotation = getAnnotationTimed(__field, Node.OptionalInput.class);
+            Node.Successor __successorAnnotation = getAnnotationTimed(__field, Node.Successor.class);
 
             Class<?> __type = __field.getType();
             int __modifiers = __field.getModifiers();
@@ -469,7 +463,7 @@ public final class NodeClass<T> extends FieldIntrospection<T>
                 {
                     __inputType = __optionalInputAnnotation.value();
                 }
-                this.___inputs.add(new InputInfo(__offset, __field.getName(), __type, __field.getDeclaringClass(), __inputType, __field.isAnnotationPresent(Node.OptionalInput.class)));
+                this.___inputs.add(new NodeClass.InputInfo(__offset, __field.getName(), __type, __field.getDeclaringClass(), __inputType, __field.isAnnotationPresent(Node.OptionalInput.class)));
             }
             else if (__successorAnnotation != null)
             {
@@ -485,7 +479,7 @@ public final class NodeClass<T> extends FieldIntrospection<T>
                     GraalError.guarantee(!Modifier.isFinal(__modifiers), "Node successor field %s should not be final", __field);
                     this.___directSuccessors++;
                 }
-                this.___successors.add(new EdgeInfo(__offset, __field.getName(), __type, __field.getDeclaringClass()));
+                this.___successors.add(new NodeClass.EdgeInfo(__offset, __field.getName(), __type, __field.getDeclaringClass()));
             }
             else
             {
@@ -790,10 +784,10 @@ public final class NodeClass<T> extends FieldIntrospection<T>
         return __toEdges.isSame(__fromEdges, __pos.getIndex());
     }
 
-    static void updateEdgesInPlace(Node __node, InplaceUpdateClosure __duplicationReplacement, Edges __edges)
+    static void updateEdgesInPlace(Node __node, NodeClass.InplaceUpdateClosure __duplicationReplacement, Edges __edges)
     {
         int __index = 0;
-        Type __curType = __edges.type();
+        Edges.EdgesType __curType = __edges.type();
         int __directCount = __edges.getDirectCount();
         final long[] __curOffsets = __edges.getOffsets();
         while (__index < __directCount)
@@ -802,7 +796,7 @@ public final class NodeClass<T> extends FieldIntrospection<T>
             if (__edge != null)
             {
                 Node __newEdge = __duplicationReplacement.replacement(__edge, __curType);
-                if (__curType == Edges.Type.Inputs)
+                if (__curType == Edges.EdgesType.Inputs)
                 {
                     __node.updateUsages(null, __newEdge);
                 }
@@ -826,15 +820,15 @@ public final class NodeClass<T> extends FieldIntrospection<T>
         }
     }
 
-    void updateInputSuccInPlace(Node __node, InplaceUpdateClosure __duplicationReplacement)
+    void updateInputSuccInPlace(Node __node, NodeClass.InplaceUpdateClosure __duplicationReplacement)
     {
         updateEdgesInPlace(__node, __duplicationReplacement, this.___inputs);
         updateEdgesInPlace(__node, __duplicationReplacement, this.___successors);
     }
 
-    private static NodeList<Node> updateEdgeListCopy(Node __node, NodeList<Node> __list, InplaceUpdateClosure __duplicationReplacement, Edges.Type __type)
+    private static NodeList<Node> updateEdgeListCopy(Node __node, NodeList<Node> __list, NodeClass.InplaceUpdateClosure __duplicationReplacement, Edges.EdgesType __type)
     {
-        NodeList<Node> __result = __type == Edges.Type.Inputs ? new NodeInputList<>(__node, __list.size()) : new NodeSuccessorList<>(__node, __list.size());
+        NodeList<Node> __result = __type == Edges.EdgesType.Inputs ? new NodeInputList<>(__node, __list.size()) : new NodeSuccessorList<>(__node, __list.size());
 
         for (int __i = 0; __i < __list.count(); ++__i)
         {
@@ -851,9 +845,9 @@ public final class NodeClass<T> extends FieldIntrospection<T>
     ///
     // Gets the input or successor edges defined by this node class.
     ///
-    public Edges getEdges(Edges.Type __type)
+    public Edges getEdges(Edges.EdgesType __type)
     {
-        return __type == Edges.Type.Inputs ? this.___inputs : this.___successors;
+        return __type == Edges.EdgesType.Inputs ? this.___inputs : this.___successors;
     }
 
     public Edges getInputEdges()
@@ -892,10 +886,10 @@ public final class NodeClass<T> extends FieldIntrospection<T>
     // @iface NodeClass.InplaceUpdateClosure
     interface InplaceUpdateClosure
     {
-        Node replacement(Node __node, Edges.Type __type);
+        Node replacement(Node __node, Edges.EdgesType __type);
     }
 
-    static EconomicMap<Node, Node> addGraphDuplicate(final Graph __graph, final Graph __oldGraph, int __estimatedNodeCount, Iterable<? extends Node> __nodes, final DuplicationReplacement __replacements)
+    static EconomicMap<Node, Node> addGraphDuplicate(final Graph __graph, final Graph __oldGraph, int __estimatedNodeCount, Iterable<? extends Node> __nodes, final Graph.DuplicationReplacement __replacements)
     {
         final EconomicMap<Node, Node> __newNodes;
         int __denseThreshold = __oldGraph.getNodeCount() + __oldGraph.getNodesDeletedSinceLastCompression() >> 4;
@@ -912,10 +906,10 @@ public final class NodeClass<T> extends FieldIntrospection<T>
         createNodeDuplicates(__graph, __nodes, __replacements, __newNodes);
 
         // @closure
-        InplaceUpdateClosure replacementClosure = new InplaceUpdateClosure()
+        NodeClass.InplaceUpdateClosure replacementClosure = new NodeClass.InplaceUpdateClosure()
         {
             @Override
-            public Node replacement(Node __node, Edges.Type __type)
+            public Node replacement(Node __node, Edges.EdgesType __type)
             {
                 Node __target = __newNodes.get(__node);
                 if (__target == null)
@@ -929,7 +923,7 @@ public final class NodeClass<T> extends FieldIntrospection<T>
                     {
                         __target = __replacement;
                     }
-                    else if (__node.graph() == __graph && __type == Edges.Type.Inputs)
+                    else if (__node.graph() == __graph && __type == Edges.EdgesType.Inputs)
                     {
                         // patch to the outer world
                         __target = __node;
@@ -957,7 +951,7 @@ public final class NodeClass<T> extends FieldIntrospection<T>
         return __newNodes;
     }
 
-    private static void createNodeDuplicates(final Graph __graph, Iterable<? extends Node> __nodes, final DuplicationReplacement __replacements, final EconomicMap<Node, Node> __newNodes)
+    private static void createNodeDuplicates(final Graph __graph, Iterable<? extends Node> __nodes, final Graph.DuplicationReplacement __replacements, final EconomicMap<Node, Node> __newNodes)
     {
         for (Node __node : __nodes)
         {
@@ -981,13 +975,13 @@ public final class NodeClass<T> extends FieldIntrospection<T>
         }
     }
 
-    private static void transferEdgesDifferentNodeClass(final Graph __graph, final DuplicationReplacement __replacements, final EconomicMap<Node, Node> __newNodes, Node __oldNode, Node __node)
+    private static void transferEdgesDifferentNodeClass(final Graph __graph, final Graph.DuplicationReplacement __replacements, final EconomicMap<Node, Node> __newNodes, Node __oldNode, Node __node)
     {
-        transferEdges(__graph, __replacements, __newNodes, __oldNode, __node, Edges.Type.Inputs);
-        transferEdges(__graph, __replacements, __newNodes, __oldNode, __node, Edges.Type.Successors);
+        transferEdges(__graph, __replacements, __newNodes, __oldNode, __node, Edges.EdgesType.Inputs);
+        transferEdges(__graph, __replacements, __newNodes, __oldNode, __node, Edges.EdgesType.Successors);
     }
 
-    private static void transferEdges(final Graph __graph, final DuplicationReplacement __replacements, final EconomicMap<Node, Node> __newNodes, Node __oldNode, Node __node, Edges.Type __type)
+    private static void transferEdges(final Graph __graph, final Graph.DuplicationReplacement __replacements, final EconomicMap<Node, Node> __newNodes, Node __oldNode, Node __node, Edges.EdgesType __type)
     {
         NodeClass<?> __nodeClass = __node.getNodeClass();
         NodeClass<?> __oldNodeClass = __oldNode.getNodeClass();
@@ -1013,7 +1007,7 @@ public final class NodeClass<T> extends FieldIntrospection<T>
                     {
                         __target = __replacement;
                     }
-                    else if (__type == Edges.Type.Inputs && __oldEdge.graph() == __graph)
+                    else if (__type == Edges.EdgesType.Inputs && __oldEdge.graph() == __graph)
                     {
                         // patch to the outer world
                         __target = __oldEdge;
@@ -1063,7 +1057,7 @@ public final class NodeClass<T> extends FieldIntrospection<T>
         // @field
         protected Node ___nextValue;
 
-        // @cons
+        // @cons NodeClass.RawEdgesIterator
         RawEdgesIterator(Node __node, long __mask)
         {
             super();
@@ -1204,7 +1198,7 @@ public final class NodeClass<T> extends FieldIntrospection<T>
             @Override
             public Iterator<Node> iterator()
             {
-                return new RawEdgesIterator(__node, __mask);
+                return new NodeClass.RawEdgesIterator(__node, __mask);
             }
         };
     }
@@ -1218,7 +1212,7 @@ public final class NodeClass<T> extends FieldIntrospection<T>
             @Override
             public Iterator<Node> iterator()
             {
-                return new RawEdgesIterator(__node, __mask);
+                return new NodeClass.RawEdgesIterator(__node, __mask);
             }
         };
     }
@@ -1300,17 +1294,17 @@ public final class NodeClass<T> extends FieldIntrospection<T>
         }
     }
 
-    public void applySuccessors(Node __node, EdgeVisitor __consumer)
+    public void applySuccessors(Node __node, Node.EdgeVisitor __consumer)
     {
         applyEdges(__node, __consumer, this.___successorIteration);
     }
 
-    public void applyInputs(Node __node, EdgeVisitor __consumer)
+    public void applyInputs(Node __node, Node.EdgeVisitor __consumer)
     {
         applyEdges(__node, __consumer, this.___inputsIteration);
     }
 
-    private static void applyEdges(Node __node, EdgeVisitor __consumer, long __mask)
+    private static void applyEdges(Node __node, Node.EdgeVisitor __consumer, long __mask)
     {
         long __myMask = __mask;
         while (__myMask != 0)
@@ -1336,7 +1330,7 @@ public final class NodeClass<T> extends FieldIntrospection<T>
         }
     }
 
-    private static void applyHelper(Node __node, EdgeVisitor __consumer, long __offset)
+    private static void applyHelper(Node __node, Node.EdgeVisitor __consumer, long __offset)
     {
         NodeList<Node> __list = Edges.getNodeListUnsafe(__node, __offset);
         if (__list != null)

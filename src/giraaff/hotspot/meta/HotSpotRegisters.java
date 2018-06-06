@@ -12,7 +12,7 @@ public final class HotSpotRegisters implements HotSpotRegistersProvider
     // @field
     private final Register ___stackPointerRegister;
 
-    // @cons
+    // @cons HotSpotRegisters
     public HotSpotRegisters(Register __threadRegister, Register __heapBaseRegister, Register __stackPointerRegister)
     {
         super();

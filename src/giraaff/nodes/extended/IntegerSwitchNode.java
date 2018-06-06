@@ -45,14 +45,14 @@ public final class IntegerSwitchNode extends SwitchNode implements LIRLowerable,
     // @field
     protected final int[] ___keys;
 
-    // @cons
+    // @cons IntegerSwitchNode
     public IntegerSwitchNode(ValueNode __value, AbstractBeginNode[] __successors, int[] __keys, double[] __keyProbabilities, int[] __keySuccessors)
     {
         super(TYPE, __value, __successors, __keySuccessors, __keyProbabilities);
         this.___keys = __keys;
     }
 
-    // @cons
+    // @cons IntegerSwitchNode
     public IntegerSwitchNode(ValueNode __value, int __successorCount, int[] __keys, double[] __keyProbabilities, int[] __keySuccessors)
     {
         this(__value, new AbstractBeginNode[__successorCount], __keys, __keyProbabilities, __keySuccessors);
@@ -149,7 +149,7 @@ public final class IntegerSwitchNode extends SwitchNode implements LIRLowerable,
         // @field
         final int ___keySuccessor;
 
-        // @cons
+        // @cons IntegerSwitchNode.KeyData
         KeyData(int __key, double __keyProbability, int __keySuccessor)
         {
             super();
@@ -175,13 +175,13 @@ public final class IntegerSwitchNode extends SwitchNode implements LIRLowerable,
             return false;
         }
 
-        List<KeyData> __newKeyDatas = new ArrayList<>(this.___keys.length);
+        List<IntegerSwitchNode.KeyData> __newKeyDatas = new ArrayList<>(this.___keys.length);
         ArrayList<AbstractBeginNode> __newSuccessors = new ArrayList<>(blockSuccessorCount());
         for (int __i = 0; __i < this.___keys.length; __i++)
         {
             if (__integerStamp.contains(this.___keys[__i]) && keySuccessor(__i) != defaultSuccessor())
             {
-                __newKeyDatas.add(new KeyData(this.___keys[__i], this.___keyProbabilities[__i], addNewSuccessor(keySuccessor(__i), __newSuccessors)));
+                __newKeyDatas.add(new IntegerSwitchNode.KeyData(this.___keys[__i], this.___keyProbabilities[__i], addNewSuccessor(keySuccessor(__i), __newSuccessors)));
             }
         }
 
@@ -267,7 +267,7 @@ public final class IntegerSwitchNode extends SwitchNode implements LIRLowerable,
         }
 
         // Build high-level representation of new switch keys.
-        List<KeyData> __newKeyDatas = new ArrayList<>(__arrayLength);
+        List<IntegerSwitchNode.KeyData> __newKeyDatas = new ArrayList<>(__arrayLength);
         ArrayList<AbstractBeginNode> __newSuccessors = new ArrayList<>(blockSuccessorCount());
         for (int __i = 0; __i < this.___keys.length; __i++)
         {
@@ -285,7 +285,7 @@ public final class IntegerSwitchNode extends SwitchNode implements LIRLowerable,
 
             for (int __newKey : __newKeys)
             {
-                __newKeyDatas.add(new KeyData(__newKey, __newKeyProbability, __newKeySuccessor));
+                __newKeyDatas.add(new IntegerSwitchNode.KeyData(__newKey, __newKeyProbability, __newKeySuccessor));
             }
         }
 
@@ -317,7 +317,7 @@ public final class IntegerSwitchNode extends SwitchNode implements LIRLowerable,
         return __index;
     }
 
-    private void doReplace(ValueNode __newValue, List<KeyData> __newKeyDatas, ArrayList<AbstractBeginNode> __newSuccessors, int __newDefaultSuccessor, double __newDefaultProbability)
+    private void doReplace(ValueNode __newValue, List<IntegerSwitchNode.KeyData> __newKeyDatas, ArrayList<AbstractBeginNode> __newSuccessors, int __newDefaultSuccessor, double __newDefaultProbability)
     {
         // Sort the new keys (invariant of the IntegerSwitchNode).
         __newKeyDatas.sort(Comparator.comparingInt(__k -> __k.___key));
@@ -330,7 +330,7 @@ public final class IntegerSwitchNode extends SwitchNode implements LIRLowerable,
 
         for (int __i = 0; __i < __newKeyCount; __i++)
         {
-            KeyData __keyData = __newKeyDatas.get(__i);
+            IntegerSwitchNode.KeyData __keyData = __newKeyDatas.get(__i);
             __newKeys[__i] = __keyData.___key;
             __newKeyProbabilities[__i] = __keyData.___keyProbability;
             __newKeySuccessors[__i] = __keyData.___keySuccessor;

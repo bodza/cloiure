@@ -13,7 +13,7 @@ import giraaff.core.common.CompressEncoding;
 // @class HotSpotRuntime
 public final class HotSpotRuntime
 {
-    // @cons
+    // @cons HotSpotRuntime
     private HotSpotRuntime()
     {
         super();

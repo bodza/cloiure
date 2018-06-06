@@ -66,25 +66,25 @@ public final class HotSpotInvokeDynamicPlugin implements InvokeDynamicPlugin
     }
 
     // @field
-    private final DynamicTypeStore ___dynoStore;
+    private final HotSpotInvokeDynamicPlugin.DynamicTypeStore ___dynoStore;
     // @field
     private final boolean ___treatAppendixAsConstant;
 
-    // @cons
-    public HotSpotInvokeDynamicPlugin(DynamicTypeStore __dynoStore, boolean __treatAppendixAsConstant)
+    // @cons HotSpotInvokeDynamicPlugin
+    public HotSpotInvokeDynamicPlugin(HotSpotInvokeDynamicPlugin.DynamicTypeStore __dynoStore, boolean __treatAppendixAsConstant)
     {
         super();
         this.___dynoStore = __dynoStore;
         this.___treatAppendixAsConstant = __treatAppendixAsConstant;
     }
 
-    // @cons
-    public HotSpotInvokeDynamicPlugin(DynamicTypeStore __dynoStore)
+    // @cons HotSpotInvokeDynamicPlugin
+    public HotSpotInvokeDynamicPlugin(HotSpotInvokeDynamicPlugin.DynamicTypeStore __dynoStore)
     {
         this(__dynoStore, true);
     }
 
-    // @cons
+    // @cons HotSpotInvokeDynamicPlugin
     public HotSpotInvokeDynamicPlugin()
     {
         this(null);
@@ -110,7 +110,7 @@ public final class HotSpotInvokeDynamicPlugin implements InvokeDynamicPlugin
         return __opcode == Bytecodes.INVOKEDYNAMIC || isResolvedDynamicInvokeMH != null;
     }
 
-    public DynamicTypeStore getDynamicTypeStore()
+    public HotSpotInvokeDynamicPlugin.DynamicTypeStore getDynamicTypeStore()
     {
         return this.___dynoStore;
     }

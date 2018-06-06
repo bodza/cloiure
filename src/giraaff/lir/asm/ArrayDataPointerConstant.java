@@ -15,14 +15,14 @@ public final class ArrayDataPointerConstant extends DataPointerConstant
     // @field
     private final byte[] ___data;
 
-    // @cons
+    // @cons ArrayDataPointerConstant
     public ArrayDataPointerConstant(byte[] __array, int __alignment)
     {
         super(__alignment);
         this.___data = __array.clone();
     }
 
-    // @cons
+    // @cons ArrayDataPointerConstant
     public ArrayDataPointerConstant(short[] __array, int __alignment)
     {
         super(__alignment);
@@ -32,7 +32,7 @@ public final class ArrayDataPointerConstant extends DataPointerConstant
         this.___data = __byteBuffer.array();
     }
 
-    // @cons
+    // @cons ArrayDataPointerConstant
     public ArrayDataPointerConstant(int[] __array, int __alignment)
     {
         super(__alignment);
@@ -42,7 +42,7 @@ public final class ArrayDataPointerConstant extends DataPointerConstant
         this.___data = __byteBuffer.array();
     }
 
-    // @cons
+    // @cons ArrayDataPointerConstant
     public ArrayDataPointerConstant(float[] __array, int __alignment)
     {
         super(__alignment);
@@ -52,7 +52,7 @@ public final class ArrayDataPointerConstant extends DataPointerConstant
         this.___data = __byteBuffer.array();
     }
 
-    // @cons
+    // @cons ArrayDataPointerConstant
     public ArrayDataPointerConstant(double[] __array, int __alignment)
     {
         super(__alignment);
@@ -62,7 +62,7 @@ public final class ArrayDataPointerConstant extends DataPointerConstant
         this.___data = __byteBuffer.array();
     }
 
-    // @cons
+    // @cons ArrayDataPointerConstant
     public ArrayDataPointerConstant(long[] __array, int __alignment)
     {
         super(__alignment);

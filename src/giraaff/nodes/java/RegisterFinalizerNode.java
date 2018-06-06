@@ -6,6 +6,7 @@ import jdk.vm.ci.meta.Assumptions.AssumptionResult;
 import giraaff.core.common.spi.ForeignCallLinkage;
 import giraaff.core.common.type.ObjectStamp;
 import giraaff.core.common.type.StampFactory;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.graph.spi.Canonicalizable;
 import giraaff.graph.spi.CanonicalizerTool;
@@ -31,14 +32,14 @@ public final class RegisterFinalizerNode extends AbstractStateSplit implements C
     // @def
     public static final NodeClass<RegisterFinalizerNode> TYPE = NodeClass.create(RegisterFinalizerNode.class);
 
-    @OptionalInput(InputType.State)
+    @Node.OptionalInput(InputType.StateI)
     // @field
     FrameState ___deoptState;
-    @Input
+    @Node.Input
     // @field
     ValueNode ___value;
 
-    // @cons
+    // @cons RegisterFinalizerNode
     public RegisterFinalizerNode(ValueNode __value)
     {
         super(TYPE, StampFactory.forVoid());
@@ -116,6 +117,6 @@ public final class RegisterFinalizerNode extends AbstractStateSplit implements C
         return true;
     }
 
-    @NodeIntrinsic
+    @Node.NodeIntrinsic
     public static native void register(Object __thisObj);
 }

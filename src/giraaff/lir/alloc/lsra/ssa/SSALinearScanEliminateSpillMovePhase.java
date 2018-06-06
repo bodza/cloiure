@@ -2,8 +2,7 @@ package giraaff.lir.alloc.lsra.ssa;
 
 import giraaff.core.common.cfg.AbstractBlockBase;
 import giraaff.lir.LIRInstruction;
-import giraaff.lir.StandardOp.LabelOp;
-import giraaff.lir.StandardOp.MoveOp;
+import giraaff.lir.StandardOp;
 import giraaff.lir.alloc.lsra.Interval;
 import giraaff.lir.alloc.lsra.LinearScan;
 import giraaff.lir.alloc.lsra.LinearScanEliminateSpillMovePhase;
@@ -11,7 +10,7 @@ import giraaff.lir.alloc.lsra.LinearScanEliminateSpillMovePhase;
 // @class SSALinearScanEliminateSpillMovePhase
 public final class SSALinearScanEliminateSpillMovePhase extends LinearScanEliminateSpillMovePhase
 {
-    // @cons
+    // @cons SSALinearScanEliminateSpillMovePhase
     SSALinearScanEliminateSpillMovePhase(LinearScan __allocator)
     {
         super(__allocator);
@@ -25,7 +24,7 @@ public final class SSALinearScanEliminateSpillMovePhase extends LinearScanElimin
     }
 
     @Override
-    protected boolean canEliminateSpillMove(AbstractBlockBase<?> __block, MoveOp __move)
+    protected boolean canEliminateSpillMove(AbstractBlockBase<?> __block, StandardOp.MoveOp __move)
     {
         if (super.canEliminateSpillMove(__block, __move))
         {
@@ -39,7 +38,7 @@ public final class SSALinearScanEliminateSpillMovePhase extends LinearScanElimin
         return false;
     }
 
-    private boolean isPhiResolutionMove(AbstractBlockBase<?> __block, MoveOp __move, Interval __toInterval)
+    private boolean isPhiResolutionMove(AbstractBlockBase<?> __block, StandardOp.MoveOp __move, Interval __toInterval)
     {
         if (!__toInterval.isSplitParent())
         {
@@ -55,7 +54,7 @@ public final class SSALinearScanEliminateSpillMovePhase extends LinearScanElimin
             return false;
         }
         LIRInstruction __op = this.___allocator.instructionForId(__toInterval.from());
-        if (!(__op instanceof LabelOp))
+        if (!(__op instanceof StandardOp.LabelOp))
         {
             return false;
         }

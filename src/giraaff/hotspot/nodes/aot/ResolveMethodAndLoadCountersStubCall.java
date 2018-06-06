@@ -28,19 +28,19 @@ public final class ResolveMethodAndLoadCountersStubCall extends DeoptimizingStub
     // @def
     public static final NodeClass<ResolveMethodAndLoadCountersStubCall> TYPE = NodeClass.create(ResolveMethodAndLoadCountersStubCall.class);
 
-    @OptionalInput
+    @Node.OptionalInput
     // @field
     protected ValueNode ___method;
-    @Input
+    @Node.Input
     // @field
     protected ValueNode ___klassHint;
-    @Input
+    @Node.Input
     // @field
     protected ValueNode ___methodDescription;
     // @field
     protected Constant ___methodConstant;
 
-    // @cons
+    // @cons ResolveMethodAndLoadCountersStubCall
     public ResolveMethodAndLoadCountersStubCall(ValueNode __method, ValueNode __klassHint, ValueNode __methodDescription)
     {
         super(TYPE, MethodCountersPointerStamp.methodCountersNonNull());
@@ -49,7 +49,7 @@ public final class ResolveMethodAndLoadCountersStubCall extends DeoptimizingStub
         this.___methodDescription = __methodDescription;
     }
 
-    @NodeIntrinsic
+    @Node.NodeIntrinsic
     public static native MethodCountersPointer resolveMethodAndLoadCounters(MethodPointer __method, KlassPointer __klassHint, Object __methodDescription);
 
     @Override

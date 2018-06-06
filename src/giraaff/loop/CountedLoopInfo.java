@@ -8,7 +8,7 @@ import jdk.vm.ci.meta.JavaConstant;
 import giraaff.core.common.type.IntegerStamp;
 import giraaff.core.common.type.Stamp;
 import giraaff.core.common.util.UnsignedLong;
-import giraaff.loop.InductionVariable.Direction;
+import giraaff.loop.InductionVariable;
 import giraaff.loop.MathUtil;
 import giraaff.nodes.AbstractBeginNode;
 import giraaff.nodes.ConstantNode;
@@ -39,7 +39,7 @@ public final class CountedLoopInfo
     // @field
     private IfNode ___ifNode;
 
-    // @cons
+    // @cons CountedLoopInfo
     CountedLoopInfo(LoopEx __loop, InductionVariable __iv, IfNode __ifNode, ValueNode __end, boolean __oneOff, AbstractBeginNode __body)
     {
         super();
@@ -85,7 +85,7 @@ public final class CountedLoopInfo
         ValueNode __min;
         ValueNode __range;
         ValueNode __absStride;
-        if (this.___iv.direction() == Direction.Up)
+        if (this.___iv.direction() == InductionVariable.Direction.Up)
         {
             __absStride = this.___iv.strideNode();
             __range = MathUtil.sub(__graph, this.___end, this.___iv.initNode());
@@ -139,7 +139,7 @@ public final class CountedLoopInfo
         long __initValue = this.___iv.constantInit();
         long __range;
         long __absStride;
-        if (this.___iv.direction() == Direction.Up)
+        if (this.___iv.direction() == InductionVariable.Direction.Up)
         {
             if (__endValue < __initValue)
             {
@@ -210,7 +210,7 @@ public final class CountedLoopInfo
         return this.___body;
     }
 
-    public Direction getDirection()
+    public InductionVariable.Direction getDirection()
     {
         return this.___iv.direction();
     }
@@ -236,7 +236,7 @@ public final class CountedLoopInfo
         StructuredGraph __graph = this.___iv.valueNode().graph();
         CompareNode __cond; // we use a negated guard with a < condition to achieve a >=
         ConstantNode __one = ConstantNode.forIntegerStamp(__stamp, 1, __graph);
-        if (this.___iv.direction() == Direction.Up)
+        if (this.___iv.direction() == InductionVariable.Direction.Up)
         {
             ValueNode __v1 = MathUtil.sub(__graph, ConstantNode.forIntegerStamp(__stamp, CodeUtil.maxValue(__stamp.getBits()), __graph), MathUtil.sub(__graph, this.___iv.strideNode(), __one));
             if (this.___oneOff)

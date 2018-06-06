@@ -6,6 +6,7 @@ import jdk.vm.ci.meta.Value;
 import org.graalvm.word.LocationIdentity;
 
 import giraaff.core.common.type.StampFactory;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.hotspot.HotSpotLIRGenerator;
 import giraaff.lir.VirtualStackSlot;
@@ -23,7 +24,7 @@ import giraaff.word.WordTypes;
 // is locked (ensuring the GC sees and updates the object) so it must come after any null pointer
 // check on the object.
 ///
-// @NodeInfo.allowedUsageTypes "Memory"
+// @NodeInfo.allowedUsageTypes "InputType.Memory"
 // @class BeginLockScopeNode
 public final class BeginLockScopeNode extends AbstractMemoryCheckpoint implements LIRLowerable, MonitorEnter, MemoryCheckpoint.Single
 {
@@ -33,14 +34,14 @@ public final class BeginLockScopeNode extends AbstractMemoryCheckpoint implement
     // @field
     protected int ___lockDepth;
 
-    // @cons
-    public BeginLockScopeNode(@InjectedNodeParameter WordTypes __wordTypes, int __lockDepth)
+    // @cons BeginLockScopeNode
+    public BeginLockScopeNode(@Node.InjectedNodeParameter WordTypes __wordTypes, int __lockDepth)
     {
         super(TYPE, StampFactory.forKind(__wordTypes.getWordKind()));
         this.___lockDepth = __lockDepth;
     }
 
-    // @cons
+    // @cons BeginLockScopeNode
     public BeginLockScopeNode(JavaKind __kind, int __lockDepth)
     {
         super(TYPE, StampFactory.forKind(__kind));
@@ -68,6 +69,6 @@ public final class BeginLockScopeNode extends AbstractMemoryCheckpoint implement
         __gen.setResult(this, __result);
     }
 
-    @NodeIntrinsic
-    public static native Word beginLockScope(@ConstantNodeParameter int __lockDepth);
+    @Node.NodeIntrinsic
+    public static native Word beginLockScope(@Node.ConstantNodeParameter int __lockDepth);
 }

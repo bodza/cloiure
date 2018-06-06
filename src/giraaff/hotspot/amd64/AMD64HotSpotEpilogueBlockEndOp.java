@@ -3,7 +3,7 @@ package giraaff.hotspot.amd64;
 import jdk.vm.ci.meta.AllocatableValue;
 
 import giraaff.asm.amd64.AMD64MacroAssembler;
-import giraaff.lir.LIRInstruction.OperandFlag;
+import giraaff.lir.LIRInstruction;
 import giraaff.lir.LIRInstructionClass;
 import giraaff.lir.amd64.AMD64BlockEndOp;
 import giraaff.lir.asm.CompilationResultBuilder;
@@ -14,13 +14,13 @@ import giraaff.lir.asm.CompilationResultBuilder;
 // @class AMD64HotSpotEpilogueBlockEndOp
 abstract class AMD64HotSpotEpilogueBlockEndOp extends AMD64BlockEndOp implements AMD64HotSpotRestoreRbpOp
 {
-    // @cons
+    // @cons AMD64HotSpotEpilogueBlockEndOp
     protected AMD64HotSpotEpilogueBlockEndOp(LIRInstructionClass<? extends AMD64HotSpotEpilogueBlockEndOp> __c)
     {
         super(__c);
     }
 
-    @Use({OperandFlag.REG, OperandFlag.STACK})
+    @LIRInstruction.Use({LIRInstruction.OperandFlag.REG, LIRInstruction.OperandFlag.STACK})
     // @field
     protected AllocatableValue ___savedRbp = AMD64HotSpotRestoreRbpOp.PLACEHOLDER;
 

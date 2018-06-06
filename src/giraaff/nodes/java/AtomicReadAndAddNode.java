@@ -5,6 +5,7 @@ import jdk.vm.ci.meta.Value;
 import org.graalvm.word.LocationIdentity;
 
 import giraaff.core.common.type.StampFactory;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.nodeinfo.InputType;
 import giraaff.nodes.ValueNode;
@@ -18,24 +19,24 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // Represents an atomic read-and-add operation like
 // {@link sun.misc.Unsafe#getAndAddInt(Object, long, int)}.
 ///
-// @NodeInfo.allowedUsageTypes "Memory"
+// @NodeInfo.allowedUsageTypes "InputType.Memory"
 // @class AtomicReadAndAddNode
 public final class AtomicReadAndAddNode extends AbstractMemoryCheckpoint implements LIRLowerable, MemoryCheckpoint.Single
 {
     // @def
     public static final NodeClass<AtomicReadAndAddNode> TYPE = NodeClass.create(AtomicReadAndAddNode.class);
 
-    @Input(InputType.Association)
+    @Node.Input(InputType.Association)
     // @field
     AddressNode ___address;
-    @Input
+    @Node.Input
     // @field
     ValueNode ___delta;
 
     // @field
     protected final LocationIdentity ___locationIdentity;
 
-    // @cons
+    // @cons AtomicReadAndAddNode
     public AtomicReadAndAddNode(AddressNode __address, ValueNode __delta, LocationIdentity __locationIdentity)
     {
         super(TYPE, StampFactory.forKind(__delta.getStackKind()));

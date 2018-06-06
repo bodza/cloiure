@@ -5,6 +5,7 @@ import jdk.vm.ci.meta.JavaKind;
 import org.graalvm.word.LocationIdentity;
 
 import giraaff.core.common.type.StampFactory;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.nodes.AbstractStateSplit;
 import giraaff.nodes.ValueNode;
@@ -21,10 +22,10 @@ public final class UnsafeMemoryStoreNode extends AbstractStateSplit implements L
     // @def
     public static final NodeClass<UnsafeMemoryStoreNode> TYPE = NodeClass.create(UnsafeMemoryStoreNode.class);
 
-    @Input
+    @Node.Input
     // @field
     protected ValueNode ___value;
-    @Input
+    @Node.Input
     // @field
     protected ValueNode ___address;
     // @field
@@ -32,7 +33,7 @@ public final class UnsafeMemoryStoreNode extends AbstractStateSplit implements L
     // @field
     protected final LocationIdentity ___locationIdentity;
 
-    // @cons
+    // @cons UnsafeMemoryStoreNode
     public UnsafeMemoryStoreNode(ValueNode __address, ValueNode __value, JavaKind __kind, LocationIdentity __locationIdentity)
     {
         super(TYPE, StampFactory.forVoid());

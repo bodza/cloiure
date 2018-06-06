@@ -5,8 +5,10 @@ import java.lang.invoke.MethodHandle;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 
 import giraaff.core.common.type.StampPair;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.graph.NodeInputList;
+import giraaff.nodes.CallTargetNode;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.java.MethodCallTargetNode;
 import giraaff.nodes.spi.Lowerable;
@@ -36,7 +38,7 @@ public final class ResolvedMethodHandleCallTargetNode extends MethodCallTargetNo
     // Creates a call target for an invocation on a direct target derived by resolving a constant
     // {@link MethodHandle}.
     ///
-    public static MethodCallTargetNode create(InvokeKind __invokeKind, ResolvedJavaMethod __targetMethod, ValueNode[] __arguments, StampPair __returnStamp, ResolvedJavaMethod __originalTargetMethod, ValueNode[] __originalArguments, StampPair __originalReturnStamp)
+    public static MethodCallTargetNode create(CallTargetNode.InvokeKind __invokeKind, ResolvedJavaMethod __targetMethod, ValueNode[] __arguments, StampPair __returnStamp, ResolvedJavaMethod __originalTargetMethod, ValueNode[] __originalArguments, StampPair __originalReturnStamp)
     {
         return new ResolvedMethodHandleCallTargetNode(__invokeKind, __targetMethod, __arguments, __returnStamp, __originalTargetMethod, __originalArguments, __originalReturnStamp);
     }
@@ -45,12 +47,12 @@ public final class ResolvedMethodHandleCallTargetNode extends MethodCallTargetNo
     protected final ResolvedJavaMethod ___originalTargetMethod;
     // @field
     protected final StampPair ___originalReturnStamp;
-    @Input
+    @Node.Input
     // @field
     NodeInputList<ValueNode> ___originalArguments;
 
-    // @cons
-    protected ResolvedMethodHandleCallTargetNode(InvokeKind __invokeKind, ResolvedJavaMethod __targetMethod, ValueNode[] __arguments, StampPair __returnStamp, ResolvedJavaMethod __originalTargetMethod, ValueNode[] __originalArguments, StampPair __originalReturnStamp)
+    // @cons ResolvedMethodHandleCallTargetNode
+    protected ResolvedMethodHandleCallTargetNode(CallTargetNode.InvokeKind __invokeKind, ResolvedJavaMethod __targetMethod, ValueNode[] __arguments, StampPair __returnStamp, ResolvedJavaMethod __originalTargetMethod, ValueNode[] __originalArguments, StampPair __originalReturnStamp)
     {
         super(TYPE, __invokeKind, __targetMethod, __arguments, __returnStamp, null);
         this.___originalTargetMethod = __originalTargetMethod;
@@ -61,7 +63,7 @@ public final class ResolvedMethodHandleCallTargetNode extends MethodCallTargetNo
     @Override
     public void lower(LoweringTool __tool)
     {
-        InvokeKind __replacementInvokeKind = this.___originalTargetMethod.isStatic() ? InvokeKind.Static : InvokeKind.Special;
+        CallTargetNode.InvokeKind __replacementInvokeKind = this.___originalTargetMethod.isStatic() ? CallTargetNode.InvokeKind.Static : CallTargetNode.InvokeKind.Special;
         MethodCallTargetNode __replacement = graph().add(new MethodCallTargetNode(__replacementInvokeKind, this.___originalTargetMethod, this.___originalArguments.toArray(new ValueNode[this.___originalArguments.size()]), this.___originalReturnStamp, null));
 
         // Replace myself...

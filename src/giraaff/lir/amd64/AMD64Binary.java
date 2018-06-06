@@ -7,20 +7,15 @@ import jdk.vm.ci.meta.JavaConstant;
 import jdk.vm.ci.meta.Value;
 
 import giraaff.asm.amd64.AMD64Address;
-import giraaff.asm.amd64.AMD64Assembler.AMD64BinaryArithmetic;
-import giraaff.asm.amd64.AMD64Assembler.AMD64MIOp;
-import giraaff.asm.amd64.AMD64Assembler.AMD64RMIOp;
-import giraaff.asm.amd64.AMD64Assembler.AMD64RMOp;
-import giraaff.asm.amd64.AMD64Assembler.AMD64RRMOp;
-import giraaff.asm.amd64.AMD64Assembler.OperandSize;
+import giraaff.asm.amd64.AMD64Assembler;
 import giraaff.asm.amd64.AMD64MacroAssembler;
 import giraaff.core.common.NumUtil;
 import giraaff.lir.LIRFrameState;
-import giraaff.lir.LIRInstruction.OperandFlag;
+import giraaff.lir.LIRInstruction;
 import giraaff.lir.LIRInstructionClass;
 import giraaff.lir.LIRValueUtil;
-import giraaff.lir.Opcode;
-import giraaff.lir.StandardOp.ImplicitNullCheck;
+import giraaff.lir.LIROpcode;
+import giraaff.lir.StandardOp;
 import giraaff.lir.asm.CompilationResultBuilder;
 
 ///
@@ -36,30 +31,30 @@ public final class AMD64Binary
     public static final class TwoOp extends AMD64LIRInstruction
     {
         // @def
-        public static final LIRInstructionClass<TwoOp> TYPE = LIRInstructionClass.create(TwoOp.class);
+        public static final LIRInstructionClass<AMD64Binary.TwoOp> TYPE = LIRInstructionClass.create(AMD64Binary.TwoOp.class);
 
-        @Opcode
+        @LIROpcode
         // @field
-        private final AMD64RMOp ___opcode;
+        private final AMD64Assembler.AMD64RMOp ___opcode;
         // @field
-        private final OperandSize ___size;
+        private final AMD64Assembler.OperandSize ___size;
 
-        @Def({OperandFlag.REG, OperandFlag.HINT})
+        @LIRInstruction.Def({LIRInstruction.OperandFlag.REG, LIRInstruction.OperandFlag.HINT})
         // @field
         protected AllocatableValue ___result;
-        @Use({OperandFlag.REG})
+        @LIRInstruction.Use({LIRInstruction.OperandFlag.REG})
         // @field
         protected AllocatableValue ___x;
         ///
-        // This argument must be Alive to ensure that result and y are not assigned to the
-        // same register, which would break the code generation by destroying y too early.
+        // This argument must be LIRInstruction.Alive to ensure that result and y are not assigned
+        // to the same register, which would break the code generation by destroying y too early.
         ///
-        @Alive({OperandFlag.REG, OperandFlag.STACK})
+        @LIRInstruction.Alive({LIRInstruction.OperandFlag.REG, LIRInstruction.OperandFlag.STACK})
         // @field
         protected AllocatableValue ___y;
 
-        // @cons
-        public TwoOp(AMD64RMOp __opcode, OperandSize __size, AllocatableValue __result, AllocatableValue __x, AllocatableValue __y)
+        // @cons AMD64Binary.TwoOp
+        public TwoOp(AMD64Assembler.AMD64RMOp __opcode, AMD64Assembler.OperandSize __size, AllocatableValue __result, AllocatableValue __x, AllocatableValue __y)
         {
             super(TYPE);
             this.___opcode = __opcode;
@@ -92,26 +87,26 @@ public final class AMD64Binary
     public static final class ThreeOp extends AMD64LIRInstruction
     {
         // @def
-        public static final LIRInstructionClass<ThreeOp> TYPE = LIRInstructionClass.create(ThreeOp.class);
+        public static final LIRInstructionClass<AMD64Binary.ThreeOp> TYPE = LIRInstructionClass.create(AMD64Binary.ThreeOp.class);
 
-        @Opcode
+        @LIROpcode
         // @field
-        private final AMD64RRMOp ___opcode;
+        private final AMD64Assembler.AMD64RRMOp ___opcode;
         // @field
-        private final OperandSize ___size;
+        private final AMD64Assembler.OperandSize ___size;
 
-        @Def({OperandFlag.REG})
+        @LIRInstruction.Def({LIRInstruction.OperandFlag.REG})
         // @field
         protected AllocatableValue ___result;
-        @Use({OperandFlag.REG})
+        @LIRInstruction.Use({LIRInstruction.OperandFlag.REG})
         // @field
         protected AllocatableValue ___x;
-        @Use({OperandFlag.REG, OperandFlag.STACK})
+        @LIRInstruction.Use({LIRInstruction.OperandFlag.REG, LIRInstruction.OperandFlag.STACK})
         // @field
         protected AllocatableValue ___y;
 
-        // @cons
-        public ThreeOp(AMD64RRMOp __opcode, OperandSize __size, AllocatableValue __result, AllocatableValue __x, AllocatableValue __y)
+        // @cons AMD64Binary.ThreeOp
+        public ThreeOp(AMD64Assembler.AMD64RRMOp __opcode, AMD64Assembler.OperandSize __size, AllocatableValue __result, AllocatableValue __x, AllocatableValue __y)
         {
             super(TYPE);
             this.___opcode = __opcode;
@@ -143,26 +138,26 @@ public final class AMD64Binary
     public static final class CommutativeTwoOp extends AMD64LIRInstruction
     {
         // @def
-        public static final LIRInstructionClass<CommutativeTwoOp> TYPE = LIRInstructionClass.create(CommutativeTwoOp.class);
+        public static final LIRInstructionClass<AMD64Binary.CommutativeTwoOp> TYPE = LIRInstructionClass.create(AMD64Binary.CommutativeTwoOp.class);
 
-        @Opcode
+        @LIROpcode
         // @field
-        private final AMD64RMOp ___opcode;
+        private final AMD64Assembler.AMD64RMOp ___opcode;
         // @field
-        private final OperandSize ___size;
+        private final AMD64Assembler.OperandSize ___size;
 
-        @Def({OperandFlag.REG, OperandFlag.HINT})
+        @LIRInstruction.Def({LIRInstruction.OperandFlag.REG, LIRInstruction.OperandFlag.HINT})
         // @field
         protected AllocatableValue ___result;
-        @Use({OperandFlag.REG, OperandFlag.STACK})
+        @LIRInstruction.Use({LIRInstruction.OperandFlag.REG, LIRInstruction.OperandFlag.STACK})
         // @field
         protected AllocatableValue ___x;
-        @Use({OperandFlag.REG, OperandFlag.STACK})
+        @LIRInstruction.Use({LIRInstruction.OperandFlag.REG, LIRInstruction.OperandFlag.STACK})
         // @field
         protected AllocatableValue ___y;
 
-        // @cons
-        public CommutativeTwoOp(AMD64RMOp __opcode, OperandSize __size, AllocatableValue __result, AllocatableValue __x, AllocatableValue __y)
+        // @cons AMD64Binary.CommutativeTwoOp
+        public CommutativeTwoOp(AMD64Assembler.AMD64RMOp __opcode, AMD64Assembler.OperandSize __size, AllocatableValue __result, AllocatableValue __x, AllocatableValue __y)
         {
             super(TYPE);
             this.___opcode = __opcode;
@@ -205,26 +200,26 @@ public final class AMD64Binary
     public static final class CommutativeThreeOp extends AMD64LIRInstruction
     {
         // @def
-        public static final LIRInstructionClass<CommutativeThreeOp> TYPE = LIRInstructionClass.create(CommutativeThreeOp.class);
+        public static final LIRInstructionClass<AMD64Binary.CommutativeThreeOp> TYPE = LIRInstructionClass.create(AMD64Binary.CommutativeThreeOp.class);
 
-        @Opcode
+        @LIROpcode
         // @field
-        private final AMD64RRMOp ___opcode;
+        private final AMD64Assembler.AMD64RRMOp ___opcode;
         // @field
-        private final OperandSize ___size;
+        private final AMD64Assembler.OperandSize ___size;
 
-        @Def({OperandFlag.REG})
+        @LIRInstruction.Def({LIRInstruction.OperandFlag.REG})
         // @field
         protected AllocatableValue ___result;
-        @Use({OperandFlag.REG})
+        @LIRInstruction.Use({LIRInstruction.OperandFlag.REG})
         // @field
         protected AllocatableValue ___x;
-        @Use({OperandFlag.REG, OperandFlag.STACK})
+        @LIRInstruction.Use({LIRInstruction.OperandFlag.REG, LIRInstruction.OperandFlag.STACK})
         // @field
         protected AllocatableValue ___y;
 
-        // @cons
-        public CommutativeThreeOp(AMD64RRMOp __opcode, OperandSize __size, AllocatableValue __result, AllocatableValue __x, AllocatableValue __y)
+        // @cons AMD64Binary.CommutativeThreeOp
+        public CommutativeThreeOp(AMD64Assembler.AMD64RRMOp __opcode, AMD64Assembler.OperandSize __size, AllocatableValue __result, AllocatableValue __x, AllocatableValue __y)
         {
             super(TYPE);
             this.___opcode = __opcode;
@@ -256,31 +251,31 @@ public final class AMD64Binary
     public static final class ConstOp extends AMD64LIRInstruction
     {
         // @def
-        public static final LIRInstructionClass<ConstOp> TYPE = LIRInstructionClass.create(ConstOp.class);
+        public static final LIRInstructionClass<AMD64Binary.ConstOp> TYPE = LIRInstructionClass.create(AMD64Binary.ConstOp.class);
 
-        @Opcode
+        @LIROpcode
         // @field
-        private final AMD64MIOp ___opcode;
+        private final AMD64Assembler.AMD64MIOp ___opcode;
         // @field
-        private final OperandSize ___size;
+        private final AMD64Assembler.OperandSize ___size;
 
-        @Def({OperandFlag.REG, OperandFlag.HINT})
+        @LIRInstruction.Def({LIRInstruction.OperandFlag.REG, LIRInstruction.OperandFlag.HINT})
         // @field
         protected AllocatableValue ___result;
-        @Use({OperandFlag.REG})
+        @LIRInstruction.Use({LIRInstruction.OperandFlag.REG})
         // @field
         protected AllocatableValue ___x;
         // @field
         private final int ___y;
 
-        // @cons
-        public ConstOp(AMD64BinaryArithmetic __opcode, OperandSize __size, AllocatableValue __result, AllocatableValue __x, int __y)
+        // @cons AMD64Binary.ConstOp
+        public ConstOp(AMD64Assembler.AMD64BinaryArithmetic __opcode, AMD64Assembler.OperandSize __size, AllocatableValue __result, AllocatableValue __x, int __y)
         {
             this(__opcode.getMIOpcode(__size, NumUtil.isByte(__y)), __size, __result, __x, __y);
         }
 
-        // @cons
-        public ConstOp(AMD64MIOp __opcode, OperandSize __size, AllocatableValue __result, AllocatableValue __x, int __y)
+        // @cons AMD64Binary.ConstOp
+        public ConstOp(AMD64Assembler.AMD64MIOp __opcode, AMD64Assembler.OperandSize __size, AllocatableValue __result, AllocatableValue __x, int __y)
         {
             super(TYPE);
             this.___opcode = __opcode;
@@ -307,18 +302,18 @@ public final class AMD64Binary
     public static final class DataTwoOp extends AMD64LIRInstruction
     {
         // @def
-        public static final LIRInstructionClass<DataTwoOp> TYPE = LIRInstructionClass.create(DataTwoOp.class);
+        public static final LIRInstructionClass<AMD64Binary.DataTwoOp> TYPE = LIRInstructionClass.create(AMD64Binary.DataTwoOp.class);
 
-        @Opcode
+        @LIROpcode
         // @field
-        private final AMD64RMOp ___opcode;
+        private final AMD64Assembler.AMD64RMOp ___opcode;
         // @field
-        private final OperandSize ___size;
+        private final AMD64Assembler.OperandSize ___size;
 
-        @Def({OperandFlag.REG, OperandFlag.HINT})
+        @LIRInstruction.Def({LIRInstruction.OperandFlag.REG, LIRInstruction.OperandFlag.HINT})
         // @field
         protected AllocatableValue ___result;
-        @Use({OperandFlag.REG})
+        @LIRInstruction.Use({LIRInstruction.OperandFlag.REG})
         // @field
         protected AllocatableValue ___x;
         // @field
@@ -327,14 +322,14 @@ public final class AMD64Binary
         // @field
         private final int ___alignment;
 
-        // @cons
-        public DataTwoOp(AMD64RMOp __opcode, OperandSize __size, AllocatableValue __result, AllocatableValue __x, JavaConstant __y)
+        // @cons AMD64Binary.DataTwoOp
+        public DataTwoOp(AMD64Assembler.AMD64RMOp __opcode, AMD64Assembler.OperandSize __size, AllocatableValue __result, AllocatableValue __x, JavaConstant __y)
         {
             this(__opcode, __size, __result, __x, __y, __y.getJavaKind().getByteCount());
         }
 
-        // @cons
-        public DataTwoOp(AMD64RMOp __opcode, OperandSize __size, AllocatableValue __result, AllocatableValue __x, JavaConstant __y, int __alignment)
+        // @cons AMD64Binary.DataTwoOp
+        public DataTwoOp(AMD64Assembler.AMD64RMOp __opcode, AMD64Assembler.OperandSize __size, AllocatableValue __result, AllocatableValue __x, JavaConstant __y, int __alignment)
         {
             super(TYPE);
             this.___opcode = __opcode;
@@ -363,18 +358,18 @@ public final class AMD64Binary
     public static final class DataThreeOp extends AMD64LIRInstruction
     {
         // @def
-        public static final LIRInstructionClass<DataThreeOp> TYPE = LIRInstructionClass.create(DataThreeOp.class);
+        public static final LIRInstructionClass<AMD64Binary.DataThreeOp> TYPE = LIRInstructionClass.create(AMD64Binary.DataThreeOp.class);
 
-        @Opcode
+        @LIROpcode
         // @field
-        private final AMD64RRMOp ___opcode;
+        private final AMD64Assembler.AMD64RRMOp ___opcode;
         // @field
-        private final OperandSize ___size;
+        private final AMD64Assembler.OperandSize ___size;
 
-        @Def({OperandFlag.REG})
+        @LIRInstruction.Def({LIRInstruction.OperandFlag.REG})
         // @field
         protected AllocatableValue ___result;
-        @Use({OperandFlag.REG})
+        @LIRInstruction.Use({LIRInstruction.OperandFlag.REG})
         // @field
         protected AllocatableValue ___x;
         // @field
@@ -383,14 +378,14 @@ public final class AMD64Binary
         // @field
         private final int ___alignment;
 
-        // @cons
-        public DataThreeOp(AMD64RRMOp __opcode, OperandSize __size, AllocatableValue __result, AllocatableValue __x, JavaConstant __y)
+        // @cons AMD64Binary.DataThreeOp
+        public DataThreeOp(AMD64Assembler.AMD64RRMOp __opcode, AMD64Assembler.OperandSize __size, AllocatableValue __result, AllocatableValue __x, JavaConstant __y)
         {
             this(__opcode, __size, __result, __x, __y, __y.getJavaKind().getByteCount());
         }
 
-        // @cons
-        public DataThreeOp(AMD64RRMOp __opcode, OperandSize __size, AllocatableValue __result, AllocatableValue __x, JavaConstant __y, int __alignment)
+        // @cons AMD64Binary.DataThreeOp
+        public DataThreeOp(AMD64Assembler.AMD64RRMOp __opcode, AMD64Assembler.OperandSize __size, AllocatableValue __result, AllocatableValue __x, JavaConstant __y, int __alignment)
         {
             super(TYPE);
             this.___opcode = __opcode;
@@ -415,24 +410,24 @@ public final class AMD64Binary
     // memory} operand.
     ///
     // @class AMD64Binary.MemoryTwoOp
-    public static final class MemoryTwoOp extends AMD64LIRInstruction implements ImplicitNullCheck
+    public static final class MemoryTwoOp extends AMD64LIRInstruction implements StandardOp.ImplicitNullCheck
     {
         // @def
-        public static final LIRInstructionClass<MemoryTwoOp> TYPE = LIRInstructionClass.create(MemoryTwoOp.class);
+        public static final LIRInstructionClass<AMD64Binary.MemoryTwoOp> TYPE = LIRInstructionClass.create(AMD64Binary.MemoryTwoOp.class);
 
-        @Opcode
+        @LIROpcode
         // @field
-        private final AMD64RMOp ___opcode;
+        private final AMD64Assembler.AMD64RMOp ___opcode;
         // @field
-        private final OperandSize ___size;
+        private final AMD64Assembler.OperandSize ___size;
 
-        @Def({OperandFlag.REG, OperandFlag.HINT})
+        @LIRInstruction.Def({LIRInstruction.OperandFlag.REG, LIRInstruction.OperandFlag.HINT})
         // @field
         protected AllocatableValue ___result;
-        @Use({OperandFlag.REG})
+        @LIRInstruction.Use({LIRInstruction.OperandFlag.REG})
         // @field
         protected AllocatableValue ___x;
-        @Alive({OperandFlag.COMPOSITE})
+        @LIRInstruction.Alive({LIRInstruction.OperandFlag.COMPOSITE})
         // @field
         protected AMD64AddressValue ___y;
 
@@ -440,8 +435,8 @@ public final class AMD64Binary
         // @field
         protected LIRFrameState ___state;
 
-        // @cons
-        public MemoryTwoOp(AMD64RMOp __opcode, OperandSize __size, AllocatableValue __result, AllocatableValue __x, AMD64AddressValue __y, LIRFrameState __state)
+        // @cons AMD64Binary.MemoryTwoOp
+        public MemoryTwoOp(AMD64Assembler.AMD64RMOp __opcode, AMD64Assembler.OperandSize __size, AllocatableValue __result, AllocatableValue __x, AMD64AddressValue __y, LIRFrameState __state)
         {
             super(TYPE);
             this.___opcode = __opcode;
@@ -478,24 +473,24 @@ public final class AMD64Binary
     // memory} operand.
     ///
     // @class AMD64Binary.MemoryThreeOp
-    public static final class MemoryThreeOp extends AMD64LIRInstruction implements ImplicitNullCheck
+    public static final class MemoryThreeOp extends AMD64LIRInstruction implements StandardOp.ImplicitNullCheck
     {
         // @def
-        public static final LIRInstructionClass<MemoryThreeOp> TYPE = LIRInstructionClass.create(MemoryThreeOp.class);
+        public static final LIRInstructionClass<AMD64Binary.MemoryThreeOp> TYPE = LIRInstructionClass.create(AMD64Binary.MemoryThreeOp.class);
 
-        @Opcode
+        @LIROpcode
         // @field
-        private final AMD64RRMOp ___opcode;
+        private final AMD64Assembler.AMD64RRMOp ___opcode;
         // @field
-        private final OperandSize ___size;
+        private final AMD64Assembler.OperandSize ___size;
 
-        @Def({OperandFlag.REG})
+        @LIRInstruction.Def({LIRInstruction.OperandFlag.REG})
         // @field
         protected AllocatableValue ___result;
-        @Use({OperandFlag.REG})
+        @LIRInstruction.Use({LIRInstruction.OperandFlag.REG})
         // @field
         protected AllocatableValue ___x;
-        @Use({OperandFlag.COMPOSITE})
+        @LIRInstruction.Use({LIRInstruction.OperandFlag.COMPOSITE})
         // @field
         protected AMD64AddressValue ___y;
 
@@ -503,8 +498,8 @@ public final class AMD64Binary
         // @field
         protected LIRFrameState ___state;
 
-        // @cons
-        public MemoryThreeOp(AMD64RRMOp __opcode, OperandSize __size, AllocatableValue __result, AllocatableValue __x, AMD64AddressValue __y, LIRFrameState __state)
+        // @cons AMD64Binary.MemoryThreeOp
+        public MemoryThreeOp(AMD64Assembler.AMD64RRMOp __opcode, AMD64Assembler.OperandSize __size, AllocatableValue __result, AllocatableValue __x, AMD64AddressValue __y, LIRFrameState __state)
         {
             super(TYPE);
             this.___opcode = __opcode;
@@ -543,25 +538,25 @@ public final class AMD64Binary
     public static final class RMIOp extends AMD64LIRInstruction
     {
         // @def
-        public static final LIRInstructionClass<RMIOp> TYPE = LIRInstructionClass.create(RMIOp.class);
+        public static final LIRInstructionClass<AMD64Binary.RMIOp> TYPE = LIRInstructionClass.create(AMD64Binary.RMIOp.class);
 
-        @Opcode
+        @LIROpcode
         // @field
-        private final AMD64RMIOp ___opcode;
+        private final AMD64Assembler.AMD64RMIOp ___opcode;
         // @field
-        private final OperandSize ___size;
+        private final AMD64Assembler.OperandSize ___size;
 
-        @Def({OperandFlag.REG})
+        @LIRInstruction.Def({LIRInstruction.OperandFlag.REG})
         // @field
         protected AllocatableValue ___result;
-        @Use({OperandFlag.REG, OperandFlag.STACK})
+        @LIRInstruction.Use({LIRInstruction.OperandFlag.REG, LIRInstruction.OperandFlag.STACK})
         // @field
         protected AllocatableValue ___x;
         // @field
         private final int ___y;
 
-        // @cons
-        public RMIOp(AMD64RMIOp __opcode, OperandSize __size, AllocatableValue __result, AllocatableValue __x, int __y)
+        // @cons AMD64Binary.RMIOp
+        public RMIOp(AMD64Assembler.AMD64RMIOp __opcode, AMD64Assembler.OperandSize __size, AllocatableValue __result, AllocatableValue __x, int __y)
         {
             super(TYPE);
             this.___opcode = __opcode;

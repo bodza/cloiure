@@ -17,7 +17,7 @@ import giraaff.util.GraalError;
 // @class Util
 public final class Util
 {
-    // @cons
+    // @cons Util
     private Util()
     {
         super();

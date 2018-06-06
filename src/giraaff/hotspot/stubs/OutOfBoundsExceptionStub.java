@@ -16,7 +16,7 @@ import giraaff.word.Word;
 // @class OutOfBoundsExceptionStub
 public final class OutOfBoundsExceptionStub extends CreateExceptionStub
 {
-    // @cons
+    // @cons OutOfBoundsExceptionStub
     public OutOfBoundsExceptionStub(HotSpotProviders __providers, HotSpotForeignCallLinkage __linkage)
     {
         super("createOutOfBoundsException", __providers, __linkage);
@@ -44,7 +44,7 @@ public final class OutOfBoundsExceptionStub extends CreateExceptionStub
     }
 
     @Snippet
-    private static Object createOutOfBoundsException(int __idx, @ConstantParameter Register __threadRegister, @ConstantParameter int __bufferSizeInWords)
+    private static Object createOutOfBoundsException(int __idx, @Snippet.ConstantParameter Register __threadRegister, @Snippet.ConstantParameter int __bufferSizeInWords)
     {
         Word __buffer = AllocaNode.alloca(__bufferSizeInWords);
 

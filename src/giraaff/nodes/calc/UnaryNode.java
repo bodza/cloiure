@@ -1,6 +1,7 @@
 package giraaff.nodes.calc;
 
 import giraaff.core.common.type.Stamp;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.graph.spi.Canonicalizable;
 import giraaff.nodes.NodeView;
@@ -15,7 +16,7 @@ public abstract class UnaryNode extends FloatingNode implements Canonicalizable.
     // @def
     public static final NodeClass<UnaryNode> TYPE = NodeClass.create(UnaryNode.class);
 
-    @Input
+    @Node.Input
     // @field
     protected ValueNode ___value;
 
@@ -37,7 +38,7 @@ public abstract class UnaryNode extends FloatingNode implements Canonicalizable.
     // @param stamp the result type of this instruction
     // @param value the input instruction
     ///
-    // @cons
+    // @cons UnaryNode
     protected UnaryNode(NodeClass<? extends UnaryNode> __c, Stamp __stamp, ValueNode __value)
     {
         super(__c, __stamp);

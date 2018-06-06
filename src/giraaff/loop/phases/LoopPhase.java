@@ -10,7 +10,7 @@ public abstract class LoopPhase<P extends LoopPolicies> extends BasePhase<PhaseC
     // @field
     private P ___policies;
 
-    // @cons
+    // @cons LoopPhase
     public LoopPhase(P __policies)
     {
         super();

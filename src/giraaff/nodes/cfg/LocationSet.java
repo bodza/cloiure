@@ -14,14 +14,14 @@ public final class LocationSet
     // @field
     private List<LocationIdentity> ___list;
 
-    // @cons
+    // @cons LocationSet
     public LocationSet()
     {
         super();
         this.___list = null;
     }
 
-    // @cons
+    // @cons LocationSet
     public LocationSet(LocationSet __other)
     {
         super();

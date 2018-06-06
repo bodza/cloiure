@@ -18,7 +18,7 @@ import giraaff.util.GraalError;
 // @class IllegalStamp
 public final class IllegalStamp extends Stamp
 {
-    // @cons
+    // @cons IllegalStamp
     private IllegalStamp()
     {
         super();

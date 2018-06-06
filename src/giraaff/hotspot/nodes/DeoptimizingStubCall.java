@@ -10,7 +10,7 @@ public abstract class DeoptimizingStubCall extends DeoptimizingFixedWithNextNode
     // @def
     public static final NodeClass<DeoptimizingStubCall> TYPE = NodeClass.create(DeoptimizingStubCall.class);
 
-    // @cons
+    // @cons DeoptimizingStubCall
     public DeoptimizingStubCall(NodeClass<? extends DeoptimizingStubCall> __c, Stamp __stamp)
     {
         super(__c, __stamp);

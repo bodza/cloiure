@@ -25,7 +25,6 @@ import giraaff.nodes.LoopExitNode;
 import giraaff.nodes.PhiNode;
 import giraaff.nodes.ProxyNode;
 import giraaff.nodes.StructuredGraph;
-import giraaff.nodes.StructuredGraph.ScheduleResult;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.ValuePhiNode;
 import giraaff.nodes.cfg.Block;
@@ -36,8 +35,6 @@ import giraaff.nodes.virtual.AllocatedObjectNode;
 import giraaff.nodes.virtual.CommitAllocationNode;
 import giraaff.nodes.virtual.VirtualObjectNode;
 import giraaff.phases.graph.ReentrantBlockIterator;
-import giraaff.phases.graph.ReentrantBlockIterator.BlockIteratorClosure;
-import giraaff.phases.graph.ReentrantBlockIterator.LoopInfo;
 import giraaff.util.GraalError;
 
 // @class EffectsClosure
@@ -46,7 +43,7 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
     // @field
     protected final ControlFlowGraph ___cfg;
     // @field
-    protected final ScheduleResult ___schedule;
+    protected final StructuredGraph.ScheduleResult ___schedule;
 
     ///
     // If a node has an alias, this means that it was replaced with another node during analysis.
@@ -91,13 +88,13 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
 
     // Intended to be used by read-eliminating phases based on the effects phase.
     // @field
-    protected final EconomicMap<Loop<Block>, LoopKillCache> ___loopLocationKillCache = EconomicMap.create(Equivalence.IDENTITY);
+    protected final EconomicMap<Loop<Block>, EffectsClosure.LoopKillCache> ___loopLocationKillCache = EconomicMap.create(Equivalence.IDENTITY);
 
     // @field
     protected boolean ___changed;
 
-    // @cons
-    public EffectsClosure(ScheduleResult __schedule, ControlFlowGraph __cfg)
+    // @cons EffectsClosure
+    public EffectsClosure(StructuredGraph.ScheduleResult __schedule, ControlFlowGraph __cfg)
     {
         super();
         this.___schedule = __schedule;
@@ -133,7 +130,7 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
         // Effects are applied during a ordered iteration over the blocks to apply them in the correct
         // order, e.g. apply the effect that adds a node to the graph before the node is used.
         // @closure
-        BlockIteratorClosure<Void> __closure = new BlockIteratorClosure<Void>()
+        ReentrantBlockIterator.BlockIteratorClosure<Void> __closure = new ReentrantBlockIterator.BlockIteratorClosure<Void>()
         {
             @Override
             protected Void getInitialState()
@@ -171,7 +168,7 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
             @Override
             protected List<Void> processLoop(Loop<Block> __loop, Void __initialState)
             {
-                LoopInfo<Void> __info = ReentrantBlockIterator.processLoop(this, __loop, __initialState);
+                ReentrantBlockIterator.BlockLoopInfo<Void> __info = ReentrantBlockIterator.processLoop(this, __loop, __initialState);
                 apply(EffectsClosure.this.___loopMergeEffects.get(__loop));
                 return __info.___exitStates;
             }
@@ -276,7 +273,7 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
     @Override
     protected BlockT merge(Block __merge, List<BlockT> __states)
     {
-        MergeProcessor __processor = createMergeProcessor(__merge);
+        EffectsClosure<BlockT>.MergeProcessor __processor = createMergeProcessor(__merge);
         doMergeWithoutDead(__processor, __states);
         this.___blockEffects.get(__merge).addAll(__processor.___mergeEffects);
         this.___blockEffects.get(__merge).addAll(__processor.___afterMergeEffects);
@@ -312,7 +309,7 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
         BlockT __loopEntryState = __initialStateRemovedKilledLocations;
         BlockT __lastMergedState = cloneState(__initialStateRemovedKilledLocations);
         processInitialLoopState(__loop, __lastMergedState);
-        MergeProcessor __mergeProcessor = createMergeProcessor(__loop.getHeader());
+        EffectsClosure<BlockT>.MergeProcessor __mergeProcessor = createMergeProcessor(__loop.getHeader());
         // Iterative loop processing: we take the predecessor state as the loop's starting state,
         // processing the loop contents, merge the states of all loop ends, and check whether the
         // resulting state is equal to the starting state. If it is, the loop processing has
@@ -322,7 +319,7 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
         // more generic, e.g. adding phis instead of non-phi values.
         for (int __iteration = 0; __iteration < 10; __iteration++)
         {
-            LoopInfo<BlockT> __info = ReentrantBlockIterator.processLoop(this, __loop, cloneState(__lastMergedState));
+            ReentrantBlockIterator.BlockLoopInfo<BlockT> __info = ReentrantBlockIterator.processLoop(this, __loop, cloneState(__lastMergedState));
 
             List<BlockT> __states = new ArrayList<>();
             __states.add(__initialStateRemovedKilledLocations);
@@ -369,7 +366,7 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
         // nothing to do
     }
 
-    private void doMergeWithoutDead(MergeProcessor __mergeProcessor, List<BlockT> __states)
+    private void doMergeWithoutDead(EffectsClosure<BlockT>.MergeProcessor __mergeProcessor, List<BlockT> __states)
     {
         int __alive = 0;
         for (BlockT __state : __states)
@@ -414,12 +411,12 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
 
     protected abstract void processLoopExit(LoopExitNode __exitNode, BlockT __initialState, BlockT __exitState, GraphEffectList __effects);
 
-    protected abstract MergeProcessor createMergeProcessor(Block __merge);
+    protected abstract EffectsClosure<BlockT>.MergeProcessor createMergeProcessor(Block __merge);
 
     ///
     // The main workhorse for merging states, both for loops and for normal merges.
     ///
-    // @class EffectsClosure.MergeProcessor
+    // @class EffectsClosure<BlockT>.MergeProcessor
     // @closure
     protected abstract class MergeProcessor
     {
@@ -442,7 +439,7 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
         // @field
         protected BlockT ___newState;
 
-        // @cons
+        // @cons EffectsClosure<BlockT>.MergeProcessor
         public MergeProcessor(Block __mergeBlock)
         {
             super();
@@ -537,7 +534,7 @@ public abstract class EffectsClosure<BlockT extends EffectsBlockState<BlockT>> e
         // @field
         private boolean ___killsAll;
 
-        // @cons
+        // @cons EffectsClosure.LoopKillCache
         protected LoopKillCache(int __visits)
         {
             super();

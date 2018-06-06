@@ -20,11 +20,11 @@ public final class ArrayCopyNode extends BasicArrayCopyNode implements Lowerable
     // @field
     private JavaKind ___elementKind;
 
-    // @cons
+    // @cons ArrayCopyNode
     public ArrayCopyNode(int __bci, ValueNode __src, ValueNode __srcPos, ValueNode __dst, ValueNode __dstPos, ValueNode __length)
     {
         super(TYPE, __src, __srcPos, __dst, __dstPos, __length, null, __bci);
-        this.___elementKind = ArrayCopySnippets.Templates.selectComponentKind(this);
+        this.___elementKind = ArrayCopySnippets.ArrayCopyTemplates.selectComponentKind(this);
     }
 
     @Override
@@ -32,7 +32,7 @@ public final class ArrayCopyNode extends BasicArrayCopyNode implements Lowerable
     {
         if (this.___elementKind == null)
         {
-            this.___elementKind = ArrayCopySnippets.Templates.selectComponentKind(this);
+            this.___elementKind = ArrayCopySnippets.ArrayCopyTemplates.selectComponentKind(this);
         }
         if (this.___elementKind != null)
         {

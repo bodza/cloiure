@@ -3,7 +3,6 @@ package giraaff.nodes.calc;
 import java.util.function.Function;
 
 import giraaff.core.common.type.ArithmeticOpTable;
-import giraaff.core.common.type.ArithmeticOpTable.UnaryOp;
 import giraaff.core.common.type.Stamp;
 import giraaff.graph.NodeClass;
 import giraaff.graph.spi.CanonicalizerTool;
@@ -21,27 +20,27 @@ public abstract class UnaryArithmeticNode<OP> extends UnaryNode implements Arith
     public static final NodeClass<UnaryArithmeticNode> TYPE = NodeClass.create(UnaryArithmeticNode.class);
 
     // @iface UnaryArithmeticNode.SerializableUnaryFunction
-    protected interface SerializableUnaryFunction<T> extends Function<ArithmeticOpTable, UnaryOp<T>>
+    protected interface SerializableUnaryFunction<T> extends Function<ArithmeticOpTable, ArithmeticOpTable.UnaryOp<T>>
     {
     }
 
     // @field
-    protected final SerializableUnaryFunction<OP> ___getOp;
+    protected final UnaryArithmeticNode.SerializableUnaryFunction<OP> ___getOp;
 
-    // @cons
-    protected UnaryArithmeticNode(NodeClass<? extends UnaryArithmeticNode<OP>> __c, SerializableUnaryFunction<OP> __getOp, ValueNode __value)
+    // @cons UnaryArithmeticNode
+    protected UnaryArithmeticNode(NodeClass<? extends UnaryArithmeticNode<OP>> __c, UnaryArithmeticNode.SerializableUnaryFunction<OP> __getOp, ValueNode __value)
     {
         super(__c, __getOp.apply(ArithmeticOpTable.forStamp(__value.stamp(NodeView.DEFAULT))).foldStamp(__value.stamp(NodeView.DEFAULT)), __value);
         this.___getOp = __getOp;
     }
 
-    protected final UnaryOp<OP> getOp(ValueNode __forValue)
+    protected final ArithmeticOpTable.UnaryOp<OP> getOp(ValueNode __forValue)
     {
         return this.___getOp.apply(ArithmeticOpTable.forStamp(__forValue.stamp(NodeView.DEFAULT)));
     }
 
     @Override
-    public final UnaryOp<OP> getArithmeticOp()
+    public final ArithmeticOpTable.UnaryOp<OP> getArithmeticOp()
     {
         return getOp(getValue());
     }
@@ -63,7 +62,7 @@ public abstract class UnaryArithmeticNode<OP> extends UnaryNode implements Arith
         return this;
     }
 
-    protected static <OP> ValueNode findSynonym(ValueNode __forValue, UnaryOp<OP> __op)
+    protected static <OP> ValueNode findSynonym(ValueNode __forValue, ArithmeticOpTable.UnaryOp<OP> __op)
     {
         if (__forValue.isConstant())
         {

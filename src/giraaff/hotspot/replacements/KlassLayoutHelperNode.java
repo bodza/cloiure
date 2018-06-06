@@ -35,11 +35,11 @@ public final class KlassLayoutHelperNode extends FloatingNode implements Canonic
     // @def
     public static final NodeClass<KlassLayoutHelperNode> TYPE = NodeClass.create(KlassLayoutHelperNode.class);
 
-    @Input
+    @Node.Input
     // @field
     protected ValueNode ___klass;
 
-    // @cons
+    // @cons KlassLayoutHelperNode
     public KlassLayoutHelperNode(ValueNode __klass)
     {
         super(TYPE, StampFactory.forKind(JavaKind.Int));

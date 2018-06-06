@@ -9,8 +9,7 @@ import org.graalvm.word.WordFactory;
 import giraaff.api.replacements.Snippet;
 import giraaff.api.replacements.Snippet.ConstantParameter;
 import giraaff.core.common.spi.ForeignCallDescriptor;
-import giraaff.graph.Node.ConstantNodeParameter;
-import giraaff.graph.Node.NodeIntrinsic;
+import giraaff.graph.Node;
 import giraaff.hotspot.HotSpotForeignCallLinkage;
 import giraaff.hotspot.HotSpotRuntime;
 import giraaff.hotspot.meta.HotSpotProviders;
@@ -34,7 +33,7 @@ import giraaff.word.Word;
 // @class NewInstanceStub
 public final class NewInstanceStub extends SnippetStub
 {
-    // @cons
+    // @cons NewInstanceStub
     public NewInstanceStub(HotSpotProviders __providers, HotSpotForeignCallLinkage __linkage)
     {
         super("newInstance", __providers, __linkage);
@@ -72,7 +71,7 @@ public final class NewInstanceStub extends SnippetStub
     // @param intArrayHub the hub for {@code int[].class}
     ///
     @Snippet
-    private static Object newInstance(KlassPointer __hub, @ConstantParameter KlassPointer __intArrayHub, @ConstantParameter Register __threadRegister)
+    private static Object newInstance(KlassPointer __hub, @Snippet.ConstantParameter KlassPointer __intArrayHub, @Snippet.ConstantParameter Register __threadRegister)
     {
         // The type is known to be an instance so Klass::_layout_helper is the instance size as a raw number.
         Word __thread = HotSpotReplacementsUtil.registerAsWord(__threadRegister);
@@ -225,6 +224,6 @@ public final class NewInstanceStub extends SnippetStub
     // @def
     public static final ForeignCallDescriptor NEW_INSTANCE_C = StubUtil.newDescriptor(NewInstanceStub.class, "newInstanceC", void.class, Word.class, KlassPointer.class);
 
-    @NodeIntrinsic(StubForeignCallNode.class)
-    public static native void newInstanceC(@ConstantNodeParameter ForeignCallDescriptor __newInstanceC, Word __thread, KlassPointer __hub);
+    @Node.NodeIntrinsic(StubForeignCallNode.class)
+    public static native void newInstanceC(@Node.ConstantNodeParameter ForeignCallDescriptor __newInstanceC, Word __thread, KlassPointer __hub);
 }

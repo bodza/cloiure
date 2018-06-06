@@ -22,9 +22,6 @@ import giraaff.nodes.extended.ForeignCallNode;
 import giraaff.nodes.java.LoadExceptionObjectNode;
 import giraaff.nodes.spi.LoweringTool;
 import giraaff.replacements.SnippetTemplate;
-import giraaff.replacements.SnippetTemplate.AbstractTemplates;
-import giraaff.replacements.SnippetTemplate.Arguments;
-import giraaff.replacements.SnippetTemplate.SnippetInfo;
 import giraaff.replacements.Snippets;
 import giraaff.replacements.nodes.ReadRegisterNode;
 import giraaff.word.Word;
@@ -41,14 +38,14 @@ import giraaff.word.Word;
 // @class LoadExceptionObjectSnippets
 public final class LoadExceptionObjectSnippets implements Snippets
 {
-    // @cons
+    // @cons LoadExceptionObjectSnippets
     private LoadExceptionObjectSnippets()
     {
         super();
     }
 
     @Snippet
-    public static Object loadException(@ConstantParameter Register __threadRegister)
+    public static Object loadException(@Snippet.ConstantParameter Register __threadRegister)
     {
         Word __thread = HotSpotReplacementsUtil.registerAsWord(__threadRegister);
         Object __exception = HotSpotReplacementsUtil.readExceptionOop(__thread);
@@ -57,16 +54,16 @@ public final class LoadExceptionObjectSnippets implements Snippets
         return PiNode.piCastToSnippetReplaceeStamp(__exception);
     }
 
-    // @class LoadExceptionObjectSnippets.Templates
-    public static final class Templates extends AbstractTemplates
+    // @class LoadExceptionObjectSnippets.LoadExceptionObjectTemplates
+    public static final class LoadExceptionObjectTemplates extends SnippetTemplate.AbstractTemplates
     {
         // @field
-        private final SnippetInfo ___loadException = snippet(LoadExceptionObjectSnippets.class, "loadException", HotSpotReplacementsUtil.EXCEPTION_OOP_LOCATION, HotSpotReplacementsUtil.EXCEPTION_PC_LOCATION);
+        private final SnippetTemplate.SnippetInfo ___loadException = snippet(LoadExceptionObjectSnippets.class, "loadException", HotSpotReplacementsUtil.EXCEPTION_OOP_LOCATION, HotSpotReplacementsUtil.EXCEPTION_PC_LOCATION);
         // @field
         private final HotSpotWordTypes ___wordTypes;
 
-        // @cons
-        public Templates(HotSpotProviders __providers, TargetDescription __target)
+        // @cons LoadExceptionObjectSnippets.LoadExceptionObjectTemplates
+        public LoadExceptionObjectTemplates(HotSpotProviders __providers, TargetDescription __target)
         {
             super(__providers, __providers.getSnippetReflection(), __target);
             this.___wordTypes = __providers.getWordTypes();
@@ -87,7 +84,7 @@ public final class LoadExceptionObjectSnippets implements Snippets
             }
             else
             {
-                Arguments __args = new Arguments(this.___loadException, __loadExceptionObject.graph().getGuardsStage(), __tool.getLoweringStage());
+                SnippetTemplate.Arguments __args = new SnippetTemplate.Arguments(this.___loadException, __loadExceptionObject.graph().getGuardsStage(), __tool.getLoweringStage());
                 __args.addConst("threadRegister", __registers.getThreadRegister());
                 template(__loadExceptionObject, __args).instantiate(this.___providers.getMetaAccess(), __loadExceptionObject, SnippetTemplate.DEFAULT_REPLACER, __args);
             }

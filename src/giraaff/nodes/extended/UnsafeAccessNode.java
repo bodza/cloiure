@@ -23,10 +23,10 @@ public abstract class UnsafeAccessNode extends FixedWithNextNode implements Cano
     // @def
     public static final NodeClass<UnsafeAccessNode> TYPE = NodeClass.create(UnsafeAccessNode.class);
 
-    @Input
+    @Node.Input
     // @field
     ValueNode ___object;
-    @Input
+    @Node.Input
     // @field
     ValueNode ___offset;
     // @field
@@ -36,7 +36,7 @@ public abstract class UnsafeAccessNode extends FixedWithNextNode implements Cano
     // @field
     protected final boolean ___forceAnyLocation;
 
-    // @cons
+    // @cons UnsafeAccessNode
     protected UnsafeAccessNode(NodeClass<? extends UnsafeAccessNode> __c, Stamp __stamp, ValueNode __object, ValueNode __offset, JavaKind __accessKind, LocationIdentity __locationIdentity, boolean __forceAnyLocation)
     {
         super(__c, __stamp);

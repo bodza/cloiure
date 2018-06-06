@@ -23,7 +23,7 @@ public class ExactInlineInfo extends AbstractInlineInfo
     // @field
     private boolean ___suppressNullCheck;
 
-    // @cons
+    // @cons ExactInlineInfo
     public ExactInlineInfo(Invoke __invoke, ResolvedJavaMethod __concrete)
     {
         super(__invoke);

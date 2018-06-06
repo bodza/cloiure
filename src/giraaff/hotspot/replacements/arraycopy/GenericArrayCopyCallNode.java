@@ -5,6 +5,7 @@ import jdk.vm.ci.meta.JavaKind;
 import org.graalvm.word.LocationIdentity;
 
 import giraaff.core.common.type.StampFactory;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.hotspot.HotSpotBackend;
 import giraaff.hotspot.HotSpotGraalRuntime;
@@ -19,34 +20,34 @@ import giraaff.nodes.memory.MemoryCheckpoint;
 import giraaff.nodes.spi.Lowerable;
 import giraaff.nodes.spi.LoweringTool;
 
-// @NodeInfo.allowedUsageTypes "Memory, Value"
+// @NodeInfo.allowedUsageTypes "InputType.Memory, InputType.Value"
 // @class GenericArrayCopyCallNode
 public final class GenericArrayCopyCallNode extends AbstractMemoryCheckpoint implements Lowerable, MemoryCheckpoint.Single
 {
     // @def
     public static final NodeClass<GenericArrayCopyCallNode> TYPE = NodeClass.create(GenericArrayCopyCallNode.class);
 
-    @Input
+    @Node.Input
     // @field
     ValueNode ___src;
-    @Input
+    @Node.Input
     // @field
     ValueNode ___srcPos;
-    @Input
+    @Node.Input
     // @field
     ValueNode ___dest;
-    @Input
+    @Node.Input
     // @field
     ValueNode ___destPos;
-    @Input
+    @Node.Input
     // @field
     ValueNode ___length;
 
     // @field
     protected final HotSpotGraalRuntime ___runtime;
 
-    // @cons
-    protected GenericArrayCopyCallNode(@InjectedNodeParameter HotSpotGraalRuntime __runtime, ValueNode __src, ValueNode __srcPos, ValueNode __dest, ValueNode __destPos, ValueNode __length)
+    // @cons GenericArrayCopyCallNode
+    protected GenericArrayCopyCallNode(@Node.InjectedNodeParameter HotSpotGraalRuntime __runtime, ValueNode __src, ValueNode __srcPos, ValueNode __dest, ValueNode __destPos, ValueNode __length)
     {
         super(TYPE, StampFactory.forKind(JavaKind.Int));
         this.___src = __src;
@@ -118,6 +119,6 @@ public final class GenericArrayCopyCallNode extends AbstractMemoryCheckpoint imp
         return LocationIdentity.any();
     }
 
-    @NodeIntrinsic
+    @Node.NodeIntrinsic
     public static native int genericArraycopy(Object __src, int __srcPos, Object __dest, int __destPos, int __length);
 }

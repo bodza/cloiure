@@ -28,7 +28,6 @@ import giraaff.nodes.NodeView;
 import giraaff.nodes.PhiNode;
 import giraaff.nodes.PiNode;
 import giraaff.nodes.StructuredGraph;
-import giraaff.nodes.StructuredGraph.ScheduleResult;
 import giraaff.nodes.UnaryOpLogicNode;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.ValuePhiNode;
@@ -37,7 +36,6 @@ import giraaff.nodes.calc.ConditionalNode;
 import giraaff.nodes.calc.UnaryNode;
 import giraaff.nodes.cfg.Block;
 import giraaff.nodes.cfg.ControlFlowGraph;
-import giraaff.nodes.cfg.ControlFlowGraph.RecursiveVisitor;
 import giraaff.nodes.extended.IntegerSwitchNode;
 import giraaff.nodes.memory.FixedAccessNode;
 import giraaff.nodes.memory.FloatingAccessNode;
@@ -49,7 +47,6 @@ import giraaff.phases.BasePhase;
 import giraaff.phases.Phase;
 import giraaff.phases.graph.ScheduledNodeIterator;
 import giraaff.phases.schedule.SchedulePhase;
-import giraaff.phases.schedule.SchedulePhase.SchedulingStrategy;
 import giraaff.phases.tiers.LowTierContext;
 import giraaff.phases.tiers.PhaseContext;
 
@@ -105,14 +102,14 @@ public final class FixReadsPhase extends BasePhase<LowTierContext>
     }
 
     // @class FixReadsPhase.RawConditionalEliminationVisitor
-    protected static final class RawConditionalEliminationVisitor implements RecursiveVisitor<Integer>
+    protected static final class RawConditionalEliminationVisitor implements ControlFlowGraph.RecursiveVisitor<Integer>
     {
         // @field
-        protected final NodeMap<StampElement> ___stampMap;
+        protected final NodeMap<FixReadsPhase.StampElement> ___stampMap;
         // @field
         protected final NodeStack ___undoOperations;
         // @field
-        private final ScheduleResult ___schedule;
+        private final StructuredGraph.ScheduleResult ___schedule;
         // @field
         private final StructuredGraph ___graph;
         // @field
@@ -124,8 +121,8 @@ public final class FixReadsPhase extends BasePhase<LowTierContext>
         // @field
         private final EconomicMap<MergeNode, EconomicMap<ValueNode, Stamp>> ___endMaps;
 
-        // @cons
-        protected RawConditionalEliminationVisitor(StructuredGraph __graph, ScheduleResult __schedule, MetaAccessProvider __metaAccess, boolean __replaceInputsWithConstants)
+        // @cons FixReadsPhase.RawConditionalEliminationVisitor
+        protected RawConditionalEliminationVisitor(StructuredGraph __graph, StructuredGraph.ScheduleResult __schedule, MetaAccessProvider __metaAccess, boolean __replaceInputsWithConstants)
         {
             super();
             this.___graph = __graph;
@@ -495,14 +492,14 @@ public final class FixReadsPhase extends BasePhase<LowTierContext>
         protected void registerNewStamp(ValueNode __value, Stamp __newStamp)
         {
             ValueNode __originalNode = __value;
-            this.___stampMap.setAndGrow(__originalNode, new StampElement(__newStamp, this.___stampMap.getAndGrow(__originalNode)));
+            this.___stampMap.setAndGrow(__originalNode, new FixReadsPhase.StampElement(__newStamp, this.___stampMap.getAndGrow(__originalNode)));
             this.___undoOperations.push(__originalNode);
         }
 
         protected Stamp getBestStamp(ValueNode __value)
         {
             ValueNode __originalNode = __value;
-            StampElement __currentStamp = this.___stampMap.getAndGrow(__originalNode);
+            FixReadsPhase.StampElement __currentStamp = this.___stampMap.getAndGrow(__originalNode);
             if (__currentStamp == null)
             {
                 return __value.stamp(NodeView.DEFAULT);
@@ -540,7 +537,7 @@ public final class FixReadsPhase extends BasePhase<LowTierContext>
         }
     }
 
-    // @cons
+    // @cons FixReadsPhase
     public FixReadsPhase(boolean __replaceInputsWithConstants, Phase __schedulePhase)
     {
         super();
@@ -552,8 +549,8 @@ public final class FixReadsPhase extends BasePhase<LowTierContext>
     protected void run(StructuredGraph __graph, LowTierContext __context)
     {
         this.___schedulePhase.apply(__graph);
-        ScheduleResult __schedule = __graph.getLastSchedule();
-        FixReadsClosure __fixReadsClosure = new FixReadsClosure();
+        StructuredGraph.ScheduleResult __schedule = __graph.getLastSchedule();
+        FixReadsPhase.FixReadsClosure __fixReadsClosure = new FixReadsPhase.FixReadsClosure();
         for (Block __block : __schedule.getCFG().getBlocks())
         {
             __fixReadsClosure.processNodes(__block, __schedule);
@@ -571,7 +568,7 @@ public final class FixReadsPhase extends BasePhase<LowTierContext>
         // @field
         private final boolean ___replaceInputsWithConstants;
 
-        // @cons
+        // @cons FixReadsPhase.RawCEPhase
         public RawCEPhase(boolean __replaceInputsWithConstants)
         {
             super();
@@ -589,17 +586,17 @@ public final class FixReadsPhase extends BasePhase<LowTierContext>
         {
             if (GraalOptions.rawConditionalElimination)
             {
-                SchedulePhase __schedulePhase = new SchedulePhase(SchedulingStrategy.LATEST, true);
+                SchedulePhase __schedulePhase = new SchedulePhase(SchedulePhase.SchedulingStrategy.LATEST, true);
                 __schedulePhase.apply(__graph);
-                ScheduleResult __schedule = __graph.getLastSchedule();
-                __schedule.getCFG().visitDominatorTree(new RawConditionalEliminationVisitor(__graph, __schedule, __context.getMetaAccess(), this.___replaceInputsWithConstants), false);
+                StructuredGraph.ScheduleResult __schedule = __graph.getLastSchedule();
+                __schedule.getCFG().visitDominatorTree(new FixReadsPhase.RawConditionalEliminationVisitor(__graph, __schedule, __context.getMetaAccess(), this.___replaceInputsWithConstants), false);
             }
         }
     }
 
-    protected ControlFlowGraph.RecursiveVisitor<?> createVisitor(StructuredGraph __graph, ScheduleResult __schedule, PhaseContext __context)
+    protected ControlFlowGraph.RecursiveVisitor<?> createVisitor(StructuredGraph __graph, StructuredGraph.ScheduleResult __schedule, PhaseContext __context)
     {
-        return new RawConditionalEliminationVisitor(__graph, __schedule, __context.getMetaAccess(), this.___replaceInputsWithConstants);
+        return new FixReadsPhase.RawConditionalEliminationVisitor(__graph, __schedule, __context.getMetaAccess(), this.___replaceInputsWithConstants);
     }
 
     // @class FixReadsPhase.StampElement
@@ -608,17 +605,17 @@ public final class FixReadsPhase extends BasePhase<LowTierContext>
         // @field
         private final Stamp ___stamp;
         // @field
-        private final StampElement ___parent;
+        private final FixReadsPhase.StampElement ___parent;
 
-        // @cons
-        public StampElement(Stamp __stamp, StampElement __parent)
+        // @cons FixReadsPhase.StampElement
+        public StampElement(Stamp __stamp, FixReadsPhase.StampElement __parent)
         {
             super();
             this.___stamp = __stamp;
             this.___parent = __parent;
         }
 
-        public StampElement getParent()
+        public FixReadsPhase.StampElement getParent()
         {
             return this.___parent;
         }

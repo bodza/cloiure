@@ -28,30 +28,30 @@ import giraaff.util.GraalError;
 public final class Interval
 {
     ///
-    // A set of interval lists, one per {@linkplain RegisterBinding binding} type.
+    // A set of interval lists, one per {@linkplain Interval.RegisterBinding binding} type.
     ///
     // @class Interval.RegisterBindingLists
     static final class RegisterBindingLists
     {
         ///
-        // List of intervals whose binding is currently {@link RegisterBinding#Fixed}.
+        // List of intervals whose binding is currently {@link Interval.RegisterBinding#Fixed}.
         ///
         // @field
         public Interval ___fixed;
 
         ///
-        // List of intervals whose binding is currently {@link RegisterBinding#Any}.
+        // List of intervals whose binding is currently {@link Interval.RegisterBinding#Any}.
         ///
         // @field
         public Interval ___any;
 
         ///
-        // List of intervals whose binding is currently {@link RegisterBinding#Stack}.
+        // List of intervals whose binding is currently {@link Interval.RegisterBinding#Stack}.
         ///
         // @field
         public Interval ___stack;
 
-        // @cons
+        // @cons Interval.RegisterBindingLists
         RegisterBindingLists(Interval __fixed, Interval __any, Interval __stack)
         {
             super();
@@ -66,7 +66,7 @@ public final class Interval
         // @param binding specifies the list to be returned
         // @return the list of intervals whose binding is {@code binding}
         ///
-        public Interval get(RegisterBinding __binding)
+        public Interval get(Interval.RegisterBinding __binding)
         {
             switch (__binding)
             {
@@ -86,7 +86,7 @@ public final class Interval
         // @param binding specifies the list to be replaced
         // @param list a list of intervals whose binding is {@code binding}
         ///
-        public void set(RegisterBinding __binding, Interval __list)
+        public void set(Interval.RegisterBinding __binding, Interval __list)
         {
             switch (__binding)
             {
@@ -114,7 +114,7 @@ public final class Interval
         // @param binding specifies the list to be updated
         // @param interval the interval to add
         ///
-        public void addToListSortedByCurrentFromPositions(RegisterBinding __binding, Interval __interval)
+        public void addToListSortedByCurrentFromPositions(Interval.RegisterBinding __binding, Interval __interval)
         {
             Interval __list = get(__binding);
             Interval __prev = null;
@@ -141,17 +141,17 @@ public final class Interval
 
         ///
         // Adds an interval to a list sorted by {@linkplain Interval#from() start} positions and
-        // {@linkplain Interval#firstUsage(RegisterPriority) first usage} positions.
+        // {@linkplain Interval#firstUsage(Interval.RegisterPriority) first usage} positions.
         //
         // @param binding specifies the list to be updated
         // @param interval the interval to add
         ///
-        public void addToListSortedByStartAndUsePositions(RegisterBinding __binding, Interval __interval)
+        public void addToListSortedByStartAndUsePositions(Interval.RegisterBinding __binding, Interval __interval)
         {
             Interval __list = get(__binding);
             Interval __prev = null;
             Interval __cur = __list;
-            while (__cur.from() < __interval.from() || (__cur.from() == __interval.from() && __cur.firstUsage(RegisterPriority.None) < __interval.firstUsage(RegisterPriority.None)))
+            while (__cur.from() < __interval.from() || (__cur.from() == __interval.from() && __cur.firstUsage(Interval.RegisterPriority.None) < __interval.firstUsage(Interval.RegisterPriority.None)))
             {
                 __prev = __cur;
                 __cur = __cur.___next;
@@ -174,7 +174,7 @@ public final class Interval
         // @param binding specifies the list to be updated
         // @param i the interval to remove
         ///
-        public void remove(RegisterBinding __binding, Interval __i)
+        public void remove(Interval.RegisterBinding __binding, Interval __i)
         {
             Interval __list = get(__binding);
             Interval __prev = null;
@@ -224,12 +224,12 @@ public final class Interval
         MustHaveRegister;
 
         // @def
-        public static final RegisterPriority[] VALUES = values();
+        public static final Interval.RegisterPriority[] VALUES = values();
 
         ///
         // Determines if this priority is higher than or equal to a given priority.
         ///
-        public boolean greaterEqual(RegisterPriority __other)
+        public boolean greaterEqual(Interval.RegisterPriority __other)
         {
             return ordinal() >= __other.ordinal();
         }
@@ -237,7 +237,7 @@ public final class Interval
         ///
         // Determines if this priority is lower than a given priority.
         ///
-        public boolean lessThan(RegisterPriority __other)
+        public boolean lessThan(Interval.RegisterPriority __other)
         {
             return ordinal() < __other.ordinal();
         }
@@ -266,15 +266,15 @@ public final class Interval
         Stack;
 
         // @def
-        public static final RegisterBinding[] VALUES = values();
+        public static final Interval.RegisterBinding[] VALUES = values();
     }
 
     ///
     // Constants denoting the linear-scan states an interval may be in with respect to the
     // {@linkplain Interval#from() start} {@code position} of the interval being processed.
     ///
-    // @enum Interval.State
-    enum State
+    // @enum Interval.IntervalState
+    enum IntervalState
     {
         ///
         // An interval that starts after {@code position}.
@@ -345,7 +345,7 @@ public final class Interval
         NoOptimization;
 
         // @def
-        public static final EnumSet<SpillState> ALWAYS_IN_MEMORY = EnumSet.of(SpillInDominator, StoreAtDefinition, StartInMemory);
+        public static final EnumSet<Interval.SpillState> ALWAYS_IN_MEMORY = EnumSet.of(SpillInDominator, StoreAtDefinition, StartInMemory);
     }
 
     ///
@@ -363,14 +363,14 @@ public final class Interval
         //
         // @param initialCapacity the initial capacity of the list in terms of entries
         ///
-        // @cons
+        // @cons Interval.UsePosList
         public UsePosList(int __initialCapacity)
         {
             super();
             this.___list = new IntList(__initialCapacity * 2);
         }
 
-        // @cons
+        // @cons Interval.UsePosList
         private UsePosList(IntList __list)
         {
             super();
@@ -386,7 +386,7 @@ public final class Interval
         // @return a use position list containing all entries removed from this list that have a use
         //         position greater or equal than {@code splitPos}
         ///
-        public UsePosList splitAt(int __splitPos)
+        public Interval.UsePosList splitAt(int __splitPos)
         {
             int __i = size() - 1;
             int __len = 0;
@@ -399,7 +399,7 @@ public final class Interval
             IntList __childList = this.___list;
             this.___list = IntList.copy(this.___list, __listSplitIndex, __len);
             __childList.setSize(__listSplitIndex);
-            return new UsePosList(__childList);
+            return new Interval.UsePosList(__childList);
         }
 
         ///
@@ -419,12 +419,12 @@ public final class Interval
         // @param index the index of the entry for which the register priority is returned
         // @return the register priority of entry {@code index} in this list
         ///
-        public RegisterPriority registerPriority(int __index)
+        public Interval.RegisterPriority registerPriority(int __index)
         {
-            return RegisterPriority.VALUES[this.___list.get((__index << 1) + 1)];
+            return Interval.RegisterPriority.VALUES[this.___list.get((__index << 1) + 1)];
         }
 
-        public void add(int __usePos, RegisterPriority __registerPriority)
+        public void add(int __usePos, Interval.RegisterPriority __registerPriority)
         {
             this.___list.add(__usePos);
             this.___list.add(__registerPriority.ordinal());
@@ -440,7 +440,7 @@ public final class Interval
             this.___list.setSize(this.___list.size() - 2);
         }
 
-        public void setRegisterPriority(int __index, RegisterPriority __registerPriority)
+        public void setRegisterPriority(int __index, Interval.RegisterPriority __registerPriority)
         {
             this.___list.set((__index << 1) + 1, __registerPriority.ordinal());
         }
@@ -492,7 +492,7 @@ public final class Interval
     // List of (use-positions, register-priorities) pairs, sorted by use-positions.
     ///
     // @field
-    private UsePosList ___usePosList;
+    private Interval.UsePosList ___usePosList;
 
     ///
     // Iterator used to traverse the ranges of an interval.
@@ -510,7 +510,7 @@ public final class Interval
     // The linear-scan state of this interval.
     ///
     // @field
-    State ___state;
+    Interval.IntervalState ___state;
 
     // @field
     private int ___cachedTo; // cached value: to of last range (-1: not cached)
@@ -546,7 +546,7 @@ public final class Interval
     // For spill move optimization.
     ///
     // @field
-    private SpillState ___spillState;
+    private Interval.SpillState ___spillState;
 
     ///
     // Position where this interval is defined (if defined only once).
@@ -694,7 +694,7 @@ public final class Interval
     }
 
     // for spill optimization
-    public SpillState spillState()
+    public Interval.SpillState spillState()
     {
         return splitParent().___spillState;
     }
@@ -704,7 +704,7 @@ public final class Interval
         return splitParent().___spillDefinitionPos;
     }
 
-    public void setSpillState(SpillState __state)
+    public void setSpillState(Interval.SpillState __state)
     {
         splitParent().___spillState = __state;
     }
@@ -717,7 +717,7 @@ public final class Interval
     // returns true if this interval has a shadow copy on the stack that is always correct
     public boolean alwaysInMemory()
     {
-        return SpillState.ALWAYS_IN_MEMORY.contains(spillState()) && !canMaterialize();
+        return Interval.SpillState.ALWAYS_IN_MEMORY.contains(spillState()) && !canMaterialize();
     }
 
     void removeFirstUsePos()
@@ -772,7 +772,7 @@ public final class Interval
         return this.___current.intersectsAt(__it.___current);
     }
 
-    // @cons
+    // @cons Interval
     Interval(AllocatableValue __operand, int __operandNumber, Interval __intervalEndMarker, Range __rangeEndMarker)
     {
         super();
@@ -784,11 +784,11 @@ public final class Interval
         }
         this.___kind = LIRKind.Illegal;
         this.___first = __rangeEndMarker;
-        this.___usePosList = new UsePosList(4);
+        this.___usePosList = new Interval.UsePosList(4);
         this.___current = __rangeEndMarker;
         this.___next = __intervalEndMarker;
         this.___cachedTo = -1;
-        this.___spillState = SpillState.NoDefinitionFound;
+        this.___spillState = Interval.SpillState.NoDefinitionFound;
         this.___spillDefinitionPos = -1;
         this.___splitParent = this;
         this.___currentSplitChild = this;
@@ -976,24 +976,24 @@ public final class Interval
         }
     }
 
-    private RegisterPriority adaptPriority(RegisterPriority __priority)
+    private Interval.RegisterPriority adaptPriority(Interval.RegisterPriority __priority)
     {
         // In case of re-materialized values we require that use-operands are registers,
         // because we don't have the value in a stack location.
         // (Note that ShouldHaveRegister means that the operand can also be a StackSlot).
-        if (__priority == RegisterPriority.ShouldHaveRegister && canMaterialize())
+        if (__priority == Interval.RegisterPriority.ShouldHaveRegister && canMaterialize())
         {
-            return RegisterPriority.MustHaveRegister;
+            return Interval.RegisterPriority.MustHaveRegister;
         }
         return __priority;
     }
 
     // note: use positions are sorted descending = first use has highest index
-    int firstUsage(RegisterPriority __minRegisterPriority)
+    int firstUsage(Interval.RegisterPriority __minRegisterPriority)
     {
         for (int __i = this.___usePosList.size() - 1; __i >= 0; --__i)
         {
-            RegisterPriority __registerPriority = adaptPriority(this.___usePosList.registerPriority(__i));
+            Interval.RegisterPriority __registerPriority = adaptPriority(this.___usePosList.registerPriority(__i));
             if (__registerPriority.greaterEqual(__minRegisterPriority))
             {
                 return this.___usePosList.usePos(__i);
@@ -1002,7 +1002,7 @@ public final class Interval
         return Integer.MAX_VALUE;
     }
 
-    int nextUsage(RegisterPriority __minRegisterPriority, int __from)
+    int nextUsage(Interval.RegisterPriority __minRegisterPriority, int __from)
     {
         for (int __i = this.___usePosList.size() - 1; __i >= 0; --__i)
         {
@@ -1015,7 +1015,7 @@ public final class Interval
         return Integer.MAX_VALUE;
     }
 
-    int nextUsageExact(RegisterPriority __exactRegisterPriority, int __from)
+    int nextUsageExact(Interval.RegisterPriority __exactRegisterPriority, int __from)
     {
         for (int __i = this.___usePosList.size() - 1; __i >= 0; --__i)
         {
@@ -1028,7 +1028,7 @@ public final class Interval
         return Integer.MAX_VALUE;
     }
 
-    int previousUsage(RegisterPriority __minRegisterPriority, int __from)
+    int previousUsage(Interval.RegisterPriority __minRegisterPriority, int __from)
     {
         int __prev = -1;
         for (int __i = this.___usePosList.size() - 1; __i >= 0; --__i)
@@ -1046,10 +1046,10 @@ public final class Interval
         return __prev;
     }
 
-    public void addUsePos(int __pos, RegisterPriority __registerPriority)
+    public void addUsePos(int __pos, Interval.RegisterPriority __registerPriority)
     {
         // do not add use positions for precolored intervals because they are never used
-        if (__registerPriority != RegisterPriority.None && LIRValueUtil.isVariable(this.___operand))
+        if (__registerPriority != Interval.RegisterPriority.None && LIRValueUtil.isVariable(this.___operand))
         {
             // note: addUse is called in descending order, so list gets sorted automatically by just appending new use positions
             int __len = this.___usePosList.size();
@@ -1238,7 +1238,7 @@ public final class Interval
     ///
     // Gets the use position information for this interval.
     ///
-    public UsePosList usePosList()
+    public Interval.UsePosList usePosList()
     {
         return this.___usePosList;
     }

@@ -3,12 +3,12 @@ package giraaff.lir.phases;
 import giraaff.core.common.GraalOptions;
 import giraaff.lir.alloc.SaveCalleeSaveRegisters;
 import giraaff.lir.constopt.ConstantLoadOptimization;
-import giraaff.lir.phases.PreAllocationOptimizationPhase.PreAllocationOptimizationContext;
+import giraaff.lir.phases.PreAllocationOptimizationPhase;
 
 // @class PreAllocationOptimizationStage
-public final class PreAllocationOptimizationStage extends LIRPhaseSuite<PreAllocationOptimizationContext>
+public final class PreAllocationOptimizationStage extends LIRPhaseSuite<PreAllocationOptimizationPhase.PreAllocationOptimizationContext>
 {
-    // @cons
+    // @cons PreAllocationOptimizationStage
     public PreAllocationOptimizationStage()
     {
         super();

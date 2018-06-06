@@ -15,7 +15,7 @@ public final class RandomSeedNode extends FloatingNode implements LIRLowerable
     // @def
     public static final NodeClass<RandomSeedNode> TYPE = NodeClass.create(RandomSeedNode.class);
 
-    // @cons
+    // @cons RandomSeedNode
     public RandomSeedNode()
     {
         super(TYPE, StampFactory.intValue());

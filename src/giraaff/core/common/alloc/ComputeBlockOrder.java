@@ -103,7 +103,7 @@ public final class ComputeBlockOrder
     ///
     private static <T extends AbstractBlockBase<T>> PriorityQueue<T> initializeWorklist(T __startBlock, BitSet __visitedBlocks)
     {
-        PriorityQueue<T> __result = new PriorityQueue<>(INITIAL_WORKLIST_CAPACITY, new BlockOrderComparator<>());
+        PriorityQueue<T> __result = new PriorityQueue<>(INITIAL_WORKLIST_CAPACITY, new ComputeBlockOrder.BlockOrderComparator<>());
         __result.add(__startBlock);
         __visitedBlocks.set(__startBlock.getId());
         return __result;

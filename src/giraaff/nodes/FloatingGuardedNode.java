@@ -1,6 +1,7 @@
 package giraaff.nodes;
 
 import giraaff.core.common.type.Stamp;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.nodeinfo.InputType;
 import giraaff.nodes.calc.FloatingNode;
@@ -13,17 +14,17 @@ public abstract class FloatingGuardedNode extends FloatingNode implements Guarde
     // @def
     public static final NodeClass<FloatingGuardedNode> TYPE = NodeClass.create(FloatingGuardedNode.class);
 
-    @OptionalInput(InputType.Guard)
+    @Node.OptionalInput(InputType.Guard)
     // @field
     protected GuardingNode ___guard;
 
-    // @cons
+    // @cons FloatingGuardedNode
     protected FloatingGuardedNode(NodeClass<? extends FloatingGuardedNode> __c, Stamp __stamp)
     {
         super(__c, __stamp);
     }
 
-    // @cons
+    // @cons FloatingGuardedNode
     protected FloatingGuardedNode(NodeClass<? extends FloatingGuardedNode> __c, Stamp __stamp, GuardingNode __guard)
     {
         super(__c, __stamp);

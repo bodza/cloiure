@@ -5,8 +5,7 @@ import jdk.vm.ci.code.Register;
 import giraaff.api.replacements.Snippet;
 import giraaff.api.replacements.Snippet.ConstantParameter;
 import giraaff.core.common.spi.ForeignCallDescriptor;
-import giraaff.graph.Node.ConstantNodeParameter;
-import giraaff.graph.Node.NodeIntrinsic;
+import giraaff.graph.Node;
 import giraaff.hotspot.HotSpotBackend;
 import giraaff.hotspot.HotSpotForeignCallLinkage;
 import giraaff.hotspot.meta.HotSpotProviders;
@@ -29,7 +28,7 @@ import giraaff.word.Word;
 // @class ExceptionHandlerStub
 public final class ExceptionHandlerStub extends SnippetStub
 {
-    // @cons
+    // @cons ExceptionHandlerStub
     public ExceptionHandlerStub(HotSpotProviders __providers, HotSpotForeignCallLinkage __linkage)
     {
         super("exceptionHandler", __providers, __linkage);
@@ -57,7 +56,7 @@ public final class ExceptionHandlerStub extends SnippetStub
     }
 
     @Snippet
-    private static void exceptionHandler(Object __exception, Word __exceptionPc, @ConstantParameter Register __threadRegister)
+    private static void exceptionHandler(Object __exception, Word __exceptionPc, @Snippet.ConstantParameter Register __threadRegister)
     {
         Word __thread = HotSpotReplacementsUtil.registerAsWord(__threadRegister);
         HotSpotReplacementsUtil.writeExceptionOop(__thread, __exception);
@@ -75,6 +74,6 @@ public final class ExceptionHandlerStub extends SnippetStub
     // @def
     public static final ForeignCallDescriptor EXCEPTION_HANDLER_FOR_PC = StubUtil.newDescriptor(ExceptionHandlerStub.class, "exceptionHandlerForPc", Word.class, Word.class);
 
-    @NodeIntrinsic(value = StubForeignCallNode.class)
-    public static native Word exceptionHandlerForPc(@ConstantNodeParameter ForeignCallDescriptor __exceptionHandlerForPc, Word __thread);
+    @Node.NodeIntrinsic(value = StubForeignCallNode.class)
+    public static native Word exceptionHandlerForPc(@Node.ConstantNodeParameter ForeignCallDescriptor __exceptionHandlerForPc, Word __thread);
 }

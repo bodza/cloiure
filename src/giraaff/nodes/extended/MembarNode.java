@@ -3,6 +3,7 @@ package giraaff.nodes.extended;
 import org.graalvm.word.LocationIdentity;
 
 import giraaff.core.common.type.StampFactory;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.nodes.FixedWithNextNode;
 import giraaff.nodes.memory.MemoryCheckpoint;
@@ -12,7 +13,7 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 ///
 // Creates a memory barrier.
 ///
-// @NodeInfo.allowedUsageTypes "Memory"
+// @NodeInfo.allowedUsageTypes "InputType.Memory"
 // @class MembarNode
 public final class MembarNode extends FixedWithNextNode implements LIRLowerable, MemoryCheckpoint.Single
 {
@@ -24,13 +25,13 @@ public final class MembarNode extends FixedWithNextNode implements LIRLowerable,
     // @field
     protected final LocationIdentity ___location;
 
-    // @cons
+    // @cons MembarNode
     public MembarNode(int __barriers)
     {
         this(__barriers, LocationIdentity.any());
     }
 
-    // @cons
+    // @cons MembarNode
     public MembarNode(int __barriers, LocationIdentity __location)
     {
         super(TYPE, StampFactory.forVoid());
@@ -50,9 +51,9 @@ public final class MembarNode extends FixedWithNextNode implements LIRLowerable,
         __gen.getLIRGeneratorTool().emitMembar(this.___barriers);
     }
 
-    @NodeIntrinsic
-    public static native void memoryBarrier(@ConstantNodeParameter int __barriers);
+    @Node.NodeIntrinsic
+    public static native void memoryBarrier(@Node.ConstantNodeParameter int __barriers);
 
-    @NodeIntrinsic
-    public static native void memoryBarrier(@ConstantNodeParameter int __barriers, @ConstantNodeParameter LocationIdentity __location);
+    @Node.NodeIntrinsic
+    public static native void memoryBarrier(@Node.ConstantNodeParameter int __barriers, @Node.ConstantNodeParameter LocationIdentity __location);
 }

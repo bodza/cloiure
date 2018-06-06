@@ -1,11 +1,11 @@
 package giraaff.core.phases;
 
-import giraaff.lir.phases.AllocationPhase.AllocationContext;
+import giraaff.lir.phases.AllocationPhase;
 import giraaff.lir.phases.AllocationStage;
 import giraaff.lir.phases.LIRPhaseSuite;
-import giraaff.lir.phases.PostAllocationOptimizationPhase.PostAllocationOptimizationContext;
+import giraaff.lir.phases.PostAllocationOptimizationPhase;
 import giraaff.lir.phases.PostAllocationOptimizationStage;
-import giraaff.lir.phases.PreAllocationOptimizationPhase.PreAllocationOptimizationContext;
+import giraaff.lir.phases.PreAllocationOptimizationPhase;
 import giraaff.lir.phases.PreAllocationOptimizationStage;
 import giraaff.phases.PhaseSuite;
 import giraaff.phases.tiers.CompilerConfiguration;
@@ -19,7 +19,7 @@ import giraaff.phases.tiers.MidTierContext;
 // @class CommunityCompilerConfiguration
 public final class CommunityCompilerConfiguration implements CompilerConfiguration
 {
-    // @cons
+    // @cons CommunityCompilerConfiguration
     public CommunityCompilerConfiguration()
     {
         super();
@@ -44,19 +44,19 @@ public final class CommunityCompilerConfiguration implements CompilerConfigurati
     }
 
     @Override
-    public LIRPhaseSuite<PreAllocationOptimizationContext> createPreAllocationOptimizationStage()
+    public LIRPhaseSuite<PreAllocationOptimizationPhase.PreAllocationOptimizationContext> createPreAllocationOptimizationStage()
     {
         return new PreAllocationOptimizationStage();
     }
 
     @Override
-    public LIRPhaseSuite<AllocationContext> createAllocationStage()
+    public LIRPhaseSuite<AllocationPhase.AllocationContext> createAllocationStage()
     {
         return new AllocationStage();
     }
 
     @Override
-    public LIRPhaseSuite<PostAllocationOptimizationContext> createPostAllocationOptimizationStage()
+    public LIRPhaseSuite<PostAllocationOptimizationPhase.PostAllocationOptimizationContext> createPostAllocationOptimizationStage()
     {
         return new PostAllocationOptimizationStage();
     }

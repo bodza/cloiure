@@ -10,6 +10,7 @@ import giraaff.graph.NodeClass;
 import giraaff.graph.spi.Canonicalizable;
 import giraaff.graph.spi.CanonicalizerTool;
 import giraaff.nodes.memory.FixedAccessNode;
+import giraaff.nodes.memory.HeapAccess;
 import giraaff.nodes.memory.ReadNode;
 import giraaff.nodes.memory.address.AddressNode;
 import giraaff.nodes.spi.Lowerable;
@@ -30,8 +31,8 @@ public final class JavaReadNode extends FixedAccessNode implements Lowerable, Gu
     // @field
     protected final boolean ___compressible;
 
-    // @cons
-    public JavaReadNode(JavaKind __readKind, AddressNode __address, LocationIdentity __location, BarrierType __barrierType, boolean __compressible)
+    // @cons JavaReadNode
+    public JavaReadNode(JavaKind __readKind, AddressNode __address, LocationIdentity __location, HeapAccess.BarrierType __barrierType, boolean __compressible)
     {
         super(TYPE, __address, __location, StampFactory.forKind(__readKind), __barrierType);
         this.___readKind = __readKind;

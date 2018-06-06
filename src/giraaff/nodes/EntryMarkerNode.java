@@ -10,14 +10,14 @@ import giraaff.util.GraalError;
 // This node will be inserted at point specified by {@link StructuredGraph#getEntryBCI()}, usually
 // by the graph builder.
 ///
-// @NodeInfo.allowedUsageTypes "Association"
+// @NodeInfo.allowedUsageTypes "InputType.Association"
 // @class EntryMarkerNode
 public final class EntryMarkerNode extends BeginStateSplitNode implements IterableNodeType, LIRLowerable
 {
     // @def
     public static final NodeClass<EntryMarkerNode> TYPE = NodeClass.create(EntryMarkerNode.class);
 
-    // @cons
+    // @cons EntryMarkerNode
     public EntryMarkerNode()
     {
         super(TYPE);

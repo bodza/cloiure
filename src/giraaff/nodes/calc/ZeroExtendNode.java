@@ -4,9 +4,6 @@ import jdk.vm.ci.code.CodeUtil;
 
 import giraaff.core.common.calc.CanonicalCondition;
 import giraaff.core.common.type.ArithmeticOpTable;
-import giraaff.core.common.type.ArithmeticOpTable.IntegerConvertOp;
-import giraaff.core.common.type.ArithmeticOpTable.IntegerConvertOp.Narrow;
-import giraaff.core.common.type.ArithmeticOpTable.IntegerConvertOp.ZeroExtend;
 import giraaff.core.common.type.IntegerStamp;
 import giraaff.core.common.type.PrimitiveStamp;
 import giraaff.core.common.type.Stamp;
@@ -21,7 +18,7 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 // The {@code ZeroExtendNode} converts an integer to a wider integer using zero extension.
 ///
 // @class ZeroExtendNode
-public final class ZeroExtendNode extends IntegerConvertNode<ZeroExtend, Narrow>
+public final class ZeroExtendNode extends IntegerConvertNode<ArithmeticOpTable.IntegerConvertOp.ZeroExtend, ArithmeticOpTable.IntegerConvertOp.Narrow>
 {
     // @def
     public static final NodeClass<ZeroExtendNode> TYPE = NodeClass.create(ZeroExtendNode.class);
@@ -29,13 +26,13 @@ public final class ZeroExtendNode extends IntegerConvertNode<ZeroExtend, Narrow>
     // @field
     private final boolean ___inputAlwaysPositive;
 
-    // @cons
+    // @cons ZeroExtendNode
     public ZeroExtendNode(ValueNode __input, int __resultBits)
     {
         this(__input, PrimitiveStamp.getBits(__input.stamp(NodeView.DEFAULT)), __resultBits, false);
     }
 
-    // @cons
+    // @cons ZeroExtendNode
     public ZeroExtendNode(ValueNode __input, int __inputBits, int __resultBits, boolean __inputAlwaysPositive)
     {
         super(TYPE, ArithmeticOpTable::getZeroExtend, ArithmeticOpTable::getNarrow, __inputBits, __resultBits, __input);
@@ -54,7 +51,7 @@ public final class ZeroExtendNode extends IntegerConvertNode<ZeroExtend, Narrow>
 
     public static ValueNode create(ValueNode __input, int __inputBits, int __resultBits, NodeView __view, boolean __alwaysPositive)
     {
-        IntegerConvertOp<ZeroExtend> __signExtend = ArithmeticOpTable.forStamp(__input.stamp(__view)).getZeroExtend();
+        ArithmeticOpTable.IntegerConvertOp<ArithmeticOpTable.IntegerConvertOp.ZeroExtend> __signExtend = ArithmeticOpTable.forStamp(__input.stamp(__view)).getZeroExtend();
         ValueNode __synonym = findSynonym(__signExtend, __input, __inputBits, __resultBits, __signExtend.foldStamp(__inputBits, __resultBits, __input.stamp(__view)));
         if (__synonym != null)
         {

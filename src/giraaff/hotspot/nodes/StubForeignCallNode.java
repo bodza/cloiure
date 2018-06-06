@@ -10,6 +10,7 @@ import giraaff.core.common.spi.ForeignCallDescriptor;
 import giraaff.core.common.spi.ForeignCallLinkage;
 import giraaff.core.common.spi.ForeignCallsProvider;
 import giraaff.core.common.type.Stamp;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.graph.NodeInputList;
 import giraaff.hotspot.replacements.HotSpotReplacementsUtil;
@@ -22,14 +23,14 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 ///
 // Node for a {@linkplain ForeignCallDescriptor foreign} call from within a stub.
 ///
-// @NodeInfo.allowedUsageTypes "Memory"
+// @NodeInfo.allowedUsageTypes "InputType.Memory"
 // @class StubForeignCallNode
 public final class StubForeignCallNode extends FixedWithNextNode implements LIRLowerable, MemoryCheckpoint.Multi
 {
     // @def
     public static final NodeClass<StubForeignCallNode> TYPE = NodeClass.create(StubForeignCallNode.class);
 
-    @Input
+    @Node.Input
     // @field
     NodeInputList<ValueNode> ___arguments;
     // @field
@@ -38,8 +39,8 @@ public final class StubForeignCallNode extends FixedWithNextNode implements LIRL
     // @field
     protected final ForeignCallDescriptor ___descriptor;
 
-    // @cons
-    public StubForeignCallNode(@InjectedNodeParameter ForeignCallsProvider __foreignCalls, @InjectedNodeParameter Stamp __stamp, ForeignCallDescriptor __descriptor, ValueNode... __arguments)
+    // @cons StubForeignCallNode
+    public StubForeignCallNode(@Node.InjectedNodeParameter ForeignCallsProvider __foreignCalls, @Node.InjectedNodeParameter Stamp __stamp, ForeignCallDescriptor __descriptor, ValueNode... __arguments)
     {
         super(TYPE, __stamp);
         this.___arguments = new NodeInputList<>(this, __arguments);

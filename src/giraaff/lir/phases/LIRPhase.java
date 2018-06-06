@@ -13,7 +13,7 @@ import giraaff.lir.gen.LIRGenerationResult;
 // @class LIRPhase
 public abstract class LIRPhase<C>
 {
-    // @cons
+    // @cons LIRPhase
     public LIRPhase()
     {
         super();

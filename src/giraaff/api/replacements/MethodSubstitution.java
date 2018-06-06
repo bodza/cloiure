@@ -53,6 +53,7 @@ import jdk.vm.ci.meta.Signature;
 ///
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
+// @iface MethodSubstitution
 public @interface MethodSubstitution
 {
     ///

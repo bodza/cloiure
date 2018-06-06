@@ -6,6 +6,7 @@ import jdk.vm.ci.meta.AllocatableValue;
 import jdk.vm.ci.meta.Constant;
 
 import giraaff.asm.amd64.AMD64MacroAssembler;
+import giraaff.lir.LIRInstruction;
 import giraaff.lir.LIRInstructionClass;
 import giraaff.lir.amd64.AMD64LIRInstruction;
 import giraaff.lir.asm.CompilationResultBuilder;
@@ -17,7 +18,7 @@ public final class AMD64HotSpotLoadAddressOp extends AMD64LIRInstruction
     // @def
     public static final LIRInstructionClass<AMD64HotSpotLoadAddressOp> TYPE = LIRInstructionClass.create(AMD64HotSpotLoadAddressOp.class);
 
-    @Def({OperandFlag.REG})
+    @LIRInstruction.Def({LIRInstruction.OperandFlag.REG})
     // @field
     protected AllocatableValue ___result;
     // @field
@@ -25,7 +26,7 @@ public final class AMD64HotSpotLoadAddressOp extends AMD64LIRInstruction
     // @field
     private final Object ___note;
 
-    // @cons
+    // @cons AMD64HotSpotLoadAddressOp
     public AMD64HotSpotLoadAddressOp(AllocatableValue __result, Constant __constant, Object __note)
     {
         super(TYPE);

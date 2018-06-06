@@ -19,7 +19,7 @@ public abstract class AbstractInlineInfo implements InlineInfo
     // @field
     protected final Invoke ___invoke;
 
-    // @cons
+    // @cons AbstractInlineInfo
     public AbstractInlineInfo(Invoke __invoke)
     {
         super();

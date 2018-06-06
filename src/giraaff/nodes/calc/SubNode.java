@@ -4,8 +4,6 @@ import jdk.vm.ci.meta.Constant;
 import jdk.vm.ci.meta.PrimitiveConstant;
 
 import giraaff.core.common.type.ArithmeticOpTable;
-import giraaff.core.common.type.ArithmeticOpTable.BinaryOp;
-import giraaff.core.common.type.ArithmeticOpTable.BinaryOp.Sub;
 import giraaff.core.common.type.IntegerStamp;
 import giraaff.core.common.type.Stamp;
 import giraaff.core.common.type.StampFactory;
@@ -19,18 +17,18 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 import giraaff.nodes.util.GraphUtil;
 
 // @class SubNode
-public class SubNode extends BinaryArithmeticNode<Sub> implements NarrowableArithmeticNode
+public class SubNode extends BinaryArithmeticNode<ArithmeticOpTable.BinaryOp.Sub> implements NarrowableArithmeticNode
 {
     // @def
     public static final NodeClass<SubNode> TYPE = NodeClass.create(SubNode.class);
 
-    // @cons
+    // @cons SubNode
     public SubNode(ValueNode __x, ValueNode __y)
     {
         this(TYPE, __x, __y);
     }
 
-    // @cons
+    // @cons SubNode
     protected SubNode(NodeClass<? extends SubNode> __c, ValueNode __x, ValueNode __y)
     {
         super(__c, ArithmeticOpTable::getSub, __x, __y);
@@ -38,7 +36,7 @@ public class SubNode extends BinaryArithmeticNode<Sub> implements NarrowableArit
 
     public static ValueNode create(ValueNode __x, ValueNode __y, NodeView __view)
     {
-        BinaryOp<Sub> __op = ArithmeticOpTable.forStamp(__x.stamp(__view)).getSub();
+        ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.Sub> __op = ArithmeticOpTable.forStamp(__x.stamp(__view)).getSub();
         Stamp __stamp = __op.foldStamp(__x.stamp(__view), __y.stamp(__view));
         ConstantNode __tryConstantFold = tryConstantFold(__op, __x, __y, __stamp, __view);
         if (__tryConstantFold != null)
@@ -48,7 +46,7 @@ public class SubNode extends BinaryArithmeticNode<Sub> implements NarrowableArit
         return canonical(null, __op, __stamp, __x, __y, __view);
     }
 
-    private static ValueNode canonical(SubNode __subNode, BinaryOp<Sub> __op, Stamp __stamp, ValueNode __forX, ValueNode __forY, NodeView __view)
+    private static ValueNode canonical(SubNode __subNode, ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.Sub> __op, Stamp __stamp, ValueNode __forX, ValueNode __forY, NodeView __view)
     {
         SubNode __self = __subNode;
         if (GraphUtil.unproxify(__forX) == GraphUtil.unproxify(__forY))
@@ -167,7 +165,7 @@ public class SubNode extends BinaryArithmeticNode<Sub> implements NarrowableArit
             return __ret;
         }
 
-        BinaryOp<Sub> __op = getOp(__forX, __forY);
+        ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.Sub> __op = getOp(__forX, __forY);
         return canonical(this, __op, this.___stamp, __forX, __forY, __view);
     }
 

@@ -11,16 +11,16 @@ public interface InliningPolicy
     static final class Decision
     {
         // @def
-        public static final Decision YES = new Decision(true, "(unknown reason)");
+        public static final InliningPolicy.Decision YES = new InliningPolicy.Decision(true, "(unknown reason)");
         // @def
-        public static final Decision NO = new Decision(false, "(unknown reason)");
+        public static final InliningPolicy.Decision NO = new InliningPolicy.Decision(false, "(unknown reason)");
 
         // @field
         public final boolean ___shouldInline;
         // @field
         public final String ___reason;
 
-        // @cons
+        // @cons InliningPolicy.Decision
         private Decision(boolean __shouldInline, String __reason)
         {
             super();
@@ -31,5 +31,5 @@ public interface InliningPolicy
 
     boolean continueInlining(StructuredGraph __graph);
 
-    Decision isWorthInlining(Replacements __replacements, MethodInvocation __invocation, int __inliningDepth, boolean __fullyProcessed);
+    InliningPolicy.Decision isWorthInlining(Replacements __replacements, MethodInvocation __invocation, int __inliningDepth, boolean __fullyProcessed);
 }

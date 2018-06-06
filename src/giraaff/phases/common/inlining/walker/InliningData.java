@@ -89,7 +89,7 @@ public final class InliningData
     // @field
     private int ___maxGraphs;
 
-    // @cons
+    // @cons InliningData
     public InliningData(StructuredGraph __rootGraph, HighTierContext __context, int __maxMethodPerInlining, CanonicalizerPhase __canonicalizer, InliningPolicy __inliningPolicy, LinkedList<Invoke> __rootInvokes)
     {
         super();
@@ -416,7 +416,7 @@ public final class InliningData
             EconomicSet<Node> __parameterUsages = __calleeInfo.inline(new Providers(this.___context), __reason);
             __canonicalizedNodes.addAll(__parameterUsages);
 
-            Graph.Mark __markBeforeCanonicalization = __callerGraph.getMark();
+            Graph.NodeMark __markBeforeCanonicalization = __callerGraph.getMark();
 
             this.___canonicalizer.applyIncremental(__callerGraph, this.___context, __canonicalizedNodes);
 

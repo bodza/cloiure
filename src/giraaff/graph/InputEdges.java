@@ -2,8 +2,8 @@ package giraaff.graph;
 
 import java.util.ArrayList;
 
-import giraaff.graph.Edges.Type;
-import giraaff.graph.NodeClass.InputInfo;
+import giraaff.graph.Edges;
+import giraaff.graph.NodeClass;
 import giraaff.nodeinfo.InputType;
 
 // @class InputEdges
@@ -14,10 +14,10 @@ public final class InputEdges extends Edges
     // @field
     private final boolean[] ___isOptional;
 
-    // @cons
-    public InputEdges(int __directCount, ArrayList<InputInfo> __edges)
+    // @cons InputEdges
+    public InputEdges(int __directCount, ArrayList<NodeClass.InputInfo> __edges)
     {
-        super(Type.Inputs, __directCount, __edges);
+        super(Edges.EdgesType.Inputs, __directCount, __edges);
 
         this.___inputTypes = new InputType[__edges.size()];
         this.___isOptional = new boolean[__edges.size()];
@@ -28,11 +28,11 @@ public final class InputEdges extends Edges
         }
     }
 
-    public static void translateInto(InputEdges __inputs, ArrayList<InputInfo> __infos)
+    public static void translateInto(InputEdges __inputs, ArrayList<NodeClass.InputInfo> __infos)
     {
         for (int __index = 0; __index < __inputs.getCount(); __index++)
         {
-            __infos.add(new InputInfo(__inputs.___offsets[__index], __inputs.getName(__index), __inputs.getType(__index), __inputs.getDeclaringClass(__index), __inputs.___inputTypes[__index], __inputs.isOptional(__index)));
+            __infos.add(new NodeClass.InputInfo(__inputs.___offsets[__index], __inputs.getName(__index), __inputs.getType(__index), __inputs.getDeclaringClass(__index), __inputs.___inputTypes[__index], __inputs.isOptional(__index)));
         }
     }
 

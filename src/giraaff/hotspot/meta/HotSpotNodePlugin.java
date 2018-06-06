@@ -38,7 +38,7 @@ public final class HotSpotNodePlugin implements NodePlugin, TypePlugin
     // @field
     protected final WordOperationPlugin ___wordOperationPlugin;
 
-    // @cons
+    // @cons HotSpotNodePlugin
     public HotSpotNodePlugin(WordOperationPlugin __wordOperationPlugin)
     {
         super();

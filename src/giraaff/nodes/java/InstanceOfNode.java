@@ -9,6 +9,7 @@ import giraaff.core.common.type.ObjectStamp;
 import giraaff.core.common.type.Stamp;
 import giraaff.core.common.type.StampFactory;
 import giraaff.core.common.type.TypeReference;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.graph.spi.CanonicalizerTool;
 import giraaff.nodeinfo.InputType;
@@ -40,17 +41,17 @@ public final class InstanceOfNode extends UnaryOpLogicNode implements Lowerable,
 
     // @field
     private JavaTypeProfile ___profile;
-    @OptionalInput(InputType.Anchor)
+    @Node.OptionalInput(InputType.Anchor)
     // @field
     protected AnchoringNode ___anchor;
 
-    // @cons
+    // @cons InstanceOfNode
     private InstanceOfNode(ObjectStamp __checkedStamp, ValueNode __object, JavaTypeProfile __profile, AnchoringNode __anchor)
     {
         this(TYPE, __checkedStamp, __object, __profile, __anchor);
     }
 
-    // @cons
+    // @cons InstanceOfNode
     protected InstanceOfNode(NodeClass<? extends InstanceOfNode> __c, ObjectStamp __checkedStamp, ValueNode __object, JavaTypeProfile __profile, AnchoringNode __anchor)
     {
         super(__c, __object);

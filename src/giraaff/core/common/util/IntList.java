@@ -21,7 +21,7 @@ public final class IntList
     ///
     // Creates an int list with a specified initial capacity.
     ///
-    // @cons
+    // @cons IntList
     public IntList(int __initialCapacity)
     {
         super();
@@ -35,7 +35,7 @@ public final class IntList
     // @param initialSize the initial {@linkplain #size() size} of the list (must be less than or
     //            equal to {@code array.length}
     ///
-    // @cons
+    // @cons IntList
     public IntList(int[] __array, int __initialSize)
     {
         super();

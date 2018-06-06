@@ -17,7 +17,7 @@ import giraaff.nodes.SnippetAnchorNode;
 // @class HotSpotClassSubstitutions
 public final class HotSpotClassSubstitutions
 {
-    // @cons
+    // @cons HotSpotClassSubstitutions
     private HotSpotClassSubstitutions()
     {
         super();

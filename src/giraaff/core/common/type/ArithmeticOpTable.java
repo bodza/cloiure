@@ -11,25 +11,7 @@ import java.util.function.Predicate;
 import jdk.vm.ci.meta.Constant;
 import jdk.vm.ci.meta.JavaKind;
 
-import giraaff.core.common.type.ArithmeticOpTable.BinaryOp.Add;
-import giraaff.core.common.type.ArithmeticOpTable.BinaryOp.And;
-import giraaff.core.common.type.ArithmeticOpTable.BinaryOp.Div;
-import giraaff.core.common.type.ArithmeticOpTable.BinaryOp.Mul;
-import giraaff.core.common.type.ArithmeticOpTable.BinaryOp.MulHigh;
-import giraaff.core.common.type.ArithmeticOpTable.BinaryOp.Or;
-import giraaff.core.common.type.ArithmeticOpTable.BinaryOp.Rem;
-import giraaff.core.common.type.ArithmeticOpTable.BinaryOp.Sub;
-import giraaff.core.common.type.ArithmeticOpTable.BinaryOp.UMulHigh;
-import giraaff.core.common.type.ArithmeticOpTable.BinaryOp.Xor;
-import giraaff.core.common.type.ArithmeticOpTable.IntegerConvertOp.Narrow;
-import giraaff.core.common.type.ArithmeticOpTable.IntegerConvertOp.SignExtend;
-import giraaff.core.common.type.ArithmeticOpTable.IntegerConvertOp.ZeroExtend;
-import giraaff.core.common.type.ArithmeticOpTable.ShiftOp.Shl;
-import giraaff.core.common.type.ArithmeticOpTable.ShiftOp.Shr;
-import giraaff.core.common.type.ArithmeticOpTable.ShiftOp.UShr;
-import giraaff.core.common.type.ArithmeticOpTable.UnaryOp.Abs;
-import giraaff.core.common.type.ArithmeticOpTable.UnaryOp.Neg;
-import giraaff.core.common.type.ArithmeticOpTable.UnaryOp.Not;
+import giraaff.core.common.type.ArithmeticOpTable;
 
 ///
 // Information about arithmetic operations.
@@ -38,48 +20,48 @@ import giraaff.core.common.type.ArithmeticOpTable.UnaryOp.Not;
 public final class ArithmeticOpTable
 {
     // @field
-    private final UnaryOp<Neg> ___neg;
+    private final ArithmeticOpTable.UnaryOp<ArithmeticOpTable.UnaryOp.Neg> ___neg;
     // @field
-    private final BinaryOp<Add> ___add;
+    private final ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.Add> ___add;
     // @field
-    private final BinaryOp<Sub> ___sub;
+    private final ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.Sub> ___sub;
 
     // @field
-    private final BinaryOp<Mul> ___mul;
+    private final ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.Mul> ___mul;
     // @field
-    private final BinaryOp<MulHigh> ___mulHigh;
+    private final ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.MulHigh> ___mulHigh;
     // @field
-    private final BinaryOp<UMulHigh> ___umulHigh;
+    private final ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.UMulHigh> ___umulHigh;
     // @field
-    private final BinaryOp<Div> ___div;
+    private final ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.Div> ___div;
     // @field
-    private final BinaryOp<Rem> ___rem;
+    private final ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.Rem> ___rem;
 
     // @field
-    private final UnaryOp<Not> ___not;
+    private final ArithmeticOpTable.UnaryOp<ArithmeticOpTable.UnaryOp.Not> ___not;
     // @field
-    private final BinaryOp<And> ___and;
+    private final ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.And> ___and;
     // @field
-    private final BinaryOp<Or> ___or;
+    private final ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.Or> ___or;
     // @field
-    private final BinaryOp<Xor> ___xor;
+    private final ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.Xor> ___xor;
 
     // @field
-    private final ShiftOp<Shl> ___shl;
+    private final ArithmeticOpTable.ShiftOp<ArithmeticOpTable.ShiftOp.Shl> ___shl;
     // @field
-    private final ShiftOp<Shr> ___shr;
+    private final ArithmeticOpTable.ShiftOp<ArithmeticOpTable.ShiftOp.Shr> ___shr;
     // @field
-    private final ShiftOp<UShr> ___ushr;
+    private final ArithmeticOpTable.ShiftOp<ArithmeticOpTable.ShiftOp.UShr> ___ushr;
 
     // @field
-    private final UnaryOp<Abs> ___abs;
+    private final ArithmeticOpTable.UnaryOp<ArithmeticOpTable.UnaryOp.Abs> ___abs;
 
     // @field
-    private final IntegerConvertOp<ZeroExtend> ___zeroExtend;
+    private final ArithmeticOpTable.IntegerConvertOp<ArithmeticOpTable.IntegerConvertOp.ZeroExtend> ___zeroExtend;
     // @field
-    private final IntegerConvertOp<SignExtend> ___signExtend;
+    private final ArithmeticOpTable.IntegerConvertOp<ArithmeticOpTable.IntegerConvertOp.SignExtend> ___signExtend;
     // @field
-    private final IntegerConvertOp<Narrow> ___narrow;
+    private final ArithmeticOpTable.IntegerConvertOp<ArithmeticOpTable.IntegerConvertOp.Narrow> ___narrow;
 
     // @field
     private final int ___hash;
@@ -96,24 +78,24 @@ public final class ArithmeticOpTable
         }
     }
 
-    public BinaryOp<?>[] getBinaryOps()
+    public ArithmeticOpTable.BinaryOp<?>[] getBinaryOps()
     {
-        return new BinaryOp<?>[] { this.___add, this.___sub, this.___mul, this.___mulHigh, this.___umulHigh, this.___div, this.___rem, this.___and, this.___or, this.___xor };
+        return new ArithmeticOpTable.BinaryOp<?>[] { this.___add, this.___sub, this.___mul, this.___mulHigh, this.___umulHigh, this.___div, this.___rem, this.___and, this.___or, this.___xor };
     }
 
-    public UnaryOp<?>[] getUnaryOps()
+    public ArithmeticOpTable.UnaryOp<?>[] getUnaryOps()
     {
-        return new UnaryOp<?>[] { this.___neg, this.___not, this.___abs };
+        return new ArithmeticOpTable.UnaryOp<?>[] { this.___neg, this.___not, this.___abs };
     }
 
-    public ShiftOp<?>[] getShiftOps()
+    public ArithmeticOpTable.ShiftOp<?>[] getShiftOps()
     {
-        return new ShiftOp<?>[] { this.___shl, this.___shr, this.___ushr };
+        return new ArithmeticOpTable.ShiftOp<?>[] { this.___shl, this.___shr, this.___ushr };
     }
 
-    public IntegerConvertOp<?>[] getIntegerConvertOps()
+    public ArithmeticOpTable.IntegerConvertOp<?>[] getIntegerConvertOps()
     {
-        return new IntegerConvertOp<?>[] { this.___zeroExtend, this.___signExtend, this.___narrow };
+        return new ArithmeticOpTable.IntegerConvertOp<?>[] { this.___zeroExtend, this.___signExtend, this.___narrow };
     }
 
     // @def
@@ -122,13 +104,13 @@ public final class ArithmeticOpTable
     // @iface ArithmeticOpTable.ArithmeticOpWrapper
     public interface ArithmeticOpWrapper
     {
-        <OP> UnaryOp<OP> wrapUnaryOp(UnaryOp<OP> __op);
+        <OP> ArithmeticOpTable.UnaryOp<OP> wrapUnaryOp(ArithmeticOpTable.UnaryOp<OP> __op);
 
-        <OP> BinaryOp<OP> wrapBinaryOp(BinaryOp<OP> __op);
+        <OP> ArithmeticOpTable.BinaryOp<OP> wrapBinaryOp(ArithmeticOpTable.BinaryOp<OP> __op);
 
-        <OP> ShiftOp<OP> wrapShiftOp(ShiftOp<OP> __op);
+        <OP> ArithmeticOpTable.ShiftOp<OP> wrapShiftOp(ArithmeticOpTable.ShiftOp<OP> __op);
 
-        <OP> IntegerConvertOp<OP> wrapIntegerConvertOp(IntegerConvertOp<OP> __op);
+        <OP> ArithmeticOpTable.IntegerConvertOp<OP> wrapIntegerConvertOp(ArithmeticOpTable.IntegerConvertOp<OP> __op);
     }
 
     private static <T> T wrapIfNonNull(Function<T, T> __wrapper, T __obj)
@@ -143,38 +125,38 @@ public final class ArithmeticOpTable
         }
     }
 
-    public static ArithmeticOpTable wrap(ArithmeticOpWrapper __wrapper, ArithmeticOpTable __inner)
+    public static ArithmeticOpTable wrap(ArithmeticOpTable.ArithmeticOpWrapper __wrapper, ArithmeticOpTable __inner)
     {
-        UnaryOp<Neg> __neg = wrapIfNonNull(__wrapper::wrapUnaryOp, __inner.getNeg());
-        BinaryOp<Add> __add = wrapIfNonNull(__wrapper::wrapBinaryOp, __inner.getAdd());
-        BinaryOp<Sub> __sub = wrapIfNonNull(__wrapper::wrapBinaryOp, __inner.getSub());
+        ArithmeticOpTable.UnaryOp<ArithmeticOpTable.UnaryOp.Neg> __neg = wrapIfNonNull(__wrapper::wrapUnaryOp, __inner.getNeg());
+        ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.Add> __add = wrapIfNonNull(__wrapper::wrapBinaryOp, __inner.getAdd());
+        ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.Sub> __sub = wrapIfNonNull(__wrapper::wrapBinaryOp, __inner.getSub());
 
-        BinaryOp<Mul> __mul = wrapIfNonNull(__wrapper::wrapBinaryOp, __inner.getMul());
-        BinaryOp<MulHigh> __mulHigh = wrapIfNonNull(__wrapper::wrapBinaryOp, __inner.getMulHigh());
-        BinaryOp<UMulHigh> __umulHigh = wrapIfNonNull(__wrapper::wrapBinaryOp, __inner.getUMulHigh());
-        BinaryOp<Div> __div = wrapIfNonNull(__wrapper::wrapBinaryOp, __inner.getDiv());
-        BinaryOp<Rem> __rem = wrapIfNonNull(__wrapper::wrapBinaryOp, __inner.getRem());
+        ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.Mul> __mul = wrapIfNonNull(__wrapper::wrapBinaryOp, __inner.getMul());
+        ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.MulHigh> __mulHigh = wrapIfNonNull(__wrapper::wrapBinaryOp, __inner.getMulHigh());
+        ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.UMulHigh> __umulHigh = wrapIfNonNull(__wrapper::wrapBinaryOp, __inner.getUMulHigh());
+        ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.Div> __div = wrapIfNonNull(__wrapper::wrapBinaryOp, __inner.getDiv());
+        ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.Rem> __rem = wrapIfNonNull(__wrapper::wrapBinaryOp, __inner.getRem());
 
-        UnaryOp<Not> __not = wrapIfNonNull(__wrapper::wrapUnaryOp, __inner.getNot());
-        BinaryOp<And> __and = wrapIfNonNull(__wrapper::wrapBinaryOp, __inner.getAnd());
-        BinaryOp<Or> __or = wrapIfNonNull(__wrapper::wrapBinaryOp, __inner.getOr());
-        BinaryOp<Xor> __xor = wrapIfNonNull(__wrapper::wrapBinaryOp, __inner.getXor());
+        ArithmeticOpTable.UnaryOp<ArithmeticOpTable.UnaryOp.Not> __not = wrapIfNonNull(__wrapper::wrapUnaryOp, __inner.getNot());
+        ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.And> __and = wrapIfNonNull(__wrapper::wrapBinaryOp, __inner.getAnd());
+        ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.Or> __or = wrapIfNonNull(__wrapper::wrapBinaryOp, __inner.getOr());
+        ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.Xor> __xor = wrapIfNonNull(__wrapper::wrapBinaryOp, __inner.getXor());
 
-        ShiftOp<Shl> __shl = wrapIfNonNull(__wrapper::wrapShiftOp, __inner.getShl());
-        ShiftOp<Shr> __shr = wrapIfNonNull(__wrapper::wrapShiftOp, __inner.getShr());
-        ShiftOp<UShr> __ushr = wrapIfNonNull(__wrapper::wrapShiftOp, __inner.getUShr());
+        ArithmeticOpTable.ShiftOp<ArithmeticOpTable.ShiftOp.Shl> __shl = wrapIfNonNull(__wrapper::wrapShiftOp, __inner.getShl());
+        ArithmeticOpTable.ShiftOp<ArithmeticOpTable.ShiftOp.Shr> __shr = wrapIfNonNull(__wrapper::wrapShiftOp, __inner.getShr());
+        ArithmeticOpTable.ShiftOp<ArithmeticOpTable.ShiftOp.UShr> __ushr = wrapIfNonNull(__wrapper::wrapShiftOp, __inner.getUShr());
 
-        UnaryOp<Abs> __abs = wrapIfNonNull(__wrapper::wrapUnaryOp, __inner.getAbs());
+        ArithmeticOpTable.UnaryOp<ArithmeticOpTable.UnaryOp.Abs> __abs = wrapIfNonNull(__wrapper::wrapUnaryOp, __inner.getAbs());
 
-        IntegerConvertOp<ZeroExtend> __zeroExtend = wrapIfNonNull(__wrapper::wrapIntegerConvertOp, __inner.getZeroExtend());
-        IntegerConvertOp<SignExtend> __signExtend = wrapIfNonNull(__wrapper::wrapIntegerConvertOp, __inner.getSignExtend());
-        IntegerConvertOp<Narrow> __narrow = wrapIfNonNull(__wrapper::wrapIntegerConvertOp, __inner.getNarrow());
+        ArithmeticOpTable.IntegerConvertOp<ArithmeticOpTable.IntegerConvertOp.ZeroExtend> __zeroExtend = wrapIfNonNull(__wrapper::wrapIntegerConvertOp, __inner.getZeroExtend());
+        ArithmeticOpTable.IntegerConvertOp<ArithmeticOpTable.IntegerConvertOp.SignExtend> __signExtend = wrapIfNonNull(__wrapper::wrapIntegerConvertOp, __inner.getSignExtend());
+        ArithmeticOpTable.IntegerConvertOp<ArithmeticOpTable.IntegerConvertOp.Narrow> __narrow = wrapIfNonNull(__wrapper::wrapIntegerConvertOp, __inner.getNarrow());
 
         return new ArithmeticOpTable(__neg, __add, __sub, __mul, __mulHigh, __umulHigh, __div, __rem, __not, __and, __or, __xor, __shl, __shr, __ushr, __abs, __zeroExtend, __signExtend, __narrow);
     }
 
-    // @cons
-    protected ArithmeticOpTable(UnaryOp<Neg> __neg, BinaryOp<Add> __add, BinaryOp<Sub> __sub, BinaryOp<Mul> __mul, BinaryOp<MulHigh> __mulHigh, BinaryOp<UMulHigh> __umulHigh, BinaryOp<Div> __div, BinaryOp<Rem> __rem, UnaryOp<Not> __not, BinaryOp<And> __and, BinaryOp<Or> __or, BinaryOp<Xor> __xor, ShiftOp<Shl> __shl, ShiftOp<Shr> __shr, ShiftOp<UShr> __ushr, UnaryOp<Abs> __abs, IntegerConvertOp<ZeroExtend> __zeroExtend, IntegerConvertOp<SignExtend> __signExtend, IntegerConvertOp<Narrow> __narrow)
+    // @cons ArithmeticOpTable
+    protected ArithmeticOpTable(ArithmeticOpTable.UnaryOp<ArithmeticOpTable.UnaryOp.Neg> __neg, ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.Add> __add, ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.Sub> __sub, ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.Mul> __mul, ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.MulHigh> __mulHigh, ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.UMulHigh> __umulHigh, ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.Div> __div, ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.Rem> __rem, ArithmeticOpTable.UnaryOp<ArithmeticOpTable.UnaryOp.Not> __not, ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.And> __and, ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.Or> __or, ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.Xor> __xor, ArithmeticOpTable.ShiftOp<ArithmeticOpTable.ShiftOp.Shl> __shl, ArithmeticOpTable.ShiftOp<ArithmeticOpTable.ShiftOp.Shr> __shr, ArithmeticOpTable.ShiftOp<ArithmeticOpTable.ShiftOp.UShr> __ushr, ArithmeticOpTable.UnaryOp<ArithmeticOpTable.UnaryOp.Abs> __abs, ArithmeticOpTable.IntegerConvertOp<ArithmeticOpTable.IntegerConvertOp.ZeroExtend> __zeroExtend, ArithmeticOpTable.IntegerConvertOp<ArithmeticOpTable.IntegerConvertOp.SignExtend> __signExtend, ArithmeticOpTable.IntegerConvertOp<ArithmeticOpTable.IntegerConvertOp.Narrow> __narrow)
     {
         super();
         this.___neg = __neg;
@@ -209,7 +191,7 @@ public final class ArithmeticOpTable
     ///
     // Describes the unary negation operation.
     ///
-    public UnaryOp<Neg> getNeg()
+    public ArithmeticOpTable.UnaryOp<ArithmeticOpTable.UnaryOp.Neg> getNeg()
     {
         return this.___neg;
     }
@@ -217,7 +199,7 @@ public final class ArithmeticOpTable
     ///
     // Describes the addition operation.
     ///
-    public BinaryOp<Add> getAdd()
+    public ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.Add> getAdd()
     {
         return this.___add;
     }
@@ -225,7 +207,7 @@ public final class ArithmeticOpTable
     ///
     // Describes the subtraction operation.
     ///
-    public BinaryOp<Sub> getSub()
+    public ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.Sub> getSub()
     {
         return this.___sub;
     }
@@ -233,7 +215,7 @@ public final class ArithmeticOpTable
     ///
     // Describes the multiplication operation.
     ///
-    public BinaryOp<Mul> getMul()
+    public ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.Mul> getMul()
     {
         return this.___mul;
     }
@@ -241,7 +223,7 @@ public final class ArithmeticOpTable
     ///
     // Describes a signed operation that multiples the upper 32-bits of two long values.
     ///
-    public BinaryOp<MulHigh> getMulHigh()
+    public ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.MulHigh> getMulHigh()
     {
         return this.___mulHigh;
     }
@@ -249,7 +231,7 @@ public final class ArithmeticOpTable
     ///
     // Describes an unsigned operation that multiples the upper 32-bits of two long values.
     ///
-    public BinaryOp<UMulHigh> getUMulHigh()
+    public ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.UMulHigh> getUMulHigh()
     {
         return this.___umulHigh;
     }
@@ -257,7 +239,7 @@ public final class ArithmeticOpTable
     ///
     // Describes the division operation.
     ///
-    public BinaryOp<Div> getDiv()
+    public ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.Div> getDiv()
     {
         return this.___div;
     }
@@ -265,7 +247,7 @@ public final class ArithmeticOpTable
     ///
     // Describes the remainder operation.
     ///
-    public BinaryOp<Rem> getRem()
+    public ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.Rem> getRem()
     {
         return this.___rem;
     }
@@ -273,7 +255,7 @@ public final class ArithmeticOpTable
     ///
     // Describes the bitwise not operation.
     ///
-    public UnaryOp<Not> getNot()
+    public ArithmeticOpTable.UnaryOp<ArithmeticOpTable.UnaryOp.Not> getNot()
     {
         return this.___not;
     }
@@ -281,7 +263,7 @@ public final class ArithmeticOpTable
     ///
     // Describes the bitwise and operation.
     ///
-    public BinaryOp<And> getAnd()
+    public ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.And> getAnd()
     {
         return this.___and;
     }
@@ -289,7 +271,7 @@ public final class ArithmeticOpTable
     ///
     // Describes the bitwise or operation.
     ///
-    public BinaryOp<Or> getOr()
+    public ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.Or> getOr()
     {
         return this.___or;
     }
@@ -297,7 +279,7 @@ public final class ArithmeticOpTable
     ///
     // Describes the bitwise xor operation.
     ///
-    public BinaryOp<Xor> getXor()
+    public ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.Xor> getXor()
     {
         return this.___xor;
     }
@@ -305,7 +287,7 @@ public final class ArithmeticOpTable
     ///
     // Describes the shift left operation.
     ///
-    public ShiftOp<Shl> getShl()
+    public ArithmeticOpTable.ShiftOp<ArithmeticOpTable.ShiftOp.Shl> getShl()
     {
         return this.___shl;
     }
@@ -313,7 +295,7 @@ public final class ArithmeticOpTable
     ///
     // Describes the signed shift right operation.
     ///
-    public ShiftOp<Shr> getShr()
+    public ArithmeticOpTable.ShiftOp<ArithmeticOpTable.ShiftOp.Shr> getShr()
     {
         return this.___shr;
     }
@@ -321,7 +303,7 @@ public final class ArithmeticOpTable
     ///
     // Describes the unsigned shift right operation.
     ///
-    public ShiftOp<UShr> getUShr()
+    public ArithmeticOpTable.ShiftOp<ArithmeticOpTable.ShiftOp.UShr> getUShr()
     {
         return this.___ushr;
     }
@@ -329,7 +311,7 @@ public final class ArithmeticOpTable
     ///
     // Describes the absolute value operation.
     ///
-    public UnaryOp<Abs> getAbs()
+    public ArithmeticOpTable.UnaryOp<ArithmeticOpTable.UnaryOp.Abs> getAbs()
     {
         return this.___abs;
     }
@@ -337,7 +319,7 @@ public final class ArithmeticOpTable
     ///
     // Describes the zero extend conversion.
     ///
-    public IntegerConvertOp<ZeroExtend> getZeroExtend()
+    public ArithmeticOpTable.IntegerConvertOp<ArithmeticOpTable.IntegerConvertOp.ZeroExtend> getZeroExtend()
     {
         return this.___zeroExtend;
     }
@@ -345,7 +327,7 @@ public final class ArithmeticOpTable
     ///
     // Describes the sign extend conversion.
     ///
-    public IntegerConvertOp<SignExtend> getSignExtend()
+    public ArithmeticOpTable.IntegerConvertOp<ArithmeticOpTable.IntegerConvertOp.SignExtend> getSignExtend()
     {
         return this.___signExtend;
     }
@@ -353,7 +335,7 @@ public final class ArithmeticOpTable
     ///
     // Describes the narrowing conversion.
     ///
-    public IntegerConvertOp<Narrow> getNarrow()
+    public ArithmeticOpTable.IntegerConvertOp<ArithmeticOpTable.IntegerConvertOp.Narrow> getNarrow()
     {
         return this.___narrow;
     }
@@ -404,14 +386,14 @@ public final class ArithmeticOpTable
         return false;
     }
 
-    // @class ArithmeticOpTable.Op
-    public abstract static class Op
+    // @class ArithmeticOpTable.ArithmeticOp
+    public abstract static class ArithmeticOp
     {
         // @field
         private final String ___operator;
 
-        // @cons
-        protected Op(String __operator)
+        // @cons ArithmeticOpTable.ArithmeticOp
+        protected ArithmeticOp(String __operator)
         {
             super();
             this.___operator = __operator;
@@ -438,7 +420,7 @@ public final class ArithmeticOpTable
             {
                 return false;
             }
-            Op __that = (Op) __obj;
+            ArithmeticOpTable.ArithmeticOp __that = (ArithmeticOpTable.ArithmeticOp) __obj;
             if (this.___operator.equals(__that.___operator))
             {
                 return true;
@@ -451,12 +433,12 @@ public final class ArithmeticOpTable
     // Describes a unary arithmetic operation.
     ///
     // @class ArithmeticOpTable.UnaryOp
-    public abstract static class UnaryOp<T> extends Op
+    public abstract static class UnaryOp<T> extends ArithmeticOpTable.ArithmeticOp
     {
         // @class ArithmeticOpTable.UnaryOp.Neg
-        public abstract static class Neg extends UnaryOp<Neg>
+        public abstract static class Neg extends ArithmeticOpTable.UnaryOp<ArithmeticOpTable.UnaryOp.Neg>
         {
-            // @cons
+            // @cons ArithmeticOpTable.UnaryOp.Neg
             protected Neg()
             {
                 super("-");
@@ -464,9 +446,9 @@ public final class ArithmeticOpTable
         }
 
         // @class ArithmeticOpTable.UnaryOp.Not
-        public abstract static class Not extends UnaryOp<Not>
+        public abstract static class Not extends ArithmeticOpTable.UnaryOp<ArithmeticOpTable.UnaryOp.Not>
         {
-            // @cons
+            // @cons ArithmeticOpTable.UnaryOp.Not
             protected Not()
             {
                 super("~");
@@ -474,16 +456,16 @@ public final class ArithmeticOpTable
         }
 
         // @class ArithmeticOpTable.UnaryOp.Abs
-        public abstract static class Abs extends UnaryOp<Abs>
+        public abstract static class Abs extends ArithmeticOpTable.UnaryOp<ArithmeticOpTable.UnaryOp.Abs>
         {
-            // @cons
+            // @cons ArithmeticOpTable.UnaryOp.Abs
             protected Abs()
             {
                 super("ABS");
             }
         }
 
-        // @cons
+        // @cons ArithmeticOpTable.UnaryOp
         protected UnaryOp(String __operation)
         {
             super(__operation);
@@ -499,7 +481,7 @@ public final class ArithmeticOpTable
         ///
         public abstract Stamp foldStamp(Stamp __stamp);
 
-        public UnaryOp<T> unwrap()
+        public ArithmeticOpTable.UnaryOp<T> unwrap()
         {
             return this;
         }
@@ -509,12 +491,12 @@ public final class ArithmeticOpTable
     // Describes a binary arithmetic operation.
     ///
     // @class ArithmeticOpTable.BinaryOp
-    public abstract static class BinaryOp<T> extends Op
+    public abstract static class BinaryOp<T> extends ArithmeticOpTable.ArithmeticOp
     {
         // @class ArithmeticOpTable.BinaryOp.Add
-        public abstract static class Add extends BinaryOp<Add>
+        public abstract static class Add extends ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.Add>
         {
-            // @cons
+            // @cons ArithmeticOpTable.BinaryOp.Add
             protected Add(boolean __associative, boolean __commutative)
             {
                 super("+", __associative, __commutative);
@@ -522,9 +504,9 @@ public final class ArithmeticOpTable
         }
 
         // @class ArithmeticOpTable.BinaryOp.Sub
-        public abstract static class Sub extends BinaryOp<Sub>
+        public abstract static class Sub extends ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.Sub>
         {
-            // @cons
+            // @cons ArithmeticOpTable.BinaryOp.Sub
             protected Sub(boolean __associative, boolean __commutative)
             {
                 super("-", __associative, __commutative);
@@ -532,9 +514,9 @@ public final class ArithmeticOpTable
         }
 
         // @class ArithmeticOpTable.BinaryOp.Mul
-        public abstract static class Mul extends BinaryOp<Mul>
+        public abstract static class Mul extends ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.Mul>
         {
-            // @cons
+            // @cons ArithmeticOpTable.BinaryOp.Mul
             protected Mul(boolean __associative, boolean __commutative)
             {
                 super("*", __associative, __commutative);
@@ -542,9 +524,9 @@ public final class ArithmeticOpTable
         }
 
         // @class ArithmeticOpTable.BinaryOp.MulHigh
-        public abstract static class MulHigh extends BinaryOp<MulHigh>
+        public abstract static class MulHigh extends ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.MulHigh>
         {
-            // @cons
+            // @cons ArithmeticOpTable.BinaryOp.MulHigh
             protected MulHigh(boolean __associative, boolean __commutative)
             {
                 super("*H", __associative, __commutative);
@@ -552,9 +534,9 @@ public final class ArithmeticOpTable
         }
 
         // @class ArithmeticOpTable.BinaryOp.UMulHigh
-        public abstract static class UMulHigh extends BinaryOp<UMulHigh>
+        public abstract static class UMulHigh extends ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.UMulHigh>
         {
-            // @cons
+            // @cons ArithmeticOpTable.BinaryOp.UMulHigh
             protected UMulHigh(boolean __associative, boolean __commutative)
             {
                 super("|*H|", __associative, __commutative);
@@ -562,9 +544,9 @@ public final class ArithmeticOpTable
         }
 
         // @class ArithmeticOpTable.BinaryOp.Div
-        public abstract static class Div extends BinaryOp<Div>
+        public abstract static class Div extends ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.Div>
         {
-            // @cons
+            // @cons ArithmeticOpTable.BinaryOp.Div
             protected Div(boolean __associative, boolean __commutative)
             {
                 super("/", __associative, __commutative);
@@ -572,9 +554,9 @@ public final class ArithmeticOpTable
         }
 
         // @class ArithmeticOpTable.BinaryOp.Rem
-        public abstract static class Rem extends BinaryOp<Rem>
+        public abstract static class Rem extends ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.Rem>
         {
-            // @cons
+            // @cons ArithmeticOpTable.BinaryOp.Rem
             protected Rem(boolean __associative, boolean __commutative)
             {
                 super("%", __associative, __commutative);
@@ -582,9 +564,9 @@ public final class ArithmeticOpTable
         }
 
         // @class ArithmeticOpTable.BinaryOp.And
-        public abstract static class And extends BinaryOp<And>
+        public abstract static class And extends ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.And>
         {
-            // @cons
+            // @cons ArithmeticOpTable.BinaryOp.And
             protected And(boolean __associative, boolean __commutative)
             {
                 super("&", __associative, __commutative);
@@ -592,9 +574,9 @@ public final class ArithmeticOpTable
         }
 
         // @class ArithmeticOpTable.BinaryOp.Or
-        public abstract static class Or extends BinaryOp<Or>
+        public abstract static class Or extends ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.Or>
         {
-            // @cons
+            // @cons ArithmeticOpTable.BinaryOp.Or
             protected Or(boolean __associative, boolean __commutative)
             {
                 super("|", __associative, __commutative);
@@ -602,9 +584,9 @@ public final class ArithmeticOpTable
         }
 
         // @class ArithmeticOpTable.BinaryOp.Xor
-        public abstract static class Xor extends BinaryOp<Xor>
+        public abstract static class Xor extends ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.Xor>
         {
-            // @cons
+            // @cons ArithmeticOpTable.BinaryOp.Xor
             protected Xor(boolean __associative, boolean __commutative)
             {
                 super("^", __associative, __commutative);
@@ -616,7 +598,7 @@ public final class ArithmeticOpTable
         // @field
         private final boolean ___commutative;
 
-        // @cons
+        // @cons ArithmeticOpTable.BinaryOp
         protected BinaryOp(String __operation, boolean __associative, boolean __commutative)
         {
             super(__operation);
@@ -683,7 +665,7 @@ public final class ArithmeticOpTable
             return null;
         }
 
-        public BinaryOp<T> unwrap()
+        public ArithmeticOpTable.BinaryOp<T> unwrap()
         {
             return this;
         }
@@ -713,7 +695,7 @@ public final class ArithmeticOpTable
             {
                 return false;
             }
-            BinaryOp<?> __that = (BinaryOp<?>) __obj;
+            ArithmeticOpTable.BinaryOp<?> __that = (ArithmeticOpTable.BinaryOp<?>) __obj;
             if (this.___associative != __that.___associative)
             {
                 return false;
@@ -731,12 +713,12 @@ public final class ArithmeticOpTable
     // {@link JavaKind#Int}.
     ///
     // @class ArithmeticOpTable.ShiftOp
-    public abstract static class ShiftOp<OP> extends Op
+    public abstract static class ShiftOp<OP> extends ArithmeticOpTable.ArithmeticOp
     {
         // @class ArithmeticOpTable.ShiftOp.Shl
-        public abstract static class Shl extends ShiftOp<Shl>
+        public abstract static class Shl extends ArithmeticOpTable.ShiftOp<ArithmeticOpTable.ShiftOp.Shl>
         {
-            // @cons
+            // @cons ArithmeticOpTable.ShiftOp.Shl
             public Shl()
             {
                 super("<<");
@@ -744,9 +726,9 @@ public final class ArithmeticOpTable
         }
 
         // @class ArithmeticOpTable.ShiftOp.Shr
-        public abstract static class Shr extends ShiftOp<Shr>
+        public abstract static class Shr extends ArithmeticOpTable.ShiftOp<ArithmeticOpTable.ShiftOp.Shr>
         {
-            // @cons
+            // @cons ArithmeticOpTable.ShiftOp.Shr
             public Shr()
             {
                 super(">>");
@@ -754,16 +736,16 @@ public final class ArithmeticOpTable
         }
 
         // @class ArithmeticOpTable.ShiftOp.UShr
-        public abstract static class UShr extends ShiftOp<UShr>
+        public abstract static class UShr extends ArithmeticOpTable.ShiftOp<ArithmeticOpTable.ShiftOp.UShr>
         {
-            // @cons
+            // @cons ArithmeticOpTable.ShiftOp.UShr
             public UShr()
             {
                 super(">>>");
             }
         }
 
-        // @cons
+        // @cons ArithmeticOpTable.ShiftOp
         protected ShiftOp(String __operation)
         {
             super(__operation);
@@ -786,12 +768,12 @@ public final class ArithmeticOpTable
     }
 
     // @class ArithmeticOpTable.IntegerConvertOp
-    public abstract static class IntegerConvertOp<T> extends Op
+    public abstract static class IntegerConvertOp<T> extends ArithmeticOpTable.ArithmeticOp
     {
         // @class ArithmeticOpTable.IntegerConvertOp.ZeroExtend
-        public abstract static class ZeroExtend extends IntegerConvertOp<ZeroExtend>
+        public abstract static class ZeroExtend extends ArithmeticOpTable.IntegerConvertOp<ArithmeticOpTable.IntegerConvertOp.ZeroExtend>
         {
-            // @cons
+            // @cons ArithmeticOpTable.IntegerConvertOp.ZeroExtend
             protected ZeroExtend()
             {
                 super("ZeroExtend");
@@ -799,9 +781,9 @@ public final class ArithmeticOpTable
         }
 
         // @class ArithmeticOpTable.IntegerConvertOp.SignExtend
-        public abstract static class SignExtend extends IntegerConvertOp<SignExtend>
+        public abstract static class SignExtend extends ArithmeticOpTable.IntegerConvertOp<ArithmeticOpTable.IntegerConvertOp.SignExtend>
         {
-            // @cons
+            // @cons ArithmeticOpTable.IntegerConvertOp.SignExtend
             protected SignExtend()
             {
                 super("SignExtend");
@@ -809,9 +791,9 @@ public final class ArithmeticOpTable
         }
 
         // @class ArithmeticOpTable.IntegerConvertOp.Narrow
-        public abstract static class Narrow extends IntegerConvertOp<Narrow>
+        public abstract static class Narrow extends ArithmeticOpTable.IntegerConvertOp<ArithmeticOpTable.IntegerConvertOp.Narrow>
         {
-            // @cons
+            // @cons ArithmeticOpTable.IntegerConvertOp.Narrow
             protected Narrow()
             {
                 super("Narrow");
@@ -824,7 +806,7 @@ public final class ArithmeticOpTable
             }
         }
 
-        // @cons
+        // @cons ArithmeticOpTable.IntegerConvertOp
         protected IntegerConvertOp(String __op)
         {
             super(__op);
@@ -834,7 +816,7 @@ public final class ArithmeticOpTable
 
         public abstract Stamp foldStamp(int __inputBits, int __resultBits, Stamp __stamp);
 
-        public IntegerConvertOp<T> unwrap()
+        public ArithmeticOpTable.IntegerConvertOp<T> unwrap()
         {
             return this;
         }

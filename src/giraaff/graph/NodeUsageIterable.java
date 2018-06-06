@@ -10,7 +10,7 @@ final class NodeUsageIterable implements NodeIterable<Node>
     // @field
     private final Node ___node;
 
-    // @cons
+    // @cons NodeUsageIterable
     NodeUsageIterable(Node __node)
     {
         super();

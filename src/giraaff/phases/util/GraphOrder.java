@@ -18,7 +18,7 @@ import giraaff.util.GraalError;
 // @class GraphOrder
 public final class GraphOrder
 {
-    // @cons
+    // @cons GraphOrder
     private GraphOrder()
     {
         super();

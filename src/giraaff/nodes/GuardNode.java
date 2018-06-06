@@ -26,14 +26,14 @@ import giraaff.nodes.extended.GuardingNode;
 // maximum flexibility for the guard node and guarantees that deoptimization occurs only if the
 // control flow would have reached the guarded node (without taking exceptions into account).
 ///
-// @NodeInfo.allowedUsageTypes "Guard"
+// @NodeInfo.allowedUsageTypes "InputType.Guard"
 // @class GuardNode
 public final class GuardNode extends FloatingAnchoredNode implements Canonicalizable, GuardingNode, DeoptimizingGuard, IterableNodeType
 {
     // @def
     public static final NodeClass<GuardNode> TYPE = NodeClass.create(GuardNode.class);
 
-    @Input(InputType.Condition)
+    @Node.Input(InputType.ConditionI)
     // @field
     protected LogicNode ___condition;
     // @field
@@ -45,13 +45,13 @@ public final class GuardNode extends FloatingAnchoredNode implements Canonicaliz
     // @field
     protected boolean ___negated;
 
-    // @cons
+    // @cons GuardNode
     public GuardNode(LogicNode __condition, AnchoringNode __anchor, DeoptimizationReason __reason, DeoptimizationAction __action, boolean __negated, JavaConstant __speculation)
     {
         this(TYPE, __condition, __anchor, __reason, __action, __negated, __speculation);
     }
 
-    // @cons
+    // @cons GuardNode
     protected GuardNode(NodeClass<? extends GuardNode> __c, LogicNode __condition, AnchoringNode __anchor, DeoptimizationReason __reason, DeoptimizationAction __action, boolean __negated, JavaConstant __speculation)
     {
         super(__c, StampFactory.forVoid(), __anchor);

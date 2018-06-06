@@ -14,29 +14,29 @@ public abstract class IntegerDivRemNode extends FixedBinaryNode implements Lower
     // @def
     public static final NodeClass<IntegerDivRemNode> TYPE = NodeClass.create(IntegerDivRemNode.class);
 
-    // @enum IntegerDivRemNode.Op
-    public enum Op
+    // @enum IntegerDivRemNode.DivRemOp
+    public enum DivRemOp
     {
         DIV,
         REM
     }
 
-    // @enum IntegerDivRemNode.Type
-    public enum Type
+    // @enum IntegerDivRemNode.Signedness
+    public enum Signedness
     {
         SIGNED,
         UNSIGNED
     }
 
     // @field
-    private final Op ___op;
+    private final IntegerDivRemNode.DivRemOp ___op;
     // @field
-    private final Type ___type;
+    private final IntegerDivRemNode.Signedness ___type;
     // @field
     private final boolean ___canDeopt;
 
-    // @cons
-    protected IntegerDivRemNode(NodeClass<? extends IntegerDivRemNode> __c, Stamp __stamp, Op __op, Type __type, ValueNode __x, ValueNode __y)
+    // @cons IntegerDivRemNode
+    protected IntegerDivRemNode(NodeClass<? extends IntegerDivRemNode> __c, Stamp __stamp, IntegerDivRemNode.DivRemOp __op, IntegerDivRemNode.Signedness __type, ValueNode __x, ValueNode __y)
     {
         super(__c, __stamp, __x, __y);
         this.___op = __op;
@@ -47,12 +47,12 @@ public abstract class IntegerDivRemNode extends FixedBinaryNode implements Lower
         this.___canDeopt = __yStamp.contains(0) || __yStamp.contains(-1);
     }
 
-    public final Op getOp()
+    public final IntegerDivRemNode.DivRemOp getOp()
     {
         return this.___op;
     }
 
-    public final Type getType()
+    public final IntegerDivRemNode.Signedness getType()
     {
         return this.___type;
     }

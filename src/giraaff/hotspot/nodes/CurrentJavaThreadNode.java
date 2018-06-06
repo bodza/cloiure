@@ -6,6 +6,7 @@ import jdk.vm.ci.meta.PlatformKind;
 
 import giraaff.core.common.LIRKind;
 import giraaff.core.common.type.StampFactory;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.hotspot.HotSpotLIRGenerator;
 import giraaff.nodes.calc.FloatingNode;
@@ -23,13 +24,13 @@ public final class CurrentJavaThreadNode extends FloatingNode implements LIRLowe
     // @def
     public static final NodeClass<CurrentJavaThreadNode> TYPE = NodeClass.create(CurrentJavaThreadNode.class);
 
-    // @cons
-    public CurrentJavaThreadNode(@InjectedNodeParameter WordTypes __wordTypes)
+    // @cons CurrentJavaThreadNode
+    public CurrentJavaThreadNode(@Node.InjectedNodeParameter WordTypes __wordTypes)
     {
         this(__wordTypes.getWordKind());
     }
 
-    // @cons
+    // @cons CurrentJavaThreadNode
     public CurrentJavaThreadNode(JavaKind __wordKind)
     {
         super(TYPE, StampFactory.forKind(__wordKind));
@@ -43,6 +44,6 @@ public final class CurrentJavaThreadNode extends FloatingNode implements LIRLowe
         __gen.setResult(this, __rawThread.asValue(LIRKind.value(__wordKind)));
     }
 
-    @NodeIntrinsic
+    @Node.NodeIntrinsic
     public static native Word get();
 }

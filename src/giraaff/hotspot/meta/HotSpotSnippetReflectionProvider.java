@@ -21,7 +21,7 @@ public final class HotSpotSnippetReflectionProvider implements SnippetReflection
     // @field
     private final WordTypes ___wordTypes;
 
-    // @cons
+    // @cons HotSpotSnippetReflectionProvider
     public HotSpotSnippetReflectionProvider(HotSpotGraalRuntime __runtime, HotSpotConstantReflectionProvider __constantReflection, WordTypes __wordTypes)
     {
         super();

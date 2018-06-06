@@ -95,7 +95,7 @@ public abstract class UnsafeArrayTypeReader implements TypeReader
     // @field
     protected long ___byteIndex;
 
-    // @cons
+    // @cons UnsafeArrayTypeReader
     protected UnsafeArrayTypeReader(byte[] __data, long __byteIndex)
     {
         super();
@@ -162,7 +162,7 @@ final class UnalignedUnsafeArrayTypeReader extends UnsafeArrayTypeReader
         return UnsafeAccess.UNSAFE.getLong(__data, readOffset(__data, __byteIndex, Long.BYTES));
     }
 
-    // @cons
+    // @cons UnalignedUnsafeArrayTypeReader
     protected UnalignedUnsafeArrayTypeReader(byte[] __data, long __byteIndex)
     {
         super(__data, __byteIndex);
@@ -225,7 +225,7 @@ final class AlignedUnsafeArrayTypeReader extends UnsafeArrayTypeReader
                 ((long) (UnsafeAccess.UNSAFE.getByte(__data, __offset + 7)) << 56);
     }
 
-    // @cons
+    // @cons AlignedUnsafeArrayTypeReader
     protected AlignedUnsafeArrayTypeReader(byte[] __data, long __byteIndex)
     {
         super(__data, __byteIndex);

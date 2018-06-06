@@ -15,12 +15,10 @@ import giraaff.core.common.spi.ForeignCallsProvider;
 import giraaff.core.target.Backend;
 import giraaff.hotspot.HotSpotBackend;
 import giraaff.hotspot.HotSpotForeignCallLinkage;
-import giraaff.hotspot.HotSpotForeignCallLinkage.RegisterEffect;
-import giraaff.hotspot.HotSpotForeignCallLinkage.Transition;
 import giraaff.hotspot.HotSpotGraalRuntime;
 import giraaff.hotspot.HotSpotHostBackend;
 import giraaff.hotspot.HotSpotRuntime;
-import giraaff.hotspot.meta.DefaultHotSpotLoweringProvider.RuntimeCalls;
+import giraaff.hotspot.meta.DefaultHotSpotLoweringProvider;
 import giraaff.hotspot.replacements.HotSpotReplacementsUtil;
 import giraaff.hotspot.replacements.MonitorSnippets;
 import giraaff.hotspot.replacements.NewObjectSnippets;
@@ -51,7 +49,7 @@ public abstract class HotSpotHostForeignCallsProvider extends HotSpotForeignCall
     // @def
     public static final ForeignCallDescriptor JAVA_TIME_NANOS = new ForeignCallDescriptor("javaTimeNanos", long.class);
 
-    // @cons
+    // @cons HotSpotHostForeignCallsProvider
     public HotSpotHostForeignCallsProvider(HotSpotGraalRuntime __runtime, MetaAccessProvider __metaAccess, CodeCacheProvider __codeCache, WordTypes __wordTypes)
     {
         super(__runtime, __metaAccess, __codeCache, __wordTypes);
@@ -126,7 +124,7 @@ public abstract class HotSpotHostForeignCallsProvider extends HotSpotForeignCall
         String __name = __kind + (__aligned ? "Aligned" : "") + (__disjoint ? "Disjoint" : "") + (__uninit ? "Uninit" : "") + "Arraycopy" + (__killAny ? "KillAny" : "");
         ForeignCallDescriptor __desc = new ForeignCallDescriptor(__name, void.class, Word.class, Word.class, Word.class);
         LocationIdentity __killed = __killAny ? LocationIdentity.any() : NamedLocationIdentity.getArrayLocation(__kind);
-        registerForeignCall(__desc, __routine, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, __killed);
+        registerForeignCall(__desc, __routine, HotSpotCallingConventionType.NativeCall, HotSpotForeignCallLinkage.RegisterEffect.DESTROYS_REGISTERS, HotSpotForeignCallLinkage.Transition.LEAF_NOFP, NOT_REEXECUTABLE, __killed);
         return __desc;
     }
 
@@ -143,7 +141,7 @@ public abstract class HotSpotHostForeignCallsProvider extends HotSpotForeignCall
         // 0 = success, n = number of copied elements xor'd with -1.
         ForeignCallDescriptor __desc = new ForeignCallDescriptor(__name, int.class, Word.class, Word.class, Word.class, Word.class, Word.class);
         LocationIdentity __killed = NamedLocationIdentity.any();
-        registerForeignCall(__desc, __routine, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, __killed);
+        registerForeignCall(__desc, __routine, HotSpotCallingConventionType.NativeCall, HotSpotForeignCallLinkage.RegisterEffect.DESTROYS_REGISTERS, HotSpotForeignCallLinkage.Transition.LEAF_NOFP, NOT_REEXECUTABLE, __killed);
         checkcastArraycopyDescriptors[__uninit ? 1 : 0] = __desc;
     }
 
@@ -174,41 +172,41 @@ public abstract class HotSpotHostForeignCallsProvider extends HotSpotForeignCall
 
     public void initialize(HotSpotProviders __providers)
     {
-        registerForeignCall(HotSpotHostBackend.DEOPTIMIZATION_HANDLER, HotSpotRuntime.handleDeoptStub, HotSpotCallingConventionType.NativeCall, RegisterEffect.PRESERVES_REGISTERS, Transition.LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
-        registerForeignCall(HotSpotHostBackend.UNCOMMON_TRAP_HANDLER, HotSpotRuntime.uncommonTrapStub, HotSpotCallingConventionType.NativeCall, RegisterEffect.PRESERVES_REGISTERS, Transition.LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
-        registerForeignCall(HotSpotBackend.IC_MISS_HANDLER, HotSpotRuntime.inlineCacheMissStub, HotSpotCallingConventionType.NativeCall, RegisterEffect.PRESERVES_REGISTERS, Transition.LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
+        registerForeignCall(HotSpotHostBackend.DEOPTIMIZATION_HANDLER, HotSpotRuntime.handleDeoptStub, HotSpotCallingConventionType.NativeCall, HotSpotForeignCallLinkage.RegisterEffect.PRESERVES_REGISTERS, HotSpotForeignCallLinkage.Transition.LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
+        registerForeignCall(HotSpotHostBackend.UNCOMMON_TRAP_HANDLER, HotSpotRuntime.uncommonTrapStub, HotSpotCallingConventionType.NativeCall, HotSpotForeignCallLinkage.RegisterEffect.PRESERVES_REGISTERS, HotSpotForeignCallLinkage.Transition.LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
+        registerForeignCall(HotSpotBackend.IC_MISS_HANDLER, HotSpotRuntime.inlineCacheMissStub, HotSpotCallingConventionType.NativeCall, HotSpotForeignCallLinkage.RegisterEffect.PRESERVES_REGISTERS, HotSpotForeignCallLinkage.Transition.LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
 
-        registerForeignCall(JAVA_TIME_MILLIS, HotSpotRuntime.javaTimeMillisAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
-        registerForeignCall(JAVA_TIME_NANOS, HotSpotRuntime.javaTimeNanosAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
+        registerForeignCall(JAVA_TIME_MILLIS, HotSpotRuntime.javaTimeMillisAddress, HotSpotCallingConventionType.NativeCall, HotSpotForeignCallLinkage.RegisterEffect.DESTROYS_REGISTERS, HotSpotForeignCallLinkage.Transition.LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
+        registerForeignCall(JAVA_TIME_NANOS, HotSpotRuntime.javaTimeNanosAddress, HotSpotCallingConventionType.NativeCall, HotSpotForeignCallLinkage.RegisterEffect.DESTROYS_REGISTERS, HotSpotForeignCallLinkage.Transition.LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
 
-        registerForeignCall(LOAD_AND_CLEAR_EXCEPTION, HotSpotRuntime.loadAndClearExceptionAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, LocationIdentity.any());
+        registerForeignCall(LOAD_AND_CLEAR_EXCEPTION, HotSpotRuntime.loadAndClearExceptionAddress, HotSpotCallingConventionType.NativeCall, HotSpotForeignCallLinkage.RegisterEffect.DESTROYS_REGISTERS, HotSpotForeignCallLinkage.Transition.LEAF_NOFP, NOT_REEXECUTABLE, LocationIdentity.any());
 
-        registerForeignCall(ExceptionHandlerStub.EXCEPTION_HANDLER_FOR_PC, HotSpotRuntime.exceptionHandlerForPcAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.SAFEPOINT, REEXECUTABLE, LocationIdentity.any());
-        registerForeignCall(UnwindExceptionToCallerStub.EXCEPTION_HANDLER_FOR_RETURN_ADDRESS, HotSpotRuntime.exceptionHandlerForReturnAddressAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.SAFEPOINT, REEXECUTABLE, LocationIdentity.any());
-        registerForeignCall(NewArrayStub.NEW_ARRAY_C, HotSpotRuntime.newArrayAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.SAFEPOINT, REEXECUTABLE, LocationIdentity.any());
-        registerForeignCall(NewInstanceStub.NEW_INSTANCE_C, HotSpotRuntime.newInstanceAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.SAFEPOINT, REEXECUTABLE, LocationIdentity.any());
+        registerForeignCall(ExceptionHandlerStub.EXCEPTION_HANDLER_FOR_PC, HotSpotRuntime.exceptionHandlerForPcAddress, HotSpotCallingConventionType.NativeCall, HotSpotForeignCallLinkage.RegisterEffect.DESTROYS_REGISTERS, HotSpotForeignCallLinkage.Transition.SAFEPOINT, REEXECUTABLE, LocationIdentity.any());
+        registerForeignCall(UnwindExceptionToCallerStub.EXCEPTION_HANDLER_FOR_RETURN_ADDRESS, HotSpotRuntime.exceptionHandlerForReturnAddressAddress, HotSpotCallingConventionType.NativeCall, HotSpotForeignCallLinkage.RegisterEffect.DESTROYS_REGISTERS, HotSpotForeignCallLinkage.Transition.SAFEPOINT, REEXECUTABLE, LocationIdentity.any());
+        registerForeignCall(NewArrayStub.NEW_ARRAY_C, HotSpotRuntime.newArrayAddress, HotSpotCallingConventionType.NativeCall, HotSpotForeignCallLinkage.RegisterEffect.DESTROYS_REGISTERS, HotSpotForeignCallLinkage.Transition.SAFEPOINT, REEXECUTABLE, LocationIdentity.any());
+        registerForeignCall(NewInstanceStub.NEW_INSTANCE_C, HotSpotRuntime.newInstanceAddress, HotSpotCallingConventionType.NativeCall, HotSpotForeignCallLinkage.RegisterEffect.DESTROYS_REGISTERS, HotSpotForeignCallLinkage.Transition.SAFEPOINT, REEXECUTABLE, LocationIdentity.any());
 
         CreateExceptionStub.registerForeignCalls(this);
 
-        link(new NewInstanceStub(__providers, registerStubCall(HotSpotBackend.NEW_INSTANCE, REEXECUTABLE, Transition.SAFEPOINT, HotSpotReplacementsUtil.TLAB_TOP_LOCATION, HotSpotReplacementsUtil.TLAB_END_LOCATION)));
-        link(new NewArrayStub(__providers, registerStubCall(HotSpotBackend.NEW_ARRAY, REEXECUTABLE, Transition.SAFEPOINT, HotSpotReplacementsUtil.TLAB_TOP_LOCATION, HotSpotReplacementsUtil.TLAB_END_LOCATION)));
+        link(new NewInstanceStub(__providers, registerStubCall(HotSpotBackend.NEW_INSTANCE, REEXECUTABLE, HotSpotForeignCallLinkage.Transition.SAFEPOINT, HotSpotReplacementsUtil.TLAB_TOP_LOCATION, HotSpotReplacementsUtil.TLAB_END_LOCATION)));
+        link(new NewArrayStub(__providers, registerStubCall(HotSpotBackend.NEW_ARRAY, REEXECUTABLE, HotSpotForeignCallLinkage.Transition.SAFEPOINT, HotSpotReplacementsUtil.TLAB_TOP_LOCATION, HotSpotReplacementsUtil.TLAB_END_LOCATION)));
         link(new ExceptionHandlerStub(__providers, this.___foreignCalls.get(HotSpotBackend.EXCEPTION_HANDLER)));
-        link(new UnwindExceptionToCallerStub(__providers, registerStubCall(HotSpotBackend.UNWIND_EXCEPTION_TO_CALLER, NOT_REEXECUTABLE, Transition.SAFEPOINT, LocationIdentity.any())));
-        link(new ArrayStoreExceptionStub(__providers, registerStubCall(RuntimeCalls.CREATE_ARRAY_STORE_EXCEPTION, REEXECUTABLE, Transition.SAFEPOINT, LocationIdentity.any())));
-        link(new ClassCastExceptionStub(__providers, registerStubCall(RuntimeCalls.CREATE_CLASS_CAST_EXCEPTION, REEXECUTABLE, Transition.SAFEPOINT, LocationIdentity.any())));
-        link(new NullPointerExceptionStub(__providers, registerStubCall(RuntimeCalls.CREATE_NULL_POINTER_EXCEPTION, REEXECUTABLE, Transition.SAFEPOINT, LocationIdentity.any())));
-        link(new OutOfBoundsExceptionStub(__providers, registerStubCall(RuntimeCalls.CREATE_OUT_OF_BOUNDS_EXCEPTION, REEXECUTABLE, Transition.SAFEPOINT, LocationIdentity.any())));
+        link(new UnwindExceptionToCallerStub(__providers, registerStubCall(HotSpotBackend.UNWIND_EXCEPTION_TO_CALLER, NOT_REEXECUTABLE, HotSpotForeignCallLinkage.Transition.SAFEPOINT, LocationIdentity.any())));
+        link(new ArrayStoreExceptionStub(__providers, registerStubCall(DefaultHotSpotLoweringProvider.RuntimeCalls.CREATE_ARRAY_STORE_EXCEPTION, REEXECUTABLE, HotSpotForeignCallLinkage.Transition.SAFEPOINT, LocationIdentity.any())));
+        link(new ClassCastExceptionStub(__providers, registerStubCall(DefaultHotSpotLoweringProvider.RuntimeCalls.CREATE_CLASS_CAST_EXCEPTION, REEXECUTABLE, HotSpotForeignCallLinkage.Transition.SAFEPOINT, LocationIdentity.any())));
+        link(new NullPointerExceptionStub(__providers, registerStubCall(DefaultHotSpotLoweringProvider.RuntimeCalls.CREATE_NULL_POINTER_EXCEPTION, REEXECUTABLE, HotSpotForeignCallLinkage.Transition.SAFEPOINT, LocationIdentity.any())));
+        link(new OutOfBoundsExceptionStub(__providers, registerStubCall(DefaultHotSpotLoweringProvider.RuntimeCalls.CREATE_OUT_OF_BOUNDS_EXCEPTION, REEXECUTABLE, HotSpotForeignCallLinkage.Transition.SAFEPOINT, LocationIdentity.any())));
 
-        linkForeignCall(__providers, IDENTITY_HASHCODE, HotSpotRuntime.identityHashCodeAddress, PREPEND_THREAD, Transition.SAFEPOINT, NOT_REEXECUTABLE, HotSpotReplacementsUtil.MARK_WORD_LOCATION);
-        linkForeignCall(__providers, ForeignCallDescriptors.REGISTER_FINALIZER, HotSpotRuntime.registerFinalizerAddress, PREPEND_THREAD, Transition.SAFEPOINT, NOT_REEXECUTABLE, LocationIdentity.any());
-        linkForeignCall(__providers, MonitorSnippets.MONITORENTER, HotSpotRuntime.monitorenterAddress, PREPEND_THREAD, Transition.SAFEPOINT, NOT_REEXECUTABLE, LocationIdentity.any());
-        linkForeignCall(__providers, MonitorSnippets.MONITOREXIT, HotSpotRuntime.monitorexitAddress, PREPEND_THREAD, Transition.STACK_INSPECTABLE_LEAF, NOT_REEXECUTABLE, LocationIdentity.any());
-        linkForeignCall(__providers, HotSpotBackend.NEW_MULTI_ARRAY, HotSpotRuntime.newMultiArrayAddress, PREPEND_THREAD, Transition.SAFEPOINT, REEXECUTABLE, HotSpotReplacementsUtil.TLAB_TOP_LOCATION, HotSpotReplacementsUtil.TLAB_END_LOCATION);
-        linkForeignCall(__providers, NewObjectSnippets.DYNAMIC_NEW_ARRAY, HotSpotRuntime.dynamicNewArrayAddress, PREPEND_THREAD, Transition.SAFEPOINT, REEXECUTABLE);
-        linkForeignCall(__providers, NewObjectSnippets.DYNAMIC_NEW_INSTANCE, HotSpotRuntime.dynamicNewInstanceAddress, PREPEND_THREAD, Transition.SAFEPOINT, REEXECUTABLE);
-        linkForeignCall(__providers, OSR_MIGRATION_END, HotSpotRuntime.osrMigrationEndAddress, DONT_PREPEND_THREAD, Transition.LEAF_NOFP, NOT_REEXECUTABLE, NO_LOCATIONS);
-        linkForeignCall(__providers, WriteBarrierSnippets.G1WBPRECALL, HotSpotRuntime.writeBarrierPreAddress, PREPEND_THREAD, Transition.LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
-        linkForeignCall(__providers, WriteBarrierSnippets.G1WBPOSTCALL, HotSpotRuntime.writeBarrierPostAddress, PREPEND_THREAD, Transition.LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
+        linkForeignCall(__providers, IDENTITY_HASHCODE, HotSpotRuntime.identityHashCodeAddress, PREPEND_THREAD, HotSpotForeignCallLinkage.Transition.SAFEPOINT, NOT_REEXECUTABLE, HotSpotReplacementsUtil.MARK_WORD_LOCATION);
+        linkForeignCall(__providers, ForeignCallDescriptors.REGISTER_FINALIZER, HotSpotRuntime.registerFinalizerAddress, PREPEND_THREAD, HotSpotForeignCallLinkage.Transition.SAFEPOINT, NOT_REEXECUTABLE, LocationIdentity.any());
+        linkForeignCall(__providers, MonitorSnippets.MONITORENTER, HotSpotRuntime.monitorenterAddress, PREPEND_THREAD, HotSpotForeignCallLinkage.Transition.SAFEPOINT, NOT_REEXECUTABLE, LocationIdentity.any());
+        linkForeignCall(__providers, MonitorSnippets.MONITOREXIT, HotSpotRuntime.monitorexitAddress, PREPEND_THREAD, HotSpotForeignCallLinkage.Transition.STACK_INSPECTABLE_LEAF, NOT_REEXECUTABLE, LocationIdentity.any());
+        linkForeignCall(__providers, HotSpotBackend.NEW_MULTI_ARRAY, HotSpotRuntime.newMultiArrayAddress, PREPEND_THREAD, HotSpotForeignCallLinkage.Transition.SAFEPOINT, REEXECUTABLE, HotSpotReplacementsUtil.TLAB_TOP_LOCATION, HotSpotReplacementsUtil.TLAB_END_LOCATION);
+        linkForeignCall(__providers, NewObjectSnippets.DYNAMIC_NEW_ARRAY, HotSpotRuntime.dynamicNewArrayAddress, PREPEND_THREAD, HotSpotForeignCallLinkage.Transition.SAFEPOINT, REEXECUTABLE);
+        linkForeignCall(__providers, NewObjectSnippets.DYNAMIC_NEW_INSTANCE, HotSpotRuntime.dynamicNewInstanceAddress, PREPEND_THREAD, HotSpotForeignCallLinkage.Transition.SAFEPOINT, REEXECUTABLE);
+        linkForeignCall(__providers, OSR_MIGRATION_END, HotSpotRuntime.osrMigrationEndAddress, DONT_PREPEND_THREAD, HotSpotForeignCallLinkage.Transition.LEAF_NOFP, NOT_REEXECUTABLE, NO_LOCATIONS);
+        linkForeignCall(__providers, WriteBarrierSnippets.G1WBPRECALL, HotSpotRuntime.writeBarrierPreAddress, PREPEND_THREAD, HotSpotForeignCallLinkage.Transition.LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
+        linkForeignCall(__providers, WriteBarrierSnippets.G1WBPOSTCALL, HotSpotRuntime.writeBarrierPostAddress, PREPEND_THREAD, HotSpotForeignCallLinkage.Transition.LEAF_NOFP, REEXECUTABLE, NO_LOCATIONS);
 
         registerArrayCopy(JavaKind.Byte, HotSpotRuntime.jbyteArraycopy, HotSpotRuntime.jbyteAlignedArraycopy, HotSpotRuntime.jbyteDisjointArraycopy, HotSpotRuntime.jbyteAlignedDisjointArraycopy);
         registerArrayCopy(JavaKind.Boolean, HotSpotRuntime.jbyteArraycopy, HotSpotRuntime.jbyteAlignedArraycopy, HotSpotRuntime.jbyteDisjointArraycopy, HotSpotRuntime.jbyteAlignedDisjointArraycopy);
@@ -222,8 +220,8 @@ public abstract class HotSpotHostForeignCallsProvider extends HotSpotForeignCall
         registerCheckcastArraycopyDescriptor(true, HotSpotRuntime.checkcastArraycopyUninit);
         registerCheckcastArraycopyDescriptor(false, HotSpotRuntime.checkcastArraycopy);
 
-        registerForeignCall(HotSpotBackend.GENERIC_ARRAYCOPY, HotSpotRuntime.genericArraycopy, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.any());
-        registerForeignCall(HotSpotBackend.UNSAFE_ARRAYCOPY, HotSpotRuntime.unsafeArraycopy, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.any());
+        registerForeignCall(HotSpotBackend.GENERIC_ARRAYCOPY, HotSpotRuntime.genericArraycopy, HotSpotCallingConventionType.NativeCall, HotSpotForeignCallLinkage.RegisterEffect.DESTROYS_REGISTERS, HotSpotForeignCallLinkage.Transition.LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.any());
+        registerForeignCall(HotSpotBackend.UNSAFE_ARRAYCOPY, HotSpotRuntime.unsafeArraycopy, HotSpotCallingConventionType.NativeCall, HotSpotForeignCallLinkage.RegisterEffect.DESTROYS_REGISTERS, HotSpotForeignCallLinkage.Transition.LEAF_NOFP, NOT_REEXECUTABLE, NamedLocationIdentity.any());
     }
 
     public HotSpotForeignCallLinkage getForeignCall(ForeignCallDescriptor __descriptor)

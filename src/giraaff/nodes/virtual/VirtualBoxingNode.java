@@ -18,13 +18,13 @@ public final class VirtualBoxingNode extends VirtualInstanceNode
     // @field
     protected final JavaKind ___boxingKind;
 
-    // @cons
+    // @cons VirtualBoxingNode
     public VirtualBoxingNode(ResolvedJavaType __type, JavaKind __boxingKind)
     {
         this(TYPE, __type, __boxingKind);
     }
 
-    // @cons
+    // @cons VirtualBoxingNode
     public VirtualBoxingNode(NodeClass<? extends VirtualBoxingNode> __c, ResolvedJavaType __type, JavaKind __boxingKind)
     {
         super(__c, __type, false);

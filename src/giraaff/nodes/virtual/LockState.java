@@ -18,7 +18,7 @@ public final class LockState
     // @field
     public final LockState ___next;
 
-    // @cons
+    // @cons LockState
     public LockState(MonitorIdNode __monitorId, LockState __next)
     {
         super();

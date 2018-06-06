@@ -1,6 +1,7 @@
 package giraaff.nodes;
 
 import giraaff.core.common.type.Stamp;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.nodeinfo.InputType;
 
@@ -16,17 +17,17 @@ public abstract class BeginStateSplitNode extends AbstractBeginNode implements S
     // @def
     public static final NodeClass<BeginStateSplitNode> TYPE = NodeClass.create(BeginStateSplitNode.class);
 
-    @OptionalInput(InputType.State)
+    @Node.OptionalInput(InputType.StateI)
     // @field
     protected FrameState ___stateAfter;
 
-    // @cons
+    // @cons BeginStateSplitNode
     protected BeginStateSplitNode(NodeClass<? extends BeginStateSplitNode> __c)
     {
         super(__c);
     }
 
-    // @cons
+    // @cons BeginStateSplitNode
     protected BeginStateSplitNode(NodeClass<? extends BeginStateSplitNode> __c, Stamp __stamp)
     {
         super(__c, __stamp);

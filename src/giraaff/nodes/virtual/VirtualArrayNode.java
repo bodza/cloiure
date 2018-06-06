@@ -24,13 +24,13 @@ public final class VirtualArrayNode extends VirtualObjectNode implements ArrayLe
     // @field
     protected final int ___length;
 
-    // @cons
+    // @cons VirtualArrayNode
     public VirtualArrayNode(ResolvedJavaType __componentType, int __length)
     {
         this(TYPE, __componentType, __length);
     }
 
-    // @cons
+    // @cons VirtualArrayNode
     protected VirtualArrayNode(NodeClass<? extends VirtualObjectNode> __c, ResolvedJavaType __componentType, int __length)
     {
         super(__c, __componentType.getArrayClass(), true);

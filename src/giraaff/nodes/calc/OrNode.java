@@ -5,12 +5,10 @@ import jdk.vm.ci.meta.Constant;
 import jdk.vm.ci.meta.PrimitiveConstant;
 
 import giraaff.core.common.type.ArithmeticOpTable;
-import giraaff.core.common.type.ArithmeticOpTable.BinaryOp;
-import giraaff.core.common.type.ArithmeticOpTable.BinaryOp.Or;
 import giraaff.core.common.type.PrimitiveStamp;
 import giraaff.core.common.type.Stamp;
 import giraaff.graph.NodeClass;
-import giraaff.graph.spi.Canonicalizable.BinaryCommutative;
+import giraaff.graph.spi.Canonicalizable;
 import giraaff.graph.spi.CanonicalizerTool;
 import giraaff.lir.gen.ArithmeticLIRGeneratorTool;
 import giraaff.nodes.ConstantNode;
@@ -20,12 +18,12 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 import giraaff.nodes.util.GraphUtil;
 
 // @class OrNode
-public final class OrNode extends BinaryArithmeticNode<Or> implements BinaryCommutative<ValueNode>, NarrowableArithmeticNode
+public final class OrNode extends BinaryArithmeticNode<ArithmeticOpTable.BinaryOp.Or> implements Canonicalizable.BinaryCommutative<ValueNode>, NarrowableArithmeticNode
 {
     // @def
     public static final NodeClass<OrNode> TYPE = NodeClass.create(OrNode.class);
 
-    // @cons
+    // @cons OrNode
     public OrNode(ValueNode __x, ValueNode __y)
     {
         super(TYPE, ArithmeticOpTable::getOr, __x, __y);
@@ -33,7 +31,7 @@ public final class OrNode extends BinaryArithmeticNode<Or> implements BinaryComm
 
     public static ValueNode create(ValueNode __x, ValueNode __y, NodeView __view)
     {
-        BinaryOp<Or> __op = ArithmeticOpTable.forStamp(__x.stamp(__view)).getOr();
+        ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.Or> __op = ArithmeticOpTable.forStamp(__x.stamp(__view)).getOr();
         Stamp __stamp = __op.foldStamp(__x.stamp(__view), __y.stamp(__view));
         ConstantNode __tryConstantFold = tryConstantFold(__op, __x, __y, __stamp, __view);
         if (__tryConstantFold != null)
@@ -56,7 +54,7 @@ public final class OrNode extends BinaryArithmeticNode<Or> implements BinaryComm
         return canonical(this, getOp(__forX, __forY), stamp(__view), __forX, __forY, __view);
     }
 
-    private static ValueNode canonical(OrNode __self, BinaryOp<Or> __op, Stamp __stamp, ValueNode __forX, ValueNode __forY, NodeView __view)
+    private static ValueNode canonical(OrNode __self, ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.Or> __op, Stamp __stamp, ValueNode __forX, ValueNode __forY, NodeView __view)
     {
         if (GraphUtil.unproxify(__forX) == GraphUtil.unproxify(__forY))
         {

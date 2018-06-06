@@ -26,7 +26,7 @@ public final class AMD64CountLeadingZerosNode extends UnaryNode implements Arith
     // @def
     public static final NodeClass<AMD64CountLeadingZerosNode> TYPE = NodeClass.create(AMD64CountLeadingZerosNode.class);
 
-    // @cons
+    // @cons AMD64CountLeadingZerosNode
     public AMD64CountLeadingZerosNode(ValueNode __value)
     {
         super(TYPE, computeStamp(__value.stamp(NodeView.DEFAULT), __value), __value);

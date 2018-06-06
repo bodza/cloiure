@@ -65,7 +65,7 @@ public final class MethodSubstitutionPlugin implements InvocationPlugin
     //            static, then {@code parameters[0]} must be the {@link Class} value denoting
     //            {@link InvocationPlugin.Receiver}
     ///
-    // @cons
+    // @cons MethodSubstitutionPlugin
     public MethodSubstitutionPlugin(BytecodeProvider __bytecodeProvider, Class<?> __declaringClass, String __name, Type... __parameters)
     {
         super();

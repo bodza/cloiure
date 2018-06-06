@@ -7,6 +7,7 @@ import jdk.vm.ci.meta.ResolvedJavaType;
 
 import giraaff.core.common.type.StampFactory;
 import giraaff.core.common.type.TypeReference;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.graph.spi.Canonicalizable;
 import giraaff.graph.spi.CanonicalizerTool;
@@ -31,19 +32,19 @@ public final class BoxNode extends FixedWithNextNode implements VirtualizableAll
     // @def
     public static final NodeClass<BoxNode> TYPE = NodeClass.create(BoxNode.class);
 
-    @Input
+    @Node.Input
     // @field
     private ValueNode ___value;
     // @field
     protected final JavaKind ___boxingKind;
 
-    // @cons
+    // @cons BoxNode
     public BoxNode(ValueNode __value, ResolvedJavaType __resultType, JavaKind __boxingKind)
     {
         this(TYPE, __value, __resultType, __boxingKind);
     }
 
-    // @cons
+    // @cons BoxNode
     public BoxNode(NodeClass<? extends BoxNode> __c, ValueNode __value, ResolvedJavaType __resultType, JavaKind __boxingKind)
     {
         super(__c, StampFactory.objectNonNull(TypeReference.createExactTrusted(__resultType)));

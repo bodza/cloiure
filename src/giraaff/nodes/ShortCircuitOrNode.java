@@ -4,6 +4,7 @@ import jdk.vm.ci.meta.TriState;
 
 import giraaff.core.common.type.Stamp;
 import giraaff.graph.IterableNodeType;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.graph.spi.Canonicalizable;
 import giraaff.graph.spi.CanonicalizerTool;
@@ -16,10 +17,10 @@ public final class ShortCircuitOrNode extends LogicNode implements IterableNodeT
     // @def
     public static final NodeClass<ShortCircuitOrNode> TYPE = NodeClass.create(ShortCircuitOrNode.class);
 
-    @Input(InputType.Condition)
+    @Node.Input(InputType.ConditionI)
     // @field
     LogicNode ___x;
-    @Input(InputType.Condition)
+    @Node.Input(InputType.ConditionI)
     // @field
     LogicNode ___y;
     // @field
@@ -29,7 +30,7 @@ public final class ShortCircuitOrNode extends LogicNode implements IterableNodeT
     // @field
     protected double ___shortCircuitProbability;
 
-    // @cons
+    // @cons ShortCircuitOrNode
     public ShortCircuitOrNode(LogicNode __x, boolean __xNegated, LogicNode __y, boolean __yNegated, double __shortCircuitProbability)
     {
         super(TYPE);

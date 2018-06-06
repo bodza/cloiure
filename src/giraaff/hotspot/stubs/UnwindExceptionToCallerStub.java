@@ -7,8 +7,7 @@ import org.graalvm.word.Pointer;
 import giraaff.api.replacements.Snippet;
 import giraaff.api.replacements.Snippet.ConstantParameter;
 import giraaff.core.common.spi.ForeignCallDescriptor;
-import giraaff.graph.Node.ConstantNodeParameter;
-import giraaff.graph.Node.NodeIntrinsic;
+import giraaff.graph.Node;
 import giraaff.hotspot.HotSpotForeignCallLinkage;
 import giraaff.hotspot.meta.HotSpotProviders;
 import giraaff.hotspot.nodes.JumpToExceptionHandlerInCallerNode;
@@ -26,7 +25,7 @@ import giraaff.word.Word;
 // @class UnwindExceptionToCallerStub
 public final class UnwindExceptionToCallerStub extends SnippetStub
 {
-    // @cons
+    // @cons UnwindExceptionToCallerStub
     public UnwindExceptionToCallerStub(HotSpotProviders __providers, HotSpotForeignCallLinkage __linkage)
     {
         super("unwindExceptionToCaller", __providers, __linkage);
@@ -53,7 +52,7 @@ public final class UnwindExceptionToCallerStub extends SnippetStub
     }
 
     @Snippet
-    private static void unwindExceptionToCaller(Object __exception, Word __returnAddress, @ConstantParameter Register __threadRegister)
+    private static void unwindExceptionToCaller(Object __exception, Word __returnAddress, @Snippet.ConstantParameter Register __threadRegister)
     {
         Pointer __exceptionOop = Word.objectToTrackedPointer(__exception);
         Word __thread = HotSpotReplacementsUtil.registerAsWord(__threadRegister);
@@ -66,6 +65,6 @@ public final class UnwindExceptionToCallerStub extends SnippetStub
     // @def
     public static final ForeignCallDescriptor EXCEPTION_HANDLER_FOR_RETURN_ADDRESS = StubUtil.newDescriptor(UnwindExceptionToCallerStub.class, "exceptionHandlerForReturnAddress", Word.class, Word.class, Word.class);
 
-    @NodeIntrinsic(value = StubForeignCallNode.class)
-    public static native Word exceptionHandlerForReturnAddress(@ConstantNodeParameter ForeignCallDescriptor __exceptionHandlerForReturnAddress, Word __thread, Word __returnAddress);
+    @Node.NodeIntrinsic(value = StubForeignCallNode.class)
+    public static native Word exceptionHandlerForReturnAddress(@Node.ConstantNodeParameter ForeignCallDescriptor __exceptionHandlerForReturnAddress, Word __thread, Word __returnAddress);
 }

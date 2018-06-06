@@ -10,23 +10,18 @@ import jdk.vm.ci.meta.Value;
 
 import giraaff.asm.Label;
 import giraaff.asm.amd64.AMD64Address;
-import giraaff.asm.amd64.AMD64Assembler.AMD64MIOp;
-import giraaff.asm.amd64.AMD64Assembler.AMD64MOp;
-import giraaff.asm.amd64.AMD64Assembler.ConditionFlag;
-import giraaff.asm.amd64.AMD64Assembler.OperandSize;
+import giraaff.asm.amd64.AMD64Assembler;
 import giraaff.asm.amd64.AMD64MacroAssembler;
 import giraaff.core.common.CompressEncoding;
 import giraaff.core.common.LIRKind;
 import giraaff.core.common.spi.LIRKindTool;
 import giraaff.core.common.type.DataPointerConstant;
 import giraaff.lir.LIRFrameState;
-import giraaff.lir.LIRInstruction.OperandFlag;
+import giraaff.lir.LIRInstruction;
 import giraaff.lir.LIRInstructionClass;
 import giraaff.lir.LIRValueUtil;
-import giraaff.lir.Opcode;
-import giraaff.lir.StandardOp.LoadConstantOp;
-import giraaff.lir.StandardOp.NullCheck;
-import giraaff.lir.StandardOp.ValueMoveOp;
+import giraaff.lir.LIROpcode;
+import giraaff.lir.StandardOp;
 import giraaff.lir.asm.CompilationResultBuilder;
 import giraaff.util.GraalError;
 
@@ -34,16 +29,16 @@ import giraaff.util.GraalError;
 public final class AMD64Move
 {
     // @class AMD64Move.AbstractMoveOp
-    private abstract static class AbstractMoveOp extends AMD64LIRInstruction implements ValueMoveOp
+    private abstract static class AbstractMoveOp extends AMD64LIRInstruction implements StandardOp.ValueMoveOp
     {
         // @def
-        public static final LIRInstructionClass<AbstractMoveOp> TYPE = LIRInstructionClass.create(AbstractMoveOp.class);
+        public static final LIRInstructionClass<AMD64Move.AbstractMoveOp> TYPE = LIRInstructionClass.create(AMD64Move.AbstractMoveOp.class);
 
         // @field
         private AMD64Kind ___moveKind;
 
-        // @cons
-        protected AbstractMoveOp(LIRInstructionClass<? extends AbstractMoveOp> __c, AMD64Kind __moveKind)
+        // @cons AMD64Move.AbstractMoveOp
+        protected AbstractMoveOp(LIRInstructionClass<? extends AMD64Move.AbstractMoveOp> __c, AMD64Kind __moveKind)
         {
             super(__c);
             this.___moveKind = __moveKind;
@@ -56,21 +51,21 @@ public final class AMD64Move
         }
     }
 
-    @Opcode
+    @LIROpcode
     // @class AMD64Move.MoveToRegOp
-    public static final class MoveToRegOp extends AbstractMoveOp
+    public static final class MoveToRegOp extends AMD64Move.AbstractMoveOp
     {
         // @def
-        public static final LIRInstructionClass<MoveToRegOp> TYPE = LIRInstructionClass.create(MoveToRegOp.class);
+        public static final LIRInstructionClass<AMD64Move.MoveToRegOp> TYPE = LIRInstructionClass.create(AMD64Move.MoveToRegOp.class);
 
-        @Def({OperandFlag.REG, OperandFlag.HINT})
+        @LIRInstruction.Def({LIRInstruction.OperandFlag.REG, LIRInstruction.OperandFlag.HINT})
         // @field
         protected AllocatableValue ___result;
-        @Use({OperandFlag.REG, OperandFlag.STACK})
+        @LIRInstruction.Use({LIRInstruction.OperandFlag.REG, LIRInstruction.OperandFlag.STACK})
         // @field
         protected AllocatableValue ___input;
 
-        // @cons
+        // @cons AMD64Move.MoveToRegOp
         public MoveToRegOp(AMD64Kind __moveKind, AllocatableValue __result, AllocatableValue __input)
         {
             super(TYPE, __moveKind);
@@ -91,21 +86,21 @@ public final class AMD64Move
         }
     }
 
-    @Opcode
+    @LIROpcode
     // @class AMD64Move.MoveFromRegOp
-    public static final class MoveFromRegOp extends AbstractMoveOp
+    public static final class MoveFromRegOp extends AMD64Move.AbstractMoveOp
     {
         // @def
-        public static final LIRInstructionClass<MoveFromRegOp> TYPE = LIRInstructionClass.create(MoveFromRegOp.class);
+        public static final LIRInstructionClass<AMD64Move.MoveFromRegOp> TYPE = LIRInstructionClass.create(AMD64Move.MoveFromRegOp.class);
 
-        @Def({OperandFlag.REG, OperandFlag.STACK})
+        @LIRInstruction.Def({LIRInstruction.OperandFlag.REG, LIRInstruction.OperandFlag.STACK})
         // @field
         protected AllocatableValue ___result;
-        @Use({OperandFlag.REG, OperandFlag.HINT})
+        @LIRInstruction.Use({LIRInstruction.OperandFlag.REG, LIRInstruction.OperandFlag.HINT})
         // @field
         protected AllocatableValue ___input;
 
-        // @cons
+        // @cons AMD64Move.MoveFromRegOp
         public MoveFromRegOp(AMD64Kind __moveKind, AllocatableValue __result, AllocatableValue __input)
         {
             super(TYPE, __moveKind);
@@ -126,20 +121,20 @@ public final class AMD64Move
         }
     }
 
-    @Opcode
+    @LIROpcode
     // @class AMD64Move.MoveFromConstOp
-    public static final class MoveFromConstOp extends AMD64LIRInstruction implements LoadConstantOp
+    public static final class MoveFromConstOp extends AMD64LIRInstruction implements StandardOp.LoadConstantOp
     {
         // @def
-        public static final LIRInstructionClass<MoveFromConstOp> TYPE = LIRInstructionClass.create(MoveFromConstOp.class);
+        public static final LIRInstructionClass<AMD64Move.MoveFromConstOp> TYPE = LIRInstructionClass.create(AMD64Move.MoveFromConstOp.class);
 
-        @Def({OperandFlag.REG, OperandFlag.STACK})
+        @LIRInstruction.Def({LIRInstruction.OperandFlag.REG, LIRInstruction.OperandFlag.STACK})
         // @field
         protected AllocatableValue ___result;
         // @field
         private final JavaConstant ___input;
 
-        // @cons
+        // @cons AMD64Move.MoveFromConstOp
         public MoveFromConstOp(AllocatableValue __result, JavaConstant __input)
         {
             super(TYPE);
@@ -173,27 +168,27 @@ public final class AMD64Move
         }
     }
 
-    @Opcode
+    @LIROpcode
     // @class AMD64Move.AMD64StackMove
-    public static final class AMD64StackMove extends AMD64LIRInstruction implements ValueMoveOp
+    public static final class AMD64StackMove extends AMD64LIRInstruction implements StandardOp.ValueMoveOp
     {
         // @def
-        public static final LIRInstructionClass<AMD64StackMove> TYPE = LIRInstructionClass.create(AMD64StackMove.class);
+        public static final LIRInstructionClass<AMD64Move.AMD64StackMove> TYPE = LIRInstructionClass.create(AMD64Move.AMD64StackMove.class);
 
-        @Def({OperandFlag.STACK})
+        @LIRInstruction.Def({LIRInstruction.OperandFlag.STACK})
         // @field
         protected AllocatableValue ___result;
-        @Use({OperandFlag.STACK, OperandFlag.HINT})
+        @LIRInstruction.Use({LIRInstruction.OperandFlag.STACK, LIRInstruction.OperandFlag.HINT})
         // @field
         protected AllocatableValue ___input;
-        @Alive({OperandFlag.STACK, OperandFlag.UNINITIALIZED})
+        @LIRInstruction.Alive({LIRInstruction.OperandFlag.STACK, LIRInstruction.OperandFlag.UNINITIALIZED})
         // @field
         private AllocatableValue ___backupSlot;
 
         // @field
         private Register ___scratch;
 
-        // @cons
+        // @cons AMD64Move.AMD64StackMove
         public AMD64StackMove(AllocatableValue __result, AllocatableValue __input, Register __scratch, AllocatableValue __backupSlot)
         {
             super(TYPE);
@@ -245,27 +240,27 @@ public final class AMD64Move
         }
     }
 
-    @Opcode
+    @LIROpcode
     // @class AMD64Move.AMD64MultiStackMove
     public static final class AMD64MultiStackMove extends AMD64LIRInstruction
     {
         // @def
-        public static final LIRInstructionClass<AMD64MultiStackMove> TYPE = LIRInstructionClass.create(AMD64MultiStackMove.class);
+        public static final LIRInstructionClass<AMD64Move.AMD64MultiStackMove> TYPE = LIRInstructionClass.create(AMD64Move.AMD64MultiStackMove.class);
 
-        @Def({OperandFlag.STACK})
+        @LIRInstruction.Def({LIRInstruction.OperandFlag.STACK})
         // @field
         protected AllocatableValue[] ___results;
-        @Use({OperandFlag.STACK})
+        @LIRInstruction.Use({LIRInstruction.OperandFlag.STACK})
         // @field
         protected Value[] ___inputs;
-        @Alive({OperandFlag.STACK, OperandFlag.UNINITIALIZED})
+        @LIRInstruction.Alive({LIRInstruction.OperandFlag.STACK, LIRInstruction.OperandFlag.UNINITIALIZED})
         // @field
         private AllocatableValue ___backupSlot;
 
         // @field
         private Register ___scratch;
 
-        // @cons
+        // @cons AMD64Move.AMD64MultiStackMove
         public AMD64MultiStackMove(AllocatableValue[] __results, Value[] __inputs, Register __scratch, AllocatableValue __backupSlot)
         {
             super(TYPE);
@@ -300,24 +295,24 @@ public final class AMD64Move
         }
     }
 
-    @Opcode
+    @LIROpcode
     // @class AMD64Move.AMD64PushPopStackMove
-    public static final class AMD64PushPopStackMove extends AMD64LIRInstruction implements ValueMoveOp
+    public static final class AMD64PushPopStackMove extends AMD64LIRInstruction implements StandardOp.ValueMoveOp
     {
         // @def
-        public static final LIRInstructionClass<AMD64PushPopStackMove> TYPE = LIRInstructionClass.create(AMD64PushPopStackMove.class);
+        public static final LIRInstructionClass<AMD64Move.AMD64PushPopStackMove> TYPE = LIRInstructionClass.create(AMD64Move.AMD64PushPopStackMove.class);
 
-        @Def({OperandFlag.STACK})
+        @LIRInstruction.Def({LIRInstruction.OperandFlag.STACK})
         // @field
         protected AllocatableValue ___result;
-        @Use({OperandFlag.STACK, OperandFlag.HINT})
+        @LIRInstruction.Use({LIRInstruction.OperandFlag.STACK, LIRInstruction.OperandFlag.HINT})
         // @field
         protected AllocatableValue ___input;
         // @field
-        private final OperandSize ___size;
+        private final AMD64Assembler.OperandSize ___size;
 
-        // @cons
-        public AMD64PushPopStackMove(OperandSize __size, AllocatableValue __result, AllocatableValue __input)
+        // @cons AMD64Move.AMD64PushPopStackMove
+        public AMD64PushPopStackMove(AMD64Assembler.OperandSize __size, AllocatableValue __result, AllocatableValue __input)
         {
             super(TYPE);
             this.___result = __result;
@@ -340,8 +335,8 @@ public final class AMD64Move
         @Override
         public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
         {
-            AMD64MOp.PUSH.emit(__masm, this.___size, (AMD64Address) __crb.asAddress(this.___input));
-            AMD64MOp.POP.emit(__masm, this.___size, (AMD64Address) __crb.asAddress(this.___result));
+            AMD64Assembler.AMD64MOp.PUSH.emit(__masm, this.___size, (AMD64Address) __crb.asAddress(this.___input));
+            AMD64Assembler.AMD64MOp.POP.emit(__masm, this.___size, (AMD64Address) __crb.asAddress(this.___result));
         }
     }
 
@@ -349,19 +344,19 @@ public final class AMD64Move
     public static final class LeaOp extends AMD64LIRInstruction
     {
         // @def
-        public static final LIRInstructionClass<LeaOp> TYPE = LIRInstructionClass.create(LeaOp.class);
+        public static final LIRInstructionClass<AMD64Move.LeaOp> TYPE = LIRInstructionClass.create(AMD64Move.LeaOp.class);
 
-        @Def({OperandFlag.REG})
+        @LIRInstruction.Def({LIRInstruction.OperandFlag.REG})
         // @field
         protected AllocatableValue ___result;
-        @Use({OperandFlag.COMPOSITE, OperandFlag.UNINITIALIZED})
+        @LIRInstruction.Use({LIRInstruction.OperandFlag.COMPOSITE, LIRInstruction.OperandFlag.UNINITIALIZED})
         // @field
         protected AMD64AddressValue ___address;
         // @field
-        private final OperandSize ___size;
+        private final AMD64Assembler.OperandSize ___size;
 
-        // @cons
-        public LeaOp(AllocatableValue __result, AMD64AddressValue __address, OperandSize __size)
+        // @cons AMD64Move.LeaOp
+        public LeaOp(AllocatableValue __result, AMD64AddressValue __address, AMD64Assembler.OperandSize __size)
         {
             super(TYPE);
             this.___result = __result;
@@ -372,7 +367,7 @@ public final class AMD64Move
         @Override
         public void emitCode(CompilationResultBuilder __crb, AMD64MacroAssembler __masm)
         {
-            if (this.___size == OperandSize.QWORD)
+            if (this.___size == AMD64Assembler.OperandSize.QWORD)
             {
                 __masm.leaq(ValueUtil.asRegister(this.___result, AMD64Kind.QWORD), this.___address.toAddress());
             }
@@ -387,15 +382,15 @@ public final class AMD64Move
     public static final class LeaDataOp extends AMD64LIRInstruction
     {
         // @def
-        public static final LIRInstructionClass<LeaDataOp> TYPE = LIRInstructionClass.create(LeaDataOp.class);
+        public static final LIRInstructionClass<AMD64Move.LeaDataOp> TYPE = LIRInstructionClass.create(AMD64Move.LeaDataOp.class);
 
-        @Def({OperandFlag.REG})
+        @LIRInstruction.Def({LIRInstruction.OperandFlag.REG})
         // @field
         protected AllocatableValue ___result;
         // @field
         private final DataPointerConstant ___data;
 
-        // @cons
+        // @cons AMD64Move.LeaDataOp
         public LeaDataOp(AllocatableValue __result, DataPointerConstant __data)
         {
             super(TYPE);
@@ -414,16 +409,16 @@ public final class AMD64Move
     public static final class StackLeaOp extends AMD64LIRInstruction
     {
         // @def
-        public static final LIRInstructionClass<StackLeaOp> TYPE = LIRInstructionClass.create(StackLeaOp.class);
+        public static final LIRInstructionClass<AMD64Move.StackLeaOp> TYPE = LIRInstructionClass.create(AMD64Move.StackLeaOp.class);
 
-        @Def({OperandFlag.REG})
+        @LIRInstruction.Def({LIRInstruction.OperandFlag.REG})
         // @field
         protected AllocatableValue ___result;
-        @Use({OperandFlag.STACK, OperandFlag.UNINITIALIZED})
+        @LIRInstruction.Use({LIRInstruction.OperandFlag.STACK, LIRInstruction.OperandFlag.UNINITIALIZED})
         // @field
         protected AllocatableValue ___slot;
 
-        // @cons
+        // @cons AMD64Move.StackLeaOp
         public StackLeaOp(AllocatableValue __result, AllocatableValue __slot)
         {
             super(TYPE);
@@ -442,12 +437,12 @@ public final class AMD64Move
     public static final class MembarOp extends AMD64LIRInstruction
     {
         // @def
-        public static final LIRInstructionClass<MembarOp> TYPE = LIRInstructionClass.create(MembarOp.class);
+        public static final LIRInstructionClass<AMD64Move.MembarOp> TYPE = LIRInstructionClass.create(AMD64Move.MembarOp.class);
 
         // @field
         private final int ___barriers;
 
-        // @cons
+        // @cons AMD64Move.MembarOp
         public MembarOp(final int __barriers)
         {
             super(TYPE);
@@ -462,19 +457,19 @@ public final class AMD64Move
     }
 
     // @class AMD64Move.NullCheckOp
-    public static final class NullCheckOp extends AMD64LIRInstruction implements NullCheck
+    public static final class NullCheckOp extends AMD64LIRInstruction implements StandardOp.NullCheck
     {
         // @def
-        public static final LIRInstructionClass<NullCheckOp> TYPE = LIRInstructionClass.create(NullCheckOp.class);
+        public static final LIRInstructionClass<AMD64Move.NullCheckOp> TYPE = LIRInstructionClass.create(AMD64Move.NullCheckOp.class);
 
-        @Use({OperandFlag.COMPOSITE})
+        @LIRInstruction.Use({LIRInstruction.OperandFlag.COMPOSITE})
         // @field
         protected AMD64AddressValue ___address;
         // @State
         // @field
         protected LIRFrameState ___state;
 
-        // @cons
+        // @cons AMD64Move.NullCheckOp
         public NullCheckOp(AMD64AddressValue __address, LIRFrameState __state)
         {
             super(TYPE);
@@ -501,30 +496,30 @@ public final class AMD64Move
         }
     }
 
-    @Opcode
+    @LIROpcode
     // @class AMD64Move.CompareAndSwapOp
     public static final class CompareAndSwapOp extends AMD64LIRInstruction
     {
         // @def
-        public static final LIRInstructionClass<CompareAndSwapOp> TYPE = LIRInstructionClass.create(CompareAndSwapOp.class);
+        public static final LIRInstructionClass<AMD64Move.CompareAndSwapOp> TYPE = LIRInstructionClass.create(AMD64Move.CompareAndSwapOp.class);
 
         // @field
         private final AMD64Kind ___accessKind;
 
-        @Def
+        @LIRInstruction.Def
         // @field
         protected AllocatableValue ___result;
-        @Use({OperandFlag.COMPOSITE})
+        @LIRInstruction.Use({LIRInstruction.OperandFlag.COMPOSITE})
         // @field
         protected AMD64AddressValue ___address;
-        @Use
+        @LIRInstruction.Use
         // @field
         protected AllocatableValue ___cmpValue;
-        @Use
+        @LIRInstruction.Use
         // @field
         protected AllocatableValue ___newValue;
 
-        // @cons
+        // @cons AMD64Move.CompareAndSwapOp
         public CompareAndSwapOp(AMD64Kind __accessKind, AllocatableValue __result, AMD64AddressValue __address, AllocatableValue __cmpValue, AllocatableValue __newValue)
         {
             super(TYPE);
@@ -560,27 +555,27 @@ public final class AMD64Move
         }
     }
 
-    @Opcode
+    @LIROpcode
     // @class AMD64Move.AtomicReadAndAddOp
     public static final class AtomicReadAndAddOp extends AMD64LIRInstruction
     {
         // @def
-        public static final LIRInstructionClass<AtomicReadAndAddOp> TYPE = LIRInstructionClass.create(AtomicReadAndAddOp.class);
+        public static final LIRInstructionClass<AMD64Move.AtomicReadAndAddOp> TYPE = LIRInstructionClass.create(AMD64Move.AtomicReadAndAddOp.class);
 
         // @field
         private final AMD64Kind ___accessKind;
 
-        @Def
+        @LIRInstruction.Def
         // @field
         protected AllocatableValue ___result;
-        @Alive({OperandFlag.COMPOSITE})
+        @LIRInstruction.Alive({LIRInstruction.OperandFlag.COMPOSITE})
         // @field
         protected AMD64AddressValue ___address;
-        @Use
+        @LIRInstruction.Use
         // @field
         protected AllocatableValue ___delta;
 
-        // @cons
+        // @cons AMD64Move.AtomicReadAndAddOp
         public AtomicReadAndAddOp(AMD64Kind __accessKind, AllocatableValue __result, AMD64AddressValue __address, AllocatableValue __delta)
         {
             super(TYPE);
@@ -616,27 +611,27 @@ public final class AMD64Move
         }
     }
 
-    @Opcode
+    @LIROpcode
     // @class AMD64Move.AtomicReadAndWriteOp
     public static final class AtomicReadAndWriteOp extends AMD64LIRInstruction
     {
         // @def
-        public static final LIRInstructionClass<AtomicReadAndWriteOp> TYPE = LIRInstructionClass.create(AtomicReadAndWriteOp.class);
+        public static final LIRInstructionClass<AMD64Move.AtomicReadAndWriteOp> TYPE = LIRInstructionClass.create(AMD64Move.AtomicReadAndWriteOp.class);
 
         // @field
         private final AMD64Kind ___accessKind;
 
-        @Def
+        @LIRInstruction.Def
         // @field
         protected AllocatableValue ___result;
-        @Alive({OperandFlag.COMPOSITE})
+        @LIRInstruction.Alive({LIRInstruction.OperandFlag.COMPOSITE})
         // @field
         protected AMD64AddressValue ___address;
-        @Use
+        @LIRInstruction.Use
         // @field
         protected AllocatableValue ___newValue;
 
-        // @cons
+        // @cons AMD64Move.AtomicReadAndWriteOp
         public AtomicReadAndWriteOp(AMD64Kind __accessKind, AllocatableValue __result, AMD64AddressValue __address, AllocatableValue __newValue)
         {
             super(TYPE);
@@ -919,12 +914,12 @@ public final class AMD64Move
         {
             case BYTE:
             {
-                AMD64MIOp.MOVB.emit(__masm, OperandSize.BYTE, __dest, (int) __imm);
+                AMD64Assembler.AMD64MIOp.MOVB.emit(__masm, AMD64Assembler.OperandSize.BYTE, __dest, (int) __imm);
                 break;
             }
             case WORD:
             {
-                AMD64MIOp.MOV.emit(__masm, OperandSize.WORD, __dest, (int) __imm);
+                AMD64Assembler.AMD64MIOp.MOV.emit(__masm, AMD64Assembler.OperandSize.WORD, __dest, (int) __imm);
                 break;
             }
             case DWORD:
@@ -952,18 +947,18 @@ public final class AMD64Move
         // @field
         protected final boolean ___nonNull;
 
-        @Def({OperandFlag.REG, OperandFlag.HINT})
+        @LIRInstruction.Def({LIRInstruction.OperandFlag.REG, LIRInstruction.OperandFlag.HINT})
         // @field
         private AllocatableValue ___result;
-        @Use({OperandFlag.REG, OperandFlag.CONST})
+        @LIRInstruction.Use({LIRInstruction.OperandFlag.REG, LIRInstruction.OperandFlag.CONST})
         // @field
         private Value ___input;
-        @Alive({OperandFlag.REG, OperandFlag.ILLEGAL, OperandFlag.UNINITIALIZED})
+        @LIRInstruction.Alive({LIRInstruction.OperandFlag.REG, LIRInstruction.OperandFlag.ILLEGAL, LIRInstruction.OperandFlag.UNINITIALIZED})
         // @field
         private AllocatableValue ___baseRegister;
 
-        // @cons
-        protected PointerCompressionOp(LIRInstructionClass<? extends PointerCompressionOp> __type, AllocatableValue __result, Value __input, AllocatableValue __baseRegister, CompressEncoding __encoding, boolean __nonNull, LIRKindTool __lirKindTool)
+        // @cons AMD64Move.PointerCompressionOp
+        protected PointerCompressionOp(LIRInstructionClass<? extends AMD64Move.PointerCompressionOp> __type, AllocatableValue __result, Value __input, AllocatableValue __baseRegister, CompressEncoding __encoding, boolean __nonNull, LIRKindTool __lirKindTool)
         {
             super(__type);
             this.___result = __result;
@@ -1006,19 +1001,19 @@ public final class AMD64Move
     }
 
     // @class AMD64Move.CompressPointerOp
-    public static final class CompressPointerOp extends PointerCompressionOp
+    public static final class CompressPointerOp extends AMD64Move.PointerCompressionOp
     {
         // @def
-        public static final LIRInstructionClass<CompressPointerOp> TYPE = LIRInstructionClass.create(CompressPointerOp.class);
+        public static final LIRInstructionClass<AMD64Move.CompressPointerOp> TYPE = LIRInstructionClass.create(AMD64Move.CompressPointerOp.class);
 
-        // @cons
+        // @cons AMD64Move.CompressPointerOp
         public CompressPointerOp(AllocatableValue __result, Value __input, AllocatableValue __baseRegister, CompressEncoding __encoding, boolean __nonNull, LIRKindTool __lirKindTool)
         {
             this(TYPE, __result, __input, __baseRegister, __encoding, __nonNull, __lirKindTool);
         }
 
-        // @cons
-        protected CompressPointerOp(LIRInstructionClass<? extends PointerCompressionOp> __type, AllocatableValue __result, Value __input, AllocatableValue __baseRegister, CompressEncoding __encoding, boolean __nonNull, LIRKindTool __lirKindTool)
+        // @cons AMD64Move.CompressPointerOp
+        protected CompressPointerOp(LIRInstructionClass<? extends AMD64Move.PointerCompressionOp> __type, AllocatableValue __result, Value __input, AllocatableValue __baseRegister, CompressEncoding __encoding, boolean __nonNull, LIRKindTool __lirKindTool)
         {
             super(__type, __result, __input, __baseRegister, __encoding, __nonNull, __lirKindTool);
         }
@@ -1035,7 +1030,7 @@ public final class AMD64Move
                 if (!this.___nonNull)
                 {
                     __masm.testq(__resReg, __resReg);
-                    __masm.cmovq(ConditionFlag.Equal, __resReg, __baseReg);
+                    __masm.cmovq(AMD64Assembler.ConditionFlag.Equal, __resReg, __baseReg);
                 }
                 __masm.subq(__resReg, __baseReg);
             }
@@ -1049,19 +1044,19 @@ public final class AMD64Move
     }
 
     // @class AMD64Move.UncompressPointerOp
-    public static final class UncompressPointerOp extends PointerCompressionOp
+    public static final class UncompressPointerOp extends AMD64Move.PointerCompressionOp
     {
         // @def
-        public static final LIRInstructionClass<UncompressPointerOp> TYPE = LIRInstructionClass.create(UncompressPointerOp.class);
+        public static final LIRInstructionClass<AMD64Move.UncompressPointerOp> TYPE = LIRInstructionClass.create(AMD64Move.UncompressPointerOp.class);
 
-        // @cons
+        // @cons AMD64Move.UncompressPointerOp
         public UncompressPointerOp(AllocatableValue __result, Value __input, AllocatableValue __baseRegister, CompressEncoding __encoding, boolean __nonNull, LIRKindTool __lirKindTool)
         {
             this(TYPE, __result, __input, __baseRegister, __encoding, __nonNull, __lirKindTool);
         }
 
-        // @cons
-        protected UncompressPointerOp(LIRInstructionClass<? extends PointerCompressionOp> __type, AllocatableValue __result, Value __input, AllocatableValue __baseRegister, CompressEncoding __encoding, boolean __nonNull, LIRKindTool __lirKindTool)
+        // @cons AMD64Move.UncompressPointerOp
+        protected UncompressPointerOp(LIRInstructionClass<? extends AMD64Move.PointerCompressionOp> __type, AllocatableValue __result, Value __input, AllocatableValue __baseRegister, CompressEncoding __encoding, boolean __nonNull, LIRKindTool __lirKindTool)
         {
             super(__type, __result, __input, __baseRegister, __encoding, __nonNull, __lirKindTool);
         }
@@ -1095,7 +1090,7 @@ public final class AMD64Move
                 }
 
                 Label __done = new Label();
-                __masm.jccb(ConditionFlag.Equal, __done);
+                __masm.jccb(AMD64Assembler.ConditionFlag.Equal, __done);
                 __masm.addq(__resReg, __baseReg);
                 __masm.bind(__done);
             }

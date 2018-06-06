@@ -7,7 +7,6 @@ import giraaff.nodes.StructuredGraph;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.graphbuilderconf.GraphBuilderContext;
 import giraaff.nodes.graphbuilderconf.InlineInvokePlugin;
-import giraaff.nodes.graphbuilderconf.InlineInvokePlugin.InlineInfo;
 
 // @class InlineDuringParsingPlugin
 public final class InlineDuringParsingPlugin implements InlineInvokePlugin
@@ -22,19 +21,19 @@ public final class InlineDuringParsingPlugin implements InlineInvokePlugin
     private static final int maxDepthAfterBudgetExceeded = 3;
 
     @Override
-    public InlineInfo shouldInlineInvoke(GraphBuilderContext __b, ResolvedJavaMethod __method, ValueNode[] __args)
+    public InlineInvokePlugin.InlineInvokeInfo shouldInlineInvoke(GraphBuilderContext __b, ResolvedJavaMethod __method, ValueNode[] __args)
     {
         if (__method.hasBytecodes() && __method.getDeclaringClass().isLinked() && __method.canBeInlined())
         {
             // test force inlining first
             if (__method.shouldBeInlined())
             {
-                return InlineInfo.createStandardInlineInfo(__method);
+                return InlineInvokePlugin.InlineInvokeInfo.createStandardInlineInfo(__method);
             }
 
             if (!__method.isSynchronized() && checkSize(__method, __args, __b.getGraph()) && checkInliningDepth(__b))
             {
-                return InlineInfo.createStandardInlineInfo(__method);
+                return InlineInvokePlugin.InlineInvokeInfo.createStandardInlineInfo(__method);
             }
         }
         return null;

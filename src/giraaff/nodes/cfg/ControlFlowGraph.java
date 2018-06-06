@@ -20,7 +20,6 @@ import giraaff.nodes.LoopEndNode;
 import giraaff.nodes.LoopExitNode;
 import giraaff.nodes.MergeNode;
 import giraaff.nodes.StructuredGraph;
-import giraaff.nodes.StructuredGraph.GuardsStage;
 import giraaff.util.GraalError;
 
 // @class ControlFlowGraph
@@ -81,7 +80,7 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
     }
 
     @SuppressWarnings("unchecked")
-    public <V> void visitDominatorTreeDefault(RecursiveVisitor<V> __visitor)
+    public <V> void visitDominatorTreeDefault(ControlFlowGraph.RecursiveVisitor<V> __visitor)
     {
         Block[] __stack = new Block[this.___maxDominatorDepth + 1];
         Block __current = getStartBlock();
@@ -167,8 +166,8 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
     // @class ControlFlowGraph.DeferredExit
     public static final class DeferredExit
     {
-        // @cons
-        public DeferredExit(Block __block, DeferredExit __next)
+        // @cons ControlFlowGraph.DeferredExit
+        public DeferredExit(Block __block, ControlFlowGraph.DeferredExit __next)
         {
             super();
             this.___block = __block;
@@ -178,20 +177,20 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
         // @field
         private final Block ___block;
         // @field
-        private final DeferredExit ___next;
+        private final ControlFlowGraph.DeferredExit ___next;
 
         public Block getBlock()
         {
             return this.___block;
         }
 
-        public DeferredExit getNext()
+        public ControlFlowGraph.DeferredExit getNext()
         {
             return this.___next;
         }
     }
 
-    public static void addDeferredExit(DeferredExit[] __deferredExits, Block __b)
+    public static void addDeferredExit(ControlFlowGraph.DeferredExit[] __deferredExits, Block __b)
     {
         Loop<Block> __outermostExited = __b.getDominator().getLoop();
         Loop<Block> __exitBlockLoop = __b.getLoop();
@@ -200,17 +199,17 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
             __outermostExited = __outermostExited.getParent();
         }
         int __loopIndex = __outermostExited.getIndex();
-        __deferredExits[__loopIndex] = new DeferredExit(__b, __deferredExits[__loopIndex]);
+        __deferredExits[__loopIndex] = new ControlFlowGraph.DeferredExit(__b, __deferredExits[__loopIndex]);
     }
 
     @SuppressWarnings({"unchecked"})
-    public <V> void visitDominatorTreeDeferLoopExits(RecursiveVisitor<V> __visitor)
+    public <V> void visitDominatorTreeDeferLoopExits(ControlFlowGraph.RecursiveVisitor<V> __visitor)
     {
         Block[] __stack = new Block[getBlocks().length];
         int __tos = 0;
         BitSet __visited = new BitSet(getBlocks().length);
         int __loopCount = getLoops().size();
-        DeferredExit[] __deferredExits = new DeferredExit[__loopCount];
+        ControlFlowGraph.DeferredExit[] __deferredExits = new ControlFlowGraph.DeferredExit[__loopCount];
         Object[] __values = null;
         int __valuesTOS = 0;
         __stack[0] = getStartBlock();
@@ -231,7 +230,7 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
                 if (__cur.isLoopHeader())
                 {
                     int __loopIndex = __cur.getLoop().getIndex();
-                    DeferredExit __deferredExit = __deferredExits[__loopIndex];
+                    ControlFlowGraph.DeferredExit __deferredExit = __deferredExits[__loopIndex];
                     if (__deferredExit != null)
                     {
                         while (__deferredExit != null)
@@ -293,7 +292,7 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
         }
     }
 
-    public <V> void visitDominatorTree(RecursiveVisitor<V> __visitor, boolean __deferLoopExits)
+    public <V> void visitDominatorTree(ControlFlowGraph.RecursiveVisitor<V> __visitor, boolean __deferLoopExits)
     {
         if (__deferLoopExits && this.getLoops().size() > 0)
         {
@@ -311,7 +310,7 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
         return __dominator != null && __b.getLoop() != __dominator.getLoop() && (!__b.isLoopHeader() || __dominator.getLoopDepth() >= __b.getLoopDepth());
     }
 
-    // @cons
+    // @cons ControlFlowGraph
     private ControlFlowGraph(StructuredGraph __graph)
     {
         super();
@@ -697,7 +696,7 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
                         computeLoopBlocks(__endBlock, __loop, __stack, true);
                     }
 
-                    if (this.___graph.getGuardsStage() != GuardsStage.AFTER_FSA)
+                    if (this.___graph.getGuardsStage() != StructuredGraph.GuardsStage.AFTER_FSA)
                     {
                         for (LoopExitNode __exit : __loopBegin.loopExits())
                         {
@@ -729,7 +728,7 @@ public final class ControlFlowGraph implements AbstractControlFlowGraph<Block>
         }
 
         // Compute the loop exit blocks after FSA.
-        if (this.___graph.getGuardsStage() == GuardsStage.AFTER_FSA)
+        if (this.___graph.getGuardsStage() == StructuredGraph.GuardsStage.AFTER_FSA)
         {
             for (Block __b : this.___reversePostOrder)
             {

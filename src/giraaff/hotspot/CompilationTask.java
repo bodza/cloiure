@@ -34,7 +34,7 @@ public final class CompilationTask
     // @field
     private HotSpotInstalledCode ___installedCode;
 
-    // @cons
+    // @cons CompilationTask
     public CompilationTask(HotSpotGraalCompiler __compiler, HotSpotCompilationRequest __request, boolean __useProfilingInfo, boolean __installAsDefault)
     {
         super();

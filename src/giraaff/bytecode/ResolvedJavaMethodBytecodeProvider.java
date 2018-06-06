@@ -14,7 +14,7 @@ public final class ResolvedJavaMethodBytecodeProvider implements BytecodeProvide
     // @def
     public static final ResolvedJavaMethodBytecodeProvider INSTANCE = new ResolvedJavaMethodBytecodeProvider();
 
-    // @cons
+    // @cons ResolvedJavaMethodBytecodeProvider
     private ResolvedJavaMethodBytecodeProvider()
     {
         super();

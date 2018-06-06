@@ -38,14 +38,14 @@ public class MethodCallTargetNode extends CallTargetNode implements IterableNode
     // @field
     protected JavaTypeProfile ___profile;
 
-    // @cons
-    public MethodCallTargetNode(InvokeKind __invokeKind, ResolvedJavaMethod __targetMethod, ValueNode[] __arguments, StampPair __returnStamp, JavaTypeProfile __profile)
+    // @cons MethodCallTargetNode
+    public MethodCallTargetNode(CallTargetNode.InvokeKind __invokeKind, ResolvedJavaMethod __targetMethod, ValueNode[] __arguments, StampPair __returnStamp, JavaTypeProfile __profile)
     {
         this(TYPE, __invokeKind, __targetMethod, __arguments, __returnStamp, __profile);
     }
 
-    // @cons
-    protected MethodCallTargetNode(NodeClass<? extends MethodCallTargetNode> __c, InvokeKind __invokeKind, ResolvedJavaMethod __targetMethod, ValueNode[] __arguments, StampPair __returnStamp, JavaTypeProfile __profile)
+    // @cons MethodCallTargetNode
+    protected MethodCallTargetNode(NodeClass<? extends MethodCallTargetNode> __c, CallTargetNode.InvokeKind __invokeKind, ResolvedJavaMethod __targetMethod, ValueNode[] __arguments, StampPair __returnStamp, JavaTypeProfile __profile)
     {
         super(__c, __arguments, __targetMethod, __invokeKind, __returnStamp);
         this.___profile = __profile;
@@ -69,7 +69,7 @@ public class MethodCallTargetNode extends CallTargetNode implements IterableNode
     ///
     public boolean isStatic()
     {
-        return invokeKind() == InvokeKind.Static;
+        return invokeKind() == CallTargetNode.InvokeKind.Static;
     }
 
     public JavaKind returnKind()
@@ -82,7 +82,7 @@ public class MethodCallTargetNode extends CallTargetNode implements IterableNode
         return (Invoke) this.usages().first();
     }
 
-    public static ResolvedJavaMethod findSpecialCallTarget(InvokeKind __invokeKind, ValueNode __receiver, ResolvedJavaMethod __targetMethod, ResolvedJavaType __contextType)
+    public static ResolvedJavaMethod findSpecialCallTarget(CallTargetNode.InvokeKind __invokeKind, ValueNode __receiver, ResolvedJavaMethod __targetMethod, ResolvedJavaType __contextType)
     {
         if (__invokeKind.isDirect())
         {
@@ -98,10 +98,10 @@ public class MethodCallTargetNode extends CallTargetNode implements IterableNode
         return devirtualizeCall(__invokeKind, __targetMethod, __contextType, __receiver.graph().getAssumptions(), __receiver.stamp(NodeView.DEFAULT));
     }
 
-    public static ResolvedJavaMethod devirtualizeCall(InvokeKind __invokeKind, ResolvedJavaMethod __targetMethod, ResolvedJavaType __contextType, Assumptions __assumptions, Stamp __receiverStamp)
+    public static ResolvedJavaMethod devirtualizeCall(CallTargetNode.InvokeKind __invokeKind, ResolvedJavaMethod __targetMethod, ResolvedJavaType __contextType, Assumptions __assumptions, Stamp __receiverStamp)
     {
         TypeReference __type = StampTool.typeReferenceOrNull(__receiverStamp);
-        if (__type == null && __invokeKind == InvokeKind.Virtual)
+        if (__type == null && __invokeKind == CallTargetNode.InvokeKind.Virtual)
         {
             // For virtual calls, we are guaranteed to receive a correct receiver type.
             __type = TypeReference.createTrusted(__assumptions, __targetMethod.getDeclaringClass());
@@ -140,7 +140,7 @@ public class MethodCallTargetNode extends CallTargetNode implements IterableNode
         if (__specialCallTarget != null)
         {
             this.setTargetMethod(__specialCallTarget);
-            setInvokeKind(InvokeKind.Special);
+            setInvokeKind(CallTargetNode.InvokeKind.Special);
             return;
         }
 
@@ -217,11 +217,11 @@ public class MethodCallTargetNode extends CallTargetNode implements IterableNode
                 arguments().set(0, __valueNode);
                 if (__speculatedType.isExact())
                 {
-                    setInvokeKind(InvokeKind.Special);
+                    setInvokeKind(CallTargetNode.InvokeKind.Special);
                 }
                 else
                 {
-                    setInvokeKind(InvokeKind.Virtual);
+                    setInvokeKind(CallTargetNode.InvokeKind.Virtual);
                 }
                 setTargetMethod(__singleImplementorMethod);
                 return true;

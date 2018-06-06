@@ -22,14 +22,10 @@ import giraaff.java.GraphBuilderPhase;
 import giraaff.lir.asm.CompilationResultBuilderFactory;
 import giraaff.lir.phases.LIRSuites;
 import giraaff.nodes.StructuredGraph;
-import giraaff.nodes.StructuredGraph.AllowAssumptions;
 import giraaff.nodes.graphbuilderconf.GraphBuilderConfiguration;
-import giraaff.nodes.graphbuilderconf.GraphBuilderConfiguration.Plugins;
 import giraaff.nodes.graphbuilderconf.IntrinsicContext;
-import giraaff.nodes.graphbuilderconf.IntrinsicContext.CompilationContext;
 import giraaff.nodes.spi.Replacements;
 import giraaff.phases.OptimisticOptimizations;
-import giraaff.phases.OptimisticOptimizations.Optimization;
 import giraaff.phases.PhaseSuite;
 import giraaff.phases.tiers.HighTierContext;
 import giraaff.phases.tiers.Suites;
@@ -40,7 +36,7 @@ public final class HotSpotGraalCompiler implements GraalJVMCICompiler
     // @field
     private final HotSpotGraalRuntime ___graalRuntime;
 
-    // @cons
+    // @cons HotSpotGraalCompiler
     public HotSpotGraalCompiler(HotSpotGraalRuntime __graalRuntime)
     {
         super();
@@ -78,7 +74,7 @@ public final class HotSpotGraalCompiler implements GraalJVMCICompiler
             {
                 __speculationLog.collectFailedSpeculations();
             }
-            __graph = new StructuredGraph.Builder(AllowAssumptions.ifTrue(GraalOptions.optAssumptions)).method(__method).entryBCI(__entryBCI).speculationLog(__speculationLog).useProfilingInfo(__useProfilingInfo).build();
+            __graph = new StructuredGraph.GraphBuilder(StructuredGraph.AllowAssumptions.ifTrue(GraalOptions.optAssumptions)).method(__method).entryBCI(__entryBCI).speculationLog(__speculationLog).useProfilingInfo(__useProfilingInfo).build();
         }
         return __graph;
     }
@@ -93,7 +89,7 @@ public final class HotSpotGraalCompiler implements GraalJVMCICompiler
         // Cut off never executed code profiles if there is code, e.g. after the osr loop, that is never executed.
         if (__isOSR && !GraalOptions.deoptAfterOSR)
         {
-            __optimisticOpts.remove(Optimization.RemoveNeverExecutedCode);
+            __optimisticOpts.remove(OptimisticOptimizations.Optimization.RemoveNeverExecutedCode);
         }
 
         CompilationResult __result =  new CompilationResult();
@@ -127,11 +123,11 @@ public final class HotSpotGraalCompiler implements GraalJVMCICompiler
         if (__subst != null)
         {
             ResolvedJavaMethod __substMethod = __subst.getMethod();
-            StructuredGraph __graph = new StructuredGraph.Builder(AllowAssumptions.YES).method(__substMethod).build();
-            Plugins __plugins = new Plugins(__providers.getGraphBuilderPlugins());
+            StructuredGraph __graph = new StructuredGraph.GraphBuilder(StructuredGraph.AllowAssumptions.YES).method(__substMethod).build();
+            GraphBuilderConfiguration.Plugins __plugins = new GraphBuilderConfiguration.Plugins(__providers.getGraphBuilderPlugins());
             GraphBuilderConfiguration __config = GraphBuilderConfiguration.getSnippetDefault(__plugins);
-            IntrinsicContext __initialReplacementContext = new IntrinsicContext(__method, __substMethod, __subst.getOrigin(), CompilationContext.ROOT_COMPILATION);
-            new GraphBuilderPhase.Instance(__providers.getMetaAccess(), __providers.getStampProvider(), __providers.getConstantReflection(), __providers.getConstantFieldProvider(), __config, OptimisticOptimizations.NONE, __initialReplacementContext).apply(__graph);
+            IntrinsicContext __initialReplacementContext = new IntrinsicContext(__method, __substMethod, __subst.getOrigin(), IntrinsicContext.CompilationContext.ROOT_COMPILATION);
+            new GraphBuilderPhase.GraphBuilderInstance(__providers.getMetaAccess(), __providers.getStampProvider(), __providers.getConstantReflection(), __providers.getConstantFieldProvider(), __config, OptimisticOptimizations.NONE, __initialReplacementContext).apply(__graph);
             return __graph;
         }
         return null;

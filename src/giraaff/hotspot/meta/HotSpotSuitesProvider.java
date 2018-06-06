@@ -21,7 +21,7 @@ public class HotSpotSuitesProvider extends SuitesProviderBase
     // @field
     private final SuitesCreator ___defaultSuitesCreator;
 
-    // @cons
+    // @cons HotSpotSuitesProvider
     public HotSpotSuitesProvider(SuitesCreator __defaultSuitesCreator, HotSpotGraalRuntime __runtime)
     {
         super();

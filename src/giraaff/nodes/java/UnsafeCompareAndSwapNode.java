@@ -5,6 +5,7 @@ import jdk.vm.ci.meta.JavaKind;
 import org.graalvm.word.LocationIdentity;
 
 import giraaff.core.common.type.StampFactory;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.memory.AbstractMemoryCheckpoint;
@@ -16,23 +17,23 @@ import giraaff.nodes.spi.LoweringTool;
 // Represents an atomic compare-and-swap operation The result is a boolean that contains whether the
 // value matched the expected value.
 ///
-// @NodeInfo.allowedUsageTypes "Value, Memory"
+// @NodeInfo.allowedUsageTypes "InputType.Value, InputType.Memory"
 // @class UnsafeCompareAndSwapNode
 public final class UnsafeCompareAndSwapNode extends AbstractMemoryCheckpoint implements Lowerable, MemoryCheckpoint.Single
 {
     // @def
     public static final NodeClass<UnsafeCompareAndSwapNode> TYPE = NodeClass.create(UnsafeCompareAndSwapNode.class);
 
-    @Input
+    @Node.Input
     // @field
     ValueNode ___object;
-    @Input
+    @Node.Input
     // @field
     ValueNode ___offset;
-    @Input
+    @Node.Input
     // @field
     ValueNode ___expected;
-    @Input
+    @Node.Input
     // @field
     ValueNode ___newValue;
 
@@ -41,7 +42,7 @@ public final class UnsafeCompareAndSwapNode extends AbstractMemoryCheckpoint imp
     // @field
     private final LocationIdentity ___locationIdentity;
 
-    // @cons
+    // @cons UnsafeCompareAndSwapNode
     public UnsafeCompareAndSwapNode(ValueNode __object, ValueNode __offset, ValueNode __expected, ValueNode __newValue, JavaKind __valueKind, LocationIdentity __locationIdentity)
     {
         super(TYPE, StampFactory.forKind(JavaKind.Boolean.getStackKind()));

@@ -18,7 +18,7 @@ public abstract class Assembler
     // @field
     public final TargetDescription ___target;
     // @field
-    private List<LabelHint> ___jumpDisplacementHints;
+    private List<Assembler.LabelHint> ___jumpDisplacementHints;
 
     ///
     // Backing code buffer.
@@ -26,7 +26,7 @@ public abstract class Assembler
     // @field
     private final CodeBuffer ___codeBuffer;
 
-    // @cons
+    // @cons Assembler
     public Assembler(TargetDescription __target)
     {
         super();
@@ -188,19 +188,19 @@ public abstract class Assembler
         {
             return;
         }
-        for (LabelHint __request : this.___jumpDisplacementHints)
+        for (Assembler.LabelHint __request : this.___jumpDisplacementHints)
         {
             __request.capture();
         }
     }
 
-    public LabelHint requestLabelHint(Label __label)
+    public Assembler.LabelHint requestLabelHint(Label __label)
     {
         if (this.___jumpDisplacementHints == null)
         {
             this.___jumpDisplacementHints = new ArrayList<>();
         }
-        LabelHint __hint = new LabelHint(__label, position());
+        Assembler.LabelHint __hint = new Assembler.LabelHint(__label, position());
         this.___jumpDisplacementHints.add(__hint);
         return __hint;
     }
@@ -215,7 +215,7 @@ public abstract class Assembler
         // @field
         private int ___capturedTarget = -1;
 
-        // @cons
+        // @cons Assembler.LabelHint
         protected LabelHint(Label __label, int __lastPosition)
         {
             super();

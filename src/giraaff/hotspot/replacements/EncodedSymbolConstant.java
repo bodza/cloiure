@@ -24,7 +24,7 @@ public final class EncodedSymbolConstant extends DataPointerConstant
     // @field
     private byte[] ___bytes;
 
-    // @cons
+    // @cons EncodedSymbolConstant
     public EncodedSymbolConstant(Constant __constant)
     {
         super(1);

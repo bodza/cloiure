@@ -25,7 +25,7 @@ public final class ForeignCallDescriptor
     // @field
     private final Class<?>[] ___argumentTypes;
 
-    // @cons
+    // @cons ForeignCallDescriptor
     public ForeignCallDescriptor(String __name, Class<?> __resultType, Class<?>... __argumentTypes)
     {
         super();

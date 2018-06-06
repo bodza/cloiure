@@ -11,7 +11,7 @@ public final class HIRLoop extends Loop<Block>
     // @field
     private LocationSet ___killLocations;
 
-    // @cons
+    // @cons HIRLoop
     protected HIRLoop(Loop<Block> __parent, int __index, Block __header)
     {
         super(__parent, __index, __header);

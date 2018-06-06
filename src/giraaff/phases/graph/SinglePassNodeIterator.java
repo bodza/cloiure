@@ -55,7 +55,7 @@ public abstract class SinglePassNodeIterator<T extends MergeableState<T>>
     // @see SinglePassNodeIterator.PathStart
     ///
     // @field
-    private final Deque<PathStart<T>> ___nodeQueue;
+    private final Deque<SinglePassNodeIterator.PathStart<T>> ___nodeQueue;
 
     ///
     // The keys in this map may be:
@@ -105,7 +105,7 @@ public abstract class SinglePassNodeIterator<T extends MergeableState<T>>
         // @field
         private final U ___stateOnEntry;
 
-        // @cons
+        // @cons SinglePassNodeIterator.PathStart
         private PathStart(AbstractBeginNode __node, U __stateOnEntry)
         {
             super();
@@ -130,7 +130,7 @@ public abstract class SinglePassNodeIterator<T extends MergeableState<T>>
         }
     }
 
-    // @cons
+    // @cons SinglePassNodeIterator
     public SinglePassNodeIterator(StartNode __start, T __initialState)
     {
         super();
@@ -231,7 +231,7 @@ public abstract class SinglePassNodeIterator<T extends MergeableState<T>>
                     __curState = __startState.clone();
                 }
                 AbstractBeginNode __begin = (AbstractBeginNode) __succ;
-                this.___nodeQueue.addFirst(new PathStart<>(__begin, __curState));
+                this.___nodeQueue.addFirst(new SinglePassNodeIterator.PathStart<>(__begin, __curState));
             }
         }
     }
@@ -250,7 +250,7 @@ public abstract class SinglePassNodeIterator<T extends MergeableState<T>>
         {
             return null;
         }
-        PathStart<T> __elem = this.___nodeQueue.removeFirst();
+        SinglePassNodeIterator.PathStart<T> __elem = this.___nodeQueue.removeFirst();
         if (__elem.___node instanceof AbstractMergeNode)
         {
             AbstractMergeNode __merge = (AbstractMergeNode) __elem.___node;
@@ -334,7 +334,7 @@ public abstract class SinglePassNodeIterator<T extends MergeableState<T>>
         }
         if (__endsVisited)
         {
-            this.___nodeQueue.add(new PathStart<>(__merge, null));
+            this.___nodeQueue.add(new SinglePassNodeIterator.PathStart<>(__merge, null));
         }
     }
 

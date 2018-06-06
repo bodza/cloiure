@@ -27,7 +27,7 @@ public final class MethodCountersPointerStamp extends MetaspacePointerStamp
         return METHOD_COUNTERS_NON_NULL;
     }
 
-    // @cons
+    // @cons MethodCountersPointerStamp
     private MethodCountersPointerStamp(boolean __nonNull, boolean __alwaysNull)
     {
         super(__nonNull, __alwaysNull);

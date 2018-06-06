@@ -20,25 +20,25 @@ public class VirtualInstanceNode extends VirtualObjectNode
     // @field
     protected final ResolvedJavaField[] ___fields;
 
-    // @cons
+    // @cons VirtualInstanceNode
     public VirtualInstanceNode(ResolvedJavaType __type, boolean __hasIdentity)
     {
         this(__type, __type.getInstanceFields(true), __hasIdentity);
     }
 
-    // @cons
+    // @cons VirtualInstanceNode
     public VirtualInstanceNode(ResolvedJavaType __type, ResolvedJavaField[] __fields, boolean __hasIdentity)
     {
         this(TYPE, __type, __fields, __hasIdentity);
     }
 
-    // @cons
+    // @cons VirtualInstanceNode
     protected VirtualInstanceNode(NodeClass<? extends VirtualInstanceNode> __c, ResolvedJavaType __type, boolean __hasIdentity)
     {
         this(__c, __type, __type.getInstanceFields(true), __hasIdentity);
     }
 
-    // @cons
+    // @cons VirtualInstanceNode
     protected VirtualInstanceNode(NodeClass<? extends VirtualInstanceNode> __c, ResolvedJavaType __type, ResolvedJavaField[] __fields, boolean __hasIdentity)
     {
         super(__c, __type, __hasIdentity);

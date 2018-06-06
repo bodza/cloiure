@@ -6,27 +6,27 @@ import jdk.vm.ci.meta.AllocatableValue;
 
 import giraaff.asm.amd64.AMD64Address;
 import giraaff.asm.amd64.AMD64MacroAssembler;
-import giraaff.lir.LIRInstruction.OperandFlag;
+import giraaff.lir.LIRInstruction;
 import giraaff.lir.LIRInstructionClass;
-import giraaff.lir.Opcode;
+import giraaff.lir.LIROpcode;
 import giraaff.lir.amd64.AMD64LIRInstruction;
 import giraaff.lir.asm.CompilationResultBuilder;
 
 ///
 // Patch the return address of the current frame.
 ///
-@Opcode
+@LIROpcode
 // @class AMD64HotSpotPatchReturnAddressOp
 final class AMD64HotSpotPatchReturnAddressOp extends AMD64LIRInstruction
 {
     // @def
     public static final LIRInstructionClass<AMD64HotSpotPatchReturnAddressOp> TYPE = LIRInstructionClass.create(AMD64HotSpotPatchReturnAddressOp.class);
 
-    @Use(OperandFlag.REG)
+    @LIRInstruction.Use(LIRInstruction.OperandFlag.REG)
     // @field
     AllocatableValue ___address;
 
-    // @cons
+    // @cons AMD64HotSpotPatchReturnAddressOp
     AMD64HotSpotPatchReturnAddressOp(AllocatableValue __address)
     {
         super(TYPE);

@@ -19,7 +19,7 @@ public final class G1ReferentFieldReadBarrier extends ObjectWriteBarrier
     // @field
     protected final boolean ___doLoad;
 
-    // @cons
+    // @cons G1ReferentFieldReadBarrier
     public G1ReferentFieldReadBarrier(AddressNode __address, ValueNode __expectedObject, boolean __doLoad)
     {
         super(TYPE, __address, __expectedObject, true);

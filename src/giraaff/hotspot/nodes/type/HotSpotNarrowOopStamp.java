@@ -12,14 +12,14 @@ import giraaff.core.common.CompressEncoding;
 import giraaff.core.common.type.AbstractObjectStamp;
 import giraaff.core.common.type.ObjectStamp;
 import giraaff.core.common.type.Stamp;
-import giraaff.nodes.CompressionNode.CompressionOp;
+import giraaff.nodes.CompressionNode;
 import giraaff.nodes.type.NarrowOopStamp;
 import giraaff.util.GraalError;
 
 // @class HotSpotNarrowOopStamp
 public final class HotSpotNarrowOopStamp extends NarrowOopStamp
 {
-    // @cons
+    // @cons HotSpotNarrowOopStamp
     private HotSpotNarrowOopStamp(ResolvedJavaType __type, boolean __exactType, boolean __nonNull, boolean __alwaysNull, CompressEncoding __encoding)
     {
         super(__type, __exactType, __nonNull, __alwaysNull, __encoding);
@@ -73,7 +73,7 @@ public final class HotSpotNarrowOopStamp extends NarrowOopStamp
         return true;
     }
 
-    public static Stamp mkStamp(CompressionOp __op, Stamp __input, CompressEncoding __encoding)
+    public static Stamp mkStamp(CompressionNode.CompressionOp __op, Stamp __input, CompressEncoding __encoding)
     {
         switch (__op)
         {

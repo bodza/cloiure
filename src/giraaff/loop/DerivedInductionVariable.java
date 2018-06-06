@@ -11,7 +11,7 @@ public abstract class DerivedInductionVariable extends InductionVariable
     // @field
     protected final InductionVariable ___base;
 
-    // @cons
+    // @cons DerivedInductionVariable
     public DerivedInductionVariable(LoopEx __loop, InductionVariable __base)
     {
         super(__loop);

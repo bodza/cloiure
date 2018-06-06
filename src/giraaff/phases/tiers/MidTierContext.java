@@ -16,7 +16,7 @@ public final class MidTierContext extends PhaseContext
     // @field
     private final ProfilingInfo ___profilingInfo;
 
-    // @cons
+    // @cons MidTierContext
     public MidTierContext(Providers __copyFrom, TargetProvider __target, OptimisticOptimizations __optimisticOpts, ProfilingInfo __profilingInfo)
     {
         super(__copyFrom);

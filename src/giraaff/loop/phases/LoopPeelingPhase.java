@@ -9,7 +9,7 @@ import giraaff.phases.tiers.PhaseContext;
 // @class LoopPeelingPhase
 public final class LoopPeelingPhase extends LoopPhase<LoopPolicies>
 {
-    // @cons
+    // @cons LoopPeelingPhase
     public LoopPeelingPhase(LoopPolicies __policies)
     {
         super(__policies);

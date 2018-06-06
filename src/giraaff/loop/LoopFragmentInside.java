@@ -7,7 +7,7 @@ import java.util.List;
 import org.graalvm.collections.EconomicMap;
 import org.graalvm.collections.Equivalence;
 
-import giraaff.graph.Graph.DuplicationReplacement;
+import giraaff.graph.Graph;
 import giraaff.graph.Node;
 import giraaff.graph.NodeBitMap;
 import giraaff.graph.iterators.NodeIterable;
@@ -35,7 +35,7 @@ import giraaff.nodes.StateSplit;
 import giraaff.nodes.StructuredGraph;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.ValuePhiNode;
-import giraaff.nodes.VirtualState.NodeClosure;
+import giraaff.nodes.VirtualState;
 import giraaff.nodes.calc.AddNode;
 import giraaff.nodes.calc.CompareNode;
 import giraaff.nodes.calc.SubNode;
@@ -56,7 +56,7 @@ public class LoopFragmentInside extends LoopFragment
     // @field
     private EconomicMap<PhiNode, ValueNode> ___mergedInitializers;
     // @closure
-    private final DuplicationReplacement dataFixBefore = new DuplicationReplacement()
+    private final Graph.DuplicationReplacement dataFixBefore = new Graph.DuplicationReplacement()
     {
         @Override
         public Node replacement(Node __oriInput)
@@ -70,7 +70,7 @@ public class LoopFragmentInside extends LoopFragment
     };
 
     // @closure
-    private final DuplicationReplacement dataFixWithinAfter = new DuplicationReplacement()
+    private final Graph.DuplicationReplacement dataFixWithinAfter = new Graph.DuplicationReplacement()
     {
         @Override
         public Node replacement(Node __oriInput)
@@ -83,13 +83,13 @@ public class LoopFragmentInside extends LoopFragment
         }
     };
 
-    // @cons
+    // @cons LoopFragmentInside
     public LoopFragmentInside(LoopEx __loop)
     {
         super(__loop);
     }
 
-    // @cons
+    // @cons LoopFragmentInside
     public LoopFragmentInside(LoopFragmentInside __original)
     {
         super(null, __original);
@@ -352,12 +352,12 @@ public class LoopFragmentInside extends LoopFragment
     }
 
     @Override
-    protected DuplicationReplacement getDuplicationReplacement()
+    protected Graph.DuplicationReplacement getDuplicationReplacement()
     {
         final LoopBeginNode __loopBegin = loop().loopBegin();
         final StructuredGraph __graph = graph();
         // @closure
-        return new DuplicationReplacement()
+        return new Graph.DuplicationReplacement()
         {
             // @field
             private EconomicMap<Node, Node> ___seenNode = EconomicMap.create(Equivalence.IDENTITY);
@@ -668,7 +668,7 @@ public class LoopFragmentInside extends LoopFragment
                 if (__duplicateState != null)
                 {
                     // fix the merge's state after
-                    __duplicateState.applyToNonVirtual(new NodeClosure<ValueNode>()
+                    __duplicateState.applyToNonVirtual(new VirtualState.NodeClosure<ValueNode>()
                     {
                         @Override
                         public void apply(Node __from, ValueNode __node)

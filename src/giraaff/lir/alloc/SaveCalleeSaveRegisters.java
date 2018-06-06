@@ -25,7 +25,7 @@ import giraaff.lir.util.RegisterMap;
 public final class SaveCalleeSaveRegisters extends PreAllocationOptimizationPhase
 {
     @Override
-    protected void run(TargetDescription __target, LIRGenerationResult __lirGenRes, PreAllocationOptimizationContext __context)
+    protected void run(TargetDescription __target, LIRGenerationResult __lirGenRes, PreAllocationOptimizationPhase.PreAllocationOptimizationContext __context)
     {
         RegisterArray __calleeSaveRegisters = __lirGenRes.getRegisterConfig().getCalleeSaveRegisters();
         if (__calleeSaveRegisters == null || __calleeSaveRegisters.size() == 0)

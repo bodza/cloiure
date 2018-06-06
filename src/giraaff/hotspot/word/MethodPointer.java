@@ -10,12 +10,12 @@ import giraaff.hotspot.word.HotSpotOperation.HotspotOpcode;
 // @class MethodPointer
 public abstract class MethodPointer extends MetaspacePointer
 {
-    @HotSpotOperation(opcode = HotspotOpcode.POINTER_EQ)
+    @HotSpotOperation(opcode = HotSpotOperation.HotspotOpcode.POINTER_EQ)
     public abstract boolean equal(KlassPointer __other);
 
-    @HotSpotOperation(opcode = HotspotOpcode.POINTER_NE)
+    @HotSpotOperation(opcode = HotSpotOperation.HotspotOpcode.POINTER_NE)
     public abstract boolean notEqual(KlassPointer __other);
 
-    @HotSpotOperation(opcode = HotspotOpcode.TO_METHOD_POINTER)
+    @HotSpotOperation(opcode = HotSpotOperation.HotspotOpcode.TO_METHOD_POINTER)
     public static native MethodPointer fromWord(Pointer __pointer);
 }

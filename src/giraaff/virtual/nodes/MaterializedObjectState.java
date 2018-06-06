@@ -3,6 +3,7 @@ package giraaff.virtual.nodes;
 import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.nodes.ValueNode;
+import giraaff.nodes.VirtualState;
 import giraaff.nodes.virtual.EscapeObjectState;
 import giraaff.nodes.virtual.VirtualObjectNode;
 
@@ -15,7 +16,7 @@ public final class MaterializedObjectState extends EscapeObjectState implements 
     // @def
     public static final NodeClass<MaterializedObjectState> TYPE = NodeClass.create(MaterializedObjectState.class);
 
-    @Input
+    @Node.Input
     // @field
     ValueNode ___materializedValue;
 
@@ -24,7 +25,7 @@ public final class MaterializedObjectState extends EscapeObjectState implements 
         return this.___materializedValue;
     }
 
-    // @cons
+    // @cons MaterializedObjectState
     public MaterializedObjectState(VirtualObjectNode __object, ValueNode __materializedValue)
     {
         super(TYPE, __object);
@@ -38,7 +39,7 @@ public final class MaterializedObjectState extends EscapeObjectState implements 
     }
 
     @Override
-    public void applyToNonVirtual(NodeClosure<? super ValueNode> __closure)
+    public void applyToNonVirtual(VirtualState.NodeClosure<? super ValueNode> __closure)
     {
         __closure.apply(this, this.___materializedValue);
     }

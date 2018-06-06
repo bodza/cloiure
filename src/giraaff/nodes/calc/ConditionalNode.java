@@ -6,6 +6,7 @@ import giraaff.core.common.calc.CanonicalCondition;
 import giraaff.core.common.type.IntegerStamp;
 import giraaff.core.common.type.Stamp;
 import giraaff.core.common.type.StampFactory;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.graph.spi.Canonicalizable;
 import giraaff.graph.spi.CanonicalizerTool;
@@ -31,13 +32,13 @@ public final class ConditionalNode extends FloatingNode implements Canonicalizab
     // @def
     public static final NodeClass<ConditionalNode> TYPE = NodeClass.create(ConditionalNode.class);
 
-    @Input(InputType.Condition)
+    @Node.Input(InputType.ConditionI)
     // @field
     LogicNode ___condition;
-    @Input(InputType.Value)
+    @Node.Input(InputType.Value)
     // @field
     ValueNode ___trueValue;
-    @Input(InputType.Value)
+    @Node.Input(InputType.Value)
     // @field
     ValueNode ___falseValue;
 
@@ -46,13 +47,13 @@ public final class ConditionalNode extends FloatingNode implements Canonicalizab
         return this.___condition;
     }
 
-    // @cons
+    // @cons ConditionalNode
     public ConditionalNode(LogicNode __condition)
     {
         this(__condition, ConstantNode.forInt(1, __condition.graph()), ConstantNode.forInt(0, __condition.graph()));
     }
 
-    // @cons
+    // @cons ConditionalNode
     public ConditionalNode(LogicNode __condition, ValueNode __trueValue, ValueNode __falseValue)
     {
         super(TYPE, __trueValue.stamp(NodeView.DEFAULT).meet(__falseValue.stamp(NodeView.DEFAULT)));
@@ -308,7 +309,7 @@ public final class ConditionalNode extends FloatingNode implements Canonicalizab
         __gen.emitConditional(this);
     }
 
-    // @cons
+    // @cons ConditionalNode
     public ConditionalNode(StructuredGraph __graph, CanonicalCondition __condition, ValueNode __x, ValueNode __y)
     {
         this(CompareNode.createCompareNode(__graph, __condition, __x, __y, null, NodeView.DEFAULT));

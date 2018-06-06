@@ -26,7 +26,7 @@ public final class AMD64CountTrailingZerosNode extends UnaryNode implements Arit
     // @def
     public static final NodeClass<AMD64CountTrailingZerosNode> TYPE = NodeClass.create(AMD64CountTrailingZerosNode.class);
 
-    // @cons
+    // @cons AMD64CountTrailingZerosNode
     public AMD64CountTrailingZerosNode(ValueNode __value)
     {
         super(TYPE, computeStamp(__value.stamp(NodeView.DEFAULT), __value), __value);

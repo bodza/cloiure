@@ -13,8 +13,6 @@ import giraaff.core.common.type.Stamp;
 import giraaff.core.common.type.StampFactory;
 import giraaff.core.common.type.StampPair;
 import giraaff.hotspot.HotSpotForeignCallLinkage;
-import giraaff.hotspot.HotSpotForeignCallLinkage.RegisterEffect;
-import giraaff.hotspot.HotSpotForeignCallLinkage.Transition;
 import giraaff.hotspot.HotSpotForeignCallLinkageImpl;
 import giraaff.hotspot.meta.HotSpotProviders;
 import giraaff.hotspot.nodes.StubForeignCallNode;
@@ -32,13 +30,12 @@ import giraaff.word.Word;
 import giraaff.word.WordTypes;
 
 ///
-// A {@linkplain #getGraph generated} stub for a {@link Transition non-leaf} foreign call from
-// compiled code. A stub is required for such calls as the caller may be scheduled for
-// deoptimization while the call is in progress. And since these are foreign/runtime calls on slow
-// paths, we don't want to force the register allocator to spill around the call. As such, this stub
-// saves and restores all allocatable registers. It also
-// {@linkplain StubUtil#handlePendingException(Word, boolean) handles} any exceptions raised during
-// the foreign call.
+// A {@linkplain #getGraph generated} stub for a {@link HotSpotForeignCallLinkage.Transition non-leaf}
+// foreign call from compiled code. A stub is required for such calls as the caller may be scheduled for
+// deoptimization while the call is in progress. And since these are foreign/runtime calls on slow paths,
+// we don't want to force the register allocator to spill around the call. As such, this stub saves and
+// restores all allocatable registers. It also {@linkplain StubUtil#handlePendingException(Word, boolean) handles}
+// any exceptions raised during the foreign call.
 ///
 // @class ForeignCallStub
 public final class ForeignCallStub extends Stub
@@ -68,14 +65,14 @@ public final class ForeignCallStub extends Stub
     //            be re-executed.
     // @param killedLocations the memory locations killed by the stub call
     ///
-    // @cons
-    public ForeignCallStub(HotSpotProviders __providers, long __address, ForeignCallDescriptor __descriptor, boolean __prependThread, Transition __transition, boolean __reexecutable, LocationIdentity... __killedLocations)
+    // @cons ForeignCallStub
+    public ForeignCallStub(HotSpotProviders __providers, long __address, ForeignCallDescriptor __descriptor, boolean __prependThread, HotSpotForeignCallLinkage.Transition __transition, boolean __reexecutable, LocationIdentity... __killedLocations)
     {
-        super(__providers, HotSpotForeignCallLinkageImpl.create(__providers.getMetaAccess(), __providers.getCodeCache(), __providers.getWordTypes(), __providers.getForeignCalls(), __descriptor, 0L, RegisterEffect.PRESERVES_REGISTERS, HotSpotCallingConventionType.JavaCall, HotSpotCallingConventionType.JavaCallee, __transition, __reexecutable, __killedLocations));
+        super(__providers, HotSpotForeignCallLinkageImpl.create(__providers.getMetaAccess(), __providers.getCodeCache(), __providers.getWordTypes(), __providers.getForeignCalls(), __descriptor, 0L, HotSpotForeignCallLinkage.RegisterEffect.PRESERVES_REGISTERS, HotSpotCallingConventionType.JavaCall, HotSpotCallingConventionType.JavaCallee, __transition, __reexecutable, __killedLocations));
         this.___prependThread = __prependThread;
         Class<?>[] __targetParameterTypes = createTargetParameters(__descriptor);
         ForeignCallDescriptor __targetSig = new ForeignCallDescriptor(__descriptor.getName() + ":C", __descriptor.getResultType(), __targetParameterTypes);
-        this.___target = HotSpotForeignCallLinkageImpl.create(__providers.getMetaAccess(), __providers.getCodeCache(), __providers.getWordTypes(), __providers.getForeignCalls(), __targetSig, __address, RegisterEffect.DESTROYS_REGISTERS, HotSpotCallingConventionType.NativeCall, HotSpotCallingConventionType.NativeCall, __transition, __reexecutable, __killedLocations);
+        this.___target = HotSpotForeignCallLinkageImpl.create(__providers.getMetaAccess(), __providers.getCodeCache(), __providers.getWordTypes(), __providers.getForeignCalls(), __targetSig, __address, HotSpotForeignCallLinkage.RegisterEffect.DESTROYS_REGISTERS, HotSpotCallingConventionType.NativeCall, HotSpotCallingConventionType.NativeCall, __transition, __reexecutable, __killedLocations);
     }
 
     ///

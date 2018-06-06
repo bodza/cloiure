@@ -5,12 +5,10 @@ import jdk.vm.ci.meta.Constant;
 import jdk.vm.ci.meta.PrimitiveConstant;
 
 import giraaff.core.common.type.ArithmeticOpTable;
-import giraaff.core.common.type.ArithmeticOpTable.BinaryOp;
-import giraaff.core.common.type.ArithmeticOpTable.BinaryOp.Xor;
 import giraaff.core.common.type.PrimitiveStamp;
 import giraaff.core.common.type.Stamp;
 import giraaff.graph.NodeClass;
-import giraaff.graph.spi.Canonicalizable.BinaryCommutative;
+import giraaff.graph.spi.Canonicalizable;
 import giraaff.graph.spi.CanonicalizerTool;
 import giraaff.lir.gen.ArithmeticLIRGeneratorTool;
 import giraaff.nodes.ConstantNode;
@@ -20,12 +18,12 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 import giraaff.nodes.util.GraphUtil;
 
 // @class XorNode
-public final class XorNode extends BinaryArithmeticNode<Xor> implements BinaryCommutative<ValueNode>, NarrowableArithmeticNode
+public final class XorNode extends BinaryArithmeticNode<ArithmeticOpTable.BinaryOp.Xor> implements Canonicalizable.BinaryCommutative<ValueNode>, NarrowableArithmeticNode
 {
     // @def
     public static final NodeClass<XorNode> TYPE = NodeClass.create(XorNode.class);
 
-    // @cons
+    // @cons XorNode
     public XorNode(ValueNode __x, ValueNode __y)
     {
         super(TYPE, ArithmeticOpTable::getXor, __x, __y);
@@ -33,7 +31,7 @@ public final class XorNode extends BinaryArithmeticNode<Xor> implements BinaryCo
 
     public static ValueNode create(ValueNode __x, ValueNode __y, NodeView __view)
     {
-        BinaryOp<Xor> __op = ArithmeticOpTable.forStamp(__x.stamp(__view)).getXor();
+        ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.Xor> __op = ArithmeticOpTable.forStamp(__x.stamp(__view)).getXor();
         Stamp __stamp = __op.foldStamp(__x.stamp(__view), __y.stamp(__view));
         ConstantNode __tryConstantFold = tryConstantFold(__op, __x, __y, __stamp, __view);
         if (__tryConstantFold != null)
@@ -56,7 +54,7 @@ public final class XorNode extends BinaryArithmeticNode<Xor> implements BinaryCo
         return canonical(this, getOp(__forX, __forY), stamp(NodeView.DEFAULT), __forX, __forY, __view);
     }
 
-    private static ValueNode canonical(XorNode __self, BinaryOp<Xor> __op, Stamp __stamp, ValueNode __forX, ValueNode __forY, NodeView __view)
+    private static ValueNode canonical(XorNode __self, ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.Xor> __op, Stamp __stamp, ValueNode __forX, ValueNode __forY, NodeView __view)
     {
         if (GraphUtil.unproxify(__forX) == GraphUtil.unproxify(__forY))
         {

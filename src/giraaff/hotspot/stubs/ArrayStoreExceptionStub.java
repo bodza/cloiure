@@ -13,7 +13,7 @@ import giraaff.util.GraalError;
 // @class ArrayStoreExceptionStub
 public final class ArrayStoreExceptionStub extends CreateExceptionStub
 {
-    // @cons
+    // @cons ArrayStoreExceptionStub
     public ArrayStoreExceptionStub(HotSpotProviders __providers, HotSpotForeignCallLinkage __linkage)
     {
         super("createArrayStoreException", __providers, __linkage);
@@ -27,7 +27,7 @@ public final class ArrayStoreExceptionStub extends CreateExceptionStub
     }
 
     @Snippet
-    private static Object createArrayStoreException(@Snippet.NonNullParameter Object __object, @ConstantParameter Register __threadRegister)
+    private static Object createArrayStoreException(@Snippet.NonNullParameter Object __object, @Snippet.ConstantParameter Register __threadRegister)
     {
         KlassPointer __klass = HotSpotReplacementsUtil.loadHub(__object);
         return createException(__threadRegister, ArrayStoreException.class, __klass);

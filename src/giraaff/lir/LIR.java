@@ -6,7 +6,7 @@ import java.util.List;
 import giraaff.core.common.cfg.AbstractBlockBase;
 import giraaff.core.common.cfg.AbstractControlFlowGraph;
 import giraaff.core.common.cfg.BlockMap;
-import giraaff.lir.StandardOp.LabelOp;
+import giraaff.lir.StandardOp;
 import giraaff.lir.gen.LIRGenerator;
 
 ///
@@ -44,7 +44,7 @@ public final class LIR extends LIRGenerator.VariableProvider
     ///
     // Creates a new LIR instance for the specified compilation.
     ///
-    // @cons
+    // @cons LIR
     public LIR(AbstractControlFlowGraph<?> __cfg, AbstractBlockBase<?>[] __linearScanOrder, AbstractBlockBase<?>[] __codeEmittingOrder)
     {
         super();
@@ -129,9 +129,9 @@ public final class LIR extends LIRGenerator.VariableProvider
             }
             for (LIRInstruction __inst : this.___lirInstructions.get(__block))
             {
-                if (__inst instanceof LabelOp)
+                if (__inst instanceof StandardOp.LabelOp)
                 {
-                    ((LabelOp) __inst).getLabel().reset();
+                    ((StandardOp.LabelOp) __inst).getLabel().reset();
                 }
             }
         }

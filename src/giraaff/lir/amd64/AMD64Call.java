@@ -10,14 +10,14 @@ import jdk.vm.ci.meta.InvokeTarget;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 import jdk.vm.ci.meta.Value;
 
-import giraaff.asm.amd64.AMD64Assembler.ConditionFlag;
+import giraaff.asm.amd64.AMD64Assembler;
 import giraaff.asm.amd64.AMD64MacroAssembler;
 import giraaff.core.common.LIRKind;
 import giraaff.core.common.spi.ForeignCallLinkage;
 import giraaff.lir.LIRFrameState;
-import giraaff.lir.LIRInstruction.OperandFlag;
+import giraaff.lir.LIRInstruction;
 import giraaff.lir.LIRInstructionClass;
-import giraaff.lir.Opcode;
+import giraaff.lir.LIROpcode;
 import giraaff.lir.asm.CompilationResultBuilder;
 
 // @class AMD64Call
@@ -27,23 +27,23 @@ public final class AMD64Call
     public abstract static class CallOp extends AMD64LIRInstruction
     {
         // @def
-        public static final LIRInstructionClass<CallOp> TYPE = LIRInstructionClass.create(CallOp.class);
+        public static final LIRInstructionClass<AMD64Call.CallOp> TYPE = LIRInstructionClass.create(AMD64Call.CallOp.class);
 
-        @Def({OperandFlag.REG, OperandFlag.ILLEGAL})
+        @LIRInstruction.Def({LIRInstruction.OperandFlag.REG, LIRInstruction.OperandFlag.ILLEGAL})
         // @field
         protected Value ___result;
-        @Use({OperandFlag.REG, OperandFlag.STACK})
+        @LIRInstruction.Use({LIRInstruction.OperandFlag.REG, LIRInstruction.OperandFlag.STACK})
         // @field
         protected Value[] ___parameters;
-        @Temp({OperandFlag.REG, OperandFlag.STACK})
+        @LIRInstruction.Temp({LIRInstruction.OperandFlag.REG, LIRInstruction.OperandFlag.STACK})
         // @field
         protected Value[] ___temps;
         // @State
         // @field
         protected LIRFrameState ___state;
 
-        // @cons
-        protected CallOp(LIRInstructionClass<? extends CallOp> __c, Value __result, Value[] __parameters, Value[] __temps, LIRFrameState __state)
+        // @cons AMD64Call.CallOp
+        protected CallOp(LIRInstructionClass<? extends AMD64Call.CallOp> __c, Value __result, Value[] __parameters, Value[] __temps, LIRFrameState __state)
         {
             super(__c);
             this.___result = __result;
@@ -60,37 +60,37 @@ public final class AMD64Call
     }
 
     // @class AMD64Call.MethodCallOp
-    public abstract static class MethodCallOp extends CallOp
+    public abstract static class MethodCallOp extends AMD64Call.CallOp
     {
         // @def
-        public static final LIRInstructionClass<MethodCallOp> TYPE = LIRInstructionClass.create(MethodCallOp.class);
+        public static final LIRInstructionClass<AMD64Call.MethodCallOp> TYPE = LIRInstructionClass.create(AMD64Call.MethodCallOp.class);
 
         // @field
         protected final ResolvedJavaMethod ___callTarget;
 
-        // @cons
-        protected MethodCallOp(LIRInstructionClass<? extends MethodCallOp> __c, ResolvedJavaMethod __callTarget, Value __result, Value[] __parameters, Value[] __temps, LIRFrameState __state)
+        // @cons AMD64Call.MethodCallOp
+        protected MethodCallOp(LIRInstructionClass<? extends AMD64Call.MethodCallOp> __c, ResolvedJavaMethod __callTarget, Value __result, Value[] __parameters, Value[] __temps, LIRFrameState __state)
         {
             super(__c, __result, __parameters, __temps, __state);
             this.___callTarget = __callTarget;
         }
     }
 
-    @Opcode
+    @LIROpcode
     // @class AMD64Call.DirectCallOp
-    public static class DirectCallOp extends MethodCallOp
+    public static class DirectCallOp extends AMD64Call.MethodCallOp
     {
         // @def
-        public static final LIRInstructionClass<DirectCallOp> TYPE = LIRInstructionClass.create(DirectCallOp.class);
+        public static final LIRInstructionClass<AMD64Call.DirectCallOp> TYPE = LIRInstructionClass.create(AMD64Call.DirectCallOp.class);
 
-        // @cons
+        // @cons AMD64Call.DirectCallOp
         public DirectCallOp(ResolvedJavaMethod __callTarget, Value __result, Value[] __parameters, Value[] __temps, LIRFrameState __state)
         {
             this(TYPE, __callTarget, __result, __parameters, __temps, __state);
         }
 
-        // @cons
-        protected DirectCallOp(LIRInstructionClass<? extends DirectCallOp> __c, ResolvedJavaMethod __callTarget, Value __result, Value[] __parameters, Value[] __temps, LIRFrameState __state)
+        // @cons AMD64Call.DirectCallOp
+        protected DirectCallOp(LIRInstructionClass<? extends AMD64Call.DirectCallOp> __c, ResolvedJavaMethod __callTarget, Value __result, Value[] __parameters, Value[] __temps, LIRFrameState __state)
         {
             super(__c, __callTarget, __result, __parameters, __temps, __state);
         }
@@ -107,25 +107,25 @@ public final class AMD64Call
         }
     }
 
-    @Opcode
+    @LIROpcode
     // @class AMD64Call.IndirectCallOp
-    public static class IndirectCallOp extends MethodCallOp
+    public static class IndirectCallOp extends AMD64Call.MethodCallOp
     {
         // @def
-        public static final LIRInstructionClass<IndirectCallOp> TYPE = LIRInstructionClass.create(IndirectCallOp.class);
+        public static final LIRInstructionClass<AMD64Call.IndirectCallOp> TYPE = LIRInstructionClass.create(AMD64Call.IndirectCallOp.class);
 
-        @Use({OperandFlag.REG})
+        @LIRInstruction.Use({LIRInstruction.OperandFlag.REG})
         // @field
         protected Value ___targetAddress;
 
-        // @cons
+        // @cons AMD64Call.IndirectCallOp
         public IndirectCallOp(ResolvedJavaMethod __callTarget, Value __result, Value[] __parameters, Value[] __temps, Value __targetAddress, LIRFrameState __state)
         {
             this(TYPE, __callTarget, __result, __parameters, __temps, __targetAddress, __state);
         }
 
-        // @cons
-        protected IndirectCallOp(LIRInstructionClass<? extends IndirectCallOp> __c, ResolvedJavaMethod __callTarget, Value __result, Value[] __parameters, Value[] __temps, Value __targetAddress, LIRFrameState __state)
+        // @cons AMD64Call.IndirectCallOp
+        protected IndirectCallOp(LIRInstructionClass<? extends AMD64Call.IndirectCallOp> __c, ResolvedJavaMethod __callTarget, Value __result, Value[] __parameters, Value[] __temps, Value __targetAddress, LIRFrameState __state)
         {
             super(__c, __callTarget, __result, __parameters, __temps, __state);
             this.___targetAddress = __targetAddress;
@@ -139,16 +139,16 @@ public final class AMD64Call
     }
 
     // @class AMD64Call.ForeignCallOp
-    public abstract static class ForeignCallOp extends CallOp
+    public abstract static class ForeignCallOp extends AMD64Call.CallOp
     {
         // @def
-        public static final LIRInstructionClass<ForeignCallOp> TYPE = LIRInstructionClass.create(ForeignCallOp.class);
+        public static final LIRInstructionClass<AMD64Call.ForeignCallOp> TYPE = LIRInstructionClass.create(AMD64Call.ForeignCallOp.class);
 
         // @field
         protected final ForeignCallLinkage ___callTarget;
 
-        // @cons
-        public ForeignCallOp(LIRInstructionClass<? extends ForeignCallOp> __c, ForeignCallLinkage __callTarget, Value __result, Value[] __parameters, Value[] __temps, LIRFrameState __state)
+        // @cons AMD64Call.ForeignCallOp
+        public ForeignCallOp(LIRInstructionClass<? extends AMD64Call.ForeignCallOp> __c, ForeignCallLinkage __callTarget, Value __result, Value[] __parameters, Value[] __temps, LIRFrameState __state)
         {
             super(__c, __result, __parameters, __temps, __state);
             this.___callTarget = __callTarget;
@@ -161,14 +161,14 @@ public final class AMD64Call
         }
     }
 
-    @Opcode
+    @LIROpcode
     // @class AMD64Call.DirectNearForeignCallOp
-    public static final class DirectNearForeignCallOp extends ForeignCallOp
+    public static final class DirectNearForeignCallOp extends AMD64Call.ForeignCallOp
     {
         // @def
-        public static final LIRInstructionClass<DirectNearForeignCallOp> TYPE = LIRInstructionClass.create(DirectNearForeignCallOp.class);
+        public static final LIRInstructionClass<AMD64Call.DirectNearForeignCallOp> TYPE = LIRInstructionClass.create(AMD64Call.DirectNearForeignCallOp.class);
 
-        // @cons
+        // @cons AMD64Call.DirectNearForeignCallOp
         public DirectNearForeignCallOp(ForeignCallLinkage __linkage, Value __result, Value[] __parameters, Value[] __temps, LIRFrameState __state)
         {
             super(TYPE, __linkage, __result, __parameters, __temps, __state);
@@ -181,18 +181,18 @@ public final class AMD64Call
         }
     }
 
-    @Opcode
+    @LIROpcode
     // @class AMD64Call.DirectFarForeignCallOp
-    public static final class DirectFarForeignCallOp extends ForeignCallOp
+    public static final class DirectFarForeignCallOp extends AMD64Call.ForeignCallOp
     {
         // @def
-        public static final LIRInstructionClass<DirectFarForeignCallOp> TYPE = LIRInstructionClass.create(DirectFarForeignCallOp.class);
+        public static final LIRInstructionClass<AMD64Call.DirectFarForeignCallOp> TYPE = LIRInstructionClass.create(AMD64Call.DirectFarForeignCallOp.class);
 
-        @Temp({OperandFlag.REG})
+        @LIRInstruction.Temp({LIRInstruction.OperandFlag.REG})
         // @field
         protected AllocatableValue ___callTemp;
 
-        // @cons
+        // @cons AMD64Call.DirectFarForeignCallOp
         public DirectFarForeignCallOp(ForeignCallLinkage __callTarget, Value __result, Value[] __parameters, Value[] __temps, LIRFrameState __state)
         {
             super(TYPE, __callTarget, __result, __parameters, __temps, __state);
@@ -249,7 +249,7 @@ public final class AMD64Call
         __masm.ensureUniquePC();
     }
 
-    public static void directConditionalJmp(CompilationResultBuilder __crb, AMD64MacroAssembler __masm, InvokeTarget __target, ConditionFlag __cond)
+    public static void directConditionalJmp(CompilationResultBuilder __crb, AMD64MacroAssembler __masm, InvokeTarget __target, AMD64Assembler.ConditionFlag __cond)
     {
         __masm.jcc(__cond, 0, true);
         __masm.ensureUniquePC();

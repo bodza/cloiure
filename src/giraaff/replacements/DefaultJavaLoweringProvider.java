@@ -30,7 +30,7 @@ import giraaff.core.common.type.TypeReference;
 import giraaff.graph.Node;
 import giraaff.hotspot.HotSpotRuntime;
 import giraaff.nodeinfo.InputType;
-import giraaff.nodes.CompressionNode.CompressionOp;
+import giraaff.nodes.CompressionNode;
 import giraaff.nodes.ConstantNode;
 import giraaff.nodes.FieldLocationIdentity;
 import giraaff.nodes.FixedNode;
@@ -85,7 +85,7 @@ import giraaff.nodes.java.RawMonitorEnterNode;
 import giraaff.nodes.java.StoreFieldNode;
 import giraaff.nodes.java.StoreIndexedNode;
 import giraaff.nodes.java.UnsafeCompareAndSwapNode;
-import giraaff.nodes.memory.HeapAccess.BarrierType;
+import giraaff.nodes.memory.HeapAccess;
 import giraaff.nodes.memory.ReadNode;
 import giraaff.nodes.memory.WriteNode;
 import giraaff.nodes.memory.address.AddressNode;
@@ -101,7 +101,7 @@ import giraaff.nodes.virtual.VirtualArrayNode;
 import giraaff.nodes.virtual.VirtualInstanceNode;
 import giraaff.nodes.virtual.VirtualObjectNode;
 import giraaff.phases.util.Providers;
-import giraaff.replacements.SnippetLowerableMemoryNode.SnippetLowering;
+import giraaff.replacements.SnippetLowerableMemoryNode;
 import giraaff.util.GraalError;
 
 ///
@@ -121,9 +121,9 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
     private final boolean ___useCompressedOops;
 
     // @field
-    private BoxingSnippets.Templates ___boxingSnippets;
+    private BoxingSnippets.BoxingTemplates ___boxingSnippets;
 
-    // @cons
+    // @cons DefaultJavaLoweringProvider
     public DefaultJavaLoweringProvider(MetaAccessProvider __metaAccess, ForeignCallsProvider __foreignCalls, TargetDescription __target, boolean __useCompressedOops)
     {
         super();
@@ -135,7 +135,7 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
 
     public void initialize(Providers __providers, SnippetReflectionProvider __snippetReflection)
     {
-        this.___boxingSnippets = new BoxingSnippets.Templates(__providers, __snippetReflection, this.___target);
+        this.___boxingSnippets = new BoxingSnippets.BoxingTemplates(__providers, __snippetReflection, this.___target);
     }
 
     public final TargetDescription getTarget()
@@ -344,7 +344,7 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
 
         GuardingNode __boundsCheck = getBoundsCheck(__loadIndexed, __array, __tool);
         AddressNode __address = createArrayIndexAddress(__graph, __array, __elementKind, __loadIndexed.index(), __boundsCheck);
-        ReadNode __memoryRead = __graph.add(new ReadNode(__address, NamedLocationIdentity.getArrayLocation(__elementKind), __loadStamp, BarrierType.NONE));
+        ReadNode __memoryRead = __graph.add(new ReadNode(__address, NamedLocationIdentity.getArrayLocation(__elementKind), __loadStamp, HeapAccess.BarrierType.NONE));
         __memoryRead.setGuard(__boundsCheck);
         ValueNode __readValue = implicitLoadConvert(__graph, __elementKind, __memoryRead);
 
@@ -418,7 +418,7 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
         StructuredGraph __graph = __array.graph();
         ValueNode __canonicalArray = this.createNullCheckedValue(GraphUtil.skipPiWhileNonNull(__array), __before, __tool);
         AddressNode __address = createOffsetAddress(__graph, __canonicalArray, HotSpotRuntime.arrayLengthOffset);
-        ReadNode __readArrayLength = __graph.add(new ReadNode(__address, NamedLocationIdentity.ARRAY_LENGTH_LOCATION, StampFactory.positiveInt(), BarrierType.NONE));
+        ReadNode __readArrayLength = __graph.add(new ReadNode(__address, NamedLocationIdentity.ARRAY_LENGTH_LOCATION, StampFactory.positiveInt(), HeapAccess.BarrierType.NONE));
         __graph.addBeforeFixed(__before, __readArrayLength);
         return __readArrayLength;
     }
@@ -457,7 +457,7 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
         ValueNode __newValue = implicitStoreConvert(__graph, __valueKind, __cas.newValue());
 
         AddressNode __address = __graph.unique(new OffsetAddressNode(__cas.object(), __cas.offset()));
-        BarrierType __barrierType = storeBarrierType(__cas.object(), __expectedValue);
+        HeapAccess.BarrierType __barrierType = storeBarrierType(__cas.object(), __expectedValue);
         LogicCompareAndSwapNode __atomicNode = __graph.add(new LogicCompareAndSwapNode(__address, __cas.getLocationIdentity(), __expectedValue, __newValue, __barrierType));
         __atomicNode.setStateAfter(__cas.stateAfter());
         __graph.replaceFixedWithFixed(__cas, __atomicNode);
@@ -471,7 +471,7 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
         ValueNode __newValue = implicitStoreConvert(__graph, __valueKind, __n.newValue());
 
         AddressNode __address = __graph.unique(new OffsetAddressNode(__n.object(), __n.offset()));
-        BarrierType __barrierType = storeBarrierType(__n.object(), __n.newValue());
+        HeapAccess.BarrierType __barrierType = storeBarrierType(__n.object(), __n.newValue());
         LoweredAtomicReadAndWriteNode __memoryRead = __graph.add(new LoweredAtomicReadAndWriteNode(__address, __n.getLocationIdentity(), __newValue, __barrierType));
         __memoryRead.setStateAfter(__n.stateAfter());
 
@@ -532,7 +532,7 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
         JavaKind __readKind = __load.accessKind();
         Stamp __loadStamp = loadStamp(__load.stamp(NodeView.DEFAULT), __readKind, __compressible);
         AddressNode __address = createUnsafeAddress(__graph, __load.object(), __load.offset());
-        ReadNode __memoryRead = __graph.add(new ReadNode(__address, __load.getLocationIdentity(), __loadStamp, BarrierType.NONE));
+        ReadNode __memoryRead = __graph.add(new ReadNode(__address, __load.getLocationIdentity(), __loadStamp, HeapAccess.BarrierType.NONE));
         if (__guard == null)
         {
             // An unsafe read must not float, otherwise it may float above a test guaranteeing the read is safe.
@@ -553,7 +553,7 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
         JavaKind __readKind = __load.getKind();
         Stamp __loadStamp = loadStamp(__load.stamp(NodeView.DEFAULT), __readKind, false);
         AddressNode __address = __graph.addOrUniqueWithInputs(OffsetAddressNode.create(__load.getAddress()));
-        ReadNode __memoryRead = __graph.add(new ReadNode(__address, __load.getLocationIdentity(), __loadStamp, BarrierType.NONE));
+        ReadNode __memoryRead = __graph.add(new ReadNode(__address, __load.getLocationIdentity(), __loadStamp, HeapAccess.BarrierType.NONE));
         // An unsafe read must not float, otherwise it may float above a test guaranteeing the read is safe.
         __memoryRead.setForceFixed(true);
         ValueNode __readValue = performBooleanCoercionIfNecessary(implicitLoadConvert(__graph, __readKind, __memoryRead, false), __readKind);
@@ -590,7 +590,7 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
         JavaKind __valueKind = __store.getKind();
         ValueNode __value = implicitStoreConvert(__graph, __valueKind, __store.getValue(), false);
         AddressNode __address = __graph.addOrUniqueWithInputs(OffsetAddressNode.create(__store.getAddress()));
-        WriteNode __write = __graph.add(new WriteNode(__address, __store.getLocationIdentity(), __value, BarrierType.NONE));
+        WriteNode __write = __graph.add(new WriteNode(__address, __store.getLocationIdentity(), __value, HeapAccess.BarrierType.NONE));
         __write.setStateAfter(__store.stateAfter());
         __graph.replaceFixedWithFixed(__store, __write);
     }
@@ -672,7 +672,7 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
                         JavaKind __entryKind = __virtual.entryKind(__i);
 
                         AddressNode __address = null;
-                        BarrierType __barrierType = null;
+                        HeapAccess.BarrierType __barrierType = null;
                         if (__virtual instanceof VirtualInstanceNode)
                         {
                             ResolvedJavaField __field = ((VirtualInstanceNode) __virtual).field(__i);
@@ -713,17 +713,17 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
                         if (!(__allocValue.isConstant() && __allocValue.asConstant().isDefaultForKind()))
                         {
                             AddressNode __address;
-                            BarrierType __barrierType;
+                            HeapAccess.BarrierType __barrierType;
                             if (__virtual instanceof VirtualInstanceNode)
                             {
                                 VirtualInstanceNode __virtualInstance = (VirtualInstanceNode) __virtual;
                                 __address = createFieldAddress(__graph, __newObject, __virtualInstance.field(__i));
-                                __barrierType = BarrierType.IMPRECISE;
+                                __barrierType = HeapAccess.BarrierType.IMPRECISE;
                             }
                             else
                             {
                                 __address = createArrayAddress(__graph, __newObject, __virtual.entryKind(__i), ConstantNode.forInt(__i, __graph));
-                                __barrierType = BarrierType.PRECISE;
+                                __barrierType = HeapAccess.BarrierType.PRECISE;
                             }
                             if (__address != null)
                             {
@@ -844,63 +844,63 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
     ///
     // @param field the field whose barrier type should be returned
     ///
-    protected BarrierType fieldLoadBarrierType(ResolvedJavaField __field)
+    protected HeapAccess.BarrierType fieldLoadBarrierType(ResolvedJavaField __field)
     {
-        return BarrierType.NONE;
+        return HeapAccess.BarrierType.NONE;
     }
 
-    protected BarrierType fieldStoreBarrierType(ResolvedJavaField __field)
+    protected HeapAccess.BarrierType fieldStoreBarrierType(ResolvedJavaField __field)
     {
         if (__field.getJavaKind() == JavaKind.Object)
         {
-            return BarrierType.IMPRECISE;
+            return HeapAccess.BarrierType.IMPRECISE;
         }
-        return BarrierType.NONE;
+        return HeapAccess.BarrierType.NONE;
     }
 
-    protected BarrierType arrayStoreBarrierType(JavaKind __elementKind)
+    protected HeapAccess.BarrierType arrayStoreBarrierType(JavaKind __elementKind)
     {
         if (__elementKind == JavaKind.Object)
         {
-            return BarrierType.PRECISE;
+            return HeapAccess.BarrierType.PRECISE;
         }
-        return BarrierType.NONE;
+        return HeapAccess.BarrierType.NONE;
     }
 
-    public BarrierType fieldInitializationBarrier(JavaKind __entryKind)
+    public HeapAccess.BarrierType fieldInitializationBarrier(JavaKind __entryKind)
     {
-        return __entryKind == JavaKind.Object ? BarrierType.IMPRECISE : BarrierType.NONE;
+        return __entryKind == JavaKind.Object ? HeapAccess.BarrierType.IMPRECISE : HeapAccess.BarrierType.NONE;
     }
 
-    public BarrierType arrayInitializationBarrier(JavaKind __entryKind)
+    public HeapAccess.BarrierType arrayInitializationBarrier(JavaKind __entryKind)
     {
-        return __entryKind == JavaKind.Object ? BarrierType.PRECISE : BarrierType.NONE;
+        return __entryKind == JavaKind.Object ? HeapAccess.BarrierType.PRECISE : HeapAccess.BarrierType.NONE;
     }
 
-    private static BarrierType unsafeStoreBarrierType(RawStoreNode __store)
+    private static HeapAccess.BarrierType unsafeStoreBarrierType(RawStoreNode __store)
     {
         if (!__store.needsBarrier())
         {
-            return BarrierType.NONE;
+            return HeapAccess.BarrierType.NONE;
         }
         return storeBarrierType(__store.object(), __store.value());
     }
 
-    private static BarrierType storeBarrierType(ValueNode __object, ValueNode __value)
+    private static HeapAccess.BarrierType storeBarrierType(ValueNode __object, ValueNode __value)
     {
         if (__value.getStackKind() == JavaKind.Object && __object.getStackKind() == JavaKind.Object)
         {
             ResolvedJavaType __type = StampTool.typeOrNull(__object);
             if (__type != null && !__type.isArray())
             {
-                return BarrierType.IMPRECISE;
+                return HeapAccess.BarrierType.IMPRECISE;
             }
             else
             {
-                return BarrierType.PRECISE;
+                return HeapAccess.BarrierType.PRECISE;
             }
         }
-        return BarrierType.NONE;
+        return HeapAccess.BarrierType.NONE;
     }
 
     public abstract int fieldOffset(ResolvedJavaField __field);
@@ -972,7 +972,7 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
         return __ret;
     }
 
-    protected abstract ValueNode newCompressionNode(CompressionOp __op, ValueNode __value);
+    protected abstract ValueNode newCompressionNode(CompressionNode.CompressionOp __op, ValueNode __value);
 
     ///
     // @param compressible whether the convert should be compressible
@@ -981,7 +981,7 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
     {
         if (useCompressedOops(__kind, __compressible))
         {
-            return newCompressionNode(CompressionOp.Uncompress, __value);
+            return newCompressionNode(CompressionNode.CompressionOp.Uncompress, __value);
         }
 
         switch (__kind)
@@ -1023,7 +1023,7 @@ public abstract class DefaultJavaLoweringProvider implements LoweringProvider
     {
         if (useCompressedOops(__kind, __compressible))
         {
-            return newCompressionNode(CompressionOp.Compress, __value);
+            return newCompressionNode(CompressionNode.CompressionOp.Compress, __value);
         }
 
         switch (__kind)

@@ -11,21 +11,18 @@ import giraaff.nodes.IfNode;
 import giraaff.nodes.LoopBeginNode;
 import giraaff.nodes.LoopExitNode;
 import giraaff.nodes.StructuredGraph;
-import giraaff.nodes.StructuredGraph.GuardsStage;
-import giraaff.nodes.StructuredGraph.ScheduleResult;
 import giraaff.nodes.cfg.Block;
 import giraaff.phases.BasePhase;
 import giraaff.phases.graph.ScheduledNodeIterator;
 import giraaff.phases.schedule.SchedulePhase;
-import giraaff.phases.schedule.SchedulePhase.SchedulingStrategy;
 import giraaff.phases.tiers.MidTierContext;
 
 ///
 // This phase lowers {@link GuardNode GuardNodes} into corresponding control-flow structure and
 // {@link DeoptimizeNode DeoptimizeNodes}.
 //
-// This allow to enter the {@link GuardsStage#FIXED_DEOPTS FIXED_DEOPTS} stage of the graph where
-// all node that may cause deoptimization are fixed.
+// This allow to enter the {@link StructuredGraph.GuardsStage#FIXED_DEOPTS FIXED_DEOPTS} stage of
+// the graph where all node that may cause deoptimization are fixed.
 //
 // It first makes a schedule in order to know where the control flow should be placed. Then, for
 // each block, it applies two passes. The first one tries to replace null-check guards with implicit
@@ -41,7 +38,7 @@ public final class GuardLoweringPhase extends BasePhase<MidTierContext>
         // @field
         private final Block ___block;
 
-        // @cons
+        // @cons GuardLoweringPhase.LowerGuards
         LowerGuards(Block __block)
         {
             super();
@@ -108,15 +105,15 @@ public final class GuardLoweringPhase extends BasePhase<MidTierContext>
     {
         if (__graph.getGuardsStage().allowsFloatingGuards())
         {
-            SchedulePhase __schedulePhase = new SchedulePhase(SchedulingStrategy.EARLIEST_WITH_GUARD_ORDER);
+            SchedulePhase __schedulePhase = new SchedulePhase(SchedulePhase.SchedulingStrategy.EARLIEST_WITH_GUARD_ORDER);
             __schedulePhase.apply(__graph);
-            ScheduleResult __schedule = __graph.getLastSchedule();
+            StructuredGraph.ScheduleResult __schedule = __graph.getLastSchedule();
 
             for (Block __block : __schedule.getCFG().getBlocks())
             {
                 processBlock(__block, __schedule);
             }
-            __graph.setGuardsStage(GuardsStage.FIXED_DEOPTS);
+            __graph.setGuardsStage(StructuredGraph.GuardsStage.FIXED_DEOPTS);
         }
     }
 
@@ -125,8 +122,8 @@ public final class GuardLoweringPhase extends BasePhase<MidTierContext>
         return true;
     }
 
-    private static void processBlock(Block __block, ScheduleResult __schedule)
+    private static void processBlock(Block __block, StructuredGraph.ScheduleResult __schedule)
     {
-        new LowerGuards(__block).processNodes(__block, __schedule);
+        new GuardLoweringPhase.LowerGuards(__block).processNodes(__block, __schedule);
     }
 }

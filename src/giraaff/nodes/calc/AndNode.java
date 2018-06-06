@@ -5,13 +5,11 @@ import jdk.vm.ci.meta.Constant;
 import jdk.vm.ci.meta.PrimitiveConstant;
 
 import giraaff.core.common.type.ArithmeticOpTable;
-import giraaff.core.common.type.ArithmeticOpTable.BinaryOp;
-import giraaff.core.common.type.ArithmeticOpTable.BinaryOp.And;
 import giraaff.core.common.type.IntegerStamp;
 import giraaff.core.common.type.PrimitiveStamp;
 import giraaff.core.common.type.Stamp;
 import giraaff.graph.NodeClass;
-import giraaff.graph.spi.Canonicalizable.BinaryCommutative;
+import giraaff.graph.spi.Canonicalizable;
 import giraaff.graph.spi.CanonicalizerTool;
 import giraaff.lir.gen.ArithmeticLIRGeneratorTool;
 import giraaff.nodes.ConstantNode;
@@ -21,12 +19,12 @@ import giraaff.nodes.spi.NodeLIRBuilderTool;
 import giraaff.nodes.util.GraphUtil;
 
 // @class AndNode
-public final class AndNode extends BinaryArithmeticNode<And> implements NarrowableArithmeticNode, BinaryCommutative<ValueNode>
+public final class AndNode extends BinaryArithmeticNode<ArithmeticOpTable.BinaryOp.And> implements NarrowableArithmeticNode, Canonicalizable.BinaryCommutative<ValueNode>
 {
     // @def
     public static final NodeClass<AndNode> TYPE = NodeClass.create(AndNode.class);
 
-    // @cons
+    // @cons AndNode
     public AndNode(ValueNode __x, ValueNode __y)
     {
         super(TYPE, ArithmeticOpTable::getAnd, __x, __y);
@@ -34,7 +32,7 @@ public final class AndNode extends BinaryArithmeticNode<And> implements Narrowab
 
     public static ValueNode create(ValueNode __x, ValueNode __y, NodeView __view)
     {
-        BinaryOp<And> __op = ArithmeticOpTable.forStamp(__x.stamp(__view)).getAnd();
+        ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.And> __op = ArithmeticOpTable.forStamp(__x.stamp(__view)).getAnd();
         Stamp __stamp = __op.foldStamp(__x.stamp(__view), __y.stamp(__view));
         ConstantNode __tryConstantFold = tryConstantFold(__op, __x, __y, __stamp, __view);
         if (__tryConstantFold != null)
@@ -57,7 +55,7 @@ public final class AndNode extends BinaryArithmeticNode<And> implements Narrowab
         return canonical(this, getOp(__forX, __forY), stamp(__view), __forX, __forY, __view);
     }
 
-    private static ValueNode canonical(AndNode __self, BinaryOp<And> __op, Stamp __stamp, ValueNode __forX, ValueNode __forY, NodeView __view)
+    private static ValueNode canonical(AndNode __self, ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.And> __op, Stamp __stamp, ValueNode __forX, ValueNode __forY, NodeView __view)
     {
         if (GraphUtil.unproxify(__forX) == GraphUtil.unproxify(__forY))
         {

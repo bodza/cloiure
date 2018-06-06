@@ -43,7 +43,7 @@ public final class ClassfileBytecode implements Bytecode
     // @field
     private byte[] ___exceptionTableBytes;
 
-    // @cons
+    // @cons ClassfileBytecode
     public ClassfileBytecode(ResolvedJavaMethod __method, DataInputStream __stream, ClassfileConstantPool __constantPool) throws IOException
     {
         super();

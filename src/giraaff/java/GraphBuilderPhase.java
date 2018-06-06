@@ -23,7 +23,7 @@ public final class GraphBuilderPhase extends BasePhase<HighTierContext>
     // @field
     private final GraphBuilderConfiguration ___graphBuilderConfig;
 
-    // @cons
+    // @cons GraphBuilderPhase
     public GraphBuilderPhase(GraphBuilderConfiguration __config)
     {
         super();
@@ -33,7 +33,7 @@ public final class GraphBuilderPhase extends BasePhase<HighTierContext>
     @Override
     protected void run(StructuredGraph __graph, HighTierContext __context)
     {
-        new Instance(__context.getMetaAccess(), __context.getStampProvider(), __context.getConstantReflection(), __context.getConstantFieldProvider(), this.___graphBuilderConfig, __context.getOptimisticOptimizations(), null).run(__graph);
+        new GraphBuilderPhase.GraphBuilderInstance(__context.getMetaAccess(), __context.getStampProvider(), __context.getConstantReflection(), __context.getConstantFieldProvider(), this.___graphBuilderConfig, __context.getOptimisticOptimizations(), null).run(__graph);
     }
 
     public GraphBuilderConfiguration getGraphBuilderConfig()
@@ -41,8 +41,8 @@ public final class GraphBuilderPhase extends BasePhase<HighTierContext>
         return this.___graphBuilderConfig;
     }
 
-    // @class GraphBuilderPhase.Instance
-    public static final class Instance extends Phase
+    // @class GraphBuilderPhase.GraphBuilderInstance
+    public static final class GraphBuilderInstance extends Phase
     {
         // @field
         protected final MetaAccessProvider ___metaAccess;
@@ -59,8 +59,8 @@ public final class GraphBuilderPhase extends BasePhase<HighTierContext>
         // @field
         private final IntrinsicContext ___initialIntrinsicContext;
 
-        // @cons
-        public Instance(MetaAccessProvider __metaAccess, StampProvider __stampProvider, ConstantReflectionProvider __constantReflection, ConstantFieldProvider __constantFieldProvider, GraphBuilderConfiguration __graphBuilderConfig, OptimisticOptimizations __optimisticOpts, IntrinsicContext __initialIntrinsicContext)
+        // @cons GraphBuilderPhase.GraphBuilderInstance
+        public GraphBuilderInstance(MetaAccessProvider __metaAccess, StampProvider __stampProvider, ConstantReflectionProvider __constantReflection, ConstantFieldProvider __constantFieldProvider, GraphBuilderConfiguration __graphBuilderConfig, OptimisticOptimizations __optimisticOpts, IntrinsicContext __initialIntrinsicContext)
         {
             super();
             this.___graphBuilderConfig = __graphBuilderConfig;
@@ -78,7 +78,7 @@ public final class GraphBuilderPhase extends BasePhase<HighTierContext>
             createBytecodeParser(__graph, null, __graph.method(), __graph.getEntryBCI(), this.___initialIntrinsicContext).buildRootMethod();
         }
 
-        // Hook for subclasses of Instance to provide a subclass of BytecodeParser.
+        // Hook for subclasses of GraphBuilderPhase.GraphBuilderInstance to provide a subclass of BytecodeParser.
         protected BytecodeParser createBytecodeParser(StructuredGraph __graph, BytecodeParser __parent, ResolvedJavaMethod __method, int __entryBCI, IntrinsicContext __intrinsicContext)
         {
             return new BytecodeParser(this, __graph, __parent, __method, __entryBCI, __intrinsicContext);

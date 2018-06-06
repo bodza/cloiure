@@ -11,14 +11,14 @@ public final class JsrScope
     // @field
     private final long ___scope;
 
-    // @cons
+    // @cons JsrScope
     private JsrScope(long __scope)
     {
         super();
         this.___scope = __scope;
     }
 
-    // @cons
+    // @cons JsrScope
     public JsrScope()
     {
         super();

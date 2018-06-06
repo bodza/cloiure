@@ -36,14 +36,14 @@ public final class ReadNode extends FloatableAccessNode implements LIRLowerableA
     // @def
     public static final NodeClass<ReadNode> TYPE = NodeClass.create(ReadNode.class);
 
-    // @cons
-    public ReadNode(AddressNode __address, LocationIdentity __location, Stamp __stamp, BarrierType __barrierType)
+    // @cons ReadNode
+    public ReadNode(AddressNode __address, LocationIdentity __location, Stamp __stamp, HeapAccess.BarrierType __barrierType)
     {
         this(TYPE, __address, __location, __stamp, null, __barrierType, false, null);
     }
 
-    // @cons
-    protected ReadNode(NodeClass<? extends ReadNode> __c, AddressNode __address, LocationIdentity __location, Stamp __stamp, GuardingNode __guard, BarrierType __barrierType, boolean __nullCheck, FrameState __stateBefore)
+    // @cons ReadNode
+    protected ReadNode(NodeClass<? extends ReadNode> __c, AddressNode __address, LocationIdentity __location, Stamp __stamp, GuardingNode __guard, HeapAccess.BarrierType __barrierType, boolean __nullCheck, FrameState __stateBefore)
     {
         super(__c, __address, __location, __stamp, __guard, __barrierType, __nullCheck, __stateBefore);
     }

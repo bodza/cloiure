@@ -17,7 +17,7 @@ public final class AMD64Address extends AbstractAddress
     // @field
     private final Register ___index;
     // @field
-    private final Scale ___scale;
+    private final AMD64Address.Scale ___scale;
     // @field
     private final int ___displacement;
 
@@ -34,10 +34,10 @@ public final class AMD64Address extends AbstractAddress
     //
     // @param base the base register
     ///
-    // @cons
+    // @cons AMD64Address
     public AMD64Address(Register __base)
     {
-        this(__base, Register.None, Scale.Times1, 0);
+        this(__base, Register.None, AMD64Address.Scale.Times1, 0);
     }
 
     ///
@@ -46,10 +46,10 @@ public final class AMD64Address extends AbstractAddress
     // @param base the base register
     // @param displacement the displacement
     ///
-    // @cons
+    // @cons AMD64Address
     public AMD64Address(Register __base, int __displacement)
     {
-        this(__base, Register.None, Scale.Times1, __displacement);
+        this(__base, Register.None, AMD64Address.Scale.Times1, __displacement);
     }
 
     ///
@@ -59,8 +59,8 @@ public final class AMD64Address extends AbstractAddress
     // @param index the index register
     // @param scale the scaling factor
     ///
-    // @cons
-    public AMD64Address(Register __base, Register __index, Scale __scale)
+    // @cons AMD64Address
+    public AMD64Address(Register __base, Register __index, AMD64Address.Scale __scale)
     {
         this(__base, __index, __scale, 0, -1);
     }
@@ -74,14 +74,14 @@ public final class AMD64Address extends AbstractAddress
     // @param scale the scaling factor
     // @param displacement the displacement
     ///
-    // @cons
-    public AMD64Address(Register __base, Register __index, Scale __scale, int __displacement)
+    // @cons AMD64Address
+    public AMD64Address(Register __base, Register __index, AMD64Address.Scale __scale, int __displacement)
     {
         this(__base, __index, __scale, __displacement, -1);
     }
 
-    // @cons
-    AMD64Address(Register __base, Register __index, Scale __scale, int __displacement, int __instructionStartPosition)
+    // @cons AMD64Address
+    AMD64Address(Register __base, Register __index, AMD64Address.Scale __scale, int __displacement, int __instructionStartPosition)
     {
         super();
         this.___base = __base;
@@ -102,6 +102,7 @@ public final class AMD64Address extends AbstractAddress
         Times4(4, 2),
         Times8(8, 3);
 
+        // @cons AMD64Address.Scale
         Scale(int __value, int __log2)
         {
             this.___value = __value;
@@ -120,7 +121,7 @@ public final class AMD64Address extends AbstractAddress
         // @field
         public final int ___log2;
 
-        public static Scale fromInt(int __scale)
+        public static AMD64Address.Scale fromInt(int __scale)
         {
             switch (__scale)
             {
@@ -137,7 +138,7 @@ public final class AMD64Address extends AbstractAddress
             }
         }
 
-        public static Scale fromShift(int __shift)
+        public static AMD64Address.Scale fromShift(int __shift)
         {
             switch (__shift)
             {
@@ -176,7 +177,7 @@ public final class AMD64Address extends AbstractAddress
     ///
     // @return Scaling factor for indexing, dependent on target operand size.
     ///
-    public Scale getScale()
+    public AMD64Address.Scale getScale()
     {
         return this.___scale;
     }

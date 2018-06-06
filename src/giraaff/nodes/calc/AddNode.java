@@ -4,11 +4,9 @@ import jdk.vm.ci.meta.Constant;
 import jdk.vm.ci.meta.Value;
 
 import giraaff.core.common.type.ArithmeticOpTable;
-import giraaff.core.common.type.ArithmeticOpTable.BinaryOp;
-import giraaff.core.common.type.ArithmeticOpTable.BinaryOp.Add;
 import giraaff.core.common.type.Stamp;
 import giraaff.graph.NodeClass;
-import giraaff.graph.spi.Canonicalizable.BinaryCommutative;
+import giraaff.graph.spi.Canonicalizable;
 import giraaff.graph.spi.CanonicalizerTool;
 import giraaff.lir.gen.ArithmeticLIRGeneratorTool;
 import giraaff.nodes.ConstantNode;
@@ -17,18 +15,18 @@ import giraaff.nodes.ValueNode;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
 // @class AddNode
-public class AddNode extends BinaryArithmeticNode<Add> implements NarrowableArithmeticNode, BinaryCommutative<ValueNode>
+public class AddNode extends BinaryArithmeticNode<ArithmeticOpTable.BinaryOp.Add> implements NarrowableArithmeticNode, Canonicalizable.BinaryCommutative<ValueNode>
 {
     // @def
     public static final NodeClass<AddNode> TYPE = NodeClass.create(AddNode.class);
 
-    // @cons
+    // @cons AddNode
     public AddNode(ValueNode __x, ValueNode __y)
     {
         this(TYPE, __x, __y);
     }
 
-    // @cons
+    // @cons AddNode
     protected AddNode(NodeClass<? extends AddNode> __c, ValueNode __x, ValueNode __y)
     {
         super(__c, ArithmeticOpTable::getAdd, __x, __y);
@@ -36,7 +34,7 @@ public class AddNode extends BinaryArithmeticNode<Add> implements NarrowableArit
 
     public static ValueNode create(ValueNode __x, ValueNode __y, NodeView __view)
     {
-        BinaryOp<Add> __op = ArithmeticOpTable.forStamp(__x.stamp(__view)).getAdd();
+        ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.Add> __op = ArithmeticOpTable.forStamp(__x.stamp(__view)).getAdd();
         Stamp __stamp = __op.foldStamp(__x.stamp(__view), __y.stamp(__view));
         ConstantNode __tryConstantFold = tryConstantFold(__op, __x, __y, __stamp, __view);
         if (__tryConstantFold != null)
@@ -53,7 +51,7 @@ public class AddNode extends BinaryArithmeticNode<Add> implements NarrowableArit
         }
     }
 
-    private static ValueNode canonical(AddNode __addNode, BinaryOp<Add> __op, ValueNode __forX, ValueNode __forY, NodeView __view)
+    private static ValueNode canonical(AddNode __addNode, ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.Add> __op, ValueNode __forX, ValueNode __forY, NodeView __view)
     {
         AddNode __self = __addNode;
         boolean __associative = __op.isAssociative();
@@ -130,7 +128,7 @@ public class AddNode extends BinaryArithmeticNode<Add> implements NarrowableArit
             // if this fails we only swap
             return new AddNode(__forY, __forX);
         }
-        BinaryOp<Add> __op = getOp(__forX, __forY);
+        ArithmeticOpTable.BinaryOp<ArithmeticOpTable.BinaryOp.Add> __op = getOp(__forX, __forY);
         NodeView __view = NodeView.from(__tool);
         return canonical(this, __op, __forX, __forY, __view);
     }

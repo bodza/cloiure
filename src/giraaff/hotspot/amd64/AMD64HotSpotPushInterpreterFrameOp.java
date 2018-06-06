@@ -8,36 +8,36 @@ import jdk.vm.ci.meta.AllocatableValue;
 import giraaff.asm.amd64.AMD64Address;
 import giraaff.asm.amd64.AMD64MacroAssembler;
 import giraaff.hotspot.HotSpotRuntime;
-import giraaff.lir.LIRInstruction.OperandFlag;
+import giraaff.lir.LIRInstruction;
 import giraaff.lir.LIRInstructionClass;
-import giraaff.lir.Opcode;
+import giraaff.lir.LIROpcode;
 import giraaff.lir.amd64.AMD64LIRInstruction;
 import giraaff.lir.asm.CompilationResultBuilder;
 
 ///
 // Pushes an interpreter frame to the stack.
 ///
-@Opcode
+@LIROpcode
 // @class AMD64HotSpotPushInterpreterFrameOp
 final class AMD64HotSpotPushInterpreterFrameOp extends AMD64LIRInstruction
 {
     // @def
     public static final LIRInstructionClass<AMD64HotSpotPushInterpreterFrameOp> TYPE = LIRInstructionClass.create(AMD64HotSpotPushInterpreterFrameOp.class);
 
-    @Alive(OperandFlag.REG)
+    @LIRInstruction.Alive(LIRInstruction.OperandFlag.REG)
     // @field
     AllocatableValue ___frameSize;
-    @Alive(OperandFlag.REG)
+    @LIRInstruction.Alive(LIRInstruction.OperandFlag.REG)
     // @field
     AllocatableValue ___framePc;
-    @Alive(OperandFlag.REG)
+    @LIRInstruction.Alive(LIRInstruction.OperandFlag.REG)
     // @field
     AllocatableValue ___senderSp;
-    @Alive(OperandFlag.REG)
+    @LIRInstruction.Alive(LIRInstruction.OperandFlag.REG)
     // @field
     AllocatableValue ___initialInfo;
 
-    // @cons
+    // @cons AMD64HotSpotPushInterpreterFrameOp
     AMD64HotSpotPushInterpreterFrameOp(AllocatableValue __frameSize, AllocatableValue __framePc, AllocatableValue __senderSp, AllocatableValue __initialInfo)
     {
         super(TYPE);

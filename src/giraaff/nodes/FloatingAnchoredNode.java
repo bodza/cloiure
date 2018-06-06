@@ -1,6 +1,7 @@
 package giraaff.nodes;
 
 import giraaff.core.common.type.Stamp;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.nodeinfo.InputType;
 import giraaff.nodes.calc.FloatingNode;
@@ -12,17 +13,17 @@ public abstract class FloatingAnchoredNode extends FloatingNode
     // @def
     public static final NodeClass<FloatingAnchoredNode> TYPE = NodeClass.create(FloatingAnchoredNode.class);
 
-    @Input(InputType.Anchor)
+    @Node.Input(InputType.Anchor)
     // @field
     protected AnchoringNode ___anchor;
 
-    // @cons
+    // @cons FloatingAnchoredNode
     public FloatingAnchoredNode(NodeClass<? extends FloatingAnchoredNode> __c, Stamp __stamp)
     {
         super(__c, __stamp);
     }
 
-    // @cons
+    // @cons FloatingAnchoredNode
     public FloatingAnchoredNode(NodeClass<? extends FloatingAnchoredNode> __c, Stamp __stamp, AnchoringNode __anchor)
     {
         super(__c, __stamp);

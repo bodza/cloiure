@@ -6,11 +6,8 @@ import jdk.vm.ci.hotspot.HotSpotCallingConventionType;
 import org.graalvm.word.LocationIdentity;
 
 import giraaff.core.common.spi.ForeignCallDescriptor;
-import giraaff.graph.Node.ConstantNodeParameter;
-import giraaff.graph.Node.NodeIntrinsic;
+import giraaff.graph.Node;
 import giraaff.hotspot.HotSpotForeignCallLinkage;
-import giraaff.hotspot.HotSpotForeignCallLinkage.RegisterEffect;
-import giraaff.hotspot.HotSpotForeignCallLinkage.Transition;
 import giraaff.hotspot.HotSpotRuntime;
 import giraaff.hotspot.meta.HotSpotForeignCallsProviderImpl;
 import giraaff.hotspot.meta.HotSpotProviders;
@@ -26,7 +23,7 @@ import giraaff.word.Word;
 // @class CreateExceptionStub
 public class CreateExceptionStub extends SnippetStub
 {
-    // @cons
+    // @cons CreateExceptionStub
     protected CreateExceptionStub(String __snippetMethodName, HotSpotProviders __providers, HotSpotForeignCallLinkage __linkage)
     {
         super(__snippetMethodName, __providers, __linkage);
@@ -70,19 +67,19 @@ public class CreateExceptionStub extends SnippetStub
     // @def
     private static final ForeignCallDescriptor THROW_CLASS_CAST_EXCEPTION = new ForeignCallDescriptor("throw_class_cast_exception", void.class, Word.class, Word.class, KlassPointer.class, KlassPointer.class);
 
-    @NodeIntrinsic(StubForeignCallNode.class)
-    private static native void throwAndPostJvmtiException(@ConstantNodeParameter ForeignCallDescriptor __d, Word __thread, Word __type, Word __message);
+    @Node.NodeIntrinsic(StubForeignCallNode.class)
+    private static native void throwAndPostJvmtiException(@Node.ConstantNodeParameter ForeignCallDescriptor __d, Word __thread, Word __type, Word __message);
 
-    @NodeIntrinsic(StubForeignCallNode.class)
-    private static native void throwKlassExternalNameException(@ConstantNodeParameter ForeignCallDescriptor __d, Word __thread, Word __type, KlassPointer __klass);
+    @Node.NodeIntrinsic(StubForeignCallNode.class)
+    private static native void throwKlassExternalNameException(@Node.ConstantNodeParameter ForeignCallDescriptor __d, Word __thread, Word __type, KlassPointer __klass);
 
-    @NodeIntrinsic(StubForeignCallNode.class)
-    private static native void throwClassCastException(@ConstantNodeParameter ForeignCallDescriptor __d, Word __thread, Word __type, KlassPointer __objKlass, KlassPointer __targetKlass);
+    @Node.NodeIntrinsic(StubForeignCallNode.class)
+    private static native void throwClassCastException(@Node.ConstantNodeParameter ForeignCallDescriptor __d, Word __thread, Word __type, KlassPointer __objKlass, KlassPointer __targetKlass);
 
     public static void registerForeignCalls(HotSpotForeignCallsProviderImpl __foreignCalls)
     {
-        __foreignCalls.registerForeignCall(THROW_AND_POST_JVMTI_EXCEPTION, HotSpotRuntime.throwAndPostJvmtiExceptionAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.SAFEPOINT, HotSpotForeignCallsProviderImpl.REEXECUTABLE, LocationIdentity.any());
-        __foreignCalls.registerForeignCall(THROW_KLASS_EXTERNAL_NAME_EXCEPTION, HotSpotRuntime.throwKlassExternalNameExceptionAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.SAFEPOINT, HotSpotForeignCallsProviderImpl.REEXECUTABLE, LocationIdentity.any());
-        __foreignCalls.registerForeignCall(THROW_CLASS_CAST_EXCEPTION, HotSpotRuntime.throwClassCastExceptionAddress, HotSpotCallingConventionType.NativeCall, RegisterEffect.DESTROYS_REGISTERS, Transition.SAFEPOINT, HotSpotForeignCallsProviderImpl.REEXECUTABLE, LocationIdentity.any());
+        __foreignCalls.registerForeignCall(THROW_AND_POST_JVMTI_EXCEPTION, HotSpotRuntime.throwAndPostJvmtiExceptionAddress, HotSpotCallingConventionType.NativeCall, HotSpotForeignCallLinkage.RegisterEffect.DESTROYS_REGISTERS, HotSpotForeignCallLinkage.Transition.SAFEPOINT, HotSpotForeignCallsProviderImpl.REEXECUTABLE, LocationIdentity.any());
+        __foreignCalls.registerForeignCall(THROW_KLASS_EXTERNAL_NAME_EXCEPTION, HotSpotRuntime.throwKlassExternalNameExceptionAddress, HotSpotCallingConventionType.NativeCall, HotSpotForeignCallLinkage.RegisterEffect.DESTROYS_REGISTERS, HotSpotForeignCallLinkage.Transition.SAFEPOINT, HotSpotForeignCallsProviderImpl.REEXECUTABLE, LocationIdentity.any());
+        __foreignCalls.registerForeignCall(THROW_CLASS_CAST_EXCEPTION, HotSpotRuntime.throwClassCastExceptionAddress, HotSpotCallingConventionType.NativeCall, HotSpotForeignCallLinkage.RegisterEffect.DESTROYS_REGISTERS, HotSpotForeignCallLinkage.Transition.SAFEPOINT, HotSpotForeignCallsProviderImpl.REEXECUTABLE, LocationIdentity.any());
     }
 }

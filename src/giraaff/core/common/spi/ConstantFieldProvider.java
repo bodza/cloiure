@@ -23,8 +23,8 @@ public interface ConstantFieldProvider
 
     ///
     // Decide whether a read from the {@code field} should be constant folded. This should return
-    // {@link ConstantFieldTool#foldConstant} or {@link ConstantFieldTool#foldStableArray} if the
-    // read should be constant folded, or {@code null} otherwise.
+    // {@link ConstantFieldProvider.ConstantFieldTool#foldConstant} or {@link ConstantFieldProvider.ConstantFieldTool#foldStableArray}
+    // if the read should be constant folded, or {@code null} otherwise.
     ///
-    <T> T readConstantField(ResolvedJavaField __field, ConstantFieldTool<T> __tool);
+    <T> T readConstantField(ResolvedJavaField __field, ConstantFieldProvider.ConstantFieldTool<T> __tool);
 }

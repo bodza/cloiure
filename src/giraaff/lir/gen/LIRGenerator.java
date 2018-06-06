@@ -36,9 +36,6 @@ import giraaff.lir.LIRInstruction;
 import giraaff.lir.LIRValueUtil;
 import giraaff.lir.LabelRef;
 import giraaff.lir.StandardOp;
-import giraaff.lir.StandardOp.BlockEndOp;
-import giraaff.lir.StandardOp.LabelOp;
-import giraaff.lir.StandardOp.SaveRegistersOp;
 import giraaff.lir.SwitchStrategy;
 import giraaff.lir.Variable;
 
@@ -63,10 +60,10 @@ public abstract class LIRGenerator implements LIRGeneratorTool
     // @field
     protected final ArithmeticLIRGenerator ___arithmeticLIRGen;
     // @field
-    private final MoveFactory ___moveFactory;
+    private final LIRGeneratorTool.MoveFactory ___moveFactory;
 
-    // @cons
-    public LIRGenerator(LIRKindTool __lirKindTool, ArithmeticLIRGenerator __arithmeticLIRGen, MoveFactory __moveFactory, CodeGenProviders __providers, LIRGenerationResult __res)
+    // @cons LIRGenerator
+    public LIRGenerator(LIRKindTool __lirKindTool, ArithmeticLIRGenerator __arithmeticLIRGen, LIRGeneratorTool.MoveFactory __moveFactory, CodeGenProviders __providers, LIRGenerationResult __res)
     {
         super();
         this.___lirKindTool = __lirKindTool;
@@ -85,16 +82,16 @@ public abstract class LIRGenerator implements LIRGeneratorTool
     }
 
     @Override
-    public MoveFactory getMoveFactory()
+    public LIRGeneratorTool.MoveFactory getMoveFactory()
     {
         return this.___moveFactory;
     }
 
     // @field
-    private MoveFactory ___spillMoveFactory;
+    private LIRGeneratorTool.MoveFactory ___spillMoveFactory;
 
     @Override
-    public MoveFactory getSpillMoveFactory()
+    public LIRGeneratorTool.MoveFactory getSpillMoveFactory()
     {
         if (this.___spillMoveFactory == null)
         {
@@ -175,7 +172,7 @@ public abstract class LIRGenerator implements LIRGeneratorTool
     @Override
     public Variable newVariable(ValueKind<?> __valueKind)
     {
-        return new Variable(__valueKind, ((VariableProvider) this.___res.getLIR()).nextVariable());
+        return new Variable(__valueKind, ((LIRGenerator.VariableProvider) this.___res.getLIR()).nextVariable());
     }
 
     @Override
@@ -313,14 +310,14 @@ public abstract class LIRGenerator implements LIRGeneratorTool
         {
             return false;
         }
-        return __ops.get(__ops.size() - 1) instanceof BlockEndOp;
+        return __ops.get(__ops.size() - 1) instanceof StandardOp.BlockEndOp;
     }
 
     // @class LIRGenerator.BlockScopeImpl
     // @closure
-    private final class BlockScopeImpl implements BlockScope
+    private final class BlockScopeImpl implements LIRGeneratorTool.BlockScope
     {
-        // @cons
+        // @cons LIRGenerator.BlockScopeImpl
         private BlockScopeImpl(AbstractBlockBase<?> __block)
         {
             super();
@@ -332,7 +329,7 @@ public abstract class LIRGenerator implements LIRGeneratorTool
             // set up the list of LIR instructions
             LIRGenerator.this.___res.getLIR().setLIRforBlock(LIRGenerator.this.___currentBlock, new ArrayList<LIRInstruction>());
 
-            LIRGenerator.this.append(new LabelOp(new Label(LIRGenerator.this.___currentBlock.getId()), LIRGenerator.this.___currentBlock.isAligned()));
+            LIRGenerator.this.append(new StandardOp.LabelOp(new Label(LIRGenerator.this.___currentBlock.getId()), LIRGenerator.this.___currentBlock.isAligned()));
         }
 
         private void doBlockEnd()
@@ -354,9 +351,9 @@ public abstract class LIRGenerator implements LIRGeneratorTool
     }
 
     @Override
-    public final BlockScope getBlockScope(AbstractBlockBase<?> __block)
+    public final LIRGeneratorTool.BlockScope getBlockScope(AbstractBlockBase<?> __block)
     {
-        BlockScopeImpl __blockScope = new BlockScopeImpl(__block);
+        LIRGenerator.BlockScopeImpl __blockScope = new LIRGenerator.BlockScopeImpl(__block);
         __blockScope.doBlockStart();
         return __blockScope;
     }
@@ -364,7 +361,7 @@ public abstract class LIRGenerator implements LIRGeneratorTool
     @Override
     public void emitIncomingValues(Value[] __params)
     {
-        ((LabelOp) this.___res.getLIR().getLIRforBlock(getCurrentBlock()).get(0)).setIncomingValues(__params);
+        ((StandardOp.LabelOp) this.___res.getLIR().getLIRforBlock(getCurrentBlock()).get(0)).setIncomingValues(__params);
     }
 
     @Override

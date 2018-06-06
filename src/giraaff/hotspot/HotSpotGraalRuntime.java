@@ -15,7 +15,7 @@ public final class HotSpotGraalRuntime implements GraalRuntime
     // @field
     private final HotSpotBackend ___backend;
 
-    // @cons
+    // @cons HotSpotGraalRuntime
     public HotSpotGraalRuntime()
     {
         super();

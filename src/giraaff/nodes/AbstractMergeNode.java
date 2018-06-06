@@ -18,20 +18,20 @@ import giraaff.nodes.util.GraphUtil;
 ///
 // Denotes the merging of multiple control-flow paths.
 ///
-// @NodeInfo.allowedUsageTypes "Association"
+// @NodeInfo.allowedUsageTypes "InputType.Association"
 // @class AbstractMergeNode
 public abstract class AbstractMergeNode extends BeginStateSplitNode implements IterableNodeType, Simplifiable, LIRLowerable
 {
     // @def
     public static final NodeClass<AbstractMergeNode> TYPE = NodeClass.create(AbstractMergeNode.class);
 
-    // @cons
+    // @cons AbstractMergeNode
     protected AbstractMergeNode(NodeClass<? extends AbstractMergeNode> __c)
     {
         super(__c);
     }
 
-    @Input(InputType.Association)
+    @Node.Input(InputType.Association)
     // @field
     protected NodeInputList<EndNode> ___ends = new NodeInputList<>(this);
 

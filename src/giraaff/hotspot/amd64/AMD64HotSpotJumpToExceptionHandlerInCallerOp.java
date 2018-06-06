@@ -6,29 +6,29 @@ import jdk.vm.ci.code.ValueUtil;
 import jdk.vm.ci.meta.AllocatableValue;
 
 import giraaff.asm.amd64.AMD64MacroAssembler;
-import giraaff.lir.LIRInstruction.OperandFlag;
+import giraaff.lir.LIRInstruction;
 import giraaff.lir.LIRInstructionClass;
-import giraaff.lir.Opcode;
+import giraaff.lir.LIROpcode;
 import giraaff.lir.asm.CompilationResultBuilder;
 
 ///
 // Sets up the arguments for an exception handler in the callers frame, removes the current frame
 // and jumps to the handler.
 ///
-@Opcode
+@LIROpcode
 // @class AMD64HotSpotJumpToExceptionHandlerInCallerOp
 final class AMD64HotSpotJumpToExceptionHandlerInCallerOp extends AMD64HotSpotEpilogueBlockEndOp
 {
     // @def
     public static final LIRInstructionClass<AMD64HotSpotJumpToExceptionHandlerInCallerOp> TYPE = LIRInstructionClass.create(AMD64HotSpotJumpToExceptionHandlerInCallerOp.class);
 
-    @Use(OperandFlag.REG)
+    @LIRInstruction.Use(LIRInstruction.OperandFlag.REG)
     // @field
     AllocatableValue ___handlerInCallerPc;
-    @Use(OperandFlag.REG)
+    @LIRInstruction.Use(LIRInstruction.OperandFlag.REG)
     // @field
     AllocatableValue ___exception;
-    @Use(OperandFlag.REG)
+    @LIRInstruction.Use(LIRInstruction.OperandFlag.REG)
     // @field
     AllocatableValue ___exceptionPc;
     // @field
@@ -36,7 +36,7 @@ final class AMD64HotSpotJumpToExceptionHandlerInCallerOp extends AMD64HotSpotEpi
     // @field
     private final int ___isMethodHandleReturnOffset;
 
-    // @cons
+    // @cons AMD64HotSpotJumpToExceptionHandlerInCallerOp
     AMD64HotSpotJumpToExceptionHandlerInCallerOp(AllocatableValue __handlerInCallerPc, AllocatableValue __exception, AllocatableValue __exceptionPc, int __isMethodHandleReturnOffset, Register __thread)
     {
         super(TYPE);

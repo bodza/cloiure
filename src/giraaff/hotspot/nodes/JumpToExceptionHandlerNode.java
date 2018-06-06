@@ -1,6 +1,7 @@
 package giraaff.hotspot.nodes;
 
 import giraaff.core.common.type.StampFactory;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.hotspot.HotSpotNodeLIRBuilder;
 import giraaff.hotspot.stubs.ExceptionHandlerStub;
@@ -20,11 +21,11 @@ public final class JumpToExceptionHandlerNode extends FixedWithNextNode implemen
     // @def
     public static final NodeClass<JumpToExceptionHandlerNode> TYPE = NodeClass.create(JumpToExceptionHandlerNode.class);
 
-    @Input
+    @Node.Input
     // @field
     ValueNode ___address;
 
-    // @cons
+    // @cons JumpToExceptionHandlerNode
     public JumpToExceptionHandlerNode(ValueNode __address)
     {
         super(TYPE, StampFactory.forVoid());
@@ -37,6 +38,6 @@ public final class JumpToExceptionHandlerNode extends FixedWithNextNode implemen
         ((HotSpotNodeLIRBuilder) __gen).emitJumpToExceptionHandler(this.___address);
     }
 
-    @NodeIntrinsic
+    @Node.NodeIntrinsic
     public static native void jumpToExceptionHandler(Word __address);
 }

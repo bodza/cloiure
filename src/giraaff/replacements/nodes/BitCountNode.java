@@ -22,7 +22,7 @@ public final class BitCountNode extends UnaryNode implements ArithmeticLIRLowera
     // @def
     public static final NodeClass<BitCountNode> TYPE = NodeClass.create(BitCountNode.class);
 
-    // @cons
+    // @cons BitCountNode
     public BitCountNode(ValueNode __value)
     {
         super(TYPE, computeStamp(__value.stamp(NodeView.DEFAULT), __value), __value);

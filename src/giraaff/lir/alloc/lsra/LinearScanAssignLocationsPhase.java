@@ -13,14 +13,11 @@ import giraaff.core.common.cfg.AbstractBlockBase;
 import giraaff.lir.ConstantValue;
 import giraaff.lir.InstructionValueProcedure;
 import giraaff.lir.LIRInstruction;
-import giraaff.lir.LIRInstruction.OperandFlag;
-import giraaff.lir.LIRInstruction.OperandMode;
 import giraaff.lir.LIRValueUtil;
-import giraaff.lir.StandardOp.MoveOp;
-import giraaff.lir.StandardOp.ValueMoveOp;
+import giraaff.lir.StandardOp;
 import giraaff.lir.Variable;
 import giraaff.lir.gen.LIRGenerationResult;
-import giraaff.lir.phases.AllocationPhase.AllocationContext;
+import giraaff.lir.phases.AllocationPhase;
 
 ///
 // Phase 7: Assign register numbers back to LIR.
@@ -31,7 +28,7 @@ public final class LinearScanAssignLocationsPhase extends LinearScanAllocationPh
     // @field
     protected final LinearScan ___allocator;
 
-    // @cons
+    // @cons LinearScanAssignLocationsPhase
     public LinearScanAssignLocationsPhase(LinearScan __allocator)
     {
         super();
@@ -39,7 +36,7 @@ public final class LinearScanAssignLocationsPhase extends LinearScanAllocationPh
     }
 
     @Override
-    protected void run(TargetDescription __target, LIRGenerationResult __lirGenRes, AllocationContext __context)
+    protected void run(TargetDescription __target, LIRGenerationResult __lirGenRes, AllocationPhase.AllocationContext __context)
     {
         assignLocations();
     }
@@ -52,7 +49,7 @@ public final class LinearScanAssignLocationsPhase extends LinearScanAllocationPh
     // @param mode the usage mode for {@code operand} by the instruction
     // @return the location assigned for the operand
     ///
-    protected Value colorLirOperand(LIRInstruction __op, Variable __operand, OperandMode __mode)
+    protected Value colorLirOperand(LIRInstruction __op, Variable __operand, LIRInstruction.OperandMode __mode)
     {
         int __opId = __op.id();
         Interval __interval = this.___allocator.intervalFor(__operand);
@@ -101,7 +98,7 @@ public final class LinearScanAssignLocationsPhase extends LinearScanAllocationPh
     private final InstructionValueProcedure assignProc = new InstructionValueProcedure()
     {
         @Override
-        public Value doValue(LIRInstruction __instruction, Value __value, OperandMode __mode, EnumSet<OperandFlag> __flags)
+        public Value doValue(LIRInstruction __instruction, Value __value, LIRInstruction.OperandMode __mode, EnumSet<LIRInstruction.OperandFlag> __flags)
         {
             if (LIRValueUtil.isVariable(__value))
             {
@@ -120,10 +117,10 @@ public final class LinearScanAssignLocationsPhase extends LinearScanAllocationPh
     protected boolean assignLocations(LIRInstruction __op)
     {
         // remove useless moves
-        if (MoveOp.isMoveOp(__op))
+        if (StandardOp.MoveOp.isMoveOp(__op))
         {
-            AllocatableValue __result = MoveOp.asMoveOp(__op).getResult();
-            if (LIRValueUtil.isVariable(__result) && this.___allocator.isMaterialized(__result, __op.id(), OperandMode.DEF))
+            AllocatableValue __result = StandardOp.MoveOp.asMoveOp(__op).getResult();
+            if (LIRValueUtil.isVariable(__result) && this.___allocator.isMaterialized(__result, __op.id(), LIRInstruction.OperandMode.DEF))
             {
                 // This happens if a materializable interval is originally not spilled but then
                 // kicked out in LinearScanWalker.splitForSpilling(). When kicking out such an
@@ -138,9 +135,9 @@ public final class LinearScanAssignLocationsPhase extends LinearScanAllocationPh
         __op.forEachOutput(assignProc);
 
         // remove useless moves
-        if (ValueMoveOp.isValueMoveOp(__op))
+        if (StandardOp.ValueMoveOp.isValueMoveOp(__op))
         {
-            ValueMoveOp __move = ValueMoveOp.asValueMoveOp(__op);
+            StandardOp.ValueMoveOp __move = StandardOp.ValueMoveOp.asValueMoveOp(__op);
             if (__move.getInput().equals(__move.getResult()))
             {
                 return true;

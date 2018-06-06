@@ -7,10 +7,7 @@ import jdk.vm.ci.meta.Value;
 import giraaff.core.common.cfg.AbstractBlockBase;
 import giraaff.lir.LIR;
 import giraaff.lir.LIRInstruction;
-import giraaff.lir.LIRInstruction.OperandMode;
-import giraaff.lir.StandardOp.BlockEndOp;
-import giraaff.lir.StandardOp.JumpOp;
-import giraaff.lir.StandardOp.LabelOp;
+import giraaff.lir.StandardOp;
 import giraaff.lir.ValueConsumer;
 
 ///
@@ -21,11 +18,11 @@ import giraaff.lir.ValueConsumer;
 // There is no explicit <code>PHI</code> {@linkplain LIRInstruction}. Instead, they are implemented
 // as parallel copy that span across a control-flow edge.
 //
-// The variables introduced by <code>PHI</code>s of a specific {@linkplain AbstractBlockBase merge
-// block} are {@linkplain LabelOp#setIncomingValues attached} to the {@linkplain LabelOp} of the
-// block. The outgoing values from the predecessor are {@link JumpOp#getOutgoingValue input} to the
-// {@linkplain BlockEndOp} of the predecessor. Because there are no critical edges we know that the
-// {@link BlockEndOp} of the predecessor has to be a {@link JumpOp}.
+// The variables introduced by <code>PHI</code>s of a specific {@linkplain AbstractBlockBase merge block}
+// are {@linkplain StandardOp.LabelOp#setIncomingValues attached} to the {@linkplain StandardOp.LabelOp}
+// of the block. The outgoing values from the predecessor are {@link StandardOp.JumpOp#getOutgoingValue input}
+// to the {@linkplain StandardOp.BlockEndOp} of the predecessor. Because there are no critical edges we know
+// that the {@link StandardOp.BlockEndOp} of the predecessor has to be a {@link StandardOp.JumpOp}.
 //
 // <h3>Example:</h3>
 //
@@ -65,15 +62,15 @@ public final class SSAUtil
     // Visits each phi value pair of an edge, i.e. the outgoing value from the predecessor and the
     // incoming value to the merge block.
     ///
-    public static void forEachPhiValuePair(LIR __lir, AbstractBlockBase<?> __merge, AbstractBlockBase<?> __pred, PhiValueVisitor __visitor)
+    public static void forEachPhiValuePair(LIR __lir, AbstractBlockBase<?> __merge, AbstractBlockBase<?> __pred, SSAUtil.PhiValueVisitor __visitor)
     {
         if (__merge.getPredecessorCount() < 2)
         {
             return;
         }
 
-        JumpOp __jump = phiOut(__lir, __pred);
-        LabelOp __label = phiIn(__lir, __merge);
+        StandardOp.JumpOp __jump = phiOut(__lir, __pred);
+        StandardOp.LabelOp __label = phiIn(__lir, __merge);
 
         for (int __i = 0; __i < __label.getPhiSize(); __i++)
         {
@@ -81,15 +78,15 @@ public final class SSAUtil
         }
     }
 
-    public static JumpOp phiOut(LIR __lir, AbstractBlockBase<?> __block)
+    public static StandardOp.JumpOp phiOut(LIR __lir, AbstractBlockBase<?> __block)
     {
         ArrayList<LIRInstruction> __instructions = __lir.getLIRforBlock(__block);
         int __index = __instructions.size() - 1;
         LIRInstruction __op = __instructions.get(__index);
-        return (JumpOp) __op;
+        return (StandardOp.JumpOp) __op;
     }
 
-    public static JumpOp phiOutOrNull(LIR __lir, AbstractBlockBase<?> __block)
+    public static StandardOp.JumpOp phiOutOrNull(LIR __lir, AbstractBlockBase<?> __block)
     {
         if (__block.getSuccessorCount() != 1)
         {
@@ -104,20 +101,20 @@ public final class SSAUtil
         return __instructions.size() - 1;
     }
 
-    public static LabelOp phiIn(LIR __lir, AbstractBlockBase<?> __block)
+    public static StandardOp.LabelOp phiIn(LIR __lir, AbstractBlockBase<?> __block)
     {
-        return (LabelOp) __lir.getLIRforBlock(__block).get(0);
+        return (StandardOp.LabelOp) __lir.getLIRforBlock(__block).get(0);
     }
 
     public static void removePhiOut(LIR __lir, AbstractBlockBase<?> __block)
     {
-        JumpOp __jump = phiOut(__lir, __block);
+        StandardOp.JumpOp __jump = phiOut(__lir, __block);
         __jump.clearOutgoingValues();
     }
 
     public static void removePhiIn(LIR __lir, AbstractBlockBase<?> __block)
     {
-        LabelOp __label = phiIn(__lir, __block);
+        StandardOp.LabelOp __label = phiIn(__lir, __block);
         __label.clearIncomingValues();
     }
 
@@ -126,7 +123,7 @@ public final class SSAUtil
         return __block.getPredecessorCount() > 1;
     }
 
-    public static void forEachPhiRegisterHint(LIR __lir, AbstractBlockBase<?> __block, LabelOp __label, Value __targetValue, OperandMode __mode, ValueConsumer __valueConsumer)
+    public static void forEachPhiRegisterHint(LIR __lir, AbstractBlockBase<?> __block, StandardOp.LabelOp __label, Value __targetValue, LIRInstruction.OperandMode __mode, ValueConsumer __valueConsumer)
     {
         if (!__label.isPhiIn())
         {
@@ -136,13 +133,13 @@ public final class SSAUtil
 
         for (AbstractBlockBase<?> __pred : __block.getPredecessors())
         {
-            JumpOp __jump = phiOut(__lir, __pred);
+            StandardOp.JumpOp __jump = phiOut(__lir, __pred);
             Value __sourceValue = __jump.getOutgoingValue(__idx);
             __valueConsumer.visitValue(__jump, __sourceValue, null, null);
         }
     }
 
-    private static int indexOfValue(LabelOp __label, Value __value)
+    private static int indexOfValue(StandardOp.LabelOp __label, Value __value)
     {
         for (int __i = 0; __i < __label.getIncomingSize(); __i++)
         {

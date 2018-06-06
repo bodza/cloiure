@@ -11,12 +11,11 @@ import giraaff.core.common.type.AbstractPointerStamp;
 import giraaff.core.common.type.Stamp;
 import giraaff.core.common.type.StampPair;
 import giraaff.graph.NodeClass;
-import giraaff.nodes.CallTargetNode.InvokeKind;
+import giraaff.nodes.CallTargetNode;
 import giraaff.nodes.NodeView;
 import giraaff.nodes.ParameterNode;
 import giraaff.nodes.ReturnNode;
 import giraaff.nodes.StructuredGraph;
-import giraaff.nodes.StructuredGraph.AllowAssumptions;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.java.LoadFieldNode;
 import giraaff.nodes.java.NewInstanceNode;
@@ -34,8 +33,8 @@ public final class ObjectCloneNode extends BasicObjectCloneNode implements Virtu
     // @def
     public static final NodeClass<ObjectCloneNode> TYPE = NodeClass.create(ObjectCloneNode.class);
 
-    // @cons
-    public ObjectCloneNode(InvokeKind __invokeKind, ResolvedJavaMethod __targetMethod, int __bci, StampPair __returnStamp, ValueNode __receiver)
+    // @cons ObjectCloneNode
+    public ObjectCloneNode(CallTargetNode.InvokeKind __invokeKind, ResolvedJavaMethod __targetMethod, int __bci, StampPair __returnStamp, ValueNode __receiver)
     {
         super(TYPE, __invokeKind, __targetMethod, __bci, __returnStamp, __receiver);
     }
@@ -76,7 +75,7 @@ public final class ObjectCloneNode extends BasicObjectCloneNode implements Virtu
                 __type = getConcreteType(getObject().stamp(NodeView.DEFAULT));
                 if (__type != null)
                 {
-                    StructuredGraph __newGraph = new StructuredGraph.Builder(AllowAssumptions.ifNonNull(__assumptions)).build();
+                    StructuredGraph __newGraph = new StructuredGraph.GraphBuilder(StructuredGraph.AllowAssumptions.ifNonNull(__assumptions)).build();
                     ParameterNode __param = __newGraph.addWithoutUnique(new ParameterNode(0, StampPair.createSingle(getObject().stamp(NodeView.DEFAULT))));
                     NewInstanceNode __newInstance = __newGraph.add(new NewInstanceNode(__type, true));
                     __newGraph.addAfterFixed(__newGraph.start(), __newInstance);

@@ -24,10 +24,10 @@ public abstract class SwitchNode extends ControlSplitNode
     // @def
     public static final NodeClass<SwitchNode> TYPE = NodeClass.create(SwitchNode.class);
 
-    @Successor
+    @Node.Successor
     // @field
     protected NodeSuccessorList<AbstractBeginNode> ___successors;
-    @Input
+    @Node.Input
     // @field
     protected ValueNode ___value;
 
@@ -43,7 +43,7 @@ public abstract class SwitchNode extends ControlSplitNode
     // @param value the instruction that provides the value to be switched over
     // @param successors the list of successors of this switch
     ///
-    // @cons
+    // @cons SwitchNode
     protected SwitchNode(NodeClass<? extends SwitchNode> __c, ValueNode __value, AbstractBeginNode[] __successors, int[] __keySuccessors, double[] __keyProbabilities)
     {
         super(__c, StampFactory.forVoid());

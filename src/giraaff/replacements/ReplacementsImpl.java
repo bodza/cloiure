@@ -18,9 +18,7 @@ import giraaff.bytecode.ResolvedJavaMethodBytecode;
 import giraaff.core.common.GraalOptions;
 import giraaff.core.common.spi.ConstantFieldProvider;
 import giraaff.graph.Node;
-import giraaff.graph.Node.NodeIntrinsic;
 import giraaff.java.GraphBuilderPhase;
-import giraaff.java.GraphBuilderPhase.Instance;
 import giraaff.nodes.CallTargetNode;
 import giraaff.nodes.Invoke;
 import giraaff.nodes.StateSplit;
@@ -28,12 +26,9 @@ import giraaff.nodes.StructuredGraph;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.graphbuilderconf.GeneratedInvocationPlugin;
 import giraaff.nodes.graphbuilderconf.GraphBuilderConfiguration;
-import giraaff.nodes.graphbuilderconf.GraphBuilderConfiguration.Plugins;
 import giraaff.nodes.graphbuilderconf.GraphBuilderContext;
 import giraaff.nodes.graphbuilderconf.InlineInvokePlugin;
-import giraaff.nodes.graphbuilderconf.InlineInvokePlugin.InlineInfo;
 import giraaff.nodes.graphbuilderconf.IntrinsicContext;
-import giraaff.nodes.graphbuilderconf.IntrinsicContext.CompilationContext;
 import giraaff.nodes.graphbuilderconf.InvocationPlugin;
 import giraaff.nodes.graphbuilderconf.MethodSubstitutionPlugin;
 import giraaff.nodes.java.MethodCallTargetNode;
@@ -43,7 +38,6 @@ import giraaff.phases.OptimisticOptimizations;
 import giraaff.phases.common.CanonicalizerPhase;
 import giraaff.phases.common.ConvertDeoptimizeToGuardPhase;
 import giraaff.phases.common.DeadCodeEliminationPhase;
-import giraaff.phases.common.DeadCodeEliminationPhase.Optionality;
 import giraaff.phases.tiers.PhaseContext;
 import giraaff.phases.util.Providers;
 import giraaff.util.GraalError;
@@ -97,7 +91,7 @@ public class ReplacementsImpl implements Replacements, InlineInvokePlugin
     //         inlined based on substitution related criteria
     ///
     @Override
-    public InlineInfo shouldInlineInvoke(GraphBuilderContext __b, ResolvedJavaMethod __method, ValueNode[] __args)
+    public InlineInvokePlugin.InlineInvokeInfo shouldInlineInvoke(GraphBuilderContext __b, ResolvedJavaMethod __method, ValueNode[] __args)
     {
         Bytecode __subst = getSubstitutionBytecode(__method);
         if (__subst != null)
@@ -105,14 +99,14 @@ public class ReplacementsImpl implements Replacements, InlineInvokePlugin
             if (__b.parsingIntrinsic() || GraalOptions.inlineDuringParsing || GraalOptions.inlineIntrinsicsDuringParsing)
             {
                 // forced inlining of intrinsics
-                return InlineInfo.createIntrinsicInlineInfo(__subst.getMethod(), __method, __subst.getOrigin());
+                return InlineInvokePlugin.InlineInvokeInfo.createIntrinsicInlineInfo(__subst.getMethod(), __method, __subst.getOrigin());
             }
             return null;
         }
         if (__b.parsingIntrinsic())
         {
             // force inlining when parsing replacements
-            return InlineInfo.createIntrinsicInlineInfo(__method, null, this.___defaultBytecodeProvider);
+            return InlineInvokePlugin.InlineInvokeInfo.createIntrinsicInlineInfo(__method, null, this.___defaultBytecodeProvider);
         }
         return null;
     }
@@ -130,7 +124,7 @@ public class ReplacementsImpl implements Replacements, InlineInvokePlugin
         }
     }
 
-    // @cons
+    // @cons ReplacementsImpl
     public ReplacementsImpl(Providers __providers, SnippetReflectionProvider __snippetReflection, BytecodeProvider __bytecodeProvider, TargetDescription __target)
     {
         super();
@@ -255,9 +249,9 @@ public class ReplacementsImpl implements Replacements, InlineInvokePlugin
     ///
     // Can be overridden to return an object that specializes various parts of graph preprocessing.
     ///
-    protected GraphMaker createGraphMaker(ResolvedJavaMethod __substitute, ResolvedJavaMethod __original)
+    protected ReplacementsImpl.GraphMaker createGraphMaker(ResolvedJavaMethod __substitute, ResolvedJavaMethod __original)
     {
-        return new GraphMaker(this, __substitute, __original);
+        return new ReplacementsImpl.GraphMaker(this, __substitute, __original);
     }
 
     ///
@@ -285,7 +279,7 @@ public class ReplacementsImpl implements Replacements, InlineInvokePlugin
         // @field
         protected final ResolvedJavaMethod ___substitutedMethod;
 
-        // @cons
+        // @cons ReplacementsImpl.GraphMaker
         protected GraphMaker(ReplacementsImpl __replacements, ResolvedJavaMethod __substitute, ResolvedJavaMethod __substitutedMethod)
         {
             super();
@@ -310,7 +304,7 @@ public class ReplacementsImpl implements Replacements, InlineInvokePlugin
         {
             new ConvertDeoptimizeToGuardPhase().apply(__graph, null);
 
-            new DeadCodeEliminationPhase(Optionality.Required).apply(__graph);
+            new DeadCodeEliminationPhase(DeadCodeEliminationPhase.Optionality.Required).apply(__graph);
         }
 
         ///
@@ -353,14 +347,14 @@ public class ReplacementsImpl implements Replacements, InlineInvokePlugin
         protected StructuredGraph buildInitialGraph(BytecodeProvider __bytecodeProvider, final ResolvedJavaMethod __methodToParse, Object[] __args)
         {
             // replacements cannot have optimistic assumptions since they have to be valid for the entire run of the VM
-            final StructuredGraph __graph = new StructuredGraph.Builder().method(__methodToParse).build();
+            final StructuredGraph __graph = new StructuredGraph.GraphBuilder().method(__methodToParse).build();
 
             // replacements are not user code so they do not participate in unsafe access tracking
             __graph.disableUnsafeAccessTracking();
 
             MetaAccessProvider __metaAccess = this.___replacements.___providers.getMetaAccess();
 
-            Plugins __plugins = new Plugins(this.___replacements.___graphBuilderPlugins);
+            GraphBuilderConfiguration.Plugins __plugins = new GraphBuilderConfiguration.Plugins(this.___replacements.___graphBuilderPlugins);
             GraphBuilderConfiguration __config = GraphBuilderConfiguration.getSnippetDefault(__plugins);
             if (__args != null)
             {
@@ -372,13 +366,13 @@ public class ReplacementsImpl implements Replacements, InlineInvokePlugin
             if (__snippetAnnotation == null)
             {
                 // post-parse inlined intrinsic
-                __initialIntrinsicContext = new IntrinsicContext(this.___substitutedMethod, this.___method, __bytecodeProvider, CompilationContext.INLINE_AFTER_PARSING);
+                __initialIntrinsicContext = new IntrinsicContext(this.___substitutedMethod, this.___method, __bytecodeProvider, IntrinsicContext.CompilationContext.INLINE_AFTER_PARSING);
             }
             else
             {
                 // snippet
                 ResolvedJavaMethod __original = this.___substitutedMethod != null ? this.___substitutedMethod : this.___method;
-                __initialIntrinsicContext = new IntrinsicContext(__original, this.___method, __bytecodeProvider, CompilationContext.INLINE_AFTER_PARSING, __snippetAnnotation.allowPartialIntrinsicArgumentMismatch());
+                __initialIntrinsicContext = new IntrinsicContext(__original, this.___method, __bytecodeProvider, IntrinsicContext.CompilationContext.INLINE_AFTER_PARSING, __snippetAnnotation.allowPartialIntrinsicArgumentMismatch());
             }
 
             createGraphBuilder(__metaAccess, this.___replacements.___providers.getStampProvider(), this.___replacements.___providers.getConstantReflection(), this.___replacements.___providers.getConstantFieldProvider(), __config, OptimisticOptimizations.NONE, __initialIntrinsicContext).apply(__graph);
@@ -387,9 +381,9 @@ public class ReplacementsImpl implements Replacements, InlineInvokePlugin
             return __graph;
         }
 
-        protected Instance createGraphBuilder(MetaAccessProvider __metaAccess, StampProvider __stampProvider, ConstantReflectionProvider __constantReflection, ConstantFieldProvider __constantFieldProvider, GraphBuilderConfiguration __graphBuilderConfig, OptimisticOptimizations __optimisticOpts, IntrinsicContext __initialIntrinsicContext)
+        protected GraphBuilderPhase.GraphBuilderInstance createGraphBuilder(MetaAccessProvider __metaAccess, StampProvider __stampProvider, ConstantReflectionProvider __constantReflection, ConstantFieldProvider __constantFieldProvider, GraphBuilderConfiguration __graphBuilderConfig, OptimisticOptimizations __optimisticOpts, IntrinsicContext __initialIntrinsicContext)
         {
-            return new GraphBuilderPhase.Instance(__metaAccess, __stampProvider, __constantReflection, __constantFieldProvider, __graphBuilderConfig, __optimisticOpts, __initialIntrinsicContext);
+            return new GraphBuilderPhase.GraphBuilderInstance(__metaAccess, __stampProvider, __constantReflection, __constantFieldProvider, __graphBuilderConfig, __optimisticOpts, __initialIntrinsicContext);
         }
     }
 }

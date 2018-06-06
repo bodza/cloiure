@@ -18,7 +18,7 @@ final class TypedGraphNodeIterator<T extends IterableNodeType> implements Iterat
     // @field
     private boolean ___needsForward;
 
-    // @cons
+    // @cons TypedGraphNodeIterator
     TypedGraphNodeIterator(NodeClass<?> __clazz, Graph __graph)
     {
         super();

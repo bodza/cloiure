@@ -10,7 +10,6 @@ import jdk.vm.ci.meta.TriState;
 import org.graalvm.collections.EconomicMap;
 
 import giraaff.graph.Graph;
-import giraaff.graph.Graph.DuplicationReplacement;
 import giraaff.graph.Node;
 import giraaff.graph.NodeBitMap;
 import giraaff.graph.iterators.NodeIterable;
@@ -54,14 +53,14 @@ public abstract class LoopFragment
     // @field
     private EconomicMap<Node, Node> ___duplicationMap;
 
-    // @cons
+    // @cons LoopFragment
     public LoopFragment(LoopEx __loop)
     {
         this(__loop, null);
         this.___nodesReady = true;
     }
 
-    // @cons
+    // @cons LoopFragment
     public LoopFragment(LoopEx __loop, LoopFragment __original)
     {
         super();
@@ -138,18 +137,18 @@ public abstract class LoopFragment
         return __l.loopBegin().graph();
     }
 
-    protected abstract DuplicationReplacement getDuplicationReplacement();
+    protected abstract Graph.DuplicationReplacement getDuplicationReplacement();
 
     protected abstract void beforeDuplication();
 
     protected abstract void finishDuplication();
 
-    protected void patchNodes(final DuplicationReplacement __dataFix)
+    protected void patchNodes(final Graph.DuplicationReplacement __dataFix)
     {
         if (isDuplicate() && !this.___nodesReady)
         {
-            final DuplicationReplacement __cfgFix = original().getDuplicationReplacement();
-            DuplicationReplacement __dr;
+            final Graph.DuplicationReplacement __cfgFix = original().getDuplicationReplacement();
+            Graph.DuplicationReplacement __dr;
             if (__cfgFix == null && __dataFix != null)
             {
                 __dr = __dataFix;
@@ -161,7 +160,7 @@ public abstract class LoopFragment
             else if (__cfgFix != null && __dataFix != null)
             {
                 // @closure
-                __dr = new DuplicationReplacement()
+                __dr = new Graph.DuplicationReplacement()
                 {
                     @Override
                     public Node replacement(Node __o)
@@ -266,7 +265,7 @@ public abstract class LoopFragment
         }
 
         final NodeBitMap __nonLoopNodes = __graph.createNodeBitMap();
-        Deque<WorkListEntry> __worklist = new ArrayDeque<>();
+        Deque<LoopFragment.WorkListEntry> __worklist = new ArrayDeque<>();
         for (AbstractBeginNode __b : __blocks)
         {
             if (__b.isDeleted())
@@ -317,7 +316,7 @@ public abstract class LoopFragment
         // @field
         boolean ___isLoopNode;
 
-        // @cons
+        // @cons LoopFragment.WorkListEntry
         WorkListEntry(Node __n, NodeBitMap __loopNodes)
         {
             super();
@@ -329,11 +328,11 @@ public abstract class LoopFragment
         @Override
         public boolean equals(Object __obj)
         {
-            if (!(__obj instanceof WorkListEntry))
+            if (!(__obj instanceof LoopFragment.WorkListEntry))
             {
                 return false;
             }
-            WorkListEntry __other = (WorkListEntry) __obj;
+            LoopFragment.WorkListEntry __other = (LoopFragment.WorkListEntry) __obj;
             return this.___n == __other.___n;
         }
 
@@ -362,16 +361,16 @@ public abstract class LoopFragment
         return TriState.UNKNOWN;
     }
 
-    private static void markFloating(Deque<WorkListEntry> __workList, Node __start, NodeBitMap __loopNodes, NodeBitMap __nonLoopNodes)
+    private static void markFloating(Deque<LoopFragment.WorkListEntry> __workList, Node __start, NodeBitMap __loopNodes, NodeBitMap __nonLoopNodes)
     {
         if (isLoopNode(__start, __loopNodes, __nonLoopNodes).isKnown())
         {
             return;
         }
-        __workList.push(new WorkListEntry(__start, __loopNodes));
+        __workList.push(new LoopFragment.WorkListEntry(__start, __loopNodes));
         while (!__workList.isEmpty())
         {
-            WorkListEntry __currentEntry = __workList.peek();
+            LoopFragment.WorkListEntry __currentEntry = __workList.peek();
             if (__currentEntry.___usages.hasNext())
             {
                 Node __current = __currentEntry.___usages.next();
@@ -385,7 +384,7 @@ public abstract class LoopFragment
                 }
                 else
                 {
-                    __workList.push(new WorkListEntry(__current, __loopNodes));
+                    __workList.push(new LoopFragment.WorkListEntry(__current, __loopNodes));
                 }
             }
             else
@@ -401,7 +400,7 @@ public abstract class LoopFragment
                 if (__isLoopNode)
                 {
                     __loopNodes.mark(__current);
-                    for (WorkListEntry __e : __workList)
+                    for (LoopFragment.WorkListEntry __e : __workList)
                     {
                         __e.___isLoopNode = true;
                     }

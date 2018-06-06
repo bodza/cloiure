@@ -12,7 +12,7 @@ public abstract class FieldIntrospection<T>
     // @field
     protected Fields ___data;
 
-    // @cons
+    // @cons FieldIntrospection
     public FieldIntrospection(Class<T> __clazz)
     {
         super();

@@ -17,8 +17,7 @@ import org.graalvm.collections.MapCursor;
 import giraaff.core.common.FieldIntrospection;
 import giraaff.core.common.Fields;
 import giraaff.core.common.FieldsScanner;
-import giraaff.lir.LIRInstruction.OperandFlag;
-import giraaff.lir.LIRInstruction.OperandMode;
+import giraaff.lir.LIRInstruction;
 
 // @class LIRIntrospection
 abstract class LIRIntrospection<T> extends FieldIntrospection<T>
@@ -36,7 +35,7 @@ abstract class LIRIntrospection<T> extends FieldIntrospection<T>
     // @def
     private static final Class<Value[]> VALUE_ARRAY_CLASS = Value[].class;
 
-    // @cons
+    // @cons LIRIntrospection
     LIRIntrospection(Class<T> __clazz)
     {
         super(__clazz);
@@ -48,21 +47,21 @@ abstract class LIRIntrospection<T> extends FieldIntrospection<T>
         // @field
         private final int ___directCount;
         // @field
-        private final EnumSet<OperandFlag>[] ___flags;
+        private final EnumSet<LIRInstruction.OperandFlag>[] ___flags;
 
-        // @cons
-        public Values(OperandModeAnnotation __mode)
+        // @cons LIRIntrospection.Values
+        public Values(LIRIntrospection.OperandModeAnnotation __mode)
         {
             this(__mode.___directCount, __mode.___values);
         }
 
         @SuppressWarnings({"unchecked"})
-        // @cons
-        public Values(int __directCount, ArrayList<ValueFieldInfo> __fields)
+        // @cons LIRIntrospection.Values
+        public Values(int __directCount, ArrayList<LIRIntrospection.ValueFieldInfo> __fields)
         {
             super(__fields);
             this.___directCount = __directCount;
-            this.___flags = (EnumSet<OperandFlag>[]) new EnumSet<?>[__fields.size()];
+            this.___flags = (EnumSet<LIRInstruction.OperandFlag>[]) new EnumSet<?>[__fields.size()];
             for (int __i = 0; __i < __fields.size(); __i++)
             {
                 this.___flags[__i] = __fields.get(__i).___flags;
@@ -74,7 +73,7 @@ abstract class LIRIntrospection<T> extends FieldIntrospection<T>
             return this.___directCount;
         }
 
-        public EnumSet<OperandFlag> getFlags(int __i)
+        public EnumSet<LIRInstruction.OperandFlag> getFlags(int __i)
         {
             return this.___flags[__i];
         }
@@ -104,16 +103,16 @@ abstract class LIRIntrospection<T> extends FieldIntrospection<T>
     // The component values in an {@link LIRInstruction} or {@link CompositeValue}.
     ///
     // @field
-    protected Values ___values;
+    protected LIRIntrospection.Values ___values;
 
     // @class LIRIntrospection.ValueFieldInfo
     protected static final class ValueFieldInfo extends FieldsScanner.FieldInfo
     {
         // @field
-        final EnumSet<OperandFlag> ___flags;
+        final EnumSet<LIRInstruction.OperandFlag> ___flags;
 
-        // @cons
-        public ValueFieldInfo(long __offset, String __name, Class<?> __type, Class<?> __declaringClass, EnumSet<OperandFlag> __flags)
+        // @cons LIRIntrospection.ValueFieldInfo
+        public ValueFieldInfo(long __offset, String __name, Class<?> __type, Class<?> __declaringClass, EnumSet<LIRInstruction.OperandFlag> __flags)
         {
             super(__offset, __name, __type, __declaringClass);
             this.___flags = __flags;
@@ -152,26 +151,26 @@ abstract class LIRIntrospection<T> extends FieldIntrospection<T>
         // @field
         public int ___directCount;
         // @field
-        public final ArrayList<ValueFieldInfo> ___values = new ArrayList<>();
+        public final ArrayList<LIRIntrospection.ValueFieldInfo> ___values = new ArrayList<>();
     }
 
     // @class LIRIntrospection.LIRFieldsScanner
     protected abstract static class LIRFieldsScanner extends FieldsScanner
     {
         // @field
-        public final EconomicMap<Class<? extends Annotation>, OperandModeAnnotation> ___valueAnnotations;
+        public final EconomicMap<Class<? extends Annotation>, LIRIntrospection.OperandModeAnnotation> ___valueAnnotations;
 
-        // @cons
+        // @cons LIRIntrospection.LIRFieldsScanner
         public LIRFieldsScanner(FieldsScanner.CalcOffset __calc)
         {
             super(__calc);
             this.___valueAnnotations = EconomicMap.create(Equivalence.DEFAULT);
         }
 
-        protected OperandModeAnnotation getOperandModeAnnotation(Field __field)
+        protected LIRIntrospection.OperandModeAnnotation getOperandModeAnnotation(Field __field)
         {
-            OperandModeAnnotation __result = null;
-            MapCursor<Class<? extends Annotation>, OperandModeAnnotation> __cursor = this.___valueAnnotations.getEntries();
+            LIRIntrospection.OperandModeAnnotation __result = null;
+            MapCursor<Class<? extends Annotation>, LIRIntrospection.OperandModeAnnotation> __cursor = this.___valueAnnotations.getEntries();
             while (__cursor.advance())
             {
                 Annotation __annotation = __field.getAnnotation(__cursor.getKey());
@@ -183,7 +182,7 @@ abstract class LIRIntrospection<T> extends FieldIntrospection<T>
             return __result;
         }
 
-        protected abstract EnumSet<OperandFlag> getFlags(Field __field);
+        protected abstract EnumSet<LIRInstruction.OperandFlag> getFlags(Field __field);
 
         @Override
         protected void scanField(Field __field, long __offset)
@@ -191,16 +190,16 @@ abstract class LIRIntrospection<T> extends FieldIntrospection<T>
             Class<?> __type = __field.getType();
             if (VALUE_CLASS.isAssignableFrom(__type) && !CONSTANT_VALUE_CLASS.isAssignableFrom(__type))
             {
-                OperandModeAnnotation __annotation = getOperandModeAnnotation(__field);
-                EnumSet<OperandFlag> __flags = getFlags(__field);
-                __annotation.___values.add(new ValueFieldInfo(__offset, __field.getName(), __type, __field.getDeclaringClass(), __flags));
+                LIRIntrospection.OperandModeAnnotation __annotation = getOperandModeAnnotation(__field);
+                EnumSet<LIRInstruction.OperandFlag> __flags = getFlags(__field);
+                __annotation.___values.add(new LIRIntrospection.ValueFieldInfo(__offset, __field.getName(), __type, __field.getDeclaringClass(), __flags));
                 __annotation.___directCount++;
             }
             else if (VALUE_ARRAY_CLASS.isAssignableFrom(__type))
             {
-                OperandModeAnnotation __annotation = getOperandModeAnnotation(__field);
-                EnumSet<OperandFlag> __flags = getFlags(__field);
-                __annotation.___values.add(new ValueFieldInfo(__offset, __field.getName(), __type, __field.getDeclaringClass(), __flags));
+                LIRIntrospection.OperandModeAnnotation __annotation = getOperandModeAnnotation(__field);
+                EnumSet<LIRInstruction.OperandFlag> __flags = getFlags(__field);
+                __annotation.___values.add(new LIRIntrospection.ValueFieldInfo(__offset, __field.getName(), __type, __field.getDeclaringClass(), __flags));
             }
             else
             {
@@ -209,7 +208,7 @@ abstract class LIRIntrospection<T> extends FieldIntrospection<T>
         }
     }
 
-    protected static void forEach(LIRInstruction __inst, Values __values, OperandMode __mode, InstructionValueProcedure __proc)
+    protected static void forEach(LIRInstruction __inst, LIRIntrospection.Values __values, LIRInstruction.OperandMode __mode, InstructionValueProcedure __proc)
     {
         for (int __i = 0; __i < __values.getCount(); __i++)
         {
@@ -256,7 +255,7 @@ abstract class LIRIntrospection<T> extends FieldIntrospection<T>
         }
     }
 
-    protected static void visitEach(LIRInstruction __inst, Values __values, OperandMode __mode, InstructionValueConsumer __proc)
+    protected static void visitEach(LIRInstruction __inst, LIRIntrospection.Values __values, LIRInstruction.OperandMode __mode, InstructionValueConsumer __proc)
     {
         for (int __i = 0; __i < __values.getCount(); __i++)
         {

@@ -16,7 +16,6 @@ import giraaff.api.replacements.SnippetReflectionProvider;
 import giraaff.bytecode.BridgeMethodUtils;
 import giraaff.core.common.calc.CanonicalCondition;
 import giraaff.core.common.calc.Condition;
-import giraaff.core.common.calc.Condition.CanonicalizedCondition;
 import giraaff.core.common.type.Stamp;
 import giraaff.core.common.type.StampFactory;
 import giraaff.core.common.type.StampPair;
@@ -46,17 +45,16 @@ import giraaff.nodes.java.LoadIndexedNode;
 import giraaff.nodes.java.LogicCompareAndSwapNode;
 import giraaff.nodes.java.StoreIndexedNode;
 import giraaff.nodes.java.ValueCompareAndSwapNode;
-import giraaff.nodes.memory.HeapAccess.BarrierType;
+import giraaff.nodes.memory.HeapAccess;
 import giraaff.nodes.memory.address.AddressNode;
 import giraaff.nodes.memory.address.OffsetAddressNode;
 import giraaff.nodes.type.StampTool;
 import giraaff.util.GraalError;
-import giraaff.word.Word.Opcode;
-import giraaff.word.Word.Operation;
+import giraaff.word.Word;
 
 ///
-// A plugin for calls to {@linkplain Operation word operations}, as well as all other nodes that
-// need special handling for {@link Word} types.
+// A plugin for calls to {@linkplain Word.Operation word operations}, as well as all other nodes
+// that need special handling for {@link Word} types.
 ///
 // @class WordOperationPlugin
 public class WordOperationPlugin implements NodePlugin, TypePlugin, InlineInvokePlugin
@@ -68,7 +66,7 @@ public class WordOperationPlugin implements NodePlugin, TypePlugin, InlineInvoke
     // @field
     protected final SnippetReflectionProvider ___snippetReflection;
 
-    // @cons
+    // @cons WordOperationPlugin
     public WordOperationPlugin(SnippetReflectionProvider __snippetReflection, WordTypes __wordTypes)
     {
         super();
@@ -87,7 +85,7 @@ public class WordOperationPlugin implements NodePlugin, TypePlugin, InlineInvoke
     // Processes a call to a method if it is annotated as a word operation by adding nodes to the
     // graph being built that implement the denoted operation.
     //
-    // @return {@code true} iff {@code method} is annotated with {@link Operation} (and was thus
+    // @return {@code true} iff {@code method} is annotated with {@link Word.Operation} (and was thus
     //         processed by this method)
     ///
     @Override
@@ -352,7 +350,7 @@ public class WordOperationPlugin implements NodePlugin, TypePlugin, InlineInvoke
             {
                 JavaKind __readKind = this.___wordTypes.asKind(__wordMethod.getSignature().getReturnType(__wordMethod.getDeclaringClass()));
                 AddressNode __address = makeAddress(__b, __args[0], __args[1]);
-                BarrierType __barrierType = this.___snippetReflection.asObject(BarrierType.class, __args[2].asJavaConstant());
+                HeapAccess.BarrierType __barrierType = this.___snippetReflection.asObject(HeapAccess.BarrierType.class, __args[2].asJavaConstant());
                 __b.push(__returnKind, readOp(__b, __readKind, __address, LocationIdentity.any(), __barrierType, true));
                 break;
             }
@@ -433,9 +431,9 @@ public class WordOperationPlugin implements NodePlugin, TypePlugin, InlineInvoke
     }
 
     ///
-    // Create an instance of a binary node which is used to lower {@link Word} operations. This
-    // method is called for all {@link Word} operations which are annotated with @Operation(node =
-    // ...) and encapsulates the reflective allocation of the node.
+    // Create an instance of a binary node which is used to lower {@link Word} operations.
+    // This method is called for all {@link Word} operations which are annotated with
+    // @Word.Operation(node = ...) and encapsulates the reflective allocation of the node.
     ///
     private static ValueNode createBinaryNodeInstance(Class<? extends ValueNode> __nodeClass, ValueNode __left, ValueNode __right)
     {
@@ -452,7 +450,7 @@ public class WordOperationPlugin implements NodePlugin, TypePlugin, InlineInvoke
 
     private ValueNode comparisonOp(GraphBuilderContext __graph, Condition __condition, ValueNode __left, ValueNode __right)
     {
-        CanonicalizedCondition __canonical = __condition.canonicalize();
+        Condition.CanonicalizedCondition __canonical = __condition.canonicalize();
 
         ValueNode __a = __canonical.mustMirror() ? __right : __left;
         ValueNode __b = __canonical.mustMirror() ? __left : __right;
@@ -483,25 +481,25 @@ public class WordOperationPlugin implements NodePlugin, TypePlugin, InlineInvoke
         return __graph.add(new ConditionalNode(__graph.add(__comparison), __trueValue, __falseValue));
     }
 
-    protected ValueNode readOp(GraphBuilderContext __b, JavaKind __readKind, AddressNode __address, LocationIdentity __location, Opcode __op)
+    protected ValueNode readOp(GraphBuilderContext __b, JavaKind __readKind, AddressNode __address, LocationIdentity __location, Word.WordOpcode __op)
     {
-        final BarrierType __barrier = (__op == Opcode.READ_BARRIERED) ? BarrierType.PRECISE : BarrierType.NONE;
-        final boolean __compressible = (__op == Opcode.READ_OBJECT || __op == Opcode.READ_BARRIERED);
+        final HeapAccess.BarrierType __barrier = (__op == Word.WordOpcode.READ_BARRIERED) ? HeapAccess.BarrierType.PRECISE : HeapAccess.BarrierType.NONE;
+        final boolean __compressible = (__op == Word.WordOpcode.READ_OBJECT || __op == Word.WordOpcode.READ_BARRIERED);
 
         return readOp(__b, __readKind, __address, __location, __barrier, __compressible);
     }
 
-    public static ValueNode readOp(GraphBuilderContext __b, JavaKind __readKind, AddressNode __address, LocationIdentity __location, BarrierType __barrierType, boolean __compressible)
+    public static ValueNode readOp(GraphBuilderContext __b, JavaKind __readKind, AddressNode __address, LocationIdentity __location, HeapAccess.BarrierType __barrierType, boolean __compressible)
     {
         // A JavaReadNode lowered to a ReadNode that will not float. This means it cannot float above
         // an explicit zero check on its base address or any other test that ensures the read is safe.
         return __b.add(new JavaReadNode(__readKind, __address, __location, __barrierType, __compressible));
     }
 
-    protected void writeOp(GraphBuilderContext __b, JavaKind __writeKind, AddressNode __address, LocationIdentity __location, ValueNode __value, Opcode __op)
+    protected void writeOp(GraphBuilderContext __b, JavaKind __writeKind, AddressNode __address, LocationIdentity __location, ValueNode __value, Word.WordOpcode __op)
     {
-        final BarrierType __barrier = (__op == Opcode.WRITE_BARRIERED) ? BarrierType.PRECISE : BarrierType.NONE;
-        final boolean __compressible = (__op == Opcode.WRITE_OBJECT || __op == Opcode.WRITE_BARRIERED);
+        final HeapAccess.BarrierType __barrier = (__op == Word.WordOpcode.WRITE_BARRIERED) ? HeapAccess.BarrierType.PRECISE : HeapAccess.BarrierType.NONE;
+        final boolean __compressible = (__op == Word.WordOpcode.WRITE_OBJECT || __op == Word.WordOpcode.WRITE_BARRIERED);
         __b.add(new JavaWriteNode(__writeKind, __address, __location, __value, __barrier, __compressible));
     }
 

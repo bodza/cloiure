@@ -22,7 +22,7 @@ import giraaff.nodes.virtual.VirtualObjectNode;
 public final class PEReadEliminationBlockState extends PartialEscapeBlockState<PEReadEliminationBlockState>
 {
     // @field
-    final EconomicMap<ReadCacheEntry, ValueNode> ___readCache;
+    final EconomicMap<PEReadEliminationBlockState.ReadCacheEntry, ValueNode> ___readCache;
 
     // @class PEReadEliminationBlockState.ReadCacheEntry
     static final class ReadCacheEntry
@@ -40,7 +40,7 @@ public final class PEReadEliminationBlockState extends PartialEscapeBlockState<P
         // @field
         public final boolean ___overflowAccess;
 
-        // @cons
+        // @cons PEReadEliminationBlockState.ReadCacheEntry
         ReadCacheEntry(LocationIdentity __identity, ValueNode __object, int __index, JavaKind __kind, boolean __overflowAccess)
         {
             super();
@@ -63,23 +63,23 @@ public final class PEReadEliminationBlockState extends PartialEscapeBlockState<P
         @Override
         public boolean equals(Object __obj)
         {
-            if (!(__obj instanceof ReadCacheEntry))
+            if (!(__obj instanceof PEReadEliminationBlockState.ReadCacheEntry))
             {
                 return false;
             }
-            ReadCacheEntry __other = (ReadCacheEntry) __obj;
+            PEReadEliminationBlockState.ReadCacheEntry __other = (PEReadEliminationBlockState.ReadCacheEntry) __obj;
             return this.___identity.equals(__other.___identity) && this.___object == __other.___object && this.___index == __other.___index && this.___kind == __other.___kind;
         }
     }
 
-    // @cons
+    // @cons PEReadEliminationBlockState
     public PEReadEliminationBlockState()
     {
         super();
         this.___readCache = EconomicMap.create(Equivalence.DEFAULT);
     }
 
-    // @cons
+    // @cons PEReadEliminationBlockState
     public PEReadEliminationBlockState(PEReadEliminationBlockState __other)
     {
         super(__other);
@@ -125,7 +125,7 @@ public final class PEReadEliminationBlockState extends PartialEscapeBlockState<P
                 {
                     // We won't cache unaligned field writes upon instantiation unless we add
                     // support for non-array objects in PEReadEliminationClosure.processUnsafeLoad.
-                    this.___readCache.put(new ReadCacheEntry(new FieldLocationIdentity(__instance.field(__i)), __representation, -1, __declaredKind, false), __values.get(__i));
+                    this.___readCache.put(new PEReadEliminationBlockState.ReadCacheEntry(new FieldLocationIdentity(__instance.field(__i)), __representation, -1, __declaredKind, false), __values.get(__i));
                 }
             }
         }
@@ -153,7 +153,7 @@ public final class PEReadEliminationBlockState extends PartialEscapeBlockState<P
         {
             __cacheObject = __object;
         }
-        this.___readCache.put(new ReadCacheEntry(__identity, __cacheObject, __index, __kind, __overflowAccess), __value);
+        this.___readCache.put(new PEReadEliminationBlockState.ReadCacheEntry(__identity, __cacheObject, __index, __kind, __overflowAccess), __value);
     }
 
     public ValueNode getReadCache(ValueNode __object, LocationIdentity __identity, int __index, JavaKind __kind, PartialEscapeClosure<?> __closure)
@@ -168,7 +168,7 @@ public final class PEReadEliminationBlockState extends PartialEscapeBlockState<P
         {
             __cacheObject = __object;
         }
-        ValueNode __cacheValue = this.___readCache.get(new ReadCacheEntry(__identity, __cacheObject, __index, __kind, false));
+        ValueNode __cacheValue = this.___readCache.get(new PEReadEliminationBlockState.ReadCacheEntry(__identity, __cacheObject, __index, __kind, false));
         __obj = __closure.getObjectState(this, __cacheValue);
         if (__obj != null)
         {
@@ -189,10 +189,10 @@ public final class PEReadEliminationBlockState extends PartialEscapeBlockState<P
 
     public void killReadCache(LocationIdentity __identity, int __index)
     {
-        Iterator<ReadCacheEntry> __iter = this.___readCache.getKeys().iterator();
+        Iterator<PEReadEliminationBlockState.ReadCacheEntry> __iter = this.___readCache.getKeys().iterator();
         while (__iter.hasNext())
         {
-            ReadCacheEntry __entry = __iter.next();
+            PEReadEliminationBlockState.ReadCacheEntry __entry = __iter.next();
             if (__entry.___identity.equals(__identity) && (__index == -1 || __entry.___index == -1 || __index == __entry.___index || __entry.___overflowAccess))
             {
                 __iter.remove();
@@ -200,7 +200,7 @@ public final class PEReadEliminationBlockState extends PartialEscapeBlockState<P
         }
     }
 
-    public EconomicMap<ReadCacheEntry, ValueNode> getReadCache()
+    public EconomicMap<PEReadEliminationBlockState.ReadCacheEntry, ValueNode> getReadCache()
     {
         return this.___readCache;
     }

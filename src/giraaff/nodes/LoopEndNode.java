@@ -20,7 +20,7 @@ public final class LoopEndNode extends AbstractEndNode
     // The declared type of the field cannot be LoopBeginNode, because loop explosion during partial
     // evaluation can temporarily assign a non-loop begin. This node will then be deleted shortly
     // after - but we still must not have type system violations for that short amount of time.
-    @Input(InputType.Association)
+    @Node.Input(InputType.Association)
     // @field
     AbstractBeginNode ___loopBegin;
     // @field
@@ -43,7 +43,7 @@ public final class LoopEndNode extends AbstractEndNode
     // @field
     boolean ___canSafepoint;
 
-    // @cons
+    // @cons LoopEndNode
     public LoopEndNode(LoopBeginNode __begin)
     {
         super(TYPE);
@@ -95,8 +95,8 @@ public final class LoopEndNode extends AbstractEndNode
     // Returns the index of this loop end amongst its {@link LoopBeginNode}'s loop ends.
     //
     // Since a LoopBeginNode also has {@linkplain LoopBeginNode#forwardEnds() forward ends},
-    // this is *not* the index into {@link PhiNode} values at the loop begin. Use
-    // {@link LoopBeginNode#phiPredecessorIndex(AbstractEndNode)} for this purpose.
+    // this is *not* the index into {@link PhiNode} values at the loop begin.
+    // Use {@link LoopBeginNode#phiPredecessorIndex(AbstractEndNode)} for this purpose.
     ///
     int endIndex()
     {

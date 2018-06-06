@@ -14,7 +14,7 @@ public abstract class VirtualStackSlot extends AllocatableValue
     // @field
     private final int ___id;
 
-    // @cons
+    // @cons VirtualStackSlot
     public VirtualStackSlot(int __id, ValueKind<?> __kind)
     {
         super(__kind);

@@ -15,8 +15,6 @@ import org.graalvm.word.LocationIdentity;
 import giraaff.core.common.LIRKind;
 import giraaff.core.common.spi.ForeignCallDescriptor;
 import giraaff.hotspot.HotSpotForeignCallLinkage;
-import giraaff.hotspot.HotSpotForeignCallLinkage.RegisterEffect;
-import giraaff.hotspot.HotSpotForeignCallLinkage.Transition;
 import giraaff.hotspot.HotSpotForeignCallLinkageImpl;
 import giraaff.hotspot.HotSpotGraalRuntime;
 import giraaff.hotspot.stubs.ForeignCallStub;
@@ -49,7 +47,7 @@ public abstract class HotSpotForeignCallsProviderImpl implements HotSpotForeignC
     // @field
     protected final WordTypes ___wordTypes;
 
-    // @cons
+    // @cons HotSpotForeignCallsProviderImpl
     public HotSpotForeignCallsProviderImpl(HotSpotGraalRuntime __runtime, MetaAccessProvider __metaAccess, CodeCacheProvider __codeCache, WordTypes __wordTypes)
     {
         super();
@@ -83,12 +81,12 @@ public abstract class HotSpotForeignCallsProviderImpl implements HotSpotForeignC
     // @param reexecutable specifies if the stub call can be re-executed without (meaningful) side
     //            effects. Deoptimization will not return to a point before a stub call that cannot
     //            be re-executed.
-    // @param transition specifies if this is a {@linkplain Transition#LEAF leaf} call
+    // @param transition specifies if this is a {@linkplain HotSpotForeignCallLinkage.Transition#LEAF leaf} call
     // @param killedLocations the memory locations killed by the stub call
     ///
-    public HotSpotForeignCallLinkage registerStubCall(ForeignCallDescriptor __descriptor, boolean __reexecutable, Transition __transition, LocationIdentity... __killedLocations)
+    public HotSpotForeignCallLinkage registerStubCall(ForeignCallDescriptor __descriptor, boolean __reexecutable, HotSpotForeignCallLinkage.Transition __transition, LocationIdentity... __killedLocations)
     {
-        return register(HotSpotForeignCallLinkageImpl.create(this.___metaAccess, this.___codeCache, this.___wordTypes, this, __descriptor, 0L, RegisterEffect.PRESERVES_REGISTERS, HotSpotCallingConventionType.JavaCall, HotSpotCallingConventionType.JavaCallee, __transition, __reexecutable, __killedLocations));
+        return register(HotSpotForeignCallLinkageImpl.create(this.___metaAccess, this.___codeCache, this.___wordTypes, this, __descriptor, 0L, HotSpotForeignCallLinkage.RegisterEffect.PRESERVES_REGISTERS, HotSpotCallingConventionType.JavaCall, HotSpotCallingConventionType.JavaCallee, __transition, __reexecutable, __killedLocations));
     }
 
     ///
@@ -99,13 +97,13 @@ public abstract class HotSpotForeignCallsProviderImpl implements HotSpotForeignC
     // @param outgoingCcType outgoing (caller) calling convention type
     // @param effect specifies if the call destroys or preserves all registers (apart from
     //            temporaries which are always destroyed)
-    // @param transition specifies if this is a {@linkplain Transition#LEAF leaf} call
+    // @param transition specifies if this is a {@linkplain HotSpotForeignCallLinkage.Transition#LEAF leaf} call
     // @param reexecutable specifies if the foreign call can be re-executed without (meaningful)
     //            side effects. Deoptimization will not return to a point before a foreign call that
     //            cannot be re-executed.
     // @param killedLocations the memory locations killed by the foreign call
     ///
-    public HotSpotForeignCallLinkage registerForeignCall(ForeignCallDescriptor __descriptor, long __address, CallingConvention.Type __outgoingCcType, RegisterEffect __effect, Transition __transition, boolean __reexecutable, LocationIdentity... __killedLocations)
+    public HotSpotForeignCallLinkage registerForeignCall(ForeignCallDescriptor __descriptor, long __address, CallingConvention.Type __outgoingCcType, HotSpotForeignCallLinkage.RegisterEffect __effect, HotSpotForeignCallLinkage.Transition __transition, boolean __reexecutable, LocationIdentity... __killedLocations)
     {
         Class<?> __resultType = __descriptor.getResultType();
         return register(HotSpotForeignCallLinkageImpl.create(this.___metaAccess, this.___codeCache, this.___wordTypes, this, __descriptor, __address, __effect, __outgoingCcType, null, __transition, __reexecutable, __killedLocations));
@@ -118,13 +116,13 @@ public abstract class HotSpotForeignCallsProviderImpl implements HotSpotForeignC
     // @param address the address of the foreign code to call
     // @param prependThread true if the JavaThread value for the current thread is to be prepended
     //            to the arguments for the call to {@code address}
-    // @param transition specifies if this is a {@linkplain Transition#LEAF leaf} call
+    // @param transition specifies if this is a {@linkplain HotSpotForeignCallLinkage.Transition#LEAF leaf} call
     // @param reexecutable specifies if the foreign call can be re-executed without (meaningful)
     //            side effects. Deoptimization will not return to a point before a foreign call that
     //            cannot be re-executed.
     // @param killedLocations the memory locations killed by the foreign call
     ///
-    public void linkForeignCall(HotSpotProviders __providers, ForeignCallDescriptor __descriptor, long __address, boolean __prependThread, Transition __transition, boolean __reexecutable, LocationIdentity... __killedLocations)
+    public void linkForeignCall(HotSpotProviders __providers, ForeignCallDescriptor __descriptor, long __address, boolean __prependThread, HotSpotForeignCallLinkage.Transition __transition, boolean __reexecutable, LocationIdentity... __killedLocations)
     {
         ForeignCallStub __stub = new ForeignCallStub(__providers, __address, __descriptor, __prependThread, __transition, __reexecutable, __killedLocations);
         HotSpotForeignCallLinkage __linkage = __stub.getLinkage();

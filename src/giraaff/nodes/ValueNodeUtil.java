@@ -5,7 +5,7 @@ import giraaff.nodes.memory.MemoryNode;
 // @class ValueNodeUtil
 public final class ValueNodeUtil
 {
-    // @cons
+    // @cons ValueNodeUtil
     private ValueNodeUtil()
     {
         super();

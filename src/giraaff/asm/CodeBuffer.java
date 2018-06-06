@@ -13,7 +13,7 @@ final class CodeBuffer
     // @field
     protected ByteBuffer ___data;
 
-    // @cons
+    // @cons CodeBuffer
     CodeBuffer(ByteOrder __order)
     {
         super();

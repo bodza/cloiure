@@ -47,9 +47,9 @@ public abstract class Backend implements TargetProvider, ValueKindFactory<LIRKin
     // @field
     private final Providers ___providers;
     // @field
-    private final ArrayList<CodeInstallationTaskFactory> ___codeInstallationTaskFactories;
+    private final ArrayList<Backend.CodeInstallationTaskFactory> ___codeInstallationTaskFactories;
 
-    // @cons
+    // @cons Backend
     protected Backend(Providers __providers)
     {
         super();
@@ -57,7 +57,7 @@ public abstract class Backend implements TargetProvider, ValueKindFactory<LIRKin
         this.___codeInstallationTaskFactories = new ArrayList<>();
     }
 
-    public synchronized void addCodeInstallationTask(CodeInstallationTaskFactory __factory)
+    public synchronized void addCodeInstallationTask(Backend.CodeInstallationTaskFactory __factory)
     {
         this.___codeInstallationTaskFactories.add(__factory);
     }
@@ -164,10 +164,10 @@ public abstract class Backend implements TargetProvider, ValueKindFactory<LIRKin
     ///
     public InstalledCode createInstalledCode(ResolvedJavaMethod __method, CompilationRequest __compilationRequest, CompilationResult __compilationResult, SpeculationLog __speculationLog, InstalledCode __predefinedInstalledCode, boolean __isDefault)
     {
-        CodeInstallationTask[] __tasks;
+        Backend.CodeInstallationTask[] __tasks;
         synchronized (this)
         {
-            __tasks = new CodeInstallationTask[this.___codeInstallationTaskFactories.size()];
+            __tasks = new Backend.CodeInstallationTask[this.___codeInstallationTaskFactories.size()];
             for (int __i = 0; __i < this.___codeInstallationTaskFactories.size(); __i++)
             {
                 __tasks[__i] = this.___codeInstallationTaskFactories.get(__i).create();
@@ -191,27 +191,27 @@ public abstract class Backend implements TargetProvider, ValueKindFactory<LIRKin
         return __installedCode;
     }
 
-    private static void failCodeInstallationTasks(CodeInstallationTask[] __tasks, Throwable __t)
+    private static void failCodeInstallationTasks(Backend.CodeInstallationTask[] __tasks, Throwable __t)
     {
-        for (CodeInstallationTask __task : __tasks)
+        for (Backend.CodeInstallationTask __task : __tasks)
         {
             __task.installFailed(__t);
         }
     }
 
-    private static void preCodeInstallationTasks(CodeInstallationTask[] __tasks, CompilationResult __compilationResult, InstalledCode __predefinedInstalledCode)
+    private static void preCodeInstallationTasks(Backend.CodeInstallationTask[] __tasks, CompilationResult __compilationResult, InstalledCode __predefinedInstalledCode)
     {
-        for (CodeInstallationTask __task : __tasks)
+        for (Backend.CodeInstallationTask __task : __tasks)
         {
             __task.preProcess(__compilationResult, __predefinedInstalledCode);
         }
     }
 
-    private static void postCodeInstallationTasks(CodeInstallationTask[] __tasks, InstalledCode __installedCode)
+    private static void postCodeInstallationTasks(Backend.CodeInstallationTask[] __tasks, InstalledCode __installedCode)
     {
         try
         {
-            for (CodeInstallationTask __task : __tasks)
+            for (Backend.CodeInstallationTask __task : __tasks)
             {
                 __task.postProcess(__installedCode);
             }
@@ -310,6 +310,6 @@ public abstract class Backend implements TargetProvider, ValueKindFactory<LIRKin
     // @class Backend.CodeInstallationTaskFactory
     public abstract static class CodeInstallationTaskFactory
     {
-        public abstract CodeInstallationTask create();
+        public abstract Backend.CodeInstallationTask create();
     }
 }

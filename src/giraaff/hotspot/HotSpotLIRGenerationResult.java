@@ -8,7 +8,7 @@ import org.graalvm.collections.Equivalence;
 import giraaff.hotspot.stubs.Stub;
 import giraaff.lir.LIR;
 import giraaff.lir.LIRFrameState;
-import giraaff.lir.StandardOp.SaveRegistersOp;
+import giraaff.lir.StandardOp;
 import giraaff.lir.framemap.FrameMapBuilder;
 import giraaff.lir.gen.LIRGenerationResult;
 
@@ -23,16 +23,16 @@ public final class HotSpotLIRGenerationResult extends LIRGenerationResult
     // that provide the information.
     ///
     // @field
-    private EconomicMap<LIRFrameState, SaveRegistersOp> ___calleeSaveInfo = EconomicMap.create(Equivalence.IDENTITY_WITH_SYSTEM_HASHCODE);
+    private EconomicMap<LIRFrameState, StandardOp.SaveRegistersOp> ___calleeSaveInfo = EconomicMap.create(Equivalence.IDENTITY_WITH_SYSTEM_HASHCODE);
 
-    // @cons
+    // @cons HotSpotLIRGenerationResult
     public HotSpotLIRGenerationResult(LIR __lir, FrameMapBuilder __frameMapBuilder, CallingConvention __callingConvention, Object __stub)
     {
         super(__lir, __frameMapBuilder, __callingConvention);
         this.___stub = __stub;
     }
 
-    public EconomicMap<LIRFrameState, SaveRegistersOp> getCalleeSaveInfo()
+    public EconomicMap<LIRFrameState, StandardOp.SaveRegistersOp> getCalleeSaveInfo()
     {
         return this.___calleeSaveInfo;
     }

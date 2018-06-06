@@ -11,18 +11,18 @@ import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 import giraaff.nodes.spi.Proxy;
 
-// @NodeInfo.allowedUsageTypes "Guard"
+// @NodeInfo.allowedUsageTypes "InputType.Guard"
 // @class GuardProxyNode
 public final class GuardProxyNode extends ProxyNode implements GuardingNode, Proxy, LIRLowerable, Canonicalizable
 {
     // @def
     public static final NodeClass<GuardProxyNode> TYPE = NodeClass.create(GuardProxyNode.class);
 
-    @OptionalInput(InputType.Guard)
+    @Node.OptionalInput(InputType.Guard)
     // @field
     GuardingNode ___value;
 
-    // @cons
+    // @cons GuardProxyNode
     public GuardProxyNode(GuardingNode __value, LoopExitNode __proxyPoint)
     {
         super(TYPE, StampFactory.forVoid(), __proxyPoint);

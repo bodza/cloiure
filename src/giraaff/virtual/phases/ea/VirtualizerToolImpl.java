@@ -47,7 +47,7 @@ final class VirtualizerToolImpl implements VirtualizerTool, CanonicalizerTool
     // @field
     private ConstantNode ___illegalConstant;
 
-    // @cons
+    // @cons VirtualizerToolImpl
     VirtualizerToolImpl(MetaAccessProvider __metaAccess, ConstantReflectionProvider __constantReflection, ConstantFieldProvider __constantFieldProvider, PartialEscapeClosure<?> __closure, Assumptions __assumptions, LoweringProvider __loweringProvider)
     {
         super();

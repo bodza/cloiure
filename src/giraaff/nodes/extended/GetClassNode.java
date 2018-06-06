@@ -6,6 +6,7 @@ import jdk.vm.ci.meta.MetaAccessProvider;
 
 import giraaff.core.common.type.ObjectStamp;
 import giraaff.core.common.type.Stamp;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.graph.spi.Canonicalizable;
 import giraaff.graph.spi.CanonicalizerTool;
@@ -28,7 +29,7 @@ public final class GetClassNode extends FloatingNode implements Lowerable, Canon
     // @def
     public static final NodeClass<GetClassNode> TYPE = NodeClass.create(GetClassNode.class);
 
-    @Input
+    @Node.Input
     // @field
     ValueNode ___object;
 
@@ -37,7 +38,7 @@ public final class GetClassNode extends FloatingNode implements Lowerable, Canon
         return this.___object;
     }
 
-    // @cons
+    // @cons GetClassNode
     public GetClassNode(Stamp __stamp, ValueNode __object)
     {
         super(TYPE, __stamp);

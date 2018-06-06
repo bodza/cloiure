@@ -1,6 +1,7 @@
 package giraaff.nodes.java;
 
 import giraaff.core.common.type.Stamp;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.nodes.FrameState;
 import giraaff.nodes.ValueNode;
@@ -15,7 +16,7 @@ public abstract class AbstractNewArrayNode extends AbstractNewObjectNode impleme
     // @def
     public static final NodeClass<AbstractNewArrayNode> TYPE = NodeClass.create(AbstractNewArrayNode.class);
 
-    @Input
+    @Node.Input
     // @field
     protected ValueNode ___length;
 
@@ -25,7 +26,7 @@ public abstract class AbstractNewArrayNode extends AbstractNewObjectNode impleme
         return this.___length;
     }
 
-    // @cons
+    // @cons AbstractNewArrayNode
     protected AbstractNewArrayNode(NodeClass<? extends AbstractNewArrayNode> __c, Stamp __stamp, ValueNode __length, boolean __fillContents, FrameState __stateBefore)
     {
         super(__c, __stamp, __fillContents, __stateBefore);

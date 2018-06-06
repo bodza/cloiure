@@ -22,7 +22,7 @@ import giraaff.nodes.ValueNode;
 // @class StampTool
 public final class StampTool
 {
-    // @cons
+    // @cons StampTool
     private StampTool()
     {
         super();

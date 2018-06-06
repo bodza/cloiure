@@ -28,10 +28,10 @@ public final class AddressLoweringPhase extends Phase
     }
 
     // @field
-    private final AddressLowering ___lowering;
+    private final AddressLoweringPhase.AddressLowering ___lowering;
 
-    // @cons
-    public AddressLoweringPhase(AddressLowering __lowering)
+    // @cons AddressLoweringPhase
+    public AddressLoweringPhase(AddressLoweringPhase.AddressLowering __lowering)
     {
         super();
         this.___lowering = __lowering;

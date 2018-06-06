@@ -32,7 +32,7 @@ public abstract class ScopedPostOrderNodeIterator
     // @field
     protected FixedNode ___currentScopeStart;
 
-    // @cons
+    // @cons ScopedPostOrderNodeIterator
     public ScopedPostOrderNodeIterator(StructuredGraph __graph)
     {
         super();

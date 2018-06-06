@@ -11,10 +11,10 @@ import jdk.vm.ci.meta.MetaUtil;
 import jdk.vm.ci.meta.SerializableConstant;
 import jdk.vm.ci.meta.VMConstant;
 
-import giraaff.code.DataSection.Data;
+import giraaff.code.DataSection;
 
 // @class DataSection
-public final class DataSection implements Iterable<Data>
+public final class DataSection implements Iterable<DataSection.Data>
 {
     // @iface DataSection.Patches
     public interface Patches
@@ -33,18 +33,18 @@ public final class DataSection implements Iterable<Data>
         // @field
         private DataSectionReference ___ref;
 
-        // @cons
+        // @cons DataSection.Data
         protected Data(int __alignment, int __size)
         {
             super();
             this.___alignment = __alignment;
             this.___size = __size;
 
-            // initialized in DataSection.insertData(Data)
+            // initialized in DataSection.insertData(DataSection.Data)
             this.___ref = null;
         }
 
-        protected abstract void emit(ByteBuffer __buffer, Patches __patches);
+        protected abstract void emit(ByteBuffer __buffer, DataSection.Patches __patches);
 
         public void updateAlignment(int __newAlignment)
         {
@@ -68,7 +68,7 @@ public final class DataSection implements Iterable<Data>
         @Override
         public int hashCode()
         {
-            // Data instances should not be used as hash map keys
+            // DataSection.Data instances should not be used as hash map keys
             throw new UnsupportedOperationException("hashCode");
         }
 
@@ -79,9 +79,9 @@ public final class DataSection implements Iterable<Data>
             {
                 return true;
             }
-            if (__obj instanceof Data)
+            if (__obj instanceof DataSection.Data)
             {
-                Data __that = (Data) __obj;
+                DataSection.Data __that = (DataSection.Data) __obj;
                 if (this.___alignment == __that.___alignment && this.___size == __that.___size && this.___ref.equals(__that.___ref))
                 {
                     return true;
@@ -92,12 +92,12 @@ public final class DataSection implements Iterable<Data>
     }
 
     // @class DataSection.RawData
-    public static final class RawData extends Data
+    public static final class RawData extends DataSection.Data
     {
         // @field
         private final byte[] ___data;
 
-        // @cons
+        // @cons DataSection.RawData
         public RawData(byte[] __data, int __alignment)
         {
             super(__alignment, __data.length);
@@ -105,25 +105,25 @@ public final class DataSection implements Iterable<Data>
         }
 
         @Override
-        protected void emit(ByteBuffer __buffer, Patches __patches)
+        protected void emit(ByteBuffer __buffer, DataSection.Patches __patches)
         {
             __buffer.put(this.___data);
         }
     }
 
     // @class DataSection.SerializableData
-    public static final class SerializableData extends Data
+    public static final class SerializableData extends DataSection.Data
     {
         // @field
         private final SerializableConstant ___constant;
 
-        // @cons
+        // @cons DataSection.SerializableData
         public SerializableData(SerializableConstant __constant)
         {
             this(__constant, 1);
         }
 
-        // @cons
+        // @cons DataSection.SerializableData
         public SerializableData(SerializableConstant __constant, int __alignment)
         {
             super(__alignment, __constant.getSerializedSize());
@@ -131,7 +131,7 @@ public final class DataSection implements Iterable<Data>
         }
 
         @Override
-        protected void emit(ByteBuffer __buffer, Patches __patches)
+        protected void emit(ByteBuffer __buffer, DataSection.Patches __patches)
         {
             int __position = __buffer.position();
             this.___constant.serialize(__buffer);
@@ -139,24 +139,24 @@ public final class DataSection implements Iterable<Data>
     }
 
     // @class DataSection.ZeroData
-    public static class ZeroData extends Data
+    public static class ZeroData extends DataSection.Data
     {
-        // @cons
+        // @cons DataSection.ZeroData
         protected ZeroData(int __alignment, int __size)
         {
             super(__alignment, __size);
         }
 
-        public static ZeroData create(int __alignment, int __size)
+        public static DataSection.ZeroData create(int __alignment, int __size)
         {
             switch (__size)
             {
                 case 1:
                     // @closure
-                    return new ZeroData(__alignment, __size)
+                    return new DataSection.ZeroData(__alignment, __size)
                     {
                         @Override
-                        protected void emit(ByteBuffer __buffer, Patches __patches)
+                        protected void emit(ByteBuffer __buffer, DataSection.Patches __patches)
                         {
                             __buffer.put((byte) 0);
                         }
@@ -164,10 +164,10 @@ public final class DataSection implements Iterable<Data>
 
                 case 2:
                     // @closure
-                    return new ZeroData(__alignment, __size)
+                    return new DataSection.ZeroData(__alignment, __size)
                     {
                         @Override
-                        protected void emit(ByteBuffer __buffer, Patches __patches)
+                        protected void emit(ByteBuffer __buffer, DataSection.Patches __patches)
                         {
                             __buffer.putShort((short) 0);
                         }
@@ -175,10 +175,10 @@ public final class DataSection implements Iterable<Data>
 
                 case 4:
                     // @closure
-                    return new ZeroData(__alignment, __size)
+                    return new DataSection.ZeroData(__alignment, __size)
                     {
                         @Override
-                        protected void emit(ByteBuffer __buffer, Patches __patches)
+                        protected void emit(ByteBuffer __buffer, DataSection.Patches __patches)
                         {
                             __buffer.putInt(0);
                         }
@@ -186,22 +186,22 @@ public final class DataSection implements Iterable<Data>
 
                 case 8:
                     // @closure
-                    return new ZeroData(__alignment, __size)
+                    return new DataSection.ZeroData(__alignment, __size)
                     {
                         @Override
-                        protected void emit(ByteBuffer __buffer, Patches __patches)
+                        protected void emit(ByteBuffer __buffer, DataSection.Patches __patches)
                         {
                             __buffer.putLong(0);
                         }
                     };
 
                 default:
-                    return new ZeroData(__alignment, __size);
+                    return new DataSection.ZeroData(__alignment, __size);
             }
         }
 
         @Override
-        protected void emit(ByteBuffer __buffer, Patches __patches)
+        protected void emit(ByteBuffer __buffer, DataSection.Patches __patches)
         {
             int __rest = getSize();
             while (__rest > 8)
@@ -218,19 +218,19 @@ public final class DataSection implements Iterable<Data>
     }
 
     // @class DataSection.PackedData
-    public static final class PackedData extends Data
+    public static final class PackedData extends DataSection.Data
     {
         // @field
-        private final Data[] ___nested;
+        private final DataSection.Data[] ___nested;
 
-        // @cons
-        private PackedData(int __alignment, int __size, Data[] __nested)
+        // @cons DataSection.PackedData
+        private PackedData(int __alignment, int __size, DataSection.Data[] __nested)
         {
             super(__alignment, __size);
             this.___nested = __nested;
         }
 
-        public static PackedData create(Data[] __nested)
+        public static DataSection.PackedData create(DataSection.Data[] __nested)
         {
             int __size = 0;
             int __alignment = 1;
@@ -239,13 +239,13 @@ public final class DataSection implements Iterable<Data>
                 __alignment = DataSection.lcm(__alignment, __nested[__i].getAlignment());
                 __size += __nested[__i].getSize();
             }
-            return new PackedData(__alignment, __size, __nested);
+            return new DataSection.PackedData(__alignment, __size, __nested);
         }
 
         @Override
-        protected void emit(ByteBuffer __buffer, Patches __patches)
+        protected void emit(ByteBuffer __buffer, DataSection.Patches __patches)
         {
-            for (Data __data : this.___nested)
+            for (DataSection.Data __data : this.___nested)
             {
                 __data.emit(__buffer, __patches);
             }
@@ -253,7 +253,7 @@ public final class DataSection implements Iterable<Data>
     }
 
     // @field
-    private final ArrayList<Data> ___dataItems = new ArrayList<>();
+    private final ArrayList<DataSection.Data> ___dataItems = new ArrayList<>();
 
     // @field
     private boolean ___closed;
@@ -288,13 +288,13 @@ public final class DataSection implements Iterable<Data>
     }
 
     ///
-    // Inserts a {@link Data} item into the data section. If the item is already in the data
-    // section, the same {@link DataSectionReference} is returned.
+    // Inserts a {@link DataSection.Data} item into the data section. If the item is already in the
+    // data section, the same {@link DataSectionReference} is returned.
     //
-    // @param data the {@link Data} item to be inserted
-    // @return a unique {@link DataSectionReference} identifying the {@link Data} item
+    // @param data the {@link DataSection.Data} item to be inserted
+    // @return a unique {@link DataSectionReference} identifying the {@link DataSection.Data} item
     ///
-    public DataSectionReference insertData(Data __data)
+    public DataSectionReference insertData(DataSection.Data __data)
     {
         checkOpen();
         synchronized (__data)
@@ -309,7 +309,7 @@ public final class DataSection implements Iterable<Data>
     }
 
     ///
-    // Transfers all {@link Data} from the provided other {@link DataSection} to this
+    // Transfers all {@link DataSection.Data} from the provided other {@link DataSection} to this
     // {@link DataSection}, and empties the other section.
     ///
     public void addAll(DataSection __other)
@@ -317,7 +317,7 @@ public final class DataSection implements Iterable<Data>
         checkOpen();
         __other.checkOpen();
 
-        for (Data __data : __other.___dataItems)
+        for (DataSection.Data __data : __other.___dataItems)
         {
             this.___dataItems.add(__data);
         }
@@ -347,7 +347,7 @@ public final class DataSection implements Iterable<Data>
 
         int __position = 0;
         int __alignment = 1;
-        for (Data __d : this.___dataItems)
+        for (DataSection.Data __d : this.___dataItems)
         {
             __alignment = lcm(__alignment, __d.___alignment);
             __position = align(__position, __d.___alignment);
@@ -389,10 +389,10 @@ public final class DataSection implements Iterable<Data>
     //
     // @param buffer the {@link ByteBuffer} where the data section should be built. The buffer must
     //            hold at least {@link #getSectionSize()} bytes.
-    // @param patch a {@link Patches} instance to receive {@link VMConstant constants} for
+    // @param patch a {@link DataSection.Patches} instance to receive {@link VMConstant constants} for
     //            relocations in the data section
     ///
-    public void buildDataSection(ByteBuffer __buffer, Patches __patch)
+    public void buildDataSection(ByteBuffer __buffer, DataSection.Patches __patch)
     {
         buildDataSection(__buffer, __patch, (__r, __s) -> {});
     }
@@ -405,15 +405,15 @@ public final class DataSection implements Iterable<Data>
     //
     // @param buffer the {@link ByteBuffer} where the data section should be built. The buffer must
     //            hold at least {@link #getSectionSize()} bytes.
-    // @param patch a {@link Patches} instance to receive {@link VMConstant constants} for
+    // @param patch a {@link DataSection.Patches} instance to receive {@link VMConstant constants} for
     // @param onEmit a function that is called before emitting each data item with the
     //            {@link DataSectionReference} and the size of the data.
     ///
-    public void buildDataSection(ByteBuffer __buffer, Patches __patch, BiConsumer<DataSectionReference, Integer> __onEmit)
+    public void buildDataSection(ByteBuffer __buffer, DataSection.Patches __patch, BiConsumer<DataSectionReference, Integer> __onEmit)
     {
         checkClosed();
         int __start = __buffer.position();
-        for (Data __d : this.___dataItems)
+        for (DataSection.Data __d : this.___dataItems)
         {
             __buffer.position(__start + __d.___ref.getOffset());
             __onEmit.accept(__d.___ref, __d.getSize());
@@ -422,9 +422,9 @@ public final class DataSection implements Iterable<Data>
         __buffer.position(__start + this.___sectionSize);
     }
 
-    public Data findData(DataSectionReference __ref)
+    public DataSection.Data findData(DataSectionReference __ref)
     {
-        for (Data __d : this.___dataItems)
+        for (DataSection.Data __d : this.___dataItems)
         {
             if (__d.___ref == __ref)
             {
@@ -434,13 +434,13 @@ public final class DataSection implements Iterable<Data>
         return null;
     }
 
-    public static void emit(ByteBuffer __buffer, Data __data, Patches __patch)
+    public static void emit(ByteBuffer __buffer, DataSection.Data __data, DataSection.Patches __patch)
     {
         __data.emit(__buffer, __patch);
     }
 
     @Override
-    public Iterator<Data> iterator()
+    public Iterator<DataSection.Data> iterator()
     {
         return this.___dataItems.iterator();
     }

@@ -9,7 +9,7 @@ public abstract class NodeWorkList implements Iterable<Node>
     // @field
     protected final Queue<Node> ___worklist = new ArrayDeque<>();
 
-    // @cons
+    // @cons NodeWorkList
     protected NodeWorkList(Graph __graph, boolean __fill)
     {
         super();

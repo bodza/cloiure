@@ -36,7 +36,7 @@ public final class Range
     // @param to the end of the range, exclusive
     // @param next link to the next range in a linked list
     ///
-    // @cons
+    // @cons Range
     Range(int __from, int __to, Range __next)
     {
         super();

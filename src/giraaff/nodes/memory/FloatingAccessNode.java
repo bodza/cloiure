@@ -3,6 +3,7 @@ package giraaff.nodes.memory;
 import org.graalvm.word.LocationIdentity;
 
 import giraaff.core.common.type.Stamp;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.nodeinfo.InputType;
 import giraaff.nodes.FloatingGuardedNode;
@@ -15,16 +16,16 @@ public abstract class FloatingAccessNode extends FloatingGuardedNode implements 
     // @def
     public static final NodeClass<FloatingAccessNode> TYPE = NodeClass.create(FloatingAccessNode.class);
 
-    @Input(InputType.Association)
+    @Node.Input(InputType.Association)
     // @field
     AddressNode ___address;
     // @field
     protected final LocationIdentity ___location;
 
     // @field
-    protected BarrierType ___barrierType;
+    protected HeapAccess.BarrierType ___barrierType;
 
-    // @cons
+    // @cons FloatingAccessNode
     protected FloatingAccessNode(NodeClass<? extends FloatingAccessNode> __c, AddressNode __address, LocationIdentity __location, Stamp __stamp)
     {
         super(__c, __stamp);
@@ -32,8 +33,8 @@ public abstract class FloatingAccessNode extends FloatingGuardedNode implements 
         this.___location = __location;
     }
 
-    // @cons
-    protected FloatingAccessNode(NodeClass<? extends FloatingAccessNode> __c, AddressNode __address, LocationIdentity __location, Stamp __stamp, GuardingNode __guard, BarrierType __barrierType)
+    // @cons FloatingAccessNode
+    protected FloatingAccessNode(NodeClass<? extends FloatingAccessNode> __c, AddressNode __address, LocationIdentity __location, Stamp __stamp, GuardingNode __guard, HeapAccess.BarrierType __barrierType)
     {
         super(__c, __stamp, __guard);
         this.___address = __address;
@@ -61,7 +62,7 @@ public abstract class FloatingAccessNode extends FloatingGuardedNode implements 
     }
 
     @Override
-    public BarrierType getBarrierType()
+    public HeapAccess.BarrierType getBarrierType()
     {
         return this.___barrierType;
     }

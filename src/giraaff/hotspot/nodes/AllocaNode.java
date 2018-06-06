@@ -6,6 +6,7 @@ import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.Value;
 
 import giraaff.core.common.type.StampFactory;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.lir.VirtualStackSlot;
 import giraaff.nodes.FixedWithNextNode;
@@ -38,13 +39,13 @@ public final class AllocaNode extends FixedWithNextNode implements LIRLowerable
     // @field
     protected final BitSet ___objects;
 
-    // @cons
-    public AllocaNode(@InjectedNodeParameter WordTypes __wordTypes, int __slots)
+    // @cons AllocaNode
+    public AllocaNode(@Node.InjectedNodeParameter WordTypes __wordTypes, int __slots)
     {
         this(__slots, __wordTypes.getWordKind(), new BitSet());
     }
 
-    // @cons
+    // @cons AllocaNode
     public AllocaNode(int __slots, JavaKind __wordKind, BitSet __objects)
     {
         super(TYPE, StampFactory.forKind(__wordKind));
@@ -60,6 +61,6 @@ public final class AllocaNode extends FixedWithNextNode implements LIRLowerable
         __gen.setResult(this, __result);
     }
 
-    @NodeIntrinsic
-    public static native Word alloca(@ConstantNodeParameter int __slots);
+    @Node.NodeIntrinsic
+    public static native Word alloca(@Node.ConstantNodeParameter int __slots);
 }

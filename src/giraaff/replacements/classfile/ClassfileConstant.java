@@ -48,7 +48,7 @@ abstract class ClassfileConstant
     // @field
     final byte ___tag;
 
-    // @cons
+    // @cons ClassfileConstant
     ClassfileConstant(byte __tag)
     {
         super();
@@ -70,7 +70,7 @@ abstract class ClassfileConstant
         // @field
         private ResolvedJavaType ___type;
 
-        // @cons
+        // @cons ClassfileConstant.ClassRef
         ClassRef(DataInputStream __stream) throws IOException
         {
             super(CONSTANT_Class);
@@ -87,7 +87,7 @@ abstract class ClassfileConstant
         {
             if (this.___type == null)
             {
-                String __typeDescriptor = __cp.get(Utf8.class, this.___nameIndex).___value;
+                String __typeDescriptor = __cp.get(ClassfileConstant.Utf8.class, this.___nameIndex).___value;
                 ClassfileBytecodeProvider __context = __cp.___context;
                 this.___type = __context.___metaAccess.lookupJavaType(__context.resolveToClass(__typeDescriptor));
             }
@@ -103,7 +103,7 @@ abstract class ClassfileConstant
         // @field
         final int ___nameAndTypeIndex;
 
-        // @cons
+        // @cons ClassfileConstant.MemberRef
         MemberRef(byte __tag, DataInputStream __stream) throws IOException
         {
             super(__tag);
@@ -114,17 +114,17 @@ abstract class ClassfileConstant
         @Override
         public void loadReferencedType(ClassfileConstantPool __cp, int __index, int __opcode)
         {
-            __cp.get(ClassRef.class, this.___classIndex).loadReferencedType(__cp, this.___classIndex, __opcode);
+            __cp.get(ClassfileConstant.ClassRef.class, this.___classIndex).loadReferencedType(__cp, this.___classIndex, __opcode);
         }
     }
 
     // @class ClassfileConstant.ExecutableRef
-    static class ExecutableRef extends MemberRef
+    static class ExecutableRef extends ClassfileConstant.MemberRef
     {
         // @field
         private ResolvedJavaMethod ___method;
 
-        // @cons
+        // @cons ClassfileConstant.ExecutableRef
         ExecutableRef(byte __tag, DataInputStream __stream) throws IOException
         {
             super(__tag, __stream);
@@ -134,8 +134,8 @@ abstract class ClassfileConstant
         {
             if (this.___method == null)
             {
-                ResolvedJavaType __cls = __cp.get(ClassRef.class, this.___classIndex).resolve(__cp);
-                NameAndType __nameAndType = __cp.get(NameAndType.class, this.___nameAndTypeIndex);
+                ResolvedJavaType __cls = __cp.get(ClassfileConstant.ClassRef.class, this.___classIndex).resolve(__cp);
+                ClassfileConstant.NameAndType __nameAndType = __cp.get(ClassfileConstant.NameAndType.class, this.___nameAndTypeIndex);
                 String __name = __nameAndType.getName(__cp);
                 String __type = __nameAndType.getType(__cp);
 
@@ -173,9 +173,9 @@ abstract class ClassfileConstant
     }
 
     // @class ClassfileConstant.MethodRef
-    static final class MethodRef extends ExecutableRef
+    static final class MethodRef extends ClassfileConstant.ExecutableRef
     {
-        // @cons
+        // @cons ClassfileConstant.MethodRef
         MethodRef(DataInputStream __stream) throws IOException
         {
             super(CONSTANT_Methodref, __stream);
@@ -183,9 +183,9 @@ abstract class ClassfileConstant
     }
 
     // @class ClassfileConstant.InterfaceMethodRef
-    static final class InterfaceMethodRef extends ExecutableRef
+    static final class InterfaceMethodRef extends ClassfileConstant.ExecutableRef
     {
-        // @cons
+        // @cons ClassfileConstant.InterfaceMethodRef
         InterfaceMethodRef(DataInputStream __stream) throws IOException
         {
             super(CONSTANT_InterfaceMethodref, __stream);
@@ -193,12 +193,12 @@ abstract class ClassfileConstant
     }
 
     // @class ClassfileConstant.FieldRef
-    static final class FieldRef extends MemberRef
+    static final class FieldRef extends ClassfileConstant.MemberRef
     {
         // @field
         private ResolvedJavaField ___field;
 
-        // @cons
+        // @cons ClassfileConstant.FieldRef
         FieldRef(DataInputStream __stream) throws IOException
         {
             super(CONSTANT_Fieldref, __stream);
@@ -208,8 +208,8 @@ abstract class ClassfileConstant
         {
             if (this.___field == null)
             {
-                ResolvedJavaType __cls = __cp.get(ClassRef.class, this.___classIndex).resolve(__cp);
-                NameAndType __nameAndType = __cp.get(NameAndType.class, this.___nameAndTypeIndex);
+                ResolvedJavaType __cls = __cp.get(ClassfileConstant.ClassRef.class, this.___classIndex).resolve(__cp);
+                ClassfileConstant.NameAndType __nameAndType = __cp.get(ClassfileConstant.NameAndType.class, this.___nameAndTypeIndex);
                 String __name = __nameAndType.getName(__cp);
                 String __type = __nameAndType.getType(__cp);
                 this.___field = resolveField(__cp.___context, __cls, __name, __type, __opcode == Bytecodes.GETSTATIC || __opcode == Bytecodes.PUTSTATIC);
@@ -228,7 +228,7 @@ abstract class ClassfileConstant
         // @field
         final JavaConstant ___value;
 
-        // @cons
+        // @cons ClassfileConstant.Primitive
         Primitive(byte __tag, JavaConstant __value)
         {
             super(__tag);
@@ -244,7 +244,7 @@ abstract class ClassfileConstant
         // @field
         JavaConstant ___value;
 
-        // @cons
+        // @cons ClassfileConstant.StringRef
         StringRef(DataInputStream __stream) throws IOException
         {
             super(ClassfileConstant.CONSTANT_String);
@@ -273,7 +273,7 @@ abstract class ClassfileConstant
         // @field
         private String ___type;
 
-        // @cons
+        // @cons ClassfileConstant.NameAndType
         NameAndType(DataInputStream __stream) throws IOException
         {
             super(ClassfileConstant.CONSTANT_NameAndType);
@@ -285,7 +285,7 @@ abstract class ClassfileConstant
         {
             if (this.___name == null)
             {
-                this.___name = __cp.get(Utf8.class, this.___nameIndex).___value;
+                this.___name = __cp.get(ClassfileConstant.Utf8.class, this.___nameIndex).___value;
             }
             return this.___name;
         }
@@ -294,7 +294,7 @@ abstract class ClassfileConstant
         {
             if (this.___type == null)
             {
-                this.___type = __cp.get(Utf8.class, this.___typeIndex).___value;
+                this.___type = __cp.get(ClassfileConstant.Utf8.class, this.___typeIndex).___value;
             }
             return this.___type;
         }
@@ -306,7 +306,7 @@ abstract class ClassfileConstant
         // @field
         final String ___value;
 
-        // @cons
+        // @cons ClassfileConstant.Utf8
         Utf8(String __value)
         {
             super(CONSTANT_Utf8);
@@ -320,7 +320,7 @@ abstract class ClassfileConstant
         // @field
         final String ___name;
 
-        // @cons
+        // @cons ClassfileConstant.Unsupported
         Unsupported(byte __tag, String __name)
         {
             super(__tag);

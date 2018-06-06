@@ -6,8 +6,8 @@ import giraaff.graph.Graph;
 import giraaff.graph.Node;
 
 ///
-// Nodes can implement {@link Canonicalizable} or one of the two sub-interfaces {@link Unary} and
-// {@link Binary} to provide local optimizations like constant folding and strength reduction.
+// Nodes can implement {@link Canonicalizable} or one of the two sub-interfaces {@link Canonicalizable.Unary} and
+// {@link Canonicalizable.Binary} to provide local optimizations like constant folding and strength reduction.
 // Implementations should return a replacement that is always semantically correct for the given
 // inputs, or "this" if they do not see an opportunity for improvement.
 //
@@ -124,7 +124,7 @@ public interface Canonicalizable
     // inputs in different order.
     ///
     // @iface Canonicalizable.BinaryCommutative
-    public interface BinaryCommutative<T extends Node> extends Binary<T>
+    public interface BinaryCommutative<T extends Node> extends Canonicalizable.Binary<T>
     {
         ///
         // Ensure a canonical ordering of inputs for commutative nodes to improve GVN results. Order

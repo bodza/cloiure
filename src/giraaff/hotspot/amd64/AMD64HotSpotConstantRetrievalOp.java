@@ -12,6 +12,7 @@ import jdk.vm.ci.meta.Value;
 import giraaff.asm.amd64.AMD64MacroAssembler;
 import giraaff.core.common.spi.ForeignCallLinkage;
 import giraaff.lir.LIRFrameState;
+import giraaff.lir.LIRInstruction;
 import giraaff.lir.LIRInstructionClass;
 import giraaff.lir.LIRValueUtil;
 import giraaff.lir.ValueProcedure;
@@ -24,21 +25,21 @@ public final class AMD64HotSpotConstantRetrievalOp extends AMD64LIRInstruction
     // @def
     public static final LIRInstructionClass<AMD64HotSpotConstantRetrievalOp> TYPE = LIRInstructionClass.create(AMD64HotSpotConstantRetrievalOp.class);
 
-    @Def
+    @LIRInstruction.Def
     // @field
     protected AllocatableValue ___result;
     // @field
     protected final Constant[] ___constants;
-    @Alive
+    @LIRInstruction.Alive
     // @field
     protected AllocatableValue[] ___constantDescriptions;
-    @Temp
+    @LIRInstruction.Temp
     // @field
     protected AllocatableValue[] ___gotSlotOffsetParameters;
-    @Temp
+    @LIRInstruction.Temp
     // @field
     protected AllocatableValue[] ___descriptionParameters;
-    @Temp
+    @LIRInstruction.Temp
     // @field
     protected Value[] ___callTemps;
     // @State
@@ -56,7 +57,7 @@ public final class AMD64HotSpotConstantRetrievalOp extends AMD64LIRInstruction
         // @field
         ArrayList<Value> ___values = new ArrayList<>();
 
-        // @cons
+        // @cons AMD64HotSpotConstantRetrievalOp.CollectTemporaries
         CollectTemporaries()
         {
             super();
@@ -69,14 +70,14 @@ public final class AMD64HotSpotConstantRetrievalOp extends AMD64LIRInstruction
         }
 
         @Override
-        public Value doValue(Value __value, OperandMode __mode, EnumSet<OperandFlag> __flags)
+        public Value doValue(Value __value, LIRInstruction.OperandMode __mode, EnumSet<LIRInstruction.OperandFlag> __flags)
         {
             this.___values.add(__value);
             return __value;
         }
     }
 
-    // @cons
+    // @cons AMD64HotSpotConstantRetrievalOp
     public AMD64HotSpotConstantRetrievalOp(Constant[] __constants, AllocatableValue[] __constantDescriptions, LIRFrameState __state, ForeignCallLinkage __callLinkage, Object[] __notes)
     {
         super(TYPE);
@@ -104,7 +105,7 @@ public final class AMD64HotSpotConstantRetrievalOp extends AMD64LIRInstruction
 
         // compute registers that are killed by the stub, but are not used as other temps.
         this.___callTemps = new Value[0];
-        this.___callTemps = LIRValueUtil.subtractRegisters(__callLinkage.getTemporaries(), new CollectTemporaries().asArray());
+        this.___callTemps = LIRValueUtil.subtractRegisters(__callLinkage.getTemporaries(), new AMD64HotSpotConstantRetrievalOp.CollectTemporaries().asArray());
     }
 
     @Override

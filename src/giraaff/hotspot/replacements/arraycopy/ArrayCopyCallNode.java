@@ -37,30 +37,30 @@ import giraaff.nodes.memory.address.OffsetAddressNode;
 import giraaff.nodes.spi.Lowerable;
 import giraaff.nodes.spi.LoweringTool;
 
-// @NodeInfo.allowedUsageTypes "Memory"
+// @NodeInfo.allowedUsageTypes "InputType.Memory"
 // @class ArrayCopyCallNode
 public final class ArrayCopyCallNode extends AbstractMemoryCheckpoint implements Lowerable, MemoryCheckpoint.Single, MemoryAccess, Canonicalizable
 {
     // @def
     public static final NodeClass<ArrayCopyCallNode> TYPE = NodeClass.create(ArrayCopyCallNode.class);
 
-    @Input
+    @Node.Input
     // @field
     protected ValueNode ___src;
-    @Input
+    @Node.Input
     // @field
     protected ValueNode ___srcPos;
-    @Input
+    @Node.Input
     // @field
     protected ValueNode ___dest;
-    @Input
+    @Node.Input
     // @field
     protected ValueNode ___destPos;
-    @Input
+    @Node.Input
     // @field
     protected ValueNode ___length;
 
-    @OptionalInput(InputType.Memory)
+    @Node.OptionalInput(InputType.Memory)
     // @field
     MemoryNode ___lastLocationAccess;
 
@@ -82,20 +82,20 @@ public final class ArrayCopyCallNode extends AbstractMemoryCheckpoint implements
     // @field
     protected final HotSpotGraalRuntime ___runtime;
 
-    // @cons
-    public ArrayCopyCallNode(@InjectedNodeParameter HotSpotGraalRuntime __runtime, ValueNode __src, ValueNode __srcPos, ValueNode __dest, ValueNode __destPos, ValueNode __length, JavaKind __elementKind, boolean __aligned, boolean __disjoint, boolean __uninitialized)
+    // @cons ArrayCopyCallNode
+    public ArrayCopyCallNode(@Node.InjectedNodeParameter HotSpotGraalRuntime __runtime, ValueNode __src, ValueNode __srcPos, ValueNode __dest, ValueNode __destPos, ValueNode __length, JavaKind __elementKind, boolean __aligned, boolean __disjoint, boolean __uninitialized)
     {
         this(__runtime, __src, __srcPos, __dest, __destPos, __length, __elementKind, null, __aligned, __disjoint, __uninitialized);
     }
 
-    // @cons
-    public ArrayCopyCallNode(@InjectedNodeParameter HotSpotGraalRuntime __runtime, ValueNode __src, ValueNode __srcPos, ValueNode __dest, ValueNode __destPos, ValueNode __length, JavaKind __elementKind, boolean __disjoint)
+    // @cons ArrayCopyCallNode
+    public ArrayCopyCallNode(@Node.InjectedNodeParameter HotSpotGraalRuntime __runtime, ValueNode __src, ValueNode __srcPos, ValueNode __dest, ValueNode __destPos, ValueNode __length, JavaKind __elementKind, boolean __disjoint)
     {
         this(__runtime, __src, __srcPos, __dest, __destPos, __length, __elementKind, null, false, __disjoint, false);
     }
 
-    // @cons
-    protected ArrayCopyCallNode(@InjectedNodeParameter HotSpotGraalRuntime __runtime, ValueNode __src, ValueNode __srcPos, ValueNode __dest, ValueNode __destPos, ValueNode __length, JavaKind __elementKind, LocationIdentity __locationIdentity, boolean __aligned, boolean __disjoint, boolean __uninitialized)
+    // @cons ArrayCopyCallNode
+    protected ArrayCopyCallNode(@Node.InjectedNodeParameter HotSpotGraalRuntime __runtime, ValueNode __src, ValueNode __srcPos, ValueNode __dest, ValueNode __destPos, ValueNode __length, JavaKind __elementKind, LocationIdentity __locationIdentity, boolean __aligned, boolean __disjoint, boolean __uninitialized)
     {
         super(TYPE, StampFactory.forVoid());
         this.___src = __src;
@@ -193,28 +193,28 @@ public final class ArrayCopyCallNode extends AbstractMemoryCheckpoint implements
         return this.___locationIdentity;
     }
 
-    @NodeIntrinsic
-    private static native void arraycopy(Object __src, int __srcPos, Object __dest, int __destPos, int __length, @ConstantNodeParameter JavaKind __elementKind, @ConstantNodeParameter boolean __aligned, @ConstantNodeParameter boolean __disjoint, @ConstantNodeParameter boolean __uninitialized);
+    @Node.NodeIntrinsic
+    private static native void arraycopy(Object __src, int __srcPos, Object __dest, int __destPos, int __length, @Node.ConstantNodeParameter JavaKind __elementKind, @Node.ConstantNodeParameter boolean __aligned, @Node.ConstantNodeParameter boolean __disjoint, @Node.ConstantNodeParameter boolean __uninitialized);
 
-    @NodeIntrinsic
-    private static native void arraycopy(Object __src, int __srcPos, Object __dest, int __destPos, int __length, @ConstantNodeParameter JavaKind __elementKind, @ConstantNodeParameter LocationIdentity __locationIdentity, @ConstantNodeParameter boolean __aligned, @ConstantNodeParameter boolean __disjoint, @ConstantNodeParameter boolean __uninitialized);
+    @Node.NodeIntrinsic
+    private static native void arraycopy(Object __src, int __srcPos, Object __dest, int __destPos, int __length, @Node.ConstantNodeParameter JavaKind __elementKind, @Node.ConstantNodeParameter LocationIdentity __locationIdentity, @Node.ConstantNodeParameter boolean __aligned, @Node.ConstantNodeParameter boolean __disjoint, @Node.ConstantNodeParameter boolean __uninitialized);
 
     public static void arraycopyObjectKillsAny(Object __src, int __srcPos, Object __dest, int __destPos, int __length)
     {
         arraycopy(__src, __srcPos, __dest, __destPos, __length, JavaKind.Object, LocationIdentity.any(), false, false, false);
     }
 
-    public static void arraycopy(Object __src, int __srcPos, Object __dest, int __destPos, int __length, @ConstantNodeParameter JavaKind __elementKind)
+    public static void arraycopy(Object __src, int __srcPos, Object __dest, int __destPos, int __length, @Node.ConstantNodeParameter JavaKind __elementKind)
     {
         arraycopy(__src, __srcPos, __dest, __destPos, __length, __elementKind, false, false, false);
     }
 
-    public static void disjointArraycopy(Object __src, int __srcPos, Object __dest, int __destPos, int __length, @ConstantNodeParameter JavaKind __elementKind)
+    public static void disjointArraycopy(Object __src, int __srcPos, Object __dest, int __destPos, int __length, @Node.ConstantNodeParameter JavaKind __elementKind)
     {
         arraycopy(__src, __srcPos, __dest, __destPos, __length, __elementKind, false, true, false);
     }
 
-    public static void disjointUninitializedArraycopy(Object __src, int __srcPos, Object __dest, int __destPos, int __length, @ConstantNodeParameter JavaKind __elementKind)
+    public static void disjointUninitializedArraycopy(Object __src, int __srcPos, Object __dest, int __destPos, int __length, @Node.ConstantNodeParameter JavaKind __elementKind)
     {
         arraycopy(__src, __srcPos, __dest, __destPos, __length, __elementKind, false, true, true);
     }

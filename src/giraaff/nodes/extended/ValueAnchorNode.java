@@ -1,6 +1,7 @@
 package giraaff.nodes.extended;
 
 import giraaff.core.common.type.StampFactory;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.graph.spi.Simplifiable;
 import giraaff.graph.spi.SimplifierTool;
@@ -20,18 +21,18 @@ import giraaff.nodes.virtual.VirtualObjectNode;
 ///
 // The ValueAnchor instruction keeps non-CFG (floating) nodes above a certain point in the graph.
 ///
-// @NodeInfo.allowedUsageTypes "Anchor, Guard"
+// @NodeInfo.allowedUsageTypes "InputType.Anchor, InputType.Guard"
 // @class ValueAnchorNode
 public final class ValueAnchorNode extends FixedWithNextNode implements LIRLowerable, Simplifiable, Virtualizable, AnchoringNode, GuardingNode
 {
     // @def
     public static final NodeClass<ValueAnchorNode> TYPE = NodeClass.create(ValueAnchorNode.class);
 
-    @OptionalInput(InputType.Guard)
+    @Node.OptionalInput(InputType.Guard)
     // @field
     ValueNode ___anchored;
 
-    // @cons
+    // @cons ValueAnchorNode
     public ValueAnchorNode(ValueNode __value)
     {
         super(TYPE, StampFactory.forVoid());

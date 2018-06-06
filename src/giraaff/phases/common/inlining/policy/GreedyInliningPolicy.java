@@ -13,7 +13,7 @@ import giraaff.phases.common.inlining.walker.MethodInvocation;
 // @class GreedyInliningPolicy
 public final class GreedyInliningPolicy extends AbstractInliningPolicy
 {
-    // @cons
+    // @cons GreedyInliningPolicy
     public GreedyInliningPolicy(Map<Invoke, Double> __hints)
     {
         super(__hints);
@@ -26,7 +26,7 @@ public final class GreedyInliningPolicy extends AbstractInliningPolicy
     }
 
     @Override
-    public Decision isWorthInlining(Replacements __replacements, MethodInvocation __invocation, int __inliningDepth, boolean __fullyProcessed)
+    public InliningPolicy.Decision isWorthInlining(Replacements __replacements, MethodInvocation __invocation, int __inliningDepth, boolean __fullyProcessed)
     {
         final InlineInfo __info = __invocation.callee();
         final double __probability = __invocation.probability();

@@ -11,7 +11,7 @@ public final class OSRLocalNode extends AbstractLocalNode implements IterableNod
     // @def
     public static final NodeClass<OSRLocalNode> TYPE = NodeClass.create(OSRLocalNode.class);
 
-    // @cons
+    // @cons OSRLocalNode
     public OSRLocalNode(int __index, Stamp __stamp)
     {
         super(TYPE, __index, __stamp);

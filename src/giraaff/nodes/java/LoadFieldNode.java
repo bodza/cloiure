@@ -42,7 +42,7 @@ public final class LoadFieldNode extends AccessFieldNode implements Canonicaliza
     // @field
     private final Stamp ___uncheckedStamp;
 
-    // @cons
+    // @cons LoadFieldNode
     protected LoadFieldNode(StampPair __stamp, ValueNode __object, ResolvedJavaField __field)
     {
         super(TYPE, __stamp.getTrustedStamp(), __object, __field);

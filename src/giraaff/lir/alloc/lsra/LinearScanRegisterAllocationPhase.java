@@ -6,7 +6,7 @@ import org.graalvm.collections.Pair;
 
 import giraaff.core.common.GraalOptions;
 import giraaff.lir.gen.LIRGenerationResult;
-import giraaff.lir.phases.AllocationPhase.AllocationContext;
+import giraaff.lir.phases.AllocationPhase;
 
 // @class LinearScanRegisterAllocationPhase
 public final class LinearScanRegisterAllocationPhase extends LinearScanAllocationPhase
@@ -14,7 +14,7 @@ public final class LinearScanRegisterAllocationPhase extends LinearScanAllocatio
     // @field
     private final LinearScan ___allocator;
 
-    // @cons
+    // @cons LinearScanRegisterAllocationPhase
     LinearScanRegisterAllocationPhase(LinearScan __allocator)
     {
         super();
@@ -22,7 +22,7 @@ public final class LinearScanRegisterAllocationPhase extends LinearScanAllocatio
     }
 
     @Override
-    protected void run(TargetDescription __target, LIRGenerationResult __result, AllocationContext __context)
+    protected void run(TargetDescription __target, LIRGenerationResult __result, AllocationPhase.AllocationContext __context)
     {
         allocateRegisters();
     }

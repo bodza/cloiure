@@ -22,13 +22,13 @@ public class MonitorEnterNode extends AccessMonitorNode implements Virtualizable
     // @def
     public static final NodeClass<MonitorEnterNode> TYPE = NodeClass.create(MonitorEnterNode.class);
 
-    // @cons
+    // @cons MonitorEnterNode
     public MonitorEnterNode(ValueNode __object, MonitorIdNode __monitorId)
     {
         this(TYPE, __object, __monitorId);
     }
 
-    // @cons
+    // @cons MonitorEnterNode
     public MonitorEnterNode(NodeClass<? extends MonitorEnterNode> __c, ValueNode __object, MonitorIdNode __monitorId)
     {
         super(__c, __object, __monitorId);

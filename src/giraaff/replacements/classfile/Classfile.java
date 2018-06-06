@@ -9,7 +9,7 @@ import java.util.List;
 import jdk.vm.ci.meta.ResolvedJavaMethod;
 import jdk.vm.ci.meta.ResolvedJavaType;
 
-import giraaff.replacements.classfile.ClassfileConstant.Utf8;
+import giraaff.replacements.classfile.ClassfileConstant;
 
 ///
 // Container for objects representing the {@code Code} attributes parsed from a class file.
@@ -37,7 +37,7 @@ public final class Classfile
     //
     // @throws NoClassDefFoundError if there is an IO error while parsing the class file
     ///
-    // @cons
+    // @cons Classfile
     public Classfile(ResolvedJavaType __type, DataInputStream __stream, ClassfileBytecodeProvider __context) throws IOException
     {
         super();
@@ -50,7 +50,7 @@ public final class Classfile
         int __major = __stream.readUnsignedShort();
         if (__major < MAJOR_VERSION_JAVA_MIN || __major > MAJOR_VERSION_JAVA_MAX)
         {
-            throw new UnsupportedClassVersionError("Unsupported class file version: " + __major + "." + __minor);
+            throw new UnsupportedClassVersionError("unsupported class file version: " + __major + "." + __minor);
         }
 
         ClassfileConstantPool __cp = new ClassfileConstantPool(__stream, __context);
@@ -122,7 +122,7 @@ public final class Classfile
         ClassfileBytecode __code = null;
         for (int __i = 0; __i < __attributesCount; __i++)
         {
-            String __attributeName = __cp.get(Utf8.class, __stream.readUnsignedShort()).___value;
+            String __attributeName = __cp.get(ClassfileConstant.Utf8.class, __stream.readUnsignedShort()).___value;
             int __attributeLength = __stream.readInt();
             if (__code == null && __attributeName.equals("Code"))
             {
@@ -162,8 +162,8 @@ public final class Classfile
         {
             int __accessFlags = __stream.readUnsignedShort();
             boolean __isStatic = Modifier.isStatic(__accessFlags);
-            String __name = __cp.get(Utf8.class, __stream.readUnsignedShort()).___value;
-            String __descriptor = __cp.get(Utf8.class, __stream.readUnsignedShort()).___value;
+            String __name = __cp.get(ClassfileConstant.Utf8.class, __stream.readUnsignedShort()).___value;
+            String __descriptor = __cp.get(ClassfileConstant.Utf8.class, __stream.readUnsignedShort()).___value;
             ClassfileBytecode __code = findCodeAttribute(__stream, __cp, __name, __descriptor, __isStatic);
             if (__code != null)
             {

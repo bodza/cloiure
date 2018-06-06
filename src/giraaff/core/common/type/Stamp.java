@@ -15,7 +15,7 @@ import giraaff.core.common.spi.LIRKindTool;
 // @class Stamp
 public abstract class Stamp
 {
-    // @cons
+    // @cons Stamp
     protected Stamp()
     {
         super();

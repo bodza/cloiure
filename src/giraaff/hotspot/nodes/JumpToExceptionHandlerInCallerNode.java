@@ -1,6 +1,7 @@
 package giraaff.hotspot.nodes;
 
 import giraaff.core.common.type.StampFactory;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.hotspot.HotSpotBackend;
 import giraaff.hotspot.HotSpotNodeLIRBuilder;
@@ -20,17 +21,17 @@ public final class JumpToExceptionHandlerInCallerNode extends ControlSinkNode im
     // @def
     public static final NodeClass<JumpToExceptionHandlerInCallerNode> TYPE = NodeClass.create(JumpToExceptionHandlerInCallerNode.class);
 
-    @Input
+    @Node.Input
     // @field
     ValueNode ___handlerInCallerPc;
-    @Input
+    @Node.Input
     // @field
     ValueNode ___exception;
-    @Input
+    @Node.Input
     // @field
     ValueNode ___exceptionPc;
 
-    // @cons
+    // @cons JumpToExceptionHandlerInCallerNode
     public JumpToExceptionHandlerInCallerNode(ValueNode __handlerInCallerPc, ValueNode __exception, ValueNode __exceptionPc)
     {
         super(TYPE, StampFactory.forVoid());
@@ -45,6 +46,6 @@ public final class JumpToExceptionHandlerInCallerNode extends ControlSinkNode im
         ((HotSpotNodeLIRBuilder) __gen).emitJumpToExceptionHandlerInCaller(this.___handlerInCallerPc, this.___exception, this.___exceptionPc);
     }
 
-    @NodeIntrinsic
+    @Node.NodeIntrinsic
     public static native void jumpToExceptionHandlerInCaller(Word __handlerInCallerPc, Object __exception, Word __exceptionPc);
 }

@@ -7,8 +7,7 @@ import java.util.Deque;
 import java.util.List;
 
 import giraaff.core.common.cfg.AbstractBlockBase;
-import giraaff.lir.constopt.ConstantTree.Flags;
-import giraaff.lir.constopt.ConstantTree.NodeCost;
+import giraaff.lir.constopt.ConstantTree;
 
 ///
 // Analyzes a {@link ConstantTree} and marks potential materialization positions.
@@ -21,14 +20,14 @@ public final class ConstantTreeAnalyzer
     // @field
     private final BitSet ___visited;
 
-    public static NodeCost analyze(ConstantTree __tree, AbstractBlockBase<?> __startBlock)
+    public static ConstantTree.NodeCost analyze(ConstantTree __tree, AbstractBlockBase<?> __startBlock)
     {
         ConstantTreeAnalyzer __analyzer = new ConstantTreeAnalyzer(__tree);
         __analyzer.analyzeBlocks(__startBlock);
         return __tree.getCost(__startBlock);
     }
 
-    // @cons
+    // @cons ConstantTreeAnalyzer
     private ConstantTreeAnalyzer(ConstantTree __tree)
     {
         super();
@@ -96,7 +95,7 @@ public final class ConstantTreeAnalyzer
         {
             if (isMarked(__child))
             {
-                NodeCost __childCost = this.___tree.getCost(__child);
+                ConstantTree.NodeCost __childCost = this.___tree.getCost(__child);
                 __usages.addAll(__childCost.getUsages());
                 __numMat += __childCost.getNumMaterializations();
                 __bestCost += __childCost.getBestCost();
@@ -114,14 +113,14 @@ public final class ConstantTreeAnalyzer
             __usages.addAll(__usagesBlock);
             __bestCost = __probabilityBlock;
             __numMat = 1;
-            this.___tree.set(Flags.CANDIDATE, __block);
+            this.___tree.set(ConstantTree.Flags.CANDIDATE, __block);
         }
         else
         {
             // stick with the current solution
         }
 
-        NodeCost __nodeCost = new NodeCost(__bestCost, __usages, __numMat);
+        ConstantTree.NodeCost __nodeCost = new ConstantTree.NodeCost(__bestCost, __usages, __numMat);
         this.___tree.setCost(__block, __nodeCost);
     }
 
@@ -152,7 +151,7 @@ public final class ConstantTreeAnalyzer
 
     private void leafCost(AbstractBlockBase<?> __block)
     {
-        this.___tree.set(Flags.CANDIDATE, __block);
+        this.___tree.set(ConstantTree.Flags.CANDIDATE, __block);
         this.___tree.getOrInitCost(__block);
     }
 

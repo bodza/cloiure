@@ -9,7 +9,7 @@ import jdk.vm.ci.meta.DeoptimizationAction;
 import jdk.vm.ci.meta.DeoptimizationReason;
 
 import giraaff.core.common.spi.ForeignCallDescriptor;
-import giraaff.graph.Node.NodeIntrinsic;
+import giraaff.graph.Node;
 import giraaff.hotspot.HotSpotRuntime;
 import giraaff.hotspot.nodes.DeoptimizeCallerNode;
 import giraaff.hotspot.nodes.StubForeignCallNode;
@@ -37,9 +37,9 @@ public final class StubUtil
         Method __found = null;
         for (Method __method : __stubClass.getDeclaredMethods())
         {
-            if (Modifier.isStatic(__method.getModifiers()) && __method.getAnnotation(NodeIntrinsic.class) != null && __method.getName().equals(__name))
+            if (Modifier.isStatic(__method.getModifiers()) && __method.getAnnotation(Node.NodeIntrinsic.class) != null && __method.getName().equals(__name))
             {
-                if (__method.getAnnotation(NodeIntrinsic.class).value().equals(StubForeignCallNode.class))
+                if (__method.getAnnotation(Node.NodeIntrinsic.class).value().equals(StubForeignCallNode.class))
                 {
                     __found = __method;
                 }

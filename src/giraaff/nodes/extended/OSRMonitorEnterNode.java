@@ -15,7 +15,7 @@ public final class OSRMonitorEnterNode extends MonitorEnterNode implements LIRLo
     // @def
     public static final NodeClass<OSRMonitorEnterNode> TYPE = NodeClass.create(OSRMonitorEnterNode.class);
 
-    // @cons
+    // @cons OSRMonitorEnterNode
     public OSRMonitorEnterNode(ValueNode __object, MonitorIdNode __monitorId)
     {
         super(TYPE, __object, __monitorId);

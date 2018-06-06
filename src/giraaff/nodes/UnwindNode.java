@@ -1,6 +1,7 @@
 package giraaff.nodes;
 
 import giraaff.core.common.type.StampFactory;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.Lowerable;
@@ -16,7 +17,7 @@ public final class UnwindNode extends ControlSinkNode implements Lowerable, LIRL
     // @def
     public static final NodeClass<UnwindNode> TYPE = NodeClass.create(UnwindNode.class);
 
-    @Input
+    @Node.Input
     // @field
     ValueNode ___exception;
 
@@ -25,7 +26,7 @@ public final class UnwindNode extends ControlSinkNode implements Lowerable, LIRL
         return this.___exception;
     }
 
-    // @cons
+    // @cons UnwindNode
     public UnwindNode(ValueNode __exception)
     {
         super(TYPE, StampFactory.forVoid());

@@ -21,21 +21,21 @@ public final class DeadCodeEliminationPhase extends Phase
     ///
     // Creates a dead code elimination phase that will be run irrespective of {@link GraalOptions#reduceDCE}.
     ///
-    // @cons
+    // @cons DeadCodeEliminationPhase
     public DeadCodeEliminationPhase()
     {
-        this(Optionality.Required);
+        this(DeadCodeEliminationPhase.Optionality.Required);
     }
 
     ///
     // Creates a dead code elimination phase that will be run only if it is
-    // {@linkplain Optionality#Required non-optional} or {@link GraalOptions#reduceDCE} is false.
+    // {@linkplain DeadCodeEliminationPhase.Optionality#Required non-optional} or {@link GraalOptions#reduceDCE} is false.
     ///
-    // @cons
-    public DeadCodeEliminationPhase(Optionality __optionality)
+    // @cons DeadCodeEliminationPhase
+    public DeadCodeEliminationPhase(DeadCodeEliminationPhase.Optionality __optionality)
     {
         super();
-        this.___optional = __optionality == Optionality.Optional;
+        this.___optional = __optionality == DeadCodeEliminationPhase.Optionality.Optional;
     }
 
     // @field

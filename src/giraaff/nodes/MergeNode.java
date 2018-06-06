@@ -11,7 +11,7 @@ public final class MergeNode extends AbstractMergeNode
     // @def
     public static final NodeClass<MergeNode> TYPE = NodeClass.create(MergeNode.class);
 
-    // @cons
+    // @cons MergeNode
     public MergeNode()
     {
         super(TYPE);

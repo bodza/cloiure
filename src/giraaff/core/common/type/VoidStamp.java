@@ -16,7 +16,7 @@ import giraaff.util.GraalError;
 // @class VoidStamp
 public final class VoidStamp extends Stamp
 {
-    // @cons
+    // @cons VoidStamp
     private VoidStamp()
     {
         super();

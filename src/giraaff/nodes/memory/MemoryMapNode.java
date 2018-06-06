@@ -10,6 +10,7 @@ import org.graalvm.collections.MapCursor;
 import org.graalvm.word.LocationIdentity;
 
 import giraaff.core.common.type.StampFactory;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.graph.NodeInputList;
 import giraaff.nodeinfo.InputType;
@@ -19,7 +20,7 @@ import giraaff.nodes.calc.FloatingNode;
 import giraaff.nodes.spi.LIRLowerable;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
-// @NodeInfo.allowedUsageTypes "Extension, Memory"
+// @NodeInfo.allowedUsageTypes "InputType.Extension, InputType.Memory"
 // @class MemoryMapNode
 public final class MemoryMapNode extends FloatingNode implements MemoryMap, MemoryNode, LIRLowerable
 {
@@ -28,11 +29,11 @@ public final class MemoryMapNode extends FloatingNode implements MemoryMap, Memo
 
     // @field
     protected final List<LocationIdentity> ___locationIdentities;
-    @Input(InputType.Memory)
+    @Node.Input(InputType.Memory)
     // @field
     NodeInputList<ValueNode> ___nodes;
 
-    // @cons
+    // @cons MemoryMapNode
     public MemoryMapNode(EconomicMap<LocationIdentity, MemoryNode> __mmap)
     {
         super(TYPE, StampFactory.forVoid());

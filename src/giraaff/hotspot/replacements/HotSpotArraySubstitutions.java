@@ -16,7 +16,7 @@ import giraaff.nodes.java.DynamicNewArrayNode;
 // @class HotSpotArraySubstitutions
 public final class HotSpotArraySubstitutions
 {
-    // @cons
+    // @cons HotSpotArraySubstitutions
     private HotSpotArraySubstitutions()
     {
         super();

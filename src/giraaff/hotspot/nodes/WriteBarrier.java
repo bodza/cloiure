@@ -12,7 +12,7 @@ public abstract class WriteBarrier extends FixedWithNextNode implements Lowerabl
     // @def
     public static final NodeClass<WriteBarrier> TYPE = NodeClass.create(WriteBarrier.class);
 
-    // @cons
+    // @cons WriteBarrier
     protected WriteBarrier(NodeClass<? extends WriteBarrier> __c)
     {
         super(__c, StampFactory.forVoid());

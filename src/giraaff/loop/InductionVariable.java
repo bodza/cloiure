@@ -18,7 +18,7 @@ public abstract class InductionVariable
         Up,
         Down;
 
-        public Direction opposite()
+        public InductionVariable.Direction opposite()
         {
             switch (this)
             {
@@ -37,7 +37,7 @@ public abstract class InductionVariable
     // @field
     protected final LoopEx ___loop;
 
-    // @cons
+    // @cons InductionVariable
     public InductionVariable(LoopEx __loop)
     {
         super();
@@ -49,7 +49,7 @@ public abstract class InductionVariable
         return this.___loop;
     }
 
-    public abstract Direction direction();
+    public abstract InductionVariable.Direction direction();
 
     ///
     // Returns the value node that is described by this induction variable.

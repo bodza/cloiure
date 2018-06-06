@@ -14,7 +14,7 @@ public final class NodeFlood implements Iterable<Node>
     // @field
     private int ___totalMarkedCount;
 
-    // @cons
+    // @cons NodeFlood
     public NodeFlood(Graph __graph)
     {
         super();
@@ -95,7 +95,7 @@ public final class NodeFlood implements Iterable<Node>
         // @field
         private Node ___nextNode;
 
-        // @cons
+        // @cons NodeFlood.UnmarkedNodeIterator
         UnmarkedNodeIterator(NodeBitMap __visited, Iterator<Node> __nodes)
         {
             super();
@@ -151,7 +151,7 @@ public final class NodeFlood implements Iterable<Node>
             @Override
             public Iterator<Node> iterator()
             {
-                return new UnmarkedNodeIterator(NodeFlood.this.___visited, NodeFlood.this.___visited.graph().getNodes().iterator());
+                return new NodeFlood.UnmarkedNodeIterator(NodeFlood.this.___visited, NodeFlood.this.___visited.graph().getNodes().iterator());
             }
         };
     }

@@ -12,7 +12,6 @@ import giraaff.lir.gen.LIRGenerationResult;
 import giraaff.lir.gen.LIRGeneratorTool;
 import giraaff.lir.phases.LIRPhase;
 import giraaff.nodes.StructuredGraph;
-import giraaff.nodes.StructuredGraph.ScheduleResult;
 import giraaff.nodes.cfg.Block;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
@@ -29,10 +28,10 @@ public final class LIRGenerationPhase extends LIRPhase<LIRGenerationPhase.LIRGen
         // @field
         private final StructuredGraph ___graph;
         // @field
-        private final ScheduleResult ___schedule;
+        private final StructuredGraph.ScheduleResult ___schedule;
 
-        // @cons
-        public LIRGenerationContext(LIRGeneratorTool __lirGen, NodeLIRBuilderTool __nodeLirBuilder, StructuredGraph __graph, ScheduleResult __schedule)
+        // @cons LIRGenerationPhase.LIRGenerationContext
+        public LIRGenerationContext(LIRGeneratorTool __lirGen, NodeLIRBuilderTool __nodeLirBuilder, StructuredGraph __graph, StructuredGraph.ScheduleResult __schedule)
         {
             super();
             this.___nodeLirBuilder = __nodeLirBuilder;
@@ -42,7 +41,7 @@ public final class LIRGenerationPhase extends LIRPhase<LIRGenerationPhase.LIRGen
         }
     }
 
-    // @cons
+    // @cons LIRGenerationPhase
     public LIRGenerationPhase()
     {
         super();
@@ -53,7 +52,7 @@ public final class LIRGenerationPhase extends LIRPhase<LIRGenerationPhase.LIRGen
     {
         NodeLIRBuilderTool __nodeLirBuilder = __context.___nodeLirBuilder;
         StructuredGraph __graph = __context.___graph;
-        ScheduleResult __schedule = __context.___schedule;
+        StructuredGraph.ScheduleResult __schedule = __context.___schedule;
         for (AbstractBlockBase<?> __b : __lirGenRes.getLIR().getControlFlowGraph().getBlocks())
         {
             emitBlock(__nodeLirBuilder, __lirGenRes, (Block) __b, __graph, __schedule.getBlockToNodesMap());

@@ -7,6 +7,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
+// @iface HotSpotOperation
 public @interface HotSpotOperation
 {
     // @enum HotSpotOperation.HotspotOpcode
@@ -21,5 +22,5 @@ public @interface HotSpotOperation
         READ_KLASS_POINTER
     }
 
-    HotspotOpcode opcode();
+    HotSpotOperation.HotspotOpcode opcode();
 }

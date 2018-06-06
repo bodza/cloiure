@@ -2,6 +2,7 @@ package giraaff.nodes.virtual;
 
 import giraaff.core.common.type.StampFactory;
 import giraaff.core.common.type.TypeReference;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.nodeinfo.InputType;
 import giraaff.nodes.ValueNode;
@@ -20,14 +21,14 @@ public final class AllocatedObjectNode extends FloatingNode implements Virtualiz
     // @def
     public static final NodeClass<AllocatedObjectNode> TYPE = NodeClass.create(AllocatedObjectNode.class);
 
-    @Input
+    @Node.Input
     // @field
     VirtualObjectNode ___virtualObject;
-    @Input(InputType.Extension)
+    @Node.Input(InputType.Extension)
     // @field
     CommitAllocationNode ___commit;
 
-    // @cons
+    // @cons AllocatedObjectNode
     public AllocatedObjectNode(VirtualObjectNode __virtualObject)
     {
         super(TYPE, StampFactory.objectNonNull(TypeReference.createExactTrusted(__virtualObject.type())));

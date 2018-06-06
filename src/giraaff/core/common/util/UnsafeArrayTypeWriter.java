@@ -29,9 +29,9 @@ public abstract class UnsafeArrayTypeWriter implements TypeWriter
         // @field
         protected int ___size;
         // @field
-        protected Chunk ___next;
+        protected UnsafeArrayTypeWriter.Chunk ___next;
 
-        // @cons
+        // @cons UnsafeArrayTypeWriter.Chunk
         protected Chunk(int __arrayLength)
         {
             super();
@@ -40,9 +40,9 @@ public abstract class UnsafeArrayTypeWriter implements TypeWriter
     }
 
     // @field
-    protected final Chunk ___firstChunk;
+    protected final UnsafeArrayTypeWriter.Chunk ___firstChunk;
     // @field
-    protected Chunk ___writeChunk;
+    protected UnsafeArrayTypeWriter.Chunk ___writeChunk;
     // @field
     protected int ___totalSize;
 
@@ -58,11 +58,11 @@ public abstract class UnsafeArrayTypeWriter implements TypeWriter
         }
     }
 
-    // @cons
+    // @cons UnsafeArrayTypeWriter
     protected UnsafeArrayTypeWriter()
     {
         super();
-        this.___firstChunk = new Chunk(MIN_CHUNK_LENGTH);
+        this.___firstChunk = new UnsafeArrayTypeWriter.Chunk(MIN_CHUNK_LENGTH);
         this.___writeChunk = this.___firstChunk;
     }
 
@@ -78,7 +78,7 @@ public abstract class UnsafeArrayTypeWriter implements TypeWriter
     public final byte[] toArray(byte[] __result)
     {
         int __resultIdx = 0;
-        for (Chunk __cur = this.___firstChunk; __cur != null; __cur = __cur.___next)
+        for (UnsafeArrayTypeWriter.Chunk __cur = this.___firstChunk; __cur != null; __cur = __cur.___next)
         {
             System.arraycopy(__cur.___data, 0, __result, __resultIdx, __cur.___size);
             __resultIdx += __cur.___size;
@@ -116,7 +116,7 @@ public abstract class UnsafeArrayTypeWriter implements TypeWriter
     {
         if (this.___writeChunk.___size + __writeBytes >= this.___writeChunk.___data.length)
         {
-            Chunk __newChunk = new Chunk(Math.min(this.___writeChunk.___data.length * 2, MAX_CHUNK_LENGTH));
+            UnsafeArrayTypeWriter.Chunk __newChunk = new UnsafeArrayTypeWriter.Chunk(Math.min(this.___writeChunk.___data.length * 2, MAX_CHUNK_LENGTH));
             this.___writeChunk.___next = __newChunk;
             this.___writeChunk = __newChunk;
         }

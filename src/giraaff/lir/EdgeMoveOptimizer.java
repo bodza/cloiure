@@ -6,9 +6,7 @@ import java.util.List;
 import jdk.vm.ci.code.TargetDescription;
 
 import giraaff.core.common.cfg.AbstractBlockBase;
-import giraaff.lir.StandardOp.LoadConstantOp;
-import giraaff.lir.StandardOp.MoveOp;
-import giraaff.lir.StandardOp.ValueMoveOp;
+import giraaff.lir.StandardOp;
 import giraaff.lir.gen.LIRGenerationResult;
 import giraaff.lir.phases.PostAllocationOptimizationPhase;
 
@@ -16,9 +14,9 @@ import giraaff.lir.phases.PostAllocationOptimizationPhase;
 // This class optimizes moves, particularly those that result from eliminating SSA form.
 //
 // When a block has more than one predecessor, and all predecessors end with the
-// {@linkplain Optimizer#same(LIRInstruction, LIRInstruction) same} sequence of {@linkplain MoveOp
-// move} instructions, then these sequences can be replaced with a single copy of the sequence at
-// the beginning of the block.
+// {@linkplain EdgeMoveOptimizer.EMOptimizer#same(LIRInstruction, LIRInstruction) same} sequence of
+// {@linkplain StandardOp.MoveOp move} instructions, then these sequences can be replaced with a
+// single copy of the sequence at the beginning of the block.
 //
 // Similarly, when a block has more than one successor, then same sequences of moves at the
 // beginning of the successors can be placed once at the end of the block. But because the moves
@@ -34,10 +32,10 @@ import giraaff.lir.phases.PostAllocationOptimizationPhase;
 public final class EdgeMoveOptimizer extends PostAllocationOptimizationPhase
 {
     @Override
-    protected void run(TargetDescription __target, LIRGenerationResult __lirGenRes, PostAllocationOptimizationContext __context)
+    protected void run(TargetDescription __target, LIRGenerationResult __lirGenRes, PostAllocationOptimizationPhase.PostAllocationOptimizationContext __context)
     {
         LIR __ir = __lirGenRes.getLIR();
-        Optimizer __optimizer = new Optimizer(__ir);
+        EdgeMoveOptimizer.EMOptimizer __optimizer = new EdgeMoveOptimizer.EMOptimizer(__ir);
 
         AbstractBlockBase<?>[] __blockList = __ir.linearScanOrder();
         // ignore the first block in the list (index 0 is not processed)
@@ -56,16 +54,16 @@ public final class EdgeMoveOptimizer extends PostAllocationOptimizationPhase
         }
     }
 
-    // @class EdgeMoveOptimizer.Optimizer
-    private static final class Optimizer
+    // @class EdgeMoveOptimizer.EMOptimizer
+    private static final class EMOptimizer
     {
         // @field
         private final List<List<LIRInstruction>> ___edgeInstructionSeqences;
         // @field
         private LIR ___ir;
 
-        // @cons
-        Optimizer(LIR __ir)
+        // @cons EdgeMoveOptimizer.EMOptimizer
+        EMOptimizer(LIR __ir)
         {
             super();
             this.___ir = __ir;
@@ -73,8 +71,8 @@ public final class EdgeMoveOptimizer extends PostAllocationOptimizationPhase
         }
 
         ///
-        // Determines if two operations are both {@linkplain MoveOp moves} that have the same source
-        // and {@linkplain MoveOp#getResult() destination} operands.
+        // Determines if two operations are both {@linkplain StandardOp.MoveOp moves} that have the
+        // same source and {@linkplain StandardOp.MoveOp#getResult() destination} operands.
         //
         // @param op1 the first instruction to compare
         // @param op2 the second instruction to compare
@@ -82,20 +80,20 @@ public final class EdgeMoveOptimizer extends PostAllocationOptimizationPhase
         ///
         private static boolean same(LIRInstruction __op1, LIRInstruction __op2)
         {
-            if (ValueMoveOp.isValueMoveOp(__op1) && ValueMoveOp.isValueMoveOp(__op2))
+            if (StandardOp.ValueMoveOp.isValueMoveOp(__op1) && StandardOp.ValueMoveOp.isValueMoveOp(__op2))
             {
-                ValueMoveOp __move1 = ValueMoveOp.asValueMoveOp(__op1);
-                ValueMoveOp __move2 = ValueMoveOp.asValueMoveOp(__op2);
+                StandardOp.ValueMoveOp __move1 = StandardOp.ValueMoveOp.asValueMoveOp(__op1);
+                StandardOp.ValueMoveOp __move2 = StandardOp.ValueMoveOp.asValueMoveOp(__op2);
                 if (__move1.getInput().equals(__move2.getInput()) && __move1.getResult().equals(__move2.getResult()))
                 {
                     // these moves are exactly equal and can be optimized
                     return true;
                 }
             }
-            else if (LoadConstantOp.isLoadConstantOp(__op1) && LoadConstantOp.isLoadConstantOp(__op2))
+            else if (StandardOp.LoadConstantOp.isLoadConstantOp(__op1) && StandardOp.LoadConstantOp.isLoadConstantOp(__op2))
             {
-                LoadConstantOp __move1 = LoadConstantOp.asLoadConstantOp(__op1);
-                LoadConstantOp __move2 = LoadConstantOp.asLoadConstantOp(__op2);
+                StandardOp.LoadConstantOp __move1 = StandardOp.LoadConstantOp.asLoadConstantOp(__op1);
+                StandardOp.LoadConstantOp __move2 = StandardOp.LoadConstantOp.asLoadConstantOp(__op2);
                 if (__move1.getConstant().equals(__move2.getConstant()) && __move1.getResult().equals(__move2.getResult()))
                 {
                     // these moves are exactly equal and can be optimized
@@ -185,7 +183,7 @@ public final class EdgeMoveOptimizer extends PostAllocationOptimizationPhase
             ArrayList<LIRInstruction> __instructions = this.___ir.getLIRforBlock(__block);
 
             LIRInstruction __branch = __instructions.get(__instructions.size() - 1);
-            if (!(__branch instanceof StandardOp.BranchOp) || __branch.hasOperands())
+            if (!(__branch instanceof StandardOp.StandardBranchOp) || __branch.hasOperands())
             {
                 // Only blocks that end with a conditional branch are optimized. In addition,
                 // a conditional branch with operands (including state) cannot be optimized.

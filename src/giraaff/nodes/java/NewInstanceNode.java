@@ -28,19 +28,19 @@ public final class NewInstanceNode extends AbstractNewObjectNode implements Virt
     // @field
     protected final ResolvedJavaType ___instanceClass;
 
-    // @cons
+    // @cons NewInstanceNode
     public NewInstanceNode(ResolvedJavaType __type, boolean __fillContents)
     {
         this(TYPE, __type, __fillContents, null);
     }
 
-    // @cons
+    // @cons NewInstanceNode
     public NewInstanceNode(ResolvedJavaType __type, boolean __fillContents, FrameState __stateBefore)
     {
         this(TYPE, __type, __fillContents, __stateBefore);
     }
 
-    // @cons
+    // @cons NewInstanceNode
     protected NewInstanceNode(NodeClass<? extends NewInstanceNode> __c, ResolvedJavaType __type, boolean __fillContents, FrameState __stateBefore)
     {
         super(__c, StampFactory.objectNonNull(TypeReference.createExactTrusted(__type)), __fillContents, __stateBefore);

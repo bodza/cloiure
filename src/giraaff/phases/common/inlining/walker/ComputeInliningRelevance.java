@@ -54,9 +54,9 @@ public final class ComputeInliningRelevance
     // root scope is used to compute invoke relevances on the fly.
     ///
     // @field
-    private Scope ___rootScope;
+    private ComputeInliningRelevance.Scope ___rootScope;
 
-    // @cons
+    // @cons ComputeInliningRelevance
     public ComputeInliningRelevance(StructuredGraph __graph, ToDoubleFunction<FixedNode> __nodeProbabilities)
     {
         super();
@@ -74,7 +74,7 @@ public final class ComputeInliningRelevance
         if (!this.___graph.hasLoops())
         {
             // fast path for the frequent case of no loops
-            this.___rootScope = new Scope(this.___graph.start(), null);
+            this.___rootScope = new ComputeInliningRelevance.Scope(this.___graph.start(), null);
         }
         else
         {
@@ -83,16 +83,16 @@ public final class ComputeInliningRelevance
                 this.___nodeRelevances = EconomicMap.create(Equivalence.IDENTITY, EXPECTED_MIN_INVOKE_COUNT + InliningUtil.getNodeCount(this.___graph) / EXPECTED_INVOKE_RATIO);
             }
             NodeWorkList __workList = this.___graph.createNodeWorkList();
-            EconomicMap<LoopBeginNode, Scope> __loops = EconomicMap.create(Equivalence.IDENTITY, EXPECTED_LOOP_COUNT);
+            EconomicMap<LoopBeginNode, ComputeInliningRelevance.Scope> __loops = EconomicMap.create(Equivalence.IDENTITY, EXPECTED_LOOP_COUNT);
 
-            Scope __topScope = new Scope(this.___graph.start(), null);
+            ComputeInliningRelevance.Scope __topScope = new ComputeInliningRelevance.Scope(this.___graph.start(), null);
             for (LoopBeginNode __loopBegin : this.___graph.getNodes(LoopBeginNode.TYPE))
             {
                 createLoopScope(__loopBegin, __loops, __topScope);
             }
 
             __topScope.process(__workList);
-            for (Scope __scope : __loops.getValues())
+            for (ComputeInliningRelevance.Scope __scope : __loops.getValues())
             {
                 __scope.process(__workList);
             }
@@ -109,15 +109,15 @@ public final class ComputeInliningRelevance
     }
 
     ///
-    // Determines the parent of the given loop and creates a {@link Scope} object for each one. This
-    // method will call itself recursively if no {@link Scope} for the parent loop exists.
+    // Determines the parent of the given loop and creates a {@link ComputeInliningRelevance.Scope} object for each one.
+    // This method will call itself recursively if no {@link ComputeInliningRelevance.Scope} for the parent loop exists.
     ///
-    private Scope createLoopScope(LoopBeginNode __loopBegin, EconomicMap<LoopBeginNode, Scope> __loops, Scope __topScope)
+    private ComputeInliningRelevance.Scope createLoopScope(LoopBeginNode __loopBegin, EconomicMap<LoopBeginNode, ComputeInliningRelevance.Scope> __loops, ComputeInliningRelevance.Scope __topScope)
     {
-        Scope __scope = __loops.get(__loopBegin);
+        ComputeInliningRelevance.Scope __scope = __loops.get(__loopBegin);
         if (__scope == null)
         {
-            final Scope __parent;
+            final ComputeInliningRelevance.Scope __parent;
             // look for the parent scope
             FixedNode __current = __loopBegin.forwardEnd();
             while (true)
@@ -153,7 +153,7 @@ public final class ComputeInliningRelevance
                     __current = (FixedNode) __current.predecessor();
                 }
             }
-            __scope = new Scope(__loopBegin, __parent);
+            __scope = new ComputeInliningRelevance.Scope(__loopBegin, __parent);
             __loops.put(__loopBegin, __scope);
         }
         return __scope;
@@ -171,7 +171,7 @@ public final class ComputeInliningRelevance
         // @field
         public final FixedNode ___start;
         // @field
-        public final Scope ___parent; // can be null for the outermost scope
+        public final ComputeInliningRelevance.Scope ___parent; // can be null for the outermost scope
 
         ///
         // The minimum probability along the most probable path in this scope. Computed lazily.
@@ -184,8 +184,8 @@ public final class ComputeInliningRelevance
         // @field
         private double ___scopeRelevanceWithinParent = ComputeInliningRelevance.UNINITIALIZED;
 
-        // @cons
-        Scope(FixedNode __start, Scope __parent)
+        // @cons ComputeInliningRelevance.Scope
+        Scope(FixedNode __start, ComputeInliningRelevance.Scope __parent)
         {
             super();
             this.___start = __start;

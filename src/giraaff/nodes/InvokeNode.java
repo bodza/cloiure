@@ -22,20 +22,20 @@ import giraaff.nodeinfo.InputType;
 ///
 // The {@code InvokeNode} represents all kinds of method calls.
 ///
-// @NodeInfo.allowedUsageTypes "Memory"
+// @NodeInfo.allowedUsageTypes "InputType.Memory"
 // @class InvokeNode
 public final class InvokeNode extends AbstractMemoryCheckpoint implements Invoke, LIRLowerable, MemoryCheckpoint.Single, UncheckedInterfaceProvider
 {
     // @def
     public static final NodeClass<InvokeNode> TYPE = NodeClass.create(InvokeNode.class);
 
-    @OptionalInput
+    @Node.OptionalInput
     // @field
     ValueNode ___classInit;
-    @Input(InputType.Extension)
+    @Node.Input(InputType.Extension)
     // @field
     CallTargetNode ___callTarget;
-    @OptionalInput(InputType.State)
+    @Node.OptionalInput(InputType.StateI)
     // @field
     FrameState ___stateDuring;
     // @field
@@ -45,13 +45,13 @@ public final class InvokeNode extends AbstractMemoryCheckpoint implements Invoke
     // @field
     protected boolean ___useForInlining;
 
-    // @cons
+    // @cons InvokeNode
     public InvokeNode(CallTargetNode __callTarget, int __bci)
     {
         this(__callTarget, __bci, __callTarget.returnStamp().getTrustedStamp());
     }
 
-    // @cons
+    // @cons InvokeNode
     public InvokeNode(CallTargetNode __callTarget, int __bci, Stamp __stamp)
     {
         super(TYPE, __stamp);
@@ -115,7 +115,7 @@ public final class InvokeNode extends AbstractMemoryCheckpoint implements Invoke
         {
             if (getStackKind() != JavaKind.Void)
             {
-                if (this.___callTarget instanceof MethodCallTargetNode && ((MethodCallTargetNode) this.___callTarget).targetMethod().getAnnotation(NodeIntrinsic.class) != null)
+                if (this.___callTarget instanceof MethodCallTargetNode && ((MethodCallTargetNode) this.___callTarget).targetMethod().getAnnotation(Node.NodeIntrinsic.class) != null)
                 {
                     return true;
                 }

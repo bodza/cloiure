@@ -25,7 +25,7 @@ public class LIRGenerationResult
     // @field
     private boolean ___hasForeignCall;
 
-    // @cons
+    // @cons LIRGenerationResult
     public LIRGenerationResult(LIR __lir, FrameMapBuilder __frameMapBuilder, CallingConvention __callingConvention)
     {
         super();

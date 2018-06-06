@@ -1,5 +1,6 @@
 package giraaff.hotspot.nodes;
 
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.nodeinfo.InputType;
 import giraaff.nodes.DeoptimizingNode;
@@ -13,7 +14,7 @@ public final class G1PreWriteBarrier extends ObjectWriteBarrier implements Deopt
     // @def
     public static final NodeClass<G1PreWriteBarrier> TYPE = NodeClass.create(G1PreWriteBarrier.class);
 
-    @OptionalInput(InputType.State)
+    @Node.OptionalInput(InputType.StateI)
     // @field
     FrameState ___stateBefore;
     // @field
@@ -21,7 +22,7 @@ public final class G1PreWriteBarrier extends ObjectWriteBarrier implements Deopt
     // @field
     protected final boolean ___doLoad;
 
-    // @cons
+    // @cons G1PreWriteBarrier
     public G1PreWriteBarrier(AddressNode __address, ValueNode __expectedObject, boolean __doLoad, boolean __nullCheck)
     {
         super(TYPE, __address, __expectedObject, true);

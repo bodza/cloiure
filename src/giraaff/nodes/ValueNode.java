@@ -29,7 +29,7 @@ public abstract class ValueNode extends giraaff.graph.Node implements ValueNodeI
     // @field
     protected Stamp ___stamp;
 
-    // @cons
+    // @cons ValueNode
     public ValueNode(NodeClass<? extends ValueNode> __c, Stamp __stamp)
     {
         super(__c);

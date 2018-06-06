@@ -1,5 +1,6 @@
 package giraaff.hotspot.nodes;
 
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.nodeinfo.InputType;
 import giraaff.nodes.ValueNode;
@@ -11,16 +12,16 @@ public abstract class ObjectWriteBarrier extends WriteBarrier
     // @def
     public static final NodeClass<ObjectWriteBarrier> TYPE = NodeClass.create(ObjectWriteBarrier.class);
 
-    @Input(InputType.Association)
+    @Node.Input(InputType.Association)
     // @field
     protected AddressNode ___address;
-    @OptionalInput
+    @Node.OptionalInput
     // @field
     protected ValueNode ___value;
     // @field
     protected final boolean ___precise;
 
-    // @cons
+    // @cons ObjectWriteBarrier
     protected ObjectWriteBarrier(NodeClass<? extends ObjectWriteBarrier> __c, AddressNode __address, ValueNode __value, boolean __precise)
     {
         super(__c);

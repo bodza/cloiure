@@ -6,6 +6,7 @@ import giraaff.graph.NodeClass;
 import giraaff.lir.gen.LIRGeneratorTool;
 import giraaff.nodes.NodeView;
 import giraaff.nodes.ValueNode;
+import giraaff.nodes.memory.HeapAccess;
 import giraaff.nodes.memory.address.AddressNode;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
@@ -19,14 +20,14 @@ public final class ValueCompareAndSwapNode extends AbstractCompareAndSwapNode
     // @def
     public static final NodeClass<ValueCompareAndSwapNode> TYPE = NodeClass.create(ValueCompareAndSwapNode.class);
 
-    // @cons
+    // @cons ValueCompareAndSwapNode
     public ValueCompareAndSwapNode(ValueNode __address, ValueNode __expectedValue, ValueNode __newValue, LocationIdentity __location)
     {
-        this((AddressNode) __address, __expectedValue, __newValue, __location, BarrierType.NONE);
+        this((AddressNode) __address, __expectedValue, __newValue, __location, HeapAccess.BarrierType.NONE);
     }
 
-    // @cons
-    public ValueCompareAndSwapNode(AddressNode __address, ValueNode __expectedValue, ValueNode __newValue, LocationIdentity __location, BarrierType __barrierType)
+    // @cons ValueCompareAndSwapNode
+    public ValueCompareAndSwapNode(AddressNode __address, ValueNode __expectedValue, ValueNode __newValue, LocationIdentity __location, HeapAccess.BarrierType __barrierType)
     {
         super(TYPE, __address, __location, __expectedValue, __newValue, __barrierType, __expectedValue.stamp(NodeView.DEFAULT).meet(__newValue.stamp(NodeView.DEFAULT)).unrestricted());
     }

@@ -1,7 +1,7 @@
 package giraaff.lir.phases;
 
 import giraaff.core.common.alloc.RegisterAllocationConfig;
-import giraaff.lir.gen.LIRGeneratorTool.MoveFactory;
+import giraaff.lir.gen.LIRGeneratorTool;
 
 // @class AllocationPhase
 public abstract class AllocationPhase extends LIRPhase<AllocationPhase.AllocationContext>
@@ -10,12 +10,12 @@ public abstract class AllocationPhase extends LIRPhase<AllocationPhase.Allocatio
     public static final class AllocationContext extends GenericContext
     {
         // @field
-        public final MoveFactory ___spillMoveFactory;
+        public final LIRGeneratorTool.MoveFactory ___spillMoveFactory;
         // @field
         public final RegisterAllocationConfig ___registerAllocationConfig;
 
-        // @cons
-        public AllocationContext(MoveFactory __spillMoveFactory, RegisterAllocationConfig __registerAllocationConfig)
+        // @cons AllocationPhase.AllocationContext
+        public AllocationContext(LIRGeneratorTool.MoveFactory __spillMoveFactory, RegisterAllocationConfig __registerAllocationConfig)
         {
             super();
             this.___spillMoveFactory = __spillMoveFactory;

@@ -31,7 +31,7 @@ final class AMD64HotSpotRegisterAllocationConfig extends RegisterAllocationConfi
         AMD64.xmm8, AMD64.xmm9, AMD64.xmm10, AMD64.xmm11, AMD64.xmm12, AMD64.xmm13, AMD64.xmm14, AMD64.xmm15
     };
 
-    // @cons
+    // @cons AMD64HotSpotRegisterAllocationConfig
     AMD64HotSpotRegisterAllocationConfig(RegisterConfig __registerConfig)
     {
         super(__registerConfig);

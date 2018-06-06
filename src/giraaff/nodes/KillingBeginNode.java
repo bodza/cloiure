@@ -5,7 +5,7 @@ import org.graalvm.word.LocationIdentity;
 import giraaff.graph.NodeClass;
 import giraaff.nodes.memory.MemoryCheckpoint;
 
-// @NodeInfo.allowedUsageTypes "Memory"
+// @NodeInfo.allowedUsageTypes "InputType.Memory"
 // @class KillingBeginNode
 public final class KillingBeginNode extends AbstractBeginNode implements MemoryCheckpoint.Single
 {
@@ -15,7 +15,7 @@ public final class KillingBeginNode extends AbstractBeginNode implements MemoryC
     // @field
     protected LocationIdentity ___locationIdentity;
 
-    // @cons
+    // @cons KillingBeginNode
     public KillingBeginNode(LocationIdentity __locationIdentity)
     {
         super(TYPE);

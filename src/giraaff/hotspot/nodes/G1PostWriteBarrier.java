@@ -13,13 +13,13 @@ public final class G1PostWriteBarrier extends ObjectWriteBarrier
     // @field
     protected final boolean ___alwaysNull;
 
-    // @cons
+    // @cons G1PostWriteBarrier
     public G1PostWriteBarrier(AddressNode __address, ValueNode __value, boolean __precise, boolean __alwaysNull)
     {
         this(TYPE, __address, __value, __precise, __alwaysNull);
     }
 
-    // @cons
+    // @cons G1PostWriteBarrier
     protected G1PostWriteBarrier(NodeClass<? extends G1PostWriteBarrier> __c, AddressNode __address, ValueNode __value, boolean __precise, boolean __alwaysNull)
     {
         super(__c, __address, __value, __precise);

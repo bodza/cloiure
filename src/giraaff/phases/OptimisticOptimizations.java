@@ -12,9 +12,9 @@ import giraaff.core.common.GraalOptions;
 public final class OptimisticOptimizations
 {
     // @def
-    public static final OptimisticOptimizations ALL = new OptimisticOptimizations(EnumSet.allOf(Optimization.class));
+    public static final OptimisticOptimizations ALL = new OptimisticOptimizations(EnumSet.allOf(OptimisticOptimizations.Optimization.class));
     // @def
-    public static final OptimisticOptimizations NONE = new OptimisticOptimizations(EnumSet.noneOf(Optimization.class));
+    public static final OptimisticOptimizations NONE = new OptimisticOptimizations(EnumSet.noneOf(OptimisticOptimizations.Optimization.class));
 
     // @enum OptimisticOptimizations.Optimization
     public enum Optimization
@@ -28,23 +28,23 @@ public final class OptimisticOptimizations
     }
 
     // @field
-    private final Set<Optimization> ___enabledOpts;
+    private final Set<OptimisticOptimizations.Optimization> ___enabledOpts;
 
-    // @cons
+    // @cons OptimisticOptimizations
     public OptimisticOptimizations(ProfilingInfo __info)
     {
         super();
-        this.___enabledOpts = EnumSet.noneOf(Optimization.class);
+        this.___enabledOpts = EnumSet.noneOf(OptimisticOptimizations.Optimization.class);
 
-        this.___enabledOpts.add(Optimization.UseExceptionProbabilityForOperations);
-        addOptimization(__info, DeoptimizationReason.UnreachedCode, Optimization.RemoveNeverExecutedCode);
-        addOptimization(__info, DeoptimizationReason.TypeCheckedInliningViolated, Optimization.UseTypeCheckedInlining);
-        addOptimization(__info, DeoptimizationReason.OptimizedTypeCheckViolated, Optimization.UseTypeCheckHints);
-        addOptimization(__info, DeoptimizationReason.NotCompiledExceptionHandler, Optimization.UseExceptionProbability);
-        addOptimization(__info, DeoptimizationReason.LoopLimitCheck, Optimization.UseLoopLimitChecks);
+        this.___enabledOpts.add(OptimisticOptimizations.Optimization.UseExceptionProbabilityForOperations);
+        addOptimization(__info, DeoptimizationReason.UnreachedCode, OptimisticOptimizations.Optimization.RemoveNeverExecutedCode);
+        addOptimization(__info, DeoptimizationReason.TypeCheckedInliningViolated, OptimisticOptimizations.Optimization.UseTypeCheckedInlining);
+        addOptimization(__info, DeoptimizationReason.OptimizedTypeCheckViolated, OptimisticOptimizations.Optimization.UseTypeCheckHints);
+        addOptimization(__info, DeoptimizationReason.NotCompiledExceptionHandler, OptimisticOptimizations.Optimization.UseExceptionProbability);
+        addOptimization(__info, DeoptimizationReason.LoopLimitCheck, OptimisticOptimizations.Optimization.UseLoopLimitChecks);
     }
 
-    private void addOptimization(ProfilingInfo __info, DeoptimizationReason __deoptReason, Optimization __optimization)
+    private void addOptimization(ProfilingInfo __info, DeoptimizationReason __deoptReason, OptimisticOptimizations.Optimization __optimization)
     {
         if (checkDeoptimizations(__info, __deoptReason))
         {
@@ -52,28 +52,28 @@ public final class OptimisticOptimizations
         }
     }
 
-    public OptimisticOptimizations remove(Optimization... __optimizations)
+    public OptimisticOptimizations remove(OptimisticOptimizations.Optimization... __optimizations)
     {
-        Set<Optimization> __newOptimizations = EnumSet.copyOf(this.___enabledOpts);
-        for (Optimization __o : __optimizations)
+        Set<OptimisticOptimizations.Optimization> __newOptimizations = EnumSet.copyOf(this.___enabledOpts);
+        for (OptimisticOptimizations.Optimization __o : __optimizations)
         {
             __newOptimizations.remove(__o);
         }
         return new OptimisticOptimizations(__newOptimizations);
     }
 
-    public OptimisticOptimizations add(Optimization... __optimizations)
+    public OptimisticOptimizations add(OptimisticOptimizations.Optimization... __optimizations)
     {
-        Set<Optimization> __newOptimizations = EnumSet.copyOf(this.___enabledOpts);
-        for (Optimization __o : __optimizations)
+        Set<OptimisticOptimizations.Optimization> __newOptimizations = EnumSet.copyOf(this.___enabledOpts);
+        for (OptimisticOptimizations.Optimization __o : __optimizations)
         {
             __newOptimizations.add(__o);
         }
         return new OptimisticOptimizations(__newOptimizations);
     }
 
-    // @cons
-    private OptimisticOptimizations(Set<Optimization> __enabledOpts)
+    // @cons OptimisticOptimizations
+    private OptimisticOptimizations(Set<OptimisticOptimizations.Optimization> __enabledOpts)
     {
         super();
         this.___enabledOpts = __enabledOpts;
@@ -81,52 +81,52 @@ public final class OptimisticOptimizations
 
     public boolean removeNeverExecutedCode()
     {
-        return GraalOptions.removeNeverExecutedCode && this.___enabledOpts.contains(Optimization.RemoveNeverExecutedCode);
+        return GraalOptions.removeNeverExecutedCode && this.___enabledOpts.contains(OptimisticOptimizations.Optimization.RemoveNeverExecutedCode);
     }
 
     public boolean useTypeCheckHints()
     {
-        return GraalOptions.useTypeCheckHints && this.___enabledOpts.contains(Optimization.UseTypeCheckHints);
+        return GraalOptions.useTypeCheckHints && this.___enabledOpts.contains(OptimisticOptimizations.Optimization.UseTypeCheckHints);
     }
 
     public boolean inlineMonomorphicCalls()
     {
-        return GraalOptions.inlineMonomorphicCalls && this.___enabledOpts.contains(Optimization.UseTypeCheckedInlining);
+        return GraalOptions.inlineMonomorphicCalls && this.___enabledOpts.contains(OptimisticOptimizations.Optimization.UseTypeCheckedInlining);
     }
 
     public boolean inlinePolymorphicCalls()
     {
-        return GraalOptions.inlinePolymorphicCalls && this.___enabledOpts.contains(Optimization.UseTypeCheckedInlining);
+        return GraalOptions.inlinePolymorphicCalls && this.___enabledOpts.contains(OptimisticOptimizations.Optimization.UseTypeCheckedInlining);
     }
 
     public boolean inlineMegamorphicCalls()
     {
-        return GraalOptions.inlineMegamorphicCalls && this.___enabledOpts.contains(Optimization.UseTypeCheckedInlining);
+        return GraalOptions.inlineMegamorphicCalls && this.___enabledOpts.contains(OptimisticOptimizations.Optimization.UseTypeCheckedInlining);
     }
 
     public boolean devirtualizeInvokes()
     {
-        return GraalOptions.optDevirtualizeInvokesOptimistically && this.___enabledOpts.contains(Optimization.UseTypeCheckedInlining);
+        return GraalOptions.optDevirtualizeInvokesOptimistically && this.___enabledOpts.contains(OptimisticOptimizations.Optimization.UseTypeCheckedInlining);
     }
 
     public boolean useExceptionProbability()
     {
-        return GraalOptions.useExceptionProbability && this.___enabledOpts.contains(Optimization.UseExceptionProbability);
+        return GraalOptions.useExceptionProbability && this.___enabledOpts.contains(OptimisticOptimizations.Optimization.UseExceptionProbability);
     }
 
     public boolean useExceptionProbabilityForOperations()
     {
-        return this.___enabledOpts.contains(Optimization.UseExceptionProbabilityForOperations);
+        return this.___enabledOpts.contains(OptimisticOptimizations.Optimization.UseExceptionProbabilityForOperations);
     }
 
     public boolean useLoopLimitChecks()
     {
-        return GraalOptions.useLoopLimitChecks && this.___enabledOpts.contains(Optimization.UseLoopLimitChecks);
+        return GraalOptions.useLoopLimitChecks && this.___enabledOpts.contains(OptimisticOptimizations.Optimization.UseLoopLimitChecks);
     }
 
     public boolean lessOptimisticThan(OptimisticOptimizations __other)
     {
-        for (Optimization __opt : Optimization.values())
+        for (OptimisticOptimizations.Optimization __opt : OptimisticOptimizations.Optimization.values())
         {
             if (!this.___enabledOpts.contains(__opt) && __other.___enabledOpts.contains(__opt))
             {

@@ -12,7 +12,7 @@ import giraaff.nodes.ParameterNode;
 import giraaff.nodes.ValueNode;
 
 ///
-// Implements the semantics of {@link VarargsParameter}.
+// Implements the semantics of {@link Snippet.VarargsParameter}.
 ///
 // @class LoadSnippetVarargParameterNode
 public final class LoadSnippetVarargParameterNode extends FixedWithNextNode implements Canonicalizable
@@ -20,15 +20,15 @@ public final class LoadSnippetVarargParameterNode extends FixedWithNextNode impl
     // @def
     public static final NodeClass<LoadSnippetVarargParameterNode> TYPE = NodeClass.create(LoadSnippetVarargParameterNode.class);
 
-    @Input
+    @Node.Input
     // @field
     ValueNode ___index;
 
-    @Input
+    @Node.Input
     // @field
     NodeInputList<ParameterNode> ___parameters;
 
-    // @cons
+    // @cons LoadSnippetVarargParameterNode
     public LoadSnippetVarargParameterNode(ParameterNode[] __locals, ValueNode __index, Stamp __stamp)
     {
         super(TYPE, __stamp);

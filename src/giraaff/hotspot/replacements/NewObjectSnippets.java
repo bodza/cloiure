@@ -19,8 +19,7 @@ import giraaff.api.replacements.Snippet.VarargsParameter;
 import giraaff.core.common.calc.UnsignedMath;
 import giraaff.core.common.spi.ForeignCallDescriptor;
 import giraaff.core.common.type.StampFactory;
-import giraaff.graph.Node.ConstantNodeParameter;
-import giraaff.graph.Node.NodeIntrinsic;
+import giraaff.graph.Node;
 import giraaff.hotspot.HotSpotBackend;
 import giraaff.hotspot.HotSpotRuntime;
 import giraaff.hotspot.meta.HotSpotProviders;
@@ -48,9 +47,6 @@ import giraaff.nodes.java.NewMultiArrayNode;
 import giraaff.nodes.memory.address.OffsetAddressNode;
 import giraaff.nodes.spi.LoweringTool;
 import giraaff.replacements.SnippetTemplate;
-import giraaff.replacements.SnippetTemplate.AbstractTemplates;
-import giraaff.replacements.SnippetTemplate.Arguments;
-import giraaff.replacements.SnippetTemplate.SnippetInfo;
 import giraaff.replacements.Snippets;
 import giraaff.replacements.nodes.ExplodeLoopNode;
 import giraaff.word.Word;
@@ -61,7 +57,7 @@ import giraaff.word.Word;
 // @class NewObjectSnippets
 public final class NewObjectSnippets implements Snippets
 {
-    // @cons
+    // @cons NewObjectSnippets
     private NewObjectSnippets()
     {
         super();
@@ -96,7 +92,7 @@ public final class NewObjectSnippets implements Snippets
     }
 
     @Snippet
-    public static Object allocateInstance(@ConstantParameter int __size, KlassPointer __hub, Word __prototypeMarkWord, @ConstantParameter boolean __fillContents, @ConstantParameter Register __threadRegister, @ConstantParameter boolean __constantSize, @ConstantParameter String __typeContext)
+    public static Object allocateInstance(@Snippet.ConstantParameter int __size, KlassPointer __hub, Word __prototypeMarkWord, @Snippet.ConstantParameter boolean __fillContents, @Snippet.ConstantParameter Register __threadRegister, @Snippet.ConstantParameter boolean __constantSize, @Snippet.ConstantParameter String __typeContext)
     {
         return PiNode.piCastToSnippetReplaceeStamp(allocateInstanceHelper(__size, __hub, __prototypeMarkWord, __fillContents, __threadRegister, __constantSize, __typeContext));
     }
@@ -119,11 +115,11 @@ public final class NewObjectSnippets implements Snippets
         }
     }
 
-    @NodeIntrinsic(value = ForeignCallNode.class, injectedStampIsNonNull = true)
-    public static native Object newInstance(@ConstantNodeParameter ForeignCallDescriptor __descriptor, KlassPointer __hub);
+    @Node.NodeIntrinsic(value = ForeignCallNode.class, injectedStampIsNonNull = true)
+    public static native Object newInstance(@Node.ConstantNodeParameter ForeignCallDescriptor __descriptor, KlassPointer __hub);
 
     @Snippet
-    public static Object allocateInstanceDynamic(Class<?> __type, Class<?> __classClass, @ConstantParameter boolean __fillContents, @ConstantParameter Register __threadRegister)
+    public static Object allocateInstanceDynamic(Class<?> __type, Class<?> __classClass, @Snippet.ConstantParameter boolean __fillContents, @Snippet.ConstantParameter Register __threadRegister)
     {
         if (BranchProbabilityNode.probability(BranchProbabilityNode.SLOW_PATH_PROBABILITY, __type == null))
         {
@@ -172,7 +168,7 @@ public final class NewObjectSnippets implements Snippets
     public static final int MAX_ARRAY_FAST_PATH_ALLOCATION_LENGTH = 0x00FFFFFF;
 
     @Snippet
-    public static Object allocateArray(KlassPointer __hub, int __length, Word __prototypeMarkWord, @ConstantParameter int __headerSize, @ConstantParameter int __log2ElementSize, @ConstantParameter boolean __fillContents, @ConstantParameter Register __threadRegister, @ConstantParameter boolean __maybeUnroll, @ConstantParameter String __typeContext)
+    public static Object allocateArray(KlassPointer __hub, int __length, Word __prototypeMarkWord, @Snippet.ConstantParameter int __headerSize, @Snippet.ConstantParameter int __log2ElementSize, @Snippet.ConstantParameter boolean __fillContents, @Snippet.ConstantParameter Register __threadRegister, @Snippet.ConstantParameter boolean __maybeUnroll, @Snippet.ConstantParameter String __typeContext)
     {
         Object __result = allocateArrayImpl(__hub, __length, __prototypeMarkWord, __headerSize, __log2ElementSize, __fillContents, __threadRegister, __maybeUnroll, __typeContext, false);
         return PiArrayNode.piArrayCastToSnippetReplaceeStamp(__result, __length);
@@ -197,27 +193,27 @@ public final class NewObjectSnippets implements Snippets
         }
     }
 
-    @NodeIntrinsic(value = ForeignCallNode.class, injectedStampIsNonNull = true)
-    public static native Object newArray(@ConstantNodeParameter ForeignCallDescriptor __descriptor, KlassPointer __hub, int __length, boolean __fillContents);
+    @Node.NodeIntrinsic(value = ForeignCallNode.class, injectedStampIsNonNull = true)
+    public static native Object newArray(@Node.ConstantNodeParameter ForeignCallDescriptor __descriptor, KlassPointer __hub, int __length, boolean __fillContents);
 
     // @def
     public static final ForeignCallDescriptor DYNAMIC_NEW_ARRAY = new ForeignCallDescriptor("dynamic_new_array", Object.class, Class.class, int.class);
     // @def
     public static final ForeignCallDescriptor DYNAMIC_NEW_INSTANCE = new ForeignCallDescriptor("dynamic_new_instance", Object.class, Class.class);
 
-    @NodeIntrinsic(value = ForeignCallNode.class, injectedStampIsNonNull = true)
-    public static native Object dynamicNewArrayStub(@ConstantNodeParameter ForeignCallDescriptor __descriptor, Class<?> __elementType, int __length);
+    @Node.NodeIntrinsic(value = ForeignCallNode.class, injectedStampIsNonNull = true)
+    public static native Object dynamicNewArrayStub(@Node.ConstantNodeParameter ForeignCallDescriptor __descriptor, Class<?> __elementType, int __length);
 
     public static Object dynamicNewInstanceStub(Class<?> __elementType)
     {
         return dynamicNewInstanceStubCall(DYNAMIC_NEW_INSTANCE, __elementType);
     }
 
-    @NodeIntrinsic(value = ForeignCallNode.class, injectedStampIsNonNull = true)
-    public static native Object dynamicNewInstanceStubCall(@ConstantNodeParameter ForeignCallDescriptor __descriptor, Class<?> __elementType);
+    @Node.NodeIntrinsic(value = ForeignCallNode.class, injectedStampIsNonNull = true)
+    public static native Object dynamicNewInstanceStubCall(@Node.ConstantNodeParameter ForeignCallDescriptor __descriptor, Class<?> __elementType);
 
     @Snippet
-    public static Object allocateArrayDynamic(Class<?> __elementType, Class<?> __voidClass, int __length, @ConstantParameter boolean __fillContents, @ConstantParameter Register __threadRegister, @ConstantParameter JavaKind __knownElementKind, @ConstantParameter int __knownLayoutHelper, Word __prototypeMarkWord)
+    public static Object allocateArrayDynamic(Class<?> __elementType, Class<?> __voidClass, int __length, @Snippet.ConstantParameter boolean __fillContents, @Snippet.ConstantParameter Register __threadRegister, @Snippet.ConstantParameter JavaKind __knownElementKind, @Snippet.ConstantParameter int __knownLayoutHelper, Word __prototypeMarkWord)
     {
         return allocateArrayDynamicImpl(__elementType, __voidClass, __length, __fillContents, __threadRegister, __knownElementKind, __knownLayoutHelper, __prototypeMarkWord);
     }
@@ -271,7 +267,7 @@ public final class NewObjectSnippets implements Snippets
     // Calls the runtime stub for implementing MULTIANEWARRAY.
     ///
     @Snippet
-    public static Object newmultiarray(KlassPointer __hub, @ConstantParameter int __rank, @VarargsParameter int[] __dimensions)
+    public static Object newmultiarray(KlassPointer __hub, @Snippet.ConstantParameter int __rank, @Snippet.VarargsParameter int[] __dimensions)
     {
         Word __dims = DimensionsNode.allocaDimsArray(__rank);
         ExplodeLoopNode.explodeLoop();
@@ -282,8 +278,8 @@ public final class NewObjectSnippets implements Snippets
         return newArrayCall(HotSpotBackend.NEW_MULTI_ARRAY, __hub, __rank, __dims);
     }
 
-    @NodeIntrinsic(value = ForeignCallNode.class, injectedStampIsNonNull = true)
-    public static native Object newArrayCall(@ConstantNodeParameter ForeignCallDescriptor __descriptor, KlassPointer __hub, int __rank, Word __dims);
+    @Node.NodeIntrinsic(value = ForeignCallNode.class, injectedStampIsNonNull = true)
+    public static native Object newArrayCall(@Node.ConstantNodeParameter ForeignCallDescriptor __descriptor, KlassPointer __hub, int __rank, Word __dims);
 
     ///
     // Maximum number of long stores to emit when zeroing an object with a constant size.
@@ -385,22 +381,22 @@ public final class NewObjectSnippets implements Snippets
         return __memory.toObjectNonNull();
     }
 
-    // @class NewObjectSnippets.Templates
-    public static final class Templates extends AbstractTemplates
+    // @class NewObjectSnippets.NewObjectTemplates
+    public static final class NewObjectTemplates extends SnippetTemplate.AbstractTemplates
     {
         // @field
-        private final SnippetInfo ___allocateInstance = snippet(NewObjectSnippets.class, "allocateInstance", HotSpotReplacementsUtil.MARK_WORD_LOCATION, HotSpotReplacementsUtil.HUB_WRITE_LOCATION, HotSpotReplacementsUtil.TLAB_TOP_LOCATION, HotSpotReplacementsUtil.TLAB_END_LOCATION);
+        private final SnippetTemplate.SnippetInfo ___allocateInstance = snippet(NewObjectSnippets.class, "allocateInstance", HotSpotReplacementsUtil.MARK_WORD_LOCATION, HotSpotReplacementsUtil.HUB_WRITE_LOCATION, HotSpotReplacementsUtil.TLAB_TOP_LOCATION, HotSpotReplacementsUtil.TLAB_END_LOCATION);
         // @field
-        private final SnippetInfo ___allocateArray = snippet(NewObjectSnippets.class, "allocateArray", HotSpotReplacementsUtil.MARK_WORD_LOCATION, HotSpotReplacementsUtil.HUB_WRITE_LOCATION, HotSpotReplacementsUtil.TLAB_TOP_LOCATION, HotSpotReplacementsUtil.TLAB_END_LOCATION);
+        private final SnippetTemplate.SnippetInfo ___allocateArray = snippet(NewObjectSnippets.class, "allocateArray", HotSpotReplacementsUtil.MARK_WORD_LOCATION, HotSpotReplacementsUtil.HUB_WRITE_LOCATION, HotSpotReplacementsUtil.TLAB_TOP_LOCATION, HotSpotReplacementsUtil.TLAB_END_LOCATION);
         // @field
-        private final SnippetInfo ___allocateArrayDynamic = snippet(NewObjectSnippets.class, "allocateArrayDynamic", HotSpotReplacementsUtil.MARK_WORD_LOCATION, HotSpotReplacementsUtil.HUB_WRITE_LOCATION, HotSpotReplacementsUtil.TLAB_TOP_LOCATION, HotSpotReplacementsUtil.TLAB_END_LOCATION);
+        private final SnippetTemplate.SnippetInfo ___allocateArrayDynamic = snippet(NewObjectSnippets.class, "allocateArrayDynamic", HotSpotReplacementsUtil.MARK_WORD_LOCATION, HotSpotReplacementsUtil.HUB_WRITE_LOCATION, HotSpotReplacementsUtil.TLAB_TOP_LOCATION, HotSpotReplacementsUtil.TLAB_END_LOCATION);
         // @field
-        private final SnippetInfo ___allocateInstanceDynamic = snippet(NewObjectSnippets.class, "allocateInstanceDynamic", HotSpotReplacementsUtil.MARK_WORD_LOCATION, HotSpotReplacementsUtil.HUB_WRITE_LOCATION, HotSpotReplacementsUtil.TLAB_TOP_LOCATION, HotSpotReplacementsUtil.TLAB_END_LOCATION);
+        private final SnippetTemplate.SnippetInfo ___allocateInstanceDynamic = snippet(NewObjectSnippets.class, "allocateInstanceDynamic", HotSpotReplacementsUtil.MARK_WORD_LOCATION, HotSpotReplacementsUtil.HUB_WRITE_LOCATION, HotSpotReplacementsUtil.TLAB_TOP_LOCATION, HotSpotReplacementsUtil.TLAB_END_LOCATION);
         // @field
-        private final SnippetInfo ___newmultiarray = snippet(NewObjectSnippets.class, "newmultiarray", HotSpotReplacementsUtil.TLAB_TOP_LOCATION, HotSpotReplacementsUtil.TLAB_END_LOCATION);
+        private final SnippetTemplate.SnippetInfo ___newmultiarray = snippet(NewObjectSnippets.class, "newmultiarray", HotSpotReplacementsUtil.TLAB_TOP_LOCATION, HotSpotReplacementsUtil.TLAB_END_LOCATION);
 
-        // @cons
-        public Templates(HotSpotProviders __providers, TargetDescription __target)
+        // @cons NewObjectSnippets.NewObjectTemplates
+        public NewObjectTemplates(HotSpotProviders __providers, TargetDescription __target)
         {
             super(__providers, __providers.getSnippetReflection(), __target);
         }
@@ -415,8 +411,8 @@ public final class NewObjectSnippets implements Snippets
             ConstantNode __hub = ConstantNode.forConstant(KlassPointerStamp.klassNonNull(), __type.klass(), this.___providers.getMetaAccess(), __graph);
             int __size = instanceSize(__type);
 
-            SnippetInfo __snippet = this.___allocateInstance;
-            Arguments __args = new Arguments(__snippet, __graph.getGuardsStage(), __tool.getLoweringStage());
+            SnippetTemplate.SnippetInfo __snippet = this.___allocateInstance;
+            SnippetTemplate.Arguments __args = new SnippetTemplate.Arguments(__snippet, __graph.getGuardsStage(), __tool.getLoweringStage());
             __args.addConst("size", __size);
             __args.add("hub", __hub);
             __args.add("prototypeMarkWord", __type.prototypeMarkWord());
@@ -442,9 +438,9 @@ public final class NewObjectSnippets implements Snippets
             final int __headerSize = HotSpotRuntime.getArrayBaseOffset(__elementKind);
             int __log2ElementSize = CodeUtil.log2(HotSpotRuntime.getArrayIndexScale(__elementKind));
 
-            SnippetInfo __snippet = this.___allocateArray;
+            SnippetTemplate.SnippetInfo __snippet = this.___allocateArray;
 
-            Arguments __args = new Arguments(__snippet, __graph.getGuardsStage(), __tool.getLoweringStage());
+            SnippetTemplate.Arguments __args = new SnippetTemplate.Arguments(__snippet, __graph.getGuardsStage(), __tool.getLoweringStage());
             __args.add("hub", __hub);
             ValueNode __length = __newArrayNode.length();
             __args.add("length", __length.isAlive() ? __length : __graph.addOrUniqueWithInputs(__length));
@@ -462,7 +458,7 @@ public final class NewObjectSnippets implements Snippets
 
         public void lower(DynamicNewInstanceNode __newInstanceNode, HotSpotRegistersProvider __registers, LoweringTool __tool)
         {
-            Arguments __args = new Arguments(this.___allocateInstanceDynamic, __newInstanceNode.graph().getGuardsStage(), __tool.getLoweringStage());
+            SnippetTemplate.Arguments __args = new SnippetTemplate.Arguments(this.___allocateInstanceDynamic, __newInstanceNode.graph().getGuardsStage(), __tool.getLoweringStage());
             __args.add("type", __newInstanceNode.getInstanceType());
             ValueNode __classClass = __newInstanceNode.getClassClass();
             __args.add("classClass", __classClass);
@@ -476,7 +472,7 @@ public final class NewObjectSnippets implements Snippets
         public void lower(DynamicNewArrayNode __newArrayNode, HotSpotRegistersProvider __registers, LoweringTool __tool)
         {
             StructuredGraph __graph = __newArrayNode.graph();
-            Arguments __args = new Arguments(this.___allocateArrayDynamic, __newArrayNode.graph().getGuardsStage(), __tool.getLoweringStage());
+            SnippetTemplate.Arguments __args = new SnippetTemplate.Arguments(this.___allocateArrayDynamic, __newArrayNode.graph().getGuardsStage(), __tool.getLoweringStage());
             __args.add("elementType", __newArrayNode.getElementType());
             ValueNode __voidClass = __newArrayNode.getVoidClass();
             __args.add("voidClass", __voidClass);
@@ -517,8 +513,8 @@ public final class NewObjectSnippets implements Snippets
             HotSpotResolvedObjectType __type = (HotSpotResolvedObjectType) __newmultiarrayNode.type();
             ConstantNode __hub = ConstantNode.forConstant(KlassPointerStamp.klassNonNull(), __type.klass(), this.___providers.getMetaAccess(), __graph);
 
-            SnippetInfo __snippet = this.___newmultiarray;
-            Arguments __args = new Arguments(__snippet, __graph.getGuardsStage(), __tool.getLoweringStage());
+            SnippetTemplate.SnippetInfo __snippet = this.___newmultiarray;
+            SnippetTemplate.Arguments __args = new SnippetTemplate.Arguments(__snippet, __graph.getGuardsStage(), __tool.getLoweringStage());
             __args.add("hub", __hub);
             __args.addConst("rank", __rank);
             __args.addVarargs("dimensions", int.class, StampFactory.forKind(JavaKind.Int), __dims);

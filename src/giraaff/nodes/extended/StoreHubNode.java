@@ -1,6 +1,7 @@
 package giraaff.nodes.extended;
 
 import giraaff.core.common.type.StampFactory;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.nodes.FixedWithNextNode;
 import giraaff.nodes.ValueNode;
@@ -13,10 +14,10 @@ public final class StoreHubNode extends FixedWithNextNode implements Lowerable
     // @def
     public static final NodeClass<StoreHubNode> TYPE = NodeClass.create(StoreHubNode.class);
 
-    @Input
+    @Node.Input
     // @field
     ValueNode ___value;
-    @Input
+    @Node.Input
     // @field
     ValueNode ___object;
 
@@ -30,7 +31,7 @@ public final class StoreHubNode extends FixedWithNextNode implements Lowerable
         return this.___object;
     }
 
-    // @cons
+    // @cons StoreHubNode
     public StoreHubNode(ValueNode __object, ValueNode __value)
     {
         super(TYPE, StampFactory.forVoid());
@@ -44,6 +45,6 @@ public final class StoreHubNode extends FixedWithNextNode implements Lowerable
         __tool.getLowerer().lower(this, __tool);
     }
 
-    @NodeIntrinsic
+    @Node.NodeIntrinsic
     public static native void write(Object __object, Object __value);
 }

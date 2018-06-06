@@ -11,6 +11,7 @@ import giraaff.core.common.type.IntegerStamp;
 import giraaff.core.common.type.Stamp;
 import giraaff.core.common.type.StampFactory;
 import giraaff.core.common.type.TypeReference;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.graph.spi.Simplifiable;
 import giraaff.graph.spi.SimplifierTool;
@@ -40,27 +41,27 @@ public final class NewArrayNode extends AbstractNewArrayNode implements Virtuali
     // @field
     private final ResolvedJavaType ___elementType;
 
-    // @cons
+    // @cons NewArrayNode
     public NewArrayNode(ResolvedJavaType __elementType, ValueNode __length, boolean __fillContents)
     {
         this(__elementType, __length, __fillContents, null);
     }
 
-    // @cons
+    // @cons NewArrayNode
     public NewArrayNode(ResolvedJavaType __elementType, ValueNode __length, boolean __fillContents, FrameState __stateBefore)
     {
         this(TYPE, __elementType, __length, __fillContents, __stateBefore);
     }
 
-    // @cons
+    // @cons NewArrayNode
     protected NewArrayNode(NodeClass<? extends NewArrayNode> __c, ResolvedJavaType __elementType, ValueNode __length, boolean __fillContents, FrameState __stateBefore)
     {
         super(__c, StampFactory.objectNonNull(TypeReference.createExactTrusted(__elementType.getArrayClass())), __length, __fillContents, __stateBefore);
         this.___elementType = __elementType;
     }
 
-    @NodeIntrinsic
-    private static native Object newArray(@ConstantNodeParameter Class<?> __elementType, int __length, @ConstantNodeParameter boolean __fillContents);
+    @Node.NodeIntrinsic
+    private static native Object newArray(@Node.ConstantNodeParameter Class<?> __elementType, int __length, @Node.ConstantNodeParameter boolean __fillContents);
 
     public static Object newUninitializedArray(Class<?> __elementType, int __length)
     {

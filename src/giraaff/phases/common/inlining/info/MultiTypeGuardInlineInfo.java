@@ -19,7 +19,7 @@ import giraaff.graph.Node;
 import giraaff.nodes.AbstractBeginNode;
 import giraaff.nodes.AbstractMergeNode;
 import giraaff.nodes.BeginNode;
-import giraaff.nodes.CallTargetNode.InvokeKind;
+import giraaff.nodes.CallTargetNode;
 import giraaff.nodes.DeoptimizeNode;
 import giraaff.nodes.EndNode;
 import giraaff.nodes.FixedNode;
@@ -67,7 +67,7 @@ public final class MultiTypeGuardInlineInfo extends AbstractInlineInfo
     // @field
     private final Inlineable[] ___inlineableElements;
 
-    // @cons
+    // @cons MultiTypeGuardInlineInfo
     public MultiTypeGuardInlineInfo(Invoke __invoke, ArrayList<ResolvedJavaMethod> __concretes, ArrayList<ProfiledType> __ptypes, ArrayList<Integer> __typesToConcretes, double __notRecordedTypeProbability)
     {
         super(__invoke);
@@ -449,7 +449,7 @@ public final class MultiTypeGuardInlineInfo extends AbstractInlineInfo
     {
         if (hasSingleMethod())
         {
-            devirtualizeWithTypeSwitch(graph(), InvokeKind.Special, this.___concretes.get(0), __providers.getStampProvider(), __providers.getConstantReflection());
+            devirtualizeWithTypeSwitch(graph(), CallTargetNode.InvokeKind.Special, this.___concretes.get(0), __providers.getStampProvider(), __providers.getConstantReflection());
         }
         else
         {
@@ -460,7 +460,7 @@ public final class MultiTypeGuardInlineInfo extends AbstractInlineInfo
     private void tryToDevirtualizeMultipleMethods(StructuredGraph __graph, StampProvider __stampProvider, ConstantReflectionProvider __constantReflection)
     {
         MethodCallTargetNode __methodCallTarget = (MethodCallTargetNode) this.___invoke.callTarget();
-        if (__methodCallTarget.invokeKind() == InvokeKind.Interface)
+        if (__methodCallTarget.invokeKind() == CallTargetNode.InvokeKind.Interface)
         {
             ResolvedJavaMethod __targetMethod = __methodCallTarget.targetMethod();
             ResolvedJavaType __leastCommonType = getLeastCommonType();
@@ -472,13 +472,13 @@ public final class MultiTypeGuardInlineInfo extends AbstractInlineInfo
                 ResolvedJavaMethod __baseClassTargetMethod = __leastCommonType.resolveConcreteMethod(__targetMethod, __contextType);
                 if (__baseClassTargetMethod != null)
                 {
-                    devirtualizeWithTypeSwitch(__graph, InvokeKind.Virtual, __leastCommonType.resolveConcreteMethod(__targetMethod, __contextType), __stampProvider, __constantReflection);
+                    devirtualizeWithTypeSwitch(__graph, CallTargetNode.InvokeKind.Virtual, __leastCommonType.resolveConcreteMethod(__targetMethod, __contextType), __stampProvider, __constantReflection);
                 }
             }
         }
     }
 
-    private void devirtualizeWithTypeSwitch(StructuredGraph __graph, InvokeKind __kind, ResolvedJavaMethod __target, StampProvider __stampProvider, ConstantReflectionProvider __constantReflection)
+    private void devirtualizeWithTypeSwitch(StructuredGraph __graph, CallTargetNode.InvokeKind __kind, ResolvedJavaMethod __target, StampProvider __stampProvider, ConstantReflectionProvider __constantReflection)
     {
         AbstractBeginNode __invocationEntry = __graph.add(new BeginNode());
         AbstractBeginNode __unknownTypeSux = createUnknownTypeSuccessor(__graph);

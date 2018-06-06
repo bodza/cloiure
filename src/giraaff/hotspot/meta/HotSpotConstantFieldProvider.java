@@ -5,6 +5,7 @@ import jdk.vm.ci.meta.MetaAccessProvider;
 import jdk.vm.ci.meta.ResolvedJavaField;
 import jdk.vm.ci.meta.ResolvedJavaType;
 
+import giraaff.core.common.spi.ConstantFieldProvider;
 import giraaff.core.common.spi.JavaConstantFieldProvider;
 import giraaff.hotspot.HotSpotRuntime;
 
@@ -14,14 +15,14 @@ import giraaff.hotspot.HotSpotRuntime;
 // @class HotSpotConstantFieldProvider
 public class HotSpotConstantFieldProvider extends JavaConstantFieldProvider
 {
-    // @cons
+    // @cons HotSpotConstantFieldProvider
     public HotSpotConstantFieldProvider(MetaAccessProvider __metaAccess)
     {
         super(__metaAccess);
     }
 
     @Override
-    protected boolean isStableField(ResolvedJavaField __field, ConstantFieldTool<?> __tool)
+    protected boolean isStableField(ResolvedJavaField __field, ConstantFieldProvider.ConstantFieldTool<?> __tool)
     {
         if (!HotSpotRuntime.foldStableValues)
         {
@@ -40,7 +41,7 @@ public class HotSpotConstantFieldProvider extends JavaConstantFieldProvider
     }
 
     @Override
-    protected boolean isFinalField(ResolvedJavaField __field, ConstantFieldTool<?> __tool)
+    protected boolean isFinalField(ResolvedJavaField __field, ConstantFieldProvider.ConstantFieldTool<?> __tool)
     {
         if (__field.isStatic() && !isStaticFieldConstant(__field))
         {

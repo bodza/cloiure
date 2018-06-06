@@ -10,39 +10,36 @@ import jdk.vm.ci.meta.Value;
 import jdk.vm.ci.meta.ValueKind;
 
 import giraaff.asm.amd64.AMD64Address;
-import giraaff.asm.amd64.AMD64Address.Scale;
 import giraaff.lir.CompositeValue;
 import giraaff.lir.InstructionValueConsumer;
 import giraaff.lir.InstructionValueProcedure;
 import giraaff.lir.LIRInstruction;
-import giraaff.lir.LIRInstruction.OperandFlag;
-import giraaff.lir.LIRInstruction.OperandMode;
 
 // @class AMD64AddressValue
 public final class AMD64AddressValue extends CompositeValue
 {
-    @Component({OperandFlag.REG, OperandFlag.ILLEGAL})
+    @CompositeValue.Component({LIRInstruction.OperandFlag.REG, LIRInstruction.OperandFlag.ILLEGAL})
     // @field
     protected AllocatableValue ___base;
-    @Component({OperandFlag.REG, OperandFlag.ILLEGAL})
+    @CompositeValue.Component({LIRInstruction.OperandFlag.REG, LIRInstruction.OperandFlag.ILLEGAL})
     // @field
     protected AllocatableValue ___index;
     // @field
-    protected final Scale ___scale;
+    protected final AMD64Address.Scale ___scale;
     // @field
     protected final int ___displacement;
 
     // @def
-    private static final EnumSet<OperandFlag> flags = EnumSet.of(OperandFlag.REG, OperandFlag.ILLEGAL);
+    private static final EnumSet<LIRInstruction.OperandFlag> flags = EnumSet.of(LIRInstruction.OperandFlag.REG, LIRInstruction.OperandFlag.ILLEGAL);
 
-    // @cons
+    // @cons AMD64AddressValue
     public AMD64AddressValue(ValueKind<?> __kind, AllocatableValue __base, int __displacement)
     {
-        this(__kind, __base, Value.ILLEGAL, Scale.Times1, __displacement);
+        this(__kind, __base, Value.ILLEGAL, AMD64Address.Scale.Times1, __displacement);
     }
 
-    // @cons
-    public AMD64AddressValue(ValueKind<?> __kind, AllocatableValue __base, AllocatableValue __index, Scale __scale, int __displacement)
+    // @cons AMD64AddressValue
+    public AMD64AddressValue(ValueKind<?> __kind, AllocatableValue __base, AllocatableValue __index, AMD64Address.Scale __scale, int __displacement)
     {
         super(__kind);
         this.___base = __base;
@@ -62,7 +59,7 @@ public final class AMD64AddressValue extends CompositeValue
     }
 
     @Override
-    public CompositeValue forEachComponent(LIRInstruction __inst, OperandMode __mode, InstructionValueProcedure __proc)
+    public CompositeValue forEachComponent(LIRInstruction __inst, LIRInstruction.OperandMode __mode, InstructionValueProcedure __proc)
     {
         AllocatableValue __newBase = (AllocatableValue) __proc.doValue(__inst, this.___base, __mode, flags);
         AllocatableValue __newIndex = (AllocatableValue) __proc.doValue(__inst, this.___index, __mode, flags);
@@ -74,7 +71,7 @@ public final class AMD64AddressValue extends CompositeValue
     }
 
     @Override
-    protected void visitEachComponent(LIRInstruction __inst, OperandMode __mode, InstructionValueConsumer __proc)
+    protected void visitEachComponent(LIRInstruction __inst, LIRInstruction.OperandMode __mode, InstructionValueConsumer __proc)
     {
         __proc.visitValue(__inst, this.___base, __mode, flags);
         __proc.visitValue(__inst, this.___index, __mode, flags);

@@ -26,11 +26,11 @@ public final class GuardedValueNode extends FloatingGuardedNode implements LIRLo
     // @def
     public static final NodeClass<GuardedValueNode> TYPE = NodeClass.create(GuardedValueNode.class);
 
-    @Input
+    @Node.Input
     // @field
     ValueNode ___object;
 
-    // @cons
+    // @cons GuardedValueNode
     public GuardedValueNode(ValueNode __object, GuardingNode __guard)
     {
         super(TYPE, __object.stamp(NodeView.DEFAULT), __guard);

@@ -3,7 +3,7 @@ package giraaff.asm;
 // @class AsmOptions
 public final class AsmOptions
 {
-    // @cons
+    // @cons AsmOptions
     private AsmOptions()
     {
         super();

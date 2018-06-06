@@ -41,13 +41,13 @@ public class RawLoadNode extends UnsafeAccessNode implements Lowerable, Virtuali
     ///
     // This constructor exists for node intrinsics that need a stamp based on {@code accessKind}.
     ///
-    // @cons
+    // @cons RawLoadNode
     public RawLoadNode(ValueNode __object, ValueNode __offset, JavaKind __accessKind, LocationIdentity __locationIdentity)
     {
         this(__object, __offset, __accessKind, __locationIdentity, false);
     }
 
-    // @cons
+    // @cons RawLoadNode
     public RawLoadNode(ValueNode __object, ValueNode __offset, JavaKind __accessKind, LocationIdentity __locationIdentity, boolean __forceAnyLocation)
     {
         super(TYPE, StampFactory.forKind(__accessKind.getStackKind()), __object, __offset, __accessKind, __locationIdentity, __forceAnyLocation);
@@ -57,13 +57,13 @@ public class RawLoadNode extends UnsafeAccessNode implements Lowerable, Virtuali
     // This constructor exists for node intrinsics that need a stamp based on the return type of the
     // {@link giraaff.graph.Node.NodeIntrinsic} annotated method.
     ///
-    // @cons
-    public RawLoadNode(@InjectedNodeParameter Stamp __stamp, ValueNode __object, ValueNode __offset, LocationIdentity __locationIdentity, JavaKind __accessKind)
+    // @cons RawLoadNode
+    public RawLoadNode(@Node.InjectedNodeParameter Stamp __stamp, ValueNode __object, ValueNode __offset, LocationIdentity __locationIdentity, JavaKind __accessKind)
     {
         super(TYPE, __stamp, __object, __offset, __accessKind, __locationIdentity, false);
     }
 
-    // @cons
+    // @cons RawLoadNode
     protected RawLoadNode(NodeClass<? extends RawLoadNode> __c, ValueNode __object, ValueNode __offset, JavaKind __accessKind, LocationIdentity __locationIdentity)
     {
         super(__c, StampFactory.forKind(__accessKind.getStackKind()), __object, __offset, __accessKind, __locationIdentity, false);
@@ -173,6 +173,6 @@ public class RawLoadNode extends UnsafeAccessNode implements Lowerable, Virtuali
         return new RawLoadNode(object(), __location, accessKind(), __identity);
     }
 
-    @NodeIntrinsic
-    public static native Object load(Object __object, long __offset, @ConstantNodeParameter JavaKind __kind, @ConstantNodeParameter LocationIdentity __locationIdentity);
+    @Node.NodeIntrinsic
+    public static native Object load(Object __object, long __offset, @Node.ConstantNodeParameter JavaKind __kind, @Node.ConstantNodeParameter LocationIdentity __locationIdentity);
 }

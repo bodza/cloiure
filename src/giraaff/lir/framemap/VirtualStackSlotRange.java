@@ -19,7 +19,7 @@ public final class VirtualStackSlotRange extends VirtualStackSlot
     // @field
     private final int ___slots;
 
-    // @cons
+    // @cons VirtualStackSlotRange
     public VirtualStackSlotRange(int __id, int __slots, BitSet __objects, LIRKind __kind)
     {
         super(__id, __kind);

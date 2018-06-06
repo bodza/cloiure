@@ -13,7 +13,7 @@ import giraaff.core.common.type.Stamp;
 import giraaff.core.common.type.StampFactory;
 import giraaff.nodes.ValueNode;
 import giraaff.nodes.type.StampTool;
-import giraaff.word.Word.Operation;
+import giraaff.word.Word;
 
 ///
 // Encapsulates information for Java types representing raw words (as opposed to Objects).
@@ -54,7 +54,7 @@ public class WordTypes
     // @field
     private final JavaKind ___wordKind;
 
-    // @cons
+    // @cons WordTypes
     public WordTypes(MetaAccessProvider __metaAccess, JavaKind __wordKind)
     {
         super();
@@ -89,12 +89,11 @@ public class WordTypes
     }
 
     ///
-    // Gets the method annotated with {@link Operation} based on a given method that represents a
-    // word operation (but may not necessarily have the annotation).
+    // Gets the method annotated with {@link Word.Operation} based on a given method that represents a word operation
+    // (but may not necessarily have the annotation).
     //
-    // @param callingContextType the {@linkplain ResolvedJavaType type} from which
-    //            {@code targetMethod} is invoked
-    // @return the {@link Operation} method resolved for {@code targetMethod} if any
+    // @param callingContextType the {@linkplain ResolvedJavaType type} from which {@code targetMethod} is invoked
+    // @return the {@link Word.Operation} method resolved for {@code targetMethod} if any
     ///
     public ResolvedJavaMethod getWordOperation(ResolvedJavaMethod __targetMethod, ResolvedJavaType __callingContextType)
     {

@@ -3,7 +3,6 @@ package giraaff.nodes.calc;
 import jdk.vm.ci.meta.JavaKind;
 
 import giraaff.core.common.type.ArithmeticOpTable;
-import giraaff.core.common.type.ArithmeticOpTable.ShiftOp.UShr;
 import giraaff.core.common.type.IntegerStamp;
 import giraaff.core.common.type.Stamp;
 import giraaff.graph.NodeClass;
@@ -15,12 +14,12 @@ import giraaff.nodes.ValueNode;
 import giraaff.nodes.spi.NodeLIRBuilderTool;
 
 // @class UnsignedRightShiftNode
-public final class UnsignedRightShiftNode extends ShiftNode<UShr>
+public final class UnsignedRightShiftNode extends ShiftNode<ArithmeticOpTable.ShiftOp.UShr>
 {
     // @def
     public static final NodeClass<UnsignedRightShiftNode> TYPE = NodeClass.create(UnsignedRightShiftNode.class);
 
-    // @cons
+    // @cons UnsignedRightShiftNode
     public UnsignedRightShiftNode(ValueNode __x, ValueNode __y)
     {
         super(TYPE, ArithmeticOpTable::getUShr, __x, __y);
@@ -28,7 +27,7 @@ public final class UnsignedRightShiftNode extends ShiftNode<UShr>
 
     public static ValueNode create(ValueNode __x, ValueNode __y, NodeView __view)
     {
-        ArithmeticOpTable.ShiftOp<UShr> __op = ArithmeticOpTable.forStamp(__x.stamp(__view)).getUShr();
+        ArithmeticOpTable.ShiftOp<ArithmeticOpTable.ShiftOp.UShr> __op = ArithmeticOpTable.forStamp(__x.stamp(__view)).getUShr();
         Stamp __stamp = __op.foldStamp(__x.stamp(__view), (IntegerStamp) __y.stamp(__view));
         ValueNode __value = ShiftNode.canonical(__op, __stamp, __x, __y, __view);
         if (__value != null)
@@ -53,7 +52,7 @@ public final class UnsignedRightShiftNode extends ShiftNode<UShr>
     }
 
     @SuppressWarnings("unused")
-    private static ValueNode canonical(UnsignedRightShiftNode __node, ArithmeticOpTable.ShiftOp<UShr> __op, Stamp __stamp, ValueNode __forX, ValueNode __forY, NodeView __view)
+    private static ValueNode canonical(UnsignedRightShiftNode __node, ArithmeticOpTable.ShiftOp<ArithmeticOpTable.ShiftOp.UShr> __op, Stamp __stamp, ValueNode __forX, ValueNode __forY, NodeView __view)
     {
         if (__forY.isConstant())
         {

@@ -18,7 +18,7 @@ public abstract class NarrowOopStamp extends AbstractObjectStamp
     // @field
     private final CompressEncoding ___encoding;
 
-    // @cons
+    // @cons NarrowOopStamp
     protected NarrowOopStamp(ResolvedJavaType __type, boolean __exactType, boolean __nonNull, boolean __alwaysNull, CompressEncoding __encoding)
     {
         super(__type, __exactType, __nonNull, __alwaysNull);

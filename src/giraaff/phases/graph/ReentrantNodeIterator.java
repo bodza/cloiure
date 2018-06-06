@@ -24,22 +24,22 @@ import giraaff.nodes.LoopExitNode;
 // @class ReentrantNodeIterator
 public final class ReentrantNodeIterator
 {
-    // @cons
+    // @cons ReentrantNodeIterator
     private ReentrantNodeIterator()
     {
         super();
     }
 
-    // @class ReentrantNodeIterator.LoopInfo
-    public static final class LoopInfo<StateT>
+    // @class ReentrantNodeIterator.NodeLoopInfo
+    public static final class NodeLoopInfo<StateT>
     {
         // @field
         public final EconomicMap<LoopEndNode, StateT> ___endStates;
         // @field
         public final EconomicMap<LoopExitNode, StateT> ___exitStates;
 
-        // @cons
-        public LoopInfo(int __endCount, int __exitCount)
+        // @cons ReentrantNodeIterator.NodeLoopInfo
+        public NodeLoopInfo(int __endCount, int __exitCount)
         {
             super();
             this.___endStates = EconomicMap.create(Equivalence.IDENTITY, __endCount);
@@ -67,11 +67,11 @@ public final class ReentrantNodeIterator
         }
     }
 
-    public static <StateT> LoopInfo<StateT> processLoop(NodeIteratorClosure<StateT> __closure, LoopBeginNode __loop, StateT __initialState)
+    public static <StateT> ReentrantNodeIterator.NodeLoopInfo<StateT> processLoop(ReentrantNodeIterator.NodeIteratorClosure<StateT> __closure, LoopBeginNode __loop, StateT __initialState)
     {
         EconomicMap<FixedNode, StateT> __blockEndStates = apply(__closure, __loop, __initialState, __loop);
 
-        LoopInfo<StateT> __info = new LoopInfo<>(__loop.loopEnds().count(), __loop.loopExits().count());
+        ReentrantNodeIterator.NodeLoopInfo<StateT> __info = new ReentrantNodeIterator.NodeLoopInfo<>(__loop.loopEnds().count(), __loop.loopExits().count());
         for (LoopEndNode __end : __loop.loopEnds())
         {
             if (__blockEndStates.containsKey(__end))
@@ -89,12 +89,12 @@ public final class ReentrantNodeIterator
         return __info;
     }
 
-    public static <StateT> void apply(NodeIteratorClosure<StateT> __closure, FixedNode __start, StateT __initialState)
+    public static <StateT> void apply(ReentrantNodeIterator.NodeIteratorClosure<StateT> __closure, FixedNode __start, StateT __initialState)
     {
         apply(__closure, __start, __initialState, null);
     }
 
-    private static <StateT> EconomicMap<FixedNode, StateT> apply(NodeIteratorClosure<StateT> __closure, FixedNode __start, StateT __initialState, LoopBeginNode __boundary)
+    private static <StateT> EconomicMap<FixedNode, StateT> apply(ReentrantNodeIterator.NodeIteratorClosure<StateT> __closure, FixedNode __start, StateT __initialState, LoopBeginNode __boundary)
     {
         Deque<AbstractBeginNode> __nodeQueue = new ArrayDeque<>();
         EconomicMap<FixedNode, StateT> __blockEndStates = EconomicMap.create(Equivalence.IDENTITY);

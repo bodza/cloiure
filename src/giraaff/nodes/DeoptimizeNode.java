@@ -6,6 +6,7 @@ import jdk.vm.ci.meta.JavaConstant;
 import jdk.vm.ci.meta.MetaAccessProvider;
 import jdk.vm.ci.meta.Value;
 
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.lir.gen.LIRGeneratorTool;
 import giraaff.nodes.spi.LIRLowerable;
@@ -31,19 +32,19 @@ public final class DeoptimizeNode extends AbstractDeoptimizeNode implements Lowe
     // @field
     protected final JavaConstant ___speculation;
 
-    // @cons
+    // @cons DeoptimizeNode
     public DeoptimizeNode(DeoptimizationAction __action, DeoptimizationReason __reason)
     {
         this(__action, __reason, DEFAULT_DEBUG_ID, JavaConstant.NULL_POINTER, null);
     }
 
-    // @cons
+    // @cons DeoptimizeNode
     public DeoptimizeNode(DeoptimizationAction __action, DeoptimizationReason __reason, JavaConstant __speculation)
     {
         this(__action, __reason, DEFAULT_DEBUG_ID, __speculation, null);
     }
 
-    // @cons
+    // @cons DeoptimizeNode
     public DeoptimizeNode(DeoptimizationAction __action, DeoptimizationReason __reason, int __debugId, JavaConstant __speculation, FrameState __stateBefore)
     {
         super(TYPE, __stateBefore);
@@ -121,6 +122,6 @@ public final class DeoptimizeNode extends AbstractDeoptimizeNode implements Lowe
         return this.___speculation;
     }
 
-    @NodeIntrinsic
-    public static native void deopt(@ConstantNodeParameter DeoptimizationAction __action, @ConstantNodeParameter DeoptimizationReason __reason);
+    @Node.NodeIntrinsic
+    public static native void deopt(@Node.ConstantNodeParameter DeoptimizationAction __action, @Node.ConstantNodeParameter DeoptimizationReason __reason);
 }

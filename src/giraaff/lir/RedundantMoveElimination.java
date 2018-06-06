@@ -19,10 +19,8 @@ import org.graalvm.collections.Equivalence;
 
 import giraaff.core.common.LIRKind;
 import giraaff.core.common.cfg.AbstractBlockBase;
-import giraaff.lir.LIRInstruction.OperandFlag;
-import giraaff.lir.LIRInstruction.OperandMode;
-import giraaff.lir.StandardOp.MoveOp;
-import giraaff.lir.StandardOp.ValueMoveOp;
+import giraaff.lir.LIRInstruction;
+import giraaff.lir.StandardOp;
 import giraaff.lir.framemap.FrameMap;
 import giraaff.lir.gen.LIRGenerationResult;
 import giraaff.lir.phases.PostAllocationOptimizationPhase;
@@ -34,9 +32,9 @@ import giraaff.lir.phases.PostAllocationOptimizationPhase;
 public final class RedundantMoveElimination extends PostAllocationOptimizationPhase
 {
     @Override
-    protected void run(TargetDescription __target, LIRGenerationResult __lirGenRes, PostAllocationOptimizationContext __context)
+    protected void run(TargetDescription __target, LIRGenerationResult __lirGenRes, PostAllocationOptimizationPhase.PostAllocationOptimizationContext __context)
     {
-        Optimization __redundantMoveElimination = new Optimization(__lirGenRes.getFrameMap());
+        RedundantMoveElimination.RMEOptimization __redundantMoveElimination = new RedundantMoveElimination.RMEOptimization(__lirGenRes.getFrameMap());
         __redundantMoveElimination.doOptimize(__lirGenRes.getLIR());
     }
 
@@ -51,17 +49,9 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
     // The value numbers also contain information if it is an object kind value or not: if the
     // number is negative it is an object kind value.
     ///
-    // @class RedundantMoveElimination.BlockData
-    private static final class BlockData
+    // @class RedundantMoveElimination.BlockStates
+    private static final class BlockStates
     {
-        // @cons
-        BlockData(int __stateSize)
-        {
-            super();
-            this.___entryState = new int[__stateSize];
-            this.___exitState = new int[__stateSize];
-        }
-
         // The state at block entry for global dataflow analysis. It contains a global value number
         // for each location to optimize.
 
@@ -78,13 +68,21 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
 
         // @field
         int ___entryValueNum;
+
+        // @cons RedundantMoveElimination.BlockStates
+        BlockStates(int __stateSize)
+        {
+            super();
+            this.___entryState = new int[__stateSize];
+            this.___exitState = new int[__stateSize];
+        }
     }
 
-    // @class RedundantMoveElimination.Optimization
-    private static final class Optimization
+    // @class RedundantMoveElimination.RMEOptimization
+    private static final class RMEOptimization
     {
         // @field
-        EconomicMap<AbstractBlockBase<?>, BlockData> ___blockData = EconomicMap.create(Equivalence.IDENTITY);
+        EconomicMap<AbstractBlockBase<?>, RedundantMoveElimination.BlockStates> ___blockData = EconomicMap.create(Equivalence.IDENTITY);
 
         // @field
         RegisterArray ___callerSaveRegs;
@@ -112,8 +110,8 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
         // @def
         static final int INIT_VALUE = 0;
 
-        // @cons
-        Optimization(FrameMap __frameMap)
+        // @cons RedundantMoveElimination.RMEOptimization
+        RMEOptimization(FrameMap __frameMap)
         {
             super();
             this.___frameMap = __frameMap;
@@ -172,7 +170,7 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
                 {
                     if (isEligibleMove(__op))
                     {
-                        Value __dest = MoveOp.asMoveOp(__op).getResult();
+                        Value __dest = StandardOp.MoveOp.asMoveOp(__op).getResult();
                         if (ValueUtil.isRegister(__dest))
                         {
                             int __regNum = ((RegisterValue) __dest).getRegister().number;
@@ -198,7 +196,7 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
             int __numLocations = this.___numRegs + this.___stackIndices.size();
             for (AbstractBlockBase<?> __block : __blocks)
             {
-                BlockData __data = new BlockData(__numLocations);
+                RedundantMoveElimination.BlockStates __data = new RedundantMoveElimination.BlockStates(__numLocations);
                 this.___blockData.put(__block, __data);
             }
         }
@@ -228,7 +226,7 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
                 __changed = false;
                 for (AbstractBlockBase<?> __block : __blocks)
                 {
-                    BlockData __data = this.___blockData.get(__block);
+                    RedundantMoveElimination.BlockStates __data = this.___blockData.get(__block);
                     // Initialize the number for global value numbering for this block.
                     // It is essential that the starting number for a block is consistent
                     // at all iterations and also in eliminateMoves().
@@ -253,7 +251,7 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
                         // Merge the states of predecessor blocks.
                         for (AbstractBlockBase<?> __predecessor : __block.getPredecessors())
                         {
-                            BlockData __predData = this.___blockData.get(__predecessor);
+                            RedundantMoveElimination.BlockStates __predData = this.___blockData.get(__predecessor);
                             __newState |= mergeState(__data.___entryState, __predData.___exitState, __valueNum);
                         }
                     }
@@ -302,7 +300,7 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
             for (AbstractBlockBase<?> __block : __blocks)
             {
                 ArrayList<LIRInstruction> __instructions = __lir.getLIRforBlock(__block);
-                BlockData __data = this.___blockData.get(__block);
+                RedundantMoveElimination.BlockStates __data = this.___blockData.get(__block);
                 boolean __hasDead = false;
 
                 // reuse the entry state for iteration, we don't need it later
@@ -317,7 +315,7 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
                     LIRInstruction __op = __instructions.get(__idx);
                     if (isEligibleMove(__op))
                     {
-                        ValueMoveOp __moveOp = ValueMoveOp.asValueMoveOp(__op);
+                        StandardOp.ValueMoveOp __moveOp = StandardOp.ValueMoveOp.asValueMoveOp(__op);
                         int __sourceIdx = getStateIdx(__moveOp.getInput());
                         int __destIdx = getStateIdx(__moveOp.getResult());
                         if (__sourceIdx >= 0 && __destIdx >= 0 && __iterState[__sourceIdx] == __iterState[__destIdx])
@@ -344,7 +342,7 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
             if (isEligibleMove(__op))
             {
                 // handle the special case of a move instruction
-                ValueMoveOp __moveOp = ValueMoveOp.asValueMoveOp(__op);
+                StandardOp.ValueMoveOp __moveOp = StandardOp.ValueMoveOp.asValueMoveOp(__op);
                 int __sourceIdx = getStateIdx(__moveOp.getInput());
                 int __destIdx = getStateIdx(__moveOp.getResult());
                 if (__sourceIdx >= 0 && __destIdx >= 0)
@@ -369,14 +367,14 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
             }
 
             // Value procedure for the instruction's output and temp values.
-            // @class RedundantMoveElimination.Optimization.*OutputValueConsumer
+            // @class RedundantMoveElimination.RMEOptimization.*OutputValueConsumer
             // @closure
             final class OutputValueConsumer implements ValueConsumer
             {
                 // @field
                 int ___opValueNum;
 
-                // @cons
+                // @cons RedundantMoveElimination.RMEOptimization.*OutputValueConsumer
                 OutputValueConsumer(int __opValueNum)
                 {
                     super();
@@ -384,9 +382,9 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
                 }
 
                 @Override
-                public void visitValue(Value __operand, OperandMode __mode, EnumSet<OperandFlag> __flags)
+                public void visitValue(Value __operand, LIRInstruction.OperandMode __mode, EnumSet<LIRInstruction.OperandFlag> __flags)
                 {
-                    int __stateIdx = RedundantMoveElimination.Optimization.this.getStateIdx(__operand);
+                    int __stateIdx = RedundantMoveElimination.RMEOptimization.this.getStateIdx(__operand);
                     if (__stateIdx >= 0)
                     {
                         // Assign a unique number to the output or temp location.
@@ -463,7 +461,7 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
         }
 
         ///
-        // Returns the index to the state arrays in BlockData for a specific location.
+        // Returns the index to the state arrays in RedundantMoveElimination.BlockStates for a specific location.
         ///
         private int getStateIdx(Value __location)
         {
@@ -513,9 +511,9 @@ public final class RedundantMoveElimination extends PostAllocationOptimizationPh
         ///
         private static boolean isEligibleMove(LIRInstruction __op)
         {
-            if (ValueMoveOp.isValueMoveOp(__op))
+            if (StandardOp.ValueMoveOp.isValueMoveOp(__op))
             {
-                ValueMoveOp __moveOp = ValueMoveOp.asValueMoveOp(__op);
+                StandardOp.ValueMoveOp __moveOp = StandardOp.ValueMoveOp.asValueMoveOp(__op);
                 Value __source = __moveOp.getInput();
                 Value __dest = __moveOp.getResult();
                 // Moves with mismatching kinds are not moves, but memory loads/stores!

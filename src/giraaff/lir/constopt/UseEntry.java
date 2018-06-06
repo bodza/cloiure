@@ -19,7 +19,7 @@ final class UseEntry
     // @field
     private final Value ___value;
 
-    // @cons
+    // @cons UseEntry
     UseEntry(AbstractBlockBase<?> __block, LIRInstruction __instruction, Value __value)
     {
         super();

@@ -11,7 +11,7 @@ public final class HotSpotLockStackHolder extends LockStackHolder
     // @field
     private final HotSpotLockStack ___lockStack;
 
-    // @cons
+    // @cons HotSpotLockStackHolder
     public HotSpotLockStackHolder(HotSpotLockStack __lockStack)
     {
         super();

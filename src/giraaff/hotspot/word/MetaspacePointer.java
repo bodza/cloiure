@@ -7,10 +7,8 @@ import org.graalvm.word.UnsignedWord;
 import org.graalvm.word.WordBase;
 
 import giraaff.hotspot.word.HotSpotOperation.HotspotOpcode;
-import giraaff.nodes.memory.HeapAccess.BarrierType;
+import giraaff.nodes.memory.HeapAccess;
 import giraaff.word.Word;
-import giraaff.word.Word.Opcode;
-import giraaff.word.Word.Operation;
 
 ///
 // Marker type for a metaspace pointer.
@@ -18,10 +16,10 @@ import giraaff.word.Word.Operation;
 // @class MetaspacePointer
 public abstract class MetaspacePointer
 {
-    @HotSpotOperation(opcode = HotspotOpcode.IS_NULL)
+    @HotSpotOperation(opcode = HotSpotOperation.HotspotOpcode.IS_NULL)
     public abstract boolean isNull();
 
-    @HotSpotOperation(opcode = HotspotOpcode.FROM_POINTER)
+    @HotSpotOperation(opcode = HotSpotOperation.HotspotOpcode.FROM_POINTER)
     public abstract Pointer asWord();
 
     ///
@@ -35,7 +33,7 @@ public abstract class MetaspacePointer
     // @param locationIdentity the identity of the read
     // @return the result of the memory access
     ///
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public abstract byte readByte(WordBase __offset, LocationIdentity __locationIdentity);
 
     ///
@@ -49,7 +47,7 @@ public abstract class MetaspacePointer
     // @param locationIdentity the identity of the read
     // @return the result of the memory access
     ///
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public abstract char readChar(WordBase __offset, LocationIdentity __locationIdentity);
 
     ///
@@ -63,7 +61,7 @@ public abstract class MetaspacePointer
     // @param locationIdentity the identity of the read
     // @return the result of the memory access
     ///
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public abstract short readShort(WordBase __offset, LocationIdentity __locationIdentity);
 
     ///
@@ -77,7 +75,7 @@ public abstract class MetaspacePointer
     // @param locationIdentity the identity of the read
     // @return the result of the memory access
     ///
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public abstract int readInt(WordBase __offset, LocationIdentity __locationIdentity);
 
     ///
@@ -91,7 +89,7 @@ public abstract class MetaspacePointer
     // @param locationIdentity the identity of the read
     // @return the result of the memory access
     ///
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public abstract long readLong(WordBase __offset, LocationIdentity __locationIdentity);
 
     ///
@@ -105,7 +103,7 @@ public abstract class MetaspacePointer
     // @param locationIdentity the identity of the read
     // @return the result of the memory access
     ///
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public abstract float readFloat(WordBase __offset, LocationIdentity __locationIdentity);
 
     ///
@@ -119,7 +117,7 @@ public abstract class MetaspacePointer
     // @param locationIdentity the identity of the read
     // @return the result of the memory access
     ///
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public abstract double readDouble(WordBase __offset, LocationIdentity __locationIdentity);
 
     ///
@@ -133,7 +131,7 @@ public abstract class MetaspacePointer
     // @param locationIdentity the identity of the read
     // @return the result of the memory access
     ///
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public abstract Word readWord(WordBase __offset, LocationIdentity __locationIdentity);
 
     ///
@@ -147,7 +145,7 @@ public abstract class MetaspacePointer
     // @param locationIdentity the identity of the read
     // @return the result of the memory access
     ///
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public abstract Object readObject(WordBase __offset, LocationIdentity __locationIdentity);
 
     ///
@@ -157,7 +155,7 @@ public abstract class MetaspacePointer
     // @param locationIdentity the identity of the read
     // @return the result of the memory access
     ///
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public abstract byte readByte(int __offset, LocationIdentity __locationIdentity);
 
     ///
@@ -167,7 +165,7 @@ public abstract class MetaspacePointer
     // @param locationIdentity the identity of the read
     // @return the result of the memory access
     ///
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public abstract char readChar(int __offset, LocationIdentity __locationIdentity);
 
     ///
@@ -177,7 +175,7 @@ public abstract class MetaspacePointer
     // @param locationIdentity the identity of the read
     // @return the result of the memory access
     ///
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public abstract short readShort(int __offset, LocationIdentity __locationIdentity);
 
     ///
@@ -187,7 +185,7 @@ public abstract class MetaspacePointer
     // @param locationIdentity the identity of the read
     // @return the result of the memory access
     ///
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public abstract int readInt(int __offset, LocationIdentity __locationIdentity);
 
     ///
@@ -197,7 +195,7 @@ public abstract class MetaspacePointer
     // @param locationIdentity the identity of the read
     // @return the result of the memory access
     ///
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public abstract long readLong(int __offset, LocationIdentity __locationIdentity);
 
     ///
@@ -207,7 +205,7 @@ public abstract class MetaspacePointer
     // @param locationIdentity the identity of the read
     // @return the result of the memory access
     ///
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public abstract float readFloat(int __offset, LocationIdentity __locationIdentity);
 
     ///
@@ -217,7 +215,7 @@ public abstract class MetaspacePointer
     // @param locationIdentity the identity of the read
     // @return the result of the memory access
     ///
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public abstract double readDouble(int __offset, LocationIdentity __locationIdentity);
 
     ///
@@ -227,7 +225,7 @@ public abstract class MetaspacePointer
     // @param locationIdentity the identity of the read
     // @return the result of the memory access
     ///
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public abstract Word readWord(int __offset, LocationIdentity __locationIdentity);
 
     ///
@@ -237,7 +235,7 @@ public abstract class MetaspacePointer
     // @param locationIdentity the identity of the read
     // @return the result of the memory access
     ///
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public abstract Object readObject(int __offset, LocationIdentity __locationIdentity);
 
     ///
@@ -251,7 +249,7 @@ public abstract class MetaspacePointer
     // @param locationIdentity the identity of the write
     // @param val the value to be written to memory
     ///
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public abstract void writeByte(WordBase __offset, byte __val, LocationIdentity __locationIdentity);
 
     ///
@@ -265,7 +263,7 @@ public abstract class MetaspacePointer
     // @param locationIdentity the identity of the write
     // @param val the value to be written to memory
     ///
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public abstract void writeChar(WordBase __offset, char __val, LocationIdentity __locationIdentity);
 
     ///
@@ -279,7 +277,7 @@ public abstract class MetaspacePointer
     // @param locationIdentity the identity of the write
     // @param val the value to be written to memory
     ///
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public abstract void writeShort(WordBase __offset, short __val, LocationIdentity __locationIdentity);
 
     ///
@@ -293,7 +291,7 @@ public abstract class MetaspacePointer
     // @param locationIdentity the identity of the write
     // @param val the value to be written to memory
     ///
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public abstract void writeInt(WordBase __offset, int __val, LocationIdentity __locationIdentity);
 
     ///
@@ -307,7 +305,7 @@ public abstract class MetaspacePointer
     // @param locationIdentity the identity of the write
     // @param val the value to be written to memory
     ///
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public abstract void writeLong(WordBase __offset, long __val, LocationIdentity __locationIdentity);
 
     ///
@@ -321,7 +319,7 @@ public abstract class MetaspacePointer
     // @param locationIdentity the identity of the write
     // @param val the value to be written to memory
     ///
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public abstract void writeFloat(WordBase __offset, float __val, LocationIdentity __locationIdentity);
 
     ///
@@ -335,7 +333,7 @@ public abstract class MetaspacePointer
     // @param locationIdentity the identity of the write
     // @param val the value to be written to memory
     ///
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public abstract void writeDouble(WordBase __offset, double __val, LocationIdentity __locationIdentity);
 
     ///
@@ -349,7 +347,7 @@ public abstract class MetaspacePointer
     // @param locationIdentity the identity of the write
     // @param val the value to be written to memory
     ///
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public abstract void writeWord(WordBase __offset, WordBase __val, LocationIdentity __locationIdentity);
 
     ///
@@ -364,7 +362,7 @@ public abstract class MetaspacePointer
     // @param locationIdentity the identity of the write
     // @param val the value to be written to memory
     ///
-    @Operation(opcode = Opcode.INITIALIZE)
+    @Word.Operation(opcode = Word.WordOpcode.INITIALIZE)
     public abstract void initializeLong(WordBase __offset, long __val, LocationIdentity __locationIdentity);
 
     ///
@@ -378,7 +376,7 @@ public abstract class MetaspacePointer
     // @param locationIdentity the identity of the write
     // @param val the value to be written to memory
     ///
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public abstract void writeObject(WordBase __offset, Object __val, LocationIdentity __locationIdentity);
 
     ///
@@ -388,7 +386,7 @@ public abstract class MetaspacePointer
     // @param locationIdentity the identity of the write
     // @param val the value to be written to memory
     ///
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public abstract void writeByte(int __offset, byte __val, LocationIdentity __locationIdentity);
 
     ///
@@ -398,7 +396,7 @@ public abstract class MetaspacePointer
     // @param locationIdentity the identity of the write
     // @param val the value to be written to memory
     ///
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public abstract void writeChar(int __offset, char __val, LocationIdentity __locationIdentity);
 
     ///
@@ -408,7 +406,7 @@ public abstract class MetaspacePointer
     // @param locationIdentity the identity of the write
     // @param val the value to be written to memory
     ///
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public abstract void writeShort(int __offset, short __val, LocationIdentity __locationIdentity);
 
     ///
@@ -418,7 +416,7 @@ public abstract class MetaspacePointer
     // @param locationIdentity the identity of the write
     // @param val the value to be written to memory
     ///
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public abstract void writeInt(int __offset, int __val, LocationIdentity __locationIdentity);
 
     ///
@@ -428,7 +426,7 @@ public abstract class MetaspacePointer
     // @param locationIdentity the identity of the write
     // @param val the value to be written to memory
     ///
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public abstract void writeLong(int __offset, long __val, LocationIdentity __locationIdentity);
 
     ///
@@ -438,7 +436,7 @@ public abstract class MetaspacePointer
     // @param locationIdentity the identity of the write
     // @param val the value to be written to memory
     ///
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public abstract void writeFloat(int __offset, float __val, LocationIdentity __locationIdentity);
 
     ///
@@ -448,7 +446,7 @@ public abstract class MetaspacePointer
     // @param locationIdentity the identity of the write
     // @param val the value to be written to memory
     ///
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public abstract void writeDouble(int __offset, double __val, LocationIdentity __locationIdentity);
 
     ///
@@ -458,7 +456,7 @@ public abstract class MetaspacePointer
     // @param locationIdentity the identity of the write
     // @param val the value to be written to memory
     ///
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public abstract void writeWord(int __offset, WordBase __val, LocationIdentity __locationIdentity);
 
     ///
@@ -468,7 +466,7 @@ public abstract class MetaspacePointer
     // @param locationIdentity the identity of the write
     // @param val the value to be written to memory
     ///
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public abstract void writeObject(int __offset, Object __val, LocationIdentity __locationIdentity);
 
     ///
@@ -481,7 +479,7 @@ public abstract class MetaspacePointer
     // @param offset the signed offset for the memory access
     // @return the result of the memory access
     ///
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public abstract byte readByte(WordBase __offset);
 
     ///
@@ -494,7 +492,7 @@ public abstract class MetaspacePointer
     // @param offset the signed offset for the memory access
     // @return the result of the memory access
     ///
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public abstract char readChar(WordBase __offset);
 
     ///
@@ -507,7 +505,7 @@ public abstract class MetaspacePointer
     // @param offset the signed offset for the memory access
     // @return the result of the memory access
     ///
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public abstract short readShort(WordBase __offset);
 
     ///
@@ -520,7 +518,7 @@ public abstract class MetaspacePointer
     // @param offset the signed offset for the memory access
     // @return the result of the memory access
     ///
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public abstract int readInt(WordBase __offset);
 
     ///
@@ -533,7 +531,7 @@ public abstract class MetaspacePointer
     // @param offset the signed offset for the memory access
     // @return the result of the memory access
     ///
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public abstract long readLong(WordBase __offset);
 
     ///
@@ -546,7 +544,7 @@ public abstract class MetaspacePointer
     // @param offset the signed offset for the memory access
     // @return the result of the memory access
     ///
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public abstract float readFloat(WordBase __offset);
 
     ///
@@ -559,7 +557,7 @@ public abstract class MetaspacePointer
     // @param offset the signed offset for the memory access
     // @return the result of the memory access
     ///
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public abstract double readDouble(WordBase __offset);
 
     ///
@@ -572,7 +570,7 @@ public abstract class MetaspacePointer
     // @param offset the signed offset for the memory access
     // @return the result of the memory access
     ///
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public abstract Word readWord(WordBase __offset);
 
     ///
@@ -585,7 +583,7 @@ public abstract class MetaspacePointer
     // @param offset the signed offset for the memory access
     // @return the result of the memory access
     ///
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public abstract Object readObject(WordBase __offset);
 
     ///
@@ -600,8 +598,8 @@ public abstract class MetaspacePointer
     // @param barrierType the type of the read barrier to be added
     // @return the result of the memory access
     ///
-    @Operation(opcode = Opcode.READ_POINTER)
-    public abstract Object readObject(WordBase __offset, BarrierType __barrierType);
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
+    public abstract Object readObject(WordBase __offset, HeapAccess.BarrierType __barrierType);
 
     ///
     // Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
@@ -609,7 +607,7 @@ public abstract class MetaspacePointer
     // @param offset the signed offset for the memory access
     // @return the result of the memory access
     ///
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public abstract byte readByte(int __offset);
 
     ///
@@ -618,7 +616,7 @@ public abstract class MetaspacePointer
     // @param offset the signed offset for the memory access
     // @return the result of the memory access
     ///
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public abstract char readChar(int __offset);
 
     ///
@@ -627,7 +625,7 @@ public abstract class MetaspacePointer
     // @param offset the signed offset for the memory access
     // @return the result of the memory access
     ///
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public abstract short readShort(int __offset);
 
     ///
@@ -636,7 +634,7 @@ public abstract class MetaspacePointer
     // @param offset the signed offset for the memory access
     // @return the result of the memory access
     ///
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public abstract int readInt(int __offset);
 
     ///
@@ -645,7 +643,7 @@ public abstract class MetaspacePointer
     // @param offset the signed offset for the memory access
     // @return the result of the memory access
     ///
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public abstract long readLong(int __offset);
 
     ///
@@ -654,7 +652,7 @@ public abstract class MetaspacePointer
     // @param offset the signed offset for the memory access
     // @return the result of the memory access
     ///
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public abstract float readFloat(int __offset);
 
     ///
@@ -663,7 +661,7 @@ public abstract class MetaspacePointer
     // @param offset the signed offset for the memory access
     // @return the result of the memory access
     ///
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public abstract double readDouble(int __offset);
 
     ///
@@ -672,7 +670,7 @@ public abstract class MetaspacePointer
     // @param offset the signed offset for the memory access
     // @return the result of the memory access
     ///
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public abstract Word readWord(int __offset);
 
     ///
@@ -681,7 +679,7 @@ public abstract class MetaspacePointer
     // @param offset the signed offset for the memory access
     // @return the result of the memory access
     ///
-    @Operation(opcode = Opcode.READ_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
     public abstract Object readObject(int __offset);
 
     ///
@@ -692,8 +690,8 @@ public abstract class MetaspacePointer
     // @param barrierType the type of the read barrier to be added
     // @return the result of the memory access
     ///
-    @Operation(opcode = Opcode.READ_POINTER)
-    public abstract Object readObject(int __offset, BarrierType __barrierType);
+    @Word.Operation(opcode = Word.WordOpcode.READ_POINTER)
+    public abstract Object readObject(int __offset, HeapAccess.BarrierType __barrierType);
 
     ///
     // Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
@@ -705,7 +703,7 @@ public abstract class MetaspacePointer
     // @param offset the signed offset for the memory access
     // @param val the value to be written to memory
     ///
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public abstract void writeByte(WordBase __offset, byte __val);
 
     ///
@@ -718,7 +716,7 @@ public abstract class MetaspacePointer
     // @param offset the signed offset for the memory access
     // @param val the value to be written to memory
     ///
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public abstract void writeChar(WordBase __offset, char __val);
 
     ///
@@ -731,7 +729,7 @@ public abstract class MetaspacePointer
     // @param offset the signed offset for the memory access
     // @param val the value to be written to memory
     ///
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public abstract void writeShort(WordBase __offset, short __val);
 
     ///
@@ -744,7 +742,7 @@ public abstract class MetaspacePointer
     // @param offset the signed offset for the memory access
     // @param val the value to be written to memory
     ///
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public abstract void writeInt(WordBase __offset, int __val);
 
     ///
@@ -757,7 +755,7 @@ public abstract class MetaspacePointer
     // @param offset the signed offset for the memory access
     // @param val the value to be written to memory
     ///
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public abstract void writeLong(WordBase __offset, long __val);
 
     ///
@@ -770,7 +768,7 @@ public abstract class MetaspacePointer
     // @param offset the signed offset for the memory access
     // @param val the value to be written to memory
     ///
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public abstract void writeFloat(WordBase __offset, float __val);
 
     ///
@@ -783,7 +781,7 @@ public abstract class MetaspacePointer
     // @param offset the signed offset for the memory access
     // @param val the value to be written to memory
     ///
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public abstract void writeDouble(WordBase __offset, double __val);
 
     ///
@@ -796,7 +794,7 @@ public abstract class MetaspacePointer
     // @param offset the signed offset for the memory access
     // @param val the value to be written to memory
     ///
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public abstract void writeWord(WordBase __offset, WordBase __val);
 
     ///
@@ -809,7 +807,7 @@ public abstract class MetaspacePointer
     // @param offset the signed offset for the memory access
     // @param val the value to be written to memory
     ///
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public abstract void writeObject(WordBase __offset, Object __val);
 
     ///
@@ -818,7 +816,7 @@ public abstract class MetaspacePointer
     // @param offset the signed offset for the memory access
     // @param val the value to be written to memory
     ///
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public abstract void writeByte(int __offset, byte __val);
 
     ///
@@ -827,7 +825,7 @@ public abstract class MetaspacePointer
     // @param offset the signed offset for the memory access
     // @param val the value to be written to memory
     ///
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public abstract void writeChar(int __offset, char __val);
 
     ///
@@ -836,7 +834,7 @@ public abstract class MetaspacePointer
     // @param offset the signed offset for the memory access
     // @param val the value to be written to memory
     ///
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public abstract void writeShort(int __offset, short __val);
 
     ///
@@ -845,7 +843,7 @@ public abstract class MetaspacePointer
     // @param offset the signed offset for the memory access
     // @param val the value to be written to memory
     ///
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public abstract void writeInt(int __offset, int __val);
 
     ///
@@ -854,7 +852,7 @@ public abstract class MetaspacePointer
     // @param offset the signed offset for the memory access
     // @param val the value to be written to memory
     ///
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public abstract void writeLong(int __offset, long __val);
 
     ///
@@ -863,7 +861,7 @@ public abstract class MetaspacePointer
     // @param offset the signed offset for the memory access
     // @param val the value to be written to memory
     ///
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public abstract void writeFloat(int __offset, float __val);
 
     ///
@@ -872,7 +870,7 @@ public abstract class MetaspacePointer
     // @param offset the signed offset for the memory access
     // @param val the value to be written to memory
     ///
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public abstract void writeDouble(int __offset, double __val);
 
     ///
@@ -881,7 +879,7 @@ public abstract class MetaspacePointer
     // @param offset the signed offset for the memory access
     // @param val the value to be written to memory
     ///
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public abstract void writeWord(int __offset, WordBase __val);
 
     ///
@@ -890,6 +888,6 @@ public abstract class MetaspacePointer
     // @param offset the signed offset for the memory access
     // @param val the value to be written to memory
     ///
-    @Operation(opcode = Opcode.WRITE_POINTER)
+    @Word.Operation(opcode = Word.WordOpcode.WRITE_POINTER)
     public abstract void writeObject(int __offset, Object __val);
 }

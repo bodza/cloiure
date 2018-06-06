@@ -4,6 +4,7 @@ import jdk.vm.ci.meta.ResolvedJavaType;
 
 import giraaff.core.common.type.StampFactory;
 import giraaff.core.common.type.TypeReference;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.graph.NodeInputList;
 import giraaff.graph.NodeList;
@@ -22,7 +23,7 @@ public final class NewMultiArrayNode extends DeoptimizingFixedWithNextNode imple
     // @def
     public static final NodeClass<NewMultiArrayNode> TYPE = NodeClass.create(NewMultiArrayNode.class);
 
-    @Input
+    @Node.Input
     // @field
     protected NodeInputList<ValueNode> ___dimensions;
     // @field
@@ -43,13 +44,13 @@ public final class NewMultiArrayNode extends DeoptimizingFixedWithNextNode imple
         return this.___dimensions;
     }
 
-    // @cons
+    // @cons NewMultiArrayNode
     public NewMultiArrayNode(ResolvedJavaType __type, ValueNode[] __dimensions)
     {
         this(TYPE, __type, __dimensions);
     }
 
-    // @cons
+    // @cons NewMultiArrayNode
     protected NewMultiArrayNode(NodeClass<? extends NewMultiArrayNode> __c, ResolvedJavaType __type, ValueNode[] __dimensions)
     {
         super(__c, StampFactory.objectNonNull(TypeReference.createExactTrusted(__type)));

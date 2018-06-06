@@ -24,8 +24,7 @@ import giraaff.core.common.cfg.AbstractBlockBase;
 import giraaff.core.common.spi.ForeignCallDescriptor;
 import giraaff.core.common.spi.ForeignCallLinkage;
 import giraaff.core.target.Backend;
-import giraaff.graph.Node.ConstantNodeParameter;
-import giraaff.graph.Node.NodeIntrinsic;
+import giraaff.graph.Node;
 import giraaff.hotspot.meta.HotSpotProviders;
 import giraaff.hotspot.nodes.aot.ResolveConstantStubCall;
 import giraaff.hotspot.stubs.ExceptionHandlerStub;
@@ -36,10 +35,7 @@ import giraaff.hotspot.word.MethodCountersPointer;
 import giraaff.lir.LIR;
 import giraaff.lir.LIRFrameState;
 import giraaff.lir.LIRInstruction;
-import giraaff.lir.LIRInstruction.OperandFlag;
-import giraaff.lir.LIRInstruction.OperandMode;
-import giraaff.lir.StandardOp.LabelOp;
-import giraaff.lir.StandardOp.SaveRegistersOp;
+import giraaff.lir.StandardOp;
 import giraaff.lir.ValueConsumer;
 import giraaff.lir.framemap.FrameMap;
 import giraaff.nodes.UnwindNode;
@@ -94,8 +90,8 @@ public abstract class HotSpotBackend extends Backend
     // @def
     public static final ForeignCallDescriptor GENERIC_ARRAYCOPY = new ForeignCallDescriptor("generic_arraycopy", int.class, Word.class, int.class, Word.class, int.class, int.class);
 
-    @NodeIntrinsic(ForeignCallNode.class)
-    private static native void unsafeArraycopyStub(@ConstantNodeParameter ForeignCallDescriptor __descriptor, Word __srcAddr, Word __dstAddr, Word __size);
+    @Node.NodeIntrinsic(ForeignCallNode.class)
+    private static native void unsafeArraycopyStub(@Node.ConstantNodeParameter ForeignCallDescriptor __descriptor, Word __srcAddr, Word __dstAddr, Word __size);
 
     ///
     // New multi array stub call.
@@ -156,7 +152,7 @@ public abstract class HotSpotBackend extends Backend
     // @field
     private final HotSpotGraalRuntime ___runtime;
 
-    // @cons
+    // @cons HotSpotBackend
     public HotSpotBackend(HotSpotGraalRuntime __runtime, HotSpotProviders __providers)
     {
         super(__providers);
@@ -189,7 +185,7 @@ public abstract class HotSpotBackend extends Backend
         ValueConsumer defConsumer = new ValueConsumer()
         {
             @Override
-            public void visitValue(Value __value, OperandMode __mode, EnumSet<OperandFlag> __flags)
+            public void visitValue(Value __value, LIRInstruction.OperandMode __mode, EnumSet<LIRInstruction.OperandFlag> __flags)
             {
                 if (ValueUtil.isRegister(__value))
                 {
@@ -206,7 +202,7 @@ public abstract class HotSpotBackend extends Backend
             }
             for (LIRInstruction __op : __lir.getLIRforBlock(__block))
             {
-                if (__op instanceof LabelOp)
+                if (__op instanceof StandardOp.LabelOp)
                 {
                     // don't consider this as a definition
                 }
@@ -223,9 +219,9 @@ public abstract class HotSpotBackend extends Backend
     ///
     // Updates a given stub with respect to the registers it destroys.
     //
-    // Any entry in {@code calleeSaveInfo} that {@linkplain SaveRegistersOp#supportsRemove()
+    // Any entry in {@code calleeSaveInfo} that {@linkplain StandardOp.SaveRegistersOp#supportsRemove()
     // supports} pruning will have {@code destroyedRegisters}
-    // {@linkplain SaveRegistersOp#remove(EconomicSet) removed} as these registers are declared as
+    // {@linkplain StandardOp.SaveRegistersOp#remove(EconomicSet) removed} as these registers are declared as
     // temporaries in the stub's {@linkplain ForeignCallLinkage linkage} (and thus will be saved by
     // the stub's caller).
     //
@@ -236,14 +232,14 @@ public abstract class HotSpotBackend extends Backend
     // @param frameMap used to {@linkplain FrameMap#offsetForStackSlot(StackSlot) convert} a virtual
     //            slot to a frame slot index
     ///
-    protected void updateStub(Stub __stub, EconomicSet<Register> __destroyedRegisters, EconomicMap<LIRFrameState, SaveRegistersOp> __calleeSaveInfo, FrameMap __frameMap)
+    protected void updateStub(Stub __stub, EconomicSet<Register> __destroyedRegisters, EconomicMap<LIRFrameState, StandardOp.SaveRegistersOp> __calleeSaveInfo, FrameMap __frameMap)
     {
         __stub.initDestroyedCallerRegisters(__destroyedRegisters);
 
-        MapCursor<LIRFrameState, SaveRegistersOp> __cursor = __calleeSaveInfo.getEntries();
+        MapCursor<LIRFrameState, StandardOp.SaveRegistersOp> __cursor = __calleeSaveInfo.getEntries();
         while (__cursor.advance())
         {
-            SaveRegistersOp __save = __cursor.getValue();
+            StandardOp.SaveRegistersOp __save = __cursor.getValue();
             if (__save.supportsRemove())
             {
                 __save.remove(__destroyedRegisters);

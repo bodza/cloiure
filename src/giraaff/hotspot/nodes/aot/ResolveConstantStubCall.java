@@ -30,10 +30,10 @@ public final class ResolveConstantStubCall extends DeoptimizingStubCall implemen
     // @def
     public static final NodeClass<ResolveConstantStubCall> TYPE = NodeClass.create(ResolveConstantStubCall.class);
 
-    @OptionalInput
+    @Node.OptionalInput
     // @field
     protected ValueNode ___value;
-    @Input
+    @Node.Input
     // @field
     protected ValueNode ___string;
     // @field
@@ -41,7 +41,7 @@ public final class ResolveConstantStubCall extends DeoptimizingStubCall implemen
     // @field
     protected HotSpotConstantLoadAction ___action;
 
-    // @cons
+    // @cons ResolveConstantStubCall
     public ResolveConstantStubCall(ValueNode __value, ValueNode __string)
     {
         super(TYPE, __value.stamp(NodeView.DEFAULT));
@@ -50,7 +50,7 @@ public final class ResolveConstantStubCall extends DeoptimizingStubCall implemen
         this.___action = HotSpotConstantLoadAction.RESOLVE;
     }
 
-    // @cons
+    // @cons ResolveConstantStubCall
     public ResolveConstantStubCall(ValueNode __value, ValueNode __string, HotSpotConstantLoadAction __action)
     {
         super(TYPE, __value.stamp(NodeView.DEFAULT));
@@ -59,14 +59,14 @@ public final class ResolveConstantStubCall extends DeoptimizingStubCall implemen
         this.___action = __action;
     }
 
-    @NodeIntrinsic
+    @Node.NodeIntrinsic
     public static native Object resolveObject(Object __value, Object __symbol);
 
-    @NodeIntrinsic
+    @Node.NodeIntrinsic
     public static native KlassPointer resolveKlass(KlassPointer __value, Object __symbol);
 
-    @NodeIntrinsic
-    public static native KlassPointer resolveKlass(KlassPointer __value, Object __symbol, @ConstantNodeParameter HotSpotConstantLoadAction __action);
+    @Node.NodeIntrinsic
+    public static native KlassPointer resolveKlass(KlassPointer __value, Object __symbol, @Node.ConstantNodeParameter HotSpotConstantLoadAction __action);
 
     @Override
     public Node canonical(CanonicalizerTool __tool)

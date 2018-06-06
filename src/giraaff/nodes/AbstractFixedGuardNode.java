@@ -5,6 +5,7 @@ import jdk.vm.ci.meta.DeoptimizationReason;
 import jdk.vm.ci.meta.JavaConstant;
 
 import giraaff.core.common.type.StampFactory;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.graph.spi.Simplifiable;
 import giraaff.graph.spi.SimplifierTool;
@@ -18,7 +19,7 @@ public abstract class AbstractFixedGuardNode extends DeoptimizingFixedWithNextNo
     // @def
     public static final NodeClass<AbstractFixedGuardNode> TYPE = NodeClass.create(AbstractFixedGuardNode.class);
 
-    @Input(InputType.Condition)
+    @Node.Input(InputType.ConditionI)
     // @field
     protected LogicNode ___condition;
     // @field
@@ -49,7 +50,7 @@ public abstract class AbstractFixedGuardNode extends DeoptimizingFixedWithNextNo
         this.___negated = __negated;
     }
 
-    // @cons
+    // @cons AbstractFixedGuardNode
     protected AbstractFixedGuardNode(NodeClass<? extends AbstractFixedGuardNode> __c, LogicNode __condition, DeoptimizationReason __deoptReason, DeoptimizationAction __action, JavaConstant __speculation, boolean __negated)
     {
         super(__c, StampFactory.forVoid());

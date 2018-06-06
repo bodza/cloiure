@@ -1,6 +1,6 @@
 package giraaff.phases.common;
 
-import giraaff.graph.Graph.NodeEventScope;
+import giraaff.graph.Graph;
 import giraaff.nodes.StructuredGraph;
 import giraaff.phases.BasePhase;
 import giraaff.phases.PhaseSuite;
@@ -17,14 +17,14 @@ public final class IncrementalCanonicalizerPhase<C extends PhaseContext> extends
     // @field
     private final CanonicalizerPhase ___canonicalizer;
 
-    // @cons
+    // @cons IncrementalCanonicalizerPhase
     public IncrementalCanonicalizerPhase(CanonicalizerPhase __canonicalizer)
     {
         super();
         this.___canonicalizer = __canonicalizer;
     }
 
-    // @cons
+    // @cons IncrementalCanonicalizerPhase
     public IncrementalCanonicalizerPhase(CanonicalizerPhase __canonicalizer, BasePhase<? super C> __phase)
     {
         super();
@@ -37,7 +37,7 @@ public final class IncrementalCanonicalizerPhase<C extends PhaseContext> extends
     protected void run(StructuredGraph __graph, C __context)
     {
         HashSetNodeEventListener __listener = new HashSetNodeEventListener();
-        try (NodeEventScope __nes = __graph.trackNodeEvents(__listener))
+        try (Graph.NodeEventScope __nes = __graph.trackNodeEvents(__listener))
         {
             super.run(__graph, __context);
         }

@@ -11,27 +11,27 @@ import giraaff.asm.amd64.AMD64MacroAssembler;
 import giraaff.core.common.spi.ForeignCallLinkage;
 import giraaff.hotspot.HotSpotBackend;
 import giraaff.hotspot.stubs.UnwindExceptionToCallerStub;
-import giraaff.lir.LIRInstruction.OperandFlag;
+import giraaff.lir.LIRInstruction;
 import giraaff.lir.LIRInstructionClass;
-import giraaff.lir.Opcode;
+import giraaff.lir.LIROpcode;
 import giraaff.lir.amd64.AMD64Call;
 import giraaff.lir.asm.CompilationResultBuilder;
 
 ///
 // Removes the current frame and jumps to the {@link UnwindExceptionToCallerStub}.
 ///
-@Opcode
+@LIROpcode
 // @class AMD64HotSpotUnwindOp
 final class AMD64HotSpotUnwindOp extends AMD64HotSpotEpilogueBlockEndOp
 {
     // @def
     public static final LIRInstructionClass<AMD64HotSpotUnwindOp> TYPE = LIRInstructionClass.create(AMD64HotSpotUnwindOp.class);
 
-    @Use({OperandFlag.REG})
+    @LIRInstruction.Use({LIRInstruction.OperandFlag.REG})
     // @field
     protected RegisterValue ___exception;
 
-    // @cons
+    // @cons AMD64HotSpotUnwindOp
     AMD64HotSpotUnwindOp(RegisterValue __exception)
     {
         super(TYPE);

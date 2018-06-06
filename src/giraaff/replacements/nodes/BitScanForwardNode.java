@@ -8,6 +8,7 @@ import giraaff.core.common.type.IntegerStamp;
 import giraaff.core.common.type.PrimitiveStamp;
 import giraaff.core.common.type.Stamp;
 import giraaff.core.common.type.StampFactory;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.graph.spi.CanonicalizerTool;
 import giraaff.lir.gen.ArithmeticLIRGeneratorTool;
@@ -28,7 +29,7 @@ public final class BitScanForwardNode extends UnaryNode implements ArithmeticLIR
     // @def
     public static final NodeClass<BitScanForwardNode> TYPE = NodeClass.create(BitScanForwardNode.class);
 
-    // @cons
+    // @cons BitScanForwardNode
     public BitScanForwardNode(ValueNode __value)
     {
         super(TYPE, StampFactory.forInteger(JavaKind.Int, 0, ((PrimitiveStamp) __value.stamp(NodeView.DEFAULT)).getBits()), __value);
@@ -106,7 +107,7 @@ public final class BitScanForwardNode extends UnaryNode implements ArithmeticLIR
     //
     // @return number of trailing zeros or an undefined value if {@code v} == 0.
     ///
-    @NodeIntrinsic
+    @Node.NodeIntrinsic
     public static native int unsafeScan(long __v);
 
     ///
@@ -114,7 +115,7 @@ public final class BitScanForwardNode extends UnaryNode implements ArithmeticLIR
     //
     // @return number of trailing zeros or an undefined value if {@code v} == 0.
     ///
-    @NodeIntrinsic
+    @Node.NodeIntrinsic
     public static native int unsafeScan(int __v);
 
     @Override

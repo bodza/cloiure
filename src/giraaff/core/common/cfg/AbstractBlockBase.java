@@ -29,7 +29,7 @@ public abstract class AbstractBlockBase<T extends AbstractBlockBase<T>>
     // @field
     private int ___linearScanNumber;
 
-    // @cons
+    // @cons AbstractBlockBase
     protected AbstractBlockBase()
     {
         super();

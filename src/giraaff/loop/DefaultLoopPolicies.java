@@ -18,7 +18,6 @@ import giraaff.nodes.LoopBeginNode;
 import giraaff.nodes.MergeNode;
 import giraaff.nodes.StructuredGraph;
 import giraaff.nodes.VirtualState;
-import giraaff.nodes.VirtualState.VirtualClosure;
 import giraaff.nodes.cfg.Block;
 import giraaff.nodes.cfg.ControlFlowGraph;
 import giraaff.nodes.debug.ControlFlowAnchorNode;
@@ -138,7 +137,7 @@ public final class DefaultLoopPolicies implements LoopPolicies
     }
 
     // @class DefaultLoopPolicies.CountingClosure
-    private static final class CountingClosure implements VirtualClosure
+    private static final class CountingClosure implements VirtualState.VirtualClosure
     {
         // @field
         int ___count;
@@ -172,7 +171,7 @@ public final class DefaultLoopPolicies implements LoopPolicies
         }
         int __inBranchTotal = __branchNodes.count();
 
-        CountingClosure __stateNodesCount = new CountingClosure();
+        DefaultLoopPolicies.CountingClosure __stateNodesCount = new DefaultLoopPolicies.CountingClosure();
         double __loopFrequency = __loop.loopBegin().loopFrequency();
         int __maxDiff = GraalOptions.loopUnswitchTrivial + (int) (GraalOptions.loopUnswitchFrequencyBoost * (__loopFrequency - 1.0 + __phis));
 

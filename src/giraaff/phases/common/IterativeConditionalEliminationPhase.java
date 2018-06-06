@@ -2,8 +2,7 @@ package giraaff.phases.common;
 
 import jdk.vm.ci.code.BailoutException;
 
-import giraaff.graph.Graph.NodeEvent;
-import giraaff.graph.Graph.NodeEventScope;
+import giraaff.graph.Graph;
 import giraaff.graph.Node;
 import giraaff.graph.spi.Simplifiable;
 import giraaff.nodes.StructuredGraph;
@@ -22,7 +21,7 @@ public final class IterativeConditionalEliminationPhase extends BasePhase<PhaseC
     // @field
     private final boolean ___fullSchedule;
 
-    // @cons
+    // @cons IterativeConditionalEliminationPhase
     public IterativeConditionalEliminationPhase(CanonicalizerPhase __canonicalizer, boolean __fullSchedule)
     {
         super();
@@ -33,11 +32,11 @@ public final class IterativeConditionalEliminationPhase extends BasePhase<PhaseC
     @Override
     protected void run(StructuredGraph __graph, PhaseContext __context)
     {
-        HashSetNodeEventListener __listener = new HashSetNodeEventListener().exclude(NodeEvent.NODE_ADDED);
+        HashSetNodeEventListener __listener = new HashSetNodeEventListener().exclude(Graph.NodeEvent.NODE_ADDED);
         int __count = 0;
         while (true)
         {
-            try (NodeEventScope __nes = __graph.trackNodeEvents(__listener))
+            try (Graph.NodeEventScope __nes = __graph.trackNodeEvents(__listener))
             {
                 new ConditionalEliminationPhase(this.___fullSchedule).apply(__graph, __context);
             }

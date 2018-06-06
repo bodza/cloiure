@@ -70,7 +70,7 @@ import giraaff.hotspot.replacements.arraycopy.ArrayCopyWithSlowPathNode;
 import giraaff.hotspot.word.KlassPointer;
 import giraaff.nodes.AbstractBeginNode;
 import giraaff.nodes.AbstractDeoptimizeNode;
-import giraaff.nodes.CompressionNode.CompressionOp;
+import giraaff.nodes.CompressionNode;
 import giraaff.nodes.ConstantNode;
 import giraaff.nodes.FixedNode;
 import giraaff.nodes.Invoke;
@@ -115,7 +115,7 @@ import giraaff.nodes.java.NewInstanceNode;
 import giraaff.nodes.java.NewMultiArrayNode;
 import giraaff.nodes.java.RawMonitorEnterNode;
 import giraaff.nodes.memory.FloatingReadNode;
-import giraaff.nodes.memory.HeapAccess.BarrierType;
+import giraaff.nodes.memory.HeapAccess;
 import giraaff.nodes.memory.ReadNode;
 import giraaff.nodes.memory.WriteNode;
 import giraaff.nodes.memory.address.AddressNode;
@@ -141,27 +141,27 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
     protected final HotSpotConstantReflectionProvider ___constantReflection;
 
     // @field
-    protected InstanceOfSnippets.Templates ___instanceofSnippets;
+    protected InstanceOfSnippets.InstanceOfTemplates ___instanceofSnippets;
     // @field
-    protected NewObjectSnippets.Templates ___newObjectSnippets;
+    protected NewObjectSnippets.NewObjectTemplates ___newObjectSnippets;
     // @field
-    protected MonitorSnippets.Templates ___monitorSnippets;
+    protected MonitorSnippets.MonitorTemplates ___monitorSnippets;
     // @field
-    protected WriteBarrierSnippets.Templates ___writeBarrierSnippets;
+    protected WriteBarrierSnippets.WriteBarrierTemplates ___writeBarrierSnippets;
     // @field
-    protected LoadExceptionObjectSnippets.Templates ___exceptionObjectSnippets;
+    protected LoadExceptionObjectSnippets.LoadExceptionObjectTemplates ___exceptionObjectSnippets;
     // @field
-    protected UnsafeLoadSnippets.Templates ___unsafeLoadSnippets;
+    protected UnsafeLoadSnippets.UnsafeLoadTemplates ___unsafeLoadSnippets;
     // @field
-    protected ArrayCopySnippets.Templates ___arraycopySnippets;
+    protected ArrayCopySnippets.ArrayCopyTemplates ___arraycopySnippets;
     // @field
-    protected StringToBytesSnippets.Templates ___stringToBytesSnippets;
+    protected StringToBytesSnippets.StringToBytesTemplates ___stringToBytesSnippets;
     // @field
-    protected HashCodeSnippets.Templates ___hashCodeSnippets;
+    protected HashCodeSnippets.HashCodeTemplates ___hashCodeSnippets;
     // @field
-    protected ResolveConstantSnippets.Templates ___resolveConstantSnippets;
+    protected ResolveConstantSnippets.ResolveConstantTemplates ___resolveConstantSnippets;
 
-    // @cons
+    // @cons DefaultHotSpotLoweringProvider
     public DefaultHotSpotLoweringProvider(HotSpotGraalRuntime __runtime, MetaAccessProvider __metaAccess, ForeignCallsProvider __foreignCalls, HotSpotRegistersProvider __registers, HotSpotConstantReflectionProvider __constantReflection, TargetDescription __target)
     {
         super(__metaAccess, __foreignCalls, __target, HotSpotRuntime.useCompressedOops);
@@ -175,19 +175,19 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
     {
         super.initialize(__providers, __providers.getSnippetReflection());
 
-        this.___instanceofSnippets = new InstanceOfSnippets.Templates(__providers, this.___target);
-        this.___newObjectSnippets = new NewObjectSnippets.Templates(__providers, this.___target);
-        this.___monitorSnippets = new MonitorSnippets.Templates(__providers, this.___target, HotSpotRuntime.useFastLocking);
-        this.___writeBarrierSnippets = new WriteBarrierSnippets.Templates(__providers, this.___target, HotSpotRuntime.useCompressedOops ? HotSpotRuntime.oopEncoding : null);
-        this.___exceptionObjectSnippets = new LoadExceptionObjectSnippets.Templates(__providers, this.___target);
-        this.___unsafeLoadSnippets = new UnsafeLoadSnippets.Templates(__providers, this.___target);
-        this.___arraycopySnippets = new ArrayCopySnippets.Templates(__providers, this.___target);
-        this.___stringToBytesSnippets = new StringToBytesSnippets.Templates(__providers, this.___target);
-        this.___hashCodeSnippets = new HashCodeSnippets.Templates(__providers, this.___target);
-        this.___resolveConstantSnippets = new ResolveConstantSnippets.Templates(__providers, this.___target);
+        this.___instanceofSnippets = new InstanceOfSnippets.InstanceOfTemplates(__providers, this.___target);
+        this.___newObjectSnippets = new NewObjectSnippets.NewObjectTemplates(__providers, this.___target);
+        this.___monitorSnippets = new MonitorSnippets.MonitorTemplates(__providers, this.___target, HotSpotRuntime.useFastLocking);
+        this.___writeBarrierSnippets = new WriteBarrierSnippets.WriteBarrierTemplates(__providers, this.___target, HotSpotRuntime.useCompressedOops ? HotSpotRuntime.oopEncoding : null);
+        this.___exceptionObjectSnippets = new LoadExceptionObjectSnippets.LoadExceptionObjectTemplates(__providers, this.___target);
+        this.___unsafeLoadSnippets = new UnsafeLoadSnippets.UnsafeLoadTemplates(__providers, this.___target);
+        this.___arraycopySnippets = new ArrayCopySnippets.ArrayCopyTemplates(__providers, this.___target);
+        this.___stringToBytesSnippets = new StringToBytesSnippets.StringToBytesTemplates(__providers, this.___target);
+        this.___hashCodeSnippets = new HashCodeSnippets.HashCodeTemplates(__providers, this.___target);
+        this.___resolveConstantSnippets = new ResolveConstantSnippets.ResolveConstantTemplates(__providers, this.___target);
     }
 
-    public MonitorSnippets.Templates getMonitorSnippets()
+    public MonitorSnippets.MonitorTemplates getMonitorSnippets()
     {
         return this.___monitorSnippets;
     }
@@ -447,8 +447,8 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
 
     private static void lowerComputeObjectAddressNode(ComputeObjectAddressNode __n)
     {
-        // Lower the node into a ComputeObjectAddress node and an Add but ensure that it's below any
-        // potential safepoints and above it's uses.
+        // Lower the node into a ComputeObjectAddress node and an ArithmeticOpTable.BinaryOp.Add,
+        // but ensure that it's below any potential safepoints and above it's uses.
         for (Node __use : __n.usages().snapshot())
         {
             if (__use instanceof FixedNode)
@@ -477,7 +477,7 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
         }
         StructuredGraph __graph = __n.graph();
         AddressNode __address = createOffsetAddress(__graph, __n.getHub(), HotSpotRuntime.klassLayoutHelperOffset);
-        __n.replaceAtUsagesAndDelete(__graph.unique(new FloatingReadNode(__address, HotSpotReplacementsUtil.KLASS_LAYOUT_HELPER_LOCATION, null, __n.stamp(NodeView.DEFAULT), null, BarrierType.NONE)));
+        __n.replaceAtUsagesAndDelete(__graph.unique(new FloatingReadNode(__address, HotSpotReplacementsUtil.KLASS_LAYOUT_HELPER_LOCATION, null, __n.stamp(NodeView.DEFAULT), null, HeapAccess.BarrierType.NONE)));
     }
 
     private void lowerHubGetClassNode(HubGetClassNode __n, LoweringTool __tool)
@@ -489,9 +489,9 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
 
         StructuredGraph __graph = __n.graph();
         AddressNode __address = createOffsetAddress(__graph, __n.getHub(), HotSpotRuntime.classMirrorOffset);
-        FloatingReadNode __read = __graph.unique(new FloatingReadNode(__address, HotSpotReplacementsUtil.CLASS_MIRROR_LOCATION, null, StampFactory.forKind(this.___target.wordJavaKind), null, BarrierType.NONE));
+        FloatingReadNode __read = __graph.unique(new FloatingReadNode(__address, HotSpotReplacementsUtil.CLASS_MIRROR_LOCATION, null, StampFactory.forKind(this.___target.wordJavaKind), null, HeapAccess.BarrierType.NONE));
         __address = createOffsetAddress(__graph, __read, 0);
-        __read = __graph.unique(new FloatingReadNode(__address, HotSpotReplacementsUtil.CLASS_MIRROR_HANDLE_LOCATION, null, __n.stamp(NodeView.DEFAULT), null, BarrierType.NONE));
+        __read = __graph.unique(new FloatingReadNode(__address, HotSpotReplacementsUtil.CLASS_MIRROR_HANDLE_LOCATION, null, __n.stamp(NodeView.DEFAULT), null, HeapAccess.BarrierType.NONE));
         __n.replaceAtUsagesAndDelete(__read);
     }
 
@@ -504,7 +504,7 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
 
         StructuredGraph __graph = __n.graph();
         AddressNode __address = createOffsetAddress(__graph, __n.getValue(), HotSpotRuntime.klassOffset);
-        FloatingReadNode __read = __graph.unique(new FloatingReadNode(__address, HotSpotReplacementsUtil.CLASS_KLASS_LOCATION, null, __n.stamp(NodeView.DEFAULT), null, BarrierType.NONE));
+        FloatingReadNode __read = __graph.unique(new FloatingReadNode(__address, HotSpotReplacementsUtil.CLASS_KLASS_LOCATION, null, __n.stamp(NodeView.DEFAULT), null, HeapAccess.BarrierType.NONE));
         __n.replaceAtUsagesAndDelete(__read);
     }
 
@@ -537,7 +537,7 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
                     // We use LocationNode.ANY_LOCATION for the reads that access the compiled
                     // code entry as HotSpot does not guarantee they are final values.
                     AddressNode __address = createOffsetAddress(__graph, __metaspaceMethod, HotSpotRuntime.methodCompiledEntryOffset);
-                    ReadNode __compiledEntry = __graph.add(new ReadNode(__address, LocationIdentity.any(), StampFactory.forKind(__wordKind), BarrierType.NONE));
+                    ReadNode __compiledEntry = __graph.add(new ReadNode(__address, LocationIdentity.any(), StampFactory.forKind(__wordKind), HeapAccess.BarrierType.NONE));
 
                     __loweredCallTarget = __graph.add(new HotSpotIndirectCallTargetNode(__metaspaceMethod, __compiledEntry, __parameters.toArray(new ValueNode[__parameters.size()]), __callTarget.returnStamp(), __signature, __callTarget.targetMethod(), HotSpotCallingConventionType.JavaCall, __callTarget.invokeKind()));
 
@@ -561,7 +561,7 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
     }
 
     @Override
-    protected ValueNode newCompressionNode(CompressionOp __op, ValueNode __value)
+    protected ValueNode newCompressionNode(CompressionNode.CompressionOp __op, ValueNode __value)
     {
         return new HotSpotCompressionNode(__op, __value, HotSpotRuntime.oopEncoding);
     }
@@ -622,15 +622,15 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
     }
 
     @Override
-    public BarrierType fieldInitializationBarrier(JavaKind __entryKind)
+    public HeapAccess.BarrierType fieldInitializationBarrier(JavaKind __entryKind)
     {
-        return (__entryKind == JavaKind.Object && !HotSpotRuntime.useDeferredInitBarriers) ? BarrierType.IMPRECISE : BarrierType.NONE;
+        return (__entryKind == JavaKind.Object && !HotSpotRuntime.useDeferredInitBarriers) ? HeapAccess.BarrierType.IMPRECISE : HeapAccess.BarrierType.NONE;
     }
 
     @Override
-    public BarrierType arrayInitializationBarrier(JavaKind __entryKind)
+    public HeapAccess.BarrierType arrayInitializationBarrier(JavaKind __entryKind)
     {
-        return (__entryKind == JavaKind.Object && !HotSpotRuntime.useDeferredInitBarriers) ? BarrierType.PRECISE : BarrierType.NONE;
+        return (__entryKind == JavaKind.Object && !HotSpotRuntime.useDeferredInitBarriers) ? HeapAccess.BarrierType.PRECISE : HeapAccess.BarrierType.NONE;
     }
 
     private void lowerOSRStartNode(OSRStartNode __osrStart)
@@ -657,7 +657,7 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
                 int __size = __osrLocal.getStackKind().getSlotCount();
                 int __offset = __localsOffset - (__osrLocal.index() + __size - 1) * __wordSize;
                 AddressNode __address = createOffsetAddress(__graph, __buffer, __offset);
-                ReadNode __load = __graph.add(new ReadNode(__address, LocationIdentity.any(), __osrLocal.stamp(NodeView.DEFAULT), BarrierType.NONE));
+                ReadNode __load = __graph.add(new ReadNode(__address, LocationIdentity.any(), __osrLocal.stamp(NodeView.DEFAULT), HeapAccess.BarrierType.NONE));
                 __osrLocal.replaceAndDelete(__load);
                 __graph.addBeforeFixed(__migrationEnd, __load);
             }
@@ -678,7 +678,7 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
 
                 // load the displaced mark from the osr buffer
                 AddressNode __addressDisplacedHeader = createOffsetAddress(__graph, __buffer, __offsetDisplacedHeader);
-                ReadNode __loadDisplacedHeader = __graph.add(new ReadNode(__addressDisplacedHeader, LocationIdentity.any(), __lock.stamp(NodeView.DEFAULT), BarrierType.NONE));
+                ReadNode __loadDisplacedHeader = __graph.add(new ReadNode(__addressDisplacedHeader, LocationIdentity.any(), __lock.stamp(NodeView.DEFAULT), HeapAccess.BarrierType.NONE));
                 __graph.addBeforeFixed(__migrationEnd, __loadDisplacedHeader);
 
                 // we need to initialize the stack slot for the lock
@@ -687,12 +687,12 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
 
                 // write the displaced mark to the correct stack slot
                 AddressNode __addressDisplacedMark = createOffsetAddress(__graph, __beginLockScope, HotSpotRuntime.lockDisplacedMarkOffset);
-                WriteNode __writeStackSlot = __graph.add(new WriteNode(__addressDisplacedMark, HotSpotReplacementsUtil.DISPLACED_MARK_WORD_LOCATION, __loadDisplacedHeader, BarrierType.NONE));
+                WriteNode __writeStackSlot = __graph.add(new WriteNode(__addressDisplacedMark, HotSpotReplacementsUtil.DISPLACED_MARK_WORD_LOCATION, __loadDisplacedHeader, HeapAccess.BarrierType.NONE));
                 __graph.addBeforeFixed(__migrationEnd, __writeStackSlot);
 
                 // load the lock object from the osr buffer
                 AddressNode __addressLockObject = createOffsetAddress(__graph, __buffer, __offsetLockObject);
-                ReadNode __loadObject = __graph.add(new ReadNode(__addressLockObject, LocationIdentity.any(), __lock.stamp(NodeView.DEFAULT), BarrierType.NONE));
+                ReadNode __loadObject = __graph.add(new ReadNode(__addressLockObject, LocationIdentity.any(), __lock.stamp(NodeView.DEFAULT), HeapAccess.BarrierType.NONE));
                 __lock.replaceAndDelete(__loadObject);
                 __graph.addBeforeFixed(__migrationEnd, __loadObject);
             }
@@ -736,11 +736,11 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
         Throwable __exception;
         if (__node.getExceptionClass() == NullPointerException.class)
         {
-            __exception = Exceptions.cachedNullPointerException;
+            __exception = DefaultHotSpotLoweringProvider.Exceptions.cachedNullPointerException;
         }
         else if (__node.getExceptionClass() == ArrayIndexOutOfBoundsException.class)
         {
-            __exception = Exceptions.cachedArrayIndexOutOfBoundsException;
+            __exception = DefaultHotSpotLoweringProvider.Exceptions.cachedArrayIndexOutOfBoundsException;
         }
         else
         {
@@ -766,19 +766,19 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
         ForeignCallDescriptor __descriptor;
         if (__node.getExceptionClass() == NullPointerException.class)
         {
-            __descriptor = RuntimeCalls.CREATE_NULL_POINTER_EXCEPTION;
+            __descriptor = DefaultHotSpotLoweringProvider.RuntimeCalls.CREATE_NULL_POINTER_EXCEPTION;
         }
         else if (__node.getExceptionClass() == ArrayIndexOutOfBoundsException.class)
         {
-            __descriptor = RuntimeCalls.CREATE_OUT_OF_BOUNDS_EXCEPTION;
+            __descriptor = DefaultHotSpotLoweringProvider.RuntimeCalls.CREATE_OUT_OF_BOUNDS_EXCEPTION;
         }
         else if (__node.getExceptionClass() == ArrayStoreException.class)
         {
-            __descriptor = RuntimeCalls.CREATE_ARRAY_STORE_EXCEPTION;
+            __descriptor = DefaultHotSpotLoweringProvider.RuntimeCalls.CREATE_ARRAY_STORE_EXCEPTION;
         }
         else if (__node.getExceptionClass() == ClassCastException.class)
         {
-            __descriptor = RuntimeCalls.CREATE_CLASS_CAST_EXCEPTION;
+            __descriptor = DefaultHotSpotLoweringProvider.RuntimeCalls.CREATE_CLASS_CAST_EXCEPTION;
         }
         else
         {
@@ -814,7 +814,7 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
         // entry as HotSpot does not guarantee that this is a final value.
         Stamp __methodStamp = MethodPointerStamp.methodNonNull();
         AddressNode __address = createOffsetAddress(__graph, __hub, __vtableEntryOffset);
-        return __graph.add(new ReadNode(__address, LocationIdentity.any(), __methodStamp, BarrierType.NONE));
+        return __graph.add(new ReadNode(__address, LocationIdentity.any(), __methodStamp, HeapAccess.BarrierType.NONE));
     }
 
     @Override
@@ -833,7 +833,7 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
 
         AddressNode __address = createOffsetAddress(__graph, __object, HotSpotRuntime.hubOffset);
         LocationIdentity __hubLocation = HotSpotRuntime.useCompressedClassPointers ? HotSpotReplacementsUtil.COMPRESSED_HUB_LOCATION : HotSpotReplacementsUtil.HUB_LOCATION;
-        FloatingReadNode __memoryRead = __graph.unique(new FloatingReadNode(__address, __hubLocation, null, __hubStamp, null, BarrierType.NONE));
+        FloatingReadNode __memoryRead = __graph.unique(new FloatingReadNode(__address, __hubLocation, null, __hubStamp, null, HeapAccess.BarrierType.NONE));
         if (HotSpotRuntime.useCompressedClassPointers)
         {
             return HotSpotCompressionNode.uncompress(__memoryRead, HotSpotRuntime.klassEncoding);
@@ -853,17 +853,17 @@ public class DefaultHotSpotLoweringProvider extends DefaultJavaLoweringProvider 
         }
 
         AddressNode __address = createOffsetAddress(__graph, __object, HotSpotRuntime.hubOffset);
-        return __graph.add(new WriteNode(__address, HotSpotReplacementsUtil.HUB_WRITE_LOCATION, __writeValue, BarrierType.NONE));
+        return __graph.add(new WriteNode(__address, HotSpotReplacementsUtil.HUB_WRITE_LOCATION, __writeValue, HeapAccess.BarrierType.NONE));
     }
 
     @Override
-    protected BarrierType fieldLoadBarrierType(ResolvedJavaField __f)
+    protected HeapAccess.BarrierType fieldLoadBarrierType(ResolvedJavaField __f)
     {
         HotSpotResolvedJavaField __loadField = (HotSpotResolvedJavaField) __f;
-        BarrierType __barrierType = BarrierType.NONE;
+        HeapAccess.BarrierType __barrierType = HeapAccess.BarrierType.NONE;
         if (HotSpotRuntime.useG1GC && __loadField.getJavaKind() == JavaKind.Object && this.___metaAccess.lookupJavaType(Reference.class).equals(__loadField.getDeclaringClass()) && __loadField.getName().equals("referent"))
         {
-            __barrierType = BarrierType.PRECISE;
+            __barrierType = HeapAccess.BarrierType.PRECISE;
         }
         return __barrierType;
     }

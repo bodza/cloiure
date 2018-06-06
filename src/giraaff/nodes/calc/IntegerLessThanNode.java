@@ -30,9 +30,9 @@ public final class IntegerLessThanNode extends IntegerLowerThanNode
     public static final NodeClass<IntegerLessThanNode> TYPE = NodeClass.create(IntegerLessThanNode.class);
 
     // @def
-    private static final LessThanOp OP = new LessThanOp();
+    private static final IntegerLessThanNode.LessThanOp OP = new IntegerLessThanNode.LessThanOp();
 
-    // @cons
+    // @cons IntegerLessThanNode
     public IntegerLessThanNode(ValueNode __x, ValueNode __y)
     {
         super(TYPE, __x, __y, OP);
@@ -82,7 +82,7 @@ public final class IntegerLessThanNode extends IntegerLowerThanNode
     }
 
     // @class IntegerLessThanNode.LessThanOp
-    public static final class LessThanOp extends LowerOp
+    public static final class LessThanOp extends IntegerLowerThanNode.LowerOp
     {
         @Override
         protected CompareNode duplicateModified(ValueNode __newX, ValueNode __newY, NodeView __view)

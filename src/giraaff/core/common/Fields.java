@@ -40,7 +40,7 @@ public class Fields
         return new Fields(__scanner.___data);
     }
 
-    // @cons
+    // @cons Fields
     public Fields(ArrayList<? extends FieldsScanner.FieldInfo> __fields)
     {
         super();
@@ -78,7 +78,7 @@ public class Fields
 
     ///
     // Function enabling an object field value to be replaced with another value when being copied
-    // within {@link Fields#copy(Object, Object, ObjectTransformer)}.
+    // within {@link Fields#copy(Object, Object, Fields.ObjectTransformer)}.
     ///
     @FunctionalInterface
     // @iface Fields.ObjectTransformer
@@ -106,7 +106,7 @@ public class Fields
     // @param trans function to applied to object field values as they are copied. If {@code null},
     //            the value is copied unchanged.
     ///
-    public void copy(Object __from, Object __to, ObjectTransformer __trans)
+    public void copy(Object __from, Object __to, Fields.ObjectTransformer __trans)
     {
         for (int __index = 0; __index < this.___offsets.length; __index++)
         {

@@ -97,12 +97,13 @@ public final class StructuredGraph extends Graph
     {
         YES,
         NO;
-        public static AllowAssumptions ifTrue(boolean __flag)
+
+        public static StructuredGraph.AllowAssumptions ifTrue(boolean __flag)
         {
             return __flag ? YES : NO;
         }
 
-        public static AllowAssumptions ifNonNull(Assumptions __assumptions)
+        public static StructuredGraph.AllowAssumptions ifNonNull(Assumptions __assumptions)
         {
             return __assumptions != null ? YES : NO;
         }
@@ -118,7 +119,7 @@ public final class StructuredGraph extends Graph
         // @field
         private final BlockMap<List<Node>> ___blockToNodesMap;
 
-        // @cons
+        // @cons StructuredGraph.ScheduleResult
         public ScheduleResult(ControlFlowGraph __cfg, NodeMap<Block> __nodeToBlockMap, BlockMap<List<Node>> __blockToNodesMap)
         {
             super();
@@ -151,8 +152,8 @@ public final class StructuredGraph extends Graph
     ///
     // Object used to create a {@link StructuredGraph}.
     ///
-    // @class StructuredGraph.Builder
-    public static final class Builder
+    // @class StructuredGraph.GraphBuilder
+    public static final class GraphBuilder
     {
         // @field
         private final Assumptions ___assumptions;
@@ -168,18 +169,18 @@ public final class StructuredGraph extends Graph
         ///
         // Creates a builder for a graph.
         ///
-        // @cons
-        public Builder(AllowAssumptions __allowAssumptions)
+        // @cons StructuredGraph.GraphBuilder
+        public GraphBuilder(StructuredGraph.AllowAssumptions __allowAssumptions)
         {
             super();
-            this.___assumptions = __allowAssumptions == AllowAssumptions.YES ? new Assumptions() : null;
+            this.___assumptions = __allowAssumptions == StructuredGraph.AllowAssumptions.YES ? new Assumptions() : null;
         }
 
         ///
         // Creates a builder for a graph that does not support {@link Assumptions}.
         ///
-        // @cons
-        public Builder()
+        // @cons StructuredGraph.GraphBuilder
+        public GraphBuilder()
         {
             super();
             this.___assumptions = null;
@@ -190,7 +191,7 @@ public final class StructuredGraph extends Graph
             return this.___rootMethod;
         }
 
-        public Builder method(ResolvedJavaMethod __method)
+        public StructuredGraph.GraphBuilder method(ResolvedJavaMethod __method)
         {
             this.___rootMethod = __method;
             return this;
@@ -201,7 +202,7 @@ public final class StructuredGraph extends Graph
             return this.___speculationLog;
         }
 
-        public Builder speculationLog(SpeculationLog __log)
+        public StructuredGraph.GraphBuilder speculationLog(SpeculationLog __log)
         {
             this.___speculationLog = __log;
             return this;
@@ -212,7 +213,7 @@ public final class StructuredGraph extends Graph
             return this.___entryBCI;
         }
 
-        public Builder entryBCI(int __bci)
+        public StructuredGraph.GraphBuilder entryBCI(int __bci)
         {
             this.___entryBCI = __bci;
             return this;
@@ -223,7 +224,7 @@ public final class StructuredGraph extends Graph
             return this.___useProfilingInfo;
         }
 
-        public Builder useProfilingInfo(boolean __flag)
+        public StructuredGraph.GraphBuilder useProfilingInfo(boolean __flag)
         {
             this.___useProfilingInfo = __flag;
             return this;
@@ -249,7 +250,7 @@ public final class StructuredGraph extends Graph
     // @field
     private final int ___entryBCI;
     // @field
-    private GuardsStage ___guardsStage = GuardsStage.FLOATING_GUARDS;
+    private StructuredGraph.GuardsStage ___guardsStage = StructuredGraph.GuardsStage.FLOATING_GUARDS;
     // @field
     private boolean ___isAfterFloatingReadPhase = false;
     // @field
@@ -270,7 +271,7 @@ public final class StructuredGraph extends Graph
     private SpeculationLog ___speculationLog;
 
     // @field
-    private ScheduleResult ___lastSchedule;
+    private StructuredGraph.ScheduleResult ___lastSchedule;
 
     ///
     // Records the methods that were used while constructing this graph, one entry for each time a
@@ -295,7 +296,7 @@ public final class StructuredGraph extends Graph
     }
 
     // @field
-    private UnsafeAccessState ___hasUnsafeAccess = UnsafeAccessState.NO_ACCESS;
+    private StructuredGraph.UnsafeAccessState ___hasUnsafeAccess = StructuredGraph.UnsafeAccessState.NO_ACCESS;
 
     // @def
     public static final boolean USE_PROFILING_INFO = true;
@@ -303,7 +304,7 @@ public final class StructuredGraph extends Graph
     // @def
     public static final boolean NO_PROFILING_INFO = false;
 
-    // @cons
+    // @cons StructuredGraph
     private StructuredGraph(ResolvedJavaMethod __method, int __entryBCI, Assumptions __assumptions, SpeculationLog __speculationLog, boolean __useProfilingInfo)
     {
         super();
@@ -323,12 +324,12 @@ public final class StructuredGraph extends Graph
         this.___useProfilingInfo = __useProfilingInfo;
     }
 
-    public void setLastSchedule(ScheduleResult __result)
+    public void setLastSchedule(StructuredGraph.ScheduleResult __result)
     {
         this.___lastSchedule = __result;
     }
 
-    public ScheduleResult getLastSchedule()
+    public StructuredGraph.ScheduleResult getLastSchedule()
     {
         return this.___lastSchedule;
     }
@@ -413,7 +414,7 @@ public final class StructuredGraph extends Graph
     public StructuredGraph copy()
     {
         StructuredGraph __copy = new StructuredGraph(method(), this.___entryBCI, this.___assumptions != null ? new Assumptions() : null, this.___speculationLog, this.___useProfilingInfo);
-        if (AllowAssumptions.ifNonNull(this.___assumptions) == AllowAssumptions.YES && this.___assumptions != null)
+        if (StructuredGraph.AllowAssumptions.ifNonNull(this.___assumptions) == StructuredGraph.AllowAssumptions.YES && this.___assumptions != null)
         {
             __copy.___assumptions.record(this.___assumptions);
         }
@@ -687,12 +688,12 @@ public final class StructuredGraph extends Graph
         }
     }
 
-    public GuardsStage getGuardsStage()
+    public StructuredGraph.GuardsStage getGuardsStage()
     {
         return this.___guardsStage;
     }
 
-    public void setGuardsStage(GuardsStage __guardsStage)
+    public void setGuardsStage(StructuredGraph.GuardsStage __guardsStage)
     {
         this.___guardsStage = __guardsStage;
     }
@@ -866,26 +867,26 @@ public final class StructuredGraph extends Graph
 
     public boolean hasUnsafeAccess()
     {
-        return this.___hasUnsafeAccess == UnsafeAccessState.HAS_ACCESS;
+        return this.___hasUnsafeAccess == StructuredGraph.UnsafeAccessState.HAS_ACCESS;
     }
 
     public void markUnsafeAccess()
     {
-        if (this.___hasUnsafeAccess == UnsafeAccessState.DISABLED)
+        if (this.___hasUnsafeAccess == StructuredGraph.UnsafeAccessState.DISABLED)
         {
             return;
         }
-        this.___hasUnsafeAccess = UnsafeAccessState.HAS_ACCESS;
+        this.___hasUnsafeAccess = StructuredGraph.UnsafeAccessState.HAS_ACCESS;
     }
 
     public void disableUnsafeAccessTracking()
     {
-        this.___hasUnsafeAccess = UnsafeAccessState.DISABLED;
+        this.___hasUnsafeAccess = StructuredGraph.UnsafeAccessState.DISABLED;
     }
 
     public boolean isUnsafeAccessTrackingEnabled()
     {
-        return this.___hasUnsafeAccess != UnsafeAccessState.DISABLED;
+        return this.___hasUnsafeAccess != StructuredGraph.UnsafeAccessState.DISABLED;
     }
 
     public SpeculationLog getSpeculationLog()

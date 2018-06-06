@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 // @class StructuralInput
 public abstract class StructuralInput
 {
-    // @cons
+    // @cons StructuralInput
     private StructuralInput()
     {
         super();
@@ -21,6 +21,7 @@ public abstract class StructuralInput
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.TYPE)
     @Inherited
+    // @iface StructuralInput.MarkerType
     public @interface MarkerType
     {
         InputType value();
@@ -29,34 +30,34 @@ public abstract class StructuralInput
     ///
     // Marker type for {@link InputType#Memory} edges in snippets.
     ///
-    @MarkerType(InputType.Memory)
+    @StructuralInput.MarkerType(InputType.Memory)
     // @class StructuralInput.Memory
     public abstract static class Memory extends StructuralInput
     {
     }
 
     ///
-    // Marker type for {@link InputType#Condition} edges in snippets.
+    // Marker type for {@link InputType#ConditionI} edges in snippets.
     ///
-    @MarkerType(InputType.Condition)
-    // @class StructuralInput.Condition
-    public abstract static class Condition extends StructuralInput
+    @StructuralInput.MarkerType(InputType.ConditionI)
+    // @class StructuralInput.ConditionI
+    public abstract static class ConditionI extends StructuralInput
     {
     }
 
     ///
-    // Marker type for {@link InputType#State} edges in snippets.
+    // Marker type for {@link InputType#StateI} edges in snippets.
     ///
-    @MarkerType(InputType.State)
-    // @class StructuralInput.State
-    public abstract static class State extends StructuralInput
+    @StructuralInput.MarkerType(InputType.StateI)
+    // @class StructuralInput.StateI
+    public abstract static class StateI extends StructuralInput
     {
     }
 
     ///
     // Marker type for {@link InputType#Guard} edges in snippets.
     ///
-    @MarkerType(InputType.Guard)
+    @StructuralInput.MarkerType(InputType.Guard)
     // @class StructuralInput.Guard
     public abstract static class Guard extends StructuralInput
     {
@@ -65,7 +66,7 @@ public abstract class StructuralInput
     ///
     // Marker type for {@link InputType#Anchor} edges in snippets.
     ///
-    @MarkerType(InputType.Anchor)
+    @StructuralInput.MarkerType(InputType.Anchor)
     // @class StructuralInput.Anchor
     public abstract static class Anchor extends StructuralInput
     {
@@ -74,7 +75,7 @@ public abstract class StructuralInput
     ///
     // Marker type for {@link InputType#Association} edges in snippets.
     ///
-    @MarkerType(InputType.Association)
+    @StructuralInput.MarkerType(InputType.Association)
     // @class StructuralInput.Association
     public abstract static class Association extends StructuralInput
     {
@@ -83,7 +84,7 @@ public abstract class StructuralInput
     ///
     // Marker type for {@link InputType#Extension} edges in snippets.
     ///
-    @MarkerType(InputType.Extension)
+    @StructuralInput.MarkerType(InputType.Extension)
     // @class StructuralInput.Extension
     public abstract static class Extension extends StructuralInput
     {

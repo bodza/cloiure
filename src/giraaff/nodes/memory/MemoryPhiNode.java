@@ -3,6 +3,7 @@ package giraaff.nodes.memory;
 import org.graalvm.word.LocationIdentity;
 
 import giraaff.core.common.type.StampFactory;
+import giraaff.graph.Node;
 import giraaff.graph.NodeClass;
 import giraaff.graph.NodeInputList;
 import giraaff.nodeinfo.InputType;
@@ -13,20 +14,20 @@ import giraaff.nodes.ValueNode;
 ///
 // Memory {@code PhiNode}s merge memory dependencies at control flow merges.
 ///
-// @NodeInfo.allowedUsageTypes "Memory"
+// @NodeInfo.allowedUsageTypes "InputType.Memory"
 // @class MemoryPhiNode
 public final class MemoryPhiNode extends PhiNode implements MemoryNode
 {
     // @def
     public static final NodeClass<MemoryPhiNode> TYPE = NodeClass.create(MemoryPhiNode.class);
 
-    @Input(InputType.Memory)
+    @Node.Input(InputType.Memory)
     // @field
     NodeInputList<ValueNode> ___values;
     // @field
     protected final LocationIdentity ___locationIdentity;
 
-    // @cons
+    // @cons MemoryPhiNode
     public MemoryPhiNode(AbstractMergeNode __merge, LocationIdentity __locationIdentity)
     {
         super(TYPE, StampFactory.forVoid(), __merge);
@@ -34,7 +35,7 @@ public final class MemoryPhiNode extends PhiNode implements MemoryNode
         this.___values = new NodeInputList<>(this);
     }
 
-    // @cons
+    // @cons MemoryPhiNode
     public MemoryPhiNode(AbstractMergeNode __merge, LocationIdentity __locationIdentity, ValueNode[] __values)
     {
         super(TYPE, StampFactory.forVoid(), __merge);

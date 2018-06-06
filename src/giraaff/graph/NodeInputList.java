@@ -3,36 +3,36 @@ package giraaff.graph;
 import java.util.Collection;
 import java.util.List;
 
-import giraaff.graph.Edges.Type;
+import giraaff.graph.Edges;
 
 // @class NodeInputList
 public final class NodeInputList<T extends Node> extends NodeList<T>
 {
-    // @cons
+    // @cons NodeInputList
     public NodeInputList(Node __self, int __initialSize)
     {
         super(__self, __initialSize);
     }
 
-    // @cons
+    // @cons NodeInputList
     public NodeInputList(Node __self)
     {
         super(__self);
     }
 
-    // @cons
+    // @cons NodeInputList
     public NodeInputList(Node __self, T[] __elements)
     {
         super(__self, __elements);
     }
 
-    // @cons
+    // @cons NodeInputList
     public NodeInputList(Node __self, List<? extends T> __elements)
     {
         super(__self, __elements);
     }
 
-    // @cons
+    // @cons NodeInputList
     public NodeInputList(Node __self, Collection<? extends NodeInterface> __elements)
     {
         super(__self, __elements);
@@ -45,8 +45,8 @@ public final class NodeInputList<T extends Node> extends NodeList<T>
     }
 
     @Override
-    public Type getEdgesType()
+    public Edges.EdgesType getEdgesType()
     {
-        return Type.Inputs;
+        return Edges.EdgesType.Inputs;
     }
 }
