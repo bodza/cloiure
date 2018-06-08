@@ -4,7 +4,9 @@
 ;                  [org.clojure/core.specs.alpha "0.1.24"]
                    [org.graalvm/graal-sdk "1.0.0-rc1"]
                    [org.openjdk.jol/jol-core "0.9"]
-                   [org.openjdk.jol/jol-cli "0.9"]]
+                   [org.openjdk.jol/jol-cli "0.9"]
+                   [com.clojure-goes-fast/clj-java-decompiler "0.1.0"]
+                   [com.clojure-goes-fast/clj-memory-meter "0.1.0"]]
     :plugins [[lein-try "0.4.3"]]
 ;   :global-vars {*warn-on-reflection* true}
     :jvm-opts ["-Xmx12g"
