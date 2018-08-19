@@ -1,2 +1,2 @@
 language: clojure
-jdk: oraclejdk9
+jdk: oraclejdk10
