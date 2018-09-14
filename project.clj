@@ -14,6 +14,7 @@
                     "--add-exports=jdk.internal.vm.ci/jdk.vm.ci.code=ALL-UNNAMED"
                     "--add-exports=jdk.internal.vm.ci/jdk.vm.ci.code.site=ALL-UNNAMED"
                     "--add-exports=jdk.internal.vm.ci/jdk.vm.ci.hotspot=ALL-UNNAMED"
+                    "--add-exports=jdk.internal.vm.ci/jdk.vm.ci.hotspot.amd64=ALL-UNNAMED"
                     "--add-exports=jdk.internal.vm.ci/jdk.vm.ci.meta=ALL-UNNAMED"
                     "--add-exports=jdk.internal.vm.ci/jdk.vm.ci.runtime=ALL-UNNAMED"
                     "--add-exports=jdk.internal.vm.compiler/org.graalvm.word=ALL-UNNAMED"
@@ -25,6 +26,7 @@
                     "--add-exports=jdk.internal.vm.ci/jdk.vm.ci.code=ALL-UNNAMED"
                     "--add-exports=jdk.internal.vm.ci/jdk.vm.ci.code.site=ALL-UNNAMED"
                     "--add-exports=jdk.internal.vm.ci/jdk.vm.ci.hotspot=ALL-UNNAMED"
+                    "--add-exports=jdk.internal.vm.ci/jdk.vm.ci.hotspot.amd64=ALL-UNNAMED"
                     "--add-exports=jdk.internal.vm.ci/jdk.vm.ci.meta=ALL-UNNAMED"
                     "--add-exports=jdk.internal.vm.ci/jdk.vm.ci.runtime=ALL-UNNAMED"]
     :source-paths ["src"] :java-source-paths ["src"] :resource-paths ["resources"] :test-paths ["src"]
