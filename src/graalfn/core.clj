@@ -12,7 +12,11 @@
 (doseq [% (keys (ns-imports *ns*))] (ns-unmap *ns* %))
 
 (import
-    [java.lang ArithmeticException Boolean Byte Character Class ClassLoader Double Error IllegalArgumentException IllegalStateException IncompatibleClassChangeError IndexOutOfBoundsException Integer Iterable Long Math Module NoClassDefFoundError NoSuchFieldError NoSuchMethodError Object Short String StringBuilder System Throwable UnsupportedClassVersionError]
+    [java.lang
+        ArithmeticException Boolean Byte Character Class ClassLoader Double Error IllegalArgumentException IllegalStateException
+        IncompatibleClassChangeError IndexOutOfBoundsException Integer Iterable Long Math Module NoClassDefFoundError NoSuchFieldError
+        NoSuchMethodError Object Short String StringBuilder System Throwable UnsupportedClassVersionError
+    ]
 )
 
 (defmacro throw! [^String s] `(throw (Error. ~s)))
@@ -65,13 +69,12 @@
 (defn abs [a] (if (neg? a) (- a) a))
 
 (import
-    [java.io ByteArrayInputStream ByteArrayOutputStream DataInputStream DataOutputStream IOException InputStream]
+    [java.io DataInputStream IOException InputStream]
     [java.lang.annotation Annotation Inherited]
     [java.lang.invoke ConstantCallSite MethodHandle MethodHandles MethodType MutableCallSite VolatileCallSite]
     [java.lang.ref #_Reference]
     [java.lang.reflect AnnotatedElement Array Constructor Field Method Modifier Type]
     [java.nio ByteBuffer ByteOrder]
-    [java.nio.charset Charset]
     [java.util
         AbstractList ArrayDeque ArrayList Arrays BitSet Collection Collections Comparator ConcurrentModificationException
         Deque EnumMap EnumSet HashMap Iterator LinkedList List ListIterator Map Map$Entry NoSuchElementException
@@ -83,24 +86,23 @@
 
     [jdk.vm.ci.amd64 AMD64 AMD64$CPUFeature AMD64Kind]
     [jdk.vm.ci.code
-        Architecture BytecodeFrame BytecodePosition CallingConvention CodeCacheProvider CodeUtil
-        CompiledCode InstalledCode MemoryBarriers Register Register$RegisterCategory RegisterArray RegisterAttributes
-        RegisterConfig RegisterSaveLayout RegisterValue StackSlot TargetDescription ValueKindFactory
+        Architecture BytecodeFrame BytecodePosition CallingConvention CodeCacheProvider CodeUtil CompiledCode
+        InstalledCode MemoryBarriers Register RegisterArray RegisterAttributes RegisterConfig RegisterSaveLayout
+        RegisterValue StackSlot TargetDescription ValueKindFactory
     ]
     [jdk.vm.ci.code.site ConstantReference DataPatch DataSectionReference Mark #_Reference Site]
     [jdk.vm.ci.hotspot
-        HotSpotCallingConventionType HotSpotCodeCacheProvider HotSpotCompiledCode
-        HotSpotCompressedNullConstant HotSpotConstant HotSpotConstantReflectionProvider HotSpotInstalledCode
-        HotSpotJVMCIRuntime HotSpotMemoryAccessProvider HotSpotMetaAccessProvider HotSpotMetaspaceConstant
-        HotSpotObjectConstant HotSpotResolvedJavaField HotSpotResolvedJavaMethod HotSpotResolvedJavaType
-        HotSpotResolvedObjectType HotSpotVMConfigAccess
+        HotSpotCallingConventionType HotSpotCodeCacheProvider HotSpotCompiledCode HotSpotCompressedNullConstant
+        HotSpotConstant HotSpotConstantReflectionProvider HotSpotInstalledCode HotSpotJVMCIRuntime
+        HotSpotMemoryAccessProvider HotSpotMetaAccessProvider HotSpotMetaspaceConstant HotSpotObjectConstant
+        HotSpotResolvedJavaField HotSpotResolvedJavaMethod HotSpotResolvedJavaType HotSpotResolvedObjectType
+        HotSpotVMConfigAccess
     ]
     [jdk.vm.ci.meta
         AllocatableValue Constant ConstantPool ConstantReflectionProvider DeoptimizationAction DeoptimizationReason
         InvokeTarget JavaConstant JavaField JavaKind JavaMethod JavaType MemoryAccessProvider MetaAccessProvider
-        MethodHandleAccessProvider MethodHandleAccessProvider$IntrinsicMethod PlatformKind PrimitiveConstant
-        RawConstant ResolvedJavaField ResolvedJavaMethod ResolvedJavaType SerializableConstant Signature
-        TriState VMConstant Value ValueKind
+        MethodHandleAccessProvider MethodHandleAccessProvider$IntrinsicMethod PlatformKind PrimitiveConstant RawConstant
+        ResolvedJavaField ResolvedJavaMethod ResolvedJavaType Signature TriState VMConstant Value ValueKind
     ]
     [jdk.vm.ci.runtime JVMCIBackend JVMCICompiler]
 
@@ -205,9 +207,6 @@
     (def #_"int" HotSpot'threadLastJavaSpOffset (+ HotSpot'javaThreadAnchorOffset (.getFieldOffset HotSpot'config, "JavaFrameAnchor::_last_Java_sp", Integer, "intptr_t*")))
     (def #_"int" HotSpot'threadLastJavaPcOffset (+ HotSpot'javaThreadAnchorOffset (.getFieldOffset HotSpot'config, "JavaFrameAnchor::_last_Java_pc", Integer, "address")))
     (def #_"int" HotSpot'threadLastJavaFpOffset (+ HotSpot'javaThreadAnchorOffset (.getFieldOffset HotSpot'config, "JavaFrameAnchor::_last_Java_fp", Integer, "intptr_t*")))
-
-    (def #_"int" HotSpot'frameInterpreterFrameSenderSpOffset (.getConstant HotSpot'config, "frame::interpreter_frame_sender_sp_offset", Integer))
-    (def #_"int" HotSpot'frameInterpreterFrameLastSpOffset   (.getConstant HotSpot'config, "frame::interpreter_frame_last_sp_offset",   Integer))
 
     (def #_"long" HotSpot'markOopDescHashShift       (.getConstant HotSpot'config, "markOopDesc::hash_shift",         Long))
     (def #_"long" HotSpot'markOopDescHashMask        (.getConstant HotSpot'config, "markOopDesc::hash_mask",          Long))
@@ -2791,10 +2790,6 @@
         )
     )
 
-    (§ method! #_"AbstractAddress" Assembler''recordDataReferenceInCode-2 [#_"Assembler" this, #_"DataPointerConstant" constant]
-        (Assembler''recordDataReferenceInCode-3 this, constant, (:alignment constant))
-    )
-
     (§ method- #_"Data" Assembler''createDataItem-2 [#_"Assembler" this, #_"Constant" constant]
         (or (get (:dataCache this) constant)
             (let [
@@ -2982,22 +2977,22 @@
  ; @anno Assembler.Prefix
  ;;
 (value-ns Prefix
-    (def #_"int" Prefix'REX        0x40)
-    (def #_"int" Prefix'REXB       0x41)
-    (def #_"int" Prefix'REXX       0x42)
-    (def #_"int" Prefix'REXXB      0x43)
-    (def #_"int" Prefix'REXR       0x44)
-    (def #_"int" Prefix'REXRB      0x45)
-    (def #_"int" Prefix'REXRX      0x46)
-    (def #_"int" Prefix'REXRXB     0x47)
-    (def #_"int" Prefix'REXW       0x48)
-    (def #_"int" Prefix'REXWB      0x49)
-    (def #_"int" Prefix'REXWX      0x4a)
-    (def #_"int" Prefix'REXWXB     0x4b)
-    (def #_"int" Prefix'REXWR      0x4c)
-    (def #_"int" Prefix'REXWRB     0x4d)
-    (def #_"int" Prefix'REXWRX     0x4e)
-    (def #_"int" Prefix'REXWRXB    0x4f)
+    (def #_"int" Prefix'REX     0x40)
+    (def #_"int" Prefix'REXB    0x41)
+    (def #_"int" Prefix'REXX    0x42)
+    (def #_"int" Prefix'REXXB   0x43)
+    (def #_"int" Prefix'REXR    0x44)
+    (def #_"int" Prefix'REXRB   0x45)
+    (def #_"int" Prefix'REXRX   0x46)
+    (def #_"int" Prefix'REXRXB  0x47)
+    (def #_"int" Prefix'REXW    0x48)
+    (def #_"int" Prefix'REXWB   0x49)
+    (def #_"int" Prefix'REXWX   0x4a)
+    (def #_"int" Prefix'REXWXB  0x4b)
+    (def #_"int" Prefix'REXWR   0x4c)
+    (def #_"int" Prefix'REXWRB  0x4d)
+    (def #_"int" Prefix'REXWRX  0x4e)
+    (def #_"int" Prefix'REXWRXB 0x4f)
 )
 
 ;;;
@@ -3006,58 +3001,38 @@
  ; @anno Assembler.OperandSize
  ;;
 (final-ns OperandSize
-    (§ enum
-        (§ reify #_"OperandSize" (ß enum OperandSize'BYTE 1, AMD64Kind/BYTE)
+    (§ enum OperandSize'BYTE
+        (§ reify #_"OperandSize" (OperandSize'new-2 1, AMD64Kind/BYTE)
             (§ override! #_"void" OperandSize''emitImmediate-3 [#_"OperandSize" this, #_"Assembler" asm, #_"int" imm]
                 (Assembler''emitByte-2 asm, imm)
                 nil
             )
-
-            #_unused
-            (§ override! #_"int" OperandSize''immediateSize-1 [#_"OperandSize" this]
-                1
-            )
         )
     )
 
-    (§ enum
-        (§ reify #_"OperandSize" (ß enum OperandSize'WORD 2, AMD64Kind/WORD, 0x66)
+    (§ enum OperandSize'WORD
+        (§ reify #_"OperandSize" (OperandSize'new-3 2, AMD64Kind/WORD, 0x66)
             (§ override! #_"void" OperandSize''emitImmediate-3 [#_"OperandSize" this, #_"Assembler" asm, #_"int" imm]
                 (Assembler''emitShort-2 asm, imm)
                 nil
             )
-
-            #_unused
-            (§ override! #_"int" OperandSize''immediateSize-1 [#_"OperandSize" this]
-                2
-            )
         )
     )
 
-    (§ enum
-        (§ reify #_"OperandSize" (ß enum OperandSize'DWORD 4, AMD64Kind/DWORD)
+    (§ enum OperandSize'DWORD
+        (§ reify #_"OperandSize" (OperandSize'new-2 4, AMD64Kind/DWORD)
             (§ override! #_"void" OperandSize''emitImmediate-3 [#_"OperandSize" this, #_"Assembler" asm, #_"int" imm]
                 (Assembler''emitInt-2 asm, imm)
                 nil
             )
-
-            #_unused
-            (§ override! #_"int" OperandSize''immediateSize-1 [#_"OperandSize" this]
-                4
-            )
         )
     )
 
-    (§ enum
-        (§ reify #_"OperandSize" (ß enum OperandSize'QWORD 8, AMD64Kind/QWORD)
+    (§ enum OperandSize'QWORD
+        (§ reify #_"OperandSize" (OperandSize'new-2 8, AMD64Kind/QWORD)
             (§ override! #_"void" OperandSize''emitImmediate-3 [#_"OperandSize" this, #_"Assembler" asm, #_"int" imm]
                 (Assembler''emitInt-2 asm, imm)
                 nil
-            )
-
-            #_unused
-            (§ override! #_"int" OperandSize''immediateSize-1 [#_"OperandSize" this]
-                4
             )
         )
     )
@@ -3066,7 +3041,6 @@
     (§ final #_"int" :bytes 0)
     (§ final #_"AMD64Kind" :kind nil)
 
-    #_unused
     (§ defn #_"OperandSize" OperandSize'new-2 [#_"int" bytes, #_"AMD64Kind" kind]
         (OperandSize'new-3 bytes, kind, 0)
     )
@@ -3082,60 +3056,11 @@
         )
     )
 
-    #_unused
-    (§ defn #_"OperandSize" OperandSize'get-1 [#_"PlatformKind" kind]
-        (loop-when [#_"ISeq" s (seq (OperandSize'values-0))] (some? s) => (throw! (str "unexpected kind: " kind))
-            (let [
-                #_"OperandSize" operandSize (first s)
-            ]
-                (if (= (:kind operandSize) kind)
-                    operandSize
-                    (recur (next s))
-                )
-            )
-        )
-    )
-
     ;;;
-     ; Emit an immediate of this size. Note that immediate #QWORD operands are encoded
-     ; as sign-extended 32-bit values.
+     ; Emit an immediate of this size. Note that immediate #QWORD operands are encoded as sign-extended 32-bit values.
      ;;
-    (§ method! #_"void" OperandSize''emitImmediate-3 [#_"OperandSize" this, #_"Assembler" asm, #_"int" imm]
+    (§ method #_"void" OperandSize''emitImmediate-3 [#_"OperandSize" this, #_"Assembler" asm, #_"int" imm]
         (throw! "unsupported operation")
-    )
-
-    #_unused
-    (§ method! #_"int" OperandSize''immediateSize-1 [#_"OperandSize" this]
-        (throw! "unsupported operation")
-    )
-)
-
-;;;
- ; Operand size and register type constraints.
- ;
- ; @anno Assembler.OpAssertion
- ;;
-(final-ns OpAssertion
-    (§ enum (OpAssertion'ByteAssertion AMD64/CPU, AMD64/CPU, OperandSize'BYTE))
-    (§ enum (OpAssertion'ByteOrLargerAssertion AMD64/CPU, AMD64/CPU, OperandSize'BYTE, OperandSize'WORD, OperandSize'DWORD, OperandSize'QWORD))
-    (§ enum (OpAssertion'WordOrLargerAssertion AMD64/CPU, AMD64/CPU, OperandSize'WORD, OperandSize'DWORD, OperandSize'QWORD))
-    (§ enum (OpAssertion'DwordOrLargerAssertion AMD64/CPU, AMD64/CPU, OperandSize'DWORD, OperandSize'QWORD))
-    (§ enum (OpAssertion'WordOrDwordAssertion AMD64/CPU, AMD64/CPU, OperandSize'WORD, OperandSize'QWORD))
-    (§ enum (OpAssertion'QwordAssertion AMD64/CPU, AMD64/CPU, OperandSize'QWORD))
-
-    (§ final #_"Register$RegisterCategory" :resultCategory nil)
-    (§ final #_"Register$RegisterCategory" :inputCategory nil)
-    (§ final #_"OperandSize[]" :allowedSizes nil)
-
-    (§ defn #_"OpAssertion" OpAssertion'new-3* [#_"Register$RegisterCategory" resultCategory, #_"Register$RegisterCategory" inputCategory, #_"OperandSize..." allowedSizes]
-        (let [
-            #_"OpAssertion" this (Object.)
-            this (assoc this :resultCategory resultCategory)
-            this (assoc this :inputCategory inputCategory)
-            this (assoc this :allowedSizes allowedSizes)
-        ]
-            this
-        )
     )
 )
 
@@ -3145,12 +3070,6 @@
  ; @anno Assembler.AMD64Op
  ;;
 (class-ns AMD64Op
-    (def #_"int" AMD64Op'P_0F 0x0f)
-    (def #_"int" AMD64Op'P_0F38 0x380f)
-    (def #_"int" AMD64Op'P_0F3A 0x3a0f)
-
-    (§ final #_"String" :opcode nil)
-
     (§ final #_"int" :prefix1 0)
     (§ final #_"int" :prefix2 0)
     (§ final #_"int" :op 0)
@@ -3158,23 +3077,16 @@
     (§ final #_"boolean" :dstIsByte false)
     (§ final #_"boolean" :srcIsByte false)
 
-    (§ final #_"OpAssertion" :assertion nil)
     (§ final #_"AMD64$CPUFeature" :feature nil)
 
-    (§ defn #_"AMD64Op" AMD64Op'new-6 [#_"String" opcode, #_"int" prefix1, #_"int" prefix2, #_"int" op, #_"OpAssertion" assertion, #_"AMD64$CPUFeature" feature]
-        (AMD64Op'new-8 opcode, prefix1, prefix2, op, (= assertion OpAssertion'ByteAssertion), (= assertion OpAssertion'ByteAssertion), assertion, feature)
-    )
-
-    (§ defn #_"AMD64Op" AMD64Op'new-8 [#_"String" opcode, #_"int" prefix1, #_"int" prefix2, #_"int" op, #_"boolean" dstIsByte, #_"boolean" srcIsByte, #_"OpAssertion" assertion, #_"AMD64$CPUFeature" feature]
+    (§ defn #_"AMD64Op" AMD64Op'new-6 [#_"int" prefix1, #_"int" prefix2, #_"int" op, #_"boolean" dstIsByte, #_"boolean" srcIsByte, #_"AMD64$CPUFeature" feature]
         (let [
             #_"AMD64Op" this (Object.)
-            this (assoc this :opcode opcode)
             this (assoc this :prefix1 prefix1)
             this (assoc this :prefix2 prefix2)
             this (assoc this :op op)
             this (assoc this :dstIsByte dstIsByte)
             this (assoc this :srcIsByte srcIsByte)
-            this (assoc this :assertion assertion)
             this (assoc this :feature feature)
         ]
             this
@@ -3212,9 +3124,9 @@
 (class-ns AMD64ImmOp (§ extends AMD64Op)
     (§ final #_"boolean" :immIsByte false)
 
-    (§ defn #_"AMD64ImmOp" AMD64ImmOp'new-5 [#_"String" opcode, #_"boolean" immIsByte, #_"int" prefix, #_"int" op, #_"OpAssertion" assertion]
+    (§ defn #_"AMD64ImmOp" AMD64ImmOp'new-5 [#_"int" prefix, #_"int" op, #_"boolean" immIsByte, #_"boolean" dstIsByte, #_"boolean" srcIsByte]
         (let [
-            #_"AMD64ImmOp" this (AMD64Op'new-6 opcode, 0, prefix, op, assertion, nil)
+            #_"AMD64ImmOp" this (AMD64Op'new-6 0, prefix, op, dstIsByte, srcIsByte, nil)
             this (assoc this :immIsByte immIsByte)
         ]
             this
@@ -3240,36 +3152,12 @@
  ; @anno Assembler.AMD64RROp
  ;;
 (class-ns AMD64RROp (§ extends AMD64Op)
-    (§ defn #_"AMD64RROp" AMD64RROp'new-6 [#_"String" opcode, #_"int" prefix1, #_"int" prefix2, #_"int" op, #_"OpAssertion" assertion, #_"AMD64$CPUFeature" feature]
-        (AMD64Op'new-6 opcode, prefix1, prefix2, op, assertion, feature)
-    )
-
-    (§ defn #_"AMD64RROp" AMD64RROp'new-8 [#_"String" opcode, #_"int" prefix1, #_"int" prefix2, #_"int" op, #_"boolean" dstIsByte, #_"boolean" srcIsByte, #_"OpAssertion" assertion, #_"AMD64$CPUFeature" feature]
-        (AMD64Op'new-8 opcode, prefix1, prefix2, op, dstIsByte, srcIsByte, assertion, feature)
+    (§ defn #_"AMD64RROp" AMD64RROp'new-6 [#_"int" prefix1, #_"int" prefix2, #_"int" op, #_"boolean" dstIsByte, #_"boolean" srcIsByte, #_"AMD64$CPUFeature" feature]
+        (AMD64Op'new-6 prefix1, prefix2, op, dstIsByte, srcIsByte, feature)
     )
 
     #_unused
     (§ abstract #_"void" AMD64RROp''emit-5 [#_"AMD64RROp" this, #_"Assembler" asm, #_"OperandSize" size, #_"Register" dst, #_"Register" src])
-)
-
-;;;
- ; Opcode with operand order of either RM or MR for 3 address forms.
- ;
- ; @anno Assembler.AMD64RRROp
- ;;
-(class-ns AMD64RRROp (§ extends AMD64Op)
-    #_unused
-    (§ defn #_"AMD64RRROp" AMD64RRROp'new-6 [#_"String" opcode, #_"int" prefix1, #_"int" prefix2, #_"int" op, #_"OpAssertion" assertion, #_"AMD64$CPUFeature" feature]
-        (AMD64Op'new-6 opcode, prefix1, prefix2, op, assertion, feature)
-    )
-
-    #_unused
-    (§ defn #_"AMD64RRROp" AMD64RRROp'new-8 [#_"String" opcode, #_"int" prefix1, #_"int" prefix2, #_"int" op, #_"boolean" dstIsByte, #_"boolean" srcIsByte, #_"OpAssertion" assertion, #_"AMD64$CPUFeature" feature]
-        (AMD64Op'new-8 opcode, prefix1, prefix2, op, dstIsByte, srcIsByte, assertion, feature)
-    )
-
-    #_unused
-    (§ abstract #_"void" AMD64RRROp''emit-6 [#_"AMD64RRROp" this, #_"Assembler" asm, #_"OperandSize" size, #_"Register" dst, #_"Register" nds, #_"Register" src])
 )
 
 ;;;
@@ -3278,55 +3166,43 @@
  ; @anno Assembler.AMD64RMOp
  ;;
 (final-ns AMD64RMOp (§ extends AMD64RROp)
-    (§ def #_"AMD64RMOp" AMD64RMOp'IMUL   (AMD64RMOp'new-4 "IMUL",         AMD64Op'P_0F, 0xaf, OpAssertion'ByteOrLargerAssertion))
-    (§ def #_"AMD64RMOp" AMD64RMOp'BSF    (AMD64RMOp'new-3 "BSF",          AMD64Op'P_0F, 0xbc))
-    (§ def #_"AMD64RMOp" AMD64RMOp'BSR    (AMD64RMOp'new-3 "BSR",          AMD64Op'P_0F, 0xbd))
-    (§ def #_"AMD64RMOp" AMD64RMOp'POPCNT (AMD64RMOp'new-5 "POPCNT", 0xf3, AMD64Op'P_0F, 0xb8, CPUFeature'POPCNT))
-    (§ def #_"AMD64RMOp" AMD64RMOp'TZCNT  (AMD64RMOp'new-5 "TZCNT",  0xf3, AMD64Op'P_0F, 0xbc, CPUFeature'BMI1))
-    (§ def #_"AMD64RMOp" AMD64RMOp'LZCNT  (AMD64RMOp'new-5 "LZCNT",  0xf3, AMD64Op'P_0F, 0xbd, CPUFeature'LZCNT))
-    (§ def #_"AMD64RMOp" AMD64RMOp'MOVZXB (AMD64RMOp'new-6 "MOVZXB",       AMD64Op'P_0F, 0xb6, false, true, OpAssertion'WordOrLargerAssertion))
-    (§ def #_"AMD64RMOp" AMD64RMOp'MOVZX  (AMD64RMOp'new-4 "MOVZX",        AMD64Op'P_0F, 0xb7, OpAssertion'DwordOrLargerAssertion))
-    (§ def #_"AMD64RMOp" AMD64RMOp'MOVSXB (AMD64RMOp'new-6 "MOVSXB",       AMD64Op'P_0F, 0xbe, false, true, OpAssertion'WordOrLargerAssertion))
-    (§ def #_"AMD64RMOp" AMD64RMOp'MOVSX  (AMD64RMOp'new-4 "MOVSX",        AMD64Op'P_0F, 0xbf, OpAssertion'DwordOrLargerAssertion))
-    (§ def #_"AMD64RMOp" AMD64RMOp'MOVSXD (AMD64RMOp'new-3 "MOVSXD",             0x63, OpAssertion'QwordAssertion))
-    (§ def #_"AMD64RMOp" AMD64RMOp'MOVB   (AMD64RMOp'new-3 "MOVB",               0x8a, OpAssertion'ByteAssertion))
-    (§ def #_"AMD64RMOp" AMD64RMOp'MOV    (AMD64RMOp'new-2 "MOV",                0x8b))
+    (§ defn #_"AMD64RMOp" AMD64RMOp'new-1 [#_"int" op]
+        (AMD64RROp'new-6 0, 0, op, false, false, nil)
+    )
+
+    (§ defn #_"AMD64RMOp" AMD64RMOp'new-2 [#_"int" prefix, #_"int" op]
+        (AMD64RROp'new-6 0, prefix, op, false, false, nil)
+    )
+
+    (§ defn #_"AMD64RMOp" AMD64RMOp'new-3 [#_"int" op, #_"boolean" dstIsByte, #_"boolean" srcIsByte]
+        (AMD64RROp'new-6 0, 0, op, dstIsByte, srcIsByte, nil)
+    )
+
+    (§ defn #_"AMD64RMOp" AMD64RMOp'new-4 [#_"int" prefix, #_"int" op, #_"boolean" dstIsByte, #_"boolean" srcIsByte]
+        (AMD64RROp'new-6 0, prefix, op, dstIsByte, srcIsByte, nil)
+    )
+
+    (§ defn #_"AMD64RMOp" AMD64RMOp'new-4 [#_"int" prefix1, #_"int" prefix2, #_"int" op, #_"AMD64$CPUFeature" feature]
+        (AMD64RROp'new-6 prefix1, prefix2, op, false, false, feature)
+    )
+
+    (§ def #_"AMD64RMOp" AMD64RMOp'IMUL   (AMD64RMOp'new-2       0x0f, 0xaf))
+    (§ def #_"AMD64RMOp" AMD64RMOp'BSF    (AMD64RMOp'new-2       0x0f, 0xbc))
+    (§ def #_"AMD64RMOp" AMD64RMOp'BSR    (AMD64RMOp'new-2       0x0f, 0xbd))
+    (§ def #_"AMD64RMOp" AMD64RMOp'POPCNT (AMD64RMOp'new-4 0xf3, 0x0f, 0xb8,              CPUFeature'POPCNT))
+    (§ def #_"AMD64RMOp" AMD64RMOp'TZCNT  (AMD64RMOp'new-4 0xf3, 0x0f, 0xbc,              CPUFeature'BMI1))
+    (§ def #_"AMD64RMOp" AMD64RMOp'LZCNT  (AMD64RMOp'new-4 0xf3, 0x0f, 0xbd,              CPUFeature'LZCNT))
+    (§ def #_"AMD64RMOp" AMD64RMOp'MOVZXB (AMD64RMOp'new-4       0x0f, 0xb6, false, true))
+    (§ def #_"AMD64RMOp" AMD64RMOp'MOVZX  (AMD64RMOp'new-2       0x0f, 0xb7))
+    (§ def #_"AMD64RMOp" AMD64RMOp'MOVSXB (AMD64RMOp'new-4       0x0f, 0xbe, false, true))
+    (§ def #_"AMD64RMOp" AMD64RMOp'MOVSX  (AMD64RMOp'new-2       0x0f, 0xbf))
+    (§ def #_"AMD64RMOp" AMD64RMOp'MOVSXD (AMD64RMOp'new-1             0x63))
+    (§ def #_"AMD64RMOp" AMD64RMOp'MOVB   (AMD64RMOp'new-3             0x8a, true,  true))
+    (§ def #_"AMD64RMOp" AMD64RMOp'MOV    (AMD64RMOp'new-1             0x8b))
 
     ;; TEST is documented as MR operation, but it's symmetric, and using it as RM operation is more convenient.
-    (§ def #_"AMD64RMOp" AMD64RMOp'TESTB  (AMD64RMOp'new-3 "TEST",               0x84, OpAssertion'ByteAssertion))
-    (§ def #_"AMD64RMOp" AMD64RMOp'TEST   (AMD64RMOp'new-2 "TEST",               0x85))
-
-    (§ defn #_"AMD64RMOp" AMD64RMOp'new-2 [#_"String" opcode, #_"int" op]
-        (AMD64RMOp'new-3 opcode, 0, op)
-    )
-
-    (§ defn #_"AMD64RMOp" AMD64RMOp'new-3 [#_"String" opcode, #_"int" op, #_"OpAssertion" assertion]
-        (AMD64RMOp'new-4 opcode, 0, op, assertion)
-    )
-
-    (§ defn #_"AMD64RMOp" AMD64RMOp'new-3 [#_"String" opcode, #_"int" prefix, #_"int" op]
-        (AMD64RMOp'new-5 opcode, 0, prefix, op, nil)
-    )
-
-    (§ defn #_"AMD64RMOp" AMD64RMOp'new-4 [#_"String" opcode, #_"int" prefix, #_"int" op, #_"OpAssertion" assertion]
-        (AMD64RMOp'new-6 opcode, 0, prefix, op, assertion, nil)
-    )
-
-    (§ defn #_"AMD64RMOp" AMD64RMOp'new-5 [#_"String" opcode, #_"int" prefix, #_"int" op, #_"OpAssertion" assertion, #_"AMD64$CPUFeature" feature]
-        (AMD64RMOp'new-6 opcode, 0, prefix, op, assertion, feature)
-    )
-
-    (§ defn #_"AMD64RMOp" AMD64RMOp'new-6 [#_"String" opcode, #_"int" prefix, #_"int" op, #_"boolean" dstIsByte, #_"boolean" srcIsByte, #_"OpAssertion" assertion]
-        (AMD64RROp'new-8 opcode, 0, prefix, op, dstIsByte, srcIsByte, assertion, nil)
-    )
-
-    (§ defn #_"AMD64RMOp" AMD64RMOp'new-5 [#_"String" opcode, #_"int" prefix1, #_"int" prefix2, #_"int" op, #_"AMD64$CPUFeature" feature]
-        (AMD64RMOp'new-6 opcode, prefix1, prefix2, op, OpAssertion'WordOrLargerAssertion, feature)
-    )
-
-    (§ defn #_"AMD64RMOp" AMD64RMOp'new-6 [#_"String" opcode, #_"int" prefix1, #_"int" prefix2, #_"int" op, #_"OpAssertion" assertion, #_"AMD64$CPUFeature" feature]
-        (AMD64RROp'new-6 opcode, prefix1, prefix2, op, assertion, feature)
-    )
+    (§ def #_"AMD64RMOp" AMD64RMOp'TESTB  (AMD64RMOp'new-3             0x84, true, true))
+    (§ def #_"AMD64RMOp" AMD64RMOp'TEST   (AMD64RMOp'new-1             0x85))
 
     (§ override! #_"void" AMD64RMOp''emit-5 [#_"AMD64RMOp" this, #_"Assembler" asm, #_"OperandSize" size, #_"Register" dst, #_"Register" src]
         (AMD64Op''emitOpcode-6 this, asm, size, (Assembler'getRXB-2 dst, src), (.encoding dst), (.encoding src))
@@ -3347,32 +3223,16 @@
  ; @anno Assembler.AMD64MROp
  ;;
 (final-ns AMD64MROp (§ extends AMD64RROp)
-    (§ def #_"AMD64MROp" AMD64MROp'MOVB (AMD64MROp'new-3 "MOVB", 0x88, OpAssertion'ByteAssertion))
-    (§ def #_"AMD64MROp" AMD64MROp'MOV  (AMD64MROp'new-2 "MOV",  0x89))
-
-    (§ defn #_"AMD64MROp" AMD64MROp'new-2 [#_"String" opcode, #_"int" op]
-        (AMD64MROp'new-3 opcode, 0, op)
+    (§ defn #_"AMD64MROp" AMD64MROp'new-1 [#_"int" op]
+        (AMD64RROp'new-6 0, 0, op, false, false, nil)
     )
 
-    (§ defn #_"AMD64MROp" AMD64MROp'new-3 [#_"String" opcode, #_"int" op, #_"OpAssertion" assertion]
-        (AMD64MROp'new-4 opcode, 0, op, assertion)
+    (§ defn #_"AMD64MROp" AMD64MROp'new-3 [#_"int" op, #_"boolean" dstIsByte, #_"boolean" srcIsByte]
+        (AMD64RROp'new-6 0, 0, op, dstIsByte, srcIsByte, nil)
     )
 
-    (§ defn #_"AMD64MROp" AMD64MROp'new-3 [#_"String" opcode, #_"int" prefix, #_"int" op]
-        (AMD64MROp'new-4 opcode, prefix, op, OpAssertion'WordOrLargerAssertion)
-    )
-
-    (§ defn #_"AMD64MROp" AMD64MROp'new-4 [#_"String" opcode, #_"int" prefix, #_"int" op, #_"OpAssertion" assertion]
-        (AMD64MROp'new-5 opcode, prefix, op, assertion, nil)
-    )
-
-    (§ defn #_"AMD64MROp" AMD64MROp'new-5 [#_"String" opcode, #_"int" prefix, #_"int" op, #_"OpAssertion" assertion, #_"AMD64$CPUFeature" feature]
-        (AMD64MROp'new-6 opcode, 0, prefix, op, assertion, feature)
-    )
-
-    (§ defn #_"AMD64MROp" AMD64MROp'new-6 [#_"String" opcode, #_"int" prefix1, #_"int" prefix2, #_"int" op, #_"OpAssertion" assertion, #_"AMD64$CPUFeature" feature]
-        (AMD64RROp'new-6 opcode, prefix1, prefix2, op, assertion, feature)
-    )
+    (§ def #_"AMD64MROp" AMD64MROp'MOVB (AMD64MROp'new-3 0x88, true, true))
+    (§ def #_"AMD64MROp" AMD64MROp'MOV  (AMD64MROp'new-1 0x89))
 
     (§ override! #_"void" AMD64MROp''emit-5 [#_"AMD64MROp" this, #_"Assembler" asm, #_"OperandSize" size, #_"Register" dst, #_"Register" src]
         (AMD64Op''emitOpcode-6 this, asm, size, (Assembler'getRXB-2 src, dst), (.encoding src), (.encoding dst))
@@ -3393,39 +3253,27 @@
  ; @anno Assembler.AMD64MOp
  ;;
 (final-ns AMD64MOp (§ extends AMD64Op)
-    (§ def #_"AMD64MOp" AMD64MOp'NOT  (AMD64MOp'new-3 "NOT",  0xf7, 2))
-    (§ def #_"AMD64MOp" AMD64MOp'NEG  (AMD64MOp'new-3 "NEG",  0xf7, 3))
-    (§ def #_"AMD64MOp" AMD64MOp'MUL  (AMD64MOp'new-3 "MUL",  0xf7, 4))
-    (§ def #_"AMD64MOp" AMD64MOp'IMUL (AMD64MOp'new-3 "IMUL", 0xf7, 5))
-    (§ def #_"AMD64MOp" AMD64MOp'DIV  (AMD64MOp'new-3 "DIV",  0xf7, 6))
-    (§ def #_"AMD64MOp" AMD64MOp'IDIV (AMD64MOp'new-3 "IDIV", 0xf7, 7))
-    (§ def #_"AMD64MOp" AMD64MOp'INC  (AMD64MOp'new-3 "INC",  0xff, 0))
-    (§ def #_"AMD64MOp" AMD64MOp'DEC  (AMD64MOp'new-3 "DEC",  0xff, 1))
-    (§ def #_"AMD64MOp" AMD64MOp'PUSH (AMD64MOp'new-3 "PUSH", 0xff, 6))
-    (§ def #_"AMD64MOp" AMD64MOp'POP  (AMD64MOp'new-4 "POP",  0x8f, 0, OpAssertion'WordOrDwordAssertion))
-
     (§ final #_"int" :ext 0)
 
-    (§ defn #_"AMD64MOp" AMD64MOp'new-3 [#_"String" opcode, #_"int" op, #_"int" ext]
-        (AMD64MOp'new-4 opcode, 0, op, ext)
-    )
-
-    (§ defn #_"AMD64MOp" AMD64MOp'new-4 [#_"String" opcode, #_"int" prefix, #_"int" op, #_"int" ext]
-        (AMD64MOp'new-5 opcode, prefix, op, ext, OpAssertion'WordOrLargerAssertion)
-    )
-
-    (§ defn #_"AMD64MOp" AMD64MOp'new-4 [#_"String" opcode, #_"int" op, #_"int" ext, #_"OpAssertion" assertion]
-        (AMD64MOp'new-5 opcode, 0, op, ext, assertion)
-    )
-
-    (§ defn #_"AMD64MOp" AMD64MOp'new-5 [#_"String" opcode, #_"int" prefix, #_"int" op, #_"int" ext, #_"OpAssertion" assertion]
+    (§ defn #_"AMD64MOp" AMD64MOp'new-2 [#_"int" op, #_"int" ext]
         (let [
-            #_"AMD64MOp" this (AMD64Op'new-6 opcode, 0, prefix, op, assertion, nil)
+            #_"AMD64MOp" this (AMD64Op'new-6 0, 0, op, false, false, nil)
             this (assoc this :ext ext)
         ]
             this
         )
     )
+
+    (§ def #_"AMD64MOp" AMD64MOp'NOT  (AMD64MOp'new-2 0xf7, 2))
+    (§ def #_"AMD64MOp" AMD64MOp'NEG  (AMD64MOp'new-2 0xf7, 3))
+    (§ def #_"AMD64MOp" AMD64MOp'MUL  (AMD64MOp'new-2 0xf7, 4))
+    (§ def #_"AMD64MOp" AMD64MOp'IMUL (AMD64MOp'new-2 0xf7, 5))
+    (§ def #_"AMD64MOp" AMD64MOp'DIV  (AMD64MOp'new-2 0xf7, 6))
+    (§ def #_"AMD64MOp" AMD64MOp'IDIV (AMD64MOp'new-2 0xf7, 7))
+    (§ def #_"AMD64MOp" AMD64MOp'INC  (AMD64MOp'new-2 0xff, 0))
+    (§ def #_"AMD64MOp" AMD64MOp'DEC  (AMD64MOp'new-2 0xff, 1))
+    (§ def #_"AMD64MOp" AMD64MOp'PUSH (AMD64MOp'new-2 0xff, 6))
+    (§ def #_"AMD64MOp" AMD64MOp'POP  (AMD64MOp'new-2 0x8f, 0))
 
     (§ method! #_"void" AMD64MOp''emit-4 [#_"AMD64MOp" this, #_"Assembler" asm, #_"OperandSize" size, #_"Register" dst]
         (AMD64Op''emitOpcode-6 this, asm, size, (Assembler'getRXB-2 nil, dst), 0, (.encoding dst))
@@ -3446,28 +3294,32 @@
  ; @anno Assembler.AMD64MIOp
  ;;
 (final-ns AMD64MIOp (§ extends AMD64ImmOp)
-    (§ def #_"AMD64MIOp" AMD64MIOp'MOVB (AMD64MIOp'new-5 "MOVB", true,  0xc6, 0, OpAssertion'ByteAssertion))
-    (§ def #_"AMD64MIOp" AMD64MIOp'MOV  (AMD64MIOp'new-4 "MOV",  false, 0xc7, 0))
-    (§ def #_"AMD64MIOp" AMD64MIOp'TEST (AMD64MIOp'new-4 "TEST", false, 0xf7, 0))
-
     (§ final #_"int" :ext 0)
 
-    (§ defn #_"AMD64MIOp" AMD64MIOp'new-4 [#_"String" opcode, #_"boolean" immIsByte, #_"int" op, #_"int" ext]
-        (AMD64MIOp'new-5 opcode, immIsByte, op, ext, OpAssertion'WordOrLargerAssertion)
+    (§ defn #_"AMD64MIOp" AMD64MIOp'new-1 [#_"int" op]
+        (AMD64MIOp'new-5 op, 0, false, false, false)
     )
 
-    (§ defn #_"AMD64MIOp" AMD64MIOp'new-5 [#_"String" opcode, #_"boolean" immIsByte, #_"int" op, #_"int" ext, #_"OpAssertion" assertion]
-        (AMD64MIOp'new-6 opcode, immIsByte, 0, op, ext, assertion)
+    (§ defn #_"AMD64MIOp" AMD64MIOp'new-3 [#_"int" op, #_"int" ext, #_"boolean" immIsByte]
+        (AMD64MIOp'new-5 op, ext, immIsByte, false, false)
     )
 
-    (§ defn #_"AMD64MIOp" AMD64MIOp'new-6 [#_"String" opcode, #_"boolean" immIsByte, #_"int" prefix, #_"int" op, #_"int" ext, #_"OpAssertion" assertion]
+    (§ defn #_"AMD64MIOp" AMD64MIOp'new-4 [#_"int" op, #_"boolean" immIsByte, #_"boolean" dstIsByte, #_"boolean" srcIsByte]
+        (AMD64MIOp'new-5 op, 0, immIsByte, dstIsByte, srcIsByte)
+    )
+
+    (§ defn #_"AMD64MIOp" AMD64MIOp'new-5 [#_"int" op, #_"int" ext, #_"boolean" immIsByte, #_"boolean" dstIsByte, #_"boolean" srcIsByte]
         (let [
-            #_"AMD64MIOp" this (AMD64ImmOp'new-5 opcode, immIsByte, prefix, op, assertion)
+            #_"AMD64MIOp" this (AMD64ImmOp'new-5 0, op, immIsByte, dstIsByte, srcIsByte)
             this (assoc this :ext ext)
         ]
             this
         )
     )
+
+    (§ def #_"AMD64MIOp" AMD64MIOp'MOVB (AMD64MIOp'new-4 0xc6, true, true, true))
+    (§ def #_"AMD64MIOp" AMD64MIOp'MOV  (AMD64MIOp'new-1 0xc7))
+    (§ def #_"AMD64MIOp" AMD64MIOp'TEST (AMD64MIOp'new-1 0xf7))
 
     (§ method! #_"void" AMD64MIOp''emit-5 [#_"AMD64MIOp" this, #_"Assembler" asm, #_"OperandSize" size, #_"Register" dst, #_"int" imm]
         (AMD64Op''emitOpcode-6 this, asm, size, (Assembler'getRXB-2 nil, dst), 0, (.encoding dst))
@@ -3490,16 +3342,12 @@
  ; @anno Assembler.AMD64RMIOp
  ;;
 (final-ns AMD64RMIOp (§ extends AMD64ImmOp)
-    (§ def #_"AMD64RMIOp" AMD64RMIOp'IMUL    (AMD64RMIOp'new-3 "IMUL", false, 0x69))
-    (§ def #_"AMD64RMIOp" AMD64RMIOp'IMUL_SX (AMD64RMIOp'new-3 "IMUL", true,  0x6b))
-
-    (§ defn #_"AMD64RMIOp" AMD64RMIOp'new-3 [#_"String" opcode, #_"boolean" immIsByte, #_"int" op]
-        (AMD64RMIOp'new-5 opcode, immIsByte, 0, op, OpAssertion'WordOrLargerAssertion)
+    (§ defn #_"AMD64RMIOp" AMD64RMIOp'new-2 [#_"int" op, #_"boolean" immIsByte]
+        (AMD64ImmOp'new-5 0, op, immIsByte, false, false)
     )
 
-    (§ defn #_"AMD64RMIOp" AMD64RMIOp'new-5 [#_"String" opcode, #_"boolean" immIsByte, #_"int" prefix, #_"int" op, #_"OpAssertion" assertion]
-        (AMD64ImmOp'new-5 opcode, immIsByte, prefix, op, assertion)
-    )
+    (§ def #_"AMD64RMIOp" AMD64RMIOp'IMUL    (AMD64RMIOp'new-2 0x69, false))
+    (§ def #_"AMD64RMIOp" AMD64RMIOp'IMUL_SX (AMD64RMIOp'new-2 0x6b, true))
 
     (§ method! #_"void" AMD64RMIOp''emit-6 [#_"AMD64RMIOp" this, #_"Assembler" asm, #_"OperandSize" size, #_"Register" dst, #_"Register" src, #_"int" imm]
         (AMD64Op''emitOpcode-6 this, asm, size, (Assembler'getRXB-2 dst, src), (.encoding dst), (.encoding src))
@@ -3531,30 +3379,30 @@
     (§ final #_"AMD64MROp" :mrOp nil)
     (§ final #_"AMD64RMOp" :rmOp nil)
 
-    (§ defn- #_"BinaryArithmetic" BinaryArithmetic'new-2 [#_"String" opcode, #_"int" code]
+    (§ defn- #_"BinaryArithmetic" BinaryArithmetic'new-1 [#_"int" code]
         (let [
             #_"BinaryArithmetic" this (Object.)
-            #_"int" baseOp (<< code 3)
-            this (assoc this :byteImmOp (AMD64MIOp'new-6 opcode, true, 0, 0x80, code, OpAssertion'ByteAssertion))
-            this (assoc this :byteMrOp (AMD64MROp'new-4 opcode, 0, baseOp, OpAssertion'ByteAssertion))
-            this (assoc this :byteRmOp (AMD64RMOp'new-4 opcode, 0, (| baseOp 0x02), OpAssertion'ByteAssertion))
-            this (assoc this :immOp (AMD64MIOp'new-6 opcode, false, 0, 0x81, code, OpAssertion'WordOrLargerAssertion))
-            this (assoc this :immSxOp (AMD64MIOp'new-6 opcode, true, 0, 0x83, code, OpAssertion'WordOrLargerAssertion))
-            this (assoc this :mrOp (AMD64MROp'new-4 opcode, 0, (| baseOp 0x01), OpAssertion'WordOrLargerAssertion))
-            this (assoc this :rmOp (AMD64RMOp'new-4 opcode, 0, (| baseOp 0x03), OpAssertion'WordOrLargerAssertion))
+            #_"int" base (<< code 3)
+            this (assoc this :byteImmOp (AMD64MIOp'new-5 0x80, code,       true, true, true))
+            this (assoc this :byteMrOp  (AMD64MROp'new-3       base,             true, true))
+            this (assoc this :byteRmOp  (AMD64RMOp'new-3    (| base 0x02),       true, true))
+            this (assoc this :immOp     (AMD64MIOp'new-3 0x81, code,       false))
+            this (assoc this :immSxOp   (AMD64MIOp'new-3 0x83, code,       true))
+            this (assoc this :mrOp      (AMD64MROp'new-1    (| base 0x01)))
+            this (assoc this :rmOp      (AMD64RMOp'new-1    (| base 0x03)))
         ]
             this
         )
     )
 
-    (§ def #_"BinaryArithmetic" BinaryArithmetic'ADD (BinaryArithmetic'new-2 "ADD", 0))
-    (§ def #_"BinaryArithmetic" BinaryArithmetic'OR  (BinaryArithmetic'new-2 "OR",  1))
-    (§ def #_"BinaryArithmetic" BinaryArithmetic'ADC (BinaryArithmetic'new-2 "ADC", 2))
-    (§ def #_"BinaryArithmetic" BinaryArithmetic'SBB (BinaryArithmetic'new-2 "SBB", 3))
-    (§ def #_"BinaryArithmetic" BinaryArithmetic'AND (BinaryArithmetic'new-2 "AND", 4))
-    (§ def #_"BinaryArithmetic" BinaryArithmetic'SUB (BinaryArithmetic'new-2 "SUB", 5))
-    (§ def #_"BinaryArithmetic" BinaryArithmetic'XOR (BinaryArithmetic'new-2 "XOR", 6))
-    (§ def #_"BinaryArithmetic" BinaryArithmetic'CMP (BinaryArithmetic'new-2 "CMP", 7))
+    (§ def #_"BinaryArithmetic" BinaryArithmetic'ADD (BinaryArithmetic'new-1 0))
+    (§ def #_"BinaryArithmetic" BinaryArithmetic'OR  (BinaryArithmetic'new-1 1))
+    (§ def #_"BinaryArithmetic" BinaryArithmetic'ADC (BinaryArithmetic'new-1 2))
+    (§ def #_"BinaryArithmetic" BinaryArithmetic'SBB (BinaryArithmetic'new-1 3))
+    (§ def #_"BinaryArithmetic" BinaryArithmetic'AND (BinaryArithmetic'new-1 4))
+    (§ def #_"BinaryArithmetic" BinaryArithmetic'SUB (BinaryArithmetic'new-1 5))
+    (§ def #_"BinaryArithmetic" BinaryArithmetic'XOR (BinaryArithmetic'new-1 6))
+    (§ def #_"BinaryArithmetic" BinaryArithmetic'CMP (BinaryArithmetic'new-1 7))
 
     (§ method! #_"AMD64MIOp" BinaryArithmetic''getMIOpcode-3 [#_"BinaryArithmetic" this, #_"OperandSize" size, #_"boolean" sx]
         (cond
@@ -3580,24 +3428,24 @@
  ; @anno Assembler.AMD64Shift
  ;;
 (final-ns AMD64Shift
-    (§ def #_"AMD64Shift" AMD64Shift'ROL (AMD64Shift'new-2 "ROL", 0))
-    (§ def #_"AMD64Shift" AMD64Shift'ROR (AMD64Shift'new-2 "ROR", 1))
-    (§ def #_"AMD64Shift" AMD64Shift'RCL (AMD64Shift'new-2 "RCL", 2))
-    (§ def #_"AMD64Shift" AMD64Shift'RCR (AMD64Shift'new-2 "RCR", 3))
-    (§ def #_"AMD64Shift" AMD64Shift'SHL (AMD64Shift'new-2 "SHL", 4))
-    (§ def #_"AMD64Shift" AMD64Shift'SHR (AMD64Shift'new-2 "SHR", 5))
-    (§ def #_"AMD64Shift" AMD64Shift'SAR (AMD64Shift'new-2 "SAR", 7))
+    (§ def #_"AMD64Shift" AMD64Shift'ROL (AMD64Shift'new-1 0))
+    (§ def #_"AMD64Shift" AMD64Shift'ROR (AMD64Shift'new-1 1))
+    (§ def #_"AMD64Shift" AMD64Shift'RCL (AMD64Shift'new-1 2))
+    (§ def #_"AMD64Shift" AMD64Shift'RCR (AMD64Shift'new-1 3))
+    (§ def #_"AMD64Shift" AMD64Shift'SHL (AMD64Shift'new-1 4))
+    (§ def #_"AMD64Shift" AMD64Shift'SHR (AMD64Shift'new-1 5))
+    (§ def #_"AMD64Shift" AMD64Shift'SAR (AMD64Shift'new-1 7))
 
     (§ final #_"AMD64MOp" :m1Op nil)
     (§ final #_"AMD64MOp" :mcOp nil)
     (§ final #_"AMD64MIOp" :miOp nil)
 
-    (§ defn- #_"AMD64Shift" AMD64Shift'new-2 [#_"String" opcode, #_"int" code]
+    (§ defn- #_"AMD64Shift" AMD64Shift'new-1 [#_"int" code]
         (let [
             #_"AMD64Shift" this (Object.)
-            this (assoc this :m1Op (AMD64MOp'new-5 opcode, 0, 0xd1, code, OpAssertion'WordOrLargerAssertion))
-            this (assoc this :mcOp (AMD64MOp'new-5 opcode, 0, 0xd3, code, OpAssertion'WordOrLargerAssertion))
-            this (assoc this :miOp (AMD64MIOp'new-6 opcode, true, 0, 0xc1, code, OpAssertion'WordOrLargerAssertion))
+            this (assoc this :m1Op (AMD64MOp'new-2 0xd1, code))
+            this (assoc this :mcOp (AMD64MOp'new-2 0xd3, code))
+            this (assoc this :miOp (AMD64MIOp'new-3 0xc1, code, true))
         ]
             this
         )
@@ -5342,32 +5190,6 @@
 )
 
 ;;;
- ; @anno DataSection.SerializableData
- ;;
-(final-ns SerializableData (§ extends Data)
-    (§ final #_"SerializableConstant" :constant nil)
-
-    (§ defn #_"SerializableData" SerializableData'new-1 [#_"SerializableConstant" constant]
-        (SerializableData'new-2 constant, 1)
-    )
-
-    (§ defn #_"SerializableData" SerializableData'new-2 [#_"SerializableConstant" constant, #_"int" alignment]
-        (let [
-            #_"SerializableData" this (Data'new-2 alignment, (#_"SerializableConstant" .getSerializedSize constant))
-            this (assoc this :constant constant)
-        ]
-            this
-        )
-    )
-
-    #_unused
-    (§ override! #_"void" SerializableData''emit-3 [#_"SerializableData" this, #_"ByteBuffer" buffer, #_"Patches" patches]
-        (#_"SerializableConstant" .serialize (:constant this), buffer)
-        nil
-    )
-)
-
-;;;
  ; @anno DataSection.ZeroData
  ;;
 (class-ns ZeroData (§ extends Data)
@@ -5543,11 +5365,6 @@
 (final-ns AddressLowering
     (def- #_"int" AddressLowering'ADDRESS_BITS 64)
     (def- #_"int" AddressLowering'INT_BITS 32)
-
-    #_unused
-    (§ defn- #_"boolean" AddressLowering'checkAddressBitWidth-1 [#_"ValueNode" value]
-        (or (nil? value) (instance? AbstractPointerStamp (:stamp value)) (= (PrimitiveStamp'getBits-1 (:stamp value)) AddressLowering'ADDRESS_BITS))
-    )
 
     (§ final #_"long" :heapBase 0)
     (§ final #_"Register" :heapBaseRegister nil)
@@ -6044,7 +5861,6 @@
     (§ method! #_"boolean" MoveFactory''allowConstantToStackMove-2 [#_"MoveFactory" this, #_"Constant" constant]
         (condp instance? constant
             HotSpotConstant     (#_"HotSpotConstant" .isCompressed constant)
-            DataPointerConstant false
             JavaConstant        (AMD64Move'canMoveConst2Stack-1 constant)
                                 true
         )
@@ -6074,7 +5890,6 @@
     (§ defn- #_"LIRInstruction" MoveFactory'createLoad-2 [#_"AllocatableValue" dst, #_"Constant" src]
         (condp instance? src
             JavaConstant        (MoveFromConstOp'new-2 dst, src)
-            DataPointerConstant (LeaDataOp'new-2 dst, src)
         )
     )
 
@@ -6449,14 +6264,6 @@
                 )
             )
         )
-    )
-
-    ;;;
-     ; Gets the {@link Register$RegisterCategory} for the given PlatformKind.
-     ;;
-    #_unused
-    (§ method! #_"Register$RegisterCategory" RegisterAllocationConfig''getRegisterCategory-2 [#_"RegisterAllocationConfig" this, #_"PlatformKind" kind]
-        (#_"Register" .getRegisterCategory (nth (:allocatableRegisters (RegisterAllocationConfig''getAllocatableRegisters-2 this, kind)) 0))
     )
 
     (§ method! #_"AllocatableRegisters" RegisterAllocationConfig''createAllocatableRegisters-2 [#_"RegisterAllocationConfig" this, #_"RegisterArray" registers]
@@ -6957,15 +6764,6 @@
         )
     )
 
-    (§ method! #_"Block[]" DominatorOptimizationProblem''getBlocks-1 [#_"DominatorOptimizationProblem<E extends Enum<E>, C>" this]
-        (:blocks this)
-    )
-
-    #_unused
-    (§ method! #_"Block" DominatorOptimizationProblem''getBlockForId-2 [#_"DominatorOptimizationProblem<E extends Enum<E>, C>" this, #_"int" id]
-        (nth (:blocks this) id)
-    )
-
     ;;;
      ; Sets a flag for a block.
      ;;
@@ -6997,7 +6795,7 @@
      ; Returns a Stream of blocks for which {@code flag} is set.
      ;;
     (§ method! #_"Stream<Block>" DominatorOptimizationProblem''stream-2 [#_"DominatorOptimizationProblem<E extends Enum<E>, C>" this, #_"E" flag]
-        (#_"Stream" .filter (#_"List" .stream (Arrays/asList (DominatorOptimizationProblem''getBlocks-1 this))), (ß block -> (§ fun (DominatorOptimizationProblem''get-3 this, flag, block))))
+        (#_"Stream" .filter (#_"List" .stream (Arrays/asList (:blocks this))), (ß block -> (§ fun (DominatorOptimizationProblem''get-3 this, flag, block))))
     )
 
     ;;;
@@ -7033,28 +6831,6 @@
             )
         )
         nil
-    )
-
-    ;;;
-     ; Returns a Stream of flags associated with {@code block}.
-     ;;
-    #_unused
-    (§ method! #_"Stream<E>" DominatorOptimizationProblem''getFlagsForBlock-2 [#_"DominatorOptimizationProblem<E extends Enum<E>, C>" this, #_"Block" block]
-        (#_"Stream" .filter (#_"Set" .stream (DominatorOptimizationProblem''getFlags-1 this)), (ß flag -> (§ fun (DominatorOptimizationProblem''get-3 this, flag, block))))
-    )
-
-    ;;;
-     ; Returns the Set of flags that can be set for this problem.
-     ;;
-    (§ method! #_"Set<E>" DominatorOptimizationProblem''getFlags-1 [#_"DominatorOptimizationProblem<E extends Enum<E>, C>" this]
-        (#_"EnumMap" .keySet (:flags this))
-    )
-
-    ;;;
-     ; Returns the name of a flag.
-     ;;
-    (§ method #_"String" DominatorOptimizationProblem''getName-2 [#_"DominatorOptimizationProblem<E extends Enum<E>, C>" this, #_"E" flag]
-        (#_"Object" .toString flag)
     )
 )
 
@@ -9100,37 +8876,11 @@
         )
     )
 
-    (§ abstract #_"SerializableConstant" ArithmeticStamp''deserialize-2 [#_"ArithmeticStamp" this, #_"ByteBuffer" buffer])
-
     #_unused
     (§ override #_"Stamp" ArithmeticStamp''improveWith-2 [#_"ArithmeticStamp" this, #_"Stamp" other]
         (when (Stamp''isCompatible-2 this, other) => this
             (Stamp''join-2 this, other)
         )
-    )
-)
-
-;;;
- ; Base class for {@link Constant constants} that represent a pointer to the data section.
- ;;
-(class-ns DataPointerConstant (§ implements SerializableConstant)
-    ;;;
-     ; The minimum alignment of the data in the data section.
-     ;;
-    (§ final #_"int" :alignment 0)
-
-    (§ defn #_"DataPointerConstant" DataPointerConstant'new-1 [#_"int" alignment]
-        (let [
-            #_"DataPointerConstant" this (Object.)
-            this (assoc this :alignment alignment)
-        ]
-            this
-        )
-    )
-
-    #_unused
-    (§ override #_"boolean" DataPointerConstant''isDefaultForKind-1 [#_"DataPointerConstant" this]
-        false
     )
 )
 
@@ -9337,17 +9087,6 @@
             ]
                 (StampFactory'forInteger-3 (:bits this), value, value)
             )
-        )
-    )
-
-    #_unused
-    (§ override! #_"SerializableConstant" IntegerStamp''deserialize-2 [#_"IntegerStamp" this, #_"ByteBuffer" buffer]
-        (case (:bits this)
-             1 (JavaConstant/forBoolean (not (zero? (#_"ByteBuffer" .get buffer))))
-             8 (JavaConstant/forByte (#_"ByteBuffer" .get buffer))
-            16 (JavaConstant/forShort (#_"ByteBuffer" .getShort buffer))
-            32 (JavaConstant/forInt (#_"ByteBuffer" .getInt buffer))
-            64 (JavaConstant/forLong (#_"ByteBuffer" .getLong buffer))
         )
     )
 
@@ -10670,9 +10409,7 @@
 
     #_unused
     (§ override! #_"boolean" RawPointerStamp''isCompatible-2 [#_"RawPointerStamp" this, #_"Constant" constant]
-        (when (instance? PrimitiveConstant constant) => (instance? DataPointerConstant constant)
-            (#_"JavaKind" .isNumericInteger (#_"PrimitiveConstant" .getJavaKind constant))
-        )
+        (and (instance? PrimitiveConstant constant) (#_"JavaKind" .isNumericInteger (#_"PrimitiveConstant" .getJavaKind constant)))
     )
 
     #_unused
@@ -11265,11 +11002,6 @@
         (+ (* slotIndex (:bitsPerSlot this)) bitWithinSlotIndex)
     )
 
-    #_unused
-    (§ method- #_"boolean" BitMap2D''verifyBitWithinSlotIndex-2 [#_"BitMap2D" this, #_"int" index]
-        true
-    )
-
     (§ defn #_"BitMap2D" BitMap2D'new-2 [#_"int" sizeInSlots, #_"int" bitsPerSlot]
         (let [
             #_"BitMap2D" this (Object.)
@@ -11468,617 +11200,6 @@
             (< (:size this) size) (assoc this :array (Arrays/copyOf (:array this), size))
             :else                        this
         )
-    )
-)
-
-;;;
- ; Provides low-level value checks and conversion for signed and unsigned values of size 1, 2, and 4 bytes.
- ;;
-(value-ns TypeConversion
-    #_unused
-    (defn #_"boolean" TypeConversion'isS1-1 [#_"long" value] (<= Byte/MIN_VALUE value Byte/MAX_VALUE))
-    #_unused
-    (defn #_"boolean" TypeConversion'isS2-1 [#_"long" value] (<= Short/MIN_VALUE value Short/MAX_VALUE))
-    #_unused
-    (defn #_"boolean" TypeConversion'isS4-1 [#_"long" value] (<= Integer/MIN_VALUE value Integer/MAX_VALUE))
-
-    #_unused
-    (defn #_"boolean" TypeConversion'isU1-1 [#_"long" value] (<= 0 value 0xff))
-    #_unused
-    (defn #_"boolean" TypeConversion'isU2-1 [#_"long" value] (<= 0 value 0xffff))
-    #_unused
-    (defn #_"boolean" TypeConversion'isU4-1 [#_"long" value] (<= 0 value 0xffffffff))
-
-    (defn #_"byte" TypeConversion'asS1-1 [#_"long" value] (byte value))
-    (defn #_"byte" TypeConversion'asU1-1 [#_"long" value] (byte value))
-
-    (defn #_"short" TypeConversion'asS2-1 [#_"long" value] (short value))
-    (defn #_"short" TypeConversion'asU2-1 [#_"long" value] (short value))
-
-    (defn #_"int" TypeConversion'asS4-1 [#_"long" value] (int value))
-    (defn #_"int" TypeConversion'asU4-1 [#_"long" value] (int value))
-)
-
-;;;
- ; Provides low-level read access for signed and unsigned values of size 1, 2, 4, and 8 bytes.
- ;;
-(§ interface TypeReader
-    ;;; Returns the next byte index to be read.
-    #_unused
-    (§ abstract #_"long" TypeReader''getByteIndex-1 [#_"TypeReader" this])
-
-    ;;; Sets the next byte index to be read.
-    #_unused
-    (§ abstract #_"void" TypeReader''setByteIndex-2 [#_"TypeReader" this, #_"long" byteIndex])
-
-    ;;; Reads a signed 1 byte value.
-    #_unused
-    (§ abstract #_"int" TypeReader''getS1-1 [#_"TypeReader" this])
-
-    ;;; Reads an unsigned 1 byte value.
-    (§ abstract #_"int" TypeReader''getU1-1 [#_"TypeReader" this])
-
-    ;;; Reads a signed 2 byte value.
-    (§ abstract #_"int" TypeReader''getS2-1 [#_"TypeReader" this])
-
-    ;;; Reads an unsigned 2 byte value.
-    #_unused
-    (§ abstract #_"int" TypeReader''getU2-1 [#_"TypeReader" this])
-
-    ;;; Reads a signed 4 byte value.
-    (§ abstract #_"int" TypeReader''getS4-1 [#_"TypeReader" this])
-
-    ;;; Reads an unsigned 4 byte value.
-    #_unused
-    (§ abstract #_"long" TypeReader''getU4-1 [#_"TypeReader" this])
-
-    ;;; Reads a signed 8 byte value.
-    #_unused
-    (§ abstract #_"long" TypeReader''getS8-1 [#_"TypeReader" this])
-
-    ;;;
-     ; Reads a signed value that has been written using {@link TypeWriter#putSV variable byte size encoding}.
-     ;;
-    (§ default! #_"long" TypeReader''getSV-1 [#_"TypeReader" this]
-        (loop [#_"long" value 0 #_"int" shift 0]
-            (let [
-                #_"long" b (TypeReader''getU1-1 this)
-                value (| value (<< (& b 0x7f) shift))
-                shift (+ shift 7)
-            ]
-                (cond
-                         (not (zero? (& b 0x80)))               (recur value shift)
-                    (and (not (zero? (& b 0x40))) (< shift 64)) (| value (<< -1 shift))
-                    :else                                       value
-                )
-            )
-        )
-    )
-
-    ;;;
-     ; Reads a signed variable byte size encoded value that is known to fit into the range of int.
-     ;;
-    #_unused
-    (§ default! #_"int" TypeReader''getSVInt-1 [#_"TypeReader" this]
-        (TypeConversion'asS4-1 (TypeReader''getSV-1 this))
-    )
-
-    ;;;
-     ; Reads an unsigned value that has been written using {@link TypeWriter#putUV variable byte size encoding}.
-     ;;
-    (§ default! #_"long" TypeReader''getUV-1 [#_"TypeReader" this]
-        (loop [#_"long" value 0 #_"int" shift 0]
-            (let [
-                #_"long" b (TypeReader''getU1-1 this)
-                value (| value (<< (& b 0x7f) shift))
-                shift (+ shift 7)
-            ]
-                (recur-if (not (zero? (& b 0x80))) [value shift] => value)
-            )
-        )
-    )
-
-    ;;;
-     ; Reads an unsigned variable byte size encoded value that is known to fit into the range of int.
-     ;;
-    #_unused
-    (§ default! #_"int" TypeReader''getUVInt-1 [#_"TypeReader" this]
-        (TypeConversion'asS4-1 (TypeReader''getUV-1 this))
-    )
-)
-
-;;;
- ; Provides low-level sequential write access for signed and unsigned values of size 1, 2, 4, and 8 bytes.
- ;;
-(§ interface TypeWriter
-    ;;;
-     ; Returns the number of bytes that have been written, i.e. the byte index of the next byte to be written.
-     ;;
-    #_unused
-    (§ abstract #_"long" TypeWriter''getBytesWritten-1 [#_"TypeWriter" this])
-
-    ;;; Writes a signed 1 byte value.
-    #_unused
-    (§ abstract #_"void" TypeWriter''putS1-2 [#_"TypeWriter" this, #_"long" value])
-
-    ;;; Writes an unsigned 1 byte value.
-    (§ abstract #_"void" TypeWriter''putU1-2 [#_"TypeWriter" this, #_"long" value])
-
-    ;;; Writes a signed 2 byte value.
-    (§ abstract #_"void" TypeWriter''putS2-2 [#_"TypeWriter" this, #_"long" value])
-
-    ;;; Writes an unsigned 2 byte value.
-    #_unused
-    (§ abstract #_"void" TypeWriter''putU2-2 [#_"TypeWriter" this, #_"long" value])
-
-    ;;; Writes a signed 4 byte value.
-    (§ abstract #_"void" TypeWriter''putS4-2 [#_"TypeWriter" this, #_"long" value])
-
-    ;;; Writes an unsigned 4 byte value.
-    #_unused
-    (§ abstract #_"void" TypeWriter''putU4-2 [#_"TypeWriter" this, #_"long" value])
-
-    ;;; Writes a signed 8 byte value.
-    #_unused
-    (§ abstract #_"void" TypeWriter''putS8-2 [#_"TypeWriter" this, #_"long" value])
-
-    ;;;
-     ; Writes a signed value in a variable byte size encoding.
-     ;;
-    #_unused
-    (§ default! #_"void" TypeWriter''putSV-2 [#_"TypeWriter" this, #_"long" value]
-        (loop [value value]
-            (if (and (<= -64 value) (< value 64))
-                (TypeWriter''putU1-2 this, (& value 0x7f))
-                (do
-                    (TypeWriter''putU1-2 this, (| 0x80 (& value 0x7f)))
-                    (recur (>> value 7))
-                )
-            )
-        )
-        nil
-    )
-
-    ;;;
-     ; Writes an unsigned value in a variable byte size encoding.
-     ;;
-    #_unused
-    (§ default! #_"void" TypeWriter''putUV-2 [#_"TypeWriter" this, #_"long" value]
-        (loop [value value]
-            (if (< value 128)
-                (TypeWriter''putU1-2 this, (& value 0x7f))
-                (do
-                    (TypeWriter''putU1-2 this, (| 0x80 (& value 0x7f)))
-                    (recur (>> value 7))
-                )
-            )
-        )
-        nil
-    )
-)
-
-;;;
- ; Provides low-level read access from a byte[] array for signed and unsigned values of size 1, 2,
- ; 4, and 8 bytes.
- ;
- ; The class can either be instantiated for sequential access to the byte[] array; or static methods
- ; can be used to read values without the overhead of creating an instance.
- ;
- ; The flag {@code supportsUnalignedMemoryAccess} must be set according to the capabilities of the
- ; hardware architecture: the value true allows more efficient memory access on
- ; architectures that support unaligned memory accesses; the value false is the safe
- ; fallback that works on every hardware.
- ;;
-(class-ns UnsafeArrayTypeReader (§ implements TypeReader)
-    (§ defn #_"int" UnsafeArrayTypeReader'getS1-2 [#_"byte[]" data, #_"long" byteIndex]
-        (.getByte HotSpot'unsafe, data, (UnsafeArrayTypeReader'readOffset-3 data, byteIndex, Byte/BYTES))
-    )
-
-    (§ defn #_"int" UnsafeArrayTypeReader'getU1-2 [#_"byte[]" data, #_"long" byteIndex]
-        (& (.getByte HotSpot'unsafe, data, (UnsafeArrayTypeReader'readOffset-3 data, byteIndex, Byte/BYTES)) 0xff)
-    )
-
-    (§ defn #_"int" UnsafeArrayTypeReader'getS2-3 [#_"byte[]" data, #_"long" byteIndex, #_"boolean" supportsUnalignedMemoryAccess]
-        (if supportsUnalignedMemoryAccess (UnalignedUnsafeArrayTypeReader'getS2-2 data, byteIndex) (AlignedUnsafeArrayTypeReader'getS2-2 data, byteIndex))
-    )
-
-    #_unused
-    (§ defn #_"int" UnsafeArrayTypeReader'getU2-3 [#_"byte[]" data, #_"long" byteIndex, #_"boolean" supportsUnalignedMemoryAccess]
-        (UnsafeArrayTypeReader'getS2-3 data, byteIndex, (& supportsUnalignedMemoryAccess 0xffff))
-    )
-
-    (§ defn #_"int" UnsafeArrayTypeReader'getS4-3 [#_"byte[]" data, #_"long" byteIndex, #_"boolean" supportsUnalignedMemoryAccess]
-        (if supportsUnalignedMemoryAccess (UnalignedUnsafeArrayTypeReader'getS4-2 data, byteIndex) (AlignedUnsafeArrayTypeReader'getS4-2 data, byteIndex))
-    )
-
-    #_unused
-    (§ defn #_"long" UnsafeArrayTypeReader'getU4-3 [#_"byte[]" data, #_"long" byteIndex, #_"boolean" supportsUnalignedMemoryAccess]
-        (UnsafeArrayTypeReader'getS4-3 data, byteIndex, (& supportsUnalignedMemoryAccess 0xffffffff))
-    )
-
-    #_unused
-    (§ defn #_"long" UnsafeArrayTypeReader'getS8-3 [#_"byte[]" data, #_"long" byteIndex, #_"boolean" supportsUnalignedMemoryAccess]
-        (if supportsUnalignedMemoryAccess (UnalignedUnsafeArrayTypeReader'getS8-2 data, byteIndex) (AlignedUnsafeArrayTypeReader'getS8-2 data, byteIndex))
-    )
-
-    (§ defn #_"long" UnsafeArrayTypeReader'readOffset-3 [#_"byte[]" data, #_"long" byteIndex, #_"int" numBytes]
-        (+ byteIndex Unsafe'ARRAY_BYTE_BASE_OFFSET)
-    )
-
-    #_unused
-    (§ defn #_"UnsafeArrayTypeReader" UnsafeArrayTypeReader'create-3 [#_"byte[]" data, #_"long" byteIndex, #_"boolean" supportsUnalignedMemoryAccess]
-        (if supportsUnalignedMemoryAccess (UnalignedUnsafeArrayTypeReader'new-2 data, byteIndex) (AlignedUnsafeArrayTypeReader'new-2 data, byteIndex))
-    )
-
-    (§ final #_"byte[]" :data nil)
-    (§ mutable #_"long" :byteIndex 0)
-
-    (§ defn #_"UnsafeArrayTypeReader" UnsafeArrayTypeReader'new-2 [#_"byte[]" data, #_"long" byteIndex]
-        (let [
-            #_"UnsafeArrayTypeReader" this (Object.)
-            this (assoc this :data data)
-            this (assoc this :byteIndex byteIndex)
-        ]
-            this
-        )
-    )
-
-    #_unused
-    (§ override #_"long" UnsafeArrayTypeReader''getByteIndex-1 [#_"UnsafeArrayTypeReader" this]
-        (:byteIndex this)
-    )
-
-    #_unused
-    (§ override #_"void" UnsafeArrayTypeReader''setByteIndex-2 [#_"UnsafeArrayTypeReader" this, #_"long" byteIndex]
-        (§ ass! this (assoc this :byteIndex byteIndex))
-        nil
-    )
-
-    #_unused
-    (§ override! #_"int" UnsafeArrayTypeReader''getS1-1 [#_"UnsafeArrayTypeReader" this]
-        (let [
-            #_"int" result (UnsafeArrayTypeReader'getS1-2 (:data this), (:byteIndex this))
-        ]
-            (§ ass! this (update this :byteIndex + Byte/BYTES))
-            result
-        )
-    )
-
-    #_unused
-    (§ override! #_"int" UnsafeArrayTypeReader''getU1-1 [#_"UnsafeArrayTypeReader" this]
-        (let [
-            #_"int" result (UnsafeArrayTypeReader'getU1-2 (:data this), (:byteIndex this))
-        ]
-            (§ ass! this (update this :byteIndex + Byte/BYTES))
-            result
-        )
-    )
-
-    #_unused
-    (§ override! #_"int" UnsafeArrayTypeReader''getU2-1 [#_"UnsafeArrayTypeReader" this]
-        (& (TypeReader''getS2-1 this) 0xffff)
-    )
-
-    #_unused
-    (§ override! #_"long" UnsafeArrayTypeReader''getU4-1 [#_"UnsafeArrayTypeReader" this]
-        (& (TypeReader''getS4-1 this) 0xffffffff)
-    )
-)
-
-(final-ns UnalignedUnsafeArrayTypeReader (§ extends UnsafeArrayTypeReader)
-    (§ defn #_"int" UnalignedUnsafeArrayTypeReader'getS2-2 [#_"byte[]" data, #_"long" byteIndex]
-        (.getShort HotSpot'unsafe, data, (UnsafeArrayTypeReader'readOffset-3 data, byteIndex, Short/BYTES))
-    )
-
-    (§ defn #_"int" UnalignedUnsafeArrayTypeReader'getS4-2 [#_"byte[]" data, #_"long" byteIndex]
-        (.getInt HotSpot'unsafe, data, (UnsafeArrayTypeReader'readOffset-3 data, byteIndex, Integer/BYTES))
-    )
-
-    (§ defn #_"long" UnalignedUnsafeArrayTypeReader'getS8-2 [#_"byte[]" data, #_"long" byteIndex]
-        (.getLong HotSpot'unsafe, data, (UnsafeArrayTypeReader'readOffset-3 data, byteIndex, Long/BYTES))
-    )
-
-    (§ defn #_"UnalignedUnsafeArrayTypeReader" UnalignedUnsafeArrayTypeReader'new-2 [#_"byte[]" data, #_"long" byteIndex]
-        (UnsafeArrayTypeReader'new-2 data, byteIndex)
-    )
-
-    #_unused
-    (§ override! #_"int" UnalignedUnsafeArrayTypeReader''getS2-1 [#_"UnalignedUnsafeArrayTypeReader" this]
-        (let [
-            #_"int" result (UnalignedUnsafeArrayTypeReader'getS2-2 (:data this), (:byteIndex this))
-        ]
-            (§ ass! this (update this :byteIndex + Short/BYTES))
-            result
-        )
-    )
-
-    #_unused
-    (§ override! #_"int" UnalignedUnsafeArrayTypeReader''getS4-1 [#_"UnalignedUnsafeArrayTypeReader" this]
-        (let [
-            #_"int" result (UnalignedUnsafeArrayTypeReader'getS4-2 (:data this), (:byteIndex this))
-        ]
-            (§ ass! this (update this :byteIndex + Integer/BYTES))
-            result
-        )
-    )
-
-    #_unused
-    (§ override! #_"long" UnalignedUnsafeArrayTypeReader''getS8-1 [#_"UnalignedUnsafeArrayTypeReader" this]
-        (let [
-            #_"long" result (UnalignedUnsafeArrayTypeReader'getS8-2 (:data this), (:byteIndex this))
-        ]
-            (§ ass! this (update this :byteIndex + Long/BYTES))
-            result
-        )
-    )
-)
-
-(final-ns AlignedUnsafeArrayTypeReader (§ extends UnsafeArrayTypeReader)
-    (§ defn #_"int" AlignedUnsafeArrayTypeReader'getS2-2 [#_"byte[]" data, #_"long" byteIndex]
-        (let [
-            #_"long" offset (UnsafeArrayTypeReader'readOffset-3 data, byteIndex, Short/BYTES)
-        ]
-            (| (<< (& (.getByte HotSpot'unsafe, data, (+ offset 0)) 0xff) 0)
-               (<<    (.getByte HotSpot'unsafe, data, (+ offset 1))       8))
-        )
-    )
-
-    (§ defn #_"int" AlignedUnsafeArrayTypeReader'getS4-2 [#_"byte[]" data, #_"long" byteIndex]
-        (let [
-            #_"long" offset (UnsafeArrayTypeReader'readOffset-3 data, byteIndex, Integer/BYTES)
-        ]
-            (| (<< (& (.getByte HotSpot'unsafe, data, (+ offset 0)) 0xff) 0)
-               (<< (& (.getByte HotSpot'unsafe, data, (+ offset 1)) 0xff) 8)
-               (<< (& (.getByte HotSpot'unsafe, data, (+ offset 2)) 0xff) 16)
-               (<<    (.getByte HotSpot'unsafe, data, (+ offset 3))       24))
-        )
-    )
-
-    (§ defn #_"long" AlignedUnsafeArrayTypeReader'getS8-2 [#_"byte[]" data, #_"long" byteIndex]
-        (let [
-            #_"long" offset (UnsafeArrayTypeReader'readOffset-3 data, byteIndex, Long/BYTES)
-        ]
-            (| (<< (long (& (.getByte HotSpot'unsafe, data, (+ offset 0)) 0xff)) 0)
-               (<< (long (& (.getByte HotSpot'unsafe, data, (+ offset 1)) 0xff)) 8)
-               (<< (long (& (.getByte HotSpot'unsafe, data, (+ offset 2)) 0xff)) 16)
-               (<< (long (& (.getByte HotSpot'unsafe, data, (+ offset 3)) 0xff)) 24)
-               (<< (long (& (.getByte HotSpot'unsafe, data, (+ offset 4)) 0xff)) 32)
-               (<< (long (& (.getByte HotSpot'unsafe, data, (+ offset 5)) 0xff)) 40)
-               (<< (long (& (.getByte HotSpot'unsafe, data, (+ offset 6)) 0xff)) 48)
-               (<< (long    (.getByte HotSpot'unsafe, data, (+ offset 7))      ) 56))
-        )
-    )
-
-    (§ defn #_"AlignedUnsafeArrayTypeReader" AlignedUnsafeArrayTypeReader'new-2 [#_"byte[]" data, #_"long" byteIndex]
-        (UnsafeArrayTypeReader'new-2 data, byteIndex)
-    )
-
-    #_unused
-    (§ override! #_"int" AlignedUnsafeArrayTypeReader''getS2-1 [#_"AlignedUnsafeArrayTypeReader" this]
-        (let [
-            #_"int" result (AlignedUnsafeArrayTypeReader'getS2-2 (:data this), (:byteIndex this))
-        ]
-            (§ ass! this (update this :byteIndex + Short/BYTES))
-            result
-        )
-    )
-
-    #_unused
-    (§ override! #_"int" AlignedUnsafeArrayTypeReader''getS4-1 [#_"AlignedUnsafeArrayTypeReader" this]
-        (let [
-            #_"int" result (AlignedUnsafeArrayTypeReader'getS4-2 (:data this), (:byteIndex this))
-        ]
-            (§ ass! this (update this :byteIndex + Integer/BYTES))
-            result
-        )
-    )
-
-    #_unused
-    (§ override! #_"long" AlignedUnsafeArrayTypeReader''getS8-1 [#_"AlignedUnsafeArrayTypeReader" this]
-        (let [
-            #_"long" result (AlignedUnsafeArrayTypeReader'getS8-2 (:data this), (:byteIndex this))
-        ]
-            (§ ass! this (update this :byteIndex + Long/BYTES))
-            result
-        )
-    )
-)
-
-;;;
- ; Provides low-level sequential write access to a byte[] array for signed and unsigned values of
- ; size 1, 2, 4, and 8 bytes. To avoid copying an array when the buffer size is no longer
- ; sufficient, the buffer is split into chunks of a fixed size.
- ;
- ; The flag {@code supportsUnalignedMemoryAccess} must be set according to the capabilities of the
- ; hardware architecture: the value true allows more efficient memory access on
- ; architectures that support unaligned memory accesses; the value false is the safe
- ; fallback that works on every hardware.
- ;;
-(class-ns UnsafeArrayTypeWriter (§ implements TypeWriter)
-    (def- #_"int" UnsafeArrayTypeWriter'MIN_CHUNK_LENGTH 200)
-    (def- #_"int" UnsafeArrayTypeWriter'MAX_CHUNK_LENGTH 16000)
-
-    (§ final #_"Chunk" :firstChunk nil)
-    (§ mutable #_"Chunk" :writeChunk nil)
-    (§ mutable #_"int" :totalSize 0)
-
-    #_unused
-    (§ defn #_"UnsafeArrayTypeWriter" UnsafeArrayTypeWriter'create-1 [#_"boolean" supportsUnalignedMemoryAccess]
-        (if supportsUnalignedMemoryAccess
-            (UnalignedUnsafeArrayTypeWriter'new-0)
-            (AlignedUnsafeArrayTypeWriter'new-0)
-        )
-    )
-
-    (§ defn #_"UnsafeArrayTypeWriter" UnsafeArrayTypeWriter'new-0 []
-        (let [
-            #_"UnsafeArrayTypeWriter" this (Object.)
-            this (assoc this :firstChunk (Chunk'new-1 UnsafeArrayTypeWriter'MIN_CHUNK_LENGTH))
-            this (assoc this :writeChunk (:firstChunk this))
-        ]
-            this
-        )
-    )
-
-    #_unused
-    (§ override! #_"long" UnsafeArrayTypeWriter''getBytesWritten-1 [#_"UnsafeArrayTypeWriter" this]
-        (:totalSize this)
-    )
-
-    ;;;
-     ; Copies the buffer into the provided byte[] array of length #getBytesWritten().
-     ;;
-    #_unused
-    (§ method! #_"byte[]" UnsafeArrayTypeWriter''toArray-2 [#_"UnsafeArrayTypeWriter" this, #_"byte[]" bytes]
-        (loop-when-recur [#_"int" i 0 #_"Chunk" cur (:firstChunk this)] (some? cur) [(+ i (:size cur)) (:next cur)]
-            (System/arraycopy (:data cur), 0, bytes, i, (:size cur))
-        )
-        bytes
-    )
-
-    #_unused
-    (§ override! #_"void" UnsafeArrayTypeWriter''putS1-2 [#_"UnsafeArrayTypeWriter" this, #_"long" value]
-        (.putByte HotSpot'unsafe, (:data (:writeChunk this)), (UnsafeArrayTypeWriter''writeOffset-2 this, Byte/BYTES), (TypeConversion'asS1-1 value))
-        nil
-    )
-
-    #_unused
-    (§ override! #_"void" UnsafeArrayTypeWriter''putU1-2 [#_"UnsafeArrayTypeWriter" this, #_"long" value]
-        (.putByte HotSpot'unsafe, (:data (:writeChunk this)), (UnsafeArrayTypeWriter''writeOffset-2 this, Byte/BYTES), (TypeConversion'asU1-1 value))
-        nil
-    )
-
-    #_unused
-    (§ override! #_"void" UnsafeArrayTypeWriter''putU2-2 [#_"UnsafeArrayTypeWriter" this, #_"long" value]
-        (TypeWriter''putS2-2 this, (TypeConversion'asU2-1 value))
-        nil
-    )
-
-    #_unused
-    (§ override! #_"void" UnsafeArrayTypeWriter''putU4-2 [#_"UnsafeArrayTypeWriter" this, #_"long" value]
-        (TypeWriter''putS4-2 this, (TypeConversion'asU4-1 value))
-        nil
-    )
-
-    (§ method! #_"long" UnsafeArrayTypeWriter''writeOffset-2 [#_"UnsafeArrayTypeWriter" this, #_"int" writeBytes]
-        (when (<= (count (:data (:writeChunk this))) (+ (:size (:writeChunk this)) writeBytes))
-            (let [
-                #_"Chunk" newChunk (Chunk'new-1 (min (<< (count (:data (:writeChunk this))) 1) UnsafeArrayTypeWriter'MAX_CHUNK_LENGTH))
-            ]
-                (§ ass! (:next (:writeChunk this)) newChunk)
-                (§ ass! this (assoc this :writeChunk newChunk))
-            )
-        )
-
-        (let [
-            #_"long" result (+ (:size (:writeChunk this)) Unsafe'ARRAY_BYTE_BASE_OFFSET)
-        ]
-            (§ ass! this (update this :totalSize + writeBytes))
-            (§ ass! (:size (:writeChunk this)) (+ (:size (:writeChunk this)) writeBytes))
-
-            result
-        )
-    )
-)
-
-;;;
- ; @anno UnsafeArrayTypeWriter.Chunk
- ;;
-(final-ns Chunk
-    (§ final #_"byte[]" :data nil)
-    (§ mutable #_"int" :size 0)
-    (§ mutable #_"Chunk" :next nil)
-
-    (§ defn #_"Chunk" Chunk'new-1 [#_"int" arrayLength]
-        (let [
-            #_"Chunk" this (Object.)
-            this (assoc this :data (byte-array arrayLength))
-        ]
-            this
-        )
-    )
-)
-
-(final-ns UnalignedUnsafeArrayTypeWriter (§ extends UnsafeArrayTypeWriter)
-    (§ defn #_"UnalignedUnsafeArrayTypeWriter" UnalignedUnsafeArrayTypeWriter'new-0 []
-        (UnsafeArrayTypeWriter'new-0)
-    )
-
-    #_unused
-    (§ override! #_"void" UnalignedUnsafeArrayTypeWriter''putS2-2 [#_"UnalignedUnsafeArrayTypeWriter" this, #_"long" value]
-        (let [
-            #_"long" offset (UnsafeArrayTypeWriter''writeOffset-2 this, Short/BYTES)
-        ]
-            (.putShort HotSpot'unsafe, (:data (:writeChunk this)), offset, (TypeConversion'asS2-1 value))
-        )
-        nil
-    )
-
-    #_unused
-    (§ override! #_"void" UnalignedUnsafeArrayTypeWriter''putS4-2 [#_"UnalignedUnsafeArrayTypeWriter" this, #_"long" value]
-        (let [
-            #_"long" offset (UnsafeArrayTypeWriter''writeOffset-2 this, Integer/BYTES)
-        ]
-            (.putInt HotSpot'unsafe, (:data (:writeChunk this)), offset, (TypeConversion'asS4-1 value))
-        )
-        nil
-    )
-
-    #_unused
-    (§ override! #_"void" UnalignedUnsafeArrayTypeWriter''putS8-2 [#_"UnalignedUnsafeArrayTypeWriter" this, #_"long" value]
-        (let [
-            #_"long" offset (UnsafeArrayTypeWriter''writeOffset-2 this, Long/BYTES)
-        ]
-            (.putLong HotSpot'unsafe, (:data (:writeChunk this)), offset, value)
-        )
-        nil
-    )
-)
-
-(final-ns AlignedUnsafeArrayTypeWriter (§ extends UnsafeArrayTypeWriter)
-    (§ defn #_"AlignedUnsafeArrayTypeWriter" AlignedUnsafeArrayTypeWriter'new-0 []
-        (UnsafeArrayTypeWriter'new-0)
-    )
-
-    #_unused
-    (§ override! #_"void" AlignedUnsafeArrayTypeWriter''putS2-2 [#_"AlignedUnsafeArrayTypeWriter" this, #_"long" value]
-        (let [
-            #_"long" offset (UnsafeArrayTypeWriter''writeOffset-2 this, Short/BYTES)
-        ]
-            (.putByte HotSpot'unsafe, (:data (:writeChunk this)), (+ offset 0), (byte (>> value 0)))
-            (.putByte HotSpot'unsafe, (:data (:writeChunk this)), (+ offset 1), (byte (>> value 8)))
-        )
-        nil
-    )
-
-    #_unused
-    (§ override! #_"void" AlignedUnsafeArrayTypeWriter''putS4-2 [#_"AlignedUnsafeArrayTypeWriter" this, #_"long" value]
-        (let [
-            #_"long" offset (UnsafeArrayTypeWriter''writeOffset-2 this, Integer/BYTES)
-        ]
-            (.putByte HotSpot'unsafe, (:data (:writeChunk this)), (+ offset 0), (byte (>> value 0)))
-            (.putByte HotSpot'unsafe, (:data (:writeChunk this)), (+ offset 1), (byte (>> value 8)))
-            (.putByte HotSpot'unsafe, (:data (:writeChunk this)), (+ offset 2), (byte (>> value 16)))
-            (.putByte HotSpot'unsafe, (:data (:writeChunk this)), (+ offset 3), (byte (>> value 24)))
-        )
-        nil
-    )
-
-    #_unused
-    (§ override! #_"void" AlignedUnsafeArrayTypeWriter''putS8-2 [#_"AlignedUnsafeArrayTypeWriter" this, #_"long" value]
-        (let [
-            #_"long" offset (UnsafeArrayTypeWriter''writeOffset-2 this, Long/BYTES)
-        ]
-            (.putByte HotSpot'unsafe, (:data (:writeChunk this)), (+ offset 0), (byte (>> value 0)))
-            (.putByte HotSpot'unsafe, (:data (:writeChunk this)), (+ offset 1), (byte (>> value 8)))
-            (.putByte HotSpot'unsafe, (:data (:writeChunk this)), (+ offset 2), (byte (>> value 16)))
-            (.putByte HotSpot'unsafe, (:data (:writeChunk this)), (+ offset 3), (byte (>> value 24)))
-            (.putByte HotSpot'unsafe, (:data (:writeChunk this)), (+ offset 4), (byte (>> value 32)))
-            (.putByte HotSpot'unsafe, (:data (:writeChunk this)), (+ offset 5), (byte (>> value 40)))
-            (.putByte HotSpot'unsafe, (:data (:writeChunk this)), (+ offset 6), (byte (>> value 48)))
-            (.putByte HotSpot'unsafe, (:data (:writeChunk this)), (+ offset 7), (byte (>> value 56)))
-        )
-        nil
     )
 )
 
@@ -13500,62 +12621,6 @@
         nil
     )
 
-    ;;;
-     ; Information associated with this node. A single value is stored directly in the field.
-     ; Multiple values are stored by creating an Object[].
-     ;;
-    (§ mutable #_"Object" :annotation nil)
-
-    #_unused
-    (§ method- #_"<T> T" Node''getNodeInfo-2 [#_"Node" this, #_"Class<T>" c]
-        (when (some? (:annotation this))
-            (cond
-                (#_"Class" .isInstance c, (:annotation this))
-                    (#_"Class" .cast c, (:annotation this))
-                (= (#_"Object" .getClass (:annotation this)) Object*'class)
-                    (loop-when [#_"ISeq" s (seq (:annotation this))] (some? s)
-                        (let [
-                            #_"Object" a (first s)
-                        ]
-                            (when (#_"Class" .isInstance c, a) => (recur (next s))
-                                (#_"Class" .cast c, a)
-                            )
-                        )
-                    )
-            )
-        )
-    )
-
-    #_unused
-    (§ method- #_"<T> void" Node''setNodeInfo-3 [#_"Node" this, #_"Class<T>" clazz, #_"T" value]
-        (cond
-            (or (nil? (:annotation this)) (#_"Class" .isInstance clazz, (:annotation this)))
-                (§ ass! this (assoc this :annotation value))
-            (= (#_"Object" .getClass (:annotation this)) Object*'class)
-                (let [
-                    #_"Object[]" a (:annotation this)
-                ]
-                    (or
-                        (loop-when [#_"int" i 0] (< i (count a))
-                            (when (#_"Class" .isInstance clazz, (nth a i)) => (recur (inc i))
-                                (aset a i value)
-                                :done
-                            )
-                        )
-                        (let [
-                            #_"Object[]" a' (Arrays/copyOf a, (inc (count a)))
-                        ]
-                            (aset a' (count a) value)
-                            (§ ass! this (assoc this :annotation a'))
-                        )
-                    )
-                )
-            :else
-                (§ ass! this (assoc this :annotation (into-array Object [ (:annotation this), value ])))
-        )
-        nil
-    )
-
     (§ method #_"boolean" Node''isAllowedUsageType-2 [#_"Node" this, #_"InputType" type]
         (and (not= type InputType'Value) (#_"EnumSet" .contains (:allowedUsageTypes (:nodeClass this)), type))
     )
@@ -14454,11 +13519,6 @@
                 (assoc this :iterableIds copy)
             )
         )
-    )
-
-    #_unused
-    (§ defn- #_"boolean" NodeClass'containsId-2 [#_"int" iterableId, #_"int[]" iterableIds]
-        (loop [#_"ISeq" s (seq iterableIds)] (and (some? s) (or (= (first s) iterableId) (recur (next s)))))
     )
 
     (§ mutable #_"String" :shortName nil)
@@ -17590,65 +16650,6 @@
     )
 )
 
-;;;
- ; Pushes an interpreter frame to the stack.
- ;;
-; @LIROpcode
-(final-ns PushInterpreterFrameOp (§ extends LIRInstruction)
-    (§ def #_"LIRInstructionClass<PushInterpreterFrameOp>" PushInterpreterFrameOp'TYPE (LIRInstructionClass'new-1 PushInterpreterFrameOp))
-
-    ; @Alive(OperandFlag'REG)
-    (§ mutable #_"AllocatableValue" :frameSize nil)
-    ; @Alive(OperandFlag'REG)
-    (§ mutable #_"AllocatableValue" :framePc nil)
-    ; @Alive(OperandFlag'REG)
-    (§ mutable #_"AllocatableValue" :senderSp nil)
-    ; @Alive(OperandFlag'REG)
-    (§ mutable #_"AllocatableValue" :initialInfo nil)
-
-    #_unused
-    (§ defn #_"PushInterpreterFrameOp" PushInterpreterFrameOp'new-4 [#_"AllocatableValue" frameSize, #_"AllocatableValue" framePc, #_"AllocatableValue" senderSp, #_"AllocatableValue" initialInfo]
-        (let [
-            #_"PushInterpreterFrameOp" this (LIRInstruction'new-1 PushInterpreterFrameOp'TYPE)
-            this (assoc this :frameSize frameSize)
-            this (assoc this :framePc framePc)
-            this (assoc this :senderSp senderSp)
-            this (assoc this :initialInfo initialInfo)
-        ]
-            this
-        )
-    )
-
-    #_unused
-    (§ override! #_"void" PushInterpreterFrameOp''emitCode-2 [#_"PushInterpreterFrameOp" this, #_"Assembler" asm]
-        (let [
-            #_"Register" frameSizeRegister (#_"RegisterValue" .getRegister (:frameSize this))
-            #_"Register" framePcRegister (#_"RegisterValue" .getRegister (:framePc this))
-            #_"Register" senderSpRegister (#_"RegisterValue" .getRegister (:senderSp this))
-            #_"Register" initialInfoRegister (#_"RegisterValue" .getRegister (:initialInfo this))
-            #_"int" wordSize 8
-        ]
-            ;; we'll push PC and BP by hand
-            (Assembler''subq-3 asm, frameSizeRegister, (* 2 wordSize))
-
-            ;; push return address
-            (Assembler''push-2 asm, framePcRegister)
-
-            ;; prolog
-            (Assembler''push-2 asm, initialInfoRegister)
-            (Assembler''movq-3 asm, initialInfoRegister, AMD64/rsp)
-            (Assembler''subq-3 asm, AMD64/rsp, frameSizeRegister)
-
-            ;; this value is corrected by layout_activation_impl
-            (Assembler''movptr-3 asm, (AMD64Address'new-2 initialInfoRegister, (* HotSpot'frameInterpreterFrameLastSpOffset wordSize)), 0)
-
-            ;; make the frame walkable
-            (Assembler''movq-3 asm, (AMD64Address'new-2 initialInfoRegister, (* HotSpot'frameInterpreterFrameSenderSpOffset wordSize)), senderSpRegister)
-        )
-        nil
-    )
-)
-
 (final-ns AMD64HotSpotRegisterAllocationConfig (§ extends RegisterAllocationConfig)
     ;;;
      ; Specify priority of register selection within phases of register allocation. Highest priority
@@ -20118,97 +19119,6 @@
 )
 
 ;;;
- ; Represents an encoded representation of a constant.
- ;;
-(final-ns EncodedSymbolConstant (§ extends DataPointerConstant)
-    (§ final #_"Constant" :constant nil)
-    (§ mutable #_"byte[]" :bytes nil)
-
-    #_unused
-    (§ defn #_"EncodedSymbolConstant" EncodedSymbolConstant'new-1 [#_"Constant" constant]
-        (let [
-            #_"EncodedSymbolConstant" this (DataPointerConstant'new-1 1)
-            this (assoc this :constant constant)
-        ]
-            this
-        )
-    )
-
-    #_unused
-    (§ override! #_"int" EncodedSymbolConstant''getSerializedSize-1 [#_"EncodedSymbolConstant" this]
-        (count (EncodedSymbolConstant''getEncodedConstant-1 this))
-    )
-
-    #_unused
-    (§ override! #_"void" EncodedSymbolConstant''serialize-2 [#_"EncodedSymbolConstant" this, #_"ByteBuffer" buffer]
-        (#_"ByteBuffer" .put buffer, (EncodedSymbolConstant''getEncodedConstant-1 this))
-        nil
-    )
-
-    ;;;
-     ; Converts a string to a byte array with modified UTF-8 encoding. The first two bytes of the
-     ; byte array store the length of the string in bytes.
-     ;
-     ; @param s a java.lang.String in UTF-16
-     ;;
-    (§ defn- #_"byte[]" EncodedSymbolConstant'toUTF8String-1 [#_"String" s]
-        (try (§ with [#_"ByteArrayOutputStream" bytes (ByteArrayOutputStream.)])
-            (let [
-                #_"DataOutputStream" stream (DataOutputStream. bytes)
-            ]
-                (#_"DataOutputStream" .writeUTF stream, s)
-                (#_"ByteArrayOutputStream" .toByteArray bytes)
-            )
-        )
-    )
-
-    (§ defn- #_"byte[]" EncodedSymbolConstant'encodeConstant-1 [#_"Constant" constant]
-        (condp instance? constant
-            HotSpotObjectConstant
-                (EncodedSymbolConstant'toUTF8String-1 (#_"HotSpotObjectConstant" .asObject constant, String))
-            HotSpotMetaspaceConstant
-                (let [
-                    #_"HotSpotResolvedObjectType" klass (#_"HotSpotMetaspaceConstant" .asResolvedJavaType constant)
-                ]
-                    (if (some? klass)
-                        (EncodedSymbolConstant'toUTF8String-1 (#_"HotSpotResolvedObjectType" .getName klass))
-                        (let [
-                            #_"HotSpotResolvedJavaMethod" method (#_"HotSpotMetaspaceConstant" .asResolvedJavaMethod constant)
-                        ]
-                            (when (some? method) => (throw! (str "encoding of constant " constant " failed"))
-                                (let [
-                                    #_"byte[]" name (EncodedSymbolConstant'toUTF8String-1 (#_"HotSpotResolvedJavaMethod" .getName method))
-                                    #_"byte[]" signature (EncodedSymbolConstant'toUTF8String-1 (#_"Signature" .toMethodDescriptor (#_"HotSpotResolvedJavaMethod" .getSignature method)))
-                                    #_"byte[]" bytes (byte-array (+ (count name) (count signature)))
-                                    #_"int" i 0
-                                ]
-                                    (System/arraycopy name, 0, bytes, i, (count name))
-                                    (§ ass i (+ i (count name)))
-                                    (System/arraycopy signature, 0, bytes, i, (count signature))
-                                    (§ ass i (+ i (count signature)))
-                                    bytes
-                                )
-                            )
-                        )
-                    )
-                )
-        )
-    )
-
-    (§ method! #_"byte[]" EncodedSymbolConstant''getEncodedConstant-1 [#_"EncodedSymbolConstant" this]
-        (when (nil? (:bytes this))
-            (§ ass! this (assoc this :bytes (EncodedSymbolConstant'encodeConstant-1 (:constant this))))
-        )
-        (:bytes this)
-    )
-
-    #_unused
-    (§ override! #_"String" EncodedSymbolConstant''toValueString-1 [#_"EncodedSymbolConstant" this]
-        (str "encoded symbol\"" (#_"Constant" .toValueString (:constant this)) "\"")
-    )
-)
-
-;;;
  ; A collection of methods used in HotSpot snippets, substitutions and stubs.
  ;;
 (value-ns HotSpotReplacementsUtil
@@ -20796,33 +19706,33 @@
                             (let [
                                 args (Arguments'new-3 (:instanceofExact this), (:guardsStage graph), (:loweringStage (:phase lowerer)))
                             ]
-                                (Arguments''add-3 args, "object", object)
-                                ((Arguments''add-3 args, "exactHub", (ConstantNode'forConstant-3 KlassPointerStamp'KLASS_NON_NULL, (#_"HotSpotResolvedObjectType" .klass exact), graph)))
+                                (Arguments''add-2 args, object)
+                                ((Arguments''add-2 args, (ConstantNode'forConstant-3 KlassPointerStamp'KLASS_NON_NULL, (#_"HotSpotResolvedObjectType" .klass exact), graph)))
                                 args
                             )
                         (#_"HotSpotResolvedObjectType" .isPrimaryType type)
                             (let [
                                 args (Arguments'new-3 (:instanceofPrimary this), (:guardsStage graph), (:loweringStage (:phase lowerer)))
                             ]
-                                (Arguments''add-3 args, "hub", hub)
-                                (Arguments''add-3 args, "object", object)
-                                (Arguments''addConst-3 args, "superCheckOffset", (#_"HotSpotResolvedObjectType" .superCheckOffset type))
+                                (Arguments''add-2 args, hub)
+                                (Arguments''add-2 args, object)
+                                (Arguments''addConst-2 args, (#_"HotSpotResolvedObjectType" .superCheckOffset type))
                                 args
                             )
                         :else
                             (let [
                                 args (Arguments'new-3 (:instanceofSecondary this), (:guardsStage graph), (:loweringStage (:phase lowerer)))
                             ]
-                                (Arguments''add-3 args, "hub", hub)
-                                (Arguments''add-3 args, "object", object)
-                                (Arguments''addVarargs-5 args, "hints", KlassPointer, KlassPointerStamp'KLASS_NON_NULL, (make-array ConstantNode 0))
-                                (Arguments''addVarargs-5 args, "hintIsPositive", boolean'class, (StampFactory'forKind-1 JavaKind/Boolean), (boolean-array 0))
+                                (Arguments''add-2 args, hub)
+                                (Arguments''add-2 args, object)
+                                (Arguments''addVarargs-4 args, KlassPointer, KlassPointerStamp'KLASS_NON_NULL, (make-array ConstantNode 0))
+                                (Arguments''addVarargs-4 args, boolean'class, (StampFactory'forKind-1 JavaKind/Boolean), (boolean-array 0))
                                 args
                             )
                     )
             ]
-                (Arguments''add-3 args, "trueValue", (:trueValue replacer))
-                (Arguments''add-3 args, "falseValue", (:falseValue replacer))
+                (Arguments''add-2 args, (:trueValue replacer))
+                (Arguments''add-2 args, (:falseValue replacer))
                 args
             )
             InstanceOfDynamicNode
@@ -20831,11 +19741,11 @@
                 #_"ValueNode" object (:y instanceOf)
                 #_"Arguments" args (Arguments'new-3 (:instanceofDynamic this), (:guardsStage (:graph instanceOf)), (:loweringStage (:phase lowerer)))
             ]
-                (Arguments''add-3 args, "hub", (:x instanceOf))
-                (Arguments''add-3 args, "object", object)
-                (Arguments''add-3 args, "trueValue", (:trueValue replacer))
-                (Arguments''add-3 args, "falseValue", (:falseValue replacer))
-                (Arguments''addConst-3 args, "allowNull", (:allow-nil? instanceOf))
+                (Arguments''add-2 args, (:x instanceOf))
+                (Arguments''add-2 args, object)
+                (Arguments''add-2 args, (:trueValue replacer))
+                (Arguments''add-2 args, (:falseValue replacer))
+                (Arguments''addConst-2 args, (:allow-nil? instanceOf))
                 args
             )
             ClassIsAssignableFromNode
@@ -20843,10 +19753,10 @@
                 #_"ClassIsAssignableFromNode" isAssignable (:instanceOf replacer)
                 #_"Arguments" args (Arguments'new-3 (:isAssignableFrom this), (:guardsStage (:graph isAssignable)), (:loweringStage (:phase lowerer)))
             ]
-                (Arguments''add-3 args, "thisClassNonNull", (:x isAssignable))
-                (Arguments''add-3 args, "otherClass", (:y isAssignable))
-                (Arguments''add-3 args, "trueValue", (:trueValue replacer))
-                (Arguments''add-3 args, "falseValue", (:falseValue replacer))
+                (Arguments''add-2 args, (:x isAssignable))
+                (Arguments''add-2 args, (:y isAssignable))
+                (Arguments''add-2 args, (:trueValue replacer))
+                (Arguments''add-2 args, (:falseValue replacer))
                 args
             )
         )
@@ -21360,18 +20270,18 @@
                     (let [
                         args (Arguments'new-3 (:monitorenter this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)))
                     ]
-                        (Arguments''add-3 args, "object", (:object node))
-                        (Arguments''add-3 args, "hub", (:hub node))
-                        (Arguments''addConst-3 args, "lockDepth", (:lockDepth (:monitorId node)))
-                        (Arguments''addConst-3 args, "threadRegister", HotSpot'threadRegister)
-                        (Arguments''addConst-3 args, "stackPointerRegister", HotSpot'stackPointerRegister)
+                        (Arguments''add-2 args, (:object node))
+                        (Arguments''add-2 args, (:hub node))
+                        (Arguments''addConst-2 args, (:lockDepth (:monitorId node)))
+                        (Arguments''addConst-2 args, HotSpot'threadRegister)
+                        (Arguments''addConst-2 args, HotSpot'stackPointerRegister)
                         args
                     )
                     (let [
                         args (Arguments'new-3 (:monitorenterStub this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)))
                     ]
-                        (Arguments''add-3 args, "object", (:object node))
-                        (Arguments''addConst-3 args, "lockDepth", (:lockDepth (:monitorId node)))
+                        (Arguments''add-2 args, (:object node))
+                        (Arguments''addConst-2 args, (:lockDepth (:monitorId node)))
                         args
                     )
                 )
@@ -21389,9 +20299,9 @@
                     (Arguments'new-3 (:monitorexitStub this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)))
                 )
         ]
-            (Arguments''add-3 args, "object", (:object node))
-            (Arguments''addConst-3 args, "lockDepth", (:lockDepth (:monitorId node)))
-            (Arguments''addConst-3 args, "threadRegister", HotSpot'threadRegister)
+            (Arguments''add-2 args, (:object node))
+            (Arguments''addConst-2 args, (:lockDepth (:monitorId node)))
+            (Arguments''addConst-2 args, HotSpot'threadRegister)
             (SnippetTemplate''instantiate-4 (SnippetTemplate'new-2 args, node), node, SnippetTemplate'DEFAULT_REPLACER, args)
         )
         nil
@@ -21711,12 +20621,12 @@
             #_"HotSpotResolvedObjectType" type (:instanceClass node)
             #_"Arguments" args (Arguments'new-3 (:allocateInstance this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)))
         ]
-            (Arguments''addConst-3 args, "size", (#_"HotSpotResolvedObjectType" .instanceSize type))
-            (Arguments''add-3 args, "hub", (ConstantNode'forConstant-3 KlassPointerStamp'KLASS_NON_NULL, (#_"HotSpotResolvedObjectType" .klass type), (:graph node)))
-            (Arguments''add-3 args, "prototypeMarkWord", (#_"HotSpotResolvedObjectType" .prototypeMarkWord type))
-            (Arguments''addConst-3 args, "fillContents", (:fillContents node))
-            (Arguments''addConst-3 args, "threadRegister", HotSpot'threadRegister)
-            (Arguments''addConst-3 args, "constantSize", true)
+            (Arguments''addConst-2 args, (#_"HotSpotResolvedObjectType" .instanceSize type))
+            (Arguments''add-2 args, (ConstantNode'forConstant-3 KlassPointerStamp'KLASS_NON_NULL, (#_"HotSpotResolvedObjectType" .klass type), (:graph node)))
+            (Arguments''add-2 args, (#_"HotSpotResolvedObjectType" .prototypeMarkWord type))
+            (Arguments''addConst-2 args, (:fillContents node))
+            (Arguments''addConst-2 args, HotSpot'threadRegister)
+            (Arguments''addConst-2 args, true)
             (SnippetTemplate''instantiate-4 (SnippetTemplate'new-2 args, node), node, SnippetTemplate'DEFAULT_REPLACER, args)
         )
         nil
@@ -21729,14 +20639,14 @@
             #_"ValueNode" length (AbstractNewArrayNode''length-1 node)
             #_"Arguments" args (Arguments'new-3 (:allocateArray this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)))
         ]
-            (Arguments''add-3 args, "hub", (ConstantNode'forConstant-3 KlassPointerStamp'KLASS_NON_NULL, (#_"HotSpotResolvedObjectType" .klass arrayType), (:graph node)))
-            (Arguments''add-3 args, "length", (if (Node''isAlive-1 length) length (Graph''addOrUniqueWithInputs-2 (:graph node), length)))
-            (Arguments''add-3 args, "prototypeMarkWord", (#_"HotSpotResolvedObjectType" .prototypeMarkWord arrayType))
-            (Arguments''addConst-3 args, "headerSize", (HotSpot'arrayBaseOffset-1 elementKind))
-            (Arguments''addConst-3 args, "log2ElementSize", (CodeUtil/log2 (HotSpot'arrayIndexScale-1 elementKind)))
-            (Arguments''addConst-3 args, "fillContents", (:fillContents node))
-            (Arguments''addConst-3 args, "threadRegister", HotSpot'threadRegister)
-            (Arguments''addConst-3 args, "maybeUnroll", (instance? ConstantNode length))
+            (Arguments''add-2 args, (ConstantNode'forConstant-3 KlassPointerStamp'KLASS_NON_NULL, (#_"HotSpotResolvedObjectType" .klass arrayType), (:graph node)))
+            (Arguments''add-2 args, (if (Node''isAlive-1 length) length (Graph''addOrUniqueWithInputs-2 (:graph node), length)))
+            (Arguments''add-2 args, (#_"HotSpotResolvedObjectType" .prototypeMarkWord arrayType))
+            (Arguments''addConst-2 args, (HotSpot'arrayBaseOffset-1 elementKind))
+            (Arguments''addConst-2 args, (CodeUtil/log2 (HotSpot'arrayIndexScale-1 elementKind)))
+            (Arguments''addConst-2 args, (:fillContents node))
+            (Arguments''addConst-2 args, HotSpot'threadRegister)
+            (Arguments''addConst-2 args, (instance? ConstantNode length))
             (SnippetTemplate''instantiate-4 (SnippetTemplate'new-2 args, node), node, SnippetTemplate'DEFAULT_REPLACER, args)
         )
         nil
@@ -21746,10 +20656,10 @@
         (let [
             #_"Arguments" args (Arguments'new-3 (:allocateInstanceDynamic this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)))
         ]
-            (Arguments''add-3 args, "type", (:class node))
-            (Arguments''add-3 args, "classClass", (:classClass node))
-            (Arguments''addConst-3 args, "fillContents", (:fillContents node))
-            (Arguments''addConst-3 args, "threadRegister", HotSpot'threadRegister)
+            (Arguments''add-2 args, (:class node))
+            (Arguments''add-2 args, (:classClass node))
+            (Arguments''addConst-2 args, (:fillContents node))
+            (Arguments''addConst-2 args, HotSpot'threadRegister)
             (SnippetTemplate''instantiate-4 (SnippetTemplate'new-2 args, node), node, SnippetTemplate'DEFAULT_REPLACER, args)
         )
         nil
@@ -21764,15 +20674,15 @@
             #_"ValueNode" length (AbstractNewArrayNode''length-1 node)
             #_"Arguments" args (Arguments'new-3 (:allocateArrayDynamic this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)))
         ]
-            (Arguments''add-3 args, "elementType", (:elementType node))
-            (Arguments''add-3 args, "voidClass", (:voidClass node))
-            (Arguments''add-3 args, "length", (if (Node''isAlive-1 length) length (Graph''addOrUniqueWithInputs-2 (:graph node), length)))
-            (Arguments''addConst-3 args, "fillContents", (:fillContents node))
-            (Arguments''addConst-3 args, "threadRegister", HotSpot'threadRegister)
+            (Arguments''add-2 args, (:elementType node))
+            (Arguments''add-2 args, (:voidClass node))
+            (Arguments''add-2 args, (if (Node''isAlive-1 length) length (Graph''addOrUniqueWithInputs-2 (:graph node), length)))
+            (Arguments''addConst-2 args, (:fillContents node))
+            (Arguments''addConst-2 args, HotSpot'threadRegister)
             ;; We use Kind.Illegal as a marker value instead of nil because constant snippet parameters cannot be nil.
-            (Arguments''addConst-3 args, "knownElementKind", (if (some? (:knownElementKind node)) (:knownElementKind node) JavaKind/Illegal))
-            (Arguments''addConst-3 args, "knownLayoutHelper", (if (some? (:knownElementKind node)) (#_"HotSpotResolvedObjectType" .layoutHelper (NewObjectTemplates'lookupArrayClass-2 lowerer, (:knownElementKind node))) 0))
-            (Arguments''add-3 args, "prototypeMarkWord", (#_"HotSpotResolvedObjectType" .prototypeMarkWord (NewObjectTemplates'lookupArrayClass-2 lowerer, JavaKind/Object)))
+            (Arguments''addConst-2 args, (if (some? (:knownElementKind node)) (:knownElementKind node) JavaKind/Illegal))
+            (Arguments''addConst-2 args, (if (some? (:knownElementKind node)) (#_"HotSpotResolvedObjectType" .layoutHelper (NewObjectTemplates'lookupArrayClass-2 lowerer, (:knownElementKind node))) 0))
+            (Arguments''add-2 args, (#_"HotSpotResolvedObjectType" .prototypeMarkWord (NewObjectTemplates'lookupArrayClass-2 lowerer, JavaKind/Object)))
             (SnippetTemplate''instantiate-4 (SnippetTemplate'new-2 args, node), node, SnippetTemplate'DEFAULT_REPLACER, args)
         )
         nil
@@ -21851,7 +20761,7 @@
         (let [
             #_"int" i (count compilationTimeString)
             #_"byte[]" a (NewArrayNode'newUninitializedArray-2 byte'class, i)
-            #_"Word" c (CStringConstant'cstring-1 compilationTimeString)
+            #_"Word" c (CStringConstant'cstring-1 compilationTimeString)
         ]
             (loop-when-recur [i (dec i)] (<= 0 i) [(dec i)]
                 ;; a[i] = c.readByte(i);
@@ -21881,7 +20791,7 @@
         (let [
             #_"Arguments" args (Arguments'new-3 (:create this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)))
         ]
-            (Arguments''addConst-3 args, "compilationTimeString", (:value node))
+            (Arguments''addConst-2 args, (:value node))
             (SnippetTemplate''instantiate-4 (SnippetTemplate'new-2 args, node), node, SnippetTemplate'DEFAULT_REPLACER, args)
         )
         nil
@@ -21959,8 +20869,8 @@
         (let [
             #_"Arguments" args (Arguments'new-3 (:unsafeLoad this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)))
         ]
-            (Arguments''add-3 args, "object", (:object node))
-            (Arguments''add-3 args, "offset", (:offset node))
+            (Arguments''add-2 args, (:object node))
+            (Arguments''add-2 args, (:offset node))
             (SnippetTemplate''instantiate-4 (SnippetTemplate'new-2 args, node), node, SnippetTemplate'DEFAULT_REPLACER, args)
         )
         nil
@@ -22294,13 +21204,13 @@
                     (let [
                         args (Arguments'new-3 (:serialPreciseWriteBarrier this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)))
                     ]
-                        (Arguments''add-3 args, "address", (:address node))
+                        (Arguments''add-2 args, (:address node))
                         args
                     )
                     (let [
                         args (Arguments'new-3 (:serialImpreciseWriteBarrier this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)))
                     ]
-                        (Arguments''add-3 args, "object", (OffsetAddressNode''getBase-1 (:address node)))
+                        (Arguments''add-2 args, (OffsetAddressNode''getBase-1 (:address node)))
                         args
                     )
                 )
@@ -22314,9 +21224,9 @@
         (let [
             #_"Arguments" args (Arguments'new-3 (:serialArrayRangeWriteBarrier this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)))
         ]
-            (Arguments''add-3 args, "address", (ArrayRangeWriteBarrier''getAddress-1 node))
-            (Arguments''add-3 args, "length", (ArrayRangeWriteBarrier''getLength-1 node))
-            (Arguments''addConst-3 args, "elementStride", (ArrayRangeWriteBarrier''getElementStride-1 node))
+            (Arguments''add-2 args, (ArrayRangeWriteBarrier''getAddress-1 node))
+            (Arguments''add-2 args, (ArrayRangeWriteBarrier''getLength-1 node))
+            (Arguments''addConst-2 args, (ArrayRangeWriteBarrier''getElementStride-1 node))
             (SnippetTemplate''instantiate-4 (SnippetTemplate'new-2 args, node), node, SnippetTemplate'DEFAULT_REPLACER, args)
         )
         nil
@@ -22331,12 +21241,12 @@
                 )
             #_"Arguments" args (Arguments'new-3 (:g1PreWriteBarrier this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)))
         ]
-            (Arguments''add-3 args, "address", (:address node))
-            (Arguments''add-3 args, "object", (when (instance? OffsetAddressNode (:address node)) (OffsetAddressNode''getBase-1 (:address node))))
-            (Arguments''add-3 args, "expectedObject", expected)
-            (Arguments''addConst-3 args, "doLoad", (:doLoad node))
-            (Arguments''addConst-3 args, "nullCheck", (:nullCheck node))
-            (Arguments''addConst-3 args, "threadRegister", HotSpot'threadRegister)
+            (Arguments''add-2 args, (:address node))
+            (Arguments''add-2 args, (when (instance? OffsetAddressNode (:address node)) (OffsetAddressNode''getBase-1 (:address node))))
+            (Arguments''add-2 args, expected)
+            (Arguments''addConst-2 args, (:doLoad node))
+            (Arguments''addConst-2 args, (:nullCheck node))
+            (Arguments''addConst-2 args, HotSpot'threadRegister)
             (SnippetTemplate''instantiate-4 (SnippetTemplate'new-2 args, node), node, SnippetTemplate'DEFAULT_REPLACER, args)
         )
         nil
@@ -22351,12 +21261,12 @@
                 )
             #_"Arguments" args (Arguments'new-3 (:g1ReferentReadBarrier this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)))
         ]
-            (Arguments''add-3 args, "address", (:address node))
-            (Arguments''add-3 args, "object", (when (instance? OffsetAddressNode (:address node)) (OffsetAddressNode''getBase-1 (:address node))))
-            (Arguments''add-3 args, "expectedObject", expected)
-            (Arguments''addConst-3 args, "doLoad", (:doLoad node))
-            (Arguments''addConst-3 args, "nullCheck", false)
-            (Arguments''addConst-3 args, "threadRegister", HotSpot'threadRegister)
+            (Arguments''add-2 args, (:address node))
+            (Arguments''add-2 args, (when (instance? OffsetAddressNode (:address node)) (OffsetAddressNode''getBase-1 (:address node))))
+            (Arguments''add-2 args, expected)
+            (Arguments''addConst-2 args, (:doLoad node))
+            (Arguments''addConst-2 args, false)
+            (Arguments''addConst-2 args, HotSpot'threadRegister)
             (SnippetTemplate''instantiate-4 (SnippetTemplate'new-2 args, node), node, SnippetTemplate'DEFAULT_REPLACER, args)
         )
         nil
@@ -22371,11 +21281,11 @@
                     )
                 #_"Arguments" args (Arguments'new-3 (:g1PostWriteBarrier this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)))
             ]
-                (Arguments''add-3 args, "address", (:address node))
-                (Arguments''add-3 args, "object", (when (instance? OffsetAddressNode (:address node)) (OffsetAddressNode''getBase-1 (:address node))))
-                (Arguments''add-3 args, "value", value)
-                (Arguments''addConst-3 args, "usePrecise", (:precise? node))
-                (Arguments''addConst-3 args, "threadRegister", HotSpot'threadRegister)
+                (Arguments''add-2 args, (:address node))
+                (Arguments''add-2 args, (when (instance? OffsetAddressNode (:address node)) (OffsetAddressNode''getBase-1 (:address node))))
+                (Arguments''add-2 args, value)
+                (Arguments''addConst-2 args, (:precise? node))
+                (Arguments''addConst-2 args, HotSpot'threadRegister)
                 (SnippetTemplate''instantiate-4 (SnippetTemplate'new-2 args, node), node, SnippetTemplate'DEFAULT_REPLACER, args)
             )
         )
@@ -22386,10 +21296,10 @@
         (let [
             #_"Arguments" args (Arguments'new-3 (:g1ArrayRangePreWriteBarrier this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)))
         ]
-            (Arguments''add-3 args, "address", (ArrayRangeWriteBarrier''getAddress-1 node))
-            (Arguments''add-3 args, "length", (ArrayRangeWriteBarrier''getLength-1 node))
-            (Arguments''addConst-3 args, "elementStride", (ArrayRangeWriteBarrier''getElementStride-1 node))
-            (Arguments''addConst-3 args, "threadRegister", HotSpot'threadRegister)
+            (Arguments''add-2 args, (ArrayRangeWriteBarrier''getAddress-1 node))
+            (Arguments''add-2 args, (ArrayRangeWriteBarrier''getLength-1 node))
+            (Arguments''addConst-2 args, (ArrayRangeWriteBarrier''getElementStride-1 node))
+            (Arguments''addConst-2 args, HotSpot'threadRegister)
             (SnippetTemplate''instantiate-4 (SnippetTemplate'new-2 args, node), node, SnippetTemplate'DEFAULT_REPLACER, args)
         )
         nil
@@ -22399,10 +21309,10 @@
         (let [
             #_"Arguments" args (Arguments'new-3 (:g1ArrayRangePostWriteBarrier this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)))
         ]
-            (Arguments''add-3 args, "address", (ArrayRangeWriteBarrier''getAddress-1 node))
-            (Arguments''add-3 args, "length", (ArrayRangeWriteBarrier''getLength-1 node))
-            (Arguments''addConst-3 args, "elementStride", (ArrayRangeWriteBarrier''getElementStride-1 node))
-            (Arguments''addConst-3 args, "threadRegister", HotSpot'threadRegister)
+            (Arguments''add-2 args, (ArrayRangeWriteBarrier''getAddress-1 node))
+            (Arguments''add-2 args, (ArrayRangeWriteBarrier''getLength-1 node))
+            (Arguments''addConst-2 args, (ArrayRangeWriteBarrier''getElementStride-1 node))
+            (Arguments''addConst-2 args, HotSpot'threadRegister)
             (SnippetTemplate''instantiate-4 (SnippetTemplate'new-2 args, node), node, SnippetTemplate'DEFAULT_REPLACER, args)
         )
         nil
@@ -26834,9 +25744,9 @@
             ;;
             ;; The profile may indicate the GOTO_W case is never taken, and thus a deoptimization stub
             ;; will be emitted. There might be optimization opportunity if additional branching based
-            ;; on opcode is within the case block. Specially, if there is only single case that
-            ;; reaches a target, we have better chance cutting out unused branches. Otherwise,
-            ;; it might be beneficial routing to the same code instead of deopting.
+            ;; on opcode is within the case block. Specially, if there is only single case that reaches
+            ;; a target, we have better chance cutting out unused branches. Otherwise, it might be
+            ;; beneficial routing to the same code instead of deopting.
             ;;
             ;; The following code rewires deoptimization stub to existing resolved branch target if
             ;; the target is connected by more than 1 cases.
@@ -33251,9 +32161,7 @@
 )
 
 (final-ns AMD64AddressValue (§ extends CompositeValue)
-    ; @Component({OperandFlag'REG, OperandFlag'ILLEGAL})
     (§ mutable #_"AllocatableValue" :base nil)
-    ; @Component({OperandFlag'REG, OperandFlag'ILLEGAL})
     (§ mutable #_"AllocatableValue" :index nil)
     (§ final #_"Scale" :scale nil)
     (§ final #_"int" :displacement 0)
@@ -35203,33 +34111,6 @@
 )
 
 ;;;
- ; @anno AMD64Move.LeaDataOp
- ;;
-(final-ns LeaDataOp (§ extends LIRInstruction)
-    (§ def #_"LIRInstructionClass<LeaDataOp>" LeaDataOp'TYPE (LIRInstructionClass'new-1 LeaDataOp))
-
-    ; @Def({OperandFlag'REG})
-    (§ mutable #_"AllocatableValue" :result nil)
-    (§ final #_"DataPointerConstant" :data nil)
-
-    (§ defn #_"LeaDataOp" LeaDataOp'new-2 [#_"AllocatableValue" result, #_"DataPointerConstant" data]
-        (let [
-            #_"LeaDataOp" this (LIRInstruction'new-1 LeaDataOp'TYPE)
-            this (assoc this :result result)
-            this (assoc this :data data)
-        ]
-            this
-        )
-    )
-
-    #_unused
-    (§ override! #_"void" LeaDataOp''emitCode-2 [#_"LeaDataOp" this, #_"Assembler" asm]
-        (Assembler''leaq-3 asm, (#_"RegisterValue" .getRegister (:result this)), (Assembler''recordDataReferenceInCode-2 asm, (:data this)))
-        nil
-    )
-)
-
-;;;
  ; @anno AMD64Move.StackLeaOp
  ;;
 (final-ns StackLeaOp (§ extends LIRInstruction)
@@ -36186,120 +35067,6 @@
     )
 )
 
-;;;
- ; Class for chunks of data that go into the data section.
- ;;
-(final-ns ArrayDataPointerConstant (§ extends DataPointerConstant)
-    (§ final #_"byte[]" :data nil)
-
-    #_unused
-    (§ defn #_"ArrayDataPointerConstant" ArrayDataPointerConstant'new-2 [#_"byte[]" array, #_"int" alignment]
-        (let [
-            #_"ArrayDataPointerConstant" this (DataPointerConstant'new-1 alignment)
-            this (assoc this :data (#_"Object" .clone array))
-        ]
-            this
-        )
-    )
-
-    #_unused
-    (§ defn #_"ArrayDataPointerConstant" ArrayDataPointerConstant'new-2 [#_"short[]" array, #_"int" alignment]
-        (let [
-            #_"ByteBuffer" byteBuffer (ByteBuffer/allocate (* (count array) 2))
-        ]
-            (#_"ByteBuffer" .order byteBuffer, (ByteOrder/nativeOrder))
-            (#_"ShortBuffer" .put (#_"ByteBuffer" .asShortBuffer byteBuffer), array)
-            (let [
-                #_"ArrayDataPointerConstant" this (DataPointerConstant'new-1 alignment)
-                this (assoc this :data (#_"ByteBuffer" .array byteBuffer))
-            ]
-                this
-            )
-        )
-    )
-
-    #_unused
-    (§ defn #_"ArrayDataPointerConstant" ArrayDataPointerConstant'new-2 [#_"int[]" array, #_"int" alignment]
-        (let [
-            #_"ByteBuffer" byteBuffer (ByteBuffer/allocate (* (count array) 4))
-        ]
-            (#_"ByteBuffer" .order byteBuffer, (ByteOrder/nativeOrder))
-            (#_"IntBuffer" .put (#_"ByteBuffer" .asIntBuffer byteBuffer), array)
-            (let [
-                #_"ArrayDataPointerConstant" this (DataPointerConstant'new-1 alignment)
-                this (assoc this :data (#_"ByteBuffer" .array byteBuffer))
-            ]
-                this
-            )
-        )
-    )
-
-    #_unused
-    (§ defn #_"ArrayDataPointerConstant" ArrayDataPointerConstant'new-2 [#_"float[]" array, #_"int" alignment]
-        (let [
-            #_"ByteBuffer" byteBuffer (ByteBuffer/allocate (* (count array) 4))
-        ]
-            (#_"ByteBuffer" .order byteBuffer, (ByteOrder/nativeOrder))
-            (#_"FloatBuffer" .put (#_"ByteBuffer" .asFloatBuffer byteBuffer), array)
-            (let [
-                #_"ArrayDataPointerConstant" this (DataPointerConstant'new-1 alignment)
-                this (assoc this :data (#_"ByteBuffer" .array byteBuffer))
-            ]
-                this
-            )
-        )
-    )
-
-    #_unused
-    (§ defn #_"ArrayDataPointerConstant" ArrayDataPointerConstant'new-2 [#_"double[]" array, #_"int" alignment]
-        (let [
-            #_"ByteBuffer" byteBuffer (ByteBuffer/allocate (* (count array) 8))
-        ]
-            (#_"ByteBuffer" .order byteBuffer, (ByteOrder/nativeOrder))
-            (#_"DoubleBuffer" .put (#_"ByteBuffer" .asDoubleBuffer byteBuffer), array)
-            (let [
-                #_"ArrayDataPointerConstant" this (DataPointerConstant'new-1 alignment)
-                this (assoc this :data (#_"ByteBuffer" .array byteBuffer))
-            ]
-                this
-            )
-        )
-    )
-
-    #_unused
-    (§ defn #_"ArrayDataPointerConstant" ArrayDataPointerConstant'new-2 [#_"long[]" array, #_"int" alignment]
-        (let [
-            #_"ByteBuffer" byteBuffer (ByteBuffer/allocate (* (count array) 8))
-        ]
-            (#_"ByteBuffer" .order byteBuffer, (ByteOrder/nativeOrder))
-            (#_"LongBuffer" .put (#_"ByteBuffer" .asLongBuffer byteBuffer), array)
-            (let [
-                #_"ArrayDataPointerConstant" this (DataPointerConstant'new-1 alignment)
-                this (assoc this :data (#_"ByteBuffer" .array byteBuffer))
-            ]
-                this
-            )
-        )
-    )
-
-    (§ override! #_"boolean" ArrayDataPointerConstant''isDefaultForKind-1 [#_"ArrayDataPointerConstant" this]
-        false
-    )
-
-    (§ override! #_"void" ArrayDataPointerConstant''serialize-2 [#_"ArrayDataPointerConstant" this, #_"ByteBuffer" buffer]
-        (#_"ByteBuffer" .put buffer, (:data this))
-        nil
-    )
-
-    (§ override! #_"int" ArrayDataPointerConstant''getSerializedSize-1 [#_"ArrayDataPointerConstant" this]
-        (count (:data this))
-    )
-
-    (§ override! #_"String" ArrayDataPointerConstant''toValueString-1 [#_"ArrayDataPointerConstant" this]
-        (str "ArrayDataPointerConstant" (Arrays/toString (:data this)))
-    )
-)
-
 (value-ns DataBuilder
     (§ defn #_"Data" DataBuilder'createDataItem-1 [#_"Constant" constant]
         (cond
@@ -36330,8 +35097,6 @@
                         )
                     )
                 )
-            (instance? SerializableConstant constant)
-                (SerializableData'new-1 constant)
             :else
                 (throw! (str constant))
         )
@@ -36357,82 +35122,6 @@
     (§ abstract #_"CompositeValue" CompositeValue''forEachComponent-4 [#_"CompositeValue" this, #_"LIRInstruction" op, #_"OperandMode" mode, #_"InstructionValueProcedure" proc])
 
     (§ abstract #_"void" CompositeValue''visitEachComponent-4 [#_"CompositeValue" this, #_"LIRInstruction" op, #_"OperandMode" mode, #_"InstructionValueConsumer" proc])
-)
-
-;;;
- ; @anno CompositeValue.Component
- ; @target ElementType.FIELD
- ;;
-(§ annotation Component
-    (§ value #_"OperandFlag[]" value OperandFlag'REG)
-)
-
-;;;
- ; Lazily associated metadata for every CompositeValue type. The metadata includes
- ; the offsets of fields annotated with Component as well as methods for iterating
- ; over such fields.
- ;;
-(final-ns CompositeValueClass #_"<T>" (§ extends FieldIntrospection #_"<T>")
-    ;;;
-     ; The CompositeValueClass is only used for formatting for the most part so cache it as a ClassValue.
-     ;;
-    (§ def- #_"ClassValue<CompositeValueClass>" CompositeValueClass'compositeClass
-        (§ reify #_"ClassValue<CompositeValueClass>" (ClassValue'new-0)
-            (§ override! #_"CompositeValueClass" ClassValue''computeValue-2 [#_"ClassValue<CompositeValueClass>" this, #_"Class" type]
-                (CompositeValueClass'new-1 type)
-            )
-        )
-    )
-
-    (§ defn #_"<T> CompositeValueClass<T>" CompositeValueClass'get-1 [#_"Class<T>" type]
-        (ClassValue''get-2 CompositeValueClass'compositeClass, type)
-    )
-
-    (§ final #_"Values" :values nil)
-
-    (§ defn- #_"CompositeValueClass" CompositeValueClass'new-1 [#_"Class<T>" clazz]
-        (let [
-            #_"CompositeValueFieldsScanner" vfs (CompositeValueFieldsScanner'new-0)
-        ]
-            (FieldsScanner''scan-4 vfs, clazz, CompositeValue, false)
-            (let [
-                #_"CompositeValueClass" this (FieldIntrospection'new-1 clazz)
-                this (assoc this :values (Values'new-1 (get (:valueAnnotations vfs) Component)))
-                this (assoc this :data (Fields'new-1 (:data vfs)))
-            ]
-                this
-            )
-        )
-    )
-
-    (§ override! #_"Fields[]" CompositeValueClass''getAllFields-1 [#_"CompositeValueClass<T>" this]
-        (into-array Fields [ (:data this), (:values this) ])
-    )
-)
-
-;;;
- ; @anno CompositeValueClass.CompositeValueFieldsScanner
- ;;
-(final-ns CompositeValueFieldsScanner (§ extends LIRFieldsScanner)
-    (§ defn #_"CompositeValueFieldsScanner" CompositeValueFieldsScanner'new-0 []
-        (let [
-            #_"CompositeValueFieldsScanner" this (LIRFieldsScanner'new-0)
-        ]
-            (#_"EconomicMap" .put (:valueAnnotations this), Component, (OperandModeAnnotation'new-0))
-            this
-        )
-    )
-
-    (§ override! #_"EnumSet<OperandFlag>" CompositeValueFieldsScanner''getFlags-2 [#_"CompositeValueFieldsScanner" this, #_"Field" field]
-        (let [
-            #_"EnumSet<OperandFlag>" result (EnumSet/noneOf OperandFlag)
-        ]
-            (when (#_"Field" .isAnnotationPresent field, Component) => (throw! "should not reach here")
-                (#_"EnumSet" .addAll result, (Arrays/asList (Component''value-1 (#_"Field" .getAnnotation field, Component))))
-            )
-            result
-        )
-    )
 )
 
 ;;;
@@ -36594,10 +35283,10 @@
         (let [
             #_"ConstantTree" constTree (ConstantTree'new-2 (:cfg (:lir this)), tree)
         ]
-            (DominatorOptimizationProblem''set-3 constTree, Flags'SUBTREE, (:block tree))
-            (DefUseTree''forEach-2 tree, (ß u -> (§ fun (DominatorOptimizationProblem''set-3 constTree, Flags'USAGE, (:block u)))))
+            (DominatorOptimizationProblem''set-3 constTree, Flags'IN_SUBTREE, (:block tree))
+            (DefUseTree''forEach-2 tree, (ß u -> (§ fun (DominatorOptimizationProblem''set-3 constTree, Flags'HAS_USAGE, (:block u)))))
 
-            (when-not (DominatorOptimizationProblem''get-3 constTree, Flags'USAGE, (:block tree)) ;; => usage in the definition block -> no optimization
+            (when-not (DominatorOptimizationProblem''get-3 constTree, Flags'HAS_USAGE, (:block tree)) ;; => usage in the definition block -> no optimization
                 (ConstantTree''markBlocks-1 constTree)
 
                 (let [
@@ -36715,6 +35404,16 @@
 )
 
 ;;;
+ ; @anno ConstantTree.Flags
+ ;;
+(value-ns Flags
+    (§ enum Flags'IN_SUBTREE)
+    (§ enum Flags'HAS_USAGE)
+    (§ enum Flags'MATERIALIZE)
+    (§ enum Flags'CANDIDATE)
+)
+
+;;;
  ; Represents a dominator (sub-)tree for a constant definition.
  ;;
 (final-ns ConstantTree (§ extends DominatorOptimizationProblem #_"<Flags, NodeCost>")
@@ -36764,37 +35463,26 @@
     )
 
     #_unused
-    (§ override! #_"String" ConstantTree''getName-2 [#_"ConstantTree" this, #_"Flags" type]
-        (condp = type
-            Flags'USAGE       "hasUsage"
-            Flags'SUBTREE     "inSubtree"
-            Flags'MATERIALIZE "materialize"
-            Flags'CANDIDATE   "candidate"
-                              (DominatorOptimizationProblem''getName-2 (§ super ), type)
-        )
-    )
-
-    #_unused
     (§ method! #_"long" ConstantTree''subTreeSize-1 [#_"ConstantTree" this]
-        (#_"Stream" .count (DominatorOptimizationProblem''stream-2 this, Flags'SUBTREE))
+        (#_"Stream" .count (DominatorOptimizationProblem''stream-2 this, Flags'IN_SUBTREE))
     )
 
     #_unused
     (§ method! #_"Block" ConstantTree''getStartBlock-1 [#_"ConstantTree" this]
-        (-> (DominatorOptimizationProblem''stream-2 this, Flags'SUBTREE) (#_"Stream" .findFirst) (Optional''get-1))
+        (-> (DominatorOptimizationProblem''stream-2 this, Flags'IN_SUBTREE) (#_"Stream" .findFirst) (Optional''get-1))
     )
 
     (§ method! #_"void" ConstantTree''markBlocks-1 [#_"ConstantTree" this]
-        (doseq [#_"Block" block (DominatorOptimizationProblem''getBlocks-1 this)]
-            (when (DominatorOptimizationProblem''get-3 this, Flags'USAGE, block)
-                (DominatorOptimizationProblem''setDominatorPath-3 this, Flags'SUBTREE, block)
+        (doseq [#_"Block" block (:blocks this)]
+            (when (DominatorOptimizationProblem''get-3 this, Flags'HAS_USAGE, block)
+                (DominatorOptimizationProblem''setDominatorPath-3 this, Flags'IN_SUBTREE, block)
             )
         )
         nil
     )
 
     (§ method! #_"boolean" ConstantTree''isMarked-2 [#_"ConstantTree" this, #_"Block" block]
-        (DominatorOptimizationProblem''get-3 this, Flags'SUBTREE, block)
+        (DominatorOptimizationProblem''get-3 this, Flags'IN_SUBTREE, block)
     )
 
     (§ method! #_"boolean" ConstantTree''isLeafBlock-2 [#_"ConstantTree" this, #_"Block" block]
@@ -36812,7 +35500,7 @@
     )
 
     (§ method! #_"int" ConstantTree''size-1 [#_"ConstantTree" this]
-        (count (DominatorOptimizationProblem''getBlocks-1 this))
+        (count (:blocks this))
     )
 
     (§ method! #_"void" ConstantTree''traverseTreeWhileTrue-3 [#_"ConstantTree" this, #_"Block" block, #_"Predicate<Block>" action]
@@ -36825,16 +35513,6 @@
         )
         nil
     )
-)
-
-;;;
- ; @anno ConstantTree.Flags
- ;;
-(value-ns Flags
-    (§ enum Flags'SUBTREE)
-    (§ enum Flags'USAGE)
-    (§ enum Flags'MATERIALIZE)
-    (§ enum Flags'CANDIDATE)
 )
 
 ;;;
@@ -39333,12 +38011,6 @@
         ]
             (LIRGenerator''append-2 this, (MROp'new-4 op, size, result, (LIRGenerator''asAllocatable-2 this, input)))
             result
-        )
-    )
-
-    (§ method! #_"Value" LIRGenerator''emitReinterpret-3 [#_"LIRGenerator" this, #_"LIRKind" to, #_"Value" inputVal]
-        (when (= to (#_"Value" .getValueKind inputVal)) => (throw! "should not reach here")
-            inputVal
         )
     )
 
@@ -42594,11 +41266,6 @@
     )
 
     #_unused
-    (§ method- #_"boolean" LabelOp''checkRange-2 [#_"LabelOp" this, #_"int" idx]
-        (< idx (count (:incomingValues this)))
-    )
-
-    #_unused
     (§ override! #_"void" LabelOp''emitCode-2 [#_"LabelOp" this, #_"Assembler" asm]
         (when (:aligned? this)
             (Assembler''align-2 asm, (* (.wordSize HotSpot'target) 2))
@@ -42675,11 +41342,6 @@
 
     (§ method! #_"JumpOp" JumpOp''clearOutgoingValues-1 [#_"JumpOp" this]
         (assoc this :outgoingValues Value/NO_VALUES)
-    )
-
-    #_unused
-    (§ method- #_"boolean" JumpOp''checkRange-2 [#_"JumpOp" this, #_"int" idx]
-        (< idx (count (:outgoingValues this)))
     )
 )
 
@@ -50867,80 +49529,6 @@
     )
 )
 
-;;;
- ; The ReinterpretNode class represents a reinterpreting conversion that changes the stamp
- ; of a primitive value to some other incompatible stamp. The new stamp must have the same width as
- ; the old stamp.
- ;;
-(final-ns ReinterpretNode (§ extends UnaryNode) (§ implements LIRLowerable)
-    (§ def #_"NodeClass<ReinterpretNode>" ReinterpretNode'TYPE (NodeClass'create-1 ReinterpretNode))
-
-    (§ defn #_"ReinterpretNode" ReinterpretNode'new-2 [#_"JavaKind" to, #_"ValueNode" value]
-        (ReinterpretNode'new-2 (StampFactory'forKind-1 to), value)
-    )
-
-    (§ defn #_"ReinterpretNode" ReinterpretNode'new-2 [#_"Stamp" to, #_"ValueNode" value]
-        (UnaryNode'new-3 ReinterpretNode'TYPE, (ReinterpretNode'getReinterpretStamp-2 to, (:stamp value)), value)
-    )
-
-    (§ defn #_"ValueNode" ReinterpretNode'create-2 [#_"JavaKind" to, #_"ValueNode" value]
-        (ReinterpretNode'create-2 (StampFactory'forKind-1 to), value)
-    )
-
-    (§ defn #_"ValueNode" ReinterpretNode'create-2 [#_"Stamp" to, #_"ValueNode" value]
-        (ReinterpretNode'canonical-3 nil, to, value)
-    )
-
-    (§ defn- #_"SerializableConstant" ReinterpretNode'evalConst-2 [#_"Stamp" stamp, #_"SerializableConstant" constant]
-        ;; We don't care about byte order here. Either would produce the correct result.
-        (let [
-            #_"ByteBuffer" buffer (#_"ByteBuffer" .order (ByteBuffer/wrap (byte-array (#_"SerializableConstant" .getSerializedSize constant))), (ByteOrder/nativeOrder))
-        ]
-            (#_"SerializableConstant" .serialize constant, buffer)
-            (#_"ByteBuffer" .rewind buffer)
-            (ArithmeticStamp''deserialize-2 stamp, buffer)
-        )
-    )
-
-    #_unused
-    (§ override! #_"ValueNode" ReinterpretNode''canonical-3 [#_"ReinterpretNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
-        (ReinterpretNode'canonical-3 this, (:stamp this), value)
-    )
-
-    (§ defn #_"ValueNode" ReinterpretNode'canonical-3 [#_"ReinterpretNode" node, #_"Stamp" stamp, #_"ValueNode" value]
-        (cond
-            (instance? ConstantNode value)
-                (ConstantNode'forConstant-2 stamp, (ReinterpretNode'evalConst-2 stamp, (:value value)))
-            (Stamp''isCompatible-2 stamp, (:stamp value))
-                value
-            (instance? ReinterpretNode value)
-                (ReinterpretNode'new-2 stamp, (UnaryNode''getValue-1 value))
-            :else
-                (or node (ReinterpretNode'new-2 stamp, value))
-        )
-    )
-
-    (§ defn- #_"Stamp" ReinterpretNode'getReinterpretStamp-2 [#_"Stamp" toStamp, #_"Stamp" fromStamp]
-        toStamp
-    )
-
-    #_unused
-    (§ override! #_"boolean" ReinterpretNode''inferStamp-1 [#_"ReinterpretNode" this]
-        (ValueNode''updateStamp-2 this, (ReinterpretNode'getReinterpretStamp-2 (:stamp this), (:stamp (UnaryNode''getValue-1 this))))
-    )
-
-    #_unused
-    (§ override! #_"void" ReinterpretNode''generate-2 [#_"ReinterpretNode" this, #_"LIRBuilder" builder]
-        (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitReinterpret-3 (:gen builder), (Stamp''getLIRKind-1 (:stamp this)), (LIRBuilder''operand-2 builder, (UnaryNode''getValue-1 this))))
-        nil
-    )
-
-    #_unused
-    (§ defn #_"ValueNode" ReinterpretNode'reinterpret-2 [#_"JavaKind" toKind, #_"ValueNode" value]
-        (Graph''add-2 (:graph value), (ReinterpretNode'new-2 toKind, value))
-    )
-)
-
 (final-ns RemNode (§ extends BinaryArithmeticNode #_"<Rem>") (§ implements Lowerable)
     (§ def #_"NodeClass<RemNode>" RemNode'TYPE (NodeClass'create-1 RemNode))
 
@@ -55599,7 +54187,7 @@
                                                 (VirtualizerTool''replaceWith-2 tool, entry)
                                             (and (instance? PrimitiveStamp (:stamp entry)) (instance? PrimitiveStamp (:stamp this)))
                                                 (when (= (:bits (:stamp this)) (:bits (:stamp entry)))
-                                                    (VirtualizerTool''replaceWith-2 tool, (ReinterpretNode'create-2 (:stamp entry), entry))
+                                                    (VirtualizerTool''replaceWith-2 tool, (ReinterpretNode'create-2 (:stamp entry), entry))
                                                 )
                                         )
                                     )
@@ -70201,15 +68789,6 @@
         )
     )
 
-    #_unused
-    (§ defn- #_"boolean" InlineableGraph'isArgMoreInformativeThanParam-2 [#_"ValueNode" arg, #_"ParameterNode" param]
-        (or (instance? ConstantNode arg) (InlineableGraph'canStampBeImproved-2 arg, param))
-    )
-
-    (§ defn- #_"boolean" InlineableGraph'canStampBeImproved-2 [#_"ValueNode" arg, #_"ParameterNode" param]
-        (some? (InlineableGraph'improvedStamp-2 arg, param))
-    )
-
     (§ defn- #_"Stamp" InlineableGraph'improvedStamp-2 [#_"ValueNode" arg, #_"ParameterNode" param]
         (let [
             #_"Stamp" joinedStamp (Stamp''join-2 (:stamp param), (:stamp arg))
@@ -71710,20 +70289,6 @@
         )
     )
 
-    #_unused
-    (§ defn- #_"boolean" InliningData'paramsAndInvokeAreInSameGraph-2 [#_"InvokeNode" invoke, #_"EconomicSet<ParameterNode>" fixedParams]
-        (loop-when [#_"ISeq" s (seq fixedParams)] (some? s) => true
-            (and (= (:graph (first s)) (:graph invoke))
-                (recur (next s))
-            )
-        )
-    )
-
-    #_unused
-    (§ method! #_"int" InliningData''graphCount-1 [#_"InliningData" this]
-        (#_"ArrayDeque" .size (:graphQueue this))
-    )
-
     (§ method! #_"boolean" InliningData''hasUnprocessedGraphs-1 [#_"InliningData" this]
         (not (#_"ArrayDeque" .isEmpty (:graphQueue this)))
     )
@@ -71780,11 +70345,6 @@
 
     (§ method! #_"int" InliningData''inliningDepth-1 [#_"InliningData" this]
         (dec (#_"ArrayDeque" .size (:invocationQueue this)))
-    )
-
-    #_unused
-    (§ method- #_"boolean" InliningData''contains-2 [#_"InliningData" this, #_"Graph" graph]
-        (loop [#_"ISeq" s (seq (:graphQueue this))] (and (some? s) (or (= (CallsiteHolder''graph-1 (first s)) graph) (recur (next s)))))
     )
 
     ;;;
@@ -71951,17 +70511,6 @@
         (loop-when [#_"int" i 0] (< i (AbstractMergeNode''forwardEndCount-1 merge)) => true
             (and (NodeBitMap''isMarked-2 (:queuedNodes this), (AbstractMergeNode''forwardEndAt-2 merge, i))
                 (recur (inc i))
-            )
-        )
-    )
-
-    #_unused
-    (§ defn- #_"int" InliningIterator'count-1 [#_"Iterable<InvokeNode>" invokes]
-        (let [
-            #_"Iterator<InvokeNode>" it (#_"Iterable" .iterator invokes)
-        ]
-            (loop-when-recur [#_"int" n 0] (#_"Iterator" .hasNext it) [(inc n)] => n
-                (#_"Iterator" .next it)
             )
         )
     )
@@ -75204,7 +73753,7 @@
                 (let [
                     #_"Arguments" args (Arguments'new-3 (get (:boxSnippets this) (:boxingKind box)), (:guardsStage (:graph box)), (:loweringStage (:phase lowerer)))
                 ]
-                    (Arguments''add-3 args, "value", (BoxNode''getValue-1 box))
+                    (Arguments''add-2 args, (BoxNode''getValue-1 box))
                     (SnippetTemplate''instantiate-4 (SnippetTemplate'new-2 args, box), box, SnippetTemplate'DEFAULT_REPLACER, args)
                 )
             )
@@ -75216,7 +73765,7 @@
         (let [
             #_"Arguments" args (Arguments'new-3 (get (:unboxSnippets this) (:boxingKind unbox)), (:guardsStage (:graph unbox)), (:loweringStage (:phase lowerer)))
         ]
-            (Arguments''add-3 args, "value", (UnboxNode''getValue-1 unbox))
+            (Arguments''add-2 args, (UnboxNode''getValue-1 unbox))
             (SnippetTemplate''instantiate-4 (SnippetTemplate'new-2 args, unbox), unbox, SnippetTemplate'DEFAULT_REPLACER, args)
         )
         nil
@@ -75885,7 +74434,7 @@
                                 (throw (IncompatibleClassChangeError. (str "cannot invokeinterface " (#_"ResolvedJavaMethod" .format (:method this), "%H.\n(%P)%R"))))
                             )
                         )
-                    (or (= opcode Bytecodes'INVOKEVIRTUAL) (= opcode Bytecodes'INVOKESPECIAL))
+                    (any = opcode Bytecodes'INVOKEVIRTUAL Bytecodes'INVOKESPECIAL)
                         (do
                             (§ ass! this (assoc this :method (ClassfileConstant'resolveMethod-5 (:context cp), cls, name, type, false)))
                             (when (nil? (:method this))
@@ -75942,7 +74491,7 @@
                 #_"String" name (NameAndType''getName-2 nameAndType, cp)
                 #_"String" type (NameAndType''getType-2 nameAndType, cp)
             ]
-                (§ ass! this (assoc this :field (ClassfileConstant'resolveField-5 (:context cp), cls, name, type, (or (= opcode Bytecodes'GETSTATIC) (= opcode Bytecodes'PUTSTATIC)))))
+                (§ ass! this (assoc this :field (ClassfileConstant'resolveField-5 (:context cp), cls, name, type, (any = opcode Bytecodes'GETSTATIC Bytecodes'PUTSTATIC))))
                 (when (nil? (:field this))
                     (throw (NoSuchFieldError. (str (#_"ResolvedJavaType" .toJavaName cls) "." name " " type)))
                 )
@@ -78684,54 +77233,6 @@
 )
 
 ;;;
- ; Represents a compile-time constant zero-terminated UTF-8 string installed with the generated code.
- ;;
-(final-ns CStringConstant (§ extends DataPointerConstant)
-    (§ def- #_"Charset" CStringConstant'UTF8 (Charset/forName "utf8"))
-
-    (§ final #_"String" :string nil)
-
-    (§ defn #_"CStringConstant" CStringConstant'new-1 [#_"String" string]
-        (let [
-            #_"CStringConstant" this (DataPointerConstant'new-1 1)
-            this (assoc this :string string)
-        ]
-            this
-        )
-    )
-
-    #_unused
-    (§ override! #_"int" CStringConstant''getSerializedSize-1 [#_"CStringConstant" this]
-        (inc (count (#_"String" .getBytes (:string this), CStringConstant'UTF8)))
-    )
-
-    #_unused
-    (§ override! #_"void" CStringConstant''serialize-2 [#_"CStringConstant" this, #_"ByteBuffer" buffer]
-        (let [
-            #_"byte[]" bytes (#_"String" .getBytes (:string this), CStringConstant'UTF8)
-        ]
-            (#_"ByteBuffer" .put buffer, bytes)
-            (#_"ByteBuffer" .put buffer, (byte 0))
-        )
-        nil
-    )
-
-    #_unused
-    (§ override! #_"String" CStringConstant''toValueString-1 [#_"CStringConstant" this]
-        (str "c\"" (:string this) "\"")
-    )
-
-    #_unused
-    (§ defn #_"boolean" CStringConstant'intrinsify-3 [#_"BytecodeParser" parser, #_"ResolvedJavaMethod" targetMethod, #_"String" string]
-        (BytecodeParser''addPush-3 parser, JavaKind/Object, (ConstantNode'new-2 (CStringConstant'new-1 string), StampFactory'rawPointer))
-        true
-    )
-
-    ; @NodeIntrinsic
-    (§ native #_"Word" CStringConstant'cstring-1 [#_@ConstantNodeParameter #_"String" string])
-)
-
-;;;
  ; A special purpose store node that differs from RawStoreNode in that it is not a
  ; StateSplit and takes a computed address instead of an object.
  ;;
@@ -79794,18 +78295,7 @@
                                     (let [
                                         #_"Object" arg (nth (:values args) i)
                                         #_"JavaKind" kind (#_"Signature" .getParameterKind signature, i)
-                                        #_"ConstantNode" constantNode
-                                            (if (instance? Constant arg)
-                                                (let [
-                                                    #_"Stamp" stamp (nth (:constStamps args) i)
-                                                ]
-                                                    (if (nil? stamp)
-                                                        (ConstantNode'forConstant-2 (§ cast #_"JavaConstant" arg), snippetCopy)
-                                                        (ConstantNode'forConstant-3 stamp, (§ cast #_"Constant" arg), snippetCopy)
-                                                    )
-                                                )
-                                                (ConstantNode'forConstant-2 (SnippetReflection'forBoxed-2 kind, arg), snippetCopy)
-                                            )
+                                        #_"ConstantNode" constantNode (ConstantNode'forConstant-2 (if (instance? Constant arg) (§ cast #_"JavaConstant" arg) (SnippetReflection'forBoxed-2 kind, arg)), snippetCopy)
                                     ]
                                         (#_"EconomicMap" .put nodeReplacements, parameter, constantNode)
                                     )
@@ -80580,22 +79070,19 @@
 )
 
 ;;;
- ; Values that are bound to the snippet method parameters. The methods #add,
- ; #addConst, and #addVarargs must be called in the same order as in the signature of
- ; the snippet method. The parameter name is passed to the add methods for assertion checking, i.e.
- ; to enforce that the order matches. Which method needs to be called depends on the annotation of the
- ; snippet method parameter:
+ ; Values that are bound to the snippet method parameters. The methods #add, #addConst, and #addVarargs
+ ; must be called in the same order as in the signature of the snippet method. Which method needs to be
+ ; called depends on the annotation of the snippet method parameter:
  ;
- ; Use #add for a parameter without an annotation. The value is bound when the
- ; SnippetTemplate is {@link SnippetTemplate#instantiate instantiated}.
+ ; Use #add for a parameter without an annotation. The value is bound when the SnippetTemplate is
+ ; {@link SnippetTemplate#instantiate instantiated}.
  ;
  ; Use #addConst for a parameter annotated with ConstantParameter.
  ; The value is bound when the SnippetTemplate is {@link SnippetTemplate#SnippetTemplate created}.
  ;
- ; Use #addVarargs for an array parameter annotated with VarargsParameter.
- ; A separate SnippetTemplate is {@link SnippetTemplate#SnippetTemplate created} for every distinct
- ; array length. The actual values are bound when the SnippetTemplate is
- ; {@link SnippetTemplate#instantiate instantiated}.
+ ; Use #addVarargs for an array parameter annotated with VarargsParameter. A separate SnippetTemplate
+ ; is {@link SnippetTemplate#SnippetTemplate created} for every distinct array length. The actual values
+ ; are bound when the SnippetTemplate is {@link SnippetTemplate#instantiate instantiated}.
  ;
  ; @anno SnippetTemplate.Arguments
  ;;
@@ -80603,7 +79090,6 @@
     (§ final #_"SnippetInfo" :info nil)
     (§ final #_"CacheKey" :cacheKey nil)
     (§ final #_"Object[]" :values nil)
-    (§ final #_"Stamp[]" :constStamps nil)
 
     (§ mutable #_"int" :nextParamIdx 0)
 
@@ -80613,31 +79099,25 @@
             this (assoc this :info info)
             this (assoc this :cacheKey (CacheKey'new-3 info, guardsStage, loweringStage))
             this (assoc this :values (make-array Object (SnippetInfo''getParameterCount-1 info)))
-            this (assoc this :constStamps (make-array Stamp (SnippetInfo''getParameterCount-1 info)))
         ]
             this
         )
     )
 
-    (§ method! #_"Arguments" Arguments''add-3 [#_"Arguments" this, #_"String" name, #_"Object" value]
+    (§ method! #_"Arguments" Arguments''add-2 [#_"Arguments" this, #_"Object" value]
         (aset (:values this) (:nextParamIdx this) value)
         (§ ass this (update this :nextParamIdx inc))
         this
     )
 
-    (§ method! #_"Arguments" Arguments''addConst-3 [#_"Arguments" this, #_"String" name, #_"Object" value]
-        (Arguments''addConst-4 this, name, value, nil)
-    )
-
-    (§ method! #_"Arguments" Arguments''addConst-4 [#_"Arguments" this, #_"String" name, #_"Object" value, #_"Stamp" stamp]
+    (§ method! #_"Arguments" Arguments''addConst-2 [#_"Arguments" this, #_"Object" value]
         (aset (:values this) (:nextParamIdx this) value)
-        (aset (:constStamps this) (:nextParamIdx this) stamp)
         (CacheKey''setParam-3 (:cacheKey this), (:nextParamIdx this), value)
         (§ ass this (update this :nextParamIdx inc))
         this
     )
 
-    (§ method! #_"Arguments" Arguments''addVarargs-5 [#_"Arguments" this, #_"String" name, #_"Class" componentType, #_"Stamp" argStamp, #_"Object" value]
+    (§ method! #_"Arguments" Arguments''addVarargs-4 [#_"Arguments" this, #_"Class" componentType, #_"Stamp" argStamp, #_"Object" value]
         (let [
             #_"Varargs" varargs (Varargs'new-3 componentType, argStamp, value)
         ]
