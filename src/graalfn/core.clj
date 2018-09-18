@@ -410,7 +410,7 @@
  ;
  ; @target ElementType.METHOD
  ;;
-(§ annotation Snippet
+(§ annotation Snippet
 )
 
 ;;;
@@ -419,7 +419,7 @@
  ; whose length specifies the number of arguments (the contents of the array are ignored) bound
  ; to the parameter during instantiation.
  ;
- ; @anno Snippet.VarargsParameter
+ ; @anno Snippet.VarargsParameter
  ; @target ElementType.PARAMETER
  ;;
 (§ annotation VarargsParameter
@@ -428,7 +428,7 @@
 ;;;
  ; Denotes a snippet parameter that will bound to a constant value during snippet template instantiation.
  ;
- ; @anno Snippet.ConstantParameter
+ ; @anno Snippet.ConstantParameter
  ; @target ElementType.PARAMETER
  ;;
 (§ annotation ConstantParameter
@@ -437,7 +437,7 @@
 ;;;
  ; Denotes a snippet parameter that will bound to a non-nil value during snippet template instantiation.
  ;
- ; @anno Snippet.NonNullParameter
+ ; @anno Snippet.NonNullParameter
  ; @target ElementType.PARAMETER
  ;;
 (§ annotation NonNullParameter
@@ -508,7 +508,7 @@
      ; @param index the index register
      ; @param scale the scaling factor
      ;;
-    #_unused
+    #_unused
     (§ defn #_"AMD64Address" AMD64Address'new-3 [#_"Register" base, #_"Register" index, #_"Scale" scale]
         (AMD64Address'new-5 base, index, scale, 0, -1)
     )
@@ -661,7 +661,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ method! #_"void" Assembler''emitShort-3 [#_"Assembler" this, #_"int" b, #_"int" pos]
         (§ ass! (:codeBuffer this) (CodeBuffer''emitShort-3 (:codeBuffer this), b, pos))
         nil
@@ -672,7 +672,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ method! #_"void" Assembler''emitLong-3 [#_"Assembler" this, #_"long" b, #_"int" pos]
         (§ ass! (:codeBuffer this) (CodeBuffer''emitLong-3 (:codeBuffer this), b, pos))
         nil
@@ -686,7 +686,7 @@
         (CodeBuffer''getShort-2 (:codeBuffer this), pos)
     )
 
-    #_unused
+    #_unused
     (§ method! #_"int" Assembler''getInt-2 [#_"Assembler" this, #_"int" pos]
         (CodeBuffer''getInt-2 (:codeBuffer this), pos)
     )
@@ -971,19 +971,19 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ method! #_"void" Assembler''andl-3 [#_"Assembler" this, #_"Register" dst, #_"int" imm32]
         (AMD64MIOp''emit-5 (BinaryArithmetic''getMIOpcode-3 BinaryArithmetic'AND, OperandSize'DWORD, (NumUtil'isByte-1 imm32)), this, OperandSize'DWORD, dst, imm32)
         nil
     )
 
-    #_unused
+    #_unused
     (§ method! #_"void" Assembler''andl-3 [#_"Assembler" this, #_"Register" dst, #_"Register" src]
         (AMD64RMOp''emit-5 (:rmOp BinaryArithmetic'AND), this, OperandSize'DWORD, dst, src)
         nil
     )
 
-    #_unused
+    #_unused
     (§ method! #_"void" Assembler''bsfq-3 [#_"Assembler" this, #_"Register" dst, #_"Register" src]
         (let [
             #_"int" encode (Assembler''prefixqAndEncode-3 this, (#_"Register" .encoding dst), (#_"Register" .encoding src))
@@ -995,7 +995,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ method! #_"void" Assembler''bsrl-3 [#_"Assembler" this, #_"Register" dst, #_"Register" src]
         (let [
             #_"int" encode (Assembler''prefixAndEncode-3 this, (#_"Register" .encoding dst), (#_"Register" .encoding src))
@@ -1079,13 +1079,13 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ method! #_"void" Assembler''hlt-1 [#_"Assembler" this]
         (Assembler''emitByte-2 this, 0xf4)
         nil
     )
 
-    #_unused
+    #_unused
     (§ method! #_"void" Assembler''imull-4 [#_"Assembler" this, #_"Register" dst, #_"Register" src, #_"int" value]
         (if (NumUtil'isByte-1 value)
             (AMD64RMIOp''emit-6 AMD64RMIOp'IMUL_SX, this, OperandSize'DWORD, dst, src, value)
@@ -1210,7 +1210,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ method! #_"void" Assembler''jmpb-2 [#_"Assembler" this, #_"Label" l]
         (if (Label''isBound-1 l)
             (let [
@@ -1299,7 +1299,7 @@
     ;;;
      ; @param wide use 4 byte encoding for displacements that would normally fit in a byte
      ;;
-    #_unused
+    #_unused
     (§ method! #_"void" Assembler''movl-4 [#_"Assembler" this, #_"Register" dst, #_"AMD64Address" src, #_"boolean" wide]
         (Assembler''prefix-3 this, src, dst)
         (Assembler''emitByte-2 this, 0x8b)
@@ -1370,7 +1370,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ method! #_"void" Assembler''movsbq-3 [#_"Assembler" this, #_"Register" dst, #_"AMD64Address" src]
         (Assembler''prefixq-3 this, src, dst)
         (Assembler''emitByte-2 this, 0x0f)
@@ -1379,7 +1379,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ method! #_"void" Assembler''movsbq-3 [#_"Assembler" this, #_"Register" dst, #_"Register" src]
         (let [
             #_"int" encode (Assembler''prefixqAndEncode-3 this, (.encoding dst), (.encoding src))
@@ -1434,7 +1434,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ method! #_"void" Assembler''movzwl-3 [#_"Assembler" this, #_"Register" dst, #_"AMD64Address" src]
         (Assembler''prefix-3 this, src, dst)
         (Assembler''emitByte-2 this, 0x0f)
@@ -1443,19 +1443,19 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ method! #_"void" Assembler''negl-2 [#_"Assembler" this, #_"Register" dst]
         (AMD64MOp''emit-4 AMD64MOp'NEG, this, OperandSize'DWORD, dst)
         nil
     )
 
-    #_unused
+    #_unused
     (§ method! #_"void" Assembler''notl-2 [#_"Assembler" this, #_"Register" dst]
         (AMD64MOp''emit-4 AMD64MOp'NOT, this, OperandSize'DWORD, dst)
         nil
     )
 
-    #_unused
+    #_unused
     (§ method! #_"void" Assembler''notq-2 [#_"Assembler" this, #_"Register" dst]
         (AMD64MOp''emit-4 AMD64MOp'NOT, this, OperandSize'QWORD, dst)
         nil
@@ -1712,19 +1712,19 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ method! #_"void" Assembler''orl-3 [#_"Assembler" this, #_"Register" dst, #_"Register" src]
         (AMD64RMOp''emit-5 (:rmOp BinaryArithmetic'OR), this, OperandSize'DWORD, dst, src)
         nil
     )
 
-    #_unused
+    #_unused
     (§ method! #_"void" Assembler''orl-3 [#_"Assembler" this, #_"Register" dst, #_"int" imm32]
         (AMD64MIOp''emit-5 (BinaryArithmetic''getMIOpcode-3 BinaryArithmetic'OR, OperandSize'DWORD, (NumUtil'isByte-1 imm32)), this, OperandSize'DWORD, dst, imm32)
         nil
     )
 
-    #_unused
+    #_unused
     (§ method! #_"void" Assembler''pop-2 [#_"Assembler" this, #_"Register" dst]
         (let [
             #_"int" encode (Assembler''prefixAndEncode-2 this, (.encoding dst))
@@ -1754,7 +1754,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ method! #_"void" Assembler''sarl-3 [#_"Assembler" this, #_"Register" dst, #_"int" imm8]
         (let [
             #_"int" encode (Assembler''prefixAndEncode-2 this, (.encoding dst))
@@ -1774,7 +1774,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ method! #_"void" Assembler''shll-3 [#_"Assembler" this, #_"Register" dst, #_"int" imm8]
         (let [
             #_"int" encode (Assembler''prefixAndEncode-2 this, (.encoding dst))
@@ -1794,7 +1794,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ method! #_"void" Assembler''shll-2 [#_"Assembler" this, #_"Register" dst]
         (let [
             #_"int" encode (Assembler''prefixAndEncode-2 this, (.encoding dst))
@@ -1805,7 +1805,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ method! #_"void" Assembler''shrl-3 [#_"Assembler" this, #_"Register" dst, #_"int" imm8]
         (let [
             #_"int" encode (Assembler''prefixAndEncode-2 this, (.encoding dst))
@@ -1817,7 +1817,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ method! #_"void" Assembler''shrl-2 [#_"Assembler" this, #_"Register" dst]
         (let [
             #_"int" encode (Assembler''prefixAndEncode-2 this, (.encoding dst))
@@ -1880,7 +1880,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ method! #_"void" Assembler''xorl-3 [#_"Assembler" this, #_"Register" dst, #_"Register" src]
         (AMD64RMOp''emit-5 (:rmOp BinaryArithmetic'XOR), this, OperandSize'DWORD, dst, src)
         nil
@@ -2110,13 +2110,13 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ method! #_"void" Assembler''andq-3 [#_"Assembler" this, #_"Register" dst, #_"int" imm32]
         (AMD64MIOp''emit-5 (BinaryArithmetic''getMIOpcode-3 BinaryArithmetic'AND, OperandSize'QWORD, (NumUtil'isByte-1 imm32)), this, OperandSize'QWORD, dst, imm32)
         nil
     )
 
-    #_unused
+    #_unused
     (§ method! #_"void" Assembler''bsrq-3 [#_"Assembler" this, #_"Register" dst, #_"Register" src]
         (let [
             #_"int" encode (Assembler''prefixqAndEncode-3 this, (#_"Register" .encoding dst), (#_"Register" .encoding src))
@@ -2213,7 +2213,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ method! #_"void" Assembler''imulq-3 [#_"Assembler" this, #_"Register" dst, #_"Register" src]
         (let [
             #_"int" encode (Assembler''prefixqAndEncode-3 this, (.encoding dst), (.encoding src))
@@ -2288,7 +2288,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ method! #_"void" Assembler''negq-2 [#_"Assembler" this, #_"Register" dst]
         (let [
             #_"int" encode (Assembler''prefixqAndEncode-2 this, (.encoding dst))
@@ -2299,7 +2299,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ method! #_"void" Assembler''orq-3 [#_"Assembler" this, #_"Register" dst, #_"Register" src]
         (AMD64RMOp''emit-5 (:rmOp BinaryArithmetic'OR), this, OperandSize'QWORD, dst, src)
         nil
@@ -2324,7 +2324,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ method! #_"void" Assembler''shlq-2 [#_"Assembler" this, #_"Register" dst]
         (let [
             #_"int" encode (Assembler''prefixqAndEncode-2 this, (.encoding dst))
@@ -2354,7 +2354,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ method! #_"void" Assembler''shrq-2 [#_"Assembler" this, #_"Register" dst]
         (let [
             #_"int" encode (Assembler''prefixqAndEncode-2 this, (.encoding dst))
@@ -2365,7 +2365,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ method! #_"void" Assembler''sbbq-3 [#_"Assembler" this, #_"Register" dst, #_"Register" src]
         (AMD64RMOp''emit-5 (:rmOp BinaryArithmetic'SBB), this, OperandSize'QWORD, dst, src)
         nil
@@ -2402,7 +2402,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ method! #_"void" Assembler''btrq-3 [#_"Assembler" this, #_"Register" src, #_"int" imm8]
         (let [
             #_"int" encode (Assembler''prefixqAndEncode-2 this, (.encoding src))
@@ -2554,7 +2554,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ method! #_"void" Assembler''prefetchr-2 [#_"Assembler" this, #_"AMD64Address" src]
         (Assembler''prefetchPrefix-2 this, src)
         (Assembler''emitByte-2 this, 0x0d)
@@ -2569,7 +2569,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ method! #_"void" Assembler''prefetcht1-2 [#_"Assembler" this, #_"AMD64Address" src]
         (Assembler''prefetchPrefix-2 this, src)
         (Assembler''emitByte-2 this, 0x18)
@@ -2603,7 +2603,7 @@
      ; Emits an instruction which is considered to be illegal. This is used if we deliberately want
      ; to crash the program (debugging etc.).
      ;;
-    #_unused
+    #_unused
     (§ method! #_"void" Assembler''illegal-1 [#_"Assembler" this]
         (Assembler''emitByte-2 this, 0x0f)
         (Assembler''emitByte-2 this, 0x0b)
@@ -2688,7 +2688,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ method! #_"void" Assembler''decrementl-2 [#_"Assembler" this, #_"Register" reg]
         (Assembler''decrementl-3 this, reg, 1)
         nil
@@ -2823,7 +2823,7 @@
      ; Returns the integer value of any constant that can be represented by a 32-bit integer value,
      ; including long constants that fit into the 32-bit range.
      ;;
-    #_unused
+    #_unused
     (§ method! #_"int" Assembler''asIntConst-2 [#_"Assembler" this, #_"Value" value]
         (let [
             #_"long" c (#_"JavaConstant" .asLong (:constant value))
@@ -2837,7 +2837,7 @@
     ;;;
      ; Returns the long value of any constant that can be represented by a 64-bit long value.
      ;;
-    #_unused
+    #_unused
     (§ method! #_"long" Assembler''asLongConst-2 [#_"Assembler" this, #_"Value" value]
         (#_"JavaConstant" .asLong (:constant value))
     )
@@ -2852,7 +2852,7 @@
     ;;;
      ; Returns the address of an object constant that is embedded as a data reference into the code.
      ;;
-    #_unused
+    #_unused
     (§ method! #_"AbstractAddress" Assembler''asObjectConstRef-2 [#_"Assembler" this, #_"JavaConstant" value]
         (Assembler''recordDataReferenceInCode-3 this, value, 8)
     )
@@ -3156,7 +3156,7 @@
         (AMD64Op'new-6 prefix1, prefix2, op, dstIsByte, srcIsByte, feature)
     )
 
-    #_unused
+    #_unused
     (§ abstract #_"void" AMD64RROp''emit-5 [#_"AMD64RROp" this, #_"Assembler" asm, #_"OperandSize" size, #_"Register" dst, #_"Register" src])
 )
 
@@ -3412,7 +3412,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ method! #_"AMD64MROp" BinaryArithmetic''getMROpcode-2 [#_"BinaryArithmetic" this, #_"OperandSize" size]
         (if (= size OperandSize'BYTE) (:byteMrOp this) (:mrOp this))
     )
@@ -3474,7 +3474,7 @@
         (#_"ByteBuffer" .position (:data this))
     )
 
-    #_unused
+    #_unused
     (§ method! #_"void" CodeBuffer''setPosition-2 [#_"CodeBuffer" this, #_"int" i]
         (#_"ByteBuffer" .position (:data this), i)
         nil
@@ -3492,7 +3492,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ method! #_"CodeBuffer" CodeBuffer''emitBytes-4 [#_"CodeBuffer" this, #_"byte[]" a, #_"int" i, #_"int" n]
         (let [
             this (CodeBuffer''ensureSize-2 this, (+ (#_"ByteBuffer" .position (:data this)) n))
@@ -3538,7 +3538,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ method! #_"CodeBuffer" CodeBuffer''emitBytes-3 [#_"CodeBuffer" this, #_"byte[]" a, #_"int" i]
         (let [
             #_"int" n (count a)
@@ -3790,12 +3790,12 @@
         (BytecodeSwitch'new-2 stream, bci)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"int" BytecodeLookupSwitch''offsetAt-2 [#_"BytecodeLookupSwitch" this, #_"int" i]
         (BytecodeStream''readInt-2 (:stream this), (+ (:alignedBci this) BytecodeLookupSwitch'OFFSET_TO_FIRST_PAIR_OFFSET (* BytecodeLookupSwitch'PAIR_SIZE i)))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"int" BytecodeLookupSwitch''keyAt-2 [#_"BytecodeLookupSwitch" this, #_"int" i]
         (BytecodeStream''readInt-2 (:stream this), (+ (:alignedBci this) BytecodeLookupSwitch'OFFSET_TO_FIRST_PAIR_MATCH (* BytecodeLookupSwitch'PAIR_SIZE i)))
     )
@@ -3823,7 +3823,7 @@
     ;;;
      ; Determines if this provider supports the INVOKEDYNAMIC bytecode.
      ;;
-    #_unused
+    #_unused
     (§ abstract #_"boolean" BytecodeProvider''supportsInvokedynamic-1 [#_"BytecodeProvider" this])
 )
 
@@ -3976,23 +3976,8 @@
     (def #_"int" Bytecodes'GOTO_W          200) ;; 0xc8
     (def #_"int" Bytecodes'JSR_W           201) ;; 0xc9
 
-    (def #_"int" Bytecodes'ILLEGAL         255)
+    (def #_"int" Bytecodes'ILLEGAL         255)
     (def #_"int" Bytecodes'END             256)
-
-    ;;;
-     ; The last opcode defined by the JVM specification.
-     ;;
-    (def #_"int" Bytecodes'LAST_JVM_OPCODE Bytecodes'JSR_W)
-
-    ;;;
-     ; An array that maps from a bytecode value to a String for the corresponding instruction mnemonic.
-     ;;
-    (def- #_"String[]" Bytecodes'nameArray (make-array String 256))
-
-    ;;;
-     ; An array that maps from a bytecode value to the set of BytecodeFlags for the corresponding instruction.
-     ;;
-    (def- #_"int[]" Bytecodes'flagsArray (int-array 256))
 
     ;;;
      ; An array that maps from a bytecode value to the length in bytes for the corresponding instruction.
@@ -4000,189 +3985,159 @@
     (def- #_"int[]" Bytecodes'lengthArray (int-array 256))
 
     ;;;
-     ; An array that maps from a bytecode value to the number of slots pushed on the stack by the
-     ; corresponding instruction.
-     ;;
-    (def- #_"int[]" Bytecodes'stackEffectArray (int-array 256))
-
-    ;;;
-     ; Defines a bytecode by entering it into the arrays that record its name, length and flags.
+     ; Defines a bytecode.
      ;
-     ; @param name instruction name (should be lower case)
      ; @param format encodes the length of the instruction
      ;;
-    (§ defn- #_"void" Bytecodes'def-4 [#_"int" opcode, #_"String" name, #_"String" format, #_"int" stackEffect]
-        (Bytecodes'def-5 opcode, name, format, stackEffect, 0)
-        nil
-    )
-
-    ;;;
-     ; Defines a bytecode by entering it into the arrays that record its name, length and flags.
-     ;
-     ; @param name instruction name (lower case)
-     ; @param format encodes the length of the instruction
-     ; @param flags the set of BytecodeFlags associated with the instruction
-     ;;
-    (§ defn- #_"void" Bytecodes'def-5 [#_"int" opcode, #_"String" name, #_"String" format, #_"int" stackEffect, #_"int" flags]
-        (aset Bytecodes'nameArray opcode name)
+    (§ defn- #_"void" Bytecodes'def-2 [#_"int" opcode, #_"String" format]
         (aset Bytecodes'lengthArray opcode (count format))
-        (aset Bytecodes'stackEffectArray opcode stackEffect)
-        (aset Bytecodes'flagsArray opcode flags)
         nil
     )
 
     (§ init
-        (Bytecodes'def-4 Bytecodes'NOP,             "nop",             "b",      0)
-        (Bytecodes'def-4 Bytecodes'ACONST_NULL,     "aconst_null",     "b",      1)
-        (Bytecodes'def-4 Bytecodes'ICONST_M1,       "iconst_m1",       "b",      1)
-        (Bytecodes'def-4 Bytecodes'ICONST_0,        "iconst_0",        "b",      1)
-        (Bytecodes'def-4 Bytecodes'ICONST_1,        "iconst_1",        "b",      1)
-        (Bytecodes'def-4 Bytecodes'ICONST_2,        "iconst_2",        "b",      1)
-        (Bytecodes'def-4 Bytecodes'ICONST_3,        "iconst_3",        "b",      1)
-        (Bytecodes'def-4 Bytecodes'ICONST_4,        "iconst_4",        "b",      1)
-        (Bytecodes'def-4 Bytecodes'ICONST_5,        "iconst_5",        "b",      1)
-        (Bytecodes'def-4 Bytecodes'LCONST_0,        "lconst_0",        "b",      2)
-        (Bytecodes'def-4 Bytecodes'LCONST_1,        "lconst_1",        "b",      2)
-        (Bytecodes'def-4 Bytecodes'BIPUSH,          "bipush",          "bc",     1)
-        (Bytecodes'def-4 Bytecodes'SIPUSH,          "sipush",          "bcc",    1)
-        (Bytecodes'def-5 Bytecodes'LDC,             "ldc",             "bi",     1,    BytecodeFlags'TRAP)
-        (Bytecodes'def-5 Bytecodes'LDC_W,           "ldc_w",           "bii",    1,    BytecodeFlags'TRAP)
-        (Bytecodes'def-5 Bytecodes'LDC2_W,          "ldc2_w",          "bii",    2,    BytecodeFlags'TRAP)
-        (Bytecodes'def-5 Bytecodes'ILOAD,           "iload",           "bi",     1,    BytecodeFlags'LOAD)
-        (Bytecodes'def-5 Bytecodes'LLOAD,           "lload",           "bi",     2,    BytecodeFlags'LOAD)
-        (Bytecodes'def-5 Bytecodes'ALOAD,           "aload",           "bi",     1,    BytecodeFlags'LOAD)
-        (Bytecodes'def-5 Bytecodes'ILOAD_0,         "iload_0",         "b",      1,    BytecodeFlags'LOAD)
-        (Bytecodes'def-5 Bytecodes'ILOAD_1,         "iload_1",         "b",      1,    BytecodeFlags'LOAD)
-        (Bytecodes'def-5 Bytecodes'ILOAD_2,         "iload_2",         "b",      1,    BytecodeFlags'LOAD)
-        (Bytecodes'def-5 Bytecodes'ILOAD_3,         "iload_3",         "b",      1,    BytecodeFlags'LOAD)
-        (Bytecodes'def-5 Bytecodes'LLOAD_0,         "lload_0",         "b",      2,    BytecodeFlags'LOAD)
-        (Bytecodes'def-5 Bytecodes'LLOAD_1,         "lload_1",         "b",      2,    BytecodeFlags'LOAD)
-        (Bytecodes'def-5 Bytecodes'LLOAD_2,         "lload_2",         "b",      2,    BytecodeFlags'LOAD)
-        (Bytecodes'def-5 Bytecodes'LLOAD_3,         "lload_3",         "b",      2,    BytecodeFlags'LOAD)
-        (Bytecodes'def-5 Bytecodes'ALOAD_0,         "aload_0",         "b",      1,    BytecodeFlags'LOAD)
-        (Bytecodes'def-5 Bytecodes'ALOAD_1,         "aload_1",         "b",      1,    BytecodeFlags'LOAD)
-        (Bytecodes'def-5 Bytecodes'ALOAD_2,         "aload_2",         "b",      1,    BytecodeFlags'LOAD)
-        (Bytecodes'def-5 Bytecodes'ALOAD_3,         "aload_3",         "b",      1,    BytecodeFlags'LOAD)
-        (Bytecodes'def-5 Bytecodes'IALOAD,          "iaload",          "b",     -1,    BytecodeFlags'TRAP)
-        (Bytecodes'def-5 Bytecodes'LALOAD,          "laload",          "b",      0,    BytecodeFlags'TRAP)
-        (Bytecodes'def-5 Bytecodes'AALOAD,          "aaload",          "b",     -1,    BytecodeFlags'TRAP)
-        (Bytecodes'def-5 Bytecodes'BALOAD,          "baload",          "b",     -1,    BytecodeFlags'TRAP)
-        (Bytecodes'def-5 Bytecodes'CALOAD,          "caload",          "b",     -1,    BytecodeFlags'TRAP)
-        (Bytecodes'def-5 Bytecodes'SALOAD,          "saload",          "b",     -1,    BytecodeFlags'TRAP)
-        (Bytecodes'def-5 Bytecodes'ISTORE,          "istore",          "bi",    -1,    BytecodeFlags'STORE)
-        (Bytecodes'def-5 Bytecodes'LSTORE,          "lstore",          "bi",    -2,    BytecodeFlags'STORE)
-        (Bytecodes'def-5 Bytecodes'ASTORE,          "astore",          "bi",    -1,    BytecodeFlags'STORE)
-        (Bytecodes'def-5 Bytecodes'ISTORE_0,        "istore_0",        "b",     -1,    BytecodeFlags'STORE)
-        (Bytecodes'def-5 Bytecodes'ISTORE_1,        "istore_1",        "b",     -1,    BytecodeFlags'STORE)
-        (Bytecodes'def-5 Bytecodes'ISTORE_2,        "istore_2",        "b",     -1,    BytecodeFlags'STORE)
-        (Bytecodes'def-5 Bytecodes'ISTORE_3,        "istore_3",        "b",     -1,    BytecodeFlags'STORE)
-        (Bytecodes'def-5 Bytecodes'LSTORE_0,        "lstore_0",        "b",     -2,    BytecodeFlags'STORE)
-        (Bytecodes'def-5 Bytecodes'LSTORE_1,        "lstore_1",        "b",     -2,    BytecodeFlags'STORE)
-        (Bytecodes'def-5 Bytecodes'LSTORE_2,        "lstore_2",        "b",     -2,    BytecodeFlags'STORE)
-        (Bytecodes'def-5 Bytecodes'LSTORE_3,        "lstore_3",        "b",     -2,    BytecodeFlags'STORE)
-        (Bytecodes'def-5 Bytecodes'ASTORE_0,        "astore_0",        "b",     -1,    BytecodeFlags'STORE)
-        (Bytecodes'def-5 Bytecodes'ASTORE_1,        "astore_1",        "b",     -1,    BytecodeFlags'STORE)
-        (Bytecodes'def-5 Bytecodes'ASTORE_2,        "astore_2",        "b",     -1,    BytecodeFlags'STORE)
-        (Bytecodes'def-5 Bytecodes'ASTORE_3,        "astore_3",        "b",     -1,    BytecodeFlags'STORE)
-        (Bytecodes'def-5 Bytecodes'IASTORE,         "iastore",         "b",     -3,    BytecodeFlags'TRAP)
-        (Bytecodes'def-5 Bytecodes'LASTORE,         "lastore",         "b",     -4,    BytecodeFlags'TRAP)
-        (Bytecodes'def-5 Bytecodes'AASTORE,         "aastore",         "b",     -3,    BytecodeFlags'TRAP)
-        (Bytecodes'def-5 Bytecodes'BASTORE,         "bastore",         "b",     -3,    BytecodeFlags'TRAP)
-        (Bytecodes'def-5 Bytecodes'CASTORE,         "castore",         "b",     -3,    BytecodeFlags'TRAP)
-        (Bytecodes'def-5 Bytecodes'SASTORE,         "sastore",         "b",     -3,    BytecodeFlags'TRAP)
-        (Bytecodes'def-4 Bytecodes'POP,             "pop",             "b",     -1)
-        (Bytecodes'def-4 Bytecodes'POP2,            "pop2",            "b",     -2)
-        (Bytecodes'def-4 Bytecodes'DUP,             "dup",             "b",      1)
-        (Bytecodes'def-4 Bytecodes'DUP_X1,          "dup_x1",          "b",      1)
-        (Bytecodes'def-4 Bytecodes'DUP_X2,          "dup_x2",          "b",      1)
-        (Bytecodes'def-4 Bytecodes'DUP2,            "dup2",            "b",      2)
-        (Bytecodes'def-4 Bytecodes'DUP2_X1,         "dup2_x1",         "b",      2)
-        (Bytecodes'def-4 Bytecodes'DUP2_X2,         "dup2_x2",         "b",      2)
-        (Bytecodes'def-4 Bytecodes'SWAP,            "swap",            "b",      0)
-        (Bytecodes'def-5 Bytecodes'IADD,            "iadd",            "b",     -1, (| BytecodeFlags'COMMUTATIVE BytecodeFlags'ASSOCIATIVE))
-        (Bytecodes'def-5 Bytecodes'LADD,            "ladd",            "b",     -2, (| BytecodeFlags'COMMUTATIVE BytecodeFlags'ASSOCIATIVE))
-        (Bytecodes'def-4 Bytecodes'ISUB,            "isub",            "b",     -1)
-        (Bytecodes'def-4 Bytecodes'LSUB,            "lsub",            "b",     -2)
-        (Bytecodes'def-5 Bytecodes'IMUL,            "imul",            "b",     -1, (| BytecodeFlags'COMMUTATIVE BytecodeFlags'ASSOCIATIVE))
-        (Bytecodes'def-5 Bytecodes'LMUL,            "lmul",            "b",     -2, (| BytecodeFlags'COMMUTATIVE BytecodeFlags'ASSOCIATIVE))
-        (Bytecodes'def-5 Bytecodes'IDIV,            "idiv",            "b",     -1,    BytecodeFlags'TRAP)
-        (Bytecodes'def-5 Bytecodes'LDIV,            "ldiv",            "b",     -2,    BytecodeFlags'TRAP)
-        (Bytecodes'def-5 Bytecodes'IREM,            "irem",            "b",     -1,    BytecodeFlags'TRAP)
-        (Bytecodes'def-5 Bytecodes'LREM,            "lrem",            "b",     -2,    BytecodeFlags'TRAP)
-        (Bytecodes'def-4 Bytecodes'INEG,            "ineg",            "b",      0)
-        (Bytecodes'def-4 Bytecodes'LNEG,            "lneg",            "b",      0)
-        (Bytecodes'def-4 Bytecodes'ISHL,            "ishl",            "b",     -1)
-        (Bytecodes'def-4 Bytecodes'LSHL,            "lshl",            "b",     -1)
-        (Bytecodes'def-4 Bytecodes'ISHR,            "ishr",            "b",     -1)
-        (Bytecodes'def-4 Bytecodes'LSHR,            "lshr",            "b",     -1)
-        (Bytecodes'def-4 Bytecodes'IUSHR,           "iushr",           "b",     -1)
-        (Bytecodes'def-4 Bytecodes'LUSHR,           "lushr",           "b",     -1)
-        (Bytecodes'def-5 Bytecodes'IAND,            "iand",            "b",     -1, (| BytecodeFlags'COMMUTATIVE BytecodeFlags'ASSOCIATIVE))
-        (Bytecodes'def-5 Bytecodes'LAND,            "land",            "b",     -2, (| BytecodeFlags'COMMUTATIVE BytecodeFlags'ASSOCIATIVE))
-        (Bytecodes'def-5 Bytecodes'IOR,             "ior",             "b",     -1, (| BytecodeFlags'COMMUTATIVE BytecodeFlags'ASSOCIATIVE))
-        (Bytecodes'def-5 Bytecodes'LOR,             "lor",             "b",     -2, (| BytecodeFlags'COMMUTATIVE BytecodeFlags'ASSOCIATIVE))
-        (Bytecodes'def-5 Bytecodes'IXOR,            "ixor",            "b",     -1, (| BytecodeFlags'COMMUTATIVE BytecodeFlags'ASSOCIATIVE))
-        (Bytecodes'def-5 Bytecodes'LXOR,            "lxor",            "b",     -2, (| BytecodeFlags'COMMUTATIVE BytecodeFlags'ASSOCIATIVE))
-        (Bytecodes'def-5 Bytecodes'IINC,            "iinc",            "bic",    0, (| BytecodeFlags'LOAD BytecodeFlags'STORE))
-        (Bytecodes'def-4 Bytecodes'I2L,             "i2l",             "b",      1)
-        (Bytecodes'def-4 Bytecodes'L2I,             "l2i",             "b",     -1)
-        (Bytecodes'def-4 Bytecodes'I2B,             "i2b",             "b",      0)
-        (Bytecodes'def-4 Bytecodes'I2C,             "i2c",             "b",      0)
-        (Bytecodes'def-4 Bytecodes'I2S,             "i2s",             "b",      0)
-        (Bytecodes'def-4 Bytecodes'LCMP,            "lcmp",            "b",     -3)
-        (Bytecodes'def-5 Bytecodes'IFEQ,            "ifeq",            "boo",   -1, (| BytecodeFlags'FALL_THROUGH BytecodeFlags'BRANCH))
-        (Bytecodes'def-5 Bytecodes'IFNE,            "ifne",            "boo",   -1, (| BytecodeFlags'FALL_THROUGH BytecodeFlags'BRANCH))
-        (Bytecodes'def-5 Bytecodes'IFLT,            "iflt",            "boo",   -1, (| BytecodeFlags'FALL_THROUGH BytecodeFlags'BRANCH))
-        (Bytecodes'def-5 Bytecodes'IFGE,            "ifge",            "boo",   -1, (| BytecodeFlags'FALL_THROUGH BytecodeFlags'BRANCH))
-        (Bytecodes'def-5 Bytecodes'IFGT,            "ifgt",            "boo",   -1, (| BytecodeFlags'FALL_THROUGH BytecodeFlags'BRANCH))
-        (Bytecodes'def-5 Bytecodes'IFLE,            "ifle",            "boo",   -1, (| BytecodeFlags'FALL_THROUGH BytecodeFlags'BRANCH))
-        (Bytecodes'def-5 Bytecodes'IF_ICMPEQ,       "if_icmpeq",       "boo",   -2, (| BytecodeFlags'COMMUTATIVE BytecodeFlags'FALL_THROUGH BytecodeFlags'BRANCH))
-        (Bytecodes'def-5 Bytecodes'IF_ICMPNE,       "if_icmpne",       "boo",   -2, (| BytecodeFlags'COMMUTATIVE BytecodeFlags'FALL_THROUGH BytecodeFlags'BRANCH))
-        (Bytecodes'def-5 Bytecodes'IF_ICMPLT,       "if_icmplt",       "boo",   -2, (| BytecodeFlags'FALL_THROUGH BytecodeFlags'BRANCH))
-        (Bytecodes'def-5 Bytecodes'IF_ICMPGE,       "if_icmpge",       "boo",   -2, (| BytecodeFlags'FALL_THROUGH BytecodeFlags'BRANCH))
-        (Bytecodes'def-5 Bytecodes'IF_ICMPGT,       "if_icmpgt",       "boo",   -2, (| BytecodeFlags'FALL_THROUGH BytecodeFlags'BRANCH))
-        (Bytecodes'def-5 Bytecodes'IF_ICMPLE,       "if_icmple",       "boo",   -2, (| BytecodeFlags'FALL_THROUGH BytecodeFlags'BRANCH))
-        (Bytecodes'def-5 Bytecodes'IF_ACMPEQ,       "if_acmpeq",       "boo",   -2, (| BytecodeFlags'COMMUTATIVE BytecodeFlags'FALL_THROUGH BytecodeFlags'BRANCH))
-        (Bytecodes'def-5 Bytecodes'IF_ACMPNE,       "if_acmpne",       "boo",   -2, (| BytecodeFlags'COMMUTATIVE BytecodeFlags'FALL_THROUGH BytecodeFlags'BRANCH))
-        (Bytecodes'def-5 Bytecodes'GOTO,            "goto",            "boo",    0, (| BytecodeFlags'STOP BytecodeFlags'BRANCH))
-        (Bytecodes'def-5 Bytecodes'JSR,             "jsr",             "boo",    0, (| BytecodeFlags'STOP BytecodeFlags'BRANCH))
-        (Bytecodes'def-5 Bytecodes'RET,             "ret",             "bi",     0,    BytecodeFlags'STOP)
-        (Bytecodes'def-5 Bytecodes'TABLESWITCH,     "tableswitch",     "",      -1,    BytecodeFlags'STOP)
-        (Bytecodes'def-5 Bytecodes'LOOKUPSWITCH,    "lookupswitch",    "",      -1,    BytecodeFlags'STOP)
-        (Bytecodes'def-5 Bytecodes'IRETURN,         "ireturn",         "b",     -1, (| BytecodeFlags'TRAP BytecodeFlags'STOP))
-        (Bytecodes'def-5 Bytecodes'LRETURN,         "lreturn",         "b",     -2, (| BytecodeFlags'TRAP BytecodeFlags'STOP))
-        (Bytecodes'def-5 Bytecodes'ARETURN,         "areturn",         "b",     -1, (| BytecodeFlags'TRAP BytecodeFlags'STOP))
-        (Bytecodes'def-5 Bytecodes'RETURN,          "return",          "b",      0, (| BytecodeFlags'TRAP BytecodeFlags'STOP))
-        (Bytecodes'def-5 Bytecodes'GETSTATIC,       "getstatic",       "bjj",    1, (| BytecodeFlags'TRAP BytecodeFlags'FIELD_READ))
-        (Bytecodes'def-5 Bytecodes'PUTSTATIC,       "putstatic",       "bjj",   -1, (| BytecodeFlags'TRAP BytecodeFlags'FIELD_WRITE))
-        (Bytecodes'def-5 Bytecodes'GETFIELD,        "getfield",        "bjj",    0, (| BytecodeFlags'TRAP BytecodeFlags'FIELD_READ))
-        (Bytecodes'def-5 Bytecodes'PUTFIELD,        "putfield",        "bjj",   -2, (| BytecodeFlags'TRAP BytecodeFlags'FIELD_WRITE))
-        (Bytecodes'def-5 Bytecodes'INVOKEVIRTUAL,   "invokevirtual",   "bjj",   -1, (| BytecodeFlags'TRAP BytecodeFlags'INVOKE))
-        (Bytecodes'def-5 Bytecodes'INVOKESPECIAL,   "invokespecial",   "bjj",   -1, (| BytecodeFlags'TRAP BytecodeFlags'INVOKE))
-        (Bytecodes'def-5 Bytecodes'INVOKESTATIC,    "invokestatic",    "bjj",    0, (| BytecodeFlags'TRAP BytecodeFlags'INVOKE))
-        (Bytecodes'def-5 Bytecodes'INVOKEINTERFACE, "invokeinterface", "bjja_", -1, (| BytecodeFlags'TRAP BytecodeFlags'INVOKE))
-        (Bytecodes'def-5 Bytecodes'INVOKEDYNAMIC,   "invokedynamic",   "bjjjj",  0, (| BytecodeFlags'TRAP BytecodeFlags'INVOKE))
-        (Bytecodes'def-5 Bytecodes'NEW,             "new",             "bii",    1,    BytecodeFlags'TRAP)
-        (Bytecodes'def-5 Bytecodes'NEWARRAY,        "newarray",        "bc",     0,    BytecodeFlags'TRAP)
-        (Bytecodes'def-5 Bytecodes'ANEWARRAY,       "anewarray",       "bii",    0,    BytecodeFlags'TRAP)
-        (Bytecodes'def-5 Bytecodes'ARRAYLENGTH,     "arraylength",     "b",      0,    BytecodeFlags'TRAP)
-        (Bytecodes'def-5 Bytecodes'CHECKCAST,       "checkcast",       "bii",    0,    BytecodeFlags'TRAP)
-        (Bytecodes'def-5 Bytecodes'INSTANCEOF,      "instanceof",      "bii",    0,    BytecodeFlags'TRAP)
-        (Bytecodes'def-5 Bytecodes'MONITORENTER,    "monitorenter",    "b",     -1,    BytecodeFlags'TRAP)
-        (Bytecodes'def-5 Bytecodes'MONITOREXIT,     "monitorexit",     "b",     -1,    BytecodeFlags'TRAP)
-        (Bytecodes'def-4 Bytecodes'WIDE,            "wide",            "",       0)
-        (Bytecodes'def-5 Bytecodes'IFNULL,          "ifnull",          "boo",   -1, (| BytecodeFlags'FALL_THROUGH BytecodeFlags'BRANCH))
-        (Bytecodes'def-5 Bytecodes'IFNONNULL,       "ifnonnull",       "boo",   -1, (| BytecodeFlags'FALL_THROUGH BytecodeFlags'BRANCH))
-        (Bytecodes'def-5 Bytecodes'GOTO_W,          "goto_w",          "boooo",  0, (| BytecodeFlags'STOP BytecodeFlags'BRANCH))
-        (Bytecodes'def-5 Bytecodes'JSR_W,           "jsr_w",           "boooo",  0, (| BytecodeFlags'STOP BytecodeFlags'BRANCH))
-    )
-
-    ;;;
-     ; Determines if an opcode is commutative.
-     ;;
-    #_unused
-    (§ defn #_"boolean" Bytecodes'isCommutative-1 [#_"int" opcode]
-        (not (zero? (& (nth Bytecodes'flagsArray (& opcode 0xff)) BytecodeFlags'COMMUTATIVE)))
+        (Bytecodes'def-2 Bytecodes'NOP,             "b")
+        (Bytecodes'def-2 Bytecodes'ACONST_NULL,     "b")
+        (Bytecodes'def-2 Bytecodes'ICONST_M1,       "b")
+        (Bytecodes'def-2 Bytecodes'ICONST_0,        "b")
+        (Bytecodes'def-2 Bytecodes'ICONST_1,        "b")
+        (Bytecodes'def-2 Bytecodes'ICONST_2,        "b")
+        (Bytecodes'def-2 Bytecodes'ICONST_3,        "b")
+        (Bytecodes'def-2 Bytecodes'ICONST_4,        "b")
+        (Bytecodes'def-2 Bytecodes'ICONST_5,        "b")
+        (Bytecodes'def-2 Bytecodes'LCONST_0,        "b")
+        (Bytecodes'def-2 Bytecodes'LCONST_1,        "b")
+        (Bytecodes'def-2 Bytecodes'BIPUSH,          "bc")
+        (Bytecodes'def-2 Bytecodes'SIPUSH,          "bcc")
+        (Bytecodes'def-2 Bytecodes'LDC,             "bi")
+        (Bytecodes'def-2 Bytecodes'LDC_W,           "bii")
+        (Bytecodes'def-2 Bytecodes'LDC2_W,          "bii")
+        (Bytecodes'def-2 Bytecodes'ILOAD,           "bi")
+        (Bytecodes'def-2 Bytecodes'LLOAD,           "bi")
+        (Bytecodes'def-2 Bytecodes'ALOAD,           "bi")
+        (Bytecodes'def-2 Bytecodes'ILOAD_0,         "b")
+        (Bytecodes'def-2 Bytecodes'ILOAD_1,         "b")
+        (Bytecodes'def-2 Bytecodes'ILOAD_2,         "b")
+        (Bytecodes'def-2 Bytecodes'ILOAD_3,         "b")
+        (Bytecodes'def-2 Bytecodes'LLOAD_0,         "b")
+        (Bytecodes'def-2 Bytecodes'LLOAD_1,         "b")
+        (Bytecodes'def-2 Bytecodes'LLOAD_2,         "b")
+        (Bytecodes'def-2 Bytecodes'LLOAD_3,         "b")
+        (Bytecodes'def-2 Bytecodes'ALOAD_0,         "b")
+        (Bytecodes'def-2 Bytecodes'ALOAD_1,         "b")
+        (Bytecodes'def-2 Bytecodes'ALOAD_2,         "b")
+        (Bytecodes'def-2 Bytecodes'ALOAD_3,         "b")
+        (Bytecodes'def-2 Bytecodes'IALOAD,          "b")
+        (Bytecodes'def-2 Bytecodes'LALOAD,          "b")
+        (Bytecodes'def-2 Bytecodes'AALOAD,          "b")
+        (Bytecodes'def-2 Bytecodes'BALOAD,          "b")
+        (Bytecodes'def-2 Bytecodes'CALOAD,          "b")
+        (Bytecodes'def-2 Bytecodes'SALOAD,          "b")
+        (Bytecodes'def-2 Bytecodes'ISTORE,          "bi")
+        (Bytecodes'def-2 Bytecodes'LSTORE,          "bi")
+        (Bytecodes'def-2 Bytecodes'ASTORE,          "bi")
+        (Bytecodes'def-2 Bytecodes'ISTORE_0,        "b")
+        (Bytecodes'def-2 Bytecodes'ISTORE_1,        "b")
+        (Bytecodes'def-2 Bytecodes'ISTORE_2,        "b")
+        (Bytecodes'def-2 Bytecodes'ISTORE_3,        "b")
+        (Bytecodes'def-2 Bytecodes'LSTORE_0,        "b")
+        (Bytecodes'def-2 Bytecodes'LSTORE_1,        "b")
+        (Bytecodes'def-2 Bytecodes'LSTORE_2,        "b")
+        (Bytecodes'def-2 Bytecodes'LSTORE_3,        "b")
+        (Bytecodes'def-2 Bytecodes'ASTORE_0,        "b")
+        (Bytecodes'def-2 Bytecodes'ASTORE_1,        "b")
+        (Bytecodes'def-2 Bytecodes'ASTORE_2,        "b")
+        (Bytecodes'def-2 Bytecodes'ASTORE_3,        "b")
+        (Bytecodes'def-2 Bytecodes'IASTORE,         "b")
+        (Bytecodes'def-2 Bytecodes'LASTORE,         "b")
+        (Bytecodes'def-2 Bytecodes'AASTORE,         "b")
+        (Bytecodes'def-2 Bytecodes'BASTORE,         "b")
+        (Bytecodes'def-2 Bytecodes'CASTORE,         "b")
+        (Bytecodes'def-2 Bytecodes'SASTORE,         "b")
+        (Bytecodes'def-2 Bytecodes'POP,             "b")
+        (Bytecodes'def-2 Bytecodes'POP2,            "b")
+        (Bytecodes'def-2 Bytecodes'DUP,             "b")
+        (Bytecodes'def-2 Bytecodes'DUP_X1,          "b")
+        (Bytecodes'def-2 Bytecodes'DUP_X2,          "b")
+        (Bytecodes'def-2 Bytecodes'DUP2,            "b")
+        (Bytecodes'def-2 Bytecodes'DUP2_X1,         "b")
+        (Bytecodes'def-2 Bytecodes'DUP2_X2,         "b")
+        (Bytecodes'def-2 Bytecodes'SWAP,            "b")
+        (Bytecodes'def-2 Bytecodes'IADD,            "b")
+        (Bytecodes'def-2 Bytecodes'LADD,            "b")
+        (Bytecodes'def-2 Bytecodes'ISUB,            "b")
+        (Bytecodes'def-2 Bytecodes'LSUB,            "b")
+        (Bytecodes'def-2 Bytecodes'IMUL,            "b")
+        (Bytecodes'def-2 Bytecodes'LMUL,            "b")
+        (Bytecodes'def-2 Bytecodes'IDIV,            "b")
+        (Bytecodes'def-2 Bytecodes'LDIV,            "b")
+        (Bytecodes'def-2 Bytecodes'IREM,            "b")
+        (Bytecodes'def-2 Bytecodes'LREM,            "b")
+        (Bytecodes'def-2 Bytecodes'INEG,            "b")
+        (Bytecodes'def-2 Bytecodes'LNEG,            "b")
+        (Bytecodes'def-2 Bytecodes'ISHL,            "b")
+        (Bytecodes'def-2 Bytecodes'LSHL,            "b")
+        (Bytecodes'def-2 Bytecodes'ISHR,            "b")
+        (Bytecodes'def-2 Bytecodes'LSHR,            "b")
+        (Bytecodes'def-2 Bytecodes'IUSHR,           "b")
+        (Bytecodes'def-2 Bytecodes'LUSHR,           "b")
+        (Bytecodes'def-2 Bytecodes'IAND,            "b")
+        (Bytecodes'def-2 Bytecodes'LAND,            "b")
+        (Bytecodes'def-2 Bytecodes'IOR,             "b")
+        (Bytecodes'def-2 Bytecodes'LOR,             "b")
+        (Bytecodes'def-2 Bytecodes'IXOR,            "b")
+        (Bytecodes'def-2 Bytecodes'LXOR,            "b")
+        (Bytecodes'def-2 Bytecodes'IINC,            "bic")
+        (Bytecodes'def-2 Bytecodes'I2L,             "b")
+        (Bytecodes'def-2 Bytecodes'L2I,             "b")
+        (Bytecodes'def-2 Bytecodes'I2B,             "b")
+        (Bytecodes'def-2 Bytecodes'I2C,             "b")
+        (Bytecodes'def-2 Bytecodes'I2S,             "b")
+        (Bytecodes'def-2 Bytecodes'LCMP,            "b")
+        (Bytecodes'def-2 Bytecodes'IFEQ,            "boo")
+        (Bytecodes'def-2 Bytecodes'IFNE,            "boo")
+        (Bytecodes'def-2 Bytecodes'IFLT,            "boo")
+        (Bytecodes'def-2 Bytecodes'IFGE,            "boo")
+        (Bytecodes'def-2 Bytecodes'IFGT,            "boo")
+        (Bytecodes'def-2 Bytecodes'IFLE,            "boo")
+        (Bytecodes'def-2 Bytecodes'IF_ICMPEQ,       "boo")
+        (Bytecodes'def-2 Bytecodes'IF_ICMPNE,       "boo")
+        (Bytecodes'def-2 Bytecodes'IF_ICMPLT,       "boo")
+        (Bytecodes'def-2 Bytecodes'IF_ICMPGE,       "boo")
+        (Bytecodes'def-2 Bytecodes'IF_ICMPGT,       "boo")
+        (Bytecodes'def-2 Bytecodes'IF_ICMPLE,       "boo")
+        (Bytecodes'def-2 Bytecodes'IF_ACMPEQ,       "boo")
+        (Bytecodes'def-2 Bytecodes'IF_ACMPNE,       "boo")
+        (Bytecodes'def-2 Bytecodes'GOTO,            "boo")
+        (Bytecodes'def-2 Bytecodes'JSR,             "boo")
+        (Bytecodes'def-2 Bytecodes'RET,             "bi")
+        (Bytecodes'def-2 Bytecodes'TABLESWITCH,     "")
+        (Bytecodes'def-2 Bytecodes'LOOKUPSWITCH,    "")
+        (Bytecodes'def-2 Bytecodes'IRETURN,         "b")
+        (Bytecodes'def-2 Bytecodes'LRETURN,         "b")
+        (Bytecodes'def-2 Bytecodes'ARETURN,         "b")
+        (Bytecodes'def-2 Bytecodes'RETURN,          "b")
+        (Bytecodes'def-2 Bytecodes'GETSTATIC,       "bjj")
+        (Bytecodes'def-2 Bytecodes'PUTSTATIC,       "bjj")
+        (Bytecodes'def-2 Bytecodes'GETFIELD,        "bjj")
+        (Bytecodes'def-2 Bytecodes'PUTFIELD,        "bjj")
+        (Bytecodes'def-2 Bytecodes'INVOKEVIRTUAL,   "bjj")
+        (Bytecodes'def-2 Bytecodes'INVOKESPECIAL,   "bjj")
+        (Bytecodes'def-2 Bytecodes'INVOKESTATIC,    "bjj")
+        (Bytecodes'def-2 Bytecodes'INVOKEINTERFACE, "bjja_")
+        (Bytecodes'def-2 Bytecodes'INVOKEDYNAMIC,   "bjjjj")
+        (Bytecodes'def-2 Bytecodes'NEW,             "bii")
+        (Bytecodes'def-2 Bytecodes'NEWARRAY,        "bc")
+        (Bytecodes'def-2 Bytecodes'ANEWARRAY,       "bii")
+        (Bytecodes'def-2 Bytecodes'ARRAYLENGTH,     "b")
+        (Bytecodes'def-2 Bytecodes'CHECKCAST,       "bii")
+        (Bytecodes'def-2 Bytecodes'INSTANCEOF,      "bii")
+        (Bytecodes'def-2 Bytecodes'MONITORENTER,    "b")
+        (Bytecodes'def-2 Bytecodes'MONITOREXIT,     "b")
+        (Bytecodes'def-2 Bytecodes'WIDE,            "")
+        (Bytecodes'def-2 Bytecodes'IFNULL,          "boo")
+        (Bytecodes'def-2 Bytecodes'IFNONNULL,       "boo")
+        (Bytecodes'def-2 Bytecodes'GOTO_W,          "boooo")
+        (Bytecodes'def-2 Bytecodes'JSR_W,           "boooo")
     )
 
     ;;;
@@ -4195,223 +4150,6 @@
     (§ defn #_"int" Bytecodes'lengthOf-1 [#_"int" opcode]
         (nth Bytecodes'lengthArray (& opcode 0xff))
     )
-
-    ;;;
-     ; Gets the effect on the depth of the expression stack of an instruction denoted by a given opcode.
-     ;
-     ; @return the change in the stack caused by the instruction denoted by {@code opcode}.
-     ;         If {@code opcode} is an illegal instruction then 0 is returned. Note that invoke
-     ;         instructions may pop more arguments so this value is a minimum stack effect.
-     ;;
-    #_unused
-    (§ defn #_"int" Bytecodes'stackEffectOf-1 [#_"int" opcode]
-        (nth Bytecodes'stackEffectArray (& opcode 0xff))
-    )
-
-    ;;;
-     ; Gets the lower-case mnemonic for a given opcode.
-     ;
-     ; @return the mnemonic for {@code opcode} or {@code "<illegal opcode: " + opcode + ">"} if
-     ;         {@code opcode} is not a legal opcode
-     ;;
-    (§ defn #_"String" Bytecodes'nameOf-1 [#_"int" opcode]
-        (or (nth Bytecodes'nameArray (& opcode 0xff)) (str "<illegal opcode: " opcode ">"))
-    )
-
-    ;;;
-     ; Allocation-free version of {@linkplain #nameOf(int)}.
-     ;
-     ; @return the mnemonic for {@code opcode} or {@code "<illegal opcode>"} if {@code opcode} is not a legal opcode
-     ;;
-    #_unused
-    (§ defn #_"String" Bytecodes'baseNameOf-1 [#_"int" opcode]
-        (or (nth Bytecodes'nameArray (& opcode 0xff)) "<illegal opcode>")
-    )
-
-    ;;;
-     ; Determines if a given opcode denotes an instruction that can cause an implicit exception.
-     ;
-     ; @return true iff {@code opcode} can cause an implicit exception, false otherwise
-     ;;
-    #_unused
-    (§ defn #_"boolean" Bytecodes'canTrap-1 [#_"int" opcode]
-        (not (zero? (& (nth Bytecodes'flagsArray (& opcode 0xff)) BytecodeFlags'TRAP)))
-    )
-
-    ;;;
-     ; Determines if a given opcode denotes an instruction that loads a local variable to the operand stack.
-     ;
-     ; @return true iff {@code opcode} loads a local variable to the operand stack, false otherwise
-     ;;
-    #_unused
-    (§ defn #_"boolean" Bytecodes'isLoad-1 [#_"int" opcode]
-        (not (zero? (& (nth Bytecodes'flagsArray (& opcode 0xff)) BytecodeFlags'LOAD)))
-    )
-
-    ;;;
-     ; Determines if a given opcode denotes an instruction that ends a basic block and does not let
-     ; control flow fall through to its lexical successor.
-     ;
-     ; @return true iff {@code opcode} properly ends a basic block
-     ;;
-    #_unused
-    (§ defn #_"boolean" Bytecodes'isStop-1 [#_"int" opcode]
-        (not (zero? (& (nth Bytecodes'flagsArray (& opcode 0xff)) BytecodeFlags'STOP)))
-    )
-
-    ;;;
-     ; Determines if a given opcode denotes an instruction that stores a value to a local variable
-     ; after popping it from the operand stack.
-     ;
-     ; @return true iff {@code opcode} stores a value to a local variable, false otherwise
-     ;;
-    #_unused
-    (§ defn #_"boolean" Bytecodes'isInvoke-1 [#_"int" opcode]
-        (not (zero? (& (nth Bytecodes'flagsArray (& opcode 0xff)) BytecodeFlags'INVOKE)))
-    )
-
-    ;;;
-     ; Determines if a given opcode denotes an instruction that stores a value to a local variable
-     ; after popping it from the operand stack.
-     ;
-     ; @return true iff {@code opcode} stores a value to a local variable, false otherwise
-     ;;
-    #_unused
-    (§ defn #_"boolean" Bytecodes'isStore-1 [#_"int" opcode]
-        (not (zero? (& (nth Bytecodes'flagsArray (& opcode 0xff)) BytecodeFlags'STORE)))
-    )
-
-    ;;;
-     ; Determines if a given opcode is an instruction that delimits a basic block.
-     ;
-     ; @return true iff {@code opcode} delimits a basic block
-     ;;
-    #_unused
-    (§ defn #_"boolean" Bytecodes'isBlockEnd-1 [#_"int" opcode]
-        (not (zero? (& (nth Bytecodes'flagsArray (& opcode 0xff)) (| BytecodeFlags'STOP BytecodeFlags'FALL_THROUGH))))
-    )
-
-    ;;;
-     ; Determines if a given opcode is an instruction that has a 2 or 4 byte operand that is an offset to another
-     ; instruction in the same method. This does not include the {@linkplain #TABLESWITCH switch} instructions.
-     ;
-     ; @return true iff {@code opcode} is a branch instruction with a single operand
-     ;;
-    #_unused
-    (§ defn #_"boolean" Bytecodes'isBranch-1 [#_"int" opcode]
-        (not (zero? (& (nth Bytecodes'flagsArray (& opcode 0xff)) BytecodeFlags'BRANCH)))
-    )
-
-    ;;;
-     ; Determines if a given opcode denotes a conditional branch.
-     ;;
-    #_unused
-    (§ defn #_"boolean" Bytecodes'isConditionalBranch-1 [#_"int" opcode]
-        (not (zero? (& (nth Bytecodes'flagsArray (& opcode 0xff)) BytecodeFlags'FALL_THROUGH)))
-    )
-
-    ;;;
-     ; Gets the arithmetic operator name for a given opcode. If {@code opcode} does not denote an
-     ; arithmetic instruction, then the {@linkplain #nameOf(int) name} of the opcode is returned instead.
-     ;;
-    #_unused
-    (§ defn #_"String" Bytecodes'operator-1 [#_"int" opcode]
-        (condp =? opcode
-            ;; arithmetic ops
-            [Bytecodes'IADD  Bytecodes'LADD ] "+"
-            [Bytecodes'ISUB  Bytecodes'LSUB ] "-"
-            [Bytecodes'IMUL  Bytecodes'LMUL ] "*"
-            [Bytecodes'IDIV  Bytecodes'LDIV ] "/"
-            [Bytecodes'IREM  Bytecodes'LREM ] "%"
-            ;; shift ops
-            [Bytecodes'ISHL  Bytecodes'LSHL ] "<<"
-            [Bytecodes'ISHR  Bytecodes'LSHR ] ">>"
-            [Bytecodes'IUSHR Bytecodes'LUSHR] ">>>"
-            ;; logic ops
-            [Bytecodes'IAND  Bytecodes'LAND ] "&"
-            [Bytecodes'IOR   Bytecodes'LOR  ] "|"
-            [Bytecodes'IXOR  Bytecodes'LXOR ] "^"
-                                              (Bytecodes'nameOf-1 opcode)
-        )
-    )
-
-    #_unused
-    (§ defn #_"boolean" Bytecodes'isIfBytecode-1 [#_"int" bytecode]
-        (any = bytecode
-            Bytecodes'IFEQ
-            Bytecodes'IFNE
-            Bytecodes'IFLT
-            Bytecodes'IFGE
-            Bytecodes'IFGT
-            Bytecodes'IFLE
-            Bytecodes'IF_ICMPEQ
-            Bytecodes'IF_ICMPNE
-            Bytecodes'IF_ICMPLT
-            Bytecodes'IF_ICMPGE
-            Bytecodes'IF_ICMPGT
-            Bytecodes'IF_ICMPLE
-            Bytecodes'IF_ACMPEQ
-            Bytecodes'IF_ACMPNE
-            Bytecodes'IFNULL
-            Bytecodes'IFNONNULL
-        )
-    )
-)
-
-;;;
- ; A collection of flags describing various bytecode attributes.
- ;
- ; @anno Bytecodes.BytecodeFlags
- ;;
-(value-ns BytecodeFlags
-    ;;;
-     ; Denotes an instruction that ends a basic block and does not let control flow fall through
-     ; to its lexical successor.
-     ;;
-    (def #_"int" BytecodeFlags'STOP 0x00000001)
-    ;;;
-     ; Denotes an instruction that ends a basic block and may let control flow fall through to
-     ; its lexical successor. In practice this means it is a conditional branch.
-     ;;
-    (def #_"int" BytecodeFlags'FALL_THROUGH 0x00000002)
-    ;;;
-     ; Denotes an instruction that has a 2 or 4 byte operand that is an offset to another
-     ; instruction in the same method. This does not include the Bytecodes#TABLESWITCH
-     ; or Bytecodes#LOOKUPSWITCH instructions.
-     ;;
-    (def #_"int" BytecodeFlags'BRANCH 0x00000004)
-    ;;;
-     ; Denotes an instruction that reads the value of a static or instance field.
-     ;;
-    (def #_"int" BytecodeFlags'FIELD_READ 0x00000008)
-    ;;;
-     ; Denotes an instruction that writes the value of a static or instance field.
-     ;;
-    (def #_"int" BytecodeFlags'FIELD_WRITE 0x00000010)
-    ;;;
-     ; Denotes an instruction that can cause a trap.
-     ;;
-    (def #_"int" BytecodeFlags'TRAP 0x00000080)
-    ;;;
-     ; Denotes an instruction that is commutative.
-     ;;
-    (def #_"int" BytecodeFlags'COMMUTATIVE 0x00000100)
-    ;;;
-     ; Denotes an instruction that is associative.
-     ;;
-    (def #_"int" BytecodeFlags'ASSOCIATIVE 0x00000200)
-    ;;;
-     ; Denotes an instruction that loads an operand.
-     ;;
-    (def #_"int" BytecodeFlags'LOAD 0x00000400)
-    ;;;
-     ; Denotes an instruction that stores an operand.
-     ;;
-    (def #_"int" BytecodeFlags'STORE 0x00000800)
-    ;;;
-     ; Denotes the 4 INVOKE* instructions.
-     ;;
-    (def #_"int" BytecodeFlags'INVOKE 0x00001000)
 )
 
 ;;;
@@ -4713,7 +4451,7 @@
      ;
      ; @return the total size in bytes of the switch instruction
      ;;
-    #_unused
+    #_unused
     (§ abstract #_"int" BytecodeSwitch''size-1 [#_"BytecodeSwitch" this])
 )
 
@@ -4750,12 +4488,12 @@
         (BytecodeStream''readInt-2 (:stream this), (+ (:alignedBci this) BytecodeTableSwitch'OFFSET_TO_HIGH_KEY))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"int" BytecodeTableSwitch''keyAt-2 [#_"BytecodeTableSwitch" this, #_"int" i]
         (+ (BytecodeTableSwitch''lowKey-1 this) i)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"int" BytecodeTableSwitch''offsetAt-2 [#_"BytecodeTableSwitch" this, #_"int" i]
         (BytecodeStream''readInt-2 (:stream this), (+ (:alignedBci this) BytecodeTableSwitch'OFFSET_TO_FIRST_JUMP_OFFSET (* BytecodeTableSwitch'JUMP_OFFSET_SIZE i)))
     )
@@ -4845,32 +4583,32 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ResolvedJavaMethod" ResolvedJavaMethodBytecode''getMethod-1 [#_"ResolvedJavaMethodBytecode" this]
         (:method this)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"byte[]" ResolvedJavaMethodBytecode''getCode-1 [#_"ResolvedJavaMethodBytecode" this]
         (#_"ResolvedJavaMethod" .getCode (:method this))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"int" ResolvedJavaMethodBytecode''getCodeSize-1 [#_"ResolvedJavaMethodBytecode" this]
         (#_"ResolvedJavaMethod" .getCodeSize (:method this))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"int" ResolvedJavaMethodBytecode''getMaxStackSize-1 [#_"ResolvedJavaMethodBytecode" this]
         (#_"ResolvedJavaMethod" .getMaxStackSize (:method this))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"int" ResolvedJavaMethodBytecode''getMaxLocals-1 [#_"ResolvedJavaMethodBytecode" this]
         (#_"ResolvedJavaMethod" .getMaxLocals (:method this))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ConstantPool" ResolvedJavaMethodBytecode''getConstantPool-1 [#_"ResolvedJavaMethodBytecode" this]
         (#_"ResolvedJavaMethod" .getConstantPool (:method this))
     )
@@ -4889,12 +4627,12 @@
         (Object.)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Bytecode" ResolvedJavaMethodBytecodeProvider''getBytecode-2 [#_"ResolvedJavaMethodBytecodeProvider" this, #_"ResolvedJavaMethod" method]
         (ResolvedJavaMethodBytecode'new-1 method)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" ResolvedJavaMethodBytecodeProvider''supportsInvokedynamic-1 [#_"ResolvedJavaMethodBytecodeProvider" this]
         true
     )
@@ -5182,7 +4920,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" RawData''emit-3 [#_"RawData" this, #_"ByteBuffer" buffer, #_"Patches" patches]
         (#_"ByteBuffer" .put buffer, (:data this))
         nil
@@ -5200,28 +4938,28 @@
     (§ defn #_"ZeroData" ZeroData'create-2 [#_"int" alignment, #_"int" size]
         (case size
             1   (§ reify #_"ZeroData" (ZeroData'new-2 alignment, size)
-                    #_unused
+                    #_unused
                     (§ override! #_"void" ZeroData''emit-3 [#_"ZeroData" this, #_"ByteBuffer" buffer, #_"Patches" patches]
                         (#_"ByteBuffer" .put buffer, (byte 0))
                         nil
                     )
                 )
             2   (§ reify #_"ZeroData" (ZeroData'new-2 alignment, size)
-                    #_unused
+                    #_unused
                     (§ override! #_"void" ZeroData''emit-3 [#_"ZeroData" this, #_"ByteBuffer" buffer, #_"Patches" patches]
                         (#_"ByteBuffer" .putShort buffer, (short 0))
                         nil
                     )
                 )
             4   (§ reify #_"ZeroData" (ZeroData'new-2 alignment, size)
-                    #_unused
+                    #_unused
                     (§ override! #_"void" ZeroData''emit-3 [#_"ZeroData" this, #_"ByteBuffer" buffer, #_"Patches" patches]
                         (#_"ByteBuffer" .putInt buffer, 0)
                         nil
                     )
                 )
             8   (§ reify #_"ZeroData" (ZeroData'new-2 alignment, size)
-                    #_unused
+                    #_unused
                     (§ override! #_"void" ZeroData''emit-3 [#_"ZeroData" this, #_"ByteBuffer" buffer, #_"Patches" patches]
                         (#_"ByteBuffer" .putLong buffer, 0)
                         nil
@@ -5231,7 +4969,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override #_"void" ZeroData''emit-3 [#_"ZeroData" this, #_"ByteBuffer" buffer, #_"Patches" patches]
         (let [
             #_"int" n
@@ -5298,8 +5036,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" AMD64AddressNode''generate-2 [#_"AMD64AddressNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"AMD64AddressNode" this, #_"LIRBuilder" builder]
         (let [
             #_"AllocatableValue" baseValue (if (some? (:base this)) (LIRGenerator''asAllocatable-2 (:gen builder), (LIRBuilder''operand-2 builder, (:base this))) Value/ILLEGAL)
             #_"AllocatableValue" indexValue (if (some? (:index this)) (LIRGenerator''asAllocatable-2 (:gen builder), (LIRBuilder''operand-2 builder, (:index this))) Value/ILLEGAL)
@@ -5350,12 +5087,12 @@
         (assoc this :displacement displacement)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"long" AMD64AddressNode''getMaxConstantDisplacement-1 [#_"AMD64AddressNode" this]
         (:displacement this)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" AMD64AddressNode''simplify-2 [#_"AMD64AddressNode" this, #_"SimplifierTool" tool]
         (§ ass! this (AMD64AddressNode''canonicalizeIndex-2 this, tool))
         nil
@@ -5765,8 +5502,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" HeapBaseNode''generate-2 [#_"HeapBaseNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"HeapBaseNode" this, #_"LIRBuilder" builder]
         (LIRBuilder''setResult-3 builder, this, (#_"Register" .asValue (:heapBaseRegister this), (Stamp''getLIRKind-1 (:stamp this))))
         nil
     )
@@ -5857,7 +5593,7 @@
      ; @param constant The constant that might be moved to a stack slot.
      ; @return true if constant to stack moves are supported for this constant
      ;;
-    #_unused
+    #_unused
     (§ method! #_"boolean" MoveFactory''allowConstantToStackMove-2 [#_"MoveFactory" this, #_"Constant" constant]
         (condp instance? constant
             HotSpotConstant     (#_"HotSpotConstant" .isCompressed constant)
@@ -6214,7 +5950,7 @@
 
     (§ def- #_"double" BlockOrderComparator'EPSILON 1e-6)
 
-    #_unused
+    #_unused
     (§ override! #_"int" BlockOrderComparator''compare-3 [#_"BlockOrderComparator" this, #_"Block" a, #_"Block" b]
         ;; Loop blocks before any loop exit block. The only exception are blocks that are (almost) impossible to reach.
         (when (and (< BlockOrderComparator'EPSILON (:probability a)) (< BlockOrderComparator'EPSILON (:probability b)))
@@ -6352,7 +6088,7 @@
      ;
      ; @return true if this condition is considered to be the canonical form, false otherwise
      ;;
-    #_unused
+    #_unused
     (§ method! #_"boolean" Condition''isCanonical-1 [#_"Condition" this]
         (condp = this
             Condition'EQ true
@@ -6426,7 +6162,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ method! #_"boolean" Condition''implies-2 [#_"Condition" this, #_"Condition" other]
         (condp = this
             other        true
@@ -6467,7 +6203,7 @@
      ; Returns true if this condition represents an unsigned comparison.
      ; EQ and NE are not considered to be unsigned.
      ;;
-    #_unused
+    #_unused
     (§ method! #_"boolean" Condition''isUnsigned-1 [#_"Condition" this]
         (any = this Condition'BT Condition'BE Condition'AT Condition'AE)
     )
@@ -6477,7 +6213,7 @@
      ;
      ; @return true if this operation is commutative
      ;;
-    #_unused
+    #_unused
     (§ method! #_"boolean" Condition''isCommutative-1 [#_"Condition" this]
         (any = this Condition'EQ Condition'NE)
     )
@@ -6608,7 +6344,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ method! #_"Condition" Condition''meet-2 [#_"Condition" this, #_"Condition" other]
         (condp = this
             other this
@@ -6870,20 +6606,6 @@
         nil
     )
 
-    ;;;
-     ; Determines if one loop is a transitive parent of another loop.
-     ;
-     ; @param childLoop The loop for which parentLoop might be a transitive parent loop.
-     ; @param parentLoop The loop which might be a transitive parent loop of child loop.
-     ; @return true if parentLoop is a (transitive) parent loop of childLoop, false otherwise
-     ;;
-    #_unused
-    (§ defn #_"boolean" Loop'transitiveParentLoop-2 [#_"Loop" childLoop, #_"Loop" parentLoop]
-        (loop-when [#_"Loop" l childLoop] (some? l) => false
-            (or (= l parentLoop) (recur (:parent l)))
-        )
-    )
-
     (§ method! #_"LocationSet" Loop''getKillLocations-1 [#_"Loop" this]
         (when (nil? (:killLocations this))
             (§ ass! this (assoc this :killLocations (LocationSet'new-0)))
@@ -6939,7 +6661,7 @@
         (not= (:base this) 0)
     )
 
-    #_unused
+    #_unused
     (§ method! #_"boolean" CompressEncoding''hasShift-1 [#_"CompressEncoding" this]
         (not= (:shift this) 0)
     )
@@ -6962,7 +6684,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ abstract #_"Fields[]" FieldIntrospection''getAllFields-1 [#_"FieldIntrospection<T>" this])
 )
 
@@ -7067,7 +6789,7 @@
      ; @param index the index of the field (between 0 and #getCount())
      ; @return the value of the specified field which will be boxed if the field type is primitive
      ;;
-    #_unused
+    #_unused
     (§ method #_"Object" Fields''get-3 [#_"Fields" this, #_"Object" object, #_"int" index]
         (let [
             #_"Class" type (nth (:types this) index)
@@ -7094,7 +6816,7 @@
      ; @param index the index of the field (between 0 and #getCount())
      ; @return the value of the specified field which will be boxed if the field type is primitive
      ;;
-    #_unused
+    #_unused
     (§ method! #_"long" Fields''getRawPrimitive-3 [#_"Fields" this, #_"Object" object, #_"int" index]
         (let [
             #_"Class" type (nth (:types this) index)
@@ -7137,7 +6859,7 @@
         (nth (:declaringClasses this) index)
     )
 
-    #_unused
+    #_unused
     (§ method #_"void" Fields''set-4 [#_"Fields" this, #_"Object" object, #_"int" index, #_"Object" value]
         (let [
             #_"Class" type (nth (:types this) index)
@@ -7158,7 +6880,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ method! #_"void" Fields''setRawPrimitive-4 [#_"Fields" this, #_"Object" object, #_"int" index, #_"long" value]
         (let [
             #_"Class" type (nth (:types this) index)
@@ -7200,12 +6922,12 @@
         (.getLong HotSpot'unsafe, n, (nth (:offsets this) i))
     )
 
-    #_unused
+    #_unused
     (§ method! #_"float" Fields''getFloat-3 [#_"Fields" this, #_"Object" n, #_"int" i]
         (.getFloat HotSpot'unsafe, n, (nth (:offsets this) i))
     )
 
-    #_unused
+    #_unused
     (§ method! #_"double" Fields''getDouble-3 [#_"Fields" this, #_"Object" n, #_"int" i]
         (.getDouble HotSpot'unsafe, n, (nth (:offsets this) i))
     )
@@ -7754,7 +7476,7 @@
      ; Create a new LIRKind with a new platform kind. If the new kind is longer than this,
      ; the reference positions are repeated to fill the vector.
      ;;
-    #_unused
+    #_unused
     (§ method! #_"LIRKind" LIRKind''repeat-2 [#_"LIRKind" this, #_"PlatformKind" kind]
         (cond
             (LIRKind''isUnknownReference-1 this) (LIRKind'unknownReference-1 kind)
@@ -7794,7 +7516,7 @@
     ;;;
      ; Change the base value of a derived reference. This must be called on derived references only.
      ;;
-    #_unused
+    #_unused
     (§ method! #_"LIRKind" LIRKind''setDerivedReferenceBase-2 [#_"LIRKind" this, #_"AllocatableValue" derivedReferenceBase]
         (assoc this :derivedReferenceBase derivedReferenceBase)
     )
@@ -7815,7 +7537,7 @@
         (LIRKind'isUnknownReference-1 (#_"Value" .getValueKind value))
     )
 
-    #_unused
+    #_unused
     (§ method! #_"int" LIRKind''getReferenceCount-1 [#_"LIRKind" this]
         (Integer/bitCount (:referenceMask this))
     )
@@ -7834,7 +7556,7 @@
      ;
      ; @param idx The index into the vector if this is a vector kind. Must be 0 if this is a scalar kind.
      ;;
-    #_unused
+    #_unused
     (§ method! #_"boolean" LIRKind''isCompressedReference-2 [#_"LIRKind" this, #_"int" idx]
         (and (not (LIRKind''isUnknownReference-1 this)) (not (zero? (& (:referenceCompressionMask this) (<< 1 idx)))))
     )
@@ -7874,7 +7596,7 @@
  ; A collection of static utility functions that check ranges of numbers.
  ;;
 (value-ns NumUtil
-    #_unused
+    #_unused
     (§ defn #_"boolean" NumUtil'isShiftCount-1 [#_"int" x]
         (<= 0 x 31)
     )
@@ -7882,7 +7604,7 @@
     ;;;
      ; Determines if a given {@code int} value is the range of unsigned byte values.
      ;;
-    #_unused
+    #_unused
     (§ defn #_"boolean" NumUtil'isUByte-1 [#_"int" x]
         (= (& x 0xff) x)
     )
@@ -7897,7 +7619,7 @@
     ;;;
      ; Determines if a given {@code long} value is the range of unsigned byte values.
      ;;
-    #_unused
+    #_unused
     (§ defn #_"boolean" NumUtil'isUByte-1 [#_"long" x]
         (= (& x 0xff) x)
     )
@@ -7912,7 +7634,7 @@
     ;;;
      ; Determines if a given {@code long} value is the range of unsigned int values.
      ;;
-    #_unused
+    #_unused
     (§ defn #_"boolean" NumUtil'isUInt-1 [#_"long" x]
         (= (& x 0xffffffff) x)
     )
@@ -7927,7 +7649,7 @@
     ;;;
      ; Determines if a given {@code int} value is the range of signed short values.
      ;;
-    #_unused
+    #_unused
     (§ defn #_"boolean" NumUtil'isShort-1 [#_"int" x]
         (= (short x) x)
     )
@@ -7935,17 +7657,17 @@
     ;;;
      ; Determines if a given {@code long} value is the range of signed short values.
      ;;
-    #_unused
+    #_unused
     (§ defn #_"boolean" NumUtil'isShort-1 [#_"long" x]
         (= (short x) x)
     )
 
-    #_unused
+    #_unused
     (§ defn #_"boolean" NumUtil'isUShort-1 [#_"int" s]
         (= s (& s 0xffff))
     )
 
-    #_unused
+    #_unused
     (§ defn #_"boolean" NumUtil'isUShort-1 [#_"long" s]
         (= s (& s 0xffff))
     )
@@ -7954,7 +7676,7 @@
         (and (<= -0x80000000 x) (< x 0x80000000))
     )
 
-    #_unused
+    #_unused
     (§ defn #_"short" NumUtil'safeToShort-1 [#_"int" v]
         (short v)
     )
@@ -7967,32 +7689,32 @@
         (* (quot (+ number mod -1) mod) mod)
     )
 
-    #_unused
+    #_unused
     (§ defn #_"int" NumUtil'roundDown-2 [#_"int" number, #_"int" mod]
         (* (quot number mod) mod)
     )
 
-    #_unused
+    #_unused
     (§ defn #_"long" NumUtil'roundDown-2 [#_"long" number, #_"long" mod]
         (* (quot number mod) mod)
     )
 
-    #_unused
+    #_unused
     (§ defn #_"int" NumUtil'log2Ceil-1 [#_"int" val]
         (loop-when-recur [#_"int" log2 0 #_"int" x 1] (< x val) [(inc log2) (<< x 1)] => log2)
     )
 
-    #_unused
+    #_unused
     (§ defn #_"boolean" NumUtil'isUnsignedNbit-2 [#_"int" n, #_"int" value]
         (<= (- 32 (Integer/numberOfLeadingZeros value)) n)
     )
 
-    #_unused
+    #_unused
     (§ defn #_"boolean" NumUtil'isUnsignedNbit-2 [#_"int" n, #_"long" value]
         (<= (- 64 (Long/numberOfLeadingZeros value)) n)
     )
 
-    #_unused
+    #_unused
     (§ defn #_"boolean" NumUtil'isSignedNbit-2 [#_"int" n, #_"int" value]
         (let [
             #_"int" m (<< 1 (dec n))
@@ -8001,7 +7723,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ defn #_"boolean" NumUtil'isSignedNbit-2 [#_"int" n, #_"long" value]
         (let [
             #_"long" m (<< 1 (dec n))
@@ -8014,7 +7736,7 @@
      ; @param n Number of bits that should be set to 1. Must be between 0 and 32 (inclusive).
      ; @return a number with n bits set to 1
      ;;
-    #_unused
+    #_unused
     (§ defn #_"int" NumUtil'getNbitNumberInt-1 [#_"int" n]
         (if (< n 32) (dec (<< 1 n)) 0xffffffff)
     )
@@ -8080,12 +7802,12 @@
 
     (§ abstract #_"AbstractObjectStamp" AbstractObjectStamp''copyWith-5 [#_"AbstractObjectStamp" this, #_"ResolvedJavaType" newType, #_"boolean" newExactType, #_"boolean" newNonNull, #_"boolean" newAlwaysNull])
 
-    #_unused
+    #_unused
     (§ override! #_"AbstractPointerStamp" AbstractObjectStamp''copyWith-3 [#_"AbstractObjectStamp" this, #_"boolean" newNonNull, #_"boolean" newAlwaysNull]
         (AbstractObjectStamp''copyWith-5 this, (:type this), (:exactType this), newNonNull, newAlwaysNull)
     )
 
-    #_unused
+    #_unused
     (§ override #_"Stamp" AbstractObjectStamp''unrestricted-1 [#_"AbstractObjectStamp" this]
         (AbstractObjectStamp''copyWith-5 this, nil, false, false, false)
     )
@@ -8094,7 +7816,7 @@
         (AbstractObjectStamp''copyWith-5 this, nil, true, true, false)
     )
 
-    #_unused
+    #_unused
     (§ override #_"Stamp" AbstractObjectStamp''constant-2 [#_"AbstractObjectStamp" this, #_"Constant" c]
         (let [
             #_"ResolvedJavaType" constType (when-not (#_"JavaConstant" .isNull c) (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, c))
@@ -8103,17 +7825,17 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override #_"boolean" AbstractObjectStamp''hasValues-1 [#_"AbstractObjectStamp" this]
         (or (not (:exactType this)) (and (some? (:type this)) (AbstractObjectStamp'isConcreteType-1 (:type this))))
     )
 
-    #_unused
+    #_unused
     (§ override #_"JavaKind" AbstractObjectStamp''getStackKind-1 [#_"AbstractObjectStamp" this]
         JavaKind/Object
     )
 
-    #_unused
+    #_unused
     (§ override #_"ResolvedJavaType" AbstractObjectStamp''javaType-1 [#_"AbstractObjectStamp" this]
         (or (:type this) (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, Object))
     )
@@ -8126,7 +7848,7 @@
         (and (:exactType this) (some? (:type this)))
     )
 
-    #_unused
+    #_unused
     (§ override #_"Stamp" AbstractObjectStamp''meet-2 [#_"AbstractObjectStamp" this, #_"Stamp" that]
         (if (= this that)
             this
@@ -8175,7 +7897,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override #_"Stamp" AbstractObjectStamp''join-2 [#_"AbstractObjectStamp" this, #_"Stamp" that]
         (AbstractObjectStamp''join0-3 this, that, false)
     )
@@ -8193,7 +7915,7 @@
      ; @param that the stamp this stamp should be casted to
      ; @return the new improved stamp or nil if this stamp cannot be improved
      ;;
-    #_unused
+    #_unused
     (§ override #_"Stamp" AbstractObjectStamp''improveWith-2 [#_"AbstractObjectStamp" this, #_"Stamp" that]
         (AbstractObjectStamp''join0-3 this, that, true)
     )
@@ -8372,7 +8094,7 @@
         (Stamp''join-2 this, other)
     )
 
-    #_unused
+    #_unused
     (§ override #_"Stamp" AbstractPointerStamp''meet-2 [#_"AbstractPointerStamp" this, #_"Stamp" other]
         (let [
             #_"boolean" meetNonNull (and (:never-nil? this) (:never-nil? other))
@@ -8382,7 +8104,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override #_"Stamp" AbstractPointerStamp''unrestricted-1 [#_"AbstractPointerStamp" this]
         (AbstractPointerStamp''copyWith-3 this, false, false)
     )
@@ -8391,12 +8113,12 @@
         (AbstractPointerStamp''asNonNull-1 stamp)
     )
 
-    #_unused
+    #_unused
     (§ defn #_"Stamp" AbstractPointerStamp'pointerMaybeNull-1 [#_"Stamp" stamp]
         (AbstractPointerStamp''asMaybeNull-1 stamp)
     )
 
-    #_unused
+    #_unused
     (§ defn #_"Stamp" AbstractPointerStamp'pointerAlwaysNull-1 [#_"Stamp" stamp]
         (AbstractPointerStamp''asAlwaysNull-1 stamp)
     )
@@ -8419,12 +8141,12 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override #_"Constant" AbstractPointerStamp''asConstant-1 [#_"AbstractPointerStamp" this]
         (when (:always-nil? this) JavaConstant/NULL_POINTER)
     )
 
-    #_unused
+    #_unused
     (§ override #_"JavaKind" AbstractPointerStamp''getStackKind-1 [#_"AbstractPointerStamp" this]
         JavaKind/Illegal
     )
@@ -8492,22 +8214,22 @@
         (if (instance? ArithmeticStamp stamp) (:ops stamp) ArithmeticOpTable'EMPTY)
     )
 
-    #_unused
+    #_unused
     (§ method! #_"BinaryOp[]" ArithmeticOpTable''getBinaryOps-1 [#_"ArithmeticOpTable" this]
         (into-array BinaryOp [ (:add this), (:sub this), (:mul this), (:mulHigh this), (:umulHigh this), (:div this), (:rem this), (:and this), (:or this), (:xor this) ])
     )
 
-    #_unused
+    #_unused
     (§ method! #_"UnaryOp[]" ArithmeticOpTable''getUnaryOps-1 [#_"ArithmeticOpTable" this]
         (into-array UnaryOp [ (:neg this), (:not this), (:abs this) ])
     )
 
-    #_unused
+    #_unused
     (§ method! #_"ShiftOp[]" ArithmeticOpTable''getShiftOps-1 [#_"ArithmeticOpTable" this]
         (into-array ShiftOp [ (:shl this), (:shr this), (:ushr this) ])
     )
 
-    #_unused
+    #_unused
     (§ method! #_"IntegerConvertOp[]" ArithmeticOpTable''getIntegerConvertOps-1 [#_"ArithmeticOpTable" this]
         (into-array IntegerConvertOp [ (:zeroExtend this), (:signExtend this), (:narrow this) ])
     )
@@ -8549,7 +8271,7 @@
      ;;
     (§ abstract #_"Stamp" UnaryOp''foldStamp-2 [#_"UnaryOp<T>" this, #_"Stamp" stamp])
 
-    #_unused
+    #_unused
     (§ method #_"UnaryOp<T>" UnaryOp''unwrap-1 [#_"UnaryOp<T>" this]
         this
     )
@@ -8628,7 +8350,7 @@
      ; Checks whether this operation is commutative. An operation is commutative when
      ; {@code a . b == b . a} for all a, b.
      ;;
-    #_unused
+    #_unused
     (§ method! #_"boolean" BinaryOp''isCommutative-1 [#_"BinaryOp<T>" this]
         (:commutative? this)
     )
@@ -8657,7 +8379,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ method #_"BinaryOp<T>" BinaryOp''unwrap-1 [#_"BinaryOp<T>" this]
         this
     )
@@ -8818,7 +8540,7 @@
 
     (§ abstract #_"Stamp" IntegerConvertOp''foldStamp-4 [#_"IntegerConvertOp<T>" this, #_"int" inputBits, #_"int" resultBits, #_"Stamp" stamp])
 
-    #_unused
+    #_unused
     (§ method #_"IntegerConvertOp<T>" IntegerConvertOp''unwrap-1 [#_"IntegerConvertOp<T>" this]
         this
     )
@@ -8855,7 +8577,7 @@
         (IntegerConvertOp'new-1 "Narrow")
     )
 
-    #_unused
+    #_unused
     (§ override #_"Stamp" Narrow''invertStamp-4 [#_"Narrow" this, #_"int" inputBits, #_"int" resultBits, #_"Stamp" outStamp]
         nil
     )
@@ -8876,7 +8598,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override #_"Stamp" ArithmeticStamp''improveWith-2 [#_"ArithmeticStamp" this, #_"Stamp" other]
         (when (Stamp''isCompatible-2 this, other) => this
             (Stamp''join-2 this, other)
@@ -8893,72 +8615,72 @@
         (Stamp'new-0)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"JavaKind" IllegalStamp''getStackKind-1 [#_"IllegalStamp" this]
         JavaKind/Illegal
     )
 
-    #_unused
+    #_unused
     (§ override! #_"LIRKind" IllegalStamp''getLIRKind-1 [#_"IllegalStamp" this]
         LIRKind'Illegal
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Stamp" IllegalStamp''unrestricted-1 [#_"IllegalStamp" this]
         this
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" IllegalStamp''isUnrestricted-1 [#_"IllegalStamp" this]
         true
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Stamp" IllegalStamp''empty-1 [#_"IllegalStamp" this]
         this
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Stamp" IllegalStamp''constant-2 [#_"IllegalStamp" this, #_"Constant" constant]
         this
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ResolvedJavaType" IllegalStamp''javaType-1 [#_"IllegalStamp" this]
         (throw! "illegal stamp has no Java type")
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Stamp" IllegalStamp''meet-2 [#_"IllegalStamp" this, #_"Stamp" other]
         this
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Stamp" IllegalStamp''join-2 [#_"IllegalStamp" this, #_"Stamp" other]
         this
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" IllegalStamp''isCompatible-2 [#_"IllegalStamp" this, #_"Stamp" stamp]
         (instance? IllegalStamp stamp)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" IllegalStamp''isCompatible-2 [#_"IllegalStamp" this, #_"Constant" constant]
         (and (instance? PrimitiveConstant constant) (= (#_"PrimitiveConstant" .getJavaKind constant) JavaKind/Illegal))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" IllegalStamp''hasValues-1 [#_"IllegalStamp" this]
         true
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Stamp" IllegalStamp''improveWith-2 [#_"IllegalStamp" this, #_"Stamp" other]
         this
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Constant" IllegalStamp''readConstant-4 [#_"IllegalStamp" this, #_"MemoryAccessProvider" provider, #_"Constant" base, #_"long" displacement]
         (throw! "can't read values of illegal stamp")
     )
@@ -9002,7 +8724,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ defn #_"IntegerStamp" IntegerStamp'create-3 [#_"int" bits, #_"long" lowerBoundInput, #_"long" upperBoundInput]
         (IntegerStamp'create-5 bits, lowerBoundInput, upperBoundInput, 0, (CodeUtil/mask bits))
     )
@@ -9079,7 +8801,7 @@
         (IntegerStamp'new-5 (:bits this), (CodeUtil/maxValue (:bits this)), (CodeUtil/minValue (:bits this)), (CodeUtil/mask (:bits this)), 0)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Stamp" IntegerStamp''constant-2 [#_"IntegerStamp" this, #_"Constant" constant]
         (when (instance? PrimitiveConstant constant) => this
             (let [
@@ -9090,7 +8812,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" IntegerStamp''hasValues-1 [#_"IntegerStamp" this]
         (<= (:lowerBound this) (:upperBound this))
     )
@@ -9099,12 +8821,12 @@
         (if (< 32 (:bits this)) JavaKind/Long JavaKind/Int)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"LIRKind" IntegerStamp''getLIRKind-1 [#_"IntegerStamp" this]
         (LIRKindTool'getIntegerKind-1 (:bits this))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ResolvedJavaType" IntegerStamp''javaType-1 [#_"IntegerStamp" this]
         (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess,
             (case (:bits this) 1 boolean'class 8 byte'class 16 short'class 32 int'class 64 long'class)
@@ -9156,7 +8878,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Stamp" IntegerStamp''meet-2 [#_"IntegerStamp" this, #_"Stamp" stamp]
         (cond
             (= stamp this)           this
@@ -9173,7 +8895,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" IntegerStamp''isCompatible-2 [#_"IntegerStamp" this, #_"Stamp" stamp]
         (or (= this stamp)
             (and (instance? IntegerStamp stamp)
@@ -9182,7 +8904,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" IntegerStamp''isCompatible-2 [#_"IntegerStamp" this, #_"Constant" constant]
         (and (instance? PrimitiveConstant constant)
             (#_"JavaKind" .isNumericInteger (#_"PrimitiveConstant" .getJavaKind constant))
@@ -9350,12 +9072,12 @@
     (§ def #_"ArithmeticOpTable" IntegerStamp'OPS (ß ArithmeticOpTable'new
     (§ args
         (§ reify #_"Neg" (Neg'new-0)
-            #_unused
+            #_unused
             (§ override! #_"Constant" Neg''foldConstant-2 [#_"Neg" this, #_"Constant" value]
                 (JavaConstant/forIntegerKind (#_"PrimitiveConstant" .getJavaKind value), (- (#_"PrimitiveConstant" .asLong value)))
             )
 
-            #_unused
+            #_unused
             (§ override! #_"Stamp" Neg''foldStamp-2 [#_"Neg" this, #_"Stamp" stamp]
                 (when-not (Stamp''isEmpty-1 stamp) => stamp
                     (let [
@@ -9380,12 +9102,12 @@
         )
 
         (§ reify #_"Add" (Add'new-2 true, true)
-            #_unused
+            #_unused
             (§ override! #_"Constant" Add''foldConstant-3 [#_"Add" this, #_"Constant" a, #_"Constant" b]
                 (JavaConstant/forIntegerKind (#_"PrimitiveConstant" .getJavaKind a), (+ (#_"PrimitiveConstant" .asLong a) (#_"PrimitiveConstant" .asLong b)))
             )
 
-            #_unused
+            #_unused
             (§ override! #_"Stamp" Add''foldStamp-3 [#_"Add" this, #_"Stamp" a, #_"Stamp" b]
                 (cond
                     (Stamp''isEmpty-1 a) a
@@ -9430,41 +9152,41 @@
                 )
             )
 
-            #_unused
+            #_unused
             (§ override! #_"boolean" Add''isNeutral-2 [#_"Add" this, #_"Constant" value]
                 (zero? (#_"PrimitiveConstant" .asLong value))
             )
         )
 
         (§ reify #_"Sub" (Sub'new-2 true, false)
-            #_unused
+            #_unused
             (§ override! #_"Constant" Sub''foldConstant-3 [#_"Sub" this, #_"Constant" a, #_"Constant" b]
                 (JavaConstant/forIntegerKind (#_"PrimitiveConstant" .getJavaKind a), (- (#_"PrimitiveConstant" .asLong a) (#_"PrimitiveConstant" .asLong b)))
             )
 
-            #_unused
+            #_unused
             (§ override! #_"Stamp" Sub''foldStamp-3 [#_"Sub" this, #_"Stamp" a, #_"Stamp" b]
                 (BinaryOp''foldStamp-3 (:add IntegerStamp'OPS), a, (UnaryOp''foldStamp-2 (:neg IntegerStamp'OPS), b))
             )
 
-            #_unused
+            #_unused
             (§ override! #_"boolean" Sub''isNeutral-2 [#_"Sub" this, #_"Constant" value]
                 (zero? (#_"PrimitiveConstant" .asLong value))
             )
 
-            #_unused
+            #_unused
             (§ override! #_"Constant" Sub''getZero-2 [#_"Sub" this, #_"Stamp" stamp]
                 (JavaConstant/forPrimitiveInt (:bits stamp), 0)
             )
         )
 
         (§ reify #_"Mul" (Mul'new-2 true, true)
-            #_unused
+            #_unused
             (§ override! #_"Constant" Mul''foldConstant-3 [#_"Mul" this, #_"Constant" a, #_"Constant" b]
                 (JavaConstant/forIntegerKind (#_"PrimitiveConstant" .getJavaKind a), (* (#_"PrimitiveConstant" .asLong a) (#_"PrimitiveConstant" .asLong b)))
             )
 
-            #_unused
+            #_unused
             (§ override! #_"Stamp" Mul''foldStamp-3 [#_"Mul" this, #_"Stamp" a, #_"Stamp" b]
                 (cond
                     (Stamp''isEmpty-1 a) a
@@ -9629,19 +9351,19 @@
                 )
             )
 
-            #_unused
+            #_unused
             (§ override! #_"boolean" Mul''isNeutral-2 [#_"Mul" this, #_"Constant" value]
                 (= (#_"PrimitiveConstant" .asLong value) 1)
             )
         )
 
         (§ reify #_"MulHigh" (MulHigh'new-2 true, true)
-            #_unused
+            #_unused
             (§ override! #_"Constant" MulHigh''foldConstant-3 [#_"MulHigh" this, #_"Constant" a, #_"Constant" b]
                 (JavaConstant/forIntegerKind (#_"PrimitiveConstant" .getJavaKind a), (PrimitiveStamp''multiplyHigh-4 this, (#_"PrimitiveConstant" .asLong a), (#_"PrimitiveConstant" .asLong b), (#_"PrimitiveConstant" .getJavaKind a)))
             )
 
-            #_unused
+            #_unused
             (§ override! #_"Stamp" MulHigh''foldStamp-3 [#_"MulHigh" this, #_"Stamp" a, #_"Stamp" b]
                 (cond
                     (Stamp''isEmpty-1 a) a
@@ -9676,12 +9398,12 @@
                 )
             )
 
-            #_unused
+            #_unused
             (§ override! #_"boolean" MulHigh''isNeutral-2 [#_"MulHigh" this, #_"Constant" value]
                 false
             )
 
-            #_unused
+            #_unused
             (§ method- #_"long" MulHigh''multiplyHigh-4 [#_"MulHigh" this, #_"long" x, #_"long" y, #_"JavaKind" javaKind]
                 (if (= javaKind JavaKind/Int)
                     (>> (* x y) 32)
@@ -9703,12 +9425,12 @@
         )
 
         (§ reify #_"UMulHigh" (UMulHigh'new-2 true, true)
-            #_unused
+            #_unused
             (§ override! #_"Constant" UMulHigh''foldConstant-3 [#_"UMulHigh" this, #_"Constant" a, #_"Constant" b]
                 (JavaConstant/forIntegerKind (#_"PrimitiveConstant" .getJavaKind a), (PrimitiveStamp''multiplyHighUnsigned-4 this, (#_"PrimitiveConstant" .asLong a), (#_"PrimitiveConstant" .asLong b), (#_"PrimitiveConstant" .getJavaKind a)))
             )
 
-            #_unused
+            #_unused
             (§ override! #_"Stamp" UMulHigh''foldStamp-3 [#_"UMulHigh" this, #_"Stamp" a, #_"Stamp" b]
                 (cond
                     (Stamp''isEmpty-1 a) a
@@ -9749,12 +9471,12 @@
                 )
             )
 
-            #_unused
+            #_unused
             (§ override! #_"boolean" UMulHigh''isNeutral-2 [#_"UMulHigh" this, #_"Constant" value]
                 false
             )
 
-            #_unused
+            #_unused
             (§ method- #_"long[]" UMulHigh''getUnsignedExtremes-2 [#_"UMulHigh" this, #_"IntegerStamp" stamp]
                 (if (and (< (:lowerBound stamp) 0) (<= 0 (:upperBound stamp)))
                     ;; If -1 and 0 are both in the signed range, then we can't say anything
@@ -9764,7 +9486,7 @@
                 )
             )
 
-            #_unused
+            #_unused
             (§ method- #_"long" UMulHigh''multiplyHighUnsigned-4 [#_"UMulHigh" this, #_"long" x, #_"long" y, #_"JavaKind" javaKind]
                 (if (= javaKind JavaKind/Int)
                     (let [
@@ -9792,14 +9514,14 @@
         )
 
         (§ reify #_"Div" (Div'new-2 true, false)
-            #_unused
+            #_unused
             (§ override! #_"Constant" Div''foldConstant-3 [#_"Div" this, #_"Constant" a, #_"Constant" b]
                 (when-not (zero? (#_"PrimitiveConstant" .asLong b))
                     (JavaConstant/forIntegerKind (#_"PrimitiveConstant" .getJavaKind a), (quot (#_"PrimitiveConstant" .asLong a) (#_"PrimitiveConstant" .asLong b)))
                 )
             )
 
-            #_unused
+            #_unused
             (§ override! #_"Stamp" Div''foldStamp-3 [#_"Div" this, #_"Stamp" a, #_"Stamp" b]
                 (cond
                     (Stamp''isEmpty-1 a) a
@@ -9829,21 +9551,21 @@
                 )
             )
 
-            #_unused
+            #_unused
             (§ override! #_"boolean" Div''isNeutral-2 [#_"Div" this, #_"Constant" value]
                 (= (#_"PrimitiveConstant" .asLong value) 1)
             )
         )
 
         (§ reify #_"Rem" (Rem'new-2 false, false)
-            #_unused
+            #_unused
             (§ override! #_"Constant" Rem''foldConstant-3 [#_"Rem" this, #_"Constant" a, #_"Constant" b]
                 (when-not (zero? (#_"PrimitiveConstant" .asLong b))
                     (JavaConstant/forIntegerKind (#_"PrimitiveConstant" .getJavaKind a), (% (#_"PrimitiveConstant" .asLong a) (#_"PrimitiveConstant" .asLong b)))
                 )
             )
 
-            #_unused
+            #_unused
             (§ override! #_"Stamp" Rem''foldStamp-3 [#_"Rem" this, #_"Stamp" a, #_"Stamp" b]
                 (cond
                     (Stamp''isEmpty-1 a) a
@@ -9881,12 +9603,12 @@
         )
 
         (§ reify #_"Not" (Not'new-0)
-            #_unused
+            #_unused
             (§ override! #_"Constant" Not''foldConstant-2 [#_"Not" this, #_"Constant" constant]
                 (JavaConstant/forIntegerKind (#_"PrimitiveConstant" .getJavaKind constant), (bit-not (#_"PrimitiveConstant" .asLong constant)))
             )
 
-            #_unused
+            #_unused
             (§ override! #_"Stamp" Not''foldStamp-2 [#_"Not" this, #_"Stamp" stamp]
                 (when-not (Stamp''isEmpty-1 stamp) => stamp
                     (let [
@@ -9900,12 +9622,12 @@
         )
 
         (§ reify #_"And" (And'new-2 true, true)
-            #_unused
+            #_unused
             (§ override! #_"Constant" And''foldConstant-3 [#_"And" this, #_"Constant" a, #_"Constant" b]
                 (JavaConstant/forIntegerKind (#_"PrimitiveConstant" .getJavaKind a), (& (#_"PrimitiveConstant" .asLong a) (#_"PrimitiveConstant" .asLong b)))
             )
 
-            #_unused
+            #_unused
             (§ override! #_"Stamp" And''foldStamp-3 [#_"And" this, #_"Stamp" a, #_"Stamp" b]
                 (cond
                     (Stamp''isEmpty-1 a) a
@@ -9914,7 +9636,7 @@
                 )
             )
 
-            #_unused
+            #_unused
             (§ override! #_"boolean" And''isNeutral-2 [#_"And" this, #_"Constant" value]
                 (let [
                     #_"long" mask (CodeUtil/mask (#_"JavaKind" .getBitCount (#_"PrimitiveConstant" .getJavaKind value)))
@@ -9925,12 +9647,12 @@
         )
 
         (§ reify #_"Or" (Or'new-2 true, true)
-            #_unused
+            #_unused
             (§ override! #_"Constant" Or''foldConstant-3 [#_"Or" this, #_"Constant" a, #_"Constant" b]
                 (JavaConstant/forIntegerKind (#_"PrimitiveConstant" .getJavaKind a), (| (#_"PrimitiveConstant" .asLong a) (#_"PrimitiveConstant" .asLong b)))
             )
 
-            #_unused
+            #_unused
             (§ override! #_"Stamp" Or''foldStamp-3 [#_"Or" this, #_"Stamp" a, #_"Stamp" b]
                 (cond
                     (Stamp''isEmpty-1 a) a
@@ -9939,19 +9661,19 @@
                 )
             )
 
-            #_unused
+            #_unused
             (§ override! #_"boolean" Or''isNeutral-2 [#_"Or" this, #_"Constant" value]
                 (zero? (#_"PrimitiveConstant" .asLong value))
             )
         )
 
         (§ reify #_"Xor" (Xor'new-2 true, true)
-            #_unused
+            #_unused
             (§ override! #_"Constant" Xor''foldConstant-3 [#_"Xor" this, #_"Constant" a, #_"Constant" b]
                 (JavaConstant/forIntegerKind (#_"PrimitiveConstant" .getJavaKind a), (bit-xor (#_"PrimitiveConstant" .asLong a) (#_"PrimitiveConstant" .asLong b)))
             )
 
-            #_unused
+            #_unused
             (§ override! #_"Stamp" Xor''foldStamp-3 [#_"Xor" this, #_"Stamp" a, #_"Stamp" b]
                 (cond
                     (Stamp''isEmpty-1 a) a
@@ -9967,19 +9689,19 @@
                 )
             )
 
-            #_unused
+            #_unused
             (§ override! #_"boolean" Xor''isNeutral-2 [#_"Xor" this, #_"Constant" value]
                 (zero? (#_"PrimitiveConstant" .asLong value))
             )
 
-            #_unused
+            #_unused
             (§ override! #_"Constant" Xor''getZero-2 [#_"Xor" this, #_"Stamp" stamp]
                 (JavaConstant/forPrimitiveInt (:bits stamp), 0)
             )
         )
 
         (§ reify #_"Shl" (Shl'new-0)
-            #_unused
+            #_unused
             (§ override! #_"Constant" Shl''foldConstant-3 [#_"Shl" this, #_"Constant" value, #_"int" amount]
                 (condp = (#_"PrimitiveConstant" .getJavaKind value)
                     JavaKind/Int  (JavaConstant/forInt (<< (#_"PrimitiveConstant" .asInt value) amount))
@@ -9987,7 +9709,7 @@
                 )
             )
 
-            #_unused
+            #_unused
             (§ override! #_"Stamp" Shl''foldStamp-3 [#_"Shl" this, #_"Stamp" stamp, #_"IntegerStamp" shift]
                 (let [
                     #_"int" bits (:bits stamp)
@@ -10042,14 +9764,14 @@
                 )
             )
 
-            #_unused
+            #_unused
             (§ override! #_"int" Shl''getShiftAmountMask-2 [#_"Shl" this, #_"Stamp" stamp]
                 (dec (:bits stamp))
             )
         )
 
         (§ reify #_"Shr" (Shr'new-0)
-            #_unused
+            #_unused
             (§ override! #_"Constant" Shr''foldConstant-3 [#_"Shr" this, #_"Constant" value, #_"int" amount]
                 (condp = (#_"PrimitiveConstant" .getJavaKind value)
                     JavaKind/Int  (JavaConstant/forInt (>> (#_"PrimitiveConstant" .asInt value) amount))
@@ -10057,7 +9779,7 @@
                 )
             )
 
-            #_unused
+            #_unused
             (§ override! #_"Stamp" Shr''foldStamp-3 [#_"Shr" this, #_"Stamp" stamp, #_"IntegerStamp" shift]
                 (let [
                     #_"int" bits (:bits stamp)
@@ -10087,14 +9809,14 @@
                 )
             )
 
-            #_unused
+            #_unused
             (§ override! #_"int" Shr''getShiftAmountMask-2 [#_"Shr" this, #_"Stamp" stamp]
                 (dec (:bits stamp))
             )
         )
 
         (§ reify #_"UShr" (UShr'new-0)
-            #_unused
+            #_unused
             (§ override! #_"Constant" UShr''foldConstant-3 [#_"UShr" this, #_"Constant" value, #_"int" amount]
                 (condp = (#_"PrimitiveConstant" .getJavaKind value)
                     JavaKind/Int  (JavaConstant/forInt (>>> (#_"PrimitiveConstant" .asInt value) amount))
@@ -10102,7 +9824,7 @@
                 )
             )
 
-            #_unused
+            #_unused
             (§ override! #_"Stamp" UShr''foldStamp-3 [#_"UShr" this, #_"Stamp" stamp, #_"IntegerStamp" shift]
                 (let [
                     #_"int" bits (:bits stamp)
@@ -10132,19 +9854,19 @@
                 )
             )
 
-            #_unused
+            #_unused
             (§ override! #_"int" UShr''getShiftAmountMask-2 [#_"UShr" this, #_"Stamp" stamp]
                 (dec (:bits stamp))
             )
         )
 
         (§ reify #_"Abs" (Abs'new-0)
-            #_unused
+            #_unused
             (§ override! #_"Constant" Abs''foldConstant-2 [#_"Abs" this, #_"Constant" constant]
                 (JavaConstant/forIntegerKind (#_"PrimitiveConstant" .getJavaKind constant), (abs (#_"PrimitiveConstant" .asLong constant)))
             )
 
-            #_unused
+            #_unused
             (§ override! #_"Stamp" Abs''foldStamp-2 [#_"Abs" this, #_"Stamp" stamp]
                 (cond
                     (Stamp''isEmpty-1 stamp)
@@ -10164,12 +9886,12 @@
         )
 
         (§ reify #_"ZeroExtend" (ZeroExtend'new-0)
-            #_unused
+            #_unused
             (§ override! #_"Constant" ZeroExtend''foldConstant-4 [#_"ZeroExtend" this, #_"int" inputBits, #_"int" resultBits, #_"Constant" constant]
                 (JavaConstant/forPrimitiveInt resultBits, (CodeUtil/zeroExtend (#_"PrimitiveConstant" .asLong constant), inputBits))
             )
 
-            #_unused
+            #_unused
             (§ override! #_"Stamp" ZeroExtend''foldStamp-4 [#_"ZeroExtend" this, #_"int" inputBits, #_"int" resultBits, #_"Stamp" stamp]
                 (cond
                     (Stamp''isEmpty-1 stamp) (IntegerStamp''empty-1 (StampFactory'forInteger-1 resultBits))
@@ -10186,7 +9908,7 @@
                 )
             )
 
-            #_unused
+            #_unused
             (§ override! #_"Stamp" ZeroExtend''invertStamp-4 [#_"ZeroExtend" this, #_"int" inputBits, #_"int" resultBits, #_"Stamp" stamp]
                 (if (Stamp''isEmpty-1 stamp)
                     (IntegerStamp''empty-1 (StampFactory'forInteger-1 inputBits))
@@ -10196,12 +9918,12 @@
         )
 
         (§ reify #_"SignExtend" (SignExtend'new-0)
-            #_unused
+            #_unused
             (§ override! #_"Constant" SignExtend''foldConstant-4 [#_"SignExtend" this, #_"int" inputBits, #_"int" resultBits, #_"Constant" constant]
                 (JavaConstant/forPrimitiveInt resultBits, (CodeUtil/signExtend (#_"PrimitiveConstant" .asLong constant), inputBits))
             )
 
-            #_unused
+            #_unused
             (§ override! #_"Stamp" SignExtend''foldStamp-4 [#_"SignExtend" this, #_"int" inputBits, #_"int" resultBits, #_"Stamp" stamp]
                 (if (Stamp''isEmpty-1 stamp)
                     (IntegerStamp''empty-1 (StampFactory'forInteger-1 resultBits))
@@ -10215,7 +9937,7 @@
                 )
             )
 
-            #_unused
+            #_unused
             (§ override! #_"Stamp" SignExtend''invertStamp-4 [#_"SignExtend" this, #_"int" inputBits, #_"int" resultBits, #_"Stamp" stamp]
                 (if (Stamp''isEmpty-1 stamp)
                     (IntegerStamp''empty-1 (StampFactory'forInteger-1 inputBits))
@@ -10229,12 +9951,12 @@
         )
 
         (§ reify #_"Narrow" (Narrow'new-0)
-            #_unused
+            #_unused
             (§ override! #_"Constant" Narrow''foldConstant-4 [#_"Narrow" this, #_"int" inputBits, #_"int" resultBits, #_"Constant" constant]
                 (JavaConstant/forPrimitiveInt resultBits, (CodeUtil/narrow (#_"PrimitiveConstant" .asLong constant), resultBits))
             )
 
-            #_unused
+            #_unused
             (§ override! #_"Stamp" Narrow''foldStamp-4 [#_"Narrow" this, #_"int" inputBits, #_"int" resultBits, #_"Stamp" stamp]
                 (cond
                     (Stamp''isEmpty-1 stamp) (IntegerStamp''empty-1 (StampFactory'forInteger-1 resultBits))
@@ -10270,34 +9992,34 @@
         (AbstractObjectStamp'new-4 type, exactType, never-nil?, always-nil?)
     )
 
-    #_unused
+    #_unused
     (§ override #_"ObjectStamp" ObjectStamp''copyWith-5 [#_"ObjectStamp" this, #_"ResolvedJavaType" type, #_"boolean" exactType, #_"boolean" never-nil?, #_"boolean" always-nil?]
         (ObjectStamp'new-4 type, exactType, never-nil?, always-nil?)
     )
 
-    #_unused
+    #_unused
     (§ override #_"Stamp" ObjectStamp''unrestricted-1 [#_"ObjectStamp" this]
         StampFactory'objectStamp
     )
 
-    #_unused
+    #_unused
     (§ override #_"boolean" ObjectStamp''isCompatible-2 [#_"ObjectStamp" this, #_"Stamp" other]
         (or (= this other) (instance? ObjectStamp other))
     )
 
-    #_unused
+    #_unused
     (§ override #_"boolean" ObjectStamp''isCompatible-2 [#_"ObjectStamp" this, #_"Constant" constant]
         (and (instance? JavaConstant constant)
             (#_"JavaKind" .isObject (#_"JavaConstant" .getJavaKind constant))
         )
     )
 
-    #_unused
+    #_unused
     (§ override #_"LIRKind" ObjectStamp''getLIRKind-1 [#_"ObjectStamp" this]
         (LIRKindTool'getObjectKind-0)
     )
 
-    #_unused
+    #_unused
     (§ override #_"Constant" ObjectStamp''readConstant-4 [#_"ObjectStamp" this, #_"MemoryAccessProvider" provider, #_"Constant" base, #_"long" displacement]
         (try
             (#_"MemoryAccessProvider" .readObjectConstant provider, base, displacement)
@@ -10330,7 +10052,7 @@
         (if (instance? PrimitiveStamp stamp) (:bits stamp) 0)
     )
 
-    #_unused
+    #_unused
     (§ override #_"Constant" PrimitiveStamp''readConstant-4 [#_"PrimitiveStamp" this, #_"MemoryAccessProvider" provider, #_"Constant" base, #_"long" displacement]
         (try
             (#_"MemoryAccessProvider" .readPrimitiveConstant provider, (Stamp''getStackKind-1 this), base, displacement, (:bits this))
@@ -10350,69 +10072,69 @@
         (AbstractPointerStamp'new-2 false, false)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"LIRKind" RawPointerStamp''getLIRKind-1 [#_"RawPointerStamp" this]
         (LIRKindTool'getWordKind-0)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"AbstractPointerStamp" RawPointerStamp''copyWith-3 [#_"RawPointerStamp" this, #_"boolean" newNonNull, #_"boolean" newAlwaysNull]
         ;; RawPointerStamp is a singleton
         this
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Stamp" RawPointerStamp''meet-2 [#_"RawPointerStamp" this, #_"Stamp" other]
         this
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Stamp" RawPointerStamp''improveWith-2 [#_"RawPointerStamp" this, #_"Stamp" other]
         this
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Stamp" RawPointerStamp''join-2 [#_"RawPointerStamp" this, #_"Stamp" other]
         this
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Stamp" RawPointerStamp''unrestricted-1 [#_"RawPointerStamp" this]
         this
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Stamp" RawPointerStamp''empty-1 [#_"RawPointerStamp" this]
         ;; there is no empty pointer stamp
         this
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" RawPointerStamp''hasValues-1 [#_"RawPointerStamp" this]
         true
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ResolvedJavaType" RawPointerStamp''javaType-1 [#_"RawPointerStamp" this]
         (throw! "pointer has no Java type")
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Stamp" RawPointerStamp''constant-2 [#_"RawPointerStamp" this, #_"Constant" constant]
         this
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" RawPointerStamp''isCompatible-2 [#_"RawPointerStamp" this, #_"Stamp" other]
         (instance? RawPointerStamp other)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" RawPointerStamp''isCompatible-2 [#_"RawPointerStamp" this, #_"Constant" constant]
         (and (instance? PrimitiveConstant constant) (#_"JavaKind" .isNumericInteger (#_"PrimitiveConstant" .getJavaKind constant)))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Constant" RawPointerStamp''readConstant-4 [#_"RawPointerStamp" this, #_"MemoryAccessProvider" provider, #_"Constant" base, #_"long" displacement]
         (throw! "can't read raw pointer")
     )
@@ -10631,7 +10353,7 @@
         (StampFactory'forKind-1 JavaKind/Int)
     )
 
-    #_unused
+    #_unused
     (§ defn #_"Stamp" StampFactory'empty-1 [#_"JavaKind" kind]
         (nth StampFactory'emptyStampCache (#_"JavaKind" .ordinal kind))
     )
@@ -10651,7 +10373,7 @@
      ;
      ; @return a new stamp with the appropriate bounds and masks
      ;;
-    #_unused
+    #_unused
     (§ defn #_"IntegerStamp" StampFactory'forIntegerWithMask-4 [#_"int" bits, #_"long" lower, #_"long" upper, #_"IntegerStamp" maskStamp]
         (let [
             #_"IntegerStamp" limit (StampFactory'forInteger-3 bits, lower, upper)
@@ -10672,7 +10394,7 @@
         (IntegerStamp'create-5 bits, (CodeUtil/minValue bits), (CodeUtil/maxValue bits), 0, (CodeUtil/mask bits))
     )
 
-    #_unused
+    #_unused
     (§ defn #_"IntegerStamp" StampFactory'forUnsignedInteger-1 [#_"int" bits]
         (StampFactory'forUnsignedInteger-5 bits, 0, (NumUtil'maxValueUnsigned-1 bits), 0, (CodeUtil/mask bits))
     )
@@ -10879,7 +10601,7 @@
     ;;;
      ; @return a new reference that is guaranteed to be exact
      ;;
-    #_unused
+    #_unused
     (§ method! #_"TypeReference" TypeReference''asExactReference-1 [#_"TypeReference" this]
         (if (:exactReference this) this (TypeReference'new-2 (:type this), true))
     )
@@ -10908,78 +10630,78 @@
         (Stamp'new-0)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Stamp" VoidStamp''unrestricted-1 [#_"VoidStamp" this]
         this
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" VoidStamp''isUnrestricted-1 [#_"VoidStamp" this]
         true
     )
 
-    #_unused
+    #_unused
     (§ override! #_"JavaKind" VoidStamp''getStackKind-1 [#_"VoidStamp" this]
         JavaKind/Void
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Stamp" VoidStamp''improveWith-2 [#_"VoidStamp" this, #_"Stamp" other]
         this
     )
 
-    #_unused
+    #_unused
     (§ override! #_"LIRKind" VoidStamp''getLIRKind-1 [#_"VoidStamp" this]
         (throw! "void stamp has no value")
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ResolvedJavaType" VoidStamp''javaType-1 [#_"VoidStamp" this]
         (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, void'class)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" VoidStamp''alwaysDistinct-2 [#_"VoidStamp" this, #_"Stamp" other]
         (not= this other)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Stamp" VoidStamp''meet-2 [#_"VoidStamp" this, #_"Stamp" other]
         this
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Stamp" VoidStamp''join-2 [#_"VoidStamp" this, #_"Stamp" other]
         this
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" VoidStamp''isCompatible-2 [#_"VoidStamp" this, #_"Stamp" stamp]
         (instance? VoidStamp stamp)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" VoidStamp''isCompatible-2 [#_"VoidStamp" this, #_"Constant" constant]
         false
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Stamp" VoidStamp''empty-1 [#_"VoidStamp" this]
         ;; the void stamp is always empty
         this
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" VoidStamp''hasValues-1 [#_"VoidStamp" this]
         false
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Constant" VoidStamp''readConstant-4 [#_"VoidStamp" this, #_"MemoryAccessProvider" provider, #_"Constant" base, #_"long" displacement]
         (throw! "can't read values of void stamp")
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Stamp" VoidStamp''constant-2 [#_"VoidStamp" this, #_"Constant" constant]
         (throw! "void stamp has no value")
     )
@@ -11021,7 +10743,7 @@
         (quot (#_"BitSet" .size (:map this)) (:bitsPerSlot this))
     )
 
-    #_unused
+    #_unused
     (§ method! #_"boolean" BitMap2D''isValidIndex-3 [#_"BitMap2D" this, #_"int" slotIndex, #_"int" bitWithinSlotIndex]
         (< (BitMap2D''bitIndex-3 this, slotIndex, bitWithinSlotIndex) (BitMap2D''sizeInBits-1 this))
     )
@@ -11040,7 +10762,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ method! #_"BitMap2D" BitMap2D''atPutGrow-4 [#_"BitMap2D" this, #_"int" slotIndex, #_"int" bitWithinSlotIndex, #_"boolean" value?]
         (let [
             #_"int" size (BitMap2D''sizeInSlots-1 this)
@@ -11062,7 +10784,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ method! #_"void" BitMap2D''clear-1 [#_"BitMap2D" this]
         (#_"BitSet" .clear (:map this))
         nil
@@ -11171,7 +10893,7 @@
     ;;;
      ; Sets the size of this list to 0.
      ;;
-    #_unused
+    #_unused
     (§ method! #_"IntList" IntList''clear-1 [#_"IntList" this]
         (assoc this :size 0)
     )
@@ -11245,7 +10967,7 @@
         (UnsignedLong'new-1 (- (:value this) unsignedValue))
     )
 
-    #_unused
+    #_unused
     (§ method! #_"UnsignedLong" UnsignedLong''plus-2 [#_"UnsignedLong" this, #_"long" unsignedValue]
         (when (neg? (Long/compareUnsigned (- 0xffffffffffffffff unsignedValue), (:value this)))
             (throw (ArithmeticException.))
@@ -11267,7 +10989,7 @@
         (LIRPhase'new-0)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" LIRGenerationPhase''run-3 [#_"LIRGenerationPhase" this, #_"LIRGenerationResult" lirGenRes, #_"LIRGenerationContext" context]
         (doseq [#_"Block" block (:reversePostOrder (:cfg (:lir lirGenRes)))]
             (§ ass! (:nodeLirBuilder context) (LIRBuilder''doBlock-4 (:nodeLirBuilder context), block, (:graph context), (:blockToNodesMap (:schedule context))))
@@ -11474,7 +11196,7 @@
      ;
      ; @param node the node whose edges are to be cleared
      ;;
-    #_unused
+    #_unused
     (§ method #_"void" Edges''clear-2 [#_"Edges" this, #_"Node" node]
         (let [
             #_"int" i
@@ -11550,7 +11272,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override #_"void" Edges''set-4 [#_"Edges" this, #_"Object" node, #_"int" index, #_"Object" value]
         (throw (IllegalArgumentException. (str "Cannot call set on " this)))
     )
@@ -11600,7 +11322,7 @@
 
     (§ abstract #_"void" Edges''update-4 [#_"Edges" this, #_"Node" node, #_"Node" oldValue, #_"Node" newValue])
 
-    #_unused
+    #_unused
     (§ method #_"boolean" Edges''contains-3 [#_"Edges" this, #_"Node" node, #_"Node" value]
         (or
             (loop-when [#_"int" i 0] (< i (:directCount this)) => false
@@ -11714,7 +11436,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" EdgesIterator''hasNext-1 [#_"EdgesIterator" this]
         (when (:needsForward this)
             (§ ass! this (EdgesIterator''forward-1 this))
@@ -11722,7 +11444,7 @@
         (< (:index this) (count (:offsets (:edges this))))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Position" EdgesIterator''next-1 [#_"EdgesIterator" this]
         (when (:needsForward this)
             (§ ass! this (EdgesIterator''forward-1 this))
@@ -11766,7 +11488,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" GraphNodeIterator''hasNext-1 [#_"GraphNodeIterator" this]
         (§ ass! this (GraphNodeIterator''checkForDeletedNode-1 this))
         (< (:index this) (:nodesSize (:graph this)))
@@ -11776,7 +11498,7 @@
         (loop-when-recur this (and (< (:index this) (:nodesSize (:graph this))) (nil? (nth (:nodes (:graph this)) (:index this)))) (update this :index inc) => this)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Node" GraphNodeIterator''next-1 [#_"GraphNodeIterator" this]
         (try
             (nth (:nodes (:graph this)) (:index this))
@@ -11820,7 +11542,7 @@
         (nth (:isOptional this) index)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" InputEdges''update-4 [#_"InputEdges" this, #_"Node" node, #_"Node" oldValue, #_"Node" newValue]
         (Node''updateUsages-3 node, oldValue, newValue)
         nil
@@ -11891,7 +11613,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" IterativeNodeWorkList''add-2 [#_"IterativeNodeWorkList" this, #_"Node" node]
         (when (some? node)
             (when (and (nil? (:inQueue this)) (< IterativeNodeWorkList'EXPLICIT_BITMAP_THRESHOLD (#_"Queue" .size (:worklist this))))
@@ -11919,7 +11641,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" IterativeNodeWorkList''contains-2 [#_"IterativeNodeWorkList" this, #_"Node" node]
         (if (some? (:inQueue this))
             (NodeBitMap''isMarked-2 (:inQueue this), node)
@@ -11963,12 +11685,12 @@
         (PredicatedProxyNodeIterator'new-2 (#_"Iterable" .iterator (:nodeIterable this)), (:predicate this))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"<F extends T> FilteredNodeIterable<F>" FilteredNodeIterable''filter-2 [#_"FilteredNodeIterable<T extends Node>" this, #_"Class<F>" clazz]
         (FilteredNodeIterable''and-2 this, (PositiveTypePredicate'new-1 clazz))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"FilteredNodeIterable<T>" FilteredNodeIterable''filter-2 [#_"FilteredNodeIterable<T extends Node>" this, #_"NodePredicate" p]
         (FilteredNodeIterable''and-2 this, p)
     )
@@ -12045,13 +11767,13 @@
 
     (§ abstract #_"void" NodeIterator''forward-1 [#_"NodeIterator<T extends Node>" this])
 
-    #_unused
+    #_unused
     (§ override #_"boolean" NodeIterator''hasNext-1 [#_"NodeIterator<T extends Node>" this]
         (NodeIterator''forward-1 this)
         (some? (:current this))
     )
 
-    #_unused
+    #_unused
     (§ override #_"T" NodeIterator''next-1 [#_"NodeIterator<T extends Node>" this]
         (NodeIterator''forward-1 this)
         (let [
@@ -12068,7 +11790,7 @@
 (§ interface NodePredicate (§ extends Predicate #_"<Node>")
     (§ abstract #_"boolean" NodePredicate''apply-2 [#_"NodePredicate" this, #_"Node" n])
 
-    #_unused
+    #_unused
     (§ default! #_"boolean" NodePredicate''test-2 [#_"NodePredicate" this, #_"Node" n]
         (NodePredicate''apply-2 this, n)
     )
@@ -12091,12 +11813,12 @@
         (Object.)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" TautologyPredicate''apply-2 [#_"TautologyPredicate" this, #_"Node" n]
         true
     )
 
-    #_unused
+    #_unused
     (§ override! #_"NodePredicate" TautologyPredicate''and-2 [#_"TautologyPredicate" this, #_"NodePredicate" np]
         np
     )
@@ -12110,12 +11832,12 @@
         (Object.)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" ContradictionPredicate''apply-2 [#_"ContradictionPredicate" this, #_"Node" n]
         false
     )
 
-    #_unused
+    #_unused
     (§ override! #_"NodePredicate" ContradictionPredicate''and-2 [#_"ContradictionPredicate" this, #_"NodePredicate" np]
         this
     )
@@ -12138,7 +11860,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" AndPredicate''apply-2 [#_"AndPredicate" this, #_"Node" n]
         (and (NodePredicate''apply-2 (:a this), n) (NodePredicate''apply-2 (:b this), n))
     )
@@ -12150,7 +11872,7 @@
 (final-ns NotPredicate (§ implements NodePredicate)
     (§ final #_"NodePredicate" :a nil)
 
-    #_unused
+    #_unused
     (§ defn #_"NotPredicate" NotPredicate'new-1 [#_"NodePredicate" n]
         (let [
             #_"NotPredicate" this (Object.)
@@ -12160,12 +11882,12 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" NotPredicate''apply-2 [#_"NotPredicate" this, #_"Node" n]
         (not (NodePredicate''apply-2 (:a this), n))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"NodePredicate" NotPredicate''negate-1 [#_"NotPredicate" this]
         (:a this)
     )
@@ -12212,7 +11934,7 @@
         this
     )
 
-    #_unused
+    #_unused
     (§ override! #_"NodePredicate" PositiveTypePredicate''negate-1 [#_"PositiveTypePredicate" this]
         (NegativeTypePredicate'new-1 this)
     )
@@ -12259,7 +11981,7 @@
         this
     )
 
-    #_unused
+    #_unused
     (§ override! #_"NodePredicate" NegativeTypePredicate''negate-1 [#_"NegativeTypePredicate" this]
         (PositiveTypePredicate'new-1 this)
     )
@@ -12279,7 +12001,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" PredicatedProxyNodeIterator''forward-1 [#_"PredicatedProxyNodeIterator<T extends Node>" this]
         (loop-when-recur [] (and (or (nil? (:current this)) (not (Node''isAlive-1 (:current this))) (not (NodePredicate''apply-2 (:predicate this), (:current this)))) (#_"Iterator" .hasNext (:iterator this))) []
             (§ ass! this (assoc this :current (#_"Iterator" .next (:iterator this))))
@@ -12566,7 +12288,7 @@
         (<= Node'ALIVE_ID_START (:id this))
     )
 
-    #_unused
+    #_unused
     (§ method! #_"boolean" Node''isUnregistered-1 [#_"Node" this]
         (= (:id this) Node'INITIAL_ID)
     )
@@ -12656,7 +12378,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ method! #_"void" Node''replaceAtUsagesAndDelete-3 [#_"Node" this, #_"Node" other, #_"Predicate<Node>" filter]
         (Node''replaceAtUsages-4 this, other, filter, this)
         (Node''safeDelete-1 this)
@@ -12930,7 +12652,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ method #_"Iterable<? extends Node>" Node''cfgPredecessors-1 [#_"Node" this]
         (if (some? (:predecessor this)) (Collections/singleton (:predecessor this)) (Collections/emptySet))
     )
@@ -12984,7 +12706,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ method! #_"void" Node''pushInputs-2 [#_"Node" this, #_"NodeStack" stack]
         (NodeClass''pushInputs-3 (:nodeClass this), this, stack)
         nil
@@ -13087,7 +12809,7 @@
      ; an injected Stamp parameter. Calling
      ; AbstractPointerStamp#nonNull() on the injected stamp is guaranteed to return true.
      ;;
-    (§ value #_"boolean" injectedStampIsNonNull false)
+    (§ value #_"boolean" injectedStampIsNonNull false)
 )
 
 ;;;
@@ -13217,7 +12939,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ method! #_"void" NodeBitMap''intersect-2 [#_"NodeBitMap" this, #_"NodeBitMap" other]
         (let [
             #_"int" n (min (count (:bits this)) (count (:bits other)))
@@ -13232,7 +12954,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ method! #_"void" NodeBitMap''subtract-2 [#_"NodeBitMap" this, #_"NodeBitMap" other]
         (let [
             #_"int" n (min (count (:bits this)) (count (:bits other)))
@@ -13244,7 +12966,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ method! #_"NodeBitMap" NodeBitMap''union-2 [#_"NodeBitMap" this, #_"NodeBitMap" other]
         (let [
             this (NodeBitMap''grow-1 this)
@@ -13381,7 +13103,7 @@
         (<= 0 (:currentNodeId this))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Node" MarkedNodeIterator''next-1 [#_"MarkedNodeIterator" this]
         (when-not (MarkedNodeIterator''hasNext-1 this)
             (throw (NoSuchElementException.))
@@ -13523,7 +13245,7 @@
 
     (§ mutable #_"String" :shortName nil)
 
-    #_unused
+    #_unused
     (§ method! #_"String" NodeClass''shortName-1 [#_"NodeClass<T>" this]
         (when (nil? (:shortName this))
             (let [
@@ -13538,14 +13260,9 @@
         (:shortName this)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Fields[]" NodeClass''getAllFields-1 [#_"NodeClass<T>" this]
         (into-array Fields [ (:data this), (:inputs this), (:successors this) ])
-    )
-
-    #_unused
-    (§ defn #_"int" NodeClass'allocatedNodeIterabledIds-0 []
-        (#_"AtomicInteger" .get NodeClass'nextIterableId)
     )
 
     (§ defn- #_"boolean" NodeClass'deepEquals0-2 [#_"Object" e1, #_"Object" e2]
@@ -13815,7 +13532,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ method! #_"boolean" NodeClass''equalSuccessors-3 [#_"NodeClass<T>" this, #_"Node" node, #_"Node" other]
         (NodeClass''equalEdges-4 this, node, other, (:successorIteration this))
     )
@@ -14134,7 +13851,7 @@
     ;;;
      ; Sorts non-list edges before list edges.
      ;;
-    #_unused
+    #_unused
     (§ override #_"int" EdgeInfo''compareTo-2 [#_"EdgeInfo" this, #_"FieldInfo" o]
         (if (#_"Class" .isAssignableFrom NodeList, (:type o))
             (when-not (#_"Class" .isAssignableFrom NodeList, (:type this))
@@ -14192,7 +13909,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" NodeFieldsScanner''scanField-3 [#_"NodeFieldsScanner" this, #_"Field" field, #_"long" offset]
         (let [
             #_"Input" inputAnnotation (#_"AnnotatedElement" .getAnnotation field, Input)
@@ -14302,7 +14019,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" RawEdgesIterator''hasNext-1 [#_"RawEdgesIterator" this]
         (let [
             #_"Node" next (:nextValue this)
@@ -14327,7 +14044,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Node" RawEdgesIterator''next-1 [#_"RawEdgesIterator" this]
         (let [
             #_"Node" next (:nextValue this)
@@ -14392,7 +14109,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ method! #_"Position" RawEdgesIterator''nextPosition-1 [#_"RawEdgesIterator" this]
         nil
     )
@@ -14420,7 +14137,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ method! #_"NodeFlood" NodeFlood''addAll-2 [#_"NodeFlood" this, #_"Iterable<? extends Node>" nodes]
         (reduce NodeFlood''add-2 this nodes)
     )
@@ -14429,7 +14146,7 @@
         (NodeBitMap''isMarked-2 (:visited this), node)
     )
 
-    #_unused
+    #_unused
     (§ method! #_"boolean" NodeFlood''isNew-2 [#_"NodeFlood" this, #_"Node" node]
         (NodeBitMap''isNew-2 (:visited this), node)
     )
@@ -14446,66 +14163,6 @@
                 (§ override! #_"Node" #_"Iterator" .next [#_"Iterator<Node>" this]
                     (#_"Queue" .remove (:worklist flood))
                 )
-            )
-        )
-    )
-
-    #_unused
-    (§ method! #_"Iterable<Node>" NodeFlood''unmarkedNodes-1 [#_"NodeFlood" this]
-        (let [
-            #_"NodeFlood" flood this
-        ]
-            (§ reify #_"Iterable<Node>" (Iterable.)
-                (§ override! #_"Iterator<Node>" #_"Iterable" .iterator [#_"Iterable<Node>" this]
-                    (UnmarkedNodeIterator'new-2 (:visited flood), (#_"Iterable" .iterator (Graph''getNodes-1 (:graph (:visited flood)))))
-                )
-            )
-        )
-    )
-)
-
-;;;
- ; @anno NodeFlood.UnmarkedNodeIterator
- ;;
-(final-ns UnmarkedNodeIterator (§ implements Iterator #_"<Node>")
-    (§ final #_"NodeBitMap" :visited nil)
-    (§ mutable #_"Iterator<Node>" :nodes nil)
-    (§ mutable #_"Node" :nextNode nil)
-
-    (§ defn #_"UnmarkedNodeIterator" UnmarkedNodeIterator'new-2 [#_"NodeBitMap" visited, #_"Iterator<Node>" nodes]
-        (let [
-            #_"UnmarkedNodeIterator" this (Object.)
-            this (assoc this :visited visited)
-            this (assoc this :nodes nodes)
-        ]
-            (§ ass! this (UnmarkedNodeIterator''forward-1 this))
-            this
-        )
-    )
-
-    (§ method- #_"UnmarkedNodeIterator" UnmarkedNodeIterator''forward-1 [#_"UnmarkedNodeIterator" this]
-        (loop [this this]
-            (when (#_"Iterator" .hasNext (:nodes this)) => (assoc this :nextNode nil)
-                (let [
-                    this (assoc this :nextNode (#_"Iterator" .next (:nodes this)))
-                ]
-                    (recur-if (NodeBitMap''isMarked-2 (:visited this), (:nextNode this)) [this] => this)
-                )
-            )
-        )
-    )
-
-    #_unused
-    (§ override! #_"boolean" UnmarkedNodeIterator''hasNext-1 [#_"UnmarkedNodeIterator" this]
-        (some? (:nextNode this))
-    )
-
-    #_unused
-    (§ override! #_"Node" UnmarkedNodeIterator''next-1 [#_"UnmarkedNodeIterator" this]
-        (try
-            (:nextNode this)
-            (finally
-                (§ ass! this (UnmarkedNodeIterator''forward-1 this))
             )
         )
     )
@@ -14528,7 +14185,7 @@
         (NodeList'new-2 self, elements)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" NodeInputList''update-3 [#_"NodeInputList<T extends Node>" this, #_"T" oldNode, #_"T" newNode]
         (Node''updateUsages-3 (:self this), oldNode, newNode)
         nil
@@ -14536,7 +14193,7 @@
 )
 
 (final-ns NodeSuccessorList #_"<T extends Node>" (§ extends NodeList #_"<T>")
-    #_unused
+    #_unused
     (§ defn #_"NodeSuccessorList" NodeSuccessorList'new-1 [#_"Node" self]
         (NodeList'new-1 self)
     )
@@ -14553,7 +14210,7 @@
         (NodeList'new-2 self, elements)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" NodeSuccessorList''update-3 [#_"NodeSuccessorList<T extends Node>" this, #_"T" oldNode, #_"T" newNode]
         (Node''updatePredecessor-3 (:self this), oldNode, newNode)
         nil
@@ -14768,7 +14425,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ method #_"void" NodeList''replace-3 [#_"NodeList<T extends Node>" this, #_"T" node, #_"T" other]
         (dotimes [#_"int" i (count this)]
             (when (= (nth (:nodes this) i) node)
@@ -14824,12 +14481,12 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" NodeListIterator''hasNext-1 [#_"NodeListIterator<R extends Node>" this]
         (< (:index this) (:size (:list this)))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"R" NodeListIterator''next-1 [#_"NodeListIterator<R extends Node>" this]
         (let [
             _ (§ cast #_"R" (nth (:nodes (:list this)) (:index this)))
@@ -14885,11 +14542,6 @@
         (and (= (:graph node) (:graph this)) (some? (NodeMap''get-2 this, node)))
     )
 
-    #_unused
-    (§ method! #_"boolean" NodeMap''containsValue-2 [#_"NodeMap<T>" this, #_"Object" value]
-        (loop [#_"ISeq" s (seq (:values this))] (and (some? s) (or (= (first s) value) (recur (next s)))))
-    )
-
     (§ method! #_"void" NodeMap''set-3 [#_"NodeMap<T>" this, #_"Node" node, #_"T" value]
         (aset (:values this) (:id node) value)
         nil
@@ -14919,7 +14571,7 @@
         (<= (NodeMap''capacity-1 this) (:id node))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" NodeMap''clear-1 [#_"NodeMap<T>" this]
         (Arrays/fill (:values this), nil)
         nil
@@ -14963,7 +14615,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"MapCursor<Node, T>" NodeMap''getEntries-1 [#_"NodeMap<T>" this]
         (let [
             #_"NodeMap" nodeMap this
@@ -14997,7 +14649,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Iterable<T>" NodeMap''getValues-1 [#_"NodeMap<T>" this]
         (let [
             #_"NodeMap" nodeMap this
@@ -15045,12 +14697,12 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"T" NodeMap''removeKey-2 [#_"NodeMap<T>" this, #_"Node" key]
         (NodeMap''put-3 this, key, nil)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" NodeMap''replaceAll-2 [#_"NodeMap<T>" this, #_"BiFunction<? super Node, ? super T, ? extends T>" function]
         (doseq [#_"Node" n (NodeMap''getKeys-1 this)]
             (NodeMap''put-3 this, n, (#_"BiFunction" .apply function, n, (NodeMap''get-2 this, n)))
@@ -15140,22 +14792,22 @@
         (NodeUsageIterator'new-1 (:node this))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Node" NodeUsageIterable''first-1 [#_"NodeUsageIterable" this]
         (:usage0 (:node this))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" NodeUsageIterable''isEmpty-1 [#_"NodeUsageIterable" this]
         (nil? (:usage0 (:node this)))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" NodeUsageIterable''isNotEmpty-1 [#_"NodeUsageIterable" this]
         (some? (:usage0 (:node this)))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"int" NodeUsageIterable''count-1 [#_"NodeUsageIterable" this]
         (Node''getUsageCount-1 (:node this))
     )
@@ -15195,12 +14847,12 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" NodeUsageIterator''hasNext-1 [#_"NodeUsageIterator" this]
         (some? (:current this))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Node" NodeUsageIterator''next-1 [#_"NodeUsageIterator" this]
         (let [
             #_"Node" result (:current this)
@@ -15241,7 +14893,7 @@
 
     (§ abstract #_"void" NodeWorkList''add-2 [#_"NodeWorkList" this, #_"Node" node])
 
-    #_unused
+    #_unused
     (§ abstract #_"boolean" NodeWorkList''contains-2 [#_"NodeWorkList" this, #_"Node" node])
 )
 
@@ -15284,11 +14936,6 @@
         (InputEdges''getInputType-2 (:edges this), (:index this))
     )
 
-    #_unused
-    (§ method! #_"boolean" Position''isInputOptional-1 [#_"Position" this]
-        (InputEdges''isOptional-2 (:edges this), (:index this))
-    )
-
     (§ method! #_"void" Position''set-3 [#_"Position" this, #_"Node" node, #_"Node" value]
         (if (< (:index this) (:directCount (:edges this)))
             (Edges''setNode-4 (:edges this), node, (:index this), value)
@@ -15318,7 +14965,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" SingletonNodeWorkList''add-2 [#_"SingletonNodeWorkList" this, #_"Node" node]
         (when (some? node)
             (when-not (NodeBitMap''isMarkedAndGrow-2 (:visited this), node)
@@ -15329,7 +14976,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" SingletonNodeWorkList''contains-2 [#_"SingletonNodeWorkList" this, #_"Node" node]
         (NodeBitMap''isMarked-2 (:visited this), node)
     )
@@ -15424,8 +15071,7 @@
      ;;
     (§ abstract #_"T" Unary''getValue-1 [#_"Unary<T extends Node>" this])
 
-    #_unused
-    (§ default #_"T" Unary''canonical-2 [#_"Unary<T extends Node>" this, #_"CanonicalizerTool" tool]
+    (§ default #_"T" Canonicalizable''canonical-2 [#_"Unary<T extends Node>" this, #_"CanonicalizerTool" tool]
         (Unary''canonical-3 this, tool, (Unary''getValue-1 this))
     )
 )
@@ -15448,8 +15094,7 @@
      ;;
     (§ abstract #_"Node" Binary''canonical-4 [#_"Binary<T extends Node>" this, #_"CanonicalizerTool" tool, #_"T" forX, #_"T" forY])
 
-    #_unused
-    (§ default #_"T" Binary''canonical-2 [#_"Binary<T extends Node>" this, #_"CanonicalizerTool" tool]
+    (§ default #_"T" Canonicalizable''canonical-2 [#_"Binary<T extends Node>" this, #_"CanonicalizerTool" tool]
         (Binary''canonical-4 this, tool, (:x this), (:y this))
     )
 )
@@ -15497,7 +15142,7 @@
  ; (in terms of simplification and canonicalization) by the actions performed in simplify.
  ;;
 (§ interface Simplifiable
-    #_unused
+    #_unused
     (§ abstract #_"void" Simplifiable''simplify-2 [#_"Simplifiable" this, #_"SimplifierTool" tool])
 )
 
@@ -15519,7 +15164,7 @@
         (Edges'new-3 EdgesType'Successors, directCount, edges)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" SuccessorEdges''update-4 [#_"SuccessorEdges" this, #_"Node" node, #_"Node" oldValue, #_"Node" newValue]
         (Node''updatePredecessor-3 node, oldValue, newValue)
         nil
@@ -15611,12 +15256,12 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" TypedGraphNodeIterator''hasNext-1 [#_"TypedGraphNodeIterator<T extends IterableNodeType>" this]
         (some? (TypedGraphNodeIterator''findNext-1 this))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"T" TypedGraphNodeIterator''next-1 [#_"TypedGraphNodeIterator<T extends IterableNodeType>" this]
         (let [
             #_"Node" result (TypedGraphNodeIterator''findNext-1 this)
@@ -15637,8 +15282,7 @@
         (LIRInstruction'new-1 AMD64DeoptimizeOp'TYPE)
     )
 
-    #_unused
-    (§ override! #_"void" AMD64DeoptimizeOp''emitCode-2 [#_"AMD64DeoptimizeOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"AMD64DeoptimizeOp" this, #_"Assembler" asm]
         (AMD64Call'directCall-4 asm, (ForeignCalls''lookupForeignCall-2 HotSpot'foreignCalls, ForeignCallDescriptor'UNCOMMON_TRAP_HANDLER), nil, false)
         nil
     )
@@ -15665,8 +15309,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" CRuntimeCallEpilogueOp''emitCode-2 [#_"CRuntimeCallEpilogueOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"CRuntimeCallEpilogueOp" this, #_"Assembler" asm]
         ;; reset last Java frame
         (Assembler''movslq-3 asm, (AMD64Address'new-2 (:thread this), (:threadLastJavaSpOffset this)), 0)
         (Assembler''movslq-3 asm, (AMD64Address'new-2 (:thread this), (:threadLastJavaFpOffset this)), 0)
@@ -15692,8 +15335,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" CRuntimeCallPrologueOp''emitCode-2 [#_"CRuntimeCallPrologueOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"CRuntimeCallPrologueOp" this, #_"Assembler" asm]
         ;; save last Java frame
         (Assembler''movq-3 asm, (AMD64Address'new-2 (:thread this), (:threadLastJavaSpOffset this)), AMD64/rsp)
         nil
@@ -15711,8 +15353,7 @@
         (EpilogueBlockEndOp'new-1 DeoptimizeCallerOp'TYPE)
     )
 
-    #_unused
-    (§ override! #_"void" DeoptimizeCallerOp''emitCode-2 [#_"DeoptimizeCallerOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"DeoptimizeCallerOp" this, #_"Assembler" asm]
         (EpilogueBlockEndOp''leaveFrameAndRestoreRbp-2 this, asm)
         (AMD64Call'directJmp-2 asm, (ForeignCalls''lookupForeignCall-2 HotSpot'foreignCalls, ForeignCallDescriptor'UNCOMMON_TRAP_HANDLER))
         nil
@@ -15738,10 +15379,9 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" DirectStaticCallOp''emitCode-2 [#_"DirectStaticCallOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"DirectStaticCallOp" this, #_"Assembler" asm]
         (Assembler''recordMark-2 asm, (if (= (:invokeKind this) InvokeKind'Static) HotSpot'invokestaticMark HotSpot'invokespecialMark))
-        (DirectCallOp''emitCode-2 (§ super ), asm)
+        (LIRInstruction''emitCode-2 (§ super ), asm)
         nil
     )
 )
@@ -15765,8 +15405,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" DirectVirtualCallOp''emitCode-2 [#_"DirectVirtualCallOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"DirectVirtualCallOp" this, #_"Assembler" asm]
         ;; The mark for an invocation that uses an inline cache must be placed
         ;; at the instruction that loads the Klass from the inline cache.
         (Assembler''recordMark-2 asm, (if (= (:invokeKind this) InvokeKind'Virtual) HotSpot'invokevirtualMark HotSpot'invokeinterfaceMark))
@@ -15790,7 +15429,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override #_"void" EpilogueBlockEndOp''setSavedRbp-2 [#_"EpilogueBlockEndOp" this, #_"AllocatableValue" value]
         (§ ass! this (assoc this :savedRbp value))
         nil
@@ -15801,7 +15440,7 @@
  ; Superclass for operations that use the value of RBP saved in a method's prologue.
  ;;
 (class-ns EpilogueOp (§ extends LIRInstruction) (§ implements AMD64HotSpotRestoreRbpOp)
-    #_unused
+    #_unused
     (§ defn #_"EpilogueOp" EpilogueOp'new-1 [#_"LIRInstructionClass<? extends EpilogueOp>" c]
         (LIRInstruction'new-1 c)
     )
@@ -15809,7 +15448,7 @@
     ; @Use({OperandFlag'REG, OperandFlag'STACK})
     (§ mutable #_"AllocatableValue" :savedRbp AMD64HotSpotRestoreRbpOp'PLACEHOLDER)
 
-    #_unused
+    #_unused
     (§ method #_"void" EpilogueOp''leaveFrameAndRestoreRbp-2 [#_"EpilogueOp" this, #_"Assembler" asm]
         (EpilogueOp'leaveFrameAndRestoreRbp-2 (:savedRbp this), asm)
         nil
@@ -15833,7 +15472,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override #_"void" EpilogueOp''setSavedRbp-2 [#_"EpilogueOp" this, #_"AllocatableValue" value]
         (§ ass! this (assoc this :savedRbp value))
         nil
@@ -15904,33 +15543,13 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" LoadConfigValueOp''emitCode-2 [#_"LoadConfigValueOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"LoadConfigValueOp" this, #_"Assembler" asm]
         (throw! "unimplemented")
     )
 )
 
-(value-ns AMD64HotSpotMove
-    #_unused
-    (§ defn #_"void" AMD64HotSpotMove'decodeKlassPointer-4 [#_"Assembler" asm, #_"Register" register, #_"Register" scratch, #_"AMD64Address" address]
-        (let [
-            #_"CompressEncoding" encoding HotSpot'klassEncoding
-        ]
-            (Assembler''movl-3 asm, register, address)
-            (when-not (zero? (:shift encoding))
-                (Assembler''shlq-3 asm, register, (:shift encoding))
-            )
-            (when (CompressEncoding''hasBase-1 encoding)
-                (Assembler''movq-3 asm, scratch, (:base encoding))
-                (Assembler''addq-3 asm, register, scratch)
-            )
-        )
-        nil
-    )
-)
-
 ;;;
- ; @anno AMD64HotSpotMove.HotSpotLoadObjectConstantOp
+ ; @anno AMD64HotSpotMove.HotSpotLoadObjectConstantOp
  ;;
 (final-ns HotSpotLoadObjectConstantOp (§ extends LIRInstruction) (§ implements LoadConstantOp)
     (§ def #_"LIRInstructionClass<HotSpotLoadObjectConstantOp>" HotSpotLoadObjectConstantOp'TYPE (LIRInstructionClass'new-1 HotSpotLoadObjectConstantOp))
@@ -15950,8 +15569,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" HotSpotLoadObjectConstantOp''emitCode-2 [#_"HotSpotLoadObjectConstantOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"HotSpotLoadObjectConstantOp" this, #_"Assembler" asm]
         (let [
             #_"boolean" compressed? (#_"HotSpotObjectConstant" .isCompressed (:input this))
         ]
@@ -15984,19 +15602,19 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Constant" HotSpotLoadObjectConstantOp''getConstant-1 [#_"HotSpotLoadObjectConstantOp" this]
         (:input this)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"AllocatableValue" HotSpotLoadObjectConstantOp''getResult-1 [#_"HotSpotLoadObjectConstantOp" this]
         (:result this)
     )
 )
 
 ;;;
- ; @anno AMD64HotSpotMove.BaseMove
+ ; @anno AMD64HotSpotMove.BaseMove
  ;;
 (final-ns BaseMove (§ extends LIRInstruction)
     (§ def #_"LIRInstructionClass<BaseMove>" BaseMove'TYPE (LIRInstructionClass'new-1 BaseMove))
@@ -16004,7 +15622,7 @@
     ; @Def({OperandFlag'REG, OperandFlag'HINT})
     (§ mutable #_"AllocatableValue" :result nil)
 
-    #_unused
+    #_unused
     (§ defn #_"BaseMove" BaseMove'new-1 [#_"AllocatableValue" result]
         (let [
             #_"BaseMove" this (LIRInstruction'new-1 BaseMove'TYPE)
@@ -16014,8 +15632,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" BaseMove''emitCode-2 [#_"BaseMove" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"BaseMove" this, #_"Assembler" asm]
         (Assembler''movq-3 asm, (#_"RegisterValue" .getRegister (:result this)), (Assembler'createPlaceholder-1 -1))
         (Assembler''recordMark-2 asm, HotSpot'narrowKlassBaseAddressMark)
         nil
@@ -16023,7 +15640,7 @@
 )
 
 ;;;
- ; @anno AMD64HotSpotMove.HotSpotLoadMetaspaceConstantOp
+ ; @anno AMD64HotSpotMove.HotSpotLoadMetaspaceConstantOp
  ;;
 (final-ns HotSpotLoadMetaspaceConstantOp (§ extends LIRInstruction) (§ implements LoadConstantOp)
     (§ def #_"LIRInstructionClass<HotSpotLoadMetaspaceConstantOp>" HotSpotLoadMetaspaceConstantOp'TYPE (LIRInstructionClass'new-1 HotSpotLoadMetaspaceConstantOp))
@@ -16043,8 +15660,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" HotSpotLoadMetaspaceConstantOp''emitCode-2 [#_"HotSpotLoadMetaspaceConstantOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"HotSpotLoadMetaspaceConstantOp" this, #_"Assembler" asm]
         (let [
             #_"boolean" compressed? (#_"HotSpotMetaspaceConstant" .isCompressed (:input this))
         ]
@@ -16070,12 +15686,12 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Constant" HotSpotLoadMetaspaceConstantOp''getConstant-1 [#_"HotSpotLoadMetaspaceConstantOp" this]
         (:input this)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"AllocatableValue" HotSpotLoadMetaspaceConstantOp''getResult-1 [#_"HotSpotLoadMetaspaceConstantOp" this]
         (:result this)
     )
@@ -16161,16 +15777,6 @@
                 ;; merge the reference information of the derived kind and the input
                 (recur (LIRKind'mergeReferenceInformation-2 derivedKind, valueKind) (inc i))
             )
-        )
-    )
-
-    #_unused
-    (§ defn- #_"boolean" LIRBuilder'isPhiInputFromBackedge-2 [#_"PhiNode" phi, #_"int" index]
-        (let [
-            #_"AbstractMergeNode" merge (PhiNode''merge-1 phi)
-            #_"AbstractEndNode" end (AbstractMergeNode''phiPredecessorAt-2 merge, index)
-        ]
-            (and (instance? LoopEndNode end) (= (:loopBegin end) merge))
         )
     )
 
@@ -16411,11 +16017,6 @@
 
     (§ method! #_"JumpOp" LIRBuilder''newJumpOp-2 [#_"LIRBuilder" this, #_"LabelRef" ref]
         (JumpOp'new-1 ref)
-    )
-
-    #_unused
-    (§ method! #_"LIRKind" LIRBuilder''getPhiKind-2 [#_"LIRBuilder" this, #_"PhiNode" phi]
-        (Stamp''getLIRKind-1 (:stamp phi))
     )
 
     (§ method! #_"void" LIRBuilder''emitBranch-5 [#_"LIRBuilder" this, #_"LogicNode" node, #_"LabelRef" trueSuccessor, #_"LabelRef" falseSuccessor, #_"double" trueSuccessorProbability]
@@ -16672,7 +16273,7 @@
         (RegisterAllocationConfig'new-0)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"RegisterArray" AMD64HotSpotRegisterAllocationConfig''initAllocatable-2 [#_"AMD64HotSpotRegisterAllocationConfig" this, #_"RegisterArray" registers]
         (let [
             #_"BitSet" regMap (BitSet. (#_"RegisterArray" .size (#_"RegisterConfig" .getAllocatableRegisters HotSpot'registerConfig)))
@@ -16732,8 +16333,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" AMD64HotSpotReturnOp''emitCode-2 [#_"AMD64HotSpotReturnOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"AMD64HotSpotReturnOp" this, #_"Assembler" asm]
         (EpilogueBlockEndOp''leaveFrameAndRestoreRbp-2 this, asm)
         (when-not (:isStub this)
             ;; Every non-stub compile method must have a poll before the return.
@@ -16777,8 +16377,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" SafepointOp''emitCode-2 [#_"SafepointOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"SafepointOp" this, #_"Assembler" asm]
         (SafepointOp'emitCode-4 asm, false, (:thread this), (when (instance? RegisterValue (:temp this)) (#_"RegisterValue" .getRegister (:temp this))))
         nil
     )
@@ -16823,8 +16422,7 @@
         (StrategySwitchOp'new-6 AMD64HotSpotStrategySwitchOp'TYPE, strategy, keyTargets, defaultTarget, key, scratch)
     )
 
-    #_unused
-    (§ override! #_"void" AMD64HotSpotStrategySwitchOp''emitCode-2 [#_"AMD64HotSpotStrategySwitchOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"AMD64HotSpotStrategySwitchOp" this, #_"Assembler" asm]
         (SwitchStrategy''run-2 (:strategy this), (HotSpotSwitchClosure'new-3 this, (#_"RegisterValue" .getRegister (:key this)), asm))
         nil
     )
@@ -16838,7 +16436,7 @@
         (AMD64SwitchClosure'new-3 op, keyRegister, asm)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" HotSpotSwitchClosure''emitComparison-2 [#_"HotSpotSwitchClosure" this, #_"Constant" constant]
         (when (instance? HotSpotMetaspaceConstant constant) => (AMD64SwitchClosure''emitComparison-2 (§ super ), constant)
             (if (#_"HotSpotMetaspaceConstant" .isCompressed constant)
@@ -16884,8 +16482,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" AMD64IndirectCallOp''emitCode-2 [#_"AMD64IndirectCallOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"AMD64IndirectCallOp" this, #_"Assembler" asm]
         (Assembler''recordMark-2 asm, HotSpot'inlineInvokeMark)
         (AMD64Call'indirectCall-3 asm, (#_"RegisterValue" .getRegister (:targetAddress this)), (:callTarget this))
         nil
@@ -16914,8 +16511,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" AMD64TailcallOp''emitCode-2 [#_"AMD64TailcallOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"AMD64TailcallOp" this, #_"Assembler" asm]
         ;; destroy the current frame (now the return address is the top of stack)
         (Assembler''leave-1 asm)
 
@@ -17183,8 +16779,7 @@
         (nth (:locks this) lockDepth)
     )
 
-    #_unused
-    (§ override! #_"void" LockStack''emitCode-2 [#_"LockStack" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"LockStack" this, #_"Assembler" asm]
         ;; do nothing
         nil
     )
@@ -17524,21 +17119,21 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"StampPair" HotSpotNodePlugin''interceptType-4 [#_"HotSpotNodePlugin" this, #_"GraphBuilderTool" b, #_"JavaType" declaredType, #_"boolean" never-nil?]
         (when (GraphBuilderTool''parsingIntrinsic-1 b)
             (WordOperationPlugin''interceptType-4 (:wordOperationPlugin this), b, declaredType, never-nil?)
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" HotSpotNodePlugin''handleInvoke-4 [#_"HotSpotNodePlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"ValueNode[]" args]
         (and (BytecodeParser''parsingIntrinsic-1 parser)
             (WordOperationPlugin''handleInvoke-4 (:wordOperationPlugin this), parser, method, args)
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" HotSpotNodePlugin''handleLoadField-4 [#_"HotSpotNodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaField" field]
         (or (and (instance? ConstantNode object)
                 (HotSpotNodePlugin'tryReadField-3 parser, field, (ValueNode''asJavaConstant-1 object))
@@ -17549,7 +17144,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" HotSpotNodePlugin''handleLoadStaticField-3 [#_"HotSpotNodePlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaField" field]
         (or (HotSpotNodePlugin'tryReadField-3 parser, field, nil)
             (and (BytecodeParser''parsingIntrinsic-1 parser)
@@ -17575,42 +17170,42 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" HotSpotNodePlugin''handleStoreField-5 [#_"HotSpotNodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaField" field, #_"ValueNode" value]
         (and (BytecodeParser''parsingIntrinsic-1 parser)
             (WordOperationPlugin''handleStoreField-5 (:wordOperationPlugin this), parser, object, field, value)
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" HotSpotNodePlugin''handleStoreStaticField-4 [#_"HotSpotNodePlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaField" field, #_"ValueNode" value]
         (and (BytecodeParser''parsingIntrinsic-1 parser)
             (WordOperationPlugin''handleStoreStaticField-4 (:wordOperationPlugin this), parser, field, value)
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" HotSpotNodePlugin''handleLoadIndexed-5 [#_"HotSpotNodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" array, #_"ValueNode" index, #_"JavaKind" elementKind]
         (and (BytecodeParser''parsingIntrinsic-1 parser)
             (WordOperationPlugin''handleLoadIndexed-5 (:wordOperationPlugin this), parser, array, index, elementKind)
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" HotSpotNodePlugin''handleStoreIndexed-6 [#_"HotSpotNodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" array, #_"ValueNode" index, #_"JavaKind" elementKind, #_"ValueNode" value]
         (and (BytecodeParser''parsingIntrinsic-1 parser)
             (WordOperationPlugin''handleStoreIndexed-6 (:wordOperationPlugin this), parser, array, index, elementKind, value)
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" HotSpotNodePlugin''handleCheckCast-4 [#_"HotSpotNodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaType" type]
         (and (BytecodeParser''parsingIntrinsic-1 parser)
             (WordOperationPlugin''handleCheckCast-4 (:wordOperationPlugin this), parser, object, type)
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" HotSpotNodePlugin''handleInstanceOf-4 [#_"HotSpotNodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaType" type]
         (and (BytecodeParser''parsingIntrinsic-1 parser)
             (WordOperationPlugin''handleInstanceOf-4 (:wordOperationPlugin this), parser, object, type)
@@ -17692,7 +17287,7 @@
         (WordOperationPlugin'new-0)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"LoadIndexedNode" HotSpotWordOperationPlugin''createLoadIndexedNode-3 [#_"HotSpotWordOperationPlugin" this, #_"ValueNode" array, #_"ValueNode" index]
         (let [
             #_"ResolvedJavaType" arrayType (StampTool'typeOrNull-1 (:stamp array))
@@ -17705,7 +17300,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" HotSpotWordOperationPlugin''handleInvoke-4 [#_"HotSpotWordOperationPlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"ValueNode[]" args]
         (and (WordTypes'isWordOperation-1 method)
             (let [
@@ -17713,7 +17308,7 @@
             ]
                 (if (some? operation)
                     (HotSpotWordOperationPlugin''processHotSpotWordOperation-5 this, parser, method, args, operation)
-                    (WordOperationPlugin''processWordOperation-4 this, parser, args, (WordTypes'getWordOperation-2 method, (#_"ResolvedJavaMethod" .getDeclaringClass (BytecodeParser''getMethod-1 parser))))
+                    (WordOperationPlugin''processWordOperation-4 this, parser, args, (WordTypes'getWordOperation-2 method, (#_"ResolvedJavaMethod" .getDeclaringClass (:method parser))))
                 )
                 true
             )
@@ -17776,9 +17371,11 @@
     (§ def #_"NodeClass<AcquiredCASLockNode>" AcquiredCASLockNode'TYPE (NodeClass'create-1 AcquiredCASLockNode))
 
     ; @Input
-    (§ mutable #_"ValueNode" :object nil)
+    (§ final #_"ValueNode" :object nil)
 
-    #_unused
+    (§ intrinsic! #_"void" AcquiredCASLockNode'mark-1 [#_"Object" object])
+
+    #_intrinsifier
     (§ defn #_"AcquiredCASLockNode" AcquiredCASLockNode'new-1 [#_"ValueNode" object]
         (let [
             #_"AcquiredCASLockNode" this (FixedWithNextNode'new-2 AcquiredCASLockNode'TYPE, (StampFactory'forVoid-0))
@@ -17788,64 +17385,10 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" AcquiredCASLockNode''generate-2 [#_"AcquiredCASLockNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"AcquiredCASLockNode" this, #_"LIRBuilder" builder]
         ;; this is just a marker node, so it generates nothing
         nil
     )
-
-    ; @NodeIntrinsic
-    (§ native #_"void" AcquiredCASLockNode'mark-1 [#_"Object" object])
-)
-
-;;;
- ; Reserves a block of memory in the stack frame of a method. The block is reserved in the frame for
- ; the entire execution of the associated method.
- ;;
-(final-ns AllocaNode (§ extends FixedWithNextNode) (§ implements LIRLowerable)
-    (§ def #_"NodeClass<AllocaNode>" AllocaNode'TYPE (NodeClass'create-1 AllocaNode))
-
-    ;;;
-     ; The number of slots in block.
-     ;;
-    (§ final #_"int" :slots 0)
-
-    ;;;
-     ; The indexes of the object pointer slots in the block. Each such object pointer slot must be
-     ; initialized before any safepoint in the method otherwise the garbage collector will see
-     ; garbage values when processing these slots.
-     ;;
-    (§ final #_"BitSet" :objects nil)
-
-    #_unused
-    (§ defn #_"AllocaNode" AllocaNode'new-1 [#_"int" slots]
-        (AllocaNode'new-3 slots, WordTypes'wordKind, (BitSet.))
-    )
-
-    (§ defn #_"AllocaNode" AllocaNode'new-3 [#_"int" slots, #_"JavaKind" wordKind, #_"BitSet" objects]
-        (let [
-            #_"AllocaNode" this (FixedWithNextNode'new-2 AllocaNode'TYPE, (StampFactory'forKind-1 wordKind))
-            this (assoc this :slots slots)
-            this (assoc this :objects objects)
-        ]
-            this
-        )
-    )
-
-    #_unused
-    (§ override! #_"void" AllocaNode''generate-2 [#_"AllocaNode" this, #_"LIRBuilder" builder]
-        (let [
-            #_"VirtualStackSlot" array (FrameMapBuilder''allocateStackSlots-4 (:frameMapBuilder (:res (:gen builder))), (:slots this), (:objects this), nil)
-            #_"Value" result (LIRGenerator''emitAddress-2 (:gen builder), array)
-        ]
-            (LIRBuilder''setResult-3 builder, this, result)
-        )
-        nil
-    )
-
-    ; @NodeIntrinsic
-    #_unused
-    (§ native #_"Word" AllocaNode'alloca-1 [#_@ConstantNodeParameter #_"int" slots])
 )
 
 (class-ns ArrayRangeWriteBarrier (§ extends WriteBarrier) (§ implements Lowerable)
@@ -17894,7 +17437,9 @@
 
     (§ mutable #_"int" :lockDepth 0)
 
-    #_unused
+    (§ intrinsic! #_"Word" BeginLockScopeNode'beginLockScope-1 [#_@ConstantNodeParameter #_"int" lockDepth])
+
+    #_intrinsifier
     (§ defn #_"BeginLockScopeNode" BeginLockScopeNode'new-1 [#_"int" lockDepth]
         (let [
             #_"BeginLockScopeNode" this (AbstractMemoryCheckpoint'new-2 BeginLockScopeNode'TYPE, (StampFactory'forKind-1 WordTypes'wordKind))
@@ -17904,7 +17449,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ defn #_"BeginLockScopeNode" BeginLockScopeNode'new-2 [#_"JavaKind" kind, #_"int" lockDepth]
         (let [
             #_"BeginLockScopeNode" this (AbstractMemoryCheckpoint'new-2 BeginLockScopeNode'TYPE, (StampFactory'forKind-1 kind))
@@ -17914,24 +17459,20 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" BeginLockScopeNode''hasSideEffect-1 [#_"BeginLockScopeNode" this]
         false
     )
 
-    #_unused
+    #_unused
     (§ override! #_"LocationIdentity" BeginLockScopeNode''getLocationIdentity-1 [#_"BeginLockScopeNode" this]
         (LocationIdentity/any)
     )
 
-    #_unused
-    (§ override! #_"void" BeginLockScopeNode''generate-2 [#_"BeginLockScopeNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"BeginLockScopeNode" this, #_"LIRBuilder" builder]
         (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitAddress-2 (:gen builder), (LIRGenerator''getLockSlot-2 (:gen builder), (:lockDepth this))))
         nil
     )
-
-    ; @NodeIntrinsic
-    (§ native #_"Word" BeginLockScopeNode'beginLockScope-1 [#_@ConstantNodeParameter #_"int" lockDepth])
 )
 
 ;;;
@@ -17942,11 +17483,13 @@
     (§ def #_"NodeClass<ComputeObjectAddressNode>" ComputeObjectAddressNode'TYPE (NodeClass'create-1 ComputeObjectAddressNode))
 
     ; @Input
-    (§ mutable #_"ValueNode" :object nil)
+    (§ final #_"ValueNode" :object nil)
     ; @Input
     (§ mutable #_"ValueNode" :offset nil)
 
-    #_unused
+    (§ intrinsic! #_"long" ComputeObjectAddressNode'get-2 [#_"Object" array, #_"long" offset])
+
+    #_intrinsifier
     (§ defn #_"ComputeObjectAddressNode" ComputeObjectAddressNode'new-2 [#_"ValueNode" obj, #_"ValueNode" offset]
         (let [
             #_"ComputeObjectAddressNode" this (FixedWithNextNode'new-2 ComputeObjectAddressNode'TYPE, (StampFactory'forKind-1 JavaKind/Long))
@@ -17957,42 +17500,13 @@
         )
     )
 
-    ; @NodeIntrinsic
-    (§ native #_"long" ComputeObjectAddressNode'get-2 [#_"Object" array, #_"long" offset])
-
-    #_unused
+    #_unused
     (§ override! #_"void" ComputeObjectAddressNode''lower-2 [#_"ComputeObjectAddressNode" this, #_"LoweringTool" lowerer]
         (when (GuardsStage'areFrameStatesAtDeopts-1 (:guardsStage (:graph this)))
             (Lowerer'lowerComputeObjectAddressNode-1 this)
         )
         nil
     )
-)
-
-;;;
- ; Gets the address of the C++ JavaThread object for the current thread.
- ;;
-(final-ns CurrentJavaThreadNode (§ extends FloatingNode) (§ implements LIRLowerable)
-    (§ def #_"NodeClass<CurrentJavaThreadNode>" CurrentJavaThreadNode'TYPE (NodeClass'create-1 CurrentJavaThreadNode))
-
-    #_unused
-    (§ defn #_"CurrentJavaThreadNode" CurrentJavaThreadNode'new-0 []
-        (CurrentJavaThreadNode'new-1 WordTypes'wordKind)
-    )
-
-    (§ defn #_"CurrentJavaThreadNode" CurrentJavaThreadNode'new-1 [#_"JavaKind" wordKind]
-        (FloatingNode'new-2 CurrentJavaThreadNode'TYPE, (StampFactory'forKind-1 wordKind))
-    )
-
-    #_unused
-    (§ override! #_"void" CurrentJavaThreadNode''generate-2 [#_"CurrentJavaThreadNode" this, #_"LIRBuilder" builder]
-        (LIRBuilder''setResult-3 builder, this, (#_"Register" .asValue HotSpot'threadRegister, (LIRKind'value-1 (#_"Architecture" .getWordKind (.arch HotSpot'target)))))
-        nil
-    )
-
-    ; @NodeIntrinsic
-    #_unused
-    (§ native #_"Word" CurrentJavaThreadNode'get-0 [])
 )
 
 ;;;
@@ -18003,7 +17517,9 @@
 
     (§ mutable #_"int" :lockDepth 0)
 
-    #_unused
+    (§ intrinsic! #_"Word" CurrentLockNode'currentLock-1 [#_@ConstantNodeParameter #_"int" lockDepth])
+
+    #_intrinsifier
     (§ defn #_"CurrentLockNode" CurrentLockNode'new-1 [#_"int" lockDepth]
         (let [
             #_"CurrentLockNode" this (FixedWithNextNode'new-2 CurrentLockNode'TYPE, (StampFactory'forKind-1 WordTypes'wordKind))
@@ -18013,15 +17529,11 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" CurrentLockNode''generate-2 [#_"CurrentLockNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"CurrentLockNode" this, #_"LIRBuilder" builder]
         ;; the register allocator cannot handle stack -> register moves, so we use an LEA here
         (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitAddress-2 (:gen builder), (LIRGenerator''getLockSlot-2 (:gen builder), (:lockDepth this))))
         nil
     )
-
-    ; @NodeIntrinsic
-    (§ native #_"Word" CurrentLockNode'currentLock-1 [#_@ConstantNodeParameter #_"int" lockDepth])
 )
 
 ;;;
@@ -18033,7 +17545,9 @@
     (§ final #_"DeoptimizationAction" :action nil)
     (§ final #_"DeoptimizationReason" :reason nil)
 
-    #_unused
+    (§ intrinsic! #_"void" DeoptimizeCallerNode'deopt-2 [#_@ConstantNodeParameter #_"DeoptimizationAction" action, #_@ConstantNodeParameter #_"DeoptimizationReason" reason])
+
+    #_intrinsifier
     (§ defn #_"DeoptimizeCallerNode" DeoptimizeCallerNode'new-2 [#_"DeoptimizationAction" action, #_"DeoptimizationReason" reason]
         (let [
             #_"DeoptimizeCallerNode" this (ControlSinkNode'new-2 DeoptimizeCallerNode'TYPE, (StampFactory'forVoid-0))
@@ -18044,14 +17558,10 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" DeoptimizeCallerNode''generate-2 [#_"DeoptimizeCallerNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"DeoptimizeCallerNode" this, #_"LIRBuilder" builder]
         (LIRGenerator''emitDeoptimizeCaller-3 (:gen builder), (:action this), (:reason this))
         nil
     )
-
-    ; @NodeIntrinsic
-    (§ native #_"void" DeoptimizeCallerNode'deopt-2 [#_@ConstantNodeParameter #_"DeoptimizationAction" action, #_@ConstantNodeParameter #_"DeoptimizationReason" reason])
 )
 
 ;;;
@@ -18061,28 +17571,26 @@
 (final-ns EndLockScopeNode (§ extends AbstractMemoryCheckpoint) (§ implements LIRLowerable, MonitorExit, Single)
     (§ def #_"NodeClass<EndLockScopeNode>" EndLockScopeNode'TYPE (NodeClass'create-1 EndLockScopeNode))
 
-    #_unused
+    (§ intrinsic! #_"void" EndLockScopeNode'endLockScope-0 [])
+
+    #_intrinsifier
     (§ defn #_"EndLockScopeNode" EndLockScopeNode'new-0 []
         (AbstractMemoryCheckpoint'new-2 EndLockScopeNode'TYPE, (StampFactory'forVoid-0))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" EndLockScopeNode''hasSideEffect-1 [#_"EndLockScopeNode" this]
         false
     )
 
-    #_unused
+    #_unused
     (§ override! #_"LocationIdentity" EndLockScopeNode''getLocationIdentity-1 [#_"EndLockScopeNode" this]
         (LocationIdentity/any)
     )
 
-    #_unused
-    (§ override! #_"void" EndLockScopeNode''generate-2 [#_"EndLockScopeNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"EndLockScopeNode" this, #_"LIRBuilder" builder]
         nil
     )
-
-    ; @NodeIntrinsic
-    (§ native #_"void" EndLockScopeNode'endLockScope-0 [])
 )
 
 ;;;
@@ -18093,9 +17601,11 @@
     (§ def #_"NodeClass<FastAcquireBiasedLockNode>" FastAcquireBiasedLockNode'TYPE (NodeClass'create-1 FastAcquireBiasedLockNode))
 
     ; @Input
-    (§ mutable #_"ValueNode" :object nil)
+    (§ final #_"ValueNode" :object nil)
 
-    #_unused
+    (§ intrinsic! #_"void" FastAcquireBiasedLockNode'mark-1 [#_"Object" object])
+
+    #_intrinsifier
     (§ defn #_"FastAcquireBiasedLockNode" FastAcquireBiasedLockNode'new-1 [#_"ValueNode" object]
         (let [
             #_"FastAcquireBiasedLockNode" this (FixedWithNextNode'new-2 FastAcquireBiasedLockNode'TYPE, (StampFactory'forVoid-0))
@@ -18105,14 +17615,10 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" FastAcquireBiasedLockNode''generate-2 [#_"FastAcquireBiasedLockNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"FastAcquireBiasedLockNode" this, #_"LIRBuilder" builder]
         ;; this is just a marker node, so it generates nothing
         nil
     )
-
-    ; @NodeIntrinsic
-    (§ native #_"void" FastAcquireBiasedLockNode'mark-1 [#_"Object" object])
 )
 
 (final-ns G1ArrayRangePostWriteBarrier (§ extends ArrayRangeWriteBarrier)
@@ -18169,12 +17675,12 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" G1PreWriteBarrier''canDeoptimize-1 [#_"G1PreWriteBarrier" this]
         (:nullCheck this)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"FrameState" G1PreWriteBarrier''stateBefore-1 [#_"G1PreWriteBarrier" this]
         (:stateBefore this)
     )
@@ -18187,10 +17693,10 @@
 )
 
 ;;;
- ; The G1ReferentFieldReadBarrier is added when a read access is performed to the referent
- ; field of a {@link java.lang.ref.Reference} object (through a LoadFieldNode or an
- ; UnsafeLoadNode). The return value of the read is passed to the snippet implementing the
- ; read barrier and consequently is added to the SATB queue if the concurrent marker is enabled.
+ ; The G1ReferentFieldReadBarrier is added when a read access is performed to the referent field
+ ; of a {@link java.lang.ref.Reference} object (through a LoadFieldNode or an UnsafeLoadNode).
+ ; The return value of the read is passed to the snippet implementing the read barrier and
+ ; consequently is added to the SATB queue if the concurrent marker is enabled.
  ;;
 (final-ns G1ReferentFieldReadBarrier (§ extends ObjectWriteBarrier)
     (§ def #_"NodeClass<G1ReferentFieldReadBarrier>" G1ReferentFieldReadBarrier'TYPE (NodeClass'create-1 G1ReferentFieldReadBarrier))
@@ -18221,7 +17727,7 @@
     (§ def #_"NodeClass<GetObjectAddressNode>" GetObjectAddressNode'TYPE (NodeClass'create-1 GetObjectAddressNode))
 
     ; @Input
-    (§ mutable #_"ValueNode" :object nil)
+    (§ final #_"ValueNode" :object nil)
 
     (§ defn #_"GetObjectAddressNode" GetObjectAddressNode'new-1 [#_"ValueNode" obj]
         (let [
@@ -18232,12 +17738,7 @@
         )
     )
 
-    ; @NodeIntrinsic
-    #_unused
-    (§ native #_"long" GetObjectAddressNode'get-1 [#_"Object" array])
-
-    #_unused
-    (§ override! #_"void" GetObjectAddressNode''generate-2 [#_"GetObjectAddressNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"GetObjectAddressNode" this, #_"LIRBuilder" builder]
         (let [
             #_"AllocatableValue" obj (LIRGenerator''newVariable-2 (:gen builder), (LIRKind'unknownReference-1 (#_"Architecture" .getWordKind (.arch HotSpot'target))))
         ]
@@ -18256,10 +17757,9 @@
 
     (§ final #_"int" :markId 0)
 
-    ;;;
-     ; Constructor for #areConfigValuesConstant().
-     ;;
-    #_unused
+    (§ intrinsic! #_"boolean" GraalHotSpotVMConfigNode'areConfigValuesConstant-0 [])
+
+    #_intrinsifier
     (§ defn #_"GraalHotSpotVMConfigNode" GraalHotSpotVMConfigNode'new-0 []
         (let [
             #_"GraalHotSpotVMConfigNode" this (FloatingNode'new-2 GraalHotSpotVMConfigNode'TYPE, (StampFactory'forKind-1 JavaKind/Boolean))
@@ -18269,12 +17769,11 @@
         )
     )
 
-    ;;;
-     ; Constructor for node intrinsics below.
-     ;
-     ; @param markId id of the config value
-     ;;
-    #_unused
+    (§ intrinsic! #_"long" GraalHotSpotVMConfigNode'loadLongConfigValue-1 [#_@ConstantNodeParameter #_"int" markId])
+    (§ intrinsic! #_"int" GraalHotSpotVMConfigNode'loadIntConfigValue-1 [#_@ConstantNodeParameter #_"int" markId])
+    (§ intrinsic! #_"byte" GraalHotSpotVMConfigNode'loadByteConfigValue-1 [#_@ConstantNodeParameter #_"int" markId])
+
+    #_intrinsifier
     (§ defn #_"GraalHotSpotVMConfigNode" GraalHotSpotVMConfigNode'new-2 [#_@InjectedNodeParameter #_"Stamp" stamp, #_"int" markId]
         (let [
             #_"GraalHotSpotVMConfigNode" this (FloatingNode'new-2 GraalHotSpotVMConfigNode'TYPE, stamp)
@@ -18284,13 +17783,7 @@
         )
     )
 
-    ;;;
-     ; Constructor with explicit type specification.
-     ;
-     ; @param markId id of the config value
-     ; @param kind explicit type of the node
-     ;;
-    #_unused
+    #_unused
     (§ defn #_"GraalHotSpotVMConfigNode" GraalHotSpotVMConfigNode'new-2 [#_"int" markId, #_"JavaKind" kind]
         (let [
             #_"GraalHotSpotVMConfigNode" this (FloatingNode'new-2 GraalHotSpotVMConfigNode'TYPE, (StampFactory'forKind-1 kind))
@@ -18300,30 +17793,17 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" GraalHotSpotVMConfigNode''generate-2 [#_"GraalHotSpotVMConfigNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"GraalHotSpotVMConfigNode" this, #_"LIRBuilder" builder]
         (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitLoadConfigValue-3 (:gen builder), (:markId this), (Stamp''getLIRKind-1 (:stamp this))))
         nil
     )
 
-    ; @NodeIntrinsic
-    (§ native- #_"boolean" GraalHotSpotVMConfigNode'areConfigValuesConstant-0 [])
-
-    ; @NodeIntrinsic
-    (§ native- #_"long" GraalHotSpotVMConfigNode'loadLongConfigValue-1 [#_@ConstantNodeParameter #_"int" markId])
-
-    ; @NodeIntrinsic
-    (§ native- #_"int" GraalHotSpotVMConfigNode'loadIntConfigValue-1 [#_@ConstantNodeParameter #_"int" markId])
-
-    ; @NodeIntrinsic
-    (§ native- #_"byte" GraalHotSpotVMConfigNode'loadByteConfigValue-1 [#_@ConstantNodeParameter #_"int" markId])
+    (§ defn #_"boolean" GraalHotSpotVMConfigNode'isCardTableAddressConstant-0 []
+        (GraalHotSpotVMConfigNode'areConfigValuesConstant-0)
+    )
 
     (§ defn #_"long" GraalHotSpotVMConfigNode'cardTableAddress-0 []
         (GraalHotSpotVMConfigNode'loadLongConfigValue-1 HotSpot'cardTableAddressMark)
-    )
-
-    (§ defn #_"boolean" GraalHotSpotVMConfigNode'isCardTableAddressConstant-0 []
-        (GraalHotSpotVMConfigNode'areConfigValuesConstant-0)
     )
 
     (§ defn #_"long" GraalHotSpotVMConfigNode'heapTopAddress-0 []
@@ -18342,8 +17822,7 @@
         (not (zero? (GraalHotSpotVMConfigNode'loadByteConfigValue-1 HotSpot'inlineContiguousAllocationSupportedMark)))
     )
 
-    #_unused
-    (§ override! #_"Node" GraalHotSpotVMConfigNode''canonical-2 [#_"GraalHotSpotVMConfigNode" this, #_"CanonicalizerTool" tool]
+    (§ override! #_"Node" Canonicalizable''canonical-2 [#_"GraalHotSpotVMConfigNode" this, #_"CanonicalizerTool" tool]
         (condp = (:markId this)
             0                                               (ConstantNode'forBoolean-1 true)
             HotSpot'cardTableAddressMark                    (ConstantNode'forLong-1 HotSpot'cardTableAddress)
@@ -18371,7 +17850,7 @@
         (Graph''add-2 (:graph input), (HotSpotCompressionNode'new-3 CompressionOp'Uncompress, input, encoding))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Constant" HotSpotCompressionNode''compress-2 [#_"HotSpotCompressionNode" this, #_"Constant" constant]
         (if (= constant JavaConstant/NULL_POINTER)
             HotSpotCompressedNullConstant/COMPRESSED_NULL
@@ -18381,14 +17860,14 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Constant" HotSpotCompressionNode''uncompress-2 [#_"HotSpotCompressionNode" this, #_"Constant" constant]
         (condp instance? constant
             HotSpotConstant (#_"HotSpotConstant" .uncompress constant)
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Stamp" HotSpotCompressionNode''mkStamp-2 [#_"HotSpotCompressionNode" this, #_"Stamp" input]
         (HotSpotNarrowOopStamp'mkStamp-3 (:op this), input, (:encoding this))
     )
@@ -18425,7 +17904,7 @@
         (LoadIndexedNode'new-5 LoadIndexedPointerNode'TYPE, stamp, array, index, JavaKind/Illegal)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" LoadIndexedPointerNode''inferStamp-1 [#_"LoadIndexedPointerNode" this]
         false
     )
@@ -18456,13 +17935,12 @@
 (final-ns RandomSeedNode (§ extends FloatingNode) (§ implements LIRLowerable)
     (§ def #_"NodeClass<RandomSeedNode>" RandomSeedNode'TYPE (NodeClass'create-1 RandomSeedNode))
 
-    #_unused
+    #_unused
     (§ defn #_"RandomSeedNode" RandomSeedNode'new-0 []
         (FloatingNode'new-2 RandomSeedNode'TYPE, (StampFactory'intValue-0))
     )
 
-    #_unused
-    (§ override! #_"void" RandomSeedNode''generate-2 [#_"RandomSeedNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"RandomSeedNode" this, #_"LIRBuilder" builder]
         (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitRandomSeed-1 (:gen builder)))
         nil
     )
@@ -18500,6 +17978,10 @@
 
     (§ final #_"ForeignCallDescriptor" :descriptor nil)
 
+    (§ intrinsic! #_"void" StubForeignCallNode'newInstanceC-3 [#_@ConstantNodeParameter #_"ForeignCallDescriptor" newInstanceC, #_"Word" thread, #_"KlassPointer" hub])
+    (§ intrinsic! #_"void" StubForeignCallNode'newArrayC-4 [#_@ConstantNodeParameter #_"ForeignCallDescriptor" newArrayC, #_"Word" thread, #_"KlassPointer" hub, #_"int" length])
+
+    #_intrinsifier
     (§ defn #_"StubForeignCallNode" StubForeignCallNode'new-3* [#_@InjectedNodeParameter #_"Stamp" stamp, #_"ForeignCallDescriptor" descriptor, #_"ValueNode..." arguments]
         (let [
             #_"StubForeignCallNode" this (FixedWithNextNode'new-2 StubForeignCallNode'TYPE, stamp)
@@ -18510,7 +17992,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"LocationIdentity[]" StubForeignCallNode''getLocationIdentities-1 [#_"StubForeignCallNode" this]
         (let [
             #_"LocationIdentity[]" killedLocations (ForeignCalls''getKilledLocations-2 HotSpot'foreignCalls, (:descriptor this))
@@ -18532,8 +18014,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" StubForeignCallNode''generate-2 [#_"StubForeignCallNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"StubForeignCallNode" this, #_"LIRBuilder" builder]
         (let [
             #_"ForeignCallLinkage" linkage (ForeignCalls''lookupForeignCall-2 HotSpot'foreignCalls, (:descriptor this))
             #_"Value[]" operands (StubForeignCallNode''operands-2 this, builder)
@@ -18570,7 +18051,7 @@
         (NarrowOopStamp'new-5 type, exactType, never-nil?, always-nil?, encoding)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"AbstractObjectStamp" HotSpotNarrowOopStamp''copyWith-5 [#_"HotSpotNarrowOopStamp" this, #_"ResolvedJavaType" type, #_"boolean" exactType, #_"boolean" never-nil?, #_"boolean" always-nil?]
         (HotSpotNarrowOopStamp'new-5 type, exactType, never-nil?, always-nil?, (NarrowOopStamp''getEncoding-1 this))
     )
@@ -18579,7 +18060,7 @@
         (HotSpotNarrowOopStamp'new-5 (AbstractObjectStamp''type-1 stamp), (AbstractObjectStamp''isExactType-1 stamp), (:never-nil? stamp), (:always-nil? stamp), encoding)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Constant" HotSpotNarrowOopStamp''readConstant-4 [#_"HotSpotNarrowOopStamp" this, #_"MemoryAccessProvider" provider, #_"Constant" base, #_"long" displacement]
         (try
             (#_"HotSpotMemoryAccessProvider" .readNarrowOopConstant provider, base, displacement)
@@ -18589,12 +18070,12 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"JavaConstant" HotSpotNarrowOopStamp''asConstant-1 [#_"HotSpotNarrowOopStamp" this]
         (when (:always-nil? this) HotSpotCompressedNullConstant/COMPRESSED_NULL)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" HotSpotNarrowOopStamp''isCompatible-2 [#_"HotSpotNarrowOopStamp" this, #_"Constant" other]
         (if (instance? HotSpotObjectConstant other)
             (#_"HotSpotObjectConstant" .isCompressed other)
@@ -18638,12 +18119,12 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"AbstractPointerStamp" KlassPointerStamp''copyWith-3 [#_"KlassPointerStamp" this, #_"boolean" newNonNull, #_"boolean" newAlwaysNull]
         (KlassPointerStamp'new-3 newNonNull, newAlwaysNull, (:encoding this))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" KlassPointerStamp''isCompatible-2 [#_"KlassPointerStamp" this, #_"Stamp" that]
         (or (= this that)
             (and (instance? KlassPointerStamp that)
@@ -18652,7 +18133,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" KlassPointerStamp''isCompatible-2 [#_"KlassPointerStamp" this, #_"Constant" constant]
         (if (instance? HotSpotMetaspaceConstant constant)
             (some? (#_"HotSpotMetaspaceConstant" .asResolvedJavaType constant))
@@ -18660,7 +18141,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Stamp" KlassPointerStamp''constant-2 [#_"KlassPointerStamp" this, #_"Constant" constant]
         (if (KlassPointerStamp''isCompressed-1 this)
             (when (= HotSpotCompressedNullConstant/COMPRESSED_NULL constant)
@@ -18678,7 +18159,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Constant" KlassPointerStamp''asConstant-1 [#_"KlassPointerStamp" this]
         (if (and (:always-nil? this) (KlassPointerStamp''isCompressed-1 this))
             HotSpotCompressedNullConstant/COMPRESSED_NULL
@@ -18686,7 +18167,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"LIRKind" KlassPointerStamp''getLIRKind-1 [#_"KlassPointerStamp" this]
         (if (KlassPointerStamp''isCompressed-1 this)
             (LIRKindTool'getNarrowPointerKind-0)
@@ -18706,7 +18187,7 @@
         (KlassPointerStamp'new-2 (:never-nil? this), (:always-nil? this))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Constant" KlassPointerStamp''readConstant-4 [#_"KlassPointerStamp" this, #_"MemoryAccessProvider" provider, #_"Constant" base, #_"long" displacement]
         (if (KlassPointerStamp''isCompressed-1 this)
             (#_"HotSpotMemoryAccessProvider" .readNarrowKlassPointerConstant provider, base, displacement)
@@ -18724,7 +18205,7 @@
         (LIRKindTool'getWordKind-0)
     )
 
-    #_unused
+    #_unused
     (§ override #_"Stamp" MetaspacePointerStamp''empty-1 [#_"MetaspacePointerStamp" this]
         ;; there is no empty pointer stamp
         this
@@ -18734,17 +18215,17 @@
         (#_"Constant" .isDefaultForKind constant)
     )
 
-    #_unused
+    #_unused
     (§ override #_"boolean" MetaspacePointerStamp''hasValues-1 [#_"MetaspacePointerStamp" this]
         true
     )
 
-    #_unused
+    #_unused
     (§ override #_"Stamp" MetaspacePointerStamp''join-2 [#_"MetaspacePointerStamp" this, #_"Stamp" other]
         (AbstractPointerStamp''defaultPointerJoin-2 this, other)
     )
 
-    #_unused
+    #_unused
     (§ override #_"ResolvedJavaType" MetaspacePointerStamp''javaType-1 [#_"MetaspacePointerStamp" this]
         (throw! "metaspace pointer has no Java type")
     )
@@ -18759,7 +18240,7 @@
         (MetaspacePointerStamp'new-2 never-nil?, always-nil?)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"AbstractPointerStamp" MethodPointerStamp''copyWith-3 [#_"MethodPointerStamp" this, #_"boolean" newNonNull, #_"boolean" newAlwaysNull]
         (cond
             newNonNull    MethodPointerStamp'METHOD_NON_NULL
@@ -18768,12 +18249,12 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" MethodPointerStamp''isCompatible-2 [#_"MethodPointerStamp" this, #_"Stamp" otherStamp]
         (or (= this otherStamp) (instance? MethodPointerStamp otherStamp))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" MethodPointerStamp''isCompatible-2 [#_"MethodPointerStamp" this, #_"Constant" constant]
         (if (instance? HotSpotMetaspaceConstant constant)
             (some? (#_"HotSpotMetaspaceConstant" .asResolvedJavaMethod constant))
@@ -18781,7 +18262,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Stamp" MethodPointerStamp''constant-2 [#_"MethodPointerStamp" this, #_"Constant" constant]
         (if (= JavaConstant/NULL_POINTER constant)
             MethodPointerStamp'METHOD_ALWAYS_NULL
@@ -18789,7 +18270,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Constant" MethodPointerStamp''readConstant-4 [#_"MethodPointerStamp" this, #_"MemoryAccessProvider" provider, #_"Constant" base, #_"long" displacement]
         (#_"HotSpotMemoryAccessProvider" .readMethodPointerConstant provider, base, displacement)
     )
@@ -18802,7 +18283,7 @@
         (FixedWithNextNode'new-2 c, (StampFactory'forVoid-0))
     )
 
-    #_unused
+    #_unused
     (§ override #_"void" WriteBarrier''lower-2 [#_"WriteBarrier" this, #_"LoweringTool" lowerer]
         (WriteBarrierTemplates''lower-3 Lowerer'writeBarrierSnippets, this, lowerer)
         nil
@@ -18814,7 +18295,7 @@
         (Phase'new-0)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" WriteBarrierAdditionPhase''run-2 [#_"WriteBarrierAdditionPhase" this, #_"Graph" graph]
         (doseq [#_"Node" node (Graph''getNodes-1 graph)]
             (condp instance? node
@@ -18963,7 +18444,7 @@
 (final-ns CallSiteTargetNode (§ extends MacroStateSplitNode) (§ implements Canonicalizable, Lowerable)
     (§ def #_"NodeClass<CallSiteTargetNode>" CallSiteTargetNode'TYPE (NodeClass'create-1 CallSiteTargetNode))
 
-    #_unused
+    #_unused
     (§ defn #_"CallSiteTargetNode" CallSiteTargetNode'new-5 [#_"InvokeKind" invokeKind, #_"ResolvedJavaMethod" targetMethod, #_"int" bci, #_"StampPair" returnStamp, #_"ValueNode" receiver]
         (MacroStateSplitNode'new-6* CallSiteTargetNode'TYPE, invokeKind, targetMethod, bci, returnStamp, receiver)
     )
@@ -18984,14 +18465,13 @@
         )
     )
 
-    #_unused
-    (§ override! #_"Node" CallSiteTargetNode''canonical-2 [#_"CallSiteTargetNode" this, #_"CanonicalizerTool" tool]
+    (§ override! #_"Node" Canonicalizable''canonical-2 [#_"CallSiteTargetNode" this, #_"CanonicalizerTool" tool]
         (or (CallSiteTargetNode'tryFold-1 (CallSiteTargetNode''getCallSite-1 this))
             this
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" CallSiteTargetNode''lower-2 [#_"CallSiteTargetNode" this, #_"LoweringTool" lowerer]
         (let [
             #_"ConstantNode" target (CallSiteTargetNode'tryFold-1 (CallSiteTargetNode''getCallSite-1 this))
@@ -19013,8 +18493,7 @@
 ;;;
  ; Read {@code Class::_klass} to get the hub for a {@link java.lang.Class}. This node mostly exists
  ; to replace {@code _klass._java_mirror._klass} with {@code _klass}. The constant folding could be
- ; handled by
- ; ReadNode#canonicalizeRead(ValueNode, AddressNode, LocationIdentity, CanonicalizerTool).
+ ; handled by ReadNode#canonicalizeRead(ValueNode, AddressNode, LocationIdentity, CanonicalizerTool).
  ;;
 (final-ns ClassGetHubNode (§ extends FloatingNode) (§ implements Lowerable, Canonicalizable, ConvertNode)
     (§ def #_"NodeClass<ClassGetHubNode>" ClassGetHubNode'TYPE (NodeClass'create-1 ClassGetHubNode))
@@ -19033,12 +18512,6 @@
 
     (§ defn #_"ValueNode" ClassGetHubNode'create-2 [#_"ValueNode" clazz, #_"boolean" allUsagesAvailable]
         (ClassGetHubNode'canonical-4 nil, allUsagesAvailable, KlassPointerStamp'KLASS, clazz)
-    )
-
-    #_unused
-    (§ defn #_"boolean" ClassGetHubNode'intrinsify-3 [#_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"ValueNode" clazz]
-        (BytecodeParser''push-3 parser, JavaKind/Object, (BytecodeParser''append-2 parser, (ClassGetHubNode'create-2 clazz, false)))
-        true
     )
 
     (§ defn #_"ValueNode" ClassGetHubNode'canonical-4 [#_"ClassGetHubNode" node, #_"boolean" allUsagesAvailable, #_"Stamp" stamp, #_"ValueNode" clazz]
@@ -19061,28 +18534,29 @@
         )
     )
 
-    #_unused
-    (§ override! #_"Node" ClassGetHubNode''canonical-2 [#_"ClassGetHubNode" this, #_"CanonicalizerTool" tool]
+    (§ override! #_"Node" Canonicalizable''canonical-2 [#_"ClassGetHubNode" this, #_"CanonicalizerTool" tool]
         (ClassGetHubNode'canonical-4 this, (CanonicalizerTool''allUsagesAvailable-1 tool), (:stamp this), (:class this))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" ClassGetHubNode''lower-2 [#_"ClassGetHubNode" this, #_"LoweringTool" lowerer]
         (Lowerer'lowerClassGetHubNode-2 this, lowerer)
         nil
     )
 
-    ; @NodeIntrinsic
-    (§ native #_"KlassPointer" ClassGetHubNode'readClass-1 [#_"Class" clazzNonNull])
+    (§ intrinsic! #_"KlassPointer" ClassGetHubNode'readClass-1 [#_"Class" clazzNonNull])
 
-    ; @NodeIntrinsic(PiNode.class)
-    (§ native #_"KlassPointer" ClassGetHubNode'piCastNonNull-2 [#_"Object" object, #_"GuardingNode" anchor])
+    #_intrinsifier
+    (§ defn #_"boolean" ClassGetHubNode'intrinsify-3 [#_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"ValueNode" clazz]
+        (BytecodeParser''push-3 parser, JavaKind/Object, (BytecodeParser''append-2 parser, (ClassGetHubNode'create-2 clazz, false)))
+        true
+    )
 
     (§ override! #_"ValueNode" ClassGetHubNode''getValue-1 [#_"ClassGetHubNode" this]
         (:class this)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Constant" ClassGetHubNode''convert-2 [#_"ClassGetHubNode" this, #_"Constant" constant]
         (let [
             #_"ResolvedJavaType" exactType (#_"ConstantReflectionProvider" .asJavaType HotSpot'constantReflection, constant)
@@ -19094,12 +18568,12 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Constant" ClassGetHubNode''reverse-2 [#_"ClassGetHubNode" this, #_"Constant" constant]
         (#_"ConstantReflectionProvider" .asJavaClass HotSpot'constantReflection, (#_"ConstantReflectionProvider" .asJavaType HotSpot'constantReflection, constant))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" ClassGetHubNode''isLossless-1 [#_"ClassGetHubNode" this]
         false
     )
@@ -19107,12 +18581,12 @@
     ;;;
      ; There is more than one {@link java.lang.Class} value that has a NULL hub.
      ;;
-    #_unused
+    #_unused
     (§ override! #_"boolean" ClassGetHubNode''mayNullCheckSkipConversion-1 [#_"ClassGetHubNode" this]
         false
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" ClassGetHubNode''preservesOrder-3 [#_"ClassGetHubNode" this, #_"CanonicalCondition" op, #_"Constant" value]
         (not (#_"ResolvedJavaType" .isPrimitive (#_"ConstantReflectionProvider" .asJavaType HotSpot'constantReflection, value)))
     )
@@ -19172,7 +18646,7 @@
      ;
      ; @return true if there was a pending deoptimization
      ;;
-    #_unused
+    #_unused
     (§ defn #_"int" HotSpotReplacementsUtil'readPendingDeoptimization-1 [#_"Word" thread]
         (Word''readInt-3 thread, HotSpot'pendingDeoptimizationOffset, HotSpotReplacementsUtil'PENDING_DEOPTIMIZATION_LOCATION)
     )
@@ -19180,7 +18654,7 @@
     ;;;
      ; Writes the pending deoptimization value for the given thread.
      ;;
-    #_unused
+    #_unused
     (§ defn #_"void" HotSpotReplacementsUtil'writePendingDeoptimization-2 [#_"Word" thread, #_"int" value]
         (Word''writeInt-4 thread, HotSpot'pendingDeoptimizationOffset, value, HotSpotReplacementsUtil'PENDING_DEOPTIMIZATION_LOCATION)
         nil
@@ -19204,7 +18678,7 @@
 
     (§ def #_"LocationIdentity" HotSpotReplacementsUtil'KLASS_LAYOUT_HELPER_LOCATION
         (§ reify #_"OptimizingLocationIdentity" (OptimizingLocationIdentity'new-1 "Klass::_layout_helper")
-            #_unused
+            #_unused
             (§ override! #_"ValueNode" OptimizingLocationIdentity''canonicalizeRead-5 [#_"OptimizingLocationIdentity" this, #_"ValueNode" read, #_"AddressNode" location, #_"ValueNode" object, #_"CanonicalizerTool" tool]
                 (let [
                     #_"ValueNode" javaObject (OptimizingLocationIdentity''findReadHub-2 this, object)
@@ -19223,16 +18697,13 @@
         )
     )
 
-    ; @NodeIntrinsic(value = KlassLayoutHelperNode.class)
-    (§ native #_"int" HotSpotReplacementsUtil'readLayoutHelper-1 [#_"KlassPointer" object])
-
     (§ def #_"LocationIdentity" HotSpotReplacementsUtil'ARRAY_KLASS_COMPONENT_MIRROR (NamedLocationIdentity'immutable-1 "ArrayKlass::_component_mirror"))
     (§ def #_"LocationIdentity" HotSpotReplacementsUtil'MARK_WORD_LOCATION           (NamedLocationIdentity'mutable-1   "MarkWord"))
     (§ def #_"LocationIdentity" HotSpotReplacementsUtil'HUB_WRITE_LOCATION           (NamedLocationIdentity'mutable-1   "Hub:write"))
 
     (§ def #_"LocationIdentity" HotSpotReplacementsUtil'HUB_LOCATION
         (§ reify #_"OptimizingLocationIdentity" (OptimizingLocationIdentity'new-1 "Hub")
-            #_unused
+            #_unused
             (§ override! #_"ValueNode" OptimizingLocationIdentity''canonicalizeRead-5 [#_"OptimizingLocationIdentity" this, #_"ValueNode" read, #_"AddressNode" location, #_"ValueNode" object, #_"CanonicalizerTool" tool]
                 (let [
                     #_"TypeReference" constantType (StampTool'typeReferenceOrNull-1 (:stamp object))
@@ -19247,7 +18718,7 @@
 
     (§ def #_"LocationIdentity" HotSpotReplacementsUtil'COMPRESSED_HUB_LOCATION
         (§ reify #_"OptimizingLocationIdentity" (OptimizingLocationIdentity'new-1 "CompressedHub")
-            #_unused
+            #_unused
             (§ override! #_"ValueNode" OptimizingLocationIdentity''canonicalizeRead-5 [#_"OptimizingLocationIdentity" this, #_"ValueNode" read, #_"AddressNode" location, #_"ValueNode" object, #_"CanonicalizerTool" tool]
                 (let [
                     #_"TypeReference" constantType (StampTool'typeReferenceOrNull-1 (:stamp object))
@@ -19266,7 +18737,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ defn #_"Word" HotSpotReplacementsUtil'arrayStart-1 [#_"int[]" a]
         (WordFactory/unsigned (ComputeObjectAddressNode'get-2 a, Unsafe'ARRAY_INT_BASE_OFFSET))
     )
@@ -19307,22 +18778,22 @@
     ;;;
      ; Loads the hub of an object (without nil-checking it first).
      ;;
-    #_unused
+    #_unused
     (§ defn #_"KlassPointer" HotSpotReplacementsUtil'loadHub-1 [#_"Object" object]
-        (HotSpotReplacementsUtil'loadHubIntrinsic-1 object)
+        (LoadHubNode'loadHubIntrinsic-1 object)
     )
 
     (§ defn #_"Word" HotSpotReplacementsUtil'loadWordFromObject-2 [#_"Object" object, #_"int" offset]
-        (HotSpotReplacementsUtil'loadWordFromObjectIntrinsic-4 object, offset, (LocationIdentity/any), (.wordJavaKind HotSpot'target))
+        (RawLoadNode'loadWordFromObjectIntrinsic-4 object, offset, (LocationIdentity/any), (.wordJavaKind HotSpot'target))
     )
 
-    #_unused
+    #_unused
     (§ defn #_"Word" HotSpotReplacementsUtil'loadWordFromObject-3 [#_"Object" object, #_"int" offset, #_"LocationIdentity" identity]
-        (HotSpotReplacementsUtil'loadWordFromObjectIntrinsic-4 object, offset, identity, (.wordJavaKind HotSpot'target))
+        (RawLoadNode'loadWordFromObjectIntrinsic-4 object, offset, identity, (.wordJavaKind HotSpot'target))
     )
 
     (§ defn #_"KlassPointer" HotSpotReplacementsUtil'loadKlassFromObject-3 [#_"Object" object, #_"int" offset, #_"LocationIdentity" identity]
-        (HotSpotReplacementsUtil'loadKlassFromObjectIntrinsic-4 object, offset, identity, (.wordJavaKind HotSpot'target))
+        (RawLoadNode'loadKlassFromObjectIntrinsic-4 object, offset, identity, (.wordJavaKind HotSpot'target))
     )
 
     ;;;
@@ -19332,24 +18803,8 @@
      ; @return the value of {@code register} as a word
      ;;
     (§ defn #_"Word" HotSpotReplacementsUtil'registerAsWord-1 [#_@ConstantNodeParameter #_"Register" register]
-        (HotSpotReplacementsUtil'registerAsWord-3 register, true, false)
+        (ReadRegisterNode'registerAsWord-3 register, true, false)
     )
-
-    ; @NodeIntrinsic(value = ReadRegisterNode.class)
-    (§ native #_"Word" HotSpotReplacementsUtil'registerAsWord-3 [#_@ConstantNodeParameter #_"Register" register, #_@ConstantNodeParameter #_"boolean" directUse, #_@ConstantNodeParameter #_"boolean" incoming])
-
-    ; @NodeIntrinsic(value = WriteRegisterNode.class)
-    #_unused
-    (§ native #_"void" HotSpotReplacementsUtil'writeRegisterAsWord-2 [#_@ConstantNodeParameter #_"Register" register, #_"Word" value])
-
-    ; @NodeIntrinsic(value = RawLoadNode.class)
-    (§ native- #_"Word" HotSpotReplacementsUtil'loadWordFromObjectIntrinsic-4 [#_"Object" object, #_"long" offset, #_@ConstantNodeParameter #_"LocationIdentity" locationIdentity, #_@ConstantNodeParameter #_"JavaKind" wordKind])
-
-    ; @NodeIntrinsic(value = RawLoadNode.class)
-    (§ native- #_"KlassPointer" HotSpotReplacementsUtil'loadKlassFromObjectIntrinsic-4 [#_"Object" object, #_"long" offset, #_@ConstantNodeParameter #_"LocationIdentity" locationIdentity, #_@ConstantNodeParameter #_"JavaKind" wordKind])
-
-    ; @NodeIntrinsic(value = LoadHubNode.class)
-    (§ native #_"KlassPointer" HotSpotReplacementsUtil'loadHubIntrinsic-1 [#_"Object" object])
 
     (§ def #_"LocationIdentity" HotSpotReplacementsUtil'CLASS_STATE_LOCATION (NamedLocationIdentity'mutable-1 "ClassState"))
 
@@ -19367,7 +18822,7 @@
 
     (§ def #_"LocationIdentity" HotSpotReplacementsUtil'CLASS_KLASS_LOCATION
         (§ reify #_"OptimizingLocationIdentity" (OptimizingLocationIdentity'new-1 "Class._klass")
-            #_unused
+            #_unused
             (§ override! #_"ValueNode" OptimizingLocationIdentity''canonicalizeRead-5 [#_"OptimizingLocationIdentity" this, #_"ValueNode" read, #_"AddressNode" location, #_"ValueNode" object, #_"CanonicalizerTool" tool]
                 (OptimizingLocationIdentity'foldIndirection-3 read, object, HotSpotReplacementsUtil'CLASS_MIRROR_LOCATION)
             )
@@ -19376,7 +18831,7 @@
 
     (§ def #_"LocationIdentity" HotSpotReplacementsUtil'CLASS_ARRAY_KLASS_LOCATION
         (§ reify #_"OptimizingLocationIdentity" (OptimizingLocationIdentity'new-1 "Class._array_klass")
-            #_unused
+            #_unused
             (§ override! #_"ValueNode" OptimizingLocationIdentity''canonicalizeRead-5 [#_"OptimizingLocationIdentity" this, #_"ValueNode" read, #_"AddressNode" location, #_"ValueNode" object, #_"CanonicalizerTool" tool]
                 (OptimizingLocationIdentity'foldIndirection-3 read, object, HotSpotReplacementsUtil'ARRAY_KLASS_COMPONENT_MIRROR)
             )
@@ -19401,7 +18856,7 @@
 
     (§ def #_"LocationIdentity" HotSpotReplacementsUtil'OBJ_ARRAY_KLASS_ELEMENT_KLASS_LOCATION
         (§ reify #_"OptimizingLocationIdentity" (OptimizingLocationIdentity'new-1 "ObjArrayKlass::_element_klass")
-            #_unused
+            #_unused
             (§ override! #_"ValueNode" OptimizingLocationIdentity''canonicalizeRead-5 [#_"OptimizingLocationIdentity" this, #_"ValueNode" read, #_"AddressNode" location, #_"ValueNode" object, #_"CanonicalizerTool" tool]
                 read
             )
@@ -19421,7 +18876,7 @@
         (NamedLocationIdentity'new-2 name, true)
     )
 
-    #_unused
+    #_unused
     (§ abstract #_"ValueNode" OptimizingLocationIdentity''canonicalizeRead-5 [#_"OptimizingLocationIdentity" this, #_"ValueNode" read, #_"AddressNode" location, #_"ValueNode" object, #_"CanonicalizerTool" tool])
 
     (§ method! #_"ValueNode" OptimizingLocationIdentity''findReadHub-2 [#_"OptimizingLocationIdentity" this, #_"ValueNode" object]
@@ -19483,8 +18938,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"Node" HubGetClassNode''canonical-2 [#_"HubGetClassNode" this, #_"CanonicalizerTool" tool]
+    (§ override! #_"Node" Canonicalizable''canonical-2 [#_"HubGetClassNode" this, #_"CanonicalizerTool" tool]
         (when-not (and (CanonicalizerTool''allUsagesAvailable-1 tool) (Node''hasNoUsages-1 this))
             (when (and (some? HotSpot'metaAccess) (instance? ConstantNode (:hub this))) => this
                 (let [
@@ -19503,16 +18957,12 @@
         nil
     )
 
-    ; @NodeIntrinsic
-    #_unused
-    (§ native #_"Class" HubGetClassNode'readClass-1 [#_"KlassPointer" hub])
-
-    #_unused
+    #_unused
     (§ override! #_"ValueNode" HubGetClassNode''getValue-1 [#_"HubGetClassNode" this]
         (:hub this)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Constant" HubGetClassNode''convert-2 [#_"HubGetClassNode" this, #_"Constant" constant]
         (if (= JavaConstant/NULL_POINTER constant)
             constant
@@ -19520,7 +18970,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Constant" HubGetClassNode''reverse-2 [#_"HubGetClassNode" this, #_"Constant" constant]
         (if (= JavaConstant/NULL_POINTER constant)
             constant
@@ -19538,12 +18988,12 @@
     ;;;
      ; Any concrete Klass* has a corresponding {@link java.lang.Class}.
      ;;
-    #_unused
+    #_unused
     (§ override! #_"boolean" HubGetClassNode''isLossless-1 [#_"HubGetClassNode" this]
         true
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" HubGetClassNode''mayNullCheckSkipConversion-1 [#_"HubGetClassNode" this]
         true
     )
@@ -19561,13 +19011,11 @@
     ;;;
      ; A test against a final type.
      ;;
-    ; @Snippet
-    #_unused
-    (§ defn #_"Object" InstanceOfSnippets'instanceofExact-4 [#_"Object" object, #_"KlassPointer" exactHub, #_"Object" trueValue, #_"Object" falseValue]
+    (§ snippet! #_"Object" #_"InstanceOfSnippets" "instanceofExact" [#_"Object" object, #_"KlassPointer" exactHub, #_"Object" trueValue, #_"Object" falseValue]
         (if (BranchProbabilityNode'probability-2 BranchProbabilityNode'NOT_FREQUENT_PROBABILITY, (nil? object))
             falseValue
             (let [
-                #_"KlassPointer" objectHub (HotSpotReplacementsUtil'loadHubIntrinsic-1 (PiNode'piCastNonNull-2 object, (SnippetAnchorNode'anchor-0)))
+                #_"KlassPointer" objectHub (LoadHubNode'loadHubIntrinsic-1 (PiNode'piCastNonNull-2 object, (SnippetAnchorNode'anchor-0)))
             ]
                 (if (BranchProbabilityNode'probability-2 BranchProbabilityNode'LIKELY_PROBABILITY, (KlassPointer''notEqual-2 objectHub, exactHub))
                     falseValue
@@ -19580,13 +19028,11 @@
     ;;;
      ; A test against a primary type.
      ;;
-    ; @Snippet
-    #_unused
-    (§ defn #_"Object" InstanceOfSnippets'instanceofPrimary-5 [#_"KlassPointer" hub, #_"Object" object, #_@ConstantParameter #_"int" superCheckOffset, #_"Object" trueValue, #_"Object" falseValue]
+    (§ snippet! #_"Object" #_"InstanceOfSnippets" "instanceofPrimary" [#_"KlassPointer" hub, #_"Object" object, #_@ConstantParameter #_"int" superCheckOffset, #_"Object" trueValue, #_"Object" falseValue]
         (if (BranchProbabilityNode'probability-2 BranchProbabilityNode'NOT_FREQUENT_PROBABILITY, (nil? object))
             falseValue
             (let [
-                #_"KlassPointer" objectHub (HotSpotReplacementsUtil'loadHubIntrinsic-1 (PiNode'piCastNonNull-2 object, (SnippetAnchorNode'anchor-0)))
+                #_"KlassPointer" objectHub (LoadHubNode'loadHubIntrinsic-1 (PiNode'piCastNonNull-2 object, (SnippetAnchorNode'anchor-0)))
             ]
                 (if (BranchProbabilityNode'probability-2 BranchProbabilityNode'NOT_LIKELY_PROBABILITY, (KlassPointer''notEqual-2 (KlassPointer''readKlassPointer-3 objectHub, superCheckOffset, HotSpotReplacementsUtil'PRIMARY_SUPERS_LOCATION), hub))
                     falseValue
@@ -19599,13 +19045,11 @@
     ;;;
      ; A test against a restricted secondary type type.
      ;;
-    ; @Snippet
-    #_unused
-    (§ defn #_"Object" InstanceOfSnippets'instanceofSecondary-6 [#_"KlassPointer" hub, #_"Object" object, #_@VarargsParameter #_"KlassPointer[]" hints, #_@VarargsParameter #_"boolean[]" hintIsPositive, #_"Object" trueValue, #_"Object" falseValue]
+    (§ snippet! #_"Object" #_"InstanceOfSnippets" "instanceofSecondary" [#_"KlassPointer" hub, #_"Object" object, #_@VarargsParameter #_"KlassPointer[]" hints, #_@VarargsParameter #_"boolean[]" hintIsPositive, #_"Object" trueValue, #_"Object" falseValue]
         (if (BranchProbabilityNode'probability-2 BranchProbabilityNode'NOT_FREQUENT_PROBABILITY, (nil? object))
             falseValue
             (let [
-                #_"KlassPointer" objectHub (HotSpotReplacementsUtil'loadHubIntrinsic-1 (PiNode'piCastNonNull-2 object, (SnippetAnchorNode'anchor-0)))
+                #_"KlassPointer" objectHub (LoadHubNode'loadHubIntrinsic-1 (PiNode'piCastNonNull-2 object, (SnippetAnchorNode'anchor-0)))
             ]
                 ;; if we get an exact match: succeed immediately
                 (ExplodeLoopNode'explodeLoop-0)
@@ -19622,13 +19066,11 @@
     ;;;
      ; Type test used when the type being tested against is not known at compile time.
      ;;
-    ; @Snippet
-    #_unused
-    (§ defn #_"Object" InstanceOfSnippets'instanceofDynamic-5 [#_"KlassPointer" hub, #_"Object" object, #_"Object" trueValue, #_"Object" falseValue, #_@ConstantParameter #_"boolean" allowNull]
+    (§ snippet! #_"Object" #_"InstanceOfSnippets" "instanceofDynamic" [#_"KlassPointer" hub, #_"Object" object, #_"Object" trueValue, #_"Object" falseValue, #_@ConstantParameter #_"boolean" allowNull]
         (if (BranchProbabilityNode'probability-2 BranchProbabilityNode'NOT_FREQUENT_PROBABILITY, (nil? object))
             (if allowNull trueValue falseValue)
             (let [
-                #_"KlassPointer" nonNullObjectHub (HotSpotReplacementsUtil'loadHubIntrinsic-1 (PiNode'piCastNonNull-2 object, (SnippetAnchorNode'anchor-0)))
+                #_"KlassPointer" nonNullObjectHub (LoadHubNode'loadHubIntrinsic-1 (PiNode'piCastNonNull-2 object, (SnippetAnchorNode'anchor-0)))
             ]
                 ;; The hub of a primitive type can be nil => always return false in this case.
                 (if (and (BranchProbabilityNode'probability-2 BranchProbabilityNode'FAST_PATH_PROBABILITY, (not (MetaspacePointer''isNull-1 hub))) (TypeCheckSnippetUtils'checkUnknownSubType-2 hub, nonNullObjectHub))
@@ -19639,16 +19081,14 @@
         )
     )
 
-    ; @Snippet
-    #_unused
-    (§ defn #_"Object" InstanceOfSnippets'isAssignableFrom-4 [#_@NonNullParameter #_"Class" thisClassNonNull, #_"Class" otherClass, #_"Object" trueValue, #_"Object" falseValue]
+    (§ snippet! #_"Object" #_"InstanceOfSnippets" "isAssignableFrom" [#_@NonNullParameter #_"Class" thisClassNonNull, #_"Class" otherClass, #_"Object" trueValue, #_"Object" falseValue]
         (if (nil? otherClass)
             (do
                 (DeoptimizeNode'deopt-2 DeoptimizationAction/InvalidateReprofile, DeoptimizationReason/NullCheckException)
                 false
             )
             (let [
-                #_"Class" otherClassNonNull (PiNode'piCastNonNullClass-2 otherClass, (SnippetAnchorNode'anchor-0))
+                #_"Class" otherClassNonNull (PiNode'piCastNonNull-2 otherClass, (SnippetAnchorNode'anchor-0))
             ]
                 (if (BranchProbabilityNode'probability-2 BranchProbabilityNode'NOT_LIKELY_PROBABILITY, (= thisClassNonNull otherClassNonNull))
                     trueValue
@@ -19658,7 +19098,7 @@
                     ]
                         (if (and (BranchProbabilityNode'probability-2 BranchProbabilityNode'FAST_PATH_PROBABILITY, (not (MetaspacePointer''isNull-1 thisHub)))
                                  (BranchProbabilityNode'probability-2 BranchProbabilityNode'FAST_PATH_PROBABILITY, (not (MetaspacePointer''isNull-1 otherHub)))
-                                 (TypeCheckSnippetUtils'checkUnknownSubType-2 thisHub, (ClassGetHubNode'piCastNonNull-2 otherHub, (SnippetAnchorNode'anchor-0)))
+                                 (TypeCheckSnippetUtils'checkUnknownSubType-2 thisHub, (PiNode'piCastNonNull-2 otherHub, (SnippetAnchorNode'anchor-0)))
                               )
                             trueValue
                             ;; If either hub is nil, one of them is a primitive type and given that the class is not equal, return false.
@@ -19685,80 +19125,80 @@
         (InstanceOfSnippetsTemplates'new-0)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Arguments" InstanceOfTemplates''makeArguments-3 [#_"InstanceOfTemplates" this, #_"InstanceOfUsageReplacer" replacer, #_"LoweringTool" lowerer]
         (condp instance? (:instanceOf replacer)
             InstanceOfNode
-            (let [
-                #_"InstanceOfNode" instanceOf (:instanceOf replacer)
-                #_"ValueNode" object (UnaryOpLogicNode''getValue-1 instanceOf)
-                #_"TypeReference" targetType (InstanceOfNode''type-1 instanceOf)
-                #_"HotSpotResolvedObjectType" type (:type targetType)
-                ;; If non-nil, then this is the only type that could pass the type check because the target of
-                ;; the type check is a final class or has been speculated to be a final class and this value is
-                ;; the only concrete subclass of the target type.
-                #_"ResolvedJavaType" exact (when (and (some? targetType) (:exactReference targetType)) type)
-                #_"ConstantNode" hub (ConstantNode'forConstant-3 KlassPointerStamp'KLASS_NON_NULL, (#_"HotSpotResolvedObjectType" .klass type), (:graph instanceOf))
-                #_"Graph" graph (:graph instanceOf)
-                #_"Arguments" args
-                    (cond
-                        (some? exact)
-                            (let [
-                                args (Arguments'new-3 (:instanceofExact this), (:guardsStage graph), (:loweringStage (:phase lowerer)))
-                            ]
-                                (Arguments''add-2 args, object)
-                                ((Arguments''add-2 args, (ConstantNode'forConstant-3 KlassPointerStamp'KLASS_NON_NULL, (#_"HotSpotResolvedObjectType" .klass exact), graph)))
-                                args
-                            )
-                        (#_"HotSpotResolvedObjectType" .isPrimaryType type)
-                            (let [
-                                args (Arguments'new-3 (:instanceofPrimary this), (:guardsStage graph), (:loweringStage (:phase lowerer)))
-                            ]
-                                (Arguments''add-2 args, hub)
-                                (Arguments''add-2 args, object)
-                                (Arguments''addConst-2 args, (#_"HotSpotResolvedObjectType" .superCheckOffset type))
-                                args
-                            )
-                        :else
-                            (let [
-                                args (Arguments'new-3 (:instanceofSecondary this), (:guardsStage graph), (:loweringStage (:phase lowerer)))
-                            ]
-                                (Arguments''add-2 args, hub)
-                                (Arguments''add-2 args, object)
-                                (Arguments''addVarargs-4 args, KlassPointer, KlassPointerStamp'KLASS_NON_NULL, (make-array ConstantNode 0))
-                                (Arguments''addVarargs-4 args, boolean'class, (StampFactory'forKind-1 JavaKind/Boolean), (boolean-array 0))
-                                args
-                            )
-                    )
-            ]
-                (Arguments''add-2 args, (:trueValue replacer))
-                (Arguments''add-2 args, (:falseValue replacer))
-                args
-            )
+                (let [
+                    #_"InstanceOfNode" instanceOf (:instanceOf replacer)
+                    #_"ValueNode" object (UnaryOpLogicNode''getValue-1 instanceOf)
+                    #_"TypeReference" targetType (InstanceOfNode''type-1 instanceOf)
+                    #_"HotSpotResolvedObjectType" type (:type targetType)
+                    ;; If non-nil, then this is the only type that could pass the type check because the target of
+                    ;; the type check is a final class or has been speculated to be a final class and this value is
+                    ;; the only concrete subclass of the target type.
+                    #_"ResolvedJavaType" exact (when (and (some? targetType) (:exactReference targetType)) type)
+                    #_"ConstantNode" hub (ConstantNode'forConstant-3 KlassPointerStamp'KLASS_NON_NULL, (#_"HotSpotResolvedObjectType" .klass type), (:graph instanceOf))
+                    #_"Graph" graph (:graph instanceOf)
+                    #_"Arguments" args
+                        (cond
+                            (some? exact)
+                                (let [
+                                    args (Arguments'new-3 (:instanceofExact this), (:guardsStage graph), (:loweringStage (:phase lowerer)))
+                                ]
+                                    (Arguments''add-2 args, object)
+                                    ((Arguments''add-2 args, (ConstantNode'forConstant-3 KlassPointerStamp'KLASS_NON_NULL, (#_"HotSpotResolvedObjectType" .klass exact), graph)))
+                                    args
+                                )
+                            (#_"HotSpotResolvedObjectType" .isPrimaryType type)
+                                (let [
+                                    args (Arguments'new-3 (:instanceofPrimary this), (:guardsStage graph), (:loweringStage (:phase lowerer)))
+                                ]
+                                    (Arguments''add-2 args, hub)
+                                    (Arguments''add-2 args, object)
+                                    (Arguments''addConst-2 args, (#_"HotSpotResolvedObjectType" .superCheckOffset type))
+                                    args
+                                )
+                            :else
+                                (let [
+                                    args (Arguments'new-3 (:instanceofSecondary this), (:guardsStage graph), (:loweringStage (:phase lowerer)))
+                                ]
+                                    (Arguments''add-2 args, hub)
+                                    (Arguments''add-2 args, object)
+                                    (Arguments''addVarargs-4 args, KlassPointer, KlassPointerStamp'KLASS_NON_NULL, (make-array ConstantNode 0))
+                                    (Arguments''addVarargs-4 args, boolean'class, (StampFactory'forKind-1 JavaKind/Boolean), (boolean-array 0))
+                                    args
+                                )
+                        )
+                ]
+                    (Arguments''add-2 args, (:trueValue replacer))
+                    (Arguments''add-2 args, (:falseValue replacer))
+                    args
+                )
             InstanceOfDynamicNode
-            (let [
-                #_"InstanceOfDynamicNode" instanceOf (:instanceOf replacer)
-                #_"ValueNode" object (:y instanceOf)
-                #_"Arguments" args (Arguments'new-3 (:instanceofDynamic this), (:guardsStage (:graph instanceOf)), (:loweringStage (:phase lowerer)))
-            ]
-                (Arguments''add-2 args, (:x instanceOf))
-                (Arguments''add-2 args, object)
-                (Arguments''add-2 args, (:trueValue replacer))
-                (Arguments''add-2 args, (:falseValue replacer))
-                (Arguments''addConst-2 args, (:allow-nil? instanceOf))
-                args
-            )
+                (let [
+                    #_"InstanceOfDynamicNode" instanceOf (:instanceOf replacer)
+                    #_"ValueNode" object (:y instanceOf)
+                    #_"Arguments" args (Arguments'new-3 (:instanceofDynamic this), (:guardsStage (:graph instanceOf)), (:loweringStage (:phase lowerer)))
+                ]
+                    (Arguments''add-2 args, (:x instanceOf))
+                    (Arguments''add-2 args, object)
+                    (Arguments''add-2 args, (:trueValue replacer))
+                    (Arguments''add-2 args, (:falseValue replacer))
+                    (Arguments''addConst-2 args, (:allow-nil? instanceOf))
+                    args
+                )
             ClassIsAssignableFromNode
-            (let [
-                #_"ClassIsAssignableFromNode" isAssignable (:instanceOf replacer)
-                #_"Arguments" args (Arguments'new-3 (:isAssignableFrom this), (:guardsStage (:graph isAssignable)), (:loweringStage (:phase lowerer)))
-            ]
-                (Arguments''add-2 args, (:x isAssignable))
-                (Arguments''add-2 args, (:y isAssignable))
-                (Arguments''add-2 args, (:trueValue replacer))
-                (Arguments''add-2 args, (:falseValue replacer))
-                args
-            )
+                (let [
+                    #_"ClassIsAssignableFromNode" isAssignable (:instanceOf replacer)
+                    #_"Arguments" args (Arguments'new-3 (:isAssignableFrom this), (:guardsStage (:graph isAssignable)), (:loweringStage (:phase lowerer)))
+                ]
+                    (Arguments''add-2 args, (:x isAssignable))
+                    (Arguments''add-2 args, (:y isAssignable))
+                    (Arguments''add-2 args, (:trueValue replacer))
+                    (Arguments''add-2 args, (:falseValue replacer))
+                    args
+                )
         )
     )
 )
@@ -19786,13 +19226,15 @@
         (KlassLayoutHelperNode'canonical-3 nil, klass, (StampFactory'forKind-1 JavaKind/Int))
     )
 
-    #_unused
+    (§ intrinsic! #_"int" KlassLayoutHelperNode'readLayoutHelper-1 [#_"KlassPointer" klass])
+
+    #_intrinsifier
     (§ defn #_"boolean" KlassLayoutHelperNode'intrinsify-3 [#_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"ValueNode" klass]
         (BytecodeParser''push-3 parser, JavaKind/Int, (BytecodeParser''append-2 parser, (KlassLayoutHelperNode'create-1 klass)))
         true
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" KlassLayoutHelperNode''inferStamp-1 [#_"KlassLayoutHelperNode" this]
         (and (instance? LoadHubNode (:klass this))
             (let [
@@ -19817,8 +19259,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"Node" KlassLayoutHelperNode''canonical-2 [#_"KlassLayoutHelperNode" this, #_"CanonicalizerTool" tool]
+    (§ override! #_"Node" Canonicalizable''canonical-2 [#_"KlassLayoutHelperNode" this, #_"CanonicalizerTool" tool]
         (when-not (and (CanonicalizerTool''allUsagesAvailable-1 tool) (Node''hasNoUsages-1 this))
             (KlassLayoutHelperNode'canonical-3 this, (:klass this), (:stamp this))
         )
@@ -19847,7 +19288,7 @@
         (or node (KlassLayoutHelperNode'new-1 klass))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" KlassLayoutHelperNode''lower-2 [#_"KlassLayoutHelperNode" this, #_"LoweringTool" lowerer]
         (Lowerer'lowerKlassLayoutHelperNode-2 this, lowerer)
         nil
@@ -19931,9 +19372,7 @@
  ; appropriately to comply with the layouts above.
  ;;
 (value-ns MonitorSnippets (§ implements Snippets)
-    ; @Snippet
-    #_unused
-    (§ defn #_"void" MonitorSnippets'monitorenter-5 [#_"Object" object, #_"KlassPointer" hub, #_@ConstantParameter #_"int" lockDepth, #_@ConstantParameter #_"Register" threadRegister, #_@ConstantParameter #_"Register" stackPointerRegister]
+    (§ snippet! #_"void" #_"MonitorSnippets" "monitorenter" [#_"Object" object, #_"KlassPointer" hub, #_@ConstantParameter #_"int" lockDepth, #_@ConstantParameter #_"Register" threadRegister, #_@ConstantParameter #_"Register" stackPointerRegister]
         ;; load the mark word - this includes a nil-check on object
         (let [
             #_"Word" mark (HotSpotReplacementsUtil'loadWordFromObject-2 object, HotSpot'markOffset)
@@ -19998,7 +19437,7 @@
                 )
             )
             ;; slow-path runtime-call
-            (MonitorSnippets'monitorenterStubC-3 ForeignCallDescriptor'MONITORENTER, object, lock)
+            (ForeignCallNode'monitorenterStubC-3 ForeignCallDescriptor'MONITORENTER, object, lock)
         )
         nil
     )
@@ -20013,82 +19452,84 @@
             #_"Word" thread (HotSpotReplacementsUtil'registerAsWord-1 threadRegister)
             #_"Word" tmp (Word''and-2 (Word''xor-2 (Word''or-2 prototypeMarkWord, thread), mark), (bit-not HotSpot'ageMaskInPlace))
         ]
-            (when (BranchProbabilityNode'probability-2 BranchProbabilityNode'FAST_PATH_PROBABILITY, (Word''equal-2 tmp, 0))
-                ;; object is already biased to current thread -> done
-                (FastAcquireBiasedLockNode'mark-1 object)
-                (§ return true)
-            )
-
-            ;; now check to see whether biasing is enabled for this object
-            (if (BranchProbabilityNode'probability-2 BranchProbabilityNode'NOT_FREQUENT_PROBABILITY, (Word''equal-2 biasableLockBits, (WordFactory/unsigned HotSpot'biasedLockPattern)))
-                (let [
-                    #_"Pointer" objectPointer (Word'objectToTrackedPointer-1 object)
-                ]
-                    ;; At this point we know that the mark word has the bias pattern and that we are not the bias owner in the
-                    ;; current epoch. We need to figure out more details about the state of the mark word in order to know what
-                    ;; operations can be legally performed on the object's mark word.
-
-                    ;; If the low three bits in the xor result aren't clear, that means the prototype header is no longer biasable
-                    ;; and we have to revoke the bias on this object.
-                    (if (BranchProbabilityNode'probability-2 BranchProbabilityNode'FREQUENT_PROBABILITY, (Word''equal-2 (Word''and-2 tmp, HotSpot'biasedLockMaskInPlace), 0))
-                        (do
-                            ;; Biasing is still enabled for object's type. See whether the epoch of the current bias is still valid,
-                            ;; meaning that the epoch bits of the mark word are equal to the epoch bits of the prototype mark word.
-                            ;; (Note that the prototype mark word's epoch bits only change at a safepoint.) If not, attempt to rebias
-                            ;; the object toward the current thread. Note that we must be absolutely sure that the current epoch is
-                            ;; invalid in order to do this, because otherwise the manipulations it performs on the mark word are illegal.
-                            (if (BranchProbabilityNode'probability-2 BranchProbabilityNode'FREQUENT_PROBABILITY, (Word''equal-2 (Word''and-2 tmp, HotSpot'epochMaskInPlace), 0))
-                                ;; The epoch of the current bias is still valid but we know nothing about the owner, it might be
-                                ;; set or it might be clear. Try to acquire the bias of the object using an atomic operation. If
-                                ;; this fails we will go in to the runtime to revoke the object's bias. Note that we first construct
-                                ;; the presumed unbiased header so we don't accidentally blow away another thread's valid bias.
-                                (let [
-                                    #_"Word" unbiasedMark (Word''and-2 mark, (| HotSpot'biasedLockMaskInPlace HotSpot'ageMaskInPlace HotSpot'epochMaskInPlace))
-                                    #_"Word" biasedMark (Word''or-2 unbiasedMark, thread)
-                                ]
-                                    (when (BranchProbabilityNode'probability-2 BranchProbabilityNode'VERY_FAST_PATH_PROBABILITY, (#_"Pointer" .logicCompareAndSwapWord objectPointer, HotSpot'markOffset, unbiasedMark, biasedMark, HotSpotReplacementsUtil'MARK_WORD_LOCATION))
-                                        ;; object is now biased to current thread -> done
-                                        (§ return true)
-                                    )
-                                    ;; If the biasing toward our thread failed, this means that another thread owns the bias
-                                    ;; and we need to revoke that bias. The revocation will occur in the interpreter runtime.
-                                )
-                                ;; At this point we know the epoch has expired, meaning that the current bias owner, if any, is
-                                ;; actually invalid. Under these circumstances *only*, are we allowed to use the current mark word
-                                ;; value as the comparison value when doing the CAS to acquire the bias in the current epoch. In
-                                ;; other words, we allow transfer of the bias from one thread to another directly in this situation.
-                                (let [
-                                    #_"Word" biasedMark (Word''or-2 prototypeMarkWord, thread)
-                                ]
-                                    (when (BranchProbabilityNode'probability-2 BranchProbabilityNode'VERY_FAST_PATH_PROBABILITY, (#_"Pointer" .logicCompareAndSwapWord objectPointer, HotSpot'markOffset, mark, biasedMark, HotSpotReplacementsUtil'MARK_WORD_LOCATION))
-                                        ;; object is now biased to current thread -> done
-                                        (§ return true)
-                                    )
-                                    ;; If the biasing toward our thread failed, then another thread succeeded in biasing it toward itself
-                                    ;; and we need to revoke that bias. The revocation will occur in the runtime in the slow case.
-                                )
-                            )
-                            ;; slow-path runtime-call
-                            (MonitorSnippets'monitorenterStubC-3 ForeignCallDescriptor'MONITORENTER, object, lock)
-                            (§ return true)
-                        )
-                        ;; The prototype mark word doesn't have the bias bit set any more, indicating that objects of this
-                        ;; data type are not supposed to be biased any more. We are going to try to reset the mark of this
-                        ;; object to the prototype value and fall through to the CAS-based locking scheme. Note that if our
-                        ;; CAS fails, it means that another thread raced us for the privilege of revoking the bias of this
-                        ;; particular object, so it's okay to continue in the normal locking code.
-                        (let [
-                            #_"Word" result (#_"Pointer" .compareAndSwapWord objectPointer, HotSpot'markOffset, mark, prototypeMarkWord, HotSpotReplacementsUtil'MARK_WORD_LOCATION)
-                        ]
-                            ;; Fall through to the normal CAS-based lock, because no matter what the result of the above CAS,
-                            ;; some thread must have succeeded in removing the bias bit from the object's header.
-                            (§ return false)
-                        )
+            (or
+                (and (BranchProbabilityNode'probability-2 BranchProbabilityNode'FAST_PATH_PROBABILITY, (Word''equal-2 tmp, 0))
+                    (do
+                        ;; object is already biased to current thread -> done
+                        (FastAcquireBiasedLockNode'mark-1 object)
+                        true
                     )
                 )
-                (do
-                    ;; biasing not enabled -> fall through to lightweight locking
-                    (§ return false)
+
+                ;; now check to see whether biasing is enabled for this object ;; => biasing not enabled -> fall through to lightweight locking
+                (and (BranchProbabilityNode'probability-2 BranchProbabilityNode'NOT_FREQUENT_PROBABILITY, (Word''equal-2 biasableLockBits, (WordFactory/unsigned HotSpot'biasedLockPattern)))
+                    (let [
+                        #_"Pointer" objectPointer (Word'objectToTrackedPointer-1 object)
+                    ]
+                        ;; At this point we know that the mark word has the bias pattern and that we are not the bias owner in the
+                        ;; current epoch. We need to figure out more details about the state of the mark word in order to know what
+                        ;; operations can be legally performed on the object's mark word.
+
+                        ;; If the low three bits in the xor result aren't clear, that means the prototype header is no longer biasable
+                        ;; and we have to revoke the bias on this object.
+                        (if (BranchProbabilityNode'probability-2 BranchProbabilityNode'FREQUENT_PROBABILITY, (Word''equal-2 (Word''and-2 tmp, HotSpot'biasedLockMaskInPlace), 0))
+                            (or
+                                ;; Biasing is still enabled for object's type. See whether the epoch of the current bias is still valid,
+                                ;; meaning that the epoch bits of the mark word are equal to the epoch bits of the prototype mark word.
+                                ;; (Note that the prototype mark word's epoch bits only change at a safepoint.) If not, attempt to rebias
+                                ;; the object toward the current thread. Note that we must be absolutely sure that the current epoch is
+                                ;; invalid in order to do this, because otherwise the manipulations it performs on the mark word are illegal.
+                                (if (BranchProbabilityNode'probability-2 BranchProbabilityNode'FREQUENT_PROBABILITY, (Word''equal-2 (Word''and-2 tmp, HotSpot'epochMaskInPlace), 0))
+                                    ;; The epoch of the current bias is still valid but we know nothing about the owner, it might be
+                                    ;; set or it might be clear. Try to acquire the bias of the object using an atomic operation. If
+                                    ;; this fails we will go in to the runtime to revoke the object's bias. Note that we first construct
+                                    ;; the presumed unbiased header so we don't accidentally blow away another thread's valid bias.
+                                    (let [
+                                        #_"Word" unbiasedMark (Word''and-2 mark, (| HotSpot'biasedLockMaskInPlace HotSpot'ageMaskInPlace HotSpot'epochMaskInPlace))
+                                        #_"Word" biasedMark (Word''or-2 unbiasedMark, thread)
+                                    ]
+                                        (and (BranchProbabilityNode'probability-2 BranchProbabilityNode'VERY_FAST_PATH_PROBABILITY, (#_"Pointer" .logicCompareAndSwapWord objectPointer, HotSpot'markOffset, unbiasedMark, biasedMark, HotSpotReplacementsUtil'MARK_WORD_LOCATION))
+                                            ;; object is now biased to current thread -> done
+                                            true
+                                        )
+                                        ;; If the biasing toward our thread failed, this means that another thread owns the bias
+                                        ;; and we need to revoke that bias. The revocation will occur in the interpreter runtime.
+                                    )
+                                    ;; At this point we know the epoch has expired, meaning that the current bias owner, if any, is
+                                    ;; actually invalid. Under these circumstances *only*, are we allowed to use the current mark word
+                                    ;; value as the comparison value when doing the CAS to acquire the bias in the current epoch. In
+                                    ;; other words, we allow transfer of the bias from one thread to another directly in this situation.
+                                    (let [
+                                        #_"Word" biasedMark (Word''or-2 prototypeMarkWord, thread)
+                                    ]
+                                        (and (BranchProbabilityNode'probability-2 BranchProbabilityNode'VERY_FAST_PATH_PROBABILITY, (#_"Pointer" .logicCompareAndSwapWord objectPointer, HotSpot'markOffset, mark, biasedMark, HotSpotReplacementsUtil'MARK_WORD_LOCATION))
+                                            ;; object is now biased to current thread -> done
+                                            true
+                                        )
+                                        ;; If the biasing toward our thread failed, then another thread succeeded in biasing it toward itself
+                                        ;; and we need to revoke that bias. The revocation will occur in the runtime in the slow case.
+                                    )
+                                )
+
+                                (do
+                                    ;; slow-path runtime-call
+                                    (ForeignCallNode'monitorenterStubC-3 ForeignCallDescriptor'MONITORENTER, object, lock)
+                                    true
+                                )
+                            )
+                            ;; The prototype mark word doesn't have the bias bit set any more, indicating that objects of this
+                            ;; data type are not supposed to be biased any more. We are going to try to reset the mark of this
+                            ;; object to the prototype value and fall through to the CAS-based locking scheme. Note that if our
+                            ;; CAS fails, it means that another thread raced us for the privilege of revoking the bias of this
+                            ;; particular object, so it's okay to continue in the normal locking code.
+                            (do
+                                (#_"Pointer" .compareAndSwapWord objectPointer, HotSpot'markOffset, mark, prototypeMarkWord, HotSpotReplacementsUtil'MARK_WORD_LOCATION)
+                                ;; Fall through to the normal CAS-based lock, because no matter what the result of the above CAS,
+                                ;; some thread must have succeeded in removing the bias bit from the object's header.
+                                false
+                            )
+                        )
+                    )
                 )
             )
         )
@@ -20116,20 +19557,16 @@
     ;;;
      ; Calls straight out to the monitorenter stub.
      ;;
-    ; @Snippet
-    #_unused
-    (§ defn #_"void" MonitorSnippets'monitorenterStub-2 [#_"Object" object, #_@ConstantParameter #_"int" lockDepth]
+    (§ snippet! #_"void" #_"MonitorSnippets" "monitorenterStub" [#_"Object" object, #_@ConstantParameter #_"int" lockDepth]
         (when (nil? object)
             (DeoptimizeNode'deopt-2 DeoptimizationAction/InvalidateReprofile, DeoptimizationReason/NullCheckException)
         )
         ;; BeginLockScope nodes do not read from object, so a use of object cannot float about the nil-check above.
-        (MonitorSnippets'monitorenterStubC-3 ForeignCallDescriptor'MONITORENTER, object, (BeginLockScopeNode'beginLockScope-1 lockDepth))
+        (ForeignCallNode'monitorenterStubC-3 ForeignCallDescriptor'MONITORENTER, object, (BeginLockScopeNode'beginLockScope-1 lockDepth))
         nil
     )
 
-    ; @Snippet
-    #_unused
-    (§ defn #_"void" MonitorSnippets'monitorexit-3 [#_"Object" object, #_@ConstantParameter #_"int" lockDepth, #_@ConstantParameter #_"Register" threadRegister]
+    (§ snippet! #_"void" #_"MonitorSnippets" "monitorexit" [#_"Object" object, #_@ConstantParameter #_"int" lockDepth, #_@ConstantParameter #_"Register" threadRegister]
         (let [
             #_"Word" mark (HotSpotReplacementsUtil'loadWordFromObject-2 object, HotSpot'markOffset)
         ]
@@ -20163,7 +19600,7 @@
                                 nil ;; ...
                                 (do
                                     ;; the object's mark word was not pointing to the displaced header
-                                    (MonitorSnippets'monitorexitStubC-3 ForeignCallDescriptor'MONITOREXIT, object, lock)
+                                    (ForeignCallNode'monitorexitStubC-3 ForeignCallDescriptor'MONITOREXIT, object, lock)
                                 )
                             )
                         )
@@ -20215,7 +19652,7 @@
                         )
                     )
                 )
-                (MonitorSnippets'monitorexitStubC-3 ForeignCallDescriptor'MONITOREXIT, object, lock)
+                (ForeignCallNode'monitorexitStubC-3 ForeignCallDescriptor'MONITOREXIT, object, lock)
                 true
             )
         )
@@ -20224,23 +19661,15 @@
     ;;;
      ; Calls straight out to the monitorexit stub.
      ;;
-    ; @Snippet
-    #_unused
-    (§ defn #_"void" MonitorSnippets'monitorexitStub-2 [#_"Object" object, #_@ConstantParameter #_"int" lockDepth]
+    (§ snippet! #_"void" #_"MonitorSnippets" "monitorexitStub" [#_"Object" object, #_@ConstantParameter #_"int" lockDepth]
         (let [
             #_"Word" lock (CurrentLockNode'currentLock-1 lockDepth)
         ]
-            (MonitorSnippets'monitorexitStubC-3 ForeignCallDescriptor'MONITOREXIT, object, lock)
+            (ForeignCallNode'monitorexitStubC-3 ForeignCallDescriptor'MONITOREXIT, object, lock)
             (EndLockScopeNode'endLockScope-0)
         )
         nil
     )
-
-    ; @NodeIntrinsic(ForeignCallNode.class)
-    (§ native #_"void" MonitorSnippets'monitorenterStubC-3 [#_@ConstantNodeParameter #_"ForeignCallDescriptor" descriptor, #_"Object" object, #_"Word" lock])
-
-    ; @NodeIntrinsic(ForeignCallNode.class)
-    (§ native #_"void" MonitorSnippets'monitorexitStubC-3 [#_@ConstantNodeParameter #_"ForeignCallDescriptor" descriptor, #_"Object" object, #_"Word" lock])
 )
 
 ;;;
@@ -20330,10 +19759,8 @@
         nil
     )
 
-    ; @Snippet
-    #_unused
-    (§ defn #_"Object" NewObjectSnippets'allocateInstance-6 [#_@ConstantParameter #_"int" size, #_"KlassPointer" hub, #_"Word" prototypeMarkWord, #_@ConstantParameter #_"boolean" fillContents, #_@ConstantParameter #_"Register" threadRegister, #_@ConstantParameter #_"boolean" constantSize]
-        (PiNode'piCastToSnippetReplaceeStamp-1 (NewObjectSnippets'allocateInstanceHelper-6 size, hub, prototypeMarkWord, fillContents, threadRegister, constantSize))
+    (§ snippet! #_"Object" #_"NewObjectSnippets" "allocateInstance" [#_@ConstantParameter #_"int" size, #_"KlassPointer" hub, #_"Word" prototypeMarkWord, #_@ConstantParameter #_"boolean" fillContents, #_@ConstantParameter #_"Register" threadRegister, #_@ConstantParameter #_"boolean" constantSize]
+        (Placeholder'piCastToSnippetReplaceeStamp-1 (NewObjectSnippets'allocateInstanceHelper-6 size, hub, prototypeMarkWord, fillContents, threadRegister, constantSize))
     )
 
     (§ defn #_"Object" NewObjectSnippets'allocateInstanceHelper-6 [#_"int" size, #_"KlassPointer" hub, #_"Word" prototypeMarkWord, #_"boolean" fillContents, #_"Register" threadRegister, #_"boolean" constantSize]
@@ -20349,28 +19776,23 @@
                     (NewObjectSnippets'emitPrefetchAllocate-2 newTop, false)
                     (NewObjectSnippets'formatObject-6 hub, size, top, prototypeMarkWord, fillContents, constantSize)
                 )
-                (NewObjectSnippets'newInstance-2 ForeignCallDescriptor'NEW_INSTANCE, hub)
+                (ForeignCallNode'newInstance-2 ForeignCallDescriptor'NEW_INSTANCE, hub)
             )
         )
     )
 
-    ; @NodeIntrinsic(value = ForeignCallNode.class, injectedStampIsNonNull = true)
-    (§ native #_"Object" NewObjectSnippets'newInstance-2 [#_@ConstantNodeParameter #_"ForeignCallDescriptor" descriptor, #_"KlassPointer" hub])
-
-    ; @Snippet
-    #_unused
-    (§ defn #_"Object" NewObjectSnippets'allocateInstanceDynamic-4 [#_"Class" type, #_"Class" classClass, #_@ConstantParameter #_"boolean" fillContents, #_@ConstantParameter #_"Register" threadRegister]
+    (§ snippet! #_"Object" #_"NewObjectSnippets" "allocateInstanceDynamic" [#_"Class" type, #_"Class" classClass, #_@ConstantParameter #_"boolean" fillContents, #_@ConstantParameter #_"Register" threadRegister]
         (when (BranchProbabilityNode'probability-2 BranchProbabilityNode'SLOW_PATH_PROBABILITY, (nil? type))
             (DeoptimizeNode'deopt-2 DeoptimizationAction/None, DeoptimizationReason/RuntimeConstraint)
         )
         (let [
-            #_"Class" nonNullType (PiNode'piCastNonNullClass-2 type, (SnippetAnchorNode'anchor-0))
+            #_"Class" nonNullType (PiNode'piCastNonNull-2 type, (SnippetAnchorNode'anchor-0))
         ]
             (when (BranchProbabilityNode'probability-2 BranchProbabilityNode'SLOW_PATH_PROBABILITY, (DynamicNewInstanceNode'throwsInstantiationException-2 type, classClass))
                 (DeoptimizeNode'deopt-2 DeoptimizationAction/None, DeoptimizationReason/RuntimeConstraint)
             )
 
-            (PiNode'piCastToSnippetReplaceeStamp-1 (NewObjectSnippets'allocateInstanceDynamicHelper-4 type, fillContents, threadRegister, nonNullType))
+            (Placeholder'piCastToSnippetReplaceeStamp-1 (NewObjectSnippets'allocateInstanceDynamicHelper-4 type, fillContents, threadRegister, nonNullType))
         )
     )
 
@@ -20380,11 +19802,11 @@
         ]
             (when (BranchProbabilityNode'probability-2 BranchProbabilityNode'FAST_PATH_PROBABILITY, (not (MetaspacePointer''isNull-1 hub)))
                 (let [
-                    #_"KlassPointer" nonNullHub (ClassGetHubNode'piCastNonNull-2 hub, (SnippetAnchorNode'anchor-0))
+                    #_"KlassPointer" nonNullHub (PiNode'piCastNonNull-2 hub, (SnippetAnchorNode'anchor-0))
                 ]
                     (when (BranchProbabilityNode'probability-2 BranchProbabilityNode'FAST_PATH_PROBABILITY, (HotSpotReplacementsUtil'isInstanceKlassFullyInitialized-1 nonNullHub))
                         (let [
-                            #_"int" layoutHelper (HotSpotReplacementsUtil'readLayoutHelper-1 nonNullHub)
+                            #_"int" layoutHelper (KlassLayoutHelperNode'readLayoutHelper-1 nonNullHub)
                         ]
                             ;; src/share/vm/oops/klass.hpp: For instances, layout helper is a positive number, the instance size.
                             ;; This size is already passed through align_object_size and scaled to bytes. The low order bit is set
@@ -20409,13 +19831,11 @@
      ;;
     (def #_"int" NewObjectSnippets'MAX_ARRAY_FAST_PATH_ALLOCATION_LENGTH 0x00ffffff)
 
-    ; @Snippet
-    #_unused
-    (§ defn #_"Object" NewObjectSnippets'allocateArray-8 [#_"KlassPointer" hub, #_"int" length, #_"Word" prototypeMarkWord, #_@ConstantParameter #_"int" headerSize, #_@ConstantParameter #_"int" log2ElementSize, #_@ConstantParameter #_"boolean" fillContents, #_@ConstantParameter #_"Register" threadRegister, #_@ConstantParameter #_"boolean" maybeUnroll]
+    (§ snippet! #_"Object" #_"NewObjectSnippets" "allocateArray" [#_"KlassPointer" hub, #_"int" length, #_"Word" prototypeMarkWord, #_@ConstantParameter #_"int" headerSize, #_@ConstantParameter #_"int" log2ElementSize, #_@ConstantParameter #_"boolean" fillContents, #_@ConstantParameter #_"Register" threadRegister, #_@ConstantParameter #_"boolean" maybeUnroll]
         (let [
             #_"Object" result (NewObjectSnippets'allocateArrayImpl-9 hub, length, prototypeMarkWord, headerSize, log2ElementSize, fillContents, threadRegister, maybeUnroll, false)
         ]
-            (PiArrayNode'piArrayCastToSnippetReplaceeStamp-2 result, length)
+            (ArrayPlaceholder'piArrayCastToSnippetReplaceeStamp-2 result, length)
         )
     )
 
@@ -20433,28 +19853,16 @@
                     (NewObjectSnippets'emitPrefetchAllocate-2 newTop, true)
                     (NewObjectSnippets'formatArray-8 hub, allocationSize, length, headerSize, top, prototypeMarkWord, fillContents, maybeUnroll)
                 )
-                (NewObjectSnippets'newArray-4 ForeignCallDescriptor'NEW_ARRAY, hub, length, fillContents)
+                (ForeignCallNode'newArray-4 ForeignCallDescriptor'NEW_ARRAY, hub, length, fillContents)
             )
         )
     )
 
-    ; @NodeIntrinsic(value = ForeignCallNode.class, injectedStampIsNonNull = true)
-    (§ native #_"Object" NewObjectSnippets'newArray-4 [#_@ConstantNodeParameter #_"ForeignCallDescriptor" descriptor, #_"KlassPointer" hub, #_"int" length, #_"boolean" fillContents])
-
-    ; @NodeIntrinsic(value = ForeignCallNode.class, injectedStampIsNonNull = true)
-    #_unused
-    (§ native #_"Object" NewObjectSnippets'dynamicNewArrayStub-3 [#_@ConstantNodeParameter #_"ForeignCallDescriptor" descriptor, #_"Class" elementType, #_"int" length])
-
     (§ defn #_"Object" NewObjectSnippets'dynamicNewInstanceStub-1 [#_"Class" elementType]
-        (NewObjectSnippets'dynamicNewInstanceStubCall-2 ForeignCallDescriptor'DYNAMIC_NEW_INSTANCE, elementType)
+        (ForeignCallNode'dynamicNewInstanceStubCall-2 ForeignCallDescriptor'DYNAMIC_NEW_INSTANCE, elementType)
     )
 
-    ; @NodeIntrinsic(value = ForeignCallNode.class, injectedStampIsNonNull = true)
-    (§ native #_"Object" NewObjectSnippets'dynamicNewInstanceStubCall-2 [#_@ConstantNodeParameter #_"ForeignCallDescriptor" descriptor, #_"Class" elementType])
-
-    ; @Snippet
-    #_unused
-    (§ defn #_"Object" NewObjectSnippets'allocateArrayDynamic-8 [#_"Class" elementType, #_"Class" voidClass, #_"int" length, #_@ConstantParameter #_"boolean" fillContents, #_@ConstantParameter #_"Register" threadRegister, #_@ConstantParameter #_"JavaKind" knownElementKind, #_@ConstantParameter #_"int" knownLayoutHelper, #_"Word" prototypeMarkWord]
+    (§ snippet! #_"Object" #_"NewObjectSnippets" "allocateArrayDynamic" [#_"Class" elementType, #_"Class" voidClass, #_"int" length, #_@ConstantParameter #_"boolean" fillContents, #_@ConstantParameter #_"Register" threadRegister, #_@ConstantParameter #_"JavaKind" knownElementKind, #_@ConstantParameter #_"int" knownLayoutHelper, #_"Word" prototypeMarkWord]
         (NewObjectSnippets'allocateArrayDynamicImpl-8 elementType, voidClass, length, fillContents, threadRegister, knownElementKind, knownLayoutHelper, prototypeMarkWord)
     )
 
@@ -20471,13 +19879,13 @@
                 (DeoptimizeNode'deopt-2 DeoptimizationAction/None, DeoptimizationReason/RuntimeConstraint)
             )
             (let [
-                #_"KlassPointer" nonNullKlass (ClassGetHubNode'piCastNonNull-2 klass, (SnippetAnchorNode'anchor-0))
+                #_"KlassPointer" nonNullKlass (PiNode'piCastNonNull-2 klass, (SnippetAnchorNode'anchor-0))
             ]
                 (when (neg? length)
                     (DeoptimizeNode'deopt-2 DeoptimizationAction/None, DeoptimizationReason/RuntimeConstraint)
                 )
                 (let [
-                    #_"int" layoutHelper (if (= knownElementKind JavaKind/Illegal) (HotSpotReplacementsUtil'readLayoutHelper-1 nonNullKlass) knownLayoutHelper)
+                    #_"int" layoutHelper (if (= knownElementKind JavaKind/Illegal) (KlassLayoutHelperNode'readLayoutHelper-1 nonNullKlass) knownLayoutHelper)
                     ;; For arrays, layout helper is a negative number, containing four distinct bytes,
                     ;; as follows:
                     ;;    MSB:[tag, hsz, ebt, log2(esz)]:LSB
@@ -20490,15 +19898,11 @@
                     #_"int" log2ElementSize (& (>> layoutHelper HotSpot'layoutHelperLog2ElementSizeShift) HotSpot'layoutHelperLog2ElementSizeMask)
                     #_"Object" result (NewObjectSnippets'allocateArrayImpl-9 nonNullKlass, length, prototypeMarkWord, headerSize, log2ElementSize, fillContents, threadRegister, false, true)
                 ]
-                    (PiArrayNode'piArrayCastToSnippetReplaceeStamp-2 result, length)
+                    (ArrayPlaceholder'piArrayCastToSnippetReplaceeStamp-2 result, length)
                 )
             )
         )
     )
-
-    ; @NodeIntrinsic(value = ForeignCallNode.class, injectedStampIsNonNull = true)
-    #_unused
-    (§ native #_"Object" NewObjectSnippets'newArrayCall-4 [#_@ConstantNodeParameter #_"ForeignCallDescriptor" descriptor, #_"KlassPointer" hub, #_"int" rank, #_"Word" dims])
 
     ;;;
      ; Maximum number of long stores to emit when zeroing an object with a constant size.
@@ -20608,9 +20012,9 @@
  ;;
 (final-ns NewObjectTemplates (§ extends AbstractTemplates)
     (§ final #_"SnippetInfo" :allocateInstance (AbstractTemplates''snippet-4* this, NewObjectSnippets, "allocateInstance", HotSpotReplacementsUtil'MARK_WORD_LOCATION, HotSpotReplacementsUtil'HUB_WRITE_LOCATION, HotSpotReplacementsUtil'TLAB_TOP_LOCATION, HotSpotReplacementsUtil'TLAB_END_LOCATION))
+    (§ final #_"SnippetInfo" :allocateInstanceDynamic (AbstractTemplates''snippet-4* this, NewObjectSnippets, "allocateInstanceDynamic", HotSpotReplacementsUtil'MARK_WORD_LOCATION, HotSpotReplacementsUtil'HUB_WRITE_LOCATION, HotSpotReplacementsUtil'TLAB_TOP_LOCATION, HotSpotReplacementsUtil'TLAB_END_LOCATION))
     (§ final #_"SnippetInfo" :allocateArray (AbstractTemplates''snippet-4* this, NewObjectSnippets, "allocateArray", HotSpotReplacementsUtil'MARK_WORD_LOCATION, HotSpotReplacementsUtil'HUB_WRITE_LOCATION, HotSpotReplacementsUtil'TLAB_TOP_LOCATION, HotSpotReplacementsUtil'TLAB_END_LOCATION))
     (§ final #_"SnippetInfo" :allocateArrayDynamic (AbstractTemplates''snippet-4* this, NewObjectSnippets, "allocateArrayDynamic", HotSpotReplacementsUtil'MARK_WORD_LOCATION, HotSpotReplacementsUtil'HUB_WRITE_LOCATION, HotSpotReplacementsUtil'TLAB_TOP_LOCATION, HotSpotReplacementsUtil'TLAB_END_LOCATION))
-    (§ final #_"SnippetInfo" :allocateInstanceDynamic (AbstractTemplates''snippet-4* this, NewObjectSnippets, "allocateInstanceDynamic", HotSpotReplacementsUtil'MARK_WORD_LOCATION, HotSpotReplacementsUtil'HUB_WRITE_LOCATION, HotSpotReplacementsUtil'TLAB_TOP_LOCATION, HotSpotReplacementsUtil'TLAB_END_LOCATION))
 
     (§ defn #_"NewObjectTemplates" NewObjectTemplates'new-0 []
         (AbstractTemplates'new-0)
@@ -20696,14 +20100,13 @@
         (MacroStateSplitNode'new-6* ReflectionGetCallerClassNode'TYPE, invokeKind, targetMethod, bci, returnStamp, arguments)
     )
 
-    #_unused
-    (§ override! #_"Node" ReflectionGetCallerClassNode''canonical-2 [#_"ReflectionGetCallerClassNode" this, #_"CanonicalizerTool" tool]
+    (§ override! #_"Node" Canonicalizable''canonical-2 [#_"ReflectionGetCallerClassNode" this, #_"CanonicalizerTool" tool]
         (or (ReflectionGetCallerClassNode''getCallerClassNode-1 this)
             this
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" ReflectionGetCallerClassNode''lower-2 [#_"ReflectionGetCallerClassNode" this, #_"LoweringTool" lowerer]
         (let [
             #_"ConstantNode" callerClassNode (ReflectionGetCallerClassNode''getCallerClassNode-1 this)
@@ -20755,9 +20158,7 @@
 (value-ns StringToBytesSnippets (§ implements Snippets)
     (§ def #_"LocationIdentity" StringToBytesSnippets'CSTRING_LOCATION (NamedLocationIdentity'immutable-1 "CString location"))
 
-    ; @Snippet
-    #_unused
-    (§ defn #_"byte[]" StringToBytesSnippets'transform-1 [#_@ConstantParameter #_"String" compilationTimeString]
+    (§ snippet! #_"byte[]" #_"StringToBytesSnippets" "transform" [#_@ConstantParameter #_"String" compilationTimeString]
         (let [
             #_"int" i (count compilationTimeString)
             #_"byte[]" a (NewArrayNode'newUninitializedArray-2 byte'class, i)
@@ -20848,9 +20249,7 @@
 )
 
 (value-ns UnsafeLoadSnippets (§ implements Snippets)
-    ; @Snippet
-    #_unused
-    (§ defn #_"Object" UnsafeLoadSnippets'lowerUnsafeLoad-2 [#_"Object" object, #_"long" offset]
+    (§ snippet! #_"Object" #_"UnsafeLoadSnippets" "lowerUnsafeLoad" [#_"Object" object, #_"long" offset]
         (Word''readObject-3 (Word'objectToTrackedPointer-1 (FixedValueAnchorNode'getObject-1 object)), (int offset), (if (and (instance? java.lang.ref.Reference object) (= (HotSpotReplacementsUtil'referentOffset-0) offset)) BarrierType'PRECISE BarrierType'NONE))
     )
 )
@@ -20895,23 +20294,17 @@
         nil
     )
 
-    ; @Snippet
-    #_unused
-    (§ defn #_"void" WriteBarrierSnippets'serialImpreciseWriteBarrier-1 [#_"Object" object]
+    (§ snippet! #_"void" #_"WriteBarrierSnippets" "serialImpreciseWriteBarrier" [#_"Object" object]
         (WriteBarrierSnippets'serialWriteBarrier-1 (Word'objectToTrackedPointer-1 object))
         nil
     )
 
-    ; @Snippet
-    #_unused
-    (§ defn #_"void" WriteBarrierSnippets'serialPreciseWriteBarrier-1 [#_"Address" address]
+    (§ snippet! #_"void" #_"WriteBarrierSnippets" "serialPreciseWriteBarrier" [#_"Address" address]
         (WriteBarrierSnippets'serialWriteBarrier-1 (Word'fromAddress-1 address))
         nil
     )
 
-    ; @Snippet
-    #_unused
-    (§ defn #_"void" WriteBarrierSnippets'serialArrayRangeWriteBarrier-3 [#_"Address" address, #_"int" length, #_@ConstantParameter #_"int" elementStride]
+    (§ snippet! #_"void" #_"WriteBarrierSnippets" "serialArrayRangeWriteBarrier" [#_"Address" address, #_"int" length, #_@ConstantParameter #_"int" elementStride]
         (when (pos? length)
             (let [
                 #_"int" cardShift HotSpot'cardTableShift
@@ -20927,9 +20320,7 @@
         nil
     )
 
-    ; @Snippet
-    #_unused
-    (§ defn #_"void" WriteBarrierSnippets'g1PreWriteBarrier-6 [#_"Address" address, #_"Object" object, #_"Object" expectedObject, #_@ConstantParameter #_"boolean" doLoad, #_@ConstantParameter #_"boolean" nullCheck, #_@ConstantParameter #_"Register" threadRegister]
+    (§ snippet! #_"void" #_"WriteBarrierSnippets" "g1PreWriteBarrier" [#_"Address" address, #_"Object" object, #_"Object" expectedObject, #_@ConstantParameter #_"boolean" doLoad, #_@ConstantParameter #_"boolean" nullCheck, #_@ConstantParameter #_"Register" threadRegister]
         (when nullCheck
             (NullCheckNode'nullCheck-1 address)
         )
@@ -20965,7 +20356,7 @@
                                 (Word''writeWord-4 logAddress, 0, previousOop, WriteBarrierSnippets'GC_LOG_LOCATION)
                                 (Word''writeWord-4 indexAddress, 0, nextIndex, WriteBarrierSnippets'GC_INDEX_LOCATION)
                             )
-                            (WriteBarrierSnippets'g1PreBarrierStub-2 ForeignCallDescriptor'G1WBPRECALL, (#_"Pointer" .toObject previousOop))
+                            (ForeignCallNode'g1PreBarrierStub-2 ForeignCallDescriptor'G1WBPRECALL, (#_"Pointer" .toObject previousOop))
                         )
                     )
                 )
@@ -20974,9 +20365,7 @@
         nil
     )
 
-    ; @Snippet
-    #_unused
-    (§ defn #_"void" WriteBarrierSnippets'g1PostWriteBarrier-5 [#_"Address" address, #_"Object" object, #_"Object" value, #_@ConstantParameter #_"boolean" usePrecise, #_@ConstantParameter #_"Register" threadRegister]
+    (§ snippet! #_"void" #_"WriteBarrierSnippets" "g1PostWriteBarrier" [#_"Address" address, #_"Object" object, #_"Object" value, #_@ConstantParameter #_"boolean" usePrecise, #_@ConstantParameter #_"Register" threadRegister]
         (let [
             #_"Word" thread (HotSpotReplacementsUtil'registerAsWord-1 threadRegister)
             #_"Object" fixedValue (FixedValueAnchorNode'getObject-1 value)
@@ -21028,7 +20417,7 @@
                                                     (Word''writeWord-4 logAddress, 0, cardAddress, WriteBarrierSnippets'GC_LOG_LOCATION)
                                                     (Word''writeWord-4 indexAddress, 0, nextIndex, WriteBarrierSnippets'GC_INDEX_LOCATION)
                                                 )
-                                                (WriteBarrierSnippets'g1PostBarrierStub-2 ForeignCallDescriptor'G1WBPOSTCALL, cardAddress)
+                                                (ForeignCallNode'g1PostBarrierStub-2 ForeignCallDescriptor'G1WBPOSTCALL, cardAddress)
                                             )
                                         )
                                     )
@@ -21042,9 +20431,7 @@
         nil
     )
 
-    ; @Snippet
-    #_unused
-    (§ defn #_"void" WriteBarrierSnippets'g1ArrayRangePreWriteBarrier-4 [#_"Address" address, #_"int" length, #_@ConstantParameter #_"int" elementStride, #_@ConstantParameter #_"Register" threadRegister]
+    (§ snippet! #_"void" #_"WriteBarrierSnippets" "g1ArrayRangePreWriteBarrier" [#_"Address" address, #_"int" length, #_@ConstantParameter #_"int" elementStride, #_@ConstantParameter #_"Register" threadRegister]
         (let [
             #_"Word" thread (HotSpotReplacementsUtil'registerAsWord-1 threadRegister)
             #_"byte" markingValue (Word''readByte-2 thread, HotSpot'g1SATBQueueMarkingOffset)
@@ -21065,7 +20452,7 @@
                                 (when (#_"Pointer" .notEqual oop, 0) => indexValue
                                     (if (zero? indexValue)
                                         (do
-                                            (WriteBarrierSnippets'g1PreBarrierStub-2 ForeignCallDescriptor'G1WBPRECALL, (#_"Pointer" .toObject oop))
+                                            (ForeignCallNode'g1PreBarrierStub-2 ForeignCallDescriptor'G1WBPRECALL, (#_"Pointer" .toObject oop))
                                             indexValue
                                         )
                                         (let [
@@ -21089,9 +20476,7 @@
         nil
     )
 
-    ; @Snippet
-    #_unused
-    (§ defn #_"void" WriteBarrierSnippets'g1ArrayRangePostWriteBarrier-4 [#_"Address" address, #_"int" length, #_@ConstantParameter #_"int" elementStride, #_@ConstantParameter #_"Register" threadRegister]
+    (§ snippet! #_"void" #_"WriteBarrierSnippets" "g1ArrayRangePostWriteBarrier" [#_"Address" address, #_"int" length, #_@ConstantParameter #_"int" elementStride, #_@ConstantParameter #_"Register" threadRegister]
         (when (pos? length)
             (let [
                 #_"Word" thread (HotSpotReplacementsUtil'registerAsWord-1 threadRegister)
@@ -21119,7 +20504,7 @@
                                         ;; a new one and add the card entry.
                                         (if (zero? indexValue)
                                             (do
-                                                (WriteBarrierSnippets'g1PostBarrierStub-2 ForeignCallDescriptor'G1WBPOSTCALL, cardAddress)
+                                                (ForeignCallNode'g1PostBarrierStub-2 ForeignCallDescriptor'G1WBPOSTCALL, cardAddress)
                                                 indexValue
                                             )
                                             (let [
@@ -21165,12 +20550,6 @@
             )
         )
     )
-
-    ; @NodeIntrinsic(ForeignCallNode.class)
-    (§ native- #_"void" WriteBarrierSnippets'g1PreBarrierStub-2 [#_@ConstantNodeParameter #_"ForeignCallDescriptor" descriptor, #_"Object" object])
-
-    ; @NodeIntrinsic(ForeignCallNode.class)
-    (§ native #_"void" WriteBarrierSnippets'g1PostBarrierStub-2 [#_@ConstantNodeParameter #_"ForeignCallDescriptor" descriptor, #_"Word" card])
 )
 
 ;;;
@@ -21413,7 +20792,7 @@
      ; In each example above, the {@code currentThread} argument is the C++ JavaThread value
      ; (i.e. %r15 on AMD64) and is only prepended if #prependThread is true.
      ;;
-    #_unused
+    #_unused
     (§ override! #_"Graph" ForeignCallStub''getStubGraph-1 [#_"ForeignCallStub" this]
         (let [
             #_"Class[]" args (#_"Object" .clone (:argumentTypes (:descriptor (:linkage this))))
@@ -21484,7 +20863,7 @@
         (SnippetStub'new-2 "newArray", linkage)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Object[]" NewArrayStub''makeConstArgs-1 [#_"NewArrayStub" this]
         (let [
             #_"HotSpotResolvedObjectType" intArrayType (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, int*'class)
@@ -21505,11 +20884,9 @@
      ; @param fillContents Should the array be filled with zeroes?
      ; @param intArrayHub the hub for {@code int[].class}
      ;;
-    ; @Snippet
-    #_unused
-    (§ defn- #_"Object" NewArrayStub'newArray-5 [#_"KlassPointer" hub, #_"int" length, #_"boolean" fillContents, #_@ConstantParameter #_"KlassPointer" intArrayHub, #_@ConstantParameter #_"Register" threadRegister]
+    (§ snippet! #_"Object" #_"NewArrayStub" "newArray" [#_"KlassPointer" hub, #_"int" length, #_"boolean" fillContents, #_@ConstantParameter #_"KlassPointer" intArrayHub, #_@ConstantParameter #_"Register" threadRegister]
         (let [
-            #_"int" layoutHelper (HotSpotReplacementsUtil'readLayoutHelper-1 hub)
+            #_"int" layoutHelper (KlassLayoutHelperNode'readLayoutHelper-1 hub)
             #_"int" log2ElementSize (& (>> layoutHelper HotSpot'layoutHelperLog2ElementSizeShift) HotSpot'layoutHelperLog2ElementSizeMask)
             #_"int" headerSize (& (>> layoutHelper HotSpot'layoutHelperHeaderSizeShift) HotSpot'layoutHelperHeaderSizeMask)
             #_"int" elementKind (& (>> layoutHelper HotSpot'layoutHelperElementTypeShift) HotSpot'layoutHelperElementTypeMask)
@@ -21527,7 +20904,7 @@
                 )
             )
 
-            (NewArrayStub'newArrayC-4 ForeignCallDescriptor'NEW_ARRAY_C, thread, hub, length)
+            (StubForeignCallNode'newArrayC-4 ForeignCallDescriptor'NEW_ARRAY_C, thread, hub, length)
             (when (some? (HotSpotReplacementsUtil'clearPendingException-1 thread))
                 (HotSpotReplacementsUtil'getAndClearObjectResult-1 thread)
                 (DeoptimizeCallerNode'deopt-2 DeoptimizationAction/None, DeoptimizationReason/RuntimeConstraint)
@@ -21535,9 +20912,6 @@
             (HotSpotReplacementsUtil'getAndClearObjectResult-1 thread)
         )
     )
-
-    ; @NodeIntrinsic(StubForeignCallNode.class)
-    (§ native #_"void" NewArrayStub'newArrayC-4 [#_@ConstantNodeParameter #_"ForeignCallDescriptor" newArrayC, #_"Word" thread, #_"KlassPointer" hub, #_"int" length])
 )
 
 ;;;
@@ -21551,7 +20925,7 @@
         (SnippetStub'new-2 "newInstance", linkage)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Object[]" NewInstanceStub''makeConstArgs-1 [#_"NewInstanceStub" this]
         (let [
             #_"HotSpotResolvedObjectType" intArrayType (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, int*'class)
@@ -21584,16 +20958,14 @@
      ; @param hub the hub of the object to be allocated
      ; @param intArrayHub the hub for {@code int[].class}
      ;;
-    ; @Snippet
-    #_unused
-    (§ defn- #_"Object" NewInstanceStub'newInstance-3 [#_"KlassPointer" hub, #_@ConstantParameter #_"KlassPointer" intArrayHub, #_@ConstantParameter #_"Register" threadRegister]
+    (§ snippet! #_"Object" #_"NewInstanceStub" "newInstance" [#_"KlassPointer" hub, #_@ConstantParameter #_"KlassPointer" intArrayHub, #_@ConstantParameter #_"Register" threadRegister]
         ;; The type is known to be an instance so Klass::_layout_helper is the instance size as a raw number.
         (let [
             #_"Word" thread (HotSpotReplacementsUtil'registerAsWord-1 threadRegister)
         ]
             (when (and (GraalHotSpotVMConfigNode'inlineContiguousAllocationSupported-0) (HotSpotReplacementsUtil'isInstanceKlassFullyInitialized-1 hub))
                 (let [
-                    #_"int" size (HotSpotReplacementsUtil'readLayoutHelper-1 hub)
+                    #_"int" size (KlassLayoutHelperNode'readLayoutHelper-1 hub)
                     #_"Word" memory (NewInstanceStub'refillAllocate-3 thread, intArrayHub, size)
                 ]
                     (when (Word''notEqual-2 memory, 0)
@@ -21603,7 +20975,7 @@
                 )
             )
 
-            (NewInstanceStub'newInstanceC-3 ForeignCallDescriptor'NEW_INSTANCE_C, thread, hub)
+            (StubForeignCallNode'newInstanceC-3 ForeignCallDescriptor'NEW_INSTANCE_C, thread, hub)
             (when (some? (HotSpotReplacementsUtil'clearPendingException-1 thread))
                 (HotSpotReplacementsUtil'getAndClearObjectResult-1 thread)
                 (DeoptimizeCallerNode'deopt-2 DeoptimizationAction/None, DeoptimizationReason/RuntimeConstraint)
@@ -21737,9 +21109,6 @@
             )
         )
     )
-
-    ; @NodeIntrinsic(StubForeignCallNode.class)
-    (§ native #_"void" NewInstanceStub'newInstanceC-3 [#_@ConstantNodeParameter #_"ForeignCallDescriptor" newInstanceC, #_"Word" thread, #_"KlassPointer" hub])
 )
 
 ;;;
@@ -21751,7 +21120,7 @@
     ;;;
      ; Creates a new snippet stub.
      ;
-     ; @param snippetMethodName name of the single Snippet annotated method in the class of this object
+     ; @param snippetMethodName name of the single Snippet annotated method in the class of this object
      ; @param linkage linkage details for a call to the stub
      ;;
     (§ defn #_"SnippetStub" SnippetStub'new-2 [#_"String" snippetMethodName, #_"ForeignCallLinkage" linkage]
@@ -21764,7 +21133,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override #_"Graph" SnippetStub''getStubGraph-1 [#_"SnippetStub" this]
         (let [
             #_"Plugins" plugins (Plugins'copy-1 HotSpot'plugins)
@@ -21977,7 +21346,7 @@
  ; Marker type for a metaspace pointer to a type.
  ;;
 (class-ns KlassPointer (§ extends MetaspacePointer)
-    #_unused
+    #_unused
     (§ defn #_"KlassPointer" KlassPointer'new-0 []
         (MetaspacePointer'new-0)
     )
@@ -22012,7 +21381,7 @@
     (§ abstract #_"boolean" MetaspacePointer''isNull-1 [#_"MetaspacePointer" this])
 
     ; @HotSpotOperation(opcode = HotspotOpcode'FROM_POINTER)
-    #_unused
+    #_unused
     (§ abstract #_"Pointer" MetaspacePointer''asWord-1 [#_"MetaspacePointer" this])
 
     ;;;
@@ -22029,14 +21398,14 @@
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    #_unused
+    #_unused
     (§ abstract #_"char" MetaspacePointer''readChar-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    #_unused
+    #_unused
     (§ abstract #_"short" MetaspacePointer''readShort-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
@@ -22049,7 +21418,7 @@
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    #_unused
+    #_unused
     (§ abstract #_"long" MetaspacePointer''readLong-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
@@ -22062,7 +21431,7 @@
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    #_unused
+    #_unused
     (§ abstract #_"Object" MetaspacePointer''readObject-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
@@ -22075,14 +21444,14 @@
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    #_unused
+    #_unused
     (§ abstract #_"char" MetaspacePointer''readChar-3 [#_"MetaspacePointer" this, #_"int" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    #_unused
+    #_unused
     (§ abstract #_"short" MetaspacePointer''readShort-3 [#_"MetaspacePointer" this, #_"int" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
@@ -22095,7 +21464,7 @@
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    #_unused
+    #_unused
     (§ abstract #_"long" MetaspacePointer''readLong-3 [#_"MetaspacePointer" this, #_"int" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
@@ -22108,49 +21477,49 @@
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    #_unused
+    #_unused
     (§ abstract #_"Object" MetaspacePointer''readObject-3 [#_"MetaspacePointer" this, #_"int" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
+    #_unused
     (§ abstract #_"void" MetaspacePointer''writeByte-4 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"byte" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
+    #_unused
     (§ abstract #_"void" MetaspacePointer''writeChar-4 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"char" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
+    #_unused
     (§ abstract #_"void" MetaspacePointer''writeShort-4 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"short" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
+    #_unused
     (§ abstract #_"void" MetaspacePointer''writeInt-4 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"int" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
+    #_unused
     (§ abstract #_"void" MetaspacePointer''writeLong-4 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"long" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
+    #_unused
     (§ abstract #_"void" MetaspacePointer''writeWord-4 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"WordBase" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
@@ -22158,112 +21527,112 @@
      ; are in bytes. The memory must be uninitialized or zero prior to this operation.
      ;;
     ; @Operation(opcode = WordOpcode'INITIALIZE)
-    #_unused
+    #_unused
     (§ abstract #_"void" MetaspacePointer''initializeLong-4 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"long" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
+    #_unused
     (§ abstract #_"void" MetaspacePointer''writeObject-4 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"Object" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
+    #_unused
     (§ abstract #_"void" MetaspacePointer''writeByte-4 [#_"MetaspacePointer" this, #_"int" offset, #_"byte" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
+    #_unused
     (§ abstract #_"void" MetaspacePointer''writeChar-4 [#_"MetaspacePointer" this, #_"int" offset, #_"char" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
+    #_unused
     (§ abstract #_"void" MetaspacePointer''writeShort-4 [#_"MetaspacePointer" this, #_"int" offset, #_"short" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
+    #_unused
     (§ abstract #_"void" MetaspacePointer''writeInt-4 [#_"MetaspacePointer" this, #_"int" offset, #_"int" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
+    #_unused
     (§ abstract #_"void" MetaspacePointer''writeLong-4 [#_"MetaspacePointer" this, #_"int" offset, #_"long" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
+    #_unused
     (§ abstract #_"void" MetaspacePointer''writeWord-4 [#_"MetaspacePointer" this, #_"int" offset, #_"WordBase" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
+    #_unused
     (§ abstract #_"void" MetaspacePointer''writeObject-4 [#_"MetaspacePointer" this, #_"int" offset, #_"Object" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    #_unused
+    #_unused
     (§ abstract #_"byte" MetaspacePointer''readByte-2 [#_"MetaspacePointer" this, #_"WordBase" offset])
 
     ;;;
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    #_unused
+    #_unused
     (§ abstract #_"char" MetaspacePointer''readChar-2 [#_"MetaspacePointer" this, #_"WordBase" offset])
 
     ;;;
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    #_unused
+    #_unused
     (§ abstract #_"short" MetaspacePointer''readShort-2 [#_"MetaspacePointer" this, #_"WordBase" offset])
 
     ;;;
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    #_unused
+    #_unused
     (§ abstract #_"int" MetaspacePointer''readInt-2 [#_"MetaspacePointer" this, #_"WordBase" offset])
 
     ;;;
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    #_unused
+    #_unused
     (§ abstract #_"long" MetaspacePointer''readLong-2 [#_"MetaspacePointer" this, #_"WordBase" offset])
 
     ;;;
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    #_unused
+    #_unused
     (§ abstract #_"Word" MetaspacePointer''readWord-2 [#_"MetaspacePointer" this, #_"WordBase" offset])
 
     ;;;
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    #_unused
+    #_unused
     (§ abstract #_"Object" MetaspacePointer''readObject-2 [#_"MetaspacePointer" this, #_"WordBase" offset])
 
     ;;;
@@ -22271,56 +21640,56 @@
      ; the VM uses compressed oops, and it can be parameterized to allow read barriers (G1 referent field).
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    #_unused
+    #_unused
     (§ abstract #_"Object" MetaspacePointer''readObject-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"BarrierType" barrierType])
 
     ;;;
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    #_unused
+    #_unused
     (§ abstract #_"byte" MetaspacePointer''readByte-2 [#_"MetaspacePointer" this, #_"int" offset])
 
     ;;;
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    #_unused
+    #_unused
     (§ abstract #_"char" MetaspacePointer''readChar-2 [#_"MetaspacePointer" this, #_"int" offset])
 
     ;;;
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    #_unused
+    #_unused
     (§ abstract #_"short" MetaspacePointer''readShort-2 [#_"MetaspacePointer" this, #_"int" offset])
 
     ;;;
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    #_unused
+    #_unused
     (§ abstract #_"int" MetaspacePointer''readInt-2 [#_"MetaspacePointer" this, #_"int" offset])
 
     ;;;
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    #_unused
+    #_unused
     (§ abstract #_"long" MetaspacePointer''readLong-2 [#_"MetaspacePointer" this, #_"int" offset])
 
     ;;;
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    #_unused
+    #_unused
     (§ abstract #_"Word" MetaspacePointer''readWord-2 [#_"MetaspacePointer" this, #_"int" offset])
 
     ;;;
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    #_unused
+    #_unused
     (§ abstract #_"Object" MetaspacePointer''readObject-2 [#_"MetaspacePointer" this, #_"int" offset])
 
     ;;;
@@ -22328,105 +21697,105 @@
      ; the VM uses compressed oops, and it can be parameterized to allow read barriers (G1 referent field).
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    #_unused
+    #_unused
     (§ abstract #_"Object" MetaspacePointer''readObject-3 [#_"MetaspacePointer" this, #_"int" offset, #_"BarrierType" barrierType])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
+    #_unused
     (§ abstract #_"void" MetaspacePointer''writeByte-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"byte" val])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
+    #_unused
     (§ abstract #_"void" MetaspacePointer''writeChar-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"char" val])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
+    #_unused
     (§ abstract #_"void" MetaspacePointer''writeShort-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"short" val])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
+    #_unused
     (§ abstract #_"void" MetaspacePointer''writeInt-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"int" val])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
+    #_unused
     (§ abstract #_"void" MetaspacePointer''writeLong-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"long" val])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
+    #_unused
     (§ abstract #_"void" MetaspacePointer''writeWord-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"WordBase" val])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
+    #_unused
     (§ abstract #_"void" MetaspacePointer''writeObject-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"Object" val])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
+    #_unused
     (§ abstract #_"void" MetaspacePointer''writeByte-3 [#_"MetaspacePointer" this, #_"int" offset, #_"byte" val])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
+    #_unused
     (§ abstract #_"void" MetaspacePointer''writeChar-3 [#_"MetaspacePointer" this, #_"int" offset, #_"char" val])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
+    #_unused
     (§ abstract #_"void" MetaspacePointer''writeShort-3 [#_"MetaspacePointer" this, #_"int" offset, #_"short" val])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
+    #_unused
     (§ abstract #_"void" MetaspacePointer''writeInt-3 [#_"MetaspacePointer" this, #_"int" offset, #_"int" val])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
+    #_unused
     (§ abstract #_"void" MetaspacePointer''writeLong-3 [#_"MetaspacePointer" this, #_"int" offset, #_"long" val])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
+    #_unused
     (§ abstract #_"void" MetaspacePointer''writeWord-3 [#_"MetaspacePointer" this, #_"int" offset, #_"WordBase" val])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
+    #_unused
     (§ abstract #_"void" MetaspacePointer''writeObject-3 [#_"MetaspacePointer" this, #_"int" offset, #_"Object" val])
 )
 
@@ -22434,21 +21803,21 @@
  ; Marker type for a metaspace pointer to a method.
  ;;
 (class-ns MethodPointer (§ extends MetaspacePointer)
-    #_unused
+    #_unused
     (§ defn #_"MethodPointer" MethodPointer'new-0 []
         (MetaspacePointer'new-0)
     )
 
     ; @HotSpotOperation(opcode = HotspotOpcode'POINTER_EQ)
-    #_unused
+    #_unused
     (§ abstract #_"boolean" MethodPointer''equal-2 [#_"MethodPointer" this, #_"KlassPointer" other])
 
     ; @HotSpotOperation(opcode = HotspotOpcode'POINTER_NE)
-    #_unused
+    #_unused
     (§ abstract #_"boolean" MethodPointer''notEqual-2 [#_"MethodPointer" this, #_"KlassPointer" other])
 
     ; @HotSpotOperation(opcode = HotspotOpcode'TO_METHOD_POINTER)
-    #_unused
+    #_unused
     (§ native #_"MethodPointer" MethodPointer'fromWord-1 [#_"Pointer" pointer])
 )
 
@@ -22471,8 +21840,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" PointerCastNode''generate-2 [#_"PointerCastNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"PointerCastNode" this, #_"LIRBuilder" builder]
         (LIRBuilder''setResult-3 builder, this, (LIRBuilder''operand-2 builder, (:input this)))
         nil
     )
@@ -23041,63 +22409,8 @@
         )
     )
 
-    #_unused
-    (§ method! #_"int" BciBlock''getLoopDepth-1 [#_"BciBlock" this]
-        (Long/bitCount (:loops this))
-    )
-
     (§ method! #_"BciBlock" BciBlock''getSuccessor-2 [#_"BciBlock" this, #_"int" index]
         (nth (:successors this) index)
-    )
-
-    ;;;
-     ; Get the loop id of the inner most loop.
-     ;
-     ; @return the loop id of the most inner loop or -1 if not part of any loop
-     ;;
-    #_unused
-    (§ method! #_"int" BciBlock''getLoopId-1 [#_"BciBlock" this]
-        (if (zero? (:loops this)) -1 (loop-when-recur [#_"int" i 0 #_"int" mask 1] (zero? (& (:loops this) mask)) [(inc i) (<< mask 1)] => i))
-    )
-
-    ;;;
-     ; Iterate over loop ids.
-     ;;
-    #_unused
-    (§ method! #_"Iterable<Integer>" BciBlock''loopIdIterable-1 [#_"BciBlock" this]
-        (let [
-            #_"BciBlock" block this
-        ]
-            (§ reify #_"Iterable<Integer>" (Iterable.)
-                (§ override! #_"Iterator<Integer>" #_"Iterable" .iterator [#_"Iterable<Integer>" this]
-                    (BciBlock'idIterator-1 (:loops block))
-                )
-            )
-        )
-    )
-
-    (§ defn- #_"Iterator<Integer>" BciBlock'idIterator-1 [#_"long" field]
-        (§ reify #_"Iterator<Integer>" (Iterator.)
-            (let [
-                #_"long" l field
-                #_"int" i 0
-                #_"int" mask 1
-            ]
-                (§ override! #_"Integer" #_"Iterator" .next [#_"Iterator<Integer>" this]
-                    (§ ass mask
-                        (loop-when-recur mask (zero? (& l mask)) (<< mask 1) => mask
-                            (§ ass i (inc i))
-                        )
-                    )
-                    (§ ass l (& l (bit-not mask)))
-                    i
-                )
-
-                (§ override! #_"boolean" #_"Iterator" .hasNext [#_"Iterator<Integer>" this]
-                    (not (zero? l))
-                )
-            )
-        )
     )
 
     (§ method- #_"JSRData" BciBlock''getOrCreateJSRData-1 [#_"BciBlock" this]
@@ -23351,14 +22664,6 @@
                 )
                 value
             )
-        )
-    )
-
-    #_unused
-    (§ method! #_"ValueNode" BytecodeParser''addNonNullCast-2 [#_"BytecodeParser" this, #_"ValueNode" value]
-        (if (:never-nil? (:stamp value))
-            value
-            (BytecodeParser''add-2 this, (PiNode'create-3 value, (AbstractPointerStamp''improveWith-2 (:stamp value), StampFactory'objectNonNullStamp), (BytecodeParser''add-2 this, (FixedGuardNode'new-4 (BytecodeParser''add-2 this, (IsNullNode'create-1 value)), DeoptimizationReason/NullCheckException, DeoptimizationAction/None, true))))
         )
     )
 
@@ -23910,12 +23215,6 @@
             )
             this
         )
-    )
-
-    #_unused
-    (§ method! #_"void" BytecodeParser''handleReplacedInvoke-3 [#_"BytecodeParser" this, #_"CallTargetNode" callTarget, #_"JavaKind" resultType]
-        (BytecodeParser''createInvoke-4 this, (BytecodeParser''bci-1 this), callTarget, resultType)
-        nil
     )
 
     (§ method! #_"InvokeNode" BytecodeParser''appendInvoke-4 [#_"BytecodeParser" this, #_"InvokeKind" initialInvokeKind, #_"ResolvedJavaMethod" initialTargetMethod, #_"ValueNode[]" args]
@@ -25923,7 +25222,7 @@
             Bytecodes'NEW             (BytecodeParser''genNewInstance-2 this, (BytecodeStream''readCPI-1 (:stream this)))
             Bytecodes'NEWARRAY        (BytecodeParser''genNewPrimitiveArray-2 this, (BytecodeStream''readLocalIndex-1 (:stream this)))
             Bytecodes'ANEWARRAY       (BytecodeParser''genNewObjectArray-2 this, (BytecodeStream''readCPI-1 (:stream this)))
-            Bytecodes'ARRAYLENGTH     (BytecodeParser''genArrayLength-1 this)
+            Bytecodes'ARRAYLENGTH     (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), JavaKind/Int, (BytecodeParser''append-2 this, (ArrayLengthNode'create-1 (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Object)))))
             Bytecodes'CHECKCAST       (BytecodeParser''genCheckCast-1 this)
             Bytecodes'INSTANCEOF      (§ ass! this (BytecodeParser''genInstanceOf-1 this))
             Bytecodes'MONITORENTER    (BytecodeParser''genMonitorEnter-3 this, (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Object), (:nextBCI (:stream this)))
@@ -25934,30 +25233,6 @@
             Bytecodes'JSR_W           (BytecodeParser''genJsr-2 this, (BytecodeStream''readBranchDest-1 (:stream this)))
         )
         this
-    )
-
-    (§ method- #_"void" BytecodeParser''genArrayLength-1 [#_"BytecodeParser" this]
-        (let [
-            #_"ValueNode" array (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Object)
-        ]
-            (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), JavaKind/Int, (BytecodeParser''append-2 this, (ArrayLengthNode'create-1 array))))
-        )
-        nil
-    )
-
-    ;;;
-     ; Gets the method being parsed by this context.
-     ;;
-    (§ method! #_"ResolvedJavaMethod" BytecodeParser''getMethod-1 [#_"BytecodeParser" this]
-        (:method this)
-    )
-
-    ;;;
-     ; Gets the code being parsed.
-     ;;
-    #_unused
-    (§ method! #_"Bytecode" BytecodeParser''getCode-1 [#_"BytecodeParser" this]
-        (:code this)
     )
 
     ;;;
@@ -26023,7 +25298,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" IntrinsicScope''close-1 [#_"IntrinsicScope" this]
         (let [
             #_"IntrinsicContext" intrinsic (:intrinsicContext (:parser this))
@@ -26221,25 +25496,25 @@
         (NodeIteratorClosure'new-0)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Double" ComputeLoopFrequenciesClosure''processNode-3 [#_"ComputeLoopFrequenciesClosure" this, #_"FixedNode" node, #_"Double" currentState]
         ;; normal nodes never change the probability of a path
         currentState
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Double" ComputeLoopFrequenciesClosure''merge-3 [#_"ComputeLoopFrequenciesClosure" this, #_"AbstractMergeNode" merge, #_"List<Double>" states]
         ;; a merge has the sum of all predecessor probabilities
         (reduce + 0.0 states)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Double" ComputeLoopFrequenciesClosure''afterSplit-3 [#_"ComputeLoopFrequenciesClosure" this, #_"AbstractBeginNode" node, #_"Double" oldState]
         ;; a control split splits up the probability
         (* oldState (ControlSplitNode''probability-2 (:predecessor node), node))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"EconomicMap<LoopExitNode, Double>" ComputeLoopFrequenciesClosure''processLoop-3 [#_"ComputeLoopFrequenciesClosure" this, #_"LoopBeginNode" loop, #_"Double" initialState]
         (let [
             #_"EconomicMap<LoopExitNode, Double>" exitStates (:exitStates (ReentrantNodeIterator'processLoop-3 this, loop, 1.0))
@@ -26282,7 +25557,7 @@
         (Phase'new-0)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" ComputeLoopFrequencyPhase''run-2 [#_"ComputeLoopFrequencyPhase" this, #_"Graph" graph]
         (ComputeLoopFrequenciesClosure'compute-1 graph)
         nil
@@ -26745,17 +26020,6 @@
     )
 
     ;;;
-     ; Clears all local variables.
-     ;;
-    #_unused
-    (§ method! #_"void" FrameStateBuilder''clearLocals-1 [#_"FrameStateBuilder" this]
-        (dotimes [#_"int" i (count (:locals this))]
-            (aset (:locals this) i nil)
-        )
-        nil
-    )
-
-    ;;;
      ; Loads the local variable at the specified index, checking that the returned value is non-nil
      ; and that two-stack values are properly handled.
      ;
@@ -27005,7 +26269,7 @@
         (BasePhase'new-0)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" GraphBuilderPhase''run-3 [#_"GraphBuilderPhase" this, #_"Graph" graph, #_"HighTierContext" context]
         (GraphBuilderInstance''run-2 (GraphBuilderInstance'new-3 (:graphBuilderConfig this), (:optimisticOpts context), nil), graph)
         nil
@@ -27116,18 +26380,18 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"int" LargeLocalLiveness''liveOutCardinality-2 [#_"LargeLocalLiveness" this, #_"int" blockID]
         (#_"BitSet" .cardinality (nth (:localsLiveOut this) blockID))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" LargeLocalLiveness''propagateLiveness-3 [#_"LargeLocalLiveness" this, #_"int" blockID, #_"int" successorID]
         (#_"BitSet" .or (nth (:localsLiveOut this) blockID), (nth (:localsLiveIn this) successorID))
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" LargeLocalLiveness''updateLiveness-2 [#_"LargeLocalLiveness" this, #_"int" blockID]
         (let [
             #_"BitSet" liveIn (nth (:localsLiveIn this) blockID)
@@ -27140,7 +26404,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" LargeLocalLiveness''loadOne-3 [#_"LargeLocalLiveness" this, #_"int" blockID, #_"int" local]
         (when-not (#_"BitSet" .get (nth (:localsLiveKill this) blockID), local)
             (#_"BitSet" .set (nth (:localsLiveGen this) blockID), local)
@@ -27148,7 +26412,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" LargeLocalLiveness''storeOne-3 [#_"LargeLocalLiveness" this, #_"int" blockID, #_"int" local]
         (when-not (#_"BitSet" .get (nth (:localsLiveGen this) blockID), local)
             (#_"BitSet" .set (nth (:localsLiveKill this) blockID), local)
@@ -27161,17 +26425,17 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" LargeLocalLiveness''localIsLiveIn-3 [#_"LargeLocalLiveness" this, #_"BciBlock" block, #_"int" local]
         (or (<= Integer/MAX_VALUE (:id block)) (#_"BitSet" .get (nth (:localsLiveIn this) (:id block)), local))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" LargeLocalLiveness''localIsLiveOut-3 [#_"LargeLocalLiveness" this, #_"BciBlock" block, #_"int" local]
         (or (<= Integer/MAX_VALUE (:id block)) (#_"BitSet" .get (nth (:localsLiveOut this) (:id block)), local))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" LargeLocalLiveness''localIsChangedInLoop-3 [#_"LargeLocalLiveness" this, #_"int" loopId, #_"int" local]
         (#_"BitSet" .get (nth (:localsChangedInLoop this) loopId), local)
     )
@@ -27355,24 +26619,24 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"int" SmallLocalLiveness''liveOutCardinality-2 [#_"SmallLocalLiveness" this, #_"int" blockID]
         (Long/bitCount (nth (:localsLiveOut this) blockID))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" SmallLocalLiveness''propagateLiveness-3 [#_"SmallLocalLiveness" this, #_"int" blockID, #_"int" successorID]
         (aswap (:localsLiveOut this) blockID | (nth (:localsLiveIn this) successorID))
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" SmallLocalLiveness''updateLiveness-2 [#_"SmallLocalLiveness" this, #_"int" blockID]
         (aset (:localsLiveIn this) blockID (| (& (nth (:localsLiveOut this) blockID) (bit-not (nth (:localsLiveKill this) blockID))) (nth (:localsLiveGen this) blockID)))
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" SmallLocalLiveness''loadOne-3 [#_"SmallLocalLiveness" this, #_"int" blockID, #_"int" local]
         (let [
             #_"long" bit (<< 1 local)
@@ -27384,7 +26648,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" SmallLocalLiveness''storeOne-3 [#_"SmallLocalLiveness" this, #_"int" blockID, #_"int" local]
         (let [
             #_"long" bit (<< 1 local)
@@ -27401,17 +26665,17 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" SmallLocalLiveness''localIsLiveIn-3 [#_"SmallLocalLiveness" this, #_"BciBlock" block, #_"int" local]
         (and (< (:id block) Integer/MAX_VALUE) (not (zero? (& (nth (:localsLiveIn this) (:id block)) (<< 1 local)))))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" SmallLocalLiveness''localIsLiveOut-3 [#_"SmallLocalLiveness" this, #_"BciBlock" block, #_"int" local]
         (and (< (:id block) Integer/MAX_VALUE) (not (zero? (& (nth (:localsLiveOut this) (:id block)) (<< 1 local)))))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" SmallLocalLiveness''localIsChangedInLoop-3 [#_"SmallLocalLiveness" this, #_"int" loopId, #_"int" local]
         (not (zero? (& (nth (:localsChangedInLoop this) loopId) (<< 1 local))))
     )
@@ -27531,11 +26795,6 @@
         (:cachedTo this)
     )
 
-    #_unused
-    (§ method! #_"int" Interval''numUsePositions-1 [#_"Interval" this]
-        (UsePosList''size-1 (:usePosList this))
-    )
-
     (§ method! #_"Interval" Interval''setLocationHint-2 [#_"Interval" this, #_"Interval" interval]
         (assoc this :locationHint interval)
     )
@@ -27602,17 +26861,6 @@
         nil
     )
 
-    ;; test intersection
-    #_unused
-    (§ method! #_"boolean" Interval''intersects-2 [#_"Interval" this, #_"Interval" i]
-        (Range''intersects-2 (:first this), (:first i))
-    )
-
-    (§ method! #_"int" Interval''intersectsAt-2 [#_"Interval" this, #_"Interval" i]
-        (Range''intersectsAt-2 (:first this), (:first i))
-    )
-
-    ;; range iteration
     (§ method! #_"Interval" Interval''rewindRange-1 [#_"Interval" this]
         (assoc this :current (:first this))
     )
@@ -27800,7 +27048,7 @@
     )
 
     ;; checks if opId is covered by any split child
-    #_unused
+    #_unused
     (§ method! #_"boolean" Interval''splitChildCovers-3 [#_"Interval" this, #_"int" opId, #_"OperandMode" mode]
         (when (seq (:splitChildren this)) => (Interval''covers-3 this, opId, mode)
             (loop [#_"int" i 0]
@@ -27980,7 +27228,7 @@
      ;
      ; Currently, only the first range can be split, and the new interval must not have split positions
      ;;
-    #_unused
+    #_unused
     (§ method! #_"Interval" Interval''splitFromStart-3 [#_"Interval" this, #_"int" splitPos, #_"LinearScan" allocator]
         ;; allocate new interval
         (let [
@@ -28424,7 +27672,7 @@
         true
     )
 
-    #_unused
+    #_unused
     (§ method! #_"IntervalWalker" IntervalWalker''walkBefore-2 [#_"IntervalWalker" this, #_"int" lirOpId]
         (IntervalWalker''walkTo-2 this, (dec lirOpId))
     )
@@ -28739,11 +27987,6 @@
         )
     )
 
-    #_unused
-    (§ method! #_"Interval" LinearScan''intervalEndMarker-1 [#_"LinearScan" this]
-        (:intervalEndMarker this)
-    )
-
     (§ method! #_"int" LinearScan''getFirstLirInstructionId-2 [#_"LinearScan" this, #_"Block" block]
         (LIRInstruction''id-1 (nth (LIR''getLIRforBlock-2 (:lir this), block) 0))
     )
@@ -28785,7 +28028,7 @@
     ;;;
      ; Gets the highest operand number for a register operand. This value will never change.
      ;;
-    #_unused
+    #_unused
     (§ method #_"int" LinearScan''maxRegisterNumber-1 [#_"LinearScan" this]
         (dec (:firstVariableNumber this))
     )
@@ -28986,7 +28229,7 @@
         (or (zero? opId) (not= (LinearScan''blockForId-2 this, opId) (LinearScan''blockForId-2 this, (dec opId))))
     )
 
-    #_unused
+    #_unused
     (§ method! #_"boolean" LinearScan''coversBlockBegin-3 [#_"LinearScan" this, #_"int" opId1, #_"int" opId2]
         (not= (LinearScan''blockForId-2 this, opId1) (LinearScan''blockForId-2 this, opId2))
     )
@@ -29141,7 +28384,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ method! #_"boolean" LinearScan''isCallerSave-2 [#_"LinearScan" this, #_"Value" operand]
         (#_"RegisterAttributes" .isCallerSave (LinearScan''attributes-2 this, (#_"RegisterValue" .getRegister operand)))
     )
@@ -29397,7 +28640,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" LinearScanAssignLocationsPhase''run-3 [#_"LinearScanAssignLocationsPhase" this, #_"LIRGenerationResult" lirGenRes, #_"AllocationContext" context]
         (doseq [#_"Block" block (LinearScan''sortedBlocks-1 (:allocator this))]
             (LinearScanAssignLocationsPhase''assignLocations-2 this, (LIR''getLIRforBlock-2 (:lir (:allocator this)), block))
@@ -29508,7 +28751,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override #_"void" LinearScanEliminateSpillMovePhase''run-3 [#_"LinearScanEliminateSpillMovePhase" this, #_"LIRGenerationResult" lirGenRes, #_"AllocationContext" context]
         (LinearScanEliminateSpillMovePhase''eliminateSpillMoves-2 this, lirGenRes)
         nil
@@ -30051,7 +29294,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override #_"void" LinearScanLifetimeAnalysisPhase''run-3 [#_"LinearScanLifetimeAnalysisPhase" this, #_"LIRGenerationResult" lirGenRes, #_"AllocationContext" context]
         (LinearScanLifetimeAnalysisPhase''numberInstructions-1 this)
         (§ ass! this (LinearScanLifetimeAnalysisPhase''computeLocalLiveSets-1 this))
@@ -30187,7 +29430,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" LinearScanOptimizeSpillPositionPhase''run-3 [#_"LinearScanOptimizeSpillPositionPhase" this, #_"LIRGenerationResult" res, #_"AllocationContext" context]
         (let [
             #_"LIRInsertionBuffer[]" buffers (make-array LIRInsertionBuffer (count (:linearScanOrder (:lir (:allocator this)))))
@@ -30227,7 +29470,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Block" IntervalBlockIterator''next-1 [#_"IntervalBlockIterator" this]
         (let [
             #_"Block" currentBlock (:block this)
@@ -30250,7 +29493,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" IntervalBlockIterator''hasNext-1 [#_"IntervalBlockIterator" this]
         (some? (:block this))
     )
@@ -30261,7 +29504,7 @@
         (RegisterAllocationPhase'new-0)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" LinearScanPhase''run-3 [#_"LinearScanPhase" this, #_"LIRGenerationResult" lirGenRes, #_"AllocationContext" context]
         (let [
             #_"LinearScan" allocator (SSALinearScan'new-5 lirGenRes, (:moveFactory context), (:registerAllocationConfig context), (:linearScanOrder (:lir lirGenRes)), (RegisterAllocationPhase''getNeverSpillConstants-1 this))
@@ -30284,7 +29527,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" LinearScanRegisterAllocationPhase''run-3 [#_"LinearScanRegisterAllocationPhase" this, #_"LIRGenerationResult" result, #_"AllocationContext" context]
         (let [
             #_"Pair<Interval, Interval>" result (LinearScan''createUnhandledLists-3 (:allocator this), LinearScan'IS_PRECOLORED_INTERVAL, LinearScan'IS_VARIABLE_INTERVAL)
@@ -30433,7 +29676,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override #_"void" LinearScanResolveDataFlowPhase''run-3 [#_"LinearScanResolveDataFlowPhase" this, #_"LIRGenerationResult" lirGenRes, #_"AllocationContext" context]
         (LinearScanResolveDataFlowPhase''resolveDataFlow-1 this)
         nil
@@ -30463,7 +29706,7 @@
     (§ def- #_"List<Interval>" LinearScanWalker'EMPTY_LIST (Collections/emptyList))
 
     ;; accessors mapped to same functions in class LinearScan
-    #_unused
+    #_unused
     (§ method #_"int" LinearScanWalker''blockCount-1 [#_"LinearScanWalker" this]
         (LinearScan''blockCount-1 (:allocator this))
     )
@@ -30472,7 +29715,7 @@
         (LinearScan''blockAt-2 (:allocator this), idx)
     )
 
-    #_unused
+    #_unused
     (§ method! #_"Block" LinearScanWalker''blockOfOpWithId-2 [#_"LinearScanWalker" this, #_"int" opId]
         (LinearScan''blockForId-2 (:allocator this), opId)
     )
@@ -30608,28 +29851,9 @@
         nil
     )
 
-    #_unused
-    (§ method! #_"void" LinearScanWalker''freeCollectUnhandled-3 [#_"LinearScanWalker" this, #_"RegisterBinding" kind, #_"Interval" current]
-        (loop-when-recur [#_"Interval" interval (RegisterBindingLists''get-2 (:unhandledLists this), kind)] (not (Interval''isEndMarker-1 interval)) [(:next interval)]
-            (LinearScanWalker''setUsePos-4 this, interval, (Interval''intersectsAt-2 interval, current), true)
-            (when (and (= kind RegisterBinding'Fixed) (<= (Interval''to-1 current) (Interval''from-1 interval)))
-                (LinearScanWalker''setUsePos-4 this, interval, (Interval''from-1 interval), true)
-            )
-        )
-        nil
-    )
-
     (§ method! #_"void" LinearScanWalker''spillExcludeActiveFixed-1 [#_"LinearScanWalker" this]
         (loop-when-recur [#_"Interval" interval (RegisterBindingLists''get-2 (:activeLists this), RegisterBinding'Fixed)] (not (Interval''isEndMarker-1 interval)) [(:next interval)]
             (LinearScanWalker''excludeFromUse-2 this, interval)
-        )
-        nil
-    )
-
-    #_unused
-    (§ method! #_"void" LinearScanWalker''spillBlockUnhandledFixed-2 [#_"LinearScanWalker" this, #_"Interval" current]
-        (loop-when-recur [#_"Interval" interval (RegisterBindingLists''get-2 (:unhandledLists this), RegisterBinding'Fixed)] (not (Interval''isEndMarker-1 interval)) [(:next interval)]
-            (LinearScanWalker''setBlockPos-3 this, interval, (Interval''intersectsAt-2 interval, current))
         )
         nil
     )
@@ -31180,7 +30404,7 @@
     )
 
     ;; allocate a physical register or memory location to an interval
-    #_unused
+    #_unused
     (§ override #_"boolean" LinearScanWalker''activateCurrent-2 [#_"LinearScanWalker" this, #_"Interval" interval]
         (let [
             #_"Value" operand (:operand interval)
@@ -31239,7 +30463,6 @@
     (§ final #_"ArrayList<Interval>" :mappingFrom nil)
     (§ final #_"ArrayList<Constant>" :mappingFromOpr nil)
     (§ final #_"ArrayList<Interval>" :mappingTo nil)
-    (§ mutable #_"boolean" :multipleReadsAllowed false)
     (§ final #_"int[]" :registerBlocked nil)
 
     (§ method #_"void" MoveResolver''setValueBlocked-3 [#_"MoveResolver" this, #_"Value" location, #_"int" direction]
@@ -31253,25 +30476,10 @@
         (nth (:mappingFrom this) i)
     )
 
-    #_unused
-    (§ method! #_"int" MoveResolver''mappingFromSize-1 [#_"MoveResolver" this]
-        (count (:mappingFrom this))
-    )
-
     (§ method #_"int" MoveResolver''valueBlocked-2 [#_"MoveResolver" this, #_"Value" location]
         (when (instance? RegisterValue location) => (throw! (str "unhandled value " location))
             (nth (:registerBlocked this) (.number (#_"RegisterValue" .getRegister location)))
         )
-    )
-
-    #_unused
-    (§ method! #_"MoveResolver" MoveResolver''setMultipleReadsAllowed-1 [#_"MoveResolver" this]
-        (assoc this :multipleReadsAllowed true)
-    )
-
-    #_unused
-    (§ method #_"boolean" MoveResolver''areMultipleReadsAllowed-1 [#_"MoveResolver" this]
-        (:multipleReadsAllowed this)
     )
 
     (§ method! #_"boolean" MoveResolver''hasMappings-1 [#_"MoveResolver" this]
@@ -31286,7 +30494,6 @@
         (let [
             #_"MoveResolver" this (Object.)
             this (assoc this :allocator allocator)
-            this (assoc this :multipleReadsAllowed false)
             this (assoc this :mappingFrom (ArrayList.))
             this (assoc this :mappingFromOpr (ArrayList.))
             this (assoc this :mappingTo (ArrayList.))
@@ -31470,8 +30677,7 @@
             )
         )
 
-        ;; reset to default value
-        (assoc this :multipleReadsAllowed false)
+        this
     )
 
     (§ method #_"void" MoveResolver''breakCycle-2 [#_"MoveResolver" this, #_"int" spillCandidate]
@@ -31587,7 +30793,7 @@
         (LinearScanWalker'new-3 allocator, unhandledFixedFirst, unhandledAnyFirst)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" OptimizingLinearScanWalker''handleSpillSlot-2 [#_"OptimizingLinearScanWalker" this, #_"Interval" interval]
         (when-not (Interval''canMaterialize-1 interval)
             (§ ass! (:unhandledLists this) (RegisterBindingLists''addToListSortedByStartAndUsePositions-3 (:unhandledLists this), RegisterBinding'Stack, interval))
@@ -31595,7 +30801,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" OptimizingLinearScanWalker''walk-1 [#_"OptimizingLinearScanWalker" this]
         (doseq [#_"Block" block (LinearScan''sortedBlocks-1 (:allocator this))]
             (OptimizingLinearScanWalker''optimizeBlock-2 this, block)
@@ -31802,27 +31008,27 @@
         (LinearScan'new-5 res, moveFactory, regAllocConfig, sortedBlocks, neverSpillConstants)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"MoveResolver" SSALinearScan''createMoveResolver-1 [#_"SSALinearScan" this]
         (SSAMoveResolver'new-1 this)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"LinearScanLifetimeAnalysisPhase" SSALinearScan''createLifetimeAnalysisPhase-1 [#_"SSALinearScan" this]
         (SSALinearScanLifetimeAnalysisPhase'new-1 this)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"LinearScanResolveDataFlowPhase" SSALinearScan''createResolveDataFlowPhase-1 [#_"SSALinearScan" this]
         (SSALinearScanResolveDataFlowPhase'new-1 this)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"LinearScanEliminateSpillMovePhase" SSALinearScan''createSpillMoveEliminationPhase-1 [#_"SSALinearScan" this]
         (SSALinearScanEliminateSpillMovePhase'new-1 this)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" SSALinearScan''beforeSpillMoveElimination-1 [#_"SSALinearScan" this]
         ;; PHIs where the Out and In value matches (i.e. there is no resolution move) are falsely detected as errors.
         (doseq [#_"Block" toBlock (LinearScan''sortedBlocks-1 this)]
@@ -31839,13 +31045,13 @@
         (LinearScanEliminateSpillMovePhase'new-1 allocator)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"int" SSALinearScanEliminateSpillMovePhase''firstInstructionOfInterest-1 [#_"SSALinearScanEliminateSpillMovePhase" this]
         ;; also look at Labels as they define PHI values
         0
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" SSALinearScanEliminateSpillMovePhase''canEliminateSpillMove-3 [#_"SSALinearScanEliminateSpillMovePhase" this, #_"Block" block, #_"MoveOp" move]
         (and (LinearScanEliminateSpillMovePhase''canEliminateSpillMove-3 (§ super ), block, move)
             ;; SSA Linear Scan might introduce moves to stack slots
@@ -31868,7 +31074,7 @@
         (LinearScanLifetimeAnalysisPhase'new-1 linearScan)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" SSALinearScanLifetimeAnalysisPhase''addRegisterHint-6 [#_"SSALinearScanLifetimeAnalysisPhase" this, #_"LIRInstruction" op, #_"Value" targetValue, #_"OperandMode" mode, #_"EnumSet<OperandFlag>" flags, #_"boolean" hintAtDef]
         (LinearScanLifetimeAnalysisPhase''addRegisterHint-6 (§ super ), op, targetValue, mode, flags, hintAtDef)
 
@@ -31905,7 +31111,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"RegisterPriority" SSALinearScanLifetimeAnalysisPhase''registerPriorityOfOutputOperand-2 [#_"SSALinearScanLifetimeAnalysisPhase" this, #_"LIRInstruction" op]
         (when-not (and (instance? LabelOp op) (LabelOp''isPhiIn-1 op)) => RegisterPriority'None
             (LinearScanLifetimeAnalysisPhase''registerPriorityOfOutputOperand-2 (§ super ), op)
@@ -31918,7 +31124,7 @@
         (LinearScanResolveDataFlowPhase'new-1 allocator)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" SSALinearScanResolveDataFlowPhase''resolveCollectMappings-5 [#_"SSALinearScanResolveDataFlowPhase" this, #_"Block" fromBlock, #_"Block" toBlock, #_"Block" midBlock, #_"MoveResolver" moveResolver]
         (LinearScanResolveDataFlowPhase''resolveCollectMappings-5 (§ super ), fromBlock, toBlock, midBlock, moveResolver)
 
@@ -31982,12 +31188,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"boolean" SSAMoveResolver''areMultipleReadsAllowed-1 [#_"SSAMoveResolver" this]
-        true
-    )
-
-    #_unused
+    #_unused
     (§ override! #_"boolean" SSAMoveResolver''mightBeBlocked-2 [#_"SSAMoveResolver" this, #_"Value" location]
         (or (MoveResolver''mightBeBlocked-2 (§ super ), location) (LIRValueUtil'isStackSlotValue-1 location))
     )
@@ -32008,7 +31209,7 @@
         (+ (:firstVirtualStackIndex this) (:id virtualStackSlot))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" SSAMoveResolver''setValueBlocked-3 [#_"SSAMoveResolver" this, #_"Value" location, #_"int" direction]
         (when (LIRValueUtil'isStackSlotValue-1 location) => (MoveResolver''setValueBlocked-3 (§ super ), location, direction)
             (let [
@@ -32025,7 +31226,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"int" SSAMoveResolver''valueBlocked-2 [#_"SSAMoveResolver" this, #_"Value" location]
         (when (LIRValueUtil'isStackSlotValue-1 location) => (MoveResolver''valueBlocked-2 (§ super ), location)
             (let [
@@ -32041,7 +31242,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"LIRInstruction" SSAMoveResolver''createMove-5 [#_"SSAMoveResolver" this, #_"AllocatableValue" fromOpr, #_"AllocatableValue" toOpr, #_"AllocatableValue" fromLocation, #_"AllocatableValue" toLocation]
         (if (and (LIRValueUtil'isStackSlotValue-1 toLocation) (LIRValueUtil'isStackSlotValue-1 fromLocation))
             (MoveFactory''createStackMove-3 (:moveFactory (MoveResolver''getAllocator-1 this)), toOpr, fromOpr)
@@ -32049,7 +31250,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" SSAMoveResolver''breakCycle-2 [#_"SSAMoveResolver" this, #_"int" spillCandidate]
         (when (= spillCandidate -1) => (MoveResolver''breakCycle-2 (§ super ), spillCandidate)
             ;; Arbitrarily select the first entry for spilling.
@@ -32076,7 +31277,7 @@
         (AllocationPhase'new-0)
     )
 
-    #_unused
+    #_unused
     (§ method! #_"RegisterAllocationPhase" RegisterAllocationPhase''setNeverSpillConstants-2 [#_"RegisterAllocationPhase" this, #_"boolean" neverSpillConstants]
         (assoc this :neverSpillConstants neverSpillConstants)
     )
@@ -32138,7 +31339,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" SaveCalleeSaveRegisters''run-3 [#_"SaveCalleeSaveRegisters" this, #_"LIRGenerationResult" lirGenRes, #_"PreAllocationOptimizationContext" context]
         (let [
             #_"RegisterArray" calleeSaveRegisters (#_"RegisterConfig" .getCalleeSaveRegisters HotSpot'registerConfig)
@@ -32184,7 +31385,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"CompositeValue" AMD64AddressValue''forEachComponent-4 [#_"AMD64AddressValue" this, #_"LIRInstruction" op, #_"OperandMode" mode, #_"InstructionValueProcedure" proc]
         (let [
             #_"AllocatableValue" base (InstructionValueProcedure''doValue-5 proc, op, (:base this), mode, AMD64AddressValue'flags)
@@ -32197,14 +31398,14 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" AMD64AddressValue''visitEachComponent-4 [#_"AMD64AddressValue" this, #_"LIRInstruction" op, #_"OperandMode" mode, #_"InstructionValueConsumer" proc]
         (InstructionValueConsumer''visitValue-5 proc, op, (:base this), mode, AMD64AddressValue'flags)
         (InstructionValueConsumer''visitValue-5 proc, op, (:index this), mode, AMD64AddressValue'flags)
         nil
     )
 
-    #_unused
+    #_unused
     (§ method! #_"AMD64AddressValue" AMD64AddressValue''withKind-2 [#_"AMD64AddressValue" this, #_"ValueKind" newKind]
         (AMD64AddressValue'new-5 newKind, (:base this), (:index this), (:scale this), (:displacement this))
     )
@@ -32264,8 +31465,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" TwoOp''emitCode-2 [#_"TwoOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"TwoOp" this, #_"Assembler" asm]
         (AMD64Move'move-3 asm, (:result this), (:x this))
         (AMD64RMOp''emit-5 (:opcode this), asm, (:size this), (#_"RegisterValue" .getRegister (:result this)), (if (instance? RegisterValue (:y this)) (#_"RegisterValue" .getRegister (:y this)) (Assembler''asAddress-2 asm, (:y this))))
         nil
@@ -32304,8 +31504,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" CommutativeTwoOp''emitCode-2 [#_"CommutativeTwoOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"CommutativeTwoOp" this, #_"Assembler" asm]
         (let [
             #_"AllocatableValue" input
                 (when-not (LIRValueUtil'sameRegister-2 (:result this), (:y this)) => (:x this)
@@ -32354,8 +31553,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" ConstOp''emitCode-2 [#_"ConstOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"ConstOp" this, #_"Assembler" asm]
         (AMD64Move'move-3 asm, (:result this), (:x this))
         (AMD64MIOp''emit-5 (:opcode this), asm, (:size this), (#_"RegisterValue" .getRegister (:result this)), (:y this))
         nil
@@ -32401,8 +31599,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" DataTwoOp''emitCode-2 [#_"DataTwoOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"DataTwoOp" this, #_"Assembler" asm]
         (AMD64Move'move-3 asm, (:result this), (:x this))
         (AMD64RMOp''emit-5 (:opcode this), asm, (:size this), (#_"RegisterValue" .getRegister (:result this)), (Assembler''recordDataReferenceInCode-3 asm, (:y this), (:alignment this)))
         nil
@@ -32442,14 +31639,13 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" MemoryTwoOp''emitCode-2 [#_"MemoryTwoOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"MemoryTwoOp" this, #_"Assembler" asm]
         (AMD64Move'move-3 asm, (:result this), (:x this))
         (AMD64RMOp''emit-5 (:opcode this), asm, (:size this), (#_"RegisterValue" .getRegister (:result this)), (AMD64AddressValue''toAddress-1 (:y this)))
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" MemoryTwoOp''makeNullCheckFor-3 [#_"MemoryTwoOp" this, #_"Value" value, #_"int" implicitNullCheckLimit]
         (AMD64AddressValue''isValidImplicitNullCheckFor-3 (:y this), value, implicitNullCheckLimit)
     )
@@ -32487,8 +31683,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" RMIOp''emitCode-2 [#_"RMIOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"RMIOp" this, #_"Assembler" asm]
         (AMD64RMIOp''emit-6 (:opcode this), asm, (:size this), (#_"RegisterValue" .getRegister (:result this)), (if (instance? RegisterValue (:x this)) (#_"RegisterValue" .getRegister (:x this)) (Assembler''asAddress-2 asm, (:x this))), (:y this))
         nil
     )
@@ -32529,8 +31724,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" ConsumerOp''emitCode-2 [#_"ConsumerOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"ConsumerOp" this, #_"Assembler" asm]
         (AMD64RMOp''emit-5 (:opcode this), asm, (:size this), (#_"RegisterValue" .getRegister (:x this)), (if (instance? RegisterValue (:y this)) (#_"RegisterValue" .getRegister (:y this)) (Assembler''asAddress-2 asm, (:y this))))
         nil
     )
@@ -32572,7 +31766,7 @@
         )
     )
 
-    (§ override #_"void" ConsumerConstOp''emitCode-2 [#_"ConsumerConstOp" this, #_"Assembler" asm]
+    (§ override #_"void" LIRInstruction''emitCode-2 [#_"ConsumerConstOp" this, #_"Assembler" asm]
         (AMD64MIOp''emit-5 (:opcode this), asm, (:size this), (if (instance? RegisterValue (:x this)) (#_"RegisterValue" .getRegister (:x this)) (Assembler''asAddress-2 asm, (:x this))), (:y this))
         nil
     )
@@ -32598,10 +31792,9 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" VMConstOp''emitCode-2 [#_"VMConstOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"VMConstOp" this, #_"Assembler" asm]
         (Assembler''recordInlineDataInCode-2 asm, (:c this))
-        (ConsumerConstOp''emitCode-2 (§ super ), asm)
+        (LIRInstruction''emitCode-2 (§ super ), asm)
         nil
     )
 )
@@ -32642,8 +31835,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" DataOp''emitCode-2 [#_"DataOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"DataOp" this, #_"Assembler" asm]
         (AMD64RMOp''emit-5 (:opcode this), asm, (:size this), (#_"RegisterValue" .getRegister (:x this)), (Assembler''recordDataReferenceInCode-3 asm, (:y this), (:alignment this)))
         nil
     )
@@ -32667,7 +31859,7 @@
     ; @Use({OperandFlag'COMPOSITE})
     (§ mutable #_"AMD64AddressValue" :y nil)
 
-    #_unused
+    #_unused
     (§ defn #_"MemoryRMOp" MemoryRMOp'new-4 [#_"AMD64RMOp" opcode, #_"OperandSize" size, #_"AllocatableValue" x, #_"AMD64AddressValue" y]
         (let [
             #_"MemoryRMOp" this (LIRInstruction'new-1 MemoryRMOp'TYPE)
@@ -32680,13 +31872,12 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" MemoryRMOp''emitCode-2 [#_"MemoryRMOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"MemoryRMOp" this, #_"Assembler" asm]
         (AMD64RMOp''emit-5 (:opcode this), asm, (:size this), (#_"RegisterValue" .getRegister (:x this)), (AMD64AddressValue''toAddress-1 (:y this)))
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" MemoryRMOp''makeNullCheckFor-3 [#_"MemoryRMOp" this, #_"Value" value, #_"int" implicitNullCheckLimit]
         (AMD64AddressValue''isValidImplicitNullCheckFor-3 (:y this), value, implicitNullCheckLimit)
     )
@@ -32722,13 +31913,12 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" MemoryMROp''emitCode-2 [#_"MemoryMROp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"MemoryMROp" this, #_"Assembler" asm]
         (AMD64MROp''emit-5 (:opcode this), asm, (:size this), (AMD64AddressValue''toAddress-1 (:x this)), (#_"RegisterValue" .getRegister (:y this)))
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" MemoryMROp''makeNullCheckFor-3 [#_"MemoryMROp" this, #_"Value" value, #_"int" implicitNullCheckLimit]
         (AMD64AddressValue''isValidImplicitNullCheckFor-3 (:x this), value, implicitNullCheckLimit)
     )
@@ -32770,17 +31960,17 @@
         )
     )
 
-    (§ override #_"void" MemoryConstOp''emitCode-2 [#_"MemoryConstOp" this, #_"Assembler" asm]
+    (§ override #_"void" LIRInstruction''emitCode-2 [#_"MemoryConstOp" this, #_"Assembler" asm]
         (AMD64MIOp''emit-5 (:opcode this), asm, (:size this), (AMD64AddressValue''toAddress-1 (:x this)), (:y this))
         nil
     )
 
-    #_unused
+    #_unused
     (§ override #_"boolean" MemoryConstOp''makeNullCheckFor-3 [#_"MemoryConstOp" this, #_"Value" value, #_"int" implicitNullCheckLimit]
         (AMD64AddressValue''isValidImplicitNullCheckFor-3 (:x this), value, implicitNullCheckLimit)
     )
 
-    #_unused
+    #_unused
     (§ method #_"AMD64MIOp" MemoryConstOp''getOpcode-1 [#_"MemoryConstOp" this]
         (:opcode this)
     )
@@ -32806,10 +31996,9 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" MemoryVMConstOp''emitCode-2 [#_"MemoryVMConstOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"MemoryVMConstOp" this, #_"Assembler" asm]
         (Assembler''recordInlineDataInCode-2 asm, (:c this))
-        (MemoryConstOp''emitCode-2 (§ super ), asm)
+        (LIRInstruction''emitCode-2 (§ super ), asm)
         nil
     )
 )
@@ -32833,8 +32022,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" AMD64ByteSwapOp''emitCode-2 [#_"AMD64ByteSwapOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"AMD64ByteSwapOp" this, #_"Assembler" asm]
         (AMD64Move'move-3 asm, (:result this), (:input this))
         (condp = (#_"Value" .getPlatformKind (:input this))
             AMD64Kind/DWORD (Assembler''bswapl-2 asm, (#_"RegisterValue" .getRegister (:result this)))
@@ -32894,7 +32082,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ defn #_"void" AMD64Call'directConditionalJmp-3 [#_"Assembler" asm, #_"InvokeTarget" target, #_"ConditionFlag" cond]
         (Assembler''jcc-4 asm, cond, 0, true)
         (Assembler''ensureUniquePC-1 asm)
@@ -32936,7 +32124,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override #_"boolean" CallOp''destroysCallerSavedRegisters-1 [#_"CallOp" this]
         true
     )
@@ -32967,7 +32155,7 @@
 (class-ns DirectCallOp (§ extends MethodCallOp)
     (§ def #_"LIRInstructionClass<DirectCallOp>" DirectCallOp'TYPE (LIRInstructionClass'new-1 DirectCallOp))
 
-    #_unused
+    #_unused
     (§ defn #_"DirectCallOp" DirectCallOp'new-4 [#_"ResolvedJavaMethod" callTarget, #_"Value" result, #_"Value[]" parameters, #_"Value[]" temps]
         (DirectCallOp'new-5 DirectCallOp'TYPE, callTarget, result, parameters, temps)
     )
@@ -32976,7 +32164,7 @@
         (MethodCallOp'new-5 c, callTarget, result, parameters, temps)
     )
 
-    (§ override #_"void" DirectCallOp''emitCode-2 [#_"DirectCallOp" this, #_"Assembler" asm]
+    (§ override #_"void" LIRInstruction''emitCode-2 [#_"DirectCallOp" this, #_"Assembler" asm]
         (AMD64Call'directCall-4 asm, (:callTarget this), nil, true)
         nil
     )
@@ -33009,8 +32197,7 @@
         )
     )
 
-    #_unused
-    (§ override #_"void" IndirectCallOp''emitCode-2 [#_"IndirectCallOp" this, #_"Assembler" asm]
+    (§ override #_"void" LIRInstruction''emitCode-2 [#_"IndirectCallOp" this, #_"Assembler" asm]
         (AMD64Call'indirectCall-3 asm, (#_"RegisterValue" .getRegister (:targetAddress this)), (:callTarget this))
         nil
     )
@@ -33033,7 +32220,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override #_"boolean" ForeignCallOp''destroysCallerSavedRegisters-1 [#_"ForeignCallOp" this]
         (ForeignCallLinkage''destroysRegisters-1 (:callTarget this))
     )
@@ -33050,8 +32237,7 @@
         (ForeignCallOp'new-5 DirectNearForeignCallOp'TYPE, linkage, result, parameters, temps)
     )
 
-    #_unused
-    (§ override! #_"void" DirectNearForeignCallOp''emitCode-2 [#_"DirectNearForeignCallOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"DirectNearForeignCallOp" this, #_"Assembler" asm]
         (AMD64Call'directCall-4 asm, (:callTarget this), nil, false)
         nil
     )
@@ -33077,8 +32263,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" DirectFarForeignCallOp''emitCode-2 [#_"DirectFarForeignCallOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"DirectFarForeignCallOp" this, #_"Assembler" asm]
         (AMD64Call'directCall-4 asm, (:callTarget this), (#_"RegisterValue" .getRegister (:callTemp this)), false)
         nil
     )
@@ -33105,8 +32290,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" AMD64CCall''emitCode-2 [#_"AMD64CCall" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"AMD64CCall" this, #_"Assembler" asm]
         (let [
             #_"Register" reg (#_"RegisterValue" .getRegister (:functionPtr this))
         ]
@@ -33116,7 +32300,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" AMD64CCall''destroysCallerSavedRegisters-1 [#_"AMD64CCall" this]
         true
     )
@@ -33143,8 +32327,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" AMD64ClearRegisterOp''emitCode-2 [#_"AMD64ClearRegisterOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"AMD64ClearRegisterOp" this, #_"Assembler" asm]
         (AMD64RMOp''emit-5 (:op this), asm, (:size this), (#_"RegisterValue" .getRegister (:result this)), (#_"RegisterValue" .getRegister (:result this)))
         nil
     )
@@ -33208,7 +32391,7 @@
     ; @Use({OperandFlag'REG, OperandFlag'ILLEGAL})
     (§ mutable #_"Value" :x nil)
 
-    #_unused
+    #_unused
     (§ defn #_"ReturnOp" ReturnOp'new-1 [#_"Value" x]
         (let [
             #_"ReturnOp" this (LIRInstruction'new-1 ReturnOp'TYPE)
@@ -33218,8 +32401,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" ReturnOp''emitCode-2 [#_"ReturnOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"ReturnOp" this, #_"Assembler" asm]
         (FrameContext''leave-2 (:frameContext asm), asm)
         (Assembler''ret-2 asm, 0)
         nil
@@ -33265,8 +32447,7 @@
      ; (= less likely to execute both the jcc and the jmp instead of just the jcc).
      ; In the case of loops, that means the jcc is the back-edge.
      ;;
-    #_unused
-    (§ override! #_"void" BranchOp''emitCode-2 [#_"BranchOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"BranchOp" this, #_"Assembler" asm]
         (cond
             (Assembler''isSuccessorEdge-2 asm, (:trueDestination this))  (BranchOp''jcc-4 this, asm, true, (:falseDestination this))
             (Assembler''isSuccessorEdge-2 asm, (:falseDestination this)) (BranchOp''jcc-4 this, asm, false, (:trueDestination this))
@@ -33306,7 +32487,7 @@
     (§ mutable #_"Value" :scratch nil)
     (§ final #_"SwitchStrategy" :strategy nil)
 
-    #_unused
+    #_unused
     (§ defn #_"StrategySwitchOp" StrategySwitchOp'new-5 [#_"SwitchStrategy" strategy, #_"LabelRef[]" keyTargets, #_"LabelRef" defaultTarget, #_"Value" key, #_"Value" scratch]
         (StrategySwitchOp'new-6 StrategySwitchOp'TYPE, strategy, keyTargets, defaultTarget, key, scratch)
     )
@@ -33325,8 +32506,7 @@
         )
     )
 
-    #_unused
-    (§ override #_"void" StrategySwitchOp''emitCode-2 [#_"StrategySwitchOp" this, #_"Assembler" asm]
+    (§ override #_"void" LIRInstruction''emitCode-2 [#_"StrategySwitchOp" this, #_"Assembler" asm]
         (SwitchStrategy''run-2 (:strategy this), (AMD64SwitchClosure'new-3 this, (#_"RegisterValue" .getRegister (:key this)), asm))
         nil
     )
@@ -33365,7 +32545,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override #_"void" AMD64SwitchClosure''conditionalJump-4 [#_"AMD64SwitchClosure" this, #_"int" index, #_"Condition" condition, #_"Label" target]
         (AMD64SwitchClosure''emitComparison-2 this, (nth (:keyConstants (:op this)) index))
         (Assembler''jcc-3 (:asm this), (AMD64ControlFlow'intCond-1 condition), target)
@@ -33403,8 +32583,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" TableSwitchOp''emitCode-2 [#_"TableSwitchOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"TableSwitchOp" this, #_"Assembler" asm]
         (let [
             #_"Register" indexReg (#_"RegisterValue" .getRegister (:index this))
             #_"Register" idxScratchReg (#_"RegisterValue" .getRegister (:idxScratch this))
@@ -33502,8 +32681,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" CondSetOp''emitCode-2 [#_"CondSetOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"CondSetOp" this, #_"Assembler" asm]
         (AMD64ControlFlow'setcc-3 asm, (:result this), (:condition this))
         nil
     )
@@ -33536,8 +32714,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" CondMoveOp''emitCode-2 [#_"CondMoveOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"CondMoveOp" this, #_"Assembler" asm]
         (AMD64Move'move-3 asm, (:result this), (:falseValue this))
         (AMD64ControlFlow'cmove-4 asm, (:result this), (:condition this), (:trueValue this))
         nil
@@ -33596,12 +32773,12 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"int" AMD64FrameMap''totalFrameSize-1 [#_"AMD64FrameMap" this]
         (+ (FrameMap''frameSize-1 this) (FrameMap''returnAddressSize-1 this))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"int" AMD64FrameMap''currentFrameSize-1 [#_"AMD64FrameMap" this]
         (AMD64FrameMap''alignFrameSize-2 this, (- (+ (:outgoingSize this) (:spillSize this)) (FrameMap''returnAddressSize-1 this)))
     )
@@ -33651,8 +32828,7 @@
         (LIRInstruction'new-1 AMD64LFenceOp'TYPE)
     )
 
-    #_unused
-    (§ override! #_"void" AMD64LFenceOp''emitCode-2 [#_"AMD64LFenceOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"AMD64LFenceOp" this, #_"Assembler" asm]
         (Assembler''lfence-1 asm)
         nil
     )
@@ -33816,8 +32992,7 @@
         )
     )
 
-    #_unused
-    (§ override #_"void" AbstractMoveOp''emitCode-2 [#_"AbstractMoveOp" this, #_"Assembler" asm]
+    (§ override #_"void" LIRInstruction''emitCode-2 [#_"AbstractMoveOp" this, #_"Assembler" asm]
         (AMD64Move'move-4 (:moveKind this), asm, (LIRInstruction''getResult-1 this), (LIRInstruction''getInput-1 this))
         nil
     )
@@ -33845,12 +33020,12 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"AllocatableValue" MoveToRegOp''getInput-1 [#_"MoveToRegOp" this]
         (:input this)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"AllocatableValue" MoveToRegOp''getResult-1 [#_"MoveToRegOp" this]
         (:result this)
     )
@@ -33878,12 +33053,12 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"AllocatableValue" MoveFromRegOp''getInput-1 [#_"MoveFromRegOp" this]
         (:input this)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"AllocatableValue" MoveFromRegOp''getResult-1 [#_"MoveFromRegOp" this]
         (:result this)
     )
@@ -33910,8 +33085,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" MoveFromConstOp''emitCode-2 [#_"MoveFromConstOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"MoveFromConstOp" this, #_"Assembler" asm]
         (if (instance? RegisterValue (:result this))
             (AMD64Move'const2reg-3 asm, (#_"RegisterValue" .getRegister (:result this)), (:input this))
             (AMD64Move'const2stack-3 asm, (:result this), (:input this))
@@ -33919,12 +33093,12 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Constant" MoveFromConstOp''getConstant-1 [#_"MoveFromConstOp" this]
         (:input this)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"AllocatableValue" MoveFromConstOp''getResult-1 [#_"MoveFromConstOp" this]
         (:result this)
     )
@@ -33966,8 +33140,7 @@
         (:result this)
     )
 
-    #_unused
-    (§ override! #_"void" AMD64StackMove''emitCode-2 [#_"AMD64StackMove" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"AMD64StackMove" this, #_"Assembler" asm]
         (let [
             #_"AMD64Kind" backupKind (#_"AllocatableValue" .getPlatformKind (:backupSlot this))
         ]
@@ -34011,8 +33184,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" AMD64MultiStackMove''emitCode-2 [#_"AMD64MultiStackMove" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"AMD64MultiStackMove" this, #_"Assembler" asm]
         (let [
             #_"AMD64Kind" backupKind (#_"AllocatableValue" .getPlatformKind (:backupSlot this))
         ]
@@ -34059,18 +33231,17 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"AllocatableValue" AMD64PushPopStackMove''getInput-1 [#_"AMD64PushPopStackMove" this]
         (:input this)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"AllocatableValue" AMD64PushPopStackMove''getResult-1 [#_"AMD64PushPopStackMove" this]
         (:result this)
     )
 
-    #_unused
-    (§ override! #_"void" AMD64PushPopStackMove''emitCode-2 [#_"AMD64PushPopStackMove" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"AMD64PushPopStackMove" this, #_"Assembler" asm]
         (AMD64MOp''emit-4 AMD64MOp'PUSH, asm, (:size this), (Assembler''asAddress-2 asm, (:input this)))
         (AMD64MOp''emit-4 AMD64MOp'POP, asm, (:size this), (Assembler''asAddress-2 asm, (:result this)))
         nil
@@ -34100,8 +33271,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" LeaOp''emitCode-2 [#_"LeaOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"LeaOp" this, #_"Assembler" asm]
         (if (= (:size this) OperandSize'QWORD)
             (Assembler''leaq-3 asm, (#_"RegisterValue" .getRegister (:result this)), (AMD64AddressValue''toAddress-1 (:address this)))
             (Assembler''lead-3 asm, (#_"RegisterValue" .getRegister (:result this)), (AMD64AddressValue''toAddress-1 (:address this)))
@@ -34131,8 +33301,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" StackLeaOp''emitCode-2 [#_"StackLeaOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"StackLeaOp" this, #_"Assembler" asm]
         (Assembler''leaq-3 asm, (#_"RegisterValue" .getRegister (:result this)), (Assembler''asAddress-2 asm, (:slot this)))
         nil
     )
@@ -34155,8 +33324,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" MembarOp''emitCode-2 [#_"MembarOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"MembarOp" this, #_"Assembler" asm]
         (Assembler''membar-2 asm, (:barriers this))
         nil
     )
@@ -34180,13 +33348,12 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" NullCheckOp''emitCode-2 [#_"NullCheckOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"NullCheckOp" this, #_"Assembler" asm]
         (Assembler''nullCheck-2 asm, (AMD64AddressValue''toAddress-1 (:address this)))
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Value" NullCheckOp''getCheckedValue-1 [#_"NullCheckOp" this]
         (:base (:address this))
     )
@@ -34223,8 +33390,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" CompareAndSwapOp''emitCode-2 [#_"CompareAndSwapOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"CompareAndSwapOp" this, #_"Assembler" asm]
         (when (.isMP HotSpot'target)
             (Assembler''lock-1 asm)
         )
@@ -34264,8 +33430,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" AtomicReadAndAddOp''emitCode-2 [#_"AtomicReadAndAddOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"AtomicReadAndAddOp" this, #_"Assembler" asm]
         (AMD64Move'move-4 (:accessKind this), asm, (:result this), (:delta this))
         (when (.isMP HotSpot'target)
             (Assembler''lock-1 asm)
@@ -34306,8 +33471,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" AtomicReadAndWriteOp''emitCode-2 [#_"AtomicReadAndWriteOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"AtomicReadAndWriteOp" this, #_"Assembler" asm]
         (AMD64Move'move-4 (:accessKind this), asm, (:result this), (:newValue this))
         (condp = (:accessKind this)
             AMD64Kind/DWORD (Assembler''xchgl-3 asm, (#_"RegisterValue" .getRegister (:result this)), (AMD64AddressValue''toAddress-1 (:address this)))
@@ -34348,7 +33512,7 @@
         (CompressEncoding''hasBase-1 encoding)
     )
 
-    #_unused
+    #_unused
     (§ method! #_"Value" PointerCompressionOp''getInput-1 [#_"PointerCompressionOp" this]
         (:input this)
     )
@@ -34381,8 +33545,7 @@
         (PointerCompressionOp'new-6 CompressPointerOp'TYPE, result, input, baseRegister, encoding, never-nil?)
     )
 
-    #_unused
-    (§ override! #_"void" CompressPointerOp''emitCode-2 [#_"CompressPointerOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"CompressPointerOp" this, #_"Assembler" asm]
         (PointerCompressionOp''move-3 this, (LIRKindTool'getObjectKind-0), asm)
 
         (let [
@@ -34422,8 +33585,7 @@
         (PointerCompressionOp'new-6 UncompressPointerOp'TYPE, result, input, baseRegister, encoding, never-nil?)
     )
 
-    #_unused
-    (§ override! #_"void" UncompressPointerOp''emitCode-2 [#_"UncompressPointerOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"UncompressPointerOp" this, #_"Assembler" asm]
         (PointerCompressionOp''move-3 this, (LIRKindTool'getNarrowOopKind-0), asm)
 
         (let [
@@ -34501,8 +33663,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" AMD64MulDivOp''emitCode-2 [#_"AMD64MulDivOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"AMD64MulDivOp" this, #_"Assembler" asm]
         (AMD64MOp''emit-4 (:opcode this), asm, (:size this), (if (instance? RegisterValue (:y this)) (#_"RegisterValue" .getRegister (:y this)) (Assembler''asAddress-2 asm, (:y this))))
         nil
     )
@@ -34525,8 +33686,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" AMD64PrefetchOp''emitCode-2 [#_"AMD64PrefetchOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"AMD64PrefetchOp" this, #_"Assembler" asm]
         (case (:instr this)
             0 (Assembler''prefetchnta-2 asm, (AMD64AddressValue''toAddress-1 (:address this)))
             1 (Assembler''prefetcht0-2 asm, (AMD64AddressValue''toAddress-1 (:address this)))
@@ -34559,8 +33719,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" AMD64ReadTimestampCounter''emitCode-2 [#_"AMD64ReadTimestampCounter" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"AMD64ReadTimestampCounter" this, #_"Assembler" asm]
         (Assembler''rdtsc-1 asm)
         nil
     )
@@ -34607,8 +33766,7 @@
         nil
     )
 
-    #_unused
-    (§ override! #_"void" AMD64RestoreRegistersOp''emitCode-2 [#_"AMD64RestoreRegistersOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"AMD64RestoreRegistersOp" this, #_"Assembler" asm]
         (let [
             #_"Register[]" savedRegisters (AMD64RestoreRegistersOp''getSavedRegisters-1 this)
         ]
@@ -34663,8 +33821,7 @@
         nil
     )
 
-    #_unused
-    (§ override! #_"void" AMD64SaveRegistersOp''emitCode-2 [#_"AMD64SaveRegistersOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"AMD64SaveRegistersOp" this, #_"Assembler" asm]
         (dotimes [#_"int" i (count (:savedRegisters this))]
             (when (some? (nth (:savedRegisters this) i))
                 (AMD64SaveRegistersOp'saveRegister-3 asm, (nth (:slots this) i), (nth (:savedRegisters this) i))
@@ -34673,7 +33830,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"RegisterSaveLayout" AMD64SaveRegistersOp''getMap-2 [#_"AMD64SaveRegistersOp" this, #_"FrameMap" frameMap]
         (let [
             #_"int" n
@@ -34741,8 +33898,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" AMD64ShiftOp''emitCode-2 [#_"AMD64ShiftOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"AMD64ShiftOp" this, #_"Assembler" asm]
         (AMD64Move'move-3 asm, (:result this), (:x this))
         (AMD64MOp''emit-4 (:opcode this), asm, (:size this), (#_"RegisterValue" .getRegister (:result this)))
         nil
@@ -34775,8 +33931,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" AMD64SignExtendOp''emitCode-2 [#_"AMD64SignExtendOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"AMD64SignExtendOp" this, #_"Assembler" asm]
         (if (= (:size this) OperandSize'DWORD)
             (Assembler''cdql-1 asm)
             (Assembler''cdqq-1 asm)
@@ -34820,8 +33975,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" MOp''emitCode-2 [#_"MOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"MOp" this, #_"Assembler" asm]
         (AMD64Move'move-3 asm, (:result this), (:value this))
         (AMD64MOp''emit-4 (:opcode this), asm, (:size this), (#_"RegisterValue" .getRegister (:result this)))
         nil
@@ -34857,8 +34011,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" RMOp''emitCode-2 [#_"RMOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"RMOp" this, #_"Assembler" asm]
         (AMD64RMOp''emit-5 (:opcode this), asm, (:size this), (#_"RegisterValue" .getRegister (:result this)), (if (instance? RegisterValue (:value this)) (#_"RegisterValue" .getRegister (:value this)) (Assembler''asAddress-2 asm, (:value this))))
         nil
     )
@@ -34893,8 +34046,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" MROp''emitCode-2 [#_"MROp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"MROp" this, #_"Assembler" asm]
         (AMD64MROp''emit-5 (:opcode this), asm, (:size this), (if (instance? RegisterValue (:result this)) (#_"RegisterValue" .getRegister (:result this)) (Assembler''asAddress-2 asm, (:result this))), (#_"RegisterValue" .getRegister (:value this)))
         nil
     )
@@ -34929,13 +34081,12 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" MemoryOp''emitCode-2 [#_"MemoryOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"MemoryOp" this, #_"Assembler" asm]
         (AMD64RMOp''emit-5 (:opcode this), asm, (:size this), (#_"RegisterValue" .getRegister (:result this)), (AMD64AddressValue''toAddress-1 (:input this)))
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" MemoryOp''makeNullCheckFor-3 [#_"MemoryOp" this, #_"Value" value, #_"int" implicitNullCheckLimit]
         (AMD64AddressValue''isValidImplicitNullCheckFor-3 (:input this), value, implicitNullCheckLimit)
     )
@@ -34953,7 +34104,7 @@
         (PostAllocationOptimizationPhase'new-0)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" StackMoveOptimizationPhase''run-3 [#_"StackMoveOptimizationPhase" this, #_"LIRGenerationResult" lirGenRes, #_"PostAllocationOptimizationContext" context]
         (let [
             #_"LIR" lir (:lir lirGenRes)
@@ -35150,7 +34301,7 @@
         (PreAllocationOptimizationPhase'new-0)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" ConstantLoadOptimization''run-3 [#_"ConstantLoadOptimization" this, #_"LIRGenerationResult" lirGenRes, #_"PreAllocationOptimizationContext" context]
         (CLOptimization''apply-1 (CLOptimization'new-2 (:lir lirGenRes), (:lirGen context)))
         nil
@@ -35462,12 +34613,12 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ method! #_"long" ConstantTree''subTreeSize-1 [#_"ConstantTree" this]
         (#_"Stream" .count (DominatorOptimizationProblem''stream-2 this, Flags'IN_SUBTREE))
     )
 
-    #_unused
+    #_unused
     (§ method! #_"Block" ConstantTree''getStartBlock-1 [#_"ConstantTree" this]
         (-> (DominatorOptimizationProblem''stream-2 this, Flags'IN_SUBTREE) (#_"Stream" .findFirst) (Optional''get-1))
     )
@@ -35493,7 +34644,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ method! #_"void" ConstantTree''setSolution-2 [#_"ConstantTree" this, #_"Block" block]
         (DominatorOptimizationProblem''set-3 this, Flags'MATERIALIZE, block)
         nil
@@ -35536,7 +34687,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ method! #_"NodeCost" NodeCost''addUsage-2 [#_"NodeCost" this, #_"UseEntry" usage]
         (let [
             this
@@ -35844,7 +34995,7 @@
     ;;;
      ; Performs control flow optimizations on the given LIR graph.
      ;;
-    #_unused
+    #_unused
     (§ override! #_"void" ControlFlowOptimizer''run-3 [#_"ControlFlowOptimizer" this, #_"LIRGenerationResult" lirGenRes, #_"PostAllocationOptimizationContext" context]
         (let [
             #_"LIR" lir (:lir lirGenRes)
@@ -35938,7 +35089,7 @@
         (PostAllocationOptimizationPhase'new-0)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" EdgeMoveOptimizer''run-3 [#_"EdgeMoveOptimizer" this, #_"LIRGenerationResult" lirGenRes, #_"PostAllocationOptimizationContext" context]
         (let [
             #_"EMOptimizer" optimizer (EMOptimizer'new-1 (:lir lirGenRes))
@@ -36223,7 +35374,7 @@
      ; Determines if an offset to an incoming stack argument was ever returned by
      ; #offsetForStackSlot(StackSlot).
      ;;
-    #_unused
+    #_unused
     (§ method! #_"boolean" FrameMap''accessesCallerFrame-1 [#_"FrameMap" this]
         (:accessesCallerFrame this)
     )
@@ -36238,7 +35389,7 @@
         (:frameSize this)
     )
 
-    #_unused
+    #_unused
     (§ method! #_"int" FrameMap''outgoingSize-1 [#_"FrameMap" this]
         (:outgoingSize this)
     )
@@ -36275,7 +35426,7 @@
      ; @param size the initial frame size to be aligned
      ; @return the aligned frame size
      ;;
-    #_unused
+    #_unused
     (§ method #_"int" FrameMap''alignFrameSize-2 [#_"FrameMap" this, #_"int" size]
         (NumUtil'roundUp-2 size, (.stackAlignment HotSpot'target))
     )
@@ -36447,20 +35598,6 @@
     (§ abstract #_"VirtualStackSlot" FrameMapBuilder''allocateSpillSlot-2 [#_"FrameMapBuilder" this, #_"ValueKind" kind])
 
     ;;;
-     ; Reserves a number of contiguous slots in the frame of the method being compiled. If the
-     ; requested number of slots is 0, this method returns nil.
-     ;
-     ; @param slots the number of slots to reserve
-     ; @param objects specifies the indexes of the object pointer slots. The caller is responsible
-     ;            for guaranteeing that each such object pointer slot is initialized before any
-     ;            instruction that uses a reference map. Without this guarantee, the garbage
-     ;            collector could see garbage object values.
-     ; @param outObjectStackSlots if non-nil, the object pointer slots allocated are added to this list
-     ; @return the first reserved stack slot (i.e. at the lowest address)
-     ;;
-    (§ abstract #_"VirtualStackSlot" FrameMapBuilder''allocateStackSlots-4 [#_"FrameMapBuilder" this, #_"int" slots, #_"BitSet" objects, #_"List<VirtualStackSlot>" outObjectStackSlots])
-
-    ;;;
      ; Informs the frame map that the compiled code calls a particular method, which may need stack
      ; space for outgoing arguments.
      ;
@@ -36495,7 +35632,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override #_"VirtualStackSlot" FrameMapBuilderImpl''allocateSpillSlot-2 [#_"FrameMapBuilderImpl" this, #_"ValueKind" kind]
         (let [
             #_"SimpleVirtualStackSlot" slot (SimpleVirtualStackSlot'new-2 (:numStackSlots this), kind)
@@ -36506,39 +35643,23 @@
         )
     )
 
-    #_unused
-    (§ override #_"VirtualStackSlot" FrameMapBuilderImpl''allocateStackSlots-4 [#_"FrameMapBuilderImpl" this, #_"int" slots, #_"BitSet" objects, #_"List<VirtualStackSlot>" outObjectStackSlots]
-        (cond
-            (zero? slots)               nil
-            (some? outObjectStackSlots) (throw! "unimplemented")
-            :else
-                (let [
-                    #_"VirtualStackSlotRange" slot (VirtualStackSlotRange'new-4 (:numStackSlots this), slots, objects, (LIRKind'fromJavaKind-2 (.arch HotSpot'target), JavaKind/Object))
-                ]
-                    (§ ass! this (update this :numStackSlots inc))
-                    (#_"List" .add (:stackSlots this), slot)
-                    slot
-                )
-        )
-    )
-
-    #_unused
+    #_unused
     (§ override #_"FrameMap" FrameMapBuilderImpl''getFrameMap-1 [#_"FrameMapBuilderImpl" this]
         (:frameMap this)
     )
 
-    #_unused
+    #_unused
     (§ override #_"int" FrameMapBuilderImpl''getNumberOfStackSlots-1 [#_"FrameMapBuilderImpl" this]
         (:numStackSlots this)
     )
 
-    #_unused
+    #_unused
     (§ override #_"void" FrameMapBuilderImpl''callsMethod-2 [#_"FrameMapBuilderImpl" this, #_"CallingConvention" cc]
         (#_"List" .add (:calls this), cc)
         nil
     )
 
-    #_unused
+    #_unused
     (§ override #_"FrameMap" FrameMapBuilderImpl''buildFrameMap-2 [#_"FrameMapBuilderImpl" this, #_"LIRGenerationResult" res]
         (doseq [#_"CallingConvention" cc (:calls this)]
             (FrameMap''callsMethod-2 (:frameMap this), cc)
@@ -36547,7 +35668,7 @@
         (:frameMap this)
     )
 
-    #_unused
+    #_unused
     (§ override #_"List<VirtualStackSlot>" FrameMapBuilderImpl''getStackSlots-1 [#_"FrameMapBuilderImpl" this]
         (:stackSlots this)
     )
@@ -36589,6 +35710,7 @@
     (§ final #_"BitSet" :objects nil)
     (§ final #_"int" :slots 0)
 
+    #_unused
     (§ defn #_"VirtualStackSlotRange" VirtualStackSlotRange'new-4 [#_"int" id, #_"int" slots, #_"BitSet" objects, #_"LIRKind" kind]
         (let [
             #_"VirtualStackSlotRange" this (VirtualStackSlot'new-2 id, kind)
@@ -36740,7 +35862,7 @@
         (Variable'new-2 valueKind, (LIR''nextVariable-1 (:lir (:res this))))
     )
 
-    #_unused
+    #_unused
     (§ method! #_"RegisterAttributes" LIRGenerator''attributes-2 [#_"LIRGenerator" this, #_"Register" register]
         (nth (#_"RegisterConfig" .getAttributesMap HotSpot'registerConfig) (.number register))
     )
@@ -36876,7 +35998,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ method! #_"void" LIRGenerator''emitCompareAndSwapBranch-9 [#_"LIRGenerator" this, #_"ValueKind" kind, #_"AMD64AddressValue" address, #_"Value" expectedValue, #_"Value" newValue, #_"Condition" condition, #_"LabelRef" trueLabel, #_"LabelRef" falseLabel, #_"double" trueLabelProbability]
         (let [
             #_"AMD64Kind" memKind (#_"ValueKind" .getPlatformKind kind)
@@ -37295,7 +36417,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ method! #_"LIRKind" LIRGenerator''getAddressKind-4 [#_"LIRGenerator" this, #_"Value" base, #_"long" displacement, #_"Value" index]
         (let [
             #_"PlatformKind" wordKind (#_"Architecture" .getWordKind (.arch HotSpot'target))
@@ -37311,6 +36433,7 @@
         )
     )
 
+    #_unused
     (§ method! #_"Variable" LIRGenerator''emitByteSwap-2 [#_"LIRGenerator" this, #_"Value" input]
         (let [
             #_"Variable" result (LIRGenerator''newVariable-2 this, (LIRKind'combine-1* input))
@@ -37461,13 +36584,13 @@
      ; @param args the arguments of the call
      ; @param address the target address of the call
      ;;
-    #_unused
+    #_unused
     (§ method! #_"void" LIRGenerator''emitTailcall-3 [#_"LIRGenerator" this, #_"Value[]" args, #_"Value" address]
         (LIRGenerator''append-2 this, (AMD64TailcallOp'new-2 args, address))
         nil
     )
 
-    #_unused
+    #_unused
     (§ method! #_"void" LIRGenerator''emitCCall-4 [#_"LIRGenerator" this, #_"long" address, #_"CallingConvention" nativeCallingConvention, #_"Value[]" args]
         (let [
             #_"Value[]" argLocations (make-array Value (count args))
@@ -37538,7 +36661,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ method- #_"Variable" LIRGenerator''emitBinary-7 [#_"LIRGenerator" this, #_"LIRKind" resultKind, #_"AMD64RMOp" op, #_"OperandSize" size, #_"boolean" commutative?, #_"Value" a, #_"Value" b]
         (cond
             (LIRValueUtil'isJavaConstant-1 b)                    (LIRGenerator''emitBinaryConst-6 this, resultKind, op, size, (LIRGenerator''asAllocatable-2 this, a), (:constant b))
@@ -37783,7 +36906,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ method! #_"Value" LIRGenerator''emitBinaryMemory-5 [#_"LIRGenerator" this, #_"AMD64RMOp" op, #_"OperandSize" size, #_"AllocatableValue" a, #_"AMD64AddressValue" location]
         (let [
             #_"Variable" result (LIRGenerator''newVariable-2 this, (LIRKind'combine-1* a))
@@ -37793,7 +36916,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ method! #_"Value" LIRGenerator''emitConvertMemoryOp-5 [#_"LIRGenerator" this, #_"PlatformKind" kind, #_"AMD64RMOp" op, #_"OperandSize" size, #_"AMD64AddressValue" address]
         (let [
             #_"Variable" result (LIRGenerator''newVariable-2 this, (LIRKind'value-1 kind))
@@ -37803,7 +36926,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ method! #_"Value" LIRGenerator''emitZeroExtendMemory-4 [#_"LIRGenerator" this, #_"AMD64Kind" memoryKind, #_"int" resultBits, #_"AMD64AddressValue" address]
         ;; Issue a zero extending load of the proper bit size and set the result to the proper kind.
         (let [
@@ -37980,7 +37103,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ method! #_"Variable" LIRGenerator''emitRol-3 [#_"LIRGenerator" this, #_"Value" a, #_"Value" b]
         (condp = (#_"Value" .getPlatformKind a)
             AMD64Kind/DWORD (LIRGenerator''emitShift-5 this, AMD64Shift'ROL, OperandSize'DWORD, a, b)
@@ -37988,7 +37111,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ method! #_"Variable" LIRGenerator''emitRor-3 [#_"LIRGenerator" this, #_"Value" a, #_"Value" b]
         (condp = (#_"Value" .getPlatformKind a)
             AMD64Kind/DWORD (LIRGenerator''emitShift-5 this, AMD64Shift'ROR, OperandSize'DWORD, a, b)
@@ -38090,6 +37213,7 @@
         )
     )
 
+    #_unused
     (§ method! #_"Variable" LIRGenerator''emitBitScanForward-2 [#_"LIRGenerator" this, #_"Value" value]
         (let [
             #_"Variable" result (LIRGenerator''newVariable-2 this, (LIRKind''changeType-2 (LIRKind'combine-1* value), AMD64Kind/DWORD))
@@ -38099,6 +37223,7 @@
         )
     )
 
+    #_unused
     (§ method! #_"Variable" LIRGenerator''emitBitScanReverse-2 [#_"LIRGenerator" this, #_"Value" value]
         (let [
             #_"Variable" result (LIRGenerator''newVariable-2 this, (LIRKind''changeType-2 (LIRKind'combine-1* value), AMD64Kind/DWORD))
@@ -38297,7 +37422,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" BlockScopeImpl''close-1 [#_"BlockScopeImpl" this]
         (BlockScopeImpl''doBlockEnd-1 this)
         nil
@@ -38308,7 +37433,7 @@
  ; @anno LIRGenerator.BlockScope
  ;;
 (§ interface BlockScope (§ extends AutoCloseable)
-    #_unused
+    #_unused
     (§ abstract #_"void" BlockScope''close-1 [#_"BlockScope" this])
 )
 
@@ -38671,7 +37796,7 @@
         (assoc this :id id)
     )
 
-    #_unused
+    #_unused
     (§ method! #_"String" LIRInstruction''name-1 [#_"LIRInstruction" this]
         (LIRInstructionClass''getOpcode-2 (:instructionClass this), this)
     )
@@ -38838,7 +37963,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ method! #_"LIRInstructionClass" LIRInstruction''getLIRInstructionClass-1 [#_"LIRInstruction" this]
         (:instructionClass this)
     )
@@ -38987,7 +38112,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ defn #_"<T> LIRInstructionClass<T>" LIRInstructionClass'get-1 [#_"Class<T>" clazz]
         (let [
             #_"Field" field (#_"Class" .getDeclaredField clazz, "TYPE")
@@ -38999,12 +38124,12 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Fields[]" LIRInstructionClass''getAllFields-1 [#_"LIRInstructionClass<T>" this]
         (into-array Fields [ (:data this), (:uses this), (:alives this), (:temps this), (:defs this) ])
     )
 
-    #_unused
+    #_unused
     (§ method! #_"Values" LIRInstructionClass''getValues-2 [#_"LIRInstructionClass<T>" this, #_"OperandMode" mode]
         (condp = mode
             OperandMode'USE   (:uses this)
@@ -39115,7 +38240,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"EnumSet<OperandFlag>" LIRInstructionFieldsScanner''getFlags-2 [#_"LIRInstructionFieldsScanner" this, #_"Field" field]
         (let [
             #_"EnumSet<OperandFlag>" result (EnumSet/noneOf OperandFlag)
@@ -39162,7 +38287,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" LIRInstructionFieldsScanner''scanField-3 [#_"LIRInstructionFieldsScanner" this, #_"Field" field, #_"long" offset]
         (LIRFieldsScanner''scanField-3 (§ super ), field, offset)
 
@@ -39300,7 +38425,7 @@
         (Fields''getObject-3 this, obj, index)
     )
 
-    #_unused
+    #_unused
     (§ method! #_"void" Values''setValueArray-4 [#_"Values" this, #_"Object" obj, #_"int" index, #_"Value[]" valueArray]
         (Fields''putObject-4 this, obj, index, valueArray)
         nil
@@ -39325,7 +38450,7 @@
     ;;;
      ; Sorts non-array fields before array fields.
      ;;
-    #_unused
+    #_unused
     (§ override! #_"int" ValueFieldInfo''compareTo-2 [#_"ValueFieldInfo" this, #_"FieldInfo" o]
         (if (#_"Class" .isAssignableFrom LIRIntrospection'VALUE_ARRAY_CLASS, (:type o))
             (when-not (#_"Class" .isAssignableFrom LIRIntrospection'VALUE_ARRAY_CLASS, (:type this))
@@ -39441,7 +38566,7 @@
         (and (instance? RegisterValue v1) (instance? RegisterValue v2) (= (#_"RegisterValue" .getRegister v1) (#_"RegisterValue" .getRegister v2)))
     )
 
-    #_unused
+    #_unused
     (§ defn #_"boolean" LIRValueUtil'sameRegister-3 [#_"Value" v1, #_"Value" v2, #_"Value" v3]
         (and (LIRValueUtil'sameRegister-2 v1, v2) (LIRValueUtil'sameRegister-2 v1, v3))
     )
@@ -39451,7 +38576,7 @@
      ; either {@link Register registers}, {@link Value values} or arrays of them. All values that
      ; are not {@link RegisterValue registers} are ignored.
      ;;
-    #_unused
+    #_unused
     (§ defn #_"boolean" LIRValueUtil'differentRegisters-1* [#_"Object..." values]
         (let [
             #_"List<Register>" registers (LIRValueUtil'collectRegisters-2 values, (ArrayList.))
@@ -39496,7 +38621,7 @@
      ; @param y a set of registers to subtract.
      ; @return resulting set of registers (x - y)
      ;;
-    #_unused
+    #_unused
     (§ defn #_"Value[]" LIRValueUtil'subtractRegisters-2 [#_"Value[]" x, #_"Value[]" y]
         (let [
             #_"ArrayList<Value>" result (ArrayList.)
@@ -39516,7 +38641,7 @@
         (PostAllocationOptimizationPhase'new-0)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" NullCheckOptimizer''run-3 [#_"NullCheckOptimizer" this, #_"LIRGenerationResult" lirGenRes, #_"PostAllocationOptimizationContext" context]
         (doseq [#_"Block" block (:codeEmittingOrder (:lir lirGenRes))]
             (when (some? block)
@@ -39608,7 +38733,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ method! #_"<T> void" GenericContext''contextAdd-2 [#_"GenericContext" this, #_"T" obj]
         (when (nil? (:context this))
             (§ ass! this (assoc this :context (ArrayList.)))
@@ -39617,7 +38742,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ method! #_"<T> T" GenericContext''contextLookup-2 [#_"GenericContext" this, #_"Class<T>" clazz]
         (loop-when [#_"ISeq" s (seq (:context this))] (some? s)
             (let [
@@ -39631,7 +38756,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ method! #_"<T> T" GenericContext''contextRemove-2 [#_"GenericContext" this, #_"Class<T>" clazz]
         (when (some? (:context this))
             (loop-when [#_"ListIterator<Object>" it (#_"ArrayList" .listIterator (:context this))] (#_"ListIterator" .hasNext it)
@@ -39684,7 +38809,7 @@
     ;;;
      ; Gets an unmodifiable view on the phases in this suite.
      ;;
-    #_unused
+    #_unused
     (§ method #_"List<LIRPhase<C>>" LIRPhaseSuite''getPhases-1 [#_"LIRPhaseSuite<C>" this]
         (Collections/unmodifiableList (:phases this))
     )
@@ -39692,7 +38817,7 @@
     ;;;
      ; Add a new phase at the beginning of this suite.
      ;;
-    #_unused
+    #_unused
     (§ method! #_"void" LIRPhaseSuite''prependPhase-2 [#_"LIRPhaseSuite<C>" this, #_"LIRPhase<C>" phase]
         (#_"List" .add (:phases this), 0, phase)
         nil
@@ -39706,7 +38831,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ method! #_"ListIterator<LIRPhase<C>>" LIRPhaseSuite''findPhase-2 [#_"LIRPhaseSuite<C>" this, #_"Class<? extends LIRPhase<C>>" phaseClass]
         (let [
             #_"ListIterator<LIRPhase<C>>" it (#_"List" .listIterator (:phases this))
@@ -39715,7 +38840,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ method! #_"<T extends LIRPhase<C>> T" LIRPhaseSuite''findPhaseInstance-2 [#_"LIRPhaseSuite<C>" this, #_"Class<T>" phaseClass]
         (loop-when [#_"ListIterator<LIRPhase<C>>" it (#_"List" .listIterator (:phases this))] (#_"ListIterator" .hasNext it)
             (let [
@@ -39732,7 +38857,7 @@
         (loop [] (and (#_"ListIterator" .hasNext it) (or (#_"Class" .isInstance phaseClass, (#_"ListIterator" .next it)) (recur))))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" LIRPhaseSuite''run-3 [#_"LIRPhaseSuite<C>" this, #_"LIRGenerationResult" lirGenRes, #_"C" context]
         (doseq [#_"LIRPhase<C>" phase (:phases this)]
             (LIRPhase''apply-3 phase, lirGenRes, context)
@@ -39856,7 +38981,7 @@
         (PostAllocationOptimizationPhase'new-0)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" RedundantMoveElimination''run-3 [#_"RedundantMoveElimination" this, #_"LIRGenerationResult" lirGenRes, #_"PostAllocationOptimizationContext" context]
         (§ ass! (RMEOptimization'new-1 (:frameMap lirGenRes)) (RMEOptimization''doOptimize-2 (RMEOptimization'new-1 (:frameMap lirGenRes)), (:lir lirGenRes)))
         nil
@@ -40245,16 +39370,6 @@
         nil
     )
 
-    #_unused
-    (§ defn- #_"void" RMEOptimization'clearValuesOfKindObject-2 [#_"int[]" state, #_"int" defNum]
-        (dotimes [#_"int" i (count state)]
-            (when (RMEOptimization'isObjectValue-1 (nth state i))
-                (aset state i (RMEOptimization'encodeValueNum-2 (+ defNum i), true))
-            )
-        )
-        nil
-    )
-
     ;;;
      ; Returns the index to the state arrays in BlockStates for a specific location.
      ;;
@@ -40374,7 +39489,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ defn #_"JumpOp" SSAUtil'phiOutOrNull-2 [#_"LIR" lir, #_"Block" block]
         (when (= (count (:successors block)) 1) (SSAUtil'phiOut-2 lir, block))
     )
@@ -40430,7 +39545,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ defn #_"int" SSAUtil'numPhiOut-2 [#_"LIR" lir, #_"Block" block]
         (if (= (count (:successors block)) 1)
             (SSAUtil'numPhiIn-2 lir, (nth (:successors block) 0))
@@ -40737,7 +39852,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" LSStackSlotAllocator''run-3 [#_"LSStackSlotAllocator" this, #_"LIRGenerationResult" lirGenRes, #_"AllocationContext" context]
         (LSStackSlotAllocator'allocateStackSlots-2 (:frameMapBuilder lirGenRes), lirGenRes)
         (§ ass! lirGenRes (LIRGenerationResult''buildFrameMap-1 lirGenRes))
@@ -41089,7 +40204,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" SimpleStackSlotAllocator''run-3 [#_"SimpleStackSlotAllocator" this, #_"LIRGenerationResult" lirGenRes, #_"AllocationContext" context]
         (SimpleStackSlotAllocator''allocateStackSlots-3 this, (:frameMapBuilder lirGenRes), lirGenRes)
         (§ ass! lirGenRes (LIRGenerationResult''buildFrameMap-1 lirGenRes))
@@ -41141,14 +40256,14 @@
         (assoc this :location location)
     )
 
-    #_unused
+    #_unused
     (§ method! #_"StackInterval" StackInterval''fixFrom-1 [#_"StackInterval" this]
         (when (= (:from this) StackInterval'INVALID_START) => this
             (assoc this :from 0)
         )
     )
 
-    #_unused
+    #_unused
     (§ method! #_"boolean" StackInterval''isFixed-1 [#_"StackInterval" this]
         (zero? (:from this))
     )
@@ -41265,8 +40380,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" LabelOp''emitCode-2 [#_"LabelOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"LabelOp" this, #_"Assembler" asm]
         (when (:aligned? this)
             (Assembler''align-2 asm, (* (.wordSize HotSpot'target) 2))
         )
@@ -41281,7 +40395,7 @@
         (pos? (:numbPhis this))
     )
 
-    #_unused
+    #_unused
     (§ method! #_"void" LabelOp''forEachIncomingValue-2 [#_"LabelOp" this, #_"InstructionValueProcedure" proc]
         (dotimes [#_"int" i (count (:incomingValues this))]
             (aset (:incomingValues this) i (InstructionValueProcedure''doValue-5 proc, this, (nth (:incomingValues this) i), OperandMode'DEF, LabelOp'incomingFlags))
@@ -41319,8 +40433,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" JumpOp''emitCode-2 [#_"JumpOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"JumpOp" this, #_"Assembler" asm]
         (when-not (Assembler''isSuccessorEdge-2 asm, (:destination this))
             (Assembler''jmp-2 asm, (LabelRef''label-1 (:destination this)))
         )
@@ -41331,7 +40444,7 @@
         (assoc this :outgoingValues values)
     )
 
-    #_unused
+    #_unused
     (§ method! #_"int" JumpOp''getPhiSize-1 [#_"JumpOp" this]
         (count (:outgoingValues this))
     )
@@ -41395,7 +40508,7 @@
      ; @param frameMap used to {@linkplain FrameMap#offsetForStackSlot(StackSlot) convert} a
      ;            virtual slot to a frame slot index
      ;;
-    #_unused
+    #_unused
     (§ abstract #_"RegisterSaveLayout" SaveRegistersOp''getMap-2 [#_"SaveRegistersOp" this, #_"FrameMap" frameMap])
 )
 
@@ -41432,14 +40545,13 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ method! #_"void" NoOp''remove-2 [#_"NoOp" this, #_"LIR" lir]
         (#_"ArrayList" .remove (LIR''getLIRforBlock-2 lir, (:block this)), (:index this))
         nil
     )
 
-    #_unused
-    (§ override! #_"void" NoOp''emitCode-2 [#_"NoOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"NoOp" this, #_"Assembler" asm]
         (when (some? (:block this))
             (throw! (str this " should have been replaced"))
         )
@@ -41466,8 +40578,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" BlackholeOp''emitCode-2 [#_"BlackholeOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"BlackholeOp" this, #_"Assembler" asm]
         ;; do nothing, just keep value alive until at least here
         nil
     )
@@ -41491,8 +40602,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" BindToRegisterOp''emitCode-2 [#_"BindToRegisterOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"BindToRegisterOp" this, #_"Assembler" asm]
         ;; do nothing, just keep value alive until at least here
         nil
     )
@@ -41509,13 +40619,12 @@
         (LIRInstruction'new-1 SpillRegistersOp'TYPE)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" SpillRegistersOp''destroysCallerSavedRegisters-1 [#_"SpillRegistersOp" this]
         true
     )
 
-    #_unused
-    (§ override! #_"void" SpillRegistersOp''emitCode-2 [#_"SpillRegistersOp" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"SpillRegistersOp" this, #_"Assembler" asm]
         ;; do nothing, just keep value alive until at least here
         nil
     )
@@ -41532,7 +40641,7 @@
     ; @Use({OperandFlag'STACK})
     (§ mutable #_"AllocatableValue" :input nil)
 
-    #_unused
+    #_unused
     (§ defn #_"StackMove" StackMove'new-2 [#_"AllocatableValue" result, #_"AllocatableValue" input]
         (let [
             #_"StackMove" this (LIRInstruction'new-1 StackMove'TYPE)
@@ -41543,17 +40652,16 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" StackMove''emitCode-2 [#_"StackMove" this, #_"Assembler" asm]
+    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"StackMove" this, #_"Assembler" asm]
         (throw! (str this " should have been removed"))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"AllocatableValue" StackMove''getInput-1 [#_"StackMove" this]
         (:input this)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"AllocatableValue" StackMove''getResult-1 [#_"StackMove" this]
         (:result this)
     )
@@ -41741,7 +40849,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override #_"void" BaseSwitchClosure''conditionalJumpOrDefault-4 [#_"BaseSwitchClosure" this, #_"int" index, #_"Condition" condition, #_"boolean" canFallThrough]
         (cond
             (and canFallThrough (Assembler''isSuccessorEdge-2 (:asm this), (:defaultTarget this)))
@@ -41757,7 +40865,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override #_"Label" BaseSwitchClosure''conditionalJump-3 [#_"BaseSwitchClosure" this, #_"int" index, #_"Condition" condition]
         (let [
             #_"Label" label (Label'new-0)
@@ -41767,13 +40875,13 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override #_"void" BaseSwitchClosure''bind-2 [#_"BaseSwitchClosure" this, #_"Label" label]
         (Assembler''bind-2 (:asm this), label)
         nil
     )
 
-    #_unused
+    #_unused
     (§ override #_"boolean" BaseSwitchClosure''isSameTarget-3 [#_"BaseSwitchClosure" this, #_"int" index1, #_"int" index2]
         (= (nth (:keyTargets this) index1) (nth (:keyTargets this) index2))
     )
@@ -41806,31 +40914,31 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" EffortClosure''conditionalJump-4 [#_"EffortClosure" this, #_"int" index, #_"Condition" condition, #_"boolean" defaultTarget]
         ;; nothing to do
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" EffortClosure''conditionalJumpOrDefault-4 [#_"EffortClosure" this, #_"int" index, #_"Condition" condition, #_"boolean" canFallThrough]
         ;; nothing to do
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Label" EffortClosure''conditionalJump-3 [#_"EffortClosure" this, #_"int" index, #_"Condition" condition]
         ;; nothing to do
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" EffortClosure''bind-2 [#_"EffortClosure" this, #_"Label" label]
         ;; nothing to do
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" EffortClosure''isSameTarget-3 [#_"EffortClosure" this, #_"int" index1, #_"int" index2]
         (= (nth (:keyTargets this) index1) (nth (:keyTargets this) index2))
     )
@@ -41879,7 +40987,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" SequentialStrategy''run-2 [#_"SequentialStrategy" this, #_"SwitchClosure" closure]
         (dotimes [#_"int" i (dec (count (:keyConstants this)))]
             (SwitchClosure''conditionalJump-4 closure, (nth (:indexes this) i), Condition'EQ, false)
@@ -41959,7 +41067,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" RangesStrategy''run-2 [#_"RangesStrategy" this, #_"SwitchClosure" closure]
         (let [
             #_"int'" depth (volatile! 0)
@@ -42047,7 +41155,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" BinaryStrategy''run-2 [#_"BinaryStrategy" this, #_"SwitchClosure" closure]
         (BinaryStrategy''recurseBinarySwitch-5 this, closure, 0, (dec (count (:keyConstants this))), 0)
         nil
@@ -42184,12 +41292,12 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ method! #_"T" RegisterMap''get-2 [#_"RegisterMap<T>" this, #_"Register" reg]
         (§ cast #_"T" (nth (:values this) (RegisterMap'index-1 reg)))
     )
 
-    #_unused
+    #_unused
     (§ method! #_"void" RegisterMap''remove-2 [#_"RegisterMap<T>" this, #_"Register" reg]
         (aset (:values this) (RegisterMap'index-1 reg) nil)
         nil
@@ -42253,7 +41361,7 @@
      ;;
     (§ abstract #_"Value" ValueProcedure''doValue-4 [#_"ValueProcedure" this, #_"Value" value, #_"OperandMode" mode, #_"EnumSet<OperandFlag>" flags])
 
-    #_unused
+    #_unused
     (§ default #_"Value" ValueProcedure''doValue-5 [#_"ValueProcedure" this, #_"LIRInstruction" instruction, #_"Value" value, #_"OperandMode" mode, #_"EnumSet<OperandFlag>" flags]
         (ValueProcedure''doValue-4 this, value, mode, flags)
     )
@@ -42323,7 +41431,7 @@
         (:graph (:phi this))
     )
 
-    #_unused
+    #_unused
     (§ method! #_"BasicInductionVariable" BasicInductionVariable''setOP-2 [#_"BasicInductionVariable" this, #_"BinaryArithmeticNode" newOp]
         (let [
             this (assoc this :rawStride (:y newOp))
@@ -42333,7 +41441,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Direction" BasicInductionVariable''direction-1 [#_"BasicInductionVariable" this]
         (let [
             #_"Stamp" stamp (:stamp (:rawStride this))
@@ -42354,7 +41462,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ValuePhiNode" BasicInductionVariable''valueNode-1 [#_"BasicInductionVariable" this]
         (:phi this)
     )
@@ -42389,7 +41497,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ValueNode" BasicInductionVariable''extremumNode-3 [#_"BasicInductionVariable" this, #_"boolean" assumePositiveTripCount, #_"Stamp" stamp]
         (let [
             #_"Stamp" fromStamp (:stamp (:phi this))
@@ -42412,7 +41520,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ValueNode" BasicInductionVariable''exitValueNode-1 [#_"BasicInductionVariable" this]
         (let [
             #_"Stamp" stamp (:stamp (:phi this))
@@ -42425,12 +41533,12 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" BasicInductionVariable''isConstantExtremum-1 [#_"BasicInductionVariable" this]
         (and (BasicInductionVariable''isConstantInit-1 this) (BasicInductionVariable''isConstantStride-1 this) (CountedLoopInfo''isConstantMaxTripCount-1 (:counted (:loop this))))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"long" BasicInductionVariable''constantExtremum-1 [#_"BasicInductionVariable" this]
         (let [
             #_"UnsignedLong" tripCount (CountedLoopInfo''constantMaxTripCount-1 (:counted (:loop this)))
@@ -42442,7 +41550,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" BasicInductionVariable''deleteUnusedNodes-1 [#_"BasicInductionVariable" this]
         nil
     )
@@ -42565,7 +41673,7 @@
         (= (-> (LoopEx''loopBegin-1 (:loop this)) (LoopBeginNode''loopExits-1) (NodeIterable''count-1)) 1)
     )
 
-    #_unused
+    #_unused
     (§ method! #_"ValueNode" CountedLoopInfo''exactTripCountNode-1 [#_"CountedLoopInfo" this]
         (CountedLoopInfo''maxTripCountNode-1 this)
     )
@@ -42574,7 +41682,7 @@
         (CountedLoopInfo''isConstantMaxTripCount-1 this)
     )
 
-    #_unused
+    #_unused
     (§ method! #_"UnsignedLong" CountedLoopInfo''constantExactTripCount-1 [#_"CountedLoopInfo" this]
         (CountedLoopInfo''constantMaxTripCount-1 this)
     )
@@ -42583,7 +41691,7 @@
         (InductionVariable''initNode-1 (:iv this))
     )
 
-    #_unused
+    #_unused
     (§ method! #_"Direction" CountedLoopInfo''getDirection-1 [#_"CountedLoopInfo" this]
         (InductionVariable''direction-1 (:iv this))
     )
@@ -42629,7 +41737,7 @@
         (Object.)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" DefaultLoopPolicies''shouldPeel-3 [#_"DefaultLoopPolicies" this, #_"LoopEx" loop, #_"ControlFlowGraph" cfg]
         (let [
             #_"LoopBeginNode" loopBegin (LoopEx''loopBegin-1 loop)
@@ -42642,7 +41750,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" DefaultLoopPolicies''shouldFullUnroll-2 [#_"DefaultLoopPolicies" this, #_"LoopEx" loop]
         (and (LoopEx''isCounted-1 loop) (CountedLoopInfo''isConstantMaxTripCount-1 (:counted loop))
             (let [
@@ -42672,7 +41780,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" DefaultLoopPolicies''shouldPartiallyUnroll-2 [#_"DefaultLoopPolicies" this, #_"LoopEx" loop]
         (let [
             #_"LoopBeginNode" loopBegin (LoopEx''loopBegin-1 loop)
@@ -42720,7 +41828,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" DefaultLoopPolicies''shouldTryUnswitch-2 [#_"DefaultLoopPolicies" this, #_"LoopEx" loop]
         (let [
             #_"LoopBeginNode" loopBegin (LoopEx''loopBegin-1 loop)
@@ -42729,7 +41837,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" DefaultLoopPolicies''shouldUnswitch-3 [#_"DefaultLoopPolicies" this, #_"LoopEx" loop, #_"List<ControlSplitNode>" controlSplits]
         (let [
             #_"Graph" graph (:graph (LoopEx''loopBegin-1 loop))
@@ -42781,7 +41889,7 @@
         (Object.)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" CountingClosure''apply-2 [#_"CountingClosure" this, #_"VirtualState" node]
         (§ ass! this (update this :count inc))
         nil
@@ -42802,67 +41910,67 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ValueNode" DerivedConvertedInductionVariable''valueNode-1 [#_"DerivedConvertedInductionVariable" this]
         (:value this)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Direction" DerivedConvertedInductionVariable''direction-1 [#_"DerivedConvertedInductionVariable" this]
         (InductionVariable''direction-1 (:base this))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ValueNode" DerivedConvertedInductionVariable''initNode-1 [#_"DerivedConvertedInductionVariable" this]
         (IntegerConvertNode'convert-3 (InductionVariable''initNode-1 (:base this)), (:stamp this), (InductionVariable''graph-1 this))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ValueNode" DerivedConvertedInductionVariable''strideNode-1 [#_"DerivedConvertedInductionVariable" this]
         (IntegerConvertNode'convert-3 (InductionVariable''strideNode-1 (:base this)), (:stamp this), (InductionVariable''graph-1 this))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" DerivedConvertedInductionVariable''isConstantInit-1 [#_"DerivedConvertedInductionVariable" this]
         (InductionVariable''isConstantInit-1 (:base this))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" DerivedConvertedInductionVariable''isConstantStride-1 [#_"DerivedConvertedInductionVariable" this]
         (InductionVariable''isConstantStride-1 (:base this))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"long" DerivedConvertedInductionVariable''constantInit-1 [#_"DerivedConvertedInductionVariable" this]
         (InductionVariable''constantInit-1 (:base this))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"long" DerivedConvertedInductionVariable''constantStride-1 [#_"DerivedConvertedInductionVariable" this]
         (InductionVariable''constantStride-1 (:base this))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ValueNode" DerivedConvertedInductionVariable''extremumNode-3 [#_"DerivedConvertedInductionVariable" this, #_"boolean" assumePositiveTripCount, #_"Stamp" s]
         (InductionVariable''extremumNode-3 (:base this), assumePositiveTripCount, s)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ValueNode" DerivedConvertedInductionVariable''exitValueNode-1 [#_"DerivedConvertedInductionVariable" this]
         (IntegerConvertNode'convert-3 (InductionVariable''exitValueNode-1 (:base this)), (:stamp this), (InductionVariable''graph-1 this))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" DerivedConvertedInductionVariable''isConstantExtremum-1 [#_"DerivedConvertedInductionVariable" this]
         (InductionVariable''isConstantExtremum-1 (:base this))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"long" DerivedConvertedInductionVariable''constantExtremum-1 [#_"DerivedConvertedInductionVariable" this]
         (InductionVariable''constantExtremum-1 (:base this))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" DerivedConvertedInductionVariable''deleteUnusedNodes-1 [#_"DerivedConvertedInductionVariable" this]
         nil
     )
@@ -42883,7 +41991,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override #_"Graph" DerivedInductionVariable''graph-1 [#_"DerivedInductionVariable" this]
         (InductionVariable''graph-1 (:base this))
     )
@@ -42907,32 +42015,32 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Direction" DerivedOffsetInductionVariable''direction-1 [#_"DerivedOffsetInductionVariable" this]
         (InductionVariable''direction-1 (:base this))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ValueNode" DerivedOffsetInductionVariable''valueNode-1 [#_"DerivedOffsetInductionVariable" this]
         (:value this)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" DerivedOffsetInductionVariable''isConstantInit-1 [#_"DerivedOffsetInductionVariable" this]
         (and (instance? ConstantNode (:offset this)) (InductionVariable''isConstantInit-1 (:base this)))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" DerivedOffsetInductionVariable''isConstantStride-1 [#_"DerivedOffsetInductionVariable" this]
         (InductionVariable''isConstantStride-1 (:base this))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"long" DerivedOffsetInductionVariable''constantInit-1 [#_"DerivedOffsetInductionVariable" this]
         (DerivedOffsetInductionVariable''op-3 this, (InductionVariable''constantInit-1 (:base this)), (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 (:offset this))))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"long" DerivedOffsetInductionVariable''constantStride-1 [#_"DerivedOffsetInductionVariable" this]
         (if (and (instance? SubNode (:value this)) (= (InductionVariable''valueNode-1 (:base this)) (:y (:value this))))
             (- (InductionVariable''constantStride-1 (:base this)))
@@ -42940,12 +42048,12 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ValueNode" DerivedOffsetInductionVariable''initNode-1 [#_"DerivedOffsetInductionVariable" this]
         (DerivedOffsetInductionVariable''op-3 this, (InductionVariable''initNode-1 (:base this)), (:offset this))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ValueNode" DerivedOffsetInductionVariable''strideNode-1 [#_"DerivedOffsetInductionVariable" this]
         (if (and (instance? SubNode (:value this)) (= (InductionVariable''valueNode-1 (:base this)) (:y (:value this))))
             (Graph''addOrUniqueWithInputs-2 (InductionVariable''graph-1 this), (NegateNode'create-1 (InductionVariable''strideNode-1 (:base this))))
@@ -42953,22 +42061,22 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ValueNode" DerivedOffsetInductionVariable''extremumNode-3 [#_"DerivedOffsetInductionVariable" this, #_"boolean" assumePositiveTripCount, #_"Stamp" stamp]
         (DerivedOffsetInductionVariable''op-3 this, (InductionVariable''extremumNode-3 (:base this), assumePositiveTripCount, stamp), (IntegerConvertNode'convert-3 (:offset this), stamp, (InductionVariable''graph-1 this)))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ValueNode" DerivedOffsetInductionVariable''exitValueNode-1 [#_"DerivedOffsetInductionVariable" this]
         (DerivedOffsetInductionVariable''op-3 this, (InductionVariable''exitValueNode-1 (:base this)), (:offset this))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" DerivedOffsetInductionVariable''isConstantExtremum-1 [#_"DerivedOffsetInductionVariable" this]
         (and (instance? ConstantNode (:offset this)) (InductionVariable''isConstantExtremum-1 (:base this)))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"long" DerivedOffsetInductionVariable''constantExtremum-1 [#_"DerivedOffsetInductionVariable" this]
         (DerivedOffsetInductionVariable''op-3 this, (InductionVariable''constantExtremum-1 (:base this)), (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 (:offset this))))
     )
@@ -42997,7 +42105,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" DerivedOffsetInductionVariable''deleteUnusedNodes-1 [#_"DerivedOffsetInductionVariable" this]
         nil
     )
@@ -43027,12 +42135,12 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ValueNode" DerivedScaledInductionVariable''valueNode-1 [#_"DerivedScaledInductionVariable" this]
         (:value this)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Direction" DerivedScaledInductionVariable''direction-1 [#_"DerivedScaledInductionVariable" this]
         (let [
             #_"Stamp" stamp (:stamp (:scale this))
@@ -43046,57 +42154,57 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ValueNode" DerivedScaledInductionVariable''initNode-1 [#_"DerivedScaledInductionVariable" this]
         (MathUtil'mul-3 (InductionVariable''graph-1 this), (InductionVariable''initNode-1 (:base this)), (:scale this))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ValueNode" DerivedScaledInductionVariable''strideNode-1 [#_"DerivedScaledInductionVariable" this]
         (MathUtil'mul-3 (InductionVariable''graph-1 this), (InductionVariable''strideNode-1 (:base this)), (:scale this))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" DerivedScaledInductionVariable''isConstantInit-1 [#_"DerivedScaledInductionVariable" this]
         (and (instance? ConstantNode (:scale this)) (InductionVariable''isConstantInit-1 (:base this)))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" DerivedScaledInductionVariable''isConstantStride-1 [#_"DerivedScaledInductionVariable" this]
         (and (instance? ConstantNode (:scale this)) (InductionVariable''isConstantStride-1 (:base this)))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"long" DerivedScaledInductionVariable''constantInit-1 [#_"DerivedScaledInductionVariable" this]
         (* (InductionVariable''constantInit-1 (:base this)) (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 (:scale this))))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"long" DerivedScaledInductionVariable''constantStride-1 [#_"DerivedScaledInductionVariable" this]
         (* (InductionVariable''constantStride-1 (:base this)) (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 (:scale this))))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ValueNode" DerivedScaledInductionVariable''extremumNode-3 [#_"DerivedScaledInductionVariable" this, #_"boolean" assumePositiveTripCount, #_"Stamp" stamp]
         (MathUtil'mul-3 (InductionVariable''graph-1 this), (InductionVariable''extremumNode-3 (:base this), assumePositiveTripCount, stamp), (IntegerConvertNode'convert-3 (:scale this), stamp, (InductionVariable''graph-1 this)))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ValueNode" DerivedScaledInductionVariable''exitValueNode-1 [#_"DerivedScaledInductionVariable" this]
         (MathUtil'mul-3 (InductionVariable''graph-1 this), (InductionVariable''exitValueNode-1 (:base this)), (:scale this))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" DerivedScaledInductionVariable''isConstantExtremum-1 [#_"DerivedScaledInductionVariable" this]
         (and (instance? ConstantNode (:scale this)) (InductionVariable''isConstantExtremum-1 (:base this)))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"long" DerivedScaledInductionVariable''constantExtremum-1 [#_"DerivedScaledInductionVariable" this]
         (* (InductionVariable''constantExtremum-1 (:base this)) (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 (:scale this))))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" DerivedScaledInductionVariable''deleteUnusedNodes-1 [#_"DerivedScaledInductionVariable" this]
         (GraphUtil'tryKillUnused-1 (:scale this))
         nil
@@ -43120,7 +42228,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ method #_"LoopEx" InductionVariable''getLoop-1 [#_"InductionVariable" this]
         (:loop this)
     )
@@ -43157,7 +42265,7 @@
      ; loop limit test. It's possible for the loop to exit before this value if
      ; CountedLoopInfo#isExactTripCount() returns false for the containing loop.
      ;;
-    #_unused
+    #_unused
     (§ method #_"ValueNode" InductionVariable''extremumNode-1 [#_"InductionVariable" this]
         (InductionVariable''extremumNode-3 this, false, (:stamp (InductionVariable''valueNode-1 this)))
     )
@@ -43236,13 +42344,13 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ method! #_"LoopFragmentInsideFrom" LoopEx''insideFrom-2 [#_"LoopEx" this, #_"FixedNode" point]
         ;; TODO
         nil
     )
 
-    #_unused
+    #_unused
     (§ method! #_"LoopFragmentInsideBefore" LoopEx''insideBefore-2 [#_"LoopEx" this, #_"FixedNode" point]
         ;; TODO
         nil
@@ -43256,7 +42364,7 @@
         (:beginNode (:header (:loop this)))
     )
 
-    #_unused
+    #_unused
     (§ method! #_"FixedNode" LoopEx''predecessor-1 [#_"LoopEx" this]
         (:predecessor (LoopBeginNode''forwardEnd-1 (LoopEx''loopBegin-1 this)))
     )
@@ -43269,7 +42377,7 @@
         (some? (:counted this))
     )
 
-    #_unused
+    #_unused
     (§ method! #_"LoopEx" LoopEx''parent-1 [#_"LoopEx" this]
         (when (some? (:parent (:loop this)))
             (LoopsData''loop-2 (:data this), (:parent (:loop this)))
@@ -43623,7 +42731,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" InvariantPredicate''apply-2 [#_"InvariantPredicate" this, #_"Node" node]
         (and (< (:id node) (:value (:mark this))) ;; newly created nodes are unknown
             (LoopEx''isOutsideLoop-2 (:loopEx this), node)
@@ -43661,13 +42769,13 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ abstract #_"LoopFragment" LoopFragment''duplicate-1 [#_"LoopFragment" this])
 
-    #_unused
+    #_unused
     (§ abstract #_"void" LoopFragment''insertBefore-2 [#_"LoopFragment" this, #_"LoopEx" l])
 
-    #_unused
+    #_unused
     (§ method! #_"void" LoopFragment''disconnect-1 [#_"LoopFragment" this]
         ;; TODO possibly abstract
         nil
@@ -43752,7 +42860,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ defn #_"NodeBitMap" LoopFragment'computeNodes-2 [#_"Graph" graph, #_"Iterable<AbstractBeginNode>" blocks]
         (LoopFragment'computeNodes-3 graph, blocks, (Collections/emptyList))
     )
@@ -44091,7 +43199,7 @@
         (LoopFragmentInside'new-1 this)
     )
 
-    #_unused
+    #_unused
     (§ method! #_"void" LoopFragmentInside''appendInside-2 [#_"LoopFragmentInside" this, #_"LoopEx" loop]
         ;; TODO
         nil
@@ -44345,7 +43453,7 @@
         (LoopBeginNode''loopExits-1 (LoopEx''loopBegin-1 (:loop this)))
     )
 
-    #_unused
+    #_unused
     (§ override #_"DuplicationReplacement" LoopFragmentInside''getDuplicationReplacement-1 [#_"LoopFragmentInside" this]
         (let [
             #_"LoopBeginNode" loopBegin (LoopEx''loopBegin-1 (:loop this))
@@ -44406,13 +43514,13 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override #_"void" LoopFragmentInside''finishDuplication-1 [#_"LoopFragmentInside" this]
         ;; TODO
         nil
     )
 
-    #_unused
+    #_unused
     (§ override #_"void" LoopFragmentInside''beforeDuplication-1 [#_"LoopFragmentInside" this]
         ;; Nothing to do
         nil
@@ -44665,7 +43773,7 @@
 (final-ns LoopFragmentInsideBefore (§ extends LoopFragmentInside)
     (§ final #_"FixedNode" :point nil)
 
-    #_unused
+    #_unused
     (§ defn #_"LoopFragmentInsideBefore" LoopFragmentInsideBefore'new-2 [#_"LoopEx" loop, #_"FixedNode" point]
         (let [
             #_"LoopFragmentInsideBefore" this (LoopFragmentInside'new-1 loop)
@@ -44685,12 +43793,12 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"LoopFragmentInsideBefore" LoopFragmentInsideBefore''duplicate-1 [#_"LoopFragmentInsideBefore" this]
         (LoopFragmentInsideBefore'new-1 this)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"NodeBitMap" LoopFragmentInsideBefore''nodes-1 [#_"LoopFragmentInsideBefore" this]
         nil
     )
@@ -44699,7 +43807,7 @@
 (final-ns LoopFragmentInsideFrom (§ extends LoopFragmentInside)
     (§ final #_"FixedNode" :point nil)
 
-    #_unused
+    #_unused
     (§ defn #_"LoopFragmentInsideFrom" LoopFragmentInsideFrom'new-2 [#_"LoopEx" loop, #_"FixedNode" point]
         (let [
             #_"LoopFragmentInsideFrom" this (LoopFragmentInside'new-1 loop)
@@ -44719,12 +43827,12 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"LoopFragmentInsideFrom" LoopFragmentInsideFrom''duplicate-1 [#_"LoopFragmentInsideFrom" this]
         (LoopFragmentInsideFrom'new-1 this)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"NodeBitMap" LoopFragmentInsideFrom''nodes-1 [#_"LoopFragmentInsideFrom" this]
         nil
     )
@@ -44760,12 +43868,12 @@
         (:nodes this)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ValueNode" LoopFragmentWhole''prim-2 [#_"LoopFragmentWhole" this, #_"ValueNode" b]
         (LoopFragment''getDuplicatedNode-2 this, b)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"DuplicationReplacement" LoopFragmentWhole''getDuplicationReplacement-1 [#_"LoopFragmentWhole" this]
         (let [
             #_"FixedNode" entry (LoopEx''entryPoint-1 (:loop this))
@@ -44792,7 +43900,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" LoopFragmentWhole''finishDuplication-1 [#_"LoopFragmentWhole" this]
         ;; TODO
         nil
@@ -44838,13 +43946,13 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" LoopFragmentWhole''beforeDuplication-1 [#_"LoopFragmentWhole" this]
         (LoopFragmentWhole''cleanupLoopExits-1 this)
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" LoopFragmentWhole''insertBefore-2 [#_"LoopFragmentWhole" this, #_"LoopEx" loop]
         ;; TODO auto-generated method stub
         nil
@@ -44914,7 +44022,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ method! #_"InductionVariable" LoopsData''getInductionVariable-2 [#_"LoopsData" this, #_"ValueNode" value]
         (loop-when [#_"InductionVariable" match nil #_"ISeq" s (seq (:loops this))] (some? s) => match
             (let [
@@ -44975,7 +44083,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ defn #_"ValueNode" MathUtil'divBefore-4 [#_"Graph" graph, #_"FixedNode" before, #_"ValueNode" dividend, #_"ValueNode" divisor]
         (MathUtil'fixedDivBefore-5 graph, before, dividend, divisor, (ß (dend, sor) -> (§ fun (SignedDivNode'create-2 dend, sor))))
     )
@@ -45011,7 +44119,7 @@
         (LoopPhase'new-1 policies)
     )
 
-    #_unused
+    #_unused
     (§ method! #_"void" ContextlessLoopPhase''apply-2 [#_"ContextlessLoopPhase<P extends LoopPolicies>" this, #_"Graph" graph]
         (BasePhase''apply-3 this, graph, nil)
         nil
@@ -45019,7 +44127,7 @@
 
     (§ abstract #_"void" ContextlessLoopPhase''run-2 [#_"ContextlessLoopPhase<P extends LoopPolicies>" this, #_"Graph" graph])
 
-    #_unused
+    #_unused
     (§ override! #_"void" ContextlessLoopPhase''run-3 [#_"ContextlessLoopPhase<P extends LoopPolicies>" this, #_"Graph" graph, #_"PhaseContext" context]
         (ContextlessLoopPhase''run-2 this, graph)
         nil
@@ -45038,7 +44146,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" LoopFullUnrollPhase''run-3 [#_"LoopFullUnrollPhase" this, #_"Graph" graph, #_"PhaseContext" context]
         (when (Graph''hasLoops-1 graph)
             (loop []
@@ -45082,7 +44190,7 @@
     )
 
     ; @SuppressWarnings("try")
-    #_unused
+    #_unused
     (§ override! #_"void" LoopPartialUnrollPhase''run-3 [#_"LoopPartialUnrollPhase" this, #_"Graph" graph, #_"PhaseContext" context]
         (when (Graph''hasLoops-1 graph)
             (let [
@@ -45140,7 +44248,7 @@
         (LoopPhase'new-1 policies)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" LoopPeelingPhase''run-3 [#_"LoopPeelingPhase" this, #_"Graph" graph, #_"PhaseContext" context]
         (when (Graph''hasLoops-1 graph)
             (let [
@@ -45176,7 +44284,7 @@
         (BasePhase'new-0)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" LoopSafepointEliminationPhase''run-3 [#_"LoopSafepointEliminationPhase" this, #_"Graph" graph, #_"MidTierContext" context]
         (let [
             #_"LoopsData" loops (LoopsData'new-1 graph)
@@ -45653,7 +44761,7 @@
         (ContextlessLoopPhase'new-1 policies)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" LoopUnswitchingPhase''run-2 [#_"LoopUnswitchingPhase" this, #_"Graph" graph]
         (when (Graph''hasLoops-1 graph)
             (loop []
@@ -45694,7 +44802,7 @@
         (Phase'new-0)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" ReassociateInvariantPhase''run-2 [#_"ReassociateInvariantPhase" this, #_"Graph" graph]
         (loop [#_"int" iterations 0]
             (let [
@@ -45780,7 +44888,7 @@
  ;;
 ; @MarkerType(InputType'Memory)
 (final-ns Memory (§ extends StructuralInput)
-    #_unused
+    #_unused
     (§ defn #_"Memory" Memory'new-0 []
         (StructuralInput'new-0)
     )
@@ -45793,7 +44901,7 @@
  ;;
 ; @MarkerType(InputType'ConditionI)
 (final-ns ConditionI (§ extends StructuralInput)
-    #_unused
+    #_unused
     (§ defn #_"ConditionI" ConditionI'new-0 []
         (StructuralInput'new-0)
     )
@@ -45806,7 +44914,7 @@
  ;;
 ; @MarkerType(InputType'StateI)
 (final-ns StateI (§ extends StructuralInput)
-    #_unused
+    #_unused
     (§ defn #_"StateI" StateI'new-0 []
         (StructuralInput'new-0)
     )
@@ -45819,7 +44927,7 @@
  ;;
 ; @MarkerType(InputType'Guard)
 (final-ns Guard (§ extends StructuralInput)
-    #_unused
+    #_unused
     (§ defn #_"Guard" Guard'new-0 []
         (StructuralInput'new-0)
     )
@@ -45832,7 +44940,7 @@
  ;;
 ; @MarkerType(InputType'Anchor)
 (final-ns Anchor (§ extends StructuralInput)
-    #_unused
+    #_unused
     (§ defn #_"Anchor" Anchor'new-0 []
         (StructuralInput'new-0)
     )
@@ -45857,7 +44965,7 @@
  ;;
 ; @MarkerType(InputType'Extension)
 (final-ns Extension (§ extends StructuralInput)
-    #_unused
+    #_unused
     (§ defn #_"Extension" Extension'new-0 []
         (StructuralInput'new-0)
     )
@@ -45907,8 +45015,7 @@
         nil
     )
 
-    #_unused
-    (§ override #_"void" AbstractBeginNode''generate-2 [#_"AbstractBeginNode" this, #_"LIRBuilder" builder]
+    (§ override #_"void" LIRLowerable''generate-2 [#_"AbstractBeginNode" this, #_"LIRBuilder" builder]
         ;; nop
         nil
     )
@@ -45949,12 +45056,12 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" BlockNodeIterator''hasNext-1 [#_"BlockNodeIterator" this]
         (some? (:current this))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"FixedNode" BlockNodeIterator''next-1 [#_"BlockNodeIterator" this]
         (let [
             #_"FixedNode" ret (:current this)
@@ -45996,7 +45103,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override #_"boolean" AbstractDeoptimizeNode''canDeoptimize-1 [#_"AbstractDeoptimizeNode" this]
         true
     )
@@ -46023,7 +45130,7 @@
         (FixedNode'new-2 c, (StampFactory'forVoid-0))
     )
 
-    (§ override #_"void" AbstractEndNode''generate-2 [#_"AbstractEndNode" this, #_"LIRBuilder" builder]
+    (§ override #_"void" LIRLowerable''generate-2 [#_"AbstractEndNode" this, #_"LIRBuilder" builder]
         (LIRBuilder''visitEndNode-2 builder, this)
         nil
     )
@@ -46032,7 +45139,7 @@
         (NodeIterable''first-1 (Node''usages-1 this))
     )
 
-    #_unused
+    #_unused
     (§ override #_"Iterable<? extends Node>" AbstractEndNode''cfgSuccessors-1 [#_"AbstractEndNode" this]
         (let [
             #_"AbstractMergeNode" merge (AbstractEndNode''merge-1 this)
@@ -46121,18 +45228,18 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override #_"boolean" AbstractFixedGuardNode''canDeoptimize-1 [#_"AbstractFixedGuardNode" this]
         true
     )
 
-    #_unused
+    #_unused
     (§ override #_"void" AbstractFixedGuardNode''setAction-2 [#_"AbstractFixedGuardNode" this, #_"DeoptimizationAction" action]
         (§ ass! this (assoc this :action action))
         nil
     )
 
-    #_unused
+    #_unused
     (§ override #_"void" AbstractFixedGuardNode''setReason-2 [#_"AbstractFixedGuardNode" this, #_"DeoptimizationReason" reason]
         (§ ass! this (assoc this :reason reason))
         nil
@@ -46177,8 +45284,7 @@
     ; @Input(InputType'Association)
     (§ mutable #_"NodeInputList<EndNode>" :ends (NodeInputList'new-1 this))
 
-    #_unused
-    (§ override #_"void" AbstractMergeNode''generate-2 [#_"AbstractMergeNode" this, #_"LIRBuilder" builder]
+    (§ override #_"void" LIRLowerable''generate-2 [#_"AbstractMergeNode" this, #_"LIRBuilder" builder]
         (LIRBuilder''visitMerge-2 builder, this)
         nil
     )
@@ -46246,7 +45352,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ method! #_"void" AbstractMergeNode''clearEnds-1 [#_"AbstractMergeNode" this]
         (NodeList''clear-1 (:ends this))
         nil
@@ -46287,7 +45393,7 @@
     ;;;
      ; This simplify method can deal with a nil value for tool, so that it can be used outside of canonicalization.
      ;;
-    #_unused
+    #_unused
     (§ override #_"void" AbstractMergeNode''simplify-2 [#_"AbstractMergeNode" this, #_"SimplifierTool" tool]
         (let [
             #_"FixedNode" node (:next this)
@@ -46449,7 +45555,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override #_"boolean" AbstractStateSplit''hasSideEffect-1 [#_"AbstractStateSplit" this]
         true
     )
@@ -46472,7 +45578,7 @@
  ; An ArithmeticOperation is an operation that does primitive value arithmetic without side effect.
  ;;
 (§ interface ArithmeticOperation
-    #_unused
+    #_unused
     (§ abstract #_"ArithmeticOp" ArithmeticOperation''getArithmeticOp-1 [#_"ArithmeticOperation" this])
 )
 
@@ -46483,12 +45589,12 @@
         (AbstractBeginNode'new-2 BeginNode'TYPE, (StampFactory'forVoid-0))
     )
 
-    #_unused
+    #_unused
     (§ defn #_"BeginNode" BeginNode'new-1 [#_"Stamp" stamp]
         (AbstractBeginNode'new-2 BeginNode'TYPE, stamp)
     )
 
-    #_unused
+    #_unused
     (§ method! #_"void" BeginNode''trySimplify-1 [#_"BeginNode" this]
         (let [
             #_"FixedNode" prev (:predecessor this)
@@ -46505,7 +45611,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" BeginNode''simplify-2 [#_"BeginNode" this, #_"SimplifierTool" tool]
         (let [
             #_"FixedNode" prev (:predecessor this)
@@ -46555,7 +45661,7 @@
         (AbstractBeginNode'new-1 c)
     )
 
-    #_unused
+    #_unused
     (§ defn #_"BeginStateSplitNode" BeginStateSplitNode'new-2 [#_"NodeClass<? extends BeginStateSplitNode>" c, #_"Stamp" stamp]
         (AbstractBeginNode'new-2 c, stamp)
     )
@@ -46573,7 +45679,7 @@
     ;;;
      ; A begin node has no side effect.
      ;;
-    #_unused
+    #_unused
     (§ override #_"boolean" BeginStateSplitNode''hasSideEffect-1 [#_"BeginStateSplitNode" this]
         false
     )
@@ -46597,8 +45703,7 @@
         )
     )
 
-    #_unused
-    (§ override #_"void" BinaryOpLogicNode''generate-2 [#_"BinaryOpLogicNode" this, #_"LIRBuilder" builder]
+    (§ override #_"void" LIRLowerable''generate-2 [#_"BinaryOpLogicNode" this, #_"LIRBuilder" builder]
         nil
     )
 
@@ -46680,7 +45785,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override #_"ValueNode" AddNode''canonical-4 [#_"AddNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
         (let [
             #_"ValueNode" ret (BinaryArithmeticNode''canonical-4 (§ super ), tool, forX, forY)
@@ -46702,8 +45807,7 @@
         )
     )
 
-    #_unused
-    (§ override #_"void" AddNode''generate-2 [#_"AddNode" this, #_"LIRBuilder" builder]
+    (§ override #_"void" LIRLowerable''generate-2 [#_"AddNode" this, #_"LIRBuilder" builder]
         (let [
             #_"Value" op1 (LIRBuilder''operand-2 builder, (:x this))
             #_"Value" op2 (LIRBuilder''operand-2 builder, (:y this))
@@ -46736,7 +45840,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ValueNode" AndNode''canonical-4 [#_"AndNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
         (let [
             #_"ValueNode" ret (BinaryArithmeticNode''canonical-4 (§ super ), tool, forX, forY)
@@ -46784,8 +45888,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" AndNode''generate-2 [#_"AndNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"AndNode" this, #_"LIRBuilder" builder]
         (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitAnd-3 (:gen builder), (LIRBuilder''operand-2 builder, (:x this)), (LIRBuilder''operand-2 builder, (:y this))))
         nil
     )
@@ -47051,13 +46154,13 @@
     ; @Input
     (§ mutable #_"ValueNode" :y nil)
 
-    #_unused
+    #_unused
     (§ method! #_"BinaryNode" BinaryNode''setX-2 [#_"BinaryNode" this, #_"ValueNode" x]
         (Node''updateUsages-3 this, (:x this), x)
         (assoc this :x x)
     )
 
-    #_unused
+    #_unused
     (§ method! #_"BinaryNode" BinaryNode''setY-2 [#_"BinaryNode" this, #_"ValueNode" y]
         (Node''updateUsages-3 this, (:y this), y)
         (assoc this :y y)
@@ -47080,7 +46183,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override #_"boolean" BinaryNode''inferStamp-1 [#_"BinaryNode" this]
         (ValueNode''updateStamp-2 this, (BinaryNode''foldStamp-3 this, (:stamp (:x this)), (:stamp (:y this))))
     )
@@ -47165,7 +46268,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ defn #_"LogicNode" CompareNode'createCompareNode-5 [#_"Graph" graph, #_"Integer" smallestCompareWidth, #_"CanonicalCondition" condition, #_"ValueNode" x, #_"ValueNode" y]
         (let [
             #_"LogicNode" result (CompareNode'createCompareNode-4 smallestCompareWidth, condition, x, y)
@@ -47336,7 +46439,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" ConditionalNode''inferStamp-1 [#_"ConditionalNode" this]
         (let [
             #_"Stamp" valueStamp (Stamp''meet-2 (:stamp (:trueValue this)), (:stamp (:falseValue this)))
@@ -47385,8 +46488,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"ValueNode" ConditionalNode''canonical-2 [#_"ConditionalNode" this, #_"CanonicalizerTool" tool]
+    (§ override! #_"ValueNode" Canonicalizable''canonical-2 [#_"ConditionalNode" this, #_"CanonicalizerTool" tool]
         (or (ConditionalNode'findSynonym-3 (:condition this), (:trueValue this), (:falseValue this))
             (ConditionalNode'canonicalizeConditional-4 (:condition this), (:trueValue this), (:falseValue this), (:stamp this))
             this
@@ -47491,13 +46593,12 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" ConditionalNode''generate-2 [#_"ConditionalNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"ConditionalNode" this, #_"LIRBuilder" builder]
         (LIRBuilder''emitConditional-2 builder, this)
         nil
     )
 
-    #_unused
+    #_unused
     (§ defn #_"ConditionalNode" ConditionalNode'new-4 [#_"Graph" graph, #_"CanonicalCondition" condition, #_"ValueNode" x, #_"ValueNode" y]
         (ConditionalNode'new-1 (CompareNode'createCompareNode-4 graph, condition, x, y))
     )
@@ -47595,7 +46696,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Node" IntegerBelowNode''canonical-4 [#_"IntegerBelowNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
         (or (CompareOp''canonical-5 IntegerBelowNode'OP, (CanonicalizerTool''smallestCompareWidth-1 tool), (BelowOp''getCondition-1 IntegerBelowNode'OP), forX, forY)
             this
@@ -47611,52 +46712,52 @@
         (LowerOp'new-0)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"CompareNode" BelowOp''duplicateModified-3 [#_"BelowOp" this, #_"ValueNode" newX, #_"ValueNode" newY]
         (IntegerBelowNode'new-2 newX, newY)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"long" BelowOp''upperBound-2 [#_"BelowOp" this, #_"IntegerStamp" stamp]
         (IntegerStamp''unsignedUpperBound-1 stamp)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"long" BelowOp''lowerBound-2 [#_"BelowOp" this, #_"IntegerStamp" stamp]
         (IntegerStamp''unsignedLowerBound-1 stamp)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"int" BelowOp''compare-3 [#_"BelowOp" this, #_"long" a, #_"long" b]
         (Long/compareUnsigned a, b)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"long" BelowOp''min-3 [#_"BelowOp" this, #_"long" a, #_"long" b]
         (NumUtil'minUnsigned-2 a, b)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"long" BelowOp''max-3 [#_"BelowOp" this, #_"long" a, #_"long" b]
         (NumUtil'maxUnsigned-2 a, b)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"long" BelowOp''cast-3 [#_"BelowOp" this, #_"long" a, #_"int" bits]
         (CodeUtil/zeroExtend a, bits)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"long" BelowOp''minValue-2 [#_"BelowOp" this, #_"int" bits]
         0
     )
 
-    #_unused
+    #_unused
     (§ override! #_"long" BelowOp''maxValue-2 [#_"BelowOp" this, #_"int" bits]
         (NumUtil'maxValueUnsigned-1 bits)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"IntegerStamp" BelowOp''forInteger-4 [#_"BelowOp" this, #_"int" bits, #_"long" min, #_"long" max]
         (StampFactory'forUnsignedInteger-3 bits, min, max)
     )
@@ -47665,7 +46766,7 @@
         CanonicalCondition'BT
     )
 
-    #_unused
+    #_unused
     (§ override! #_"IntegerLowerThanNode" BelowOp''createNode-3 [#_"BelowOp" this, #_"ValueNode" x, #_"ValueNode" y]
         (IntegerBelowNode'new-2 x, y)
     )
@@ -47711,12 +46812,12 @@
         (IntegerConvertNode''getOp-2 this, (UnaryNode''getValue-1 this))
     )
 
-    #_unused
+    #_unused
     (§ override #_"Constant" IntegerConvertNode''convert-2 [#_"IntegerConvertNode<OP, REV>" this, #_"Constant" constant]
         (IntegerConvertOp''foldConstant-4 (IntegerConvertNode''getArithmeticOp-1 this), (IntegerConvertNode''getInputBits-1 this), (IntegerConvertNode''getResultBits-1 this), constant)
     )
 
-    #_unused
+    #_unused
     (§ override #_"Constant" IntegerConvertNode''reverse-2 [#_"IntegerConvertNode<OP, REV>" this, #_"Constant" constant]
         (let [
             #_"IntegerConvertOp<REV>" reverse (Function''apply-2 (:getReverseOp this), (ArithmeticOpTable'forStamp-1 (:stamp this)))
@@ -47725,12 +46826,12 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override #_"Stamp" IntegerConvertNode''foldStamp-2 [#_"IntegerConvertNode<OP, REV>" this, #_"Stamp" stamp]
         (IntegerConvertOp''foldStamp-4 (IntegerConvertNode''getArithmeticOp-1 this), (:inputBits this), (:resultBits this), stamp)
     )
 
-    (§ override #_"ValueNode" IntegerConvertNode''canonical-3 [#_"IntegerConvertNode<OP, REV>" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
+    (§ override #_"ValueNode" Unary''canonical-3 [#_"IntegerConvertNode<OP, REV>" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
         (or (IntegerConvertNode'findSynonym-5 (IntegerConvertNode''getOp-2 this, value), value, (:inputBits this), (:resultBits this), (:stamp this))
             this
         )
@@ -47743,7 +46844,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ defn #_"ValueNode" IntegerConvertNode'convert-2 [#_"ValueNode" input, #_"Stamp" stamp]
         (IntegerConvertNode'convert-3 input, stamp, false)
     )
@@ -47762,7 +46863,7 @@
         (IntegerConvertNode'convert-3 input, stamp, true)
     )
 
-    #_unused
+    #_unused
     (§ defn #_"ValueNode" IntegerConvertNode'convertUnsigned-3 [#_"ValueNode" input, #_"Stamp" stamp, #_"Graph" graph]
         (let [
             #_"ValueNode" convert (IntegerConvertNode'convert-3 input, stamp, true)
@@ -47787,7 +46888,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override #_"Stamp" IntegerConvertNode''invertStamp-2 [#_"IntegerConvertNode<OP, REV>" this, #_"Stamp" outStamp]
         (IntegerConvertOp''invertStamp-4 (IntegerConvertNode''getArithmeticOp-1 this), (:inputBits this), (:resultBits this), outStamp)
     )
@@ -47827,12 +46928,12 @@
         (:type this)
     )
 
-    #_unused
+    #_unused
     (§ override #_"void" IntegerDivRemNode''lower-2 [#_"IntegerDivRemNode" this, #_"LoweringTool" lowerer]
         nil ;; Nothing to do for division nodes. The HotSpot signal handler catches divisions by zero and the MIN_VALUE / -1 cases.
     )
 
-    #_unused
+    #_unused
     (§ override #_"boolean" IntegerDivRemNode''canDeoptimize-1 [#_"IntegerDivRemNode" this]
         (:canDeopt this)
     )
@@ -47895,24 +46996,24 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Node" IntegerEqualsNode''canonical-4 [#_"IntegerEqualsNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
         (or (IntegerEqualsOp''canonical-5 IntegerEqualsNode'OP, (CanonicalizerTool''smallestCompareWidth-1 tool), CanonicalCondition'EQ, forX, forY)
             this
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Stamp" IntegerEqualsNode''getSucceedingStampForX-4 [#_"IntegerEqualsNode" this, #_"boolean" negated?, #_"Stamp" xStamp, #_"Stamp" yStamp]
         (when-not negated? (Stamp''join-2 xStamp, yStamp))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Stamp" IntegerEqualsNode''getSucceedingStampForY-4 [#_"IntegerEqualsNode" this, #_"boolean" negated?, #_"Stamp" xStamp, #_"Stamp" yStamp]
         (when-not negated? (Stamp''join-2 xStamp, yStamp))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"TriState" IntegerEqualsNode''tryFold-3 [#_"IntegerEqualsNode" this, #_"Stamp" xStamp, #_"Stamp" yStamp]
         (when (and (instance? IntegerStamp xStamp) (instance? IntegerStamp yStamp)) => TriState/UNKNOWN
             (cond
@@ -47932,7 +47033,7 @@
         (CompareOp'new-0)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"LogicNode" IntegerEqualsOp''optimizeNormalizeCompare-5 [#_"IntegerEqualsOp" this, #_"Integer" smallestCompareWidth, #_"Constant" constant, #_"NormalizeCompareNode" normalizeNode, #_"boolean" mirrored?]
         (let [
             #_"ValueNode" a (:x normalizeNode)
@@ -47947,7 +47048,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"CompareNode" IntegerEqualsOp''duplicateModified-3 [#_"IntegerEqualsOp" this, #_"ValueNode" newX, #_"ValueNode" newY]
         (cond
             (and (instance? IntegerStamp (:stamp newX)) (instance? IntegerStamp (:stamp newY)))                 (IntegerEqualsNode'new-2 newX, newY)
@@ -47983,7 +47084,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"LogicNode" IntegerEqualsOp''canonicalizeSymmetricConstant-6 [#_"IntegerEqualsOp" this, #_"Integer" smallestCompareWidth, #_"CanonicalCondition" condition, #_"Constant" constant, #_"ValueNode" node, #_"boolean" mirrored?]
         (or
             (when (instance? PrimitiveConstant constant)
@@ -48071,7 +47172,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Node" IntegerLessThanNode''canonical-4 [#_"IntegerLessThanNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
         (or (CompareOp''canonical-5 IntegerLessThanNode'OP, (CanonicalizerTool''smallestCompareWidth-1 tool), (LessThanOp''getCondition-1 IntegerLessThanNode'OP), forX, forY)
             this
@@ -48107,14 +47208,14 @@
         (LowerOp'new-0)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"CompareNode" LessThanOp''duplicateModified-3 [#_"LessThanOp" this, #_"ValueNode" newX, #_"ValueNode" newY]
         (when (and (instance? IntegerStamp (:stamp newX)) (instance? IntegerStamp (:stamp newY))) => (throw! "should not reach here")
             (IntegerLessThanNode'new-2 newX, newY)
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"LogicNode" LessThanOp''optimizeNormalizeCompare-5 [#_"LessThanOp" this, #_"Integer" smallestCompareWidth, #_"Constant" constant, #_"NormalizeCompareNode" normalizeNode, #_"boolean" mirrored?]
         ;; a NC b < c  (not mirrored)
         ;; cases for c:
@@ -48148,7 +47249,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"LogicNode" LessThanOp''findSynonym-3 [#_"LessThanOp" this, #_"ValueNode" forX, #_"ValueNode" forY]
         (or (LowerOp''findSynonym-3 (§ super ), forX, forY)
             (when (and (instance? IntegerStamp (:stamp forX)) (instance? IntegerStamp (:stamp forY)) (IntegerStamp'sameSign-2 (:stamp forX), (:stamp forY)))
@@ -48240,32 +47341,32 @@
         CanonicalCondition'LT
     )
 
-    #_unused
+    #_unused
     (§ override! #_"IntegerLowerThanNode" LessThanOp''createNode-3 [#_"LessThanOp" this, #_"ValueNode" x, #_"ValueNode" y]
         (IntegerLessThanNode'new-2 x, y)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"long" LessThanOp''upperBound-2 [#_"LessThanOp" this, #_"IntegerStamp" stamp]
         (:upperBound stamp)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"long" LessThanOp''lowerBound-2 [#_"LessThanOp" this, #_"IntegerStamp" stamp]
         (:lowerBound stamp)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"int" LessThanOp''compare-3 [#_"LessThanOp" this, #_"long" a, #_"long" b]
         (Long/compare a, b)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"long" LessThanOp''min-3 [#_"LessThanOp" this, #_"long" a, #_"long" b]
         (min a b)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"long" LessThanOp''max-3 [#_"LessThanOp" this, #_"long" a, #_"long" b]
         (max a b)
     )
@@ -48278,12 +47379,12 @@
         (NumUtil'minValue-1 bits)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"long" LessThanOp''maxValue-2 [#_"LessThanOp" this, #_"int" bits]
         (NumUtil'maxValue-1 bits)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"IntegerStamp" LessThanOp''forInteger-4 [#_"LessThanOp" this, #_"int" bits, #_"long" min, #_"long" max]
         (StampFactory'forInteger-3 bits, (LessThanOp''cast-3 this, min, bits), (LessThanOp''cast-3 this, max, bits))
     )
@@ -48310,12 +47411,12 @@
         (:op this)
     )
 
-    #_unused
+    #_unused
     (§ override #_"Stamp" IntegerLowerThanNode''getSucceedingStampForX-4 [#_"IntegerLowerThanNode" this, #_"boolean" negated?, #_"Stamp" xStamp, #_"Stamp" yStamp]
         (IntegerLowerThanNode''getSucceedingStampForX-7 this, negated?, (not negated?), xStamp, yStamp, (:x this), (:y this))
     )
 
-    #_unused
+    #_unused
     (§ override #_"Stamp" IntegerLowerThanNode''getSucceedingStampForY-4 [#_"IntegerLowerThanNode" this, #_"boolean" negated?, #_"Stamp" xStamp, #_"Stamp" yStamp]
         (IntegerLowerThanNode''getSucceedingStampForX-7 this, (not negated?), (not negated?), yStamp, xStamp, (:y this), (:x this))
     )
@@ -48355,7 +47456,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override #_"TriState" IntegerLowerThanNode''tryFold-3 [#_"IntegerLowerThanNode" this, #_"Stamp" xStamp, #_"Stamp" yStamp]
         (LowerOp''tryFold-3 (IntegerLowerThanNode''getOp-1 this), xStamp, yStamp)
     )
@@ -48369,7 +47470,7 @@
         (CompareOp'new-0)
     )
 
-    #_unused
+    #_unused
     (§ override #_"LogicNode" LowerOp''canonical-5 [#_"LowerOp" this, #_"Integer" smallestCompareWidth, #_"CanonicalCondition" condition, #_"ValueNode" forX, #_"ValueNode" forY]
         (or (CompareOp''canonical-5 (§ super ), smallestCompareWidth, condition, forX, forY)
             (LowerOp''findSynonym-3 this, forX, forY)
@@ -48605,7 +47706,7 @@
         (BinaryOpLogicNode'new-3 IntegerTestNode'TYPE, x, y)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ValueNode" IntegerTestNode''canonical-4 [#_"IntegerTestNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
         (cond
             (and (instance? ConstantNode forX) (instance? ConstantNode forY))
@@ -48626,7 +47727,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Stamp" IntegerTestNode''getSucceedingStampForX-4 [#_"IntegerTestNode" this, #_"boolean" negated?, #_"Stamp" xStamp, #_"Stamp" yStamp]
         (IntegerTestNode'getSucceedingStamp-3 negated?, xStamp, yStamp)
     )
@@ -48654,12 +47755,12 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Stamp" IntegerTestNode''getSucceedingStampForY-4 [#_"IntegerTestNode" this, #_"boolean" negated?, #_"Stamp" xStamp, #_"Stamp" yStamp]
         (IntegerTestNode'getSucceedingStamp-3 negated?, yStamp, xStamp)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"TriState" IntegerTestNode''tryFold-3 [#_"IntegerTestNode" this, #_"Stamp" xStamp, #_"Stamp" yStamp]
         (when (and (instance? IntegerStamp xStamp) (instance? IntegerStamp yStamp)) => TriState/UNKNOWN
             (cond
@@ -48692,14 +47793,12 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" IsNullNode''generate-2 [#_"IsNullNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"IsNullNode" this, #_"LIRBuilder" builder]
         ;; Nothing to do.
         nil
     )
 
-    #_unused
-    (§ override! #_"ValueNode" IsNullNode''canonical-3 [#_"IsNullNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
+    (§ override! #_"ValueNode" Unary''canonical-3 [#_"IsNullNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
         (IsNullNode'canonicalized-2 this, value)
     )
 
@@ -48713,8 +47812,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" IsNullNode''virtualize-2 [#_"IsNullNode" this, #_"VirtualizerTool" tool]
+    (§ override! #_"void" Virtualizable''virtualize-2 [#_"IsNullNode" this, #_"VirtualizerTool" tool]
         (let [
             #_"TriState" fold (IsNullNode''tryFold-2 this, (:stamp (VirtualizerTool''getAlias-2 tool, (UnaryOpLogicNode''getValue-1 this))))
         ]
@@ -48725,7 +47823,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Stamp" IsNullNode''getSucceedingStampForValue-2 [#_"IsNullNode" this, #_"boolean" negated?]
         ;; ignore any more precise input stamp, since canonicalization will skip through PiNodes
         (let [
@@ -48762,7 +47860,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ValueNode" LeftShiftNode''canonical-4 [#_"LeftShiftNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
         (let [
             #_"ValueNode" ret (ShiftNode''canonical-4 (§ super ), tool, forX, forY)
@@ -48814,8 +47912,7 @@
         (or self (LeftShiftNode'new-2 forX, forY))
     )
 
-    #_unused
-    (§ override! #_"void" LeftShiftNode''generate-2 [#_"LeftShiftNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"LeftShiftNode" this, #_"LIRBuilder" builder]
         (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitShl-3 (:gen builder), (LIRBuilder''operand-2 builder, (:x this)), (LIRBuilder''operand-2 builder, (:y this))))
         nil
     )
@@ -48841,7 +47938,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override #_"ValueNode" MulNode''canonical-4 [#_"MulNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
         (let [
             #_"ValueNode" ret (BinaryArithmeticNode''canonical-4 (§ super ), tool, forX, forY)
@@ -48938,8 +48035,7 @@
         )
     )
 
-    #_unused
-    (§ override #_"void" MulNode''generate-2 [#_"MulNode" this, #_"LIRBuilder" builder]
+    (§ override #_"void" LIRLowerable''generate-2 [#_"MulNode" this, #_"LIRBuilder" builder]
         (let [
             #_"Value" op1 (LIRBuilder''operand-2 builder, (:x this))
             #_"Value" op2 (LIRBuilder''operand-2 builder, (:y this))
@@ -48959,7 +48055,7 @@
     ;;;
      ; Check whether this operation can be narrowed to {@code resultBits} bit without loss of precision.
      ;;
-    #_unused
+    #_unused
     (§ default #_"boolean" NarrowableArithmeticNode''isNarrowable-2 [#_"NarrowableArithmeticNode" this, #_"int" resultBits]
         true
     )
@@ -48993,15 +48089,14 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" NarrowNode''isLossless-1 [#_"NarrowNode" this]
         false
     )
 
-    #_unused
-    (§ override! #_"ValueNode" NarrowNode''canonical-3 [#_"NarrowNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
+    (§ override! #_"ValueNode" Unary''canonical-3 [#_"NarrowNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
         (let [
-            #_"ValueNode" canon (IntegerConvertNode''canonical-3 (§ super ), tool, value)
+            #_"ValueNode" canon (Unary''canonical-3 (§ super ), tool, value)
         ]
             (when (= canon this) => canon
                 (condp instance? value
@@ -49054,13 +48149,12 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" NarrowNode''generate-2 [#_"NarrowNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"NarrowNode" this, #_"LIRBuilder" builder]
         (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitNarrow-3 (:gen builder), (LIRBuilder''operand-2 builder, (UnaryNode''getValue-1 this)), (IntegerConvertNode''getResultBits-1 this)))
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" NarrowNode''mayNullCheckSkipConversion-1 [#_"NarrowNode" this]
         false
     )
@@ -49082,8 +48176,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"ValueNode" NegateNode''canonical-3 [#_"NegateNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
+    (§ override! #_"ValueNode" Unary''canonical-3 [#_"NegateNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
         (or (UnaryArithmeticNode'findSynonym-2 value, (UnaryArithmeticNode''getOp-2 this, value))
             this
         )
@@ -49099,13 +48192,12 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" NegateNode''generate-2 [#_"NegateNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"NegateNode" this, #_"LIRBuilder" builder]
         (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitNegate-2 (:gen builder), (LIRBuilder''operand-2 builder, (UnaryNode''getValue-1 this))))
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Stamp" NegateNode''invertStamp-2 [#_"NegateNode" this, #_"Stamp" outStamp]
         (UnaryOp''foldStamp-2 (UnaryArithmeticNode''getArithmeticOp-1 this), outStamp)
     )
@@ -49147,19 +48239,19 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ValueNode" NormalizeCompareNode''canonical-4 [#_"NormalizeCompareNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
         (or (NormalizeCompareNode'tryConstantFold-3 (:x this), (:y this), (Stamp''getStackKind-1 (:stamp this)))
             this
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" NormalizeCompareNode''inferStamp-1 [#_"NormalizeCompareNode" this]
         false
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Stamp" NormalizeCompareNode''foldStamp-3 [#_"NormalizeCompareNode" this, #_"Stamp" stampX, #_"Stamp" stampY]
         (:stamp this)
     )
@@ -49175,15 +48267,14 @@
         (UnaryArithmeticNode'new-3 NotNode'TYPE, :not, x)
     )
 
-    #_unused
+    #_unused
     (§ defn #_"ValueNode" NotNode'create-1 [#_"ValueNode" x]
         (NotNode'canonicalize-2 nil, x)
     )
 
-    #_unused
-    (§ override! #_"ValueNode" NotNode''canonical-3 [#_"NotNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
+    (§ override! #_"ValueNode" Unary''canonical-3 [#_"NotNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
         (let [
-            #_"ValueNode" ret (UnaryArithmeticNode''canonical-3 (§ super ), tool, value)
+            #_"ValueNode" ret (Unary''canonical-3 (§ super ), tool, value)
         ]
             (when (= ret this) => ret
                 (NotNode'canonicalize-2 this, value)
@@ -49199,13 +48290,12 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" NotNode''generate-2 [#_"NotNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"NotNode" this, #_"LIRBuilder" builder]
         (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitNot-2 (:gen builder), (LIRBuilder''operand-2 builder, (UnaryNode''getValue-1 this))))
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Stamp" NotNode''invertStamp-2 [#_"NotNode" this, #_"Stamp" outStamp]
         (UnaryOp''foldStamp-2 (UnaryArithmeticNode''getArithmeticOp-1 this), outStamp)
     )
@@ -49233,7 +48323,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ValueNode" ObjectEqualsNode''canonical-4 [#_"ObjectEqualsNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
         (or (CompareOp''canonical-5 ObjectEqualsNode'OP, (CanonicalizerTool''smallestCompareWidth-1 tool), CanonicalCondition'EQ, forX, forY)
             this
@@ -49264,8 +48354,7 @@
         nil
     )
 
-    #_unused
-    (§ override! #_"void" ObjectEqualsNode''virtualize-2 [#_"ObjectEqualsNode" this, #_"VirtualizerTool" tool]
+    (§ override! #_"void" Virtualizable''virtualize-2 [#_"ObjectEqualsNode" this, #_"VirtualizerTool" tool]
         (let [
             #_"ValueNode" xAlias (VirtualizerTool''getAlias-2 tool, (:x this))
             #_"ValueNode" yAlias (VirtualizerTool''getAlias-2 tool, (:y this))
@@ -49318,7 +48407,7 @@
         (PointerEqualsOp'new-0)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"LogicNode" ObjectEqualsOp''canonicalizeSymmetricConstant-6 [#_"ObjectEqualsOp" this, #_"Integer" smallestCompareWidth, #_"CanonicalCondition" condition, #_"Constant" constant, #_"ValueNode" node, #_"boolean" mirrored?]
         (let [
             #_"ResolvedJavaType" type (#_"ConstantReflectionProvider" .asJavaType HotSpot'constantReflection, constant)
@@ -49333,7 +48422,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"CompareNode" ObjectEqualsOp''duplicateModified-3 [#_"ObjectEqualsOp" this, #_"ValueNode" newX, #_"ValueNode" newY]
         (cond
             (and (instance? ObjectStamp (:stamp newX)) (instance? ObjectStamp (:stamp newY)))                   (ObjectEqualsNode'new-2 newX, newY)
@@ -49361,7 +48450,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ValueNode" OrNode''canonical-4 [#_"OrNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
         (let [
             #_"ValueNode" ret (BinaryArithmeticNode''canonical-4 (§ super ), tool, forX, forY)
@@ -49406,8 +48495,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" OrNode''generate-2 [#_"OrNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"OrNode" this, #_"LIRBuilder" builder]
         (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitOr-3 (:gen builder), (LIRBuilder''operand-2 builder, (:x this)), (LIRBuilder''operand-2 builder, (:y this))))
         nil
     )
@@ -49430,7 +48518,7 @@
         (CompareNode'new-4 c, CanonicalCondition'EQ, x, y)
     )
 
-    #_unused
+    #_unused
     (§ override #_"Node" PointerEqualsNode''canonical-4 [#_"PointerEqualsNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
         (or (PointerEqualsOp''canonical-5 PointerEqualsNode'OP, (CanonicalizerTool''smallestCompareWidth-1 tool), CanonicalCondition'EQ, forX, forY)
             this
@@ -49446,7 +48534,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override #_"Stamp" PointerEqualsNode''getSucceedingStampForX-4 [#_"PointerEqualsNode" this, #_"boolean" negated?, #_"Stamp" xStamp, #_"Stamp" yStamp]
         (when-not negated?
             (let [
@@ -49459,7 +48547,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override #_"Stamp" PointerEqualsNode''getSucceedingStampForY-4 [#_"PointerEqualsNode" this, #_"boolean" negated?, #_"Stamp" xStamp, #_"Stamp" yStamp]
         (when-not negated?
             (let [
@@ -49472,7 +48560,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override #_"TriState" PointerEqualsNode''tryFold-3 [#_"PointerEqualsNode" this, #_"Stamp" xStamp, #_"Stamp" yStamp]
         (when (and (instance? ObjectStamp xStamp) (instance? ObjectStamp yStamp)) => TriState/UNKNOWN
             (cond
@@ -49523,7 +48611,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override #_"CompareNode" PointerEqualsOp''duplicateModified-3 [#_"PointerEqualsOp" this, #_"ValueNode" newX, #_"ValueNode" newY]
         (PointerEqualsNode'new-2 newX, newY)
     )
@@ -49540,7 +48628,7 @@
         (BinaryArithmeticNode'new-4 c, :rem, x, y)
     )
 
-    #_unused
+    #_unused
     (§ defn #_"ValueNode" RemNode'create-2 [#_"ValueNode" forX, #_"ValueNode" forY]
         (let [
             #_"BinaryOp<Rem>" op (:rem (ArithmeticOpTable'forStamp-1 (:stamp forX)))
@@ -49551,13 +48639,12 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" RemNode''lower-2 [#_"RemNode" this, #_"LoweringTool" lowerer]
         nil ;; No lowering, we generate LIR directly for this node.
     )
 
-    #_unused
-    (§ override! #_"void" RemNode''generate-2 [#_"RemNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"RemNode" this, #_"LIRBuilder" builder]
         (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitRem-3 (:gen builder), (LIRBuilder''operand-2 builder, (:x this)), (LIRBuilder''operand-2 builder, (:y this))))
         nil
     )
@@ -49579,7 +48666,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ValueNode" RightShiftNode''canonical-4 [#_"RightShiftNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
         (let [
             #_"ValueNode" ret (ShiftNode''canonical-4 (§ super ), tool, forX, forY)
@@ -49624,13 +48711,12 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" RightShiftNode''generate-2 [#_"RightShiftNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"RightShiftNode" this, #_"LIRBuilder" builder]
         (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitShr-3 (:gen builder), (LIRBuilder''operand-2 builder, (:x this)), (LIRBuilder''operand-2 builder, (:y this))))
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" RightShiftNode''isNarrowable-2 [#_"RightShiftNode" this, #_"int" resultBits]
         (and (ShiftNode''isNarrowable-2 (§ super ), resultBits)
             ;; For signed right shifts, the narrow can be done before the shift if the cut off bits
@@ -49672,7 +48758,7 @@
         (ShiftNode''getOp-2 this, (:x this))
     )
 
-    #_unused
+    #_unused
     (§ override #_"Stamp" ShiftNode''foldStamp-3 [#_"ShiftNode<OP>" this, #_"Stamp" stampX, #_"Stamp" stampY]
         (ShiftOp''foldStamp-3 (ShiftNode''getArithmeticOp-1 this), stampX, stampY)
     )
@@ -49727,12 +48813,12 @@
         (SignedDivNode'canonical-3 (§ cast #_"SignedDivNode" nil), x, y)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" SignedDivNode''inferStamp-1 [#_"SignedDivNode" this]
         (ValueNode''updateStamp-2 this, (BinaryOp''foldStamp-3 (:div IntegerStamp'OPS), (:stamp (:x this)), (:stamp (:y this))))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ValueNode" SignedDivNode''canonical-4 [#_"SignedDivNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
         (SignedDivNode'canonical-3 this, forX, forY)
     )
@@ -49796,8 +48882,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" SignedDivNode''generate-2 [#_"SignedDivNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"SignedDivNode" this, #_"LIRBuilder" builder]
         (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitDiv-3 (:gen builder), (LIRBuilder''operand-2 builder, (:x this)), (LIRBuilder''operand-2 builder, (:y this))))
         nil
     )
@@ -49822,12 +48907,12 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" SignedRemNode''inferStamp-1 [#_"SignedRemNode" this]
         (ValueNode''updateStamp-2 this, (BinaryOp''foldStamp-3 (:rem IntegerStamp'OPS), (:stamp (:x this)), (:stamp (:y this))))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ValueNode" SignedRemNode''canonical-4 [#_"SignedRemNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
         (SignedRemNode'canonical-4 this, forX, forY, (:stamp this))
     )
@@ -49872,8 +48957,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" SignedRemNode''generate-2 [#_"SignedRemNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"SignedRemNode" this, #_"LIRBuilder" builder]
         (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitRem-3 (:gen builder), (LIRBuilder''operand-2 builder, (:x this)), (LIRBuilder''operand-2 builder, (:y this))))
         nil
     )
@@ -49907,15 +48991,14 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" SignExtendNode''isLossless-1 [#_"SignExtendNode" this]
         true
     )
 
-    #_unused
-    (§ override! #_"ValueNode" SignExtendNode''canonical-3 [#_"SignExtendNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
+    (§ override! #_"ValueNode" Unary''canonical-3 [#_"SignExtendNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
         (let [
-            #_"ValueNode" ret (IntegerConvertNode''canonical-3 (§ super ), tool, value)
+            #_"ValueNode" ret (Unary''canonical-3 (§ super ), tool, value)
         ]
             (when (= ret this) => ret
                 (SignExtendNode'canonical-4 this, value, (IntegerConvertNode''getInputBits-1 this), (IntegerConvertNode''getResultBits-1 this))
@@ -49945,13 +49028,12 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" SignExtendNode''generate-2 [#_"SignExtendNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"SignExtendNode" this, #_"LIRBuilder" builder]
         (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitSignExtend-4 (:gen builder), (LIRBuilder''operand-2 builder, (UnaryNode''getValue-1 this)), (IntegerConvertNode''getInputBits-1 this), (IntegerConvertNode''getResultBits-1 this)))
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" SignExtendNode''mayNullCheckSkipConversion-1 [#_"SignExtendNode" this]
         true
     )
@@ -50081,7 +49163,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override #_"ValueNode" SubNode''canonical-4 [#_"SubNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
         (let [
             #_"ValueNode" ret (BinaryArithmeticNode''canonical-4 (§ super ), tool, forX, forY)
@@ -50092,8 +49174,7 @@
         )
     )
 
-    #_unused
-    (§ override #_"void" SubNode''generate-2 [#_"SubNode" this, #_"LIRBuilder" builder]
+    (§ override #_"void" LIRLowerable''generate-2 [#_"SubNode" this, #_"LIRBuilder" builder]
         (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitSub-4 (:gen builder), (LIRBuilder''operand-2 builder, (:x this)), (LIRBuilder''operand-2 builder, (:y this)), false))
         nil
     )
@@ -50121,12 +49202,12 @@
         (UnaryArithmeticNode''getOp-2 this, (UnaryNode''getValue-1 this))
     )
 
-    #_unused
+    #_unused
     (§ override #_"Stamp" UnaryArithmeticNode''foldStamp-2 [#_"UnaryArithmeticNode<OP>" this, #_"Stamp" stamp]
         (UnaryOp''foldStamp-2 (UnaryArithmeticNode''getOp-2 this, (UnaryNode''getValue-1 this)), stamp)
     )
 
-    (§ override #_"ValueNode" UnaryArithmeticNode''canonical-3 [#_"UnaryArithmeticNode<OP>" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
+    (§ override #_"ValueNode" Unary''canonical-3 [#_"UnaryArithmeticNode<OP>" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
         (or (UnaryArithmeticNode'findSynonym-2 value, (UnaryArithmeticNode''getOp-2 this, value))
             this
         )
@@ -50158,7 +49239,7 @@
         (:value this)
     )
 
-    #_unused
+    #_unused
     (§ method #_"void" UnaryNode''setValue-2 [#_"UnaryNode" this, #_"ValueNode" value]
         (Node''updateUsages-3 this, (:value this), value)
         (§ ass! this (assoc this :value value))
@@ -50180,7 +49261,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override #_"boolean" UnaryNode''inferStamp-1 [#_"UnaryNode" this]
         (ValueNode''updateStamp-2 this, (UnaryNode''foldStamp-2 this, (:stamp (:value this))))
     )
@@ -50219,8 +49300,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"Node" UnpackEndianHalfNode''canonical-3 [#_"UnpackEndianHalfNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
+    (§ override! #_"Node" Unary''canonical-3 [#_"UnpackEndianHalfNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
         (if (and (instance? ConstantNode value) (#_"Constant" .isDefaultForKind (:value value)))
             (ConstantNode'defaultForKind-1 (Stamp''getStackKind-1 (:stamp this)))
             this
@@ -50260,7 +49340,7 @@
         (UnsignedDivNode'canonical-4 nil, x, y, (Stamp''unrestricted-1 (:stamp x)))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ValueNode" UnsignedDivNode''canonical-4 [#_"UnsignedDivNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
         (UnsignedDivNode'canonical-4 this, forX, forY, (:stamp this))
     )
@@ -50295,8 +49375,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" UnsignedDivNode''generate-2 [#_"UnsignedDivNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"UnsignedDivNode" this, #_"LIRBuilder" builder]
         (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitUDiv-3 (:gen builder), (LIRBuilder''operand-2 builder, (:x this)), (LIRBuilder''operand-2 builder, (:y this))))
         nil
     )
@@ -50313,12 +49392,12 @@
         (IntegerDivRemNode'new-6 c, (Stamp''unrestricted-1 (:stamp x)), DivRemOp'REM, Signedness'UNSIGNED, x, y)
     )
 
-    #_unused
+    #_unused
     (§ defn #_"ValueNode" UnsignedRemNode'create-2 [#_"ValueNode" x, #_"ValueNode" y]
         (UnsignedRemNode'canonical-4 nil, x, y, (Stamp''unrestricted-1 (:stamp x)))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ValueNode" UnsignedRemNode''canonical-4 [#_"UnsignedRemNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
         (UnsignedRemNode'canonical-4 this, forX, forY, (:stamp this))
     )
@@ -50353,8 +49432,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" UnsignedRemNode''generate-2 [#_"UnsignedRemNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"UnsignedRemNode" this, #_"LIRBuilder" builder]
         (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitURem-3 (:gen builder), (LIRBuilder''operand-2 builder, (:x this)), (LIRBuilder''operand-2 builder, (:y this))))
         nil
     )
@@ -50376,7 +49454,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ValueNode" UnsignedRightShiftNode''canonical-4 [#_"UnsignedRightShiftNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
         (let [
             #_"ValueNode" ret (ShiftNode''canonical-4 (§ super ), tool, forX, forY)
@@ -50429,13 +49507,12 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" UnsignedRightShiftNode''generate-2 [#_"UnsignedRightShiftNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"UnsignedRightShiftNode" this, #_"LIRBuilder" builder]
         (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitUShr-3 (:gen builder), (LIRBuilder''operand-2 builder, (:x this)), (LIRBuilder''operand-2 builder, (:y this))))
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" UnsignedRightShiftNode''isNarrowable-2 [#_"UnsignedRightShiftNode" this, #_"int" resultBits]
         (and (ShiftNode''isNarrowable-2 (§ super ), resultBits)
             ;; For unsigned right shifts, the narrow can be done before the shift if the cut off bits are all zero.
@@ -50460,7 +49537,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ValueNode" XorNode''canonical-4 [#_"XorNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
         (let [
             #_"ValueNode" ret (BinaryArithmeticNode''canonical-4 (§ super ), tool, forX, forY)
@@ -50502,8 +49579,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" XorNode''generate-2 [#_"XorNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"XorNode" this, #_"LIRBuilder" builder]
         (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitXor-3 (:gen builder), (LIRBuilder''operand-2 builder, (:x this)), (LIRBuilder''operand-2 builder, (:y this))))
         nil
     )
@@ -50534,7 +49610,7 @@
         (ZeroExtendNode'create-4 input, (PrimitiveStamp'getBits-1 (:stamp input)), resultBits, false)
     )
 
-    #_unused
+    #_unused
     (§ defn #_"ValueNode" ZeroExtendNode'create-3 [#_"ValueNode" input, #_"int" inputBits, #_"int" resultBits]
         (ZeroExtendNode'create-4 input, inputBits, resultBits, false)
     )
@@ -50549,20 +49625,19 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" ZeroExtendNode''isLossless-1 [#_"ZeroExtendNode" this]
         true
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" ZeroExtendNode''preservesOrder-2 [#_"ZeroExtendNode" this, #_"CanonicalCondition" condition]
         (not= condition CanonicalCondition'LT)
     )
 
-    #_unused
-    (§ override! #_"ValueNode" ZeroExtendNode''canonical-3 [#_"ZeroExtendNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
+    (§ override! #_"ValueNode" Unary''canonical-3 [#_"ZeroExtendNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
         (let [
-            #_"ValueNode" ret (IntegerConvertNode''canonical-3 (§ super ), tool, value)
+            #_"ValueNode" ret (Unary''canonical-3 (§ super ), tool, value)
         ]
             (when (= ret this) => ret
                 (ZeroExtendNode'canonical-5 this, value, (IntegerConvertNode''getInputBits-1 this), (IntegerConvertNode''getResultBits-1 this), (:inputAlwaysPositive this))
@@ -50598,13 +49673,12 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" ZeroExtendNode''generate-2 [#_"ZeroExtendNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"ZeroExtendNode" this, #_"LIRBuilder" builder]
         (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitZeroExtend-4 (:gen builder), (LIRBuilder''operand-2 builder, (UnaryNode''getValue-1 this)), (IntegerConvertNode''getInputBits-1 this), (IntegerConvertNode''getResultBits-1 this)))
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" ZeroExtendNode''mayNullCheckSkipConversion-1 [#_"ZeroExtendNode" this]
         true
     )
@@ -50643,11 +49717,10 @@
     ;;;
      ; A human-readable representation of the target, used for debug printing only.
      ;;
-    #_unused
+    #_unused
     (§ abstract #_"String" CallTargetNode''targetName-1 [#_"CallTargetNode" this])
 
-    #_unused
-    (§ override #_"void" CallTargetNode''generate-2 [#_"CallTargetNode" this, #_"LIRBuilder" builder]
+    (§ override #_"void" LIRLowerable''generate-2 [#_"CallTargetNode" this, #_"LIRBuilder" builder]
         ;; nop
         nil
     )
@@ -50685,7 +49758,7 @@
 
     (§ final #_"boolean" :direct false)
 
-    #_unused
+    #_unused
     (§ defn #_"InvokeKind" InvokeKind'new-1 [#_"boolean" direct]
         (let [
             #_"InvokeKind" this (Object.)
@@ -50703,7 +49776,7 @@
         (not (:direct this))
     )
 
-    #_unused
+    #_unused
     (§ method! #_"boolean" InvokeKind''isInterface-1 [#_"InvokeKind" this]
         (= this InvokeKind'Interface)
     )
@@ -50842,7 +49915,7 @@
         (nth (:successors this) 0)
     )
 
-    #_unused
+    #_unused
     (§ method! #_"Block" Block''getEarliestPostDominated-1 [#_"Block" this]
         (loop [#_"Block" b this]
             (let [
@@ -51040,12 +50113,12 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" FixedNodeIterator''hasNext-1 [#_"FixedNodeIterator" this]
         (some? (:cur this))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"FixedNode" FixedNodeIterator''next-1 [#_"FixedNodeIterator" this]
         (let [
             #_"FixedNode" result (:cur this)
@@ -51903,7 +50976,7 @@
     ;;;
      ; True if block {@code a} dominates block {@code b} and {@code a} is not identical block to {@code b}.
      ;;
-    #_unused
+    #_unused
     (§ defn #_"boolean" ControlFlowGraph'strictlyDominates-2 [#_"Block" a, #_"Block" b]
         (and (not= a b) (ControlFlowGraph'dominates-2 a, b))
     )
@@ -51975,7 +51048,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ defn #_"LocationSet" LocationSet'new-1 [#_"LocationSet" other]
         (let [
             #_"LocationSet" this (Object.)
@@ -51995,7 +51068,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ method! #_"boolean" LocationSet''isEmpty-1 [#_"LocationSet" this]
         (nil? (:firstLocation this))
     )
@@ -52071,7 +51144,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override #_"Stamp" CompressionNode''foldStamp-2 [#_"CompressionNode" this, #_"Stamp" stamp]
         (CompressionNode''mkStamp-2 this, stamp)
     )
@@ -52087,7 +51160,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override #_"Constant" CompressionNode''reverse-2 [#_"CompressionNode" this, #_"Constant" constant]
         (condp = (:op this)
             CompressionOp'Compress   (CompressionNode''uncompress-2 this, constant)
@@ -52095,7 +51168,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override #_"boolean" CompressionNode''isLossless-1 [#_"CompressionNode" this]
         true
     )
@@ -52110,8 +51183,7 @@
         (:encoding this)
     )
 
-    #_unused
-    (§ override #_"ValueNode" CompressionNode''canonical-3 [#_"CompressionNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
+    (§ override #_"ValueNode" Unary''canonical-3 [#_"CompressionNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
         (cond
             (instance? ConstantNode value)
                 (ConstantNode'forConstant-4 (:stamp this), (CompressionNode''convert-2 this, (:value value)), (:stableDimension value), (:isDefaultStable value))
@@ -52124,8 +51196,7 @@
         )
     )
 
-    #_unused
-    (§ override #_"void" CompressionNode''generate-2 [#_"CompressionNode" this, #_"LIRBuilder" builder]
+    (§ override #_"void" LIRLowerable''generate-2 [#_"CompressionNode" this, #_"LIRBuilder" builder]
         (let [
             #_"boolean" never-nil?
                 (if (instance? AbstractObjectStamp (:stamp (:value this)))
@@ -52145,7 +51216,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override #_"boolean" CompressionNode''mayNullCheckSkipConversion-1 [#_"CompressionNode" this]
         true
     )
@@ -52167,7 +51238,7 @@
     (§ mutable #_"LogicNode" :condition nil)
     (§ mutable #_"boolean" :negated? false)
 
-    #_unused
+    #_unused
     (§ defn #_"ConditionAnchorNode" ConditionAnchorNode'new-1 [#_"LogicNode" condition]
         (ConditionAnchorNode'new-2 condition, false)
     )
@@ -52182,8 +51253,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"Node" ConditionAnchorNode''canonical-3 [#_"ConditionAnchorNode" this, #_"CanonicalizerTool" tool, #_"Node" value]
+    (§ override! #_"Node" Unary''canonical-3 [#_"ConditionAnchorNode" this, #_"CanonicalizerTool" tool, #_"Node" value]
         (condp instance? value
             LogicNegationNode
                 (ConditionAnchorNode'new-2 (LogicNegationNode''getValue-1 value), (not (:negated? this)))
@@ -52197,7 +51267,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" ConditionAnchorNode''lower-2 [#_"ConditionAnchorNode" this, #_"LoweringTool" lowerer]
         (let [
             #_"Graph" graph (:graph this)
@@ -52209,7 +51279,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Node" ConditionAnchorNode''getValue-1 [#_"ConditionAnchorNode" this]
         (:condition this)
     )
@@ -52260,7 +51330,7 @@
      ; Gathers all the ConstantNodes that are inputs to the
      ; {@linkplain Graph#getNodes() live nodes} in a given graph.
      ;;
-    #_unused
+    #_unused
     (§ defn #_"NodeIterable<ConstantNode>" ConstantNode'getConstantNodes-1 [#_"Graph" graph]
         (NodeIterable''filter-2 (Graph''getNodes-1 graph), ConstantNode)
     )
@@ -52268,14 +51338,13 @@
     ;;;
      ; Replaces this node at its usages with another node.
      ;;
-    #_unused
+    #_unused
     (§ method! #_"void" ConstantNode''replace-3 [#_"ConstantNode" this, #_"Graph" graph, #_"Node" replacement]
         (Node''replaceAtUsagesAndDelete-2 this, replacement)
         nil
     )
 
-    #_unused
-    (§ override! #_"void" ConstantNode''generate-2 [#_"ConstantNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"ConstantNode" this, #_"LIRBuilder" builder]
         (let [
             #_"LIRKind" kind (Stamp''getLIRKind-1 (:stamp this))
         ]
@@ -52347,7 +51416,7 @@
     ;;;
      ; Returns a node for a Java primitive.
      ;;
-    #_unused
+    #_unused
     (§ defn #_"ConstantNode" ConstantNode'forPrimitive-1 [#_"JavaConstant" constant]
         (ConstantNode'forConstant-1 constant)
     )
@@ -52355,7 +51424,7 @@
     ;;;
      ; Returns a node for a primitive of a given type.
      ;;
-    #_unused
+    #_unused
     (§ defn #_"ConstantNode" ConstantNode'forPrimitive-3 [#_"Stamp" stamp, #_"JavaConstant" constant, #_"Graph" graph]
         (if (instance? IntegerStamp stamp)
             (ConstantNode'forIntegerBits-3 (:bits stamp), constant, graph)
@@ -52439,7 +51508,7 @@
      ; @param i the byte value for which to create the instruction
      ; @return a node representing the byte
      ;;
-    #_unused
+    #_unused
     (§ defn #_"ConstantNode" ConstantNode'forByte-2 [#_"byte" i, #_"Graph" graph]
         (Graph''add-2 graph, (ConstantNode'createPrimitive-1 (JavaConstant/forInt i)))
     )
@@ -52450,7 +51519,7 @@
      ; @param i the char value for which to create the instruction
      ; @return a node representing the char
      ;;
-    #_unused
+    #_unused
     (§ defn #_"ConstantNode" ConstantNode'forChar-2 [#_"char" i, #_"Graph" graph]
         (Graph''add-2 graph, (ConstantNode'createPrimitive-1 (JavaConstant/forInt i)))
     )
@@ -52461,7 +51530,7 @@
      ; @param i the short value for which to create the instruction
      ; @return a node representing the short
      ;;
-    #_unused
+    #_unused
     (§ defn #_"ConstantNode" ConstantNode'forShort-2 [#_"short" i, #_"Graph" graph]
         (Graph''add-2 graph, (ConstantNode'createPrimitive-1 (JavaConstant/forInt i)))
     )
@@ -52591,7 +51660,7 @@
     ; @Input
     (§ mutable #_"ValueNode" :value nil)
 
-    #_unused
+    #_unused
     (§ defn #_"BindToRegisterNode" BindToRegisterNode'new-1 [#_"ValueNode" value]
         (let [
             #_"BindToRegisterNode" this (FixedWithNextNode'new-2 BindToRegisterNode'TYPE, (StampFactory'forVoid-0))
@@ -52601,8 +51670,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" BindToRegisterNode''generate-2 [#_"BindToRegisterNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"BindToRegisterNode" this, #_"LIRBuilder" builder]
         (LIRGenerator''append-2 (:gen builder), (BindToRegisterOp'new-1 (LIRGenerator''asAllocatable-2 (:gen builder), (LIRBuilder''operand-2 builder, (:value this)))))
         nil
     )
@@ -52614,7 +51682,7 @@
     ; @Input
     (§ mutable #_"ValueNode" :value nil)
 
-    #_unused
+    #_unused
     (§ defn #_"BlackholeNode" BlackholeNode'new-1 [#_"ValueNode" value]
         (let [
             #_"BlackholeNode" this (FixedWithNextNode'new-2 BlackholeNode'TYPE, (StampFactory'forVoid-0))
@@ -52624,8 +51692,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" BlackholeNode''generate-2 [#_"BlackholeNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"BlackholeNode" this, #_"LIRBuilder" builder]
         (LIRGenerator''emitBlackhole-2 (:gen builder), (LIRBuilder''operand-2 builder, (:value this)))
         nil
     )
@@ -52654,18 +51721,17 @@
     ;;;
      ; Used by MacroSubstitution.
      ;;
-    #_unused
+    #_unused
     (§ defn #_"ControlFlowAnchorNode" ControlFlowAnchorNode'new-1 [#_"InvokeNode" invoke]
         (ControlFlowAnchorNode'new-0)
     )
 
-    #_unused
-    (§ override! #_"void" ControlFlowAnchorNode''generate-2 [#_"ControlFlowAnchorNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"ControlFlowAnchorNode" this, #_"LIRBuilder" builder]
         ;; do nothing
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" ControlFlowAnchorNode''afterClone-2 [#_"ControlFlowAnchorNode" this, #_"Node" other]
         nil
     )
@@ -52686,7 +51752,7 @@
     ; @Input
     (§ mutable #_"ValueNode" :value nil)
 
-    #_unused
+    #_unused
     (§ defn #_"OpaqueNode" OpaqueNode'new-1 [#_"ValueNode" value]
         (let [
             #_"OpaqueNode" this (FloatingNode'new-2 OpaqueNode'TYPE, (Stamp''unrestricted-1 (:stamp value)))
@@ -52696,8 +51762,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" OpaqueNode''generate-2 [#_"OpaqueNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"OpaqueNode" this, #_"LIRBuilder" builder]
         (LIRBuilder''setResult-3 builder, this, (LIRBuilder''operand-2 builder, (:value this)))
         nil
     )
@@ -52708,7 +51773,7 @@
 
     (§ mutable #_"Object" :unique nil)
 
-    #_unused
+    #_unused
     (§ defn #_"SpillRegistersNode" SpillRegistersNode'new-0 []
         (let [
             #_"SpillRegistersNode" this (FixedWithNextNode'new-2 SpillRegistersNode'TYPE, (StampFactory'forVoid-0))
@@ -52719,8 +51784,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" SpillRegistersNode''generate-2 [#_"SpillRegistersNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"SpillRegistersNode" this, #_"LIRBuilder" builder]
         (LIRGenerator''append-2 (:gen builder), (SpillRegistersOp'new-0))
         nil
     )
@@ -52736,7 +51800,7 @@
 
     (§ final #_"String" :value nil)
 
-    #_unused
+    #_unused
     (§ defn #_"StringToBytesNode" StringToBytesNode'new-2 [#_"String" value, #_"Stamp" stamp]
         (let [
             #_"StringToBytesNode" this (FixedWithNextNode'new-2 StringToBytesNode'TYPE, stamp)
@@ -52746,7 +51810,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" StringToBytesNode''lower-2 [#_"StringToBytesNode" this, #_"LoweringTool" lowerer]
         (when (GuardsStage'areDeoptsFixed-1 (:guardsStage (:graph this)))
             (StringToBytesTemplates''lower-3 Lowerer'stringToBytesSnippets, this, lowerer)
@@ -52754,7 +51818,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"LocationIdentity" StringToBytesNode''getLocationIdentity-1 [#_"StringToBytesNode" this]
         (NamedLocationIdentity'getArrayLocation-1 JavaKind/Byte)
     )
@@ -52770,6 +51834,9 @@
     (§ mutable #_"int" :debugId 0)
     (§ final #_"JavaConstant" :speculation nil)
 
+    (§ intrinsic! #_"void" DeoptimizeNode'deopt-2 [#_@ConstantNodeParameter #_"DeoptimizationAction" action, #_@ConstantNodeParameter #_"DeoptimizationReason" reason])
+
+    #_intrinsifier
     (§ defn #_"DeoptimizeNode" DeoptimizeNode'new-2 [#_"DeoptimizationAction" action, #_"DeoptimizationReason" reason]
         (DeoptimizeNode'new-5 action, reason, DeoptimizeNode'DEFAULT_DEBUG_ID, JavaConstant/NULL_POINTER, nil)
     )
@@ -52790,13 +51857,13 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" DeoptimizeNode''setAction-2 [#_"DeoptimizeNode" this, #_"DeoptimizationAction" action]
         (§ ass! this (assoc this :action action))
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" DeoptimizeNode''setReason-2 [#_"DeoptimizeNode" this, #_"DeoptimizationReason" reason]
         (§ ass! this (assoc this :reason reason))
         nil
@@ -52806,8 +51873,7 @@
         nil ;; No lowering, we generate LIR directly for this node.
     )
 
-    #_unused
-    (§ override! #_"void" DeoptimizeNode''generate-2 [#_"DeoptimizeNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"DeoptimizeNode" this, #_"LIRBuilder" builder]
         (let [
             #_"Value" actionAndReason (LIRGenerator''emitJavaConstant-2 (:gen builder), (#_"MetaAccessProvider" .encodeDeoptActionAndReason HotSpot'metaAccess, (:action this), (:reason this), (:debugId this)))
             #_"Value" speculationValue (LIRGenerator''emitJavaConstant-2 (:gen builder), (:speculation this))
@@ -52817,18 +51883,15 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ValueNode" DeoptimizeNode''getActionAndReason-1 [#_"DeoptimizeNode" this]
         (ConstantNode'forConstant-2 (#_"MetaAccessProvider" .encodeDeoptActionAndReason HotSpot'metaAccess, (:action this), (:reason this), (:debugId this)), (:graph this))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ValueNode" DeoptimizeNode''getSpeculation-1 [#_"DeoptimizeNode" this]
         (ConstantNode'forConstant-2 (:speculation this), (:graph this))
     )
-
-    ; @NodeIntrinsic
-    (§ native #_"void" DeoptimizeNode'deopt-2 [#_@ConstantNodeParameter #_"DeoptimizationAction" action, #_@ConstantNodeParameter #_"DeoptimizationReason" reason])
 )
 
 (class-ns DeoptimizingFixedWithNextNode (§ extends FixedWithNextNode) (§ implements DeoptBefore)
@@ -52925,7 +51988,7 @@
 (class-ns DirectCallTargetNode (§ extends LoweredCallTargetNode)
     (§ def #_"NodeClass<DirectCallTargetNode>" DirectCallTargetNode'TYPE (NodeClass'create-1 DirectCallTargetNode))
 
-    #_unused
+    #_unused
     (§ defn #_"DirectCallTargetNode" DirectCallTargetNode'new-6 [#_"ValueNode[]" arguments, #_"StampPair" returnStamp, #_"JavaType[]" signature, #_"ResolvedJavaMethod" target, #_"CallingConvention$Type" callType, #_"InvokeKind" invokeKind]
         (DirectCallTargetNode'new-7 DirectCallTargetNode'TYPE, arguments, returnStamp, signature, target, callType, invokeKind)
     )
@@ -52934,7 +51997,7 @@
         (LoweredCallTargetNode'new-7 c, arguments, returnStamp, signature, target, callType, invokeKind)
     )
 
-    #_unused
+    #_unused
     (§ override #_"String" DirectCallTargetNode''targetName-1 [#_"DirectCallTargetNode" this]
         (#_"ResolvedJavaMethod" .format (CallTargetNode''targetMethod-1 this), "Direct#%h.\n")
     )
@@ -52958,29 +52021,27 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ValueNode" DynamicDeoptimizeNode''getActionAndReason-1 [#_"DynamicDeoptimizeNode" this]
         (:actionAndReason this)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ValueNode" DynamicDeoptimizeNode''getSpeculation-1 [#_"DynamicDeoptimizeNode" this]
         (:speculation this)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" DynamicDeoptimizeNode''lower-2 [#_"DynamicDeoptimizeNode" this, #_"LoweringTool" lowerer]
         nil ;; No lowering, we generate LIR directly for this node.
     )
 
-    #_unused
-    (§ override! #_"void" DynamicDeoptimizeNode''generate-2 [#_"DynamicDeoptimizeNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"DynamicDeoptimizeNode" this, #_"LIRBuilder" builder]
         (LIRGenerator''emitDeoptimize-3 (:gen builder), (LIRBuilder''operand-2 builder, (:actionAndReason this)), (LIRBuilder''operand-2 builder, (:speculation this)))
         nil
     )
 
-    #_unused
-    (§ override! #_"Node" DynamicDeoptimizeNode''canonical-2 [#_"DynamicDeoptimizeNode" this, #_"CanonicalizerTool" tool]
+    (§ override! #_"Node" Canonicalizable''canonical-2 [#_"DynamicDeoptimizeNode" this, #_"CanonicalizerTool" tool]
         (when (and (instance? ConstantNode (:actionAndReason this)) (instance? ConstantNode (:speculation this))) => this
             (let [
                 #_"JavaConstant" constant (ValueNode''asJavaConstant-1 (:actionAndReason this))
@@ -53055,14 +52116,13 @@
         (:value this)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" BoxNode''lower-2 [#_"BoxNode" this, #_"LoweringTool" lowerer]
         (BoxingTemplates''lower-3 Lowerer'boxingSnippets, this, lowerer)
         nil
     )
 
-    #_unused
-    (§ override! #_"ValueNode" BoxNode''canonical-3 [#_"BoxNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
+    (§ override! #_"ValueNode" Unary''canonical-3 [#_"BoxNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
         (when-not (and (CanonicalizerTool''allUsagesAvailable-1 tool) (Node''hasNoUsages-1 this))
             this
         )
@@ -53072,8 +52132,7 @@
         (VirtualBoxingNode'new-2 (StampTool'typeOrNull-1 (:stamp this)), (:boxingKind this))
     )
 
-    #_unused
-    (§ override! #_"void" BoxNode''virtualize-2 [#_"BoxNode" this, #_"VirtualizerTool" tool]
+    (§ override! #_"void" Virtualizable''virtualize-2 [#_"BoxNode" this, #_"VirtualizerTool" tool]
         (let [
             #_"ValueNode" alias (VirtualizerTool''getAlias-2 tool, (BoxNode''getValue-1 this))
             #_"VirtualBoxingNode" newVirtual (BoxNode''createVirtualBoxingNode-1 this)
@@ -53110,7 +52169,18 @@
     ; @Input
     (§ mutable #_"ValueNode" :condition nil)
 
-    #_unused
+    ;;;
+     ; This intrinsic should only be used for the condition of an if statement. The parameter
+     ; condition should also only denote a simple condition and not a combined condition involving
+     ; && or || operators. It injects the probability of the condition into the if statement.
+     ;
+     ; @param probability the probability that the given condition is true as a double value between 0.0 and 1.0
+     ; @param condition the simple condition without any && or || operators
+     ; @return the condition
+     ;;
+    (§ intrinsic! #_"boolean" BranchProbabilityNode'probability-2 [#_"double" probability, #_"boolean" condition])
+
+    #_intrinsifier
     (§ defn #_"BranchProbabilityNode" BranchProbabilityNode'new-2 [#_"ValueNode" probability, #_"ValueNode" condition]
         (let [
             #_"BranchProbabilityNode" this (FloatingNode'new-2 BranchProbabilityNode'TYPE, (:stamp condition))
@@ -53121,7 +52191,11 @@
         )
     )
 
-    #_unused
+    (§ method- #_"boolean" BranchProbabilityNode''isSubstitutionGraph-1 [#_"BranchProbabilityNode" this]
+        (and (Node''hasExactlyOneUsage-1 this) (instance? ReturnNode (NodeIterable''first-1 (Node''usages-1 this))))
+    )
+
+    #_unused
     (§ override! #_"void" BranchProbabilityNode''simplify-2 [#_"BranchProbabilityNode" this, #_"SimplifierTool" tool]
         (when (and (Node''hasUsages-1 this) (instance? ConstantNode (:probability this)))
             (let [
@@ -53178,23 +52252,7 @@
         nil
     )
 
-    (§ method- #_"boolean" BranchProbabilityNode''isSubstitutionGraph-1 [#_"BranchProbabilityNode" this]
-        (and (Node''hasExactlyOneUsage-1 this) (instance? ReturnNode (NodeIterable''first-1 (Node''usages-1 this))))
-    )
-
-    ;;;
-     ; This intrinsic should only be used for the condition of an if statement. The parameter
-     ; condition should also only denote a simple condition and not a combined condition involving
-     ; && or || operators. It injects the probability of the condition into the if statement.
-     ;
-     ; @param probability the probability that the given condition is true as a double value between 0.0 and 1.0
-     ; @param condition the simple condition without any && or || operators
-     ; @return the condition
-     ;;
-    ; @NodeIntrinsic
-    (§ native #_"boolean" BranchProbabilityNode'probability-2 [#_"double" probability, #_"boolean" condition])
-
-    #_unused
+    #_unused
     (§ override! #_"void" BranchProbabilityNode''lower-2 [#_"BranchProbabilityNode" this, #_"LoweringTool" lowerer]
         (throw! "Branch probability could not be injected, because the probability value did not reduce to a constant value.")
     )
@@ -53204,7 +52262,7 @@
     (§ def #_"NodeClass<FixedValueAnchorNode>" FixedValueAnchorNode'TYPE (NodeClass'create-1 FixedValueAnchorNode))
 
     ; @Input
-    (§ mutable #_"ValueNode" :object nil)
+    (§ final #_"ValueNode" :object nil)
     (§ mutable #_"Stamp" :predefinedStamp nil)
 
     (§ defn #_"FixedValueAnchorNode" FixedValueAnchorNode'new-2 [#_"NodeClass<? extends FixedValueAnchorNode>" c, #_"ValueNode" object]
@@ -53216,6 +52274,9 @@
         )
     )
 
+    (§ intrinsic! #_"Object" FixedValueAnchorNode'getObject-1 [#_"Object" object])
+
+    #_intrinsifier
     (§ defn #_"FixedValueAnchorNode" FixedValueAnchorNode'new-1 [#_"ValueNode" object]
         (FixedValueAnchorNode'new-2 FixedValueAnchorNode'TYPE, object)
     )
@@ -53230,26 +52291,22 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override #_"boolean" FixedValueAnchorNode''inferStamp-1 [#_"FixedValueAnchorNode" this]
         (and (nil? (:predefinedStamp this)) (ValueNode''updateStamp-2 this, (:stamp (:object this))))
     )
 
-    ; @NodeIntrinsic
-    (§ native #_"Object" FixedValueAnchorNode'getObject-1 [#_"Object" object])
-
-    #_unused
-    (§ override #_"void" FixedValueAnchorNode''generate-2 [#_"FixedValueAnchorNode" this, #_"LIRBuilder" builder]
+    (§ override #_"void" LIRLowerable''generate-2 [#_"FixedValueAnchorNode" this, #_"LIRBuilder" builder]
         (LIRBuilder''setResult-3 builder, this, (LIRBuilder''operand-2 builder, (:object this)))
         nil
     )
 
-    #_unused
+    #_unused
     (§ override #_"ValueNode" FixedValueAnchorNode''getOriginalNode-1 [#_"FixedValueAnchorNode" this]
         (:object this)
     )
 
-    #_unused
+    #_unused
     (§ override #_"GuardingNode" FixedValueAnchorNode''getGuard-1 [#_"FixedValueAnchorNode" this]
         this
     )
@@ -53280,8 +52337,8 @@
         )
     )
 
-    #_unused
-    (§ defn #_"boolean" ForeignCallNode'intrinsify-5* [#_"BytecodeParser" parser, #_"ResolvedJavaMethod" targetMethod, #_@InjectedNodeParameter #_"Stamp" returnStamp, #_"ForeignCallDescriptor" descriptor, #_"ValueNode..." arguments]
+    #_intrinsifier
+    (§ defn #_"boolean" ForeignCallNode'intrinsify-5* [#_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_@InjectedNodeParameter #_"Stamp" returnStamp, #_"ForeignCallDescriptor" descriptor, #_"ValueNode..." arguments]
         (let [
             #_"ForeignCallNode" node (ForeignCallNode'new-2* descriptor, arguments)
         ]
@@ -53297,7 +52354,7 @@
                 )
 
                 (let [
-                    #_"JavaKind" returnKind (#_"Signature" .getReturnKind (#_"ResolvedJavaMethod" .getSignature targetMethod))
+                    #_"JavaKind" returnKind (#_"Signature" .getReturnKind (#_"ResolvedJavaMethod" .getSignature method))
                 ]
                     (if (= returnKind JavaKind/Void)
                         (BytecodeParser''add-2 parser, node)
@@ -53310,12 +52367,23 @@
         )
     )
 
-    #_unused
+    (§ intrinsic! #_"void" ForeignCallNode'monitorenterStubC-3 [#_@ConstantNodeParameter #_"ForeignCallDescriptor" descriptor, #_"Object" object, #_"Word" lock])
+    (§ intrinsic! #_"void" ForeignCallNode'monitorexitStubC-3 [#_@ConstantNodeParameter #_"ForeignCallDescriptor" descriptor, #_"Object" object, #_"Word" lock])
+
+    (§ intrinsic! #_"Object" ForeignCallNode'newInstance-2 [#_@ConstantNodeParameter #_"ForeignCallDescriptor" descriptor, #_"KlassPointer" hub])
+    (§ intrinsic! #_"Object" ForeignCallNode'newArray-4 [#_@ConstantNodeParameter #_"ForeignCallDescriptor" descriptor, #_"KlassPointer" hub, #_"int" length, #_"boolean" fillContents])
+
+    (§ intrinsic! #_"Object" ForeignCallNode'dynamicNewInstanceStubCall-2 [#_@ConstantNodeParameter #_"ForeignCallDescriptor" descriptor, #_"Class" elementType])
+
+    (§ intrinsic! #_"void" ForeignCallNode'g1PreBarrierStub-2 [#_@ConstantNodeParameter #_"ForeignCallDescriptor" descriptor, #_"Object" object])
+    (§ intrinsic! #_"void" ForeignCallNode'g1PostBarrierStub-2 [#_@ConstantNodeParameter #_"ForeignCallDescriptor" descriptor, #_"Word" card])
+
+    #_unused
     (§ override! #_"boolean" ForeignCallNode''hasSideEffect-1 [#_"ForeignCallNode" this]
         (not (ForeignCalls''isReexecutable-2 HotSpot'foreignCalls, (:descriptor this)))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"LocationIdentity[]" ForeignCallNode''getLocationIdentities-1 [#_"ForeignCallNode" this]
         (ForeignCalls''getKilledLocations-2 HotSpot'foreignCalls, (:descriptor this))
     )
@@ -53331,8 +52399,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" ForeignCallNode''generate-2 [#_"ForeignCallNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"ForeignCallNode" this, #_"LIRBuilder" builder]
         (let [
             #_"ForeignCallLinkage" linkage (ForeignCalls''lookupForeignCall-2 HotSpot'foreignCalls, (:descriptor this))
             #_"Value[]" operands (ForeignCallNode''operands-2 this, builder)
@@ -53345,13 +52412,13 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" ForeignCallNode''setStateAfter-2 [#_"ForeignCallNode" this, #_"FrameState" x]
         (AbstractStateSplit''setStateAfter-2 (§ super ), x)
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"FrameState" ForeignCallNode''stateDuring-1 [#_"ForeignCallNode" this]
         (:stateDuring this)
     )
@@ -53369,7 +52436,7 @@
         (assoc this :bci bci)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" ForeignCallNode''computeStateDuring-2 [#_"ForeignCallNode" this, #_"FrameState" after]
         (let [
             #_"FrameState" during
@@ -53385,7 +52452,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" ForeignCallNode''canDeoptimize-1 [#_"ForeignCallNode" this]
         false
     )
@@ -53402,9 +52469,9 @@
     (§ def #_"NodeClass<GetClassNode>" GetClassNode'TYPE (NodeClass'create-1 GetClassNode))
 
     ; @Input
-    (§ mutable #_"ValueNode" :object nil)
+    (§ final #_"ValueNode" :object nil)
 
-    #_unused
+    #_unused
     (§ defn #_"GetClassNode" GetClassNode'new-2 [#_"Stamp" stamp, #_"ValueNode" object]
         (let [
             #_"GetClassNode" this (FloatingNode'new-2 GetClassNode'TYPE, stamp)
@@ -53414,7 +52481,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" GetClassNode''lower-2 [#_"GetClassNode" this, #_"LoweringTool" lowerer]
         (Lowerer'lowerGetClassNode-3 this, lowerer, (:graph this))
         nil
@@ -53426,15 +52493,13 @@
         )
     )
 
-    #_unused
-    (§ override! #_"ValueNode" GetClassNode''canonical-2 [#_"GetClassNode" this, #_"CanonicalizerTool" tool]
+    (§ override! #_"ValueNode" Canonicalizable''canonical-2 [#_"GetClassNode" this, #_"CanonicalizerTool" tool]
         (or (GetClassNode'tryFold-1 (:object this))
             this
         )
     )
 
-    #_unused
-    (§ override! #_"void" GetClassNode''virtualize-2 [#_"GetClassNode" this, #_"VirtualizerTool" tool]
+    (§ override! #_"void" Virtualizable''virtualize-2 [#_"GetClassNode" this, #_"VirtualizerTool" tool]
         (let [
             #_"ValueNode" alias (VirtualizerTool''getAlias-2 tool, (:object this))
         ]
@@ -53452,7 +52517,7 @@
 (§ interface GuardedNode
     (§ abstract #_"GuardingNode" GuardedNode''getGuard-1 [#_"GuardedNode" this])
 
-    #_unused
+    #_unused
     (§ abstract #_"void" GuardedNode''setGuard-2 [#_"GuardedNode" this, #_"GuardingNode" guard])
 )
 
@@ -53462,7 +52527,7 @@
     ; @OptionalInput(InputType'Guard)
     (§ mutable #_"GuardingNode" :guard nil)
 
-    #_unused
+    #_unused
     (§ defn #_"GuardedUnsafeLoadNode" GuardedUnsafeLoadNode'new-5 [#_"ValueNode" object, #_"ValueNode" offset, #_"JavaKind" accessKind, #_"LocationIdentity" locationIdentity, #_"GuardingNode" guard]
         (let [
             #_"GuardedUnsafeLoadNode" this (RawLoadNode'new-5 GuardedUnsafeLoadNode'TYPE, object, offset, accessKind, locationIdentity)
@@ -53476,7 +52541,7 @@
         (:guard this)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" GuardedUnsafeLoadNode''setGuard-2 [#_"GuardedUnsafeLoadNode" this, #_"GuardingNode" guard]
         (Node''updateUsages-3 this, (:guard this), guard)
         (§ ass! this (assoc this :guard guard))
@@ -53509,7 +52574,7 @@
         (IntegerSwitchNode'new-5 value, (make-array AbstractBeginNode successorCount), keys, keyProbabilities, keySuccessors)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" IntegerSwitchNode''isSorted-1 [#_"IntegerSwitchNode" this]
         true
     )
@@ -53521,18 +52586,17 @@
         (JavaConstant/forInt (nth (:keys this) i))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" IntegerSwitchNode''equalKeys-2 [#_"IntegerSwitchNode" this, #_"SwitchNode" switchNode]
         (and (instance? IntegerSwitchNode switchNode) (Arrays/equals (:keys this), (:keys switchNode)))
     )
 
-    #_unused
-    (§ override! #_"void" IntegerSwitchNode''generate-2 [#_"IntegerSwitchNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"IntegerSwitchNode" this, #_"LIRBuilder" builder]
         (LIRBuilder''emitSwitch-2 builder, this)
         nil
     )
 
-    #_unused
+    #_unused
     (§ method! #_"AbstractBeginNode" IntegerSwitchNode''successorAtKey-2 [#_"IntegerSwitchNode" this, #_"int" key]
         (nth (:successors this) (IntegerSwitchNode''successorIndexAtKey-2 this, key))
     )
@@ -53550,7 +52614,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" IntegerSwitchNode''simplify-2 [#_"IntegerSwitchNode" this, #_"SimplifierTool" tool]
         (cond
             (= (count (:successors this)) 1)
@@ -53853,19 +52917,18 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" JavaReadNode''lower-2 [#_"JavaReadNode" this, #_"LoweringTool" lowerer]
         (Lowerer'lowerJavaReadNode-1 this)
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" JavaReadNode''canNullCheck-1 [#_"JavaReadNode" this]
         true
     )
 
-    #_unused
-    (§ override! #_"Node" JavaReadNode''canonical-2 [#_"JavaReadNode" this, #_"CanonicalizerTool" tool]
+    (§ override! #_"Node" Canonicalizable''canonical-2 [#_"JavaReadNode" this, #_"CanonicalizerTool" tool]
         (ReadNode'canonicalizeRead-4 this, (FixedAccessNode''getAddress-1 this), (FixedAccessNode''getLocationIdentity-1 this), tool)
     )
 )
@@ -53890,13 +52953,13 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" JavaWriteNode''lower-2 [#_"JavaWriteNode" this, #_"LoweringTool" lowerer]
         (Lowerer'lowerJavaWriteNode-1 this)
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" JavaWriteNode''canNullCheck-1 [#_"JavaWriteNode" this]
         true
     )
@@ -53921,6 +52984,9 @@
         )
     )
 
+    (§ intrinsic! #_"KlassPointer" LoadHubNode'loadHubIntrinsic-1 [#_"Object" object])
+
+    #_intrinsifier
     (§ defn #_"LoadHubNode" LoadHubNode'new-1 [#_"ValueNode" value]
         (LoadHubNode'new-2 KlassPointerStamp'KLASS_NON_NULL, value)
     )
@@ -53939,8 +53005,7 @@
         nil
     )
 
-    #_unused
-    (§ override! #_"ValueNode" LoadHubNode''canonical-2 [#_"LoadHubNode" this, #_"CanonicalizerTool" tool]
+    (§ override! #_"ValueNode" Canonicalizable''canonical-2 [#_"LoadHubNode" this, #_"CanonicalizerTool" tool]
         (or (LoadHubNode'findSynonym-2 (:value this), (:stamp this))
             this
         )
@@ -53956,8 +53021,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" LoadHubNode''virtualize-2 [#_"LoadHubNode" this, #_"VirtualizerTool" tool]
+    (§ override! #_"void" Virtualizable''virtualize-2 [#_"LoadHubNode" this, #_"VirtualizerTool" tool]
         (let [
             #_"TypeReference" type (StampTool'typeReferenceOrNull-1 (:stamp (VirtualizerTool''getAlias-2 tool, (:value this))))
         ]
@@ -53985,7 +53049,7 @@
      ;;
     (§ final #_"ResolvedJavaType" :callerType nil)
 
-    #_unused
+    #_unused
     (§ defn #_"LoadMethodNode" LoadMethodNode'new-5 [#_@InjectedNodeParameter #_"Stamp" stamp, #_"ResolvedJavaMethod" method, #_"ResolvedJavaType" receiverType, #_"ResolvedJavaType" callerType, #_"ValueNode" hub]
         (let [
             #_"LoadMethodNode" this (FixedWithNextNode'new-2 LoadMethodNode'TYPE, stamp)
@@ -54001,14 +53065,13 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" LoadMethodNode''lower-2 [#_"LoadMethodNode" this, #_"LoweringTool" lowerer]
         (Lowerer'lowerLoadMethodNode-1 this)
         nil
     )
 
-    #_unused
-    (§ override! #_"Node" LoadMethodNode''canonical-2 [#_"LoadMethodNode" this, #_"CanonicalizerTool" tool]
+    (§ override! #_"Node" Canonicalizable''canonical-2 [#_"LoadMethodNode" this, #_"CanonicalizerTool" tool]
         (when (instance? LoadHubNode (:hub this))
             (let [
                 #_"TypeReference" type (StampTool'typeReferenceOrNull-1 (:stamp (:value (:hub this))))
@@ -54053,10 +53116,16 @@
     (§ final #_"int" :barriers 0)
     (§ final #_"LocationIdentity" :location nil)
 
+    (§ intrinsic! #_"void" MembarNode'memoryBarrier-1 [#_@ConstantNodeParameter #_"int" barriers])
+
+    #_intrinsifier
     (§ defn #_"MembarNode" MembarNode'new-1 [#_"int" barriers]
         (MembarNode'new-2 barriers, (LocationIdentity/any))
     )
 
+    (§ intrinsic! #_"void" MembarNode'memoryBarrier-2 [#_@ConstantNodeParameter #_"int" barriers, #_@ConstantNodeParameter #_"LocationIdentity" location])
+
+    #_intrinsifier
     (§ defn #_"MembarNode" MembarNode'new-2 [#_"int" barriers, #_"LocationIdentity" location]
         (let [
             #_"MembarNode" this (FixedWithNextNode'new-2 MembarNode'TYPE, (StampFactory'forVoid-0))
@@ -54067,22 +53136,15 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"LocationIdentity" MembarNode''getLocationIdentity-1 [#_"MembarNode" this]
         (:location this)
     )
 
-    #_unused
-    (§ override! #_"void" MembarNode''generate-2 [#_"MembarNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"MembarNode" this, #_"LIRBuilder" builder]
         (LIRGenerator''emitMembar-2 (:gen builder), (:barriers this))
         nil
     )
-
-    ; @NodeIntrinsic
-    (§ native #_"void" MembarNode'memoryBarrier-1 [#_@ConstantNodeParameter #_"int" barriers])
-
-    ; @NodeIntrinsic
-    (§ native #_"void" MembarNode'memoryBarrier-2 [#_@ConstantNodeParameter #_"int" barriers, #_@ConstantNodeParameter #_"LocationIdentity" location])
 )
 
 ;;;
@@ -54102,8 +53164,11 @@
     (§ def #_"NodeClass<NullCheckNode>" NullCheckNode'TYPE (NodeClass'create-1 NullCheckNode))
 
     ; @Input
-    (§ mutable #_"ValueNode" :object nil)
+    (§ final #_"ValueNode" :object nil)
 
+    (§ intrinsic! #_"void" NullCheckNode'nullCheck-1 [#_"Object" object])
+
+    #_intrinsifier
     (§ defn #_"NullCheckNode" NullCheckNode'new-1 [#_"ValueNode" object]
         (let [
             #_"NullCheckNode" this (DeoptimizingFixedWithNextNode'new-2 NullCheckNode'TYPE, (StampFactory'forVoid-0))
@@ -54113,19 +53178,15 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" NullCheckNode''generate-2 [#_"NullCheckNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"NullCheckNode" this, #_"LIRBuilder" builder]
         (LIRGenerator''emitNullCheck-2 (:gen builder), (LIRBuilder''operand-2 builder, (:object this)))
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" NullCheckNode''canDeoptimize-1 [#_"NullCheckNode" this]
         true
     )
-
-    ; @NodeIntrinsic
-    (§ native #_"void" NullCheckNode'nullCheck-1 [#_"Object" object])
 )
 
 ;;;
@@ -54135,37 +53196,37 @@
 (class-ns RawLoadNode (§ extends UnsafeAccessNode) (§ implements Lowerable, Virtualizable, Canonicalizable)
     (§ def #_"NodeClass<RawLoadNode>" RawLoadNode'TYPE (NodeClass'create-1 RawLoadNode))
 
-    ;;;
-     ; This constructor exists for node intrinsics that need a stamp based on {@code accessKind}.
-     ;;
-    (§ defn #_"RawLoadNode" RawLoadNode'new-4 [#_"ValueNode" object, #_"ValueNode" offset, #_"JavaKind" accessKind, #_"LocationIdentity" locationIdentity]
-        (RawLoadNode'new-5 object, offset, accessKind, locationIdentity, false)
-    )
+    (§ intrinsic! #_"Word" RawLoadNode'loadWordFromObjectIntrinsic-4 [#_"Object" object, #_"long" offset, #_@ConstantNodeParameter #_"LocationIdentity" locationIdentity, #_@ConstantNodeParameter #_"JavaKind" wordKind])
 
-    (§ defn #_"RawLoadNode" RawLoadNode'new-5 [#_"ValueNode" object, #_"ValueNode" offset, #_"JavaKind" accessKind, #_"LocationIdentity" locationIdentity, #_"boolean" forceAnyLocation]
-        (UnsafeAccessNode'new-7 RawLoadNode'TYPE, (StampFactory'forKind-1 (#_"JavaKind" .getStackKind accessKind)), object, offset, accessKind, locationIdentity, forceAnyLocation)
-    )
+    (§ intrinsic! #_"KlassPointer" RawLoadNode'loadKlassFromObjectIntrinsic-4 [#_"Object" object, #_"long" offset, #_@ConstantNodeParameter #_"LocationIdentity" locationIdentity, #_@ConstantNodeParameter #_"JavaKind" wordKind])
 
     ;;;
      ; This constructor exists for node intrinsics that need a stamp based on the return type of
      ; the NodeIntrinsic annotated method.
      ;;
+    #_intrinsifier
     (§ defn #_"RawLoadNode" RawLoadNode'new-5 [#_@InjectedNodeParameter #_"Stamp" stamp, #_"ValueNode" object, #_"ValueNode" offset, #_"LocationIdentity" locationIdentity, #_"JavaKind" accessKind]
         (UnsafeAccessNode'new-7 RawLoadNode'TYPE, stamp, object, offset, accessKind, locationIdentity, false)
+    )
+
+    ;;;
+     ; This constructor exists for node intrinsics that need a stamp based on {@code accessKind}.
+     ;;
+    (§ defn #_"RawLoadNode" RawLoadNode'new-4 [#_"ValueNode" object, #_"ValueNode" offset, #_"JavaKind" accessKind, #_"LocationIdentity" locationIdentity]
+        (UnsafeAccessNode'new-7 RawLoadNode'TYPE, (StampFactory'forKind-1 (#_"JavaKind" .getStackKind accessKind)), object, offset, accessKind, locationIdentity, false)
     )
 
     (§ defn #_"RawLoadNode" RawLoadNode'new-5 [#_"NodeClass<? extends RawLoadNode>" c, #_"ValueNode" object, #_"ValueNode" offset, #_"JavaKind" accessKind, #_"LocationIdentity" locationIdentity]
         (UnsafeAccessNode'new-7 c, (StampFactory'forKind-1 (#_"JavaKind" .getStackKind accessKind)), object, offset, accessKind, locationIdentity, false)
     )
 
-    #_unused
+    #_unused
     (§ override #_"void" RawLoadNode''lower-2 [#_"RawLoadNode" this, #_"LoweringTool" lowerer]
         (Lowerer'lowerUnsafeLoadNode-2 this, lowerer)
         nil
     )
 
-    #_unused
-    (§ override #_"void" RawLoadNode''virtualize-2 [#_"RawLoadNode" this, #_"VirtualizerTool" tool]
+    (§ override #_"void" Virtualizable''virtualize-2 [#_"RawLoadNode" this, #_"VirtualizerTool" tool]
         (let [
             #_"ValueNode" object (VirtualizerTool''getAlias-2 tool, (:object this))
         ]
@@ -54201,8 +53262,7 @@
         nil
     )
 
-    #_unused
-    (§ override #_"Node" RawLoadNode''canonical-2 [#_"RawLoadNode" this, #_"CanonicalizerTool" tool]
+    (§ override #_"Node" Canonicalizable''canonical-2 [#_"RawLoadNode" this, #_"CanonicalizerTool" tool]
         (or
             (when (and (not (:forceAnyLocation this)) (#_"LocationIdentity" .isAny (:locationIdentity this)))
                 (let [
@@ -54239,23 +53299,19 @@
                     )
                 )
             )
-            (UnsafeAccessNode''canonical-2 (§ super ), tool)
+            (Canonicalizable''canonical-2 (§ super ), tool)
         )
     )
 
-    #_unused
+    #_unused
     (§ override #_"ValueNode" RawLoadNode''cloneAsFieldAccess-2 [#_"RawLoadNode" this, #_"ResolvedJavaField" field]
         (LoadFieldNode'create-2 (:object this), field)
     )
 
-    #_unused
-    (§ override #_"ValueNode" RawLoadNode''cloneAsArrayAccess-3 [#_"RawLoadNode" this, #_"ValueNode" location, #_"LocationIdentity" identity]
-        (RawLoadNode'new-4 (:object this), location, (:accessKind this), identity)
+    #_unused
+    (§ override #_"ValueNode" RawLoadNode''cloneAsArrayAccess-3 [#_"RawLoadNode" this, #_"ValueNode" offset, #_"LocationIdentity" identity]
+        (RawLoadNode'new-4 (:object this), offset, (:accessKind this), identity)
     )
-
-    ; @NodeIntrinsic
-    #_unused
-    (§ native #_"Object" RawLoadNode'load-4 [#_"Object" object, #_"long" offset, #_@ConstantNodeParameter #_"JavaKind" kind, #_@ConstantNodeParameter #_"LocationIdentity" locationIdentity])
 )
 
 ;;;
@@ -54271,14 +53327,6 @@
     (§ mutable #_"FrameState" :stateAfter nil)
     (§ final #_"boolean" :needsBarrier false)
 
-    (§ defn #_"RawStoreNode" RawStoreNode'new-5 [#_"ValueNode" object, #_"ValueNode" offset, #_"ValueNode" value, #_"JavaKind" accessKind, #_"LocationIdentity" locationIdentity]
-        (RawStoreNode'new-6 object, offset, value, accessKind, locationIdentity, true)
-    )
-
-    (§ defn #_"RawStoreNode" RawStoreNode'new-6 [#_"ValueNode" object, #_"ValueNode" offset, #_"ValueNode" value, #_"JavaKind" accessKind, #_"LocationIdentity" locationIdentity, #_"boolean" needsBarrier]
-        (RawStoreNode'new-8 object, offset, value, accessKind, locationIdentity, needsBarrier, nil, false)
-    )
-
     (§ defn #_"RawStoreNode" RawStoreNode'new-8 [#_"ValueNode" object, #_"ValueNode" offset, #_"ValueNode" value, #_"JavaKind" accessKind, #_"LocationIdentity" locationIdentity, #_"boolean" needsBarrier, #_"FrameState" stateAfter, #_"boolean" forceAnyLocation]
         (let [
             #_"RawStoreNode" this (UnsafeAccessNode'new-7 RawStoreNode'TYPE, (StampFactory'forVoid-0), object, offset, accessKind, locationIdentity, forceAnyLocation)
@@ -54290,38 +53338,29 @@
         )
     )
 
-    ; @NodeIntrinsic
-    #_unused
-    (§ native #_"Object" RawStoreNode'storeObject-6 [#_"Object" object, #_"long" offset, #_"Object" value, #_@ConstantNodeParameter #_"JavaKind" kind, #_@ConstantNodeParameter #_"LocationIdentity" locationIdentity, #_@ConstantNodeParameter #_"boolean" needsBarrier])
-
-    ; @NodeIntrinsic
-    #_unused
-    (§ native #_"Object" RawStoreNode'storeChar-5 [#_"Object" object, #_"long" offset, #_"char" value, #_@ConstantNodeParameter #_"JavaKind" kind, #_@ConstantNodeParameter #_"LocationIdentity" locationIdentity])
-
     (§ override! #_"FrameState" RawStoreNode''stateAfter-1 [#_"RawStoreNode" this]
         (:stateAfter this)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" RawStoreNode''setStateAfter-2 [#_"RawStoreNode" this, #_"FrameState" x]
         (Node''updateUsages-3 this, (:stateAfter this), x)
         (§ ass! this (assoc this :stateAfter x))
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" RawStoreNode''hasSideEffect-1 [#_"RawStoreNode" this]
         true
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" RawStoreNode''lower-2 [#_"RawStoreNode" this, #_"LoweringTool" lowerer]
         (Lowerer'lowerUnsafeStoreNode-1 this)
         nil
     )
 
-    #_unused
-    (§ override! #_"void" RawStoreNode''virtualize-2 [#_"RawStoreNode" this, #_"VirtualizerTool" tool]
+    (§ override! #_"void" Virtualizable''virtualize-2 [#_"RawStoreNode" this, #_"VirtualizerTool" tool]
         (let [
             #_"ValueNode" object (VirtualizerTool''getAlias-2 tool, (:object this))
         ]
@@ -54345,12 +53384,12 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ValueNode" RawStoreNode''cloneAsFieldAccess-2 [#_"RawStoreNode" this, #_"ResolvedJavaField" field]
         (StoreFieldNode'new-4 (:object this), field, (:value this), (RawStoreNode''stateAfter-1 this))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ValueNode" RawStoreNode''cloneAsArrayAccess-3 [#_"RawStoreNode" this, #_"ValueNode" location, #_"LocationIdentity" identity]
         (RawStoreNode'new-8 (:object this), location, (:value this), (:accessKind this), identity, (:needsBarrier this), (RawStoreNode''stateAfter-1 this), (:forceAnyLocation this))
     )
@@ -54385,7 +53424,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"FrameState" StateSplitProxyNode''stateAfter-1 [#_"StateSplitProxyNode" this]
         (:stateAfter this)
     )
@@ -54396,13 +53435,12 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" StateSplitProxyNode''hasSideEffect-1 [#_"StateSplitProxyNode" this]
         true
     )
 
-    #_unused
-    (§ override! #_"Node" StateSplitProxyNode''canonical-2 [#_"StateSplitProxyNode" this, #_"CanonicalizerTool" tool]
+    (§ override! #_"Node" Canonicalizable''canonical-2 [#_"StateSplitProxyNode" this, #_"CanonicalizerTool" tool]
         (when (or (and (instance? ConstantNode (:object this)) (not (:delayElimination this))) (nil? (:stateAfter this))) => this
             (:object this)
         )
@@ -54415,9 +53453,11 @@
     ; @Input
     (§ mutable #_"ValueNode" :value nil)
     ; @Input
-    (§ mutable #_"ValueNode" :object nil)
+    (§ final #_"ValueNode" :object nil)
 
-    #_unused
+    (§ intrinsic! #_"void" StoreHubNode'write-2 [#_"Object" object, #_"Object" value])
+
+    #_intrinsifier
     (§ defn #_"StoreHubNode" StoreHubNode'new-2 [#_"ValueNode" object, #_"ValueNode" value]
         (let [
             #_"StoreHubNode" this (FixedWithNextNode'new-2 StoreHubNode'TYPE, (StampFactory'forVoid-0))
@@ -54428,14 +53468,11 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" StoreHubNode''lower-2 [#_"StoreHubNode" this, #_"LoweringTool" lowerer]
         (Lowerer'lowerStoreHubNode-2 this, (:graph this))
         nil
     )
-
-    ; @NodeIntrinsic
-    (§ native #_"void" StoreHubNode'write-2 [#_"Object" object, #_"Object" value])
 )
 
 ;;;
@@ -54471,7 +53508,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override #_"int" SwitchNode''getSuccessorCount-1 [#_"SwitchNode" this]
         (count (:successors this))
     )
@@ -54489,7 +53526,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override #_"boolean" SwitchNode''setProbability-3 [#_"SwitchNode" this, #_"AbstractBeginNode" successor, #_"double" value]
         (let [
             [#_"double" sum #_"double" otherSum]
@@ -54582,7 +53619,7 @@
         (nth (:successors this) (SwitchNode''defaultSuccessorIndex-1 this))
     )
 
-    #_unused
+    #_unused
     (§ override #_"AbstractBeginNode" SwitchNode''getPrimarySuccessor-1 [#_"SwitchNode" this]
         nil
     )
@@ -54604,7 +53641,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ abstract #_"Stamp" SwitchNode''getValueStampForSuccessor-2 [#_"SwitchNode" this, #_"AbstractBeginNode" beginNode])
 )
 
@@ -54629,19 +53666,18 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ defn #_"ValueNode" UnboxNode'create-2 [#_"ValueNode" value, #_"JavaKind" boxingKind]
         (or (UnboxNode'findSynonym-2 value, boxingKind) (UnboxNode'new-2 value, boxingKind))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" UnboxNode''lower-2 [#_"UnboxNode" this, #_"LoweringTool" lowerer]
         (BoxingTemplates''lower-3 Lowerer'boxingSnippets, this, lowerer)
         nil
     )
 
-    #_unused
-    (§ override! #_"void" UnboxNode''virtualize-2 [#_"UnboxNode" this, #_"VirtualizerTool" tool]
+    (§ override! #_"void" Virtualizable''virtualize-2 [#_"UnboxNode" this, #_"VirtualizerTool" tool]
         (let [
             #_"ValueNode" alias (VirtualizerTool''getAlias-2 tool, (UnboxNode''getValue-1 this))
         ]
@@ -54659,8 +53695,7 @@
         nil
     )
 
-    #_unused
-    (§ override! #_"ValueNode" UnboxNode''canonical-3 [#_"UnboxNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
+    (§ override! #_"ValueNode" Unary''canonical-3 [#_"UnboxNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
         (when-not (and (CanonicalizerTool''allUsagesAvailable-1 tool) (Node''hasNoUsages-1 this) (StampTool'isPointerNeverNull-1 (:stamp value)))
             (or (UnboxNode'findSynonym-2 value, (:boxingKind this))
                 this
@@ -54690,7 +53725,7 @@
     (§ def #_"NodeClass<UnsafeAccessNode>" UnsafeAccessNode'TYPE (NodeClass'create-1 UnsafeAccessNode))
 
     ; @Input
-    (§ mutable #_"ValueNode" :object nil)
+    (§ final #_"ValueNode" :object nil)
     ; @Input
     (§ mutable #_"ValueNode" :offset nil)
 
@@ -54711,7 +53746,7 @@
         )
     )
 
-    (§ override #_"Node" UnsafeAccessNode''canonical-2 [#_"UnsafeAccessNode" this, #_"CanonicalizerTool" tool]
+    (§ override #_"Node" Canonicalizable''canonical-2 [#_"UnsafeAccessNode" this, #_"CanonicalizerTool" tool]
         (when (and (not (:forceAnyLocation this)) (#_"LocationIdentity" .isAny (:locationIdentity this))) => this
             (when (instance? ConstantNode (:offset this))
                 (let [
@@ -54750,100 +53785,6 @@
 )
 
 ;;;
- ; Copy a value at a location specified as an offset relative to a source object to another location
- ; specified as an offset relative to destination object. No nil-checks are performed.
- ;;
-(final-ns UnsafeCopyNode
-    #_unused
-    (§ defn #_"UnsafeCopyNode" UnsafeCopyNode'new-0 []
-        (Object.)
-    )
-
-    #_unused
-    (§ defn #_"boolean" UnsafeCopyNode'intrinsify-8 [#_"BytecodeParser" parser, #_"ResolvedJavaMethod" targetMethod, #_"ValueNode" sourceObject, #_"ValueNode" sourceOffset, #_"ValueNode" destinationObject, #_"ValueNode" destinationOffset, #_"JavaKind" accessKind, #_"LocationIdentity" locationIdentity]
-        (let [
-            #_"RawLoadNode" value (BytecodeParser''add-2 parser, (RawLoadNode'new-4 sourceObject, sourceOffset, accessKind, locationIdentity))
-        ]
-            (BytecodeParser''add-2 parser, (RawStoreNode'new-5 destinationObject, destinationOffset, value, accessKind, locationIdentity))
-            true
-        )
-    )
-
-    ; @NodeIntrinsic
-    #_unused
-    (§ native #_"void" UnsafeCopyNode'copy-6 [#_"Object" srcObject, #_"long" srcOffset, #_"Object" destObject, #_"long" destOffset, #_@ConstantNodeParameter #_"JavaKind" kind, #_@ConstantNodeParameter #_"LocationIdentity" locationIdentity])
-)
-
-;;;
- ; Load of a value at a location specified as an absolute address.
- ;;
-(final-ns UnsafeMemoryLoadNode (§ extends FixedWithNextNode) (§ implements Lowerable)
-    (§ def #_"NodeClass<UnsafeMemoryLoadNode>" UnsafeMemoryLoadNode'TYPE (NodeClass'create-1 UnsafeMemoryLoadNode))
-
-    ; @Input
-    (§ mutable #_"ValueNode" :address nil)
-
-    (§ final #_"JavaKind" :kind nil)
-    (§ final #_"LocationIdentity" :locationIdentity nil)
-
-    #_unused
-    (§ defn #_"UnsafeMemoryLoadNode" UnsafeMemoryLoadNode'new-3 [#_"ValueNode" address, #_"JavaKind" kind, #_"LocationIdentity" locationIdentity]
-        (let [
-            #_"UnsafeMemoryLoadNode" this (FixedWithNextNode'new-2 UnsafeMemoryLoadNode'TYPE, (StampFactory'forKind-1 (#_"JavaKind" .getStackKind kind)))
-            this (assoc this :address address)
-            this (assoc this :kind kind)
-            this (assoc this :locationIdentity locationIdentity)
-        ]
-            this
-        )
-    )
-
-    #_unused
-    (§ override! #_"void" UnsafeMemoryLoadNode''lower-2 [#_"UnsafeMemoryLoadNode" this, #_"LoweringTool" lowerer]
-        (Lowerer'lowerUnsafeMemoryLoadNode-1 this)
-        nil
-    )
-)
-
-;;;
- ; Store of a value at a location specified as an absolute address.
- ;;
-(final-ns UnsafeMemoryStoreNode (§ extends AbstractStateSplit) (§ implements Lowerable, Single)
-    (§ def #_"NodeClass<UnsafeMemoryStoreNode>" UnsafeMemoryStoreNode'TYPE (NodeClass'create-1 UnsafeMemoryStoreNode))
-
-    ; @Input
-    (§ mutable #_"ValueNode" :value nil)
-    ; @Input
-    (§ mutable #_"ValueNode" :address nil)
-
-    (§ final #_"JavaKind" :kind nil)
-    (§ final #_"LocationIdentity" :locationIdentity nil)
-
-    #_unused
-    (§ defn #_"UnsafeMemoryStoreNode" UnsafeMemoryStoreNode'new-4 [#_"ValueNode" address, #_"ValueNode" value, #_"JavaKind" kind, #_"LocationIdentity" locationIdentity]
-        (let [
-            #_"UnsafeMemoryStoreNode" this (AbstractStateSplit'new-2 UnsafeMemoryStoreNode'TYPE, (StampFactory'forVoid-0))
-            this (assoc this :address address)
-            this (assoc this :value value)
-            this (assoc this :kind kind)
-            this (assoc this :locationIdentity locationIdentity)
-        ]
-            this
-        )
-    )
-
-    #_unused
-    (§ override! #_"void" UnsafeMemoryStoreNode''lower-2 [#_"UnsafeMemoryStoreNode" this, #_"LoweringTool" lowerer]
-        (Lowerer'lowerUnsafeMemoryStoreNode-1 this)
-        nil
-    )
-
-    (§ override! #_"LocationIdentity" UnsafeMemoryStoreNode''getLocationIdentity-1 [#_"UnsafeMemoryStoreNode" this]
-        (:locationIdentity this)
-    )
-)
-
-;;;
  ; The ValueAnchor instruction keeps non-CFG (floating) nodes above a certain point in the graph.
  ;;
 ;; @NodeInfo.allowedUsageTypes "InputType.Anchor, InputType.Guard"
@@ -54862,13 +53803,12 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" ValueAnchorNode''generate-2 [#_"ValueAnchorNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"ValueAnchorNode" this, #_"LIRBuilder" builder]
         ;; Nothing to emit, since this node is used for structural purposes only.
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" ValueAnchorNode''simplify-2 [#_"ValueAnchorNode" this, #_"SimplifierTool" tool]
         (loop-when [#_"ValueAnchorNode" nextAnchor (:next this)] (instance? ValueAnchorNode nextAnchor)
             (when (or (nil? (:anchored nextAnchor)) (= (:anchored nextAnchor) (:anchored this)))
@@ -54895,8 +53835,7 @@
         nil
     )
 
-    #_unused
-    (§ override! #_"void" ValueAnchorNode''virtualize-2 [#_"ValueAnchorNode" this, #_"VirtualizerTool" tool]
+    (§ override! #_"void" Virtualizable''virtualize-2 [#_"ValueAnchorNode" this, #_"VirtualizerTool" tool]
         (if (or (nil? (:anchored this)) (instance? AbstractBeginNode (:anchored this)))
             (VirtualizerTool''delete-1 tool)
             (when (instance? VirtualObjectNode (VirtualizerTool''getAlias-2 tool, (:anchored this)))
@@ -54924,7 +53863,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" FieldLocationIdentity''isImmutable-1 [#_"FieldLocationIdentity" this]
         false
     )
@@ -54946,7 +53885,7 @@
         (AbstractFixedGuardNode'new-6 FixedGuardNode'TYPE, logic, reason, action, speculation, negated?)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" FixedGuardNode''simplify-2 [#_"FixedGuardNode" this, #_"SimplifierTool" tool]
         (AbstractFixedGuardNode''simplify-2 (§ super ), tool)
         (let [
@@ -55000,7 +53939,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" FixedGuardNode''canDeoptimize-1 [#_"FixedGuardNode" this]
         true
     )
@@ -55039,7 +53978,7 @@
     ; @Input(InputType'Anchor)
     (§ mutable #_"AnchoringNode" :anchor nil)
 
-    #_unused
+    #_unused
     (§ defn #_"FloatingAnchoredNode" FloatingAnchoredNode'new-2 [#_"NodeClass<? extends FloatingAnchoredNode>" c, #_"Stamp" stamp]
         (FloatingNode'new-2 c, stamp)
     )
@@ -55057,7 +53996,7 @@
         (:anchor this)
     )
 
-    #_unused
+    #_unused
     (§ method! #_"FloatingAnchoredNode" FloatingAnchoredNode''setAnchor-2 [#_"FloatingAnchoredNode" this, #_"AnchoringNode" anchor]
         (Node''updateUsages-3 this, (:anchor this), anchor)
         (assoc this :anchor anchor)
@@ -55087,7 +54026,7 @@
         (:guard this)
     )
 
-    #_unused
+    #_unused
     (§ override #_"void" FloatingGuardedNode''setGuard-2 [#_"FloatingGuardedNode" this, #_"GuardingNode" guard]
         (Node''updateUsages-3 this, (:guard this), guard)
         (§ ass! this (assoc this :guard guard))
@@ -55260,7 +54199,7 @@
      ; {@code getCode().getCode()} which may be different from {@code getMethod().getCode()} if the
      ; latter has been subject to instrumentation.
      ;;
-    #_unused
+    #_unused
     (§ method! #_"boolean" FrameState''canProduceBytecodeFrame-1 [#_"FrameState" this]
         (and (some? (:code this)) (= (Bytecode''getCode-1 (:code this)) (#_"ResolvedJavaMethod" .getCode (Bytecode''getMethod-1 (:code this)))))
     )
@@ -55406,7 +54345,7 @@
      ; @param i the index into the locals
      ; @return the instruction that produced the value for the specified local
      ;;
-    #_unused
+    #_unused
     (§ method! #_"ValueNode" FrameState''localAt-2 [#_"FrameState" this, #_"int" i]
         (nth (:values this) i)
     )
@@ -55427,7 +54366,7 @@
      ; @param i the index into the list of locked monitors.
      ; @return the lock owner at the given index
      ;;
-    #_unused
+    #_unused
     (§ method! #_"ValueNode" FrameState''lockAt-2 [#_"FrameState" this, #_"int" i]
         (nth (:values this) (+ (:localsSize this) (:stackSize this) i))
     )
@@ -55435,7 +54374,7 @@
     ;;;
      ; Get the MonitorIdNode that corresponds to the locked object at the specified index.
      ;;
-    #_unused
+    #_unused
     (§ method! #_"MonitorIdNode" FrameState''monitorIdAt-2 [#_"FrameState" this, #_"int" i]
         (nth (:monitorIds this) i)
     )
@@ -55444,12 +54383,12 @@
         (if (some? (:monitorIds this)) (count (:monitorIds this)) 0)
     )
 
-    #_unused
+    #_unused
     (§ method! #_"NodeIterable<FrameState>" FrameState''innerFrameStates-1 [#_"FrameState" this]
         (NodeIterable''filter-2 (Node''usages-1 this), FrameState)
     )
 
-    #_unused
+    #_unused
     (§ method- #_"int" FrameState''outerLockDepth-1 [#_"FrameState" this]
         (loop-when-recur [#_"int" depth 0 #_"FrameState" outer (:outerFrameState this)]
                          (some? outer)
@@ -55660,7 +54599,7 @@
      ; @param value the node to be added to the graph
      ; @return either the node added or an equivalent node
      ;;
-    #_unused
+    #_unused
     (§ abstract #_"ValueNode" GraphBuilderTool''append-2 [#_"GraphBuilderTool" this, #_"ValueNode" value])
 
     ;;;
@@ -55762,7 +54701,7 @@
         (InlineInvokeInfo'new-2 methodToInline, HotSpot'defaultBytecodeProvider)
     )
 
-    #_unused
+    #_unused
     (§ method! #_"boolean" InlineInvokeInfo''allowsInlining-1 [#_"InlineInvokeInfo" this]
         (some? (:methodToInline this))
     )
@@ -55920,7 +54859,7 @@
     ;;;
      ; Determines if the receiver is constant.
      ;;
-    #_unused
+    #_unused
     (§ default #_"boolean" Receiver''isConstant-1 [#_"Receiver" this]
         false
     )
@@ -55943,7 +54882,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ValueNode" InvocationPluginReceiver''get-2 [#_"InvocationPluginReceiver" this, #_"boolean" performNullCheck]
         (when performNullCheck => (nth (:args this) 0)
             (when (nil? (:value this))
@@ -55956,7 +54895,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" InvocationPluginReceiver''isConstant-1 [#_"InvocationPluginReceiver" this]
         (instance? ConstantNode (nth (:args this) 0))
     )
@@ -55992,7 +54931,7 @@
      ; @param opcode the opcode of the invoke instruction
      ; @return true if this dynamic invoke is supported
      ;;
-    #_unused
+    #_unused
     (§ abstract #_"boolean" InvokeDynamicPlugin''supportsDynamicInvoke-4 [#_"InvokeDynamicPlugin" this, #_"BytecodeParser" parser, #_"int" cpi, #_"int" opcode])
 
     ;;;
@@ -56175,9 +55114,9 @@
     (§ def #_"NodeClass<GuardedValueNode>" GuardedValueNode'TYPE (NodeClass'create-1 GuardedValueNode))
 
     ; @Input
-    (§ mutable #_"ValueNode" :object nil)
+    (§ final #_"ValueNode" :object nil)
 
-    #_unused
+    #_unused
     (§ defn #_"GuardedValueNode" GuardedValueNode'new-2 [#_"ValueNode" object, #_"GuardingNode" guard]
         (let [
             #_"GuardedValueNode" this (FloatingGuardedNode'new-3 GuardedValueNode'TYPE, (:stamp object), guard)
@@ -56187,21 +55126,19 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" GuardedValueNode''generate-2 [#_"GuardedValueNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"GuardedValueNode" this, #_"LIRBuilder" builder]
         (when (and (not= (ValueNode''getStackKind-1 (:object this)) JavaKind/Void) (not= (ValueNode''getStackKind-1 (:object this)) JavaKind/Illegal))
             (LIRBuilder''setResult-3 builder, this, (LIRBuilder''operand-2 builder, (:object this)))
         )
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" GuardedValueNode''inferStamp-1 [#_"GuardedValueNode" this]
         (ValueNode''updateStamp-2 this, (:stamp (:object this)))
     )
 
-    #_unused
-    (§ override! #_"void" GuardedValueNode''virtualize-2 [#_"GuardedValueNode" this, #_"VirtualizerTool" tool]
+    (§ override! #_"void" Virtualizable''virtualize-2 [#_"GuardedValueNode" this, #_"VirtualizerTool" tool]
         (let [
             #_"ValueNode" alias (VirtualizerTool''getAlias-2 tool, (:object this))
         ]
@@ -56212,8 +55149,7 @@
         nil
     )
 
-    #_unused
-    (§ override! #_"Node" GuardedValueNode''canonical-2 [#_"GuardedValueNode" this, #_"CanonicalizerTool" tool]
+    (§ override! #_"Node" Canonicalizable''canonical-2 [#_"GuardedValueNode" this, #_"CanonicalizerTool" tool]
         (when (nil? (FloatingGuardedNode''getGuard-1 this)) => this
             (if (= (:stamp this) (:stamp (:object this)))
                 (:object this)
@@ -56222,7 +55158,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ValueNode" GuardedValueNode''getOriginalNode-1 [#_"GuardedValueNode" this]
         (:object this)
     )
@@ -56275,7 +55211,7 @@
         (:condition this)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" GuardNode''setCondition-3 [#_"GuardNode" this, #_"LogicNode" x, #_"boolean" negated?]
         (Node''updateUsages-3 this, (:condition this), x)
         (§ ass! this (assoc this :condition x))
@@ -56283,13 +55219,12 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ method! #_"GuardNode" GuardNode''setSpeculation-2 [#_"GuardNode" this, #_"JavaConstant" speculation]
         (assoc this :speculation speculation)
     )
 
-    #_unused
-    (§ override! #_"Node" GuardNode''canonical-2 [#_"GuardNode" this, #_"CanonicalizerTool" tool]
+    (§ override! #_"Node" Canonicalizable''canonical-2 [#_"GuardNode" this, #_"CanonicalizerTool" tool]
         (let [
             #_"LogicNode" logic (GuardNode''getCondition-1 this)
         ]
@@ -56306,18 +55241,18 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ method! #_"GuardNode" GuardNode''negate-1 [#_"GuardNode" this]
         (update this :negated? not)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" GuardNode''setAction-2 [#_"GuardNode" this, #_"DeoptimizationAction" invalidaterecompile]
         (§ ass! this (assoc this :action invalidaterecompile))
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" GuardNode''setReason-2 [#_"GuardNode" this, #_"DeoptimizationReason" reason]
         (§ ass! this (assoc this :reason reason))
         nil
@@ -56343,7 +55278,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ defn #_"GuardPhiNode" GuardPhiNode'new-2 [#_"AbstractMergeNode" merge, #_"ValueNode[]" values]
         (let [
             #_"GuardPhiNode" this (PhiNode'new-3 GuardPhiNode'TYPE, (StampFactory'forVoid-0), merge)
@@ -56353,7 +55288,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"NodeInputList<ValueNode>" GuardPhiNode''values-1 [#_"GuardPhiNode" this]
         (:values this)
     )
@@ -56375,33 +55310,31 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" GuardProxyNode''generate-2 [#_"GuardProxyNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"GuardProxyNode" this, #_"LIRBuilder" builder]
         nil
     )
 
-    #_unused
+    #_unused
     (§ method! #_"GuardProxyNode" GuardProxyNode''setValue-2 [#_"GuardProxyNode" this, #_"GuardingNode" newValue]
         (Node''updateUsages-3 this, (:value this), newValue)
         (assoc this :value newValue)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ValueNode" GuardProxyNode''value-1 [#_"GuardProxyNode" this]
         (when (some? (:value this))
             (:value this)
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Node" GuardProxyNode''getOriginalNode-1 [#_"GuardProxyNode" this]
         (when (some? (:value this))
             (:value this)
         )
     )
 
-    #_unused
-    (§ override! #_"Node" GuardProxyNode''canonical-2 [#_"GuardProxyNode" this, #_"CanonicalizerTool" tool]
+    (§ override! #_"Node" Canonicalizable''canonical-2 [#_"GuardProxyNode" this, #_"CanonicalizerTool" tool]
         (when (some? (:value this))
             this
         )
@@ -56460,7 +55393,7 @@
      ; @param istrue true if the true successor is requested, false otherwise
      ; @return the corresponding successor
      ;;
-    #_unused
+    #_unused
     (§ method! #_"AbstractBeginNode" IfNode''successor-2 [#_"IfNode" this, #_"boolean" istrue]
         (if istrue (:trueSuccessor this) (:falseSuccessor this))
     )
@@ -56473,8 +55406,7 @@
         (if (= successor (:trueSuccessor this)) (:trueSuccessorProbability this) (- 1.0 (:trueSuccessorProbability this)))
     )
 
-    #_unused
-    (§ override! #_"void" IfNode''generate-2 [#_"IfNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"IfNode" this, #_"LIRBuilder" builder]
         (LIRBuilder''emitIf-2 builder, this)
         nil
     )
@@ -56489,7 +55421,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" IfNode''simplify-2 [#_"IfNode" this, #_"SimplifierTool" tool]
         (cond
             (instance? DeoptimizeNode (:next (:trueSuccessor this)))
@@ -57261,7 +56193,7 @@
                                 (if-not (= canon logic)
                                     (§ return canon)
                                     ;; Create a new node to carry the optimized inputs.
-                                    (§ return (LogicNode''canonical-2 (ShortCircuitOrNode'new-5 resultX, (:xNegated logic), resultY, (:yNegated logic), (:shortCircuitProbability logic)), tool))
+                                    (§ return (Canonicalizable''canonical-2 (ShortCircuitOrNode'new-5 resultX, (:xNegated logic), resultY, (:yNegated logic), (:shortCircuitProbability logic)), tool))
                                 )
                             )
                         )
@@ -57629,7 +56561,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"AbstractBeginNode" IfNode''getPrimarySuccessor-1 [#_"IfNode" this]
         nil
     )
@@ -57638,7 +56570,7 @@
         (if result (:trueSuccessor this) (:falseSuccessor this))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" IfNode''setProbability-3 [#_"IfNode" this, #_"AbstractBeginNode" successor, #_"double" value]
         (condp = successor
             (:trueSuccessor this)
@@ -57655,7 +56587,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"int" IfNode''getSuccessorCount-1 [#_"IfNode" this]
         2
     )
@@ -57667,7 +56599,7 @@
     ; @Input
     (§ mutable #_"ValueNode" :computedAddress nil)
 
-    #_unused
+    #_unused
     (§ defn #_"IndirectCallTargetNode" IndirectCallTargetNode'new-7 [#_"ValueNode" computedAddress, #_"ValueNode[]" arguments, #_"StampPair" returnStamp, #_"JavaType[]" signature, #_"ResolvedJavaMethod" target, #_"CallingConvention$Type" callType, #_"InvokeKind" invokeKind]
         (IndirectCallTargetNode'new-8 IndirectCallTargetNode'TYPE, computedAddress, arguments, returnStamp, signature, target, callType, invokeKind)
     )
@@ -57681,7 +56613,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override #_"String" IndirectCallTargetNode''targetName-1 [#_"IndirectCallTargetNode" this]
         (if (some? (CallTargetNode''targetMethod-1 this))
             (#_"ResolvedJavaMethod" .format (CallTargetNode''targetMethod-1 this), "Indirect#%h.\n")
@@ -57722,7 +56654,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ method! #_"ResolvedJavaMethod" InvokeNode''getTargetMethod-1 [#_"InvokeNode" this]
         (when (some? (:callTarget this)) (CallTargetNode''targetMethod-1 (:callTarget this)))
     )
@@ -57754,7 +56686,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" InvokeNode''computeStateDuring-2 [#_"InvokeNode" this, #_"FrameState" stateAfter]
         (InvokeNode''setStateDuring-2 this, (FrameState''duplicateModifiedDuringCall-3 stateAfter, (:bci this), (ValueNode''getStackKind-1 this)))
         nil
@@ -57775,12 +56707,12 @@
     )
 
 
-    #_unused
+    #_unused
     (§ override! #_"void" InvokeNode''afterClone-2 [#_"InvokeNode" this, #_"Node" other]
         nil
     )
 
-    #_unused
+    #_unused
     (§ method! #_"InvokeNode" InvokeNode''setCallTarget-2 [#_"InvokeNode" this, #_"CallTargetNode" callTarget]
         (Node''updateUsages-3 this, (:callTarget this), callTarget)
         (assoc this :callTarget callTarget)
@@ -57790,7 +56722,7 @@
         (assoc this :useForInlining value)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" InvokeNode''isAllowedUsageType-2 [#_"InvokeNode" this, #_"InputType" type]
         (or (Node''isAllowedUsageType-2 (§ super ), type)
             (and (not (= (ValueNode''getStackKind-1 this) JavaKind/Void))
@@ -57800,7 +56732,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"LocationIdentity" InvokeNode''getLocationIdentity-1 [#_"InvokeNode" this]
         (LocationIdentity/any)
     )
@@ -57810,8 +56742,7 @@
         nil
     )
 
-    #_unused
-    (§ override! #_"void" InvokeNode''generate-2 [#_"InvokeNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"InvokeNode" this, #_"LIRBuilder" builder]
         (LIRBuilder''emitInvoke-2 builder, this)
         nil
     )
@@ -57848,7 +56779,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" InvokeNode''canDeoptimize-1 [#_"InvokeNode" this]
         true
     )
@@ -57863,7 +56794,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Stamp" InvokeNode''uncheckedStamp-1 [#_"InvokeNode" this]
         (:uncheckedStamp (CallTargetNode''returnStamp-1 (:callTarget this)))
     )
@@ -57892,7 +56823,7 @@
     ; @OptionalInput(InputType'StateI)
     (§ mutable #_"FrameState" :stateAfter nil)
 
-    #_unused
+    #_unused
     (§ override #_"FrameState" AbstractCompareAndSwapNode''stateAfter-1 [#_"AbstractCompareAndSwapNode" this]
         (:stateAfter this)
     )
@@ -57903,7 +56834,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override #_"boolean" AbstractCompareAndSwapNode''hasSideEffect-1 [#_"AbstractCompareAndSwapNode" this]
         true
     )
@@ -57922,12 +56853,12 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override #_"boolean" AbstractCompareAndSwapNode''canNullCheck-1 [#_"AbstractCompareAndSwapNode" this]
         false
     )
 
-    #_unused
+    #_unused
     (§ override #_"Stamp" AbstractCompareAndSwapNode''getAccessStamp-1 [#_"AbstractCompareAndSwapNode" this]
         (Stamp''unrestricted-1 (Stamp''meet-2 (:stamp (:expectedValue this)), (:stamp (:newValue this))))
     )
@@ -57958,7 +56889,7 @@
     ;;;
      ; The list of node which produce input for this instruction.
      ;;
-    #_unused
+    #_unused
     (§ method #_"ValueNode" AbstractNewArrayNode''dimension-2 [#_"AbstractNewArrayNode" this, #_"int" index]
         (AbstractNewObjectNode''length-1 this)
     )
@@ -57966,7 +56897,7 @@
     ;;;
      ; The rank of the array allocated by this node, i.e. how many array dimensions.
      ;;
-    #_unused
+    #_unused
     (§ method #_"int" AbstractNewArrayNode''dimensionCount-1 [#_"AbstractNewArrayNode" this]
         1
     )
@@ -58034,7 +56965,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override #_"boolean" AbstractNewObjectNode''canDeoptimize-1 [#_"AbstractNewObjectNode" this]
         true
     )
@@ -58067,7 +56998,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ method! #_"AccessArrayNode" AccessArrayNode''setArray-2 [#_"AccessArrayNode" this, #_"ValueNode" array]
         (Node''updateUsages-3 this, (:array this), array)
         (assoc this :array array)
@@ -58081,7 +57012,7 @@
     (§ def #_"NodeClass<AccessFieldNode>" AccessFieldNode'TYPE (NodeClass'create-1 AccessFieldNode))
 
     ; @OptionalInput
-    (§ mutable #_"ValueNode" :object nil)
+    (§ final #_"ValueNode" :object nil)
 
     (§ final #_"ResolvedJavaField" :field nil)
 
@@ -58128,7 +57059,7 @@
         (#_"ResolvedJavaField" .isVolatile (:field this))
     )
 
-    #_unused
+    #_unused
     (§ override #_"void" AccessFieldNode''lower-2 [#_"AccessFieldNode" this, #_"LoweringTool" lowerer]
         (condp instance? this
             LoadFieldNode  (Lowerer'lowerLoadFieldNode-2 this, lowerer)
@@ -58174,7 +57105,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override #_"void" AccessIndexedNode''lower-2 [#_"AccessIndexedNode" this, #_"LoweringTool" lowerer]
         (condp instance? this
             LoadIndexedNode  (Lowerer'lowerLoadIndexedNode-2 this, lowerer)
@@ -58196,11 +57127,11 @@
     ; @OptionalInput(InputType'StateI)
     (§ mutable #_"FrameState" :stateBefore nil)
     ; @Input
-    (§ mutable #_"ValueNode" :object nil)
+    (§ final #_"ValueNode" :object nil)
     ; @Input(InputType'Association)
     (§ mutable #_"MonitorIdNode" :monitorId nil)
 
-    #_unused
+    #_unused
     (§ override #_"boolean" AccessMonitorNode''canDeoptimize-1 [#_"AccessMonitorNode" this]
         true
     )
@@ -58212,13 +57143,6 @@
     (§ override #_"void" AccessMonitorNode''setStateBefore-2 [#_"AccessMonitorNode" this, #_"FrameState" f]
         (Node''updateUsages-3 this, (:stateBefore this), f)
         (§ ass! this (assoc this :stateBefore f))
-        nil
-    )
-
-    #_unused
-    (§ method #_"void" AccessMonitorNode''setObject-2 [#_"AccessMonitorNode" this, #_"ValueNode" lockedObject]
-        (Node''updateUsages-3 this, (:object this), lockedObject)
-        (§ ass! this (assoc this :object lockedObject))
         nil
     )
 
@@ -58247,7 +57171,7 @@
     ; @Input
     (§ mutable #_"ValueNode" :array nil)
 
-    #_unused
+    #_unused
     (§ override! #_"ValueNode" ArrayLengthNode''getValue-1 [#_"ArrayLengthNode" this]
         (:array this)
     )
@@ -58269,8 +57193,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"ValueNode" ArrayLengthNode''canonical-3 [#_"ArrayLengthNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
+    (§ override! #_"ValueNode" Unary''canonical-3 [#_"ArrayLengthNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
         (or (ArrayLengthNode'readArrayLength-1 value)
             this
         )
@@ -58335,18 +57258,13 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" ArrayLengthNode''lower-2 [#_"ArrayLengthNode" this, #_"LoweringTool" lowerer]
         (Lowerer'lowerArrayLengthNode-2 this, lowerer)
         nil
     )
 
-    ; @NodeIntrinsic
-    #_unused
-    (§ native #_"int" ArrayLengthNode'arrayLength-1 [#_"Object" array])
-
-    #_unused
-    (§ override! #_"void" ArrayLengthNode''virtualize-2 [#_"ArrayLengthNode" this, #_"VirtualizerTool" tool]
+    (§ override! #_"void" Virtualizable''virtualize-2 [#_"ArrayLengthNode" this, #_"VirtualizerTool" tool]
         (let [
             #_"ValueNode" array (VirtualizerTool''getAlias-2 tool, (:array this))
         ]
@@ -58373,7 +57291,7 @@
 
     (§ final #_"LocationIdentity" :locationIdentity nil)
 
-    #_unused
+    #_unused
     (§ defn #_"AtomicReadAndAddNode" AtomicReadAndAddNode'new-3 [#_"AddressNode" address, #_"ValueNode" delta, #_"LocationIdentity" locationIdentity]
         (let [
             #_"AtomicReadAndAddNode" this (AbstractMemoryCheckpoint'new-2 AtomicReadAndAddNode'TYPE, (StampFactory'forKind-1 (ValueNode''getStackKind-1 delta)))
@@ -58385,13 +57303,12 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"LocationIdentity" AtomicReadAndAddNode''getLocationIdentity-1 [#_"AtomicReadAndAddNode" this]
         (:locationIdentity this)
     )
 
-    #_unused
-    (§ override! #_"void" AtomicReadAndAddNode''generate-2 [#_"AtomicReadAndAddNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"AtomicReadAndAddNode" this, #_"LIRBuilder" builder]
         (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitAtomicReadAndAdd-3 (:gen builder), (LIRBuilder''operand-2 builder, (:address this)), (LIRBuilder''operand-2 builder, (:delta this))))
         nil
     )
@@ -58405,7 +57322,7 @@
     (§ def #_"NodeClass<AtomicReadAndWriteNode>" AtomicReadAndWriteNode'TYPE (NodeClass'create-1 AtomicReadAndWriteNode))
 
     ; @Input
-    (§ mutable #_"ValueNode" :object nil)
+    (§ final #_"ValueNode" :object nil)
     ; @Input
     (§ mutable #_"ValueNode" :offset nil)
     ; @Input
@@ -58414,7 +57331,7 @@
     (§ final #_"JavaKind" :valueKind nil)
     (§ final #_"LocationIdentity" :locationIdentity nil)
 
-    #_unused
+    #_unused
     (§ defn #_"AtomicReadAndWriteNode" AtomicReadAndWriteNode'new-5 [#_"ValueNode" object, #_"ValueNode" offset, #_"ValueNode" newValue, #_"JavaKind" valueKind, #_"LocationIdentity" locationIdentity]
         (let [
             #_"AtomicReadAndWriteNode" this (AbstractMemoryCheckpoint'new-2 AtomicReadAndWriteNode'TYPE, (StampFactory'forKind-1 (ValueNode''getStackKind-1 newValue)))
@@ -58432,7 +57349,7 @@
         (:locationIdentity this)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" AtomicReadAndWriteNode''lower-2 [#_"AtomicReadAndWriteNode" this, #_"LoweringTool" lowerer]
         (Lowerer'lowerAtomicReadAndWriteNode-1 this)
         nil
@@ -58446,12 +57363,12 @@
 (final-ns ClassIsAssignableFromNode (§ extends BinaryOpLogicNode) (§ implements Binary #_"<ValueNode>", Lowerable)
     (§ def #_"NodeClass<ClassIsAssignableFromNode>" ClassIsAssignableFromNode'TYPE (NodeClass'create-1 ClassIsAssignableFromNode))
 
-    #_unused
+    #_unused
     (§ defn #_"ClassIsAssignableFromNode" ClassIsAssignableFromNode'new-2 [#_"ValueNode" thisClass, #_"ValueNode" otherClass]
         (BinaryOpLogicNode'new-3 ClassIsAssignableFromNode'TYPE, thisClass, otherClass)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Node" ClassIsAssignableFromNode''canonical-4 [#_"ClassIsAssignableFromNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
         (when (and (instance? ConstantNode forX) (instance? ConstantNode forY)) => this
             (let [
@@ -58465,7 +57382,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" ClassIsAssignableFromNode''lower-2 [#_"ClassIsAssignableFromNode" this, #_"LoweringTool" lowerer]
         (when (GuardsStage'areDeoptsFixed-1 (:guardsStage (:graph this)))
             (InstanceOfSnippetsTemplates''lower-3 Lowerer'instanceofSnippets, this, lowerer)
@@ -58473,17 +57390,17 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Stamp" ClassIsAssignableFromNode''getSucceedingStampForX-4 [#_"ClassIsAssignableFromNode" this, #_"boolean" negated?, #_"Stamp" xStamp, #_"Stamp" yStamp]
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Stamp" ClassIsAssignableFromNode''getSucceedingStampForY-4 [#_"ClassIsAssignableFromNode" this, #_"boolean" negated?, #_"Stamp" xStamp, #_"Stamp" yStamp]
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"TriState" ClassIsAssignableFromNode''tryFold-3 [#_"ClassIsAssignableFromNode" this, #_"Stamp" xStamp, #_"Stamp" yStamp]
         TriState/UNKNOWN
     )
@@ -58512,12 +57429,16 @@
      ;;
     (§ final #_"JavaKind" :knownElementKind nil)
 
-    #_unused
+    (§ intrinsic! #_"Object" DynamicNewArrayNode'newArray-3 [#_"Class" componentType, #_"int" length, #_@ConstantNodeParameter #_"boolean" fillContents])
+
+    #_intrinsifier
     (§ defn #_"DynamicNewArrayNode" DynamicNewArrayNode'new-3 [#_"ValueNode" elementType, #_"ValueNode" length, #_"boolean" fillContents]
         (DynamicNewArrayNode'new-6 DynamicNewArrayNode'TYPE, elementType, length, fillContents, nil, nil)
     )
 
-    #_unused
+    (§ intrinsic! #_"Object" DynamicNewArrayNode'newArray-4 [#_"Class" componentType, #_"int" length, #_@ConstantNodeParameter #_"boolean" fillContents, #_@ConstantNodeParameter #_"JavaKind" knownElementKind])
+
+    #_intrinsifier
     (§ defn #_"DynamicNewArrayNode" DynamicNewArrayNode'new-4 [#_"ValueNode" elementType, #_"ValueNode" length, #_"boolean" fillContents, #_"JavaKind" knownElementKind]
         (DynamicNewArrayNode'new-6 DynamicNewArrayNode'TYPE, elementType, length, fillContents, knownElementKind, nil)
     )
@@ -58542,8 +57463,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"Node" DynamicNewArrayNode''canonical-2 [#_"DynamicNewArrayNode" this, #_"CanonicalizerTool" tool]
+    (§ override! #_"Node" Canonicalizable''canonical-2 [#_"DynamicNewArrayNode" this, #_"CanonicalizerTool" tool]
         (when (instance? ConstantNode (:elementType this)) => this
             (let [
                 #_"ResolvedJavaType" type (#_"ConstantReflectionProvider" .asJavaType HotSpot'constantReflection, (:value (:elementType this)))
@@ -58570,22 +57490,16 @@
         (= (#_"ResolvedJavaType" .getJavaKind elementType) JavaKind/Void)
     )
 
-    ; @NodeIntrinsic
-    (§ native- #_"Object" DynamicNewArrayNode'newArray-3 [#_"Class" componentType, #_"int" length, #_@ConstantNodeParameter #_"boolean" fillContents])
-
-    #_unused
+    #_unused
     (§ defn #_"Object" DynamicNewArrayNode'newArray-2 [#_"Class" componentType, #_"int" length]
         (DynamicNewArrayNode'newArray-3 componentType, length, true)
     )
-
-    ; @NodeIntrinsic
-    (§ native- #_"Object" DynamicNewArrayNode'newArray-4 [#_"Class" componentType, #_"int" length, #_@ConstantNodeParameter #_"boolean" fillContents, #_@ConstantNodeParameter #_"JavaKind" knownElementKind])
 
     (§ defn #_"Object" DynamicNewArrayNode'newArray-3 [#_"Class" componentType, #_"int" length, #_"JavaKind" knownElementKind]
         (DynamicNewArrayNode'newArray-4 componentType, length, true, knownElementKind)
     )
 
-    #_unused
+    #_unused
     (§ defn #_"Object" DynamicNewArrayNode'newUninitializedArray-3 [#_"Class" componentType, #_"int" length, #_"JavaKind" knownElementKind]
         (DynamicNewArrayNode'newArray-4 componentType, length, false, knownElementKind)
     )
@@ -58609,7 +57523,7 @@
     ; @OptionalInput
     (§ mutable #_"ValueNode" :classClass nil)
 
-    #_unused
+    #_unused
     (§ defn #_"DynamicNewInstanceNode" DynamicNewInstanceNode'new-2 [#_"ValueNode" clazz, #_"boolean" fillContents]
         (DynamicNewInstanceNode'new-4 DynamicNewInstanceNode'TYPE, clazz, fillContents, nil)
     )
@@ -58623,8 +57537,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"Node" DynamicNewInstanceNode''canonical-2 [#_"DynamicNewInstanceNode" this, #_"CanonicalizerTool" tool]
+    (§ override! #_"Node" Canonicalizable''canonical-2 [#_"DynamicNewInstanceNode" this, #_"CanonicalizerTool" tool]
         (when (instance? ConstantNode (:class this)) => this
             (let [
                 #_"ResolvedJavaType" type (#_"ConstantReflectionProvider" .asJavaType HotSpot'constantReflection, (:value (:class this)))
@@ -58672,15 +57585,14 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" FinalFieldBarrierNode''virtualize-2 [#_"FinalFieldBarrierNode" this, #_"VirtualizerTool" tool]
+    (§ override! #_"void" Virtualizable''virtualize-2 [#_"FinalFieldBarrierNode" this, #_"VirtualizerTool" tool]
         (when (and (some? (:value this)) (instance? VirtualObjectNode (VirtualizerTool''getAlias-2 tool, (:value this))))
             (VirtualizerTool''delete-1 tool)
         )
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" FinalFieldBarrierNode''lower-2 [#_"FinalFieldBarrierNode" this, #_"LoweringTool" lowerer]
         (§ ass! (:graph this) (Graph''replaceFixedWithFixed-3 (:graph this), this, (Graph''add-2 (:graph this), (MembarNode'new-1 (| MemoryBarriers/LOAD_STORE MemoryBarriers/STORE_STORE)))))
         nil
@@ -58721,12 +57633,12 @@
         (= (ValueNode''getStackKind-1 (:x this)) JavaKind/Object)
     )
 
-    #_unused
+    #_unused
     (§ method! #_"boolean" InstanceOfDynamicNode''isHub-1 [#_"InstanceOfDynamicNode" this]
         (not (InstanceOfDynamicNode''isMirror-1 this))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" InstanceOfDynamicNode''lower-2 [#_"InstanceOfDynamicNode" this, #_"LoweringTool" lowerer]
         (if (GuardsStage'areDeoptsFixed-1 (:guardsStage (:graph this)))
             (InstanceOfSnippetsTemplates''lower-3 Lowerer'instanceofSnippets, this, lowerer)
@@ -58772,7 +57684,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"LogicNode" InstanceOfDynamicNode''canonical-4 [#_"InstanceOfDynamicNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forMirror, #_"ValueNode" forObject]
         (or (InstanceOfDynamicNode'findSynonym-4 forMirror, forObject, (:allow-nil? this), (:exact? this))
             this
@@ -58784,17 +57696,17 @@
         (assoc this :x newObject)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Stamp" InstanceOfDynamicNode''getSucceedingStampForX-4 [#_"InstanceOfDynamicNode" this, #_"boolean" negated?, #_"Stamp" xStamp, #_"Stamp" yStamp]
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Stamp" InstanceOfDynamicNode''getSucceedingStampForY-4 [#_"InstanceOfDynamicNode" this, #_"boolean" negated?, #_"Stamp" xStamp, #_"Stamp" yStamp]
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"TriState" InstanceOfDynamicNode''tryFold-3 [#_"InstanceOfDynamicNode" this, #_"Stamp" xStamp, #_"Stamp" yStamp]
         TriState/UNKNOWN
     )
@@ -58844,7 +57756,7 @@
         (or (InstanceOfNode'findSynonym-2 checkedStamp, object) (InstanceOfNode'new-3 checkedStamp, object, anchor))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" InstanceOfNode''lower-2 [#_"InstanceOfNode" this, #_"LoweringTool" lowerer]
         (if (GuardsStage'areDeoptsFixed-1 (:guardsStage (:graph this)))
             (InstanceOfSnippetsTemplates''lower-3 Lowerer'instanceofSnippets, this, lowerer)
@@ -58861,8 +57773,7 @@
         nil
     )
 
-    #_unused
-    (§ override! #_"ValueNode" InstanceOfNode''canonical-3 [#_"InstanceOfNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
+    (§ override! #_"ValueNode" Unary''canonical-3 [#_"InstanceOfNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
         (or (InstanceOfNode'findSynonym-2 (:checkedStamp this), value)
             this
         )
@@ -58904,8 +57815,7 @@
         (StampTool'typeReferenceOrNull-1 (:checkedStamp this))
     )
 
-    #_unused
-    (§ override! #_"void" InstanceOfNode''virtualize-2 [#_"InstanceOfNode" this, #_"VirtualizerTool" tool]
+    (§ override! #_"void" Virtualizable''virtualize-2 [#_"InstanceOfNode" this, #_"VirtualizerTool" tool]
         (let [
             #_"TriState" fold (InstanceOfNode''tryFold-2 this, (:stamp (VirtualizerTool''getAlias-2 tool, (UnaryOpLogicNode''getValue-1 this))))
         ]
@@ -58916,7 +57826,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Stamp" InstanceOfNode''getSucceedingStampForValue-2 [#_"InstanceOfNode" this, #_"boolean" negated?]
         (when-not negated? (:checkedStamp this))
     )
@@ -58937,7 +57847,7 @@
         (not (:never-nil? (:checkedStamp this)))
     )
 
-    #_unused
+    #_unused
     (§ method! #_"InstanceOfNode" InstanceOfNode''strengthenCheckedStamp-2 [#_"InstanceOfNode" this, #_"ObjectStamp" newCheckedStamp]
         (assoc this :checkedStamp newCheckedStamp)
     )
@@ -58980,8 +57890,7 @@
         (:object this)
     )
 
-    #_unused
-    (§ override! #_"ValueNode" LoadFieldNode''canonical-3 [#_"LoadFieldNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forObject]
+    (§ override! #_"ValueNode" Unary''canonical-3 [#_"LoadFieldNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forObject]
         (when-not (and (CanonicalizerTool''allUsagesAvailable-1 tool) (Node''hasNoUsages-1 this) (not (AccessFieldNode''isVolatile-1 this)) (or (AccessFieldNode''isStatic-1 this) (StampTool'isPointerNeverNull-1 (:stamp forObject))))
             (LoadFieldNode'canonical-6 this, (StampPair'new-2 (:stamp this), (:uncheckedStamp this)), forObject, (:field this), (CanonicalizerTool''canonicalizeReads-1 tool), (CanonicalizerTool''allUsagesAvailable-1 tool))
         )
@@ -59007,7 +57916,7 @@
     ;;;
      ; Gets a constant value for this load if possible.
      ;;
-    #_unused
+    #_unused
     (§ method! #_"ConstantNode" LoadFieldNode''asConstant-3 [#_"LoadFieldNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forObject]
         (LoadFieldNode'asConstant-2 forObject, (:field this))
     )
@@ -59021,7 +57930,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ method! #_"ConstantNode" LoadFieldNode''asConstant-3 [#_"LoadFieldNode" this, #_"CanonicalizerTool" tool, #_"JavaConstant" constant]
         (ConstantFields'tryConstantFold-2 (AccessFieldNode''field-1 this), constant)
     )
@@ -59045,8 +57954,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" LoadFieldNode''virtualize-2 [#_"LoadFieldNode" this, #_"VirtualizerTool" tool]
+    (§ override! #_"void" Virtualizable''virtualize-2 [#_"LoadFieldNode" this, #_"VirtualizerTool" tool]
         (let [
             #_"ValueNode" object (VirtualizerTool''getAlias-2 tool, (:object this))
         ]
@@ -59069,15 +57977,9 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Stamp" LoadFieldNode''uncheckedStamp-1 [#_"LoadFieldNode" this]
         (:uncheckedStamp this)
-    )
-
-    #_unused
-    (§ method! #_"LoadFieldNode" LoadFieldNode''setObject-2 [#_"LoadFieldNode" this, #_"ValueNode" newObject]
-        (Node''updateUsages-3 this, (:object this), newObject)
-        (assoc this :object newObject)
     )
 )
 
@@ -59131,13 +58033,12 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override #_"boolean" LoadIndexedNode''inferStamp-1 [#_"LoadIndexedNode" this]
         (ValueNode''updateStamp-2 this, (Stamp''improveWith-2 (:stamp this), (LoadIndexedNode'createStamp-2 (AccessArrayNode''array-1 this), (:elementKind this))))
     )
 
-    #_unused
-    (§ override #_"void" LoadIndexedNode''virtualize-2 [#_"LoadIndexedNode" this, #_"VirtualizerTool" tool]
+    (§ override #_"void" Virtualizable''virtualize-2 [#_"LoadIndexedNode" this, #_"VirtualizerTool" tool]
         (let [
             #_"ValueNode" array (VirtualizerTool''getAlias-2 tool, (AccessArrayNode''array-1 this))
         ]
@@ -59161,8 +58062,7 @@
         nil
     )
 
-    #_unused
-    (§ override #_"Node" LoadIndexedNode''canonical-2 [#_"LoadIndexedNode" this, #_"CanonicalizerTool" tool]
+    (§ override #_"Node" Canonicalizable''canonical-2 [#_"LoadIndexedNode" this, #_"CanonicalizerTool" tool]
         (or (LoadIndexedNode'tryConstantFold-2 (AccessArrayNode''array-1 this), (AccessIndexedNode''index-1 this))
             this
         )
@@ -59203,8 +58103,7 @@
         (AbstractCompareAndSwapNode'new-7 LogicCompareAndSwapNode'TYPE, address, location, expectedValue, newValue, barrierType, (StampFactory'forKind-1 (#_"JavaKind" .getStackKind JavaKind/Boolean)))
     )
 
-    #_unused
-    (§ override! #_"void" LogicCompareAndSwapNode''generate-2 [#_"LogicCompareAndSwapNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"LogicCompareAndSwapNode" this, #_"LIRBuilder" builder]
         (let [
             #_"LIRKind" resultKind (Stamp''getLIRKind-1 (:stamp this))
             #_"Value" trueResult (LIRGenerator''emitConstant-3 (:gen builder), resultKind, JavaConstant/TRUE)
@@ -59239,7 +58138,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"FrameState" LoweredAtomicReadAndWriteNode''stateAfter-1 [#_"LoweredAtomicReadAndWriteNode" this]
         (:stateAfter this)
     )
@@ -59250,13 +58149,12 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" LoweredAtomicReadAndWriteNode''hasSideEffect-1 [#_"LoweredAtomicReadAndWriteNode" this]
         true
     )
 
-    #_unused
-    (§ override! #_"void" LoweredAtomicReadAndWriteNode''generate-2 [#_"LoweredAtomicReadAndWriteNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"LoweredAtomicReadAndWriteNode" this, #_"LIRBuilder" builder]
         (let [
             #_"Value" result (LIRGenerator''emitAtomicReadAndWrite-3 (:gen builder), (LIRBuilder''operand-2 builder, (FixedAccessNode''getAddress-1 this)), (LIRBuilder''operand-2 builder, (:newValue this)))
         ]
@@ -59265,12 +58163,12 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" LoweredAtomicReadAndWriteNode''canNullCheck-1 [#_"LoweredAtomicReadAndWriteNode" this]
         false
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Stamp" LoweredAtomicReadAndWriteNode''getAccessStamp-1 [#_"LoweredAtomicReadAndWriteNode" this]
         (:stamp this)
     )
@@ -59308,7 +58206,7 @@
         (= (CallTargetNode''invokeKind-1 this) InvokeKind'Static)
     )
 
-    #_unused
+    #_unused
     (§ method! #_"JavaKind" MethodCallTargetNode''returnKind-1 [#_"MethodCallTargetNode" this]
         (#_"Signature" .getReturnKind (#_"ResolvedJavaMethod" .getSignature (CallTargetNode''targetMethod-1 this)))
     )
@@ -59349,7 +58247,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override #_"void" MethodCallTargetNode''simplify-2 [#_"MethodCallTargetNode" this, #_"SimplifierTool" tool]
         ;; attempt to devirtualize the call
         (when (some? (InvokeNode''getContextMethod-1 (MethodCallTargetNode''invoke-1 this))) ;; => avoid invokes that have placeholder bcis: they do not have a valid contextType
@@ -59366,7 +58264,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override #_"String" MethodCallTargetNode''targetName-1 [#_"MethodCallTargetNode" this]
         (if (some? (CallTargetNode''targetMethod-1 this))
             (#_"ResolvedJavaMethod" .format (CallTargetNode''targetMethod-1 this), "%h.\n")
@@ -59374,7 +58272,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ defn #_"MethodCallTargetNode" MethodCallTargetNode'find-2 [#_"Graph" graph, #_"ResolvedJavaMethod" method]
         (loop-when [#_"ISeq" s (seq (Graph''getNodes-2 graph, MethodCallTargetNode'TYPE))] (some? s)
             (let [
@@ -59402,7 +58300,7 @@
         (AccessMonitorNode'new-3 c, object, monitorId)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"LocationIdentity" MonitorEnterNode''getLocationIdentity-1 [#_"MonitorEnterNode" this]
         (LocationIdentity/any)
     )
@@ -59412,8 +58310,7 @@
         nil
     )
 
-    #_unused
-    (§ override! #_"void" MonitorEnterNode''virtualize-2 [#_"MonitorEnterNode" this, #_"VirtualizerTool" tool]
+    (§ override! #_"void" Virtualizable''virtualize-2 [#_"MonitorEnterNode" this, #_"VirtualizerTool" tool]
         (let [
             #_"ValueNode" object (VirtualizerTool''getAlias-2 tool, (:object this))
         ]
@@ -59457,12 +58354,12 @@
         (assoc this :escapedReturnValue nil)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"LocationIdentity" MonitorExitNode''getLocationIdentity-1 [#_"MonitorExitNode" this]
         (LocationIdentity/any)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" MonitorExitNode''lower-2 [#_"MonitorExitNode" this, #_"LoweringTool" lowerer]
         (when (GuardsStage'areFrameStatesAtDeopts-1 (:guardsStage (:graph this)))
             (MonitorTemplates''lower-3 Lowerer'monitorSnippets, this, lowerer)
@@ -59470,8 +58367,7 @@
         nil
     )
 
-    #_unused
-    (§ override! #_"void" MonitorExitNode''virtualize-2 [#_"MonitorExitNode" this, #_"VirtualizerTool" tool]
+    (§ override! #_"void" Virtualizable''virtualize-2 [#_"MonitorExitNode" this, #_"VirtualizerTool" tool]
         (let [
             #_"ValueNode" object (VirtualizerTool''getAlias-2 tool, (:object this))
         ]
@@ -59513,13 +58409,12 @@
         (assoc this :lockDepth lockDepth)
     )
 
-    #_unused
+    #_unused
     (§ method! #_"MonitorIdNode" MonitorIdNode''setEliminated-1 [#_"MonitorIdNode" this]
         (assoc this :eliminated true)
     )
 
-    #_unused
-    (§ override! #_"void" MonitorIdNode''generate-2 [#_"MonitorIdNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"MonitorIdNode" this, #_"LIRBuilder" builder]
         ;; nothing to do
         nil
     )
@@ -59534,6 +58429,9 @@
 
     (§ final #_"ResolvedJavaType" :elementType nil)
 
+    (§ intrinsic! #_"Object" NewArrayNode'newArray-3 [#_@ConstantNodeParameter #_"Class" elementType, #_"int" length, #_@ConstantNodeParameter #_"boolean" fillContents])
+
+    #_intrinsifier
     (§ defn #_"NewArrayNode" NewArrayNode'new-3 [#_"ResolvedJavaType" elementType, #_"ValueNode" length, #_"boolean" fillContents]
         (NewArrayNode'new-4 elementType, length, fillContents, nil)
     )
@@ -59551,15 +58449,11 @@
         )
     )
 
-    ; @NodeIntrinsic
-    (§ native- #_"Object" NewArrayNode'newArray-3 [#_@ConstantNodeParameter #_"Class" elementType, #_"int" length, #_@ConstantNodeParameter #_"boolean" fillContents])
-
     (§ defn #_"Object" NewArrayNode'newUninitializedArray-2 [#_"Class" elementType, #_"int" length]
         (NewArrayNode'newArray-3 elementType, length, false)
     )
 
-    #_unused
-    (§ override! #_"void" NewArrayNode''virtualize-2 [#_"NewArrayNode" this, #_"VirtualizerTool" tool]
+    (§ override! #_"void" Virtualizable''virtualize-2 [#_"NewArrayNode" this, #_"VirtualizerTool" tool]
         (let [
             #_"ValueNode" lengthAlias (VirtualizerTool''getAlias-2 tool, (AbstractNewArrayNode''length-1 this))
         ]
@@ -59592,7 +58486,7 @@
         (ConstantNode'defaultForKind-2 (#_"ResolvedJavaType" .getJavaKind (:elementType this)), (:graph this))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" NewArrayNode''simplify-2 [#_"NewArrayNode" this, #_"SimplifierTool" tool]
         (when (Node''hasNoUsages-1 this)
             (let [
@@ -59645,8 +58539,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" NewInstanceNode''virtualize-2 [#_"NewInstanceNode" this, #_"VirtualizerTool" tool]
+    (§ override! #_"void" Virtualizable''virtualize-2 [#_"NewInstanceNode" this, #_"VirtualizerTool" tool]
         ;; Reference objects can escape into their ReferenceQueue at any safepoint, therefore they're excluded from escape analysis.
         (when-not (#_"ResolvedJavaType" .isAssignableFrom (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, java.lang.ref.Reference), (:instanceClass this))
             (let [
@@ -59693,12 +58586,12 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"LocationIdentity" RawMonitorEnterNode''getLocationIdentity-1 [#_"RawMonitorEnterNode" this]
         (LocationIdentity/any)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" RawMonitorEnterNode''lower-2 [#_"RawMonitorEnterNode" this, #_"LoweringTool" lowerer]
         (when (GuardsStage'areFrameStatesAtDeopts-1 (:guardsStage (:graph this)))
             (MonitorTemplates''lower-3 Lowerer'monitorSnippets, this, lowerer)
@@ -59706,8 +58599,7 @@
         nil
     )
 
-    #_unused
-    (§ override! #_"void" RawMonitorEnterNode''virtualize-2 [#_"RawMonitorEnterNode" this, #_"VirtualizerTool" tool]
+    (§ override! #_"void" Virtualizable''virtualize-2 [#_"RawMonitorEnterNode" this, #_"VirtualizerTool" tool]
         (let [
             #_"ValueNode" object (VirtualizerTool''getAlias-2 tool, (:object this))
         ]
@@ -59741,7 +58633,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" StoreFieldNode''hasSideEffect-1 [#_"StoreFieldNode" this]
         true
     )
@@ -59765,8 +58657,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" StoreFieldNode''virtualize-2 [#_"StoreFieldNode" this, #_"VirtualizerTool" tool]
+    (§ override! #_"void" Virtualizable''virtualize-2 [#_"StoreFieldNode" this, #_"VirtualizerTool" tool]
         (let [
             #_"ValueNode" object (VirtualizerTool''getAlias-2 tool, (:object this))
         ]
@@ -59800,14 +58691,14 @@
         (:stateAfter this)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" StoreIndexedNode''setStateAfter-2 [#_"StoreIndexedNode" this, #_"FrameState" x]
         (Node''updateUsages-3 this, (:stateAfter this), x)
         (§ ass! this (assoc this :stateAfter x))
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" StoreIndexedNode''hasSideEffect-1 [#_"StoreIndexedNode" this]
         true
     )
@@ -59821,8 +58712,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" StoreIndexedNode''virtualize-2 [#_"StoreIndexedNode" this, #_"VirtualizerTool" tool]
+    (§ override! #_"void" Virtualizable''virtualize-2 [#_"StoreIndexedNode" this, #_"VirtualizerTool" tool]
         (let [
             #_"ValueNode" array (VirtualizerTool''getAlias-2 tool, (AccessArrayNode''array-1 this))
         ]
@@ -59857,7 +58747,7 @@
     (§ def #_"NodeClass<UnsafeCompareAndSwapNode>" UnsafeCompareAndSwapNode'TYPE (NodeClass'create-1 UnsafeCompareAndSwapNode))
 
     ; @Input
-    (§ mutable #_"ValueNode" :object nil)
+    (§ final #_"ValueNode" :object nil)
     ; @Input
     (§ mutable #_"ValueNode" :offset nil)
     ; @Input
@@ -59868,7 +58758,7 @@
     (§ final #_"JavaKind" :valueKind nil)
     (§ final #_"LocationIdentity" :locationIdentity nil)
 
-    #_unused
+    #_unused
     (§ defn #_"UnsafeCompareAndSwapNode" UnsafeCompareAndSwapNode'new-6 [#_"ValueNode" object, #_"ValueNode" offset, #_"ValueNode" expected, #_"ValueNode" newValue, #_"JavaKind" valueKind, #_"LocationIdentity" locationIdentity]
         (let [
             #_"UnsafeCompareAndSwapNode" this (AbstractMemoryCheckpoint'new-2 UnsafeCompareAndSwapNode'TYPE, (StampFactory'forKind-1 (#_"JavaKind" .getStackKind JavaKind/Boolean)))
@@ -59887,7 +58777,7 @@
         (:locationIdentity this)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" UnsafeCompareAndSwapNode''lower-2 [#_"UnsafeCompareAndSwapNode" this, #_"LoweringTool" lowerer]
         (Lowerer'lowerCompareAndSwapNode-1 this)
         nil
@@ -59909,8 +58799,7 @@
         (AbstractCompareAndSwapNode'new-7 ValueCompareAndSwapNode'TYPE, address, location, expectedValue, newValue, barrierType, (Stamp''unrestricted-1 (Stamp''meet-2 (:stamp expectedValue), (:stamp newValue))))
     )
 
-    #_unused
-    (§ override! #_"void" ValueCompareAndSwapNode''generate-2 [#_"ValueCompareAndSwapNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"ValueCompareAndSwapNode" this, #_"LIRBuilder" builder]
         (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitValueCompareAndSwap-4 (:gen builder), (LIRBuilder''operand-2 builder, (FixedAccessNode''getAddress-1 this)), (LIRBuilder''operand-2 builder, (:expectedValue this)), (LIRBuilder''operand-2 builder, (AbstractCompareAndSwapNode''getNewValue-1 this))))
         nil
     )
@@ -59931,7 +58820,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ defn #_"AbstractBeginNode" KillingBeginNode'begin-2 [#_"FixedNode" with, #_"LocationIdentity" locationIdentity]
         (when-not (instance? KillingBeginNode with) => with
             (let [
@@ -59992,7 +58881,7 @@
     ;;;
      ; Gets a constant for true.
      ;;
-    #_unused
+    #_unused
     (§ defn #_"LogicConstantNode" LogicConstantNode'tautology-1 [#_"Graph" graph]
         (LogicConstantNode'forBoolean-2 true, graph)
     )
@@ -60018,8 +58907,7 @@
         (LogicConstantNode'forBoolean-1 false)
     )
 
-    #_unused
-    (§ override! #_"void" LogicConstantNode''generate-2 [#_"LogicConstantNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"LogicConstantNode" this, #_"LIRBuilder" builder]
         ;; nothing to do
         nil
     )
@@ -60061,8 +58949,7 @@
         (:value this)
     )
 
-    #_unused
-    (§ override! #_"LogicNode" LogicNegationNode''canonical-3 [#_"LogicNegationNode" this, #_"CanonicalizerTool" tool, #_"LogicNode" value]
+    (§ override! #_"LogicNode" Unary''canonical-3 [#_"LogicNegationNode" this, #_"CanonicalizerTool" tool, #_"LogicNode" value]
         (or (LogicNegationNode'findSynonym-1 value)
             this
         )
@@ -60077,7 +58964,7 @@
         (FloatingNode'new-2 c, (StampFactory'forVoid-0))
     )
 
-    #_unused
+    #_unused
     (§ defn #_"LogicNode" LogicNode'and-3 [#_"LogicNode" a, #_"LogicNode" b, #_"double" shortCircuitProbability]
         (LogicNode'and-5 a, false, b, false, shortCircuitProbability)
     )
@@ -60105,7 +58992,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ method! #_"boolean" LogicNode''isContradiction-1 [#_"LogicNode" this]
         (and (instance? LogicConstantNode this)
             (not (:value this))
@@ -60156,7 +59043,7 @@
         (assoc this :loopType LoopType'PRE_LOOP)
     )
 
-    #_unused
+    #_unused
     (§ method! #_"boolean" LoopBeginNode''isPreLoop-1 [#_"LoopBeginNode" this]
         (= (:loopType this) LoopType'PRE_LOOP)
     )
@@ -60173,7 +59060,7 @@
         (assoc this :loopType LoopType'POST_LOOP)
     )
 
-    #_unused
+    #_unused
     (§ method! #_"boolean" LoopBeginNode''isPostLoop-1 [#_"LoopBeginNode" this]
         (= (:loopType this) LoopType'POST_LOOP)
     )
@@ -60221,7 +59108,7 @@
         (NodeIterable''filter-2 (Node''usages-1 this), LoopExitNode)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"NodeIterable<Node>" LoopBeginNode''anchored-1 [#_"LoopBeginNode" this]
         (NodeIterable''filter-2 (AbstractMergeNode''anchored-1 (§ super )), (NegativeTypePredicate''nor-2 (NegativeTypePredicate'new-1 LoopEndNode), LoopExitNode))
     )
@@ -60251,7 +59138,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ method! #_"boolean" LoopBeginNode''isSingleEntryLoop-1 [#_"LoopBeginNode" this]
         (= (AbstractMergeNode''forwardEndCount-1 this) 1)
     )
@@ -60264,13 +59151,12 @@
         (update this :splits inc)
     )
 
-    #_unused
-    (§ override! #_"void" LoopBeginNode''generate-2 [#_"LoopBeginNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"LoopBeginNode" this, #_"LIRBuilder" builder]
         ;; Nothing to emit, since this is node is used for structural purposes only.
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" LoopBeginNode''deleteEnd-2 [#_"LoopBeginNode" this, #_"AbstractEndNode" end]
         (when (instance? LoopEndNode end) => (AbstractMergeNode''deleteEnd-2 (§ super ), end)
             (§ ass! end (LoopEndNode''setLoopBegin-2 end, nil))
@@ -60304,7 +59190,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"AbstractEndNode" LoopBeginNode''phiPredecessorAt-2 [#_"LoopBeginNode" this, #_"int" index]
         (if (< index (AbstractMergeNode''forwardEndCount-1 this))
             (AbstractMergeNode''forwardEndAt-2 this, index)
@@ -60334,12 +59220,12 @@
         (update this :unswitches inc)
     )
 
-    #_unused
+    #_unused
     (§ method! #_"LoopBeginNode" LoopBeginNode''setInversionCount-2 [#_"LoopBeginNode" this, #_"int" count]
         (assoc this :inversionCount count)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" LoopBeginNode''simplify-2 [#_"LoopBeginNode" this, #_"SimplifierTool" tool]
         (LoopBeginNode''canonicalizePhis-2 this, tool)
         nil
@@ -60539,7 +59425,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"AbstractMergeNode" LoopEndNode''merge-1 [#_"LoopEndNode" this]
         (:loopBegin this)
     )
@@ -60557,10 +59443,9 @@
         (assoc this :canSafepoint false)
     )
 
-    #_unused
-    (§ override! #_"void" LoopEndNode''generate-2 [#_"LoopEndNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"LoopEndNode" this, #_"LIRBuilder" builder]
         (LIRBuilder''visitLoopEnd-2 builder, this)
-        (AbstractEndNode''generate-2 (§ super ), builder)
+        (LIRLowerable''generate-2 (§ super ), builder)
         nil
     )
 
@@ -60568,7 +59453,7 @@
         (assoc this :endIndex idx)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Iterable<? extends Node>" LoopEndNode''cfgSuccessors-1 [#_"LoopEndNode" this]
         (Collections/emptyList)
     )
@@ -60601,7 +59486,7 @@
         )))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" LoopExitNode''prepareDelete-2 [#_"LoopExitNode" this, #_"FixedNode" evacuateFrom]
         (LoopExitNode''removeProxies-1 this)
         (AbstractBeginNode''prepareDelete-2 (§ super ), evacuateFrom)
@@ -60634,7 +59519,7 @@
         )))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" LoopExitNode''simplify-2 [#_"LoopExitNode" this, #_"SimplifierTool" tool]
         (loop-when [#_"Node" pred (:predecessor this)] (and (CanonicalizerTool''allUsagesAvailable-1 tool) (instance? BeginNode pred) (Node''hasNoUsages-1 pred))
             (let [
@@ -60710,7 +59595,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override #_"boolean" AbstractWriteNode''hasSideEffect-1 [#_"AbstractWriteNode" this]
         true
     )
@@ -60728,7 +59613,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override #_"boolean" AbstractWriteNode''isAllowedUsageType-2 [#_"AbstractWriteNode" this, #_"InputType" type]
         (or (and (= type InputType'Guard) (:nullCheck this)) (Node''isAllowedUsageType-2 (§ super ), type))
     )
@@ -60743,12 +59628,12 @@
 (§ interface Access (§ extends GuardedNode, HeapAccess)
     (§ abstract #_"AddressNode" Access''getAddress-1 [#_"Access" this])
 
-    #_unused
+    #_unused
     (§ abstract #_"void" Access''setAddress-2 [#_"Access" this, #_"AddressNode" address])
 
     (§ abstract #_"LocationIdentity" Access''getLocationIdentity-1 [#_"Access" this])
 
-    #_unused
+    #_unused
     (§ abstract #_"boolean" Access''canNullCheck-1 [#_"Access" this])
 )
 
@@ -60780,7 +59665,7 @@
  ; @anno AddressNode.Address
  ;;
 (final-ns Address (§ extends Association)
-    #_unused
+    #_unused
     (§ defn #_"Address" Address'new-0 []
         (Association'new-0)
     )
@@ -60799,6 +59684,9 @@
     ; @Input
     (§ mutable #_"ValueNode" :offset nil)
 
+    (§ intrinsic! #_"Address" OffsetAddressNode'address-2 [#_"Object" base, #_"long" offset])
+
+    #_intrinsifier
     (§ defn #_"OffsetAddressNode" OffsetAddressNode'new-2 [#_"ValueNode" base, #_"ValueNode" offset]
         (let [
             #_"OffsetAddressNode" this (AddressNode'new-1 OffsetAddressNode'TYPE)
@@ -60817,20 +59705,19 @@
         (:base this)
     )
 
-    #_unused
+    #_unused
     (§ method! #_"OffsetAddressNode" OffsetAddressNode''setBase-2 [#_"OffsetAddressNode" this, #_"ValueNode" base]
         (Node''updateUsages-3 this, (:base this), base)
         (assoc this :base base)
     )
 
-    #_unused
+    #_unused
     (§ method! #_"OffsetAddressNode" OffsetAddressNode''setOffset-2 [#_"OffsetAddressNode" this, #_"ValueNode" offset]
         (Node''updateUsages-3 this, (:offset this), offset)
         (assoc this :offset offset)
     )
 
-    #_unused
-    (§ override! #_"Node" OffsetAddressNode''canonical-2 [#_"OffsetAddressNode" this, #_"CanonicalizerTool" tool]
+    (§ override! #_"Node" Canonicalizable''canonical-2 [#_"OffsetAddressNode" this, #_"CanonicalizerTool" tool]
         (condp instance? (:base this)
             OffsetAddressNode
                 ;; Rewrite (&base[offset1])[offset2] to base[offset1 + offset2].
@@ -60844,10 +59731,7 @@
         )
     )
 
-    ; @NodeIntrinsic
-    (§ native #_"Address" OffsetAddressNode'address-2 [#_"Object" base, #_"long" offset])
-
-    #_unused
+    #_unused
     (§ override! #_"long" OffsetAddressNode''getMaxConstantDisplacement-1 [#_"OffsetAddressNode" this]
         (let [
             #_"Stamp" stamp (:stamp (:offset this))
@@ -60856,7 +59740,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ValueNode" OffsetAddressNode''getIndex-1 [#_"OffsetAddressNode" this]
         nil
     )
@@ -60883,7 +59767,7 @@
         (:address this)
     )
 
-    #_unused
+    #_unused
     (§ override #_"void" FixedAccessNode''setAddress-2 [#_"FixedAccessNode" this, #_"AddressNode" address]
         (Node''updateUsages-3 this, (:address this), address)
         (§ ass! this (assoc this :address address))
@@ -60919,7 +59803,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override #_"boolean" FixedAccessNode''canDeoptimize-1 [#_"FixedAccessNode" this]
         (:nullCheck this)
     )
@@ -60945,12 +59829,12 @@
 (class-ns FloatableAccessNode (§ extends FixedAccessNode)
     (§ def #_"NodeClass<FloatableAccessNode>" FloatableAccessNode'TYPE (NodeClass'create-1 FloatableAccessNode))
 
-    #_unused
+    #_unused
     (§ defn #_"FloatableAccessNode" FloatableAccessNode'new-4 [#_"NodeClass<? extends FloatableAccessNode>" c, #_"AddressNode" address, #_"LocationIdentity" location, #_"Stamp" stamp]
         (FixedAccessNode'new-4 c, address, location, stamp)
     )
 
-    #_unused
+    #_unused
     (§ defn #_"FloatableAccessNode" FloatableAccessNode'new-6 [#_"NodeClass<? extends FloatableAccessNode>" c, #_"AddressNode" address, #_"LocationIdentity" location, #_"Stamp" stamp, #_"GuardingNode" guard, #_"BarrierType" barrierType]
         (FixedAccessNode'new-8 c, address, location, stamp, guard, barrierType, false, nil)
     )
@@ -60986,7 +59870,7 @@
 
     (§ mutable #_"BarrierType" :barrierType nil)
 
-    #_unused
+    #_unused
     (§ defn #_"FloatingAccessNode" FloatingAccessNode'new-4 [#_"NodeClass<? extends FloatingAccessNode>" c, #_"AddressNode" address, #_"LocationIdentity" location, #_"Stamp" stamp]
         (let [
             #_"FloatingAccessNode" this (FloatingGuardedNode'new-2 c, stamp)
@@ -61012,7 +59896,7 @@
         (:address this)
     )
 
-    #_unused
+    #_unused
     (§ override #_"void" FloatingAccessNode''setAddress-2 [#_"FloatingAccessNode" this, #_"AddressNode" address]
         (Node''updateUsages-3 this, (:address this), address)
         (§ ass! this (assoc this :address address))
@@ -61027,7 +59911,7 @@
         (:barrierType this)
     )
 
-    #_unused
+    #_unused
     (§ override #_"boolean" FloatingAccessNode''canNullCheck-1 [#_"FloatingAccessNode" this]
         true
     )
@@ -61045,7 +59929,7 @@
     ; @OptionalInput(InputType'Memory)
     (§ mutable #_"MemoryNode" :lastLocationAccess nil)
 
-    #_unused
+    #_unused
     (§ defn #_"FloatingReadNode" FloatingReadNode'new-4 [#_"AddressNode" address, #_"LocationIdentity" location, #_"MemoryNode" lastLocationAccess, #_"Stamp" stamp]
         (FloatingReadNode'new-6 address, location, lastLocationAccess, stamp, nil, BarrierType'NONE)
     )
@@ -61064,15 +59948,14 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" FloatingReadNode''setLastLocationAccess-2 [#_"FloatingReadNode" this, #_"MemoryNode" newlla]
         (Node''updateUsages-3 this, (:lastLocationAccess this), newlla)
         (§ ass! this (assoc this :lastLocationAccess newlla))
         nil
     )
 
-    #_unused
-    (§ override! #_"void" FloatingReadNode''generate-2 [#_"FloatingReadNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"FloatingReadNode" this, #_"LIRBuilder" builder]
         (let [
             #_"LIRKind" readKind (Stamp''getLIRKind-1 (:stamp this))
         ]
@@ -61081,8 +59964,7 @@
         nil
     )
 
-    #_unused
-    (§ override! #_"Node" FloatingReadNode''canonical-2 [#_"FloatingReadNode" this, #_"CanonicalizerTool" tool]
+    (§ override! #_"Node" Canonicalizable''canonical-2 [#_"FloatingReadNode" this, #_"CanonicalizerTool" tool]
         (let [
             #_"Node" result (ReadNode'canonicalizeRead-4 this, (FloatingAccessNode''getAddress-1 this), (FloatingAccessNode''getLocationIdentity-1 this), tool)
         ]
@@ -61101,7 +59983,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"FixedAccessNode" FloatingReadNode''asFixedNode-1 [#_"FloatingReadNode" this]
         (let [
             #_"ReadNode" result (Graph''add-2 (:graph this), (ReadNode'new-4 (FloatingAccessNode''getAddress-1 this), (FloatingAccessNode''getLocationIdentity-1 this), (:stamp this), (FloatingAccessNode''getBarrierType-1 this)))
@@ -61123,7 +60005,7 @@
     ;;;
      ; Gets the write barrier type for that particular access.
      ;;
-    #_unused
+    #_unused
     (§ abstract #_"BarrierType" HeapAccess''getBarrierType-1 [#_"HeapAccess" this])
 )
 
@@ -61148,7 +60030,7 @@
 )
 
 (§ interface LIRLowerableAccess (§ extends LIRLowerable, Access)
-    #_unused
+    #_unused
     (§ abstract #_"Stamp" LIRLowerableAccess''getAccessStamp-1 [#_"LIRLowerableAccess" this])
 )
 
@@ -61173,22 +60055,16 @@
         (FixedWithNextNode'new-2 MemoryAnchorNode'TYPE, (StampFactory'forVoid-0))
     )
 
-    #_unused
-    (§ override! #_"void" MemoryAnchorNode''generate-2 [#_"MemoryAnchorNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"MemoryAnchorNode" this, #_"LIRBuilder" builder]
         ;; Nothing to emit, since this node is used for structural purposes only.
         nil
     )
 
-    #_unused
-    (§ override! #_"Node" MemoryAnchorNode''canonical-2 [#_"MemoryAnchorNode" this, #_"CanonicalizerTool" tool]
+    (§ override! #_"Node" Canonicalizable''canonical-2 [#_"MemoryAnchorNode" this, #_"CanonicalizerTool" tool]
         (when-not (and (CanonicalizerTool''allUsagesAvailable-1 tool) (Node''hasNoUsages-1 this))
             this
         )
     )
-
-    ; @NodeIntrinsic
-    #_unused
-    (§ native #_"Memory" MemoryAnchorNode'anchor-0 [])
 )
 
 ;;;
@@ -61264,7 +60140,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ method! #_"boolean" MemoryMapNode''isEmpty-1 [#_"MemoryMapNode" this]
         (or (empty? (:locationIdentities this))
             (and (= (count (:locationIdentities this)) 1)
@@ -61291,7 +60167,7 @@
         (:locationIdentities this)
     )
 
-    #_unused
+    #_unused
     (§ method! #_"EconomicMap<LocationIdentity, MemoryNode>" MemoryMapNode''toMap-1 [#_"MemoryMapNode" this]
         (let [
             #_"EconomicMap<LocationIdentity, MemoryNode>" res (EconomicMap/create Equivalence/DEFAULT, (count (:locationIdentities this)))
@@ -61303,8 +60179,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" MemoryMapNode''generate-2 [#_"MemoryMapNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"MemoryMapNode" this, #_"LIRBuilder" builder]
         ;; nothing to do...
         nil
     )
@@ -61337,7 +60212,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ defn #_"MemoryPhiNode" MemoryPhiNode'new-3 [#_"AbstractMergeNode" merge, #_"LocationIdentity" locationIdentity, #_"ValueNode[]" values]
         (let [
             #_"MemoryPhiNode" this (PhiNode'new-3 MemoryPhiNode'TYPE, (StampFactory'forVoid-0), merge)
@@ -61348,7 +60223,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"NodeInputList<ValueNode>" MemoryPhiNode''values-1 [#_"MemoryPhiNode" this]
         (:values this)
     )
@@ -61368,8 +60243,7 @@
         (FloatableAccessNode'new-8 c, address, location, stamp, guard, barrierType, nullCheck, stateBefore)
     )
 
-    #_unused
-    (§ override! #_"void" ReadNode''generate-2 [#_"ReadNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"ReadNode" this, #_"LIRBuilder" builder]
         (let [
             #_"LIRKind" readKind (Stamp''getLIRKind-1 (ReadNode''getAccessStamp-1 this))
         ]
@@ -61378,8 +60252,7 @@
         nil
     )
 
-    #_unused
-    (§ override! #_"Node" ReadNode''canonical-2 [#_"ReadNode" this, #_"CanonicalizerTool" tool]
+    (§ override! #_"Node" Canonicalizable''canonical-2 [#_"ReadNode" this, #_"CanonicalizerTool" tool]
         (cond
             (and (CanonicalizerTool''allUsagesAvailable-1 tool) (Node''hasNoUsages-1 this))
                 nil ;; read without usages or guard can be safely removed
@@ -61390,12 +60263,12 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"FloatingAccessNode" ReadNode''asFloatingNode-2 [#_"ReadNode" this, #_"MemoryNode" lastLocationAccess]
         (Graph''add-2 (:graph this), (FloatingReadNode'new-6 (FixedAccessNode''getAddress-1 this), (FixedAccessNode''getLocationIdentity-1 this), lastLocationAccess, (:stamp this), (FixedAccessNode''getGuard-1 this), (FixedAccessNode''getBarrierType-1 this)))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" ReadNode''isAllowedUsageType-2 [#_"ReadNode" this, #_"InputType" type]
         (or (and (:nullCheck this) (= type InputType'Guard)) (Node''isAllowedUsageType-2 (§ super ), type))
     )
@@ -61438,12 +60311,11 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" ReadNode''virtualize-2 [#_"ReadNode" this, #_"VirtualizerTool" tool]
+    (§ override! #_"void" Virtualizable''virtualize-2 [#_"ReadNode" this, #_"VirtualizerTool" tool]
         (throw! "unexpected ReadNode before PEA")
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" ReadNode''canNullCheck-1 [#_"ReadNode" this]
         true
     )
@@ -61463,13 +60335,12 @@
         (AbstractWriteNode'new-5 WriteNode'TYPE, address, location, value, barrierType)
     )
 
-    #_unused
+    #_unused
     (§ defn #_"WriteNode" WriteNode'new-5 [#_"NodeClass<? extends WriteNode>" c, #_"AddressNode" address, #_"LocationIdentity" location, #_"ValueNode" value, #_"BarrierType" barrierType]
         (AbstractWriteNode'new-5 c, address, location, value, barrierType)
     )
 
-    #_unused
-    (§ override! #_"void" WriteNode''generate-2 [#_"WriteNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"WriteNode" this, #_"LIRBuilder" builder]
         (let [
             #_"LIRKind" writeKind (Stamp''getLIRKind-1 (:stamp (AbstractWriteNode''value-1 this)))
         ]
@@ -61478,7 +60349,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" WriteNode''canNullCheck-1 [#_"WriteNode" this]
         true
     )
@@ -61487,8 +60358,7 @@
         (:stamp (AbstractWriteNode''value-1 this))
     )
 
-    #_unused
-    (§ override! #_"Node" WriteNode''canonical-2 [#_"WriteNode" this, #_"CanonicalizerTool" tool]
+    (§ override! #_"Node" Canonicalizable''canonical-2 [#_"WriteNode" this, #_"CanonicalizerTool" tool]
         (when (and (CanonicalizerTool''canonicalizeReads-1 tool) (Node''hasExactlyOneUsage-1 this) (instance? WriteNode (:next this))) => this
             (let [
                 #_"WriteNode" write (:next this)
@@ -61512,7 +60382,7 @@
         (AbstractMergeNode'new-1 MergeNode'TYPE)
     )
 
-    #_unused
+    #_unused
     (§ defn #_"void" MergeNode'removeMergeIfDegenerated-1 [#_"MergeNode" node]
         (when (and (= (AbstractMergeNode''forwardEndCount-1 node) 1) (Node''hasNoUsages-1 node))
             (let [
@@ -61588,7 +60458,7 @@
         (NamedLocationIdentity'new-2 name, immutable)
     )
 
-    #_unused
+    #_unused
     (§ override #_"boolean" NamedLocationIdentity''isImmutable-1 [#_"NamedLocationIdentity" this]
         (:immutable this)
     )
@@ -61631,7 +60501,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Stamp" ParameterNode''uncheckedStamp-1 [#_"ParameterNode" this]
         (:uncheckedStamp this)
     )
@@ -61664,7 +60534,7 @@
         (:merge this)
     )
 
-    #_unused
+    #_unused
     (§ method! #_"PhiNode" PhiNode''setMerge-2 [#_"PhiNode" this, #_"AbstractMergeNode" merge]
         (Node''updateUsages-3 this, (:merge this), merge)
         (assoc this :merge merge)
@@ -61717,7 +60587,7 @@
         (count (PhiNode''values-1 this))
     )
 
-    #_unused
+    #_unused
     (§ method! #_"void" PhiNode''clearValues-1 [#_"PhiNode" this]
         (NodeList''clear-1 (PhiNode''values-1 this))
         nil
@@ -61762,8 +60632,7 @@
         )
     )
 
-    #_unused
-    (§ override #_"ValueNode" PhiNode''canonical-2 [#_"PhiNode" this, #_"CanonicalizerTool" tool]
+    (§ override #_"ValueNode" Canonicalizable''canonical-2 [#_"PhiNode" this, #_"CanonicalizerTool" tool]
         (when (PhiNode''isLoopPhi-1 this) => (PhiNode''singleValueOrThis-1 this)
             (let [
                 #_"int" n (PhiNode''valueCount-1 this)
@@ -61824,18 +60693,11 @@
         )
     )
 
-    #_unused
-    (§ override! #_"Node" PiArrayNode''canonical-2 [#_"PiArrayNode" this, #_"CanonicalizerTool" tool]
+    (§ override! #_"Node" Canonicalizable''canonical-2 [#_"PiArrayNode" this, #_"CanonicalizerTool" tool]
         (when (= (GraphUtil'arrayLength-1 (:object this)) (PiNode''length-1 this)) => this
-            (PiNode''canonical-2 (§ super ), tool)
+            (Canonicalizable''canonical-2 (§ super ), tool)
         )
     )
-
-    ;;;
-     ; Changes the stamp of an object inside a snippet to be the stamp of the node replaced by the snippet.
-     ;;
-    ; @NodeIntrinsic(ArrayPlaceholder.class)
-    (§ native #_"Object" PiArrayNode'piArrayCastToSnippetReplaceeStamp-2 [#_"Object" object, #_"int" length])
 )
 
 ;;;
@@ -61850,7 +60712,12 @@
     ; @Input
     (§ mutable #_"ValueNode" :length nil)
 
-    #_unused
+    ;;;
+     ; Changes the stamp of an object inside a snippet to be the stamp of the node replaced by the snippet.
+     ;;
+    (§ intrinsic! #_"Object" ArrayPlaceholder'piArrayCastToSnippetReplaceeStamp-2 [#_"Object" object, #_"int" length])
+
+    #_intrinsifier
     (§ defn #_"ArrayPlaceholder" ArrayPlaceholder'new-2 [#_"ValueNode" object, #_"ValueNode" length]
         (let [
             #_"ArrayPlaceholder" this (Placeholder'new-2 ArrayPlaceholder'TYPE, object)
@@ -61860,7 +60727,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" ArrayPlaceholder''makeReplacement-2 [#_"ArrayPlaceholder" this, #_"Stamp" snippetReplaceeStamp]
         (let [
             #_"PiArrayNode" piArray (Graph''add-2 (:graph this), (PiArrayNode'new-3 (:object this), (:length this), snippetReplaceeStamp))
@@ -61883,7 +60750,7 @@
     (§ def #_"NodeClass<PiNode>" PiNode'TYPE (NodeClass'create-1 PiNode))
 
     ; @Input
-    (§ mutable #_"ValueNode" :object nil)
+    (§ final #_"ValueNode" :object nil)
     (§ mutable #_"Stamp" :piStamp nil)
 
     (§ defn #_"PiNode" PiNode'new-4 [#_"NodeClass<? extends PiNode>" c, #_"ValueNode" object, #_"Stamp" stamp, #_"GuardingNode" guard]
@@ -61909,10 +60776,6 @@
         (PiNode'new-3 object, (AbstractPointerStamp'pointerNonNull-1 (:stamp object)), guard)
     )
 
-    (§ defn #_"PiNode" PiNode'new-4 [#_"ValueNode" object, #_"ResolvedJavaType" toType, #_"boolean" exactType, #_"boolean" never-nil?]
-        (PiNode'new-2 object, (StampFactory'object-2 (if exactType (TypeReference'createExactTrusted-1 toType) (TypeReference'create-1 toType)), (or never-nil? (StampTool'isPointerNeverNull-1 (:stamp object)))))
-    )
-
     (§ defn #_"ValueNode" PiNode'create-2 [#_"ValueNode" object, #_"Stamp" stamp]
         (or (PiNode'canonical-3 object, stamp, nil)
             (PiNode'new-2 object, stamp)
@@ -61935,7 +60798,13 @@
         )
     )
 
-    #_unused
+    ;;;
+     ; Changes the stamp of an object and ensures the newly stamped value is non-nil and does not
+     ; float above a given guard.
+     ;;
+    (§ intrinsic! #_"Object" PiNode'piCastNonNull-2 [#_"Object" object, #_"GuardingNode" guard])
+
+    #_intrinsifier
     (§ defn #_"boolean" PiNode'intrinsify-4 [#_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"ValueNode" object, #_"ValueNode" guard]
         (let [
             #_"Stamp" stamp (AbstractPointerStamp'pointerNonNull-1 (:stamp object))
@@ -61949,27 +60818,7 @@
         )
     )
 
-    #_unused
-    (§ defn #_"boolean" PiNode'intrinsify-6 [#_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"ValueNode" object, #_"ResolvedJavaType" toType, #_"boolean" exactType, #_"boolean" never-nil?]
-        (let [
-            #_"Stamp" stamp (StampFactory'object-2 (if exactType (TypeReference'createExactTrusted-1 toType) (TypeReference'create-1 toType)), (or never-nil? (StampTool'isPointerNeverNull-1 (:stamp object))))
-            #_"ValueNode" value
-                (or (PiNode'canonical-3 object, stamp, nil)
-                    (PiNode'new-2 object, stamp)
-                )
-        ]
-            (BytecodeParser''push-3 parser, JavaKind/Object, (BytecodeParser''append-2 parser, value))
-            true
-        )
-    )
-
-    #_unused
-    (§ method! #_"PiNode" PiNode''strengthenPiStamp-2 [#_"PiNode" this, #_"Stamp" newPiStamp]
-        (assoc this :piStamp newPiStamp)
-    )
-
-    #_unused
-    (§ override #_"void" PiNode''generate-2 [#_"PiNode" this, #_"LIRBuilder" builder]
+    (§ override #_"void" LIRLowerable''generate-2 [#_"PiNode" this, #_"LIRBuilder" builder]
         (when (LIRBuilder''hasOperand-2 builder, (:object this))
             (LIRBuilder''setResult-3 builder, this, (LIRBuilder''operand-2 builder, (:object this)))
         )
@@ -61977,15 +60826,10 @@
     )
 
     (§ override #_"boolean" PiNode''inferStamp-1 [#_"PiNode" this]
-        (ValueNode''updateStamp-2 this, (PiNode''computeStamp-1 this))
+        (ValueNode''updateStamp-2 this, (Stamp''improveWith-2 (:piStamp this), (:stamp (:object this))))
     )
 
-    (§ method- #_"Stamp" PiNode''computeStamp-1 [#_"PiNode" this]
-        (Stamp''improveWith-2 (:piStamp this), (:stamp (:object this)))
-    )
-
-    #_unused
-    (§ override #_"void" PiNode''virtualize-2 [#_"PiNode" this, #_"VirtualizerTool" tool]
+    (§ override #_"void" Virtualizable''virtualize-2 [#_"PiNode" this, #_"VirtualizerTool" tool]
         (let [
             #_"ValueNode" object (VirtualizerTool''getAlias-2 tool, (:object this))
         ]
@@ -62026,7 +60870,7 @@
         )
     )
 
-    (§ override #_"Node" PiNode''canonical-2 [#_"PiNode" this, #_"CanonicalizerTool" tool]
+    (§ override #_"Node" Canonicalizable''canonical-2 [#_"PiNode" this, #_"CanonicalizerTool" tool]
         (or (PiNode'canonical-3 (:object this), (:stamp this), (FloatingGuardedNode''getGuard-1 this))
             this
         )
@@ -62035,61 +60879,6 @@
     (§ override #_"ValueNode" PiNode''getOriginalNode-1 [#_"PiNode" this]
         (:object this)
     )
-
-    #_unused
-    (§ method! #_"PiNode" PiNode''setOriginalNode-2 [#_"PiNode" this, #_"ValueNode" newNode]
-        (Node''updateUsages-3 this, (:object this), newNode)
-        (assoc this :object newNode)
-    )
-
-    ;;;
-     ; Casts an object to have an exact, non-nil stamp representing Class.
-     ;;
-    #_unused
-    (§ defn #_"Class" PiNode'asNonNullClass-1 [#_"Object" object]
-        (PiNode'asNonNullClassIntrinsic-4 object, Class, true, true)
-    )
-
-    ;;;
-     ; Casts an object to have an exact, non-nil stamp representing Class.
-     ;;
-    #_unused
-    (§ defn #_"Class" PiNode'asNonNullObject-1 [#_"Object" object]
-        (PiNode'asNonNullClassIntrinsic-4 object, Object, false, true)
-    )
-
-    ; @NodeIntrinsic(PiNode.class)
-    (§ native- #_"Class" PiNode'asNonNullClassIntrinsic-4 [#_"Object" object, #_@ConstantNodeParameter #_"Class" toType, #_@ConstantNodeParameter #_"boolean" exactType, #_@ConstantNodeParameter #_"boolean" never-nil?])
-
-    ;;;
-     ; Changes the stamp of an object inside a snippet to be the stamp of the node replaced by the snippet.
-     ;;
-    ; @NodeIntrinsic(Placeholder.class)
-    (§ native #_"Object" PiNode'piCastToSnippetReplaceeStamp-1 [#_"Object" object])
-
-    ;;;
-     ; Changes the stamp of an object and ensures the newly stamped value is non-nil and does not
-     ; float above a given guard.
-     ;;
-    ; @NodeIntrinsic
-    (§ native #_"Object" PiNode'piCastNonNull-2 [#_"Object" object, #_"GuardingNode" guard])
-
-    ;;;
-     ; Changes the stamp of an object and ensures the newly stamped value is non-nil and does not
-     ; float above a given guard.
-     ;;
-    ; @NodeIntrinsic
-    (§ native #_"Class" PiNode'piCastNonNullClass-2 [#_"Class" type, #_"GuardingNode" guard])
-
-    ;;;
-     ; Changes the stamp of an object to represent a given type and to indicate that the object is not nil.
-     ;;
-    (§ defn #_"Object" PiNode'piCastNonNull-2 [#_"Object" object, #_@ConstantNodeParameter #_"Class" toType]
-        (PiNode'piCast-4 object, toType, false, true)
-    )
-
-    ; @NodeIntrinsic
-    (§ native #_"Object" PiNode'piCast-4 [#_"Object" object, #_@ConstantNodeParameter #_"Class" toType, #_@ConstantNodeParameter #_"boolean" exactType, #_@ConstantNodeParameter #_"boolean" never-nil?])
 )
 
 ;;;
@@ -62102,7 +60891,7 @@
     (§ def #_"NodeClass<Placeholder>" Placeholder'TYPE (NodeClass'create-1 Placeholder))
 
     ; @Input
-    (§ mutable #_"ValueNode" :object nil)
+    (§ final #_"ValueNode" :object nil)
 
     (§ defn #_"Placeholder" Placeholder'new-2 [#_"NodeClass<? extends Placeholder>" c, #_"ValueNode" object]
         (let [
@@ -62113,7 +60902,12 @@
         )
     )
 
-    #_unused
+    ;;;
+     ; Changes the stamp of an object inside a snippet to be the stamp of the node replaced by the snippet.
+     ;;
+    (§ intrinsic! #_"Object" Placeholder'piCastToSnippetReplaceeStamp-1 [#_"Object" object])
+
+    #_intrinsifier
     (§ defn #_"Placeholder" Placeholder'new-1 [#_"ValueNode" object]
         (Placeholder'new-2 Placeholder'TYPE, object)
     )
@@ -62153,7 +60947,9 @@
     ; @Input(InputType'Association)
     (§ mutable #_"AddressNode" :address nil)
 
-    #_unused
+    (§ intrinsic! #_"void" PrefetchAllocateNode'prefetch-1 [#_"Address" address])
+
+    #_intrinsifier
     (§ defn #_"PrefetchAllocateNode" PrefetchAllocateNode'new-1 [#_"AddressNode" address]
         (let [
             #_"PrefetchAllocateNode" this (FixedWithNextNode'new-2 PrefetchAllocateNode'TYPE, (StampFactory'forVoid-0))
@@ -62163,14 +60959,10 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" PrefetchAllocateNode''generate-2 [#_"PrefetchAllocateNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"PrefetchAllocateNode" this, #_"LIRBuilder" builder]
         (LIRGenerator''emitPrefetchAllocate-2 (:gen builder), (LIRBuilder''operand-2 builder, (:address this)))
         nil
     )
-
-    ; @NodeIntrinsic
-    (§ native #_"void" PrefetchAllocateNode'prefetch-1 [#_"Address" address])
 )
 
 ;;;
@@ -62225,8 +61017,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" ReturnNode''generate-2 [#_"ReturnNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"ReturnNode" this, #_"LIRBuilder" builder]
         (if (nil? (:result this))
             (§ ass! (:gen builder) (LIRGenerator''emitReturn-3 (:gen builder), JavaKind/Void, nil))
             (§ ass! (:gen builder) (LIRGenerator''emitReturn-3 (:gen builder), (ValueNode''getStackKind-1 (:result this)), (LIRBuilder''operand-2 builder, (:result this))))
@@ -62250,18 +61041,17 @@
         (DeoptimizingFixedWithNextNode'new-2 SafepointNode'TYPE, (StampFactory'forVoid-0))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" SafepointNode''lower-2 [#_"SafepointNode" this, #_"LoweringTool" lowerer]
         nil ;; No lowering, we generate LIR directly for this node.
     )
 
-    #_unused
-    (§ override! #_"void" SafepointNode''generate-2 [#_"SafepointNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"SafepointNode" this, #_"LIRBuilder" builder]
         (LIRBuilder''visitSafepointNode-2 builder, this)
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" SafepointNode''canDeoptimize-1 [#_"SafepointNode" this]
         true
     )
@@ -62453,12 +61243,14 @@
 (final-ns SnippetAnchorNode (§ extends FixedWithNextNode) (§ implements Simplifiable, GuardingNode)
     (§ def #_"NodeClass<SnippetAnchorNode>" SnippetAnchorNode'TYPE (NodeClass'create-1 SnippetAnchorNode))
 
-    #_unused
+    (§ intrinsic! #_"GuardingNode" SnippetAnchorNode'anchor-0 [])
+
+    #_intrinsifier
     (§ defn #_"SnippetAnchorNode" SnippetAnchorNode'new-0 []
         (FixedWithNextNode'new-2 SnippetAnchorNode'TYPE, StampFactory'objectStamp)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" SnippetAnchorNode''simplify-2 [#_"SnippetAnchorNode" this, #_"SimplifierTool" tool]
         (let [
             #_"AbstractBeginNode" prevBegin (AbstractBeginNode'prevBegin-1 this)
@@ -62471,9 +61263,6 @@
         )
         nil
     )
-
-    ; @NodeIntrinsic
-    (§ native #_"GuardingNode" SnippetAnchorNode'anchor-0 [])
 )
 
 (§ interface ArrayLengthProvider
@@ -62556,7 +61345,7 @@
      ; Returns a stamp containing information about interface types that has not been verified or nil
      ; if no such stamp is available. A type check is needed before using informations from this stamp.
      ;;
-    #_unused
+    #_unused
     (§ abstract #_"Stamp" UncheckedInterfaceProvider''uncheckedStamp-1 [#_"UncheckedInterfaceProvider" this])
 )
 
@@ -62567,7 +61356,7 @@
  ; For some algorithms it is necessary or advantageous to see through these proxies.
  ;;
 (§ interface ValueProxy (§ extends LimitedValueProxy)
-    #_unused
+    #_unused
     (§ abstract #_"GuardingNode" ValueProxy''getGuard-1 [#_"ValueProxy" this])
 )
 
@@ -62662,7 +61451,7 @@
 
     (§ abstract #_"void" VirtualizerTool''setEnsureVirtualized-3 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject, #_"boolean" ensureVirtualized])
 
-    #_unused
+    #_unused
     (§ abstract #_"boolean" VirtualizerTool''getEnsureVirtualized-2 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject])
 
     ;; operations on the current node
@@ -62692,7 +61481,7 @@
      ; @param oldInput the old input value.
      ; @param replacement the new input value.
      ;;
-    #_unused
+    #_unused
     (§ abstract #_"void" VirtualizerTool''replaceFirstInput-3 [#_"VirtualizerTool" this, #_"Node" oldInput, #_"Node" replacement])
 
     ;;;
@@ -62715,7 +61504,7 @@
      ;
      ; @return true if materialization happened, false if not
      ;;
-    #_unused
+    #_unused
     (§ abstract #_"boolean" VirtualizerTool''ensureMaterialized-2 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject])
 )
 
@@ -62734,7 +61523,7 @@
         (BeginStateSplitNode'new-1 StartNode'TYPE)
     )
 
-    #_unused
+    #_unused
     (§ override #_"LocationIdentity" StartNode''getLocationIdentity-1 [#_"StartNode" this]
         (LocationIdentity/any)
     )
@@ -62763,10 +61552,10 @@
 )
 
 (§ interface StaticDeoptimizingNode
-    #_unused
+    #_unused
     (§ abstract #_"void" StaticDeoptimizingNode''setReason-2 [#_"StaticDeoptimizingNode" this, #_"DeoptimizationReason" reason])
 
-    #_unused
+    #_unused
     (§ abstract #_"void" StaticDeoptimizingNode''setAction-2 [#_"StaticDeoptimizingNode" this, #_"DeoptimizationAction" action])
 
     (§ default! #_"GuardPriority" StaticDeoptimizingNode''computePriority-1 [#_"StaticDeoptimizingNode" this]
@@ -63175,7 +61964,7 @@
         (assoc this :lastSchedule result)
     )
 
-    #_unused
+    #_unused
     (§ method! #_"Stamp" Graph''getReturnStamp-1 [#_"Graph" this]
         (loop-when [#_"Stamp" stamp nil #_"ISeq" s (seq (Graph''getNodes-2 this, ReturnNode'TYPE))] (some? s) => stamp
             (let [
@@ -63584,35 +62373,35 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" ChainedNodeEventListener''nodeAdded-2 [#_"ChainedNodeEventListener" this, #_"Node" node]
         (NodeEventListener''event-3 (:head this), NodeEvent'NODE_ADDED, node)
         (NodeEventListener''event-3 (:next this), NodeEvent'NODE_ADDED, node)
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" ChainedNodeEventListener''inputChanged-2 [#_"ChainedNodeEventListener" this, #_"Node" node]
         (NodeEventListener''event-3 (:head this), NodeEvent'INPUT_CHANGED, node)
         (NodeEventListener''event-3 (:next this), NodeEvent'INPUT_CHANGED, node)
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" ChainedNodeEventListener''usagesDroppedToZero-2 [#_"ChainedNodeEventListener" this, #_"Node" node]
         (NodeEventListener''event-3 (:head this), NodeEvent'ZERO_USAGES, node)
         (NodeEventListener''event-3 (:next this), NodeEvent'ZERO_USAGES, node)
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" ChainedNodeEventListener''nodeRemoved-2 [#_"ChainedNodeEventListener" this, #_"Node" node]
         (NodeEventListener''event-3 (:head this), NodeEvent'NODE_REMOVED, node)
         (NodeEventListener''event-3 (:next this), NodeEvent'NODE_REMOVED, node)
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" ChainedNodeEventListener''changed-3 [#_"ChainedNodeEventListener" this, #_"NodeEvent" e, #_"Node" node]
         (NodeEventListener''event-3 (:head this), e, node)
         (NodeEventListener''event-3 (:next this), e, node)
@@ -63641,7 +62430,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" NodeEventScope''close-1 [#_"NodeEventScope" this]
         (if (instance? ChainedNodeEventListener (:nodeEventListener (:graph this)))
             (§ ass! (:nodeEventListener (:graph this)) (:next (:nodeEventListener (:graph this))))
@@ -63683,7 +62472,7 @@
     ;;;
      ; Determines if this mark still represents the {@linkplain Graph#getNodeCount() live node count} of the graph.
      ;;
-    #_unused
+    #_unused
     (§ method! #_"boolean" NodeMark''isCurrent-1 [#_"NodeMark" this]
         (= (:value this) (:nodesSize (:graph this)))
     )
@@ -63695,7 +62484,7 @@
 (final-ns PlaceHolderNode (§ extends Node)
     (§ def #_"NodeClass<PlaceHolderNode>" PlaceHolderNode'TYPE (NodeClass'create-1 PlaceHolderNode))
 
-    #_unused
+    #_unused
     (§ defn #_"PlaceHolderNode" PlaceHolderNode'new-0 []
         (Node'new-1 PlaceHolderNode'TYPE)
     )
@@ -63723,7 +62512,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Node" MapReplacement''replacement-2 [#_"MapReplacement" this, #_"Node" original]
         (or (get (:map this) original) original)
     )
@@ -63809,7 +62598,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ abstract #_"AbstractObjectStamp" NarrowOopStamp''copyWith-5 [#_"NarrowOopStamp" this, #_"ResolvedJavaType" type, #_"boolean" exactType, #_"boolean" never-nil?, #_"boolean" always-nil?])
 
     (§ method #_"Stamp" NarrowOopStamp''uncompressed-1 [#_"NarrowOopStamp" this]
@@ -63820,12 +62609,12 @@
         (:encoding this)
     )
 
-    #_unused
+    #_unused
     (§ override #_"LIRKind" NarrowOopStamp''getLIRKind-1 [#_"NarrowOopStamp" this]
         (LIRKindTool'getNarrowOopKind-0)
     )
 
-    #_unused
+    #_unused
     (§ override #_"boolean" NarrowOopStamp''isCompatible-2 [#_"NarrowOopStamp" this, #_"Stamp" other]
         (or (= this other)
             (and (instance? NarrowOopStamp other)
@@ -63834,13 +62623,13 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ abstract #_"Constant" NarrowOopStamp''readConstant-4 [#_"NarrowOopStamp" this, #_"MemoryAccessProvider" provider, #_"Constant" base, #_"long" displacement])
 
-    #_unused
+    #_unused
     (§ abstract #_"JavaConstant" NarrowOopStamp''asConstant-1 [#_"NarrowOopStamp" this])
 
-    #_unused
+    #_unused
     (§ abstract #_"boolean" NarrowOopStamp''isCompatible-2 [#_"NarrowOopStamp" this, #_"Constant" other])
 )
 
@@ -63848,7 +62637,7 @@
  ; Helper class that is used to keep all stamp-related operations in one place.
  ;;
 (value-ns StampTool
-    #_unused
+    #_unused
     (§ defn #_"Stamp" StampTool'meet-1 [#_"Iterable<? extends ValueNode>" values]
         (or (StampTool'meetOrNull-2 values, nil) (StampFactory'forVoid-0))
     )
@@ -63880,7 +62669,7 @@
      ;
      ; @return nil if it's can't be true or it nothing useful can be encoded
      ;;
-    #_unused
+    #_unused
     (§ defn #_"Stamp" StampTool'unsignedCompare-2 [#_"Stamp" a, #_"Stamp" b]
         (cond
             (and (IntegerStamp''isUnrestricted-1 a) (IntegerStamp''isUnrestricted-1 b))
@@ -63973,7 +62762,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ defn #_"ResolvedJavaType" StampTool'objectTypeOrNull-1 [#_"Stamp" stamp]
         (when (and (instance? AbstractObjectStamp stamp) (Stamp''hasValues-1 stamp))
             (or (AbstractObjectStamp''type-1 stamp)
@@ -63990,7 +62779,7 @@
      ;
      ; @return true if this node represents a legal object stamp whose Java type is known exactly
      ;;
-    #_unused
+    #_unused
     (§ defn #_"boolean" StampTool'isExactType-1 [#_"Stamp" stamp]
         (and (instance? AbstractObjectStamp stamp) (Stamp''hasValues-1 stamp)
             (AbstractObjectStamp''isExactType-1 stamp)
@@ -64017,12 +62806,11 @@
         )
     )
 
-    #_unused
-    (§ override #_"void" UnaryOpLogicNode''generate-2 [#_"UnaryOpLogicNode" this, #_"LIRBuilder" builder]
+    (§ override #_"void" LIRLowerable''generate-2 [#_"UnaryOpLogicNode" this, #_"LIRBuilder" builder]
         nil
     )
 
-    #_unused
+    #_unused
     (§ method #_"Stamp" UnaryOpLogicNode''getSucceedingStampForValue-3 [#_"UnaryOpLogicNode" this, #_"boolean" negated?, #_"Stamp" valueStamp]
         (let [
             #_"Stamp" succStamp (UnaryOpLogicNode''getSucceedingStampForValue-2 this, negated?)
@@ -64576,40 +63364,40 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" DefaultSimplifierTool''canonicalizeReads-1 [#_"DefaultSimplifierTool" this]
         (:canonicalizeReads this)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" DefaultSimplifierTool''allUsagesAvailable-1 [#_"DefaultSimplifierTool" this]
         true
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" DefaultSimplifierTool''deleteBranch-2 [#_"DefaultSimplifierTool" this, #_"Node" branch]
         (Node''replaceFirstSuccessor-3 (:predecessor branch), branch, nil)
         (GraphUtil'killCFG-1 branch)
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" DefaultSimplifierTool''removeIfUnused-2 [#_"DefaultSimplifierTool" this, #_"Node" node]
         (GraphUtil'tryKillUnused-1 node)
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" DefaultSimplifierTool''addToWorkList-2 [#_"DefaultSimplifierTool" this, #_"Node" node]
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" DefaultSimplifierTool''addToWorkList-2 [#_"DefaultSimplifierTool" this, #_"Iterable<? extends Node>" nodes]
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Integer" DefaultSimplifierTool''smallestCompareWidth-1 [#_"DefaultSimplifierTool" this]
         (Lowerer'smallestCompareWidth-0)
     )
@@ -64718,7 +63506,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override #_"boolean" ValueNode''isAllowedUsageType-2 [#_"ValueNode" this, #_"InputType" type]
         (or (and (not= (ValueNode''getStackKind-1 this) JavaKind/Void) (= type InputType'Value)) (Node''isAllowedUsageType-2 (§ super ), type))
     )
@@ -64777,7 +63565,7 @@
         (:values this)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" ValuePhiNode''inferStamp-1 [#_"ValuePhiNode" this]
         ;; Meet all the values feeding this Phi but don't use the stamp of this Phi since that's what's being computed.
         (let [
@@ -64833,13 +63621,12 @@
         (:value this)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" ValueProxyNode''inferStamp-1 [#_"ValueProxyNode" this]
         (ValueNode''updateStamp-2 this, (:stamp (:value this)))
     )
 
-    #_unused
-    (§ override! #_"Node" ValueProxyNode''canonical-2 [#_"ValueProxyNode" this, #_"CanonicalizerTool" tool]
+    (§ override! #_"Node" Canonicalizable''canonical-2 [#_"ValueProxyNode" this, #_"CanonicalizerTool" tool]
         (if (or (instance? ConstantNode (:value this))
                 (and (:loopPhiProxy this) (not (AbstractMergeNode''isPhiAtMerge-2 (:loopBegin (:loopExit this)), (:value this))))
             )
@@ -64848,8 +63635,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" ValueProxyNode''virtualize-2 [#_"ValueProxyNode" this, #_"VirtualizerTool" tool]
+    (§ override! #_"void" Virtualizable''virtualize-2 [#_"ValueProxyNode" this, #_"VirtualizerTool" tool]
         (let [
             #_"ValueNode" alias (VirtualizerTool''getAlias-2 tool, (:value this))
         ]
@@ -64864,7 +63650,7 @@
         (ValueProxyNode''value-1 this)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"GuardingNode" ValueProxyNode''getGuard-1 [#_"ValueProxyNode" this]
         (:loopExit this)
     )
@@ -64896,8 +63682,7 @@
         (assoc this :commit node)
     )
 
-    #_unused
-    (§ override! #_"void" AllocatedObjectNode''virtualize-2 [#_"AllocatedObjectNode" this, #_"VirtualizerTool" tool]
+    (§ override! #_"void" Virtualizable''virtualize-2 [#_"AllocatedObjectNode" this, #_"VirtualizerTool" tool]
         (VirtualizerTool''replaceWithVirtual-2 tool, (:virtualObject this))
         nil
     )
@@ -64930,7 +63715,7 @@
         (#_"List" .subList (:locks this), (nth (:lockIndexes this) objIndex), (nth (:lockIndexes this) (inc objIndex)))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" CommitAllocationNode''lower-2 [#_"CommitAllocationNode" this, #_"LoweringTool" lowerer]
         (dotimes [#_"int" i (count (:virtualObjects this))]
             (when (nth (:ensureVirtual this) i)
@@ -64941,12 +63726,12 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"LocationIdentity" CommitAllocationNode''getLocationIdentity-1 [#_"CommitAllocationNode" this]
         (if (empty? (:locks this)) (LocationIdentity/init) (LocationIdentity/any))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" CommitAllocationNode''afterClone-2 [#_"CommitAllocationNode" this, #_"Node" other]
         (§ ass! this (assoc this :lockIndexes (ArrayList. (:lockIndexes this))))
         nil
@@ -64958,8 +63743,7 @@
         nil
     )
 
-    #_unused
-    (§ override! #_"void" CommitAllocationNode''virtualize-2 [#_"CommitAllocationNode" this, #_"VirtualizerTool" tool]
+    (§ override! #_"void" Virtualizable''virtualize-2 [#_"CommitAllocationNode" this, #_"VirtualizerTool" tool]
         (loop-when [#_"int" pos 0 #_"int" i 0] (< i (count (:virtualObjects this)))
             (let [
                 #_"VirtualObjectNode" virtualObject (nth (:virtualObjects this) i)
@@ -64973,7 +63757,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" CommitAllocationNode''simplify-2 [#_"CommitAllocationNode" this, #_"SimplifierTool" tool]
         (let [
             #_"boolean[]" used (boolean-array (count (:virtualObjects this)))
@@ -65072,10 +63856,10 @@
     (§ def #_"NodeClass<EnsureVirtualizedNode>" EnsureVirtualizedNode'TYPE (NodeClass'create-1 EnsureVirtualizedNode))
 
     ; @Input
-    (§ mutable #_"ValueNode" :object nil)
+    (§ final #_"ValueNode" :object nil)
     (§ final #_"boolean" :localOnly false)
 
-    #_unused
+    #_unused
     (§ defn #_"EnsureVirtualizedNode" EnsureVirtualizedNode'new-2 [#_"ValueNode" object, #_"boolean" localOnly]
         (let [
             #_"EnsureVirtualizedNode" this (FixedWithNextNode'new-2 EnsureVirtualizedNode'TYPE, (StampFactory'forVoid-0))
@@ -65086,8 +63870,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" EnsureVirtualizedNode''virtualize-2 [#_"EnsureVirtualizedNode" this, #_"VirtualizerTool" tool]
+    (§ override! #_"void" Virtualizable''virtualize-2 [#_"EnsureVirtualizedNode" this, #_"VirtualizerTool" tool]
         (let [
             #_"ValueNode" object (VirtualizerTool''getAlias-2 tool, (:object this))
         ]
@@ -65104,7 +63887,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" EnsureVirtualizedNode''lower-2 [#_"EnsureVirtualizedNode" this, #_"LoweringTool" lowerer]
         (EnsureVirtualizedNode'ensureVirtualFailure-2 this, (:stamp (:object this)))
         nil
@@ -65135,7 +63918,7 @@
     (§ def #_"NodeClass<EscapeObjectState>" EscapeObjectState'TYPE (NodeClass'create-1 EscapeObjectState))
 
     ; @Input
-    (§ mutable #_"VirtualObjectNode" :object nil)
+    (§ final #_"VirtualObjectNode" :object nil)
 
     (§ defn #_"EscapeObjectState" EscapeObjectState'new-2 [#_"NodeClass<? extends EscapeObjectState>" c, #_"VirtualObjectNode" object]
         (let [
@@ -65222,18 +64005,17 @@
         (:length this)
     )
 
-    #_unused
-    (§ override! #_"void" VirtualArrayNode''generate-2 [#_"VirtualArrayNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"VirtualArrayNode" this, #_"LIRBuilder" builder]
         ;; nothing to do...
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"String" VirtualArrayNode''entryName-2 [#_"VirtualArrayNode" this, #_"int" index]
         (str "[" index "]")
     )
 
-    #_unused
+    #_unused
     (§ override! #_"int" VirtualArrayNode''entryIndexForOffset-3 [#_"VirtualArrayNode" this, #_"long" constantOffset, #_"JavaKind" expectedEntryKind]
         (VirtualArrayNode'entryIndexForOffset-4 constantOffset, expectedEntryKind, (:componentType this), (:length this))
     )
@@ -65265,17 +64047,17 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"JavaKind" VirtualArrayNode''entryKind-2 [#_"VirtualArrayNode" this, #_"int" index]
         (#_"ResolvedJavaType" .getJavaKind (:componentType this))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"VirtualArrayNode" VirtualArrayNode''duplicate-1 [#_"VirtualArrayNode" this]
         (VirtualArrayNode'new-2 (:componentType this), (:length this))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ValueNode" VirtualArrayNode''getMaterializedRepresentation-4 [#_"VirtualArrayNode" this, #_"FixedNode" fixed, #_"ValueNode[]" entries, #_"LockState" locks]
         (AllocatedObjectNode'new-1 this)
     )
@@ -65303,12 +64085,12 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"VirtualBoxingNode" VirtualBoxingNode''duplicate-1 [#_"VirtualBoxingNode" this]
         (VirtualBoxingNode'new-2 (VirtualObjectNode''type-1 this), (:boxingKind this))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ValueNode" VirtualBoxingNode''getMaterializedRepresentation-4 [#_"VirtualBoxingNode" this, #_"FixedNode" fixed, #_"ValueNode[]" entries, #_"LockState" locks]
         (BoxNode'new-3 (nth entries 0), (VirtualObjectNode''type-1 this), (:boxingKind this))
     )
@@ -65346,7 +64128,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override #_"ResolvedJavaType" VirtualInstanceNode''type-1 [#_"VirtualInstanceNode" this]
         (:type this)
     )
@@ -65363,7 +64145,7 @@
         (:fields this)
     )
 
-    #_unused
+    #_unused
     (§ override #_"String" VirtualInstanceNode''entryName-2 [#_"VirtualInstanceNode" this, #_"int" index]
         (#_"ResolvedJavaField" .getName (nth (:fields this) index))
     )
@@ -65378,22 +64160,22 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override #_"int" VirtualInstanceNode''entryIndexForOffset-3 [#_"VirtualInstanceNode" this, #_"long" constantOffset, #_"JavaKind" expectedEntryKind]
         (VirtualInstanceNode''fieldIndex-2 this, (#_"ResolvedJavaType" .findInstanceFieldWithOffset (:type this), constantOffset, expectedEntryKind))
     )
 
-    #_unused
+    #_unused
     (§ override #_"JavaKind" VirtualInstanceNode''entryKind-2 [#_"VirtualInstanceNode" this, #_"int" index]
         (#_"ResolvedJavaField" .getJavaKind (nth (:fields this) index))
     )
 
-    #_unused
+    #_unused
     (§ override #_"VirtualInstanceNode" VirtualInstanceNode''duplicate-1 [#_"VirtualInstanceNode" this]
         (VirtualInstanceNode'new-3 (:type this), (:fields this), (VirtualObjectNode''hasIdentity-1 (§ super )))
     )
 
-    #_unused
+    #_unused
     (§ override #_"ValueNode" VirtualInstanceNode''getMaterializedRepresentation-4 [#_"VirtualInstanceNode" this, #_"FixedNode" fixed, #_"ValueNode[]" entries, #_"LockState" locks]
         (AllocatedObjectNode'new-1 this)
     )
@@ -65426,7 +64208,7 @@
         (assoc this :objectId objectId)
     )
 
-    #_unused
+    #_unused
     (§ override #_"void" VirtualObjectNode''afterClone-2 [#_"VirtualObjectNode" this, #_"Node" other]
         (Node''afterClone-2 (§ super ), other)
         (§ ass! this (VirtualObjectNode''resetObjectId-1 this))
@@ -65448,7 +64230,7 @@
     ;;;
      ; Returns the name of the entry at the given index. Only used for debugging purposes.
      ;;
-    #_unused
+    #_unused
     (§ abstract #_"String" VirtualObjectNode''entryName-2 [#_"VirtualObjectNode" this, #_"int" i])
 
     ;;;
@@ -65479,7 +64261,7 @@
         (:hasIdentity this)
     )
 
-    #_unused
+    #_unused
     (§ method! #_"VirtualObjectNode" VirtualObjectNode''setIdentity-2 [#_"VirtualObjectNode" this, #_"boolean" identity]
         (assoc this :hasIdentity identity)
     )
@@ -65491,8 +64273,7 @@
      ;;
     (§ abstract #_"ValueNode" VirtualObjectNode''getMaterializedRepresentation-4 [#_"VirtualObjectNode" this, #_"FixedNode" fixed, #_"ValueNode[]" entries, #_"LockState" locks])
 
-    #_unused
-    (§ override #_"void" VirtualObjectNode''generate-2 [#_"VirtualObjectNode" this, #_"LIRBuilder" builder]
+    (§ override #_"void" LIRLowerable''generate-2 [#_"VirtualObjectNode" this, #_"LIRBuilder" builder]
         ;; nothing to do...
         nil
     )
@@ -65510,7 +64291,7 @@
 
     (§ def #_"NodeClass<VirtualState>" VirtualState'TYPE (NodeClass'create-1 VirtualState))
 
-    #_unused
+    #_unused
     (§ abstract #_"VirtualState" VirtualState''duplicateWithVirtualState-1 [#_"VirtualState" this])
 
     (§ abstract #_"void" VirtualState''applyToNonVirtual-2 [#_"VirtualState" this, #_"NodeClosure<? super ValueNode>" closure])
@@ -65519,10 +64300,10 @@
      ; Performs a <b>pre-order</b> iteration over all elements reachable from this state that
      ; are a subclass of VirtualState.
      ;;
-    #_unused
+    #_unused
     (§ abstract #_"void" VirtualState''applyToVirtual-2 [#_"VirtualState" this, #_"VirtualClosure" closure])
 
-    #_unused
+    #_unused
     (§ abstract #_"boolean" VirtualState''isPartOfThisState-2 [#_"VirtualState" this, #_"VirtualState" state])
 )
 
@@ -65583,7 +64364,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" AddressLoweringPhase''run-2 [#_"AddressLoweringPhase" this, #_"Graph" graph]
         (AddressLowering''preProcess-2 (:lowering this), graph)
         (loop-when-recur [#_"ISeq" s (seq (Graph''getNodes-1 graph))] (some? s) [(next s)]
@@ -65635,7 +64416,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" CanonicalizerPhase''run-3 [#_"CanonicalizerPhase" this, #_"Graph" graph, #_"PhaseContext" context]
         (CanonicalizerInstance''run-2 (CanonicalizerInstance'new-2 this, context), graph)
         nil
@@ -65893,7 +64674,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" Tool''deleteBranch-2 [#_"Tool" this, #_"Node" branch]
         (Node''replaceFirstSuccessor-3 (:predecessor branch), branch, nil)
         (GraphUtil'killCFG-1 branch)
@@ -65910,23 +64691,23 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" Tool''removeIfUnused-2 [#_"Tool" this, #_"Node" node]
         (GraphUtil'tryKillUnused-1 node)
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" Tool''canonicalizeReads-1 [#_"Tool" this]
         (:canonicalizeReads (:phase (:instance this)))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" Tool''allUsagesAvailable-1 [#_"Tool" this]
         true
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Integer" Tool''smallestCompareWidth-1 [#_"Tool" this]
         (Lowerer'smallestCompareWidth-0)
     )
@@ -65944,7 +64725,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" ConditionalEliminationPhase''run-3 [#_"ConditionalEliminationPhase" this, #_"Graph" graph, #_"PhaseContext" context]
         (let [
             #_"ControlFlowGraph" cfg (ControlFlowGraph'compute-5 graph, true, true, true, true)
@@ -65971,7 +64752,7 @@
         (Object.)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Block" MoveGuardsUpwards''enter-2 [#_"MoveGuardsUpwards" this, #_"Block" b]
         (let [
             #_"Block" o'anchorBlock (:anchorBlock this)
@@ -66046,7 +64827,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" MoveGuardsUpwards''exit-3 [#_"MoveGuardsUpwards" this, #_"Block" b, #_"Block" value]
         (§ ass! this (assoc this :anchorBlock value))
         nil
@@ -66200,7 +64981,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Integer" ConditionalEliminationInstance''enter-2 [#_"ConditionalEliminationInstance" this, #_"Block" block]
         (let [
             #_"int" mark (:tos (:undoOperations this))
@@ -66921,7 +65702,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" ConditionalEliminationInstance''exit-3 [#_"ConditionalEliminationInstance" this, #_"Block" b, #_"Integer" state]
         (let [
             #_"int" mark state
@@ -66945,7 +65726,7 @@
  ;;
 ; @FunctionalInterface
 (§ interface InfoElementProvider
-    #_unused
+    #_unused
     (§ abstract #_"Iterable<InfoElement>" InfoElementProvider''getInfoElements-2 [#_"InfoElementProvider" this, #_"ValueNode" value])
 )
 
@@ -66968,7 +65749,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Node" InputFilter''apply-3 [#_"InputFilter" this, #_"Node" _, #_"Node" node]
         (when (:ok this) ;; => abort the recursion
             (cond
@@ -67164,7 +65945,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" ConvertDeoptimizeToGuardPhase''run-3 [#_"ConvertDeoptimizeToGuardPhase" this, #_"Graph" graph, #_"PhaseContext" context]
         (doseq [#_"DeoptimizeNode" d (Graph''getNodes-2 graph, DeoptimizeNode'TYPE)]
             (when-not (= (:action d) DeoptimizationAction/None)
@@ -67204,7 +65985,7 @@
 
     (§ final #_"boolean" :optional false)
 
-    #_unused
+    #_unused
     (§ override! #_"void" DeadCodeEliminationPhase''run-2 [#_"DeadCodeEliminationPhase" this, #_"Graph" graph]
         (when-not (and (:optional this) GraalOptions'reduceDCE)
             (let [
@@ -67313,7 +66094,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" DeoptimizationGroupingPhase''run-3 [#_"DeoptimizationGroupingPhase" this, #_"Graph" graph, #_"MidTierContext" context]
         (loop-when [#_"ControlFlowGraph" cfg nil #_"ISeq" s (seq (Graph''getNodes-2 graph, FrameState'TYPE))] (some? s)
             (let [
@@ -67386,7 +66167,7 @@
         (Phase'new-0)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" ExpandLogicPhase''run-2 [#_"ExpandLogicPhase" this, #_"Graph" graph]
         (doseq [#_"ShortCircuitOrNode" logic (Graph''getNodes-2 graph, ShortCircuitOrNode'TYPE)]
             (ExpandLogicPhase'processBinary-1 logic)
@@ -67538,7 +66319,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" FixReadsPhase''run-3 [#_"FixReadsPhase" this, #_"Graph" graph, #_"LowTierContext" context]
         (Phase''apply-2 (:schedulePhase this), graph)
         (let [
@@ -67565,7 +66346,7 @@
         (ScheduledNodeIterator'new-0)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" FixReadsClosure''processNode-2 [#_"FixReadsClosure" this, #_"Node" node]
         (condp instance? node
             AbstractMergeNode
@@ -67943,7 +66724,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Integer" RawConditionalEliminationVisitor''enter-2 [#_"RawConditionalEliminationVisitor" this, #_"Block" b]
         (let [
             #_"int" mark (:tos (:undoOperations this))
@@ -67958,7 +66739,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" RawConditionalEliminationVisitor''exit-3 [#_"RawConditionalEliminationVisitor" this, #_"Block" b, #_"Integer" state]
         (let [
             #_"int" mark state
@@ -67981,12 +66762,12 @@
  ; @anno FixReadsPhase.RawCEPhase
  ;;
 (final-ns RawCEPhase (§ extends BasePhase #_"<LowTierContext>")
-    #_unused
+    #_unused
     (§ defn #_"RawCEPhase" RawCEPhase'new-0 []
         (BasePhase'new-0)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" RawCEPhase''run-3 [#_"RawCEPhase" this, #_"Graph" graph, #_"LowTierContext" context]
         (when GraalOptions'rawConditionalElimination
             (Phase''apply-2 (SchedulePhase'new-2 SchedulingStrategy'LATEST, true), graph)
@@ -68115,7 +66896,7 @@
     )
 
     ; @SuppressWarnings("try")
-    #_unused
+    #_unused
     (§ override! #_"void" FloatingReadPhase''run-2 [#_"FloatingReadPhase" this, #_"Graph" graph]
         (let [
             #_"EconomicMap<LoopBeginNode, EconomicSet<LocationIdentity>>" modifiedInLoops nil
@@ -68238,7 +67019,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Iterable<LocationIdentity>" MemoryMapImpl''getLocations-1 [#_"MemoryMapImpl" this]
         (keys (:lastMemorySnapshot this))
     )
@@ -68263,7 +67044,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"MemoryMapImpl" FloatingReadClosure''processNode-3 [#_"FloatingReadClosure" this, #_"FixedNode" node, #_"MemoryMapImpl" state]
         (if (instance? MemoryAnchorNode node)
             (do
@@ -68354,17 +67135,17 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"MemoryMapImpl" FloatingReadClosure''merge-3 [#_"FloatingReadClosure" this, #_"AbstractMergeNode" merge, #_"List<MemoryMapImpl>" states]
         (FloatingReadPhase'mergeMemoryMaps-2 merge, states)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"MemoryMapImpl" FloatingReadClosure''afterSplit-3 [#_"FloatingReadClosure" this, #_"AbstractBeginNode" node, #_"MemoryMapImpl" oldState]
         (MemoryMapImpl'new-1 oldState)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"EconomicMap<LoopExitNode, MemoryMapImpl>" FloatingReadClosure''processLoop-3 [#_"FloatingReadClosure" this, #_"LoopBeginNode" loop, #_"MemoryMapImpl" initialState]
         (let [
             #_"EconomicSet<LocationIdentity>" modifiedLocations (get (:modifiedInLoops this) loop)
@@ -68430,7 +67211,7 @@
         (Phase'new-0)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" FrameStateAssignmentPhase''run-2 [#_"FrameStateAssignmentPhase" this, #_"Graph" graph]
         (when (GuardsStage'areFrameStatesAtSideEffects-1 (:guardsStage graph))
             (ReentrantNodeIterator'apply-3 (FrameStateAssignmentClosure'new-0), (:start graph), nil)
@@ -68438,36 +67219,6 @@
             (#_"Iterable" .forEach (NodeIterable''filter-2 (Graph''getNodes-2 graph, FrameState'TYPE), (ß state -> (§ fun (Node''hasNoUsages-1 state)))), GraphUtil'killWithUnusedFloatingInputs)
         )
         nil
-    )
-
-    #_unused
-    (§ defn- #_"boolean" FrameStateAssignmentPhase'hasFloatingDeopts-1 [#_"Graph" graph]
-        (loop-when [#_"ISeq" s (seq (Graph''getNodes-1 graph))] (some? s) => false
-            (let [
-                #_"Node" node (first s)
-            ]
-                (or (and (instance? DeoptimizingNode node) (GraphUtil'isFloatingNode-1 node) (DeoptimizingNode''canDeoptimize-1 node))
-                    (recur (next s))
-                )
-            )
-        )
-    )
-
-    (§ defn- #_"FrameState" FrameStateAssignmentPhase'singleFrameState-1 [#_"List<FrameState>" states]
-        (let [
-            #_"FrameState" singleState (nth states 0)
-        ]
-            (loop [#_"int" i 1]
-                (if (< i (count states))
-                    (when (= (nth states i) singleState)
-                        (recur (inc i))
-                    )
-                    (when (and (some? singleState) (not= (:bci singleState) BytecodeFrame/INVALID_FRAMESTATE_BCI))
-                        singleState
-                    )
-                )
-            )
-        )
     )
 )
 
@@ -68479,7 +67230,7 @@
         (NodeIteratorClosure'new-0)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"FrameState" FrameStateAssignmentClosure''processNode-3 [#_"FrameStateAssignmentClosure" this, #_"FixedNode" node, #_"FrameState" state]
         (when (and (instance? DeoptBefore node) (DeoptBefore''canDeoptimize-1 node) (nil? (DeoptBefore''stateBefore-1 node)))
             (when (some? state) => (throw! (str "no FrameState at DeoptimizingNode " node))
@@ -68520,17 +67271,34 @@
         )
     )
 
-    #_unused
-    (§ override! #_"FrameState" FrameStateAssignmentClosure''merge-3 [#_"FrameStateAssignmentClosure" this, #_"AbstractMergeNode" merge, #_"List<FrameState>" states]
-        (or (FrameStateAssignmentPhase'singleFrameState-1 states) (BeginStateSplitNode''stateAfter-1 merge))
+    (§ defn- #_"FrameState" FrameStateAssignmentClosure'singleFrameState-1 [#_"List<FrameState>" states]
+        (let [
+            #_"FrameState" singleState (nth states 0)
+        ]
+            (loop [#_"int" i 1]
+                (if (< i (count states))
+                    (when (= (nth states i) singleState)
+                        (recur (inc i))
+                    )
+                    (when (and (some? singleState) (not= (:bci singleState) BytecodeFrame/INVALID_FRAMESTATE_BCI))
+                        singleState
+                    )
+                )
+            )
+        )
     )
 
-    #_unused
+    #_unused
+    (§ override! #_"FrameState" FrameStateAssignmentClosure''merge-3 [#_"FrameStateAssignmentClosure" this, #_"AbstractMergeNode" merge, #_"List<FrameState>" states]
+        (or (FrameStateAssignmentClosure'singleFrameState-1 states) (BeginStateSplitNode''stateAfter-1 merge))
+    )
+
+    #_unused
     (§ override! #_"FrameState" FrameStateAssignmentClosure''afterSplit-3 [#_"FrameStateAssignmentClosure" this, #_"AbstractBeginNode" node, #_"FrameState" oldState]
         oldState
     )
 
-    #_unused
+    #_unused
     (§ override! #_"EconomicMap<LoopExitNode, FrameState>" FrameStateAssignmentClosure''processLoop-3 [#_"FrameStateAssignmentClosure" this, #_"LoopBeginNode" loop, #_"FrameState" initialState]
         (:exitStates (ReentrantNodeIterator'processLoop-3 this, loop, initialState))
     )
@@ -68552,7 +67320,7 @@
         (BasePhase'new-0)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" GuardLoweringPhase''run-3 [#_"GuardLoweringPhase" this, #_"Graph" graph, #_"MidTierContext" context]
         (when (GuardsStage'allowsFloatingGuards-1 (:guardsStage graph))
             (Phase''apply-2 (SchedulePhase'new-1 SchedulingStrategy'EARLIEST_WITH_GUARD_ORDER), graph)
@@ -68580,7 +67348,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" LowerGuards''processNode-2 [#_"LowerGuards" this, #_"Node" node]
         (when (instance? GuardNode node)
             (let [
@@ -68653,7 +67421,7 @@
     )
 
     ; @SuppressWarnings("try")
-    #_unused
+    #_unused
     (§ override! #_"void" IncrementalCanonicalizerPhase''run-3 [#_"IncrementalCanonicalizerPhase<C extends PhaseContext>" this, #_"Graph" graph, #_"C" context]
         (let [
             #_"HashSetNodeEventListener" listener (HashSetNodeEventListener'new-0)
@@ -68682,12 +67450,12 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override #_"Graph" AbstractInlineInfo''graph-1 [#_"AbstractInlineInfo" this]
         (:graph (:invoke this))
     )
 
-    #_unused
+    #_unused
     (§ override #_"InvokeNode" AbstractInlineInfo''invoke-1 [#_"AbstractInlineInfo" this]
         (:invoke this)
     )
@@ -68696,7 +67464,7 @@
         (InliningUtil'inlineForCanonicalization-4 invoke, (:graph inlineable), receiverNullCheck, concrete)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" AbstractInlineInfo''populateInlinableElements-4 [#_"AbstractInlineInfo" this, #_"HighTierContext" context, #_"Graph" caller, #_"CanonicalizerPhase" canonicalizer]
         (dotimes [#_"int" i (InlineInfo''numberOfMethods-1 this)]
             (InlineInfo''setInlinableElement-3 this, i, (Inlineable'getInlineableElement-4 (InlineInfo''methodAt-2 this, i), (:invoke this), context, canonicalizer))
@@ -68704,7 +67472,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"int" AbstractInlineInfo''determineNodeCount-1 [#_"AbstractInlineInfo" this]
         (loop-when [#_"int" n 0 #_"int" i 0] (< i (InlineInfo''numberOfMethods-1 this)) => n
             (let [
@@ -68861,17 +67629,17 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"int" InlineableGraph''getNodeCount-1 [#_"InlineableGraph" this]
         (Graph''getNodeCount-1 (:graph this))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Iterable<InvokeNode>" InlineableGraph''getInvokes-1 [#_"InlineableGraph" this]
         (Graph''getInvokes-1 (:graph this))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"double" InlineableGraph''getProbability-2 [#_"InlineableGraph" this, #_"InvokeNode" invoke]
         (FixedNodeProbabilityCache''applyAsDouble-2 (:probabilites this), invoke)
     )
@@ -68895,54 +67663,54 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ method! #_"ExactInlineInfo" ExactInlineInfo''suppressNullCheck-1 [#_"ExactInlineInfo" this]
         (assoc this :suppressNullCheck true)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"EconomicSet<Node>" ExactInlineInfo''inline-1 [#_"ExactInlineInfo" this]
         (AbstractInlineInfo'inline-4 (:invoke this), (:concrete this), (:inlineableElement this), (not (:suppressNullCheck this)))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" ExactInlineInfo''tryToDevirtualizeInvoke-1 [#_"ExactInlineInfo" this]
         ;; nothing todo, can already be bound statically
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"int" ExactInlineInfo''numberOfMethods-1 [#_"ExactInlineInfo" this]
         1
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ResolvedJavaMethod" ExactInlineInfo''methodAt-2 [#_"ExactInlineInfo" this, #_"int" index]
         (:concrete this)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"double" ExactInlineInfo''probabilityAt-2 [#_"ExactInlineInfo" this, #_"int" index]
         1.0
     )
 
-    #_unused
+    #_unused
     (§ override! #_"double" ExactInlineInfo''relevanceAt-2 [#_"ExactInlineInfo" this, #_"int" index]
         1.0
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Inlineable" ExactInlineInfo''inlineableElementAt-2 [#_"ExactInlineInfo" this, #_"int" index]
         (:inlineableElement this)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" ExactInlineInfo''setInlinableElement-3 [#_"ExactInlineInfo" this, #_"int" index, #_"Inlineable" inlineableElement]
         (§ ass! this (assoc this :inlineableElement inlineableElement))
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" ExactInlineInfo''shouldInline-1 [#_"ExactInlineInfo" this]
         (#_"ResolvedJavaMethod" .shouldBeInlined (:concrete this))
     )
@@ -68957,7 +67725,7 @@
     ;;;
      ; The graph containing the {@link #invoke() invocation} that may be inlined.
      ;;
-    #_unused
+    #_unused
     (§ abstract #_"Graph" InlineInfo''graph-1 [#_"InlineInfo" this])
 
     ;;;
@@ -69015,7 +67783,7 @@
     ;;;
      ; This method sets in motion the inlining machinery.
      ;;
-    #_unused
+    #_unused
     (§ override! #_"void" InliningPhase''run-3 [#_"InliningPhase" this, #_"Graph" graph, #_"HighTierContext" context]
         (let [
             #_"InliningData" data (InliningData'new-5 graph, context, (:canonicalizer this), (GreedyInliningPolicy'new-0), nil)
@@ -69474,12 +68242,12 @@
         (AbstractInliningPolicy'new-0)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" GreedyInliningPolicy''continueInlining-2 [#_"GreedyInliningPolicy" this, #_"Graph" currentGraph]
         (< (Graph''getNodeCount-1 currentGraph) GraalOptions'maximumDesiredSize)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Decision" GreedyInliningPolicy''isWorthInlining-5 [#_"GreedyInliningPolicy" this, #_"Replacements" replacements, #_"MethodInvocation" invocation, #_"int" inliningDepth, #_"boolean" fullyProcessed]
         (cond
             GraalOptions'inlineEverything                     Decision'YES
@@ -69636,12 +68404,12 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ResolvedJavaMethod" CallsiteHolderExplorable''method-1 [#_"CallsiteHolderExplorable" this]
         (when (some? (:graph this)) (:rootMethod (:graph this)))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" CallsiteHolderExplorable''hasRemainingInvokes-1 [#_"CallsiteHolderExplorable" this]
         (seq (:remainingInvokes this))
     )
@@ -69659,7 +68427,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ defn #_"boolean" CallsiteHolderExplorable'allArgsNonNull-1 [#_"InvokeNode" invoke]
         (loop-when [#_"ISeq" s (seq (CallTargetNode''arguments-1 (:callTarget invoke)))] (some? s) => true
             (and (some? (first s))
@@ -69668,7 +68436,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ method! #_"boolean" CallsiteHolderExplorable''containsInvoke-2 [#_"CallsiteHolderExplorable" this, #_"InvokeNode" invoke]
         (loop-when [#_"ISeq" s (seq (Graph''getInvokes-1 (CallsiteHolderExplorable''graph-1 this)))] (some? s) => false
             (or (= (first s) invoke)
@@ -69677,7 +68445,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ method! #_"boolean" CallsiteHolderExplorable''containsParam-2 [#_"CallsiteHolderExplorable" this, #_"ParameterNode" param]
         (loop-when [#_"ISeq" s (seq (Graph''getNodes-2 (:graph this), ParameterNode'TYPE))] (some? s) => false
             (or (= (first s) param)
@@ -70596,7 +69364,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" IterativeConditionalEliminationPhase''run-3 [#_"IterativeConditionalEliminationPhase" this, #_"Graph" graph, #_"PhaseContext" context]
         (let [
             #_"HashSetNodeEventListener" listener (HashSetNodeEventListener''exclude-2 (HashSetNodeEventListener'new-0), NodeEvent'NODE_ADDED)
@@ -70633,7 +69401,7 @@
         (Phase'new-0)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" LockEliminationPhase''run-2 [#_"LockEliminationPhase" this, #_"Graph" graph]
         (doseq [#_"MonitorExitNode" monitorExitNode (Graph''getNodes-2 graph, MonitorExitNode'TYPE)]
             (let [
@@ -70674,7 +69442,7 @@
         (Phase'new-0)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" LoopSafepointInsertionPhase''run-2 [#_"LoopSafepointInsertionPhase" this, #_"Graph" graph]
         (when GraalOptions'genLoopSafepoints
             (doseq [#_"LoopBeginNode" loopBeginNode (Graph''getNodes-2 graph, LoopBeginNode'TYPE)]
@@ -70706,7 +69474,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" LoweringPhase''run-3 [#_"LoweringPhase" this, #_"Graph" graph, #_"PhaseContext" context]
         (let [
             #_"IncrementalCanonicalizerPhase<PhaseContext>" incrementalCanonicalizer (IncrementalCanonicalizerPhase'new-1 (:canonicalizer this))
@@ -70800,7 +69568,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ defn #_"void" LoweringPhase'processBlockBounded-1 [#_"ProcessFrame" rootFrame]
         (loop-when [#_"ProcessBlockState" state ProcessBlockState'ST_PROCESS #_"ProcessFrame" frame rootFrame] (some? frame)
             (let [
@@ -70897,7 +69665,7 @@
         (:guard this)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" DummyGuardHandle''setGuard-2 [#_"DummyGuardHandle" this, #_"GuardingNode" guard]
         (Node''updateUsages-3 this, (:guard this), guard)
         (§ ass! this (assoc this :guard guard))
@@ -71004,7 +69772,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" LoweringRound''run-2 [#_"LoweringRound" this, #_"Graph" graph]
         (Phase''apply-2 (:schedulePhase this), graph)
         (§ ass! this (assoc this :schedule (:lastSchedule graph)))
@@ -71082,7 +69850,7 @@
      ;
      ; @param node a Lowerable node
      ;;
-    #_unused
+    #_unused
     (§ method- #_"Collection<Node>" LoweringRound''getUnscheduledUsages-2 [#_"LoweringRound" this, #_"Node" node]
         (let [
             #_"List<Node>" unscheduledUsages (ArrayList.)
@@ -71181,7 +69949,7 @@
         (BasePhase'new-0)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" PropagateDeoptimizeProbabilityPhase''run-3 [#_"PropagateDeoptimizeProbabilityPhase" this, #_"Graph" graph, #_"PhaseContext" context]
         (when (Graph''hasNode-2 graph, AbstractDeoptimizeNode'TYPE)
             (let [
@@ -71256,7 +70024,7 @@
         (Phase'new-0)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" RemoveValueProxyPhase''run-2 [#_"RemoveValueProxyPhase" this, #_"Graph" graph]
         (doseq [#_"LoopExitNode" exit (Graph''getNodes-2 graph, LoopExitNode'TYPE)]
             (doseq [#_"ProxyNode" vpn (NodeIterable''snapshot-1 (LoopExitNode''proxies-1 exit))]
@@ -71426,7 +70194,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" UseTrappingNullChecksPhase''run-3 [#_"UseTrappingNullChecksPhase" this, #_"Graph" graph, #_"LowTierContext" context]
         (when-not (or (not GraalOptions'useTrappingNullChecks) (<= (.implicitNullCheckLimit HotSpot'target) 0))
             (let [
@@ -71488,7 +70256,7 @@
         this
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" HashSetNodeEventListener''changed-3 [#_"HashSetNodeEventListener" this, #_"NodeEvent" e, #_"Node" node]
         (when (contains? (:filter this) e)
             (#_"EconomicSet" .add (:nodes this), node)
@@ -71600,7 +70368,7 @@
      ; the canonicalizer. For example, word type rewriting must run before the first run of the
      ; canonicalizer because many nodes are not prepared to see the word type during canonicalization.
      ;;
-    #_unused
+    #_unused
     (§ defn #_"void" InferStamps'inferStamps-1 [#_"Graph" graph]
         ;; We want to make the stamps more precise. For cyclic phi functions, this means we have to
         ;; ignore the initial stamp because the imprecise stamp would always propagate around the
@@ -72162,7 +70930,7 @@
 
     (§ abstract #_"void" Phase''run-2 [#_"Phase" this, #_"Graph" graph])
 
-    #_unused
+    #_unused
     (§ override! #_"void" Phase''run-3 [#_"Phase" this, #_"Graph" graph, #_"Object" context]
         (Phase''run-2 this, graph)
         nil
@@ -72187,7 +70955,7 @@
     ;;;
      ; Add a new phase at the beginning of this suite.
      ;;
-    #_unused
+    #_unused
     (§ method! #_"void" PhaseSuite''prependPhase-2 [#_"PhaseSuite<C>" this, #_"BasePhase<? super C>" phase]
         (#_"List" .add (:phases this), 0, phase)
         nil
@@ -72205,7 +70973,7 @@
      ; Inserts a phase before the last phase in the suite. If the suite contains no phases the new
      ; phase will be inserted as the first phase.
      ;;
-    #_unused
+    #_unused
     (§ method! #_"void" PhaseSuite''addBeforeLast-2 [#_"PhaseSuite<C>" this, #_"BasePhase<? super C>" phase]
         (let [
             #_"ListIterator<BasePhase<? super C>>" last (PhaseSuite''findLastPhase-1 this)
@@ -72236,7 +71004,7 @@
     ;;;
      ; Gets an unmodifiable view on the phases in this suite.
      ;;
-    #_unused
+    #_unused
     (§ method #_"List<BasePhase<? super C>>" PhaseSuite''getPhases-1 [#_"PhaseSuite<C>" this]
         (Collections/unmodifiableList (:phases this))
     )
@@ -72271,7 +71039,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ defn #_"<C> boolean" PhaseSuite'findNextPhase-2 [#_"ListIterator<BasePhase<? super C>>" it, #_"Class<? extends BasePhase<? super C>>" phaseClass]
         (PhaseSuite'findNextPhase-3 it, phaseClass, false)
     )
@@ -72325,7 +71093,7 @@
     ;;;
      ; Removes the first instance of the given phase class, looking recursively into inner phase suites.
      ;;
-    #_unused
+    #_unused
     (§ method! #_"boolean" PhaseSuite''replacePhase-3 [#_"PhaseSuite<C>" this, #_"Class<? extends BasePhase<? super C>>" phaseClass, #_"BasePhase<? super C>" newPhase]
         (let [
             #_"ListIterator<BasePhase<? super C>>" it (#_"List" .listIterator (:phases this))
@@ -72388,7 +71156,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" SchedulePhase''run-2 [#_"SchedulePhase" this, #_"Graph" graph]
         (§ ass! (ScheduleInstance'new-0) (ScheduleInstance''run-4 (ScheduleInstance'new-0), graph, (:selectedStrategy this), (:immutableGraph this)))
         nil
@@ -72414,7 +71182,7 @@
         (any = self SchedulingStrategy'EARLIEST SchedulingStrategy'EARLIEST_WITH_GUARD_ORDER)
     )
 
-    #_unused
+    #_unused
     (§ defn #_"boolean" SchedulingStrategy'isLatest-1 [#_"SchedulingStrategy" self]
         (not (SchedulingStrategy'isEarliest-1 self))
     )
@@ -73135,7 +71903,7 @@
     ;;;
      ; Gets the nodes in a given block.
      ;;
-    #_unused
+    #_unused
     (§ method! #_"List<Node>" ScheduleInstance''nodesFor-2 [#_"ScheduleInstance" this, #_"Block" block]
         (BlockMap''get-2 (:blockToNodesMap this), block)
     )
@@ -73535,12 +72303,12 @@
 (final-ns AMD64CountLeadingZerosNode (§ extends UnaryNode) (§ implements LIRLowerable)
     (§ def #_"NodeClass<AMD64CountLeadingZerosNode>" AMD64CountLeadingZerosNode'TYPE (NodeClass'create-1 AMD64CountLeadingZerosNode))
 
-    #_unused
+    #_unused
     (§ defn #_"AMD64CountLeadingZerosNode" AMD64CountLeadingZerosNode'new-1 [#_"ValueNode" value]
         (UnaryNode'new-3 AMD64CountLeadingZerosNode'TYPE, (AMD64CountLeadingZerosNode'computeStamp-2 (:stamp value), value), value)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Stamp" AMD64CountLeadingZerosNode''foldStamp-2 [#_"AMD64CountLeadingZerosNode" this, #_"Stamp" stamp]
         (AMD64CountLeadingZerosNode'computeStamp-2 stamp, (UnaryNode''getValue-1 this))
     )
@@ -73562,15 +72330,13 @@
         )
     )
 
-    #_unused
-    (§ override! #_"ValueNode" AMD64CountLeadingZerosNode''canonical-3 [#_"AMD64CountLeadingZerosNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
+    (§ override! #_"ValueNode" Unary''canonical-3 [#_"AMD64CountLeadingZerosNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
         (or (AMD64CountLeadingZerosNode'tryFold-1 value)
             this
         )
     )
 
-    #_unused
-    (§ override! #_"void" AMD64CountLeadingZerosNode''generate-2 [#_"AMD64CountLeadingZerosNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"AMD64CountLeadingZerosNode" this, #_"LIRBuilder" builder]
         (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitCountLeadingZeros-2 (:gen builder), (LIRBuilder''operand-2 builder, (UnaryNode''getValue-1 this))))
         nil
     )
@@ -73582,12 +72348,12 @@
 (final-ns AMD64CountTrailingZerosNode (§ extends UnaryNode) (§ implements LIRLowerable)
     (§ def #_"NodeClass<AMD64CountTrailingZerosNode>" AMD64CountTrailingZerosNode'TYPE (NodeClass'create-1 AMD64CountTrailingZerosNode))
 
-    #_unused
+    #_unused
     (§ defn #_"AMD64CountTrailingZerosNode" AMD64CountTrailingZerosNode'new-1 [#_"ValueNode" value]
         (UnaryNode'new-3 AMD64CountTrailingZerosNode'TYPE, (AMD64CountTrailingZerosNode'computeStamp-2 (:stamp value), value), value)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Stamp" AMD64CountTrailingZerosNode''foldStamp-2 [#_"AMD64CountTrailingZerosNode" this, #_"Stamp" stamp]
         (AMD64CountTrailingZerosNode'computeStamp-2 stamp, (UnaryNode''getValue-1 this))
     )
@@ -73609,92 +72375,32 @@
         )
     )
 
-    #_unused
-    (§ override! #_"ValueNode" AMD64CountTrailingZerosNode''canonical-3 [#_"AMD64CountTrailingZerosNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
+    (§ override! #_"ValueNode" Unary''canonical-3 [#_"AMD64CountTrailingZerosNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
         (or (AMD64CountTrailingZerosNode'tryFold-1 value)
             this
         )
     )
 
-    #_unused
-    (§ override! #_"void" AMD64CountTrailingZerosNode''generate-2 [#_"AMD64CountTrailingZerosNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"AMD64CountTrailingZerosNode" this, #_"LIRBuilder" builder]
         (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitCountTrailingZeros-2 (:gen builder), (LIRBuilder''operand-2 builder, (UnaryNode''getValue-1 this))))
         nil
     )
 )
 
 (value-ns BoxingSnippets (§ implements Snippets)
-    ; @Snippet
-    #_unused
-    (§ defn #_"Object" BoxingSnippets'booleanValueOf-1 [#_"boolean" value]
-        (PiNode'piCastToSnippetReplaceeStamp-1 (Boolean/valueOf value))
-    )
+    (§ snippet! #_"Object" #_"BoxingSnippets" "booleanValueOf" [#_"boolean" value] (Placeholder'piCastToSnippetReplaceeStamp-1 (Boolean/valueOf value)))
+    (§ snippet! #_"Object" #_"BoxingSnippets" "byteValueOf"    [#_"byte" value]    (Placeholder'piCastToSnippetReplaceeStamp-1 (Byte/valueOf value)))
+    (§ snippet! #_"Object" #_"BoxingSnippets" "charValueOf"    [#_"char" value]    (Placeholder'piCastToSnippetReplaceeStamp-1 (Character/valueOf value)))
+    (§ snippet! #_"Object" #_"BoxingSnippets" "intValueOf"     [#_"int" value]     (Placeholder'piCastToSnippetReplaceeStamp-1 (Integer/valueOf value)))
+    (§ snippet! #_"Object" #_"BoxingSnippets" "longValueOf"    [#_"long" value]    (Placeholder'piCastToSnippetReplaceeStamp-1 (Long/valueOf value)))
+    (§ snippet! #_"Object" #_"BoxingSnippets" "shortValueOf"   [#_"short" value]   (Placeholder'piCastToSnippetReplaceeStamp-1 (Short/valueOf value)))
 
-    ; @Snippet
-    #_unused
-    (§ defn #_"Object" BoxingSnippets'byteValueOf-1 [#_"byte" value]
-        (PiNode'piCastToSnippetReplaceeStamp-1 (Byte/valueOf value))
-    )
-
-    ; @Snippet
-    #_unused
-    (§ defn #_"Object" BoxingSnippets'charValueOf-1 [#_"char" value]
-        (PiNode'piCastToSnippetReplaceeStamp-1 (Character/valueOf value))
-    )
-
-    ; @Snippet
-    #_unused
-    (§ defn #_"Object" BoxingSnippets'intValueOf-1 [#_"int" value]
-        (PiNode'piCastToSnippetReplaceeStamp-1 (Integer/valueOf value))
-    )
-
-    ; @Snippet
-    #_unused
-    (§ defn #_"Object" BoxingSnippets'longValueOf-1 [#_"long" value]
-        (PiNode'piCastToSnippetReplaceeStamp-1 (Long/valueOf value))
-    )
-
-    ; @Snippet
-    #_unused
-    (§ defn #_"Object" BoxingSnippets'shortValueOf-1 [#_"short" value]
-        (PiNode'piCastToSnippetReplaceeStamp-1 (Short/valueOf value))
-    )
-
-    ; @Snippet
-    #_unused
-    (§ defn #_"boolean" BoxingSnippets'booleanValue-1 [#_"Boolean" value]
-        (#_"Boolean" .booleanValue value)
-    )
-
-    ; @Snippet
-    #_unused
-    (§ defn #_"byte" BoxingSnippets'byteValue-1 [#_"Byte" value]
-        (#_"Byte" .byteValue value)
-    )
-
-    ; @Snippet
-    #_unused
-    (§ defn #_"char" BoxingSnippets'charValue-1 [#_"Character" value]
-        (#_"Character" .charValue value)
-    )
-
-    ; @Snippet
-    #_unused
-    (§ defn #_"int" BoxingSnippets'intValue-1 [#_"Integer" value]
-        (#_"Integer" .intValue value)
-    )
-
-    ; @Snippet
-    #_unused
-    (§ defn #_"long" BoxingSnippets'longValue-1 [#_"Long" value]
-        (#_"Long" .longValue value)
-    )
-
-    ; @Snippet
-    #_unused
-    (§ defn #_"short" BoxingSnippets'shortValue-1 [#_"Short" value]
-        (#_"Short" .shortValue value)
-    )
+    (§ snippet! #_"boolean" #_"BoxingSnippets" "booleanValue" [#_"Boolean" value]   (#_"Boolean" .booleanValue value))
+    (§ snippet! #_"byte"    #_"BoxingSnippets" "byteValue"    [#_"Byte" value]      (#_"Byte" .byteValue value))
+    (§ snippet! #_"char"    #_"BoxingSnippets" "charValue"    [#_"Character" value] (#_"Character" .charValue value))
+    (§ snippet! #_"int"     #_"BoxingSnippets" "intValue"     [#_"Integer" value]   (#_"Integer" .intValue value))
+    (§ snippet! #_"long"    #_"BoxingSnippets" "longValue"    [#_"Long" value]      (#_"Long" .longValue value))
+    (§ snippet! #_"short"   #_"BoxingSnippets" "shortValue"   [#_"Short" value]     (#_"Short" .shortValue value))
 
     (§ defn #_"FloatingNode" BoxingSnippets'canonicalizeBoxing-1 [#_"BoxNode" box]
         (let [
@@ -73963,27 +72669,27 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"byte[]" ClassfileBytecode''getCode-1 [#_"ClassfileBytecode" this]
         (:code this)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"int" ClassfileBytecode''getCodeSize-1 [#_"ClassfileBytecode" this]
         (count (:code this))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"int" ClassfileBytecode''getMaxLocals-1 [#_"ClassfileBytecode" this]
         (:maxLocals this)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"int" ClassfileBytecode''getMaxStackSize-1 [#_"ClassfileBytecode" this]
         (:maxStack this)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ConstantPool" ClassfileBytecode''getConstantPool-1 [#_"ClassfileBytecode" this]
         (:constantPool this)
     )
@@ -74024,7 +72730,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Bytecode" ClassfileBytecodeProvider''getBytecode-2 [#_"ClassfileBytecodeProvider" this, #_"ResolvedJavaMethod" method]
         (let [
             #_"Classfile" classfile (ClassfileBytecodeProvider''getClassfile-2 this, (ClassfileBytecodeProvider''resolveToClass-2 this, (#_"ResolvedJavaType" .getName (#_"ResolvedJavaMethod" .getDeclaringClass method))))
@@ -74033,7 +72739,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" ClassfileBytecodeProvider''supportsInvokedynamic-1 [#_"ClassfileBytecodeProvider" this]
         false
     )
@@ -74398,7 +73104,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override #_"void" MemberRef''loadReferencedType-4 [#_"MemberRef" this, #_"ClassfileConstantPool" cp, #_"int" index, #_"int" opcode]
         (ClassRef''loadReferencedType-4 (ClassfileConstantPool''get-3 cp, ClassRef, (:classIndex this)), cp, (:classIndex this), opcode)
         nil
@@ -74606,7 +73312,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" Unsupported''loadReferencedType-4 [#_"Unsupported" this, #_"ClassfileConstantPool" cp, #_"int" index, #_"int" opcode]
         (throw! (str "Resolution of " (:name this) " constant pool entries not supported by " (#_"Class" .getSimpleName ClassfileBytecodeProvider)))
     )
@@ -74677,7 +73383,7 @@
         (#_"Class" .cast c, (nth (:entries this) index))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" ClassfileConstantPool''loadReferencedType-3 [#_"ClassfileConstantPool" this, #_"int" index, #_"int" opcode]
         (when (= opcode Bytecodes'INVOKEDYNAMIC)
             (throw! (str "INVOKEDYNAMIC not supported by " (#_"Class" .getSimpleName ClassfileBytecodeProvider)))
@@ -74686,12 +73392,12 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"JavaField" ClassfileConstantPool''lookupField-4 [#_"ClassfileConstantPool" this, #_"int" index, #_"ResolvedJavaMethod" method, #_"int" opcode]
         (FieldRef''resolve-3 (ClassfileConstantPool''get-3 this, FieldRef, index), this, opcode)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"JavaMethod" ClassfileConstantPool''lookupMethod-3 [#_"ClassfileConstantPool" this, #_"int" index, #_"int" opcode]
         (when (= opcode Bytecodes'INVOKEDYNAMIC)
             (throw! (str "INVOKEDYNAMIC not supported by" (#_"Class" .getSimpleName ClassfileBytecodeProvider)))
@@ -74707,12 +73413,12 @@
         (:value (§ cast #_"Utf8" (nth (:entries this) index)))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Signature" ClassfileConstantPool''lookupSignature-2 [#_"ClassfileConstantPool" this, #_"int" index]
         (throw! "should not reach here")
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Object" ClassfileConstantPool''lookupConstant-2 [#_"ClassfileConstantPool" this, #_"int" index]
         (let [
             #_"ClassfileConstant" c (nth (:entries this) index)
@@ -74728,7 +73434,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"JavaConstant" ClassfileConstantPool''lookupAppendix-3 [#_"ClassfileConstantPool" this, #_"int" index, #_"int" opcode]
         (when-not (= opcode Bytecodes'INVOKEVIRTUAL)
             (throw! "should not reach here")
@@ -74756,7 +73462,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"FloatingNode" ConstantBindingParameterPlugin''interceptParameter-4 [#_"ConstantBindingParameterPlugin" this, #_"GraphBuilderTool" b, #_"int" index, #_"StampPair" stamp]
         (when-some [#_"Object" arg (nth (:constantArgs this) index)]
             (condp instance? arg
@@ -74892,6 +73598,17 @@
         )
     )
 
+    (§ defn- #_"ValueNode" Lowerer'performBooleanCoercionIfNecessary-2 [#_"ValueNode" readValue, #_"JavaKind" readKind]
+        (when (= readKind JavaKind/Boolean) => readValue
+            (let [
+                #_"Graph" graph (:graph readValue)
+                #_"IntegerEqualsNode" eq (Graph''add-2 graph, (IntegerEqualsNode'new-2 readValue, (ConstantNode'forInt-2 0, graph)))
+            ]
+                (Graph''add-2 graph, (ConditionalNode'new-3 eq, (ConstantNode'forBoolean-2 false, graph), (ConstantNode'forBoolean-2 true, graph)))
+            )
+        )
+    )
+
     (§ defn #_"ReadNode" Lowerer'createUnsafeRead-3 [#_"Graph" graph, #_"RawLoadNode" load, #_"GuardingNode" guard]
         (let [
             #_"boolean" compressible? (= (:accessKind load) JavaKind/Object)
@@ -74910,17 +73627,6 @@
             ]
                 (§ ass! load (Node''replaceAtUsages-2 load, readValue))
                 memoryRead
-            )
-        )
-    )
-
-    (§ defn- #_"ValueNode" Lowerer'performBooleanCoercionIfNecessary-2 [#_"ValueNode" readValue, #_"JavaKind" readKind]
-        (when (= readKind JavaKind/Boolean) => readValue
-            (let [
-                #_"Graph" graph (:graph readValue)
-                #_"IntegerEqualsNode" eq (Graph''add-2 graph, (IntegerEqualsNode'new-2 readValue, (ConstantNode'forInt-2 0, graph)))
-            ]
-                (Graph''add-2 graph, (ConditionalNode'new-3 eq, (ConstantNode'forBoolean-2 false, graph), (ConstantNode'forBoolean-2 true, graph)))
             )
         )
     )
@@ -75101,15 +73807,6 @@
         )
     )
 
-    (§ defn #_"ValueNode" Lowerer'implicitLoadConvert-3 [#_"Graph" graph, #_"JavaKind" kind, #_"ValueNode" value]
-        (Lowerer'implicitLoadConvert-4 graph, kind, value, true)
-    )
-
-    #_unused
-    (§ defn #_"ValueNode" Lowerer'implicitLoadConvert-2 [#_"JavaKind" kind, #_"ValueNode" value]
-        (Lowerer'implicitLoadConvert-3 kind, value, true)
-    )
-
     (§ defn #_"ValueNode" Lowerer'implicitLoadConvert-4 [#_"Graph" graph, #_"JavaKind" kind, #_"ValueNode" value, #_"boolean" compressible?]
         (let [
             #_"ValueNode" ret (Lowerer'implicitLoadConvert-3 kind, value, compressible?)
@@ -75118,6 +73815,15 @@
                 (Graph''add-2 graph, ret)
             )
         )
+    )
+
+    (§ defn #_"ValueNode" Lowerer'implicitLoadConvert-3 [#_"Graph" graph, #_"JavaKind" kind, #_"ValueNode" value]
+        (Lowerer'implicitLoadConvert-4 graph, kind, value, true)
+    )
+
+    #_unused
+    (§ defn #_"ValueNode" Lowerer'implicitLoadConvert-2 [#_"JavaKind" kind, #_"ValueNode" value]
+        (Lowerer'implicitLoadConvert-3 kind, value, true)
     )
 
     (§ defn #_"ValueNode" Lowerer'newCompressionNode-2 [#_"CompressionOp" op, #_"ValueNode" value]
@@ -75135,15 +73841,6 @@
         )
     )
 
-    (§ defn #_"ValueNode" Lowerer'implicitStoreConvert-3 [#_"Graph" graph, #_"JavaKind" kind, #_"ValueNode" value]
-        (Lowerer'implicitStoreConvert-4 graph, kind, value, true)
-    )
-
-    #_unused
-    (§ defn #_"ValueNode" Lowerer'implicitStoreConvert-2 [#_"JavaKind" kind, #_"ValueNode" value]
-        (Lowerer'implicitStoreConvert-3 kind, value, true)
-    )
-
     (§ defn #_"ValueNode" Lowerer'implicitStoreConvert-4 [#_"Graph" graph, #_"JavaKind" kind, #_"ValueNode" value, #_"boolean" compressible?]
         (let [
             #_"ValueNode" ret (Lowerer'implicitStoreConvert-3 kind, value, compressible?)
@@ -75152,6 +73849,15 @@
                 (Graph''add-2 graph, ret)
             )
         )
+    )
+
+    (§ defn #_"ValueNode" Lowerer'implicitStoreConvert-3 [#_"Graph" graph, #_"JavaKind" kind, #_"ValueNode" value]
+        (Lowerer'implicitStoreConvert-4 graph, kind, value, true)
+    )
+
+    #_unused
+    (§ defn #_"ValueNode" Lowerer'implicitStoreConvert-2 [#_"JavaKind" kind, #_"ValueNode" value]
+        (Lowerer'implicitStoreConvert-3 kind, value, true)
     )
 
     (§ defn #_"ValueNode" Lowerer'implicitStoreConvert-3 [#_"JavaKind" kind, #_"ValueNode" value, #_"boolean" compressible?]
@@ -75566,26 +74272,6 @@
         nil
     )
 
-    (§ defn #_"void" Lowerer'lowerUnsafeMemoryLoadNode-1 [#_"UnsafeMemoryLoadNode" load]
-        (let [
-            #_"Graph" graph (:graph load)
-            #_"JavaKind" readKind (:kind load)
-            #_"Stamp" loadStamp (Lowerer'loadStamp-3 (:stamp load), readKind, false)
-            #_"AddressNode" address (Graph''addOrUniqueWithInputs-2 graph, (OffsetAddressNode'create-1 (:address load)))
-            #_"ReadNode" memoryRead (Graph''add-2 graph, (ReadNode'new-4 address, (:locationIdentity load), loadStamp, BarrierType'NONE))
-        ]
-            ;; An unsafe read must not float, otherwise it may float above a test guaranteeing the read is safe.
-            (§ ass! memoryRead (FloatableAccessNode''setForceFixed-2 memoryRead, true))
-            (let [
-                #_"ValueNode" readValue (Lowerer'performBooleanCoercionIfNecessary-2 (Lowerer'implicitLoadConvert-4 graph, readKind, memoryRead, false), readKind)
-            ]
-                (§ ass! load (Node''replaceAtUsages-2 load, readValue))
-                (§ ass! graph (Graph''replaceFixedWithFixed-3 graph, load, memoryRead))
-            )
-        )
-        nil
-    )
-
     (§ defn #_"void" Lowerer'lowerUnsafeStoreNode-1 [#_"RawStoreNode" store]
         (let [
             #_"Graph" graph (:graph store)
@@ -75596,20 +74282,6 @@
             #_"WriteNode" write (Graph''add-2 graph, (WriteNode'new-4 address, (:locationIdentity store), value, (Lowerer'unsafeStoreBarrierType-1 store)))
         ]
             (AbstractWriteNode''setStateAfter-2 write, (RawStoreNode''stateAfter-1 store))
-            (§ ass! graph (Graph''replaceFixedWithFixed-3 graph, store, write))
-        )
-        nil
-    )
-
-    (§ defn #_"void" Lowerer'lowerUnsafeMemoryStoreNode-1 [#_"UnsafeMemoryStoreNode" store]
-        (let [
-            #_"Graph" graph (:graph store)
-            #_"JavaKind" valueKind (:kind store)
-            #_"ValueNode" value (Lowerer'implicitStoreConvert-4 graph, valueKind, (:value store), false)
-            #_"AddressNode" address (Graph''addOrUniqueWithInputs-2 graph, (OffsetAddressNode'create-1 (:address store)))
-            #_"WriteNode" write (Graph''add-2 graph, (WriteNode'new-4 address, (UnsafeMemoryStoreNode''getLocationIdentity-1 store), value, BarrierType'NONE))
-        ]
-            (AbstractWriteNode''setStateAfter-2 write, (AbstractStateSplit''stateAfter-1 store))
             (§ ass! graph (Graph''replaceFixedWithFixed-3 graph, store, write))
         )
         nil
@@ -75791,7 +74463,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" GraphKit''parsingIntrinsic-1 [#_"GraphKit" this]
         true
     )
@@ -75805,7 +74477,7 @@
         (Graph''add-2 (:graph this), (GraphKit''changeToWord-2 this, node))
     )
 
-    #_unused
+    #_unused
     (§ method! #_"ValueNode" GraphKit''add-2 [#_"GraphKit" this, #_"ValueNode" node]
         (Graph''add-2 (:graph this), (GraphKit''changeToWord-2 this, node))
     )
@@ -75868,7 +74540,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ method! #_"ResolvedJavaMethod" GraphKit''findMethod-4* [#_"GraphKit" this, #_"Class" declaringClass, #_"String" name, #_"Class..." parameterTypes]
         (#_"MetaAccessProvider" .lookupJavaMethod HotSpot'metaAccess, (#_"Class" .getDeclaredMethod declaringClass, name, parameterTypes))
     )
@@ -75960,7 +74632,7 @@
      ; @param trueProbability The estimated probability the condition is true
      ; @return the created IfNode
      ;;
-    #_unused
+    #_unused
     (§ method! #_"IfNode" GraphKit''startIf-3 [#_"GraphKit" this, #_"LogicNode" condition, #_"double" trueProbability]
         (let [
             #_"AbstractBeginNode" thenSuccessor (Graph''add-2 (:graph this), (BeginNode'new-0))
@@ -75996,7 +74668,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ method! #_"GraphKit" GraphKit''thenPart-1 [#_"GraphKit" this]
         (let [
             #_"IfStructure" s (GraphKit''saveLastIfNode-1 this)
@@ -76007,7 +74679,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ method! #_"GraphKit" GraphKit''elsePart-1 [#_"GraphKit" this]
         (let [
             #_"IfStructure" s (GraphKit''saveLastIfNode-1 this)
@@ -76024,7 +74696,7 @@
      ; @return the created merge node, or nil if no merge node was required (for example,
      ;         when one part ended with a control sink).
      ;;
-    #_unused
+    #_unused
     (§ method! #_"AbstractMergeNode" GraphKit''endIf-1 [#_"GraphKit" this]
         (let [
             #_"IfStructure" s (GraphKit''saveLastIfNode-1 this)
@@ -76111,7 +74783,7 @@
     (def- #_"int" InlineDuringParsingPlugin'nodeBudget 2000)
     (def- #_"int" InlineDuringParsingPlugin'maxDepthAfterBudgetExceeded 3)
 
-    #_unused
+    #_unused
     (§ override! #_"InlineInvokeInfo" InlineDuringParsingPlugin''shouldInlineInvoke-4 [#_"InlineDuringParsingPlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"ValueNode[]" args]
         (when (and (#_"ResolvedJavaMethod" .hasBytecodes method) (#_"ResolvedJavaType" .isLinked (#_"ResolvedJavaMethod" .getDeclaringClass method)) (#_"ResolvedJavaMethod" .canBeInlined method))
             ;; test force inlining first
@@ -76350,13 +75022,13 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" NonMaterializationUsageReplacer''replaceUsingInstantiation-1 [#_"NonMaterializationUsageReplacer" this]
         (Node''replaceFirstInput-3 (:usage this), (:instanceOf this), (Instantiation''asCondition-2 (:instantiation this), (:trueValue this)))
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" NonMaterializationUsageReplacer''replace-3 [#_"NonMaterializationUsageReplacer" this, #_"ValueNode" oldNode, #_"ValueNode" newNode]
         (ValueNode''inferStamp-1 newNode)
         (§ ass! (:instantiation this) (Instantiation''initialize-4 (:instantiation this), newNode, (:trueValue this), (:falseValue this)))
@@ -76383,7 +75055,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" MaterializationUsageReplacer''replaceUsingInstantiation-1 [#_"MaterializationUsageReplacer" this]
         (let [
             #_"ValueNode" newValue (Instantiation''asMaterialization-4 (:instantiation this), (:graph (:usage this)), (:trueValue this), (:falseValue this))
@@ -76394,7 +75066,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" MaterializationUsageReplacer''replace-3 [#_"MaterializationUsageReplacer" this, #_"ValueNode" oldNode, #_"ValueNode" newNode]
         (ValueNode''inferStamp-1 newNode)
         (§ ass! (:instantiation this) (Instantiation''initialize-4 (:instantiation this), newNode, (:trueValue this), (:falseValue this)))
@@ -76421,12 +75093,12 @@
     (§ defn- #_"int" MethodHandlePlugin'countRecursiveInlining-2 [#_"BytecodeParser" parser, #_"ResolvedJavaMethod" method]
         (loop-when-recur [#_"int" n 0 parser (BytecodeParser''getParent-1 parser)]
                          (some? parser)
-                         [(if (= method (BytecodeParser''getMethod-1 parser)) (inc n) n) (BytecodeParser''getParent-1 parser)]
+                         [(if (= method (:method parser)) (inc n) n) (BytecodeParser''getParent-1 parser)]
                       => n
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" MethodHandlePlugin''handleInvoke-4 [#_"MethodHandlePlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"ValueNode[]" args]
         (let [
             #_"MethodHandleAccessProvider$IntrinsicMethod" intrinsicMethod (#_"MethodHandleAccessProvider" .lookupMethodHandleIntrinsic (:methodHandleAccess this), method)
@@ -76509,7 +75181,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" IntegerAddExactNode''inferStamp-1 [#_"IntegerAddExactNode" this]
         ;; Note: it is not allowed to use the foldStamp method of the regular add node as we do not know
         ;; the result stamp of this node if we do not know whether we may deopt. If we know we can never
@@ -76517,7 +75189,7 @@
         false
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Stamp" IntegerAddExactNode''foldStamp-3 [#_"IntegerAddExactNode" this, #_"Stamp" a, #_"Stamp" b]
         (let [
             #_"int" bits (:bits a)
@@ -76552,10 +75224,10 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ValueNode" IntegerAddExactNode''canonical-4 [#_"IntegerAddExactNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
         (if (and (instance? ConstantNode forX) (not (instance? ConstantNode forY)))
-            (AddNode''canonical-2 (IntegerAddExactNode'new-2 forY, forX), tool)
+            (Canonicalizable''canonical-2 (IntegerAddExactNode'new-2 forY, forX), tool)
             (do
                 (cond
                     (instance? ConstantNode forX)
@@ -76572,7 +75244,7 @@
                         )
                 )
                 (when-not (IntegerStamp'addCanOverflow-2 (:stamp forX), (:stamp forY)) => this
-                    (BinaryArithmeticNode''canonical-2 (AddNode'new-2 forX, forY), tool)
+                    (Canonicalizable''canonical-2 (AddNode'new-2 forX, forY), tool)
                 )
             )
         )
@@ -76597,12 +75269,12 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"IntegerExactArithmeticSplitNode" IntegerAddExactNode''createSplit-3 [#_"IntegerAddExactNode" this, #_"AbstractBeginNode" next, #_"AbstractBeginNode" deopt]
         (Graph''add-2 (:graph this), (IntegerAddExactSplitNode'new-5 (:stamp this), (:x this), (:y this), next, deopt))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" IntegerAddExactNode''lower-2 [#_"IntegerAddExactNode" this, #_"LoweringTool" lowerer]
         (IntegerExactArithmeticSplitNode'lower-2 lowerer, this)
         nil
@@ -76616,12 +75288,12 @@
         (IntegerExactArithmeticSplitNode'new-6 IntegerAddExactSplitNode'TYPE, stamp, x, y, next, overflowSuccessor)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Value" IntegerAddExactSplitNode''generateArithmetic-2 [#_"IntegerAddExactSplitNode" this, #_"LIRBuilder" builder]
         (LIRGenerator''emitAdd-4 (:gen builder), (LIRBuilder''operand-2 builder, (:x this)), (LIRBuilder''operand-2 builder, (:y this)), true)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" IntegerAddExactSplitNode''simplify-2 [#_"IntegerAddExactSplitNode" this, #_"SimplifierTool" tool]
         (when-not (IntegerStamp'addCanOverflow-2 (:stamp (:x this)), (:stamp (:y this)))
             (SimplifierTool''deleteBranch-2 tool, (:overflowSuccessor this))
@@ -76665,7 +75337,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override #_"AbstractBeginNode" IntegerExactArithmeticSplitNode''getPrimarySuccessor-1 [#_"IntegerExactArithmeticSplitNode" this]
         (:next this)
     )
@@ -76674,7 +75346,7 @@
         (if (= successor (:next this)) 1 0)
     )
 
-    #_unused
+    #_unused
     (§ override #_"boolean" IntegerExactArithmeticSplitNode''setProbability-3 [#_"IntegerExactArithmeticSplitNode" this, #_"AbstractBeginNode" successor, #_"double" value]
         ;; Successor probabilities for arithmetic split nodes are fixed.
         false
@@ -76684,8 +75356,7 @@
         (:next this)
     )
 
-    #_unused
-    (§ override #_"void" IntegerExactArithmeticSplitNode''generate-2 [#_"IntegerExactArithmeticSplitNode" this, #_"LIRBuilder" builder]
+    (§ override #_"void" LIRLowerable''generate-2 [#_"IntegerExactArithmeticSplitNode" this, #_"LIRBuilder" builder]
         (LIRBuilder''setResult-3 builder, this, (IntegerExactArithmeticSplitNode''generateArithmetic-2 this, builder))
         (LIRBuilder''emitOverflowCheckBranch-5 builder, (:overflowSuccessor this), (IntegerExactArithmeticSplitNode''getNext-1 this), (:stamp this), (IntegerExactArithmeticSplitNode''probability-2 this, (:overflowSuccessor this)))
         nil
@@ -76717,7 +75388,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override #_"int" IntegerExactArithmeticSplitNode''getSuccessorCount-1 [#_"IntegerExactArithmeticSplitNode" this]
         2
     )
@@ -76739,7 +75410,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" IntegerMulExactNode''inferStamp-1 [#_"IntegerMulExactNode" this]
         ;; Note: it is not allowed to use the foldStamp method of the regular mul node as we do not know
         ;; the result stamp of this node if we do not know whether we may deopt. If we know we can never
@@ -76747,11 +75418,11 @@
         false
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ValueNode" IntegerMulExactNode''canonical-4 [#_"IntegerMulExactNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
         (cond
             (and (instance? ConstantNode forX) (not (instance? ConstantNode forY)))
-                (§ return (MulNode''canonical-2 (IntegerMulExactNode'new-2 forY, forX), tool))
+                (§ return (Canonicalizable''canonical-2 (IntegerMulExactNode'new-2 forY, forX), tool))
             (instance? ConstantNode forX)
                 (§ return (IntegerMulExactNode''canonicalXconstant-3 this, forX, forY))
             (instance? ConstantNode forY)
@@ -76767,7 +75438,7 @@
                 )
         )
         (when-not (IntegerStamp'multiplicationCanOverflow-2 (:stamp (:x this)), (:stamp (:y this))) => this
-            (BinaryArithmeticNode''canonical-2 (MulNode'new-2 (:x this), (:y this)), tool)
+            (Canonicalizable''canonical-2 (MulNode'new-2 (:x this), (:y this)), tool)
         )
     )
 
@@ -76788,12 +75459,12 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"IntegerExactArithmeticSplitNode" IntegerMulExactNode''createSplit-3 [#_"IntegerMulExactNode" this, #_"AbstractBeginNode" next, #_"AbstractBeginNode" deopt]
         (Graph''add-2 (:graph this), (IntegerMulExactSplitNode'new-5 (:stamp this), (:x this), (:y this), next, deopt))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" IntegerMulExactNode''lower-2 [#_"IntegerMulExactNode" this, #_"LoweringTool" lowerer]
         (IntegerExactArithmeticSplitNode'lower-2 lowerer, this)
         nil
@@ -76807,12 +75478,12 @@
         (IntegerExactArithmeticSplitNode'new-6 IntegerMulExactSplitNode'TYPE, stamp, x, y, next, overflowSuccessor)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Value" IntegerMulExactSplitNode''generateArithmetic-2 [#_"IntegerMulExactSplitNode" this, #_"LIRBuilder" builder]
         (LIRGenerator''emitMul-4 (:gen builder), (LIRBuilder''operand-2 builder, (:x this)), (LIRBuilder''operand-2 builder, (:y this)), true)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" IntegerMulExactSplitNode''simplify-2 [#_"IntegerMulExactSplitNode" this, #_"SimplifierTool" tool]
         (when-not (IntegerStamp'multiplicationCanOverflow-2 (:stamp (:x this)), (:stamp (:y this)))
             (SimplifierTool''deleteBranch-2 tool, (:overflowSuccessor this))
@@ -76835,8 +75506,7 @@
         (BinaryArithmeticNode'new-4 IntegerMulHighNode'TYPE, :mulHigh, x, y)
     )
 
-    #_unused
-    (§ override! #_"void" IntegerMulHighNode''generate-2 [#_"IntegerMulHighNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"IntegerMulHighNode" this, #_"LIRBuilder" builder]
         (let [
             #_"Value" a (LIRBuilder''operand-2 builder, (:x this))
             #_"Value" b (LIRBuilder''operand-2 builder, (:y this))
@@ -76846,7 +75516,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ValueNode" IntegerMulHighNode''canonical-4 [#_"IntegerMulHighNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
         (let [
             #_"ValueNode" ret (BinaryArithmeticNode''canonical-4 (§ super ), tool, forX, forY)
@@ -76887,7 +75557,7 @@
 (final-ns IntegerSubExactNode (§ extends SubNode) (§ implements IntegerExactArithmeticNode)
     (§ def #_"NodeClass<IntegerSubExactNode>" IntegerSubExactNode'TYPE (NodeClass'create-1 IntegerSubExactNode))
 
-    #_unused
+    #_unused
     (§ defn #_"IntegerSubExactNode" IntegerSubExactNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
         (let [
             #_"IntegerSubExactNode" this (SubNode'new-3 IntegerSubExactNode'TYPE, x, y)
@@ -76897,7 +75567,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" IntegerSubExactNode''inferStamp-1 [#_"IntegerSubExactNode" this]
         ;; Note: it is not allowed to use the foldStamp method of the regular sub node as we do not know
         ;; the result stamp of this node if we do not know whether we may deopt. If we know we can never
@@ -76905,14 +75575,14 @@
         false
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ValueNode" IntegerSubExactNode''canonical-4 [#_"IntegerSubExactNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
         (cond
             (= (GraphUtil'unproxify-1 forX) (GraphUtil'unproxify-1 forY))                                             (ConstantNode'forIntegerStamp-2 (:stamp this), 0)
             (and (instance? ConstantNode forX) (instance? ConstantNode forY))                                         (IntegerSubExactNode''canonicalXYconstant-3 this, forX, forY)
             (and (instance? ConstantNode forY) (zero? (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 forY)))) forX
             (IntegerStamp'subtractionCanOverflow-2 (:stamp (:x this)), (:stamp (:y this)))                            this
-            :else                                                                                                     (BinaryArithmeticNode''canonical-2 (SubNode'new-2 (:x this), (:y this)), tool)
+            :else                                                                                                     (Canonicalizable''canonical-2 (SubNode'new-2 (:x this), (:y this)), tool)
         )
     )
 
@@ -76933,12 +75603,12 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"IntegerExactArithmeticSplitNode" IntegerSubExactNode''createSplit-3 [#_"IntegerSubExactNode" this, #_"AbstractBeginNode" next, #_"AbstractBeginNode" deopt]
         (Graph''add-2 (:graph this), (IntegerSubExactSplitNode'new-5 (:stamp this), (:x this), (:y this), next, deopt))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" IntegerSubExactNode''lower-2 [#_"IntegerSubExactNode" this, #_"LoweringTool" lowerer]
         (IntegerExactArithmeticSplitNode'lower-2 lowerer, this)
         nil
@@ -76952,12 +75622,12 @@
         (IntegerExactArithmeticSplitNode'new-6 IntegerSubExactSplitNode'TYPE, stamp, x, y, next, overflowSuccessor)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Value" IntegerSubExactSplitNode''generateArithmetic-2 [#_"IntegerSubExactSplitNode" this, #_"LIRBuilder" builder]
         (LIRGenerator''emitSub-4 (:gen builder), (LIRBuilder''operand-2 builder, (:x this)), (LIRBuilder''operand-2 builder, (:y this)), true)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" IntegerSubExactSplitNode''simplify-2 [#_"IntegerSubExactSplitNode" this, #_"SimplifierTool" tool]
         (when-not (IntegerStamp'subtractionCanOverflow-2 (:stamp (:x this)), (:stamp (:y this)))
             (SimplifierTool''deleteBranch-2 tool, (:overflowSuccessor this))
@@ -76980,8 +75650,7 @@
         (BinaryArithmeticNode'new-4 UnsignedMulHighNode'TYPE, :umulHigh, x, y)
     )
 
-    #_unused
-    (§ override! #_"void" UnsignedMulHighNode''generate-2 [#_"UnsignedMulHighNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"UnsignedMulHighNode" this, #_"LIRBuilder" builder]
         (let [
             #_"Value" a (LIRBuilder''operand-2 builder, (:x this))
             #_"Value" b (LIRBuilder''operand-2 builder, (:y this))
@@ -76991,7 +75660,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ValueNode" UnsignedMulHighNode''canonical-4 [#_"UnsignedMulHighNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
         (let [
             #_"ValueNode" ret (BinaryArithmeticNode''canonical-4 (§ super ), tool, forX, forY)
@@ -77028,12 +75697,12 @@
 (final-ns BitCountNode (§ extends UnaryNode) (§ implements LIRLowerable)
     (§ def #_"NodeClass<BitCountNode>" BitCountNode'TYPE (NodeClass'create-1 BitCountNode))
 
-    #_unused
+    #_unused
     (§ defn #_"BitCountNode" BitCountNode'new-1 [#_"ValueNode" value]
         (UnaryNode'new-3 BitCountNode'TYPE, (BitCountNode'computeStamp-2 (:stamp value), value), value)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Stamp" BitCountNode''foldStamp-2 [#_"BitCountNode" this, #_"Stamp" stamp]
         (BitCountNode'computeStamp-2 stamp, (UnaryNode''getValue-1 this))
     )
@@ -77042,8 +75711,7 @@
         (StampFactory'forInteger-3 JavaKind/Int, (Long/bitCount (:downMask stamp)), (Long/bitCount (:upMask stamp)))
     )
 
-    #_unused
-    (§ override! #_"ValueNode" BitCountNode''canonical-3 [#_"BitCountNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
+    (§ override! #_"ValueNode" Unary''canonical-3 [#_"BitCountNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
         (when (instance? ConstantNode value) => this
             (let [
                 #_"JavaConstant" constant (ValueNode''asJavaConstant-1 value)
@@ -77053,181 +75721,8 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" BitCountNode''generate-2 [#_"BitCountNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"BitCountNode" this, #_"LIRBuilder" builder]
         (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitBitCount-2 (:gen builder), (LIRBuilder''operand-2 builder, (UnaryNode''getValue-1 this))))
-        nil
-    )
-)
-
-;;;
- ; Determines the index of the least significant "1" bit. Note that the result is undefined if the
- ; input is zero.
- ;;
-(final-ns BitScanForwardNode (§ extends UnaryNode) (§ implements LIRLowerable)
-    (§ def #_"NodeClass<BitScanForwardNode>" BitScanForwardNode'TYPE (NodeClass'create-1 BitScanForwardNode))
-
-    #_unused
-    (§ defn #_"BitScanForwardNode" BitScanForwardNode'new-1 [#_"ValueNode" value]
-        (UnaryNode'new-3 BitScanForwardNode'TYPE, (StampFactory'forInteger-3 JavaKind/Int, 0, (:bits (:stamp value))), value)
-    )
-
-    #_unused
-    (§ override! #_"Stamp" BitScanForwardNode''foldStamp-2 [#_"BitScanForwardNode" this, #_"Stamp" stamp]
-        (let [
-            #_"long" mask (CodeUtil/mask (:bits stamp))
-            #_"int" firstAlwaysSetBit (BitScanForwardNode'scan-1 (& (:downMask stamp) mask))
-            #_"int" lower (BitScanForwardNode'scan-1 (& (:upMask stamp) mask))
-            #_"int" upper
-                (when (= firstAlwaysSetBit -1) => firstAlwaysSetBit
-                    (BitScanReverseNode'scan-1 (& (:upMask stamp) mask))
-                )
-        ]
-            (StampFactory'forInteger-3 JavaKind/Int, lower, upper)
-        )
-    )
-
-    (§ defn #_"ValueNode" BitScanForwardNode'tryFold-1 [#_"ValueNode" value]
-        (when (instance? ConstantNode value)
-            (let [
-                #_"JavaConstant" constant (ValueNode''asJavaConstant-1 value)
-            ]
-                (when-not (zero? (#_"JavaConstant" .asLong constant))
-                    (ConstantNode'forInt-1 (if (= (ValueNode''getStackKind-1 value) JavaKind/Int) (BitScanForwardNode'scan-1 (#_"JavaConstant" .asInt constant)) (BitScanForwardNode'scan-1 (#_"JavaConstant" .asLong constant))))
-                )
-            )
-        )
-    )
-
-    #_unused
-    (§ override! #_"ValueNode" BitScanForwardNode''canonical-3 [#_"BitScanForwardNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
-        (or (BitScanForwardNode'tryFold-1 value)
-            this
-        )
-    )
-
-    ;;;
-     ; Utility method with defined return value for 0.
-     ;
-     ; @return number of trailing zeros or -1 if {@code v} == 0
-     ;;
-    (§ defn #_"int" BitScanForwardNode'scan-1 [#_"long" v]
-        (if (zero? v) -1 (Long/numberOfTrailingZeros v))
-    )
-
-    ;;;
-     ; Utility method with defined return value for 0.
-     ;
-     ; @return number of trailing zeros or -1 if {@code v} == 0
-     ;;
-    (§ defn #_"int" BitScanForwardNode'scan-1 [#_"int" v]
-        (BitScanForwardNode'scan-1 (& 0xffffffff v))
-    )
-
-    ;;;
-     ; Raw intrinsic for bsf instruction.
-     ;
-     ; @return number of trailing zeros or an undefined value if {@code v} == 0
-     ;;
-    ; @NodeIntrinsic
-    #_unused
-    (§ native #_"int" BitScanForwardNode'unsafeScan-1 [#_"long" v])
-
-    ;;;
-     ; Raw intrinsic for bsf instruction.
-     ;
-     ; @return number of trailing zeros or an undefined value if {@code v} == 0
-     ;;
-    ; @NodeIntrinsic
-    #_unused
-    (§ native #_"int" BitScanForwardNode'unsafeScan-1 [#_"int" v])
-
-    #_unused
-    (§ override! #_"void" BitScanForwardNode''generate-2 [#_"BitScanForwardNode" this, #_"LIRBuilder" builder]
-        (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitBitScanForward-2 (:gen builder), (LIRBuilder''operand-2 builder, (UnaryNode''getValue-1 this))))
-        nil
-    )
-)
-
-;;;
- ; Determines the index of the most significant "1" bit. Note that the result is undefined if the
- ; input is zero.
- ;;
-(final-ns BitScanReverseNode (§ extends UnaryNode) (§ implements LIRLowerable)
-    (§ def #_"NodeClass<BitScanReverseNode>" BitScanReverseNode'TYPE (NodeClass'create-1 BitScanReverseNode))
-
-    #_unused
-    (§ defn #_"BitScanReverseNode" BitScanReverseNode'new-1 [#_"ValueNode" value]
-        (UnaryNode'new-3 BitScanReverseNode'TYPE, (StampFactory'forInteger-3 JavaKind/Int, 0, (:bits (:stamp value))), value)
-    )
-
-    #_unused
-    (§ override! #_"Stamp" BitScanReverseNode''foldStamp-2 [#_"BitScanReverseNode" this, #_"Stamp" stamp]
-        (let [
-            #_"long" mask (CodeUtil/mask (:bits stamp))
-            #_"int" lastAlwaysSetBit (BitScanReverseNode'scan-1 (& (:downMask stamp) mask))
-            #_"int" lower
-                (when (= lastAlwaysSetBit -1) => lastAlwaysSetBit
-                    (BitScanForwardNode'scan-1 (& (:upMask stamp) mask))
-                )
-            #_"int" upper (BitScanReverseNode'scan-1 (& (:upMask stamp) mask))
-        ]
-            (StampFactory'forInteger-3 JavaKind/Int, lower, upper)
-        )
-    )
-
-    #_unused
-    (§ override! #_"ValueNode" BitScanReverseNode''canonical-3 [#_"BitScanReverseNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
-        (when (instance? ConstantNode value) => this
-            (let [
-                #_"JavaConstant" constant (ValueNode''asJavaConstant-1 value)
-            ]
-                (when-not (zero? (#_"JavaConstant" .asLong constant)) => this
-                    (ConstantNode'forInt-1 (if (= (ValueNode''getStackKind-1 value) JavaKind/Int) (BitScanReverseNode'scan-1 (#_"JavaConstant" .asInt constant)) (BitScanReverseNode'scan-1 (#_"JavaConstant" .asLong constant))))
-                )
-            )
-        )
-    )
-
-    ;;;
-     ; Utility method with defined return value for 0.
-     ;
-     ; @return index of first set bit or -1 if {@code v} == 0
-     ;;
-    (§ defn #_"int" BitScanReverseNode'scan-1 [#_"long" v]
-        (- 63 (Long/numberOfLeadingZeros v))
-    )
-
-    ;;;
-     ; Utility method with defined return value for 0.
-     ;
-     ; @return index of first set bit or -1 if {@code v} == 0
-     ;;
-    (§ defn #_"int" BitScanReverseNode'scan-1 [#_"int" v]
-        (- 31 (Integer/numberOfLeadingZeros v))
-    )
-
-    ;;;
-     ; Raw intrinsic for bsr instruction.
-     ;
-     ; @return index of first set bit or an undefined value if {@code v} == 0
-     ;;
-    ; @NodeIntrinsic
-    #_unused
-    (§ native #_"int" BitScanReverseNode'unsafeScan-1 [#_"int" v])
-
-    ;;;
-     ; Raw intrinsic for bsr instruction.
-     ;
-     ; @return index of first set bit or an undefined value if {@code v} == 0
-     ;;
-    ; @NodeIntrinsic
-    #_unused
-    (§ native #_"int" BitScanReverseNode'unsafeScan-1 [#_"long" v])
-
-    #_unused
-    (§ override! #_"void" BitScanReverseNode''generate-2 [#_"BitScanReverseNode" this, #_"LIRBuilder" builder]
-        (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitBitScanReverse-2 (:gen builder), (LIRBuilder''operand-2 builder, (UnaryNode''getValue-1 this))))
         nil
     )
 )
@@ -77246,7 +75741,9 @@
 
     (§ final #_"JavaKind" :kind nil)
 
-    #_unused
+    (§ intrinsic! #_"void" DirectStoreNode'storeBoolean-3 [#_"long" address, #_"boolean" value, #_@ConstantNodeParameter #_"JavaKind" kind])
+
+    #_intrinsifier
     (§ defn #_"DirectStoreNode" DirectStoreNode'new-3 [#_"ValueNode" address, #_"ValueNode" value, #_"JavaKind" kind]
         (let [
             #_"DirectStoreNode" this (FixedWithNextNode'new-2 DirectStoreNode'TYPE, (StampFactory'forVoid-0))
@@ -77258,8 +75755,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" DirectStoreNode''generate-2 [#_"DirectStoreNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"DirectStoreNode" this, #_"LIRBuilder" builder]
         (let [
             #_"Value" value (LIRBuilder''operand-2 builder, (:value this))
             #_"LIRKind" lirKind (LIRKind'fromJavaKind-2 (.arch HotSpot'target), (:kind this))
@@ -77268,9 +75764,6 @@
         )
         nil
     )
-
-    ; @NodeIntrinsic
-    (§ native #_"void" DirectStoreNode'storeBoolean-3 [#_"long" address, #_"boolean" value, #_@ConstantNodeParameter #_"JavaKind" kind])
 )
 
 ;;;
@@ -77279,7 +75772,12 @@
 (final-ns ExplodeLoopNode (§ extends FixedWithNextNode)
     (§ def #_"NodeClass<ExplodeLoopNode>" ExplodeLoopNode'TYPE (NodeClass'create-1 ExplodeLoopNode))
 
-    #_unused
+    ;;;
+     ; A call to this method must be placed immediately prior to the loop that is to be exploded.
+     ;;
+    (§ intrinsic! #_"void" ExplodeLoopNode'explodeLoop-0 [])
+
+    #_intrinsifier
     (§ defn #_"ExplodeLoopNode" ExplodeLoopNode'new-0 []
         (FixedWithNextNode'new-2 ExplodeLoopNode'TYPE, (StampFactory'forVoid-0))
     )
@@ -77298,12 +75796,6 @@
             )
         )
     )
-
-    ;;;
-     ; A call to this method must be placed immediately prior to the loop that is to be exploded.
-     ;;
-    ; @NodeIntrinsic
-    (§ native #_"void" ExplodeLoopNode'explodeLoop-0 [])
 )
 
 ;;;
@@ -77328,8 +75820,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"Node" LoadSnippetVarargParameterNode''canonical-2 [#_"LoadSnippetVarargParameterNode" this, #_"CanonicalizerTool" tool]
+    (§ override! #_"Node" Canonicalizable''canonical-2 [#_"LoadSnippetVarargParameterNode" this, #_"CanonicalizerTool" tool]
         (when (instance? ConstantNode (:index this)) => this
             (let [
                 #_"int" i (#_"JavaConstant" .asInt (ValueNode''asJavaConstant-1 (:index this)))
@@ -77377,22 +75868,12 @@
         )
     )
 
-    #_unused
-    (§ method #_"ValueNode" MacroNode''getArgument-2 [#_"MacroNode" this, #_"int" i]
-        (nth (:arguments this) i)
-    )
-
-    #_unused
-    (§ method #_"int" MacroNode''getArgumentCount-1 [#_"MacroNode" this]
-        (count (:arguments this))
-    )
-
-    #_unused
+    #_unused
     (§ method! #_"ValueNode[]" MacroNode''toArgumentArray-1 [#_"MacroNode" this]
         (NodeList''toArray-2 (:arguments this), (make-array ValueNode 0))
     )
 
-    #_unused
+    #_unused
     (§ method! #_"ResolvedJavaMethod" MacroNode''getTargetMethod-1 [#_"MacroNode" this]
         (:targetMethod this)
     )
@@ -77401,7 +75882,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override #_"void" MacroNode''afterClone-2 [#_"MacroNode" this, #_"Node" other]
         nil
     )
@@ -77414,35 +75895,7 @@
         nil
     )
 
-    ;;;
-     ; Applies lowering to a replacement graph.
-     ;
-     ; @param replacementGraph a replacement (i.e. snippet or method substitution) graph
-     ;;
-    #_unused
-    (§ method! #_"Graph" MacroNode''lowerReplacement-3 [#_"MacroNode" this, #_"Graph" replacementGraph, #_"LoweringTool" lowerer]
-        (let [
-            #_"PhaseContext" c (PhaseContext'new-0)
-        ]
-            (when-not (:hasValueProxies (:graph this))
-                (Phase''apply-2 (RemoveValueProxyPhase'new-0), replacementGraph)
-            )
-            (let [
-                #_"GuardsStage" guardsStage (:guardsStage (:graph this))
-            ]
-                (when-not (GuardsStage'allowsFloatingGuards-1 guardsStage)
-                    (BasePhase''apply-3 (GuardLoweringPhase'new-0), replacementGraph, nil)
-                    (when (GuardsStage'areFrameStatesAtDeopts-1 guardsStage)
-                        (Phase''apply-2 (FrameStateAssignmentPhase'new-0), replacementGraph)
-                    )
-                )
-                (BasePhase''apply-3 (LoweringPhase'new-2 (CanonicalizerPhase'new-0), (:loweringStage (:phase lowerer))), replacementGraph, c)
-                replacementGraph
-            )
-        )
-    )
-
-    #_unused
+    #_unused
     (§ override #_"void" MacroNode''lower-2 [#_"MacroNode" this, #_"LoweringTool" lowerer]
         (let [
             #_"Graph" replacementGraph (MacroNode''getLoweredSnippetGraph-2 this, lowerer)
@@ -77471,7 +75924,7 @@
                         (let [
                             #_"ResolvedJavaMethod" method (:rootMethod (:graph this))
                         ]
-                            (when (some? (#_"ResolvedJavaMethod" .getAnnotation method, Snippet)) => (throw! (str (:graph this) ": cannot lower to invoke without state: " this))
+                            (when (some? (#_"ResolvedJavaMethod" .getAnnotation method, Snippet)) => (throw! (str (:graph this) ": cannot lower to invoke without state: " this))
                                 ;; One cause for this is that a MacroNode is created for a method that no longer
                                 ;; needs a MacroNode. For example, Class.getComponentType() only needs a MacroNode
                                 ;; prior to JDK9 as it was given a non-native implementation in JDK9.
@@ -77524,24 +75977,24 @@
         (MacroNode'new-6* c, invokeKind, targetMethod, bci, returnStamp, arguments)
     )
 
-    #_unused
+    #_unused
     (§ override #_"FrameState" MacroStateSplitNode''stateAfter-1 [#_"MacroStateSplitNode" this]
         (:stateAfter this)
     )
 
-    #_unused
+    #_unused
     (§ override #_"void" MacroStateSplitNode''setStateAfter-2 [#_"MacroStateSplitNode" this, #_"FrameState" x]
         (Node''updateUsages-3 this, (:stateAfter this), x)
         (§ ass! this (assoc this :stateAfter x))
         nil
     )
 
-    #_unused
+    #_unused
     (§ override #_"boolean" MacroStateSplitNode''hasSideEffect-1 [#_"MacroStateSplitNode" this]
         true
     )
 
-    #_unused
+    #_unused
     (§ override #_"LocationIdentity" MacroStateSplitNode''getLocationIdentity-1 [#_"MacroStateSplitNode" this]
         (LocationIdentity/any)
     )
@@ -77584,7 +76037,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" MethodHandleNode''simplify-2 [#_"MethodHandleNode" this, #_"SimplifierTool" tool]
         (let [
             #_"MethodHandleAccessProvider" methodHandleAccess (#_"ConstantReflectionProvider" .getMethodHandleAccess HotSpot'constantReflection)
@@ -77856,6 +76309,9 @@
         )
     )
 
+    (§ intrinsic! #_"Word" ReadRegisterNode'registerAsWord-3 [#_@ConstantNodeParameter #_"Register" register, #_@ConstantNodeParameter #_"boolean" directUse, #_@ConstantNodeParameter #_"boolean" incoming])
+
+    #_intrinsifier
     (§ defn #_"ReadRegisterNode" ReadRegisterNode'new-4 [#_@InjectedNodeParameter #_"Stamp" stamp, #_"Register" register, #_"boolean" directUse, #_"boolean" incoming]
         (let [
             #_"ReadRegisterNode" this (FixedWithNextNode'new-2 ReadRegisterNode'TYPE, stamp)
@@ -77867,8 +76323,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" ReadRegisterNode''generate-2 [#_"ReadRegisterNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"ReadRegisterNode" this, #_"LIRBuilder" builder]
         (let [
             #_"LIRKind" kind (Stamp''getLIRKind-1 (:stamp this))
             #_"Value" result (#_"Register" .asValue (:register this), kind)
@@ -77923,7 +76378,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" ResolvedMethodHandleCallTargetNode''lower-2 [#_"ResolvedMethodHandleCallTargetNode" this, #_"LoweringTool" lowerer]
         (let [
             #_"InvokeKind" replacementInvokeKind (if (#_"ResolvedJavaMethod" .isStatic (:originalTargetMethod this)) InvokeKind'Static InvokeKind'Special)
@@ -77935,50 +76390,8 @@
         nil
     )
 
-    #_unused
-    (§ override! #_"void" ResolvedMethodHandleCallTargetNode''generate-2 [#_"ResolvedMethodHandleCallTargetNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"ResolvedMethodHandleCallTargetNode" this, #_"LIRBuilder" builder]
         (throw! "should have replaced itself")
-    )
-)
-
-(final-ns ReverseBytesNode (§ extends UnaryNode) (§ implements LIRLowerable)
-    (§ def #_"NodeClass<ReverseBytesNode>" ReverseBytesNode'TYPE (NodeClass'create-1 ReverseBytesNode))
-
-    #_unused
-    (§ defn #_"ReverseBytesNode" ReverseBytesNode'new-1 [#_"ValueNode" value]
-        (UnaryNode'new-3 ReverseBytesNode'TYPE, (StampFactory'forKind-1 (ValueNode''getStackKind-1 value)), value)
-    )
-
-    #_unused
-    (§ override! #_"Stamp" ReverseBytesNode''foldStamp-2 [#_"ReverseBytesNode" this, #_"Stamp" stamp]
-        (condp = (ValueNode''getStackKind-1 this)
-            JavaKind/Int
-                (let [
-                    #_"long" mask (CodeUtil/mask (#_"JavaKind" .getBitCount JavaKind/Int))
-                ]
-                    (IntegerStamp'stampForMask-3 (:bits stamp), (& (Integer/reverse (int (:downMask stamp))) mask), (& (Integer/reverse (int (:upMask stamp))) mask))
-                )
-            JavaKind/Long
-                (IntegerStamp'stampForMask-3 (:bits stamp), (Long/reverse (:downMask stamp)), (Long/reverse (:upMask stamp)))
-            (:stamp this)
-        )
-    )
-
-    #_unused
-    (§ override! #_"ValueNode" ReverseBytesNode''canonical-3 [#_"ReverseBytesNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
-        (when (instance? ConstantNode value) => this
-            (let [
-                #_"JavaConstant" constant (ValueNode''asJavaConstant-1 value)
-            ]
-                (ConstantNode'forIntegerKind-2 (ValueNode''getStackKind-1 this), (if (= (ValueNode''getStackKind-1 this) JavaKind/Int) (Integer/reverseBytes (#_"JavaConstant" .asInt constant)) (Long/reverseBytes (#_"JavaConstant" .asLong constant))))
-            )
-        )
-    )
-
-    #_unused
-    (§ override! #_"void" ReverseBytesNode''generate-2 [#_"ReverseBytesNode" this, #_"LIRBuilder" builder]
-        (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitByteSwap-2 (:gen builder), (LIRBuilder''operand-2 builder, (UnaryNode''getValue-1 this))))
-        nil
     )
 )
 
@@ -77992,8 +76405,7 @@
         (MacroStateSplitNode'new-6* VirtualizableInvokeMacroNode'TYPE, invokeKind, targetMethod, bci, returnStamp, arguments)
     )
 
-    #_unused
-    (§ override! #_"void" VirtualizableInvokeMacroNode''virtualize-2 [#_"VirtualizableInvokeMacroNode" this, #_"VirtualizerTool" tool]
+    (§ override! #_"void" Virtualizable''virtualize-2 [#_"VirtualizableInvokeMacroNode" this, #_"VirtualizerTool" tool]
         (doseq [#_"ValueNode" arg (:arguments this)]
             (let [
                 #_"ValueNode" alias (VirtualizerTool''getAlias-2 tool, arg)
@@ -78002,45 +76414,6 @@
                     (VirtualizerTool''delete-1 tool)
                 )
             )
-        )
-        nil
-    )
-)
-
-;;;
- ; Changes the value of a specific register.
- ;;
-(final-ns WriteRegisterNode (§ extends FixedWithNextNode) (§ implements LIRLowerable)
-    (§ def #_"NodeClass<WriteRegisterNode>" WriteRegisterNode'TYPE (NodeClass'create-1 WriteRegisterNode))
-
-    ;;;
-     ; The fixed register to access.
-     ;;
-    (§ final #_"Register" :register nil)
-
-    ;;;
-     ; The new value assigned to the register.
-     ;;
-    ; @Input
-    (§ mutable #_"ValueNode" :value nil)
-
-    #_unused
-    (§ defn #_"WriteRegisterNode" WriteRegisterNode'new-2 [#_"Register" register, #_"ValueNode" value]
-        (let [
-            #_"WriteRegisterNode" this (FixedWithNextNode'new-2 WriteRegisterNode'TYPE, (StampFactory'forVoid-0))
-            this (assoc this :register register)
-            this (assoc this :value value)
-        ]
-            this
-        )
-    )
-
-    #_unused
-    (§ override! #_"void" WriteRegisterNode''generate-2 [#_"WriteRegisterNode" this, #_"LIRBuilder" builder]
-        (let [
-            #_"Value" val (LIRBuilder''operand-2 builder, (:value this))
-        ]
-            (LIRGenerator''emitMove-3 (:gen builder), (#_"Register" .asValue (:register this), (#_"Value" .getValueKind val)), val)
         )
         nil
     )
@@ -78058,7 +76431,7 @@
      ; @return an object specifying how {@code method} is to be inlined or nil if it should not be
      ;         inlined based on substitution related criteria
      ;;
-    #_unused
+    #_unused
     (§ override! #_"InlineInvokeInfo" Replacements''shouldInlineInvoke-4 [#_"Replacements" this, #_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"ValueNode[]" args]
         (when (BytecodeParser''parsingIntrinsic-1 parser)
             ;; force inlining when parsing replacements
@@ -78066,7 +76439,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" Replacements''notifyNotInlined-4 [#_"Replacements" this, #_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"InvokeNode" invoke]
         (when (BytecodeParser''parsingIntrinsic-1 parser)
             (let [
@@ -78143,7 +76516,7 @@
                     (§ ass! plugins (Plugins''prependParameterPlugin-2 plugins, (ConstantBindingParameterPlugin'new-1 args)))
                 )
             #_"IntrinsicContext" initialIntrinsicContext
-                (if (some? (#_"ResolvedJavaMethod" .getAnnotation (:method this), Snippet))
+                (if (some? (#_"ResolvedJavaMethod" .getAnnotation (:method this), Snippet))
                     ;; snippet
                     (IntrinsicContext'new-4 (:method this), (:method this), HotSpot'defaultBytecodeProvider, CompilationContext'INLINE_AFTER_PARSING)
                     ;; post-parse inlined intrinsic
@@ -78179,28 +76552,18 @@
         )
     )
 
-    #_unused
-    (§ method! #_"ValueNode" SnippetLowerableMemoryNode''getArgument-2 [#_"SnippetLowerableMemoryNode" this, #_"int" i]
-        (nth (:arguments this) i)
-    )
-
-    #_unused
-    (§ method! #_"int" SnippetLowerableMemoryNode''getArgumentCount-1 [#_"SnippetLowerableMemoryNode" this]
-        (count (:arguments this))
-    )
-
-    #_unused
+    #_unused
     (§ override! #_"void" SnippetLowerableMemoryNode''lower-2 [#_"SnippetLowerableMemoryNode" this, #_"LoweringTool" lowerer]
         (SnippetLowering''lower-3 (:lowering this), this, lowerer)
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"LocationIdentity" SnippetLowerableMemoryNode''getLocationIdentity-1 [#_"SnippetLowerableMemoryNode" this]
         (:locationIdentity this)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" SnippetLowerableMemoryNode''setLastLocationAccess-2 [#_"SnippetLowerableMemoryNode" this, #_"MemoryNode" lla]
         (Node''updateUsages-3 this, (:lastLocationAccess this), lla)
         (§ ass! this (assoc this :lastLocationAccess lla))
@@ -78266,8 +76629,6 @@
      ; The nodes to be inlined when this specialization is instantiated.
      ;;
     (§ final #_"ArrayList<Node>" :nodes nil)
-
-    (§ mutable #_"boolean" :mayRemoveLocation false)
 
     (§ defn #_"SnippetTemplate" SnippetTemplate'new-2 [#_"Arguments" args, #_"Node" replacee]
         (let [
@@ -78948,11 +77309,6 @@
         )
         nil
     )
-
-    #_unused
-    (§ method! #_"SnippetTemplate" SnippetTemplate''setMayRemoveLocation-2 [#_"SnippetTemplate" this, #_"boolean" mayRemoveLocation]
-        (assoc this :mayRemoveLocation mayRemoveLocation)
-    )
 )
 
 ;;;
@@ -78978,7 +77334,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ method #_"ResolvedJavaMethod" SnippetInfo''getMethod-1 [#_"SnippetInfo" this]
         (:method this)
     )
@@ -79039,7 +77395,7 @@
         (SnippetInfo'new-2 method, privateLocations)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Lazy" LazySnippetInfo''lazy-1 [#_"LazySnippetInfo" this]
         (when (nil? (#_"AtomicReference" .get (:lazy this)))
             (#_"AtomicReference" .compareAndSet (:lazy this), nil, (Lazy'new-1 (:method this)))
@@ -79063,7 +77419,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Lazy" EagerSnippetInfo''lazy-1 [#_"EagerSnippetInfo" this]
         (:lazy this)
     )
@@ -79227,7 +77583,7 @@
     )
 
     ;;;
-     ; Finds the unique method in {@code declaringClass} named {@code methodName} annotated by Snippet
+     ; Finds the unique method in {@code declaringClass} named {@code methodName} annotated by Snippet
      ; and returns a SnippetInfo value describing it. There must be exactly one snippet method in
      ; {@code declaringClass}.
      ;;
@@ -79290,7 +77646,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override #_"Collection<LocationIdentity>" MemoryInputMap''getLocations-1 [#_"MemoryInputMap" this]
         (if (some? (:locationIdentity this)) (Collections/singleton (:locationIdentity this)) (Collections/emptySet))
     )
@@ -79314,7 +77670,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"MemoryNode" MemoryOutputMap''getLastLocationAccess-2 [#_"MemoryOutputMap" this, #_"LocationIdentity" locationIdentity]
         (let [
             #_"MemoryNode" lastLocationAccess (MemoryMapNode''getLastLocationAccess-2 (:memoryMap (:returnNode (:template this))), locationIdentity)
@@ -79326,7 +77682,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Collection<LocationIdentity>" MemoryOutputMap''getLocations-1 [#_"MemoryOutputMap" this]
         (MemoryMapNode''getLocations-1 (:memoryMap (:returnNode (:template this))))
     )
@@ -79350,12 +77706,12 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"MaterializedObjectState" MaterializedObjectState''duplicateWithVirtualState-1 [#_"MaterializedObjectState" this]
         (Graph''add-2 (:graph this), (MaterializedObjectState'new-2 (:object this), (:materializedValue this)))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" MaterializedObjectState''applyToNonVirtual-2 [#_"MaterializedObjectState" this, #_"NodeClosure<? super ValueNode>" closure]
         (NodeClosure''apply-3 closure, this, (:materializedValue this))
         nil
@@ -79389,12 +77745,12 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"VirtualObjectState" VirtualObjectState''duplicateWithVirtualState-1 [#_"VirtualObjectState" this]
         (Graph''add-2 (:graph this), (VirtualObjectState'new-2 (:object this), (:values this)))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" VirtualObjectState''applyToNonVirtual-2 [#_"VirtualObjectState" this, #_"NodeClosure<? super ValueNode>" closure]
         (doseq [#_"ValueNode" value (:values this)]
             (when (some? value)
@@ -79410,12 +77766,12 @@
         (EffectsPhase'new-3 1, canonicalizer, true)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Closure" EarlyReadEliminationPhase''createEffectsClosure-4 [#_"EarlyReadEliminationPhase" this, #_"PhaseContext" context, #_"ScheduleResult" schedule, #_"ControlFlowGraph" cfg]
         (ReadEliminationClosure'new-2 cfg, true)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" EarlyReadEliminationPhase''run-3 [#_"EarlyReadEliminationPhase" this, #_"Graph" graph, #_"PhaseContext" context]
         (EffectsPhase''runAnalysis-3 this, graph, context)
         nil
@@ -79476,18 +77832,8 @@
         )
     )
 
-    #_unused
-    (§ method! #_"int" EffectList''checkpoint-1 [#_"EffectList" this]
-        (:size this)
-    )
-
     (§ method #_"int" EffectList''size-1 [#_"EffectList" this]
         (:size this)
-    )
-
-    #_unused
-    (§ method! #_"EffectList" EffectList''backtrack-2 [#_"EffectList" this, #_"int" checkpoint]
-        (assoc this :size checkpoint)
     )
 
     (§ override #_"Iterator<Effect>" #_"Iterable" .iterator [#_"EffectList" this]
@@ -79514,7 +77860,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ method #_"Effect" EffectList''get-2 [#_"EffectList" this, #_"int" index]
         (when (<= (:size this) index)
             (throw (IndexOutOfBoundsException.))
@@ -79549,7 +77895,7 @@
  ; @anno EffectList.Effect
  ;;
 (§ interface Effect
-    #_unused
+    #_unused
     (§ default #_"boolean" Effect''isVisible-1 [#_"Effect" this]
         true
     )
@@ -79619,23 +77965,6 @@
             )
         )
     )
-
-    ;;;
-     ; Modifies target so that only entries that have corresponding entries in source remain.
-     ;;
-    #_unused
-    (§ defn #_"<U, V> void" EffectsBlockState'meetMaps-2 [#_"Map<U, V>" target, #_"Map<U, V>" source]
-        (let [
-            #_"Iterator<Map$Entry<U, V>>" it (#_"Set" .iterator (#_"Map" .entrySet target))
-        ]
-            (while (#_"Iterator" .hasNext it)
-                (when-not (#_"Map" .containsKey source, (#_"Map$Entry" .getKey (#_"Iterator" .next it)))
-                    (#_"Iterator" .remove it)
-                )
-            )
-        )
-        nil
-    )
 )
 
 (class-ns EffectsClosure #_"<BlockT extends EffectsBlockState<BlockT>>" (§ extends Closure #_"<BlockT>")
@@ -79699,12 +78028,12 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override #_"boolean" EffectsClosure''needsApplyEffects-1 [#_"EffectsClosure<BlockT extends EffectsBlockState<BlockT>>" this]
         true
     )
 
-    #_unused
+    #_unused
     (§ override #_"void" EffectsClosure''applyEffects-1 [#_"EffectsClosure<BlockT extends EffectsBlockState<BlockT>>" this]
         (let [
             #_"Graph" graph (:graph (:cfg this))
@@ -79769,7 +78098,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override #_"BlockT" EffectsClosure''processBlock-3 [#_"EffectsClosure<BlockT extends EffectsBlockState<BlockT>>" this, #_"Block" block, #_"BlockT" state]
         (when-not (EffectsBlockState''isDead-1 state) => state
             (let [
@@ -79836,7 +78165,7 @@
      ;;
     (§ abstract #_"boolean" EffectsClosure''processNode-5 [#_"EffectsClosure<BlockT extends EffectsBlockState<BlockT>>" this, #_"Node" node, #_"BlockT" state, #_"GraphEffectList" effects, #_"FixedWithNextNode" lastFixedNode])
 
-    #_unused
+    #_unused
     (§ override #_"BlockT" EffectsClosure''merge-3 [#_"EffectsClosure<BlockT extends EffectsBlockState<BlockT>>" this, #_"Block" merge, #_"List<BlockT>" states]
         (let [
             #_"MergeProcessor<BlockT>" processor (EffectsClosure''createMergeProcessor-2 this, merge)
@@ -79848,7 +78177,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"List<BlockT>" EffectsClosure''processLoop-3 [#_"EffectsClosure<BlockT extends EffectsBlockState<BlockT>>" this, #_"Loop" loop, #_"BlockT" initialState]
         (if (EffectsBlockState''isDead-1 initialState)
             (let [
@@ -80211,7 +78540,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override #_"void" EffectsPhase''run-3 [#_"EffectsPhase<PhaseContextT extends PhaseContext>" this, #_"Graph" graph, #_"PhaseContextT" context]
         (EffectsPhase''runAnalysis-3 this, graph, context)
         nil
@@ -80267,21 +78596,6 @@
         (EffectList''add-3 this, "add fixed node", (ß graph ->
             (§ fun
                 (Graph''addBeforeFixed-3 graph, position, (Graph''add-2 graph, node))
-            ))
-        )
-        nil
-    )
-
-    #_unused
-    (§ method! #_"void" GraphEffectList''ensureAdded-3 [#_"GraphEffectList" this, #_"ValueNode" node, #_"FixedNode" position]
-        (EffectList''add-3 this, "ensure added", (ß graph ->
-            (§ fun
-                (when-not (Node''isAlive-1 node)
-                    (Graph''addOrUniqueWithInputs-2 graph, node)
-                    (when (instance? FixedWithNextNode node)
-                        (Graph''addBeforeFixed-3 graph, position, node)
-                    )
-                )
             ))
         )
         nil
@@ -80344,7 +78658,7 @@
                     nil
                 )
 
-                #_unused
+                #_unused
                 (§ override! #_"boolean" Effect''isVisible-1 [#_"Effect" this]
                     false
                 )
@@ -80458,7 +78772,7 @@
                     nil
                 )
 
-                #_unused
+                #_unused
                 (§ override! #_"boolean" Effect''isVisible-1 [#_"Effect" this]
                     (not (instance? FrameState node))
                 )
@@ -81025,7 +79339,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override #_"boolean" PartialEscapeClosure''needsApplyEffects-1 [#_"PartialEscapeClosure<BlockT extends PartialEscapeBlockState<BlockT>>" this]
         (or (:changed? this)
             ;; If there is a mismatch between the number of materializations and the number of virtualizations,
@@ -81529,7 +79843,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override #_"PEMergeProcessor<BlockT>" PartialEscapeClosure''createMergeProcessor-2 [#_"PartialEscapeClosure<BlockT extends PartialEscapeBlockState<BlockT>>" this, #_"Block" merge]
         (PEMergeProcessor'new-2 this, merge)
     )
@@ -82239,7 +80553,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" CollectVirtualObjectsClosure''apply-3 [#_"CollectVirtualObjectsClosure<BlockT extends PartialEscapeBlockState<BlockT>>" this, #_"Node" usage, #_"ValueNode" value]
         (if (instance? VirtualObjectNode value)
             (when (and (not= (VirtualObjectNode''getObjectId-1 value) -1) (some? (PartialEscapeBlockState''getObjectStateOptional-2 (:state this), value)))
@@ -82269,12 +80583,12 @@
         (PartialEscapeClosure'new-1 schedule)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"FinalState" FinalClosure''getInitialState-1 [#_"FinalClosure" this]
         (FinalState'new-0)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"FinalState" FinalClosure''cloneState-2 [#_"FinalClosure" this, #_"FinalState" oldState]
         (FinalState'new-1 oldState)
     )
@@ -82288,7 +80602,7 @@
         (PartialEscapePhase'new-4 iterative, GraalOptions'optEarlyReadElimination, canonicalizer, nil)
     )
 
-    #_unused
+    #_unused
     (§ defn #_"PartialEscapePhase" PartialEscapePhase'new-3 [#_"boolean" iterative, #_"CanonicalizerPhase" canonicalizer, #_"BasePhase<PhaseContext>" cleanupPhase]
         (PartialEscapePhase'new-4 iterative, GraalOptions'optEarlyReadElimination, canonicalizer, cleanupPhase)
     )
@@ -82303,7 +80617,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" PartialEscapePhase''run-3 [#_"PartialEscapePhase" this, #_"Graph" graph, #_"PhaseContext" context]
         (when (or (:readElimination this) (Graph''hasVirtualizableAllocation-1 graph))
             (EffectsPhase''runAnalysis-3 this, graph, context)
@@ -82311,7 +80625,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" PartialEscapePhase''postIteration-4 [#_"PartialEscapePhase" this, #_"Graph" graph, #_"PhaseContext" context, #_"EconomicSet<Node>" changedNodes]
         (EffectsPhase''postIteration-4 (§ super ), graph, context, changedNodes)
         (when (some? (:cleanupPhase this))
@@ -82320,7 +80634,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Closure" PartialEscapePhase''createEffectsClosure-4 [#_"PartialEscapePhase" this, #_"PhaseContext" context, #_"ScheduleResult" schedule, #_"ControlFlowGraph" cfg]
         (doseq [#_"VirtualObjectNode" virtual (Graph''getNodes-2 (:graph cfg), VirtualObjectNode'TYPE)]
             (§ ass! virtual (VirtualObjectNode''resetObjectId-1 virtual))
@@ -82366,7 +80680,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" PEReadEliminationBlockState''objectMaterialized-4 [#_"PEReadEliminationBlockState" this, #_"VirtualObjectNode" virtual, #_"AllocatedObjectNode" representation, #_"List<ValueNode>" values]
         (when (instance? VirtualInstanceNode virtual)
             (dotimes [#_"int" i (VirtualInstanceNode''entryCount-1 virtual)]
@@ -82384,7 +80698,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" PEReadEliminationBlockState''equivalentTo-2 [#_"PEReadEliminationBlockState" this, #_"PEReadEliminationBlockState" other]
         (and (EffectsBlockState'isSubMapOf-2 (:readCache this), (:readCache other)) (PartialEscapeBlockState''equivalentTo-2 (§ super ), other))
     )
@@ -82476,12 +80790,12 @@
         (PartialEscapeClosure'new-1 schedule)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"PEReadEliminationBlockState" PEReadEliminationClosure''getInitialState-1 [#_"PEReadEliminationClosure" this]
         (PEReadEliminationBlockState'new-0)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" PEReadEliminationClosure''processNode-5 [#_"PEReadEliminationClosure" this, #_"Node" node, #_"PEReadEliminationBlockState" state, #_"GraphEffectList" effects, #_"FixedWithNextNode" lastFixedNode]
         (or (PartialEscapeClosure''processNode-5 (§ super ), node, state, effects, lastFixedNode)
             (condp instance? node
@@ -82737,7 +81051,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" PEReadEliminationClosure''processInitialLoopState-3 [#_"PEReadEliminationClosure" this, #_"Loop" loop, #_"PEReadEliminationBlockState" initialState]
         (PartialEscapeClosure''processInitialLoopState-3 (§ super ), loop, initialState)
 
@@ -82785,7 +81099,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" PEReadEliminationClosure''processLoopExit-5 [#_"PEReadEliminationClosure" this, #_"LoopExitNode" exitNode, #_"PEReadEliminationBlockState" initialState, #_"PEReadEliminationBlockState" exitState, #_"GraphEffectList" effects]
         (PartialEscapeClosure''processLoopExit-5 (§ super ), exitNode, initialState, exitState, effects)
 
@@ -82814,17 +81128,17 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"PEReadEliminationBlockState" PEReadEliminationClosure''cloneState-2 [#_"PEReadEliminationClosure" this, #_"PEReadEliminationBlockState" other]
         (PEReadEliminationBlockState'new-1 other)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"PEMergeProcessor<PEReadEliminationBlockState>" PEReadEliminationClosure''createMergeProcessor-2 [#_"PEReadEliminationClosure" this, #_"Block" merge]
         (PEReadEliminationMergeProcessor'new-2 this, merge)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" PEReadEliminationClosure''processKilledLoopLocations-4 [#_"PEReadEliminationClosure" this, #_"Loop" loop, #_"PEReadEliminationBlockState" initialState, #_"PEReadEliminationBlockState" mergedStates]
         (when (seq (:readCache initialState))
             (let [
@@ -82868,7 +81182,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"PEReadEliminationBlockState" PEReadEliminationClosure''stripKilledLoopLocations-3 [#_"PEReadEliminationClosure" this, #_"Loop" loop, #_"PEReadEliminationBlockState" originalInitialState]
         (let [
             #_"PEReadEliminationBlockState" initialState (PartialEscapeClosure''stripKilledLoopLocations-3 (§ super ), loop, originalInitialState)
@@ -82898,7 +81212,7 @@
         (PEMergeProcessor'new-2 reClosure, mergeBlock)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" PEReadEliminationMergeProcessor''merge-2 [#_"PEReadEliminationMergeProcessor" this, #_"List<PEReadEliminationBlockState>" states]
         (PEMergeProcessor''merge-2 (§ super ), states)
 
@@ -83014,7 +81328,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" ReadEliminationBlockState''equivalentTo-2 [#_"ReadEliminationBlockState" this, #_"ReadEliminationBlockState" other]
         (EffectsBlockState'isSubMapOf-2 (:readCache this), (:readCache other))
     )
@@ -83079,17 +81393,17 @@
         (CacheEntry'new-2 object, identity)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"CacheEntry<LocationIdentity>" LoadCacheEntry''duplicateWithObject-2 [#_"LoadCacheEntry" this, #_"ValueNode" newObject]
         (LoadCacheEntry'new-2 newObject, (:identity this))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" LoadCacheEntry''conflicts-2 [#_"LoadCacheEntry" this, #_"LocationIdentity" other]
         (= (:identity this) other)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"LocationIdentity" LoadCacheEntry''getIdentity-1 [#_"LoadCacheEntry" this]
         (:identity this)
     )
@@ -83113,17 +81427,17 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"CacheEntry<ValueNode>" UnsafeLoadCacheEntry''duplicateWithObject-2 [#_"UnsafeLoadCacheEntry" this, #_"ValueNode" newObject]
         (UnsafeLoadCacheEntry'new-3 newObject, (:identity this), (:locationIdentity this))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" UnsafeLoadCacheEntry''conflicts-2 [#_"UnsafeLoadCacheEntry" this, #_"LocationIdentity" other]
         (= (:locationIdentity this) other)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"LocationIdentity" UnsafeLoadCacheEntry''getIdentity-1 [#_"UnsafeLoadCacheEntry" this]
         (:locationIdentity this)
     )
@@ -83145,12 +81459,12 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ReadEliminationBlockState" ReadEliminationClosure''getInitialState-1 [#_"ReadEliminationClosure" this]
         (ReadEliminationBlockState'new-0)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" ReadEliminationClosure''processNode-5 [#_"ReadEliminationClosure" this, #_"Node" node, #_"ReadEliminationBlockState" state, #_"GraphEffectList" effects, #_"FixedWithNextNode" lastFixedNode]
         (condp instance? node
             AccessFieldNode
@@ -83315,7 +81629,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" ReadEliminationClosure''processLoopExit-5 [#_"ReadEliminationClosure" this, #_"LoopExitNode" exitNode, #_"ReadEliminationBlockState" initialState, #_"ReadEliminationBlockState" exitState, #_"GraphEffectList" effects]
         (when (:hasValueProxies (:graph exitNode))
             (let [
@@ -83336,17 +81650,17 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ReadEliminationBlockState" ReadEliminationClosure''cloneState-2 [#_"ReadEliminationClosure" this, #_"ReadEliminationBlockState" other]
         (ReadEliminationBlockState'new-1 other)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"MergeProcessor<ReadEliminationBlockState>" ReadEliminationClosure''createMergeProcessor-2 [#_"ReadEliminationClosure" this, #_"Block" merge]
         (ReadEliminationMergeProcessor'new-1 merge)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" ReadEliminationClosure''processKilledLoopLocations-4 [#_"ReadEliminationClosure" this, #_"Loop" loop, #_"ReadEliminationBlockState" initialState, #_"ReadEliminationBlockState" mergedStates]
         (when (seq (:readCache initialState))
             (let [
@@ -83390,7 +81704,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ReadEliminationBlockState" ReadEliminationClosure''stripKilledLoopLocations-3 [#_"ReadEliminationClosure" this, #_"Loop" loop, #_"ReadEliminationBlockState" originalInitialState]
         (let [
             #_"ReadEliminationBlockState" initialState (EffectsClosure''stripKilledLoopLocations-3 (§ super ), loop, originalInitialState)
@@ -83433,7 +81747,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" ReadEliminationMergeProcessor''merge-2 [#_"ReadEliminationMergeProcessor" this, #_"List<ReadEliminationBlockState>" states]
         (let [
             #_"MapCursor<CacheEntry, ValueNode>" cursor (#_"EconomicMap" .getEntries (:readCache (nth states 0)))
@@ -83554,7 +81868,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override! #_"ValueNode" VirtualizerToolImpl''getAlias-2 [#_"VirtualizerToolImpl" this, #_"ValueNode" value]
         (PartialEscapeClosure''getAliasAndResolve-3 (:closure this), (:state this), value)
     )
@@ -83563,7 +81877,7 @@
         (ObjectState''getEntry-2 (PartialEscapeBlockState''getObjectState-2 (:state this), virtualObject), index)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" VirtualizerToolImpl''setVirtualEntry-6 [#_"VirtualizerToolImpl" this, #_"VirtualObjectNode" virtual, #_"int" index, #_"ValueNode" value, #_"JavaKind" theAccessKind, #_"long" offset]
         (let [
             #_"ObjectState" obj (PartialEscapeBlockState''getObjectState-2 (:state this), virtual)
@@ -83621,13 +81935,13 @@
         (:illegalConstant this)
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" VirtualizerToolImpl''setEnsureVirtualized-3 [#_"VirtualizerToolImpl" this, #_"VirtualObjectNode" object, #_"boolean" ensure?]
         (PartialEscapeBlockState''setEnsureVirtualized-3 (:state this), (VirtualObjectNode''getObjectId-1 object), ensure?)
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" VirtualizerToolImpl''getEnsureVirtualized-2 [#_"VirtualizerToolImpl" this, #_"VirtualObjectNode" object]
         (:ensureVirtualized (PartialEscapeBlockState''getObjectState-2 (:state this), object))
     )
@@ -83646,14 +81960,14 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" VirtualizerToolImpl''delete-1 [#_"VirtualizerToolImpl" this]
         (GraphEffectList''deleteNode-2 (:effects this), (:current this))
         (§ ass! this (assoc this :deleted true))
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" VirtualizerToolImpl''replaceFirstInput-3 [#_"VirtualizerToolImpl" this, #_"Node" oldInput, #_"Node" replacement]
         (GraphEffectList''replaceFirstInput-4 (:effects this), (:current this), oldInput, replacement)
         nil
@@ -83667,7 +81981,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" VirtualizerToolImpl''createVirtualObject-5 [#_"VirtualizerToolImpl" this, #_"VirtualObjectNode" virtualObject, #_"ValueNode[]" entryState, #_"List<MonitorIdNode>" locks, #_"boolean" ensureVirtualized]
         (when-not (Node''isAlive-1 virtualObject)
             (GraphEffectList''addFloatingNode-3 (:effects this), virtualObject, "newVirtualObject")
@@ -83699,12 +82013,12 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"int" VirtualizerToolImpl''getMaximumEntryCount-1 [#_"VirtualizerToolImpl" this]
         GraalOptions'maximumEscapeAnalysisArrayLength
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" VirtualizerToolImpl''replaceWith-2 [#_"VirtualizerToolImpl" this, #_"ValueNode" node]
         (if (instance? VirtualObjectNode node)
             (VirtualizerToolImpl''replaceWithVirtual-2 this, node)
@@ -83713,33 +82027,33 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" VirtualizerToolImpl''ensureMaterialized-2 [#_"VirtualizerToolImpl" this, #_"VirtualObjectNode" object]
         (PartialEscapeClosure''ensureMaterialized-5 (:closure this), (:state this), (VirtualObjectNode''getObjectId-1 object), (:position this), (:effects this))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"void" VirtualizerToolImpl''addLock-3 [#_"VirtualizerToolImpl" this, #_"VirtualObjectNode" object, #_"MonitorIdNode" monitorId]
         (PartialEscapeBlockState''addLock-3 (:state this), (VirtualObjectNode''getObjectId-1 object), monitorId)
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"MonitorIdNode" VirtualizerToolImpl''removeLock-2 [#_"VirtualizerToolImpl" this, #_"VirtualObjectNode" object]
         (PartialEscapeBlockState''removeLock-2 (:state this), (VirtualObjectNode''getObjectId-1 object))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" VirtualizerToolImpl''canonicalizeReads-1 [#_"VirtualizerToolImpl" this]
         false
     )
 
-    #_unused
+    #_unused
     (§ override! #_"boolean" VirtualizerToolImpl''allUsagesAvailable-1 [#_"VirtualizerToolImpl" this]
         true
     )
 
-    #_unused
+    #_unused
     (§ override! #_"Integer" VirtualizerToolImpl''smallestCompareWidth-1 [#_"VirtualizerToolImpl" this]
         (Lowerer'smallestCompareWidth-0)
     )
@@ -83756,392 +82070,392 @@
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_BARRIERED)
-    #_unused
+    #_unused
     (§ native #_"byte" BarrieredAccess'readByte-3 [#_"Object" object, #_"WordBase" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_BARRIERED)
-    #_unused
+    #_unused
     (§ native #_"char" BarrieredAccess'readChar-3 [#_"Object" object, #_"WordBase" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_BARRIERED)
-    #_unused
+    #_unused
     (§ native #_"short" BarrieredAccess'readShort-3 [#_"Object" object, #_"WordBase" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_BARRIERED)
-    #_unused
+    #_unused
     (§ native #_"int" BarrieredAccess'readInt-3 [#_"Object" object, #_"WordBase" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_BARRIERED)
-    #_unused
+    #_unused
     (§ native #_"long" BarrieredAccess'readLong-3 [#_"Object" object, #_"WordBase" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_BARRIERED)
-    #_unused
+    #_unused
     (§ native #_"<T extends WordBase> T" BarrieredAccess'readWord-3 [#_"Object" object, #_"WordBase" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_BARRIERED)
-    #_unused
+    #_unused
     (§ native #_"Object" BarrieredAccess'readObject-3 [#_"Object" object, #_"WordBase" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_BARRIERED)
-    #_unused
+    #_unused
     (§ native #_"byte" BarrieredAccess'readByte-3 [#_"Object" object, #_"int" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_BARRIERED)
-    #_unused
+    #_unused
     (§ native #_"char" BarrieredAccess'readChar-3 [#_"Object" object, #_"int" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_BARRIERED)
-    #_unused
+    #_unused
     (§ native #_"short" BarrieredAccess'readShort-3 [#_"Object" object, #_"int" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_BARRIERED)
-    #_unused
+    #_unused
     (§ native #_"int" BarrieredAccess'readInt-3 [#_"Object" object, #_"int" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_BARRIERED)
-    #_unused
+    #_unused
     (§ native #_"long" BarrieredAccess'readLong-3 [#_"Object" object, #_"int" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_BARRIERED)
-    #_unused
+    #_unused
     (§ native #_"<T extends WordBase> T" BarrieredAccess'readWord-3 [#_"Object" object, #_"int" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_BARRIERED)
-    #_unused
+    #_unused
     (§ native #_"Object" BarrieredAccess'readObject-3 [#_"Object" object, #_"int" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
-    #_unused
+    #_unused
     (§ native #_"void" BarrieredAccess'writeByte-4 [#_"Object" object, #_"WordBase" offset, #_"byte" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
-    #_unused
+    #_unused
     (§ native #_"void" BarrieredAccess'writeChar-4 [#_"Object" object, #_"WordBase" offset, #_"char" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
-    #_unused
+    #_unused
     (§ native #_"void" BarrieredAccess'writeShort-4 [#_"Object" object, #_"WordBase" offset, #_"short" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
-    #_unused
+    #_unused
     (§ native #_"void" BarrieredAccess'writeInt-4 [#_"Object" object, #_"WordBase" offset, #_"int" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
-    #_unused
+    #_unused
     (§ native #_"void" BarrieredAccess'writeLong-4 [#_"Object" object, #_"WordBase" offset, #_"long" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
-    #_unused
+    #_unused
     (§ native #_"void" BarrieredAccess'writeWord-4 [#_"Object" object, #_"WordBase" offset, #_"WordBase" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
-    #_unused
+    #_unused
     (§ native #_"void" BarrieredAccess'writeObject-4 [#_"Object" object, #_"WordBase" offset, #_"Object" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
-    #_unused
+    #_unused
     (§ native #_"void" BarrieredAccess'writeByte-4 [#_"Object" object, #_"int" offset, #_"byte" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
-    #_unused
+    #_unused
     (§ native #_"void" BarrieredAccess'writeChar-4 [#_"Object" object, #_"int" offset, #_"char" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
-    #_unused
+    #_unused
     (§ native #_"void" BarrieredAccess'writeShort-4 [#_"Object" object, #_"int" offset, #_"short" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
-    #_unused
+    #_unused
     (§ native #_"void" BarrieredAccess'writeInt-4 [#_"Object" object, #_"int" offset, #_"int" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
-    #_unused
+    #_unused
     (§ native #_"void" BarrieredAccess'writeLong-4 [#_"Object" object, #_"int" offset, #_"long" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
-    #_unused
+    #_unused
     (§ native #_"void" BarrieredAccess'writeWord-4 [#_"Object" object, #_"int" offset, #_"WordBase" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
-    #_unused
+    #_unused
     (§ native #_"void" BarrieredAccess'writeObject-4 [#_"Object" object, #_"int" offset, #_"Object" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_BARRIERED)
-    #_unused
+    #_unused
     (§ native #_"byte" BarrieredAccess'readByte-2 [#_"Object" object, #_"WordBase" offset])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_BARRIERED)
-    #_unused
+    #_unused
     (§ native #_"char" BarrieredAccess'readChar-2 [#_"Object" object, #_"WordBase" offset])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_BARRIERED)
-    #_unused
+    #_unused
     (§ native #_"short" BarrieredAccess'readShort-2 [#_"Object" object, #_"WordBase" offset])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_BARRIERED)
-    #_unused
+    #_unused
     (§ native #_"int" BarrieredAccess'readInt-2 [#_"Object" object, #_"WordBase" offset])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_BARRIERED)
-    #_unused
+    #_unused
     (§ native #_"long" BarrieredAccess'readLong-2 [#_"Object" object, #_"WordBase" offset])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_BARRIERED)
-    #_unused
+    #_unused
     (§ native #_"<T extends WordBase> T" BarrieredAccess'readWord-2 [#_"Object" object, #_"WordBase" offset])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_BARRIERED)
-    #_unused
+    #_unused
     (§ native #_"Object" BarrieredAccess'readObject-2 [#_"Object" object, #_"WordBase" offset])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_BARRIERED)
-    #_unused
+    #_unused
     (§ native #_"byte" BarrieredAccess'readByte-2 [#_"Object" object, #_"int" offset])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_BARRIERED)
-    #_unused
+    #_unused
     (§ native #_"char" BarrieredAccess'readChar-2 [#_"Object" object, #_"int" offset])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_BARRIERED)
-    #_unused
+    #_unused
     (§ native #_"short" BarrieredAccess'readShort-2 [#_"Object" object, #_"int" offset])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_BARRIERED)
-    #_unused
+    #_unused
     (§ native #_"int" BarrieredAccess'readInt-2 [#_"Object" object, #_"int" offset])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_BARRIERED)
-    #_unused
+    #_unused
     (§ native #_"long" BarrieredAccess'readLong-2 [#_"Object" object, #_"int" offset])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_BARRIERED)
-    #_unused
+    #_unused
     (§ native #_"<T extends WordBase> T" BarrieredAccess'readWord-2 [#_"Object" object, #_"int" offset])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_BARRIERED)
-    #_unused
+    #_unused
     (§ native #_"Object" BarrieredAccess'readObject-2 [#_"Object" object, #_"int" offset])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
-    #_unused
+    #_unused
     (§ native #_"void" BarrieredAccess'writeByte-3 [#_"Object" object, #_"WordBase" offset, #_"byte" val])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
-    #_unused
+    #_unused
     (§ native #_"void" BarrieredAccess'writeChar-3 [#_"Object" object, #_"WordBase" offset, #_"char" val])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
-    #_unused
+    #_unused
     (§ native #_"void" BarrieredAccess'writeShort-3 [#_"Object" object, #_"WordBase" offset, #_"short" val])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
-    #_unused
+    #_unused
     (§ native #_"void" BarrieredAccess'writeInt-3 [#_"Object" object, #_"WordBase" offset, #_"int" val])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
-    #_unused
+    #_unused
     (§ native #_"void" BarrieredAccess'writeLong-3 [#_"Object" object, #_"WordBase" offset, #_"long" val])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
-    #_unused
+    #_unused
     (§ native #_"void" BarrieredAccess'writeWord-3 [#_"Object" object, #_"WordBase" offset, #_"WordBase" val])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
-    #_unused
+    #_unused
     (§ native #_"void" BarrieredAccess'writeObject-3 [#_"Object" object, #_"WordBase" offset, #_"Object" val])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
-    #_unused
+    #_unused
     (§ native #_"void" BarrieredAccess'writeByte-3 [#_"Object" object, #_"int" offset, #_"byte" val])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
-    #_unused
+    #_unused
     (§ native #_"void" BarrieredAccess'writeChar-3 [#_"Object" object, #_"int" offset, #_"char" val])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
-    #_unused
+    #_unused
     (§ native #_"void" BarrieredAccess'writeShort-3 [#_"Object" object, #_"int" offset, #_"short" val])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
-    #_unused
+    #_unused
     (§ native #_"void" BarrieredAccess'writeInt-3 [#_"Object" object, #_"int" offset, #_"int" val])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
-    #_unused
+    #_unused
     (§ native #_"void" BarrieredAccess'writeLong-3 [#_"Object" object, #_"int" offset, #_"long" val])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
-    #_unused
+    #_unused
     (§ native #_"void" BarrieredAccess'writeWord-3 [#_"Object" object, #_"int" offset, #_"WordBase" val])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
-    #_unused
+    #_unused
     (§ native #_"void" BarrieredAccess'writeObject-3 [#_"Object" object, #_"int" offset, #_"Object" val])
 )
 
@@ -84156,392 +82470,392 @@
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_OBJECT)
-    #_unused
+    #_unused
     (§ native #_"byte" ObjectAccess'readByte-3 [#_"Object" object, #_"WordBase" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_OBJECT)
-    #_unused
+    #_unused
     (§ native #_"char" ObjectAccess'readChar-3 [#_"Object" object, #_"WordBase" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_OBJECT)
-    #_unused
+    #_unused
     (§ native #_"short" ObjectAccess'readShort-3 [#_"Object" object, #_"WordBase" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_OBJECT)
-    #_unused
+    #_unused
     (§ native #_"int" ObjectAccess'readInt-3 [#_"Object" object, #_"WordBase" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_OBJECT)
-    #_unused
+    #_unused
     (§ native #_"long" ObjectAccess'readLong-3 [#_"Object" object, #_"WordBase" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_OBJECT)
-    #_unused
+    #_unused
     (§ native #_"<T extends WordBase> T" ObjectAccess'readWord-3 [#_"Object" object, #_"WordBase" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_OBJECT)
-    #_unused
+    #_unused
     (§ native #_"Object" ObjectAccess'readObject-3 [#_"Object" object, #_"WordBase" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_OBJECT)
-    #_unused
+    #_unused
     (§ native #_"byte" ObjectAccess'readByte-3 [#_"Object" object, #_"int" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_OBJECT)
-    #_unused
+    #_unused
     (§ native #_"char" ObjectAccess'readChar-3 [#_"Object" object, #_"int" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_OBJECT)
-    #_unused
+    #_unused
     (§ native #_"short" ObjectAccess'readShort-3 [#_"Object" object, #_"int" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_OBJECT)
-    #_unused
+    #_unused
     (§ native #_"int" ObjectAccess'readInt-3 [#_"Object" object, #_"int" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_OBJECT)
-    #_unused
+    #_unused
     (§ native #_"long" ObjectAccess'readLong-3 [#_"Object" object, #_"int" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_OBJECT)
-    #_unused
+    #_unused
     (§ native #_"<T extends WordBase> T" ObjectAccess'readWord-3 [#_"Object" object, #_"int" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_OBJECT)
-    #_unused
+    #_unused
     (§ native #_"Object" ObjectAccess'readObject-3 [#_"Object" object, #_"int" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
-    #_unused
+    #_unused
     (§ native #_"void" ObjectAccess'writeByte-4 [#_"Object" object, #_"WordBase" offset, #_"byte" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
-    #_unused
+    #_unused
     (§ native #_"void" ObjectAccess'writeChar-4 [#_"Object" object, #_"WordBase" offset, #_"char" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
-    #_unused
+    #_unused
     (§ native #_"void" ObjectAccess'writeShort-4 [#_"Object" object, #_"WordBase" offset, #_"short" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
-    #_unused
+    #_unused
     (§ native #_"void" ObjectAccess'writeInt-4 [#_"Object" object, #_"WordBase" offset, #_"int" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
-    #_unused
+    #_unused
     (§ native #_"void" ObjectAccess'writeLong-4 [#_"Object" object, #_"WordBase" offset, #_"long" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
-    #_unused
+    #_unused
     (§ native #_"void" ObjectAccess'writeWord-4 [#_"Object" object, #_"WordBase" offset, #_"WordBase" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
-    #_unused
+    #_unused
     (§ native #_"void" ObjectAccess'writeObject-4 [#_"Object" object, #_"WordBase" offset, #_"Object" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
-    #_unused
+    #_unused
     (§ native #_"void" ObjectAccess'writeByte-4 [#_"Object" object, #_"int" offset, #_"byte" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
-    #_unused
+    #_unused
     (§ native #_"void" ObjectAccess'writeChar-4 [#_"Object" object, #_"int" offset, #_"char" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
-    #_unused
+    #_unused
     (§ native #_"void" ObjectAccess'writeShort-4 [#_"Object" object, #_"int" offset, #_"short" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
-    #_unused
+    #_unused
     (§ native #_"void" ObjectAccess'writeInt-4 [#_"Object" object, #_"int" offset, #_"int" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
-    #_unused
+    #_unused
     (§ native #_"void" ObjectAccess'writeLong-4 [#_"Object" object, #_"int" offset, #_"long" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
-    #_unused
+    #_unused
     (§ native #_"void" ObjectAccess'writeWord-4 [#_"Object" object, #_"int" offset, #_"WordBase" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
-    #_unused
+    #_unused
     (§ native #_"void" ObjectAccess'writeObject-4 [#_"Object" object, #_"int" offset, #_"Object" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_OBJECT)
-    #_unused
+    #_unused
     (§ native #_"byte" ObjectAccess'readByte-2 [#_"Object" object, #_"WordBase" offset])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_OBJECT)
-    #_unused
+    #_unused
     (§ native #_"char" ObjectAccess'readChar-2 [#_"Object" object, #_"WordBase" offset])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_OBJECT)
-    #_unused
+    #_unused
     (§ native #_"short" ObjectAccess'readShort-2 [#_"Object" object, #_"WordBase" offset])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_OBJECT)
-    #_unused
+    #_unused
     (§ native #_"int" ObjectAccess'readInt-2 [#_"Object" object, #_"WordBase" offset])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_OBJECT)
-    #_unused
+    #_unused
     (§ native #_"long" ObjectAccess'readLong-2 [#_"Object" object, #_"WordBase" offset])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_OBJECT)
-    #_unused
+    #_unused
     (§ native #_"<T extends WordBase> T" ObjectAccess'readWord-2 [#_"Object" object, #_"WordBase" offset])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_OBJECT)
-    #_unused
+    #_unused
     (§ native #_"Object" ObjectAccess'readObject-2 [#_"Object" object, #_"WordBase" offset])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_OBJECT)
-    #_unused
+    #_unused
     (§ native #_"byte" ObjectAccess'readByte-2 [#_"Object" object, #_"int" offset])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_OBJECT)
-    #_unused
+    #_unused
     (§ native #_"char" ObjectAccess'readChar-2 [#_"Object" object, #_"int" offset])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_OBJECT)
-    #_unused
+    #_unused
     (§ native #_"short" ObjectAccess'readShort-2 [#_"Object" object, #_"int" offset])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_OBJECT)
-    #_unused
+    #_unused
     (§ native #_"int" ObjectAccess'readInt-2 [#_"Object" object, #_"int" offset])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_OBJECT)
-    #_unused
+    #_unused
     (§ native #_"long" ObjectAccess'readLong-2 [#_"Object" object, #_"int" offset])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_OBJECT)
-    #_unused
+    #_unused
     (§ native #_"<T extends WordBase> T" ObjectAccess'readWord-2 [#_"Object" object, #_"int" offset])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_OBJECT)
-    #_unused
+    #_unused
     (§ native #_"Object" ObjectAccess'readObject-2 [#_"Object" object, #_"int" offset])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
-    #_unused
+    #_unused
     (§ native #_"void" ObjectAccess'writeByte-3 [#_"Object" object, #_"WordBase" offset, #_"byte" val])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
-    #_unused
+    #_unused
     (§ native #_"void" ObjectAccess'writeChar-3 [#_"Object" object, #_"WordBase" offset, #_"char" val])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
-    #_unused
+    #_unused
     (§ native #_"void" ObjectAccess'writeShort-3 [#_"Object" object, #_"WordBase" offset, #_"short" val])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
-    #_unused
+    #_unused
     (§ native #_"void" ObjectAccess'writeInt-3 [#_"Object" object, #_"WordBase" offset, #_"int" val])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
-    #_unused
+    #_unused
     (§ native #_"void" ObjectAccess'writeLong-3 [#_"Object" object, #_"WordBase" offset, #_"long" val])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
-    #_unused
+    #_unused
     (§ native #_"void" ObjectAccess'writeWord-3 [#_"Object" object, #_"WordBase" offset, #_"WordBase" val])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
-    #_unused
+    #_unused
     (§ native #_"void" ObjectAccess'writeObject-3 [#_"Object" object, #_"WordBase" offset, #_"Object" val])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
-    #_unused
+    #_unused
     (§ native #_"void" ObjectAccess'writeByte-3 [#_"Object" object, #_"int" offset, #_"byte" val])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
-    #_unused
+    #_unused
     (§ native #_"void" ObjectAccess'writeChar-3 [#_"Object" object, #_"int" offset, #_"char" val])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
-    #_unused
+    #_unused
     (§ native #_"void" ObjectAccess'writeShort-3 [#_"Object" object, #_"int" offset, #_"short" val])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
-    #_unused
+    #_unused
     (§ native #_"void" ObjectAccess'writeInt-3 [#_"Object" object, #_"int" offset, #_"int" val])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
-    #_unused
+    #_unused
     (§ native #_"void" ObjectAccess'writeLong-3 [#_"Object" object, #_"int" offset, #_"long" val])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
-    #_unused
+    #_unused
     (§ native #_"void" ObjectAccess'writeWord-3 [#_"Object" object, #_"int" offset, #_"WordBase" val])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
-    #_unused
+    #_unused
     (§ native #_"void" ObjectAccess'writeObject-3 [#_"Object" object, #_"int" offset, #_"Object" val])
 )
 
@@ -84598,7 +82912,7 @@
      ; #objectToTrackedPointer(Object) instead.
      ;;
     ; @Operation(opcode = WordOpcode'OBJECT_TO_UNTRACKED)
-    #_unused
+    #_unused
     (§ native #_"Word" Word'objectToUntrackedPointer-1 [#_"Object" val])
 
     ; @Operation(opcode = WordOpcode'FROM_ADDRESS)
@@ -84838,19 +83152,19 @@
     )
 
     ; @Operation(opcode = WordOpcode'NOT)
-    #_unused
+    #_unused
     (§ override #_"Word" Word''not-1 [#_"Word" this]
         (Word'box-1 (bit-not (Word''unbox-1 this)))
     )
 
     ; @Operation(opcode = WordOpcode'IS_NULL)
-    #_unused
+    #_unused
     (§ override #_"boolean" Word''isNull-1 [#_"Word" this]
         (Word''equal-2 this, (WordFactory/zero))
     )
 
     ; @Operation(opcode = WordOpcode'IS_NON_NULL)
-    #_unused
+    #_unused
     (§ override #_"boolean" Word''isNonNull-1 [#_"Word" this]
         (Word''notEqual-2 this, (WordFactory/zero))
     )
@@ -85481,7 +83795,7 @@
         nil
     )
 
-    #_unused
+    #_unused
     (§ override! #_"<T extends WordBase> T" BoxFactoryImpl''boxImpl-2 [#_"BoxFactoryImpl" this, #_"long" val]
         (§ cast #_"T" (HostedWord'boxLong-1 val))
     )
@@ -85514,7 +83828,7 @@
         (if (<= HostedWord'SMALL_FROM val HostedWord'SMALL_TO) (nth HostedWord'smallCache (int (- val HostedWord'SMALL_FROM))) (HostedWord'new-1 val))
     )
 
-    #_unused
+    #_unused
     (§ override! #_"long" HostedWord''unbox-1 [#_"HostedWord" this]
         (:rawValue this)
     )
@@ -85567,8 +83881,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"Node" WordCastNode''canonical-2 [#_"WordCastNode" this, #_"CanonicalizerTool" tool]
+    (§ override! #_"Node" Canonicalizable''canonical-2 [#_"WordCastNode" this, #_"CanonicalizerTool" tool]
         (cond
             (and (CanonicalizerTool''allUsagesAvailable-1 tool) (Node''hasNoUsages-1 this))
                 ;; if the cast is unused, it can be eliminated
@@ -85590,8 +83903,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" WordCastNode''generate-2 [#_"WordCastNode" this, #_"LIRBuilder" builder]
+    (§ override! #_"void" LIRLowerable''generate-2 [#_"WordCastNode" this, #_"LIRBuilder" builder]
         (let [
             #_"Value" value (LIRBuilder''operand-2 builder, (:input this))
             #_"ValueKind" kind (Stamp''getLIRKind-1 (:stamp this))
@@ -85633,7 +83945,7 @@
     (§ override #_"boolean" WordOperationPlugin''handleInvoke-4 [#_"WordOperationPlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"ValueNode[]" args]
         (and (WordTypes'isWordOperation-1 method)
             (do
-                (WordOperationPlugin''processWordOperation-4 this, parser, args, (WordTypes'getWordOperation-2 method, (#_"ResolvedJavaMethod" .getDeclaringClass (BytecodeParser''getMethod-1 parser))))
+                (WordOperationPlugin''processWordOperation-4 this, parser, args, (WordTypes'getWordOperation-2 method, (#_"ResolvedJavaMethod" .getDeclaringClass (:method parser))))
                 true
             )
         )
@@ -85655,7 +83967,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ override #_"void" WordOperationPlugin''notifyNotInlined-4 [#_"WordOperationPlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"InvokeNode" invoke]
         (when (WordTypes'isWord-1 invoke)
             (§ ass! invoke (ValueNode''setStamp-2 invoke, (WordTypes'getWordStamp-1 (StampTool'typeOrNull-1 (:stamp invoke)))))
@@ -86061,14 +84373,6 @@
         ]
             this
         )
-    )
-
-    ;;;
-     ; Determines if a frame is set up and torn down by this object.
-     ;;
-    #_unused
-    (§ method! #_"boolean" FrameContext''hasFrame-1 [#_"FrameContext" this]
-        (not (:omitFrame this))
     )
 
     ;;;
