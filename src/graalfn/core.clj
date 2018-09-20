@@ -5493,18 +5493,44 @@
     )
 )
 
+(final-ns RegisterBackupPair
+    (§ final #_"Register" :register nil)
+    (§ final #_"VirtualStackSlot" :backupSlot nil)
+
+    (§ defn #_"RegisterBackupPair" RegisterBackupPair'new-2 [#_"Register" register, #_"VirtualStackSlot" backupSlot]
+        (let [
+            #_"RegisterBackupPair" this (hash-map)
+            this (assoc this :register register)
+            this (assoc this :backupSlot backupSlot)
+        ]
+            this
+        )
+    )
+)
+
 ;;;
  ; Factory for creating moves.
  ;;
 (final-ns MoveFactory
-    (§ final #_"BackupSlotProvider" :backupSlotProvider nil)
+    (§ final #_"FrameMapBuilder" :frameMapBuilder nil)
 
-    (§ defn #_"MoveFactory" MoveFactory'new-1 [#_"BackupSlotProvider" backupSlotProvider]
+    (§ defn #_"MoveFactory" MoveFactory'new-1 [#_"FrameMapBuilder" frameMapBuilder]
         (let [
             #_"MoveFactory" this (hash-map)
-            this (assoc this :backupSlotProvider backupSlotProvider)
+            this (assoc this :frameMapBuilder frameMapBuilder)
         ]
             this
+        )
+    )
+
+    #_memoize
+    (§ method! #_"RegisterBackupPair" MoveFactory''getScratchRegister-2 [#_"MoveFactory" this, #_"PlatformKind" kind]
+        (let [
+            #_"RegisterArray" available (#_"RegisterConfig" .filterAllocatableRegisters HotSpot'registerConfig, kind, (#_"RegisterConfig" .getAllocatableRegisters HotSpot'registerConfig))
+            #_"Register" scratch (#_"RegisterArray" .get available, 0)
+            #_"LIRKind" largest (LIRKind'value-1 (#_"Architecture" .getLargestStorableKind (.arch HotSpot'target), (#_"Register" .getRegisterCategory scratch)))
+        ]
+            (RegisterBackupPair'new-2 scratch, (FrameMapBuilder''allocateSpillSlot-2 (:frameMapBuilder this), largest))
         )
     )
 
@@ -5537,9 +5563,9 @@
     #_unused
     (§ method! #_"boolean" MoveFactory''allowConstantToStackMove-2 [#_"MoveFactory" this, #_"Constant" constant]
         (condp instance? constant
-            HotSpotConstant     (#_"HotSpotConstant" .isCompressed constant)
-            JavaConstant        (AMD64Move'canMoveConst2Stack-1 constant)
-                                true
+            HotSpotConstant (#_"HotSpotConstant" .isCompressed constant)
+            JavaConstant    (AMD64Move'canMoveConst2Stack-1 constant)
+                            true
         )
     )
 
@@ -5557,7 +5583,7 @@
             2 (AMD64PushPopStackMove'new-3 OperandSize'WORD, result, input)
             8 (AMD64PushPopStackMove'new-3 OperandSize'QWORD, result, input)
             (let [
-                #_"RegisterBackupPair" backup (BackupSlotProvider''getScratchRegister-2 (:backupSlotProvider this), (#_"AllocatableValue" .getPlatformKind input))
+                #_"RegisterBackupPair" backup (MoveFactory''getScratchRegister-2 this, (#_"AllocatableValue" .getPlatformKind input))
             ]
                 (AMD64StackMove'new-4 result, input, (:register backup), (:backupSlot backup))
             )
@@ -5566,7 +5592,7 @@
 
     (§ defn- #_"LIRInstruction" MoveFactory'createLoad-2 [#_"AllocatableValue" dst, #_"Constant" src]
         (condp instance? src
-            JavaConstant        (MoveFromConstOp'new-2 dst, src)
+            JavaConstant (MoveFromConstOp'new-2 dst, src)
         )
     )
 
@@ -5592,61 +5618,6 @@
                 HotSpotObjectConstant    (HotSpotLoadObjectConstantOp'new-2 dst, src)
                 HotSpotMetaspaceConstant (HotSpotLoadMetaspaceConstantOp'new-2 dst, src)
                                          (MoveFactory'createStackLoad-2 dst, src)
-            )
-        )
-    )
-)
-
-;;;
- ; @anno MoveFactory.RegisterBackupPair
- ;;
-(final-ns RegisterBackupPair
-    (§ final #_"Register" :register nil)
-    (§ final #_"VirtualStackSlot" :backupSlot nil)
-
-    (§ defn #_"RegisterBackupPair" RegisterBackupPair'new-2 [#_"Register" register, #_"VirtualStackSlot" backupSlot]
-        (let [
-            #_"RegisterBackupPair" this (hash-map)
-            this (assoc this :register register)
-            this (assoc this :backupSlot backupSlot)
-        ]
-            this
-        )
-    )
-)
-
-;;;
- ; @anno MoveFactory.BackupSlotProvider
- ;;
-(final-ns BackupSlotProvider
-    (§ final #_"FrameMapBuilder" :frameMapBuilder nil)
-
-    (§ final #_"EconomicMap<PlatformKind$Key, RegisterBackupPair>" :categorized (EconomicMap/create Equivalence/DEFAULT))
-
-    (§ defn #_"BackupSlotProvider" BackupSlotProvider'new-1 [#_"FrameMapBuilder" frameMapBuilder]
-        (let [
-            #_"BackupSlotProvider" this (hash-map)
-            this (assoc this :frameMapBuilder frameMapBuilder)
-        ]
-            this
-        )
-    )
-
-    (§ method! #_"RegisterBackupPair" BackupSlotProvider''getScratchRegister-2 [#_"BackupSlotProvider" this, #_"PlatformKind" kind]
-        (let [
-            #_"PlatformKind$Key" key (#_"PlatformKind" .getKey kind)
-        ]
-            (or (get (:categorized this) key)
-                (let [
-                    #_"RegisterArray" available (#_"RegisterConfig" .filterAllocatableRegisters HotSpot'registerConfig, kind, (#_"RegisterConfig" .getAllocatableRegisters HotSpot'registerConfig))
-                    #_"Register" scratch (#_"RegisterArray" .get available, 0)
-                    #_"LIRKind" largest (LIRKind'value-1 (#_"Architecture" .getLargestStorableKind (.arch HotSpot'target), (#_"Register" .getRegisterCategory scratch)))
-                    #_"VirtualStackSlot" backup (FrameMapBuilder''allocateSpillSlot-2 (:frameMapBuilder this), largest)
-                    #_"RegisterBackupPair" value (RegisterBackupPair'new-2 scratch, backup)
-                ]
-                    (#_"EconomicMap" .put (:categorized this), key, value)
-                    value
-                )
             )
         )
     )
@@ -5910,61 +5881,6 @@
 )
 
 ;;;
- ; Configuration for register allocation. This is different to RegisterConfig.
- ;;
-(class-ns RegisterAllocationConfig
-    (§ final #_"EconomicMap<PlatformKind$Key, AllocatableRegisters>" :categorized (EconomicMap/create Equivalence/DEFAULT))
-    (§ mutable #_"RegisterArray" :cachedRegisters nil)
-
-    (§ defn #_"RegisterAllocationConfig" RegisterAllocationConfig'new-0 []
-        (hash-map)
-    )
-
-    (§ method #_"RegisterArray" RegisterAllocationConfig''initAllocatable-2 [#_"RegisterAllocationConfig" this, #_"RegisterArray" registers]
-        registers
-    )
-
-    ;;;
-     ; Gets the set of registers that can be used by the register allocator for a value of a particular kind.
-     ;;
-    (§ method! #_"AllocatableRegisters" RegisterAllocationConfig''getAllocatableRegisters-2 [#_"RegisterAllocationConfig" this, #_"PlatformKind" kind]
-        (let [
-            #_"PlatformKind$Key" key (#_"PlatformKind" .getKey kind)
-        ]
-            (if (contains? (:categorized this) key)
-                (get (:categorized this) key)
-                (let [
-                    #_"AllocatableRegisters" ret (RegisterAllocationConfig''createAllocatableRegisters-2 this, (#_"RegisterConfig" .filterAllocatableRegisters HotSpot'registerConfig, kind, (RegisterAllocationConfig''getAllocatableRegisters-1 this)))
-                ]
-                    (#_"EconomicMap" .put (:categorized this), key, ret)
-                    ret
-                )
-            )
-        )
-    )
-
-    (§ method! #_"AllocatableRegisters" RegisterAllocationConfig''createAllocatableRegisters-2 [#_"RegisterAllocationConfig" this, #_"RegisterArray" registers]
-        (loop-when [#_"int" min Integer/MAX_VALUE #_"int" max Integer/MIN_VALUE #_"ISeq" s (seq registers)] (some? s) => (AllocatableRegisters'new-3 registers, min, max)
-            (let [
-                #_"int" n (.number (first s))
-            ]
-                (recur (if (< n min) n min) (if (< max n) n max) (next s))
-            )
-        )
-    )
-
-    ;;;
-     ; Gets the set of registers that can be used by the register allocator.
-     ;;
-    (§ method! #_"RegisterArray" RegisterAllocationConfig''getAllocatableRegisters-1 [#_"RegisterAllocationConfig" this]
-        (when (nil? (:cachedRegisters this))
-            (§ ass! this (assoc this :cachedRegisters (RegisterAllocationConfig''initAllocatable-2 this, (#_"RegisterConfig" .getAllocatableRegisters HotSpot'registerConfig))))
-        )
-        (:cachedRegisters this)
-    )
-)
-
-;;;
  ; @anno RegisterAllocationConfig.AllocatableRegisters
  ;;
 (final-ns AllocatableRegisters
@@ -5980,6 +5896,73 @@
             this (assoc this :maxRegisterNumber maxRegisterNumber)
         ]
             this
+        )
+    )
+)
+
+;;;
+ ; Configuration for register allocation. This is different to RegisterConfig.
+ ;;
+(value-ns RegisterAllocationConfig
+    ;;;
+     ; Specify priority of register selection within phases of register allocation. Highest priority is first.
+     ; A useful heuristic is to give registers a low priority when they are required by machine instructions,
+     ; like EAX and EDX on I486, and choose no-save registers before save-on-call and save-on-call before save-on-entry.
+     ; Registers which participate in fixed calling sequences should come last.
+     ; Registers which are used as pairs must fall on an even boundary.
+     ;
+     ; Adopted from x86_64.ad.
+     ;;
+    (§ def- #_"Register*" RegisterAllocationConfig'registerAllocationOrder
+        [
+            AMD64/r10, AMD64/r11, AMD64/r8, AMD64/r9, AMD64/r12,
+            AMD64/rcx, AMD64/rbx, AMD64/rdi, AMD64/rdx, AMD64/rsi, AMD64/rax, AMD64/rbp,
+            AMD64/r13, AMD64/r14, ;; AMD64/r15, AMD64/rsp
+        ]
+    )
+
+    ;;;
+     ; The ordered set of registers that can be used by the register allocator.
+     ;;
+    (§ def #_"RegisterArray" RegisterAllocationConfig'allocatableRegisters
+        (let [
+            #_"RegisterArray" registers (#_"RegisterConfig" .getAllocatableRegisters HotSpot'registerConfig)
+            #_"BitSet" bits (BitSet. (#_"RegisterArray" .size registers))
+            _
+                (doseq [#_"Register" reg registers]
+                    (#_"BitSet" .set bits, (.number reg))
+                )
+            #_"ArrayList<Register>" allocatableRegisters (ArrayList.)
+            _
+                (doseq [#_"Register" reg RegisterAllocationConfig'registerAllocationOrder]
+                    (when (#_"BitSet" .get bits, (.number reg))
+                        (#_"ArrayList" .add allocatableRegisters, reg)
+                    )
+                )
+        ]
+            (RegisterArray. allocatableRegisters)
+        )
+    )
+
+    (§ defn- #_"AllocatableRegisters" RegisterAllocationConfig'createAllocatableRegisters-1 [#_"RegisterArray" registers]
+        (loop-when [#_"int" min Integer/MAX_VALUE #_"int" max Integer/MIN_VALUE #_"ISeq" s (seq registers)] (some? s) => (AllocatableRegisters'new-3 registers, min, max)
+            (let [
+                #_"int" n (.number (first s))
+            ]
+                (recur (if (< n min) n min) (if (< max n) n max) (next s))
+            )
+        )
+    )
+
+    ;;;
+     ; Gets the set of registers that can be used by the register allocator for a value of a particular kind.
+     ;;
+    #_memoize
+    (§ defn #_"AllocatableRegisters" RegisterAllocationConfig'getAllocatableRegisters-1 [#_"PlatformKind" kind]
+        (let [
+            #_"RegisterArray" available (#_"RegisterConfig" .filterAllocatableRegisters HotSpot'registerConfig, kind, RegisterAllocationConfig'allocatableRegisters)
+        ]
+            (RegisterAllocationConfig'createAllocatableRegisters-1 available)
         )
     )
 )
@@ -6626,19 +6609,9 @@
  ; Describes fields in a class, primarily for access via Unsafe.
  ;;
 (class-ns Fields
-    ;;;
-     ; Offsets used with Unsafe to access the fields.
-     ;;
     (§ final #_"long[]" :offsets nil)
-    ;;;
-     ; The names of the fields.
-     ;;
     (§ final #_"String[]" :names nil)
-    ;;;
-     ; The types of the fields.
-     ;;
     (§ final #_"Class[]" :types nil)
-
     (§ final #_"Class[]" :declaringClasses nil)
 
     (§ defn #_"Fields" Fields'new-1 [#_"ArrayList<? extends FieldInfo>" fields]
@@ -6650,17 +6623,18 @@
             this (assoc this :names (make-array String n))
             this (assoc this :types (make-array Class n))
             this (assoc this :declaringClasses (make-array Class n))
-        ]
-            (loop-when-recur [#_"int" i 0 #_"ISeq" s (seq fields)] (some? s) [(inc i) (next s)]
-                (let [
-                    #_"FieldInfo" f (first s)
-                ]
-                    (aset (:offsets this) i (:offset f))
-                    (aset (:names this) i (:name f))
-                    (aset (:types this) i (:type f))
-                    (aset (:declaringClasses this) i (:declaringClass f))
+            _
+                (loop-when-recur [#_"int" i 0 #_"ISeq" s (seq fields)] (some? s) [(inc i) (next s)]
+                    (let [
+                        #_"FieldInfo" f (first s)
+                    ]
+                        (aset (:offsets this) i (:offset f))
+                        (aset (:names this) i (:name f))
+                        (aset (:types this) i (:type f))
+                        (aset (:declaringClasses this) i (:declaringClass f))
+                    )
                 )
-            )
+        ]
             this
         )
     )
@@ -6678,19 +6652,7 @@
      ; @param from the object from which the fields should be copied
      ; @param to the object to which the fields should be copied
      ;;
-    (§ method #_"void" Fields''copy-3 [#_"Fields" this, #_"Object" from, #_"Object" to]
-        (Fields''copy-4 this, from, to, nil)
-        nil
-    )
-
-    ;;;
-     ; Copies fields from {@code from} to {@code to}, both of which must be of the same type.
-     ;
-     ; @param from the object from which the fields should be copied
-     ; @param to the object to which the fields should be copied
-     ; @param trans function to applied to object field values as they are copied. If nil, the value is copied unchanged.
-     ;;
-    (§ method #_"void" Fields''copy-4 [#_"Fields" this, #_"Object" from, #_"Object" to, #_"ObjectTransformer" trans]
+    (§ method? #_"void" Fields''copy-3 [#_"Fields" this, #_"Object" from, #_"Object" to]
         (dotimes [#_"int" index (count (:offsets this))]
             (let [
                 #_"Class" type (nth (:types this) index)
@@ -6705,11 +6667,7 @@
                         char'class    (.putChar    HotSpot'unsafe, to, offset, (.getChar    HotSpot'unsafe, from, offset))
                         byte'class    (.putByte    HotSpot'unsafe, to, offset, (.getByte    HotSpot'unsafe, from, offset))
                     )
-                    (let [
-                        #_"Object" obj (.getObject HotSpot'unsafe, from, offset)
-                    ]
-                        (.putObject HotSpot'unsafe, to, offset, (if (some? trans) (ObjectTransformer''apply-3 trans, index, obj) obj))
-                    )
+                    (.putObject HotSpot'unsafe, to, offset, (.getObject HotSpot'unsafe, from, offset))
                 )
             )
         )
@@ -6717,75 +6675,18 @@
     )
 
     ;;;
-     ; Gets the value of a field for a given object.
-     ;
-     ; @param object the object whose field is to be read
-     ; @param index the index of the field (between 0 and #getCount())
-     ; @return the value of the specified field which will be boxed if the field type is primitive
-     ;;
-    #_unused
-    (§ method #_"Object" Fields''get-3 [#_"Fields" this, #_"Object" object, #_"int" index]
-        (let [
-            #_"Class" type (nth (:types this) index)
-            #_"long" offset (nth (:offsets this) index)
-        ]
-            (if (#_"Class" .isPrimitive type)
-                (condp = type
-                    int'class     (.getInt     HotSpot'unsafe, object, offset)
-                    long'class    (.getLong    HotSpot'unsafe, object, offset)
-                    boolean'class (.getBoolean HotSpot'unsafe, object, offset)
-                    short'class   (.getShort   HotSpot'unsafe, object, offset)
-                    char'class    (.getChar    HotSpot'unsafe, object, offset)
-                    byte'class    (.getByte    HotSpot'unsafe, object, offset)
-                )
-                (.getObject HotSpot'unsafe, object, offset)
-            )
-        )
-    )
-
-    ;;;
-     ; Gets the value of a field for a given object.
-     ;
-     ; @param object the object whose field is to be read
-     ; @param index the index of the field (between 0 and #getCount())
-     ; @return the value of the specified field which will be boxed if the field type is primitive
-     ;;
-    #_unused
-    (§ method! #_"long" Fields''getRawPrimitive-3 [#_"Fields" this, #_"Object" object, #_"int" index]
-        (let [
-            #_"Class" type (nth (:types this) index)
-            #_"long" offset (nth (:offsets this) index)
-        ]
-            (condp = type
-                int'class         (.getInt     HotSpot'unsafe, object, offset)
-                long'class        (.getLong    HotSpot'unsafe, object, offset)
-                boolean'class (if (.getBoolean HotSpot'unsafe, object, offset) 1 0)
-                short'class       (.getShort   HotSpot'unsafe, object, offset)
-                char'class        (.getChar    HotSpot'unsafe, object, offset)
-                byte'class        (.getByte    HotSpot'unsafe, object, offset)
-            )
-        )
-    )
-
-    ;;;
-     ; Determines if a field in the domain of this object is the same as the field denoted by the
-     ; same index in another Fields object.
+     ; Determines if a field in the domain of this object is the same as the field denoted by
+     ; the same index in another Fields object.
      ;;
     (§ method! #_"boolean" Fields''isSame-3 [#_"Fields" this, #_"Fields" other, #_"int" index]
         (= (nth (:offsets other) index) (nth (:offsets this) index))
     )
 
-    ;;;
-     ; Gets the name of a field.
-     ;;
-    (§ method #_"String" Fields''getName-2 [#_"Fields" this, #_"int" index]
+    (§ method! #_"String" Fields''getName-2 [#_"Fields" this, #_"int" index]
         (nth (:names this) index)
     )
 
-    ;;;
-     ; Gets the type of a field.
-     ;;
-    (§ method #_"Class" Fields''getType-2 [#_"Fields" this, #_"int" index]
+    (§ method! #_"Class" Fields''getType-2 [#_"Fields" this, #_"int" index]
         (nth (:types this) index)
     )
 
@@ -6793,88 +6694,18 @@
         (nth (:declaringClasses this) index)
     )
 
-    #_unused
-    (§ method #_"void" Fields''set-4 [#_"Fields" this, #_"Object" object, #_"int" index, #_"Object" value]
-        (let [
-            #_"Class" type (nth (:types this) index)
-            #_"long" offset (nth (:offsets this) index)
-        ]
-            (if (#_"Class" .isPrimitive type)
-                (condp = type
-                    int'class     (.putInt     HotSpot'unsafe, object, offset, value)
-                    long'class    (.putLong    HotSpot'unsafe, object, offset, value)
-                    boolean'class (.putBoolean HotSpot'unsafe, object, offset, value)
-                    short'class   (.putShort   HotSpot'unsafe, object, offset, value)
-                    char'class    (.putChar    HotSpot'unsafe, object, offset, value)
-                    byte'class    (.putByte    HotSpot'unsafe, object, offset, value)
-                )
-                (.putObject HotSpot'unsafe, object, offset, value)
-            )
-        )
-        nil
-    )
-
-    #_unused
-    (§ method! #_"void" Fields''setRawPrimitive-4 [#_"Fields" this, #_"Object" object, #_"int" index, #_"long" value]
-        (let [
-            #_"Class" type (nth (:types this) index)
-            #_"long" offset (nth (:offsets this) index)
-        ]
-            (condp = type
-                int'class     (.putInt     HotSpot'unsafe, object, offset, (int value))
-                long'class    (.putLong    HotSpot'unsafe, object, offset, value)
-                boolean'class (.putBoolean HotSpot'unsafe, object, offset, (not (zero? value)))
-                short'class   (.putShort   HotSpot'unsafe, object, offset, (short value))
-                char'class    (.putChar    HotSpot'unsafe, object, offset, (char value))
-                byte'class    (.putByte    HotSpot'unsafe, object, offset, (byte value))
-            )
-        )
-        nil
-    )
-
-    (§ method! #_"boolean" Fields''getBoolean-3 [#_"Fields" this, #_"Object" n, #_"int" i]
-        (.getBoolean HotSpot'unsafe, n, (nth (:offsets this) i))
-    )
-
-    (§ method #_"byte" Fields''getByte-3 [#_"Fields" this, #_"Object" n, #_"int" i]
-        (.getByte HotSpot'unsafe, n, (nth (:offsets this) i))
-    )
-
-    (§ method #_"short" Fields''getShort-3 [#_"Fields" this, #_"Object" n, #_"int" i]
-        (.getShort HotSpot'unsafe, n, (nth (:offsets this) i))
-    )
-
-    (§ method! #_"char" Fields''getChar-3 [#_"Fields" this, #_"Object" n, #_"int" i]
-        (.getChar HotSpot'unsafe, n, (nth (:offsets this) i))
-    )
-
-    (§ method #_"int" Fields''getInt-3 [#_"Fields" this, #_"Object" n, #_"int" i]
-        (.getInt HotSpot'unsafe, n, (nth (:offsets this) i))
-    )
-
-    (§ method! #_"long" Fields''getLong-3 [#_"Fields" this, #_"Object" n, #_"int" i]
-        (.getLong HotSpot'unsafe, n, (nth (:offsets this) i))
-    )
-
-    (§ method #_"Object" Fields''getObject-3 [#_"Fields" this, #_"Object" object, #_"int" i]
-        (.getObject HotSpot'unsafe, object, (nth (:offsets this) i))
-    )
+    (§ method! #_"boolean" Fields''getBoolean-3 [#_"Fields" this, #_"Object" o, #_"int" i] (.getBoolean HotSpot'unsafe, o, (nth (:offsets this) i)))
+    (§ method! #_"byte"    Fields''getByte-3    [#_"Fields" this, #_"Object" o, #_"int" i] (.getByte    HotSpot'unsafe, o, (nth (:offsets this) i)))
+    (§ method! #_"short"   Fields''getShort-3   [#_"Fields" this, #_"Object" o, #_"int" i] (.getShort   HotSpot'unsafe, o, (nth (:offsets this) i)))
+    (§ method! #_"char"    Fields''getChar-3    [#_"Fields" this, #_"Object" o, #_"int" i] (.getChar    HotSpot'unsafe, o, (nth (:offsets this) i)))
+    (§ method! #_"int"     Fields''getInt-3     [#_"Fields" this, #_"Object" o, #_"int" i] (.getInt     HotSpot'unsafe, o, (nth (:offsets this) i)))
+    (§ method! #_"long"    Fields''getLong-3    [#_"Fields" this, #_"Object" o, #_"int" i] (.getLong    HotSpot'unsafe, o, (nth (:offsets this) i)))
+    (§ method! #_"Object"  Fields''getObject-3  [#_"Fields" this, #_"Object" o, #_"int" i] (.getObject  HotSpot'unsafe, o, (nth (:offsets this) i)))
 
     (§ method! #_"void" Fields''putObject-4 [#_"Fields" this, #_"Object" object, #_"int" i, #_"Object" value]
         (.putObject HotSpot'unsafe, object, (nth (:offsets this) i), value)
         nil
     )
-)
-
-;;;
- ; Function enabling an object field value to be replaced with another value when being copied
- ; within Fields#copy(Object, Object, ObjectTransformer).
- ;
- ; @anno Fields.ObjectTransformer
- ;;
-; @FunctionalInterface
-(§ interface ObjectTransformer
-    (§ abstract #_"Object" ObjectTransformer''apply-3 [#_"ObjectTransformer" this, #_"int" index, #_"Object" from])
 )
 
 ;;;
@@ -7091,7 +6922,7 @@
     (def #_"boolean" GraalOptions'lirOptConstantLoadOptimization (and GraalOptions'lirOptimization true))
 
     ;;;
-     ; @anno PostAllocationOptimizationStage.Options
+     ; @anno PostAllocationStage.Options
      ;;
     (def #_"boolean" GraalOptions'lirOptEdgeMoveOptimizer (and GraalOptions'lirOptimization true))
     (def #_"boolean" GraalOptions'lirOptControlFlowOptimizer (and GraalOptions'lirOptimization true))
@@ -11058,7 +10889,7 @@
      ; @param fromNode the node from which the edges should be copied.
      ; @param toNode the node to which the edges should be copied.
      ;;
-    (§ method #_"void" Edges''copy-3 [#_"Edges" this, #_"Node" fromNode, #_"Node" toNode]
+    (§ method? #_"void" Edges''copy-3 [#_"Edges" this, #_"Node" fromNode, #_"Node" toNode]
         (let [
             #_"int" i
                 (loop-when-recur [i 0] (< i (:directCount this)) [(inc i)] => i
@@ -11077,11 +10908,6 @@
             )
         )
         nil
-    )
-
-    #_unused
-    (§ override #_"void" Edges''set-4 [#_"Edges" this, #_"Object" node, #_"int" index, #_"Object" value]
-        (throw (IllegalArgumentException. (str "Cannot call set on " this)))
     )
 
     ;;;
@@ -13597,14 +13423,19 @@
     (§ defn #_"NodeFieldsScanner" NodeFieldsScanner'new-1 [#_"NodeClass" superNodeClass]
         (let [
             #_"NodeFieldsScanner" this (FieldsScanner'new-0)
+            this
+                (when (some? superNodeClass) => this
+                    (InputEdges'translateInto-2 (:inputs superNodeClass), (:inputs this))
+                    (Edges'translateInto-2 (:successors superNodeClass), (:successors this))
+                    (Fields'translateInto-2 (:data superNodeClass), (:data this))
+                    (let [
+                        this (assoc this :directInputs (:directCount (:inputs superNodeClass)))
+                        this (assoc this :directSuccessors (:directCount (:successors superNodeClass)))
+                    ]
+                        this
+                    )
+                )
         ]
-            (when (some? superNodeClass)
-                (InputEdges'translateInto-2 (:inputs superNodeClass), (:inputs this))
-                (Edges'translateInto-2 (:successors superNodeClass), (:successors this))
-                (Fields'translateInto-2 (:data superNodeClass), (:data this))
-                (§ ass this (assoc this :directInputs (:directCount (:inputs superNodeClass))))
-                (§ ass this (assoc this :directSuccessors (:directCount (:successors superNodeClass))))
-            )
             this
         )
     )
@@ -15933,52 +15764,6 @@
             )
         )
         nil
-    )
-)
-
-(final-ns AMD64HotSpotRegisterAllocationConfig (§ extends RegisterAllocationConfig)
-    ;;;
-     ; Specify priority of register selection within phases of register allocation. Highest priority
-     ; is first. A useful heuristic is to give registers a low priority when they are required by
-     ; machine instructions, like EAX and EDX on I486, and choose no-save registers before save-on-call
-     ; and save-on-call before save-on-entry. Registers which participate in fixed calling sequences
-     ; should come last. Registers which are used as pairs must fall on an even boundary.
-     ;
-     ; Adopted from x86_64.ad.
-     ;;
-    (§ def #_"Register[]" AMD64HotSpotRegisterAllocationConfig'registerAllocationOrder)
-    (§ array
-        AMD64/r10, AMD64/r11, AMD64/r8, AMD64/r9, AMD64/r12,
-        AMD64/rcx, AMD64/rbx, AMD64/rdi, AMD64/rdx, AMD64/rsi, AMD64/rax, AMD64/rbp,
-        AMD64/r13, AMD64/r14
-        ;; AMD64.r15, AMD64.rsp
-    )
-
-    (§ defn #_"AMD64HotSpotRegisterAllocationConfig" AMD64HotSpotRegisterAllocationConfig'new-0 []
-        (RegisterAllocationConfig'new-0)
-    )
-
-    #_unused
-    (§ override! #_"RegisterArray" AMD64HotSpotRegisterAllocationConfig''initAllocatable-2 [#_"AMD64HotSpotRegisterAllocationConfig" this, #_"RegisterArray" registers]
-        (let [
-            #_"BitSet" regMap (BitSet. (#_"RegisterArray" .size (#_"RegisterConfig" .getAllocatableRegisters HotSpot'registerConfig)))
-        ]
-            (doseq [#_"Register" reg registers]
-                (#_"BitSet" .set regMap, (.number reg))
-            )
-
-            (let [
-                #_"ArrayList<Register>" allocatableRegisters (ArrayList.)
-            ]
-                (doseq [#_"Register" reg AMD64HotSpotRegisterAllocationConfig'registerAllocationOrder]
-                    (when (#_"BitSet" .get regMap, (.number reg))
-                        (#_"ArrayList" .add allocatableRegisters, reg)
-                    )
-                )
-
-                (RegisterAllocationConfig''initAllocatable-2 (§ super ), (RegisterArray. allocatableRegisters))
-            )
-        )
     )
 )
 
@@ -27536,7 +27321,6 @@
     (§ final #_"FrameMapBuilder" :frameMapBuilder nil)
     (§ final #_"RegisterAttributes[]" :registerAttributes nil)
     (§ final #_"RegisterArray" :registers nil)
-    (§ final #_"RegisterAllocationConfig" :regAllocConfig nil)
     (§ final #_"MoveFactory" :moveFactory nil)
     (§ final #_"BlockMap<BlockData>" :blockData nil)
     ;;;
@@ -27582,7 +27366,7 @@
     (§ final #_"Interval" :intervalEndMarker nil)
     (§ final #_"Range" :rangeEndMarker nil)
 
-    (§ defn #_"LinearScan" LinearScan'new-4 [#_"LIRGenerationResult" res, #_"MoveFactory" moveFactory, #_"RegisterAllocationConfig" regAllocConfig, #_"Block[]" sortedBlocks]
+    (§ defn #_"LinearScan" LinearScan'new-3 [#_"LIRGenerationResult" res, #_"MoveFactory" moveFactory, #_"Block[]" sortedBlocks]
         (let [
             #_"LinearScan" this (hash-map)
             this (assoc this :lir (:lir res))
@@ -27590,7 +27374,6 @@
             this (assoc this :frameMapBuilder (:frameMapBuilder res))
             this (assoc this :sortedBlocks sortedBlocks)
             this (assoc this :registerAttributes (#_"RegisterConfig" .getAttributesMap HotSpot'registerConfig))
-            this (assoc this :regAllocConfig regAllocConfig)
             this (assoc this :registers (#_"Architecture" .getRegisters (.arch HotSpot'target)))
             this (assoc this :firstVariableNumber (#_"RegisterArray" .size (LinearScan''getRegisters-1 this)))
             this (assoc this :numVariables (:numVariables (:lir this)))
@@ -28063,10 +27846,6 @@
 
     (§ method #_"RegisterArray" LinearScan''getRegisters-1 [#_"LinearScan" this]
         (:registers this)
-    )
-
-    (§ method! #_"RegisterAllocationConfig" LinearScan''getRegisterAllocationConfig-1 [#_"LinearScan" this]
-        (:regAllocConfig this)
     )
 
     (§ method! #_"boolean" LinearScan''callKillsRegisters-1 [#_"LinearScan" this]
@@ -29100,14 +28879,14 @@
     )
 )
 
-(final-ns LinearScanPhase (§ extends RegisterAllocationPhase)
+(final-ns LinearScanPhase (§ implements LIRPhase #_"<LIRPhaseContext>") ;; AllocationPhase
     (§ defn #_"LinearScanPhase" LinearScanPhase'new-0 []
-        (RegisterAllocationPhase'new-0)
+        (hash-map)
     )
 
-    (§ override! #_"void" LIRPhase''run-3 [#_"LinearScanPhase" this, #_"LIRGenerationResult" lirGenRes, #_"AllocationContext" context]
+    (§ override! #_"void" LIRPhase''run-3 [#_"LinearScanPhase" this, #_"LIRGenerationResult" lirGenRes, #_"LIRPhaseContext" context]
         (let [
-            #_"LinearScan" allocator (SSALinearScan'new-4 lirGenRes, (:moveFactory context), (:registerAllocationConfig context), (:linearScanOrder (:lir lirGenRes)))
+            #_"LinearScan" allocator (SSALinearScan'new-3 lirGenRes, (:moveFactory (:lirGen context)), (:linearScanOrder (:lir lirGenRes)))
         ]
             (LinearScan''allocate-2 allocator, lirGenRes)
         )
@@ -29931,7 +29710,7 @@
 
     (§ method! #_"LinearScanWalker" LinearScanWalker''initVarsForAlloc-2 [#_"LinearScanWalker" this, #_"Interval" interval]
         (let [
-            #_"AllocatableRegisters" r (RegisterAllocationConfig''getAllocatableRegisters-2 (LinearScan''getRegisterAllocationConfig-1 (:allocator this)), (#_"ValueKind" .getPlatformKind (:kind interval)))
+            #_"AllocatableRegisters" r (RegisterAllocationConfig'getAllocatableRegisters-1 (#_"ValueKind" .getPlatformKind (:kind interval)))
             this (assoc this :availableRegs (:allocatableRegisters r))
             this (assoc this :minReg (:minRegisterNumber r))
             this (assoc this :maxReg (:maxRegisterNumber r))
@@ -30075,10 +29854,6 @@
         (seq (:mappingFrom this))
     )
 
-    (§ method! #_"LinearScan" MoveResolver''getAllocator-1 [#_"MoveResolver" this]
-        (:allocator this)
-    )
-
     (§ defn #_"MoveResolver" MoveResolver'new-1 [#_"LinearScan" allocator]
         (let [
             #_"MoveResolver" this (hash-map)
@@ -30187,7 +29962,7 @@
      ; @param toLocation {@link Interval#location() location} of the {@code to} interval
      ;;
     (§ method #_"LIRInstruction" MoveResolver''createMove-5 [#_"MoveResolver" this, #_"AllocatableValue" fromOpr, #_"AllocatableValue" toOpr, #_"AllocatableValue" fromLocation, #_"AllocatableValue" toLocation]
-        (MoveFactory''createMove-3 (:moveFactory (MoveResolver''getAllocator-1 this)), toOpr, fromOpr)
+        (MoveFactory''createMove-3 (:moveFactory (:allocator this)), toOpr, fromOpr)
     )
 
     (§ method- #_"LIRInstruction" MoveResolver''insertMove-3 [#_"MoveResolver" this, #_"Constant" fromOpr, #_"Interval" toInterval]
@@ -30195,8 +29970,8 @@
             #_"AllocatableValue" toOpr (:operand toInterval)
             #_"LIRInstruction" move
                 (if (LIRValueUtil'isStackSlotValue-1 (:location toInterval))
-                    (MoveFactory''createStackLoad-3 (:moveFactory (MoveResolver''getAllocator-1 this)), toOpr, fromOpr)
-                    (MoveFactory''createLoad-3 (:moveFactory (MoveResolver''getAllocator-1 this)), toOpr, fromOpr)
+                    (MoveFactory''createStackLoad-3 (:moveFactory (:allocator this)), toOpr, fromOpr)
+                    (MoveFactory''createLoad-3 (:moveFactory (:allocator this)), toOpr, fromOpr)
                 )
         ]
             (§ ass! (:insertionBuffer this) (LIRInsertionBuffer''append-3 (:insertionBuffer this), (:insertIdx this), move))
@@ -30282,7 +30057,7 @@
             #_"AllocatableValue" spillSlot (Interval''spillSlot-1 fromInterval)
         ]
             (when (nil? spillSlot)
-                (§ ass spillSlot (FrameMapBuilder''allocateSpillSlot-2 (LinearScan''getFrameMapBuilder-1 (MoveResolver''getAllocator-1 this)), (:kind fromInterval)))
+                (§ ass spillSlot (FrameMapBuilder''allocateSpillSlot-2 (LinearScan''getFrameMapBuilder-1 (:allocator this)), (:kind fromInterval)))
                 (Interval''setSpillSlot-2 fromInterval, spillSlot)
             )
             (MoveResolver''spillInterval-4 this, spillCandidate, fromInterval, spillSlot)
@@ -30292,7 +30067,7 @@
 
     (§ method! #_"void" MoveResolver''spillInterval-4 [#_"MoveResolver" this, #_"int" spillCandidate, #_"Interval" fromInterval, #_"AllocatableValue" spillSlot]
         (let [
-            #_"Interval" spillInterval (LinearScan''createDerivedInterval-2 (MoveResolver''getAllocator-1 this), fromInterval)
+            #_"Interval" spillInterval (LinearScan''createDerivedInterval-2 (:allocator this), fromInterval)
         ]
             (§ ass! spillInterval (Interval''setKind-2 spillInterval, (:kind fromInterval)))
 
@@ -30593,8 +30368,8 @@
 )
 
 (final-ns SSALinearScan (§ extends LinearScan)
-    (§ defn #_"SSALinearScan" SSALinearScan'new-4 [#_"LIRGenerationResult" res, #_"MoveFactory" moveFactory, #_"RegisterAllocationConfig" regAllocConfig, #_"Block[]" sortedBlocks]
-        (LinearScan'new-4 res, moveFactory, regAllocConfig, sortedBlocks)
+    (§ defn #_"SSALinearScan" SSALinearScan'new-3 [#_"LIRGenerationResult" res, #_"MoveFactory" moveFactory, #_"Block[]" sortedBlocks]
+        (LinearScan'new-3 res, moveFactory, sortedBlocks)
     )
 
     #_unused
@@ -30834,7 +30609,7 @@
     #_unused
     (§ override! #_"LIRInstruction" SSAMoveResolver''createMove-5 [#_"SSAMoveResolver" this, #_"AllocatableValue" fromOpr, #_"AllocatableValue" toOpr, #_"AllocatableValue" fromLocation, #_"AllocatableValue" toLocation]
         (if (and (LIRValueUtil'isStackSlotValue-1 toLocation) (LIRValueUtil'isStackSlotValue-1 fromLocation))
-            (MoveFactory''createStackMove-3 (:moveFactory (MoveResolver''getAllocator-1 this)), toOpr, fromOpr)
+            (MoveFactory''createStackMove-3 (:moveFactory (:allocator this)), toOpr, fromOpr)
             (MoveResolver''createMove-5 (§ super ), fromOpr, toOpr, fromLocation, toLocation)
         )
     )
@@ -30847,7 +30622,7 @@
                 #_"int" stackSpillCandidate 0
                 #_"Interval" fromInterval (MoveResolver''getMappingFrom-2 this, stackSpillCandidate)
                 ;; allocate new stack slot
-                #_"VirtualStackSlot" spillSlot (FrameMapBuilder''allocateSpillSlot-2 (LinearScan''getFrameMapBuilder-1 (MoveResolver''getAllocator-1 this)), (:kind fromInterval))
+                #_"VirtualStackSlot" spillSlot (FrameMapBuilder''allocateSpillSlot-2 (LinearScan''getFrameMapBuilder-1 (:allocator this)), (:kind fromInterval))
             ]
                 (MoveResolver''spillInterval-4 this, stackSpillCandidate, fromInterval, spillSlot)
             )
@@ -30856,28 +30631,19 @@
     )
 )
 
-;;;
- ; Marker class for register allocation phases.
- ;;
-(class-ns RegisterAllocationPhase (§ extends AllocationPhase)
-    (§ defn #_"RegisterAllocationPhase" RegisterAllocationPhase'new-0 []
-        (AllocationPhase'new-0)
-    )
-)
-
-(final-ns SaveCalleeSaveRegisters (§ extends PreAllocationOptimizationPhase)
+(final-ns SaveCalleeSaveRegisters (§ implements LIRPhase #_"<LIRPhaseContext>") ;; PreAllocationPhase
     (§ defn #_"SaveCalleeSaveRegisters" SaveCalleeSaveRegisters'new-0 []
-        (PreAllocationOptimizationPhase'new-0)
+        (hash-map)
     )
 
-    (§ defn- #_"RegisterMap<Variable>" SaveCalleeSaveRegisters'saveAtEntry-5 [#_"LIR" lir, #_"LIRGenerator" lirGen, #_"LIRGenerationResult" lirGenRes, #_"RegisterArray" calleeSaveRegisters, #_"Architecture" arch]
+    (§ defn- #_"RegisterMap" SaveCalleeSaveRegisters'saveAtEntry-5 [#_"LIR" lir, #_"LIRGenerator" lirGen, #_"LIRGenerationResult" lirGenRes, #_"RegisterArray" calleeSaveRegisters, #_"Architecture" arch]
         (let [
             #_"Block" startBlock (ControlFlowGraph''getStartBlock-1 (:cfg lir))
             #_"List<LIRInstruction>" ops (LIR''getLIRforBlock-2 lir, startBlock)
             #_"LIRInsertionBuffer" buffer (LIRInsertionBuffer''init-2 (LIRInsertionBuffer'new-0), ops)
             #_"LabelOp" entry (nth ops 0)
             #_"RegisterValue[]" savedRegisterValues (make-array RegisterValue (#_"RegisterArray" .size calleeSaveRegisters))
-            #_"RegisterMap<Variable>" saveMap (RegisterMap'new-1 arch)
+            #_"RegisterMap" saveMap (RegisterMap'new-1 arch)
         ]
             (loop-when [#_"int" i 0 #_"ISeq" s (seq calleeSaveRegisters)] (some? s)
                 (let [
@@ -30900,7 +30666,7 @@
         )
     )
 
-    (§ defn- #_"void" SaveCalleeSaveRegisters'restoreAtExit-5 [#_"LIR" lir, #_"MoveFactory" moveFactory, #_"LIRGenerationResult" lirGenRes, #_"RegisterMap<Variable>" calleeSaveRegisters, #_"Block" block]
+    (§ defn- #_"void" SaveCalleeSaveRegisters'restoreAtExit-5 [#_"LIR" lir, #_"MoveFactory" moveFactory, #_"LIRGenerationResult" lirGenRes, #_"RegisterMap" calleeSaveRegisters, #_"Block" block]
         (let [
             #_"List<LIRInstruction>" ops (LIR''getLIRforBlock-2 lir, block)
             #_"int" i (dec (count ops))
@@ -30917,14 +30683,14 @@
         nil
     )
 
-    (§ override! #_"void" LIRPhase''run-3 [#_"SaveCalleeSaveRegisters" this, #_"LIRGenerationResult" lirGenRes, #_"PreAllocationOptimizationContext" context]
+    (§ override! #_"void" LIRPhase''run-3 [#_"SaveCalleeSaveRegisters" this, #_"LIRGenerationResult" lirGenRes, #_"LIRPhaseContext" context]
         (let [
             #_"RegisterArray" calleeSaveRegisters (#_"RegisterConfig" .getCalleeSaveRegisters HotSpot'registerConfig)
         ]
             (when (and (some? calleeSaveRegisters) (not (zero? (#_"RegisterArray" .size calleeSaveRegisters))))
                 (let [
                     #_"LIR" lir (:lir lirGenRes)
-                    #_"RegisterMap<Variable>" savedRegisters (SaveCalleeSaveRegisters'saveAtEntry-5 lir, (:lirGen context), lirGenRes, calleeSaveRegisters, (.arch HotSpot'target))
+                    #_"RegisterMap" savedRegisters (SaveCalleeSaveRegisters'saveAtEntry-5 lir, (:lirGen context), lirGenRes, calleeSaveRegisters, (.arch HotSpot'target))
                 ]
                     (doseq [#_"Block" block (:codeEmittingOrder lir)]
                         (when (and (some? block) (empty? (:successors block)))
@@ -33662,12 +33428,12 @@
  ; Note: this phase must be inserted <b>after</b> RedundantMoveElimination phase because
  ; AMD64MultiStackMove are not probably detected.
  ;;
-(final-ns StackMoveOptimizationPhase (§ extends PostAllocationOptimizationPhase)
+(final-ns StackMoveOptimizationPhase (§ implements LIRPhase #_"<LIRPhaseContext>") ;; PostAllocationPhase
     (§ defn #_"StackMoveOptimizationPhase" StackMoveOptimizationPhase'new-0 []
-        (PostAllocationOptimizationPhase'new-0)
+        (hash-map)
     )
 
-    (§ override! #_"void" LIRPhase''run-3 [#_"StackMoveOptimizationPhase" this, #_"LIRGenerationResult" lirGenRes, #_"PostAllocationOptimizationContext" context]
+    (§ override! #_"void" LIRPhase''run-3 [#_"StackMoveOptimizationPhase" this, #_"LIRGenerationResult" lirGenRes, #_"LIRPhaseContext" context]
         (let [
             #_"LIR" lir (:lir lirGenRes)
         ]
@@ -33858,12 +33624,12 @@
  ; a constant, which is potentially scheduled into a block with high probability, with one or more
  ; definitions in blocks with a lower probability.
  ;;
-(final-ns ConstantLoadOptimization (§ extends PreAllocationOptimizationPhase)
+(final-ns ConstantLoadOptimization (§ implements LIRPhase #_"<LIRPhaseContext>") ;; PreAllocationPhase
     (§ defn #_"ConstantLoadOptimization" ConstantLoadOptimization'new-0 []
-        (PreAllocationOptimizationPhase'new-0)
+        (hash-map)
     )
 
-    (§ override! #_"void" LIRPhase''run-3 [#_"ConstantLoadOptimization" this, #_"LIRGenerationResult" lirGenRes, #_"PreAllocationOptimizationContext" context]
+    (§ override! #_"void" LIRPhase''run-3 [#_"ConstantLoadOptimization" this, #_"LIRGenerationResult" lirGenRes, #_"LIRPhaseContext" context]
         (CLOptimization''apply-1 (CLOptimization'new-2 (:lir lirGenRes), (:lirGen context)))
         nil
     )
@@ -33875,7 +33641,7 @@
 (final-ns CLOptimization
     (§ final #_"LIR" :lir nil)
     (§ final #_"LIRGenerator" :lirGen nil)
-    (§ final #_"VariableMap<DefUseTree>" :map nil)
+    (§ final #_"VariableMap" :map nil)
     (§ final #_"BitSet" :phiConstants nil)
     (§ final #_"BitSet" :defined nil)
     (§ final #_"BlockMap<List<UseEntry>>" :blockMap nil)
@@ -34454,13 +34220,8 @@
     )
 )
 
-;;;
- ; Maps variables to a generic type.
- ;
- ; TODO evaluate data structure
- ;;
-(final-ns VariableMap #_"<T>"
-    (§ final #_"ArrayList<T>" :content nil)
+(final-ns VariableMap
+    (§ final #_"ArrayList<DefUseTree>" :content nil)
 
     (§ defn #_"VariableMap" VariableMap'new-0 []
         (let [
@@ -34471,27 +34232,27 @@
         )
     )
 
-    (§ method! #_"T" VariableMap''get-2 [#_"VariableMap<T>" this, #_"Variable" key]
+    (§ method! #_"DefUseTree" VariableMap''get-2 [#_"VariableMap" this, #_"Variable" key]
         (when (and (some? key) (< (:index key) (count (:content this))))
             (nth (:content this) (:index key))
         )
     )
 
-    (§ method! #_"T" VariableMap''put-3 [#_"VariableMap<T>" this, #_"Variable" key, #_"T" value]
+    (§ method! #_"DefUseTree" VariableMap''put-3 [#_"VariableMap" this, #_"Variable" key, #_"DefUseTree" value]
         (while (<= (count (:content this)) (:index key))
             (#_"ArrayList" .add (:content this), nil)
         )
         (#_"ArrayList" .set (:content this), (:index key), value)
     )
 
-    (§ method! #_"T" VariableMap''remove-2 [#_"VariableMap<T>" this, #_"Variable" key]
+    (§ method! #_"DefUseTree" VariableMap''remove-2 [#_"VariableMap" this, #_"Variable" key]
         (when (< (:index key) (count (:content this)))
             (#_"ArrayList" .set (:content this), (:index key), nil)
         )
     )
 
-    (§ method! #_"void" VariableMap''forEach-2 [#_"VariableMap<T>" this, #_"Consumer<T>" action]
-        (doseq [#_"T" e (:content this)]
+    (§ method! #_"void" VariableMap''forEach-2 [#_"VariableMap" this, #_"Consumer<DefUseTree>" action]
+        (doseq [#_"DefUseTree" e (:content this)]
             (when (some? e)
                 (#_"Consumer" .accept action, e)
             )
@@ -34502,10 +34263,10 @@
     ;;;
      ; Keeps only keys which match the given predicate.
      ;;
-    (§ method! #_"void" VariableMap''filter-2 [#_"VariableMap<T>" this, #_"Predicate<T>" predicate]
+    (§ method! #_"void" VariableMap''filter-2 [#_"VariableMap" this, #_"Predicate<DefUseTree>" predicate]
         (dotimes [#_"int" i (count (:content this))]
             (let [
-                #_"T" e (nth (:content this) i)
+                #_"DefUseTree" e (nth (:content this) i)
             ]
                 (when (and (some? e) (not (#_"Predicate" .test predicate, e)))
                     (#_"ArrayList" .set (:content this), i, nil)
@@ -34519,15 +34280,15 @@
 ;;;
  ; This class performs basic optimizations on the control flow graph after LIR generation.
  ;;
-(final-ns ControlFlowOptimizer (§ extends PostAllocationOptimizationPhase)
+(final-ns ControlFlowOptimizer (§ implements LIRPhase #_"<LIRPhaseContext>") ;; PostAllocationPhase
     (§ defn #_"ControlFlowOptimizer" ControlFlowOptimizer'new-0 []
-        (PostAllocationOptimizationPhase'new-0)
+        (hash-map)
     )
 
     ;;;
      ; Performs control flow optimizations on the given LIR graph.
      ;;
-    (§ override! #_"void" LIRPhase''run-3 [#_"ControlFlowOptimizer" this, #_"LIRGenerationResult" lirGenRes, #_"PostAllocationOptimizationContext" context]
+    (§ override! #_"void" LIRPhase''run-3 [#_"ControlFlowOptimizer" this, #_"LIRGenerationResult" lirGenRes, #_"LIRPhaseContext" context]
         (let [
             #_"LIR" lir (:lir lirGenRes)
         ]
@@ -34615,12 +34376,12 @@
  ; Because this optimization works best when a block contains only a few moves, it has a huge impact
  ; on the number of blocks that are totally empty.
  ;;
-(final-ns EdgeMoveOptimizer (§ extends PostAllocationOptimizationPhase)
+(final-ns EdgeMoveOptimizer (§ implements LIRPhase #_"<LIRPhaseContext>") ;; PostAllocationPhase
     (§ defn #_"EdgeMoveOptimizer" EdgeMoveOptimizer'new-0 []
-        (PostAllocationOptimizationPhase'new-0)
+        (hash-map)
     )
 
-    (§ override! #_"void" LIRPhase''run-3 [#_"EdgeMoveOptimizer" this, #_"LIRGenerationResult" lirGenRes, #_"PostAllocationOptimizationContext" context]
+    (§ override! #_"void" LIRPhase''run-3 [#_"EdgeMoveOptimizer" this, #_"LIRGenerationResult" lirGenRes, #_"LIRPhaseContext" context]
         (let [
             #_"EMOptimizer" optimizer (EMOptimizer'new-1 (:lir lirGenRes))
             #_"Block[]" blockList (:linearScanOrder (:lir lirGenRes))
@@ -35302,7 +35063,7 @@
         (let [
             #_"LIRGenerator" this (hash-map)
             this (assoc this :res res)
-            this (assoc this :moveFactory (MoveFactory'new-1 (BackupSlotProvider'new-1 (:frameMapBuilder res))))
+            this (assoc this :moveFactory (MoveFactory'new-1 (:frameMapBuilder res)))
         ]
             this
         )
@@ -38092,12 +37853,12 @@
     )
 )
 
-(final-ns NullCheckOptimizer (§ extends PostAllocationOptimizationPhase)
+(final-ns NullCheckOptimizer (§ implements LIRPhase #_"<LIRPhaseContext>") ;; PostAllocationPhase
     (§ defn #_"NullCheckOptimizer" NullCheckOptimizer'new-0 []
-        (PostAllocationOptimizationPhase'new-0)
+        (hash-map)
     )
 
-    (§ override! #_"void" LIRPhase''run-3 [#_"NullCheckOptimizer" this, #_"LIRGenerationResult" lirGenRes, #_"PostAllocationOptimizationContext" context]
+    (§ override! #_"void" LIRPhase''run-3 [#_"NullCheckOptimizer" this, #_"LIRGenerationResult" lirGenRes, #_"LIRPhaseContext" context]
         (doseq [#_"Block" block (:codeEmittingOrder (:lir lirGenRes))]
             (when (some? block)
                 (let [
@@ -38132,31 +37893,101 @@
 (§ annotation LIROpcode
 )
 
-(class-ns AllocationPhase (§ implements LIRPhase #_"<AllocationContext>")
-    (§ defn #_"AllocationPhase" AllocationPhase'new-0 []
-        (hash-map)
-    )
-)
+(final-ns LIRPhaseContext
+    (§ final #_"LIRGenerator" :lirGen nil)
 
-;;;
- ; @anno AllocationPhase.AllocationContext
- ;;
-(final-ns AllocationContext
-    (§ final #_"MoveFactory" :moveFactory nil)
-    (§ final #_"RegisterAllocationConfig" :registerAllocationConfig nil)
-
-    (§ defn #_"AllocationContext" AllocationContext'new-2 [#_"MoveFactory" moveFactory, #_"RegisterAllocationConfig" registerAllocationConfig]
+    (§ defn #_"LIRPhaseContext" LIRPhaseContext'new-1 [#_"LIRGenerator" lirGen]
         (let [
-            #_"AllocationContext" this (hash-map)
-            this (assoc this :moveFactory moveFactory)
-            this (assoc this :registerAllocationConfig registerAllocationConfig)
+            #_"LIRPhaseContext" this (hash-map)
+            this (assoc this :lirGen lirGen)
         ]
             this
         )
     )
 )
 
-(final-ns AllocationStage (§ implements LIRPhaseSuite #_"<AllocationContext>")
+;;;
+ ; Base for all low-level phases. Subclasses should be stateless. There will be one global instance
+ ; for each phase that is shared for all compilations.
+ ;;
+(§ interface LIRPhase #_"<C>"
+    (§ abstract #_"void" LIRPhase''run-3 [#_"LIRPhase<C>" this, #_"LIRGenerationResult" lirGenRes, #_"C" context])
+)
+
+(class-ns LIRPhaseSuite (§ implements LIRPhase #_"<LIRPhaseContext>")
+    (§ mutable #_"List<LIRPhase<LIRPhaseContext>>" :phases nil)
+
+    (§ defn #_"LIRPhaseSuite" LIRPhaseSuite'new-0 []
+        (let [
+            #_"LIRPhaseSuite" this (hash-map)
+            this (assoc this :phases (ArrayList.))
+        ]
+            this
+        )
+    )
+
+    (§ method! #_"void" LIRPhaseSuite''appendPhase-2 [#_"LIRPhaseSuite" this, #_"LIRPhase<LIRPhaseContext>" phase]
+        (#_"List" .add (:phases this), phase)
+        nil
+    )
+
+    (§ override! #_"void" LIRPhase''run-3 [#_"LIRPhaseSuite" this, #_"LIRGenerationResult" lirGenRes, #_"LIRPhaseContext" context]
+        (doseq [#_"LIRPhase<LIRPhaseContext>" phase (:phases this)]
+            (LIRPhase''run-3 phase, lirGenRes, context)
+        )
+        nil
+    )
+)
+
+(final-ns LIRSuites
+    ;;;
+     ; PreAllocationPhases are executed between LIR generation and register allocation.
+     ;
+     ; Implementers can create new {@link LIRGenerator#newVariable variables},
+     ; {@link LIRGenerationResult#getFrameMap stack slots} and {@link LIRGenerationResult#getFrameMapBuilder virtual stack slots}.
+     ;;
+    (§ final #_"LIRPhaseSuite" :preAllocStage nil)
+    ;;;
+     ; AllocationPhases are responsible for register allocation and translating VirtualStackSlots into StackSlots.
+     ;
+     ; After the AllocationStage there should be no more Variables and VirtualStackSlots.
+     ;;
+    (§ final #_"LIRPhaseSuite" :allocStage nil)
+    ;;;
+     ; PostAllocationPhases are executed after register allocation and before machine code generation.
+     ;
+     ; A PostAllocationPhase must not introduce new Variables, VirtualStackSlots or StackSlots.
+     ; Blocks might be removed from LIR#codeEmittingOrder() by overwriting them with nil.
+     ;;
+    (§ final #_"LIRPhaseSuite" :postAllocStage nil)
+
+    (§ defn #_"LIRSuites" LIRSuites'new-3 [#_"LIRPhaseSuite" preAllocStage, #_"LIRPhaseSuite" allocStage, #_"LIRPhaseSuite" postAllocStage]
+        (let [
+            #_"LIRSuites" this (hash-map)
+            this (assoc this :preAllocStage preAllocStage)
+            this (assoc this :allocStage allocStage)
+            this (assoc this :postAllocStage postAllocStage)
+        ]
+            this
+        )
+    )
+)
+
+(final-ns PreAllocationStage (§ implements LIRPhaseSuite)
+    (§ defn #_"PreAllocationStage" PreAllocationStage'new-0 []
+        (let [
+            #_"PreAllocationStage" this (LIRPhaseSuite'new-0)
+        ]
+            (when GraalOptions'lirOptConstantLoadOptimization
+                (LIRPhaseSuite''appendPhase-2 this, (ConstantLoadOptimization'new-0))
+            )
+            (LIRPhaseSuite''appendPhase-2 this, (SaveCalleeSaveRegisters'new-0))
+            this
+        )
+    )
+)
+
+(final-ns AllocationStage (§ implements LIRPhaseSuite)
     (§ defn #_"AllocationStage" AllocationStage'new-0 []
         (let [
             #_"AllocationStage" this (LIRPhaseSuite'new-0)
@@ -38173,92 +38004,10 @@
     )
 )
 
-;;;
- ; Base for all low-level phases. Subclasses should be stateless. There will be one global instance
- ; for each phase that is shared for all compilations.
- ;;
-(§ interface LIRPhase #_"<C>"
-    (§ abstract #_"void" LIRPhase''run-3 [#_"LIRPhase<C>" this, #_"LIRGenerationResult" lirGenRes, #_"C" context])
-)
-
-(class-ns LIRPhaseSuite #_"<C>" (§ implements LIRPhase #_"<C>")
-    (§ mutable #_"List<LIRPhase<C>>" :phases nil)
-
-    (§ defn #_"LIRPhaseSuite" LIRPhaseSuite'new-0 []
+(final-ns PostAllocationStage (§ implements LIRPhaseSuite)
+    (§ defn #_"PostAllocationStage" PostAllocationStage'new-0 []
         (let [
-            #_"LIRPhaseSuite" this (hash-map)
-            this (assoc this :phases (ArrayList.))
-        ]
-            this
-        )
-    )
-
-    (§ method! #_"void" LIRPhaseSuite''appendPhase-2 [#_"LIRPhaseSuite<C>" this, #_"LIRPhase<C>" phase]
-        (#_"List" .add (:phases this), phase)
-        nil
-    )
-
-    (§ override! #_"void" LIRPhase''run-3 [#_"LIRPhaseSuite<C>" this, #_"LIRGenerationResult" lirGenRes, #_"C" context]
-        (doseq [#_"LIRPhase<C>" phase (:phases this)]
-            (LIRPhase''run-3 phase, lirGenRes, context)
-        )
-        nil
-    )
-)
-
-(final-ns LIRSuites
-    ;;;
-     ; PreAllocationOptimizationPhases are executed between LIR generation and register allocation.
-     ;
-     ; {@link PreAllocationOptimizationPhase Implementers} can create new {@link LIRGenerator#newVariable variables},
-     ; {@link LIRGenerationResult#getFrameMap stack slots} and {@link LIRGenerationResult#getFrameMapBuilder virtual stack slots}.
-     ;;
-    (§ final #_"LIRPhaseSuite<PreAllocationOptimizationContext>" :preAllocOptStage nil)
-    ;;;
-     ; AllocationPhases are responsible for register allocation and translating VirtualStackSlots into StackSlots.
-     ;
-     ; After the AllocationStage there should be no more Variables and VirtualStackSlots.
-     ;;
-    (§ final #_"LIRPhaseSuite<AllocationContext>" :allocStage nil)
-    ;;;
-     ; PostAllocationOptimizationPhases are executed after register allocation and before machine code generation.
-     ;
-     ; A PostAllocationOptimizationPhase must not introduce new Variables, VirtualStackSlots or StackSlots.
-     ; Blocks might be removed from LIR#codeEmittingOrder() by overwriting them with nil.
-     ;;
-    (§ final #_"LIRPhaseSuite<PostAllocationOptimizationContext>" :postAllocStage nil)
-
-    (§ defn #_"LIRSuites" LIRSuites'new-3 [#_"LIRPhaseSuite<PreAllocationOptimizationContext>" preAllocOptStage, #_"LIRPhaseSuite<AllocationContext>" allocStage, #_"LIRPhaseSuite<PostAllocationOptimizationContext>" postAllocStage]
-        (let [
-            #_"LIRSuites" this (hash-map)
-            this (assoc this :preAllocOptStage preAllocOptStage)
-            this (assoc this :allocStage allocStage)
-            this (assoc this :postAllocStage postAllocStage)
-        ]
-            this
-        )
-    )
-)
-
-(class-ns PostAllocationOptimizationPhase (§ implements LIRPhase #_"<PostAllocationOptimizationContext>")
-    (§ defn #_"PostAllocationOptimizationPhase" PostAllocationOptimizationPhase'new-0 []
-        (hash-map)
-    )
-)
-
-;;;
- ; @anno PostAllocationOptimizationPhase.PostAllocationOptimizationContext
- ;;
-(final-ns PostAllocationOptimizationContext
-    (§ defn #_"PostAllocationOptimizationContext" PostAllocationOptimizationContext'new-0 []
-        (hash-map)
-    )
-)
-
-(final-ns PostAllocationOptimizationStage (§ implements LIRPhaseSuite #_"<PostAllocationOptimizationContext>")
-    (§ defn #_"PostAllocationOptimizationStage" PostAllocationOptimizationStage'new-0 []
-        (let [
-            #_"PostAllocationOptimizationStage" this (LIRPhaseSuite'new-0)
+            #_"PostAllocationStage" this (LIRPhaseSuite'new-0)
         ]
             (when GraalOptions'lirOptEdgeMoveOptimizer
                 (LIRPhaseSuite''appendPhase-2 this, (EdgeMoveOptimizer'new-0))
@@ -38277,52 +38026,20 @@
     )
 )
 
-(class-ns PreAllocationOptimizationPhase (§ implements LIRPhase #_"<PreAllocationOptimizationContext>")
-    (§ defn #_"PreAllocationOptimizationPhase" PreAllocationOptimizationPhase'new-0 []
-        (hash-map)
-    )
-)
-
-;;;
- ; @anno PreAllocationOptimizationPhase.PreAllocationOptimizationContext
- ;;
-(final-ns PreAllocationOptimizationContext
-    (§ final #_"LIRGenerator" :lirGen nil)
-
-    (§ defn #_"PreAllocationOptimizationContext" PreAllocationOptimizationContext'new-1 [#_"LIRGenerator" lirGen]
-        (let [
-            #_"PreAllocationOptimizationContext" this (hash-map)
-            this (assoc this :lirGen lirGen)
-        ]
-            this
-        )
-    )
-)
-
-(final-ns PreAllocationOptimizationStage (§ implements LIRPhaseSuite #_"<PreAllocationOptimizationContext>")
-    (§ defn #_"PreAllocationOptimizationStage" PreAllocationOptimizationStage'new-0 []
-        (let [
-            #_"PreAllocationOptimizationStage" this (LIRPhaseSuite'new-0)
-        ]
-            (when GraalOptions'lirOptConstantLoadOptimization
-                (LIRPhaseSuite''appendPhase-2 this, (ConstantLoadOptimization'new-0))
-            )
-            (LIRPhaseSuite''appendPhase-2 this, (SaveCalleeSaveRegisters'new-0))
-            this
-        )
-    )
-)
-
 ;;;
  ; Removes move instructions, where the destination value is already in place.
  ;;
-(final-ns RedundantMoveElimination (§ extends PostAllocationOptimizationPhase)
+(final-ns RedundantMoveElimination (§ implements LIRPhase #_"<LIRPhaseContext>") ;; PostAllocationPhase
     (§ defn #_"RedundantMoveElimination" RedundantMoveElimination'new-0 []
-        (PostAllocationOptimizationPhase'new-0)
+        (hash-map)
     )
 
-    (§ override! #_"void" LIRPhase''run-3 [#_"RedundantMoveElimination" this, #_"LIRGenerationResult" lirGenRes, #_"PostAllocationOptimizationContext" context]
-        (§ ass! (RMEOptimization'new-1 (:frameMap lirGenRes)) (RMEOptimization''doOptimize-2 (RMEOptimization'new-1 (:frameMap lirGenRes)), (:lir lirGenRes)))
+    (§ override! #_"void" LIRPhase''run-3 [#_"RedundantMoveElimination" this, #_"LIRGenerationResult" lirGenRes, #_"LIRPhaseContext" context]
+        (let [
+            #_"RMEOptimization" optimization (RMEOptimization'new-1 (:frameMap lirGenRes))
+        ]
+            (§ ass! optimization (RMEOptimization''doOptimize-2 optimization, (:lir lirGenRes)))
+        )
         nil
     )
 )
@@ -39179,9 +38896,9 @@
  ; stack slot must be marked with the OperandFlag#UNINITIALIZED. Otherwise the stack
  ; slot might be reused and its content destroyed.
  ;;
-(final-ns LSStackSlotAllocator (§ extends AllocationPhase)
+(final-ns LSStackSlotAllocator (§ implements LIRPhase #_"<LIRPhaseContext>") ;; AllocationPhase
     (§ defn #_"LSStackSlotAllocator" LSStackSlotAllocator'new-0 []
-        (AllocationPhase'new-0)
+        (hash-map)
     )
 
     (§ defn- #_"void" LSStackSlotAllocator'allocateStackSlots-2 [#_"FrameMapBuilderTool" builder, #_"LIRGenerationResult" res]
@@ -39191,7 +38908,7 @@
         nil
     )
 
-    (§ override! #_"void" LIRPhase''run-3 [#_"LSStackSlotAllocator" this, #_"LIRGenerationResult" lirGenRes, #_"AllocationContext" context]
+    (§ override! #_"void" LIRPhase''run-3 [#_"LSStackSlotAllocator" this, #_"LIRGenerationResult" lirGenRes, #_"LIRPhaseContext" context]
         (LSStackSlotAllocator'allocateStackSlots-2 (:frameMapBuilder lirGenRes), lirGenRes)
         (§ ass! lirGenRes (LIRGenerationResult''buildFrameMap-1 lirGenRes))
         nil
@@ -39487,9 +39204,9 @@
     (§ enum SlotSize'Illegal)
 )
 
-(final-ns SimpleStackSlotAllocator (§ extends AllocationPhase)
+(final-ns SimpleStackSlotAllocator (§ implements LIRPhase #_"<LIRPhaseContext>") ;; AllocationPhase
     (§ defn #_"SimpleStackSlotAllocator" SimpleStackSlotAllocator'new-0 []
-        (AllocationPhase'new-0)
+        (hash-map)
     )
 
     (§ defn- #_"StackSlot" SimpleStackSlotAllocator'mapSimpleVirtualStackSlot-2 [#_"FrameMapBuilderTool" builder, #_"SimpleVirtualStackSlot" virtualStackSlot]
@@ -39542,7 +39259,7 @@
         nil
     )
 
-    (§ override! #_"void" LIRPhase''run-3 [#_"SimpleStackSlotAllocator" this, #_"LIRGenerationResult" lirGenRes, #_"AllocationContext" context]
+    (§ override! #_"void" LIRPhase''run-3 [#_"SimpleStackSlotAllocator" this, #_"LIRGenerationResult" lirGenRes, #_"LIRPhaseContext" context]
         (SimpleStackSlotAllocator''allocateStackSlots-3 this, (:frameMapBuilder lirGenRes), lirGenRes)
         (§ ass! lirGenRes (LIRGenerationResult''buildFrameMap-1 lirGenRes))
         nil
@@ -39593,18 +39310,6 @@
         (assoc this :location location)
     )
 
-    #_unused
-    (§ method! #_"StackInterval" StackInterval''fixFrom-1 [#_"StackInterval" this]
-        (when (= (:from this) StackInterval'INVALID_START) => this
-            (assoc this :from 0)
-        )
-    )
-
-    #_unused
-    (§ method! #_"boolean" StackInterval''isFixed-1 [#_"StackInterval" this]
-        (zero? (:from this))
-    )
-
     (§ method! #_"StackInterval" StackInterval''setLocationHint-2 [#_"StackInterval" this, #_"StackInterval" locationHint]
         (assoc this :hint locationHint)
     )
@@ -39647,8 +39352,6 @@
  ;;
 (final-ns LabelOp (§ extends LIRInstruction)
     (§ def #_"LIRInstructionClass<LabelOp>" LabelOp'TYPE (LIRInstructionClass'new-1 LabelOp))
-
-    (§ def #_"EnumSet<OperandFlag>" LabelOp'incomingFlags (EnumSet/of OperandFlag'REG, OperandFlag'STACK))
 
     ;;;
      ; In the LIR, every register and variable must be defined before it is used. For method
@@ -39731,14 +39434,6 @@
     (§ method! #_"boolean" LabelOp''isPhiIn-1 [#_"LabelOp" this]
         (pos? (:numbPhis this))
     )
-
-    #_unused
-    (§ method! #_"void" LabelOp''forEachIncomingValue-2 [#_"LabelOp" this, #_"InstructionValueProcedure" proc]
-        (dotimes [#_"int" i (count (:incomingValues this))]
-            (aset (:incomingValues this) i (InstructionValueProcedure''doValue-5 proc, this, (nth (:incomingValues this) i), OperandMode'DEF, LabelOp'incomingFlags))
-        )
-        nil
-    )
 )
 
 ;;;
@@ -39779,11 +39474,6 @@
 
     (§ method! #_"JumpOp" JumpOp''setPhiValues-2 [#_"JumpOp" this, #_"Value[]" values]
         (assoc this :outgoingValues values)
-    )
-
-    #_unused
-    (§ method! #_"int" JumpOp''getPhiSize-1 [#_"JumpOp" this]
-        (count (:outgoingValues this))
     )
 
     (§ method! #_"Value" JumpOp''getOutgoingValue-2 [#_"JumpOp" this, #_"int" idx]
@@ -39879,12 +39569,6 @@
 
     (§ method! #_"void" NoOp''replace-3 [#_"NoOp" this, #_"LIR" lir, #_"LIRInstruction" replacement]
         (#_"ArrayList" .set (LIR''getLIRforBlock-2 lir, (:block this)), (:index this), replacement)
-        nil
-    )
-
-    #_unused
-    (§ method! #_"void" NoOp''remove-2 [#_"NoOp" this, #_"LIR" lir]
-        (#_"ArrayList" .remove (LIR''getLIRforBlock-2 lir, (:block this)), (:index this))
         nil
     )
 
@@ -40615,40 +40299,29 @@
     )
 )
 
-(final-ns RegisterMap #_"<T>"
-    (§ final #_"Object[]" :values nil)
+(final-ns RegisterMap
+    (§ final #_"Variable[]" :values nil)
     (§ final #_"Architecture" :arch nil)
 
     (§ defn #_"RegisterMap" RegisterMap'new-1 [#_"Architecture" arch]
         (let [
             #_"RegisterMap" this (hash-map)
-            this (assoc this :values (make-array Object (#_"RegisterArray" .size (#_"Architecture" .getRegisters arch))))
+            this (assoc this :values (make-array Variable (#_"RegisterArray" .size (#_"Architecture" .getRegisters arch))))
             this (assoc this :arch arch)
         ]
             this
         )
     )
 
-    #_unused
-    (§ method! #_"T" RegisterMap''get-2 [#_"RegisterMap<T>" this, #_"Register" reg]
-        (§ cast #_"T" (nth (:values this) (RegisterMap'index-1 reg)))
-    )
-
-    #_unused
-    (§ method! #_"void" RegisterMap''remove-2 [#_"RegisterMap<T>" this, #_"Register" reg]
-        (aset (:values this) (RegisterMap'index-1 reg) nil)
+    (§ method! #_"void" RegisterMap''put-3 [#_"RegisterMap" this, #_"Register" reg, #_"Variable" value]
+        (aset (:values this) (.number reg) value)
         nil
     )
 
-    (§ method! #_"void" RegisterMap''put-3 [#_"RegisterMap<T>" this, #_"Register" reg, #_"T" value]
-        (aset (:values this) (RegisterMap'index-1 reg) value)
-        nil
-    )
-
-    (§ method! #_"void" RegisterMap''forEach-2 [#_"RegisterMap<T>" this, #_"BiConsumer<? super Register, ? super T>" consumer]
+    (§ method! #_"void" RegisterMap''forEach-2 [#_"RegisterMap" this, #_"BiConsumer<? super Register, ? super Variable>" consumer]
         (dotimes [#_"int" i (count (:values this))]
             (let [
-                #_"T" value (nth (:values this) i)
+                #_"Variable" value (nth (:values this) i)
             ]
                 (when (some? value)
                     (#_"BiConsumer" .accept consumer, (#_"RegisterArray" .get (#_"Architecture" .getRegisters (:arch this)), i), value)
@@ -40656,10 +40329,6 @@
             )
         )
         nil
-    )
-
-    (§ defn- #_"int" RegisterMap'index-1 [#_"Register" reg]
-        (.number reg)
     )
 )
 
@@ -40749,8 +40418,8 @@
 (final-ns BasicInductionVariable (§ extends InductionVariable)
     (§ final #_"ValuePhiNode" :phi nil)
     (§ final #_"ValueNode" :init nil)
-    (§ mutable #_"ValueNode" :rawStride nil)
-    (§ mutable #_"BinaryArithmeticNode" :op nil)
+    (§ final #_"ValueNode" :rawStride nil)
+    (§ final #_"BinaryArithmeticNode" :op nil)
 
     (§ defn #_"BasicInductionVariable" BasicInductionVariable'new-5 [#_"LoopEx" loop, #_"ValuePhiNode" phi, #_"ValueNode" init, #_"ValueNode" rawStride, #_"BinaryArithmeticNode" op]
         (let [
@@ -40766,16 +40435,6 @@
 
     (§ override! #_"Graph" BasicInductionVariable''graph-1 [#_"BasicInductionVariable" this]
         (:graph (:phi this))
-    )
-
-    #_unused
-    (§ method! #_"BasicInductionVariable" BasicInductionVariable''setOP-2 [#_"BasicInductionVariable" this, #_"BinaryArithmeticNode" newOp]
-        (let [
-            this (assoc this :rawStride (:y newOp))
-            this (assoc this :op newOp)
-        ]
-            this
-        )
     )
 
     #_unused
@@ -41646,6 +41305,7 @@
     (§ mutable #_"LoopFragmentWhole" :whole nil)
     (§ mutable #_"CountedLoopInfo" :counted nil)
     (§ mutable #_"LoopsData" :data nil)
+
     (§ mutable #_"EconomicMap<Node, InductionVariable>" :ivs nil)
 
     (§ defn #_"LoopEx" LoopEx'new-2 [#_"Loop" loop, #_"LoopsData" data]
@@ -41681,29 +41341,12 @@
         )
     )
 
-    #_unused
-    (§ method! #_"LoopFragmentInsideFrom" LoopEx''insideFrom-2 [#_"LoopEx" this, #_"FixedNode" point]
-        ;; TODO
-        nil
-    )
-
-    #_unused
-    (§ method! #_"LoopFragmentInsideBefore" LoopEx''insideBefore-2 [#_"LoopEx" this, #_"FixedNode" point]
-        ;; TODO
-        nil
-    )
-
     (§ method! #_"boolean" LoopEx''isOutsideLoop-2 [#_"LoopEx" this, #_"Node" node]
         (not (LoopFragment''contains-2 (LoopEx''whole-1 this), node))
     )
 
     (§ method! #_"LoopBeginNode" LoopEx''loopBegin-1 [#_"LoopEx" this]
         (:beginNode (:header (:loop this)))
-    )
-
-    #_unused
-    (§ method! #_"FixedNode" LoopEx''predecessor-1 [#_"LoopEx" this]
-        (:predecessor (LoopBeginNode''forwardEnd-1 (LoopEx''loopBegin-1 this)))
     )
 
     (§ method! #_"FixedNode" LoopEx''entryPoint-1 [#_"LoopEx" this]
@@ -41714,15 +41357,8 @@
         (some? (:counted this))
     )
 
-    #_unused
-    (§ method! #_"LoopEx" LoopEx''parent-1 [#_"LoopEx" this]
-        (when (some? (:parent (:loop this)))
-            (LoopsData''loop-2 (:data this), (:parent (:loop this)))
-        )
-    )
-
     (§ method! #_"int" LoopEx''size-1 [#_"LoopEx" this]
-        (-> (LoopEx''whole-1 this) (LoopFragmentWhole''nodes-1) (NodeBitMap''count-1))
+        (NodeBitMap''count-1 (LoopFragmentWhole''nodes-1 (LoopEx''whole-1 this)))
     )
 
     (§ method! #_"boolean" LoopEx''reassociateInvariants-1 [#_"LoopEx" this]
@@ -41910,13 +41546,6 @@
         nil
     )
 
-    (§ method! #_"EconomicMap<Node, InductionVariable>" LoopEx''getInductionVariables-1 [#_"LoopEx" this]
-        (when (nil? (:ivs this))
-            (§ ass! this (assoc this :ivs (LoopEx'findInductionVariables-1 this)))
-        )
-        (:ivs this)
-    )
-
     ;;;
      ; Collect all the basic induction variables for the loop and the find any induction variables
      ; which are derived from the basic ones.
@@ -42001,6 +41630,13 @@
             )
             ivs
         )
+    )
+
+    (§ method! #_"EconomicMap<Node, InductionVariable>" LoopEx''getInductionVariables-1 [#_"LoopEx" this]
+        (when (nil? (:ivs this))
+            (§ ass! this (assoc this :ivs (LoopEx'findInductionVariables-1 this)))
+        )
+        (:ivs this)
     )
 
     (§ defn- #_"ValueNode" LoopEx'addSub-3 [#_"LoopEx" loop, #_"ValueNode" op, #_"ValueNode" base]
@@ -42111,12 +41747,6 @@
 
     #_unused
     (§ abstract #_"void" LoopFragment''insertBefore-2 [#_"LoopFragment" this, #_"LoopEx" l])
-
-    #_unused
-    (§ method! #_"void" LoopFragment''disconnect-1 [#_"LoopFragment" this]
-        ;; TODO possibly abstract
-        nil
-    )
 
     (§ method #_"boolean" LoopFragment''contains-2 [#_"LoopFragment" this, #_"Node" node]
         (NodeBitMap''isMarkedAndGrow-2 (LoopFragment''nodes-1 this), node)
@@ -42534,12 +42164,6 @@
 
     (§ override #_"LoopFragmentInside" LoopFragmentInside''duplicate-1 [#_"LoopFragmentInside" this]
         (LoopFragmentInside'new-1 this)
-    )
-
-    #_unused
-    (§ method! #_"void" LoopFragmentInside''appendInside-2 [#_"LoopFragmentInside" this, #_"LoopEx" loop]
-        ;; TODO
-        nil
     )
 
     (§ override #_"void" LoopFragmentInside''insertBefore-2 [#_"LoopFragmentInside" this, #_"LoopEx" loop]
@@ -43331,10 +42955,6 @@
         )
     )
 
-    (§ method! #_"LoopEx" LoopsData''loop-2 [#_"LoopsData" this, #_"Loop" loop]
-        (get (:loopBeginToEx this) (:beginNode (:header loop)))
-    )
-
     (§ method! #_"LoopEx" LoopsData''loop-2 [#_"LoopsData" this, #_"LoopBeginNode" loopBegin]
         (get (:loopBeginToEx this) loopBegin)
     )
@@ -43357,21 +42977,6 @@
             (LoopEx''detectCounted-1 loop)
         )
         nil
-    )
-
-    #_unused
-    (§ method! #_"InductionVariable" LoopsData''getInductionVariable-2 [#_"LoopsData" this, #_"ValueNode" value]
-        (loop-when [#_"InductionVariable" match nil #_"ISeq" s (seq (:loops this))] (some? s) => match
-            (let [
-                #_"InductionVariable" iv (get (LoopEx''getInductionVariables-1 (first s)) value)
-            ]
-                (when (some? iv) => (recur match (next s))
-                    (when (some? match) => (recur iv (next s))
-                        nil
-                    )
-                )
-            )
-        )
     )
 
     ;;;
@@ -83326,7 +82931,7 @@
 
     (§ defn #_"LIRSuites" Suites'createLIRSuites-0 []
         (let [
-            #_"LIRSuites" lirSuites (LIRSuites'new-3 (PreAllocationOptimizationStage'new-0), (AllocationStage'new-0), (PostAllocationOptimizationStage'new-0))
+            #_"LIRSuites" lirSuites (LIRSuites'new-3 (PreAllocationStage'new-0), (AllocationStage'new-0), (PostAllocationStage'new-0))
         ]
             (when GraalOptions'lirOptStackMoveOptimizer
                 ;; note: this phase must be inserted *after* RedundantMoveElimination
@@ -83471,10 +83076,14 @@
     )
 
     (§ defn #_"LIRGenerationResult" Compiler'emitLowLevel-3 [#_"LIRGenerationResult" res, #_"LIRGenerator" gen, #_"LIRSuites" suites]
-        (LIRPhase''run-3 (:preAllocOptStage suites), res, (PreAllocationOptimizationContext'new-1 gen))
-        (LIRPhase''run-3 (:allocStage suites), res, (AllocationContext'new-2 (:moveFactory gen), (AMD64HotSpotRegisterAllocationConfig'new-0)))
-        (LIRPhase''run-3 (:postAllocStage suites), res, (PostAllocationOptimizationContext'new-0))
-        res
+        (let [
+            #_"LIRPhaseContext" context (LIRPhaseContext'new-1 gen)
+        ]
+            (LIRPhase''run-3 (:preAllocStage suites), res, context)
+            (LIRPhase''run-3 (:allocStage suites), res, context)
+            (LIRPhase''run-3 (:postAllocStage suites), res, nil)
+            res
+        )
     )
 
     (§ defn- #_"CallingConvention" Compiler'makeCallingConvention-2 [#_"Graph" graph, #_"Stub" stub]
@@ -83501,9 +83110,9 @@
         )
     )
 
-    (§ defn #_"CompilationResult" Compiler'emitBackEnd-3 [#_"Graph" graph, #_"Stub" stub, #_"LIRSuites" lirSuites]
+    (§ defn #_"CompilationResult" Compiler'emitBackEnd-3 [#_"Graph" graph, #_"Stub" stub, #_"LIRSuites" suites]
         (let [
-            #_"Assembler" asm (Assembler'new-1 (Compiler'emitLIR-3 graph, stub, lirSuites))
+            #_"Assembler" asm (Assembler'new-1 (Compiler'emitLIR-3 graph, stub, suites))
         ]
             (§ ass! asm (Assembler''assemble-1 asm))
             (Assembler''finish-1 asm)
