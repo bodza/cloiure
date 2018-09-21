@@ -3126,7 +3126,7 @@
     )
 
     #_unused
-    (§ abstract #_"void" AMD64RROp''emit-5 [#_"AMD64RROp" this, #_"Assembler" asm, #_"OperandSize" size, #_"Register" dst, #_"Register" src])
+    (§ abstract #_"void" AMD64RROp''emit-5 [#_"AMD64RROp" this, #_"Assembler" asm, #_"OperandSize" size, #_"Register" dst, #_"Register" src])
 )
 
 ;;;
@@ -4370,7 +4370,7 @@
      ; @param i the switch target index
      ; @return the key at {@code i}'th switch target index
      ;;
-    (§ abstract #_"int" BytecodeSwitch''keyAt-2 [#_"BytecodeSwitch" this, #_"int" i])
+    (§ abstract #_"int" BytecodeSwitch''keyAt-2 [#_"BytecodeSwitch" this, #_"int" i])
 
     ;;;
      ; Gets the offset from the start of the switch instruction for the {@code i}'th switch target.
@@ -4378,14 +4378,14 @@
      ; @param i the switch target index
      ; @return the offset to the {@code i}'th switch target
      ;;
-    (§ abstract #_"int" BytecodeSwitch''offsetAt-2 [#_"BytecodeSwitch" this, #_"int" i])
+    (§ abstract #_"int" BytecodeSwitch''offsetAt-2 [#_"BytecodeSwitch" this, #_"int" i])
 
     ;;;
      ; Gets the number of switch targets.
      ;
      ; @return the number of switch targets
      ;;
-    (§ abstract #_"int" BytecodeSwitch''numberOfCases-1 [#_"BytecodeSwitch" this])
+    (§ abstract #_"int" BytecodeSwitch''numberOfCases-1 [#_"BytecodeSwitch" this])
 
     ;;;
      ; Gets the total size in bytes of the switch instruction.
@@ -4393,7 +4393,7 @@
      ; @return the total size in bytes of the switch instruction
      ;;
     #_unused
-    (§ abstract #_"int" BytecodeSwitch''size-1 [#_"BytecodeSwitch" this])
+    (§ abstract #_"int" BytecodeSwitch''size-1 [#_"BytecodeSwitch" this])
 )
 
 ;;;
@@ -4837,7 +4837,7 @@
         )
     )
 
-    (§ abstract #_"void" Data''emit-3 [#_"Data" this, #_"ByteBuffer" buffer, #_"Patches" patches])
+    (§ abstract #_"void" Data''emit-3 [#_"Data" this, #_"ByteBuffer" buffer, #_"Patches" patches])
 
     (§ method! #_"Data" Data''updateAlignment-2 [#_"Data" this, #_"int" alignment]
         (when-not (= alignment (:alignment this)) => this
@@ -6602,7 +6602,7 @@
     )
 
     #_unused
-    (§ abstract #_"Fields[]" FieldIntrospection''getAllFields-1 [#_"FieldIntrospection<T>" this])
+    (§ abstract #_"Fields[]" FieldIntrospection''getAllFields-1 [#_"FieldIntrospection<T>" this])
 )
 
 ;;;
@@ -7520,7 +7520,7 @@
         )
     )
 
-    (§ abstract #_"AbstractObjectStamp" AbstractObjectStamp''copyWith-5 [#_"AbstractObjectStamp" this, #_"ResolvedJavaType" newType, #_"boolean" newExactType, #_"boolean" newNonNull, #_"boolean" newAlwaysNull])
+    (§ abstract #_"AbstractObjectStamp" AbstractObjectStamp''copyWith-5 [#_"AbstractObjectStamp" this, #_"ResolvedJavaType" newType, #_"boolean" newExactType, #_"boolean" newNonNull, #_"boolean" newAlwaysNull])
 
     #_unused
     (§ override! #_"AbstractPointerStamp" AbstractObjectStamp''copyWith-3 [#_"AbstractObjectStamp" this, #_"boolean" newNonNull, #_"boolean" newAlwaysNull]
@@ -7796,7 +7796,7 @@
         )
     )
 
-    (§ abstract #_"AbstractPointerStamp" AbstractPointerStamp''copyWith-3 [#_"AbstractPointerStamp" this, #_"boolean" newNonNull, #_"boolean" newAlwaysNull])
+    (§ abstract #_"AbstractPointerStamp" AbstractPointerStamp''copyWith-3 [#_"AbstractPointerStamp" this, #_"boolean" newNonNull, #_"boolean" newAlwaysNull])
 
     (§ method! #_"Stamp" AbstractPointerStamp''defaultPointerJoin-2 [#_"AbstractPointerStamp" this, #_"Stamp" other]
         (let [
@@ -7964,12 +7964,12 @@
     ;;;
      ; Apply the operation to a Constant.
      ;;
-    (§ abstract #_"Constant" UnaryOp''foldConstant-2 [#_"UnaryOp<T>" this, #_"Constant" value])
+    (§ abstract #_"Constant" UnaryOp''foldConstant-2 [#_"UnaryOp<T>" this, #_"Constant" value])
 
     ;;;
      ; Apply the operation to a Stamp.
      ;;
-    (§ abstract #_"Stamp" UnaryOp''foldStamp-2 [#_"UnaryOp<T>" this, #_"Stamp" stamp])
+    (§ abstract #_"Stamp" UnaryOp''foldStamp-2 [#_"UnaryOp<T>" this, #_"Stamp" stamp])
 
     #_unused
     (§ method #_"UnaryOp<T>" UnaryOp''unwrap-1 [#_"UnaryOp<T>" this]
@@ -8029,12 +8029,12 @@
      ; @return the result of applying this operation or nil if applying it would raise
      ;         an exception (e.g. ArithmeticException for dividing by 0)
      ;;
-    (§ abstract #_"Constant" BinaryOp''foldConstant-3 [#_"BinaryOp<T>" this, #_"Constant" a, #_"Constant" b])
+    (§ abstract #_"Constant" BinaryOp''foldConstant-3 [#_"BinaryOp<T>" this, #_"Constant" a, #_"Constant" b])
 
     ;;;
      ; Apply the operation to two Stamps.
      ;;
-    (§ abstract #_"Stamp" BinaryOp''foldStamp-3 [#_"BinaryOp<T>" this, #_"Stamp" a, #_"Stamp" b])
+    (§ abstract #_"Stamp" BinaryOp''foldStamp-3 [#_"BinaryOp<T>" this, #_"Stamp" a, #_"Stamp" b])
 
     ;;;
      ; Checks whether this operation is associative. An operation is associative when
@@ -8188,17 +8188,17 @@
     ;;;
      ; Apply the shift to a constant.
      ;;
-    (§ abstract #_"Constant" ShiftOp''foldConstant-3 [#_"ShiftOp<OP>" this, #_"Constant" constant, #_"int" amount])
+    (§ abstract #_"Constant" ShiftOp''foldConstant-3 [#_"ShiftOp<OP>" this, #_"Constant" constant, #_"int" amount])
 
     ;;;
      ; Apply the shift to a stamp.
      ;;
-    (§ abstract #_"Stamp" ShiftOp''foldStamp-3 [#_"ShiftOp<OP>" this, #_"Stamp" stamp, #_"IntegerStamp" amount])
+    (§ abstract #_"Stamp" ShiftOp''foldStamp-3 [#_"ShiftOp<OP>" this, #_"Stamp" stamp, #_"IntegerStamp" amount])
 
     ;;;
      ; Get the shift amount mask for a given result stamp.
      ;;
-    (§ abstract #_"int" ShiftOp''getShiftAmountMask-2 [#_"ShiftOp<OP>" this, #_"Stamp" stamp])
+    (§ abstract #_"int" ShiftOp''getShiftAmountMask-2 [#_"ShiftOp<OP>" this, #_"Stamp" stamp])
 )
 
 ;;;
@@ -8236,9 +8236,9 @@
         (ArithmeticOp'new-1 op)
     )
 
-    (§ abstract #_"Constant" IntegerConvertOp''foldConstant-4 [#_"IntegerConvertOp<T>" this, #_"int" inputBits, #_"int" resultBits, #_"Constant" value])
+    (§ abstract #_"Constant" IntegerConvertOp''foldConstant-4 [#_"IntegerConvertOp<T>" this, #_"int" inputBits, #_"int" resultBits, #_"Constant" value])
 
-    (§ abstract #_"Stamp" IntegerConvertOp''foldStamp-4 [#_"IntegerConvertOp<T>" this, #_"int" inputBits, #_"int" resultBits, #_"Stamp" stamp])
+    (§ abstract #_"Stamp" IntegerConvertOp''foldStamp-4 [#_"IntegerConvertOp<T>" this, #_"int" inputBits, #_"int" resultBits, #_"Stamp" stamp])
 
     #_unused
     (§ method #_"IntegerConvertOp<T>" IntegerConvertOp''unwrap-1 [#_"IntegerConvertOp<T>" this]
@@ -8248,7 +8248,7 @@
     ;;;
      ; Computes the stamp of the input for the given output stamp.
      ;;
-    (§ abstract #_"Stamp" IntegerConvertOp''invertStamp-4 [#_"IntegerConvertOp<T>" this, #_"int" inputBits, #_"int" resultBits, #_"Stamp" outStamp])
+    (§ abstract #_"Stamp" IntegerConvertOp''invertStamp-4 [#_"IntegerConvertOp<T>" this, #_"int" inputBits, #_"int" resultBits, #_"Stamp" outStamp])
 )
 
 ;;;
@@ -9852,7 +9852,7 @@
      ; Returns the type of the stamp, guaranteed to be non-nil. In some cases, it requires the
      ; lookup of class metadata.
      ;;
-    (§ abstract #_"ResolvedJavaType" Stamp''javaType-1 [#_"Stamp" this])
+    (§ abstract #_"ResolvedJavaType" Stamp''javaType-1 [#_"Stamp" this])
 
     (§ method #_"boolean" Stamp''alwaysDistinct-2 [#_"Stamp" this, #_"Stamp" other]
         (Stamp''isEmpty-1 (Stamp''join-2 this, other))
@@ -9863,12 +9863,12 @@
      ; bytecode stack. Returns JavaKind#Illegal if a value of this stamp can not be stored
      ; on the bytecode stack.
      ;;
-    (§ abstract #_"JavaKind" Stamp''getStackKind-1 [#_"Stamp" this])
+    (§ abstract #_"JavaKind" Stamp''getStackKind-1 [#_"Stamp" this])
 
     ;;;
      ; Gets a platform dependent LIRKind that can be used to store a value of this stamp.
      ;;
-    (§ abstract #_"LIRKind" Stamp''getLIRKind-1 [#_"Stamp" this])
+    (§ abstract #_"LIRKind" Stamp''getLIRKind-1 [#_"Stamp" this])
 
     ;;;
      ; Returns the union of this stamp and the given stamp. Typically used to create stamps for phi nodes.
@@ -9876,7 +9876,7 @@
      ; @param other The stamp that will enlarge this stamp.
      ; @return the union of this stamp and the given stamp
      ;;
-    (§ abstract #_"Stamp" Stamp''meet-2 [#_"Stamp" this, #_"Stamp" other])
+    (§ abstract #_"Stamp" Stamp''meet-2 [#_"Stamp" this, #_"Stamp" other])
 
     ;;;
      ; Returns the intersection of this stamp and the given stamp.
@@ -9884,21 +9884,21 @@
      ; @param other The stamp that will tighten this stamp.
      ; @return the intersection of this stamp and the given stamp
      ;;
-    (§ abstract #_"Stamp" Stamp''join-2 [#_"Stamp" this, #_"Stamp" other])
+    (§ abstract #_"Stamp" Stamp''join-2 [#_"Stamp" this, #_"Stamp" other])
 
     ;;;
      ; Returns a stamp of the same kind, but allowing the full value range of the kind.
      ;
      ; #unrestricted() is the neutral element of the #join(Stamp) operation.
      ;;
-    (§ abstract #_"Stamp" Stamp''unrestricted-1 [#_"Stamp" this])
+    (§ abstract #_"Stamp" Stamp''unrestricted-1 [#_"Stamp" this])
 
     ;;;
      ; Returns a stamp of the same kind, but with no allowed values.
      ;
      ; #empty() is the neutral element of the #meet(Stamp) operation.
      ;;
-    (§ abstract #_"Stamp" Stamp''empty-1 [#_"Stamp" this])
+    (§ abstract #_"Stamp" Stamp''empty-1 [#_"Stamp" this])
 
     ;;;
      ; If it is possible to represent single value stamps of this kind, this method returns the
@@ -9907,22 +9907,22 @@
      ; If it is not possible to represent single value stamps, this method returns a stamp that
      ; includes c, and is otherwise as narrow as possible.
      ;;
-    (§ abstract #_"Stamp" Stamp''constant-2 [#_"Stamp" this, #_"Constant" constant])
+    (§ abstract #_"Stamp" Stamp''constant-2 [#_"Stamp" this, #_"Constant" constant])
 
     ;;;
      ; Test whether two stamps have the same base type.
      ;;
-    (§ abstract #_"boolean" Stamp''isCompatible-2 [#_"Stamp" this, #_"Stamp" other])
+    (§ abstract #_"boolean" Stamp''isCompatible-2 [#_"Stamp" this, #_"Stamp" other])
 
     ;;;
      ; Check that the constant {@code other} is compatible with this stamp.
      ;;
-    (§ abstract #_"boolean" Stamp''isCompatible-2 [#_"Stamp" this, #_"Constant" constant])
+    (§ abstract #_"boolean" Stamp''isCompatible-2 [#_"Stamp" this, #_"Constant" constant])
 
     ;;;
      ; Test whether this stamp has legal values.
      ;;
-    (§ abstract #_"boolean" Stamp''hasValues-1 [#_"Stamp" this])
+    (§ abstract #_"boolean" Stamp''hasValues-1 [#_"Stamp" this])
 
     ;;;
      ; Tests whether this stamp represents an illegal value.
@@ -9953,7 +9953,7 @@
      ;
      ; @return the value read or nil if the value can't be read for some reason
      ;;
-    (§ abstract #_"Constant" Stamp''readConstant-4 [#_"Stamp" this, #_"MemoryAccessProvider" provider, #_"Constant" base, #_"long" displacement])
+    (§ abstract #_"Constant" Stamp''readConstant-4 [#_"Stamp" this, #_"MemoryAccessProvider" provider, #_"Constant" base, #_"long" displacement])
 
     ;;;
      ; Tries to improve this stamp with the stamp given as parameter. If successful, returns the new
@@ -9962,7 +9962,7 @@
      ; @param other the stamp that should be used to improve this stamp
      ; @return the newly improved stamp or a stamp equal to {@code this} if an improvement was not possible
      ;;
-    (§ abstract #_"Stamp" Stamp''improveWith-2 [#_"Stamp" this, #_"Stamp" other])
+    (§ abstract #_"Stamp" Stamp''improveWith-2 [#_"Stamp" this, #_"Stamp" other])
 
     ;;;
      ; Tries to improve this stamp with the stamp given as parameter. If successful, returns the new
@@ -10953,7 +10953,7 @@
         nil
     )
 
-    (§ abstract #_"void" Edges''update-4 [#_"Edges" this, #_"Node" node, #_"Node" oldValue, #_"Node" newValue])
+    (§ abstract #_"void" Edges''update-4 [#_"Edges" this, #_"Node" node, #_"Node" oldValue, #_"Node" newValue])
 
     #_unused
     (§ method #_"boolean" Edges''contains-3 [#_"Edges" this, #_"Node" node, #_"Node" value]
@@ -11069,16 +11069,14 @@
         )
     )
 
-    #_unused
-    (§ override! #_"boolean" EdgesIterator''hasNext-1 [#_"EdgesIterator" this]
+    (§ override! #_"boolean" #_"Iterator" .hasNext [#_"EdgesIterator" this]
         (when (:needsForward this)
             (§ ass! this (EdgesIterator''forward-1 this))
         )
         (< (:index this) (count (:offsets (:edges this))))
     )
 
-    #_unused
-    (§ override! #_"Position" EdgesIterator''next-1 [#_"EdgesIterator" this]
+    (§ override! #_"Position" #_"Iterator" .next [#_"EdgesIterator" this]
         (when (:needsForward this)
             (§ ass! this (EdgesIterator''forward-1 this))
         )
@@ -11121,18 +11119,16 @@
         )
     )
 
-    #_unused
-    (§ override! #_"boolean" GraphNodeIterator''hasNext-1 [#_"GraphNodeIterator" this]
-        (§ ass! this (GraphNodeIterator''checkForDeletedNode-1 this))
-        (< (:index this) (:nodesSize (:graph this)))
-    )
-
     (§ method- #_"GraphNodeIterator" GraphNodeIterator''checkForDeletedNode-1 [#_"GraphNodeIterator" this]
         (loop-when-recur this (and (< (:index this) (:nodesSize (:graph this))) (nil? (nth (:nodes (:graph this)) (:index this)))) (update this :index inc) => this)
     )
 
-    #_unused
-    (§ override! #_"Node" GraphNodeIterator''next-1 [#_"GraphNodeIterator" this]
+    (§ override! #_"boolean" #_"Iterator" .hasNext [#_"GraphNodeIterator" this]
+        (§ ass! this (GraphNodeIterator''checkForDeletedNode-1 this))
+        (< (:index this) (:nodesSize (:graph this)))
+    )
+
+    (§ override! #_"Node" #_"Iterator" .next [#_"GraphNodeIterator" this]
         (try
             (nth (:nodes (:graph this)) (:index this))
             (finally
@@ -11296,9 +11292,115 @@
     )
 )
 
+(§ interface NodeIterable #_"<T extends Node>" (§ extends Iterable #_"<T>")
+    (§ method #_"<F extends T> NodeIterable<F>" NodeIterable''filter-2 [#_"NodeIterable<T extends Node>" this, #_"Class<F>" clazz]
+        (FilteredNodeIterable''and-2 (FilteredNodeIterable'new-1 this), (PositiveTypePredicate'new-1 clazz))
+    )
+
+    (§ method #_"FilteredNodeIterable<T>" NodeIterable''filter-2 [#_"NodeIterable<T extends Node>" this, #_"NodePredicate" predicate]
+        (FilteredNodeIterable''and-2 (FilteredNodeIterable'new-1 this), predicate)
+    )
+
+    (§ method #_"List<T>" NodeIterable''snapshot-1 [#_"NodeIterable<T extends Node>" this]
+        (let [
+            #_"ArrayList<T>" list (ArrayList.)
+        ]
+            (NodeIterable''snapshotTo-2 this, list)
+            list
+        )
+    )
+
+    (§ method #_"void" NodeIterable''snapshotTo-2 [#_"NodeIterable<T extends Node>" this, #_"Collection<? super T>" to]
+        (doseq [#_"T" n this]
+            (#_"Collection" .add to, n)
+        )
+        nil
+    )
+
+    (§ method #_"T" NodeIterable''first-1 [#_"NodeIterable<T extends Node>" this]
+        (let [
+            #_"Iterator<T>" it (#_"Iterable" .iterator this)
+        ]
+            (when (#_"Iterator" .hasNext it)
+                (#_"Iterator" .next it)
+            )
+        )
+    )
+
+    (§ method #_"int" NodeIterable''count-1 [#_"NodeIterable<T extends Node>" this]
+        (let [
+            #_"Iterator<T>" it (#_"Iterable" .iterator this)
+        ]
+            (loop-when-recur [#_"int" n 0] (#_"Iterator" .hasNext it) [(inc n)] => n
+                (#_"Iterator" .next it)
+            )
+        )
+    )
+
+    (§ method #_"boolean" NodeIterable''isEmpty-1 [#_"NodeIterable<T extends Node>" this]
+        (not (#_"Iterator" .hasNext (#_"Iterable" .iterator this)))
+    )
+
+    (§ method #_"boolean" NodeIterable''isNotEmpty-1 [#_"NodeIterable<T extends Node>" this]
+        (#_"Iterator" .hasNext (#_"Iterable" .iterator this))
+    )
+
+    (§ method #_"boolean" NodeIterable''contains-2 [#_"NodeIterable<T extends Node>" this, #_"T" node]
+        (loop-when [#_"ISeq" s (seq this)] (some? s) => false
+            (or (= (first s) node)
+                (recur (next s))
+            )
+        )
+    )
+)
+
+(final-ns NodeIterator #_"<T extends Node>" (§ implements Iterator #_"<T>")
+    (§ final #_"Iterator<T>" :iterator nil)
+    (§ final #_"NodePredicate" :predicate nil)
+
+    (§ mutable #_"T" :current nil)
+
+    (§ defn #_"NodeIterator" NodeIterator'new-2 [#_"Iterator<T>" iterator, #_"NodePredicate" predicate]
+        (let [
+            #_"NodeIterator" this (hash-map)
+            this (assoc this :iterator iterator)
+            this (assoc this :predicate predicate)
+        ]
+            this
+        )
+    )
+
+    (§ method- #_"void" NodeIterator''forward-1 [#_"NodeIterator<T extends Node>" this]
+        (loop-when-recur [] (and (or (nil? (:current this)) (not (Node''isAlive-1 (:current this))) (not (NodePredicate''apply-2 (:predicate this), (:current this)))) (#_"Iterator" .hasNext (:iterator this))) []
+            (§ ass! this (assoc this :current (#_"Iterator" .next (:iterator this))))
+        )
+        (when (and (some? (:current this)) (or (not (Node''isAlive-1 (:current this))) (not (NodePredicate''apply-2 (:predicate this), (:current this)))))
+            (§ ass! this (assoc this :current nil))
+        )
+        nil
+    )
+
+    (§ override! #_"boolean" #_"Iterator" .hasNext [#_"NodeIterator<T extends Node>" this]
+        (NodeIterator''forward-1 this)
+        (some? (:current this))
+    )
+
+    (§ override! #_"T" #_"Iterator" .next [#_"NodeIterator<T extends Node>" this]
+        (NodeIterator''forward-1 this)
+        (let [
+            #_"T" ret (:current this)
+        ]
+            (when (some? (:current this)) => (throw (NoSuchElementException.))
+                (§ ass! this (assoc this :current nil))
+                ret
+            )
+        )
+    )
+)
+
 (final-ns FilteredNodeIterable #_"<T extends Node>" (§ implements NodeIterable #_"<T>")
     (§ final #_"NodeIterable<T>" :nodeIterable nil)
-    (§ mutable #_"NodePredicate" :predicate NodePredicates'TAUTOLOGY)
+    (§ mutable #_"NodePredicate" :predicate TautologyPredicate'INSTANCE)
 
     (§ defn #_"FilteredNodeIterable" FilteredNodeIterable'new-1 [#_"NodeIterable<T>" nodeIterable]
         (let [
@@ -11315,7 +11417,7 @@
     )
 
     (§ override! #_"Iterator<T>" #_"Iterable" .iterator [#_"FilteredNodeIterable<T extends Node>" this]
-        (PredicatedProxyNodeIterator'new-2 (#_"Iterable" .iterator (:nodeIterable this)), (:predicate this))
+        (NodeIterator'new-2 (#_"Iterable" .iterator (:nodeIterable this)), (:predicate this))
     )
 
     #_unused
@@ -11329,155 +11431,54 @@
     )
 )
 
-(§ interface NodeIterable #_"<T extends Node>" (§ extends Iterable #_"<T>")
-    (§ default #_"<F extends T> NodeIterable<F>" NodeIterable''filter-2 [#_"NodeIterable<T extends Node>" this, #_"Class<F>" clazz]
-        (FilteredNodeIterable''and-2 (FilteredNodeIterable'new-1 this), (PositiveTypePredicate'new-1 clazz))
-    )
-
-    (§ default #_"FilteredNodeIterable<T>" NodeIterable''filter-2 [#_"NodeIterable<T extends Node>" this, #_"NodePredicate" predicate]
-        (FilteredNodeIterable''and-2 (FilteredNodeIterable'new-1 this), predicate)
-    )
-
-    (§ default #_"List<T>" NodeIterable''snapshot-1 [#_"NodeIterable<T extends Node>" this]
-        (let [
-            #_"ArrayList<T>" list (ArrayList.)
-        ]
-            (NodeIterable''snapshotTo-2 this, list)
-            list
-        )
-    )
-
-    (§ default #_"void" NodeIterable''snapshotTo-2 [#_"NodeIterable<T extends Node>" this, #_"Collection<? super T>" to]
-        (doseq [#_"T" n this]
-            (#_"Collection" .add to, n)
-        )
-        nil
-    )
-
-    (§ default #_"T" NodeIterable''first-1 [#_"NodeIterable<T extends Node>" this]
-        (let [
-            #_"Iterator<T>" it (#_"Iterable" .iterator this)
-        ]
-            (when (#_"Iterator" .hasNext it)
-                (#_"Iterator" .next it)
-            )
-        )
-    )
-
-    (§ default #_"int" NodeIterable''count-1 [#_"NodeIterable<T extends Node>" this]
-        (let [
-            #_"Iterator<T>" it (#_"Iterable" .iterator this)
-        ]
-            (loop-when-recur [#_"int" n 0] (#_"Iterator" .hasNext it) [(inc n)] => n
-                (#_"Iterator" .next it)
-            )
-        )
-    )
-
-    (§ default #_"boolean" NodeIterable''isEmpty-1 [#_"NodeIterable<T extends Node>" this]
-        (not (#_"Iterator" .hasNext (#_"Iterable" .iterator this)))
-    )
-
-    (§ default #_"boolean" NodeIterable''isNotEmpty-1 [#_"NodeIterable<T extends Node>" this]
-        (#_"Iterator" .hasNext (#_"Iterable" .iterator this))
-    )
-
-    (§ default #_"boolean" NodeIterable''contains-2 [#_"NodeIterable<T extends Node>" this, #_"T" node]
-        (loop-when [#_"ISeq" s (seq this)] (some? s) => false
-            (or (= (first s) node)
-                (recur (next s))
-            )
-        )
-    )
-)
-
-(class-ns NodeIterator #_"<T extends Node>" (§ implements Iterator #_"<T>")
-    (§ defn #_"NodeIterator" NodeIterator'new-0 []
-        (hash-map)
-    )
-
-    (§ mutable #_"T" :current nil)
-
-    (§ abstract #_"void" NodeIterator''forward-1 [#_"NodeIterator<T extends Node>" this])
-
-    #_unused
-    (§ override #_"boolean" NodeIterator''hasNext-1 [#_"NodeIterator<T extends Node>" this]
-        (NodeIterator''forward-1 this)
-        (some? (:current this))
-    )
-
-    #_unused
-    (§ override #_"T" NodeIterator''next-1 [#_"NodeIterator<T extends Node>" this]
-        (NodeIterator''forward-1 this)
-        (let [
-            #_"T" ret (:current this)
-        ]
-            (when (some? (:current this)) => (throw (NoSuchElementException.))
-                (§ ass! this (assoc this :current nil))
-                ret
-            )
-        )
-    )
-)
-
 (§ interface NodePredicate (§ extends Predicate #_"<Node>")
-    (§ abstract #_"boolean" NodePredicate''apply-2 [#_"NodePredicate" this, #_"Node" n])
+    (§ abstract #_"boolean" NodePredicate''apply-2 [#_"NodePredicate" this, #_"Node" node])
 
-    #_unused
-    (§ default! #_"boolean" NodePredicate''test-2 [#_"NodePredicate" this, #_"Node" n]
-        (NodePredicate''apply-2 this, n)
+    (§ method #_"NodePredicate" NodePredicate''and-2 [#_"NodePredicate" this, #_"NodePredicate" other]
+        (AndPredicate'new-2 this, other)
     )
-
-    (§ default #_"NodePredicate" NodePredicate''and-2 [#_"NodePredicate" this, #_"NodePredicate" np]
-        (AndPredicate'new-2 this, np)
-    )
-)
-
-(value-ns NodePredicates
-    (§ def- #_"TautologyPredicate" NodePredicates'TAUTOLOGY (TautologyPredicate'new-0))
-    (§ def- #_"ContradictionPredicate" NodePredicates'CONTRADICTION (ContradictionPredicate'new-0))
 )
 
 ;;;
- ; @anno NodePredicates.TautologyPredicate
+ ; @anno NodePredicate.TautologyPredicate
  ;;
 (final-ns TautologyPredicate (§ implements NodePredicate)
-    (§ defn #_"TautologyPredicate" TautologyPredicate'new-0 []
+    (§ defn- #_"TautologyPredicate" TautologyPredicate'new-0 []
         (hash-map)
     )
 
-    #_unused
-    (§ override! #_"boolean" TautologyPredicate''apply-2 [#_"TautologyPredicate" this, #_"Node" n]
+    (§ override! #_"boolean" NodePredicate''apply-2 [#_"TautologyPredicate" this, #_"Node" node]
         true
     )
 
-    #_unused
-    (§ override! #_"NodePredicate" TautologyPredicate''and-2 [#_"TautologyPredicate" this, #_"NodePredicate" np]
-        np
+    (§ override! #_"NodePredicate" NodePredicate''and-2 [#_"TautologyPredicate" this, #_"NodePredicate" other]
+        other
     )
+
+    (§ def #_"TautologyPredicate" TautologyPredicate'INSTANCE (TautologyPredicate'new-0))
 )
 
 ;;;
- ; @anno NodePredicates.ContradictionPredicate
+ ; @anno NodePredicate.ContradictionPredicate
  ;;
 (final-ns ContradictionPredicate (§ implements NodePredicate)
-    (§ defn #_"ContradictionPredicate" ContradictionPredicate'new-0 []
+    (§ defn- #_"ContradictionPredicate" ContradictionPredicate'new-0 []
         (hash-map)
     )
 
-    #_unused
-    (§ override! #_"boolean" ContradictionPredicate''apply-2 [#_"ContradictionPredicate" this, #_"Node" n]
+    (§ override! #_"boolean" NodePredicate''apply-2 [#_"ContradictionPredicate" this, #_"Node" node]
         false
     )
 
-    #_unused
-    (§ override! #_"NodePredicate" ContradictionPredicate''and-2 [#_"ContradictionPredicate" this, #_"NodePredicate" np]
+    (§ override! #_"NodePredicate" NodePredicate''and-2 [#_"ContradictionPredicate" this, #_"NodePredicate" other]
         this
     )
+
+    (§ def #_"ContradictionPredicate" ContradictionPredicate'INSTANCE (ContradictionPredicate'new-0))
 )
 
 ;;;
- ; @anno NodePredicates.AndPredicate
+ ; @anno NodePredicate.AndPredicate
  ;;
 (final-ns AndPredicate (§ implements NodePredicate)
     (§ final #_"NodePredicate" :a nil)
@@ -11493,41 +11494,13 @@
         )
     )
 
-    #_unused
-    (§ override! #_"boolean" AndPredicate''apply-2 [#_"AndPredicate" this, #_"Node" n]
+    (§ override! #_"boolean" NodePredicate''apply-2 [#_"AndPredicate" this, #_"Node" n]
         (and (NodePredicate''apply-2 (:a this), n) (NodePredicate''apply-2 (:b this), n))
     )
 )
 
 ;;;
- ; @anno NodePredicates.NotPredicate
- ;;
-(final-ns NotPredicate (§ implements NodePredicate)
-    (§ final #_"NodePredicate" :a nil)
-
-    #_unused
-    (§ defn #_"NotPredicate" NotPredicate'new-1 [#_"NodePredicate" n]
-        (let [
-            #_"NotPredicate" this (hash-map)
-            this (assoc this :a n)
-        ]
-            this
-        )
-    )
-
-    #_unused
-    (§ override! #_"boolean" NotPredicate''apply-2 [#_"NotPredicate" this, #_"Node" n]
-        (not (NodePredicate''apply-2 (:a this), n))
-    )
-
-    #_unused
-    (§ override! #_"NodePredicate" NotPredicate''negate-1 [#_"NotPredicate" this]
-        (:a this)
-    )
-)
-
-;;;
- ; @anno NodePredicates.PositiveTypePredicate
+ ; @anno NodePredicate.PositiveTypePredicate
  ;;
 (final-ns PositiveTypePredicate (§ implements NodePredicate)
     (§ final #_"Class" :type nil)
@@ -11542,21 +11515,8 @@
         )
     )
 
-    (§ defn #_"PositiveTypePredicate" PositiveTypePredicate'new-1 [#_"NegativeTypePredicate" a]
-        (let [
-            #_"PositiveTypePredicate" this (hash-map)
-            this (assoc this :type (:type a))
-            this
-                (when (some? (:nor a)) => this
-                    (assoc this :or (PositiveTypePredicate'new-1 (:nor a)))
-                )
-        ]
-            this
-        )
-    )
-
-    (§ override! #_"boolean" PositiveTypePredicate''apply-2 [#_"PositiveTypePredicate" this, #_"Node" n]
-        (or (#_"Class" .isInstance (:type this), n) (and (some? (:or this)) (PositiveTypePredicate''apply-2 (:or this), n)))
+    (§ override! #_"boolean" NodePredicate''apply-2 [#_"PositiveTypePredicate" this, #_"Node" n]
+        (or (#_"Class" .isInstance (:type this), n) (and (some? (:or this)) (NodePredicate''apply-2 (:or this), n)))
     )
 
     (§ method! #_"PositiveTypePredicate" PositiveTypePredicate''or-2 [#_"PositiveTypePredicate" this, #_"Class<? extends Node>" clazz]
@@ -11566,15 +11526,10 @@
         )
         this
     )
-
-    #_unused
-    (§ override! #_"NodePredicate" PositiveTypePredicate''negate-1 [#_"PositiveTypePredicate" this]
-        (NegativeTypePredicate'new-1 this)
-    )
 )
 
 ;;;
- ; @anno NodePredicates.NegativeTypePredicate
+ ; @anno NodePredicate.NegativeTypePredicate
  ;;
 (final-ns NegativeTypePredicate (§ implements NodePredicate)
     (§ final #_"Class" :type nil)
@@ -11589,21 +11544,8 @@
         )
     )
 
-    (§ defn #_"NegativeTypePredicate" NegativeTypePredicate'new-1 [#_"PositiveTypePredicate" a]
-        (let [
-            #_"NegativeTypePredicate" this (hash-map)
-            this (assoc this :type (:type a))
-            this
-                (when (some? (:or a)) => this
-                    (assoc this :nor (NegativeTypePredicate'new-1 (:or a)))
-                )
-        ]
-            this
-        )
-    )
-
-    (§ override! #_"boolean" NegativeTypePredicate''apply-2 [#_"NegativeTypePredicate" this, #_"Node" n]
-        (and (not (#_"Class" .isInstance (:type this), n)) (or (nil? (:nor this)) (NegativeTypePredicate''apply-2 (:nor this), n)))
+    (§ override! #_"boolean" NodePredicate''apply-2 [#_"NegativeTypePredicate" this, #_"Node" n]
+        (and (not (#_"Class" .isInstance (:type this), n)) (or (nil? (:nor this)) (NodePredicate''apply-2 (:nor this), n)))
     )
 
     (§ method! #_"NegativeTypePredicate" NegativeTypePredicate''nor-2 [#_"NegativeTypePredicate" this, #_"Class<? extends Node>" clazz]
@@ -11612,37 +11554,6 @@
             (NegativeTypePredicate''nor-2 (:nor this), clazz)
         )
         this
-    )
-
-    #_unused
-    (§ override! #_"NodePredicate" NegativeTypePredicate''negate-1 [#_"NegativeTypePredicate" this]
-        (PositiveTypePredicate'new-1 this)
-    )
-)
-
-(final-ns PredicatedProxyNodeIterator #_"<T extends Node>" (§ extends NodeIterator #_"<T>")
-    (§ final #_"Iterator<T>" :iterator nil)
-    (§ final #_"NodePredicate" :predicate nil)
-
-    (§ defn #_"PredicatedProxyNodeIterator" PredicatedProxyNodeIterator'new-2 [#_"Iterator<T>" iterator, #_"NodePredicate" predicate]
-        (let [
-            #_"PredicatedProxyNodeIterator" this (NodeIterator'new-0)
-            this (assoc this :iterator iterator)
-            this (assoc this :predicate predicate)
-        ]
-            this
-        )
-    )
-
-    #_unused
-    (§ override! #_"void" PredicatedProxyNodeIterator''forward-1 [#_"PredicatedProxyNodeIterator<T extends Node>" this]
-        (loop-when-recur [] (and (or (nil? (:current this)) (not (Node''isAlive-1 (:current this))) (not (NodePredicate''apply-2 (:predicate this), (:current this)))) (#_"Iterator" .hasNext (:iterator this))) []
-            (§ ass! this (assoc this :current (#_"Iterator" .next (:iterator this))))
-        )
-        (when (and (some? (:current this)) (or (not (Node''isAlive-1 (:current this))) (not (NodePredicate''apply-2 (:predicate this), (:current this)))))
-            (§ ass! this (assoc this :current nil))
-        )
-        nil
     )
 )
 
@@ -12454,7 +12365,7 @@
         (hash-map)
     )
 
-    (§ abstract #_"Node" EdgeVisitor''apply-3 [#_"EdgeVisitor" this, #_"Node" source, #_"Node" target])
+    (§ abstract #_"Node" EdgeVisitor''apply-3 [#_"EdgeVisitor" this, #_"Node" source, #_"Node" target])
 )
 
 (final-ns NodeBitMap (§ implements NodeIterable #_"<Node>")
@@ -12678,16 +12589,15 @@
         )
     )
 
-    (§ override! #_"boolean" MarkedNodeIterator''hasNext-1 [#_"MarkedNodeIterator" this]
+    (§ override! #_"boolean" #_"Iterator" .hasNext [#_"MarkedNodeIterator" this]
         (when (and (nil? (:currentNode this)) (<= 0 (:currentNodeId this)))
             (§ ass! this (MarkedNodeIterator''forward-1 this))
         )
         (<= 0 (:currentNodeId this))
     )
 
-    #_unused
-    (§ override! #_"Node" MarkedNodeIterator''next-1 [#_"MarkedNodeIterator" this]
-        (when-not (MarkedNodeIterator''hasNext-1 this)
+    (§ override! #_"Node" #_"Iterator" .next [#_"MarkedNodeIterator" this]
+        (when-not (#_"Iterator" .hasNext this)
             (throw (NoSuchElementException.))
         )
         (when-not (Node''isAlive-1 (:currentNode this))
@@ -13550,8 +13460,18 @@
         )
     )
 
-    #_unused
-    (§ override! #_"boolean" RawEdgesIterator''hasNext-1 [#_"RawEdgesIterator" this]
+    (§ method- #_"Node" RawEdgesIterator''forward-1 [#_"RawEdgesIterator" this]
+        (loop-when [] (not (zero? (:mask this)))
+            (let [
+                #_"Node" next (RawEdgesIterator''getInput-1 this)
+            ]
+                (§ ass! this (assoc this :mask (RawEdgesIterator''advanceInput-1 this)))
+                (or next (recur))
+            )
+        )
+    )
+
+    (§ override! #_"boolean" #_"Iterator" .hasNext [#_"RawEdgesIterator" this]
         (let [
             #_"Node" next (:nextValue this)
         ]
@@ -13564,19 +13484,7 @@
         )
     )
 
-    (§ method- #_"Node" RawEdgesIterator''forward-1 [#_"RawEdgesIterator" this]
-        (loop-when [] (not (zero? (:mask this)))
-            (let [
-                #_"Node" next (RawEdgesIterator''getInput-1 this)
-            ]
-                (§ ass! this (assoc this :mask (RawEdgesIterator''advanceInput-1 this)))
-                (or next (recur))
-            )
-        )
-    )
-
-    #_unused
-    (§ override! #_"Node" RawEdgesIterator''next-1 [#_"RawEdgesIterator" this]
+    (§ override! #_"Node" #_"Iterator" .next [#_"RawEdgesIterator" this]
         (let [
             #_"Node" next (:nextValue this)
         ]
@@ -13812,7 +13720,7 @@
         )
     )
 
-    (§ abstract #_"void" NodeList''update-3 [#_"NodeList<T extends Node>" this, #_"T" oldNode, #_"T" newNode])
+    (§ abstract #_"void" NodeList''update-3 [#_"NodeList<T extends Node>" this, #_"T" oldNode, #_"T" newNode])
 
     (§ override #_"boolean" NodeList''add-2 [#_"NodeList<T extends Node>" this, #_"Node" node]
         (let [
@@ -13997,13 +13905,11 @@
         )
     )
 
-    #_unused
-    (§ override! #_"boolean" NodeListIterator''hasNext-1 [#_"NodeListIterator<R extends Node>" this]
+    (§ override! #_"boolean" #_"Iterator" .hasNext [#_"NodeListIterator<R extends Node>" this]
         (< (:index this) (:size (:list this)))
     )
 
-    #_unused
-    (§ override! #_"R" NodeListIterator''next-1 [#_"NodeListIterator<R extends Node>" this]
+    (§ override! #_"R" #_"Iterator" .next [#_"NodeListIterator<R extends Node>" this]
         (let [
             _ (§ cast #_"R" (nth (:nodes (:list this)) (:index this)))
         ]
@@ -14363,13 +14269,11 @@
         )
     )
 
-    #_unused
-    (§ override! #_"boolean" NodeUsageIterator''hasNext-1 [#_"NodeUsageIterator" this]
+    (§ override! #_"boolean" #_"Iterator" .hasNext [#_"NodeUsageIterator" this]
         (some? (:current this))
     )
 
-    #_unused
-    (§ override! #_"Node" NodeUsageIterator''next-1 [#_"NodeUsageIterator" this]
+    (§ override! #_"Node" #_"Iterator" .next [#_"NodeUsageIterator" this]
         (let [
             #_"Node" result (:current this)
         ]
@@ -14407,10 +14311,10 @@
         nil
     )
 
-    (§ abstract #_"void" NodeWorkList''add-2 [#_"NodeWorkList" this, #_"Node" node])
+    (§ abstract #_"void" NodeWorkList''add-2 [#_"NodeWorkList" this, #_"Node" node])
 
     #_unused
-    (§ abstract #_"boolean" NodeWorkList''contains-2 [#_"NodeWorkList" this, #_"Node" node])
+    (§ abstract #_"boolean" NodeWorkList''contains-2 [#_"NodeWorkList" this, #_"Node" node])
 )
 
 ;;;
@@ -14587,7 +14491,7 @@
      ;;
     (§ abstract #_"T" Unary''getValue-1 [#_"Unary<T extends Node>" this])
 
-    (§ default #_"T" Canonicalizable''canonical-2 [#_"Unary<T extends Node>" this, #_"CanonicalizerTool" tool]
+    (§ method #_"T" Canonicalizable''canonical-2 [#_"Unary<T extends Node>" this, #_"CanonicalizerTool" tool]
         (Unary''canonical-3 this, tool, (Unary''getValue-1 this))
     )
 )
@@ -14610,7 +14514,7 @@
      ;;
     (§ abstract #_"Node" Binary''canonical-4 [#_"Binary<T extends Node>" this, #_"CanonicalizerTool" tool, #_"T" forX, #_"T" forY])
 
-    (§ default #_"T" Canonicalizable''canonical-2 [#_"Binary<T extends Node>" this, #_"CanonicalizerTool" tool]
+    (§ method #_"T" Canonicalizable''canonical-2 [#_"Binary<T extends Node>" this, #_"CanonicalizerTool" tool]
         (Binary''canonical-4 this, tool, (:x this), (:y this))
     )
 )
@@ -14708,24 +14612,13 @@
         )
     )
 
-    (§ method- #_"Node" TypedGraphNodeIterator''findNext-1 [#_"TypedGraphNodeIterator<T extends IterableNodeType>" this]
-        (if (:needsForward this)
-            (§ ass! this (TypedGraphNodeIterator''forward-1 this))
-            (let [
-                #_"Node" c (TypedGraphNodeIterator''current-1 this)
-                #_"Node" afterDeleted (Graph''getIterableNodeNext-2 (:graph this), c)
-            ]
-                (cond
-                    (nil? afterDeleted)
-                        (§ ass! this (assoc this :needsForward true))
-                    (not= c afterDeleted)
-                        (TypedGraphNodeIterator''setCurrent-2 this, afterDeleted)
-                )
-            )
-        )
-        (when-not (:needsForward this)
-            (TypedGraphNodeIterator''current-1 this)
-        )
+    (§ method- #_"Node" TypedGraphNodeIterator''current-1 [#_"TypedGraphNodeIterator<T extends IterableNodeType>" this]
+        (nth (:current this) (:currentIdIndex this))
+    )
+
+    (§ method- #_"void" TypedGraphNodeIterator''setCurrent-2 [#_"TypedGraphNodeIterator<T extends IterableNodeType>" this, #_"Node" node]
+        (aset (:current this) (:currentIdIndex this) node)
+        nil
     )
 
     (§ method- #_"TypedGraphNodeIterator<T extends IterableNodeType>" TypedGraphNodeIterator''forward-1 [#_"TypedGraphNodeIterator<T extends IterableNodeType>" this]
@@ -14763,22 +14656,31 @@
         )
     )
 
-    (§ method- #_"Node" TypedGraphNodeIterator''current-1 [#_"TypedGraphNodeIterator<T extends IterableNodeType>" this]
-        (nth (:current this) (:currentIdIndex this))
+    (§ method- #_"Node" TypedGraphNodeIterator''findNext-1 [#_"TypedGraphNodeIterator<T extends IterableNodeType>" this]
+        (if (:needsForward this)
+            (§ ass! this (TypedGraphNodeIterator''forward-1 this))
+            (let [
+                #_"Node" c (TypedGraphNodeIterator''current-1 this)
+                #_"Node" afterDeleted (Graph''getIterableNodeNext-2 (:graph this), c)
+            ]
+                (cond
+                    (nil? afterDeleted)
+                        (§ ass! this (assoc this :needsForward true))
+                    (not= c afterDeleted)
+                        (TypedGraphNodeIterator''setCurrent-2 this, afterDeleted)
+                )
+            )
+        )
+        (when-not (:needsForward this)
+            (TypedGraphNodeIterator''current-1 this)
+        )
     )
 
-    (§ method- #_"void" TypedGraphNodeIterator''setCurrent-2 [#_"TypedGraphNodeIterator<T extends IterableNodeType>" this, #_"Node" n]
-        (aset (:current this) (:currentIdIndex this) n)
-        nil
-    )
-
-    #_unused
-    (§ override! #_"boolean" TypedGraphNodeIterator''hasNext-1 [#_"TypedGraphNodeIterator<T extends IterableNodeType>" this]
+    (§ override! #_"boolean" #_"Iterator" .hasNext [#_"TypedGraphNodeIterator<T extends IterableNodeType>" this]
         (some? (TypedGraphNodeIterator''findNext-1 this))
     )
 
-    #_unused
-    (§ override! #_"T" TypedGraphNodeIterator''next-1 [#_"TypedGraphNodeIterator<T extends IterableNodeType>" this]
+    (§ override! #_"T" #_"Iterator" .next [#_"TypedGraphNodeIterator<T extends IterableNodeType>" this]
         (let [
             #_"Node" result (TypedGraphNodeIterator''findNext-1 this)
         ]
@@ -18346,7 +18248,7 @@
     )
 
     #_unused
-    (§ abstract #_"ValueNode" OptimizingLocationIdentity''canonicalizeRead-5 [#_"OptimizingLocationIdentity" this, #_"ValueNode" read, #_"AddressNode" location, #_"ValueNode" object, #_"CanonicalizerTool" tool])
+    (§ abstract #_"ValueNode" OptimizingLocationIdentity''canonicalizeRead-5 [#_"OptimizingLocationIdentity" this, #_"ValueNode" read, #_"AddressNode" location, #_"ValueNode" object, #_"CanonicalizerTool" tool])
 
     (§ method! #_"ValueNode" OptimizingLocationIdentity''findReadHub-2 [#_"OptimizingLocationIdentity" this, #_"ValueNode" object]
         (let [
@@ -20682,7 +20584,7 @@
     ;;;
      ; Gets the graph that from which the code for this stub will be compiled.
      ;;
-    (§ abstract #_"Graph" Stub''getStubGraph-1 [#_"Stub" this])
+    (§ abstract #_"Graph" Stub''getStubGraph-1 [#_"Stub" this])
 
     ;;;
      ; Gets the code for this stub, compiling it first if necessary.
@@ -20815,21 +20717,21 @@
     )
 
     ; @HotSpotOperation(opcode = HotspotOpcode'POINTER_EQ)
-    (§ abstract #_"boolean" KlassPointer''equal-2 [#_"KlassPointer" this, #_"KlassPointer" other])
+    (§ abstract #_"boolean" KlassPointer''equal-2 [#_"KlassPointer" this, #_"KlassPointer" other])
 
     ; @HotSpotOperation(opcode = HotspotOpcode'POINTER_NE)
-    (§ abstract #_"boolean" KlassPointer''notEqual-2 [#_"KlassPointer" this, #_"KlassPointer" other])
+    (§ abstract #_"boolean" KlassPointer''notEqual-2 [#_"KlassPointer" this, #_"KlassPointer" other])
 
     ; @HotSpotOperation(opcode = HotspotOpcode'TO_KLASS_POINTER)
     (§ native #_"KlassPointer" KlassPointer'fromWord-1 [#_"Pointer" pointer])
 
     ; @HotSpotOperation(opcode = HotspotOpcode'READ_KLASS_POINTER)
     #_native
-    (§ abstract #_"KlassPointer" KlassPointer''readKlassPointer-3 [#_"KlassPointer" this, #_"int" offset, #_"LocationIdentity" locationIdentity])
+    (§ abstract #_"KlassPointer" KlassPointer''readKlassPointer-3 [#_"KlassPointer" this, #_"int" offset, #_"LocationIdentity" locationIdentity])
 
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     #_native
-    (§ abstract #_"void" KlassPointer''writeKlassPointer-4 [#_"KlassPointer" this, #_"int" offset, #_"KlassPointer" t, #_"LocationIdentity" locationIdentity])
+    (§ abstract #_"void" KlassPointer''writeKlassPointer-4 [#_"KlassPointer" this, #_"int" offset, #_"KlassPointer" t, #_"LocationIdentity" locationIdentity])
 )
 
 ;;;
@@ -20841,11 +20743,11 @@
     )
 
     ; @HotSpotOperation(opcode = HotspotOpcode'IS_NULL)
-    (§ abstract #_"boolean" MetaspacePointer''isNull-1 [#_"MetaspacePointer" this])
+    (§ abstract #_"boolean" MetaspacePointer''isNull-1 [#_"MetaspacePointer" this])
 
     ; @HotSpotOperation(opcode = HotspotOpcode'FROM_POINTER)
     #_unused
-    (§ abstract #_"Pointer" MetaspacePointer''asWord-1 [#_"MetaspacePointer" this])
+    (§ abstract #_"Pointer" MetaspacePointer''asWord-1 [#_"MetaspacePointer" this])
 
     ;;;
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
@@ -20855,135 +20757,135 @@
      ; knows that the highest-order bit of the unsigned value is never used).
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    (§ abstract #_"byte" MetaspacePointer''readByte-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"LocationIdentity" locationIdentity])
+    (§ abstract #_"byte" MetaspacePointer''readByte-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
     #_unused
-    (§ abstract #_"char" MetaspacePointer''readChar-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"LocationIdentity" locationIdentity])
+    (§ abstract #_"char" MetaspacePointer''readChar-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
     #_unused
-    (§ abstract #_"short" MetaspacePointer''readShort-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"LocationIdentity" locationIdentity])
+    (§ abstract #_"short" MetaspacePointer''readShort-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    (§ abstract #_"int" MetaspacePointer''readInt-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_POINTER)
-    #_unused
-    (§ abstract #_"long" MetaspacePointer''readLong-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_POINTER)
-    (§ abstract #_"Word" MetaspacePointer''readWord-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"LocationIdentity" locationIdentity])
+    (§ abstract #_"int" MetaspacePointer''readInt-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
     #_unused
-    (§ abstract #_"Object" MetaspacePointer''readObject-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"LocationIdentity" locationIdentity])
+    (§ abstract #_"long" MetaspacePointer''readLong-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    (§ abstract #_"byte" MetaspacePointer''readByte-3 [#_"MetaspacePointer" this, #_"int" offset, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_POINTER)
-    #_unused
-    (§ abstract #_"char" MetaspacePointer''readChar-3 [#_"MetaspacePointer" this, #_"int" offset, #_"LocationIdentity" locationIdentity])
+    (§ abstract #_"Word" MetaspacePointer''readWord-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
     #_unused
-    (§ abstract #_"short" MetaspacePointer''readShort-3 [#_"MetaspacePointer" this, #_"int" offset, #_"LocationIdentity" locationIdentity])
+    (§ abstract #_"Object" MetaspacePointer''readObject-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    (§ abstract #_"int" MetaspacePointer''readInt-3 [#_"MetaspacePointer" this, #_"int" offset, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_POINTER)
-    #_unused
-    (§ abstract #_"long" MetaspacePointer''readLong-3 [#_"MetaspacePointer" this, #_"int" offset, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_POINTER)
-    (§ abstract #_"Word" MetaspacePointer''readWord-3 [#_"MetaspacePointer" this, #_"int" offset, #_"LocationIdentity" locationIdentity])
+    (§ abstract #_"byte" MetaspacePointer''readByte-3 [#_"MetaspacePointer" this, #_"int" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
     #_unused
-    (§ abstract #_"Object" MetaspacePointer''readObject-3 [#_"MetaspacePointer" this, #_"int" offset, #_"LocationIdentity" locationIdentity])
+    (§ abstract #_"char" MetaspacePointer''readChar-3 [#_"MetaspacePointer" this, #_"int" offset, #_"LocationIdentity" locationIdentity])
+
+    ;;;
+     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'READ_POINTER)
+    #_unused
+    (§ abstract #_"short" MetaspacePointer''readShort-3 [#_"MetaspacePointer" this, #_"int" offset, #_"LocationIdentity" locationIdentity])
+
+    ;;;
+     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'READ_POINTER)
+    (§ abstract #_"int" MetaspacePointer''readInt-3 [#_"MetaspacePointer" this, #_"int" offset, #_"LocationIdentity" locationIdentity])
+
+    ;;;
+     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'READ_POINTER)
+    #_unused
+    (§ abstract #_"long" MetaspacePointer''readLong-3 [#_"MetaspacePointer" this, #_"int" offset, #_"LocationIdentity" locationIdentity])
+
+    ;;;
+     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'READ_POINTER)
+    (§ abstract #_"Word" MetaspacePointer''readWord-3 [#_"MetaspacePointer" this, #_"int" offset, #_"LocationIdentity" locationIdentity])
+
+    ;;;
+     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'READ_POINTER)
+    #_unused
+    (§ abstract #_"Object" MetaspacePointer''readObject-3 [#_"MetaspacePointer" this, #_"int" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     #_unused
-    (§ abstract #_"void" MetaspacePointer''writeByte-4 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"byte" val, #_"LocationIdentity" locationIdentity])
+    (§ abstract #_"void" MetaspacePointer''writeByte-4 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"byte" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     #_unused
-    (§ abstract #_"void" MetaspacePointer''writeChar-4 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"char" val, #_"LocationIdentity" locationIdentity])
+    (§ abstract #_"void" MetaspacePointer''writeChar-4 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"char" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     #_unused
-    (§ abstract #_"void" MetaspacePointer''writeShort-4 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"short" val, #_"LocationIdentity" locationIdentity])
+    (§ abstract #_"void" MetaspacePointer''writeShort-4 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"short" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     #_unused
-    (§ abstract #_"void" MetaspacePointer''writeInt-4 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"int" val, #_"LocationIdentity" locationIdentity])
+    (§ abstract #_"void" MetaspacePointer''writeInt-4 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"int" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     #_unused
-    (§ abstract #_"void" MetaspacePointer''writeLong-4 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"long" val, #_"LocationIdentity" locationIdentity])
+    (§ abstract #_"void" MetaspacePointer''writeLong-4 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"long" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     #_unused
-    (§ abstract #_"void" MetaspacePointer''writeWord-4 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"WordBase" val, #_"LocationIdentity" locationIdentity])
+    (§ abstract #_"void" MetaspacePointer''writeWord-4 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"WordBase" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Initializes the memory at address {@code (this + offset)}. Both the base address and offset
@@ -20991,112 +20893,112 @@
      ;;
     ; @Operation(opcode = WordOpcode'INITIALIZE)
     #_unused
-    (§ abstract #_"void" MetaspacePointer''initializeLong-4 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"long" val, #_"LocationIdentity" locationIdentity])
+    (§ abstract #_"void" MetaspacePointer''initializeLong-4 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"long" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     #_unused
-    (§ abstract #_"void" MetaspacePointer''writeObject-4 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"Object" val, #_"LocationIdentity" locationIdentity])
+    (§ abstract #_"void" MetaspacePointer''writeObject-4 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"Object" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     #_unused
-    (§ abstract #_"void" MetaspacePointer''writeByte-4 [#_"MetaspacePointer" this, #_"int" offset, #_"byte" val, #_"LocationIdentity" locationIdentity])
+    (§ abstract #_"void" MetaspacePointer''writeByte-4 [#_"MetaspacePointer" this, #_"int" offset, #_"byte" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     #_unused
-    (§ abstract #_"void" MetaspacePointer''writeChar-4 [#_"MetaspacePointer" this, #_"int" offset, #_"char" val, #_"LocationIdentity" locationIdentity])
+    (§ abstract #_"void" MetaspacePointer''writeChar-4 [#_"MetaspacePointer" this, #_"int" offset, #_"char" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     #_unused
-    (§ abstract #_"void" MetaspacePointer''writeShort-4 [#_"MetaspacePointer" this, #_"int" offset, #_"short" val, #_"LocationIdentity" locationIdentity])
+    (§ abstract #_"void" MetaspacePointer''writeShort-4 [#_"MetaspacePointer" this, #_"int" offset, #_"short" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     #_unused
-    (§ abstract #_"void" MetaspacePointer''writeInt-4 [#_"MetaspacePointer" this, #_"int" offset, #_"int" val, #_"LocationIdentity" locationIdentity])
+    (§ abstract #_"void" MetaspacePointer''writeInt-4 [#_"MetaspacePointer" this, #_"int" offset, #_"int" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     #_unused
-    (§ abstract #_"void" MetaspacePointer''writeLong-4 [#_"MetaspacePointer" this, #_"int" offset, #_"long" val, #_"LocationIdentity" locationIdentity])
+    (§ abstract #_"void" MetaspacePointer''writeLong-4 [#_"MetaspacePointer" this, #_"int" offset, #_"long" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     #_unused
-    (§ abstract #_"void" MetaspacePointer''writeWord-4 [#_"MetaspacePointer" this, #_"int" offset, #_"WordBase" val, #_"LocationIdentity" locationIdentity])
+    (§ abstract #_"void" MetaspacePointer''writeWord-4 [#_"MetaspacePointer" this, #_"int" offset, #_"WordBase" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     #_unused
-    (§ abstract #_"void" MetaspacePointer''writeObject-4 [#_"MetaspacePointer" this, #_"int" offset, #_"Object" val, #_"LocationIdentity" locationIdentity])
+    (§ abstract #_"void" MetaspacePointer''writeObject-4 [#_"MetaspacePointer" this, #_"int" offset, #_"Object" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
     #_unused
-    (§ abstract #_"byte" MetaspacePointer''readByte-2 [#_"MetaspacePointer" this, #_"WordBase" offset])
+    (§ abstract #_"byte" MetaspacePointer''readByte-2 [#_"MetaspacePointer" this, #_"WordBase" offset])
 
     ;;;
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
     #_unused
-    (§ abstract #_"char" MetaspacePointer''readChar-2 [#_"MetaspacePointer" this, #_"WordBase" offset])
+    (§ abstract #_"char" MetaspacePointer''readChar-2 [#_"MetaspacePointer" this, #_"WordBase" offset])
 
     ;;;
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
     #_unused
-    (§ abstract #_"short" MetaspacePointer''readShort-2 [#_"MetaspacePointer" this, #_"WordBase" offset])
+    (§ abstract #_"short" MetaspacePointer''readShort-2 [#_"MetaspacePointer" this, #_"WordBase" offset])
 
     ;;;
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
     #_unused
-    (§ abstract #_"int" MetaspacePointer''readInt-2 [#_"MetaspacePointer" this, #_"WordBase" offset])
+    (§ abstract #_"int" MetaspacePointer''readInt-2 [#_"MetaspacePointer" this, #_"WordBase" offset])
 
     ;;;
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
     #_unused
-    (§ abstract #_"long" MetaspacePointer''readLong-2 [#_"MetaspacePointer" this, #_"WordBase" offset])
+    (§ abstract #_"long" MetaspacePointer''readLong-2 [#_"MetaspacePointer" this, #_"WordBase" offset])
 
     ;;;
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
     #_unused
-    (§ abstract #_"Word" MetaspacePointer''readWord-2 [#_"MetaspacePointer" this, #_"WordBase" offset])
+    (§ abstract #_"Word" MetaspacePointer''readWord-2 [#_"MetaspacePointer" this, #_"WordBase" offset])
 
     ;;;
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
     #_unused
-    (§ abstract #_"Object" MetaspacePointer''readObject-2 [#_"MetaspacePointer" this, #_"WordBase" offset])
+    (§ abstract #_"Object" MetaspacePointer''readObject-2 [#_"MetaspacePointer" this, #_"WordBase" offset])
 
     ;;;
      ; Reads the memory at address {@code (this + offset)}. This access will decompress the oop if
@@ -21104,56 +21006,56 @@
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
     #_unused
-    (§ abstract #_"Object" MetaspacePointer''readObject-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"BarrierType" barrierType])
+    (§ abstract #_"Object" MetaspacePointer''readObject-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"BarrierType" barrierType])
 
     ;;;
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
     #_unused
-    (§ abstract #_"byte" MetaspacePointer''readByte-2 [#_"MetaspacePointer" this, #_"int" offset])
+    (§ abstract #_"byte" MetaspacePointer''readByte-2 [#_"MetaspacePointer" this, #_"int" offset])
 
     ;;;
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
     #_unused
-    (§ abstract #_"char" MetaspacePointer''readChar-2 [#_"MetaspacePointer" this, #_"int" offset])
+    (§ abstract #_"char" MetaspacePointer''readChar-2 [#_"MetaspacePointer" this, #_"int" offset])
 
     ;;;
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
     #_unused
-    (§ abstract #_"short" MetaspacePointer''readShort-2 [#_"MetaspacePointer" this, #_"int" offset])
+    (§ abstract #_"short" MetaspacePointer''readShort-2 [#_"MetaspacePointer" this, #_"int" offset])
 
     ;;;
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
     #_unused
-    (§ abstract #_"int" MetaspacePointer''readInt-2 [#_"MetaspacePointer" this, #_"int" offset])
+    (§ abstract #_"int" MetaspacePointer''readInt-2 [#_"MetaspacePointer" this, #_"int" offset])
 
     ;;;
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
     #_unused
-    (§ abstract #_"long" MetaspacePointer''readLong-2 [#_"MetaspacePointer" this, #_"int" offset])
+    (§ abstract #_"long" MetaspacePointer''readLong-2 [#_"MetaspacePointer" this, #_"int" offset])
 
     ;;;
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
     #_unused
-    (§ abstract #_"Word" MetaspacePointer''readWord-2 [#_"MetaspacePointer" this, #_"int" offset])
+    (§ abstract #_"Word" MetaspacePointer''readWord-2 [#_"MetaspacePointer" this, #_"int" offset])
 
     ;;;
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
     #_unused
-    (§ abstract #_"Object" MetaspacePointer''readObject-2 [#_"MetaspacePointer" this, #_"int" offset])
+    (§ abstract #_"Object" MetaspacePointer''readObject-2 [#_"MetaspacePointer" this, #_"int" offset])
 
     ;;;
      ; Reads the memory at address {@code (this + offset)}. This access will decompress the oop if
@@ -21161,105 +21063,105 @@
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
     #_unused
-    (§ abstract #_"Object" MetaspacePointer''readObject-3 [#_"MetaspacePointer" this, #_"int" offset, #_"BarrierType" barrierType])
+    (§ abstract #_"Object" MetaspacePointer''readObject-3 [#_"MetaspacePointer" this, #_"int" offset, #_"BarrierType" barrierType])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     #_unused
-    (§ abstract #_"void" MetaspacePointer''writeByte-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"byte" val])
+    (§ abstract #_"void" MetaspacePointer''writeByte-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"byte" val])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     #_unused
-    (§ abstract #_"void" MetaspacePointer''writeChar-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"char" val])
+    (§ abstract #_"void" MetaspacePointer''writeChar-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"char" val])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     #_unused
-    (§ abstract #_"void" MetaspacePointer''writeShort-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"short" val])
+    (§ abstract #_"void" MetaspacePointer''writeShort-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"short" val])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     #_unused
-    (§ abstract #_"void" MetaspacePointer''writeInt-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"int" val])
+    (§ abstract #_"void" MetaspacePointer''writeInt-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"int" val])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     #_unused
-    (§ abstract #_"void" MetaspacePointer''writeLong-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"long" val])
+    (§ abstract #_"void" MetaspacePointer''writeLong-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"long" val])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     #_unused
-    (§ abstract #_"void" MetaspacePointer''writeWord-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"WordBase" val])
+    (§ abstract #_"void" MetaspacePointer''writeWord-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"WordBase" val])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     #_unused
-    (§ abstract #_"void" MetaspacePointer''writeObject-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"Object" val])
+    (§ abstract #_"void" MetaspacePointer''writeObject-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"Object" val])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     #_unused
-    (§ abstract #_"void" MetaspacePointer''writeByte-3 [#_"MetaspacePointer" this, #_"int" offset, #_"byte" val])
+    (§ abstract #_"void" MetaspacePointer''writeByte-3 [#_"MetaspacePointer" this, #_"int" offset, #_"byte" val])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     #_unused
-    (§ abstract #_"void" MetaspacePointer''writeChar-3 [#_"MetaspacePointer" this, #_"int" offset, #_"char" val])
+    (§ abstract #_"void" MetaspacePointer''writeChar-3 [#_"MetaspacePointer" this, #_"int" offset, #_"char" val])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     #_unused
-    (§ abstract #_"void" MetaspacePointer''writeShort-3 [#_"MetaspacePointer" this, #_"int" offset, #_"short" val])
+    (§ abstract #_"void" MetaspacePointer''writeShort-3 [#_"MetaspacePointer" this, #_"int" offset, #_"short" val])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     #_unused
-    (§ abstract #_"void" MetaspacePointer''writeInt-3 [#_"MetaspacePointer" this, #_"int" offset, #_"int" val])
+    (§ abstract #_"void" MetaspacePointer''writeInt-3 [#_"MetaspacePointer" this, #_"int" offset, #_"int" val])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     #_unused
-    (§ abstract #_"void" MetaspacePointer''writeLong-3 [#_"MetaspacePointer" this, #_"int" offset, #_"long" val])
+    (§ abstract #_"void" MetaspacePointer''writeLong-3 [#_"MetaspacePointer" this, #_"int" offset, #_"long" val])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     #_unused
-    (§ abstract #_"void" MetaspacePointer''writeWord-3 [#_"MetaspacePointer" this, #_"int" offset, #_"WordBase" val])
+    (§ abstract #_"void" MetaspacePointer''writeWord-3 [#_"MetaspacePointer" this, #_"int" offset, #_"WordBase" val])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     #_unused
-    (§ abstract #_"void" MetaspacePointer''writeObject-3 [#_"MetaspacePointer" this, #_"int" offset, #_"Object" val])
+    (§ abstract #_"void" MetaspacePointer''writeObject-3 [#_"MetaspacePointer" this, #_"int" offset, #_"Object" val])
 )
 
 ;;;
@@ -21273,11 +21175,11 @@
 
     ; @HotSpotOperation(opcode = HotspotOpcode'POINTER_EQ)
     #_unused
-    (§ abstract #_"boolean" MethodPointer''equal-2 [#_"MethodPointer" this, #_"KlassPointer" other])
+    (§ abstract #_"boolean" MethodPointer''equal-2 [#_"MethodPointer" this, #_"KlassPointer" other])
 
     ; @HotSpotOperation(opcode = HotspotOpcode'POINTER_NE)
     #_unused
-    (§ abstract #_"boolean" MethodPointer''notEqual-2 [#_"MethodPointer" this, #_"KlassPointer" other])
+    (§ abstract #_"boolean" MethodPointer''notEqual-2 [#_"MethodPointer" this, #_"KlassPointer" other])
 
     ; @HotSpotOperation(opcode = HotspotOpcode'TO_METHOD_POINTER)
     #_unused
@@ -24761,8 +24663,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" IntrinsicScope''close-1 [#_"IntrinsicScope" this]
+    (§ override! #_"void" #_"AutoCloseable" .close [#_"IntrinsicScope" this]
         (let [
             #_"IntrinsicContext" intrinsic (:intrinsicContext (:parser this))
         ]
@@ -25968,42 +25869,42 @@
     ;;;
      ; Returns whether the local is live at the beginning of the given block.
      ;;
-    (§ abstract #_"boolean" LocalLiveness''localIsLiveIn-3 [#_"LocalLiveness" this, #_"BciBlock" block, #_"int" local])
+    (§ abstract #_"boolean" LocalLiveness''localIsLiveIn-3 [#_"LocalLiveness" this, #_"BciBlock" block, #_"int" local])
 
     ;;;
      ; Returns whether the local is set in the given loop.
      ;;
-    (§ abstract #_"boolean" LocalLiveness''localIsChangedInLoop-3 [#_"LocalLiveness" this, #_"int" loopId, #_"int" local])
+    (§ abstract #_"boolean" LocalLiveness''localIsChangedInLoop-3 [#_"LocalLiveness" this, #_"int" loopId, #_"int" local])
 
     ;;;
      ; Returns whether the local is live at the end of the given block.
      ;;
-    (§ abstract #_"boolean" LocalLiveness''localIsLiveOut-3 [#_"LocalLiveness" this, #_"BciBlock" block, #_"int" local])
+    (§ abstract #_"boolean" LocalLiveness''localIsLiveOut-3 [#_"LocalLiveness" this, #_"BciBlock" block, #_"int" local])
 
     ;;;
      ; Returns the number of live locals at the end of the given block.
      ;;
-    (§ abstract #_"int" LocalLiveness''liveOutCardinality-2 [#_"LocalLiveness" this, #_"int" blockID])
+    (§ abstract #_"int" LocalLiveness''liveOutCardinality-2 [#_"LocalLiveness" this, #_"int" blockID])
 
     ;;;
      ; Adds all locals the are in the liveIn of the successor to the liveOut of the block.
      ;;
-    (§ abstract #_"void" LocalLiveness''propagateLiveness-3 [#_"LocalLiveness" this, #_"int" blockID, #_"int" successorID])
+    (§ abstract #_"void" LocalLiveness''propagateLiveness-3 [#_"LocalLiveness" this, #_"int" blockID, #_"int" successorID])
 
     ;;;
      ; Calculates a new liveIn for the given block from liveOut, liveKill and liveGen.
      ;;
-    (§ abstract #_"void" LocalLiveness''updateLiveness-2 [#_"LocalLiveness" this, #_"int" blockID])
+    (§ abstract #_"void" LocalLiveness''updateLiveness-2 [#_"LocalLiveness" this, #_"int" blockID])
 
     ;;;
      ; Adds the local to liveGen if it wasn't already killed in this block.
      ;;
-    (§ abstract #_"void" LocalLiveness''loadOne-3 [#_"LocalLiveness" this, #_"int" blockID, #_"int" local])
+    (§ abstract #_"void" LocalLiveness''loadOne-3 [#_"LocalLiveness" this, #_"int" blockID, #_"int" local])
 
     ;;;
      ; Add this local to liveKill if it wasn't already generated in this block.
      ;;
-    (§ abstract #_"void" LocalLiveness''storeOne-3 [#_"LocalLiveness" this, #_"int" blockID, #_"int" local])
+    (§ abstract #_"void" LocalLiveness''storeOne-3 [#_"LocalLiveness" this, #_"int" blockID, #_"int" local])
 
     (§ method- #_"void" LocalLiveness''computeLocalLiveness-3 [#_"LocalLiveness" this, #_"BytecodeStream" stream, #_"BciBlock" block]
         (let [
@@ -27899,7 +27800,7 @@
         (hash-map)
     )
 
-    (§ abstract #_"boolean" IntervalPredicate''apply-2 [#_"IntervalPredicate" this, #_"Interval" i])
+    (§ abstract #_"boolean" IntervalPredicate''apply-2 [#_"IntervalPredicate" this, #_"Interval" i])
 )
 
 (class-ns LinearScanAllocationPhase
@@ -27907,7 +27808,7 @@
         (hash-map)
     )
 
-    (§ abstract #_"void" LinearScanAllocationPhase''run-2 [#_"LinearScanAllocationPhase" this, #_"LIRGenerationResult" lirGenRes])
+    (§ abstract #_"void" LinearScanAllocationPhase''run-2 [#_"LinearScanAllocationPhase" this, #_"LIRGenerationResult" lirGenRes])
 )
 
 ;;;
@@ -28850,8 +28751,11 @@
         )
     )
 
-    #_unused
-    (§ override! #_"Block" IntervalBlockIterator''next-1 [#_"IntervalBlockIterator" this]
+    (§ override! #_"boolean" #_"Iterator" .hasNext [#_"IntervalBlockIterator" this]
+        (some? (:block this))
+    )
+
+    (§ override! #_"Block" #_"Iterator" .next [#_"IntervalBlockIterator" this]
         (let [
             #_"Block" currentBlock (:block this)
             #_"int" nextBlockIndex (inc (:linearScanNumber (:block this)))
@@ -28871,11 +28775,6 @@
             )
             currentBlock
         )
-    )
-
-    #_unused
-    (§ override! #_"boolean" IntervalBlockIterator''hasNext-1 [#_"IntervalBlockIterator" this]
-        (some? (:block this))
     )
 )
 
@@ -30782,13 +30681,13 @@
     ; @Def({OperandFlag'REG, OperandFlag'HINT})
     (§ mutable #_"AllocatableValue" :result nil)
     ; @Use({OperandFlag'REG})
-    (§ mutable #_"AllocatableValue" :x nil)
+    (§ final #_"AllocatableValue" :x nil)
     ;;;
      ; This argument must be Alive to ensure that result and y are not assigned
      ; to the same register, which would break the code generation by destroying y too early.
      ;;
     ; @Alive({OperandFlag'REG, OperandFlag'STACK})
-    (§ mutable #_"AllocatableValue" :y nil)
+    (§ final #_"AllocatableValue" :y nil)
 
     (§ defn #_"TwoOp" TwoOp'new-5 [#_"AMD64RMOp" opcode, #_"OperandSize" size, #_"AllocatableValue" result, #_"AllocatableValue" x, #_"AllocatableValue" y]
         (let [
@@ -30825,9 +30724,9 @@
     ; @Def({OperandFlag'REG, OperandFlag'HINT})
     (§ mutable #_"AllocatableValue" :result nil)
     ; @Use({OperandFlag'REG, OperandFlag'STACK})
-    (§ mutable #_"AllocatableValue" :x nil)
+    (§ final #_"AllocatableValue" :x nil)
     ; @Use({OperandFlag'REG, OperandFlag'STACK})
-    (§ mutable #_"AllocatableValue" :y nil)
+    (§ final #_"AllocatableValue" :y nil)
 
     (§ defn #_"CommutativeTwoOp" CommutativeTwoOp'new-5 [#_"AMD64RMOp" opcode, #_"OperandSize" size, #_"AllocatableValue" result, #_"AllocatableValue" x, #_"AllocatableValue" y]
         (let [
@@ -30871,7 +30770,7 @@
     ; @Def({OperandFlag'REG, OperandFlag'HINT})
     (§ mutable #_"AllocatableValue" :result nil)
     ; @Use({OperandFlag'REG})
-    (§ mutable #_"AllocatableValue" :x nil)
+    (§ final #_"AllocatableValue" :x nil)
     (§ final #_"int" :y 0)
 
     (§ defn #_"ConstOp" ConstOp'new-5 [#_"BinaryArithmetic" opcode, #_"OperandSize" size, #_"AllocatableValue" result, #_"AllocatableValue" x, #_"int" y]
@@ -30914,7 +30813,7 @@
     ; @Def({OperandFlag'REG, OperandFlag'HINT})
     (§ mutable #_"AllocatableValue" :result nil)
     ; @Use({OperandFlag'REG})
-    (§ mutable #_"AllocatableValue" :x nil)
+    (§ final #_"AllocatableValue" :x nil)
     (§ final #_"JavaConstant" :y nil)
 
     (§ final #_"int" :alignment 0)
@@ -30960,9 +30859,9 @@
     ; @Def({OperandFlag'REG, OperandFlag'HINT})
     (§ mutable #_"AllocatableValue" :result nil)
     ; @Use({OperandFlag'REG})
-    (§ mutable #_"AllocatableValue" :x nil)
+    (§ final #_"AllocatableValue" :x nil)
     ; @Alive({OperandFlag'COMPOSITE})
-    (§ mutable #_"AMD64AddressValue" :y nil)
+    (§ final #_"AMD64AddressValue" :y nil)
 
     (§ defn #_"MemoryTwoOp" MemoryTwoOp'new-5 [#_"AMD64RMOp" opcode, #_"OperandSize" size, #_"AllocatableValue" result, #_"AllocatableValue" x, #_"AMD64AddressValue" y]
         (let [
@@ -31005,7 +30904,7 @@
     ; @Def({OperandFlag'REG})
     (§ mutable #_"AllocatableValue" :result nil)
     ; @Use({OperandFlag'REG, OperandFlag'STACK})
-    (§ mutable #_"AllocatableValue" :x nil)
+    (§ final #_"AllocatableValue" :x nil)
     (§ final #_"int" :y 0)
 
     (§ defn #_"RMIOp" RMIOp'new-5 [#_"AMD64RMIOp" opcode, #_"OperandSize" size, #_"AllocatableValue" result, #_"AllocatableValue" x, #_"int" y]
@@ -31046,9 +30945,9 @@
     (§ final #_"OperandSize" :size nil)
 
     ; @Use({OperandFlag'REG})
-    (§ mutable #_"AllocatableValue" :x nil)
+    (§ final #_"AllocatableValue" :x nil)
     ; @Use({OperandFlag'REG, OperandFlag'STACK})
-    (§ mutable #_"AllocatableValue" :y nil)
+    (§ final #_"AllocatableValue" :y nil)
 
     (§ defn #_"ConsumerOp" ConsumerOp'new-4 [#_"AMD64RMOp" opcode, #_"OperandSize" size, #_"AllocatableValue" x, #_"AllocatableValue" y]
         (let [
@@ -31081,7 +30980,7 @@
     (§ final #_"OperandSize" :size nil)
 
     ; @Use({OperandFlag'REG, OperandFlag'STACK})
-    (§ mutable #_"AllocatableValue" :x nil)
+    (§ final #_"AllocatableValue" :x nil)
     (§ final #_"int" :y 0)
 
     (§ defn #_"ConsumerConstOp" ConsumerConstOp'new-4 [#_"BinaryArithmetic" opcode, #_"OperandSize" size, #_"AllocatableValue" x, #_"int" y]
@@ -31151,7 +31050,7 @@
     (§ final #_"OperandSize" :size nil)
 
     ; @Use({OperandFlag'REG})
-    (§ mutable #_"AllocatableValue" :x nil)
+    (§ final #_"AllocatableValue" :x nil)
     (§ final #_"Constant" :y nil)
 
     (§ final #_"int" :alignment 0)
@@ -31193,9 +31092,9 @@
     (§ final #_"OperandSize" :size nil)
 
     ; @Use({OperandFlag'REG})
-    (§ mutable #_"AllocatableValue" :x nil)
+    (§ final #_"AllocatableValue" :x nil)
     ; @Use({OperandFlag'COMPOSITE})
-    (§ mutable #_"AMD64AddressValue" :y nil)
+    (§ final #_"AMD64AddressValue" :y nil)
 
     #_unused
     (§ defn #_"MemoryRMOp" MemoryRMOp'new-4 [#_"AMD64RMOp" opcode, #_"OperandSize" size, #_"AllocatableValue" x, #_"AMD64AddressValue" y]
@@ -31235,9 +31134,9 @@
     (§ final #_"OperandSize" :size nil)
 
     ; @Use({OperandFlag'COMPOSITE})
-    (§ mutable #_"AMD64AddressValue" :x nil)
+    (§ final #_"AMD64AddressValue" :x nil)
     ; @Use({OperandFlag'REG})
-    (§ mutable #_"AllocatableValue" :y nil)
+    (§ final #_"AllocatableValue" :y nil)
 
     (§ defn #_"MemoryMROp" MemoryMROp'new-4 [#_"AMD64MROp" opcode, #_"OperandSize" size, #_"AMD64AddressValue" x, #_"AllocatableValue" y]
         (let [
@@ -31275,7 +31174,7 @@
     (§ final #_"OperandSize" :size nil)
 
     ; @Use({OperandFlag'COMPOSITE})
-    (§ mutable #_"AMD64AddressValue" :x nil)
+    (§ final #_"AMD64AddressValue" :x nil)
     (§ final #_"int" :y 0)
 
     (§ defn #_"MemoryConstOp" MemoryConstOp'new-4 [#_"BinaryArithmetic" opcode, #_"OperandSize" size, #_"AMD64AddressValue" x, #_"int" y]
@@ -31727,7 +31626,7 @@
     (§ def #_"LIRInstructionClass<ReturnOp>" ReturnOp'TYPE (LIRInstructionClass'new-1 ReturnOp))
 
     ; @Use({OperandFlag'REG, OperandFlag'ILLEGAL})
-    (§ mutable #_"Value" :x nil)
+    (§ final #_"Value" :x nil)
 
     #_unused
     (§ defn #_"ReturnOp" ReturnOp'new-1 [#_"Value" x]
@@ -32971,7 +32870,7 @@
     (§ mutable #_"AllocatableValue" :lowX nil)
 
     ; @Use({OperandFlag'REG, OperandFlag'STACK})
-    (§ mutable #_"AllocatableValue" :y nil)
+    (§ final #_"AllocatableValue" :y nil)
 
     (§ defn #_"AMD64MulDivOp" AMD64MulDivOp'new-5 [#_"AMD64MOp" opcode, #_"OperandSize" size, #_"LIRKind" resultKind, #_"AllocatableValue" x, #_"AllocatableValue" y]
         (AMD64MulDivOp'new-6 opcode, size, resultKind, Value/ILLEGAL, x, y)
@@ -33210,9 +33109,9 @@
     ; @Def({OperandFlag'REG, OperandFlag'HINT})
     (§ mutable #_"AllocatableValue" :result nil)
     ; @Use({OperandFlag'REG, OperandFlag'STACK})
-    (§ mutable #_"AllocatableValue" :x nil)
+    (§ final #_"AllocatableValue" :x nil)
     ; @Alive({OperandFlag'REG})
-    (§ mutable #_"AllocatableValue" :y nil)
+    (§ final #_"AllocatableValue" :y nil)
 
     (§ defn #_"AMD64ShiftOp" AMD64ShiftOp'new-5 [#_"AMD64MOp" opcode, #_"OperandSize" size, #_"AllocatableValue" result, #_"AllocatableValue" x, #_"AllocatableValue" y]
         (let [
@@ -33598,9 +33497,9 @@
      ;
      ; @return the original CompositeValue or a copy with any modified values
      ;;
-    (§ abstract #_"CompositeValue" CompositeValue''forEachComponent-4 [#_"CompositeValue" this, #_"LIRInstruction" op, #_"OperandMode" mode, #_"InstructionValueProcedure" proc])
+    (§ abstract #_"CompositeValue" CompositeValue''forEachComponent-4 [#_"CompositeValue" this, #_"LIRInstruction" op, #_"OperandMode" mode, #_"InstructionValueProcedure" proc])
 
-    (§ abstract #_"void" CompositeValue''visitEachComponent-4 [#_"CompositeValue" this, #_"LIRInstruction" op, #_"OperandMode" mode, #_"InstructionValueConsumer" proc])
+    (§ abstract #_"void" CompositeValue''visitEachComponent-4 [#_"CompositeValue" this, #_"LIRInstruction" op, #_"OperandMode" mode, #_"InstructionValueConsumer" proc])
 )
 
 ;;;
@@ -34202,11 +34101,6 @@
         )
     )
 
-    (§ method! #_"void" UseEntry''setValue-2 [#_"UseEntry" this, #_"Value" newValue]
-        (UseEntry'replaceValue-3 (:instruction this), (:value this), newValue)
-        nil
-    )
-
     (§ defn- #_"void" UseEntry'replaceValue-3 [#_"LIRInstruction" op, #_"Value" oldValue, #_"Value" newValue]
         (let [
             #_"ValueProcedure" proc (ß (value, mode, flags) -> (§ fun (if (#_"Value" .identityEquals value, oldValue) newValue value)))
@@ -34216,6 +34110,11 @@
             (LIRInstruction''forEachOutput-2 op, proc)
             (LIRInstruction''forEachTemp-2 op, proc)
         )
+        nil
+    )
+
+    (§ method! #_"void" UseEntry''setValue-2 [#_"UseEntry" this, #_"Value" newValue]
+        (UseEntry'replaceValue-3 (:instruction this), (:value this), newValue)
         nil
     )
 )
@@ -34675,13 +34574,13 @@
      ;
      ; @return the total size of the frame (in bytes)
      ;;
-    (§ abstract #_"int" FrameMap''totalFrameSize-1 [#_"FrameMap" this])
+    (§ abstract #_"int" FrameMap''totalFrameSize-1 [#_"FrameMap" this])
 
     ;;;
      ; Gets the current size of this frame. This is the size that would be returned by
      ; #frameSize() if #finish() were called now.
      ;;
-    (§ abstract #_"int" FrameMap''currentFrameSize-1 [#_"FrameMap" this])
+    (§ abstract #_"int" FrameMap''currentFrameSize-1 [#_"FrameMap" this])
 
     ;;;
      ; Aligns the given frame size to the stack alignment size and return the aligned size.
@@ -34855,7 +34754,7 @@
      ; @param kind The kind of the spill slot to be reserved.
      ; @return a spill slot denoting the reserved memory area
      ;;
-    (§ abstract #_"VirtualStackSlot" FrameMapBuilder''allocateSpillSlot-2 [#_"FrameMapBuilder" this, #_"ValueKind" kind])
+    (§ abstract #_"VirtualStackSlot" FrameMapBuilder''allocateSpillSlot-2 [#_"FrameMapBuilder" this, #_"ValueKind" kind])
 
     ;;;
      ; Informs the frame map that the compiled code calls a particular method, which may need stack
@@ -34863,12 +34762,12 @@
      ;
      ; @param cc The calling convention for the called method.
      ;;
-    (§ abstract #_"void" FrameMapBuilder''callsMethod-2 [#_"FrameMapBuilder" this, #_"CallingConvention" cc])
+    (§ abstract #_"void" FrameMapBuilder''callsMethod-2 [#_"FrameMapBuilder" this, #_"CallingConvention" cc])
 
     ;;;
      ; Creates a FrameMap based on the information collected by this FrameMapBuilder.
      ;;
-    (§ abstract #_"FrameMap" FrameMapBuilder''buildFrameMap-2 [#_"FrameMapBuilder" this, #_"LIRGenerationResult" result])
+    (§ abstract #_"FrameMap" FrameMapBuilder''buildFrameMap-2 [#_"FrameMapBuilder" this, #_"LIRGenerationResult" result])
 )
 
 ;;;
@@ -34946,11 +34845,11 @@
      ; Returns the number of VirtualStackSlots created by this FrameMapBuilder.
      ; Can be used as an upper bound for an array indexed by VirtualStackSlot#getId().
      ;;
-    (§ abstract #_"int" FrameMapBuilderTool''getNumberOfStackSlots-1 [#_"FrameMapBuilderTool" this])
+    (§ abstract #_"int" FrameMapBuilderTool''getNumberOfStackSlots-1 [#_"FrameMapBuilderTool" this])
 
-    (§ abstract #_"List<VirtualStackSlot>" FrameMapBuilderTool''getStackSlots-1 [#_"FrameMapBuilderTool" this])
+    (§ abstract #_"List<VirtualStackSlot>" FrameMapBuilderTool''getStackSlots-1 [#_"FrameMapBuilderTool" this])
 
-    (§ abstract #_"FrameMap" FrameMapBuilderTool''getFrameMap-1 [#_"FrameMapBuilderTool" this])
+    (§ abstract #_"FrameMap" FrameMapBuilderTool''getFrameMap-1 [#_"FrameMapBuilderTool" this])
 )
 
 ;;;
@@ -35378,9 +35277,9 @@
 
     (§ method! #_"BlockScope" LIRGenerator''getBlockScope-2 [#_"LIRGenerator" this, #_"Block" block]
         (let [
-            #_"BlockScopeImpl" blockScope (BlockScopeImpl'new-2 this, block)
+            #_"BlockScope" blockScope (BlockScope'new-2 this, block)
         ]
-            (BlockScopeImpl''doBlockStart-1 blockScope)
+            (BlockScope''doBlockStart-1 blockScope)
             blockScope
         )
     )
@@ -36649,14 +36548,14 @@
 )
 
 ;;;
- ; @anno LIRGenerator.BlockScopeImpl
+ ; @anno LIRGenerator.BlockScope
  ;;
-(final-ns BlockScopeImpl (§ implements BlockScope)
+(final-ns BlockScope (§ implements AutoCloseable)
     (§ final #_"LIRGenerator" :gen nil)
 
-    (§ defn- #_"BlockScopeImpl" BlockScopeImpl'new-2 [#_"LIRGenerator" gen, #_"Block" block]
+    (§ defn- #_"BlockScope" BlockScope'new-2 [#_"LIRGenerator" gen, #_"Block" block]
         (let [
-            #_"BlockScopeImpl" this (hash-map)
+            #_"BlockScope" this (hash-map)
             this (assoc this :gen gen)
         ]
             (§ ass! (:currentBlock (:gen this)) block)
@@ -36664,7 +36563,7 @@
         )
     )
 
-    (§ method- #_"void" BlockScopeImpl''doBlockStart-1 [#_"BlockScopeImpl" this]
+    (§ method- #_"void" BlockScope''doBlockStart-1 [#_"BlockScope" this]
         ;; set up the list of LIR instructions
         (LIR''setLIRforBlock-3 (:lir (:res (:gen this))), (:currentBlock (:gen this)), (ArrayList.))
 
@@ -36672,24 +36571,15 @@
         nil
     )
 
-    (§ method- #_"void" BlockScopeImpl''doBlockEnd-1 [#_"BlockScopeImpl" this]
+    (§ method- #_"void" BlockScope''doBlockEnd-1 [#_"BlockScope" this]
         (§ ass! (:currentBlock (:gen this)) nil)
         nil
     )
 
-    #_unused
-    (§ override! #_"void" BlockScopeImpl''close-1 [#_"BlockScopeImpl" this]
-        (BlockScopeImpl''doBlockEnd-1 this)
+    (§ override! #_"void" #_"AutoCloseable" .close [#_"BlockScope" this]
+        (BlockScope''doBlockEnd-1 this)
         nil
     )
-)
-
-;;;
- ; @anno LIRGenerator.BlockScope
- ;;
-(§ interface BlockScope (§ extends AutoCloseable)
-    #_unused
-    (§ abstract #_"void" BlockScope''close-1 [#_"BlockScope" this])
 )
 
 ;;;
@@ -37041,7 +36931,7 @@
         )
     )
 
-    (§ abstract #_"void" LIRInstruction''emitCode-2 [#_"LIRInstruction" this, #_"Assembler" asm])
+    (§ abstract #_"void" LIRInstruction''emitCode-2 [#_"LIRInstruction" this, #_"Assembler" asm])
 
     (§ method! #_"int" LIRInstruction''id-1 [#_"LIRInstruction" this]
         (:id this)
@@ -37728,7 +37618,7 @@
         )
     )
 
-    (§ abstract #_"EnumSet<OperandFlag>" LIRFieldsScanner''getFlags-2 [#_"LIRFieldsScanner" this, #_"Field" field])
+    (§ abstract #_"EnumSet<OperandFlag>" LIRFieldsScanner''getFlags-2 [#_"LIRFieldsScanner" this, #_"Field" field])
 
     (§ override #_"void" LIRFieldsScanner''scanField-3 [#_"LIRFieldsScanner" this, #_"Field" field, #_"long" offset]
         (let [
@@ -39743,7 +39633,7 @@
         )
     )
 
-    (§ abstract #_"void" SwitchStrategy''run-2 [#_"SwitchStrategy" this, #_"SwitchClosure" closure])
+    (§ abstract #_"void" SwitchStrategy''run-2 [#_"SwitchStrategy" this, #_"SwitchClosure" closure])
 
     (§ defn- #_"SwitchStrategy[]" SwitchStrategy'getStrategies-3 [#_"double[]" keyProbabilities, #_"JavaConstant[]" keyConstants, #_"LabelRef[]" keyTargets]
         (let [
@@ -39856,7 +39746,7 @@
      ; This method generates code for a comparison between the actual value and the constant at
      ; the given index and a condition jump to target.
      ;;
-    (§ abstract #_"void" BaseSwitchClosure''conditionalJump-4 [#_"BaseSwitchClosure" this, #_"int" index, #_"Condition" condition, #_"Label" target])
+    (§ abstract #_"void" BaseSwitchClosure''conditionalJump-4 [#_"BaseSwitchClosure" this, #_"int" index, #_"Condition" condition, #_"Label" target])
 
     (§ override #_"void" BaseSwitchClosure''conditionalJump-4 [#_"BaseSwitchClosure" this, #_"int" index, #_"Condition" condition, #_"boolean" targetDefault]
         (let [
@@ -40346,7 +40236,7 @@
      ;;
     (§ abstract #_"void" ValueConsumer''visitValue-4 [#_"ValueConsumer" this, #_"Value" value, #_"OperandMode" mode, #_"EnumSet<OperandFlag>" flags])
 
-    (§ default #_"void" ValueConsumer''visitValue-5 [#_"ValueConsumer" this, #_"LIRInstruction" instruction, #_"Value" value, #_"OperandMode" mode, #_"EnumSet<OperandFlag>" flags]
+    (§ method #_"void" ValueConsumer''visitValue-5 [#_"ValueConsumer" this, #_"LIRInstruction" instruction, #_"Value" value, #_"OperandMode" mode, #_"EnumSet<OperandFlag>" flags]
         (ValueConsumer''visitValue-4 this, value, mode, flags)
         nil
     )
@@ -40368,7 +40258,7 @@
     (§ abstract #_"Value" ValueProcedure''doValue-4 [#_"ValueProcedure" this, #_"Value" value, #_"OperandMode" mode, #_"EnumSet<OperandFlag>" flags])
 
     #_unused
-    (§ default #_"Value" ValueProcedure''doValue-5 [#_"ValueProcedure" this, #_"LIRInstruction" instruction, #_"Value" value, #_"OperandMode" mode, #_"EnumSet<OperandFlag>" flags]
+    (§ method #_"Value" ValueProcedure''doValue-5 [#_"ValueProcedure" this, #_"LIRInstruction" instruction, #_"Value" value, #_"OperandMode" mode, #_"EnumSet<OperandFlag>" flags]
         (ValueProcedure''doValue-4 this, value, mode, flags)
     )
 )
@@ -40437,8 +40327,7 @@
         (:graph (:phi this))
     )
 
-    #_unused
-    (§ override! #_"Direction" BasicInductionVariable''direction-1 [#_"BasicInductionVariable" this]
+    (§ override! #_"Direction" InductionVariable''direction-1 [#_"BasicInductionVariable" this]
         (let [
             #_"Stamp" stamp (:stamp (:rawStride this))
         ]
@@ -40669,7 +40558,7 @@
         (= (-> (LoopEx''loopBegin-1 (:loop this)) (LoopBeginNode''loopExits-1) (NodeIterable''count-1)) 1)
     )
 
-    #_unused
+    #_unused
     (§ method! #_"ValueNode" CountedLoopInfo''exactTripCountNode-1 [#_"CountedLoopInfo" this]
         (CountedLoopInfo''maxTripCountNode-1 this)
     )
@@ -40678,18 +40567,13 @@
         (CountedLoopInfo''isConstantMaxTripCount-1 this)
     )
 
-    #_unused
+    #_unused
     (§ method! #_"UnsignedLong" CountedLoopInfo''constantExactTripCount-1 [#_"CountedLoopInfo" this]
         (CountedLoopInfo''constantMaxTripCount-1 this)
     )
 
     (§ method! #_"ValueNode" CountedLoopInfo''getStart-1 [#_"CountedLoopInfo" this]
         (InductionVariable''initNode-1 (:iv this))
-    )
-
-    #_unused
-    (§ method! #_"Direction" CountedLoopInfo''getDirection-1 [#_"CountedLoopInfo" this]
-        (InductionVariable''direction-1 (:iv this))
     )
 
     (§ method! #_"GuardingNode" CountedLoopInfo''getOverFlowGuard-1 [#_"CountedLoopInfo" this]
@@ -40911,8 +40795,7 @@
         (:value this)
     )
 
-    #_unused
-    (§ override! #_"Direction" DerivedConvertedInductionVariable''direction-1 [#_"DerivedConvertedInductionVariable" this]
+    (§ override! #_"Direction" InductionVariable''direction-1 [#_"DerivedConvertedInductionVariable" this]
         (InductionVariable''direction-1 (:base this))
     )
 
@@ -41011,8 +40894,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"Direction" DerivedOffsetInductionVariable''direction-1 [#_"DerivedOffsetInductionVariable" this]
+    (§ override! #_"Direction" InductionVariable''direction-1 [#_"DerivedOffsetInductionVariable" this]
         (InductionVariable''direction-1 (:base this))
     )
 
@@ -41136,8 +41018,7 @@
         (:value this)
     )
 
-    #_unused
-    (§ override! #_"Direction" DerivedScaledInductionVariable''direction-1 [#_"DerivedScaledInductionVariable" this]
+    (§ override! #_"Direction" InductionVariable''direction-1 [#_"DerivedScaledInductionVariable" this]
         (let [
             #_"Stamp" stamp (:stamp (:scale this))
         ]
@@ -41211,7 +41092,7 @@
  ; This class describes a value node that is an induction variable in a counted loop.
  ;;
 (class-ns InductionVariable
-    (§ abstract #_"Graph" InductionVariable''graph-1 [#_"InductionVariable" this])
+    (§ abstract #_"Graph" InductionVariable''graph-1 [#_"InductionVariable" this])
 
     (§ final #_"LoopEx" :loop nil)
 
@@ -41224,36 +41105,31 @@
         )
     )
 
-    #_unused
-    (§ method #_"LoopEx" InductionVariable''getLoop-1 [#_"InductionVariable" this]
-        (:loop this)
-    )
-
-    (§ abstract #_"Direction" InductionVariable''direction-1 [#_"InductionVariable" this])
+    (§ abstract #_"Direction" InductionVariable''direction-1 [#_"InductionVariable" this])
 
     ;;;
      ; Returns the value node that is described by this induction variable.
      ;;
-    (§ abstract #_"ValueNode" InductionVariable''valueNode-1 [#_"InductionVariable" this])
+    (§ abstract #_"ValueNode" InductionVariable''valueNode-1 [#_"InductionVariable" this])
 
     ;;;
      ; Returns the node that gives the initial value of this induction variable.
      ;;
-    (§ abstract #_"ValueNode" InductionVariable''initNode-1 [#_"InductionVariable" this])
+    (§ abstract #_"ValueNode" InductionVariable''initNode-1 [#_"InductionVariable" this])
 
     ;;;
      ; Returns the stride of the induction variable. The stride is the value that is added to the
      ; induction variable at each iteration.
      ;;
-    (§ abstract #_"ValueNode" InductionVariable''strideNode-1 [#_"InductionVariable" this])
+    (§ abstract #_"ValueNode" InductionVariable''strideNode-1 [#_"InductionVariable" this])
 
-    (§ abstract #_"boolean" InductionVariable''isConstantInit-1 [#_"InductionVariable" this])
+    (§ abstract #_"boolean" InductionVariable''isConstantInit-1 [#_"InductionVariable" this])
 
-    (§ abstract #_"boolean" InductionVariable''isConstantStride-1 [#_"InductionVariable" this])
+    (§ abstract #_"boolean" InductionVariable''isConstantStride-1 [#_"InductionVariable" this])
 
-    (§ abstract #_"long" InductionVariable''constantInit-1 [#_"InductionVariable" this])
+    (§ abstract #_"long" InductionVariable''constantInit-1 [#_"InductionVariable" this])
 
-    (§ abstract #_"long" InductionVariable''constantStride-1 [#_"InductionVariable" this])
+    (§ abstract #_"long" InductionVariable''constantStride-1 [#_"InductionVariable" this])
 
     ;;;
      ; Returns the extremum value of the induction variable. The extremum value is the value of the
@@ -41266,22 +41142,22 @@
         (InductionVariable''extremumNode-3 this, false, (:stamp (InductionVariable''valueNode-1 this)))
     )
 
-    (§ abstract #_"ValueNode" InductionVariable''extremumNode-3 [#_"InductionVariable" this, #_"boolean" assumePositiveTripCount, #_"Stamp" stamp])
+    (§ abstract #_"ValueNode" InductionVariable''extremumNode-3 [#_"InductionVariable" this, #_"boolean" assumePositiveTripCount, #_"Stamp" stamp])
 
-    (§ abstract #_"boolean" InductionVariable''isConstantExtremum-1 [#_"InductionVariable" this])
+    (§ abstract #_"boolean" InductionVariable''isConstantExtremum-1 [#_"InductionVariable" this])
 
-    (§ abstract #_"long" InductionVariable''constantExtremum-1 [#_"InductionVariable" this])
+    (§ abstract #_"long" InductionVariable''constantExtremum-1 [#_"InductionVariable" this])
 
     ;;;
      ; Returns the exit value of the induction variable. The exit value is the value of the
      ; induction variable at the loop exit.
      ;;
-    (§ abstract #_"ValueNode" InductionVariable''exitValueNode-1 [#_"InductionVariable" this])
+    (§ abstract #_"ValueNode" InductionVariable''exitValueNode-1 [#_"InductionVariable" this])
 
     ;;;
      ; Deletes any nodes created within the scope of this object that have no usages.
      ;;
-    (§ abstract #_"void" InductionVariable''deleteUnusedNodes-1 [#_"InductionVariable" this])
+    (§ abstract #_"void" InductionVariable''deleteUnusedNodes-1 [#_"InductionVariable" this])
 )
 
 ;;;
@@ -41704,8 +41580,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"boolean" InvariantPredicate''apply-2 [#_"InvariantPredicate" this, #_"Node" node]
+    (§ override! #_"boolean" NodePredicate''apply-2 [#_"InvariantPredicate" this, #_"Node" node]
         (and (< (:id node) (:value (:mark this))) ;; newly created nodes are unknown
             (LoopEx''isOutsideLoop-2 (:loopEx this), node)
         )
@@ -41743,10 +41618,10 @@
     )
 
     #_unused
-    (§ abstract #_"LoopFragment" LoopFragment''duplicate-1 [#_"LoopFragment" this])
+    (§ abstract #_"LoopFragment" LoopFragment''duplicate-1 [#_"LoopFragment" this])
 
     #_unused
-    (§ abstract #_"void" LoopFragment''insertBefore-2 [#_"LoopFragment" this, #_"LoopEx" l])
+    (§ abstract #_"void" LoopFragment''insertBefore-2 [#_"LoopFragment" this, #_"LoopEx" l])
 
     (§ method #_"boolean" LoopFragment''contains-2 [#_"LoopFragment" this, #_"Node" node]
         (NodeBitMap''isMarkedAndGrow-2 (LoopFragment''nodes-1 this), node)
@@ -41768,23 +41643,23 @@
      ; @param b original value
      ; @return corresponding value in the peel
      ;;
-    (§ abstract #_"ValueNode" LoopFragment''prim-2 [#_"LoopFragment" this, #_"ValueNode" b])
+    (§ abstract #_"ValueNode" LoopFragment''prim-2 [#_"LoopFragment" this, #_"ValueNode" b])
 
     (§ method! #_"boolean" LoopFragment''isDuplicate-1 [#_"LoopFragment" this]
         (some? (:original this))
     )
 
-    (§ abstract #_"NodeBitMap" LoopFragment''nodes-1 [#_"LoopFragment" this])
+    (§ abstract #_"NodeBitMap" LoopFragment''nodes-1 [#_"LoopFragment" this])
 
     (§ method #_"Graph" LoopFragment''graph-1 [#_"LoopFragment" this]
         (:graph (LoopEx''loopBegin-1 (:loop (if (LoopFragment''isDuplicate-1 this) (:original this) this))))
     )
 
-    (§ abstract #_"DuplicationReplacement" LoopFragment''getDuplicationReplacement-1 [#_"LoopFragment" this])
+    (§ abstract #_"DuplicationReplacement" LoopFragment''getDuplicationReplacement-1 [#_"LoopFragment" this])
 
-    (§ abstract #_"void" LoopFragment''beforeDuplication-1 [#_"LoopFragment" this])
+    (§ abstract #_"void" LoopFragment''beforeDuplication-1 [#_"LoopFragment" this])
 
-    (§ abstract #_"void" LoopFragment''finishDuplication-1 [#_"LoopFragment" this])
+    (§ abstract #_"void" LoopFragment''finishDuplication-1 [#_"LoopFragment" this])
 
     (§ method! #_"LoopFragment" LoopFragment''patchNodes-2 [#_"LoopFragment" this, #_"DuplicationReplacement" dataFix]
         (when (and (LoopFragment''isDuplicate-1 this) (not (:nodesReady this))) => this
@@ -42694,7 +42569,7 @@
                                 (let [
                                     #_"PhiNode" firstPhi (LoopFragmentInside'patchPhi-3 graph, phi, newExitMerge)
                                 ]
-                                    (doseq [#_"AbstractEndNode" end (AbstractMergeNode''forwardEnds-1 newExitMerge)]
+                                    (doseq [#_"AbstractEndNode" end (:ends newExitMerge)]
                                         (let [
                                             #_"LoopEndNode" loopEnd (get reverseEnds end)
                                             #_"ValueNode" prim (LoopFragmentInside''prim-2 this, (PhiNode''valueAt-2 phi, loopEnd))
@@ -43056,26 +42931,7 @@
     )
 )
 
-(class-ns ContextlessLoopPhase #_"<P extends LoopPolicies>" (§ extends LoopPhase #_"<P>")
-    (§ defn #_"ContextlessLoopPhase" ContextlessLoopPhase'new-1 [#_"P" policies]
-        (LoopPhase'new-1 policies)
-    )
-
-    #_unused
-    (§ method! #_"void" ContextlessLoopPhase''apply-2 [#_"ContextlessLoopPhase<P extends LoopPolicies>" this, #_"Graph" graph]
-        (§ ass! graph (Phase''run-3 this, graph, nil))
-        nil
-    )
-
-    (§ abstract #_"void" ContextlessLoopPhase''run-2 [#_"ContextlessLoopPhase<P extends LoopPolicies>" this, #_"Graph" graph])
-
-    (§ override! #_"Graph" Phase''run-3 [#_"ContextlessLoopPhase<P extends LoopPolicies>" this, #_"Graph" graph, #_"PhaseContext" context]
-        (ContextlessLoopPhase''run-2 this, graph)
-        graph
-    )
-)
-
-(final-ns LoopFullUnrollPhase (§ extends LoopPhase #_"<LoopPolicies>")
+(final-ns LoopFullUnrollPhase (§ extends LoopPhase)
     (§ final #_"CanonicalizerPhase" :canonicalizer nil)
 
     (§ defn #_"LoopFullUnrollPhase" LoopFullUnrollPhase'new-2 [#_"CanonicalizerPhase" canonicalizer, #_"LoopPolicies" policies]
@@ -43117,7 +42973,7 @@
     )
 )
 
-(final-ns LoopPartialUnrollPhase (§ extends LoopPhase #_"<LoopPolicies>")
+(final-ns LoopPartialUnrollPhase (§ extends LoopPhase)
     (§ final #_"CanonicalizerPhase" :canonicalizer nil)
 
     (§ defn #_"LoopPartialUnrollPhase" LoopPartialUnrollPhase'new-2 [#_"LoopPolicies" policies, #_"CanonicalizerPhase" canonicalizer]
@@ -43182,7 +43038,20 @@
     )
 )
 
-(final-ns LoopPeelingPhase (§ extends LoopPhase #_"<LoopPolicies>")
+(class-ns LoopPhase (§ implements Phase)
+    (§ final #_"LoopPolicies" :policies nil)
+
+    (§ defn #_"LoopPhase" LoopPhase'new-1 [#_"LoopPolicies" policies]
+        (let [
+            #_"LoopPhase" this (hash-map)
+            this (assoc this :policies policies)
+        ]
+            this
+        )
+    )
+)
+
+(final-ns LoopPeelingPhase (§ extends LoopPhase)
     (§ defn #_"LoopPeelingPhase" LoopPeelingPhase'new-1 [#_"LoopPolicies" policies]
         (LoopPhase'new-1 policies)
     )
@@ -43201,19 +43070,6 @@
             )
         )
         graph
-    )
-)
-
-(class-ns LoopPhase #_"<P extends LoopPolicies>" (§ implements Phase)
-    (§ mutable #_"P" :policies nil)
-
-    (§ defn #_"LoopPhase" LoopPhase'new-1 [#_"P" policies]
-        (let [
-            #_"LoopPhase" this (hash-map)
-            this (assoc this :policies policies)
-        ]
-            this
-        )
     )
 )
 
@@ -43693,13 +43549,12 @@
     )
 )
 
-(final-ns LoopUnswitchingPhase (§ extends ContextlessLoopPhase #_"<LoopPolicies>")
+(final-ns LoopUnswitchingPhase (§ extends LoopPhase)
     (§ defn #_"LoopUnswitchingPhase" LoopUnswitchingPhase'new-1 [#_"LoopPolicies" policies]
-        (ContextlessLoopPhase'new-1 policies)
+        (LoopPhase'new-1 policies)
     )
 
-    #_unused
-    (§ override! #_"void" LoopUnswitchingPhase''run-2 [#_"LoopUnswitchingPhase" this, #_"Graph" graph]
+    (§ override! #_"Graph" Phase''run-3 [#_"LoopUnswitchingPhase" this, #_"Graph" graph, #_"PhaseContext" context]
         (when (Graph''hasLoops-1 graph)
             (loop []
                 (let [
@@ -43726,13 +43581,13 @@
                 )
             )
         )
-        nil
+        graph
     )
 )
 
 ;;;
  ; Rearrange {@link BinaryArithmeticNode#isAssociative() associative binary operations} so that
- ; invariant parts of the expression can move outside of the loop.
+ ; invariant parts of the expression can be moved outside of the loop.
  ;;
 (final-ns ReassociateInvariantPhase (§ implements Phase)
     (§ defn #_"ReassociateInvariantPhase" ReassociateInvariantPhase'new-0 []
@@ -43992,13 +43847,11 @@
         )
     )
 
-    #_unused
-    (§ override! #_"boolean" BlockNodeIterator''hasNext-1 [#_"BlockNodeIterator" this]
+    (§ override! #_"boolean" #_"Iterator" .hasNext [#_"BlockNodeIterator" this]
         (some? (:current this))
     )
 
-    #_unused
-    (§ override! #_"FixedNode" BlockNodeIterator''next-1 [#_"BlockNodeIterator" this]
+    (§ override! #_"FixedNode" #_"Iterator" .next [#_"BlockNodeIterator" this]
         (let [
             #_"FixedNode" ret (:current this)
         ]
@@ -44054,9 +43907,9 @@
         nil
     )
 
-    (§ abstract #_"ValueNode" AbstractDeoptimizeNode''getActionAndReason-1 [#_"AbstractDeoptimizeNode" this])
+    (§ abstract #_"ValueNode" AbstractDeoptimizeNode''getActionAndReason-1 [#_"AbstractDeoptimizeNode" this])
 
-    (§ abstract #_"ValueNode" AbstractDeoptimizeNode''getSpeculation-1 [#_"AbstractDeoptimizeNode" this])
+    (§ abstract #_"ValueNode" AbstractDeoptimizeNode''getSpeculation-1 [#_"AbstractDeoptimizeNode" this])
 )
 
 (class-ns AbstractEndNode (§ extends FixedNode) (§ implements LIRLowerable)
@@ -44288,16 +44141,6 @@
         nil
     )
 
-    #_unused
-    (§ method! #_"void" AbstractMergeNode''clearEnds-1 [#_"AbstractMergeNode" this]
-        (NodeList''clear-1 (:ends this))
-        nil
-    )
-
-    (§ method! #_"NodeInputList<EndNode>" AbstractMergeNode''forwardEnds-1 [#_"AbstractMergeNode" this]
-        (:ends this)
-    )
-
     (§ method #_"int" AbstractMergeNode''phiPredecessorCount-1 [#_"AbstractMergeNode" this]
         (AbstractMergeNode''forwardEndCount-1 this)
     )
@@ -44440,7 +44283,7 @@
                                 )
                                 (let [
                                     #_"ValuePhiNode" returnValuePhi (when-not (or (nil? (:result node)) (not (AbstractMergeNode''isPhiAtMerge-2 this, (:result node)))) (:result node))
-                                    #_"List<EndNode>" endNodes (NodeList''snapshot-1 (AbstractMergeNode''forwardEnds-1 this))
+                                    #_"List<EndNode>" endNodes (NodeList''snapshot-1 (:ends this))
                                 ]
                                     (doseq [#_"EndNode" end endNodes]
                                         (let [
@@ -44531,23 +44374,6 @@
     )
 
     #_unused
-    (§ method! #_"void" BeginNode''trySimplify-1 [#_"BeginNode" this]
-        (let [
-            #_"FixedNode" prev (:predecessor this)
-        ]
-            (if (instance? ControlSplitNode prev)
-                nil ;; This begin node is necessary.
-                (do
-                    ;; This begin node can be removed and all guards moved up to the preceding begin node.
-                    (AbstractBeginNode''prepareDelete-1 this)
-                    (Graph''removeFixed-2 (:graph this), this)
-                )
-            )
-        )
-        nil
-    )
-
-    #_unused
     (§ override! #_"void" BeginNode''simplify-2 [#_"BeginNode" this, #_"SimplifierTool" tool]
         (let [
             #_"FixedNode" prev (:predecessor this)
@@ -44625,9 +44451,9 @@
     (§ def #_"NodeClass<BinaryOpLogicNode>" BinaryOpLogicNode'TYPE (NodeClass'create-1 BinaryOpLogicNode))
 
     ; @Input
-    (§ mutable #_"ValueNode" :x nil)
+    (§ final #_"ValueNode" :x nil)
     ; @Input
-    (§ mutable #_"ValueNode" :y nil)
+    (§ final #_"ValueNode" :y nil)
 
     (§ defn #_"BinaryOpLogicNode" BinaryOpLogicNode'new-3 [#_"NodeClass<? extends BinaryOpLogicNode>" c, #_"ValueNode" x, #_"ValueNode" y]
         (let [
@@ -44655,11 +44481,11 @@
         )
     )
 
-    (§ abstract #_"Stamp" BinaryOpLogicNode''getSucceedingStampForX-4 [#_"BinaryOpLogicNode" this, #_"boolean" negated?, #_"Stamp" xStamp, #_"Stamp" yStamp])
+    (§ abstract #_"Stamp" BinaryOpLogicNode''getSucceedingStampForX-4 [#_"BinaryOpLogicNode" this, #_"boolean" negated?, #_"Stamp" xStamp, #_"Stamp" yStamp])
 
-    (§ abstract #_"Stamp" BinaryOpLogicNode''getSucceedingStampForY-4 [#_"BinaryOpLogicNode" this, #_"boolean" negated?, #_"Stamp" xStamp, #_"Stamp" yStamp])
+    (§ abstract #_"Stamp" BinaryOpLogicNode''getSucceedingStampForY-4 [#_"BinaryOpLogicNode" this, #_"boolean" negated?, #_"Stamp" xStamp, #_"Stamp" yStamp])
 
-    (§ abstract #_"TriState" BinaryOpLogicNode''tryFold-3 [#_"BinaryOpLogicNode" this, #_"Stamp" xStamp, #_"Stamp" yStamp])
+    (§ abstract #_"TriState" BinaryOpLogicNode''tryFold-3 [#_"BinaryOpLogicNode" this, #_"Stamp" xStamp, #_"Stamp" yStamp])
 )
 
 (class-ns AddNode (§ extends BinaryArithmeticNode #_"<Add>") (§ implements NarrowableArithmeticNode, BinaryCommutative #_"<ValueNode>")
@@ -45086,21 +44912,9 @@
     (§ def #_"NodeClass<BinaryNode>" BinaryNode'TYPE (NodeClass'create-1 BinaryNode))
 
     ; @Input
-    (§ mutable #_"ValueNode" :x nil)
+    (§ final #_"ValueNode" :x nil)
     ; @Input
-    (§ mutable #_"ValueNode" :y nil)
-
-    #_unused
-    (§ method! #_"BinaryNode" BinaryNode''setX-2 [#_"BinaryNode" this, #_"ValueNode" x]
-        (Node''updateUsages-3 this, (:x this), x)
-        (assoc this :x x)
-    )
-
-    #_unused
-    (§ method! #_"BinaryNode" BinaryNode''setY-2 [#_"BinaryNode" this, #_"ValueNode" y]
-        (Node''updateUsages-3 this, (:y this), y)
-        (assoc this :y y)
-    )
+    (§ final #_"ValueNode" :y nil)
 
     ;;;
      ; Creates a new BinaryNode instance.
@@ -45129,7 +44943,7 @@
      ; with the current values of #x and #y. This code is used to provide the
      ; default implementation of #inferStamp() and may be used by external optimizations.
      ;;
-    (§ abstract #_"Stamp" BinaryNode''foldStamp-3 [#_"BinaryNode" this, #_"Stamp" stampX, #_"Stamp" stampY])
+    (§ abstract #_"Stamp" BinaryNode''foldStamp-3 [#_"BinaryNode" this, #_"Stamp" stampX, #_"Stamp" stampY])
 )
 
 (class-ns CompareNode (§ extends BinaryOpLogicNode) (§ implements Binary #_"<ValueNode>")
@@ -45332,7 +45146,7 @@
         )
     )
 
-    (§ abstract #_"LogicNode" CompareOp''duplicateModified-3 [#_"CompareOp" this, #_"ValueNode" newW, #_"ValueNode" newY])
+    (§ abstract #_"LogicNode" CompareOp''duplicateModified-3 [#_"CompareOp" this, #_"ValueNode" newW, #_"ValueNode" newY])
 )
 
 ;;;
@@ -45571,7 +45385,7 @@
      ; @param op a comparison operator
      ; @return true iff (c1 op c2) == (convert(c1) op convert(c2)) for all c1, c2
      ;;
-    (§ default #_"boolean" ConvertNode''preservesOrder-2 [#_"ConvertNode" this, #_"CanonicalCondition" op]
+    (§ method #_"boolean" ConvertNode''preservesOrder-2 [#_"ConvertNode" this, #_"CanonicalCondition" op]
         (ConvertNode''isLossless-1 this)
     )
 
@@ -45581,7 +45395,7 @@
      ; @param op a comparison operator
      ; @return true iff (c1 op value) == (convert(c1) op convert(value)) for value and all c1
      ;;
-    (§ default #_"boolean" ConvertNode''preservesOrder-3 [#_"ConvertNode" this, #_"CanonicalCondition" op, #_"Constant" value]
+    (§ method #_"boolean" ConvertNode''preservesOrder-3 [#_"ConvertNode" this, #_"CanonicalCondition" op, #_"Constant" value]
         (ConvertNode''preservesOrder-2 this, op)
     )
 )
@@ -45590,9 +45404,9 @@
     (§ def #_"NodeClass<FixedBinaryNode>" FixedBinaryNode'TYPE (NodeClass'create-1 FixedBinaryNode))
 
     ; @Input
-    (§ mutable #_"ValueNode" :x nil)
+    (§ final #_"ValueNode" :x nil)
     ; @Input
-    (§ mutable #_"ValueNode" :y nil)
+    (§ final #_"ValueNode" :y nil)
 
     (§ defn #_"FixedBinaryNode" FixedBinaryNode'new-4 [#_"NodeClass<? extends FixedBinaryNode>" c, #_"Stamp" stamp, #_"ValueNode" x, #_"ValueNode" y]
         (let [
@@ -46413,15 +46227,15 @@
         )
     )
 
-    (§ abstract #_"long" LowerOp''upperBound-2 [#_"LowerOp" this, #_"IntegerStamp" stamp])
+    (§ abstract #_"long" LowerOp''upperBound-2 [#_"LowerOp" this, #_"IntegerStamp" stamp])
 
-    (§ abstract #_"long" LowerOp''lowerBound-2 [#_"LowerOp" this, #_"IntegerStamp" stamp])
+    (§ abstract #_"long" LowerOp''lowerBound-2 [#_"LowerOp" this, #_"IntegerStamp" stamp])
 
-    (§ abstract #_"int" LowerOp''compare-3 [#_"LowerOp" this, #_"long" a, #_"long" b])
+    (§ abstract #_"int" LowerOp''compare-3 [#_"LowerOp" this, #_"long" a, #_"long" b])
 
-    (§ abstract #_"long" LowerOp''min-3 [#_"LowerOp" this, #_"long" a, #_"long" b])
+    (§ abstract #_"long" LowerOp''min-3 [#_"LowerOp" this, #_"long" a, #_"long" b])
 
-    (§ abstract #_"long" LowerOp''max-3 [#_"LowerOp" this, #_"long" a, #_"long" b])
+    (§ abstract #_"long" LowerOp''max-3 [#_"LowerOp" this, #_"long" a, #_"long" b])
 
     (§ method #_"long" LowerOp''min-4 [#_"LowerOp" this, #_"long" a, #_"long" b, #_"int" bits]
         (LowerOp''min-3 this, (LowerOp''cast-3 this, a, bits), (LowerOp''cast-3 this, b, bits))
@@ -46431,17 +46245,17 @@
         (LowerOp''max-3 this, (LowerOp''cast-3 this, a, bits), (LowerOp''cast-3 this, b, bits))
     )
 
-    (§ abstract #_"long" LowerOp''cast-3 [#_"LowerOp" this, #_"long" a, #_"int" bits])
+    (§ abstract #_"long" LowerOp''cast-3 [#_"LowerOp" this, #_"long" a, #_"int" bits])
 
-    (§ abstract #_"long" LowerOp''minValue-2 [#_"LowerOp" this, #_"int" bits])
+    (§ abstract #_"long" LowerOp''minValue-2 [#_"LowerOp" this, #_"int" bits])
 
-    (§ abstract #_"long" LowerOp''maxValue-2 [#_"LowerOp" this, #_"int" bits])
+    (§ abstract #_"long" LowerOp''maxValue-2 [#_"LowerOp" this, #_"int" bits])
 
-    (§ abstract #_"IntegerStamp" LowerOp''forInteger-4 [#_"LowerOp" this, #_"int" bits, #_"long" min, #_"long" max])
+    (§ abstract #_"IntegerStamp" LowerOp''forInteger-4 [#_"LowerOp" this, #_"int" bits, #_"long" min, #_"long" max])
 
-    (§ abstract #_"CanonicalCondition" LowerOp''getCondition-1 [#_"LowerOp" this])
+    (§ abstract #_"CanonicalCondition" LowerOp''getCondition-1 [#_"LowerOp" this])
 
-    (§ abstract #_"IntegerLowerThanNode" LowerOp''createNode-3 [#_"LowerOp" this, #_"ValueNode" x, #_"ValueNode" y])
+    (§ abstract #_"IntegerLowerThanNode" LowerOp''createNode-3 [#_"LowerOp" this, #_"ValueNode" x, #_"ValueNode" y])
 
     (§ method #_"LogicNode" LowerOp''create-3 [#_"LowerOp" this, #_"ValueNode" x, #_"ValueNode" y]
         (or (CompareNode'tryConstantFoldPrimitive-3 (LowerOp''getCondition-1 this), x, y)
@@ -46992,7 +46806,7 @@
      ; Check whether this operation can be narrowed to {@code resultBits} bit without loss of precision.
      ;;
     #_unused
-    (§ default #_"boolean" NarrowableArithmeticNode''isNarrowable-2 [#_"NarrowableArithmeticNode" this, #_"int" resultBits]
+    (§ method #_"boolean" NarrowableArithmeticNode''isNarrowable-2 [#_"NarrowableArithmeticNode" this, #_"int" resultBits]
         true
     )
 )
@@ -48175,13 +47989,6 @@
         (:value this)
     )
 
-    #_unused
-    (§ method #_"void" UnaryNode''setValue-2 [#_"UnaryNode" this, #_"ValueNode" value]
-        (Node''updateUsages-3 this, (:value this), value)
-        (§ ass! this (assoc this :value value))
-        nil
-    )
-
     ;;;
      ; Creates a new UnaryNode instance.
      ;
@@ -48654,7 +48461,7 @@
      ; A human-readable representation of the target, used for debug printing only.
      ;;
     #_unused
-    (§ abstract #_"String" CallTargetNode''targetName-1 [#_"CallTargetNode" this])
+    (§ abstract #_"String" CallTargetNode''targetName-1 [#_"CallTargetNode" this])
 
     (§ override #_"void" LIRLowerable''generate-2 [#_"CallTargetNode" this, #_"LIRBuilder" builder]
         ;; nop
@@ -48712,7 +48519,7 @@
         (not (:direct this))
     )
 
-    #_unused
+    #_unused
     (§ method! #_"boolean" InvokeKind''isInterface-1 [#_"InvokeKind" this]
         (= this InvokeKind'Interface)
     )
@@ -48849,17 +48656,6 @@
 
     (§ method! #_"Block" Block''getFirstSuccessor-1 [#_"Block" this]
         (nth (:successors this) 0)
-    )
-
-    #_unused
-    (§ method! #_"Block" Block''getEarliestPostDominated-1 [#_"Block" this]
-        (loop [#_"Block" b this]
-            (let [
-                #_"Block" dom (:dominator b)
-            ]
-                (recur-if (and (some? dom) (= (:postdominator dom) b)) [dom] => b)
-            )
-        )
     )
 
     (§ method! #_"Iterable<FixedNode>" Block''getNodes-1 [#_"Block" this]
@@ -49049,13 +48845,11 @@
         )
     )
 
-    #_unused
-    (§ override! #_"boolean" FixedNodeIterator''hasNext-1 [#_"FixedNodeIterator" this]
+    (§ override! #_"boolean" #_"Iterator" .hasNext [#_"FixedNodeIterator" this]
         (some? (:cur this))
     )
 
-    #_unused
-    (§ override! #_"FixedNode" FixedNodeIterator''next-1 [#_"FixedNodeIterator" this]
+    (§ override! #_"FixedNode" #_"Iterator" .next [#_"FixedNodeIterator" this]
         (let [
             #_"FixedNode" result (:cur this)
         ]
@@ -50004,11 +49798,6 @@
         )
     )
 
-    #_unused
-    (§ method! #_"boolean" LocationSet''isEmpty-1 [#_"LocationSet" this]
-        (nil? (:firstLocation this))
-    )
-
     (§ method! #_"boolean" LocationSet''isAny-1 [#_"LocationSet" this]
         (and (some? (:firstLocation this)) (#_"LocationIdentity" .isAny (:firstLocation this)))
     )
@@ -50085,9 +49874,9 @@
         (CompressionNode''mkStamp-2 this, stamp)
     )
 
-    (§ abstract #_"Constant" CompressionNode''compress-2 [#_"CompressionNode" this, #_"Constant" constant])
+    (§ abstract #_"Constant" CompressionNode''compress-2 [#_"CompressionNode" this, #_"Constant" constant])
 
-    (§ abstract #_"Constant" CompressionNode''uncompress-2 [#_"CompressionNode" this, #_"Constant" constant])
+    (§ abstract #_"Constant" CompressionNode''uncompress-2 [#_"CompressionNode" this, #_"Constant" constant])
 
     (§ override #_"Constant" CompressionNode''convert-2 [#_"CompressionNode" this, #_"Constant" constant]
         (condp = (:op this)
@@ -50109,7 +49898,7 @@
         true
     )
 
-    (§ abstract #_"Stamp" CompressionNode''mkStamp-2 [#_"CompressionNode" this, #_"Stamp" input])
+    (§ abstract #_"Stamp" CompressionNode''mkStamp-2 [#_"CompressionNode" this, #_"Stamp" input])
 
     (§ method #_"CompressionOp" CompressionNode''getOp-1 [#_"CompressionNode" this]
         (:op this)
@@ -50269,15 +50058,6 @@
     #_unused
     (§ defn #_"NodeIterable<ConstantNode>" ConstantNode'getConstantNodes-1 [#_"Graph" graph]
         (NodeIterable''filter-2 (Graph''getNodes-1 graph), ConstantNode)
-    )
-
-    ;;;
-     ; Replaces this node at its usages with another node.
-     ;;
-    #_unused
-    (§ method! #_"void" ConstantNode''replace-3 [#_"ConstantNode" this, #_"Graph" graph, #_"Node" replacement]
-        (Node''replaceAtUsagesAndDelete-2 this, replacement)
-        nil
     )
 
     (§ override! #_"void" LIRLowerable''generate-2 [#_"ConstantNode" this, #_"LIRBuilder" builder]
@@ -50568,13 +50348,13 @@
         (FixedNode'new-2 c, stamp)
     )
 
-    (§ abstract #_"double" ControlSplitNode''probability-2 [#_"ControlSplitNode" this, #_"AbstractBeginNode" successor])
+    (§ abstract #_"double" ControlSplitNode''probability-2 [#_"ControlSplitNode" this, #_"AbstractBeginNode" successor])
 
     ;;;
      ; Attempts to set the probability for the given successor to the passed value (which has to be
      ; in the range of 0.0 and 1.0). Returns whether setting the probability was successful.
      ;;
-    (§ abstract #_"boolean" ControlSplitNode''setProbability-3 [#_"ControlSplitNode" this, #_"AbstractBeginNode" successor, #_"double" value])
+    (§ abstract #_"boolean" ControlSplitNode''setProbability-3 [#_"ControlSplitNode" this, #_"AbstractBeginNode" successor, #_"double" value])
 
     ;;;
      ; Primary successor of the control split. Data dependencies on the node have to be scheduled in
@@ -50582,12 +50362,12 @@
      ;
      ; @return the primary successor
      ;;
-    (§ abstract #_"AbstractBeginNode" ControlSplitNode''getPrimarySuccessor-1 [#_"ControlSplitNode" this])
+    (§ abstract #_"AbstractBeginNode" ControlSplitNode''getPrimarySuccessor-1 [#_"ControlSplitNode" this])
 
     ;;;
      ; Returns the number of successors.
      ;;
-    (§ abstract #_"int" ControlSplitNode''getSuccessorCount-1 [#_"ControlSplitNode" this])
+    (§ abstract #_"int" ControlSplitNode''getSuccessorCount-1 [#_"ControlSplitNode" this])
 )
 
 (final-ns BindToRegisterNode (§ extends FixedWithNextNode) (§ implements LIRLowerable)
@@ -51422,7 +51202,6 @@
 (§ interface GuardedNode
     (§ abstract #_"GuardingNode" GuardedNode''getGuard-1 [#_"GuardedNode" this])
 
-    #_unused
     (§ abstract #_"void" GuardedNode''setGuard-2 [#_"GuardedNode" this, #_"GuardingNode" guard])
 )
 
@@ -51446,8 +51225,7 @@
         (:guard this)
     )
 
-    #_unused
-    (§ override! #_"void" GuardedUnsafeLoadNode''setGuard-2 [#_"GuardedUnsafeLoadNode" this, #_"GuardingNode" guard]
+    (§ override! #_"void" GuardedNode''setGuard-2 [#_"GuardedUnsafeLoadNode" this, #_"GuardingNode" guard]
         (Node''updateUsages-3 this, (:guard this), guard)
         (§ ass! this (assoc this :guard guard))
         nil
@@ -51501,12 +51279,7 @@
         nil
     )
 
-    #_unused
-    (§ method! #_"AbstractBeginNode" IntegerSwitchNode''successorAtKey-2 [#_"IntegerSwitchNode" this, #_"int" key]
-        (nth (:successors this) (IntegerSwitchNode''successorIndexAtKey-2 this, key))
-    )
-
-    (§ method! #_"int" IntegerSwitchNode''successorIndexAtKey-2 [#_"IntegerSwitchNode" this, #_"int" key]
+    (§ method- #_"int" IntegerSwitchNode''successorIndexAtKey-2 [#_"IntegerSwitchNode" this, #_"int" key]
         (let [
             #_"int" n (count (:keys this))
         ]
@@ -51595,13 +51368,13 @@
                 (and (not (< 1 (NodeIterable''count-1 (Node''usages-1 loadIndexed))))
                     (let [
                         #_"ValueNode" newValue (AccessIndexedNode''index-1 loadIndexed)
-                        #_"JavaConstant" arrayConstant (ValueNode''asJavaConstant-1 (AccessArrayNode''array-1 loadIndexed))
+                        #_"JavaConstant" arrayConstant (ValueNode''asJavaConstant-1 (:array loadIndexed))
                     ]
                         ;; The array is a constant that we can optimize. We require the array elements to be
                         ;; constant too, since we put them as literal constants into the switch keys.
                         (and (some? arrayConstant)
-                            (= (:stableDimension (AccessArrayNode''array-1 loadIndexed)) 1)
-                            (:isDefaultStable (AccessArrayNode''array-1 loadIndexed))
+                            (= (:stableDimension (:array loadIndexed)) 1)
+                            (:isDefaultStable (:array loadIndexed))
                             (let [
                                 #_"Integer" optionalArrayLength (#_"ConstantReflectionProvider" .readArrayLength HotSpot'constantReflection, arrayConstant)
                             ]
@@ -52463,12 +52236,12 @@
         (:value this)
     )
 
-    (§ abstract #_"boolean" SwitchNode''isSorted-1 [#_"SwitchNode" this])
+    (§ abstract #_"boolean" SwitchNode''isSorted-1 [#_"SwitchNode" this])
 
     ;;;
      ; The key at the specified position, encoded in a Constant.
      ;;
-    (§ abstract #_"Constant" SwitchNode''keyAt-2 [#_"SwitchNode" this, #_"int" i])
+    (§ abstract #_"Constant" SwitchNode''keyAt-2 [#_"SwitchNode" this, #_"int" i])
 
     (§ method! #_"boolean" SwitchNode''structureEquals-2 [#_"SwitchNode" this, #_"SwitchNode" switchNode]
         (and (Arrays/equals (:keySuccessors this), (:keySuccessors switchNode)) (SwitchNode''equalKeys-2 this, switchNode))
@@ -52477,7 +52250,7 @@
     ;;;
      ; Returns true if the switch has the same keys in the same order as this switch.
      ;;
-    (§ abstract #_"boolean" SwitchNode''equalKeys-2 [#_"SwitchNode" this, #_"SwitchNode" switchNode])
+    (§ abstract #_"boolean" SwitchNode''equalKeys-2 [#_"SwitchNode" this, #_"SwitchNode" switchNode])
 
     ;;;
      ; Returns the index of the successor belonging to the key at the specified index.
@@ -52547,7 +52320,7 @@
     )
 
     #_unused
-    (§ abstract #_"Stamp" SwitchNode''getValueStampForSuccessor-2 [#_"SwitchNode" this, #_"AbstractBeginNode" beginNode])
+    (§ abstract #_"Stamp" SwitchNode''getValueStampForSuccessor-2 [#_"SwitchNode" this, #_"AbstractBeginNode" beginNode])
 )
 
 (final-ns UnboxNode (§ extends FixedWithNextNode) (§ implements Virtualizable, Lowerable, Unary #_"<ValueNode>")
@@ -52684,9 +52457,9 @@
         )
     )
 
-    (§ abstract #_"ValueNode" UnsafeAccessNode''cloneAsFieldAccess-2 [#_"UnsafeAccessNode" this, #_"ResolvedJavaField" field])
+    (§ abstract #_"ValueNode" UnsafeAccessNode''cloneAsFieldAccess-2 [#_"UnsafeAccessNode" this, #_"ResolvedJavaField" field])
 
-    (§ abstract #_"ValueNode" UnsafeAccessNode''cloneAsArrayAccess-3 [#_"UnsafeAccessNode" this, #_"ValueNode" location, #_"LocationIdentity" identity])
+    (§ abstract #_"ValueNode" UnsafeAccessNode''cloneAsArrayAccess-3 [#_"UnsafeAccessNode" this, #_"ValueNode" location, #_"LocationIdentity" identity])
 )
 
 ;;;
@@ -52883,7 +52656,7 @@
     ; @Input(InputType'Anchor)
     (§ mutable #_"AnchoringNode" :anchor nil)
 
-    #_unused
+    #_unused
     (§ defn #_"FloatingAnchoredNode" FloatingAnchoredNode'new-2 [#_"NodeClass<? extends FloatingAnchoredNode>" c, #_"Stamp" stamp]
         (FloatingNode'new-2 c, stamp)
     )
@@ -52899,12 +52672,6 @@
 
     (§ method #_"AnchoringNode" FloatingAnchoredNode''getAnchor-1 [#_"FloatingAnchoredNode" this]
         (:anchor this)
-    )
-
-    #_unused
-    (§ method! #_"FloatingAnchoredNode" FloatingAnchoredNode''setAnchor-2 [#_"FloatingAnchoredNode" this, #_"AnchoringNode" anchor]
-        (Node''updateUsages-3 this, (:anchor this), anchor)
-        (assoc this :anchor anchor)
     )
 )
 
@@ -52931,8 +52698,7 @@
         (:guard this)
     )
 
-    #_unused
-    (§ override #_"void" FloatingGuardedNode''setGuard-2 [#_"FloatingGuardedNode" this, #_"GuardingNode" guard]
+    (§ override #_"void" GuardedNode''setGuard-2 [#_"FloatingGuardedNode" this, #_"GuardingNode" guard]
         (Node''updateUsages-3 this, (:guard this), guard)
         (§ ass! this (assoc this :guard guard))
         nil
@@ -53096,19 +52862,6 @@
         (when (some? (:code this)) (Bytecode''getMethod-1 (:code this)))
     )
 
-    ;;;
-     ; Determines if this frame state can be converted to a BytecodeFrame.
-     ;
-     ; Since a BytecodeFrame encodes #getMethod() and #bci, it does not
-     ; preserve #getCode(). #bci is only guaranteed to be valid in terms of
-     ; {@code getCode().getCode()} which may be different from {@code getMethod().getCode()} if the
-     ; latter has been subject to instrumentation.
-     ;;
-    #_unused
-    (§ method! #_"boolean" FrameState''canProduceBytecodeFrame-1 [#_"FrameState" this]
-        (and (some? (:code this)) (= (Bytecode''getCode-1 (:code this)) (#_"ResolvedJavaMethod" .getCode (Bytecode''getMethod-1 (:code this)))))
-    )
-
     (§ method! #_"FrameState" FrameState''addVirtualObjectMapping-2 [#_"FrameState" this, #_"EscapeObjectState" virtualObject]
         (let [
             this
@@ -53250,7 +53003,7 @@
      ; @param i the index into the locals
      ; @return the instruction that produced the value for the specified local
      ;;
-    #_unused
+    #_unused
     (§ method! #_"ValueNode" FrameState''localAt-2 [#_"FrameState" this, #_"int" i]
         (nth (:values this) i)
     )
@@ -53271,7 +53024,7 @@
      ; @param i the index into the list of locked monitors.
      ; @return the lock owner at the given index
      ;;
-    #_unused
+    #_unused
     (§ method! #_"ValueNode" FrameState''lockAt-2 [#_"FrameState" this, #_"int" i]
         (nth (:values this) (+ (:localsSize this) (:stackSize this) i))
     )
@@ -53279,7 +53032,7 @@
     ;;;
      ; Get the MonitorIdNode that corresponds to the locked object at the specified index.
      ;;
-    #_unused
+    #_unused
     (§ method! #_"MonitorIdNode" FrameState''monitorIdAt-2 [#_"FrameState" this, #_"int" i]
         (nth (:monitorIds this) i)
     )
@@ -53519,7 +53272,7 @@
      ; @param method the target method of an invoke
      ; @param args the arguments to the invoke
      ;;
-    (§ default #_"InlineInvokeInfo" InlineInvokePlugin''shouldInlineInvoke-4 [#_"InlineInvokePlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"ValueNode[]" args]
+    (§ method #_"InlineInvokeInfo" InlineInvokePlugin''shouldInlineInvoke-4 [#_"InlineInvokePlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"ValueNode[]" args]
         nil
     )
 
@@ -53528,7 +53281,7 @@
      ;
      ; @param methodToInline the inlined method
      ;;
-    (§ default #_"void" InlineInvokePlugin''notifyBeforeInline-2 [#_"InlineInvokePlugin" this, #_"ResolvedJavaMethod" methodToInline]
+    (§ method #_"void" InlineInvokePlugin''notifyBeforeInline-2 [#_"InlineInvokePlugin" this, #_"ResolvedJavaMethod" methodToInline]
         nil
     )
 
@@ -53537,7 +53290,7 @@
      ;
      ; @param methodToInline the inlined method
      ;;
-    (§ default #_"void" InlineInvokePlugin''notifyAfterInline-2 [#_"InlineInvokePlugin" this, #_"ResolvedJavaMethod" methodToInline]
+    (§ method #_"void" InlineInvokePlugin''notifyAfterInline-2 [#_"InlineInvokePlugin" this, #_"ResolvedJavaMethod" methodToInline]
         nil
     )
 
@@ -53547,7 +53300,7 @@
      ; @param method the method that was not inlined
      ; @param invoke the invoke node created for the call to {@code method}
      ;;
-    (§ default #_"void" InlineInvokePlugin''notifyNotInlined-4 [#_"InlineInvokePlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"InvokeNode" invoke]
+    (§ method #_"void" InlineInvokePlugin''notifyNotInlined-4 [#_"InlineInvokePlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"InvokeNode" invoke]
         nil
     )
 )
@@ -53588,7 +53341,7 @@
         (InlineInvokeInfo'new-2 methodToInline, HotSpot'defaultBytecodeProvider)
     )
 
-    #_unused
+    #_unused
     (§ method! #_"boolean" InlineInvokeInfo''allowsInlining-1 [#_"InlineInvokeInfo" this]
         (some? (:methodToInline this))
     )
@@ -53734,7 +53487,7 @@
      ;
      ; @return the receiver value with a {@linkplain StampTool#isPointerNonNull(ValueNode) non-nil} stamp
      ;;
-    (§ default #_"ValueNode" Receiver''get-1 [#_"Receiver" this]
+    (§ method #_"ValueNode" Receiver''get-1 [#_"Receiver" this]
         (Receiver''get-2 this, true)
     )
 
@@ -53747,7 +53500,7 @@
      ; Determines if the receiver is constant.
      ;;
     #_unused
-    (§ default #_"boolean" Receiver''isConstant-1 [#_"Receiver" this]
+    (§ method #_"boolean" Receiver''isConstant-1 [#_"Receiver" this]
         false
     )
 )
@@ -53852,7 +53605,7 @@
      ; @param args the arguments of the method invocation
      ; @return true if the plugin handles the invocation, false otherwise
      ;;
-    (§ default #_"boolean" NodePlugin''handleInvoke-4 [#_"NodePlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"ValueNode[]" args]
+    (§ method #_"boolean" NodePlugin''handleInvoke-4 [#_"NodePlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"ValueNode[]" args]
         false
     )
 
@@ -53864,7 +53617,7 @@
      ; @param field the accessed field
      ; @return true if the plugin handles the field access, false otherwise
      ;;
-    (§ default #_"boolean" NodePlugin''handleLoadField-4 [#_"NodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaField" field]
+    (§ method #_"boolean" NodePlugin''handleLoadField-4 [#_"NodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaField" field]
         false
     )
 
@@ -53875,7 +53628,7 @@
      ; @param field the accessed field
      ; @return true if the plugin handles the field access, false otherwise
      ;;
-    (§ default #_"boolean" NodePlugin''handleLoadStaticField-3 [#_"NodePlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaField" field]
+    (§ method #_"boolean" NodePlugin''handleLoadStaticField-3 [#_"NodePlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaField" field]
         false
     )
 
@@ -53887,7 +53640,7 @@
      ; @param value the value to be stored into the field
      ; @return true if the plugin handles the field access, false otherwise
      ;;
-    (§ default #_"boolean" NodePlugin''handleStoreField-5 [#_"NodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaField" field, #_"ValueNode" value]
+    (§ method #_"boolean" NodePlugin''handleStoreField-5 [#_"NodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaField" field, #_"ValueNode" value]
         false
     )
 
@@ -53898,7 +53651,7 @@
      ; @param value the value to be stored into the field
      ; @return true if the plugin handles the field access, false otherwise
      ;;
-    (§ default #_"boolean" NodePlugin''handleStoreStaticField-4 [#_"NodePlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaField" field, #_"ValueNode" value]
+    (§ method #_"boolean" NodePlugin''handleStoreStaticField-4 [#_"NodePlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaField" field, #_"ValueNode" value]
         false
     )
 
@@ -53911,7 +53664,7 @@
      ; @param elementKind the element kind of the accessed array
      ; @return true if the plugin handles the array access, false otherwise
      ;;
-    (§ default #_"boolean" NodePlugin''handleLoadIndexed-5 [#_"NodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" array, #_"ValueNode" index, #_"JavaKind" elementKind]
+    (§ method #_"boolean" NodePlugin''handleLoadIndexed-5 [#_"NodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" array, #_"ValueNode" index, #_"JavaKind" elementKind]
         false
     )
 
@@ -53924,7 +53677,7 @@
      ; @param value the value to be stored into the array
      ; @return true if the plugin handles the array access, false otherwise
      ;;
-    (§ default #_"boolean" NodePlugin''handleStoreIndexed-6 [#_"NodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" array, #_"ValueNode" index, #_"JavaKind" elementKind, #_"ValueNode" value]
+    (§ method #_"boolean" NodePlugin''handleStoreIndexed-6 [#_"NodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" array, #_"ValueNode" index, #_"JavaKind" elementKind, #_"ValueNode" value]
         false
     )
 
@@ -53936,7 +53689,7 @@
      ; @param type the type that the object is checked against
      ; @return true if the plugin handles the cast, false otherwise
      ;;
-    (§ default #_"boolean" NodePlugin''handleCheckCast-4 [#_"NodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaType" type]
+    (§ method #_"boolean" NodePlugin''handleCheckCast-4 [#_"NodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaType" type]
         false
     )
 
@@ -53948,7 +53701,7 @@
      ; @param type the type that the object is checked against
      ; @return true if the plugin handles the instanceof, false otherwise
      ;;
-    (§ default #_"boolean" NodePlugin''handleInstanceOf-4 [#_"NodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaType" type]
+    (§ method #_"boolean" NodePlugin''handleInstanceOf-4 [#_"NodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaType" type]
         false
     )
 )
@@ -54083,11 +53836,6 @@
         nil
     )
 
-    #_unused
-    (§ method! #_"GuardNode" GuardNode''setSpeculation-2 [#_"GuardNode" this, #_"JavaConstant" speculation]
-        (assoc this :speculation speculation)
-    )
-
     (§ override! #_"Node" Canonicalizable''canonical-2 [#_"GuardNode" this, #_"CanonicalizerTool" tool]
         (let [
             #_"LogicNode" logic (GuardNode''getCondition-1 this)
@@ -54103,11 +53851,6 @@
 
     (§ method! #_"FixedWithNextNode" GuardNode''lowerGuard-1 [#_"GuardNode" this]
         nil
-    )
-
-    #_unused
-    (§ method! #_"GuardNode" GuardNode''negate-1 [#_"GuardNode" this]
-        (update this :negated? not)
     )
 
     #_unused
@@ -54176,12 +53919,6 @@
 
     (§ override! #_"void" LIRLowerable''generate-2 [#_"GuardProxyNode" this, #_"LIRBuilder" builder]
         nil
-    )
-
-    #_unused
-    (§ method! #_"GuardProxyNode" GuardProxyNode''setValue-2 [#_"GuardProxyNode" this, #_"GuardingNode" newValue]
-        (Node''updateUsages-3 this, (:value this), newValue)
-        (assoc this :value newValue)
     )
 
     #_unused
@@ -54257,7 +53994,7 @@
      ; @param istrue true if the true successor is requested, false otherwise
      ; @return the corresponding successor
      ;;
-    #_unused
+    #_unused
     (§ method! #_"AbstractBeginNode" IfNode''successor-2 [#_"IfNode" this, #_"boolean" istrue]
         (if istrue (:trueSuccessor this) (:falseSuccessor this))
     )
@@ -54844,7 +54581,7 @@
                 (GraphUtil'tryKillUnused-1 logic)
             )
             (when (and (Node''isAlive-1 merge) (< 1 (AbstractMergeNode''forwardEndCount-1 merge)))
-                (doseq [#_"FixedNode" end (AbstractMergeNode''forwardEnds-1 merge)]
+                (doseq [#_"FixedNode" end (:ends merge)]
                     (let [
                         #_"Node" n (loop-when-recur [n end] (and (some? n) (instance? BeginNode (:predecessor n))) [(:predecessor n)] => n)
                     ]
@@ -54950,7 +54687,7 @@
                             ;; each successor of the if gets a new merge if needed
                             (let [
                                 [#_"MergeNode" trueMerge #_"MergeNode" falseMerge]
-                                    (loop-when [trueMerge nil falseMerge nil #_"ISeq" s (seq (NodeList''snapshot-1 (AbstractMergeNode''forwardEnds-1 merge)))] (some? s) => [trueMerge falseMerge]
+                                    (loop-when [trueMerge nil falseMerge nil #_"ISeq" s (seq (NodeList''snapshot-1 (:ends merge)))] (some? s) => [trueMerge falseMerge]
                                         (let [
                                             #_"EndNode" end (first s)
                                             #_"Node" value (PhiNode''valueAt-2 phi, end)
@@ -55518,7 +55255,7 @@
         )
     )
 
-    #_unused
+    #_unused
     (§ method! #_"ResolvedJavaMethod" InvokeNode''getTargetMethod-1 [#_"InvokeNode" this]
         (when (some? (:callTarget this)) (CallTargetNode''targetMethod-1 (:callTarget this)))
     )
@@ -55574,12 +55311,6 @@
     #_unused
     (§ override! #_"void" InvokeNode''afterClone-2 [#_"InvokeNode" this, #_"Node" other]
         nil
-    )
-
-    #_unused
-    (§ method! #_"InvokeNode" InvokeNode''setCallTarget-2 [#_"InvokeNode" this, #_"CallTargetNode" callTarget]
-        (Node''updateUsages-3 this, (:callTarget this), callTarget)
-        (assoc this :callTarget callTarget)
     )
 
     (§ method! #_"InvokeNode" InvokeNode''setUseForInlining-2 [#_"InvokeNode" this, #_"boolean" value]
@@ -55844,10 +55575,6 @@
     ; @Input
     (§ mutable #_"ValueNode" :array nil)
 
-    (§ method #_"ValueNode" AccessArrayNode''array-1 [#_"AccessArrayNode" this]
-        (:array this)
-    )
-
     ;;;
      ; Creates a new AccessArrayNode.
      ;
@@ -55860,12 +55587,6 @@
         ]
             this
         )
-    )
-
-    #_unused
-    (§ method! #_"AccessArrayNode" AccessArrayNode''setArray-2 [#_"AccessArrayNode" this, #_"ValueNode" array]
-        (Node''updateUsages-3 this, (:array this), array)
-        (assoc this :array array)
     )
 )
 
@@ -56899,12 +56620,12 @@
 
     #_unused
     (§ override #_"boolean" LoadIndexedNode''inferStamp-1 [#_"LoadIndexedNode" this]
-        (ValueNode''updateStamp-2 this, (Stamp''improveWith-2 (:stamp this), (LoadIndexedNode'createStamp-2 (AccessArrayNode''array-1 this), (:elementKind this))))
+        (ValueNode''updateStamp-2 this, (Stamp''improveWith-2 (:stamp this), (LoadIndexedNode'createStamp-2 (:array this), (:elementKind this))))
     )
 
     (§ override #_"void" Virtualizable''virtualize-2 [#_"LoadIndexedNode" this, #_"VirtualizerTool" tool]
         (let [
-            #_"ValueNode" array (VirtualizerTool''getAlias-2 tool, (AccessArrayNode''array-1 this))
+            #_"ValueNode" array (VirtualizerTool''getAlias-2 tool, (:array this))
         ]
             (when (instance? VirtualObjectNode array)
                 (let [
@@ -56927,7 +56648,7 @@
     )
 
     (§ override #_"Node" Canonicalizable''canonical-2 [#_"LoadIndexedNode" this, #_"CanonicalizerTool" tool]
-        (or (LoadIndexedNode'tryConstantFold-2 (AccessArrayNode''array-1 this), (AccessIndexedNode''index-1 this))
+        (or (LoadIndexedNode'tryConstantFold-2 (:array this), (AccessIndexedNode''index-1 this))
             this
         )
     )
@@ -57578,7 +57299,7 @@
 
     (§ override! #_"void" Virtualizable''virtualize-2 [#_"StoreIndexedNode" this, #_"VirtualizerTool" tool]
         (let [
-            #_"ValueNode" array (VirtualizerTool''getAlias-2 tool, (AccessArrayNode''array-1 this))
+            #_"ValueNode" array (VirtualizerTool''getAlias-2 tool, (:array this))
         ]
             (when (instance? VirtualObjectNode array)
                 (let [
@@ -58512,9 +58233,9 @@
         (FloatingNode'new-2 c, StampFactory'rawPointer)
     )
 
-    (§ abstract #_"ValueNode" AddressNode''getBase-1 [#_"AddressNode" this])
+    (§ abstract #_"ValueNode" AddressNode''getBase-1 [#_"AddressNode" this])
 
-    (§ abstract #_"ValueNode" AddressNode''getIndex-1 [#_"AddressNode" this])
+    (§ abstract #_"ValueNode" AddressNode''getIndex-1 [#_"AddressNode" this])
 
     ;;;
      ; Constant that is the maximum displacement from the base and index for this address. This value
@@ -58522,7 +58243,7 @@
      ;
      ; @return the maximum distance in bytes from the base that this address can be
      ;;
-    (§ abstract #_"long" AddressNode''getMaxConstantDisplacement-1 [#_"AddressNode" this])
+    (§ abstract #_"long" AddressNode''getMaxConstantDisplacement-1 [#_"AddressNode" this])
 )
 
 ;;;
@@ -58676,7 +58397,7 @@
         (:guard this)
     )
 
-    (§ override #_"void" FixedAccessNode''setGuard-2 [#_"FixedAccessNode" this, #_"GuardingNode" guard]
+    (§ override #_"void" GuardedNode''setGuard-2 [#_"FixedAccessNode" this, #_"GuardingNode" guard]
         (Node''updateUsages-3 this, (:guard this), guard)
         (§ ass! this (assoc this :guard guard))
         nil
@@ -58707,7 +58428,7 @@
         (FixedAccessNode'new-8 c, address, location, stamp, guard, barrierType, nullCheck, stateBefore)
     )
 
-    (§ abstract #_"FloatingAccessNode" FloatableAccessNode''asFloatingNode-2 [#_"FloatableAccessNode" this, #_"MemoryNode" lastLocationAccess])
+    (§ abstract #_"FloatingAccessNode" FloatableAccessNode''asFloatingNode-2 [#_"FloatableAccessNode" this, #_"MemoryNode" lastLocationAccess])
 
     (§ mutable #_"boolean" :forceFixed false)
 
@@ -58780,7 +58501,7 @@
         true
     )
 
-    (§ abstract #_"FixedAccessNode" FloatingAccessNode''asFixedNode-1 [#_"FloatingAccessNode" this])
+    (§ abstract #_"FixedAccessNode" FloatingAccessNode''asFixedNode-1 [#_"FloatingAccessNode" this])
 )
 
 ;;;
@@ -58852,7 +58573,7 @@
         (let [
             #_"ReadNode" result (Graph''add-2 (:graph this), (ReadNode'new-4 (FloatingAccessNode''getAddress-1 this), (FloatingAccessNode''getLocationIdentity-1 this), (:stamp this), (FloatingAccessNode''getBarrierType-1 this)))
         ]
-            (FixedAccessNode''setGuard-2 result, (FloatingGuardedNode''getGuard-1 this))
+            (GuardedNode''setGuard-2 result, (FloatingGuardedNode''getGuard-1 this))
             result
         )
     )
@@ -59392,7 +59113,7 @@
         )
     )
 
-    (§ abstract #_"NodeInputList<ValueNode>" PhiNode''values-1 [#_"PhiNode" this])
+    (§ abstract #_"NodeInputList<ValueNode>" PhiNode''values-1 [#_"PhiNode" this])
 
     (§ method #_"AbstractMergeNode" PhiNode''merge-1 [#_"PhiNode" this]
         (:merge this)
@@ -59848,7 +59569,7 @@
         )
     )
 
-    (§ abstract #_"ValueNode" ProxyNode''value-1 [#_"ProxyNode" this])
+    (§ abstract #_"ValueNode" ProxyNode''value-1 [#_"ProxyNode" this])
 
     (§ defn #_"ValueProxyNode" ProxyNode'forValue-3 [#_"ValueNode" value, #_"LoopExitNode" exit, #_"Graph" graph]
         (Graph''add-2 graph, (ValueProxyNode'new-2 value, exit))
@@ -59925,9 +59646,9 @@
     (§ def #_"NodeClass<ShortCircuitOrNode>" ShortCircuitOrNode'TYPE (NodeClass'create-1 ShortCircuitOrNode))
 
     ; @Input(InputType'ConditionI)
-    (§ mutable #_"LogicNode" :x nil)
+    (§ final #_"LogicNode" :x nil)
     ; @Input(InputType'ConditionI)
-    (§ mutable #_"LogicNode" :y nil)
+    (§ final #_"LogicNode" :y nil)
     (§ mutable #_"boolean" :xNegated false)
     (§ mutable #_"boolean" :yNegated false)
     ;;;
@@ -60177,7 +59898,7 @@
  ; Interface for nodes which have FrameState nodes as input.
  ;;
 (§ interface NodeWithState
-    (§ default! #_"NodeIterable<FrameState>" NodeWithState''states-1 [#_"NodeWithState" this]
+    (§ method! #_"NodeIterable<FrameState>" NodeWithState''states-1 [#_"NodeWithState" this]
         (NodeIterable''filter-2 (Node''inputs-1 this), FrameState)
     )
 )
@@ -60300,7 +60021,7 @@
      ;;
     (§ abstract #_"boolean" VirtualizerTool''setVirtualEntry-6 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject, #_"int" index, #_"ValueNode" value, #_"JavaKind" accessKind, #_"long" offset])
 
-    (§ default #_"void" VirtualizerTool''setVirtualEntry-4 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject, #_"int" index, #_"ValueNode" value]
+    (§ method #_"void" VirtualizerTool''setVirtualEntry-4 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject, #_"int" index, #_"ValueNode" value]
         (when-not (VirtualizerTool''setVirtualEntry-6 this, virtualObject, index, value, nil, 0)
             (throw! "unexpected failure when updating virtual entry")
         )
@@ -60422,7 +60143,7 @@
     #_unused
     (§ abstract #_"void" StaticDeoptimizingNode''setAction-2 [#_"StaticDeoptimizingNode" this, #_"DeoptimizationAction" action])
 
-    (§ default! #_"GuardPriority" StaticDeoptimizingNode''computePriority-1 [#_"StaticDeoptimizingNode" this]
+    (§ method! #_"GuardPriority" StaticDeoptimizingNode''computePriority-1 [#_"StaticDeoptimizingNode" this]
         (if (and (some? (:speculation this)) (#_"JavaConstant" .isNonNull (:speculation this)))
             GuardPriority'Speculation
             (condp =? (:action this)
@@ -61023,7 +60744,7 @@
             (let [
                 #_"AbstractMergeNode" merge (Graph''add-2 this, (MergeNode'new-0))
             ]
-                (doseq [#_"EndNode" end (AbstractMergeNode''forwardEnds-1 begin)]
+                (doseq [#_"EndNode" end (:ends begin)]
                     (AbstractMergeNode''addForwardEnd-2 merge, end)
                 )
                 (Graph''replaceFixedWithFixed-3 this, begin, merge)
@@ -61294,8 +61015,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" NodeEventScope''close-1 [#_"NodeEventScope" this]
+    (§ override! #_"void" #_"AutoCloseable" .close [#_"NodeEventScope" this]
         (if (instance? ChainedNodeEventListener (:nodeEventListener (:graph this)))
             (§ ass! (:nodeEventListener (:graph this)) (:next (:nodeEventListener (:graph this))))
             (§ ass! (:nodeEventListener (:graph this)) nil)
@@ -61463,7 +61183,7 @@
     )
 
     #_unused
-    (§ abstract #_"AbstractObjectStamp" NarrowOopStamp''copyWith-5 [#_"NarrowOopStamp" this, #_"ResolvedJavaType" type, #_"boolean" exactType, #_"boolean" never-nil?, #_"boolean" always-nil?])
+    (§ abstract #_"AbstractObjectStamp" NarrowOopStamp''copyWith-5 [#_"NarrowOopStamp" this, #_"ResolvedJavaType" type, #_"boolean" exactType, #_"boolean" never-nil?, #_"boolean" always-nil?])
 
     (§ method #_"Stamp" NarrowOopStamp''uncompressed-1 [#_"NarrowOopStamp" this]
         (ObjectStamp'new-4 (AbstractObjectStamp''type-1 this), (AbstractObjectStamp''isExactType-1 this), (:never-nil? this), (:always-nil? this))
@@ -61488,13 +61208,13 @@
     )
 
     #_unused
-    (§ abstract #_"Constant" NarrowOopStamp''readConstant-4 [#_"NarrowOopStamp" this, #_"MemoryAccessProvider" provider, #_"Constant" base, #_"long" displacement])
+    (§ abstract #_"Constant" NarrowOopStamp''readConstant-4 [#_"NarrowOopStamp" this, #_"MemoryAccessProvider" provider, #_"Constant" base, #_"long" displacement])
 
     #_unused
-    (§ abstract #_"JavaConstant" NarrowOopStamp''asConstant-1 [#_"NarrowOopStamp" this])
+    (§ abstract #_"JavaConstant" NarrowOopStamp''asConstant-1 [#_"NarrowOopStamp" this])
 
     #_unused
-    (§ abstract #_"boolean" NarrowOopStamp''isCompatible-2 [#_"NarrowOopStamp" this, #_"Constant" other])
+    (§ abstract #_"boolean" NarrowOopStamp''isCompatible-2 [#_"NarrowOopStamp" this, #_"Constant" other])
 )
 
 ;;;
@@ -61685,9 +61405,9 @@
         )
     )
 
-    (§ abstract #_"Stamp" UnaryOpLogicNode''getSucceedingStampForValue-2 [#_"UnaryOpLogicNode" this, #_"boolean" negated?])
+    (§ abstract #_"Stamp" UnaryOpLogicNode''getSucceedingStampForValue-2 [#_"UnaryOpLogicNode" this, #_"boolean" negated?])
 
-    (§ abstract #_"TriState" UnaryOpLogicNode''tryFold-2 [#_"UnaryOpLogicNode" this, #_"Stamp" valueStamp])
+    (§ abstract #_"TriState" UnaryOpLogicNode''tryFold-2 [#_"UnaryOpLogicNode" this, #_"Stamp" valueStamp])
 )
 
 (value-ns GraphUtil
@@ -62793,7 +62513,7 @@
         )
     )
 
-    (§ abstract #_"EscapeObjectState" EscapeObjectState''duplicateWithVirtualState-1 [#_"EscapeObjectState" this])
+    (§ abstract #_"EscapeObjectState" EscapeObjectState''duplicateWithVirtualState-1 [#_"EscapeObjectState" this])
 
     (§ override #_"boolean" EscapeObjectState''isPartOfThisState-2 [#_"EscapeObjectState" this, #_"VirtualState" state]
         (= this state)
@@ -63083,19 +62803,19 @@
      ; The type of object described by this VirtualObjectNode. In case of arrays, this is
      ; the array type (and not the component type).
      ;;
-    (§ abstract #_"ResolvedJavaType" VirtualObjectNode''type-1 [#_"VirtualObjectNode" this])
+    (§ abstract #_"ResolvedJavaType" VirtualObjectNode''type-1 [#_"VirtualObjectNode" this])
 
     ;;;
      ; The number of entries this virtual object has. Either the number of fields or the number of
      ; array elements.
      ;;
-    (§ abstract #_"int" VirtualObjectNode''entryCount-1 [#_"VirtualObjectNode" this])
+    (§ abstract #_"int" VirtualObjectNode''entryCount-1 [#_"VirtualObjectNode" this])
 
     ;;;
      ; Returns the name of the entry at the given index. Only used for debugging purposes.
      ;;
     #_unused
-    (§ abstract #_"String" VirtualObjectNode''entryName-2 [#_"VirtualObjectNode" this, #_"int" i])
+    (§ abstract #_"String" VirtualObjectNode''entryName-2 [#_"VirtualObjectNode" this, #_"int" i])
 
     ;;;
      ; If the given index denotes an entry in this virtual object, the index of this entry is
@@ -63105,17 +62825,17 @@
      ; @param expectedEntryKind specifies which type is expected at this offset, important when
      ;            doing implicit casts, especially on big endian systems
      ;;
-    (§ abstract #_"int" VirtualObjectNode''entryIndexForOffset-3 [#_"VirtualObjectNode" this, #_"long" constantOffset, #_"JavaKind" expectedEntryKind])
+    (§ abstract #_"int" VirtualObjectNode''entryIndexForOffset-3 [#_"VirtualObjectNode" this, #_"long" constantOffset, #_"JavaKind" expectedEntryKind])
 
     ;;;
      ; Returns the JavaKind of the entry at the given index.
      ;;
-    (§ abstract #_"JavaKind" VirtualObjectNode''entryKind-2 [#_"VirtualObjectNode" this, #_"int" index])
+    (§ abstract #_"JavaKind" VirtualObjectNode''entryKind-2 [#_"VirtualObjectNode" this, #_"int" index])
 
     ;;;
      ; Returns an exact duplicate of this virtual object node, which has not been added to the graph yet.
      ;;
-    (§ abstract #_"VirtualObjectNode" VirtualObjectNode''duplicate-1 [#_"VirtualObjectNode" this])
+    (§ abstract #_"VirtualObjectNode" VirtualObjectNode''duplicate-1 [#_"VirtualObjectNode" this])
 
     ;;;
      ; Specifies whether this virtual object has an object identity. If not, then the result of a
@@ -63135,7 +62855,7 @@
      ; AllocatedObjectNode then this node will be attached to a CommitAllocationNode,
      ; otherwise the node will just be added to the graph.
      ;;
-    (§ abstract #_"ValueNode" VirtualObjectNode''getMaterializedRepresentation-4 [#_"VirtualObjectNode" this, #_"FixedNode" fixed, #_"ValueNode[]" entries, #_"LockState" locks])
+    (§ abstract #_"ValueNode" VirtualObjectNode''getMaterializedRepresentation-4 [#_"VirtualObjectNode" this, #_"FixedNode" fixed, #_"ValueNode[]" entries, #_"LockState" locks])
 
     (§ override #_"void" LIRLowerable''generate-2 [#_"VirtualObjectNode" this, #_"LIRBuilder" builder]
         ;; nothing to do...
@@ -63156,19 +62876,19 @@
     (§ def #_"NodeClass<VirtualState>" VirtualState'TYPE (NodeClass'create-1 VirtualState))
 
     #_unused
-    (§ abstract #_"VirtualState" VirtualState''duplicateWithVirtualState-1 [#_"VirtualState" this])
+    (§ abstract #_"VirtualState" VirtualState''duplicateWithVirtualState-1 [#_"VirtualState" this])
 
-    (§ abstract #_"void" VirtualState''applyToNonVirtual-2 [#_"VirtualState" this, #_"NodeClosure<? super ValueNode>" closure])
+    (§ abstract #_"void" VirtualState''applyToNonVirtual-2 [#_"VirtualState" this, #_"NodeClosure<? super ValueNode>" closure])
 
     ;;;
      ; Performs a <b>pre-order</b> iteration over all elements reachable from this state that
      ; are a subclass of VirtualState.
      ;;
     #_unused
-    (§ abstract #_"void" VirtualState''applyToVirtual-2 [#_"VirtualState" this, #_"VirtualClosure" closure])
+    (§ abstract #_"void" VirtualState''applyToVirtual-2 [#_"VirtualState" this, #_"VirtualClosure" closure])
 
     #_unused
-    (§ abstract #_"boolean" VirtualState''isPartOfThisState-2 [#_"VirtualState" this, #_"VirtualState" state])
+    (§ abstract #_"boolean" VirtualState''isPartOfThisState-2 [#_"VirtualState" this, #_"VirtualState" state])
 )
 
 ;;;
@@ -63179,7 +62899,7 @@
         (hash-map)
     )
 
-    (§ abstract #_"void" NodeClosure''apply-3 [#_"NodeClosure<T extends Node>" this, #_"Node" usage, #_"T" node])
+    (§ abstract #_"void" NodeClosure''apply-3 [#_"NodeClosure<T extends Node>" this, #_"Node" usage, #_"T" node])
 )
 
 ;;;
@@ -63196,15 +62916,6 @@
  ;;
 (§ interface Phase
     (§ abstract #_"Graph" Phase''run-3 [#_"Phase" this, #_"Graph" graph, #_"PhaseContext" context])
-)
-
-;;;
- ; Common superclass for phases that perform inlining.
- ;;
-(class-ns AbstractInliningPhase (§ implements Phase)
-    (§ defn #_"AbstractInliningPhase" AbstractInliningPhase'new-0 []
-        (hash-map)
-    )
 )
 
 (final-ns AddressLoweringPhase (§ implements Phase)
@@ -64694,7 +64405,7 @@
                                     #_"FixedNode" next (:next node)
                                 ]
                                     (while (Node''isAlive-1 node)
-                                        (ConvertDeoptimizeToGuardPhase''propagateFixed-3 this, (first (AbstractMergeNode''forwardEnds-1 node)), deopt)
+                                        (ConvertDeoptimizeToGuardPhase''propagateFixed-3 this, (first (:ends node)), deopt)
                                     )
                                     (ConvertDeoptimizeToGuardPhase''propagateFixed-3 this, next, deopt)
                                 )
@@ -66603,12 +66314,12 @@
     (§ abstract #_"int" InlineInfo''determineNodeCount-1 [#_"InlineInfo" this])
 )
 
-(final-ns InliningPhase (§ extends AbstractInliningPhase)
+(final-ns InliningPhase (§ implements Phase)
     (§ final #_"CanonicalizerPhase" :canonicalizer nil)
 
     (§ defn #_"InliningPhase" InliningPhase'new-1 [#_"CanonicalizerPhase" canonicalizer]
         (let [
-            #_"InliningPhase" this (AbstractInliningPhase'new-0)
+            #_"InliningPhase" this (hash-map)
             this (assoc this :canonicalizer canonicalizer)
         ]
             this
@@ -67149,7 +66860,7 @@
     ;;;
      ; Gets the method associated with the {@linkplain #graph() graph} represented by this object.
      ;;
-    (§ abstract #_"ResolvedJavaMethod" CallsiteHolder''method-1 [#_"CallsiteHolder" this])
+    (§ abstract #_"ResolvedJavaMethod" CallsiteHolder''method-1 [#_"CallsiteHolder" this])
 
     ;;;
      ; The stack realized by InliningData grows upon InliningData#moveForward()
@@ -67157,12 +66868,12 @@
      ; CallsiteHolder. The list of not-yet-considered callsites is managed by
      ; CallsiteHolderExplorable, and this method reports whether any such candidates remain.
      ;;
-    (§ abstract #_"boolean" CallsiteHolder''hasRemainingInvokes-1 [#_"CallsiteHolder" this])
+    (§ abstract #_"boolean" CallsiteHolder''hasRemainingInvokes-1 [#_"CallsiteHolder" this])
 
     ;;;
      ; The graph about which this object contains inlining information.
      ;;
-    (§ abstract #_"Graph" CallsiteHolder''graph-1 [#_"CallsiteHolder" this])
+    (§ abstract #_"Graph" CallsiteHolder''graph-1 [#_"CallsiteHolder" this])
 )
 
 ;;;
@@ -68496,8 +68207,7 @@
         (:guard this)
     )
 
-    #_unused
-    (§ override! #_"void" DummyGuardHandle''setGuard-2 [#_"DummyGuardHandle" this, #_"GuardingNode" guard]
+    (§ override! #_"void" GuardedNode''setGuard-2 [#_"DummyGuardHandle" this, #_"GuardingNode" guard]
         (Node''updateUsages-3 this, (:guard this), guard)
         (§ ass! this (assoc this :guard guard))
         nil
@@ -68796,7 +68506,7 @@
                                 (nil? fixedNode)
                                     nil ;; Can happen for start node.
                                 (instance? AbstractMergeNode fixedNode)
-                                    (doseq [#_"AbstractEndNode" end (AbstractMergeNode''forwardEnds-1 fixedNode)]
+                                    (doseq [#_"AbstractEndNode" end (:ends fixedNode)]
                                         (§ ass! stack (NodeStack''push-2 stack, (AbstractBeginNode'prevBegin-1 end)))
                                     )
                                 (instance? ControlSplitNode fixedNode)
@@ -69153,7 +68863,7 @@
         ;; which causes the recursion to overflow the stack earlier than it would otherwise.
         (let [
             probability
-                (loop-when-recur [probability probability #_"ISeq" s (seq (AbstractMergeNode''forwardEnds-1 node))]
+                (loop-when-recur [probability probability #_"ISeq" s (seq (:ends node))]
                                  (some? s)
                                  [(+ probability (FixedNodeProbabilityCache''applyAsDouble-2 this, (first s))) (next s)]
                               => probability
@@ -69230,7 +68940,7 @@
 
 (value-ns ReentrantBlockIterator
     (§ defn- #_"<StateT> boolean" ReentrantBlockIterator'allEndsVisited-3 [#_"EconomicMap<FixedNode, StateT>" states, #_"Block" current, #_"AbstractMergeNode" merge]
-        (loop-when [#_"ISeq" s (seq (AbstractMergeNode''forwardEnds-1 merge))] (some? s) => true
+        (loop-when [#_"ISeq" s (seq (:ends merge))] (some? s) => true
             (let [
                 #_"AbstractEndNode" forwardEnd (first s)
             ]
@@ -69418,15 +69128,15 @@
         (hash-map)
     )
 
-    (§ abstract #_"StateT" BlockIteratorClosure''getInitialState-1 [#_"BlockIteratorClosure<StateT>" this])
+    (§ abstract #_"StateT" BlockIteratorClosure''getInitialState-1 [#_"BlockIteratorClosure<StateT>" this])
 
-    (§ abstract #_"StateT" BlockIteratorClosure''processBlock-3 [#_"BlockIteratorClosure<StateT>" this, #_"Block" block, #_"StateT" currentState])
+    (§ abstract #_"StateT" BlockIteratorClosure''processBlock-3 [#_"BlockIteratorClosure<StateT>" this, #_"Block" block, #_"StateT" currentState])
 
-    (§ abstract #_"StateT" BlockIteratorClosure''merge-3 [#_"BlockIteratorClosure<StateT>" this, #_"Block" merge, #_"List<StateT>" states])
+    (§ abstract #_"StateT" BlockIteratorClosure''merge-3 [#_"BlockIteratorClosure<StateT>" this, #_"Block" merge, #_"List<StateT>" states])
 
-    (§ abstract #_"StateT" BlockIteratorClosure''cloneState-2 [#_"BlockIteratorClosure<StateT>" this, #_"StateT" oldState])
+    (§ abstract #_"StateT" BlockIteratorClosure''cloneState-2 [#_"BlockIteratorClosure<StateT>" this, #_"StateT" oldState])
 
-    (§ abstract #_"List<StateT>" BlockIteratorClosure''processLoop-3 [#_"BlockIteratorClosure<StateT>" this, #_"Loop" loop, #_"StateT" initialState])
+    (§ abstract #_"List<StateT>" BlockIteratorClosure''processLoop-3 [#_"BlockIteratorClosure<StateT>" this, #_"Loop" loop, #_"StateT" initialState])
 )
 
 (value-ns ReentrantNodeIterator
@@ -69481,7 +69191,7 @@
                                                         )
                                                         (let [
                                                             #_"boolean" endsVisited
-                                                                (loop-when [#_"ISeq" s (seq (AbstractMergeNode''forwardEnds-1 merge))] (some? s) => true
+                                                                (loop-when [#_"ISeq" s (seq (:ends merge))] (some? s) => true
                                                                     (let [
                                                                         #_"AbstractEndNode" forwardEnd (first s)
                                                                     ]
@@ -69610,13 +69320,13 @@
         (hash-map)
     )
 
-    (§ abstract #_"StateT" NodeIteratorClosure''processNode-3 [#_"NodeIteratorClosure<StateT>" this, #_"FixedNode" node, #_"StateT" currentState])
+    (§ abstract #_"StateT" NodeIteratorClosure''processNode-3 [#_"NodeIteratorClosure<StateT>" this, #_"FixedNode" node, #_"StateT" currentState])
 
-    (§ abstract #_"StateT" NodeIteratorClosure''merge-3 [#_"NodeIteratorClosure<StateT>" this, #_"AbstractMergeNode" merge, #_"List<StateT>" states])
+    (§ abstract #_"StateT" NodeIteratorClosure''merge-3 [#_"NodeIteratorClosure<StateT>" this, #_"AbstractMergeNode" merge, #_"List<StateT>" states])
 
-    (§ abstract #_"StateT" NodeIteratorClosure''afterSplit-3 [#_"NodeIteratorClosure<StateT>" this, #_"AbstractBeginNode" node, #_"StateT" oldState])
+    (§ abstract #_"StateT" NodeIteratorClosure''afterSplit-3 [#_"NodeIteratorClosure<StateT>" this, #_"AbstractBeginNode" node, #_"StateT" oldState])
 
-    (§ abstract #_"EconomicMap<LoopExitNode, StateT>" NodeIteratorClosure''processLoop-3 [#_"NodeIteratorClosure<StateT>" this, #_"LoopBeginNode" loop, #_"StateT" initialState])
+    (§ abstract #_"EconomicMap<LoopExitNode, StateT>" NodeIteratorClosure''processLoop-3 [#_"NodeIteratorClosure<StateT>" this, #_"LoopBeginNode" loop, #_"StateT" initialState])
 )
 
 ;;;
@@ -69686,7 +69396,7 @@
         )
     )
 
-    (§ abstract #_"void" ScheduledNodeIterator''processNode-2 [#_"ScheduledNodeIterator" this, #_"Node" node])
+    (§ abstract #_"void" ScheduledNodeIterator''processNode-2 [#_"ScheduledNodeIterator" this, #_"Node" node])
 )
 
 ;;;
@@ -72277,7 +71987,7 @@
             #_"ReadNode" memoryRead (Graph''add-2 graph, (ReadNode'new-4 address, (:locationIdentity load), loadStamp, BarrierType'NONE))
         ]
             (if (some? guard)
-                (FixedAccessNode''setGuard-2 memoryRead, guard)
+                (GuardedNode''setGuard-2 memoryRead, guard)
                 ;; An unsafe read must not float, otherwise it may float above a test guaranteeing the read is safe.
                 (§ ass! memoryRead (FloatableAccessNode''setForceFixed-2 memoryRead, true))
             )
@@ -72771,14 +72481,14 @@
     (§ defn #_"void" Lowerer'lowerLoadIndexedNode-2 [#_"LoadIndexedNode" loadIndexed, #_"LoweringTool" lowerer]
         (let [
             #_"Graph" graph (:graph loadIndexed)
-            #_"ValueNode" array (Lowerer'createNullCheckedValue-3 (AccessArrayNode''array-1 loadIndexed), loadIndexed, lowerer)
+            #_"ValueNode" array (Lowerer'createNullCheckedValue-3 (:array loadIndexed), loadIndexed, lowerer)
             #_"JavaKind" elementKind (:elementKind loadIndexed)
             #_"Stamp" loadStamp (Lowerer'loadStamp-2 (:stamp loadIndexed), elementKind)
             #_"GuardingNode" boundsCheck (Lowerer'getBoundsCheck-3 loadIndexed, array, lowerer)
             #_"AddressNode" address (Lowerer'createArrayIndexAddress-5 graph, array, elementKind, (AccessIndexedNode''index-1 loadIndexed), boundsCheck)
             #_"ReadNode" memoryRead (Graph''add-2 graph, (ReadNode'new-4 address, (NamedLocationIdentity'getArrayLocation-1 elementKind), loadStamp, BarrierType'NONE))
         ]
-            (FixedAccessNode''setGuard-2 memoryRead, boundsCheck)
+            (GuardedNode''setGuard-2 memoryRead, boundsCheck)
             (§ ass! loadIndexed (Node''replaceAtUsages-2 loadIndexed, (Lowerer'implicitLoadConvert-3 graph, elementKind, memoryRead)))
             (§ ass! graph (Graph''replaceFixed-3 graph, loadIndexed, memoryRead))
         )
@@ -72789,7 +72499,7 @@
         (let [
             #_"Graph" graph (:graph storeIndexed)
             #_"ValueNode" value (:value storeIndexed)
-            #_"ValueNode" array (Lowerer'createNullCheckedValue-3 (AccessArrayNode''array-1 storeIndexed), storeIndexed, lowerer)
+            #_"ValueNode" array (Lowerer'createNullCheckedValue-3 (:array storeIndexed), storeIndexed, lowerer)
             #_"GuardingNode" boundsCheck (Lowerer'getBoundsCheck-3 storeIndexed, array, lowerer)
             #_"JavaKind" elementKind (:elementKind storeIndexed)
             #_"LogicNode" condition
@@ -72822,7 +72532,7 @@
             #_"AddressNode" address (Lowerer'createArrayIndexAddress-5 graph, array, elementKind, (AccessIndexedNode''index-1 storeIndexed), boundsCheck)
             #_"WriteNode" memoryWrite (Graph''add-2 graph, (WriteNode'new-4 address, (NamedLocationIdentity'getArrayLocation-1 elementKind), (Lowerer'implicitStoreConvert-3 graph, elementKind, value), (Lowerer'arrayStoreBarrierType-1 (:elementKind storeIndexed))))
         ]
-            (FixedAccessNode''setGuard-2 memoryWrite, boundsCheck)
+            (GuardedNode''setGuard-2 memoryWrite, boundsCheck)
             (when (some? condition)
                 (LoweringTool''createGuard-5 lowerer, storeIndexed, condition, DeoptimizationReason/ArrayStoreException, DeoptimizationAction/InvalidateReprofile)
             )
@@ -72956,7 +72666,7 @@
             #_"ValueNode" readValue (Lowerer'implicitLoadConvert-4 graph, valueKind, memoryRead, (:compressible? read))
         ]
             (if (some? guard)
-                (FixedAccessNode''setGuard-2 memoryRead, guard)
+                (GuardedNode''setGuard-2 memoryRead, guard)
                 ;; An unsafe read must not float, otherwise it may float above a test guaranteeing the read is safe.
                 (§ ass! memoryRead (FloatableAccessNode''setForceFixed-2 memoryRead, true))
             )
@@ -72974,7 +72684,7 @@
         ]
             (AbstractWriteNode''setStateAfter-2 memoryWrite, (AbstractWriteNode''stateAfter-1 write))
             (§ ass! graph (Graph''replaceFixedWithFixed-3 graph, write, memoryWrite))
-            (FixedAccessNode''setGuard-2 memoryWrite, (FixedAccessNode''getGuard-1 write))
+            (GuardedNode''setGuard-2 memoryWrite, (FixedAccessNode''getGuard-1 write))
         )
         nil
     )
@@ -73502,7 +73212,7 @@
     ;;;
      ; Gets the arguments used to retrieve and instantiate an instanceof snippet template.
      ;;
-    (§ abstract #_"Arguments" InstanceOfSnippetsTemplates''makeArguments-3 [#_"InstanceOfSnippetsTemplates" this, #_"InstanceOfUsageReplacer" replacer, #_"LoweringTool" lowerer])
+    (§ abstract #_"Arguments" InstanceOfSnippetsTemplates''makeArguments-3 [#_"InstanceOfSnippetsTemplates" this, #_"InstanceOfUsageReplacer" replacer, #_"LoweringTool" lowerer])
 
     (§ method #_"void" InstanceOfSnippetsTemplates''lower-3 [#_"InstanceOfSnippetsTemplates" this, #_"FloatingNode" instanceOf, #_"LoweringTool" lowerer]
         (let [
@@ -73660,7 +73370,7 @@
     ;;;
      ; Does the replacement based on a previously snippet instantiation.
      ;;
-    (§ abstract #_"void" InstanceOfUsageReplacer''replaceUsingInstantiation-1 [#_"InstanceOfUsageReplacer" this])
+    (§ abstract #_"void" InstanceOfUsageReplacer''replaceUsingInstantiation-1 [#_"InstanceOfUsageReplacer" this])
 )
 
 ;;;
@@ -73980,9 +73690,9 @@
     ; @Successor
     (§ mutable #_"AbstractBeginNode" :overflowSuccessor nil)
     ; @Input
-    (§ mutable #_"ValueNode" :x nil)
+    (§ final #_"ValueNode" :x nil)
     ; @Input
-    (§ mutable #_"ValueNode" :y nil)
+    (§ final #_"ValueNode" :y nil)
 
     (§ defn #_"IntegerExactArithmeticSplitNode" IntegerExactArithmeticSplitNode'new-6 [#_"NodeClass<? extends IntegerExactArithmeticSplitNode>" c, #_"Stamp" stamp, #_"ValueNode" x, #_"ValueNode" y, #_"AbstractBeginNode" next, #_"AbstractBeginNode" overflowSuccessor]
         (let [
@@ -74021,7 +73731,7 @@
         nil
     )
 
-    (§ abstract #_"Value" IntegerExactArithmeticSplitNode''generateArithmetic-2 [#_"IntegerExactArithmeticSplitNode" this, #_"LIRBuilder" builder])
+    (§ abstract #_"Value" IntegerExactArithmeticSplitNode''generateArithmetic-2 [#_"IntegerExactArithmeticSplitNode" this, #_"LIRBuilder" builder])
 
     (§ defn #_"void" IntegerExactArithmeticSplitNode'lower-2 [#_"LoweringTool" lowerer, #_"IntegerExactArithmeticNode" node]
         (when (= (:guardsStage (:graph node)) GuardsStage'FIXED_DEOPTS)
@@ -74930,7 +74640,7 @@
      ;
      ; @return the newly added node
      ;;
-    (§ abstract #_"ValueNode" GraphAdder''add-2 [#_"GraphAdder" this, #_"ValueNode" node])
+    (§ abstract #_"ValueNode" GraphAdder''add-2 [#_"GraphAdder" this, #_"ValueNode" node])
 )
 
 ;;;
@@ -75951,7 +75661,7 @@
     (§ final #_"ResolvedJavaMethod" :method nil)
     (§ final #_"LocationIdentity[]" :privateLocations nil)
 
-    (§ abstract #_"Lazy" SnippetInfo''lazy-1 [#_"SnippetInfo" this])
+    (§ abstract #_"Lazy" SnippetInfo''lazy-1 [#_"SnippetInfo" this])
 
     (§ defn #_"SnippetInfo" SnippetInfo'new-2 [#_"ResolvedJavaMethod" method, #_"LocationIdentity[]" privateLocations]
         (let [
@@ -76523,15 +76233,15 @@
  ;;
 (§ interface Effect
     #_unused
-    (§ default #_"boolean" Effect''isVisible-1 [#_"Effect" this]
+    (§ method #_"boolean" Effect''isVisible-1 [#_"Effect" this]
         true
     )
 
-    (§ default #_"boolean" Effect''isCfgKill-1 [#_"Effect" this]
+    (§ method #_"boolean" Effect''isCfgKill-1 [#_"Effect" this]
         false
     )
 
-    (§ default #_"void" Effect''apply-3 [#_"Effect" this, #_"Graph" graph, #_"ArrayList<Node>" obsoleteNodes]
+    (§ method #_"void" Effect''apply-3 [#_"Effect" this, #_"Graph" graph, #_"ArrayList<Node>" obsoleteNodes]
         (Effect''apply-2 this, graph)
         nil
     )
@@ -76564,7 +76274,7 @@
         )
     )
 
-    (§ abstract #_"boolean" EffectsBlockState''equivalentTo-2 [#_"EffectsBlockState<T extends EffectsBlockState<T>>" this, #_"T" other])
+    (§ abstract #_"boolean" EffectsBlockState''equivalentTo-2 [#_"EffectsBlockState<T extends EffectsBlockState<T>>" this, #_"T" other])
 
     (§ method! #_"boolean" EffectsBlockState''isDead-1 [#_"EffectsBlockState<T extends EffectsBlockState<T>>" this]
         (:dead this)
@@ -76790,7 +76500,7 @@
      ;
      ; @return true if the effects include removing the node, false otherwise
      ;;
-    (§ abstract #_"boolean" EffectsClosure''processNode-5 [#_"EffectsClosure<BlockT extends EffectsBlockState<BlockT>>" this, #_"Node" node, #_"BlockT" state, #_"GraphEffectList" effects, #_"FixedWithNextNode" lastFixedNode])
+    (§ abstract #_"boolean" EffectsClosure''processNode-5 [#_"EffectsClosure<BlockT extends EffectsBlockState<BlockT>>" this, #_"Node" node, #_"BlockT" state, #_"GraphEffectList" effects, #_"FixedWithNextNode" lastFixedNode])
 
     #_unused
     (§ override #_"BlockT" EffectsClosure''merge-3 [#_"EffectsClosure<BlockT extends EffectsBlockState<BlockT>>" this, #_"Block" merge, #_"List<BlockT>" states]
@@ -76933,9 +76643,9 @@
         nil
     )
 
-    (§ abstract #_"void" EffectsClosure''processLoopExit-5 [#_"EffectsClosure<BlockT extends EffectsBlockState<BlockT>>" this, #_"LoopExitNode" exitNode, #_"BlockT" initialState, #_"BlockT" exitState, #_"GraphEffectList" effects])
+    (§ abstract #_"void" EffectsClosure''processLoopExit-5 [#_"EffectsClosure<BlockT extends EffectsBlockState<BlockT>>" this, #_"LoopExitNode" exitNode, #_"BlockT" initialState, #_"BlockT" exitState, #_"GraphEffectList" effects])
 
-    (§ abstract #_"MergeProcessor<BlockT>" EffectsClosure''createMergeProcessor-2 [#_"EffectsClosure<BlockT extends EffectsBlockState<BlockT>>" this, #_"Block" merge])
+    (§ abstract #_"MergeProcessor<BlockT>" EffectsClosure''createMergeProcessor-2 [#_"EffectsClosure<BlockT extends EffectsBlockState<BlockT>>" this, #_"Block" merge])
 
     (§ method! #_"void" EffectsClosure''addScalarAlias-3 [#_"EffectsClosure<BlockT extends EffectsBlockState<BlockT>>" this, #_"ValueNode" node, #_"ValueNode" alias]
         (NodeMap''set-3 (:aliases this), node, alias)
@@ -77058,7 +76768,7 @@
     ;;;
      ; @param states the states that should be merged.
      ;;
-    (§ abstract #_"void" MergeProcessor''merge-2 [#_"MergeProcessor<BlockT extends EffectsBlockState<BlockT>>" this, #_"List<BlockT>" states])
+    (§ abstract #_"void" MergeProcessor''merge-2 [#_"MergeProcessor<BlockT extends EffectsBlockState<BlockT>>" this, #_"List<BlockT>" states])
 
     (§ method- #_"MergeProcessor<BlockT extends EffectsBlockState<BlockT>>" MergeProcessor''setNewState-2 [#_"MergeProcessor<BlockT extends EffectsBlockState<BlockT>>" this, #_"BlockT" state]
         (let [
@@ -77179,7 +76889,7 @@
         nil
     )
 
-    (§ abstract #_"Closure" EffectsPhase''createEffectsClosure-3 [#_"EffectsPhase" this, #_"ScheduleResult" schedule, #_"ControlFlowGraph" cfg])
+    (§ abstract #_"Closure" EffectsPhase''createEffectsClosure-3 [#_"EffectsPhase" this, #_"ScheduleResult" schedule, #_"ControlFlowGraph" cfg])
 )
 
 ;;;
@@ -77190,9 +76900,9 @@
         (BlockIteratorClosure'new-0)
     )
 
-    (§ abstract #_"boolean" Closure''needsApplyEffects-1 [#_"Closure<T>" this])
+    (§ abstract #_"boolean" Closure''needsApplyEffects-1 [#_"Closure<T>" this])
 
-    (§ abstract #_"void" Closure''applyEffects-1 [#_"Closure<T>" this])
+    (§ abstract #_"void" Closure''applyEffects-1 [#_"Closure<T>" this])
 )
 
 (final-ns GraphEffectList (§ extends EffectList)
@@ -79599,7 +79309,7 @@
             elementKind
                 (when (= elementKind JavaKind/Byte) => elementKind
                     (let [
-                        elementKind (PEReadEliminationClosure'getElementKindFromStamp-1 (AccessArrayNode''array-1 store))
+                        elementKind (PEReadEliminationClosure'getElementKindFromStamp-1 (:array store))
                     ]
                         (when (= elementKind JavaKind/Illegal) => elementKind
                             ;; Could not determine the actual access kind from stamp. Hence kill both.
@@ -79613,7 +79323,7 @@
             (let [
                 #_"LocationIdentity" arrayLocation (NamedLocationIdentity'getArrayLocation-1 elementKind)
             ]
-                (when (= index -1) => (PEReadEliminationClosure''processStore-10 this, store, (AccessArrayNode''array-1 store), arrayLocation, index, elementKind, false, (:value store), state, effects)
+                (when (= index -1) => (PEReadEliminationClosure''processStore-10 this, store, (:array store), arrayLocation, index, elementKind, false, (:value store), state, effects)
                     (PEReadEliminationBlockState''killReadCache-3 state, arrayLocation, -1)
                     false
                 )
@@ -79630,7 +79340,7 @@
                 elementKind
                     (when (= elementKind JavaKind/Byte) => elementKind
                         (let [
-                            elementKind (PEReadEliminationClosure'getElementKindFromStamp-1 (AccessArrayNode''array-1 load))
+                            elementKind (PEReadEliminationClosure'getElementKindFromStamp-1 (:array load))
                         ]
                             (when (= elementKind JavaKind/Illegal) => elementKind
                                 (§ return false)
@@ -79641,7 +79351,7 @@
                 (let [
                     #_"LocationIdentity" arrayLocation (NamedLocationIdentity'getArrayLocation-1 elementKind)
                 ]
-                    (PEReadEliminationClosure''processLoad-8 this, load, (AccessArrayNode''array-1 load), arrayLocation, index, elementKind, state, effects)
+                    (PEReadEliminationClosure''processLoad-8 this, load, (:array load), arrayLocation, index, elementKind, state, effects)
                 )
             )
         )
@@ -79986,11 +79696,11 @@
         )
     )
 
-    (§ abstract #_"CacheEntry<T>" CacheEntry''duplicateWithObject-2 [#_"CacheEntry<T>" this, #_"ValueNode" newObject])
+    (§ abstract #_"CacheEntry<T>" CacheEntry''duplicateWithObject-2 [#_"CacheEntry<T>" this, #_"ValueNode" newObject])
 
-    (§ abstract #_"boolean" CacheEntry''conflicts-2 [#_"CacheEntry<T>" this, #_"LocationIdentity" other])
+    (§ abstract #_"boolean" CacheEntry''conflicts-2 [#_"CacheEntry<T>" this, #_"LocationIdentity" other])
 
-    (§ abstract #_"LocationIdentity" CacheEntry''getIdentity-1 [#_"CacheEntry<T>" this])
+    (§ abstract #_"LocationIdentity" CacheEntry''getIdentity-1 [#_"CacheEntry<T>" this])
 )
 
 ;;;
@@ -81487,7 +81197,7 @@
         (§ cast #_"T" (HostedWord'boxLong-1 val))
     )
 
-    (§ abstract #_"long" Word''unbox-1 [#_"Word" this])
+    (§ abstract #_"long" Word''unbox-1 [#_"Word" this])
 
     (§ defn- #_"Word" Word'intParam-1 [#_"int" val]
         (Word'box-1 val)
@@ -81528,11 +81238,11 @@
 
     ; @Operation(opcode = WordOpcode'TO_OBJECT)
     #_native
-    (§ abstract #_"Object" Word''toObject-1 [#_"Word" this])
+    (§ abstract #_"Object" Word''toObject-1 [#_"Word" this])
 
     ; @Operation(opcode = WordOpcode'TO_OBJECT_NON_NULL)
     #_native
-    (§ abstract #_"Object" Word''toObjectNonNull-1 [#_"Word" this])
+    (§ abstract #_"Object" Word''toObjectNonNull-1 [#_"Word" this])
 
     ; @Operation(node = AddNode.class)
     (§ override #_"Word" Word''add-2 [#_"Word" this, #_"SignedWord" val]
@@ -81979,7 +81689,7 @@
 
     ; @Operation(opcode = WordOpcode'READ_POINTER)
     #_native
-    (§ abstract #_"Object" Word''readObject-3 [#_"Word" this, #_"WordBase" offset, #_"LocationIdentity" locationIdentity])
+    (§ abstract #_"Object" Word''readObject-3 [#_"Word" this, #_"WordBase" offset, #_"LocationIdentity" locationIdentity])
 
     ; @Operation(opcode = WordOpcode'READ_POINTER)
     (§ override #_"byte" Word''readByte-3 [#_"Word" this, #_"int" offset, #_"LocationIdentity" locationIdentity]
@@ -82060,7 +81770,7 @@
 
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     #_native
-    (§ abstract #_"void" Word''writeObject-4 [#_"Word" this, #_"WordBase" offset, #_"Object" val, #_"LocationIdentity" locationIdentity])
+    (§ abstract #_"void" Word''writeObject-4 [#_"Word" this, #_"WordBase" offset, #_"Object" val, #_"LocationIdentity" locationIdentity])
 
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     (§ override #_"void" Word''writeByte-4 [#_"Word" this, #_"int" offset, #_"byte" val, #_"LocationIdentity" locationIdentity]
@@ -82142,11 +81852,11 @@
 
     ; @Operation(opcode = WordOpcode'READ_POINTER)
     #_native
-    (§ abstract #_"Object" Word''readObject-2 [#_"Word" this, #_"WordBase" offset])
+    (§ abstract #_"Object" Word''readObject-2 [#_"Word" this, #_"WordBase" offset])
 
     ; @Operation(opcode = WordOpcode'READ_HEAP)
     #_native
-    (§ abstract #_"Object" Word''readObject-3 [#_"Word" this, #_"WordBase" offset, #_"BarrierType" barrierType])
+    (§ abstract #_"Object" Word''readObject-3 [#_"Word" this, #_"WordBase" offset, #_"BarrierType" barrierType])
 
     ; @Operation(opcode = WordOpcode'READ_POINTER)
     (§ override #_"byte" Word''readByte-2 [#_"Word" this, #_"int" offset]
@@ -82261,7 +81971,7 @@
 
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     #_native
-    (§ abstract #_"void" Word''writeObject-3 [#_"Word" this, #_"WordBase" offset, #_"Object" val])
+    (§ abstract #_"void" Word''writeObject-3 [#_"Word" this, #_"WordBase" offset, #_"Object" val])
 
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     (§ override #_"void" Word''writeByte-3 [#_"Word" this, #_"int" offset, #_"byte" val]
