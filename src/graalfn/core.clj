@@ -9852,9 +9852,8 @@
     )
 
     ;;;
-     ; Gets a Java JavaKind that can be used to store a value of this stamp on the Java
-     ; bytecode stack. Returns JavaKind#Illegal if a value of this stamp can not be stored
-     ; on the bytecode stack.
+     ; Gets a Java JavaKind that can be used to store a value of this stamp on the Java bytecode stack.
+     ; Returns JavaKind#Illegal if a value of this stamp can not be stored on the bytecode stack.
      ;;
     (§ abstract #_"JavaKind" Stamp''getStackKind-1 [#_"Stamp" this])
 
@@ -11880,10 +11879,6 @@
         nil
     )
 
-    (§ method #_"boolean" Node''isAllowedUsageType-2 [#_"Node" this, #_"InputType" type]
-        (and (not= type InputType'Value) (#_"EnumSet" .contains (:allowedUsageTypes (:nodeClass this)), type))
-    )
-
     (§ method- #_"boolean" Node''checkReplaceWith-2 [#_"Node" this, #_"Node" other]
         (when (and (some? (:graph this)) (Graph''isFrozen-1 (:graph this)))
             (throw! "cannot modify frozen graph")
@@ -12300,48 +12295,6 @@
 )
 
 ;;;
- ; Annotates a method that can be replaced by a compiler intrinsic. A (resolved) call to the
- ; annotated method will be processed by a generated InvocationPlugin that calls either
- ; a factory method or a constructor corresponding with the annotated method.
- ;
- ; A factory method corresponding to an annotated method is a static method named
- ; {@code intrinsify} defined in the class denoted by #value(). In order, its signature
- ; is as follows:
- ;
- ; (1) A BytecodeParser parameter.
- ; (2) A ResolvedJavaMethod parameter.
- ; (3) A sequence of zero or more injected parameters.
- ; (4) Remaining parameters that match the declared parameters of the annotated method.
- ;
- ; A constructor corresponding to an annotated method is defined in the class denoted by
- ; #value(). In order, its signature is as follows:
- ;
- ; (1) A sequence of zero or more injected parameters.
- ; (2) Remaining parameters that match the declared parameters of the annotated method.
- ;
- ; There must be exactly one such factory method or constructor corresponding to a
- ; NodeIntrinsic annotated method.
- ;
- ; @anno Node.NodeIntrinsic
- ; @target ElementType.METHOD
- ;;
-(§ annotation NodeIntrinsic
-    ;;;
-     ; The class declaring the factory method or Node subclass declaring the constructor
-     ; used to intrinsify a call to the annotated method. The default value is the class in
-     ; which the annotated method is declared.
-     ;;
-    (§ value #_"Class" value NodeIntrinsic)
-
-    ;;;
-     ; If true, the factory method or constructor selected by the annotation must have
-     ; an injected Stamp parameter. Calling
-     ; AbstractPointerStamp#nonNull() on the injected stamp is guaranteed to return true.
-     ;;
-    (§ value #_"boolean" injectedStampIsNonNull false)
-)
-
-;;;
  ; Marker interface for nodes that contains other nodes. When the inputs to this node changes,
  ; users of this node should also be placed on the work list for canonicalization.
  ;
@@ -12649,7 +12602,6 @@
     (§ final #_"NodeClass<? super T>" :superNodeClass nil)
 
     (§ final #_"int" :iterableId 0)
-    (§ final #_"EnumSet<InputType>" :allowedUsageTypes nil)
     (§ mutable #_"int[]" :iterableIds nil)
     (§ final #_"long" :inputsIteration 0)
     (§ final #_"long" :successorIteration 0)
@@ -12678,7 +12630,6 @@
             this (assoc this :inputsIteration (NodeClass'computeIterationMask-3 (Fields''type-1 (:inputs this)), (:directCount (:inputs this)), (:offsets (:inputs this))))
             this (assoc this :data (Fields'new-1 (:data fs)))
             this (assoc this :isLeafNode (zero? (+ (count (:offsets (:inputs this))) (count (:offsets (:successors this))))))
-            this (assoc this :allowedUsageTypes (if (nil? superNodeClass) (EnumSet/noneOf InputType) (#_"Object" .clone (:allowedUsageTypes superNodeClass))))
         ]
             (if (#_"Class" .isAssignableFrom IterableNodeType, clazz)
                 (do
@@ -16522,9 +16473,9 @@
 )
 
 ;;;
- ; Reflection operations on values represented as constants for the
- ; processing of snippets. Snippets need a direct access to the value of object constants, which is
- ; not allowed in other parts of Graal to enforce compiler-VM separation.
+ ; Reflection operations on values represented as constants for the processing of snippets.
+ ; Snippets need a direct access to the value of object constants, which is not allowed in
+ ; other parts of Graal to enforce compiler-VM separation.
  ;
  ; This interface must not be used in Graal code that is not related to snippet processing.
  ;;
@@ -16738,7 +16689,6 @@
  ; with an EndLockScopeNode. The frame state after this node denotes that the object is locked (ensuring
  ; the GC sees and updates the object) so it must come after any nil pointer check on the object.
  ;;
-;; @NodeInfo.allowedUsageTypes "InputType.Memory"
 (final-ns BeginLockScopeNode (§ extends AbstractMemoryCheckpoint) (§ implements LIRLowerable, MonitorEnter, Single)
     (§ def #_"NodeClass<BeginLockScopeNode>" BeginLockScopeNode'TYPE (NodeClass'create-1 BeginLockScopeNode))
 
@@ -16801,10 +16751,23 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" ComputeObjectAddressNode''lower-2 [#_"ComputeObjectAddressNode" this, #_"LoweringTool" lowerer]
+    (§ override! #_"void" Lowerable''lower-2 [#_"ComputeObjectAddressNode" this, #_"LoweringTool" lowerer]
         (when (GuardsStage'areFrameStatesAtDeopts-1 (:guardsStage (:graph this)))
-            (Lowerer'lowerComputeObjectAddressNode-1 this)
+            ;; Lower this node into a ComputeObjectAddress and an Add, but ensure
+            ;; that it's below any potential safepoints and above it's uses.
+            (doseq [#_"Node" use (NodeIterable''snapshot-1 (Node''usages-1 this))]
+                (when (instance? FixedNode use) => (throw! (str "unexpected floating use of ComputeObjectAddressNode " this))
+                    (let [
+                        #_"Graph" graph (:graph this)
+                        #_"GetObjectAddressNode" address (Graph''add-2 graph, (GetObjectAddressNode'new-1 (:object this)))
+                    ]
+                        (Graph''addBeforeFixed-3 graph, use, address)
+                        (Node''replaceFirstInput-3 use, this, (Graph''add-2 graph, (AddNode'new-2 address, (:offset this))))
+                    )
+                )
+            )
+            (GraphUtil'unlinkFixedNode-1 this)
+            (Node''safeDelete-1 this)
         )
         nil
     )
@@ -16868,7 +16831,6 @@
 ;;;
  ; Intrinsic for closing a scope binding a stack-based lock with an object.
  ;;
-;; @NodeInfo.allowedUsageTypes "InputType.Memory"
 (final-ns EndLockScopeNode (§ extends AbstractMemoryCheckpoint) (§ implements LIRLowerable, MonitorExit, Single)
     (§ def #_"NodeClass<EndLockScopeNode>" EndLockScopeNode'TYPE (NodeClass'create-1 EndLockScopeNode))
 
@@ -17246,7 +17208,6 @@
 ;;;
  ; Node for a foreign call from within a stub.
  ;;
-;; @NodeInfo.allowedUsageTypes "InputType.Memory"
 (final-ns StubForeignCallNode (§ extends FixedWithNextNode) (§ implements LIRLowerable, Multi)
     (§ def #_"NodeClass<StubForeignCallNode>" StubForeignCallNode'TYPE (NodeClass'create-1 StubForeignCallNode))
 
@@ -17560,8 +17521,7 @@
         (FixedWithNextNode'new-2 c, (StampFactory'forVoid-0))
     )
 
-    #_unused
-    (§ override #_"void" WriteBarrier''lower-2 [#_"WriteBarrier" this, #_"LoweringTool" lowerer]
+    (§ override #_"void" Lowerable''lower-2 [#_"WriteBarrier" this, #_"LoweringTool" lowerer]
         (WriteBarrierTemplates''lower-3 Lowerer'writeBarrierSnippets, this, lowerer)
         nil
     )
@@ -17765,9 +17725,16 @@
         (ClassGetHubNode'canonical-4 this, (CanonicalizerTool''allUsagesAvailable-1 tool), (:stamp this), (:class this))
     )
 
-    #_unused
-    (§ override! #_"void" ClassGetHubNode''lower-2 [#_"ClassGetHubNode" this, #_"LoweringTool" lowerer]
-        (Lowerer'lowerClassGetHubNode-2 this, lowerer)
+    (§ override! #_"void" Lowerable''lower-2 [#_"ClassGetHubNode" this, #_"LoweringTool" lowerer]
+        (when-not (= (:loweringStage (:phase lowerer)) LoweringStage'HIGH_TIER)
+            (let [
+                #_"Graph" graph (:graph this)
+                #_"AddressNode" address (Lowerer'createOffsetAddress-3 graph, (ClassGetHubNode''getValue-1 this), HotSpot'klassOffset)
+                #_"FloatingReadNode" read (Graph''add-2 graph, (FloatingReadNode'new-6 address, ReplacementsUtil'CLASS_KLASS_LOCATION, nil, (:stamp this), nil, BarrierType'NONE))
+            ]
+                (Node''replaceAtUsagesAndDelete-2 this, read)
+            )
+        )
         nil
     )
 
@@ -18179,8 +18146,18 @@
         )
     )
 
-    (§ override! #_"void" HubGetClassNode''lower-2 [#_"HubGetClassNode" this, #_"LoweringTool" lowerer]
-        (Lowerer'lowerHubGetClassNode-2 this, lowerer)
+    (§ override! #_"void" Lowerable''lower-2 [#_"HubGetClassNode" this, #_"LoweringTool" lowerer]
+        (when-not (= (:loweringStage (:phase lowerer)) LoweringStage'HIGH_TIER)
+            (let [
+                #_"Graph" graph (:graph this)
+                #_"AddressNode" address (Lowerer'createOffsetAddress-3 graph, (:hub this), HotSpot'classMirrorOffset)
+                #_"FloatingReadNode" read (Graph''add-2 graph, (FloatingReadNode'new-6 address, ReplacementsUtil'CLASS_MIRROR_LOCATION, nil, (StampFactory'forKind-1 (.wordJavaKind HotSpot'target)), nil, BarrierType'NONE))
+                address (Lowerer'createOffsetAddress-3 graph, read, 0)
+                read (Graph''add-2 graph, (FloatingReadNode'new-6 address, ReplacementsUtil'CLASS_MIRROR_HANDLE_LOCATION, nil, (:stamp this), nil, BarrierType'NONE))
+            ]
+                (Node''replaceAtUsagesAndDelete-2 this, read)
+            )
+        )
         nil
     )
 
@@ -18515,9 +18492,15 @@
         (or node (KlassLayoutHelperNode'new-1 klass))
     )
 
-    #_unused
-    (§ override! #_"void" KlassLayoutHelperNode''lower-2 [#_"KlassLayoutHelperNode" this, #_"LoweringTool" lowerer]
-        (Lowerer'lowerKlassLayoutHelperNode-2 this, lowerer)
+    (§ override! #_"void" Lowerable''lower-2 [#_"KlassLayoutHelperNode" this, #_"LoweringTool" lowerer]
+        (when-not (= (:loweringStage (:phase lowerer)) LoweringStage'HIGH_TIER)
+            (let [
+                #_"Graph" graph (:graph this)
+                #_"AddressNode" address (Lowerer'createOffsetAddress-3 graph, (:klass this), HotSpot'klassLayoutHelperOffset)
+            ]
+                (Node''replaceAtUsagesAndDelete-2 this, (Graph''add-2 graph, (FloatingReadNode'new-6 address, ReplacementsUtil'KLASS_LAYOUT_HELPER_LOCATION, nil, (:stamp this), nil, BarrierType'NONE)))
+            )
+        )
         nil
     )
 )
@@ -19358,8 +19341,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" ReflectionGetCallerClassNode''lower-2 [#_"ReflectionGetCallerClassNode" this, #_"LoweringTool" lowerer]
+    (§ override! #_"void" Lowerable''lower-2 [#_"ReflectionGetCallerClassNode" this, #_"LoweringTool" lowerer]
         (let [
             #_"ConstantNode" callerClassNode (ReflectionGetCallerClassNode''getCallerClassNode-1 this)
         ]
@@ -19369,56 +19351,9 @@
                     #_"InvokeNode" invoke (MacroNode''createInvoke-1 this)
                 ]
                     (§ ass! (:graph this) (Graph''replaceFixedWithFixed-3 (:graph this), this, invoke))
-                    (InvokeNode''lower-2 invoke, lowerer)
+                    (Lowerable''lower-2 invoke, lowerer)
                 )
             )
-        )
-        nil
-    )
-)
-
-;;;
- ; The StringToBytesSnippets contains a snippet for lowering StringToBytesNode.
- ;;
-(value-ns StringToBytesSnippets (§ implements Snippets)
-    (§ def #_"LocationIdentity" StringToBytesSnippets'CSTRING_LOCATION (NamedLocationIdentity'immutable-1 "CString location"))
-
-    (§ snippet! #_"byte[]" #_"StringToBytesSnippets" "transform" [#_@ConstantParameter #_"String" compilationTimeString]
-        (let [
-            #_"int" i (count compilationTimeString)
-            #_"byte[]" a (NewArrayNode'newUninitializedArray-2 byte'class, i)
-            #_"Word" c (CStringConstant'cstring-1 compilationTimeString)
-        ]
-            (loop-when-recur [i (dec i)] (<= 0 i) [(dec i)]
-                ;; a[i] = c.readByte(i);
-                (.putByte HotSpot'unsafe, a, (+ Unsafe'ARRAY_CHAR_BASE_OFFSET i), (Word''readByte-3 c, i, StringToBytesSnippets'CSTRING_LOCATION))
-            )
-            a
-        )
-    )
-)
-
-;;;
- ; @anno StringToBytesSnippets.StringToBytesTemplates
- ;;
-(final-ns StringToBytesTemplates (§ extends AbstractTemplates)
-    (§ final #_"SnippetInfo" :create nil)
-
-    (§ defn #_"StringToBytesTemplates" StringToBytesTemplates'new-0 []
-        (let [
-            #_"StringToBytesTemplates" this (AbstractTemplates'new-0)
-            this (assoc this :create (AbstractTemplates''snippet-4* this, StringToBytesSnippets, "transform", (NamedLocationIdentity'getArrayLocation-1 JavaKind/Byte)))
-        ]
-            this
-        )
-    )
-
-    (§ method! #_"void" StringToBytesTemplates''lower-3 [#_"StringToBytesTemplates" this, #_"StringToBytesNode" node, #_"LoweringTool" lowerer]
-        (let [
-            #_"Arguments" args (Arguments'new-3 (:create this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)))
-        ]
-            (Arguments''addConst-2 args, (:value node))
-            (SnippetTemplate''instantiate-4 (SnippetTemplate'new-2 args, node), node, SnippetTemplate'DEFAULT_REPLACER, args)
         )
         nil
     )
@@ -43505,7 +43440,6 @@
     )
 )
 
-;; @NodeInfo.allowedUsageTypes "InputType.Guard, InputType.Anchor"
 (class-ns AbstractBeginNode (§ extends FixedWithNextNode) (§ implements LIRLowerable, GuardingNode, AnchoringNode, IterableNodeType)
     (§ def #_"NodeClass<AbstractBeginNode>" AbstractBeginNode'TYPE (NodeClass'create-1 AbstractBeginNode))
 
@@ -43805,7 +43739,6 @@
 ;;;
  ; Denotes the merging of multiple control-flow paths.
  ;;
-;; @NodeInfo.allowedUsageTypes "InputType.Association"
 (class-ns AbstractMergeNode (§ extends BeginStateSplitNode) (§ implements IterableNodeType, Simplifiable, LIRLowerable)
     (§ def #_"NodeClass<AbstractMergeNode>" AbstractMergeNode'TYPE (NodeClass'create-1 AbstractMergeNode))
 
@@ -45421,8 +45354,7 @@
         (:type this)
     )
 
-    #_unused
-    (§ override #_"void" IntegerDivRemNode''lower-2 [#_"IntegerDivRemNode" this, #_"LoweringTool" lowerer]
+    (§ override #_"void" Lowerable''lower-2 [#_"IntegerDivRemNode" this, #_"LoweringTool" lowerer]
         nil ;; Nothing to do for division nodes. The HotSpot signal handler catches divisions by zero and the MIN_VALUE / -1 cases.
     )
 
@@ -47073,34 +47005,9 @@
         (CompareOp'new-0)
     )
 
-    ;;;
-     ; Determines if this is a comparison used to determine whether dispatching on a receiver
-     ; could select a certain method and if so, returns true if the answer is guaranteed
-     ; to be false. Otherwise, returns false.
-     ;;
-    (§ defn- #_"boolean" PointerEqualsOp'isAlwaysFailingVirtualDispatchTest-3 [#_"CanonicalCondition" condition, #_"ValueNode" forX, #_"ValueNode" forY]
-        (and (= condition CanonicalCondition'EQ) (instance? LoadMethodNode forX) (instance? ConstantNode forY) (= (#_"ResolvedJavaMethod" .getEncoding (:method forX)) (:value forY)) (instance? LoadHubNode (:hub forX))
-            (let [
-                #_"ResolvedJavaType" type (StampTool'typeOrNull-1 (:stamp (:value (:hub forX))))
-                #_"ResolvedJavaType" declaringClass (#_"ResolvedJavaMethod" .getDeclaringClass (:method forX))
-            ]
-                (and (some? type) (not (= type declaringClass)) (#_"ResolvedJavaType" .isAssignableFrom declaringClass, type)
-                    (let [
-                        #_"ResolvedJavaMethod" override (#_"ResolvedJavaType" .resolveMethod type, (:method forX), (:callerType forX))
-                    ]
-                        (and (some? override) (not (= override (:method forX))))
-                    )
-                )
-            )
-        )
-    )
-
     (§ override #_"LogicNode" PointerEqualsOp''canonical-5 [#_"PointerEqualsOp" this, #_"Integer" smallestCompareWidth, #_"CanonicalCondition" condition, #_"ValueNode" forX, #_"ValueNode" forY]
         (or (PointerEqualsNode'findSynonym-2 forX, forY)
-            (if (PointerEqualsOp'isAlwaysFailingVirtualDispatchTest-3 condition, forX, forY)
-                (LogicConstantNode'contradiction-0)
-                (CompareOp''canonical-5 (§ super ), smallestCompareWidth, condition, forX, forY)
-            )
+            (CompareOp''canonical-5 (§ super ), smallestCompareWidth, condition, forX, forY)
         )
     )
 
@@ -47132,8 +47039,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" RemNode''lower-2 [#_"RemNode" this, #_"LoweringTool" lowerer]
+    (§ override! #_"void" Lowerable''lower-2 [#_"RemNode" this, #_"LoweringTool" lowerer]
         nil ;; No lowering, we generate LIR directly for this node.
     )
 
@@ -47793,15 +47699,10 @@
         )
     )
 
-    (§ override! #_"void" UnpackEndianHalfNode''lower-2 [#_"UnpackEndianHalfNode" this, #_"LoweringTool" lowerer]
-        (Lowerer'lowerSecondHalf-1 this)
-        nil
-    )
-
-    (§ method! #_"void" UnpackEndianHalfNode''lower-2 [#_"UnpackEndianHalfNode" this, #_"ByteOrder" byteOrder]
+    (§ override! #_"void" Lowerable''lower-2 [#_"UnpackEndianHalfNode" this, #_"LoweringTool" lowerer]
         (let [
             #_"ValueNode" result
-                (when (= (= byteOrder ByteOrder/BIG_ENDIAN) (:firstHalf this)) => (:value this)
+                (when (= (= (#_"Architecture" .getByteOrder (.arch HotSpot'target)) ByteOrder/BIG_ENDIAN) (:firstHalf this)) => (:value this)
                     (Graph''add-2 (:graph this), (UnsignedRightShiftNode'new-2 (:value this), (ConstantNode'forInt-2 32, (:graph this))))
                 )
         ]
@@ -48170,7 +48071,6 @@
     )
 )
 
-;; @NodeInfo.allowedUsageTypes "InputType.Extension"
 (class-ns CallTargetNode (§ extends ValueNode) (§ implements LIRLowerable)
     (§ def #_"NodeClass<CallTargetNode>" CallTargetNode'TYPE (NodeClass'create-1 CallTargetNode))
 
@@ -48199,12 +48099,6 @@
     (§ method! #_"StampPair" CallTargetNode''returnStamp-1 [#_"CallTargetNode" this]
         (:returnStamp this)
     )
-
-    ;;;
-     ; A human-readable representation of the target, used for debug printing only.
-     ;;
-    #_unused
-    (§ abstract #_"String" CallTargetNode''targetName-1 [#_"CallTargetNode" this])
 
     (§ override #_"void" LIRLowerable''generate-2 [#_"CallTargetNode" this, #_"LIRBuilder" builder]
         ;; nop
@@ -49680,7 +49574,6 @@
     (§ enum CompressionOp'Uncompress)
 )
 
-;; @NodeInfo.allowedUsageTypes "InputType.Guard"
 (final-ns ConditionAnchorNode (§ extends FixedWithNextNode) (§ implements Unary #_"<Node>", Lowerable, GuardingNode)
     (§ def #_"NodeClass<ConditionAnchorNode>" ConditionAnchorNode'TYPE (NodeClass'create-1 ConditionAnchorNode))
 
@@ -49688,7 +49581,7 @@
     (§ mutable #_"LogicNode" :condition nil)
     (§ mutable #_"boolean" :negated? false)
 
-    #_unused
+    #_unused
     (§ defn #_"ConditionAnchorNode" ConditionAnchorNode'new-1 [#_"LogicNode" condition]
         (ConditionAnchorNode'new-2 condition, false)
     )
@@ -49696,8 +49589,8 @@
     (§ defn #_"ConditionAnchorNode" ConditionAnchorNode'new-2 [#_"LogicNode" condition, #_"boolean" negated?]
         (let [
             #_"ConditionAnchorNode" this (FixedWithNextNode'new-2 ConditionAnchorNode'TYPE, (StampFactory'forVoid-0))
-            this (assoc this :negated? negated?)
             this (assoc this :condition condition)
+            this (assoc this :negated? negated?)
         ]
             this
         )
@@ -49717,8 +49610,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" ConditionAnchorNode''lower-2 [#_"ConditionAnchorNode" this, #_"LoweringTool" lowerer]
+    (§ override! #_"void" Lowerable''lower-2 [#_"ConditionAnchorNode" this, #_"LoweringTool" lowerer]
         (let [
             #_"Graph" graph (:graph this)
         ]
@@ -50101,7 +49993,7 @@
     ; @Input
     (§ mutable #_"ValueNode" :value nil)
 
-    #_unused
+    #_unused
     (§ defn #_"BindToRegisterNode" BindToRegisterNode'new-1 [#_"ValueNode" value]
         (let [
             #_"BindToRegisterNode" this (FixedWithNextNode'new-2 BindToRegisterNode'TYPE, (StampFactory'forVoid-0))
@@ -50123,7 +50015,7 @@
     ; @Input
     (§ mutable #_"ValueNode" :value nil)
 
-    #_unused
+    #_unused
     (§ defn #_"BlackholeNode" BlackholeNode'new-1 [#_"ValueNode" value]
         (let [
             #_"BlackholeNode" this (FixedWithNextNode'new-2 BlackholeNode'TYPE, (StampFactory'forVoid-0))
@@ -50148,7 +50040,7 @@
 (final-ns ControlFlowAnchorNode (§ extends FixedWithNextNode) (§ implements LIRLowerable, ControlFlowAnchored)
     (§ def #_"NodeClass<ControlFlowAnchorNode>" ControlFlowAnchorNode'TYPE (NodeClass'create-1 ControlFlowAnchorNode))
 
-    #_unused
+    #_unused
     (§ defn #_"ControlFlowAnchorNode" ControlFlowAnchorNode'new-0 []
         (FixedWithNextNode'new-2 ControlFlowAnchorNode'TYPE, (StampFactory'forVoid-0))
     )
@@ -50170,7 +50062,7 @@
     ; @Input
     (§ mutable #_"ValueNode" :value nil)
 
-    #_unused
+    #_unused
     (§ defn #_"OpaqueNode" OpaqueNode'new-1 [#_"ValueNode" value]
         (let [
             #_"OpaqueNode" this (FloatingNode'new-2 OpaqueNode'TYPE, (Stamp''unrestricted-1 (:stamp value)))
@@ -50189,7 +50081,7 @@
 (final-ns SpillRegistersNode (§ extends FixedWithNextNode) (§ implements LIRLowerable)
     (§ def #_"NodeClass<SpillRegistersNode>" SpillRegistersNode'TYPE (NodeClass'create-1 SpillRegistersNode))
 
-    #_unused
+    #_unused
     (§ defn #_"SpillRegistersNode" SpillRegistersNode'new-0 []
         (FixedWithNextNode'new-2 SpillRegistersNode'TYPE, (StampFactory'forVoid-0))
     )
@@ -50197,40 +50089,6 @@
     (§ override! #_"void" LIRLowerable''generate-2 [#_"SpillRegistersNode" this, #_"LIRBuilder" builder]
         (LIRGenerator''append-2 (:gen builder), (SpillRegistersOp'new-0))
         nil
-    )
-)
-
-;;;
- ; The StringToBytesNode transforms a compilation-time String into a byte array in the
- ; compiled code.
- ;;
-;; @NodeInfo.allowedUsageTypes "InputType.Memory"
-(final-ns StringToBytesNode (§ extends FixedWithNextNode) (§ implements Lowerable, Single)
-    (§ def #_"NodeClass<StringToBytesNode>" StringToBytesNode'TYPE (NodeClass'create-1 StringToBytesNode))
-
-    (§ final #_"String" :value nil)
-
-    #_unused
-    (§ defn #_"StringToBytesNode" StringToBytesNode'new-2 [#_"String" value, #_"Stamp" stamp]
-        (let [
-            #_"StringToBytesNode" this (FixedWithNextNode'new-2 StringToBytesNode'TYPE, stamp)
-            this (assoc this :value value)
-        ]
-            this
-        )
-    )
-
-    #_unused
-    (§ override! #_"void" StringToBytesNode''lower-2 [#_"StringToBytesNode" this, #_"LoweringTool" lowerer]
-        (when (GuardsStage'areDeoptsFixed-1 (:guardsStage (:graph this)))
-            (StringToBytesTemplates''lower-3 Lowerer'stringToBytesSnippets, this, lowerer)
-        )
-        nil
-    )
-
-    #_unused
-    (§ override! #_"LocationIdentity" StringToBytesNode''getLocationIdentity-1 [#_"StringToBytesNode" this]
-        (NamedLocationIdentity'getArrayLocation-1 JavaKind/Byte)
     )
 )
 
@@ -50279,7 +50137,7 @@
         nil
     )
 
-    (§ override! #_"void" DeoptimizeNode''lower-2 [#_"DeoptimizeNode" this, #_"LoweringTool" lowerer]
+    (§ override! #_"void" Lowerable''lower-2 [#_"DeoptimizeNode" this, #_"LoweringTool" lowerer]
         nil ;; No lowering, we generate LIR directly for this node.
     )
 
@@ -50398,18 +50256,13 @@
 (class-ns DirectCallTargetNode (§ extends LoweredCallTargetNode)
     (§ def #_"NodeClass<DirectCallTargetNode>" DirectCallTargetNode'TYPE (NodeClass'create-1 DirectCallTargetNode))
 
-    #_unused
+    #_unused
     (§ defn #_"DirectCallTargetNode" DirectCallTargetNode'new-6 [#_"ValueNode[]" arguments, #_"StampPair" returnStamp, #_"JavaType[]" signature, #_"ResolvedJavaMethod" target, #_"CallingConvention$Type" callType, #_"InvokeKind" invokeKind]
         (DirectCallTargetNode'new-7 DirectCallTargetNode'TYPE, arguments, returnStamp, signature, target, callType, invokeKind)
     )
 
     (§ defn #_"DirectCallTargetNode" DirectCallTargetNode'new-7 [#_"NodeClass<? extends DirectCallTargetNode>" c, #_"ValueNode[]" arguments, #_"StampPair" returnStamp, #_"JavaType[]" signature, #_"ResolvedJavaMethod" target, #_"CallingConvention$Type" callType, #_"InvokeKind" invokeKind]
         (LoweredCallTargetNode'new-7 c, arguments, returnStamp, signature, target, callType, invokeKind)
-    )
-
-    #_unused
-    (§ override #_"String" DirectCallTargetNode''targetName-1 [#_"DirectCallTargetNode" this]
-        (#_"ResolvedJavaMethod" .format (CallTargetNode''targetMethod-1 this), "Direct#%h.\n")
     )
 )
 
@@ -50441,8 +50294,7 @@
         (:speculation this)
     )
 
-    #_unused
-    (§ override! #_"void" DynamicDeoptimizeNode''lower-2 [#_"DynamicDeoptimizeNode" this, #_"LoweringTool" lowerer]
+    (§ override! #_"void" Lowerable''lower-2 [#_"DynamicDeoptimizeNode" this, #_"LoweringTool" lowerer]
         nil ;; No lowering, we generate LIR directly for this node.
     )
 
@@ -50462,7 +50314,6 @@
     )
 )
 
-;; @NodeInfo.allowedUsageTypes "InputType.Association"
 (final-ns EndNode (§ extends AbstractEndNode)
     (§ def #_"NodeClass<EndNode>" EndNode'TYPE (NodeClass'create-1 EndNode))
 
@@ -50526,8 +50377,7 @@
         (:value this)
     )
 
-    #_unused
-    (§ override! #_"void" BoxNode''lower-2 [#_"BoxNode" this, #_"LoweringTool" lowerer]
+    (§ override! #_"void" Lowerable''lower-2 [#_"BoxNode" this, #_"LoweringTool" lowerer]
         (BoxingTemplates''lower-3 Lowerer'boxingSnippets, this, lowerer)
         nil
     )
@@ -50662,8 +50512,7 @@
         nil
     )
 
-    #_unused
-    (§ override! #_"void" BranchProbabilityNode''lower-2 [#_"BranchProbabilityNode" this, #_"LoweringTool" lowerer]
+    (§ override! #_"void" Lowerable''lower-2 [#_"BranchProbabilityNode" this, #_"LoweringTool" lowerer]
         (throw! "Branch probability could not be injected, because the probability value did not reduce to a constant value.")
     )
 )
@@ -50725,7 +50574,6 @@
 ;;;
  ; Node for a foreign call.
  ;;
-;; @NodeInfo.allowedUsageTypes "InputType.Memory"
 (final-ns ForeignCallNode (§ extends AbstractMemoryCheckpoint) (§ implements LIRLowerable, DeoptDuring, Multi)
     (§ def #_"NodeClass<ForeignCallNode>" ForeignCallNode'TYPE (NodeClass'create-1 ForeignCallNode))
 
@@ -50881,7 +50729,7 @@
     ; @Input
     (§ final #_"ValueNode" :object nil)
 
-    #_unused
+    #_unused
     (§ defn #_"GetClassNode" GetClassNode'new-2 [#_"Stamp" stamp, #_"ValueNode" object]
         (let [
             #_"GetClassNode" this (FloatingNode'new-2 GetClassNode'TYPE, stamp)
@@ -50891,9 +50739,15 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" GetClassNode''lower-2 [#_"GetClassNode" this, #_"LoweringTool" lowerer]
-        (Lowerer'lowerGetClassNode-3 this, lowerer, (:graph this))
+    (§ override! #_"void" Lowerable''lower-2 [#_"GetClassNode" this, #_"LoweringTool" lowerer]
+        (let [
+            #_"LoadHubNode" hub (Graph''add-2 (:graph this), (LoadHubNode'new-1 (:object this)))
+            #_"HubGetClassNode" hubGetClass (Graph''add-2 (:graph this), (HubGetClassNode'new-1 hub))
+        ]
+            (Node''replaceAtUsagesAndDelete-2 this, hubGetClass)
+            (Lowerable''lower-2 hub, lowerer)
+            (Lowerable''lower-2 hubGetClass, lowerer)
+        )
         nil
     )
 
@@ -50928,33 +50782,6 @@
     (§ abstract #_"GuardingNode" GuardedNode''getGuard-1 [#_"GuardedNode" this])
 
     (§ abstract #_"void" GuardedNode''setGuard-2 [#_"GuardedNode" this, #_"GuardingNode" guard])
-)
-
-(final-ns GuardedUnsafeLoadNode (§ extends RawLoadNode) (§ implements GuardedNode)
-    (§ def #_"NodeClass<GuardedUnsafeLoadNode>" GuardedUnsafeLoadNode'TYPE (NodeClass'create-1 GuardedUnsafeLoadNode))
-
-    ; @OptionalInput(InputType'Guard)
-    (§ mutable #_"GuardingNode" :guard nil)
-
-    #_unused
-    (§ defn #_"GuardedUnsafeLoadNode" GuardedUnsafeLoadNode'new-5 [#_"ValueNode" object, #_"ValueNode" offset, #_"JavaKind" accessKind, #_"LocationIdentity" locationIdentity, #_"GuardingNode" guard]
-        (let [
-            #_"GuardedUnsafeLoadNode" this (RawLoadNode'new-5 GuardedUnsafeLoadNode'TYPE, object, offset, accessKind, locationIdentity)
-            this (assoc this :guard guard)
-        ]
-            this
-        )
-    )
-
-    (§ override! #_"GuardingNode" GuardedUnsafeLoadNode''getGuard-1 [#_"GuardedUnsafeLoadNode" this]
-        (:guard this)
-    )
-
-    (§ override! #_"void" GuardedNode''setGuard-2 [#_"GuardedUnsafeLoadNode" this, #_"GuardingNode" guard]
-        (Node''updateUsages-3 this, (:guard this), guard)
-        (§ ass! this (assoc this :guard guard))
-        nil
-    )
 )
 
 (§ interface GuardingNode
@@ -51320,9 +51147,21 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" JavaReadNode''lower-2 [#_"JavaReadNode" this, #_"LoweringTool" lowerer]
-        (Lowerer'lowerJavaReadNode-1 this)
+    (§ override! #_"void" Lowerable''lower-2 [#_"JavaReadNode" this, #_"LoweringTool" lowerer]
+        (let [
+            #_"Stamp" loadStamp (Lowerer'loadStamp-3 (:stamp this), (:readKind this), (:compressible? this))
+            #_"ReadNode" memoryRead (Graph''add-2 (:graph this), (ReadNode'new-4 (FixedAccessNode''getAddress-1 this), (FixedAccessNode''getLocationIdentity-1 this), loadStamp, (FixedAccessNode''getBarrierType-1 this)))
+            #_"ValueNode" readValue (Lowerer'implicitLoadConvert-4 (:graph this), (:readKind this), memoryRead, (:compressible? this))
+            #_"GuardingNode" guard (FixedAccessNode''getGuard-1 this)
+        ]
+            (if (some? guard)
+                (GuardedNode''setGuard-2 memoryRead, guard)
+                ;; An unsafe read must not float, otherwise it may float above a test guaranteeing the read is safe.
+                (§ ass! memoryRead (FloatableAccessNode''setForceFixed-2 memoryRead, true))
+            )
+            (§ ass! this (Node''replaceAtUsages-2 this, readValue))
+            (§ ass! (:graph this) (Graph''replaceFixed-3 (:graph this), this, memoryRead))
+        )
         nil
     )
 
@@ -51356,9 +51195,15 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" JavaWriteNode''lower-2 [#_"JavaWriteNode" this, #_"LoweringTool" lowerer]
-        (Lowerer'lowerJavaWriteNode-1 this)
+    (§ override! #_"void" Lowerable''lower-2 [#_"JavaWriteNode" this, #_"LoweringTool" lowerer]
+        (let [
+            #_"ValueNode" value (Lowerer'implicitStoreConvert-4 (:graph this), (:writeKind this), (AbstractWriteNode''value-1 this), (:compressible? this))
+            #_"WriteNode" memoryWrite (Graph''add-2 (:graph this), (WriteNode'new-4 (FixedAccessNode''getAddress-1 this), (FixedAccessNode''getLocationIdentity-1 this), value, (FixedAccessNode''getBarrierType-1 this)))
+        ]
+            (AbstractWriteNode''setStateAfter-2 memoryWrite, (AbstractWriteNode''stateAfter-1 this))
+            (§ ass! (:graph this) (Graph''replaceFixedWithFixed-3 (:graph this), this, memoryWrite))
+            (GuardedNode''setGuard-2 memoryWrite, (FixedAccessNode''getGuard-1 this))
+        )
         nil
     )
 
@@ -51403,8 +51248,10 @@
         )
     )
 
-    (§ override! #_"void" LoadHubNode''lower-2 [#_"LoadHubNode" this, #_"LoweringTool" lowerer]
-        (Lowerer'lowerLoadHubNode-2 this, lowerer)
+    (§ override! #_"void" Lowerable''lower-2 [#_"LoadHubNode" this, #_"LoweringTool" lowerer]
+        (when (and (= (:loweringStage (:phase lowerer)) LoweringStage'LOW_TIER) (not (GuardsStage'allowsFloatingGuards-1 (:guardsStage (:graph this)))))
+            (Node''replaceAtUsagesAndDelete-2 this, (Lowerer'createReadHub-3 (:graph this), (:value this), lowerer))
+        )
         nil
     )
 
@@ -51437,82 +51284,8 @@
 )
 
 ;;;
- ; Loads a method from the virtual method table of a given hub.
- ;;
-(final-ns LoadMethodNode (§ extends FixedWithNextNode) (§ implements Lowerable, Canonicalizable)
-    (§ def #_"NodeClass<LoadMethodNode>" LoadMethodNode'TYPE (NodeClass'create-1 LoadMethodNode))
-
-    ; @Input
-    (§ mutable #_"ValueNode" :hub nil)
-    (§ final #_"ResolvedJavaMethod" :method nil)
-    (§ final #_"ResolvedJavaType" :receiverType nil)
-
-    ;;;
-     ; The caller or context type used to perform access checks when resolving #method.
-     ;;
-    (§ final #_"ResolvedJavaType" :callerType nil)
-
-    #_unused
-    (§ defn #_"LoadMethodNode" LoadMethodNode'new-5 [#_@InjectedNodeParameter #_"Stamp" stamp, #_"ResolvedJavaMethod" method, #_"ResolvedJavaType" receiverType, #_"ResolvedJavaType" callerType, #_"ValueNode" hub]
-        (let [
-            #_"LoadMethodNode" this (FixedWithNextNode'new-2 LoadMethodNode'TYPE, stamp)
-            this (assoc this :receiverType receiverType)
-            this (assoc this :callerType callerType)
-            this (assoc this :hub hub)
-            this (assoc this :method method)
-        ]
-            (when-not (#_"ResolvedJavaMethod" .isInVirtualMethodTable method, receiverType)
-                (throw! (str method " does not have a vtable entry in type " receiverType))
-            )
-            this
-        )
-    )
-
-    #_unused
-    (§ override! #_"void" LoadMethodNode''lower-2 [#_"LoadMethodNode" this, #_"LoweringTool" lowerer]
-        (Lowerer'lowerLoadMethodNode-1 this)
-        nil
-    )
-
-    (§ override! #_"Node" Canonicalizable''canonical-2 [#_"LoadMethodNode" this, #_"CanonicalizerTool" tool]
-        (when (instance? LoadHubNode (:hub this))
-            (let [
-                #_"TypeReference" type (StampTool'typeReferenceOrNull-1 (:stamp (:value (:hub this))))
-            ]
-                (when (and (some? type) (:exactReference type))
-                    (§ return (LoadMethodNode''resolveExactMethod-3 this, tool, (:type type)))
-                )
-            )
-        )
-        (when (instance? ConstantNode (:hub this)) => this
-            (LoadMethodNode''resolveExactMethod-3 this, tool, (#_"ConstantReflectionProvider" .asJavaType HotSpot'constantReflection, (:value (:hub this))))
-        )
-    )
-
-    ;;;
-     ; Find the method which would be loaded.
-     ;
-     ; @param type the exact type of object being loaded from
-     ; @return the method which would be invoked for {@code type} or nil if it doesn't implement the method
-     ;;
-    (§ method- #_"Node" LoadMethodNode''resolveExactMethod-3 [#_"LoadMethodNode" this, #_"CanonicalizerTool" tool, #_"ResolvedJavaType" type]
-        (let [
-            #_"ResolvedJavaMethod" newMethod (#_"ResolvedJavaType" .resolveConcreteMethod type, (:method this), (:callerType this))
-        ]
-            (if (some? newMethod)
-                (ConstantNode'forConstant-2 (:stamp this), (#_"ResolvedJavaMethod" .getEncoding newMethod))
-                ;; This really represent a misuse of LoadMethod since we're loading from a class which
-                ;; isn't known to implement the original method but for now at least fold it away.
-                (ConstantNode'forConstant-2 (:stamp this), JavaConstant/NULL_POINTER)
-            )
-        )
-    )
-)
-
-;;;
  ; Creates a memory barrier.
  ;;
-;; @NodeInfo.allowedUsageTypes "InputType.Memory"
 (final-ns MembarNode (§ extends FixedWithNextNode) (§ implements LIRLowerable, Single)
     (§ def #_"NodeClass<MembarNode>" MembarNode'TYPE (NodeClass'create-1 MembarNode))
 
@@ -51562,7 +51335,6 @@
 (§ interface MonitorExit (§ extends MemoryCheckpoint)
 )
 
-;; @NodeInfo.allowedUsageTypes "InputType.Guard"
 (final-ns NullCheckNode (§ extends DeoptimizingFixedWithNextNode) (§ implements LIRLowerable, GuardingNode)
     (§ def #_"NodeClass<NullCheckNode>" NullCheckNode'TYPE (NodeClass'create-1 NullCheckNode))
 
@@ -51596,25 +51368,18 @@
  ; Load of a value from a location specified as an offset relative to an object. No nil-check is
  ; performed before the load.
  ;;
-(class-ns RawLoadNode (§ extends UnsafeAccessNode) (§ implements Lowerable, Virtualizable, Canonicalizable)
+(final-ns RawLoadNode (§ extends UnsafeAccessNode) (§ implements Lowerable, Virtualizable, Canonicalizable)
     (§ def #_"NodeClass<RawLoadNode>" RawLoadNode'TYPE (NodeClass'create-1 RawLoadNode))
 
     (§ intrinsic! #_"Word" RawLoadNode'loadWordFromObjectIntrinsic-4 [#_"Object" object, #_"long" offset, #_@ConstantNodeParameter #_"LocationIdentity" locationIdentity, #_@ConstantNodeParameter #_"JavaKind" wordKind])
 
     (§ intrinsic! #_"KlassPointer" RawLoadNode'loadKlassFromObjectIntrinsic-4 [#_"Object" object, #_"long" offset, #_@ConstantNodeParameter #_"LocationIdentity" locationIdentity, #_@ConstantNodeParameter #_"JavaKind" wordKind])
 
-    ;;;
-     ; This constructor exists for node intrinsics that need a stamp based on the return type of
-     ; the NodeIntrinsic annotated method.
-     ;;
     #_intrinsifier
     (§ defn #_"RawLoadNode" RawLoadNode'new-5 [#_@InjectedNodeParameter #_"Stamp" stamp, #_"ValueNode" object, #_"ValueNode" offset, #_"LocationIdentity" locationIdentity, #_"JavaKind" accessKind]
         (UnsafeAccessNode'new-7 RawLoadNode'TYPE, stamp, object, offset, accessKind, locationIdentity, false)
     )
 
-    ;;;
-     ; This constructor exists for node intrinsics that need a stamp based on {@code accessKind}.
-     ;;
     (§ defn #_"RawLoadNode" RawLoadNode'new-4 [#_"ValueNode" object, #_"ValueNode" offset, #_"JavaKind" accessKind, #_"LocationIdentity" locationIdentity]
         (UnsafeAccessNode'new-7 RawLoadNode'TYPE, (StampFactory'forKind-1 (#_"JavaKind" .getStackKind accessKind)), object, offset, accessKind, locationIdentity, false)
     )
@@ -51623,13 +51388,63 @@
         (UnsafeAccessNode'new-7 c, (StampFactory'forKind-1 (#_"JavaKind" .getStackKind accessKind)), object, offset, accessKind, locationIdentity, false)
     )
 
-    #_unused
-    (§ override #_"void" RawLoadNode''lower-2 [#_"RawLoadNode" this, #_"LoweringTool" lowerer]
-        (Lowerer'lowerUnsafeLoadNode-2 this, lowerer)
+    (§ method- #_"boolean" RawLoadNode''addReadBarrier-1 [#_"RawLoadNode" this]
+        (and HotSpot'useG1GC
+            (= (:guardsStage (:graph this)) GuardsStage'FIXED_DEOPTS)
+            (= (ValueNode''getStackKind-1 (:object this)) JavaKind/Object)
+            (= (:accessKind this) JavaKind/Object)
+            (not (StampTool'isPointerAlwaysNull-1 (:stamp (:object this))))
+            (let [
+                #_"ResolvedJavaType" type (StampTool'typeOrNull-1 (:stamp (:object this)))
+            ]
+                (and (some? type) (not (#_"ResolvedJavaType" .isArray type)))
+            )
+        )
+    )
+
+    (§ defn- #_"ValueNode" RawLoadNode'performBooleanCoercionIfNecessary-2 [#_"ValueNode" readValue, #_"JavaKind" readKind]
+        (when (= readKind JavaKind/Boolean) => readValue
+            (let [
+                #_"Graph" graph (:graph readValue)
+                #_"IntegerEqualsNode" eq (Graph''add-2 graph, (IntegerEqualsNode'new-2 readValue, (ConstantNode'forInt-2 0, graph)))
+            ]
+                (Graph''add-2 graph, (ConditionalNode'new-3 eq, (ConstantNode'forBoolean-2 false, graph), (ConstantNode'forBoolean-2 true, graph)))
+            )
+        )
+    )
+
+    (§ method! #_"ReadNode" RawLoadNode''createUnsafeRead-2 [#_"RawLoadNode" this, #_"GuardingNode" guard]
+        (let [
+            #_"boolean" compressible? (= (:accessKind this) JavaKind/Object)
+            #_"JavaKind" readKind (:accessKind this)
+            #_"Stamp" loadStamp (Lowerer'loadStamp-3 (:stamp this), readKind, compressible?)
+            #_"AddressNode" address (Lowerer'createUnsafeAddress-3 (:graph this), (:object this), (:offset this))
+            #_"ReadNode" memoryRead (Graph''add-2 (:graph this), (ReadNode'new-4 address, (:locationIdentity this), loadStamp, BarrierType'NONE))
+        ]
+            (if (some? guard)
+                (GuardedNode''setGuard-2 memoryRead, guard)
+                ;; An unsafe read must not float, otherwise it may float above a test guaranteeing the read is safe.
+                (§ ass! memoryRead (FloatableAccessNode''setForceFixed-2 memoryRead, true))
+            )
+            (let [
+                #_"ValueNode" readValue (RawLoadNode'performBooleanCoercionIfNecessary-2 (Lowerer'implicitLoadConvert-4 (:graph this), readKind, memoryRead, compressible?), readKind)
+            ]
+                (§ ass! this (Node''replaceAtUsages-2 this, readValue))
+                memoryRead
+            )
+        )
+    )
+
+    (§ override! #_"void" Lowerable''lower-2 [#_"RawLoadNode" this, #_"LoweringTool" lowerer]
+        (if (and (not (GuardsStage'allowsFloatingGuards-1 (:guardsStage (:graph this)))) (RawLoadNode''addReadBarrier-1 this))
+            (UnsafeLoadTemplates''lower-3 Lowerer'unsafeLoadSnippets, this, lowerer)
+            ;; never had a guarding condition, so it must be fixed, creation of the read will force it to be fixed
+            (§ ass! (:graph this) (Graph''replaceFixedWithFixed-3 (:graph this), this, (RawLoadNode''createUnsafeRead-2 this, nil)))
+        )
         nil
     )
 
-    (§ override #_"void" Virtualizable''virtualize-2 [#_"RawLoadNode" this, #_"VirtualizerTool" tool]
+    (§ override! #_"void" Virtualizable''virtualize-2 [#_"RawLoadNode" this, #_"VirtualizerTool" tool]
         (let [
             #_"ValueNode" object (VirtualizerTool''getAlias-2 tool, (:object this))
         ]
@@ -51665,7 +51480,7 @@
         nil
     )
 
-    (§ override #_"Node" Canonicalizable''canonical-2 [#_"RawLoadNode" this, #_"CanonicalizerTool" tool]
+    (§ override! #_"Node" Canonicalizable''canonical-2 [#_"RawLoadNode" this, #_"CanonicalizerTool" tool]
         (or
             (when (and (not (:forceAnyLocation this)) (#_"LocationIdentity" .isAny (:locationIdentity this)))
                 (let [
@@ -51707,12 +51522,12 @@
     )
 
     #_unused
-    (§ override #_"ValueNode" RawLoadNode''cloneAsFieldAccess-2 [#_"RawLoadNode" this, #_"ResolvedJavaField" field]
+    (§ override! #_"ValueNode" RawLoadNode''cloneAsFieldAccess-2 [#_"RawLoadNode" this, #_"ResolvedJavaField" field]
         (LoadFieldNode'create-2 (:object this), field)
     )
 
     #_unused
-    (§ override #_"ValueNode" RawLoadNode''cloneAsArrayAccess-3 [#_"RawLoadNode" this, #_"ValueNode" offset, #_"LocationIdentity" identity]
+    (§ override! #_"ValueNode" RawLoadNode''cloneAsArrayAccess-3 [#_"RawLoadNode" this, #_"ValueNode" offset, #_"LocationIdentity" identity]
         (RawLoadNode'new-4 (:object this), offset, (:accessKind this), identity)
     )
 )
@@ -51726,9 +51541,9 @@
 
     ; @Input
     (§ mutable #_"ValueNode" :value nil)
+    (§ final #_"boolean" :needsBarrier false)
     ; @OptionalInput(InputType'StateI)
     (§ mutable #_"FrameState" :stateAfter nil)
-    (§ final #_"boolean" :needsBarrier false)
 
     (§ defn #_"RawStoreNode" RawStoreNode'new-8 [#_"ValueNode" object, #_"ValueNode" offset, #_"ValueNode" value, #_"JavaKind" accessKind, #_"LocationIdentity" locationIdentity, #_"boolean" needsBarrier, #_"FrameState" stateAfter, #_"boolean" forceAnyLocation]
         (let [
@@ -51757,9 +51572,22 @@
         true
     )
 
-    #_unused
-    (§ override! #_"void" RawStoreNode''lower-2 [#_"RawStoreNode" this, #_"LoweringTool" lowerer]
-        (Lowerer'lowerUnsafeStoreNode-1 this)
+    (§ method- #_"BarrierType" RawStoreNode''unsafeStoreBarrierType-1 [#_"RawStoreNode" this]
+        (when (:needsBarrier this) => BarrierType'NONE
+            (Lowerer'storeBarrierType-2 (:object this), (:value this))
+        )
+    )
+
+    (§ override! #_"void" Lowerable''lower-2 [#_"RawStoreNode" this, #_"LoweringTool" lowerer]
+        (let [
+            #_"boolean" compressible? (= (ValueNode''getStackKind-1 (:value this)) JavaKind/Object)
+            #_"ValueNode" value (Lowerer'implicitStoreConvert-4 (:graph this), (:accessKind this), (:value this), compressible?)
+            #_"AddressNode" address (Lowerer'createUnsafeAddress-3 (:graph this), (:object this), (:offset this))
+            #_"WriteNode" write (Graph''add-2 (:graph this), (WriteNode'new-4 address, (:locationIdentity this), value, (RawStoreNode''unsafeStoreBarrierType-1 this)))
+        ]
+            (AbstractWriteNode''setStateAfter-2 write, (RawStoreNode''stateAfter-1 this))
+            (§ ass! (:graph this) (Graph''replaceFixedWithFixed-3 (:graph this), this, write))
+        )
         nil
     )
 
@@ -51871,9 +51699,17 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" StoreHubNode''lower-2 [#_"StoreHubNode" this, #_"LoweringTool" lowerer]
-        (Lowerer'lowerStoreHubNode-2 this, (:graph this))
+    (§ defn- #_"WriteNode" StoreHubNode'createWriteHub-3 [#_"Graph" graph, #_"ValueNode" object, #_"ValueNode" value]
+        (let [
+            #_"ValueNode" writeValue (if HotSpot'useCompressedClassPointers (HotSpotCompressionNode'compress-2 value, HotSpot'klassEncoding) value)
+            #_"AddressNode" address (Lowerer'createOffsetAddress-3 graph, object, HotSpot'hubOffset)
+        ]
+            (Graph''add-2 graph, (WriteNode'new-4 address, ReplacementsUtil'HUB_WRITE_LOCATION, writeValue, BarrierType'NONE))
+        )
+    )
+
+    (§ override! #_"void" Lowerable''lower-2 [#_"StoreHubNode" this, #_"LoweringTool" lowerer]
+        (§ ass! (:graph this) (Graph''replaceFixed-3 (:graph this), this, (StoreHubNode'createWriteHub-3 (:graph this), (:object this), (:value this))))
         nil
     )
 )
@@ -52074,8 +51910,7 @@
         (or (UnboxNode'findSynonym-2 value, boxingKind) (UnboxNode'new-2 value, boxingKind))
     )
 
-    #_unused
-    (§ override! #_"void" UnboxNode''lower-2 [#_"UnboxNode" this, #_"LoweringTool" lowerer]
+    (§ override! #_"void" Lowerable''lower-2 [#_"UnboxNode" this, #_"LoweringTool" lowerer]
         (BoxingTemplates''lower-3 Lowerer'boxingSnippets, this, lowerer)
         nil
     )
@@ -52190,7 +52025,6 @@
 ;;;
  ; The ValueAnchor instruction keeps non-CFG (floating) nodes above a certain point in the graph.
  ;;
-;; @NodeInfo.allowedUsageTypes "InputType.Anchor, InputType.Guard"
 (final-ns ValueAnchorNode (§ extends FixedWithNextNode) (§ implements LIRLowerable, Simplifiable, Virtualizable, AnchoringNode, GuardingNode)
     (§ def #_"NodeClass<ValueAnchorNode>" ValueAnchorNode'TYPE (NodeClass'create-1 ValueAnchorNode))
 
@@ -52272,7 +52106,6 @@
     )
 )
 
-;; @NodeInfo.allowedUsageTypes "InputType.Guard"
 (final-ns FixedGuardNode (§ extends AbstractFixedGuardNode) (§ implements Lowerable, IterableNodeType)
     (§ def #_"NodeClass<FixedGuardNode>" FixedGuardNode'TYPE (NodeClass'create-1 FixedGuardNode))
 
@@ -52327,7 +52160,7 @@
         nil
     )
 
-    (§ override! #_"void" FixedGuardNode''lower-2 [#_"FixedGuardNode" this, #_"LoweringTool" lowerer]
+    (§ override! #_"void" Lowerable''lower-2 [#_"FixedGuardNode" this, #_"LoweringTool" lowerer]
         (if (GuardsStage'allowsFloatingGuards-1 (:guardsStage (:graph this)))
             (when-not (= (:action this) DeoptimizationAction/None)
                 (let [
@@ -52337,7 +52170,7 @@
                     (Graph''removeFixed-2 (:graph this), this)
                 )
             )
-            (DeoptimizeNode''lower-2 (AbstractFixedGuardNode''lowerToIf-1 this), lowerer)
+            (Lowerable''lower-2 (AbstractFixedGuardNode''lowerToIf-1 this), lowerer)
         )
         nil
     )
@@ -53446,66 +53279,6 @@
 )
 
 ;;;
- ; A node that changes the type of its input, usually narrowing it. For example, a GuardedValueNode
- ; is used to keep the nodes depending on guards inside a loop during speculative guard movement.
- ;
- ; A GuardedValueNode will only go away if its guard is nil or Graph#start().
- ;;
-(final-ns GuardedValueNode (§ extends FloatingGuardedNode) (§ implements LIRLowerable, Virtualizable, Canonicalizable, ValueProxy)
-    (§ def #_"NodeClass<GuardedValueNode>" GuardedValueNode'TYPE (NodeClass'create-1 GuardedValueNode))
-
-    ; @Input
-    (§ final #_"ValueNode" :object nil)
-
-    #_unused
-    (§ defn #_"GuardedValueNode" GuardedValueNode'new-2 [#_"ValueNode" object, #_"GuardingNode" guard]
-        (let [
-            #_"GuardedValueNode" this (FloatingGuardedNode'new-3 GuardedValueNode'TYPE, (:stamp object), guard)
-            this (assoc this :object object)
-        ]
-            this
-        )
-    )
-
-    (§ override! #_"void" LIRLowerable''generate-2 [#_"GuardedValueNode" this, #_"LIRBuilder" builder]
-        (when (and (not= (ValueNode''getStackKind-1 (:object this)) JavaKind/Void) (not= (ValueNode''getStackKind-1 (:object this)) JavaKind/Illegal))
-            (LIRBuilder''setResult-3 builder, this, (LIRBuilder''operand-2 builder, (:object this)))
-        )
-        nil
-    )
-
-    #_unused
-    (§ override! #_"boolean" GuardedValueNode''inferStamp-1 [#_"GuardedValueNode" this]
-        (ValueNode''updateStamp-2 this, (:stamp (:object this)))
-    )
-
-    (§ override! #_"void" Virtualizable''virtualize-2 [#_"GuardedValueNode" this, #_"VirtualizerTool" tool]
-        (let [
-            #_"ValueNode" alias (VirtualizerTool''getAlias-2 tool, (:object this))
-        ]
-            (when (instance? VirtualObjectNode alias)
-                (VirtualizerTool''replaceWithVirtual-2 tool, alias)
-            )
-        )
-        nil
-    )
-
-    (§ override! #_"Node" Canonicalizable''canonical-2 [#_"GuardedValueNode" this, #_"CanonicalizerTool" tool]
-        (when (nil? (FloatingGuardedNode''getGuard-1 this)) => this
-            (if (= (:stamp this) (:stamp (:object this)))
-                (:object this)
-                (PiNode'create-2 (:object this), (:stamp this))
-            )
-        )
-    )
-
-    #_unused
-    (§ override! #_"ValueNode" GuardedValueNode''getOriginalNode-1 [#_"GuardedValueNode" this]
-        (:object this)
-    )
-)
-
-;;;
  ; A guard is a node that deoptimizes based on a conditional expression. Guards are not attached to
  ; a certain frame state, they can move around freely and will always use the correct frame state
  ; when the nodes are scheduled (i.e. the last emitted frame state). The node that is guarded has a
@@ -53517,7 +53290,6 @@
  ; maximum flexibility for the guard node and guarantees that deoptimization occurs only if the
  ; control flow would have reached the guarded node (without taking exceptions into account).
  ;;
-;; @NodeInfo.allowedUsageTypes "InputType.Guard"
 (final-ns GuardNode (§ extends FloatingAnchoredNode) (§ implements Canonicalizable, GuardingNode, DeoptimizingGuard, IterableNodeType)
     (§ def #_"NodeClass<GuardNode>" GuardNode'TYPE (NodeClass'create-1 GuardNode))
 
@@ -53593,7 +53365,6 @@
 ;;;
  ; Guard PhiNodes merge guard dependencies at control flow merges.
  ;;
-;; @NodeInfo.allowedUsageTypes "InputType.Guard"
 (final-ns GuardPhiNode (§ extends PhiNode) (§ implements GuardingNode)
     (§ def #_"NodeClass<GuardPhiNode>" GuardPhiNode'TYPE (NodeClass'create-1 GuardPhiNode))
 
@@ -53625,7 +53396,6 @@
     )
 )
 
-;; @NodeInfo.allowedUsageTypes "InputType.Guard"
 (final-ns GuardProxyNode (§ extends ProxyNode) (§ implements GuardingNode, Proxy, LIRLowerable, Canonicalizable)
     (§ def #_"NodeClass<GuardProxyNode>" GuardProxyNode'TYPE (NodeClass'create-1 GuardProxyNode))
 
@@ -54924,7 +54694,7 @@
     ; @Input
     (§ mutable #_"ValueNode" :computedAddress nil)
 
-    #_unused
+    #_unused
     (§ defn #_"IndirectCallTargetNode" IndirectCallTargetNode'new-7 [#_"ValueNode" computedAddress, #_"ValueNode[]" arguments, #_"StampPair" returnStamp, #_"JavaType[]" signature, #_"ResolvedJavaMethod" target, #_"CallingConvention$Type" callType, #_"InvokeKind" invokeKind]
         (IndirectCallTargetNode'new-8 IndirectCallTargetNode'TYPE, computedAddress, arguments, returnStamp, signature, target, callType, invokeKind)
     )
@@ -54937,20 +54707,11 @@
             this
         )
     )
-
-    #_unused
-    (§ override #_"String" IndirectCallTargetNode''targetName-1 [#_"IndirectCallTargetNode" this]
-        (if (some? (CallTargetNode''targetMethod-1 this))
-            (#_"ResolvedJavaMethod" .format (CallTargetNode''targetMethod-1 this), "Indirect#%h.\n")
-            "[unknown]"
-        )
-    )
 )
 
 ;;;
  ; The InvokeNode represents all kinds of method calls.
  ;;
-;; @NodeInfo.allowedUsageTypes "InputType.Memory"
 (final-ns InvokeNode (§ extends AbstractMemoryCheckpoint) (§ implements StateSplit, Lowerable, DeoptDuring, LIRLowerable, Single, UncheckedInterfaceProvider)
     (§ def #_"NodeClass<InvokeNode>" InvokeNode'TYPE (NodeClass'create-1 InvokeNode))
 
@@ -55037,22 +54798,56 @@
     )
 
     #_unused
-    (§ override! #_"boolean" InvokeNode''isAllowedUsageType-2 [#_"InvokeNode" this, #_"InputType" type]
-        (or (Node''isAllowedUsageType-2 (§ super ), type)
-            (and (not (= (ValueNode''getStackKind-1 this) JavaKind/Void))
-                (instance? MethodCallTargetNode (:callTarget this))
-                (some? (#_"ResolvedJavaMethod" .getAnnotation (CallTargetNode''targetMethod-1 (:callTarget this)), NodeIntrinsic))
-            )
-        )
-    )
-
-    #_unused
     (§ override! #_"LocationIdentity" InvokeNode''getLocationIdentity-1 [#_"InvokeNode" this]
         (LocationIdentity/any)
     )
 
-    (§ override! #_"void" InvokeNode''lower-2 [#_"InvokeNode" this, #_"LoweringTool" lowerer]
-        (Lowerer'lowerInvoke-3 this, lowerer, (:graph this))
+    (§ override! #_"void" Lowerable''lower-2 [#_"InvokeNode" this, #_"LoweringTool" lowerer]
+        (when (instance? MethodCallTargetNode (:callTarget this))
+            (let [
+                #_"MethodCallTargetNode" callTarget (:callTarget this)
+                #_"NodeInputList<ValueNode>" parameters (CallTargetNode''arguments-1 callTarget)
+                #_"ValueNode" receiver (first parameters)
+                receiver
+                    (when (and (not (MethodCallTargetNode''isStatic-1 callTarget)) (instance? ObjectStamp (:stamp receiver)) (not (StampTool'isPointerNeverNull-1 (:stamp receiver)))) => receiver
+                        (let [
+                            receiver (Lowerer'createNullCheckedValue-3 receiver, this, lowerer)
+                        ]
+                            (NodeList''set-3 parameters, 0, receiver)
+                            receiver
+                        )
+                    )
+                #_"JavaType[]" signature (#_"Signature" .toParameterTypes (#_"ResolvedJavaMethod" .getSignature (CallTargetNode''targetMethod-1 callTarget)), (when-not (MethodCallTargetNode''isStatic-1 callTarget) (#_"ResolvedJavaMethod" .getDeclaringClass (CallTargetNode''targetMethod-1 callTarget))))
+                #_"LoweredCallTargetNode" loweredCallTarget
+                    (or
+                        (when (and GraalOptions'inlineVTableStubs (InvokeKind''isIndirect-1 (CallTargetNode''invokeKind-1 callTarget)) GraalOptions'alwaysInlineVTableStubs)
+                            (let [
+                                #_"HotSpotResolvedJavaMethod" hsMethod (CallTargetNode''targetMethod-1 callTarget)
+                                #_"ResolvedJavaType" receiverType (InvokeNode''getReceiverType-1 this)
+                            ]
+                                (when (#_"HotSpotResolvedJavaMethod" .isInVirtualMethodTable hsMethod, receiverType)
+                                    (let [
+                                        #_"ValueNode" hub (Lowerer'createReadHub-3 (:graph this), receiver, lowerer)
+                                        #_"ReadNode" metaspaceMethod (Lowerer'createReadVirtualMethod-4 (:graph this), hub, hsMethod, receiverType)
+                                        ;; We use LocationNode.ANY_LOCATION for the reads that access the compiled
+                                        ;; code entry as HotSpot does not guarantee they are final values.
+                                        #_"AddressNode" address (Lowerer'createOffsetAddress-3 (:graph this), metaspaceMethod, HotSpot'methodCompiledEntryOffset)
+                                        #_"ReadNode" compiledEntry (Graph''add-2 (:graph this), (ReadNode'new-4 address, (LocationIdentity/any), (StampFactory'forKind-1 (.wordJavaKind HotSpot'target)), BarrierType'NONE))
+                                        loweredCallTarget (Graph''add-2 (:graph this), (HotSpotIndirectCallTargetNode'new-8 metaspaceMethod, compiledEntry, (NodeList''toArray-2 parameters, (make-array ValueNode (count parameters))), (CallTargetNode''returnStamp-1 callTarget), signature, (CallTargetNode''targetMethod-1 callTarget), HotSpotCallingConventionType/JavaCall, (CallTargetNode''invokeKind-1 callTarget)))
+                                    ]
+                                        (Graph''addBeforeFixed-3 (:graph this), this, metaspaceMethod)
+                                        (Graph''addAfterFixed-3 (:graph this), metaspaceMethod, compiledEntry)
+                                        loweredCallTarget
+                                    )
+                                )
+                            )
+                        )
+                        (Graph''add-2 (:graph this), (HotSpotDirectCallTargetNode'new-6 (NodeList''toArray-2 parameters, (make-array ValueNode (count parameters))), (CallTargetNode''returnStamp-1 callTarget), signature, (CallTargetNode''targetMethod-1 callTarget), HotSpotCallingConventionType/JavaCall, (CallTargetNode''invokeKind-1 callTarget)))
+                    )
+            ]
+                (§ ass! callTarget (Node''replaceAndDelete-2 callTarget, loweredCallTarget))
+            )
+        )
         nil
     )
 
@@ -55126,7 +54921,6 @@
 ;;;
  ; Low-level atomic compare-and-swap operation.
  ;;
-;; @NodeInfo.allowedUsageTypes "InputType.Value, InputType.Memory"
 (class-ns AbstractCompareAndSwapNode (§ extends FixedAccessNode) (§ implements StateSplit, LIRLowerableAccess, Single)
     (§ def #_"NodeClass<AbstractCompareAndSwapNode>" AbstractCompareAndSwapNode'TYPE (NodeClass'create-1 AbstractCompareAndSwapNode))
 
@@ -55237,7 +55031,7 @@
         )
     )
 
-    (§ override #_"void" AbstractNewObjectNode''lower-2 [#_"AbstractNewObjectNode" this, #_"LoweringTool" lowerer]
+    (§ override #_"void" Lowerable''lower-2 [#_"AbstractNewObjectNode" this, #_"LoweringTool" lowerer]
         (condp instance? this
             NewInstanceNode
                 (when (GuardsStage'areFrameStatesAtDeopts-1 (:guardsStage (:graph this)))
@@ -55356,11 +55150,53 @@
         (#_"ResolvedJavaField" .isVolatile (:field this))
     )
 
-    #_unused
-    (§ override #_"void" AccessFieldNode''lower-2 [#_"AccessFieldNode" this, #_"LoweringTool" lowerer]
+    (§ defn- #_"ValueNode" AccessFieldNode'staticFieldBase-2 [#_"Graph" graph, #_"ResolvedJavaField" field]
+        (ConstantNode'forConstant-2 (#_"HotSpotConstantReflectionProvider" .asJavaClass HotSpot'constantReflection, (#_"HotSpotResolvedJavaField" .getDeclaringClass field)), graph)
+    )
+
+    (§ method- #_"void" AccessFieldNode''lowerLoadFieldNode-2 [#_"LoadFieldNode" this, #_"LoweringTool" lowerer]
+        (let [
+            #_"ValueNode" object (if (AccessFieldNode''isStatic-1 this) (AccessFieldNode'staticFieldBase-2 (:graph this), (:field this)) (:object this))
+            object (Lowerer'createNullCheckedValue-3 object, this, lowerer)
+            #_"Stamp" loadStamp (Lowerer'loadStamp-3 (:stamp this), (#_"ResolvedJavaField" .getJavaKind (:field this)), true)
+            #_"AddressNode" address (Lowerer'createFieldAddress-3 (:graph this), object, (:field this))
+            #_"ReadNode" memoryRead (Graph''add-2 (:graph this), (ReadNode'new-4 address, (FieldLocationIdentity'new-1 (:field this)), loadStamp, (Lowerer'fieldLoadBarrierType-1 (:field this))))
+            #_"ValueNode" readValue (Lowerer'implicitLoadConvert-3 (:graph this), (#_"ResolvedJavaField" .getJavaKind (:field this)), memoryRead)
+        ]
+            (§ ass! this (Node''replaceAtUsages-2 this, readValue))
+            (§ ass! (:graph this) (Graph''replaceFixed-3 (:graph this), this, memoryRead))
+
+            (when (AccessFieldNode''isVolatile-1 this)
+                (Graph''addBeforeFixed-3 (:graph this), memoryRead, (Graph''add-2 (:graph this), (MembarNode'new-1 MemoryBarriers/JMM_PRE_VOLATILE_READ)))
+                (Graph''addAfterFixed-3 (:graph this), memoryRead, (Graph''add-2 (:graph this), (MembarNode'new-1 MemoryBarriers/JMM_POST_VOLATILE_READ)))
+            )
+        )
+        nil
+    )
+
+    (§ method- #_"void" AccessFieldNode''lowerStoreFieldNode-2 [#_"StoreFieldNode" this, #_"LoweringTool" lowerer]
+        (let [
+            #_"ValueNode" object (if (AccessFieldNode''isStatic-1 this) (AccessFieldNode'staticFieldBase-2 (:graph this), (:field this)) (:object this))
+            object (Lowerer'createNullCheckedValue-3 object, this, lowerer)
+            #_"ValueNode" value (Lowerer'implicitStoreConvert-3 (:graph this), (#_"ResolvedJavaField" .getJavaKind (:field this)), (:value this))
+            #_"AddressNode" address (Lowerer'createFieldAddress-3 (:graph this), object, (:field this))
+            #_"WriteNode" memoryWrite (Graph''add-2 (:graph this), (WriteNode'new-4 address, (FieldLocationIdentity'new-1 (:field this)), value, (Lowerer'fieldStoreBarrierType-1 (:field this))))
+        ]
+            (AbstractWriteNode''setStateAfter-2 memoryWrite, (StoreFieldNode''stateAfter-1 this))
+            (§ ass! (:graph this) (Graph''replaceFixedWithFixed-3 (:graph this), this, memoryWrite))
+
+            (when (AccessFieldNode''isVolatile-1 this)
+                (Graph''addBeforeFixed-3 (:graph this), memoryWrite, (Graph''add-2 (:graph this), (MembarNode'new-1 MemoryBarriers/JMM_PRE_VOLATILE_WRITE)))
+                (Graph''addAfterFixed-3 (:graph this), memoryWrite, (Graph''add-2 (:graph this), (MembarNode'new-1 MemoryBarriers/JMM_POST_VOLATILE_WRITE)))
+            )
+        )
+        nil
+    )
+
+    (§ override #_"void" Lowerable''lower-2 [#_"AccessFieldNode" this, #_"LoweringTool" lowerer]
         (condp instance? this
-            LoadFieldNode  (Lowerer'lowerLoadFieldNode-2 this, lowerer)
-            StoreFieldNode (Lowerer'lowerStoreFieldNode-2 this, lowerer)
+            LoadFieldNode  (AccessFieldNode''lowerLoadFieldNode-2 this, lowerer)
+            StoreFieldNode (AccessFieldNode''lowerStoreFieldNode-2 this, lowerer)
         )
         nil
     )
@@ -55402,11 +55238,82 @@
         )
     )
 
-    #_unused
-    (§ override #_"void" AccessIndexedNode''lower-2 [#_"AccessIndexedNode" this, #_"LoweringTool" lowerer]
+    ;;;
+     ; Create a PiNode on the index proving that the index is positive. On some platforms this is
+     ; important to allow the index to be used as an int in the address mode.
+     ;;
+    (§ defn- #_"AddressNode" AccessIndexedNode'createArrayIndexAddress-5 [#_"Graph" graph, #_"ValueNode" array, #_"JavaKind" elementKind, #_"ValueNode" index, #_"GuardingNode" boundsCheck]
+        (let [
+            #_"IntegerStamp" indexStamp (StampFactory'forInteger-3 32, 0, (dec Integer/MAX_VALUE))
+            #_"ValueNode" positiveIndex (Graph''maybeAddOrUnique-2 graph, (PiNode'create-3 index, indexStamp, (when (some? boundsCheck) boundsCheck)))
+        ]
+            (Lowerer'createArrayAddress-4 graph, array, elementKind, positiveIndex)
+        )
+    )
+
+    (§ method- #_"void" AccessIndexedNode''lowerLoadIndexedNode-2 [#_"LoadIndexedNode" this, #_"LoweringTool" lowerer]
+        (let [
+            #_"ValueNode" array (Lowerer'createNullCheckedValue-3 (:array this), this, lowerer)
+            #_"Stamp" loadStamp (Lowerer'loadStamp-3 (:stamp this), (:elementKind this), true)
+            #_"GuardingNode" boundsCheck (Lowerer'getBoundsCheck-3 this, array, lowerer)
+            #_"AddressNode" address (AccessIndexedNode'createArrayIndexAddress-5 (:graph this), array, (:elementKind this), (AccessIndexedNode''index-1 this), boundsCheck)
+            #_"ReadNode" memoryRead (Graph''add-2 (:graph this), (ReadNode'new-4 address, (NamedLocationIdentity'getArrayLocation-1 (:elementKind this)), loadStamp, BarrierType'NONE))
+        ]
+            (GuardedNode''setGuard-2 memoryRead, boundsCheck)
+            (§ ass! this (Node''replaceAtUsages-2 this, (Lowerer'implicitLoadConvert-3 (:graph this), (:elementKind this), memoryRead)))
+            (§ ass! (:graph this) (Graph''replaceFixed-3 (:graph this), this, memoryRead))
+        )
+        nil
+    )
+
+    (§ method- #_"void" AccessIndexedNode''lowerStoreIndexedNode-2 [#_"StoreIndexedNode" this, #_"LoweringTool" lowerer]
+        (let [
+            #_"ValueNode" array (Lowerer'createNullCheckedValue-3 (:array this), this, lowerer)
+            #_"GuardingNode" boundsCheck (Lowerer'getBoundsCheck-3 this, array, lowerer)
+            #_"LogicNode" condition
+                (when (and (= (:elementKind this) JavaKind/Object) (not (StampTool'isPointerAlwaysNull-1 (:stamp (:value this)))))
+                    ;; Array store check.
+                    (let [
+                        #_"TypeReference" arrayType (StampTool'typeReferenceOrNull-1 (:stamp array))
+                    ]
+                        (if (and (some? arrayType) (:exactReference arrayType))
+                            (let [
+                                #_"ResolvedJavaType" elementType (#_"ResolvedJavaType" .getComponentType (:type arrayType))
+                            ]
+                                (when-not (#_"ResolvedJavaType" .isJavaLangObject elementType)
+                                    (let [
+                                        #_"LogicNode" typeTest (Graph''addOrUniqueWithInputs-2 (:graph this), (InstanceOfNode'create-2 (TypeReference'createTrusted-1 elementType), (:value this)))
+                                    ]
+                                        (LogicNode'or-3 (Graph''add-2 (:graph this), (IsNullNode'create-1 (:value this))), typeTest, GraalDirectives'UNLIKELY_PROBABILITY)
+                                    )
+                                )
+                            )
+                            ;; The guard on the read hub should be the nil-check of the array that was introduced earlier.
+                            (let [
+                                #_"LogicNode" typeTest (Graph''add-2 (:graph this), (InstanceOfDynamicNode'create-3 (Lowerer'createReadArrayComponentHub-3 (:graph this), (Lowerer'createReadHub-3 (:graph this), array, lowerer), this), (:value this), false))
+                            ]
+                                (LogicNode'or-3 (Graph''add-2 (:graph this), (IsNullNode'create-1 (:value this))), typeTest, GraalDirectives'UNLIKELY_PROBABILITY)
+                            )
+                        )
+                    )
+                )
+            #_"AddressNode" address (AccessIndexedNode'createArrayIndexAddress-5 (:graph this), array, (:elementKind this), (AccessIndexedNode''index-1 this), boundsCheck)
+            #_"WriteNode" memoryWrite (Graph''add-2 (:graph this), (WriteNode'new-4 address, (NamedLocationIdentity'getArrayLocation-1 (:elementKind this)), (Lowerer'implicitStoreConvert-3 (:graph this), (:elementKind this), (:value this)), (Lowerer'arrayStoreBarrierType-1 (:elementKind this))))
+        ]
+            (GuardedNode''setGuard-2 memoryWrite, boundsCheck)
+            (when (some? condition)
+                (LoweringTool''createGuard-5 lowerer, this, condition, DeoptimizationReason/ArrayStoreException, DeoptimizationAction/InvalidateReprofile)
+            )
+            (AbstractWriteNode''setStateAfter-2 memoryWrite, (StoreIndexedNode''stateAfter-1 this))
+            (§ ass! (:graph this) (Graph''replaceFixedWithFixed-3 (:graph this), this, memoryWrite))
+        )
+        nil
+    )
+
+    (§ override #_"void" Lowerable''lower-2 [#_"AccessIndexedNode" this, #_"LoweringTool" lowerer]
         (condp instance? this
-            LoadIndexedNode  (Lowerer'lowerLoadIndexedNode-2 this, lowerer)
-            StoreIndexedNode (Lowerer'lowerStoreIndexedNode-2 this, lowerer)
+            LoadIndexedNode  (AccessIndexedNode''lowerLoadIndexedNode-2 this, lowerer)
+            StoreIndexedNode (AccessIndexedNode''lowerStoreIndexedNode-2 this, lowerer)
         )
         nil
     )
@@ -55417,7 +55324,6 @@
  ;
  ; The Java bytecode specification allows non-balanced locking. Graal does not handle such cases.
  ;;
-;; @NodeInfo.allowedUsageTypes "InputType.Memory"
 (class-ns AccessMonitorNode (§ extends AbstractMemoryCheckpoint) (§ implements MemoryCheckpoint, DeoptBefore, DeoptAfter)
     (§ def #_"NodeClass<AccessMonitorNode>" AccessMonitorNode'TYPE (NodeClass'create-1 AccessMonitorNode))
 
@@ -55555,9 +55461,9 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" ArrayLengthNode''lower-2 [#_"ArrayLengthNode" this, #_"LoweringTool" lowerer]
-        (Lowerer'lowerArrayLengthNode-2 this, lowerer)
+    (§ override! #_"void" Lowerable''lower-2 [#_"ArrayLengthNode" this, #_"LoweringTool" lowerer]
+        (§ ass! this (Node''replaceAtUsages-2 this, (Lowerer'createReadArrayLength-3 (:array this), this, lowerer)))
+        (Graph''removeFixed-2 (:graph this), this)
         nil
     )
 
@@ -55574,10 +55480,8 @@
 )
 
 ;;;
- ; Represents an atomic read-and-add operation like
- ; {@link sun.misc.Unsafe#getAndAddInt(Object, long, int)}.
+ ; Represents an atomic read-and-add operation like {@link sun.misc.Unsafe#getAndAddInt(Object, long, int)}.
  ;;
-;; @NodeInfo.allowedUsageTypes "InputType.Memory"
 (final-ns AtomicReadAndAddNode (§ extends AbstractMemoryCheckpoint) (§ implements LIRLowerable, Single)
     (§ def #_"NodeClass<AtomicReadAndAddNode>" AtomicReadAndAddNode'TYPE (NodeClass'create-1 AtomicReadAndAddNode))
 
@@ -55612,8 +55516,7 @@
 )
 
 ;;;
- ; Represents an atomic read-and-write operation like
- ; {@link sun.misc.Unsafe#getAndSetInt(Object, long, int)}.
+ ; Represents an atomic read-and-write operation like {@link sun.misc.Unsafe#getAndSetInt(Object, long, int)}.
  ;;
 (final-ns AtomicReadAndWriteNode (§ extends AbstractMemoryCheckpoint) (§ implements Lowerable, Single)
     (§ def #_"NodeClass<AtomicReadAndWriteNode>" AtomicReadAndWriteNode'TYPE (NodeClass'create-1 AtomicReadAndWriteNode))
@@ -55646,9 +55549,25 @@
         (:locationIdentity this)
     )
 
-    #_unused
-    (§ override! #_"void" AtomicReadAndWriteNode''lower-2 [#_"AtomicReadAndWriteNode" this, #_"LoweringTool" lowerer]
-        (Lowerer'lowerAtomicReadAndWriteNode-1 this)
+    (§ override! #_"void" Lowerable''lower-2 [#_"AtomicReadAndWriteNode" this, #_"LoweringTool" lowerer]
+        (let [
+            #_"Graph" graph (:graph this)
+            #_"JavaKind" valueKind (:valueKind this)
+            #_"ValueNode" newValue (Lowerer'implicitStoreConvert-3 graph, valueKind, (:newValue this))
+            #_"AddressNode" address (Graph''add-2 graph, (OffsetAddressNode'new-2 (:object this), (:offset this)))
+            #_"BarrierType" barrierType (Lowerer'storeBarrierType-2 (:object this), (:newValue this))
+            #_"LoweredAtomicReadAndWriteNode" memoryRead (Graph''add-2 graph, (LoweredAtomicReadAndWriteNode'new-4 address, (AtomicReadAndWriteNode''getLocationIdentity-1 this), newValue, barrierType))
+        ]
+            (LoweredAtomicReadAndWriteNode''setStateAfter-2 memoryRead, (AbstractStateSplit''stateAfter-1 this))
+
+            (let [
+                #_"ValueNode" readValue (Lowerer'implicitLoadConvert-3 graph, valueKind, memoryRead)
+            ]
+                (Node''replaceFirstInput-3 (AbstractStateSplit''stateAfter-1 this), this, memoryRead)
+                (§ ass! this (Node''replaceAtUsages-2 this, readValue))
+                (§ ass! graph (Graph''replaceFixedWithFixed-3 graph, this, memoryRead))
+            )
+        )
         nil
     )
 )
@@ -55679,8 +55598,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" ClassIsAssignableFromNode''lower-2 [#_"ClassIsAssignableFromNode" this, #_"LoweringTool" lowerer]
+    (§ override! #_"void" Lowerable''lower-2 [#_"ClassIsAssignableFromNode" this, #_"LoweringTool" lowerer]
         (when (GuardsStage'areDeoptsFixed-1 (:guardsStage (:graph this)))
             (InstanceOfSnippetsTemplates''lower-3 Lowerer'instanceofSnippets, this, lowerer)
         )
@@ -55889,8 +55807,7 @@
         nil
     )
 
-    #_unused
-    (§ override! #_"void" FinalFieldBarrierNode''lower-2 [#_"FinalFieldBarrierNode" this, #_"LoweringTool" lowerer]
+    (§ override! #_"void" Lowerable''lower-2 [#_"FinalFieldBarrierNode" this, #_"LoweringTool" lowerer]
         (§ ass! (:graph this) (Graph''replaceFixedWithFixed-3 (:graph this), this, (Graph''add-2 (:graph this), (MembarNode'new-1 (| MemoryBarriers/LOAD_STORE MemoryBarriers/STORE_STORE)))))
         nil
     )
@@ -55935,8 +55852,7 @@
         (not (InstanceOfDynamicNode''isMirror-1 this))
     )
 
-    #_unused
-    (§ override! #_"void" InstanceOfDynamicNode''lower-2 [#_"InstanceOfDynamicNode" this, #_"LoweringTool" lowerer]
+    (§ override! #_"void" Lowerable''lower-2 [#_"InstanceOfDynamicNode" this, #_"LoweringTool" lowerer]
         (if (GuardsStage'areDeoptsFixed-1 (:guardsStage (:graph this)))
             (InstanceOfSnippetsTemplates''lower-3 Lowerer'instanceofSnippets, this, lowerer)
             (do
@@ -56053,8 +55969,7 @@
         (or (InstanceOfNode'findSynonym-2 checkedStamp, object) (InstanceOfNode'new-3 checkedStamp, object, anchor))
     )
 
-    #_unused
-    (§ override! #_"void" InstanceOfNode''lower-2 [#_"InstanceOfNode" this, #_"LoweringTool" lowerer]
+    (§ override! #_"void" Lowerable''lower-2 [#_"InstanceOfNode" this, #_"LoweringTool" lowerer]
         (if (GuardsStage'areDeoptsFixed-1 (:guardsStage (:graph this)))
             (InstanceOfSnippetsTemplates''lower-3 Lowerer'instanceofSnippets, this, lowerer)
             (when (InstanceOfNode''allowsNull-1 this)
@@ -56396,10 +56311,8 @@
 )
 
 ;;;
- ; Represents the lowered version of an atomic read-and-write operation like
- ; {@link sun.misc.Unsafe#getAndSetInt(Object, long, int)}.
+ ; Represents the lowered version of an atomic read-and-write operation like {@link sun.misc.Unsafe#getAndSetInt(Object, long, int)}.
  ;;
-;; @NodeInfo.allowedUsageTypes "InputType.Memory"
 (final-ns LoweredAtomicReadAndWriteNode (§ extends FixedAccessNode) (§ implements StateSplit, LIRLowerableAccess, Single)
     (§ def #_"NodeClass<LoweredAtomicReadAndWriteNode>" LoweredAtomicReadAndWriteNode'TYPE (NodeClass'create-1 LoweredAtomicReadAndWriteNode))
 
@@ -56544,14 +56457,6 @@
     )
 
     #_unused
-    (§ override #_"String" MethodCallTargetNode''targetName-1 [#_"MethodCallTargetNode" this]
-        (if (some? (CallTargetNode''targetMethod-1 this))
-            (#_"ResolvedJavaMethod" .format (CallTargetNode''targetMethod-1 this), "%h.\n")
-            "??Invalid!"
-        )
-    )
-
-    #_unused
     (§ defn #_"MethodCallTargetNode" MethodCallTargetNode'find-2 [#_"Graph" graph, #_"ResolvedJavaMethod" method]
         (loop-when [#_"ISeq" s (seq (Graph''getNodes-2 graph, MethodCallTargetNode'TYPE))] (some? s)
             (let [
@@ -56584,8 +56489,16 @@
         (LocationIdentity/any)
     )
 
-    (§ override! #_"void" MonitorEnterNode''lower-2 [#_"MonitorEnterNode" this, #_"LoweringTool" lowerer]
-        (Lowerer'lowerMonitorEnterNode-3 this, lowerer, (:graph this))
+    (§ override! #_"void" Lowerable''lower-2 [#_"MonitorEnterNode" this, #_"LoweringTool" lowerer]
+        (let [
+            #_"ValueNode" object (Lowerer'createNullCheckedValue-3 (:object this), this, lowerer)
+            #_"ValueNode" hub (Graph''add-2 (:graph this), (LoadHubNode'create-1 object))
+            #_"RawMonitorEnterNode" rawMonitorEnter (Graph''add-2 (:graph this), (RawMonitorEnterNode'new-3 object, hub, (:monitorId this)))
+        ]
+            (AccessMonitorNode''setStateBefore-2 rawMonitorEnter, (AccessMonitorNode''stateBefore-1 this))
+            (AbstractStateSplit''setStateAfter-2 rawMonitorEnter, (AbstractStateSplit''stateAfter-1 this))
+            (§ ass! (:graph this) (Graph''replaceFixedWithFixed-3 (:graph this), this, rawMonitorEnter))
+        )
         nil
     )
 
@@ -56638,8 +56551,7 @@
         (LocationIdentity/any)
     )
 
-    #_unused
-    (§ override! #_"void" MonitorExitNode''lower-2 [#_"MonitorExitNode" this, #_"LoweringTool" lowerer]
+    (§ override! #_"void" Lowerable''lower-2 [#_"MonitorExitNode" this, #_"LoweringTool" lowerer]
         (when (GuardsStage'areFrameStatesAtDeopts-1 (:guardsStage (:graph this)))
             (MonitorTemplates''lower-3 Lowerer'monitorSnippets, this, lowerer)
         )
@@ -56663,7 +56575,6 @@
  ; This node describes one locking scope; it ties the monitor enter, monitor exit and the frame states together.
  ; It is thus referenced from the MonitorEnterNode, from the MonitorExitNode and from the FrameState.
  ;;
-;; @NodeInfo.allowedUsageTypes "InputType.Association"
 (final-ns MonitorIdNode (§ extends ValueNode) (§ implements IterableNodeType, LIRLowerable)
     (§ def #_"NodeClass<MonitorIdNode>" MonitorIdNode'TYPE (NodeClass'create-1 MonitorIdNode))
 
@@ -56719,10 +56630,6 @@
         ]
             this
         )
-    )
-
-    (§ defn #_"Object" NewArrayNode'newUninitializedArray-2 [#_"Class" elementType, #_"int" length]
-        (NewArrayNode'newArray-3 elementType, length, false)
     )
 
     (§ override! #_"void" Virtualizable''virtualize-2 [#_"NewArrayNode" this, #_"VirtualizerTool" tool]
@@ -56863,8 +56770,7 @@
         (LocationIdentity/any)
     )
 
-    #_unused
-    (§ override! #_"void" RawMonitorEnterNode''lower-2 [#_"RawMonitorEnterNode" this, #_"LoweringTool" lowerer]
+    (§ override! #_"void" Lowerable''lower-2 [#_"RawMonitorEnterNode" this, #_"LoweringTool" lowerer]
         (when (GuardsStage'areFrameStatesAtDeopts-1 (:guardsStage (:graph this)))
             (MonitorTemplates''lower-3 Lowerer'monitorSnippets, this, lowerer)
         )
@@ -57014,7 +56920,6 @@
  ; Represents an atomic compare-and-swap operation The result is a boolean that contains whether the
  ; value matched the expected value.
  ;;
-;; @NodeInfo.allowedUsageTypes "InputType.Value, InputType.Memory"
 (final-ns UnsafeCompareAndSwapNode (§ extends AbstractMemoryCheckpoint) (§ implements Lowerable, Single)
     (§ def #_"NodeClass<UnsafeCompareAndSwapNode>" UnsafeCompareAndSwapNode'TYPE (NodeClass'create-1 UnsafeCompareAndSwapNode))
 
@@ -57049,9 +56954,19 @@
         (:locationIdentity this)
     )
 
-    #_unused
-    (§ override! #_"void" UnsafeCompareAndSwapNode''lower-2 [#_"UnsafeCompareAndSwapNode" this, #_"LoweringTool" lowerer]
-        (Lowerer'lowerCompareAndSwapNode-1 this)
+    (§ override! #_"void" Lowerable''lower-2 [#_"UnsafeCompareAndSwapNode" this, #_"LoweringTool" lowerer]
+        (let [
+            #_"Graph" graph (:graph this)
+            #_"JavaKind" valueKind (:valueKind this)
+            #_"ValueNode" expectedValue (Lowerer'implicitStoreConvert-3 graph, valueKind, (:expected this))
+            #_"ValueNode" newValue (Lowerer'implicitStoreConvert-3 graph, valueKind, (:newValue this))
+            #_"AddressNode" address (Graph''add-2 graph, (OffsetAddressNode'new-2 (:object this), (:offset this)))
+            #_"BarrierType" barrierType (Lowerer'storeBarrierType-2 (:object this), expectedValue)
+            #_"LogicCompareAndSwapNode" atomicNode (Graph''add-2 graph, (LogicCompareAndSwapNode'new-5 address, (UnsafeCompareAndSwapNode''getLocationIdentity-1 this), expectedValue, newValue, barrierType))
+        ]
+            (AbstractCompareAndSwapNode''setStateAfter-2 atomicNode, (AbstractStateSplit''stateAfter-1 this))
+            (§ ass! graph (Graph''replaceFixedWithFixed-3 graph, this, atomicNode))
+        )
         nil
     )
 )
@@ -57077,7 +56992,6 @@
     )
 )
 
-;; @NodeInfo.allowedUsageTypes "InputType.Memory"
 (final-ns KillingBeginNode (§ extends AbstractBeginNode) (§ implements Single)
     (§ def #_"NodeClass<KillingBeginNode>" KillingBeginNode'TYPE (NodeClass'create-1 KillingBeginNode))
 
@@ -57228,7 +57142,6 @@
     )
 )
 
-;; @NodeInfo.allowedUsageTypes "InputType.ConditionI"
 (class-ns LogicNode (§ extends FloatingNode) (§ implements IndirectCanonicalization)
     (§ def #_"NodeClass<LogicNode>" LogicNode'TYPE (NodeClass'create-1 LogicNode))
 
@@ -57720,7 +57633,6 @@
     )
 )
 
-;; @NodeInfo.allowedUsageTypes "InputType.Association"
 (final-ns LoopExitNode (§ extends BeginStateSplitNode) (§ implements IterableNodeType, Simplifiable)
     (§ def #_"NodeClass<LoopExitNode>" LoopExitNode'TYPE (NodeClass'create-1 LoopExitNode))
 
@@ -57835,7 +57747,6 @@
     )
 )
 
-;; @NodeInfo.allowedUsageTypes "InputType.Memory, InputType.Guard"
 (class-ns AbstractWriteNode (§ extends FixedAccessNode) (§ implements StateSplit, Single, MemoryAccess, GuardingNode)
     (§ def #_"NodeClass<AbstractWriteNode>" AbstractWriteNode'TYPE (NodeClass'create-1 AbstractWriteNode))
 
@@ -57874,11 +57785,6 @@
         )
     )
 
-    #_unused
-    (§ override #_"boolean" AbstractWriteNode''isAllowedUsageType-2 [#_"AbstractWriteNode" this, #_"InputType" type]
-        (or (and (= type InputType'Guard) (:nullCheck this)) (Node''isAllowedUsageType-2 (§ super ), type))
-    )
-
     (§ override #_"void" AbstractWriteNode''setLastLocationAccess-2 [#_"AbstractWriteNode" this, #_"MemoryNode" lla]
         (Node''updateUsages-3 this, (:lastLocationAccess this), lla)
         (§ ass! this (assoc this :lastLocationAccess lla))
@@ -57901,7 +57807,6 @@
 ;;;
  ; Base class for nodes that deal with addressing calculation.
  ;;
-;; @NodeInfo.allowedUsageTypes "InputType.Association"
 (class-ns AddressNode (§ extends FloatingNode) (§ implements IndirectCanonicalization)
     (§ def #_"NodeClass<AddressNode>" AddressNode'TYPE (NodeClass'create-1 AddressNode))
 
@@ -57936,7 +57841,6 @@
  ; Represents an address that is composed of a base and an offset. The base can be either a
  ; JavaKind#Object, a word-sized integer or another pointer. The offset must be a word-sized integer.
  ;;
-;; @NodeInfo.allowedUsageTypes "InputType.Association"
 (final-ns OffsetAddressNode (§ extends AddressNode) (§ implements Canonicalizable)
     (§ def #_"NodeClass<OffsetAddressNode>" OffsetAddressNode'TYPE (NodeClass'create-1 OffsetAddressNode))
 
@@ -58078,6 +57982,8 @@
 (class-ns FloatableAccessNode (§ extends FixedAccessNode)
     (§ def #_"NodeClass<FloatableAccessNode>" FloatableAccessNode'TYPE (NodeClass'create-1 FloatableAccessNode))
 
+    (§ final #_"boolean" :forceFixed false)
+
     #_unused
     (§ defn #_"FloatableAccessNode" FloatableAccessNode'new-4 [#_"NodeClass<? extends FloatableAccessNode>" c, #_"AddressNode" address, #_"LocationIdentity" location, #_"Stamp" stamp]
         (FixedAccessNode'new-4 c, address, location, stamp)
@@ -58093,8 +57999,6 @@
     )
 
     (§ abstract #_"FloatingAccessNode" FloatableAccessNode''asFloatingNode-2 [#_"FloatableAccessNode" this, #_"MemoryNode" lastLocationAccess])
-
-    (§ mutable #_"boolean" :forceFixed false)
 
     (§ method! #_"FloatableAccessNode" FloatableAccessNode''setForceFixed-2 [#_"FloatableAccessNode" this, #_"boolean" flag]
         (assoc this :forceFixed flag)
@@ -58296,7 +58200,6 @@
     (§ abstract #_"void" MemoryAccess''setLastLocationAccess-2 [#_"MemoryAccess" this, #_"MemoryNode" lla])
 )
 
-;; @NodeInfo.allowedUsageTypes "InputType.Memory"
 (final-ns MemoryAnchorNode (§ extends FixedWithNextNode) (§ implements LIRLowerable, MemoryNode, Canonicalizable)
     (§ def #_"NodeClass<MemoryAnchorNode>" MemoryAnchorNode'TYPE (NodeClass'create-1 MemoryAnchorNode))
 
@@ -58365,7 +58268,6 @@
     (§ abstract #_"Iterable<LocationIdentity>" MemoryMap''getLocations-1 [#_"MemoryMap" this])
 )
 
-;; @NodeInfo.allowedUsageTypes "InputType.Extension, InputType.Memory"
 (final-ns MemoryMapNode (§ extends FloatingNode) (§ implements MemoryMap, MemoryNode, LIRLowerable)
     (§ def #_"NodeClass<MemoryMapNode>" MemoryMapNode'TYPE (NodeClass'create-1 MemoryMapNode))
 
@@ -58431,7 +58333,6 @@
 ;;;
  ; Memory PhiNodes merge memory dependencies at control flow merges.
  ;;
-;; @NodeInfo.allowedUsageTypes "InputType.Memory"
 (final-ns MemoryPhiNode (§ extends PhiNode) (§ implements MemoryNode)
     (§ def #_"NodeClass<MemoryPhiNode>" MemoryPhiNode'TYPE (NodeClass'create-1 MemoryPhiNode))
 
@@ -58503,11 +58404,6 @@
     #_unused
     (§ override! #_"FloatingAccessNode" ReadNode''asFloatingNode-2 [#_"ReadNode" this, #_"MemoryNode" lastLocationAccess]
         (Graph''add-2 (:graph this), (FloatingReadNode'new-6 (FixedAccessNode''getAddress-1 this), (FixedAccessNode''getLocationIdentity-1 this), lastLocationAccess, (:stamp this), (FixedAccessNode''getGuard-1 this), (FixedAccessNode''getBarrierType-1 this)))
-    )
-
-    #_unused
-    (§ override! #_"boolean" ReadNode''isAllowedUsageType-2 [#_"ReadNode" this, #_"InputType" type]
-        (or (and (:nullCheck this) (= type InputType'Guard)) (Node''isAllowedUsageType-2 (§ super ), type))
     )
 
     (§ defn #_"ValueNode" ReadNode'canonicalizeRead-4 [#_"ValueNode" read, #_"AddressNode" address, #_"LocationIdentity" locationIdentity, #_"CanonicalizerTool" tool]
@@ -58967,7 +58863,7 @@
  ; A node that changes the type of its input, usually narrowing it. For example, a PiNode
  ; refines the type of a receiver during type-guarded inlining to be the type tested by the guard.
  ;
- ; In contrast to a GuardedValueNode, a PiNode is useless as soon as the type of its
+ ; In contrast to a GuardedValueNode, a PiNode is useless as soon as the type of its
  ; input is as narrow or narrower than the PiNode's type. The PiNode, and therefore
  ; also the scheduling restriction enforced by the guard, will go away.
  ;;
@@ -58976,7 +58872,7 @@
 
     ; @Input
     (§ final #_"ValueNode" :object nil)
-    (§ mutable #_"Stamp" :piStamp nil)
+    (§ final #_"Stamp" :piStamp nil)
 
     (§ defn #_"PiNode" PiNode'new-4 [#_"NodeClass<? extends PiNode>" c, #_"ValueNode" object, #_"Stamp" stamp, #_"GuardingNode" guard]
         (let [
@@ -58997,29 +58893,9 @@
         (PiNode'new-4 PiNode'TYPE, object, stamp, guard)
     )
 
-    (§ defn #_"PiNode" PiNode'new-2 [#_"ValueNode" object, #_"ValueNode" guard]
-        (PiNode'new-3 object, (AbstractPointerStamp'pointerNonNull-1 (:stamp object)), guard)
-    )
-
-    (§ defn #_"ValueNode" PiNode'create-2 [#_"ValueNode" object, #_"Stamp" stamp]
-        (or (PiNode'canonical-3 object, stamp, nil)
-            (PiNode'new-2 object, stamp)
-        )
-    )
-
     (§ defn #_"ValueNode" PiNode'create-3 [#_"ValueNode" object, #_"Stamp" stamp, #_"ValueNode" guard]
         (or (PiNode'canonical-3 object, stamp, guard)
             (PiNode'new-3 object, stamp, guard)
-        )
-    )
-
-    (§ defn #_"ValueNode" PiNode'create-2 [#_"ValueNode" object, #_"ValueNode" guard]
-        (let [
-            #_"Stamp" stamp (AbstractPointerStamp'pointerNonNull-1 (:stamp object))
-        ]
-            (or (PiNode'canonical-3 object, stamp, guard)
-                (PiNode'new-3 object, stamp, guard)
-            )
         )
     )
 
@@ -59266,8 +59142,7 @@
         (DeoptimizingFixedWithNextNode'new-2 SafepointNode'TYPE, (StampFactory'forVoid-0))
     )
 
-    #_unused
-    (§ override! #_"void" SafepointNode''lower-2 [#_"SafepointNode" this, #_"LoweringTool" lowerer]
+    (§ override! #_"void" Lowerable''lower-2 [#_"SafepointNode" this, #_"LoweringTool" lowerer]
         nil ;; No lowering, we generate LIR directly for this node.
     )
 
@@ -59464,7 +59339,6 @@
     )
 )
 
-;; @NodeInfo.allowedUsageTypes "InputType.Value, InputType.Anchor, InputType.Guard"
 (final-ns SnippetAnchorNode (§ extends FixedWithNextNode) (§ implements Simplifiable, GuardingNode)
     (§ def #_"NodeClass<SnippetAnchorNode>" SnippetAnchorNode'TYPE (NodeClass'create-1 SnippetAnchorNode))
 
@@ -59736,7 +59610,6 @@
 ;;;
  ; The start node of a graph.
  ;;
-;; @NodeInfo.allowedUsageTypes "InputType.Memory"
 (class-ns StartNode (§ extends BeginStateSplitNode) (§ implements Single)
     (§ def #_"NodeClass<StartNode>" StartNode'TYPE (NodeClass'create-1 StartNode))
 
@@ -61718,11 +61591,6 @@
         )
     )
 
-    #_unused
-    (§ override #_"boolean" ValueNode''isAllowedUsageType-2 [#_"ValueNode" this, #_"InputType" type]
-        (or (and (not= (ValueNode''getStackKind-1 this) JavaKind/Void) (= type InputType'Value)) (Node''isAllowedUsageType-2 (§ super ), type))
-    )
-
     ;;;
      ; Checks if this node has usages other than the given node {@code node}.
      ;
@@ -61906,7 +61774,6 @@
     )
 )
 
-;; @NodeInfo.allowedUsageTypes "InputType.Extension, InputType.Memory"
 (final-ns CommitAllocationNode (§ extends FixedWithNextNode) (§ implements VirtualizableAllocation, Lowerable, Simplifiable, Single)
     (§ def #_"NodeClass<CommitAllocationNode>" CommitAllocationNode'TYPE (NodeClass'create-1 CommitAllocationNode))
 
@@ -61923,18 +61790,217 @@
         (FixedWithNextNode'new-2 CommitAllocationNode'TYPE, (StampFactory'forVoid-0))
     )
 
-    (§ method! #_"List<MonitorIdNode>" CommitAllocationNode''getLocks-2 [#_"CommitAllocationNode" this, #_"int" objIndex]
-        (#_"List" .subList (:locks this), (nth (:lockIndexes this) objIndex), (nth (:lockIndexes this) (inc objIndex)))
+    (§ method! #_"void" CommitAllocationNode''addLocks-2 [#_"CommitAllocationNode" this, #_"List<MonitorIdNode>" monitorIds]
+        (NodeList''addAll-2 (:locks this), monitorIds)
+        (#_"ArrayList" .add (:lockIndexes this), (count (:locks this)))
+        nil
     )
 
-    #_unused
-    (§ override! #_"void" CommitAllocationNode''lower-2 [#_"CommitAllocationNode" this, #_"LoweringTool" lowerer]
+    (§ method! #_"List<MonitorIdNode>" CommitAllocationNode''getLocks-2 [#_"CommitAllocationNode" this, #_"int" i]
+        (#_"List" .subList (:locks this), (nth (:lockIndexes this) i), (nth (:lockIndexes this) (inc i)))
+    )
+
+    ;;;
+     ; Insert the required MemoryBarriers#STORE_STORE barrier for an allocation and also include
+     ; the MemoryBarriers#LOAD_STORE required for final fields if any final fields are being written,
+     ; as if FinalFieldBarrierNode were emitted.
+     ;;
+    (§ method- #_"void" CommitAllocationNode''insertAllocationBarrier-1 [#_"CommitAllocationNode" this]
+        (let [
+            #_"boolean" final?
+                (loop-when [#_"ISeq" s (seq (:virtualObjects this))] (some? s) => false
+                    (or
+                        (loop-when [#_"ISeq" s (seq (#_"ResolvedJavaType" .getInstanceFields (VirtualObjectNode''type-1 (first s)), true))] (some? s) => false
+                            (or
+                                (#_"ResolvedJavaField" .isFinal (first s))
+                                (recur (next s))
+                            )
+                        )
+                        (recur (next s))
+                    )
+                )
+            #_"int" barrier (| MemoryBarriers/STORE_STORE (if final? MemoryBarriers/LOAD_STORE 0))
+        ]
+            (Graph''addAfterFixed-3 (:graph this), this, (Graph''add-2 (:graph this), (MembarNode'new-2 barrier, (LocationIdentity/init))))
+        )
+        nil
+    )
+
+    (§ method- #_"void" CommitAllocationNode''finishAllocatedObjects-3 [#_"CommitAllocationNode" this, #_"LoweringTool" lowerer, #_"ValueNode[]" allocations]
+        (dotimes [#_"int" i (count (:virtualObjects this))]
+            (let [
+                #_"FixedValueAnchorNode" anchor (Graph''add-2 (:graph this), (FixedValueAnchorNode'new-1 (nth allocations i)))
+            ]
+                (aset allocations i anchor)
+                (Graph''addBeforeFixed-3 (:graph this), this, anchor)
+            )
+        )
+        ;; Note that the FrameState that is assigned to these MonitorEnterNodes isn't the correct state.
+        ;; It will be the state from before the allocation occurred instead of a valid state after the
+        ;; locking is performed. In practice this should be fine since these are newly allocated objects.
+        ;; The bytecodes themselves permit allocating an object, doing a monitorenter and then dropping
+        ;; all references to the object which would produce the same state, though that would normally
+        ;; produce an IllegalMonitorStateException. In HotSpot some form of fast path locking should
+        ;; always occur so the FrameState should never actually be used.
+        (let [
+            #_"ArrayList<MonitorEnterNode>" enters
+                (loop-when [enters nil #_"int" i 0] (< i (count (:virtualObjects this))) => enters
+                    (let [
+                        #_"List<MonitorIdNode>" locks (CommitAllocationNode''getLocks-2 this, i)
+                        locks
+                            (when (< 1 (count locks)) => locks
+                                ;; ensure that the lock operations are performed in lock depth order
+                                (let [
+                                    #_"ArrayList<MonitorIdNode>" newList (ArrayList. locks)
+                                ]
+                                    (#_"ArrayList" .sort newList, (ß (a, b) -> (§ fun (Integer/compare (:lockDepth a), (:lockDepth b)))))
+                                    newList
+                                )
+                            )
+                        enters
+                            (loop-when [enters enters #_"ISeq" s (seq locks)] (some? s) => enters
+                                (let [
+                                    #_"MonitorEnterNode" enter (Graph''add-2 (:graph this), (MonitorEnterNode'new-2 (nth allocations i), (first s)))
+                                ]
+                                    (Graph''addBeforeFixed-3 (:graph this), this, enter)
+                                    (let [
+                                        enters (or enters (ArrayList.))
+                                    ]
+                                        (#_"ArrayList" .add enters, enter)
+                                        (recur enters (next s))
+                                    )
+                                )
+                            )
+                    ]
+                        (recur enters (inc i))
+                    )
+                )
+        ]
+            (doseq [#_"Node" usage (NodeIterable''snapshot-1 (Node''usages-1 this))]
+                (if (instance? AllocatedObjectNode usage)
+                    (Node''replaceAtUsagesAndDelete-2 usage, (nth allocations (#_"List" .indexOf (:virtualObjects this), (:virtualObject usage))))
+                    (Node''replaceAtUsages-3 this, InputType'Memory, (nth enters (dec (count enters))))
+                )
+            )
+            (doseq [#_"MonitorEnterNode" enter enters]
+                (Lowerable''lower-2 enter, lowerer)
+            )
+            (CommitAllocationNode''insertAllocationBarrier-1 this)
+        )
+        nil
+    )
+
+    (§ override! #_"void" Lowerable''lower-2 [#_"CommitAllocationNode" this, #_"LoweringTool" lowerer]
         (dotimes [#_"int" i (count (:virtualObjects this))]
             (when (nth (:ensureVirtual this) i)
                 (EnsureVirtualizedNode'ensureVirtualFailure-2 this, (:stamp (nth (:virtualObjects this) i)))
             )
         )
-        (Lowerer'lowerCommitAllocationNode-2 this, lowerer)
+        (when (= (:guardsStage (:graph this)) GuardsStage'FIXED_DEOPTS)
+            (let [
+                #_"List<AbstractNewObjectNode>" recursiveLowerings (ArrayList.)
+                #_"ValueNode[]" allocations (make-array ValueNode (count (:virtualObjects this)))
+                #_"BitSet" omittedValues (BitSet.)
+            ]
+                (loop-when [#_"int" valuePos 0 #_"int" objIndex 0] (< objIndex (count (:virtualObjects this)))
+                    (let [
+                        #_"VirtualObjectNode" virtual (nth (:virtualObjects this) objIndex)
+                        #_"int" entryCount (VirtualObjectNode''entryCount-1 virtual)
+                        #_"AbstractNewObjectNode" newObject
+                            (if (instance? VirtualInstanceNode virtual)
+                                (Graph''add-2 (:graph this), (NewInstanceNode'new-2 (VirtualObjectNode''type-1 virtual), true))
+                                (Graph''add-2 (:graph this), (NewArrayNode'new-3 (:componentType virtual), (ConstantNode'forInt-2 entryCount, (:graph this)), true))
+                            )
+                    ]
+                        (#_"List" .add recursiveLowerings, newObject)
+                        (Graph''addBeforeFixed-3 (:graph this), this, newObject)
+                        (aset allocations objIndex newObject)
+                        (let [
+                            valuePos
+                                (loop-when [valuePos valuePos #_"int" i 0] (< i entryCount) => valuePos
+                                    (let [
+                                        #_"ValueNode" value (nth (:values this) valuePos)
+                                        value
+                                            (when (instance? VirtualObjectNode value) => value
+                                                (nth allocations (#_"List" .indexOf (:virtualObjects this), value))
+                                            )
+                                    ]
+                                        (cond
+                                            (nil? value)
+                                                (#_"BitSet" .set omittedValues, valuePos)
+                                            (not (and (instance? ConstantNode value) (#_"Constant" .isDefaultForKind (:value value))))
+                                                ;; Constant.illegal is always the defaultForKind, so it is skipped
+                                                (let [
+                                                    #_"JavaKind" valueKind (ValueNode''getStackKind-1 value)
+                                                    #_"JavaKind" entryKind (VirtualObjectNode''entryKind-2 virtual, i)
+                                                    [#_"AddressNode" address #_"BarrierType" barrierType]
+                                                        (if (instance? VirtualInstanceNode virtual)
+                                                            (let [
+                                                                #_"long" offset (#_"HotSpotResolvedJavaField" .offset (VirtualInstanceNode''field-2 virtual, i))
+                                                            ]
+                                                                (when (<= 0 offset)
+                                                                    [(Lowerer'createOffsetAddress-3 (:graph this), newObject, offset) (Lowerer'fieldInitializationBarrier-1 entryKind)]
+                                                                )
+                                                            )
+                                                            [(Lowerer'createOffsetAddress-3 (:graph this), newObject, (+ (HotSpot'arrayBaseOffset-1 entryKind) (* i (HotSpot'arrayIndexScale-1 entryKind)))) (Lowerer'arrayInitializationBarrier-1 entryKind)]
+                                                        )
+                                                ]
+                                                    (when (some? address)
+                                                        (Graph''addAfterFixed-3 (:graph this), newObject, (Graph''add-2 (:graph this), (WriteNode'new-4 address, (LocationIdentity/init), (Lowerer'implicitStoreConvert-3 (:graph this), entryKind, value), barrierType)))
+                                                    )
+                                                )
+                                        )
+                                        (recur (inc valuePos) (inc i))
+                                    )
+                                )
+                        ]
+                            (recur valuePos (inc objIndex))
+                        )
+                    )
+                )
+
+                (loop-when [#_"int" valuePos 0 #_"int" objIndex 0] (< objIndex (count (:virtualObjects this)))
+                    (let [
+                        #_"VirtualObjectNode" virtual (nth (:virtualObjects this) objIndex)
+                        #_"int" entryCount (VirtualObjectNode''entryCount-1 virtual)
+                        #_"ValueNode" newObject (nth allocations objIndex)
+                        valuePos
+                            (loop-when [valuePos valuePos #_"int" i 0] (< i entryCount) => valuePos
+                                (when (#_"BitSet" .get omittedValues, valuePos)
+                                    (let [
+                                        #_"ValueNode" value (nth (:values this) valuePos)
+                                        #_"ValueNode" allocValue (nth allocations (#_"List" .indexOf (:virtualObjects this), value))
+                                    ]
+                                        (when-not (and (instance? ConstantNode allocValue) (#_"Constant" .isDefaultForKind (:value allocValue)))
+                                            (let [
+                                                [#_"AddressNode" address #_"BarrierType" barrierType]
+                                                    (if (instance? VirtualInstanceNode virtual)
+                                                        [(Lowerer'createFieldAddress-3 (:graph this), newObject, (VirtualInstanceNode''field-2 virtual, i)) BarrierType'IMPRECISE]
+                                                        [(Lowerer'createArrayAddress-4 (:graph this), newObject, (VirtualObjectNode''entryKind-2 virtual, i), (ConstantNode'forInt-2 i, (:graph this))) BarrierType'PRECISE]
+                                                    )
+                                            ]
+                                                (when (some? address)
+                                                    (Graph''addBeforeFixed-3 (:graph this), this, (Graph''add-2 (:graph this), (WriteNode'new-4 address, (LocationIdentity/init), (Lowerer'implicitStoreConvert-3 (:graph this), JavaKind/Object, allocValue), barrierType)))
+                                                )
+                                            )
+                                        )
+                                    )
+                                )
+                                (recur (inc valuePos) (inc i))
+                            )
+                    ]
+                        (recur valuePos (inc objIndex))
+                    )
+                )
+
+                (CommitAllocationNode''finishAllocatedObjects-3 this, lowerer, allocations)
+                (Graph''removeFixed-2 (:graph this), this)
+
+                (doseq [#_"AbstractNewObjectNode" recursiveLowering recursiveLowerings]
+                    (Lowerable''lower-2 recursiveLowering, lowerer)
+                )
+            )
+        )
         nil
     )
 
@@ -61946,12 +62012,6 @@
     #_unused
     (§ override! #_"void" CommitAllocationNode''afterClone-2 [#_"CommitAllocationNode" this, #_"Node" other]
         (§ ass! this (assoc this :lockIndexes (ArrayList. (:lockIndexes this))))
-        nil
-    )
-
-    (§ method! #_"void" CommitAllocationNode''addLocks-2 [#_"CommitAllocationNode" this, #_"List<MonitorIdNode>" monitorIds]
-        (NodeList''addAll-2 (:locks this), monitorIds)
-        (#_"ArrayList" .add (:lockIndexes this), (count (:locks this)))
         nil
     )
 
@@ -62099,12 +62159,6 @@
         nil
     )
 
-    #_unused
-    (§ override! #_"void" EnsureVirtualizedNode''lower-2 [#_"EnsureVirtualizedNode" this, #_"LoweringTool" lowerer]
-        (EnsureVirtualizedNode'ensureVirtualFailure-2 this, (:stamp (:object this)))
-        nil
-    )
-
     (§ defn #_"void" EnsureVirtualizedNode'ensureVirtualFailure-2 [#_"Node" location, #_"Stamp" stamp]
         (let [
             #_"String" additionalReason
@@ -62122,6 +62176,11 @@
         ]
             (throw! (str "instance of type " (#_"ResolvedJavaType" .getName (StampTool'typeOrNull-1 stamp)) " should not be materialized" additionalReason))
         )
+        nil
+    )
+
+    (§ override! #_"void" Lowerable''lower-2 [#_"EnsureVirtualizedNode" this, #_"LoweringTool" lowerer]
+        (EnsureVirtualizedNode'ensureVirtualFailure-2 this, (:stamp (:object this)))
         nil
     )
 )
@@ -62483,7 +62542,6 @@
  ; Base class for nodes that contain "virtual" state, like FrameState and VirtualObjectState.
  ; Subclasses of this class will be treated in a special way by the scheduler.
  ;;
-;; @NodeInfo.allowedUsageTypes "InputType.StateI"
 (class-ns VirtualState (§ extends Node)
     (§ defn #_"VirtualState" VirtualState'new-1 [#_"NodeClass<? extends VirtualState>" c]
         (Node'new-1 c)
@@ -67861,7 +67919,7 @@
                     (let [
                         #_"DummyGuardHandle" handle (Graph''add-2 graph, (DummyGuardHandle'new-1 fixedGuard))
                     ]
-                        (FixedGuardNode''lower-2 fixedGuard, this)
+                        (Lowerable''lower-2 fixedGuard, this)
                         (let [
                             #_"GuardingNode" result (DummyGuardHandle''getGuard-1 handle)
                         ]
@@ -71437,93 +71495,38 @@
  ; Provides a capability for replacing a higher node with one or more lower level nodes.
  ;;
 (value-ns Lowerer
-    (§ def #_"BoxingTemplates"        Lowerer'boxingSnippets        (BoxingTemplates'new-0))
-    (§ def #_"InstanceOfTemplates"    Lowerer'instanceofSnippets    (InstanceOfTemplates'new-0))
-    (§ def #_"NewObjectTemplates"     Lowerer'newObjectSnippets     (NewObjectTemplates'new-0))
-    (§ def #_"MonitorTemplates"       Lowerer'monitorSnippets       (MonitorTemplates'new-1 HotSpot'useFastLocking))
-    (§ def #_"WriteBarrierTemplates"  Lowerer'writeBarrierSnippets  (WriteBarrierTemplates'new-1 (when HotSpot'useCompressedOops HotSpot'oopEncoding)))
-    (§ def #_"StringToBytesTemplates" Lowerer'stringToBytesSnippets (StringToBytesTemplates'new-0))
-    (§ def #_"UnsafeLoadTemplates"    Lowerer'unsafeLoadSnippets    (UnsafeLoadTemplates'new-0))
+    (§ def #_"BoxingTemplates"       Lowerer'boxingSnippets       (BoxingTemplates'new-0))
+    (§ def #_"InstanceOfTemplates"   Lowerer'instanceofSnippets   (InstanceOfTemplates'new-0))
+    (§ def #_"NewObjectTemplates"    Lowerer'newObjectSnippets    (NewObjectTemplates'new-0))
+    (§ def #_"MonitorTemplates"      Lowerer'monitorSnippets      (MonitorTemplates'new-1 HotSpot'useFastLocking))
+    (§ def #_"WriteBarrierTemplates" Lowerer'writeBarrierSnippets (WriteBarrierTemplates'new-1 (when HotSpot'useCompressedOops HotSpot'oopEncoding)))
+    (§ def #_"UnsafeLoadTemplates"   Lowerer'unsafeLoadSnippets   (UnsafeLoadTemplates'new-0))
 
-    (§ defn- #_"boolean" Lowerer'addReadBarrier-1 [#_"RawLoadNode" load]
-        (and HotSpot'useG1GC
-            (= (:guardsStage (:graph load)) GuardsStage'FIXED_DEOPTS)
-            (= (ValueNode''getStackKind-1 (:object load)) JavaKind/Object)
-            (= (:accessKind load) JavaKind/Object)
-            (not (StampTool'isPointerAlwaysNull-1 (:stamp (:object load))))
-            (let [
-                #_"ResolvedJavaType" type (StampTool'typeOrNull-1 (:stamp (:object load)))
-            ]
-                (and (some? type) (not (#_"ResolvedJavaType" .isArray type)))
-            )
-        )
-    )
-
-    (§ defn- #_"ReadNode" Lowerer'createReadVirtualMethod-4 [#_"Graph" graph, #_"ValueNode" hub, #_"HotSpotResolvedJavaMethod" method, #_"ResolvedJavaType" receiverType]
-        (Lowerer'createReadVirtualMethod-3 graph, hub, (#_"HotSpotResolvedJavaMethod" .vtableEntryOffset method, receiverType))
-    )
-
-    (§ defn- #_"ReadNode" Lowerer'createReadVirtualMethod-3 [#_"Graph" graph, #_"ValueNode" hub, #_"int" vtableEntryOffset]
-        ;; We use LocationNode.ANY_LOCATION for the reads that access the vtable
-        ;; entry as HotSpot does not guarantee that this is a final value.
-        (let [
-            #_"AddressNode" address (Lowerer'createOffsetAddress-3 graph, hub, vtableEntryOffset)
-        ]
-            (Graph''add-2 graph, (ReadNode'new-4 address, (LocationIdentity/any), MethodPointerStamp'METHOD_NON_NULL, BarrierType'NONE))
-        )
-    )
-
-    (§ defn- #_"WriteNode" Lowerer'createWriteHub-3 [#_"Graph" graph, #_"ValueNode" object, #_"ValueNode" value]
-        (let [
-            #_"ValueNode" writeValue (if HotSpot'useCompressedClassPointers (HotSpotCompressionNode'compress-2 value, HotSpot'klassEncoding) value)
-            #_"AddressNode" address (Lowerer'createOffsetAddress-3 graph, object, HotSpot'hubOffset)
-        ]
-            (Graph''add-2 graph, (WriteNode'new-4 address, ReplacementsUtil'HUB_WRITE_LOCATION, writeValue, BarrierType'NONE))
-        )
+    ;;;
+     ; Indicates the smallest width for comparing an integer value on the target platform.
+     ;;
+    (§ defn #_"Integer" Lowerer'smallestCompareWidth-0 []
+        8
     )
 
     (§ defn #_"AddressNode" Lowerer'createOffsetAddress-3 [#_"Graph" graph, #_"ValueNode" object, #_"long" offset]
         (Graph''add-2 graph, (OffsetAddressNode'new-2 object, (ConstantNode'forIntegerKind-3 (.wordJavaKind HotSpot'target), offset, graph)))
     )
 
+    (§ defn #_"ReadNode" Lowerer'createReadVirtualMethod-4 [#_"Graph" graph, #_"ValueNode" hub, #_"HotSpotResolvedJavaMethod" method, #_"ResolvedJavaType" receiverType]
+        ;; We use LocationNode.ANY_LOCATION for the reads that access the vtable entry as HotSpot does not guarantee that this is a final value.
+        (let [
+            #_"AddressNode" address (Lowerer'createOffsetAddress-3 graph, hub, (#_"HotSpotResolvedJavaMethod" .vtableEntryOffset method, receiverType))
+        ]
+            (Graph''add-2 graph, (ReadNode'new-4 address, (LocationIdentity/any), MethodPointerStamp'METHOD_NON_NULL, BarrierType'NONE))
+        )
+    )
+
     (§ defn #_"AddressNode" Lowerer'createFieldAddress-3 [#_"Graph" graph, #_"ValueNode" object, #_"ResolvedJavaField" field]
         (let [
-            #_"int" offset (Lowerer'fieldOffset-1 field)
+            #_"int" offset (#_"HotSpotResolvedJavaField" .offset field)
         ]
             (when (<= 0 offset) (Lowerer'createOffsetAddress-3 graph, object, offset))
-        )
-    )
-
-    (§ defn #_"JavaKind" Lowerer'getStorageKind-1 [#_"ResolvedJavaField" field]
-        (#_"ResolvedJavaField" .getJavaKind field)
-    )
-
-    ;;;
-     ; Create a PiNode on the index proving that the index is positive. On some platforms this is
-     ; important to allow the index to be used as an int in the address mode.
-     ;;
-    (§ defn #_"AddressNode" Lowerer'createArrayIndexAddress-5 [#_"Graph" graph, #_"ValueNode" array, #_"JavaKind" elementKind, #_"ValueNode" index, #_"GuardingNode" boundsCheck]
-        (let [
-            #_"IntegerStamp" indexStamp (StampFactory'forInteger-3 32, 0, (dec Integer/MAX_VALUE))
-            #_"ValueNode" positiveIndex (Graph''maybeAddOrUnique-2 graph, (PiNode'create-3 index, indexStamp, (when (some? boundsCheck) boundsCheck)))
-        ]
-            (Lowerer'createArrayAddress-4 graph, array, elementKind, positiveIndex)
-        )
-    )
-
-    (§ defn #_"AddressNode" Lowerer'createArrayAddress-4 [#_"Graph" graph, #_"ValueNode" array, #_"JavaKind" elementKind, #_"ValueNode" index]
-        (let [
-            #_"ValueNode" wordIndex
-                (if (< 4 (.wordSize HotSpot'target))
-                    (Graph''add-2 graph, (SignExtendNode'new-2 index, (* (.wordSize HotSpot'target) 8)))
-                    index
-                )
-            #_"int" shift (CodeUtil/log2 (HotSpot'arrayIndexScale-1 elementKind))
-            #_"ValueNode" scaledIndex (Graph''add-2 graph, (LeftShiftNode'new-2 wordIndex, (ConstantNode'forInt-2 shift, graph)))
-            #_"int" base (HotSpot'arrayBaseOffset-1 elementKind)
-            #_"ValueNode" offset (Graph''add-2 graph, (AddNode'new-2 scaledIndex, (ConstantNode'forIntegerKind-3 (.wordJavaKind HotSpot'target), base, graph)))
-        ]
-            (Graph''add-2 graph, (OffsetAddressNode'new-2 array, offset))
         )
     )
 
@@ -71551,141 +71554,6 @@
         )
     )
 
-    (§ defn- #_"ValueNode" Lowerer'performBooleanCoercionIfNecessary-2 [#_"ValueNode" readValue, #_"JavaKind" readKind]
-        (when (= readKind JavaKind/Boolean) => readValue
-            (let [
-                #_"Graph" graph (:graph readValue)
-                #_"IntegerEqualsNode" eq (Graph''add-2 graph, (IntegerEqualsNode'new-2 readValue, (ConstantNode'forInt-2 0, graph)))
-            ]
-                (Graph''add-2 graph, (ConditionalNode'new-3 eq, (ConstantNode'forBoolean-2 false, graph), (ConstantNode'forBoolean-2 true, graph)))
-            )
-        )
-    )
-
-    (§ defn #_"ReadNode" Lowerer'createUnsafeRead-3 [#_"Graph" graph, #_"RawLoadNode" load, #_"GuardingNode" guard]
-        (let [
-            #_"boolean" compressible? (= (:accessKind load) JavaKind/Object)
-            #_"JavaKind" readKind (:accessKind load)
-            #_"Stamp" loadStamp (Lowerer'loadStamp-3 (:stamp load), readKind, compressible?)
-            #_"AddressNode" address (Lowerer'createUnsafeAddress-3 graph, (:object load), (:offset load))
-            #_"ReadNode" memoryRead (Graph''add-2 graph, (ReadNode'new-4 address, (:locationIdentity load), loadStamp, BarrierType'NONE))
-        ]
-            (if (some? guard)
-                (GuardedNode''setGuard-2 memoryRead, guard)
-                ;; An unsafe read must not float, otherwise it may float above a test guaranteeing the read is safe.
-                (§ ass! memoryRead (FloatableAccessNode''setForceFixed-2 memoryRead, true))
-            )
-            (let [
-                #_"ValueNode" readValue (Lowerer'performBooleanCoercionIfNecessary-2 (Lowerer'implicitLoadConvert-4 graph, readKind, memoryRead, compressible?), readKind)
-            ]
-                (§ ass! load (Node''replaceAtUsages-2 load, readValue))
-                memoryRead
-            )
-        )
-    )
-
-    (§ defn #_"NewInstanceNode" Lowerer'createNewInstanceFromVirtual-1 [#_"VirtualObjectNode" virtual]
-        (NewInstanceNode'new-2 (VirtualObjectNode''type-1 virtual), true)
-    )
-
-    (§ defn #_"NewArrayNode" Lowerer'createNewArrayFromVirtual-2 [#_"VirtualObjectNode" virtual, #_"ValueNode" length]
-        (NewArrayNode'new-3 (:componentType virtual), length, true)
-    )
-
-    (§ defn #_"void" Lowerer'finishAllocatedObjects-3 [#_"LoweringTool" lowerer, #_"CommitAllocationNode" commit, #_"ValueNode[]" allocations]
-        (let [
-            #_"Graph" graph (:graph commit)
-        ]
-            (dotimes [#_"int" i (count (:virtualObjects commit))]
-                (let [
-                    #_"FixedValueAnchorNode" anchor (Graph''add-2 graph, (FixedValueAnchorNode'new-1 (nth allocations i)))
-                ]
-                    (aset allocations i anchor)
-                    (Graph''addBeforeFixed-3 graph, commit, anchor)
-                )
-            )
-            ;; Note that the FrameState that is assigned to these MonitorEnterNodes isn't the correct state.
-            ;; It will be the state from before the allocation occurred instead of a valid state after the
-            ;; locking is performed. In practice this should be fine since these are newly allocated objects.
-            ;; The bytecodes themselves permit allocating an object, doing a monitorenter and then dropping
-            ;; all references to the object which would produce the same state, though that would normally
-            ;; produce an IllegalMonitorStateException. In HotSpot some form of fast path locking should
-            ;; always occur so the FrameState should never actually be used.
-            (let [
-                #_"ArrayList<MonitorEnterNode>" enters
-                    (loop-when [enters nil #_"int" i 0] (< i (count (:virtualObjects commit))) => enters
-                        (let [
-                            #_"List<MonitorIdNode>" locks (CommitAllocationNode''getLocks-2 commit, i)
-                            locks
-                                (when (< 1 (count locks)) => locks
-                                    ;; ensure that the lock operations are performed in lock depth order
-                                    (let [
-                                        #_"ArrayList<MonitorIdNode>" newList (ArrayList. locks)
-                                    ]
-                                        (#_"ArrayList" .sort newList, (ß (a, b) -> (§ fun (Integer/compare (:lockDepth a), (:lockDepth b)))))
-                                        newList
-                                    )
-                                )
-                            enters
-                                (loop-when [enters enters #_"ISeq" s (seq locks)] (some? s) => enters
-                                    (let [
-                                        #_"MonitorEnterNode" enter (Graph''add-2 graph, (MonitorEnterNode'new-2 (nth allocations i), (first s)))
-                                    ]
-                                        (Graph''addBeforeFixed-3 graph, commit, enter)
-                                        (let [
-                                            enters (or enters (ArrayList.))
-                                        ]
-                                            (#_"ArrayList" .add enters, enter)
-                                            (recur enters (next s))
-                                        )
-                                    )
-                                )
-                        ]
-                            (recur enters (inc i))
-                        )
-                    )
-            ]
-                (doseq [#_"Node" usage (NodeIterable''snapshot-1 (Node''usages-1 commit))]
-                    (if (instance? AllocatedObjectNode usage)
-                        (Node''replaceAtUsagesAndDelete-2 usage, (nth allocations (#_"List" .indexOf (:virtualObjects commit), (:virtualObject usage))))
-                        (Node''replaceAtUsages-3 commit, InputType'Memory, (nth enters (dec (count enters))))
-                    )
-                )
-                (doseq [#_"MonitorEnterNode" enter enters]
-                    (MonitorEnterNode''lower-2 enter, lowerer)
-                )
-                (Lowerer'insertAllocationBarrier-2 commit, graph)
-            )
-        )
-        nil
-    )
-
-    ;;;
-     ; Insert the required MemoryBarriers#STORE_STORE barrier for an allocation and also
-     ; include the MemoryBarriers#LOAD_STORE required for final fields if any final fields
-     ; are being written, as if FinalFieldBarrierNode were emitted.
-     ;;
-    (§ defn- #_"void" Lowerer'insertAllocationBarrier-2 [#_"CommitAllocationNode" commit, #_"Graph" graph]
-        (let [
-            #_"boolean" final?
-                (loop-when [#_"ISeq" s (seq (:virtualObjects commit))] (some? s) => false
-                    (or
-                        (loop-when [#_"ISeq" s (seq (#_"ResolvedJavaType" .getInstanceFields (VirtualObjectNode''type-1 (first s)), true))] (some? s) => false
-                            (or
-                                (#_"ResolvedJavaField" .isFinal (first s))
-                                (recur (next s))
-                            )
-                        )
-                        (recur (next s))
-                    )
-                )
-            #_"int" barrier (| MemoryBarriers/STORE_STORE (if final? MemoryBarriers/LOAD_STORE 0))
-        ]
-            (Graph''addAfterFixed-3 graph, commit, (Graph''add-2 graph, (MembarNode'new-2 barrier, (LocationIdentity/init))))
-        )
-        nil
-    )
-
     (§ defn #_"BarrierType" Lowerer'fieldLoadBarrierType-1 [#_"ResolvedJavaField" field]
         (if (and HotSpot'useG1GC (= (#_"HotSpotResolvedJavaField" .getJavaKind field) JavaKind/Object) (= (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, java.lang.ref.Reference) (#_"HotSpotResolvedJavaField" .getDeclaringClass field)) (= (#_"HotSpotResolvedJavaField" .getName field) "referent"))
             BarrierType'PRECISE
@@ -71709,13 +71577,7 @@
         (if (and (= entryKind JavaKind/Object) (not HotSpot'useDeferredInitBarriers)) BarrierType'PRECISE BarrierType'NONE)
     )
 
-    (§ defn- #_"BarrierType" Lowerer'unsafeStoreBarrierType-1 [#_"RawStoreNode" store]
-        (when (:needsBarrier store) => BarrierType'NONE
-            (Lowerer'storeBarrierType-2 (:object store), (:value store))
-        )
-    )
-
-    (§ defn- #_"BarrierType" Lowerer'storeBarrierType-2 [#_"ValueNode" object, #_"ValueNode" value]
+    (§ defn #_"BarrierType" Lowerer'storeBarrierType-2 [#_"ValueNode" object, #_"ValueNode" value]
         (when (and (= (ValueNode''getStackKind-1 value) JavaKind/Object) (= (ValueNode''getStackKind-1 object) JavaKind/Object)) => BarrierType'NONE
             (let [
                 #_"ResolvedJavaType" type (StampTool'typeOrNull-1 (:stamp object))
@@ -71725,33 +71587,13 @@
         )
     )
 
-    (§ defn #_"int" Lowerer'fieldOffset-1 [#_"ResolvedJavaField" field]
-        (#_"HotSpotResolvedJavaField" .offset field)
-    )
-
-    (§ defn #_"FieldLocationIdentity" Lowerer'fieldLocationIdentity-1 [#_"ResolvedJavaField" field]
-        (FieldLocationIdentity'new-1 field)
-    )
-
-    (§ defn #_"ValueNode" Lowerer'staticFieldBase-2 [#_"Graph" graph, #_"ResolvedJavaField" field]
-        (ConstantNode'forConstant-2 (#_"HotSpotConstantReflectionProvider" .asJavaClass HotSpot'constantReflection, (#_"HotSpotResolvedJavaField" .getDeclaringClass field)), graph)
-    )
-
-    (§ defn #_"Stamp" Lowerer'loadStamp-2 [#_"Stamp" stamp, #_"JavaKind" kind]
-        (Lowerer'loadStamp-3 stamp, kind, true)
-    )
-
     (§ defn- #_"boolean" Lowerer'useCompressedOops-2 [#_"JavaKind" kind, #_"boolean" compressible?]
         (and (= kind JavaKind/Object) compressible? HotSpot'useCompressedOops)
     )
 
-    (§ defn #_"Stamp" Lowerer'loadCompressedStamp-1 [#_"ObjectStamp" stamp]
-        (HotSpotNarrowOopStamp'compressed-2 stamp, HotSpot'oopEncoding)
-    )
-
     (§ defn #_"Stamp" Lowerer'loadStamp-3 [#_"Stamp" stamp, #_"JavaKind" kind, #_"boolean" compressible?]
         (if (Lowerer'useCompressedOops-2 kind, compressible?)
-            (Lowerer'loadCompressedStamp-1 stamp)
+            (HotSpotNarrowOopStamp'compressed-2 stamp, HotSpot'oopEncoding)
             (condp =? kind
                 [JavaKind/Boolean JavaKind/Byte] (IntegerConvertOp''foldStamp-4 (:narrow IntegerStamp'OPS), 32, 8, stamp)
                 [JavaKind/Char JavaKind/Short]   (IntegerConvertOp''foldStamp-4 (:narrow IntegerStamp'OPS), 32, 16, stamp)
@@ -71760,9 +71602,20 @@
         )
     )
 
+    (§ defn- #_"ValueNode" Lowerer'newCompressionNode-2 [#_"CompressionOp" op, #_"ValueNode" value]
+        (HotSpotCompressionNode'new-3 op, value, HotSpot'oopEncoding)
+    )
+
     (§ defn #_"ValueNode" Lowerer'implicitLoadConvert-4 [#_"Graph" graph, #_"JavaKind" kind, #_"ValueNode" value, #_"boolean" compressible?]
         (let [
-            #_"ValueNode" ret (Lowerer'implicitLoadConvert-3 kind, value, compressible?)
+            #_"ValueNode" ret
+                (when-not (Lowerer'useCompressedOops-2 kind, compressible?) => (Lowerer'newCompressionNode-2 CompressionOp'Uncompress, value)
+                    (condp =? kind
+                        [JavaKind/Byte JavaKind/Short]   (SignExtendNode'new-2 value, 32)
+                        [JavaKind/Boolean JavaKind/Char] (ZeroExtendNode'new-2 value, 32)
+                                                         value
+                    )
+                )
         ]
             (when-not (Node''isAlive-1 ret) => ret
                 (Graph''add-2 graph, ret)
@@ -71774,29 +71627,16 @@
         (Lowerer'implicitLoadConvert-4 graph, kind, value, true)
     )
 
-    #_unused
-    (§ defn #_"ValueNode" Lowerer'implicitLoadConvert-2 [#_"JavaKind" kind, #_"ValueNode" value]
-        (Lowerer'implicitLoadConvert-3 kind, value, true)
-    )
-
-    (§ defn #_"ValueNode" Lowerer'newCompressionNode-2 [#_"CompressionOp" op, #_"ValueNode" value]
-        (HotSpotCompressionNode'new-3 op, value, HotSpot'oopEncoding)
-    )
-
-    (§ defn #_"ValueNode" Lowerer'implicitLoadConvert-3 [#_"JavaKind" kind, #_"ValueNode" value, #_"boolean" compressible?]
-        (if (Lowerer'useCompressedOops-2 kind, compressible?)
-            (Lowerer'newCompressionNode-2 CompressionOp'Uncompress, value)
-            (condp =? kind
-                [JavaKind/Byte JavaKind/Short]   (SignExtendNode'new-2 value, 32)
-                [JavaKind/Boolean JavaKind/Char] (ZeroExtendNode'new-2 value, 32)
-                                                 value
-            )
-        )
-    )
-
     (§ defn #_"ValueNode" Lowerer'implicitStoreConvert-4 [#_"Graph" graph, #_"JavaKind" kind, #_"ValueNode" value, #_"boolean" compressible?]
         (let [
-            #_"ValueNode" ret (Lowerer'implicitStoreConvert-3 kind, value, compressible?)
+            #_"ValueNode" ret
+                (when-not (Lowerer'useCompressedOops-2 kind, compressible?) => (Lowerer'newCompressionNode-2 CompressionOp'Compress, value)
+                    (condp =? kind
+                        [JavaKind/Boolean JavaKind/Byte] (NarrowNode'new-2 value, 8)
+                        [JavaKind/Char JavaKind/Short]   (NarrowNode'new-2 value, 16)
+                                                         value
+                    )
+                )
         ]
             (when-not (Node''isAlive-1 ret) => ret
                 (Graph''add-2 graph, ret)
@@ -71806,22 +71646,6 @@
 
     (§ defn #_"ValueNode" Lowerer'implicitStoreConvert-3 [#_"Graph" graph, #_"JavaKind" kind, #_"ValueNode" value]
         (Lowerer'implicitStoreConvert-4 graph, kind, value, true)
-    )
-
-    #_unused
-    (§ defn #_"ValueNode" Lowerer'implicitStoreConvert-2 [#_"JavaKind" kind, #_"ValueNode" value]
-        (Lowerer'implicitStoreConvert-3 kind, value, true)
-    )
-
-    (§ defn #_"ValueNode" Lowerer'implicitStoreConvert-3 [#_"JavaKind" kind, #_"ValueNode" value, #_"boolean" compressible?]
-        (if (Lowerer'useCompressedOops-2 kind, compressible?)
-            (Lowerer'newCompressionNode-2 CompressionOp'Compress, value)
-            (condp =? kind
-                [JavaKind/Boolean JavaKind/Byte] (NarrowNode'new-2 value, 8)
-                [JavaKind/Char JavaKind/Short]   (NarrowNode'new-2 value, 16)
-                                                 value
-            )
-        )
     )
 
     (§ defn #_"ValueNode" Lowerer'createReadHub-3 [#_"Graph" graph, #_"ValueNode" object, #_"LoweringTool" lowerer]
@@ -71881,514 +71705,20 @@
         )
     )
 
-    ;;;
-     ; Indicates the smallest width for comparing an integer value on the target platform.
-     ;;
-    (§ defn #_"Integer" Lowerer'smallestCompareWidth-0 []
-        8
-    )
-
-    (§ defn #_"void" Lowerer'lowerInvoke-3 [#_"InvokeNode" invoke, #_"LoweringTool" lowerer, #_"Graph" graph]
-        (when (instance? MethodCallTargetNode (:callTarget invoke))
-            (let [
-                #_"MethodCallTargetNode" callTarget (:callTarget invoke)
-                #_"NodeInputList<ValueNode>" parameters (CallTargetNode''arguments-1 callTarget)
-                #_"ValueNode" receiver (first parameters)
-                receiver
-                    (when (and (not (MethodCallTargetNode''isStatic-1 callTarget)) (instance? ObjectStamp (:stamp receiver)) (not (StampTool'isPointerNeverNull-1 (:stamp receiver)))) => receiver
-                        (let [
-                            receiver (Lowerer'createNullCheckedValue-3 receiver, invoke, lowerer)
-                        ]
-                            (NodeList''set-3 parameters, 0, receiver)
-                            receiver
-                        )
-                    )
-                #_"JavaType[]" signature (#_"Signature" .toParameterTypes (#_"ResolvedJavaMethod" .getSignature (CallTargetNode''targetMethod-1 callTarget)), (when-not (MethodCallTargetNode''isStatic-1 callTarget) (#_"ResolvedJavaMethod" .getDeclaringClass (CallTargetNode''targetMethod-1 callTarget))))
-                #_"LoweredCallTargetNode" loweredCallTarget
-                    (or
-                        (when (and GraalOptions'inlineVTableStubs (InvokeKind''isIndirect-1 (CallTargetNode''invokeKind-1 callTarget)) GraalOptions'alwaysInlineVTableStubs)
-                            (let [
-                                #_"HotSpotResolvedJavaMethod" hsMethod (CallTargetNode''targetMethod-1 callTarget)
-                                #_"ResolvedJavaType" receiverType (InvokeNode''getReceiverType-1 invoke)
-                            ]
-                                (when (#_"HotSpotResolvedJavaMethod" .isInVirtualMethodTable hsMethod, receiverType)
-                                    (let [
-                                        #_"JavaKind" wordKind (.wordJavaKind HotSpot'target)
-                                        #_"ValueNode" hub (Lowerer'createReadHub-3 graph, receiver, lowerer)
-                                        #_"ReadNode" metaspaceMethod (Lowerer'createReadVirtualMethod-4 graph, hub, hsMethod, receiverType)
-                                        ;; We use LocationNode.ANY_LOCATION for the reads that access the compiled
-                                        ;; code entry as HotSpot does not guarantee they are final values.
-                                        #_"AddressNode" address (Lowerer'createOffsetAddress-3 graph, metaspaceMethod, HotSpot'methodCompiledEntryOffset)
-                                        #_"ReadNode" compiledEntry (Graph''add-2 graph, (ReadNode'new-4 address, (LocationIdentity/any), (StampFactory'forKind-1 wordKind), BarrierType'NONE))
-                                        loweredCallTarget (Graph''add-2 graph, (HotSpotIndirectCallTargetNode'new-8 metaspaceMethod, compiledEntry, (NodeList''toArray-2 parameters, (make-array ValueNode (count parameters))), (CallTargetNode''returnStamp-1 callTarget), signature, (CallTargetNode''targetMethod-1 callTarget), HotSpotCallingConventionType/JavaCall, (CallTargetNode''invokeKind-1 callTarget)))
-                                    ]
-                                        (Graph''addBeforeFixed-3 graph, invoke, metaspaceMethod)
-                                        (Graph''addAfterFixed-3 graph, metaspaceMethod, compiledEntry)
-                                        loweredCallTarget
-                                    )
-                                )
-                            )
-                        )
-                        (Graph''add-2 graph, (HotSpotDirectCallTargetNode'new-6 (NodeList''toArray-2 parameters, (make-array ValueNode (count parameters))), (CallTargetNode''returnStamp-1 callTarget), signature, (CallTargetNode''targetMethod-1 callTarget), HotSpotCallingConventionType/JavaCall, (CallTargetNode''invokeKind-1 callTarget)))
-                    )
-            ]
-                (§ ass! callTarget (Node''replaceAndDelete-2 callTarget, loweredCallTarget))
-            )
-        )
-        nil
-    )
-
-    (§ defn #_"void" Lowerer'lowerLoadMethodNode-1 [#_"LoadMethodNode" node]
-        (§ ass! (:graph node) (Graph''replaceFixed-3 (:graph node), node, (Lowerer'createReadVirtualMethod-4 (:graph node), (:hub node), (:method node), (:receiverType node))))
-        nil
-    )
-
-    (§ defn #_"void" Lowerer'lowerGetClassNode-3 [#_"GetClassNode" getClass, #_"LoweringTool" lowerer, #_"Graph" graph]
+    (§ defn #_"AddressNode" Lowerer'createArrayAddress-4 [#_"Graph" graph, #_"ValueNode" array, #_"JavaKind" elementKind, #_"ValueNode" index]
         (let [
-            #_"LoadHubNode" hub (Graph''add-2 graph, (LoadHubNode'new-1 (:object getClass)))
-            #_"HubGetClassNode" hubGetClass (Graph''add-2 graph, (HubGetClassNode'new-1 hub))
-        ]
-            (Node''replaceAtUsagesAndDelete-2 getClass, hubGetClass)
-            (LoadHubNode''lower-2 hub, lowerer)
-            (HubGetClassNode''lower-2 hubGetClass, lowerer)
-        )
-        nil
-    )
-
-    (§ defn #_"void" Lowerer'lowerStoreHubNode-2 [#_"StoreHubNode" storeHub, #_"Graph" graph]
-        (§ ass! graph (Graph''replaceFixed-3 graph, storeHub, (Lowerer'createWriteHub-3 graph, (:object storeHub), (:value storeHub))))
-        nil
-    )
-
-    (§ defn #_"void" Lowerer'lowerClassGetHubNode-2 [#_"ClassGetHubNode" node, #_"LoweringTool" lowerer]
-        (when-not (= (:loweringStage (:phase lowerer)) LoweringStage'HIGH_TIER)
-            (let [
-                #_"Graph" graph (:graph node)
-                #_"AddressNode" address (Lowerer'createOffsetAddress-3 graph, (ClassGetHubNode''getValue-1 node), HotSpot'klassOffset)
-                #_"FloatingReadNode" read (Graph''add-2 graph, (FloatingReadNode'new-6 address, ReplacementsUtil'CLASS_KLASS_LOCATION, nil, (:stamp node), nil, BarrierType'NONE))
-            ]
-                (Node''replaceAtUsagesAndDelete-2 node, read)
-            )
-        )
-        nil
-    )
-
-    (§ defn #_"void" Lowerer'lowerHubGetClassNode-2 [#_"HubGetClassNode" node, #_"LoweringTool" lowerer]
-        (when-not (= (:loweringStage (:phase lowerer)) LoweringStage'HIGH_TIER)
-            (let [
-                #_"Graph" graph (:graph node)
-                #_"AddressNode" address (Lowerer'createOffsetAddress-3 graph, (:hub node), HotSpot'classMirrorOffset)
-                #_"FloatingReadNode" read (Graph''add-2 graph, (FloatingReadNode'new-6 address, ReplacementsUtil'CLASS_MIRROR_LOCATION, nil, (StampFactory'forKind-1 (.wordJavaKind HotSpot'target)), nil, BarrierType'NONE))
-                address (Lowerer'createOffsetAddress-3 graph, read, 0)
-                read (Graph''add-2 graph, (FloatingReadNode'new-6 address, ReplacementsUtil'CLASS_MIRROR_HANDLE_LOCATION, nil, (:stamp node), nil, BarrierType'NONE))
-            ]
-                (Node''replaceAtUsagesAndDelete-2 node, read)
-            )
-        )
-        nil
-    )
-
-    (§ defn #_"void" Lowerer'lowerKlassLayoutHelperNode-2 [#_"KlassLayoutHelperNode" node, #_"LoweringTool" lowerer]
-        (when-not (= (:loweringStage (:phase lowerer)) LoweringStage'HIGH_TIER)
-            (let [
-                #_"Graph" graph (:graph node)
-                #_"AddressNode" address (Lowerer'createOffsetAddress-3 graph, (:klass node), HotSpot'klassLayoutHelperOffset)
-            ]
-                (Node''replaceAtUsagesAndDelete-2 node, (Graph''add-2 graph, (FloatingReadNode'new-6 address, ReplacementsUtil'KLASS_LAYOUT_HELPER_LOCATION, nil, (:stamp node), nil, BarrierType'NONE)))
-            )
-        )
-        nil
-    )
-
-    (§ defn #_"void" Lowerer'lowerComputeObjectAddressNode-1 [#_"ComputeObjectAddressNode" node]
-        ;; Lower the node into a ComputeObjectAddress node and an Add,
-        ;; but ensure that it's below any potential safepoints and above it's uses.
-        (doseq [#_"Node" use (NodeIterable''snapshot-1 (Node''usages-1 node))]
-            (when (instance? FixedNode use) => (throw! (str "unexpected floating use of ComputeObjectAddressNode " node))
-                (let [
-                    #_"Graph" graph (:graph node)
-                    #_"GetObjectAddressNode" address (Graph''add-2 graph, (GetObjectAddressNode'new-1 (:object node)))
-                ]
-                    (Graph''addBeforeFixed-3 graph, use, address)
-                    (Node''replaceFirstInput-3 use, node, (Graph''add-2 graph, (AddNode'new-2 address, (:offset node))))
+            #_"ValueNode" wordIndex
+                (if (< 4 (.wordSize HotSpot'target))
+                    (Graph''add-2 graph, (SignExtendNode'new-2 index, (* (.wordSize HotSpot'target) 8)))
+                    index
                 )
-            )
-        )
-        (GraphUtil'unlinkFixedNode-1 node)
-        (Node''safeDelete-1 node)
-        nil
-    )
-
-    (§ defn #_"void" Lowerer'lowerLoadFieldNode-2 [#_"LoadFieldNode" loadField, #_"LoweringTool" lowerer]
-        (let [
-            #_"Graph" graph (:graph loadField)
-            #_"ResolvedJavaField" field (:field loadField)
-            #_"ValueNode" object (if (AccessFieldNode''isStatic-1 loadField) (Lowerer'staticFieldBase-2 graph, field) (:object loadField))
-            object (Lowerer'createNullCheckedValue-3 object, loadField, lowerer)
-            #_"Stamp" loadStamp (Lowerer'loadStamp-2 (:stamp loadField), (Lowerer'getStorageKind-1 field))
-            #_"AddressNode" address (Lowerer'createFieldAddress-3 graph, object, field)
-            #_"ReadNode" memoryRead (Graph''add-2 graph, (ReadNode'new-4 address, (Lowerer'fieldLocationIdentity-1 field), loadStamp, (Lowerer'fieldLoadBarrierType-1 field)))
-            #_"ValueNode" readValue (Lowerer'implicitLoadConvert-3 graph, (Lowerer'getStorageKind-1 field), memoryRead)
+            #_"int" shift (CodeUtil/log2 (HotSpot'arrayIndexScale-1 elementKind))
+            #_"ValueNode" scaledIndex (Graph''add-2 graph, (LeftShiftNode'new-2 wordIndex, (ConstantNode'forInt-2 shift, graph)))
+            #_"int" base (HotSpot'arrayBaseOffset-1 elementKind)
+            #_"ValueNode" offset (Graph''add-2 graph, (AddNode'new-2 scaledIndex, (ConstantNode'forIntegerKind-3 (.wordJavaKind HotSpot'target), base, graph)))
         ]
-            (§ ass! loadField (Node''replaceAtUsages-2 loadField, readValue))
-            (§ ass! graph (Graph''replaceFixed-3 graph, loadField, memoryRead))
-
-            (when (AccessFieldNode''isVolatile-1 loadField)
-                (Graph''addBeforeFixed-3 graph, memoryRead, (Graph''add-2 graph, (MembarNode'new-1 MemoryBarriers/JMM_PRE_VOLATILE_READ)))
-                (Graph''addAfterFixed-3 graph, memoryRead, (Graph''add-2 graph, (MembarNode'new-1 MemoryBarriers/JMM_POST_VOLATILE_READ)))
-            )
+            (Graph''add-2 graph, (OffsetAddressNode'new-2 array, offset))
         )
-        nil
-    )
-
-    (§ defn #_"void" Lowerer'lowerStoreFieldNode-2 [#_"StoreFieldNode" storeField, #_"LoweringTool" lowerer]
-        (let [
-            #_"Graph" graph (:graph storeField)
-            #_"ResolvedJavaField" field (:field storeField)
-            #_"ValueNode" object (if (AccessFieldNode''isStatic-1 storeField) (Lowerer'staticFieldBase-2 graph, field) (:object storeField))
-            object (Lowerer'createNullCheckedValue-3 object, storeField, lowerer)
-            #_"ValueNode" value (Lowerer'implicitStoreConvert-3 graph, (Lowerer'getStorageKind-1 field), (:value storeField))
-            #_"AddressNode" address (Lowerer'createFieldAddress-3 graph, object, field)
-            #_"WriteNode" memoryWrite (Graph''add-2 graph, (WriteNode'new-4 address, (Lowerer'fieldLocationIdentity-1 field), value, (Lowerer'fieldStoreBarrierType-1 field)))
-        ]
-            (AbstractWriteNode''setStateAfter-2 memoryWrite, (StoreFieldNode''stateAfter-1 storeField))
-            (§ ass! graph (Graph''replaceFixedWithFixed-3 graph, storeField, memoryWrite))
-
-            (when (AccessFieldNode''isVolatile-1 storeField)
-                (Graph''addBeforeFixed-3 graph, memoryWrite, (Graph''add-2 graph, (MembarNode'new-1 MemoryBarriers/JMM_PRE_VOLATILE_WRITE)))
-                (Graph''addAfterFixed-3 graph, memoryWrite, (Graph''add-2 graph, (MembarNode'new-1 MemoryBarriers/JMM_POST_VOLATILE_WRITE)))
-            )
-        )
-        nil
-    )
-
-    (§ defn #_"void" Lowerer'lowerLoadIndexedNode-2 [#_"LoadIndexedNode" loadIndexed, #_"LoweringTool" lowerer]
-        (let [
-            #_"Graph" graph (:graph loadIndexed)
-            #_"ValueNode" array (Lowerer'createNullCheckedValue-3 (:array loadIndexed), loadIndexed, lowerer)
-            #_"JavaKind" elementKind (:elementKind loadIndexed)
-            #_"Stamp" loadStamp (Lowerer'loadStamp-2 (:stamp loadIndexed), elementKind)
-            #_"GuardingNode" boundsCheck (Lowerer'getBoundsCheck-3 loadIndexed, array, lowerer)
-            #_"AddressNode" address (Lowerer'createArrayIndexAddress-5 graph, array, elementKind, (AccessIndexedNode''index-1 loadIndexed), boundsCheck)
-            #_"ReadNode" memoryRead (Graph''add-2 graph, (ReadNode'new-4 address, (NamedLocationIdentity'getArrayLocation-1 elementKind), loadStamp, BarrierType'NONE))
-        ]
-            (GuardedNode''setGuard-2 memoryRead, boundsCheck)
-            (§ ass! loadIndexed (Node''replaceAtUsages-2 loadIndexed, (Lowerer'implicitLoadConvert-3 graph, elementKind, memoryRead)))
-            (§ ass! graph (Graph''replaceFixed-3 graph, loadIndexed, memoryRead))
-        )
-        nil
-    )
-
-    (§ defn #_"void" Lowerer'lowerStoreIndexedNode-2 [#_"StoreIndexedNode" storeIndexed, #_"LoweringTool" lowerer]
-        (let [
-            #_"Graph" graph (:graph storeIndexed)
-            #_"ValueNode" value (:value storeIndexed)
-            #_"ValueNode" array (Lowerer'createNullCheckedValue-3 (:array storeIndexed), storeIndexed, lowerer)
-            #_"GuardingNode" boundsCheck (Lowerer'getBoundsCheck-3 storeIndexed, array, lowerer)
-            #_"JavaKind" elementKind (:elementKind storeIndexed)
-            #_"LogicNode" condition
-                (when (and (= elementKind JavaKind/Object) (not (StampTool'isPointerAlwaysNull-1 (:stamp value))))
-                    ;; Array store check.
-                    (let [
-                        #_"TypeReference" arrayType (StampTool'typeReferenceOrNull-1 (:stamp array))
-                    ]
-                        (if (and (some? arrayType) (:exactReference arrayType))
-                            (let [
-                                #_"ResolvedJavaType" elementType (#_"ResolvedJavaType" .getComponentType (:type arrayType))
-                            ]
-                                (when-not (#_"ResolvedJavaType" .isJavaLangObject elementType)
-                                    (let [
-                                        #_"LogicNode" typeTest (Graph''addOrUniqueWithInputs-2 graph, (InstanceOfNode'create-2 (TypeReference'createTrusted-1 elementType), value))
-                                    ]
-                                        (LogicNode'or-3 (Graph''add-2 graph, (IsNullNode'create-1 value)), typeTest, GraalDirectives'UNLIKELY_PROBABILITY)
-                                    )
-                                )
-                            )
-                            ;; The guard on the read hub should be the nil-check of the array that was introduced earlier.
-                            (let [
-                                #_"LogicNode" typeTest (Graph''add-2 graph, (InstanceOfDynamicNode'create-3 (Lowerer'createReadArrayComponentHub-3 graph, (Lowerer'createReadHub-3 graph, array, lowerer), storeIndexed), value, false))
-                            ]
-                                (LogicNode'or-3 (Graph''add-2 graph, (IsNullNode'create-1 value)), typeTest, GraalDirectives'UNLIKELY_PROBABILITY)
-                            )
-                        )
-                    )
-                )
-            #_"AddressNode" address (Lowerer'createArrayIndexAddress-5 graph, array, elementKind, (AccessIndexedNode''index-1 storeIndexed), boundsCheck)
-            #_"WriteNode" memoryWrite (Graph''add-2 graph, (WriteNode'new-4 address, (NamedLocationIdentity'getArrayLocation-1 elementKind), (Lowerer'implicitStoreConvert-3 graph, elementKind, value), (Lowerer'arrayStoreBarrierType-1 (:elementKind storeIndexed))))
-        ]
-            (GuardedNode''setGuard-2 memoryWrite, boundsCheck)
-            (when (some? condition)
-                (LoweringTool''createGuard-5 lowerer, storeIndexed, condition, DeoptimizationReason/ArrayStoreException, DeoptimizationAction/InvalidateReprofile)
-            )
-            (AbstractWriteNode''setStateAfter-2 memoryWrite, (StoreIndexedNode''stateAfter-1 storeIndexed))
-            (§ ass! graph (Graph''replaceFixedWithFixed-3 graph, storeIndexed, memoryWrite))
-        )
-        nil
-    )
-
-    (§ defn #_"void" Lowerer'lowerArrayLengthNode-2 [#_"ArrayLengthNode" node, #_"LoweringTool" lowerer]
-        (§ ass! node (Node''replaceAtUsages-2 node, (Lowerer'createReadArrayLength-3 (:array node), node, lowerer)))
-        (Graph''removeFixed-2 (:graph node), node)
-        nil
-    )
-
-    (§ defn #_"void" Lowerer'lowerLoadHubNode-2 [#_"LoadHubNode" node, #_"LoweringTool" lowerer]
-        (when (and (= (:loweringStage (:phase lowerer)) LoweringStage'LOW_TIER) (not (GuardsStage'allowsFloatingGuards-1 (:guardsStage (:graph node)))))
-            (Node''replaceAtUsagesAndDelete-2 node, (Lowerer'createReadHub-3 (:graph node), (:value node), lowerer))
-        )
-        nil
-    )
-
-    (§ defn #_"void" Lowerer'lowerMonitorEnterNode-3 [#_"MonitorEnterNode" monitorEnter, #_"LoweringTool" lowerer, #_"Graph" graph]
-        (let [
-            #_"ValueNode" object (Lowerer'createNullCheckedValue-3 (:object monitorEnter), monitorEnter, lowerer)
-            #_"ValueNode" hub (Graph''add-2 graph, (LoadHubNode'create-1 object))
-            #_"RawMonitorEnterNode" rawMonitorEnter (Graph''add-2 graph, (RawMonitorEnterNode'new-3 object, hub, (:monitorId monitorEnter)))
-        ]
-            (AccessMonitorNode''setStateBefore-2 rawMonitorEnter, (AccessMonitorNode''stateBefore-1 monitorEnter))
-            (AbstractStateSplit''setStateAfter-2 rawMonitorEnter, (AbstractStateSplit''stateAfter-1 monitorEnter))
-            (§ ass! graph (Graph''replaceFixedWithFixed-3 graph, monitorEnter, rawMonitorEnter))
-        )
-        nil
-    )
-
-    (§ defn #_"void" Lowerer'lowerCompareAndSwapNode-1 [#_"UnsafeCompareAndSwapNode" node]
-        (let [
-            #_"Graph" graph (:graph node)
-            #_"JavaKind" valueKind (:valueKind node)
-            #_"ValueNode" expectedValue (Lowerer'implicitStoreConvert-3 graph, valueKind, (:expected node))
-            #_"ValueNode" newValue (Lowerer'implicitStoreConvert-3 graph, valueKind, (:newValue node))
-            #_"AddressNode" address (Graph''add-2 graph, (OffsetAddressNode'new-2 (:object node), (:offset node)))
-            #_"BarrierType" barrierType (Lowerer'storeBarrierType-2 (:object node), expectedValue)
-            #_"LogicCompareAndSwapNode" atomicNode (Graph''add-2 graph, (LogicCompareAndSwapNode'new-5 address, (UnsafeCompareAndSwapNode''getLocationIdentity-1 node), expectedValue, newValue, barrierType))
-        ]
-            (AbstractCompareAndSwapNode''setStateAfter-2 atomicNode, (AbstractStateSplit''stateAfter-1 node))
-            (§ ass! graph (Graph''replaceFixedWithFixed-3 graph, node, atomicNode))
-        )
-        nil
-    )
-
-    (§ defn #_"void" Lowerer'lowerAtomicReadAndWriteNode-1 [#_"AtomicReadAndWriteNode" node]
-        (let [
-            #_"Graph" graph (:graph node)
-            #_"JavaKind" valueKind (:valueKind node)
-            #_"ValueNode" newValue (Lowerer'implicitStoreConvert-3 graph, valueKind, (:newValue node))
-            #_"AddressNode" address (Graph''add-2 graph, (OffsetAddressNode'new-2 (:object node), (:offset node)))
-            #_"BarrierType" barrierType (Lowerer'storeBarrierType-2 (:object node), (:newValue node))
-            #_"LoweredAtomicReadAndWriteNode" memoryRead (Graph''add-2 graph, (LoweredAtomicReadAndWriteNode'new-4 address, (AtomicReadAndWriteNode''getLocationIdentity-1 node), newValue, barrierType))
-        ]
-            (LoweredAtomicReadAndWriteNode''setStateAfter-2 memoryRead, (AbstractStateSplit''stateAfter-1 node))
-
-            (let [
-                #_"ValueNode" readValue (Lowerer'implicitLoadConvert-3 graph, valueKind, memoryRead)
-            ]
-                (Node''replaceFirstInput-3 (AbstractStateSplit''stateAfter-1 node), node, memoryRead)
-                (§ ass! node (Node''replaceAtUsages-2 node, readValue))
-                (§ ass! graph (Graph''replaceFixedWithFixed-3 graph, node, memoryRead))
-            )
-        )
-        nil
-    )
-
-    (§ defn #_"void" Lowerer'lowerUnsafeLoadNode-2 [#_"RawLoadNode" load, #_"LoweringTool" lowerer]
-        (cond
-            (and (not (instance? GuardedUnsafeLoadNode load)) (not (GuardsStage'allowsFloatingGuards-1 (:guardsStage (:graph load)))) (Lowerer'addReadBarrier-1 load))
-                (UnsafeLoadTemplates''lower-3 Lowerer'unsafeLoadSnippets, load, lowerer)
-            (instance? GuardedUnsafeLoadNode load)
-                (let [
-                    #_"GuardingNode" guard (GuardedUnsafeLoadNode''getGuard-1 load)
-                ]
-                    (if (nil? guard)
-                        ;; can float freely if the guard folded away
-                        (let [
-                            #_"ReadNode" memoryRead (Lowerer'createUnsafeRead-3 (:graph load), load, nil)
-                        ]
-                            (§ ass! memoryRead (FloatableAccessNode''setForceFixed-2 memoryRead, false))
-                            (§ ass! (:graph load) (Graph''replaceFixedWithFixed-3 (:graph load), load, memoryRead))
-                        )
-                        ;; must be guarded, but flows below the guard
-                        (let [
-                            #_"ReadNode" memoryRead (Lowerer'createUnsafeRead-3 (:graph load), load, guard)
-                        ]
-                            (§ ass! (:graph load) (Graph''replaceFixedWithFixed-3 (:graph load), load, memoryRead))
-                        )
-                    )
-                )
-            :else
-                ;; never had a guarding condition so it must be fixed, creation of the read will force it to be fixed
-                (let [
-                    #_"ReadNode" memoryRead (Lowerer'createUnsafeRead-3 (:graph load), load, nil)
-                ]
-                    (§ ass! (:graph load) (Graph''replaceFixedWithFixed-3 (:graph load), load, memoryRead))
-                )
-        )
-        nil
-    )
-
-    (§ defn #_"void" Lowerer'lowerUnsafeStoreNode-1 [#_"RawStoreNode" store]
-        (let [
-            #_"Graph" graph (:graph store)
-            #_"boolean" compressible? (= (ValueNode''getStackKind-1 (:value store)) JavaKind/Object)
-            #_"JavaKind" valueKind (:accessKind store)
-            #_"ValueNode" value (Lowerer'implicitStoreConvert-4 graph, valueKind, (:value store), compressible?)
-            #_"AddressNode" address (Lowerer'createUnsafeAddress-3 graph, (:object store), (:offset store))
-            #_"WriteNode" write (Graph''add-2 graph, (WriteNode'new-4 address, (:locationIdentity store), value, (Lowerer'unsafeStoreBarrierType-1 store)))
-        ]
-            (AbstractWriteNode''setStateAfter-2 write, (RawStoreNode''stateAfter-1 store))
-            (§ ass! graph (Graph''replaceFixedWithFixed-3 graph, store, write))
-        )
-        nil
-    )
-
-    (§ defn #_"void" Lowerer'lowerJavaReadNode-1 [#_"JavaReadNode" read]
-        (let [
-            #_"Graph" graph (:graph read)
-            #_"JavaKind" valueKind (:readKind read)
-            #_"Stamp" loadStamp (Lowerer'loadStamp-3 (:stamp read), valueKind, (:compressible? read))
-            #_"ReadNode" memoryRead (Graph''add-2 graph, (ReadNode'new-4 (FixedAccessNode''getAddress-1 read), (FixedAccessNode''getLocationIdentity-1 read), loadStamp, (FixedAccessNode''getBarrierType-1 read)))
-            #_"GuardingNode" guard (FixedAccessNode''getGuard-1 read)
-            #_"ValueNode" readValue (Lowerer'implicitLoadConvert-4 graph, valueKind, memoryRead, (:compressible? read))
-        ]
-            (if (some? guard)
-                (GuardedNode''setGuard-2 memoryRead, guard)
-                ;; An unsafe read must not float, otherwise it may float above a test guaranteeing the read is safe.
-                (§ ass! memoryRead (FloatableAccessNode''setForceFixed-2 memoryRead, true))
-            )
-            (§ ass! read (Node''replaceAtUsages-2 read, readValue))
-            (§ ass! graph (Graph''replaceFixed-3 graph, read, memoryRead))
-        )
-        nil
-    )
-
-    (§ defn #_"void" Lowerer'lowerJavaWriteNode-1 [#_"JavaWriteNode" write]
-        (let [
-            #_"Graph" graph (:graph write)
-            #_"ValueNode" value (Lowerer'implicitStoreConvert-4 graph, (:writeKind write), (AbstractWriteNode''value-1 write), (:compressible? write))
-            #_"WriteNode" memoryWrite (Graph''add-2 graph, (WriteNode'new-4 (FixedAccessNode''getAddress-1 write), (FixedAccessNode''getLocationIdentity-1 write), value, (FixedAccessNode''getBarrierType-1 write)))
-        ]
-            (AbstractWriteNode''setStateAfter-2 memoryWrite, (AbstractWriteNode''stateAfter-1 write))
-            (§ ass! graph (Graph''replaceFixedWithFixed-3 graph, write, memoryWrite))
-            (GuardedNode''setGuard-2 memoryWrite, (FixedAccessNode''getGuard-1 write))
-        )
-        nil
-    )
-
-    (§ defn #_"void" Lowerer'lowerCommitAllocationNode-2 [#_"CommitAllocationNode" commit, #_"LoweringTool" lowerer]
-        (let [
-            #_"Graph" graph (:graph commit)
-        ]
-            (when (= (:guardsStage graph) GuardsStage'FIXED_DEOPTS)
-                (let [
-                    #_"List<AbstractNewObjectNode>" recursiveLowerings (ArrayList.)
-                    #_"ValueNode[]" allocations (make-array ValueNode (count (:virtualObjects commit)))
-                    #_"BitSet" omittedValues (BitSet.)
-                ]
-                    (loop-when [#_"int" valuePos 0 #_"int" objIndex 0] (< objIndex (count (:virtualObjects commit)))
-                        (let [
-                            #_"VirtualObjectNode" virtual (nth (:virtualObjects commit) objIndex)
-                            #_"int" entryCount (VirtualObjectNode''entryCount-1 virtual)
-                            #_"AbstractNewObjectNode" newObject
-                                (if (instance? VirtualInstanceNode virtual)
-                                    (Graph''add-2 graph, (Lowerer'createNewInstanceFromVirtual-1 virtual))
-                                    (Graph''add-2 graph, (Lowerer'createNewArrayFromVirtual-2 virtual, (ConstantNode'forInt-2 entryCount, graph)))
-                                )
-                        ]
-                            (#_"List" .add recursiveLowerings, newObject)
-                            (Graph''addBeforeFixed-3 graph, commit, newObject)
-                            (aset allocations objIndex newObject)
-                            (let [
-                                valuePos
-                                    (loop-when [valuePos valuePos #_"int" i 0] (< i entryCount) => valuePos
-                                        (let [
-                                            #_"ValueNode" value (nth (:values commit) valuePos)
-                                            value
-                                                (when (instance? VirtualObjectNode value) => value
-                                                    (nth allocations (#_"List" .indexOf (:virtualObjects commit), value))
-                                                )
-                                        ]
-                                            (cond
-                                                (nil? value)
-                                                    (#_"BitSet" .set omittedValues, valuePos)
-                                                (not (and (instance? ConstantNode value) (#_"Constant" .isDefaultForKind (:value value))))
-                                                    ;; Constant.illegal is always the defaultForKind, so it is skipped
-                                                    (let [
-                                                        #_"JavaKind" valueKind (ValueNode''getStackKind-1 value)
-                                                        #_"JavaKind" entryKind (VirtualObjectNode''entryKind-2 virtual, i)
-                                                        [#_"AddressNode" address #_"BarrierType" barrierType]
-                                                            (if (instance? VirtualInstanceNode virtual)
-                                                                (let [
-                                                                    #_"long" offset (Lowerer'fieldOffset-1 (VirtualInstanceNode''field-2 virtual, i))
-                                                                ]
-                                                                    (when (<= 0 offset)
-                                                                        [(Lowerer'createOffsetAddress-3 graph, newObject, offset) (Lowerer'fieldInitializationBarrier-1 entryKind)]
-                                                                    )
-                                                                )
-                                                                [(Lowerer'createOffsetAddress-3 graph, newObject, (+ (HotSpot'arrayBaseOffset-1 entryKind) (* i (HotSpot'arrayIndexScale-1 entryKind)))) (Lowerer'arrayInitializationBarrier-1 entryKind)]
-                                                            )
-                                                    ]
-                                                        (when (some? address)
-                                                            (Graph''addAfterFixed-3 graph, newObject, (Graph''add-2 graph, (WriteNode'new-4 address, (LocationIdentity/init), (Lowerer'implicitStoreConvert-3 graph, entryKind, value), barrierType)))
-                                                        )
-                                                    )
-                                            )
-                                            (recur (inc valuePos) (inc i))
-                                        )
-                                    )
-                            ]
-                                (recur valuePos (inc objIndex))
-                            )
-                        )
-                    )
-
-                    (loop-when [#_"int" valuePos 0 #_"int" objIndex 0] (< objIndex (count (:virtualObjects commit)))
-                        (let [
-                            #_"VirtualObjectNode" virtual (nth (:virtualObjects commit) objIndex)
-                            #_"int" entryCount (VirtualObjectNode''entryCount-1 virtual)
-                            #_"ValueNode" newObject (nth allocations objIndex)
-                            valuePos
-                                (loop-when [valuePos valuePos #_"int" i 0] (< i entryCount) => valuePos
-                                    (when (#_"BitSet" .get omittedValues, valuePos)
-                                        (let [
-                                            #_"ValueNode" value (nth (:values commit) valuePos)
-                                            #_"ValueNode" allocValue (nth allocations (#_"List" .indexOf (:virtualObjects commit), value))
-                                        ]
-                                            (when-not (and (instance? ConstantNode allocValue) (#_"Constant" .isDefaultForKind (:value allocValue)))
-                                                (let [
-                                                    [#_"AddressNode" address #_"BarrierType" barrierType]
-                                                        (if (instance? VirtualInstanceNode virtual)
-                                                            [(Lowerer'createFieldAddress-3 graph, newObject, (VirtualInstanceNode''field-2 virtual, i)) BarrierType'IMPRECISE]
-                                                            [(Lowerer'createArrayAddress-4 graph, newObject, (VirtualObjectNode''entryKind-2 virtual, i), (ConstantNode'forInt-2 i, graph)) BarrierType'PRECISE]
-                                                        )
-                                                ]
-                                                    (when (some? address)
-                                                        (Graph''addBeforeFixed-3 graph, commit, (Graph''add-2 graph, (WriteNode'new-4 address, (LocationIdentity/init), (Lowerer'implicitStoreConvert-3 graph, JavaKind/Object, allocValue), barrierType)))
-                                                    )
-                                                )
-                                            )
-                                        )
-                                    )
-                                    (recur (inc valuePos) (inc i))
-                                )
-                        ]
-                            (recur valuePos (inc objIndex))
-                        )
-                    )
-
-                    (Lowerer'finishAllocatedObjects-3 lowerer, commit, allocations)
-                    (Graph''removeFixed-2 graph, commit)
-
-                    (doseq [#_"AbstractNewObjectNode" recursiveLowering recursiveLowerings]
-                        (AbstractNewObjectNode''lower-2 recursiveLowering, lowerer)
-                    )
-                )
-            )
-        )
-        nil
-    )
-
-    (§ defn #_"void" Lowerer'lowerSecondHalf-1 [#_"UnpackEndianHalfNode" node]
-        (UnpackEndianHalfNode''lower-2 node, (#_"Architecture" .getByteOrder (.arch HotSpot'target)))
-        nil
     )
 )
 
@@ -73195,8 +72525,7 @@
         (Graph''add-2 (:graph this), (IntegerAddExactSplitNode'new-5 (:stamp this), (:x this), (:y this), next, deopt))
     )
 
-    #_unused
-    (§ override! #_"void" IntegerAddExactNode''lower-2 [#_"IntegerAddExactNode" this, #_"LoweringTool" lowerer]
+    (§ override! #_"void" Lowerable''lower-2 [#_"IntegerAddExactNode" this, #_"LoweringTool" lowerer]
         (IntegerExactArithmeticSplitNode'lower-2 lowerer, this)
         nil
     )
@@ -73385,8 +72714,7 @@
         (Graph''add-2 (:graph this), (IntegerMulExactSplitNode'new-5 (:stamp this), (:x this), (:y this), next, deopt))
     )
 
-    #_unused
-    (§ override! #_"void" IntegerMulExactNode''lower-2 [#_"IntegerMulExactNode" this, #_"LoweringTool" lowerer]
+    (§ override! #_"void" Lowerable''lower-2 [#_"IntegerMulExactNode" this, #_"LoweringTool" lowerer]
         (IntegerExactArithmeticSplitNode'lower-2 lowerer, this)
         nil
     )
@@ -73529,8 +72857,7 @@
         (Graph''add-2 (:graph this), (IntegerSubExactSplitNode'new-5 (:stamp this), (:x this), (:y this), next, deopt))
     )
 
-    #_unused
-    (§ override! #_"void" IntegerSubExactNode''lower-2 [#_"IntegerSubExactNode" this, #_"LoweringTool" lowerer]
+    (§ override! #_"void" Lowerable''lower-2 [#_"IntegerSubExactNode" this, #_"LoweringTool" lowerer]
         (IntegerExactArithmeticSplitNode'lower-2 lowerer, this)
         nil
     )
@@ -73805,8 +73132,7 @@
         nil
     )
 
-    #_unused
-    (§ override #_"void" MacroNode''lower-2 [#_"MacroNode" this, #_"LoweringTool" lowerer]
+    (§ override #_"void" Lowerable''lower-2 [#_"MacroNode" this, #_"LoweringTool" lowerer]
         (let [
             #_"Graph" replacementGraph (MacroNode''getLoweredSnippetGraph-2 this, lowerer)
             #_"InvokeNode" invoke (MacroNode''replaceWithInvoke-1 this)
@@ -73842,7 +73168,7 @@
                             )
                         )
                     )
-                    (InvokeNode''lower-2 invoke, lowerer)
+                    (Lowerable''lower-2 invoke, lowerer)
                 )
             )
         )
@@ -74286,8 +73612,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" ResolvedMethodHandleCallTargetNode''lower-2 [#_"ResolvedMethodHandleCallTargetNode" this, #_"LoweringTool" lowerer]
+    (§ override! #_"void" Lowerable''lower-2 [#_"ResolvedMethodHandleCallTargetNode" this, #_"LoweringTool" lowerer]
         (let [
             #_"InvokeKind" replacementInvokeKind (if (#_"ResolvedJavaMethod" .isStatic (:originalTargetMethod this)) InvokeKind'Static InvokeKind'Special)
             #_"MethodCallTargetNode" replacement (Graph''add-2 (:graph this), (MethodCallTargetNode'new-4 replacementInvokeKind, (:originalTargetMethod this), (NodeList''toArray-2 (:originalArguments this), (make-array ValueNode (count (:originalArguments this)))), (:originalReturnStamp this)))
@@ -74431,8 +73756,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"void" SnippetLowerableMemoryNode''lower-2 [#_"SnippetLowerableMemoryNode" this, #_"LoweringTool" lowerer]
+    (§ override! #_"void" Lowerable''lower-2 [#_"SnippetLowerableMemoryNode" this, #_"LoweringTool" lowerer]
         (SnippetLowering''lower-3 (:lowering this), this, lowerer)
         nil
     )
