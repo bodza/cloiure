@@ -7381,8 +7381,7 @@
         )
     )
 
-    #_unused
-    (§ override #_"boolean" AbstractObjectStamp''hasValues-1 [#_"AbstractObjectStamp" this]
+    (§ override #_"boolean" Stamp''hasValues-1 [#_"AbstractObjectStamp" this]
         (or (not (:exactType this)) (and (some? (:type this)) (AbstractObjectStamp'isConcreteType-1 (:type this))))
     )
 
@@ -7471,8 +7470,7 @@
      ; @param that the stamp this stamp should be casted to
      ; @return the new improved stamp or nil if this stamp cannot be improved
      ;;
-    #_unused
-    (§ override #_"Stamp" AbstractObjectStamp''improveWith-2 [#_"AbstractObjectStamp" this, #_"Stamp" that]
+    (§ override #_"Stamp" Stamp''improveWith-2 [#_"AbstractObjectStamp" this, #_"Stamp" that]
         (AbstractObjectStamp''join0-3 this, that, true)
     )
 
@@ -7646,7 +7644,7 @@
         )
     )
 
-    (§ override #_"Stamp" AbstractPointerStamp''improveWith-2 [#_"AbstractPointerStamp" this, #_"Stamp" other]
+    (§ override #_"Stamp" Stamp''improveWith-2 [#_"AbstractPointerStamp" this, #_"Stamp" other]
         (Stamp''join-2 this, other)
     )
 
@@ -8105,8 +8103,7 @@
         )
     )
 
-    #_unused
-    (§ override #_"Stamp" ArithmeticStamp''improveWith-2 [#_"ArithmeticStamp" this, #_"Stamp" other]
+    (§ override #_"Stamp" Stamp''improveWith-2 [#_"ArithmeticStamp" this, #_"Stamp" other]
         (when (Stamp''isCompatible-2 this, other) => this
             (Stamp''join-2 this, other)
         )
@@ -8177,13 +8174,11 @@
         (and (instance? PrimitiveConstant constant) (= (#_"PrimitiveConstant" .getJavaKind constant) JavaKind/Illegal))
     )
 
-    #_unused
-    (§ override! #_"boolean" IllegalStamp''hasValues-1 [#_"IllegalStamp" this]
+    (§ override! #_"boolean" Stamp''hasValues-1 [#_"IllegalStamp" this]
         true
     )
 
-    #_unused
-    (§ override! #_"Stamp" IllegalStamp''improveWith-2 [#_"IllegalStamp" this, #_"Stamp" other]
+    (§ override! #_"Stamp" Stamp''improveWith-2 [#_"IllegalStamp" this, #_"Stamp" other]
         this
     )
 
@@ -8319,8 +8314,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"boolean" IntegerStamp''hasValues-1 [#_"IntegerStamp" this]
+    (§ override! #_"boolean" Stamp''hasValues-1 [#_"IntegerStamp" this]
         (<= (:lowerBound this) (:upperBound this))
     )
 
@@ -9595,8 +9589,7 @@
         this
     )
 
-    #_unused
-    (§ override! #_"Stamp" RawPointerStamp''improveWith-2 [#_"RawPointerStamp" this, #_"Stamp" other]
+    (§ override! #_"Stamp" Stamp''improveWith-2 [#_"RawPointerStamp" this, #_"Stamp" other]
         this
     )
 
@@ -9616,8 +9609,7 @@
         this
     )
 
-    #_unused
-    (§ override! #_"boolean" RawPointerStamp''hasValues-1 [#_"RawPointerStamp" this]
+    (§ override! #_"boolean" Stamp''hasValues-1 [#_"RawPointerStamp" this]
         true
     )
 
@@ -10130,8 +10122,7 @@
         JavaKind/Void
     )
 
-    #_unused
-    (§ override! #_"Stamp" VoidStamp''improveWith-2 [#_"VoidStamp" this, #_"Stamp" other]
+    (§ override! #_"Stamp" Stamp''improveWith-2 [#_"VoidStamp" this, #_"Stamp" other]
         this
     )
 
@@ -10176,8 +10167,7 @@
         this
     )
 
-    #_unused
-    (§ override! #_"boolean" VoidStamp''hasValues-1 [#_"VoidStamp" this]
+    (§ override! #_"boolean" Stamp''hasValues-1 [#_"VoidStamp" this]
         false
     )
 
@@ -11361,7 +11351,7 @@
     ;;;
      ; Applies the given visitor to all inputs of this node.
      ;;
-    (§ method #_"void" Node''applyInputs-2 [#_"Node" this, #_"EdgeVisitor" visitor]
+    (§ method! #_"void" Node''applyInputs-2 [#_"Node" this, #_"EdgeVisitor" visitor]
         (NodeClass''applyInputs-3 (:nodeClass this), this, visitor)
         nil
     )
@@ -11369,7 +11359,7 @@
     ;;;
      ; Applies the given visitor to all successors of this node.
      ;;
-    (§ method #_"void" Node''applySuccessors-2 [#_"Node" this, #_"EdgeVisitor" visitor]
+    (§ method! #_"void" Node''applySuccessors-2 [#_"Node" this, #_"EdgeVisitor" visitor]
         (NodeClass''applySuccessors-3 (:nodeClass this), this, visitor)
         nil
     )
@@ -11439,7 +11429,7 @@
      ;
      ; @param node the node to add
      ;;
-    (§ method #_"void" Node''addUsage-2 [#_"Node" this, #_"Node" node]
+    (§ method! #_"void" Node''addUsage-2 [#_"Node" this, #_"Node" node]
         (cond
             (nil? (:usage0 this))
                 (§ ass! this (assoc this :usage0 node))
@@ -13930,7 +13920,7 @@
         )
     )
 
-    (§ method #_"void" NodeWorkList''addAll-2 [#_"NodeWorkList" this, #_"Iterable<? extends Node>" nodes]
+    (§ method! #_"void" NodeWorkList''addAll-2 [#_"NodeWorkList" this, #_"Iterable<? extends Node>" nodes]
         (doseq [#_"Node" node nodes]
             (when (Node''isAlive-1 node)
                 (NodeWorkList''add-2 this, node)
@@ -16218,8 +16208,7 @@
         (BeginLockScopeNode'new-2 WordTypes'wordKind, lockDepth)
     )
 
-    #_unused
-    (§ override! #_"boolean" BeginLockScopeNode''hasSideEffect-1 [#_"BeginLockScopeNode" this]
+    (§ override! #_"boolean" StateSplit''hasSideEffect-1 [#_"BeginLockScopeNode" this]
         false
     )
 
@@ -16349,8 +16338,7 @@
         (AbstractMemoryCheckpoint'new-2 EndLockScopeNode'TYPE, VoidStamp'instance)
     )
 
-    #_unused
-    (§ override! #_"boolean" EndLockScopeNode''hasSideEffect-1 [#_"EndLockScopeNode" this]
+    (§ override! #_"boolean" StateSplit''hasSideEffect-1 [#_"EndLockScopeNode" this]
         false
     )
 
@@ -16430,8 +16418,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"boolean" G1PreWriteBarrier''canDeoptimize-1 [#_"G1PreWriteBarrier" this]
+    (§ override! #_"boolean" DeoptimizingNode''canDeoptimize-1 [#_"G1PreWriteBarrier" this]
         (:nullCheck this)
     )
 
@@ -16836,8 +16823,7 @@
         this
     )
 
-    #_unused
-    (§ override #_"boolean" KlassPointerStamp''hasValues-1 [#_"KlassPointerStamp" this]
+    (§ override #_"boolean" Stamp''hasValues-1 [#_"KlassPointerStamp" this]
         true
     )
 
@@ -26771,7 +26757,7 @@
         )
     )
 
-    (§ method #_"void" LinearScanLifetimeAnalysisPhase''addUse-6 [#_"LinearScanLifetimeAnalysisPhase" this, #_"AllocatableValue" operand, #_"int" from, #_"int" to, #_"RegisterPriority" registerPriority, #_"ValueKind" kind]
+    (§ method- #_"void" LinearScanLifetimeAnalysisPhase''addUse-6 [#_"LinearScanLifetimeAnalysisPhase" this, #_"AllocatableValue" operand, #_"int" from, #_"int" to, #_"RegisterPriority" registerPriority, #_"ValueKind" kind]
         (when (LinearScan''isProcessed-2 (:allocator this), operand)
             (let [
                 #_"Interval" interval (LinearScan''getOrCreateInterval-2 (:allocator this), operand)
@@ -26847,7 +26833,7 @@
         nil
     )
 
-    (§ method #_"void" LinearScanLifetimeAnalysisPhase''addDef-5 [#_"LinearScanLifetimeAnalysisPhase" this, #_"AllocatableValue" operand, #_"LIRInstruction" op, #_"RegisterPriority" registerPriority, #_"ValueKind" kind]
+    (§ method- #_"void" LinearScanLifetimeAnalysisPhase''addDef-5 [#_"LinearScanLifetimeAnalysisPhase" this, #_"AllocatableValue" operand, #_"LIRInstruction" op, #_"RegisterPriority" registerPriority, #_"ValueKind" kind]
         (when (LinearScan''isProcessed-2 (:allocator this), operand)
             (let [
                 #_"int" defPos (LIRInstruction''id-1 op)
@@ -33131,7 +33117,7 @@
      ;            collector could see garbage object values.
      ; @return the first reserved stack slot (i.e. at the lowest address)
      ;;
-    (§ method #_"StackSlot" FrameMap''allocateStackSlots-3 [#_"FrameMap" this, #_"int" n, #_"BitSet" objects]
+    (§ method! #_"StackSlot" FrameMap''allocateStackSlots-3 [#_"FrameMap" this, #_"int" n, #_"BitSet" objects]
         (when (pos? n)
             (§ ass! this (assoc this :spillSize (+ (:spillSize this) (FrameMap''spillSlotRangeSize-2 this, n))))
 
@@ -38638,19 +38624,19 @@
         )
     )
 
-    (§ override! #_"boolean" BasicInductionVariable''isConstantInit-1 [#_"BasicInductionVariable" this]
+    (§ override! #_"boolean" InductionVariable''isConstantInit-1 [#_"BasicInductionVariable" this]
         (instance? ConstantNode (:init this))
     )
 
-    (§ override! #_"boolean" BasicInductionVariable''isConstantStride-1 [#_"BasicInductionVariable" this]
+    (§ override! #_"boolean" InductionVariable''isConstantStride-1 [#_"BasicInductionVariable" this]
         (instance? ConstantNode (:rawStride this))
     )
 
-    (§ override! #_"long" BasicInductionVariable''constantInit-1 [#_"BasicInductionVariable" this]
+    (§ override! #_"long" InductionVariable''constantInit-1 [#_"BasicInductionVariable" this]
         (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 (:init this)))
     )
 
-    (§ override! #_"long" BasicInductionVariable''constantStride-1 [#_"BasicInductionVariable" this]
+    (§ override! #_"long" InductionVariable''constantStride-1 [#_"BasicInductionVariable" this]
         (condp instance? (:op this)
             AddNode    (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 (:rawStride this)))
             SubNode (- (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 (:rawStride this))))
@@ -38670,19 +38656,17 @@
         )
     )
 
-    #_unused
-    (§ override! #_"boolean" BasicInductionVariable''isConstantExtremum-1 [#_"BasicInductionVariable" this]
-        (and (BasicInductionVariable''isConstantInit-1 this) (BasicInductionVariable''isConstantStride-1 this) (CountedLoopInfo''isConstantMaxTripCount-1 (:counted (:loop this))))
+    (§ override! #_"boolean" InductionVariable''isConstantExtremum-1 [#_"BasicInductionVariable" this]
+        (and (InductionVariable''isConstantInit-1 this) (InductionVariable''isConstantStride-1 this) (CountedLoopInfo''isConstantMaxTripCount-1 (:counted (:loop this))))
     )
 
-    #_unused
-    (§ override! #_"long" BasicInductionVariable''constantExtremum-1 [#_"BasicInductionVariable" this]
+    (§ override! #_"long" InductionVariable''constantExtremum-1 [#_"BasicInductionVariable" this]
         (let [
             #_"UnsignedLong" tripCount (CountedLoopInfo''constantMaxTripCount-1 (:counted (:loop this)))
         ]
             (if (UnsignedLong''isLessThan-2 tripCount, 1)
-                (BasicInductionVariable''constantInit-1 this)
-                (UnsignedLong''asLong-1 (UnsignedLong''wrappingPlus-2 (UnsignedLong''wrappingTimes-2 (UnsignedLong''minus-2 tripCount, 1), (BasicInductionVariable''constantStride-1 this)), (BasicInductionVariable''constantInit-1 this)))
+                (InductionVariable''constantInit-1 this)
+                (UnsignedLong''asLong-1 (UnsignedLong''wrappingPlus-2 (UnsignedLong''wrappingTimes-2 (UnsignedLong''minus-2 tripCount, 1), (InductionVariable''constantStride-1 this)), (InductionVariable''constantInit-1 this)))
             )
         )
     )
@@ -39061,23 +39045,19 @@
         (IntegerConvertNode'convert-3 (InductionVariable''strideNode-1 (:base this)), (:stamp this), (InductionVariable''graph-1 this))
     )
 
-    #_unused
-    (§ override! #_"boolean" DerivedConvertedInductionVariable''isConstantInit-1 [#_"DerivedConvertedInductionVariable" this]
+    (§ override! #_"boolean" InductionVariable''isConstantInit-1 [#_"DerivedConvertedInductionVariable" this]
         (InductionVariable''isConstantInit-1 (:base this))
     )
 
-    #_unused
-    (§ override! #_"boolean" DerivedConvertedInductionVariable''isConstantStride-1 [#_"DerivedConvertedInductionVariable" this]
+    (§ override! #_"boolean" InductionVariable''isConstantStride-1 [#_"DerivedConvertedInductionVariable" this]
         (InductionVariable''isConstantStride-1 (:base this))
     )
 
-    #_unused
-    (§ override! #_"long" DerivedConvertedInductionVariable''constantInit-1 [#_"DerivedConvertedInductionVariable" this]
+    (§ override! #_"long" InductionVariable''constantInit-1 [#_"DerivedConvertedInductionVariable" this]
         (InductionVariable''constantInit-1 (:base this))
     )
 
-    #_unused
-    (§ override! #_"long" DerivedConvertedInductionVariable''constantStride-1 [#_"DerivedConvertedInductionVariable" this]
+    (§ override! #_"long" InductionVariable''constantStride-1 [#_"DerivedConvertedInductionVariable" this]
         (InductionVariable''constantStride-1 (:base this))
     )
 
@@ -39086,13 +39066,11 @@
         (IntegerConvertNode'convert-3 (InductionVariable''exitValueNode-1 (:base this)), (:stamp this), (InductionVariable''graph-1 this))
     )
 
-    #_unused
-    (§ override! #_"boolean" DerivedConvertedInductionVariable''isConstantExtremum-1 [#_"DerivedConvertedInductionVariable" this]
+    (§ override! #_"boolean" InductionVariable''isConstantExtremum-1 [#_"DerivedConvertedInductionVariable" this]
         (InductionVariable''isConstantExtremum-1 (:base this))
     )
 
-    #_unused
-    (§ override! #_"long" DerivedConvertedInductionVariable''constantExtremum-1 [#_"DerivedConvertedInductionVariable" this]
+    (§ override! #_"long" InductionVariable''constantExtremum-1 [#_"DerivedConvertedInductionVariable" this]
         (InductionVariable''constantExtremum-1 (:base this))
     )
 
@@ -39150,23 +39128,19 @@
         (:value this)
     )
 
-    #_unused
-    (§ override! #_"boolean" DerivedOffsetInductionVariable''isConstantInit-1 [#_"DerivedOffsetInductionVariable" this]
+    (§ override! #_"boolean" InductionVariable''isConstantInit-1 [#_"DerivedOffsetInductionVariable" this]
         (and (instance? ConstantNode (:offset this)) (InductionVariable''isConstantInit-1 (:base this)))
     )
 
-    #_unused
-    (§ override! #_"boolean" DerivedOffsetInductionVariable''isConstantStride-1 [#_"DerivedOffsetInductionVariable" this]
+    (§ override! #_"boolean" InductionVariable''isConstantStride-1 [#_"DerivedOffsetInductionVariable" this]
         (InductionVariable''isConstantStride-1 (:base this))
     )
 
-    #_unused
-    (§ override! #_"long" DerivedOffsetInductionVariable''constantInit-1 [#_"DerivedOffsetInductionVariable" this]
+    (§ override! #_"long" InductionVariable''constantInit-1 [#_"DerivedOffsetInductionVariable" this]
         (DerivedOffsetInductionVariable''op-3 this, (InductionVariable''constantInit-1 (:base this)), (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 (:offset this))))
     )
 
-    #_unused
-    (§ override! #_"long" DerivedOffsetInductionVariable''constantStride-1 [#_"DerivedOffsetInductionVariable" this]
+    (§ override! #_"long" InductionVariable''constantStride-1 [#_"DerivedOffsetInductionVariable" this]
         (if (and (instance? SubNode (:value this)) (= (InductionVariable''valueNode-1 (:base this)) (:y (:value this))))
             (- (InductionVariable''constantStride-1 (:base this)))
             (InductionVariable''constantStride-1 (:base this))
@@ -39191,13 +39165,11 @@
         (DerivedOffsetInductionVariable''op-3 this, (InductionVariable''exitValueNode-1 (:base this)), (:offset this))
     )
 
-    #_unused
-    (§ override! #_"boolean" DerivedOffsetInductionVariable''isConstantExtremum-1 [#_"DerivedOffsetInductionVariable" this]
+    (§ override! #_"boolean" InductionVariable''isConstantExtremum-1 [#_"DerivedOffsetInductionVariable" this]
         (and (instance? ConstantNode (:offset this)) (InductionVariable''isConstantExtremum-1 (:base this)))
     )
 
-    #_unused
-    (§ override! #_"long" DerivedOffsetInductionVariable''constantExtremum-1 [#_"DerivedOffsetInductionVariable" this]
+    (§ override! #_"long" InductionVariable''constantExtremum-1 [#_"DerivedOffsetInductionVariable" this]
         (DerivedOffsetInductionVariable''op-3 this, (InductionVariable''constantExtremum-1 (:base this)), (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 (:offset this))))
     )
 
@@ -39283,23 +39255,19 @@
         (MathUtil'mul-3 (InductionVariable''graph-1 this), (InductionVariable''strideNode-1 (:base this)), (:scale this))
     )
 
-    #_unused
-    (§ override! #_"boolean" DerivedScaledInductionVariable''isConstantInit-1 [#_"DerivedScaledInductionVariable" this]
+    (§ override! #_"boolean" InductionVariable''isConstantInit-1 [#_"DerivedScaledInductionVariable" this]
         (and (instance? ConstantNode (:scale this)) (InductionVariable''isConstantInit-1 (:base this)))
     )
 
-    #_unused
-    (§ override! #_"boolean" DerivedScaledInductionVariable''isConstantStride-1 [#_"DerivedScaledInductionVariable" this]
+    (§ override! #_"boolean" InductionVariable''isConstantStride-1 [#_"DerivedScaledInductionVariable" this]
         (and (instance? ConstantNode (:scale this)) (InductionVariable''isConstantStride-1 (:base this)))
     )
 
-    #_unused
-    (§ override! #_"long" DerivedScaledInductionVariable''constantInit-1 [#_"DerivedScaledInductionVariable" this]
+    (§ override! #_"long" InductionVariable''constantInit-1 [#_"DerivedScaledInductionVariable" this]
         (* (InductionVariable''constantInit-1 (:base this)) (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 (:scale this))))
     )
 
-    #_unused
-    (§ override! #_"long" DerivedScaledInductionVariable''constantStride-1 [#_"DerivedScaledInductionVariable" this]
+    (§ override! #_"long" InductionVariable''constantStride-1 [#_"DerivedScaledInductionVariable" this]
         (* (InductionVariable''constantStride-1 (:base this)) (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 (:scale this))))
     )
 
@@ -39308,13 +39276,11 @@
         (MathUtil'mul-3 (InductionVariable''graph-1 this), (InductionVariable''exitValueNode-1 (:base this)), (:scale this))
     )
 
-    #_unused
-    (§ override! #_"boolean" DerivedScaledInductionVariable''isConstantExtremum-1 [#_"DerivedScaledInductionVariable" this]
+    (§ override! #_"boolean" InductionVariable''isConstantExtremum-1 [#_"DerivedScaledInductionVariable" this]
         (and (instance? ConstantNode (:scale this)) (InductionVariable''isConstantExtremum-1 (:base this)))
     )
 
-    #_unused
-    (§ override! #_"long" DerivedScaledInductionVariable''constantExtremum-1 [#_"DerivedScaledInductionVariable" this]
+    (§ override! #_"long" InductionVariable''constantExtremum-1 [#_"DerivedScaledInductionVariable" this]
         (* (InductionVariable''constantExtremum-1 (:base this)) (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 (:scale this))))
     )
 
@@ -39355,8 +39321,8 @@
     (§ abstract #_"ValueNode" InductionVariable''initNode-1 [#_"InductionVariable" this])
 
     ;;;
-     ; Returns the stride of the induction variable. The stride is the value that is added to the
-     ; induction variable at each iteration.
+     ; Returns the stride of the induction variable. The stride is the value that is added to
+     ; the induction variable at each iteration.
      ;;
     (§ abstract #_"ValueNode" InductionVariable''strideNode-1 [#_"InductionVariable" this])
 
@@ -41917,8 +41883,7 @@
         )
     )
 
-    #_unused
-    (§ override #_"boolean" AbstractDeoptimizeNode''canDeoptimize-1 [#_"AbstractDeoptimizeNode" this]
+    (§ override #_"boolean" DeoptimizingNode''canDeoptimize-1 [#_"AbstractDeoptimizeNode" this]
         true
     )
 
@@ -42041,8 +42006,7 @@
         )
     )
 
-    #_unused
-    (§ override #_"boolean" AbstractFixedGuardNode''canDeoptimize-1 [#_"AbstractFixedGuardNode" this]
+    (§ override #_"boolean" DeoptimizingNode''canDeoptimize-1 [#_"AbstractFixedGuardNode" this]
         true
     )
 
@@ -42357,8 +42321,7 @@
         nil
     )
 
-    #_unused
-    (§ override #_"boolean" AbstractStateSplit''hasSideEffect-1 [#_"AbstractStateSplit" this]
+    (§ override #_"boolean" StateSplit''hasSideEffect-1 [#_"AbstractStateSplit" this]
         true
     )
 
@@ -42464,8 +42427,7 @@
     ;;;
      ; A begin node has no side effect.
      ;;
-    #_unused
-    (§ override #_"boolean" BeginStateSplitNode''hasSideEffect-1 [#_"BeginStateSplitNode" this]
+    (§ override #_"boolean" StateSplit''hasSideEffect-1 [#_"BeginStateSplitNode" this]
         false
     )
 )
@@ -42570,16 +42532,15 @@
         )
     )
 
-    #_unused
-    (§ override #_"ValueNode" AddNode''canonical-4 [#_"AddNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+    (§ override #_"ValueNode" Binary''canonical-4 [#_"AddNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
         (let [
-            #_"ValueNode" ret (BinaryArithmeticNode''canonical-4 (§ super ), tool, forX, forY)
+            #_"ValueNode" ret (Binary''canonical-4 (§ super ), tool, forX, forY)
         ]
             (when (= ret this) => ret
                 (if (and (instance? ConstantNode forX) (not (instance? ConstantNode forY)))
                     ;; we try to swap and canonicalize
                     (let [
-                        #_"ValueNode" improvement (BinaryArithmeticNode''canonical-4 this, tool, forY, forX)
+                        #_"ValueNode" improvement (Binary''canonical-4 this, tool, forY, forX)
                     ]
                         (when (= improvement this) => improvement
                             ;; if this fails we only swap
@@ -42625,10 +42586,9 @@
         )
     )
 
-    #_unused
-    (§ override! #_"ValueNode" AndNode''canonical-4 [#_"AndNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+    (§ override! #_"ValueNode" Binary''canonical-4 [#_"AndNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
         (let [
-            #_"ValueNode" ret (BinaryArithmeticNode''canonical-4 (§ super ), tool, forX, forY)
+            #_"ValueNode" ret (Binary''canonical-4 (§ super ), tool, forX, forY)
         ]
             (when (= ret this) => ret
                 (AndNode'canonical-5 this, (BinaryArithmeticNode''getOp-3 this, forX, forY), (:stamp this), forX, forY)
@@ -42705,7 +42665,7 @@
         (BinaryOp''isAssociative-1 (BinaryArithmeticNode''getArithmeticOp-1 this))
     )
 
-    (§ override #_"ValueNode" BinaryArithmeticNode''canonical-4 [#_"BinaryArithmeticNode<OP>" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+    (§ override #_"ValueNode" Binary''canonical-4 [#_"BinaryArithmeticNode<OP>" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
         (or (BinaryArithmeticNode'tryConstantFold-4 (BinaryArithmeticNode''getOp-3 this, forX, forY), forX, forY, (:stamp this))
             this
         )
@@ -43469,8 +43429,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"Node" IntegerBelowNode''canonical-4 [#_"IntegerBelowNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+    (§ override! #_"Node" Binary''canonical-4 [#_"IntegerBelowNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
         (or (CompareOp''canonical-5 IntegerBelowNode'OP, (CanonicalizerTool''smallestCompareWidth-1 tool), (BelowOp''getCondition-1 IntegerBelowNode'OP), forX, forY)
             this
         )
@@ -43705,8 +43664,7 @@
         nil ;; Nothing to do for division nodes. The HotSpot signal handler catches divisions by zero and the MIN_VALUE / -1 cases.
     )
 
-    #_unused
-    (§ override #_"boolean" IntegerDivRemNode''canDeoptimize-1 [#_"IntegerDivRemNode" this]
+    (§ override #_"boolean" DeoptimizingNode''canDeoptimize-1 [#_"IntegerDivRemNode" this]
         (:canDeopt this)
     )
 )
@@ -43768,8 +43726,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"Node" IntegerEqualsNode''canonical-4 [#_"IntegerEqualsNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+    (§ override! #_"Node" Binary''canonical-4 [#_"IntegerEqualsNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
         (or (IntegerEqualsOp''canonical-5 IntegerEqualsNode'OP, (CanonicalizerTool''smallestCompareWidth-1 tool), CanonicalCondition'EQ, forX, forY)
             this
         )
@@ -43944,8 +43901,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"Node" IntegerLessThanNode''canonical-4 [#_"IntegerLessThanNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+    (§ override! #_"Node" Binary''canonical-4 [#_"IntegerLessThanNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
         (or (CompareOp''canonical-5 IntegerLessThanNode'OP, (CanonicalizerTool''smallestCompareWidth-1 tool), (LessThanOp''getCondition-1 IntegerLessThanNode'OP), forX, forY)
             this
         )
@@ -44478,8 +44434,7 @@
         (BinaryOpLogicNode'new-3 IntegerTestNode'TYPE, x, y)
     )
 
-    #_unused
-    (§ override! #_"ValueNode" IntegerTestNode''canonical-4 [#_"IntegerTestNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+    (§ override! #_"ValueNode" Binary''canonical-4 [#_"IntegerTestNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
         (cond
             (and (instance? ConstantNode forX) (instance? ConstantNode forY))
                 (LogicConstantNode'forBoolean-1 (zero? (& (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 forX)) (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 forY)))))
@@ -44632,10 +44587,9 @@
         )
     )
 
-    #_unused
-    (§ override! #_"ValueNode" LeftShiftNode''canonical-4 [#_"LeftShiftNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+    (§ override! #_"ValueNode" Binary''canonical-4 [#_"LeftShiftNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
         (let [
-            #_"ValueNode" ret (ShiftNode''canonical-4 (§ super ), tool, forX, forY)
+            #_"ValueNode" ret (Binary''canonical-4 (§ super ), tool, forX, forY)
         ]
             (when (= ret this) => ret
                 (LeftShiftNode'canonical-5 this, (ShiftNode''getArithmeticOp-1 this), (:stamp this), forX, forY)
@@ -44710,16 +44664,15 @@
         )
     )
 
-    #_unused
-    (§ override #_"ValueNode" MulNode''canonical-4 [#_"MulNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+    (§ override #_"ValueNode" Binary''canonical-4 [#_"MulNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
         (let [
-            #_"ValueNode" ret (BinaryArithmeticNode''canonical-4 (§ super ), tool, forX, forY)
+            #_"ValueNode" ret (Binary''canonical-4 (§ super ), tool, forX, forY)
         ]
             (when (= ret this) => ret
                 (if (and (instance? ConstantNode forX) (not (instance? ConstantNode forY)))
                     ;; we try to swap and canonicalize
                     (let [
-                        #_"ValueNode" improvement (BinaryArithmeticNode''canonical-4 this, tool, forY, forX)
+                        #_"ValueNode" improvement (Binary''canonical-4 this, tool, forY, forX)
                     ]
                         (when (= improvement this) => improvement
                             ;; if this fails we only swap
@@ -44997,8 +44950,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"ValueNode" NormalizeCompareNode''canonical-4 [#_"NormalizeCompareNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+    (§ override! #_"ValueNode" Binary''canonical-4 [#_"NormalizeCompareNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
         (or (NormalizeCompareNode'tryConstantFold-3 (:x this), (:y this), (Stamp''getStackKind-1 (:stamp this)))
             this
         )
@@ -45081,8 +45033,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"ValueNode" ObjectEqualsNode''canonical-4 [#_"ObjectEqualsNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+    (§ override! #_"ValueNode" Binary''canonical-4 [#_"ObjectEqualsNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
         (or (CompareOp''canonical-5 ObjectEqualsNode'OP, (CanonicalizerTool''smallestCompareWidth-1 tool), CanonicalCondition'EQ, forX, forY)
             this
         )
@@ -45208,10 +45159,9 @@
         )
     )
 
-    #_unused
-    (§ override! #_"ValueNode" OrNode''canonical-4 [#_"OrNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+    (§ override! #_"ValueNode" Binary''canonical-4 [#_"OrNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
         (let [
-            #_"ValueNode" ret (BinaryArithmeticNode''canonical-4 (§ super ), tool, forX, forY)
+            #_"ValueNode" ret (Binary''canonical-4 (§ super ), tool, forX, forY)
         ]
             (when (= ret this) => ret
                 (OrNode'canonical-5 this, (BinaryArithmeticNode''getOp-3 this, forX, forY), (:stamp this), forX, forY)
@@ -45276,8 +45226,7 @@
         (CompareNode'new-4 c, CanonicalCondition'EQ, x, y)
     )
 
-    #_unused
-    (§ override #_"Node" PointerEqualsNode''canonical-4 [#_"PointerEqualsNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+    (§ override #_"Node" Binary''canonical-4 [#_"PointerEqualsNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
         (or (PointerEqualsOp''canonical-5 PointerEqualsNode'OP, (CanonicalizerTool''smallestCompareWidth-1 tool), CanonicalCondition'EQ, forX, forY)
             this
         )
@@ -45398,10 +45347,9 @@
         )
     )
 
-    #_unused
-    (§ override! #_"ValueNode" RightShiftNode''canonical-4 [#_"RightShiftNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+    (§ override! #_"ValueNode" Binary''canonical-4 [#_"RightShiftNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
         (let [
-            #_"ValueNode" ret (ShiftNode''canonical-4 (§ super ), tool, forX, forY)
+            #_"ValueNode" ret (Binary''canonical-4 (§ super ), tool, forX, forY)
         ]
             (when (= ret this) => ret
                 (RightShiftNode'canonical-5 this, (ShiftNode''getArithmeticOp-1 this), (:stamp this), forX, forY)
@@ -45485,7 +45433,7 @@
         (ShiftOp''foldStamp-3 (ShiftNode''getArithmeticOp-1 this), stampX, stampY)
     )
 
-    (§ override #_"ValueNode" ShiftNode''canonical-4 [#_"ShiftNode<OP>" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+    (§ override #_"ValueNode" Binary''canonical-4 [#_"ShiftNode<OP>" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
         (or (ShiftNode'canonical-4 (ShiftNode''getOp-2 this, forX), (:stamp this), forX, forY)
             this
         )
@@ -45528,8 +45476,7 @@
         (ValueNode''updateStamp-2 this, (BinaryOp''foldStamp-3 (:div IntegerStamp'OPS), (:stamp (:x this)), (:stamp (:y this))))
     )
 
-    #_unused
-    (§ override! #_"ValueNode" SignedDivNode''canonical-4 [#_"SignedDivNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+    (§ override! #_"ValueNode" Binary''canonical-4 [#_"SignedDivNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
         (SignedDivNode'canonical-3 this, forX, forY)
     )
 
@@ -45622,8 +45569,7 @@
         (ValueNode''updateStamp-2 this, (BinaryOp''foldStamp-3 (:rem IntegerStamp'OPS), (:stamp (:x this)), (:stamp (:y this))))
     )
 
-    #_unused
-    (§ override! #_"ValueNode" SignedRemNode''canonical-4 [#_"SignedRemNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+    (§ override! #_"ValueNode" Binary''canonical-4 [#_"SignedRemNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
         (SignedRemNode'canonical-4 this, forX, forY, (:stamp this))
     )
 
@@ -45873,10 +45819,9 @@
         )
     )
 
-    #_unused
-    (§ override #_"ValueNode" SubNode''canonical-4 [#_"SubNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+    (§ override #_"ValueNode" Binary''canonical-4 [#_"SubNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
         (let [
-            #_"ValueNode" ret (BinaryArithmeticNode''canonical-4 (§ super ), tool, forX, forY)
+            #_"ValueNode" ret (Binary''canonical-4 (§ super ), tool, forX, forY)
         ]
             (when (= ret this) => ret
                 (SubNode'canonical-5 this, (BinaryArithmeticNode''getOp-3 this, forX, forY), (:stamp this), forX, forY)
@@ -46038,8 +45983,7 @@
         (UnsignedDivNode'canonical-4 nil, x, y, (Stamp''unrestricted-1 (:stamp x)))
     )
 
-    #_unused
-    (§ override! #_"ValueNode" UnsignedDivNode''canonical-4 [#_"UnsignedDivNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+    (§ override! #_"ValueNode" Binary''canonical-4 [#_"UnsignedDivNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
         (UnsignedDivNode'canonical-4 this, forX, forY, (:stamp this))
     )
 
@@ -46095,8 +46039,7 @@
         (UnsignedRemNode'canonical-4 nil, x, y, (Stamp''unrestricted-1 (:stamp x)))
     )
 
-    #_unused
-    (§ override! #_"ValueNode" UnsignedRemNode''canonical-4 [#_"UnsignedRemNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+    (§ override! #_"ValueNode" Binary''canonical-4 [#_"UnsignedRemNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
         (UnsignedRemNode'canonical-4 this, forX, forY, (:stamp this))
     )
 
@@ -46152,10 +46095,9 @@
         )
     )
 
-    #_unused
-    (§ override! #_"ValueNode" UnsignedRightShiftNode''canonical-4 [#_"UnsignedRightShiftNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+    (§ override! #_"ValueNode" Binary''canonical-4 [#_"UnsignedRightShiftNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
         (let [
-            #_"ValueNode" ret (ShiftNode''canonical-4 (§ super ), tool, forX, forY)
+            #_"ValueNode" ret (Binary''canonical-4 (§ super ), tool, forX, forY)
         ]
             (when (= ret this) => ret
                 (UnsignedRightShiftNode'canonical-5 this, (ShiftNode''getArithmeticOp-1 this), (:stamp this), forX, forY)
@@ -46227,10 +46169,9 @@
         )
     )
 
-    #_unused
-    (§ override! #_"ValueNode" XorNode''canonical-4 [#_"XorNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+    (§ override! #_"ValueNode" Binary''canonical-4 [#_"XorNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
         (let [
-            #_"ValueNode" ret (BinaryArithmeticNode''canonical-4 (§ super ), tool, forX, forY)
+            #_"ValueNode" ret (Binary''canonical-4 (§ super ), tool, forX, forY)
         ]
             (when (= ret this) => ret
                 (XorNode'canonical-5 this, (BinaryArithmeticNode''getOp-3 this, forX, forY), (:stamp this), forX, forY)
@@ -48907,8 +48848,7 @@
     (§ intrinsic! #_"void" ForeignCallNode'g1PreBarrierStub-2 [#_@ConstantNodeParameter #_"ForeignCallDescriptor" descriptor, #_"Object" object])
     (§ intrinsic! #_"void" ForeignCallNode'g1PostBarrierStub-2 [#_@ConstantNodeParameter #_"ForeignCallDescriptor" descriptor, #_"Word" card])
 
-    #_unused
-    (§ override! #_"boolean" ForeignCallNode''hasSideEffect-1 [#_"ForeignCallNode" this]
+    (§ override! #_"boolean" StateSplit''hasSideEffect-1 [#_"ForeignCallNode" this]
         (not (ForeignCalls''isReexecutable-2 HotSpot'foreignCalls, (:descriptor this)))
     )
 
@@ -48981,8 +48921,7 @@
         nil
     )
 
-    #_unused
-    (§ override! #_"boolean" ForeignCallNode''canDeoptimize-1 [#_"ForeignCallNode" this]
+    (§ override! #_"boolean" DeoptimizingNode''canDeoptimize-1 [#_"ForeignCallNode" this]
         false
     )
 
@@ -49629,8 +49568,7 @@
         nil
     )
 
-    #_unused
-    (§ override! #_"boolean" NullCheckNode''canDeoptimize-1 [#_"NullCheckNode" this]
+    (§ override! #_"boolean" DeoptimizingNode''canDeoptimize-1 [#_"NullCheckNode" this]
         true
     )
 )
@@ -49838,8 +49776,7 @@
         nil
     )
 
-    #_unused
-    (§ override! #_"boolean" RawStoreNode''hasSideEffect-1 [#_"RawStoreNode" this]
+    (§ override! #_"boolean" StateSplit''hasSideEffect-1 [#_"RawStoreNode" this]
         true
     )
 
@@ -49937,8 +49874,7 @@
         nil
     )
 
-    #_unused
-    (§ override! #_"boolean" StateSplitProxyNode''hasSideEffect-1 [#_"StateSplitProxyNode" this]
+    (§ override! #_"boolean" StateSplit''hasSideEffect-1 [#_"StateSplitProxyNode" this]
         true
     )
 
@@ -50445,8 +50381,7 @@
         nil
     )
 
-    #_unused
-    (§ override! #_"boolean" FixedGuardNode''canDeoptimize-1 [#_"FixedGuardNode" this]
+    (§ override! #_"boolean" DeoptimizingNode''canDeoptimize-1 [#_"FixedGuardNode" this]
         true
     )
 )
@@ -52480,7 +52415,7 @@
                     ]
                         (when-not (and (= resultX (:x logic)) (= resultY (:y logic)))
                             (let [
-                                #_"LogicNode" canon (ShortCircuitOrNode''canonical-4 logic, tool, resultX, resultY)
+                                #_"LogicNode" canon (Binary''canonical-4 logic, tool, resultX, resultY)
                             ]
                                 (if-not (= canon logic)
                                     (§ return canon)
@@ -53039,8 +52974,7 @@
         nil
     )
 
-    #_unused
-    (§ override! #_"boolean" InvokeNode''canDeoptimize-1 [#_"InvokeNode" this]
+    (§ override! #_"boolean" DeoptimizingNode''canDeoptimize-1 [#_"InvokeNode" this]
         true
     )
 
@@ -53093,8 +53027,7 @@
         nil
     )
 
-    #_unused
-    (§ override #_"boolean" AbstractCompareAndSwapNode''hasSideEffect-1 [#_"AbstractCompareAndSwapNode" this]
+    (§ override #_"boolean" StateSplit''hasSideEffect-1 [#_"AbstractCompareAndSwapNode" this]
         true
     )
 
@@ -53208,8 +53141,7 @@
         nil
     )
 
-    #_unused
-    (§ override #_"boolean" AbstractNewObjectNode''canDeoptimize-1 [#_"AbstractNewObjectNode" this]
+    (§ override #_"boolean" DeoptimizingNode''canDeoptimize-1 [#_"AbstractNewObjectNode" this]
         true
     )
 )
@@ -53469,8 +53401,7 @@
     ; @Input
     (§ mutable #_"MonitorIdNode" :monitorId nil)
 
-    #_unused
-    (§ override #_"boolean" AccessMonitorNode''canDeoptimize-1 [#_"AccessMonitorNode" this]
+    (§ override #_"boolean" DeoptimizingNode''canDeoptimize-1 [#_"AccessMonitorNode" this]
         true
     )
 
@@ -53719,8 +53650,7 @@
         (BinaryOpLogicNode'new-3 ClassIsAssignableFromNode'TYPE, thisClass, otherClass)
     )
 
-    #_unused
-    (§ override! #_"Node" ClassIsAssignableFromNode''canonical-4 [#_"ClassIsAssignableFromNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+    (§ override! #_"Node" Binary''canonical-4 [#_"ClassIsAssignableFromNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
         (when (and (instance? ConstantNode forX) (instance? ConstantNode forY)) => this
             (let [
                 #_"ResolvedJavaType" thisType (#_"ConstantReflectionProvider" .asJavaType HotSpot'constantReflection, (ValueNode''asJavaConstant-1 forX))
@@ -54031,8 +53961,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"LogicNode" InstanceOfDynamicNode''canonical-4 [#_"InstanceOfDynamicNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forMirror, #_"ValueNode" forObject]
+    (§ override! #_"LogicNode" Binary''canonical-4 [#_"InstanceOfDynamicNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forMirror, #_"ValueNode" forObject]
         (or (InstanceOfDynamicNode'findSynonym-4 forMirror, forObject, (:allow-nil? this), (:exact? this))
             this
         )
@@ -54475,8 +54404,7 @@
         nil
     )
 
-    #_unused
-    (§ override! #_"boolean" LoweredAtomicReadAndWriteNode''hasSideEffect-1 [#_"LoweredAtomicReadAndWriteNode" this]
+    (§ override! #_"boolean" StateSplit''hasSideEffect-1 [#_"LoweredAtomicReadAndWriteNode" this]
         true
     )
 
@@ -54932,8 +54860,7 @@
         nil
     )
 
-    #_unused
-    (§ override! #_"boolean" StoreFieldNode''hasSideEffect-1 [#_"StoreFieldNode" this]
+    (§ override! #_"boolean" StateSplit''hasSideEffect-1 [#_"StoreFieldNode" this]
         true
     )
 
@@ -54997,8 +54924,7 @@
         nil
     )
 
-    #_unused
-    (§ override! #_"boolean" StoreIndexedNode''hasSideEffect-1 [#_"StoreIndexedNode" this]
+    (§ override! #_"boolean" StateSplit''hasSideEffect-1 [#_"StoreIndexedNode" this]
         true
     )
 
@@ -55852,8 +55778,7 @@
         nil
     )
 
-    #_unused
-    (§ override #_"boolean" AbstractWriteNode''hasSideEffect-1 [#_"AbstractWriteNode" this]
+    (§ override #_"boolean" StateSplit''hasSideEffect-1 [#_"AbstractWriteNode" this]
         true
     )
 
@@ -56037,8 +55962,7 @@
         )
     )
 
-    #_unused
-    (§ override #_"boolean" FixedAccessNode''canDeoptimize-1 [#_"FixedAccessNode" this]
+    (§ override #_"boolean" DeoptimizingNode''canDeoptimize-1 [#_"FixedAccessNode" this]
         (:nullCheck this)
     )
 
@@ -57207,8 +57131,7 @@
         nil
     )
 
-    #_unused
-    (§ override! #_"boolean" SafepointNode''canDeoptimize-1 [#_"SafepointNode" this]
+    (§ override! #_"boolean" DeoptimizingNode''canDeoptimize-1 [#_"SafepointNode" this]
         true
     )
 )
@@ -57262,7 +57185,7 @@
         )
     )
 
-    (§ override! #_"LogicNode" ShortCircuitOrNode''canonical-4 [#_"ShortCircuitOrNode" this, #_"CanonicalizerTool" tool, #_"LogicNode" forX, #_"LogicNode" forY]
+    (§ override! #_"LogicNode" Binary''canonical-4 [#_"ShortCircuitOrNode" this, #_"CanonicalizerTool" tool, #_"LogicNode" forX, #_"LogicNode" forY]
         (let [
             #_"ShortCircuitOrNode" canon (ShortCircuitOrNode''canonicalizeNegation-3 this, forX, forY)
         ]
@@ -63444,7 +63367,7 @@
 
     #_unused
     (§ override! #_"FrameState" FrameStateAssignmentClosure''processNode-3 [#_"FrameStateAssignmentClosure" this, #_"FixedNode" node, #_"FrameState" state]
-        (when (and (instance? DeoptBefore node) (DeoptBefore''canDeoptimize-1 node) (nil? (DeoptBefore''stateBefore-1 node)))
+        (when (and (instance? DeoptBefore node) (DeoptimizingNode''canDeoptimize-1 node) (nil? (DeoptBefore''stateBefore-1 node)))
             (when (some? state) => (throw! (str "no FrameState at DeoptimizingNode " node))
                 (DeoptBefore''setStateBefore-2 node, state)
             )
@@ -63469,12 +63392,12 @@
                     )
                 )
         ]
-            (when (and (instance? DeoptDuring node) (DeoptDuring''canDeoptimize-1 node))
+            (when (and (instance? DeoptDuring node) (DeoptimizingNode''canDeoptimize-1 node))
                 (when (some? state) => (throw! (str "no FrameState at DeoptimizingNode " node))
                     (DeoptDuring''computeStateDuring-2 node, state)
                 )
             )
-            (when (and (instance? DeoptAfter node) (DeoptAfter''canDeoptimize-1 node) (nil? (DeoptAfter''stateAfter-1 node)))
+            (when (and (instance? DeoptAfter node) (DeoptimizingNode''canDeoptimize-1 node) (nil? (DeoptAfter''stateAfter-1 node)))
                 (when (some? state) => (throw! (str "no FrameState at DeoptimizingNode " node))
                     (DeoptAfter''setStateAfter-2 node, state)
                 )
@@ -70366,8 +70289,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"ValueNode" IntegerAddExactNode''canonical-4 [#_"IntegerAddExactNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+    (§ override! #_"ValueNode" Binary''canonical-4 [#_"IntegerAddExactNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
         (if (and (instance? ConstantNode forX) (not (instance? ConstantNode forY)))
             (Canonicalizable''canonical-2 (IntegerAddExactNode'new-2 forY, forX), tool)
             (do
@@ -70559,8 +70481,7 @@
         false
     )
 
-    #_unused
-    (§ override! #_"ValueNode" IntegerMulExactNode''canonical-4 [#_"IntegerMulExactNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+    (§ override! #_"ValueNode" Binary''canonical-4 [#_"IntegerMulExactNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
         (cond
             (and (instance? ConstantNode forX) (not (instance? ConstantNode forY)))
                 (§ return (Canonicalizable''canonical-2 (IntegerMulExactNode'new-2 forY, forX), tool))
@@ -70656,16 +70577,15 @@
         nil
     )
 
-    #_unused
-    (§ override! #_"ValueNode" IntegerMulHighNode''canonical-4 [#_"IntegerMulHighNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+    (§ override! #_"ValueNode" Binary''canonical-4 [#_"IntegerMulHighNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
         (let [
-            #_"ValueNode" ret (BinaryArithmeticNode''canonical-4 (§ super ), tool, forX, forY)
+            #_"ValueNode" ret (Binary''canonical-4 (§ super ), tool, forX, forY)
         ]
             (when (= ret this) => ret
                 (when (and (instance? ConstantNode forX) (not (instance? ConstantNode forY))) => (IntegerMulHighNode'canonical-2 this, forY)
                     ;; we try to swap and canonicalize
                     (let [
-                        #_"ValueNode" improvement (BinaryArithmeticNode''canonical-4 this, tool, forY, forX)
+                        #_"ValueNode" improvement (Binary''canonical-4 this, tool, forY, forX)
                     ]
                         (when (= improvement this) => improvement
                             ;; if this fails we only swap
@@ -70715,8 +70635,7 @@
         false
     )
 
-    #_unused
-    (§ override! #_"ValueNode" IntegerSubExactNode''canonical-4 [#_"IntegerSubExactNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+    (§ override! #_"ValueNode" Binary''canonical-4 [#_"IntegerSubExactNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
         (cond
             (= (GraphUtil'unproxify-1 forX) (GraphUtil'unproxify-1 forY))                                             (ConstantNode'forIntegerStamp-2 (:stamp this), 0)
             (and (instance? ConstantNode forX) (instance? ConstantNode forY))                                         (IntegerSubExactNode''canonicalXYconstant-3 this, forX, forY)
@@ -70799,16 +70718,15 @@
         nil
     )
 
-    #_unused
-    (§ override! #_"ValueNode" UnsignedMulHighNode''canonical-4 [#_"UnsignedMulHighNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+    (§ override! #_"ValueNode" Binary''canonical-4 [#_"UnsignedMulHighNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
         (let [
-            #_"ValueNode" ret (BinaryArithmeticNode''canonical-4 (§ super ), tool, forX, forY)
+            #_"ValueNode" ret (Binary''canonical-4 (§ super ), tool, forX, forY)
         ]
             (when (= ret this) => ret
                 (when (and (instance? ConstantNode forX) (not (instance? ConstantNode forY))) => (UnsignedMulHighNode'canonical-2 this, forY)
                     ;; we try to swap and canonicalize
                     (let [
-                        #_"ValueNode" improvement (BinaryArithmeticNode''canonical-4 this, tool, forY, forX)
+                        #_"ValueNode" improvement (Binary''canonical-4 this, tool, forY, forX)
                     ]
                         (when (= improvement this) => improvement
                             ;; if this fails we only swap
@@ -71077,8 +70995,7 @@
         nil
     )
 
-    #_unused
-    (§ override #_"boolean" MacroStateSplitNode''hasSideEffect-1 [#_"MacroStateSplitNode" this]
+    (§ override #_"boolean" StateSplit''hasSideEffect-1 [#_"MacroStateSplitNode" this]
         true
     )
 
@@ -72854,14 +72771,14 @@
         )
     )
 
-    (§ method #_"void" EffectList''add-3 [#_"EffectList" this, #_"String" name, #_"Effect" effect]
+    (§ method! #_"void" EffectList''add-3 [#_"EffectList" this, #_"String" name, #_"Effect" effect]
         (§ ass! this (EffectList''enlarge-2 this, 1))
         (aset (:effects this) (:size this) effect)
         (§ ass! this (update this :size inc))
         nil
     )
 
-    (§ method #_"void" EffectList''addAll-2 [#_"EffectList" this, #_"EffectList" list]
+    (§ method! #_"void" EffectList''addAll-2 [#_"EffectList" this, #_"EffectList" list]
         (§ ass! this (EffectList''enlarge-2 this, (:size list)))
         (System/arraycopy (:effects list), 0, (:effects this), (:size this), (:size list))
         (§ ass! this (assoc this :size (+ (:size this) (:size list))))
@@ -72916,7 +72833,7 @@
         (zero? (:size this))
     )
 
-    (§ method #_"void" EffectList''apply-4 [#_"EffectList" this, #_"Graph" graph, #_"ArrayList<Node>" obsoleteNodes, #_"boolean" cfgKills]
+    (§ method! #_"void" EffectList''apply-4 [#_"EffectList" this, #_"Graph" graph, #_"ArrayList<Node>" obsoleteNodes, #_"boolean" cfgKills]
         (dotimes [#_"int" i (EffectList''size-1 this)]
             (let [
                 #_"Effect" effect (nth (:effects this) i)
