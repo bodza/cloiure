@@ -107,8 +107,7 @@
     [jdk.vm.ci.runtime JVMCIBackend JVMCICompiler]
 
     [org.graalvm.collections EconomicMap EconomicSet Equivalence MapCursor Pair UnmodifiableEconomicMap UnmodifiableMapCursor]
-    [org.graalvm.word LocationIdentity WordFactory]
-    [org.graalvm.word.impl WordBoxFactory WordFactoryOperation]
+    [org.graalvm.word LocationIdentity]
 
     [sun.misc Unsafe]
 )
@@ -17633,7 +17632,7 @@
 
     #_unused
     (§ defn #_"Word" ReplacementsUtil'arrayStart-1 [#_"int[]" a]
-        (WordFactory/unsigned (ComputeObjectAddressNode'get-2 a, Unsafe'ARRAY_INT_BASE_OFFSET))
+        (WordFactory'unsigned-1 (ComputeObjectAddressNode'get-2 a, Unsafe'ARRAY_INT_BASE_OFFSET))
     )
 
     ;;;
@@ -18333,12 +18332,12 @@
                             ;; assuming both the stack pointer and page_size have their least
                             ;; significant 2 bits cleared and page_size is a power of 2
                             (let [
-                                #_"Word" alignedMask (WordFactory/unsigned (dec (.wordSize HotSpot'target)))
+                                #_"Word" alignedMask (WordFactory'unsigned-1 (dec (.wordSize HotSpot'target)))
                                 #_"Word" stackPointer (Word''add-2 (ReplacementsUtil'registerAsWord-1 stackPointerRegister), HotSpot'stackBias)
                             ]
                                 (when (BranchProbabilityNode'probability-2 BranchProbabilityNode'FAST_PATH_PROBABILITY, (Word''equal-2 (Word''and-2 (Word''subtract-2 currentMark, stackPointer), (Word''subtract-2 alignedMask, (.pageSize HotSpot'unsafe))), 0))
                                     ;; recursively locked => write 0 to the lock slot
-                                    (Word''writeWord-4 lock, HotSpot'lockDisplacedMarkOffset, (WordFactory/zero), ReplacementsUtil'DISPLACED_MARK_WORD_LOCATION)
+                                    (Word''writeWord-4 lock, HotSpot'lockDisplacedMarkOffset, (WordFactory'zero-0), ReplacementsUtil'DISPLACED_MARK_WORD_LOCATION)
                                     (§ return )
                                 )
                             )
@@ -18372,7 +18371,7 @@
                 )
 
                 ;; now check to see whether biasing is enabled for this object ;; => biasing not enabled -> fall through to lightweight locking
-                (and (BranchProbabilityNode'probability-2 BranchProbabilityNode'NOT_FREQUENT_PROBABILITY, (Word''equal-2 biasableLockBits, (WordFactory/unsigned HotSpot'biasedLockPattern)))
+                (and (BranchProbabilityNode'probability-2 BranchProbabilityNode'NOT_FREQUENT_PROBABILITY, (Word''equal-2 biasableLockBits, (WordFactory'unsigned-1 HotSpot'biasedLockPattern)))
                     (let [
                         #_"Word" objectPointer (Word'objectToTrackedPointer-1 object)
                     ]
@@ -18486,7 +18485,7 @@
                 ;; First, the interpreter checks for IllegalMonitorStateException at a higher level.
                 ;; Second, if the bias was revoked while we held the lock, the object could not be
                 ;; rebiased toward another thread, so the bias bit would be clear.
-                (when (BranchProbabilityNode'probability-2 BranchProbabilityNode'FREQUENT_PROBABILITY, (Word''equal-2 (Word''and-2 mark, HotSpot'biasedLockMaskInPlace), (WordFactory/unsigned HotSpot'biasedLockPattern)))
+                (when (BranchProbabilityNode'probability-2 BranchProbabilityNode'FREQUENT_PROBABILITY, (Word''equal-2 (Word''and-2 mark, HotSpot'biasedLockMaskInPlace), (WordFactory'unsigned-1 HotSpot'biasedLockPattern)))
                     (EndLockScopeNode'endLockScope-0)
                     (§ return )
                 )
@@ -18557,7 +18556,7 @@
                             ;; cxq == 0 && entryList == 0
                             ;; nobody is waiting, success
                             (MembarNode'memoryBarrier-1 (| MemoryBarriers/LOAD_STORE MemoryBarriers/STORE_STORE))
-                            (Word''writeWord-3 monitor, ownerOffset, (WordFactory/zero))
+                            (Word''writeWord-3 monitor, ownerOffset, (WordFactory'zero-0))
                             (§ return true)
                         )
                     )
@@ -18858,7 +18857,7 @@
                     (when (and constantSize (<= (quot (- size offset) 8) NewObjectSnippets'MAX_UNROLLED_OBJECT_ZEROING_STORES))
                         (ExplodeLoopNode'explodeLoop-0)
                     )
-                    (loop-when-recur [#_"Word" i (WordFactory/signed offset)] (< (Word''rawValue-1 i) size) [(Word''add-2 i, 8)]
+                    (loop-when-recur [#_"Word" i (WordFactory'signed-1 offset)] (< (Word''rawValue-1 i) size) [(Word''add-2 i, 8)]
                         (Word''initializeLong-4 memory, i, value, (LocationIdentity/init))
                     )
                 )
@@ -19148,7 +19147,7 @@
         ]
             (if (and (= (int startAddress) startAddress) (VMConfigNode'isCardTableAddressConstant-0))
                 (Word''writeByte-4 base, (int startAddress), (byte 0), WriteBarrierSnippets'GC_CARD_LOCATION)
-                (Word''writeByte-4 base, (WordFactory/unsigned startAddress), (byte 0), WriteBarrierSnippets'GC_CARD_LOCATION)
+                (Word''writeByte-4 base, (WordFactory'unsigned-1 startAddress), (byte 0), WriteBarrierSnippets'GC_CARD_LOCATION)
             )
         )
         nil
@@ -19242,7 +19241,7 @@
         ]
             (if (and (= (int startAddress) startAddress) (VMConfigNode'isCardTableAddressConstant-0))
                 (§ ass displacement (int startAddress))
-                (§ ass cardBase (Word''add-2 cardBase, (WordFactory/unsigned startAddress)))
+                (§ ass cardBase (Word''add-2 cardBase, (WordFactory'unsigned-1 startAddress)))
             )
             (let [
                 #_"Word" cardAddress (Word''add-2 cardBase, displacement)
@@ -19307,7 +19306,7 @@
                 ]
                     (loop-when [indexValue indexValue #_"int" i 0] (< i length)
                         (let [
-                            #_"Word" oop (Word'objectToTrackedPointer-1 (Word''readObject-3 (WordFactory/pointer (+ start (* i scale))), 0, BarrierType'NONE))
+                            #_"Word" oop (Word'objectToTrackedPointer-1 (Word''readObject-3 (WordFactory'pointer-1 (+ start (* i scale))), 0, BarrierType'NONE))
                             indexValue
                                 (when (Word''notEqual-2 oop, 0) => indexValue
                                     (if (zero? indexValue)
@@ -19317,11 +19316,11 @@
                                         )
                                         (let [
                                             indexValue (- indexValue (.wordSize HotSpot'target))
-                                            #_"Word" logAddress (Word''add-2 bufferAddress, (WordFactory/unsigned indexValue))
+                                            #_"Word" logAddress (Word''add-2 bufferAddress, (WordFactory'unsigned-1 indexValue))
                                         ]
                                             ;; Log the object to be marked as well as update the SATB's buffer next index.
                                             (Word''writeWord-4 logAddress, 0, oop, WriteBarrierSnippets'GC_LOG_LOCATION)
-                                            (Word''writeWord-4 indexAddress, 0, (WordFactory/unsigned indexValue), WriteBarrierSnippets'GC_INDEX_LOCATION)
+                                            (Word''writeWord-4 indexAddress, 0, (WordFactory'unsigned-1 indexValue), WriteBarrierSnippets'GC_INDEX_LOCATION)
                                             indexValue
                                         )
                                     )
@@ -19349,7 +19348,7 @@
             ]
                 (loop-when [indexValue indexValue #_"long" i (- end start)] (<= 0 i)
                     (let [
-                        #_"Word" cardAddress (WordFactory/unsigned (+ start cardStart i))
+                        #_"Word" cardAddress (WordFactory'unsigned-1 (+ start cardStart i))
                         #_"byte" cardByte (Word''readByte-3 cardAddress, 0, WriteBarrierSnippets'GC_CARD_LOCATION)
                         indexValue
                             ;; If the card is already dirty, (hence already enqueued) skip the insertion.
@@ -19369,11 +19368,11 @@
                                             )
                                             (let [
                                                 indexValue (- indexValue (.wordSize HotSpot'target))
-                                                #_"Word" logAddress (Word''add-2 bufferAddress, (WordFactory/unsigned indexValue))
+                                                #_"Word" logAddress (Word''add-2 bufferAddress, (WordFactory'unsigned-1 indexValue))
                                             ]
                                                 ;; Log the object to be scanned as well as update the card queue's next index.
                                                 (Word''writeWord-4 logAddress, 0, cardAddress, WriteBarrierSnippets'GC_LOG_LOCATION)
-                                                (Word''writeWord-4 indexAddress, 0, (WordFactory/unsigned indexValue), WriteBarrierSnippets'GC_INDEX_LOCATION)
+                                                (Word''writeWord-4 indexAddress, 0, (WordFactory'unsigned-1 indexValue), WriteBarrierSnippets'GC_INDEX_LOCATION)
                                                 indexValue
                                             )
                                         )
@@ -19757,7 +19756,7 @@
                     #_"Word" memory (NewInstanceStub'refillAllocate-3 thread, intArrayHub, sizeInBytes)
                 ]
                     (when (Word''notEqual-2 memory, 0)
-                        (§ return (NewObjectSnippets'formatArray-8 hub, sizeInBytes, length, headerSize, memory, (WordFactory/unsigned HotSpot'arrayPrototypeMarkWord), fillContents, false))
+                        (§ return (NewObjectSnippets'formatArray-8 hub, sizeInBytes, length, headerSize, memory, (WordFactory'unsigned-1 HotSpot'arrayPrototypeMarkWord), fillContents, false))
                     )
                 )
             )
@@ -19803,7 +19802,7 @@
             #_"Word" newTop (Word''add-2 top, size)
         ]
             ;; this check might lead to problems if the TLAB is within 16GB of the address space end (checked in C++ code)
-            (when (BranchProbabilityNode'probability-2 BranchProbabilityNode'FAST_PATH_PROBABILITY, (Word''belowOrEqual-2 newTop, end)) => (WordFactory/zero)
+            (when (BranchProbabilityNode'probability-2 BranchProbabilityNode'FAST_PATH_PROBABILITY, (Word''belowOrEqual-2 newTop, end)) => (WordFactory'zero-0)
                 (ReplacementsUtil'writeTlabTop-2 thread, newTop)
                 top
             )
@@ -19848,18 +19847,17 @@
      ; @param intArrayHub the hub for {@code int[].class}
      ; @param sizeInBytes the size of the allocation
      ;
-     ; @return the newly allocated, uninitialized chunk of memory,
-     ;         or WordFactory#zero() if the operation was unsuccessful
+     ; @return the newly allocated, uninitialized chunk of memory, or WordFactory#zero() if the operation was unsuccessful
      ;;
     (§ defn #_"Word" NewInstanceStub'refillAllocate-3 [#_"Word" thread, #_"KlassPointer" intArrayHub, #_"int" sizeInBytes]
         ;; If G1 is enabled, the "eden" allocation space is not the same always
         ;; and therefore we have to go to slowpath to allocate a new TLAB.
         (cond
-            HotSpot'useG1GC       (WordFactory/zero)
-            (not HotSpot'useTLAB) (NewInstanceStub'edenAllocate-1 (WordFactory/unsigned sizeInBytes))
+            HotSpot'useG1GC       (WordFactory'zero-0)
+            (not HotSpot'useTLAB) (NewInstanceStub'edenAllocate-1 (WordFactory'unsigned-1 sizeInBytes))
             :else
                 (let [
-                    #_"Word" intArrayMarkWord (WordFactory/unsigned HotSpot'tlabIntArrayMarkWord)
+                    #_"Word" intArrayMarkWord (WordFactory'unsigned-1 HotSpot'tlabIntArrayMarkWord)
                     #_"int" alignmentReserveInBytes (* HotSpot'tlabAlignmentReserve (.wordSize HotSpot'target))
                     #_"Word" top (ReplacementsUtil'readTlabTop-1 thread)
                     #_"Word" end (ReplacementsUtil'readTlabEnd-1 thread)
@@ -19914,7 +19912,7 @@
 
                                         (NewInstanceStub'allocate-2 thread, sizeInBytes)
                                     )
-                                    (WordFactory/zero)
+                                    (WordFactory'zero-0)
                                 )
                             )
                         )
@@ -19928,7 +19926,7 @@
                                 (Word''writeInt-4 thread, HotSpot'tlabSlowAllocationsOffset, (inc (Word''readInt-3 thread, HotSpot'tlabSlowAllocationsOffset, ReplacementsUtil'TLAB_SLOW_ALLOCATIONS_LOCATION)), ReplacementsUtil'TLAB_SLOW_ALLOCATIONS_LOCATION)
                             )
 
-                            (NewInstanceStub'edenAllocate-1 (WordFactory/unsigned sizeInBytes))
+                            (NewInstanceStub'edenAllocate-1 (WordFactory'unsigned-1 sizeInBytes))
                         )
                     )
                 )
@@ -19943,8 +19941,8 @@
      ;;
     (§ defn #_"Word" NewInstanceStub'edenAllocate-1 [#_"Word" sizeInBytes]
         (let [
-            #_"Word" heapTopAddress (WordFactory/unsigned (VMConfigNode'heapTopAddress-0))
-            #_"Word" heapEndAddress (WordFactory/unsigned (VMConfigNode'heapEndAddress-0))
+            #_"Word" heapTopAddress (WordFactory'unsigned-1 (VMConfigNode'heapTopAddress-0))
+            #_"Word" heapEndAddress (WordFactory'unsigned-1 (VMConfigNode'heapEndAddress-0))
         ]
             (loop []
                 (let [
@@ -19952,12 +19950,12 @@
                     #_"Word" newHeapTop (Word''add-2 heapTop, sizeInBytes)
                 ]
                     (if (Word''belowOrEqual-2 newHeapTop, heapTop)
-                        (WordFactory/zero)
+                        (WordFactory'zero-0)
                         (let [
                             #_"Word" heapEnd (Word''readWord-3 heapEndAddress, 0, ReplacementsUtil'HEAP_END_LOCATION)
                         ]
                             (cond
-                                (Word''aboveThan-2 newHeapTop, heapEnd) (WordFactory/zero)
+                                (Word''aboveThan-2 newHeapTop, heapEnd) (WordFactory'zero-0)
                                 (Word''logicCompareAndSwapWord-5 heapTopAddress, 0, heapTop, newHeapTop, ReplacementsUtil'HEAP_TOP_LOCATION) heapTop
                                 :else (recur)
                             )
@@ -20114,7 +20112,7 @@
 
     (§ def #_"ResolvedJavaType" WordTypes'wordBase         (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, WordBase))
     (§ def #_"ResolvedJavaType" WordTypes'wordImpl         (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, Word))
-    (§ def #_"ResolvedJavaType" WordTypes'wordFactory      (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, WordFactory))
+    (§ def #_"ResolvedJavaType" WordTypes'wordFactory      (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, WordFactory))
     (§ def #_"ResolvedJavaType" WordTypes'objectAccess     (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, ObjectAccess))
     (§ def #_"ResolvedJavaType" WordTypes'barrieredAccess  (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, BarrieredAccess))
     (§ def #_"ResolvedJavaType" WordTypes'metaspacePointer (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, MetaspacePointer))
@@ -20122,7 +20120,6 @@
     (§ def #_"ResolvedJavaType" WordTypes'methodPointer    (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, MethodPointer))
 
     (§ init
-        (Word'ensureInitialized-0)
         (#_"ResolvedJavaType" .initialize WordTypes'wordImpl)
     )
 
@@ -79047,24 +79044,9 @@
 )
 
 (final-ns Word
-    (§ defn #_"void" Word'ensureInitialized-0 []
-        ;; Calling this method ensures that the static initializer has been executed.
-        nil
-    )
-
-    (§ init
-        (§ ass! WordBoxFactory/boxFactory
-            (§ reify #_"WordBoxFactory" (WordBoxFactory.)
-                (§ override! #_"Word" #_"WordBoxFactory" .boxImpl [#_"WordBoxFactory" this, #_"long" val]
-                    (Word'boxLong-1 val)
-                )
-            )
-        )
-    )
-
     (§ final #_"long" :rawValue 0)
 
-    (§ defn #_"Word" Word'new-1 [#_"long" rawValue]
+    (§ defn- #_"Word" Word'new-1 [#_"long" rawValue]
         (let [
             #_"Word" this (hash-map)
             this (assoc this :rawValue rawValue)
@@ -79073,15 +79055,11 @@
         )
     )
 
-    #_memoize
-    (§ defn #_"Word" Word'boxLong-1 [#_"long" val]
-        (Word'new-1 val)
-    )
-
     ;; Outside users must use the different signed() and unsigned() methods to ensure proper
     ;; expansion of 32-bit values on 64-bit systems.
-    (§ defn- #_"Word" Word'box-1 [#_"long" val]
-        (Word'boxLong-1 val)
+    #_memoize
+    (§ defn #_"Word" Word'box-1 [#_"long" val]
+        (Word'new-1 val)
     )
 
     (§ method! #_"long" Word''unbox-1 [#_"Word" this]
@@ -79270,13 +79248,13 @@
     ; @Operation(opcode = WordOpcode'IS_NULL)
     #_unused
     (§ method! #_"boolean" Word''isNull-1 [#_"Word" this]
-        (Word''equal-2 this, (WordFactory/zero))
+        (Word''equal-2 this, (WordFactory'zero-0))
     )
 
     ; @Operation(opcode = WordOpcode'IS_NON_NULL)
     #_unused
     (§ method! #_"boolean" Word''isNonNull-1 [#_"Word" this]
-        (Word''notEqual-2 this, (WordFactory/zero))
+        (Word''notEqual-2 this, (WordFactory'zero-0))
     )
 
     ; @Operation(opcode = WordOpcode'COMPARISON, condition = Condition'EQ)
@@ -79414,37 +79392,37 @@
 
     ; @Operation(opcode = WordOpcode'READ_POINTER)
     (§ method! #_"byte" Word''readByte-3 [#_"Word" this, #_"int" offset, #_"LocationIdentity" locationIdentity]
-        (Word''readByte-3 this, (WordFactory/signed offset), locationIdentity)
+        (Word''readByte-3 this, (WordFactory'signed-1 offset), locationIdentity)
     )
 
     ; @Operation(opcode = WordOpcode'READ_POINTER)
     (§ method! #_"char" Word''readChar-3 [#_"Word" this, #_"int" offset, #_"LocationIdentity" locationIdentity]
-        (Word''readChar-3 this, (WordFactory/signed offset), locationIdentity)
+        (Word''readChar-3 this, (WordFactory'signed-1 offset), locationIdentity)
     )
 
     ; @Operation(opcode = WordOpcode'READ_POINTER)
     (§ method! #_"short" Word''readShort-3 [#_"Word" this, #_"int" offset, #_"LocationIdentity" locationIdentity]
-        (Word''readShort-3 this, (WordFactory/signed offset), locationIdentity)
+        (Word''readShort-3 this, (WordFactory'signed-1 offset), locationIdentity)
     )
 
     ; @Operation(opcode = WordOpcode'READ_POINTER)
     (§ method! #_"int" Word''readInt-3 [#_"Word" this, #_"int" offset, #_"LocationIdentity" locationIdentity]
-        (Word''readInt-3 this, (WordFactory/signed offset), locationIdentity)
+        (Word''readInt-3 this, (WordFactory'signed-1 offset), locationIdentity)
     )
 
     ; @Operation(opcode = WordOpcode'READ_POINTER)
     (§ method! #_"long" Word''readLong-3 [#_"Word" this, #_"int" offset, #_"LocationIdentity" locationIdentity]
-        (Word''readLong-3 this, (WordFactory/signed offset), locationIdentity)
+        (Word''readLong-3 this, (WordFactory'signed-1 offset), locationIdentity)
     )
 
     ; @Operation(opcode = WordOpcode'READ_POINTER)
     (§ method! #_"Word" Word''readWord-3 [#_"Word" this, #_"int" offset, #_"LocationIdentity" locationIdentity]
-        (Word''readWord-3 this, (WordFactory/signed offset), locationIdentity)
+        (Word''readWord-3 this, (WordFactory'signed-1 offset), locationIdentity)
     )
 
     ; @Operation(opcode = WordOpcode'READ_POINTER)
     (§ method! #_"Object" Word''readObject-3 [#_"Word" this, #_"int" offset, #_"LocationIdentity" locationIdentity]
-        (Word''readObject-3 this, (WordFactory/signed offset), locationIdentity)
+        (Word''readObject-3 this, (WordFactory'signed-1 offset), locationIdentity)
     )
 
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
@@ -79494,49 +79472,49 @@
 
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     (§ method! #_"void" Word''writeByte-4 [#_"Word" this, #_"int" offset, #_"byte" val, #_"LocationIdentity" locationIdentity]
-        (Word''writeByte-4 this, (WordFactory/signed offset), val, locationIdentity)
+        (Word''writeByte-4 this, (WordFactory'signed-1 offset), val, locationIdentity)
         nil
     )
 
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     (§ method! #_"void" Word''writeChar-4 [#_"Word" this, #_"int" offset, #_"char" val, #_"LocationIdentity" locationIdentity]
-        (Word''writeChar-4 this, (WordFactory/signed offset), val, locationIdentity)
+        (Word''writeChar-4 this, (WordFactory'signed-1 offset), val, locationIdentity)
         nil
     )
 
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     (§ method! #_"void" Word''writeShort-4 [#_"Word" this, #_"int" offset, #_"short" val, #_"LocationIdentity" locationIdentity]
-        (Word''writeShort-4 this, (WordFactory/signed offset), val, locationIdentity)
+        (Word''writeShort-4 this, (WordFactory'signed-1 offset), val, locationIdentity)
         nil
     )
 
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     (§ method! #_"void" Word''writeInt-4 [#_"Word" this, #_"int" offset, #_"int" val, #_"LocationIdentity" locationIdentity]
-        (Word''writeInt-4 this, (WordFactory/signed offset), val, locationIdentity)
+        (Word''writeInt-4 this, (WordFactory'signed-1 offset), val, locationIdentity)
         nil
     )
 
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     (§ method! #_"void" Word''writeLong-4 [#_"Word" this, #_"int" offset, #_"long" val, #_"LocationIdentity" locationIdentity]
-        (Word''writeLong-4 this, (WordFactory/signed offset), val, locationIdentity)
+        (Word''writeLong-4 this, (WordFactory'signed-1 offset), val, locationIdentity)
         nil
     )
 
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     (§ method! #_"void" Word''writeWord-4 [#_"Word" this, #_"int" offset, #_"Word" val, #_"LocationIdentity" locationIdentity]
-        (Word''writeWord-4 this, (WordFactory/signed offset), val, locationIdentity)
+        (Word''writeWord-4 this, (WordFactory'signed-1 offset), val, locationIdentity)
         nil
     )
 
     ; @Operation(opcode = WordOpcode'INITIALIZE)
     (§ method! #_"void" Word''initializeLong-4 [#_"Word" this, #_"int" offset, #_"long" val, #_"LocationIdentity" locationIdentity]
-        (Word''initializeLong-4 this, (WordFactory/signed offset), val, locationIdentity)
+        (Word''initializeLong-4 this, (WordFactory'signed-1 offset), val, locationIdentity)
         nil
     )
 
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     (§ method! #_"void" Word''writeObject-4 [#_"Word" this, #_"int" offset, #_"Object" val, #_"LocationIdentity" locationIdentity]
-        (Word''writeObject-4 this, (WordFactory/signed offset), val, locationIdentity)
+        (Word''writeObject-4 this, (WordFactory'signed-1 offset), val, locationIdentity)
         nil
     )
 
@@ -79578,42 +79556,42 @@
 
     ; @Operation(opcode = WordOpcode'READ_POINTER)
     (§ method! #_"byte" Word''readByte-2 [#_"Word" this, #_"int" offset]
-        (Word''readByte-2 this, (WordFactory/signed offset))
+        (Word''readByte-2 this, (WordFactory'signed-1 offset))
     )
 
     ; @Operation(opcode = WordOpcode'READ_POINTER)
     (§ method! #_"char" Word''readChar-2 [#_"Word" this, #_"int" offset]
-        (Word''readChar-2 this, (WordFactory/signed offset))
+        (Word''readChar-2 this, (WordFactory'signed-1 offset))
     )
 
     ; @Operation(opcode = WordOpcode'READ_POINTER)
     (§ method! #_"short" Word''readShort-2 [#_"Word" this, #_"int" offset]
-        (Word''readShort-2 this, (WordFactory/signed offset))
+        (Word''readShort-2 this, (WordFactory'signed-1 offset))
     )
 
     ; @Operation(opcode = WordOpcode'READ_POINTER)
     (§ method! #_"int" Word''readInt-2 [#_"Word" this, #_"int" offset]
-        (Word''readInt-2 this, (WordFactory/signed offset))
+        (Word''readInt-2 this, (WordFactory'signed-1 offset))
     )
 
     ; @Operation(opcode = WordOpcode'READ_POINTER)
     (§ method! #_"long" Word''readLong-2 [#_"Word" this, #_"int" offset]
-        (Word''readLong-2 this, (WordFactory/signed offset))
+        (Word''readLong-2 this, (WordFactory'signed-1 offset))
     )
 
     ; @Operation(opcode = WordOpcode'READ_POINTER)
     (§ method! #_"Word" Word''readWord-2 [#_"Word" this, #_"int" offset]
-        (Word''readWord-2 this, (WordFactory/signed offset))
+        (Word''readWord-2 this, (WordFactory'signed-1 offset))
     )
 
     ; @Operation(opcode = WordOpcode'READ_POINTER)
     (§ method! #_"Object" Word''readObject-2 [#_"Word" this, #_"int" offset]
-        (Word''readObject-2 this, (WordFactory/signed offset))
+        (Word''readObject-2 this, (WordFactory'signed-1 offset))
     )
 
     ; @Operation(opcode = WordOpcode'READ_HEAP)
     (§ method! #_"Object" Word''readObject-3 [#_"Word" this, #_"int" offset, #_"BarrierType" barrierType]
-        (Word''readObject-3 this, (WordFactory/signed offset), barrierType)
+        (Word''readObject-3 this, (WordFactory'signed-1 offset), barrierType)
     )
 
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
@@ -79687,101 +79665,188 @@
 
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     (§ method! #_"void" Word''writeByte-3 [#_"Word" this, #_"int" offset, #_"byte" val]
-        (Word''writeByte-3 this, (WordFactory/signed offset), val)
+        (Word''writeByte-3 this, (WordFactory'signed-1 offset), val)
         nil
     )
 
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     (§ method! #_"void" Word''writeChar-3 [#_"Word" this, #_"int" offset, #_"char" val]
-        (Word''writeChar-3 this, (WordFactory/signed offset), val)
+        (Word''writeChar-3 this, (WordFactory'signed-1 offset), val)
         nil
     )
 
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     (§ method! #_"void" Word''writeShort-3 [#_"Word" this, #_"int" offset, #_"short" val]
-        (Word''writeShort-3 this, (WordFactory/signed offset), val)
+        (Word''writeShort-3 this, (WordFactory'signed-1 offset), val)
         nil
     )
 
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     (§ method! #_"void" Word''writeInt-3 [#_"Word" this, #_"int" offset, #_"int" val]
-        (Word''writeInt-3 this, (WordFactory/signed offset), val)
+        (Word''writeInt-3 this, (WordFactory'signed-1 offset), val)
         nil
     )
 
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     (§ method! #_"void" Word''writeLong-3 [#_"Word" this, #_"int" offset, #_"long" val]
-        (Word''writeLong-3 this, (WordFactory/signed offset), val)
+        (Word''writeLong-3 this, (WordFactory'signed-1 offset), val)
         nil
     )
 
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     (§ method! #_"void" Word''writeWord-3 [#_"Word" this, #_"int" offset, #_"Word" val]
-        (Word''writeWord-3 this, (WordFactory/signed offset), val)
+        (Word''writeWord-3 this, (WordFactory'signed-1 offset), val)
         nil
     )
 
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     (§ method! #_"void" Word''writeObject-3 [#_"Word" this, #_"int" offset, #_"Object" val]
-        (Word''writeObject-3 this, (WordFactory/signed offset), val)
+        (Word''writeObject-3 this, (WordFactory'signed-1 offset), val)
         nil
     )
 
     ; @Operation(opcode = WordOpcode'CAS_POINTER)
     (§ method! #_"int" Word''compareAndSwapInt-5 [#_"Word" this, #_"int" offset, #_"int" expectedValue, #_"int" newValue, #_"LocationIdentity" locationIdentity]
-        (Word''compareAndSwapInt-5 this, (WordFactory/signed offset), expectedValue, newValue, locationIdentity)
+        (Word''compareAndSwapInt-5 this, (WordFactory'signed-1 offset), expectedValue, newValue, locationIdentity)
     )
 
     ; @Operation(opcode = WordOpcode'CAS_POINTER)
     (§ method! #_"long" Word''compareAndSwapLong-5 [#_"Word" this, #_"int" offset, #_"long" expectedValue, #_"long" newValue, #_"LocationIdentity" locationIdentity]
-        (Word''compareAndSwapLong-5 this, (WordFactory/signed offset), expectedValue, newValue, locationIdentity)
+        (Word''compareAndSwapLong-5 this, (WordFactory'signed-1 offset), expectedValue, newValue, locationIdentity)
     )
 
     ; @Operation(opcode = WordOpcode'CAS_POINTER)
     (§ method! #_"Word" Word''compareAndSwapWord-5 [#_"Word" this, #_"int" offset, #_"Word" expectedValue, #_"Word" newValue, #_"LocationIdentity" locationIdentity]
-        (Word''compareAndSwapWord-5 this, (WordFactory/signed offset), expectedValue, newValue, locationIdentity)
+        (Word''compareAndSwapWord-5 this, (WordFactory'signed-1 offset), expectedValue, newValue, locationIdentity)
     )
 
     ; @Operation(opcode = WordOpcode'CAS_POINTER)
     (§ method! #_"Object" Word''compareAndSwapObject-5 [#_"Word" this, #_"int" offset, #_"Object" expectedValue, #_"Object" newValue, #_"LocationIdentity" locationIdentity]
-        (Word''compareAndSwapObject-5 this, (WordFactory/signed offset), expectedValue, newValue, locationIdentity)
+        (Word''compareAndSwapObject-5 this, (WordFactory'signed-1 offset), expectedValue, newValue, locationIdentity)
     )
 
     ; @Operation(opcode = WordOpcode'CAS_POINTER)
     (§ method! #_"boolean" Word''logicCompareAndSwapInt-5 [#_"Word" this, #_"int" offset, #_"int" expectedValue, #_"int" newValue, #_"LocationIdentity" locationIdentity]
-        (Word''logicCompareAndSwapInt-5 this, (WordFactory/signed offset), expectedValue, newValue, locationIdentity)
+        (Word''logicCompareAndSwapInt-5 this, (WordFactory'signed-1 offset), expectedValue, newValue, locationIdentity)
     )
 
     ; @Operation(opcode = WordOpcode'CAS_POINTER)
     (§ method! #_"boolean" Word''logicCompareAndSwapLong-5 [#_"Word" this, #_"int" offset, #_"long" expectedValue, #_"long" newValue, #_"LocationIdentity" locationIdentity]
-        (Word''logicCompareAndSwapLong-5 this, (WordFactory/signed offset), expectedValue, newValue, locationIdentity)
+        (Word''logicCompareAndSwapLong-5 this, (WordFactory'signed-1 offset), expectedValue, newValue, locationIdentity)
     )
 
     ; @Operation(opcode = WordOpcode'CAS_POINTER)
     (§ method! #_"boolean" Word''logicCompareAndSwapWord-5 [#_"Word" this, #_"int" offset, #_"Word" expectedValue, #_"Word" newValue, #_"LocationIdentity" locationIdentity]
-        (Word''logicCompareAndSwapWord-5 this, (WordFactory/signed offset), expectedValue, newValue, locationIdentity)
+        (Word''logicCompareAndSwapWord-5 this, (WordFactory'signed-1 offset), expectedValue, newValue, locationIdentity)
     )
 
     ; @Operation(opcode = WordOpcode'CAS_POINTER)
     (§ method! #_"boolean" Word''logicCompareAndSwapObject-5 [#_"Word" this, #_"int" offset, #_"Object" expectedValue, #_"Object" newValue, #_"LocationIdentity" locationIdentity]
-        (Word''logicCompareAndSwapObject-5 this, (WordFactory/signed offset), expectedValue, newValue, locationIdentity)
+        (Word''logicCompareAndSwapObject-5 this, (WordFactory'signed-1 offset), expectedValue, newValue, locationIdentity)
     )
 )
 
 ;;;
- ; Links a method to a canonical operation represented by an WordOpcode val.
+ ; Provides factory methods to create machine-word-sized values.
+ ;;
+(value-ns WordFactory
+    ;;;
+     ; The constant 0, i.e. the word with no bits set.
+     ; There is no difference between a signed and unsigned zero.
+     ;;
+    ; @WordFactoryOperation(opcode = WordFactoryOpcode'ZERO)
+    (§ defn #_"Word" WordFactory'zero-0 []
+        (Word'box-1 0)
+    )
+
+    ;;;
+     ; The null pointer, i.e. the pointer with no bits set.
+     ; There is no difference to a signed or unsigned {@link #zero}.
+     ;;
+    ; @WordFactoryOperation(opcode = WordFactoryOpcode'ZERO)
+    #_unused
+    (§ defn #_"Word" WordFactory'nullPointer-0 []
+        (Word'box-1 0)
+    )
+
+    ;;;
+     ; Unsafe conversion from a Java long value to a Word. The parameter is treated as an unsigned
+     ; 64-bit value (in contrast to the semantics of a Java long).
+     ;;
+    ; @WordFactoryOperation(opcode = WordFactoryOpcode'FROM_UNSIGNED)
+    (§ defn #_"Word" WordFactory'unsigned-1 [#_"long" val]
+        (Word'box-1 val)
+    )
+
+    ;;;
+     ; Unsafe conversion from a Java long value to a {@link PointerBase pointer}. The parameter is
+     ; treated as an unsigned 64-bit value (in contrast to the semantics of a Java long).
+     ;;
+    ; @WordFactoryOperation(opcode = WordFactoryOpcode'FROM_UNSIGNED)
+    (§ defn #_"Word" WordFactory'pointer-1 [#_"long" val]
+        (Word'box-1 val)
+    )
+
+    ;;;
+     ; Unsafe conversion from a Java int value to a Word. The parameter is treated as an unsigned
+     ; 32-bit value (in contrast to the semantics of a Java int).
+     ;;
+    ; @WordFactoryOperation(opcode = WordFactoryOpcode'FROM_UNSIGNED)
+    (§ defn #_"Word" WordFactory'unsigned-1 [#_"int" val]
+        (Word'box-1 (& val 0xffffffff))
+    )
+
+    ;;;
+     ; Unsafe conversion from a Java long value to a Word. The parameter is treated as a signed
+     ; 64-bit value (unchanged semantics of a Java long).
+     ;;
+    ; @WordFactoryOperation(opcode = WordFactoryOpcode'FROM_SIGNED)
+    (§ defn #_"Word" WordFactory'signed-1 [#_"long" val]
+        (Word'box-1 val)
+    )
+
+    ;;;
+     ; Unsafe conversion from a Java int value to a Word. The parameter is treated as a signed
+     ; 32-bit value (unchanged semantics of a Java int).
+     ;;
+    ; @WordFactoryOperation(opcode = WordFactoryOpcode'FROM_SIGNED)
+    (§ defn #_"Word" WordFactory'signed-1 [#_"int" val]
+        (Word'box-1 val)
+    )
+)
+
+;;;
+ ; Links a method to a canonical operation represented by a WordFactoryOpcode val.
+ ;
+ ; @target ElementType.METHOD
+ ;;
+(§ annotation WordFactoryOperation
+    (§ value #_"WordFactoryOpcode" WordFactoryOperation''opcode-1)
+)
+
+;;;
+ ; The canonical WordFactoryOperation represented by a method in a word type.
+ ;;
+(value-ns WordFactoryOpcode
+    (§ enum WordFactoryOpcode'ZERO)
+    (§ enum WordFactoryOpcode'FROM_UNSIGNED)
+    (§ enum WordFactoryOpcode'FROM_SIGNED)
+)
+
+;;;
+ ; Links a method to a canonical operation represented by a WordOpcode val.
  ;
  ; @anno Word.Operation
  ; @target ElementType.METHOD
  ;;
 (§ annotation Operation
-    (§ value #_"Class<? extends ValueNode>" node ValueNode)
+    (§ value #_"Class<? extends ValueNode>" Operation''node-1 ValueNode)
 
-    (§ value #_"boolean" rightOperandIsInt false)
+    (§ value #_"boolean" Operation''rightOperandIsInt-1 false)
 
-    (§ value #_"WordOpcode" opcode WordOpcode'NODE_CLASS)
+    (§ value #_"WordOpcode" Operation''opcode-1 WordOpcode'NODE_CLASS)
 
-    (§ value #_"Condition" condition Condition'EQ)
+    (§ value #_"Condition" Operation''condition-1 Condition'EQ)
 )
 
 ;;;
@@ -79802,14 +79867,14 @@
     (§ enum WordOpcode'WRITE_POINTER)
     (§ enum WordOpcode'WRITE_OBJECT)
     (§ enum WordOpcode'WRITE_BARRIERED)
-    (§ enum WordOpcode'CAS_POINTER)
     (§ enum WordOpcode'INITIALIZE)
-    (§ enum WordOpcode'FROM_ADDRESS)
+    (§ enum WordOpcode'TO_RAW_VALUE)
     (§ enum WordOpcode'OBJECT_TO_TRACKED)
     (§ enum WordOpcode'OBJECT_TO_UNTRACKED)
+    (§ enum WordOpcode'FROM_ADDRESS)
     (§ enum WordOpcode'TO_OBJECT)
     (§ enum WordOpcode'TO_OBJECT_NON_NULL)
-    (§ enum WordOpcode'TO_RAW_VALUE)
+    (§ enum WordOpcode'CAS_POINTER)
 )
 
 ;;;
@@ -80067,7 +80132,7 @@
         ]
             (or
                 (when (some? factoryOperation)
-                    (condp = (#_"WordFactoryOperation" .opcode factoryOperation)
+                    (condp = (WordFactoryOperation''opcode-1 factoryOperation)
                         WordFactoryOpcode'ZERO
                         (do
                             (BytecodeParser''addPush-3 parser, returnKind, (ConstantNode'forIntegerKind-2 WordTypes'wordKind, 0))
@@ -80109,7 +80174,7 @@
                             (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin''comparisonOp-5 this, parser, Condition'NE, (nth args 0), (ConstantNode'forIntegerKind-2 WordTypes'wordKind, 0)))
                         WordOpcode'NOT
                             (BytecodeParser''addPush-3 parser, returnKind, (XorNode'new-2 (nth args 0), (BytecodeParser''add-2 parser, (ConstantNode'forIntegerKind-2 WordTypes'wordKind, -1))))
-                    [WordOpcode'READ_POINTER WordOpcode'READ_OBJECT WordOpcode'READ_BARRIERED]
+                       [WordOpcode'READ_POINTER WordOpcode'READ_OBJECT WordOpcode'READ_BARRIERED]
                             (let [
                                 #_"JavaKind" readKind (WordTypes'asKind-1 (#_"Signature" .getReturnType (#_"ResolvedJavaMethod" .getSignature wordMethod), (#_"ResolvedJavaMethod" .getDeclaringClass wordMethod)))
                                 #_"AddressNode" address (WordOperationPlugin''makeAddress-4 this, parser, (nth args 0), (nth args 1))
@@ -80129,7 +80194,7 @@
                             ]
                                 (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin'readOp-6 parser, readKind, address, (LocationIdentity/any), barrierType, true))
                             )
-                    [WordOpcode'WRITE_POINTER WordOpcode'WRITE_OBJECT WordOpcode'WRITE_BARRIERED WordOpcode'INITIALIZE]
+                       [WordOpcode'WRITE_POINTER WordOpcode'WRITE_OBJECT WordOpcode'WRITE_BARRIERED WordOpcode'INITIALIZE]
                             (let [
                                 #_"JavaKind" writeKind (WordTypes'asKind-1 (#_"Signature" .getParameterType (#_"ResolvedJavaMethod" .getSignature wordMethod), (if (#_"ResolvedJavaMethod" .isStatic wordMethod) 2 1), (#_"ResolvedJavaMethod" .getDeclaringClass wordMethod)))
                                 #_"AddressNode" address (WordOperationPlugin''makeAddress-4 this, parser, (nth args 0), (nth args 1))
