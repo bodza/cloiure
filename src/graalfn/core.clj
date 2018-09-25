@@ -246,8 +246,6 @@
     (def #_"long" HotSpot'arrayPrototypeMarkWord (| HotSpot'markWordNoHashInPlace HotSpot'markWordNoLockInPlace))
     (def #_"long" HotSpot'tlabIntArrayMarkWord   (| (& HotSpot'arrayPrototypeMarkWord (bit-not HotSpot'markOopDescHashMaskInPlace)) (<< (& 0x2 HotSpot'markOopDescHashMask) HotSpot'markOopDescHashShift)))
 
-    (def #_"int" HotSpot'methodCompiledEntryOffset (.getFieldOffset HotSpot'config, "Method::_from_compiled_entry", Integer, "address"))
-
     ;;;
      ; Bit pattern that represents a non-oop. Neither the high bits nor the low bits of this value
      ; are allowed to look like (respectively) the high or low bits of a real oop.
@@ -323,7 +321,6 @@
     (def #_"int" HotSpot'invokevirtualMark                       (.getConstant HotSpot'config, "CodeInstaller::INVOKEVIRTUAL",                          Integer))
     (def #_"int" HotSpot'invokestaticMark                        (.getConstant HotSpot'config, "CodeInstaller::INVOKESTATIC",                           Integer))
     (def #_"int" HotSpot'invokespecialMark                       (.getConstant HotSpot'config, "CodeInstaller::INVOKESPECIAL",                          Integer))
-    (def #_"int" HotSpot'inlineInvokeMark                        (.getConstant HotSpot'config, "CodeInstaller::INLINE_INVOKE",                          Integer))
     (def #_"int" HotSpot'pollNearMark                            (.getConstant HotSpot'config, "CodeInstaller::POLL_NEAR",                              Integer))
     (def #_"int" HotSpot'pollReturnNearMark                      (.getConstant HotSpot'config, "CodeInstaller::POLL_RETURN_NEAR",                       Integer))
     (def #_"int" HotSpot'pollFarMark                             (.getConstant HotSpot'config, "CodeInstaller::POLL_FAR",                               Integer))
@@ -6818,8 +6815,6 @@
     (def #_"boolean" GraalOptions'replaceInputsWithConstantsBasedOnStamps true)
     (def #_"boolean" GraalOptions'removeNeverExecutedCode true)
     (def #_"boolean" GraalOptions'genLoopSafepoints true)
-    (def #_"boolean" GraalOptions'inlineVTableStubs true)
-    (def #_"boolean" GraalOptions'alwaysInlineVTableStubs false)
     (def #_"boolean" GraalOptions'resolveClassBeforeStaticInvoke false)
     (def #_"boolean" GraalOptions'canOmitFrame true)
 
@@ -15207,29 +15202,6 @@
         nil
     )
 
-    (§ method- #_"void" LIRBuilder''emitIndirectCall-5 [#_"LIRBuilder" this, #_"IndirectCallTargetNode" callTarget, #_"Value" result, #_"Value[]" parameters, #_"Value[]" temps]
-        (if (instance? HotSpotIndirectCallTargetNode callTarget)
-            (let [
-                #_"Value" metaspaceMethodSrc (LIRBuilder''operand-2 this, (:metaspaceMethod callTarget))
-                #_"Value" targetAddressSrc (LIRBuilder''operand-2 this, (:computedAddress callTarget))
-                #_"AllocatableValue" metaspaceMethodDst (#_"Register" .asValue AMD64/rbx, (#_"Value" .getValueKind metaspaceMethodSrc))
-                #_"AllocatableValue" targetAddressDst (#_"Register" .asValue AMD64/rax, (#_"Value" .getValueKind targetAddressSrc))
-            ]
-                (LIRGenerator''emitMove-3 (:gen this), metaspaceMethodDst, metaspaceMethodSrc)
-                (LIRGenerator''emitMove-3 (:gen this), targetAddressDst, targetAddressSrc)
-                (LIRGenerator''append-2 (:gen this), (AMD64IndirectCallOp'new-6 (CallTargetNode''targetMethod-1 callTarget), result, parameters, temps, metaspaceMethodDst, targetAddressDst))
-            )
-            (let [
-                #_"Value" targetAddressSrc (LIRBuilder''operand-2 this, (:computedAddress callTarget))
-                #_"AllocatableValue" targetAddress (#_"Register" .asValue AMD64/rax, (#_"Value" .getValueKind targetAddressSrc))
-            ]
-                (LIRGenerator''emitMove-3 (:gen this), targetAddress, targetAddressSrc)
-                (LIRGenerator''append-2 (:gen this), (IndirectCallOp'new-5 (CallTargetNode''targetMethod-1 callTarget), result, parameters, temps, targetAddress))
-            )
-        )
-        nil
-    )
-
     (§ method! #_"void" LIRBuilder''emitInvoke-2 [#_"LIRBuilder" this, #_"InvokeNode" invoke]
         (let [
             #_"LoweredCallTargetNode" callTarget (:callTarget invoke)
@@ -15244,7 +15216,6 @@
             ]
                 (condp instance? callTarget
                     DirectCallTargetNode   (LIRBuilder''emitDirectCall-5 this, callTarget, result, parameters, AllocatableValue/NONE)
-                    IndirectCallTargetNode (LIRBuilder''emitIndirectCall-5 this, callTarget, result, parameters, AllocatableValue/NONE)
                 )
 
                 (when-not (= result Value/ILLEGAL)
@@ -15410,40 +15381,6 @@
                 )
             )
         )
-        nil
-    )
-)
-
-;;;
- ; A register indirect call that complies with the extra conventions for such calls in HotSpot. In
- ; particular, the metaspace Method of the callee must be in RBX for the case where a vtable entry's
- ; _from_compiled_entry is the address of an C2I adapter. Such adapters expect the target method to
- ; be in RBX.
- ;;
-; @LIROpcode
-(final-ns AMD64IndirectCallOp (§ extends IndirectCallOp)
-    (§ def #_"LIRInstructionClass<AMD64IndirectCallOp>" AMD64IndirectCallOp'TYPE (LIRInstructionClass'new-1 AMD64IndirectCallOp))
-
-    ;;;
-     ; Vtable stubs expect the metaspace Method in RBX.
-     ;;
-    (§ def #_"Register" AMD64IndirectCallOp'METHOD AMD64/rbx)
-
-    ; @Use({OperandFlag'REG})
-    (§ mutable #_"Value" :metaspaceMethod nil)
-
-    (§ defn #_"AMD64IndirectCallOp" AMD64IndirectCallOp'new-6 [#_"ResolvedJavaMethod" targetMethod, #_"Value" result, #_"Value[]" parameters, #_"Value[]" temps, #_"Value" metaspaceMethod, #_"Value" targetAddress]
-        (let [
-            #_"AMD64IndirectCallOp" this (IndirectCallOp'new-6 AMD64IndirectCallOp'TYPE, targetMethod, result, parameters, temps, targetAddress)
-            this (assoc this :metaspaceMethod metaspaceMethod)
-        ]
-            this
-        )
-    )
-
-    (§ override! #_"void" LIRInstruction''emitCode-2 [#_"AMD64IndirectCallOp" this, #_"Assembler" asm]
-        (Assembler''recordMark-2 asm, HotSpot'inlineInvokeMark)
-        (AMD64Call'indirectCall-3 asm, (#_"RegisterValue" .getRegister (:targetAddress this)), (:callTarget this))
         nil
     )
 )
@@ -16251,7 +16188,7 @@
             #_"ResolvedJavaType" arrayType (StampTool'typeOrNull-1 (:stamp array))
             #_"Stamp" componentStamp (WordTypes'getWordStamp-1 (#_"ResolvedJavaType" .getComponentType arrayType))
         ]
-            (if (instance? MetaspacePointerStamp componentStamp)
+            (if (instance? KlassPointerStamp componentStamp)
                 (LoadIndexedPointerNode'new-3 componentStamp, array, index)
                 (WordOperationPlugin''createLoadIndexedNode-3 (§ super ), array, index)
             )
@@ -16266,7 +16203,7 @@
             ]
                 (if (some? operation)
                     (HotSpotWordOperationPlugin''processHotSpotWordOperation-5 this, parser, method, args, operation)
-                    (WordOperationPlugin''processWordOperation-4 this, parser, args, (WordTypes'getWordOperation-2 method, (#_"ResolvedJavaMethod" .getDeclaringClass (:method parser))))
+                    (WordOperationPlugin''processWordOperation-4 this, parser, method, args)
                 )
                 true
             )
@@ -16300,8 +16237,6 @@
                     (BytecodeParser''addPush-3 parser, returnKind, (PointerCastNode'new-2 (StampFactory'forKind-1 WordTypes'wordKind), (nth args 0)))
                 HotspotOpcode'TO_KLASS_POINTER
                     (BytecodeParser''addPush-3 parser, returnKind, (PointerCastNode'new-2 KlassPointerStamp'KLASS, (nth args 0)))
-                HotspotOpcode'TO_METHOD_POINTER
-                    (BytecodeParser''addPush-3 parser, returnKind, (PointerCastNode'new-2 MethodPointerStamp'METHOD, (nth args 0)))
                 HotspotOpcode'READ_KLASS_POINTER
                     (let [
                         #_"Stamp" readStamp KlassPointerStamp'KLASS
@@ -16819,22 +16754,6 @@
     )
 )
 
-(final-ns HotSpotIndirectCallTargetNode (§ extends IndirectCallTargetNode)
-    (§ def #_"NodeClass<HotSpotIndirectCallTargetNode>" HotSpotIndirectCallTargetNode'TYPE (NodeClass'create-1 HotSpotIndirectCallTargetNode))
-
-    ; @Input
-    (§ mutable #_"ValueNode" :metaspaceMethod nil)
-
-    (§ defn #_"HotSpotIndirectCallTargetNode" HotSpotIndirectCallTargetNode'new-8 [#_"ValueNode" metaspaceMethod, #_"ValueNode" computedAddress, #_"ValueNode[]" arguments, #_"StampPair" returnStamp, #_"JavaType[]" signature, #_"ResolvedJavaMethod" target, #_"CallingConvention$Type" callType, #_"InvokeKind" invokeKind]
-        (let [
-            #_"HotSpotIndirectCallTargetNode" this (IndirectCallTargetNode'new-8 HotSpotIndirectCallTargetNode'TYPE, computedAddress, arguments, returnStamp, signature, target, callType, invokeKind)
-            this (assoc this :metaspaceMethod metaspaceMethod)
-        ]
-            this
-        )
-    )
-)
-
 (final-ns LoadIndexedPointerNode (§ extends LoadIndexedNode)
     (§ def #_"NodeClass<LoadIndexedPointerNode>" LoadIndexedPointerNode'TYPE (NodeClass'create-1 LoadIndexedPointerNode))
 
@@ -17036,7 +16955,7 @@
     )
 )
 
-(final-ns KlassPointerStamp (§ extends MetaspacePointerStamp)
+(final-ns KlassPointerStamp (§ extends AbstractPointerStamp)
     (§ def #_"KlassPointerStamp" KlassPointerStamp'KLASS             (KlassPointerStamp'new-2 false, false))
     (§ def #_"KlassPointerStamp" KlassPointerStamp'KLASS_NON_NULL    (KlassPointerStamp'new-2 true, false))
     (§ def #_"KlassPointerStamp" KlassPointerStamp'KLASS_ALWAYS_NULL (KlassPointerStamp'new-2 false, true))
@@ -17049,7 +16968,7 @@
 
     (§ defn- #_"KlassPointerStamp" KlassPointerStamp'new-3 [#_"boolean" never-nil?, #_"boolean" always-nil?, #_"CompressEncoding" encoding]
         (let [
-            #_"KlassPointerStamp" this (MetaspacePointerStamp'new-2 never-nil?, always-nil?)
+            #_"KlassPointerStamp" this (AbstractPointerStamp'new-2 never-nil?, always-nil?)
             this (assoc this :encoding encoding)
         ]
             this
@@ -17059,6 +16978,27 @@
     #_unused
     (§ override! #_"AbstractPointerStamp" KlassPointerStamp''copyWith-3 [#_"KlassPointerStamp" this, #_"boolean" newNonNull, #_"boolean" newAlwaysNull]
         (KlassPointerStamp'new-3 newNonNull, newAlwaysNull, (:encoding this))
+    )
+
+    #_unused
+    (§ override #_"Stamp" KlassPointerStamp''empty-1 [#_"KlassPointerStamp" this]
+        ;; there is no empty pointer stamp
+        this
+    )
+
+    #_unused
+    (§ override #_"boolean" KlassPointerStamp''hasValues-1 [#_"KlassPointerStamp" this]
+        true
+    )
+
+    #_unused
+    (§ override #_"Stamp" KlassPointerStamp''join-2 [#_"KlassPointerStamp" this, #_"Stamp" other]
+        (AbstractPointerStamp''defaultPointerJoin-2 this, other)
+    )
+
+    #_unused
+    (§ override #_"ResolvedJavaType" KlassPointerStamp''javaType-1 [#_"KlassPointerStamp" this]
+        (throw! "metaspace pointer has no Java type")
     )
 
     #_unused
@@ -17074,7 +17014,7 @@
     (§ override! #_"boolean" KlassPointerStamp''isCompatible-2 [#_"KlassPointerStamp" this, #_"Constant" constant]
         (if (instance? HotSpotMetaspaceConstant constant)
             (some? (#_"HotSpotMetaspaceConstant" .asResolvedJavaType constant))
-            (MetaspacePointerStamp''isCompatible-2 (§ super ), constant)
+            (#_"Constant" .isDefaultForKind constant)
         )
     )
 
@@ -17108,7 +17048,7 @@
     (§ override! #_"LIRKind" KlassPointerStamp''getLIRKind-1 [#_"KlassPointerStamp" this]
         (if (KlassPointerStamp''isCompressed-1 this)
             (LIRKindTool'getNarrowPointerKind-0)
-            (MetaspacePointerStamp''getLIRKind-1 (§ super ))
+            (LIRKindTool'getWordKind-0)
         )
     )
 
@@ -17130,86 +17070,6 @@
             (#_"HotSpotMemoryAccessProvider" .readNarrowKlassPointerConstant provider, base, displacement)
             (#_"HotSpotMemoryAccessProvider" .readKlassPointerConstant provider, base, displacement)
         )
-    )
-)
-
-(class-ns MetaspacePointerStamp (§ extends AbstractPointerStamp)
-    (§ defn #_"MetaspacePointerStamp" MetaspacePointerStamp'new-2 [#_"boolean" never-nil?, #_"boolean" always-nil?]
-        (AbstractPointerStamp'new-2 never-nil?, always-nil?)
-    )
-
-    (§ override #_"LIRKind" MetaspacePointerStamp''getLIRKind-1 [#_"MetaspacePointerStamp" this]
-        (LIRKindTool'getWordKind-0)
-    )
-
-    #_unused
-    (§ override #_"Stamp" MetaspacePointerStamp''empty-1 [#_"MetaspacePointerStamp" this]
-        ;; there is no empty pointer stamp
-        this
-    )
-
-    (§ override #_"boolean" MetaspacePointerStamp''isCompatible-2 [#_"MetaspacePointerStamp" this, #_"Constant" constant]
-        (#_"Constant" .isDefaultForKind constant)
-    )
-
-    #_unused
-    (§ override #_"boolean" MetaspacePointerStamp''hasValues-1 [#_"MetaspacePointerStamp" this]
-        true
-    )
-
-    #_unused
-    (§ override #_"Stamp" MetaspacePointerStamp''join-2 [#_"MetaspacePointerStamp" this, #_"Stamp" other]
-        (AbstractPointerStamp''defaultPointerJoin-2 this, other)
-    )
-
-    #_unused
-    (§ override #_"ResolvedJavaType" MetaspacePointerStamp''javaType-1 [#_"MetaspacePointerStamp" this]
-        (throw! "metaspace pointer has no Java type")
-    )
-)
-
-(final-ns MethodPointerStamp (§ extends MetaspacePointerStamp)
-    (§ def- #_"MethodPointerStamp" MethodPointerStamp'METHOD             (MethodPointerStamp'new-2 false, false))
-    (§ def- #_"MethodPointerStamp" MethodPointerStamp'METHOD_NON_NULL    (MethodPointerStamp'new-2 true, false))
-    (§ def- #_"MethodPointerStamp" MethodPointerStamp'METHOD_ALWAYS_NULL (MethodPointerStamp'new-2 false, true))
-
-    (§ defn- #_"MethodPointerStamp" MethodPointerStamp'new-2 [#_"boolean" never-nil?, #_"boolean" always-nil?]
-        (MetaspacePointerStamp'new-2 never-nil?, always-nil?)
-    )
-
-    #_unused
-    (§ override! #_"AbstractPointerStamp" MethodPointerStamp''copyWith-3 [#_"MethodPointerStamp" this, #_"boolean" newNonNull, #_"boolean" newAlwaysNull]
-        (cond
-            newNonNull    MethodPointerStamp'METHOD_NON_NULL
-            newAlwaysNull MethodPointerStamp'METHOD_ALWAYS_NULL
-            :else         MethodPointerStamp'METHOD
-        )
-    )
-
-    #_unused
-    (§ override! #_"boolean" MethodPointerStamp''isCompatible-2 [#_"MethodPointerStamp" this, #_"Stamp" otherStamp]
-        (or (= this otherStamp) (instance? MethodPointerStamp otherStamp))
-    )
-
-    #_unused
-    (§ override! #_"boolean" MethodPointerStamp''isCompatible-2 [#_"MethodPointerStamp" this, #_"Constant" constant]
-        (if (instance? HotSpotMetaspaceConstant constant)
-            (some? (#_"HotSpotMetaspaceConstant" .asResolvedJavaMethod constant))
-            (MetaspacePointerStamp''isCompatible-2 (§ super ), constant)
-        )
-    )
-
-    #_unused
-    (§ override! #_"Stamp" MethodPointerStamp''constant-2 [#_"MethodPointerStamp" this, #_"Constant" constant]
-        (if (= JavaConstant/NULL_POINTER constant)
-            MethodPointerStamp'METHOD_ALWAYS_NULL
-            MethodPointerStamp'METHOD_NON_NULL
-        )
-    )
-
-    #_unused
-    (§ override! #_"Constant" MethodPointerStamp''readConstant-4 [#_"MethodPointerStamp" this, #_"MemoryAccessProvider" provider, #_"Constant" base, #_"long" displacement]
-        (#_"HotSpotMemoryAccessProvider" .readMethodPointerConstant provider, base, displacement)
     )
 )
 
@@ -17702,7 +17562,7 @@
     (§ def #_"LocationIdentity" ReplacementsUtil'CLASS_STATE_LOCATION (NamedLocationIdentity'mutable-1 "ClassState"))
 
     (§ defn- #_"byte" ReplacementsUtil'readInstanceKlassState-1 [#_"KlassPointer" hub]
-        (MetaspacePointer''readByte-3 hub, HotSpot'instanceKlassInitStateOffset, ReplacementsUtil'CLASS_STATE_LOCATION)
+        (KlassPointer''readByte-3 hub, HotSpot'instanceKlassInitStateOffset, ReplacementsUtil'CLASS_STATE_LOCATION)
     )
 
     ;;;
@@ -17976,7 +17836,7 @@
                 #_"KlassPointer" nonNullObjectHub (LoadHubNode'loadHubIntrinsic-1 (PiNode'piCastNonNull-2 object, (SnippetAnchorNode'anchor-0)))
             ]
                 ;; The hub of a primitive type can be nil => always return false in this case.
-                (if (and (BranchProbabilityNode'probability-2 BranchProbabilityNode'FAST_PATH_PROBABILITY, (not (MetaspacePointer''isNull-1 hub))) (TypeCheckSnippetUtils'checkUnknownSubType-2 hub, nonNullObjectHub))
+                (if (and (BranchProbabilityNode'probability-2 BranchProbabilityNode'FAST_PATH_PROBABILITY, (not (KlassPointer''isNull-1 hub))) (TypeCheckSnippetUtils'checkUnknownSubType-2 hub, nonNullObjectHub))
                     trueValue
                     falseValue
                 )
@@ -17999,8 +17859,8 @@
                         #_"KlassPointer" thisHub (ClassGetHubNode'readClass-1 thisClassNonNull)
                         #_"KlassPointer" otherHub (ClassGetHubNode'readClass-1 otherClassNonNull)
                     ]
-                        (if (and (BranchProbabilityNode'probability-2 BranchProbabilityNode'FAST_PATH_PROBABILITY, (not (MetaspacePointer''isNull-1 thisHub)))
-                                 (BranchProbabilityNode'probability-2 BranchProbabilityNode'FAST_PATH_PROBABILITY, (not (MetaspacePointer''isNull-1 otherHub)))
+                        (if (and (BranchProbabilityNode'probability-2 BranchProbabilityNode'FAST_PATH_PROBABILITY, (not (KlassPointer''isNull-1 thisHub)))
+                                 (BranchProbabilityNode'probability-2 BranchProbabilityNode'FAST_PATH_PROBABILITY, (not (KlassPointer''isNull-1 otherHub)))
                                  (TypeCheckSnippetUtils'checkUnknownSubType-2 thisHub, (PiNode'piCastNonNull-2 otherHub, (SnippetAnchorNode'anchor-0)))
                               )
                             trueValue
@@ -18357,7 +18217,7 @@
         (let [
             #_"Word" biasableLockBits (Word''and-2 mark, HotSpot'biasedLockMaskInPlace)
             ;; Check whether the bias pattern is present in the object's mark word and the bias owner and the epoch are both still current.
-            #_"Word" prototypeMarkWord (MetaspacePointer''readWord-3 hub, HotSpot'prototypeMarkWordOffset, ReplacementsUtil'PROTOTYPE_MARK_WORD_LOCATION)
+            #_"Word" prototypeMarkWord (KlassPointer''readWord-3 hub, HotSpot'prototypeMarkWordOffset, ReplacementsUtil'PROTOTYPE_MARK_WORD_LOCATION)
             #_"Word" thread (ReplacementsUtil'registerAsWord-1 threadRegister)
             #_"Word" tmp (Word''and-2 (Word''xor-2 (Word''or-2 prototypeMarkWord, thread), mark), (bit-not HotSpot'ageMaskInPlace))
         ]
@@ -18709,7 +18569,7 @@
         (let [
             #_"KlassPointer" hub (ClassGetHubNode'readClass-1 nonNullType)
         ]
-            (when (BranchProbabilityNode'probability-2 BranchProbabilityNode'FAST_PATH_PROBABILITY, (not (MetaspacePointer''isNull-1 hub)))
+            (when (BranchProbabilityNode'probability-2 BranchProbabilityNode'FAST_PATH_PROBABILITY, (not (KlassPointer''isNull-1 hub)))
                 (let [
                     #_"KlassPointer" nonNullHub (PiNode'piCastNonNull-2 hub, (SnippetAnchorNode'anchor-0))
                 ]
@@ -18722,7 +18582,7 @@
                             ;; if instances of this class cannot be allocated using the fastpath.
                             (when (BranchProbabilityNode'probability-2 BranchProbabilityNode'FAST_PATH_PROBABILITY, (zero? (& layoutHelper 1)))
                                 (let [
-                                    #_"Word" prototypeMarkWord (MetaspacePointer''readWord-3 nonNullHub, HotSpot'prototypeMarkWordOffset, ReplacementsUtil'PROTOTYPE_MARK_WORD_LOCATION)
+                                    #_"Word" prototypeMarkWord (KlassPointer''readWord-3 nonNullHub, HotSpot'prototypeMarkWordOffset, ReplacementsUtil'PROTOTYPE_MARK_WORD_LOCATION)
                                 ]
                                     (§ return (NewObjectSnippets'allocateInstanceHelper-6 layoutHelper, nonNullHub, prototypeMarkWord, fillContents, threadRegister, false))
                                 )
@@ -18784,7 +18644,7 @@
         (let [
             #_"KlassPointer" klass (ReplacementsUtil'loadKlassFromObject-3 elementType, HotSpot'arrayKlassOffset, ReplacementsUtil'CLASS_ARRAY_KLASS_LOCATION)
         ]
-            (when (MetaspacePointer''isNull-1 klass)
+            (when (KlassPointer''isNull-1 klass)
                 (DeoptimizeNode'deopt-2 DeoptimizationAction/None, DeoptimizationReason/RuntimeConstraint)
             )
             (let [
@@ -18879,7 +18739,7 @@
      ;;
     (§ defn #_"Object" NewObjectSnippets'formatObject-6 [#_"KlassPointer" hub, #_"int" size, #_"Word" memory, #_"Word" compileTimePrototypeMarkWord, #_"boolean" fillContents, #_"boolean" constantSize]
         (let [
-            #_"Word" prototypeMarkWord (if HotSpot'useBiasedLocking (MetaspacePointer''readWord-3 hub, HotSpot'prototypeMarkWordOffset, ReplacementsUtil'PROTOTYPE_MARK_WORD_LOCATION) compileTimePrototypeMarkWord)
+            #_"Word" prototypeMarkWord (if HotSpot'useBiasedLocking (KlassPointer''readWord-3 hub, HotSpot'prototypeMarkWordOffset, ReplacementsUtil'PROTOTYPE_MARK_WORD_LOCATION) compileTimePrototypeMarkWord)
         ]
             (ReplacementsUtil'initializeObjectHeader-3 memory, prototypeMarkWord, hub)
             (when fillContents
@@ -19071,7 +18931,7 @@
         (or (KlassPointer''equal-2 s, t)
             ;; if (S.scan_s_s_array(T)) { S.cache = T; return true; }
             (let [
-                #_"Word" secondarySupers (MetaspacePointer''readWord-3 s, HotSpot'secondarySupersOffset, ReplacementsUtil'SECONDARY_SUPERS_LOCATION)
+                #_"Word" secondarySupers (KlassPointer''readWord-3 s, HotSpot'secondarySupersOffset, ReplacementsUtil'SECONDARY_SUPERS_LOCATION)
                 #_"int" n (Word''readInt-3 secondarySupers, HotSpot'metaspaceArrayLengthOffset, ReplacementsUtil'METASPACE_ARRAY_LENGTH_LOCATION)
             ]
                 (loop-when [#_"int" i 0] (< i n) => false
@@ -19094,7 +18954,7 @@
     (§ defn #_"boolean" TypeCheckSnippetUtils'checkUnknownSubType-2 [#_"KlassPointer" t, #_"KlassPointer" sNonNull]
         ;; int off = T.offset
         (let [
-            #_"int" superCheckOffset (MetaspacePointer''readInt-3 t, HotSpot'superCheckOffsetOffset, ReplacementsUtil'KLASS_SUPER_CHECK_OFFSET_LOCATION)
+            #_"int" superCheckOffset (KlassPointer''readInt-3 t, HotSpot'superCheckOffsetOffset, ReplacementsUtil'KLASS_SUPER_CHECK_OFFSET_LOCATION)
         ]
             ;; if (T = S[off]) return true
             (or (KlassPointer''equal-2 (KlassPointer''readKlassPointer-3 sNonNull, superCheckOffset, ReplacementsUtil'PRIMARY_SUPERS_LOCATION), t)
@@ -19826,7 +19686,7 @@
                     #_"Word" memory (NewInstanceStub'refillAllocate-3 thread, intArrayHub, size)
                 ]
                     (when (Word''notEqual-2 memory, 0)
-                        (NewObjectSnippets'formatObjectForStub-4 hub, size, memory, (MetaspacePointer''readWord-3 hub, HotSpot'prototypeMarkWordOffset, ReplacementsUtil'PROTOTYPE_MARK_WORD_LOCATION))
+                        (NewObjectSnippets'formatObjectForStub-4 hub, size, memory, (KlassPointer''readWord-3 hub, HotSpot'prototypeMarkWordOffset, ReplacementsUtil'PROTOTYPE_MARK_WORD_LOCATION))
                         (§ return (Word''toObject-1 memory))
                     )
                 )
@@ -20100,7 +19960,6 @@
 (value-ns HotspotOpcode
     (§ enum HotspotOpcode'FROM_POINTER)
     (§ enum HotspotOpcode'TO_KLASS_POINTER)
-    (§ enum HotspotOpcode'TO_METHOD_POINTER)
     (§ enum HotspotOpcode'POINTER_EQ)
     (§ enum HotspotOpcode'POINTER_NE)
     (§ enum HotspotOpcode'IS_NULL)
@@ -20110,43 +19969,17 @@
 (value-ns WordTypes
     (§ def #_"JavaKind" WordTypes'wordKind (.wordJavaKind HotSpot'target))
 
-    (§ def #_"ResolvedJavaType" WordTypes'wordBase         (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, WordBase))
-    (§ def #_"ResolvedJavaType" WordTypes'wordImpl         (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, Word))
-    (§ def #_"ResolvedJavaType" WordTypes'wordFactory      (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, WordFactory))
-    (§ def #_"ResolvedJavaType" WordTypes'objectAccess     (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, ObjectAccess))
-    (§ def #_"ResolvedJavaType" WordTypes'barrieredAccess  (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, BarrieredAccess))
-    (§ def #_"ResolvedJavaType" WordTypes'metaspacePointer (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, MetaspacePointer))
+    (§ def #_"ResolvedJavaType" WordTypes'word             (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, Word))
     (§ def #_"ResolvedJavaType" WordTypes'klassPointer     (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, KlassPointer))
-    (§ def #_"ResolvedJavaType" WordTypes'methodPointer    (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, MethodPointer))
-
-    (§ init
-        (#_"ResolvedJavaType" .initialize WordTypes'wordImpl)
-    )
 
     ;;;
-     ; Determines if a given method denotes a word operation.
+     ; Determines if a given type is a word type.
      ;;
-    (§ defn #_"boolean" WordTypes'isWordOperation-1 [#_"ResolvedJavaMethod" targetMethod]
-        (let [
-            #_"ResolvedJavaType" type (#_"ResolvedJavaMethod" .getDeclaringClass targetMethod)
-        ]
-            (or (any = type WordTypes'wordFactory WordTypes'objectAccess WordTypes'barrieredAccess) (WordTypes'isWord-1 type))
-        )
-    )
-
-    ;;;
-     ; Gets the method annotated with Operation based on a given method that represents a word operation
-     ; (but may not necessarily have the annotation).
-     ;
-     ; @param callingContextType the type from which {@code targetMethod} is invoked
-     ; @return the Operation method resolved for {@code targetMethod} if any
-     ;;
-    (§ defn #_"ResolvedJavaMethod" WordTypes'getWordOperation-2 [#_"ResolvedJavaMethod" targetMethod, #_"ResolvedJavaType" callingContextType]
-        (let [
-            #_"boolean" isWordBase (#_"ResolvedJavaType" .isAssignableFrom WordTypes'wordBase, (#_"ResolvedJavaMethod" .getDeclaringClass targetMethod))
-        ]
-            (when (and isWordBase (not (#_"ResolvedJavaMethod" .isStatic targetMethod))) => targetMethod
-                (#_"ResolvedJavaType" .resolveConcreteMethod WordTypes'wordImpl, targetMethod, callingContextType)
+    (§ defn #_"boolean" WordTypes'isWord-1 [#_"JavaType" type]
+        (and (instance? ResolvedJavaType type)
+            (or
+                (#_"ResolvedJavaType" .isAssignableFrom WordTypes'klassPointer, type)
+                (#_"ResolvedJavaType" .isAssignableFrom WordTypes'word, type)
             )
         )
     )
@@ -20159,15 +19992,10 @@
     )
 
     ;;;
-     ; Determines if a given type is a word type.
+     ; Determines if a given method denotes a word operation.
      ;;
-    (§ defn #_"boolean" WordTypes'isWord-1 [#_"JavaType" type]
-        (and (instance? ResolvedJavaType type)
-            (or
-                (#_"ResolvedJavaType" .isAssignableFrom WordTypes'metaspacePointer, type)
-                (#_"ResolvedJavaType" .isAssignableFrom WordTypes'wordBase, type)
-            )
-        )
+    (§ defn #_"boolean" WordTypes'isWordOperation-1 [#_"ResolvedJavaMethod" targetMethod]
+        (WordTypes'isWord-1 (#_"ResolvedJavaMethod" .getDeclaringClass targetMethod))
     )
 
     ;;;
@@ -20175,7 +20003,7 @@
      ; if {@code type} is a {@linkplain #isWord(JavaType) word type}.
      ;;
     (§ defn #_"JavaKind" WordTypes'asKind-1 [#_"JavaType" type]
-        (if (or (any = type WordTypes'klassPointer WordTypes'methodPointer) (WordTypes'isWord-1 type))
+        (if (or (= type WordTypes'klassPointer) (WordTypes'isWord-1 type))
             WordTypes'wordKind
             (#_"JavaType" .getJavaKind type)
         )
@@ -20185,457 +20013,22 @@
      ; Gets the stamp for a given {@linkplain #isWord(JavaType) word type}.
      ;;
     (§ defn #_"Stamp" WordTypes'getWordStamp-1 [#_"ResolvedJavaType" type]
-        (condp = type
-            WordTypes'klassPointer  KlassPointerStamp'KLASS
-            WordTypes'methodPointer MethodPointerStamp'METHOD
-                                    (StampFactory'forKind-1 WordTypes'wordKind)
+        (if (= type WordTypes'klassPointer)
+            KlassPointerStamp'KLASS
+            (StampFactory'forKind-1 WordTypes'wordKind)
         )
     )
 )
 
 ;;;
- ; Marker type for a metaspace pointer.
- ;;
-(class-ns MetaspacePointer
-    (§ defn #_"MetaspacePointer" MetaspacePointer'new-0 []
-        (hash-map)
-    )
-
-    ; @HotSpotOperation(opcode = HotspotOpcode'IS_NULL)
-    (§ abstract #_"boolean" MetaspacePointer''isNull-1 [#_"MetaspacePointer" this])
-
-    ; @HotSpotOperation(opcode = HotspotOpcode'FROM_POINTER)
-    #_unused
-    (§ abstract #_"Word" MetaspacePointer''asWord-1 [#_"MetaspacePointer" this])
-
-    ;;;
-     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;
-     ; The offset is always treated as a SignedWord value. However, the static type is Word to avoid the frequent casts
-     ; of UnsignedWord values (where the caller knows that the highest-order bit of the unsigned value is never used).
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_POINTER)
-    (§ abstract #_"byte" MetaspacePointer''readByte-3 [#_"MetaspacePointer" this, #_"Word" offset, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_POINTER)
-    #_unused
-    (§ abstract #_"char" MetaspacePointer''readChar-3 [#_"MetaspacePointer" this, #_"Word" offset, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_POINTER)
-    #_unused
-    (§ abstract #_"short" MetaspacePointer''readShort-3 [#_"MetaspacePointer" this, #_"Word" offset, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_POINTER)
-    (§ abstract #_"int" MetaspacePointer''readInt-3 [#_"MetaspacePointer" this, #_"Word" offset, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_POINTER)
-    #_unused
-    (§ abstract #_"long" MetaspacePointer''readLong-3 [#_"MetaspacePointer" this, #_"Word" offset, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_POINTER)
-    (§ abstract #_"Word" MetaspacePointer''readWord-3 [#_"MetaspacePointer" this, #_"Word" offset, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_POINTER)
-    #_unused
-    (§ abstract #_"Object" MetaspacePointer''readObject-3 [#_"MetaspacePointer" this, #_"Word" offset, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_POINTER)
-    (§ abstract #_"byte" MetaspacePointer''readByte-3 [#_"MetaspacePointer" this, #_"int" offset, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_POINTER)
-    #_unused
-    (§ abstract #_"char" MetaspacePointer''readChar-3 [#_"MetaspacePointer" this, #_"int" offset, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_POINTER)
-    #_unused
-    (§ abstract #_"short" MetaspacePointer''readShort-3 [#_"MetaspacePointer" this, #_"int" offset, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_POINTER)
-    (§ abstract #_"int" MetaspacePointer''readInt-3 [#_"MetaspacePointer" this, #_"int" offset, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_POINTER)
-    #_unused
-    (§ abstract #_"long" MetaspacePointer''readLong-3 [#_"MetaspacePointer" this, #_"int" offset, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_POINTER)
-    (§ abstract #_"Word" MetaspacePointer''readWord-3 [#_"MetaspacePointer" this, #_"int" offset, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_POINTER)
-    #_unused
-    (§ abstract #_"Object" MetaspacePointer''readObject-3 [#_"MetaspacePointer" this, #_"int" offset, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
-    (§ abstract #_"void" MetaspacePointer''writeByte-4 [#_"MetaspacePointer" this, #_"Word" offset, #_"byte" val, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
-    (§ abstract #_"void" MetaspacePointer''writeChar-4 [#_"MetaspacePointer" this, #_"Word" offset, #_"char" val, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
-    (§ abstract #_"void" MetaspacePointer''writeShort-4 [#_"MetaspacePointer" this, #_"Word" offset, #_"short" val, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
-    (§ abstract #_"void" MetaspacePointer''writeInt-4 [#_"MetaspacePointer" this, #_"Word" offset, #_"int" val, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
-    (§ abstract #_"void" MetaspacePointer''writeLong-4 [#_"MetaspacePointer" this, #_"Word" offset, #_"long" val, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
-    (§ abstract #_"void" MetaspacePointer''writeWord-4 [#_"MetaspacePointer" this, #_"Word" offset, #_"Word" val, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Initializes the memory at address {@code (this + offset)}. Both the base address and offset
-     ; are in bytes. The memory must be uninitialized or zero prior to this operation.
-     ;;
-    ; @Operation(opcode = WordOpcode'INITIALIZE)
-    #_unused
-    (§ abstract #_"void" MetaspacePointer''initializeLong-4 [#_"MetaspacePointer" this, #_"Word" offset, #_"long" val, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
-    (§ abstract #_"void" MetaspacePointer''writeObject-4 [#_"MetaspacePointer" this, #_"Word" offset, #_"Object" val, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
-    (§ abstract #_"void" MetaspacePointer''writeByte-4 [#_"MetaspacePointer" this, #_"int" offset, #_"byte" val, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
-    (§ abstract #_"void" MetaspacePointer''writeChar-4 [#_"MetaspacePointer" this, #_"int" offset, #_"char" val, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
-    (§ abstract #_"void" MetaspacePointer''writeShort-4 [#_"MetaspacePointer" this, #_"int" offset, #_"short" val, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
-    (§ abstract #_"void" MetaspacePointer''writeInt-4 [#_"MetaspacePointer" this, #_"int" offset, #_"int" val, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
-    (§ abstract #_"void" MetaspacePointer''writeLong-4 [#_"MetaspacePointer" this, #_"int" offset, #_"long" val, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
-    (§ abstract #_"void" MetaspacePointer''writeWord-4 [#_"MetaspacePointer" this, #_"int" offset, #_"Word" val, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
-    (§ abstract #_"void" MetaspacePointer''writeObject-4 [#_"MetaspacePointer" this, #_"int" offset, #_"Object" val, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_POINTER)
-    #_unused
-    (§ abstract #_"byte" MetaspacePointer''readByte-2 [#_"MetaspacePointer" this, #_"Word" offset])
-
-    ;;;
-     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_POINTER)
-    #_unused
-    (§ abstract #_"char" MetaspacePointer''readChar-2 [#_"MetaspacePointer" this, #_"Word" offset])
-
-    ;;;
-     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_POINTER)
-    #_unused
-    (§ abstract #_"short" MetaspacePointer''readShort-2 [#_"MetaspacePointer" this, #_"Word" offset])
-
-    ;;;
-     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_POINTER)
-    #_unused
-    (§ abstract #_"int" MetaspacePointer''readInt-2 [#_"MetaspacePointer" this, #_"Word" offset])
-
-    ;;;
-     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_POINTER)
-    #_unused
-    (§ abstract #_"long" MetaspacePointer''readLong-2 [#_"MetaspacePointer" this, #_"Word" offset])
-
-    ;;;
-     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_POINTER)
-    #_unused
-    (§ abstract #_"Word" MetaspacePointer''readWord-2 [#_"MetaspacePointer" this, #_"Word" offset])
-
-    ;;;
-     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_POINTER)
-    #_unused
-    (§ abstract #_"Object" MetaspacePointer''readObject-2 [#_"MetaspacePointer" this, #_"Word" offset])
-
-    ;;;
-     ; Reads the memory at address {@code (this + offset)}. This access will decompress the oop if
-     ; the VM uses compressed oops, and it can be parameterized to allow read barriers (G1 referent field).
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_POINTER)
-    #_unused
-    (§ abstract #_"Object" MetaspacePointer''readObject-3 [#_"MetaspacePointer" this, #_"Word" offset, #_"BarrierType" barrierType])
-
-    ;;;
-     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_POINTER)
-    #_unused
-    (§ abstract #_"byte" MetaspacePointer''readByte-2 [#_"MetaspacePointer" this, #_"int" offset])
-
-    ;;;
-     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_POINTER)
-    #_unused
-    (§ abstract #_"char" MetaspacePointer''readChar-2 [#_"MetaspacePointer" this, #_"int" offset])
-
-    ;;;
-     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_POINTER)
-    #_unused
-    (§ abstract #_"short" MetaspacePointer''readShort-2 [#_"MetaspacePointer" this, #_"int" offset])
-
-    ;;;
-     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_POINTER)
-    #_unused
-    (§ abstract #_"int" MetaspacePointer''readInt-2 [#_"MetaspacePointer" this, #_"int" offset])
-
-    ;;;
-     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_POINTER)
-    #_unused
-    (§ abstract #_"long" MetaspacePointer''readLong-2 [#_"MetaspacePointer" this, #_"int" offset])
-
-    ;;;
-     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_POINTER)
-    #_unused
-    (§ abstract #_"Word" MetaspacePointer''readWord-2 [#_"MetaspacePointer" this, #_"int" offset])
-
-    ;;;
-     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_POINTER)
-    #_unused
-    (§ abstract #_"Object" MetaspacePointer''readObject-2 [#_"MetaspacePointer" this, #_"int" offset])
-
-    ;;;
-     ; Reads the memory at address {@code (this + offset)}. This access will decompress the oop if
-     ; the VM uses compressed oops, and it can be parameterized to allow read barriers (G1 referent field).
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_POINTER)
-    #_unused
-    (§ abstract #_"Object" MetaspacePointer''readObject-3 [#_"MetaspacePointer" this, #_"int" offset, #_"BarrierType" barrierType])
-
-    ;;;
-     ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
-    (§ abstract #_"void" MetaspacePointer''writeByte-3 [#_"MetaspacePointer" this, #_"Word" offset, #_"byte" val])
-
-    ;;;
-     ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
-    (§ abstract #_"void" MetaspacePointer''writeChar-3 [#_"MetaspacePointer" this, #_"Word" offset, #_"char" val])
-
-    ;;;
-     ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
-    (§ abstract #_"void" MetaspacePointer''writeShort-3 [#_"MetaspacePointer" this, #_"Word" offset, #_"short" val])
-
-    ;;;
-     ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
-    (§ abstract #_"void" MetaspacePointer''writeInt-3 [#_"MetaspacePointer" this, #_"Word" offset, #_"int" val])
-
-    ;;;
-     ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
-    (§ abstract #_"void" MetaspacePointer''writeLong-3 [#_"MetaspacePointer" this, #_"Word" offset, #_"long" val])
-
-    ;;;
-     ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
-    (§ abstract #_"void" MetaspacePointer''writeWord-3 [#_"MetaspacePointer" this, #_"Word" offset, #_"Word" val])
-
-    ;;;
-     ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
-    (§ abstract #_"void" MetaspacePointer''writeObject-3 [#_"MetaspacePointer" this, #_"Word" offset, #_"Object" val])
-
-    ;;;
-     ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
-    (§ abstract #_"void" MetaspacePointer''writeByte-3 [#_"MetaspacePointer" this, #_"int" offset, #_"byte" val])
-
-    ;;;
-     ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
-    (§ abstract #_"void" MetaspacePointer''writeChar-3 [#_"MetaspacePointer" this, #_"int" offset, #_"char" val])
-
-    ;;;
-     ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
-    (§ abstract #_"void" MetaspacePointer''writeShort-3 [#_"MetaspacePointer" this, #_"int" offset, #_"short" val])
-
-    ;;;
-     ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
-    (§ abstract #_"void" MetaspacePointer''writeInt-3 [#_"MetaspacePointer" this, #_"int" offset, #_"int" val])
-
-    ;;;
-     ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
-    (§ abstract #_"void" MetaspacePointer''writeLong-3 [#_"MetaspacePointer" this, #_"int" offset, #_"long" val])
-
-    ;;;
-     ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
-    (§ abstract #_"void" MetaspacePointer''writeWord-3 [#_"MetaspacePointer" this, #_"int" offset, #_"Word" val])
-
-    ;;;
-     ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
-    (§ abstract #_"void" MetaspacePointer''writeObject-3 [#_"MetaspacePointer" this, #_"int" offset, #_"Object" val])
-)
-
-;;;
  ; Marker type for a metaspace pointer to a type.
  ;;
-(final-ns KlassPointer (§ extends MetaspacePointer)
-    #_unused
-    (§ defn #_"KlassPointer" KlassPointer'new-0 []
-        (MetaspacePointer'new-0)
-    )
-
+(value-ns KlassPointer
     ; @HotSpotOperation(opcode = HotspotOpcode'POINTER_EQ)
-    (§ abstract! #_"boolean" KlassPointer''equal-2 [#_"KlassPointer" this, #_"KlassPointer" other])
+    (§ native #_"boolean" KlassPointer''equal-2 [#_"KlassPointer" this, #_"KlassPointer" other])
 
     ; @HotSpotOperation(opcode = HotspotOpcode'POINTER_NE)
-    (§ abstract! #_"boolean" KlassPointer''notEqual-2 [#_"KlassPointer" this, #_"KlassPointer" other])
+    (§ native #_"boolean" KlassPointer''notEqual-2 [#_"KlassPointer" this, #_"KlassPointer" other])
 
     ; @HotSpotOperation(opcode = HotspotOpcode'TO_KLASS_POINTER)
     (§ native #_"KlassPointer" KlassPointer'fromWord-1 [#_"Word" pointer])
@@ -20645,28 +20038,426 @@
 
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     (§ native #_"void" KlassPointer''writeKlassPointer-4 [#_"KlassPointer" this, #_"int" offset, #_"KlassPointer" t, #_"LocationIdentity" locationIdentity])
-)
 
-;;;
- ; Marker type for a metaspace pointer to a method.
- ;;
-(final-ns MethodPointer (§ extends MetaspacePointer)
-    #_unused
-    (§ defn #_"MethodPointer" MethodPointer'new-0 []
-        (MetaspacePointer'new-0)
-    )
+    ; @HotSpotOperation(opcode = HotspotOpcode'IS_NULL)
+    (§ native #_"boolean" KlassPointer''isNull-1 [#_"KlassPointer" this])
 
-    ; @HotSpotOperation(opcode = HotspotOpcode'POINTER_EQ)
-    #_unused
-    (§ abstract! #_"boolean" MethodPointer''equal-2 [#_"MethodPointer" this, #_"KlassPointer" other])
+    ; @HotSpotOperation(opcode = HotspotOpcode'FROM_POINTER)
+    #_unused
+    (§ native #_"Word" KlassPointer''asWord-1 [#_"KlassPointer" this])
 
-    ; @HotSpotOperation(opcode = HotspotOpcode'POINTER_NE)
-    #_unused
-    (§ abstract! #_"boolean" MethodPointer''notEqual-2 [#_"MethodPointer" this, #_"KlassPointer" other])
+    ;;;
+     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;
+     ; The offset is always treated as a SignedWord value. However, the static type is Word to avoid the frequent casts
+     ; of UnsignedWord values (where the caller knows that the highest-order bit of the unsigned value is never used).
+     ;;
+    ; @Operation(opcode = WordOpcode'READ_POINTER)
+    (§ native #_"byte" KlassPointer''readByte-3 [#_"KlassPointer" this, #_"Word" offset, #_"LocationIdentity" locationIdentity])
 
-    ; @HotSpotOperation(opcode = HotspotOpcode'TO_METHOD_POINTER)
-    #_unused
-    (§ native #_"MethodPointer" MethodPointer'fromWord-1 [#_"Word" pointer])
+    ;;;
+     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'READ_POINTER)
+    #_unused
+    (§ native #_"char" KlassPointer''readChar-3 [#_"KlassPointer" this, #_"Word" offset, #_"LocationIdentity" locationIdentity])
+
+    ;;;
+     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'READ_POINTER)
+    #_unused
+    (§ native #_"short" KlassPointer''readShort-3 [#_"KlassPointer" this, #_"Word" offset, #_"LocationIdentity" locationIdentity])
+
+    ;;;
+     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'READ_POINTER)
+    (§ native #_"int" KlassPointer''readInt-3 [#_"KlassPointer" this, #_"Word" offset, #_"LocationIdentity" locationIdentity])
+
+    ;;;
+     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'READ_POINTER)
+    #_unused
+    (§ native #_"long" KlassPointer''readLong-3 [#_"KlassPointer" this, #_"Word" offset, #_"LocationIdentity" locationIdentity])
+
+    ;;;
+     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'READ_POINTER)
+    (§ native #_"Word" KlassPointer''readWord-3 [#_"KlassPointer" this, #_"Word" offset, #_"LocationIdentity" locationIdentity])
+
+    ;;;
+     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'READ_POINTER)
+    #_unused
+    (§ native #_"Object" KlassPointer''readObject-3 [#_"KlassPointer" this, #_"Word" offset, #_"LocationIdentity" locationIdentity])
+
+    ;;;
+     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'READ_POINTER)
+    (§ native #_"byte" KlassPointer''readByte-3 [#_"KlassPointer" this, #_"int" offset, #_"LocationIdentity" locationIdentity])
+
+    ;;;
+     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'READ_POINTER)
+    #_unused
+    (§ native #_"char" KlassPointer''readChar-3 [#_"KlassPointer" this, #_"int" offset, #_"LocationIdentity" locationIdentity])
+
+    ;;;
+     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'READ_POINTER)
+    #_unused
+    (§ native #_"short" KlassPointer''readShort-3 [#_"KlassPointer" this, #_"int" offset, #_"LocationIdentity" locationIdentity])
+
+    ;;;
+     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'READ_POINTER)
+    (§ native #_"int" KlassPointer''readInt-3 [#_"KlassPointer" this, #_"int" offset, #_"LocationIdentity" locationIdentity])
+
+    ;;;
+     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'READ_POINTER)
+    #_unused
+    (§ native #_"long" KlassPointer''readLong-3 [#_"KlassPointer" this, #_"int" offset, #_"LocationIdentity" locationIdentity])
+
+    ;;;
+     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'READ_POINTER)
+    (§ native #_"Word" KlassPointer''readWord-3 [#_"KlassPointer" this, #_"int" offset, #_"LocationIdentity" locationIdentity])
+
+    ;;;
+     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'READ_POINTER)
+    #_unused
+    (§ native #_"Object" KlassPointer''readObject-3 [#_"KlassPointer" this, #_"int" offset, #_"LocationIdentity" locationIdentity])
+
+    ;;;
+     ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'WRITE_POINTER)
+    #_unused
+    (§ native #_"void" KlassPointer''writeByte-4 [#_"KlassPointer" this, #_"Word" offset, #_"byte" val, #_"LocationIdentity" locationIdentity])
+
+    ;;;
+     ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'WRITE_POINTER)
+    #_unused
+    (§ native #_"void" KlassPointer''writeChar-4 [#_"KlassPointer" this, #_"Word" offset, #_"char" val, #_"LocationIdentity" locationIdentity])
+
+    ;;;
+     ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'WRITE_POINTER)
+    #_unused
+    (§ native #_"void" KlassPointer''writeShort-4 [#_"KlassPointer" this, #_"Word" offset, #_"short" val, #_"LocationIdentity" locationIdentity])
+
+    ;;;
+     ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'WRITE_POINTER)
+    #_unused
+    (§ native #_"void" KlassPointer''writeInt-4 [#_"KlassPointer" this, #_"Word" offset, #_"int" val, #_"LocationIdentity" locationIdentity])
+
+    ;;;
+     ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'WRITE_POINTER)
+    #_unused
+    (§ native #_"void" KlassPointer''writeLong-4 [#_"KlassPointer" this, #_"Word" offset, #_"long" val, #_"LocationIdentity" locationIdentity])
+
+    ;;;
+     ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'WRITE_POINTER)
+    #_unused
+    (§ native #_"void" KlassPointer''writeWord-4 [#_"KlassPointer" this, #_"Word" offset, #_"Word" val, #_"LocationIdentity" locationIdentity])
+
+    ;;;
+     ; Initializes the memory at address {@code (this + offset)}. Both the base address and offset
+     ; are in bytes. The memory must be uninitialized or zero prior to this operation.
+     ;;
+    ; @Operation(opcode = WordOpcode'INITIALIZE)
+    #_unused
+    (§ native #_"void" KlassPointer''initializeLong-4 [#_"KlassPointer" this, #_"Word" offset, #_"long" val, #_"LocationIdentity" locationIdentity])
+
+    ;;;
+     ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'WRITE_POINTER)
+    #_unused
+    (§ native #_"void" KlassPointer''writeObject-4 [#_"KlassPointer" this, #_"Word" offset, #_"Object" val, #_"LocationIdentity" locationIdentity])
+
+    ;;;
+     ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'WRITE_POINTER)
+    #_unused
+    (§ native #_"void" KlassPointer''writeByte-4 [#_"KlassPointer" this, #_"int" offset, #_"byte" val, #_"LocationIdentity" locationIdentity])
+
+    ;;;
+     ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'WRITE_POINTER)
+    #_unused
+    (§ native #_"void" KlassPointer''writeChar-4 [#_"KlassPointer" this, #_"int" offset, #_"char" val, #_"LocationIdentity" locationIdentity])
+
+    ;;;
+     ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'WRITE_POINTER)
+    #_unused
+    (§ native #_"void" KlassPointer''writeShort-4 [#_"KlassPointer" this, #_"int" offset, #_"short" val, #_"LocationIdentity" locationIdentity])
+
+    ;;;
+     ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'WRITE_POINTER)
+    #_unused
+    (§ native #_"void" KlassPointer''writeInt-4 [#_"KlassPointer" this, #_"int" offset, #_"int" val, #_"LocationIdentity" locationIdentity])
+
+    ;;;
+     ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'WRITE_POINTER)
+    #_unused
+    (§ native #_"void" KlassPointer''writeLong-4 [#_"KlassPointer" this, #_"int" offset, #_"long" val, #_"LocationIdentity" locationIdentity])
+
+    ;;;
+     ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'WRITE_POINTER)
+    #_unused
+    (§ native #_"void" KlassPointer''writeWord-4 [#_"KlassPointer" this, #_"int" offset, #_"Word" val, #_"LocationIdentity" locationIdentity])
+
+    ;;;
+     ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'WRITE_POINTER)
+    #_unused
+    (§ native #_"void" KlassPointer''writeObject-4 [#_"KlassPointer" this, #_"int" offset, #_"Object" val, #_"LocationIdentity" locationIdentity])
+
+    ;;;
+     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'READ_POINTER)
+    #_unused
+    (§ native #_"byte" KlassPointer''readByte-2 [#_"KlassPointer" this, #_"Word" offset])
+
+    ;;;
+     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'READ_POINTER)
+    #_unused
+    (§ native #_"char" KlassPointer''readChar-2 [#_"KlassPointer" this, #_"Word" offset])
+
+    ;;;
+     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'READ_POINTER)
+    #_unused
+    (§ native #_"short" KlassPointer''readShort-2 [#_"KlassPointer" this, #_"Word" offset])
+
+    ;;;
+     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'READ_POINTER)
+    #_unused
+    (§ native #_"int" KlassPointer''readInt-2 [#_"KlassPointer" this, #_"Word" offset])
+
+    ;;;
+     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'READ_POINTER)
+    #_unused
+    (§ native #_"long" KlassPointer''readLong-2 [#_"KlassPointer" this, #_"Word" offset])
+
+    ;;;
+     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'READ_POINTER)
+    #_unused
+    (§ native #_"Word" KlassPointer''readWord-2 [#_"KlassPointer" this, #_"Word" offset])
+
+    ;;;
+     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'READ_POINTER)
+    #_unused
+    (§ native #_"Object" KlassPointer''readObject-2 [#_"KlassPointer" this, #_"Word" offset])
+
+    ;;;
+     ; Reads the memory at address {@code (this + offset)}. This access will decompress the oop if
+     ; the VM uses compressed oops, and it can be parameterized to allow read barriers (G1 referent field).
+     ;;
+    ; @Operation(opcode = WordOpcode'READ_POINTER)
+    #_unused
+    (§ native #_"Object" KlassPointer''readObject-3 [#_"KlassPointer" this, #_"Word" offset, #_"BarrierType" barrierType])
+
+    ;;;
+     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'READ_POINTER)
+    #_unused
+    (§ native #_"byte" KlassPointer''readByte-2 [#_"KlassPointer" this, #_"int" offset])
+
+    ;;;
+     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'READ_POINTER)
+    #_unused
+    (§ native #_"char" KlassPointer''readChar-2 [#_"KlassPointer" this, #_"int" offset])
+
+    ;;;
+     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'READ_POINTER)
+    #_unused
+    (§ native #_"short" KlassPointer''readShort-2 [#_"KlassPointer" this, #_"int" offset])
+
+    ;;;
+     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'READ_POINTER)
+    #_unused
+    (§ native #_"int" KlassPointer''readInt-2 [#_"KlassPointer" this, #_"int" offset])
+
+    ;;;
+     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'READ_POINTER)
+    #_unused
+    (§ native #_"long" KlassPointer''readLong-2 [#_"KlassPointer" this, #_"int" offset])
+
+    ;;;
+     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'READ_POINTER)
+    #_unused
+    (§ native #_"Word" KlassPointer''readWord-2 [#_"KlassPointer" this, #_"int" offset])
+
+    ;;;
+     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'READ_POINTER)
+    #_unused
+    (§ native #_"Object" KlassPointer''readObject-2 [#_"KlassPointer" this, #_"int" offset])
+
+    ;;;
+     ; Reads the memory at address {@code (this + offset)}. This access will decompress the oop if
+     ; the VM uses compressed oops, and it can be parameterized to allow read barriers (G1 referent field).
+     ;;
+    ; @Operation(opcode = WordOpcode'READ_POINTER)
+    #_unused
+    (§ native #_"Object" KlassPointer''readObject-3 [#_"KlassPointer" this, #_"int" offset, #_"BarrierType" barrierType])
+
+    ;;;
+     ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'WRITE_POINTER)
+    #_unused
+    (§ native #_"void" KlassPointer''writeByte-3 [#_"KlassPointer" this, #_"Word" offset, #_"byte" val])
+
+    ;;;
+     ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'WRITE_POINTER)
+    #_unused
+    (§ native #_"void" KlassPointer''writeChar-3 [#_"KlassPointer" this, #_"Word" offset, #_"char" val])
+
+    ;;;
+     ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'WRITE_POINTER)
+    #_unused
+    (§ native #_"void" KlassPointer''writeShort-3 [#_"KlassPointer" this, #_"Word" offset, #_"short" val])
+
+    ;;;
+     ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'WRITE_POINTER)
+    #_unused
+    (§ native #_"void" KlassPointer''writeInt-3 [#_"KlassPointer" this, #_"Word" offset, #_"int" val])
+
+    ;;;
+     ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'WRITE_POINTER)
+    #_unused
+    (§ native #_"void" KlassPointer''writeLong-3 [#_"KlassPointer" this, #_"Word" offset, #_"long" val])
+
+    ;;;
+     ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'WRITE_POINTER)
+    #_unused
+    (§ native #_"void" KlassPointer''writeWord-3 [#_"KlassPointer" this, #_"Word" offset, #_"Word" val])
+
+    ;;;
+     ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'WRITE_POINTER)
+    #_unused
+    (§ native #_"void" KlassPointer''writeObject-3 [#_"KlassPointer" this, #_"Word" offset, #_"Object" val])
+
+    ;;;
+     ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'WRITE_POINTER)
+    #_unused
+    (§ native #_"void" KlassPointer''writeByte-3 [#_"KlassPointer" this, #_"int" offset, #_"byte" val])
+
+    ;;;
+     ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'WRITE_POINTER)
+    #_unused
+    (§ native #_"void" KlassPointer''writeChar-3 [#_"KlassPointer" this, #_"int" offset, #_"char" val])
+
+    ;;;
+     ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'WRITE_POINTER)
+    #_unused
+    (§ native #_"void" KlassPointer''writeShort-3 [#_"KlassPointer" this, #_"int" offset, #_"short" val])
+
+    ;;;
+     ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'WRITE_POINTER)
+    #_unused
+    (§ native #_"void" KlassPointer''writeInt-3 [#_"KlassPointer" this, #_"int" offset, #_"int" val])
+
+    ;;;
+     ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'WRITE_POINTER)
+    #_unused
+    (§ native #_"void" KlassPointer''writeLong-3 [#_"KlassPointer" this, #_"int" offset, #_"long" val])
+
+    ;;;
+     ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'WRITE_POINTER)
+    #_unused
+    (§ native #_"void" KlassPointer''writeWord-3 [#_"KlassPointer" this, #_"int" offset, #_"Word" val])
+
+    ;;;
+     ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'WRITE_POINTER)
+    #_unused
+    (§ native #_"void" KlassPointer''writeObject-3 [#_"KlassPointer" this, #_"int" offset, #_"Object" val])
 )
 
 ;;;
@@ -30805,16 +30596,6 @@
         (Assembler''ensureUniquePC-1 asm)
         nil
     )
-
-    (§ defn #_"int" AMD64Call'indirectCall-3 [#_"Assembler" asm, #_"Register" dst, #_"InvokeTarget" callTarget]
-        (let [
-            #_"int" before (Assembler''position-1 asm)
-        ]
-            (Assembler''call-2 asm, dst)
-            (Assembler''ensureUniquePC-1 asm)
-            before
-        )
-    )
 )
 
 ;;;
@@ -30888,35 +30669,6 @@
 
     (§ method! #_"int" DirectCallOp''emitCall-2 [#_"DirectCallOp" this, #_"Assembler" asm]
         (AMD64Call'directCall-4 asm, (:callTarget this), nil, true)
-    )
-)
-
-;;;
- ; @anno AMD64Call.IndirectCallOp
- ;;
-; @LIROpcode
-(class-ns IndirectCallOp (§ extends MethodCallOp)
-    (§ def #_"LIRInstructionClass<IndirectCallOp>" IndirectCallOp'TYPE (LIRInstructionClass'new-1 IndirectCallOp))
-
-    ; @Use({OperandFlag'REG})
-    (§ mutable #_"Value" :targetAddress nil)
-
-    (§ defn #_"IndirectCallOp" IndirectCallOp'new-5 [#_"ResolvedJavaMethod" callTarget, #_"Value" result, #_"Value[]" parameters, #_"Value[]" temps, #_"Value" targetAddress]
-        (IndirectCallOp'new-6 IndirectCallOp'TYPE, callTarget, result, parameters, temps, targetAddress)
-    )
-
-    (§ defn #_"IndirectCallOp" IndirectCallOp'new-6 [#_"LIRInstructionClass<? extends IndirectCallOp>" c, #_"ResolvedJavaMethod" callTarget, #_"Value" result, #_"Value[]" parameters, #_"Value[]" temps, #_"Value" targetAddress]
-        (let [
-            #_"IndirectCallOp" this (MethodCallOp'new-5 c, callTarget, result, parameters, temps)
-            this (assoc this :targetAddress targetAddress)
-        ]
-            this
-        )
-    )
-
-    (§ override #_"void" LIRInstruction''emitCode-2 [#_"IndirectCallOp" this, #_"Assembler" asm]
-        (AMD64Call'indirectCall-3 asm, (#_"RegisterValue" .getRegister (:targetAddress this)), (:callTarget this))
-        nil
     )
 )
 
@@ -53964,27 +53716,6 @@
     )
 )
 
-(class-ns IndirectCallTargetNode (§ extends LoweredCallTargetNode)
-    (§ def #_"NodeClass<IndirectCallTargetNode>" IndirectCallTargetNode'TYPE (NodeClass'create-1 IndirectCallTargetNode))
-
-    ; @Input
-    (§ mutable #_"ValueNode" :computedAddress nil)
-
-    #_unused
-    (§ defn #_"IndirectCallTargetNode" IndirectCallTargetNode'new-7 [#_"ValueNode" computedAddress, #_"ValueNode[]" arguments, #_"StampPair" returnStamp, #_"JavaType[]" signature, #_"ResolvedJavaMethod" target, #_"CallingConvention$Type" callType, #_"InvokeKind" invokeKind]
-        (IndirectCallTargetNode'new-8 IndirectCallTargetNode'TYPE, computedAddress, arguments, returnStamp, signature, target, callType, invokeKind)
-    )
-
-    (§ defn #_"IndirectCallTargetNode" IndirectCallTargetNode'new-8 [#_"NodeClass<? extends IndirectCallTargetNode>" c, #_"ValueNode" computedAddress, #_"ValueNode[]" arguments, #_"StampPair" returnStamp, #_"JavaType[]" signature, #_"ResolvedJavaMethod" target, #_"CallingConvention$Type" callType, #_"InvokeKind" invokeKind]
-        (let [
-            #_"IndirectCallTargetNode" this (LoweredCallTargetNode'new-7 c, arguments, returnStamp, signature, target, callType, invokeKind)
-            this (assoc this :computedAddress computedAddress)
-        ]
-            this
-        )
-    )
-)
-
 ;;;
  ; The InvokeNode represents all kinds of method calls.
  ;;
@@ -54094,32 +53825,7 @@
                         )
                     )
                 #_"JavaType[]" signature (#_"Signature" .toParameterTypes (#_"ResolvedJavaMethod" .getSignature (CallTargetNode''targetMethod-1 callTarget)), (when-not (MethodCallTargetNode''isStatic-1 callTarget) (#_"ResolvedJavaMethod" .getDeclaringClass (CallTargetNode''targetMethod-1 callTarget))))
-                #_"LoweredCallTargetNode" loweredCallTarget
-                    (or
-                        (when (and GraalOptions'inlineVTableStubs (InvokeKind''isIndirect-1 (CallTargetNode''invokeKind-1 callTarget)) GraalOptions'alwaysInlineVTableStubs)
-                            (let [
-                                #_"HotSpotResolvedJavaMethod" hsMethod (CallTargetNode''targetMethod-1 callTarget)
-                                #_"ResolvedJavaType" receiverType (InvokeNode''getReceiverType-1 this)
-                            ]
-                                (when (#_"HotSpotResolvedJavaMethod" .isInVirtualMethodTable hsMethod, receiverType)
-                                    (let [
-                                        #_"ValueNode" hub (Lowerer'createReadHub-3 (:graph this), receiver, lowerer)
-                                        #_"ReadNode" metaspaceMethod (Lowerer'createReadVirtualMethod-4 (:graph this), hub, hsMethod, receiverType)
-                                        ;; We use LocationNode.ANY_LOCATION for the reads that access the compiled
-                                        ;; code entry as HotSpot does not guarantee they are final values.
-                                        #_"AddressNode" address (Lowerer'createOffsetAddress-3 (:graph this), metaspaceMethod, HotSpot'methodCompiledEntryOffset)
-                                        #_"ReadNode" compiledEntry (Graph''add-2 (:graph this), (ReadNode'new-4 address, (LocationIdentity/any), (StampFactory'forKind-1 (.wordJavaKind HotSpot'target)), BarrierType'NONE))
-                                        loweredCallTarget (Graph''add-2 (:graph this), (HotSpotIndirectCallTargetNode'new-8 metaspaceMethod, compiledEntry, (#_"List" .toArray parameters, (make-array ValueNode (count parameters))), (CallTargetNode''returnStamp-1 callTarget), signature, (CallTargetNode''targetMethod-1 callTarget), HotSpotCallingConventionType/JavaCall, (CallTargetNode''invokeKind-1 callTarget)))
-                                    ]
-                                        (Graph''addBeforeFixed-3 (:graph this), this, metaspaceMethod)
-                                        (Graph''addAfterFixed-3 (:graph this), metaspaceMethod, compiledEntry)
-                                        loweredCallTarget
-                                    )
-                                )
-                            )
-                        )
-                        (Graph''add-2 (:graph this), (HotSpotDirectCallTargetNode'new-6 (#_"List" .toArray parameters, (make-array ValueNode (count parameters))), (CallTargetNode''returnStamp-1 callTarget), signature, (CallTargetNode''targetMethod-1 callTarget), HotSpotCallingConventionType/JavaCall, (CallTargetNode''invokeKind-1 callTarget)))
-                    )
+                #_"LoweredCallTargetNode" loweredCallTarget (Graph''add-2 (:graph this), (HotSpotDirectCallTargetNode'new-6 (#_"List" .toArray parameters, (make-array ValueNode (count parameters))), (CallTargetNode''returnStamp-1 callTarget), signature, (CallTargetNode''targetMethod-1 callTarget), HotSpotCallingConventionType/JavaCall, (CallTargetNode''invokeKind-1 callTarget)))
             ]
                 (§ ass! callTarget (Node''replaceAndDelete-2 callTarget, loweredCallTarget))
             )
@@ -65127,19 +64833,15 @@
      ;;
     (§ defn #_"String" InliningUtil'checkInvokeConditions-1 [#_"InvokeNode" invoke]
         (cond
-            (or (nil? (:predecessor invoke)) (not (Node''isAlive-1 invoke)))
-                "the invoke is dead code"
-            (not (instance? MethodCallTargetNode (:callTarget invoke)))
-                "the invoke has already been lowered, or has been created as a low-level node"
+            (or (nil? (:predecessor invoke)) (not (Node''isAlive-1 invoke))) "the invoke is dead code"
+            (not (instance? MethodCallTargetNode (:callTarget invoke)))      "the invoke has already been lowered, or has been created as a low-level node"
             :else
                 (let [
                     #_"MethodCallTargetNode" callTarget (:callTarget invoke)
                 ]
                     (cond
-                        (nil? (CallTargetNode''targetMethod-1 callTarget))
-                            "target method is nil"
-                        (not (:useForInlining invoke))
-                            "the invoke is marked to be not used for inlining"
+                        (nil? (CallTargetNode''targetMethod-1 callTarget)) "target method is nil"
+                        (not (:useForInlining invoke))                     "the invoke is marked to be not used for inlining"
                         :else
                             (let [
                                 #_"ValueNode" receiver (MethodCallTargetNode''receiver-1 callTarget)
@@ -70542,15 +70244,6 @@
 
     (§ defn #_"AddressNode" Lowerer'createOffsetAddress-3 [#_"Graph" graph, #_"ValueNode" object, #_"long" offset]
         (Graph''add-2 graph, (OffsetAddressNode'new-2 object, (ConstantNode'forIntegerKind-3 (.wordJavaKind HotSpot'target), offset, graph)))
-    )
-
-    (§ defn #_"ReadNode" Lowerer'createReadVirtualMethod-4 [#_"Graph" graph, #_"ValueNode" hub, #_"HotSpotResolvedJavaMethod" method, #_"ResolvedJavaType" receiverType]
-        ;; We use LocationNode.ANY_LOCATION for the reads that access the vtable entry as HotSpot does not guarantee that this is a final value.
-        (let [
-            #_"AddressNode" address (Lowerer'createOffsetAddress-3 graph, hub, (#_"HotSpotResolvedJavaMethod" .vtableEntryOffset method, receiverType))
-        ]
-            (Graph''add-2 graph, (ReadNode'new-4 address, (LocationIdentity/any), MethodPointerStamp'METHOD_NON_NULL, BarrierType'NONE))
-        )
     )
 
     (§ defn #_"AddressNode" Lowerer'createFieldAddress-3 [#_"Graph" graph, #_"ValueNode" object, #_"ResolvedJavaField" field]
@@ -78244,805 +77937,6 @@
     )
 )
 
-;;;
- ; Medium-level memory access for objects. Similarly to the readXxx and writeXxx methods defined for
- ; Pointer and ObjectAccess, these methods access the memory without any nil-checks.
- ; However, these methods use read- or write barriers. When the VM uses compressed pointers,
- ; then readObject and writeObject methods access compressed pointers.
- ;;
-(value-ns BarrieredAccess
-    ;;;
-     ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_BARRIERED)
-    #_unused
-    (§ native #_"byte" BarrieredAccess'readByte-3 [#_"Object" object, #_"Word" offset, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_BARRIERED)
-    #_unused
-    (§ native #_"char" BarrieredAccess'readChar-3 [#_"Object" object, #_"Word" offset, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_BARRIERED)
-    #_unused
-    (§ native #_"short" BarrieredAccess'readShort-3 [#_"Object" object, #_"Word" offset, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_BARRIERED)
-    #_unused
-    (§ native #_"int" BarrieredAccess'readInt-3 [#_"Object" object, #_"Word" offset, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_BARRIERED)
-    #_unused
-    (§ native #_"long" BarrieredAccess'readLong-3 [#_"Object" object, #_"Word" offset, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_BARRIERED)
-    #_unused
-    (§ native #_"Word" BarrieredAccess'readWord-3 [#_"Object" object, #_"Word" offset, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_BARRIERED)
-    #_unused
-    (§ native #_"Object" BarrieredAccess'readObject-3 [#_"Object" object, #_"Word" offset, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_BARRIERED)
-    #_unused
-    (§ native #_"byte" BarrieredAccess'readByte-3 [#_"Object" object, #_"int" offset, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_BARRIERED)
-    #_unused
-    (§ native #_"char" BarrieredAccess'readChar-3 [#_"Object" object, #_"int" offset, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_BARRIERED)
-    #_unused
-    (§ native #_"short" BarrieredAccess'readShort-3 [#_"Object" object, #_"int" offset, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_BARRIERED)
-    #_unused
-    (§ native #_"int" BarrieredAccess'readInt-3 [#_"Object" object, #_"int" offset, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_BARRIERED)
-    #_unused
-    (§ native #_"long" BarrieredAccess'readLong-3 [#_"Object" object, #_"int" offset, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_BARRIERED)
-    #_unused
-    (§ native #_"Word" BarrieredAccess'readWord-3 [#_"Object" object, #_"int" offset, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_BARRIERED)
-    #_unused
-    (§ native #_"Object" BarrieredAccess'readObject-3 [#_"Object" object, #_"int" offset, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
-    #_unused
-    (§ native #_"void" BarrieredAccess'writeByte-4 [#_"Object" object, #_"Word" offset, #_"byte" val, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
-    #_unused
-    (§ native #_"void" BarrieredAccess'writeChar-4 [#_"Object" object, #_"Word" offset, #_"char" val, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
-    #_unused
-    (§ native #_"void" BarrieredAccess'writeShort-4 [#_"Object" object, #_"Word" offset, #_"short" val, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
-    #_unused
-    (§ native #_"void" BarrieredAccess'writeInt-4 [#_"Object" object, #_"Word" offset, #_"int" val, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
-    #_unused
-    (§ native #_"void" BarrieredAccess'writeLong-4 [#_"Object" object, #_"Word" offset, #_"long" val, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
-    #_unused
-    (§ native #_"void" BarrieredAccess'writeWord-4 [#_"Object" object, #_"Word" offset, #_"Word" val, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
-    #_unused
-    (§ native #_"void" BarrieredAccess'writeObject-4 [#_"Object" object, #_"Word" offset, #_"Object" val, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
-    #_unused
-    (§ native #_"void" BarrieredAccess'writeByte-4 [#_"Object" object, #_"int" offset, #_"byte" val, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
-    #_unused
-    (§ native #_"void" BarrieredAccess'writeChar-4 [#_"Object" object, #_"int" offset, #_"char" val, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
-    #_unused
-    (§ native #_"void" BarrieredAccess'writeShort-4 [#_"Object" object, #_"int" offset, #_"short" val, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
-    #_unused
-    (§ native #_"void" BarrieredAccess'writeInt-4 [#_"Object" object, #_"int" offset, #_"int" val, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
-    #_unused
-    (§ native #_"void" BarrieredAccess'writeLong-4 [#_"Object" object, #_"int" offset, #_"long" val, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
-    #_unused
-    (§ native #_"void" BarrieredAccess'writeWord-4 [#_"Object" object, #_"int" offset, #_"Word" val, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
-    #_unused
-    (§ native #_"void" BarrieredAccess'writeObject-4 [#_"Object" object, #_"int" offset, #_"Object" val, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_BARRIERED)
-    #_unused
-    (§ native #_"byte" BarrieredAccess'readByte-2 [#_"Object" object, #_"Word" offset])
-
-    ;;;
-     ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_BARRIERED)
-    #_unused
-    (§ native #_"char" BarrieredAccess'readChar-2 [#_"Object" object, #_"Word" offset])
-
-    ;;;
-     ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_BARRIERED)
-    #_unused
-    (§ native #_"short" BarrieredAccess'readShort-2 [#_"Object" object, #_"Word" offset])
-
-    ;;;
-     ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_BARRIERED)
-    #_unused
-    (§ native #_"int" BarrieredAccess'readInt-2 [#_"Object" object, #_"Word" offset])
-
-    ;;;
-     ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_BARRIERED)
-    #_unused
-    (§ native #_"long" BarrieredAccess'readLong-2 [#_"Object" object, #_"Word" offset])
-
-    ;;;
-     ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_BARRIERED)
-    #_unused
-    (§ native #_"Word" BarrieredAccess'readWord-2 [#_"Object" object, #_"Word" offset])
-
-    ;;;
-     ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_BARRIERED)
-    #_unused
-    (§ native #_"Object" BarrieredAccess'readObject-2 [#_"Object" object, #_"Word" offset])
-
-    ;;;
-     ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_BARRIERED)
-    #_unused
-    (§ native #_"byte" BarrieredAccess'readByte-2 [#_"Object" object, #_"int" offset])
-
-    ;;;
-     ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_BARRIERED)
-    #_unused
-    (§ native #_"char" BarrieredAccess'readChar-2 [#_"Object" object, #_"int" offset])
-
-    ;;;
-     ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_BARRIERED)
-    #_unused
-    (§ native #_"short" BarrieredAccess'readShort-2 [#_"Object" object, #_"int" offset])
-
-    ;;;
-     ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_BARRIERED)
-    #_unused
-    (§ native #_"int" BarrieredAccess'readInt-2 [#_"Object" object, #_"int" offset])
-
-    ;;;
-     ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_BARRIERED)
-    #_unused
-    (§ native #_"long" BarrieredAccess'readLong-2 [#_"Object" object, #_"int" offset])
-
-    ;;;
-     ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_BARRIERED)
-    #_unused
-    (§ native #_"Word" BarrieredAccess'readWord-2 [#_"Object" object, #_"int" offset])
-
-    ;;;
-     ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_BARRIERED)
-    #_unused
-    (§ native #_"Object" BarrieredAccess'readObject-2 [#_"Object" object, #_"int" offset])
-
-    ;;;
-     ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
-    #_unused
-    (§ native #_"void" BarrieredAccess'writeByte-3 [#_"Object" object, #_"Word" offset, #_"byte" val])
-
-    ;;;
-     ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
-    #_unused
-    (§ native #_"void" BarrieredAccess'writeChar-3 [#_"Object" object, #_"Word" offset, #_"char" val])
-
-    ;;;
-     ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
-    #_unused
-    (§ native #_"void" BarrieredAccess'writeShort-3 [#_"Object" object, #_"Word" offset, #_"short" val])
-
-    ;;;
-     ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
-    #_unused
-    (§ native #_"void" BarrieredAccess'writeInt-3 [#_"Object" object, #_"Word" offset, #_"int" val])
-
-    ;;;
-     ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
-    #_unused
-    (§ native #_"void" BarrieredAccess'writeLong-3 [#_"Object" object, #_"Word" offset, #_"long" val])
-
-    ;;;
-     ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
-    #_unused
-    (§ native #_"void" BarrieredAccess'writeWord-3 [#_"Object" object, #_"Word" offset, #_"Word" val])
-
-    ;;;
-     ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
-    #_unused
-    (§ native #_"void" BarrieredAccess'writeObject-3 [#_"Object" object, #_"Word" offset, #_"Object" val])
-
-    ;;;
-     ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
-    #_unused
-    (§ native #_"void" BarrieredAccess'writeByte-3 [#_"Object" object, #_"int" offset, #_"byte" val])
-
-    ;;;
-     ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
-    #_unused
-    (§ native #_"void" BarrieredAccess'writeChar-3 [#_"Object" object, #_"int" offset, #_"char" val])
-
-    ;;;
-     ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
-    #_unused
-    (§ native #_"void" BarrieredAccess'writeShort-3 [#_"Object" object, #_"int" offset, #_"short" val])
-
-    ;;;
-     ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
-    #_unused
-    (§ native #_"void" BarrieredAccess'writeInt-3 [#_"Object" object, #_"int" offset, #_"int" val])
-
-    ;;;
-     ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
-    #_unused
-    (§ native #_"void" BarrieredAccess'writeLong-3 [#_"Object" object, #_"int" offset, #_"long" val])
-
-    ;;;
-     ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
-    #_unused
-    (§ native #_"void" BarrieredAccess'writeWord-3 [#_"Object" object, #_"int" offset, #_"Word" val])
-
-    ;;;
-     ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
-    #_unused
-    (§ native #_"void" BarrieredAccess'writeObject-3 [#_"Object" object, #_"int" offset, #_"Object" val])
-)
-
-;;;
- ; Low-level memory access for objects. Similarly to the readXxx and writeXxx methods defined for Pointer,
- ; these methods access the raw memory without any nil-checks, read- or write barriers.
- ; When the VM uses compressed pointers, then readObject and writeObject methods access compressed pointers.
- ;;
-(value-ns ObjectAccess
-    ;;;
-     ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_OBJECT)
-    #_unused
-    (§ native #_"byte" ObjectAccess'readByte-3 [#_"Object" object, #_"Word" offset, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_OBJECT)
-    #_unused
-    (§ native #_"char" ObjectAccess'readChar-3 [#_"Object" object, #_"Word" offset, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_OBJECT)
-    #_unused
-    (§ native #_"short" ObjectAccess'readShort-3 [#_"Object" object, #_"Word" offset, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_OBJECT)
-    #_unused
-    (§ native #_"int" ObjectAccess'readInt-3 [#_"Object" object, #_"Word" offset, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_OBJECT)
-    #_unused
-    (§ native #_"long" ObjectAccess'readLong-3 [#_"Object" object, #_"Word" offset, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_OBJECT)
-    #_unused
-    (§ native #_"Word" ObjectAccess'readWord-3 [#_"Object" object, #_"Word" offset, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_OBJECT)
-    #_unused
-    (§ native #_"Object" ObjectAccess'readObject-3 [#_"Object" object, #_"Word" offset, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_OBJECT)
-    #_unused
-    (§ native #_"byte" ObjectAccess'readByte-3 [#_"Object" object, #_"int" offset, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_OBJECT)
-    #_unused
-    (§ native #_"char" ObjectAccess'readChar-3 [#_"Object" object, #_"int" offset, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_OBJECT)
-    #_unused
-    (§ native #_"short" ObjectAccess'readShort-3 [#_"Object" object, #_"int" offset, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_OBJECT)
-    #_unused
-    (§ native #_"int" ObjectAccess'readInt-3 [#_"Object" object, #_"int" offset, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_OBJECT)
-    #_unused
-    (§ native #_"long" ObjectAccess'readLong-3 [#_"Object" object, #_"int" offset, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_OBJECT)
-    #_unused
-    (§ native #_"Word" ObjectAccess'readWord-3 [#_"Object" object, #_"int" offset, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_OBJECT)
-    #_unused
-    (§ native #_"Object" ObjectAccess'readObject-3 [#_"Object" object, #_"int" offset, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
-    #_unused
-    (§ native #_"void" ObjectAccess'writeByte-4 [#_"Object" object, #_"Word" offset, #_"byte" val, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
-    #_unused
-    (§ native #_"void" ObjectAccess'writeChar-4 [#_"Object" object, #_"Word" offset, #_"char" val, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
-    #_unused
-    (§ native #_"void" ObjectAccess'writeShort-4 [#_"Object" object, #_"Word" offset, #_"short" val, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
-    #_unused
-    (§ native #_"void" ObjectAccess'writeInt-4 [#_"Object" object, #_"Word" offset, #_"int" val, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
-    #_unused
-    (§ native #_"void" ObjectAccess'writeLong-4 [#_"Object" object, #_"Word" offset, #_"long" val, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
-    #_unused
-    (§ native #_"void" ObjectAccess'writeWord-4 [#_"Object" object, #_"Word" offset, #_"Word" val, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
-    #_unused
-    (§ native #_"void" ObjectAccess'writeObject-4 [#_"Object" object, #_"Word" offset, #_"Object" val, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
-    #_unused
-    (§ native #_"void" ObjectAccess'writeByte-4 [#_"Object" object, #_"int" offset, #_"byte" val, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
-    #_unused
-    (§ native #_"void" ObjectAccess'writeChar-4 [#_"Object" object, #_"int" offset, #_"char" val, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
-    #_unused
-    (§ native #_"void" ObjectAccess'writeShort-4 [#_"Object" object, #_"int" offset, #_"short" val, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
-    #_unused
-    (§ native #_"void" ObjectAccess'writeInt-4 [#_"Object" object, #_"int" offset, #_"int" val, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
-    #_unused
-    (§ native #_"void" ObjectAccess'writeLong-4 [#_"Object" object, #_"int" offset, #_"long" val, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
-    #_unused
-    (§ native #_"void" ObjectAccess'writeWord-4 [#_"Object" object, #_"int" offset, #_"Word" val, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
-    #_unused
-    (§ native #_"void" ObjectAccess'writeObject-4 [#_"Object" object, #_"int" offset, #_"Object" val, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_OBJECT)
-    #_unused
-    (§ native #_"byte" ObjectAccess'readByte-2 [#_"Object" object, #_"Word" offset])
-
-    ;;;
-     ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_OBJECT)
-    #_unused
-    (§ native #_"char" ObjectAccess'readChar-2 [#_"Object" object, #_"Word" offset])
-
-    ;;;
-     ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_OBJECT)
-    #_unused
-    (§ native #_"short" ObjectAccess'readShort-2 [#_"Object" object, #_"Word" offset])
-
-    ;;;
-     ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_OBJECT)
-    #_unused
-    (§ native #_"int" ObjectAccess'readInt-2 [#_"Object" object, #_"Word" offset])
-
-    ;;;
-     ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_OBJECT)
-    #_unused
-    (§ native #_"long" ObjectAccess'readLong-2 [#_"Object" object, #_"Word" offset])
-
-    ;;;
-     ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_OBJECT)
-    #_unused
-    (§ native #_"Word" ObjectAccess'readWord-2 [#_"Object" object, #_"Word" offset])
-
-    ;;;
-     ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_OBJECT)
-    #_unused
-    (§ native #_"Object" ObjectAccess'readObject-2 [#_"Object" object, #_"Word" offset])
-
-    ;;;
-     ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_OBJECT)
-    #_unused
-    (§ native #_"byte" ObjectAccess'readByte-2 [#_"Object" object, #_"int" offset])
-
-    ;;;
-     ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_OBJECT)
-    #_unused
-    (§ native #_"char" ObjectAccess'readChar-2 [#_"Object" object, #_"int" offset])
-
-    ;;;
-     ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_OBJECT)
-    #_unused
-    (§ native #_"short" ObjectAccess'readShort-2 [#_"Object" object, #_"int" offset])
-
-    ;;;
-     ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_OBJECT)
-    #_unused
-    (§ native #_"int" ObjectAccess'readInt-2 [#_"Object" object, #_"int" offset])
-
-    ;;;
-     ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_OBJECT)
-    #_unused
-    (§ native #_"long" ObjectAccess'readLong-2 [#_"Object" object, #_"int" offset])
-
-    ;;;
-     ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_OBJECT)
-    #_unused
-    (§ native #_"Word" ObjectAccess'readWord-2 [#_"Object" object, #_"int" offset])
-
-    ;;;
-     ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_OBJECT)
-    #_unused
-    (§ native #_"Object" ObjectAccess'readObject-2 [#_"Object" object, #_"int" offset])
-
-    ;;;
-     ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
-    #_unused
-    (§ native #_"void" ObjectAccess'writeByte-3 [#_"Object" object, #_"Word" offset, #_"byte" val])
-
-    ;;;
-     ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
-    #_unused
-    (§ native #_"void" ObjectAccess'writeChar-3 [#_"Object" object, #_"Word" offset, #_"char" val])
-
-    ;;;
-     ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
-    #_unused
-    (§ native #_"void" ObjectAccess'writeShort-3 [#_"Object" object, #_"Word" offset, #_"short" val])
-
-    ;;;
-     ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
-    #_unused
-    (§ native #_"void" ObjectAccess'writeInt-3 [#_"Object" object, #_"Word" offset, #_"int" val])
-
-    ;;;
-     ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
-    #_unused
-    (§ native #_"void" ObjectAccess'writeLong-3 [#_"Object" object, #_"Word" offset, #_"long" val])
-
-    ;;;
-     ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
-    #_unused
-    (§ native #_"void" ObjectAccess'writeWord-3 [#_"Object" object, #_"Word" offset, #_"Word" val])
-
-    ;;;
-     ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
-    #_unused
-    (§ native #_"void" ObjectAccess'writeObject-3 [#_"Object" object, #_"Word" offset, #_"Object" val])
-
-    ;;;
-     ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
-    #_unused
-    (§ native #_"void" ObjectAccess'writeByte-3 [#_"Object" object, #_"int" offset, #_"byte" val])
-
-    ;;;
-     ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
-    #_unused
-    (§ native #_"void" ObjectAccess'writeChar-3 [#_"Object" object, #_"int" offset, #_"char" val])
-
-    ;;;
-     ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
-    #_unused
-    (§ native #_"void" ObjectAccess'writeShort-3 [#_"Object" object, #_"int" offset, #_"short" val])
-
-    ;;;
-     ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
-    #_unused
-    (§ native #_"void" ObjectAccess'writeInt-3 [#_"Object" object, #_"int" offset, #_"int" val])
-
-    ;;;
-     ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
-    #_unused
-    (§ native #_"void" ObjectAccess'writeLong-3 [#_"Object" object, #_"int" offset, #_"long" val])
-
-    ;;;
-     ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
-    #_unused
-    (§ native #_"void" ObjectAccess'writeWord-3 [#_"Object" object, #_"int" offset, #_"Word" val])
-
-    ;;;
-     ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
-    #_unused
-    (§ native #_"void" ObjectAccess'writeObject-3 [#_"Object" object, #_"int" offset, #_"Object" val])
-)
-
 (final-ns Word
     (§ final #_"long" :rawValue 0)
 
@@ -79081,24 +77975,8 @@
      ; the arithmetic on the pointer and the capabilities of the backend to deal with derived
      ; references, this may work correctly, or result in a compiler error.
      ;;
-    ; @Operation(opcode = WordOpcode'OBJECT_TO_TRACKED)
+    ; @Operation(opcode = WordOpcode'FROM_OBJECT)
     (§ native #_"Word" Word'objectToTrackedPointer-1 [#_"Object" val])
-
-    ;;;
-     ; Convert an Object to a Pointer, dropping the reference information. If the returned pointer
-     ; or any value derived from it is alive across a safepoint, it will be treated as a simple
-     ; integer and not tracked by the garbage collector.
-     ;
-     ; This is a dangerous operation, the GC could move the object without updating the pointer!
-     ; Use only in combination with some mechanism to prevent the GC from moving or freeing the
-     ; object as long as the pointer is in use.
-     ;
-     ; If the result value should not be alive across a safepoint, it's better to use
-     ; #objectToTrackedPointer(Object) instead.
-     ;;
-    ; @Operation(opcode = WordOpcode'OBJECT_TO_UNTRACKED)
-    #_unused
-    (§ native #_"Word" Word'objectToUntrackedPointer-1 [#_"Object" val])
 
     ; @Operation(opcode = WordOpcode'FROM_ADDRESS)
     (§ native #_"Word" Word'fromAddress-1 [#_"Address" address])
@@ -79240,19 +78118,19 @@
     )
 
     ; @Operation(opcode = WordOpcode'NOT)
-    #_unused
+    #_unused
     (§ method! #_"Word" Word''not-1 [#_"Word" this]
         (Word'box-1 (bit-not (Word''unbox-1 this)))
     )
 
     ; @Operation(opcode = WordOpcode'IS_NULL)
-    #_unused
+    #_unused
     (§ method! #_"boolean" Word''isNull-1 [#_"Word" this]
         (Word''equal-2 this, (WordFactory'zero-0))
     )
 
     ; @Operation(opcode = WordOpcode'IS_NON_NULL)
-    #_unused
+    #_unused
     (§ method! #_"boolean" Word''isNonNull-1 [#_"Word" this]
         (Word''notEqual-2 this, (WordFactory'zero-0))
     )
@@ -79869,8 +78747,7 @@
     (§ enum WordOpcode'WRITE_BARRIERED)
     (§ enum WordOpcode'INITIALIZE)
     (§ enum WordOpcode'TO_RAW_VALUE)
-    (§ enum WordOpcode'OBJECT_TO_TRACKED)
-    (§ enum WordOpcode'OBJECT_TO_UNTRACKED)
+    (§ enum WordOpcode'FROM_OBJECT)
     (§ enum WordOpcode'FROM_ADDRESS)
     (§ enum WordOpcode'TO_OBJECT)
     (§ enum WordOpcode'TO_OBJECT_NON_NULL)
@@ -79888,7 +78765,15 @@
 
     ; @Input
     (§ mutable #_"ValueNode" :input nil)
-    (§ final #_"boolean" :trackedPointer false)
+
+    (§ defn #_"WordCastNode" WordCastNode'new-2 [#_"Stamp" stamp, #_"ValueNode" input]
+        (let [
+            #_"WordCastNode" this (FixedWithNextNode'new-2 WordCastNode'TYPE, stamp)
+            this (assoc this :input input)
+        ]
+            this
+        )
+    )
 
     (§ defn #_"WordCastNode" WordCastNode'wordToObject-2 [#_"ValueNode" input, #_"JavaKind" wordKind]
         (WordCastNode'new-2 StampFactory'objectStamp, input)
@@ -79898,30 +78783,12 @@
         (WordCastNode'new-2 StampFactory'objectNonNullStamp, input)
     )
 
-    (§ defn #_"WordCastNode" WordCastNode'addressToWord-2 [#_"ValueNode" input, #_"JavaKind" wordKind]
+    (§ defn #_"WordCastNode" WordCastNode'objectToWord-2 [#_"ValueNode" input, #_"JavaKind" wordKind]
         (WordCastNode'new-2 (StampFactory'forKind-1 wordKind), input)
     )
 
-    (§ defn #_"WordCastNode" WordCastNode'objectToTrackedPointer-2 [#_"ValueNode" input, #_"JavaKind" wordKind]
-        (WordCastNode'new-3 (StampFactory'forKind-1 wordKind), input, true)
-    )
-
-    (§ defn #_"WordCastNode" WordCastNode'objectToUntrackedPointer-2 [#_"ValueNode" input, #_"JavaKind" wordKind]
-        (WordCastNode'new-3 (StampFactory'forKind-1 wordKind), input, false)
-    )
-
-    (§ defn #_"WordCastNode" WordCastNode'new-2 [#_"Stamp" stamp, #_"ValueNode" input]
-        (WordCastNode'new-3 stamp, input, true)
-    )
-
-    (§ defn #_"WordCastNode" WordCastNode'new-3 [#_"Stamp" stamp, #_"ValueNode" input, #_"boolean" trackedPointer]
-        (let [
-            #_"WordCastNode" this (FixedWithNextNode'new-2 WordCastNode'TYPE, stamp)
-            this (assoc this :input input)
-            this (assoc this :trackedPointer trackedPointer)
-        ]
-            this
-        )
+    (§ defn #_"WordCastNode" WordCastNode'addressToWord-2 [#_"ValueNode" input, #_"JavaKind" wordKind]
+        (WordCastNode'new-2 (StampFactory'forKind-1 wordKind), input)
     )
 
     (§ override! #_"Node" Canonicalizable''canonical-2 [#_"WordCastNode" this, #_"CanonicalizerTool" tool]
@@ -79951,7 +78818,7 @@
             #_"Value" value (LIRBuilder''operand-2 builder, (:input this))
             #_"ValueKind" kind (Stamp''getLIRKind-1 (:stamp this))
             kind
-                (when (and (:trackedPointer this) (LIRKind'isValue-1 kind) (not (LIRKind'isValue-1 value))) => kind
+                (when (and (LIRKind'isValue-1 kind) (not (LIRKind'isValue-1 value))) => kind
                     ;; just change the PlatformKind, but don't drop reference information
                     (#_"ValueKind" .changeType (#_"Value" .getValueKind value), (#_"ValueKind" .getPlatformKind kind))
                 )
@@ -79988,7 +78855,7 @@
     (§ override #_"boolean" WordOperationPlugin''handleInvoke-4 [#_"WordOperationPlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"ValueNode[]" args]
         (and (WordTypes'isWordOperation-1 method)
             (do
-                (WordOperationPlugin''processWordOperation-4 this, parser, args, (WordTypes'getWordOperation-2 method, (#_"ResolvedJavaMethod" .getDeclaringClass (:method parser))))
+                (WordOperationPlugin''processWordOperation-4 this, parser, method, args)
                 true
             )
         )
@@ -80125,10 +78992,10 @@
         )
     )
 
-    (§ method! #_"void" WordOperationPlugin''processWordOperation-4 [#_"WordOperationPlugin" this, #_"BytecodeParser" parser, #_"ValueNode[]" args, #_"ResolvedJavaMethod" wordMethod]
+    (§ method! #_"void" WordOperationPlugin''processWordOperation-4 [#_"WordOperationPlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"ValueNode[]" args]
         (let [
-            #_"JavaKind" returnKind (#_"Signature" .getReturnKind (#_"ResolvedJavaMethod" .getSignature wordMethod))
-            #_"WordFactoryOperation" factoryOperation (BridgeMethodUtils'getAnnotation-2 WordFactoryOperation, wordMethod)
+            #_"JavaKind" returnKind (#_"Signature" .getReturnKind (#_"ResolvedJavaMethod" .getSignature method))
+            #_"WordFactoryOperation" factoryOperation (BridgeMethodUtils'getAnnotation-2 WordFactoryOperation, method)
         ]
             (or
                 (when (some? factoryOperation)
@@ -80153,10 +79020,10 @@
                 )
 
                 (let [
-                    #_"Operation" operation (BridgeMethodUtils'getAnnotation-2 Operation, wordMethod)
+                    #_"Operation" operation (BridgeMethodUtils'getAnnotation-2 Operation, method)
                 ]
                     (when (nil? operation)
-                        (throw! (str "cannot call method on a word value: " (#_"ResolvedJavaMethod" .format wordMethod, "%H.\n(%p)")))
+                        (throw! (str "cannot call method on a word value: " (#_"ResolvedJavaMethod" .format method, "%H.\n(%p)")))
                     )
                     (condp =? (Operation''opcode-1 operation)
                         WordOpcode'NODE_CLASS
@@ -80176,7 +79043,7 @@
                             (BytecodeParser''addPush-3 parser, returnKind, (XorNode'new-2 (nth args 0), (BytecodeParser''add-2 parser, (ConstantNode'forIntegerKind-2 WordTypes'wordKind, -1))))
                        [WordOpcode'READ_POINTER WordOpcode'READ_OBJECT WordOpcode'READ_BARRIERED]
                             (let [
-                                #_"JavaKind" readKind (WordTypes'asKind-1 (#_"Signature" .getReturnType (#_"ResolvedJavaMethod" .getSignature wordMethod), (#_"ResolvedJavaMethod" .getDeclaringClass wordMethod)))
+                                #_"JavaKind" readKind (WordTypes'asKind-1 (#_"Signature" .getReturnType (#_"ResolvedJavaMethod" .getSignature method), (#_"ResolvedJavaMethod" .getDeclaringClass method)))
                                 #_"AddressNode" address (WordOperationPlugin''makeAddress-4 this, parser, (nth args 0), (nth args 1))
                                 #_"LocationIdentity" location
                                     (if (= (count args) 2)
@@ -80188,7 +79055,7 @@
                             )
                         WordOpcode'READ_HEAP
                             (let [
-                                #_"JavaKind" readKind (WordTypes'asKind-1 (#_"Signature" .getReturnType (#_"ResolvedJavaMethod" .getSignature wordMethod), (#_"ResolvedJavaMethod" .getDeclaringClass wordMethod)))
+                                #_"JavaKind" readKind (WordTypes'asKind-1 (#_"Signature" .getReturnType (#_"ResolvedJavaMethod" .getSignature method), (#_"ResolvedJavaMethod" .getDeclaringClass method)))
                                 #_"AddressNode" address (WordOperationPlugin''makeAddress-4 this, parser, (nth args 0), (nth args 1))
                                 #_"BarrierType" barrierType (SnippetReflection'asObject-2 BarrierType, (ValueNode''asJavaConstant-1 (nth args 2)))
                             ]
@@ -80196,7 +79063,7 @@
                             )
                        [WordOpcode'WRITE_POINTER WordOpcode'WRITE_OBJECT WordOpcode'WRITE_BARRIERED WordOpcode'INITIALIZE]
                             (let [
-                                #_"JavaKind" writeKind (WordTypes'asKind-1 (#_"Signature" .getParameterType (#_"ResolvedJavaMethod" .getSignature wordMethod), (if (#_"ResolvedJavaMethod" .isStatic wordMethod) 2 1), (#_"ResolvedJavaMethod" .getDeclaringClass wordMethod)))
+                                #_"JavaKind" writeKind (WordTypes'asKind-1 (#_"Signature" .getParameterType (#_"ResolvedJavaMethod" .getSignature method), (if (#_"ResolvedJavaMethod" .isStatic method) 2 1), (#_"ResolvedJavaMethod" .getDeclaringClass method)))
                                 #_"AddressNode" address (WordOperationPlugin''makeAddress-4 this, parser, (nth args 0), (nth args 1))
                                 #_"LocationIdentity" location
                                     (if (= (count args) 3)
@@ -80208,17 +79075,11 @@
                             )
                         WordOpcode'TO_RAW_VALUE
                             (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin''toUnsigned-4 this, parser, (nth args 0), JavaKind/Long))
-                        WordOpcode'OBJECT_TO_TRACKED
+                        WordOpcode'FROM_OBJECT
                             (let [
-                                #_"WordCastNode" objectToTracked (BytecodeParser''add-2 parser, (WordCastNode'objectToTrackedPointer-2 (nth args 0), WordTypes'wordKind))
+                                #_"WordCastNode" objectToTracked (BytecodeParser''add-2 parser, (WordCastNode'objectToWord-2 (nth args 0), WordTypes'wordKind))
                             ]
                                 (BytecodeParser''push-3 parser, returnKind, objectToTracked)
-                            )
-                        WordOpcode'OBJECT_TO_UNTRACKED
-                            (let [
-                                #_"WordCastNode" objectToUntracked (BytecodeParser''add-2 parser, (WordCastNode'objectToUntrackedPointer-2 (nth args 0), WordTypes'wordKind))
-                            ]
-                                (BytecodeParser''push-3 parser, returnKind, objectToUntracked)
                             )
                         WordOpcode'FROM_ADDRESS
                             (let [
@@ -80241,9 +79102,9 @@
                         WordOpcode'CAS_POINTER
                             (let [
                                 #_"AddressNode" address (WordOperationPlugin''makeAddress-4 this, parser, (nth args 0), (nth args 1))
-                                #_"JavaKind" valueKind (WordTypes'asKind-1 (#_"Signature" .getParameterType (#_"ResolvedJavaMethod" .getSignature wordMethod), 1, (#_"ResolvedJavaMethod" .getDeclaringClass wordMethod)))
+                                #_"JavaKind" valueKind (WordTypes'asKind-1 (#_"Signature" .getParameterType (#_"ResolvedJavaMethod" .getSignature method), 1, (#_"ResolvedJavaMethod" .getDeclaringClass method)))
                                 #_"LocationIdentity" location (SnippetReflection'asObject-2 LocationIdentity, (ValueNode''asJavaConstant-1 (nth args 4)))
-                                #_"JavaType" returnType (#_"Signature" .getReturnType (#_"ResolvedJavaMethod" .getSignature wordMethod), (#_"ResolvedJavaMethod" .getDeclaringClass wordMethod))
+                                #_"JavaType" returnType (#_"Signature" .getReturnType (#_"ResolvedJavaMethod" .getSignature method), (#_"ResolvedJavaMethod" .getDeclaringClass method))
                             ]
                                 (BytecodeParser''addPush-3 parser, returnKind, (WordOperationPlugin''casOp-7 this, valueKind, (WordTypes'asKind-1 returnType), address, location, (nth args 2), (nth args 3)))
                             )
