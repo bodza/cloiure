@@ -107,7 +107,7 @@
     [jdk.vm.ci.runtime JVMCIBackend JVMCICompiler]
 
     [org.graalvm.collections EconomicMap EconomicSet Equivalence MapCursor Pair UnmodifiableEconomicMap UnmodifiableMapCursor]
-    [org.graalvm.word ComparableWord LocationIdentity Pointer SignedWord UnsignedWord WordBase WordFactory]
+    [org.graalvm.word LocationIdentity WordFactory]
     [org.graalvm.word.impl WordBoxFactory WordFactoryOperation]
 
     [sun.misc Unsafe]
@@ -6767,7 +6767,7 @@
     ;;;
      ; Sorts fields in ascending order by their #offsets.
      ;;
-    (§ override #_"int" FieldInfo''compareTo-2 [#_"FieldInfo" this, #_"FieldInfo" o]
+    (§ override #_"int" #_"Comparable" .compareTo [#_"FieldInfo" this, #_"FieldInfo" o]
         (cond (< (:offset this) (:offset o)) -1 (< (:offset o) (:offset this)) 1 :else 0)
     )
 )
@@ -7203,7 +7203,7 @@
      ; Create a new LIRKind with the same reference information and a new platform kind.
      ; If the new kind is a longer vector than this, the new elements are marked as untracked values.
      ;;
-    (§ override! #_"LIRKind" LIRKind''changeType-2 [#_"LIRKind" this, #_"PlatformKind" kind]
+    (§ override! #_"LIRKind" #_"ValueKind" .changeType [#_"LIRKind" this, #_"PlatformKind" kind]
         (cond
             (= kind (#_"ValueKind" .getPlatformKind this)) this
             (LIRKind''isUnknownReference-1 this)           (LIRKind'unknownReference-1 kind)
@@ -11044,12 +11044,12 @@
         (let [
             #_"ArrayList<T>" list (ArrayList.)
         ]
-            (NodeIterable''snapshotTo-2 this, list)
+            (NodeIterable''snapshot-2 this, list)
             list
         )
     )
 
-    (§ method #_"void" NodeIterable''snapshotTo-2 [#_"NodeIterable<T extends Node>" this, #_"Collection<? super T>" to]
+    (§ method! #_"void" NodeIterable''snapshot-2 [#_"NodeIterable<T extends Node>" this, #_"Collection<? super T>" to]
         (doseq [#_"T" n this]
             (#_"Collection" .add to, n)
         )
@@ -12553,7 +12553,7 @@
                     #_"Node" oldNode (nth list i)
                 ]
                     (when (some? oldNode)
-                        (NodeList''set-3 result, i, (InplaceUpdateClosure''replacement-3 duplicationReplacement, oldNode, type))
+                        (#_"List" .set result, i, (InplaceUpdateClosure''replacement-3 duplicationReplacement, oldNode, type))
                     )
                 )
             )
@@ -12977,8 +12977,7 @@
     ;;;
      ; Sorts non-list edges before list edges.
      ;;
-    #_unused
-    (§ override #_"int" EdgeInfo''compareTo-2 [#_"EdgeInfo" this, #_"FieldInfo" o]
+    (§ override #_"int" #_"Comparable" .compareTo [#_"EdgeInfo" this, #_"FieldInfo" o]
         (if (#_"Class" .isAssignableFrom NodeList, (:type o))
             (when-not (#_"Class" .isAssignableFrom NodeList, (:type this))
                 (§ return -1)
@@ -12987,7 +12986,7 @@
                 (§ return 1)
             )
         )
-        (FieldInfo''compareTo-2 (§ super ), o)
+        (#_"Comparable" .compareTo (§ super ), o)
     )
 )
 
@@ -13299,8 +13298,7 @@
         (NodeList'new-2 self, elements)
     )
 
-    #_unused
-    (§ override! #_"void" NodeInputList''update-3 [#_"NodeInputList<T extends Node>" this, #_"T" oldNode, #_"T" newNode]
+    (§ override! #_"void" NodeList''update-3 [#_"NodeInputList<T extends Node>" this, #_"T" oldNode, #_"T" newNode]
         (Node''updateUsages-3 (:self this), oldNode, newNode)
         nil
     )
@@ -13324,8 +13322,7 @@
         (NodeList'new-2 self, elements)
     )
 
-    #_unused
-    (§ override! #_"void" NodeSuccessorList''update-3 [#_"NodeSuccessorList<T extends Node>" this, #_"T" oldNode, #_"T" newNode]
+    (§ override! #_"void" NodeList''update-3 [#_"NodeSuccessorList<T extends Node>" this, #_"T" oldNode, #_"T" newNode]
         (Node''updatePredecessor-3 (:self this), oldNode, newNode)
         nil
     )
@@ -13412,20 +13409,20 @@
 
     (§ abstract #_"void" NodeList''update-3 [#_"NodeList<T extends Node>" this, #_"T" oldNode, #_"T" newNode])
 
-    (§ override #_"boolean" NodeList''add-2 [#_"NodeList<T extends Node>" this, #_"Node" node]
+    (§ override! #_"boolean" #_"List" .add [#_"NodeList<T extends Node>" this, #_"Node" node]
         (let [
-            #_"int" length (count (:nodes this))
+            #_"int" n (count (:nodes this))
         ]
             (cond
-                (zero? length)
+                (zero? n)
                     (§ ass! this (assoc this :nodes (make-array Node 2)))
-                (= (:size this) length)
-                (let [
-                    #_"Node[]" newNodes (make-array Node (inc (* (count (:nodes this)) 2)))
-                ]
-                    (System/arraycopy (:nodes this), 0, newNodes, 0, length)
-                    (§ ass! this (assoc this :nodes newNodes))
-                )
+                (= (:size this) n)
+                    (let [
+                        #_"Node[]" a (make-array Node (inc (* 2 n)))
+                    ]
+                        (System/arraycopy (:nodes this), 0, a, 0, n)
+                        (§ ass! this (assoc this :nodes a))
+                    )
             )
             (aset (:nodes this) (:size this) node)
             (§ ass! this (update this :size inc))
@@ -13434,7 +13431,7 @@
         )
     )
 
-    (§ override #_"T" NodeList''set-3 [#_"NodeList<T extends Node>" this, #_"int" index, #_"Node" node]
+    (§ override! #_"T" #_"List" .set [#_"NodeList<T extends Node>" this, #_"int" index, #_"Node" node]
         (let [
             #_"T" oldValue (nth (:nodes this) index)
         ]
@@ -13444,12 +13441,12 @@
         )
     )
 
-    (§ method #_"void" NodeList''initialize-3 [#_"NodeList<T extends Node>" this, #_"int" index, #_"Node" node]
+    (§ method! #_"void" NodeList''initialize-3 [#_"NodeList<T extends Node>" this, #_"int" index, #_"Node" node]
         (aset (:nodes this) index node)
         nil
     )
 
-    (§ method #_"void" NodeList''copy-2 [#_"NodeList<T extends Node>" this, #_"NodeList<? extends Node>" other]
+    (§ method! #_"void" NodeList''copy-2 [#_"NodeList<T extends Node>" this, #_"NodeList<? extends Node>" other]
         (let [
             #_"Node[]" newNodes (make-array Node (:size other))
         ]
@@ -13460,7 +13457,7 @@
         nil
     )
 
-    (§ override #_"void" NodeList''clear-1 [#_"NodeList<T extends Node>" this]
+    (§ override! #_"void" #_"List" .clear [#_"NodeList<T extends Node>" this]
         (dotimes [#_"int" i (:size this)]
             (NodeList''update-3 this, (§ cast #_"T" (nth (:nodes this) i)), nil)
         )
@@ -13477,7 +13474,7 @@
         )
     )
 
-    (§ override #_"boolean" NodeList''remove-2 [#_"NodeList<T extends Node>" this, #_"Object" node]
+    (§ override! #_"boolean" #_"List" .remove [#_"NodeList<T extends Node>" this, #_"Object" node]
         (let [
             #_"int" i (loop-when-recur [i 0] (and (< i (:size this)) (not= (nth (:nodes this) i) node)) [(inc i)] => i)
         ]
@@ -13497,7 +13494,7 @@
         )
     )
 
-    (§ override #_"T" NodeList''remove-2 [#_"NodeList<T extends Node>" this, #_"int" index]
+    (§ override! #_"T" #_"List" .remove [#_"NodeList<T extends Node>" this, #_"int" index]
         (let [
             #_"T" oldValue (nth (:nodes this) index)
         ]
@@ -13520,26 +13517,22 @@
         )
     )
 
-    (§ override #_"Iterator<T>" #_"Iterable" .iterator [#_"NodeList<T extends Node>" this]
+    (§ override! #_"Iterator<T>" #_"Iterable" .iterator [#_"NodeList<T extends Node>" this]
         (NodeListIterator'new-2 this, 0)
     )
 
-    (§ override #_"boolean" NodeList''contains-2 [#_"NodeList<T extends Node>" this, #_"T" other]
-        (loop [#_"int" i 0] (and (< i (:size this)) (or (= (nth (:nodes this) i) other) (recur (inc i)))))
-    )
-
-    (§ override #_"List<T>" NodeList''snapshot-1 [#_"NodeList<T extends Node>" this]
+    (§ override! #_"List<T>" NodeIterable''snapshot-1 [#_"NodeList<T extends Node>" this]
         (Arrays/asList (Arrays/copyOf (:nodes this), (:size this)))
     )
 
-    (§ override #_"<A> A[]" NodeList''toArray-2 [#_"NodeList<T extends Node>" this, #_"A[]" a]
+    (§ override! #_"<A> A[]" #_"List" .toArray [#_"NodeList<T extends Node>" this, #_"A[]" a]
         (when (<= (:size this) (count a)) => (Arrays/copyOf (:nodes this), (:size this), (#_"Object" .getClass a))
             (System/arraycopy (:nodes this), 0, a, 0, (:size this))
             a
         )
     )
 
-    (§ override #_"int" NodeList''indexOf-2 [#_"NodeList<T extends Node>" this, #_"Object" node]
+    (§ override! #_"int" #_"List" .indexOf [#_"NodeList<T extends Node>" this, #_"Object" node]
         (loop-when [#_"int" i 0] (< i (:size this)) => -1
             (if (= (nth (:nodes this) i) node)
                 i
@@ -13548,20 +13541,13 @@
         )
     )
 
-    (§ override #_"boolean" NodeList''contains-2 [#_"NodeList<T extends Node>" this, #_"Object" o]
-        (not= (NodeList''indexOf-2 this, o) -1)
+    (§ override! #_"boolean" #_"List" .contains [#_"NodeList<T extends Node>" this, #_"Object" o]
+        (not= (#_"List" .indexOf this, o) -1)
     )
 
-    (§ override #_"boolean" NodeList''addAll-2 [#_"NodeList<T extends Node>" this, #_"Collection<? extends T>" c]
+    (§ override! #_"boolean" #_"List" .addAll [#_"NodeList<T extends Node>" this, #_"Collection<? extends T>" c]
         (doseq [#_"T" e c]
-            (NodeList''add-2 this, e)
-        )
-        true
-    )
-
-    (§ method #_"boolean" NodeList''addAll-2 [#_"NodeList<T extends Node>" this, #_"T[]" c]
-        (doseq [#_"T" e c]
-            (NodeList''add-2 this, e)
+            (#_"List" .add this, e)
         )
         true
     )
@@ -13624,7 +13610,7 @@
         )
     )
 
-    (§ override! #_"T" NodeMap''get-2 [#_"NodeMap<T>" this, #_"Node" node]
+    (§ override! #_"T" #_"Map" .get [#_"NodeMap<T>" this, #_"Node" node]
         (§ cast #_"T" (nth (:values this) (:id node)))
     )
 
@@ -13639,8 +13625,8 @@
         )
     )
 
-    (§ override! #_"boolean" NodeMap''containsKey-2 [#_"NodeMap<T>" this, #_"Node" node]
-        (and (= (:graph node) (:graph this)) (some? (NodeMap''get-2 this, node)))
+    (§ override! #_"boolean" #_"Map" .containsKey [#_"NodeMap<T>" this, #_"Node" node]
+        (and (= (:graph node) (:graph this)) (some? (get this node)))
     )
 
     (§ method! #_"void" NodeMap''set-3 [#_"NodeMap<T>" this, #_"Node" node, #_"T" value]
@@ -13672,13 +13658,7 @@
         (<= (NodeMap''capacity-1 this) (:id node))
     )
 
-    #_unused
-    (§ override! #_"void" NodeMap''clear-1 [#_"NodeMap<T>" this]
-        (Arrays/fill (:values this), nil)
-        nil
-    )
-
-    (§ override! #_"Iterable<Node>" NodeMap''getKeys-1 [#_"NodeMap<T>" this]
+    (§ override! #_"Iterable<Node>" #_"UnmodifiableEconomicMap" .getKeys [#_"NodeMap<T>" this]
         (let [
             #_"NodeMap" nodeMap this
         ]
@@ -13716,42 +13696,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"MapCursor<Node, T>" NodeMap''getEntries-1 [#_"NodeMap<T>" this]
-        (let [
-            #_"NodeMap" nodeMap this
-        ]
-            (§ reify #_"MapCursor<Node, T>" (MapCursor.)
-                (let [
-                    #_"int" i -1
-                ]
-                    (§ override! #_"boolean" #_"MapCursor" .advance [#_"MapCursor<Node, T>" this]
-                        (§ ass i (inc i))
-                        (while (and (< i (count (:values nodeMap))) (or (nil? (nth (:values nodeMap) i)) (nil? (NodeMap''getKey-2 nodeMap, i))))
-                            (§ ass i (inc i))
-                        )
-                        (< i (count (:values nodeMap)))
-                    )
-
-                    (§ override! #_"Node" #_"MapCursor" .getKey [#_"MapCursor<Node, T>" this]
-                        (NodeMap''getKey-2 nodeMap, i)
-                    )
-
-                    (§ override! #_"T" #_"MapCursor" .getValue [#_"MapCursor<Node, T>" this]
-                        (§ cast #_"T" (nth (:values nodeMap) i))
-                    )
-
-                    (§ override! #_"void" #_"MapCursor" .remove [#_"MapCursor<Node, T>" this]
-                        (aset (:values nodeMap) i nil)
-                        nil
-                    )
-                )
-            )
-        )
-    )
-
-    #_unused
-    (§ override! #_"Iterable<T>" NodeMap''getValues-1 [#_"NodeMap<T>" this]
+    (§ override! #_"Iterable<T>" #_"UnmodifiableEconomicMap" .getValues [#_"NodeMap<T>" this]
         (let [
             #_"NodeMap" nodeMap this
         ]
@@ -13789,26 +13734,46 @@
         )
     )
 
-    (§ override! #_"T" NodeMap''put-3 [#_"NodeMap<T>" this, #_"Node" key, #_"T" value]
+    (§ override! #_"MapCursor<Node, T>" #_"UnmodifiableEconomicMap" .getEntries [#_"NodeMap<T>" this]
         (let [
-            #_"T" result (NodeMap''get-2 this, key)
+            #_"NodeMap" nodeMap this
+        ]
+            (§ reify #_"MapCursor<Node, T>" (MapCursor.)
+                (let [
+                    #_"int" i -1
+                ]
+                    (§ override! #_"boolean" #_"MapCursor" .advance [#_"MapCursor<Node, T>" this]
+                        (§ ass i (inc i))
+                        (while (and (< i (count (:values nodeMap))) (or (nil? (nth (:values nodeMap) i)) (nil? (NodeMap''getKey-2 nodeMap, i))))
+                            (§ ass i (inc i))
+                        )
+                        (< i (count (:values nodeMap)))
+                    )
+
+                    (§ override! #_"Node" #_"MapCursor" .getKey [#_"MapCursor<Node, T>" this]
+                        (NodeMap''getKey-2 nodeMap, i)
+                    )
+
+                    (§ override! #_"T" #_"MapCursor" .getValue [#_"MapCursor<Node, T>" this]
+                        (§ cast #_"T" (nth (:values nodeMap) i))
+                    )
+
+                    (§ override! #_"void" #_"MapCursor" .remove [#_"MapCursor<Node, T>" this]
+                        (aset (:values nodeMap) i nil)
+                        nil
+                    )
+                )
+            )
+        )
+    )
+
+    (§ override! #_"T" #_"Map" .put [#_"NodeMap<T>" this, #_"Node" key, #_"T" value]
+        (let [
+            #_"T" result (get this key)
         ]
             (NodeMap''set-3 this, key, value)
             result
         )
-    )
-
-    #_unused
-    (§ override! #_"T" NodeMap''removeKey-2 [#_"NodeMap<T>" this, #_"Node" key]
-        (NodeMap''put-3 this, key, nil)
-    )
-
-    #_unused
-    (§ override! #_"void" NodeMap''replaceAll-2 [#_"NodeMap<T>" this, #_"BiFunction<? super Node, ? super T, ? extends T>" function]
-        (doseq [#_"Node" n (NodeMap''getKeys-1 this)]
-            (NodeMap''put-3 this, n, (#_"BiFunction" .apply function, n, (NodeMap''get-2 this, n)))
-        )
-        nil
     )
 )
 
@@ -14038,7 +14003,7 @@
     (§ method! #_"void" Position''set-3 [#_"Position" this, #_"Node" node, #_"Node" value]
         (if (< (:index this) (:directCount (:edges this)))
             (Edges''setNode-4 (:edges this), node, (:index this), value)
-            (NodeList''set-3 (Edges'getNodeList-3 node, (:offsets (:edges this)), (:index this)), (:subIndex this), value)
+            (#_"List" .set (Edges'getNodeList-3 node, (:offsets (:edges this)), (:index this)), (:subIndex this), value)
         )
         nil
     )
@@ -14769,7 +14734,7 @@
     )
 
     (§ method- #_"Value" LIRBuilder''getOperand-2 [#_"LIRBuilder" this, #_"Node" node]
-        (when (some? (:nodeOperands this)) (NodeMap''get-2 (:nodeOperands this), node))
+        (when (some? (:nodeOperands this)) (get (:nodeOperands this) node))
     )
 
     ;;;
@@ -18322,7 +18287,7 @@
         (let [
             #_"Word" mark (ReplacementsUtil'loadWordFromObject-2 object, HotSpot'markOffset)
             #_"Word" lock (BeginLockScopeNode'beginLockScope-1 lockDepth)
-            #_"Pointer" objectPointer (Word'objectToTrackedPointer-1 object)
+            #_"Word" objectPointer (Word'objectToTrackedPointer-1 object)
         ]
             (when (and HotSpot'useBiasedLocking (MonitorSnippets'tryEnterBiased-5 object, hub, lock, mark, threadRegister))
                 (§ return )
@@ -18345,7 +18310,7 @@
 
                     ;; Test if the object's mark word is unlocked, and if so, store the (address of) the lock slot into the object's mark word.
                     (let [
-                        #_"Word" currentMark (#_"Pointer" .compareAndSwapWord objectPointer, HotSpot'markOffset, unlockedMark, lock, ReplacementsUtil'MARK_WORD_LOCATION)
+                        #_"Word" currentMark (Word''compareAndSwapWord-5 objectPointer, HotSpot'markOffset, unlockedMark, lock, ReplacementsUtil'MARK_WORD_LOCATION)
                     ]
                         (if (BranchProbabilityNode'probability-2 BranchProbabilityNode'FAST_PATH_PROBABILITY, (Word''equal-2 currentMark, unlockedMark))
                             (do
@@ -18409,7 +18374,7 @@
                 ;; now check to see whether biasing is enabled for this object ;; => biasing not enabled -> fall through to lightweight locking
                 (and (BranchProbabilityNode'probability-2 BranchProbabilityNode'NOT_FREQUENT_PROBABILITY, (Word''equal-2 biasableLockBits, (WordFactory/unsigned HotSpot'biasedLockPattern)))
                     (let [
-                        #_"Pointer" objectPointer (Word'objectToTrackedPointer-1 object)
+                        #_"Word" objectPointer (Word'objectToTrackedPointer-1 object)
                     ]
                         ;; At this point we know that the mark word has the bias pattern and that we are not the bias owner in the
                         ;; current epoch. We need to figure out more details about the state of the mark word in order to know what
@@ -18433,7 +18398,7 @@
                                         #_"Word" unbiasedMark (Word''and-2 mark, (| HotSpot'biasedLockMaskInPlace HotSpot'ageMaskInPlace HotSpot'epochMaskInPlace))
                                         #_"Word" biasedMark (Word''or-2 unbiasedMark, thread)
                                     ]
-                                        (and (BranchProbabilityNode'probability-2 BranchProbabilityNode'VERY_FAST_PATH_PROBABILITY, (#_"Pointer" .logicCompareAndSwapWord objectPointer, HotSpot'markOffset, unbiasedMark, biasedMark, ReplacementsUtil'MARK_WORD_LOCATION))
+                                        (and (BranchProbabilityNode'probability-2 BranchProbabilityNode'VERY_FAST_PATH_PROBABILITY, (Word''logicCompareAndSwapWord-5 objectPointer, HotSpot'markOffset, unbiasedMark, biasedMark, ReplacementsUtil'MARK_WORD_LOCATION))
                                             ;; object is now biased to current thread -> done
                                             true
                                         )
@@ -18447,7 +18412,7 @@
                                     (let [
                                         #_"Word" biasedMark (Word''or-2 prototypeMarkWord, thread)
                                     ]
-                                        (and (BranchProbabilityNode'probability-2 BranchProbabilityNode'VERY_FAST_PATH_PROBABILITY, (#_"Pointer" .logicCompareAndSwapWord objectPointer, HotSpot'markOffset, mark, biasedMark, ReplacementsUtil'MARK_WORD_LOCATION))
+                                        (and (BranchProbabilityNode'probability-2 BranchProbabilityNode'VERY_FAST_PATH_PROBABILITY, (Word''logicCompareAndSwapWord-5 objectPointer, HotSpot'markOffset, mark, biasedMark, ReplacementsUtil'MARK_WORD_LOCATION))
                                             ;; object is now biased to current thread -> done
                                             true
                                         )
@@ -18468,7 +18433,7 @@
                             ;; CAS fails, it means that another thread raced us for the privilege of revoking the bias of this
                             ;; particular object, so it's okay to continue in the normal locking code.
                             (do
-                                (#_"Pointer" .compareAndSwapWord objectPointer, HotSpot'markOffset, mark, prototypeMarkWord, ReplacementsUtil'MARK_WORD_LOCATION)
+                                (Word''compareAndSwapWord-5 objectPointer, HotSpot'markOffset, mark, prototypeMarkWord, ReplacementsUtil'MARK_WORD_LOCATION)
                                 ;; Fall through to the normal CAS-based lock, because no matter what the result of the above CAS,
                                 ;; some thread must have succeeded in removing the bias bit from the object's header.
                                 false
@@ -18539,9 +18504,9 @@
                         ;; restore the displaced mark in the object - if the object's mark word is not
                         ;; pointing to the displaced mark word, do unlocking via runtime call.
                         (let [
-                            #_"Pointer" objectPointer (Word'objectToTrackedPointer-1 object)
+                            #_"Word" objectPointer (Word'objectToTrackedPointer-1 object)
                         ]
-                            (if (BranchProbabilityNode'probability-2 BranchProbabilityNode'VERY_FAST_PATH_PROBABILITY, (#_"Pointer" .logicCompareAndSwapWord objectPointer, HotSpot'markOffset, lock, displacedMark, ReplacementsUtil'MARK_WORD_LOCATION))
+                            (if (BranchProbabilityNode'probability-2 BranchProbabilityNode'VERY_FAST_PATH_PROBABILITY, (Word''logicCompareAndSwapWord-5 objectPointer, HotSpot'markOffset, lock, displacedMark, ReplacementsUtil'MARK_WORD_LOCATION))
                                 nil ;; ...
                                 (do
                                     ;; the object's mark word was not pointing to the displaced header
@@ -19176,10 +19141,10 @@
     (§ def #_"LocationIdentity" WriteBarrierSnippets'GC_LOG_LOCATION (NamedLocationIdentity'mutable-1 "GC-Log"))
     (§ def #_"LocationIdentity" WriteBarrierSnippets'GC_INDEX_LOCATION (NamedLocationIdentity'mutable-1 "GC-Index"))
 
-    (§ defn- #_"void" WriteBarrierSnippets'serialWriteBarrier-1 [#_"Pointer" ptr]
+    (§ defn- #_"void" WriteBarrierSnippets'serialWriteBarrier-1 [#_"Word" ptr]
         (let [
             #_"long" startAddress (VMConfigNode'cardTableAddress-0)
-            #_"Word" base (#_"Pointer" .unsignedShiftRight ptr, HotSpot'cardTableShift)
+            #_"Word" base (Word''unsignedShiftRight-2 ptr, HotSpot'cardTableShift)
         ]
             (if (and (= (int startAddress) startAddress) (VMConfigNode'isCardTableAddressConstant-0))
                 (Word''writeByte-4 base, (int startAddress), (byte 0), WriteBarrierSnippets'GC_CARD_LOCATION)
@@ -19223,7 +19188,7 @@
             #_"Word" thread (ReplacementsUtil'registerAsWord-1 threadRegister)
             #_"Object" fixedExpectedObject (FixedValueAnchorNode'getObject-1 expectedObject)
             #_"Word" field (Word'fromAddress-1 address)
-            #_"Pointer" previousOop (Word'objectToTrackedPointer-1 fixedExpectedObject)
+            #_"Word" previousOop (Word'objectToTrackedPointer-1 fixedExpectedObject)
             #_"byte" markingValue (Word''readByte-2 thread, HotSpot'g1SATBQueueMarkingOffset)
             #_"int" gcCycle 0
         ]
@@ -19235,7 +19200,7 @@
                     (§ ass previousOop (Word'objectToTrackedPointer-1 (Word''readObject-3 field, 0, BarrierType'NONE)))
                 )
                 ;; If the previous value is nil the barrier should not be issued.
-                (when (BranchProbabilityNode'probability-2 BranchProbabilityNode'FREQUENT_PROBABILITY, (#_"Pointer" .notEqual previousOop, 0))
+                (when (BranchProbabilityNode'probability-2 BranchProbabilityNode'FREQUENT_PROBABILITY, (Word''notEqual-2 previousOop, 0))
                     ;; If the thread-local SATB buffer is full, issue a native call, which will initialize a new one and add the entry.
                     (let [
                         #_"Word" indexAddress (Word''add-2 thread, HotSpot'g1SATBQueueIndexOffset)
@@ -19251,7 +19216,7 @@
                                 (Word''writeWord-4 logAddress, 0, previousOop, WriteBarrierSnippets'GC_LOG_LOCATION)
                                 (Word''writeWord-4 indexAddress, 0, nextIndex, WriteBarrierSnippets'GC_INDEX_LOCATION)
                             )
-                            (ForeignCallNode'g1PreBarrierStub-2 ForeignCallDescriptor'G1WBPRECALL, (#_"Pointer" .toObject previousOop))
+                            (ForeignCallNode'g1PreBarrierStub-2 ForeignCallDescriptor'G1WBPRECALL, (Word''toObject-1 previousOop))
                         )
                     )
                 )
@@ -19264,27 +19229,27 @@
         (let [
             #_"Word" thread (ReplacementsUtil'registerAsWord-1 threadRegister)
             #_"Object" fixedValue (FixedValueAnchorNode'getObject-1 value)
-            #_"Pointer" oop (if usePrecise (Word'fromAddress-1 address) (Word'objectToTrackedPointer-1 object))
+            #_"Word" oop (if usePrecise (Word'fromAddress-1 address) (Word'objectToTrackedPointer-1 object))
             #_"int" gcCycle 0
-            #_"Pointer" writtenValue (Word'objectToTrackedPointer-1 fixedValue)
+            #_"Word" writtenValue (Word'objectToTrackedPointer-1 fixedValue)
             ;; The result of the xor reveals whether the installed pointer crosses heap regions.
             ;; In case it does the write barrier has to be issued.
-            #_"UnsignedWord" xorResult (#_"UnsignedWord" .unsignedShiftRight (#_"Pointer" .xor oop, writtenValue), (VMConfigNode'logOfHeapRegionGrainBytes-0))
+            #_"Word" xorResult (Word''unsignedShiftRight-2 (Word''xor-2 oop, writtenValue), (VMConfigNode'logOfHeapRegionGrainBytes-0))
             ;; Calculate the address of the card to be enqueued to the thread local card queue.
-            #_"UnsignedWord" cardBase (#_"Pointer" .unsignedShiftRight oop, HotSpot'cardTableShift)
+            #_"Word" cardBase (Word''unsignedShiftRight-2 oop, HotSpot'cardTableShift)
             #_"long" startAddress (VMConfigNode'cardTableAddress-0)
             #_"int" displacement 0
         ]
             (if (and (= (int startAddress) startAddress) (VMConfigNode'isCardTableAddressConstant-0))
                 (§ ass displacement (int startAddress))
-                (§ ass cardBase (#_"UnsignedWord" .add cardBase, (WordFactory/unsigned startAddress)))
+                (§ ass cardBase (Word''add-2 cardBase, (WordFactory/unsigned startAddress)))
             )
             (let [
-                #_"Word" cardAddress (#_"UnsignedWord" .add cardBase, displacement)
+                #_"Word" cardAddress (Word''add-2 cardBase, displacement)
             ]
-                (when (BranchProbabilityNode'probability-2 BranchProbabilityNode'FREQUENT_PROBABILITY, (#_"UnsignedWord" .notEqual xorResult, 0))
+                (when (BranchProbabilityNode'probability-2 BranchProbabilityNode'FREQUENT_PROBABILITY, (Word''notEqual-2 xorResult, 0))
                     ;; If the written value is not nil continue with the barrier addition.
-                    (when (BranchProbabilityNode'probability-2 BranchProbabilityNode'FREQUENT_PROBABILITY, (#_"Pointer" .notEqual writtenValue, 0))
+                    (when (BranchProbabilityNode'probability-2 BranchProbabilityNode'FREQUENT_PROBABILITY, (Word''notEqual-2 writtenValue, 0))
                         (let [
                             #_"byte" cardByte (Word''readByte-3 cardAddress, 0, WriteBarrierSnippets'GC_CARD_LOCATION)
                         ]
@@ -19336,18 +19301,18 @@
                 (let [
                     #_"Word" bufferAddress (Word''readWord-2 thread, HotSpot'g1SATBQueueBufferOffset)
                     #_"Word" indexAddress (Word''add-2 thread, HotSpot'g1SATBQueueIndexOffset)
-                    #_"long" indexValue (#_"WordBase" .rawValue (Word''readWord-2 indexAddress, 0))
+                    #_"long" indexValue (Word''rawValue-1 (Word''readWord-2 indexAddress, 0))
                     #_"long" start (WriteBarrierSnippets'getPointerToFirstArrayElement-3 address, length, elementStride)
                     #_"int" scale Unsafe'ARRAY_OBJECT_INDEX_SCALE
                 ]
                     (loop-when [indexValue indexValue #_"int" i 0] (< i length)
                         (let [
-                            #_"Pointer" oop (Word'objectToTrackedPointer-1 (Word''readObject-3 (WordFactory/pointer (+ start (* i scale))), 0, BarrierType'NONE))
+                            #_"Word" oop (Word'objectToTrackedPointer-1 (Word''readObject-3 (WordFactory/pointer (+ start (* i scale))), 0, BarrierType'NONE))
                             indexValue
-                                (when (#_"Pointer" .notEqual oop, 0) => indexValue
+                                (when (Word''notEqual-2 oop, 0) => indexValue
                                     (if (zero? indexValue)
                                         (do
-                                            (ForeignCallNode'g1PreBarrierStub-2 ForeignCallDescriptor'G1WBPRECALL, (#_"Pointer" .toObject oop))
+                                            (ForeignCallNode'g1PreBarrierStub-2 ForeignCallDescriptor'G1WBPRECALL, (Word''toObject-1 oop))
                                             indexValue
                                         )
                                         (let [
@@ -19377,7 +19342,7 @@
                 #_"Word" thread (ReplacementsUtil'registerAsWord-1 threadRegister)
                 #_"Word" bufferAddress (Word''readWord-2 thread, HotSpot'g1CardQueueBufferOffset)
                 #_"Word" indexAddress (Word''add-2 thread, HotSpot'g1CardQueueIndexOffset)
-                #_"long" indexValue (#_"WordBase" .rawValue (Word''readWord-2 thread, HotSpot'g1CardQueueIndexOffset))
+                #_"long" indexValue (Word''rawValue-1 (Word''readWord-2 thread, HotSpot'g1CardQueueIndexOffset))
                 #_"long" cardStart (VMConfigNode'cardTableAddress-0)
                 #_"long" start (>>> (WriteBarrierSnippets'getPointerToFirstArrayElement-3 address, length, elementStride) HotSpot'cardTableShift)
                 #_"long" end (>>> (WriteBarrierSnippets'getPointerToLastArrayElement-3 address, length, elementStride) HotSpot'cardTableShift)
@@ -20147,7 +20112,7 @@
 (value-ns WordTypes
     (§ def #_"JavaKind" WordTypes'wordKind (.wordJavaKind HotSpot'target))
 
-    (§ def #_"ResolvedJavaType" WordTypes'wordBase         (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, WordBase))
+    (§ def #_"ResolvedJavaType" WordTypes'wordBase         (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, WordBase))
     (§ def #_"ResolvedJavaType" WordTypes'wordImpl         (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, Word))
     (§ def #_"ResolvedJavaType" WordTypes'wordFactory      (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, WordFactory))
     (§ def #_"ResolvedJavaType" WordTypes'objectAccess     (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, ObjectAccess))
@@ -20157,7 +20122,7 @@
     (§ def #_"ResolvedJavaType" WordTypes'methodPointer    (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, MethodPointer))
 
     (§ init
-        (Word'ensureInitialized-0)
+        (Word'ensureInitialized-0)
         (#_"ResolvedJavaType" .initialize WordTypes'wordImpl)
     )
 
@@ -20244,57 +20209,56 @@
 
     ; @HotSpotOperation(opcode = HotspotOpcode'FROM_POINTER)
     #_unused
-    (§ abstract #_"Pointer" MetaspacePointer''asWord-1 [#_"MetaspacePointer" this])
+    (§ abstract #_"Word" MetaspacePointer''asWord-1 [#_"MetaspacePointer" this])
 
     ;;;
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;
-     ; The offset is always treated as a SignedWord value. However, the static type is
-     ; WordBase to avoid the frequent casts of UnsignedWord values (where the caller
-     ; knows that the highest-order bit of the unsigned value is never used).
+     ; The offset is always treated as a SignedWord value. However, the static type is Word to avoid the frequent casts
+     ; of UnsignedWord values (where the caller knows that the highest-order bit of the unsigned value is never used).
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    (§ abstract #_"byte" MetaspacePointer''readByte-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"LocationIdentity" locationIdentity])
+    (§ abstract #_"byte" MetaspacePointer''readByte-3 [#_"MetaspacePointer" this, #_"Word" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
     #_unused
-    (§ abstract #_"char" MetaspacePointer''readChar-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"LocationIdentity" locationIdentity])
+    (§ abstract #_"char" MetaspacePointer''readChar-3 [#_"MetaspacePointer" this, #_"Word" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
     #_unused
-    (§ abstract #_"short" MetaspacePointer''readShort-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"LocationIdentity" locationIdentity])
+    (§ abstract #_"short" MetaspacePointer''readShort-3 [#_"MetaspacePointer" this, #_"Word" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    (§ abstract #_"int" MetaspacePointer''readInt-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_POINTER)
-    #_unused
-    (§ abstract #_"long" MetaspacePointer''readLong-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"LocationIdentity" locationIdentity])
-
-    ;;;
-     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;;
-    ; @Operation(opcode = WordOpcode'READ_POINTER)
-    (§ abstract #_"Word" MetaspacePointer''readWord-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"LocationIdentity" locationIdentity])
+    (§ abstract #_"int" MetaspacePointer''readInt-3 [#_"MetaspacePointer" this, #_"Word" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
     #_unused
-    (§ abstract #_"Object" MetaspacePointer''readObject-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"LocationIdentity" locationIdentity])
+    (§ abstract #_"long" MetaspacePointer''readLong-3 [#_"MetaspacePointer" this, #_"Word" offset, #_"LocationIdentity" locationIdentity])
+
+    ;;;
+     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'READ_POINTER)
+    (§ abstract #_"Word" MetaspacePointer''readWord-3 [#_"MetaspacePointer" this, #_"Word" offset, #_"LocationIdentity" locationIdentity])
+
+    ;;;
+     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
+     ;;
+    ; @Operation(opcode = WordOpcode'READ_POINTER)
+    #_unused
+    (§ abstract #_"Object" MetaspacePointer''readObject-3 [#_"MetaspacePointer" this, #_"Word" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
@@ -20347,42 +20311,42 @@
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     #_unused
-    (§ abstract #_"void" MetaspacePointer''writeByte-4 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"byte" val, #_"LocationIdentity" locationIdentity])
+    (§ abstract #_"void" MetaspacePointer''writeByte-4 [#_"MetaspacePointer" this, #_"Word" offset, #_"byte" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     #_unused
-    (§ abstract #_"void" MetaspacePointer''writeChar-4 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"char" val, #_"LocationIdentity" locationIdentity])
+    (§ abstract #_"void" MetaspacePointer''writeChar-4 [#_"MetaspacePointer" this, #_"Word" offset, #_"char" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     #_unused
-    (§ abstract #_"void" MetaspacePointer''writeShort-4 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"short" val, #_"LocationIdentity" locationIdentity])
+    (§ abstract #_"void" MetaspacePointer''writeShort-4 [#_"MetaspacePointer" this, #_"Word" offset, #_"short" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     #_unused
-    (§ abstract #_"void" MetaspacePointer''writeInt-4 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"int" val, #_"LocationIdentity" locationIdentity])
+    (§ abstract #_"void" MetaspacePointer''writeInt-4 [#_"MetaspacePointer" this, #_"Word" offset, #_"int" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     #_unused
-    (§ abstract #_"void" MetaspacePointer''writeLong-4 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"long" val, #_"LocationIdentity" locationIdentity])
+    (§ abstract #_"void" MetaspacePointer''writeLong-4 [#_"MetaspacePointer" this, #_"Word" offset, #_"long" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     #_unused
-    (§ abstract #_"void" MetaspacePointer''writeWord-4 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"WordBase" val, #_"LocationIdentity" locationIdentity])
+    (§ abstract #_"void" MetaspacePointer''writeWord-4 [#_"MetaspacePointer" this, #_"Word" offset, #_"Word" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Initializes the memory at address {@code (this + offset)}. Both the base address and offset
@@ -20390,14 +20354,14 @@
      ;;
     ; @Operation(opcode = WordOpcode'INITIALIZE)
     #_unused
-    (§ abstract #_"void" MetaspacePointer''initializeLong-4 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"long" val, #_"LocationIdentity" locationIdentity])
+    (§ abstract #_"void" MetaspacePointer''initializeLong-4 [#_"MetaspacePointer" this, #_"Word" offset, #_"long" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     #_unused
-    (§ abstract #_"void" MetaspacePointer''writeObject-4 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"Object" val, #_"LocationIdentity" locationIdentity])
+    (§ abstract #_"void" MetaspacePointer''writeObject-4 [#_"MetaspacePointer" this, #_"Word" offset, #_"Object" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
@@ -20439,7 +20403,7 @@
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     #_unused
-    (§ abstract #_"void" MetaspacePointer''writeWord-4 [#_"MetaspacePointer" this, #_"int" offset, #_"WordBase" val, #_"LocationIdentity" locationIdentity])
+    (§ abstract #_"void" MetaspacePointer''writeWord-4 [#_"MetaspacePointer" this, #_"int" offset, #_"Word" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
@@ -20453,49 +20417,49 @@
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
     #_unused
-    (§ abstract #_"byte" MetaspacePointer''readByte-2 [#_"MetaspacePointer" this, #_"WordBase" offset])
+    (§ abstract #_"byte" MetaspacePointer''readByte-2 [#_"MetaspacePointer" this, #_"Word" offset])
 
     ;;;
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
     #_unused
-    (§ abstract #_"char" MetaspacePointer''readChar-2 [#_"MetaspacePointer" this, #_"WordBase" offset])
+    (§ abstract #_"char" MetaspacePointer''readChar-2 [#_"MetaspacePointer" this, #_"Word" offset])
 
     ;;;
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
     #_unused
-    (§ abstract #_"short" MetaspacePointer''readShort-2 [#_"MetaspacePointer" this, #_"WordBase" offset])
+    (§ abstract #_"short" MetaspacePointer''readShort-2 [#_"MetaspacePointer" this, #_"Word" offset])
 
     ;;;
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
     #_unused
-    (§ abstract #_"int" MetaspacePointer''readInt-2 [#_"MetaspacePointer" this, #_"WordBase" offset])
+    (§ abstract #_"int" MetaspacePointer''readInt-2 [#_"MetaspacePointer" this, #_"Word" offset])
 
     ;;;
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
     #_unused
-    (§ abstract #_"long" MetaspacePointer''readLong-2 [#_"MetaspacePointer" this, #_"WordBase" offset])
+    (§ abstract #_"long" MetaspacePointer''readLong-2 [#_"MetaspacePointer" this, #_"Word" offset])
 
     ;;;
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
     #_unused
-    (§ abstract #_"Word" MetaspacePointer''readWord-2 [#_"MetaspacePointer" this, #_"WordBase" offset])
+    (§ abstract #_"Word" MetaspacePointer''readWord-2 [#_"MetaspacePointer" this, #_"Word" offset])
 
     ;;;
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
     #_unused
-    (§ abstract #_"Object" MetaspacePointer''readObject-2 [#_"MetaspacePointer" this, #_"WordBase" offset])
+    (§ abstract #_"Object" MetaspacePointer''readObject-2 [#_"MetaspacePointer" this, #_"Word" offset])
 
     ;;;
      ; Reads the memory at address {@code (this + offset)}. This access will decompress the oop if
@@ -20503,7 +20467,7 @@
      ;;
     ; @Operation(opcode = WordOpcode'READ_POINTER)
     #_unused
-    (§ abstract #_"Object" MetaspacePointer''readObject-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"BarrierType" barrierType])
+    (§ abstract #_"Object" MetaspacePointer''readObject-3 [#_"MetaspacePointer" this, #_"Word" offset, #_"BarrierType" barrierType])
 
     ;;;
      ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
@@ -20567,49 +20531,49 @@
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     #_unused
-    (§ abstract #_"void" MetaspacePointer''writeByte-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"byte" val])
+    (§ abstract #_"void" MetaspacePointer''writeByte-3 [#_"MetaspacePointer" this, #_"Word" offset, #_"byte" val])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     #_unused
-    (§ abstract #_"void" MetaspacePointer''writeChar-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"char" val])
+    (§ abstract #_"void" MetaspacePointer''writeChar-3 [#_"MetaspacePointer" this, #_"Word" offset, #_"char" val])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     #_unused
-    (§ abstract #_"void" MetaspacePointer''writeShort-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"short" val])
+    (§ abstract #_"void" MetaspacePointer''writeShort-3 [#_"MetaspacePointer" this, #_"Word" offset, #_"short" val])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     #_unused
-    (§ abstract #_"void" MetaspacePointer''writeInt-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"int" val])
+    (§ abstract #_"void" MetaspacePointer''writeInt-3 [#_"MetaspacePointer" this, #_"Word" offset, #_"int" val])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     #_unused
-    (§ abstract #_"void" MetaspacePointer''writeLong-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"long" val])
+    (§ abstract #_"void" MetaspacePointer''writeLong-3 [#_"MetaspacePointer" this, #_"Word" offset, #_"long" val])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     #_unused
-    (§ abstract #_"void" MetaspacePointer''writeWord-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"WordBase" val])
+    (§ abstract #_"void" MetaspacePointer''writeWord-3 [#_"MetaspacePointer" this, #_"Word" offset, #_"Word" val])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     #_unused
-    (§ abstract #_"void" MetaspacePointer''writeObject-3 [#_"MetaspacePointer" this, #_"WordBase" offset, #_"Object" val])
+    (§ abstract #_"void" MetaspacePointer''writeObject-3 [#_"MetaspacePointer" this, #_"Word" offset, #_"Object" val])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
@@ -20651,7 +20615,7 @@
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
     #_unused
-    (§ abstract #_"void" MetaspacePointer''writeWord-3 [#_"MetaspacePointer" this, #_"int" offset, #_"WordBase" val])
+    (§ abstract #_"void" MetaspacePointer''writeWord-3 [#_"MetaspacePointer" this, #_"int" offset, #_"Word" val])
 
     ;;;
      ; Writes the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
@@ -20677,15 +20641,13 @@
     (§ abstract! #_"boolean" KlassPointer''notEqual-2 [#_"KlassPointer" this, #_"KlassPointer" other])
 
     ; @HotSpotOperation(opcode = HotspotOpcode'TO_KLASS_POINTER)
-    (§ native #_"KlassPointer" KlassPointer'fromWord-1 [#_"Pointer" pointer])
+    (§ native #_"KlassPointer" KlassPointer'fromWord-1 [#_"Word" pointer])
 
     ; @HotSpotOperation(opcode = HotspotOpcode'READ_KLASS_POINTER)
-    #_native
-    (§ abstract! #_"KlassPointer" KlassPointer''readKlassPointer-3 [#_"KlassPointer" this, #_"int" offset, #_"LocationIdentity" locationIdentity])
+    (§ native #_"KlassPointer" KlassPointer''readKlassPointer-3 [#_"KlassPointer" this, #_"int" offset, #_"LocationIdentity" locationIdentity])
 
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_native
-    (§ abstract! #_"void" KlassPointer''writeKlassPointer-4 [#_"KlassPointer" this, #_"int" offset, #_"KlassPointer" t, #_"LocationIdentity" locationIdentity])
+    (§ native #_"void" KlassPointer''writeKlassPointer-4 [#_"KlassPointer" this, #_"int" offset, #_"KlassPointer" t, #_"LocationIdentity" locationIdentity])
 )
 
 ;;;
@@ -20707,7 +20669,7 @@
 
     ; @HotSpotOperation(opcode = HotspotOpcode'TO_METHOD_POINTER)
     #_unused
-    (§ native #_"MethodPointer" MethodPointer'fromWord-1 [#_"Pointer" pointer])
+    (§ native #_"MethodPointer" MethodPointer'fromWord-1 [#_"Word" pointer])
 )
 
 ;;;
@@ -35734,7 +35696,7 @@
 
     (§ method- #_"Variable" LIRGenerator''emitShift-5 [#_"LIRGenerator" this, #_"AMD64Shift" op, #_"OperandSize" size, #_"Value" a, #_"Value" b]
         (let [
-            #_"Variable" result (LIRGenerator''newVariable-2 this, (LIRKind''changeType-2 (LIRKind'combine-1* a, b), (#_"Value" .getPlatformKind a)))
+            #_"Variable" result (LIRGenerator''newVariable-2 this, (#_"ValueKind" .changeType (LIRKind'combine-1* a, b), (#_"Value" .getPlatformKind a)))
             #_"AllocatableValue" input (LIRGenerator''asAllocatable-2 this, a)
         ]
             (if (LIRValueUtil'isJavaConstant-1 b)
@@ -35815,7 +35777,7 @@
     (§ method! #_"Value" LIRGenerator''emitNarrow-3 [#_"LIRGenerator" this, #_"Value" inputVal, #_"int" bits]
         (when (and (= (#_"Value" .getPlatformKind inputVal) AMD64Kind/QWORD) (<= bits 32)) => inputVal
             ;; TODO make it possible to reinterpret Long as Int in LIR without move
-            (LIRGenerator''emitConvertOp-5 this, (LIRKind''changeType-2 (LIRKind'combine-1* inputVal), AMD64Kind/DWORD), AMD64RMOp'MOV, OperandSize'DWORD, inputVal)
+            (LIRGenerator''emitConvertOp-5 this, (#_"ValueKind" .changeType (LIRKind'combine-1* inputVal), AMD64Kind/DWORD), AMD64RMOp'MOV, OperandSize'DWORD, inputVal)
         )
     )
 
@@ -35826,15 +35788,15 @@
             (< 32 toBits)
                 ;; sign extend to 64 bits
                 (case fromBits
-                     8 (LIRGenerator''emitConvertOp-5 this, (LIRKind''changeType-2 AMD64Kind/QWORD (LIRKind'combine-1* inputVal)), AMD64RMOp'MOVSXB, OperandSize'QWORD, inputVal)
-                    16 (LIRGenerator''emitConvertOp-5 this, (LIRKind''changeType-2 AMD64Kind/QWORD (LIRKind'combine-1* inputVal)), AMD64RMOp'MOVSX, OperandSize'QWORD, inputVal)
-                    32 (LIRGenerator''emitConvertOp-5 this, (LIRKind''changeType-2 AMD64Kind/QWORD (LIRKind'combine-1* inputVal)), AMD64RMOp'MOVSXD, OperandSize'QWORD, inputVal)
+                     8 (LIRGenerator''emitConvertOp-5 this, (#_"ValueKind" .changeType AMD64Kind/QWORD (LIRKind'combine-1* inputVal)), AMD64RMOp'MOVSXB, OperandSize'QWORD, inputVal)
+                    16 (LIRGenerator''emitConvertOp-5 this, (#_"ValueKind" .changeType AMD64Kind/QWORD (LIRKind'combine-1* inputVal)), AMD64RMOp'MOVSX, OperandSize'QWORD, inputVal)
+                    32 (LIRGenerator''emitConvertOp-5 this, (#_"ValueKind" .changeType AMD64Kind/QWORD (LIRKind'combine-1* inputVal)), AMD64RMOp'MOVSXD, OperandSize'QWORD, inputVal)
                 )
             :else
                 ;; sign extend to 32 bits (smaller values are internally represented as 32 bit values)
                 (case fromBits
-                     8 (LIRGenerator''emitConvertOp-5 this, (LIRKind''changeType-2 AMD64Kind/DWORD (LIRKind'combine-1* inputVal)), AMD64RMOp'MOVSXB, OperandSize'DWORD, inputVal)
-                    16 (LIRGenerator''emitConvertOp-5 this, (LIRKind''changeType-2 AMD64Kind/DWORD (LIRKind'combine-1* inputVal)), AMD64RMOp'MOVSX, OperandSize'DWORD, inputVal)
+                     8 (LIRGenerator''emitConvertOp-5 this, (#_"ValueKind" .changeType AMD64Kind/DWORD (LIRKind'combine-1* inputVal)), AMD64RMOp'MOVSXB, OperandSize'DWORD, inputVal)
+                    16 (LIRGenerator''emitConvertOp-5 this, (#_"ValueKind" .changeType AMD64Kind/DWORD (LIRKind'combine-1* inputVal)), AMD64RMOp'MOVSX, OperandSize'DWORD, inputVal)
                     32 inputVal
                 )
         )
@@ -35854,7 +35816,7 @@
                 )
             :else
                 (let [
-                    #_"LIRKind" resultKind (LIRKind''changeType-2 (LIRKind'combine-1* inputVal), (if (< 32 toBits) AMD64Kind/QWORD AMD64Kind/DWORD))
+                    #_"LIRKind" resultKind (#_"ValueKind" .changeType (LIRKind'combine-1* inputVal), (if (< 32 toBits) AMD64Kind/QWORD AMD64Kind/DWORD))
                 ]
                     ;; Always emit DWORD operations, even if the resultKind is Long. On AMD64, all DWORD operations
                     ;; implicitly set the upper half of the register to 0, which is what we want anyway. Compared to
@@ -35878,7 +35840,7 @@
 
     (§ method! #_"Variable" LIRGenerator''emitBitCount-2 [#_"LIRGenerator" this, #_"Value" value]
         (let [
-            #_"Variable" result (LIRGenerator''newVariable-2 this, (LIRKind''changeType-2 (LIRKind'combine-1* value), AMD64Kind/DWORD))
+            #_"Variable" result (LIRGenerator''newVariable-2 this, (#_"ValueKind" .changeType (LIRKind'combine-1* value), AMD64Kind/DWORD))
         ]
             (if (= (#_"Value" .getPlatformKind value) AMD64Kind/QWORD)
                 (LIRGenerator''append-2 this, (RMOp'new-4 AMD64RMOp'POPCNT, OperandSize'QWORD, result, (LIRGenerator''asAllocatable-2 this, value)))
@@ -35891,7 +35853,7 @@
     #_unused
     (§ method! #_"Variable" LIRGenerator''emitBitScanForward-2 [#_"LIRGenerator" this, #_"Value" value]
         (let [
-            #_"Variable" result (LIRGenerator''newVariable-2 this, (LIRKind''changeType-2 (LIRKind'combine-1* value), AMD64Kind/DWORD))
+            #_"Variable" result (LIRGenerator''newVariable-2 this, (#_"ValueKind" .changeType (LIRKind'combine-1* value), AMD64Kind/DWORD))
         ]
             (LIRGenerator''append-2 this, (RMOp'new-4 AMD64RMOp'BSF, OperandSize'QWORD, result, (LIRGenerator''asAllocatable-2 this, value)))
             result
@@ -35901,7 +35863,7 @@
     #_unused
     (§ method! #_"Variable" LIRGenerator''emitBitScanReverse-2 [#_"LIRGenerator" this, #_"Value" value]
         (let [
-            #_"Variable" result (LIRGenerator''newVariable-2 this, (LIRKind''changeType-2 (LIRKind'combine-1* value), AMD64Kind/DWORD))
+            #_"Variable" result (LIRGenerator''newVariable-2 this, (#_"ValueKind" .changeType (LIRKind'combine-1* value), AMD64Kind/DWORD))
         ]
             (if (= (#_"Value" .getPlatformKind value) AMD64Kind/QWORD)
                 (LIRGenerator''append-2 this, (RMOp'new-4 AMD64RMOp'BSR, OperandSize'QWORD, result, (LIRGenerator''asAllocatable-2 this, value)))
@@ -35913,7 +35875,7 @@
 
     (§ method! #_"Value" LIRGenerator''emitCountLeadingZeros-2 [#_"LIRGenerator" this, #_"Value" value]
         (let [
-            #_"Variable" result (LIRGenerator''newVariable-2 this, (LIRKind''changeType-2 (LIRKind'combine-1* value), AMD64Kind/DWORD))
+            #_"Variable" result (LIRGenerator''newVariable-2 this, (#_"ValueKind" .changeType (LIRKind'combine-1* value), AMD64Kind/DWORD))
         ]
             (if (= (#_"Value" .getPlatformKind value) AMD64Kind/QWORD)
                 (LIRGenerator''append-2 this, (RMOp'new-4 AMD64RMOp'LZCNT, OperandSize'QWORD, result, (LIRGenerator''asAllocatable-2 this, value)))
@@ -35925,7 +35887,7 @@
 
     (§ method! #_"Value" LIRGenerator''emitCountTrailingZeros-2 [#_"LIRGenerator" this, #_"Value" value]
         (let [
-            #_"Variable" result (LIRGenerator''newVariable-2 this, (LIRKind''changeType-2 (LIRKind'combine-1* value), AMD64Kind/DWORD))
+            #_"Variable" result (LIRGenerator''newVariable-2 this, (#_"ValueKind" .changeType (LIRKind'combine-1* value), AMD64Kind/DWORD))
         ]
             (if (= (#_"Value" .getPlatformKind value) AMD64Kind/QWORD)
                 (LIRGenerator''append-2 this, (RMOp'new-4 AMD64RMOp'TZCNT, OperandSize'QWORD, result, (LIRGenerator''asAllocatable-2 this, value)))
@@ -37064,8 +37026,7 @@
     ;;;
      ; Sorts non-array fields before array fields.
      ;;
-    #_unused
-    (§ override! #_"int" ValueFieldInfo''compareTo-2 [#_"ValueFieldInfo" this, #_"FieldInfo" o]
+    (§ override! #_"int" #_"Comparable" .compareTo [#_"ValueFieldInfo" this, #_"FieldInfo" o]
         (if (#_"Class" .isAssignableFrom LIRIntrospection'VALUE_ARRAY_CLASS, (:type o))
             (when-not (#_"Class" .isAssignableFrom LIRIntrospection'VALUE_ARRAY_CLASS, (:type this))
                 (§ return -1)
@@ -37074,7 +37035,7 @@
                 (§ return 1)
             )
         )
-        (FieldInfo''compareTo-2 (§ super ), o)
+        (#_"Comparable" .compareTo (§ super ), o)
     )
 )
 
@@ -43200,11 +43161,11 @@
     )
 
     (§ method! #_"int" AbstractMergeNode''forwardEndIndex-2 [#_"AbstractMergeNode" this, #_"EndNode" end]
-        (NodeList''indexOf-2 (:ends this), end)
+        (#_"List" .indexOf (:ends this), end)
     )
 
     (§ method! #_"void" AbstractMergeNode''addForwardEnd-2 [#_"AbstractMergeNode" this, #_"EndNode" end]
-        (NodeList''add-2 (:ends this), end)
+        (#_"List" .add (:ends this), end)
         nil
     )
 
@@ -43258,7 +43219,7 @@
     )
 
     (§ method #_"void" AbstractMergeNode''deleteEnd-2 [#_"AbstractMergeNode" this, #_"AbstractEndNode" end]
-        (NodeList''remove-2 (:ends this), end)
+        (#_"List" .remove (:ends this), end)
         nil
     )
 
@@ -43404,7 +43365,7 @@
                                 )
                                 (let [
                                     #_"ValuePhiNode" returnValuePhi (when-not (or (nil? (:result node)) (not (AbstractMergeNode''isPhiAtMerge-2 this, (:result node)))) (:result node))
-                                    #_"List<EndNode>" endNodes (NodeList''snapshot-1 (:ends this))
+                                    #_"List<EndNode>" endNodes (NodeIterable''snapshot-1 (:ends this))
                                 ]
                                     (doseq [#_"EndNode" end endNodes]
                                         (let [
@@ -48313,7 +48274,7 @@
     )
 
     (§ method! #_"Block" ControlFlowGraph''blockFor-2 [#_"ControlFlowGraph" this, #_"Node" node]
-        (NodeMap''get-2 (:nodeToBlock this), node)
+        (get (:nodeToBlock this) node)
     )
 
     (§ method- #_"void" ControlFlowGraph''identifyBlock-2 [#_"ControlFlowGraph" this, #_"Block" block]
@@ -48368,7 +48329,7 @@
                                         (condp instance? end
                                             EndNode
                                                 (let [
-                                                    #_"Block" suxBlock (NodeMap''get-2 nodeMap, (AbstractEndNode''merge-1 end))
+                                                    #_"Block" suxBlock (get nodeMap (AbstractEndNode''merge-1 end))
                                                 ]
                                                     (when (= (:id suxBlock) ControlFlowGraph'BLOCK_ID_INITIAL)
                                                         (§ ass tos (inc tos))
@@ -48379,12 +48340,12 @@
                                                 )
                                             IfNode
                                                 (let [
-                                                    #_"Block" trueSucc (NodeMap''get-2 nodeMap, (:trueSuccessor end))
+                                                    #_"Block" trueSucc (get nodeMap (:trueSuccessor end))
                                                 ]
                                                     (§ ass tos (inc tos))
                                                     (aset stack tos trueSucc)
                                                     (let [
-                                                        #_"Block" falseSucc (NodeMap''get-2 nodeMap, (:falseSuccessor end))
+                                                        #_"Block" falseSucc (get nodeMap (:falseSuccessor end))
                                                     ]
                                                         (§ ass tos (inc tos))
                                                         (aset stack tos falseSucc)
@@ -48400,7 +48361,7 @@
                                                 )
                                             LoopEndNode
                                                 (do
-                                                    (§ ass! block (Block''setSuccessors-2 block, (into-array Block [ (NodeMap''get-2 nodeMap, (:loopBegin end)) ])))
+                                                    (§ ass! block (Block''setSuccessors-2 block, (into-array Block [ (get nodeMap (:loopBegin end)) ])))
                                                     tos
                                                 )
                                             ControlSinkNode
@@ -48415,7 +48376,7 @@
                                                     tos
                                                         (loop-when [tos tos #_"ISeq" s (seq (Node''successors-1 end))] (some? s) => tos
                                                             (let [
-                                                                #_"Block" sux (NodeMap''get-2 nodeMap, (first s))
+                                                                #_"Block" sux (get nodeMap (first s))
                                                                 tos (inc tos)
                                                             ]
                                                                 (aset stack tos sux)
@@ -48445,7 +48406,7 @@
                                                     #_"Block[]" predecessors (make-array Block n)
                                                 ]
                                                     (dotimes [#_"int" i n]
-                                                        (aset predecessors i (NodeMap''get-2 nodeMap, (AbstractMergeNode''forwardEndAt-2 beginNode, i)))
+                                                        (aset predecessors i (get nodeMap (AbstractMergeNode''forwardEndAt-2 beginNode, i)))
                                                     )
                                                     (§ ass! block (Block''setPredecessors-2 block, predecessors))
                                                 )
@@ -48483,10 +48444,10 @@
             #_"Block[]" predecessors (make-array Block (+ forwardEndCount (count loopEnds)))
         ]
             (dotimes [#_"int" i forwardEndCount]
-                (aset predecessors i (NodeMap''get-2 nodeMap, (AbstractMergeNode''forwardEndAt-2 loopBeginNode, i)))
+                (aset predecessors i (get nodeMap (AbstractMergeNode''forwardEndAt-2 loopBeginNode, i)))
             )
             (dotimes [#_"int" i (count loopEnds)]
-                (aset predecessors (+ i forwardEndCount) (NodeMap''get-2 nodeMap, (nth loopEnds i)))
+                (aset predecessors (+ i forwardEndCount) (get nodeMap (nth loopEnds i)))
             )
             (§ ass! block (Block''setPredecessors-2 block, predecessors))
         )
@@ -48562,13 +48523,13 @@
                                     (#_"List" .add (:blocks loop), block)
 
                                     (doseq [#_"LoopEndNode" end (LoopBeginNode''loopEnds-1 beginNode)]
-                                        (ControlFlowGraph'computeLoopBlocks-4 (NodeMap''get-2 (:nodeToBlock this), end), loop, stack, true)
+                                        (ControlFlowGraph'computeLoopBlocks-4 (get (:nodeToBlock this) end), loop, stack, true)
                                     )
 
                                     (when-not (= (:guardsStage (:graph this)) GuardsStage'AFTER_FSA)
                                         (doseq [#_"LoopExitNode" exit (LoopBeginNode''loopExits-1 beginNode)]
                                             (let [
-                                                #_"Block" exitBlock (NodeMap''get-2 (:nodeToBlock this), exit)
+                                                #_"Block" exitBlock (get (:nodeToBlock this) exit)
                                             ]
                                                 (ControlFlowGraph'computeLoopBlocks-4 (Block''getFirstPredecessor-1 exitBlock), loop, stack, true)
                                                 (Loop''addExit-2 loop, exitBlock)
@@ -50457,7 +50418,7 @@
                 (let [
                     #_"List<AbstractBeginNode>" deadSuccessors (NodeIterable''snapshot-1 (NodeList''filter-2 (:successors this), (ß s -> (§ fun (not (#_"ArrayList" .contains newSuccessors, s))))))
                 ]
-                    (NodeList''clear-1 (:successors this))
+                    (#_"List" .clear (:successors this))
 
                     ;; Create the new switch node. This is done before removing dead successors as 'killCFG' could edit
                     ;; some of the inputs (e.g. if 'newValue' is a loop-phi of the loop that dies while removing successors).
@@ -51234,7 +51195,7 @@
     )
 
     (§ method! #_"void" SwitchNode''setBlockSuccessor-3 [#_"SwitchNode" this, #_"int" i, #_"AbstractBeginNode" s]
-        (NodeList''set-3 (:successors this), i, s)
+        (#_"List" .set (:successors this), i, s)
         nil
     )
 
@@ -51492,8 +51453,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"boolean" FieldLocationIdentity''isImmutable-1 [#_"FieldLocationIdentity" this]
+    (§ override! #_"boolean" #_"LocationIdentity" .isImmutable [#_"FieldLocationIdentity" this]
         false
     )
 )
@@ -51819,7 +51779,7 @@
                     (assoc this :virtualObjectMappings (NodeInputList'new-1 this))
                 )
         ]
-            (NodeList''add-2 (:virtualObjectMappings this), virtualObject)
+            (#_"List" .add (:virtualObjectMappings this), virtualObject)
             this
         )
     )
@@ -53500,7 +53460,7 @@
                             ;; each successor of the if gets a new merge if needed
                             (let [
                                 [#_"MergeNode" trueMerge #_"MergeNode" falseMerge]
-                                    (loop-when [trueMerge nil falseMerge nil #_"ISeq" s (seq (NodeList''snapshot-1 (:ends merge)))] (some? s) => [trueMerge falseMerge]
+                                    (loop-when [trueMerge nil falseMerge nil #_"ISeq" s (seq (NodeIterable''snapshot-1 (:ends merge)))] (some? s) => [trueMerge falseMerge]
                                         (let [
                                             #_"EndNode" end (first s)
                                             #_"Node" value (PhiNode''valueAt-2 phi, end)
@@ -54132,7 +54092,7 @@
                         (let [
                             receiver (Lowerer'createNullCheckedValue-3 receiver, this, lowerer)
                         ]
-                            (NodeList''set-3 parameters, 0, receiver)
+                            (#_"List" .set parameters, 0, receiver)
                             receiver
                         )
                     )
@@ -54152,7 +54112,7 @@
                                         ;; code entry as HotSpot does not guarantee they are final values.
                                         #_"AddressNode" address (Lowerer'createOffsetAddress-3 (:graph this), metaspaceMethod, HotSpot'methodCompiledEntryOffset)
                                         #_"ReadNode" compiledEntry (Graph''add-2 (:graph this), (ReadNode'new-4 address, (LocationIdentity/any), (StampFactory'forKind-1 (.wordJavaKind HotSpot'target)), BarrierType'NONE))
-                                        loweredCallTarget (Graph''add-2 (:graph this), (HotSpotIndirectCallTargetNode'new-8 metaspaceMethod, compiledEntry, (NodeList''toArray-2 parameters, (make-array ValueNode (count parameters))), (CallTargetNode''returnStamp-1 callTarget), signature, (CallTargetNode''targetMethod-1 callTarget), HotSpotCallingConventionType/JavaCall, (CallTargetNode''invokeKind-1 callTarget)))
+                                        loweredCallTarget (Graph''add-2 (:graph this), (HotSpotIndirectCallTargetNode'new-8 metaspaceMethod, compiledEntry, (#_"List" .toArray parameters, (make-array ValueNode (count parameters))), (CallTargetNode''returnStamp-1 callTarget), signature, (CallTargetNode''targetMethod-1 callTarget), HotSpotCallingConventionType/JavaCall, (CallTargetNode''invokeKind-1 callTarget)))
                                     ]
                                         (Graph''addBeforeFixed-3 (:graph this), this, metaspaceMethod)
                                         (Graph''addAfterFixed-3 (:graph this), metaspaceMethod, compiledEntry)
@@ -54161,7 +54121,7 @@
                                 )
                             )
                         )
-                        (Graph''add-2 (:graph this), (HotSpotDirectCallTargetNode'new-6 (NodeList''toArray-2 parameters, (make-array ValueNode (count parameters))), (CallTargetNode''returnStamp-1 callTarget), signature, (CallTargetNode''targetMethod-1 callTarget), HotSpotCallingConventionType/JavaCall, (CallTargetNode''invokeKind-1 callTarget)))
+                        (Graph''add-2 (:graph this), (HotSpotDirectCallTargetNode'new-6 (#_"List" .toArray parameters, (make-array ValueNode (count parameters))), (CallTargetNode''returnStamp-1 callTarget), signature, (CallTargetNode''targetMethod-1 callTarget), HotSpotCallingConventionType/JavaCall, (CallTargetNode''invokeKind-1 callTarget)))
                     )
             ]
                 (§ ass! callTarget (Node''replaceAndDelete-2 callTarget, loweredCallTarget))
@@ -57816,8 +57776,7 @@
         (NamedLocationIdentity'new-2 name, immutable)
     )
 
-    #_unused
-    (§ override #_"boolean" NamedLocationIdentity''isImmutable-1 [#_"NamedLocationIdentity" this]
+    (§ override! #_"boolean" #_"LocationIdentity" .isImmutable [#_"NamedLocationIdentity" this]
         (:immutable this)
     )
 
@@ -57910,14 +57869,14 @@
      ;;
     (§ method! #_"void" PhiNode''initializeValueAt-3 [#_"PhiNode" this, #_"int" i, #_"ValueNode" x]
         (while (<= (count (PhiNode''values-1 this)) i)
-            (NodeList''add-2 (PhiNode''values-1 this), nil)
+            (#_"List" .add (PhiNode''values-1 this), nil)
         )
-        (NodeList''set-3 (PhiNode''values-1 this), i, x)
+        (#_"List" .set (PhiNode''values-1 this), i, x)
         nil
     )
 
     (§ method! #_"void" PhiNode''setValueAt-3 [#_"PhiNode" this, #_"int" i, #_"ValueNode" x]
-        (NodeList''set-3 (PhiNode''values-1 this), i, x)
+        (#_"List" .set (PhiNode''values-1 this), i, x)
         nil
     )
 
@@ -57940,12 +57899,12 @@
     )
 
     (§ method! #_"void" PhiNode''addInput-2 [#_"PhiNode" this, #_"ValueNode" x]
-        (NodeList''add-2 (PhiNode''values-1 this), x)
+        (#_"List" .add (PhiNode''values-1 this), x)
         nil
     )
 
     (§ method! #_"void" PhiNode''removeInput-2 [#_"PhiNode" this, #_"int" index]
-        (NodeList''remove-2 (PhiNode''values-1 this), index)
+        (#_"List" .remove (PhiNode''values-1 this), index)
         nil
     )
 
@@ -58907,17 +58866,17 @@
  ;
  ; @anno StaticDeoptimizingNode.GuardPriority
  ;;
-(value-ns GuardPriority
+(value-ns GuardPriority (§ implements Comparable #_"<GuardPriority>")
     (§ enum GuardPriority'Speculation)
     (§ enum GuardPriority'Profile)
     (§ enum GuardPriority'None)
 
     (§ defn #_"boolean" GuardPriority'isHigherPriorityThan-2 [#_"GuardPriority" a, #_"GuardPriority" b]
-        (neg? (GuardPriority''compareTo-2 a, b))
+        (neg? (#_"Comparable" .compareTo a, b))
     )
 
     (§ defn #_"boolean" GuardPriority'isLowerPriorityThan-2 [#_"GuardPriority" a, #_"GuardPriority" b]
-        (pos? (GuardPriority''compareTo-2 a, b))
+        (pos? (#_"Comparable" .compareTo a, b))
     )
 
     (§ defn #_"GuardPriority" GuardPriority'highest-0 []
@@ -61007,7 +60966,7 @@
     )
 
     (§ method! #_"void" CommitAllocationNode''addLocks-2 [#_"CommitAllocationNode" this, #_"List<MonitorIdNode>" monitorIds]
-        (NodeList''addAll-2 (:locks this), monitorIds)
+        (#_"List" .addAll (:locks this), monitorIds)
         (#_"ArrayList" .add (:lockIndexes this), (count (:locks this)))
         nil
     )
@@ -61271,7 +61230,7 @@
             #_"boolean[]" used (boolean-array (count (:virtualObjects this)))
             #_"int" usedCount
                 (loop-when [usedCount 0 #_"ISeq" s (seq (NodeIterable''filter-2 (Node''usages-1 this), AllocatedObjectNode))] (some? s) => usedCount
-                    (aset used (NodeList''indexOf-2 (:virtualObjects this), (:virtualObject (first s))) true)
+                    (aset used (#_"List" .indexOf (:virtualObjects this), (:virtualObject (first s))) true)
                     (recur (inc usedCount) (next s))
                 )
         ]
@@ -61296,7 +61255,7 @@
                                                 (when (nth used objIndex) => [usedCount progress?]
                                                     (loop-when [usedCount usedCount progress? progress? #_"int" i 0] (< i (VirtualObjectNode''entryCount-1 virtualObject)) => [usedCount progress?]
                                                         (let [
-                                                            #_"int" index (NodeList''indexOf-2 (:virtualObjects this), (nth (:values this) (+ valuePos i)))
+                                                            #_"int" index (#_"List" .indexOf (:virtualObjects this), (nth (:values this) (+ valuePos i)))
                                                             [usedCount progress?]
                                                                 (when (and (not= index -1) (not (nth used index))) => [usedCount progress?]
                                                                     (aset used index true)
@@ -61342,12 +61301,12 @@
                                         )
                                     )
                             ]
-                                (NodeList''clear-1 (:virtualObjects this))
-                                (NodeList''addAll-2 (:virtualObjects this), newVirtualObjects)
-                                (NodeList''clear-1 (:locks this))
-                                (NodeList''addAll-2 (:locks this), newLocks)
-                                (NodeList''clear-1 (:values this))
-                                (NodeList''addAll-2 (:values this), newValues)
+                                (#_"List" .clear (:virtualObjects this))
+                                (#_"List" .addAll (:virtualObjects this), newVirtualObjects)
+                                (#_"List" .clear (:locks this))
+                                (#_"List" .addAll (:locks this), newLocks)
+                                (#_"List" .clear (:values this))
+                                (#_"List" .addAll (:values this), newValues)
                                 (§ ass! this (assoc this :lockIndexes newLockIndexes))
                                 (§ ass! this (assoc this :ensureVirtual newEnsureVirtual))
                             )
@@ -62760,8 +62719,8 @@
 
     (§ method- #_"boolean" ConditionalEliminationInstance''canScheduleAbove-4 [#_"ConditionalEliminationInstance" this, #_"Node" test, #_"Node" target, #_"ValueNode" knownToBeAbove]
         (let [
-            #_"Block" targetBlock (NodeMap''get-2 (:nodeToBlock this), target)
-            #_"Block" testBlock (NodeMap''get-2 (:nodeToBlock this), test)
+            #_"Block" targetBlock (get (:nodeToBlock this) target)
+            #_"Block" testBlock (get (:nodeToBlock this) test)
         ]
             (or
                 (when (and (some? targetBlock) (some? testBlock))
@@ -63121,7 +63080,7 @@
                     #_"Node" node (NodeStack''pop-1 (:undoOperations this))
                 ]
                     (when (Node''isAlive-1 node)
-                        (NodeMap''set-3 (:map this), node, (:parent (NodeMap''get-2 (:map this), node)))
+                        (NodeMap''set-3 (:map this), node, (:parent (get (:map this) node)))
                     )
                 )
             )
@@ -63872,7 +63831,7 @@
             (when (instance? MergeNode merge)
                 (let [
                     #_"NodeMap<Block>" blockToNodeMap (:nodeToBlockMap (:schedule this))
-                    #_"Block" mergeBlock (NodeMap''get-2 blockToNodeMap, merge)
+                    #_"Block" mergeBlock (get blockToNodeMap merge)
                     #_"Block" mergeBlockDominator (:dominator mergeBlock)
                     #_"EconomicMap<ValueNode, Stamp>" currentEndMap (get (:endMaps this) merge)
                 ]
@@ -63901,7 +63860,7 @@
                             (let [
                                 #_"int" lastMark (:tos (:undoOperations this))
                             ]
-                                (loop-when [#_"Block" currentBlock (NodeMap''get-2 blockToNodeMap, node)] (not= currentBlock mergeBlockDominator)
+                                (loop-when [#_"Block" currentBlock (get blockToNodeMap node)] (not= currentBlock mergeBlockDominator)
                                     (let [
                                         #_"int" mark (BlockMap''get-2 (:blockActionStart this), currentBlock)
                                     ]
@@ -63957,7 +63916,7 @@
     )
 
     (§ defn- #_"Block" RawConditionalEliminationVisitor'getBlock-2 [#_"ValueNode" node, #_"NodeMap<Block>" blockToNodeMap]
-        (NodeMap''get-2 blockToNodeMap, (if (instance? PhiNode node) (PhiNode''merge-1 node) node))
+        (get blockToNodeMap (if (instance? PhiNode node) (PhiNode''merge-1 node) node))
     )
 
     (§ method! #_"void" RawConditionalEliminationVisitor''processUnary-2 [#_"RawConditionalEliminationVisitor" this, #_"UnaryNode" node]
@@ -64149,7 +64108,7 @@
                     #_"Node" node (NodeStack''pop-1 (:undoOperations this))
                 ]
                     (when (Node''isAlive-1 node)
-                        (NodeMap''set-3 (:stampMap this), node, (:parent (NodeMap''get-2 (:stampMap this), node)))
+                        (NodeMap''set-3 (:stampMap this), node, (:parent (get (:stampMap this) node)))
                     )
                 )
             )
@@ -64998,7 +64957,7 @@
         (let [
             #_"ArrayList<Node>" result (or parameterUsages (ArrayList.))
         ]
-            (NodeIterable''snapshotTo-2 (Node''usages-1 param), result)
+            (NodeIterable''snapshot-2 (Node''usages-1 param), result)
             result
         )
     )
@@ -65334,19 +65293,19 @@
                     #_"Node" node (#_"ArrayDeque" .pop workList)
                     #_"ValueNode" currentValue (#_"ArrayDeque" .pop valueList)
                 ]
-                    (when-not (NodeMap''containsKey-2 seen, node)
-                        (NodeMap''put-3 seen, node, node)
+                    (when-not (contains? seen node)
+                        (#_"Map" .put seen, node, node)
                         (when (and (instance? StateSplit node) (not= node originalMerge))
                             (let [
                                 #_"FrameState" state (StateSplit''stateAfter-1 node)
                             ]
-                                (when (and (some? state) (NodeList''contains-2 (:values state), returnPhi))
+                                (when (and (some? state) (#_"List" .contains (:values state), returnPhi))
                                     (let [
                                         #_"FrameState" duplicate (FrameState''duplicate-1 state)
                                     ]
                                         (loop-when-recur [#_"int" i 0 #_"ISeq" s (seq (:values state))] (some? s) [(inc i) (next s)]
                                             (when (= (first s) returnPhi)
-                                                (NodeList''set-3 (:values duplicate), i, currentValue)
+                                                (#_"List" .set (:values duplicate), i, currentValue)
                                             )
                                         )
                                         (StateSplit''setStateAfter-2 node, duplicate)
@@ -67485,7 +67444,7 @@
                         (condp instance? reason
                             ValuePhiNode
                                 (if (= (PhiNode''merge-1 reason) merge)
-                                    [(NodeList''snapshot-1 (ValuePhiNode''values-1 reason)) 1]
+                                    [(NodeIterable''snapshot-1 (ValuePhiNode''values-1 reason)) 1]
                                     (§ return )
                                 )
                             ConstantNode
@@ -67499,7 +67458,7 @@
                             (when (instance? ValuePhiNode speculation) => [nil expectedPhis]
                                 (if-not (= (PhiNode''merge-1 speculation) merge)
                                     (§ return )
-                                    [(NodeList''snapshot-1 (ValuePhiNode''values-1 speculation)) (inc expectedPhis)]
+                                    [(NodeIterable''snapshot-1 (ValuePhiNode''values-1 speculation)) (inc expectedPhis)]
                                 )
                             )
                     ]
@@ -67628,7 +67587,7 @@
      ; As an exception to all the above, a probability of 1 is assumed for a FixedNode that
      ; appears to be dead-code (i.e. lacks a predecessor).
      ;;
-    (§ override! #_"double" FixedNodeProbabilityCache''applyAsDouble-2 [#_"FixedNodeProbabilityCache" this, #_"FixedNode" node]
+    (§ method! #_"double" FixedNodeProbabilityCache''applyAsDouble-2 [#_"FixedNodeProbabilityCache" this, #_"FixedNode" node]
         (let [
             node (FixedNodeProbabilityCache'findBegin-1 node)
         ]
@@ -68439,7 +68398,7 @@
                                                             (let [
                                                                 #_"Node" node (PhiNode''valueAt-2 phi, (+ i (AbstractMergeNode''forwardEndCount-1 loopBegin)))
                                                                 changed?
-                                                                    (when (and (some? node) (nil? (NodeMap''get-2 entries, node))) => changed?
+                                                                    (when (and (some? node) (nil? (get entries node))) => changed?
                                                                         (ScheduleInstance'processStack-5 node, startBlock, entries, visited, stack)
                                                                         true
                                                                     )
@@ -68480,7 +68439,7 @@
                             #_"AbstractBeginNode" primarySuccessor (ControlSplitNode''getPrimarySuccessor-1 fixedNode)
                         ]
                             (when (some? primarySuccessor)
-                                (§ ass! (NodeMap''get-2 entries, fixedNode) (MicroBlock''prependChildrenTo-2 (NodeMap''get-2 entries, fixedNode), (NodeMap''get-2 entries, primarySuccessor)))
+                                (§ ass! (get entries fixedNode) (MicroBlock''prependChildrenTo-2 (get entries fixedNode), (get entries primarySuccessor)))
                             )
                         )
                     )
@@ -68493,7 +68452,7 @@
                     (doseq [#_"FixedNode" node (AbstractBeginNode''getBlockNodes-1 (:beginNode block))]
                         (NodeMap''set-3 nodeToBlock, node, block)
                         (#_"ArrayList" .add nodes, node)
-                        (loop-when-recur [#_"NodeEntry" next (:head (NodeMap''get-2 entries, node))] (some? next) [(:next next)]
+                        (loop-when-recur [#_"NodeEntry" next (:head (get entries node))] (some? next) [(:next next)]
                             (NodeMap''set-3 nodeToBlock, (:node next), block)
                             (#_"ArrayList" .add nodes, (:node next))
                         )
@@ -68706,7 +68665,7 @@
                         #_"ValueNode" value (ProxyNode''value-1 proxy)
                     ]
                         ;; if multiple proxies reference the same value, schedule the value of a proxy once
-                        (when (and (some? value) (= (NodeMap''get-2 nodeMap, value) block) (NodeBitMap''isMarked-2 unprocessed, value))
+                        (when (and (some? value) (= (get nodeMap value) block) (NodeBitMap''isMarked-2 unprocessed, value))
                             (ScheduleInstance'sortIntoList-6 value, block, result, nodeMap, unprocessed, nil)
                         )
                     )
@@ -68730,7 +68689,7 @@
                                             (ScheduleInstance'sortIntoList-6 node, block, result, nodeMap, unprocessed, nil)
                                             watchList
                                         )
-                                    (and (= (NodeMap''get-2 nodeMap, node) block) (instance? FloatingReadNode node))
+                                    (and (= (get nodeMap node) block) (instance? FloatingReadNode node))
                                         (if (ScheduleInstance'isImplicitNullOpportunity-2 node, block)
                                             (do
                                                 ;; Schedule at the beginning of the block.
@@ -68830,7 +68789,7 @@
         (when-not (instance? PhiNode node)
             (NodeBitMap''clear-2 unprocessed, node)
             (doseq [#_"Node" input (Node''inputs-1 node)]
-                (when (and (= (NodeMap''get-2 nodeMap, input) block) (NodeBitMap''isMarked-2 unprocessed, input) (not= input excludeNode))
+                (when (and (= (get nodeMap input) block) (NodeBitMap''isMarked-2 unprocessed, input) (not= input excludeNode))
                     (ScheduleInstance'sortIntoList-6 input, block, result, nodeMap, unprocessed, excludeNode)
                 )
             )
@@ -68907,7 +68866,7 @@
                 ;; An input to a PhiNode is used at the end of the predecessor block that
                 ;; corresponds to the PhiNode input. One PhiNode can use an input multiple times.
                 (let [
-                    #_"Block" mergeBlock (NodeMap''get-2 currentNodeMap, (PhiNode''merge-1 usage))
+                    #_"Block" mergeBlock (get currentNodeMap (PhiNode''merge-1 usage))
                 ]
                     (loop-when-recur [block block #_"int" i 0]
                                      (< i (PhiNode''valueCount-1 usage))
@@ -68917,14 +68876,14 @@
                 )
             AbstractBeginNode
                 (let [
-                    #_"Block" otherBlock (NodeMap''get-2 currentNodeMap, usage)
+                    #_"Block" otherBlock (get currentNodeMap usage)
                 ]
                     (ControlFlowGraph'commonDominator-2 block, (if (instance? StartNode usage) otherBlock (:dominator otherBlock)))
                 )
             #_else
                 ;; All other types of usages: Put the input into the same block as the usage.
                 (let [
-                    #_"Block" otherBlock (NodeMap''get-2 currentNodeMap, (if (instance? ProxyNode usage) (:loopExit usage) usage))
+                    #_"Block" otherBlock (get currentNodeMap (if (instance? ProxyNode usage) (:loopExit usage) usage))
                 ]
                     (ControlFlowGraph'commonDominator-2 block, otherBlock)
                 )
@@ -68933,7 +68892,7 @@
 
     (§ defn- #_"void" ScheduleInstance'processNodes-5 [#_"NodeBitMap" visited, #_"NodeMap<MicroBlock>" entries, #_"NodeStack" stack, #_"MicroBlock" startBlock, #_"Iterable<? extends Node>" nodes]
         (doseq [#_"Node" node nodes]
-            (when (nil? (NodeMap''get-2 entries, node))
+            (when (nil? (get entries node))
                 (ScheduleInstance'processStack-5 node, startBlock, entries, visited, stack)
             )
         )
@@ -68944,7 +68903,7 @@
         (NodeStack''pop-1 stack)
         (when (NodeBitMap''checkAndMarkInc-2 visited, phiNode)
             (let [
-                #_"MicroBlock" mergeBlock (NodeMap''get-2 nodeToBlock, (PhiNode''merge-1 phiNode))
+                #_"MicroBlock" mergeBlock (get nodeToBlock (PhiNode''merge-1 phiNode))
             ]
                 (NodeMap''set-3 nodeToBlock, phiNode, mergeBlock)
                 (let [
@@ -68954,7 +68913,7 @@
                         (let [
                             #_"Node" input (PhiNode''valueAt-2 phiNode, i)
                         ]
-                            (when (and (some? input) (nil? (NodeMap''get-2 nodeToBlock, input)))
+                            (when (and (some? input) (nil? (get nodeToBlock input)))
                                 (§ ass! stack (NodeStack''push-2 stack, input))
                             )
                         )
@@ -68968,11 +68927,11 @@
     (§ defn- #_"void" ScheduleInstance'processStackProxy-4 [#_"NodeStack" stack, #_"ProxyNode" proxyNode, #_"NodeMap<MicroBlock>" nodeToBlock, #_"NodeBitMap" visited]
         (NodeStack''pop-1 stack)
         (when (NodeBitMap''checkAndMarkInc-2 visited, proxyNode)
-            (NodeMap''set-3 nodeToBlock, proxyNode, (NodeMap''get-2 nodeToBlock, (:loopExit proxyNode)))
+            (NodeMap''set-3 nodeToBlock, proxyNode, (get nodeToBlock (:loopExit proxyNode)))
             (let [
                 #_"Node" input (ProxyNode''value-1 proxyNode)
             ]
-                (when (and (some? input) (nil? (NodeMap''get-2 nodeToBlock, input)))
+                (when (and (some? input) (nil? (get nodeToBlock input)))
                     (§ ass! stack (NodeStack''push-2 stack, input))
                 )
             )
@@ -68986,7 +68945,7 @@
             (condp instance? node
                 PhiNode   (ScheduleInstance'processStackPhi-4 stack, node, nodeToMicroBlock, visited)
                 ProxyNode (ScheduleInstance'processStackProxy-4 stack, node, nodeToMicroBlock, visited)
-                (if (some? (NodeMap''get-2 nodeToMicroBlock, node))
+                (if (some? (get nodeToMicroBlock node))
                     (NodeStack''pop-1 stack)
                     (let [
                         #_"MicroBlock" earliestBlock (ScheduleInstance'processInputs-4 nodeToMicroBlock, stack, startBlock, node)
@@ -69021,7 +68980,7 @@
             (loop-when [#_"MicroBlock" earliestBlock startBlock #_"ISeq" s (seq (Node''inputs-1 current))] (some? s) => earliestBlock
                 (let [
                     #_"Node" input (first s)
-                    #_"MicroBlock" inputBlock (NodeMap''get-2 nodeToBlock, input)
+                    #_"MicroBlock" inputBlock (get nodeToBlock input)
                     earliestBlock
                         (when (nil? inputBlock) => (if (and (some? earliestBlock) (< (:id earliestBlock) (:id inputBlock))) inputBlock earliestBlock)
                             (§ ass! stack (NodeStack''push-2 stack, input))
@@ -69150,7 +69109,7 @@
             #_"EconomicSet<MicroBlock>" blocksWithGuards (EconomicSet/create Equivalence/IDENTITY)
         ]
             (doseq [#_"GuardNode" guard (Graph''getNodes-2 graph, GuardNode'TYPE)]
-                (#_"EconomicSet" .add blocksWithGuards, (NodeMap''get-2 entries, guard))
+                (#_"EconomicSet" .add blocksWithGuards, (get entries guard))
             )
             (let [
                 #_"NodeMap<GuardPriority>" priorities (NodeMap'new-1 graph)
@@ -69182,7 +69141,7 @@
     (§ defn- #_"MicroBlock" GuardOrder'resortGuards-4 [#_"MicroBlock" block, #_"NodeStack" stack, #_"NodeBitMap" blockNodes, #_"NodeMap<GuardPriority>" priorities]
         (when (GuardOrder'propagatePriority-4 block, stack, priorities, blockNodes)
             (let [
-                #_"Function<GuardNode, GuardPriority>" transitiveGuardPriorityGetter (ß priorities(§ ffun )NodeMap''get-2)
+                #_"Function<GuardNode, GuardPriority>" transitiveGuardPriorityGetter (§ ffun #_"Map" .get)
                 #_"Comparator<GuardNode>" globalGuardPriorityComparator (#_"Comparator" .thenComparingInt (#_"Comparator" .thenComparing (Comparator/comparing transitiveGuardPriorityGetter), (ß GuardNode(§ ffun )StaticDeoptimizingNode''computePriority-1)), (§ ffun #_"Object" .hashCode))
                 #_"SortedSet<GuardNode>" availableGuards (TreeSet. globalGuardPriorityComparator)
                 #_"MicroBlock" newBlock (MicroBlock'new-1 (:id block))
@@ -69300,7 +69259,7 @@
                 (loop []
                     (let [
                         #_"Node" node (NodeStack''pop-1 stack)
-                        #_"GuardPriority" priority (NodeMap''get-2 priorities, node)
+                        #_"GuardPriority" priority (get priorities node)
                     ]
                         (loop-when-recur [#_"ISeq" s (seq (Node''inputs-1 node))] (some? s) [(next s)]
                             (let [
@@ -69308,7 +69267,7 @@
                             ]
                                 (when (NodeBitMap''isMarked-2 blockNodes, input)
                                     (let [
-                                        #_"GuardPriority" inputPriority (NodeMap''get-2 priorities, input)
+                                        #_"GuardPriority" inputPriority (get priorities input)
                                     ]
                                         (when (or (nil? inputPriority) (GuardPriority'isLowerPriorityThan-2 inputPriority, priority))
                                             (NodeMap''set-3 priorities, input, priority)
@@ -70337,7 +70296,7 @@
 
     (§ method! #_"JavaConstant" StringRef''getValue-2 [#_"StringRef" this, #_"ClassfileConstantPool" pool]
         (when (nil? (:value this))
-            (§ ass! this (assoc this :value (SnippetReflection'forObject-1 (ClassfileConstantPool''lookupUtf8-2 pool, (:stringIndex this)))))
+            (§ ass! this (assoc this :value (SnippetReflection'forObject-1 (#_"ConstantPool" .lookupUtf8 pool, (:stringIndex this)))))
         )
         (:value this)
     )
@@ -70479,8 +70438,7 @@
         (#_"Class" .cast c, (nth (:entries this) index))
     )
 
-    #_unused
-    (§ override! #_"void" ClassfileConstantPool''loadReferencedType-3 [#_"ClassfileConstantPool" this, #_"int" index, #_"int" opcode]
+    (§ override! #_"void" #_"ConstantPool" .loadReferencedType [#_"ClassfileConstantPool" this, #_"int" index, #_"int" opcode]
         (when (= opcode Bytecodes'INVOKEDYNAMIC)
             (throw! (str "INVOKEDYNAMIC not supported by " (#_"Class" .getSimpleName ClassfileBytecodeProvider)))
         )
@@ -70488,41 +70446,33 @@
         nil
     )
 
-    #_unused
-    (§ override! #_"JavaField" ClassfileConstantPool''lookupField-4 [#_"ClassfileConstantPool" this, #_"int" index, #_"ResolvedJavaMethod" method, #_"int" opcode]
+    (§ override! #_"JavaField" #_"ConstantPool" .lookupField [#_"ClassfileConstantPool" this, #_"int" index, #_"ResolvedJavaMethod" method, #_"int" opcode]
         (FieldRef''resolve-3 (ClassfileConstantPool''get-3 this, FieldRef, index), this, opcode)
     )
 
-    #_unused
-    (§ override! #_"JavaMethod" ClassfileConstantPool''lookupMethod-3 [#_"ClassfileConstantPool" this, #_"int" index, #_"int" opcode]
+    (§ override! #_"JavaMethod" #_"ConstantPool" .lookupMethod [#_"ClassfileConstantPool" this, #_"int" index, #_"int" opcode]
         (when (= opcode Bytecodes'INVOKEDYNAMIC)
             (throw! (str "INVOKEDYNAMIC not supported by" (#_"Class" .getSimpleName ClassfileBytecodeProvider)))
         )
         (ExecutableRef''resolve-3 (ClassfileConstantPool''get-3 this, ExecutableRef, index), this, opcode)
     )
 
-    (§ override! #_"JavaType" ClassfileConstantPool''lookupType-3 [#_"ClassfileConstantPool" this, #_"int" index, #_"int" opcode]
+    (§ override! #_"JavaType" #_"ConstantPool" .lookupType [#_"ClassfileConstantPool" this, #_"int" index, #_"int" opcode]
         (ClassRef''resolve-2 (ClassfileConstantPool''get-3 this, ClassRef, index), this)
     )
 
-    (§ override! #_"String" ClassfileConstantPool''lookupUtf8-2 [#_"ClassfileConstantPool" this, #_"int" index]
+    (§ override! #_"String" #_"ConstantPool" .lookupUtf8 [#_"ClassfileConstantPool" this, #_"int" index]
         (:value (§ cast #_"Utf8" (nth (:entries this) index)))
     )
 
-    #_unused
-    (§ override! #_"Signature" ClassfileConstantPool''lookupSignature-2 [#_"ClassfileConstantPool" this, #_"int" index]
-        (throw! "should not reach here")
-    )
-
-    #_unused
-    (§ override! #_"Object" ClassfileConstantPool''lookupConstant-2 [#_"ClassfileConstantPool" this, #_"int" index]
+    (§ override! #_"Object" #_"ConstantPool" .lookupConstant [#_"ClassfileConstantPool" this, #_"int" index]
         (let [
             #_"ClassfileConstant" c (nth (:entries this) index)
         ]
             (if (instance? Primitive c)
                 (:value c)
                 (condp = (:tag c)
-                    ClassfileConstant'CONSTANT_Class  (ClassfileConstantPool''lookupType-3 this, index, -1)
+                    ClassfileConstant'CONSTANT_Class  (#_"ConstantPool" .lookupType this, index, -1)
                     ClassfileConstant'CONSTANT_String (StringRef''getValue-2 this, c)
                     (throw! (str "unexpected constant pool tag " (:tag c)))
                 )
@@ -70530,8 +70480,7 @@
         )
     )
 
-    #_unused
-    (§ override! #_"JavaConstant" ClassfileConstantPool''lookupAppendix-3 [#_"ClassfileConstantPool" this, #_"int" index, #_"int" opcode]
+    (§ override! #_"JavaConstant" #_"ConstantPool" .lookupAppendix [#_"ClassfileConstantPool" this, #_"int" index, #_"int" opcode]
         (when-not (= opcode Bytecodes'INVOKEVIRTUAL)
             (throw! "should not reach here")
         )
@@ -71484,7 +71433,7 @@
                                         false ;; we need to force-inline but we can not, leave the invoke as-is
                                         (and (<= (MethodHandlePlugin'countRecursiveInlining-2 parser, targetMethod) GraalOptions'maximumRecursiveInlining)
                                             (do
-                                                (§ ass! parser (BytecodeParser''handleReplacedInvoke-5 parser, (InvokeNode''getInvokeKind-1 invoke), targetMethod, (NodeList''toArray-2 argumentsList, (make-array ValueNode (count argumentsList))), inlineEverything))
+                                                (§ ass! parser (BytecodeParser''handleReplacedInvoke-5 parser, (InvokeNode''getInvokeKind-1 invoke), targetMethod, (#_"List" .toArray argumentsList, (make-array ValueNode (count argumentsList))), inlineEverything))
                                                 true
                                             )
                                         )
@@ -72269,7 +72218,7 @@
 
     (§ method #_"InvokeNode" MacroNode''createInvoke-1 [#_"MacroNode" this]
         (let [
-            #_"MethodCallTargetNode" callTarget (Graph''add-2 (:graph this), (MethodCallTargetNode'new-4 (:invokeKind this), (:targetMethod this), (NodeList''toArray-2 (:arguments this), (make-array ValueNode (count (:arguments this)))), (:returnStamp this)))
+            #_"MethodCallTargetNode" callTarget (Graph''add-2 (:graph this), (MethodCallTargetNode'new-4 (:invokeKind this), (:targetMethod this), (#_"List" .toArray (:arguments this), (make-array ValueNode (count (:arguments this)))), (:returnStamp this)))
             #_"InvokeNode" invoke (Graph''add-2 (:graph this), (InvokeNode'new-2 callTarget, (:bci this)))
         ]
             (when (some? (MacroNode''stateAfter-1 this))
@@ -72360,7 +72309,7 @@
     (§ override! #_"void" MethodHandleNode''simplify-2 [#_"MethodHandleNode" this, #_"SimplifierTool" tool]
         (let [
             #_"MethodHandleAccessProvider" methodHandleAccess (#_"ConstantReflectionProvider" .getMethodHandleAccess HotSpot'constantReflection)
-            #_"ValueNode[]" argumentsArray (NodeList''toArray-2 (:arguments this), (make-array ValueNode (count (:arguments this))))
+            #_"ValueNode[]" argumentsArray (#_"List" .toArray (:arguments this), (make-array ValueNode (count (:arguments this))))
             #_"FixedNode" before this
             #_"GraphAdder" adder
                 (§ reify #_"GraphAdder" (GraphAdder'new-1 (:graph before))
@@ -72698,7 +72647,7 @@
     (§ override! #_"void" Lowerable''lower-2 [#_"ResolvedMethodHandleCallTargetNode" this, #_"LoweringTool" lowerer]
         (let [
             #_"InvokeKind" replacementInvokeKind (if (#_"ResolvedJavaMethod" .isStatic (:originalTargetMethod this)) InvokeKind'Static InvokeKind'Special)
-            #_"MethodCallTargetNode" replacement (Graph''add-2 (:graph this), (MethodCallTargetNode'new-4 replacementInvokeKind, (:originalTargetMethod this), (NodeList''toArray-2 (:originalArguments this), (make-array ValueNode (count (:originalArguments this)))), (:originalReturnStamp this)))
+            #_"MethodCallTargetNode" replacement (Graph''add-2 (:graph this), (MethodCallTargetNode'new-4 replacementInvokeKind, (:originalTargetMethod this), (#_"List" .toArray (:originalArguments this), (make-array ValueNode (count (:originalArguments this)))), (:originalReturnStamp this)))
         ]
             ;; Replace myself...
             (§ ass! this (Node''replaceAndDelete-2 this, replacement))
@@ -74502,7 +74451,7 @@
                                 (do
                                     (§ ass lastMergedState (:newState mergeProcessor))
                                     (doseq [#_"Block" block (:blocks loop)]
-                                        (GraphEffectList''clear-1 (BlockMap''get-2 (:blockEffects this), block))
+                                        (EffectList''clear-1 (BlockMap''get-2 (:blockEffects this), block))
                                     )
                                     (recur (inc iteration))
                                 )
@@ -74592,7 +74541,7 @@
     (§ method! #_"ValueNode" EffectsClosure''getScalarAlias-2 [#_"EffectsClosure<BlockT extends EffectsBlockState<BlockT>>" this, #_"ValueNode" node]
         (when (and (some? node) (Node''isAlive-1 node) (not (NodeMap''isNew-2 (:aliases this), node))) => node
             (let [
-                #_"ValueNode" result (NodeMap''get-2 (:aliases this), node)
+                #_"ValueNode" result (get (:aliases this) node)
             ]
                 (if (and (some? result) (not (instance? VirtualObjectNode result))) result node)
             )
@@ -74702,8 +74651,8 @@
         (let [
             this (assoc this :newState state)
         ]
-            (GraphEffectList''clear-1 (:mergeEffects this))
-            (GraphEffectList''clear-1 (:afterMergeEffects this))
+            (EffectList''clear-1 (:mergeEffects this))
+            (EffectList''clear-1 (:afterMergeEffects this))
             this
         )
     )
@@ -74843,7 +74792,7 @@
      ;;
     (§ mutable #_"int" :virtualizationDelta 0)
 
-    (§ override! #_"void" GraphEffectList''clear-1 [#_"GraphEffectList" this]
+    (§ override! #_"void" EffectList''clear-1 [#_"GraphEffectList" this]
         (EffectList''clear-1 (§ super ))
         (§ ass! this (assoc this :virtualizationDelta 0))
         nil
@@ -74914,7 +74863,7 @@
                     (when (Node''isAlive-1 node)
                         (dotimes [#_"int" i (FrameState''virtualObjectMappingCount-1 node)]
                             (when (= (:object (FrameState''virtualObjectMappingAt-2 node, i)) (:object state))
-                                (NodeList''remove-2 (:virtualObjectMappings node), i)
+                                (#_"List" .remove (:virtualObjectMappings node), i)
                             )
                         )
                         (§ ass! node (FrameState''addVirtualObjectMapping-2 node, (Graph''addOrUniqueWithInputs-2 graph, state)))
@@ -76115,7 +76064,7 @@
         (when (some? value)
             (if (and (Node''isAlive-1 value) (not (NodeMap''isNew-2 (:aliases this), value)))
                 (let [
-                    #_"ValueNode" object (NodeMap''get-2 (:aliases this), value)
+                    #_"ValueNode" object (get (:aliases this) value)
                 ]
                     (when (instance? VirtualObjectNode object) (PartialEscapeBlockState''getObjectStateOptional-2 state, object))
                 )
@@ -76126,7 +76075,7 @@
 
     (§ method #_"ValueNode" PartialEscapeClosure''getAlias-2 [#_"PartialEscapeClosure<BlockT extends PartialEscapeBlockState<BlockT>>" this, #_"ValueNode" value]
         (if (and (some? value) (not (instance? VirtualObjectNode value)) (Node''isAlive-1 value) (not (NodeMap''isNew-2 (:aliases this), value)))
-            (or (NodeMap''get-2 (:aliases this), value)
+            (or (get (:aliases this) value)
                 value
             )
             value
@@ -76370,8 +76319,8 @@
                 ]
                     (when materialized?
                         (§ ass! (:newState this) (PartialEscapeBlockState''resetObjectStates-2 (:newState this), (count (:virtualObjects (:peClosure this)))))
-                        (GraphEffectList''clear-1 (:mergeEffects this))
-                        (GraphEffectList''clear-1 (:afterMergeEffects this))
+                        (EffectList''clear-1 (:mergeEffects this))
+                        (EffectList''clear-1 (:afterMergeEffects this))
                     )
                     (recur-if materialized? [])
                 )
@@ -78300,7 +78249,7 @@
 
 ;;;
  ; Medium-level memory access for objects. Similarly to the readXxx and writeXxx methods defined for
- ; Pointer and ObjectAccess, these methods access the memory without any nil-checks.
+ ; Pointer and ObjectAccess, these methods access the memory without any nil-checks.
  ; However, these methods use read- or write barriers. When the VM uses compressed pointers,
  ; then readObject and writeObject methods access compressed pointers.
  ;;
@@ -78310,49 +78259,49 @@
      ;;
     ; @Operation(opcode = WordOpcode'READ_BARRIERED)
     #_unused
-    (§ native #_"byte" BarrieredAccess'readByte-3 [#_"Object" object, #_"WordBase" offset, #_"LocationIdentity" locationIdentity])
+    (§ native #_"byte" BarrieredAccess'readByte-3 [#_"Object" object, #_"Word" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_BARRIERED)
     #_unused
-    (§ native #_"char" BarrieredAccess'readChar-3 [#_"Object" object, #_"WordBase" offset, #_"LocationIdentity" locationIdentity])
+    (§ native #_"char" BarrieredAccess'readChar-3 [#_"Object" object, #_"Word" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_BARRIERED)
     #_unused
-    (§ native #_"short" BarrieredAccess'readShort-3 [#_"Object" object, #_"WordBase" offset, #_"LocationIdentity" locationIdentity])
+    (§ native #_"short" BarrieredAccess'readShort-3 [#_"Object" object, #_"Word" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_BARRIERED)
     #_unused
-    (§ native #_"int" BarrieredAccess'readInt-3 [#_"Object" object, #_"WordBase" offset, #_"LocationIdentity" locationIdentity])
+    (§ native #_"int" BarrieredAccess'readInt-3 [#_"Object" object, #_"Word" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_BARRIERED)
     #_unused
-    (§ native #_"long" BarrieredAccess'readLong-3 [#_"Object" object, #_"WordBase" offset, #_"LocationIdentity" locationIdentity])
+    (§ native #_"long" BarrieredAccess'readLong-3 [#_"Object" object, #_"Word" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_BARRIERED)
     #_unused
-    (§ native #_"<T extends WordBase> T" BarrieredAccess'readWord-3 [#_"Object" object, #_"WordBase" offset, #_"LocationIdentity" locationIdentity])
+    (§ native #_"Word" BarrieredAccess'readWord-3 [#_"Object" object, #_"Word" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_BARRIERED)
     #_unused
-    (§ native #_"Object" BarrieredAccess'readObject-3 [#_"Object" object, #_"WordBase" offset, #_"LocationIdentity" locationIdentity])
+    (§ native #_"Object" BarrieredAccess'readObject-3 [#_"Object" object, #_"Word" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
@@ -78394,7 +78343,7 @@
      ;;
     ; @Operation(opcode = WordOpcode'READ_BARRIERED)
     #_unused
-    (§ native #_"<T extends WordBase> T" BarrieredAccess'readWord-3 [#_"Object" object, #_"int" offset, #_"LocationIdentity" locationIdentity])
+    (§ native #_"Word" BarrieredAccess'readWord-3 [#_"Object" object, #_"int" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
@@ -78408,49 +78357,49 @@
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
     #_unused
-    (§ native #_"void" BarrieredAccess'writeByte-4 [#_"Object" object, #_"WordBase" offset, #_"byte" val, #_"LocationIdentity" locationIdentity])
+    (§ native #_"void" BarrieredAccess'writeByte-4 [#_"Object" object, #_"Word" offset, #_"byte" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
     #_unused
-    (§ native #_"void" BarrieredAccess'writeChar-4 [#_"Object" object, #_"WordBase" offset, #_"char" val, #_"LocationIdentity" locationIdentity])
+    (§ native #_"void" BarrieredAccess'writeChar-4 [#_"Object" object, #_"Word" offset, #_"char" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
     #_unused
-    (§ native #_"void" BarrieredAccess'writeShort-4 [#_"Object" object, #_"WordBase" offset, #_"short" val, #_"LocationIdentity" locationIdentity])
+    (§ native #_"void" BarrieredAccess'writeShort-4 [#_"Object" object, #_"Word" offset, #_"short" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
     #_unused
-    (§ native #_"void" BarrieredAccess'writeInt-4 [#_"Object" object, #_"WordBase" offset, #_"int" val, #_"LocationIdentity" locationIdentity])
+    (§ native #_"void" BarrieredAccess'writeInt-4 [#_"Object" object, #_"Word" offset, #_"int" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
     #_unused
-    (§ native #_"void" BarrieredAccess'writeLong-4 [#_"Object" object, #_"WordBase" offset, #_"long" val, #_"LocationIdentity" locationIdentity])
+    (§ native #_"void" BarrieredAccess'writeLong-4 [#_"Object" object, #_"Word" offset, #_"long" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
     #_unused
-    (§ native #_"void" BarrieredAccess'writeWord-4 [#_"Object" object, #_"WordBase" offset, #_"WordBase" val, #_"LocationIdentity" locationIdentity])
+    (§ native #_"void" BarrieredAccess'writeWord-4 [#_"Object" object, #_"Word" offset, #_"Word" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
     #_unused
-    (§ native #_"void" BarrieredAccess'writeObject-4 [#_"Object" object, #_"WordBase" offset, #_"Object" val, #_"LocationIdentity" locationIdentity])
+    (§ native #_"void" BarrieredAccess'writeObject-4 [#_"Object" object, #_"Word" offset, #_"Object" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
@@ -78492,7 +78441,7 @@
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
     #_unused
-    (§ native #_"void" BarrieredAccess'writeWord-4 [#_"Object" object, #_"int" offset, #_"WordBase" val, #_"LocationIdentity" locationIdentity])
+    (§ native #_"void" BarrieredAccess'writeWord-4 [#_"Object" object, #_"int" offset, #_"Word" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
@@ -78506,49 +78455,49 @@
      ;;
     ; @Operation(opcode = WordOpcode'READ_BARRIERED)
     #_unused
-    (§ native #_"byte" BarrieredAccess'readByte-2 [#_"Object" object, #_"WordBase" offset])
+    (§ native #_"byte" BarrieredAccess'readByte-2 [#_"Object" object, #_"Word" offset])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_BARRIERED)
     #_unused
-    (§ native #_"char" BarrieredAccess'readChar-2 [#_"Object" object, #_"WordBase" offset])
+    (§ native #_"char" BarrieredAccess'readChar-2 [#_"Object" object, #_"Word" offset])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_BARRIERED)
     #_unused
-    (§ native #_"short" BarrieredAccess'readShort-2 [#_"Object" object, #_"WordBase" offset])
+    (§ native #_"short" BarrieredAccess'readShort-2 [#_"Object" object, #_"Word" offset])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_BARRIERED)
     #_unused
-    (§ native #_"int" BarrieredAccess'readInt-2 [#_"Object" object, #_"WordBase" offset])
+    (§ native #_"int" BarrieredAccess'readInt-2 [#_"Object" object, #_"Word" offset])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_BARRIERED)
     #_unused
-    (§ native #_"long" BarrieredAccess'readLong-2 [#_"Object" object, #_"WordBase" offset])
+    (§ native #_"long" BarrieredAccess'readLong-2 [#_"Object" object, #_"Word" offset])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_BARRIERED)
     #_unused
-    (§ native #_"<T extends WordBase> T" BarrieredAccess'readWord-2 [#_"Object" object, #_"WordBase" offset])
+    (§ native #_"Word" BarrieredAccess'readWord-2 [#_"Object" object, #_"Word" offset])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_BARRIERED)
     #_unused
-    (§ native #_"Object" BarrieredAccess'readObject-2 [#_"Object" object, #_"WordBase" offset])
+    (§ native #_"Object" BarrieredAccess'readObject-2 [#_"Object" object, #_"Word" offset])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
@@ -78590,7 +78539,7 @@
      ;;
     ; @Operation(opcode = WordOpcode'READ_BARRIERED)
     #_unused
-    (§ native #_"<T extends WordBase> T" BarrieredAccess'readWord-2 [#_"Object" object, #_"int" offset])
+    (§ native #_"Word" BarrieredAccess'readWord-2 [#_"Object" object, #_"int" offset])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
@@ -78604,49 +78553,49 @@
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
     #_unused
-    (§ native #_"void" BarrieredAccess'writeByte-3 [#_"Object" object, #_"WordBase" offset, #_"byte" val])
+    (§ native #_"void" BarrieredAccess'writeByte-3 [#_"Object" object, #_"Word" offset, #_"byte" val])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
     #_unused
-    (§ native #_"void" BarrieredAccess'writeChar-3 [#_"Object" object, #_"WordBase" offset, #_"char" val])
+    (§ native #_"void" BarrieredAccess'writeChar-3 [#_"Object" object, #_"Word" offset, #_"char" val])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
     #_unused
-    (§ native #_"void" BarrieredAccess'writeShort-3 [#_"Object" object, #_"WordBase" offset, #_"short" val])
+    (§ native #_"void" BarrieredAccess'writeShort-3 [#_"Object" object, #_"Word" offset, #_"short" val])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
     #_unused
-    (§ native #_"void" BarrieredAccess'writeInt-3 [#_"Object" object, #_"WordBase" offset, #_"int" val])
+    (§ native #_"void" BarrieredAccess'writeInt-3 [#_"Object" object, #_"Word" offset, #_"int" val])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
     #_unused
-    (§ native #_"void" BarrieredAccess'writeLong-3 [#_"Object" object, #_"WordBase" offset, #_"long" val])
+    (§ native #_"void" BarrieredAccess'writeLong-3 [#_"Object" object, #_"Word" offset, #_"long" val])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
     #_unused
-    (§ native #_"void" BarrieredAccess'writeWord-3 [#_"Object" object, #_"WordBase" offset, #_"WordBase" val])
+    (§ native #_"void" BarrieredAccess'writeWord-3 [#_"Object" object, #_"Word" offset, #_"Word" val])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
     #_unused
-    (§ native #_"void" BarrieredAccess'writeObject-3 [#_"Object" object, #_"WordBase" offset, #_"Object" val])
+    (§ native #_"void" BarrieredAccess'writeObject-3 [#_"Object" object, #_"Word" offset, #_"Object" val])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
@@ -78688,7 +78637,7 @@
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_BARRIERED)
     #_unused
-    (§ native #_"void" BarrieredAccess'writeWord-3 [#_"Object" object, #_"int" offset, #_"WordBase" val])
+    (§ native #_"void" BarrieredAccess'writeWord-3 [#_"Object" object, #_"int" offset, #_"Word" val])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
@@ -78699,7 +78648,7 @@
 )
 
 ;;;
- ; Low-level memory access for objects. Similarly to the readXxx and writeXxx methods defined for Pointer,
+ ; Low-level memory access for objects. Similarly to the readXxx and writeXxx methods defined for Pointer,
  ; these methods access the raw memory without any nil-checks, read- or write barriers.
  ; When the VM uses compressed pointers, then readObject and writeObject methods access compressed pointers.
  ;;
@@ -78709,49 +78658,49 @@
      ;;
     ; @Operation(opcode = WordOpcode'READ_OBJECT)
     #_unused
-    (§ native #_"byte" ObjectAccess'readByte-3 [#_"Object" object, #_"WordBase" offset, #_"LocationIdentity" locationIdentity])
+    (§ native #_"byte" ObjectAccess'readByte-3 [#_"Object" object, #_"Word" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_OBJECT)
     #_unused
-    (§ native #_"char" ObjectAccess'readChar-3 [#_"Object" object, #_"WordBase" offset, #_"LocationIdentity" locationIdentity])
+    (§ native #_"char" ObjectAccess'readChar-3 [#_"Object" object, #_"Word" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_OBJECT)
     #_unused
-    (§ native #_"short" ObjectAccess'readShort-3 [#_"Object" object, #_"WordBase" offset, #_"LocationIdentity" locationIdentity])
+    (§ native #_"short" ObjectAccess'readShort-3 [#_"Object" object, #_"Word" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_OBJECT)
     #_unused
-    (§ native #_"int" ObjectAccess'readInt-3 [#_"Object" object, #_"WordBase" offset, #_"LocationIdentity" locationIdentity])
+    (§ native #_"int" ObjectAccess'readInt-3 [#_"Object" object, #_"Word" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_OBJECT)
     #_unused
-    (§ native #_"long" ObjectAccess'readLong-3 [#_"Object" object, #_"WordBase" offset, #_"LocationIdentity" locationIdentity])
+    (§ native #_"long" ObjectAccess'readLong-3 [#_"Object" object, #_"Word" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_OBJECT)
     #_unused
-    (§ native #_"<T extends WordBase> T" ObjectAccess'readWord-3 [#_"Object" object, #_"WordBase" offset, #_"LocationIdentity" locationIdentity])
+    (§ native #_"Word" ObjectAccess'readWord-3 [#_"Object" object, #_"Word" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_OBJECT)
     #_unused
-    (§ native #_"Object" ObjectAccess'readObject-3 [#_"Object" object, #_"WordBase" offset, #_"LocationIdentity" locationIdentity])
+    (§ native #_"Object" ObjectAccess'readObject-3 [#_"Object" object, #_"Word" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
@@ -78793,7 +78742,7 @@
      ;;
     ; @Operation(opcode = WordOpcode'READ_OBJECT)
     #_unused
-    (§ native #_"<T extends WordBase> T" ObjectAccess'readWord-3 [#_"Object" object, #_"int" offset, #_"LocationIdentity" locationIdentity])
+    (§ native #_"Word" ObjectAccess'readWord-3 [#_"Object" object, #_"int" offset, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
@@ -78807,49 +78756,49 @@
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
     #_unused
-    (§ native #_"void" ObjectAccess'writeByte-4 [#_"Object" object, #_"WordBase" offset, #_"byte" val, #_"LocationIdentity" locationIdentity])
+    (§ native #_"void" ObjectAccess'writeByte-4 [#_"Object" object, #_"Word" offset, #_"byte" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
     #_unused
-    (§ native #_"void" ObjectAccess'writeChar-4 [#_"Object" object, #_"WordBase" offset, #_"char" val, #_"LocationIdentity" locationIdentity])
+    (§ native #_"void" ObjectAccess'writeChar-4 [#_"Object" object, #_"Word" offset, #_"char" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
     #_unused
-    (§ native #_"void" ObjectAccess'writeShort-4 [#_"Object" object, #_"WordBase" offset, #_"short" val, #_"LocationIdentity" locationIdentity])
+    (§ native #_"void" ObjectAccess'writeShort-4 [#_"Object" object, #_"Word" offset, #_"short" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
     #_unused
-    (§ native #_"void" ObjectAccess'writeInt-4 [#_"Object" object, #_"WordBase" offset, #_"int" val, #_"LocationIdentity" locationIdentity])
+    (§ native #_"void" ObjectAccess'writeInt-4 [#_"Object" object, #_"Word" offset, #_"int" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
     #_unused
-    (§ native #_"void" ObjectAccess'writeLong-4 [#_"Object" object, #_"WordBase" offset, #_"long" val, #_"LocationIdentity" locationIdentity])
+    (§ native #_"void" ObjectAccess'writeLong-4 [#_"Object" object, #_"Word" offset, #_"long" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
     #_unused
-    (§ native #_"void" ObjectAccess'writeWord-4 [#_"Object" object, #_"WordBase" offset, #_"WordBase" val, #_"LocationIdentity" locationIdentity])
+    (§ native #_"void" ObjectAccess'writeWord-4 [#_"Object" object, #_"Word" offset, #_"Word" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
     #_unused
-    (§ native #_"void" ObjectAccess'writeObject-4 [#_"Object" object, #_"WordBase" offset, #_"Object" val, #_"LocationIdentity" locationIdentity])
+    (§ native #_"void" ObjectAccess'writeObject-4 [#_"Object" object, #_"Word" offset, #_"Object" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
@@ -78891,7 +78840,7 @@
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
     #_unused
-    (§ native #_"void" ObjectAccess'writeWord-4 [#_"Object" object, #_"int" offset, #_"WordBase" val, #_"LocationIdentity" locationIdentity])
+    (§ native #_"void" ObjectAccess'writeWord-4 [#_"Object" object, #_"int" offset, #_"Word" val, #_"LocationIdentity" locationIdentity])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
@@ -78905,49 +78854,49 @@
      ;;
     ; @Operation(opcode = WordOpcode'READ_OBJECT)
     #_unused
-    (§ native #_"byte" ObjectAccess'readByte-2 [#_"Object" object, #_"WordBase" offset])
+    (§ native #_"byte" ObjectAccess'readByte-2 [#_"Object" object, #_"Word" offset])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_OBJECT)
     #_unused
-    (§ native #_"char" ObjectAccess'readChar-2 [#_"Object" object, #_"WordBase" offset])
+    (§ native #_"char" ObjectAccess'readChar-2 [#_"Object" object, #_"Word" offset])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_OBJECT)
     #_unused
-    (§ native #_"short" ObjectAccess'readShort-2 [#_"Object" object, #_"WordBase" offset])
+    (§ native #_"short" ObjectAccess'readShort-2 [#_"Object" object, #_"Word" offset])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_OBJECT)
     #_unused
-    (§ native #_"int" ObjectAccess'readInt-2 [#_"Object" object, #_"WordBase" offset])
+    (§ native #_"int" ObjectAccess'readInt-2 [#_"Object" object, #_"Word" offset])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_OBJECT)
     #_unused
-    (§ native #_"long" ObjectAccess'readLong-2 [#_"Object" object, #_"WordBase" offset])
+    (§ native #_"long" ObjectAccess'readLong-2 [#_"Object" object, #_"Word" offset])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_OBJECT)
     #_unused
-    (§ native #_"<T extends WordBase> T" ObjectAccess'readWord-2 [#_"Object" object, #_"WordBase" offset])
+    (§ native #_"Word" ObjectAccess'readWord-2 [#_"Object" object, #_"Word" offset])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'READ_OBJECT)
     #_unused
-    (§ native #_"Object" ObjectAccess'readObject-2 [#_"Object" object, #_"WordBase" offset])
+    (§ native #_"Object" ObjectAccess'readObject-2 [#_"Object" object, #_"Word" offset])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
@@ -78989,7 +78938,7 @@
      ;;
     ; @Operation(opcode = WordOpcode'READ_OBJECT)
     #_unused
-    (§ native #_"<T extends WordBase> T" ObjectAccess'readWord-2 [#_"Object" object, #_"int" offset])
+    (§ native #_"Word" ObjectAccess'readWord-2 [#_"Object" object, #_"int" offset])
 
     ;;;
      ; Reads the memory at address {@code (object + offset)}. The offset is in bytes.
@@ -79003,49 +78952,49 @@
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
     #_unused
-    (§ native #_"void" ObjectAccess'writeByte-3 [#_"Object" object, #_"WordBase" offset, #_"byte" val])
+    (§ native #_"void" ObjectAccess'writeByte-3 [#_"Object" object, #_"Word" offset, #_"byte" val])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
     #_unused
-    (§ native #_"void" ObjectAccess'writeChar-3 [#_"Object" object, #_"WordBase" offset, #_"char" val])
+    (§ native #_"void" ObjectAccess'writeChar-3 [#_"Object" object, #_"Word" offset, #_"char" val])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
     #_unused
-    (§ native #_"void" ObjectAccess'writeShort-3 [#_"Object" object, #_"WordBase" offset, #_"short" val])
+    (§ native #_"void" ObjectAccess'writeShort-3 [#_"Object" object, #_"Word" offset, #_"short" val])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
     #_unused
-    (§ native #_"void" ObjectAccess'writeInt-3 [#_"Object" object, #_"WordBase" offset, #_"int" val])
+    (§ native #_"void" ObjectAccess'writeInt-3 [#_"Object" object, #_"Word" offset, #_"int" val])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
     #_unused
-    (§ native #_"void" ObjectAccess'writeLong-3 [#_"Object" object, #_"WordBase" offset, #_"long" val])
+    (§ native #_"void" ObjectAccess'writeLong-3 [#_"Object" object, #_"Word" offset, #_"long" val])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
     #_unused
-    (§ native #_"void" ObjectAccess'writeWord-3 [#_"Object" object, #_"WordBase" offset, #_"WordBase" val])
+    (§ native #_"void" ObjectAccess'writeWord-3 [#_"Object" object, #_"Word" offset, #_"Word" val])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
     #_unused
-    (§ native #_"void" ObjectAccess'writeObject-3 [#_"Object" object, #_"WordBase" offset, #_"Object" val])
+    (§ native #_"void" ObjectAccess'writeObject-3 [#_"Object" object, #_"Word" offset, #_"Object" val])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
@@ -79087,7 +79036,7 @@
      ;;
     ; @Operation(opcode = WordOpcode'WRITE_OBJECT)
     #_unused
-    (§ native #_"void" ObjectAccess'writeWord-3 [#_"Object" object, #_"int" offset, #_"WordBase" val])
+    (§ native #_"void" ObjectAccess'writeWord-3 [#_"Object" object, #_"int" offset, #_"Word" val])
 
     ;;;
      ; Writes the memory at address {@code (object + offset)}. The offset is in bytes.
@@ -79097,39 +79046,59 @@
     (§ native #_"void" ObjectAccess'writeObject-3 [#_"Object" object, #_"int" offset, #_"Object" val])
 )
 
-(class-ns Word (§ implements SignedWord, UnsignedWord, Pointer)
-    (§ defn #_"void" Word'ensureInitialized-0 []
+(final-ns Word
+    (§ defn #_"void" Word'ensureInitialized-0 []
         ;; Calling this method ensures that the static initializer has been executed.
         nil
     )
 
     (§ init
-        (BoxFactoryImpl'initialize-0)
+        (§ ass! WordBoxFactory/boxFactory
+            (§ reify #_"WordBoxFactory" (WordBoxFactory.)
+                (§ override! #_"Word" #_"WordBoxFactory" .boxImpl [#_"WordBoxFactory" this, #_"long" val]
+                    (Word'boxLong-1 val)
+                )
+            )
+        )
     )
 
-    (§ defn #_"Word" Word'new-0 []
-        (hash-map)
+    (§ final #_"long" :rawValue 0)
+
+    (§ defn #_"Word" Word'new-1 [#_"long" rawValue]
+        (let [
+            #_"Word" this (hash-map)
+            this (assoc this :rawValue rawValue)
+        ]
+            this
+        )
+    )
+
+    #_memoize
+    (§ defn #_"Word" Word'boxLong-1 [#_"long" val]
+        (Word'new-1 val)
     )
 
     ;; Outside users must use the different signed() and unsigned() methods to ensure proper
     ;; expansion of 32-bit values on 64-bit systems.
-    (§ defn- #_"<T extends WordBase> T" Word'box-1 [#_"long" val]
-        (§ cast #_"T" (HostedWord'boxLong-1 val))
+    (§ defn- #_"Word" Word'box-1 [#_"long" val]
+        (Word'boxLong-1 val)
     )
 
-    (§ abstract #_"long" Word''unbox-1 [#_"Word" this])
+    (§ method! #_"long" Word''unbox-1 [#_"Word" this]
+        (:rawValue this)
+    )
 
     (§ defn- #_"Word" Word'intParam-1 [#_"int" val]
         (Word'box-1 val)
     )
 
     ; @Operation(opcode = WordOpcode'TO_RAW_VALUE)
-    (§ override #_"long" Word''rawValue-1 [#_"Word" this]
+    (§ method! #_"long" Word''rawValue-1 [#_"Word" this]
         (Word''unbox-1 this)
     )
 
     ;;;
-     ; Convert an Object to a Pointer, keeping the reference information. If the returned pointer
+     ; Convert an Object to a Pointer, keeping the reference information. If the returned pointer
      ; or any value derived from it is alive across a safepoint, it will be tracked. Depending on
      ; the arithmetic on the pointer and the capabilities of the backend to deal with derived
      ; references, this may work correctly, or result in a compiler error.
@@ -79138,7 +79107,7 @@
     (§ native #_"Word" Word'objectToTrackedPointer-1 [#_"Object" val])
 
     ;;;
-     ; Convert an Object to a Pointer, dropping the reference information. If the returned pointer
+     ; Convert an Object to a Pointer, dropping the reference information. If the returned pointer
      ; or any value derived from it is alive across a safepoint, it will be treated as a simple
      ; integer and not tracked by the garbage collector.
      ;
@@ -79157,65 +79126,33 @@
     (§ native #_"Word" Word'fromAddress-1 [#_"Address" address])
 
     ; @Operation(opcode = WordOpcode'TO_OBJECT)
-    #_native
-    (§ abstract #_"Object" Word''toObject-1 [#_"Word" this])
+    (§ native #_"Object" Word''toObject-1 [#_"Word" this])
 
     ; @Operation(opcode = WordOpcode'TO_OBJECT_NON_NULL)
-    #_native
-    (§ abstract #_"Object" Word''toObjectNonNull-1 [#_"Word" this])
+    (§ native #_"Object" Word''toObjectNonNull-1 [#_"Word" this])
 
     ; @Operation(node = AddNode.class)
-    (§ override #_"Word" Word''add-2 [#_"Word" this, #_"SignedWord" val]
-        (Word''add-2 this, (§ cast #_"Word" val))
-    )
-
-    ; @Operation(node = AddNode.class)
-    (§ override #_"Word" Word''add-2 [#_"Word" this, #_"UnsignedWord" val]
-        (Word''add-2 this, (§ cast #_"Word" val))
-    )
-
-    ; @Operation(node = AddNode.class)
-    (§ override #_"Word" Word''add-2 [#_"Word" this, #_"int" val]
+    (§ method! #_"Word" Word''add-2 [#_"Word" this, #_"int" val]
         (Word''add-2 this, (Word'intParam-1 val))
     )
 
     ; @Operation(node = AddNode.class)
-    (§ method #_"Word" Word''add-2 [#_"Word" this, #_"Word" val]
+    (§ method! #_"Word" Word''add-2 [#_"Word" this, #_"Word" val]
         (Word'box-1 (+ (Word''unbox-1 this) (Word''unbox-1 val)))
     )
 
     ; @Operation(node = SubNode.class)
-    (§ override #_"Word" Word''subtract-2 [#_"Word" this, #_"SignedWord" val]
-        (Word''subtract-2 this, (§ cast #_"Word" val))
-    )
-
-    ; @Operation(node = SubNode.class)
-    (§ override #_"Word" Word''subtract-2 [#_"Word" this, #_"UnsignedWord" val]
-        (Word''subtract-2 this, (§ cast #_"Word" val))
-    )
-
-    ; @Operation(node = SubNode.class)
-    (§ override #_"Word" Word''subtract-2 [#_"Word" this, #_"int" val]
+    (§ method! #_"Word" Word''subtract-2 [#_"Word" this, #_"int" val]
         (Word''subtract-2 this, (Word'intParam-1 val))
     )
 
     ; @Operation(node = SubNode.class)
-    (§ method #_"Word" Word''subtract-2 [#_"Word" this, #_"Word" val]
+    (§ method! #_"Word" Word''subtract-2 [#_"Word" this, #_"Word" val]
         (Word'box-1 (- (Word''unbox-1 this) (Word''unbox-1 val)))
     )
 
     ; @Operation(node = MulNode.class)
-    (§ override #_"Word" Word''multiply-2 [#_"Word" this, #_"SignedWord" val]
-        (Word''multiply-2 this, (§ cast #_"Word" val))
-    )
-
-    ; @Operation(node = MulNode.class)
-    (§ override #_"Word" Word''multiply-2 [#_"Word" this, #_"UnsignedWord" val]
-        (Word''multiply-2 this, (§ cast #_"Word" val))
-    )
-
-    ; @Operation(node = MulNode.class)
-    (§ override #_"Word" Word''multiply-2 [#_"Word" this, #_"int" val]
+    (§ method! #_"Word" Word''multiply-2 [#_"Word" this, #_"int" val]
         (Word''multiply-2 this, (Word'intParam-1 val))
     )
 
@@ -79225,12 +79162,7 @@
     )
 
     ; @Operation(node = SignedDivNode.class)
-    (§ override #_"Word" Word''signedDivide-2 [#_"Word" this, #_"SignedWord" val]
-        (Word''signedDivide-2 this, (§ cast #_"Word" val))
-    )
-
-    ; @Operation(node = SignedDivNode.class)
-    (§ override #_"Word" Word''signedDivide-2 [#_"Word" this, #_"int" val]
+    (§ method! #_"Word" Word''signedDivide-2 [#_"Word" this, #_"int" val]
         (Word''signedDivide-2 this, (Word'intParam-1 val))
     )
 
@@ -79240,12 +79172,7 @@
     )
 
     ; @Operation(node = UnsignedDivNode.class)
-    (§ override #_"Word" Word''unsignedDivide-2 [#_"Word" this, #_"UnsignedWord" val]
-        (Word''unsignedDivide-2 this, (§ cast #_"Word" val))
-    )
-
-    ; @Operation(node = UnsignedDivNode.class)
-    (§ override #_"Word" Word''unsignedDivide-2 [#_"Word" this, #_"int" val]
+    (§ method! #_"Word" Word''unsignedDivide-2 [#_"Word" this, #_"int" val]
         (Word''signedDivide-2 this, (Word'intParam-1 val))
     )
 
@@ -79255,12 +79182,7 @@
     )
 
     ; @Operation(node = SignedRemNode.class)
-    (§ override #_"Word" Word''signedRemainder-2 [#_"Word" this, #_"SignedWord" val]
-        (Word''signedRemainder-2 this, (§ cast #_"Word" val))
-    )
-
-    ; @Operation(node = SignedRemNode.class)
-    (§ override #_"Word" Word''signedRemainder-2 [#_"Word" this, #_"int" val]
+    (§ method! #_"Word" Word''signedRemainder-2 [#_"Word" this, #_"int" val]
         (Word''signedRemainder-2 this, (Word'intParam-1 val))
     )
 
@@ -79270,12 +79192,7 @@
     )
 
     ; @Operation(node = UnsignedRemNode.class)
-    (§ override #_"Word" Word''unsignedRemainder-2 [#_"Word" this, #_"UnsignedWord" val]
-        (Word''unsignedRemainder-2 this, (§ cast #_"Word" val))
-    )
-
-    ; @Operation(node = UnsignedRemNode.class)
-    (§ override #_"Word" Word''unsignedRemainder-2 [#_"Word" this, #_"int" val]
+    (§ method! #_"Word" Word''unsignedRemainder-2 [#_"Word" this, #_"int" val]
         (Word''signedRemainder-2 this, (Word'intParam-1 val))
     )
 
@@ -79285,12 +79202,7 @@
     )
 
     ; @Operation(node = LeftShiftNode.class, rightOperandIsInt = true)
-    (§ override #_"Word" Word''shiftLeft-2 [#_"Word" this, #_"UnsignedWord" val]
-        (Word''shiftLeft-2 this, (§ cast #_"Word" val))
-    )
-
-    ; @Operation(node = LeftShiftNode.class, rightOperandIsInt = true)
-    (§ override #_"Word" Word''shiftLeft-2 [#_"Word" this, #_"int" val]
+    (§ method! #_"Word" Word''shiftLeft-2 [#_"Word" this, #_"int" val]
         (Word''shiftLeft-2 this, (Word'intParam-1 val))
     )
 
@@ -79300,12 +79212,7 @@
     )
 
     ; @Operation(node = RightShiftNode.class, rightOperandIsInt = true)
-    (§ override #_"Word" Word''signedShiftRight-2 [#_"Word" this, #_"UnsignedWord" val]
-        (Word''signedShiftRight-2 this, (§ cast #_"Word" val))
-    )
-
-    ; @Operation(node = RightShiftNode.class, rightOperandIsInt = true)
-    (§ override #_"Word" Word''signedShiftRight-2 [#_"Word" this, #_"int" val]
+    (§ method! #_"Word" Word''signedShiftRight-2 [#_"Word" this, #_"int" val]
         (Word''signedShiftRight-2 this, (Word'intParam-1 val))
     )
 
@@ -79315,12 +79222,7 @@
     )
 
     ; @Operation(node = UnsignedRightShiftNode.class, rightOperandIsInt = true)
-    (§ override #_"Word" Word''unsignedShiftRight-2 [#_"Word" this, #_"UnsignedWord" val]
-        (Word''unsignedShiftRight-2 this, (§ cast #_"Word" val))
-    )
-
-    ; @Operation(node = UnsignedRightShiftNode.class, rightOperandIsInt = true)
-    (§ override #_"Word" Word''unsignedShiftRight-2 [#_"Word" this, #_"int" val]
+    (§ method! #_"Word" Word''unsignedShiftRight-2 [#_"Word" this, #_"int" val]
         (Word''unsignedShiftRight-2 this, (Word'intParam-1 val))
     )
 
@@ -79330,57 +79232,27 @@
     )
 
     ; @Operation(node = AndNode.class)
-    (§ override #_"Word" Word''and-2 [#_"Word" this, #_"SignedWord" val]
-        (Word''and-2 this, (§ cast #_"Word" val))
-    )
-
-    ; @Operation(node = AndNode.class)
-    (§ override #_"Word" Word''and-2 [#_"Word" this, #_"UnsignedWord" val]
-        (Word''and-2 this, (§ cast #_"Word" val))
-    )
-
-    ; @Operation(node = AndNode.class)
-    (§ override #_"Word" Word''and-2 [#_"Word" this, #_"int" val]
+    (§ method! #_"Word" Word''and-2 [#_"Word" this, #_"int" val]
         (Word''and-2 this, (Word'intParam-1 val))
     )
 
     ; @Operation(node = AndNode.class)
-    (§ method #_"Word" Word''and-2 [#_"Word" this, #_"Word" val]
+    (§ method! #_"Word" Word''and-2 [#_"Word" this, #_"Word" val]
         (Word'box-1 (& (Word''unbox-1 this) (Word''unbox-1 val)))
     )
 
     ; @Operation(node = OrNode.class)
-    (§ override #_"Word" Word''or-2 [#_"Word" this, #_"SignedWord" val]
-        (Word''or-2 this, (§ cast #_"Word" val))
-    )
-
-    ; @Operation(node = OrNode.class)
-    (§ override #_"Word" Word''or-2 [#_"Word" this, #_"UnsignedWord" val]
-        (Word''or-2 this, (§ cast #_"Word" val))
-    )
-
-    ; @Operation(node = OrNode.class)
-    (§ override #_"Word" Word''or-2 [#_"Word" this, #_"int" val]
+    (§ method! #_"Word" Word''or-2 [#_"Word" this, #_"int" val]
         (Word''or-2 this, (Word'intParam-1 val))
     )
 
     ; @Operation(node = OrNode.class)
-    (§ method #_"Word" Word''or-2 [#_"Word" this, #_"Word" val]
+    (§ method! #_"Word" Word''or-2 [#_"Word" this, #_"Word" val]
         (Word'box-1 (| (Word''unbox-1 this) (Word''unbox-1 val)))
     )
 
     ; @Operation(node = XorNode.class)
-    (§ override #_"Word" Word''xor-2 [#_"Word" this, #_"SignedWord" val]
-        (Word''xor-2 this, (§ cast #_"Word" val))
-    )
-
-    ; @Operation(node = XorNode.class)
-    (§ override #_"Word" Word''xor-2 [#_"Word" this, #_"UnsignedWord" val]
-        (Word''xor-2 this, (§ cast #_"Word" val))
-    )
-
-    ; @Operation(node = XorNode.class)
-    (§ override #_"Word" Word''xor-2 [#_"Word" this, #_"int" val]
+    (§ method! #_"Word" Word''xor-2 [#_"Word" this, #_"int" val]
         (Word''xor-2 this, (Word'intParam-1 val))
     )
 
@@ -79391,94 +79263,54 @@
 
     ; @Operation(opcode = WordOpcode'NOT)
     #_unused
-    (§ override #_"Word" Word''not-1 [#_"Word" this]
+    (§ method! #_"Word" Word''not-1 [#_"Word" this]
         (Word'box-1 (bit-not (Word''unbox-1 this)))
     )
 
     ; @Operation(opcode = WordOpcode'IS_NULL)
     #_unused
-    (§ override #_"boolean" Word''isNull-1 [#_"Word" this]
+    (§ method! #_"boolean" Word''isNull-1 [#_"Word" this]
         (Word''equal-2 this, (WordFactory/zero))
     )
 
     ; @Operation(opcode = WordOpcode'IS_NON_NULL)
     #_unused
-    (§ override #_"boolean" Word''isNonNull-1 [#_"Word" this]
+    (§ method! #_"boolean" Word''isNonNull-1 [#_"Word" this]
         (Word''notEqual-2 this, (WordFactory/zero))
     )
 
     ; @Operation(opcode = WordOpcode'COMPARISON, condition = Condition'EQ)
-    (§ override #_"boolean" Word''equal-2 [#_"Word" this, #_"ComparableWord" val]
-        (Word''equal-2 this, (§ cast #_"Word" val))
-    )
-
-    ; @Operation(opcode = WordOpcode'COMPARISON, condition = Condition'EQ)
-    (§ override #_"boolean" Word''equal-2 [#_"Word" this, #_"SignedWord" val]
-        (Word''equal-2 this, (§ cast #_"Word" val))
-    )
-
-    ; @Operation(opcode = WordOpcode'COMPARISON, condition = Condition'EQ)
-    (§ override #_"boolean" Word''equal-2 [#_"Word" this, #_"UnsignedWord" val]
-        (Word''equal-2 this, (§ cast #_"Word" val))
-    )
-
-    ; @Operation(opcode = WordOpcode'COMPARISON, condition = Condition'EQ)
-    (§ override #_"boolean" Word''equal-2 [#_"Word" this, #_"int" val]
+    (§ method! #_"boolean" Word''equal-2 [#_"Word" this, #_"int" val]
         (Word''equal-2 this, (Word'intParam-1 val))
     )
 
     ; @Operation(opcode = WordOpcode'COMPARISON, condition = Condition'EQ)
-    (§ method #_"boolean" Word''equal-2 [#_"Word" this, #_"Word" val]
+    (§ method! #_"boolean" Word''equal-2 [#_"Word" this, #_"Word" val]
         (= (Word''unbox-1 this) (Word''unbox-1 val))
     )
 
     ; @Operation(opcode = WordOpcode'COMPARISON, condition = Condition'NE)
-    (§ override #_"boolean" Word''notEqual-2 [#_"Word" this, #_"ComparableWord" val]
-        (Word''notEqual-2 this, (§ cast #_"Word" val))
-    )
-
-    ; @Operation(opcode = WordOpcode'COMPARISON, condition = Condition'NE)
-    (§ override #_"boolean" Word''notEqual-2 [#_"Word" this, #_"SignedWord" val]
-        (Word''notEqual-2 this, (§ cast #_"Word" val))
-    )
-
-    ; @Operation(opcode = WordOpcode'COMPARISON, condition = Condition'NE)
-    (§ override #_"boolean" Word''notEqual-2 [#_"Word" this, #_"UnsignedWord" val]
-        (Word''notEqual-2 this, (§ cast #_"Word" val))
-    )
-
-    ; @Operation(opcode = WordOpcode'COMPARISON, condition = Condition'NE)
-    (§ override #_"boolean" Word''notEqual-2 [#_"Word" this, #_"int" val]
+    (§ method! #_"boolean" Word''notEqual-2 [#_"Word" this, #_"int" val]
         (Word''notEqual-2 this, (Word'intParam-1 val))
     )
 
     ; @Operation(opcode = WordOpcode'COMPARISON, condition = Condition'NE)
-    (§ method #_"boolean" Word''notEqual-2 [#_"Word" this, #_"Word" val]
+    (§ method! #_"boolean" Word''notEqual-2 [#_"Word" this, #_"Word" val]
         (not= (Word''unbox-1 this) (Word''unbox-1 val))
     )
 
     ; @Operation(opcode = WordOpcode'COMPARISON, condition = Condition'LT)
-    (§ override #_"boolean" Word''lessThan-2 [#_"Word" this, #_"SignedWord" val]
-        (Word''lessThan-2 this, (§ cast #_"Word" val))
-    )
-
-    ; @Operation(opcode = WordOpcode'COMPARISON, condition = Condition'LT)
-    (§ override #_"boolean" Word''lessThan-2 [#_"Word" this, #_"int" val]
+    (§ method! #_"boolean" Word''lessThan-2 [#_"Word" this, #_"int" val]
         (Word''lessThan-2 this, (Word'intParam-1 val))
     )
 
     ; @Operation(opcode = WordOpcode'COMPARISON, condition = Condition'LT)
-    (§ method #_"boolean" Word''lessThan-2 [#_"Word" this, #_"Word" val]
+    (§ method! #_"boolean" Word''lessThan-2 [#_"Word" this, #_"Word" val]
         (< (Word''unbox-1 this) (Word''unbox-1 val))
     )
 
     ; @Operation(opcode = WordOpcode'COMPARISON, condition = Condition'LE)
-    (§ override #_"boolean" Word''lessOrEqual-2 [#_"Word" this, #_"SignedWord" val]
-        (Word''lessOrEqual-2 this, (§ cast #_"Word" val))
-    )
-
-    ; @Operation(opcode = WordOpcode'COMPARISON, condition = Condition'LE)
-    (§ override #_"boolean" Word''lessOrEqual-2 [#_"Word" this, #_"int" val]
+    (§ method! #_"boolean" Word''lessOrEqual-2 [#_"Word" this, #_"int" val]
         (Word''lessOrEqual-2 this, (Word'intParam-1 val))
     )
 
@@ -79488,12 +79320,7 @@
     )
 
     ; @Operation(opcode = WordOpcode'COMPARISON, condition = Condition'GT)
-    (§ override #_"boolean" Word''greaterThan-2 [#_"Word" this, #_"SignedWord" val]
-        (Word''greaterThan-2 this, (§ cast #_"Word" val))
-    )
-
-    ; @Operation(opcode = WordOpcode'COMPARISON, condition = Condition'GT)
-    (§ override #_"boolean" Word''greaterThan-2 [#_"Word" this, #_"int" val]
+    (§ method! #_"boolean" Word''greaterThan-2 [#_"Word" this, #_"int" val]
         (Word''greaterThan-2 this, (Word'intParam-1 val))
     )
 
@@ -79503,12 +79330,7 @@
     )
 
     ; @Operation(opcode = WordOpcode'COMPARISON, condition = Condition'GE)
-    (§ override #_"boolean" Word''greaterOrEqual-2 [#_"Word" this, #_"SignedWord" val]
-        (Word''greaterOrEqual-2 this, (§ cast #_"Word" val))
-    )
-
-    ; @Operation(opcode = WordOpcode'COMPARISON, condition = Condition'GE)
-    (§ override #_"boolean" Word''greaterOrEqual-2 [#_"Word" this, #_"int" val]
+    (§ method! #_"boolean" Word''greaterOrEqual-2 [#_"Word" this, #_"int" val]
         (Word''greaterOrEqual-2 this, (Word'intParam-1 val))
     )
 
@@ -79518,12 +79340,7 @@
     )
 
     ; @Operation(opcode = WordOpcode'COMPARISON, condition = Condition'BT)
-    (§ override #_"boolean" Word''belowThan-2 [#_"Word" this, #_"UnsignedWord" val]
-        (Word''belowThan-2 this, (§ cast #_"Word" val))
-    )
-
-    ; @Operation(opcode = WordOpcode'COMPARISON, condition = Condition'BT)
-    (§ override #_"boolean" Word''belowThan-2 [#_"Word" this, #_"int" val]
+    (§ method! #_"boolean" Word''belowThan-2 [#_"Word" this, #_"int" val]
         (Word''belowThan-2 this, (Word'intParam-1 val))
     )
 
@@ -79533,12 +79350,7 @@
     )
 
     ; @Operation(opcode = WordOpcode'COMPARISON, condition = Condition'BE)
-    (§ override #_"boolean" Word''belowOrEqual-2 [#_"Word" this, #_"UnsignedWord" val]
-        (Word''belowOrEqual-2 this, (§ cast #_"Word" val))
-    )
-
-    ; @Operation(opcode = WordOpcode'COMPARISON, condition = Condition'BE)
-    (§ override #_"boolean" Word''belowOrEqual-2 [#_"Word" this, #_"int" val]
+    (§ method! #_"boolean" Word''belowOrEqual-2 [#_"Word" this, #_"int" val]
         (Word''belowOrEqual-2 this, (Word'intParam-1 val))
     )
 
@@ -79548,12 +79360,7 @@
     )
 
     ; @Operation(opcode = WordOpcode'COMPARISON, condition = Condition'AT)
-    (§ override #_"boolean" Word''aboveThan-2 [#_"Word" this, #_"UnsignedWord" val]
-        (Word''aboveThan-2 this, (§ cast #_"Word" val))
-    )
-
-    ; @Operation(opcode = WordOpcode'COMPARISON, condition = Condition'AT)
-    (§ override #_"boolean" Word''aboveThan-2 [#_"Word" this, #_"int" val]
+    (§ method! #_"boolean" Word''aboveThan-2 [#_"Word" this, #_"int" val]
         (Word''aboveThan-2 this, (Word'intParam-1 val))
     )
 
@@ -79563,12 +79370,7 @@
     )
 
     ; @Operation(opcode = WordOpcode'COMPARISON, condition = Condition'AE)
-    (§ override #_"boolean" Word''aboveOrEqual-2 [#_"Word" this, #_"UnsignedWord" val]
-        (Word''aboveOrEqual-2 this, (§ cast #_"Word" val))
-    )
-
-    ; @Operation(opcode = WordOpcode'COMPARISON, condition = Condition'AE)
-    (§ override #_"boolean" Word''aboveOrEqual-2 [#_"Word" this, #_"int" val]
+    (§ method! #_"boolean" Word''aboveOrEqual-2 [#_"Word" this, #_"int" val]
         (Word''aboveOrEqual-2 this, (Word'intParam-1 val))
     )
 
@@ -79578,400 +79380,390 @@
     )
 
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    (§ override #_"byte" Word''readByte-3 [#_"Word" this, #_"WordBase" offset, #_"LocationIdentity" locationIdentity]
-        (.getByte HotSpot'unsafe, (Word''unbox-1 (Word''add-2 this, (§ cast #_"Word" offset))))
+    (§ method! #_"byte" Word''readByte-3 [#_"Word" this, #_"Word" offset, #_"LocationIdentity" locationIdentity]
+        (.getByte HotSpot'unsafe, (Word''unbox-1 (Word''add-2 this, offset)))
     )
 
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    (§ override #_"char" Word''readChar-3 [#_"Word" this, #_"WordBase" offset, #_"LocationIdentity" locationIdentity]
-        (.getChar HotSpot'unsafe, (Word''unbox-1 (Word''add-2 this, (§ cast #_"Word" offset))))
+    (§ method! #_"char" Word''readChar-3 [#_"Word" this, #_"Word" offset, #_"LocationIdentity" locationIdentity]
+        (.getChar HotSpot'unsafe, (Word''unbox-1 (Word''add-2 this, offset)))
     )
 
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    (§ override #_"short" Word''readShort-3 [#_"Word" this, #_"WordBase" offset, #_"LocationIdentity" locationIdentity]
-        (.getShort HotSpot'unsafe, (Word''unbox-1 (Word''add-2 this, (§ cast #_"Word" offset))))
+    (§ method! #_"short" Word''readShort-3 [#_"Word" this, #_"Word" offset, #_"LocationIdentity" locationIdentity]
+        (.getShort HotSpot'unsafe, (Word''unbox-1 (Word''add-2 this, offset)))
     )
 
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    (§ override #_"int" Word''readInt-3 [#_"Word" this, #_"WordBase" offset, #_"LocationIdentity" locationIdentity]
-        (.getInt HotSpot'unsafe, (Word''unbox-1 (Word''add-2 this, (§ cast #_"Word" offset))))
+    (§ method! #_"int" Word''readInt-3 [#_"Word" this, #_"Word" offset, #_"LocationIdentity" locationIdentity]
+        (.getInt HotSpot'unsafe, (Word''unbox-1 (Word''add-2 this, offset)))
     )
 
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    (§ override #_"long" Word''readLong-3 [#_"Word" this, #_"WordBase" offset, #_"LocationIdentity" locationIdentity]
-        (.getLong HotSpot'unsafe, (Word''unbox-1 (Word''add-2 this, (§ cast #_"Word" offset))))
+    (§ method! #_"long" Word''readLong-3 [#_"Word" this, #_"Word" offset, #_"LocationIdentity" locationIdentity]
+        (.getLong HotSpot'unsafe, (Word''unbox-1 (Word''add-2 this, offset)))
     )
 
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    (§ override #_"<T extends WordBase> T" Word''readWord-3 [#_"Word" this, #_"WordBase" offset, #_"LocationIdentity" locationIdentity]
-        (Word'box-1 (.getAddress HotSpot'unsafe, (Word''unbox-1 (Word''add-2 this, (§ cast #_"Word" offset)))))
+    (§ method! #_"Word" Word''readWord-3 [#_"Word" this, #_"Word" offset, #_"LocationIdentity" locationIdentity]
+        (Word'box-1 (.getAddress HotSpot'unsafe, (Word''unbox-1 (Word''add-2 this, offset))))
     )
 
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    #_native
-    (§ abstract #_"Object" Word''readObject-3 [#_"Word" this, #_"WordBase" offset, #_"LocationIdentity" locationIdentity])
+    (§ native #_"Object" Word''readObject-3 [#_"Word" this, #_"Word" offset, #_"LocationIdentity" locationIdentity])
 
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    (§ override #_"byte" Word''readByte-3 [#_"Word" this, #_"int" offset, #_"LocationIdentity" locationIdentity]
+    (§ method! #_"byte" Word''readByte-3 [#_"Word" this, #_"int" offset, #_"LocationIdentity" locationIdentity]
         (Word''readByte-3 this, (WordFactory/signed offset), locationIdentity)
     )
 
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    (§ override #_"char" Word''readChar-3 [#_"Word" this, #_"int" offset, #_"LocationIdentity" locationIdentity]
+    (§ method! #_"char" Word''readChar-3 [#_"Word" this, #_"int" offset, #_"LocationIdentity" locationIdentity]
         (Word''readChar-3 this, (WordFactory/signed offset), locationIdentity)
     )
 
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    (§ override #_"short" Word''readShort-3 [#_"Word" this, #_"int" offset, #_"LocationIdentity" locationIdentity]
+    (§ method! #_"short" Word''readShort-3 [#_"Word" this, #_"int" offset, #_"LocationIdentity" locationIdentity]
         (Word''readShort-3 this, (WordFactory/signed offset), locationIdentity)
     )
 
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    (§ override #_"int" Word''readInt-3 [#_"Word" this, #_"int" offset, #_"LocationIdentity" locationIdentity]
+    (§ method! #_"int" Word''readInt-3 [#_"Word" this, #_"int" offset, #_"LocationIdentity" locationIdentity]
         (Word''readInt-3 this, (WordFactory/signed offset), locationIdentity)
     )
 
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    (§ override #_"long" Word''readLong-3 [#_"Word" this, #_"int" offset, #_"LocationIdentity" locationIdentity]
+    (§ method! #_"long" Word''readLong-3 [#_"Word" this, #_"int" offset, #_"LocationIdentity" locationIdentity]
         (Word''readLong-3 this, (WordFactory/signed offset), locationIdentity)
     )
 
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    (§ override #_"<T extends WordBase> T" Word''readWord-3 [#_"Word" this, #_"int" offset, #_"LocationIdentity" locationIdentity]
+    (§ method! #_"Word" Word''readWord-3 [#_"Word" this, #_"int" offset, #_"LocationIdentity" locationIdentity]
         (Word''readWord-3 this, (WordFactory/signed offset), locationIdentity)
     )
 
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    (§ override #_"Object" Word''readObject-3 [#_"Word" this, #_"int" offset, #_"LocationIdentity" locationIdentity]
+    (§ method! #_"Object" Word''readObject-3 [#_"Word" this, #_"int" offset, #_"LocationIdentity" locationIdentity]
         (Word''readObject-3 this, (WordFactory/signed offset), locationIdentity)
     )
 
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    (§ override #_"void" Word''writeByte-4 [#_"Word" this, #_"WordBase" offset, #_"byte" val, #_"LocationIdentity" locationIdentity]
-        (.putByte HotSpot'unsafe, (Word''unbox-1 (Word''add-2 this, (§ cast #_"Word" offset))), val)
+    (§ method! #_"void" Word''writeByte-4 [#_"Word" this, #_"Word" offset, #_"byte" val, #_"LocationIdentity" locationIdentity]
+        (.putByte HotSpot'unsafe, (Word''unbox-1 (Word''add-2 this, offset)), val)
         nil
     )
 
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    (§ override #_"void" Word''writeChar-4 [#_"Word" this, #_"WordBase" offset, #_"char" val, #_"LocationIdentity" locationIdentity]
-        (.putChar HotSpot'unsafe, (Word''unbox-1 (Word''add-2 this, (§ cast #_"Word" offset))), val)
+    (§ method! #_"void" Word''writeChar-4 [#_"Word" this, #_"Word" offset, #_"char" val, #_"LocationIdentity" locationIdentity]
+        (.putChar HotSpot'unsafe, (Word''unbox-1 (Word''add-2 this, offset)), val)
         nil
     )
 
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    (§ override #_"void" Word''writeShort-4 [#_"Word" this, #_"WordBase" offset, #_"short" val, #_"LocationIdentity" locationIdentity]
-        (.putShort HotSpot'unsafe, (Word''unbox-1 (Word''add-2 this, (§ cast #_"Word" offset))), val)
+    (§ method! #_"void" Word''writeShort-4 [#_"Word" this, #_"Word" offset, #_"short" val, #_"LocationIdentity" locationIdentity]
+        (.putShort HotSpot'unsafe, (Word''unbox-1 (Word''add-2 this, offset)), val)
         nil
     )
 
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    (§ override #_"void" Word''writeInt-4 [#_"Word" this, #_"WordBase" offset, #_"int" val, #_"LocationIdentity" locationIdentity]
-        (.putInt HotSpot'unsafe, (Word''unbox-1 (Word''add-2 this, (§ cast #_"Word" offset))), val)
+    (§ method! #_"void" Word''writeInt-4 [#_"Word" this, #_"Word" offset, #_"int" val, #_"LocationIdentity" locationIdentity]
+        (.putInt HotSpot'unsafe, (Word''unbox-1 (Word''add-2 this, offset)), val)
         nil
     )
 
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    (§ override #_"void" Word''writeLong-4 [#_"Word" this, #_"WordBase" offset, #_"long" val, #_"LocationIdentity" locationIdentity]
-        (.putLong HotSpot'unsafe, (Word''unbox-1 (Word''add-2 this, (§ cast #_"Word" offset))), val)
+    (§ method! #_"void" Word''writeLong-4 [#_"Word" this, #_"Word" offset, #_"long" val, #_"LocationIdentity" locationIdentity]
+        (.putLong HotSpot'unsafe, (Word''unbox-1 (Word''add-2 this, offset)), val)
         nil
     )
 
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    (§ override #_"void" Word''writeWord-4 [#_"Word" this, #_"WordBase" offset, #_"WordBase" val, #_"LocationIdentity" locationIdentity]
-        (.putAddress HotSpot'unsafe, (Word''unbox-1 (Word''add-2 this, (§ cast #_"Word" offset))), (Word''unbox-1 (§ cast #_"Word" val)))
+    (§ method! #_"void" Word''writeWord-4 [#_"Word" this, #_"Word" offset, #_"Word" val, #_"LocationIdentity" locationIdentity]
+        (.putAddress HotSpot'unsafe, (Word''unbox-1 (Word''add-2 this, offset)), (Word''unbox-1 val))
         nil
     )
 
     ; @Operation(opcode = WordOpcode'INITIALIZE)
-    (§ override #_"void" Word''initializeLong-4 [#_"Word" this, #_"WordBase" offset, #_"long" val, #_"LocationIdentity" locationIdentity]
-        (.putLong HotSpot'unsafe, (Word''unbox-1 (Word''add-2 this, (§ cast #_"Word" offset))), val)
+    (§ method! #_"void" Word''initializeLong-4 [#_"Word" this, #_"Word" offset, #_"long" val, #_"LocationIdentity" locationIdentity]
+        (.putLong HotSpot'unsafe, (Word''unbox-1 (Word''add-2 this, offset)), val)
         nil
     )
 
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_native
-    (§ abstract #_"void" Word''writeObject-4 [#_"Word" this, #_"WordBase" offset, #_"Object" val, #_"LocationIdentity" locationIdentity])
+    (§ native #_"void" Word''writeObject-4 [#_"Word" this, #_"Word" offset, #_"Object" val, #_"LocationIdentity" locationIdentity])
 
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    (§ override #_"void" Word''writeByte-4 [#_"Word" this, #_"int" offset, #_"byte" val, #_"LocationIdentity" locationIdentity]
+    (§ method! #_"void" Word''writeByte-4 [#_"Word" this, #_"int" offset, #_"byte" val, #_"LocationIdentity" locationIdentity]
         (Word''writeByte-4 this, (WordFactory/signed offset), val, locationIdentity)
         nil
     )
 
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    (§ override #_"void" Word''writeChar-4 [#_"Word" this, #_"int" offset, #_"char" val, #_"LocationIdentity" locationIdentity]
+    (§ method! #_"void" Word''writeChar-4 [#_"Word" this, #_"int" offset, #_"char" val, #_"LocationIdentity" locationIdentity]
         (Word''writeChar-4 this, (WordFactory/signed offset), val, locationIdentity)
         nil
     )
 
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    (§ override #_"void" Word''writeShort-4 [#_"Word" this, #_"int" offset, #_"short" val, #_"LocationIdentity" locationIdentity]
+    (§ method! #_"void" Word''writeShort-4 [#_"Word" this, #_"int" offset, #_"short" val, #_"LocationIdentity" locationIdentity]
         (Word''writeShort-4 this, (WordFactory/signed offset), val, locationIdentity)
         nil
     )
 
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    (§ override #_"void" Word''writeInt-4 [#_"Word" this, #_"int" offset, #_"int" val, #_"LocationIdentity" locationIdentity]
+    (§ method! #_"void" Word''writeInt-4 [#_"Word" this, #_"int" offset, #_"int" val, #_"LocationIdentity" locationIdentity]
         (Word''writeInt-4 this, (WordFactory/signed offset), val, locationIdentity)
         nil
     )
 
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    (§ override #_"void" Word''writeLong-4 [#_"Word" this, #_"int" offset, #_"long" val, #_"LocationIdentity" locationIdentity]
+    (§ method! #_"void" Word''writeLong-4 [#_"Word" this, #_"int" offset, #_"long" val, #_"LocationIdentity" locationIdentity]
         (Word''writeLong-4 this, (WordFactory/signed offset), val, locationIdentity)
         nil
     )
 
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    (§ override #_"void" Word''writeWord-4 [#_"Word" this, #_"int" offset, #_"WordBase" val, #_"LocationIdentity" locationIdentity]
+    (§ method! #_"void" Word''writeWord-4 [#_"Word" this, #_"int" offset, #_"Word" val, #_"LocationIdentity" locationIdentity]
         (Word''writeWord-4 this, (WordFactory/signed offset), val, locationIdentity)
         nil
     )
 
     ; @Operation(opcode = WordOpcode'INITIALIZE)
-    (§ override #_"void" Word''initializeLong-4 [#_"Word" this, #_"int" offset, #_"long" val, #_"LocationIdentity" locationIdentity]
+    (§ method! #_"void" Word''initializeLong-4 [#_"Word" this, #_"int" offset, #_"long" val, #_"LocationIdentity" locationIdentity]
         (Word''initializeLong-4 this, (WordFactory/signed offset), val, locationIdentity)
         nil
     )
 
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    (§ override #_"void" Word''writeObject-4 [#_"Word" this, #_"int" offset, #_"Object" val, #_"LocationIdentity" locationIdentity]
+    (§ method! #_"void" Word''writeObject-4 [#_"Word" this, #_"int" offset, #_"Object" val, #_"LocationIdentity" locationIdentity]
         (Word''writeObject-4 this, (WordFactory/signed offset), val, locationIdentity)
         nil
     )
 
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    (§ override #_"byte" Word''readByte-2 [#_"Word" this, #_"WordBase" offset]
-        (.getByte HotSpot'unsafe, (Word''unbox-1 (Word''add-2 this, (§ cast #_"Word" offset))))
+    (§ method! #_"byte" Word''readByte-2 [#_"Word" this, #_"Word" offset]
+        (.getByte HotSpot'unsafe, (Word''unbox-1 (Word''add-2 this, offset)))
     )
 
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    (§ override #_"char" Word''readChar-2 [#_"Word" this, #_"WordBase" offset]
-        (.getChar HotSpot'unsafe, (Word''unbox-1 (Word''add-2 this, (§ cast #_"Word" offset))))
+    (§ method! #_"char" Word''readChar-2 [#_"Word" this, #_"Word" offset]
+        (.getChar HotSpot'unsafe, (Word''unbox-1 (Word''add-2 this, offset)))
     )
 
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    (§ override #_"short" Word''readShort-2 [#_"Word" this, #_"WordBase" offset]
-        (.getShort HotSpot'unsafe, (Word''unbox-1 (Word''add-2 this, (§ cast #_"Word" offset))))
+    (§ method! #_"short" Word''readShort-2 [#_"Word" this, #_"Word" offset]
+        (.getShort HotSpot'unsafe, (Word''unbox-1 (Word''add-2 this, offset)))
     )
 
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    (§ override #_"int" Word''readInt-2 [#_"Word" this, #_"WordBase" offset]
-        (.getInt HotSpot'unsafe, (Word''unbox-1 (Word''add-2 this, (§ cast #_"Word" offset))))
+    (§ method! #_"int" Word''readInt-2 [#_"Word" this, #_"Word" offset]
+        (.getInt HotSpot'unsafe, (Word''unbox-1 (Word''add-2 this, offset)))
     )
 
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    (§ override #_"long" Word''readLong-2 [#_"Word" this, #_"WordBase" offset]
-        (.getLong HotSpot'unsafe, (Word''unbox-1 (Word''add-2 this, (§ cast #_"Word" offset))))
+    (§ method! #_"long" Word''readLong-2 [#_"Word" this, #_"Word" offset]
+        (.getLong HotSpot'unsafe, (Word''unbox-1 (Word''add-2 this, offset)))
     )
 
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    (§ override #_"<T extends WordBase> T" Word''readWord-2 [#_"Word" this, #_"WordBase" offset]
-        (Word'box-1 (.getAddress HotSpot'unsafe, (Word''unbox-1 (Word''add-2 this, (§ cast #_"Word" offset)))))
+    (§ method! #_"Word" Word''readWord-2 [#_"Word" this, #_"Word" offset]
+        (Word'box-1 (.getAddress HotSpot'unsafe, (Word''unbox-1 (Word''add-2 this, offset))))
     )
 
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    #_native
-    (§ abstract #_"Object" Word''readObject-2 [#_"Word" this, #_"WordBase" offset])
+    (§ native #_"Object" Word''readObject-2 [#_"Word" this, #_"Word" offset])
 
     ; @Operation(opcode = WordOpcode'READ_HEAP)
-    #_native
-    (§ abstract #_"Object" Word''readObject-3 [#_"Word" this, #_"WordBase" offset, #_"BarrierType" barrierType])
+    (§ native #_"Object" Word''readObject-3 [#_"Word" this, #_"Word" offset, #_"BarrierType" barrierType])
 
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    (§ override #_"byte" Word''readByte-2 [#_"Word" this, #_"int" offset]
+    (§ method! #_"byte" Word''readByte-2 [#_"Word" this, #_"int" offset]
         (Word''readByte-2 this, (WordFactory/signed offset))
     )
 
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    (§ override #_"char" Word''readChar-2 [#_"Word" this, #_"int" offset]
+    (§ method! #_"char" Word''readChar-2 [#_"Word" this, #_"int" offset]
         (Word''readChar-2 this, (WordFactory/signed offset))
     )
 
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    (§ override #_"short" Word''readShort-2 [#_"Word" this, #_"int" offset]
+    (§ method! #_"short" Word''readShort-2 [#_"Word" this, #_"int" offset]
         (Word''readShort-2 this, (WordFactory/signed offset))
     )
 
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    (§ override #_"int" Word''readInt-2 [#_"Word" this, #_"int" offset]
+    (§ method! #_"int" Word''readInt-2 [#_"Word" this, #_"int" offset]
         (Word''readInt-2 this, (WordFactory/signed offset))
     )
 
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    (§ override #_"long" Word''readLong-2 [#_"Word" this, #_"int" offset]
+    (§ method! #_"long" Word''readLong-2 [#_"Word" this, #_"int" offset]
         (Word''readLong-2 this, (WordFactory/signed offset))
     )
 
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    (§ override #_"<T extends WordBase> T" Word''readWord-2 [#_"Word" this, #_"int" offset]
+    (§ method! #_"Word" Word''readWord-2 [#_"Word" this, #_"int" offset]
         (Word''readWord-2 this, (WordFactory/signed offset))
     )
 
     ; @Operation(opcode = WordOpcode'READ_POINTER)
-    (§ override #_"Object" Word''readObject-2 [#_"Word" this, #_"int" offset]
+    (§ method! #_"Object" Word''readObject-2 [#_"Word" this, #_"int" offset]
         (Word''readObject-2 this, (WordFactory/signed offset))
     )
 
     ; @Operation(opcode = WordOpcode'READ_HEAP)
-    (§ method #_"Object" Word''readObject-3 [#_"Word" this, #_"int" offset, #_"BarrierType" barrierType]
+    (§ method! #_"Object" Word''readObject-3 [#_"Word" this, #_"int" offset, #_"BarrierType" barrierType]
         (Word''readObject-3 this, (WordFactory/signed offset), barrierType)
     )
 
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    (§ override #_"void" Word''writeByte-3 [#_"Word" this, #_"WordBase" offset, #_"byte" val]
-        (.putByte HotSpot'unsafe, (Word''unbox-1 (Word''add-2 this, (§ cast #_"Word" offset))), val)
+    (§ method! #_"void" Word''writeByte-3 [#_"Word" this, #_"Word" offset, #_"byte" val]
+        (.putByte HotSpot'unsafe, (Word''unbox-1 (Word''add-2 this, offset)), val)
         nil
     )
 
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    (§ override #_"void" Word''writeChar-3 [#_"Word" this, #_"WordBase" offset, #_"char" val]
-        (.putChar HotSpot'unsafe, (Word''unbox-1 (Word''add-2 this, (§ cast #_"Word" offset))), val)
+    (§ method! #_"void" Word''writeChar-3 [#_"Word" this, #_"Word" offset, #_"char" val]
+        (.putChar HotSpot'unsafe, (Word''unbox-1 (Word''add-2 this, offset)), val)
         nil
     )
 
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    (§ override #_"void" Word''writeShort-3 [#_"Word" this, #_"WordBase" offset, #_"short" val]
-        (.putShort HotSpot'unsafe, (Word''unbox-1 (Word''add-2 this, (§ cast #_"Word" offset))), val)
+    (§ method! #_"void" Word''writeShort-3 [#_"Word" this, #_"Word" offset, #_"short" val]
+        (.putShort HotSpot'unsafe, (Word''unbox-1 (Word''add-2 this, offset)), val)
         nil
     )
 
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    (§ override #_"void" Word''writeInt-3 [#_"Word" this, #_"WordBase" offset, #_"int" val]
-        (.putInt HotSpot'unsafe, (Word''unbox-1 (Word''add-2 this, (§ cast #_"Word" offset))), val)
+    (§ method! #_"void" Word''writeInt-3 [#_"Word" this, #_"Word" offset, #_"int" val]
+        (.putInt HotSpot'unsafe, (Word''unbox-1 (Word''add-2 this, offset)), val)
         nil
     )
 
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    (§ override #_"void" Word''writeLong-3 [#_"Word" this, #_"WordBase" offset, #_"long" val]
-        (.putLong HotSpot'unsafe, (Word''unbox-1 (Word''add-2 this, (§ cast #_"Word" offset))), val)
+    (§ method! #_"void" Word''writeLong-3 [#_"Word" this, #_"Word" offset, #_"long" val]
+        (.putLong HotSpot'unsafe, (Word''unbox-1 (Word''add-2 this, offset)), val)
         nil
     )
 
     ; @Operation(opcode = WordOpcode'CAS_POINTER)
-    #_native
-    (§ override #_"int" Word''compareAndSwapInt-5 [#_"Word" this, #_"WordBase" offset, #_"int" expectedValue, #_"int" newValue, #_"LocationIdentity" locationIdentity])
+    (§ native #_"int" Word''compareAndSwapInt-5 [#_"Word" this, #_"Word" offset, #_"int" expectedValue, #_"int" newValue, #_"LocationIdentity" locationIdentity])
 
     ; @Operation(opcode = WordOpcode'CAS_POINTER)
-    #_native
-    (§ override #_"long" Word''compareAndSwapLong-5 [#_"Word" this, #_"WordBase" offset, #_"long" expectedValue, #_"long" newValue, #_"LocationIdentity" locationIdentity])
+    (§ native #_"long" Word''compareAndSwapLong-5 [#_"Word" this, #_"Word" offset, #_"long" expectedValue, #_"long" newValue, #_"LocationIdentity" locationIdentity])
 
     ; @Operation(opcode = WordOpcode'CAS_POINTER)
-    #_native
-    (§ override #_"<T extends WordBase> T" Word''compareAndSwapWord-5 [#_"Word" this, #_"WordBase" offset, #_"T" expectedValue, #_"T" newValue, #_"LocationIdentity" locationIdentity])
+    (§ native #_"Word" Word''compareAndSwapWord-5 [#_"Word" this, #_"Word" offset, #_"Word" expectedValue, #_"Word" newValue, #_"LocationIdentity" locationIdentity])
 
     ; @Operation(opcode = WordOpcode'CAS_POINTER)
-    #_native
-    (§ override #_"Object" Word''compareAndSwapObject-5 [#_"Word" this, #_"WordBase" offset, #_"Object" expectedValue, #_"Object" newValue, #_"LocationIdentity" locationIdentity])
+    (§ native #_"Object" Word''compareAndSwapObject-5 [#_"Word" this, #_"Word" offset, #_"Object" expectedValue, #_"Object" newValue, #_"LocationIdentity" locationIdentity])
 
     ; @Operation(opcode = WordOpcode'CAS_POINTER)
-    (§ override #_"boolean" Word''logicCompareAndSwapInt-5 [#_"Word" this, #_"WordBase" offset, #_"int" expectedValue, #_"int" newValue, #_"LocationIdentity" locationIdentity]
-        (.compareAndSwapInt HotSpot'unsafe, (Word''toObject-1 this), (Word''unbox-1 (§ cast #_"Word" offset)), expectedValue, newValue)
+    (§ method! #_"boolean" Word''logicCompareAndSwapInt-5 [#_"Word" this, #_"Word" offset, #_"int" expectedValue, #_"int" newValue, #_"LocationIdentity" locationIdentity]
+        (.compareAndSwapInt HotSpot'unsafe, (Word''toObject-1 this), (Word''unbox-1 offset), expectedValue, newValue)
     )
 
     ; @Operation(opcode = WordOpcode'CAS_POINTER)
-    (§ override #_"boolean" Word''logicCompareAndSwapLong-5 [#_"Word" this, #_"WordBase" offset, #_"long" expectedValue, #_"long" newValue, #_"LocationIdentity" locationIdentity]
-        (.compareAndSwapLong HotSpot'unsafe, (Word''toObject-1 this), (Word''unbox-1 (§ cast #_"Word" offset)), expectedValue, newValue)
+    (§ method! #_"boolean" Word''logicCompareAndSwapLong-5 [#_"Word" this, #_"Word" offset, #_"long" expectedValue, #_"long" newValue, #_"LocationIdentity" locationIdentity]
+        (.compareAndSwapLong HotSpot'unsafe, (Word''toObject-1 this), (Word''unbox-1 offset), expectedValue, newValue)
     )
 
     ; @Operation(opcode = WordOpcode'CAS_POINTER)
-    #_native
-    (§ override #_"boolean" Word''logicCompareAndSwapWord-5 [#_"Word" this, #_"WordBase" offset, #_"WordBase" expectedValue, #_"WordBase" newValue, #_"LocationIdentity" locationIdentity])
+    (§ native #_"boolean" Word''logicCompareAndSwapWord-5 [#_"Word" this, #_"Word" offset, #_"Word" expectedValue, #_"Word" newValue, #_"LocationIdentity" locationIdentity])
 
     ; @Operation(opcode = WordOpcode'CAS_POINTER)
-    (§ override #_"boolean" Word''logicCompareAndSwapObject-5 [#_"Word" this, #_"WordBase" offset, #_"Object" expectedValue, #_"Object" newValue, #_"LocationIdentity" locationIdentity]
-        (.compareAndSwapObject HotSpot'unsafe, (Word''toObject-1 this), (Word''unbox-1 (§ cast #_"Word" offset)), expectedValue, newValue)
+    (§ method! #_"boolean" Word''logicCompareAndSwapObject-5 [#_"Word" this, #_"Word" offset, #_"Object" expectedValue, #_"Object" newValue, #_"LocationIdentity" locationIdentity]
+        (.compareAndSwapObject HotSpot'unsafe, (Word''toObject-1 this), (Word''unbox-1 offset), expectedValue, newValue)
     )
 
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    (§ override #_"void" Word''writeWord-3 [#_"Word" this, #_"WordBase" offset, #_"WordBase" val]
-        (.putAddress HotSpot'unsafe, (Word''unbox-1 (Word''add-2 this, (§ cast #_"Word" offset))), (Word''unbox-1 (§ cast #_"Word" val)))
+    (§ method! #_"void" Word''writeWord-3 [#_"Word" this, #_"Word" offset, #_"Word" val]
+        (.putAddress HotSpot'unsafe, (Word''unbox-1 (Word''add-2 this, offset)), (Word''unbox-1 val))
         nil
     )
 
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    #_native
-    (§ abstract #_"void" Word''writeObject-3 [#_"Word" this, #_"WordBase" offset, #_"Object" val])
+    (§ native #_"void" Word''writeObject-3 [#_"Word" this, #_"Word" offset, #_"Object" val])
 
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    (§ override #_"void" Word''writeByte-3 [#_"Word" this, #_"int" offset, #_"byte" val]
+    (§ method! #_"void" Word''writeByte-3 [#_"Word" this, #_"int" offset, #_"byte" val]
         (Word''writeByte-3 this, (WordFactory/signed offset), val)
         nil
     )
 
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    (§ override #_"void" Word''writeChar-3 [#_"Word" this, #_"int" offset, #_"char" val]
+    (§ method! #_"void" Word''writeChar-3 [#_"Word" this, #_"int" offset, #_"char" val]
         (Word''writeChar-3 this, (WordFactory/signed offset), val)
         nil
     )
 
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    (§ override #_"void" Word''writeShort-3 [#_"Word" this, #_"int" offset, #_"short" val]
+    (§ method! #_"void" Word''writeShort-3 [#_"Word" this, #_"int" offset, #_"short" val]
         (Word''writeShort-3 this, (WordFactory/signed offset), val)
         nil
     )
 
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    (§ override #_"void" Word''writeInt-3 [#_"Word" this, #_"int" offset, #_"int" val]
+    (§ method! #_"void" Word''writeInt-3 [#_"Word" this, #_"int" offset, #_"int" val]
         (Word''writeInt-3 this, (WordFactory/signed offset), val)
         nil
     )
 
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    (§ override #_"void" Word''writeLong-3 [#_"Word" this, #_"int" offset, #_"long" val]
+    (§ method! #_"void" Word''writeLong-3 [#_"Word" this, #_"int" offset, #_"long" val]
         (Word''writeLong-3 this, (WordFactory/signed offset), val)
         nil
     )
 
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    (§ override #_"void" Word''writeWord-3 [#_"Word" this, #_"int" offset, #_"WordBase" val]
+    (§ method! #_"void" Word''writeWord-3 [#_"Word" this, #_"int" offset, #_"Word" val]
         (Word''writeWord-3 this, (WordFactory/signed offset), val)
         nil
     )
 
     ; @Operation(opcode = WordOpcode'WRITE_POINTER)
-    (§ override #_"void" Word''writeObject-3 [#_"Word" this, #_"int" offset, #_"Object" val]
+    (§ method! #_"void" Word''writeObject-3 [#_"Word" this, #_"int" offset, #_"Object" val]
         (Word''writeObject-3 this, (WordFactory/signed offset), val)
         nil
     )
 
     ; @Operation(opcode = WordOpcode'CAS_POINTER)
-    (§ override #_"int" Word''compareAndSwapInt-5 [#_"Word" this, #_"int" offset, #_"int" expectedValue, #_"int" newValue, #_"LocationIdentity" locationIdentity]
+    (§ method! #_"int" Word''compareAndSwapInt-5 [#_"Word" this, #_"int" offset, #_"int" expectedValue, #_"int" newValue, #_"LocationIdentity" locationIdentity]
         (Word''compareAndSwapInt-5 this, (WordFactory/signed offset), expectedValue, newValue, locationIdentity)
     )
 
     ; @Operation(opcode = WordOpcode'CAS_POINTER)
-    (§ override #_"long" Word''compareAndSwapLong-5 [#_"Word" this, #_"int" offset, #_"long" expectedValue, #_"long" newValue, #_"LocationIdentity" locationIdentity]
+    (§ method! #_"long" Word''compareAndSwapLong-5 [#_"Word" this, #_"int" offset, #_"long" expectedValue, #_"long" newValue, #_"LocationIdentity" locationIdentity]
         (Word''compareAndSwapLong-5 this, (WordFactory/signed offset), expectedValue, newValue, locationIdentity)
     )
 
     ; @Operation(opcode = WordOpcode'CAS_POINTER)
-    (§ override #_"<T extends WordBase> T" Word''compareAndSwapWord-5 [#_"Word" this, #_"int" offset, #_"T" expectedValue, #_"T" newValue, #_"LocationIdentity" locationIdentity]
+    (§ method! #_"Word" Word''compareAndSwapWord-5 [#_"Word" this, #_"int" offset, #_"Word" expectedValue, #_"Word" newValue, #_"LocationIdentity" locationIdentity]
         (Word''compareAndSwapWord-5 this, (WordFactory/signed offset), expectedValue, newValue, locationIdentity)
     )
 
     ; @Operation(opcode = WordOpcode'CAS_POINTER)
-    (§ override #_"Object" Word''compareAndSwapObject-5 [#_"Word" this, #_"int" offset, #_"Object" expectedValue, #_"Object" newValue, #_"LocationIdentity" locationIdentity]
+    (§ method! #_"Object" Word''compareAndSwapObject-5 [#_"Word" this, #_"int" offset, #_"Object" expectedValue, #_"Object" newValue, #_"LocationIdentity" locationIdentity]
         (Word''compareAndSwapObject-5 this, (WordFactory/signed offset), expectedValue, newValue, locationIdentity)
     )
 
     ; @Operation(opcode = WordOpcode'CAS_POINTER)
-    (§ override #_"boolean" Word''logicCompareAndSwapInt-5 [#_"Word" this, #_"int" offset, #_"int" expectedValue, #_"int" newValue, #_"LocationIdentity" locationIdentity]
+    (§ method! #_"boolean" Word''logicCompareAndSwapInt-5 [#_"Word" this, #_"int" offset, #_"int" expectedValue, #_"int" newValue, #_"LocationIdentity" locationIdentity]
         (Word''logicCompareAndSwapInt-5 this, (WordFactory/signed offset), expectedValue, newValue, locationIdentity)
     )
 
     ; @Operation(opcode = WordOpcode'CAS_POINTER)
-    (§ override #_"boolean" Word''logicCompareAndSwapLong-5 [#_"Word" this, #_"int" offset, #_"long" expectedValue, #_"long" newValue, #_"LocationIdentity" locationIdentity]
+    (§ method! #_"boolean" Word''logicCompareAndSwapLong-5 [#_"Word" this, #_"int" offset, #_"long" expectedValue, #_"long" newValue, #_"LocationIdentity" locationIdentity]
         (Word''logicCompareAndSwapLong-5 this, (WordFactory/signed offset), expectedValue, newValue, locationIdentity)
     )
 
     ; @Operation(opcode = WordOpcode'CAS_POINTER)
-    (§ override #_"boolean" Word''logicCompareAndSwapWord-5 [#_"Word" this, #_"int" offset, #_"WordBase" expectedValue, #_"WordBase" newValue, #_"LocationIdentity" locationIdentity]
+    (§ method! #_"boolean" Word''logicCompareAndSwapWord-5 [#_"Word" this, #_"int" offset, #_"Word" expectedValue, #_"Word" newValue, #_"LocationIdentity" locationIdentity]
         (Word''logicCompareAndSwapWord-5 this, (WordFactory/signed offset), expectedValue, newValue, locationIdentity)
     )
 
     ; @Operation(opcode = WordOpcode'CAS_POINTER)
-    (§ override #_"boolean" Word''logicCompareAndSwapObject-5 [#_"Word" this, #_"int" offset, #_"Object" expectedValue, #_"Object" newValue, #_"LocationIdentity" locationIdentity]
+    (§ method! #_"boolean" Word''logicCompareAndSwapObject-5 [#_"Word" this, #_"int" offset, #_"Object" expectedValue, #_"Object" newValue, #_"LocationIdentity" locationIdentity]
         (Word''logicCompareAndSwapObject-5 this, (WordFactory/signed offset), expectedValue, newValue, locationIdentity)
     )
 )
@@ -80018,58 +79810,6 @@
     (§ enum WordOpcode'TO_OBJECT)
     (§ enum WordOpcode'TO_OBJECT_NON_NULL)
     (§ enum WordOpcode'TO_RAW_VALUE)
-)
-
-;;;
- ; @anno Word.BoxFactoryImpl
- ;;
-(final-ns BoxFactoryImpl (§ extends WordBoxFactory)
-    (§ defn #_"BoxFactoryImpl" BoxFactoryImpl'new-0 []
-        (WordBoxFactory.)
-    )
-
-    (§ defn #_"void" BoxFactoryImpl'initialize-0 []
-        (§ ass WordBoxFactory/boxFactory (BoxFactoryImpl'new-0))
-        nil
-    )
-
-    #_unused
-    (§ override! #_"<T extends WordBase> T" BoxFactoryImpl''boxImpl-2 [#_"BoxFactoryImpl" this, #_"long" val]
-        (§ cast #_"T" (HostedWord'boxLong-1 val))
-    )
-)
-
-(final-ns HostedWord (§ extends Word)
-    (def- #_"int" HostedWord'SMALL_FROM -1)
-    (def- #_"int" HostedWord'SMALL_TO 100)
-
-    (§ def- #_"HostedWord[]" HostedWord'smallCache (make-array HostedWord (inc (- HostedWord'SMALL_TO HostedWord'SMALL_FROM))))
-
-    (§ init
-        (loop-when-recur [#_"int" i HostedWord'SMALL_FROM] (<= i HostedWord'SMALL_TO) [(inc i)]
-            (aset HostedWord'smallCache (- i HostedWord'SMALL_FROM) (HostedWord'new-1 i))
-        )
-    )
-
-    (§ final #_"long" :rawValue 0)
-
-    (§ defn- #_"HostedWord" HostedWord'new-1 [#_"long" rawValue]
-        (let [
-            #_"HostedWord" this (Word'new-0)
-            this (assoc this :rawValue rawValue)
-        ]
-            this
-        )
-    )
-
-    (§ defn #_"Word" HostedWord'boxLong-1 [#_"long" val]
-        (if (<= HostedWord'SMALL_FROM val HostedWord'SMALL_TO) (nth HostedWord'smallCache (int (- val HostedWord'SMALL_FROM))) (HostedWord'new-1 val))
-    )
-
-    #_unused
-    (§ override! #_"long" HostedWord''unbox-1 [#_"HostedWord" this]
-        (:rawValue this)
-    )
 )
 
 ;;;
