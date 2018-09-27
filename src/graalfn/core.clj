@@ -1,5 +1,5 @@
 (ns graalfn.core
-    (:refer-clojure :only [*ns* + - / <= = and assoc bit-and bit-not bit-or bit-shift-left bit-shift-right byte cond condp cons defmacro defn doseq first import inc int int-array keys let letfn make-array neg? next not ns-imports ns-unmap nth or quot reduce rem repeat rest second seq sequential? short some? symbol? unsigned-bit-shift-right vary-meta vec vector?])
+    (:refer-clojure :only [*ns* + - / <= = and assoc bit-and bit-not bit-or bit-shift-left bit-shift-right byte cond condp cons defmacro defn defprotocol doseq first import inc int int-array keys let letfn make-array neg? next not ns-imports ns-unmap nth or quot reduce rem repeat rest second seq sequential? short some? symbol? unsigned-bit-shift-right vary-meta vec vector?])
 )
 
 (defmacro § [& _])
@@ -255,71 +255,60 @@
 )
 
 ;;;
- ; An interface for accessing the bytecode properties of a ResolvedJavaMethod that allows
- ; for different properties than those returned by ResolvedJavaMethod. Since the bytecode
- ; accessed directly from ResolvedJavaMethod may have been subject to bytecode
- ; instrumentation and VM rewriting, this indirection can be used to enable access to the original
- ; bytecode of a method (i.e. as defined in a class file).
+ ; An interface for accessing the bytecode properties of a ResolvedJavaMethod that allows for
+ ; different properties than those returned by ResolvedJavaMethod. Since the bytecode accessed
+ ; directly from ResolvedJavaMethod may have been subject to bytecode instrumentation and VM
+ ; rewriting, this indirection can be used to enable access to the original bytecode of a method
+ ; (i.e. as defined in a class file).
  ;;
-(§ interface Bytecode
-    ;;;
-     ; Gets the method this object supplies bytecode for.
-     ;;
-    (§ abstract #_"ResolvedJavaMethod" Bytecode'''getMethod-1 [#_"Bytecode" this])
-
-    (§ abstract #_"byte[]" Bytecode'''getCode-1 [#_"Bytecode" this])
-
-    (§ abstract #_"int" Bytecode'''getCodeSize-1 [#_"Bytecode" this])
-
-    (§ abstract #_"int" Bytecode'''getMaxStackSize-1 [#_"Bytecode" this])
-
-    (§ abstract #_"int" Bytecode'''getMaxLocals-1 [#_"Bytecode" this])
-
-    (§ abstract #_"ConstantPool" Bytecode'''getConstantPool-1 [#_"Bytecode" this])
+(defprotocol Bytecode
+    (#_"ResolvedJavaMethod" Bytecode'''getMethod-1 [#_"Bytecode" this])
+    (#_"byte[]" Bytecode'''getCode-1 [#_"Bytecode" this])
+    (#_"int" Bytecode'''getCodeSize-1 [#_"Bytecode" this])
+    (#_"int" Bytecode'''getMaxStackSize-1 [#_"Bytecode" this])
+    (#_"int" Bytecode'''getMaxLocals-1 [#_"Bytecode" this])
+    (#_"ConstantPool" Bytecode'''getConstantPool-1 [#_"Bytecode" this])
 )
 
 ;;;
  ; Provides a Bytecode object for interposing on the bytecode of a ResolvedJavaMethod
  ; (i.e. potentially getting bytecode different than ResolvedJavaMethod#getCode()).
  ;;
-(§ interface BytecodeProvider
-    ;;;
-     ; Gets a Bytecode object that supplies bytecode properties for {@code method}.
-     ;;
-    (§ abstract #_"Bytecode" BytecodeProvider'''getBytecode-2 [#_"BytecodeProvider" this, #_"ResolvedJavaMethod" method])
+(defprotocol BytecodeProvider
+    (#_"Bytecode" BytecodeProvider'''getBytecode-2 [#_"BytecodeProvider" this, #_"ResolvedJavaMethod" method])
 )
 
 ;;;
  ; @anno DataSection.Patches
  ;;
 ; @FunctionalInterface
-(§ interface Patches
-    (§ abstract #_"void" Patches'''registerPatch-3 [#_"Patches" this, #_"int" position, #_"VMConstant" constant])
+(defprotocol Patches
+    (#_"void" Patches'''registerPatch-3 [#_"Patches" this, #_"int" position, #_"VMConstant" constant])
 )
 
 ;;;
  ; A marker for a node type supporting {@linkplain Graph#getNodes(NodeClass) fast iteration} of its
  ; instances in a graph. The support for fast iteration comes with a memory cost (e.g. extra data
- ; structures Graph) so only node types for which fast iteration provides a compilation
- ; performance benefit should implement this interface.
+ ; structures Graph) so only node types for which fast iteration provides a compilation performance
+ ; benefit should implement this interface.
  ;;
-(§ interface IterableNodeType
+(defprotocol IterableNodeType
 )
 
-(§ interface NodeIterable #_"<T implements Node>" (§ extends Iterable #_"<T>")
-    (§ abstract #_"<F extends T> NodeIterable<F>" NodeIterable'''filter-2 [#_"NodeIterable<T implements Node>" this, #_"Class<F>" clazz])
+(§ defprotocol NodeIterable #_"<T implements Node>" #_(§ extends Iterable #_"<T>")
+    (#_"<F extends T> NodeIterable<F>" NodeIterable'''filter-2 [#_"NodeIterable<T implements Node>" this, #_"Class<F>" clazz])
 
     (§ override #_"<F extends T> NodeIterable<F>" NodeIterable'''filter-2 [#_"NodeIterable<T implements Node>" this, #_"Class<F>" clazz]
         (FilteredNodeIterable''and-2 (FilteredNodeIterable'new-1 this), (PositiveTypePredicate'new-1 clazz))
     )
 
-    (§ abstract #_"FilteredNodeIterable<T>" NodeIterable'''filter-2 [#_"NodeIterable<T implements Node>" this, #_"NodePredicate" predicate])
+    (#_"FilteredNodeIterable<T>" NodeIterable'''filter-2 [#_"NodeIterable<T implements Node>" this, #_"NodePredicate" predicate])
 
     (§ override #_"FilteredNodeIterable<T>" NodeIterable'''filter-2 [#_"NodeIterable<T implements Node>" this, #_"NodePredicate" predicate]
         (FilteredNodeIterable''and-2 (FilteredNodeIterable'new-1 this), predicate)
     )
 
-    (§ abstract #_"List<T>" NodeIterable'''snapshot-1 [#_"NodeIterable<T implements Node>" this])
+    (#_"List<T>" NodeIterable'''snapshot-1 [#_"NodeIterable<T implements Node>" this])
 
     (§ override #_"List<T>" NodeIterable'''snapshot-1 [#_"NodeIterable<T implements Node>" this]
         (let [
@@ -337,7 +326,7 @@
         nil
     )
 
-    (§ abstract #_"T" NodeIterable'''first-1 [#_"NodeIterable<T implements Node>" this])
+    (#_"T" NodeIterable'''first-1 [#_"NodeIterable<T implements Node>" this])
 
     (§ override #_"T" NodeIterable'''first-1 [#_"NodeIterable<T implements Node>" this]
         (let [
@@ -349,7 +338,7 @@
         )
     )
 
-    (§ abstract #_"int" NodeIterable'''count-1 [#_"NodeIterable<T implements Node>" this])
+    (#_"int" NodeIterable'''count-1 [#_"NodeIterable<T implements Node>" this])
 
     (§ override #_"int" NodeIterable'''count-1 [#_"NodeIterable<T implements Node>" this]
         (let [
@@ -361,19 +350,19 @@
         )
     )
 
-    (§ abstract #_"boolean" NodeIterable'''isEmpty-1 [#_"NodeIterable<T implements Node>" this])
+    (#_"boolean" NodeIterable'''isEmpty-1 [#_"NodeIterable<T implements Node>" this])
 
     (§ override #_"boolean" NodeIterable'''isEmpty-1 [#_"NodeIterable<T implements Node>" this]
         (not (#_"Iterator" .hasNext (#_"Iterable" .iterator this)))
     )
 
-    (§ abstract #_"boolean" NodeIterable'''isNotEmpty-1 [#_"NodeIterable<T implements Node>" this])
+    (#_"boolean" NodeIterable'''isNotEmpty-1 [#_"NodeIterable<T implements Node>" this])
 
     (§ override #_"boolean" NodeIterable'''isNotEmpty-1 [#_"NodeIterable<T implements Node>" this]
         (#_"Iterator" .hasNext (#_"Iterable" .iterator this))
     )
 
-    (§ abstract #_"boolean" NodeIterable'''contains-2 [#_"NodeIterable<T implements Node>" this, #_"T" node])
+    (#_"boolean" NodeIterable'''contains-2 [#_"NodeIterable<T implements Node>" this, #_"T" node])
 
     (§ override #_"boolean" NodeIterable'''contains-2 [#_"NodeIterable<T implements Node>" this, #_"T" node]
         (loop-when [#_"ISeq" s (seq this)] (some? s) => false
@@ -384,10 +373,10 @@
     )
 )
 
-(§ interface NodePredicate (§ extends Predicate #_"<Node>")
-    (§ abstract #_"boolean" NodePredicate'''apply-2 [#_"NodePredicate" this, #_"Node" node])
+(§ defprotocol NodePredicate #_(§ extends Predicate #_"<Node>")
+    (#_"boolean" NodePredicate'''apply-2 [#_"NodePredicate" this, #_"Node" node])
 
-    (§ abstract #_"NodePredicate" NodePredicate'''and-2 [#_"NodePredicate" this, #_"NodePredicate" other])
+    (#_"NodePredicate" NodePredicate'''and-2 [#_"NodePredicate" this, #_"NodePredicate" other])
 
     (§ override #_"NodePredicate" NodePredicate'''and-2 [#_"NodePredicate" this, #_"NodePredicate" other]
         (AndPredicate'new-2 this, other)
@@ -400,33 +389,33 @@
  ;
  ; @anno Node.IndirectCanonicalization
  ;;
-(§ interface IndirectCanonicalization
+(defprotocol IndirectCanonicalization
 )
 
 ;;;
  ; @anno NodeClass.InplaceUpdateClosure
  ;;
-(§ interface InplaceUpdateClosure
-    (§ abstract #_"Node" InplaceUpdateClosure'''replacement-3 [#_"InplaceUpdateClosure" this, #_"Node" node, #_"EdgesType" type])
+(defprotocol InplaceUpdateClosure
+    (#_"Node" InplaceUpdateClosure'''replacement-3 [#_"InplaceUpdateClosure" this, #_"Node" node, #_"EdgesType" type])
 )
 
 ;;;
  ; Nodes can implement Canonicalizable or one of the two sub-interfaces Unary and
  ; Binary to provide local optimizations like constant folding and strength reduction.
- ; Implementations should return a replacement that is always semantically correct for the given
- ; inputs, or "this" if they do not see an opportunity for improvement.
+ ; Implementations should return a replacement that is always semantically correct for
+ ; the given inputs, or "this" if they do not see an opportunity for improvement.
  ;
  ; <b>Implementations of Canonicalizable#canonical(CanonicalizerTool) or the equivalent
  ; methods of the two sub-interfaces must not have any side effects.</b>
- ; They are not allowed to change inputs, successors or properties of any node (including the
- ; current one) and they also cannot add new nodes to the graph.
+ ; They are not allowed to change inputs, successors or properties of any node (including
+ ; the current one) and they also cannot add new nodes to the graph.
  ;
- ; In addition to pre-existing nodes they can return newly created nodes, which will be added to the
- ; graph automatically if (and only if) the effects of the canonicalization are committed.
- ; Non-cyclic graphs (DAGs) of newly created nodes (i.e. one newly created node with an input to
- ; another newly created node) will be handled correctly.
+ ; In addition to pre-existing nodes they can return newly created nodes, which will be added
+ ; to the graph automatically if (and only if) the effects of the canonicalization are committed.
+ ; Non-cyclic graphs (DAGs) of newly created nodes (i.e. one newly created node with an input
+ ; to another newly created node) will be handled correctly.
  ;;
-(§ interface Canonicalizable
+(defprotocol Canonicalizable
     ;;;
      ; Implementations of this method can provide local optimizations like constant folding and
      ; strength reduction. Implementations should look at the properties and inputs of the current
@@ -446,7 +435,7 @@
      ;
      ; @param tool provides access to runtime interfaces like MetaAccessProvider
      ;;
-    (§ abstract #_"Node" Canonicalizable'''canonical-2 [#_"Canonicalizable" this, #_"CanonicalizerTool" tool])
+    (#_"Node" Canonicalizable'''canonical-2 [#_"Canonicalizable" this, #_"CanonicalizerTool" tool])
 )
 
 ;;;
@@ -458,20 +447,20 @@
  ;
  ; @anno Canonicalizable.Unary
  ;;
-(§ interface Unary #_"<T implements Node>" (§ extends Canonicalizable)
+(§ defprotocol Unary #_"<T implements Node>" #_(§ extends Canonicalizable)
     ;;;
      ; Similar to Canonicalizable#canonical(CanonicalizerTool), except that implementations should act as if the
      ; current input of the node was the given one, i.e. they should never look at the inputs via the this pointer.
      ;;
-    (§ abstract #_"Node" Unary'''canonical-3 [#_"Unary<T implements Node>" this, #_"CanonicalizerTool" tool, #_"T" forValue])
+    (#_"Node" Unary'''canonical-3 [#_"Unary<T implements Node>" this, #_"CanonicalizerTool" tool, #_"T" forValue])
 
     ;;;
      ; Gets the current value of the input, so that calling #canonical(CanonicalizerTool, Node) with the value
      ; returned from this method should behave exactly like Canonicalizable#canonical(CanonicalizerTool).
      ;;
-    (§ abstract #_"T" Unary'''getValue-1 [#_"Unary<T implements Node>" this])
+    (#_"T" Unary'''getValue-1 [#_"Unary<T implements Node>" this])
 
-    (§ abstract #_"T" Canonicalizable'''canonical-2 [#_"Unary<T implements Node>" this, #_"CanonicalizerTool" tool])
+    (#_"T" Canonicalizable'''canonical-2 [#_"Unary<T implements Node>" this, #_"CanonicalizerTool" tool])
 
     (§ override #_"T" Canonicalizable'''canonical-2 [#_"Unary<T implements Node>" this, #_"CanonicalizerTool" tool]
         (Unary'''canonical-3 this, tool, (Unary'''getValue-1 this))
@@ -479,22 +468,23 @@
 )
 
 ;;;
- ; This sub-interface of Canonicalizable is intended for nodes that have exactly two inputs. It has an
- ; additional #canonical(CanonicalizerTool, Node, Node) method that looks at the given inputs instead of the current
- ; inputs of the node - which can be used to ask "what if this input is changed to this node" - questions.
+ ; This sub-interface of Canonicalizable is intended for nodes that have exactly two inputs.
+ ; It has an additional #canonical(CanonicalizerTool, Node, Node) method that looks at the given
+ ; inputs instead of the current inputs of the node - which can be used to ask "what if this
+ ; input is changed to this node" - questions.
  ;
  ; @param <T> the common supertype of all inputs of this node
  ;
  ; @anno Canonicalizable.Binary
  ;;
-(§ interface Binary #_"<T implements Node>" (§ extends Canonicalizable)
+(§ defprotocol Binary #_"<T implements Node>" #_(§ extends Canonicalizable)
     ;;;
      ; Similar to Canonicalizable#canonical(CanonicalizerTool), except that implementations should act as if the
      ; current input of the node was the given one, i.e. they should never look at the inputs via the this pointer.
      ;;
-    (§ abstract #_"Node" Binary'''canonical-4 [#_"Binary<T implements Node>" this, #_"CanonicalizerTool" tool, #_"T" forX, #_"T" forY])
+    (#_"Node" Binary'''canonical-4 [#_"Binary<T implements Node>" this, #_"CanonicalizerTool" tool, #_"T" forX, #_"T" forY])
 
-    (§ abstract #_"T" Canonicalizable'''canonical-2 [#_"Binary<T implements Node>" this, #_"CanonicalizerTool" tool])
+    (#_"T" Canonicalizable'''canonical-2 [#_"Binary<T implements Node>" this, #_"CanonicalizerTool" tool])
 
     (§ override #_"T" Canonicalizable'''canonical-2 [#_"Binary<T implements Node>" this, #_"CanonicalizerTool" tool]
         (Binary'''canonical-4 this, tool, (:x this), (:y this))
@@ -508,7 +498,7 @@
      ;
      ; @return the original node or another node with the same input ordering
      ;;
-    (§ abstract #_"Node" Binary'''maybeCommuteInputs-1 [#_"Binary<T implements Node>" this])
+    (#_"Node" Binary'''maybeCommuteInputs-1 [#_"Binary<T implements Node>" this])
 )
 
 ;;;
@@ -517,23 +507,21 @@
  ;
  ; @anno Canonicalizable.BinaryCommutative
  ;;
-(§ interface BinaryCommutative #_"<T implements Node>" (§ extends Binary #_"<T>")
+(defprotocol BinaryCommutative #_"<T implements Node>" #_(§ extends Binary #_"<T>")
 )
 
-(§ interface CanonicalizerTool
-    (§ abstract #_"boolean" CanonicalizerTool'''canonicalizeReads-1 [#_"CanonicalizerTool" this])
-
+(defprotocol CanonicalizerTool
+    (#_"boolean" CanonicalizerTool'''canonicalizeReads-1 [#_"CanonicalizerTool" this])
     ;;;
      ; If this method returns false, not all {@link Node#usages() usages of a node} are yet available.
      ; So a node must not be canonicalized base on, e.g. information returned from Node#hasNoUsages().
      ;;
-    (§ abstract #_"boolean" CanonicalizerTool'''allUsagesAvailable-1 [#_"CanonicalizerTool" this])
-
+    (#_"boolean" CanonicalizerTool'''allUsagesAvailable-1 [#_"CanonicalizerTool" this])
     ;;;
      ; Indicates the smallest width for comparing an integer value on the target platform.
      ; If this method returns nil, then there is no known smallest compare width.
      ;;
-    (§ abstract #_"Integer" CanonicalizerTool'''smallestCompareWidth-1 [#_"CanonicalizerTool" this])
+    (#_"Integer" CanonicalizerTool'''smallestCompareWidth-1 [#_"CanonicalizerTool" this])
 )
 
 ;;;
@@ -544,31 +532,28 @@
  ; SimplifierTool#addToWorkList(Node) for each node that might be influenced
  ; (in terms of simplification and canonicalization) by the actions performed in simplify.
  ;;
-(§ interface Simplifiable
-    (§ abstract #_"void" Simplifiable'''simplify-2 [#_"Simplifiable" this, #_"SimplifierTool" tool])
+(defprotocol Simplifiable
+    (#_"void" Simplifiable'''simplify-2 [#_"Simplifiable" this, #_"SimplifierTool" tool])
 )
 
-(§ interface SimplifierTool (§ extends CanonicalizerTool)
-    (§ abstract #_"void" SimplifierTool'''deleteBranch-2 [#_"SimplifierTool" this, #_"Node" branch])
-
+(defprotocol SimplifierTool #_(§ extends CanonicalizerTool)
+    (#_"void" SimplifierTool'''deleteBranch-2 [#_"SimplifierTool" this, #_"Node" branch])
     ;;;
      ; Adds a node to the worklist independent of whether it has already been on the worklist.
      ;;
-    (§ abstract #_"void" SimplifierTool'''addToWorkList-2 [#_"SimplifierTool" this, #_"Node" node])
-
-    (§ abstract #_"void" SimplifierTool'''addToWorkList-2 [#_"SimplifierTool" this, #_"Iterable<? implements Node>" nodes])
-
-    (§ abstract #_"void" SimplifierTool'''removeIfUnused-2 [#_"SimplifierTool" this, #_"Node" node])
+    #_(§ abstract #_"void" SimplifierTool'''addToWorkList-2 [#_"SimplifierTool" this, #_"Node" node])
+    #_(§ abstract #_"void" SimplifierTool'''addToWorkList-2 [#_"SimplifierTool" this, #_"Iterable<? implements Node>" nodes])
+    (#_"void" SimplifierTool'''removeIfUnused-2 [#_"SimplifierTool" this, #_"Node" node])
 )
 
-(§ interface AMD64HotSpotRestoreRbpOp
+(§ defprotocol AMD64HotSpotRestoreRbpOp
     ;;;
      ; The type of location (i.e. stack or register) in which RBP is saved is not known until initial LIR generation
      ; is finished. Until then, we use a placeholder variable so that LIR verification is successful.
      ;;
     (§ def #_"Variable" AMD64HotSpotRestoreRbpOp'PLACEHOLDER (Variable'new-2 (LIRKind'value-1 AMD64Kind/QWORD), Integer/MAX_VALUE))
 
-    (§ abstract #_"void" AMD64HotSpotRestoreRbpOp'''setSavedRbp-2 [#_"AMD64HotSpotRestoreRbpOp" this, #_"AllocatableValue" value])
+    (#_"void" AMD64HotSpotRestoreRbpOp'''setSavedRbp-2 [#_"AMD64HotSpotRestoreRbpOp" this, #_"AllocatableValue" value])
 )
 
 ;;;
@@ -576,7 +561,7 @@
  ; See InstructionValueProcedure for a version that can modify values.
  ;;
 ; @FunctionalInterface
-(§ interface InstructionValueConsumer
+(defprotocol InstructionValueConsumer
     ;;;
      ; Iterator method to be overwritten.
      ;
@@ -585,7 +570,7 @@
      ; @param mode The operand mode for the value.
      ; @param flags A set of flags for the value.
      ;;
-    (§ abstract #_"void" InstructionValueConsumer'''visitValue-5 [#_"InstructionValueConsumer" this, #_"LIRInstruction" instruction, #_"Value" value, #_"OperandMode" mode, #_"EnumSet<OperandFlag>" flags])
+    (#_"void" InstructionValueConsumer'''visitValue-5 [#_"InstructionValueConsumer" this, #_"LIRInstruction" instruction, #_"Value" value, #_"OperandMode" mode, #_"EnumSet<OperandFlag>" flags])
 )
 
 ;;;
@@ -593,7 +578,7 @@
  ; the old value.
  ;;
 ; @FunctionalInterface
-(§ interface InstructionValueProcedure
+(defprotocol InstructionValueProcedure
     ;;;
      ; Iterator method to be overwritten.
      ;
@@ -603,26 +588,26 @@
      ; @param flags A set of flags for the value.
      ; @return the new value to replace the value that was passed in
      ;;
-    (§ abstract #_"Value" InstructionValueProcedure'''doValue-5 [#_"InstructionValueProcedure" this, #_"LIRInstruction" instruction, #_"Value" value, #_"OperandMode" mode, #_"EnumSet<OperandFlag>" flags])
+    (#_"Value" InstructionValueProcedure'''doValue-5 [#_"InstructionValueProcedure" this, #_"LIRInstruction" instruction, #_"Value" value, #_"OperandMode" mode, #_"EnumSet<OperandFlag>" flags])
 )
 
 ;;;
  ; Base for all low-level phases. Subclasses should be stateless. There will be one global instance
  ; for each phase that is shared for all compilations.
  ;;
-(§ interface LIRPhase #_"<C>"
-    (§ abstract #_"void" LIRPhase'''run-3 [#_"LIRPhase<C>" this, #_"LIRGenerationResult" lirGenRes, #_"C" context])
+(defprotocol LIRPhase #_"<C>"
+    (#_"void" LIRPhase'''run-3 [#_"LIRPhase<C>" this, #_"LIRGenerationResult" lirGenRes, #_"C" context])
 )
 
 ;;;
  ; @anno SSAUtil.PhiValueVisitor
  ;;
-(§ interface PhiValueVisitor
+(defprotocol PhiValueVisitor
     ;;;
      ; @param phiIn the incoming value at the merge block
      ; @param phiOut the outgoing value from the predecessor block
      ;;
-    (§ abstract #_"void" PhiValueVisitor'''visit-3 [#_"PhiValueVisitor" this, #_"Value" phiIn, #_"Value" phiOut])
+    (#_"void" PhiValueVisitor'''visit-3 [#_"PhiValueVisitor" this, #_"Value" phiIn, #_"Value" phiOut])
 )
 
 ;;;
@@ -631,21 +616,21 @@
  ;
  ; @anno StandardOp.BlockEndOp
  ;;
-(§ interface BlockEndOp
+(defprotocol BlockEndOp
 )
 
 ;;;
  ; @anno StandardOp.NullCheck
  ;;
-(§ interface NullCheck
-    (§ abstract #_"Value" NullCheck'''getCheckedValue-1 [#_"NullCheck" this])
+(defprotocol NullCheck
+    (#_"Value" NullCheck'''getCheckedValue-1 [#_"NullCheck" this])
 )
 
 ;;;
  ; @anno StandardOp.ImplicitNullCheck
  ;;
-(§ interface ImplicitNullCheck
-    (§ abstract #_"boolean" ImplicitNullCheck'''makeNullCheckFor-3 [#_"ImplicitNullCheck" this, #_"Value" value, #_"int" implicitNullCheckLimit])
+(defprotocol ImplicitNullCheck
+    (#_"boolean" ImplicitNullCheck'''makeNullCheckFor-3 [#_"ImplicitNullCheck" this, #_"Value" value, #_"int" implicitNullCheckLimit])
 )
 
 ;;;
@@ -653,7 +638,7 @@
  ;
  ; @anno StandardOp.StandardBranchOp
  ;;
-(§ interface StandardBranchOp (§ extends BlockEndOp)
+(defprotocol StandardBranchOp #_(§ extends BlockEndOp)
 )
 
 ;;;
@@ -661,8 +646,8 @@
  ;
  ; @anno StandardOp.MoveOp
  ;;
-(§ interface MoveOp
-    (§ abstract #_"AllocatableValue" MoveOp'''getResult-1 [#_"MoveOp" this])
+(defprotocol MoveOp
+    (#_"AllocatableValue" MoveOp'''getResult-1 [#_"MoveOp" this])
 )
 
 ;;;
@@ -670,8 +655,8 @@
  ;
  ; @anno StandardOp.ValueMoveOp
  ;;
-(§ interface ValueMoveOp (§ extends MoveOp)
-    (§ abstract #_"AllocatableValue" ValueMoveOp'''getInput-1 [#_"ValueMoveOp" this])
+(defprotocol ValueMoveOp #_(§ extends MoveOp)
+    (#_"AllocatableValue" ValueMoveOp'''getInput-1 [#_"ValueMoveOp" this])
 )
 
 ;;;
@@ -679,14 +664,14 @@
  ;
  ; @anno StandardOp.LoadConstantOp
  ;;
-(§ interface LoadConstantOp (§ extends MoveOp)
-    (§ abstract #_"Constant" LoadConstantOp'''getConstant-1 [#_"LoadConstantOp" this])
+(defprotocol LoadConstantOp #_(§ extends MoveOp)
+    (#_"Constant" LoadConstantOp'''getConstant-1 [#_"LoadConstantOp" this])
 )
 
 ;;;
  ; @anno SwitchStrategy.SwitchClosure
  ;;
-(§ interface SwitchClosure
+(defprotocol SwitchClosure
     ;;;
      ; Generates a conditional or unconditional jump. The jump will be unconditional if
      ; condition is nil. If defaultTarget is true, then the jump will go the default.
@@ -695,8 +680,7 @@
      ; @param condition The condition on which to jump (can be nil)
      ; @param defaultTarget true if the jump should go to the default target, false if index should be used
      ;;
-    (§ abstract #_"void" SwitchClosure'''conditionalJump-4 [#_"SwitchClosure" this, #_"int" index, #_"Condition" condition, #_"boolean" defaultTarget])
-
+    (#_"void" SwitchClosure'''conditionalJump-4 [#_"SwitchClosure" this, #_"int" index, #_"Condition" condition, #_"boolean" defaultTarget])
     ;;;
      ; Generates a conditional jump to the target with the specified index. The fall through
      ; should go to the default target.
@@ -705,8 +689,7 @@
      ; @param condition The condition on which to jump
      ; @param canFallThrough true if this is the last instruction in the switch statement, to allow for fall-through optimizations
      ;;
-    (§ abstract #_"void" SwitchClosure'''conditionalJumpOrDefault-4 [#_"SwitchClosure" this, #_"int" index, #_"Condition" condition, #_"boolean" canFallThrough])
-
+    (#_"void" SwitchClosure'''conditionalJumpOrDefault-4 [#_"SwitchClosure" this, #_"int" index, #_"Condition" condition, #_"boolean" canFallThrough])
     ;;;
      ; Create a new label and generate a conditional jump to it.
      ;
@@ -714,24 +697,22 @@
      ; @param condition The condition on which to jump
      ; @return a new Label
      ;;
-    (§ abstract #_"Label" SwitchClosure'''conditionalJump-3 [#_"SwitchClosure" this, #_"int" index, #_"Condition" condition])
-
+    (#_"Label" SwitchClosure'''conditionalJump-3 [#_"SwitchClosure" this, #_"int" index, #_"Condition" condition])
     ;;;
      ; Binds a label returned by #conditionalJump(int, Condition).
      ;;
-    (§ abstract #_"void" SwitchClosure'''bind-2 [#_"SwitchClosure" this, #_"Label" label])
-
+    (#_"void" SwitchClosure'''bind-2 [#_"SwitchClosure" this, #_"Label" label])
     ;;;
      ; Return true iff the target of both indexes is the same.
      ;;
-    (§ abstract #_"boolean" SwitchClosure'''isSameTarget-3 [#_"SwitchClosure" this, #_"int" index1, #_"int" index2])
+    (#_"boolean" SwitchClosure'''isSameTarget-3 [#_"SwitchClosure" this, #_"int" index1, #_"int" index2])
 )
 
 ;;;
  ; Non-modifying version of ValueProcedure.
  ;;
 ; @FunctionalInterface
-(§ interface ValueConsumer (§ extends InstructionValueConsumer)
+(§ defprotocol ValueConsumer #_(§ extends InstructionValueConsumer)
     ;;;
      ; Iterator method to be overwritten.
      ;
@@ -739,7 +720,7 @@
      ; @param mode The operand mode for the value.
      ; @param flags A set of flags for the value.
      ;;
-    (§ abstract #_"void" ValueConsumer'''visitValue-4 [#_"ValueConsumer" this, #_"Value" value, #_"OperandMode" mode, #_"EnumSet<OperandFlag>" flags])
+    (#_"void" ValueConsumer'''visitValue-4 [#_"ValueConsumer" this, #_"Value" value, #_"OperandMode" mode, #_"EnumSet<OperandFlag>" flags])
 
     (§ override! #_"void" InstructionValueConsumer'''visitValue-5 [#_"ValueConsumer" this, #_"LIRInstruction" instruction, #_"Value" value, #_"OperandMode" mode, #_"EnumSet<OperandFlag>" flags]
         (ValueConsumer'''visitValue-4 this, value, mode, flags)
@@ -751,7 +732,7 @@
  ; Similar to InstructionValueProcedure but without an LIRInstruction parameter.
  ;;
 ; @FunctionalInterface
-(§ interface ValueProcedure (§ extends InstructionValueProcedure)
+(§ defprotocol ValueProcedure #_(§ extends InstructionValueProcedure)
     ;;;
      ; Iterator method to be overwritten.
      ;
@@ -760,47 +741,43 @@
      ; @param flags A set of flags for the value.
      ; @return the new value to replace the value that was passed in
      ;;
-    (§ abstract #_"Value" ValueProcedure'''doValue-4 [#_"ValueProcedure" this, #_"Value" value, #_"OperandMode" mode, #_"EnumSet<OperandFlag>" flags])
+    (#_"Value" ValueProcedure'''doValue-4 [#_"ValueProcedure" this, #_"Value" value, #_"OperandMode" mode, #_"EnumSet<OperandFlag>" flags])
 
     (§ override! #_"Value" InstructionValueProcedure'''doValue-5 [#_"ValueProcedure" this, #_"LIRInstruction" instruction, #_"Value" value, #_"OperandMode" mode, #_"EnumSet<OperandFlag>" flags]
         (ValueProcedure'''doValue-4 this, value, mode, flags)
     )
 )
 
-(§ interface LoopPolicies
-    (§ abstract #_"boolean" LoopPolicies'''shouldPeel-3 [#_"LoopPolicies" this, #_"LoopEx" loop, #_"ControlFlowGraph" cfg])
-
-    (§ abstract #_"boolean" LoopPolicies'''shouldFullUnroll-2 [#_"LoopPolicies" this, #_"LoopEx" loop])
-
-    (§ abstract #_"boolean" LoopPolicies'''shouldPartiallyUnroll-2 [#_"LoopPolicies" this, #_"LoopEx" loop])
-
-    (§ abstract #_"boolean" LoopPolicies'''shouldTryUnswitch-2 [#_"LoopPolicies" this, #_"LoopEx" loop])
-
-    (§ abstract #_"boolean" LoopPolicies'''shouldUnswitch-3 [#_"LoopPolicies" this, #_"LoopEx" loop, #_"List<ControlSplitNode>" controlSplits])
+(defprotocol LoopPolicies
+    (#_"boolean" LoopPolicies'''shouldPeel-3 [#_"LoopPolicies" this, #_"LoopEx" loop, #_"ControlFlowGraph" cfg])
+    (#_"boolean" LoopPolicies'''shouldFullUnroll-2 [#_"LoopPolicies" this, #_"LoopEx" loop])
+    (#_"boolean" LoopPolicies'''shouldPartiallyUnroll-2 [#_"LoopPolicies" this, #_"LoopEx" loop])
+    (#_"boolean" LoopPolicies'''shouldTryUnswitch-2 [#_"LoopPolicies" this, #_"LoopEx" loop])
+    (#_"boolean" LoopPolicies'''shouldUnswitch-3 [#_"LoopPolicies" this, #_"LoopEx" loop, #_"List<ControlSplitNode>" controlSplits])
 )
 
 ;;;
  ; An ArithmeticOperation is an operation that does primitive value arithmetic without side effect.
  ;;
-(§ interface ArithmeticOperation
-    (§ abstract #_"ArithmeticOp" ArithmeticOperation'''getArithmeticOp-1 [#_"ArithmeticOperation" this])
+(defprotocol ArithmeticOperation
+    (#_"ArithmeticOp" ArithmeticOperation'''getArithmeticOp-1 [#_"ArithmeticOperation" this])
 )
 
 ;;;
  ; @anno BinaryArithmeticNode.SerializableBinaryFunction
  ;;
-(§ interface SerializableBinaryFunction #_"<T>" (§ extends Function #_"<ArithmeticOpTable, BinaryOp<T>>")
+(defprotocol SerializableBinaryFunction #_"<T>" #_(§ extends Function #_"<ArithmeticOpTable, BinaryOp<T>>")
 )
 
 ;;;
  ; Represents a conversion between primitive types.
  ;;
-(§ interface ConvertNode
-    (§ abstract #_"ValueNode" ConvertNode'''getValue-1 [#_"ConvertNode" this])
+(§ defprotocol ConvertNode
+    (#_"ValueNode" ConvertNode'''getValue-1 [#_"ConvertNode" this])
 
-    (§ abstract #_"Constant" ConvertNode'''convert-2 [#_"ConvertNode" this, #_"Constant" constant])
+    (#_"Constant" ConvertNode'''convert-2 [#_"ConvertNode" this, #_"Constant" constant])
 
-    (§ abstract #_"Constant" ConvertNode'''reverse-2 [#_"ConvertNode" this, #_"Constant" constant])
+    (#_"Constant" ConvertNode'''reverse-2 [#_"ConvertNode" this, #_"Constant" constant])
 
     ;;;
      ; Checks whether a nil-check may skip the conversion. This is true if in the conversion NULL
@@ -808,14 +785,14 @@
      ;
      ; @return whether a nil-check may skip the conversion
      ;;
-    (§ abstract #_"boolean" ConvertNode'''mayNullCheckSkipConversion-1 [#_"ConvertNode" this])
+    (#_"boolean" ConvertNode'''mayNullCheckSkipConversion-1 [#_"ConvertNode" this])
 
     ;;;
      ; Check whether a conversion is lossless.
      ;
      ; @return true iff reverse(convert(c)) == c for all c
      ;;
-    (§ abstract #_"boolean" ConvertNode'''isLossless-1 [#_"ConvertNode" this])
+    (#_"boolean" ConvertNode'''isLossless-1 [#_"ConvertNode" this])
 
     ;;;
      ; Check whether a conversion preserves comparison order.
@@ -823,7 +800,7 @@
      ; @param op a comparison operator
      ; @return true iff (c1 op c2) == (convert(c1) op convert(c2)) for all c1, c2
      ;;
-    (§ abstract #_"boolean" ConvertNode'''preservesOrder-2 [#_"ConvertNode" this, #_"CanonicalCondition" op])
+    (#_"boolean" ConvertNode'''preservesOrder-2 [#_"ConvertNode" this, #_"CanonicalCondition" op])
 
     (§ override #_"boolean" ConvertNode'''preservesOrder-2 [#_"ConvertNode" this, #_"CanonicalCondition" op]
         (ConvertNode'''isLossless-1 this)
@@ -835,7 +812,7 @@
      ; @param op a comparison operator
      ; @return true iff (c1 op value) == (convert(c1) op convert(value)) for value and all c1
      ;;
-    (§ abstract #_"boolean" ConvertNode'''preservesOrder-3 [#_"ConvertNode" this, #_"CanonicalCondition" op, #_"Constant" value])
+    (#_"boolean" ConvertNode'''preservesOrder-3 [#_"ConvertNode" this, #_"CanonicalCondition" op, #_"Constant" value])
 
     (§ override #_"boolean" ConvertNode'''preservesOrder-3 [#_"ConvertNode" this, #_"CanonicalCondition" op, #_"Constant" value]
         (ConvertNode'''preservesOrder-2 this, op)
@@ -845,53 +822,48 @@
 ;;;
  ; @anno IntegerConvertNode.SerializableIntegerConvertFunction
  ;;
-(§ interface SerializableIntegerConvertFunction #_"<T>" (§ extends Function #_"<ArithmeticOpTable, IntegerConvertOp<T>>")
+(defprotocol SerializableIntegerConvertFunction #_"<T>" #_(§ extends Function #_"<ArithmeticOpTable, IntegerConvertOp<T>>")
 )
 
 ;;;
  ; @anno ShiftNode.SerializableShiftFunction
  ;;
-(§ interface SerializableShiftFunction #_"<T>" (§ extends Function #_"<ArithmeticOpTable, ShiftOp<T>>")
+(defprotocol SerializableShiftFunction #_"<T>" #_(§ extends Function #_"<ArithmeticOpTable, ShiftOp<T>>")
 )
 
 ;;;
  ; @anno UnaryArithmeticNode.SerializableUnaryFunction
  ;;
-(§ interface SerializableUnaryFunction #_"<T>" (§ extends Function #_"<ArithmeticOpTable, UnaryOp<T>>")
+(defprotocol SerializableUnaryFunction #_"<T>" #_(§ extends Function #_"<ArithmeticOpTable, UnaryOp<T>>")
 )
 
 ;;;
  ; @anno ControlFlowGraph.RecursiveVisitor
  ;;
-(§ interface RecursiveVisitor #_"<V>"
-    (§ abstract #_"V" RecursiveVisitor'''enter-2 [#_"RecursiveVisitor<V>" this, #_"Block" b])
-
-    (§ abstract #_"void" RecursiveVisitor'''exit-3 [#_"RecursiveVisitor<V>" this, #_"Block" b, #_"V" value])
+(defprotocol RecursiveVisitor #_"<V>"
+    (#_"V" RecursiveVisitor'''enter-2 [#_"RecursiveVisitor<V>" this, #_"Block" b])
+    (#_"void" RecursiveVisitor'''exit-3 [#_"RecursiveVisitor<V>" this, #_"Block" b, #_"V" value])
 )
 
 ;;;
  ; Marker interface for nodes that prevents control flow optimizations. The node should never be duplicated.
  ;;
-(§ interface ControlFlowAnchored
+(defprotocol ControlFlowAnchored
 )
 
 ;;;
  ; Shared interface to capture core methods of AbstractFixedGuardNode and GuardNode.
  ;;
-(§ interface DeoptimizingGuard (§ extends GuardingNode, StaticDeoptimizingNode)
-    (§ abstract #_"LogicNode" DeoptimizingGuard'''getCondition-1 [#_"DeoptimizingGuard" this])
-
-    (§ abstract #_"void" DeoptimizingGuard'''setCondition-3 [#_"DeoptimizingGuard" this, #_"LogicNode" x, #_"boolean" negated?])
+(defprotocol DeoptimizingGuard #_(§ extends GuardingNode, StaticDeoptimizingNode)
+    (#_"LogicNode" DeoptimizingGuard'''getCondition-1 [#_"DeoptimizingGuard" this])
+    (#_"void" DeoptimizingGuard'''setCondition-3 [#_"DeoptimizingGuard" this, #_"LogicNode" x, #_"boolean" negated?])
 )
 
 ;;;
  ; Interface implemented by nodes which may need deoptimization information.
  ;;
-(§ interface DeoptimizingNode (§ extends NodeWithState)
-    ;;;
-     ; Determines if this node needs deoptimization information.
-     ;;
-    (§ abstract #_"boolean" DeoptimizingNode'''canDeoptimize-1 [#_"DeoptimizingNode" this])
+(defprotocol DeoptimizingNode #_(§ extends NodeWithState)
+    (#_"boolean" DeoptimizingNode'''canDeoptimize-1 [#_"DeoptimizingNode" this])
 )
 
 ;;;
@@ -899,11 +871,11 @@
  ;
  ; @anno DeoptimizingNode.DeoptBefore
  ;;
-(§ interface DeoptBefore (§ extends DeoptimizingNode)
+(defprotocol DeoptBefore #_(§ extends DeoptimizingNode)
     ;;;
      ; Sets the FrameState describing the program state before the execution of this node.
      ;;
-    (§ abstract #_"void" DeoptBefore'''setStateBefore-2 [#_"DeoptBefore" this, #_"FrameState" state])
+    (#_"void" DeoptBefore'''setStateBefore-2 [#_"DeoptBefore" this, #_"FrameState" state])
 )
 
 ;;;
@@ -911,7 +883,7 @@
  ;
  ; @anno DeoptimizingNode.DeoptAfter
  ;;
-(§ interface DeoptAfter (§ extends DeoptimizingNode, StateSplit)
+(defprotocol DeoptAfter #_(§ extends DeoptimizingNode, StateSplit)
 )
 
 ;;;
@@ -919,63 +891,60 @@
  ;
  ; @anno DeoptimizingNode.DeoptDuring
  ;;
-(§ interface DeoptDuring (§ extends DeoptimizingNode, StateSplit)
+(defprotocol DeoptDuring #_(§ extends DeoptimizingNode, StateSplit)
     ;;;
      ; Sets the FrameState describing the program state during the execution of this node.
      ;;
-    (§ abstract #_"void" DeoptDuring'''setStateDuring-2 [#_"DeoptDuring" this, #_"FrameState" state])
-
+    (#_"void" DeoptDuring'''setStateDuring-2 [#_"DeoptDuring" this, #_"FrameState" state])
     ;;;
      ; Compute the FrameState describing the program state during the execution of this node from
      ; an input FrameState describing the program state after finishing the execution of this node.
      ;;
-    (§ abstract #_"void" DeoptDuring'''computeStateDuring-2 [#_"DeoptDuring" this, #_"FrameState" stateAfter])
+    (#_"void" DeoptDuring'''computeStateDuring-2 [#_"DeoptDuring" this, #_"FrameState" stateAfter])
 )
 
-(§ interface AnchoringNode
+(defprotocol AnchoringNode
 )
 
 ;;;
  ; A node that may be guarded by a guarding node.
  ;;
-(§ interface GuardedNode
-    (§ abstract #_"GuardingNode" GuardedNode'''getGuard-1 [#_"GuardedNode" this])
-
-    (§ abstract #_"void" GuardedNode'''setGuard-2 [#_"GuardedNode" this, #_"GuardingNode" guard])
+(defprotocol GuardedNode
+    (#_"GuardingNode" GuardedNode'''getGuard-1 [#_"GuardedNode" this])
+    (#_"void" GuardedNode'''setGuard-2 [#_"GuardedNode" this, #_"GuardingNode" guard])
 )
 
-(§ interface GuardingNode
+(defprotocol GuardingNode
 )
 
 ;;;
  ; Denotes monitor locking transition.
  ;;
-(§ interface MonitorEnter
+(defprotocol MonitorEnter
 )
 
 ;;;
  ; Denotes monitor unlocking transition.
  ;;
-(§ interface MonitorExit (§ extends MemoryCheckpoint)
+(defprotocol MonitorExit #_(§ extends MemoryCheckpoint)
 )
 
 ;;;
  ; Used by a GraphBuilderPlugin to interface with an object that builds a graph.
  ;;
-(§ interface GraphBuilder
+(defprotocol GraphBuilder
     ;;;
      ; Adds the given node to the graph and also adds recursively all referenced inputs.
      ;
      ; @param value the node to be added to the graph
      ; @return either the node added or an equivalent node
      ;;
-    (§ abstract #_"ValueNode" GraphBuilder'''append-2 [#_"GraphBuilder" this, #_"ValueNode" value])
-
+    (#_"ValueNode" GraphBuilder'''append-2 [#_"GraphBuilder" this, #_"ValueNode" value])
     ;;;
-     ; Determines if this parsing context is within the bytecode of an intrinsic or a method inlined
-     ; by an intrinsic.
+     ; Determines if this parsing context is within the bytecode of an intrinsic or a method
+     ; inlined by an intrinsic.
      ;;
-    (§ abstract #_"boolean" GraphBuilder'''parsingIntrinsic-1 [#_"GraphBuilder" this])
+    (#_"boolean" GraphBuilder'''parsingIntrinsic-1 [#_"GraphBuilder" this])
 )
 
 ;;;
@@ -984,7 +953,7 @@
  ; {@link #notifyNotInlined non-inlined} invocations (i.e. those for which an InvokeNode
  ; is created).
  ;;
-(§ interface InlineInvokePlugin
+(§ defprotocol InlineInvokePlugin
     ;;;
      ; Determines whether a call to a given method is to be inlined. The return value is a tri-state:
      ;
@@ -1001,7 +970,7 @@
      ; @param method the target method of an invoke
      ; @param args the arguments to the invoke
      ;;
-    (§ abstract #_"InlineInvokeInfo" InlineInvokePlugin'''shouldInlineInvoke-4 [#_"InlineInvokePlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"ValueNode[]" args])
+    (#_"InlineInvokeInfo" InlineInvokePlugin'''shouldInlineInvoke-4 [#_"InlineInvokePlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"ValueNode[]" args])
 
     (§ override #_"InlineInvokeInfo" InlineInvokePlugin'''shouldInlineInvoke-4 [#_"InlineInvokePlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"ValueNode[]" args]
         nil
@@ -1012,7 +981,7 @@
      ;
      ; @param methodToInline the inlined method
      ;;
-    (§ abstract #_"void" InlineInvokePlugin'''notifyBeforeInline-2 [#_"InlineInvokePlugin" this, #_"ResolvedJavaMethod" methodToInline])
+    (#_"void" InlineInvokePlugin'''notifyBeforeInline-2 [#_"InlineInvokePlugin" this, #_"ResolvedJavaMethod" methodToInline])
 
     (§ override #_"void" InlineInvokePlugin'''notifyBeforeInline-2 [#_"InlineInvokePlugin" this, #_"ResolvedJavaMethod" methodToInline]
         nil
@@ -1023,7 +992,7 @@
      ;
      ; @param methodToInline the inlined method
      ;;
-    (§ abstract #_"void" InlineInvokePlugin'''notifyAfterInline-2 [#_"InlineInvokePlugin" this, #_"ResolvedJavaMethod" methodToInline])
+    (#_"void" InlineInvokePlugin'''notifyAfterInline-2 [#_"InlineInvokePlugin" this, #_"ResolvedJavaMethod" methodToInline])
 
     (§ override #_"void" InlineInvokePlugin'''notifyAfterInline-2 [#_"InlineInvokePlugin" this, #_"ResolvedJavaMethod" methodToInline]
         nil
@@ -1035,7 +1004,7 @@
      ; @param method the method that was not inlined
      ; @param invoke the invoke node created for the call to {@code method}
      ;;
-    (§ abstract #_"void" InlineInvokePlugin'''notifyNotInlined-4 [#_"InlineInvokePlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"InvokeNode" invoke])
+    (#_"void" InlineInvokePlugin'''notifyNotInlined-4 [#_"InlineInvokePlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"InvokeNode" invoke])
 
     (§ override #_"void" InlineInvokePlugin'''notifyNotInlined-4 [#_"InlineInvokePlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"InvokeNode" invoke]
         nil
@@ -1048,24 +1017,22 @@
  ;
  ; @anno IntrinsicContext.SideEffectsState
  ;;
-(§ interface SideEffectsState
+(defprotocol SideEffectsState
     ;;;
      ; Determines if the current program point is preceded by one or more side effects.
      ;;
-    (§ abstract #_"boolean" SideEffectsState'''isAfterSideEffect-1 [#_"SideEffectsState" this])
-
+    (#_"boolean" SideEffectsState'''isAfterSideEffect-1 [#_"SideEffectsState" this])
     ;;;
      ; Gets the side effects preceding the current program point.
      ;;
-    (§ abstract #_"Iterable<StateSplit>" SideEffectsState'''sideEffects-1 [#_"SideEffectsState" this])
-
+    (#_"Iterable<StateSplit>" SideEffectsState'''sideEffects-1 [#_"SideEffectsState" this])
     ;;;
      ; Records a side effect for the current program point.
      ;;
-    (§ abstract #_"void" SideEffectsState'''addSideEffect-2 [#_"SideEffectsState" this, #_"StateSplit" sideEffect])
+    (#_"void" SideEffectsState'''addSideEffect-2 [#_"SideEffectsState" this, #_"StateSplit" sideEffect])
 )
 
-(§ interface NodePlugin
+(§ defprotocol NodePlugin
     ;;;
      ; Handle the parsing of a method invocation bytecode to a method that can be bound statically.
      ; If the method returns true, it must push a value as the result of the method invocation
@@ -1075,7 +1042,7 @@
      ; @param args the arguments of the method invocation
      ; @return true if the plugin handles the invocation, false otherwise
      ;;
-    (§ abstract #_"boolean" NodePlugin'''handleInvoke-4 [#_"NodePlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"ValueNode[]" args])
+    (#_"boolean" NodePlugin'''handleInvoke-4 [#_"NodePlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"ValueNode[]" args])
 
     (§ override #_"boolean" NodePlugin'''handleInvoke-4 [#_"NodePlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"ValueNode[]" args]
         false
@@ -1089,7 +1056,7 @@
      ; @param field the accessed field
      ; @return true if the plugin handles the field access, false otherwise
      ;;
-    (§ abstract #_"boolean" NodePlugin'''handleLoadField-4 [#_"NodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaField" field])
+    (#_"boolean" NodePlugin'''handleLoadField-4 [#_"NodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaField" field])
 
     (§ override #_"boolean" NodePlugin'''handleLoadField-4 [#_"NodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaField" field]
         false
@@ -1102,7 +1069,7 @@
      ; @param field the accessed field
      ; @return true if the plugin handles the field access, false otherwise
      ;;
-    (§ abstract #_"boolean" NodePlugin'''handleLoadStaticField-3 [#_"NodePlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaField" field])
+    (#_"boolean" NodePlugin'''handleLoadStaticField-3 [#_"NodePlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaField" field])
 
     (§ override #_"boolean" NodePlugin'''handleLoadStaticField-3 [#_"NodePlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaField" field]
         false
@@ -1116,7 +1083,7 @@
      ; @param value the value to be stored into the field
      ; @return true if the plugin handles the field access, false otherwise
      ;;
-    (§ abstract #_"boolean" NodePlugin'''handleStoreField-5 [#_"NodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaField" field, #_"ValueNode" value])
+    (#_"boolean" NodePlugin'''handleStoreField-5 [#_"NodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaField" field, #_"ValueNode" value])
 
     (§ override #_"boolean" NodePlugin'''handleStoreField-5 [#_"NodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaField" field, #_"ValueNode" value]
         false
@@ -1129,7 +1096,7 @@
      ; @param value the value to be stored into the field
      ; @return true if the plugin handles the field access, false otherwise
      ;;
-    (§ abstract #_"boolean" NodePlugin'''handleStoreStaticField-4 [#_"NodePlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaField" field, #_"ValueNode" value])
+    (#_"boolean" NodePlugin'''handleStoreStaticField-4 [#_"NodePlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaField" field, #_"ValueNode" value])
 
     (§ override #_"boolean" NodePlugin'''handleStoreStaticField-4 [#_"NodePlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaField" field, #_"ValueNode" value]
         false
@@ -1144,7 +1111,7 @@
      ; @param elementKind the element kind of the accessed array
      ; @return true if the plugin handles the array access, false otherwise
      ;;
-    (§ abstract #_"boolean" NodePlugin'''handleLoadIndexed-5 [#_"NodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" array, #_"ValueNode" index, #_"JavaKind" elementKind])
+    (#_"boolean" NodePlugin'''handleLoadIndexed-5 [#_"NodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" array, #_"ValueNode" index, #_"JavaKind" elementKind])
 
     (§ override #_"boolean" NodePlugin'''handleLoadIndexed-5 [#_"NodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" array, #_"ValueNode" index, #_"JavaKind" elementKind]
         false
@@ -1159,7 +1126,7 @@
      ; @param value the value to be stored into the array
      ; @return true if the plugin handles the array access, false otherwise
      ;;
-    (§ abstract #_"boolean" NodePlugin'''handleStoreIndexed-6 [#_"NodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" array, #_"ValueNode" index, #_"JavaKind" elementKind, #_"ValueNode" value])
+    (#_"boolean" NodePlugin'''handleStoreIndexed-6 [#_"NodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" array, #_"ValueNode" index, #_"JavaKind" elementKind, #_"ValueNode" value])
 
     (§ override #_"boolean" NodePlugin'''handleStoreIndexed-6 [#_"NodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" array, #_"ValueNode" index, #_"JavaKind" elementKind, #_"ValueNode" value]
         false
@@ -1173,7 +1140,7 @@
      ; @param type the type that the object is checked against
      ; @return true if the plugin handles the cast, false otherwise
      ;;
-    (§ abstract #_"boolean" NodePlugin'''handleCheckCast-4 [#_"NodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaType" type])
+    (#_"boolean" NodePlugin'''handleCheckCast-4 [#_"NodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaType" type])
 
     (§ override #_"boolean" NodePlugin'''handleCheckCast-4 [#_"NodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaType" type]
         false
@@ -1187,155 +1154,148 @@
      ; @param type the type that the object is checked against
      ; @return true if the plugin handles the instanceof, false otherwise
      ;;
-    (§ abstract #_"boolean" NodePlugin'''handleInstanceOf-4 [#_"NodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaType" type])
+    (#_"boolean" NodePlugin'''handleInstanceOf-4 [#_"NodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaType" type])
 
     (§ override #_"boolean" NodePlugin'''handleInstanceOf-4 [#_"NodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaType" type]
         false
     )
 )
 
-(§ interface ParameterPlugin
-    (§ abstract #_"FloatingNode" ParameterPlugin'''interceptParameter-4 [#_"ParameterPlugin" this, #_"GraphBuilder" b, #_"int" index, #_"StampPair" stamp])
+(defprotocol ParameterPlugin
+    (#_"FloatingNode" ParameterPlugin'''interceptParameter-4 [#_"ParameterPlugin" this, #_"GraphBuilder" b, #_"int" index, #_"StampPair" stamp])
 )
 
 ;;;
  ; Plugin for overriding types in the bytecode parser. This can be used to modify the standard
  ; behavior of Java type resolution, e.g. to introduce trusted interface types with special semantics.
  ;;
-(§ interface TypePlugin
+(defprotocol TypePlugin
     ;;;
      ; Intercept the type of arguments or return values.
      ;;
-    (§ abstract #_"StampPair" TypePlugin'''interceptType-4 [#_"TypePlugin" this, #_"GraphBuilder" b, #_"JavaType" declaredType, #_"boolean" never-nil?])
+    (#_"StampPair" TypePlugin'''interceptType-4 [#_"TypePlugin" this, #_"GraphBuilder" b, #_"JavaType" declaredType, #_"boolean" never-nil?])
 )
 
-(§ interface Access (§ extends GuardedNode, HeapAccess)
-    (§ abstract #_"AddressNode" Access'''getAddress-1 [#_"Access" this])
-
-    #_unused
-    (§ abstract #_"void" Access'''setAddress-2 [#_"Access" this, #_"AddressNode" address])
-
-    (§ abstract #_"LocationIdentity" Access'''getLocationIdentity-1 [#_"Access" this])
-
-    (§ abstract #_"boolean" Access'''canNullCheck-1 [#_"Access" this])
+(defprotocol Access #_(§ extends GuardedNode, HeapAccess)
+    (#_"AddressNode" Access'''getAddress-1 [#_"Access" this])
+    (#_"LocationIdentity" Access'''getLocationIdentity-1 [#_"Access" this])
+    (#_"boolean" Access'''canNullCheck-1 [#_"Access" this])
 )
 
 ;;;
  ; @anno AddressNode.Address
  ;;
-(§ interface Address
+(defprotocol Address
 )
 
 ;;;
  ; Encapsulates properties of a node describing how it accesses the heap.
  ;;
-(§ interface HeapAccess
+(defprotocol HeapAccess
     ;;;
      ; Gets the write barrier type for that particular access.
      ;;
-    (§ abstract #_"BarrierType" HeapAccess'''getBarrierType-1 [#_"HeapAccess" this])
+    (#_"BarrierType" HeapAccess'''getBarrierType-1 [#_"HeapAccess" this])
 )
 
-(§ interface LIRLowerableAccess (§ extends LIRLowerable, Access)
-    (§ abstract #_"Stamp" LIRLowerableAccess'''getAccessStamp-1 [#_"LIRLowerableAccess" this])
+(defprotocol LIRLowerableAccess #_(§ extends LIRLowerable, Access)
+    (#_"Stamp" LIRLowerableAccess'''getAccessStamp-1 [#_"LIRLowerableAccess" this])
 )
 
 ;;;
  ; This interface marks nodes that access some memory location, and that have an edge to the last
  ; node that kills this location.
  ;;
-(§ interface MemoryAccess
-    (§ abstract #_"LocationIdentity" MemoryAccess'''getLocationIdentity-1 [#_"MemoryAccess" this])
-
+(defprotocol MemoryAccess
+    (#_"LocationIdentity" MemoryAccess'''getLocationIdentity-1 [#_"MemoryAccess" this])
     ;;;
      ; @param lla the MemoryNode that represents the last kill of the location
      ;;
-    (§ abstract #_"void" MemoryAccess'''setLastLocationAccess-2 [#_"MemoryAccess" this, #_"MemoryNode" lla])
+    (#_"void" MemoryAccess'''setLastLocationAccess-2 [#_"MemoryAccess" this, #_"MemoryNode" lla])
 )
 
 ;;;
- ; This interface marks subclasses of FixedNode that kill a set of memory locations
- ; represented by location identities (i.e. change a value at one or more locations that belong
- ; to these location identities).
+ ; This interface marks subclasses of FixedNode that kill a set of memory locations represented
+ ; by location identities (i.e. change a value at one or more locations that belong to these
+ ; location identities).
  ;;
-(§ interface MemoryCheckpoint (§ extends MemoryNode)
+(defprotocol MemoryCheckpoint #_(§ extends MemoryNode)
 )
 
 ;;;
  ; @anno MemoryCheckpoint.Single
  ;;
-(§ interface Single (§ extends MemoryCheckpoint)
+(defprotocol Single #_(§ extends MemoryCheckpoint)
     ;;;
      ; This method is used to determine which memory location is killed by this node. Returning
      ; the special value LocationIdentity#any() will kill all memory locations.
      ;
      ; @return the identity of the location killed by this node
      ;;
-    (§ abstract #_"LocationIdentity" Single'''getLocationIdentity-1 [#_"Single" this])
+    (#_"LocationIdentity" Single'''getLocationIdentity-1 [#_"Single" this])
 )
 
 ;;;
  ; @anno MemoryCheckpoint.Multi
  ;;
-(§ interface Multi (§ extends MemoryCheckpoint)
+(defprotocol Multi #_(§ extends MemoryCheckpoint)
     ;;;
      ; This method is used to determine which set of memory locations is killed by this node.
      ; Returning the special value LocationIdentity#any() will kill all memory locations.
      ;
      ; @return the identities of all locations killed by this node
      ;;
-    (§ abstract #_"LocationIdentity[]" Multi'''getLocationIdentities-1 [#_"Multi" this])
+    (#_"LocationIdentity[]" Multi'''getLocationIdentities-1 [#_"Multi" this])
 )
 
 ;;;
  ; Maps a location to the last node that (potentially) wrote to the location.
  ;;
-(§ interface MemoryMap
+(defprotocol MemoryMap
     ;;;
      ; Gets the last node that that (potentially) wrote to {@code locationIdentity}.
      ;;
-    (§ abstract #_"MemoryNode" MemoryMap'''getLastLocationAccess-2 [#_"MemoryMap" this, #_"LocationIdentity" locationIdentity])
-
+    (#_"MemoryNode" MemoryMap'''getLastLocationAccess-2 [#_"MemoryMap" this, #_"LocationIdentity" locationIdentity])
     ;;;
      ; Gets the location identities in the domain of this map.
      ;;
-    (§ abstract #_"Iterable<LocationIdentity>" MemoryMap'''getLocations-1 [#_"MemoryMap" this])
+    (#_"Iterable<LocationIdentity>" MemoryMap'''getLocations-1 [#_"MemoryMap" this])
 )
 
 ;;;
  ; This interface marks nodes that are part of the memory graph.
  ;;
-(§ interface MemoryNode
+(defprotocol MemoryNode
 )
 
-(§ interface ArrayLengthProvider
+(defprotocol ArrayLengthProvider
     ;;;
-     ; @return the length of the array described by this node, or nil if it is not available
+     ; Returns the length of the array described by this node, or nil if it is not available.
      ;;
-    (§ abstract #_"ValueNode" ArrayLengthProvider'''length-1 [#_"ArrayLengthProvider" this])
+    (#_"ValueNode" ArrayLengthProvider'''length-1 [#_"ArrayLengthProvider" this])
 )
 
-(§ interface LIRLowerable
-    (§ abstract #_"void" LIRLowerable'''generate-2 [#_"LIRLowerable" this, #_"LIRBuilder" builder])
+(defprotocol LIRLowerable
+    (#_"void" LIRLowerable'''generate-2 [#_"LIRLowerable" this, #_"LIRBuilder" builder])
 )
 
 ;;;
- ; Interface implemented by nodes that can replace themselves with lower level nodes during a phase
- ; that transforms a graph to replace higher level nodes with lower level nodes.
+ ; Interface implemented by nodes that can replace themselves with lower level nodes during
+ ; a phase that transforms a graph to replace higher level nodes with lower level nodes.
  ;;
-(§ interface Lowerable
+(defprotocol Lowerable
     ;;;
      ; Expand this node into lower level nodes expressing the same semantics. If the introduced
      ; nodes are themselves lowerable, they should be recursively lowered as part of this call.
      ;;
-    (§ abstract #_"void" Lowerable'''lower-2 [#_"Lowerable" this, #_"LoweringTool" lowerer])
+    (#_"void" Lowerable'''lower-2 [#_"Lowerable" this, #_"LoweringTool" lowerer])
 )
 
 ;;;
  ; Interface for nodes which have FrameState nodes as input.
  ;;
-(§ interface NodeWithState
-    (§ abstract #_"NodeIterable<FrameState>" NodeWithState'''states-1 [#_"NodeWithState" this])
+(§ defprotocol NodeWithState
+    (#_"NodeIterable<FrameState>" NodeWithState'''states-1 [#_"NodeWithState" this])
 
     (§ override! #_"NodeIterable<FrameState>" NodeWithState'''states-1 [#_"NodeWithState" this]
         (NodeIterable'''filter-2 (NodeImpl''inputs-1 this), FrameState)
@@ -1348,8 +1308,8 @@
  ;
  ; For some algorithms it is necessary or advantageous to see through these proxies.
  ;;
-(§ interface Proxy
-    (§ abstract #_"Node" Proxy'''getOriginalNode-1 [#_"Proxy" this])
+(defprotocol Proxy
+    (#_"Node" Proxy'''getOriginalNode-1 [#_"Proxy" this])
 )
 
 ;;;
@@ -1357,15 +1317,15 @@
  ; should see through the proxy for doing some checks. Optimizations should not see through
  ; this proxy and therefore should only test for ValueProxy.
  ;;
-(§ interface LimitedValueProxy (§ extends Proxy)
+(§ defprotocol LimitedValueProxy #_(§ extends Proxy)
     (§ override #_"ValueNode" Proxy'''getOriginalNode-1 [#_"LimitedValueProxy" this])
 )
 
-(§ interface StampInverter
+(defprotocol StampInverter
     ;;;
      ; Computes the stamp of the input for the given output stamp.
      ;;
-    (§ abstract #_"Stamp" StampInverter'''invertStamp-2 [#_"StampInverter" this, #_"Stamp" outStamp])
+    (#_"Stamp" StampInverter'''invertStamp-2 [#_"StampInverter" this, #_"Stamp" outStamp])
 )
 
 ;;;
@@ -1374,16 +1334,16 @@
  ;
  ; For some algorithms it is necessary or advantageous to see through these proxies.
  ;;
-(§ interface ValueProxy (§ extends LimitedValueProxy)
+(defprotocol ValueProxy #_(§ extends LimitedValueProxy)
 )
 
 ;;;
  ; This interface allows a node to convey information about what its effect would be if some of its
- ; inputs were virtualized. The #virtualize(VirtualizerTool) method will only be called for
- ; nodes that have some interaction with virtualized nodes. However, the virtualized nodes might
- ; have been re-materialized in the meantime.
+ ; inputs were virtualized. The #virtualize(VirtualizerTool) method will only be called for nodes
+ ; that have some interaction with virtualized nodes. However, the virtualized nodes might have
+ ; been re-materialized in the meantime.
  ;;
-(§ interface Virtualizable
+(defprotocol Virtualizable
     ;;;
      ; A node class can implement this method to convey information about what its effect would be
      ; if some of its inputs were virtualized. All modifications must be made through the supplied
@@ -1392,19 +1352,18 @@
      ;
      ; @param tool the tool used to describe the effects of this node
      ;;
-    (§ abstract #_"void" Virtualizable'''virtualize-2 [#_"Virtualizable" this, #_"VirtualizerTool" tool])
+    (#_"void" Virtualizable'''virtualize-2 [#_"Virtualizable" this, #_"VirtualizerTool" tool])
 )
 
 ;;;
  ; This interface allows a node to convey information about what its effect would be if some of its
  ; inputs were virtualized.
  ;
- ; The difference to Virtualizable is that the #virtualize(VirtualizerTool) method
- ; will be called regardless of whether this node had any interaction with virtualized nodes. This
- ; interface can therefore be used for object allocations, for which virtualization introduces new
- ; virtualized objects.
+ ; The difference to Virtualizable is that the #virtualize(VirtualizerTool) method will be called
+ ; regardless of whether this node had any interaction with virtualized nodes. This interface can
+ ; therefore be used for object allocations, for which virtualization introduces new virtualized objects.
  ;;
-(§ interface VirtualizableAllocation (§ extends Virtualizable)
+(defprotocol VirtualizableAllocation #_(§ extends Virtualizable)
 )
 
 ;;;
@@ -1413,13 +1372,13 @@
  ;
  ; See also Virtualizable.
  ;;
-(§ interface VirtualizerTool
+(§ defprotocol VirtualizerTool
     ;;;
      ; This method should be used to query the maximum size of virtualized objects before attempting virtualization.
      ;
      ; @return the maximum number of entries for virtualized objects
      ;;
-    (§ abstract #_"int" VirtualizerTool'''getMaximumEntryCount-1 [#_"VirtualizerTool" this])
+    (#_"int" VirtualizerTool'''getMaximumEntryCount-1 [#_"VirtualizerTool" this])
 
     ;; methods working on virtualized/materialized objects
 
@@ -1431,7 +1390,7 @@
      ; @param locks the initial locking depths.
      ; @param ensureVirtualized true if this object needs to stay virtual
      ;;
-    (§ abstract #_"void" VirtualizerTool'''createVirtualObject-5 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject, #_"ValueNode[]" entryState, #_"List<MonitorIdNode>" locks, #_"boolean" ensureVirtualized])
+    (#_"void" VirtualizerTool'''createVirtualObject-5 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject, #_"ValueNode[]" entryState, #_"List<MonitorIdNode>" locks, #_"boolean" ensureVirtualized])
 
     ;;;
      ; Returns a VirtualObjectNode if the given value is aliased with a virtual object that is still
@@ -1441,7 +1400,7 @@
      ; Replacements via #replaceWithValue(ValueNode) are not immediately committed. This method can be
      ; used to determine if a value was replaced by another one (e.g. a load field by the loaded value).
      ;;
-    (§ abstract #_"ValueNode" VirtualizerTool'''getAlias-2 [#_"VirtualizerTool" this, #_"ValueNode" value])
+    (#_"ValueNode" VirtualizerTool'''getAlias-2 [#_"VirtualizerTool" this, #_"ValueNode" value])
 
     ;;;
      ; Sets the entry (field or array element) with the given index in the virtualized object.
@@ -1451,9 +1410,9 @@
      ; @param accessKind the kind of the store which might be different than VirtualObjectNode#entryKind(int)
      ; @return true if the operation was permitted
      ;;
-    (§ abstract #_"boolean" VirtualizerTool'''setVirtualEntry-6 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject, #_"int" index, #_"ValueNode" value, #_"JavaKind" accessKind, #_"long" offset])
+    (#_"boolean" VirtualizerTool'''setVirtualEntry-6 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject, #_"int" index, #_"ValueNode" value, #_"JavaKind" accessKind, #_"long" offset])
 
-    (§ abstract #_"void" VirtualizerTool'''setVirtualEntry-4 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject, #_"int" index, #_"ValueNode" value])
+    (#_"void" VirtualizerTool'''setVirtualEntry-4 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject, #_"int" index, #_"ValueNode" value])
 
     (§ override! #_"void" VirtualizerTool'''setVirtualEntry-4 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject, #_"int" index, #_"ValueNode" value]
         (when-not (VirtualizerTool'''setVirtualEntry-6 this, virtualObject, index, value, nil, 0)
@@ -1462,14 +1421,14 @@
         nil
     )
 
-    (§ abstract #_"ValueNode" VirtualizerTool'''getEntry-3 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject, #_"int" index])
+    (#_"ValueNode" VirtualizerTool'''getEntry-3 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject, #_"int" index])
 
-    (§ abstract #_"void" VirtualizerTool'''addLock-3 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject, #_"MonitorIdNode" monitorId])
+    (#_"void" VirtualizerTool'''addLock-3 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject, #_"MonitorIdNode" monitorId])
 
-    (§ abstract #_"MonitorIdNode" VirtualizerTool'''removeLock-2 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject])
+    (#_"MonitorIdNode" VirtualizerTool'''removeLock-2 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject])
 
     #_unused
-    (§ abstract #_"boolean" VirtualizerTool'''getEnsureVirtualized-2 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject])
+    (#_"boolean" VirtualizerTool'''getEnsureVirtualized-2 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject])
 
     ;; operations on the current node
 
@@ -1478,19 +1437,19 @@
      ;
      ; @param virtualObject the virtualized object that should replace the current node.
      ;;
-    (§ abstract #_"void" VirtualizerTool'''replaceWithVirtual-2 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject])
+    (#_"void" VirtualizerTool'''replaceWithVirtual-2 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject])
 
     ;;;
      ; Deletes the current node and replaces it with the given value.
      ;
      ; @param replacement the value that should replace the current node.
      ;;
-    (§ abstract #_"void" VirtualizerTool'''replaceWithValue-2 [#_"VirtualizerTool" this, #_"ValueNode" replacement])
+    (#_"void" VirtualizerTool'''replaceWithValue-2 [#_"VirtualizerTool" this, #_"ValueNode" replacement])
 
     ;;;
      ; Deletes the current node.
      ;;
-    (§ abstract #_"void" VirtualizerTool'''delete-1 [#_"VirtualizerTool" this])
+    (#_"void" VirtualizerTool'''delete-1 [#_"VirtualizerTool" this])
 
     ;;;
      ; Replaces an input of the current node.
@@ -1499,14 +1458,14 @@
      ; @param replacement the new input value.
      ;;
     #_unused
-    (§ abstract #_"void" VirtualizerTool'''replaceFirstInput-3 [#_"VirtualizerTool" this, #_"Node" oldInput, #_"Node" replacement])
+    (#_"void" VirtualizerTool'''replaceFirstInput-3 [#_"VirtualizerTool" this, #_"Node" oldInput, #_"Node" replacement])
 
     ;;;
      ; Adds the given node to the graph.This action will only be performed when, and if, the changes are committed.
      ;
      ; @param node the node to add.
      ;;
-    (§ abstract #_"void" VirtualizerTool'''addNode-2 [#_"VirtualizerTool" this, #_"ValueNode" node])
+    (#_"void" VirtualizerTool'''addNode-2 [#_"VirtualizerTool" this, #_"ValueNode" node])
 
     ;;;
      ; This method performs either #replaceWithValue(ValueNode) or #replaceWithVirtual(VirtualObjectNode),
@@ -1514,7 +1473,7 @@
      ;
      ; @param value the replacement value
      ;;
-    (§ abstract #_"void" VirtualizerTool'''replaceWith-2 [#_"VirtualizerTool" this, #_"ValueNode" value])
+    (#_"void" VirtualizerTool'''replaceWith-2 [#_"VirtualizerTool" this, #_"ValueNode" value])
 
     ;;;
      ; If state is virtual, materialization is performed for the given state.
@@ -1522,32 +1481,30 @@
      ; @return true if materialization happened, false if not
      ;;
     #_unused
-    (§ abstract #_"boolean" VirtualizerTool'''ensureMaterialized-2 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject])
+    (#_"boolean" VirtualizerTool'''ensureMaterialized-2 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject])
 )
 
 ;;;
  ; A state split is a node that may have a frame state associated with it.
  ;;
-(§ interface StateSplit (§ extends NodeWithState)
+(defprotocol StateSplit #_(§ extends NodeWithState)
     ;;;
      ; Sets the FrameState corresponding to the state of the JVM after execution of this node.
      ;;
-    (§ abstract #_"void" StateSplit'''setStateAfter-2 [#_"StateSplit" this, #_"FrameState" x])
-
+    (#_"void" StateSplit'''setStateAfter-2 [#_"StateSplit" this, #_"FrameState" x])
     ;;;
-     ; Determines if this node has a side-effect. Such nodes cannot be safely re-executed because
-     ; they modify state which is visible to other threads or modify state beyond what is captured
-     ; in FrameState nodes.
+     ; Determines if this node has a side-effect. Such nodes cannot be safely re-executed because they modify
+     ; state which is visible to other threads or modify state beyond what is captured in FrameState nodes.
      ;;
-    (§ abstract #_"boolean" StateSplit'''hasSideEffect-1 [#_"StateSplit" this])
+    (#_"boolean" StateSplit'''hasSideEffect-1 [#_"StateSplit" this])
 )
 
-(§ interface StaticDeoptimizingNode
-    (§ abstract #_"void" StaticDeoptimizingNode'''setReason-2 [#_"StaticDeoptimizingNode" this, #_"DeoptimizationReason" reason])
+(§ defprotocol StaticDeoptimizingNode
+    (#_"void" StaticDeoptimizingNode'''setReason-2 [#_"StaticDeoptimizingNode" this, #_"DeoptimizationReason" reason])
 
-    (§ abstract #_"void" StaticDeoptimizingNode'''setAction-2 [#_"StaticDeoptimizingNode" this, #_"DeoptimizationAction" action])
+    (#_"void" StaticDeoptimizingNode'''setAction-2 [#_"StaticDeoptimizingNode" this, #_"DeoptimizationAction" action])
 
-    (§ abstract #_"GuardPriority" StaticDeoptimizingNode'''computePriority-1 [#_"StaticDeoptimizingNode" this])
+    (#_"GuardPriority" StaticDeoptimizingNode'''computePriority-1 [#_"StaticDeoptimizingNode" this])
 
     (§ override! #_"GuardPriority" StaticDeoptimizingNode'''computePriority-1 [#_"StaticDeoptimizingNode" this]
         (if (and (some? (:speculation this)) (#_"JavaConstant" .isNonNull (:speculation this)))
@@ -1573,15 +1530,15 @@
 ;;;
  ; @anno Graph.DuplicationReplacement
  ;;
-(§ interface DuplicationReplacement
-    (§ abstract #_"Node" DuplicationReplacement'''replacement-2 [#_"DuplicationReplacement" this, #_"Node" original])
+(defprotocol DuplicationReplacement
+    (#_"Node" DuplicationReplacement'''replacement-2 [#_"DuplicationReplacement" this, #_"Node" original])
 )
 
 ;;;
  ; @anno VirtualState.VirtualClosure
  ;;
-(§ interface VirtualClosure
-    (§ abstract #_"void" VirtualClosure'''apply-2 [#_"VirtualClosure" this, #_"VirtualState" node])
+(defprotocol VirtualClosure
+    (#_"void" VirtualClosure'''apply-2 [#_"VirtualClosure" this, #_"VirtualState" node])
 )
 
 ;;;
@@ -1589,24 +1546,24 @@
  ; for each phase that is shared for all compilations. VM-, target- and compilation-specific data
  ; can be passed with a context object.
  ;;
-(§ interface Phase
-    (§ abstract #_"Graph" Phase'''run-3 [#_"Phase" this, #_"Graph" graph, #_"PhaseContext" context])
+(defprotocol Phase
+    (#_"Graph" Phase'''run-3 [#_"Phase" this, #_"Graph" graph, #_"PhaseContext" context])
 )
 
 ;;;
  ; @anno ConditionalEliminationPhase.InfoElementProvider
  ;;
 ; @FunctionalInterface
-(§ interface InfoElementProvider
+(defprotocol InfoElementProvider
     #_unused
-    (§ abstract #_"Iterable<InfoElement>" InfoElementProvider'''getInfoElements-2 [#_"InfoElementProvider" this, #_"ValueNode" value])
+    (#_"Iterable<InfoElement>" InfoElementProvider'''getInfoElements-2 [#_"InfoElementProvider" this, #_"ValueNode" value])
 )
 
 ;;;
  ; @anno ConditionalEliminationPhase.GuardRewirer
  ;;
 ; @FunctionalInterface
-(§ interface GuardRewirer
+(defprotocol GuardRewirer
     ;;;
      ; Called if the condition could be proven to have a constant value ({@code result}) under {@code guard}.
      ;
@@ -1615,77 +1572,62 @@
      ; @param newInput new input to pi nodes depending on the new guard
      ; @return whether the transformation could be applied
      ;;
-    (§ abstract #_"boolean" GuardRewirer'''rewire-5 [#_"GuardRewirer" this, #_"GuardingNode" guard, #_"boolean" result, #_"Stamp" guardedValueStamp, #_"ValueNode" newInput])
+    (#_"boolean" GuardRewirer'''rewire-5 [#_"GuardRewirer" this, #_"GuardingNode" guard, #_"boolean" result, #_"Stamp" guardedValueStamp, #_"ValueNode" newInput])
 )
 
-(§ interface Inlineable
-    (§ abstract #_"int" Inlineable'''getNodeCount-1 [#_"Inlineable" this])
-
-    (§ abstract #_"Iterable<InvokeNode>" Inlineable'''getInvokes-1 [#_"Inlineable" this])
-
-    (§ abstract #_"double" Inlineable'''getProbability-2 [#_"Inlineable" this, #_"InvokeNode" invoke])
+(defprotocol Inlineable
+    (#_"int" Inlineable'''getNodeCount-1 [#_"Inlineable" this])
+    (#_"Iterable<InvokeNode>" Inlineable'''getInvokes-1 [#_"Inlineable" this])
+    (#_"double" Inlineable'''getProbability-2 [#_"Inlineable" this, #_"InvokeNode" invoke])
 )
 
 ;;;
- ; Represents an opportunity for inlining at a given invoke, with the given weight and level. The
- ; weight is the amortized weight of the additional code - so smaller is better. The level is the
- ; number of nested inlinings that lead to this invoke.
+ ; Represents an opportunity for inlining at a given invoke, with the given weight and level. The weight is the amortized
+ ; weight of the additional code - so smaller is better. The level is the number of nested inlinings that lead to this invoke.
  ;;
-(§ interface InlineInfo
+(defprotocol InlineInfo
     ;;;
      ; The invocation that may be inlined.
      ;;
-    (§ abstract #_"InvokeNode" InlineInfo'''invoke-1 [#_"InlineInfo" this])
-
+    (#_"InvokeNode" InlineInfo'''invoke-1 [#_"InlineInfo" this])
     ;;;
      ; Returns the number of methods that may be inlined by the {@link #invoke() invocation}.
      ;;
-    (§ abstract #_"int" InlineInfo'''numberOfMethods-1 [#_"InlineInfo" this])
-
-    (§ abstract #_"ResolvedJavaMethod" InlineInfo'''methodAt-2 [#_"InlineInfo" this, #_"int" index])
-
-    (§ abstract #_"Inlineable" InlineInfo'''inlineableElementAt-2 [#_"InlineInfo" this, #_"int" index])
-
-    (§ abstract #_"double" InlineInfo'''probabilityAt-2 [#_"InlineInfo" this, #_"int" index])
-
-    (§ abstract #_"double" InlineInfo'''relevanceAt-2 [#_"InlineInfo" this, #_"int" index])
-
-    (§ abstract #_"void" InlineInfo'''setInlinableElement-3 [#_"InlineInfo" this, #_"int" index, #_"Inlineable" inlineableElement])
-
+    (#_"int" InlineInfo'''numberOfMethods-1 [#_"InlineInfo" this])
+    (#_"ResolvedJavaMethod" InlineInfo'''methodAt-2 [#_"InlineInfo" this, #_"int" index])
+    (#_"Inlineable" InlineInfo'''inlineableElementAt-2 [#_"InlineInfo" this, #_"int" index])
+    (#_"double" InlineInfo'''probabilityAt-2 [#_"InlineInfo" this, #_"int" index])
+    (#_"double" InlineInfo'''relevanceAt-2 [#_"InlineInfo" this, #_"int" index])
+    (#_"void" InlineInfo'''setInlinableElement-3 [#_"InlineInfo" this, #_"int" index, #_"Inlineable" inlineableElement])
     ;;;
      ; Performs the inlining described by this object and returns the node that represents the return value
      ; of the inlined method (or nil for void methods and methods that have no non-exceptional exit).
      ;
      ; @return a collection of nodes that need to be canonicalized after the inlining
      ;;
-    (§ abstract #_"EconomicSet<Node>" InlineInfo'''inline-1 [#_"InlineInfo" this])
-
+    (#_"EconomicSet<Node>" InlineInfo'''inline-1 [#_"InlineInfo" this])
     ;;;
      ; Try to make the call static bindable to avoid interface and virtual method calls.
      ;;
-    (§ abstract #_"void" InlineInfo'''tryToDevirtualizeInvoke-1 [#_"InlineInfo" this])
-
-    (§ abstract #_"boolean" InlineInfo'''shouldInline-1 [#_"InlineInfo" this])
-
-    (§ abstract #_"void" InlineInfo'''populateInlinableElements-4 [#_"InlineInfo" this, #_"PhaseContext" context, #_"Graph" caller, #_"CanonicalizerPhase" canonicalizer])
-
-    (§ abstract #_"int" InlineInfo'''determineNodeCount-1 [#_"InlineInfo" this])
+    (#_"void" InlineInfo'''tryToDevirtualizeInvoke-1 [#_"InlineInfo" this])
+    (#_"boolean" InlineInfo'''shouldInline-1 [#_"InlineInfo" this])
+    (#_"void" InlineInfo'''populateInlinableElements-4 [#_"InlineInfo" this, #_"PhaseContext" context, #_"Graph" caller, #_"CanonicalizerPhase" canonicalizer])
+    (#_"int" InlineInfo'''determineNodeCount-1 [#_"InlineInfo" this])
 )
 
-(§ interface InliningPolicy
-    (§ abstract #_"boolean" InliningPolicy'''continueInlining-2 [#_"InliningPolicy" this, #_"Graph" graph])
-
-    (§ abstract #_"Decision" InliningPolicy'''isWorthInlining-5 [#_"InliningPolicy" this, #_"Replacements" replacements, #_"MethodInvocation" invocation, #_"int" inliningDepth, #_"boolean" fullyProcessed])
+(defprotocol InliningPolicy
+    (#_"boolean" InliningPolicy'''continueInlining-2 [#_"InliningPolicy" this, #_"Graph" graph])
+    (#_"Decision" InliningPolicy'''isWorthInlining-5 [#_"InliningPolicy" this, #_"Replacements" replacements, #_"MethodInvocation" invocation, #_"int" inliningDepth, #_"boolean" fullyProcessed])
 )
 
-(§ interface IntegerExactArithmeticNode (§ extends Lowerable)
-    (§ abstract #_"IntegerExactArithmeticSplitNode" IntegerExactArithmeticNode'''createSplit-3 [#_"IntegerExactArithmeticNode" this, #_"AbstractBeginNode" next, #_"AbstractBeginNode" deopt])
+(defprotocol IntegerExactArithmeticNode #_(§ extends Lowerable)
+    (#_"IntegerExactArithmeticSplitNode" IntegerExactArithmeticNode'''createSplit-3 [#_"IntegerExactArithmeticNode" this, #_"AbstractBeginNode" next, #_"AbstractBeginNode" deopt])
 )
 
 ;;;
  ; Marker interface for a class that defines one or more Snippets.
  ;;
-(§ interface Snippets
+(defprotocol Snippets
 )
 
 ;;;
@@ -1696,31 +1638,31 @@
  ;
  ; @anno SnippetTemplate.UsageReplacer
  ;;
-(§ interface UsageReplacer
+(defprotocol UsageReplacer
     ;;;
      ; Replaces all usages of {@code oldNode} with direct or indirect usages of {@code newNode}.
      ;;
-    (§ abstract #_"void" UsageReplacer'''replace-3 [#_"UsageReplacer" this, #_"ValueNode" oldNode, #_"ValueNode" newNode])
+    (#_"void" UsageReplacer'''replace-3 [#_"UsageReplacer" this, #_"ValueNode" oldNode, #_"ValueNode" newNode])
 )
 
 ;;;
  ; @anno EffectList.Effect
  ;;
-(§ interface Effect
-    (§ abstract #_"boolean" Effect'''isCfgKill-1 [#_"Effect" this])
+(§ defprotocol Effect
+    (#_"boolean" Effect'''isCfgKill-1 [#_"Effect" this])
 
     (§ override #_"boolean" Effect'''isCfgKill-1 [#_"Effect" this]
         false
     )
 
-    (§ abstract #_"void" Effect'''apply-3 [#_"Effect" this, #_"Graph" graph, #_"ArrayList<Node>" obsoleteNodes])
+    (#_"void" Effect'''apply-3 [#_"Effect" this, #_"Graph" graph, #_"ArrayList<Node>" obsoleteNodes])
 
     (§ override #_"void" Effect'''apply-3 [#_"Effect" this, #_"Graph" graph, #_"ArrayList<Node>" obsoleteNodes]
         (Effect'''apply-2 this, graph)
         nil
     )
 
-    (§ abstract #_"void" Effect'''apply-2 [#_"Effect" this, #_"Graph" graph])
+    (#_"void" Effect'''apply-2 [#_"Effect" this, #_"Graph" graph])
 )
 
 ;;;
@@ -1728,11 +1670,11 @@
  ;
  ; @anno Assembler.OperandSize
  ;;
-(§ interface OperandSize
+(defprotocol OperandSize
     ;;;
      ; Emit an immediate of this size. Note that immediate #QWORD operands are encoded as sign-extended 32-bit values.
      ;;
-    (§ abstract #_"void" OperandSize'''emitImmediate-3 [#_"OperandSize" this, #_"Assembler" asm, #_"int" imm])
+    (#_"void" OperandSize'''emitImmediate-3 [#_"OperandSize" this, #_"Assembler" asm, #_"int" imm])
 )
 
 ;;;
@@ -1740,72 +1682,69 @@
  ;
  ; @anno Assembler.AMD64RROp
  ;;
-(§ interface AMD64RROp
-    (§ abstract #_"void" AMD64RROp'''emit-5 [#_"AMD64RROp" this, #_"Assembler" asm, #_"OperandSize" size, #_"Register" dst, #_"Register" src])
+(defprotocol AMD64RROp
+    (#_"void" AMD64RROp'''emit-5 [#_"AMD64RROp" this, #_"Assembler" asm, #_"OperandSize" size, #_"Register" dst, #_"Register" src])
 )
 
 ;;;
  ; An abstract class that provides the state and methods common to Bytecodes#LOOKUPSWITCH and
  ; Bytecodes#TABLESWITCH instructions.
  ;;
-(§ interface BytecodeSwitch
+(defprotocol BytecodeSwitch
     ;;;
      ; Gets the key at {@code i}'th switch target index.
      ;
      ; @param i the switch target index
      ; @return the key at {@code i}'th switch target index
      ;;
-    (§ abstract #_"int" BytecodeSwitch'''keyAt-2 [#_"BytecodeSwitch" this, #_"int" i])
-
+    (#_"int" BytecodeSwitch'''keyAt-2 [#_"BytecodeSwitch" this, #_"int" i])
     ;;;
      ; Gets the offset from the start of the switch instruction for the {@code i}'th switch target.
      ;
      ; @param i the switch target index
      ; @return the offset to the {@code i}'th switch target
      ;;
-    (§ abstract #_"int" BytecodeSwitch'''offsetAt-2 [#_"BytecodeSwitch" this, #_"int" i])
-
+    (#_"int" BytecodeSwitch'''offsetAt-2 [#_"BytecodeSwitch" this, #_"int" i])
     ;;;
      ; Gets the number of switch targets.
      ;
      ; @return the number of switch targets
      ;;
-    (§ abstract #_"int" BytecodeSwitch'''numberOfCases-1 [#_"BytecodeSwitch" this])
-
+    (#_"int" BytecodeSwitch'''numberOfCases-1 [#_"BytecodeSwitch" this])
     ;;;
      ; Gets the total size in bytes of the switch instruction.
      ;
      ; @return the total size in bytes of the switch instruction
      ;;
-    (§ abstract #_"int" BytecodeSwitch'''size-1 [#_"BytecodeSwitch" this])
+    (#_"int" BytecodeSwitch'''size-1 [#_"BytecodeSwitch" this])
 )
 
 ;;;
  ; @anno DataSection.Data
  ;;
-(§ interface Data
-    (§ abstract #_"void" Data'''emit-3 [#_"Data" this, #_"ByteBuffer" buffer, #_"Patches" patches])
+(defprotocol Data
+    (#_"void" Data'''emit-3 [#_"Data" this, #_"ByteBuffer" buffer, #_"Patches" patches])
 )
 
 ;;;
  ; Scans the fields in a class hierarchy.
  ;;
-(§ interface FieldsScanner
-    (§ abstract #_"void" FieldsScanner'''scanField-3 [#_"FieldsScanner" this, #_"Field" field, #_"long" offset])
+(defprotocol FieldsScanner
+    (#_"void" FieldsScanner'''scanField-3 [#_"FieldsScanner" this, #_"Field" field, #_"long" offset])
 )
 
 ;;;
  ; Type describing all pointers to Java objects.
  ;;
-(§ interface AbstractObjectStamp
-    (§ abstract #_"AbstractObjectStamp" AbstractObjectStamp'''copyWith-5 [#_"AbstractObjectStamp" this, #_"ResolvedJavaType" newType, #_"boolean" newExactType, #_"boolean" newNonNull, #_"boolean" newAlwaysNull])
+(defprotocol AbstractObjectStamp
+    (#_"AbstractObjectStamp" AbstractObjectStamp'''copyWith-5 [#_"AbstractObjectStamp" this, #_"ResolvedJavaType" newType, #_"boolean" newExactType, #_"boolean" newNonNull, #_"boolean" newAlwaysNull])
 )
 
 ;;;
  ; Abstract base class of all pointer types.
  ;;
-(§ interface AbstractPointerStamp
-    (§ abstract #_"AbstractPointerStamp" AbstractPointerStamp'''copyWith-3 [#_"AbstractPointerStamp" this, #_"boolean" newNonNull, #_"boolean" newAlwaysNull])
+(defprotocol AbstractPointerStamp
+    (#_"AbstractPointerStamp" AbstractPointerStamp'''copyWith-3 [#_"AbstractPointerStamp" this, #_"boolean" newNonNull, #_"boolean" newAlwaysNull])
 )
 
 ;;;
@@ -1813,16 +1752,15 @@
  ;
  ; @anno ArithmeticOpTable.UnaryOp
  ;;
-(§ interface UnaryOp #_"<T>"
+(defprotocol UnaryOp #_"<T>"
     ;;;
      ; Apply the operation to a Constant.
      ;;
-    (§ abstract #_"Constant" UnaryOp'''foldConstant-2 [#_"UnaryOp<T>" this, #_"Constant" value])
-
+    (#_"Constant" UnaryOp'''foldConstant-2 [#_"UnaryOp<T>" this, #_"Constant" value])
     ;;;
      ; Apply the operation to a Stamp.
      ;;
-    (§ abstract #_"Stamp" UnaryOp'''foldStamp-2 [#_"UnaryOp<T>" this, #_"Stamp" stamp])
+    (#_"Stamp" UnaryOp'''foldStamp-2 [#_"UnaryOp<T>" this, #_"Stamp" stamp])
 )
 
 ;;;
@@ -1830,20 +1768,18 @@
  ;
  ; @anno ArithmeticOpTable.BinaryOp
  ;;
-(§ interface BinaryOp #_"<T>"
+(defprotocol BinaryOp #_"<T>"
     ;;;
      ; Applies this operation to {@code a} and {@code b}.
      ;
      ; @return the result of applying this operation or nil if applying it would raise
      ;         an exception (e.g. ArithmeticException for dividing by 0)
      ;;
-    (§ abstract #_"Constant" BinaryOp'''foldConstant-3 [#_"BinaryOp<T>" this, #_"Constant" a, #_"Constant" b])
-
+    (#_"Constant" BinaryOp'''foldConstant-3 [#_"BinaryOp<T>" this, #_"Constant" a, #_"Constant" b])
     ;;;
      ; Apply the operation to two Stamps.
      ;;
-    (§ abstract #_"Stamp" BinaryOp'''foldStamp-3 [#_"BinaryOp<T>" this, #_"Stamp" a, #_"Stamp" b])
-
+    (#_"Stamp" BinaryOp'''foldStamp-3 [#_"BinaryOp<T>" this, #_"Stamp" a, #_"Stamp" b])
     ;;;
      ; Check whether a Constant is a neutral element for this operation. A neutral
      ; element is any element {@code n} where {@code a . n == a} for all a.
@@ -1851,8 +1787,7 @@
      ; @param n the Constant that should be tested
      ; @return true iff for all {@code a}: {@code a . n == a}
      ;;
-    (§ abstract #_"boolean" BinaryOp'''isNeutral-2 [#_"BinaryOp<T>" this, #_"Constant" n])
-
+    (#_"boolean" BinaryOp'''isNeutral-2 [#_"BinaryOp<T>" this, #_"Constant" n])
     ;;;
      ; Check whether this operation has a zero {@code z == a . a} for each a. Examples of
      ; operations having such an element are subtraction and exclusive-or. Note that this
@@ -1862,7 +1797,7 @@
      ; @return a unique {@code z} such that {@code z == a . a} for each {@code a} in
      ;         {@code stamp} if it exists, otherwise nil
      ;;
-    (§ abstract #_"Constant" BinaryOp'''getZero-2 [#_"BinaryOp<T>" this, #_"Stamp" stamp])
+    (#_"Constant" BinaryOp'''getZero-2 [#_"BinaryOp<T>" this, #_"Stamp" stamp])
 )
 
 ;;;
@@ -1870,90 +1805,78 @@
  ;
  ; @anno ArithmeticOpTable.ShiftOp
  ;;
-(§ interface ShiftOp #_"<OP>"
+(defprotocol ShiftOp #_"<OP>"
     ;;;
      ; Apply the shift to a constant.
      ;;
-    (§ abstract #_"Constant" ShiftOp'''foldConstant-3 [#_"ShiftOp<OP>" this, #_"Constant" constant, #_"int" amount])
-
+    (#_"Constant" ShiftOp'''foldConstant-3 [#_"ShiftOp<OP>" this, #_"Constant" constant, #_"int" amount])
     ;;;
      ; Apply the shift to a stamp.
      ;;
-    (§ abstract #_"Stamp" ShiftOp'''foldStamp-3 [#_"ShiftOp<OP>" this, #_"Stamp" stamp, #_"IntegerStamp" amount])
-
+    (#_"Stamp" ShiftOp'''foldStamp-3 [#_"ShiftOp<OP>" this, #_"Stamp" stamp, #_"IntegerStamp" amount])
     ;;;
      ; Get the shift amount mask for a given result stamp.
      ;;
-    (§ abstract #_"int" ShiftOp'''getShiftAmountMask-2 [#_"ShiftOp<OP>" this, #_"Stamp" stamp])
+    (#_"int" ShiftOp'''getShiftAmountMask-2 [#_"ShiftOp<OP>" this, #_"Stamp" stamp])
 )
 
 ;;;
  ; @anno ArithmeticOpTable.IntegerConvertOp
  ;;
-(§ interface IntegerConvertOp #_"<T>"
-    (§ abstract #_"Constant" IntegerConvertOp'''foldConstant-4 [#_"IntegerConvertOp<T>" this, #_"int" inputBits, #_"int" resultBits, #_"Constant" value])
-
-    (§ abstract #_"Stamp" IntegerConvertOp'''foldStamp-4 [#_"IntegerConvertOp<T>" this, #_"int" inputBits, #_"int" resultBits, #_"Stamp" stamp])
-
+(defprotocol IntegerConvertOp #_"<T>"
+    (#_"Constant" IntegerConvertOp'''foldConstant-4 [#_"IntegerConvertOp<T>" this, #_"int" inputBits, #_"int" resultBits, #_"Constant" value])
+    (#_"Stamp" IntegerConvertOp'''foldStamp-4 [#_"IntegerConvertOp<T>" this, #_"int" inputBits, #_"int" resultBits, #_"Stamp" stamp])
     ;;;
      ; Computes the stamp of the input for the given output stamp.
      ;;
-    (§ abstract #_"Stamp" IntegerConvertOp'''invertStamp-4 [#_"IntegerConvertOp<T>" this, #_"int" inputBits, #_"int" resultBits, #_"Stamp" outStamp])
+    (#_"Stamp" IntegerConvertOp'''invertStamp-4 [#_"IntegerConvertOp<T>" this, #_"int" inputBits, #_"int" resultBits, #_"Stamp" outStamp])
 )
 
 ;;;
  ; A stamp is the basis for a type system.
  ;;
-(§ interface Stamp
+(defprotocol Stamp
     ;;;
      ; Returns the type of the stamp, guaranteed to be non-nil. In some cases, it requires the
      ; lookup of class metadata.
      ;;
-    (§ abstract #_"ResolvedJavaType" Stamp'''javaType-1 [#_"Stamp" this])
-
-    (§ abstract #_"boolean" Stamp'''alwaysDistinct-2 [#_"Stamp" this, #_"Stamp" other])
-
+    (#_"ResolvedJavaType" Stamp'''javaType-1 [#_"Stamp" this])
+    (#_"boolean" Stamp'''alwaysDistinct-2 [#_"Stamp" this, #_"Stamp" other])
     ;;;
      ; Gets a Java JavaKind that can be used to store a value of this stamp on the Java bytecode stack.
      ; Returns JavaKind#Illegal if a value of this stamp can not be stored on the bytecode stack.
      ;;
-    (§ abstract #_"JavaKind" Stamp'''getStackKind-1 [#_"Stamp" this])
-
+    (#_"JavaKind" Stamp'''getStackKind-1 [#_"Stamp" this])
     ;;;
      ; Gets a platform dependent LIRKind that can be used to store a value of this stamp.
      ;;
-    (§ abstract #_"LIRKind" Stamp'''getLIRKind-1 [#_"Stamp" this])
-
+    (#_"LIRKind" Stamp'''getLIRKind-1 [#_"Stamp" this])
     ;;;
      ; Returns the union of this stamp and the given stamp. Typically used to create stamps for phi nodes.
      ;
      ; @param other The stamp that will enlarge this stamp.
      ; @return the union of this stamp and the given stamp
      ;;
-    (§ abstract #_"Stamp" Stamp'''meet-2 [#_"Stamp" this, #_"Stamp" other])
-
+    (#_"Stamp" Stamp'''meet-2 [#_"Stamp" this, #_"Stamp" other])
     ;;;
      ; Returns the intersection of this stamp and the given stamp.
      ;
      ; @param other The stamp that will tighten this stamp.
      ; @return the intersection of this stamp and the given stamp
      ;;
-    (§ abstract #_"Stamp" Stamp'''join-2 [#_"Stamp" this, #_"Stamp" other])
-
+    (#_"Stamp" Stamp'''join-2 [#_"Stamp" this, #_"Stamp" other])
     ;;;
      ; Returns a stamp of the same kind, but allowing the full value range of the kind.
      ;
      ; #unrestricted() is the neutral element of the #join(Stamp) operation.
      ;;
-    (§ abstract #_"Stamp" Stamp'''unrestricted-1 [#_"Stamp" this])
-
+    (#_"Stamp" Stamp'''unrestricted-1 [#_"Stamp" this])
     ;;;
      ; Returns a stamp of the same kind, but with no allowed values.
      ;
      ; #empty() is the neutral element of the #meet(Stamp) operation.
      ;;
-    (§ abstract #_"Stamp" Stamp'''empty-1 [#_"Stamp" this])
-
+    (#_"Stamp" Stamp'''empty-1 [#_"Stamp" this])
     ;;;
      ; If it is possible to represent single value stamps of this kind, this method returns the
      ; stamp representing the single value c. stamp.constant(c).asConstant() should be equal to c.
@@ -1961,43 +1884,36 @@
      ; If it is not possible to represent single value stamps, this method returns a stamp that
      ; includes c, and is otherwise as narrow as possible.
      ;;
-    (§ abstract #_"Stamp" Stamp'''constant-2 [#_"Stamp" this, #_"Constant" constant])
-
+    (#_"Stamp" Stamp'''constant-2 [#_"Stamp" this, #_"Constant" constant])
     ;;;
      ; Test whether two stamps have the same base type.
      ;;
-    (§ abstract #_"boolean" Stamp'''isCompatible-2 [#_"Stamp" this, #_"Stamp" other])
-
+    #_(§ abstract #_"boolean" Stamp'''isCompatible-2 [#_"Stamp" this, #_"Stamp" other])
     ;;;
      ; Check that the constant {@code other} is compatible with this stamp.
      ;;
-    (§ abstract #_"boolean" Stamp'''isCompatible-2 [#_"Stamp" this, #_"Constant" constant])
-
+    #_(§ abstract #_"boolean" Stamp'''isCompatible-2 [#_"Stamp" this, #_"Constant" constant])
     ;;;
      ; Test whether this stamp has legal values.
      ;;
-    (§ abstract #_"boolean" Stamp'''hasValues-1 [#_"Stamp" this])
-
+    (#_"boolean" Stamp'''hasValues-1 [#_"Stamp" this])
     ;;;
      ; Tests whether this stamp represents all values of this kind.
      ;;
-    (§ abstract #_"boolean" Stamp'''isUnrestricted-1 [#_"Stamp" this])
-
+    (#_"boolean" Stamp'''isUnrestricted-1 [#_"Stamp" this])
     ;;;
      ; If this stamp represents a single value, the methods returns this single value, nil otherwise.
      ;
      ; @return the constant corresponding to the single value of this stamp and nil if this stamp
      ;         can represent less or more than one value.
      ;;
-    (§ abstract #_"Constant" Stamp'''asConstant-1 [#_"Stamp" this])
-
+    (#_"Constant" Stamp'''asConstant-1 [#_"Stamp" this])
     ;;;
      ; Read a value of this stamp from memory.
      ;
      ; @return the value read or nil if the value can't be read for some reason
      ;;
-    (§ abstract #_"Constant" Stamp'''readConstant-4 [#_"Stamp" this, #_"MemoryAccessProvider" provider, #_"Constant" base, #_"long" displacement])
-
+    (#_"Constant" Stamp'''readConstant-4 [#_"Stamp" this, #_"MemoryAccessProvider" provider, #_"Constant" base, #_"long" displacement])
     ;;;
      ; Tries to improve this stamp with the stamp given as parameter. If successful, returns the new
      ; improved stamp. Otherwise, returns a stamp equal to this.
@@ -2005,14 +1921,14 @@
      ; @param other the stamp that should be used to improve this stamp
      ; @return the newly improved stamp or a stamp equal to {@code this} if an improvement was not possible
      ;;
-    (§ abstract #_"Stamp" Stamp'''improveWith-2 [#_"Stamp" this, #_"Stamp" other])
+    (#_"Stamp" Stamp'''improveWith-2 [#_"Stamp" this, #_"Stamp" other])
 )
 
 ;;;
  ; Describes Node fields representing the set of inputs for the node or the set of the node's successors.
  ;;
-(§ interface Edges
-    (§ abstract #_"void" Edges'''update-4 [#_"Edges" this, #_"Node" node, #_"Node" oldValue, #_"Node" newValue])
+(defprotocol Edges
+    (#_"void" Edges'''update-4 [#_"Edges" this, #_"Node" node, #_"Node" oldValue, #_"Node" newValue])
 )
 
 ;;;
@@ -2023,115 +1939,103 @@
  ; If a field, of a type compatible with Node, annotated with either Input and
  ; Successor is not nil, then there is an edge from this node to the node this field points to.
  ;;
-(§ interface Node
-    (§ abstract #_"void" Node'''replaceAtUsages-4 [#_"Node" this, #_"Node" other, #_"Predicate<Node>" filter, #_"Node" toBeDeleted])
-
-    (§ abstract #_"void" Node'''replaceAtUsages-3 [#_"Node" this, #_"InputType" type, #_"Node" other])
-
-    (§ abstract #_"void" Node'''afterClone-2 [#_"Node" this, #_"Node" other])
-
-    (§ abstract #_"Iterable<? implements Node>" Node'''cfgPredecessors-1 [#_"Node" this])
-
+(defprotocol Node
+    (#_"void" Node'''replaceAtUsages-4 [#_"Node" this, #_"Node" other, #_"Predicate<Node>" filter, #_"Node" toBeDeleted])
+    (#_"void" Node'''replaceAtUsages-3 [#_"Node" this, #_"InputType" type, #_"Node" other])
+    (#_"void" Node'''afterClone-2 [#_"Node" this, #_"Node" other])
+    (#_"Iterable<? implements Node>" Node'''cfgPredecessors-1 [#_"Node" this])
     ;;;
      ; Returns an iterator that will provide all control-flow successors of this node. Normally this
      ; will be the contents of all fields annotated with Successor, but some node classes (like EndNode)
      ; may return different nodes.
      ;;
-    (§ abstract #_"Iterable<? implements Node>" Node'''cfgSuccessors-1 [#_"Node" this])
+    (#_"Iterable<? implements Node>" Node'''cfgSuccessors-1 [#_"Node" this])
 )
 
 ;;;
  ; @anno Node.EdgeVisitor
  ;;
-(§ interface EdgeVisitor
-    (§ abstract #_"Node" EdgeVisitor'''apply-3 [#_"EdgeVisitor" this, #_"Node" source, #_"Node" target])
+(defprotocol EdgeVisitor
+    (#_"Node" EdgeVisitor'''apply-3 [#_"EdgeVisitor" this, #_"Node" source, #_"Node" target])
 )
 
-(§ interface NodeList #_"<T implements Node>"
-    (§ abstract #_"void" NodeList'''update-3 [#_"NodeList<T implements Node>" this, #_"T" oldNode, #_"T" newNode])
+(defprotocol NodeList #_"<T implements Node>"
+    (#_"void" NodeList'''update-3 [#_"NodeList<T implements Node>" this, #_"T" oldNode, #_"T" newNode])
 )
 
-(§ interface NodeWorkList
-    (§ abstract #_"void" NodeWorkList'''add-2 [#_"NodeWorkList" this, #_"Node" node])
+(defprotocol NodeWorkList
+    (#_"void" NodeWorkList'''add-2 [#_"NodeWorkList" this, #_"Node" node])
 )
 
-(§ interface CanonicalizableLocation
-    (§ abstract #_"ValueNode" CanonicalizableLocation'''canonicalizeRead-5 [#_"CanonicalizableLocation" this, #_"ValueNode" read, #_"AddressNode" location, #_"ValueNode" object, #_"CanonicalizerTool" tool])
+(defprotocol CanonicalizableLocation
+    (#_"ValueNode" CanonicalizableLocation'''canonicalizeRead-5 [#_"CanonicalizableLocation" this, #_"ValueNode" read, #_"AddressNode" location, #_"ValueNode" object, #_"CanonicalizerTool" tool])
 )
 
 ;;;
  ; Base class for a stub defined by a snippet.
  ;;
-(§ interface SnippetStub
-    (§ abstract #_"Object[]" SnippetStub'''makeConstArgs-1 [#_"SnippetStub" this])
+(defprotocol SnippetStub
+    (#_"Object[]" SnippetStub'''makeConstArgs-1 [#_"SnippetStub" this])
 )
 
 ;;;
  ; Base class for implementing some low level code providing the out-of-line slow path for a snippet
  ; and/or a callee saved call to a HotSpot C/C++ runtime function or even a another compiled Java method.
  ;;
-(§ interface Stub
+(defprotocol Stub
     ;;;
      ; Gets the graph that from which the code for this stub will be compiled.
      ;;
-    (§ abstract #_"Graph" Stub'''getStubGraph-1 [#_"Stub" this])
+    (#_"Graph" Stub'''getStubGraph-1 [#_"Stub" this])
 )
 
 ;;;
  ; Encapsulates the liveness calculation, so that subclasses for locals <= 64 and locals > 64 can be implemented.
  ;;
-(§ interface LocalLiveness
+(defprotocol LocalLiveness
     ;;;
      ; Returns whether the local is live at the beginning of the given block.
      ;;
-    (§ abstract #_"boolean" LocalLiveness'''localIsLiveIn-3 [#_"LocalLiveness" this, #_"BciBlock" block, #_"int" local])
-
+    (#_"boolean" LocalLiveness'''localIsLiveIn-3 [#_"LocalLiveness" this, #_"BciBlock" block, #_"int" local])
     ;;;
      ; Returns whether the local is set in the given loop.
      ;;
-    (§ abstract #_"boolean" LocalLiveness'''localIsChangedInLoop-3 [#_"LocalLiveness" this, #_"int" loopId, #_"int" local])
-
+    (#_"boolean" LocalLiveness'''localIsChangedInLoop-3 [#_"LocalLiveness" this, #_"int" loopId, #_"int" local])
     ;;;
      ; Returns whether the local is live at the end of the given block.
      ;;
-    (§ abstract #_"boolean" LocalLiveness'''localIsLiveOut-3 [#_"LocalLiveness" this, #_"BciBlock" block, #_"int" local])
-
+    (#_"boolean" LocalLiveness'''localIsLiveOut-3 [#_"LocalLiveness" this, #_"BciBlock" block, #_"int" local])
     ;;;
      ; Returns the number of live locals at the end of the given block.
      ;;
-    (§ abstract #_"int" LocalLiveness'''liveOutCardinality-2 [#_"LocalLiveness" this, #_"int" blockID])
-
+    (#_"int" LocalLiveness'''liveOutCardinality-2 [#_"LocalLiveness" this, #_"int" blockID])
     ;;;
      ; Adds all locals the are in the liveIn of the successor to the liveOut of the block.
      ;;
-    (§ abstract #_"void" LocalLiveness'''propagateLiveness-3 [#_"LocalLiveness" this, #_"int" blockID, #_"int" successorID])
-
+    (#_"void" LocalLiveness'''propagateLiveness-3 [#_"LocalLiveness" this, #_"int" blockID, #_"int" successorID])
     ;;;
      ; Calculates a new liveIn for the given block from liveOut, liveKill and liveGen.
      ;;
-    (§ abstract #_"void" LocalLiveness'''updateLiveness-2 [#_"LocalLiveness" this, #_"int" blockID])
-
+    (#_"void" LocalLiveness'''updateLiveness-2 [#_"LocalLiveness" this, #_"int" blockID])
     ;;;
      ; Adds the local to liveGen if it wasn't already killed in this block.
      ;;
-    (§ abstract #_"void" LocalLiveness'''loadOne-3 [#_"LocalLiveness" this, #_"int" blockID, #_"int" local])
-
+    (#_"void" LocalLiveness'''loadOne-3 [#_"LocalLiveness" this, #_"int" blockID, #_"int" local])
     ;;;
      ; Add this local to liveKill if it wasn't already generated in this block.
      ;;
-    (§ abstract #_"void" LocalLiveness'''storeOne-3 [#_"LocalLiveness" this, #_"int" blockID, #_"int" local])
+    (#_"void" LocalLiveness'''storeOne-3 [#_"LocalLiveness" this, #_"int" blockID, #_"int" local])
 )
 
-(§ interface IntervalWalker
+(defprotocol IntervalWalker
     ;;;
      ; Processes the {@code currentInterval} interval in an attempt to allocate a physical register
      ; to it and thus allow it to be moved to a list of {@linkplain #activeLists active} intervals.
      ;
      ; @return true if a register was allocated to the {@code currentInterval} interval
      ;;
-    (§ abstract #_"boolean" IntervalWalker'''activateCurrent-2 [#_"IntervalWalker" this, #_"Interval" currentInterval])
-
-    (§ abstract #_"void" IntervalWalker'''walk-1 [#_"IntervalWalker" this])
+    (#_"boolean" IntervalWalker'''activateCurrent-2 [#_"IntervalWalker" this, #_"Interval" currentInterval])
+    (#_"void" IntervalWalker'''walk-1 [#_"IntervalWalker" this])
 )
 
 ;;;
@@ -2139,55 +2043,46 @@
  ; <a href="http://doi.acm.org/10.1145/1064979.1064998">"Optimized Interval Splitting in a Linear Scan Register Allocator"</a>
  ; by Christian Wimmer and Hanspeter Moessenboeck.
  ;;
-(§ interface LinearScan
-    (§ abstract #_"MoveResolver" LinearScan'''createMoveResolver-1 [#_"LinearScan" this])
-
-    (§ abstract #_"void" LinearScan'''initBlockData-2 [#_"LinearScan" this, #_"Block" block])
-
-    (§ abstract #_"Interval" LinearScan'''getOrCreateInterval-2 [#_"LinearScan" this, #_"AllocatableValue" operand])
-
-    (§ abstract #_"void" LinearScan'''beforeSpillMoveElimination-1 [#_"LinearScan" this])
-
-    (§ abstract #_"LinearScanLifetimeAnalysisPhase" LinearScan'''createLifetimeAnalysisPhase-1 [#_"LinearScan" this])
-
-    (§ abstract #_"LinearScanResolveDataFlowPhase" LinearScan'''createResolveDataFlowPhase-1 [#_"LinearScan" this])
-
-    (§ abstract #_"LinearScanEliminateSpillMovePhase" LinearScan'''createSpillMoveEliminationPhase-1 [#_"LinearScan" this])
+(defprotocol LinearScan
+    (#_"MoveResolver" LinearScan'''createMoveResolver-1 [#_"LinearScan" this])
+    (#_"void" LinearScan'''initBlockData-2 [#_"LinearScan" this, #_"Block" block])
+    (#_"Interval" LinearScan'''getOrCreateInterval-2 [#_"LinearScan" this, #_"AllocatableValue" operand])
+    (#_"void" LinearScan'''beforeSpillMoveElimination-1 [#_"LinearScan" this])
+    (#_"LinearScanLifetimeAnalysisPhase" LinearScan'''createLifetimeAnalysisPhase-1 [#_"LinearScan" this])
+    (#_"LinearScanResolveDataFlowPhase" LinearScan'''createResolveDataFlowPhase-1 [#_"LinearScan" this])
+    (#_"LinearScanEliminateSpillMovePhase" LinearScan'''createSpillMoveEliminationPhase-1 [#_"LinearScan" this])
 )
 
 ;;;
  ; @anno LinearScan.IntervalPredicate
  ;;
-(§ interface IntervalPredicate
-    (§ abstract #_"boolean" IntervalPredicate'''apply-2 [#_"IntervalPredicate" this, #_"Interval" i])
+(defprotocol IntervalPredicate
+    (#_"boolean" IntervalPredicate'''apply-2 [#_"IntervalPredicate" this, #_"Interval" i])
 )
 
-(§ interface LinearScanAllocationPhase
-    (§ abstract #_"void" LinearScanAllocationPhase'''run-2 [#_"LinearScanAllocationPhase" this, #_"LIRGenerationResult" lirGenRes])
+(defprotocol LinearScanAllocationPhase
+    (#_"void" LinearScanAllocationPhase'''run-2 [#_"LinearScanAllocationPhase" this, #_"LIRGenerationResult" lirGenRes])
 )
 
-(§ interface LinearScanEliminateSpillMovePhase
+(defprotocol LinearScanEliminateSpillMovePhase
     ;;;
      ; @return the index of the first instruction that is of interest for #eliminateSpillMoves
      ;;
-    (§ abstract #_"int" LinearScanEliminateSpillMovePhase'''firstInstructionOfInterest-1 [#_"LinearScanEliminateSpillMovePhase" this])
-
+    (#_"int" LinearScanEliminateSpillMovePhase'''firstInstructionOfInterest-1 [#_"LinearScanEliminateSpillMovePhase" this])
     ;;;
      ; @param block The block {@code move} is located in.
      ; @param move Spill move.
      ;;
-    (§ abstract #_"boolean" LinearScanEliminateSpillMovePhase'''canEliminateSpillMove-3 [#_"LinearScanEliminateSpillMovePhase" this, #_"Block" block, #_"MoveOp" move])
+    (#_"boolean" LinearScanEliminateSpillMovePhase'''canEliminateSpillMove-3 [#_"LinearScanEliminateSpillMovePhase" this, #_"Block" block, #_"MoveOp" move])
 )
 
-(§ interface LinearScanLifetimeAnalysisPhase
-    (§ abstract #_"void" LinearScanLifetimeAnalysisPhase'''addRegisterHint-6 [#_"LinearScanLifetimeAnalysisPhase" this, #_"LIRInstruction" op, #_"Value" targetValue, #_"OperandMode" mode, #_"EnumSet<OperandFlag>" flags, #_"boolean" hintAtDef])
-
+(defprotocol LinearScanLifetimeAnalysisPhase
+    (#_"void" LinearScanLifetimeAnalysisPhase'''addRegisterHint-6 [#_"LinearScanLifetimeAnalysisPhase" this, #_"LIRInstruction" op, #_"Value" targetValue, #_"OperandMode" mode, #_"EnumSet<OperandFlag>" flags, #_"boolean" hintAtDef])
     ;;;
      ; Determines the register priority for an instruction's output/result operand.
      ;;
-    (§ abstract #_"RegisterPriority" LinearScanLifetimeAnalysisPhase'''registerPriorityOfOutputOperand-2 [#_"LinearScanLifetimeAnalysisPhase" this, #_"LIRInstruction" op])
-
-    (§ abstract #_"void" LinearScanLifetimeAnalysisPhase'''buildIntervals-1 [#_"LinearScanLifetimeAnalysisPhase" this])
+    (#_"RegisterPriority" LinearScanLifetimeAnalysisPhase'''registerPriorityOfOutputOperand-2 [#_"LinearScanLifetimeAnalysisPhase" this, #_"LIRInstruction" op])
+    (#_"void" LinearScanLifetimeAnalysisPhase'''buildIntervals-1 [#_"LinearScanLifetimeAnalysisPhase" this])
 )
 
 ;;;
@@ -2195,40 +2090,36 @@
  ;
  ; Insert moves at edges between blocks if intervals have been split.
  ;;
-(§ interface LinearScanResolveDataFlowPhase
-    (§ abstract #_"void" LinearScanResolveDataFlowPhase'''resolveCollectMappings-5 [#_"LinearScanResolveDataFlowPhase" this, #_"Block" fromBlock, #_"Block" toBlock, #_"Block" midBlock, #_"MoveResolver" moveResolver])
+(defprotocol LinearScanResolveDataFlowPhase
+    (#_"void" LinearScanResolveDataFlowPhase'''resolveCollectMappings-5 [#_"LinearScanResolveDataFlowPhase" this, #_"Block" fromBlock, #_"Block" toBlock, #_"Block" midBlock, #_"MoveResolver" moveResolver])
 )
 
-(§ interface LinearScanWalker
+(defprotocol LinearScanWalker
     ;;;
      ; This is called for every interval that is assigned to a stack slot.
      ;;
-    (§ abstract #_"void" LinearScanWalker'''handleSpillSlot-2 [#_"LinearScanWalker" this, #_"Interval" interval])
+    (#_"void" LinearScanWalker'''handleSpillSlot-2 [#_"LinearScanWalker" this, #_"Interval" interval])
 )
 
-(§ interface MoveResolver
-    (§ abstract #_"void" MoveResolver'''setValueBlocked-3 [#_"MoveResolver" this, #_"Value" location, #_"int" direction])
-
-    (§ abstract #_"int" MoveResolver'''valueBlocked-2 [#_"MoveResolver" this, #_"Value" location])
-
-    (§ abstract #_"boolean" MoveResolver'''mightBeBlocked-2 [#_"MoveResolver" this, #_"Value" location])
-
+(defprotocol MoveResolver
+    (#_"void" MoveResolver'''setValueBlocked-3 [#_"MoveResolver" this, #_"Value" location, #_"int" direction])
+    (#_"int" MoveResolver'''valueBlocked-2 [#_"MoveResolver" this, #_"Value" location])
+    (#_"boolean" MoveResolver'''mightBeBlocked-2 [#_"MoveResolver" this, #_"Value" location])
     ;;;
      ; @param fromOpr {@link Interval#operand operand} of the {@code from} interval
      ; @param toOpr {@link Interval#operand operand} of the {@code to} interval
      ; @param fromLocation {@link Interval#location() location} of the {@code to} interval
      ; @param toLocation {@link Interval#location() location} of the {@code to} interval
      ;;
-    (§ abstract #_"LIRInstruction" MoveResolver'''createMove-5 [#_"MoveResolver" this, #_"AllocatableValue" fromOpr, #_"AllocatableValue" toOpr, #_"AllocatableValue" fromLocation, #_"AllocatableValue" toLocation])
-
-    (§ abstract #_"void" MoveResolver'''breakCycle-2 [#_"MoveResolver" this, #_"int" spillCandidate])
+    (#_"LIRInstruction" MoveResolver'''createMove-5 [#_"MoveResolver" this, #_"AllocatableValue" fromOpr, #_"AllocatableValue" toOpr, #_"AllocatableValue" fromLocation, #_"AllocatableValue" toLocation])
+    (#_"void" MoveResolver'''breakCycle-2 [#_"MoveResolver" this, #_"int" spillCandidate])
 )
 
 ;;;
  ; @anno AMD64ControlFlow.StrategySwitchOp.AMD64SwitchClosure
  ;;
-(§ interface AMD64SwitchClosure
-    (§ abstract #_"void" AMD64SwitchClosure'''emitComparison-2 [#_"AMD64SwitchClosure" this, #_"Constant" c])
+(defprotocol AMD64SwitchClosure
+    (#_"void" AMD64SwitchClosure'''emitComparison-2 [#_"AMD64SwitchClosure" this, #_"Constant" c])
 )
 
 ;;;
@@ -2236,16 +2127,15 @@
  ; intended to support addresses and not general arbitrary nesting of composite values. Because of
  ; the possibility of sharing of CompositeValues they should be immutable.
  ;;
-(§ interface CompositeValue
+(defprotocol CompositeValue
     ;;;
      ; Invoke {@code proc} on each Value element of this CompositeValue.
      ; If {@code proc} replaces any value then a new CompositeValue should be returned.
      ;
      ; @return the original CompositeValue or a copy with any modified values
      ;;
-    (§ abstract #_"CompositeValue" CompositeValue'''forEachComponent-4 [#_"CompositeValue" this, #_"LIRInstruction" op, #_"OperandMode" mode, #_"InstructionValueProcedure" proc])
-
-    (§ abstract #_"void" CompositeValue'''visitEachComponent-4 [#_"CompositeValue" this, #_"LIRInstruction" op, #_"OperandMode" mode, #_"InstructionValueConsumer" proc])
+    (#_"CompositeValue" CompositeValue'''forEachComponent-4 [#_"CompositeValue" this, #_"LIRInstruction" op, #_"OperandMode" mode, #_"InstructionValueProcedure" proc])
+    (#_"void" CompositeValue'''visitEachComponent-4 [#_"CompositeValue" this, #_"LIRInstruction" op, #_"OperandMode" mode, #_"InstructionValueConsumer" proc])
 )
 
 ;;;
@@ -2255,21 +2145,19 @@
  ; are indexed from the stack pointer, while spill slots are indexed from the beginning of the frame (and the total frame
  ; size has to be added to get the actual offset from the stack pointer).
  ;;
-(§ interface FrameMap
+(defprotocol FrameMap
     ;;;
      ; Gets the total frame size of the compiled frame, including the size of the
      ; {@link Architecture#getReturnAddressSize() return address slot}.
      ;
      ; @return the total size of the frame (in bytes)
      ;;
-    (§ abstract #_"int" FrameMap'''totalFrameSize-1 [#_"FrameMap" this])
-
+    (#_"int" FrameMap'''totalFrameSize-1 [#_"FrameMap" this])
     ;;;
      ; Gets the current size of this frame. This is the size that would be returned by
      ; #frameSize() if #finish() were called now.
      ;;
-    (§ abstract #_"int" FrameMap'''currentFrameSize-1 [#_"FrameMap" this])
-
+    (#_"int" FrameMap'''currentFrameSize-1 [#_"FrameMap" this])
     ;;;
      ; Aligns the given frame size to the stack alignment size and return the aligned size.
      ;
@@ -2277,13 +2165,13 @@
      ; @return the aligned frame size
      ;;
     #_unused
-    (§ abstract #_"int" FrameMap'''alignFrameSize-2 [#_"FrameMap" this, #_"int" size])
+    (#_"int" FrameMap'''alignFrameSize-2 [#_"FrameMap" this, #_"int" size])
 )
 
 ;;;
  ; A FrameMapBuilder is used to collect all information necessary to {@linkplain #buildFrameMap create} a FrameMap.
  ;;
-(§ interface FrameMapBuilder
+(defprotocol FrameMapBuilder
     ;;;
      ; Reserves a spill slot in the frame of the method being compiled. The returned slot is aligned
      ; on its natural alignment, i.e. an 8-byte spill slot is aligned at an 8-byte boundary, unless
@@ -2292,51 +2180,46 @@
      ; @param kind The kind of the spill slot to be reserved.
      ; @return a spill slot denoting the reserved memory area
      ;;
-    (§ abstract #_"VirtualStackSlot" FrameMapBuilder'''allocateSpillSlot-2 [#_"FrameMapBuilder" this, #_"ValueKind" kind])
-
+    (#_"VirtualStackSlot" FrameMapBuilder'''allocateSpillSlot-2 [#_"FrameMapBuilder" this, #_"ValueKind" kind])
     ;;;
      ; Informs the frame map that the compiled code calls a particular method, which may need stack
      ; space for outgoing arguments.
      ;
      ; @param cc The calling convention for the called method.
      ;;
-    (§ abstract #_"void" FrameMapBuilder'''callsMethod-2 [#_"FrameMapBuilder" this, #_"CallingConvention" cc])
-
+    (#_"void" FrameMapBuilder'''callsMethod-2 [#_"FrameMapBuilder" this, #_"CallingConvention" cc])
     ;;;
      ; Creates a FrameMap based on the information collected by this FrameMapBuilder.
      ;;
-    (§ abstract #_"FrameMap" FrameMapBuilder'''buildFrameMap-2 [#_"FrameMapBuilder" this, #_"LIRGenerationResult" result])
+    (#_"FrameMap" FrameMapBuilder'''buildFrameMap-2 [#_"FrameMapBuilder" this, #_"LIRGenerationResult" result])
 )
 
 ;;;
  ; A FrameMapBuilder that allows access to the underlying FrameMap.
  ;;
-(§ interface FrameMapBuilderTool
+(defprotocol FrameMapBuilderTool
     ;;;
      ; Returns the number of VirtualStackSlots created by this FrameMapBuilder.
      ; Can be used as an upper bound for an array indexed by VirtualStackSlot#getId().
      ;;
-    (§ abstract #_"int" FrameMapBuilderTool'''getNumberOfStackSlots-1 [#_"FrameMapBuilderTool" this])
-
-    (§ abstract #_"List<VirtualStackSlot>" FrameMapBuilderTool'''getStackSlots-1 [#_"FrameMapBuilderTool" this])
-
-    (§ abstract #_"FrameMap" FrameMapBuilderTool'''getFrameMap-1 [#_"FrameMapBuilderTool" this])
+    (#_"int" FrameMapBuilderTool'''getNumberOfStackSlots-1 [#_"FrameMapBuilderTool" this])
+    (#_"List<VirtualStackSlot>" FrameMapBuilderTool'''getStackSlots-1 [#_"FrameMapBuilderTool" this])
+    (#_"FrameMap" FrameMapBuilderTool'''getFrameMap-1 [#_"FrameMapBuilderTool" this])
 )
 
 ;;;
  ; The base class for an LIRInstruction.
  ;;
-(§ interface LIRInstruction
-    (§ abstract #_"void" LIRInstruction'''emitCode-2 [#_"LIRInstruction" this, #_"Assembler" asm])
-
-    (§ abstract #_"boolean" LIRInstruction'''destroysCallerSavedRegisters-1 [#_"LIRInstruction" this])
+(defprotocol LIRInstruction
+    (#_"void" LIRInstruction'''emitCode-2 [#_"LIRInstruction" this, #_"Assembler" asm])
+    (#_"boolean" LIRInstruction'''destroysCallerSavedRegisters-1 [#_"LIRInstruction" this])
 )
 
 ;;;
  ; @anno LIRIntrospection.LIRFieldsScanner
  ;;
-(§ interface LIRFieldsScanner
-    (§ abstract #_"EnumSet<OperandFlag>" LIRFieldsScanner'''getFlags-2 [#_"LIRFieldsScanner" this, #_"Field" field])
+(defprotocol LIRFieldsScanner
+    (#_"EnumSet<OperandFlag>" LIRFieldsScanner'''getFlags-2 [#_"LIRFieldsScanner" this, #_"Field" field])
 )
 
 ;;;
@@ -2347,10 +2230,9 @@
  ; The strategy returned by this method will have its averageEffort set, while a strategy
  ; constructed directly will not.
  ;;
-(§ interface SwitchStrategy
-    (§ abstract #_"double" SwitchStrategy'''getAverageEffort-1 [#_"SwitchStrategy" this])
-
-    (§ abstract #_"void" SwitchStrategy'''run-2 [#_"SwitchStrategy" this, #_"SwitchClosure" closure])
+(defprotocol SwitchStrategy
+    (#_"double" SwitchStrategy'''getAverageEffort-1 [#_"SwitchStrategy" this])
+    (#_"void" SwitchStrategy'''run-2 [#_"SwitchStrategy" this, #_"SwitchClosure" closure])
 )
 
 ;;;
@@ -2359,89 +2241,70 @@
  ;
  ; @anno SwitchStrategy.BaseSwitchClosure
  ;;
-(§ interface BaseSwitchClosure
+(defprotocol BaseSwitchClosure
     ;;;
      ; This method generates code for a comparison between the actual value and the constant at
      ; the given index and a condition jump to target.
      ;;
-    (§ abstract #_"void" BaseSwitchClosure'''conditionalJump-4 [#_"BaseSwitchClosure" this, #_"int" index, #_"Condition" condition, #_"Label" target])
+    (#_"void" BaseSwitchClosure'''conditionalJump-4 [#_"BaseSwitchClosure" this, #_"int" index, #_"Condition" condition, #_"Label" target])
 )
 
 ;;;
  ; This class describes a value node that is an induction variable in a counted loop.
  ;;
-(§ interface InductionVariable
-    (§ abstract #_"Graph" InductionVariable'''graph-1 [#_"InductionVariable" this])
-
-    (§ abstract #_"Direction" InductionVariable'''direction-1 [#_"InductionVariable" this])
-
+(defprotocol InductionVariable
+    (#_"Graph" InductionVariable'''graph-1 [#_"InductionVariable" this])
+    (#_"Direction" InductionVariable'''direction-1 [#_"InductionVariable" this])
     ;;;
      ; Returns the value node that is described by this induction variable.
      ;;
-    (§ abstract #_"ValueNode" InductionVariable'''valueNode-1 [#_"InductionVariable" this])
-
+    (#_"ValueNode" InductionVariable'''valueNode-1 [#_"InductionVariable" this])
     ;;;
      ; Returns the node that gives the initial value of this induction variable.
      ;;
-    (§ abstract #_"ValueNode" InductionVariable'''initNode-1 [#_"InductionVariable" this])
-
+    (#_"ValueNode" InductionVariable'''initNode-1 [#_"InductionVariable" this])
     ;;;
      ; Returns the stride of the induction variable. The stride is the value that is added to
      ; the induction variable at each iteration.
      ;;
-    (§ abstract #_"ValueNode" InductionVariable'''strideNode-1 [#_"InductionVariable" this])
-
-    (§ abstract #_"boolean" InductionVariable'''isConstantInit-1 [#_"InductionVariable" this])
-
-    (§ abstract #_"boolean" InductionVariable'''isConstantStride-1 [#_"InductionVariable" this])
-
-    (§ abstract #_"long" InductionVariable'''constantInit-1 [#_"InductionVariable" this])
-
-    (§ abstract #_"long" InductionVariable'''constantStride-1 [#_"InductionVariable" this])
-
-    (§ abstract #_"boolean" InductionVariable'''isConstantExtremum-1 [#_"InductionVariable" this])
-
-    (§ abstract #_"long" InductionVariable'''constantExtremum-1 [#_"InductionVariable" this])
-
+    (#_"ValueNode" InductionVariable'''strideNode-1 [#_"InductionVariable" this])
+    (#_"boolean" InductionVariable'''isConstantInit-1 [#_"InductionVariable" this])
+    (#_"boolean" InductionVariable'''isConstantStride-1 [#_"InductionVariable" this])
+    (#_"long" InductionVariable'''constantInit-1 [#_"InductionVariable" this])
+    (#_"long" InductionVariable'''constantStride-1 [#_"InductionVariable" this])
+    (#_"boolean" InductionVariable'''isConstantExtremum-1 [#_"InductionVariable" this])
+    (#_"long" InductionVariable'''constantExtremum-1 [#_"InductionVariable" this])
     ;;;
      ; Returns the exit value of the induction variable. The exit value is the value of the
      ; induction variable at the loop exit.
      ;;
-    (§ abstract #_"ValueNode" InductionVariable'''exitValueNode-1 [#_"InductionVariable" this])
-
+    (#_"ValueNode" InductionVariable'''exitValueNode-1 [#_"InductionVariable" this])
     ;;;
      ; Deletes any nodes created within the scope of this object that have no usages.
      ;;
-    (§ abstract #_"void" InductionVariable'''deleteUnusedNodes-1 [#_"InductionVariable" this])
+    (#_"void" InductionVariable'''deleteUnusedNodes-1 [#_"InductionVariable" this])
 )
 
-(§ interface LoopFragment
-    (§ abstract #_"LoopFragment" LoopFragment'''duplicate-1 [#_"LoopFragment" this])
-
-    (§ abstract #_"void" LoopFragment'''insertBefore-2 [#_"LoopFragment" this, #_"LoopEx" l])
-
+(defprotocol LoopFragment
+    (#_"LoopFragment" LoopFragment'''duplicate-1 [#_"LoopFragment" this])
+    (#_"void" LoopFragment'''insertBefore-2 [#_"LoopFragment" this, #_"LoopEx" l])
     ;;;
-     ; Gets the corresponding value in this fragment. Should be called on duplicate fragments with a
-     ; node from the original fragment as argument.
+     ; Gets the corresponding value in this fragment. Should be called on duplicate fragments
+     ; with a node from the original fragment as argument.
      ;
      ; @param b original value
      ; @return corresponding value in the peel
      ;;
-    (§ abstract #_"ValueNode" LoopFragment'''prim-2 [#_"LoopFragment" this, #_"ValueNode" b])
-
-    (§ abstract #_"NodeBitMap" LoopFragment'''nodes-1 [#_"LoopFragment" this])
-
-    (§ abstract #_"DuplicationReplacement" LoopFragment'''getDuplicationReplacement-1 [#_"LoopFragment" this])
-
-    (§ abstract #_"void" LoopFragment'''beforeDuplication-1 [#_"LoopFragment" this])
-
-    (§ abstract #_"void" LoopFragment'''finishDuplication-1 [#_"LoopFragment" this])
+    (#_"ValueNode" LoopFragment'''prim-2 [#_"LoopFragment" this, #_"ValueNode" b])
+    (#_"NodeBitMap" LoopFragment'''nodes-1 [#_"LoopFragment" this])
+    (#_"DuplicationReplacement" LoopFragment'''getDuplicationReplacement-1 [#_"LoopFragment" this])
+    (#_"void" LoopFragment'''beforeDuplication-1 [#_"LoopFragment" this])
+    (#_"void" LoopFragment'''finishDuplication-1 [#_"LoopFragment" this])
 )
 
-(§ interface AbstractBeginNode
-    (§ abstract #_"void" AbstractBeginNode'''prepareDelete-2 [#_"AbstractBeginNode" this, #_"FixedNode" evacuateFrom])
-
-    (§ abstract #_"NodeIterable<Node>" AbstractBeginNode'''anchored-1 [#_"AbstractBeginNode" this])
+(defprotocol AbstractBeginNode
+    (#_"void" AbstractBeginNode'''prepareDelete-2 [#_"AbstractBeginNode" this, #_"FixedNode" evacuateFrom])
+    (#_"NodeIterable<Node>" AbstractBeginNode'''anchored-1 [#_"AbstractBeginNode" this])
 )
 
 ;;;
@@ -2450,197 +2313,165 @@
  ; After this node, execution will continue using a fallback execution engine (such as an
  ; interpreter) at the position described by the {@link #stateBefore() deoptimization state}.
  ;;
-(§ interface AbstractDeoptimizeNode
-    (§ abstract #_"ValueNode" AbstractDeoptimizeNode'''getActionAndReason-1 [#_"AbstractDeoptimizeNode" this])
-
-    (§ abstract #_"ValueNode" AbstractDeoptimizeNode'''getSpeculation-1 [#_"AbstractDeoptimizeNode" this])
+(defprotocol AbstractDeoptimizeNode
+    (#_"ValueNode" AbstractDeoptimizeNode'''getActionAndReason-1 [#_"AbstractDeoptimizeNode" this])
+    (#_"ValueNode" AbstractDeoptimizeNode'''getSpeculation-1 [#_"AbstractDeoptimizeNode" this])
 )
 
-(§ interface AbstractEndNode
-    (§ abstract #_"AbstractMergeNode" AbstractEndNode'''merge-1 [#_"AbstractEndNode" this])
+(defprotocol AbstractEndNode
+    (#_"AbstractMergeNode" AbstractEndNode'''merge-1 [#_"AbstractEndNode" this])
 )
 
 ;;;
  ; Denotes the merging of multiple control-flow paths.
  ;;
-(§ interface AbstractMergeNode
-    (§ abstract #_"void" AbstractMergeNode'''deleteEnd-2 [#_"AbstractMergeNode" this, #_"AbstractEndNode" end])
-
-    (§ abstract #_"int" AbstractMergeNode'''phiPredecessorCount-1 [#_"AbstractMergeNode" this])
-
-    (§ abstract #_"int" AbstractMergeNode'''phiPredecessorIndex-2 [#_"AbstractMergeNode" this, #_"AbstractEndNode" pred])
-
-    (§ abstract #_"AbstractEndNode" AbstractMergeNode'''phiPredecessorAt-2 [#_"AbstractMergeNode" this, #_"int" index])
+(defprotocol AbstractMergeNode
+    (#_"void" AbstractMergeNode'''deleteEnd-2 [#_"AbstractMergeNode" this, #_"AbstractEndNode" end])
+    (#_"int" AbstractMergeNode'''phiPredecessorCount-1 [#_"AbstractMergeNode" this])
+    (#_"int" AbstractMergeNode'''phiPredecessorIndex-2 [#_"AbstractMergeNode" this, #_"AbstractEndNode" pred])
+    (#_"AbstractEndNode" AbstractMergeNode'''phiPredecessorAt-2 [#_"AbstractMergeNode" this, #_"int" index])
 )
 
-(§ interface BinaryOpLogicNode
-    (§ abstract #_"Stamp" BinaryOpLogicNode'''getSucceedingStampForX-4 [#_"BinaryOpLogicNode" this, #_"boolean" negated?, #_"Stamp" xStamp, #_"Stamp" yStamp])
-
-    (§ abstract #_"Stamp" BinaryOpLogicNode'''getSucceedingStampForY-4 [#_"BinaryOpLogicNode" this, #_"boolean" negated?, #_"Stamp" xStamp, #_"Stamp" yStamp])
-
-    (§ abstract #_"TriState" BinaryOpLogicNode'''tryFold-3 [#_"BinaryOpLogicNode" this, #_"Stamp" xStamp, #_"Stamp" yStamp])
+(defprotocol BinaryOpLogicNode
+    (#_"Stamp" BinaryOpLogicNode'''getSucceedingStampForX-4 [#_"BinaryOpLogicNode" this, #_"boolean" negated?, #_"Stamp" xStamp, #_"Stamp" yStamp])
+    (#_"Stamp" BinaryOpLogicNode'''getSucceedingStampForY-4 [#_"BinaryOpLogicNode" this, #_"boolean" negated?, #_"Stamp" xStamp, #_"Stamp" yStamp])
+    (#_"TriState" BinaryOpLogicNode'''tryFold-3 [#_"BinaryOpLogicNode" this, #_"Stamp" xStamp, #_"Stamp" yStamp])
 )
 
-(§ interface BinaryArithmeticNode #_"<OP>"
-    (§ abstract #_"boolean" BinaryArithmeticNode'''isAssociative-1 [#_"BinaryArithmeticNode<OP>" this])
+(defprotocol BinaryArithmeticNode #_"<OP>"
+    (#_"boolean" BinaryArithmeticNode'''isAssociative-1 [#_"BinaryArithmeticNode<OP>" this])
 )
 
 ;;;
  ; The BinaryNode class is the base of arithmetic and logic operations with two inputs.
  ;;
-(§ interface BinaryNode
+(defprotocol BinaryNode
     ;;;
      ; Compute an improved for this node using the passed in stamps. The stamps must be compatible
-     ; with the current values of #x and #y. This code is used to provide the
-     ; default implementation of #inferStamp() and may be used by external optimizations.
+     ; with the current values of #x and #y. This code is used to provide the default implementation
+     ; of #inferStamp() and may be used by external optimizations.
      ;;
-    (§ abstract #_"Stamp" BinaryNode'''foldStamp-3 [#_"BinaryNode" this, #_"Stamp" stampX, #_"Stamp" stampY])
+    (#_"Stamp" BinaryNode'''foldStamp-3 [#_"BinaryNode" this, #_"Stamp" stampX, #_"Stamp" stampY])
 )
 
 ;;;
  ; @anno CompareNode.CompareOp
  ;;
-(§ interface CompareOp
-    (§ abstract #_"LogicNode" CompareOp'''canonical-5 [#_"CompareOp" this, #_"Integer" smallestCompareWidth, #_"CanonicalCondition" condition, #_"ValueNode" forX, #_"ValueNode" forY])
-
-    (§ abstract #_"LogicNode" CompareOp'''canonicalizeSymmetricConstant-6 [#_"CompareOp" this, #_"Integer" smallestCompareWidth, #_"CanonicalCondition" condition, #_"Constant" constant, #_"ValueNode" node, #_"boolean" mirrored?])
-
-    (§ abstract #_"LogicNode" CompareOp'''optimizeNormalizeCompare-5 [#_"CompareOp" this, #_"Integer" smallestCompareWidth, #_"Constant" constant, #_"NormalizeCompareNode" normalizeNode, #_"boolean" mirrored?])
-
-    (§ abstract #_"LogicNode" CompareOp'''duplicateModified-3 [#_"CompareOp" this, #_"ValueNode" newW, #_"ValueNode" newY])
+(defprotocol CompareOp
+    (#_"LogicNode" CompareOp'''canonical-5 [#_"CompareOp" this, #_"Integer" smallestCompareWidth, #_"CanonicalCondition" condition, #_"ValueNode" forX, #_"ValueNode" forY])
+    (#_"LogicNode" CompareOp'''canonicalizeSymmetricConstant-6 [#_"CompareOp" this, #_"Integer" smallestCompareWidth, #_"CanonicalCondition" condition, #_"Constant" constant, #_"ValueNode" node, #_"boolean" mirrored?])
+    (#_"LogicNode" CompareOp'''optimizeNormalizeCompare-5 [#_"CompareOp" this, #_"Integer" smallestCompareWidth, #_"Constant" constant, #_"NormalizeCompareNode" normalizeNode, #_"boolean" mirrored?])
+    (#_"LogicNode" CompareOp'''duplicateModified-3 [#_"CompareOp" this, #_"ValueNode" newW, #_"ValueNode" newY])
 )
 
 ;;;
  ; @anno IntegerLowerThanNode.LowerOp
  ;;
-(§ interface LowerOp
-    (§ abstract #_"long" LowerOp'''upperBound-2 [#_"LowerOp" this, #_"IntegerStamp" stamp])
-
-    (§ abstract #_"long" LowerOp'''lowerBound-2 [#_"LowerOp" this, #_"IntegerStamp" stamp])
-
-    (§ abstract #_"int" LowerOp'''compare-3 [#_"LowerOp" this, #_"long" a, #_"long" b])
-
-    (§ abstract #_"long" LowerOp'''min-3 [#_"LowerOp" this, #_"long" a, #_"long" b])
-
-    (§ abstract #_"long" LowerOp'''max-3 [#_"LowerOp" this, #_"long" a, #_"long" b])
-
-    (§ abstract #_"long" LowerOp'''cast-3 [#_"LowerOp" this, #_"long" a, #_"int" bits])
-
-    (§ abstract #_"long" LowerOp'''minValue-2 [#_"LowerOp" this, #_"int" bits])
-
-    (§ abstract #_"long" LowerOp'''maxValue-2 [#_"LowerOp" this, #_"int" bits])
-
-    (§ abstract #_"IntegerStamp" LowerOp'''forInteger-4 [#_"LowerOp" this, #_"int" bits, #_"long" min, #_"long" max])
-
-    (§ abstract #_"CanonicalCondition" LowerOp'''getCondition-1 [#_"LowerOp" this])
-
-    (§ abstract #_"IntegerLowerThanNode" LowerOp'''createNode-3 [#_"LowerOp" this, #_"ValueNode" x, #_"ValueNode" y])
-
-    (§ abstract #_"LogicNode" LowerOp'''create-3 [#_"LowerOp" this, #_"ValueNode" x, #_"ValueNode" y])
-
-    (§ abstract #_"LogicNode" LowerOp'''findSynonym-3 [#_"LowerOp" this, #_"ValueNode" forX, #_"ValueNode" forY])
+(defprotocol LowerOp
+    (#_"long" LowerOp'''upperBound-2 [#_"LowerOp" this, #_"IntegerStamp" stamp])
+    (#_"long" LowerOp'''lowerBound-2 [#_"LowerOp" this, #_"IntegerStamp" stamp])
+    (#_"int" LowerOp'''compare-3 [#_"LowerOp" this, #_"long" a, #_"long" b])
+    (#_"long" LowerOp'''min-3 [#_"LowerOp" this, #_"long" a, #_"long" b])
+    (#_"long" LowerOp'''max-3 [#_"LowerOp" this, #_"long" a, #_"long" b])
+    (#_"long" LowerOp'''cast-3 [#_"LowerOp" this, #_"long" a, #_"int" bits])
+    (#_"long" LowerOp'''minValue-2 [#_"LowerOp" this, #_"int" bits])
+    (#_"long" LowerOp'''maxValue-2 [#_"LowerOp" this, #_"int" bits])
+    (#_"IntegerStamp" LowerOp'''forInteger-4 [#_"LowerOp" this, #_"int" bits, #_"long" min, #_"long" max])
+    (#_"CanonicalCondition" LowerOp'''getCondition-1 [#_"LowerOp" this])
+    (#_"IntegerLowerThanNode" LowerOp'''createNode-3 [#_"LowerOp" this, #_"ValueNode" x, #_"ValueNode" y])
+    (#_"LogicNode" LowerOp'''create-3 [#_"LowerOp" this, #_"ValueNode" x, #_"ValueNode" y])
+    (#_"LogicNode" LowerOp'''findSynonym-3 [#_"LowerOp" this, #_"ValueNode" forX, #_"ValueNode" forY])
 )
 
 ;;;
  ; The UnaryNode class is the base of arithmetic and bit logic operations with exactly one input.
  ;;
-(§ interface UnaryNode
+(defprotocol UnaryNode
     ;;;
      ; Compute an improved for this node using the passed in stamp. The stamp must be compatible
-     ; with the current value of #value. This code is used to provide the default
-     ; implementation of #inferStamp() and may be used by external optimizations.
+     ; with the current value of #value. This code is used to provide the default implementation
+     ; of #inferStamp() and may be used by external optimizations.
      ;;
-    (§ abstract #_"Stamp" UnaryNode'''foldStamp-2 [#_"UnaryNode" this, #_"Stamp" stamp])
+    (#_"Stamp" UnaryNode'''foldStamp-2 [#_"UnaryNode" this, #_"Stamp" stamp])
 )
 
 ;;;
  ; Compress or uncompress an oop or metaspace pointer.
  ;;
-(§ interface CompressionNode
-    (§ abstract #_"Constant" CompressionNode'''compress-2 [#_"CompressionNode" this, #_"Constant" constant])
-
-    (§ abstract #_"Constant" CompressionNode'''uncompress-2 [#_"CompressionNode" this, #_"Constant" constant])
-
-    (§ abstract #_"Stamp" CompressionNode'''mkStamp-2 [#_"CompressionNode" this, #_"Stamp" input])
+(defprotocol CompressionNode
+    (#_"Constant" CompressionNode'''compress-2 [#_"CompressionNode" this, #_"Constant" constant])
+    (#_"Constant" CompressionNode'''uncompress-2 [#_"CompressionNode" this, #_"Constant" constant])
+    (#_"Stamp" CompressionNode'''mkStamp-2 [#_"CompressionNode" this, #_"Stamp" input])
 )
 
 ;;;
  ; The ControlSplitNode is a base class for all instructions that split the control flow (i.e. have more than one successor).
  ;;
-(§ interface ControlSplitNode
-    (§ abstract #_"double" ControlSplitNode'''probability-2 [#_"ControlSplitNode" this, #_"AbstractBeginNode" successor])
-
+(defprotocol ControlSplitNode
+    (#_"double" ControlSplitNode'''probability-2 [#_"ControlSplitNode" this, #_"AbstractBeginNode" successor])
     ;;;
      ; Attempts to set the probability for the given successor to the passed value (which has to be
      ; in the range of 0.0 and 1.0). Returns whether setting the probability was successful.
      ;;
-    (§ abstract #_"boolean" ControlSplitNode'''setProbability-3 [#_"ControlSplitNode" this, #_"AbstractBeginNode" successor, #_"double" value])
-
+    (#_"boolean" ControlSplitNode'''setProbability-3 [#_"ControlSplitNode" this, #_"AbstractBeginNode" successor, #_"double" value])
     ;;;
      ; Primary successor of the control split. Data dependencies on the node have to be scheduled in
      ; the primary successor. Returns nil if data dependencies are not expected.
      ;
      ; @return the primary successor
      ;;
-    (§ abstract #_"AbstractBeginNode" ControlSplitNode'''getPrimarySuccessor-1 [#_"ControlSplitNode" this])
-
+    (#_"AbstractBeginNode" ControlSplitNode'''getPrimarySuccessor-1 [#_"ControlSplitNode" this])
     ;;;
      ; Returns the number of successors.
      ;;
-    (§ abstract #_"int" ControlSplitNode'''getSuccessorCount-1 [#_"ControlSplitNode" this])
+    (#_"int" ControlSplitNode'''getSuccessorCount-1 [#_"ControlSplitNode" this])
 )
 
 ;;;
  ; The SwitchNode class is the base of both lookup and table switches.
  ;;
-(§ interface SwitchNode
-    (§ abstract #_"boolean" SwitchNode'''isSorted-1 [#_"SwitchNode" this])
-
+(defprotocol SwitchNode
+    (#_"boolean" SwitchNode'''isSorted-1 [#_"SwitchNode" this])
     ;;;
      ; The key at the specified position, encoded in a Constant.
      ;;
-    (§ abstract #_"Constant" SwitchNode'''keyAt-2 [#_"SwitchNode" this, #_"int" i])
-
+    (#_"Constant" SwitchNode'''keyAt-2 [#_"SwitchNode" this, #_"int" i])
     ;;;
      ; Returns true if the switch has the same keys in the same order as this switch.
      ;;
-    (§ abstract #_"boolean" SwitchNode'''equalKeys-2 [#_"SwitchNode" this, #_"SwitchNode" switchNode])
-
-    (§ abstract #_"Stamp" SwitchNode'''getValueStampForSuccessor-2 [#_"SwitchNode" this, #_"AbstractBeginNode" beginNode])
+    (#_"boolean" SwitchNode'''equalKeys-2 [#_"SwitchNode" this, #_"SwitchNode" switchNode])
+    (#_"Stamp" SwitchNode'''getValueStampForSuccessor-2 [#_"SwitchNode" this, #_"AbstractBeginNode" beginNode])
 )
 
-(§ interface UnsafeAccessNode
-    (§ abstract #_"ValueNode" UnsafeAccessNode'''cloneAsFieldAccess-2 [#_"UnsafeAccessNode" this, #_"ResolvedJavaField" field])
-
-    (§ abstract #_"ValueNode" UnsafeAccessNode'''cloneAsArrayAccess-3 [#_"UnsafeAccessNode" this, #_"ValueNode" location, #_"LocationIdentity" identity])
+(defprotocol UnsafeAccessNode
+    (#_"ValueNode" UnsafeAccessNode'''cloneAsFieldAccess-2 [#_"UnsafeAccessNode" this, #_"ResolvedJavaField" field])
+    (#_"ValueNode" UnsafeAccessNode'''cloneAsArrayAccess-3 [#_"UnsafeAccessNode" this, #_"ValueNode" location, #_"LocationIdentity" identity])
 )
 
 ;;;
  ; Base class for nodes that deal with addressing calculation.
  ;;
-(§ interface AddressNode
-    (§ abstract #_"ValueNode" AddressNode'''getBase-1 [#_"AddressNode" this])
-
-    (§ abstract #_"ValueNode" AddressNode'''getIndex-1 [#_"AddressNode" this])
-
+(defprotocol AddressNode
+    (#_"ValueNode" AddressNode'''getBase-1 [#_"AddressNode" this])
+    (#_"ValueNode" AddressNode'''getIndex-1 [#_"AddressNode" this])
     ;;;
      ; Constant that is the maximum displacement from the base and index for this address. This value
      ; is used to determine whether using the access as an implicit nil-check on the base is valid.
      ;
      ; @return the maximum distance in bytes from the base that this address can be
      ;;
-    (§ abstract #_"long" AddressNode'''getMaxConstantDisplacement-1 [#_"AddressNode" this])
+    (#_"long" AddressNode'''getMaxConstantDisplacement-1 [#_"AddressNode" this])
 )
 
 ;;;
  ; An FixedAccessNode that can be converted to a FloatingAccessNode.
  ;;
-(§ interface FloatableAccessNode
-    (§ abstract #_"FloatingAccessNode" FloatableAccessNode'''asFloatingNode-2 [#_"FloatableAccessNode" this, #_"MemoryNode" lastLocationAccess])
+(defprotocol FloatableAccessNode
+    (#_"FloatingAccessNode" FloatableAccessNode'''asFloatingNode-2 [#_"FloatableAccessNode" this, #_"MemoryNode" lastLocationAccess])
 )
 
-(§ interface FloatingAccessNode
-    (§ abstract #_"FixedAccessNode" FloatingAccessNode'''asFixedNode-1 [#_"FloatingAccessNode" this])
+(defprotocol FloatingAccessNode
+    (#_"FixedAccessNode" FloatingAccessNode'''asFixedNode-1 [#_"FloatingAccessNode" this])
 )
 
 ;;;
@@ -2648,8 +2479,8 @@
  ; For a AbstractMergeNode, the order of the values corresponds to the order of the ends. For LoopBeginNodes,
  ; the first value corresponds to the loop's predecessor, while the rest of the values correspond to the LoopEndNodes.
  ;;
-(§ interface PhiNode
-    (§ abstract #_"NodeInputList<ValueNode>" PhiNode'''values-1 [#_"PhiNode" this])
+(defprotocol PhiNode
+    (#_"NodeInputList<ValueNode>" PhiNode'''values-1 [#_"PhiNode" this])
 )
 
 ;;;
@@ -2657,13 +2488,13 @@
  ;
  ; @anno PiNode.Placeholder
  ;;
-(§ interface Placeholder
+(defprotocol Placeholder
     ;;;
      ; Replaces this node with a PiNode during snippet instantiation.
      ;
      ; @param snippetReplaceeStamp the stamp of the node being replace by the snippet
      ;;
-    (§ abstract #_"void" Placeholder'''makeReplacement-2 [#_"Placeholder" this, #_"Stamp" snippetReplaceeStamp])
+    (#_"void" Placeholder'''makeReplacement-2 [#_"Placeholder" this, #_"Stamp" snippetReplaceeStamp])
 )
 
 ;;;
@@ -2671,56 +2502,51 @@
  ;
  ; @anno Graph.NodeEventListener
  ;;
-(§ interface NodeEventListener
+(defprotocol NodeEventListener
     ;;;
      ; Notifies this listener about any change event in the graph.
      ;
      ; @param e an event
      ; @param node the node related to {@code e}
      ;;
-    (§ abstract #_"void" NodeEventListener'''changed-3 [#_"NodeEventListener" this, #_"NodeEvent" e, #_"Node" node])
-
+    (#_"void" NodeEventListener'''changed-3 [#_"NodeEventListener" this, #_"NodeEvent" e, #_"Node" node])
     ;;;
      ; Notifies this listener about a change in a node's inputs.
      ;
      ; @param node a node who has had one of its inputs changed
      ;;
-    (§ abstract #_"void" NodeEventListener'''inputChanged-2 [#_"NodeEventListener" this, #_"Node" node])
-
+    (#_"void" NodeEventListener'''inputChanged-2 [#_"NodeEventListener" this, #_"Node" node])
     ;;;
      ; Notifies this listener of a node becoming unused.
      ;
      ; @param node a node whose Node#usages() just became empty
      ;;
-    (§ abstract #_"void" NodeEventListener'''usagesDroppedToZero-2 [#_"NodeEventListener" this, #_"Node" node])
-
+    (#_"void" NodeEventListener'''usagesDroppedToZero-2 [#_"NodeEventListener" this, #_"Node" node])
     ;;;
      ; Notifies this listener of an added node.
      ;
      ; @param node a node that was just added to the graph
      ;;
-    (§ abstract #_"void" NodeEventListener'''nodeAdded-2 [#_"NodeEventListener" this, #_"Node" node])
-
+    (#_"void" NodeEventListener'''nodeAdded-2 [#_"NodeEventListener" this, #_"Node" node])
     ;;;
      ; Notifies this listener of a removed node.
      ;;
-    (§ abstract #_"void" NodeEventListener'''nodeRemoved-2 [#_"NodeEventListener" this, #_"Node" node])
+    (#_"void" NodeEventListener'''nodeRemoved-2 [#_"NodeEventListener" this, #_"Node" node])
 )
 
-(§ interface NarrowOopStamp
-    (§ abstract #_"Stamp" NarrowOopStamp'''uncompressed-1 [#_"NarrowOopStamp" this])
+(defprotocol NarrowOopStamp
+    (#_"Stamp" NarrowOopStamp'''uncompressed-1 [#_"NarrowOopStamp" this])
 )
 
-(§ interface UnaryOpLogicNode
-    (§ abstract #_"Stamp" UnaryOpLogicNode'''getSucceedingStampForValue-2 [#_"UnaryOpLogicNode" this, #_"boolean" negated?])
-
-    (§ abstract #_"TriState" UnaryOpLogicNode'''tryFold-2 [#_"UnaryOpLogicNode" this, #_"Stamp" valueStamp])
+(defprotocol UnaryOpLogicNode
+    (#_"Stamp" UnaryOpLogicNode'''getSucceedingStampForValue-2 [#_"UnaryOpLogicNode" this, #_"boolean" negated?])
+    (#_"TriState" UnaryOpLogicNode'''tryFold-2 [#_"UnaryOpLogicNode" this, #_"Stamp" valueStamp])
 )
 
 ;;;
  ; This class represents a value within the graph, including local variables, phis, and all other instructions.
  ;;
-(§ interface ValueNode
+(defprotocol ValueNode
     ;;;
      ; This method can be overridden by subclasses of ValueNode if they need to recompute
      ; their stamp if their inputs change. A typical implementation will compute the stamp and pass
@@ -2728,22 +2554,20 @@
      ;
      ; @return true if the stamp has changed, false otherwise
      ;;
-    (§ abstract #_"boolean" ValueNode'''inferStamp-1 [#_"ValueNode" this])
+    (#_"boolean" ValueNode'''inferStamp-1 [#_"ValueNode" this])
 )
 
-(§ interface VirtualObjectNode
+(defprotocol VirtualObjectNode
     ;;;
      ; The type of object described by this VirtualObjectNode. In case of arrays, this is
      ; the array type (and not the component type).
      ;;
-    (§ abstract #_"ResolvedJavaType" VirtualObjectNode'''type-1 [#_"VirtualObjectNode" this])
-
+    (#_"ResolvedJavaType" VirtualObjectNode'''type-1 [#_"VirtualObjectNode" this])
     ;;;
      ; The number of entries this virtual object has. Either the number of fields or the number of
      ; array elements.
      ;;
-    (§ abstract #_"int" VirtualObjectNode'''entryCount-1 [#_"VirtualObjectNode" this])
-
+    (#_"int" VirtualObjectNode'''entryCount-1 [#_"VirtualObjectNode" this])
     ;;;
      ; If the given index denotes an entry in this virtual object, the index of this entry is
      ; returned. If no such entry can be found, this method returns -1.
@@ -2752,101 +2576,86 @@
      ; @param expectedEntryKind specifies which type is expected at this offset, important when
      ;            doing implicit casts, especially on big endian systems
      ;;
-    (§ abstract #_"int" VirtualObjectNode'''entryIndexForOffset-3 [#_"VirtualObjectNode" this, #_"long" constantOffset, #_"JavaKind" expectedEntryKind])
-
+    (#_"int" VirtualObjectNode'''entryIndexForOffset-3 [#_"VirtualObjectNode" this, #_"long" constantOffset, #_"JavaKind" expectedEntryKind])
     ;;;
      ; Returns the JavaKind of the entry at the given index.
      ;;
-    (§ abstract #_"JavaKind" VirtualObjectNode'''entryKind-2 [#_"VirtualObjectNode" this, #_"int" index])
-
+    (#_"JavaKind" VirtualObjectNode'''entryKind-2 [#_"VirtualObjectNode" this, #_"int" index])
     ;;;
      ; Returns an exact duplicate of this virtual object node, which has not been added to the graph yet.
      ;;
-    (§ abstract #_"VirtualObjectNode" VirtualObjectNode'''duplicate-1 [#_"VirtualObjectNode" this])
-
+    (#_"VirtualObjectNode" VirtualObjectNode'''duplicate-1 [#_"VirtualObjectNode" this])
     ;;;
      ; Returns a node that can be used to materialize this virtual object. If this returns an
      ; AllocatedObjectNode then this node will be attached to a CommitAllocationNode,
      ; otherwise the node will just be added to the graph.
      ;;
-    (§ abstract #_"ValueNode" VirtualObjectNode'''getMaterializedRepresentation-4 [#_"VirtualObjectNode" this, #_"FixedNode" fixed, #_"ValueNode[]" entries, #_"LockState" locks])
+    (#_"ValueNode" VirtualObjectNode'''getMaterializedRepresentation-4 [#_"VirtualObjectNode" this, #_"FixedNode" fixed, #_"ValueNode[]" entries, #_"LockState" locks])
 )
 
 ;;;
  ; Base class for nodes that contain "virtual" state, like FrameState and VirtualObjectState.
  ; Subclasses of this class will be treated in a special way by the scheduler.
  ;;
-(§ interface VirtualState
-    (§ abstract #_"VirtualState" VirtualState'''duplicateWithVirtualState-1 [#_"VirtualState" this])
-
-    (§ abstract #_"void" VirtualState'''applyToNonVirtual-2 [#_"VirtualState" this, #_"NodeClosure<? super ValueNode>" closure])
-
+(defprotocol VirtualState
+    (#_"VirtualState" VirtualState'''duplicateWithVirtualState-1 [#_"VirtualState" this])
+    (#_"void" VirtualState'''applyToNonVirtual-2 [#_"VirtualState" this, #_"NodeClosure<? super ValueNode>" closure])
     ;;;
      ; Performs a <b>pre-order</b> iteration over all elements reachable from this state that
      ; are a subclass of VirtualState.
      ;;
-    (§ abstract #_"void" VirtualState'''applyToVirtual-2 [#_"VirtualState" this, #_"VirtualClosure" closure])
-
-    (§ abstract #_"boolean" VirtualState'''isPartOfThisState-2 [#_"VirtualState" this, #_"VirtualState" state])
+    (#_"void" VirtualState'''applyToVirtual-2 [#_"VirtualState" this, #_"VirtualClosure" closure])
+    (#_"boolean" VirtualState'''isPartOfThisState-2 [#_"VirtualState" this, #_"VirtualState" state])
 )
 
 ;;;
  ; @anno VirtualState.NodeClosure
  ;;
-(§ interface NodeClosure #_"<T implements Node>"
-    (§ abstract #_"void" NodeClosure'''apply-3 [#_"NodeClosure<T implements Node>" this, #_"Node" usage, #_"T" node])
+(defprotocol NodeClosure #_"<T implements Node>"
+    (#_"void" NodeClosure'''apply-3 [#_"NodeClosure<T implements Node>" this, #_"Node" usage, #_"T" node])
 )
 
 ;;;
  ; Information about a graph that will potentially be inlined. This includes tracking the invocations
  ; in graph that will subject to inlining themselves.
  ;;
-(§ interface CallsiteHolder
+(defprotocol CallsiteHolder
     ;;;
      ; Gets the method associated with the {@linkplain #graph() graph} represented by this object.
      ;;
-    (§ abstract #_"ResolvedJavaMethod" CallsiteHolder'''method-1 [#_"CallsiteHolder" this])
-
+    (#_"ResolvedJavaMethod" CallsiteHolder'''method-1 [#_"CallsiteHolder" this])
     ;;;
-     ; The stack realized by InliningData grows upon InliningData#moveForward()
-     ; deciding to explore (depth-first) a callsite of the graph associated to this
-     ; CallsiteHolder. The list of not-yet-considered callsites is managed by
-     ; CallsiteHolderExplorable, and this method reports whether any such candidates remain.
+     ; The stack realized by InliningData grows upon InliningData#moveForward() deciding
+     ; to explore (depth-first) a callsite of the graph associated to this CallsiteHolder.
+     ; The list of not-yet-considered callsites is managed by CallsiteHolderExplorable,
+     ; and this method reports whether any such candidates remain.
      ;;
-    (§ abstract #_"boolean" CallsiteHolder'''hasRemainingInvokes-1 [#_"CallsiteHolder" this])
-
+    (#_"boolean" CallsiteHolder'''hasRemainingInvokes-1 [#_"CallsiteHolder" this])
     ;;;
      ; The graph about which this object contains inlining information.
      ;;
-    (§ abstract #_"Graph" CallsiteHolder'''graph-1 [#_"CallsiteHolder" this])
+    (#_"Graph" CallsiteHolder'''graph-1 [#_"CallsiteHolder" this])
 )
 
 ;;;
  ; @anno ReentrantBlockIterator.BlockIteratorClosure
  ;;
-(§ interface BlockIteratorClosure #_"<StateT>"
-    (§ abstract #_"StateT" BlockIteratorClosure'''getInitialState-1 [#_"BlockIteratorClosure<StateT>" this])
-
-    (§ abstract #_"StateT" BlockIteratorClosure'''processBlock-3 [#_"BlockIteratorClosure<StateT>" this, #_"Block" block, #_"StateT" currentState])
-
-    (§ abstract #_"StateT" BlockIteratorClosure'''merge-3 [#_"BlockIteratorClosure<StateT>" this, #_"Block" merge, #_"List<StateT>" states])
-
-    (§ abstract #_"StateT" BlockIteratorClosure'''cloneState-2 [#_"BlockIteratorClosure<StateT>" this, #_"StateT" oldState])
-
-    (§ abstract #_"List<StateT>" BlockIteratorClosure'''processLoop-3 [#_"BlockIteratorClosure<StateT>" this, #_"Loop" loop, #_"StateT" initialState])
+(defprotocol BlockIteratorClosure #_"<StateT>"
+    (#_"StateT" BlockIteratorClosure'''getInitialState-1 [#_"BlockIteratorClosure<StateT>" this])
+    (#_"StateT" BlockIteratorClosure'''processBlock-3 [#_"BlockIteratorClosure<StateT>" this, #_"Block" block, #_"StateT" currentState])
+    (#_"StateT" BlockIteratorClosure'''merge-3 [#_"BlockIteratorClosure<StateT>" this, #_"Block" merge, #_"List<StateT>" states])
+    (#_"StateT" BlockIteratorClosure'''cloneState-2 [#_"BlockIteratorClosure<StateT>" this, #_"StateT" oldState])
+    (#_"List<StateT>" BlockIteratorClosure'''processLoop-3 [#_"BlockIteratorClosure<StateT>" this, #_"Loop" loop, #_"StateT" initialState])
 )
 
 ;;;
  ; @anno ReentrantNodeIterator.NodeIteratorClosure
  ;;
-(§ interface NodeIteratorClosure #_"<StateT>"
-    (§ abstract #_"StateT" NodeIteratorClosure'''processNode-3 [#_"NodeIteratorClosure<StateT>" this, #_"FixedNode" node, #_"StateT" currentState])
-
-    (§ abstract #_"StateT" NodeIteratorClosure'''merge-3 [#_"NodeIteratorClosure<StateT>" this, #_"AbstractMergeNode" merge, #_"List<StateT>" states])
-
-    (§ abstract #_"StateT" NodeIteratorClosure'''afterSplit-3 [#_"NodeIteratorClosure<StateT>" this, #_"AbstractBeginNode" node, #_"StateT" oldState])
-
-    (§ abstract #_"EconomicMap<LoopExitNode, StateT>" NodeIteratorClosure'''processLoop-3 [#_"NodeIteratorClosure<StateT>" this, #_"LoopBeginNode" loop, #_"StateT" initialState])
+(defprotocol NodeIteratorClosure #_"<StateT>"
+    (#_"StateT" NodeIteratorClosure'''processNode-3 [#_"NodeIteratorClosure<StateT>" this, #_"FixedNode" node, #_"StateT" currentState])
+    (#_"StateT" NodeIteratorClosure'''merge-3 [#_"NodeIteratorClosure<StateT>" this, #_"AbstractMergeNode" merge, #_"List<StateT>" states])
+    (#_"StateT" NodeIteratorClosure'''afterSplit-3 [#_"NodeIteratorClosure<StateT>" this, #_"AbstractBeginNode" node, #_"StateT" oldState])
+    (#_"EconomicMap<LoopExitNode, StateT>" NodeIteratorClosure'''processLoop-3 [#_"NodeIteratorClosure<StateT>" this, #_"LoopBeginNode" loop, #_"StateT" initialState])
 )
 
 ;;;
@@ -2855,35 +2664,35 @@
  ; While iterating, it is possible to {@link #insert(FixedNode, FixedWithNextNode) insert} and
  ; {@link #replaceCurrent(FixedWithNextNode) replace} nodes.
  ;;
-(§ interface ScheduledNodeIterator
-    (§ abstract #_"void" ScheduledNodeIterator'''processNode-2 [#_"ScheduledNodeIterator" this, #_"Node" node])
+(defprotocol ScheduledNodeIterator
+    (#_"void" ScheduledNodeIterator'''processNode-2 [#_"ScheduledNodeIterator" this, #_"Node" node])
 )
 
-(§ interface ClassfileConstant
+(defprotocol ClassfileConstant
     ;;;
      ; Loads the type, if any, referenced at a specified entry.
      ;;
-    (§ abstract #_"void" ClassfileConstant'''loadReferencedType-4 [#_"ClassfileConstant" this, #_"ClassfileConstantPool" cp, #_"int" index, #_"int" opcode])
+    (#_"void" ClassfileConstant'''loadReferencedType-4 [#_"ClassfileConstant" this, #_"ClassfileConstantPool" cp, #_"int" index, #_"int" opcode])
 )
 
 ;;;
  ; Helper class for lowering InstanceOfNodes with snippets. The majority of the complexity
- ; in such a lowering derives from the fact that InstanceOfNode is a floating node. A
- ; snippet used to lower an InstanceOfNode will almost always incorporate control flow and
- ; replacing a floating node with control flow is not trivial.
+ ; in such a lowering derives from the fact that InstanceOfNode is a floating node. A snippet
+ ; used to lower an InstanceOfNode will almost always incorporate control flow and replacing
+ ; a floating node with control flow is not trivial.
  ;
- ; The mechanism implemented in this class ensures that the graph for an instanceof snippet is
- ; instantiated once per InstanceOfNode being lowered. The result produced is then re-used
- ; by all usages of the node. Additionally, if there is a single usage that is an IfNode,
- ; the control flow in the snippet is connected directly to the true and false successors of the
+ ; The mechanism implemented in this class ensures that the graph for an instanceof snippet
+ ; is instantiated once per InstanceOfNode being lowered. The result produced is then re-used
+ ; by all usages of the node. Additionally, if there is a single usage that is an IfNode, the
+ ; control flow in the snippet is connected directly to the true and false successors of the
  ; IfNode. This avoids materializing the instanceof test as a boolean which is then retested
  ; by the IfNode.
  ;;
-(§ interface InstanceOfSnippetsTemplates
+(defprotocol InstanceOfSnippetsTemplates
     ;;;
      ; Gets the arguments used to retrieve and instantiate an instanceof snippet template.
      ;;
-    (§ abstract #_"Arguments" InstanceOfSnippetsTemplates'''makeArguments-3 [#_"InstanceOfSnippetsTemplates" this, #_"InstanceOfUsageReplacer" replacer, #_"LoweringTool" lowerer])
+    (#_"Arguments" InstanceOfSnippetsTemplates'''makeArguments-3 [#_"InstanceOfSnippetsTemplates" this, #_"InstanceOfUsageReplacer" replacer, #_"LoweringTool" lowerer])
 )
 
 ;;;
@@ -2891,15 +2700,15 @@
  ;
  ; @anno InstanceOfSnippetsTemplates.InstanceOfUsageReplacer
  ;;
-(§ interface InstanceOfUsageReplacer
+(defprotocol InstanceOfUsageReplacer
     ;;;
      ; Does the replacement based on a previously snippet instantiation.
      ;;
-    (§ abstract #_"void" InstanceOfUsageReplacer'''replaceUsingInstantiation-1 [#_"InstanceOfUsageReplacer" this])
+    (#_"void" InstanceOfUsageReplacer'''replaceUsingInstantiation-1 [#_"InstanceOfUsageReplacer" this])
 )
 
-(§ interface IntegerExactArithmeticSplitNode
-    (§ abstract #_"Value" IntegerExactArithmeticSplitNode'''generateArithmetic-2 [#_"IntegerExactArithmeticSplitNode" this, #_"LIRBuilder" builder])
+(defprotocol IntegerExactArithmeticSplitNode
+    (#_"Value" IntegerExactArithmeticSplitNode'''generateArithmetic-2 [#_"IntegerExactArithmeticSplitNode" this, #_"LIRBuilder" builder])
 )
 
 ;;;
@@ -2907,14 +2716,13 @@
  ;
  ; @anno MethodHandleNode.GraphAdder
  ;;
-(§ interface GraphAdder
+(defprotocol GraphAdder
     ;;;
-     ; Call Graph#addOrUnique(Node) on {@code node}
-     ; and link any FixedWithNextNodes into the current control flow.
+     ; Call Graph#addOrUnique(Node) on {@code node} and link any FixedWithNextNodes into the current control flow.
      ;
      ; @return the newly added node
      ;;
-    (§ abstract #_"ValueNode" GraphAdder'''add-2 [#_"GraphAdder" this, #_"ValueNode" node])
+    (#_"ValueNode" GraphAdder'''add-2 [#_"GraphAdder" this, #_"ValueNode" node])
 )
 
 ;;;
@@ -2924,39 +2732,34 @@
  ;
  ; @anno SnippetTemplate.SnippetInfo
  ;;
-(§ interface SnippetInfo
-    (§ abstract #_"Lazy" SnippetInfo'''lazy-1 [#_"SnippetInfo" this])
+(defprotocol SnippetInfo
+    (#_"Lazy" SnippetInfo'''lazy-1 [#_"SnippetInfo" this])
 )
 
 ;;;
  ; An EffectList can be used to maintain a list of Effects and backtrack to a previous
  ; state by truncating the list.
  ;;
-(§ interface EffectList
-    (§ abstract #_"void" EffectList'''clear-1 [#_"EffectList" this])
+(defprotocol EffectList
+    (#_"void" EffectList'''clear-1 [#_"EffectList" this])
 )
 
-(§ interface EffectsBlockState #_"<T implements EffectsBlockState<T>>"
-    (§ abstract #_"boolean" EffectsBlockState'''equivalentTo-2 [#_"EffectsBlockState<T implements EffectsBlockState<T>>" this, #_"T" other])
+(defprotocol EffectsBlockState #_"<T implements EffectsBlockState<T>>"
+    (#_"boolean" EffectsBlockState'''equivalentTo-2 [#_"EffectsBlockState<T implements EffectsBlockState<T>>" this, #_"T" other])
 )
 
-(§ interface EffectsClosure #_"<BlockT implements EffectsBlockState<BlockT>>"
+(defprotocol EffectsClosure #_"<BlockT implements EffectsBlockState<BlockT>>"
     ;;;
      ; Collects the effects of virtualizing the given node.
      ;
      ; @return true if the effects include removing the node, false otherwise
      ;;
-    (§ abstract #_"boolean" EffectsClosure'''processNode-5 [#_"EffectsClosure<BlockT implements EffectsBlockState<BlockT>>" this, #_"Node" node, #_"BlockT" state, #_"GraphEffectList" effects, #_"FixedWithNextNode" lastFixedNode])
-
-    (§ abstract #_"BlockT" EffectsClosure'''stripKilledLoopLocations-3 [#_"EffectsClosure<BlockT implements EffectsBlockState<BlockT>>" this, #_"Loop" loop, #_"BlockT" initialState])
-
-    (§ abstract #_"void" EffectsClosure'''processKilledLoopLocations-4 [#_"EffectsClosure<BlockT implements EffectsBlockState<BlockT>>" this, #_"Loop" loop, #_"BlockT" initialState, #_"BlockT" mergedStates])
-
-    (§ abstract #_"void" EffectsClosure'''processInitialLoopState-3 [#_"EffectsClosure<BlockT implements EffectsBlockState<BlockT>>" this, #_"Loop" loop, #_"BlockT" initialState])
-
-    (§ abstract #_"void" EffectsClosure'''processLoopExit-5 [#_"EffectsClosure<BlockT implements EffectsBlockState<BlockT>>" this, #_"LoopExitNode" exitNode, #_"BlockT" initialState, #_"BlockT" exitState, #_"GraphEffectList" effects])
-
-    (§ abstract #_"MergeProcessor<BlockT>" EffectsClosure'''createMergeProcessor-2 [#_"EffectsClosure<BlockT implements EffectsBlockState<BlockT>>" this, #_"Block" merge])
+    (#_"boolean" EffectsClosure'''processNode-5 [#_"EffectsClosure<BlockT implements EffectsBlockState<BlockT>>" this, #_"Node" node, #_"BlockT" state, #_"GraphEffectList" effects, #_"FixedWithNextNode" lastFixedNode])
+    (#_"BlockT" EffectsClosure'''stripKilledLoopLocations-3 [#_"EffectsClosure<BlockT implements EffectsBlockState<BlockT>>" this, #_"Loop" loop, #_"BlockT" initialState])
+    (#_"void" EffectsClosure'''processKilledLoopLocations-4 [#_"EffectsClosure<BlockT implements EffectsBlockState<BlockT>>" this, #_"Loop" loop, #_"BlockT" initialState, #_"BlockT" mergedStates])
+    (#_"void" EffectsClosure'''processInitialLoopState-3 [#_"EffectsClosure<BlockT implements EffectsBlockState<BlockT>>" this, #_"Loop" loop, #_"BlockT" initialState])
+    (#_"void" EffectsClosure'''processLoopExit-5 [#_"EffectsClosure<BlockT implements EffectsBlockState<BlockT>>" this, #_"LoopExitNode" exitNode, #_"BlockT" initialState, #_"BlockT" exitState, #_"GraphEffectList" effects])
+    (#_"MergeProcessor<BlockT>" EffectsClosure'''createMergeProcessor-2 [#_"EffectsClosure<BlockT implements EffectsBlockState<BlockT>>" this, #_"Block" merge])
 )
 
 ;;;
@@ -2964,36 +2767,33 @@
  ;
  ; @anno EffectsClosure.MergeProcessor
  ;;
-(§ interface MergeProcessor #_"<BlockT implements EffectsBlockState<BlockT>>"
-    (§ abstract #_"void" MergeProcessor'''merge-2 [#_"MergeProcessor<BlockT implements EffectsBlockState<BlockT>>" this, #_"List<BlockT>" states])
+(defprotocol MergeProcessor #_"<BlockT implements EffectsBlockState<BlockT>>"
+    (#_"void" MergeProcessor'''merge-2 [#_"MergeProcessor<BlockT implements EffectsBlockState<BlockT>>" this, #_"List<BlockT>" states])
 )
 
-(§ interface EffectsPhase
-    (§ abstract #_"Closure" EffectsPhase'''createEffectsClosure-3 [#_"EffectsPhase" this, #_"ScheduleResult" schedule, #_"ControlFlowGraph" cfg])
+(defprotocol EffectsPhase
+    (#_"Closure" EffectsPhase'''createEffectsClosure-3 [#_"EffectsPhase" this, #_"ScheduleResult" schedule, #_"ControlFlowGraph" cfg])
 )
 
 ;;;
  ; @anno EffectsPhase.Closure
  ;;
-(§ interface Closure #_"<T>"
-    (§ abstract #_"boolean" Closure'''needsApplyEffects-1 [#_"Closure<T>" this])
-
-    (§ abstract #_"void" Closure'''applyEffects-1 [#_"Closure<T>" this])
+(defprotocol Closure #_"<T>"
+    (#_"boolean" Closure'''needsApplyEffects-1 [#_"Closure<T>" this])
+    (#_"void" Closure'''applyEffects-1 [#_"Closure<T>" this])
 )
 
-(§ interface PartialEscapeBlockState #_"<T implements PartialEscapeBlockState<T>>"
-    (§ abstract #_"void" PartialEscapeBlockState'''objectMaterialized-4 [#_"PartialEscapeBlockState<T implements PartialEscapeBlockState<T>>" this, #_"VirtualObjectNode" virtual, #_"AllocatedObjectNode" representation, #_"List<ValueNode>" values])
+(defprotocol PartialEscapeBlockState #_"<T implements PartialEscapeBlockState<T>>"
+    (#_"void" PartialEscapeBlockState'''objectMaterialized-4 [#_"PartialEscapeBlockState<T implements PartialEscapeBlockState<T>>" this, #_"VirtualObjectNode" virtual, #_"AllocatedObjectNode" representation, #_"List<ValueNode>" values])
 )
 
 ;;;
  ; @anno ReadEliminationBlockState.CacheEntry
  ;;
-(§ interface CacheEntry #_"<T>"
-    (§ abstract #_"CacheEntry<T>" CacheEntry'''duplicateWithObject-2 [#_"CacheEntry<T>" this, #_"ValueNode" newObject])
-
-    (§ abstract #_"boolean" CacheEntry'''conflicts-2 [#_"CacheEntry<T>" this, #_"LocationIdentity" other])
-
-    (§ abstract #_"LocationIdentity" CacheEntry'''getIdentity-1 [#_"CacheEntry<T>" this])
+(defprotocol CacheEntry #_"<T>"
+    (#_"CacheEntry<T>" CacheEntry'''duplicateWithObject-2 [#_"CacheEntry<T>" this, #_"ValueNode" newObject])
+    (#_"boolean" CacheEntry'''conflicts-2 [#_"CacheEntry<T>" this, #_"LocationIdentity" other])
+    (#_"LocationIdentity" CacheEntry'''getIdentity-1 [#_"CacheEntry<T>" this])
 )
 
 (value-ns HotSpot
@@ -7674,7 +7474,7 @@
                                 this (assoc this :displacement (+ (:displacement this) (* (:value (:scale this)) addBy)))
                             ]
                                 (NodeImpl''replaceFirstInput-3 this, (:index this), (:x add))
-                                (SimplifierTool'''addToWorkList-2 tool, (:index this))
+                                (SimplifierTool'''addToWorkList-2 tool, (:index this))
                                 this
                             )
                         )
@@ -43413,7 +43213,7 @@
                                         #_"AbstractEndNode" end (AbstractMergeNodeImpl''forwardEndAt-2 this, (- n i))
                                     ]
                                         (when (some? tool)
-                                            (SimplifierTool'''addToWorkList-2 tool, end)
+                                            (SimplifierTool'''addToWorkList-2 tool, end)
                                         )
                                         (let [
                                             #_"AbstractEndNode" newEnd
@@ -43438,7 +43238,7 @@
                                             (NodeImpl''replaceAtPredecessor-2 end, newEnd)
                                             (NodeImpl''safeDelete-1 end)
                                             (when (some? tool)
-                                                (SimplifierTool'''addToWorkList-2 tool, (:predecessor newEnd))
+                                                (SimplifierTool'''addToWorkList-2 tool, (:predecessor newEnd))
                                             )
                                         )
                                     )
@@ -43481,7 +43281,7 @@
                                             #_"ReturnNode" newReturn (Graph''add-2 (:graph this), (ReturnNode'new-1 (if (nil? returnValuePhi) (:result node) (PhiNodeImpl''valueAt-2 returnValuePhi, end))))
                                         ]
                                             (when (some? tool)
-                                                (SimplifierTool'''addToWorkList-2 tool, (:predecessor end))
+                                                (SimplifierTool'''addToWorkList-2 tool, (:predecessor end))
                                             )
                                             (NodeImpl''replaceAtPredecessor-2 end, newReturn)
                                         )
@@ -43564,7 +43364,7 @@
                     (do
                         ;; This begin node can be removed and all guards moved up to the preceding begin node.
                         (AbstractBeginNodeImpl''prepareDelete-1 this)
-                        (SimplifierTool'''addToWorkList-2 tool, (:next this))
+                        (SimplifierTool'''addToWorkList-2 tool, (:next this))
                         (Graph''removeFixed-2 (:graph this), this)
                     )
             )
@@ -49561,7 +49361,7 @@
                                 (do
                                     (§ ass! this (NodeImpl''replaceAndDelete-2 this, (:condition this)))
                                     (when (some? tool)
-                                        (SimplifierTool'''addToWorkList-2 tool, (NodeImpl''usages-1 (:condition this)))
+                                        (SimplifierTool'''addToWorkList-2 tool, (NodeImpl''usages-1 (:condition this)))
                                     )
                                 )
                                 (when-not (BranchProbabilityNode''isSubstitutionGraph-1 this)
@@ -49875,7 +49675,7 @@
         (cond
             (= (count (:successors this)) 1)
             (do
-                (SimplifierTool'''addToWorkList-2 tool, (SwitchNodeImpl''defaultSuccessor-1 this))
+                (SimplifierTool'''addToWorkList-2 tool, (SwitchNodeImpl''defaultSuccessor-1 this))
                 (Graph''removeSplitPropagate-3 (:graph this), this, (SwitchNodeImpl''defaultSuccessor-1 this))
             )
             (instance? ConstantNode (:value this))
@@ -49910,7 +49710,7 @@
                     (empty? newKeys)
                         (do
                             (when (some? tool)
-                                (SimplifierTool'''addToWorkList-2 tool, (SwitchNodeImpl''defaultSuccessor-1 this))
+                                (SimplifierTool'''addToWorkList-2 tool, (SwitchNodeImpl''defaultSuccessor-1 this))
                             )
                             (Graph''removeSplitPropagate-3 (:graph this), this, (SwitchNodeImpl''defaultSuccessor-1 this))
                             true
@@ -50848,7 +50648,7 @@
                 (SimplifierTool'''deleteBranch-2 tool, successor)
             )
         )
-        (SimplifierTool'''addToWorkList-2 tool, (nth (:successors this) survivingEdge))
+        (SimplifierTool'''addToWorkList-2 tool, (nth (:successors this) survivingEdge))
         (Graph''removeSplit-3 (:graph this), this, (nth (:successors this) survivingEdge))
         nil
     )
@@ -52141,12 +51941,12 @@
                     (if (:value c)
                         (do
                             (SimplifierTool'''deleteBranch-2 tool, (:falseSuccessor this))
-                            (SimplifierTool'''addToWorkList-2 tool, (:trueSuccessor this))
+                            (SimplifierTool'''addToWorkList-2 tool, (:trueSuccessor this))
                             (Graph''removeSplit-3 (:graph this), this, (:trueSuccessor this))
                         )
                         (do
                             (SimplifierTool'''deleteBranch-2 tool, (:trueSuccessor this))
-                            (SimplifierTool'''addToWorkList-2 tool, (:falseSuccessor this))
+                            (SimplifierTool'''addToWorkList-2 tool, (:falseSuccessor this))
                             (Graph''removeSplit-3 (:graph this), this, (:falseSuccessor this))
                         )
                     )
@@ -52380,7 +52180,7 @@
                                     (Graph''addBeforeFixed-3 (:graph this), this, trueNext)
                                     (doseq [#_"Node" usage (NodeIterable'''snapshot-1 (NodeImpl''usages-1 trueNext))]
                                         (when (NodeImpl''isAlive-1 usage)
-                                            (SimplifierTool'''addToWorkList-2 tool, usage)
+                                            (SimplifierTool'''addToWorkList-2 tool, usage)
                                         )
                                     )
                                     (recur)
@@ -52672,7 +52472,7 @@
             #_"LogicNode" logic (:condition this)
         ]
             (Graph''removeSplitPropagate-3 (:graph this), this, trueBegin)
-            (SimplifierTool'''addToWorkList-2 tool, trueBegin)
+            (SimplifierTool'''addToWorkList-2 tool, trueBegin)
             (when (some? logic)
                 (GraphUtil'tryKillUnused-1 logic)
             )
@@ -52682,7 +52482,7 @@
                         #_"Node" n (loop-when-recur [n end] (and (some? n) (instance? BeginNode (:predecessor n))) [(:predecessor n)] => n)
                     ]
                         (when (and (some? n) (instance? IfNode (:predecessor n)))
-                            (SimplifierTool'''addToWorkList-2 tool, (:predecessor n))
+                            (SimplifierTool'''addToWorkList-2 tool, (:predecessor n))
                         )
                     )
                 )
@@ -53218,7 +53018,7 @@
                     )
                 )
             )
-            (SimplifierTool'''addToWorkList-2 tool, successor)
+            (SimplifierTool'''addToWorkList-2 tool, successor)
         )
         nil
     )
@@ -55944,7 +55744,7 @@
                                                     )
                                                 )
                                                 (when (some? tool)
-                                                    (SimplifierTool'''addToWorkList-2 tool, (NodeImpl''usages-1 otherPhi))
+                                                    (SimplifierTool'''addToWorkList-2 tool, (NodeImpl''usages-1 otherPhi))
                                                 )
                                                 (§ ass! otherPhi (NodeImpl''replaceAtUsages-2 otherPhi, phi))
                                                 (GraphUtil'killWithUnusedFloatingInputs-1 otherPhi)
@@ -56289,13 +56089,6 @@
         (:address this)
     )
 
-    #_unused
-    (§ override #_"void" Access'''setAddress-2 [#_"FixedAccessNode" this, #_"AddressNode" address]
-        (NodeImpl''updateUsages-3 this, (:address this), address)
-        (§ ass! this (assoc this :address address))
-        nil
-    )
-
     (§ override #_"LocationIdentity" FixedAccessNode'''getLocationIdentity-1 [#_"FixedAccessNode" this]
         (:location this)
     )
@@ -56410,13 +56203,6 @@
 
     (§ override #_"AddressNode" Access'''getAddress-1 [#_"FloatingAccessNode" this]
         (:address this)
-    )
-
-    #_unused
-    (§ override #_"void" Access'''setAddress-2 [#_"FloatingAccessNode" this, #_"AddressNode" address]
-        (NodeImpl''updateUsages-3 this, (:address this), address)
-        (§ ass! this (assoc this :address address))
-        nil
     )
 
     (§ override #_"LocationIdentity" FloatingAccessNodeImpl'''getLocationIdentity-1 [#_"FloatingAccessNode" this]
@@ -59332,11 +59118,11 @@
         nil
     )
 
-    (§ override! #_"void" SimplifierTool'''addToWorkList-2 [#_"DefaultSimplifierTool" this, #_"Node" node]
+    (§ override! #_"void" SimplifierTool'''addToWorkList-2 [#_"DefaultSimplifierTool" this, #_"Node" node]
         nil
     )
 
-    (§ override! #_"void" SimplifierTool'''addToWorkList-2 [#_"DefaultSimplifierTool" this, #_"Iterable<? implements Node>" nodes]
+    (§ override! #_"void" SimplifierTool'''addToWorkList-2 [#_"DefaultSimplifierTool" this, #_"Iterable<? implements Node>" nodes]
         nil
     )
 
@@ -60532,7 +60318,7 @@
                     :else
                     (do
                         ;; when removing a fixed node, new canonicalization opportunities for its successor may arise
-                        (SimplifierTool'''addToWorkList-2 (:tool this), (:next node))
+                        (SimplifierTool'''addToWorkList-2 (:tool this), (:next node))
                         (cond
                             (nil? canonical)
                             (do
@@ -60599,12 +60385,12 @@
         nil
     )
 
-    (§ override! #_"void" SimplifierTool'''addToWorkList-2 [#_"Tool" this, #_"Node" node]
+    (§ override! #_"void" SimplifierTool'''addToWorkList-2 [#_"Tool" this, #_"Node" node]
         (NodeWorkList'''add-2 (:workList (:instance this)), node)
         nil
     )
 
-    (§ override! #_"void" SimplifierTool'''addToWorkList-2 [#_"Tool" this, #_"Iterable<? implements Node>" nodes]
+    (§ override! #_"void" SimplifierTool'''addToWorkList-2 [#_"Tool" this, #_"Iterable<? implements Node>" nodes]
         (NodeWorkListImpl''addAll-2 (:workList (:instance this)), nodes)
         nil
     )
@@ -69867,12 +69653,12 @@
     (§ override! #_"void" Simplifiable'''simplify-2 [#_"IntegerAddExactSplitNode" this, #_"SimplifierTool" tool]
         (when-not (IntegerStamp'addCanOverflow-2 (:stamp (:x this)), (:stamp (:y this)))
             (SimplifierTool'''deleteBranch-2 tool, (:overflowSuccessor this))
-            (SimplifierTool'''addToWorkList-2 tool, (:next this))
+            (SimplifierTool'''addToWorkList-2 tool, (:next this))
             (let [
                 #_"AddNode" replacement (Graph''add-2 (:graph this), (AddNode'new-2 (:x this), (:y this)))
             ]
                 (Graph''replaceSplitWithFloating-4 (:graph this), this, replacement, (:next this))
-                (SimplifierTool'''addToWorkList-2 tool, replacement)
+                (SimplifierTool'''addToWorkList-2 tool, replacement)
             )
         )
         nil
@@ -70042,12 +69828,12 @@
     (§ override! #_"void" Simplifiable'''simplify-2 [#_"IntegerMulExactSplitNode" this, #_"SimplifierTool" tool]
         (when-not (IntegerStamp'multiplicationCanOverflow-2 (:stamp (:x this)), (:stamp (:y this)))
             (SimplifierTool'''deleteBranch-2 tool, (:overflowSuccessor this))
-            (SimplifierTool'''addToWorkList-2 tool, (:next this))
+            (SimplifierTool'''addToWorkList-2 tool, (:next this))
             (let [
                 #_"MulNode" replacement (Graph''add-2 (:graph this), (MulNode'new-2 (:x this), (:y this)))
             ]
                 (Graph''replaceSplitWithFloating-4 (:graph this), this, replacement, (:next this))
-                (SimplifierTool'''addToWorkList-2 tool, replacement)
+                (SimplifierTool'''addToWorkList-2 tool, replacement)
             )
         )
         nil
@@ -70179,12 +69965,12 @@
     (§ override! #_"void" Simplifiable'''simplify-2 [#_"IntegerSubExactSplitNode" this, #_"SimplifierTool" tool]
         (when-not (IntegerStamp'subtractionCanOverflow-2 (:stamp (:x this)), (:stamp (:y this)))
             (SimplifierTool'''deleteBranch-2 tool, (:overflowSuccessor this))
-            (SimplifierTool'''addToWorkList-2 tool, (:next this))
+            (SimplifierTool'''addToWorkList-2 tool, (:next this))
             (let [
                 #_"SubNode" replacement (Graph''add-2 (:graph this), (SubNode'new-2 (:x this), (:y this)))
             ]
                 (Graph''replaceSplitWithFloating-4 (:graph this), this, replacement, (:next this))
-                (SimplifierTool'''addToWorkList-2 tool, replacement)
+                (SimplifierTool'''addToWorkList-2 tool, replacement)
             )
         )
         nil
