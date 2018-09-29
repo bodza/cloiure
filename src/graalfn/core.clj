@@ -1,5 +1,5 @@
 (ns graalfn.core
-    (:refer-clojure :only [* *ns* + - -> / < <= = > >= aget and aset assoc bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean-array byte byte-array case char cond condp cons contains? count dec declare defmacro defn defprotocol doseq dotimes double double-array empty? filter first get hash-map if-not import inc instance? int int-array into-array keys let letfn locking long long-array loop make-array map max min neg? next nil? not not= ns-imports ns-unmap nth object-array or pos? quot reduce rem remove repeat rest second seq sequential? short some? str symbol? unsigned-bit-shift-right update update-in vals vary-meta vec vector? when-some while zero?])
+    (:refer-clojure :only [* *ns* + - -> / < <= = > >= aget and aset assoc bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean-array byte byte-array case char cond condp cons contains? count dec declare defmacro defn defprotocol doseq dotimes double double-array empty? filter first get hash-map if-not import inc instance? int int-array into-array keys let letfn locking long long-array loop make-array map max merge min neg? next nil? not not= ns-imports ns-unmap nth object-array or pos? quot reduce rem remove repeat rest second seq sequential? short some? str symbol? unsigned-bit-shift-right update update-in vals vary-meta vec vector? when-some while zero?])
 )
 
 (defmacro § [& _])
@@ -150,8 +150,11 @@ GraalDirectives'UNLIKELY_PROBABILITY
 GuardPriority
 GuardsStage''ordinal-1
 InputType
+InstanceOfSnippets
 LIROpcode
 MetaspaceOperation''opcode-1
+MonitorSnippets
+NewObjectSnippets
 NodeEvent
 NonNullParameter
 Optimization'values-0
@@ -159,6 +162,7 @@ RegisterPriority''ordinal-1
 Snippet
 SpillState''ordinal-1
 Temp
+UnsafeLoadSnippets
 Use
 VarargsParameter
 WordFactoryOperation
@@ -168,6 +172,7 @@ WordOperation''opcode-1
 WordOperation''rightOperandIsInt-1
 WordOperation''node-1
 WordOperation''condition-1
+WriteBarrierSnippets
 )
 
 (declare
@@ -7147,7 +7152,7 @@ ZeroExtendNode'new-4
 )
 
 (defprotocol ParameterPlugin
-    (#_"FloatingNode" ParameterPlugin'''interceptParameter-4 [#_"ParameterPlugin" this, #_"GraphBuilder" b, #_"int" index, #_"StampPair" stamp])
+    (#_"FloatingNode" ParameterPlugin'''interceptParameter-4 [#_"ParameterPlugin" this, #_"GraphBuilder" b, #_"int" index, #_"StampPair" stamp])
 )
 
 ;;;
@@ -7158,7 +7163,7 @@ ZeroExtendNode'new-4
     ;;;
      ; Intercept the type of arguments or return values.
      ;;
-    (#_"StampPair" TypePlugin'''interceptType-4 [#_"TypePlugin" this, #_"GraphBuilder" b, #_"JavaType" declaredType, #_"boolean" never-nil?])
+    (#_"StampPair" TypePlugin'''interceptType-4 [#_"TypePlugin" this, #_"GraphBuilder" b, #_"JavaType" declaredType, #_"boolean" never-nil?])
 )
 
 (defprotocol Access #_(§ extends GuardedNode, HeapAccess)
@@ -9066,29 +9071,33 @@ ZeroExtendNode'new-4
  ; may be a variable that will get a register assigned later by the register allocator.
  ;;
 (final-ns AMD64Address (§ extends AbstractAddress)
-    ;;;
-     ; Base register that defines the start of the address computation.
-     ; If not present, is denoted by Register#None.
-     ;;
-    (§ final #_"Register" :base nil)
-    ;;;
-     ; Index register, the value of which (possibly scaled by #getScale) is added to #getBase.
-     ; If not present, is denoted by Register#None.
-     ;;
-    (§ final #_"Register" :index nil)
-    ;;;
-     ; Scaling factor for indexing, dependent on target operand size.
-     ;;
-    (§ final #_"Scale" :scale nil)
-    ;;;
-     ; Optional additive displacement.
-     ;;
-    (§ final #_"int" :displacement 0)
-    ;;;
-     ; The start of the instruction, i.e. the value that is used as the key for looking up placeholder
-     ; patching information. Only used for {@link Assembler#getPlaceholder placeholder addresses}.
-     ;;
-    (§ final #_"int" :instructionStartPosition 0)
+    (defn- #_"AMD64Address" AMD64Address'init-0 []
+        (hash-map
+            ;;;
+             ; Base register that defines the start of the address computation.
+             ; If not present, is denoted by Register#None.
+             ;;
+            #_"Register" :base nil
+            ;;;
+             ; Index register, the value of which (possibly scaled by #getScale) is added to #getBase.
+             ; If not present, is denoted by Register#None.
+             ;;
+            #_"Register" :index nil
+            ;;;
+             ; Scaling factor for indexing, dependent on target operand size.
+             ;;
+            #_"Scale" :scale nil
+            ;;;
+             ; Optional additive displacement.
+             ;;
+            #_"int" :displacement 0
+            ;;;
+             ; The start of the instruction, i.e. the value that is used as the key for looking up placeholder
+             ; patching information. Only used for {@link Assembler#getPlaceholder placeholder addresses}.
+             ;;
+            #_"int" :instructionStartPosition 0
+        )
+    )
 
     ;;;
      ; Creates an AMD64Address with given base register, no scaling and no displacement.
@@ -9137,6 +9146,7 @@ ZeroExtendNode'new-4
     (defn #_"AMD64Address" AMD64Address'new-5 [#_"Register" base, #_"Register" index, #_"Scale" scale, #_"int" displacement, #_"int" instructionStartPosition]
         (let [
             #_"AMD64Address" this (AbstractAddress'new-0)
+            this (merge this (AMD64Address'init-0))
             this (assoc this :base base)
             this (assoc this :index index)
             this (assoc this :scale scale)
@@ -9154,18 +9164,22 @@ ZeroExtendNode'new-4
  ; @anno AMD64Address.Scale
  ;;
 (final-ns Scale
-    ;;;
-     ; The value (or multiplier) of this scale.
-     ;;
-    (§ final #_"int" :value 0)
-    ;;;
-     ; The shift (value log 2) of this scale.
-     ;;
-    (§ final #_"int" :shift 0)
+    (defn- #_"Scale" Scale'init-0 []
+        (hash-map
+            ;;;
+             ; The value (or multiplier) of this scale.
+             ;;
+            #_"int" :value 0
+            ;;;
+             ; The shift (value log 2) of this scale.
+             ;;
+            #_"int" :shift 0
+        )
+    )
 
     (defn- #_"Scale" Scale'new-2 [#_"int" value, #_"int" shift]
         (let [
-            #_"Scale" this (hash-map)
+            #_"Scale" this (merge (hash-map) (Scale'init-0))
             this (assoc this :value value)
             this (assoc this :shift shift)
         ]
@@ -9189,31 +9203,30 @@ ZeroExtendNode'new-4
 
     (def- #_"int" Assembler'MinEncodingNeedsRex 8)
 
-    ;;;
-     ; The LIR for which code is being generated.
-     ;;
-    (§ final #_"LIR" :lir nil)
-
-    (§ final #_"FrameMap" :frameMap nil)
-    ;;;
-     ; The object that emits code for managing a method's frame.
-     ;;
-    (§ final #_"FrameContext" :frameContext nil)
-
-    (§ final #_"CompilationResult" :compilationResult nil)
-
-    ;;;
-     ; The index of the block currently being emitted.
-     ;;
-    (§ mutable #_"int" :currentBlockIndex 0)
-
-    (§ final #_"EconomicMap<Constant, Data>" :dataCache (EconomicMap/create Equivalence/DEFAULT))
-
-    (§ final #_"CodeBuffer" :codeBuffer (CodeBuffer'new-1 (#_"Architecture" .getByteOrder (.arch HotSpot'target))))
+    (defn- #_"Assembler" Assembler'init-0 []
+        (hash-map
+            ;;;
+             ; The LIR for which code is being generated.
+             ;;
+            #_"LIR" :lir nil
+            #_"FrameMap" :frameMap nil
+            ;;;
+             ; The object that emits code for managing a method's frame.
+             ;;
+            #_"FrameContext" :frameContext nil
+            #_"CompilationResult" :compilationResult nil
+            ;;;
+             ; The index of the block currently being emitted.
+             ;;
+            #_"int" :currentBlockIndex 0
+            #_"EconomicMap<Constant, Data>" :dataCache (EconomicMap/create Equivalence/DEFAULT)
+            #_"CodeBuffer" :codeBuffer (CodeBuffer'new-1 (#_"Architecture" .getByteOrder (.arch HotSpot'target)))
+        )
+    )
 
     (defn #_"Assembler" Assembler'new-1 [#_"LIRGenerationResult" res]
         (let [
-            #_"Assembler" this (hash-map)
+            #_"Assembler" this (merge (hash-map) (Assembler'init-0))
             this (assoc this :lir (:lir res))
             this (assoc this :frameMap (:frameMap res))
             ;; Omit the frame if the method:
@@ -11498,12 +11511,16 @@ ZeroExtendNode'new-4
  ; @anno Assembler.ConditionFlag
  ;;
 (final-ns ConditionFlag
-    (§ final #_"int" :value 0)
-    (§ final #_"String" :operator nil)
+    (defn- #_"ConditionFlag" ConditionFlag'init-0 []
+        (hash-map
+            #_"int" :value 0
+            #_"String" :operator nil
+        )
+    )
 
     (defn- #_"ConditionFlag" ConditionFlag'new-2 [#_"int" value, #_"String" operator]
         (let [
-            #_"ConditionFlag" this (hash-map)
+            #_"ConditionFlag" this (merge (hash-map) (ConditionFlag'init-0))
             this (assoc this :value value)
             this (assoc this :operator operator)
         ]
@@ -11619,9 +11636,13 @@ ZeroExtendNode'new-4
         )
     )
 
-    (§ final #_"int" :sizePrefix 0)
-    (§ final #_"int" :bytes 0)
-    (§ final #_"AMD64Kind" :kind nil)
+    (defn- #_"OperandSizeImpl" OperandSizeImpl'init-0 []
+        (hash-map
+            #_"int" :sizePrefix 0
+            #_"int" :bytes 0
+            #_"AMD64Kind" :kind nil
+        )
+    )
 
     (defn #_"OperandSize" OperandSizeImpl'new-2 [#_"int" bytes, #_"AMD64Kind" kind]
         (OperandSizeImpl'new-3 bytes, kind, 0)
@@ -11629,7 +11650,7 @@ ZeroExtendNode'new-4
 
     (defn #_"OperandSize" OperandSizeImpl'new-3 [#_"int" bytes, #_"AMD64Kind" kind, #_"int" sizePrefix]
         (let [
-            #_"OperandSize" this (hash-map)
+            #_"OperandSize" this (merge (hash-map) (OperandSizeImpl'init-0))
             this (assoc this :sizePrefix sizePrefix)
             this (assoc this :bytes bytes)
             this (assoc this :kind kind)
@@ -11645,18 +11666,20 @@ ZeroExtendNode'new-4
  ; @anno Assembler.AMD64Op
  ;;
 (class-ns AMD64Op
-    (§ final #_"int" :prefix1 0)
-    (§ final #_"int" :prefix2 0)
-    (§ final #_"int" :op 0)
-
-    (§ final #_"boolean" :dstIsByte false)
-    (§ final #_"boolean" :srcIsByte false)
-
-    (§ final #_"AMD64$CPUFeature" :feature nil)
+    (defn- #_"AMD64Op" AMD64Op'init-0 []
+        (hash-map
+            #_"int" :prefix1 0
+            #_"int" :prefix2 0
+            #_"int" :op 0
+            #_"boolean" :dstIsByte false
+            #_"boolean" :srcIsByte false
+            #_"AMD64$CPUFeature" :feature nil
+        )
+    )
 
     (defn #_"AMD64Op" AMD64Op'new-6 [#_"int" prefix1, #_"int" prefix2, #_"int" op, #_"boolean" dstIsByte, #_"boolean" srcIsByte, #_"AMD64$CPUFeature" feature]
         (let [
-            #_"AMD64Op" this (hash-map)
+            #_"AMD64Op" this (merge (hash-map) (AMD64Op'init-0))
             this (assoc this :prefix1 prefix1)
             this (assoc this :prefix2 prefix2)
             this (assoc this :op op)
@@ -11697,11 +11720,16 @@ ZeroExtendNode'new-4
  ; @anno Assembler.AMD64ImmOp
  ;;
 (class-ns AMD64ImmOp (§ extends AMD64Op)
-    (§ final #_"boolean" :immIsByte false)
+    (defn- #_"AMD64ImmOp" AMD64ImmOp'init-0 []
+        (hash-map
+            #_"boolean" :immIsByte false
+        )
+    )
 
     (defn #_"AMD64ImmOp" AMD64ImmOp'new-5 [#_"int" prefix, #_"int" op, #_"boolean" immIsByte, #_"boolean" dstIsByte, #_"boolean" srcIsByte]
         (let [
             #_"AMD64ImmOp" this (AMD64Op'new-6 0, prefix, op, dstIsByte, srcIsByte, nil)
+            this (merge this (AMD64ImmOp'init-0))
             this (assoc this :immIsByte immIsByte)
         ]
             this
@@ -11820,11 +11848,16 @@ ZeroExtendNode'new-4
  ; @anno Assembler.AMD64MOp
  ;;
 (final-ns AMD64MOp (§ extends AMD64Op)
-    (§ final #_"int" :ext 0)
+    (defn- #_"AMD64MOp" AMD64MOp'init-0 []
+        (hash-map
+            #_"int" :ext 0
+        )
+    )
 
     (defn #_"AMD64MOp" AMD64MOp'new-2 [#_"int" op, #_"int" ext]
         (let [
             #_"AMD64MOp" this (AMD64Op'new-6 0, 0, op, false, false, nil)
+            this (merge this (AMD64MOp'init-0))
             this (assoc this :ext ext)
         ]
             this
@@ -11861,7 +11894,11 @@ ZeroExtendNode'new-4
  ; @anno Assembler.AMD64MIOp
  ;;
 (final-ns AMD64MIOp (§ extends AMD64ImmOp)
-    (§ final #_"int" :ext 0)
+    (defn- #_"AMD64MIOp" AMD64MIOp'init-0 []
+        (hash-map
+            #_"int" :ext 0
+        )
+    )
 
     (defn #_"AMD64MIOp" AMD64MIOp'new-1 [#_"int" op]
         (AMD64MIOp'new-5 op, 0, false, false, false)
@@ -11878,6 +11915,7 @@ ZeroExtendNode'new-4
     (defn #_"AMD64MIOp" AMD64MIOp'new-5 [#_"int" op, #_"int" ext, #_"boolean" immIsByte, #_"boolean" dstIsByte, #_"boolean" srcIsByte]
         (let [
             #_"AMD64MIOp" this (AMD64ImmOp'new-5 0, op, immIsByte, dstIsByte, srcIsByte)
+            this (merge this (AMD64MIOp'init-0))
             this (assoc this :ext ext)
         ]
             this
@@ -11937,18 +11975,21 @@ ZeroExtendNode'new-4
  ; @anno Assembler.BinaryArithmetic
  ;;
 (final-ns BinaryArithmetic
-    (§ final #_"AMD64MIOp" :byteImmOp nil)
-    (§ final #_"AMD64MROp" :byteMrOp nil)
-    (§ final #_"AMD64RMOp" :byteRmOp nil)
-
-    (§ final #_"AMD64MIOp" :immOp nil)
-    (§ final #_"AMD64MIOp" :immSxOp nil)
-    (§ final #_"AMD64MROp" :mrOp nil)
-    (§ final #_"AMD64RMOp" :rmOp nil)
+    (defn- #_"BinaryArithmetic" BinaryArithmetic'init-0 []
+        (hash-map
+            #_"AMD64MIOp" :byteImmOp nil
+            #_"AMD64MROp" :byteMrOp nil
+            #_"AMD64RMOp" :byteRmOp nil
+            #_"AMD64MIOp" :immOp nil
+            #_"AMD64MIOp" :immSxOp nil
+            #_"AMD64MROp" :mrOp nil
+            #_"AMD64RMOp" :rmOp nil
+        )
+    )
 
     (defn- #_"BinaryArithmetic" BinaryArithmetic'new-1 [#_"int" code]
         (let [
-            #_"BinaryArithmetic" this (hash-map)
+            #_"BinaryArithmetic" this (merge (hash-map) (BinaryArithmetic'init-0))
             #_"int" base (<< code 3)
             this (assoc this :byteImmOp (AMD64MIOp'new-5 0x80, code,       true, true, true))
             this (assoc this :byteMrOp  (AMD64MROp'new-3       base,             true, true))
@@ -12003,13 +12044,17 @@ ZeroExtendNode'new-4
     (§ def #_"AMD64Shift" AMD64Shift'SHR (AMD64Shift'new-1 5))
     (§ def #_"AMD64Shift" AMD64Shift'SAR (AMD64Shift'new-1 7))
 
-    (§ final #_"AMD64MOp" :m1Op nil)
-    (§ final #_"AMD64MOp" :mcOp nil)
-    (§ final #_"AMD64MIOp" :miOp nil)
+    (defn- #_"AMD64Shift" AMD64Shift'init-0 []
+        (hash-map
+            #_"AMD64MOp" :m1Op nil
+            #_"AMD64MOp" :mcOp nil
+            #_"AMD64MIOp" :miOp nil
+        )
+    )
 
     (defn- #_"AMD64Shift" AMD64Shift'new-1 [#_"int" code]
         (let [
-            #_"AMD64Shift" this (hash-map)
+            #_"AMD64Shift" this (merge (hash-map) (AMD64Shift'init-0))
             this (assoc this :m1Op (AMD64MOp'new-2 0xd1, code))
             this (assoc this :mcOp (AMD64MOp'new-2 0xd3, code))
             this (assoc this :miOp (AMD64MIOp'new-3 0xc1, code, true))
@@ -12025,11 +12070,15 @@ ZeroExtendNode'new-4
 (final-ns CodeBuffer
     (def #_"int" CodeBuffer'InitialSize 232)
 
-    (§ final #_"ByteBuffer" :data nil)
+    (defn- #_"CodeBuffer" CodeBuffer'init-0 []
+        (hash-map
+            #_"ByteBuffer" :data nil
+        )
+    )
 
     (defn #_"CodeBuffer" CodeBuffer'new-1 [#_"ByteOrder" order]
         (let [
-            #_"CodeBuffer" this (hash-map)
+            #_"CodeBuffer" this (merge (hash-map) (CodeBuffer'init-0))
             this (assoc this :data (ByteBuffer/allocate CodeBuffer'InitialSize))
         ]
             (#_"ByteBuffer" .order (:data this), order)
@@ -12171,16 +12220,19 @@ ZeroExtendNode'new-4
  ; This class represents a label within assembly code.
  ;;
 (final-ns Label
-    (§ mutable #_"int" :position -1)
-
-    ;;;
-     ; References to instructions that jump to this unresolved label. These instructions need to be
-     ; patched when the label is bound using the #patchInstructions(Assembler) method.
-     ;;
-    (§ mutable #_"ArrayList<Integer>" :patchPositions nil)
+    (defn- #_"Label" Label'init-0 []
+        (hash-map
+            #_"int" :position -1
+            ;;;
+             ; References to instructions that jump to this unresolved label. These instructions need to be
+             ; patched when the label is bound using the #patchInstructions(Assembler) method.
+             ;;
+            #_"ArrayList<Integer>" :patchPositions nil
+        )
+    )
 
     (defn #_"Label" Label'new-0 []
-        (hash-map)
+        (merge (hash-map) (Label'init-0))
     )
 
     ;;;
@@ -12652,23 +12704,27 @@ ZeroExtendNode'new-4
  ; For example, it handles the Bytecodes#WIDE instruction and wide variants of instructions internally.
  ;;
 (final-ns BytecodeStream
-    (§ final #_"byte[]" :code nil)
-    (§ mutable #_"int" :opcode 0)
-    ;;;
-     ; Current bytecode index.
-     ;;
-    (§ mutable #_"int" :curBCI 0)
-    ;;;
-     ; Next bytecode index (no side-effects).
-     ;;
-    (§ mutable #_"int" :nextBCI 0)
+    (defn- #_"BytecodeStream" BytecodeStream'init-0 []
+        (hash-map
+            #_"byte[]" :code nil
+            #_"int" :opcode 0
+            ;;;
+             ; Current bytecode index.
+             ;;
+            #_"int" :curBCI 0
+            ;;;
+             ; Next bytecode index (no side-effects).
+             ;;
+            #_"int" :nextBCI 0
+        )
+    )
 
     ;;;
      ; Creates a new BytecodeStream for the specified bytecode.
      ;;
     (defn #_"BytecodeStream" BytecodeStream'new-1 [#_"byte[]" code]
         (let [
-            #_"BytecodeStream" this (hash-map)
+            #_"BytecodeStream" this (merge (hash-map) (BytecodeStream'init-0))
             this (assoc this :code code)
             this (BytecodeStream''setBCI-2 this, 0)
         ]
@@ -12855,19 +12911,23 @@ ZeroExtendNode'new-4
 )
 
 (class-ns BytecodeSwitchImpl (§ implements BytecodeSwitch)
-    ;;;
-     ; The BytecodeStream containing the bytecode array.
-     ;;
-    (§ final #_"BytecodeStream" :stream nil)
-    ;;;
-     ; Index of start of switch instruction.
-     ;;
-    (§ final #_"int" :bci 0)
-    ;;;
-     ; Index of the start of the additional data for the switch instruction, aligned to a multiple
-     ; of four from the method start.
-     ;;
-    (§ final #_"int" :alignedBci 0)
+    (defn- #_"BytecodeSwitchImpl" BytecodeSwitchImpl'init-0 []
+        (hash-map
+            ;;;
+             ; The BytecodeStream containing the bytecode array.
+             ;;
+            #_"BytecodeStream" :stream nil
+            ;;;
+             ; Index of start of switch instruction.
+             ;;
+            #_"int" :bci 0
+            ;;;
+             ; Index of the start of the additional data for the switch instruction, aligned to a multiple
+             ; of four from the method start.
+             ;;
+            #_"int" :alignedBci 0
+        )
+    )
 
     ;;;
      ; Constructor for a BytecodeStream.
@@ -12877,7 +12937,7 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"BytecodeSwitch" BytecodeSwitchImpl'new-2 [#_"BytecodeStream" stream, #_"int" bci]
         (let [
-            #_"BytecodeSwitch" this (hash-map)
+            #_"BytecodeSwitch" this (merge (hash-map) (BytecodeSwitchImpl'init-0))
             this (assoc this :stream stream)
             this (assoc this :bci bci)
             this (assoc this :alignedBci (& (+ bci 4) 0xfffffffc))
@@ -13030,11 +13090,15 @@ ZeroExtendNode'new-4
  ; instrumentation and rewriting performed on the ResolvedJavaMethod.
  ;;
 (final-ns ResolvedJavaMethodBytecode (§ implements Bytecode)
-    (§ final #_"ResolvedJavaMethod" :method nil)
+    (defn- #_"ResolvedJavaMethodBytecode" ResolvedJavaMethodBytecode'init-0 []
+        (hash-map
+            #_"ResolvedJavaMethod" :method nil
+        )
+    )
 
     (defn #_"ResolvedJavaMethodBytecode" ResolvedJavaMethodBytecode'new-1 [#_"ResolvedJavaMethod" method]
         (let [
-            #_"ResolvedJavaMethodBytecode" this (hash-map)
+            #_"ResolvedJavaMethodBytecode" this (merge (hash-map) (ResolvedJavaMethodBytecode'init-0))
             this (assoc this :method method)
         ]
             this
@@ -13089,28 +13153,30 @@ ZeroExtendNode'new-4
  ; data and references, relocation information, deoptimization information, etc.
  ;;
 (final-ns CompilationResult
-    (§ mutable #_"boolean" :closed false)
-
-    (§ final #_"DataSection" :dataSection (DataSection'new-0))
-    (§ final #_"List<DataPatch>" :dataPatches (ArrayList.))
-    (§ final #_"List<Mark>" :marks (ArrayList.))
-
-    ;;;
-     ; Total frame size in bytes. This includes the return address pushed onto the stack, if any.
-     ;;
-    (§ final #_"int" :totalFrameSize -1)
-    ;;;
-     ; The buffer containing the emitted machine code.
-     ;;
-    (§ mutable #_"byte[]" :targetCode nil)
-    ;;;
-     ; The leading number of bytes in #targetCode containing the emitted machine code.
-     ;;
-    (§ mutable #_"int" :targetCodeSize 0)
+    (defn- #_"CompilationResult" CompilationResult'init-0 []
+        (hash-map
+            #_"boolean" :closed false
+            #_"DataSection" :dataSection (DataSection'new-0)
+            #_"List<DataPatch>" :dataPatches (ArrayList.)
+            #_"List<Mark>" :marks (ArrayList.)
+            ;;;
+             ; Total frame size in bytes. This includes the return address pushed onto the stack, if any.
+             ;;
+            #_"int" :totalFrameSize -1
+            ;;;
+             ; The buffer containing the emitted machine code.
+             ;;
+            #_"byte[]" :targetCode nil
+            ;;;
+             ; The leading number of bytes in #targetCode containing the emitted machine code.
+             ;;
+            #_"int" :targetCodeSize 0
+        )
+    )
 
     (defn #_"CompilationResult" CompilationResult'new-1 [#_"int" totalFrameSize]
         (let [
-            #_"CompilationResult" this (hash-map)
+            #_"CompilationResult" this (merge (hash-map) (CompilationResult'init-0))
             this (assoc this :totalFrameSize totalFrameSize)
         ]
             this
@@ -13183,14 +13249,17 @@ ZeroExtendNode'new-4
 )
 
 (final-ns DataSection
-    (§ final #_"ArrayList<Data>" :dataItems (ArrayList.))
-
-    (§ mutable #_"boolean" :closed false)
-    (§ mutable #_"int" :sectionAlignment 0)
-    (§ mutable #_"int" :sectionSize 0)
+    (defn- #_"DataSection" DataSection'init-0 []
+        (hash-map
+            #_"ArrayList<Data>" :dataItems (ArrayList.)
+            #_"boolean" :closed false
+            #_"int" :sectionAlignment 0
+            #_"int" :sectionSize 0
+        )
+    )
 
     (defn #_"DataSection" DataSection'new-0 []
-        (hash-map)
+        (merge (hash-map) (DataSection'init-0))
     )
 
     (defn- #_"void" DataSection''checkOpen-1 [#_"DataSection" this]
@@ -13315,14 +13384,17 @@ ZeroExtendNode'new-4
 )
 
 (class-ns DataImpl (§ implements Data)
-    (§ mutable #_"int" :alignment 0)
-    (§ final #_"int" :size 0)
-
-    (§ mutable #_"DataSectionReference" :ref nil)
+    (defn- #_"DataImpl" DataImpl'init-0 []
+        (hash-map
+            #_"int" :alignment 0
+            #_"int" :size 0
+            #_"DataSectionReference" :ref nil
+        )
+    )
 
     (defn #_"Data" DataImpl'new-2 [#_"int" alignment, #_"int" size]
         (let [
-            #_"Data" this (hash-map)
+            #_"Data" this (merge (hash-map) (DataImpl'init-0))
             this (assoc this :alignment alignment)
             this (assoc this :size size)
             ;; initialized in DataSection.insertData(Data)
@@ -13343,11 +13415,16 @@ ZeroExtendNode'new-4
  ; @anno DataSection.RawData
  ;;
 (final-ns RawData (§ extends DataImpl)
-    (§ final #_"byte[]" :data nil)
+    (defn- #_"RawData" RawData'init-0 []
+        (hash-map
+            #_"byte[]" :data nil
+        )
+    )
 
     (defn #_"RawData" RawData'new-2 [#_"byte[]" data, #_"int" alignment]
         (let [
             #_"RawData" this (DataImpl'new-2 alignment, (count data))
+            this (merge this (RawData'init-0))
             this (assoc this :data data)
         ]
             this
@@ -13419,17 +13496,21 @@ ZeroExtendNode'new-4
 (final-ns AMD64AddressNode (§ extends AddressNodeImpl) (§ implements Simplifiable, LIRLowerable)
     (§ def #_"NodeClass<AMD64AddressNode>" AMD64AddressNode'TYPE (NodeClass'create-1 AMD64AddressNode))
 
-    ; @OptionalInput
-    (§ final #_"ValueNode" :base nil)
-    ; @OptionalInput
-    (§ final #_"ValueNode" :index nil)
-    (§ mutable #_"Scale" :scale nil)
-
-    (§ mutable #_"int" :displacement 0)
+    (defn- #_"AMD64AddressNode" AMD64AddressNode'init-0 []
+        (hash-map
+            ; @OptionalInput
+            #_"ValueNode" :base nil
+            ; @OptionalInput
+            #_"ValueNode" :index nil
+            #_"Scale" :scale nil
+            #_"int" :displacement 0
+        )
+    )
 
     (defn #_"AMD64AddressNode" AMD64AddressNode'new-2 [#_"ValueNode" base, #_"ValueNode" index]
         (let [
             #_"AMD64AddressNode" this (AddressNodeImpl'new-1 AMD64AddressNode'TYPE)
+            this (merge this (AMD64AddressNode'init-0))
             this (assoc this :base base)
             this (assoc this :index index)
             this (assoc this :scale Scale'Times1)
@@ -13528,12 +13609,16 @@ ZeroExtendNode'new-4
     (def- #_"int" AddressLowering'ADDRESS_BITS 64)
     (def- #_"int" AddressLowering'INT_BITS 32)
 
-    (§ final #_"long" :heapBase 0)
-    (§ final #_"Register" :heapBaseRegister nil)
+    (defn- #_"AddressLowering" AddressLowering'init-0 []
+        (hash-map
+            #_"long" :heapBase 0
+            #_"Register" :heapBaseRegister nil
+        )
+    )
 
     (defn #_"AddressLowering" AddressLowering'new-1 [#_"Register" heapBaseRegister]
         (let [
-            #_"AddressLowering" this (hash-map)
+            #_"AddressLowering" this (merge (hash-map) (AddressLowering'init-0))
             this (assoc this :heapBase (:base HotSpot'oopEncoding))
             this (assoc this :heapBaseRegister (if (zero? (:heapBase this)) nil heapBaseRegister))
         ]
@@ -13912,11 +13997,16 @@ ZeroExtendNode'new-4
 (final-ns HeapBaseNode (§ extends FloatingNode) (§ implements LIRLowerable)
     (§ def #_"NodeClass<HeapBaseNode>" HeapBaseNode'TYPE (NodeClass'create-1 HeapBaseNode))
 
-    (§ final #_"Register" :heapBaseRegister nil)
+    (defn- #_"HeapBaseNode" HeapBaseNode'init-0 []
+        (hash-map
+            #_"Register" :heapBaseRegister nil
+        )
+    )
 
     (defn #_"HeapBaseNode" HeapBaseNode'new-1 [#_"Register" heapBaseRegister]
         (let [
             #_"HeapBaseNode" this (FloatingNode'new-2 HeapBaseNode'TYPE, StampFactory'rawPointer)
+            this (merge this (HeapBaseNode'init-0))
             this (assoc this :heapBaseRegister heapBaseRegister)
         ]
             this
@@ -13974,12 +14064,16 @@ ZeroExtendNode'new-4
 )
 
 (final-ns RegisterBackupPair
-    (§ final #_"Register" :register nil)
-    (§ final #_"VirtualStackSlot" :backupSlot nil)
+    (defn- #_"RegisterBackupPair" RegisterBackupPair'init-0 []
+        (hash-map
+            #_"Register" :register nil
+            #_"VirtualStackSlot" :backupSlot nil
+        )
+    )
 
     (defn #_"RegisterBackupPair" RegisterBackupPair'new-2 [#_"Register" register, #_"VirtualStackSlot" backupSlot]
         (let [
-            #_"RegisterBackupPair" this (hash-map)
+            #_"RegisterBackupPair" this (merge (hash-map) (RegisterBackupPair'init-0))
             this (assoc this :register register)
             this (assoc this :backupSlot backupSlot)
         ]
@@ -13992,11 +14086,15 @@ ZeroExtendNode'new-4
  ; Factory for creating moves.
  ;;
 (final-ns MoveFactory
-    (§ final #_"FrameMapBuilder" :frameMapBuilder nil)
+    (defn- #_"MoveFactory" MoveFactory'init-0 []
+        (hash-map
+            #_"FrameMapBuilder" :frameMapBuilder nil
+        )
+    )
 
     (defn #_"MoveFactory" MoveFactory'new-1 [#_"FrameMapBuilder" frameMapBuilder]
         (let [
-            #_"MoveFactory" this (hash-map)
+            #_"MoveFactory" this (merge (hash-map) (MoveFactory'init-0))
             this (assoc this :frameMapBuilder frameMapBuilder)
         ]
             this
@@ -14363,13 +14461,17 @@ ZeroExtendNode'new-4
  ; @anno RegisterAllocationConfig.AllocatableRegisters
  ;;
 (final-ns AllocatableRegisters
-    (§ final #_"Register[]" :allocatableRegisters nil)
-    (§ final #_"int" :minRegisterNumber 0)
-    (§ final #_"int" :maxRegisterNumber 0)
+    (defn- #_"AllocatableRegisters" AllocatableRegisters'init-0 []
+        (hash-map
+            #_"Register[]" :allocatableRegisters nil
+            #_"int" :minRegisterNumber 0
+            #_"int" :maxRegisterNumber 0
+        )
+    )
 
     (defn #_"AllocatableRegisters" AllocatableRegisters'new-3 [#_"RegisterArray" allocatableRegisters, #_"int" minRegisterNumber, #_"int" maxRegisterNumber]
         (let [
-            #_"AllocatableRegisters" this (hash-map)
+            #_"AllocatableRegisters" this (merge (hash-map) (AllocatableRegisters'init-0))
             this (assoc this :allocatableRegisters (#_"RegisterArray" .toArray allocatableRegisters))
             this (assoc this :minRegisterNumber minRegisterNumber)
             this (assoc this :maxRegisterNumber maxRegisterNumber)
@@ -14450,11 +14552,15 @@ ZeroExtendNode'new-4
  ; Condition codes used in conditionals.
  ;;
 (final-ns Condition
-    (§ final #_"String" :operator nil)
+    (defn- #_"Condition" Condition'init-0 []
+        (hash-map
+            #_"String" :operator nil
+        )
+    )
 
     (defn- #_"Condition" Condition'new-1 [#_"String" operator]
         (let [
-            #_"Condition" this (hash-map)
+            #_"Condition" this (merge (hash-map) (Condition'init-0))
             this (assoc this :operator operator)
         ]
             this
@@ -14807,13 +14913,17 @@ ZeroExtendNode'new-4
  ; @anno Condition.CanonicalizedCondition
  ;;
 (final-ns CanonicalizedCondition
-    (§ final #_"CanonicalCondition" :canonicalCondition nil)
-    (§ final #_"boolean" :mirror? false)
-    (§ final #_"boolean" :negate? false)
+    (defn- #_"CanonicalizedCondition" CanonicalizedCondition'init-0 []
+        (hash-map
+            #_"CanonicalCondition" :canonicalCondition nil
+            #_"boolean" :mirror? false
+            #_"boolean" :negate? false
+        )
+    )
 
     (defn- #_"CanonicalizedCondition" CanonicalizedCondition'new-3 [#_"CanonicalCondition" canonicalCondition, #_"boolean" mirror?, #_"boolean" negate?]
         (let [
-            #_"CanonicalizedCondition" this (hash-map)
+            #_"CanonicalizedCondition" this (merge (hash-map) (CanonicalizedCondition'init-0))
             this (assoc this :canonicalCondition canonicalCondition)
             this (assoc this :mirror? mirror?)
             this (assoc this :negate? negate?)
@@ -14824,11 +14934,15 @@ ZeroExtendNode'new-4
 )
 
 (final-ns CanonicalCondition
-    (§ final #_"Condition" :condition nil)
+    (defn- #_"CanonicalCondition" CanonicalCondition'init-0 []
+        (hash-map
+            #_"Condition" :condition nil
+        )
+    )
 
     (defn- #_"CanonicalCondition" CanonicalCondition'new-1 [#_"Condition" condition]
         (let [
-            #_"CanonicalCondition" this (hash-map)
+            #_"CanonicalCondition" this (merge (hash-map) (CanonicalCondition'init-0))
             this (assoc this :condition condition)
         ]
             this
@@ -14857,11 +14971,15 @@ ZeroExtendNode'new-4
 )
 
 (final-ns BlockMap #_"<T>"
-    (§ final #_"T[]" :data nil)
+    (defn- #_"BlockMap" BlockMap'init-0 []
+        (hash-map
+            #_"T[]" :data nil
+        )
+    )
 
     (defn #_"BlockMap" BlockMap'new-1 [#_"ControlFlowGraph" cfg]
         (let [
-            #_"BlockMap" this (hash-map)
+            #_"BlockMap" this (merge (hash-map) (BlockMap'init-0))
             this (assoc this :data (§ cast #_"T[]" (make-array Object (count (:reversePostOrder cfg)))))
         ]
             this
@@ -14888,13 +15006,17 @@ ZeroExtendNode'new-4
  ;            boolean flags. Use an enum entry in E instead.
  ;;
 (class-ns DominatorOptimizationProblem #_"<E extends Enum<E>, C>"
-    (§ mutable #_"Block[]" :blocks nil)
-    (§ mutable #_"EnumMap<E, BitSet>" :flags nil)
-    (§ mutable #_"BlockMap<C>" :costs nil)
+    (defn- #_"DominatorOptimizationProblem" DominatorOptimizationProblem'init-0 []
+        (hash-map
+            #_"Block[]" :blocks nil
+            #_"EnumMap<E, BitSet>" :flags nil
+            #_"BlockMap<C>" :costs nil
+        )
+    )
 
     (defn #_"DominatorOptimizationProblem" DominatorOptimizationProblem'new-2 [#_"Class<E>" flagType, #_"ControlFlowGraph" cfg]
         (let [
-            #_"DominatorOptimizationProblem" this (hash-map)
+            #_"DominatorOptimizationProblem" this (merge (hash-map) (DominatorOptimizationProblem'init-0))
             this (assoc this :blocks (:reversePostOrder cfg))
             this (assoc this :flags (EnumMap. flagType))
             this (assoc this :costs (BlockMap'new-1 cfg))
@@ -14967,20 +15089,22 @@ ZeroExtendNode'new-4
 )
 
 (final-ns Loop
-    (§ final #_"Loop" :parent nil)
-    (§ final #_"List<Loop>" :children nil)
-
-    (§ final #_"int" :depth 0)
-    (§ final #_"int" :index 0)
-    (§ final #_"Block" :header nil)
-    (§ final #_"List<Block>" :blocks nil)
-    (§ final #_"List<Block>" :exits nil)
-
-    (§ mutable #_"LocationSet" :killLocations nil)
+    (defn- #_"Loop" Loop'init-0 []
+        (hash-map
+            #_"Loop" :parent nil
+            #_"List<Loop>" :children nil
+            #_"int" :depth 0
+            #_"int" :index 0
+            #_"Block" :header nil
+            #_"List<Block>" :blocks nil
+            #_"List<Block>" :exits nil
+            #_"LocationSet" :killLocations nil
+        )
+    )
 
     (defn #_"Loop" Loop'new-3 [#_"Loop" parent, #_"int" index, #_"Block" header]
         (let [
-            #_"Loop" this (hash-map)
+            #_"Loop" this (merge (hash-map) (Loop'init-0))
             this (assoc this :parent parent)
             this (assoc this :depth (if (some? parent) (inc (:depth parent)) 1))
             this (assoc this :index index)
@@ -15040,12 +15164,16 @@ ZeroExtendNode'new-4
  ; A compact representation of the different encoding strategies for objects and metadata.
  ;;
 (final-ns CompressEncoding
-    (§ final #_"long" :base 0)
-    (§ final #_"int" :shift 0)
+    (defn- #_"CompressEncoding" CompressEncoding'init-0 []
+        (hash-map
+            #_"long" :base 0
+            #_"int" :shift 0
+        )
+    )
 
     (defn #_"CompressEncoding" CompressEncoding'new-2 [#_"long" base, #_"int" shift]
         (let [
-            #_"CompressEncoding" this (hash-map)
+            #_"CompressEncoding" this (merge (hash-map) (CompressEncoding'init-0))
             this (assoc this :base base)
             this (assoc this :shift shift)
         ]
@@ -15064,15 +15192,19 @@ ZeroExtendNode'new-4
 )
 
 (class-ns FieldIntrospection #_"<T>"
-    (§ final #_"Class<T>" :class nil)
-    ;;;
-     ; The set of fields in #clazz that do long belong to a more specific category.
-     ;;
-    (§ mutable #_"Fields" :data nil)
+    (defn- #_"FieldIntrospection" FieldIntrospection'init-0 []
+        (hash-map
+            #_"Class<T>" :class nil
+            ;;;
+             ; The set of fields in #clazz that do long belong to a more specific category.
+             ;;
+            #_"Fields" :data nil
+        )
+    )
 
     (defn #_"FieldIntrospection" FieldIntrospection'new-1 [#_"Class<T>" clazz]
         (let [
-            #_"FieldIntrospection" this (hash-map)
+            #_"FieldIntrospection" this (merge (hash-map) (FieldIntrospection'init-0))
             this (assoc this :class clazz)
         ]
             this
@@ -15084,15 +15216,19 @@ ZeroExtendNode'new-4
  ; Describes fields in a class, primarily for access via Unsafe.
  ;;
 (class-ns Fields
-    (§ final #_"long[]" :offsets nil)
-    (§ final #_"String[]" :names nil)
-    (§ final #_"Class[]" :types nil)
-    (§ final #_"Class[]" :declaringClasses nil)
+    (defn- #_"Fields" Fields'init-0 []
+        (hash-map
+            #_"long[]" :offsets nil
+            #_"String[]" :names nil
+            #_"Class[]" :types nil
+            #_"Class[]" :declaringClasses nil
+        )
+    )
 
     (defn #_"Fields" Fields'new-1 [#_"ArrayList<? extends FieldInfo>" fields]
         (Collections/sort fields)
         (let [
-            #_"Fields" this (hash-map)
+            #_"Fields" this (merge (hash-map) (Fields'init-0))
             #_"int" n (count fields)
             this (assoc this :offsets (long-array n))
             this (assoc this :names (make-array String n))
@@ -15184,13 +15320,17 @@ ZeroExtendNode'new-4
 )
 
 (class-ns FieldsScannerImpl (§ implements FieldsScanner)
-    ;;;
-     ; Fields not belonging to a more specific category defined by scanner subclasses are added to this list.
-     ;;
-    (§ final #_"ArrayList<FieldInfo>" :data (ArrayList.))
+    (defn- #_"FieldsScannerImpl" FieldsScannerImpl'init-0 []
+        (hash-map
+            ;;;
+             ; Fields not belonging to a more specific category defined by scanner subclasses are added to this list.
+             ;;
+            #_"ArrayList<FieldInfo>" :data (ArrayList.)
+        )
+    )
 
     (defn #_"FieldsScanner" FieldsScannerImpl'new-0 []
-        (hash-map)
+        (merge (hash-map) (FieldsScannerImpl'init-0))
     )
 
     ;;;
@@ -15226,14 +15366,18 @@ ZeroExtendNode'new-4
  ; @anno FieldsScanner.FieldInfo
  ;;
 (class-ns FieldInfo (§ implements Comparable #_"<FieldInfo>")
-    (§ final #_"long" :offset 0)
-    (§ final #_"String" :name nil)
-    (§ final #_"Class" :type nil)
-    (§ final #_"Class" :declaringClass nil)
+    (defn- #_"FieldInfo" FieldInfo'init-0 []
+        (hash-map
+            #_"long" :offset 0
+            #_"String" :name nil
+            #_"Class" :type nil
+            #_"Class" :declaringClass nil
+        )
+    )
 
     (defn #_"FieldInfo" FieldInfo'new-4 [#_"long" offset, #_"String" name, #_"Class" type, #_"Class" declaringClass]
         (let [
-            #_"FieldInfo" this (hash-map)
+            #_"FieldInfo" this (merge (hash-map) (FieldInfo'init-0))
             this (assoc this :offset offset)
             this (assoc this :name name)
             this (assoc this :type type)
@@ -15484,25 +15628,28 @@ ZeroExtendNode'new-4
 
     (§ def #_"LIRKind" LIRKind'Illegal (LIRKind'unknownReference-1 (#_"ValueKind" .getPlatformKind ValueKind/Illegal)))
 
-    ;;;
-     ; The location of object references in the value. If the value is a vector type, each bit
-     ; represents one component of the vector.
-     ;;
-    (§ final #_"int" :referenceMask 0)
-
-    ;;;
-     ; Mask with 1-bits indicating which references in #referenceMask are compressed.
-     ;;
-    (§ final #_"int" :referenceCompressionMask 0)
-
-    ;;;
-     ; Base value of a derived reference.
-     ;;
-    (§ mutable #_"AllocatableValue" :derivedReferenceBase nil)
+    (defn- #_"LIRKind" LIRKind'init-0 []
+        (hash-map
+            ;;;
+             ; The location of object references in the value. If the value is a vector type, each bit
+             ; represents one component of the vector.
+             ;;
+            #_"int" :referenceMask 0
+            ;;;
+             ; Mask with 1-bits indicating which references in #referenceMask are compressed.
+             ;;
+            #_"int" :referenceCompressionMask 0
+            ;;;
+             ; Base value of a derived reference.
+             ;;
+            #_"AllocatableValue" :derivedReferenceBase nil
+        )
+    )
 
     (defn- #_"LIRKind" LIRKind'new-4 [#_"PlatformKind" platformKind, #_"int" referenceMask, #_"int" referenceCompressionMask, #_"AllocatableValue" derivedReferenceBase]
         (let [
             #_"LIRKind" this (ValueKind. platformKind)
+            this (merge this (LIRKind'init-0))
             this (assoc this :referenceMask referenceMask)
             this (assoc this :referenceCompressionMask referenceCompressionMask)
             this (assoc this :derivedReferenceBase derivedReferenceBase)
@@ -15829,12 +15976,17 @@ ZeroExtendNode'new-4
 )
 
 (class-ns AbstractObjectStampImpl (§ extends AbstractPointerStampImpl) (§ implements AbstractObjectStamp)
-    (§ final #_"ResolvedJavaType" :type nil)
-    (§ final #_"boolean" :exactType false)
+    (defn- #_"AbstractObjectStampImpl" AbstractObjectStampImpl'init-0 []
+        (hash-map
+            #_"ResolvedJavaType" :type nil
+            #_"boolean" :exactType false
+        )
+    )
 
     (defn #_"AbstractObjectStamp" AbstractObjectStampImpl'new-4 [#_"ResolvedJavaType" type, #_"boolean" exactType, #_"boolean" never-nil?, #_"boolean" always-nil?]
         (let [
             #_"AbstractObjectStamp" this (AbstractPointerStampImpl'new-2 never-nil?, always-nil?)
+            this (merge this (AbstractObjectStampImpl'init-0))
             this (assoc this :type type)
             this (assoc this :exactType exactType)
         ]
@@ -16087,12 +16239,17 @@ ZeroExtendNode'new-4
 )
 
 (class-ns AbstractPointerStampImpl (§ extends StampImpl) (§ implements AbstractPointerStamp)
-    (§ final #_"boolean" :never-nil? false)
-    (§ final #_"boolean" :always-nil? false)
+    (defn- #_"AbstractPointerStampImpl" AbstractPointerStampImpl'init-0 []
+        (hash-map
+            #_"boolean" :never-nil? false
+            #_"boolean" :always-nil? false
+        )
+    )
 
     (defn #_"AbstractPointerStamp" AbstractPointerStampImpl'new-2 [#_"boolean" never-nil?, #_"boolean" always-nil?]
         (let [
             #_"AbstractPointerStamp" this (StampImpl'new-0)
+            this (merge this (AbstractPointerStampImpl'init-0))
             this (assoc this :never-nil? never-nil?)
             this (assoc this :always-nil? always-nil?)
         ]
@@ -16160,34 +16317,33 @@ ZeroExtendNode'new-4
  ; Information about arithmetic operations.
  ;;
 (final-ns ArithmeticOpTable
-    (§ final #_"UnaryOp<Neg>" :neg nil)                        ;; unary negation operation
-    (§ final #_"BinaryOp<Add>" :add nil)                       ;; addition operation
-    (§ final #_"BinaryOp<Sub>" :sub nil)                       ;; subtraction operation
-
-    (§ final #_"BinaryOp<Mul>" :mul nil)                       ;; multiplication operation
-    (§ final #_"BinaryOp<MulHigh>" :mulHigh nil)               ;; signed operation that multiples the upper 32-bits of two long values
-    (§ final #_"BinaryOp<UMulHigh>" :umulHigh nil)             ;; unsigned operation that multiples the upper 32-bits of two long values
-    (§ final #_"BinaryOp<Div>" :div nil)                       ;; division operation
-    (§ final #_"BinaryOp<Rem>" :rem nil)                       ;; remainder operation
-
-    (§ final #_"UnaryOp<Not>" :not nil)                        ;; bitwise not operation
-    (§ final #_"BinaryOp<And>" :and nil)                       ;; bitwise and operation
-    (§ final #_"BinaryOp<Or>" :or nil)                         ;; bitwise or operation
-    (§ final #_"BinaryOp<Xor>" :xor nil)                       ;; bitwise xor operation
-
-    (§ final #_"ShiftOp<Shl>" :shl nil)                        ;; shift left operation
-    (§ final #_"ShiftOp<Shr>" :shr nil)                        ;; signed shift right operation
-    (§ final #_"ShiftOp<UShr>" :ushr nil)                      ;; unsigned shift right operation
-
-    (§ final #_"UnaryOp<Abs>" :abs nil)                        ;; absolute value operation
-
-    (§ final #_"IntegerConvertOp<ZeroExtend>" :zeroExtend nil) ;; zero extend conversion
-    (§ final #_"IntegerConvertOp<SignExtend>" :signExtend nil) ;; sign extend conversion
-    (§ final #_"IntegerConvertOp<Narrow>" :narrow nil)         ;; narrowing conversion
+    (defn- #_"ArithmeticOpTable" ArithmeticOpTable'init-0 []
+        (hash-map
+            #_"UnaryOp<Neg>" :neg nil                        ;; unary negation operation
+            #_"BinaryOp<Add>" :add nil                       ;; addition operation
+            #_"BinaryOp<Sub>" :sub nil                       ;; subtraction operation
+            #_"BinaryOp<Mul>" :mul nil                       ;; multiplication operation
+            #_"BinaryOp<MulHigh>" :mulHigh nil               ;; signed operation that multiples the upper 32-bits of two long values
+            #_"BinaryOp<UMulHigh>" :umulHigh nil             ;; unsigned operation that multiples the upper 32-bits of two long values
+            #_"BinaryOp<Div>" :div nil                       ;; division operation
+            #_"BinaryOp<Rem>" :rem nil                       ;; remainder operation
+            #_"UnaryOp<Not>" :not nil                        ;; bitwise not operation
+            #_"BinaryOp<And>" :and nil                       ;; bitwise and operation
+            #_"BinaryOp<Or>" :or nil                         ;; bitwise or operation
+            #_"BinaryOp<Xor>" :xor nil                       ;; bitwise xor operation
+            #_"ShiftOp<Shl>" :shl nil                        ;; shift left operation
+            #_"ShiftOp<Shr>" :shr nil                        ;; signed shift right operation
+            #_"ShiftOp<UShr>" :ushr nil                      ;; unsigned shift right operation
+            #_"UnaryOp<Abs>" :abs nil                        ;; absolute value operation
+            #_"IntegerConvertOp<ZeroExtend>" :zeroExtend nil ;; zero extend conversion
+            #_"IntegerConvertOp<SignExtend>" :signExtend nil ;; sign extend conversion
+            #_"IntegerConvertOp<Narrow>" :narrow nil         ;; narrowing conversion
+        )
+    )
 
     (defn #_"ArithmeticOpTable" ArithmeticOpTable'new-19 [#_"UnaryOp<Neg>" neg, #_"BinaryOp<Add>" add, #_"BinaryOp<Sub>" sub, #_"BinaryOp<Mul>" mul, #_"BinaryOp<MulHigh>" mulHigh, #_"BinaryOp<UMulHigh>" umulHigh, #_"BinaryOp<Div>" div, #_"BinaryOp<Rem>" rem, #_"UnaryOp<Not>" not, #_"BinaryOp<And>" and, #_"BinaryOp<Or>" or, #_"BinaryOp<Xor>" xor, #_"ShiftOp<Shl>" shl, #_"ShiftOp<Shr>" shr, #_"ShiftOp<UShr>" ushr, #_"UnaryOp<Abs>" abs, #_"IntegerConvertOp<ZeroExtend>" zeroExtend, #_"IntegerConvertOp<SignExtend>" signExtend, #_"IntegerConvertOp<Narrow>" narrow]
         (let [
-            #_"ArithmeticOpTable" this (hash-map)
+            #_"ArithmeticOpTable" this (merge (hash-map) (ArithmeticOpTable'init-0))
             this (assoc this :neg neg)
             this (assoc this :add add)
             this (assoc this :sub sub)
@@ -16223,11 +16379,15 @@ ZeroExtendNode'new-4
  ; @anno ArithmeticOpTable.ArithmeticOp
  ;;
 (class-ns ArithmeticOp
-    (§ final #_"String" :operator nil)
+    (defn- #_"ArithmeticOp" ArithmeticOp'init-0 []
+        (hash-map
+            #_"String" :operator nil
+        )
+    )
 
     (defn #_"ArithmeticOp" ArithmeticOp'new-1 [#_"String" operator]
         (let [
-            #_"ArithmeticOp" this (hash-map)
+            #_"ArithmeticOp" this (merge (hash-map) (ArithmeticOp'init-0))
             this (assoc this :operator operator)
         ]
             this
@@ -16269,12 +16429,17 @@ ZeroExtendNode'new-4
 )
 
 (class-ns BinaryOpImpl #_"<T>" (§ extends ArithmeticOp) (§ implements BinaryOp #_"<T>")
-    (§ final #_"boolean" :associative? false)
-    (§ final #_"boolean" :commutative? false)
+    (defn- #_"BinaryOpImpl" BinaryOpImpl'init-0 []
+        (hash-map
+            #_"boolean" :associative? false
+            #_"boolean" :commutative? false
+        )
+    )
 
     (defn #_"BinaryOp" BinaryOpImpl'new-3 [#_"String" operation, #_"boolean" associative?, #_"boolean" commutative?]
         (let [
             #_"BinaryOp" this (ArithmeticOp'new-1 operation)
+            this (merge this (BinaryOpImpl'init-0))
             this (assoc this :associative? associative?)
             this (assoc this :commutative? commutative?)
         ]
@@ -16474,11 +16639,16 @@ ZeroExtendNode'new-4
  ; Type describing values that support arithmetic operations.
  ;;
 (class-ns ArithmeticStamp (§ extends StampImpl)
-    (§ final #_"ArithmeticOpTable" :ops nil)
+    (defn- #_"ArithmeticStamp" ArithmeticStamp'init-0 []
+        (hash-map
+            #_"ArithmeticOpTable" :ops nil
+        )
+    )
 
     (defn #_"ArithmeticStamp" ArithmeticStamp'new-1 [#_"ArithmeticOpTable" ops]
         (let [
             #_"ArithmeticStamp" this (StampImpl'new-0)
+            this (merge this (ArithmeticStamp'init-0))
             this (assoc this :ops ops)
         ]
             this
@@ -16567,26 +16737,31 @@ ZeroExtendNode'new-4
  ; (always set) bit-masks.
  ;;
 (final-ns IntegerStamp (§ extends PrimitiveStamp)
-    ;;;
-     ; The signed inclusive lower bound on the value described by this stamp.
-     ;;
-    (§ final #_"long" :lowerBound 0)
-    ;;;
-     ; The signed inclusive upper bound on the value described by this stamp.
-     ;;
-    (§ final #_"long" :upperBound 0)
-    ;;;
-     ; This bit-mask describes the bits that are always set in the value described by this stamp.
-     ;;
-    (§ final #_"long" :downMask 0)
-    ;;;
-     ; This bit-mask describes the bits that can be set in the value described by this stamp.
-     ;;
-    (§ final #_"long" :upMask 0)
+    (defn- #_"IntegerStamp" IntegerStamp'init-0 []
+        (hash-map
+            ;;;
+             ; The signed inclusive lower bound on the value described by this stamp.
+             ;;
+            #_"long" :lowerBound 0
+            ;;;
+             ; The signed inclusive upper bound on the value described by this stamp.
+             ;;
+            #_"long" :upperBound 0
+            ;;;
+             ; This bit-mask describes the bits that are always set in the value described by this stamp.
+             ;;
+            #_"long" :downMask 0
+            ;;;
+             ; This bit-mask describes the bits that can be set in the value described by this stamp.
+             ;;
+            #_"long" :upMask 0
+        )
+    )
 
     (defn- #_"IntegerStamp" IntegerStamp'new-5 [#_"int" bits, #_"long" lowerBound, #_"long" upperBound, #_"long" downMask, #_"long" upMask]
         (let [
             #_"IntegerStamp" this (PrimitiveStamp'new-2 bits, IntegerStamp'OPS)
+            this (merge this (IntegerStamp'init-0))
             this (assoc this :lowerBound lowerBound)
             this (assoc this :upperBound upperBound)
             this (assoc this :downMask downMask)
@@ -17839,14 +18014,19 @@ ZeroExtendNode'new-4
  ; Type describing primitive values.
  ;;
 (class-ns PrimitiveStamp (§ extends ArithmeticStamp)
-    ;;;
-     ; The width in bits of the value described by this stamp.
-     ;;
-    (§ final #_"int" :bits 0)
+    (defn- #_"PrimitiveStamp" PrimitiveStamp'init-0 []
+        (hash-map
+            ;;;
+             ; The width in bits of the value described by this stamp.
+             ;;
+            #_"int" :bits 0
+        )
+    )
 
     (defn #_"PrimitiveStamp" PrimitiveStamp'new-2 [#_"int" bits, #_"ArithmeticOpTable" ops]
         (let [
             #_"PrimitiveStamp" this (ArithmeticStamp'new-1 ops)
+            this (merge this (PrimitiveStamp'init-0))
             this (assoc this :bits bits)
         ]
             this
@@ -18135,7 +18315,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"StampPair" StampFactory'forDeclaredType-2 [#_"JavaType" type, #_"boolean" never-nil?]
+    (defn #_"StampPair" StampFactory'forDeclaredType-2 [#_"JavaType" type, #_"boolean" never-nil?]
         (if (and (= (#_"JavaType" .getJavaKind type) JavaKind/Object) (instance? ResolvedJavaType type))
             (let [
                 #_"TypeReference" reference (TypeReference'create-1 type)
@@ -18183,13 +18363,17 @@ ZeroExtendNode'new-4
  ; A pair of stamp with one being the stamp that can be trusted and the other one being a guess that
  ; needs a dynamic check to be used.
  ;;
-(final-ns StampPair
-    (§ final #_"Stamp" :trustedStamp nil)
-    (§ final #_"Stamp" :uncheckedStamp nil)
+(final-ns StampPair
+    (defn- #_"StampPair" StampPair'init-0 []
+        (hash-map
+            #_"Stamp" :trustedStamp nil
+            #_"Stamp" :uncheckedStamp nil
+        )
+    )
 
-    (defn #_"StampPair" StampPair'new-2 [#_"Stamp" trustedStamp, #_"Stamp" uncheckedStamp]
+    (defn #_"StampPair" StampPair'new-2 [#_"Stamp" trustedStamp, #_"Stamp" uncheckedStamp]
         (let [
-            #_"StampPair" this (hash-map)
+            #_"StampPair" this (merge (hash-map) (StampPair'init-0))
             this (assoc this :trustedStamp trustedStamp)
             this (assoc this :uncheckedStamp uncheckedStamp)
         ]
@@ -18221,19 +18405,23 @@ ZeroExtendNode'new-4
  ; parameters, fields, and return values. They are not checked by the Java verifier.
  ;;
 (final-ns TypeReference
-    ;;;
-     ; The type this reference refers to.
-     ;;
-    (§ final #_"ResolvedJavaType" :type nil)
-    ;;;
-     ; true if this reference is exact = only refers to the given type,
-     ; false if it also refers to its sub-types
-     ;;
-    (§ final #_"boolean" :exactReference false)
+    (defn- #_"TypeReference" TypeReference'init-0 []
+        (hash-map
+            ;;;
+             ; The type this reference refers to.
+             ;;
+            #_"ResolvedJavaType" :type nil
+            ;;;
+             ; true if this reference is exact = only refers to the given type,
+             ; false if it also refers to its sub-types
+             ;;
+            #_"boolean" :exactReference false
+        )
+    )
 
     (defn- #_"TypeReference" TypeReference'new-2 [#_"ResolvedJavaType" type, #_"boolean" exactReference]
         (let [
-            #_"TypeReference" this (hash-map)
+            #_"TypeReference" this (merge (hash-map) (TypeReference'init-0))
             this (assoc this :type type)
             this (assoc this :exactReference exactReference)
         ]
@@ -18368,12 +18556,16 @@ ZeroExtendNode'new-4
  ; This class implements a two-dimensional bitmap.
  ;;
 (final-ns BitMap2D
-    (§ final #_"BitSet" :bits nil)
-    (§ final #_"int" :bitsPerSlot 0)
+    (defn- #_"BitMap2D" BitMap2D'init-0 []
+        (hash-map
+            #_"BitSet" :bits nil
+            #_"int" :bitsPerSlot 0
+        )
+    )
 
     (defn #_"BitMap2D" BitMap2D'new-2 [#_"int" sizeInSlots, #_"int" bitsPerSlot]
         (let [
-            #_"BitMap2D" this (hash-map)
+            #_"BitMap2D" this (merge (hash-map) (BitMap2D'init-0))
             this (assoc this :bits (BitSet. (* sizeInSlots bitsPerSlot)))
             this (assoc this :bitsPerSlot bitsPerSlot)
         ]
@@ -18398,15 +18590,19 @@ ZeroExtendNode'new-4
 (final-ns IntList
     (§ def- #_"int[]" IntList'EMPTY_INT_ARRAY (int-array 0))
 
-    (§ mutable #_"int[]" :array nil)
-    (§ mutable #_"int" :size 0)
+    (defn- #_"IntList" IntList'init-0 []
+        (hash-map
+            #_"int[]" :array nil
+            #_"int" :size 0
+        )
+    )
 
     ;;;
      ; Creates an int list with a specified initial capacity.
      ;;
     (defn #_"IntList" IntList'new-1 [#_"int" initialCapacity]
         (let [
-            #_"IntList" this (hash-map)
+            #_"IntList" this (merge (hash-map) (IntList'init-0))
             this (assoc this :array (int-array initialCapacity))
         ]
             this
@@ -18421,7 +18617,7 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"IntList" IntList'new-2 [#_"int[]" array, #_"int" initialSize]
         (let [
-            #_"IntList" this (hash-map)
+            #_"IntList" this (merge (hash-map) (IntList'init-0))
             this (assoc this :array array)
             this (assoc this :size initialSize)
         ]
@@ -18516,11 +18712,15 @@ ZeroExtendNode'new-4
 )
 
 (final-ns UnsignedLong
-    (§ final #_"long" :value 0)
+    (defn- #_"UnsignedLong" UnsignedLong'init-0 []
+        (hash-map
+            #_"long" :value 0
+        )
+    )
 
     (defn #_"UnsignedLong" UnsignedLong'new-1 [#_"long" value]
         (let [
-            #_"UnsignedLong" this (hash-map)
+            #_"UnsignedLong" this (merge (hash-map) (UnsignedLong'init-0))
             this (assoc this :value value)
         ]
             this
@@ -18592,14 +18792,18 @@ ZeroExtendNode'new-4
  ; @anno LIRGenerationPhase.LIRGenerationContext
  ;;
 (final-ns LIRGenerationContext
-    (§ final #_"LIRBuilder" :nodeLirBuilder nil)
-    (§ final #_"LIRGenerator" :lirGen nil)
-    (§ final #_"Graph" :graph nil)
-    (§ final #_"ScheduleResult" :schedule nil)
+    (defn- #_"LIRGenerationContext" LIRGenerationContext'init-0 []
+        (hash-map
+            #_"LIRBuilder" :nodeLirBuilder nil
+            #_"LIRGenerator" :lirGen nil
+            #_"Graph" :graph nil
+            #_"ScheduleResult" :schedule nil
+        )
+    )
 
     (defn #_"LIRGenerationContext" LIRGenerationContext'new-4 [#_"LIRGenerator" lirGen, #_"LIRBuilder" nodeLirBuilder, #_"Graph" graph, #_"ScheduleResult" schedule]
         (let [
-            #_"LIRGenerationContext" this (hash-map)
+            #_"LIRGenerationContext" this (merge (hash-map) (LIRGenerationContext'init-0))
             this (assoc this :nodeLirBuilder nodeLirBuilder)
             this (assoc this :lirGen lirGen)
             this (assoc this :graph graph)
@@ -18710,16 +18914,21 @@ ZeroExtendNode'new-4
 )
 
 (class-ns EdgesImpl (§ extends Fields) (§ implements Edges)
-    (§ final #_"EdgesType" :type nil)
-    ;;;
-     ; Number of direct edges represented by this object. A direct edge goes directly
-     ; to another Node. An indirect edge goes via a NodeList.
-     ;;
-    (§ final #_"int" :directCount 0)
+    (defn- #_"EdgesImpl" EdgesImpl'init-0 []
+        (hash-map
+            #_"EdgesType" :type nil
+            ;;;
+             ; Number of direct edges represented by this object. A direct edge goes directly
+             ; to another Node. An indirect edge goes via a NodeList.
+             ;;
+            #_"int" :directCount 0
+        )
+    )
 
     (defn #_"Edges" EdgesImpl'new-3 [#_"EdgesType" type, #_"int" directCount, #_"ArrayList<? extends FieldInfo>" edges]
         (let [
             #_"Edges" this (Fields'new-1 edges)
+            this (merge this (EdgesImpl'init-0))
             this (assoc this :type type)
             this (assoc this :directCount directCount)
         ]
@@ -18898,20 +19107,24 @@ ZeroExtendNode'new-4
  ; @anno Edges.EdgesIterator
  ;;
 (final-ns EdgesIterator (§ implements Iterator #_"<Position>")
-    (§ final #_"Node" :node nil)
-    (§ final #_"Edges" :edges nil)
-    (§ final #_"int" :index 0)
-    (§ mutable #_"int" :subIndex 0)
-    (§ mutable #_"boolean" :needsForward false)
-    (§ final #_"int" :directCount 0)
-    (§ final #_"long[]" :offsets nil)
+    (defn- #_"EdgesIterator" EdgesIterator'init-0 []
+        (hash-map
+            #_"Node" :node nil
+            #_"Edges" :edges nil
+            #_"int" :index 0
+            #_"int" :subIndex 0
+            #_"boolean" :needsForward false
+            #_"int" :directCount 0
+            #_"long[]" :offsets nil
+        )
+    )
 
     ;;;
      ; Creates an iterator that will iterate over some given edges in a given node.
      ;;
     (defn #_"EdgesIterator" EdgesIterator'new-2 [#_"Node" node, #_"Edges" edges]
         (let [
-            #_"EdgesIterator" this (hash-map)
+            #_"EdgesIterator" this (merge (hash-map) (EdgesIterator'init-0))
             this (assoc this :node node)
             this (assoc this :edges edges)
             this (assoc this :index NodeImpl'NOT_ITERABLE)
@@ -18981,8 +19194,12 @@ ZeroExtendNode'new-4
  ; Iterates over the nodes in a given graph.
  ;;
 (final-ns GraphNodeIterator (§ implements Iterator #_"<Node>")
-    (§ final #_"Graph" :graph nil)
-    (§ final #_"int" :index 0)
+    (defn- #_"GraphNodeIterator" GraphNodeIterator'init-0 []
+        (hash-map
+            #_"Graph" :graph nil
+            #_"int" :index 0
+        )
+    )
 
     (defn #_"GraphNodeIterator" GraphNodeIterator'new-1 [#_"Graph" graph]
         (GraphNodeIterator'new-2 graph, 0)
@@ -18990,7 +19207,7 @@ ZeroExtendNode'new-4
 
     (defn #_"GraphNodeIterator" GraphNodeIterator'new-2 [#_"Graph" graph, #_"int" index]
         (let [
-            #_"GraphNodeIterator" this (hash-map)
+            #_"GraphNodeIterator" this (merge (hash-map) (GraphNodeIterator'init-0))
             this (assoc this :graph graph)
             this (assoc this :index (dec index))
         ]
@@ -19031,12 +19248,17 @@ ZeroExtendNode'new-4
 )
 
 (final-ns InputEdges (§ extends EdgesImpl)
-    (§ final #_"InputType[]" :inputTypes nil)
-    (§ final #_"boolean[]" :isOptional nil)
+    (defn- #_"InputEdges" InputEdges'init-0 []
+        (hash-map
+            #_"InputType[]" :inputTypes nil
+            #_"boolean[]" :isOptional nil
+        )
+    )
 
     (defn #_"InputEdges" InputEdges'new-2 [#_"int" directCount, #_"ArrayList<InputInfo>" edges]
         (let [
             #_"InputEdges" this (EdgesImpl'new-3 EdgesType'Inputs, directCount, edges)
+            this (merge this (InputEdges'init-0))
             this (assoc this :inputTypes (make-array InputType (count edges)))
             this (assoc this :isOptional (boolean-array (count edges)))
         ]
@@ -19072,12 +19294,17 @@ ZeroExtendNode'new-4
 (final-ns IterativeNodeWorkList (§ extends NodeWorkListImpl)
     (def- #_"int" IterativeNodeWorkList'EXPLICIT_BITMAP_THRESHOLD 10)
 
-    (§ mutable #_"int" :iterationLimit 0)
-    (§ mutable #_"NodeBitMap" :inQueue nil)
+    (defn- #_"IterativeNodeWorkList" IterativeNodeWorkList'init-0 []
+        (hash-map
+            #_"int" :iterationLimit 0
+            #_"NodeBitMap" :inQueue nil
+        )
+    )
 
     (defn #_"IterativeNodeWorkList" IterativeNodeWorkList'new-3 [#_"Graph" graph, #_"boolean" fill, #_"int" iterationLimitPerNode]
         (let [
             #_"IterativeNodeWorkList" this (NodeWorkListImpl'new-2 graph, fill)
+            this (merge this (IterativeNodeWorkList'init-0))
             this (assoc this :iterationLimit (int (Long/min (* (Graph''getNodeCount-1 graph) (long iterationLimitPerNode)), Integer/MAX_VALUE)))
         ]
             this
@@ -19166,14 +19393,17 @@ ZeroExtendNode'new-4
 )
 
 (final-ns NodeIterator #_"<T implements Node>" (§ implements Iterator #_"<T>")
-    (§ final #_"Iterator<T>" :iterator nil)
-    (§ final #_"NodePredicate" :predicate nil)
-
-    (§ mutable #_"T" :current nil)
+    (defn- #_"NodeIterator" NodeIterator'init-0 []
+        (hash-map
+            #_"Iterator<T>" :iterator nil
+            #_"NodePredicate" :predicate nil
+            #_"T" :current nil
+        )
+    )
 
     (defn #_"NodeIterator" NodeIterator'new-2 [#_"Iterator<T>" iterator, #_"NodePredicate" predicate]
         (let [
-            #_"NodeIterator" this (hash-map)
+            #_"NodeIterator" this (merge (hash-map) (NodeIterator'init-0))
             this (assoc this :iterator iterator)
             this (assoc this :predicate predicate)
         ]
@@ -19210,12 +19440,16 @@ ZeroExtendNode'new-4
 )
 
 (final-ns FilteredNodeIterable #_"<T implements Node>" (§ implements NodeIterable #_"<T>")
-    (§ final #_"NodeIterable<T>" :nodeIterable nil)
-    (§ mutable #_"NodePredicate" :predicate TautologyPredicate'INSTANCE)
+    (defn- #_"FilteredNodeIterable" FilteredNodeIterable'init-0 []
+        (hash-map
+            #_"NodeIterable<T>" :nodeIterable nil
+            #_"NodePredicate" :predicate TautologyPredicate'INSTANCE
+        )
+    )
 
     (defn #_"FilteredNodeIterable" FilteredNodeIterable'new-1 [#_"NodeIterable<T>" nodeIterable]
         (let [
-            #_"FilteredNodeIterable" this (hash-map)
+            #_"FilteredNodeIterable" this (merge (hash-map) (FilteredNodeIterable'init-0))
             this (assoc this :nodeIterable nodeIterable)
         ]
             this
@@ -19282,12 +19516,16 @@ ZeroExtendNode'new-4
  ; @anno NodePredicate.AndPredicate
  ;;
 (final-ns AndPredicate (§ implements NodePredicate)
-    (§ final #_"NodePredicate" :a nil)
-    (§ final #_"NodePredicate" :b nil)
+    (defn- #_"AndPredicate" AndPredicate'init-0 []
+        (hash-map
+            #_"NodePredicate" :a nil
+            #_"NodePredicate" :b nil
+        )
+    )
 
     (defn #_"AndPredicate" AndPredicate'new-2 [#_"NodePredicate" a, #_"NodePredicate" b]
         (let [
-            #_"AndPredicate" this (hash-map)
+            #_"AndPredicate" this (merge (hash-map) (AndPredicate'init-0))
             this (assoc this :a a)
             this (assoc this :b b)
         ]
@@ -19304,12 +19542,16 @@ ZeroExtendNode'new-4
  ; @anno NodePredicate.PositiveTypePredicate
  ;;
 (final-ns PositiveTypePredicate (§ implements NodePredicate)
-    (§ final #_"Class" :type nil)
-    (§ mutable #_"PositiveTypePredicate" :or nil)
+    (defn- #_"PositiveTypePredicate" PositiveTypePredicate'init-0 []
+        (hash-map
+            #_"Class" :type nil
+            #_"PositiveTypePredicate" :or nil
+        )
+    )
 
     (defn #_"PositiveTypePredicate" PositiveTypePredicate'new-1 [#_"Class" type]
         (let [
-            #_"PositiveTypePredicate" this (hash-map)
+            #_"PositiveTypePredicate" this (merge (hash-map) (PositiveTypePredicate'init-0))
             this (assoc this :type type)
         ]
             this
@@ -19333,12 +19575,16 @@ ZeroExtendNode'new-4
  ; @anno NodePredicate.NegativeTypePredicate
  ;;
 (final-ns NegativeTypePredicate (§ implements NodePredicate)
-    (§ final #_"Class" :type nil)
-    (§ mutable #_"NegativeTypePredicate" :nor nil)
+    (defn- #_"NegativeTypePredicate" NegativeTypePredicate'init-0 []
+        (hash-map
+            #_"Class" :type nil
+            #_"NegativeTypePredicate" :nor nil
+        )
+    )
 
     (defn #_"NegativeTypePredicate" NegativeTypePredicate'new-1 [#_"Class" type]
         (let [
-            #_"NegativeTypePredicate" this (hash-map)
+            #_"NegativeTypePredicate" this (merge (hash-map) (NegativeTypePredicate'init-0))
             this (assoc this :type type)
         ]
             this
@@ -19365,34 +19611,37 @@ ZeroExtendNode'new-4
     (def #_"int" NodeImpl'INITIAL_ID -1)
     (def #_"int" NodeImpl'ALIVE_ID_START 0)
 
-    (§ mutable #_"Graph" :graph nil)
-    (§ mutable #_"int" :id 0)
-
-    ;; this next pointer is used in Graph to implement fast iteration over NodeClass types, it
-    ;; therefore points to the next Node of the same type.
-    (§ mutable #_"Node" :typeCacheNext nil)
-
     (def #_"int" NodeImpl'INLINE_USAGE_COUNT 2)
     (§ def- #_"Node[]" NodeImpl'NO_NODES (make-array Node 0))
-
-    ;;;
-     ; Head of usage list. The elements of the usage list in order are #usage0,
-     ; #usage1 and #extraUsages. The first nil entry terminates the list.
-     ;;
-    (§ mutable #_"Node" :usage0 nil)
-    (§ mutable #_"Node" :usage1 nil)
-    (§ mutable #_"Node[]" :extraUsages nil)
-    (§ mutable #_"int" :extraUsagesCount 0)
-
-    (§ mutable #_"Node" :predecessor nil)
-    (§ mutable #_"NodeClass<? implements Node>" :nodeClass nil)
 
     (def #_"int" NodeImpl'NODE_LIST -2)
     (def #_"int" NodeImpl'NOT_ITERABLE -1)
 
+    (defn- #_"NodeImpl" NodeImpl'init-0 []
+        (hash-map
+            #_"Graph" :graph nil
+            #_"int" :id 0
+            ;;;
+             ; This next pointer is used in Graph to implement fast iteration over NodeClass types,
+             ; therefore it points to the next Node of the same type.
+             ;;
+            #_"Node" :typeCacheNext nil
+            ;;;
+             ; Head of usage list. The elements of the usage list in order are #usage0,
+             ; #usage1 and #extraUsages. The first nil entry terminates the list.
+             ;;
+            #_"Node" :usage0 nil
+            #_"Node" :usage1 nil
+            #_"Node[]" :extraUsages nil
+            #_"int" :extraUsagesCount 0
+            #_"Node" :predecessor nil
+            #_"NodeClass<? implements Node>" :nodeClass nil
+        )
+    )
+
     (defn #_"Node" NodeImpl'new-1 [#_"NodeClass<? implements Node>" c]
         (let [
-            #_"Node" this (hash-map)
+            #_"Node" this (merge (hash-map) (NodeImpl'init-0))
         ]
             (§ ass! this (NodeImpl''init-2 this, c))
             this
@@ -20039,14 +20288,18 @@ ZeroExtendNode'new-4
         (>> (dec (+ nodeCount Long/SIZE)) NodeBitMap'SHIFT)
     )
 
-    (§ final #_"Graph" :graph nil)
-    (§ mutable #_"long[]" :bits nil)
-    (§ mutable #_"int" :nodeCount 0)
-    (§ mutable #_"int" :counter 0)
+    (defn- #_"NodeBitMap" NodeBitMap'init-0 []
+        (hash-map
+            #_"Graph" :graph nil
+            #_"long[]" :bits nil
+            #_"int" :nodeCount 0
+            #_"int" :counter 0
+        )
+    )
 
     (defn #_"NodeBitMap" NodeBitMap'new-1g [#_"Graph" graph]
         (let [
-            #_"NodeBitMap" this (hash-map)
+            #_"NodeBitMap" this (merge (hash-map) (NodeBitMap'init-0))
             this (assoc this :graph graph)
             this (assoc this :nodeCount (:nodesSize graph))
             this (assoc this :bits (long-array (NodeBitMap'sizeForNodeCount-1 (:nodeCount this))))
@@ -20057,7 +20310,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"NodeBitMap" NodeBitMap'new-1m [#_"NodeBitMap" other]
         (let [
-            #_"NodeBitMap" this (hash-map)
+            #_"NodeBitMap" this (merge (hash-map) (NodeBitMap'init-0))
             this (assoc this :graph (:graph other))
             this (assoc this :bits (#_"Object" .clone (:bits other)))
             this (assoc this :nodeCount (:nodeCount other))
@@ -20229,14 +20482,17 @@ ZeroExtendNode'new-4
  ; @anno NodeBitMap.MarkedNodeIterator
  ;;
 (final-ns MarkedNodeIterator (§ implements Iterator #_"<Node>")
-    (§ final #_"NodeBitMap" :bitMap nil)
-
-    (§ mutable #_"int" :currentNodeId 0)
-    (§ mutable #_"Node" :currentNode nil)
+    (defn- #_"MarkedNodeIterator" MarkedNodeIterator'init-0 []
+        (hash-map
+            #_"NodeBitMap" :bitMap nil
+            #_"int" :currentNodeId 0
+            #_"Node" :currentNode nil
+        )
+    )
 
     (defn #_"MarkedNodeIterator" MarkedNodeIterator'new-1 [#_"NodeBitMap" bitMap]
         (let [
-            #_"MarkedNodeIterator" this (hash-map)
+            #_"MarkedNodeIterator" this (merge (hash-map) (MarkedNodeIterator'init-0))
             this (assoc this :bitMap bitMap)
             this (assoc this :currentNodeId -1)
         ]
@@ -20315,27 +20571,29 @@ ZeroExtendNode'new-4
 
     (§ def- #_"AtomicInteger" NodeClass'nextIterableId (AtomicInteger.))
 
-    (§ final #_"InputEdges" :inputs nil)
-    (§ final #_"SuccessorEdges" :successors nil)
-    (§ final #_"NodeClass<? super T>" :superNodeClass nil)
-
-    (§ final #_"int" :iterableId 0)
-    (§ mutable #_"int[]" :iterableIds nil)
-    (§ final #_"long" :inputsIteration 0)
-    (§ final #_"long" :successorIteration 0)
-
-    (§ final #_"boolean" :canonicalizable? false)
-    (§ final #_"boolean" :commutative? false)
-    (§ final #_"boolean" :simplifiable? false)
-
-    ;;;
-     ; Determines if the node has no inputs, nor successors.
-     ;;
-    (§ final #_"boolean" :isLeafNode false)
+    (defn- #_"NodeClass" NodeClass'init-0 []
+        (hash-map
+            #_"InputEdges" :inputs nil
+            #_"SuccessorEdges" :successors nil
+            #_"NodeClass<? super T>" :superNodeClass nil
+            #_"int" :iterableId 0
+            #_"int[]" :iterableIds nil
+            #_"long" :inputsIteration 0
+            #_"long" :successorIteration 0
+            #_"boolean" :canonicalizable? false
+            #_"boolean" :commutative? false
+            #_"boolean" :simplifiable? false
+            ;;;
+             ; Determines if the node has no inputs, nor successors.
+             ;;
+            #_"boolean" :isLeafNode false
+        )
+    )
 
     (defn #_"NodeClass" NodeClass'new-2 [#_"Class<T>" clazz, #_"NodeClass<? super T>" superNodeClass]
         (let [
             #_"NodeClass" this (FieldIntrospection'new-1 clazz)
+            this (merge this (NodeClass'init-0))
             this (assoc this :superNodeClass superNodeClass)
             this (assoc this :canonicalizable? (#_"Class" .isAssignableFrom Canonicalizable, clazz))
             this (assoc this :commutative? (#_"Class" .isAssignableFrom BinaryCommutative, clazz))
@@ -20968,12 +21226,17 @@ ZeroExtendNode'new-4
  ; @anno NodeClass.InputInfo
  ;;
 (final-ns InputInfo (§ extends EdgeInfo)
-    (§ final #_"InputType" :inputType nil)
-    (§ final #_"boolean" :optional false)
+    (defn- #_"InputInfo" InputInfo'init-0 []
+        (hash-map
+            #_"InputType" :inputType nil
+            #_"boolean" :optional false
+        )
+    )
 
     (defn #_"InputInfo" InputInfo'new-6 [#_"long" offset, #_"String" name, #_"Class" type, #_"Class" declaringClass, #_"InputType" inputType, #_"boolean" optional]
         (let [
             #_"InputInfo" this (EdgeInfo'new-4 offset, name, type, declaringClass)
+            this (merge this (InputInfo'init-0))
             this (assoc this :inputType inputType)
             this (assoc this :optional optional)
         ]
@@ -20986,14 +21249,19 @@ ZeroExtendNode'new-4
  ; @anno NodeClass.NodeFieldsScanner
  ;;
 (final-ns NodeFieldsScanner (§ extends FieldsScannerImpl)
-    (§ final #_"ArrayList<InputInfo>" :inputs (ArrayList.))
-    (§ final #_"ArrayList<EdgeInfo>" :successors (ArrayList.))
-    (§ mutable #_"int" :directInputs 0)
-    (§ mutable #_"int" :directSuccessors 0)
+    (defn- #_"NodeFieldsScanner" NodeFieldsScanner'init-0 []
+        (hash-map
+            #_"ArrayList<InputInfo>" :inputs (ArrayList.)
+            #_"ArrayList<EdgeInfo>" :successors (ArrayList.)
+            #_"int" :directInputs 0
+            #_"int" :directSuccessors 0
+        )
+    )
 
     (defn #_"NodeFieldsScanner" NodeFieldsScanner'new-1 [#_"NodeClass" superNodeClass]
         (let [
             #_"NodeFieldsScanner" this (FieldsScannerImpl'new-0)
+            this (merge this (NodeFieldsScanner'init-0))
             this
                 (when (some? superNodeClass) => this
                     (InputEdges'translateInto-2 (:inputs superNodeClass), (:inputs this))
@@ -21099,13 +21367,17 @@ ZeroExtendNode'new-4
  ; @anno NodeClass.RawEdgesIterator
  ;;
 (final-ns RawEdgesIterator (§ implements Iterator #_"<Node>")
-    (§ final #_"Node" :node nil)
-    (§ mutable #_"long" :mask 0)
-    (§ mutable #_"Node" :nextValue nil)
+    (defn- #_"RawEdgesIterator" RawEdgesIterator'init-0 []
+        (hash-map
+            #_"Node" :node nil
+            #_"long" :mask 0
+            #_"Node" :nextValue nil
+        )
+    )
 
     (defn #_"RawEdgesIterator" RawEdgesIterator'new-2 [#_"Node" node, #_"long" mask]
         (let [
-            #_"RawEdgesIterator" this (hash-map)
+            #_"RawEdgesIterator" this (merge (hash-map) (RawEdgesIterator'init-0))
             this (assoc this :node node)
             this (assoc this :mask mask)
         ]
@@ -21203,13 +21475,17 @@ ZeroExtendNode'new-4
 )
 
 (final-ns NodeFlood (§ implements Iterable #_"<Node>")
-    (§ final #_"NodeBitMap" :visited nil)
-    (§ final #_"Queue<Node>" :worklist (ArrayDeque.))
-    (§ mutable #_"int" :totalMarkedCount 0)
+    (defn- #_"NodeFlood" NodeFlood'init-0 []
+        (hash-map
+            #_"NodeBitMap" :visited nil
+            #_"Queue<Node>" :worklist (ArrayDeque.)
+            #_"int" :totalMarkedCount 0
+        )
+    )
 
     (defn #_"NodeFlood" NodeFlood'new-1 [#_"Graph" graph]
         (let [
-            #_"NodeFlood" this (hash-map)
+            #_"NodeFlood" this (merge (hash-map) (NodeFlood'init-0))
             this (assoc this :visited (NodeBitMap'new-1g graph))
         ]
             this
@@ -21295,14 +21571,19 @@ ZeroExtendNode'new-4
 (class-ns NodeListImpl #_"<T implements Node>" (§ extends AbstractList #_"<T>") (§ implements NodeList #_"<T implements Node>", NodeIterable #_"<T>")
     (§ def #_"Node[]" NodeListImpl'EMPTY_NODE_ARRAY (make-array Node 0))
 
-    (§ final #_"Node" :self nil)
-    (§ mutable #_"Node[]" :nodes nil)
-    (§ mutable #_"int" :size 0)
-    (§ final #_"int" :initialSize 0)
+    (defn- #_"NodeListImpl" NodeListImpl'init-0 []
+        (hash-map
+            #_"Node" :self nil
+            #_"Node[]" :nodes nil
+            #_"int" :size 0
+            #_"int" :initialSize 0
+        )
+    )
 
     (defn #_"NodeList" NodeListImpl'new-1 [#_"Node" self]
         (let [
             #_"NodeList" this (ß AbstractList.)
+            this (merge this (NodeListImpl'init-0))
             this (assoc this :self self)
             this (assoc this :nodes NodeListImpl'EMPTY_NODE_ARRAY)
             this (assoc this :initialSize 0)
@@ -21314,6 +21595,7 @@ ZeroExtendNode'new-4
     (defn #_"NodeList" NodeListImpl'new-2i [#_"Node" self, #_"int" initialSize]
         (let [
             #_"NodeList" this (ß AbstractList.)
+            this (merge this (NodeListImpl'init-0))
             this (assoc this :self self)
             this (assoc this :size initialSize)
             this (assoc this :initialSize initialSize)
@@ -21326,6 +21608,7 @@ ZeroExtendNode'new-4
     (defn #_"NodeList" NodeListImpl'new-2a [#_"Node" self, #_"T[]" elements]
         (let [
             #_"NodeList" this (ß AbstractList.)
+            this (merge this (NodeListImpl'init-0))
             this (assoc this :self self)
         ]
             (if (or (nil? elements) (empty? elements))
@@ -21350,6 +21633,7 @@ ZeroExtendNode'new-4
     (defn #_"NodeList" NodeListImpl'new-2l [#_"Node" self, #_"List<? extends T>" elements]
         (let [
             #_"NodeList" this (ß AbstractList.)
+            this (merge this (NodeListImpl'init-0))
             this (assoc this :self self)
         ]
             (if (or (nil? elements) (empty? elements))
@@ -21519,12 +21803,16 @@ ZeroExtendNode'new-4
  ; @anno NodeList.NodeListIterator
  ;;
 (final-ns NodeListIterator #_"<R implements Node>" (§ implements Iterator #_"<R>")
-    (§ final #_"NodeList<R>" :list nil)
-    (§ final #_"int" :index 0)
+    (defn- #_"NodeListIterator" NodeListIterator'init-0 []
+        (hash-map
+            #_"NodeList<R>" :list nil
+            #_"int" :index 0
+        )
+    )
 
     (defn #_"NodeListIterator" NodeListIterator'new-2 [#_"NodeList<R>" list, #_"int" startIndex]
         (let [
-            #_"NodeListIterator" this (hash-map)
+            #_"NodeListIterator" this (merge (hash-map) (NodeListIterator'init-0))
             this (assoc this :list list)
             this (assoc this :index startIndex)
         ]
@@ -21549,12 +21837,16 @@ ZeroExtendNode'new-4
 (final-ns NodeMap #_"<T>" (§ implements EconomicMap #_"<Node, T>")
     (def- #_"int" NodeMap'MIN_REALLOC_SIZE 16)
 
-    (§ final #_"Graph" :graph nil)
-    (§ mutable #_"Object[]" :values nil)
+    (defn- #_"NodeMap" NodeMap'init-0 []
+        (hash-map
+            #_"Graph" :graph nil
+            #_"Object[]" :values nil
+        )
+    )
 
     (defn #_"NodeMap" NodeMap'new-1g [#_"Graph" graph]
         (let [
-            #_"NodeMap" this (hash-map)
+            #_"NodeMap" this (merge (hash-map) (NodeMap'init-0))
             this (assoc this :graph graph)
             this (assoc this :values (make-array Object (:nodesSize graph)))
         ]
@@ -21564,7 +21856,7 @@ ZeroExtendNode'new-4
 
     (defn #_"NodeMap" NodeMap'new-1m [#_"NodeMap<T>" copyFrom]
         (let [
-            #_"NodeMap" this (hash-map)
+            #_"NodeMap" this (merge (hash-map) (NodeMap'init-0))
             this (assoc this :graph (:graph copyFrom))
             this (assoc this :values (Arrays/copyOf (:values copyFrom), (count (:values copyFrom))))
         ]
@@ -21742,8 +22034,12 @@ ZeroExtendNode'new-4
 (final-ns NodeStack
     (def- #_"int" NodeStack'DEFAULT_INITIAL_SIZE 8)
 
-    (§ mutable #_"Node[]" :values nil)
-    (§ mutable #_"int" :tos 0)
+    (defn- #_"NodeStack" NodeStack'init-0 []
+        (hash-map
+            #_"Node[]" :values nil
+            #_"int" :tos 0
+        )
+    )
 
     (defn #_"NodeStack" NodeStack'new-0 []
         (NodeStack'new-1 NodeStack'DEFAULT_INITIAL_SIZE)
@@ -21751,7 +22047,7 @@ ZeroExtendNode'new-4
 
     (defn #_"NodeStack" NodeStack'new-1 [#_"int" initialSize]
         (let [
-            #_"NodeStack" this (hash-map)
+            #_"NodeStack" this (merge (hash-map) (NodeStack'init-0))
             this (assoc this :values (make-array Node initialSize))
         ]
             this
@@ -21805,11 +22101,15 @@ ZeroExtendNode'new-4
 )
 
 (final-ns NodeUsageIterable (§ implements NodeIterable #_"<Node>")
-    (§ final #_"Node" :node nil)
+    (defn- #_"NodeUsageIterable" NodeUsageIterable'init-0 []
+        (hash-map
+            #_"Node" :node nil
+        )
+    )
 
     (defn #_"NodeUsageIterable" NodeUsageIterable'new-1 [#_"Node" node]
         (let [
-            #_"NodeUsageIterable" this (hash-map)
+            #_"NodeUsageIterable" this (merge (hash-map) (NodeUsageIterable'init-0))
             this (assoc this :node node)
         ]
             this
@@ -21838,9 +22138,13 @@ ZeroExtendNode'new-4
 )
 
 (final-ns NodeUsageIterator (§ implements Iterator #_"<Node>")
-    (§ final #_"Node" :node nil)
-    (§ mutable #_"int" :index -1)
-    (§ mutable #_"Node" :current nil)
+    (defn- #_"NodeUsageIterator" NodeUsageIterator'init-0 []
+        (hash-map
+            #_"Node" :node nil
+            #_"int" :index -1
+            #_"Node" :current nil
+        )
+    )
 
     (defn #_"NodeUsageIterator" NodeUsageIterator''advance-1 [#_"NodeUsageIterator" this]
         (let [
@@ -21863,7 +22167,7 @@ ZeroExtendNode'new-4
 
     (defn #_"NodeUsageIterator" NodeUsageIterator'new-1 [#_"Node" node]
         (let [
-            #_"NodeUsageIterator" this (hash-map)
+            #_"NodeUsageIterator" this (merge (hash-map) (NodeUsageIterator'init-0))
             this (assoc this :node node)
         ]
             (§ ass! this (NodeUsageIterator''advance-1 this))
@@ -21889,11 +22193,15 @@ ZeroExtendNode'new-4
 )
 
 (class-ns NodeWorkListImpl (§ implements NodeWorkList, Iterable #_"<Node>")
-    (§ final #_"Queue<Node>" :worklist (ArrayDeque.))
+    (defn- #_"NodeWorkListImpl" NodeWorkListImpl'init-0 []
+        (hash-map
+            #_"Queue<Node>" :worklist (ArrayDeque.)
+        )
+    )
 
     (defn #_"NodeWorkList" NodeWorkListImpl'new-2 [#_"Graph" graph, #_"boolean" fill]
         (let [
-            #_"NodeWorkList" this (hash-map)
+            #_"NodeWorkList" this (merge (hash-map) (NodeWorkListImpl'init-0))
         ]
             (when fill
                 (doseq [#_"Node" node (Graph''getNodes-1 graph)]
@@ -21918,22 +22226,26 @@ ZeroExtendNode'new-4
  ; Describes an edge slot for a NodeClass.
  ;;
 (final-ns Position
-    ;;;
-     ; The edges in which this position lies.
-     ;;
-    (§ final #_"Edges" :edges nil)
-    ;;;
-     ; Index of the Node or NodeList field denoted by this position.
-     ;;
-    (§ final #_"int" :index 0)
-    ;;;
-     ; Index within a NodeList if #index denotes a NodeList field otherwise Node#NOT_ITERABLE.
-     ;;
-    (§ final #_"int" :subIndex 0)
+    (defn- #_"Position" Position'init-0 []
+        (hash-map
+            ;;;
+             ; The edges in which this position lies.
+             ;;
+            #_"Edges" :edges nil
+            ;;;
+             ; Index of the Node or NodeList field denoted by this position.
+             ;;
+            #_"int" :index 0
+            ;;;
+             ; Index within a NodeList if #index denotes a NodeList field otherwise Node#NOT_ITERABLE.
+             ;;
+            #_"int" :subIndex 0
+        )
+    )
 
     (defn #_"Position" Position'new-3 [#_"Edges" edges, #_"int" index, #_"int" subIndex]
         (let [
-            #_"Position" this (hash-map)
+            #_"Position" this (merge (hash-map) (Position'init-0))
             this (assoc this :edges edges)
             this (assoc this :index index)
             this (assoc this :subIndex subIndex)
@@ -21971,11 +22283,16 @@ ZeroExtendNode'new-4
 )
 
 (final-ns SingletonNodeWorkList (§ extends NodeWorkListImpl)
-    (§ final #_"NodeBitMap" :visited nil)
+    (defn- #_"SingletonNodeWorkList" SingletonNodeWorkList'init-0 []
+        (hash-map
+            #_"NodeBitMap" :visited nil
+        )
+    )
 
     (defn #_"SingletonNodeWorkList" SingletonNodeWorkList'new-1 [#_"Graph" graph]
         (let [
             #_"SingletonNodeWorkList" this (NodeWorkListImpl'new-2 graph, false)
+            this (merge this (SingletonNodeWorkList'init-0))
             this (assoc this :visited (NodeBitMap'new-1g graph))
         ]
             this
@@ -22030,16 +22347,19 @@ ZeroExtendNode'new-4
 )
 
 (final-ns TypedGraphNodeIterator #_"<T extends IterableNodeType>" (§ implements Iterator #_"<T>")
-    (§ final #_"Graph" :graph nil)
-    (§ final #_"int[]" :ids nil)
-    (§ final #_"Node[]" :current nil)
-
-    (§ mutable #_"int" :currentIdIndex 0)
-    (§ mutable #_"boolean" :needsForward false)
+    (defn- #_"TypedGraphNodeIterator" TypedGraphNodeIterator'init-0 []
+        (hash-map
+            #_"Graph" :graph nil
+            #_"int[]" :ids nil
+            #_"Node[]" :current nil
+            #_"int" :currentIdIndex 0
+            #_"boolean" :needsForward false
+        )
+    )
 
     (defn #_"TypedGraphNodeIterator" TypedGraphNodeIterator'new-2 [#_"NodeClass" clazz, #_"Graph" graph]
         (let [
-            #_"TypedGraphNodeIterator" this (hash-map)
+            #_"TypedGraphNodeIterator" this (merge (hash-map) (TypedGraphNodeIterator'init-0))
             this (assoc this :graph graph)
             this (assoc this :ids (:iterableIds clazz))
             this (assoc this :currentIdIndex 0)
@@ -22148,14 +22468,19 @@ ZeroExtendNode'new-4
 (final-ns CRuntimeCallEpilogueOp (§ extends LIRInstructionImpl)
     (§ def #_"LIRInstructionClass<CRuntimeCallEpilogueOp>" CRuntimeCallEpilogueOp'TYPE (LIRInstructionClass'new-1 CRuntimeCallEpilogueOp))
 
-    (§ final #_"int" :threadLastJavaSpOffset 0)
-    (§ final #_"int" :threadLastJavaFpOffset 0)
-    (§ final #_"int" :threadLastJavaPcOffset 0)
-    (§ final #_"Register" :thread nil)
+    (defn- #_"CRuntimeCallEpilogueOp" CRuntimeCallEpilogueOp'init-0 []
+        (hash-map
+            #_"int" :threadLastJavaSpOffset 0
+            #_"int" :threadLastJavaFpOffset 0
+            #_"int" :threadLastJavaPcOffset 0
+            #_"Register" :thread nil
+        )
+    )
 
     (defn #_"CRuntimeCallEpilogueOp" CRuntimeCallEpilogueOp'new-4 [#_"int" threadLastJavaSpOffset, #_"int" threadLastJavaFpOffset, #_"int" threadLastJavaPcOffset, #_"Register" thread]
         (let [
             #_"CRuntimeCallEpilogueOp" this (LIRInstructionImpl'new-1 CRuntimeCallEpilogueOp'TYPE)
+            this (merge this (CRuntimeCallEpilogueOp'init-0))
             this (assoc this :threadLastJavaSpOffset threadLastJavaSpOffset)
             this (assoc this :threadLastJavaFpOffset threadLastJavaFpOffset)
             this (assoc this :threadLastJavaPcOffset threadLastJavaPcOffset)
@@ -22178,12 +22503,17 @@ ZeroExtendNode'new-4
 (final-ns CRuntimeCallPrologueOp (§ extends LIRInstructionImpl)
     (§ def #_"LIRInstructionClass<CRuntimeCallPrologueOp>" CRuntimeCallPrologueOp'TYPE (LIRInstructionClass'new-1 CRuntimeCallPrologueOp))
 
-    (§ final #_"int" :threadLastJavaSpOffset 0)
-    (§ final #_"Register" :thread nil)
+    (defn- #_"CRuntimeCallPrologueOp" CRuntimeCallPrologueOp'init-0 []
+        (hash-map
+            #_"int" :threadLastJavaSpOffset 0
+            #_"Register" :thread nil
+        )
+    )
 
     (defn #_"CRuntimeCallPrologueOp" CRuntimeCallPrologueOp'new-2 [#_"int" threadLastJavaSpOffset, #_"Register" thread]
         (let [
             #_"CRuntimeCallPrologueOp" this (LIRInstructionImpl'new-1 CRuntimeCallPrologueOp'TYPE)
+            this (merge this (CRuntimeCallPrologueOp'init-0))
             this (assoc this :threadLastJavaSpOffset threadLastJavaSpOffset)
             this (assoc this :thread thread)
         ]
@@ -22224,11 +22554,16 @@ ZeroExtendNode'new-4
 (final-ns DirectStaticCallOp (§ extends DirectCallOp)
     (§ def #_"LIRInstructionClass<DirectStaticCallOp>" DirectStaticCallOp'TYPE (LIRInstructionClass'new-1 DirectStaticCallOp))
 
-    (§ final #_"InvokeKind" :invokeKind nil)
+    (defn- #_"DirectStaticCallOp" DirectStaticCallOp'init-0 []
+        (hash-map
+            #_"InvokeKind" :invokeKind nil
+        )
+    )
 
     (defn #_"DirectStaticCallOp" DirectStaticCallOp'new-5 [#_"ResolvedJavaMethod" target, #_"Value" result, #_"Value[]" parameters, #_"Value[]" temps, #_"InvokeKind" invokeKind]
         (let [
             #_"DirectStaticCallOp" this (DirectCallOp'new-5 DirectStaticCallOp'TYPE, target, result, parameters, temps)
+            this (merge this (DirectStaticCallOp'init-0))
             this (assoc this :invokeKind invokeKind)
         ]
             this
@@ -22250,11 +22585,16 @@ ZeroExtendNode'new-4
 (final-ns DirectVirtualCallOp (§ extends DirectCallOp)
     (§ def #_"LIRInstructionClass<DirectVirtualCallOp>" DirectVirtualCallOp'TYPE (LIRInstructionClass'new-1 DirectVirtualCallOp))
 
-    (§ final #_"InvokeKind" :invokeKind nil)
+    (defn- #_"DirectVirtualCallOp" DirectVirtualCallOp'init-0 []
+        (hash-map
+            #_"InvokeKind" :invokeKind nil
+        )
+    )
 
     (defn #_"DirectVirtualCallOp" DirectVirtualCallOp'new-5 [#_"ResolvedJavaMethod" target, #_"Value" result, #_"Value[]" parameters, #_"Value[]" temps, #_"InvokeKind" invokeKind]
         (let [
             #_"DirectVirtualCallOp" this (DirectCallOp'new-5 DirectVirtualCallOp'TYPE, target, result, parameters, temps)
+            this (merge this (DirectVirtualCallOp'init-0))
             this (assoc this :invokeKind invokeKind)
         ]
             this
@@ -22273,12 +22613,18 @@ ZeroExtendNode'new-4
 )
 
 (class-ns EpilogueBlockEndOp (§ extends LIRInstructionImpl) (§ implements AMD64HotSpotRestoreRbpOp, BlockEndOp)
-    (defn #_"EpilogueBlockEndOp" EpilogueBlockEndOp'new-1 [#_"LIRInstructionClass<? extends EpilogueBlockEndOp>" c]
-        (LIRInstructionImpl'new-1 c)
+    (defn- #_"EpilogueBlockEndOp" EpilogueBlockEndOp'init-0 []
+        (hash-map
+            ; @Use({OperandFlag'REG, OperandFlag'STACK})
+            #_"AllocatableValue" :savedRbp AMD64HotSpotRestoreRbpOp'PLACEHOLDER
+        )
     )
 
-    ; @Use({OperandFlag'REG, OperandFlag'STACK})
-    (§ mutable #_"AllocatableValue" :savedRbp AMD64HotSpotRestoreRbpOp'PLACEHOLDER)
+    (defn #_"EpilogueBlockEndOp" EpilogueBlockEndOp'new-1 [#_"LIRInstructionClass<? extends EpilogueBlockEndOp>" c]
+        (merge (LIRInstructionImpl'new-1 c)
+            (EpilogueBlockEndOp'init-0)
+        )
+    )
 
     (defn- #_"void" EpilogueBlockEndOp'leaveFrameAndRestoreRbp-2 [#_"AllocatableValue" savedRbp, #_"Assembler" asm]
         (if (instance? StackSlot savedRbp)
@@ -22315,16 +22661,20 @@ ZeroExtendNode'new-4
  ; @anno LIRGenerator.SaveRbp
  ;;
 (final-ns SaveRbp
-    (§ final #_"LIRGenerator" :gen nil)
-    (§ final #_"NoOp" :placeholder nil)
-    ;;;
-     ; The slot reserved for saving RBP.
-     ;;
-    (§ final #_"StackSlot" :reservedSlot nil)
+    (defn- #_"SaveRbp" SaveRbp'init-0 []
+        (hash-map
+            #_"LIRGenerator" :gen nil
+            #_"NoOp" :placeholder nil
+            ;;;
+             ; The slot reserved for saving RBP.
+             ;;
+            #_"StackSlot" :reservedSlot nil
+        )
+    )
 
     (defn #_"SaveRbp" SaveRbp'new-2 [#_"LIRGenerator" gen, #_"NoOp" placeholder]
         (let [
-            #_"SaveRbp" this (hash-map)
+            #_"SaveRbp" this (merge (hash-map) (SaveRbp'init-0))
             this (assoc this :gen gen)
             this (assoc this :placeholder placeholder)
             this (assoc this :reservedSlot (AMD64FrameMapBuilder''allocateRBPSpillSlot-1 (:frameMapBuilder (:res (:gen this)))))
@@ -22358,14 +22708,18 @@ ZeroExtendNode'new-4
 (final-ns LoadConfigValueOp (§ extends LIRInstructionImpl)
     (§ def #_"LIRInstructionClass<LoadConfigValueOp>" LoadConfigValueOp'TYPE (LIRInstructionClass'new-1 LoadConfigValueOp))
 
-    ; @Def({OperandFlag'REG})
-    (§ mutable #_"AllocatableValue" :result nil)
-
-    (§ final #_"int" :markId 0)
+    (defn- #_"LoadConfigValueOp" LoadConfigValueOp'init-0 []
+        (hash-map
+            ; @Def({OperandFlag'REG})
+            #_"AllocatableValue" :result nil
+            #_"int" :markId 0
+        )
+    )
 
     (defn #_"LoadConfigValueOp" LoadConfigValueOp'new-2 [#_"int" markId, #_"AllocatableValue" result]
         (let [
             #_"LoadConfigValueOp" this (LIRInstructionImpl'new-1 LoadConfigValueOp'TYPE)
+            this (merge this (LoadConfigValueOp'init-0))
             this (assoc this :result result)
             this (assoc this :markId markId)
         ]
@@ -22384,14 +22738,18 @@ ZeroExtendNode'new-4
 (final-ns LoadObjectConstantOp (§ extends LIRInstructionImpl) (§ implements LoadConstantOp)
     (§ def #_"LIRInstructionClass<LoadObjectConstantOp>" LoadObjectConstantOp'TYPE (LIRInstructionClass'new-1 LoadObjectConstantOp))
 
-    ; @Def({OperandFlag'REG, OperandFlag'STACK})
-    (§ mutable #_"AllocatableValue" :result nil)
-
-    (§ final #_"HotSpotObjectConstant" :input nil)
+    (defn- #_"LoadObjectConstantOp" LoadObjectConstantOp'init-0 []
+        (hash-map
+            ; @Def({OperandFlag'REG, OperandFlag'STACK})
+            #_"AllocatableValue" :result nil
+            #_"HotSpotObjectConstant" :input nil
+        )
+    )
 
     (defn #_"LoadObjectConstantOp" LoadObjectConstantOp'new-2 [#_"AllocatableValue" result, #_"HotSpotObjectConstant" input]
         (let [
             #_"LoadObjectConstantOp" this (LIRInstructionImpl'new-1 LoadObjectConstantOp'TYPE)
+            this (merge this (LoadObjectConstantOp'init-0))
             this (assoc this :result result)
             this (assoc this :input input)
         ]
@@ -22447,14 +22805,18 @@ ZeroExtendNode'new-4
 (final-ns LoadMetaspaceConstantOp (§ extends LIRInstructionImpl) (§ implements LoadConstantOp)
     (§ def #_"LIRInstructionClass<LoadMetaspaceConstantOp>" LoadMetaspaceConstantOp'TYPE (LIRInstructionClass'new-1 LoadMetaspaceConstantOp))
 
-    ; @Def({OperandFlag'REG, OperandFlag'STACK})
-    (§ mutable #_"AllocatableValue" :result nil)
-
-    (§ final #_"HotSpotMetaspaceConstant" :input nil)
+    (defn- #_"LoadMetaspaceConstantOp" LoadMetaspaceConstantOp'init-0 []
+        (hash-map
+            ; @Def({OperandFlag'REG, OperandFlag'STACK})
+            #_"AllocatableValue" :result nil
+            #_"HotSpotMetaspaceConstant" :input nil
+        )
+    )
 
     (defn #_"LoadMetaspaceConstantOp" LoadMetaspaceConstantOp'new-2 [#_"AllocatableValue" result, #_"HotSpotMetaspaceConstant" input]
         (let [
             #_"LoadMetaspaceConstantOp" this (LIRInstructionImpl'new-1 LoadMetaspaceConstantOp'TYPE)
+            this (merge this (LoadMetaspaceConstantOp'init-0))
             this (assoc this :result result)
             this (assoc this :input input)
         ]
@@ -22498,16 +22860,18 @@ ZeroExtendNode'new-4
 )
 
 (final-ns LIRBuilder
-    (§ final #_"LIRGenerator" :gen nil)
-
-    (§ final #_"NodeMap<Value>" :nodeOperands nil)
-    (§ final #_"LockStackHolder" :lockStackHolder nil)
-
-    (§ mutable #_"ValueNode" :currentInstruction nil)
+    (defn- #_"LIRBuilder" LIRBuilder'init-0 []
+        (hash-map
+            #_"LIRGenerator" :gen nil
+            #_"NodeMap<Value>" :nodeOperands nil
+            #_"LockStackHolder" :lockStackHolder nil
+            #_"ValueNode" :currentInstruction nil
+        )
+    )
 
     (defn #_"LIRBuilder" LIRBuilder'new-2 [#_"Graph" graph, #_"LIRGenerator" gen]
         (let [
-            #_"LIRBuilder" this (hash-map)
+            #_"LIRBuilder" this (merge (hash-map) (LIRBuilder'init-0))
             this (assoc this :gen gen)
             this (assoc this :nodeOperands (NodeMap'new-1g graph))
             this (assoc this :lockStackHolder (LockStackHolder'new-1 (LockStack'new-2 (:frameMapBuilder (:res gen)), (LIRKind'value-1 AMD64Kind/QWORD))))
@@ -23034,16 +23398,20 @@ ZeroExtendNode'new-4
 (final-ns AMD64HotSpotReturnOp (§ extends EpilogueBlockEndOp)
     (§ def #_"LIRInstructionClass<AMD64HotSpotReturnOp>" AMD64HotSpotReturnOp'TYPE (LIRInstructionClass'new-1 AMD64HotSpotReturnOp))
 
-    ; @Use({OperandFlag'REG, OperandFlag'ILLEGAL})
-    (§ mutable #_"Value" :value nil)
-
-    (§ final #_"boolean" :isStub false)
-    (§ final #_"Register" :thread nil)
-    (§ final #_"Register" :scratchForSafepointOnReturn nil)
+    (defn- #_"AMD64HotSpotReturnOp" AMD64HotSpotReturnOp'init-0 []
+        (hash-map
+            ; @Use({OperandFlag'REG, OperandFlag'ILLEGAL})
+            #_"Value" :value nil
+            #_"boolean" :isStub false
+            #_"Register" :thread nil
+            #_"Register" :scratchForSafepointOnReturn nil
+        )
+    )
 
     (defn #_"AMD64HotSpotReturnOp" AMD64HotSpotReturnOp'new-4 [#_"Value" value, #_"boolean" isStub, #_"Register" thread, #_"Register" scratchForSafepointOnReturn]
         (let [
             #_"AMD64HotSpotReturnOp" this (EpilogueBlockEndOp'new-1 AMD64HotSpotReturnOp'TYPE)
+            this (merge this (AMD64HotSpotReturnOp'init-0))
             this (assoc this :value value)
             this (assoc this :isStub isStub)
             this (assoc this :thread thread)
@@ -23082,14 +23450,18 @@ ZeroExtendNode'new-4
         )
     )
 
-    ; @Temp({OperandFlag'REG, OperandFlag'ILLEGAL})
-    (§ mutable #_"AllocatableValue" :temp nil)
-
-    (§ final #_"Register" :thread nil)
+    (defn- #_"SafepointOp" SafepointOp'init-0 []
+        (hash-map
+            ; @Temp({OperandFlag'REG, OperandFlag'ILLEGAL})
+            #_"AllocatableValue" :temp nil
+            #_"Register" :thread nil
+        )
+    )
 
     (defn #_"SafepointOp" SafepointOp'new-2 [#_"LIRBuilder" builder, #_"Register" thread]
         (let [
             #_"SafepointOp" this (LIRInstructionImpl'new-1 SafepointOp'TYPE)
+            this (merge this (SafepointOp'init-0))
             this (assoc this :thread thread)
             this (assoc this :temp (if (or HotSpot'threadLocalHandshakes (SafepointOp'isPollingPageFar-0)) (LIRGenerator''newVariable-2 (:gen builder), (LIRKind'value-1 (#_"Architecture" .getWordKind (.arch HotSpot'target)))) Value/ILLEGAL)) ;; => don't waste a register if it's unneeded
         ]
@@ -23181,14 +23553,19 @@ ZeroExtendNode'new-4
 (final-ns AMD64TailcallOp (§ extends LIRInstructionImpl)
     (§ def #_"LIRInstructionClass<AMD64TailcallOp>" AMD64TailcallOp'TYPE (LIRInstructionClass'new-1 AMD64TailcallOp))
 
-    ; @Use
-    (§ mutable #_"Value" :target nil)
-    ; @Alive
-    (§ mutable #_"Value[]" :parameters nil)
+    (defn- #_"AMD64TailcallOp" AMD64TailcallOp'init-0 []
+        (hash-map
+            ; @Use
+            #_"Value" :target nil
+            ; @Alive
+            #_"Value[]" :parameters nil
+        )
+    )
 
     (defn #_"AMD64TailcallOp" AMD64TailcallOp'new-2 [#_"Value[]" parameters, #_"Value" target]
         (let [
             #_"AMD64TailcallOp" this (LIRInstructionImpl'new-1 AMD64TailcallOp'TYPE)
+            this (merge this (AMD64TailcallOp'init-0))
             this (assoc this :target target)
             this (assoc this :parameters parameters)
         ]
@@ -23208,11 +23585,15 @@ ZeroExtendNode'new-4
 )
 
 (final-ns LockStackHolder
-    (§ final #_"LockStack" :lockStack nil)
+    (defn- #_"LockStackHolder" LockStackHolder'init-0 []
+        (hash-map
+            #_"LockStack" :lockStack nil
+        )
+    )
 
     (defn #_"LockStackHolder" LockStackHolder'new-1 [#_"LockStack" lockStack]
         (let [
-            #_"LockStackHolder" this (hash-map)
+            #_"LockStackHolder" this (merge (hash-map) (LockStackHolder'init-0))
             this (assoc this :lockStack lockStack)
         ]
             this
@@ -23266,44 +23647,44 @@ ZeroExtendNode'new-4
  ; The runtime specific details of a foreign call.
  ;;
 (final-ns ForeignCallLinkage (§ implements InvokeTarget)
-    ;;;
-     ; The descriptor of the call.
-     ;;
-    (§ final #_"ForeignCallDescriptor" :descriptor nil)
-
-    (§ mutable #_"long" :address 0)
-
-    (§ final #_"RegisterEffect" :effect nil)
-    (§ final #_"Transition" :transition nil)
-    ;;;
-     ; The calling convention for this call.
-     ; The details of where parameters are passed and value(s) are returned from the caller's perspective.
-     ;;
-    (§ final #_"CallingConvention" :outgoingCallingConvention nil)
-    ;;;
-     ; The calling convention for incoming arguments to the stub, iff this call uses a compiled stub.
-     ; The details of where parameters are passed and value(s) are returned from the callee's perspective.
-     ;;
-    (§ final #_"CallingConvention" :incomingCallingConvention nil)
-
-    (§ final #_"boolean" :reexecutable false)
-    ;;;
-     ; The memory locations killed by the call.
-     ;;
-    (§ final #_"LocationIdentity[]" :killedLocations nil)
-
-    ;;;
-     ; The registers and stack slots defined/killed by the call.
-     ;;
-    (§ mutable #_"Value[]" :temporaries AllocatableValue/NONE)
-    ;;;
-     ; Non-null (eventually) iff this is a call to a compiled stub.
-     ;;
-    (§ mutable #_"Stub" :stub nil)
+    (defn- #_"ForeignCallLinkage" ForeignCallLinkage'init-0 []
+        (hash-map
+            ;;;
+             ; The descriptor of the call.
+             ;;
+            #_"ForeignCallDescriptor" :descriptor nil
+            #_"long" :address 0
+            #_"RegisterEffect" :effect nil
+            #_"Transition" :transition nil
+            ;;;
+             ; The calling convention for this call.
+             ; The details of where parameters are passed and value(s) are returned from the caller's perspective.
+             ;;
+            #_"CallingConvention" :outgoingCallingConvention nil
+            ;;;
+             ; The calling convention for incoming arguments to the stub, iff this call uses a compiled stub.
+             ; The details of where parameters are passed and value(s) are returned from the callee's perspective.
+             ;;
+            #_"CallingConvention" :incomingCallingConvention nil
+            #_"boolean" :reexecutable false
+            ;;;
+             ; The memory locations killed by the call.
+             ;;
+            #_"LocationIdentity[]" :killedLocations nil
+            ;;;
+             ; The registers and stack slots defined/killed by the call.
+             ;;
+            #_"Value[]" :temporaries AllocatableValue/NONE
+            ;;;
+             ; Non-null (eventually) iff this is a call to a compiled stub.
+             ;;
+            #_"Stub" :stub nil
+        )
+    )
 
     (defn #_"ForeignCallLinkage" ForeignCallLinkage'new-8* [#_"ForeignCallDescriptor" descriptor, #_"long" address, #_"RegisterEffect" effect, #_"Transition" transition, #_"CallingConvention" outgoingCallingConvention, #_"CallingConvention" incomingCallingConvention, #_"boolean" reexecutable, #_"LocationIdentity..." killedLocations]
         (let [
-            #_"ForeignCallLinkage" this (hash-map)
+            #_"ForeignCallLinkage" this (merge (hash-map) (ForeignCallLinkage'init-0))
             this (assoc this :descriptor descriptor)
             this (assoc this :address address)
             this (assoc this :effect effect)
@@ -23431,15 +23812,19 @@ ZeroExtendNode'new-4
 
     (§ def- #_"AllocatableValue[]" LockStack'EMPTY (make-array AllocatableValue 0))
 
-    ; @Def({OperandFlag'STACK})
-    (§ mutable #_"AllocatableValue[]" :locks nil)
-
-    (§ final #_"FrameMapBuilder" :frameMapBuilder nil)
-    (§ final #_"LIRKind" :slotKind nil)
+    (defn- #_"LockStack" LockStack'init-0 []
+        (hash-map
+            ; @Def({OperandFlag'STACK})
+            #_"AllocatableValue[]" :locks nil
+            #_"FrameMapBuilder" :frameMapBuilder nil
+            #_"LIRKind" :slotKind nil
+        )
+    )
 
     (defn #_"LockStack" LockStack'new-2 [#_"FrameMapBuilder" frameMapBuilder, #_"LIRKind" slotKind]
         (let [
             #_"LockStack" this (LIRInstructionImpl'new-1 LockStack'TYPE)
+            this (merge this (LockStack'init-0))
             this (assoc this :frameMapBuilder frameMapBuilder)
             this (assoc this :slotKind slotKind)
             this (assoc this :locks LockStack'EMPTY)
@@ -23484,13 +23869,17 @@ ZeroExtendNode'new-4
  ; linking Java calls at arbitrary bytecodes.
  ;;
 (final-ns ForeignCallDescriptor
-    (§ final #_"String" :name nil)
-    (§ final #_"Class" :resultType nil)
-    (§ final #_"Class[]" :argumentTypes nil)
+    (defn- #_"ForeignCallDescriptor" ForeignCallDescriptor'init-0 []
+        (hash-map
+            #_"String" :name nil
+            #_"Class" :resultType nil
+            #_"Class[]" :argumentTypes nil
+        )
+    )
 
     (defn #_"ForeignCallDescriptor" ForeignCallDescriptor'new-3* [#_"String" name, #_"Class" resultType, #_"Class..." argumentTypes]
         (let [
-            #_"ForeignCallDescriptor" this (hash-map)
+            #_"ForeignCallDescriptor" this (merge (hash-map) (ForeignCallDescriptor'init-0))
             this (assoc this :name name)
             this (assoc this :resultType resultType)
             this (assoc this :argumentTypes argumentTypes)
@@ -23543,11 +23932,15 @@ ZeroExtendNode'new-4
      ;;
     (§ def #_"Value[]" ForeignCalls'nativeABICallerSaveRegisters (ForeignCalls'createNativeABICallerSaveRegisters-0))
 
-    (§ final #_"EconomicMap<ForeignCallDescriptor, ForeignCallLinkage>" :foreignCalls (EconomicMap/create))
+    (defn- #_"ForeignCalls" ForeignCalls'init-0 []
+        (hash-map
+            #_"EconomicMap<ForeignCallDescriptor, ForeignCallLinkage>" :foreignCalls (EconomicMap/create)
+        )
+    )
 
     (defn #_"ForeignCalls" ForeignCalls'new-0 []
         (let [
-            #_"ForeignCalls" this (hash-map)
+            #_"ForeignCalls" this (merge (hash-map) (ForeignCalls'init-0))
         ]
             (ForeignCalls''initialize-1 this)
             this
@@ -23792,18 +24185,22 @@ ZeroExtendNode'new-4
  ; Constant folding of field loads.
  ;;
 (final-ns HotSpotNodePlugin (§ implements NodePlugin, TypePlugin)
-    (§ final #_"WordOperationPlugin" :wordOperationPlugin nil)
+    (defn- #_"HotSpotNodePlugin" HotSpotNodePlugin'init-0 []
+        (hash-map
+            #_"WordOperationPlugin" :wordOperationPlugin nil
+        )
+    )
 
     (defn #_"HotSpotNodePlugin" HotSpotNodePlugin'new-1 [#_"WordOperationPlugin" wordOperationPlugin]
         (let [
-            #_"HotSpotNodePlugin" this (hash-map)
+            #_"HotSpotNodePlugin" this (merge (hash-map) (HotSpotNodePlugin'init-0))
             this (assoc this :wordOperationPlugin wordOperationPlugin)
         ]
             this
         )
     )
 
-    (§ override! #_"StampPair" TypePlugin'''interceptType-4 [#_"HotSpotNodePlugin" this, #_"GraphBuilder" b, #_"JavaType" declaredType, #_"boolean" never-nil?]
+    (§ override! #_"StampPair" TypePlugin'''interceptType-4 [#_"HotSpotNodePlugin" this, #_"GraphBuilder" b, #_"JavaType" declaredType, #_"boolean" never-nil?]
         (when (GraphBuilder'''parsingIntrinsic-1 b)
             (TypePlugin'''interceptType-4 (:wordOperationPlugin this), b, declaredType, never-nil?)
         )
@@ -23961,8 +24358,12 @@ ZeroExtendNode'new-4
 (final-ns AcquiredCASLockNode (§ extends FixedWithNextNode) (§ implements LIRLowerable)
     (§ def #_"NodeClass<AcquiredCASLockNode>" AcquiredCASLockNode'TYPE (NodeClass'create-1 AcquiredCASLockNode))
 
-    ; @Input
-    (§ final #_"ValueNode" :object nil)
+    (defn- #_"AcquiredCASLockNode" AcquiredCASLockNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"ValueNode" :object nil
+        )
+    )
 
     (§ intrinsic! #_"void" AcquiredCASLockNode'mark-1 [#_"Object" object])
 
@@ -23970,6 +24371,7 @@ ZeroExtendNode'new-4
     (defn #_"AcquiredCASLockNode" AcquiredCASLockNode'new-1 [#_"ValueNode" object]
         (let [
             #_"AcquiredCASLockNode" this (FixedWithNextNode'new-2 AcquiredCASLockNode'TYPE, VoidStamp'instance)
+            this (merge this (AcquiredCASLockNode'init-0))
             this (assoc this :object object)
         ]
             this
@@ -23990,11 +24392,16 @@ ZeroExtendNode'new-4
 (final-ns BeginLockScopeNode (§ extends AbstractMemoryCheckpoint) (§ implements LIRLowerable, MonitorEnter, Single)
     (§ def #_"NodeClass<BeginLockScopeNode>" BeginLockScopeNode'TYPE (NodeClass'create-1 BeginLockScopeNode))
 
-    (§ mutable #_"int" :lockDepth 0)
+    (defn- #_"BeginLockScopeNode" BeginLockScopeNode'init-0 []
+        (hash-map
+            #_"int" :lockDepth 0
+        )
+    )
 
     (defn #_"BeginLockScopeNode" BeginLockScopeNode'new-2 [#_"JavaKind" kind, #_"int" lockDepth]
         (let [
             #_"BeginLockScopeNode" this (AbstractMemoryCheckpoint'new-2 BeginLockScopeNode'TYPE, (StampFactory'forKind-1 kind))
+            this (merge this (BeginLockScopeNode'init-0))
             this (assoc this :lockDepth lockDepth)
         ]
             this
@@ -24030,10 +24437,14 @@ ZeroExtendNode'new-4
 (final-ns ComputeObjectAddressNode (§ extends FixedWithNextNode) (§ implements Lowerable, ControlFlowAnchored)
     (§ def #_"NodeClass<ComputeObjectAddressNode>" ComputeObjectAddressNode'TYPE (NodeClass'create-1 ComputeObjectAddressNode))
 
-    ; @Input
-    (§ final #_"ValueNode" :object nil)
-    ; @Input
-    (§ final #_"ValueNode" :offset nil)
+    (defn- #_"ComputeObjectAddressNode" ComputeObjectAddressNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"ValueNode" :object nil
+            ; @Input
+            #_"ValueNode" :offset nil
+        )
+    )
 
     (§ intrinsic! #_"long" ComputeObjectAddressNode'get-2 [#_"Object" array, #_"long" offset])
 
@@ -24041,6 +24452,7 @@ ZeroExtendNode'new-4
     (defn #_"ComputeObjectAddressNode" ComputeObjectAddressNode'new-2 [#_"ValueNode" obj, #_"ValueNode" offset]
         (let [
             #_"ComputeObjectAddressNode" this (FixedWithNextNode'new-2 ComputeObjectAddressNode'TYPE, (StampFactory'forKind-1 JavaKind/Long))
+            this (merge this (ComputeObjectAddressNode'init-0))
             this (assoc this :object obj)
             this (assoc this :offset offset)
         ]
@@ -24076,7 +24488,11 @@ ZeroExtendNode'new-4
 (final-ns CurrentLockNode (§ extends FixedWithNextNode) (§ implements LIRLowerable)
     (§ def #_"NodeClass<CurrentLockNode>" CurrentLockNode'TYPE (NodeClass'create-1 CurrentLockNode))
 
-    (§ mutable #_"int" :lockDepth 0)
+    (defn- #_"CurrentLockNode" CurrentLockNode'init-0 []
+        (hash-map
+            #_"int" :lockDepth 0
+        )
+    )
 
     (§ intrinsic! #_"Word" CurrentLockNode'currentLock-1 [#_@ConstantNodeParameter #_"int" lockDepth])
 
@@ -24084,6 +24500,7 @@ ZeroExtendNode'new-4
     (defn #_"CurrentLockNode" CurrentLockNode'new-1 [#_"int" lockDepth]
         (let [
             #_"CurrentLockNode" this (FixedWithNextNode'new-2 CurrentLockNode'TYPE, (StampFactory'forKind-1 WordTypes'wordKind))
+            this (merge this (CurrentLockNode'init-0))
             this (assoc this :lockDepth lockDepth)
         ]
             this
@@ -24103,8 +24520,12 @@ ZeroExtendNode'new-4
 (final-ns DeoptimizeCallerNode (§ extends ControlSinkNode) (§ implements LIRLowerable)
     (§ def #_"NodeClass<DeoptimizeCallerNode>" DeoptimizeCallerNode'TYPE (NodeClass'create-1 DeoptimizeCallerNode))
 
-    (§ final #_"DeoptimizationAction" :action nil)
-    (§ final #_"DeoptimizationReason" :reason nil)
+    (defn- #_"DeoptimizeCallerNode" DeoptimizeCallerNode'init-0 []
+        (hash-map
+            #_"DeoptimizationAction" :action nil
+            #_"DeoptimizationReason" :reason nil
+        )
+    )
 
     (§ intrinsic! #_"void" DeoptimizeCallerNode'deopt-2 [#_@ConstantNodeParameter #_"DeoptimizationAction" action, #_@ConstantNodeParameter #_"DeoptimizationReason" reason])
 
@@ -24112,6 +24533,7 @@ ZeroExtendNode'new-4
     (defn #_"DeoptimizeCallerNode" DeoptimizeCallerNode'new-2 [#_"DeoptimizationAction" action, #_"DeoptimizationReason" reason]
         (let [
             #_"DeoptimizeCallerNode" this (ControlSinkNode'new-2 DeoptimizeCallerNode'TYPE, VoidStamp'instance)
+            this (merge this (DeoptimizeCallerNode'init-0))
             this (assoc this :action action)
             this (assoc this :reason reason)
         ]
@@ -24159,8 +24581,12 @@ ZeroExtendNode'new-4
 (final-ns FastAcquireBiasedLockNode (§ extends FixedWithNextNode) (§ implements LIRLowerable)
     (§ def #_"NodeClass<FastAcquireBiasedLockNode>" FastAcquireBiasedLockNode'TYPE (NodeClass'create-1 FastAcquireBiasedLockNode))
 
-    ; @Input
-    (§ final #_"ValueNode" :object nil)
+    (defn- #_"FastAcquireBiasedLockNode" FastAcquireBiasedLockNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"ValueNode" :object nil
+        )
+    )
 
     (§ intrinsic! #_"void" FastAcquireBiasedLockNode'mark-1 [#_"Object" object])
 
@@ -24168,6 +24594,7 @@ ZeroExtendNode'new-4
     (defn #_"FastAcquireBiasedLockNode" FastAcquireBiasedLockNode'new-1 [#_"ValueNode" object]
         (let [
             #_"FastAcquireBiasedLockNode" this (FixedWithNextNode'new-2 FastAcquireBiasedLockNode'TYPE, VoidStamp'instance)
+            this (merge this (FastAcquireBiasedLockNode'init-0))
             this (assoc this :object object)
         ]
             this
@@ -24183,7 +24610,11 @@ ZeroExtendNode'new-4
 (final-ns G1PostWriteBarrier (§ extends ObjectWriteBarrier)
     (§ def #_"NodeClass<G1PostWriteBarrier>" G1PostWriteBarrier'TYPE (NodeClass'create-1 G1PostWriteBarrier))
 
-    (§ final #_"boolean" :always-nil? false)
+    (defn- #_"G1PostWriteBarrier" G1PostWriteBarrier'init-0 []
+        (hash-map
+            #_"boolean" :always-nil? false
+        )
+    )
 
     (defn #_"G1PostWriteBarrier" G1PostWriteBarrier'new-4 [#_"AddressNode" address, #_"ValueNode" value, #_"boolean" precise?, #_"boolean" always-nil?]
         (G1PostWriteBarrier'new-5 G1PostWriteBarrier'TYPE, address, value, precise?, always-nil?)
@@ -24192,6 +24623,7 @@ ZeroExtendNode'new-4
     (defn #_"G1PostWriteBarrier" G1PostWriteBarrier'new-5 [#_"NodeClass<? extends G1PostWriteBarrier>" c, #_"AddressNode" address, #_"ValueNode" value, #_"boolean" precise?, #_"boolean" always-nil?]
         (let [
             #_"G1PostWriteBarrier" this (ObjectWriteBarrier'new-4 c, address, value, precise?)
+            this (merge this (G1PostWriteBarrier'init-0))
             this (assoc this :always-nil? always-nil?)
         ]
             this
@@ -24202,15 +24634,19 @@ ZeroExtendNode'new-4
 (final-ns G1PreWriteBarrier (§ extends ObjectWriteBarrier) (§ implements DeoptBefore)
     (§ def #_"NodeClass<G1PreWriteBarrier>" G1PreWriteBarrier'TYPE (NodeClass'create-1 G1PreWriteBarrier))
 
-    ; @OptionalInput
-    (§ mutable #_"FrameState" :stateBefore nil)
-
-    (§ final #_"boolean" :nullCheck false)
-    (§ final #_"boolean" :doLoad false)
+    (defn- #_"G1PreWriteBarrier" G1PreWriteBarrier'init-0 []
+        (hash-map
+            ; @OptionalInput
+            #_"FrameState" :stateBefore nil
+            #_"boolean" :nullCheck false
+            #_"boolean" :doLoad false
+        )
+    )
 
     (defn #_"G1PreWriteBarrier" G1PreWriteBarrier'new-4 [#_"AddressNode" address, #_"ValueNode" expectedObject, #_"boolean" doLoad, #_"boolean" nullCheck]
         (let [
             #_"G1PreWriteBarrier" this (ObjectWriteBarrier'new-4 G1PreWriteBarrier'TYPE, address, expectedObject, true)
+            this (merge this (G1PreWriteBarrier'init-0))
             this (assoc this :doLoad doLoad)
             this (assoc this :nullCheck nullCheck)
         ]
@@ -24238,11 +24674,16 @@ ZeroExtendNode'new-4
 (final-ns G1ReferentFieldReadBarrier (§ extends ObjectWriteBarrier)
     (§ def #_"NodeClass<G1ReferentFieldReadBarrier>" G1ReferentFieldReadBarrier'TYPE (NodeClass'create-1 G1ReferentFieldReadBarrier))
 
-    (§ final #_"boolean" :doLoad false)
+    (defn- #_"G1ReferentFieldReadBarrier" G1ReferentFieldReadBarrier'init-0 []
+        (hash-map
+            #_"boolean" :doLoad false
+        )
+    )
 
     (defn #_"G1ReferentFieldReadBarrier" G1ReferentFieldReadBarrier'new-3 [#_"AddressNode" address, #_"ValueNode" expectedObject, #_"boolean" doLoad]
         (let [
             #_"G1ReferentFieldReadBarrier" this (ObjectWriteBarrier'new-4 G1ReferentFieldReadBarrier'TYPE, address, expectedObject, true)
+            this (merge this (G1ReferentFieldReadBarrier'init-0))
             this (assoc this :doLoad doLoad)
         ]
             this
@@ -24263,12 +24704,17 @@ ZeroExtendNode'new-4
 (final-ns GetObjectAddressNode (§ extends FixedWithNextNode) (§ implements LIRLowerable)
     (§ def #_"NodeClass<GetObjectAddressNode>" GetObjectAddressNode'TYPE (NodeClass'create-1 GetObjectAddressNode))
 
-    ; @Input
-    (§ final #_"ValueNode" :object nil)
+    (defn- #_"GetObjectAddressNode" GetObjectAddressNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"ValueNode" :object nil
+        )
+    )
 
     (defn #_"GetObjectAddressNode" GetObjectAddressNode'new-1 [#_"ValueNode" obj]
         (let [
             #_"GetObjectAddressNode" this (FixedWithNextNode'new-2 GetObjectAddressNode'TYPE, (StampFactory'forKind-1 JavaKind/Long))
+            this (merge this (GetObjectAddressNode'init-0))
             this (assoc this :object obj)
         ]
             this
@@ -24292,7 +24738,11 @@ ZeroExtendNode'new-4
 (final-ns VMConfigNode (§ extends FloatingNode) (§ implements LIRLowerable, Canonicalizable)
     (§ def #_"NodeClass<VMConfigNode>" VMConfigNode'TYPE (NodeClass'create-1 VMConfigNode))
 
-    (§ final #_"int" :markId 0)
+    (defn- #_"VMConfigNode" VMConfigNode'init-0 []
+        (hash-map
+            #_"int" :markId 0
+        )
+    )
 
     (§ intrinsic! #_"boolean" VMConfigNode'areConfigValuesConstant-0 [])
 
@@ -24300,6 +24750,7 @@ ZeroExtendNode'new-4
     (defn #_"VMConfigNode" VMConfigNode'new-0 []
         (let [
             #_"VMConfigNode" this (FloatingNode'new-2 VMConfigNode'TYPE, (StampFactory'forKind-1 JavaKind/Boolean))
+            this (merge this (VMConfigNode'init-0))
             this (assoc this :markId 0)
         ]
             this
@@ -24314,6 +24765,7 @@ ZeroExtendNode'new-4
     (defn #_"VMConfigNode" VMConfigNode'new-2 [#_@InjectedNodeParameter #_"Stamp" stamp, #_"int" markId]
         (let [
             #_"VMConfigNode" this (FloatingNode'new-2 VMConfigNode'TYPE, stamp)
+            this (merge this (VMConfigNode'init-0))
             this (assoc this :markId markId)
         ]
             this
@@ -24386,7 +24838,7 @@ ZeroExtendNode'new-4
 (final-ns HotSpotDirectCallTargetNode (§ extends DirectCallTargetNode)
     (§ def #_"NodeClass<HotSpotDirectCallTargetNode>" HotSpotDirectCallTargetNode'TYPE (NodeClass'create-1 HotSpotDirectCallTargetNode))
 
-    (defn #_"HotSpotDirectCallTargetNode" HotSpotDirectCallTargetNode'new-6 [#_"ValueNode[]" arguments, #_"StampPair" returnStamp, #_"JavaType[]" signature, #_"ResolvedJavaMethod" target, #_"CallingConvention$Type" callType, #_"InvokeKind" invokeKind]
+    (defn #_"HotSpotDirectCallTargetNode" HotSpotDirectCallTargetNode'new-6 [#_"ValueNode[]" arguments, #_"StampPair" returnStamp, #_"JavaType[]" signature, #_"ResolvedJavaMethod" target, #_"CallingConvention$Type" callType, #_"InvokeKind" invokeKind]
         (DirectCallTargetNode'new-7 HotSpotDirectCallTargetNode'TYPE, arguments, returnStamp, signature, target, callType, invokeKind)
     )
 )
@@ -24406,16 +24858,20 @@ ZeroExtendNode'new-4
 (class-ns ObjectWriteBarrier (§ extends WriteBarrier)
     (§ def #_"NodeClass<ObjectWriteBarrier>" ObjectWriteBarrier'TYPE (NodeClass'create-1 ObjectWriteBarrier))
 
-    ; @Input
-    (§ mutable #_"AddressNode" :address nil)
-    ; @OptionalInput
-    (§ mutable #_"ValueNode" :value nil)
-
-    (§ final #_"boolean" :precise? false)
+    (defn- #_"ObjectWriteBarrier" ObjectWriteBarrier'init-0 []
+        (hash-map
+            ; @Input
+            #_"AddressNode" :address nil
+            ; @OptionalInput
+            #_"ValueNode" :value nil
+            #_"boolean" :precise? false
+        )
+    )
 
     (defn #_"ObjectWriteBarrier" ObjectWriteBarrier'new-4 [#_"NodeClass<? extends ObjectWriteBarrier>" c, #_"AddressNode" address, #_"ValueNode" value, #_"boolean" precise?]
         (let [
             #_"ObjectWriteBarrier" this (WriteBarrier'new-1 c)
+            this (merge this (ObjectWriteBarrier'init-0))
             this (assoc this :address address)
             this (assoc this :value value)
             this (assoc this :precise? precise?)
@@ -24457,10 +24913,13 @@ ZeroExtendNode'new-4
 (final-ns StubForeignCallNode (§ extends FixedWithNextNode) (§ implements LIRLowerable, Multi)
     (§ def #_"NodeClass<StubForeignCallNode>" StubForeignCallNode'TYPE (NodeClass'create-1 StubForeignCallNode))
 
-    ; @Input
-    (§ mutable #_"NodeInputList<ValueNode>" :arguments nil)
-
-    (§ final #_"ForeignCallDescriptor" :descriptor nil)
+    (defn- #_"StubForeignCallNode" StubForeignCallNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"NodeInputList<ValueNode>" :arguments nil
+            #_"ForeignCallDescriptor" :descriptor nil
+        )
+    )
 
     (§ intrinsic! #_"void" StubForeignCallNode'newInstanceC-3 [#_@ConstantNodeParameter #_"ForeignCallDescriptor" newInstanceC, #_"Word" thread, #_"KlassPointer" hub])
     (§ intrinsic! #_"void" StubForeignCallNode'newArrayC-4 [#_@ConstantNodeParameter #_"ForeignCallDescriptor" newArrayC, #_"Word" thread, #_"KlassPointer" hub, #_"int" length])
@@ -24469,6 +24928,7 @@ ZeroExtendNode'new-4
     (defn #_"StubForeignCallNode" StubForeignCallNode'new-3* [#_@InjectedNodeParameter #_"Stamp" stamp, #_"ForeignCallDescriptor" descriptor, #_"ValueNode..." arguments]
         (let [
             #_"StubForeignCallNode" this (FixedWithNextNode'new-2 StubForeignCallNode'TYPE, stamp)
+            this (merge this (StubForeignCallNode'init-0))
             this (assoc this :arguments (NodeInputList'new-2a this, arguments))
             this (assoc this :descriptor descriptor)
         ]
@@ -24517,11 +24977,16 @@ ZeroExtendNode'new-4
 (final-ns StubStartNode (§ extends StartNode)
     (§ def #_"NodeClass<StubStartNode>" StubStartNode'TYPE (NodeClass'create-1 StubStartNode))
 
-    (§ final #_"Stub" :stub nil)
+    (defn- #_"StubStartNode" StubStartNode'init-0 []
+        (hash-map
+            #_"Stub" :stub nil
+        )
+    )
 
     (defn #_"StubStartNode" StubStartNode'new-1 [#_"Stub" stub]
         (let [
             #_"StubStartNode" this (StartNode'new-1 StubStartNode'TYPE)
+            this (merge this (StubStartNode'init-0))
             this (assoc this :stub stub)
         ]
             this
@@ -24583,7 +25048,11 @@ ZeroExtendNode'new-4
     (§ def #_"KlassPointerStamp" KlassPointerStamp'KLASS_NON_NULL    (KlassPointerStamp'new-2 true, false))
     (§ def #_"KlassPointerStamp" KlassPointerStamp'KLASS_ALWAYS_NULL (KlassPointerStamp'new-2 false, true))
 
-    (§ final #_"CompressEncoding" :encoding nil)
+    (defn- #_"KlassPointerStamp" KlassPointerStamp'init-0 []
+        (hash-map
+            #_"CompressEncoding" :encoding nil
+        )
+    )
 
     (defn- #_"KlassPointerStamp" KlassPointerStamp'new-2 [#_"boolean" never-nil?, #_"boolean" always-nil?]
         (KlassPointerStamp'new-3 never-nil?, always-nil?, nil)
@@ -24592,6 +25061,7 @@ ZeroExtendNode'new-4
     (defn- #_"KlassPointerStamp" KlassPointerStamp'new-3 [#_"boolean" never-nil?, #_"boolean" always-nil?, #_"CompressEncoding" encoding]
         (let [
             #_"KlassPointerStamp" this (AbstractPointerStampImpl'new-2 never-nil?, always-nil?)
+            this (merge this (KlassPointerStamp'init-0))
             this (assoc this :encoding encoding)
         ]
             this
@@ -24827,12 +25297,17 @@ ZeroExtendNode'new-4
 (final-ns ClassGetHubNode (§ extends FloatingNode) (§ implements Lowerable, Canonicalizable, ConvertNode)
     (§ def #_"NodeClass<ClassGetHubNode>" ClassGetHubNode'TYPE (NodeClass'create-1 ClassGetHubNode))
 
-    ; @Input
-    (§ mutable #_"ValueNode" :class nil)
+    (defn- #_"ClassGetHubNode" ClassGetHubNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"ValueNode" :class nil
+        )
+    )
 
     (defn #_"ClassGetHubNode" ClassGetHubNode'new-1 [#_"ValueNode" clazz]
         (let [
             #_"ClassGetHubNode" this (FloatingNode'new-2 ClassGetHubNode'TYPE, KlassPointerStamp'KLASS)
+            this (merge this (ClassGetHubNode'init-0))
             this (assoc this :class clazz)
         ]
             this
@@ -25245,12 +25720,17 @@ ZeroExtendNode'new-4
 (final-ns HubGetClassNode (§ extends FloatingNode) (§ implements Lowerable, Canonicalizable, ConvertNode)
     (§ def #_"NodeClass<HubGetClassNode>" HubGetClassNode'TYPE (NodeClass'create-1 HubGetClassNode))
 
-    ; @Input
-    (§ mutable #_"ValueNode" :hub nil)
+    (defn- #_"HubGetClassNode" HubGetClassNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"ValueNode" :hub nil
+        )
+    )
 
     (defn #_"HubGetClassNode" HubGetClassNode'new-1 [#_"ValueNode" hub]
         (let [
             #_"HubGetClassNode" this (FloatingNode'new-2 HubGetClassNode'TYPE, (StampFactory'objectNonNull-1 (TypeReference'create-1 (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, Class))))
+            this (merge this (HubGetClassNode'init-0))
             this (assoc this :hub hub)
         ]
             this
@@ -25439,14 +25919,16 @@ ZeroExtendNode'new-4
  ; @anno InstanceOfSnippets.InstanceOfTemplates
  ;;
 (final-ns InstanceOfTemplates (§ extends InstanceOfSnippetsTemplatesImpl)
-    (§ final #_"SnippetInfo" :instanceofExact (AbstractTemplates''snippet-4* this, InstanceOfSnippets, "instanceofExact"))
-    (§ final #_"SnippetInfo" :instanceofPrimary (AbstractTemplates''snippet-4* this, InstanceOfSnippets, "instanceofPrimary"))
-    (§ final #_"SnippetInfo" :instanceofSecondary (AbstractTemplates''snippet-4* this, InstanceOfSnippets, "instanceofSecondary", ReplacementsUtil'SECONDARY_SUPER_CACHE_LOCATION))
-    (§ final #_"SnippetInfo" :instanceofDynamic (AbstractTemplates''snippet-4* this, InstanceOfSnippets, "instanceofDynamic", ReplacementsUtil'SECONDARY_SUPER_CACHE_LOCATION))
-    (§ final #_"SnippetInfo" :isAssignableFrom (AbstractTemplates''snippet-4* this, InstanceOfSnippets, "isAssignableFrom", ReplacementsUtil'SECONDARY_SUPER_CACHE_LOCATION))
-
     (defn #_"InstanceOfTemplates" InstanceOfTemplates'new-0 []
-        (InstanceOfSnippetsTemplatesImpl'new-0)
+        (merge (InstanceOfSnippetsTemplatesImpl'new-0)
+            (hash-map
+                #_"SnippetInfo" :instanceofExact (AbstractTemplates''snippet-4* (ß this), InstanceOfSnippets, "instanceofExact")
+                #_"SnippetInfo" :instanceofPrimary (AbstractTemplates''snippet-4* (ß this), InstanceOfSnippets, "instanceofPrimary")
+                #_"SnippetInfo" :instanceofSecondary (AbstractTemplates''snippet-4* (ß this), InstanceOfSnippets, "instanceofSecondary", ReplacementsUtil'SECONDARY_SUPER_CACHE_LOCATION)
+                #_"SnippetInfo" :instanceofDynamic (AbstractTemplates''snippet-4* (ß this), InstanceOfSnippets, "instanceofDynamic", ReplacementsUtil'SECONDARY_SUPER_CACHE_LOCATION)
+                #_"SnippetInfo" :isAssignableFrom (AbstractTemplates''snippet-4* (ß this), InstanceOfSnippets, "isAssignableFrom", ReplacementsUtil'SECONDARY_SUPER_CACHE_LOCATION)
+            )
+        )
     )
 
     (§ override! #_"Arguments" InstanceOfSnippetsTemplates'''makeArguments-3 [#_"InstanceOfTemplates" this, #_"InstanceOfUsageReplacer" replacer, #_"LoweringTool" lowerer]
@@ -25533,12 +26015,17 @@ ZeroExtendNode'new-4
 (final-ns KlassLayoutHelperNode (§ extends FloatingNode) (§ implements Canonicalizable, Lowerable)
     (§ def #_"NodeClass<KlassLayoutHelperNode>" KlassLayoutHelperNode'TYPE (NodeClass'create-1 KlassLayoutHelperNode))
 
-    ; @Input
-    (§ mutable #_"ValueNode" :klass nil)
+    (defn- #_"KlassLayoutHelperNode" KlassLayoutHelperNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"ValueNode" :klass nil
+        )
+    )
 
     (defn #_"KlassLayoutHelperNode" KlassLayoutHelperNode'new-1 [#_"ValueNode" klass]
         (let [
             #_"KlassLayoutHelperNode" this (FloatingNode'new-2 KlassLayoutHelperNode'TYPE, (StampFactory'forKind-1 JavaKind/Int))
+            this (merge this (KlassLayoutHelperNode'init-0))
             this (assoc this :klass klass)
         ]
             this
@@ -26004,16 +26491,20 @@ ZeroExtendNode'new-4
  ; @anno MonitorSnippets.MonitorTemplates
  ;;
 (final-ns MonitorTemplates (§ extends AbstractTemplates)
-    (§ final #_"SnippetInfo" :monitorenter (AbstractTemplates''snippet-4* this, MonitorSnippets, "monitorenter"))
-    (§ final #_"SnippetInfo" :monitorexit (AbstractTemplates''snippet-4* this, MonitorSnippets, "monitorexit"))
-    (§ final #_"SnippetInfo" :monitorenterStub (AbstractTemplates''snippet-4* this, MonitorSnippets, "monitorenterStub"))
-    (§ final #_"SnippetInfo" :monitorexitStub (AbstractTemplates''snippet-4* this, MonitorSnippets, "monitorexitStub"))
-
-    (§ final #_"boolean" :useFastLocking false)
+    (defn- #_"MonitorTemplates" MonitorTemplates'init-0 []
+        (hash-map
+            #_"SnippetInfo" :monitorenter (AbstractTemplates''snippet-4* (ß this), MonitorSnippets, "monitorenter")
+            #_"SnippetInfo" :monitorexit (AbstractTemplates''snippet-4* (ß this), MonitorSnippets, "monitorexit")
+            #_"SnippetInfo" :monitorenterStub (AbstractTemplates''snippet-4* (ß this), MonitorSnippets, "monitorenterStub")
+            #_"SnippetInfo" :monitorexitStub (AbstractTemplates''snippet-4* (ß this), MonitorSnippets, "monitorexitStub")
+            #_"boolean" :useFastLocking false
+        )
+    )
 
     (defn #_"MonitorTemplates" MonitorTemplates'new-1 [#_"boolean" useFastLocking]
         (let [
             #_"MonitorTemplates" this (AbstractTemplates'new-0)
+            this (merge this (MonitorTemplates'init-0))
             this (assoc this :useFastLocking useFastLocking)
         ]
             this
@@ -26339,13 +26830,15 @@ ZeroExtendNode'new-4
  ; @anno NewObjectSnippets.NewObjectTemplates
  ;;
 (final-ns NewObjectTemplates (§ extends AbstractTemplates)
-    (§ final #_"SnippetInfo" :allocateInstance (AbstractTemplates''snippet-4* this, NewObjectSnippets, "allocateInstance", ReplacementsUtil'MARK_WORD_LOCATION, ReplacementsUtil'HUB_WRITE_LOCATION, ReplacementsUtil'TLAB_TOP_LOCATION, ReplacementsUtil'TLAB_END_LOCATION))
-    (§ final #_"SnippetInfo" :allocateInstanceDynamic (AbstractTemplates''snippet-4* this, NewObjectSnippets, "allocateInstanceDynamic", ReplacementsUtil'MARK_WORD_LOCATION, ReplacementsUtil'HUB_WRITE_LOCATION, ReplacementsUtil'TLAB_TOP_LOCATION, ReplacementsUtil'TLAB_END_LOCATION))
-    (§ final #_"SnippetInfo" :allocateArray (AbstractTemplates''snippet-4* this, NewObjectSnippets, "allocateArray", ReplacementsUtil'MARK_WORD_LOCATION, ReplacementsUtil'HUB_WRITE_LOCATION, ReplacementsUtil'TLAB_TOP_LOCATION, ReplacementsUtil'TLAB_END_LOCATION))
-    (§ final #_"SnippetInfo" :allocateArrayDynamic (AbstractTemplates''snippet-4* this, NewObjectSnippets, "allocateArrayDynamic", ReplacementsUtil'MARK_WORD_LOCATION, ReplacementsUtil'HUB_WRITE_LOCATION, ReplacementsUtil'TLAB_TOP_LOCATION, ReplacementsUtil'TLAB_END_LOCATION))
-
     (defn #_"NewObjectTemplates" NewObjectTemplates'new-0 []
-        (AbstractTemplates'new-0)
+        (merge (AbstractTemplates'new-0)
+            (hash-map
+                #_"SnippetInfo" :allocateInstance (AbstractTemplates''snippet-4* (ß this), NewObjectSnippets, "allocateInstance", ReplacementsUtil'MARK_WORD_LOCATION, ReplacementsUtil'HUB_WRITE_LOCATION, ReplacementsUtil'TLAB_TOP_LOCATION, ReplacementsUtil'TLAB_END_LOCATION)
+                #_"SnippetInfo" :allocateInstanceDynamic (AbstractTemplates''snippet-4* (ß this), NewObjectSnippets, "allocateInstanceDynamic", ReplacementsUtil'MARK_WORD_LOCATION, ReplacementsUtil'HUB_WRITE_LOCATION, ReplacementsUtil'TLAB_TOP_LOCATION, ReplacementsUtil'TLAB_END_LOCATION)
+                #_"SnippetInfo" :allocateArray (AbstractTemplates''snippet-4* (ß this), NewObjectSnippets, "allocateArray", ReplacementsUtil'MARK_WORD_LOCATION, ReplacementsUtil'HUB_WRITE_LOCATION, ReplacementsUtil'TLAB_TOP_LOCATION, ReplacementsUtil'TLAB_END_LOCATION)
+                #_"SnippetInfo" :allocateArrayDynamic (AbstractTemplates''snippet-4* (ß this), NewObjectSnippets, "allocateArrayDynamic", ReplacementsUtil'MARK_WORD_LOCATION, ReplacementsUtil'HUB_WRITE_LOCATION, ReplacementsUtil'TLAB_TOP_LOCATION, ReplacementsUtil'TLAB_END_LOCATION)
+            )
+        )
     )
 
     (defn #_"void" NewObjectTemplates''lower-3i [#_"NewObjectTemplates" this, #_"NewInstanceNode" node, #_"LoweringTool" lowerer]
@@ -26424,7 +26917,7 @@ ZeroExtendNode'new-4
 (final-ns ReflectionGetCallerClassNode (§ extends MacroStateSplitNode) (§ implements Canonicalizable, Lowerable)
     (§ def #_"NodeClass<ReflectionGetCallerClassNode>" ReflectionGetCallerClassNode'TYPE (NodeClass'create-1 ReflectionGetCallerClassNode))
 
-    (defn #_"ReflectionGetCallerClassNode" ReflectionGetCallerClassNode'new-5* [#_"InvokeKind" invokeKind, #_"ResolvedJavaMethod" targetMethod, #_"int" bci, #_"StampPair" returnStamp, #_"ValueNode..." arguments]
+    (defn #_"ReflectionGetCallerClassNode" ReflectionGetCallerClassNode'new-5* [#_"InvokeKind" invokeKind, #_"ResolvedJavaMethod" targetMethod, #_"int" bci, #_"StampPair" returnStamp, #_"ValueNode..." arguments]
         (MacroStateSplitNode'new-6* ReflectionGetCallerClassNode'TYPE, invokeKind, targetMethod, bci, returnStamp, arguments)
     )
 
@@ -26536,10 +27029,12 @@ ZeroExtendNode'new-4
  ; @anno UnsafeLoadSnippets.UnsafeLoadTemplates
  ;;
 (final-ns UnsafeLoadTemplates (§ extends AbstractTemplates)
-    (§ final #_"SnippetInfo" :unsafeLoad (AbstractTemplates''snippet-4* this, UnsafeLoadSnippets, "lowerUnsafeLoad"))
-
     (defn #_"UnsafeLoadTemplates" UnsafeLoadTemplates'new-0 []
-        (AbstractTemplates'new-0)
+        (merge (AbstractTemplates'new-0)
+            (hash-map
+                #_"SnippetInfo" :unsafeLoad (AbstractTemplates''snippet-4* (ß this), UnsafeLoadSnippets, "lowerUnsafeLoad")
+            )
+        )
     )
 
     (defn #_"void" UnsafeLoadTemplates''lower-3 [#_"UnsafeLoadTemplates" this, #_"RawLoadNode" node, #_"LoweringTool" lowerer]
@@ -26698,17 +27193,21 @@ ZeroExtendNode'new-4
  ; @anno WriteBarrierSnippets.WriteBarrierTemplates
  ;;
 (final-ns WriteBarrierTemplates (§ extends AbstractTemplates)
-    (§ final #_"SnippetInfo" :serialImpreciseWriteBarrier (AbstractTemplates''snippet-4* this, WriteBarrierSnippets, "serialImpreciseWriteBarrier", WriteBarrierSnippets'GC_CARD_LOCATION))
-    (§ final #_"SnippetInfo" :serialPreciseWriteBarrier (AbstractTemplates''snippet-4* this, WriteBarrierSnippets, "serialPreciseWriteBarrier", WriteBarrierSnippets'GC_CARD_LOCATION))
-    (§ final #_"SnippetInfo" :g1PreWriteBarrier (AbstractTemplates''snippet-4* this, WriteBarrierSnippets, "g1PreWriteBarrier", WriteBarrierSnippets'GC_INDEX_LOCATION, WriteBarrierSnippets'GC_LOG_LOCATION))
-    (§ final #_"SnippetInfo" :g1ReferentReadBarrier (AbstractTemplates''snippet-4* this, WriteBarrierSnippets, "g1PreWriteBarrier", WriteBarrierSnippets'GC_INDEX_LOCATION, WriteBarrierSnippets'GC_LOG_LOCATION))
-    (§ final #_"SnippetInfo" :g1PostWriteBarrier (AbstractTemplates''snippet-4* this, WriteBarrierSnippets, "g1PostWriteBarrier", WriteBarrierSnippets'GC_CARD_LOCATION, WriteBarrierSnippets'GC_INDEX_LOCATION, WriteBarrierSnippets'GC_LOG_LOCATION))
-
-    (§ final #_"CompressEncoding" :oopEncoding nil)
+    (defn- #_"WriteBarrierTemplates" WriteBarrierTemplates'init-0 []
+        (hash-map
+            #_"SnippetInfo" :serialImpreciseWriteBarrier (AbstractTemplates''snippet-4* (ß this), WriteBarrierSnippets, "serialImpreciseWriteBarrier", WriteBarrierSnippets'GC_CARD_LOCATION)
+            #_"SnippetInfo" :serialPreciseWriteBarrier (AbstractTemplates''snippet-4* (ß this), WriteBarrierSnippets, "serialPreciseWriteBarrier", WriteBarrierSnippets'GC_CARD_LOCATION)
+            #_"SnippetInfo" :g1PreWriteBarrier (AbstractTemplates''snippet-4* (ß this), WriteBarrierSnippets, "g1PreWriteBarrier", WriteBarrierSnippets'GC_INDEX_LOCATION, WriteBarrierSnippets'GC_LOG_LOCATION)
+            #_"SnippetInfo" :g1ReferentReadBarrier (AbstractTemplates''snippet-4* (ß this), WriteBarrierSnippets, "g1PreWriteBarrier", WriteBarrierSnippets'GC_INDEX_LOCATION, WriteBarrierSnippets'GC_LOG_LOCATION)
+            #_"SnippetInfo" :g1PostWriteBarrier (AbstractTemplates''snippet-4* (ß this), WriteBarrierSnippets, "g1PostWriteBarrier", WriteBarrierSnippets'GC_CARD_LOCATION, WriteBarrierSnippets'GC_INDEX_LOCATION, WriteBarrierSnippets'GC_LOG_LOCATION)
+            #_"CompressEncoding" :oopEncoding nil
+        )
+    )
 
     (defn #_"WriteBarrierTemplates" WriteBarrierTemplates'new-1 [#_"CompressEncoding" oopEncoding]
         (let [
             #_"WriteBarrierTemplates" this (AbstractTemplates'new-0)
+            this (merge this (WriteBarrierTemplates'init-0))
             this (assoc this :oopEncoding oopEncoding)
         ]
             this
@@ -26807,15 +27306,18 @@ ZeroExtendNode'new-4
  ; It also {@linkplain StubUtil#handlePendingException(Word, boolean) handles} any exceptions raised during the foreign call.
  ;;
 (final-ns ForeignCallStub (§ extends StubImpl)
-    ;;;
-     ; Linkage target for the call from this stub.
-     ;;
-    (§ final #_"ForeignCallLinkage" :target nil)
-
-    ;;;
-     ; Specifies if the JavaThread value for the current thread is to be prepended to the arguments for the call to #target.
-     ;;
-    (§ final #_"boolean" :prependThread false)
+    (defn- #_"ForeignCallStub" ForeignCallStub'init-0 []
+        (hash-map
+            ;;;
+             ; Linkage target for the call from this stub.
+             ;;
+            #_"ForeignCallLinkage" :target nil
+            ;;;
+             ; Specifies if the JavaThread value for the current thread is to be prepended to the arguments for the call to #target.
+             ;;
+            #_"boolean" :prependThread false
+        )
+    )
 
     ;;;
      ; Creates a stub for a call to code at a given address.
@@ -26831,6 +27333,7 @@ ZeroExtendNode'new-4
     (defn #_"ForeignCallStub" ForeignCallStub'new-6* [#_"long" address, #_"ForeignCallDescriptor" descriptor, #_"boolean" prependThread, #_"Transition" transition, #_"boolean" reexecutable, #_"LocationIdentity..." killedLocations]
         (let [
             #_"ForeignCallStub" this (StubImpl'new-1 (ForeignCallLinkage'create-8* descriptor, 0, RegisterEffect'PRESERVES_REGISTERS, HotSpotCallingConventionType/JavaCall, HotSpotCallingConventionType/JavaCallee, transition, reexecutable, killedLocations))
+            this (merge this (ForeignCallStub'init-0))
             this (assoc this :prependThread prependThread)
             #_"Class[]" targetParameterTypes (ForeignCallStub''createTargetParameters-2 this, descriptor)
             #_"ForeignCallDescriptor" targetSig (ForeignCallDescriptor'new-3* (str (:name descriptor) ":C"), (:resultType descriptor), targetParameterTypes)
@@ -26922,7 +27425,7 @@ ZeroExtendNode'new-4
             (dotimes [#_"int" i (count args)]
                 (let [
                     #_"ResolvedJavaType" type (#_"ResolvedJavaType" .resolve (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, (nth args i)), accessingClass)
-                    #_"StampPair" stamp (StampFactory'forDeclaredType-2 type, false)
+                    #_"StampPair" stamp (StampFactory'forDeclaredType-2 type, false)
                 ]
                     (aset params i (GraphKit''add-2 kit, (ParameterNode'new-2 i, stamp)))
                 )
@@ -27207,7 +27710,11 @@ ZeroExtendNode'new-4
 )
 
 (class-ns SnippetStubImpl (§ extends StubImpl) (§ implements SnippetStub, Snippets)
-    (§ final #_"ResolvedJavaMethod" :method nil)
+    (defn- #_"SnippetStubImpl" SnippetStubImpl'init-0 []
+        (hash-map
+            #_"ResolvedJavaMethod" :method nil
+        )
+    )
 
     ;;;
      ; Creates a new snippet stub.
@@ -27218,6 +27725,7 @@ ZeroExtendNode'new-4
     (defn #_"SnippetStub" SnippetStubImpl'new-2 [#_"String" snippetMethodName, #_"ForeignCallLinkage" linkage]
         (let [
             #_"SnippetStub" this (StubImpl'new-1 linkage)
+            this (merge this (SnippetStubImpl'init-0))
             #_"Method" method (AbstractTemplates'findMethod-3 (#_"Object" .getClass this), snippetMethodName)
             this (assoc this :method (#_"MetaAccessProvider" .lookupJavaMethod HotSpot'metaAccess, method))
         ]
@@ -27268,14 +27776,18 @@ ZeroExtendNode'new-4
 )
 
 (class-ns StubImpl (§ implements Stub)
-    ;;;
-     ; The linkage information for a call to this stub from compiled code.
-     ;;
-    (§ final #_"ForeignCallLinkage" :linkage nil)
-    ;;;
-     ; The code installed for the stub.
-     ;;
-    (§ mutable #_"InstalledCode" :code nil)
+    (defn- #_"StubImpl" StubImpl'init-0 []
+        (hash-map
+            ;;;
+             ; The linkage information for a call to this stub from compiled code.
+             ;;
+            #_"ForeignCallLinkage" :linkage nil
+            ;;;
+             ; The code installed for the stub.
+             ;;
+            #_"InstalledCode" :code nil
+        )
+    )
 
     ;;;
      ; Creates a new stub.
@@ -27284,7 +27796,7 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"Stub" StubImpl'new-1 [#_"ForeignCallLinkage" linkage]
         (let [
-            #_"Stub" this (hash-map)
+            #_"Stub" this (merge (hash-map) (StubImpl'init-0))
             this (assoc this :linkage linkage)
         ]
             this
@@ -27383,12 +27895,17 @@ ZeroExtendNode'new-4
 (final-ns PointerCastNode (§ extends FloatingNode) (§ implements LIRLowerable)
     (§ def #_"NodeClass<PointerCastNode>" PointerCastNode'TYPE (NodeClass'create-1 PointerCastNode))
 
-    ; @Input
-    (§ mutable #_"ValueNode" :input nil)
+    (defn- #_"PointerCastNode" PointerCastNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"ValueNode" :input nil
+        )
+    )
 
     (defn #_"PointerCastNode" PointerCastNode'new-2 [#_"Stamp" stamp, #_"ValueNode" input]
         (let [
             #_"PointerCastNode" this (FloatingNode'new-2 PointerCastNode'TYPE, stamp)
+            this (merge this (PointerCastNode'init-0))
             this (assoc this :input input)
         ]
             this
@@ -27440,24 +27957,32 @@ ZeroExtendNode'new-4
     (def- #_"int" BciBlockMapping'LOOP_HEADER_MAX_CAPACITY Long/SIZE)
     (def- #_"int" BciBlockMapping'LOOP_HEADER_INITIAL_CAPACITY 4)
 
-    ;;;
-     ; The blocks found in this method, in reverse postorder.
-     ;;
-    (§ mutable #_"BciBlock[]" :blocks nil)
-    (§ final #_"Bytecode" :code nil)
-    (§ mutable #_"boolean" :hasJsrBytecodes false)
-
-    (§ mutable #_"BciBlock" :startBlock nil)
-    (§ mutable #_"BciBlock[]" :loopHeaders nil)
-
-    (§ mutable #_"int" :blocksNotYetAssignedId 0)
+    (defn- #_"BciBlockMapping" BciBlockMapping'init-0 []
+        (hash-map
+            #_"Bytecode" :code nil
+            ;;;
+             ; The blocks found in this method, in reverse postorder.
+             ;;
+            #_"BciBlock[]" :blocks nil
+            #_"BciBlock" :startBlock nil
+            #_"int" :blocksNotYetAssignedId 0
+            ;;;
+             ; The next available loop number.
+             ;;
+            #_"int" :nextLoop 0
+            #_"BciBlock[]" :loopHeaders nil
+            #_"boolean" :loopChanges false
+            #_"boolean" :hasJsrBytecodes false
+            #_"ArrayList<BciBlock>" :jsrVisited (ArrayList.)
+        )
+    )
 
     ;;;
      ; Creates a new BlockMap instance from {@code code}.
      ;;
     (defn- #_"BciBlockMapping" BciBlockMapping'new-1 [#_"Bytecode" code]
         (let [
-            #_"BciBlockMapping" this (hash-map)
+            #_"BciBlockMapping" this (merge (hash-map) (BciBlockMapping'init-0))
             this (assoc this :code code)
         ]
             this
@@ -27634,8 +28159,6 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (§ final #_"ArrayList<BciBlock>" :jsrVisited (ArrayList.))
-
     (defn- #_"BciBlockMapping" BciBlockMapping''createJsrAlternatives-3 [#_"BciBlockMapping" this, #_"BciBlock[]" blockMap, #_"BciBlock" block]
         (#_"ArrayList" .add (:jsrVisited this), block)
         (let [
@@ -27700,8 +28223,6 @@ ZeroExtendNode'new-4
             this
         )
     )
-
-    (§ mutable #_"boolean" :loopChanges false)
 
     (defn- #_"BciBlockMapping" BciBlockMapping''fixLoopBits-2 [#_"BciBlockMapping" this, #_"BciBlock[]" blockMap]
         (loop [this this]
@@ -27804,11 +28325,6 @@ ZeroExtendNode'new-4
     (defn #_"BciBlock" BciBlockMapping''getLoopHeader-2 [#_"BciBlockMapping" this, #_"int" index]
         (nth (:loopHeaders this) index)
     )
-
-    ;;;
-     ; The next available loop number.
-     ;;
-    (§ mutable #_"int" :nextLoop 0)
 
     ;;;
      ; Mark the block as a loop header, using the next available loop number. Also checks for corner
@@ -27929,23 +28445,26 @@ ZeroExtendNode'new-4
  ; @anno BciBlockMapping.BciBlock
  ;;
 (final-ns BciBlock
-    (§ mutable #_"int" :id 0)
-    (§ final #_"int" :startBci 0)
-    (§ mutable #_"int" :endBci 0)
-    (§ mutable #_"boolean" :isLoopHeader false)
-    (§ mutable #_"int" :loopId 0)
-    (§ mutable #_"int" :loopEnd 0)
-    (§ mutable #_"List<BciBlock>" :successors (ArrayList.))
-    (§ mutable #_"int" :predecessorCount 0)
-
-    (§ mutable #_"boolean" :visited false)
-    (§ mutable #_"boolean" :active false)
-    (§ mutable #_"long" :loops 0)
-    (§ mutable #_"JSRData" :jsrData nil)
+    (defn- #_"BciBlock" BciBlock'init-0 []
+        (hash-map
+            #_"int" :id 0
+            #_"int" :startBci 0
+            #_"int" :endBci 0
+            #_"boolean" :isLoopHeader false
+            #_"int" :loopId 0
+            #_"int" :loopEnd 0
+            #_"List<BciBlock>" :successors (ArrayList.)
+            #_"int" :predecessorCount 0
+            #_"boolean" :visited false
+            #_"boolean" :active false
+            #_"long" :loops 0
+            #_"JSRData" :jsrData nil
+        )
+    )
 
     (defn #_"BciBlock" BciBlock'new-1 [#_"int" startBci]
         (let [
-            #_"BciBlock" this (hash-map)
+            #_"BciBlock" this (merge (hash-map) (BciBlock'init-0))
             this (assoc this :startBci startBci)
         ]
             this
@@ -28062,44 +28581,58 @@ ZeroExtendNode'new-4
  ; @anno BciBlockMapping.BciBlock.JSRData
  ;;
 (final-ns JSRData
-    (§ mutable #_"EconomicMap<JsrScope, BciBlock>" :jsrAlternatives nil)
-    (§ mutable #_"JsrScope" :jsrScope JsrScope'EMPTY_SCOPE)
-    (§ mutable #_"BciBlock" :jsrSuccessor nil)
-    (§ mutable #_"int" :jsrReturnBci 0)
-    (§ mutable #_"BciBlock" :retSuccessor nil)
-    (§ mutable #_"boolean" :endsWithRet false)
+    (defn- #_"JSRData" JSRData'init-0 []
+        (hash-map
+            #_"EconomicMap<JsrScope, BciBlock>" :jsrAlternatives nil
+            #_"JsrScope" :jsrScope JsrScope'EMPTY_SCOPE
+            #_"BciBlock" :jsrSuccessor nil
+            #_"int" :jsrReturnBci 0
+            #_"BciBlock" :retSuccessor nil
+            #_"boolean" :endsWithRet false
+        )
+    )
 
     (defn #_"JSRData" JSRData'new-0 []
-        (hash-map)
+        (merge (hash-map) (JSRData'init-0))
     )
 )
 
 (final-ns BytecodeParser (§ implements GraphBuilder)
-    (§ final #_"GraphBuilderInstance" :graphBuilderInstance nil)
-    (§ final #_"Graph" :graph nil)
-
-    (§ mutable #_"BciBlockMapping" :blockMap nil)
-    (§ mutable #_"LocalLiveness" :liveness nil)
-    (§ final #_"BytecodeParser" :parent nil)
-
-    (§ mutable #_"ValueNode" :methodSynchronizedObject nil)
-
-    (§ mutable #_"List<ReturnToCallerData>" :returnDataList nil)
-
-    (§ mutable #_"FixedWithNextNode" :lastInstr nil) ;; the last instruction added
-    (§ mutable #_"boolean" :controlFlowSplit false)
-
-    (§ mutable #_"FixedWithNextNode[]" :firstInstructionArray nil)
-    (§ mutable #_"FrameStateBuilder[]" :entryStateArray nil)
-
-    (§ mutable #_"boolean" :finalBarrierRequired false)
-    (§ mutable #_"ValueNode" :originalReceiver nil)
-    (§ final #_"boolean" :eagerInitializing false)
-    (§ final #_"boolean" :uninitializedIsError false)
+    (defn- #_"BytecodeParser" BytecodeParser'init-0 []
+        (hash-map
+            #_"GraphBuilderInstance" :graphBuilderInstance nil
+            #_"Graph" :graph nil
+            #_"BciBlockMapping" :blockMap nil
+            #_"LocalLiveness" :liveness nil
+            #_"BytecodeParser" :parent nil
+            #_"ValueNode" :methodSynchronizedObject nil
+            #_"List<ReturnToCallerData>" :returnDataList nil
+            #_"FixedWithNextNode" :lastInstr nil ;; the last instruction added
+            #_"boolean" :controlFlowSplit false
+            #_"FixedWithNextNode[]" :firstInstructionArray nil
+            #_"FrameStateBuilder[]" :entryStateArray nil
+            #_"boolean" :finalBarrierRequired false
+            #_"ValueNode" :originalReceiver nil
+            #_"boolean" :eagerInitializing false
+            #_"boolean" :uninitializedIsError false
+            #_"CurrentInvoke" :currentInvoke nil
+            #_"FrameStateBuilder" :frameState nil
+            #_"BciBlock" :currentBlock nil
+            #_"BytecodeStream" :stream nil
+            #_"GraphBuilderConfiguration" :graphBuilderConfig nil
+            #_"ResolvedJavaMethod" :method nil
+            #_"Bytecode" :code nil
+            #_"BytecodeProvider" :bytecodeProvider nil
+            #_"OptimisticOptimizations" :optimisticOpts nil
+            #_"ConstantPool" :constantPool nil
+            #_"IntrinsicContext" :intrinsicContext nil
+            #_"boolean" :forceInliningEverything false
+        )
+    )
 
     (defn #_"BytecodeParser" BytecodeParser'new-5 [#_"GraphBuilderInstance" graphBuilderInstance, #_"Graph" graph, #_"BytecodeParser" parent, #_"ResolvedJavaMethod" method, #_"IntrinsicContext" intrinsicContext]
         (let [
-            #_"BytecodeParser" this (hash-map)
+            #_"BytecodeParser" this (merge (hash-map) (BytecodeParser'init-0))
             this (assoc this :bytecodeProvider (if (some? intrinsicContext) (:bytecodeProvider intrinsicContext) ResolvedJavaMethodBytecodeProvider'INSTANCE))
             this (assoc this :code (BytecodeProvider'''getBytecode-2 (:bytecodeProvider this), method))
             this (assoc this :method (Bytecode'''getMethod-1 (:code this)))
@@ -28241,7 +28774,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"StampPair" BytecodeParser''getInvokeReturnStamp-1 [#_"BytecodeParser" this]
+    (defn #_"StampPair" BytecodeParser''getInvokeReturnStamp-1 [#_"BytecodeParser" this]
         (StampFactory'forDeclaredType-2 (BytecodeParser''getInvokeReturnType-1 this), false)
     )
 
@@ -28544,7 +29077,7 @@ ZeroExtendNode'new-4
 
     (defn #_"ValueNode" BytecodeParser''genLoadField-3 [#_"BytecodeParser" this, #_"ValueNode" receiver, #_"ResolvedJavaField" field]
         (let [
-            #_"StampPair" stamp (Plugins''getOverridingStamp-4 (:plugins (:graphBuilderConfig this)), this, (#_"ResolvedJavaField" .getType field), false)
+            #_"StampPair" stamp (Plugins''getOverridingStamp-4 (:plugins (:graphBuilderConfig this)), this, (#_"ResolvedJavaField" .getType field), false)
         ]
             (if (some? stamp)
                 (LoadFieldNode'createOverrideStamp-5 stamp, receiver, field, false, false)
@@ -28693,18 +29226,6 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (§ mutable #_"CurrentInvoke" :currentInvoke nil)
-    (§ mutable #_"FrameStateBuilder" :frameState nil)
-    (§ mutable #_"BciBlock" :currentBlock nil)
-    (§ final #_"BytecodeStream" :stream nil)
-    (§ final #_"GraphBuilderConfiguration" :graphBuilderConfig nil)
-    (§ final #_"ResolvedJavaMethod" :method nil)
-    (§ final #_"Bytecode" :code nil)
-    (§ final #_"BytecodeProvider" :bytecodeProvider nil)
-    (§ final #_"OptimisticOptimizations" :optimisticOpts nil)
-    (§ final #_"ConstantPool" :constantPool nil)
-    (§ final #_"IntrinsicContext" :intrinsicContext nil)
-
     ;;;
      ; Gets the kind of invocation currently being parsed.
      ;;
@@ -28718,8 +29239,6 @@ ZeroExtendNode'new-4
     (defn #_"JavaType" BytecodeParser''getInvokeReturnType-1 [#_"BytecodeParser" this]
         (when (some? (:currentInvoke this)) (:returnType (:currentInvoke this)))
     )
-
-    (§ mutable #_"boolean" :forceInliningEverything false)
 
     ;;;
      ; Handles an invocation that a plugin determines can replace the original invocation (i.e. the one
@@ -28886,7 +29405,7 @@ ZeroExtendNode'new-4
 
     (defn #_"InvokeNode" BytecodeParser''createNonInlinedInvoke-7 [#_"BytecodeParser" this, #_"int" invokeBci, #_"ValueNode[]" invokeArgs, #_"ResolvedJavaMethod" targetMethod, #_"InvokeKind" invokeKind, #_"JavaKind" resultType, #_"JavaType" returnType]
         (let [
-            #_"StampPair" returnStamp
+            #_"StampPair" returnStamp
                 (or (Plugins''getOverridingStamp-4 (:plugins (:graphBuilderConfig this)), this, returnType, false)
                     (StampFactory'forDeclaredType-2 returnType, false)
                 )
@@ -30807,10 +31326,14 @@ ZeroExtendNode'new-4
  ; @anno BytecodeParser.IntrinsicScope
  ;;
 (final-ns IntrinsicScope (§ implements AutoCloseable)
-    (§ mutable #_"FrameState" :stateBefore nil)
-    (§ final #_"NodeMark" :mark nil)
-    (§ final #_"BytecodeParser" :parser nil)
-    (§ mutable #_"List<ReturnToCallerData>" :returnDataList nil)
+    (defn- #_"IntrinsicScope" IntrinsicScope'init-0 []
+        (hash-map
+            #_"FrameState" :stateBefore nil
+            #_"NodeMark" :mark nil
+            #_"BytecodeParser" :parser nil
+            #_"List<ReturnToCallerData>" :returnDataList nil
+        )
+    )
 
     ;;;
      ; Creates a scope for root parsing an intrinsic.
@@ -30819,7 +31342,7 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"IntrinsicScope" IntrinsicScope'new-1 [#_"BytecodeParser" parser]
         (let [
-            #_"IntrinsicScope" this (hash-map)
+            #_"IntrinsicScope" this (merge (hash-map) (IntrinsicScope'init-0))
             this (assoc this :parser parser)
             this (assoc this :mark nil)
         ]
@@ -30835,7 +31358,7 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"IntrinsicScope" IntrinsicScope'new-3 [#_"BytecodeParser" parser, #_"JavaKind[]" argSlotKinds, #_"ValueNode[]" args]
         (let [
-            #_"IntrinsicScope" this (hash-map)
+            #_"IntrinsicScope" this (merge (hash-map) (IntrinsicScope'init-0))
             this (assoc this :parser parser)
             this (assoc this :mark (NodeMark'new-1 (:graph parser)))
             this (assoc this :stateBefore (FrameStateBuilder''create-6 (:frameState parser), (BytecodeParser''bci-1 parser), (BytecodeParser''getNonIntrinsicAncestor-1 parser), false, argSlotKinds, args))
@@ -30960,12 +31483,16 @@ ZeroExtendNode'new-4
  ; @anno BytecodeParser.FixedTarget
  ;;
 (final-ns FixedTarget
-    (§ final #_"FixedNode" :fixed nil)
-    (§ final #_"FrameStateBuilder" :state nil)
+    (defn- #_"FixedTarget" FixedTarget'init-0 []
+        (hash-map
+            #_"FixedNode" :fixed nil
+            #_"FrameStateBuilder" :state nil
+        )
+    )
 
     (defn #_"FixedTarget" FixedTarget'new-2 [#_"FixedNode" fixed, #_"FrameStateBuilder" state]
         (let [
-            #_"FixedTarget" this (hash-map)
+            #_"FixedTarget" this (merge (hash-map) (FixedTarget'init-0))
             this (assoc this :fixed fixed)
             this (assoc this :state state)
         ]
@@ -30978,12 +31505,16 @@ ZeroExtendNode'new-4
  ; @anno BytecodeParser.ReturnToCallerData
  ;;
 (final-ns ReturnToCallerData
-    (§ final #_"ValueNode" :returnValue nil)
-    (§ final #_"FixedWithNextNode" :beforeReturnNode nil)
+    (defn- #_"ReturnToCallerData" ReturnToCallerData'init-0 []
+        (hash-map
+            #_"ValueNode" :returnValue nil
+            #_"FixedWithNextNode" :beforeReturnNode nil
+        )
+    )
 
     (defn #_"ReturnToCallerData" ReturnToCallerData'new-2 [#_"ValueNode" returnValue, #_"FixedWithNextNode" beforeReturnNode]
         (let [
-            #_"ReturnToCallerData" this (hash-map)
+            #_"ReturnToCallerData" this (merge (hash-map) (ReturnToCallerData'init-0))
             this (assoc this :returnValue returnValue)
             this (assoc this :beforeReturnNode beforeReturnNode)
         ]
@@ -31000,13 +31531,17 @@ ZeroExtendNode'new-4
  ; @anno BytecodeParser.CurrentInvoke
  ;;
 (final-ns CurrentInvoke
-    (§ final #_"ValueNode[]" :args nil)
-    (§ final #_"InvokeKind" :kind nil)
-    (§ final #_"JavaType" :returnType nil)
+    (defn- #_"CurrentInvoke" CurrentInvoke'init-0 []
+        (hash-map
+            #_"ValueNode[]" :args nil
+            #_"InvokeKind" :kind nil
+            #_"JavaType" :returnType nil
+        )
+    )
 
     (defn #_"CurrentInvoke" CurrentInvoke'new-3 [#_"ValueNode[]" args, #_"InvokeKind" kind, #_"JavaType" returnType]
         (let [
-            #_"CurrentInvoke" this (hash-map)
+            #_"CurrentInvoke" this (merge (hash-map) (CurrentInvoke'init-0))
             this (assoc this :args args)
             this (assoc this :kind kind)
             this (assoc this :returnType returnType)
@@ -31020,12 +31555,16 @@ ZeroExtendNode'new-4
  ; @anno BytecodeParser.SuccessorInfo
  ;;
 (final-ns SuccessorInfo
-    (§ final #_"int" :blockIndex 0)
-    (§ mutable #_"int" :actualIndex 0)
+    (defn- #_"SuccessorInfo" SuccessorInfo'init-0 []
+        (hash-map
+            #_"int" :blockIndex 0
+            #_"int" :actualIndex 0
+        )
+    )
 
     (defn #_"SuccessorInfo" SuccessorInfo'new-1 [#_"int" blockSuccessorIndex]
         (let [
-            #_"SuccessorInfo" this (hash-map)
+            #_"SuccessorInfo" this (merge (hash-map) (SuccessorInfo'init-0))
             this (assoc this :blockIndex blockSuccessorIndex)
             this (assoc this :actualIndex -1)
         ]
@@ -31108,26 +31647,28 @@ ZeroExtendNode'new-4
     (§ def- #_"ValueNode[]" FrameStateBuilder'EMPTY_ARRAY (make-array ValueNode 0))
     (§ def- #_"MonitorIdNode[]" FrameStateBuilder'EMPTY_MONITOR_ARRAY (make-array MonitorIdNode 0))
 
-    (§ final #_"BytecodeParser" :parser nil)
-    (§ final #_"GraphBuilder" :tool nil)
-    (§ final #_"Bytecode" :code nil)
-    ;;;
-     ; Current size (height) of the stack.
-     ;;
-    (§ mutable #_"int" :stackSize 0)
-    (§ final #_"ValueNode[]" :locals nil)
-    (§ final #_"ValueNode[]" :stack nil)
-    (§ mutable #_"ValueNode[]" :lockedObjects nil)
-
-    (§ mutable #_"MonitorIdNode[]" :monitorIds nil)
-    (§ final #_"Graph" :graph nil)
-    (§ mutable #_"FrameState" :outerFrameState nil)
-
-    ;;;
-     ; The closest {@link StateSplit#hasSideEffect() side-effect} predecessors. There will be more
-     ; than one when the current block contains no side-effects but merging predecessor blocks do.
-     ;;
-    (§ mutable #_"List<StateSplit>" :sideEffects nil)
+    (defn- #_"FrameStateBuilder" FrameStateBuilder'init-0 []
+        (hash-map
+            #_"BytecodeParser" :parser nil
+            #_"GraphBuilder" :tool nil
+            #_"Bytecode" :code nil
+            ;;;
+             ; Current size (height) of the stack.
+             ;;
+            #_"int" :stackSize 0
+            #_"ValueNode[]" :locals nil
+            #_"ValueNode[]" :stack nil
+            #_"ValueNode[]" :lockedObjects nil
+            #_"MonitorIdNode[]" :monitorIds nil
+            #_"Graph" :graph nil
+            #_"FrameState" :outerFrameState nil
+            ;;;
+             ; The closest {@link StateSplit#hasSideEffect() side-effect} predecessors. There will be more
+             ; than one when the current block contains no side-effects but merging predecessor blocks do.
+             ;;
+            #_"List<StateSplit>" :sideEffects nil
+        )
+    )
 
     (defn- #_"ValueNode[]" FrameStateBuilder'allocateArray-1 [#_"int" length]
         (if (zero? length) FrameStateBuilder'EMPTY_ARRAY (make-array ValueNode length))
@@ -31141,7 +31682,7 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"FrameStateBuilder" FrameStateBuilder'new-3c [#_"GraphBuilder" tool, #_"Bytecode" code, #_"Graph" graph]
         (let [
-            #_"FrameStateBuilder" this (hash-map)
+            #_"FrameStateBuilder" this (merge (hash-map) (FrameStateBuilder'init-0))
             this (assoc this :tool tool)
             this (assoc this :parser (when (instance? BytecodeParser tool) tool))
             this (assoc this :code code)
@@ -31167,7 +31708,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"FrameStateBuilder" FrameStateBuilder'new-1 [#_"FrameStateBuilder" other]
         (let [
-            #_"FrameStateBuilder" this (hash-map)
+            #_"FrameStateBuilder" this (merge (hash-map) (FrameStateBuilder'init-0))
             this (assoc this :parser (:parser other))
             this (assoc this :tool (:tool other))
             this (assoc this :code (:code other))
@@ -31221,7 +31762,7 @@ ZeroExtendNode'new-4
             [#_"int" i #_"int" j]
                 (when-not (#_"ResolvedJavaMethod" .isStatic method) => [0 0]
                     (let [
-                        #_"StampPair" receiverStamp
+                        #_"StampPair" receiverStamp
                             (or (when (some? plugins) (Plugins''getOverridingStamp-4 plugins, (:tool this), originalType, true))
                                 (StampFactory'forDeclaredType-2 originalType, true)
                             )
@@ -31245,7 +31786,7 @@ ZeroExtendNode'new-4
                     #_"JavaType" type (#_"Signature" .getParameterType sig, k, originalType)
                     type (if eagerResolve (#_"JavaType" .resolve type, originalType) type)
                     #_"JavaKind" kind (#_"JavaType" .getJavaKind type)
-                    #_"StampPair" stamp
+                    #_"StampPair" stamp
                         (or (when (some? plugins) (Plugins''getOverridingStamp-4 plugins, (:tool this), type, false))
                             (StampFactory'forDeclaredType-2 type, false)
                         )
@@ -31803,10 +32344,14 @@ ZeroExtendNode'new-4
  ; Parses the bytecodes of a method and builds the IR graph.
  ;;
 (final-ns GraphBuilderPhase (§ implements Phase)
-    (§ final #_"GraphBuilderConfiguration" :graphBuilderConfig (GraphBuilderConfiguration'getDefault-0))
+    (defn- #_"GraphBuilderPhase" GraphBuilderPhase'init-0 []
+        (hash-map
+            #_"GraphBuilderConfiguration" :graphBuilderConfig (GraphBuilderConfiguration'getDefault-0)
+        )
+    )
 
     (defn #_"GraphBuilderPhase" GraphBuilderPhase'new-0 []
-        (hash-map)
+        (merge (hash-map) (GraphBuilderPhase'init-0))
     )
 
     (§ override! #_"Graph" Phase'''run-3 [#_"GraphBuilderPhase" this, #_"Graph" graph, #_"PhaseContext" context]
@@ -31818,13 +32363,17 @@ ZeroExtendNode'new-4
  ; @anno GraphBuilderPhase.GraphBuilderInstance
  ;;
 (final-ns GraphBuilderInstance (§ implements Phase)
-    (§ final #_"GraphBuilderConfiguration" :graphBuilderConfig nil)
-    (§ final #_"OptimisticOptimizations" :optimisticOpts nil)
-    (§ final #_"IntrinsicContext" :initialIntrinsicContext nil)
+    (defn- #_"GraphBuilderInstance" GraphBuilderInstance'init-0 []
+        (hash-map
+            #_"GraphBuilderConfiguration" :graphBuilderConfig nil
+            #_"OptimisticOptimizations" :optimisticOpts nil
+            #_"IntrinsicContext" :initialIntrinsicContext nil
+        )
+    )
 
     (defn #_"GraphBuilderInstance" GraphBuilderInstance'new-3 [#_"GraphBuilderConfiguration" graphBuilderConfig, #_"OptimisticOptimizations" optimisticOpts, #_"IntrinsicContext" initialIntrinsicContext]
         (let [
-            #_"GraphBuilderInstance" this (hash-map)
+            #_"GraphBuilderInstance" this (merge (hash-map) (GraphBuilderInstance'init-0))
             this (assoc this :graphBuilderConfig graphBuilderConfig)
             this (assoc this :optimisticOpts optimisticOpts)
             this (assoc this :initialIntrinsicContext initialIntrinsicContext)
@@ -31846,11 +32395,15 @@ ZeroExtendNode'new-4
 (final-ns JsrScope
     (§ def #_"JsrScope" JsrScope'EMPTY_SCOPE (JsrScope'new-0))
 
-    (§ final #_"long" :scope 0)
+    (defn- #_"JsrScope" JsrScope'init-0 []
+        (hash-map
+            #_"long" :scope 0
+        )
+    )
 
     (defn- #_"JsrScope" JsrScope'new-1 [#_"long" scope]
         (let [
-            #_"JsrScope" this (hash-map)
+            #_"JsrScope" this (merge (hash-map) (JsrScope'init-0))
             this (assoc this :scope scope)
         ]
             this
@@ -31859,7 +32412,7 @@ ZeroExtendNode'new-4
 
     (defn #_"JsrScope" JsrScope'new-0 []
         (let [
-            #_"JsrScope" this (hash-map)
+            #_"JsrScope" this (merge (hash-map) (JsrScope'init-0))
             this (assoc this :scope 0)
         ]
             this
@@ -31891,15 +32444,20 @@ ZeroExtendNode'new-4
 )
 
 (final-ns LargeLocalLiveness (§ extends LocalLivenessImpl)
-    (§ mutable #_"BitSet[]" :localsLiveIn nil)
-    (§ mutable #_"BitSet[]" :localsLiveOut nil)
-    (§ mutable #_"BitSet[]" :localsLiveGen nil)
-    (§ mutable #_"BitSet[]" :localsLiveKill nil)
-    (§ mutable #_"BitSet[]" :localsChangedInLoop nil)
+    (defn- #_"LargeLocalLiveness" LargeLocalLiveness'init-0 []
+        (hash-map
+            #_"BitSet[]" :localsLiveIn nil
+            #_"BitSet[]" :localsLiveOut nil
+            #_"BitSet[]" :localsLiveGen nil
+            #_"BitSet[]" :localsLiveKill nil
+            #_"BitSet[]" :localsChangedInLoop nil
+        )
+    )
 
     (defn #_"LargeLocalLiveness" LargeLocalLiveness'new-3 [#_"BciBlock[]" blocks, #_"int" maxLocals, #_"int" loopCount]
         (let [
             #_"LargeLocalLiveness" this (LocalLivenessImpl'new-1 blocks)
+            this (merge this (LargeLocalLiveness'init-0))
             #_"int" n (count blocks)
             this (assoc this :localsLiveIn (make-array BitSet n))
             this (assoc this :localsLiveOut (make-array BitSet n))
@@ -31976,7 +32534,11 @@ ZeroExtendNode'new-4
 )
 
 (class-ns LocalLivenessImpl (§ implements LocalLiveness)
-    (§ final #_"BciBlock[]" :blocks nil)
+    (defn- #_"LocalLivenessImpl" LocalLivenessImpl'init-0 []
+        (hash-map
+            #_"BciBlock[]" :blocks nil
+        )
+    )
 
     (defn #_"LocalLiveness" LocalLivenessImpl'compute-4 [#_"BytecodeStream" stream, #_"BciBlock[]" blocks, #_"int" maxLocals, #_"int" loopCount]
         (let [
@@ -31989,7 +32551,7 @@ ZeroExtendNode'new-4
 
     (defn #_"LocalLiveness" LocalLivenessImpl'new-1 [#_"BciBlock[]" blocks]
         (let [
-            #_"LocalLiveness" this (hash-map)
+            #_"LocalLiveness" this (merge (hash-map) (LocalLivenessImpl'init-0))
             this (assoc this :blocks blocks)
         ]
             this
@@ -32088,16 +32650,21 @@ ZeroExtendNode'new-4
 (final-ns SmallLocalLiveness (§ extends LocalLivenessImpl)
     ;; local n is represented by the bit accessible as (1 << n)
 
-    (§ final #_"long[]" :localsLiveIn nil)
-    (§ final #_"long[]" :localsLiveOut nil)
-    (§ final #_"long[]" :localsLiveGen nil)
-    (§ final #_"long[]" :localsLiveKill nil)
-    (§ final #_"long[]" :localsChangedInLoop nil)
-    (§ final #_"int" :maxLocals 0)
+    (defn- #_"SmallLocalLiveness" SmallLocalLiveness'init-0 []
+        (hash-map
+            #_"long[]" :localsLiveIn nil
+            #_"long[]" :localsLiveOut nil
+            #_"long[]" :localsLiveGen nil
+            #_"long[]" :localsLiveKill nil
+            #_"long[]" :localsChangedInLoop nil
+            #_"int" :maxLocals 0
+        )
+    )
 
     (defn #_"SmallLocalLiveness" SmallLocalLiveness'new-3 [#_"BciBlock[]" blocks, #_"int" maxLocals, #_"int" loopCount]
         (let [
             #_"SmallLocalLiveness" this (LocalLivenessImpl'new-1 blocks)
+            this (merge this (SmallLocalLiveness'init-0))
             this (assoc this :maxLocals maxLocals)
             #_"int" n (count blocks)
             this (assoc this :localsLiveIn (long-array n))
@@ -32170,87 +32737,89 @@ ZeroExtendNode'new-4
 (final-ns Interval
     (§ def #_"int" Interval'END_MARKER_OPERAND_NUMBER Integer/MIN_VALUE)
 
-    ;;;
-     ; The register or variable for this interval prior to register allocation.
-     ;;
-    (§ final #_"AllocatableValue" :operand nil)
-    ;;;
-     ; The operand number for this interval's {@linkplain #operand operand}.
-     ;;
-    (§ final #_"int" :operandNumber 0)
-    ;;;
-     ; The register or spill slot assigned to this interval.
-     ; In case of a spilled interval which is re-materialized this is Value#ILLEGAL.
-     ;;
-    (§ mutable #_"AllocatableValue" :location nil)
-    ;;;
-     ; The stack slot to which all splits of this interval are spilled if necessary.
-     ;;
-    (§ mutable #_"AllocatableValue" :spillSlot nil)
-    ;;;
-     ; The kind of this interval.
-     ;;
-    (§ mutable #_"ValueKind" :kind nil)
-    ;;;
-     ; The head of the list of ranges describing this interval. This list is sorted by
-     ; {@linkplain LIRInstruction#id instruction ids}.
-     ;;
-    (§ mutable #_"Range" :first nil)
-    ;;;
-     ; List of (use-positions, register-priorities) pairs, sorted by use-positions.
-     ;;
-    (§ mutable #_"UsePosList" :usePosList nil)
-    ;;;
-     ; Iterator used to traverse the ranges of an interval.
-     ;;
-    (§ mutable #_"Range" :current nil)
-    ;;;
-     ; Link to next interval in a sorted list of intervals that ends with LinearScan.intervalEndMarker.
-     ;;
-    (§ mutable #_"Interval" :next nil)
-    ;;;
-     ; The linear-scan state of this interval.
-     ;;
-    (§ mutable #_"IntervalState" :state nil)
-
-    (§ mutable #_"int" :cachedTo 0) ;; cached value: to of last range (-1: not cached)
-
-    ;;;
-     ; The interval from which this one is derived. If this is a {@linkplain #isSplitParent() split parent}, it points to itself.
-     ;;
-    (§ mutable #_"Interval" :splitParent nil)
-    ;;;
-     ; List of all intervals that are split off from this interval. This is only used if this is a {@linkplain #isSplitParent() split parent}.
-     ;;
-    (§ mutable #_"List<Interval>" :splitChildren (Collections/emptyList))
-    ;;;
-     ; Current split child that has been active or inactive last (always stored in split parents).
-     ;;
-    (§ mutable #_"Interval" :currentSplitChild nil)
-    ;;;
-     ; Specifies if move is inserted between currentSplitChild and this interval when interval gets active the first time.
-     ;;
-    (§ mutable #_"boolean" :insertMoveWhenActivated false)
-    ;;;
-     ; For spill move optimization.
-     ;;
-    (§ mutable #_"SpillState" :spillState nil)
-    ;;;
-     ; Position where this interval is defined (if defined only once).
-     ;;
-    (§ mutable #_"int" :spillDefinitionPos 0)
-    ;;;
-     ; This interval should be assigned the same location as the hint interval.
-     ;;
-    (§ mutable #_"Interval" :locationHint nil)
-    ;;;
-     ; The value with which a spilled child interval can be re-materialized. Currently this must be a Constant.
-     ;;
-    (§ mutable #_"Constant" :materializedValue nil)
-    ;;;
-     ; The number of times #addMaterializationValue(Constant) is called.
-     ;;
-    (§ mutable #_"int" :numMaterializationValuesAdded 0)
+    (defn- #_"Interval" Interval'init-0 []
+        (hash-map
+            ;;;
+             ; The register or variable for this interval prior to register allocation.
+             ;;
+            #_"AllocatableValue" :operand nil
+            ;;;
+             ; The operand number for this interval's {@linkplain #operand operand}.
+             ;;
+            #_"int" :operandNumber 0
+            ;;;
+             ; The register or spill slot assigned to this interval.
+             ; In case of a spilled interval which is re-materialized this is Value#ILLEGAL.
+             ;;
+            #_"AllocatableValue" :location nil
+            ;;;
+             ; The stack slot to which all splits of this interval are spilled if necessary.
+             ;;
+            #_"AllocatableValue" :spillSlot nil
+            ;;;
+             ; The kind of this interval.
+             ;;
+            #_"ValueKind" :kind nil
+            ;;;
+             ; The head of the list of ranges describing this interval. This list is sorted by
+             ; {@linkplain LIRInstruction#id instruction ids}.
+             ;;
+            #_"Range" :first nil
+            ;;;
+             ; List of (use-positions, register-priorities) pairs, sorted by use-positions.
+             ;;
+            #_"UsePosList" :usePosList nil
+            ;;;
+             ; Iterator used to traverse the ranges of an interval.
+             ;;
+            #_"Range" :current nil
+            ;;;
+             ; Link to next interval in a sorted list of intervals that ends with LinearScan.intervalEndMarker.
+             ;;
+            #_"Interval" :next nil
+            ;;;
+             ; The linear-scan state of this interval.
+             ;;
+            #_"IntervalState" :state nil
+            #_"int" :cachedTo 0 ;; cached value: to of last range (-1: not cached)
+            ;;;
+             ; The interval from which this one is derived. If this is a {@linkplain #isSplitParent() split parent}, it points to itself.
+             ;;
+            #_"Interval" :splitParent nil
+            ;;;
+             ; List of all intervals that are split off from this interval. This is only used if this is a {@linkplain #isSplitParent() split parent}.
+             ;;
+            #_"List<Interval>" :splitChildren (Collections/emptyList)
+            ;;;
+             ; Current split child that has been active or inactive last (always stored in split parents).
+             ;;
+            #_"Interval" :currentSplitChild nil
+            ;;;
+             ; Specifies if move is inserted between currentSplitChild and this interval when interval gets active the first time.
+             ;;
+            #_"boolean" :insertMoveWhenActivated false
+            ;;;
+             ; For spill move optimization.
+             ;;
+            #_"SpillState" :spillState nil
+            ;;;
+             ; Position where this interval is defined (if defined only once).
+             ;;
+            #_"int" :spillDefinitionPos 0
+            ;;;
+             ; This interval should be assigned the same location as the hint interval.
+             ;;
+            #_"Interval" :locationHint nil
+            ;;;
+             ; The value with which a spilled child interval can be re-materialized. Currently this must be a Constant.
+             ;;
+            #_"Constant" :materializedValue nil
+            ;;;
+             ; The number of times #addMaterializationValue(Constant) is called.
+             ;;
+            #_"int" :numMaterializationValuesAdded 0
+        )
+    )
 
     (defn #_"Interval" Interval''assignLocation-2 [#_"Interval" this, #_"AllocatableValue" newLocation]
         (assoc this :location (if (and (instance? RegisterValue newLocation) (= (#_"AllocatableValue" .getValueKind newLocation) LIRKind'Illegal) (not (= (:kind this) LIRKind'Illegal))) (#_"Register" .asValue (#_"RegisterValue" .getRegister newLocation), (:kind this)) newLocation))
@@ -32374,7 +32943,7 @@ ZeroExtendNode'new-4
 
     (defn #_"Interval" Interval'new-4 [#_"AllocatableValue" operand, #_"int" operandNumber, #_"Interval" intervalEndMarker, #_"Range" rangeEndMarker]
         (let [
-            #_"Interval" this (hash-map)
+            #_"Interval" this (merge (hash-map) (Interval'init-0))
             this (assoc this :operand operand)
             this (assoc this :operandNumber operandNumber)
             this (if (instance? RegisterValue operand) (assoc this :location operand) this)
@@ -32716,24 +33285,26 @@ ZeroExtendNode'new-4
  ; @anno Interval.RegisterBindingLists
  ;;
 (final-ns RegisterBindingLists
-    ;;;
-     ; List of intervals whose binding is currently RegisterBinding#Fixed.
-     ;;
-    (§ mutable #_"Interval" :fixed nil)
-
-    ;;;
-     ; List of intervals whose binding is currently RegisterBinding#Any.
-     ;;
-    (§ mutable #_"Interval" :any nil)
-
-    ;;;
-     ; List of intervals whose binding is currently RegisterBinding#Stack.
-     ;;
-    (§ mutable #_"Interval" :stack nil)
+    (defn- #_"RegisterBindingLists" RegisterBindingLists'init-0 []
+        (hash-map
+            ;;;
+             ; List of intervals whose binding is currently RegisterBinding#Fixed.
+             ;;
+            #_"Interval" :fixed nil
+            ;;;
+             ; List of intervals whose binding is currently RegisterBinding#Any.
+             ;;
+            #_"Interval" :any nil
+            ;;;
+             ; List of intervals whose binding is currently RegisterBinding#Stack.
+             ;;
+            #_"Interval" :stack nil
+        )
+    )
 
     (defn #_"RegisterBindingLists" RegisterBindingLists'new-3 [#_"Interval" fixed, #_"Interval" any, #_"Interval" stack]
         (let [
-            #_"RegisterBindingLists" this (hash-map)
+            #_"RegisterBindingLists" this (merge (hash-map) (RegisterBindingLists'init-0))
             this (assoc this :fixed fixed)
             this (assoc this :any any)
             this (assoc this :stack stack)
@@ -32976,7 +33547,11 @@ ZeroExtendNode'new-4
  ; @anno Interval.UsePosList
  ;;
 (final-ns UsePosList
-    (§ mutable #_"IntList" :list nil)
+    (defn- #_"UsePosList" UsePosList'init-0 []
+        (hash-map
+            #_"IntList" :list nil
+        )
+    )
 
     ;;;
      ; Creates a use list.
@@ -32985,7 +33560,7 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"UsePosList" UsePosList'new-1i [#_"int" initialCapacity]
         (let [
-            #_"UsePosList" this (hash-map)
+            #_"UsePosList" this (merge (hash-map) (UsePosList'init-0))
             this (assoc this :list (IntList'new-1 (* initialCapacity 2)))
         ]
             this
@@ -32994,7 +33569,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"UsePosList" UsePosList'new-1l [#_"IntList" list]
         (let [
-            #_"UsePosList" this (hash-map)
+            #_"UsePosList" this (merge (hash-map) (UsePosList'init-0))
             this (assoc this :list list)
         ]
             this
@@ -33067,27 +33642,31 @@ ZeroExtendNode'new-4
 )
 
 (class-ns IntervalWalkerImpl (§ implements IntervalWalker)
-    (§ final #_"LinearScan" :allocator nil)
-    ;;;
-     ; Sorted list of intervals, not live before the current position.
-     ;;
-    (§ mutable #_"RegisterBindingLists" :unhandledLists nil)
-    ;;;
-     ; Sorted list of intervals, live at the current position.
-     ;;
-    (§ mutable #_"RegisterBindingLists" :activeLists nil)
-    ;;;
-     ; Sorted list of intervals in a life time hole at the current position.
-     ;;
-    (§ mutable #_"RegisterBindingLists" :inactiveLists nil)
-    ;;;
-     ; The current position (intercept point through the intervals).
-     ;;
-    (§ mutable #_"int" :currentPosition 0)
-    ;;;
-     ; The binding of the current interval being processed.
-     ;;
-    (§ mutable #_"RegisterBinding" :currentBinding nil)
+    (defn- #_"IntervalWalkerImpl" IntervalWalkerImpl'init-0 []
+        (hash-map
+            #_"LinearScan" :allocator nil
+            ;;;
+             ; Sorted list of intervals, not live before the current position.
+             ;;
+            #_"RegisterBindingLists" :unhandledLists nil
+            ;;;
+             ; Sorted list of intervals, live at the current position.
+             ;;
+            #_"RegisterBindingLists" :activeLists nil
+            ;;;
+             ; Sorted list of intervals in a life time hole at the current position.
+             ;;
+            #_"RegisterBindingLists" :inactiveLists nil
+            ;;;
+             ; The current position (intercept point through the intervals).
+             ;;
+            #_"int" :currentPosition 0
+            ;;;
+             ; The binding of the current interval being processed.
+             ;;
+            #_"RegisterBinding" :currentBinding nil
+        )
+    )
 
     ;;;
      ; Creates a new interval walker.
@@ -33098,7 +33677,7 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"IntervalWalker" IntervalWalkerImpl'new-3 [#_"LinearScan" allocator, #_"Interval" unhandledFixed, #_"Interval" unhandledAny]
         (let [
-            #_"IntervalWalker" this (hash-map)
+            #_"IntervalWalker" this (merge (hash-map) (IntervalWalkerImpl'init-0))
             this (assoc this :allocator allocator)
             this (assoc this :unhandledLists (RegisterBindingLists'new-3 unhandledFixed, unhandledAny, (:intervalEndMarker allocator)))
             this (assoc this :activeLists (RegisterBindingLists'new-3 (:intervalEndMarker allocator), (:intervalEndMarker allocator), (:intervalEndMarker allocator)))
@@ -33325,58 +33904,61 @@ ZeroExtendNode'new-4
     (def #_"int" LinearScanImpl'DOMINATOR_SPILL_MOVE_ID -2)
     (def- #_"int" LinearScanImpl'SPLIT_INTERVALS_CAPACITY_RIGHT_SHIFT 1)
 
-    (§ final #_"LIR" :lir nil)
-    (§ final #_"FrameMapBuilder" :frameMapBuilder nil)
-    (§ final #_"RegisterAttributes[]" :registerAttributes nil)
-    (§ final #_"RegisterArray" :registers nil)
-    (§ final #_"MoveFactory" :moveFactory nil)
-    (§ final #_"BlockMap<BlockData>" :blockData nil)
-    ;;;
-     ; List of blocks in linear-scan order. This is only correct as long as the CFG does not change.
-     ;;
-    (§ final #_"Block[]" :sortedBlocks nil)
-    ;;;
-     ; Map from {@linkplain #operandNumber(Value) operand numbers} to intervals.
-     ;;
-    (§ mutable #_"Interval[]" :intervals nil)
-    ;;;
-     ; The number of valid entries in #intervals.
-     ;;
-    (§ mutable #_"int" :intervalsSize 0)
-    ;;;
-     ; The index of the first entry in #intervals for a
-     ; {@linkplain #createDerivedInterval(Interval) derived interval}.
-     ;;
-    (§ mutable #_"int" :firstDerivedIntervalIndex -1)
-    ;;;
-     ; Intervals sorted by Interval#from().
-     ;;
-    (§ mutable #_"Interval[]" :sortedIntervals nil)
-    ;;;
-     ; Map from an instruction {@linkplain LIRInstruction#id id} to the instruction. Entries should
-     ; be retrieved with #instructionForId(int) as the id is not simply an index into this array.
-     ;;
-    (§ mutable #_"LIRInstruction[]" :opIdToInstructionMap nil)
-    ;;;
-     ; Map from an instruction {@linkplain LIRInstruction#id id} to the
-     ; block containing the instruction. Entries should be retrieved
-     ; with #blockForId(int) as the id is not simply an index into this array.
-     ;;
-    (§ mutable #_"Block[]" :opIdToBlockMap nil)
-    ;;;
-     ; The {@linkplain #operandNumber(Value) number} of the first variable operand allocated.
-     ;;
-    (§ final #_"int" :firstVariableNumber 0)
-    (§ mutable #_"int" :numVariables 0)
-    ;;;
-     ; Sentinel interval to denote the end of an interval list.
-     ;;
-    (§ final #_"Interval" :intervalEndMarker nil)
-    (§ final #_"Range" :rangeEndMarker nil)
+    (defn- #_"LinearScanImpl" LinearScanImpl'init-0 []
+        (hash-map
+            #_"LIR" :lir nil
+            #_"FrameMapBuilder" :frameMapBuilder nil
+            #_"RegisterAttributes[]" :registerAttributes nil
+            #_"RegisterArray" :registers nil
+            #_"MoveFactory" :moveFactory nil
+            #_"BlockMap<BlockData>" :blockData nil
+            ;;;
+             ; List of blocks in linear-scan order. This is only correct as long as the CFG does not change.
+             ;;
+            #_"Block[]" :sortedBlocks nil
+            ;;;
+             ; Map from {@linkplain #operandNumber(Value) operand numbers} to intervals.
+             ;;
+            #_"Interval[]" :intervals nil
+            ;;;
+             ; The number of valid entries in #intervals.
+             ;;
+            #_"int" :intervalsSize 0
+            ;;;
+             ; The index of the first entry in #intervals for a
+             ; {@linkplain #createDerivedInterval(Interval) derived interval}.
+             ;;
+            #_"int" :firstDerivedIntervalIndex -1
+            ;;;
+             ; Intervals sorted by Interval#from().
+             ;;
+            #_"Interval[]" :sortedIntervals nil
+            ;;;
+             ; Map from an instruction {@linkplain LIRInstruction#id id} to the instruction. Entries should
+             ; be retrieved with #instructionForId(int) as the id is not simply an index into this array.
+             ;;
+            #_"LIRInstruction[]" :opIdToInstructionMap nil
+            ;;;
+             ; Map from an instruction {@linkplain LIRInstruction#id id} to the block containing the instruction.
+             ; Entries should be retrieved with #blockForId(int) as the id is not simply an index into this array.
+             ;;
+            #_"Block[]" :opIdToBlockMap nil
+            ;;;
+             ; The {@linkplain #operandNumber(Value) number} of the first variable operand allocated.
+             ;;
+            #_"int" :firstVariableNumber 0
+            #_"int" :numVariables 0
+            ;;;
+             ; Sentinel interval to denote the end of an interval list.
+             ;;
+            #_"Interval" :intervalEndMarker nil
+            #_"Range" :rangeEndMarker nil
+        )
+    )
 
     (defn #_"LinearScan" LinearScanImpl'new-3 [#_"LIRGenerationResult" res, #_"MoveFactory" moveFactory, #_"Block[]" sortedBlocks]
         (let [
-            #_"LinearScan" this (hash-map)
+            #_"LinearScan" this (merge (hash-map) (LinearScanImpl'init-0))
             this (assoc this :lir (:lir res))
             this (assoc this :moveFactory moveFactory)
             this (assoc this :frameMapBuilder (:frameMapBuilder res))
@@ -33857,38 +34439,39 @@ ZeroExtendNode'new-4
  ; @anno LinearScan.BlockData
  ;;
 (final-ns BlockData
-    (defn #_"BlockData" BlockData'new-0 []
-        (hash-map)
+    (defn- #_"BlockData" BlockData'init-0 []
+        (hash-map
+            ;;;
+             ; Bit map specifying which operands are live upon entry to this block. These are values
+             ; used in this block or any of its successors where such value are not defined in this
+             ; block. The bit index of an operand is its {@linkplain LinearScan#operandNumber(Value)
+             ; operand number}.
+             ;;
+            #_"BitSet" :liveIn nil
+            ;;;
+             ; Bit map specifying which operands are live upon exit from this block. These are values
+             ; used in a successor block that are either defined in this block or were live upon entry
+             ; to this block. The bit index of an operand is its
+             ; {@linkplain LinearScan#operandNumber(Value) operand number}.
+             ;;
+            #_"BitSet" :liveOut nil
+            ;;;
+             ; Bit map specifying which operands are used (before being defined) in this block. That is,
+             ; these are the values that are live upon entry to the block. The bit index of an operand
+             ; is its {@linkplain LinearScan#operandNumber(Value) operand number}.
+             ;;
+            #_"BitSet" :liveGen nil
+            ;;;
+             ; Bit map specifying which operands are defined/overwritten in this block. The bit index of
+             ; an operand is its {@linkplain LinearScan#operandNumber(Value) operand number}.
+             ;;
+            #_"BitSet" :liveKill nil
+        )
     )
 
-    ;;;
-     ; Bit map specifying which operands are live upon entry to this block. These are values
-     ; used in this block or any of its successors where such value are not defined in this
-     ; block. The bit index of an operand is its {@linkplain LinearScan#operandNumber(Value)
-     ; operand number}.
-     ;;
-    (§ mutable #_"BitSet" :liveIn nil)
-
-    ;;;
-     ; Bit map specifying which operands are live upon exit from this block. These are values
-     ; used in a successor block that are either defined in this block or were live upon entry
-     ; to this block. The bit index of an operand is its
-     ; {@linkplain LinearScan#operandNumber(Value) operand number}.
-     ;;
-    (§ mutable #_"BitSet" :liveOut nil)
-
-    ;;;
-     ; Bit map specifying which operands are used (before being defined) in this block. That is,
-     ; these are the values that are live upon entry to the block. The bit index of an operand
-     ; is its {@linkplain LinearScan#operandNumber(Value) operand number}.
-     ;;
-    (§ mutable #_"BitSet" :liveGen nil)
-
-    ;;;
-     ; Bit map specifying which operands are defined/overwritten in this block. The bit index of
-     ; an operand is its {@linkplain LinearScan#operandNumber(Value) operand number}.
-     ;;
-    (§ mutable #_"BitSet" :liveKill nil)
+    (defn #_"BlockData" BlockData'new-0 []
+        (merge (hash-map) (BlockData'init-0))
+    )
 )
 
 (class-ns IntervalPredicateImpl (§ implements IntervalPredicate)
@@ -33907,11 +34490,16 @@ ZeroExtendNode'new-4
  ; Phase 7: Assign register numbers back to LIR.
  ;;
 (final-ns LinearScanAssignLocationsPhase (§ extends LinearScanAllocationPhaseImpl)
-    (§ final #_"LinearScan" :allocator nil)
+    (defn- #_"LinearScanAssignLocationsPhase" LinearScanAssignLocationsPhase'init-0 []
+        (hash-map
+            #_"LinearScan" :allocator nil
+        )
+    )
 
     (defn #_"LinearScanAssignLocationsPhase" LinearScanAssignLocationsPhase'new-1 [#_"LinearScan" allocator]
         (let [
             #_"LinearScanAssignLocationsPhase" this (LinearScanAllocationPhaseImpl'new-0)
+            this (merge this (LinearScanAssignLocationsPhase'init-0))
             this (assoc this :allocator allocator)
         ]
             this
@@ -34036,11 +34624,16 @@ ZeroExtendNode'new-4
         )
     )
 
-    (§ final #_"LinearScan" :allocator nil)
+    (defn- #_"LinearScanEliminateSpillMovePhaseImpl" LinearScanEliminateSpillMovePhaseImpl'init-0 []
+        (hash-map
+            #_"LinearScan" :allocator nil
+        )
+    )
 
     (defn #_"LinearScanEliminateSpillMovePhase" LinearScanEliminateSpillMovePhaseImpl'new-1 [#_"LinearScan" allocator]
         (let [
             #_"LinearScanEliminateSpillMovePhase" this (LinearScanAllocationPhaseImpl'new-0)
+            this (merge this (LinearScanEliminateSpillMovePhaseImpl'init-0))
             this (assoc this :allocator allocator)
         ]
             this
@@ -34129,15 +34722,20 @@ ZeroExtendNode'new-4
 )
 
 (class-ns LinearScanLifetimeAnalysisPhaseImpl (§ extends LinearScanAllocationPhaseImpl) (§ implements LinearScanLifetimeAnalysisPhase)
-    (§ final #_"LinearScan" :allocator nil)
-    ;;;
-     ; Bit set for each variable that is contained in each loop.
-     ;;
-    (§ mutable #_"BitMap2D" :intervalInLoop nil)
+    (defn- #_"LinearScanLifetimeAnalysisPhaseImpl" LinearScanLifetimeAnalysisPhaseImpl'init-0 []
+        (hash-map
+            #_"LinearScan" :allocator nil
+            ;;;
+             ; Bit set for each variable that is contained in each loop.
+             ;;
+            #_"BitMap2D" :intervalInLoop nil
+        )
+    )
 
     (defn #_"LinearScanLifetimeAnalysisPhase" LinearScanLifetimeAnalysisPhaseImpl'new-1 [#_"LinearScan" linearScan]
         (let [
             #_"LinearScanLifetimeAnalysisPhase" this (LinearScanAllocationPhaseImpl'new-0)
+            this (merge this (LinearScanLifetimeAnalysisPhaseImpl'init-0))
             this (assoc this :allocator linearScan)
         ]
             this
@@ -34669,11 +35267,16 @@ ZeroExtendNode'new-4
 )
 
 (final-ns LinearScanOptimizeSpillPositionPhase (§ extends LinearScanAllocationPhaseImpl)
-    (§ final #_"LinearScan" :allocator nil)
+    (defn- #_"LinearScanOptimizeSpillPositionPhase" LinearScanOptimizeSpillPositionPhase'init-0 []
+        (hash-map
+            #_"LinearScan" :allocator nil
+        )
+    )
 
     (defn #_"LinearScanOptimizeSpillPositionPhase" LinearScanOptimizeSpillPositionPhase'new-1 [#_"LinearScan" allocator]
         (let [
             #_"LinearScanOptimizeSpillPositionPhase" this (LinearScanAllocationPhaseImpl'new-0)
+            this (merge this (LinearScanOptimizeSpillPositionPhase'init-0))
             this (assoc this :allocator allocator)
         ]
             this
@@ -34817,14 +35420,17 @@ ZeroExtendNode'new-4
  ; @anno LinearScanOptimizeSpillPositionPhase.IntervalBlockIterator
  ;;
 (final-ns IntervalBlockIterator (§ implements Iterator #_"<Block>")
-    (§ final #_"LinearScanOptimizeSpillPositionPhase" :phase nil)
-
-    (§ mutable #_"Range" :range nil)
-    (§ mutable #_"Block" :block nil)
+    (defn- #_"IntervalBlockIterator" IntervalBlockIterator'init-0 []
+        (hash-map
+            #_"LinearScanOptimizeSpillPositionPhase" :phase nil
+            #_"Range" :range nil
+            #_"Block" :block nil
+        )
+    )
 
     (defn #_"IntervalBlockIterator" IntervalBlockIterator'new-2 [#_"LinearScanOptimizeSpillPositionPhase" phase, #_"Interval" interval]
         (let [
-            #_"IntervalBlockIterator" this (hash-map)
+            #_"IntervalBlockIterator" this (merge (hash-map) (IntervalBlockIterator'init-0))
             this (assoc this :phase phase)
             this (assoc this :range (:first interval))
             this (assoc this :block (LinearScanImpl''blockForId-2 (:allocator (:phase this)), (:from (:range this))))
@@ -34876,11 +35482,16 @@ ZeroExtendNode'new-4
 )
 
 (final-ns LinearScanRegisterAllocationPhase (§ extends LinearScanAllocationPhaseImpl)
-    (§ final #_"LinearScan" :allocator nil)
+    (defn- #_"LinearScanRegisterAllocationPhase" LinearScanRegisterAllocationPhase'init-0 []
+        (hash-map
+            #_"LinearScan" :allocator nil
+        )
+    )
 
     (defn #_"LinearScanRegisterAllocationPhase" LinearScanRegisterAllocationPhase'new-1 [#_"LinearScan" allocator]
         (let [
             #_"LinearScanRegisterAllocationPhase" this (LinearScanAllocationPhaseImpl'new-0)
+            this (merge this (LinearScanRegisterAllocationPhase'init-0))
             this (assoc this :allocator allocator)
         ]
             this
@@ -34907,11 +35518,16 @@ ZeroExtendNode'new-4
 )
 
 (class-ns LinearScanResolveDataFlowPhaseImpl (§ extends LinearScanAllocationPhaseImpl) (§ implements LinearScanResolveDataFlowPhase)
-    (§ final #_"LinearScan" :allocator nil)
+    (defn- #_"LinearScanResolveDataFlowPhaseImpl" LinearScanResolveDataFlowPhaseImpl'init-0 []
+        (hash-map
+            #_"LinearScan" :allocator nil
+        )
+    )
 
     (defn #_"LinearScanResolveDataFlowPhase" LinearScanResolveDataFlowPhaseImpl'new-1 [#_"LinearScan" allocator]
         (let [
             #_"LinearScanResolveDataFlowPhase" this (LinearScanAllocationPhaseImpl'new-0)
+            this (merge this (LinearScanResolveDataFlowPhaseImpl'init-0))
             this (assoc this :allocator allocator)
         ]
             this
@@ -35045,19 +35661,22 @@ ZeroExtendNode'new-4
      ;;
     (§ def- #_"List<Interval>" LinearScanWalkerImpl'EMPTY_LIST (Collections/emptyList))
 
-    (§ mutable #_"Register[]" :availableRegs nil)
-
-    (§ final #_"int[]" :usePos nil)
-    (§ final #_"int[]" :blockPos nil)
-
-    (§ mutable #_"List<Interval>[]" :spillIntervals nil)
-    (§ mutable #_"MoveResolver" :moveResolver nil) ;; for ordering spill moves
-    (§ mutable #_"int" :minReg 0)
-    (§ mutable #_"int" :maxReg 0)
+    (defn- #_"LinearScanWalkerImpl" LinearScanWalkerImpl'init-0 []
+        (hash-map
+            #_"Register[]" :availableRegs nil
+            #_"int[]" :usePos nil
+            #_"int[]" :blockPos nil
+            #_"List<Interval>[]" :spillIntervals nil
+            #_"MoveResolver" :moveResolver nil ;; for ordering spill moves
+            #_"int" :minReg 0
+            #_"int" :maxReg 0
+        )
+    )
 
     (defn #_"LinearScanWalker" LinearScanWalkerImpl'new-3 [#_"LinearScan" allocator, #_"Interval" unhandledFixedFirst, #_"Interval" unhandledAnyFirst]
         (let [
             #_"LinearScanWalker" this (IntervalWalkerImpl'new-3 allocator, unhandledFixedFirst, unhandledAnyFirst)
+            this (merge this (LinearScanWalkerImpl'init-0))
             this (assoc this :moveResolver (LinearScan'''createMoveResolver-1 allocator))
             this (assoc this :spillIntervals (make-array List (#_"RegisterArray" .size (LinearScanImpl''getRegisters-1 allocator))))
             _
@@ -35786,15 +36405,17 @@ ZeroExtendNode'new-4
 )
 
 (class-ns MoveResolverImpl (§ implements MoveResolver)
-    (§ final #_"LinearScan" :allocator nil)
-
-    (§ mutable #_"int" :insertIdx 0)
-    (§ mutable #_"LIRInsertionBuffer" :insertionBuffer nil) ;; buffer where moves are inserted
-
-    (§ final #_"ArrayList<Interval>" :mappingFrom nil)
-    (§ final #_"ArrayList<Constant>" :mappingFromOpr nil)
-    (§ final #_"ArrayList<Interval>" :mappingTo nil)
-    (§ final #_"int[]" :registerBlocked nil)
+    (defn- #_"MoveResolverImpl" MoveResolverImpl'init-0 []
+        (hash-map
+            #_"LinearScan" :allocator nil
+            #_"int" :insertIdx 0
+            #_"LIRInsertionBuffer" :insertionBuffer nil ;; buffer where moves are inserted
+            #_"ArrayList<Interval>" :mappingFrom nil
+            #_"ArrayList<Constant>" :mappingFromOpr nil
+            #_"ArrayList<Interval>" :mappingTo nil
+            #_"int[]" :registerBlocked nil
+        )
+    )
 
     (§ override #_"void" MoveResolver'''setValueBlocked-3 [#_"MoveResolver" this, #_"Value" location, #_"int" direction]
         (when (instance? RegisterValue location) => (throw! (str "unhandled value " location))
@@ -35819,7 +36440,7 @@ ZeroExtendNode'new-4
 
     (defn #_"MoveResolver" MoveResolverImpl'new-1 [#_"LinearScan" allocator]
         (let [
-            #_"MoveResolver" this (hash-map)
+            #_"MoveResolver" this (merge (hash-map) (MoveResolverImpl'init-0))
             this (assoc this :allocator allocator)
             this (assoc this :mappingFrom (ArrayList.))
             this (assoc this :mappingFromOpr (ArrayList.))
@@ -36239,20 +36860,22 @@ ZeroExtendNode'new-4
  ; Represents a range of integers from a start (inclusive) to an end (exclusive).
  ;;
 (final-ns Range
-    ;;;
-     ; The start of the range, inclusive.
-     ;;
-    (§ mutable #_"int" :from 0)
-
-    ;;;
-     ; The end of the range, exclusive.
-     ;;
-    (§ mutable #_"int" :to 0)
-
-    ;;;
-     ; A link to allow the range to be put into a singly linked list.
-     ;;
-    (§ mutable #_"Range" :next nil)
+    (defn- #_"Range" Range'init-0 []
+        (hash-map
+            ;;;
+             ; The start of the range, inclusive.
+             ;;
+            #_"int" :from 0
+            ;;;
+             ; The end of the range, exclusive.
+             ;;
+            #_"int" :to 0
+            ;;;
+             ; A link to allow the range to be put into a singly linked list.
+             ;;
+            #_"Range" :next nil
+        )
+    )
 
     (defn #_"boolean" Range''intersects-2 [#_"Range" this, #_"Range" r]
         (not= (Range''intersectsAt-2 this, r) -1)
@@ -36267,7 +36890,7 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"Range" Range'new-3 [#_"int" from, #_"int" to, #_"Range" next]
         (let [
-            #_"Range" this (hash-map)
+            #_"Range" this (merge (hash-map) (Range'init-0))
             this (assoc this :from from)
             this (assoc this :to to)
             this (assoc this :next next)
@@ -36481,15 +37104,19 @@ ZeroExtendNode'new-4
 (final-ns SSAMoveResolver (§ extends MoveResolverImpl)
     (def- #_"int" SSAMoveResolver'STACK_SLOT_IN_CALLER_FRAME_IDX -1)
 
-    (§ mutable #_"int[]" :stackBlocked nil)
-
-    (§ final #_"int" :firstVirtualStackIndex 0)
+    (defn- #_"SSAMoveResolver" SSAMoveResolver'init-0 []
+        (hash-map
+            #_"int[]" :stackBlocked nil
+            #_"int" :firstVirtualStackIndex 0
+        )
+    )
 
     (defn #_"SSAMoveResolver" SSAMoveResolver'new-1 [#_"LinearScan" allocator]
         (let [
             #_"FrameMapBuilderTool" frameMapBuilderTool (LinearScanImpl''getFrameMapBuilder-1 allocator)
             #_"FrameMap" frameMap (FrameMapBuilderTool'''getFrameMap-1 frameMapBuilderTool)
             #_"SSAMoveResolver" this (MoveResolverImpl'new-1 allocator)
+            this (merge this (SSAMoveResolver'init-0))
             this (assoc this :stackBlocked (int-array (FrameMapBuilderTool'''getNumberOfStackSlots-1 frameMapBuilderTool)))
             this (assoc this :firstVirtualStackIndex (if (not (FrameMapImpl''frameNeedsAllocating-1 frameMap)) 0 (inc (FrameMap'''currentFrameSize-1 frameMap))))
         ]
@@ -36645,10 +37272,14 @@ ZeroExtendNode'new-4
 )
 
 (final-ns AMD64AddressValue (§ extends CompositeValueImpl)
-    (§ final #_"AllocatableValue" :base nil)
-    (§ final #_"AllocatableValue" :index nil)
-    (§ final #_"Scale" :scale nil)
-    (§ final #_"int" :displacement 0)
+    (defn- #_"AMD64AddressValue" AMD64AddressValue'init-0 []
+        (hash-map
+            #_"AllocatableValue" :base nil
+            #_"AllocatableValue" :index nil
+            #_"Scale" :scale nil
+            #_"int" :displacement 0
+        )
+    )
 
     (§ def- #_"EnumSet<OperandFlag>" AMD64AddressValue'flags (EnumSet/of OperandFlag'REG, OperandFlag'ILLEGAL))
 
@@ -36659,6 +37290,7 @@ ZeroExtendNode'new-4
     (defn #_"AMD64AddressValue" AMD64AddressValue'new-5 [#_"ValueKind" kind, #_"AllocatableValue" base, #_"AllocatableValue" index, #_"Scale" scale, #_"int" displacement]
         (let [
             #_"AMD64AddressValue" this (CompositeValueImpl'new-1 kind)
+            this (merge this (AMD64AddressValue'init-0))
             this (assoc this :base base)
             this (assoc this :index index)
             this (assoc this :scale scale)
@@ -36713,24 +37345,28 @@ ZeroExtendNode'new-4
 (final-ns TwoOp (§ extends LIRInstructionImpl)
     (§ def #_"LIRInstructionClass<TwoOp>" TwoOp'TYPE (LIRInstructionClass'new-1 TwoOp))
 
-    ; @LIROpcode
-    (§ final #_"AMD64RMOp" :opcode nil)
-    (§ final #_"OperandSize" :size nil)
-
-    ; @Def({OperandFlag'REG, OperandFlag'HINT})
-    (§ mutable #_"AllocatableValue" :result nil)
-    ; @Use({OperandFlag'REG})
-    (§ final #_"AllocatableValue" :x nil)
-    ;;;
-     ; This argument must be Alive to ensure that result and y are not assigned to the same register,
-     ; which would break the code generation by destroying y too early.
-     ;;
-    ; @Alive({OperandFlag'REG, OperandFlag'STACK})
-    (§ final #_"AllocatableValue" :y nil)
+    (defn- #_"TwoOp" TwoOp'init-0 []
+        (hash-map
+            ; @LIROpcode
+            #_"AMD64RMOp" :opcode nil
+            #_"OperandSize" :size nil
+            ; @Def({OperandFlag'REG, OperandFlag'HINT})
+            #_"AllocatableValue" :result nil
+            ; @Use({OperandFlag'REG})
+            #_"AllocatableValue" :x nil
+            ;;;
+             ; This argument must be Alive to ensure that result and y are not assigned to the same register,
+             ; which would break the code generation by destroying y too early.
+             ;;
+            ; @Alive({OperandFlag'REG, OperandFlag'STACK})
+            #_"AllocatableValue" :y nil
+        )
+    )
 
     (defn #_"TwoOp" TwoOp'new-5 [#_"AMD64RMOp" opcode, #_"OperandSize" size, #_"AllocatableValue" result, #_"AllocatableValue" x, #_"AllocatableValue" y]
         (let [
             #_"TwoOp" this (LIRInstructionImpl'new-1 TwoOp'TYPE)
+            this (merge this (TwoOp'init-0))
             this (assoc this :opcode opcode)
             this (assoc this :size size)
             this (assoc this :result result)
@@ -36759,20 +37395,24 @@ ZeroExtendNode'new-4
 (final-ns CommutativeTwoOp (§ extends LIRInstructionImpl)
     (§ def #_"LIRInstructionClass<CommutativeTwoOp>" CommutativeTwoOp'TYPE (LIRInstructionClass'new-1 CommutativeTwoOp))
 
-    ; @LIROpcode
-    (§ final #_"AMD64RMOp" :opcode nil)
-    (§ final #_"OperandSize" :size nil)
-
-    ; @Def({OperandFlag'REG, OperandFlag'HINT})
-    (§ mutable #_"AllocatableValue" :result nil)
-    ; @Use({OperandFlag'REG, OperandFlag'STACK})
-    (§ final #_"AllocatableValue" :x nil)
-    ; @Use({OperandFlag'REG, OperandFlag'STACK})
-    (§ final #_"AllocatableValue" :y nil)
+    (defn- #_"CommutativeTwoOp" CommutativeTwoOp'init-0 []
+        (hash-map
+            ; @LIROpcode
+            #_"AMD64RMOp" :opcode nil
+            #_"OperandSize" :size nil
+            ; @Def({OperandFlag'REG, OperandFlag'HINT})
+            #_"AllocatableValue" :result nil
+            ; @Use({OperandFlag'REG, OperandFlag'STACK})
+            #_"AllocatableValue" :x nil
+            ; @Use({OperandFlag'REG, OperandFlag'STACK})
+            #_"AllocatableValue" :y nil
+        )
+    )
 
     (defn #_"CommutativeTwoOp" CommutativeTwoOp'new-5 [#_"AMD64RMOp" opcode, #_"OperandSize" size, #_"AllocatableValue" result, #_"AllocatableValue" x, #_"AllocatableValue" y]
         (let [
             #_"CommutativeTwoOp" this (LIRInstructionImpl'new-1 CommutativeTwoOp'TYPE)
+            this (merge this (CommutativeTwoOp'init-0))
             this (assoc this :opcode opcode)
             this (assoc this :size size)
             this (assoc this :result result)
@@ -36808,15 +37448,18 @@ ZeroExtendNode'new-4
 (final-ns ConstOp (§ extends LIRInstructionImpl)
     (§ def #_"LIRInstructionClass<ConstOp>" ConstOp'TYPE (LIRInstructionClass'new-1 ConstOp))
 
-    ; @LIROpcode
-    (§ final #_"AMD64MIOp" :opcode nil)
-    (§ final #_"OperandSize" :size nil)
-
-    ; @Def({OperandFlag'REG, OperandFlag'HINT})
-    (§ mutable #_"AllocatableValue" :result nil)
-    ; @Use({OperandFlag'REG})
-    (§ final #_"AllocatableValue" :x nil)
-    (§ final #_"int" :y 0)
+    (defn- #_"ConstOp" ConstOp'init-0 []
+        (hash-map
+            ; @LIROpcode
+            #_"AMD64MIOp" :opcode nil
+            #_"OperandSize" :size nil
+            ; @Def({OperandFlag'REG, OperandFlag'HINT})
+            #_"AllocatableValue" :result nil
+            ; @Use({OperandFlag'REG})
+            #_"AllocatableValue" :x nil
+            #_"int" :y 0
+        )
+    )
 
     (defn #_"ConstOp" ConstOp'new-5b [#_"BinaryArithmetic" opcode, #_"OperandSize" size, #_"AllocatableValue" result, #_"AllocatableValue" x, #_"int" y]
         (ConstOp'new-5a (BinaryArithmetic''getMIOpcode-3 opcode, size, (NumUtil'isByte-1i y)), size, result, x, y)
@@ -36825,6 +37468,7 @@ ZeroExtendNode'new-4
     (defn #_"ConstOp" ConstOp'new-5a [#_"AMD64MIOp" opcode, #_"OperandSize" size, #_"AllocatableValue" result, #_"AllocatableValue" x, #_"int" y]
         (let [
             #_"ConstOp" this (LIRInstructionImpl'new-1 ConstOp'TYPE)
+            this (merge this (ConstOp'init-0))
             this (assoc this :opcode opcode)
             this (assoc this :size size)
             this (assoc this :result result)
@@ -36851,17 +37495,19 @@ ZeroExtendNode'new-4
 (final-ns DataTwoOp (§ extends LIRInstructionImpl)
     (§ def #_"LIRInstructionClass<DataTwoOp>" DataTwoOp'TYPE (LIRInstructionClass'new-1 DataTwoOp))
 
-    ; @LIROpcode
-    (§ final #_"AMD64RMOp" :opcode nil)
-    (§ final #_"OperandSize" :size nil)
-
-    ; @Def({OperandFlag'REG, OperandFlag'HINT})
-    (§ mutable #_"AllocatableValue" :result nil)
-    ; @Use({OperandFlag'REG})
-    (§ final #_"AllocatableValue" :x nil)
-    (§ final #_"JavaConstant" :y nil)
-
-    (§ final #_"int" :alignment 0)
+    (defn- #_"DataTwoOp" DataTwoOp'init-0 []
+        (hash-map
+            ; @LIROpcode
+            #_"AMD64RMOp" :opcode nil
+            #_"OperandSize" :size nil
+            ; @Def({OperandFlag'REG, OperandFlag'HINT})
+            #_"AllocatableValue" :result nil
+            ; @Use({OperandFlag'REG})
+            #_"AllocatableValue" :x nil
+            #_"JavaConstant" :y nil
+            #_"int" :alignment 0
+        )
+    )
 
     (defn #_"DataTwoOp" DataTwoOp'new-5 [#_"AMD64RMOp" opcode, #_"OperandSize" size, #_"AllocatableValue" result, #_"AllocatableValue" x, #_"JavaConstant" y]
         (DataTwoOp'new-6 opcode, size, result, x, y, (#_"JavaKind" .getByteCount (#_"JavaConstant" .getJavaKind y)))
@@ -36870,6 +37516,7 @@ ZeroExtendNode'new-4
     (defn #_"DataTwoOp" DataTwoOp'new-6 [#_"AMD64RMOp" opcode, #_"OperandSize" size, #_"AllocatableValue" result, #_"AllocatableValue" x, #_"JavaConstant" y, #_"int" alignment]
         (let [
             #_"DataTwoOp" this (LIRInstructionImpl'new-1 DataTwoOp'TYPE)
+            this (merge this (DataTwoOp'init-0))
             this (assoc this :opcode opcode)
             this (assoc this :size size)
             this (assoc this :result result)
@@ -36897,20 +37544,24 @@ ZeroExtendNode'new-4
 (final-ns MemoryTwoOp (§ extends LIRInstructionImpl) (§ implements ImplicitNullCheck)
     (§ def #_"LIRInstructionClass<MemoryTwoOp>" MemoryTwoOp'TYPE (LIRInstructionClass'new-1 MemoryTwoOp))
 
-    ; @LIROpcode
-    (§ final #_"AMD64RMOp" :opcode nil)
-    (§ final #_"OperandSize" :size nil)
-
-    ; @Def({OperandFlag'REG, OperandFlag'HINT})
-    (§ mutable #_"AllocatableValue" :result nil)
-    ; @Use({OperandFlag'REG})
-    (§ final #_"AllocatableValue" :x nil)
-    ; @Alive({OperandFlag'COMPOSITE})
-    (§ final #_"AMD64AddressValue" :y nil)
+    (defn- #_"MemoryTwoOp" MemoryTwoOp'init-0 []
+        (hash-map
+            ; @LIROpcode
+            #_"AMD64RMOp" :opcode nil
+            #_"OperandSize" :size nil
+            ; @Def({OperandFlag'REG, OperandFlag'HINT})
+            #_"AllocatableValue" :result nil
+            ; @Use({OperandFlag'REG})
+            #_"AllocatableValue" :x nil
+            ; @Alive({OperandFlag'COMPOSITE})
+            #_"AMD64AddressValue" :y nil
+        )
+    )
 
     (defn #_"MemoryTwoOp" MemoryTwoOp'new-5 [#_"AMD64RMOp" opcode, #_"OperandSize" size, #_"AllocatableValue" result, #_"AllocatableValue" x, #_"AMD64AddressValue" y]
         (let [
             #_"MemoryTwoOp" this (LIRInstructionImpl'new-1 MemoryTwoOp'TYPE)
+            this (merge this (MemoryTwoOp'init-0))
             this (assoc this :opcode opcode)
             this (assoc this :size size)
             this (assoc this :result result)
@@ -36941,19 +37592,23 @@ ZeroExtendNode'new-4
 (final-ns RMIOp (§ extends LIRInstructionImpl)
     (§ def #_"LIRInstructionClass<RMIOp>" RMIOp'TYPE (LIRInstructionClass'new-1 RMIOp))
 
-    ; @LIROpcode
-    (§ final #_"AMD64RMIOp" :opcode nil)
-    (§ final #_"OperandSize" :size nil)
-
-    ; @Def({OperandFlag'REG})
-    (§ mutable #_"AllocatableValue" :result nil)
-    ; @Use({OperandFlag'REG, OperandFlag'STACK})
-    (§ final #_"AllocatableValue" :x nil)
-    (§ final #_"int" :y 0)
+    (defn- #_"RMIOp" RMIOp'init-0 []
+        (hash-map
+            ; @LIROpcode
+            #_"AMD64RMIOp" :opcode nil
+            #_"OperandSize" :size nil
+            ; @Def({OperandFlag'REG})
+            #_"AllocatableValue" :result nil
+            ; @Use({OperandFlag'REG, OperandFlag'STACK})
+            #_"AllocatableValue" :x nil
+            #_"int" :y 0
+        )
+    )
 
     (defn #_"RMIOp" RMIOp'new-5 [#_"AMD64RMIOp" opcode, #_"OperandSize" size, #_"AllocatableValue" result, #_"AllocatableValue" x, #_"int" y]
         (let [
             #_"RMIOp" this (LIRInstructionImpl'new-1 RMIOp'TYPE)
+            this (merge this (RMIOp'init-0))
             this (assoc this :opcode opcode)
             this (assoc this :size size)
             this (assoc this :result result)
@@ -36987,18 +37642,22 @@ ZeroExtendNode'new-4
 (final-ns ConsumerOp (§ extends LIRInstructionImpl)
     (§ def #_"LIRInstructionClass<ConsumerOp>" ConsumerOp'TYPE (LIRInstructionClass'new-1 ConsumerOp))
 
-    ; @LIROpcode
-    (§ final #_"AMD64RMOp" :opcode nil)
-    (§ final #_"OperandSize" :size nil)
-
-    ; @Use({OperandFlag'REG})
-    (§ final #_"AllocatableValue" :x nil)
-    ; @Use({OperandFlag'REG, OperandFlag'STACK})
-    (§ final #_"AllocatableValue" :y nil)
+    (defn- #_"ConsumerOp" ConsumerOp'init-0 []
+        (hash-map
+            ; @LIROpcode
+            #_"AMD64RMOp" :opcode nil
+            #_"OperandSize" :size nil
+            ; @Use({OperandFlag'REG})
+            #_"AllocatableValue" :x nil
+            ; @Use({OperandFlag'REG, OperandFlag'STACK})
+            #_"AllocatableValue" :y nil
+        )
+    )
 
     (defn #_"ConsumerOp" ConsumerOp'new-4 [#_"AMD64RMOp" opcode, #_"OperandSize" size, #_"AllocatableValue" x, #_"AllocatableValue" y]
         (let [
             #_"ConsumerOp" this (LIRInstructionImpl'new-1 ConsumerOp'TYPE)
+            this (merge this (ConsumerOp'init-0))
             this (assoc this :opcode opcode)
             this (assoc this :size size)
             this (assoc this :x x)
@@ -37025,13 +37684,16 @@ ZeroExtendNode'new-4
 (class-ns ConsumerConstOp (§ extends LIRInstructionImpl)
     (§ def #_"LIRInstructionClass<ConsumerConstOp>" ConsumerConstOp'TYPE (LIRInstructionClass'new-1 ConsumerConstOp))
 
-    ; @LIROpcode
-    (§ final #_"AMD64MIOp" :opcode nil)
-    (§ final #_"OperandSize" :size nil)
-
-    ; @Use({OperandFlag'REG, OperandFlag'STACK})
-    (§ final #_"AllocatableValue" :x nil)
-    (§ final #_"int" :y 0)
+    (defn- #_"ConsumerConstOp" ConsumerConstOp'init-0 []
+        (hash-map
+            ; @LIROpcode
+            #_"AMD64MIOp" :opcode nil
+            #_"OperandSize" :size nil
+            ; @Use({OperandFlag'REG, OperandFlag'STACK})
+            #_"AllocatableValue" :x nil
+            #_"int" :y 0
+        )
+    )
 
     (defn #_"ConsumerConstOp" ConsumerConstOp'new-4b [#_"BinaryArithmetic" opcode, #_"OperandSize" size, #_"AllocatableValue" x, #_"int" y]
         (ConsumerConstOp'new-4a (BinaryArithmetic''getMIOpcode-3 opcode, size, (NumUtil'isByte-1i y)), size, x, y)
@@ -37044,6 +37706,7 @@ ZeroExtendNode'new-4
     (defn #_"ConsumerConstOp" ConsumerConstOp'new-5 [#_"LIRInstructionClass<? extends ConsumerConstOp>" c, #_"AMD64MIOp" opcode, #_"OperandSize" size, #_"AllocatableValue" x, #_"int" y]
         (let [
             #_"ConsumerConstOp" this (LIRInstructionImpl'new-1 c)
+            this (merge this (ConsumerConstOp'init-0))
             this (assoc this :opcode opcode)
             this (assoc this :size size)
             this (assoc this :x x)
@@ -37071,11 +37734,16 @@ ZeroExtendNode'new-4
 (final-ns VMConstOp (§ extends ConsumerConstOp)
     (§ def #_"LIRInstructionClass<VMConstOp>" VMConstOp'TYPE (LIRInstructionClass'new-1 VMConstOp))
 
-    (§ final #_"VMConstant" :c nil)
+    (defn- #_"VMConstOp" VMConstOp'init-0 []
+        (hash-map
+            #_"VMConstant" :c nil
+        )
+    )
 
     (defn #_"VMConstOp" VMConstOp'new-3 [#_"AMD64MIOp" opcode, #_"AllocatableValue" x, #_"VMConstant" c]
         (let [
             #_"VMConstOp" this (ConsumerConstOp'new-5 VMConstOp'TYPE, opcode, OperandSizeImpl'DWORD, x, 0xdeaddead)
+            this (merge this (VMConstOp'init-0))
             this (assoc this :c c)
         ]
             this
@@ -37097,15 +37765,17 @@ ZeroExtendNode'new-4
 (final-ns DataOp (§ extends LIRInstructionImpl)
     (§ def #_"LIRInstructionClass<DataOp>" DataOp'TYPE (LIRInstructionClass'new-1 DataOp))
 
-    ; @LIROpcode
-    (§ final #_"AMD64RMOp" :opcode nil)
-    (§ final #_"OperandSize" :size nil)
-
-    ; @Use({OperandFlag'REG})
-    (§ final #_"AllocatableValue" :x nil)
-    (§ final #_"Constant" :y nil)
-
-    (§ final #_"int" :alignment 0)
+    (defn- #_"DataOp" DataOp'init-0 []
+        (hash-map
+            ; @LIROpcode
+            #_"AMD64RMOp" :opcode nil
+            #_"OperandSize" :size nil
+            ; @Use({OperandFlag'REG})
+            #_"AllocatableValue" :x nil
+            #_"Constant" :y nil
+            #_"int" :alignment 0
+        )
+    )
 
     (defn #_"DataOp" DataOp'new-4 [#_"AMD64RMOp" opcode, #_"OperandSize" size, #_"AllocatableValue" x, #_"Constant" y]
         (DataOp'new-5 opcode, size, x, y, (:bytes size))
@@ -37114,6 +37784,7 @@ ZeroExtendNode'new-4
     (defn #_"DataOp" DataOp'new-5 [#_"AMD64RMOp" opcode, #_"OperandSize" size, #_"AllocatableValue" x, #_"Constant" y, #_"int" alignment]
         (let [
             #_"DataOp" this (LIRInstructionImpl'new-1 DataOp'TYPE)
+            this (merge this (DataOp'init-0))
             this (assoc this :opcode opcode)
             this (assoc this :size size)
             this (assoc this :x x)
@@ -37138,19 +37809,23 @@ ZeroExtendNode'new-4
 (final-ns MemoryRMOp (§ extends LIRInstructionImpl) (§ implements ImplicitNullCheck)
     (§ def #_"LIRInstructionClass<MemoryRMOp>" MemoryRMOp'TYPE (LIRInstructionClass'new-1 MemoryRMOp))
 
-    ; @LIROpcode
-    (§ final #_"AMD64RMOp" :opcode nil)
-    (§ final #_"OperandSize" :size nil)
-
-    ; @Use({OperandFlag'REG})
-    (§ final #_"AllocatableValue" :x nil)
-    ; @Use({OperandFlag'COMPOSITE})
-    (§ final #_"AMD64AddressValue" :y nil)
+    (defn- #_"MemoryRMOp" MemoryRMOp'init-0 []
+        (hash-map
+            ; @LIROpcode
+            #_"AMD64RMOp" :opcode nil
+            #_"OperandSize" :size nil
+            ; @Use({OperandFlag'REG})
+            #_"AllocatableValue" :x nil
+            ; @Use({OperandFlag'COMPOSITE})
+            #_"AMD64AddressValue" :y nil
+        )
+    )
 
     #_unused
     (defn #_"MemoryRMOp" MemoryRMOp'new-4 [#_"AMD64RMOp" opcode, #_"OperandSize" size, #_"AllocatableValue" x, #_"AMD64AddressValue" y]
         (let [
             #_"MemoryRMOp" this (LIRInstructionImpl'new-1 MemoryRMOp'TYPE)
+            this (merge this (MemoryRMOp'init-0))
             this (assoc this :opcode opcode)
             this (assoc this :size size)
             this (assoc this :x x)
@@ -37178,18 +37853,22 @@ ZeroExtendNode'new-4
 (final-ns MemoryMROp (§ extends LIRInstructionImpl) (§ implements ImplicitNullCheck)
     (§ def #_"LIRInstructionClass<MemoryMROp>" MemoryMROp'TYPE (LIRInstructionClass'new-1 MemoryMROp))
 
-    ; @LIROpcode
-    (§ final #_"AMD64MROp" :opcode nil)
-    (§ final #_"OperandSize" :size nil)
-
-    ; @Use({OperandFlag'COMPOSITE})
-    (§ final #_"AMD64AddressValue" :x nil)
-    ; @Use({OperandFlag'REG})
-    (§ final #_"AllocatableValue" :y nil)
+    (defn- #_"MemoryMROp" MemoryMROp'init-0 []
+        (hash-map
+            ; @LIROpcode
+            #_"AMD64MROp" :opcode nil
+            #_"OperandSize" :size nil
+            ; @Use({OperandFlag'COMPOSITE})
+            #_"AMD64AddressValue" :x nil
+            ; @Use({OperandFlag'REG})
+            #_"AllocatableValue" :y nil
+        )
+    )
 
     (defn #_"MemoryMROp" MemoryMROp'new-4 [#_"AMD64MROp" opcode, #_"OperandSize" size, #_"AMD64AddressValue" x, #_"AllocatableValue" y]
         (let [
             #_"MemoryMROp" this (LIRInstructionImpl'new-1 MemoryMROp'TYPE)
+            this (merge this (MemoryMROp'init-0))
             this (assoc this :opcode opcode)
             this (assoc this :size size)
             this (assoc this :x x)
@@ -37217,13 +37896,16 @@ ZeroExtendNode'new-4
 (class-ns MemoryConstOp (§ extends LIRInstructionImpl) (§ implements ImplicitNullCheck)
     (§ def #_"LIRInstructionClass<MemoryConstOp>" MemoryConstOp'TYPE (LIRInstructionClass'new-1 MemoryConstOp))
 
-    ; @LIROpcode
-    (§ final #_"AMD64MIOp" :opcode nil)
-    (§ final #_"OperandSize" :size nil)
-
-    ; @Use({OperandFlag'COMPOSITE})
-    (§ final #_"AMD64AddressValue" :x nil)
-    (§ final #_"int" :y 0)
+    (defn- #_"MemoryConstOp" MemoryConstOp'init-0 []
+        (hash-map
+            ; @LIROpcode
+            #_"AMD64MIOp" :opcode nil
+            #_"OperandSize" :size nil
+            ; @Use({OperandFlag'COMPOSITE})
+            #_"AMD64AddressValue" :x nil
+            #_"int" :y 0
+        )
+    )
 
     #_unused
     (defn #_"MemoryConstOp" MemoryConstOp'new-4b [#_"BinaryArithmetic" opcode, #_"OperandSize" size, #_"AMD64AddressValue" x, #_"int" y]
@@ -37237,6 +37919,7 @@ ZeroExtendNode'new-4
     (defn #_"MemoryConstOp" MemoryConstOp'new-5 [#_"LIRInstructionClass<? extends MemoryConstOp>" c, #_"AMD64MIOp" opcode, #_"OperandSize" size, #_"AMD64AddressValue" x, #_"int" y]
         (let [
             #_"MemoryConstOp" this (LIRInstructionImpl'new-1 c)
+            this (merge this (MemoryConstOp'init-0))
             this (assoc this :opcode opcode)
             this (assoc this :size size)
             this (assoc this :x x)
@@ -37265,11 +37948,16 @@ ZeroExtendNode'new-4
 (final-ns MemoryVMConstOp (§ extends MemoryConstOp)
     (§ def #_"LIRInstructionClass<MemoryVMConstOp>" MemoryVMConstOp'TYPE (LIRInstructionClass'new-1 MemoryVMConstOp))
 
-    (§ final #_"VMConstant" :c nil)
+    (defn- #_"MemoryVMConstOp" MemoryVMConstOp'init-0 []
+        (hash-map
+            #_"VMConstant" :c nil
+        )
+    )
 
     (defn #_"MemoryVMConstOp" MemoryVMConstOp'new-3 [#_"AMD64MIOp" opcode, #_"AMD64AddressValue" x, #_"VMConstant" c]
         (let [
             #_"MemoryVMConstOp" this (MemoryConstOp'new-5 MemoryVMConstOp'TYPE, opcode, OperandSizeImpl'DWORD, x, 0xdeaddead)
+            this (merge this (MemoryVMConstOp'init-0))
             this (assoc this :c c)
         ]
             this
@@ -37287,14 +37975,19 @@ ZeroExtendNode'new-4
 (final-ns AMD64ByteSwapOp (§ extends LIRInstructionImpl)
     (§ def #_"LIRInstructionClass<AMD64ByteSwapOp>" AMD64ByteSwapOp'TYPE (LIRInstructionClass'new-1 AMD64ByteSwapOp))
 
-    ; @Def({OperandFlag'REG, OperandFlag'HINT})
-    (§ mutable #_"Value" :result nil)
-    ; @Use
-    (§ mutable #_"Value" :input nil)
+    (defn- #_"AMD64ByteSwapOp" AMD64ByteSwapOp'init-0 []
+        (hash-map
+            ; @Def({OperandFlag'REG, OperandFlag'HINT})
+            #_"Value" :result nil
+            ; @Use
+            #_"Value" :input nil
+        )
+    )
 
     (defn #_"AMD64ByteSwapOp" AMD64ByteSwapOp'new-2 [#_"Value" result, #_"Value" input]
         (let [
             #_"AMD64ByteSwapOp" this (LIRInstructionImpl'new-1 AMD64ByteSwapOp'TYPE)
+            this (merge this (AMD64ByteSwapOp'init-0))
             this (assoc this :result result)
             this (assoc this :input input)
         ]
@@ -37376,16 +38069,21 @@ ZeroExtendNode'new-4
 (class-ns CallOp (§ extends LIRInstructionImpl)
     (§ def #_"LIRInstructionClass<CallOp>" CallOp'TYPE (LIRInstructionClass'new-1 CallOp))
 
-    ; @Def({OperandFlag'REG, OperandFlag'ILLEGAL})
-    (§ mutable #_"Value" :result nil)
-    ; @Use({OperandFlag'REG, OperandFlag'STACK})
-    (§ mutable #_"Value[]" :parameters nil)
-    ; @Temp({OperandFlag'REG, OperandFlag'STACK})
-    (§ mutable #_"Value[]" :temporaries nil)
+    (defn- #_"CallOp" CallOp'init-0 []
+        (hash-map
+            ; @Def({OperandFlag'REG, OperandFlag'ILLEGAL})
+            #_"Value" :result nil
+            ; @Use({OperandFlag'REG, OperandFlag'STACK})
+            #_"Value[]" :parameters nil
+            ; @Temp({OperandFlag'REG, OperandFlag'STACK})
+            #_"Value[]" :temporaries nil
+        )
+    )
 
     (defn #_"CallOp" CallOp'new-4 [#_"LIRInstructionClass<? extends CallOp>" c, #_"Value" result, #_"Value[]" parameters, #_"Value[]" temporaries]
         (let [
             #_"CallOp" this (LIRInstructionImpl'new-1 c)
+            this (merge this (CallOp'init-0))
             this (assoc this :result result)
             this (assoc this :parameters parameters)
             this (assoc this :temporaries (LIRInstructionImpl'addStackSlotsToTemporaries-2 parameters, temporaries))
@@ -37405,11 +38103,16 @@ ZeroExtendNode'new-4
 (class-ns MethodCallOp (§ extends CallOp)
     (§ def #_"LIRInstructionClass<MethodCallOp>" MethodCallOp'TYPE (LIRInstructionClass'new-1 MethodCallOp))
 
-    (§ final #_"ResolvedJavaMethod" :callTarget nil)
+    (defn- #_"MethodCallOp" MethodCallOp'init-0 []
+        (hash-map
+            #_"ResolvedJavaMethod" :callTarget nil
+        )
+    )
 
     (defn #_"MethodCallOp" MethodCallOp'new-5 [#_"LIRInstructionClass<? extends MethodCallOp>" c, #_"ResolvedJavaMethod" callTarget, #_"Value" result, #_"Value[]" parameters, #_"Value[]" temps]
         (let [
             #_"MethodCallOp" this (CallOp'new-4 c, result, parameters, temps)
+            this (merge this (MethodCallOp'init-0))
             this (assoc this :callTarget callTarget)
         ]
             this
@@ -37449,11 +38152,16 @@ ZeroExtendNode'new-4
 (class-ns ForeignCallOp (§ extends CallOp)
     (§ def #_"LIRInstructionClass<ForeignCallOp>" ForeignCallOp'TYPE (LIRInstructionClass'new-1 ForeignCallOp))
 
-    (§ final #_"ForeignCallLinkage" :callTarget nil)
+    (defn- #_"ForeignCallOp" ForeignCallOp'init-0 []
+        (hash-map
+            #_"ForeignCallLinkage" :callTarget nil
+        )
+    )
 
     (defn #_"ForeignCallOp" ForeignCallOp'new-5 [#_"LIRInstructionClass<? extends ForeignCallOp>" c, #_"ForeignCallLinkage" callTarget, #_"Value" result, #_"Value[]" parameters, #_"Value[]" temps]
         (let [
             #_"ForeignCallOp" this (CallOp'new-4 c, result, parameters, temps)
+            this (merge this (ForeignCallOp'init-0))
             this (assoc this :callTarget callTarget)
         ]
             this
@@ -37489,12 +38197,17 @@ ZeroExtendNode'new-4
 (final-ns DirectFarForeignCallOp (§ extends ForeignCallOp)
     (§ def #_"LIRInstructionClass<DirectFarForeignCallOp>" DirectFarForeignCallOp'TYPE (LIRInstructionClass'new-1 DirectFarForeignCallOp))
 
-    ; @Temp({OperandFlag'REG})
-    (§ mutable #_"AllocatableValue" :callTemp nil)
+    (defn- #_"DirectFarForeignCallOp" DirectFarForeignCallOp'init-0 []
+        (hash-map
+            ; @Temp({OperandFlag'REG})
+            #_"AllocatableValue" :callTemp nil
+        )
+    )
 
     (defn #_"DirectFarForeignCallOp" DirectFarForeignCallOp'new-4 [#_"ForeignCallLinkage" callTarget, #_"Value" result, #_"Value[]" parameters, #_"Value[]" temps]
         (let [
             #_"DirectFarForeignCallOp" this (ForeignCallOp'new-5 DirectFarForeignCallOp'TYPE, callTarget, result, parameters, temps)
+            this (merge this (DirectFarForeignCallOp'init-0))
             ;; The register allocator does not support virtual registers that are used at the call site, so use a fixed register.
             this (assoc this :callTemp (#_"Register" .asValue AMD64/rax, (LIRKind'value-1 AMD64Kind/QWORD)))
         ]
@@ -37511,16 +38224,21 @@ ZeroExtendNode'new-4
 (final-ns AMD64CCall (§ extends LIRInstructionImpl)
     (§ def #_"LIRInstructionClass<AMD64CCall>" AMD64CCall'TYPE (LIRInstructionClass'new-1 AMD64CCall))
 
-    ; @Def({OperandFlag'REG, OperandFlag'ILLEGAL})
-    (§ mutable #_"Value" :result nil)
-    ; @Use({OperandFlag'REG, OperandFlag'STACK})
-    (§ mutable #_"Value[]" :parameters nil)
-    ; @Use({OperandFlag'REG})
-    (§ mutable #_"Value" :functionPtr nil)
+    (defn- #_"AMD64CCall" AMD64CCall'init-0 []
+        (hash-map
+            ; @Def({OperandFlag'REG, OperandFlag'ILLEGAL})
+            #_"Value" :result nil
+            ; @Use({OperandFlag'REG, OperandFlag'STACK})
+            #_"Value[]" :parameters nil
+            ; @Use({OperandFlag'REG})
+            #_"Value" :functionPtr nil
+        )
+    )
 
     (defn #_"AMD64CCall" AMD64CCall'new-3 [#_"Value" result, #_"Value" functionPtr, #_"Value[]" parameters]
         (let [
             #_"AMD64CCall" this (LIRInstructionImpl'new-1 AMD64CCall'TYPE)
+            this (merge this (AMD64CCall'init-0))
             this (assoc this :result result)
             this (assoc this :functionPtr functionPtr)
             this (assoc this :parameters parameters)
@@ -37547,16 +38265,20 @@ ZeroExtendNode'new-4
 (final-ns AMD64ClearRegisterOp (§ extends LIRInstructionImpl)
     (§ def #_"LIRInstructionClass<AMD64ClearRegisterOp>" AMD64ClearRegisterOp'TYPE (LIRInstructionClass'new-1 AMD64ClearRegisterOp))
 
-    ; @LIROpcode
-    (§ final #_"AMD64RMOp" :op nil)
-    (§ final #_"OperandSize" :size nil)
-
-    ; @Def({OperandFlag'REG})
-    (§ mutable #_"AllocatableValue" :result nil)
+    (defn- #_"AMD64ClearRegisterOp" AMD64ClearRegisterOp'init-0 []
+        (hash-map
+            ; @LIROpcode
+            #_"AMD64RMOp" :op nil
+            #_"OperandSize" :size nil
+            ; @Def({OperandFlag'REG})
+            #_"AllocatableValue" :result nil
+        )
+    )
 
     (defn #_"AMD64ClearRegisterOp" AMD64ClearRegisterOp'new-2 [#_"OperandSize" size, #_"AllocatableValue" result]
         (let [
             #_"AMD64ClearRegisterOp" this (LIRInstructionImpl'new-1 AMD64ClearRegisterOp'TYPE)
+            this (merge this (AMD64ClearRegisterOp'init-0))
             this (assoc this :op (BinaryArithmetic''getRMOpcode-2 BinaryArithmetic'XOR, size))
             this (assoc this :size size)
             this (assoc this :result result)
@@ -37626,13 +38348,18 @@ ZeroExtendNode'new-4
 (final-ns ReturnOp (§ extends LIRInstructionImpl) (§ implements BlockEndOp)
     (§ def #_"LIRInstructionClass<ReturnOp>" ReturnOp'TYPE (LIRInstructionClass'new-1 ReturnOp))
 
-    ; @Use({OperandFlag'REG, OperandFlag'ILLEGAL})
-    (§ final #_"Value" :x nil)
+    (defn- #_"ReturnOp" ReturnOp'init-0 []
+        (hash-map
+            ; @Use({OperandFlag'REG, OperandFlag'ILLEGAL})
+            #_"Value" :x nil
+        )
+    )
 
     #_unused
     (defn #_"ReturnOp" ReturnOp'new-1 [#_"Value" x]
         (let [
             #_"ReturnOp" this (LIRInstructionImpl'new-1 ReturnOp'TYPE)
+            this (merge this (ReturnOp'init-0))
             this (assoc this :x x)
         ]
             this
@@ -37652,11 +38379,14 @@ ZeroExtendNode'new-4
 (final-ns BranchOp (§ extends LIRInstructionImpl) (§ implements StandardBranchOp)
     (§ def #_"LIRInstructionClass<BranchOp>" BranchOp'TYPE (LIRInstructionClass'new-1 BranchOp))
 
-    (§ final #_"ConditionFlag" :condition nil)
-    (§ final #_"LabelRef" :trueDestination nil)
-    (§ final #_"LabelRef" :falseDestination nil)
-
-    (§ final #_"double" :trueDestinationProbability 0.0)
+    (defn- #_"BranchOp" BranchOp'init-0 []
+        (hash-map
+            #_"ConditionFlag" :condition nil
+            #_"LabelRef" :trueDestination nil
+            #_"LabelRef" :falseDestination nil
+            #_"double" :trueDestinationProbability 0.0
+        )
+    )
 
     (defn #_"BranchOp" BranchOp'new-4c [#_"Condition" condition, #_"LabelRef" trueDestination, #_"LabelRef" falseDestination, #_"double" trueDestinationProbability]
         (BranchOp'new-4f (AMD64ControlFlow'intCond-1 condition), trueDestination, falseDestination, trueDestinationProbability)
@@ -37669,6 +38399,7 @@ ZeroExtendNode'new-4
     (defn #_"BranchOp" BranchOp'new-5 [#_"LIRInstructionClass<? extends BranchOp>" c, #_"ConditionFlag" condition, #_"LabelRef" trueDestination, #_"LabelRef" falseDestination, #_"double" trueDestinationProbability]
         (let [
             #_"BranchOp" this (LIRInstructionImpl'new-1 c)
+            this (merge this (BranchOp'init-0))
             this (assoc this :condition condition)
             this (assoc this :trueDestination trueDestination)
             this (assoc this :falseDestination falseDestination)
@@ -37716,14 +38447,18 @@ ZeroExtendNode'new-4
 (class-ns StrategySwitchOp (§ extends LIRInstructionImpl) (§ implements BlockEndOp)
     (§ def #_"LIRInstructionClass<StrategySwitchOp>" StrategySwitchOp'TYPE (LIRInstructionClass'new-1 StrategySwitchOp))
 
-    (§ final #_"Constant[]" :keyConstants nil)
-    (§ final #_"LabelRef[]" :keyTargets nil)
-    (§ mutable #_"LabelRef" :defaultTarget nil)
-    ; @Alive({OperandFlag'REG})
-    (§ mutable #_"Value" :key nil)
-    ; @Temp({OperandFlag'REG, OperandFlag'ILLEGAL})
-    (§ mutable #_"Value" :scratch nil)
-    (§ final #_"SwitchStrategy" :strategy nil)
+    (defn- #_"StrategySwitchOp" StrategySwitchOp'init-0 []
+        (hash-map
+            #_"Constant[]" :keyConstants nil
+            #_"LabelRef[]" :keyTargets nil
+            #_"LabelRef" :defaultTarget nil
+            ; @Alive({OperandFlag'REG})
+            #_"Value" :key nil
+            ; @Temp({OperandFlag'REG, OperandFlag'ILLEGAL})
+            #_"Value" :scratch nil
+            #_"SwitchStrategy" :strategy nil
+        )
+    )
 
     #_unused
     (defn #_"StrategySwitchOp" StrategySwitchOp'new-5 [#_"SwitchStrategy" strategy, #_"LabelRef[]" keyTargets, #_"LabelRef" defaultTarget, #_"Value" key, #_"Value" scratch]
@@ -37733,6 +38468,7 @@ ZeroExtendNode'new-4
     (defn #_"StrategySwitchOp" StrategySwitchOp'new-6 [#_"LIRInstructionClass<? extends StrategySwitchOp>" c, #_"SwitchStrategy" strategy, #_"LabelRef[]" keyTargets, #_"LabelRef" defaultTarget, #_"Value" key, #_"Value" scratch]
         (let [
             #_"StrategySwitchOp" this (LIRInstructionImpl'new-1 c)
+            this (merge this (StrategySwitchOp'init-0))
             this (assoc this :strategy strategy)
             this (assoc this :keyConstants (:keyConstants strategy))
             this (assoc this :keyTargets keyTargets)
@@ -37751,14 +38487,18 @@ ZeroExtendNode'new-4
 )
 
 (class-ns AMD64SwitchClosureImpl (§ extends BaseSwitchClosureImpl) (§ implements AMD64SwitchClosure)
-    (§ final #_"StrategySwitchOp" :op nil)
-
-    (§ final #_"Register" :keyRegister nil)
-    (§ final #_"Assembler" :asm nil)
+    (defn- #_"AMD64SwitchClosureImpl" AMD64SwitchClosureImpl'init-0 []
+        (hash-map
+            #_"StrategySwitchOp" :op nil
+            #_"Register" :keyRegister nil
+            #_"Assembler" :asm nil
+        )
+    )
 
     (defn #_"AMD64SwitchClosure" AMD64SwitchClosureImpl'new-3 [#_"StrategySwitchOp" op, #_"Register" keyRegister, #_"Assembler" asm]
         (let [
             #_"AMD64SwitchClosure" this (BaseSwitchClosureImpl'new-3 asm, (:keyTargets op), (:defaultTarget op))
+            this (merge this (AMD64SwitchClosureImpl'init-0))
             this (assoc this :op op)
             this (assoc this :keyRegister keyRegister)
             this (assoc this :asm asm)
@@ -37793,19 +38533,24 @@ ZeroExtendNode'new-4
 (final-ns TableSwitchOp (§ extends LIRInstructionImpl) (§ implements BlockEndOp)
     (§ def #_"LIRInstructionClass<TableSwitchOp>" TableSwitchOp'TYPE (LIRInstructionClass'new-1 TableSwitchOp))
 
-    (§ final #_"int" :lowKey 0)
-    (§ final #_"LabelRef" :defaultTarget nil)
-    (§ final #_"LabelRef[]" :targets nil)
-    ; @Use
-    (§ final #_"Value" :index nil)
-    ; @Temp({OperandFlag'REG, OperandFlag'HINT})
-    (§ mutable #_"Value" :idxScratch nil)
-    ; @Temp
-    (§ mutable #_"Value" :scratch nil)
+    (defn- #_"TableSwitchOp" TableSwitchOp'init-0 []
+        (hash-map
+            #_"int" :lowKey 0
+            #_"LabelRef" :defaultTarget nil
+            #_"LabelRef[]" :targets nil
+            ; @Use
+            #_"Value" :index nil
+            ; @Temp({OperandFlag'REG, OperandFlag'HINT})
+            #_"Value" :idxScratch nil
+            ; @Temp
+            #_"Value" :scratch nil
+        )
+    )
 
     (defn #_"TableSwitchOp" TableSwitchOp'new-6 [#_"int" lowKey, #_"LabelRef" defaultTarget, #_"LabelRef[]" targets, #_"Value" index, #_"Variable" scratch, #_"Variable" idxScratch]
         (let [
             #_"TableSwitchOp" this (LIRInstructionImpl'new-1 TableSwitchOp'TYPE)
+            this (merge this (TableSwitchOp'init-0))
             this (assoc this :lowKey lowKey)
             this (assoc this :defaultTarget defaultTarget)
             this (assoc this :targets targets)
@@ -37901,13 +38646,18 @@ ZeroExtendNode'new-4
 (final-ns CondSetOp (§ extends LIRInstructionImpl)
     (§ def #_"LIRInstructionClass<CondSetOp>" CondSetOp'TYPE (LIRInstructionClass'new-1 CondSetOp))
 
-    ; @Def({OperandFlag'REG, OperandFlag'HINT})
-    (§ mutable #_"Value" :result nil)
-    (§ final #_"ConditionFlag" :condition nil)
+    (defn- #_"CondSetOp" CondSetOp'init-0 []
+        (hash-map
+            ; @Def({OperandFlag'REG, OperandFlag'HINT})
+            #_"Value" :result nil
+            #_"ConditionFlag" :condition nil
+        )
+    )
 
     (defn #_"CondSetOp" CondSetOp'new-2 [#_"Variable" result, #_"Condition" condition]
         (let [
             #_"CondSetOp" this (LIRInstructionImpl'new-1 CondSetOp'TYPE)
+            this (merge this (CondSetOp'init-0))
             this (assoc this :result result)
             this (assoc this :condition (AMD64ControlFlow'intCond-1 condition))
         ]
@@ -37928,17 +38678,22 @@ ZeroExtendNode'new-4
 (final-ns CondMoveOp (§ extends LIRInstructionImpl)
     (§ def #_"LIRInstructionClass<CondMoveOp>" CondMoveOp'TYPE (LIRInstructionClass'new-1 CondMoveOp))
 
-    ; @Def({OperandFlag'REG, OperandFlag'HINT})
-    (§ mutable #_"Value" :result nil)
-    ; @Alive({OperandFlag'REG})
-    (§ mutable #_"Value" :trueValue nil)
-    ; @Use({OperandFlag'REG, OperandFlag'STACK, OperandFlag'CONST})
-    (§ mutable #_"Value" :falseValue nil)
-    (§ final #_"ConditionFlag" :condition nil)
+    (defn- #_"CondMoveOp" CondMoveOp'init-0 []
+        (hash-map
+            ; @Def({OperandFlag'REG, OperandFlag'HINT})
+            #_"Value" :result nil
+            ; @Alive({OperandFlag'REG})
+            #_"Value" :trueValue nil
+            ; @Use({OperandFlag'REG, OperandFlag'STACK, OperandFlag'CONST})
+            #_"Value" :falseValue nil
+            #_"ConditionFlag" :condition nil
+        )
+    )
 
     (defn #_"CondMoveOp" CondMoveOp'new-4 [#_"Variable" result, #_"Condition" condition, #_"AllocatableValue" trueValue, #_"Value" falseValue]
         (let [
             #_"CondMoveOp" this (LIRInstructionImpl'new-1 CondMoveOp'TYPE)
+            this (merge this (CondMoveOp'init-0))
             this (assoc this :result result)
             this (assoc this :condition (AMD64ControlFlow'intCond-1 condition))
             this (assoc this :trueValue trueValue)
@@ -37994,11 +38749,16 @@ ZeroExtendNode'new-4
  ; relative to the stack pointer.
  ;;
 (final-ns AMD64FrameMap (§ extends FrameMapImpl)
-    (§ mutable #_"StackSlot" :rbpSpillSlot nil)
+    (defn- #_"AMD64FrameMap" AMD64FrameMap'init-0 []
+        (hash-map
+            #_"StackSlot" :rbpSpillSlot nil
+        )
+    )
 
     (defn #_"AMD64FrameMap" AMD64FrameMap'new-0 []
         (let [
             #_"AMD64FrameMap" this (FrameMapImpl'new-0)
+            this (merge this (AMD64FrameMap'init-0))
             ;; (negative) offset relative to sp + total frame size
             this (assoc this :initialSpillSize (FrameMapImpl''returnAddressSize-1 this))
             this (assoc this :spillSize (:initialSpillSize this))
@@ -38213,11 +38973,16 @@ ZeroExtendNode'new-4
 (class-ns AbstractMoveOp (§ extends LIRInstructionImpl) (§ implements ValueMoveOp)
     (§ def #_"LIRInstructionClass<AbstractMoveOp>" AbstractMoveOp'TYPE (LIRInstructionClass'new-1 AbstractMoveOp))
 
-    (§ mutable #_"AMD64Kind" :moveKind nil)
+    (defn- #_"AbstractMoveOp" AbstractMoveOp'init-0 []
+        (hash-map
+            #_"AMD64Kind" :moveKind nil
+        )
+    )
 
     (defn #_"AbstractMoveOp" AbstractMoveOp'new-2 [#_"LIRInstructionClass<? extends AbstractMoveOp>" c, #_"AMD64Kind" moveKind]
         (let [
             #_"AbstractMoveOp" this (LIRInstructionImpl'new-1 c)
+            this (merge this (AbstractMoveOp'init-0))
             this (assoc this :moveKind moveKind)
         ]
             this
@@ -38237,14 +39002,19 @@ ZeroExtendNode'new-4
 (final-ns MoveToRegOp (§ extends AbstractMoveOp)
     (§ def #_"LIRInstructionClass<MoveToRegOp>" MoveToRegOp'TYPE (LIRInstructionClass'new-1 MoveToRegOp))
 
-    ; @Def({OperandFlag'REG, OperandFlag'HINT})
-    (§ mutable #_"AllocatableValue" :result nil)
-    ; @Use({OperandFlag'REG, OperandFlag'STACK})
-    (§ mutable #_"AllocatableValue" :input nil)
+    (defn- #_"MoveToRegOp" MoveToRegOp'init-0 []
+        (hash-map
+            ; @Def({OperandFlag'REG, OperandFlag'HINT})
+            #_"AllocatableValue" :result nil
+            ; @Use({OperandFlag'REG, OperandFlag'STACK})
+            #_"AllocatableValue" :input nil
+        )
+    )
 
     (defn #_"MoveToRegOp" MoveToRegOp'new-3 [#_"AMD64Kind" moveKind, #_"AllocatableValue" result, #_"AllocatableValue" input]
         (let [
             #_"MoveToRegOp" this (AbstractMoveOp'new-2 MoveToRegOp'TYPE, moveKind)
+            this (merge this (MoveToRegOp'init-0))
             this (assoc this :result result)
             this (assoc this :input input)
         ]
@@ -38268,14 +39038,19 @@ ZeroExtendNode'new-4
 (final-ns MoveFromRegOp (§ extends AbstractMoveOp)
     (§ def #_"LIRInstructionClass<MoveFromRegOp>" MoveFromRegOp'TYPE (LIRInstructionClass'new-1 MoveFromRegOp))
 
-    ; @Def({OperandFlag'REG, OperandFlag'STACK})
-    (§ mutable #_"AllocatableValue" :result nil)
-    ; @Use({OperandFlag'REG, OperandFlag'HINT})
-    (§ mutable #_"AllocatableValue" :input nil)
+    (defn- #_"MoveFromRegOp" MoveFromRegOp'init-0 []
+        (hash-map
+            ; @Def({OperandFlag'REG, OperandFlag'STACK})
+            #_"AllocatableValue" :result nil
+            ; @Use({OperandFlag'REG, OperandFlag'HINT})
+            #_"AllocatableValue" :input nil
+        )
+    )
 
     (defn #_"MoveFromRegOp" MoveFromRegOp'new-3 [#_"AMD64Kind" moveKind, #_"AllocatableValue" result, #_"AllocatableValue" input]
         (let [
             #_"MoveFromRegOp" this (AbstractMoveOp'new-2 MoveFromRegOp'TYPE, moveKind)
+            this (merge this (MoveFromRegOp'init-0))
             this (assoc this :result result)
             this (assoc this :input input)
         ]
@@ -38299,13 +39074,18 @@ ZeroExtendNode'new-4
 (final-ns MoveFromConstOp (§ extends LIRInstructionImpl) (§ implements LoadConstantOp)
     (§ def #_"LIRInstructionClass<MoveFromConstOp>" MoveFromConstOp'TYPE (LIRInstructionClass'new-1 MoveFromConstOp))
 
-    ; @Def({OperandFlag'REG, OperandFlag'STACK})
-    (§ mutable #_"AllocatableValue" :result nil)
-    (§ final #_"JavaConstant" :input nil)
+    (defn- #_"MoveFromConstOp" MoveFromConstOp'init-0 []
+        (hash-map
+            ; @Def({OperandFlag'REG, OperandFlag'STACK})
+            #_"AllocatableValue" :result nil
+            #_"JavaConstant" :input nil
+        )
+    )
 
     (defn #_"MoveFromConstOp" MoveFromConstOp'new-2 [#_"AllocatableValue" result, #_"JavaConstant" input]
         (let [
             #_"MoveFromConstOp" this (LIRInstructionImpl'new-1 MoveFromConstOp'TYPE)
+            this (merge this (MoveFromConstOp'init-0))
             this (assoc this :result result)
             this (assoc this :input input)
         ]
@@ -38337,18 +39117,22 @@ ZeroExtendNode'new-4
 (final-ns AMD64StackMove (§ extends LIRInstructionImpl) (§ implements ValueMoveOp)
     (§ def #_"LIRInstructionClass<AMD64StackMove>" AMD64StackMove'TYPE (LIRInstructionClass'new-1 AMD64StackMove))
 
-    ; @Def({OperandFlag'STACK})
-    (§ mutable #_"AllocatableValue" :result nil)
-    ; @Use({OperandFlag'STACK, OperandFlag'HINT})
-    (§ mutable #_"AllocatableValue" :input nil)
-    ; @Alive({OperandFlag'STACK, OperandFlag'UNINITIALIZED})
-    (§ mutable #_"AllocatableValue" :backupSlot nil)
-
-    (§ mutable #_"Register" :scratch nil)
+    (defn- #_"AMD64StackMove" AMD64StackMove'init-0 []
+        (hash-map
+            ; @Def({OperandFlag'STACK})
+            #_"AllocatableValue" :result nil
+            ; @Use({OperandFlag'STACK, OperandFlag'HINT})
+            #_"AllocatableValue" :input nil
+            ; @Alive({OperandFlag'STACK, OperandFlag'UNINITIALIZED})
+            #_"AllocatableValue" :backupSlot nil
+            #_"Register" :scratch nil
+        )
+    )
 
     (defn #_"AMD64StackMove" AMD64StackMove'new-4 [#_"AllocatableValue" result, #_"AllocatableValue" input, #_"Register" scratch, #_"AllocatableValue" backupSlot]
         (let [
             #_"AMD64StackMove" this (LIRInstructionImpl'new-1 AMD64StackMove'TYPE)
+            this (merge this (AMD64StackMove'init-0))
             this (assoc this :result result)
             this (assoc this :input input)
             this (assoc this :backupSlot backupSlot)
@@ -38389,18 +39173,22 @@ ZeroExtendNode'new-4
 (final-ns AMD64MultiStackMove (§ extends LIRInstructionImpl)
     (§ def #_"LIRInstructionClass<AMD64MultiStackMove>" AMD64MultiStackMove'TYPE (LIRInstructionClass'new-1 AMD64MultiStackMove))
 
-    ; @Def({OperandFlag'STACK})
-    (§ mutable #_"AllocatableValue[]" :results nil)
-    ; @Use({OperandFlag'STACK})
-    (§ mutable #_"Value[]" :inputs nil)
-    ; @Alive({OperandFlag'STACK, OperandFlag'UNINITIALIZED})
-    (§ mutable #_"AllocatableValue" :backupSlot nil)
-
-    (§ mutable #_"Register" :scratch nil)
+    (defn- #_"AMD64MultiStackMove" AMD64MultiStackMove'init-0 []
+        (hash-map
+            ; @Def({OperandFlag'STACK})
+            #_"AllocatableValue[]" :results nil
+            ; @Use({OperandFlag'STACK})
+            #_"Value[]" :inputs nil
+            ; @Alive({OperandFlag'STACK, OperandFlag'UNINITIALIZED})
+            #_"AllocatableValue" :backupSlot nil
+            #_"Register" :scratch nil
+        )
+    )
 
     (defn #_"AMD64MultiStackMove" AMD64MultiStackMove'new-4 [#_"AllocatableValue[]" results, #_"Value[]" inputs, #_"Register" scratch, #_"AllocatableValue" backupSlot]
         (let [
             #_"AMD64MultiStackMove" this (LIRInstructionImpl'new-1 AMD64MultiStackMove'TYPE)
+            this (merge this (AMD64MultiStackMove'init-0))
             this (assoc this :results results)
             this (assoc this :inputs inputs)
             this (assoc this :backupSlot backupSlot)
@@ -38440,15 +39228,20 @@ ZeroExtendNode'new-4
 (final-ns AMD64PushPopStackMove (§ extends LIRInstructionImpl) (§ implements ValueMoveOp)
     (§ def #_"LIRInstructionClass<AMD64PushPopStackMove>" AMD64PushPopStackMove'TYPE (LIRInstructionClass'new-1 AMD64PushPopStackMove))
 
-    ; @Def({OperandFlag'STACK})
-    (§ mutable #_"AllocatableValue" :result nil)
-    ; @Use({OperandFlag'STACK, OperandFlag'HINT})
-    (§ mutable #_"AllocatableValue" :input nil)
-    (§ final #_"OperandSize" :size nil)
+    (defn- #_"AMD64PushPopStackMove" AMD64PushPopStackMove'init-0 []
+        (hash-map
+            ; @Def({OperandFlag'STACK})
+            #_"AllocatableValue" :result nil
+            ; @Use({OperandFlag'STACK, OperandFlag'HINT})
+            #_"AllocatableValue" :input nil
+            #_"OperandSize" :size nil
+        )
+    )
 
     (defn #_"AMD64PushPopStackMove" AMD64PushPopStackMove'new-3 [#_"OperandSize" size, #_"AllocatableValue" result, #_"AllocatableValue" input]
         (let [
             #_"AMD64PushPopStackMove" this (LIRInstructionImpl'new-1 AMD64PushPopStackMove'TYPE)
+            this (merge this (AMD64PushPopStackMove'init-0))
             this (assoc this :result result)
             this (assoc this :input input)
             this (assoc this :size size)
@@ -38478,15 +39271,20 @@ ZeroExtendNode'new-4
 (final-ns LeaOp (§ extends LIRInstructionImpl)
     (§ def #_"LIRInstructionClass<LeaOp>" LeaOp'TYPE (LIRInstructionClass'new-1 LeaOp))
 
-    ; @Def({OperandFlag'REG})
-    (§ mutable #_"AllocatableValue" :result nil)
-    ; @Use({OperandFlag'COMPOSITE, OperandFlag'UNINITIALIZED})
-    (§ mutable #_"AMD64AddressValue" :address nil)
-    (§ final #_"OperandSize" :size nil)
+    (defn- #_"LeaOp" LeaOp'init-0 []
+        (hash-map
+            ; @Def({OperandFlag'REG})
+            #_"AllocatableValue" :result nil
+            ; @Use({OperandFlag'COMPOSITE, OperandFlag'UNINITIALIZED})
+            #_"AMD64AddressValue" :address nil
+            #_"OperandSize" :size nil
+        )
+    )
 
     (defn #_"LeaOp" LeaOp'new-3 [#_"AllocatableValue" result, #_"AMD64AddressValue" address, #_"OperandSize" size]
         (let [
             #_"LeaOp" this (LIRInstructionImpl'new-1 LeaOp'TYPE)
+            this (merge this (LeaOp'init-0))
             this (assoc this :result result)
             this (assoc this :address address)
             this (assoc this :size size)
@@ -38510,14 +39308,19 @@ ZeroExtendNode'new-4
 (final-ns StackLeaOp (§ extends LIRInstructionImpl)
     (§ def #_"LIRInstructionClass<StackLeaOp>" StackLeaOp'TYPE (LIRInstructionClass'new-1 StackLeaOp))
 
-    ; @Def({OperandFlag'REG})
-    (§ mutable #_"AllocatableValue" :result nil)
-    ; @Use({OperandFlag'STACK, OperandFlag'UNINITIALIZED})
-    (§ mutable #_"AllocatableValue" :slot nil)
+    (defn- #_"StackLeaOp" StackLeaOp'init-0 []
+        (hash-map
+            ; @Def({OperandFlag'REG})
+            #_"AllocatableValue" :result nil
+            ; @Use({OperandFlag'STACK, OperandFlag'UNINITIALIZED})
+            #_"AllocatableValue" :slot nil
+        )
+    )
 
     (defn #_"StackLeaOp" StackLeaOp'new-2 [#_"AllocatableValue" result, #_"AllocatableValue" slot]
         (let [
             #_"StackLeaOp" this (LIRInstructionImpl'new-1 StackLeaOp'TYPE)
+            this (merge this (StackLeaOp'init-0))
             this (assoc this :result result)
             this (assoc this :slot slot)
         ]
@@ -38537,11 +39340,16 @@ ZeroExtendNode'new-4
 (final-ns MembarOp (§ extends LIRInstructionImpl)
     (§ def #_"LIRInstructionClass<MembarOp>" MembarOp'TYPE (LIRInstructionClass'new-1 MembarOp))
 
-    (§ final #_"int" :barriers 0)
+    (defn- #_"MembarOp" MembarOp'init-0 []
+        (hash-map
+            #_"int" :barriers 0
+        )
+    )
 
     (defn #_"MembarOp" MembarOp'new-1 [#_"int" barriers]
         (let [
             #_"MembarOp" this (LIRInstructionImpl'new-1 MembarOp'TYPE)
+            this (merge this (MembarOp'init-0))
             this (assoc this :barriers barriers)
         ]
             this
@@ -38560,12 +39368,17 @@ ZeroExtendNode'new-4
 (final-ns NullCheckOp (§ extends LIRInstructionImpl) (§ implements NullCheck)
     (§ def #_"LIRInstructionClass<NullCheckOp>" NullCheckOp'TYPE (LIRInstructionClass'new-1 NullCheckOp))
 
-    ; @Use({OperandFlag'COMPOSITE})
-    (§ mutable #_"AMD64AddressValue" :address nil)
+    (defn- #_"NullCheckOp" NullCheckOp'init-0 []
+        (hash-map
+            ; @Use({OperandFlag'COMPOSITE})
+            #_"AMD64AddressValue" :address nil
+        )
+    )
 
     (defn #_"NullCheckOp" NullCheckOp'new-1 [#_"AMD64AddressValue" address]
         (let [
             #_"NullCheckOp" this (LIRInstructionImpl'new-1 NullCheckOp'TYPE)
+            this (merge this (NullCheckOp'init-0))
             this (assoc this :address address)
         ]
             this
@@ -38589,20 +39402,24 @@ ZeroExtendNode'new-4
 (final-ns CompareAndSwapOp (§ extends LIRInstructionImpl)
     (§ def #_"LIRInstructionClass<CompareAndSwapOp>" CompareAndSwapOp'TYPE (LIRInstructionClass'new-1 CompareAndSwapOp))
 
-    (§ final #_"AMD64Kind" :accessKind nil)
-
-    ; @Def
-    (§ mutable #_"AllocatableValue" :result nil)
-    ; @Use({OperandFlag'COMPOSITE})
-    (§ mutable #_"AMD64AddressValue" :address nil)
-    ; @Use
-    (§ mutable #_"AllocatableValue" :cmpValue nil)
-    ; @Use
-    (§ mutable #_"AllocatableValue" :newValue nil)
+    (defn- #_"CompareAndSwapOp" CompareAndSwapOp'init-0 []
+        (hash-map
+            #_"AMD64Kind" :accessKind nil
+            ; @Def
+            #_"AllocatableValue" :result nil
+            ; @Use({OperandFlag'COMPOSITE})
+            #_"AMD64AddressValue" :address nil
+            ; @Use
+            #_"AllocatableValue" :cmpValue nil
+            ; @Use
+            #_"AllocatableValue" :newValue nil
+        )
+    )
 
     (defn #_"CompareAndSwapOp" CompareAndSwapOp'new-5 [#_"AMD64Kind" accessKind, #_"AllocatableValue" result, #_"AMD64AddressValue" address, #_"AllocatableValue" cmpValue, #_"AllocatableValue" newValue]
         (let [
             #_"CompareAndSwapOp" this (LIRInstructionImpl'new-1 CompareAndSwapOp'TYPE)
+            this (merge this (CompareAndSwapOp'init-0))
             this (assoc this :accessKind accessKind)
             this (assoc this :result result)
             this (assoc this :address address)
@@ -38632,18 +39449,22 @@ ZeroExtendNode'new-4
 (final-ns AtomicReadAndAddOp (§ extends LIRInstructionImpl)
     (§ def #_"LIRInstructionClass<AtomicReadAndAddOp>" AtomicReadAndAddOp'TYPE (LIRInstructionClass'new-1 AtomicReadAndAddOp))
 
-    (§ final #_"AMD64Kind" :accessKind nil)
-
-    ; @Def
-    (§ mutable #_"AllocatableValue" :result nil)
-    ; @Alive({OperandFlag'COMPOSITE})
-    (§ mutable #_"AMD64AddressValue" :address nil)
-    ; @Use
-    (§ mutable #_"AllocatableValue" :delta nil)
+    (defn- #_"AtomicReadAndAddOp" AtomicReadAndAddOp'init-0 []
+        (hash-map
+            #_"AMD64Kind" :accessKind nil
+            ; @Def
+            #_"AllocatableValue" :result nil
+            ; @Alive({OperandFlag'COMPOSITE})
+            #_"AMD64AddressValue" :address nil
+            ; @Use
+            #_"AllocatableValue" :delta nil
+        )
+    )
 
     (defn #_"AtomicReadAndAddOp" AtomicReadAndAddOp'new-4 [#_"AMD64Kind" accessKind, #_"AllocatableValue" result, #_"AMD64AddressValue" address, #_"AllocatableValue" delta]
         (let [
             #_"AtomicReadAndAddOp" this (LIRInstructionImpl'new-1 AtomicReadAndAddOp'TYPE)
+            this (merge this (AtomicReadAndAddOp'init-0))
             this (assoc this :accessKind accessKind)
             this (assoc this :result result)
             this (assoc this :address address)
@@ -38673,18 +39494,22 @@ ZeroExtendNode'new-4
 (final-ns AtomicReadAndWriteOp (§ extends LIRInstructionImpl)
     (§ def #_"LIRInstructionClass<AtomicReadAndWriteOp>" AtomicReadAndWriteOp'TYPE (LIRInstructionClass'new-1 AtomicReadAndWriteOp))
 
-    (§ final #_"AMD64Kind" :accessKind nil)
-
-    ; @Def
-    (§ mutable #_"AllocatableValue" :result nil)
-    ; @Alive({OperandFlag'COMPOSITE})
-    (§ mutable #_"AMD64AddressValue" :address nil)
-    ; @Use
-    (§ mutable #_"AllocatableValue" :newValue nil)
+    (defn- #_"AtomicReadAndWriteOp" AtomicReadAndWriteOp'init-0 []
+        (hash-map
+            #_"AMD64Kind" :accessKind nil
+            ; @Def
+            #_"AllocatableValue" :result nil
+            ; @Alive({OperandFlag'COMPOSITE})
+            #_"AMD64AddressValue" :address nil
+            ; @Use
+            #_"AllocatableValue" :newValue nil
+        )
+    )
 
     (defn #_"AtomicReadAndWriteOp" AtomicReadAndWriteOp'new-4 [#_"AMD64Kind" accessKind, #_"AllocatableValue" result, #_"AMD64AddressValue" address, #_"AllocatableValue" newValue]
         (let [
             #_"AtomicReadAndWriteOp" this (LIRInstructionImpl'new-1 AtomicReadAndWriteOp'TYPE)
+            this (merge this (AtomicReadAndWriteOp'init-0))
             this (assoc this :accessKind accessKind)
             this (assoc this :result result)
             this (assoc this :address address)
@@ -38708,19 +39533,23 @@ ZeroExtendNode'new-4
  ; @anno AMD64Move.PointerCompressionOp
  ;;
 (class-ns PointerCompressionOp (§ extends LIRInstructionImpl)
-    (§ final #_"CompressEncoding" :encoding nil)
-    (§ final #_"boolean" :never-nil? false)
-
-    ; @Def({OperandFlag'REG, OperandFlag'HINT})
-    (§ mutable #_"AllocatableValue" :result nil)
-    ; @Use({OperandFlag'REG, OperandFlag'CONST})
-    (§ mutable #_"Value" :input nil)
-    ; @Alive({OperandFlag'REG, OperandFlag'ILLEGAL, OperandFlag'UNINITIALIZED})
-    (§ mutable #_"AllocatableValue" :baseRegister nil)
+    (defn- #_"PointerCompressionOp" PointerCompressionOp'init-0 []
+        (hash-map
+            #_"CompressEncoding" :encoding nil
+            #_"boolean" :never-nil? false
+            ; @Def({OperandFlag'REG, OperandFlag'HINT})
+            #_"AllocatableValue" :result nil
+            ; @Use({OperandFlag'REG, OperandFlag'CONST})
+            #_"Value" :input nil
+            ; @Alive({OperandFlag'REG, OperandFlag'ILLEGAL, OperandFlag'UNINITIALIZED})
+            #_"AllocatableValue" :baseRegister nil
+        )
+    )
 
     (defn #_"PointerCompressionOp" PointerCompressionOp'new-6 [#_"LIRInstructionClass<? extends PointerCompressionOp>" type, #_"AllocatableValue" result, #_"Value" input, #_"AllocatableValue" baseRegister, #_"CompressEncoding" encoding, #_"boolean" never-nil?]
         (let [
             #_"PointerCompressionOp" this (LIRInstructionImpl'new-1 type)
+            this (merge this (PointerCompressionOp'init-0))
             this (assoc this :result result)
             this (assoc this :input input)
             this (assoc this :baseRegister baseRegister)
@@ -38841,22 +39670,23 @@ ZeroExtendNode'new-4
 (final-ns AMD64MulDivOp (§ extends LIRInstructionImpl)
     (§ def #_"LIRInstructionClass<AMD64MulDivOp>" AMD64MulDivOp'TYPE (LIRInstructionClass'new-1 AMD64MulDivOp))
 
-    ; @LIROpcode
-    (§ final #_"AMD64MOp" :opcode nil)
-    (§ final #_"OperandSize" :size nil)
-
-    ; @Def({OperandFlag'REG})
-    (§ mutable #_"AllocatableValue" :highResult nil)
-    ; @Def({OperandFlag'REG})
-    (§ mutable #_"AllocatableValue" :lowResult nil)
-
-    ; @Use({OperandFlag'REG, OperandFlag'ILLEGAL})
-    (§ mutable #_"AllocatableValue" :highX nil)
-    ; @Use({OperandFlag'REG})
-    (§ mutable #_"AllocatableValue" :lowX nil)
-
-    ; @Use({OperandFlag'REG, OperandFlag'STACK})
-    (§ final #_"AllocatableValue" :y nil)
+    (defn- #_"AMD64MulDivOp" AMD64MulDivOp'init-0 []
+        (hash-map
+            ; @LIROpcode
+            #_"AMD64MOp" :opcode nil
+            #_"OperandSize" :size nil
+            ; @Def({OperandFlag'REG})
+            #_"AllocatableValue" :highResult nil
+            ; @Def({OperandFlag'REG})
+            #_"AllocatableValue" :lowResult nil
+            ; @Use({OperandFlag'REG, OperandFlag'ILLEGAL})
+            #_"AllocatableValue" :highX nil
+            ; @Use({OperandFlag'REG})
+            #_"AllocatableValue" :lowX nil
+            ; @Use({OperandFlag'REG, OperandFlag'STACK})
+            #_"AllocatableValue" :y nil
+        )
+    )
 
     (defn #_"AMD64MulDivOp" AMD64MulDivOp'new-5 [#_"AMD64MOp" opcode, #_"OperandSize" size, #_"LIRKind" resultKind, #_"AllocatableValue" x, #_"AllocatableValue" y]
         (AMD64MulDivOp'new-6 opcode, size, resultKind, Value/ILLEGAL, x, y)
@@ -38865,6 +39695,7 @@ ZeroExtendNode'new-4
     (defn #_"AMD64MulDivOp" AMD64MulDivOp'new-6 [#_"AMD64MOp" opcode, #_"OperandSize" size, #_"LIRKind" resultKind, #_"AllocatableValue" highX, #_"AllocatableValue" lowX, #_"AllocatableValue" y]
         (let [
             #_"AMD64MulDivOp" this (LIRInstructionImpl'new-1 AMD64MulDivOp'TYPE)
+            this (merge this (AMD64MulDivOp'init-0))
             this (assoc this :opcode opcode)
             this (assoc this :size size)
             this (assoc this :highResult (#_"Register" .asValue AMD64/rdx, resultKind))
@@ -38889,13 +39720,18 @@ ZeroExtendNode'new-4
 (final-ns AMD64PrefetchOp (§ extends LIRInstructionImpl)
     (§ def #_"LIRInstructionClass<AMD64PrefetchOp>" AMD64PrefetchOp'TYPE (LIRInstructionClass'new-1 AMD64PrefetchOp))
 
-    (§ final #_"int" :instr 0) ;; AllocatePrefetchInstr
-    ; @Alive({OperandFlag'COMPOSITE})
-    (§ mutable #_"AMD64AddressValue" :address nil)
+    (defn- #_"AMD64PrefetchOp" AMD64PrefetchOp'init-0 []
+        (hash-map
+            #_"int" :instr 0 ;; AllocatePrefetchInstr
+            ; @Alive({OperandFlag'COMPOSITE})
+            #_"AMD64AddressValue" :address nil
+        )
+    )
 
     (defn #_"AMD64PrefetchOp" AMD64PrefetchOp'new-2 [#_"AMD64AddressValue" address, #_"int" instr]
         (let [
             #_"AMD64PrefetchOp" this (LIRInstructionImpl'new-1 AMD64PrefetchOp'TYPE)
+            this (merge this (AMD64PrefetchOp'init-0))
             this (assoc this :address address)
             this (assoc this :instr instr)
         ]
@@ -38921,14 +39757,19 @@ ZeroExtendNode'new-4
 (final-ns ReadTimestampCounter (§ extends LIRInstructionImpl)
     (§ def #_"LIRInstructionClass<ReadTimestampCounter>" ReadTimestampCounter'TYPE (LIRInstructionClass'new-1 ReadTimestampCounter))
 
-    ; @Def({OperandFlag'REG})
-    (§ mutable #_"AllocatableValue" :highResult nil)
-    ; @Def({OperandFlag'REG})
-    (§ mutable #_"AllocatableValue" :lowResult nil)
+    (defn- #_"ReadTimestampCounter" ReadTimestampCounter'init-0 []
+        (hash-map
+            ; @Def({OperandFlag'REG})
+            #_"AllocatableValue" :highResult nil
+            ; @Def({OperandFlag'REG})
+            #_"AllocatableValue" :lowResult nil
+        )
+    )
 
     (defn #_"ReadTimestampCounter" ReadTimestampCounter'new-0 []
         (let [
             #_"ReadTimestampCounter" this (LIRInstructionImpl'new-1 ReadTimestampCounter'TYPE)
+            this (merge this (ReadTimestampCounter'init-0))
             this (assoc this :highResult (#_"Register" .asValue AMD64/rdx, (LIRKind'value-1 AMD64Kind/DWORD)))
             this (assoc this :lowResult (#_"Register" .asValue AMD64/rax, (LIRKind'value-1 AMD64Kind/DWORD)))
         ]
@@ -38949,16 +39790,19 @@ ZeroExtendNode'new-4
 (final-ns AMD64RestoreRegistersOp (§ extends LIRInstructionImpl)
     (§ def #_"LIRInstructionClass<AMD64RestoreRegistersOp>" AMD64RestoreRegistersOp'TYPE (LIRInstructionClass'new-1 AMD64RestoreRegistersOp))
 
-    ;;;
-     ; The slots from which the registers are restored.
-     ;;
-    ; @Use(OperandFlag'STACK)
-    (§ final #_"AllocatableValue[]" :slots nil)
-
-    ;;;
-     ; The operation that saved the registers restored by this operation.
-     ;;
-    (§ final #_"AMD64SaveRegistersOp" :save nil)
+    (defn- #_"AMD64RestoreRegistersOp" AMD64RestoreRegistersOp'init-0 []
+        (hash-map
+            ;;;
+             ; The slots from which the registers are restored.
+             ;;
+            ; @Use(OperandFlag'STACK)
+            #_"AllocatableValue[]" :slots nil
+            ;;;
+             ; The operation that saved the registers restored by this operation.
+             ;;
+            #_"AMD64SaveRegistersOp" :save nil
+        )
+    )
 
     (defn #_"AMD64RestoreRegistersOp" AMD64RestoreRegistersOp'new-2 [#_"AllocatableValue[]" values, #_"AMD64SaveRegistersOp" save]
         (AMD64RestoreRegistersOp'new-3 AMD64RestoreRegistersOp'TYPE, values, save)
@@ -38967,6 +39811,7 @@ ZeroExtendNode'new-4
     (defn #_"AMD64RestoreRegistersOp" AMD64RestoreRegistersOp'new-3 [#_"LIRInstructionClass<? extends AMD64RestoreRegistersOp>" c, #_"AllocatableValue[]" values, #_"AMD64SaveRegistersOp" save]
         (let [
             #_"AMD64RestoreRegistersOp" this (LIRInstructionImpl'new-1 c)
+            this (merge this (AMD64RestoreRegistersOp'init-0))
             this (assoc this :slots values)
             this (assoc this :save save)
         ]
@@ -39004,16 +39849,19 @@ ZeroExtendNode'new-4
 (final-ns AMD64SaveRegistersOp (§ extends LIRInstructionImpl)
     (§ def #_"LIRInstructionClass<AMD64SaveRegistersOp>" AMD64SaveRegistersOp'TYPE (LIRInstructionClass'new-1 AMD64SaveRegistersOp))
 
-    ;;;
-     ; The registers (potentially) saved by this operation.
-     ;;
-    (§ final #_"Register[]" :savedRegisters nil)
-
-    ;;;
-     ; The slots to which the registers are saved.
-     ;;
-    ; @Def(OperandFlag'STACK)
-    (§ final #_"AllocatableValue[]" :slots nil)
+    (defn- #_"AMD64SaveRegistersOp" AMD64SaveRegistersOp'init-0 []
+        (hash-map
+            ;;;
+             ; The registers (potentially) saved by this operation.
+             ;;
+            #_"Register[]" :savedRegisters nil
+            ;;;
+             ; The slots to which the registers are saved.
+             ;;
+            ; @Def(OperandFlag'STACK)
+            #_"AllocatableValue[]" :slots nil
+        )
+    )
 
     ;;;
      ; @param savedRegisters the registers saved by this operation which may be subject to {@linkplain #remove(EconomicSet) pruning}
@@ -39022,6 +39870,7 @@ ZeroExtendNode'new-4
     (defn #_"AMD64SaveRegistersOp" AMD64SaveRegistersOp'new-2 [#_"Register[]" savedRegisters, #_"AllocatableValue[]" savedRegisterLocations]
         (let [
             #_"AMD64SaveRegistersOp" this (LIRInstructionImpl'new-1 AMD64SaveRegistersOp'TYPE)
+            this (merge this (AMD64SaveRegistersOp'init-0))
             this (assoc this :savedRegisters savedRegisters)
             this (assoc this :slots savedRegisterLocations)
         ]
@@ -39051,20 +39900,24 @@ ZeroExtendNode'new-4
 (final-ns AMD64ShiftOp (§ extends LIRInstructionImpl)
     (§ def #_"LIRInstructionClass<AMD64ShiftOp>" AMD64ShiftOp'TYPE (LIRInstructionClass'new-1 AMD64ShiftOp))
 
-    ; @LIROpcode
-    (§ final #_"AMD64MOp" :opcode nil)
-    (§ final #_"OperandSize" :size nil)
-
-    ; @Def({OperandFlag'REG, OperandFlag'HINT})
-    (§ mutable #_"AllocatableValue" :result nil)
-    ; @Use({OperandFlag'REG, OperandFlag'STACK})
-    (§ final #_"AllocatableValue" :x nil)
-    ; @Alive({OperandFlag'REG})
-    (§ final #_"AllocatableValue" :y nil)
+    (defn- #_"AMD64ShiftOp" AMD64ShiftOp'init-0 []
+        (hash-map
+            ; @LIROpcode
+            #_"AMD64MOp" :opcode nil
+            #_"OperandSize" :size nil
+            ; @Def({OperandFlag'REG, OperandFlag'HINT})
+            #_"AllocatableValue" :result nil
+            ; @Use({OperandFlag'REG, OperandFlag'STACK})
+            #_"AllocatableValue" :x nil
+            ; @Alive({OperandFlag'REG})
+            #_"AllocatableValue" :y nil
+        )
+    )
 
     (defn #_"AMD64ShiftOp" AMD64ShiftOp'new-5 [#_"AMD64MOp" opcode, #_"OperandSize" size, #_"AllocatableValue" result, #_"AllocatableValue" x, #_"AllocatableValue" y]
         (let [
             #_"AMD64ShiftOp" this (LIRInstructionImpl'new-1 AMD64ShiftOp'TYPE)
+            this (merge this (AMD64ShiftOp'init-0))
             this (assoc this :opcode opcode)
             this (assoc this :size size)
             this (assoc this :result result)
@@ -39086,19 +39939,22 @@ ZeroExtendNode'new-4
 (final-ns AMD64SignExtendOp (§ extends LIRInstructionImpl)
     (§ def #_"LIRInstructionClass<AMD64SignExtendOp>" AMD64SignExtendOp'TYPE (LIRInstructionClass'new-1 AMD64SignExtendOp))
 
-    (§ final #_"OperandSize" :size nil)
-
-    ; @Def({OperandFlag'REG})
-    (§ mutable #_"AllocatableValue" :highResult nil)
-    ; @Def({OperandFlag'REG})
-    (§ mutable #_"AllocatableValue" :lowResult nil)
-
-    ; @Use({OperandFlag'REG})
-    (§ mutable #_"AllocatableValue" :input nil)
+    (defn- #_"AMD64SignExtendOp" AMD64SignExtendOp'init-0 []
+        (hash-map
+            #_"OperandSize" :size nil
+            ; @Def({OperandFlag'REG})
+            #_"AllocatableValue" :highResult nil
+            ; @Def({OperandFlag'REG})
+            #_"AllocatableValue" :lowResult nil
+            ; @Use({OperandFlag'REG})
+            #_"AllocatableValue" :input nil
+        )
+    )
 
     (defn #_"AMD64SignExtendOp" AMD64SignExtendOp'new-3 [#_"OperandSize" size, #_"LIRKind" resultKind, #_"AllocatableValue" input]
         (let [
             #_"AMD64SignExtendOp" this (LIRInstructionImpl'new-1 AMD64SignExtendOp'TYPE)
+            this (merge this (AMD64SignExtendOp'init-0))
             this (assoc this :size size)
             this (assoc this :highResult (#_"Register" .asValue AMD64/rdx, resultKind))
             this (assoc this :lowResult (#_"Register" .asValue AMD64/rax, resultKind))
@@ -39131,18 +39987,22 @@ ZeroExtendNode'new-4
 (final-ns MOp (§ extends LIRInstructionImpl)
     (§ def #_"LIRInstructionClass<MOp>" MOp'TYPE (LIRInstructionClass'new-1 MOp))
 
-    ; @LIROpcode
-    (§ final #_"AMD64MOp" :opcode nil)
-    (§ final #_"OperandSize" :size nil)
-
-    ; @Def({OperandFlag'REG, OperandFlag'HINT})
-    (§ mutable #_"AllocatableValue" :result nil)
-    ; @Use({OperandFlag'REG, OperandFlag'STACK})
-    (§ mutable #_"AllocatableValue" :value nil)
+    (defn- #_"MOp" MOp'init-0 []
+        (hash-map
+            ; @LIROpcode
+            #_"AMD64MOp" :opcode nil
+            #_"OperandSize" :size nil
+            ; @Def({OperandFlag'REG, OperandFlag'HINT})
+            #_"AllocatableValue" :result nil
+            ; @Use({OperandFlag'REG, OperandFlag'STACK})
+            #_"AllocatableValue" :value nil
+        )
+    )
 
     (defn #_"MOp" MOp'new-4 [#_"AMD64MOp" opcode, #_"OperandSize" size, #_"AllocatableValue" result, #_"AllocatableValue" value]
         (let [
             #_"MOp" this (LIRInstructionImpl'new-1 MOp'TYPE)
+            this (merge this (MOp'init-0))
             this (assoc this :opcode opcode)
             this (assoc this :size size)
             this (assoc this :result result)
@@ -39167,18 +40027,22 @@ ZeroExtendNode'new-4
 (final-ns RMOp (§ extends LIRInstructionImpl)
     (§ def #_"LIRInstructionClass<RMOp>" RMOp'TYPE (LIRInstructionClass'new-1 RMOp))
 
-    ; @LIROpcode
-    (§ final #_"AMD64RMOp" :opcode nil)
-    (§ final #_"OperandSize" :size nil)
-
-    ; @Def({OperandFlag'REG})
-    (§ mutable #_"AllocatableValue" :result nil)
-    ; @Use({OperandFlag'REG, OperandFlag'STACK})
-    (§ mutable #_"AllocatableValue" :value nil)
+    (defn- #_"RMOp" RMOp'init-0 []
+        (hash-map
+            ; @LIROpcode
+            #_"AMD64RMOp" :opcode nil
+            #_"OperandSize" :size nil
+            ; @Def({OperandFlag'REG})
+            #_"AllocatableValue" :result nil
+            ; @Use({OperandFlag'REG, OperandFlag'STACK})
+            #_"AllocatableValue" :value nil
+        )
+    )
 
     (defn #_"RMOp" RMOp'new-4 [#_"AMD64RMOp" opcode, #_"OperandSize" size, #_"AllocatableValue" result, #_"AllocatableValue" value]
         (let [
             #_"RMOp" this (LIRInstructionImpl'new-1 RMOp'TYPE)
+            this (merge this (RMOp'init-0))
             this (assoc this :opcode opcode)
             this (assoc this :size size)
             this (assoc this :result result)
@@ -39205,18 +40069,22 @@ ZeroExtendNode'new-4
 (final-ns MROp (§ extends LIRInstructionImpl)
     (§ def #_"LIRInstructionClass<MROp>" MROp'TYPE (LIRInstructionClass'new-1 MROp))
 
-    ; @LIROpcode
-    (§ final #_"AMD64MROp" :opcode nil)
-    (§ final #_"OperandSize" :size nil)
-
-    ; @Def({OperandFlag'REG, OperandFlag'STACK})
-    (§ mutable #_"AllocatableValue" :result nil)
-    ; @Use({OperandFlag'REG})
-    (§ mutable #_"AllocatableValue" :value nil)
+    (defn- #_"MROp" MROp'init-0 []
+        (hash-map
+            ; @LIROpcode
+            #_"AMD64MROp" :opcode nil
+            #_"OperandSize" :size nil
+            ; @Def({OperandFlag'REG, OperandFlag'STACK})
+            #_"AllocatableValue" :result nil
+            ; @Use({OperandFlag'REG})
+            #_"AllocatableValue" :value nil
+        )
+    )
 
     (defn #_"MROp" MROp'new-4 [#_"AMD64MROp" opcode, #_"OperandSize" size, #_"AllocatableValue" result, #_"AllocatableValue" value]
         (let [
             #_"MROp" this (LIRInstructionImpl'new-1 MROp'TYPE)
+            this (merge this (MROp'init-0))
             this (assoc this :opcode opcode)
             this (assoc this :size size)
             this (assoc this :result result)
@@ -39243,18 +40111,22 @@ ZeroExtendNode'new-4
 (final-ns MemoryOp (§ extends LIRInstructionImpl) (§ implements ImplicitNullCheck)
     (§ def #_"LIRInstructionClass<MemoryOp>" MemoryOp'TYPE (LIRInstructionClass'new-1 MemoryOp))
 
-    ; @LIROpcode
-    (§ final #_"AMD64RMOp" :opcode nil)
-    (§ final #_"OperandSize" :size nil)
-
-    ; @Def({OperandFlag'REG})
-    (§ mutable #_"AllocatableValue" :result nil)
-    ; @Use({OperandFlag'COMPOSITE})
-    (§ mutable #_"AMD64AddressValue" :input nil)
+    (defn- #_"MemoryOp" MemoryOp'init-0 []
+        (hash-map
+            ; @LIROpcode
+            #_"AMD64RMOp" :opcode nil
+            #_"OperandSize" :size nil
+            ; @Def({OperandFlag'REG})
+            #_"AllocatableValue" :result nil
+            ; @Use({OperandFlag'COMPOSITE})
+            #_"AMD64AddressValue" :input nil
+        )
+    )
 
     (defn #_"MemoryOp" MemoryOp'new-4 [#_"AMD64RMOp" opcode, #_"OperandSize" size, #_"AllocatableValue" result, #_"AMD64AddressValue" input]
         (let [
             #_"MemoryOp" this (LIRInstructionImpl'new-1 MemoryOp'TYPE)
+            this (merge this (MemoryOp'init-0))
             this (assoc this :opcode opcode)
             this (assoc this :size size)
             this (assoc this :result result)
@@ -39302,18 +40174,22 @@ ZeroExtendNode'new-4
  ; @anno StackMoveOptimizationPhase.Closure0
  ;;
 (final-ns Closure0
-    (defn #_"Closure0" Closure0'new-0 []
-        (hash-map)
-    )
-
     (def- #_"int" Closure0'NONE -1)
 
-    (§ mutable #_"int" :begin Closure0'NONE)
-    (§ mutable #_"Register" :reg nil)
-    (§ mutable #_"List<AllocatableValue>" :dst nil)
-    (§ mutable #_"List<Value>" :src nil)
-    (§ mutable #_"AllocatableValue" :slot nil)
-    (§ mutable #_"boolean" :removed false)
+    (defn- #_"Closure0" Closure0'init-0 []
+        (hash-map
+            #_"int" :begin Closure0'NONE
+            #_"Register" :reg nil
+            #_"List<AllocatableValue>" :dst nil
+            #_"List<Value>" :src nil
+            #_"AllocatableValue" :slot nil
+            #_"boolean" :removed false
+        )
+    )
+
+    (defn #_"Closure0" Closure0'new-0 []
+        (merge (hash-map) (Closure0'init-0))
+    )
 
     (defn #_"Closure0" Closure0''process-2 [#_"Closure0" this, #_"List<LIRInstruction>" ops]
         (let [
@@ -39445,11 +40321,16 @@ ZeroExtendNode'new-4
  ; Represents an inlined Constant value.
  ;;
 (final-ns ConstantValue (§ extends Value)
-    (§ final #_"Constant" :constant nil)
+    (defn- #_"ConstantValue" ConstantValue'init-0 []
+        (hash-map
+            #_"Constant" :constant nil
+        )
+    )
 
     (defn #_"ConstantValue" ConstantValue'new-2 [#_"ValueKind" kind, #_"Constant" constant]
         (let [
             #_"ConstantValue" this (ß Value. kind)
+            this (merge this (ConstantValue'init-0))
             this (assoc this :constant constant)
         ]
             this
@@ -39477,17 +40358,21 @@ ZeroExtendNode'new-4
  ; @anno ConstantLoadOptimization.CLOptimization
  ;;
 (final-ns CLOptimization
-    (§ final #_"LIR" :lir nil)
-    (§ final #_"LIRGenerator" :lirGen nil)
-    (§ final #_"VariableMap" :map nil)
-    (§ final #_"BitSet" :phiConstants nil)
-    (§ final #_"BitSet" :defined nil)
-    (§ final #_"BlockMap<List<UseEntry>>" :blockMap nil)
-    (§ final #_"BlockMap<LIRInsertionBuffer>" :insertionBuffers nil)
+    (defn- #_"CLOptimization" CLOptimization'init-0 []
+        (hash-map
+            #_"LIR" :lir nil
+            #_"LIRGenerator" :lirGen nil
+            #_"VariableMap" :map nil
+            #_"BitSet" :phiConstants nil
+            #_"BitSet" :defined nil
+            #_"BlockMap<List<UseEntry>>" :blockMap nil
+            #_"BlockMap<LIRInsertionBuffer>" :insertionBuffers nil
+        )
+    )
 
     (defn- #_"CLOptimization" CLOptimization'new-2 [#_"LIR" lir, #_"LIRGenerator" lirGen]
         (let [
-            #_"CLOptimization" this (hash-map)
+            #_"CLOptimization" this (merge (hash-map) (CLOptimization'init-0))
             this (assoc this :lir lir)
             this (assoc this :lirGen lirGen)
             this (assoc this :map (VariableMap'new-0))
@@ -39733,11 +40618,16 @@ ZeroExtendNode'new-4
  ; Represents a dominator (sub-)tree for a constant definition.
  ;;
 (final-ns ConstantTree (§ extends DominatorOptimizationProblem #_"<Flags, NodeCost>")
-    (§ final #_"BlockMap<List<UseEntry>>" :blockMap nil)
+    (defn- #_"ConstantTree" ConstantTree'init-0 []
+        (hash-map
+            #_"BlockMap<List<UseEntry>>" :blockMap nil
+        )
+    )
 
     (defn #_"ConstantTree" ConstantTree'new-2 [#_"ControlFlowGraph" cfg, #_"DefUseTree" tree]
         (let [
             #_"ConstantTree" this (DominatorOptimizationProblem'new-2 Flags, cfg)
+            this (merge this (ConstantTree'init-0))
             this (assoc this :blockMap (BlockMap'new-1 cfg))
         ]
             (DefUseTree''forEach-2 tree, (ß (u) -> (§ fun (#_"List" .add (ConstantTree''getOrInitList-2 this, (:block u)), u))))
@@ -39821,13 +40711,17 @@ ZeroExtendNode'new-4
  ; @anno ConstantTree.NodeCost
  ;;
 (final-ns NodeCost
-    (§ mutable #_"List<UseEntry>" :usages nil)
-    (§ mutable #_"double" :bestCost 0.0)
-    (§ mutable #_"int" :numMat 0)
+    (defn- #_"NodeCost" NodeCost'init-0 []
+        (hash-map
+            #_"List<UseEntry>" :usages nil
+            #_"double" :bestCost 0.0
+            #_"int" :numMat 0
+        )
+    )
 
     (defn #_"NodeCost" NodeCost'new-3 [#_"double" bestCost, #_"List<UseEntry>" usages, #_"int" numMat]
         (let [
-            #_"NodeCost" this (hash-map)
+            #_"NodeCost" this (merge (hash-map) (NodeCost'init-0))
             this (assoc this :bestCost bestCost)
             this (assoc this :usages usages)
             this (assoc this :numMat numMat)
@@ -39845,8 +40739,12 @@ ZeroExtendNode'new-4
  ; Analyzes a ConstantTree and marks potential materialization positions.
  ;;
 (final-ns ConstantTreeAnalyzer
-    (§ final #_"ConstantTree" :tree nil)
-    (§ final #_"BitSet" :visited nil)
+    (defn- #_"ConstantTreeAnalyzer" ConstantTreeAnalyzer'init-0 []
+        (hash-map
+            #_"ConstantTree" :tree nil
+            #_"BitSet" :visited nil
+        )
+    )
 
     (defn #_"NodeCost" ConstantTreeAnalyzer'analyze-2 [#_"ConstantTree" tree, #_"Block" startBlock]
         (let [
@@ -39859,7 +40757,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"ConstantTreeAnalyzer" ConstantTreeAnalyzer'new-1 [#_"ConstantTree" tree]
         (let [
-            #_"ConstantTreeAnalyzer" this (hash-map)
+            #_"ConstantTreeAnalyzer" this (merge (hash-map) (ConstantTreeAnalyzer'init-0))
             this (assoc this :tree tree)
             this (assoc this :visited (BitSet. (ConstantTree''size-1 tree)))
         ]
@@ -39983,13 +40881,17 @@ ZeroExtendNode'new-4
  ; Represents def-use tree of a constant.
  ;;
 (final-ns DefUseTree
-    (§ final #_"LoadConstantOp" :instruction nil)
-    (§ final #_"Block" :block nil)
-    (§ final #_"List<UseEntry>" :uses nil)
+    (defn- #_"DefUseTree" DefUseTree'init-0 []
+        (hash-map
+            #_"LoadConstantOp" :instruction nil
+            #_"Block" :block nil
+            #_"List<UseEntry>" :uses nil
+        )
+    )
 
     (defn #_"DefUseTree" DefUseTree'new-2 [#_"LIRInstruction" instruction, #_"Block" block]
         (let [
-            #_"DefUseTree" this (hash-map)
+            #_"DefUseTree" this (merge (hash-map) (DefUseTree'init-0))
             this (assoc this :instruction instruction)
             this (assoc this :block block)
             this (assoc this :uses (ArrayList.))
@@ -40025,13 +40927,17 @@ ZeroExtendNode'new-4
  ; Represents a usage of a constant.
  ;;
 (final-ns UseEntry
-    (§ final #_"Block" :block nil)
-    (§ final #_"LIRInstruction" :instruction nil)
-    (§ final #_"Value" :value nil)
+    (defn- #_"UseEntry" UseEntry'init-0 []
+        (hash-map
+            #_"Block" :block nil
+            #_"LIRInstruction" :instruction nil
+            #_"Value" :value nil
+        )
+    )
 
     (defn #_"UseEntry" UseEntry'new-3 [#_"Block" block, #_"LIRInstruction" instruction, #_"Value" value]
         (let [
-            #_"UseEntry" this (hash-map)
+            #_"UseEntry" this (merge (hash-map) (UseEntry'init-0))
             this (assoc this :block block)
             this (assoc this :instruction instruction)
             this (assoc this :value value)
@@ -40059,11 +40965,15 @@ ZeroExtendNode'new-4
 )
 
 (final-ns VariableMap
-    (§ final #_"ArrayList<DefUseTree>" :content nil)
+    (defn- #_"VariableMap" VariableMap'init-0 []
+        (hash-map
+            #_"ArrayList<DefUseTree>" :content nil
+        )
+    )
 
     (defn #_"VariableMap" VariableMap'new-0 []
         (let [
-            #_"VariableMap" this (hash-map)
+            #_"VariableMap" this (merge (hash-map) (VariableMap'init-0))
             this (assoc this :content (ArrayList.))
         ]
             this
@@ -40140,11 +41050,15 @@ ZeroExtendNode'new-4
  ; @anno ControlFlowOptimizer.CFOptimizer
  ;;
 (final-ns CFOptimizer
-    (§ final #_"LIR" :lir nil)
+    (defn- #_"CFOptimizer" CFOptimizer'init-0 []
+        (hash-map
+            #_"LIR" :lir nil
+        )
+    )
 
     (defn- #_"CFOptimizer" CFOptimizer'new-1 [#_"LIR" lir]
         (let [
-            #_"CFOptimizer" this (hash-map)
+            #_"CFOptimizer" this (merge (hash-map) (CFOptimizer'init-0))
             this (assoc this :lir lir)
         ]
             this
@@ -40246,12 +41160,16 @@ ZeroExtendNode'new-4
  ; @anno EdgeMoveOptimizer.EMOptimizer
  ;;
 (final-ns EMOptimizer
-    (§ final #_"LIR" :lir nil)
-    (§ final #_"List<List<LIRInstruction>>" :edgeInstructionSeqences nil)
+    (defn- #_"EMOptimizer" EMOptimizer'init-0 []
+        (hash-map
+            #_"LIR" :lir nil
+            #_"List<List<LIRInstruction>>" :edgeInstructionSeqences nil
+        )
+    )
 
     (defn #_"EMOptimizer" EMOptimizer'new-1 [#_"LIR" lir]
         (let [
-            #_"EMOptimizer" this (hash-map)
+            #_"EMOptimizer" this (merge (hash-map) (EMOptimizer'init-0))
             this (assoc this :lir lir)
             this (assoc this :edgeInstructionSeqences (ArrayList.))
         ]
@@ -40433,39 +41351,43 @@ ZeroExtendNode'new-4
 )
 
 (class-ns FrameMapImpl (§ implements FrameMap)
-    ;;;
-     ; The final frame size, not including the size of the {@link Architecture#getReturnAddressSize() return address slot}.
-     ; The value is only set after register allocation is complete, i.e. after all spill slots have been allocated.
-     ;;
-    (§ mutable #_"int" :frameSize 0)
-    ;;;
-     ; Initial size of the area occupied by spill slots and other stack-allocated memory blocks.
-     ;;
-    (§ mutable #_"int" :initialSpillSize 0)
-    ;;;
-     ; Size of the area occupied by spill slots and other stack-allocated memory blocks.
-     ;;
-    (§ mutable #_"int" :spillSize 0)
-    ;;;
-     ; Size of the area occupied by outgoing overflow arguments. This value is adjusted as calling conventions for outgoing
-     ; calls are retrieved. On some platforms, there is a minimum outgoing size even if no overflow arguments are on the stack.
-     ;;
-    (§ mutable #_"int" :outgoingSize 0)
-    ;;;
-     ; Determines if this frame has values on the stack for outgoing calls.
-     ;;
-    (§ mutable #_"boolean" :hasOutgoingStackArguments false)
-    ;;;
-     ; The list of stack slots allocated in this frame that are present in every reference map.
-     ;;
-    (§ final #_"List<StackSlot>" :objectStackSlots nil)
+    (defn- #_"FrameMapImpl" FrameMapImpl'init-0 []
+        (hash-map
+            ;;;
+             ; The final frame size, not including the size of the {@link Architecture#getReturnAddressSize() return address slot}.
+             ; The value is only set after register allocation is complete, i.e. after all spill slots have been allocated.
+             ;;
+            #_"int" :frameSize 0
+            ;;;
+             ; Initial size of the area occupied by spill slots and other stack-allocated memory blocks.
+             ;;
+            #_"int" :initialSpillSize 0
+            ;;;
+             ; Size of the area occupied by spill slots and other stack-allocated memory blocks.
+             ;;
+            #_"int" :spillSize 0
+            ;;;
+             ; Size of the area occupied by outgoing overflow arguments. This value is adjusted as calling conventions for outgoing
+             ; calls are retrieved. On some platforms, there is a minimum outgoing size even if no overflow arguments are on the stack.
+             ;;
+            #_"int" :outgoingSize 0
+            ;;;
+             ; Determines if this frame has values on the stack for outgoing calls.
+             ;;
+            #_"boolean" :hasOutgoingStackArguments false
+            ;;;
+             ; The list of stack slots allocated in this frame that are present in every reference map.
+             ;;
+            #_"List<StackSlot>" :objectStackSlots nil
+        )
+    )
 
     ;;;
      ; Creates a new frame map for the specified method.
      ;;
     (defn #_"FrameMap" FrameMapImpl'new-0 []
         (let [
-            #_"FrameMap" this (hash-map)
+            #_"FrameMap" this (merge (hash-map) (FrameMapImpl'init-0))
             this (assoc this :frameSize -1)
             this (assoc this :outgoingSize (#_"CodeCacheProvider" .getMinimumOutgoingSize HotSpot'codeCache))
             this (assoc this :objectStackSlots (ArrayList.))
@@ -40658,14 +41580,19 @@ ZeroExtendNode'new-4
  ; A FrameMapBuilder that records allocation.
  ;;
 (class-ns FrameMapBuilderImpl0 (§ extends FrameMapBuilderToolImpl)
-    (§ final #_"FrameMap" :frameMap nil)
-    (§ final #_"List<VirtualStackSlot>" :stackSlots nil)
-    (§ final #_"List<CallingConvention>" :calls nil)
-    (§ mutable #_"int" :numStackSlots 0)
+    (defn- #_"FrameMapBuilderImpl0" FrameMapBuilderImpl0'init-0 []
+        (hash-map
+            #_"FrameMap" :frameMap nil
+            #_"List<VirtualStackSlot>" :stackSlots nil
+            #_"List<CallingConvention>" :calls nil
+            #_"int" :numStackSlots 0
+        )
+    )
 
     (defn #_"FrameMapBuilderImpl0" FrameMapBuilderImpl0'new-1 [#_"FrameMap" frameMap]
         (let [
             #_"FrameMapBuilderImpl0" this (FrameMapBuilderToolImpl'new-0)
+            this (merge this (FrameMapBuilderImpl0'init-0))
             this (assoc this :frameMap frameMap)
             this (assoc this :stackSlots (ArrayList.))
             this (assoc this :calls (ArrayList.))
@@ -40731,13 +41658,18 @@ ZeroExtendNode'new-4
  ; of size TargetDescription#wordSize.
  ;;
 (final-ns VirtualStackSlotRange (§ extends VirtualStackSlot)
-    (§ final #_"BitSet" :objects nil)
-    (§ final #_"int" :slots 0)
+    (defn- #_"VirtualStackSlotRange" VirtualStackSlotRange'init-0 []
+        (hash-map
+            #_"BitSet" :objects nil
+            #_"int" :slots 0
+        )
+    )
 
     #_unused
     (defn #_"VirtualStackSlotRange" VirtualStackSlotRange'new-4 [#_"int" id, #_"int" slots, #_"BitSet" objects, #_"LIRKind" kind]
         (let [
             #_"VirtualStackSlotRange" this (VirtualStackSlot'new-2 id, kind)
+            this (merge this (VirtualStackSlotRange'init-0))
             this (assoc this :slots slots)
             this (assoc this :objects (#_"Object" .clone objects))
         ]
@@ -40751,33 +41683,36 @@ ZeroExtendNode'new-4
 )
 
 (final-ns LIRGenerationResult
-    (§ final #_"LIR" :lir nil)
-    ;;;
-     ; FrameMapBuilder for collecting the information to build a FrameMap.
-     ;
-     ; Valid only prior calling #buildFrameMap.
-     ;;
-    (§ final #_"FrameMapBuilder" :frameMapBuilder nil)
-    ;;;
-     ; FrameMap associated with this LIRGenerationResult.
-     ;
-     ; Valid only after calling #buildFrameMap.
-     ;;
-    (§ mutable #_"FrameMap" :frameMap nil)
-    ;;;
-     ; Incoming calling convention for the parameters of the method that is compiled.
-     ;;
-    (§ final #_"CallingConvention" :callingConvention nil)
-    ;;;
-     ; Records whether the code being generated makes at least one foreign call.
-     ;;
-    (§ mutable #_"boolean" :hasForeignCall false)
-
-    (§ final #_"Object" :stub nil)
+    (defn- #_"LIRGenerationResult" LIRGenerationResult'init-0 []
+        (hash-map
+            #_"LIR" :lir nil
+            ;;;
+             ; FrameMapBuilder for collecting the information to build a FrameMap.
+             ;
+             ; Valid only prior calling #buildFrameMap.
+             ;;
+            #_"FrameMapBuilder" :frameMapBuilder nil
+            ;;;
+             ; FrameMap associated with this LIRGenerationResult.
+             ;
+             ; Valid only after calling #buildFrameMap.
+             ;;
+            #_"FrameMap" :frameMap nil
+            ;;;
+             ; Incoming calling convention for the parameters of the method that is compiled.
+             ;;
+            #_"CallingConvention" :callingConvention nil
+            ;;;
+             ; Records whether the code being generated makes at least one foreign call.
+             ;;
+            #_"boolean" :hasForeignCall false
+            #_"Object" :stub nil
+        )
+    )
 
     (defn #_"LIRGenerationResult" LIRGenerationResult'new-4 [#_"LIR" lir, #_"FrameMapBuilder" frameMapBuilder, #_"CallingConvention" callingConvention, #_"Object" stub]
         (let [
-            #_"LIRGenerationResult" this (hash-map)
+            #_"LIRGenerationResult" this (merge (hash-map) (LIRGenerationResult'init-0))
             this (assoc this :lir lir)
             this (assoc this :frameMapBuilder frameMapBuilder)
             this (assoc this :callingConvention callingConvention)
@@ -40804,28 +41739,30 @@ ZeroExtendNode'new-4
  ; This namespace traverses the HIR instructions and generates LIR instructions from them.
  ;;
 (final-ns LIRGenerator
-    (§ final #_"LIRGenerationResult" :res nil)
-    ;;;
-     ; Intended to be a special MoveFactory for spill moves.
-     ;
-     ; The instructions returned by this factory must only depend on the input values. References
-     ; to values that require interaction with register allocation are strictly forbidden.
-     ;;
-    (§ final #_"MoveFactory" :moveFactory nil)
-
-    (§ mutable #_"LockStackHolder" :lockStackHolder nil)
-    (§ mutable #_"SaveRbp" :saveRbp nil)
-    ;;;
-     ; List of epilogue operations that need to restore RBP.
-     ;;
-    (§ mutable #_"List<AMD64HotSpotRestoreRbpOp>" :epilogueOps (ArrayList.))
-    (§ mutable #_"Register" :pollOnReturnScratchRegister nil)
-
-    (§ mutable #_"Block" :currentBlock nil)
+    (defn- #_"LIRGenerator" LIRGenerator'init-0 []
+        (hash-map
+            #_"LIRGenerationResult" :res nil
+            ;;;
+             ; Intended to be a special MoveFactory for spill moves.
+             ;
+             ; The instructions returned by this factory must only depend on the input values. References
+             ; to values that require interaction with register allocation are strictly forbidden.
+             ;;
+            #_"MoveFactory" :moveFactory nil
+            #_"LockStackHolder" :lockStackHolder nil
+            #_"SaveRbp" :saveRbp nil
+            ;;;
+             ; List of epilogue operations that need to restore RBP.
+             ;;
+            #_"List<AMD64HotSpotRestoreRbpOp>" :epilogueOps (ArrayList.)
+            #_"Register" :pollOnReturnScratchRegister nil
+            #_"Block" :currentBlock nil
+        )
+    )
 
     (defn #_"LIRGenerator" LIRGenerator'new-1 [#_"LIRGenerationResult" res]
         (let [
-            #_"LIRGenerator" this (hash-map)
+            #_"LIRGenerator" this (merge (hash-map) (LIRGenerator'init-0))
             this (assoc this :res res)
             this (assoc this :moveFactory (MoveFactory'new-1 (:frameMapBuilder res)))
         ]
@@ -42417,11 +43354,15 @@ ZeroExtendNode'new-4
  ; @anno LIRGenerator.BlockScope
  ;;
 (final-ns BlockScope (§ implements AutoCloseable)
-    (§ final #_"LIRGenerator" :gen nil)
+    (defn- #_"BlockScope" BlockScope'init-0 []
+        (hash-map
+            #_"LIRGenerator" :gen nil
+        )
+    )
 
     (defn- #_"BlockScope" BlockScope'new-2 [#_"LIRGenerator" gen, #_"Block" block]
         (let [
-            #_"BlockScope" this (hash-map)
+            #_"BlockScope" this (merge (hash-map) (BlockScope'init-0))
             this (assoc this :gen gen)
         ]
             (§ ass! (:currentBlock (:gen this)) block)
@@ -42457,9 +43398,13 @@ ZeroExtendNode'new-4
  ; the successor list of A. Note therefore that the successor list cannot be re-ordered.
  ;;
 (final-ns LabelRef
-    (§ final #_"LIR" :lir nil)
-    (§ final #_"Block" :block nil)
-    (§ final #_"int" :suxIndex 0)
+    (defn- #_"LabelRef" LabelRef'init-0 []
+        (hash-map
+            #_"LIR" :lir nil
+            #_"Block" :block nil
+            #_"int" :suxIndex 0
+        )
+    )
 
     ;;;
      ; Returns a new reference to a successor of the given block.
@@ -42480,7 +43425,7 @@ ZeroExtendNode'new-4
      ;;
     (defn- #_"LabelRef" LabelRef'new-3 [#_"LIR" lir, #_"Block" block, #_"int" suxIndex]
         (let [
-            #_"LabelRef" this (hash-map)
+            #_"LabelRef" this (merge (hash-map) (LabelRef'init-0))
             this (assoc this :lir lir)
             this (assoc this :block block)
             this (assoc this :suxIndex suxIndex)
@@ -42503,34 +43448,37 @@ ZeroExtendNode'new-4
  ; optimization, and finalization.
  ;;
 (final-ns LIR
-    (§ final #_"ControlFlowGraph" :cfg nil)
-    ;;;
-     ; The linear-scan ordered list of blocks.
-     ;;
-    (§ final #_"Block[]" :linearScanOrder nil)
-    ;;;
-     ; The order in which the code is emitted.
-     ;;
-    (§ final #_"Block[]" :codeEmittingOrder nil)
-    ;;;
-     ; Map from block to LIRInstructions.
-     ; Note that we are using ArrayList instead of List to avoid interface dispatch.
-     ;;
-    (§ final #_"BlockMap<List<LIRInstruction>>" :lirInstructions nil)
-    ;;;
-     ; Determines if any of the parameters to the method are passed via the stack where the parameters
-     ; are located in the caller's frame.
-     ;;
-    (§ mutable #_"boolean" :hasArgInCallerFrame false)
-
-    (§ mutable #_"int" :numVariables 0)
+    (defn- #_"LIR" LIR'init-0 []
+        (hash-map
+            #_"ControlFlowGraph" :cfg nil
+            ;;;
+             ; The linear-scan ordered list of blocks.
+             ;;
+            #_"Block[]" :linearScanOrder nil
+            ;;;
+             ; The order in which the code is emitted.
+             ;;
+            #_"Block[]" :codeEmittingOrder nil
+            ;;;
+             ; Map from block to LIRInstructions.
+             ; Note that we are using ArrayList instead of List to avoid interface dispatch.
+             ;;
+            #_"BlockMap<List<LIRInstruction>>" :lirInstructions nil
+            ;;;
+             ; Determines if any of the parameters to the method are passed via the stack where the parameters
+             ; are located in the caller's frame.
+             ;;
+            #_"boolean" :hasArgInCallerFrame false
+            #_"int" :numVariables 0
+        )
+    )
 
     ;;;
      ; Creates a new LIR instance for the specified compilation.
      ;;
     (defn #_"LIR" LIR'new-3 [#_"ControlFlowGraph" cfg, #_"Block[]" linearScanOrder, #_"Block[]" codeEmittingOrder]
         (let [
-            #_"LIR" this (hash-map)
+            #_"LIR" this (merge (hash-map) (LIR'init-0))
             this (assoc this :cfg cfg)
             this (assoc this :codeEmittingOrder codeEmittingOrder)
             this (assoc this :linearScanOrder linearScanOrder)
@@ -42583,27 +43531,29 @@ ZeroExtendNode'new-4
  ; Note: This class does not depend on LIRInstruction, so we could make it a generic utility class.
  ;;
 (final-ns LIRInsertionBuffer
-    ;;;
-     ; The lir list where ops of this buffer should be inserted later (nil when uninitialized).
-     ;;
-    (§ mutable #_"List<LIRInstruction>" :lir nil)
-
-    ;;;
-     ; List of insertion points. index and count are stored alternately: indexAndCount[i * 2]: the
-     ; index into lir list where "count" ops should be inserted indexAndCount[i * 2 + 1]: the number
-     ; of ops to be inserted at index
-     ;;
-    (§ mutable #_"int[]" :indexAndCount nil)
-    (§ mutable #_"int" :indexAndCountSize 0)
-
-    ;;;
-     ; The LIROps to be inserted.
-     ;;
-    (§ final #_"List<LIRInstruction>" :ops nil)
+    (defn- #_"LIRInsertionBuffer" LIRInsertionBuffer'init-0 []
+        (hash-map
+            ;;;
+             ; The lir list where ops of this buffer should be inserted later (nil when uninitialized).
+             ;;
+            #_"List<LIRInstruction>" :lir nil
+            ;;;
+             ; List of insertion points. index and count are stored alternately: indexAndCount[i * 2]: the
+             ; index into lir list where "count" ops should be inserted indexAndCount[i * 2 + 1]: the number
+             ; of ops to be inserted at index
+             ;;
+            #_"int[]" :indexAndCount nil
+            #_"int" :indexAndCountSize 0
+            ;;;
+             ; The LIROps to be inserted.
+             ;;
+            #_"List<LIRInstruction>" :ops nil
+        )
+    )
 
     (defn #_"LIRInsertionBuffer" LIRInsertionBuffer'new-0 []
         (let [
-            #_"LIRInsertionBuffer" this (hash-map)
+            #_"LIRInsertionBuffer" this (merge (hash-map) (LIRInsertionBuffer'init-0))
             this (assoc this :indexAndCount (int-array 8))
             this (assoc this :ops (ArrayList.))
         ]
@@ -42739,19 +43689,22 @@ ZeroExtendNode'new-4
      ;;
     (§ def #_"EnumSet<OperandFlag>" LIRInstructionImpl'ADDRESS_FLAGS (EnumSet/of OperandFlag'REG, OperandFlag'ILLEGAL))
 
-    (§ final #_"LIRInstructionClass" :instructionClass nil)
-
-    ;;;
-     ; Instruction id for register allocation.
-     ;;
-    (§ mutable #_"int" :id 0)
+    (defn- #_"LIRInstructionImpl" LIRInstructionImpl'init-0 []
+        (hash-map
+            #_"LIRInstructionClass" :instructionClass nil
+            ;;;
+             ; Instruction id for register allocation.
+             ;;
+            #_"int" :id 0
+        )
+    )
 
     ;;;
      ; Constructs a new LIR instruction.
      ;;
     (defn #_"LIRInstruction" LIRInstructionImpl'new-1 [#_"LIRInstructionClass<? implements LIRInstruction>" c]
         (let [
-            #_"LIRInstruction" this (hash-map)
+            #_"LIRInstruction" this (merge (hash-map) (LIRInstructionImpl'init-0))
             this (assoc this :instructionClass c)
             this (assoc this :id -1)
         ]
@@ -43004,17 +43957,19 @@ ZeroExtendNode'new-4
 )
 
 (final-ns LIRInstructionClass #_"<T>" (§ extends LIRIntrospection #_"<T>")
-    (§ final #_"Values" :uses nil)
-    (§ final #_"Values" :alives nil)
-    (§ final #_"Values" :temps nil)
-    (§ final #_"Values" :defs nil)
-
-    (§ final #_"boolean" :isMoveOp false)
-    (§ final #_"boolean" :isValueMoveOp false)
-    (§ final #_"boolean" :isLoadConstantOp false)
-
-    (§ mutable #_"String" :opcodeConstant nil)
-    (§ mutable #_"int" :opcodeIndex 0)
+    (defn- #_"LIRInstructionClass" LIRInstructionClass'init-0 []
+        (hash-map
+            #_"Values" :uses nil
+            #_"Values" :alives nil
+            #_"Values" :temps nil
+            #_"Values" :defs nil
+            #_"boolean" :isMoveOp false
+            #_"boolean" :isValueMoveOp false
+            #_"boolean" :isLoadConstantOp false
+            #_"String" :opcodeConstant nil
+            #_"int" :opcodeIndex 0
+        )
+    )
 
     (defn #_"LIRInstructionClass" LIRInstructionClass'new-1 [#_"Class<T>" clazz]
         (let [
@@ -43023,6 +43978,7 @@ ZeroExtendNode'new-4
             (§ ass! ifs (LIRInstructionFieldsScanner''scan-2 ifs, clazz))
             (let [
                 #_"LIRInstructionClass" this (LIRIntrospection'new-1 clazz)
+                this (merge this (LIRInstructionClass'init-0))
                 this (assoc this :uses (Values'new-1 (get (:valueAnnotations ifs) Use)))
                 this (assoc this :alives (Values'new-1 (get (:valueAnnotations ifs) Alive)))
                 this (assoc this :temps (Values'new-1 (get (:valueAnnotations ifs) Temp)))
@@ -43117,16 +44073,20 @@ ZeroExtendNode'new-4
  ; @anno LIRInstructionClass.LIRInstructionFieldsScanner
  ;;
 (final-ns LIRInstructionFieldsScanner (§ extends LIRFieldsScannerImpl)
-    (§ mutable #_"String" :opcodeConstant nil)
-
-    ;;;
-     ; Field (if any) annotated by LIROpcode.
-     ;;
-    (§ mutable #_"FieldInfo" :opcodeField nil)
+    (defn- #_"LIRInstructionFieldsScanner" LIRInstructionFieldsScanner'init-0 []
+        (hash-map
+            #_"String" :opcodeConstant nil
+            ;;;
+             ; Field (if any) annotated by LIROpcode.
+             ;;
+            #_"FieldInfo" :opcodeField nil
+        )
+    )
 
     (defn #_"LIRInstructionFieldsScanner" LIRInstructionFieldsScanner'new-0 []
         (let [
             #_"LIRInstructionFieldsScanner" this (LIRFieldsScannerImpl'new-0)
+            this (merge this (LIRInstructionFieldsScanner'init-0))
         ]
             (#_"EconomicMap" .put (:valueAnnotations this), Use, (OperandModeAnnotation'new-0))
             (#_"EconomicMap" .put (:valueAnnotations this), Alive, (OperandModeAnnotation'new-0))
@@ -43200,14 +44160,20 @@ ZeroExtendNode'new-4
     (§ def- #_"Class<StackSlot>" LIRIntrospection'STACK_SLOT_CLASS StackSlot)
     (§ def- #_"Class<Value[]>" LIRIntrospection'VALUE_ARRAY_CLASS Value*'class)
 
-    (defn #_"LIRIntrospection" LIRIntrospection'new-1 [#_"Class<T>" clazz]
-        (FieldIntrospection'new-1 clazz)
+    (defn- #_"LIRIntrospection" LIRIntrospection'init-0 []
+        (hash-map
+            ;;;
+             ; The component values in an LIRInstruction or CompositeValue.
+             ;;
+            #_"Values" :values nil
+        )
     )
 
-    ;;;
-     ; The component values in an LIRInstruction or CompositeValue.
-     ;;
-    (§ mutable #_"Values" :values nil)
+    (defn #_"LIRIntrospection" LIRIntrospection'new-1 [#_"Class<T>" clazz]
+        (merge (FieldIntrospection'new-1 clazz)
+            (LIRIntrospection'init-0)
+        )
+    )
 
     (defn #_"void" LIRIntrospection'forEach-4 [#_"LIRInstruction" op, #_"Values" values, #_"OperandMode" mode, #_"InstructionValueProcedure" proc]
         (dotimes [#_"int" i (count (:offsets values))]
@@ -43282,12 +44248,17 @@ ZeroExtendNode'new-4
  ; @anno LIRIntrospection.Values
  ;;
 (final-ns Values (§ extends Fields)
-    (§ final #_"int" :directCount 0)
-    (§ final #_"EnumSet<OperandFlag>[]" :flags nil)
+    (defn- #_"Values" Values'init-0 []
+        (hash-map
+            #_"int" :directCount 0
+            #_"EnumSet<OperandFlag>[]" :flags nil
+        )
+    )
 
     (defn #_"Values" Values'new-1 [#_"OperandModeAnnotation" mode]
         (let [
             #_"Values" this (Fields'new-1 (:values mode))
+            this (merge this (Values'init-0))
             this (assoc this :directCount (:directCount mode))
             this (assoc this :flags (§ cast #_"EnumSet<OperandFlag>[]" (make-array EnumSet (count (:values mode)))))
         ]
@@ -43316,11 +44287,16 @@ ZeroExtendNode'new-4
  ; @anno LIRIntrospection.ValueFieldInfo
  ;;
 (final-ns ValueFieldInfo (§ extends FieldInfo)
-    (§ final #_"EnumSet<OperandFlag>" :flags nil)
+    (defn- #_"ValueFieldInfo" ValueFieldInfo'init-0 []
+        (hash-map
+            #_"EnumSet<OperandFlag>" :flags nil
+        )
+    )
 
     (defn #_"ValueFieldInfo" ValueFieldInfo'new-5 [#_"long" offset, #_"String" name, #_"Class" type, #_"Class" declaringClass, #_"EnumSet<OperandFlag>" flags]
         (let [
             #_"ValueFieldInfo" this (FieldInfo'new-4 offset, name, type, declaringClass)
+            this (merge this (ValueFieldInfo'init-0))
             this (assoc this :flags flags)
         ]
             this
@@ -43347,23 +44323,32 @@ ZeroExtendNode'new-4
  ; @anno LIRIntrospection.OperandModeAnnotation
  ;;
 (final-ns OperandModeAnnotation
-    (§ final #_"ArrayList<ValueFieldInfo>" :values (ArrayList.))
-    ;;;
-     ; Number of non-array fields in #values.
-     ;;
-    (§ mutable #_"int" :directCount 0)
+    (defn- #_"OperandModeAnnotation" OperandModeAnnotation'init-0 []
+        (hash-map
+            #_"ArrayList<ValueFieldInfo>" :values (ArrayList.)
+            ;;;
+             ; Number of non-array fields in #values.
+             ;;
+            #_"int" :directCount 0
+        )
+    )
 
     (defn #_"OperandModeAnnotation" OperandModeAnnotation'new-0 []
-        (hash-map)
+        (merge (hash-map) (OperandModeAnnotation'init-0))
     )
 )
 
 (class-ns LIRFieldsScannerImpl (§ extends FieldsScannerImpl) (§ implements LIRFieldsScanner)
-    (§ final #_"EconomicMap<Class<? extends Annotation>, OperandModeAnnotation>" :valueAnnotations nil)
+    (defn- #_"LIRFieldsScannerImpl" LIRFieldsScannerImpl'init-0 []
+        (hash-map
+            #_"EconomicMap<Class<? extends Annotation>, OperandModeAnnotation>" :valueAnnotations nil
+        )
+    )
 
     (defn #_"LIRFieldsScanner" LIRFieldsScannerImpl'new-0 []
         (let [
             #_"LIRFieldsScanner" this (FieldsScannerImpl'new-0)
+            this (merge this (LIRFieldsScannerImpl'init-0))
             this (assoc this :valueAnnotations (EconomicMap/create Equivalence/DEFAULT))
         ]
             this
@@ -43474,11 +44459,15 @@ ZeroExtendNode'new-4
 )
 
 (final-ns LIRPhaseContext
-    (§ final #_"LIRGenerator" :lirGen nil)
+    (defn- #_"LIRPhaseContext" LIRPhaseContext'init-0 []
+        (hash-map
+            #_"LIRGenerator" :lirGen nil
+        )
+    )
 
     (defn #_"LIRPhaseContext" LIRPhaseContext'new-1 [#_"LIRGenerator" lirGen]
         (let [
-            #_"LIRPhaseContext" this (hash-map)
+            #_"LIRPhaseContext" this (merge (hash-map) (LIRPhaseContext'init-0))
             this (assoc this :lirGen lirGen)
         ]
             this
@@ -43487,11 +44476,15 @@ ZeroExtendNode'new-4
 )
 
 (class-ns LIRPhaseSuite (§ implements LIRPhase #_"<LIRPhaseContext>")
-    (§ mutable #_"List<LIRPhase<LIRPhaseContext>>" :phases nil)
+    (defn- #_"LIRPhaseSuite" LIRPhaseSuite'init-0 []
+        (hash-map
+            #_"List<LIRPhase<LIRPhaseContext>>" :phases nil
+        )
+    )
 
     (defn #_"LIRPhaseSuite" LIRPhaseSuite'new-0 []
         (let [
-            #_"LIRPhaseSuite" this (hash-map)
+            #_"LIRPhaseSuite" this (merge (hash-map) (LIRPhaseSuite'init-0))
             this (assoc this :phases (ArrayList.))
         ]
             this
@@ -43512,30 +44505,34 @@ ZeroExtendNode'new-4
 )
 
 (final-ns LIRSuites
-    ;;;
-     ; PreAllocationPhases are executed between LIR generation and register allocation.
-     ;
-     ; Implementers can create new {@link LIRGenerator#newVariable variables},
-     ; {@link LIRGenerationResult#getFrameMap stack slots} and {@link LIRGenerationResult#getFrameMapBuilder virtual stack slots}.
-     ;;
-    (§ final #_"LIRPhaseSuite" :preAllocStage nil)
-    ;;;
-     ; AllocationPhases are responsible for register allocation and translating VirtualStackSlots into StackSlots.
-     ;
-     ; After the AllocationStage there should be no more Variables and VirtualStackSlots.
-     ;;
-    (§ final #_"LIRPhaseSuite" :allocStage nil)
-    ;;;
-     ; PostAllocationPhases are executed after register allocation and before machine code generation.
-     ;
-     ; A PostAllocationPhase must not introduce new Variables, VirtualStackSlots or StackSlots.
-     ; Blocks might be removed from LIR#codeEmittingOrder() by overwriting them with nil.
-     ;;
-    (§ final #_"LIRPhaseSuite" :postAllocStage nil)
+    (defn- #_"LIRSuites" LIRSuites'init-0 []
+        (hash-map
+            ;;;
+             ; PreAllocationPhases are executed between LIR generation and register allocation.
+             ;
+             ; Implementers can create new {@link LIRGenerator#newVariable variables},
+             ; {@link LIRGenerationResult#getFrameMap stack slots} and {@link LIRGenerationResult#getFrameMapBuilder virtual stack slots}.
+             ;;
+            #_"LIRPhaseSuite" :preAllocStage nil
+            ;;;
+             ; AllocationPhases are responsible for register allocation and translating VirtualStackSlots into StackSlots.
+             ;
+             ; After the AllocationStage there should be no more Variables and VirtualStackSlots.
+             ;;
+            #_"LIRPhaseSuite" :allocStage nil
+            ;;;
+             ; PostAllocationPhases are executed after register allocation and before machine code generation.
+             ;
+             ; A PostAllocationPhase must not introduce new Variables, VirtualStackSlots or StackSlots.
+             ; Blocks might be removed from LIR#codeEmittingOrder() by overwriting them with nil.
+             ;;
+            #_"LIRPhaseSuite" :postAllocStage nil
+        )
+    )
 
     (defn #_"LIRSuites" LIRSuites'new-3 [#_"LIRPhaseSuite" preAllocStage, #_"LIRPhaseSuite" allocStage, #_"LIRPhaseSuite" postAllocStage]
         (let [
-            #_"LIRSuites" this (hash-map)
+            #_"LIRSuites" this (merge (hash-map) (LIRSuites'init-0))
             this (assoc this :preAllocStage preAllocStage)
             this (assoc this :allocStage allocStage)
             this (assoc this :postAllocStage postAllocStage)
@@ -43630,23 +44627,22 @@ ZeroExtendNode'new-4
  ; @anno RedundantMoveElimination.BlockStates
  ;;
 (final-ns BlockStates
-    ;; The state at block entry for global dataflow analysis. It contains a global value number
-    ;; for each location to optimize.
-
-    (§ mutable #_"int[]" :entryState nil)
-
-    ;; The state at block exit for global dataflow analysis. It contains a global value number
-    ;; for each location to optimize.
-
-    (§ mutable #_"int[]" :exitState nil)
-
-    ;; The starting number for global value numbering in this block.
-
-    (§ mutable #_"int" :entryValueNum 0)
+    (defn- #_"BlockStates" BlockStates'init-0 []
+        (hash-map
+            ;; The state at block entry for global dataflow analysis.
+            ;; It contains a global value number for each location to optimize.
+            #_"int[]" :entryState nil
+            ;; The state at block exit for global dataflow analysis.
+            ;; It contains a global value number for each location to optimize.
+            #_"int[]" :exitState nil
+            ;; The starting number for global value numbering in this block.
+            #_"int" :entryValueNum 0
+        )
+    )
 
     (defn #_"BlockStates" BlockStates'new-1 [#_"int" stateSize]
         (let [
-            #_"BlockStates" this (hash-map)
+            #_"BlockStates" this (merge (hash-map) (BlockStates'init-0))
             this (assoc this :entryState (int-array stateSize))
             this (assoc this :exitState (int-array stateSize))
         ]
@@ -43659,31 +44655,30 @@ ZeroExtendNode'new-4
  ; @anno RedundantMoveElimination.RMEOptimization
  ;;
 (final-ns RMEOptimization
-    (§ mutable #_"EconomicMap<Block, BlockStates>" :blockData (EconomicMap/create Equivalence/IDENTITY))
-
-    (§ mutable #_"RegisterArray" :callerSaveRegs nil)
-
-    ;;;
-     ; Contains the register number for registers which can be optimized and -1 for the others.
-     ;;
-    (§ mutable #_"int[]" :eligibleRegs nil)
-
-    ;;;
-     ; A map from the StackSlot {@link #getOffset offset} to an index into the state.
-     ; StackSlots of different kinds that map to the same location will map to the same index.
-     ;;
-    (§ mutable #_"EconomicMap<Integer, Integer>" :stackIndices (EconomicMap/create Equivalence/DEFAULT))
-
-    (§ mutable #_"int" :numRegs 0)
-
-    (§ final #_"FrameMap" :frameMap nil)
+    (defn- #_"RMEOptimization" RMEOptimization'init-0 []
+        (hash-map
+            #_"EconomicMap<Block, BlockStates>" :blockData (EconomicMap/create Equivalence/IDENTITY)
+            #_"RegisterArray" :callerSaveRegs nil
+            ;;;
+             ; Contains the register number for registers which can be optimized and -1 for the others.
+             ;;
+            #_"int[]" :eligibleRegs nil
+            ;;;
+             ; A map from the StackSlot {@link #getOffset offset} to an index into the state.
+             ; StackSlots of different kinds that map to the same location will map to the same index.
+             ;;
+            #_"EconomicMap<Integer, Integer>" :stackIndices (EconomicMap/create Equivalence/DEFAULT)
+            #_"int" :numRegs 0
+            #_"FrameMap" :frameMap nil
+        )
+    )
 
     ;; Pseudo value for a not yet assigned location.
     (def #_"int" RMEOptimization'INIT_VALUE 0)
 
     (defn #_"RMEOptimization" RMEOptimization'new-1 [#_"FrameMap" frameMap]
         (let [
-            #_"RMEOptimization" this (hash-map)
+            #_"RMEOptimization" this (merge (hash-map) (RMEOptimization'init-0))
             this (assoc this :frameMap frameMap)
         ]
             this
@@ -44161,16 +45156,20 @@ ZeroExtendNode'new-4
  ; Calculates the stack intervals using a worklist-based backwards data-flow analysis.
  ;;
 (final-ns FixPointIntervalBuilder
-    (§ final #_"LIR" :lir nil)
-    (§ final #_"StackInterval[]" :stackSlotMap nil)
-    (§ final #_"int" :maxOpId 0)
-    (§ final #_"BlockMap<BitSet>" :liveInMap nil)
-    (§ final #_"BlockMap<BitSet>" :liveOutMap nil)
-    (§ final #_"EconomicSet<LIRInstruction>" :usePos (EconomicSet/create Equivalence/IDENTITY))
+    (defn- #_"FixPointIntervalBuilder" FixPointIntervalBuilder'init-0 []
+        (hash-map
+            #_"LIR" :lir nil
+            #_"StackInterval[]" :stackSlotMap nil
+            #_"int" :maxOpId 0
+            #_"BlockMap<BitSet>" :liveInMap nil
+            #_"BlockMap<BitSet>" :liveOutMap nil
+            #_"EconomicSet<LIRInstruction>" :usePos (EconomicSet/create Equivalence/IDENTITY)
+        )
+    )
 
     (defn #_"FixPointIntervalBuilder" FixPointIntervalBuilder'new-3 [#_"LIR" lir, #_"StackInterval[]" stackSlotMap, #_"int" maxOpId]
         (let [
-            #_"FixPointIntervalBuilder" this (hash-map)
+            #_"FixPointIntervalBuilder" this (merge (hash-map) (FixPointIntervalBuilder'init-0))
             this (assoc this :lir lir)
             this (assoc this :stackSlotMap stackSlotMap)
             this (assoc this :maxOpId maxOpId)
@@ -44311,16 +45310,18 @@ ZeroExtendNode'new-4
  ; @anno FixPointIntervalBuilder.BlockClosure
  ;;
 (final-ns BlockClosure
-    (§ final #_"FixPointIntervalBuilder" :builder nil)
-
-    (§ final #_"BitSet" :currentSet nil)
-
-    (§ mutable #_"InstructionValueConsumer" :defConsumer nil)
-    (§ mutable #_"InstructionValueConsumer" :useConsumer nil)
+    (defn- #_"BlockClosure" BlockClosure'init-0 []
+        (hash-map
+            #_"FixPointIntervalBuilder" :builder nil
+            #_"BitSet" :currentSet nil
+            #_"InstructionValueConsumer" :defConsumer nil
+            #_"InstructionValueConsumer" :useConsumer nil
+        )
+    )
 
     (defn- #_"BlockClosure" BlockClosure'new-2 [#_"FixPointIntervalBuilder" builder, #_"BitSet" set]
         (let [
-            #_"BlockClosure" this (hash-map)
+            #_"BlockClosure" this (merge (hash-map) (BlockClosure'init-0))
             this (assoc this :builder builder)
             this (assoc this :currentSet set)
             #_"BlockClosure" closure this
@@ -44453,20 +45454,25 @@ ZeroExtendNode'new-4
  ; @anno LSStackSlotAllocator.Allocator
  ;;
 (final-ns Allocator
-    (§ final #_"LIR" :lir nil)
-    (§ final #_"FrameMapBuilderTool" :frameMapBuilder nil)
-    (§ final #_"StackInterval[]" :stackSlotMap nil)
-    (§ final #_"PriorityQueue<StackInterval>" :unhandled nil)
-    (§ final #_"PriorityQueue<StackInterval>" :active nil)
-    (§ final #_"Block[]" :sortedBlocks nil)
-    ;;;
-     ; Highest instruction id.
-     ;;
-    (§ final #_"int" :maxOpId 0)
+    (defn- #_"Allocator" Allocator'init-0 []
+        (hash-map
+            #_"LIR" :lir nil
+            #_"FrameMapBuilderTool" :frameMapBuilder nil
+            #_"StackInterval[]" :stackSlotMap nil
+            #_"PriorityQueue<StackInterval>" :unhandled nil
+            #_"PriorityQueue<StackInterval>" :active nil
+            #_"Block[]" :sortedBlocks nil
+            ;;;
+             ; Highest instruction id.
+             ;;
+            #_"int" :maxOpId 0
+            #_"EnumMap<SlotSize, Deque<StackSlot>>" :freeSlots nil
+        )
+    )
 
     (defn- #_"Allocator" Allocator'new-2 [#_"LIR" lir, #_"FrameMapBuilderTool" frameMapBuilder]
         (let [
-            #_"Allocator" this (hash-map)
+            #_"Allocator" this (merge (hash-map) (Allocator'init-0))
             this (assoc this :lir lir)
             this (assoc this :frameMapBuilder frameMapBuilder)
             this (assoc this :stackSlotMap (make-array StackInterval (FrameMapBuilderTool'''getNumberOfStackSlots-1 frameMapBuilder)))
@@ -44588,8 +45594,6 @@ ZeroExtendNode'new-4
               SlotSize'Illegal
         )
     )
-
-    (§ mutable #_"EnumMap<SlotSize, Deque<StackSlot>>" :freeSlots nil)
 
     ;;;
      ; @return the list of free stack slots for {@code size} or nil if there is none
@@ -44804,16 +45808,20 @@ ZeroExtendNode'new-4
     (§ def- #_"int" StackInterval'INVALID_START Integer/MAX_VALUE)
     (§ def- #_"int" StackInterval'INVALID_END Integer/MIN_VALUE)
 
-    (§ final #_"VirtualStackSlot" :operand nil)
-    (§ mutable #_"StackInterval" :hint nil)
-    (§ final #_"ValueKind" :kind nil)
-    (§ mutable #_"int" :from StackInterval'INVALID_START)
-    (§ mutable #_"int" :to StackInterval'INVALID_END)
-    (§ mutable #_"StackSlot" :location nil)
+    (defn- #_"StackInterval" StackInterval'init-0 []
+        (hash-map
+            #_"VirtualStackSlot" :operand nil
+            #_"StackInterval" :hint nil
+            #_"ValueKind" :kind nil
+            #_"int" :from StackInterval'INVALID_START
+            #_"int" :to StackInterval'INVALID_END
+            #_"StackSlot" :location nil
+        )
+    )
 
     (defn #_"StackInterval" StackInterval'new-2 [#_"VirtualStackSlot" operand, #_"ValueKind" kind]
         (let [
-            #_"StackInterval" this (hash-map)
+            #_"StackInterval" this (merge (hash-map) (StackInterval'init-0))
             this (assoc this :operand operand)
             this (assoc this :kind kind)
         ]
@@ -44864,23 +45872,28 @@ ZeroExtendNode'new-4
 (final-ns LabelOp (§ extends LIRInstructionImpl)
     (§ def #_"LIRInstructionClass<LabelOp>" LabelOp'TYPE (LIRInstructionClass'new-1 LabelOp))
 
-    ;;;
-     ; In the LIR, every register and variable must be defined before it is used. For method
-     ; parameters that are passed in fixed registers, exception objects passed to the exception
-     ; handler in a fixed register, or any other use of a fixed register not defined in this
-     ; method, an artificial definition is necessary. To avoid spill moves to be inserted
-     ; between the label at the beginning of a block an an actual definition in the second
-     ; instruction of a block, the registers are defined here in the label.
-     ;;
-    ; @Def({OperandFlag'REG, OperandFlag'STACK})
-    (§ mutable #_"Value[]" :incomingValues nil)
-    (§ final #_"Label" :label nil)
-    (§ final #_"boolean" :aligned? false)
-    (§ mutable #_"int" :numbPhis 0)
+    (defn- #_"LabelOp" LabelOp'init-0 []
+        (hash-map
+            ;;;
+             ; In the LIR, every register and variable must be defined before it is used. For method
+             ; parameters that are passed in fixed registers, exception objects passed to the exception
+             ; handler in a fixed register, or any other use of a fixed register not defined in this
+             ; method, an artificial definition is necessary. To avoid spill moves to be inserted
+             ; between the label at the beginning of a block an an actual definition in the second
+             ; instruction of a block, the registers are defined here in the label.
+             ;;
+            ; @Def({OperandFlag'REG, OperandFlag'STACK})
+            #_"Value[]" :incomingValues nil
+            #_"Label" :label nil
+            #_"boolean" :aligned? false
+            #_"int" :numbPhis 0
+        )
+    )
 
     (defn #_"LabelOp" LabelOp'new-2 [#_"Label" label, #_"boolean" aligned?]
         (let [
             #_"LabelOp" this (LIRInstructionImpl'new-1 LabelOp'TYPE)
+            this (merge this (LabelOp'init-0))
             this (assoc this :label label)
             this (assoc this :aligned? aligned?)
             this (assoc this :incomingValues Value/NO_VALUES)
@@ -44957,10 +45970,13 @@ ZeroExtendNode'new-4
 
     (§ def #_"EnumSet<OperandFlag>" JumpOp'outgoingFlags (EnumSet/of OperandFlag'REG, OperandFlag'STACK, OperandFlag'CONST, OperandFlag'OUTGOING))
 
-    ; @Alive({OperandFlag'REG, OperandFlag'STACK, OperandFlag'CONST, OperandFlag'OUTGOING})
-    (§ mutable #_"Value[]" :outgoingValues nil)
-
-    (§ final #_"LabelRef" :destination nil)
+    (defn- #_"JumpOp" JumpOp'init-0 []
+        (hash-map
+            ; @Alive({OperandFlag'REG, OperandFlag'STACK, OperandFlag'CONST, OperandFlag'OUTGOING})
+            #_"Value[]" :outgoingValues nil
+            #_"LabelRef" :destination nil
+        )
+    )
 
     (defn #_"JumpOp" JumpOp'new-1 [#_"LabelRef" destination]
         (JumpOp'new-2 JumpOp'TYPE, destination)
@@ -44969,6 +45985,7 @@ ZeroExtendNode'new-4
     (defn #_"JumpOp" JumpOp'new-2 [#_"LIRInstructionClass<? extends JumpOp>" c, #_"LabelRef" destination]
         (let [
             #_"JumpOp" this (LIRInstructionImpl'new-1 c)
+            this (merge this (JumpOp'init-0))
             this (assoc this :destination destination)
             this (assoc this :outgoingValues Value/NO_VALUES)
         ]
@@ -45005,18 +46022,23 @@ ZeroExtendNode'new-4
 (final-ns NoOp (§ extends LIRInstructionImpl)
     (§ def #_"LIRInstructionClass<NoOp>" NoOp'TYPE (LIRInstructionClass'new-1 NoOp))
 
-    ;;;
-     ; The block in which this instruction is located.
-     ;;
-    (§ final #_"Block" :block nil)
-    ;;;
-     ; The block index of this instruction.
-     ;;
-    (§ final #_"int" :index 0)
+    (defn- #_"NoOp" NoOp'init-0 []
+        (hash-map
+            ;;;
+             ; The block in which this instruction is located.
+             ;;
+            #_"Block" :block nil
+            ;;;
+             ; The block index of this instruction.
+             ;;
+            #_"int" :index 0
+        )
+    )
 
     (defn #_"NoOp" NoOp'new-2 [#_"Block" block, #_"int" index]
         (let [
             #_"NoOp" this (LIRInstructionImpl'new-1 NoOp'TYPE)
+            this (merge this (NoOp'init-0))
             this (assoc this :block block)
             this (assoc this :index index)
         ]
@@ -45044,12 +46066,17 @@ ZeroExtendNode'new-4
 (final-ns BlackholeOp (§ extends LIRInstructionImpl)
     (§ def #_"LIRInstructionClass<BlackholeOp>" BlackholeOp'TYPE (LIRInstructionClass'new-1 BlackholeOp))
 
-    ; @Use({OperandFlag'REG, OperandFlag'STACK, OperandFlag'CONST})
-    (§ mutable #_"Value" :value nil)
+    (defn- #_"BlackholeOp" BlackholeOp'init-0 []
+        (hash-map
+            ; @Use({OperandFlag'REG, OperandFlag'STACK, OperandFlag'CONST})
+            #_"Value" :value nil
+        )
+    )
 
     (defn #_"BlackholeOp" BlackholeOp'new-1 [#_"Value" value]
         (let [
             #_"BlackholeOp" this (LIRInstructionImpl'new-1 BlackholeOp'TYPE)
+            this (merge this (BlackholeOp'init-0))
             this (assoc this :value value)
         ]
             this
@@ -45068,12 +46095,17 @@ ZeroExtendNode'new-4
 (final-ns BindToRegisterOp (§ extends LIRInstructionImpl)
     (§ def #_"LIRInstructionClass<BindToRegisterOp>" BindToRegisterOp'TYPE (LIRInstructionClass'new-1 BindToRegisterOp))
 
-    ; @Use({OperandFlag'REG})
-    (§ mutable #_"Value" :value nil)
+    (defn- #_"BindToRegisterOp" BindToRegisterOp'init-0 []
+        (hash-map
+            ; @Use({OperandFlag'REG})
+            #_"Value" :value nil
+        )
+    )
 
     (defn #_"BindToRegisterOp" BindToRegisterOp'new-1 [#_"Value" value]
         (let [
             #_"BindToRegisterOp" this (LIRInstructionImpl'new-1 BindToRegisterOp'TYPE)
+            this (merge this (BindToRegisterOp'init-0))
             this (assoc this :value value)
         ]
             this
@@ -45108,13 +46140,17 @@ ZeroExtendNode'new-4
 )
 
 (class-ns SwitchStrategyImpl (§ implements SwitchStrategy)
-    (§ final #_"double[]" :keyProbabilities nil)
-    (§ mutable #_"double" :averageEffort -1)
-    (§ mutable #_"EffortClosure" :effortClosure nil)
+    (defn- #_"SwitchStrategyImpl" SwitchStrategyImpl'init-0 []
+        (hash-map
+            #_"double[]" :keyProbabilities nil
+            #_"double" :averageEffort -1
+            #_"EffortClosure" :effortClosure nil
+        )
+    )
 
     (defn #_"SwitchStrategy" SwitchStrategyImpl'new-1 [#_"double[]" keyProbabilities]
         (let [
-            #_"SwitchStrategy" this (hash-map)
+            #_"SwitchStrategy" this (merge (hash-map) (SwitchStrategyImpl'init-0))
             this (assoc this :keyProbabilities keyProbabilities)
         ]
             this
@@ -45196,13 +46232,17 @@ ZeroExtendNode'new-4
 )
 
 (class-ns BaseSwitchClosureImpl (§ implements BaseSwitchClosure, SwitchClosure)
-    (§ final #_"Assembler" :asm nil)
-    (§ final #_"LabelRef[]" :keyTargets nil)
-    (§ final #_"LabelRef" :defaultTarget nil)
+    (defn- #_"BaseSwitchClosureImpl" BaseSwitchClosureImpl'init-0 []
+        (hash-map
+            #_"Assembler" :asm nil
+            #_"LabelRef[]" :keyTargets nil
+            #_"LabelRef" :defaultTarget nil
+        )
+    )
 
     (defn #_"BaseSwitchClosure" BaseSwitchClosureImpl'new-3 [#_"Assembler" asm, #_"LabelRef[]" keyTargets, #_"LabelRef" defaultTarget]
         (let [
-            #_"BaseSwitchClosure" this (hash-map)
+            #_"BaseSwitchClosure" this (merge (hash-map) (BaseSwitchClosureImpl'init-0))
             this (assoc this :asm asm)
             this (assoc this :keyTargets keyTargets)
             this (assoc this :defaultTarget defaultTarget)
@@ -45264,17 +46304,20 @@ ZeroExtendNode'new-4
  ; @anno SwitchStrategy.EffortClosure
  ;;
 (final-ns EffortClosure (§ implements SwitchClosure)
-    (§ final #_"SwitchStrategy" :strategy nil)
-
-    (§ mutable #_"int" :defaultEffort 0)
-    (§ mutable #_"int" :defaultCount 0)
-    (§ final #_"int[]" :keyEfforts nil)
-    (§ final #_"int[]" :keyCounts nil)
-    (§ final #_"LabelRef[]" :keyTargets nil)
+    (defn- #_"EffortClosure" EffortClosure'init-0 []
+        (hash-map
+            #_"SwitchStrategy" :strategy nil
+            #_"int" :defaultEffort 0
+            #_"int" :defaultCount 0
+            #_"int[]" :keyEfforts nil
+            #_"int[]" :keyCounts nil
+            #_"LabelRef[]" :keyTargets nil
+        )
+    )
 
     (defn #_"EffortClosure" EffortClosure'new-2 [#_"SwitchStrategy" strategy, #_"LabelRef[]" keyTargets]
         (let [
-            #_"EffortClosure" this (hash-map)
+            #_"EffortClosure" this (merge (hash-map) (EffortClosure'init-0))
             this (assoc this :strategy strategy)
             this (assoc this :keyEfforts (int-array (count (:keyProbabilities strategy))))
             this (assoc this :keyCounts (int-array (count (:keyProbabilities strategy))))
@@ -45326,12 +46369,17 @@ ZeroExtendNode'new-4
  ; @anno SwitchStrategy.SequentialStrategy
  ;;
 (final-ns SequentialStrategy (§ extends SwitchStrategyImpl)
-    (§ final #_"Integer[]" :indexes nil)
-    (§ final #_"Constant[]" :keyConstants nil)
+    (defn- #_"SequentialStrategy" SequentialStrategy'init-0 []
+        (hash-map
+            #_"Integer[]" :indexes nil
+            #_"Constant[]" :keyConstants nil
+        )
+    )
 
     (defn #_"SequentialStrategy" SequentialStrategy'new-2 [#_"double[]" keyProbabilities, #_"Constant[]" keyConstants]
         (let [
             #_"SequentialStrategy" this (SwitchStrategyImpl'new-1 keyProbabilities)
+            this (merge this (SequentialStrategy'init-0))
             this (assoc this :keyConstants keyConstants)
             #_"int" n (count keyConstants)
             this (assoc this :indexes (make-array Integer n))
@@ -45370,11 +46418,16 @@ ZeroExtendNode'new-4
  ; @anno SwitchStrategy.PrimitiveStrategy
  ;;
 (class-ns PrimitiveStrategy (§ extends SwitchStrategyImpl)
-    (§ final #_"JavaConstant[]" :keyConstants nil)
+    (defn- #_"PrimitiveStrategy" PrimitiveStrategy'init-0 []
+        (hash-map
+            #_"JavaConstant[]" :keyConstants nil
+        )
+    )
 
     (defn #_"PrimitiveStrategy" PrimitiveStrategy'new-2 [#_"double[]" keyProbabilities, #_"JavaConstant[]" keyConstants]
         (let [
             #_"PrimitiveStrategy" this (SwitchStrategyImpl'new-1 keyProbabilities)
+            this (merge this (PrimitiveStrategy'init-0))
             this (assoc this :keyConstants keyConstants)
         ]
             this
@@ -45407,11 +46460,16 @@ ZeroExtendNode'new-4
  ; @anno SwitchStrategy.RangesStrategy
  ;;
 (final-ns RangesStrategy (§ extends PrimitiveStrategy)
-    (§ final #_"Integer[]" :indexes nil)
+    (defn- #_"RangesStrategy" RangesStrategy'init-0 []
+        (hash-map
+            #_"Integer[]" :indexes nil
+        )
+    )
 
     (defn #_"RangesStrategy" RangesStrategy'new-2 [#_"double[]" keyProbabilities, #_"JavaConstant[]" keyConstants]
         (let [
             #_"RangesStrategy" this (PrimitiveStrategy'new-2 keyProbabilities, keyConstants)
+            this (merge this (RangesStrategy'init-0))
             #_"int" n (count keyConstants)
             this (assoc this :indexes (make-array Integer n))
             _
@@ -45498,11 +46556,16 @@ ZeroExtendNode'new-4
 (final-ns BinaryStrategy (§ extends PrimitiveStrategy)
     (def- #_"double" BinaryStrategy'MIN_PROBABILITY 0.00001)
 
-    (§ final #_"double[]" :probabilitySums nil)
+    (defn- #_"BinaryStrategy" BinaryStrategy'init-0 []
+        (hash-map
+            #_"double[]" :probabilitySums nil
+        )
+    )
 
     (defn #_"BinaryStrategy" BinaryStrategy'new-2 [#_"double[]" keyProbabilities, #_"JavaConstant[]" keyConstants]
         (let [
             #_"BinaryStrategy" this (PrimitiveStrategy'new-2 keyProbabilities, keyConstants)
+            this (merge this (BinaryStrategy'init-0))
             this (assoc this :probabilitySums (double-array (inc (count keyProbabilities))))
             _
                 (loop-when [#_"double" sum 0.0 #_"int" i 0] (< i (count keyConstants))
@@ -45641,12 +46704,16 @@ ZeroExtendNode'new-4
 )
 
 (final-ns RegisterMap
-    (§ final #_"Variable[]" :values nil)
-    (§ final #_"Architecture" :arch nil)
+    (defn- #_"RegisterMap" RegisterMap'init-0 []
+        (hash-map
+            #_"Variable[]" :values nil
+            #_"Architecture" :arch nil
+        )
+    )
 
     (defn #_"RegisterMap" RegisterMap'new-1 [#_"Architecture" arch]
         (let [
-            #_"RegisterMap" this (hash-map)
+            #_"RegisterMap" this (merge (hash-map) (RegisterMap'init-0))
             this (assoc this :values (make-array Variable (#_"RegisterArray" .size (#_"Architecture" .getRegisters arch))))
             this (assoc this :arch arch)
         ]
@@ -45678,12 +46745,15 @@ ZeroExtendNode'new-4
  ; by a register allocator.
  ;;
 (final-ns Variable (§ extends AllocatableValue)
-    ;;;
-     ; The identifier of the variable. This is a non-zero index in a contiguous 0-based name space.
-     ;;
-    (§ final #_"int" :index 0)
-
-    (§ mutable #_"String" :name nil)
+    (defn- #_"Variable" Variable'init-0 []
+        (hash-map
+            ;;;
+             ; The identifier of the variable. This is a non-zero index in a contiguous 0-based name space.
+             ;;
+            #_"int" :index 0
+            #_"String" :name nil
+        )
+    )
 
     ;;;
      ; Creates a new variable.
@@ -45691,6 +46761,7 @@ ZeroExtendNode'new-4
     (defn #_"Variable" Variable'new-2 [#_"ValueKind" kind, #_"int" index]
         (let [
             #_"Variable" this (AllocatableValue. kind)
+            this (merge this (Variable'init-0))
             this (assoc this :index index)
         ]
             this
@@ -45703,11 +46774,16 @@ ZeroExtendNode'new-4
  ; are replaced by real StackSlots with a fixed position in the frame before code emission.
  ;;
 (class-ns VirtualStackSlot (§ extends AllocatableValue)
-    (§ final #_"int" :id 0)
+    (defn- #_"VirtualStackSlot" VirtualStackSlot'init-0 []
+        (hash-map
+            #_"int" :id 0
+        )
+    )
 
     (defn #_"VirtualStackSlot" VirtualStackSlot'new-2 [#_"int" id, #_"ValueKind" kind]
         (let [
             #_"VirtualStackSlot" this (AllocatableValue. kind)
+            this (merge this (VirtualStackSlot'init-0))
             this (assoc this :id id)
         ]
             this
@@ -45716,14 +46792,19 @@ ZeroExtendNode'new-4
 )
 
 (final-ns BasicInductionVariable (§ extends InductionVariableImpl)
-    (§ final #_"ValuePhiNode" :phi nil)
-    (§ final #_"ValueNode" :init nil)
-    (§ final #_"ValueNode" :rawStride nil)
-    (§ final #_"BinaryArithmeticNode" :op nil)
+    (defn- #_"BasicInductionVariable" BasicInductionVariable'init-0 []
+        (hash-map
+            #_"ValuePhiNode" :phi nil
+            #_"ValueNode" :init nil
+            #_"ValueNode" :rawStride nil
+            #_"BinaryArithmeticNode" :op nil
+        )
+    )
 
     (defn #_"BasicInductionVariable" BasicInductionVariable'new-5 [#_"LoopEx" loop, #_"ValuePhiNode" phi, #_"ValueNode" init, #_"ValueNode" rawStride, #_"BinaryArithmeticNode" op]
         (let [
             #_"BasicInductionVariable" this (InductionVariableImpl'new-1 loop)
+            this (merge this (BasicInductionVariable'init-0))
             this (assoc this :phi phi)
             this (assoc this :init init)
             this (assoc this :rawStride rawStride)
@@ -45824,16 +46905,20 @@ ZeroExtendNode'new-4
 )
 
 (final-ns CountedLoopInfo
-    (§ final #_"LoopEx" :loop nil)
-    (§ mutable #_"InductionVariable" :iv nil)
-    (§ mutable #_"ValueNode" :end nil)
-    (§ mutable #_"boolean" :oneOff false)
-    (§ mutable #_"AbstractBeginNode" :body nil)
-    (§ mutable #_"IfNode" :ifNode nil)
+    (defn- #_"CountedLoopInfo" CountedLoopInfo'init-0 []
+        (hash-map
+            #_"LoopEx" :loop nil
+            #_"InductionVariable" :iv nil
+            #_"ValueNode" :end nil
+            #_"boolean" :oneOff false
+            #_"AbstractBeginNode" :body nil
+            #_"IfNode" :ifNode nil
+        )
+    )
 
     (defn #_"CountedLoopInfo" CountedLoopInfo'new-6 [#_"LoopEx" loop, #_"InductionVariable" iv, #_"IfNode" ifNode, #_"ValueNode" end, #_"boolean" oneOff, #_"AbstractBeginNode" body]
         (let [
-            #_"CountedLoopInfo" this (hash-map)
+            #_"CountedLoopInfo" this (merge (hash-map) (CountedLoopInfo'init-0))
             this (assoc this :loop loop)
             this (assoc this :iv iv)
             this (assoc this :end end)
@@ -46140,10 +47225,14 @@ ZeroExtendNode'new-4
  ; @anno DefaultLoopPolicies.CountingClosure
  ;;
 (final-ns CountingClosure (§ implements VirtualClosure)
-    (§ mutable #_"int" :count 0)
+    (defn- #_"CountingClosure" CountingClosure'init-0 []
+        (hash-map
+            #_"int" :count 0
+        )
+    )
 
     (defn #_"CountingClosure" CountingClosure'new-0 []
-        (hash-map)
+        (merge (hash-map) (CountingClosure'init-0))
     )
 
     (§ override! #_"void" VirtualClosure'''apply-2 [#_"CountingClosure" this, #_"VirtualState" node]
@@ -46153,12 +47242,17 @@ ZeroExtendNode'new-4
 )
 
 (final-ns DerivedConvertedInductionVariable (§ extends DerivedInductionVariable)
-    (§ final #_"Stamp" :stamp nil)
-    (§ final #_"ValueNode" :value nil)
+    (defn- #_"DerivedConvertedInductionVariable" DerivedConvertedInductionVariable'init-0 []
+        (hash-map
+            #_"Stamp" :stamp nil
+            #_"ValueNode" :value nil
+        )
+    )
 
     (defn #_"DerivedConvertedInductionVariable" DerivedConvertedInductionVariable'new-4 [#_"LoopEx" loop, #_"InductionVariable" base, #_"Stamp" stamp, #_"ValueNode" value]
         (let [
             #_"DerivedConvertedInductionVariable" this (DerivedInductionVariable'new-2 loop, base)
+            this (merge this (DerivedConvertedInductionVariable'init-0))
             this (assoc this :stamp stamp)
             this (assoc this :value value)
         ]
@@ -46219,11 +47313,16 @@ ZeroExtendNode'new-4
  ; Base class of the derived induction variables.
  ;;
 (class-ns DerivedInductionVariable (§ extends InductionVariableImpl)
-    (§ final #_"InductionVariable" :base nil)
+    (defn- #_"DerivedInductionVariable" DerivedInductionVariable'init-0 []
+        (hash-map
+            #_"InductionVariable" :base nil
+        )
+    )
 
     (defn #_"DerivedInductionVariable" DerivedInductionVariable'new-2 [#_"LoopEx" loop, #_"InductionVariable" base]
         (let [
             #_"DerivedInductionVariable" this (InductionVariableImpl'new-1 loop)
+            this (merge this (DerivedInductionVariable'init-0))
             this (assoc this :base base)
         ]
             this
@@ -46240,12 +47339,17 @@ ZeroExtendNode'new-4
 )
 
 (final-ns DerivedOffsetInductionVariable (§ extends DerivedInductionVariable)
-    (§ final #_"ValueNode" :offset nil)
-    (§ final #_"BinaryArithmeticNode" :value nil)
+    (defn- #_"DerivedOffsetInductionVariable" DerivedOffsetInductionVariable'init-0 []
+        (hash-map
+            #_"ValueNode" :offset nil
+            #_"BinaryArithmeticNode" :value nil
+        )
+    )
 
     (defn #_"DerivedOffsetInductionVariable" DerivedOffsetInductionVariable'new-4 [#_"LoopEx" loop, #_"InductionVariable" base, #_"ValueNode" offset, #_"BinaryArithmeticNode" value]
         (let [
             #_"DerivedOffsetInductionVariable" this (DerivedInductionVariable'new-2 loop, base)
+            this (merge this (DerivedOffsetInductionVariable'init-0))
             this (assoc this :offset offset)
             this (assoc this :value value)
         ]
@@ -46333,12 +47437,17 @@ ZeroExtendNode'new-4
 )
 
 (final-ns DerivedScaledInductionVariable (§ extends DerivedInductionVariable)
-    (§ final #_"ValueNode" :scale nil)
-    (§ final #_"ValueNode" :value nil)
+    (defn- #_"DerivedScaledInductionVariable" DerivedScaledInductionVariable'init-0 []
+        (hash-map
+            #_"ValueNode" :scale nil
+            #_"ValueNode" :value nil
+        )
+    )
 
     (defn #_"DerivedScaledInductionVariable" DerivedScaledInductionVariable'new-4 [#_"LoopEx" loop, #_"InductionVariable" base, #_"ValueNode" scale, #_"ValueNode" value]
         (let [
             #_"DerivedScaledInductionVariable" this (DerivedInductionVariable'new-2 loop, base)
+            this (merge this (DerivedScaledInductionVariable'init-0))
             this (assoc this :scale scale)
             this (assoc this :value value)
         ]
@@ -46349,6 +47458,7 @@ ZeroExtendNode'new-4
     (defn #_"DerivedScaledInductionVariable" DerivedScaledInductionVariable'new-3 [#_"LoopEx" loop, #_"InductionVariable" base, #_"NegateNode" value]
         (let [
             #_"DerivedScaledInductionVariable" this (DerivedInductionVariable'new-2 loop, base)
+            this (merge this (DerivedScaledInductionVariable'init-0))
             this (assoc this :scale (ConstantNode'forIntegerStamp-3 (:stamp value), -1, (:graph value)))
             this (assoc this :value value)
         ]
@@ -46416,11 +47526,15 @@ ZeroExtendNode'new-4
 )
 
 (class-ns InductionVariableImpl (§ implements InductionVariable)
-    (§ final #_"LoopEx" :loop nil)
+    (defn- #_"InductionVariableImpl" InductionVariableImpl'init-0 []
+        (hash-map
+            #_"LoopEx" :loop nil
+        )
+    )
 
     (defn #_"InductionVariable" InductionVariableImpl'new-1 [#_"LoopEx" loop]
         (let [
-            #_"InductionVariable" this (hash-map)
+            #_"InductionVariable" this (merge (hash-map) (InductionVariableImpl'init-0))
             this (assoc this :loop loop)
         ]
             this
@@ -46444,17 +47558,20 @@ ZeroExtendNode'new-4
 )
 
 (final-ns LoopEx
-    (§ final #_"Loop" :loop nil)
-    (§ mutable #_"LoopFragmentInside" :inside nil)
-    (§ mutable #_"LoopFragmentWhole" :whole nil)
-    (§ mutable #_"CountedLoopInfo" :counted nil)
-    (§ mutable #_"LoopsData" :data nil)
-
-    (§ mutable #_"EconomicMap<Node, InductionVariable>" :ivs nil)
+    (defn- #_"LoopEx" LoopEx'init-0 []
+        (hash-map
+            #_"Loop" :loop nil
+            #_"LoopFragmentInside" :inside nil
+            #_"LoopFragmentWhole" :whole nil
+            #_"CountedLoopInfo" :counted nil
+            #_"LoopsData" :data nil
+            #_"EconomicMap<Node, InductionVariable>" :ivs nil
+        )
+    )
 
     (defn #_"LoopEx" LoopEx'new-2 [#_"Loop" loop, #_"LoopsData" data]
         (let [
-            #_"LoopEx" this (hash-map)
+            #_"LoopEx" this (merge (hash-map) (LoopEx'init-0))
             this (assoc this :loop loop)
             this (assoc this :data data)
         ]
@@ -46835,12 +47952,16 @@ ZeroExtendNode'new-4
  ; @anno LoopEx.InvariantPredicate
  ;;
 (final-ns InvariantPredicate (§ implements NodePredicate)
-    (§ final #_"LoopEx" :loopEx nil)
-    (§ final #_"NodeMark" :mark nil)
+    (defn- #_"InvariantPredicate" InvariantPredicate'init-0 []
+        (hash-map
+            #_"LoopEx" :loopEx nil
+            #_"NodeMark" :mark nil
+        )
+    )
 
     (defn #_"InvariantPredicate" InvariantPredicate'new-1 [#_"LoopEx" loopEx]
         (let [
-            #_"InvariantPredicate" this (hash-map)
+            #_"InvariantPredicate" this (merge (hash-map) (InvariantPredicate'init-0))
             this (assoc this :loopEx loopEx)
             this (assoc this :mark (NodeMark'new-1 (:graph (LoopEx''loopBegin-1 loopEx))))
         ]
@@ -46856,30 +47977,34 @@ ZeroExtendNode'new-4
 )
 
 (class-ns LoopFragmentImpl (§ implements LoopFragment)
-    ;;;
-     ; The original LoopEx for this fragment. For duplicated fragments this is nil.
-     ;;
-    (§ final #_"LoopEx" :loop nil)
-    (§ final #_"LoopFragment" :original nil)
-    (§ mutable #_"NodeBitMap" :nodes nil)
-    (§ mutable #_"boolean" :nodesReady false)
-    (§ mutable #_"EconomicMap<Node, Node>" :duplicationMap nil)
-
-    (defn #_"LoopFragment" LoopFragmentImpl'new-1 [#_"LoopEx" loop]
-        (let [
-            #_"LoopFragment" this (LoopFragmentImpl'new-2 loop, nil)
-            this (assoc this :nodesReady true)
-        ]
-            this
+    (defn- #_"LoopFragmentImpl" LoopFragmentImpl'init-0 []
+        (hash-map
+            ;;;
+             ; The original LoopEx for this fragment. For duplicated fragments this is nil.
+             ;;
+            #_"LoopEx" :loop nil
+            #_"LoopFragment" :original nil
+            #_"NodeBitMap" :nodes nil
+            #_"boolean" :nodesReady false
+            #_"EconomicMap<Node, Node>" :duplicationMap nil
         )
     )
 
     (defn #_"LoopFragment" LoopFragmentImpl'new-2 [#_"LoopEx" loop, #_"LoopFragment" original]
         (let [
-            #_"LoopFragment" this (hash-map)
+            #_"LoopFragment" this (merge (hash-map) (LoopFragmentImpl'init-0))
             this (assoc this :loop loop)
             this (assoc this :original original)
             this (assoc this :nodesReady false)
+        ]
+            this
+        )
+    )
+
+    (defn #_"LoopFragment" LoopFragmentImpl'new-1 [#_"LoopEx" loop]
+        (let [
+            #_"LoopFragment" this (LoopFragmentImpl'new-2 loop, nil)
+            this (assoc this :nodesReady true)
         ]
             this
         )
@@ -47244,13 +48369,17 @@ ZeroExtendNode'new-4
  ; @anno LoopFragment.WorkListEntry
  ;;
 (final-ns WorkListEntry
-    (§ final #_"Iterator<Node>" :usages nil)
-    (§ final #_"Node" :n nil)
-    (§ mutable #_"boolean" :isLoopNode false)
+    (defn- #_"WorkListEntry" WorkListEntry'init-0 []
+        (hash-map
+            #_"Iterator<Node>" :usages nil
+            #_"Node" :n nil
+            #_"boolean" :isLoopNode false
+        )
+    )
 
     (defn #_"WorkListEntry" WorkListEntry'new-2 [#_"Node" n, #_"NodeBitMap" loopNodes]
         (let [
-            #_"WorkListEntry" this (hash-map)
+            #_"WorkListEntry" this (merge (hash-map) (WorkListEntry'init-0))
             this (assoc this :n n)
             this (assoc this :usages (#_"Iterable" .iterator (NodeImpl''usages-1 n)))
             this (assoc this :isLoopNode (NodeBitMap''isMarked-2n loopNodes, n))
@@ -47265,21 +48394,29 @@ ZeroExtendNode'new-4
 )
 
 (final-ns LoopFragmentInside (§ extends LoopFragmentImpl)
-    ;;;
-     ; When an inside fragment's (loop)ends are merged to create a unique exit point, some phis
-     ; must be created: they phis together all the back-values of the loop-phis. These can then
-     ; be used to update the loop-phis' forward edge value ('initializer') in the peeling case.
-     ; In the unrolling case they will be used as the value that replace the loop-phis of the
-     ; duplicated inside fragment.
-     ;;
-    (§ mutable #_"EconomicMap<PhiNode, ValueNode>" :mergedInitializers nil)
+    (defn- #_"LoopFragmentInside" LoopFragmentInside'init-0 []
+        (hash-map
+            ;;;
+             ; When an inside fragment's (loop)ends are merged to create a unique exit point, some phis
+             ; must be created: they phis together all the back-values of the loop-phis. These can then
+             ; be used to update the loop-phis' forward edge value ('initializer') in the peeling case.
+             ; In the unrolling case they will be used as the value that replace the loop-phis of the
+             ; duplicated inside fragment.
+             ;;
+            #_"EconomicMap<PhiNode, ValueNode>" :mergedInitializers nil
+        )
+    )
 
     (defn #_"LoopFragmentInside" LoopFragmentInside'new-1e [#_"LoopEx" loop]
-        (LoopFragmentImpl'new-1 loop)
+        (merge (LoopFragmentImpl'new-1 loop)
+            (LoopFragmentInside'init-0)
+        )
     )
 
     (defn #_"LoopFragmentInside" LoopFragmentInside'new-1f [#_"LoopFragmentInside" original]
-        (LoopFragmentImpl'new-2 nil, original)
+        (merge (LoopFragmentImpl'new-2 nil, original)
+            (LoopFragmentInside'init-0)
+        )
     )
 
     (§ override! #_"LoopFragmentInside" LoopFragment'''duplicate-1 [#_"LoopFragmentInside" this]
@@ -47965,13 +49102,17 @@ ZeroExtendNode'new-4
 )
 
 (final-ns LoopsData
-    (§ final #_"EconomicMap<LoopBeginNode, LoopEx>" :loopBeginToEx (EconomicMap/create Equivalence/IDENTITY))
-    (§ final #_"ControlFlowGraph" :cfg nil)
-    (§ final #_"List<LoopEx>" :loops nil)
+    (defn- #_"LoopsData" LoopsData'init-0 []
+        (hash-map
+            #_"EconomicMap<LoopBeginNode, LoopEx>" :loopBeginToEx (EconomicMap/create Equivalence/IDENTITY)
+            #_"ControlFlowGraph" :cfg nil
+            #_"List<LoopEx>" :loops nil
+        )
+    )
 
     (defn #_"LoopsData" LoopsData'new-1 [#_"Graph" graph]
         (let [
-            #_"LoopsData" this (hash-map)
+            #_"LoopsData" this (merge (hash-map) (LoopsData'init-0))
             this (assoc this :cfg (ControlFlowGraph'compute-5 graph, true, true, true, true))
             this (assoc this :loops (ArrayList.))
         ]
@@ -48089,11 +49230,16 @@ ZeroExtendNode'new-4
 )
 
 (final-ns LoopFullUnrollPhase (§ extends LoopPhase)
-    (§ final #_"CanonicalizerPhase" :canonicalizer nil)
+    (defn- #_"LoopFullUnrollPhase" LoopFullUnrollPhase'init-0 []
+        (hash-map
+            #_"CanonicalizerPhase" :canonicalizer nil
+        )
+    )
 
     (defn #_"LoopFullUnrollPhase" LoopFullUnrollPhase'new-2 [#_"CanonicalizerPhase" canonicalizer, #_"LoopPolicies" policies]
         (let [
             #_"LoopFullUnrollPhase" this (LoopPhase'new-1 policies)
+            this (merge this (LoopFullUnrollPhase'init-0))
             this (assoc this :canonicalizer canonicalizer)
         ]
             this
@@ -48131,11 +49277,16 @@ ZeroExtendNode'new-4
 )
 
 (final-ns LoopPartialUnrollPhase (§ extends LoopPhase)
-    (§ final #_"CanonicalizerPhase" :canonicalizer nil)
+    (defn- #_"LoopPartialUnrollPhase" LoopPartialUnrollPhase'init-0 []
+        (hash-map
+            #_"CanonicalizerPhase" :canonicalizer nil
+        )
+    )
 
     (defn #_"LoopPartialUnrollPhase" LoopPartialUnrollPhase'new-2 [#_"LoopPolicies" policies, #_"CanonicalizerPhase" canonicalizer]
         (let [
             #_"LoopPartialUnrollPhase" this (LoopPhase'new-1 policies)
+            this (merge this (LoopPartialUnrollPhase'init-0))
             this (assoc this :canonicalizer canonicalizer)
         ]
             this
@@ -48196,11 +49347,15 @@ ZeroExtendNode'new-4
 )
 
 (class-ns LoopPhase (§ implements Phase)
-    (§ final #_"LoopPolicies" :policies nil)
+    (defn- #_"LoopPhase" LoopPhase'init-0 []
+        (hash-map
+            #_"LoopPolicies" :policies nil
+        )
+    )
 
     (defn #_"LoopPhase" LoopPhase'new-1 [#_"LoopPolicies" policies]
         (let [
-            #_"LoopPhase" this (hash-map)
+            #_"LoopPhase" this (merge (hash-map) (LoopPhase'init-0))
             this (assoc this :policies policies)
         ]
             this
@@ -48862,11 +50017,15 @@ ZeroExtendNode'new-4
  ; @anno AbstractBeginNode.BlockNodeIterator
  ;;
 (final-ns BlockNodeIterator (§ implements Iterator #_"<FixedNode>")
-    (§ mutable #_"FixedNode" :current nil)
+    (defn- #_"BlockNodeIterator" BlockNodeIterator'init-0 []
+        (hash-map
+            #_"FixedNode" :current nil
+        )
+    )
 
     (defn #_"BlockNodeIterator" BlockNodeIterator'new-1 [#_"FixedNode" next]
         (let [
-            #_"BlockNodeIterator" this (hash-map)
+            #_"BlockNodeIterator" this (merge (hash-map) (BlockNodeIterator'init-0))
             this (assoc this :current next)
         ]
             this
@@ -48900,12 +50059,17 @@ ZeroExtendNode'new-4
 (class-ns AbstractDeoptimizeNodeImpl (§ extends ControlSinkNode) (§ implements AbstractDeoptimizeNode, IterableNodeType, DeoptBefore)
     (§ def #_"NodeClass<AbstractDeoptimizeNode>" AbstractDeoptimizeNodeImpl'TYPE (NodeClass'create-1 AbstractDeoptimizeNodeImpl))
 
-    ; @OptionalInput
-    (§ mutable #_"FrameState" :stateBefore nil)
+    (defn- #_"AbstractDeoptimizeNodeImpl" AbstractDeoptimizeNodeImpl'init-0 []
+        (hash-map
+            ; @OptionalInput
+            #_"FrameState" :stateBefore nil
+        )
+    )
 
     (defn #_"AbstractDeoptimizeNode" AbstractDeoptimizeNodeImpl'new-2 [#_"NodeClass<? implements AbstractDeoptimizeNode>" c, #_"FrameState" stateBefore]
         (let [
             #_"AbstractDeoptimizeNode" this (ControlSinkNode'new-2 c, VoidStamp'instance)
+            this (merge this (AbstractDeoptimizeNodeImpl'init-0))
             this (assoc this :stateBefore stateBefore)
         ]
             this
@@ -48951,16 +50115,21 @@ ZeroExtendNode'new-4
 (class-ns AbstractFixedGuardNode (§ extends DeoptimizingFixedWithNextNode) (§ implements Simplifiable, GuardingNode, DeoptimizingGuard)
     (§ def #_"NodeClass<AbstractFixedGuardNode>" AbstractFixedGuardNode'TYPE (NodeClass'create-1 AbstractFixedGuardNode))
 
-    ; @Input
-    (§ mutable #_"LogicNode" :condition nil)
-    (§ mutable #_"DeoptimizationReason" :reason nil)
-    (§ mutable #_"DeoptimizationAction" :action nil)
-    (§ mutable #_"JavaConstant" :speculation nil)
-    (§ mutable #_"boolean" :negated? false)
+    (defn- #_"AbstractFixedGuardNode" AbstractFixedGuardNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"LogicNode" :condition nil
+            #_"DeoptimizationReason" :reason nil
+            #_"DeoptimizationAction" :action nil
+            #_"JavaConstant" :speculation nil
+            #_"boolean" :negated? false
+        )
+    )
 
     (defn #_"AbstractFixedGuardNode" AbstractFixedGuardNode'new-6 [#_"NodeClass<? extends AbstractFixedGuardNode>" c, #_"LogicNode" condition, #_"DeoptimizationReason" reason, #_"DeoptimizationAction" action, #_"JavaConstant" speculation, #_"boolean" negated?]
         (let [
             #_"AbstractFixedGuardNode" this (DeoptimizingFixedWithNextNode'new-2 c, VoidStamp'instance)
+            this (merge this (AbstractFixedGuardNode'init-0))
             this (assoc this :action action)
             this (assoc this :speculation speculation)
             this (assoc this :negated? negated?)
@@ -49041,11 +50210,16 @@ ZeroExtendNode'new-4
 (class-ns AbstractLocalNode (§ extends FloatingNode)
     (§ def #_"NodeClass<AbstractLocalNode>" AbstractLocalNode'TYPE (NodeClass'create-1 AbstractLocalNode))
 
-    (§ final #_"int" :index 0)
+    (defn- #_"AbstractLocalNode" AbstractLocalNode'init-0 []
+        (hash-map
+            #_"int" :index 0
+        )
+    )
 
     (defn #_"AbstractLocalNode" AbstractLocalNode'new-3 [#_"NodeClass<? extends AbstractLocalNode>" c, #_"int" index, #_"Stamp" stamp]
         (let [
             #_"AbstractLocalNode" this (FloatingNode'new-2 c, stamp)
+            this (merge this (AbstractLocalNode'init-0))
             this (assoc this :index index)
         ]
             this
@@ -49066,11 +50240,13 @@ ZeroExtendNode'new-4
     (§ def #_"NodeClass<AbstractMergeNode>" AbstractMergeNodeImpl'TYPE (NodeClass'create-1 AbstractMergeNodeImpl))
 
     (defn #_"AbstractMergeNode" AbstractMergeNodeImpl'new-1 [#_"NodeClass<? implements AbstractMergeNode>" c]
-        (BeginStateSplitNode'new-1 c)
+        (merge (BeginStateSplitNode'new-1 c)
+            (hash-map
+                ; @Input
+                #_"NodeInputList<EndNode>" :ends (NodeInputList'new-1 (ß this))
+            )
+        )
     )
-
-    ; @Input
-    (§ mutable #_"NodeInputList<EndNode>" :ends (NodeInputList'new-1 this))
 
     (§ override #_"void" LIRLowerable'''generate-2 [#_"AbstractMergeNode" this, #_"LIRBuilder" builder]
         (LIRBuilder''visitMerge-2 builder, this)
@@ -49319,8 +50495,12 @@ ZeroExtendNode'new-4
 (class-ns AbstractStateSplit (§ extends FixedWithNextNode) (§ implements StateSplit)
     (§ def #_"NodeClass<AbstractStateSplit>" AbstractStateSplit'TYPE (NodeClass'create-1 AbstractStateSplit))
 
-    ; @OptionalInput
-    (§ mutable #_"FrameState" :stateAfter nil)
+    (defn- #_"AbstractStateSplit" AbstractStateSplit'init-0 []
+        (hash-map
+            ; @OptionalInput
+            #_"FrameState" :stateAfter nil
+        )
+    )
 
     (§ override #_"void" StateSplit'''setStateAfter-2 [#_"AbstractStateSplit" this, #_"FrameState" x]
         (NodeImpl''updateUsages-3 this, (:stateAfter this), x)
@@ -49339,6 +50519,7 @@ ZeroExtendNode'new-4
     (defn #_"AbstractStateSplit" AbstractStateSplit'new-3 [#_"NodeClass<? extends AbstractStateSplit>" c, #_"Stamp" stamp, #_"FrameState" stateAfter]
         (let [
             #_"AbstractStateSplit" this (FixedWithNextNode'new-2 c, stamp)
+            this (merge this (AbstractStateSplit'init-0))
             this (assoc this :stateAfter stateAfter)
         ]
             this
@@ -49400,16 +50581,24 @@ ZeroExtendNode'new-4
 (class-ns BeginStateSplitNode (§ extends AbstractBeginNodeImpl) (§ implements StateSplit)
     (§ def #_"NodeClass<BeginStateSplitNode>" BeginStateSplitNode'TYPE (NodeClass'create-1 BeginStateSplitNode))
 
-    ; @OptionalInput
-    (§ mutable #_"FrameState" :stateAfter nil)
+    (defn- #_"BeginStateSplitNode" BeginStateSplitNode'init-0 []
+        (hash-map
+            ; @OptionalInput
+            #_"FrameState" :stateAfter nil
+        )
+    )
 
     (defn #_"BeginStateSplitNode" BeginStateSplitNode'new-1 [#_"NodeClass<? extends BeginStateSplitNode>" c]
-        (AbstractBeginNodeImpl'new-1 c)
+        (merge (AbstractBeginNodeImpl'new-1 c)
+            (BeginStateSplitNode'init-0)
+        )
     )
 
     #_unused
     (defn #_"BeginStateSplitNode" BeginStateSplitNode'new-2 [#_"NodeClass<? extends BeginStateSplitNode>" c, #_"Stamp" stamp]
-        (AbstractBeginNodeImpl'new-2 c, stamp)
+        (merge (AbstractBeginNodeImpl'new-2 c, stamp)
+            (BeginStateSplitNode'init-0)
+        )
     )
 
     (§ override #_"void" StateSplit'''setStateAfter-2 [#_"BeginStateSplitNode" this, #_"FrameState" x]
@@ -49429,14 +50618,19 @@ ZeroExtendNode'new-4
 (class-ns BinaryOpLogicNodeImpl (§ extends LogicNode) (§ implements BinaryOpLogicNode, LIRLowerable, Binary #_"<ValueNode>")
     (§ def #_"NodeClass<BinaryOpLogicNode>" BinaryOpLogicNodeImpl'TYPE (NodeClass'create-1 BinaryOpLogicNodeImpl))
 
-    ; @Input
-    (§ final #_"ValueNode" :x nil)
-    ; @Input
-    (§ final #_"ValueNode" :y nil)
+    (defn- #_"BinaryOpLogicNodeImpl" BinaryOpLogicNodeImpl'init-0 []
+        (hash-map
+            ; @Input
+            #_"ValueNode" :x nil
+            ; @Input
+            #_"ValueNode" :y nil
+        )
+    )
 
     (defn #_"BinaryOpLogicNode" BinaryOpLogicNodeImpl'new-3 [#_"NodeClass<? implements BinaryOpLogicNode>" c, #_"ValueNode" x, #_"ValueNode" y]
         (let [
             #_"BinaryOpLogicNode" this (LogicNode'new-1 c)
+            this (merge this (BinaryOpLogicNodeImpl'init-0))
             this (assoc this :x x)
             this (assoc this :y y)
         ]
@@ -49630,11 +50824,16 @@ ZeroExtendNode'new-4
 (class-ns BinaryArithmeticNodeImpl #_"<OP>" (§ extends BinaryNodeImpl) (§ implements BinaryArithmeticNode #_"<OP>", ArithmeticOperation, LIRLowerable, Binary #_"<ValueNode>")
     (§ def #_"NodeClass<BinaryArithmeticNode>" BinaryArithmeticNodeImpl'TYPE (NodeClass'create-1 BinaryArithmeticNodeImpl))
 
-    (§ final #_"SerializableBinaryFunction<OP>" :getOp nil)
+    (defn- #_"BinaryArithmeticNodeImpl" BinaryArithmeticNodeImpl'init-0 []
+        (hash-map
+            #_"SerializableBinaryFunction<OP>" :getOp nil
+        )
+    )
 
     (defn #_"BinaryArithmeticNode" BinaryArithmeticNodeImpl'new-4 [#_"NodeClass<? implements BinaryArithmeticNode<OP>>" c, #_"SerializableBinaryFunction<OP>" getOp, #_"ValueNode" x, #_"ValueNode" y]
         (let [
             #_"BinaryArithmeticNode" this (BinaryNodeImpl'new-4 c, (BinaryOp'''foldStamp-3 (#_"Function" .apply getOp, (ArithmeticOpTable'forStamp-1 (:stamp x))), (:stamp x), (:stamp y)), x, y)
+            this (merge this (BinaryArithmeticNodeImpl'init-0))
             this (assoc this :getOp getOp)
         ]
             this
@@ -49873,10 +51072,14 @@ ZeroExtendNode'new-4
 (class-ns BinaryNodeImpl (§ extends FloatingNode) (§ implements BinaryNode, Binary #_"<ValueNode>")
     (§ def #_"NodeClass<BinaryNode>" BinaryNodeImpl'TYPE (NodeClass'create-1 BinaryNodeImpl))
 
-    ; @Input
-    (§ final #_"ValueNode" :x nil)
-    ; @Input
-    (§ final #_"ValueNode" :y nil)
+    (defn- #_"BinaryNodeImpl" BinaryNodeImpl'init-0 []
+        (hash-map
+            ; @Input
+            #_"ValueNode" :x nil
+            ; @Input
+            #_"ValueNode" :y nil
+        )
+    )
 
     ;;;
      ; Creates a new BinaryNode instance.
@@ -49888,6 +51091,7 @@ ZeroExtendNode'new-4
     (defn #_"BinaryNode" BinaryNodeImpl'new-4 [#_"NodeClass<? implements BinaryNode>" c, #_"Stamp" stamp, #_"ValueNode" x, #_"ValueNode" y]
         (let [
             #_"BinaryNode" this (FloatingNode'new-2 c, stamp)
+            this (merge this (BinaryNodeImpl'init-0))
             this (assoc this :x x)
             this (assoc this :y y)
         ]
@@ -49903,7 +51107,11 @@ ZeroExtendNode'new-4
 (class-ns CompareNode (§ extends BinaryOpLogicNodeImpl) (§ implements Binary #_"<ValueNode>")
     (§ def #_"NodeClass<CompareNode>" CompareNode'TYPE (NodeClass'create-1 CompareNode))
 
-    (§ final #_"CanonicalCondition" :condition nil)
+    (defn- #_"CompareNode" CompareNode'init-0 []
+        (hash-map
+            #_"CanonicalCondition" :condition nil
+        )
+    )
 
     ;;;
      ; Constructs a new Compare instruction.
@@ -49914,6 +51122,7 @@ ZeroExtendNode'new-4
     (defn #_"CompareNode" CompareNode'new-4 [#_"NodeClass<? extends CompareNode>" c, #_"CanonicalCondition" condition, #_"ValueNode" x, #_"ValueNode" y]
         (let [
             #_"CompareNode" this (BinaryOpLogicNodeImpl'new-3 c, x, y)
+            this (merge this (CompareNode'init-0))
             this (assoc this :condition condition)
         ]
             this
@@ -50103,16 +51312,21 @@ ZeroExtendNode'new-4
 (final-ns ConditionalNode (§ extends FloatingNode) (§ implements Canonicalizable, LIRLowerable)
     (§ def #_"NodeClass<ConditionalNode>" ConditionalNode'TYPE (NodeClass'create-1 ConditionalNode))
 
-    ; @Input
-    (§ mutable #_"LogicNode" :condition nil)
-    ; @Input(InputType'Value)
-    (§ mutable #_"ValueNode" :trueValue nil)
-    ; @Input(InputType'Value)
-    (§ mutable #_"ValueNode" :falseValue nil)
+    (defn- #_"ConditionalNode" ConditionalNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"LogicNode" :condition nil
+            ; @Input(InputType'Value)
+            #_"ValueNode" :trueValue nil
+            ; @Input(InputType'Value)
+            #_"ValueNode" :falseValue nil
+        )
+    )
 
     (defn #_"ConditionalNode" ConditionalNode'new-3 [#_"LogicNode" condition, #_"ValueNode" trueValue, #_"ValueNode" falseValue]
         (let [
             #_"ConditionalNode" this (FloatingNode'new-2 ConditionalNode'TYPE, (Stamp'''meet-2 (:stamp trueValue), (:stamp falseValue)))
+            this (merge this (ConditionalNode'init-0))
             this (assoc this :condition condition)
             this (assoc this :trueValue trueValue)
             this (assoc this :falseValue falseValue)
@@ -50303,14 +51517,19 @@ ZeroExtendNode'new-4
 (class-ns FixedBinaryNode (§ extends DeoptimizingFixedWithNextNode) (§ implements Binary #_"<ValueNode>")
     (§ def #_"NodeClass<FixedBinaryNode>" FixedBinaryNode'TYPE (NodeClass'create-1 FixedBinaryNode))
 
-    ; @Input
-    (§ final #_"ValueNode" :x nil)
-    ; @Input
-    (§ final #_"ValueNode" :y nil)
+    (defn- #_"FixedBinaryNode" FixedBinaryNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"ValueNode" :x nil
+            ; @Input
+            #_"ValueNode" :y nil
+        )
+    )
 
     (defn #_"FixedBinaryNode" FixedBinaryNode'new-4 [#_"NodeClass<? extends FixedBinaryNode>" c, #_"Stamp" stamp, #_"ValueNode" x, #_"ValueNode" y]
         (let [
             #_"FixedBinaryNode" this (DeoptimizingFixedWithNextNode'new-2 c, stamp)
+            this (merge this (FixedBinaryNode'init-0))
             this (assoc this :x x)
             this (assoc this :y y)
         ]
@@ -50416,15 +51635,19 @@ ZeroExtendNode'new-4
 (class-ns IntegerConvertNode #_"<OP, REV>" (§ extends UnaryNodeImpl) (§ implements ArithmeticOperation, ConvertNode, LIRLowerable, StampInverter)
     (§ def #_"NodeClass<IntegerConvertNode>" IntegerConvertNode'TYPE (NodeClass'create-1 IntegerConvertNode))
 
-    (§ final #_"SerializableIntegerConvertFunction<OP>" :getOp nil)
-    (§ final #_"SerializableIntegerConvertFunction<REV>" :getReverseOp nil)
-
-    (§ final #_"int" :inputBits 0)
-    (§ final #_"int" :resultBits 0)
+    (defn- #_"IntegerConvertNode" IntegerConvertNode'init-0 []
+        (hash-map
+            #_"SerializableIntegerConvertFunction<OP>" :getOp nil
+            #_"SerializableIntegerConvertFunction<REV>" :getReverseOp nil
+            #_"int" :inputBits 0
+            #_"int" :resultBits 0
+        )
+    )
 
     (defn #_"IntegerConvertNode" IntegerConvertNode'new-6 [#_"NodeClass<? extends IntegerConvertNode<OP, REV>>" c, #_"SerializableIntegerConvertFunction<OP>" getOp, #_"SerializableIntegerConvertFunction<REV>" getReverseOp, #_"int" inputBits, #_"int" resultBits, #_"ValueNode" input]
         (let [
             #_"IntegerConvertNode" this (UnaryNodeImpl'new-3 c, (IntegerConvertOp'''foldStamp-4 (#_"Function" .apply getOp, (ArithmeticOpTable'forStamp-1 (:stamp input))), inputBits, resultBits, (:stamp input)), input)
+            this (merge this (IntegerConvertNode'init-0))
             this (assoc this :getOp getOp)
             this (assoc this :getReverseOp getReverseOp)
             this (assoc this :inputBits inputBits)
@@ -50531,13 +51754,18 @@ ZeroExtendNode'new-4
 (class-ns IntegerDivRemNode (§ extends FixedBinaryNode) (§ implements Lowerable)
     (§ def #_"NodeClass<IntegerDivRemNode>" IntegerDivRemNode'TYPE (NodeClass'create-1 IntegerDivRemNode))
 
-    (§ final #_"DivRemOp" :op nil)
-    (§ final #_"Signedness" :type nil)
-    (§ final #_"boolean" :canDeopt false)
+    (defn- #_"IntegerDivRemNode" IntegerDivRemNode'init-0 []
+        (hash-map
+            #_"DivRemOp" :op nil
+            #_"Signedness" :type nil
+            #_"boolean" :canDeopt false
+        )
+    )
 
     (defn #_"IntegerDivRemNode" IntegerDivRemNode'new-6 [#_"NodeClass<? extends IntegerDivRemNode>" c, #_"Stamp" stamp, #_"DivRemOp" op, #_"Signedness" type, #_"ValueNode" x, #_"ValueNode" y]
         (let [
             #_"IntegerDivRemNode" this (FixedBinaryNode'new-4 c, stamp, x, y)
+            this (merge this (IntegerDivRemNode'init-0))
             this (assoc this :op op)
             this (assoc this :type type)
             ;; Assigning canDeopt during constructor, because it must never change during lifetime of the node.
@@ -50999,11 +52227,16 @@ ZeroExtendNode'new-4
 (class-ns IntegerLowerThanNode (§ extends CompareNode)
     (§ def #_"NodeClass<IntegerLowerThanNode>" IntegerLowerThanNode'TYPE (NodeClass'create-1 IntegerLowerThanNode))
 
-    (§ final #_"LowerOp" :op nil)
+    (defn- #_"IntegerLowerThanNode" IntegerLowerThanNode'init-0 []
+        (hash-map
+            #_"LowerOp" :op nil
+        )
+    )
 
     (defn #_"IntegerLowerThanNode" IntegerLowerThanNode'new-4 [#_"NodeClass<? extends CompareNode>" c, #_"ValueNode" x, #_"ValueNode" y, #_"LowerOp" op]
         (let [
             #_"IntegerLowerThanNode" this (CompareNode'new-4 c, (LowerOp'''getCondition-1 op), x, y)
+            this (merge this (IntegerLowerThanNode'init-0))
             this (assoc this :op op)
         ]
             this
@@ -52229,7 +53462,11 @@ ZeroExtendNode'new-4
 (class-ns ShiftNode #_"<OP>" (§ extends BinaryNodeImpl) (§ implements ArithmeticOperation, LIRLowerable)
     (§ def #_"NodeClass<ShiftNode>" ShiftNode'TYPE (NodeClass'create-1 ShiftNode))
 
-    (§ final #_"SerializableShiftFunction<OP>" :getOp nil)
+    (defn- #_"ShiftNode" ShiftNode'init-0 []
+        (hash-map
+            #_"SerializableShiftFunction<OP>" :getOp nil
+        )
+    )
 
     ;;;
      ; Creates a new shift operation.
@@ -52240,6 +53477,7 @@ ZeroExtendNode'new-4
     (defn #_"ShiftNode" ShiftNode'new-4 [#_"NodeClass<? extends ShiftNode<OP>>" c, #_"SerializableShiftFunction<OP>" getOp, #_"ValueNode" x, #_"ValueNode" s]
         (let [
             #_"ShiftNode" this (BinaryNodeImpl'new-4 c, (ShiftOp'''foldStamp-3 (#_"Function" .apply getOp, (ArithmeticOpTable'forStamp-1 (:stamp x))), (:stamp x), (:stamp s)), x, s)
+            this (merge this (ShiftNode'init-0))
             this (assoc this :getOp getOp)
         ]
             this
@@ -52653,11 +53891,16 @@ ZeroExtendNode'new-4
 (class-ns UnaryArithmeticNode #_"<OP>" (§ extends UnaryNodeImpl) (§ implements ArithmeticOperation, LIRLowerable)
     (§ def #_"NodeClass<UnaryArithmeticNode>" UnaryArithmeticNode'TYPE (NodeClass'create-1 UnaryArithmeticNode))
 
-    (§ final #_"SerializableUnaryFunction<OP>" :getOp nil)
+    (defn- #_"UnaryArithmeticNode" UnaryArithmeticNode'init-0 []
+        (hash-map
+            #_"SerializableUnaryFunction<OP>" :getOp nil
+        )
+    )
 
     (defn #_"UnaryArithmeticNode" UnaryArithmeticNode'new-3 [#_"NodeClass<? extends UnaryArithmeticNode<OP>>" c, #_"SerializableUnaryFunction<OP>" getOp, #_"ValueNode" value]
         (let [
             #_"UnaryArithmeticNode" this (UnaryNodeImpl'new-3 c, (UnaryOp'''foldStamp-2 (#_"Function" .apply getOp, (ArithmeticOpTable'forStamp-1 (:stamp value))), (:stamp value)), value)
+            this (merge this (UnaryArithmeticNode'init-0))
             this (assoc this :getOp getOp)
         ]
             this
@@ -52692,8 +53935,12 @@ ZeroExtendNode'new-4
 (class-ns UnaryNodeImpl (§ extends FloatingNode) (§ implements UnaryNode, Unary #_"<ValueNode>")
     (§ def #_"NodeClass<UnaryNode>" UnaryNodeImpl'TYPE (NodeClass'create-1 UnaryNodeImpl))
 
-    ; @Input
-    (§ mutable #_"ValueNode" :value nil)
+    (defn- #_"UnaryNodeImpl" UnaryNodeImpl'init-0 []
+        (hash-map
+            ; @Input
+            #_"ValueNode" :value nil
+        )
+    )
 
     (§ override #_"ValueNode" Unary'''getValue-1 [#_"UnaryNode" this]
         (:value this)
@@ -52708,6 +53955,7 @@ ZeroExtendNode'new-4
     (defn #_"UnaryNode" UnaryNodeImpl'new-3 [#_"NodeClass<? implements UnaryNode>" c, #_"Stamp" stamp, #_"ValueNode" value]
         (let [
             #_"UnaryNode" this (FloatingNode'new-2 c, stamp)
+            this (merge this (UnaryNodeImpl'init-0))
             this (assoc this :value value)
         ]
             this
@@ -52729,11 +53977,16 @@ ZeroExtendNode'new-4
 (final-ns UnpackEndianHalfNode (§ extends UnaryNodeImpl) (§ implements Lowerable)
     (§ def #_"NodeClass<UnpackEndianHalfNode>" UnpackEndianHalfNode'TYPE (NodeClass'create-1 UnpackEndianHalfNode))
 
-    (§ final #_"boolean" :firstHalf false)
+    (defn- #_"UnpackEndianHalfNode" UnpackEndianHalfNode'init-0 []
+        (hash-map
+            #_"boolean" :firstHalf false
+        )
+    )
 
     (defn #_"UnpackEndianHalfNode" UnpackEndianHalfNode'new-2 [#_"ValueNode" value, #_"boolean" firstHalf]
         (let [
             #_"UnpackEndianHalfNode" this (UnaryNodeImpl'new-3 UnpackEndianHalfNode'TYPE, (StampFactory'forKind-1 JavaKind/Int), value)
+            this (merge this (UnpackEndianHalfNode'init-0))
             this (assoc this :firstHalf firstHalf)
         ]
             this
@@ -53021,7 +54274,11 @@ ZeroExtendNode'new-4
 (final-ns ZeroExtendNode (§ extends IntegerConvertNode #_"<ZeroExtend, Narrow>")
     (§ def #_"NodeClass<ZeroExtendNode>" ZeroExtendNode'TYPE (NodeClass'create-1 ZeroExtendNode))
 
-    (§ final #_"boolean" :inputAlwaysPositive false)
+    (defn- #_"ZeroExtendNode" ZeroExtendNode'init-0 []
+        (hash-map
+            #_"boolean" :inputAlwaysPositive false
+        )
+    )
 
     (defn #_"ZeroExtendNode" ZeroExtendNode'new-2 [#_"ValueNode" input, #_"int" resultBits]
         (ZeroExtendNode'new-4 input, (PrimitiveStamp'getBits-1 (:stamp input)), resultBits, false)
@@ -53030,6 +54287,7 @@ ZeroExtendNode'new-4
     (defn #_"ZeroExtendNode" ZeroExtendNode'new-4 [#_"ValueNode" input, #_"int" inputBits, #_"int" resultBits, #_"boolean" inputAlwaysPositive]
         (let [
             #_"ZeroExtendNode" this (IntegerConvertNode'new-6 ZeroExtendNode'TYPE, :zeroExtend, :narrow, inputBits, resultBits, input)
+            this (merge this (ZeroExtendNode'init-0))
             this (assoc this :inputAlwaysPositive inputAlwaysPositive)
         ]
             this
@@ -53114,15 +54372,20 @@ ZeroExtendNode'new-4
 (class-ns CallTargetNode (§ extends ValueNodeImpl) (§ implements LIRLowerable)
     (§ def #_"NodeClass<CallTargetNode>" CallTargetNode'TYPE (NodeClass'create-1 CallTargetNode))
 
-    ; @Input
-    (§ mutable #_"NodeInputList<ValueNode>" :arguments nil)
-    (§ mutable #_"ResolvedJavaMethod" :targetMethod nil)
-    (§ mutable #_"InvokeKind" :invokeKind nil)
-    (§ final #_"StampPair" :returnStamp nil)
+    (defn- #_"CallTargetNode" CallTargetNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"NodeInputList<ValueNode>" :arguments nil
+            #_"ResolvedJavaMethod" :targetMethod nil
+            #_"InvokeKind" :invokeKind nil
+            #_"StampPair" :returnStamp nil
+        )
+    )
 
-    (defn #_"CallTargetNode" CallTargetNode'new-5 [#_"NodeClass<? extends CallTargetNode>" c, #_"ValueNode[]" arguments, #_"ResolvedJavaMethod" targetMethod, #_"InvokeKind" invokeKind, #_"StampPair" returnStamp]
+    (defn #_"CallTargetNode" CallTargetNode'new-5 [#_"NodeClass<? extends CallTargetNode>" c, #_"ValueNode[]" arguments, #_"ResolvedJavaMethod" targetMethod, #_"InvokeKind" invokeKind, #_"StampPair" returnStamp]
         (let [
             #_"CallTargetNode" this (ValueNodeImpl'new-2 c, VoidStamp'instance)
+            this (merge this (CallTargetNode'init-0))
             this (assoc this :targetMethod targetMethod)
             this (assoc this :invokeKind invokeKind)
             this (assoc this :arguments (NodeInputList'new-2a this, arguments))
@@ -53136,7 +54399,7 @@ ZeroExtendNode'new-4
         (:arguments this)
     )
 
-    (defn #_"StampPair" CallTargetNode''returnStamp-1 [#_"CallTargetNode" this]
+    (defn #_"StampPair" CallTargetNode''returnStamp-1 [#_"CallTargetNode" this]
         (:returnStamp this)
     )
 
@@ -53176,11 +54439,15 @@ ZeroExtendNode'new-4
     (§ enum InvokeKind'Static    (InvokeKind'new-1 true))
     (§ enum InvokeKind'Virtual   (InvokeKind'new-1 false))
 
-    (§ final #_"boolean" :direct false)
+    (defn- #_"InvokeKind" InvokeKind'init-0 []
+        (hash-map
+            #_"boolean" :direct false
+        )
+    )
 
     (defn #_"InvokeKind" InvokeKind'new-1 [#_"boolean" direct]
         (let [
-            #_"InvokeKind" this (hash-map)
+            #_"InvokeKind" this (merge (hash-map) (InvokeKind'init-0))
             this (assoc this :direct direct)
         ]
             this
@@ -53204,38 +54471,35 @@ ZeroExtendNode'new-4
 (final-ns Block
     (§ def #_"Block[]" Block'EMPTY_ARRAY (make-array Block 0))
 
-    (§ mutable #_"int" :id 0)
-    ;;;
-     ; Level in the dominator tree starting with 0 for the start block.
-     ;;
-    (§ mutable #_"int" :domDepth 0)
-
-    (§ mutable #_"Block[]" :predecessors nil)
-    (§ mutable #_"Block[]" :successors nil)
-
-    (§ mutable #_"Block" :dominator nil)
-    (§ mutable #_"Block" :firstDominated nil)
-    (§ mutable #_"Block" :dominatedSibling nil)
-    (§ mutable #_"int" :domNumber 0)
-    (§ mutable #_"int" :maxChildDomNumber 0)
-
-    (§ mutable #_"boolean" :aligned? false)
-    (§ mutable #_"int" :linearScanNumber 0)
-
-    (§ final #_"AbstractBeginNode" :beginNode nil)
-
-    (§ mutable #_"FixedNode" :endNode nil)
-
-    (§ mutable #_"double" :probability 0.0)
-    (§ mutable #_"Loop" :loop nil)
-
-    (§ mutable #_"Block" :postdominator nil)
-    (§ mutable #_"LocationSet" :killLocations nil)
-    (§ mutable #_"LocationSet" :killLocationsBetweenThisAndDominator nil)
+    (defn- #_"Block" Block'init-0 []
+        (hash-map
+            #_"int" :id 0
+            ;;;
+             ; Level in the dominator tree starting with 0 for the start block.
+             ;;
+            #_"int" :domDepth 0
+            #_"Block[]" :predecessors nil
+            #_"Block[]" :successors nil
+            #_"Block" :dominator nil
+            #_"Block" :firstDominated nil
+            #_"Block" :dominatedSibling nil
+            #_"int" :domNumber 0
+            #_"int" :maxChildDomNumber 0
+            #_"boolean" :aligned? false
+            #_"int" :linearScanNumber 0
+            #_"AbstractBeginNode" :beginNode nil
+            #_"FixedNode" :endNode nil
+            #_"double" :probability 0.0
+            #_"Loop" :loop nil
+            #_"Block" :postdominator nil
+            #_"LocationSet" :killLocations nil
+            #_"LocationSet" :killLocationsBetweenThisAndDominator nil
+        )
+    )
 
     (defn #_"Block" Block'new-1 [#_"AbstractBeginNode" node]
         (let [
-            #_"Block" this (hash-map)
+            #_"Block" this (merge (hash-map) (Block'init-0))
             this (assoc this :id ControlFlowGraph'BLOCK_ID_INITIAL)
             this (assoc this :linearScanNumber -1)
             this (assoc this :domNumber -1)
@@ -53506,11 +54770,15 @@ ZeroExtendNode'new-4
  ; @anno Block.FixedNodeIterator
  ;;
 (final-ns FixedNodeIterator (§ implements Iterator #_"<FixedNode>")
-    (§ mutable #_"FixedNode" :cur nil)
+    (defn- #_"FixedNodeIterator" FixedNodeIterator'init-0 []
+        (hash-map
+            #_"FixedNode" :cur nil
+        )
+    )
 
     (defn #_"FixedNodeIterator" FixedNodeIterator'new-1 [#_"Block" block]
         (let [
-            #_"FixedNodeIterator" this (hash-map)
+            #_"FixedNodeIterator" this (merge (hash-map) (FixedNodeIterator'init-0))
             this (assoc this :cur (:beginNode block))
         ]
             this
@@ -53552,22 +54820,25 @@ ZeroExtendNode'new-4
     (def #_"double" ControlFlowGraph'MIN_PROBABILITY #_"0x1.0p-500" 3.0549363634996047e-151)
     (def #_"double" ControlFlowGraph'MAX_PROBABILITY (/ 1.0 ControlFlowGraph'MIN_PROBABILITY))
 
-    (§ final #_"Graph" :graph nil)
-
-    (§ mutable #_"NodeMap<Block>" :nodeToBlock nil)
-    ;;;
-     ; The list of blocks contained in this control flow graph.
-     ;
-     ; It is guaranteed that the blocks are numbered and ordered according
-     ; to a reverse post order traversal of the control flow graph.
-     ;;
-    (§ mutable #_"Block[]" :reversePostOrder nil)
-    (§ mutable #_"List<Loop>" :loops nil)
-    (§ mutable #_"int" :maxDominatorDepth 0)
+    (defn- #_"ControlFlowGraph" ControlFlowGraph'init-0 []
+        (hash-map
+            #_"Graph" :graph nil
+            #_"NodeMap<Block>" :nodeToBlock nil
+            ;;;
+             ; The list of blocks contained in this control flow graph.
+             ;
+             ; It is guaranteed that the blocks are numbered and ordered according
+             ; to a reverse post order traversal of the control flow graph.
+             ;;
+            #_"Block[]" :reversePostOrder nil
+            #_"List<Loop>" :loops nil
+            #_"int" :maxDominatorDepth 0
+        )
+    )
 
     (defn- #_"ControlFlowGraph" ControlFlowGraph'new-1 [#_"Graph" graph]
         (let [
-            #_"ControlFlowGraph" this (hash-map)
+            #_"ControlFlowGraph" this (merge (hash-map) (ControlFlowGraph'init-0))
             this (assoc this :graph graph)
             this (assoc this :nodeToBlock (NodeMap'new-1g graph))
         ]
@@ -54414,12 +55685,16 @@ ZeroExtendNode'new-4
  ; @anno ControlFlowGraph.DeferredExit
  ;;
 (final-ns DeferredExit
-    (§ final #_"Block" :block nil)
-    (§ final #_"DeferredExit" :next nil)
+    (defn- #_"DeferredExit" DeferredExit'init-0 []
+        (hash-map
+            #_"Block" :block nil
+            #_"DeferredExit" :next nil
+        )
+    )
 
     (defn #_"DeferredExit" DeferredExit'new-2 [#_"Block" block, #_"DeferredExit" next]
         (let [
-            #_"DeferredExit" this (hash-map)
+            #_"DeferredExit" this (merge (hash-map) (DeferredExit'init-0))
             this (assoc this :block block)
             this (assoc this :next next)
         ]
@@ -54429,12 +55704,16 @@ ZeroExtendNode'new-4
 )
 
 (final-ns LocationSet
-    (§ final #_"LocationIdentity" :firstLocation nil)
-    (§ final #_"List<LocationIdentity>" :list nil)
+    (defn- #_"LocationSet" LocationSet'init-0 []
+        (hash-map
+            #_"LocationIdentity" :firstLocation nil
+            #_"List<LocationIdentity>" :list nil
+        )
+    )
 
     (defn #_"LocationSet" LocationSet'new-0 []
         (let [
-            #_"LocationSet" this (hash-map)
+            #_"LocationSet" this (merge (hash-map) (LocationSet'init-0))
             this (assoc this :list nil)
         ]
             this
@@ -54499,12 +55778,17 @@ ZeroExtendNode'new-4
 (class-ns CompressionNodeImpl (§ extends UnaryNodeImpl) (§ implements CompressionNode, ConvertNode, LIRLowerable)
     (§ def #_"NodeClass<CompressionNode>" CompressionNodeImpl'TYPE (NodeClass'create-1 CompressionNodeImpl))
 
-    (§ final #_"CompressionOp" :op nil)
-    (§ final #_"CompressEncoding" :encoding nil)
+    (defn- #_"CompressionNodeImpl" CompressionNodeImpl'init-0 []
+        (hash-map
+            #_"CompressionOp" :op nil
+            #_"CompressEncoding" :encoding nil
+        )
+    )
 
     (defn #_"CompressionNode" CompressionNodeImpl'new-5 [#_"NodeClass<? implements UnaryNode>" c, #_"CompressionOp" op, #_"ValueNode" input, #_"Stamp" stamp, #_"CompressEncoding" encoding]
         (let [
             #_"CompressionNode" this (UnaryNodeImpl'new-3 c, stamp, input)
+            this (merge this (CompressionNodeImpl'init-0))
             this (assoc this :op op)
             this (assoc this :encoding encoding)
         ]
@@ -54587,9 +55871,13 @@ ZeroExtendNode'new-4
 (final-ns ConditionAnchorNode (§ extends FixedWithNextNode) (§ implements Unary #_"<Node>", Lowerable, GuardingNode)
     (§ def #_"NodeClass<ConditionAnchorNode>" ConditionAnchorNode'TYPE (NodeClass'create-1 ConditionAnchorNode))
 
-    ; @Input
-    (§ mutable #_"LogicNode" :condition nil)
-    (§ mutable #_"boolean" :negated? false)
+    (defn- #_"ConditionAnchorNode" ConditionAnchorNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"LogicNode" :condition nil
+            #_"boolean" :negated? false
+        )
+    )
 
     #_unused
     (defn #_"ConditionAnchorNode" ConditionAnchorNode'new-1 [#_"LogicNode" condition]
@@ -54599,6 +55887,7 @@ ZeroExtendNode'new-4
     (defn #_"ConditionAnchorNode" ConditionAnchorNode'new-2 [#_"LogicNode" condition, #_"boolean" negated?]
         (let [
             #_"ConditionAnchorNode" this (FixedWithNextNode'new-2 ConditionAnchorNode'TYPE, VoidStamp'instance)
+            this (merge this (ConditionAnchorNode'init-0))
             this (assoc this :condition condition)
             this (assoc this :negated? negated?)
         ]
@@ -54642,22 +55931,27 @@ ZeroExtendNode'new-4
 (final-ns ConstantNode (§ extends FloatingNode) (§ implements LIRLowerable)
     (§ def #_"NodeClass<ConstantNode>" ConstantNode'TYPE (NodeClass'create-1 ConstantNode))
 
-    ;;;
-     ; the constant value represented by this node
-     ;;
-    (§ final #_"Constant" :value nil)
-    ;;;
-     ; the number of stable dimensions if this is a stable array, otherwise 0
-     ;;
-    (§ final #_"int" :stableDimension 0)
-    ;;;
-     ; true if this is a stable array and the default elements are considered stable
-     ;;
-    (§ final #_"boolean" :isDefaultStable false)
+    (defn- #_"ConstantNode" ConstantNode'init-0 []
+        (hash-map
+            ;;;
+             ; the constant value represented by this node
+             ;;
+            #_"Constant" :value nil
+            ;;;
+             ; the number of stable dimensions if this is a stable array, otherwise 0
+             ;;
+            #_"int" :stableDimension 0
+            ;;;
+             ; true if this is a stable array and the default elements are considered stable
+             ;;
+            #_"boolean" :isDefaultStable false
+        )
+    )
 
     (defn- #_"ConstantNode" ConstantNode'new-4 [#_"Constant" value, #_"Stamp" stamp, #_"int" stableDimension, #_"boolean" isDefaultStable]
         (let [
             #_"ConstantNode" this (FloatingNode'new-2 ConstantNode'TYPE, stamp)
+            this (merge this (ConstantNode'init-0))
             this (assoc this :value value)
             this (assoc this :stableDimension stableDimension)
             ;; Ensure that isDefaultStable has a canonical value to avoid having two constant nodes that only differ
@@ -54965,13 +56259,18 @@ ZeroExtendNode'new-4
 (final-ns BindToRegisterNode (§ extends FixedWithNextNode) (§ implements LIRLowerable)
     (§ def #_"NodeClass<BindToRegisterNode>" BindToRegisterNode'TYPE (NodeClass'create-1 BindToRegisterNode))
 
-    ; @Input
-    (§ mutable #_"ValueNode" :value nil)
+    (defn- #_"BindToRegisterNode" BindToRegisterNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"ValueNode" :value nil
+        )
+    )
 
     #_unused
     (defn #_"BindToRegisterNode" BindToRegisterNode'new-1 [#_"ValueNode" value]
         (let [
             #_"BindToRegisterNode" this (FixedWithNextNode'new-2 BindToRegisterNode'TYPE, VoidStamp'instance)
+            this (merge this (BindToRegisterNode'init-0))
             this (assoc this :value value)
         ]
             this
@@ -54987,13 +56286,18 @@ ZeroExtendNode'new-4
 (final-ns BlackholeNode (§ extends FixedWithNextNode) (§ implements LIRLowerable)
     (§ def #_"NodeClass<BlackholeNode>" BlackholeNode'TYPE (NodeClass'create-1 BlackholeNode))
 
-    ; @Input
-    (§ mutable #_"ValueNode" :value nil)
+    (defn- #_"BlackholeNode" BlackholeNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"ValueNode" :value nil
+        )
+    )
 
     #_unused
     (defn #_"BlackholeNode" BlackholeNode'new-1 [#_"ValueNode" value]
         (let [
             #_"BlackholeNode" this (FixedWithNextNode'new-2 BlackholeNode'TYPE, VoidStamp'instance)
+            this (merge this (BlackholeNode'init-0))
             this (assoc this :value value)
         ]
             this
@@ -55027,13 +56331,18 @@ ZeroExtendNode'new-4
 (final-ns OpaqueNode (§ extends FloatingNode) (§ implements LIRLowerable)
     (§ def #_"NodeClass<OpaqueNode>" OpaqueNode'TYPE (NodeClass'create-1 OpaqueNode))
 
-    ; @Input
-    (§ mutable #_"ValueNode" :value nil)
+    (defn- #_"OpaqueNode" OpaqueNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"ValueNode" :value nil
+        )
+    )
 
     #_unused
     (defn #_"OpaqueNode" OpaqueNode'new-1 [#_"ValueNode" value]
         (let [
             #_"OpaqueNode" this (FloatingNode'new-2 OpaqueNode'TYPE, (Stamp'''unrestricted-1 (:stamp value)))
+            this (merge this (OpaqueNode'init-0))
             this (assoc this :value value)
         ]
             this
@@ -55065,10 +56374,14 @@ ZeroExtendNode'new-4
 
     (§ def #_"NodeClass<DeoptimizeNode>" DeoptimizeNode'TYPE (NodeClass'create-1 DeoptimizeNode))
 
-    (§ mutable #_"DeoptimizationAction" :action nil)
-    (§ mutable #_"DeoptimizationReason" :reason nil)
-    (§ mutable #_"int" :debugId 0)
-    (§ final #_"JavaConstant" :speculation nil)
+    (defn- #_"DeoptimizeNode" DeoptimizeNode'init-0 []
+        (hash-map
+            #_"DeoptimizationAction" :action nil
+            #_"DeoptimizationReason" :reason nil
+            #_"int" :debugId 0
+            #_"JavaConstant" :speculation nil
+        )
+    )
 
     (§ intrinsic! #_"void" DeoptimizeNode'deopt-2 [#_@ConstantNodeParameter #_"DeoptimizationAction" action, #_@ConstantNodeParameter #_"DeoptimizationReason" reason])
 
@@ -55084,6 +56397,7 @@ ZeroExtendNode'new-4
     (defn #_"DeoptimizeNode" DeoptimizeNode'new-5 [#_"DeoptimizationAction" action, #_"DeoptimizationReason" reason, #_"int" debugId, #_"JavaConstant" speculation, #_"FrameState" stateBefore]
         (let [
             #_"DeoptimizeNode" this (AbstractDeoptimizeNodeImpl'new-2 DeoptimizeNode'TYPE, stateBefore)
+            this (merge this (DeoptimizeNode'init-0))
             this (assoc this :action action)
             this (assoc this :reason reason)
             this (assoc this :debugId debugId)
@@ -55129,16 +56443,23 @@ ZeroExtendNode'new-4
 (class-ns DeoptimizingFixedWithNextNode (§ extends FixedWithNextNode) (§ implements DeoptBefore)
     (§ def #_"NodeClass<DeoptimizingFixedWithNextNode>" DeoptimizingFixedWithNextNode'TYPE (NodeClass'create-1 DeoptimizingFixedWithNextNode))
 
-    ; @OptionalInput
-    (§ mutable #_"FrameState" :stateBefore nil)
+    (defn- #_"DeoptimizingFixedWithNextNode" DeoptimizingFixedWithNextNode'init-0 []
+        (hash-map
+            ; @OptionalInput
+            #_"FrameState" :stateBefore nil
+        )
+    )
 
     (defn #_"DeoptimizingFixedWithNextNode" DeoptimizingFixedWithNextNode'new-2 [#_"NodeClass<? extends DeoptimizingFixedWithNextNode>" c, #_"Stamp" stamp]
-        (FixedWithNextNode'new-2 c, stamp)
+        (merge (FixedWithNextNode'new-2 c, stamp)
+            (DeoptimizingFixedWithNextNode'init-0)
+        )
     )
 
     (defn #_"DeoptimizingFixedWithNextNode" DeoptimizingFixedWithNextNode'new-3 [#_"NodeClass<? extends DeoptimizingFixedWithNextNode>" c, #_"Stamp" stamp, #_"FrameState" stateBefore]
         (let [
             #_"DeoptimizingFixedWithNextNode" this (FixedWithNextNode'new-2 c, stamp)
+            this (merge this (DeoptimizingFixedWithNextNode'init-0))
             this (assoc this :stateBefore stateBefore)
         ]
             this
@@ -55156,11 +56477,11 @@ ZeroExtendNode'new-4
     (§ def #_"NodeClass<DirectCallTargetNode>" DirectCallTargetNode'TYPE (NodeClass'create-1 DirectCallTargetNode))
 
     #_unused
-    (defn #_"DirectCallTargetNode" DirectCallTargetNode'new-6 [#_"ValueNode[]" arguments, #_"StampPair" returnStamp, #_"JavaType[]" signature, #_"ResolvedJavaMethod" target, #_"CallingConvention$Type" callType, #_"InvokeKind" invokeKind]
+    (defn #_"DirectCallTargetNode" DirectCallTargetNode'new-6 [#_"ValueNode[]" arguments, #_"StampPair" returnStamp, #_"JavaType[]" signature, #_"ResolvedJavaMethod" target, #_"CallingConvention$Type" callType, #_"InvokeKind" invokeKind]
         (DirectCallTargetNode'new-7 DirectCallTargetNode'TYPE, arguments, returnStamp, signature, target, callType, invokeKind)
     )
 
-    (defn #_"DirectCallTargetNode" DirectCallTargetNode'new-7 [#_"NodeClass<? extends DirectCallTargetNode>" c, #_"ValueNode[]" arguments, #_"StampPair" returnStamp, #_"JavaType[]" signature, #_"ResolvedJavaMethod" target, #_"CallingConvention$Type" callType, #_"InvokeKind" invokeKind]
+    (defn #_"DirectCallTargetNode" DirectCallTargetNode'new-7 [#_"NodeClass<? extends DirectCallTargetNode>" c, #_"ValueNode[]" arguments, #_"StampPair" returnStamp, #_"JavaType[]" signature, #_"ResolvedJavaMethod" target, #_"CallingConvention$Type" callType, #_"InvokeKind" invokeKind]
         (LoweredCallTargetNode'new-7 c, arguments, returnStamp, signature, target, callType, invokeKind)
     )
 )
@@ -55168,14 +56489,19 @@ ZeroExtendNode'new-4
 (final-ns DynamicDeoptimizeNode (§ extends AbstractDeoptimizeNodeImpl) (§ implements LIRLowerable, Lowerable, Canonicalizable)
     (§ def #_"NodeClass<DynamicDeoptimizeNode>" DynamicDeoptimizeNode'TYPE (NodeClass'create-1 DynamicDeoptimizeNode))
 
-    ; @Input
-    (§ mutable #_"ValueNode" :actionAndReason nil)
-    ; @Input
-    (§ mutable #_"ValueNode" :speculation nil)
+    (defn- #_"DynamicDeoptimizeNode" DynamicDeoptimizeNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"ValueNode" :actionAndReason nil
+            ; @Input
+            #_"ValueNode" :speculation nil
+        )
+    )
 
     (defn #_"DynamicDeoptimizeNode" DynamicDeoptimizeNode'new-2 [#_"ValueNode" actionAndReason, #_"ValueNode" speculation]
         (let [
             #_"DynamicDeoptimizeNode" this (AbstractDeoptimizeNodeImpl'new-2 DynamicDeoptimizeNode'TYPE, nil)
+            this (merge this (DynamicDeoptimizeNode'init-0))
             this (assoc this :actionAndReason actionAndReason)
             this (assoc this :speculation speculation)
         ]
@@ -55226,9 +56552,13 @@ ZeroExtendNode'new-4
 (final-ns BoxNode (§ extends FixedWithNextNode) (§ implements VirtualizableAllocation, Lowerable, Unary #_"<ValueNode>")
     (§ def #_"NodeClass<BoxNode>" BoxNode'TYPE (NodeClass'create-1 BoxNode))
 
-    ; @Input
-    (§ mutable #_"ValueNode" :value nil)
-    (§ final #_"JavaKind" :boxingKind nil)
+    (defn- #_"BoxNode" BoxNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"ValueNode" :value nil
+            #_"JavaKind" :boxingKind nil
+        )
+    )
 
     (defn #_"BoxNode" BoxNode'new-3 [#_"ValueNode" value, #_"ResolvedJavaType" resultType, #_"JavaKind" boxingKind]
         (BoxNode'new-4 BoxNode'TYPE, value, resultType, boxingKind)
@@ -55237,6 +56567,7 @@ ZeroExtendNode'new-4
     (defn #_"BoxNode" BoxNode'new-4 [#_"NodeClass<? extends BoxNode>" c, #_"ValueNode" value, #_"ResolvedJavaType" resultType, #_"JavaKind" boxingKind]
         (let [
             #_"BoxNode" this (FixedWithNextNode'new-2 c, (StampFactory'objectNonNull-1 (TypeReference'createExactTrusted-1 resultType)))
+            this (merge this (BoxNode'init-0))
             this (assoc this :value value)
             this (assoc this :boxingKind boxingKind)
         ]
@@ -55295,10 +56626,14 @@ ZeroExtendNode'new-4
     (def #_"double" BranchProbabilityNode'VERY_FAST_PATH_PROBABILITY 0.999)
     (§ def #_"double" BranchProbabilityNode'VERY_SLOW_PATH_PROBABILITY (- 1.0 BranchProbabilityNode'VERY_FAST_PATH_PROBABILITY))
 
-    ; @Input
-    (§ mutable #_"ValueNode" :probability nil)
-    ; @Input
-    (§ mutable #_"ValueNode" :condition nil)
+    (defn- #_"BranchProbabilityNode" BranchProbabilityNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"ValueNode" :probability nil
+            ; @Input
+            #_"ValueNode" :condition nil
+        )
+    )
 
     ;;;
      ; This intrinsic should only be used for the condition of an if statement. The parameter
@@ -55315,6 +56650,7 @@ ZeroExtendNode'new-4
     (defn #_"BranchProbabilityNode" BranchProbabilityNode'new-2 [#_"ValueNode" probability, #_"ValueNode" condition]
         (let [
             #_"BranchProbabilityNode" this (FloatingNode'new-2 BranchProbabilityNode'TYPE, (:stamp condition))
+            this (merge this (BranchProbabilityNode'init-0))
             this (assoc this :probability probability)
             this (assoc this :condition condition)
         ]
@@ -55390,13 +56726,18 @@ ZeroExtendNode'new-4
 (class-ns FixedValueAnchorNode (§ extends FixedWithNextNode) (§ implements LIRLowerable, ValueProxy, GuardingNode)
     (§ def #_"NodeClass<FixedValueAnchorNode>" FixedValueAnchorNode'TYPE (NodeClass'create-1 FixedValueAnchorNode))
 
-    ; @Input
-    (§ final #_"ValueNode" :object nil)
-    (§ mutable #_"Stamp" :predefinedStamp nil)
+    (defn- #_"FixedValueAnchorNode" FixedValueAnchorNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"ValueNode" :object nil
+            #_"Stamp" :predefinedStamp nil
+        )
+    )
 
     (defn #_"FixedValueAnchorNode" FixedValueAnchorNode'new-2t [#_"NodeClass<? extends FixedValueAnchorNode>" c, #_"ValueNode" object]
         (let [
             #_"FixedValueAnchorNode" this (FixedWithNextNode'new-2 c, (:stamp object))
+            this (merge this (FixedValueAnchorNode'init-0))
             this (assoc this :object object)
         ]
             this
@@ -55414,6 +56755,7 @@ ZeroExtendNode'new-4
     (defn #_"FixedValueAnchorNode" FixedValueAnchorNode'new-2v [#_"ValueNode" object, #_"Stamp" predefinedStamp]
         (let [
             #_"FixedValueAnchorNode" this (FixedWithNextNode'new-2 FixedValueAnchorNode'TYPE, predefinedStamp)
+            this (merge this (FixedValueAnchorNode'init-0))
             this (assoc this :object object)
             this (assoc this :predefinedStamp predefinedStamp)
         ]
@@ -55441,17 +56783,21 @@ ZeroExtendNode'new-4
 (final-ns ForeignCallNode (§ extends AbstractMemoryCheckpoint) (§ implements LIRLowerable, DeoptDuring, Multi)
     (§ def #_"NodeClass<ForeignCallNode>" ForeignCallNode'TYPE (NodeClass'create-1 ForeignCallNode))
 
-    ; @Input
-    (§ mutable #_"NodeInputList<ValueNode>" :arguments nil)
-    ; @OptionalInput
-    (§ mutable #_"FrameState" :stateDuring nil)
-
-    (§ final #_"ForeignCallDescriptor" :descriptor nil)
-    (§ mutable #_"int" :bci BytecodeFrame/UNKNOWN_BCI)
+    (defn- #_"ForeignCallNode" ForeignCallNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"NodeInputList<ValueNode>" :arguments nil
+            ; @OptionalInput
+            #_"FrameState" :stateDuring nil
+            #_"ForeignCallDescriptor" :descriptor nil
+            #_"int" :bci BytecodeFrame/UNKNOWN_BCI
+        )
+    )
 
     (defn #_"ForeignCallNode" ForeignCallNode'new-2* [#_"ForeignCallDescriptor" descriptor, #_"ValueNode..." arguments]
         (let [
             #_"ForeignCallNode" this (AbstractMemoryCheckpoint'new-2 ForeignCallNode'TYPE, (StampFactory'forKind-1 (JavaKind/fromJavaClass (:resultType descriptor))))
+            this (merge this (ForeignCallNode'init-0))
             this (assoc this :arguments (NodeInputList'new-2a this, arguments))
             this (assoc this :descriptor descriptor)
         ]
@@ -55575,13 +56921,18 @@ ZeroExtendNode'new-4
 (final-ns GetClassNode (§ extends FloatingNode) (§ implements Lowerable, Canonicalizable, Virtualizable)
     (§ def #_"NodeClass<GetClassNode>" GetClassNode'TYPE (NodeClass'create-1 GetClassNode))
 
-    ; @Input
-    (§ final #_"ValueNode" :object nil)
+    (defn- #_"GetClassNode" GetClassNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"ValueNode" :object nil
+        )
+    )
 
     #_unused
     (defn #_"GetClassNode" GetClassNode'new-2 [#_"Stamp" stamp, #_"ValueNode" object]
         (let [
             #_"GetClassNode" this (FloatingNode'new-2 GetClassNode'TYPE, stamp)
+            this (merge this (GetClassNode'init-0))
             this (assoc this :object object)
         ]
             this
@@ -55631,11 +56982,16 @@ ZeroExtendNode'new-4
 (final-ns IntegerSwitchNode (§ extends SwitchNodeImpl) (§ implements LIRLowerable, Simplifiable)
     (§ def #_"NodeClass<IntegerSwitchNode>" IntegerSwitchNode'TYPE (NodeClass'create-1 IntegerSwitchNode))
 
-    (§ final #_"int[]" :keys nil)
+    (defn- #_"IntegerSwitchNode" IntegerSwitchNode'init-0 []
+        (hash-map
+            #_"int[]" :keys nil
+        )
+    )
 
     (defn #_"IntegerSwitchNode" IntegerSwitchNode'new-5a [#_"ValueNode" value, #_"AbstractBeginNode[]" successors, #_"int[]" keys, #_"double[]" keyProbabilities, #_"int[]" keySuccessors]
         (let [
             #_"IntegerSwitchNode" this (SwitchNodeImpl'new-5 IntegerSwitchNode'TYPE, value, successors, keySuccessors, keyProbabilities)
+            this (merge this (IntegerSwitchNode'init-0))
             this (assoc this :keys keys)
         ]
             this
@@ -55945,13 +57301,17 @@ ZeroExtendNode'new-4
  ; @anno IntegerSwitchNode.KeyData
  ;;
 (final-ns KeyData
-    (§ final #_"int" :key 0)
-    (§ final #_"double" :keyProbability 0.0)
-    (§ final #_"int" :keySuccessor 0)
+    (defn- #_"KeyData" KeyData'init-0 []
+        (hash-map
+            #_"int" :key 0
+            #_"double" :keyProbability 0.0
+            #_"int" :keySuccessor 0
+        )
+    )
 
     (defn #_"KeyData" KeyData'new-3 [#_"int" key, #_"double" keyProbability, #_"int" keySuccessor]
         (let [
-            #_"KeyData" this (hash-map)
+            #_"KeyData" this (merge (hash-map) (KeyData'init-0))
             this (assoc this :key key)
             this (assoc this :keyProbability keyProbability)
             this (assoc this :keySuccessor keySuccessor)
@@ -55968,12 +57328,17 @@ ZeroExtendNode'new-4
 (final-ns JavaReadNode (§ extends FixedAccessNode) (§ implements Lowerable, GuardingNode, Canonicalizable)
     (§ def #_"NodeClass<JavaReadNode>" JavaReadNode'TYPE (NodeClass'create-1 JavaReadNode))
 
-    (§ final #_"JavaKind" :readKind nil)
-    (§ final #_"boolean" :compressible? false)
+    (defn- #_"JavaReadNode" JavaReadNode'init-0 []
+        (hash-map
+            #_"JavaKind" :readKind nil
+            #_"boolean" :compressible? false
+        )
+    )
 
     (defn #_"JavaReadNode" JavaReadNode'new-5 [#_"JavaKind" readKind, #_"AddressNode" address, #_"LocationIdentity" location, #_"BarrierType" barrierType, #_"boolean" compressible?]
         (let [
             #_"JavaReadNode" this (FixedAccessNode'new-5 JavaReadNode'TYPE, address, location, (StampFactory'forKind-1 readKind), barrierType)
+            this (merge this (JavaReadNode'init-0))
             this (assoc this :readKind readKind)
             this (assoc this :compressible? compressible?)
         ]
@@ -56015,12 +57380,17 @@ ZeroExtendNode'new-4
 (final-ns JavaWriteNode (§ extends AbstractWriteNode) (§ implements Lowerable, StateSplit, MemoryAccess, Single)
     (§ def #_"NodeClass<JavaWriteNode>" JavaWriteNode'TYPE (NodeClass'create-1 JavaWriteNode))
 
-    (§ final #_"JavaKind" :writeKind nil)
-    (§ final #_"boolean" :compressible? false)
+    (defn- #_"JavaWriteNode" JavaWriteNode'init-0 []
+        (hash-map
+            #_"JavaKind" :writeKind nil
+            #_"boolean" :compressible? false
+        )
+    )
 
     (defn #_"JavaWriteNode" JavaWriteNode'new-6 [#_"JavaKind" writeKind, #_"AddressNode" address, #_"LocationIdentity" location, #_"ValueNode" value, #_"BarrierType" barrierType, #_"boolean" compressible?]
         (let [
             #_"JavaWriteNode" this (AbstractWriteNode'new-5 JavaWriteNode'TYPE, address, location, value, barrierType)
+            this (merge this (JavaWriteNode'init-0))
             this (assoc this :writeKind writeKind)
             this (assoc this :compressible? compressible?)
         ]
@@ -56051,8 +57421,12 @@ ZeroExtendNode'new-4
 (final-ns LoadHubNode (§ extends FloatingNode) (§ implements Lowerable, Canonicalizable, Virtualizable)
     (§ def #_"NodeClass<LoadHubNode>" LoadHubNode'TYPE (NodeClass'create-1 LoadHubNode))
 
-    ; @Input
-    (§ mutable #_"ValueNode" :value nil)
+    (defn- #_"LoadHubNode" LoadHubNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"ValueNode" :value nil
+        )
+    )
 
     (defn #_"ValueNode" LoadHubNode'create-1 [#_"ValueNode" value]
         (let [
@@ -56074,6 +57448,7 @@ ZeroExtendNode'new-4
     (defn #_"LoadHubNode" LoadHubNode'new-2 [#_"Stamp" stamp, #_"ValueNode" value]
         (let [
             #_"LoadHubNode" this (FloatingNode'new-2 LoadHubNode'TYPE, stamp)
+            this (merge this (LoadHubNode'init-0))
             this (assoc this :value value)
         ]
             this
@@ -56121,8 +57496,12 @@ ZeroExtendNode'new-4
 (final-ns MembarNode (§ extends FixedWithNextNode) (§ implements LIRLowerable, Single)
     (§ def #_"NodeClass<MembarNode>" MembarNode'TYPE (NodeClass'create-1 MembarNode))
 
-    (§ final #_"int" :barriers 0)
-    (§ final #_"LocationIdentity" :location nil)
+    (defn- #_"MembarNode" MembarNode'init-0 []
+        (hash-map
+            #_"int" :barriers 0
+            #_"LocationIdentity" :location nil
+        )
+    )
 
     (§ intrinsic! #_"void" MembarNode'memoryBarrier-1 [#_@ConstantNodeParameter #_"int" barriers])
 
@@ -56137,6 +57516,7 @@ ZeroExtendNode'new-4
     (defn #_"MembarNode" MembarNode'new-2 [#_"int" barriers, #_"LocationIdentity" location]
         (let [
             #_"MembarNode" this (FixedWithNextNode'new-2 MembarNode'TYPE, VoidStamp'instance)
+            this (merge this (MembarNode'init-0))
             this (assoc this :barriers barriers)
             this (assoc this :location location)
         ]
@@ -56158,8 +57538,12 @@ ZeroExtendNode'new-4
 (final-ns NullCheckNode (§ extends DeoptimizingFixedWithNextNode) (§ implements LIRLowerable, GuardingNode)
     (§ def #_"NodeClass<NullCheckNode>" NullCheckNode'TYPE (NodeClass'create-1 NullCheckNode))
 
-    ; @Input
-    (§ final #_"ValueNode" :object nil)
+    (defn- #_"NullCheckNode" NullCheckNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"ValueNode" :object nil
+        )
+    )
 
     (§ intrinsic! #_"void" NullCheckNode'nullCheck-1 [#_"Object" object])
 
@@ -56167,6 +57551,7 @@ ZeroExtendNode'new-4
     (defn #_"NullCheckNode" NullCheckNode'new-1 [#_"ValueNode" object]
         (let [
             #_"NullCheckNode" this (DeoptimizingFixedWithNextNode'new-2 NullCheckNode'TYPE, VoidStamp'instance)
+            this (merge this (NullCheckNode'init-0))
             this (assoc this :object object)
         ]
             this
@@ -56357,15 +57742,20 @@ ZeroExtendNode'new-4
 (final-ns RawStoreNode (§ extends UnsafeAccessNodeImpl) (§ implements StateSplit, Lowerable, Virtualizable, Single)
     (§ def #_"NodeClass<RawStoreNode>" RawStoreNode'TYPE (NodeClass'create-1 RawStoreNode))
 
-    ; @Input
-    (§ mutable #_"ValueNode" :value nil)
-    (§ final #_"boolean" :needsBarrier false)
-    ; @OptionalInput
-    (§ mutable #_"FrameState" :stateAfter nil)
+    (defn- #_"RawStoreNode" RawStoreNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"ValueNode" :value nil
+            #_"boolean" :needsBarrier false
+            ; @OptionalInput
+            #_"FrameState" :stateAfter nil
+        )
+    )
 
     (defn #_"RawStoreNode" RawStoreNode'new-8 [#_"ValueNode" object, #_"ValueNode" offset, #_"ValueNode" value, #_"JavaKind" accessKind, #_"LocationIdentity" locationIdentity, #_"boolean" needsBarrier, #_"FrameState" stateAfter, #_"boolean" forceAnyLocation]
         (let [
             #_"RawStoreNode" this (UnsafeAccessNodeImpl'new-7 RawStoreNode'TYPE, VoidStamp'instance, object, offset, accessKind, locationIdentity, forceAnyLocation)
+            this (merge this (RawStoreNode'init-0))
             this (assoc this :value value)
             this (assoc this :needsBarrier needsBarrier)
             this (assoc this :stateAfter stateAfter)
@@ -56445,12 +57835,16 @@ ZeroExtendNode'new-4
 (final-ns StateSplitProxyNode (§ extends FixedValueAnchorNode) (§ implements Canonicalizable, StateSplit)
     (§ def #_"NodeClass<StateSplitProxyNode>" StateSplitProxyNode'TYPE (NodeClass'create-1 StateSplitProxyNode))
 
-    ; @OptionalInput
-    (§ mutable #_"FrameState" :stateAfter nil)
-    ;;;
-     ; Disallows elimination of this node until after the FrameState has been consumed.
-     ;;
-    (§ final #_"boolean" :delayElimination false)
+    (defn- #_"StateSplitProxyNode" StateSplitProxyNode'init-0 []
+        (hash-map
+            ; @OptionalInput
+            #_"FrameState" :stateAfter nil
+            ;;;
+             ; Disallows elimination of this node until after the FrameState has been consumed.
+             ;;
+            #_"boolean" :delayElimination false
+        )
+    )
 
     (defn #_"StateSplitProxyNode" StateSplitProxyNode'new-1 [#_"ValueNode" object]
         (StateSplitProxyNode'new-2 object, false)
@@ -56459,6 +57853,7 @@ ZeroExtendNode'new-4
     (defn #_"StateSplitProxyNode" StateSplitProxyNode'new-2 [#_"ValueNode" object, #_"boolean" delayElimination]
         (let [
             #_"StateSplitProxyNode" this (FixedValueAnchorNode'new-2t StateSplitProxyNode'TYPE, object)
+            this (merge this (StateSplitProxyNode'init-0))
             this (assoc this :delayElimination delayElimination)
         ]
             this
@@ -56485,10 +57880,14 @@ ZeroExtendNode'new-4
 (final-ns StoreHubNode (§ extends FixedWithNextNode) (§ implements Lowerable)
     (§ def #_"NodeClass<StoreHubNode>" StoreHubNode'TYPE (NodeClass'create-1 StoreHubNode))
 
-    ; @Input
-    (§ mutable #_"ValueNode" :value nil)
-    ; @Input
-    (§ final #_"ValueNode" :object nil)
+    (defn- #_"StoreHubNode" StoreHubNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"ValueNode" :value nil
+            ; @Input
+            #_"ValueNode" :object nil
+        )
+    )
 
     (§ intrinsic! #_"void" StoreHubNode'write-2 [#_"Object" object, #_"Object" value])
 
@@ -56496,6 +57895,7 @@ ZeroExtendNode'new-4
     (defn #_"StoreHubNode" StoreHubNode'new-2 [#_"ValueNode" object, #_"ValueNode" value]
         (let [
             #_"StoreHubNode" this (FixedWithNextNode'new-2 StoreHubNode'TYPE, VoidStamp'instance)
+            this (merge this (StoreHubNode'init-0))
             this (assoc this :value value)
             this (assoc this :object object)
         ]
@@ -56521,14 +57921,17 @@ ZeroExtendNode'new-4
 (class-ns SwitchNodeImpl (§ extends ControlSplitNodeImpl) (§ implements SwitchNode)
     (§ def #_"NodeClass<SwitchNode>" SwitchNodeImpl'TYPE (NodeClass'create-1 SwitchNodeImpl))
 
-    ; @Successor
-    (§ mutable #_"NodeSuccessorList<AbstractBeginNode>" :successors nil)
-    ; @Input
-    (§ mutable #_"ValueNode" :value nil)
-
-    ;; do not change the contents of these arrays:
-    (§ final #_"double[]" :keyProbabilities nil)
-    (§ final #_"int[]" :keySuccessors nil)
+    (defn- #_"SwitchNodeImpl" SwitchNodeImpl'init-0 []
+        (hash-map
+            ; @Successor
+            #_"NodeSuccessorList<AbstractBeginNode>" :successors nil
+            ; @Input
+            #_"ValueNode" :value nil
+            ;; do not change the contents of these arrays:
+            #_"double[]" :keyProbabilities nil
+            #_"int[]" :keySuccessors nil
+        )
+    )
 
     ;;;
      ; Constructs a new Switch.
@@ -56539,6 +57942,7 @@ ZeroExtendNode'new-4
     (defn #_"SwitchNode" SwitchNodeImpl'new-5 [#_"NodeClass<? implements SwitchNode>" c, #_"ValueNode" value, #_"AbstractBeginNode[]" successors, #_"int[]" keySuccessors, #_"double[]" keyProbabilities]
         (let [
             #_"SwitchNode" this (ControlSplitNodeImpl'new-2 c, VoidStamp'instance)
+            this (merge this (SwitchNodeImpl'init-0))
             this (assoc this :successors (NodeSuccessorList'new-2a this, successors))
             this (assoc this :value value)
             this (assoc this :keySuccessors keySuccessors)
@@ -56666,9 +58070,13 @@ ZeroExtendNode'new-4
 (final-ns UnboxNode (§ extends FixedWithNextNode) (§ implements Virtualizable, Lowerable, Unary #_"<ValueNode>")
     (§ def #_"NodeClass<UnboxNode>" UnboxNode'TYPE (NodeClass'create-1 UnboxNode))
 
-    ; @Input
-    (§ mutable #_"ValueNode" :value nil)
-    (§ final #_"JavaKind" :boxingKind nil)
+    (defn- #_"UnboxNode" UnboxNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"ValueNode" :value nil
+            #_"JavaKind" :boxingKind nil
+        )
+    )
 
     (§ override! #_"ValueNode" Unary'''getValue-1 [#_"UnboxNode" this]
         (:value this)
@@ -56677,6 +58085,7 @@ ZeroExtendNode'new-4
     (defn #_"UnboxNode" UnboxNode'new-2 [#_"ValueNode" value, #_"JavaKind" boxingKind]
         (let [
             #_"UnboxNode" this (FixedWithNextNode'new-2 UnboxNode'TYPE, (StampFactory'forKind-1 (#_"JavaKind" .getStackKind boxingKind)))
+            this (merge this (UnboxNode'init-0))
             this (assoc this :value value)
             this (assoc this :boxingKind boxingKind)
         ]
@@ -56741,18 +58150,22 @@ ZeroExtendNode'new-4
 (class-ns UnsafeAccessNodeImpl (§ extends FixedWithNextNode) (§ implements UnsafeAccessNode, Canonicalizable)
     (§ def #_"NodeClass<UnsafeAccessNode>" UnsafeAccessNodeImpl'TYPE (NodeClass'create-1 UnsafeAccessNodeImpl))
 
-    ; @Input
-    (§ final #_"ValueNode" :object nil)
-    ; @Input
-    (§ final #_"ValueNode" :offset nil)
-
-    (§ final #_"JavaKind" :accessKind nil)
-    (§ final #_"LocationIdentity" :locationIdentity nil)
-    (§ final #_"boolean" :forceAnyLocation false)
+    (defn- #_"UnsafeAccessNodeImpl" UnsafeAccessNodeImpl'init-0 []
+        (hash-map
+            ; @Input
+            #_"ValueNode" :object nil
+            ; @Input
+            #_"ValueNode" :offset nil
+            #_"JavaKind" :accessKind nil
+            #_"LocationIdentity" :locationIdentity nil
+            #_"boolean" :forceAnyLocation false
+        )
+    )
 
     (defn #_"UnsafeAccessNode" UnsafeAccessNodeImpl'new-7 [#_"NodeClass<? implements UnsafeAccessNode>" c, #_"Stamp" stamp, #_"ValueNode" object, #_"ValueNode" offset, #_"JavaKind" accessKind, #_"LocationIdentity" locationIdentity, #_"boolean" forceAnyLocation]
         (let [
             #_"UnsafeAccessNode" this (FixedWithNextNode'new-2 c, stamp)
+            this (merge this (UnsafeAccessNodeImpl'init-0))
             this (assoc this :object object)
             this (assoc this :offset offset)
             this (assoc this :accessKind accessKind)
@@ -56803,12 +58216,17 @@ ZeroExtendNode'new-4
 (final-ns ValueAnchorNode (§ extends FixedWithNextNode) (§ implements LIRLowerable, Simplifiable, Virtualizable, AnchoringNode, GuardingNode)
     (§ def #_"NodeClass<ValueAnchorNode>" ValueAnchorNode'TYPE (NodeClass'create-1 ValueAnchorNode))
 
-    ; @OptionalInput(InputType'Guard)
-    (§ mutable #_"ValueNode" :anchored nil)
+    (defn- #_"ValueAnchorNode" ValueAnchorNode'init-0 []
+        (hash-map
+            ; @OptionalInput(InputType'Guard)
+            #_"ValueNode" :anchored nil
+        )
+    )
 
     (defn #_"ValueAnchorNode" ValueAnchorNode'new-1 [#_"ValueNode" value]
         (let [
             #_"ValueAnchorNode" this (FixedWithNextNode'new-2 ValueAnchorNode'TYPE, VoidStamp'instance)
+            this (merge this (ValueAnchorNode'init-0))
             this (assoc this :anchored value)
         ]
             this
@@ -56863,11 +58281,16 @@ ZeroExtendNode'new-4
 )
 
 (final-ns FieldLocationIdentity (§ extends LocationIdentity)
-    (§ final #_"ResolvedJavaField" :inner nil)
+    (defn- #_"FieldLocationIdentity" FieldLocationIdentity'init-0 []
+        (hash-map
+            #_"ResolvedJavaField" :inner nil
+        )
+    )
 
     (defn #_"FieldLocationIdentity" FieldLocationIdentity'new-1 [#_"ResolvedJavaField" inner]
         (let [
             #_"FieldLocationIdentity" this (LocationIdentity.)
+            this (merge this (FieldLocationIdentity'init-0))
             this (assoc this :inner inner)
         ]
             this
@@ -56966,8 +58389,12 @@ ZeroExtendNode'new-4
 (class-ns FixedWithNextNode (§ extends FixedNode)
     (§ def #_"NodeClass<FixedWithNextNode>" FixedWithNextNode'TYPE (NodeClass'create-1 FixedWithNextNode))
 
-    ; @Successor
-    (§ mutable #_"FixedNode" :next nil)
+    (defn- #_"FixedWithNextNode" FixedWithNextNode'init-0 []
+        (hash-map
+            ; @Successor
+            #_"FixedNode" :next nil
+        )
+    )
 
     (defn #_"FixedWithNextNode" FixedWithNextNode''setNext-2 [#_"FixedWithNextNode" this, #_"FixedNode" node]
         (NodeImpl''updatePredecessor-3 this, (:next this), node)
@@ -56975,24 +58402,33 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"FixedWithNextNode" FixedWithNextNode'new-2 [#_"NodeClass<? extends FixedWithNextNode>" c, #_"Stamp" stamp]
-        (FixedNode'new-2 c, stamp)
+        (merge (FixedNode'new-2 c, stamp)
+            (FixedWithNextNode'init-0)
+        )
     )
 )
 
 (class-ns FloatingAnchoredNode (§ extends FloatingNode)
     (§ def #_"NodeClass<FloatingAnchoredNode>" FloatingAnchoredNode'TYPE (NodeClass'create-1 FloatingAnchoredNode))
 
-    ; @Input(InputType'Anchor)
-    (§ mutable #_"AnchoringNode" :anchor nil)
+    (defn- #_"FloatingAnchoredNode" FloatingAnchoredNode'init-0 []
+        (hash-map
+            ; @Input(InputType'Anchor)
+            #_"AnchoringNode" :anchor nil
+        )
+    )
 
     #_unused
     (defn #_"FloatingAnchoredNode" FloatingAnchoredNode'new-2 [#_"NodeClass<? extends FloatingAnchoredNode>" c, #_"Stamp" stamp]
-        (FloatingNode'new-2 c, stamp)
+        (merge (FloatingNode'new-2 c, stamp)
+            (FloatingAnchoredNode'init-0)
+        )
     )
 
     (defn #_"FloatingAnchoredNode" FloatingAnchoredNode'new-3 [#_"NodeClass<? extends FloatingAnchoredNode>" c, #_"Stamp" stamp, #_"AnchoringNode" anchor]
         (let [
             #_"FloatingAnchoredNode" this (FloatingNode'new-2 c, stamp)
+            this (merge this (FloatingAnchoredNode'init-0))
             this (assoc this :anchor anchor)
         ]
             this
@@ -57007,16 +58443,23 @@ ZeroExtendNode'new-4
 (class-ns FloatingGuardedNode (§ extends FloatingNode) (§ implements GuardedNode)
     (§ def #_"NodeClass<FloatingGuardedNode>" FloatingGuardedNode'TYPE (NodeClass'create-1 FloatingGuardedNode))
 
-    ; @OptionalInput(InputType'Guard)
-    (§ mutable #_"GuardingNode" :guard nil)
+    (defn- #_"FloatingGuardedNode" FloatingGuardedNode'init-0 []
+        (hash-map
+            ; @OptionalInput(InputType'Guard)
+            #_"GuardingNode" :guard nil
+        )
+    )
 
     (defn #_"FloatingGuardedNode" FloatingGuardedNode'new-2 [#_"NodeClass<? extends FloatingGuardedNode>" c, #_"Stamp" stamp]
-        (FloatingNode'new-2 c, stamp)
+        (merge (FloatingNode'new-2 c, stamp)
+            (FloatingGuardedNode'init-0)
+        )
     )
 
     (defn #_"FloatingGuardedNode" FloatingGuardedNode'new-3 [#_"NodeClass<? extends FloatingGuardedNode>" c, #_"Stamp" stamp, #_"GuardingNode" guard]
         (let [
             #_"FloatingGuardedNode" this (FloatingNode'new-2 c, stamp)
+            this (merge this (FloatingGuardedNode'init-0))
             this (assoc this :guard guard)
         ]
             this
@@ -57049,46 +58492,43 @@ ZeroExtendNode'new-4
      ;;
     (§ def #_"ValueNode" FrameState'TWO_SLOT_MARKER (TwoSlotMarker'new-0))
 
-    ;;;
-     ; Size of the local variables.
-     ;;
-    (§ final #_"int" :localsSize 0)
-
-    ;;;
-     ; Current size (height) of the stack.
-     ;;
-    (§ final #_"int" :stackSize 0)
-
-    (§ final #_"boolean" :duringCall false)
-
-    ; @OptionalInput
-    (§ mutable #_"FrameState" :outerFrameState nil)
-
-    ;;;
-     ; Contains the locals, the expressions and the locked objects, in this order.
-     ;;
-    ; @OptionalInput
-    (§ mutable #_"NodeInputList<ValueNode>" :values nil)
-
-    ; @Input
-    (§ mutable #_"NodeInputList<MonitorIdNode>" :monitorIds nil)
-
-    ; @OptionalInput
-    (§ mutable #_"NodeInputList<EscapeObjectState>" :virtualObjectMappings nil)
-
-    ;;;
-     ; The bytecode index to which this frame state applies.
-     ;;
-    (§ final #_"int" :bci 0)
-
-    ;;;
-     ; The bytecode to which this frame state applies.
-     ;;
-    (§ final #_"Bytecode" :code nil)
+    (defn- #_"FrameState" FrameState'init-0 []
+        (hash-map
+            ;;;
+             ; Size of the local variables.
+             ;;
+            #_"int" :localsSize 0
+            ;;;
+             ; Current size (height) of the stack.
+             ;;
+            #_"int" :stackSize 0
+            #_"boolean" :duringCall false
+            ; @OptionalInput
+            #_"FrameState" :outerFrameState nil
+            ;;;
+             ; Contains the locals, the expressions and the locked objects, in this order.
+             ;;
+            ; @OptionalInput
+            #_"NodeInputList<ValueNode>" :values nil
+            ; @Input
+            #_"NodeInputList<MonitorIdNode>" :monitorIds nil
+            ; @OptionalInput
+            #_"NodeInputList<EscapeObjectState>" :virtualObjectMappings nil
+            ;;;
+             ; The bytecode index to which this frame state applies.
+             ;;
+            #_"int" :bci 0
+            ;;;
+             ; The bytecode to which this frame state applies.
+             ;;
+            #_"Bytecode" :code nil
+        )
+    )
 
     (defn #_"FrameState" FrameState'new-9i [#_"FrameState" outerFrameState, #_"Bytecode" code, #_"int" bci, #_"int" localsSize, #_"int" stackSize, #_"int" lockSize, #_"boolean" duringCall, #_"List<MonitorIdNode>" monitorIds, #_"List<EscapeObjectState>" virtualObjectMappings]
         (let [
             #_"FrameState" this (VirtualStateImpl'new-1 FrameState'TYPE)
+            this (merge this (FrameState'init-0))
         ]
             (when (some? code)
                 ;; Make sure the bci is within range of the bytecodes. If the code size is 0 then allow
@@ -57429,13 +58869,17 @@ ZeroExtendNode'new-4
 )
 
 (final-ns GraphBuilderConfiguration
-    (§ final #_"boolean" :eagerResolving false)
-    (§ final #_"boolean" :unresolvedIsError false)
-    (§ final #_"Plugins" :plugins nil)
+    (defn- #_"GraphBuilderConfiguration" GraphBuilderConfiguration'init-0 []
+        (hash-map
+            #_"boolean" :eagerResolving false
+            #_"boolean" :unresolvedIsError false
+            #_"Plugins" :plugins nil
+        )
+    )
 
     (defn- #_"GraphBuilderConfiguration" GraphBuilderConfiguration'new-3 [#_"boolean" eagerResolving, #_"boolean" unresolvedIsError, #_"Plugins" plugins]
         (let [
-            #_"GraphBuilderConfiguration" this (hash-map)
+            #_"GraphBuilderConfiguration" this (merge (hash-map) (GraphBuilderConfiguration'init-0))
             this (assoc this :eagerResolving eagerResolving)
             this (assoc this :unresolvedIsError unresolvedIsError)
             this (assoc this :plugins plugins)
@@ -57457,10 +58901,14 @@ ZeroExtendNode'new-4
  ; @anno GraphBuilderConfiguration.Plugins
  ;;
 (final-ns Plugins
-    (§ mutable #_"NodePlugin[]" :nodePlugins nil)
-    (§ mutable #_"ParameterPlugin[]" :parameterPlugins nil)
-    (§ mutable #_"TypePlugin[]" :typePlugins nil)
-    (§ mutable #_"InlineInvokePlugin[]" :inlineInvokePlugins nil)
+    (defn- #_"Plugins" Plugins'init-0 []
+        (hash-map
+            #_"NodePlugin[]" :nodePlugins nil
+            #_"ParameterPlugin[]" :parameterPlugins nil
+            #_"TypePlugin[]" :typePlugins nil
+            #_"InlineInvokePlugin[]" :inlineInvokePlugins nil
+        )
+    )
 
     ;;;
      ; Creates a copy of a given set of plugins.
@@ -57482,7 +58930,7 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"Plugins" Plugins'new-0 []
         (let [
-            #_"Plugins" this (hash-map)
+            #_"Plugins" this (merge (hash-map) (Plugins'init-0))
             this (assoc this :nodePlugins (make-array NodePlugin 0))
             this (assoc this :parameterPlugins (make-array ParameterPlugin 0))
             this (assoc this :typePlugins (make-array TypePlugin 0))
@@ -57546,7 +58994,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"StampPair" Plugins''getOverridingStamp-4 [#_"Plugins" this, #_"GraphBuilder" b, #_"JavaType" type, #_"boolean" never-nil?]
+    (defn #_"StampPair" Plugins''getOverridingStamp-4 [#_"Plugins" this, #_"GraphBuilder" b, #_"JavaType" type, #_"boolean" never-nil?]
         (loop-when [#_"ISeq" s (seq (:typePlugins this))] (some? s)
             (or (TypePlugin'''interceptType-4 (first s), b, type, never-nil?)
                 (recur (next s))
@@ -57562,21 +59010,25 @@ ZeroExtendNode'new-4
  ; @anno InlineInvokePlugin.InlineInvokeInfo
  ;;
 (final-ns InlineInvokeInfo
-    ;;;
-     ; The method to be inlined, or nil if the call site must not be inlined.
-     ;;
-    (§ final #_"ResolvedJavaMethod" :methodToInline nil)
-    ;;;
-     ; The provider of bytecode to be parsed for #getMethodToInline() if it is
-     ; an intrinsic for the original method (i.e. the {@code method} passed to
-     ; InlineInvokePlugin#shouldInlineInvoke).
-     ; A nil value indicates that this is not an intrinsic inlining.
-     ;;
-    (§ final #_"BytecodeProvider" :intrinsicBytecodeProvider nil)
+    (defn- #_"InlineInvokeInfo" InlineInvokeInfo'init-0 []
+        (hash-map
+            ;;;
+             ; The method to be inlined, or nil if the call site must not be inlined.
+             ;;
+            #_"ResolvedJavaMethod" :methodToInline nil
+            ;;;
+             ; The provider of bytecode to be parsed for #getMethodToInline() if it is
+             ; an intrinsic for the original method (i.e. the {@code method} passed to
+             ; InlineInvokePlugin#shouldInlineInvoke).
+             ; A nil value indicates that this is not an intrinsic inlining.
+             ;;
+            #_"BytecodeProvider" :intrinsicBytecodeProvider nil
+        )
+    )
 
     (defn- #_"InlineInvokeInfo" InlineInvokeInfo'new-2 [#_"ResolvedJavaMethod" methodToInline, #_"BytecodeProvider" intrinsicBytecodeProvider]
         (let [
-            #_"InlineInvokeInfo" this (hash-map)
+            #_"InlineInvokeInfo" this (merge (hash-map) (InlineInvokeInfo'init-0))
             this (assoc this :methodToInline methodToInline)
             this (assoc this :intrinsicBytecodeProvider intrinsicBytecodeProvider)
         ]
@@ -57608,26 +59060,27 @@ ZeroExtendNode'new-4
  ; raw machine words and pointers.
  ;;
 (final-ns IntrinsicContext
-    ;;;
-     ; Method being intrinsified.
-     ;;
-    (§ final #_"ResolvedJavaMethod" :originalMethod nil)
-
-    ;;;
-     ; Method providing the intrinsic implementation.
-     ;;
-    (§ final #_"ResolvedJavaMethod" :intrinsicMethod nil)
-
-    ;;;
-     ; Provider of bytecode to be parsed for a method that is part of an intrinsic.
-     ;;
-    (§ final #_"BytecodeProvider" :bytecodeProvider nil)
-
-    (§ final #_"CompilationContext" :compilationContext nil)
+    (defn- #_"IntrinsicContext" IntrinsicContext'init-0 []
+        (hash-map
+            ;;;
+             ; Method being intrinsified.
+             ;;
+            #_"ResolvedJavaMethod" :originalMethod nil
+            ;;;
+             ; Method providing the intrinsic implementation.
+             ;;
+            #_"ResolvedJavaMethod" :intrinsicMethod nil
+            ;;;
+             ; Provider of bytecode to be parsed for a method that is part of an intrinsic.
+             ;;
+            #_"BytecodeProvider" :bytecodeProvider nil
+            #_"CompilationContext" :compilationContext nil
+        )
+    )
 
     (defn #_"IntrinsicContext" IntrinsicContext'new-4 [#_"ResolvedJavaMethod" method, #_"ResolvedJavaMethod" intrinsic, #_"BytecodeProvider" bytecodeProvider, #_"CompilationContext" compilationContext]
         (let [
-            #_"IntrinsicContext" this (hash-map)
+            #_"IntrinsicContext" this (merge (hash-map) (IntrinsicContext'init-0))
             this (assoc this :originalMethod method)
             this (assoc this :intrinsicMethod intrinsic)
             this (assoc this :bytecodeProvider bytecodeProvider)
@@ -57719,12 +59172,16 @@ ZeroExtendNode'new-4
 (final-ns GuardNode (§ extends FloatingAnchoredNode) (§ implements Canonicalizable, GuardingNode, DeoptimizingGuard, IterableNodeType)
     (§ def #_"NodeClass<GuardNode>" GuardNode'TYPE (NodeClass'create-1 GuardNode))
 
-    ; @Input
-    (§ mutable #_"LogicNode" :condition nil)
-    (§ mutable #_"DeoptimizationReason" :reason nil)
-    (§ mutable #_"DeoptimizationAction" :action nil)
-    (§ mutable #_"JavaConstant" :speculation nil)
-    (§ mutable #_"boolean" :negated? false)
+    (defn- #_"GuardNode" GuardNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"LogicNode" :condition nil
+            #_"DeoptimizationReason" :reason nil
+            #_"DeoptimizationAction" :action nil
+            #_"JavaConstant" :speculation nil
+            #_"boolean" :negated? false
+        )
+    )
 
     (defn #_"GuardNode" GuardNode'new-6 [#_"LogicNode" condition, #_"AnchoringNode" anchor, #_"DeoptimizationReason" reason, #_"DeoptimizationAction" action, #_"boolean" negated?, #_"JavaConstant" speculation]
         (GuardNode'new-7 GuardNode'TYPE, condition, anchor, reason, action, negated?, speculation)
@@ -57733,6 +59190,7 @@ ZeroExtendNode'new-4
     (defn #_"GuardNode" GuardNode'new-7 [#_"NodeClass<? extends GuardNode>" c, #_"LogicNode" condition, #_"AnchoringNode" anchor, #_"DeoptimizationReason" reason, #_"DeoptimizationAction" action, #_"boolean" negated?, #_"JavaConstant" speculation]
         (let [
             #_"GuardNode" this (FloatingAnchoredNode'new-3 c, VoidStamp'instance, anchor)
+            this (merge this (GuardNode'init-0))
             this (assoc this :condition condition)
             this (assoc this :reason reason)
             this (assoc this :action action)
@@ -57791,12 +59249,17 @@ ZeroExtendNode'new-4
 (final-ns GuardPhiNode (§ extends PhiNodeImpl) (§ implements GuardingNode)
     (§ def #_"NodeClass<GuardPhiNode>" GuardPhiNode'TYPE (NodeClass'create-1 GuardPhiNode))
 
-    ; @OptionalInput(InputType'Guard)
-    (§ mutable #_"NodeInputList<ValueNode>" :values nil)
+    (defn- #_"GuardPhiNode" GuardPhiNode'init-0 []
+        (hash-map
+            ; @OptionalInput(InputType'Guard)
+            #_"NodeInputList<ValueNode>" :values nil
+        )
+    )
 
     (defn #_"GuardPhiNode" GuardPhiNode'new-1 [#_"AbstractMergeNode" merge]
         (let [
             #_"GuardPhiNode" this (PhiNodeImpl'new-3 GuardPhiNode'TYPE, VoidStamp'instance, merge)
+            this (merge this (GuardPhiNode'init-0))
             this (assoc this :values (NodeInputList'new-1 this))
         ]
             this
@@ -57807,6 +59270,7 @@ ZeroExtendNode'new-4
     (defn #_"GuardPhiNode" GuardPhiNode'new-2 [#_"AbstractMergeNode" merge, #_"ValueNode[]" values]
         (let [
             #_"GuardPhiNode" this (PhiNodeImpl'new-3 GuardPhiNode'TYPE, VoidStamp'instance, merge)
+            this (merge this (GuardPhiNode'init-0))
             this (assoc this :values (NodeInputList'new-2a this, values))
         ]
             this
@@ -57821,12 +59285,17 @@ ZeroExtendNode'new-4
 (final-ns GuardProxyNode (§ extends ProxyNode) (§ implements GuardingNode, Proxy, LIRLowerable, Canonicalizable)
     (§ def #_"NodeClass<GuardProxyNode>" GuardProxyNode'TYPE (NodeClass'create-1 GuardProxyNode))
 
-    ; @OptionalInput(InputType'Guard)
-    (§ mutable #_"GuardingNode" :value nil)
+    (defn- #_"GuardProxyNode" GuardProxyNode'init-0 []
+        (hash-map
+            ; @OptionalInput(InputType'Guard)
+            #_"GuardingNode" :value nil
+        )
+    )
 
     (defn #_"GuardProxyNode" GuardProxyNode'new-2 [#_"GuardingNode" value, #_"LoopExitNode" proxyPoint]
         (let [
             #_"GuardProxyNode" this (ProxyNode'new-3 GuardProxyNode'TYPE, VoidStamp'instance, proxyPoint)
+            this (merge this (GuardProxyNode'init-0))
             this (assoc this :value value)
         ]
             this
@@ -57855,13 +59324,17 @@ ZeroExtendNode'new-4
 (final-ns IfNode (§ extends ControlSplitNodeImpl) (§ implements Simplifiable, LIRLowerable)
     (§ def #_"NodeClass<IfNode>" IfNode'TYPE (NodeClass'create-1 IfNode))
 
-    ; @Successor
-    (§ mutable #_"AbstractBeginNode" :trueSuccessor nil)
-    ; @Successor
-    (§ mutable #_"AbstractBeginNode" :falseSuccessor nil)
-    ; @Input
-    (§ mutable #_"LogicNode" :condition nil)
-    (§ mutable #_"double" :trueSuccessorProbability 0.0)
+    (defn- #_"IfNode" IfNode'init-0 []
+        (hash-map
+            ; @Successor
+            #_"AbstractBeginNode" :trueSuccessor nil
+            ; @Successor
+            #_"AbstractBeginNode" :falseSuccessor nil
+            ; @Input
+            #_"LogicNode" :condition nil
+            #_"double" :trueSuccessorProbability 0.0
+        )
+    )
 
     (defn #_"IfNode" IfNode''setCondition-2 [#_"IfNode" this, #_"LogicNode" x]
         (NodeImpl''updateUsages-3 this, (:condition this), x)
@@ -57875,6 +59348,7 @@ ZeroExtendNode'new-4
     (defn #_"IfNode" IfNode'new-4b [#_"LogicNode" condition, #_"AbstractBeginNode" trueSuccessor, #_"AbstractBeginNode" falseSuccessor, #_"double" trueSuccessorProbability]
         (let [
             #_"IfNode" this (ControlSplitNodeImpl'new-2 IfNode'TYPE, VoidStamp'instance)
+            this (merge this (IfNode'init-0))
             this (assoc this :condition condition)
             this (assoc this :falseSuccessor falseSuccessor)
             this (assoc this :trueSuccessor trueSuccessor)
@@ -59102,16 +60576,18 @@ ZeroExtendNode'new-4
 (final-ns InvokeNode (§ extends AbstractMemoryCheckpoint) (§ implements StateSplit, Lowerable, DeoptDuring, LIRLowerable, Single)
     (§ def #_"NodeClass<InvokeNode>" InvokeNode'TYPE (NodeClass'create-1 InvokeNode))
 
-    ; @Input
-    (§ mutable #_"CallTargetNode" :callTarget nil)
-    (§ final #_"int" :bci 0)
-
-    ; @OptionalInput
-    (§ mutable #_"ValueNode" :classInit nil)
-    ; @OptionalInput
-    (§ mutable #_"FrameState" :stateDuring nil)
-
-    (§ mutable #_"boolean" :useForInlining true)
+    (defn- #_"InvokeNode" InvokeNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"CallTargetNode" :callTarget nil
+            #_"int" :bci 0
+            ; @OptionalInput
+            #_"ValueNode" :classInit nil
+            ; @OptionalInput
+            #_"FrameState" :stateDuring nil
+            #_"boolean" :useForInlining true
+        )
+    )
 
     (defn #_"InvokeNode" InvokeNode'new-2 [#_"CallTargetNode" callTarget, #_"int" bci]
         (InvokeNode'new-3 callTarget, bci, (:trustedStamp (CallTargetNode''returnStamp-1 callTarget)))
@@ -59120,6 +60596,7 @@ ZeroExtendNode'new-4
     (defn #_"InvokeNode" InvokeNode'new-3 [#_"CallTargetNode" callTarget, #_"int" bci, #_"Stamp" stamp]
         (let [
             #_"InvokeNode" this (AbstractMemoryCheckpoint'new-2 InvokeNode'TYPE, stamp)
+            this (merge this (InvokeNode'init-0))
             this (assoc this :callTarget callTarget)
             this (assoc this :bci bci)
         ]
@@ -59273,12 +60750,16 @@ ZeroExtendNode'new-4
 (class-ns AbstractCompareAndSwapNode (§ extends FixedAccessNode) (§ implements StateSplit, LIRLowerableAccess, Single)
     (§ def #_"NodeClass<AbstractCompareAndSwapNode>" AbstractCompareAndSwapNode'TYPE (NodeClass'create-1 AbstractCompareAndSwapNode))
 
-    ; @Input
-    (§ mutable #_"ValueNode" :expectedValue nil)
-    ; @Input
-    (§ mutable #_"ValueNode" :newValue nil)
-    ; @OptionalInput
-    (§ mutable #_"FrameState" :stateAfter nil)
+    (defn- #_"AbstractCompareAndSwapNode" AbstractCompareAndSwapNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"ValueNode" :expectedValue nil
+            ; @Input
+            #_"ValueNode" :newValue nil
+            ; @OptionalInput
+            #_"FrameState" :stateAfter nil
+        )
+    )
 
     (§ override #_"void" StateSplit'''setStateAfter-2 [#_"AbstractCompareAndSwapNode" this, #_"FrameState" x]
         (NodeImpl''updateUsages-3 this, (:stateAfter this), x)
@@ -59297,6 +60778,7 @@ ZeroExtendNode'new-4
     (defn #_"AbstractCompareAndSwapNode" AbstractCompareAndSwapNode'new-7 [#_"NodeClass<? extends AbstractCompareAndSwapNode>" c, #_"AddressNode" address, #_"LocationIdentity" location, #_"ValueNode" expectedValue, #_"ValueNode" newValue, #_"BarrierType" barrierType, #_"Stamp" stamp]
         (let [
             #_"AbstractCompareAndSwapNode" this (FixedAccessNode'new-5 c, address, location, stamp, barrierType)
+            this (merge this (AbstractCompareAndSwapNode'init-0))
             this (assoc this :expectedValue expectedValue)
             this (assoc this :newValue newValue)
         ]
@@ -59319,12 +60801,17 @@ ZeroExtendNode'new-4
 (class-ns AbstractNewArrayNode (§ extends AbstractNewObjectNode) (§ implements ArrayLengthProvider)
     (§ def #_"NodeClass<AbstractNewArrayNode>" AbstractNewArrayNode'TYPE (NodeClass'create-1 AbstractNewArrayNode))
 
-    ; @Input
-    (§ mutable #_"ValueNode" :length nil)
+    (defn- #_"AbstractNewArrayNode" AbstractNewArrayNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"ValueNode" :length nil
+        )
+    )
 
     (defn #_"AbstractNewArrayNode" AbstractNewArrayNode'new-5 [#_"NodeClass<? extends AbstractNewArrayNode>" c, #_"Stamp" stamp, #_"ValueNode" length, #_"boolean" fillContents, #_"FrameState" stateBefore]
         (let [
             #_"AbstractNewArrayNode" this (AbstractNewObjectNode'new-4 c, stamp, fillContents, stateBefore)
+            this (merge this (AbstractNewArrayNode'init-0))
             this (assoc this :length length)
         ]
             this
@@ -59342,14 +60829,19 @@ ZeroExtendNode'new-4
 (class-ns AbstractNewObjectNode (§ extends DeoptimizingFixedWithNextNode) (§ implements Lowerable)
     (§ def #_"NodeClass<AbstractNewObjectNode>" AbstractNewObjectNode'TYPE (NodeClass'create-1 AbstractNewObjectNode))
 
-    ;;;
-     ; {@code true} if the object's contents should be initialized to zero/nil
-     ;;
-    (§ final #_"boolean" :fillContents false)
+    (defn- #_"AbstractNewObjectNode" AbstractNewObjectNode'init-0 []
+        (hash-map
+            ;;;
+             ; {@code true} if the object's contents should be initialized to zero/nil
+             ;;
+            #_"boolean" :fillContents false
+        )
+    )
 
     (defn #_"AbstractNewObjectNode" AbstractNewObjectNode'new-4 [#_"NodeClass<? extends AbstractNewObjectNode>" c, #_"Stamp" stamp, #_"boolean" fillContents, #_"FrameState" stateBefore]
         (let [
             #_"AbstractNewObjectNode" this (DeoptimizingFixedWithNextNode'new-3 c, stamp, stateBefore)
+            this (merge this (AbstractNewObjectNode'init-0))
             this (assoc this :fillContents fillContents)
         ]
             this
@@ -59409,8 +60901,12 @@ ZeroExtendNode'new-4
 (class-ns AccessArrayNode (§ extends FixedWithNextNode)
     (§ def #_"NodeClass<AccessArrayNode>" AccessArrayNode'TYPE (NodeClass'create-1 AccessArrayNode))
 
-    ; @Input
-    (§ mutable #_"ValueNode" :array nil)
+    (defn- #_"AccessArrayNode" AccessArrayNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"ValueNode" :array nil
+        )
+    )
 
     ;;;
      ; Creates a new AccessArrayNode.
@@ -59420,6 +60916,7 @@ ZeroExtendNode'new-4
     (defn #_"AccessArrayNode" AccessArrayNode'new-3 [#_"NodeClass<? extends AccessArrayNode>" c, #_"Stamp" stamp, #_"ValueNode" array]
         (let [
             #_"AccessArrayNode" this (FixedWithNextNode'new-2 c, stamp)
+            this (merge this (AccessArrayNode'init-0))
             this (assoc this :array array)
         ]
             this
@@ -59433,12 +60930,16 @@ ZeroExtendNode'new-4
 (class-ns AccessFieldNode (§ extends FixedWithNextNode) (§ implements Lowerable)
     (§ def #_"NodeClass<AccessFieldNode>" AccessFieldNode'TYPE (NodeClass'create-1 AccessFieldNode))
 
-    ; @OptionalInput
-    (§ final #_"ValueNode" :object nil)
-    ;;;
-     ; The compiler interface field for this field access.
-     ;;
-    (§ final #_"ResolvedJavaField" :field nil)
+    (defn- #_"AccessFieldNode" AccessFieldNode'init-0 []
+        (hash-map
+            ; @OptionalInput
+            #_"ValueNode" :object nil
+            ;;;
+             ; The compiler interface field for this field access.
+             ;;
+            #_"ResolvedJavaField" :field nil
+        )
+    )
 
     ;;;
      ; Constructs a new access field object.
@@ -59449,6 +60950,7 @@ ZeroExtendNode'new-4
     (defn #_"AccessFieldNode" AccessFieldNode'new-4 [#_"NodeClass<? extends AccessFieldNode>" c, #_"Stamp" stamp, #_"ValueNode" object, #_"ResolvedJavaField" field]
         (let [
             #_"AccessFieldNode" this (FixedWithNextNode'new-2 c, stamp)
+            this (merge this (AccessFieldNode'init-0))
             this (assoc this :object object)
             this (assoc this :field field)
         ]
@@ -59533,12 +61035,16 @@ ZeroExtendNode'new-4
 (class-ns AccessIndexedNode (§ extends AccessArrayNode) (§ implements Lowerable)
     (§ def #_"NodeClass<AccessIndexedNode>" AccessIndexedNode'TYPE (NodeClass'create-1 AccessIndexedNode))
 
-    ; @Input
-    (§ final #_"ValueNode" :index nil)
-    ;;;
-     ; The element type of the array.
-     ;;
-    (§ final #_"JavaKind" :elementKind nil)
+    (defn- #_"AccessIndexedNode" AccessIndexedNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"ValueNode" :index nil
+            ;;;
+             ; The element type of the array.
+             ;;
+            #_"JavaKind" :elementKind nil
+        )
+    )
 
     (defn #_"ValueNode" AccessIndexedNode''index-1 [#_"AccessIndexedNode" this]
         (:index this)
@@ -59555,6 +61061,7 @@ ZeroExtendNode'new-4
     (defn #_"AccessIndexedNode" AccessIndexedNode'new-5 [#_"NodeClass<? extends AccessIndexedNode>" c, #_"Stamp" stamp, #_"ValueNode" array, #_"ValueNode" index, #_"JavaKind" elementKind]
         (let [
             #_"AccessIndexedNode" this (AccessArrayNode'new-3 c, stamp, array)
+            this (merge this (AccessIndexedNode'init-0))
             this (assoc this :index index)
             this (assoc this :elementKind elementKind)
         ]
@@ -59651,12 +61158,16 @@ ZeroExtendNode'new-4
 (class-ns AccessMonitorNode (§ extends AbstractMemoryCheckpoint) (§ implements MemoryCheckpoint, DeoptBefore, DeoptAfter)
     (§ def #_"NodeClass<AccessMonitorNode>" AccessMonitorNode'TYPE (NodeClass'create-1 AccessMonitorNode))
 
-    ; @OptionalInput
-    (§ mutable #_"FrameState" :stateBefore nil)
-    ; @Input
-    (§ final #_"ValueNode" :object nil)
-    ; @Input
-    (§ mutable #_"MonitorIdNode" :monitorId nil)
+    (defn- #_"AccessMonitorNode" AccessMonitorNode'init-0 []
+        (hash-map
+            ; @OptionalInput
+            #_"FrameState" :stateBefore nil
+            ; @Input
+            #_"ValueNode" :object nil
+            ; @Input
+            #_"MonitorIdNode" :monitorId nil
+        )
+    )
 
     (§ override #_"boolean" DeoptimizingNode'''canDeoptimize-1 [#_"AccessMonitorNode" this]
         true
@@ -59676,6 +61187,7 @@ ZeroExtendNode'new-4
     (defn #_"AccessMonitorNode" AccessMonitorNode'new-3 [#_"NodeClass<? extends AccessMonitorNode>" c, #_"ValueNode" object, #_"MonitorIdNode" monitorId]
         (let [
             #_"AccessMonitorNode" this (AbstractMemoryCheckpoint'new-2 c, VoidStamp'instance)
+            this (merge this (AccessMonitorNode'init-0))
             this (assoc this :object object)
             this (assoc this :monitorId monitorId)
         ]
@@ -59690,8 +61202,12 @@ ZeroExtendNode'new-4
 (final-ns ArrayLengthNode (§ extends FixedWithNextNode) (§ implements Unary #_"<ValueNode>", Lowerable, Virtualizable)
     (§ def #_"NodeClass<ArrayLengthNode>" ArrayLengthNode'TYPE (NodeClass'create-1 ArrayLengthNode))
 
-    ; @Input
-    (§ mutable #_"ValueNode" :array nil)
+    (defn- #_"ArrayLengthNode" ArrayLengthNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"ValueNode" :array nil
+        )
+    )
 
     (§ override! #_"ValueNode" Unary'''getValue-1 [#_"ArrayLengthNode" this]
         (:array this)
@@ -59700,6 +61216,7 @@ ZeroExtendNode'new-4
     (defn #_"ArrayLengthNode" ArrayLengthNode'new-1 [#_"ValueNode" array]
         (let [
             #_"ArrayLengthNode" this (FixedWithNextNode'new-2 ArrayLengthNode'TYPE, StampFactory'nonNegativeInt)
+            this (merge this (ArrayLengthNode'init-0))
             this (assoc this :array array)
         ]
             this
@@ -59803,17 +61320,21 @@ ZeroExtendNode'new-4
 (final-ns AtomicReadAndAddNode (§ extends AbstractMemoryCheckpoint) (§ implements LIRLowerable, Single)
     (§ def #_"NodeClass<AtomicReadAndAddNode>" AtomicReadAndAddNode'TYPE (NodeClass'create-1 AtomicReadAndAddNode))
 
-    ; @Input
-    (§ mutable #_"AddressNode" :address nil)
-    ; @Input
-    (§ mutable #_"ValueNode" :delta nil)
-
-    (§ final #_"LocationIdentity" :locationIdentity nil)
+    (defn- #_"AtomicReadAndAddNode" AtomicReadAndAddNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"AddressNode" :address nil
+            ; @Input
+            #_"ValueNode" :delta nil
+            #_"LocationIdentity" :locationIdentity nil
+        )
+    )
 
     #_unused
     (defn #_"AtomicReadAndAddNode" AtomicReadAndAddNode'new-3 [#_"AddressNode" address, #_"ValueNode" delta, #_"LocationIdentity" locationIdentity]
         (let [
             #_"AtomicReadAndAddNode" this (AbstractMemoryCheckpoint'new-2 AtomicReadAndAddNode'TYPE, (StampFactory'forKind-1 (ValueNodeImpl''getStackKind-1 delta)))
+            this (merge this (AtomicReadAndAddNode'init-0))
             this (assoc this :address address)
             this (assoc this :delta delta)
             this (assoc this :locationIdentity locationIdentity)
@@ -59839,20 +61360,24 @@ ZeroExtendNode'new-4
 (final-ns AtomicReadAndWriteNode (§ extends AbstractMemoryCheckpoint) (§ implements Lowerable, Single)
     (§ def #_"NodeClass<AtomicReadAndWriteNode>" AtomicReadAndWriteNode'TYPE (NodeClass'create-1 AtomicReadAndWriteNode))
 
-    ; @Input
-    (§ final #_"ValueNode" :object nil)
-    ; @Input
-    (§ final #_"ValueNode" :offset nil)
-    ; @Input
-    (§ mutable #_"ValueNode" :newValue nil)
-
-    (§ final #_"JavaKind" :valueKind nil)
-    (§ final #_"LocationIdentity" :locationIdentity nil)
+    (defn- #_"AtomicReadAndWriteNode" AtomicReadAndWriteNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"ValueNode" :object nil
+            ; @Input
+            #_"ValueNode" :offset nil
+            ; @Input
+            #_"ValueNode" :newValue nil
+            #_"JavaKind" :valueKind nil
+            #_"LocationIdentity" :locationIdentity nil
+        )
+    )
 
     #_unused
     (defn #_"AtomicReadAndWriteNode" AtomicReadAndWriteNode'new-5 [#_"ValueNode" object, #_"ValueNode" offset, #_"ValueNode" newValue, #_"JavaKind" valueKind, #_"LocationIdentity" locationIdentity]
         (let [
             #_"AtomicReadAndWriteNode" this (AbstractMemoryCheckpoint'new-2 AtomicReadAndWriteNode'TYPE, (StampFactory'forKind-1 (ValueNodeImpl''getStackKind-1 newValue)))
+            this (merge this (AtomicReadAndWriteNode'init-0))
             this (assoc this :object object)
             this (assoc this :offset offset)
             this (assoc this :newValue newValue)
@@ -59941,21 +61466,23 @@ ZeroExtendNode'new-4
 (final-ns DynamicNewArrayNode (§ extends AbstractNewArrayNode) (§ implements Canonicalizable)
     (§ def #_"NodeClass<DynamicNewArrayNode>" DynamicNewArrayNode'TYPE (NodeClass'create-1 DynamicNewArrayNode))
 
-    ; @Input
-    (§ mutable #_"ValueNode" :elementType nil)
-
-    ;;;
-     ; Class pointer to void.class needs to be exposed earlier than this node is lowered so that it
-     ; can be replaced by the AOT machinery. If it's not needed for lowering this input can be ignored.
-     ;;
-    ; @OptionalInput
-    (§ mutable #_"ValueNode" :voidClass nil)
-
-    ;;;
-     ; A non-nil value indicating the worst case element type. Mainly useful for distinguishing
-     ; Object arrays from primitive arrays.
-     ;;
-    (§ final #_"JavaKind" :knownElementKind nil)
+    (defn- #_"DynamicNewArrayNode" DynamicNewArrayNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"ValueNode" :elementType nil
+            ;;;
+             ; Class pointer to void.class needs to be exposed earlier than this node is lowered so that it
+             ; can be replaced by the AOT machinery. If it's not needed for lowering this input can be ignored.
+             ;;
+            ; @OptionalInput
+            #_"ValueNode" :voidClass nil
+            ;;;
+             ; A non-nil value indicating the worst case element type. Mainly useful for distinguishing
+             ; Object arrays from primitive arrays.
+             ;;
+            #_"JavaKind" :knownElementKind nil
+        )
+    )
 
     (§ intrinsic! #_"Object" DynamicNewArrayNode'newArray-3 [#_"Class" componentType, #_"int" length, #_@ConstantNodeParameter #_"boolean" fillContents])
 
@@ -59984,6 +61511,7 @@ ZeroExtendNode'new-4
     (defn #_"DynamicNewArrayNode" DynamicNewArrayNode'new-6 [#_"NodeClass<? extends DynamicNewArrayNode>" c, #_"ValueNode" elementType, #_"ValueNode" length, #_"boolean" fillContents, #_"JavaKind" knownElementKind, #_"FrameState" stateBefore]
         (let [
             #_"DynamicNewArrayNode" this (AbstractNewArrayNode'new-5 c, (DynamicNewArrayNode'computeStamp-1 knownElementKind), length, fillContents, stateBefore)
+            this (merge this (DynamicNewArrayNode'init-0))
             this (assoc this :elementType elementType)
             this (assoc this :knownElementKind knownElementKind)
         ]
@@ -60041,15 +61569,18 @@ ZeroExtendNode'new-4
 (final-ns DynamicNewInstanceNode (§ extends AbstractNewObjectNode) (§ implements Canonicalizable)
     (§ def #_"NodeClass<DynamicNewInstanceNode>" DynamicNewInstanceNode'TYPE (NodeClass'create-1 DynamicNewInstanceNode))
 
-    ; @Input
-    (§ mutable #_"ValueNode" :class nil)
-
-    ;;;
-     ; Class pointer to class.class needs to be exposed earlier than this node is lowered so that it
-     ; can be replaced by the AOT machinery. If it's not needed for lowering this input can be ignored.
-     ;;
-    ; @OptionalInput
-    (§ mutable #_"ValueNode" :classClass nil)
+    (defn- #_"DynamicNewInstanceNode" DynamicNewInstanceNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"ValueNode" :class nil
+            ;;;
+             ; Class pointer to class.class needs to be exposed earlier than this node is lowered so that it
+             ; can be replaced by the AOT machinery. If it's not needed for lowering this input can be ignored.
+             ;;
+            ; @OptionalInput
+            #_"ValueNode" :classClass nil
+        )
+    )
 
     #_unused
     (defn #_"DynamicNewInstanceNode" DynamicNewInstanceNode'new-2 [#_"ValueNode" clazz, #_"boolean" fillContents]
@@ -60059,6 +61590,7 @@ ZeroExtendNode'new-4
     (defn #_"DynamicNewInstanceNode" DynamicNewInstanceNode'new-4 [#_"NodeClass<? extends DynamicNewInstanceNode>" c, #_"ValueNode" clazz, #_"boolean" fillContents, #_"FrameState" stateBefore]
         (let [
             #_"DynamicNewInstanceNode" this (AbstractNewObjectNode'new-4 c, StampFactory'objectNonNullStamp, fillContents, stateBefore)
+            this (merge this (DynamicNewInstanceNode'init-0))
             this (assoc this :class clazz)
         ]
             this
@@ -60101,12 +61633,17 @@ ZeroExtendNode'new-4
 (final-ns FinalFieldBarrierNode (§ extends FixedWithNextNode) (§ implements Virtualizable, Lowerable)
     (§ def #_"NodeClass<FinalFieldBarrierNode>" FinalFieldBarrierNode'TYPE (NodeClass'create-1 FinalFieldBarrierNode))
 
-    ; @OptionalInput
-    (§ mutable #_"ValueNode" :value nil)
+    (defn- #_"FinalFieldBarrierNode" FinalFieldBarrierNode'init-0 []
+        (hash-map
+            ; @OptionalInput
+            #_"ValueNode" :value nil
+        )
+    )
 
     (defn #_"FinalFieldBarrierNode" FinalFieldBarrierNode'new-1 [#_"ValueNode" value]
         (let [
             #_"FinalFieldBarrierNode" this (FixedWithNextNode'new-2 FinalFieldBarrierNode'TYPE, VoidStamp'instance)
+            this (merge this (FinalFieldBarrierNode'init-0))
             this (assoc this :value value)
         ]
             this
@@ -60133,8 +61670,12 @@ ZeroExtendNode'new-4
 (final-ns InstanceOfDynamicNode (§ extends BinaryOpLogicNodeImpl) (§ implements Binary #_"<ValueNode>", Lowerable)
     (§ def #_"NodeClass<InstanceOfDynamicNode>" InstanceOfDynamicNode'TYPE (NodeClass'create-1 InstanceOfDynamicNode))
 
-    (§ final #_"boolean" :allow-nil? false)
-    (§ final #_"boolean" :exact? false)
+    (defn- #_"InstanceOfDynamicNode" InstanceOfDynamicNode'init-0 []
+        (hash-map
+            #_"boolean" :allow-nil? false
+            #_"boolean" :exact? false
+        )
+    )
 
     (defn #_"LogicNode" InstanceOfDynamicNode'create-4 [#_"ValueNode" mirror, #_"ValueNode" object, #_"boolean" allow-nil?, #_"boolean" exact?]
         (or (InstanceOfDynamicNode'findSynonym-4 mirror, object, allow-nil?, exact?)
@@ -60149,6 +61690,7 @@ ZeroExtendNode'new-4
     (defn #_"InstanceOfDynamicNode" InstanceOfDynamicNode'new-4 [#_"ValueNode" mirror, #_"ValueNode" object, #_"boolean" allow-nil?, #_"boolean" exact?]
         (let [
             #_"InstanceOfDynamicNode" this (BinaryOpLogicNodeImpl'new-3 InstanceOfDynamicNode'TYPE, mirror, object)
+            this (merge this (InstanceOfDynamicNode'init-0))
             this (assoc this :allow-nil? allow-nil?)
             this (assoc this :exact? exact?)
         ]
@@ -60240,10 +61782,13 @@ ZeroExtendNode'new-4
 (final-ns InstanceOfNode (§ extends UnaryOpLogicNodeImpl) (§ implements Lowerable, Virtualizable)
     (§ def #_"NodeClass<InstanceOfNode>" InstanceOfNode'TYPE (NodeClass'create-1 InstanceOfNode))
 
-    (§ mutable #_"ObjectStamp" :checkedStamp nil)
-
-    ; @OptionalInput(InputType'Anchor)
-    (§ mutable #_"AnchoringNode" :anchor nil)
+    (defn- #_"InstanceOfNode" InstanceOfNode'init-0 []
+        (hash-map
+            #_"ObjectStamp" :checkedStamp nil
+            ; @OptionalInput(InputType'Anchor)
+            #_"AnchoringNode" :anchor nil
+        )
+    )
 
     (defn- #_"InstanceOfNode" InstanceOfNode'new-3 [#_"ObjectStamp" checkedStamp, #_"ValueNode" object, #_"AnchoringNode" anchor]
         (InstanceOfNode'new-4 InstanceOfNode'TYPE, checkedStamp, object, anchor)
@@ -60252,6 +61797,7 @@ ZeroExtendNode'new-4
     (defn #_"InstanceOfNode" InstanceOfNode'new-4 [#_"NodeClass<? extends InstanceOfNode>" c, #_"ObjectStamp" checkedStamp, #_"ValueNode" object, #_"AnchoringNode" anchor]
         (let [
             #_"InstanceOfNode" this (UnaryOpLogicNodeImpl'new-2 c, object)
+            this (merge this (InstanceOfNode'init-0))
             this (assoc this :checkedStamp checkedStamp)
             this (assoc this :anchor anchor)
         ]
@@ -60374,11 +61920,16 @@ ZeroExtendNode'new-4
 (final-ns LoadFieldNode (§ extends AccessFieldNode) (§ implements Unary #_"<ValueNode>", Virtualizable)
     (§ def #_"NodeClass<LoadFieldNode>" LoadFieldNode'TYPE (NodeClass'create-1 LoadFieldNode))
 
-    (§ final #_"Stamp" :uncheckedStamp nil)
+    (defn- #_"LoadFieldNode" LoadFieldNode'init-0 []
+        (hash-map
+            #_"Stamp" :uncheckedStamp nil
+        )
+    )
 
-    (defn #_"LoadFieldNode" LoadFieldNode'new-3 [#_"StampPair" stamp, #_"ValueNode" object, #_"ResolvedJavaField" field]
+    (defn #_"LoadFieldNode" LoadFieldNode'new-3 [#_"StampPair" stamp, #_"ValueNode" object, #_"ResolvedJavaField" field]
         (let [
             #_"LoadFieldNode" this (AccessFieldNode'new-4 LoadFieldNode'TYPE, (:trustedStamp stamp), object, field)
+            this (merge this (LoadFieldNode'init-0))
             this (assoc this :uncheckedStamp (:uncheckedStamp stamp))
         ]
             this
@@ -60393,11 +61944,11 @@ ZeroExtendNode'new-4
         (LoadFieldNode'canonical-6 nil, (StampFactory'forDeclaredType-2 (#_"ResolvedJavaField" .getType field), false), object, field, canonicalizeReads, allUsagesAvailable)
     )
 
-    (defn #_"LoadFieldNode" LoadFieldNode'createOverrideStamp-3 [#_"StampPair" stamp, #_"ValueNode" object, #_"ResolvedJavaField" field]
+    (defn #_"LoadFieldNode" LoadFieldNode'createOverrideStamp-3 [#_"StampPair" stamp, #_"ValueNode" object, #_"ResolvedJavaField" field]
         (LoadFieldNode'new-3 stamp, object, field)
     )
 
-    (defn #_"ValueNode" LoadFieldNode'createOverrideStamp-5 [#_"StampPair" stamp, #_"ValueNode" object, #_"ResolvedJavaField" field, #_"boolean" canonicalizeReads, #_"boolean" allUsagesAvailable]
+    (defn #_"ValueNode" LoadFieldNode'createOverrideStamp-5 [#_"StampPair" stamp, #_"ValueNode" object, #_"ResolvedJavaField" field, #_"boolean" canonicalizeReads, #_"boolean" allUsagesAvailable]
         (LoadFieldNode'canonical-6 nil, stamp, object, field, canonicalizeReads, allUsagesAvailable)
     )
 
@@ -60439,7 +61990,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"ValueNode" LoadFieldNode'canonical-6 [#_"LoadFieldNode" self, #_"StampPair" stamp, #_"ValueNode" forObject, #_"ResolvedJavaField" field, #_"boolean" canonicalizeReads, #_"boolean" allUsagesAvailable]
+    (defn- #_"ValueNode" LoadFieldNode'canonical-6 [#_"LoadFieldNode" self, #_"StampPair" stamp, #_"ValueNode" forObject, #_"ResolvedJavaField" field, #_"boolean" canonicalizeReads, #_"boolean" allUsagesAvailable]
         (or
             (when (and canonicalizeReads (some? HotSpot'metaAccess))
                 (or
@@ -60618,14 +62169,19 @@ ZeroExtendNode'new-4
 (final-ns LoweredAtomicReadAndWriteNode (§ extends FixedAccessNode) (§ implements StateSplit, LIRLowerableAccess, Single)
     (§ def #_"NodeClass<LoweredAtomicReadAndWriteNode>" LoweredAtomicReadAndWriteNode'TYPE (NodeClass'create-1 LoweredAtomicReadAndWriteNode))
 
-    ; @Input
-    (§ mutable #_"ValueNode" :newValue nil)
-    ; @OptionalInput
-    (§ mutable #_"FrameState" :stateAfter nil)
+    (defn- #_"LoweredAtomicReadAndWriteNode" LoweredAtomicReadAndWriteNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"ValueNode" :newValue nil
+            ; @OptionalInput
+            #_"FrameState" :stateAfter nil
+        )
+    )
 
     (defn #_"LoweredAtomicReadAndWriteNode" LoweredAtomicReadAndWriteNode'new-4 [#_"AddressNode" address, #_"LocationIdentity" location, #_"ValueNode" newValue, #_"BarrierType" barrierType]
         (let [
             #_"LoweredAtomicReadAndWriteNode" this (FixedAccessNode'new-5 LoweredAtomicReadAndWriteNode'TYPE, address, location, (Stamp'''unrestricted-1 (:stamp newValue)), barrierType)
+            this (merge this (LoweredAtomicReadAndWriteNode'init-0))
             this (assoc this :newValue newValue)
         ]
             this
@@ -60663,11 +62219,11 @@ ZeroExtendNode'new-4
 (class-ns MethodCallTargetNode (§ extends CallTargetNode) (§ implements IterableNodeType, Simplifiable)
     (§ def #_"NodeClass<MethodCallTargetNode>" MethodCallTargetNode'TYPE (NodeClass'create-1 MethodCallTargetNode))
 
-    (defn #_"MethodCallTargetNode" MethodCallTargetNode'new-4 [#_"InvokeKind" invokeKind, #_"ResolvedJavaMethod" targetMethod, #_"ValueNode[]" arguments, #_"StampPair" returnStamp]
+    (defn #_"MethodCallTargetNode" MethodCallTargetNode'new-4 [#_"InvokeKind" invokeKind, #_"ResolvedJavaMethod" targetMethod, #_"ValueNode[]" arguments, #_"StampPair" returnStamp]
         (MethodCallTargetNode'new-5 MethodCallTargetNode'TYPE, invokeKind, targetMethod, arguments, returnStamp)
     )
 
-    (defn #_"MethodCallTargetNode" MethodCallTargetNode'new-5 [#_"NodeClass<? extends MethodCallTargetNode>" c, #_"InvokeKind" invokeKind, #_"ResolvedJavaMethod" targetMethod, #_"ValueNode[]" arguments, #_"StampPair" returnStamp]
+    (defn #_"MethodCallTargetNode" MethodCallTargetNode'new-5 [#_"NodeClass<? extends MethodCallTargetNode>" c, #_"InvokeKind" invokeKind, #_"ResolvedJavaMethod" targetMethod, #_"ValueNode[]" arguments, #_"StampPair" returnStamp]
         (CallTargetNode'new-5 c, arguments, targetMethod, invokeKind, returnStamp)
     )
 
@@ -60803,15 +62359,20 @@ ZeroExtendNode'new-4
 (final-ns MonitorExitNode (§ extends AccessMonitorNode) (§ implements Virtualizable, Lowerable, IterableNodeType, MonitorExit, Single)
     (§ def #_"NodeClass<MonitorExitNode>" MonitorExitNode'TYPE (NodeClass'create-1 MonitorExitNode))
 
-    ;;;
-     ; Non-null for the monitor exit introduced due to a synchronized root method and nil in all other cases.
-     ;;
-    ; @OptionalInput
-    (§ mutable #_"ValueNode" :escapedReturnValue nil)
+    (defn- #_"MonitorExitNode" MonitorExitNode'init-0 []
+        (hash-map
+            ;;;
+             ; Non-null for the monitor exit introduced due to a synchronized root method and nil in all other cases.
+             ;;
+            ; @OptionalInput
+            #_"ValueNode" :escapedReturnValue nil
+        )
+    )
 
     (defn #_"MonitorExitNode" MonitorExitNode'new-3 [#_"ValueNode" object, #_"MonitorIdNode" monitorId, #_"ValueNode" escapedReturnValue]
         (let [
             #_"MonitorExitNode" this (AccessMonitorNode'new-3 MonitorExitNode'TYPE, object, monitorId)
+            this (merge this (MonitorExitNode'init-0))
             this (assoc this :escapedReturnValue escapedReturnValue)
         ]
             this
@@ -60858,7 +62419,11 @@ ZeroExtendNode'new-4
 (final-ns MonitorIdNode (§ extends ValueNodeImpl) (§ implements IterableNodeType, LIRLowerable)
     (§ def #_"NodeClass<MonitorIdNode>" MonitorIdNode'TYPE (NodeClass'create-1 MonitorIdNode))
 
-    (§ mutable #_"int" :lockDepth 0)
+    (defn- #_"MonitorIdNode" MonitorIdNode'init-0 []
+        (hash-map
+            #_"int" :lockDepth 0
+        )
+    )
 
     (defn #_"MonitorIdNode" MonitorIdNode'new-1 [#_"int" lockDepth]
         (MonitorIdNode'new-2 MonitorIdNode'TYPE, lockDepth)
@@ -60867,6 +62432,7 @@ ZeroExtendNode'new-4
     (defn #_"MonitorIdNode" MonitorIdNode'new-2 [#_"NodeClass<? extends MonitorIdNode>" c, #_"int" lockDepth]
         (let [
             #_"MonitorIdNode" this (ValueNodeImpl'new-2 c, VoidStamp'instance)
+            this (merge this (MonitorIdNode'init-0))
             this (assoc this :lockDepth lockDepth)
         ]
             this
@@ -60890,7 +62456,11 @@ ZeroExtendNode'new-4
 (final-ns NewArrayNode (§ extends AbstractNewArrayNode) (§ implements VirtualizableAllocation, Simplifiable)
     (§ def #_"NodeClass<NewArrayNode>" NewArrayNode'TYPE (NodeClass'create-1 NewArrayNode))
 
-    (§ final #_"ResolvedJavaType" :elementType nil)
+    (defn- #_"NewArrayNode" NewArrayNode'init-0 []
+        (hash-map
+            #_"ResolvedJavaType" :elementType nil
+        )
+    )
 
     (§ intrinsic! #_"Object" NewArrayNode'newArray-3 [#_@ConstantNodeParameter #_"Class" elementType, #_"int" length, #_@ConstantNodeParameter #_"boolean" fillContents])
 
@@ -60906,6 +62476,7 @@ ZeroExtendNode'new-4
     (defn #_"NewArrayNode" NewArrayNode'new-5 [#_"NodeClass<? extends NewArrayNode>" c, #_"ResolvedJavaType" elementType, #_"ValueNode" length, #_"boolean" fillContents, #_"FrameState" stateBefore]
         (let [
             #_"NewArrayNode" this (AbstractNewArrayNode'new-5 c, (StampFactory'objectNonNull-1 (TypeReference'createExactTrusted-1 (#_"ResolvedJavaType" .getArrayClass elementType))), length, fillContents, stateBefore)
+            this (merge this (NewArrayNode'init-0))
             this (assoc this :elementType elementType)
         ]
             this
@@ -60975,10 +62546,14 @@ ZeroExtendNode'new-4
 (final-ns NewInstanceNode (§ extends AbstractNewObjectNode) (§ implements VirtualizableAllocation)
     (§ def #_"NodeClass<NewInstanceNode>" NewInstanceNode'TYPE (NodeClass'create-1 NewInstanceNode))
 
-    ;;;
-     ; The instance class being allocated by this node.
-     ;;
-    (§ final #_"ResolvedJavaType" :instanceClass nil)
+    (defn- #_"NewInstanceNode" NewInstanceNode'init-0 []
+        (hash-map
+            ;;;
+             ; The instance class being allocated by this node.
+             ;;
+            #_"ResolvedJavaType" :instanceClass nil
+        )
+    )
 
     (defn #_"NewInstanceNode" NewInstanceNode'new-2 [#_"ResolvedJavaType" type, #_"boolean" fillContents]
         (NewInstanceNode'new-4 NewInstanceNode'TYPE, type, fillContents, nil)
@@ -60991,6 +62566,7 @@ ZeroExtendNode'new-4
     (defn #_"NewInstanceNode" NewInstanceNode'new-4 [#_"NodeClass<? extends NewInstanceNode>" c, #_"ResolvedJavaType" type, #_"boolean" fillContents, #_"FrameState" stateBefore]
         (let [
             #_"NewInstanceNode" this (AbstractNewObjectNode'new-4 c, (StampFactory'objectNonNull-1 (TypeReference'createExactTrusted-1 type)), fillContents, stateBefore)
+            this (merge this (NewInstanceNode'init-0))
             this (assoc this :instanceClass type)
         ]
             this
@@ -61032,12 +62608,17 @@ ZeroExtendNode'new-4
 (final-ns RawMonitorEnterNode (§ extends AccessMonitorNode) (§ implements Virtualizable, Lowerable, IterableNodeType, MonitorEnter, Single)
     (§ def #_"NodeClass<RawMonitorEnterNode>" RawMonitorEnterNode'TYPE (NodeClass'create-1 RawMonitorEnterNode))
 
-    ; @Input
-    (§ mutable #_"ValueNode" :hub nil)
+    (defn- #_"RawMonitorEnterNode" RawMonitorEnterNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"ValueNode" :hub nil
+        )
+    )
 
     (defn #_"RawMonitorEnterNode" RawMonitorEnterNode'new-3 [#_"ValueNode" object, #_"ValueNode" hub, #_"MonitorIdNode" monitorId]
         (let [
             #_"RawMonitorEnterNode" this (AccessMonitorNode'new-3 RawMonitorEnterNode'TYPE, object, monitorId)
+            this (merge this (RawMonitorEnterNode'init-0))
             this (assoc this :hub hub)
         ]
             this
@@ -61075,10 +62656,14 @@ ZeroExtendNode'new-4
 (final-ns StoreFieldNode (§ extends AccessFieldNode) (§ implements StateSplit, Virtualizable)
     (§ def #_"NodeClass<StoreFieldNode>" StoreFieldNode'TYPE (NodeClass'create-1 StoreFieldNode))
 
-    ; @Input
-    (§ mutable #_"ValueNode" :value nil)
-    ; @OptionalInput
-    (§ mutable #_"FrameState" :stateAfter nil)
+    (defn- #_"StoreFieldNode" StoreFieldNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"ValueNode" :value nil
+            ; @OptionalInput
+            #_"FrameState" :stateAfter nil
+        )
+    )
 
     (§ override! #_"void" StateSplit'''setStateAfter-2 [#_"StoreFieldNode" this, #_"FrameState" x]
         (NodeImpl''updateUsages-3 this, (:stateAfter this), x)
@@ -61093,6 +62678,7 @@ ZeroExtendNode'new-4
     (defn #_"StoreFieldNode" StoreFieldNode'new-3 [#_"ValueNode" object, #_"ResolvedJavaField" field, #_"ValueNode" value]
         (let [
             #_"StoreFieldNode" this (AccessFieldNode'new-4 StoreFieldNode'TYPE, VoidStamp'instance, object, field)
+            this (merge this (StoreFieldNode'init-0))
             this (assoc this :value value)
         ]
             this
@@ -61102,6 +62688,7 @@ ZeroExtendNode'new-4
     (defn #_"StoreFieldNode" StoreFieldNode'new-4 [#_"ValueNode" object, #_"ResolvedJavaField" field, #_"ValueNode" value, #_"FrameState" stateAfter]
         (let [
             #_"StoreFieldNode" this (AccessFieldNode'new-4 StoreFieldNode'TYPE, VoidStamp'instance, object, field)
+            this (merge this (StoreFieldNode'init-0))
             this (assoc this :value value)
             this (assoc this :stateAfter stateAfter)
         ]
@@ -61134,10 +62721,14 @@ ZeroExtendNode'new-4
 (final-ns StoreIndexedNode (§ extends AccessIndexedNode) (§ implements StateSplit, Lowerable, Virtualizable)
     (§ def #_"NodeClass<StoreIndexedNode>" StoreIndexedNode'TYPE (NodeClass'create-1 StoreIndexedNode))
 
-    ; @Input
-    (§ mutable #_"ValueNode" :value nil)
-    ; @OptionalInput
-    (§ mutable #_"FrameState" :stateAfter nil)
+    (defn- #_"StoreIndexedNode" StoreIndexedNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"ValueNode" :value nil
+            ; @OptionalInput
+            #_"FrameState" :stateAfter nil
+        )
+    )
 
     (§ override! #_"void" StateSplit'''setStateAfter-2 [#_"StoreIndexedNode" this, #_"FrameState" x]
         (NodeImpl''updateUsages-3 this, (:stateAfter this), x)
@@ -61152,6 +62743,7 @@ ZeroExtendNode'new-4
     (defn #_"StoreIndexedNode" StoreIndexedNode'new-4 [#_"ValueNode" array, #_"ValueNode" index, #_"JavaKind" elementKind, #_"ValueNode" value]
         (let [
             #_"StoreIndexedNode" this (AccessIndexedNode'new-5 StoreIndexedNode'TYPE, VoidStamp'instance, array, index, elementKind)
+            this (merge this (StoreIndexedNode'init-0))
             this (assoc this :value value)
         ]
             this
@@ -61191,22 +62783,26 @@ ZeroExtendNode'new-4
 (final-ns UnsafeCompareAndSwapNode (§ extends AbstractMemoryCheckpoint) (§ implements Lowerable, Single)
     (§ def #_"NodeClass<UnsafeCompareAndSwapNode>" UnsafeCompareAndSwapNode'TYPE (NodeClass'create-1 UnsafeCompareAndSwapNode))
 
-    ; @Input
-    (§ final #_"ValueNode" :object nil)
-    ; @Input
-    (§ final #_"ValueNode" :offset nil)
-    ; @Input
-    (§ mutable #_"ValueNode" :expected nil)
-    ; @Input
-    (§ mutable #_"ValueNode" :newValue nil)
-
-    (§ final #_"JavaKind" :valueKind nil)
-    (§ final #_"LocationIdentity" :locationIdentity nil)
+    (defn- #_"UnsafeCompareAndSwapNode" UnsafeCompareAndSwapNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"ValueNode" :object nil
+            ; @Input
+            #_"ValueNode" :offset nil
+            ; @Input
+            #_"ValueNode" :expected nil
+            ; @Input
+            #_"ValueNode" :newValue nil
+            #_"JavaKind" :valueKind nil
+            #_"LocationIdentity" :locationIdentity nil
+        )
+    )
 
     #_unused
     (defn #_"UnsafeCompareAndSwapNode" UnsafeCompareAndSwapNode'new-6 [#_"ValueNode" object, #_"ValueNode" offset, #_"ValueNode" expected, #_"ValueNode" newValue, #_"JavaKind" valueKind, #_"LocationIdentity" locationIdentity]
         (let [
             #_"UnsafeCompareAndSwapNode" this (AbstractMemoryCheckpoint'new-2 UnsafeCompareAndSwapNode'TYPE, (StampFactory'forKind-1 (#_"JavaKind" .getStackKind JavaKind/Boolean)))
+            this (merge this (UnsafeCompareAndSwapNode'init-0))
             this (assoc this :object object)
             this (assoc this :offset offset)
             this (assoc this :expected expected)
@@ -61266,11 +62862,16 @@ ZeroExtendNode'new-4
 (final-ns LogicConstantNode (§ extends LogicNode) (§ implements LIRLowerable)
     (§ def #_"NodeClass<LogicConstantNode>" LogicConstantNode'TYPE (NodeClass'create-1 LogicConstantNode))
 
-    (§ final #_"boolean" :value false)
+    (defn- #_"LogicConstantNode" LogicConstantNode'init-0 []
+        (hash-map
+            #_"boolean" :value false
+        )
+    )
 
     (defn #_"LogicConstantNode" LogicConstantNode'new-1 [#_"boolean" value]
         (let [
             #_"LogicConstantNode" this (LogicNode'new-1 LogicConstantNode'TYPE)
+            this (merge this (LogicConstantNode'init-0))
             this (assoc this :value value)
         ]
             this
@@ -61338,12 +62939,17 @@ ZeroExtendNode'new-4
 (final-ns LogicNegationNode (§ extends LogicNode) (§ implements Unary #_"<LogicNode>")
     (§ def #_"NodeClass<LogicNegationNode>" LogicNegationNode'TYPE (NodeClass'create-1 LogicNegationNode))
 
-    ; @Input
-    (§ mutable #_"LogicNode" :value nil)
+    (defn- #_"LogicNegationNode" LogicNegationNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"LogicNode" :value nil
+        )
+    )
 
     (defn #_"LogicNegationNode" LogicNegationNode'new-1 [#_"LogicNode" value]
         (let [
             #_"LogicNegationNode" this (LogicNode'new-1 LogicNegationNode'TYPE)
+            this (merge this (LogicNegationNode'init-0))
             this (assoc this :value value)
         ]
             this
@@ -61421,25 +63027,28 @@ ZeroExtendNode'new-4
 (final-ns LoopBeginNode (§ extends AbstractMergeNodeImpl) (§ implements IterableNodeType, LIRLowerable)
     (§ def #_"NodeClass<LoopBeginNode>" LoopBeginNode'TYPE (NodeClass'create-1 LoopBeginNode))
 
-    (§ mutable #_"double" :loopFrequency 0.0)
-    (§ mutable #_"double" :loopOrigFrequency 0.0)
-    (§ mutable #_"int" :nextEndIndex 0)
-    (§ mutable #_"int" :unswitches 0)
-    (§ mutable #_"int" :splits 0)
-    (§ mutable #_"LoopType" :loopType nil)
-    (§ mutable #_"int" :unrollFactor 0)
-
-    ;;;
-     ; See LoopEndNode#canSafepoint for more information.
-     ;;
-    (§ mutable #_"boolean" :canEndsSafepoint false)
-
-    ; @OptionalInput(InputType'Guard)
-    (§ mutable #_"GuardingNode" :overflowGuard nil)
+    (defn- #_"LoopBeginNode" LoopBeginNode'init-0 []
+        (hash-map
+            #_"double" :loopFrequency 0.0
+            #_"double" :loopOrigFrequency 0.0
+            #_"int" :nextEndIndex 0
+            #_"int" :unswitches 0
+            #_"int" :splits 0
+            #_"LoopType" :loopType nil
+            #_"int" :unrollFactor 0
+            ;;;
+             ; See LoopEndNode#canSafepoint for more information.
+             ;;
+            #_"boolean" :canEndsSafepoint false
+            ; @OptionalInput(InputType'Guard)
+            #_"GuardingNode" :overflowGuard nil
+        )
+    )
 
     (defn #_"LoopBeginNode" LoopBeginNode'new-0 []
         (let [
             #_"LoopBeginNode" this (AbstractMergeNodeImpl'new-1 LoopBeginNode'TYPE)
+            this (merge this (LoopBeginNode'init-0))
             this (assoc this :loopFrequency 1)
             this (assoc this :loopOrigFrequency 1)
             this (assoc this :unswitches 0)
@@ -61789,38 +63398,44 @@ ZeroExtendNode'new-4
 (final-ns LoopEndNode (§ extends AbstractEndNodeImpl)
     (§ def #_"NodeClass<LoopEndNode>" LoopEndNode'TYPE (NodeClass'create-1 LoopEndNode))
 
-    ;; The declared type of the field cannot be LoopBeginNode, because loop explosion during partial
-    ;; evaluation can temporarily assign a non-loop begin. This node will then be deleted shortly
-    ;; after - but we still must not have type system violations for that short amount of time.
-    ; @Input
-    (§ mutable #_"AbstractBeginNode" :loopBegin nil)
-    ;;;
-     ; The index of this loop end amongst its LoopBeginNode's loop ends.
-     ;
-     ; Since a LoopBeginNode also has {@linkplain LoopBeginNode#forwardEnds() forward ends},
-     ; this is *not* the index into PhiNode values at the loop begin.
-     ; Use LoopBeginNode#phiPredecessorIndex(AbstractEndNode) for this purpose.
-     ;;
-    (§ mutable #_"int" :endIndex 0)
-
-    ;;;
-     ; Most loop ends need a safepoint (flag set to true) so that garbage collection can interrupt
-     ; a long-running (possibly endless) loop. Safepoints may be disabled for two reasons: (1) Some
-     ; code must be safepoint free, i.e. uninterruptible by garbage collection. (2) An optimization
-     ; phase determined that the loop already has another safepoint or cannot be endless, so there
-     ; is no need for a loop-end safepoint.
-     ;
-     ; Note that (1) is a hard correctness issue: emitting a safepoint in uninterruptible code is a bug,
-     ; i.e. it is not allowed to set the flag back to true once it is false. To ensure that loop ends
-     ; that are created late, e.g. during control flow simplifications, have no safepoints in such cases,
-     ; the safepoints are actually disabled for the {@link LoopBeginNode#canEndsSafepoint loop begin}.
-     ; New loop ends inherit the flag value from the loop begin.
-     ;;
-    (§ mutable #_"boolean" :canSafepoint false)
+    (defn- #_"LoopEndNode" LoopEndNode'init-0 []
+        (hash-map
+            ;;;
+             ; The declared type of the field cannot be LoopBeginNode, because loop explosion during partial
+             ; evaluation can temporarily assign a non-loop begin. This node will then be deleted shortly
+             ; after - but we still must not have type system violations for that short amount of time.
+             ;;
+            ; @Input
+            #_"AbstractBeginNode" :loopBegin nil
+            ;;;
+             ; The index of this loop end amongst its LoopBeginNode's loop ends.
+             ;
+             ; Since a LoopBeginNode also has {@linkplain LoopBeginNode#forwardEnds() forward ends},
+             ; this is *not* the index into PhiNode values at the loop begin.
+             ; Use LoopBeginNode#phiPredecessorIndex(AbstractEndNode) for this purpose.
+             ;;
+            #_"int" :endIndex 0
+            ;;;
+             ; Most loop ends need a safepoint (flag set to true) so that garbage collection can interrupt
+             ; a long-running (possibly endless) loop. Safepoints may be disabled for two reasons: (1) Some
+             ; code must be safepoint free, i.e. uninterruptible by garbage collection. (2) An optimization
+             ; phase determined that the loop already has another safepoint or cannot be endless, so there
+             ; is no need for a loop-end safepoint.
+             ;
+             ; Note that (1) is a hard correctness issue: emitting a safepoint in uninterruptible code is a bug,
+             ; i.e. it is not allowed to set the flag back to true once it is false. To ensure that loop ends
+             ; that are created late, e.g. during control flow simplifications, have no safepoints in such cases,
+             ; the safepoints are actually disabled for the {@link LoopBeginNode#canEndsSafepoint loop begin}.
+             ; New loop ends inherit the flag value from the loop begin.
+             ;;
+            #_"boolean" :canSafepoint false
+        )
+    )
 
     (defn #_"LoopEndNode" LoopEndNode'new-1 [#_"LoopBeginNode" begin]
         (let [
             #_"LoopEndNode" this (AbstractEndNodeImpl'new-1 LoopEndNode'TYPE)
+            this (merge this (LoopEndNode'init-0))
             this (assoc this :endIndex (LoopBeginNode''nextEndIndex-1 begin))
             this (assoc this :loopBegin begin)
             this (assoc this :canSafepoint (:canEndsSafepoint begin))
@@ -61864,15 +63479,20 @@ ZeroExtendNode'new-4
 (final-ns LoopExitNode (§ extends BeginStateSplitNode) (§ implements IterableNodeType, Simplifiable)
     (§ def #_"NodeClass<LoopExitNode>" LoopExitNode'TYPE (NodeClass'create-1 LoopExitNode))
 
-    ;; The declared type of the field cannot be LoopBeginNode, because loop explosion during partial
-    ;; evaluation can temporarily assign a non-loop begin. This node will then be deleted shortly
-    ;; after - but we still must not have type system violations for that short amount of time.
-    ; @Input
-    (§ mutable #_"AbstractBeginNode" :loopBegin nil)
+    (defn- #_"LoopExitNode" LoopExitNode'init-0 []
+        (hash-map
+            ;; The declared type of the field cannot be LoopBeginNode, because loop explosion during partial
+            ;; evaluation can temporarily assign a non-loop begin. This node will then be deleted shortly
+            ;; after - but we still must not have type system violations for that short amount of time.
+            ; @Input
+            #_"AbstractBeginNode" :loopBegin nil
+        )
+    )
 
     (defn #_"LoopExitNode" LoopExitNode'new-1 [#_"LoopBeginNode" loop]
         (let [
             #_"LoopExitNode" this (BeginStateSplitNode'new-1 LoopExitNode'TYPE)
+            this (merge this (LoopExitNode'init-0))
             this (assoc this :loopBegin loop)
         ]
             this
@@ -61936,12 +63556,17 @@ ZeroExtendNode'new-4
 (class-ns LoweredCallTargetNode (§ extends CallTargetNode)
     (§ def #_"NodeClass<LoweredCallTargetNode>" LoweredCallTargetNode'TYPE (NodeClass'create-1 LoweredCallTargetNode))
 
-    (§ final #_"JavaType[]" :signature nil)
-    (§ final #_"CallingConvention$Type" :callType nil)
+    (defn- #_"LoweredCallTargetNode" LoweredCallTargetNode'init-0 []
+        (hash-map
+            #_"JavaType[]" :signature nil
+            #_"CallingConvention$Type" :callType nil
+        )
+    )
 
-    (defn #_"LoweredCallTargetNode" LoweredCallTargetNode'new-7 [#_"NodeClass<? extends LoweredCallTargetNode>" c, #_"ValueNode[]" arguments, #_"StampPair" returnStamp, #_"JavaType[]" signature, #_"ResolvedJavaMethod" target, #_"CallingConvention$Type" callType, #_"InvokeKind" invokeKind]
+    (defn #_"LoweredCallTargetNode" LoweredCallTargetNode'new-7 [#_"NodeClass<? extends LoweredCallTargetNode>" c, #_"ValueNode[]" arguments, #_"StampPair" returnStamp, #_"JavaType[]" signature, #_"ResolvedJavaMethod" target, #_"CallingConvention$Type" callType, #_"InvokeKind" invokeKind]
         (let [
             #_"LoweredCallTargetNode" this (CallTargetNode'new-5 c, arguments, target, invokeKind, returnStamp)
+            this (merge this (LoweredCallTargetNode'init-0))
             this (assoc this :signature signature)
             this (assoc this :callType callType)
         ]
@@ -61976,12 +63601,16 @@ ZeroExtendNode'new-4
 (class-ns AbstractWriteNode (§ extends FixedAccessNode) (§ implements StateSplit, Single, MemoryAccess, GuardingNode)
     (§ def #_"NodeClass<AbstractWriteNode>" AbstractWriteNode'TYPE (NodeClass'create-1 AbstractWriteNode))
 
-    ; @Input
-    (§ mutable #_"ValueNode" :value nil)
-    ; @OptionalInput
-    (§ mutable #_"FrameState" :stateAfter nil)
-    ; @OptionalInput(InputType'Memory)
-    (§ mutable #_"Node" :lastLocationAccess nil)
+    (defn- #_"AbstractWriteNode" AbstractWriteNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"ValueNode" :value nil
+            ; @OptionalInput
+            #_"FrameState" :stateAfter nil
+            ; @OptionalInput(InputType'Memory)
+            #_"Node" :lastLocationAccess nil
+        )
+    )
 
     (§ override #_"void" StateSplit'''setStateAfter-2 [#_"AbstractWriteNode" this, #_"FrameState" x]
         (NodeImpl''updateUsages-3 this, (:stateAfter this), x)
@@ -61996,6 +63625,7 @@ ZeroExtendNode'new-4
     (defn #_"AbstractWriteNode" AbstractWriteNode'new-5 [#_"NodeClass<? extends AbstractWriteNode>" c, #_"AddressNode" address, #_"LocationIdentity" location, #_"ValueNode" value, #_"BarrierType" barrierType]
         (let [
             #_"AbstractWriteNode" this (FixedAccessNode'new-5 c, address, location, VoidStamp'instance, barrierType)
+            this (merge this (AbstractWriteNode'init-0))
             this (assoc this :value value)
         ]
             this
@@ -62024,10 +63654,14 @@ ZeroExtendNode'new-4
 (final-ns OffsetAddressNode (§ extends AddressNodeImpl) (§ implements Canonicalizable)
     (§ def #_"NodeClass<OffsetAddressNode>" OffsetAddressNode'TYPE (NodeClass'create-1 OffsetAddressNode))
 
-    ; @Input
-    (§ final #_"ValueNode" :base nil)
-    ; @Input
-    (§ final #_"ValueNode" :offset nil)
+    (defn- #_"OffsetAddressNode" OffsetAddressNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"ValueNode" :base nil
+            ; @Input
+            #_"ValueNode" :offset nil
+        )
+    )
 
     (§ intrinsic! #_"Address" OffsetAddressNode'address-2 [#_"Object" base, #_"long" offset])
 
@@ -62035,6 +63669,7 @@ ZeroExtendNode'new-4
     (defn #_"OffsetAddressNode" OffsetAddressNode'new-2 [#_"ValueNode" base, #_"ValueNode" offset]
         (let [
             #_"OffsetAddressNode" this (AddressNodeImpl'new-1 OffsetAddressNode'TYPE)
+            this (merge this (OffsetAddressNode'init-0))
             this (assoc this :base base)
             this (assoc this :offset offset)
         ]
@@ -62084,15 +63719,17 @@ ZeroExtendNode'new-4
 (class-ns FixedAccessNode (§ extends DeoptimizingFixedWithNextNode) (§ implements Access, IterableNodeType)
     (§ def #_"NodeClass<FixedAccessNode>" FixedAccessNode'TYPE (NodeClass'create-1 FixedAccessNode))
 
-    ; @OptionalInput(InputType'Guard)
-    (§ mutable #_"GuardingNode" :guard nil)
-
-    ; @Input
-    (§ mutable #_"AddressNode" :address nil)
-    (§ final #_"LocationIdentity" :location nil)
-
-    (§ mutable #_"boolean" :nullCheck false)
-    (§ mutable #_"BarrierType" :barrierType nil)
+    (defn- #_"FixedAccessNode" FixedAccessNode'init-0 []
+        (hash-map
+            ; @OptionalInput(InputType'Guard)
+            #_"GuardingNode" :guard nil
+            ; @Input
+            #_"AddressNode" :address nil
+            #_"LocationIdentity" :location nil
+            #_"boolean" :nullCheck false
+            #_"BarrierType" :barrierType nil
+        )
+    )
 
     (§ override #_"AddressNode" Access'''getAddress-1 [#_"FixedAccessNode" this]
         (:address this)
@@ -62117,6 +63754,7 @@ ZeroExtendNode'new-4
     (defn #_"FixedAccessNode" FixedAccessNode'new-8 [#_"NodeClass<? extends FixedAccessNode>" c, #_"AddressNode" address, #_"LocationIdentity" location, #_"Stamp" stamp, #_"GuardingNode" guard, #_"BarrierType" barrierType, #_"boolean" nullCheck, #_"FrameState" stateBefore]
         (let [
             #_"FixedAccessNode" this (DeoptimizingFixedWithNextNode'new-3 c, stamp, stateBefore)
+            this (merge this (FixedAccessNode'init-0))
             this (assoc this :address address)
             this (assoc this :location location)
             this (assoc this :guard guard)
@@ -62149,20 +63787,30 @@ ZeroExtendNode'new-4
 (class-ns FloatableAccessNodeImpl (§ extends FixedAccessNode) (§ implements FloatableAccessNode)
     (§ def #_"NodeClass<FloatableAccessNode>" FloatableAccessNodeImpl'TYPE (NodeClass'create-1 FloatableAccessNodeImpl))
 
-    (§ final #_"boolean" :forceFixed false)
+    (defn- #_"FloatableAccessNodeImpl" FloatableAccessNodeImpl'init-0 []
+        (hash-map
+            #_"boolean" :forceFixed false
+        )
+    )
 
     #_unused
     (defn #_"FloatableAccessNode" FloatableAccessNodeImpl'new-4 [#_"NodeClass<? implements FloatableAccessNode>" c, #_"AddressNode" address, #_"LocationIdentity" location, #_"Stamp" stamp]
-        (FixedAccessNode'new-4 c, address, location, stamp)
+        (merge (FixedAccessNode'new-4 c, address, location, stamp)
+            (FloatableAccessNodeImpl'init-0)
+        )
     )
 
     #_unused
     (defn #_"FloatableAccessNode" FloatableAccessNodeImpl'new-6 [#_"NodeClass<? implements FloatableAccessNode>" c, #_"AddressNode" address, #_"LocationIdentity" location, #_"Stamp" stamp, #_"GuardingNode" guard, #_"BarrierType" barrierType]
-        (FixedAccessNode'new-8 c, address, location, stamp, guard, barrierType, false, nil)
+        (merge (FixedAccessNode'new-8 c, address, location, stamp, guard, barrierType, false, nil)
+            (FloatableAccessNodeImpl'init-0)
+        )
     )
 
     (defn #_"FloatableAccessNode" FloatableAccessNodeImpl'new-8 [#_"NodeClass<? implements FloatableAccessNode>" c, #_"AddressNode" address, #_"LocationIdentity" location, #_"Stamp" stamp, #_"GuardingNode" guard, #_"BarrierType" barrierType, #_"boolean" nullCheck, #_"FrameState" stateBefore]
-        (FixedAccessNode'new-8 c, address, location, stamp, guard, barrierType, nullCheck, stateBefore)
+        (merge (FixedAccessNode'new-8 c, address, location, stamp, guard, barrierType, nullCheck, stateBefore)
+            (FloatableAccessNodeImpl'init-0)
+        )
     )
 
     (defn #_"FloatableAccessNode" FloatableAccessNodeImpl''setForceFixed-2 [#_"FloatableAccessNode" this, #_"boolean" flag]
@@ -62182,16 +63830,20 @@ ZeroExtendNode'new-4
 (class-ns FloatingAccessNodeImpl (§ extends FloatingGuardedNode) (§ implements FloatingAccessNode, Access, MemoryAccess)
     (§ def #_"NodeClass<FloatingAccessNode>" FloatingAccessNodeImpl'TYPE (NodeClass'create-1 FloatingAccessNodeImpl))
 
-    ; @Input
-    (§ mutable #_"AddressNode" :address nil)
-    (§ final #_"LocationIdentity" :location nil)
-
-    (§ mutable #_"BarrierType" :barrierType nil)
+    (defn- #_"FloatingAccessNodeImpl" FloatingAccessNodeImpl'init-0 []
+        (hash-map
+            ; @Input
+            #_"AddressNode" :address nil
+            #_"LocationIdentity" :location nil
+            #_"BarrierType" :barrierType nil
+        )
+    )
 
     #_unused
     (defn #_"FloatingAccessNode" FloatingAccessNodeImpl'new-4 [#_"NodeClass<? implements FloatingAccessNode>" c, #_"AddressNode" address, #_"LocationIdentity" location, #_"Stamp" stamp]
         (let [
             #_"FloatingAccessNode" this (FloatingGuardedNode'new-2 c, stamp)
+            this (merge this (FloatingAccessNodeImpl'init-0))
             this (assoc this :address address)
             this (assoc this :location location)
         ]
@@ -62202,6 +63854,7 @@ ZeroExtendNode'new-4
     (defn #_"FloatingAccessNode" FloatingAccessNodeImpl'new-6 [#_"NodeClass<? implements FloatingAccessNode>" c, #_"AddressNode" address, #_"LocationIdentity" location, #_"Stamp" stamp, #_"GuardingNode" guard, #_"BarrierType" barrierType]
         (let [
             #_"FloatingAccessNode" this (FloatingGuardedNode'new-3 c, stamp, guard)
+            this (merge this (FloatingAccessNodeImpl'init-0))
             this (assoc this :address address)
             this (assoc this :location location)
             this (assoc this :barrierType barrierType)
@@ -62234,8 +63887,12 @@ ZeroExtendNode'new-4
 (final-ns FloatingReadNode (§ extends FloatingAccessNodeImpl) (§ implements LIRLowerableAccess, Canonicalizable)
     (§ def #_"NodeClass<FloatingReadNode>" FloatingReadNode'TYPE (NodeClass'create-1 FloatingReadNode))
 
-    ; @OptionalInput(InputType'Memory)
-    (§ mutable #_"MemoryNode" :lastLocationAccess nil)
+    (defn- #_"FloatingReadNode" FloatingReadNode'init-0 []
+        (hash-map
+            ; @OptionalInput(InputType'Memory)
+            #_"MemoryNode" :lastLocationAccess nil
+        )
+    )
 
     #_unused
     (defn #_"FloatingReadNode" FloatingReadNode'new-4 [#_"AddressNode" address, #_"LocationIdentity" location, #_"MemoryNode" lastLocationAccess, #_"Stamp" stamp]
@@ -62249,6 +63906,7 @@ ZeroExtendNode'new-4
     (defn #_"FloatingReadNode" FloatingReadNode'new-6 [#_"AddressNode" address, #_"LocationIdentity" location, #_"MemoryNode" lastLocationAccess, #_"Stamp" stamp, #_"GuardingNode" guard, #_"BarrierType" barrierType]
         (let [
             #_"FloatingReadNode" this (FloatingAccessNodeImpl'new-6 FloatingReadNode'TYPE, address, location, stamp, guard, barrierType)
+            this (merge this (FloatingReadNode'init-0))
             this (assoc this :lastLocationAccess lastLocationAccess)
         ]
             ;; The input to floating reads must be always non-nil or have at least a guard.
@@ -62346,13 +64004,18 @@ ZeroExtendNode'new-4
 (final-ns MemoryMapNode (§ extends FloatingNode) (§ implements MemoryMap, MemoryNode, LIRLowerable)
     (§ def #_"NodeClass<MemoryMapNode>" MemoryMapNode'TYPE (NodeClass'create-1 MemoryMapNode))
 
-    (§ final #_"List<LocationIdentity>" :locationIdentities nil)
-    ; @Input(InputType'Memory)
-    (§ mutable #_"NodeInputList<ValueNode>" :nodes nil)
+    (defn- #_"MemoryMapNode" MemoryMapNode'init-0 []
+        (hash-map
+            #_"List<LocationIdentity>" :locationIdentities nil
+            ; @Input(InputType'Memory)
+            #_"NodeInputList<ValueNode>" :nodes nil
+        )
+    )
 
     (defn #_"MemoryMapNode" MemoryMapNode'new-1 [#_"EconomicMap<LocationIdentity, MemoryNode>" mmap]
         (let [
             #_"MemoryMapNode" this (FloatingNode'new-2 MemoryMapNode'TYPE, VoidStamp'instance)
+            this (merge this (MemoryMapNode'init-0))
             this (assoc this :locationIdentities (ArrayList.))
             this (assoc this :nodes (NodeInputList'new-2i this, (count mmap)))
             #_"MapCursor<LocationIdentity, MemoryNode>" cursor (#_"EconomicMap" .getEntries mmap)
@@ -62405,13 +64068,18 @@ ZeroExtendNode'new-4
 (final-ns MemoryPhiNode (§ extends PhiNodeImpl) (§ implements MemoryNode)
     (§ def #_"NodeClass<MemoryPhiNode>" MemoryPhiNode'TYPE (NodeClass'create-1 MemoryPhiNode))
 
-    ; @Input(InputType'Memory)
-    (§ mutable #_"NodeInputList<ValueNode>" :values nil)
-    (§ final #_"LocationIdentity" :locationIdentity nil)
+    (defn- #_"MemoryPhiNode" MemoryPhiNode'init-0 []
+        (hash-map
+            ; @Input(InputType'Memory)
+            #_"NodeInputList<ValueNode>" :values nil
+            #_"LocationIdentity" :locationIdentity nil
+        )
+    )
 
     (defn #_"MemoryPhiNode" MemoryPhiNode'new-2 [#_"AbstractMergeNode" merge, #_"LocationIdentity" locationIdentity]
         (let [
             #_"MemoryPhiNode" this (PhiNodeImpl'new-3 MemoryPhiNode'TYPE, VoidStamp'instance, merge)
+            this (merge this (MemoryPhiNode'init-0))
             this (assoc this :locationIdentity locationIdentity)
             this (assoc this :values (NodeInputList'new-1 this))
         ]
@@ -62423,6 +64091,7 @@ ZeroExtendNode'new-4
     (defn #_"MemoryPhiNode" MemoryPhiNode'new-3 [#_"AbstractMergeNode" merge, #_"LocationIdentity" locationIdentity, #_"ValueNode[]" values]
         (let [
             #_"MemoryPhiNode" this (PhiNodeImpl'new-3 MemoryPhiNode'TYPE, VoidStamp'instance, merge)
+            this (merge this (MemoryPhiNode'init-0))
             this (assoc this :locationIdentity locationIdentity)
             this (assoc this :values (NodeInputList'new-2a this, values))
         ]
@@ -62590,12 +64259,17 @@ ZeroExtendNode'new-4
      ;;
     (§ def #_"LocationIdentity" NamedLocationIdentity'ARRAY_LENGTH_LOCATION (NamedLocationIdentity'immutable-1 "[].length"))
 
-    (§ final #_"String" :name nil)
-    (§ final #_"boolean" :immutable false)
+    (defn- #_"NamedLocationIdentity" NamedLocationIdentity'init-0 []
+        (hash-map
+            #_"String" :name nil
+            #_"boolean" :immutable false
+        )
+    )
 
     (defn #_"NamedLocationIdentity" NamedLocationIdentity'new-2 [#_"String" name, #_"boolean" immutable]
         (let [
             #_"NamedLocationIdentity" this (LocationIdentity.)
+            this (merge this (NamedLocationIdentity'init-0))
             this (assoc this :name name)
             this (assoc this :immutable immutable)
         ]
@@ -62663,11 +64337,16 @@ ZeroExtendNode'new-4
 (final-ns ParameterNode (§ extends AbstractLocalNode) (§ implements IterableNodeType)
     (§ def #_"NodeClass<ParameterNode>" ParameterNode'TYPE (NodeClass'create-1 ParameterNode))
 
-    (§ mutable #_"Stamp" :uncheckedStamp nil)
+    (defn- #_"ParameterNode" ParameterNode'init-0 []
+        (hash-map
+            #_"Stamp" :uncheckedStamp nil
+        )
+    )
 
-    (defn #_"ParameterNode" ParameterNode'new-2 [#_"int" index, #_"StampPair" stamp]
+    (defn #_"ParameterNode" ParameterNode'new-2 [#_"int" index, #_"StampPair" stamp]
         (let [
             #_"ParameterNode" this (AbstractLocalNode'new-3 ParameterNode'TYPE, index, (:trustedStamp stamp))
+            this (merge this (ParameterNode'init-0))
             this (assoc this :uncheckedStamp (:uncheckedStamp stamp))
         ]
             this
@@ -62678,12 +64357,17 @@ ZeroExtendNode'new-4
 (class-ns PhiNodeImpl (§ extends FloatingNode) (§ implements PhiNode, Canonicalizable)
     (§ def #_"NodeClass<PhiNode>" PhiNodeImpl'TYPE (NodeClass'create-1 PhiNodeImpl))
 
-    ; @Input
-    (§ mutable #_"AbstractMergeNode" :merge nil)
+    (defn- #_"PhiNodeImpl" PhiNodeImpl'init-0 []
+        (hash-map
+            ; @Input
+            #_"AbstractMergeNode" :merge nil
+        )
+    )
 
     (defn #_"PhiNode" PhiNodeImpl'new-3 [#_"NodeClass<? implements PhiNode>" c, #_"Stamp" stamp, #_"AbstractMergeNode" merge]
         (let [
             #_"PhiNode" this (FloatingNode'new-2 c, stamp)
+            this (merge this (PhiNodeImpl'init-0))
             this (assoc this :merge merge)
         ]
             this
@@ -62821,8 +64505,12 @@ ZeroExtendNode'new-4
 (final-ns PiArrayNode (§ extends PiNode) (§ implements ArrayLengthProvider)
     (§ def #_"NodeClass<PiArrayNode>" PiArrayNode'TYPE (NodeClass'create-1 PiArrayNode))
 
-    ; @Input
-    (§ mutable #_"ValueNode" :length nil)
+    (defn- #_"PiArrayNode" PiArrayNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"ValueNode" :length nil
+        )
+    )
 
     (§ override! #_"ValueNode" ArrayLengthProvider'''length-1 [#_"PiArrayNode" this]
         (:length this)
@@ -62831,6 +64519,7 @@ ZeroExtendNode'new-4
     (defn #_"PiArrayNode" PiArrayNode'new-3 [#_"ValueNode" object, #_"ValueNode" length, #_"Stamp" stamp]
         (let [
             #_"PiArrayNode" this (PiNode'new-4 PiArrayNode'TYPE, object, stamp, nil)
+            this (merge this (PiArrayNode'init-0))
             this (assoc this :length length)
         ]
             this
@@ -62853,8 +64542,12 @@ ZeroExtendNode'new-4
 (final-ns ArrayPlaceholder (§ extends PlaceholderImpl)
     (§ def #_"NodeClass<ArrayPlaceholder>" ArrayPlaceholder'TYPE (NodeClass'create-1 ArrayPlaceholder))
 
-    ; @Input
-    (§ mutable #_"ValueNode" :length nil)
+    (defn- #_"ArrayPlaceholder" ArrayPlaceholder'init-0 []
+        (hash-map
+            ; @Input
+            #_"ValueNode" :length nil
+        )
+    )
 
     ;;;
      ; Changes the stamp of an object inside a snippet to be the stamp of the node replaced by the snippet.
@@ -62865,6 +64558,7 @@ ZeroExtendNode'new-4
     (defn #_"ArrayPlaceholder" ArrayPlaceholder'new-2 [#_"ValueNode" object, #_"ValueNode" length]
         (let [
             #_"ArrayPlaceholder" this (PlaceholderImpl'new-2 ArrayPlaceholder'TYPE, object)
+            this (merge this (ArrayPlaceholder'init-0))
             this (assoc this :length length)
         ]
             this
@@ -62892,13 +64586,18 @@ ZeroExtendNode'new-4
 (class-ns PiNode (§ extends FloatingGuardedNode) (§ implements LIRLowerable, Virtualizable, IterableNodeType, Canonicalizable, ValueProxy)
     (§ def #_"NodeClass<PiNode>" PiNode'TYPE (NodeClass'create-1 PiNode))
 
-    ; @Input
-    (§ final #_"ValueNode" :object nil)
-    (§ final #_"Stamp" :piStamp nil)
+    (defn- #_"PiNode" PiNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"ValueNode" :object nil
+            #_"Stamp" :piStamp nil
+        )
+    )
 
     (defn #_"PiNode" PiNode'new-4 [#_"NodeClass<? extends PiNode>" c, #_"ValueNode" object, #_"Stamp" stamp, #_"GuardingNode" guard]
         (let [
             #_"PiNode" this (FloatingGuardedNode'new-3 c, stamp, guard)
+            this (merge this (PiNode'init-0))
             this (assoc this :object object)
             this (assoc this :piStamp stamp)
         ]
@@ -63007,12 +64706,17 @@ ZeroExtendNode'new-4
 (class-ns PlaceholderImpl (§ extends FloatingGuardedNode) (§ implements Placeholder)
     (§ def #_"NodeClass<Placeholder>" PlaceholderImpl'TYPE (NodeClass'create-1 PlaceholderImpl))
 
-    ; @Input
-    (§ final #_"ValueNode" :object nil)
+    (defn- #_"PlaceholderImpl" PlaceholderImpl'init-0 []
+        (hash-map
+            ; @Input
+            #_"ValueNode" :object nil
+        )
+    )
 
     (defn #_"Placeholder" PlaceholderImpl'new-2 [#_"NodeClass<? implements Placeholder>" c, #_"ValueNode" object]
         (let [
             #_"Placeholder" this (FloatingGuardedNode'new-3 c, PlaceholderStamp'SINGLETON, nil)
+            this (merge this (PlaceholderImpl'init-0))
             this (assoc this :object object)
         ]
             this
@@ -63056,8 +64760,12 @@ ZeroExtendNode'new-4
 (final-ns PrefetchAllocateNode (§ extends FixedWithNextNode) (§ implements LIRLowerable)
     (§ def #_"NodeClass<PrefetchAllocateNode>" PrefetchAllocateNode'TYPE (NodeClass'create-1 PrefetchAllocateNode))
 
-    ; @Input
-    (§ mutable #_"AddressNode" :address nil)
+    (defn- #_"PrefetchAllocateNode" PrefetchAllocateNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"AddressNode" :address nil
+        )
+    )
 
     (§ intrinsic! #_"void" PrefetchAllocateNode'prefetch-1 [#_"Address" address])
 
@@ -63065,6 +64773,7 @@ ZeroExtendNode'new-4
     (defn #_"PrefetchAllocateNode" PrefetchAllocateNode'new-1 [#_"AddressNode" address]
         (let [
             #_"PrefetchAllocateNode" this (FixedWithNextNode'new-2 PrefetchAllocateNode'TYPE, VoidStamp'instance)
+            this (merge this (PrefetchAllocateNode'init-0))
             this (assoc this :address address)
         ]
             this
@@ -63084,12 +64793,17 @@ ZeroExtendNode'new-4
 (class-ns ProxyNode (§ extends FloatingNode)
     (§ def #_"NodeClass<ProxyNode>" ProxyNode'TYPE (NodeClass'create-1 ProxyNode))
 
-    ; @Input
-    (§ mutable #_"LoopExitNode" :loopExit nil)
+    (defn- #_"ProxyNode" ProxyNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"LoopExitNode" :loopExit nil
+        )
+    )
 
     (defn #_"ProxyNode" ProxyNode'new-3 [#_"NodeClass<? extends ProxyNode>" c, #_"Stamp" stamp, #_"LoopExitNode" proxyPoint]
         (let [
             #_"ProxyNode" this (FloatingNode'new-2 c, stamp)
+            this (merge this (ProxyNode'init-0))
             this (assoc this :loopExit proxyPoint)
         ]
             this
@@ -63108,10 +64822,14 @@ ZeroExtendNode'new-4
 (final-ns ReturnNode (§ extends ControlSinkNode) (§ implements LIRLowerable, IterableNodeType)
     (§ def #_"NodeClass<ReturnNode>" ReturnNode'TYPE (NodeClass'create-1 ReturnNode))
 
-    ; @OptionalInput
-    (§ mutable #_"ValueNode" :result nil)
-    ; @OptionalInput
-    (§ mutable #_"MemoryMapNode" :memoryMap nil)
+    (defn- #_"ReturnNode" ReturnNode'init-0 []
+        (hash-map
+            ; @OptionalInput
+            #_"ValueNode" :result nil
+            ; @OptionalInput
+            #_"MemoryMapNode" :memoryMap nil
+        )
+    )
 
     (defn #_"ReturnNode" ReturnNode'new-1 [#_"ValueNode" result]
         (ReturnNode'new-2 result, nil)
@@ -63120,6 +64838,7 @@ ZeroExtendNode'new-4
     (defn #_"ReturnNode" ReturnNode'new-2 [#_"ValueNode" result, #_"MemoryMapNode" memoryMap]
         (let [
             #_"ReturnNode" this (ControlSinkNode'new-2 ReturnNode'TYPE, VoidStamp'instance)
+            this (merge this (ReturnNode'init-0))
             this (assoc this :result result)
             this (assoc this :memoryMap memoryMap)
         ]
@@ -63168,21 +64887,26 @@ ZeroExtendNode'new-4
 (final-ns ShortCircuitOrNode (§ extends LogicNode) (§ implements IterableNodeType, Binary #_"<LogicNode>")
     (§ def #_"NodeClass<ShortCircuitOrNode>" ShortCircuitOrNode'TYPE (NodeClass'create-1 ShortCircuitOrNode))
 
-    ; @Input
-    (§ final #_"LogicNode" :x nil)
-    ; @Input
-    (§ final #_"LogicNode" :y nil)
-    (§ mutable #_"boolean" :xNegated false)
-    (§ mutable #_"boolean" :yNegated false)
-    ;;;
-     ; The probability that the {@link #getY() y} part of this binary node is <b>not</b> evaluated.
-     ; This is the probability that this operator will short-circuit its execution.
-     ;;
-    (§ mutable #_"double" :shortCircuitProbability 0.0)
+    (defn- #_"ShortCircuitOrNode" ShortCircuitOrNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"LogicNode" :x nil
+            ; @Input
+            #_"LogicNode" :y nil
+            #_"boolean" :xNegated false
+            #_"boolean" :yNegated false
+            ;;;
+             ; The probability that the {@link #getY() y} part of this binary node is <b>not</b> evaluated.
+             ; This is the probability that this operator will short-circuit its execution.
+             ;;
+            #_"double" :shortCircuitProbability 0.0
+        )
+    )
 
     (defn #_"ShortCircuitOrNode" ShortCircuitOrNode'new-5 [#_"LogicNode" x, #_"boolean" xNegated, #_"LogicNode" y, #_"boolean" yNegated, #_"double" shortCircuitProbability]
         (let [
             #_"ShortCircuitOrNode" this (LogicNode'new-1 ShortCircuitOrNode'TYPE)
+            this (merge this (ShortCircuitOrNode'init-0))
             this (assoc this :x x)
             this (assoc this :xNegated xNegated)
             this (assoc this :y y)
@@ -63434,57 +65158,54 @@ ZeroExtendNode'new-4
  ; This node is the start of the control flow of the graph.
  ;;
 (final-ns Graph
-    ;;;
-     ; The set of nodes in the graph, ordered by {@linkplain #register(Node) registration} time.
-     ;;
-    (§ mutable #_"Node[]" :nodes nil)
-    ;;;
-     ; The number of valid entries in #nodes.
-     ;;
-    (§ mutable #_"int" :nodesSize 0)
-
-    ;; these two arrays contain one entry for each NodeClass, indexed by NodeClass.iterableId.
-    ;; they contain the first and last pointer to a linked list of all nodes with this type.
-    (§ final #_"ArrayList<Node>" :iterableNodesFirst nil)
-    (§ final #_"ArrayList<Node>" :iterableNodesLast nil)
-
-    ;;;
-     ; The number of nodes which have been deleted from this graph.
-     ;;
-    (§ mutable #_"int" :nodesDeleted 0)
-
-    (§ mutable #_"NodeEventListener" :nodeEventListener nil)
-
-    ;;;
-     ; Indicates that the graph should no longer be modified. Frozen graphs can be used by multiple
-     ; threads so it's only safe to read them.
-     ;;
-    (§ mutable #_"boolean" :frozen false)
-
     (def #_"long" Graph'INVALID_GRAPH_ID -1)
-    (§ def- #_"AtomicLong" Graph'uniqueGraphIds (AtomicLong.))
+    (def- #_"AtomicLong" Graph'uniqueGraphIds (AtomicLong.))
 
-    (§ mutable #_"StartNode" :start nil)
-
-    ;;;
-     ; The root method from which this graph was built.
-     ;
-     ; nil if this method was not built from a method or the method is not available
-     ;;
-    (§ mutable #_"ResolvedJavaMethod" :rootMethod nil)
-
-    (§ final #_"long" :graphId 0)
-    (§ mutable #_"GuardsStage" :guardsStage GuardsStage'FLOATING_GUARDS)
-    (§ mutable #_"boolean" :isAfterFloatingReadPhase false)
-    (§ mutable #_"boolean" :isAfterFixedReadPhase false)
-    (§ mutable #_"boolean" :hasValueProxies true)
-    (§ mutable #_"boolean" :isAfterExpandLogic false)
-
-    (§ mutable #_"ScheduleResult" :lastSchedule nil)
+    (defn- #_"Graph" Graph'init-0 []
+        (hash-map
+            #_"long" :graphId 0
+            ;;;
+             ; The set of nodes in the graph, ordered by {@linkplain #register(Node) registration} time.
+             ;;
+            #_"Node[]" :nodes nil
+            ;;;
+             ; The number of valid entries in #nodes.
+             ;;
+            #_"int" :nodesSize 0
+            ;;;
+             ; These two arrays contain one entry for each NodeClass, indexed by NodeClass.iterableId.
+             ; They contain the first and last pointer to a linked list of all nodes with this type.
+             ;;
+            #_"ArrayList<Node>" :iterableNodesFirst nil
+            #_"ArrayList<Node>" :iterableNodesLast nil
+            ;;;
+             ; The number of nodes which have been deleted from this graph.
+             ;;
+            #_"int" :nodesDeleted 0
+            #_"NodeEventListener" :nodeEventListener nil
+            ;;;
+             ; Indicates that the graph should no longer be modified. Frozen graphs can be used by multiple
+             ; threads so it's only safe to read them.
+             ;;
+            #_"boolean" :frozen false
+            #_"StartNode" :start nil
+            ;;;
+             ; The root method from which this graph was built, or nil
+             ; if this method was not built from a method or the method is not available.
+             ;;
+            #_"ResolvedJavaMethod" :rootMethod nil
+            #_"GuardsStage" :guardsStage GuardsStage'FLOATING_GUARDS
+            #_"boolean" :isAfterFloatingReadPhase false
+            #_"boolean" :isAfterFixedReadPhase false
+            #_"boolean" :hasValueProxies true
+            #_"boolean" :isAfterExpandLogic false
+            #_"ScheduleResult" :lastSchedule nil
+        )
+    )
 
     (defn #_"Graph" Graph'new-1 [#_"ResolvedJavaMethod" method]
         (let [
-            #_"Graph" this (hash-map)
+            #_"Graph" this (merge (hash-map) (Graph'init-0))
             this (assoc this :nodes (make-array Node 32))
             this (assoc this :iterableNodesFirst (ArrayList.))
             this (assoc this :iterableNodesLast (ArrayList.))
@@ -64155,12 +65876,17 @@ ZeroExtendNode'new-4
  ; @anno Graph.ChainedNodeEventListener
  ;;
 (final-ns ChainedNodeEventListener (§ extends NodeEventListenerImpl)
-    (§ mutable #_"NodeEventListener" :head nil)
-    (§ mutable #_"NodeEventListener" :next nil)
+    (defn- #_"ChainedNodeEventListener" ChainedNodeEventListener'init-0 []
+        (hash-map
+            #_"NodeEventListener" :head nil
+            #_"NodeEventListener" :next nil
+        )
+    )
 
     (defn #_"ChainedNodeEventListener" ChainedNodeEventListener'new-2 [#_"NodeEventListener" head, #_"NodeEventListener" next]
         (let [
             #_"ChainedNodeEventListener" this (NodeEventListenerImpl'new-0)
+            this (merge this (ChainedNodeEventListener'init-0))
             this (assoc this :head head)
             this (assoc this :next next)
         ]
@@ -64205,11 +65931,15 @@ ZeroExtendNode'new-4
  ; @anno Graph.NodeEventScope
  ;;
 (final-ns NodeEventScope (§ implements AutoCloseable)
-    (§ final #_"Graph" :graph nil)
+    (defn- #_"NodeEventScope" NodeEventScope'init-0 []
+        (hash-map
+            #_"Graph" :graph nil
+        )
+    )
 
     (defn #_"NodeEventScope" NodeEventScope'new-2 [#_"Graph" graph, #_"NodeEventListener" listener]
         (let [
-            #_"NodeEventScope" this (hash-map)
+            #_"NodeEventScope" this (merge (hash-map) (NodeEventScope'init-0))
             this (assoc this :graph graph)
         ]
             (if (nil? (:nodeEventListener (:graph this)))
@@ -64235,15 +65965,19 @@ ZeroExtendNode'new-4
  ; @anno Graph.NodeMark
  ;;
 (final-ns NodeMark
-    (§ final #_"Graph" :graph nil)
-    ;;;
-     ; Live node count of the associated graph when this object was created.
-     ;;
-    (§ final #_"int" :value 0)
+    (defn- #_"NodeMark" NodeMark'init-0 []
+        (hash-map
+            #_"Graph" :graph nil
+            ;;;
+             ; Live node count of the associated graph when this object was created.
+             ;;
+            #_"int" :value 0
+        )
+    )
 
     (defn #_"NodeMark" NodeMark'new-1 [#_"Graph" graph]
         (let [
-            #_"NodeMark" this (hash-map)
+            #_"NodeMark" this (merge (hash-map) (NodeMark'init-0))
             this (assoc this :graph graph)
             this (assoc this :value (:nodesSize graph))
         ]
@@ -64271,11 +66005,15 @@ ZeroExtendNode'new-4
  ; @anno Graph.MapReplacement
  ;;
 (final-ns MapReplacement (§ implements DuplicationReplacement)
-    (§ final #_"EconomicMap<Node, Node>" :map nil)
+    (defn- #_"MapReplacement" MapReplacement'init-0 []
+        (hash-map
+            #_"EconomicMap<Node, Node>" :map nil
+        )
+    )
 
     (defn #_"MapReplacement" MapReplacement'new-1 [#_"EconomicMap<Node, Node>" map]
         (let [
-            #_"MapReplacement" this (hash-map)
+            #_"MapReplacement" this (merge (hash-map) (MapReplacement'init-0))
             this (assoc this :map map)
         ]
             this
@@ -64335,13 +66073,17 @@ ZeroExtendNode'new-4
  ; @anno Graph.ScheduleResult
  ;;
 (final-ns ScheduleResult
-    (§ final #_"ControlFlowGraph" :cfg nil)
-    (§ final #_"NodeMap<Block>" :nodeToBlockMap nil)
-    (§ final #_"BlockMap<List<Node>>" :blockToNodesMap nil)
+    (defn- #_"ScheduleResult" ScheduleResult'init-0 []
+        (hash-map
+            #_"ControlFlowGraph" :cfg nil
+            #_"NodeMap<Block>" :nodeToBlockMap nil
+            #_"BlockMap<List<Node>>" :blockToNodesMap nil
+        )
+    )
 
     (defn #_"ScheduleResult" ScheduleResult'new-3 [#_"ControlFlowGraph" cfg, #_"NodeMap<Block>" nodeToBlockMap, #_"BlockMap<List<Node>>" blockToNodesMap]
         (let [
-            #_"ScheduleResult" this (hash-map)
+            #_"ScheduleResult" this (merge (hash-map) (ScheduleResult'init-0))
             this (assoc this :cfg cfg)
             this (assoc this :nodeToBlockMap nodeToBlockMap)
             this (assoc this :blockToNodesMap blockToNodesMap)
@@ -64356,11 +66098,16 @@ ZeroExtendNode'new-4
 )
 
 (class-ns NarrowOopStampImpl (§ extends AbstractObjectStampImpl) (§ implements NarrowOopStamp)
-    (§ final #_"CompressEncoding" :encoding nil)
+    (defn- #_"NarrowOopStampImpl" NarrowOopStampImpl'init-0 []
+        (hash-map
+            #_"CompressEncoding" :encoding nil
+        )
+    )
 
     (defn #_"NarrowOopStamp" NarrowOopStampImpl'new-5 [#_"ResolvedJavaType" type, #_"boolean" exactType, #_"boolean" never-nil?, #_"boolean" always-nil?, #_"CompressEncoding" encoding]
         (let [
             #_"NarrowOopStamp" this (AbstractObjectStampImpl'new-4 type, exactType, never-nil?, always-nil?)
+            this (merge this (NarrowOopStampImpl'init-0))
             this (assoc this :encoding encoding)
         ]
             this
@@ -64538,8 +66285,12 @@ ZeroExtendNode'new-4
 (class-ns UnaryOpLogicNodeImpl (§ extends LogicNode) (§ implements UnaryOpLogicNode, LIRLowerable, Unary #_"<ValueNode>")
     (§ def #_"NodeClass<UnaryOpLogicNode>" UnaryOpLogicNodeImpl'TYPE (NodeClass'create-1 UnaryOpLogicNodeImpl))
 
-    ; @Input
-    (§ mutable #_"ValueNode" :value nil)
+    (defn- #_"UnaryOpLogicNodeImpl" UnaryOpLogicNodeImpl'init-0 []
+        (hash-map
+            ; @Input
+            #_"ValueNode" :value nil
+        )
+    )
 
     (§ override #_"ValueNode" Unary'''getValue-1 [#_"UnaryOpLogicNode" this]
         (:value this)
@@ -64548,6 +66299,7 @@ ZeroExtendNode'new-4
     (defn #_"UnaryOpLogicNode" UnaryOpLogicNodeImpl'new-2 [#_"NodeClass<? implements UnaryOpLogicNode>" c, #_"ValueNode" value]
         (let [
             #_"UnaryOpLogicNode" this (LogicNode'new-1 c)
+            this (merge this (UnaryOpLogicNodeImpl'init-0))
             this (assoc this :value value)
         ]
             this
@@ -65097,11 +66849,15 @@ ZeroExtendNode'new-4
  ; @anno GraphUtil.DefaultSimplifierTool
  ;;
 (final-ns DefaultSimplifierTool (§ implements SimplifierTool)
-    (§ final #_"boolean" :canonicalizeReads false)
+    (defn- #_"DefaultSimplifierTool" DefaultSimplifierTool'init-0 []
+        (hash-map
+            #_"boolean" :canonicalizeReads false
+        )
+    )
 
     (defn #_"DefaultSimplifierTool" DefaultSimplifierTool'new-1 [#_"boolean" canonicalizeReads]
         (let [
-            #_"DefaultSimplifierTool" this (hash-map)
+            #_"DefaultSimplifierTool" this (merge (hash-map) (DefaultSimplifierTool'init-0))
             this (assoc this :canonicalizeReads canonicalizeReads)
         ]
             this
@@ -65143,15 +66899,20 @@ ZeroExtendNode'new-4
 (class-ns ValueNodeImpl (§ extends NodeImpl) (§ implements ValueNode)
     (§ def #_"NodeClass<ValueNode>" ValueNodeImpl'TYPE (NodeClass'create-1 ValueNodeImpl))
 
-    ;;;
-     ; The kind of this value. This is JavaKind#Void for instructions that produce no value.
-     ; This kind is guaranteed to be a {@linkplain JavaKind#getStackKind() stack kind}.
-     ;;
-    (§ mutable #_"Stamp" :stamp nil)
+    (defn- #_"ValueNodeImpl" ValueNodeImpl'init-0 []
+        (hash-map
+            ;;;
+             ; The kind of this value. This is JavaKind#Void for instructions that produce no value.
+             ; This kind is guaranteed to be a {@linkplain JavaKind#getStackKind() stack kind}.
+             ;;
+            #_"Stamp" :stamp nil
+        )
+    )
 
     (defn #_"ValueNode" ValueNodeImpl'new-2 [#_"NodeClass<? implements ValueNode>" c, #_"Stamp" stamp]
         (let [
             #_"ValueNode" this (NodeImpl'new-1 c)
+            this (merge this (ValueNodeImpl'init-0))
             this (assoc this :stamp stamp)
         ]
             this
@@ -65258,8 +67019,12 @@ ZeroExtendNode'new-4
 (final-ns ValuePhiNode (§ extends PhiNodeImpl) (§ implements ArrayLengthProvider)
     (§ def #_"NodeClass<ValuePhiNode>" ValuePhiNode'TYPE (NodeClass'create-1 ValuePhiNode))
 
-    ; @Input
-    (§ mutable #_"NodeInputList<ValueNode>" :values nil)
+    (defn- #_"ValuePhiNode" ValuePhiNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"NodeInputList<ValueNode>" :values nil
+        )
+    )
 
     (defn #_"ValuePhiNode" ValuePhiNode'new-2 [#_"Stamp" stamp, #_"AbstractMergeNode" merge]
         (ValuePhiNode'new-3t ValuePhiNode'TYPE, stamp, merge)
@@ -65268,6 +67033,7 @@ ZeroExtendNode'new-4
     (defn #_"ValuePhiNode" ValuePhiNode'new-3t [#_"NodeClass<? extends ValuePhiNode>" c, #_"Stamp" stamp, #_"AbstractMergeNode" merge]
         (let [
             #_"ValuePhiNode" this (PhiNodeImpl'new-3 c, stamp, merge)
+            this (merge this (ValuePhiNode'init-0))
             this (assoc this :values (NodeInputList'new-1 this))
         ]
             this
@@ -65277,6 +67043,7 @@ ZeroExtendNode'new-4
     (defn #_"ValuePhiNode" ValuePhiNode'new-3s [#_"Stamp" stamp, #_"AbstractMergeNode" merge, #_"ValueNode[]" values]
         (let [
             #_"ValuePhiNode" this (PhiNodeImpl'new-3 ValuePhiNode'TYPE, stamp, merge)
+            this (merge this (ValuePhiNode'init-0))
             this (assoc this :values (NodeInputList'new-2a this, values))
         ]
             this
@@ -65324,13 +67091,18 @@ ZeroExtendNode'new-4
 (final-ns ValueProxyNode (§ extends ProxyNode) (§ implements Canonicalizable, Virtualizable, ValueProxy)
     (§ def #_"NodeClass<ValueProxyNode>" ValueProxyNode'TYPE (NodeClass'create-1 ValueProxyNode))
 
-    ; @Input
-    (§ mutable #_"ValueNode" :value nil)
-    (§ final #_"boolean" :loopPhiProxy false)
+    (defn- #_"ValueProxyNode" ValueProxyNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"ValueNode" :value nil
+            #_"boolean" :loopPhiProxy false
+        )
+    )
 
     (defn #_"ValueProxyNode" ValueProxyNode'new-2 [#_"ValueNode" value, #_"LoopExitNode" loopExit]
         (let [
             #_"ValueProxyNode" this (ProxyNode'new-3 ValueProxyNode'TYPE, (:stamp value), loopExit)
+            this (merge this (ValueProxyNode'init-0))
             this (assoc this :value value)
             this (assoc this :loopPhiProxy (AbstractMergeNodeImpl''isPhiAtMerge-2 (:loopBegin loopExit), value))
         ]
@@ -65374,14 +67146,19 @@ ZeroExtendNode'new-4
 (final-ns AllocatedObjectNode (§ extends FloatingNode) (§ implements Virtualizable, ArrayLengthProvider)
     (§ def #_"NodeClass<AllocatedObjectNode>" AllocatedObjectNode'TYPE (NodeClass'create-1 AllocatedObjectNode))
 
-    ; @Input
-    (§ mutable #_"VirtualObjectNode" :virtualObject nil)
-    ; @Input
-    (§ mutable #_"CommitAllocationNode" :commit nil)
+    (defn- #_"AllocatedObjectNode" AllocatedObjectNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"VirtualObjectNode" :virtualObject nil
+            ; @Input
+            #_"CommitAllocationNode" :commit nil
+        )
+    )
 
     (defn #_"AllocatedObjectNode" AllocatedObjectNode'new-1 [#_"VirtualObjectNode" virtualObject]
         (let [
             #_"AllocatedObjectNode" this (FloatingNode'new-2 AllocatedObjectNode'TYPE, (StampFactory'objectNonNull-1 (TypeReference'createExactTrusted-1 (VirtualObjectNode'''type-1 virtualObject))))
+            this (merge this (AllocatedObjectNode'init-0))
             this (assoc this :virtualObject virtualObject)
         ]
             this
@@ -65408,17 +67185,19 @@ ZeroExtendNode'new-4
 (final-ns CommitAllocationNode (§ extends FixedWithNextNode) (§ implements VirtualizableAllocation, Lowerable, Simplifiable, Single)
     (§ def #_"NodeClass<CommitAllocationNode>" CommitAllocationNode'TYPE (NodeClass'create-1 CommitAllocationNode))
 
-    ; @Input
-    (§ mutable #_"NodeInputList<VirtualObjectNode>" :virtualObjects (NodeInputList'new-1 this))
-    ; @Input
-    (§ mutable #_"NodeInputList<ValueNode>" :values (NodeInputList'new-1 this))
-    ; @Input
-    (§ mutable #_"NodeInputList<MonitorIdNode>" :locks (NodeInputList'new-1 this))
-    (§ mutable #_"ArrayList<Integer>" :lockIndexes (ArrayList. (Arrays/asList 0)))
-    (§ mutable #_"ArrayList<Boolean>" :ensureVirtual (ArrayList.))
-
     (defn #_"CommitAllocationNode" CommitAllocationNode'new-0 []
-        (FixedWithNextNode'new-2 CommitAllocationNode'TYPE, VoidStamp'instance)
+        (merge (FixedWithNextNode'new-2 CommitAllocationNode'TYPE, VoidStamp'instance)
+            (hash-map
+                ; @Input
+                #_"NodeInputList<VirtualObjectNode>" :virtualObjects (NodeInputList'new-1 (ß this))
+                ; @Input
+                #_"NodeInputList<ValueNode>" :values (NodeInputList'new-1 (ß this))
+                ; @Input
+                #_"NodeInputList<MonitorIdNode>" :locks (NodeInputList'new-1 (ß this))
+                #_"ArrayList<Integer>" :lockIndexes (ArrayList. (Arrays/asList 0))
+                #_"ArrayList<Boolean>" :ensureVirtual (ArrayList.)
+            )
+        )
     )
 
     (defn #_"void" CommitAllocationNode''addLocks-2 [#_"CommitAllocationNode" this, #_"List<MonitorIdNode>" monitorIds]
@@ -65776,12 +67555,17 @@ ZeroExtendNode'new-4
 (class-ns EscapeObjectState (§ extends VirtualStateImpl)
     (§ def #_"NodeClass<EscapeObjectState>" EscapeObjectState'TYPE (NodeClass'create-1 EscapeObjectState))
 
-    ; @Input
-    (§ final #_"VirtualObjectNode" :object nil)
+    (defn- #_"EscapeObjectState" EscapeObjectState'init-0 []
+        (hash-map
+            ; @Input
+            #_"VirtualObjectNode" :object nil
+        )
+    )
 
     (defn #_"EscapeObjectState" EscapeObjectState'new-2 [#_"NodeClass<? extends EscapeObjectState>" c, #_"VirtualObjectNode" object]
         (let [
             #_"EscapeObjectState" this (VirtualStateImpl'new-1 c)
+            this (merge this (EscapeObjectState'init-0))
             this (assoc this :object object)
         ]
             this
@@ -65803,12 +67587,16 @@ ZeroExtendNode'new-4
  ; current lock state of an object.
  ;;
 (final-ns LockState
-    (§ final #_"MonitorIdNode" :monitorId nil)
-    (§ final #_"LockState" :next nil)
+    (defn- #_"LockState" LockState'init-0 []
+        (hash-map
+            #_"MonitorIdNode" :monitorId nil
+            #_"LockState" :next nil
+        )
+    )
 
     (defn #_"LockState" LockState'new-2 [#_"MonitorIdNode" monitorId, #_"LockState" next]
         (let [
-            #_"LockState" this (hash-map)
+            #_"LockState" this (merge (hash-map) (LockState'init-0))
             this (assoc this :monitorId monitorId)
             this (assoc this :next next)
         ]
@@ -65837,8 +67625,12 @@ ZeroExtendNode'new-4
 (final-ns VirtualArrayNode (§ extends VirtualObjectNodeImpl) (§ implements ArrayLengthProvider)
     (§ def #_"NodeClass<VirtualArrayNode>" VirtualArrayNode'TYPE (NodeClass'create-1 VirtualArrayNode))
 
-    (§ final #_"ResolvedJavaType" :componentType nil)
-    (§ final #_"int" :length 0)
+    (defn- #_"VirtualArrayNode" VirtualArrayNode'init-0 []
+        (hash-map
+            #_"ResolvedJavaType" :componentType nil
+            #_"int" :length 0
+        )
+    )
 
     (defn #_"VirtualArrayNode" VirtualArrayNode'new-2 [#_"ResolvedJavaType" componentType, #_"int" length]
         (VirtualArrayNode'new-3 VirtualArrayNode'TYPE, componentType, length)
@@ -65847,6 +67639,7 @@ ZeroExtendNode'new-4
     (defn #_"VirtualArrayNode" VirtualArrayNode'new-3 [#_"NodeClass<? implements VirtualObjectNode>" c, #_"ResolvedJavaType" componentType, #_"int" length]
         (let [
             #_"VirtualArrayNode" this (VirtualObjectNodeImpl'new-3 c, (#_"ResolvedJavaType" .getArrayClass componentType), true)
+            this (merge this (VirtualArrayNode'init-0))
             this (assoc this :componentType componentType)
             this (assoc this :length length)
         ]
@@ -65918,7 +67711,11 @@ ZeroExtendNode'new-4
 (final-ns VirtualBoxingNode (§ extends VirtualInstanceNode)
     (§ def #_"NodeClass<VirtualBoxingNode>" VirtualBoxingNode'TYPE (NodeClass'create-1 VirtualBoxingNode))
 
-    (§ final #_"JavaKind" :boxingKind nil)
+    (defn- #_"VirtualBoxingNode" VirtualBoxingNode'init-0 []
+        (hash-map
+            #_"JavaKind" :boxingKind nil
+        )
+    )
 
     (defn #_"VirtualBoxingNode" VirtualBoxingNode'new-2 [#_"ResolvedJavaType" type, #_"JavaKind" boxingKind]
         (VirtualBoxingNode'new-3 VirtualBoxingNode'TYPE, type, boxingKind)
@@ -65927,6 +67724,7 @@ ZeroExtendNode'new-4
     (defn #_"VirtualBoxingNode" VirtualBoxingNode'new-3 [#_"NodeClass<? extends VirtualBoxingNode>" c, #_"ResolvedJavaType" type, #_"JavaKind" boxingKind]
         (let [
             #_"VirtualBoxingNode" this (VirtualInstanceNode'new-3t c, type, false)
+            this (merge this (VirtualBoxingNode'init-0))
             this (assoc this :boxingKind boxingKind)
         ]
             this
@@ -65949,8 +67747,12 @@ ZeroExtendNode'new-4
 (class-ns VirtualInstanceNode (§ extends VirtualObjectNodeImpl)
     (§ def #_"NodeClass<VirtualInstanceNode>" VirtualInstanceNode'TYPE (NodeClass'create-1 VirtualInstanceNode))
 
-    (§ final #_"ResolvedJavaType" :type nil)
-    (§ final #_"ResolvedJavaField[]" :fields nil)
+    (defn- #_"VirtualInstanceNode" VirtualInstanceNode'init-0 []
+        (hash-map
+            #_"ResolvedJavaType" :type nil
+            #_"ResolvedJavaField[]" :fields nil
+        )
+    )
 
     (defn #_"VirtualInstanceNode" VirtualInstanceNode'new-2 [#_"ResolvedJavaType" type, #_"boolean" hasIdentity]
         (VirtualInstanceNode'new-3y type, (#_"ResolvedJavaType" .getInstanceFields type, true), hasIdentity)
@@ -65967,6 +67769,7 @@ ZeroExtendNode'new-4
     (defn #_"VirtualInstanceNode" VirtualInstanceNode'new-4 [#_"NodeClass<? extends VirtualInstanceNode>" c, #_"ResolvedJavaType" type, #_"ResolvedJavaField[]" fields, #_"boolean" hasIdentity]
         (let [
             #_"VirtualInstanceNode" this (VirtualObjectNodeImpl'new-3 c, type, hasIdentity)
+            this (merge this (VirtualInstanceNode'init-0))
             this (assoc this :type type)
             this (assoc this :fields fields)
         ]
@@ -66020,17 +67823,21 @@ ZeroExtendNode'new-4
 (class-ns VirtualObjectNodeImpl (§ extends ValueNodeImpl) (§ implements VirtualObjectNode, LIRLowerable, IterableNodeType)
     (§ def #_"NodeClass<VirtualObjectNode>" VirtualObjectNodeImpl'TYPE (NodeClass'create-1 VirtualObjectNodeImpl))
 
-    ;;;
-     ; Specifies whether this virtual object has an object identity. If not, then the result of
-     ; a comparison of two virtual objects is determined by comparing their contents.
-     ;;
-    (§ final #_"boolean" :hasIdentity false)
-
-    (§ mutable #_"int" :objectId -1)
+    (defn- #_"VirtualObjectNodeImpl" VirtualObjectNodeImpl'init-0 []
+        (hash-map
+            ;;;
+             ; Specifies whether this virtual object has an object identity. If not, then the result of
+             ; a comparison of two virtual objects is determined by comparing their contents.
+             ;;
+            #_"boolean" :hasIdentity false
+            #_"int" :objectId -1
+        )
+    )
 
     (defn #_"VirtualObjectNode" VirtualObjectNodeImpl'new-3 [#_"NodeClass<? implements VirtualObjectNode>" c, #_"ResolvedJavaType" type, #_"boolean" hasIdentity]
         (let [
             #_"VirtualObjectNode" this (ValueNodeImpl'new-2 c, (StampFactory'objectNonNull-1 (TypeReference'createExactTrusted-1 type)))
+            this (merge this (VirtualObjectNodeImpl'init-0))
             this (assoc this :hasIdentity hasIdentity)
         ]
             this
@@ -66072,11 +67879,15 @@ ZeroExtendNode'new-4
 )
 
 (final-ns AddressLoweringPhase (§ implements Phase)
-    (§ final #_"AddressLowering" :lowering nil)
+    (defn- #_"AddressLoweringPhase" AddressLoweringPhase'init-0 []
+        (hash-map
+            #_"AddressLowering" :lowering nil
+        )
+    )
 
     (defn #_"AddressLoweringPhase" AddressLoweringPhase'new-1 [#_"AddressLowering" lowering]
         (let [
-            #_"AddressLoweringPhase" this (hash-map)
+            #_"AddressLoweringPhase" this (merge (hash-map) (AddressLoweringPhase'init-0))
             this (assoc this :lowering lowering)
         ]
             this
@@ -66107,10 +67918,14 @@ ZeroExtendNode'new-4
 (final-ns CanonicalizerPhase (§ implements Phase)
     (def- #_"int" CanonicalizerPhase'MAX_ITERATION_PER_NODE 10)
 
-    (§ mutable #_"boolean" :canonicalizeReads true)
+    (defn- #_"CanonicalizerPhase" CanonicalizerPhase'init-0 []
+        (hash-map
+            #_"boolean" :canonicalizeReads true
+        )
+    )
 
     (defn #_"CanonicalizerPhase" CanonicalizerPhase'new-0 []
-        (hash-map)
+        (merge (hash-map) (CanonicalizerPhase'init-0))
     )
 
     ;;;
@@ -66143,13 +67958,15 @@ ZeroExtendNode'new-4
  ; @anno CanonicalizerPhase.CanonicalizerInstance
  ;;
 (final-ns CanonicalizerInstance (§ implements Phase)
-    (§ final #_"CanonicalizerPhase" :phase nil)
-
-    (§ final #_"NodeMark" :newNodesMark nil)
-    (§ final #_"Iterable<? implements Node>" :initWorkingSet nil)
-
-    (§ mutable #_"NodeWorkList" :workList nil)
-    (§ mutable #_"Tool" :tool nil)
+    (defn- #_"CanonicalizerInstance" CanonicalizerInstance'init-0 []
+        (hash-map
+            #_"CanonicalizerPhase" :phase nil
+            #_"NodeMark" :newNodesMark nil
+            #_"Iterable<? implements Node>" :initWorkingSet nil
+            #_"NodeWorkList" :workList nil
+            #_"Tool" :tool nil
+        )
+    )
 
     (defn- #_"CanonicalizerInstance" CanonicalizerInstance'new-1 [#_"CanonicalizerPhase" phase]
         (CanonicalizerInstance'new-3 phase, nil, nil)
@@ -66165,7 +67982,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"CanonicalizerInstance" CanonicalizerInstance'new-3 [#_"CanonicalizerPhase" phase, #_"Iterable<? implements Node>" workingSet, #_"NodeMark" newNodesMark]
         (let [
-            #_"CanonicalizerInstance" this (hash-map)
+            #_"CanonicalizerInstance" this (merge (hash-map) (CanonicalizerInstance'init-0))
             this (assoc this :phase phase)
             this (assoc this :newNodesMark newNodesMark)
             this (assoc this :initWorkingSet workingSet)
@@ -66377,11 +68194,15 @@ ZeroExtendNode'new-4
  ; @anno CanonicalizerPhase.CanonicalizerInstance.Tool
  ;;
 (final-ns Tool (§ implements SimplifierTool)
-    (§ final #_"CanonicalizerInstance" :instance nil)
+    (defn- #_"Tool" Tool'init-0 []
+        (hash-map
+            #_"CanonicalizerInstance" :instance nil
+        )
+    )
 
     (defn #_"Tool" Tool'new-1 [#_"CanonicalizerInstance" instance]
         (let [
-            #_"Tool" this (hash-map)
+            #_"Tool" this (merge (hash-map) (Tool'init-0))
             this (assoc this :instance instance)
         ]
             this
@@ -66423,11 +68244,15 @@ ZeroExtendNode'new-4
 )
 
 (final-ns ConditionalEliminationPhase (§ implements Phase)
-    (§ final #_"boolean" :fullSchedule false)
+    (defn- #_"ConditionalEliminationPhase" ConditionalEliminationPhase'init-0 []
+        (hash-map
+            #_"boolean" :fullSchedule false
+        )
+    )
 
     (defn #_"ConditionalEliminationPhase" ConditionalEliminationPhase'new-1 [#_"boolean" fullSchedule]
         (let [
-            #_"ConditionalEliminationPhase" this (hash-map)
+            #_"ConditionalEliminationPhase" this (merge (hash-map) (ConditionalEliminationPhase'init-0))
             this (assoc this :fullSchedule fullSchedule)
         ]
             this
@@ -66454,10 +68279,14 @@ ZeroExtendNode'new-4
  ; @anno ConditionalEliminationPhase.MoveGuardsUpwards
  ;;
 (final-ns MoveGuardsUpwards (§ implements RecursiveVisitor #_"<Block>")
-    (§ mutable #_"Block" :anchorBlock nil)
+    (defn- #_"MoveGuardsUpwards" MoveGuardsUpwards'init-0 []
+        (hash-map
+            #_"Block" :anchorBlock nil
+        )
+    )
 
     (defn #_"MoveGuardsUpwards" MoveGuardsUpwards'new-0 []
-        (hash-map)
+        (merge (hash-map) (MoveGuardsUpwards'init-0))
     )
 
     (§ override! #_"Block" RecursiveVisitor'''enter-2 [#_"MoveGuardsUpwards" this, #_"Block" b]
@@ -66544,10 +68373,14 @@ ZeroExtendNode'new-4
  ; @anno ConditionalEliminationPhase.PhiInfoElement
  ;;
 (final-ns PhiInfoElement
-    (§ mutable #_"EconomicMap<EndNode, InfoElement>" :infoElements nil)
+    (defn- #_"PhiInfoElement" PhiInfoElement'init-0 []
+        (hash-map
+            #_"EconomicMap<EndNode, InfoElement>" :infoElements nil
+        )
+    )
 
     (defn #_"PhiInfoElement" PhiInfoElement'new-0 []
-        (hash-map)
+        (merge (hash-map) (PhiInfoElement'init-0))
     )
 
     (defn #_"PhiInfoElement" PhiInfoElement''set-3 [#_"PhiInfoElement" this, #_"EndNode" end, #_"InfoElement" infoElement]
@@ -66573,22 +68406,25 @@ ZeroExtendNode'new-4
  ; @anno ConditionalEliminationPhase.ConditionalEliminationInstance
  ;;
 (final-ns ConditionalEliminationInstance (§ implements RecursiveVisitor #_"<Integer>")
-    (§ final #_"NodeMap<InfoElement>" :map nil)
-    (§ final #_"BlockMap<List<Node>>" :blockToNodes nil)
-    (§ final #_"NodeMap<Block>" :nodeToBlock nil)
-    (§ final #_"CanonicalizerTool" :tool nil)
-    (§ final #_"NodeStack" :undoOperations nil)
-    (§ final #_"Graph" :graph nil)
-    (§ final #_"EconomicMap<MergeNode, EconomicMap<ValuePhiNode, PhiInfoElement>>" :mergeMaps nil)
-
-    ;;;
-     ; Tests which may be eliminated because post dominating tests to prove a broader condition.
-     ;;
-    (§ mutable #_"Deque<DeoptimizingGuard>" :pendingTests nil)
+    (defn- #_"ConditionalEliminationInstance" ConditionalEliminationInstance'init-0 []
+        (hash-map
+            #_"NodeMap<InfoElement>" :map nil
+            #_"BlockMap<List<Node>>" :blockToNodes nil
+            #_"NodeMap<Block>" :nodeToBlock nil
+            #_"CanonicalizerTool" :tool nil
+            #_"NodeStack" :undoOperations nil
+            #_"Graph" :graph nil
+            #_"EconomicMap<MergeNode, EconomicMap<ValuePhiNode, PhiInfoElement>>" :mergeMaps nil
+            ;;;
+             ; Tests which may be eliminated because post dominating tests to prove a broader condition.
+             ;;
+            #_"Deque<DeoptimizingGuard>" :pendingTests nil
+        )
+    )
 
     (defn #_"ConditionalEliminationInstance" ConditionalEliminationInstance'new-3 [#_"Graph" graph, #_"BlockMap<List<Node>>" blockToNodes, #_"NodeMap<Block>" nodeToBlock]
         (let [
-            #_"ConditionalEliminationInstance" this (hash-map)
+            #_"ConditionalEliminationInstance" this (merge (hash-map) (ConditionalEliminationInstance'init-0))
             this (assoc this :graph graph)
             this (assoc this :blockToNodes blockToNodes)
             this (assoc this :nodeToBlock nodeToBlock)
@@ -67431,12 +69267,17 @@ ZeroExtendNode'new-4
  ; @anno ConditionalEliminationPhase.InputFilter
  ;;
 (final-ns InputFilter (§ extends EdgeVisitorImpl)
-    (§ mutable #_"boolean" :ok false)
-    (§ mutable #_"ValueNode" :value nil)
+    (defn- #_"InputFilter" InputFilter'init-0 []
+        (hash-map
+            #_"boolean" :ok false
+            #_"ValueNode" :value nil
+        )
+    )
 
     (defn #_"InputFilter" InputFilter'new-1 [#_"ValueNode" value]
         (let [
             #_"InputFilter" this (EdgeVisitorImpl'new-0)
+            this (merge this (InputFilter'init-0))
             this (assoc this :value value)
             this (assoc this :ok true)
         ]
@@ -67461,14 +69302,18 @@ ZeroExtendNode'new-4
  ; @anno ConditionalEliminationPhase.InfoElement
  ;;
 (final-ns InfoElement
-    (§ final #_"Stamp" :stamp nil)
-    (§ final #_"GuardingNode" :guard nil)
-    (§ final #_"ValueNode" :proxifiedInput nil)
-    (§ final #_"InfoElement" :parent nil)
+    (defn- #_"InfoElement" InfoElement'init-0 []
+        (hash-map
+            #_"Stamp" :stamp nil
+            #_"GuardingNode" :guard nil
+            #_"ValueNode" :proxifiedInput nil
+            #_"InfoElement" :parent nil
+        )
+    )
 
     (defn #_"InfoElement" InfoElement'new-4 [#_"Stamp" stamp, #_"GuardingNode" guard, #_"ValueNode" proxifiedInput, #_"InfoElement" parent]
         (let [
-            #_"InfoElement" this (hash-map)
+            #_"InfoElement" this (merge (hash-map) (InfoElement'init-0))
             this (assoc this :stamp stamp)
             this (assoc this :guard guard)
             this (assoc this :proxifiedInput proxifiedInput)
@@ -67639,11 +69484,10 @@ ZeroExtendNode'new-4
 )
 
 (final-ns DeadCodeEliminationPhase (§ implements Phase)
-    ;;;
-     ; Creates a dead code elimination phase that will be run irrespective of GraalOptions#reduceDCE.
-     ;;
-    (defn #_"DeadCodeEliminationPhase" DeadCodeEliminationPhase'new-0 []
-        (DeadCodeEliminationPhase'new-1 Optionality'Required)
+    (defn- #_"DeadCodeEliminationPhase" DeadCodeEliminationPhase'init-0 []
+        (hash-map
+            #_"boolean" :optional false
+        )
     )
 
     ;;;
@@ -67652,14 +69496,19 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"DeadCodeEliminationPhase" DeadCodeEliminationPhase'new-1 [#_"Optionality" optionality]
         (let [
-            #_"DeadCodeEliminationPhase" this (hash-map)
+            #_"DeadCodeEliminationPhase" this (merge (hash-map) (DeadCodeEliminationPhase'init-0))
             this (assoc this :optional (= optionality Optionality'Optional))
         ]
             this
         )
     )
 
-    (§ final #_"boolean" :optional false)
+    ;;;
+     ; Creates a dead code elimination phase that will be run irrespective of GraalOptions#reduceDCE.
+     ;;
+    (defn #_"DeadCodeEliminationPhase" DeadCodeEliminationPhase'new-0 []
+        (DeadCodeEliminationPhase'new-1 Optionality'Required)
+    )
 
     (§ override! #_"Graph" Phase'''run-3 [#_"DeadCodeEliminationPhase" this, #_"Graph" graph, #_"PhaseContext" context]
         (when-not (and (:optional this) GraalOptions'reduceDCE)
@@ -67979,11 +69828,15 @@ ZeroExtendNode'new-4
  ; This phase lowers FloatingReadNodes into corresponding fixed reads.
  ;;
 (final-ns FixReadsPhase (§ implements Phase)
-    (§ mutable #_"Phase" :schedulePhase nil)
+    (defn- #_"FixReadsPhase" FixReadsPhase'init-0 []
+        (hash-map
+            #_"Phase" :schedulePhase nil
+        )
+    )
 
     (defn #_"FixReadsPhase" FixReadsPhase'new-1 [#_"Phase" schedulePhase]
         (let [
-            #_"FixReadsPhase" this (hash-map)
+            #_"FixReadsPhase" this (merge (hash-map) (FixReadsPhase'init-0))
             this (assoc this :schedulePhase schedulePhase)
         ]
             this
@@ -68045,16 +69898,20 @@ ZeroExtendNode'new-4
  ; @anno FixReadsPhase.RawConditionalEliminationVisitor
  ;;
 (final-ns RawConditionalEliminationVisitor (§ implements RecursiveVisitor #_"<Integer>")
-    (§ final #_"NodeMap<StampElement>" :stampMap nil)
-    (§ final #_"NodeStack" :undoOperations nil)
-    (§ final #_"ScheduleResult" :schedule nil)
-    (§ final #_"Graph" :graph nil)
-    (§ final #_"BlockMap<Integer>" :blockActionStart nil)
-    (§ final #_"EconomicMap<MergeNode, EconomicMap<ValueNode, Stamp>>" :endMaps nil)
+    (defn- #_"RawConditionalEliminationVisitor" RawConditionalEliminationVisitor'init-0 []
+        (hash-map
+            #_"NodeMap<StampElement>" :stampMap nil
+            #_"NodeStack" :undoOperations nil
+            #_"ScheduleResult" :schedule nil
+            #_"Graph" :graph nil
+            #_"BlockMap<Integer>" :blockActionStart nil
+            #_"EconomicMap<MergeNode, EconomicMap<ValueNode, Stamp>>" :endMaps nil
+        )
+    )
 
     (defn #_"RawConditionalEliminationVisitor" RawConditionalEliminationVisitor'new-2 [#_"Graph" graph, #_"ScheduleResult" schedule]
         (let [
-            #_"RawConditionalEliminationVisitor" this (hash-map)
+            #_"RawConditionalEliminationVisitor" this (merge (hash-map) (RawConditionalEliminationVisitor'init-0))
             this (assoc this :graph graph)
             this (assoc this :schedule schedule)
             this (assoc this :blockActionStart (BlockMap'new-1 (:cfg schedule)))
@@ -68428,12 +70285,16 @@ ZeroExtendNode'new-4
  ; @anno FixReadsPhase.StampElement
  ;;
 (final-ns StampElement
-    (§ final #_"Stamp" :stamp nil)
-    (§ final #_"StampElement" :parent nil)
+    (defn- #_"StampElement" StampElement'init-0 []
+        (hash-map
+            #_"Stamp" :stamp nil
+            #_"StampElement" :parent nil
+        )
+    )
 
     (defn #_"StampElement" StampElement'new-2 [#_"Stamp" stamp, #_"StampElement" parent]
         (let [
-            #_"StampElement" this (hash-map)
+            #_"StampElement" this (merge (hash-map) (StampElement'init-0))
             this (assoc this :stamp stamp)
             this (assoc this :parent parent)
         ]
@@ -68443,8 +70304,12 @@ ZeroExtendNode'new-4
 )
 
 (final-ns FloatingReadPhase (§ implements Phase)
-    (§ mutable #_"boolean" :createFloatingReads false)
-    (§ mutable #_"boolean" :createMemoryMapNodes false)
+    (defn- #_"FloatingReadPhase" FloatingReadPhase'init-0 []
+        (hash-map
+            #_"boolean" :createFloatingReads false
+            #_"boolean" :createMemoryMapNodes false
+        )
+    )
 
     (defn #_"FloatingReadPhase" FloatingReadPhase'new-0 []
         (FloatingReadPhase'new-2 true, false)
@@ -68457,7 +70322,7 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"FloatingReadPhase" FloatingReadPhase'new-2 [#_"boolean" createFloatingReads, #_"boolean" createMemoryMapNodes]
         (let [
-            #_"FloatingReadPhase" this (hash-map)
+            #_"FloatingReadPhase" this (merge (hash-map) (FloatingReadPhase'init-0))
             this (assoc this :createFloatingReads createFloatingReads)
             this (assoc this :createMemoryMapNodes createMemoryMapNodes)
         ]
@@ -68627,12 +70492,25 @@ ZeroExtendNode'new-4
  ; @anno FloatingReadPhase.MemoryMapImpl
  ;;
 (final-ns MemoryMapImpl (§ implements MemoryMap)
-    (§ final #_"EconomicMap<LocationIdentity, MemoryNode>" :lastMemorySnapshot nil)
+    (defn- #_"MemoryMapImpl" MemoryMapImpl'init-0 []
+        (hash-map
+            #_"EconomicMap<LocationIdentity, MemoryNode>" :lastMemorySnapshot nil
+        )
+    )
 
     (defn #_"MemoryMapImpl" MemoryMapImpl'new-1m [#_"MemoryMapImpl" memoryMap]
         (let [
-            #_"MemoryMapImpl" this (hash-map)
+            #_"MemoryMapImpl" this (merge (hash-map) (MemoryMapImpl'init-0))
             this (assoc this :lastMemorySnapshot (EconomicMap/create Equivalence/DEFAULT, (:lastMemorySnapshot memoryMap)))
+        ]
+            this
+        )
+    )
+
+    (defn #_"MemoryMapImpl" MemoryMapImpl'new-0 []
+        (let [
+            #_"MemoryMapImpl" this (merge (hash-map) (MemoryMapImpl'init-0))
+            this (assoc this :lastMemorySnapshot (EconomicMap/create Equivalence/DEFAULT))
         ]
             this
         )
@@ -68643,15 +70521,6 @@ ZeroExtendNode'new-4
             #_"MemoryMapImpl" this (MemoryMapImpl'new-0)
         ]
             (#_"EconomicMap" .put (:lastMemorySnapshot this), (LocationIdentity/any), start)
-            this
-        )
-    )
-
-    (defn #_"MemoryMapImpl" MemoryMapImpl'new-0 []
-        (let [
-            #_"MemoryMapImpl" this (hash-map)
-            this (assoc this :lastMemorySnapshot (EconomicMap/create Equivalence/DEFAULT))
-        ]
             this
         )
     )
@@ -68673,13 +70542,18 @@ ZeroExtendNode'new-4
  ; @anno FloatingReadPhase.FloatingReadClosure
  ;;
 (final-ns FloatingReadClosure (§ extends NodeIteratorClosureImpl #_"<MemoryMapImpl>")
-    (§ final #_"EconomicMap<LoopBeginNode, EconomicSet<LocationIdentity>>" :modifiedInLoops nil)
-    (§ mutable #_"boolean" :createFloatingReads false)
-    (§ mutable #_"boolean" :createMemoryMapNodes false)
+    (defn- #_"FloatingReadClosure" FloatingReadClosure'init-0 []
+        (hash-map
+            #_"EconomicMap<LoopBeginNode, EconomicSet<LocationIdentity>>" :modifiedInLoops nil
+            #_"boolean" :createFloatingReads false
+            #_"boolean" :createMemoryMapNodes false
+        )
+    )
 
     (defn #_"FloatingReadClosure" FloatingReadClosure'new-3 [#_"EconomicMap<LoopBeginNode, EconomicSet<LocationIdentity>>" modifiedInLoops, #_"boolean" createFloatingReads, #_"boolean" createMemoryMapNodes]
         (let [
             #_"FloatingReadClosure" this (NodeIteratorClosureImpl'new-0)
+            this (merge this (FloatingReadClosure'init-0))
             this (assoc this :modifiedInLoops modifiedInLoops)
             this (assoc this :createFloatingReads createFloatingReads)
             this (assoc this :createMemoryMapNodes createMemoryMapNodes)
@@ -68976,11 +70850,16 @@ ZeroExtendNode'new-4
  ; @anno GuardLoweringPhase.LowerGuards
  ;;
 (final-ns LowerGuards (§ extends ScheduledNodeIteratorImpl)
-    (§ final #_"Block" :block nil)
+    (defn- #_"LowerGuards" LowerGuards'init-0 []
+        (hash-map
+            #_"Block" :block nil
+        )
+    )
 
     (defn #_"LowerGuards" LowerGuards'new-1 [#_"Block" block]
         (let [
             #_"LowerGuards" this (ScheduledNodeIteratorImpl'new-0)
+            this (merge this (LowerGuards'init-0))
             this (assoc this :block block)
         ]
             this
@@ -69037,11 +70916,16 @@ ZeroExtendNode'new-4
  ; phases in the suite have been applied if any of the phases changed the graph.
  ;;
 (final-ns IncrementalCanonicalizerPhase (§ extends PhaseSuite)
-    (§ final #_"CanonicalizerPhase" :canonicalizer nil)
+    (defn- #_"IncrementalCanonicalizerPhase" IncrementalCanonicalizerPhase'init-0 []
+        (hash-map
+            #_"CanonicalizerPhase" :canonicalizer nil
+        )
+    )
 
     (defn #_"IncrementalCanonicalizerPhase" IncrementalCanonicalizerPhase'new-1 [#_"CanonicalizerPhase" canonicalizer]
         (let [
             #_"IncrementalCanonicalizerPhase" this (PhaseSuite'new-0)
+            this (merge this (IncrementalCanonicalizerPhase'init-0))
             this (assoc this :canonicalizer canonicalizer)
         ]
             this
@@ -69075,11 +70959,15 @@ ZeroExtendNode'new-4
 )
 
 (class-ns AbstractInlineInfo (§ implements InlineInfo)
-    (§ final #_"InvokeNode" :invoke nil)
+    (defn- #_"AbstractInlineInfo" AbstractInlineInfo'init-0 []
+        (hash-map
+            #_"InvokeNode" :invoke nil
+        )
+    )
 
     (defn #_"AbstractInlineInfo" AbstractInlineInfo'new-1 [#_"InvokeNode" invoke]
         (let [
-            #_"AbstractInlineInfo" this (hash-map)
+            #_"AbstractInlineInfo" this (merge (hash-map) (AbstractInlineInfo'init-0))
             this (assoc this :invoke invoke)
         ]
             this
@@ -69119,9 +71007,12 @@ ZeroExtendNode'new-4
  ; Instances of this class don't make sense in isolation but as part of an InlineInfo.
  ;;
 (final-ns InlineableGraph (§ implements Inlineable)
-    (§ final #_"Graph" :graph nil)
-
-    (§ mutable #_"FixedNodeProbabilityCache" :probabilites (FixedNodeProbabilityCache'new-0))
+    (defn- #_"InlineableGraph" InlineableGraph'init-0 []
+        (hash-map
+            #_"Graph" :graph nil
+            #_"FixedNodeProbabilityCache" :probabilites (FixedNodeProbabilityCache'new-0)
+        )
+    )
 
     ;;;
      ; This method builds the IR nodes for the given {@code method} and canonicalizes them.
@@ -69141,7 +71032,7 @@ ZeroExtendNode'new-4
 
     (defn #_"InlineableGraph" InlineableGraph'new-4 [#_"ResolvedJavaMethod" method, #_"InvokeNode" invoke, #_"PhaseContext" context, #_"CanonicalizerPhase" canonicalizer]
         (let [
-            #_"InlineableGraph" this (hash-map)
+            #_"InlineableGraph" this (merge (hash-map) (InlineableGraph'init-0))
             ;; TODO copying the graph is only necessary if it is modified or if it contains any invokes
             this (assoc this :graph (Graph''copy-1 (InlineableGraph'parseBytecodes-3 method, context, canonicalizer)))
         ]
@@ -69262,12 +71153,17 @@ ZeroExtendNode'new-4
  ; target method and therefore is able to determine the called method exactly.
  ;;
 (final-ns ExactInlineInfo (§ extends AbstractInlineInfo)
-    (§ final #_"ResolvedJavaMethod" :concrete nil)
-    (§ mutable #_"Inlineable" :inlineableElement nil)
+    (defn- #_"ExactInlineInfo" ExactInlineInfo'init-0 []
+        (hash-map
+            #_"ResolvedJavaMethod" :concrete nil
+            #_"Inlineable" :inlineableElement nil
+        )
+    )
 
     (defn #_"ExactInlineInfo" ExactInlineInfo'new-2 [#_"InvokeNode" invoke, #_"ResolvedJavaMethod" concrete]
         (let [
             #_"ExactInlineInfo" this (AbstractInlineInfo'new-1 invoke)
+            this (merge this (ExactInlineInfo'init-0))
             this (assoc this :concrete concrete)
         ]
             this
@@ -69314,11 +71210,15 @@ ZeroExtendNode'new-4
 )
 
 (final-ns InliningPhase (§ implements Phase)
-    (§ final #_"CanonicalizerPhase" :canonicalizer nil)
+    (defn- #_"InliningPhase" InliningPhase'init-0 []
+        (hash-map
+            #_"CanonicalizerPhase" :canonicalizer nil
+        )
+    )
 
     (defn #_"InliningPhase" InliningPhase'new-1 [#_"CanonicalizerPhase" canonicalizer]
         (let [
-            #_"InliningPhase" this (hash-map)
+            #_"InliningPhase" this (merge (hash-map) (InliningPhase'init-0))
             this (assoc this :canonicalizer canonicalizer)
         ]
             this
@@ -69821,12 +71721,16 @@ ZeroExtendNode'new-4
     (§ def #_"Decision" Decision'YES (Decision'new-2 true, "(unknown reason)"))
     (§ def #_"Decision" Decision'NO (Decision'new-2 false, "(unknown reason)"))
 
-    (§ final #_"boolean" :shouldInline false)
-    (§ final #_"String" :reason nil)
+    (defn- #_"Decision" Decision'init-0 []
+        (hash-map
+            #_"boolean" :shouldInline false
+            #_"String" :reason nil
+        )
+    )
 
     (defn- #_"Decision" Decision'new-2 [#_"boolean" shouldInline, #_"String" reason]
         (let [
-            #_"Decision" this (hash-map)
+            #_"Decision" this (merge (hash-map) (Decision'init-0))
             this (assoc this :shouldInline shouldInline)
             this (assoc this :reason reason)
         ]
@@ -69850,34 +71754,36 @@ ZeroExtendNode'new-4
  ; inlining opportunities (thus the adjective "explorable" given to this class).
  ;;
 (final-ns CallsiteHolderExplorable (§ extends CallsiteHolderImpl)
-    ;;;
-     ; Graph in which inlining may be performed at one or more of the callsites containined in #remainingInvokes.
-     ;;
-    (§ final #_"Graph" :graph nil)
-
-    (§ final #_"LinkedList<InvokeNode>" :remainingInvokes nil)
-    (§ final #_"double" :probability 0.0)
-    (§ final #_"double" :relevance 0.0)
-
-    ;;;
-     ; Parameters for which the callsite targeting #graph() provides "fixed" arguments. That
-     ; callsite isn't referenced by this instance. Instead, it belongs to the graph of the caller of
-     ; this CallsiteHolderExplorable.
-     ;
-     ; Constant arguments don't contribute to fixed-params: those params have been removed already,
-     ; see InlineableGraph.
-     ;
-     ; Instead, fixed-params are those receiving freshly instantiated arguments (possibly
-     ; instantiated several levels up in the call-hierarchy).
-     ;;
-    (§ final #_"EconomicSet<ParameterNode>" :fixedParams nil)
-
-    (§ final #_"ToDoubleFunction<FixedNode>" :probabilities nil)
-    (§ final #_"ComputeInliningRelevance" :computeInliningRelevance nil)
+    (defn- #_"CallsiteHolderExplorable" CallsiteHolderExplorable'init-0 []
+        (hash-map
+            ;;;
+             ; Graph in which inlining may be performed at one or more of the callsites containined in #remainingInvokes.
+             ;;
+            #_"Graph" :graph nil
+            #_"LinkedList<InvokeNode>" :remainingInvokes nil
+            #_"double" :probability 0.0
+            #_"double" :relevance 0.0
+            ;;;
+             ; Parameters for which the callsite targeting #graph() provides "fixed" arguments. That
+             ; callsite isn't referenced by this instance. Instead, it belongs to the graph of the caller of
+             ; this CallsiteHolderExplorable.
+             ;
+             ; Constant arguments don't contribute to fixed-params: those params have been removed already,
+             ; see InlineableGraph.
+             ;
+             ; Instead, fixed-params are those receiving freshly instantiated arguments (possibly
+             ; instantiated several levels up in the call-hierarchy).
+             ;;
+            #_"EconomicSet<ParameterNode>" :fixedParams nil
+            #_"ToDoubleFunction<FixedNode>" :probabilities nil
+            #_"ComputeInliningRelevance" :computeInliningRelevance nil
+        )
+    )
 
     (defn #_"CallsiteHolderExplorable" CallsiteHolderExplorable'new-5 [#_"Graph" graph, #_"double" probability, #_"double" relevance, #_"BitSet" freshlyInstantiatedArguments, #_"LinkedList<InvokeNode>" invokes]
         (let [
             #_"CallsiteHolderExplorable" this (CallsiteHolderImpl'new-0)
+            this (merge this (CallsiteHolderExplorable'init-0))
             this (assoc this :graph graph)
             this (assoc this :probability probability)
             this (assoc this :relevance relevance)
@@ -69957,23 +71863,26 @@ ZeroExtendNode'new-4
     (def- #_"int" ComputeInliningRelevance'EXPECTED_INVOKE_RATIO 20)
     (def- #_"int" ComputeInliningRelevance'EXPECTED_LOOP_COUNT 3)
 
-    (§ final #_"Graph" :graph nil)
-    (§ final #_"ToDoubleFunction<FixedNode>" :nodeProbabilities nil)
-
-    ;;;
-     ; Node relevances are pre-computed for all invokes if the graph contains loops. If there are no
-     ; loops, the computation happens lazily based on #rootScope.
-     ;;
-    (§ mutable #_"EconomicMap<FixedNode, Double>" :nodeRelevances nil)
-    ;;;
-     ; This scope is non-nil if (and only if) there are no loops in the graph. In this case, the
-     ; root scope is used to compute invoke relevances on the fly.
-     ;;
-    (§ mutable #_"Scope" :rootScope nil)
+    (defn- #_"ComputeInliningRelevance" ComputeInliningRelevance'init-0 []
+        (hash-map
+            #_"Graph" :graph nil
+            #_"ToDoubleFunction<FixedNode>" :nodeProbabilities nil
+            ;;;
+             ; Node relevances are pre-computed for all invokes if the graph contains loops.
+             ; If there are no loops, the computation happens lazily based on #rootScope.
+             ;;
+            #_"EconomicMap<FixedNode, Double>" :nodeRelevances nil
+            ;;;
+             ; This scope is non-nil if (and only if) there are no loops in the graph.
+             ; In this case, the root scope is used to compute invoke relevances on the fly.
+             ;;
+            #_"Scope" :rootScope nil
+        )
+    )
 
     (defn #_"ComputeInliningRelevance" ComputeInliningRelevance'new-2 [#_"Graph" graph, #_"ToDoubleFunction<FixedNode>" nodeProbabilities]
         (let [
-            #_"ComputeInliningRelevance" this (hash-map)
+            #_"ComputeInliningRelevance" this (merge (hash-map) (ComputeInliningRelevance'init-0))
             this (assoc this :graph graph)
             this (assoc this :nodeProbabilities nodeProbabilities)
         ]
@@ -70182,23 +72091,25 @@ ZeroExtendNode'new-4
  ; @anno ComputeInliningRelevance.Scope
  ;;
 (final-ns Scope
-    (§ final #_"ComputeInliningRelevance" :relevance nil)
-
-    (§ final #_"FixedNode" :start nil)
-    (§ final #_"Scope" :parent nil) ;; can be nil for the outermost scope
-
-    ;;;
-     ; The minimum probability along the most probable path in this scope. Computed lazily.
-     ;;
-    (§ mutable #_"double" :fastPathMinProbability ComputeInliningRelevance'UNINITIALIZED)
-    ;;;
-     ; A measure of how important this scope is within its parent scope. Computed lazily.
-     ;;
-    (§ mutable #_"double" :scopeRelevanceWithinParent ComputeInliningRelevance'UNINITIALIZED)
+    (defn- #_"Scope" Scope'init-0 []
+        (hash-map
+            #_"ComputeInliningRelevance" :relevance nil
+            #_"FixedNode" :start nil
+            #_"Scope" :parent nil ;; can be nil for the outermost scope
+            ;;;
+             ; The minimum probability along the most probable path in this scope. Computed lazily.
+             ;;
+            #_"double" :fastPathMinProbability ComputeInliningRelevance'UNINITIALIZED
+            ;;;
+             ; A measure of how important this scope is within its parent scope. Computed lazily.
+             ;;
+            #_"double" :scopeRelevanceWithinParent ComputeInliningRelevance'UNINITIALIZED
+        )
+    )
 
     (defn #_"Scope" Scope'new-3 [#_"ComputeInliningRelevance" relevance, #_"FixedNode" start, #_"Scope" parent]
         (let [
-            #_"Scope" this (hash-map)
+            #_"Scope" this (merge (hash-map) (Scope'init-0))
             this (assoc this :relevance relevance)
             this (assoc this :start start)
             this (assoc this :parent parent)
@@ -70281,22 +72192,24 @@ ZeroExtendNode'new-4
  ; (2) a single CallsiteHolder (the root one, for the method on which inlining was called)
  ;;
 (final-ns InliningData
-    ;;;
-     ; Call hierarchy from outer most call (i.e. compilation unit) to inner most callee.
-     ;;
-    (§ final #_"ArrayDeque<CallsiteHolder>" :graphQueue (ArrayDeque.))
-    (§ final #_"ArrayDeque<MethodInvocation>" :invocationQueue (ArrayDeque.))
-
-    (§ final #_"PhaseContext" :context nil)
-    (§ final #_"CanonicalizerPhase" :canonicalizer nil)
-    (§ final #_"InliningPolicy" :inliningPolicy nil)
-    (§ final #_"Graph" :rootGraph nil)
-
-    (§ mutable #_"int" :maxGraphs 0)
+    (defn- #_"InliningData" InliningData'init-0 []
+        (hash-map
+            ;;;
+             ; Call hierarchy from outer most call (i.e. compilation unit) to inner most callee.
+             ;;
+            #_"ArrayDeque<CallsiteHolder>" :graphQueue (ArrayDeque.)
+            #_"ArrayDeque<MethodInvocation>" :invocationQueue (ArrayDeque.)
+            #_"PhaseContext" :context nil
+            #_"CanonicalizerPhase" :canonicalizer nil
+            #_"InliningPolicy" :inliningPolicy nil
+            #_"Graph" :rootGraph nil
+            #_"int" :maxGraphs 0
+        )
+    )
 
     (defn #_"InliningData" InliningData'new-5 [#_"Graph" rootGraph, #_"PhaseContext" context, #_"CanonicalizerPhase" canonicalizer, #_"InliningPolicy" inliningPolicy, #_"LinkedList<InvokeNode>" rootInvokes]
         (let [
-            #_"InliningData" this (hash-map)
+            #_"InliningData" this (merge (hash-map) (InliningData'init-0))
             this (assoc this :context context)
             this (assoc this :canonicalizer canonicalizer)
             this (assoc this :inliningPolicy inliningPolicy)
@@ -70672,13 +72585,17 @@ ZeroExtendNode'new-4
  ; the InvokeNodes with MethodCallTargetNode. Such list of callsites is returned by #apply().
  ;;
 (final-ns InliningIterator
-    (§ final #_"StartNode" :start nil)
-    (§ final #_"Deque<FixedNode>" :nodeQueue nil)
-    (§ final #_"NodeBitMap" :queuedNodes nil)
+    (defn- #_"InliningIterator" InliningIterator'init-0 []
+        (hash-map
+            #_"StartNode" :start nil
+            #_"Deque<FixedNode>" :nodeQueue nil
+            #_"NodeBitMap" :queuedNodes nil
+        )
+    )
 
     (defn #_"InliningIterator" InliningIterator'new-1 [#_"Graph" graph]
         (let [
-            #_"InliningIterator" this (hash-map)
+            #_"InliningIterator" this (merge (hash-map) (InliningIterator'init-0))
             this (assoc this :start (:start graph))
             this (assoc this :nodeQueue (ArrayDeque.))
             this (assoc this :queuedNodes (NodeBitMap'new-1g graph))
@@ -70772,30 +72689,31 @@ ZeroExtendNode'new-4
  ; CallsiteHolders in that element represent feasible targets for the callsite in question.
  ;;
 (final-ns MethodInvocation
-    (§ final #_"InlineInfo" :callee nil)
-    (§ final #_"double" :probability 0.0)
-    (§ final #_"double" :relevance 0.0)
-
-    (§ mutable #_"int" :processedGraphs 0)
-
-    ;;;
-     ; The immutable positions of freshly instantiated arguments (i.e. positions in {@code callee.invoke.callTarget.arguments}).
-     ;
-     ; A freshly instantiated argument is either:
-     ;
-     ; (1) an InliningData#isFreshInstantiation(ValueNode)
-     ; (2) a fixed-param of the graph containing the callsite (i.e. of {@code callee.graph()} that contains {@code callee.invoke})
-     ;
-     ; Given those positions, the CallsiteHolderExplorable instantiated in #buildCallsiteHolderForElement(int) can determine
-     ; which of <i>its</i> parameters are fixed.
-     ;;
-    (§ final #_"BitSet" :freshlyInstantiatedArguments nil)
-
-    (§ final #_"int" :sizeFreshArgs 0)
+    (defn- #_"MethodInvocation" MethodInvocation'init-0 []
+        (hash-map
+            #_"InlineInfo" :callee nil
+            #_"double" :probability 0.0
+            #_"double" :relevance 0.0
+            #_"int" :processedGraphs 0
+            ;;;
+             ; The immutable positions of freshly instantiated arguments (i.e. positions in {@code callee.invoke.callTarget.arguments}).
+             ;
+             ; A freshly instantiated argument is either:
+             ;
+             ; (1) an InliningData#isFreshInstantiation(ValueNode)
+             ; (2) a fixed-param of the graph containing the callsite (i.e. of {@code callee.graph()} that contains {@code callee.invoke})
+             ;
+             ; Given those positions, the CallsiteHolderExplorable instantiated in #buildCallsiteHolderForElement(int) can determine
+             ; which of <i>its</i> parameters are fixed.
+             ;;
+            #_"BitSet" :freshlyInstantiatedArguments nil
+            #_"int" :sizeFreshArgs 0
+        )
+    )
 
     (defn #_"MethodInvocation" MethodInvocation'new-4 [#_"InlineInfo" info, #_"double" probability, #_"double" relevance, #_"BitSet" freshlyInstantiatedArguments]
         (let [
-            #_"MethodInvocation" this (hash-map)
+            #_"MethodInvocation" this (merge (hash-map) (MethodInvocation'init-0))
             this (assoc this :callee info)
             this (assoc this :probability probability)
             this (assoc this :relevance relevance)
@@ -70832,12 +72750,16 @@ ZeroExtendNode'new-4
 (final-ns IterativeConditionalEliminationPhase (§ implements Phase)
     (def- #_"int" IterativeConditionalEliminationPhase'MAX_ITERATIONS 256)
 
-    (§ final #_"CanonicalizerPhase" :canonicalizer nil)
-    (§ final #_"boolean" :fullSchedule false)
+    (defn- #_"IterativeConditionalEliminationPhase" IterativeConditionalEliminationPhase'init-0 []
+        (hash-map
+            #_"CanonicalizerPhase" :canonicalizer nil
+            #_"boolean" :fullSchedule false
+        )
+    )
 
     (defn #_"IterativeConditionalEliminationPhase" IterativeConditionalEliminationPhase'new-2 [#_"CanonicalizerPhase" canonicalizer, #_"boolean" fullSchedule]
         (let [
-            #_"IterativeConditionalEliminationPhase" this (hash-map)
+            #_"IterativeConditionalEliminationPhase" this (merge (hash-map) (IterativeConditionalEliminationPhase'init-0))
             this (assoc this :canonicalizer canonicalizer)
             this (assoc this :fullSchedule fullSchedule)
         ]
@@ -70942,12 +72864,16 @@ ZeroExtendNode'new-4
  ; Processes all Lowerable nodes to do their lowering.
  ;;
 (final-ns LoweringPhase (§ implements Phase)
-    (§ final #_"CanonicalizerPhase" :canonicalizer nil)
-    (§ final #_"LoweringStage" :loweringStage nil)
+    (defn- #_"LoweringPhase" LoweringPhase'init-0 []
+        (hash-map
+            #_"CanonicalizerPhase" :canonicalizer nil
+            #_"LoweringStage" :loweringStage nil
+        )
+    )
 
     (defn #_"LoweringPhase" LoweringPhase'new-2 [#_"CanonicalizerPhase" canonicalizer, #_"LoweringStage" loweringStage]
         (let [
-            #_"LoweringPhase" this (hash-map)
+            #_"LoweringPhase" this (merge (hash-map) (LoweringPhase'init-0))
             this (assoc this :canonicalizer canonicalizer)
             this (assoc this :loweringStage loweringStage)
         ]
@@ -71127,12 +73053,17 @@ ZeroExtendNode'new-4
 (final-ns DummyGuardHandle (§ extends ValueNodeImpl) (§ implements GuardedNode)
     (§ def #_"NodeClass<DummyGuardHandle>" DummyGuardHandle'TYPE (NodeClass'create-1 DummyGuardHandle))
 
-    ; @Input(InputType'Guard)
-    (§ mutable #_"GuardingNode" :guard nil)
+    (defn- #_"DummyGuardHandle" DummyGuardHandle'init-0 []
+        (hash-map
+            ; @Input(InputType'Guard)
+            #_"GuardingNode" :guard nil
+        )
+    )
 
     (defn #_"DummyGuardHandle" DummyGuardHandle'new-1 [#_"GuardingNode" guard]
         (let [
             #_"DummyGuardHandle" this (ValueNodeImpl'new-2 DummyGuardHandle'TYPE, VoidStamp'instance)
+            this (merge this (DummyGuardHandle'init-0))
             this (assoc this :guard guard)
         ]
             this
@@ -71151,15 +73082,18 @@ ZeroExtendNode'new-4
 )
 
 (final-ns LoweringTool
-    (§ final #_"LoweringPhase" :phase nil)
-
-    (§ final #_"NodeBitMap" :activeGuards nil)
-    (§ mutable #_"AnchoringNode" :guardAnchor nil)
-    (§ mutable #_"FixedWithNextNode" :lastFixedNode nil)
+    (defn- #_"LoweringTool" LoweringTool'init-0 []
+        (hash-map
+            #_"LoweringPhase" :phase nil
+            #_"NodeBitMap" :activeGuards nil
+            #_"AnchoringNode" :guardAnchor nil
+            #_"FixedWithNextNode" :lastFixedNode nil
+        )
+    )
 
     (defn #_"LoweringTool" LoweringTool'new-4 [#_"LoweringPhase" phase, #_"AnchoringNode" guardAnchor, #_"NodeBitMap" activeGuards, #_"FixedWithNextNode" lastFixedNode]
         (let [
-            #_"LoweringTool" this (hash-map)
+            #_"LoweringTool" this (merge (hash-map) (LoweringTool'init-0))
             this (assoc this :phase phase)
             this (assoc this :guardAnchor guardAnchor)
             this (assoc this :activeGuards activeGuards)
@@ -71231,14 +73165,17 @@ ZeroExtendNode'new-4
  ; @anno LoweringPhase.LoweringRound
  ;;
 (final-ns LoweringRound (§ implements Phase)
-    (§ final #_"LoweringPhase" :phase nil)
-
-    (§ final #_"SchedulePhase" :schedulePhase (SchedulePhase'new-0))
-    (§ mutable #_"ScheduleResult" :schedule nil)
+    (defn- #_"LoweringRound" LoweringRound'init-0 []
+        (hash-map
+            #_"LoweringPhase" :phase nil
+            #_"SchedulePhase" :schedulePhase (SchedulePhase'new-0)
+            #_"ScheduleResult" :schedule nil
+        )
+    )
 
     (defn- #_"LoweringRound" LoweringRound'new-1 [#_"LoweringPhase" phase]
         (let [
-            #_"LoweringRound" this (hash-map)
+            #_"LoweringRound" this (merge (hash-map) (LoweringRound'init-0))
             this (assoc this :phase phase)
         ]
             this
@@ -71359,19 +73296,21 @@ ZeroExtendNode'new-4
  ; @anno LoweringPhase.LoweringRound.ProcessFrame
  ;;
 (final-ns ProcessFrame
-    (§ final #_"ProcessFrame" :parent nil)
-    (§ final #_"Block" :block nil)
-    (§ mutable #_"Block" :dominated nil)
-    (§ final #_"Block" :alwaysReachedBlock nil)
-
-    (§ final #_"LoweringRound" :round nil)
-
-    (§ final #_"NodeBitMap" :activeGuards nil)
-    (§ mutable #_"AnchoringNode" :anchor nil)
+    (defn- #_"ProcessFrame" ProcessFrame'init-0 []
+        (hash-map
+            #_"ProcessFrame" :parent nil
+            #_"Block" :block nil
+            #_"Block" :dominated nil
+            #_"Block" :alwaysReachedBlock nil
+            #_"LoweringRound" :round nil
+            #_"NodeBitMap" :activeGuards nil
+            #_"AnchoringNode" :anchor nil
+        )
+    )
 
     (defn #_"ProcessFrame" ProcessFrame'new-5 [#_"ProcessFrame" parent, #_"LoweringRound" round, #_"Block" block, #_"NodeBitMap" activeGuards, #_"AnchoringNode" anchor]
         (let [
-            #_"ProcessFrame" this (hash-map)
+            #_"ProcessFrame" this (merge (hash-map) (ProcessFrame'init-0))
             this (assoc this :parent parent)
             this (assoc this :block block)
             this (assoc this :alwaysReachedBlock (:postdominator block))
@@ -71687,11 +73626,15 @@ ZeroExtendNode'new-4
  ; A simple NodeEventListener implementation that accumulates event nodes in a HashSet.
  ;;
 (final-ns HashSetNodeEventListener (§ extends NodeEventListenerImpl)
-    ;;;
-     ; The set being used to accumulate the nodes communicated to this listener.
-     ;;
-    (§ final #_"EconomicSet<Node>" :nodes nil)
-    (§ final #_"Set<NodeEvent>" :filter nil)
+    (defn- #_"HashSetNodeEventListener" HashSetNodeEventListener'init-0 []
+        (hash-map
+            ;;;
+             ; The set being used to accumulate the nodes communicated to this listener.
+             ;;
+            #_"EconomicSet<Node>" :nodes nil
+            #_"Set<NodeEvent>" :filter nil
+        )
+    )
 
     ;;;
      ; Creates a NodeEventListener that collects nodes from all events.
@@ -71699,6 +73642,7 @@ ZeroExtendNode'new-4
     (defn #_"HashSetNodeEventListener" HashSetNodeEventListener'new-0 []
         (let [
             #_"HashSetNodeEventListener" this (NodeEventListenerImpl'new-0)
+            this (merge this (HashSetNodeEventListener'init-0))
             this (assoc this :nodes (EconomicSet/create Equivalence/IDENTITY))
             this (assoc this :filter (EnumSet/allOf NodeEvent))
         ]
@@ -71712,6 +73656,7 @@ ZeroExtendNode'new-4
     (defn #_"HashSetNodeEventListener" HashSetNodeEventListener'new-1 [#_"Set<NodeEvent>" filter]
         (let [
             #_"HashSetNodeEventListener" this (NodeEventListenerImpl'new-0)
+            this (merge this (HashSetNodeEventListener'init-0))
             this (assoc this :nodes (EconomicSet/create Equivalence/IDENTITY))
             this (assoc this :filter filter)
         ]
@@ -71744,11 +73689,15 @@ ZeroExtendNode'new-4
  ; Compute probabilities for fixed nodes on the fly and cache them at AbstractBeginNodes.
  ;;
 (final-ns FixedNodeProbabilityCache (§ implements ToDoubleFunction #_"<FixedNode>")
-    (defn #_"FixedNodeProbabilityCache" FixedNodeProbabilityCache'new-0 []
-        (hash-map)
+    (defn- #_"FixedNodeProbabilityCache" FixedNodeProbabilityCache'init-0 []
+        (hash-map
+            #_"EconomicMap<FixedNode, Double>" :cache (EconomicMap/create Equivalence/IDENTITY)
+        )
     )
 
-    (§ final #_"EconomicMap<FixedNode, Double>" :cache (EconomicMap/create Equivalence/IDENTITY))
+    (defn #_"FixedNodeProbabilityCache" FixedNodeProbabilityCache'new-0 []
+        (merge (hash-map) (FixedNodeProbabilityCache'init-0))
+    )
 
     ;;;
      ; Given a FixedNode this method finds the most immediate AbstractBeginNode preceding it that either:
@@ -72041,12 +73990,16 @@ ZeroExtendNode'new-4
  ; @anno ReentrantBlockIterator.BlockLoopInfo
  ;;
 (final-ns BlockLoopInfo #_"<StateT>"
-    (§ final #_"List<StateT>" :endStates nil)
-    (§ final #_"List<StateT>" :exitStates nil)
+    (defn- #_"BlockLoopInfo" BlockLoopInfo'init-0 []
+        (hash-map
+            #_"List<StateT>" :endStates nil
+            #_"List<StateT>" :exitStates nil
+        )
+    )
 
     (defn #_"BlockLoopInfo" BlockLoopInfo'new-2 [#_"int" endCount, #_"int" exitCount]
         (let [
-            #_"BlockLoopInfo" this (hash-map)
+            #_"BlockLoopInfo" this (merge (hash-map) (BlockLoopInfo'init-0))
             this (assoc this :endStates (ArrayList.))
             this (assoc this :exitStates (ArrayList.))
         ]
@@ -72209,12 +74162,16 @@ ZeroExtendNode'new-4
  ; @anno ReentrantNodeIterator.NodeLoopInfo
  ;;
 (final-ns NodeLoopInfo #_"<StateT>"
-    (§ final #_"EconomicMap<LoopEndNode, StateT>" :endStates nil)
-    (§ final #_"EconomicMap<LoopExitNode, StateT>" :exitStates nil)
+    (defn- #_"NodeLoopInfo" NodeLoopInfo'init-0 []
+        (hash-map
+            #_"EconomicMap<LoopEndNode, StateT>" :endStates nil
+            #_"EconomicMap<LoopExitNode, StateT>" :exitStates nil
+        )
+    )
 
     (defn #_"NodeLoopInfo" NodeLoopInfo'new-2 [#_"int" endCount, #_"int" exitCount]
         (let [
-            #_"NodeLoopInfo" this (hash-map)
+            #_"NodeLoopInfo" this (merge (hash-map) (NodeLoopInfo'init-0))
             this (assoc this :endStates (EconomicMap/create Equivalence/IDENTITY, endCount))
             this (assoc this :exitStates (EconomicMap/create Equivalence/IDENTITY, exitCount))
         ]
@@ -72230,13 +74187,17 @@ ZeroExtendNode'new-4
 )
 
 (class-ns ScheduledNodeIteratorImpl (§ implements ScheduledNodeIterator)
-    (defn #_"ScheduledNodeIterator" ScheduledNodeIteratorImpl'new-0 []
-        (hash-map)
+    (defn- #_"ScheduledNodeIteratorImpl" ScheduledNodeIteratorImpl'init-0 []
+        (hash-map
+            #_"FixedWithNextNode" :lastFixed nil
+            #_"FixedWithNextNode" :reconnect nil
+            #_"ListIterator<Node>" :iterator nil
+        )
     )
 
-    (§ mutable #_"FixedWithNextNode" :lastFixed nil)
-    (§ mutable #_"FixedWithNextNode" :reconnect nil)
-    (§ mutable #_"ListIterator<Node>" :iterator nil)
+    (defn #_"ScheduledNodeIterator" ScheduledNodeIteratorImpl'new-0 []
+        (merge (hash-map) (ScheduledNodeIteratorImpl'init-0))
+    )
 
     (defn #_"void" ScheduledNodeIteratorImpl''processNodes-3 [#_"ScheduledNodeIterator" this, #_"Block" block, #_"ScheduleResult" schedule]
         (§ ass! this (assoc this :lastFixed (:beginNode block)))
@@ -72301,11 +74262,15 @@ ZeroExtendNode'new-4
 )
 
 (final-ns OptimisticOptimizations
-    (§ final #_"Set<Optimization>" :enabledOpts nil)
+    (defn- #_"OptimisticOptimizations" OptimisticOptimizations'init-0 []
+        (hash-map
+            #_"Set<Optimization>" :enabledOpts nil
+        )
+    )
 
     (defn #_"OptimisticOptimizations" OptimisticOptimizations'new-1 [#_"Set<Optimization>" enabledOpts]
         (let [
-            #_"OptimisticOptimizations" this (hash-map)
+            #_"OptimisticOptimizations" this (merge (hash-map) (OptimisticOptimizations'init-0))
             this (assoc this :enabledOpts enabledOpts)
         ]
             this
@@ -72346,11 +74311,15 @@ ZeroExtendNode'new-4
  ; A compiler phase that can apply an ordered collection of phases to a graph.
  ;;
 (class-ns PhaseSuite (§ implements Phase)
-    (§ mutable #_"List<Phase>" :phases nil)
+    (defn- #_"PhaseSuite" PhaseSuite'init-0 []
+        (hash-map
+            #_"List<Phase>" :phases nil
+        )
+    )
 
     (defn #_"PhaseSuite" PhaseSuite'new-0 []
         (let [
-            #_"PhaseSuite" this (hash-map)
+            #_"PhaseSuite" this (merge (hash-map) (PhaseSuite'init-0))
             this (assoc this :phases (ArrayList.))
         ]
             this
@@ -72414,11 +74383,15 @@ ZeroExtendNode'new-4
 )
 
 (final-ns SchedulePhase (§ implements Phase)
-    (§ final #_"SchedulingStrategy" :selectedStrategy nil)
+    (defn- #_"SchedulePhase" SchedulePhase'init-0 []
+        (hash-map
+            #_"SchedulingStrategy" :selectedStrategy nil
+        )
+    )
 
     (defn #_"SchedulePhase" SchedulePhase'new-1 [#_"SchedulingStrategy" strategy]
         (let [
-            #_"SchedulePhase" this (hash-map)
+            #_"SchedulePhase" this (merge (hash-map) (SchedulePhase'init-0))
             this (assoc this :selectedStrategy strategy)
         ]
             this
@@ -72460,12 +74433,16 @@ ZeroExtendNode'new-4
  ;;
 (final-ns ScheduleInstance
     (def- #_"double" ScheduleInstance'IMPLICIT_NULL_CHECK_OPPORTUNITY_PROBABILITY_FACTOR 2)
-    ;;;
-     ; Map from blocks to the nodes in each block.
-     ;;
-    (§ mutable #_"ControlFlowGraph" :cfg nil)
-    (§ mutable #_"BlockMap<List<Node>>" :blockToNodesMap nil)
-    (§ mutable #_"NodeMap<Block>" :nodeToBlockMap nil)
+    (defn- #_"ScheduleInstance" ScheduleInstance'init-0 []
+        (hash-map
+            ;;;
+             ; Map from blocks to the nodes in each block.
+             ;;
+            #_"ControlFlowGraph" :cfg nil
+            #_"BlockMap<List<Node>>" :blockToNodesMap nil
+            #_"NodeMap<Block>" :nodeToBlockMap nil
+        )
+    )
 
     (defn #_"ScheduleInstance" ScheduleInstance'new-0 []
         (ScheduleInstance'new-1 nil)
@@ -72473,7 +74450,7 @@ ZeroExtendNode'new-4
 
     (defn #_"ScheduleInstance" ScheduleInstance'new-1 [#_"ControlFlowGraph" cfg]
         (let [
-            #_"ScheduleInstance" this (hash-map)
+            #_"ScheduleInstance" this (merge (hash-map) (ScheduleInstance'init-0))
             this (assoc this :cfg cfg)
         ]
             this
@@ -73150,23 +75127,27 @@ ZeroExtendNode'new-4
  ; @anno SchedulePhase.ScheduleInstance.MicroBlock
  ;;
 (final-ns MicroBlock
-    ;;;
-     ; The id of the micro block, with a block always associated with a lower id than its successors.
-     ;;
-    (§ final #_"int" :id 0)
-    ;;;
-     ; Number of nodes in this micro block.
-     ;;
-    (§ mutable #_"int" :nodeCount 0)
-    ;;;
-     ; First node of the linked list of nodes of this micro block.
-     ;;
-    (§ mutable #_"NodeEntry" :head nil)
-    (§ mutable #_"NodeEntry" :tail nil)
+    (defn- #_"MicroBlock" MicroBlock'init-0 []
+        (hash-map
+            ;;;
+             ; The id of the micro block, with a block always associated with a lower id than its successors.
+             ;;
+            #_"int" :id 0
+            ;;;
+             ; Number of nodes in this micro block.
+             ;;
+            #_"int" :nodeCount 0
+            ;;;
+             ; First node of the linked list of nodes of this micro block.
+             ;;
+            #_"NodeEntry" :head nil
+            #_"NodeEntry" :tail nil
+        )
+    )
 
     (defn #_"MicroBlock" MicroBlock'new-1 [#_"int" id]
         (let [
-            #_"MicroBlock" this (hash-map)
+            #_"MicroBlock" this (merge (hash-map) (MicroBlock'init-0))
             this (assoc this :id id)
         ]
             this
@@ -73227,12 +75208,16 @@ ZeroExtendNode'new-4
  ; @anno SchedulePhase.ScheduleInstance.NodeEntry
  ;;
 (final-ns NodeEntry
-    (§ final #_"Node" :node nil)
-    (§ mutable #_"NodeEntry" :next nil)
+    (defn- #_"NodeEntry" NodeEntry'init-0 []
+        (hash-map
+            #_"Node" :node nil
+            #_"NodeEntry" :next nil
+        )
+    )
 
     (defn #_"NodeEntry" NodeEntry'new-1 [#_"Node" node]
         (let [
-            #_"NodeEntry" this (hash-map)
+            #_"NodeEntry" this (merge (hash-map) (NodeEntry'init-0))
             this (assoc this :node node)
             this (assoc this :next nil)
         ]
@@ -73435,11 +75420,15 @@ ZeroExtendNode'new-4
 )
 
 (final-ns PhaseContext
-    (§ final #_"OptimisticOptimizations" :optimisticOpts nil)
+    (defn- #_"PhaseContext" PhaseContext'init-0 []
+        (hash-map
+            #_"OptimisticOptimizations" :optimisticOpts nil
+        )
+    )
 
     (defn #_"PhaseContext" PhaseContext'new-1 [#_"OptimisticOptimizations" optimisticOpts]
         (let [
-            #_"PhaseContext" this (hash-map)
+            #_"PhaseContext" this (merge (hash-map) (PhaseContext'init-0))
             this (assoc this :optimisticOpts optimisticOpts)
         ]
             this
@@ -73641,12 +75630,17 @@ ZeroExtendNode'new-4
  ; @anno BoxingSnippets.BoxingTemplates
  ;;
 (final-ns BoxingTemplates (§ extends AbstractTemplates)
-    (§ final #_"EnumMap<JavaKind, SnippetInfo>" :boxSnippets (EnumMap. JavaKind))
-    (§ final #_"EnumMap<JavaKind, SnippetInfo>" :unboxSnippets (EnumMap. JavaKind))
+    (defn- #_"BoxingTemplates" BoxingTemplates'init-0 []
+        (hash-map
+            #_"EnumMap<JavaKind, SnippetInfo>" :boxSnippets (EnumMap. JavaKind)
+            #_"EnumMap<JavaKind, SnippetInfo>" :unboxSnippets (EnumMap. JavaKind)
+        )
+    )
 
     (defn #_"BoxingTemplates" BoxingTemplates'new-0 []
         (let [
             #_"BoxingTemplates" this (AbstractTemplates'new-0)
+            this (merge this (BoxingTemplates'init-0))
         ]
             (doseq [#_"JavaKind" kind (into-array JavaKind [ JavaKind/Boolean, JavaKind/Byte, JavaKind/Char, JavaKind/Int, JavaKind/Long, JavaKind/Short ])]
                 (#_"EnumMap" .put (:boxSnippets this), kind, (AbstractTemplates''snippet-4* this, BoxingSnippets, (str (#_"JavaKind" .getJavaName kind) "ValueOf")))
@@ -73693,8 +75687,12 @@ ZeroExtendNode'new-4
     (def- #_"int" Classfile'MAJOR_VERSION_JAVA_MIN 51) ;; JDK7
     (def- #_"int" Classfile'MAJOR_VERSION_JAVA_MAX 55) ;; JDK11
 
-    (§ final #_"ResolvedJavaType" :type nil)
-    (§ final #_"List<ClassfileBytecode>" :codeAttributes nil)
+    (defn- #_"Classfile" Classfile'init-0 []
+        (hash-map
+            #_"ResolvedJavaType" :type nil
+            #_"List<ClassfileBytecode>" :codeAttributes nil
+        )
+    )
 
     ;;;
      ; Creates a Classfile by parsing the class file bytes for {@code type} loadable from {@code context}.
@@ -73703,7 +75701,7 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"Classfile" Classfile'new-3 [#_"ResolvedJavaType" type, #_"DataInputStream" stream, #_"ClassfileBytecodeProvider" context]
         (let [
-            #_"Classfile" this (hash-map)
+            #_"Classfile" this (merge (hash-map) (Classfile'init-0))
             this (assoc this :type type)
             #_"int" magic (#_"DataInputStream" .readInt stream)
             #_"int" minor (#_"DataInputStream" .readUnsignedShort stream)
@@ -73838,17 +75836,19 @@ ZeroExtendNode'new-4
 (final-ns ClassfileBytecode (§ implements Bytecode)
     (def- #_"int" ClassfileBytecode'EXCEPTION_HANDLER_TABLE_SIZE_IN_BYTES 8)
 
-    (§ final #_"ResolvedJavaMethod" :method nil)
-
-    (§ final #_"ClassfileConstantPool" :constantPool nil)
-
-    (§ mutable #_"byte[]" :code nil)
-    (§ mutable #_"int" :maxLocals 0)
-    (§ mutable #_"int" :maxStack 0)
+    (defn- #_"ClassfileBytecode" ClassfileBytecode'init-0 []
+        (hash-map
+            #_"ResolvedJavaMethod" :method nil
+            #_"ClassfileConstantPool" :constantPool nil
+            #_"byte[]" :code nil
+            #_"int" :maxLocals 0
+            #_"int" :maxStack 0
+        )
+    )
 
     (defn #_"ClassfileBytecode" ClassfileBytecode'new-3 [#_"ResolvedJavaMethod" method, #_"DataInputStream" stream, #_"ClassfileConstantPool" constantPool]
         (let [
-            #_"ClassfileBytecode" this (hash-map)
+            #_"ClassfileBytecode" this (merge (hash-map) (ClassfileBytecode'init-0))
             this (assoc this :method method)
             this (assoc this :constantPool constantPool)
             this (assoc this :maxStack (#_"DataInputStream" .readUnsignedShort stream))
@@ -73917,15 +75917,19 @@ ZeroExtendNode'new-4
  ; {@code jdk.vm.ci.meta} implementation for parsing snippet/intrinsic bytecodes.
  ;;
 (final-ns ClassfileBytecodeProvider (§ implements BytecodeProvider)
-    (§ final #_"ClassLoader" :loader nil)
-    (§ final #_"EconomicMap<Class, Classfile>" :classfiles (EconomicMap/create Equivalence/IDENTITY))
-    (§ final #_"EconomicMap<String, Class>" :classes (EconomicMap/create))
-    (§ final #_"EconomicMap<ResolvedJavaType, FieldsCache>" :fields (EconomicMap/create))
-    (§ final #_"EconomicMap<ResolvedJavaType, MethodsCache>" :methods (EconomicMap/create))
+    (defn- #_"ClassfileBytecodeProvider" ClassfileBytecodeProvider'init-0 []
+        (hash-map
+            #_"ClassLoader" :loader nil
+            #_"EconomicMap<Class, Classfile>" :classfiles (EconomicMap/create Equivalence/IDENTITY)
+            #_"EconomicMap<String, Class>" :classes (EconomicMap/create)
+            #_"EconomicMap<ResolvedJavaType, FieldsCache>" :fields (EconomicMap/create)
+            #_"EconomicMap<ResolvedJavaType, MethodsCache>" :methods (EconomicMap/create)
+        )
+    )
 
     (defn #_"ClassfileBytecodeProvider" ClassfileBytecodeProvider'new-0 []
         (let [
-            #_"ClassfileBytecodeProvider" this (hash-map)
+            #_"ClassfileBytecodeProvider" this (merge (hash-map) (ClassfileBytecodeProvider'init-0))
             this (assoc this :loader (or (#_"Class" .getClassLoader (#_"Object" .getClass this)) (ClassLoader/getSystemClassLoader)))
         ]
             this
@@ -74053,12 +76057,16 @@ ZeroExtendNode'new-4
  ; @anno ClassfileBytecodeProvider.FieldKey
  ;;
 (final-ns FieldKey
-    (§ final #_"String" :name nil)
-    (§ final #_"String" :type nil)
+    (defn- #_"FieldKey" FieldKey'init-0 []
+        (hash-map
+            #_"String" :name nil
+            #_"String" :type nil
+        )
+    )
 
     (defn #_"FieldKey" FieldKey'new-2 [#_"String" name, #_"String" type]
         (let [
-            #_"FieldKey" this (hash-map)
+            #_"FieldKey" this (merge (hash-map) (FieldKey'init-0))
             this (assoc this :name name)
             this (assoc this :type type)
         ]
@@ -74073,12 +76081,16 @@ ZeroExtendNode'new-4
  ; @anno ClassfileBytecodeProvider.MethodKey
  ;;
 (final-ns MethodKey
-    (§ final #_"String" :name nil)
-    (§ final #_"String" :descriptor nil)
+    (defn- #_"MethodKey" MethodKey'init-0 []
+        (hash-map
+            #_"String" :name nil
+            #_"String" :descriptor nil
+        )
+    )
 
     (defn #_"MethodKey" MethodKey'new-2 [#_"String" name, #_"String" descriptor]
         (let [
-            #_"MethodKey" this (hash-map)
+            #_"MethodKey" this (merge (hash-map) (MethodKey'init-0))
             this (assoc this :name name)
             this (assoc this :descriptor descriptor)
         ]
@@ -74204,11 +76216,15 @@ ZeroExtendNode'new-4
     (def #_"byte" ClassfileConstantImpl'CONSTANT_Dynamic            17)
     (def #_"byte" ClassfileConstantImpl'CONSTANT_InvokeDynamic      18)
 
-    (§ final #_"byte" :tag 0)
+    (defn- #_"ClassfileConstantImpl" ClassfileConstantImpl'init-0 []
+        (hash-map
+            #_"byte" :tag 0
+        )
+    )
 
     (defn #_"ClassfileConstant" ClassfileConstantImpl'new-1 [#_"byte" tag]
         (let [
-            #_"ClassfileConstant" this (hash-map)
+            #_"ClassfileConstant" this (merge (hash-map) (ClassfileConstantImpl'init-0))
             this (assoc this :tag tag)
         ]
             this
@@ -74250,12 +76266,17 @@ ZeroExtendNode'new-4
  ; @anno ClassfileConstant.ClassRef
  ;;
 (final-ns ClassRef (§ extends ClassfileConstantImpl)
-    (§ final #_"int" :nameIndex 0)
-    (§ mutable #_"ResolvedJavaType" :type nil)
+    (defn- #_"ClassRef" ClassRef'init-0 []
+        (hash-map
+            #_"int" :nameIndex 0
+            #_"ResolvedJavaType" :type nil
+        )
+    )
 
     (defn #_"ClassRef" ClassRef'new-1 [#_"DataInputStream" stream]
         (let [
             #_"ClassRef" this (ClassfileConstantImpl'new-1 ClassfileConstantImpl'CONSTANT_Class)
+            this (merge this (ClassRef'init-0))
             this (assoc this :nameIndex (#_"DataInputStream" .readUnsignedShort stream))
         ]
             this
@@ -74279,12 +76300,17 @@ ZeroExtendNode'new-4
  ; @anno ClassfileConstant.MemberRef
  ;;
 (class-ns MemberRef (§ extends ClassfileConstantImpl)
-    (§ final #_"int" :classIndex 0)
-    (§ final #_"int" :nameAndTypeIndex 0)
+    (defn- #_"MemberRef" MemberRef'init-0 []
+        (hash-map
+            #_"int" :classIndex 0
+            #_"int" :nameAndTypeIndex 0
+        )
+    )
 
     (defn #_"MemberRef" MemberRef'new-2 [#_"byte" tag, #_"DataInputStream" stream]
         (let [
             #_"MemberRef" this (ClassfileConstantImpl'new-1 tag)
+            this (merge this (MemberRef'init-0))
             this (assoc this :classIndex (#_"DataInputStream" .readUnsignedShort stream))
             this (assoc this :nameAndTypeIndex (#_"DataInputStream" .readUnsignedShort stream))
         ]
@@ -74302,10 +76328,16 @@ ZeroExtendNode'new-4
  ; @anno ClassfileConstant.ExecutableRef
  ;;
 (class-ns ExecutableRef (§ extends MemberRef)
-    (§ mutable #_"ResolvedJavaMethod" :method nil)
+    (defn- #_"ExecutableRef" ExecutableRef'init-0 []
+        (hash-map
+            #_"ResolvedJavaMethod" :method nil
+        )
+    )
 
     (defn #_"ExecutableRef" ExecutableRef'new-2 [#_"byte" tag, #_"DataInputStream" stream]
-        (MemberRef'new-2 tag, stream)
+        (merge (MemberRef'new-2 tag, stream)
+            (ExecutableRef'init-0)
+        )
     )
 
     (defn #_"ResolvedJavaMethod" ExecutableRef''resolve-3 [#_"ExecutableRef" this, #_"ClassfileConstantPool" cp, #_"int" opcode]
@@ -74370,10 +76402,16 @@ ZeroExtendNode'new-4
  ; @anno ClassfileConstant.FieldRef
  ;;
 (final-ns FieldRef (§ extends MemberRef)
-    (§ mutable #_"ResolvedJavaField" :field nil)
+    (defn- #_"FieldRef" FieldRef'init-0 []
+        (hash-map
+            #_"ResolvedJavaField" :field nil
+        )
+    )
 
     (defn #_"FieldRef" FieldRef'new-1 [#_"DataInputStream" stream]
-        (MemberRef'new-2 ClassfileConstantImpl'CONSTANT_Fieldref, stream)
+        (merge (MemberRef'new-2 ClassfileConstantImpl'CONSTANT_Fieldref, stream)
+            (FieldRef'init-0)
+        )
     )
 
     (defn #_"ResolvedJavaField" FieldRef''resolve-3 [#_"FieldRef" this, #_"ClassfileConstantPool" cp, #_"int" opcode]
@@ -74398,11 +76436,16 @@ ZeroExtendNode'new-4
  ; @anno ClassfileConstant.Primitive
  ;;
 (final-ns Primitive (§ extends ClassfileConstantImpl)
-    (§ final #_"JavaConstant" :value nil)
+    (defn- #_"Primitive" Primitive'init-0 []
+        (hash-map
+            #_"JavaConstant" :value nil
+        )
+    )
 
     (defn #_"Primitive" Primitive'new-2 [#_"byte" tag, #_"JavaConstant" value]
         (let [
             #_"Primitive" this (ClassfileConstantImpl'new-1 tag)
+            this (merge this (Primitive'init-0))
             this (assoc this :value value)
         ]
             this
@@ -74414,12 +76457,17 @@ ZeroExtendNode'new-4
  ; @anno ClassfileConstant.StringRef
  ;;
 (final-ns StringRef (§ extends ClassfileConstantImpl)
-    (§ final #_"int" :stringIndex 0)
-    (§ mutable #_"JavaConstant" :value nil)
+    (defn- #_"StringRef" StringRef'init-0 []
+        (hash-map
+            #_"int" :stringIndex 0
+            #_"JavaConstant" :value nil
+        )
+    )
 
     (defn #_"StringRef" StringRef'new-1 [#_"DataInputStream" stream]
         (let [
             #_"StringRef" this (ClassfileConstantImpl'new-1 ClassfileConstantImpl'CONSTANT_String)
+            this (merge this (StringRef'init-0))
             this (assoc this :stringIndex (#_"DataInputStream" .readUnsignedShort stream))
         ]
             this
@@ -74438,14 +76486,19 @@ ZeroExtendNode'new-4
  ; @anno ClassfileConstant.NameAndType
  ;;
 (final-ns NameAndType (§ extends ClassfileConstantImpl)
-    (§ final #_"int" :nameIndex 0)
-    (§ final #_"int" :typeIndex 0)
-    (§ mutable #_"String" :name nil)
-    (§ mutable #_"String" :type nil)
+    (defn- #_"NameAndType" NameAndType'init-0 []
+        (hash-map
+            #_"int" :nameIndex 0
+            #_"int" :typeIndex 0
+            #_"String" :name nil
+            #_"String" :type nil
+        )
+    )
 
     (defn #_"NameAndType" NameAndType'new-1 [#_"DataInputStream" stream]
         (let [
             #_"NameAndType" this (ClassfileConstantImpl'new-1 ClassfileConstantImpl'CONSTANT_NameAndType)
+            this (merge this (NameAndType'init-0))
             this (assoc this :nameIndex (#_"DataInputStream" .readUnsignedShort stream))
             this (assoc this :typeIndex (#_"DataInputStream" .readUnsignedShort stream))
         ]
@@ -74472,11 +76525,16 @@ ZeroExtendNode'new-4
  ; @anno ClassfileConstant.Utf8
  ;;
 (final-ns Utf8 (§ extends ClassfileConstantImpl)
-    (§ final #_"String" :value nil)
+    (defn- #_"Utf8" Utf8'init-0 []
+        (hash-map
+            #_"String" :value nil
+        )
+    )
 
     (defn #_"Utf8" Utf8'new-1 [#_"String" value]
         (let [
             #_"Utf8" this (ClassfileConstantImpl'new-1 ClassfileConstantImpl'CONSTANT_Utf8)
+            this (merge this (Utf8'init-0))
             this (assoc this :value value)
         ]
             this
@@ -74488,11 +76546,16 @@ ZeroExtendNode'new-4
  ; @anno ClassfileConstant.Unsupported
  ;;
 (final-ns Unsupported (§ extends ClassfileConstantImpl)
-    (§ final #_"String" :name nil)
+    (defn- #_"Unsupported" Unsupported'init-0 []
+        (hash-map
+            #_"String" :name nil
+        )
+    )
 
     (defn #_"Unsupported" Unsupported'new-2 [#_"byte" tag, #_"String" name]
         (let [
             #_"Unsupported" this (ClassfileConstantImpl'new-1 tag)
+            this (merge this (Unsupported'init-0))
             this (assoc this :name name)
         ]
             this
@@ -74505,12 +76568,16 @@ ZeroExtendNode'new-4
 )
 
 (final-ns ClassfileConstantPool (§ implements ConstantPool)
-    (§ final #_"ClassfileConstant[]" :entries nil)
-    (§ final #_"ClassfileBytecodeProvider" :context nil)
+    (defn- #_"ClassfileConstantPool" ClassfileConstantPool'init-0 []
+        (hash-map
+            #_"ClassfileConstant[]" :entries nil
+            #_"ClassfileBytecodeProvider" :context nil
+        )
+    )
 
     (defn #_"ClassfileConstantPool" ClassfileConstantPool'new-2 [#_"DataInputStream" stream, #_"ClassfileBytecodeProvider" context]
         (let [
-            #_"ClassfileConstantPool" this (hash-map)
+            #_"ClassfileConstantPool" this (merge (hash-map) (ClassfileConstantPool'init-0))
             this (assoc this :context context)
             #_"int" n (#_"DataInputStream" .readUnsignedShort stream)
             this (assoc this :entries (make-array ClassfileConstant n))
@@ -74622,7 +76689,11 @@ ZeroExtendNode'new-4
  ; A ParameterPlugin that binds constant values to some parameters.
  ;;
 (final-ns ConstantBindingParameterPlugin (§ implements ParameterPlugin)
-    (§ final #_"Object[]" :constantArgs nil)
+    (defn- #_"ConstantBindingParameterPlugin" ConstantBindingParameterPlugin'init-0 []
+        (hash-map
+            #_"Object[]" :constantArgs nil
+        )
+    )
 
     ;;;
      ; Creates a plugin that will create ConstantNodes for each parameter with
@@ -74631,14 +76702,14 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"ConstantBindingParameterPlugin" ConstantBindingParameterPlugin'new-1 [#_"Object[]" constantArgs]
         (let [
-            #_"ConstantBindingParameterPlugin" this (hash-map)
+            #_"ConstantBindingParameterPlugin" this (merge (hash-map) (ConstantBindingParameterPlugin'init-0))
             this (assoc this :constantArgs constantArgs)
         ]
             this
         )
     )
 
-    (§ override! #_"FloatingNode" ParameterPlugin'''interceptParameter-4 [#_"ConstantBindingParameterPlugin" this, #_"GraphBuilder" b, #_"int" index, #_"StampPair" stamp]
+    (§ override! #_"FloatingNode" ParameterPlugin'''interceptParameter-4 [#_"ConstantBindingParameterPlugin" this, #_"GraphBuilder" b, #_"int" index, #_"StampPair" stamp]
         (when-some [#_"Object" arg (nth (:constantArgs this) index)]
             (condp instance? arg
                 ConstantNode
@@ -74883,14 +76954,17 @@ ZeroExtendNode'new-4
  ; bytecode parsing} based graph creation).
  ;;
 (final-ns GraphKit (§ implements GraphBuilder)
-    (§ final #_"Graph" :graph nil)
-    (§ mutable #_"FixedWithNextNode" :lastFixedNode nil)
-
-    (§ final #_"List<Structure>" :structures nil)
+    (defn- #_"GraphKit" GraphKit'init-0 []
+        (hash-map
+            #_"Graph" :graph nil
+            #_"FixedWithNextNode" :lastFixedNode nil
+            #_"List<Structure>" :structures nil
+        )
+    )
 
     (defn #_"GraphKit" GraphKit'new-1 [#_"ResolvedJavaMethod" stubMethod]
         (let [
-            #_"GraphKit" this (hash-map)
+            #_"GraphKit" this (merge (hash-map) (GraphKit'init-0))
             this (assoc this :graph (Graph'new-1 stubMethod))
             this (assoc this :lastFixedNode (:start (:graph this)))
             this (assoc this :structures (ArrayList.))
@@ -74959,7 +77033,7 @@ ZeroExtendNode'new-4
         (let [
             #_"Signature" signature (#_"ResolvedJavaMethod" .getSignature method)
             #_"JavaType" returnType (#_"Signature" .getReturnType signature, nil)
-            #_"StampPair" returnStamp
+            #_"StampPair" returnStamp
                 (or (Plugins''getOverridingStamp-4 HotSpot'plugins, this, returnType, false)
                     (StampFactory'forDeclaredType-2 returnType, false)
                 )
@@ -75168,12 +77242,18 @@ ZeroExtendNode'new-4
  ; @anno GraphKit.IfStructure
  ;;
 (final-ns IfStructure (§ extends Structure)
-    (§ mutable #_"IfState" :state nil)
-    (§ mutable #_"FixedNode" :thenPart nil)
-    (§ mutable #_"FixedNode" :elsePart nil)
+    (defn- #_"IfStructure" IfStructure'init-0 []
+        (hash-map
+            #_"IfState" :state nil
+            #_"FixedNode" :thenPart nil
+            #_"FixedNode" :elsePart nil
+        )
+    )
 
     (defn #_"IfStructure" IfStructure'new-0 []
-        (Structure'new-0)
+        (merge (Structure'new-0)
+            (IfStructure'init-0)
+        )
     )
 )
 
@@ -75303,13 +77383,17 @@ ZeroExtendNode'new-4
  ; @anno InstanceOfSnippetsTemplates.Instantiation
  ;;
 (final-ns Instantiation
-    (§ mutable #_"ValueNode" :result nil)
-    (§ mutable #_"LogicNode" :condition nil)
-    (§ mutable #_"ValueNode" :trueValue nil)
-    (§ mutable #_"ValueNode" :falseValue nil)
+    (defn- #_"Instantiation" Instantiation'init-0 []
+        (hash-map
+            #_"ValueNode" :result nil
+            #_"LogicNode" :condition nil
+            #_"ValueNode" :trueValue nil
+            #_"ValueNode" :falseValue nil
+        )
+    )
 
     (defn #_"Instantiation" Instantiation'new-0 []
-        (hash-map)
+        (merge (hash-map) (Instantiation'init-0))
     )
 
     ;;;
@@ -75363,14 +77447,18 @@ ZeroExtendNode'new-4
 )
 
 (class-ns InstanceOfUsageReplacerImpl (§ implements InstanceOfUsageReplacer, UsageReplacer)
-    (§ final #_"Instantiation" :instantiation nil)
-    (§ final #_"FloatingNode" :instanceOf nil)
-    (§ final #_"ValueNode" :trueValue nil)
-    (§ final #_"ValueNode" :falseValue nil)
+    (defn- #_"InstanceOfUsageReplacerImpl" InstanceOfUsageReplacerImpl'init-0 []
+        (hash-map
+            #_"Instantiation" :instantiation nil
+            #_"FloatingNode" :instanceOf nil
+            #_"ValueNode" :trueValue nil
+            #_"ValueNode" :falseValue nil
+        )
+    )
 
     (defn #_"InstanceOfUsageReplacer" InstanceOfUsageReplacerImpl'new-4 [#_"Instantiation" instantiation, #_"FloatingNode" instanceOf, #_"ValueNode" trueValue, #_"ValueNode" falseValue]
         (let [
-            #_"InstanceOfUsageReplacer" this (hash-map)
+            #_"InstanceOfUsageReplacer" this (merge (hash-map) (InstanceOfUsageReplacerImpl'init-0))
             this (assoc this :instantiation instantiation)
             this (assoc this :instanceOf instanceOf)
             this (assoc this :trueValue trueValue)
@@ -75388,11 +77476,16 @@ ZeroExtendNode'new-4
  ; @anno InstanceOfSnippetsTemplates.NonMaterializationUsageReplacer
  ;;
 (final-ns NonMaterializationUsageReplacer (§ extends InstanceOfUsageReplacerImpl)
-    (§ final #_"Node" :usage nil)
+    (defn- #_"NonMaterializationUsageReplacer" NonMaterializationUsageReplacer'init-0 []
+        (hash-map
+            #_"Node" :usage nil
+        )
+    )
 
     (defn #_"NonMaterializationUsageReplacer" NonMaterializationUsageReplacer'new-5 [#_"Instantiation" instantiation, #_"ValueNode" trueValue, #_"ValueNode" falseValue, #_"FloatingNode" instanceOf, #_"Node" usage]
         (let [
             #_"NonMaterializationUsageReplacer" this (InstanceOfUsageReplacerImpl'new-4 instantiation, instanceOf, trueValue, falseValue)
+            this (merge this (NonMaterializationUsageReplacer'init-0))
             this (assoc this :usage usage)
         ]
             this
@@ -75419,11 +77512,16 @@ ZeroExtendNode'new-4
  ; @anno InstanceOfSnippetsTemplates.MaterializationUsageReplacer
  ;;
 (final-ns MaterializationUsageReplacer (§ extends InstanceOfUsageReplacerImpl)
-    (§ final #_"ConditionalNode" :usage nil)
+    (defn- #_"MaterializationUsageReplacer" MaterializationUsageReplacer'init-0 []
+        (hash-map
+            #_"ConditionalNode" :usage nil
+        )
+    )
 
     (defn #_"MaterializationUsageReplacer" MaterializationUsageReplacer'new-5 [#_"Instantiation" instantiation, #_"ValueNode" trueValue, #_"ValueNode" falseValue, #_"FloatingNode" instanceOf, #_"ConditionalNode" usage]
         (let [
             #_"MaterializationUsageReplacer" this (InstanceOfUsageReplacerImpl'new-4 instantiation, instanceOf, trueValue, falseValue)
+            this (merge this (MaterializationUsageReplacer'init-0))
             this (assoc this :usage usage)
         ]
             this
@@ -75450,12 +77548,16 @@ ZeroExtendNode'new-4
 )
 
 (final-ns MethodHandlePlugin (§ implements NodePlugin)
-    (§ final #_"MethodHandleAccessProvider" :methodHandleAccess nil)
-    (§ final #_"boolean" :safeForDeoptimization false)
+    (defn- #_"MethodHandlePlugin" MethodHandlePlugin'init-0 []
+        (hash-map
+            #_"MethodHandleAccessProvider" :methodHandleAccess nil
+            #_"boolean" :safeForDeoptimization false
+        )
+    )
 
     (defn #_"MethodHandlePlugin" MethodHandlePlugin'new-2 [#_"MethodHandleAccessProvider" methodHandleAccess, #_"boolean" safeForDeoptimization]
         (let [
-            #_"MethodHandlePlugin" this (hash-map)
+            #_"MethodHandlePlugin" this (merge (hash-map) (MethodHandlePlugin'init-0))
             this (assoc this :methodHandleAccess methodHandleAccess)
             this (assoc this :safeForDeoptimization safeForDeoptimization)
         ]
@@ -75484,7 +77586,7 @@ ZeroExtendNode'new-4
                     )
 
                     (let [
-                        #_"StampPair" invokeReturnStamp (BytecodeParser''getInvokeReturnStamp-1 parser)
+                        #_"StampPair" invokeReturnStamp (BytecodeParser''getInvokeReturnStamp-1 parser)
                         #_"GraphAdder" adder
                             (§ reify #_"GraphAdder" (GraphAdderImpl'new-1 (:graph parser))
                                 (§ override! #_"ValueNode" GraphAdder'''add-2 [#_"GraphAdder" this, #_"ValueNode" node]
@@ -75677,18 +77779,23 @@ ZeroExtendNode'new-4
 (class-ns IntegerExactArithmeticSplitNodeImpl (§ extends ControlSplitNodeImpl) (§ implements IntegerExactArithmeticSplitNode, Simplifiable, LIRLowerable)
     (§ def #_"NodeClass<IntegerExactArithmeticSplitNode>" IntegerExactArithmeticSplitNodeImpl'TYPE (NodeClass'create-1 IntegerExactArithmeticSplitNodeImpl))
 
-    ; @Successor
-    (§ mutable #_"AbstractBeginNode" :next nil)
-    ; @Successor
-    (§ mutable #_"AbstractBeginNode" :overflowSuccessor nil)
-    ; @Input
-    (§ final #_"ValueNode" :x nil)
-    ; @Input
-    (§ final #_"ValueNode" :y nil)
+    (defn- #_"IntegerExactArithmeticSplitNodeImpl" IntegerExactArithmeticSplitNodeImpl'init-0 []
+        (hash-map
+            ; @Successor
+            #_"AbstractBeginNode" :next nil
+            ; @Successor
+            #_"AbstractBeginNode" :overflowSuccessor nil
+            ; @Input
+            #_"ValueNode" :x nil
+            ; @Input
+            #_"ValueNode" :y nil
+        )
+    )
 
     (defn #_"IntegerExactArithmeticSplitNode" IntegerExactArithmeticSplitNodeImpl'new-6 [#_"NodeClass<? implements IntegerExactArithmeticSplitNode>" c, #_"Stamp" stamp, #_"ValueNode" x, #_"ValueNode" y, #_"AbstractBeginNode" next, #_"AbstractBeginNode" overflowSuccessor]
         (let [
             #_"IntegerExactArithmeticSplitNode" this (ControlSplitNodeImpl'new-2 c, stamp)
+            this (merge this (IntegerExactArithmeticSplitNodeImpl'init-0))
             this (assoc this :x x)
             this (assoc this :y y)
             this (assoc this :overflowSuccessor overflowSuccessor)
@@ -76106,14 +78213,19 @@ ZeroExtendNode'new-4
 (final-ns LoadSnippetVarargParameterNode (§ extends FixedWithNextNode) (§ implements Canonicalizable)
     (§ def #_"NodeClass<LoadSnippetVarargParameterNode>" LoadSnippetVarargParameterNode'TYPE (NodeClass'create-1 LoadSnippetVarargParameterNode))
 
-    ; @Input
-    (§ final #_"ValueNode" :index nil)
-    ; @Input
-    (§ mutable #_"NodeInputList<ParameterNode>" :parameters nil)
+    (defn- #_"LoadSnippetVarargParameterNode" LoadSnippetVarargParameterNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"ValueNode" :index nil
+            ; @Input
+            #_"NodeInputList<ParameterNode>" :parameters nil
+        )
+    )
 
     (defn #_"LoadSnippetVarargParameterNode" LoadSnippetVarargParameterNode'new-3 [#_"ParameterNode[]" locals, #_"ValueNode" index, #_"Stamp" stamp]
         (let [
             #_"LoadSnippetVarargParameterNode" this (FixedWithNextNode'new-2 LoadSnippetVarargParameterNode'TYPE, stamp)
+            this (merge this (LoadSnippetVarargParameterNode'init-0))
             this (assoc this :index index)
             this (assoc this :parameters (NodeInputList'new-2a this, locals))
         ]
@@ -76148,17 +78260,21 @@ ZeroExtendNode'new-4
 (class-ns MacroNode (§ extends FixedWithNextNode) (§ implements Lowerable)
     (§ def #_"NodeClass<MacroNode>" MacroNode'TYPE (NodeClass'create-1 MacroNode))
 
-    ; @Input
-    (§ mutable #_"NodeInputList<ValueNode>" :arguments nil)
+    (defn- #_"MacroNode" MacroNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"NodeInputList<ValueNode>" :arguments nil
+            #_"int" :bci 0
+            #_"ResolvedJavaMethod" :targetMethod nil
+            #_"StampPair" :returnStamp nil
+            #_"InvokeKind" :invokeKind nil
+        )
+    )
 
-    (§ final #_"int" :bci 0)
-    (§ final #_"ResolvedJavaMethod" :targetMethod nil)
-    (§ final #_"StampPair" :returnStamp nil)
-    (§ final #_"InvokeKind" :invokeKind nil)
-
-    (defn #_"MacroNode" MacroNode'new-6* [#_"NodeClass<? extends MacroNode>" c, #_"InvokeKind" invokeKind, #_"ResolvedJavaMethod" targetMethod, #_"int" bci, #_"StampPair" returnStamp, #_"ValueNode..." arguments]
+    (defn #_"MacroNode" MacroNode'new-6* [#_"NodeClass<? extends MacroNode>" c, #_"InvokeKind" invokeKind, #_"ResolvedJavaMethod" targetMethod, #_"int" bci, #_"StampPair" returnStamp, #_"ValueNode..." arguments]
         (let [
             #_"MacroNode" this (FixedWithNextNode'new-2 c, (:trustedStamp returnStamp))
+            this (merge this (MacroNode'init-0))
             this (assoc this :arguments (NodeInputList'new-2a this, arguments))
             this (assoc this :bci bci)
             this (assoc this :targetMethod targetMethod)
@@ -76255,11 +78371,17 @@ ZeroExtendNode'new-4
 (class-ns MacroStateSplitNode (§ extends MacroNode) (§ implements StateSplit, Single)
     (§ def #_"NodeClass<MacroStateSplitNode>" MacroStateSplitNode'TYPE (NodeClass'create-1 MacroStateSplitNode))
 
-    ; @OptionalInput
-    (§ mutable #_"FrameState" :stateAfter nil)
+    (defn- #_"MacroStateSplitNode" MacroStateSplitNode'init-0 []
+        (hash-map
+            ; @OptionalInput
+            #_"FrameState" :stateAfter nil
+        )
+    )
 
-    (defn #_"MacroStateSplitNode" MacroStateSplitNode'new-6* [#_"NodeClass<? extends MacroNode>" c, #_"InvokeKind" invokeKind, #_"ResolvedJavaMethod" targetMethod, #_"int" bci, #_"StampPair" returnStamp, #_"ValueNode..." arguments]
-        (MacroNode'new-6* c, invokeKind, targetMethod, bci, returnStamp, arguments)
+    (defn #_"MacroStateSplitNode" MacroStateSplitNode'new-6* [#_"NodeClass<? extends MacroNode>" c, #_"InvokeKind" invokeKind, #_"ResolvedJavaMethod" targetMethod, #_"int" bci, #_"StampPair" returnStamp, #_"ValueNode..." arguments]
+        (merge (MacroNode'new-6* c, invokeKind, targetMethod, bci, returnStamp, arguments)
+            (MacroStateSplitNode'init-0)
+        )
     )
 
     (§ override #_"void" StateSplit'''setStateAfter-2 [#_"MacroStateSplitNode" this, #_"FrameState" x]
@@ -76284,11 +78406,16 @@ ZeroExtendNode'new-4
 (final-ns MethodHandleNode (§ extends MacroStateSplitNode) (§ implements Simplifiable)
     (§ def #_"NodeClass<MethodHandleNode>" MethodHandleNode'TYPE (NodeClass'create-1 MethodHandleNode))
 
-    (§ final #_"MethodHandleAccessProvider$IntrinsicMethod" :intrinsicMethod nil)
+    (defn- #_"MethodHandleNode" MethodHandleNode'init-0 []
+        (hash-map
+            #_"MethodHandleAccessProvider$IntrinsicMethod" :intrinsicMethod nil
+        )
+    )
 
-    (defn #_"MethodHandleNode" MethodHandleNode'new-6* [#_"MethodHandleAccessProvider$IntrinsicMethod" intrinsicMethod, #_"InvokeKind" invokeKind, #_"ResolvedJavaMethod" targetMethod, #_"int" bci, #_"StampPair" returnStamp, #_"ValueNode..." arguments]
+    (defn #_"MethodHandleNode" MethodHandleNode'new-6* [#_"MethodHandleAccessProvider$IntrinsicMethod" intrinsicMethod, #_"InvokeKind" invokeKind, #_"ResolvedJavaMethod" targetMethod, #_"int" bci, #_"StampPair" returnStamp, #_"ValueNode..." arguments]
         (let [
             #_"MethodHandleNode" this (MacroStateSplitNode'new-6* MethodHandleNode'TYPE, invokeKind, targetMethod, bci, returnStamp, arguments)
+            this (merge this (MethodHandleNode'init-0))
             this (assoc this :intrinsicMethod intrinsicMethod)
         ]
             this
@@ -76306,7 +78433,7 @@ ZeroExtendNode'new-4
      ; @param arguments arguments to the original MethodHandle call
      ; @return a more direct invocation derived from the MethodHandle call or nil
      ;;
-    (defn #_"InvokeNode" MethodHandleNode'tryResolveTargetInvoke-7* [#_"GraphAdder" adder, #_"MethodHandleAccessProvider" methodHandleAccess, #_"MethodHandleAccessProvider$IntrinsicMethod" intrinsicMethod, #_"ResolvedJavaMethod" original, #_"int" bci, #_"StampPair" returnStamp, #_"ValueNode..." arguments]
+    (defn #_"InvokeNode" MethodHandleNode'tryResolveTargetInvoke-7* [#_"GraphAdder" adder, #_"MethodHandleAccessProvider" methodHandleAccess, #_"MethodHandleAccessProvider$IntrinsicMethod" intrinsicMethod, #_"ResolvedJavaMethod" original, #_"int" bci, #_"StampPair" returnStamp, #_"ValueNode..." arguments]
         (condp =? intrinsicMethod
             MethodHandleAccessProvider$IntrinsicMethod/INVOKE_BASIC
                 (MethodHandleNode'getInvokeBasicTarget-7 adder, intrinsicMethod, methodHandleAccess, original, bci, returnStamp, arguments)
@@ -76377,7 +78504,7 @@ ZeroExtendNode'new-4
      ;
      ; @return invoke node for the {@link java.lang.invoke.MethodHandle} target
      ;;
-    (defn- #_"InvokeNode" MethodHandleNode'getInvokeBasicTarget-7 [#_"GraphAdder" adder, #_"MethodHandleAccessProvider$IntrinsicMethod" intrinsicMethod, #_"MethodHandleAccessProvider" methodHandleAccess, #_"ResolvedJavaMethod" original, #_"int" bci, #_"StampPair" returnStamp, #_"ValueNode[]" arguments]
+    (defn- #_"InvokeNode" MethodHandleNode'getInvokeBasicTarget-7 [#_"GraphAdder" adder, #_"MethodHandleAccessProvider$IntrinsicMethod" intrinsicMethod, #_"MethodHandleAccessProvider" methodHandleAccess, #_"ResolvedJavaMethod" original, #_"int" bci, #_"StampPair" returnStamp, #_"ValueNode[]" arguments]
         (let [
             #_"ValueNode" methodHandleNode (MethodHandleNode'getReceiver-1 arguments)
         ]
@@ -76395,7 +78522,7 @@ ZeroExtendNode'new-4
      ;
      ; @return invoke node for the member name target
      ;;
-    (defn- #_"InvokeNode" MethodHandleNode'getLinkToTarget-7 [#_"GraphAdder" adder, #_"MethodHandleAccessProvider$IntrinsicMethod" intrinsicMethod, #_"MethodHandleAccessProvider" methodHandleAccess, #_"ResolvedJavaMethod" original, #_"int" bci, #_"StampPair" returnStamp, #_"ValueNode[]" arguments]
+    (defn- #_"InvokeNode" MethodHandleNode'getLinkToTarget-7 [#_"GraphAdder" adder, #_"MethodHandleAccessProvider$IntrinsicMethod" intrinsicMethod, #_"MethodHandleAccessProvider" methodHandleAccess, #_"ResolvedJavaMethod" original, #_"int" bci, #_"StampPair" returnStamp, #_"ValueNode[]" arguments]
         (let [
             #_"ValueNode" memberNameNode (MethodHandleNode'getMemberName-1 arguments)
         ]
@@ -76412,7 +78539,7 @@ ZeroExtendNode'new-4
      ;
      ; @return invoke node for the member name target
      ;;
-    (defn- #_"InvokeNode" MethodHandleNode'getTargetInvokeNode-7 [#_"GraphAdder" adder, #_"MethodHandleAccessProvider$IntrinsicMethod" intrinsicMethod, #_"int" bci, #_"StampPair" returnStamp, #_"ValueNode[]" originalArguments, #_"ResolvedJavaMethod" target, #_"ResolvedJavaMethod" original]
+    (defn- #_"InvokeNode" MethodHandleNode'getTargetInvokeNode-7 [#_"GraphAdder" adder, #_"MethodHandleAccessProvider$IntrinsicMethod" intrinsicMethod, #_"int" bci, #_"StampPair" returnStamp, #_"ValueNode[]" originalArguments, #_"ResolvedJavaMethod" target, #_"ResolvedJavaMethod" original]
         (when (some? target)
             ;; In lambda forms we erase signature types to avoid resolving issues involving
             ;; class loaders. When we optimize a method handle invoke to a direct call
@@ -76503,7 +78630,7 @@ ZeroExtendNode'new-4
      ;
      ; @return invoke node for the member name target
      ;;
-    (defn- #_"InvokeNode" MethodHandleNode'createTargetInvokeNode-6 [#_"MethodHandleAccessProvider$IntrinsicMethod" intrinsicMethod, #_"ResolvedJavaMethod" target, #_"ResolvedJavaMethod" original, #_"int" bci, #_"StampPair" returnStamp, #_"ValueNode[]" arguments]
+    (defn- #_"InvokeNode" MethodHandleNode'createTargetInvokeNode-6 [#_"MethodHandleAccessProvider$IntrinsicMethod" intrinsicMethod, #_"ResolvedJavaMethod" target, #_"ResolvedJavaMethod" original, #_"int" bci, #_"StampPair" returnStamp, #_"ValueNode[]" arguments]
         (let [
             #_"InvokeKind" targetInvokeKind (if (#_"ResolvedJavaMethod" .isStatic target) InvokeKind'Static InvokeKind'Special)
             #_"JavaType" targetReturnType (#_"Signature" .getReturnType (#_"ResolvedJavaMethod" .getSignature target), nil)
@@ -76518,7 +78645,7 @@ ZeroExtendNode'new-4
                     MethodHandleAccessProvider$IntrinsicMethod/LINK_TO_INTERFACE]
                         (Arrays/copyOfRange arguments, 0, (dec (count arguments)))
                 )
-            #_"StampPair" targetReturnStamp (StampFactory'forDeclaredType-2 targetReturnType, false)
+            #_"StampPair" targetReturnStamp (StampFactory'forDeclaredType-2 targetReturnType, false)
             #_"MethodCallTargetNode" callTarget (ResolvedMethodHandleCallTargetNode'create-7 targetInvokeKind, target, targetArguments, targetReturnStamp, original, arguments, returnStamp)
         ]
             ;; The call target can have a different return type than the invoker, e.g. the target returns
@@ -76534,11 +78661,15 @@ ZeroExtendNode'new-4
 )
 
 (class-ns GraphAdderImpl (§ implements GraphAdder)
-    (§ final #_"Graph" :graph nil)
+    (defn- #_"GraphAdderImpl" GraphAdderImpl'init-0 []
+        (hash-map
+            #_"Graph" :graph nil
+        )
+    )
 
     (defn #_"GraphAdder" GraphAdderImpl'new-1 [#_"Graph" graph]
         (let [
-            #_"GraphAdder" this (hash-map)
+            #_"GraphAdder" this (merge (hash-map) (GraphAdderImpl'init-0))
             this (assoc this :graph graph)
         ]
             this
@@ -76552,27 +78683,30 @@ ZeroExtendNode'new-4
 (final-ns ReadRegisterNode (§ extends FixedWithNextNode) (§ implements LIRLowerable)
     (§ def #_"NodeClass<ReadRegisterNode>" ReadRegisterNode'TYPE (NodeClass'create-1 ReadRegisterNode))
 
-    ;;;
-     ; The fixed register to access.
-     ;;
-    (§ final #_"Register" :register nil)
-
-    ;;;
-     ; When true, subsequent uses of this node use the fixed register; when false, the value is
-     ; moved into a new virtual register so that the fixed register is not seen by uses.
-     ;;
-    (§ final #_"boolean" :directUse false)
-
-    ;;;
-     ; When true, this node is also an implicit definition of the value for the register allocator,
-     ; i.e. the register is an implicit incoming value; when false, the register must be defined in
-     ; the same method or must be an register excluded from register allocation.
-     ;;
-    (§ final #_"boolean" :incoming false)
+    (defn- #_"ReadRegisterNode" ReadRegisterNode'init-0 []
+        (hash-map
+            ;;;
+             ; The fixed register to access.
+             ;;
+            #_"Register" :register nil
+            ;;;
+             ; When true, subsequent uses of this node use the fixed register; when false, the value is
+             ; moved into a new virtual register so that the fixed register is not seen by uses.
+             ;;
+            #_"boolean" :directUse false
+            ;;;
+             ; When true, this node is also an implicit definition of the value for the register allocator,
+             ; i.e. the register is an implicit incoming value; when false, the register must be defined in
+             ; the same method or must be an register excluded from register allocation.
+             ;;
+            #_"boolean" :incoming false
+        )
+    )
 
     (defn #_"ReadRegisterNode" ReadRegisterNode'new-4r [#_"Register" register, #_"JavaKind" kind, #_"boolean" directUse, #_"boolean" incoming]
         (let [
             #_"ReadRegisterNode" this (FixedWithNextNode'new-2 ReadRegisterNode'TYPE, (StampFactory'forKind-1 kind))
+            this (merge this (ReadRegisterNode'init-0))
             this (assoc this :register register)
             this (assoc this :directUse directUse)
             this (assoc this :incoming incoming)
@@ -76587,6 +78721,7 @@ ZeroExtendNode'new-4
     (defn #_"ReadRegisterNode" ReadRegisterNode'new-4i [#_@InjectedNodeParameter #_"Stamp" stamp, #_"Register" register, #_"boolean" directUse, #_"boolean" incoming]
         (let [
             #_"ReadRegisterNode" this (FixedWithNextNode'new-2 ReadRegisterNode'TYPE, stamp)
+            this (merge this (ReadRegisterNode'init-0))
             this (assoc this :register register)
             this (assoc this :directUse directUse)
             this (assoc this :incoming incoming)
@@ -76628,18 +78763,23 @@ ZeroExtendNode'new-4
     ;;;
      ; Creates a call target for an invocation on a direct target derived by resolving a constant MethodHandle.
      ;;
-    (defn #_"MethodCallTargetNode" ResolvedMethodHandleCallTargetNode'create-7 [#_"InvokeKind" invokeKind, #_"ResolvedJavaMethod" targetMethod, #_"ValueNode[]" arguments, #_"StampPair" returnStamp, #_"ResolvedJavaMethod" originalTargetMethod, #_"ValueNode[]" originalArguments, #_"StampPair" originalReturnStamp]
+    (defn #_"MethodCallTargetNode" ResolvedMethodHandleCallTargetNode'create-7 [#_"InvokeKind" invokeKind, #_"ResolvedJavaMethod" targetMethod, #_"ValueNode[]" arguments, #_"StampPair" returnStamp, #_"ResolvedJavaMethod" originalTargetMethod, #_"ValueNode[]" originalArguments, #_"StampPair" originalReturnStamp]
         (ResolvedMethodHandleCallTargetNode'new-7 invokeKind, targetMethod, arguments, returnStamp, originalTargetMethod, originalArguments, originalReturnStamp)
     )
 
-    (§ final #_"ResolvedJavaMethod" :originalTargetMethod nil)
-    (§ final #_"StampPair" :originalReturnStamp nil)
-    ; @Input
-    (§ mutable #_"NodeInputList<ValueNode>" :originalArguments nil)
+    (defn- #_"ResolvedMethodHandleCallTargetNode" ResolvedMethodHandleCallTargetNode'init-0 []
+        (hash-map
+            #_"ResolvedJavaMethod" :originalTargetMethod nil
+            #_"StampPair" :originalReturnStamp nil
+            ; @Input
+            #_"NodeInputList<ValueNode>" :originalArguments nil
+        )
+    )
 
-    (defn #_"ResolvedMethodHandleCallTargetNode" ResolvedMethodHandleCallTargetNode'new-7 [#_"InvokeKind" invokeKind, #_"ResolvedJavaMethod" targetMethod, #_"ValueNode[]" arguments, #_"StampPair" returnStamp, #_"ResolvedJavaMethod" originalTargetMethod, #_"ValueNode[]" originalArguments, #_"StampPair" originalReturnStamp]
+    (defn #_"ResolvedMethodHandleCallTargetNode" ResolvedMethodHandleCallTargetNode'new-7 [#_"InvokeKind" invokeKind, #_"ResolvedJavaMethod" targetMethod, #_"ValueNode[]" arguments, #_"StampPair" returnStamp, #_"ResolvedJavaMethod" originalTargetMethod, #_"ValueNode[]" originalArguments, #_"StampPair" originalReturnStamp]
         (let [
             #_"ResolvedMethodHandleCallTargetNode" this (MethodCallTargetNode'new-5 ResolvedMethodHandleCallTargetNode'TYPE, invokeKind, targetMethod, arguments, returnStamp)
+            this (merge this (ResolvedMethodHandleCallTargetNode'init-0))
             this (assoc this :originalTargetMethod originalTargetMethod)
             this (assoc this :originalReturnStamp originalReturnStamp)
             this (assoc this :originalArguments (NodeInputList'new-2a this, originalArguments))
@@ -76670,7 +78810,7 @@ ZeroExtendNode'new-4
 (final-ns VirtualizableInvokeMacroNode (§ extends MacroStateSplitNode) (§ implements Virtualizable)
     (§ def #_"NodeClass<VirtualizableInvokeMacroNode>" VirtualizableInvokeMacroNode'TYPE (NodeClass'create-1 VirtualizableInvokeMacroNode))
 
-    (defn #_"VirtualizableInvokeMacroNode" VirtualizableInvokeMacroNode'new-5* [#_"InvokeKind" invokeKind, #_"ResolvedJavaMethod" targetMethod, #_"int" bci, #_"StampPair" returnStamp, #_"ValueNode..." arguments]
+    (defn #_"VirtualizableInvokeMacroNode" VirtualizableInvokeMacroNode'new-5* [#_"InvokeKind" invokeKind, #_"ResolvedJavaMethod" targetMethod, #_"int" bci, #_"StampPair" returnStamp, #_"ValueNode..." arguments]
         (MacroStateSplitNode'new-6* VirtualizableInvokeMacroNode'TYPE, invokeKind, targetMethod, bci, returnStamp, arguments)
     )
 
@@ -76778,46 +78918,50 @@ ZeroExtendNode'new-4
     (def- #_"Object" SnippetTemplate'UNUSED_PARAMETER "UNUSED_PARAMETER")
     (def- #_"Object" SnippetTemplate'CONSTANT_PARAMETER "CONSTANT_PARAMETER")
 
-    ;;;
-     ; The graph built from the snippet method.
-     ;;
-    (§ final #_"Graph" :snippet nil)
-    (§ final #_"SnippetInfo" :info nil)
-    ;;;
-     ; The named parameters of this template that must be bound to values during instantiation.
-     ; For a parameter that is still live after specialization, the value in this map is either
-     ; a ParameterNode instance or a ParameterNode array. For an eliminated parameter,
-     ; the value is identical to the key.
-     ;;
-    (§ final #_"Object[]" :parameters nil)
-    ;;;
-     ; The return node (if any) of the snippet.
-     ;;
-    (§ final #_"ReturnNode" :returnNode nil)
-    ;;;
-     ; The memory anchor (if any) of the snippet.
-     ;;
-    (§ final #_"MemoryAnchorNode" :memoryAnchor nil)
-    ;;;
-     ; Nodes that inherit the StateSplit#stateAfter() from the replacee during instantiation.
-     ;;
-    (§ final #_"ArrayList<StateSplit>" :sideEffectNodes nil)
-    ;;;
-     ; Nodes that inherit a deoptimization FrameState from the replacee during instantiation.
-     ;;
-    (§ final #_"ArrayList<DeoptimizingNode>" :deoptNodes nil)
-    ;;;
-     ; Nodes that have a stamp originating from a Placeholder.
-     ;;
-    (§ final #_"ArrayList<ValueNode>" :placeholderStampedNodes nil)
-    ;;;
-     ; The nodes to be inlined when this specialization is instantiated.
-     ;;
-    (§ final #_"ArrayList<Node>" :nodes nil)
+    (defn- #_"SnippetTemplate" SnippetTemplate'init-0 []
+        (hash-map
+            ;;;
+             ; The graph built from the snippet method.
+             ;;
+            #_"Graph" :snippet nil
+            #_"SnippetInfo" :info nil
+            ;;;
+             ; The named parameters of this template that must be bound to values during instantiation.
+             ; For a parameter that is still live after specialization, the value in this map is either
+             ; a ParameterNode instance or a ParameterNode array. For an eliminated parameter,
+             ; the value is identical to the key.
+             ;;
+            #_"Object[]" :parameters nil
+            ;;;
+             ; The return node (if any) of the snippet.
+             ;;
+            #_"ReturnNode" :returnNode nil
+            ;;;
+             ; The memory anchor (if any) of the snippet.
+             ;;
+            #_"MemoryAnchorNode" :memoryAnchor nil
+            ;;;
+             ; Nodes that inherit the StateSplit#stateAfter() from the replacee during instantiation.
+             ;;
+            #_"ArrayList<StateSplit>" :sideEffectNodes nil
+            ;;;
+             ; Nodes that inherit a deoptimization FrameState from the replacee during instantiation.
+             ;;
+            #_"ArrayList<DeoptimizingNode>" :deoptNodes nil
+            ;;;
+             ; Nodes that have a stamp originating from a Placeholder.
+             ;;
+            #_"ArrayList<ValueNode>" :placeholderStampedNodes nil
+            ;;;
+             ; The nodes to be inlined when this specialization is instantiated.
+             ;;
+            #_"ArrayList<Node>" :nodes nil
+        )
+    )
 
     (defn #_"SnippetTemplate" SnippetTemplate'new-2 [#_"Arguments" args, #_"Node" replacee]
         (let [
-            #_"SnippetTemplate" this (hash-map)
+            #_"SnippetTemplate" this (merge (hash-map) (SnippetTemplate'init-0))
             this (assoc this :info (:info args))
             #_"Object[]" constantArgs (SnippetTemplate''getConstantArgs-2 this, args)
             #_"Graph" snippetGraph (Replacements'createSnippet-2 (:method (:info args)), constantArgs)
@@ -77497,12 +79641,16 @@ ZeroExtendNode'new-4
 )
 
 (class-ns SnippetInfoImpl (§ implements SnippetInfo)
-    (§ final #_"ResolvedJavaMethod" :method nil)
-    (§ final #_"LocationIdentity[]" :privateLocations nil)
+    (defn- #_"SnippetInfoImpl" SnippetInfoImpl'init-0 []
+        (hash-map
+            #_"ResolvedJavaMethod" :method nil
+            #_"LocationIdentity[]" :privateLocations nil
+        )
+    )
 
     (defn #_"SnippetInfo" SnippetInfoImpl'new-2 [#_"ResolvedJavaMethod" method, #_"LocationIdentity[]" privateLocations]
         (let [
-            #_"SnippetInfo" this (hash-map)
+            #_"SnippetInfo" this (merge (hash-map) (SnippetInfoImpl'init-0))
             this (assoc this :method method)
             this (assoc this :privateLocations privateLocations)
         ]
@@ -77533,14 +79681,18 @@ ZeroExtendNode'new-4
  ; @anno SnippetTemplate.SnippetInfo.Lazy
  ;;
 (final-ns Lazy
-    (§ final #_"boolean[]" :constantParameters nil)
-    (§ final #_"boolean[]" :varargsParameters nil)
-    (§ final #_"boolean[]" :nonNullParameters nil)
+    (defn- #_"Lazy" Lazy'init-0 []
+        (hash-map
+            #_"boolean[]" :constantParameters nil
+            #_"boolean[]" :varargsParameters nil
+            #_"boolean[]" :nonNullParameters nil
+        )
+    )
 
     (defn #_"Lazy" Lazy'new-1 [#_"ResolvedJavaMethod" method]
         (let [
             #_"int" n (#_"Signature" .getParameterCount (#_"ResolvedJavaMethod" .getSignature method), false)
-            #_"Lazy" this (hash-map)
+            #_"Lazy" this (merge (hash-map) (Lazy'init-0))
             this (assoc this :constantParameters (boolean-array n))
             this (assoc this :varargsParameters (boolean-array n))
             this (assoc this :nonNullParameters (boolean-array n))
@@ -77560,10 +79712,16 @@ ZeroExtendNode'new-4
  ; @anno SnippetTemplate.LazySnippetInfo
  ;;
 (final-ns LazySnippetInfo (§ extends SnippetInfoImpl)
-    (§ final #_"AtomicReference<Lazy>" :lazy (AtomicReference. nil))
+    (defn- #_"LazySnippetInfo" LazySnippetInfo'init-0 []
+        (hash-map
+            #_"AtomicReference<Lazy>" :lazy (AtomicReference. nil)
+        )
+    )
 
     (defn #_"LazySnippetInfo" LazySnippetInfo'new-2 [#_"ResolvedJavaMethod" method, #_"LocationIdentity[]" privateLocations]
-        (SnippetInfoImpl'new-2 method, privateLocations)
+        (merge (SnippetInfoImpl'new-2 method, privateLocations)
+            (LazySnippetInfo'init-0)
+        )
     )
 
     (§ override! #_"Lazy" SnippetInfo'''lazy-1 [#_"LazySnippetInfo" this]
@@ -77578,11 +79736,16 @@ ZeroExtendNode'new-4
  ; @anno SnippetTemplate.EagerSnippetInfo
  ;;
 (final-ns EagerSnippetInfo (§ extends SnippetInfoImpl)
-    (§ final #_"Lazy" :lazy nil)
+    (defn- #_"EagerSnippetInfo" EagerSnippetInfo'init-0 []
+        (hash-map
+            #_"Lazy" :lazy nil
+        )
+    )
 
     (defn #_"EagerSnippetInfo" EagerSnippetInfo'new-2 [#_"ResolvedJavaMethod" method, #_"LocationIdentity[]" privateLocations]
         (let [
             #_"EagerSnippetInfo" this (SnippetInfoImpl'new-2 method, privateLocations)
+            this (merge this (EagerSnippetInfo'init-0))
             this (assoc this :lazy (Lazy'new-1 method))
         ]
             this
@@ -77612,15 +79775,18 @@ ZeroExtendNode'new-4
  ; @anno SnippetTemplate.Arguments
  ;;
 (final-ns Arguments
-    (§ final #_"SnippetInfo" :info nil)
-    (§ final #_"CacheKey" :cacheKey nil)
-    (§ final #_"Object[]" :values nil)
-
-    (§ mutable #_"int" :nextParamIdx 0)
+    (defn- #_"Arguments" Arguments'init-0 []
+        (hash-map
+            #_"SnippetInfo" :info nil
+            #_"CacheKey" :cacheKey nil
+            #_"Object[]" :values nil
+            #_"int" :nextParamIdx 0
+        )
+    )
 
     (defn #_"Arguments" Arguments'new-3 [#_"SnippetInfo" info, #_"GuardsStage" guardsStage, #_"LoweringStage" loweringStage]
         (let [
-            #_"Arguments" this (hash-map)
+            #_"Arguments" this (merge (hash-map) (Arguments'init-0))
             this (assoc this :info info)
             this (assoc this :cacheKey (CacheKey'new-3 info, guardsStage, loweringStage))
             this (assoc this :values (make-array Object (SnippetInfoImpl''getParameterCount-1 info)))
@@ -77661,14 +79827,18 @@ ZeroExtendNode'new-4
  ; @anno SnippetTemplate.Varargs
  ;;
 (final-ns Varargs
-    (§ final #_"Class" :componentType nil)
-    (§ final #_"Stamp" :stamp nil)
-    (§ final #_"Object" :value nil)
-    (§ final #_"int" :length 0)
+    (defn- #_"Varargs" Varargs'init-0 []
+        (hash-map
+            #_"Class" :componentType nil
+            #_"Stamp" :stamp nil
+            #_"Object" :value nil
+            #_"int" :length 0
+        )
+    )
 
     (defn #_"Varargs" Varargs'new-3 [#_"Class" componentType, #_"Stamp" stamp, #_"Object" value]
         (let [
-            #_"Varargs" this (hash-map)
+            #_"Varargs" this (merge (hash-map) (Varargs'init-0))
             this (assoc this :componentType componentType)
             this (assoc this :stamp stamp)
             this (assoc this :value value)
@@ -77688,11 +79858,16 @@ ZeroExtendNode'new-4
 (final-ns VarargsPlaceholderNode (§ extends FloatingNode) (§ implements ArrayLengthProvider)
     (§ def #_"NodeClass<VarargsPlaceholderNode>" VarargsPlaceholderNode'TYPE (NodeClass'create-1 VarargsPlaceholderNode))
 
-    (§ final #_"Varargs" :varargs nil)
+    (defn- #_"VarargsPlaceholderNode" VarargsPlaceholderNode'init-0 []
+        (hash-map
+            #_"Varargs" :varargs nil
+        )
+    )
 
     (defn #_"VarargsPlaceholderNode" VarargsPlaceholderNode'new-1 [#_"Varargs" varargs]
         (let [
             #_"VarargsPlaceholderNode" this (FloatingNode'new-2 VarargsPlaceholderNode'TYPE, (StampFactory'objectNonNull-1 (TypeReference'createExactTrusted-1 (#_"ResolvedJavaType" .getArrayClass (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, (:componentType varargs))))))
+            this (merge this (VarargsPlaceholderNode'init-0))
             this (assoc this :varargs varargs)
         ]
             this
@@ -77708,14 +79883,18 @@ ZeroExtendNode'new-4
  ; @anno SnippetTemplate.CacheKey
  ;;
 (final-ns CacheKey
-    (§ final #_"ResolvedJavaMethod" :method nil)
-    (§ final #_"Object[]" :values nil)
-    (§ final #_"GuardsStage" :guardsStage nil)
-    (§ final #_"LoweringStage" :loweringStage nil)
+    (defn- #_"CacheKey" CacheKey'init-0 []
+        (hash-map
+            #_"ResolvedJavaMethod" :method nil
+            #_"Object[]" :values nil
+            #_"GuardsStage" :guardsStage nil
+            #_"LoweringStage" :loweringStage nil
+        )
+    )
 
     (defn #_"CacheKey" CacheKey'new-3 [#_"SnippetInfo" info, #_"GuardsStage" guardsStage, #_"LoweringStage" loweringStage]
         (let [
-            #_"CacheKey" this (hash-map)
+            #_"CacheKey" this (merge (hash-map) (CacheKey'init-0))
             this (assoc this :method (:method info))
             this (assoc this :guardsStage guardsStage)
             this (assoc this :loweringStage loweringStage)
@@ -77773,12 +79952,16 @@ ZeroExtendNode'new-4
  ; @anno SnippetTemplate.MemoryInputMap
  ;;
 (class-ns MemoryInputMap (§ implements MemoryMap)
-    (§ final #_"LocationIdentity" :locationIdentity nil)
-    (§ final #_"MemoryNode" :lastLocationAccess nil)
+    (defn- #_"MemoryInputMap" MemoryInputMap'init-0 []
+        (hash-map
+            #_"LocationIdentity" :locationIdentity nil
+            #_"MemoryNode" :lastLocationAccess nil
+        )
+    )
 
     (defn #_"MemoryInputMap" MemoryInputMap'new-1 [#_"ValueNode" replacee]
         (let [
-            #_"MemoryInputMap" this (hash-map)
+            #_"MemoryInputMap" this (merge (hash-map) (MemoryInputMap'init-0))
         ]
             (if (instance? MemoryAccess replacee)
                 (do
@@ -77809,13 +79992,17 @@ ZeroExtendNode'new-4
  ; @anno SnippetTemplate.MemoryOutputMap
  ;;
 (final-ns MemoryOutputMap (§ extends MemoryInputMap)
-    (§ final #_"SnippetTemplate" :template nil)
-
-    (§ final #_"UnmodifiableEconomicMap<Node, Node>" :duplicates nil)
+    (defn- #_"MemoryOutputMap" MemoryOutputMap'init-0 []
+        (hash-map
+            #_"SnippetTemplate" :template nil
+            #_"UnmodifiableEconomicMap<Node, Node>" :duplicates nil
+        )
+    )
 
     (defn #_"MemoryOutputMap" MemoryOutputMap'new-3 [#_"SnippetTemplate" template, #_"ValueNode" replacee, #_"UnmodifiableEconomicMap<Node, Node>" duplicates]
         (let [
             #_"MemoryOutputMap" this (MemoryInputMap'new-1 replacee)
+            this (merge this (MemoryOutputMap'init-0))
             this (assoc this :template template)
             this (assoc this :duplicates duplicates)
         ]
@@ -77845,12 +80032,17 @@ ZeroExtendNode'new-4
 (final-ns MaterializedObjectState (§ extends EscapeObjectState)
     (§ def #_"NodeClass<MaterializedObjectState>" MaterializedObjectState'TYPE (NodeClass'create-1 MaterializedObjectState))
 
-    ; @Input
-    (§ mutable #_"ValueNode" :materializedValue nil)
+    (defn- #_"MaterializedObjectState" MaterializedObjectState'init-0 []
+        (hash-map
+            ; @Input
+            #_"ValueNode" :materializedValue nil
+        )
+    )
 
     (defn #_"MaterializedObjectState" MaterializedObjectState'new-2 [#_"VirtualObjectNode" object, #_"ValueNode" materializedValue]
         (let [
             #_"MaterializedObjectState" this (EscapeObjectState'new-2 MaterializedObjectState'TYPE, object)
+            this (merge this (MaterializedObjectState'init-0))
             this (assoc this :materializedValue materializedValue)
         ]
             this
@@ -77873,12 +80065,17 @@ ZeroExtendNode'new-4
 (final-ns VirtualObjectState (§ extends EscapeObjectState)
     (§ def #_"NodeClass<VirtualObjectState>" VirtualObjectState'TYPE (NodeClass'create-1 VirtualObjectState))
 
-    ; @OptionalInput
-    (§ mutable #_"NodeInputList<ValueNode>" :values nil)
+    (defn- #_"VirtualObjectState" VirtualObjectState'init-0 []
+        (hash-map
+            ; @OptionalInput
+            #_"NodeInputList<ValueNode>" :values nil
+        )
+    )
 
     (defn #_"VirtualObjectState" VirtualObjectState'new-2a [#_"VirtualObjectNode" object, #_"ValueNode[]" values]
         (let [
             #_"VirtualObjectState" this (EscapeObjectState'new-2 VirtualObjectState'TYPE, object)
+            this (merge this (VirtualObjectState'init-0))
             this (assoc this :values (NodeInputList'new-2a this, values))
         ]
             this
@@ -77888,6 +80085,7 @@ ZeroExtendNode'new-4
     (defn #_"VirtualObjectState" VirtualObjectState'new-2l [#_"VirtualObjectNode" object, #_"List<ValueNode>" values]
         (let [
             #_"VirtualObjectState" this (EscapeObjectState'new-2 VirtualObjectState'TYPE, object)
+            this (merge this (VirtualObjectState'init-0))
             this (assoc this :values (NodeInputList'new-2l this, values))
         ]
             this
@@ -77927,11 +80125,15 @@ ZeroExtendNode'new-4
     (§ def- #_"Effect[]" EffectListImpl'EMPTY_ARRAY (make-array Effect 0))
     (§ def- #_"String[]" EffectListImpl'EMPTY_STRING_ARRAY (make-array String 0))
 
-    (§ mutable #_"Effect[]" :effects EffectListImpl'EMPTY_ARRAY)
-    (§ mutable #_"int" :size 0)
+    (defn- #_"EffectListImpl" EffectListImpl'init-0 []
+        (hash-map
+            #_"Effect[]" :effects EffectListImpl'EMPTY_ARRAY
+            #_"int" :size 0
+        )
+    )
 
     (defn #_"EffectList" EffectListImpl'new-0 []
-        (hash-map)
+        (merge (hash-map) (EffectListImpl'init-0))
     )
 
     (defn- #_"EffectList" EffectListImpl''enlarge-2 [#_"EffectList" this, #_"int" elements]
@@ -78025,15 +80227,19 @@ ZeroExtendNode'new-4
 )
 
 (class-ns EffectsBlockStateImpl #_"<T implements EffectsBlockState<T>>" (§ implements EffectsBlockState #_"<T implements EffectsBlockState<T>>")
-    ;;;
-     ; This flag specifies whether this block is unreachable, which can happen during analysis
-     ; if conditions turn constant or nodes canonicalize to cfg sinks.
-     ;;
-    (§ mutable #_"boolean" :dead false)
+    (defn- #_"EffectsBlockStateImpl" EffectsBlockStateImpl'init-0 []
+        (hash-map
+            ;;;
+             ; This flag specifies whether this block is unreachable, which can happen during analysis
+             ; if conditions turn constant or nodes canonicalize to cfg sinks.
+             ;;
+            #_"boolean" :dead false
+        )
+    )
 
     (defn #_"EffectsBlockState" EffectsBlockStateImpl'new-0 []
         (let [
-            #_"EffectsBlockState" this (hash-map)
+            #_"EffectsBlockState" this (merge (hash-map) (EffectsBlockStateImpl'init-0))
         ]
             ;; emtpy
             this
@@ -78042,7 +80248,7 @@ ZeroExtendNode'new-4
 
     (defn #_"EffectsBlockState" EffectsBlockStateImpl'new-1 [#_"EffectsBlockState<T>" other]
         (let [
-            #_"EffectsBlockState" this (hash-map)
+            #_"EffectsBlockState" this (merge (hash-map) (EffectsBlockStateImpl'init-0))
             this (assoc this :dead (:dead other))
         ]
             this
@@ -78078,53 +80284,50 @@ ZeroExtendNode'new-4
 )
 
 (class-ns EffectsClosureImpl #_"<BlockT implements EffectsBlockState<BlockT>>" (§ extends ClosureImpl #_"<BlockT>") (§ implements EffectsClosure #_"<BlockT implements EffectsBlockState<BlockT>>")
-    (§ final #_"ControlFlowGraph" :cfg nil)
-    (§ final #_"ScheduleResult" :schedule nil)
-
-    ;;;
-     ; If a node has an alias, this means that it was replaced with another node during analysis.
-     ; Nodes can be replaced by normal ("scalar") nodes, e.g. a LoadIndexedNode with a ConstantNode,
-     ; or by virtual nodes, e.g. a NewInstanceNode with a VirtualInstanceNode. A node was replaced
-     ; with a virtual value iff the alias is a subclass of VirtualObjectNode.
-     ;
-     ; This alias map exists only once and is not part of the block state, so that during iterative
-     ; loop processing the alias of a node may be changed to another value.
-     ;;
-    (§ final #_"NodeMap<ValueNode>" :aliases nil)
-
-    ;;;
-     ; This set allows for a quick check whether a node has inputs that were replaced with "scalar" values.
-     ;;
-    (§ final #_"NodeBitMap" :hasScalarReplacedInputs nil)
-
-    ;; TODO if it was possible to introduce your own subclasses of Block and Loop, these maps would
-    ;; not be necessary. We could merge the GraphEffectsList logic into them.
-
-    ;;;
-     ; The effects accumulated during analysis of nodes. They may be cleared and re-filled during
-     ; iterative loop processing.
-     ;;
-    (§ final #_"BlockMap<GraphEffectList>" :blockEffects nil)
-
-    ;;;
-     ; Effects that can only be applied after the effects from within the loop have been applied and
-     ; that must be applied before any effect from after the loop is applied. E.g., updating phis.
-     ;;
-    (§ final #_"EconomicMap<Loop, GraphEffectList>" :loopMergeEffects (EconomicMap/create Equivalence/IDENTITY))
-
-    ;;;
-     ; The entry state of loops is needed when loop proxies are processed.
-     ;;
-    (§ final #_"EconomicMap<LoopBeginNode, BlockT>" :loopEntryStates (EconomicMap/create Equivalence/IDENTITY))
-
-    ;; Intended to be used by read-eliminating phases based on the effects phase.
-    (§ final #_"EconomicMap<Loop, LoopKillCache>" :loopLocationKillCache (EconomicMap/create Equivalence/IDENTITY))
-
-    (§ mutable #_"boolean" :changed? false)
+    (defn- #_"EffectsClosureImpl" EffectsClosureImpl'init-0 []
+        (hash-map
+            #_"ControlFlowGraph" :cfg nil
+            #_"ScheduleResult" :schedule nil
+            ;;;
+             ; If a node has an alias, this means that it was replaced with another node during analysis.
+             ; Nodes can be replaced by normal ("scalar") nodes, e.g. a LoadIndexedNode with a ConstantNode,
+             ; or by virtual nodes, e.g. a NewInstanceNode with a VirtualInstanceNode. A node was replaced
+             ; with a virtual value iff the alias is a subclass of VirtualObjectNode.
+             ;
+             ; This alias map exists only once and is not part of the block state, so that during iterative
+             ; loop processing the alias of a node may be changed to another value.
+             ;;
+            #_"NodeMap<ValueNode>" :aliases nil
+            ;;;
+             ; This set allows for a quick check whether a node has inputs that were replaced with "scalar" values.
+             ;;
+            #_"NodeBitMap" :hasScalarReplacedInputs nil
+            ;;;
+             ; The effects accumulated during analysis of nodes. They may be cleared and re-filled during
+             ; iterative loop processing.
+             ;;
+            #_"BlockMap<GraphEffectList>" :blockEffects nil
+            ;;;
+             ; Effects that can only be applied after the effects from within the loop have been applied and
+             ; that must be applied before any effect from after the loop is applied. E.g., updating phis.
+             ;;
+            #_"EconomicMap<Loop, GraphEffectList>" :loopMergeEffects (EconomicMap/create Equivalence/IDENTITY)
+            ;;;
+             ; The entry state of loops is needed when loop proxies are processed.
+             ;;
+            #_"EconomicMap<LoopBeginNode, BlockT>" :loopEntryStates (EconomicMap/create Equivalence/IDENTITY)
+            ;;;
+             ; Intended to be used by read-eliminating phases based on the effects phase.
+             ;;
+            #_"EconomicMap<Loop, LoopKillCache>" :loopLocationKillCache (EconomicMap/create Equivalence/IDENTITY)
+            #_"boolean" :changed? false
+        )
+    )
 
     (defn #_"EffectsClosure" EffectsClosureImpl'new-2 [#_"ScheduleResult" schedule, #_"ControlFlowGraph" cfg]
         (let [
             #_"EffectsClosure" this (ClosureImpl'new-0)
+            this (merge this (EffectsClosureImpl'init-0))
             this (assoc this :schedule schedule)
             this (assoc this :cfg cfg)
             this (assoc this :aliases (NodeMap'new-1g (:graph cfg)))
@@ -78433,14 +80636,18 @@ ZeroExtendNode'new-4
  ; @anno EffectsClosure.LoopKillCache
  ;;
 (final-ns LoopKillCache
-    (§ mutable #_"int" :visits 0)
-    (§ mutable #_"LocationIdentity" :firstLocation nil)
-    (§ mutable #_"EconomicSet<LocationIdentity>" :killedLocations nil)
-    (§ mutable #_"boolean" :killsAll false)
+    (defn- #_"LoopKillCache" LoopKillCache'init-0 []
+        (hash-map
+            #_"int" :visits 0
+            #_"LocationIdentity" :firstLocation nil
+            #_"EconomicSet<LocationIdentity>" :killedLocations nil
+            #_"boolean" :killsAll false
+        )
+    )
 
     (defn #_"LoopKillCache" LoopKillCache'new-1 [#_"int" visits]
         (let [
-            #_"LoopKillCache" this (hash-map)
+            #_"LoopKillCache" this (merge (hash-map) (LoopKillCache'init-0))
             this (assoc this :visits visits)
         ]
             this
@@ -78494,22 +80701,24 @@ ZeroExtendNode'new-4
 )
 
 (class-ns MergeProcessorImpl #_"<BlockT implements EffectsBlockState<BlockT>>" (§ implements MergeProcessor #_"<BlockT implements EffectsBlockState<BlockT>>")
-    (§ final #_"Block" :mergeBlock nil)
-    (§ final #_"AbstractMergeNode" :merge nil)
-
-    (§ final #_"GraphEffectList" :mergeEffects (GraphEffectList'new-0))
-    (§ final #_"GraphEffectList" :afterMergeEffects (GraphEffectList'new-0))
-
-    ;;;
-     ; The indexes are used to map from an index in the list of active (non-dead) predecessors
-     ; to an index in the list of all predecessors (the latter may be larger).
-     ;;
-    (§ mutable #_"int[]" :stateIndexes nil)
-    (§ mutable #_"BlockT" :newState nil)
+    (defn- #_"MergeProcessorImpl" MergeProcessorImpl'init-0 []
+        (hash-map
+            #_"Block" :mergeBlock nil
+            #_"AbstractMergeNode" :merge nil
+            #_"GraphEffectList" :mergeEffects (GraphEffectList'new-0)
+            #_"GraphEffectList" :afterMergeEffects (GraphEffectList'new-0)
+            ;;;
+             ; The indexes are used to map from an index in the list of active (non-dead) predecessors
+             ; to an index in the list of all predecessors (the latter may be larger).
+             ;;
+            #_"int[]" :stateIndexes nil
+            #_"BlockT" :newState nil
+        )
+    )
 
     (defn #_"MergeProcessor" MergeProcessorImpl'new-1 [#_"Block" mergeBlock]
         (let [
-            #_"MergeProcessor" this (hash-map)
+            #_"MergeProcessor" this (merge (hash-map) (MergeProcessorImpl'init-0))
             this (assoc this :mergeBlock mergeBlock)
             this (assoc this :merge (§ cast #_"AbstractMergeNode" (:beginNode mergeBlock)))
         ]
@@ -78558,9 +80767,13 @@ ZeroExtendNode'new-4
 )
 
 (class-ns EffectsPhaseImpl (§ implements EffectsPhase, Phase)
-    (§ final #_"int" :maxIterations 0)
-    (§ final #_"CanonicalizerPhase" :canonicalizer nil)
-    (§ final #_"boolean" :unscheduled false)
+    (defn- #_"EffectsPhaseImpl" EffectsPhaseImpl'init-0 []
+        (hash-map
+            #_"int" :maxIterations 0
+            #_"CanonicalizerPhase" :canonicalizer nil
+            #_"boolean" :unscheduled false
+        )
+    )
 
     (defn #_"EffectsPhase" EffectsPhaseImpl'new-2 [#_"int" maxIterations, #_"CanonicalizerPhase" canonicalizer]
         (EffectsPhaseImpl'new-3 maxIterations, canonicalizer, false)
@@ -78568,7 +80781,7 @@ ZeroExtendNode'new-4
 
     (defn #_"EffectsPhase" EffectsPhaseImpl'new-3 [#_"int" maxIterations, #_"CanonicalizerPhase" canonicalizer, #_"boolean" unscheduled]
         (let [
-            #_"EffectsPhase" this (hash-map)
+            #_"EffectsPhase" this (merge (hash-map) (EffectsPhaseImpl'init-0))
             this (assoc this :maxIterations maxIterations)
             this (assoc this :canonicalizer canonicalizer)
             this (assoc this :unscheduled unscheduled)
@@ -78644,14 +80857,20 @@ ZeroExtendNode'new-4
 )
 
 (final-ns GraphEffectList (§ extends EffectListImpl)
-    (defn #_"GraphEffectList" GraphEffectList'new-0 []
-        (EffectListImpl'new-0)
+    (defn- #_"GraphEffectList" GraphEffectList'init-0 []
+        (hash-map
+            ;;;
+             ; Determines how many objects are virtualized (positive) or materialized (negative) by this effect.
+             ;;
+            #_"int" :virtualizationDelta 0
+        )
     )
 
-    ;;;
-     ; Determines how many objects are virtualized (positive) or materialized (negative) by this effect.
-     ;;
-    (§ mutable #_"int" :virtualizationDelta 0)
+    (defn #_"GraphEffectList" GraphEffectList'new-0 []
+        (merge (EffectListImpl'new-0)
+            (GraphEffectList'init-0)
+        )
+    )
 
     (§ override! #_"void" EffectList'''clear-1 [#_"GraphEffectList" this]
         (EffectList'''clear-1 (§ super ))
@@ -78852,22 +81071,23 @@ ZeroExtendNode'new-4
  ; still virtual. If the object was materialized, it contains the current materialized value.
  ;;
 (final-ns ObjectState
-    ;;;
-     ; Users of this method are not allowed to change the entries of the returned array.
-     ;;
-    (§ mutable #_"ValueNode[]" :entries nil)
-
-    (§ mutable #_"ValueNode" :materializedValue nil)
-    (§ mutable #_"LockState" :locks nil)
-    (§ mutable #_"boolean" :ensureVirtualized false)
-
-    (§ mutable #_"EscapeObjectState" :cachedState nil)
-
-    ;;;
-     ; ObjectStates are duplicated lazily, if this field is true then the state needs to be copied
-     ; before it is modified.
-     ;;
-    (§ mutable #_"boolean" :copyOnWrite false)
+    (defn- #_"ObjectState" ObjectState'init-0 []
+        (hash-map
+            ;;;
+             ; Users of this method are not allowed to change the entries of the returned array.
+             ;;
+            #_"ValueNode[]" :entries nil
+            #_"ValueNode" :materializedValue nil
+            #_"LockState" :locks nil
+            #_"boolean" :ensureVirtualized false
+            #_"EscapeObjectState" :cachedState nil
+            ;;;
+             ; ObjectStates are duplicated lazily, if this field is true then the state needs to
+             ; be copied before it is modified.
+             ;;
+            #_"boolean" :copyOnWrite false
+        )
+    )
 
     (defn #_"ObjectState" ObjectState'new-3m [#_"ValueNode[]" entries, #_"List<MonitorIdNode>" locks, #_"boolean" ensureVirtualized]
         (let [
@@ -78882,7 +81102,7 @@ ZeroExtendNode'new-4
 
     (defn #_"ObjectState" ObjectState'new-3s [#_"ValueNode[]" entries, #_"LockState" locks, #_"boolean" ensureVirtualized]
         (let [
-            #_"ObjectState" this (hash-map)
+            #_"ObjectState" this (merge (hash-map) (ObjectState'init-0))
             this (assoc this :entries entries)
             this (assoc this :locks locks)
             this (assoc this :ensureVirtualized ensureVirtualized)
@@ -78893,7 +81113,7 @@ ZeroExtendNode'new-4
 
     (defn #_"ObjectState" ObjectState'new-3v [#_"ValueNode" materializedValue, #_"LockState" locks, #_"boolean" ensureVirtualized]
         (let [
-            #_"ObjectState" this (hash-map)
+            #_"ObjectState" this (merge (hash-map) (ObjectState'init-0))
             this (assoc this :materializedValue materializedValue)
             this (assoc this :locks locks)
             this (assoc this :ensureVirtualized ensureVirtualized)
@@ -78904,7 +81124,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"ObjectState" ObjectState'new-1 [#_"ObjectState" other]
         (let [
-            #_"ObjectState" this (hash-map)
+            #_"ObjectState" this (merge (hash-map) (ObjectState'init-0))
             this (assoc this :entries (when (some? (:entries other)) (#_"Object" .clone (:entries other))))
             this (assoc this :materializedValue (:materializedValue other))
             this (assoc this :locks (:locks other))
@@ -79028,11 +81248,19 @@ ZeroExtendNode'new-4
 (class-ns PartialEscapeBlockStateImpl #_"<T implements PartialEscapeBlockState<T>>" (§ extends EffectsBlockStateImpl #_"<T>") (§ implements PartialEscapeBlockState #_"<T implements PartialEscapeBlockState<T>>")
     (§ def- #_"ObjectState[]" PartialEscapeBlockStateImpl'EMPTY_ARRAY (make-array ObjectState 0))
 
-    ;;;
-     ; This array contains the state of all virtual objects, indexed by VirtualObjectNode#getObjectId().
-     ; Entries in this array may be nil if the corresponding virtual object is not alive or reachable currently.
-     ;;
-    (§ mutable #_"ObjectState[]" :objectStates nil)
+    (defn- #_"PartialEscapeBlockStateImpl" PartialEscapeBlockStateImpl'init-0 []
+        (hash-map
+            ;;;
+             ; This array contains the state of all virtual objects, indexed by VirtualObjectNode#getObjectId().
+             ; Entries in this array may be nil if the corresponding virtual object is not alive or reachable currently.
+             ;;
+            #_"ObjectState[]" :objectStates nil
+            ;;;
+             ; Usage count for the objectStates array, to avoid unneessary copying.
+             ;;
+            #_"RefCount" :arrayRefCount nil
+        )
+    )
 
     (defn #_"boolean" PartialEscapeBlockStateImpl''contains-2 [#_"PartialEscapeBlockState<T implements PartialEscapeBlockState<T>>" this, #_"VirtualObjectNode" value]
         (loop [#_"ISeq" s (seq (:objectStates this))]
@@ -79055,14 +81283,10 @@ ZeroExtendNode'new-4
         )
     )
 
-    ;;;
-     ; Usage count for the objectStates array, to avoid unneessary copying.
-     ;;
-    (§ mutable #_"RefCount" :arrayRefCount nil)
-
     (defn #_"PartialEscapeBlockState" PartialEscapeBlockStateImpl'new-0 []
         (let [
             #_"PartialEscapeBlockState" this (EffectsBlockStateImpl'new-0)
+            this (merge this (PartialEscapeBlockStateImpl'init-0))
             this (assoc this :objectStates PartialEscapeBlockStateImpl'EMPTY_ARRAY)
             this (assoc this :arrayRefCount (RefCount'new-0))
         ]
@@ -79073,6 +81297,7 @@ ZeroExtendNode'new-4
     (defn #_"PartialEscapeBlockState" PartialEscapeBlockStateImpl'new-1 [#_"PartialEscapeBlockState<T>" other]
         (let [
             #_"PartialEscapeBlockState" this (EffectsBlockStateImpl'new-1 other)
+            this (merge this (PartialEscapeBlockStateImpl'init-0))
         ]
             (§ ass! this (PartialEscapeBlockStateImpl''adoptAddObjectStates-2 this, other))
             this
@@ -79361,11 +81586,15 @@ ZeroExtendNode'new-4
  ; @anno PartialEscapeBlockState.RefCount
  ;;
 (final-ns RefCount
-    (defn #_"RefCount" RefCount'new-0 []
-        (hash-map)
+    (defn- #_"RefCount" RefCount'init-0 []
+        (hash-map
+            #_"int" :refCount 1
+        )
     )
 
-    (§ mutable #_"int" :refCount 1)
+    (defn #_"RefCount" RefCount'new-0 []
+        (merge (hash-map) (RefCount'init-0))
+    )
 )
 
 ;;;
@@ -79385,26 +81614,29 @@ ZeroExtendNode'new-4
 )
 
 (class-ns PartialEscapeClosure #_"<BlockT implements PartialEscapeBlockState<BlockT>>" (§ extends EffectsClosureImpl #_"<BlockT>")
-    ;;;
-     ; Nodes with inputs that were modified during analysis are marked in this bitset - this way
-     ; nodes that are not influenced at all by analysis can be rejected quickly.
-     ;;
-    (§ final #_"NodeBitMap" :hasVirtualInputs nil)
-
-    ;;;
-     ; This is handed out to implementers of Virtualizable.
-     ;;
-    (§ final #_"VirtualizerToolImpl" :tool nil)
-
-    ;;;
-     ; The indexes into this array correspond to VirtualObjectNode#getObjectId().
-     ;;
-    (§ final #_"ArrayList<VirtualObjectNode>" :virtualObjects (ArrayList.))
+    (defn- #_"PartialEscapeClosure" PartialEscapeClosure'init-0 []
+        (hash-map
+            ;;;
+             ; Nodes with inputs that were modified during analysis are marked in this bitset - this way
+             ; nodes that are not influenced at all by analysis can be rejected quickly.
+             ;;
+            #_"NodeBitMap" :hasVirtualInputs nil
+            ;;;
+             ; This is handed out to implementers of Virtualizable.
+             ;;
+            #_"VirtualizerToolImpl" :tool nil
+            ;;;
+             ; The indexes into this array correspond to VirtualObjectNode#getObjectId().
+             ;;
+            #_"ArrayList<VirtualObjectNode>" :virtualObjects (ArrayList.)
+        )
+    )
 
     (defn #_"PartialEscapeClosure" PartialEscapeClosure'new-1 [#_"ScheduleResult" schedule]
         (let [
             #_"Graph" graph (:graph (:cfg schedule))
             #_"PartialEscapeClosure" this (EffectsClosureImpl'new-2 schedule, (:cfg schedule))
+            this (merge this (PartialEscapeClosure'init-0))
             this (assoc this :hasVirtualInputs (NodeBitMap'new-1g graph))
             this (assoc this :tool (VirtualizerToolImpl'new-1 this))
         ]
@@ -79985,17 +82217,20 @@ ZeroExtendNode'new-4
  ; @anno PartialEscapeClosure.PEMergeProcessor
  ;;
 (class-ns PEMergeProcessor #_"<BlockT implements PartialEscapeBlockState<BlockT>>" (§ extends MergeProcessorImpl #_"<BlockT>")
-    (§ final #_"PartialEscapeClosure<BlockT>" :peClosure nil)
-
-    (§ mutable #_"EconomicMap<Object, ValuePhiNode>" :materializedPhis nil)
-    (§ mutable #_"EconomicMap<ValueNode, ValuePhiNode[]>" :valuePhis nil)
-    (§ mutable #_"EconomicMap<ValuePhiNode, VirtualObjectNode>" :valueObjectVirtuals nil)
-
-    (§ final #_"boolean" :needsCaching false)
+    (defn- #_"PEMergeProcessor" PEMergeProcessor'init-0 []
+        (hash-map
+            #_"PartialEscapeClosure<BlockT>" :peClosure nil
+            #_"EconomicMap<Object, ValuePhiNode>" :materializedPhis nil
+            #_"EconomicMap<ValueNode, ValuePhiNode[]>" :valuePhis nil
+            #_"EconomicMap<ValuePhiNode, VirtualObjectNode>" :valueObjectVirtuals nil
+            #_"boolean" :needsCaching false
+        )
+    )
 
     (defn #_"PEMergeProcessor" PEMergeProcessor'new-2 [#_"PartialEscapeClosure<BlockT>" peClosure, #_"Block" mergeBlock]
         (let [
             #_"PEMergeProcessor" this (MergeProcessorImpl'new-1 mergeBlock)
+            this (merge this (PEMergeProcessor'init-0))
             this (assoc this :peClosure peClosure)
             ;; merge will only be called multiple times for loop headers
             this (assoc this :needsCaching (Block''isLoopHeader-1 mergeBlock))
@@ -80606,15 +82841,19 @@ ZeroExtendNode'new-4
  ; @anno PartialEscapeClosure.CollectVirtualObjectsClosure
  ;;
 (final-ns CollectVirtualObjectsClosure #_"<BlockT implements PartialEscapeBlockState<BlockT>>" (§ extends NodeClosureImpl #_"<ValueNode>")
-    (§ final #_"PartialEscapeClosure<BlockT>" :peClosure nil)
-
-    (§ final #_"EconomicSet<VirtualObjectNode>" :virtual nil)
-    (§ final #_"GraphEffectList" :effects nil)
-    (§ final #_"BlockT" :state nil)
+    (defn- #_"CollectVirtualObjectsClosure" CollectVirtualObjectsClosure'init-0 []
+        (hash-map
+            #_"PartialEscapeClosure<BlockT>" :peClosure nil
+            #_"EconomicSet<VirtualObjectNode>" :virtual nil
+            #_"GraphEffectList" :effects nil
+            #_"BlockT" :state nil
+        )
+    )
 
     (defn- #_"CollectVirtualObjectsClosure" CollectVirtualObjectsClosure'new-4 [#_"PartialEscapeClosure<BlockT>" peClosure, #_"EconomicSet<VirtualObjectNode>" virtual, #_"GraphEffectList" effects, #_"BlockT" state]
         (let [
             #_"CollectVirtualObjectsClosure" this (NodeClosureImpl'new-0)
+            this (merge this (CollectVirtualObjectsClosure'init-0))
             this (assoc this :peClosure peClosure)
             this (assoc this :virtual virtual)
             this (assoc this :effects effects)
@@ -80663,7 +82902,11 @@ ZeroExtendNode'new-4
 )
 
 (final-ns PartialEscapePhase (§ extends EffectsPhaseImpl)
-    (§ final #_"boolean" :readElimination false)
+    (defn- #_"PartialEscapePhase" PartialEscapePhase'init-0 []
+        (hash-map
+            #_"boolean" :readElimination false
+        )
+    )
 
     (defn #_"PartialEscapePhase" PartialEscapePhase'new-2 [#_"boolean" iterative, #_"CanonicalizerPhase" canonicalizer]
         (PartialEscapePhase'new-3 iterative, GraalOptions'optEarlyReadElimination, canonicalizer)
@@ -80672,6 +82915,7 @@ ZeroExtendNode'new-4
     (defn #_"PartialEscapePhase" PartialEscapePhase'new-3 [#_"boolean" iterative, #_"boolean" readElimination, #_"CanonicalizerPhase" canonicalizer]
         (let [
             #_"PartialEscapePhase" this (EffectsPhaseImpl'new-2 (if iterative GraalOptions'escapeAnalysisIterations 1), canonicalizer)
+            this (merge this (PartialEscapePhase'init-0))
             this (assoc this :readElimination readElimination)
         ]
             this
@@ -80697,11 +82941,16 @@ ZeroExtendNode'new-4
 )
 
 (final-ns PEReadEliminationBlockState (§ extends PartialEscapeBlockStateImpl #_"<PEReadEliminationBlockState>")
-    (§ final #_"EconomicMap<ReadCacheEntry, ValueNode>" :readCache nil)
+    (defn- #_"PEReadEliminationBlockState" PEReadEliminationBlockState'init-0 []
+        (hash-map
+            #_"EconomicMap<ReadCacheEntry, ValueNode>" :readCache nil
+        )
+    )
 
     (defn #_"PEReadEliminationBlockState" PEReadEliminationBlockState'new-0 []
         (let [
             #_"PEReadEliminationBlockState" this (PartialEscapeBlockStateImpl'new-0)
+            this (merge this (PEReadEliminationBlockState'init-0))
             this (assoc this :readCache (EconomicMap/create Equivalence/DEFAULT))
         ]
             this
@@ -80711,6 +82960,7 @@ ZeroExtendNode'new-4
     (defn #_"PEReadEliminationBlockState" PEReadEliminationBlockState'new-1 [#_"PEReadEliminationBlockState" other]
         (let [
             #_"PEReadEliminationBlockState" this (PartialEscapeBlockStateImpl'new-1 other)
+            this (merge this (PEReadEliminationBlockState'init-0))
             this (assoc this :readCache (EconomicMap/create Equivalence/DEFAULT, (:readCache other)))
         ]
             this
@@ -80803,17 +83053,20 @@ ZeroExtendNode'new-4
  ; @anno PEReadEliminationBlockState.ReadCacheEntry
  ;;
 (final-ns ReadCacheEntry
-    (§ final #_"LocationIdentity" :identity nil)
-    (§ final #_"ValueNode" :object nil)
-    (§ final #_"int" :index 0)
-    (§ final #_"JavaKind" :kind nil)
-
-    ;; This flag does not affect hashCode or equals implementations.
-    (§ final #_"boolean" :overflowAccess false)
+    (defn- #_"ReadCacheEntry" ReadCacheEntry'init-0 []
+        (hash-map
+            #_"LocationIdentity" :identity nil
+            #_"ValueNode" :object nil
+            #_"int" :index 0
+            #_"JavaKind" :kind nil
+            ;; This flag does not affect hashCode or equals implementations.
+            #_"boolean" :overflowAccess false
+        )
+    )
 
     (defn #_"ReadCacheEntry" ReadCacheEntry'new-5 [#_"LocationIdentity" identity, #_"ValueNode" object, #_"int" index, #_"JavaKind" kind, #_"boolean" overflowAccess]
         (let [
-            #_"ReadCacheEntry" this (hash-map)
+            #_"ReadCacheEntry" this (merge (hash-map) (ReadCacheEntry'init-0))
             this (assoc this :identity identity)
             this (assoc this :object object)
             this (assoc this :index index)
@@ -81347,11 +83600,16 @@ ZeroExtendNode'new-4
  ; This class maintains a set of known values, identified by base object, locations and offset.
  ;;
 (final-ns ReadEliminationBlockState (§ extends EffectsBlockStateImpl #_"<ReadEliminationBlockState>")
-    (§ final #_"EconomicMap<CacheEntry, ValueNode>" :readCache nil)
+    (defn- #_"ReadEliminationBlockState" ReadEliminationBlockState'init-0 []
+        (hash-map
+            #_"EconomicMap<CacheEntry, ValueNode>" :readCache nil
+        )
+    )
 
     (defn #_"ReadEliminationBlockState" ReadEliminationBlockState'new-0 []
         (let [
             #_"ReadEliminationBlockState" this (EffectsBlockStateImpl'new-0)
+            this (merge this (ReadEliminationBlockState'init-0))
             this (assoc this :readCache (EconomicMap/create Equivalence/DEFAULT))
         ]
             this
@@ -81361,6 +83619,7 @@ ZeroExtendNode'new-4
     (defn #_"ReadEliminationBlockState" ReadEliminationBlockState'new-1 [#_"ReadEliminationBlockState" other]
         (let [
             #_"ReadEliminationBlockState" this (EffectsBlockStateImpl'new-0)
+            this (merge this (ReadEliminationBlockState'init-0))
             this (assoc this :readCache (EconomicMap/create Equivalence/DEFAULT, (:readCache other)))
         ]
             this
@@ -81400,12 +83659,16 @@ ZeroExtendNode'new-4
 )
 
 (class-ns CacheEntryImpl #_"<T>" (§ implements CacheEntry #_"<T>")
-    (§ final #_"ValueNode" :object nil)
-    (§ final #_"T" :identity nil)
+    (defn- #_"CacheEntryImpl" CacheEntryImpl'init-0 []
+        (hash-map
+            #_"ValueNode" :object nil
+            #_"T" :identity nil
+        )
+    )
 
     (defn #_"CacheEntry" CacheEntryImpl'new-2 [#_"ValueNode" object, #_"T" identity]
         (let [
-            #_"CacheEntry" this (hash-map)
+            #_"CacheEntry" this (merge (hash-map) (CacheEntryImpl'init-0))
             this (assoc this :object object)
             this (assoc this :identity identity)
         ]
@@ -81442,11 +83705,16 @@ ZeroExtendNode'new-4
  ; @anno ReadEliminationBlockState.UnsafeLoadCacheEntry
  ;;
 (final-ns UnsafeLoadCacheEntry (§ extends CacheEntryImpl #_"<ValueNode>")
-    (§ final #_"LocationIdentity" :locationIdentity nil)
+    (defn- #_"UnsafeLoadCacheEntry" UnsafeLoadCacheEntry'init-0 []
+        (hash-map
+            #_"LocationIdentity" :locationIdentity nil
+        )
+    )
 
     (defn #_"UnsafeLoadCacheEntry" UnsafeLoadCacheEntry'new-3 [#_"ValueNode" object, #_"ValueNode" location, #_"LocationIdentity" locationIdentity]
         (let [
             #_"UnsafeLoadCacheEntry" this (CacheEntryImpl'new-2 object, location)
+            this (merge this (UnsafeLoadCacheEntry'init-0))
             this (assoc this :locationIdentity locationIdentity)
         ]
             this
@@ -81471,11 +83739,16 @@ ZeroExtendNode'new-4
  ; but over time both have evolved so that there's a significant overlap.
  ;;
 (final-ns ReadEliminationClosure (§ extends EffectsClosureImpl #_"<ReadEliminationBlockState>")
-    (§ final #_"boolean" :considerGuards false)
+    (defn- #_"ReadEliminationClosure" ReadEliminationClosure'init-0 []
+        (hash-map
+            #_"boolean" :considerGuards false
+        )
+    )
 
     (defn #_"ReadEliminationClosure" ReadEliminationClosure'new-2 [#_"ControlFlowGraph" cfg, #_"boolean" considerGuards]
         (let [
             #_"ReadEliminationClosure" this (EffectsClosureImpl'new-2 nil, cfg)
+            this (merge this (ReadEliminationClosure'init-0))
             this (assoc this :considerGuards considerGuards)
         ]
             this
@@ -81746,10 +84019,16 @@ ZeroExtendNode'new-4
  ; @anno ReadEliminationClosure.ReadEliminationMergeProcessor
  ;;
 (final-ns ReadEliminationMergeProcessor (§ extends MergeProcessorImpl #_"<ReadEliminationBlockState>")
-    (§ final #_"EconomicMap<Object, ValuePhiNode>" :materializedPhis (EconomicMap/create Equivalence/DEFAULT))
+    (defn- #_"ReadEliminationMergeProcessor" ReadEliminationMergeProcessor'init-0 []
+        (hash-map
+            #_"EconomicMap<Object, ValuePhiNode>" :materializedPhis (EconomicMap/create Equivalence/DEFAULT)
+        )
+    )
 
     (defn #_"ReadEliminationMergeProcessor" ReadEliminationMergeProcessor'new-1 [#_"Block" mergeBlock]
-        (MergeProcessorImpl'new-1 mergeBlock)
+        (merge (MergeProcessorImpl'new-1 mergeBlock)
+            (ReadEliminationMergeProcessor'init-0)
+        )
     )
 
     (defn #_"ValuePhiNode" ReadEliminationMergeProcessor''getCachedPhi-3 [#_"ReadEliminationMergeProcessor" this, #_"CacheEntry" virtual, #_"Stamp" stamp]
@@ -81853,18 +84132,21 @@ ZeroExtendNode'new-4
  ; Forwards calls from VirtualizerTool to the actual PartialEscapeBlockState.
  ;;
 (final-ns VirtualizerToolImpl (§ implements VirtualizerTool, CanonicalizerTool)
-    (§ final #_"PartialEscapeClosure" :closure nil)
-    (§ mutable #_"ConstantNode" :illegalConstant nil)
-
-    (§ mutable #_"boolean" :deleted false)
-    (§ mutable #_"PartialEscapeBlockState" :state nil)
-    (§ mutable #_"ValueNode" :current nil)
-    (§ mutable #_"FixedNode" :position nil)
-    (§ mutable #_"GraphEffectList" :effects nil)
+    (defn- #_"VirtualizerToolImpl" VirtualizerToolImpl'init-0 []
+        (hash-map
+            #_"PartialEscapeClosure" :closure nil
+            #_"ConstantNode" :illegalConstant nil
+            #_"boolean" :deleted false
+            #_"PartialEscapeBlockState" :state nil
+            #_"ValueNode" :current nil
+            #_"FixedNode" :position nil
+            #_"GraphEffectList" :effects nil
+        )
+    )
 
     (defn #_"VirtualizerToolImpl" VirtualizerToolImpl'new-1 [#_"PartialEscapeClosure" closure]
         (let [
-            #_"VirtualizerToolImpl" this (hash-map)
+            #_"VirtualizerToolImpl" this (merge (hash-map) (VirtualizerToolImpl'init-0))
             this (assoc this :closure closure)
         ]
             this
@@ -82058,11 +84340,15 @@ ZeroExtendNode'new-4
 )
 
 (final-ns Word
-    (§ final #_"long" :rawValue 0)
+    (defn- #_"Word" Word'init-0 []
+        (hash-map
+            #_"long" :rawValue 0
+        )
+    )
 
     (defn- #_"Word" Word'new-1 [#_"long" rawValue]
         (let [
-            #_"Word" this (hash-map)
+            #_"Word" this (merge (hash-map) (Word'init-0))
             this (assoc this :rawValue rawValue)
         ]
             this
@@ -82900,20 +85186,24 @@ ZeroExtendNode'new-4
 )
 
 ;;;
- ; Casts between Word and Object exposed by the Word#fromAddress,
- ; Word#objectToTrackedPointer, Word#objectToUntrackedPointer and
- ; Word#toObject() operations. It has an impact on the pointer maps for the GC,
- ; so it must not be scheduled or optimized away.
+ ; Casts between Word and Object exposed by the Word#fromAddress, Word#objectToTrackedPointer,
+ ; Word#objectToUntrackedPointer and Word#toObject() operations. It has an impact on the pointer
+ ; maps for the GC, so it must not be scheduled or optimized away.
  ;;
 (final-ns WordCastNode (§ extends FixedWithNextNode) (§ implements LIRLowerable, Canonicalizable)
     (§ def #_"NodeClass<WordCastNode>" WordCastNode'TYPE (NodeClass'create-1 WordCastNode))
 
-    ; @Input
-    (§ mutable #_"ValueNode" :input nil)
+    (defn- #_"WordCastNode" WordCastNode'init-0 []
+        (hash-map
+            ; @Input
+            #_"ValueNode" :input nil
+        )
+    )
 
     (defn #_"WordCastNode" WordCastNode'new-2 [#_"Stamp" stamp, #_"ValueNode" input]
         (let [
             #_"WordCastNode" this (FixedWithNextNode'new-2 WordCastNode'TYPE, stamp)
+            this (merge this (WordCastNode'init-0))
             this (assoc this :input input)
         ]
             this
@@ -83173,7 +85463,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (§ override! #_"StampPair" TypePlugin'''interceptType-4 [#_"WordOperationPlugin" this, #_"GraphBuilder" b, #_"JavaType" type, #_"boolean" never-nil?]
+    (§ override! #_"StampPair" TypePlugin'''interceptType-4 [#_"WordOperationPlugin" this, #_"GraphBuilder" b, #_"JavaType" type, #_"boolean" never-nil?]
         (let [
             #_"Stamp" wordStamp
                 (when (instance? ResolvedJavaType type)
@@ -83198,7 +85488,7 @@ ZeroExtendNode'new-4
 
     (§ override! #_"boolean" NodePlugin'''handleLoadField-4 [#_"WordOperationPlugin" this, #_"BytecodeParser" parser, #_"ValueNode" receiver, #_"ResolvedJavaField" field]
         (let [
-            #_"StampPair" wordStamp (TypePlugin'''interceptType-4 this, parser, (#_"ResolvedJavaField" .getType field), false)
+            #_"StampPair" wordStamp (TypePlugin'''interceptType-4 this, parser, (#_"ResolvedJavaField" .getType field), false)
         ]
             (and (some? wordStamp)
                 (do
@@ -83433,13 +85723,17 @@ ZeroExtendNode'new-4
         )
     )
 
-    (§ final #_"PhaseSuite" :highTier nil)
-    (§ final #_"PhaseSuite" :midTier nil)
-    (§ final #_"PhaseSuite" :lowTier nil)
+    (defn- #_"Suites" Suites'init-0 []
+        (hash-map
+            #_"PhaseSuite" :highTier nil
+            #_"PhaseSuite" :midTier nil
+            #_"PhaseSuite" :lowTier nil
+        )
+    )
 
     (defn #_"Suites" Suites'new-3 [#_"PhaseSuite" highTier, #_"PhaseSuite" midTier, #_"PhaseSuite" lowTier]
         (let [
-            #_"Suites" this (hash-map)
+            #_"Suites" this (merge (hash-map) (Suites'init-0))
             this (assoc this :highTier highTier)
             this (assoc this :midTier midTier)
             this (assoc this :lowTier lowTier)
@@ -83462,12 +85756,16 @@ ZeroExtendNode'new-4
      ;;
     (def #_"int" FrameContext'PATCHED_VERIFIED_ENTRY_POINT_INSTRUCTION_SIZE 5)
 
-    (§ final #_"boolean" :isStub false)
-    (§ final #_"boolean" :omitFrame false)
+    (defn- #_"FrameContext" FrameContext'init-0 []
+        (hash-map
+            #_"boolean" :isStub false
+            #_"boolean" :omitFrame false
+        )
+    )
 
     (defn #_"FrameContext" FrameContext'new-2 [#_"boolean" isStub, #_"boolean" omitFrame]
         (let [
-            #_"FrameContext" this (hash-map)
+            #_"FrameContext" this (merge (hash-map) (FrameContext'init-0))
             this (assoc this :isStub isStub)
             this (assoc this :omitFrame omitFrame)
         ]
