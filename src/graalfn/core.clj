@@ -5526,7 +5526,7 @@ ZeroExtendNode'new-4
 (defp! IterableNodeType
 )
 
-(defp! NodeIterable #_(§ extends Iterable #_"<Node>")
+(defp! NodeIterable
     (#_"NodeIterable" NodeIterable'''filter-2c [#_"NodeIterable" this, #_"Class<Node>" clazz])
     (#_"FilteredNodeIterable" NodeIterable'''filter-2p [#_"NodeIterable" this, #_"NodePredicate" predicate])
     (#_"List<Node>" NodeIterable'''snapshot-1 [#_"NodeIterable" this])
@@ -5537,7 +5537,7 @@ ZeroExtendNode'new-4
     (#_"boolean" NodeIterable'''contains-2 [#_"NodeIterable" this, #_"Node" node])
 )
 
-(defp! NodePredicate #_(§ extends Predicate #_"<Node>")
+(defp! NodePredicate
     (#_"boolean" NodePredicate'''apply-2 [#_"NodePredicate" this, #_"Node" node])
     (#_"NodePredicate" NodePredicate'''and-2 [#_"NodePredicate" this, #_"NodePredicate" other])
 )
@@ -5606,7 +5606,7 @@ ZeroExtendNode'new-4
  ;
  ; @anno Canonicalizable.Unary
  ;;
-(defp! Unary #_"<T implements Node>" #_(§ extends Canonicalizable)
+(defp! Unary #_"<T implements Node>"
     ;;;
      ; Similar to Canonicalizable#canonical(CanonicalizerTool), except that implementations should act as if the
      ; current input of the node was the given one, i.e. they should never look at the inputs via the this pointer.
@@ -5629,7 +5629,7 @@ ZeroExtendNode'new-4
  ;
  ; @anno Canonicalizable.Binary
  ;;
-(defp Binary #_"<T implements Node>" #_(§ extends Canonicalizable)
+(defp Binary #_"<T implements Node>"
     ;;;
      ; Similar to Canonicalizable#canonical(CanonicalizerTool), except that implementations should act as if the
      ; current input of the node was the given one, i.e. they should never look at the inputs via the this pointer.
@@ -5653,7 +5653,7 @@ ZeroExtendNode'new-4
  ;
  ; @anno Canonicalizable.BinaryCommutative
  ;;
-(defp! BinaryCommutative #_"<T implements Node>" #_(§ extends Binary #_"<T>")
+(defp! BinaryCommutative
 )
 
 (defp CanonicalizerTool
@@ -5682,7 +5682,7 @@ ZeroExtendNode'new-4
     (#_"void" Simplifiable'''simplify-2 [#_"Simplifiable" this, #_"SimplifierTool" tool])
 )
 
-(defp! SimplifierTool #_(§ extends CanonicalizerTool)
+(defp! SimplifierTool
     (#_"void" SimplifierTool'''deleteBranch-2 [#_"SimplifierTool" this, #_"Node" branch])
     ;;;
      ; Adds a node to the worklist independent of whether it has already been on the worklist.
@@ -5784,7 +5784,7 @@ ZeroExtendNode'new-4
  ;
  ; @anno StandardOp.StandardBranchOp
  ;;
-(defp! StandardBranchOp #_(§ extends BlockEndOp)
+(defp! StandardBranchOp
 )
 
 ;;;
@@ -5801,7 +5801,7 @@ ZeroExtendNode'new-4
  ;
  ; @anno StandardOp.ValueMoveOp
  ;;
-(defp! ValueMoveOp #_(§ extends MoveOp)
+(defp! ValueMoveOp
     (#_"AllocatableValue" ValueMoveOp'''getInput-1 [#_"ValueMoveOp" this])
 )
 
@@ -5810,7 +5810,7 @@ ZeroExtendNode'new-4
  ;
  ; @anno StandardOp.LoadConstantOp
  ;;
-(defp! LoadConstantOp #_(§ extends MoveOp)
+(defp! LoadConstantOp
     (#_"Constant" LoadConstantOp'''getConstant-1 [#_"LoadConstantOp" this])
 )
 
@@ -5858,7 +5858,7 @@ ZeroExtendNode'new-4
  ; Non-modifying version of ValueProcedure.
  ;;
 ; @FunctionalInterface
-(defp! ValueConsumer #_(§ extends InstructionValueConsumer)
+(defp! ValueConsumer #_(§ extends InstructionValueConsumer)
     ;;;
      ; Iterator method to be overwritten.
      ;
@@ -5878,7 +5878,7 @@ ZeroExtendNode'new-4
  ; Similar to InstructionValueProcedure but without an LIRInstruction parameter.
  ;;
 ; @FunctionalInterface
-(defp! ValueProcedure #_(§ extends InstructionValueProcedure)
+(defp! ValueProcedure #_(§ extends InstructionValueProcedure)
     ;;;
      ; Iterator method to be overwritten.
      ;
@@ -5912,7 +5912,7 @@ ZeroExtendNode'new-4
 ;;;
  ; @anno BinaryArithmeticNode.SerializableBinaryFunction
  ;;
-(defp! SerializableBinaryFunction #_"<T>" #_(§ extends Function #_"<ArithmeticOpTable, BinaryOp<T>>")
+(defp! SerializableBinaryFunction #_"<T>" #_(§ extends Function #_"<ArithmeticOpTable, BinaryOp<T>>")
 )
 
 ;;;
@@ -5955,19 +5955,19 @@ ZeroExtendNode'new-4
 ;;;
  ; @anno IntegerConvertNode.SerializableIntegerConvertFunction
  ;;
-(defp! SerializableIntegerConvertFunction #_"<T>" #_(§ extends Function #_"<ArithmeticOpTable, IntegerConvertOp<T>>")
+(defp! SerializableIntegerConvertFunction #_"<T>" #_(§ extends Function #_"<ArithmeticOpTable, IntegerConvertOp<T>>")
 )
 
 ;;;
  ; @anno ShiftNode.SerializableShiftFunction
  ;;
-(defp! SerializableShiftFunction #_"<T>" #_(§ extends Function #_"<ArithmeticOpTable, ShiftOp<T>>")
+(defp! SerializableShiftFunction #_"<T>" #_(§ extends Function #_"<ArithmeticOpTable, ShiftOp<T>>")
 )
 
 ;;;
  ; @anno UnaryArithmeticNode.SerializableUnaryFunction
  ;;
-(defp! SerializableUnaryFunction #_"<T>" #_(§ extends Function #_"<ArithmeticOpTable, UnaryOp<T>>")
+(defp! SerializableUnaryFunction #_"<T>" #_(§ extends Function #_"<ArithmeticOpTable, UnaryOp<T>>")
 )
 
 ;;;
@@ -5987,7 +5987,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Shared interface to capture core methods of AbstractFixedGuardNode and GuardNode.
  ;;
-(defp! DeoptimizingGuard #_(§ extends GuardingNode, StaticDeoptimizingNode)
+(defp! DeoptimizingGuard
     (#_"LogicNode" DeoptimizingGuard'''getCondition-1 [#_"DeoptimizingGuard" this])
     (#_"void" DeoptimizingGuard'''setCondition-3 [#_"DeoptimizingGuard" this, #_"LogicNode" x, #_"boolean" negated?])
 )
@@ -5995,7 +5995,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Interface implemented by nodes which may need deoptimization information.
  ;;
-(defp DeoptimizingNode #_(§ extends NodeWithState)
+(defp DeoptimizingNode
     (#_"boolean" DeoptimizingNode'''canDeoptimize-1 [#_"DeoptimizingNode" this])
 )
 
@@ -6004,7 +6004,7 @@ ZeroExtendNode'new-4
  ;
  ; @anno DeoptimizingNode.DeoptBefore
  ;;
-(defp! DeoptBefore #_(§ extends DeoptimizingNode)
+(defp! DeoptBefore
     ;;;
      ; Sets the FrameState describing the program state before the execution of this node.
      ;;
@@ -6016,7 +6016,7 @@ ZeroExtendNode'new-4
  ;
  ; @anno DeoptimizingNode.DeoptAfter
  ;;
-(defp! DeoptAfter #_(§ extends DeoptimizingNode, StateSplit)
+(defp! DeoptAfter
 )
 
 ;;;
@@ -6024,7 +6024,7 @@ ZeroExtendNode'new-4
  ;
  ; @anno DeoptimizingNode.DeoptDuring
  ;;
-(defp! DeoptDuring #_(§ extends DeoptimizingNode, StateSplit)
+(defp! DeoptDuring
     ;;;
      ; Sets the FrameState describing the program state during the execution of this node.
      ;;
@@ -6059,7 +6059,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Denotes monitor unlocking transition.
  ;;
-(defp! MonitorExit #_(§ extends MemoryCheckpoint)
+(defp! MonitorExit
 )
 
 ;;;
@@ -6246,7 +6246,7 @@ ZeroExtendNode'new-4
     (#_"StampPair" TypePlugin'''interceptType-4 [#_"TypePlugin" this, #_"GraphBuilder" b, #_"JavaType" declaredType, #_"boolean" never-nil?])
 )
 
-(defp Access #_(§ extends GuardedNode, HeapAccess)
+(defp Access
     (#_"AddressNode" Access'''getAddress-1 [#_"Access" this])
     (#_"LocationIdentity" Access'''getLocationIdentity-1 [#_"Access" this])
     (#_"boolean" Access'''canNullCheck-1 [#_"Access" this])
@@ -6268,7 +6268,7 @@ ZeroExtendNode'new-4
     (#_"BarrierType" HeapAccess'''getBarrierType-1 [#_"HeapAccess" this])
 )
 
-(defp! LIRLowerableAccess #_(§ extends LIRLowerable, Access)
+(defp! LIRLowerableAccess
     (#_"Stamp" LIRLowerableAccess'''getAccessStamp-1 [#_"LIRLowerableAccess" this])
 )
 
@@ -6289,13 +6289,13 @@ ZeroExtendNode'new-4
  ; by location identities (i.e. change a value at one or more locations that belong to these
  ; location identities).
  ;;
-(defp MemoryCheckpoint #_(§ extends MemoryNode)
+(defp MemoryCheckpoint
 )
 
 ;;;
  ; @anno MemoryCheckpoint.Single
  ;;
-(defp! Single #_(§ extends MemoryCheckpoint)
+(defp! Single
     ;;;
      ; This method is used to determine which memory location is killed by this node. Returning
      ; the special value LocationIdentity#any() will kill all memory locations.
@@ -6308,7 +6308,7 @@ ZeroExtendNode'new-4
 ;;;
  ; @anno MemoryCheckpoint.Multi
  ;;
-(defp! Multi #_(§ extends MemoryCheckpoint)
+(defp! Multi
     ;;;
      ; This method is used to determine which set of memory locations is killed by this node.
      ; Returning the special value LocationIdentity#any() will kill all memory locations.
@@ -6383,7 +6383,7 @@ ZeroExtendNode'new-4
  ; should see through the proxy for doing some checks. Optimizations should not see through
  ; this proxy and therefore should only test for ValueProxy.
  ;;
-(defp LimitedValueProxy #_(§ extends Proxy)
+(defp LimitedValueProxy
   #_(§ override #_"ValueNode" Proxy'''getOriginalNode-1 [#_"LimitedValueProxy" this])
 )
 
@@ -6400,7 +6400,7 @@ ZeroExtendNode'new-4
  ;
  ; For some algorithms it is necessary or advantageous to see through these proxies.
  ;;
-(defp! ValueProxy #_(§ extends LimitedValueProxy)
+(defp! ValueProxy
 )
 
 ;;;
@@ -6429,7 +6429,7 @@ ZeroExtendNode'new-4
  ; regardless of whether this node had any interaction with virtualized nodes. This interface can
  ; therefore be used for object allocations, for which virtualization introduces new virtualized objects.
  ;;
-(defp! VirtualizableAllocation #_(§ extends Virtualizable)
+(defp! VirtualizableAllocation
 )
 
 ;;;
@@ -6527,7 +6527,7 @@ ZeroExtendNode'new-4
 ;;;
  ; A state split is a node that may have a frame state associated with it.
  ;;
-(defp StateSplit #_(§ extends NodeWithState)
+(defp StateSplit
     ;;;
      ; Sets the FrameState corresponding to the state of the JVM after execution of this node.
      ;;
@@ -6638,7 +6638,7 @@ ZeroExtendNode'new-4
     (#_"Decision" InliningPolicy'''isWorthInlining-5 [#_"InliningPolicy" this, #_"Replacements" replacements, #_"MethodInvocation" invocation, #_"int" inliningDepth, #_"boolean" fullyProcessed])
 )
 
-(defp! IntegerExactArithmeticNode #_(§ extends Lowerable)
+(defp! IntegerExactArithmeticNode
     (#_"IntegerExactArithmeticSplitNode" IntegerExactArithmeticNode'''createSplit-3 [#_"IntegerExactArithmeticNode" this, #_"AbstractBeginNode" next, #_"AbstractBeginNode" deopt])
 )
 
@@ -7934,7 +7934,7 @@ ZeroExtendNode'new-4
 (defr                       AbstractInliningPolicy'class                InliningPolicy, AbstractInliningPolicy)
 ,   (defr!                  GreedyInliningPolicy'class                  AbstractInliningPolicy #_"'class")
 
-,   (defr                   NodeList'class                              #_"AbstractList" #_"<Node>", NodeList, NodeIterable)
+,   (defr                   NodeList'class                              #_"AbstractList" #_"<Node>", NodeList, NodeIterable, #_"Iterable" #_"<Node>")
 ,   ,   (defr!              NodeInputList'class                         NodeList #_"'class")
 ,   ,   (defr!              NodeSuccessorList'class                     NodeList #_"'class")
 
@@ -7957,7 +7957,7 @@ ZeroExtendNode'new-4
 ,   ,   (defr!              VirtualStackSlotRange'class                 VirtualStackSlot #_"'class")
 
 (defr!                      Allocator'class)
-(defr!                      AndPredicate'class                          NodePredicate)
+(defr!                      AndPredicate'class                          NodePredicate, #_"Predicate" #_"<Node>")
 (defr!                      Arguments'class)
 
 (defr                       ArithmeticOp'class                          ArithmeticOp)
@@ -8077,7 +8077,7 @@ ZeroExtendNode'new-4
 (defr!                      ConstantBindingParameterPlugin'class        ParameterPlugin)
 (defr!                      ConstantLoadOptimization'class              LIRPhase #_"<LIRPhaseContext>") ;; PreAllocationPhase
 (defr!                      ConstantTreeAnalyzer'class)
-(defr!                      ContradictionPredicate'class                NodePredicate)
+(defr!                      ContradictionPredicate'class                NodePredicate, #_"Predicate" #_"<Node>")
 (defr!                      ControlFlowGraph'class)
 (defr!                      ControlFlowOptimizer'class                  LIRPhase #_"<LIRPhaseContext>") ;; PostAllocationPhase
 (defr!                      ConvertDeoptimizeToGuardPhase'class         Phase)
@@ -8094,7 +8094,7 @@ ZeroExtendNode'new-4
 (defr!                      Decision'class)
 (defr!                      DefUseTree'class)
 (defr!                      DefaultLoopPolicies'class                   LoopPolicies)
-(defr!                      DefaultSimplifierTool'class                 SimplifierTool)
+(defr!                      DefaultSimplifierTool'class                 SimplifierTool, CanonicalizerTool)
 (defr!                      DeferredExit'class)
 (defr!                      DeoptimizationGroupingPhase'class           Phase)
 
@@ -8150,7 +8150,7 @@ ZeroExtendNode'new-4
 ,   ,   (defr!              LIRInstructionFieldsScanner'class           LIRFieldsScanner #_"'class")
 ,   (defr!                  NodeFieldsScanner'class                     FieldsScanner #_"'class")
 
-(defr!                      FilteredNodeIterable'class                  NodeIterable)
+(defr!                      FilteredNodeIterable'class                  NodeIterable, #_"Iterable" #_"<Node>")
 (defr!                      FixPointIntervalBuilder'class)
 (defr!                      FixReadsPhase'class                         Phase)
 (defr!                      FixedNodeIterator'class                     #_"Iterator" #_"<FixedNode>")
@@ -8213,7 +8213,7 @@ ZeroExtendNode'new-4
 
 (defr!                      IntrinsicContext'class)
 (defr!                      IntrinsicScope'class                        #_"AutoCloseable")
-(defr!                      InvariantPredicate'class                    NodePredicate)
+(defr!                      InvariantPredicate'class                    NodePredicate, #_"Predicate" #_"<Node>")
 (defr!                      InvokeKind'class)
 (defr!                      IterativeConditionalEliminationPhase'class  Phase)
 (defr!                      JSRData'class)
@@ -8236,21 +8236,21 @@ ZeroExtendNode'new-4
 ,   (defr!                  AMD64MulDivOp'class                         LIRInstruction #_"'class")
 ,   (defr!                  AMD64MultiStackMove'class                   LIRInstruction #_"'class")
 ,   (defr!                  AMD64PrefetchOp'class                       LIRInstruction #_"'class")
-,   (defr!                  AMD64PushPopStackMove'class                 LIRInstruction #_"'class", ValueMoveOp)
+,   (defr!                  AMD64PushPopStackMove'class                 LIRInstruction #_"'class", ValueMoveOp, MoveOp)
 ,   (defr!                  AMD64RestoreRegistersOp'class               LIRInstruction #_"'class")
 ,   (defr!                  AMD64SaveRegistersOp'class                  LIRInstruction #_"'class")
 ,   (defr!                  AMD64ShiftOp'class                          LIRInstruction #_"'class")
 ,   (defr!                  AMD64SignExtendOp'class                     LIRInstruction #_"'class")
-,   (defr!                  AMD64StackMove'class                        LIRInstruction #_"'class", ValueMoveOp)
+,   (defr!                  AMD64StackMove'class                        LIRInstruction #_"'class", ValueMoveOp, MoveOp)
 ,   (defr!                  AMD64TailcallOp'class                       LIRInstruction #_"'class")
-,   (defr                   AbstractMoveOp'class                        LIRInstruction #_"'class", AbstractMoveOp, ValueMoveOp)
+,   (defr                   AbstractMoveOp'class                        LIRInstruction #_"'class", AbstractMoveOp, ValueMoveOp, MoveOp)
 ,   ,   (defr!              MoveFromRegOp'class                         AbstractMoveOp #_"'class")
 ,   ,   (defr!              MoveToRegOp'class                           AbstractMoveOp #_"'class")
 ,   (defr!                  AtomicReadAndAddOp'class                    LIRInstruction #_"'class")
 ,   (defr!                  AtomicReadAndWriteOp'class                  LIRInstruction #_"'class")
 ,   (defr!                  BindToRegisterOp'class                      LIRInstruction #_"'class")
 ,   (defr!                  BlackholeOp'class                           LIRInstruction #_"'class")
-,   (defr!                  BranchOp'class                              LIRInstruction #_"'class", StandardBranchOp)
+,   (defr!                  BranchOp'class                              LIRInstruction #_"'class", StandardBranchOp, BlockEndOp)
 ,   (defr!                  CRuntimeCallEpilogueOp'class                LIRInstruction #_"'class")
 ,   (defr!                  CRuntimeCallPrologueOp'class                LIRInstruction #_"'class")
 ,   (defr                   CallOp'class                                LIRInstruction #_"'class", CallOp)
@@ -8278,8 +8278,8 @@ ZeroExtendNode'new-4
 ,   (defr!                  LabelOp'class                               LIRInstruction #_"'class")
 ,   (defr!                  LeaOp'class                                 LIRInstruction #_"'class")
 ,   (defr!                  LoadConfigValueOp'class                     LIRInstruction #_"'class")
-,   (defr!                  LoadMetaspaceConstantOp'class               LIRInstruction #_"'class", LoadConstantOp)
-,   (defr!                  LoadObjectConstantOp'class                  LIRInstruction #_"'class", LoadConstantOp)
+,   (defr!                  LoadMetaspaceConstantOp'class               LIRInstruction #_"'class", LoadConstantOp, MoveOp)
+,   (defr!                  LoadObjectConstantOp'class                  LIRInstruction #_"'class", LoadConstantOp, MoveOp)
 ,   (defr!                  LockStack'class                             LIRInstruction #_"'class")
 ,   (defr!                  MOp'class                                   LIRInstruction #_"'class")
 ,   (defr!                  MROp'class                                  LIRInstruction #_"'class")
@@ -8290,7 +8290,7 @@ ZeroExtendNode'new-4
 ,   (defr!                  MemoryOp'class                              LIRInstruction #_"'class", ImplicitNullCheck)
 ,   (defr!                  MemoryRMOp'class                            LIRInstruction #_"'class", ImplicitNullCheck)
 ,   (defr!                  MemoryTwoOp'class                           LIRInstruction #_"'class", ImplicitNullCheck)
-,   (defr!                  MoveFromConstOp'class                       LIRInstruction #_"'class", LoadConstantOp)
+,   (defr!                  MoveFromConstOp'class                       LIRInstruction #_"'class", LoadConstantOp, MoveOp)
 ,   (defr!                  NoOp'class                                  LIRInstruction #_"'class")
 ,   (defr!                  NullCheckOp'class                           LIRInstruction #_"'class", NullCheck)
 ,   (defr                   PointerCompressionOp'class                  LIRInstruction #_"'class", PointerCompressionOp)
@@ -8392,8 +8392,8 @@ ZeroExtendNode'new-4
 (defr                       MoveResolver'class                          MoveResolver)
 ,   (defr!                  SSAMoveResolver'class                       MoveResolver #_"'class")
 
-(defr!                      NegativeTypePredicate'class                 NodePredicate)
-(defr!                      NodeBitMap'class                            NodeIterable)
+(defr!                      NegativeTypePredicate'class                 NodePredicate, #_"Predicate" #_"<Node>")
+(defr!                      NodeBitMap'class                            NodeIterable, #_"Iterable" #_"<Node>")
 
 (defr                       NodeClosure'class #_"<T implements Node>"   NodeClosure #_"<T implements Node>")
 ,   (defr!                  CollectVirtualObjectsClosure'class #_"<BlockT implements PartialEscapeBlockState<BlockT>>" NodeClosure #_"'class" #_"<ValueNode>")
@@ -8422,7 +8422,7 @@ ZeroExtendNode'new-4
 ,   ,   ,   ,   (defr!      EndNode'class                               AbstractEndNode #_"'class")
 ,   ,   ,   ,   (defr!      LoopEndNode'class                           AbstractEndNode #_"'class")
 ,   ,   ,   (defr           ControlSinkNode'class                       FixedNode #_"'class", ControlSinkNode)
-,   ,   ,   ,   (defr       AbstractDeoptimizeNode'class                ControlSinkNode #_"'class", AbstractDeoptimizeNode, IterableNodeType, DeoptBefore)
+,   ,   ,   ,   (defr       AbstractDeoptimizeNode'class                ControlSinkNode #_"'class", AbstractDeoptimizeNode, IterableNodeType, DeoptBefore, DeoptimizingNode, NodeWithState)
 ,   ,   ,   ,   ,   (defr!  DeoptimizeNode'class                        AbstractDeoptimizeNode #_"'class", Lowerable, LIRLowerable, StaticDeoptimizingNode)
 ,   ,   ,   ,   ,   (defr!  DynamicDeoptimizeNode'class                 AbstractDeoptimizeNode #_"'class", LIRLowerable, Lowerable, Canonicalizable)
 ,   ,   ,   ,   (defr!      DeoptimizeCallerNode'class                  ControlSinkNode #_"'class", LIRLowerable)
@@ -8438,65 +8438,65 @@ ZeroExtendNode'new-4
 ,   ,   ,   (defr           FixedWithNextNode'class                     FixedNode #_"'class", FixedWithNextNode)
 ,   ,   ,   ,   (defr       AbstractBeginNode'class                     FixedWithNextNode #_"'class", AbstractBeginNode, LIRLowerable, GuardingNode, AnchoringNode, IterableNodeType)
 ,   ,   ,   ,   ,   (defr!  BeginNode'class                             AbstractBeginNode #_"'class", Simplifiable)
-,   ,   ,   ,   ,   (defr   BeginStateSplitNode'class                   AbstractBeginNode #_"'class", BeginStateSplitNode, StateSplit)
+,   ,   ,   ,   ,   (defr   BeginStateSplitNode'class                   AbstractBeginNode #_"'class", BeginStateSplitNode, StateSplit, NodeWithState)
 ,   ,   ,   ,   ,   ,   (defr AbstractMergeNode'class                   BeginStateSplitNode #_"'class", AbstractMergeNode, IterableNodeType, Simplifiable, LIRLowerable)
 ,   ,   ,   ,   ,   ,   ,   (defr! LoopBeginNode'class                  AbstractMergeNode #_"'class", IterableNodeType, LIRLowerable)
 ,   ,   ,   ,   ,   ,   ,   (defr! MergeNode'class                      AbstractMergeNode #_"'class")
 ,   ,   ,   ,   ,   ,   (defr! LoopExitNode'class                       BeginStateSplitNode #_"'class", IterableNodeType, Simplifiable)
-,   ,   ,   ,   ,   ,   (defr StartNode'class                           BeginStateSplitNode #_"'class", StartNode, Single)
+,   ,   ,   ,   ,   ,   (defr StartNode'class                           BeginStateSplitNode #_"'class", StartNode, Single, MemoryCheckpoint, MemoryNode)
 ,   ,   ,   ,   ,   ,   ,   (defr! StubStartNode'class                  StartNode #_"'class")
-,   ,   ,   ,   (defr       AbstractStateSplit'class                    FixedWithNextNode #_"'class", AbstractStateSplit, StateSplit)
-,   ,   ,   ,   ,   (defr   AbstractMemoryCheckpoint'class              AbstractStateSplit #_"'class", AbstractMemoryCheckpoint, MemoryCheckpoint)
-,   ,   ,   ,   ,   ,   (defr AccessMonitorNode'class                   AbstractMemoryCheckpoint #_"'class", AccessMonitorNode, MemoryCheckpoint, DeoptBefore, DeoptAfter)
-,   ,   ,   ,   ,   ,   ,   (defr! MonitorEnterNode'class               AccessMonitorNode #_"'class", Virtualizable, Lowerable, IterableNodeType, MonitorEnter, Single)
-,   ,   ,   ,   ,   ,   ,   (defr! MonitorExitNode'class                AccessMonitorNode #_"'class", Virtualizable, Lowerable, IterableNodeType, MonitorExit, Single)
-,   ,   ,   ,   ,   ,   ,   (defr! RawMonitorEnterNode'class            AccessMonitorNode #_"'class", Virtualizable, Lowerable, IterableNodeType, MonitorEnter, Single)
-,   ,   ,   ,   ,   ,   (defr! AtomicReadAndAddNode'class               AbstractMemoryCheckpoint #_"'class", LIRLowerable, Single)
-,   ,   ,   ,   ,   ,   (defr! AtomicReadAndWriteNode'class             AbstractMemoryCheckpoint #_"'class", Lowerable, Single)
-,   ,   ,   ,   ,   ,   (defr! BeginLockScopeNode'class                 AbstractMemoryCheckpoint #_"'class", LIRLowerable, MonitorEnter, Single)
-,   ,   ,   ,   ,   ,   (defr! EndLockScopeNode'class                   AbstractMemoryCheckpoint #_"'class", LIRLowerable, MonitorExit, Single)
-,   ,   ,   ,   ,   ,   (defr! ForeignCallNode'class                    AbstractMemoryCheckpoint #_"'class", LIRLowerable, DeoptDuring, Multi)
-,   ,   ,   ,   ,   ,   (defr! InvokeNode'class                         AbstractMemoryCheckpoint #_"'class", StateSplit, Lowerable, DeoptDuring, LIRLowerable, Single)
-,   ,   ,   ,   ,   ,   (defr! UnsafeCompareAndSwapNode'class           AbstractMemoryCheckpoint #_"'class", Lowerable, Single)
+,   ,   ,   ,   (defr       AbstractStateSplit'class                    FixedWithNextNode #_"'class", AbstractStateSplit, StateSplit, NodeWithState)
+,   ,   ,   ,   ,   (defr   AbstractMemoryCheckpoint'class              AbstractStateSplit #_"'class", AbstractMemoryCheckpoint, MemoryCheckpoint, MemoryNode)
+,   ,   ,   ,   ,   ,   (defr AccessMonitorNode'class                   AbstractMemoryCheckpoint #_"'class", AccessMonitorNode, MemoryCheckpoint, MemoryNode, DeoptBefore, DeoptimizingNode, NodeWithState, DeoptAfter, StateSplit)
+,   ,   ,   ,   ,   ,   ,   (defr! MonitorEnterNode'class               AccessMonitorNode #_"'class", Virtualizable, Lowerable, IterableNodeType, MonitorEnter, Single, MemoryCheckpoint, MemoryNode)
+,   ,   ,   ,   ,   ,   ,   (defr! MonitorExitNode'class                AccessMonitorNode #_"'class", Virtualizable, Lowerable, IterableNodeType, MonitorExit, MemoryCheckpoint, MemoryNode, Single)
+,   ,   ,   ,   ,   ,   ,   (defr! RawMonitorEnterNode'class            AccessMonitorNode #_"'class", Virtualizable, Lowerable, IterableNodeType, MonitorEnter, Single, MemoryCheckpoint, MemoryNode)
+,   ,   ,   ,   ,   ,   (defr! AtomicReadAndAddNode'class               AbstractMemoryCheckpoint #_"'class", LIRLowerable, Single, MemoryCheckpoint, MemoryNode)
+,   ,   ,   ,   ,   ,   (defr! AtomicReadAndWriteNode'class             AbstractMemoryCheckpoint #_"'class", Lowerable, Single, MemoryCheckpoint, MemoryNode)
+,   ,   ,   ,   ,   ,   (defr! BeginLockScopeNode'class                 AbstractMemoryCheckpoint #_"'class", LIRLowerable, MonitorEnter, Single, MemoryCheckpoint, MemoryNode)
+,   ,   ,   ,   ,   ,   (defr! EndLockScopeNode'class                   AbstractMemoryCheckpoint #_"'class", LIRLowerable, MonitorExit, MemoryCheckpoint, MemoryNode, Single)
+,   ,   ,   ,   ,   ,   (defr! ForeignCallNode'class                    AbstractMemoryCheckpoint #_"'class", LIRLowerable, DeoptDuring, DeoptimizingNode, NodeWithState, StateSplit, Multi, MemoryCheckpoint, MemoryNode)
+,   ,   ,   ,   ,   ,   (defr! InvokeNode'class                         AbstractMemoryCheckpoint #_"'class", StateSplit, NodeWithState, Lowerable, DeoptDuring, DeoptimizingNode, LIRLowerable, Single, MemoryCheckpoint, MemoryNode)
+,   ,   ,   ,   ,   ,   (defr! UnsafeCompareAndSwapNode'class           AbstractMemoryCheckpoint #_"'class", Lowerable, Single, MemoryCheckpoint, MemoryNode)
 ,   ,   ,   ,   (defr       AccessArrayNode'class                       FixedWithNextNode #_"'class", AccessArrayNode)
 ,   ,   ,   ,   ,   (defr   AccessIndexedNode'class                     AccessArrayNode #_"'class", AccessIndexedNode, Lowerable)
 ,   ,   ,   ,   ,   ,   (defr LoadIndexedNode'class                     AccessIndexedNode #_"'class", LoadIndexedNode, Virtualizable, Canonicalizable)
 ,   ,   ,   ,   ,   ,   ,   (defr! LoadIndexedPointerNode'class         LoadIndexedNode #_"'class")
-,   ,   ,   ,   ,   ,   (defr! StoreIndexedNode'class                   AccessIndexedNode #_"'class", StateSplit, Lowerable, Virtualizable)
+,   ,   ,   ,   ,   ,   (defr! StoreIndexedNode'class                   AccessIndexedNode #_"'class", StateSplit, NodeWithState, Lowerable, Virtualizable)
 ,   ,   ,   ,   (defr       AccessFieldNode'class                       FixedWithNextNode #_"'class", AccessFieldNode, Lowerable)
-,   ,   ,   ,   ,   (defr!  LoadFieldNode'class                         AccessFieldNode #_"'class", Unary #_"<ValueNode>", Virtualizable)
-,   ,   ,   ,   ,   (defr!  StoreFieldNode'class                        AccessFieldNode #_"'class", StateSplit, Virtualizable)
+,   ,   ,   ,   ,   (defr!  LoadFieldNode'class                         AccessFieldNode #_"'class", Unary #_"<ValueNode>", Canonicalizable, Virtualizable)
+,   ,   ,   ,   ,   (defr!  StoreFieldNode'class                        AccessFieldNode #_"'class", StateSplit, NodeWithState, Virtualizable)
 ,   ,   ,   ,   (defr!      AcquiredCASLockNode'class                   FixedWithNextNode #_"'class", LIRLowerable)
-,   ,   ,   ,   (defr!      ArrayLengthNode'class                       FixedWithNextNode #_"'class", Unary #_"<ValueNode>", Lowerable, Virtualizable)
+,   ,   ,   ,   (defr!      ArrayLengthNode'class                       FixedWithNextNode #_"'class", Unary #_"<ValueNode>", Canonicalizable, Lowerable, Virtualizable)
 ,   ,   ,   ,   (defr!      BindToRegisterNode'class                    FixedWithNextNode #_"'class", LIRLowerable)
 ,   ,   ,   ,   (defr!      BlackholeNode'class                         FixedWithNextNode #_"'class", LIRLowerable)
-,   ,   ,   ,   (defr!      BoxNode'class                               FixedWithNextNode #_"'class", VirtualizableAllocation, Lowerable, Unary #_"<ValueNode>")
-,   ,   ,   ,   (defr!      CommitAllocationNode'class                  FixedWithNextNode #_"'class", VirtualizableAllocation, Lowerable, Simplifiable, Single)
+,   ,   ,   ,   (defr!      BoxNode'class                               FixedWithNextNode #_"'class", VirtualizableAllocation, Virtualizable, Lowerable, Unary #_"<ValueNode>", Canonicalizable)
+,   ,   ,   ,   (defr!      CommitAllocationNode'class                  FixedWithNextNode #_"'class", VirtualizableAllocation, Virtualizable, Lowerable, Simplifiable, Single, MemoryCheckpoint, MemoryNode)
 ,   ,   ,   ,   (defr!      ComputeObjectAddressNode'class              FixedWithNextNode #_"'class", Lowerable, ControlFlowAnchored)
-,   ,   ,   ,   (defr!      ConditionAnchorNode'class                   FixedWithNextNode #_"'class", Unary #_"<Node>", Lowerable, GuardingNode)
+,   ,   ,   ,   (defr!      ConditionAnchorNode'class                   FixedWithNextNode #_"'class", Unary #_"<Node>", Canonicalizable, Lowerable, GuardingNode)
 ,   ,   ,   ,   (defr!      ControlFlowAnchorNode'class                 FixedWithNextNode #_"'class", LIRLowerable, ControlFlowAnchored)
 ,   ,   ,   ,   (defr!      CurrentLockNode'class                       FixedWithNextNode #_"'class", LIRLowerable)
-,   ,   ,   ,   (defr       DeoptimizingFixedWithNextNode'class         FixedWithNextNode #_"'class", DeoptimizingFixedWithNextNode, DeoptBefore)
-,   ,   ,   ,   ,   (defr   AbstractFixedGuardNode'class                DeoptimizingFixedWithNextNode #_"'class", AbstractFixedGuardNode, Simplifiable, GuardingNode, DeoptimizingGuard)
+,   ,   ,   ,   (defr       DeoptimizingFixedWithNextNode'class         FixedWithNextNode #_"'class", DeoptimizingFixedWithNextNode, DeoptBefore, DeoptimizingNode, NodeWithState)
+,   ,   ,   ,   ,   (defr   AbstractFixedGuardNode'class                DeoptimizingFixedWithNextNode #_"'class", AbstractFixedGuardNode, Simplifiable, GuardingNode, DeoptimizingGuard, StaticDeoptimizingNode)
 ,   ,   ,   ,   ,   ,   (defr! FixedGuardNode'class                     AbstractFixedGuardNode #_"'class", Lowerable, IterableNodeType)
 ,   ,   ,   ,   ,   (defr   AbstractNewObjectNode'class                 DeoptimizingFixedWithNextNode #_"'class", AbstractNewObjectNode, Lowerable)
 ,   ,   ,   ,   ,   ,   (defr AbstractNewArrayNode'class                AbstractNewObjectNode #_"'class", AbstractNewArrayNode, ArrayLengthProvider)
 ,   ,   ,   ,   ,   ,   ,   (defr! DynamicNewArrayNode'class            AbstractNewArrayNode #_"'class", Canonicalizable)
-,   ,   ,   ,   ,   ,   ,   (defr! NewArrayNode'class                   AbstractNewArrayNode #_"'class", VirtualizableAllocation, Simplifiable)
+,   ,   ,   ,   ,   ,   ,   (defr! NewArrayNode'class                   AbstractNewArrayNode #_"'class", VirtualizableAllocation, Virtualizable, Simplifiable)
 ,   ,   ,   ,   ,   ,   (defr! DynamicNewInstanceNode'class             AbstractNewObjectNode #_"'class", Canonicalizable)
-,   ,   ,   ,   ,   ,   (defr! NewInstanceNode'class                    AbstractNewObjectNode #_"'class", VirtualizableAllocation)
-,   ,   ,   ,   ,   (defr   FixedAccessNode'class                       DeoptimizingFixedWithNextNode #_"'class", FixedAccessNode, Access, IterableNodeType)
-,   ,   ,   ,   ,   ,   (defr AbstractCompareAndSwapNode'class          FixedAccessNode #_"'class", AbstractCompareAndSwapNode, StateSplit, LIRLowerableAccess, Single)
+,   ,   ,   ,   ,   ,   (defr! NewInstanceNode'class                    AbstractNewObjectNode #_"'class", VirtualizableAllocation, Virtualizable)
+,   ,   ,   ,   ,   (defr   FixedAccessNode'class                       DeoptimizingFixedWithNextNode #_"'class", FixedAccessNode, Access, GuardedNode, HeapAccess, IterableNodeType)
+,   ,   ,   ,   ,   ,   (defr AbstractCompareAndSwapNode'class          FixedAccessNode #_"'class", AbstractCompareAndSwapNode, StateSplit, NodeWithState, LIRLowerableAccess, LIRLowerable, Access, GuardedNode, HeapAccess, Single, MemoryCheckpoint, MemoryNode)
 ,   ,   ,   ,   ,   ,   ,   (defr! LogicCompareAndSwapNode'class        AbstractCompareAndSwapNode #_"'class")
 ,   ,   ,   ,   ,   ,   ,   (defr! ValueCompareAndSwapNode'class        AbstractCompareAndSwapNode #_"'class")
-,   ,   ,   ,   ,   ,   (defr AbstractWriteNode'class                   FixedAccessNode #_"'class", AbstractWriteNode, StateSplit, Single, MemoryAccess, GuardingNode)
-,   ,   ,   ,   ,   ,   ,   (defr! JavaWriteNode'class                  AbstractWriteNode #_"'class", Lowerable, StateSplit, MemoryAccess, Single)
-,   ,   ,   ,   ,   ,   ,   (defr! WriteNode'class                      AbstractWriteNode #_"'class", LIRLowerableAccess, Canonicalizable)
+,   ,   ,   ,   ,   ,   (defr AbstractWriteNode'class                   FixedAccessNode #_"'class", AbstractWriteNode, StateSplit, NodeWithState, Single, MemoryCheckpoint, MemoryNode, MemoryAccess, GuardingNode)
+,   ,   ,   ,   ,   ,   ,   (defr! JavaWriteNode'class                  AbstractWriteNode #_"'class", Lowerable, StateSplit, NodeWithState, MemoryAccess, Single, MemoryCheckpoint, MemoryNode)
+,   ,   ,   ,   ,   ,   ,   (defr! WriteNode'class                      AbstractWriteNode #_"'class", LIRLowerableAccess, LIRLowerable, Access, GuardedNode, HeapAccess, Canonicalizable)
 ,   ,   ,   ,   ,   ,   (defr FloatableAccessNode'class                 FixedAccessNode #_"'class", FloatableAccessNode)
-,   ,   ,   ,   ,   ,   ,   (defr! ReadNode'class                       FloatableAccessNode #_"'class", LIRLowerableAccess, Canonicalizable, Virtualizable, GuardingNode)
+,   ,   ,   ,   ,   ,   ,   (defr! ReadNode'class                       FloatableAccessNode #_"'class", LIRLowerableAccess, LIRLowerable, Access, GuardedNode, HeapAccess, Canonicalizable, Virtualizable, GuardingNode)
 ,   ,   ,   ,   ,   ,   (defr! JavaReadNode'class                       FixedAccessNode #_"'class", Lowerable, GuardingNode, Canonicalizable)
-,   ,   ,   ,   ,   ,   (defr! LoweredAtomicReadAndWriteNode'class      FixedAccessNode #_"'class", StateSplit, LIRLowerableAccess, Single)
-,   ,   ,   ,   ,   (defr   FixedBinaryNode'class                       DeoptimizingFixedWithNextNode #_"'class", FixedBinaryNode, Binary #_"<ValueNode>")
+,   ,   ,   ,   ,   ,   (defr! LoweredAtomicReadAndWriteNode'class      FixedAccessNode #_"'class", StateSplit, NodeWithState, LIRLowerableAccess, LIRLowerable, Access, GuardedNode, HeapAccess, Single, MemoryCheckpoint, MemoryNode)
+,   ,   ,   ,   ,   (defr   FixedBinaryNode'class                       DeoptimizingFixedWithNextNode #_"'class", FixedBinaryNode, Binary #_"<ValueNode>", Canonicalizable)
 ,   ,   ,   ,   ,   ,   (defr IntegerDivRemNode'class                   FixedBinaryNode #_"'class", IntegerDivRemNode, Lowerable)
 ,   ,   ,   ,   ,   ,   ,   (defr! SignedDivNode'class                  IntegerDivRemNode #_"'class", LIRLowerable)
 ,   ,   ,   ,   ,   ,   ,   (defr! SignedRemNode'class                  IntegerDivRemNode #_"'class", LIRLowerable)
@@ -8507,33 +8507,33 @@ ZeroExtendNode'new-4
 ,   ,   ,   ,   (defr!      ExplodeLoopNode'class                       FixedWithNextNode #_"'class")
 ,   ,   ,   ,   (defr!      FastAcquireBiasedLockNode'class             FixedWithNextNode #_"'class", LIRLowerable)
 ,   ,   ,   ,   (defr!      FinalFieldBarrierNode'class                 FixedWithNextNode #_"'class", Virtualizable, Lowerable)
-,   ,   ,   ,   (defr       FixedValueAnchorNode'class                  FixedWithNextNode #_"'class", FixedValueAnchorNode, LIRLowerable, ValueProxy, GuardingNode)
-,   ,   ,   ,   ,   (defr!  StateSplitProxyNode'class                   FixedValueAnchorNode #_"'class", Canonicalizable, StateSplit)
+,   ,   ,   ,   (defr       FixedValueAnchorNode'class                  FixedWithNextNode #_"'class", FixedValueAnchorNode, LIRLowerable, ValueProxy, LimitedValueProxy, Proxy, GuardingNode)
+,   ,   ,   ,   ,   (defr!  StateSplitProxyNode'class                   FixedValueAnchorNode #_"'class", Canonicalizable, StateSplit, NodeWithState)
 ,   ,   ,   ,   (defr!      GetObjectAddressNode'class                  FixedWithNextNode #_"'class", LIRLowerable)
 ,   ,   ,   ,   (defr!      LoadSnippetVarargParameterNode'class        FixedWithNextNode #_"'class", Canonicalizable)
 ,   ,   ,   ,   (defr       MacroNode'class                             FixedWithNextNode #_"'class", MacroNode, Lowerable)
-,   ,   ,   ,   ,   (defr   MacroStateSplitNode'class                   MacroNode #_"'class", MacroStateSplitNode, StateSplit, Single)
+,   ,   ,   ,   ,   (defr   MacroStateSplitNode'class                   MacroNode #_"'class", MacroStateSplitNode, StateSplit, NodeWithState, Single, MemoryCheckpoint, MemoryNode)
 ,   ,   ,   ,   ,   ,   (defr! MethodHandleNode'class                   MacroStateSplitNode #_"'class", Simplifiable)
 ,   ,   ,   ,   ,   ,   (defr! ReflectionGetCallerClassNode'class       MacroStateSplitNode #_"'class", Canonicalizable, Lowerable)
 ,   ,   ,   ,   ,   ,   (defr! VirtualizableInvokeMacroNode'class       MacroStateSplitNode #_"'class", Virtualizable)
-,   ,   ,   ,   (defr!      MembarNode'class                            FixedWithNextNode #_"'class", LIRLowerable, Single)
+,   ,   ,   ,   (defr!      MembarNode'class                            FixedWithNextNode #_"'class", LIRLowerable, Single, MemoryCheckpoint, MemoryNode)
 ,   ,   ,   ,   (defr!      MemoryAnchorNode'class                      FixedWithNextNode #_"'class", LIRLowerable, MemoryNode, Canonicalizable)
 ,   ,   ,   ,   (defr!      PrefetchAllocateNode'class                  FixedWithNextNode #_"'class", LIRLowerable)
 ,   ,   ,   ,   (defr!      ReadRegisterNode'class                      FixedWithNextNode #_"'class", LIRLowerable)
 ,   ,   ,   ,   (defr!      SnippetAnchorNode'class                     FixedWithNextNode #_"'class", Simplifiable, GuardingNode)
 ,   ,   ,   ,   (defr!      SpillRegistersNode'class                    FixedWithNextNode #_"'class", LIRLowerable)
 ,   ,   ,   ,   (defr!      StoreHubNode'class                          FixedWithNextNode #_"'class", Lowerable)
-,   ,   ,   ,   (defr!      StubForeignCallNode'class                   FixedWithNextNode #_"'class", LIRLowerable, Multi)
-,   ,   ,   ,   (defr!      UnboxNode'class                             FixedWithNextNode #_"'class", Virtualizable, Lowerable, Unary #_"<ValueNode>")
+,   ,   ,   ,   (defr!      StubForeignCallNode'class                   FixedWithNextNode #_"'class", LIRLowerable, Multi, MemoryCheckpoint, MemoryNode)
+,   ,   ,   ,   (defr!      UnboxNode'class                             FixedWithNextNode #_"'class", Virtualizable, Lowerable, Unary #_"<ValueNode>", Canonicalizable)
 ,   ,   ,   ,   (defr       UnsafeAccessNode'class                      FixedWithNextNode #_"'class", UnsafeAccessNode, Canonicalizable)
 ,   ,   ,   ,   ,   (defr!  RawLoadNode'class                           UnsafeAccessNode #_"'class", Lowerable, Virtualizable, Canonicalizable)
-,   ,   ,   ,   ,   (defr!  RawStoreNode'class                          UnsafeAccessNode #_"'class", StateSplit, Lowerable, Virtualizable, Single)
+,   ,   ,   ,   ,   (defr!  RawStoreNode'class                          UnsafeAccessNode #_"'class", StateSplit, NodeWithState, Lowerable, Virtualizable, Single, MemoryCheckpoint, MemoryNode)
 ,   ,   ,   ,   (defr!      ValueAnchorNode'class                       FixedWithNextNode #_"'class", LIRLowerable, Simplifiable, Virtualizable, AnchoringNode, GuardingNode)
 ,   ,   ,   ,   (defr!      WordCastNode'class                          FixedWithNextNode #_"'class", LIRLowerable, Canonicalizable)
 ,   ,   ,   ,   (defr       WriteBarrier'class                          FixedWithNextNode #_"'class", WriteBarrier, Lowerable)
 ,   ,   ,   ,   ,   (defr   ObjectWriteBarrier'class                    WriteBarrier #_"'class", ObjectWriteBarrier)
 ,   ,   ,   ,   ,   ,   (defr! G1PostWriteBarrier'class                 ObjectWriteBarrier #_"'class")
-,   ,   ,   ,   ,   ,   (defr! G1PreWriteBarrier'class                  ObjectWriteBarrier #_"'class", DeoptBefore)
+,   ,   ,   ,   ,   ,   (defr! G1PreWriteBarrier'class                  ObjectWriteBarrier #_"'class", DeoptBefore, DeoptimizingNode, NodeWithState)
 ,   ,   ,   ,   ,   ,   (defr! G1ReferentFieldReadBarrier'class         ObjectWriteBarrier #_"'class")
 ,   ,   ,   ,   ,   ,   (defr! SerialWriteBarrier'class                 ObjectWriteBarrier #_"'class")
 ,   ,   (defr               FloatingNode'class                          ValueNode #_"'class", FloatingNode)
@@ -8543,20 +8543,20 @@ ZeroExtendNode'new-4
 ,   ,   ,   ,   (defr!      AMD64AddressNode'class                      AddressNode #_"'class", Simplifiable, LIRLowerable)
 ,   ,   ,   ,   (defr!      OffsetAddressNode'class                     AddressNode #_"'class", Canonicalizable)
 ,   ,   ,   (defr!          AllocatedObjectNode'class                   FloatingNode #_"'class", Virtualizable, ArrayLengthProvider)
-,   ,   ,   (defr           BinaryNode'class                            FloatingNode #_"'class", BinaryNode, Binary #_"<ValueNode>")
+,   ,   ,   (defr           BinaryNode'class                            FloatingNode #_"'class", BinaryNode, Binary #_"<ValueNode>", Canonicalizable)
 ,   ,   ,   ,   (defr       BinaryArithmeticNode'class #_"<OP>"         BinaryNode #_"'class", BinaryArithmeticNode #_"<OP>", ArithmeticOperation, LIRLowerable)
-,   ,   ,   ,   ,   (defr   AddNode'class                               BinaryArithmeticNode #_"'class" #_"<Add>", AddNode, BinaryCommutative #_"<ValueNode>")
-,   ,   ,   ,   ,   ,   (defr! IntegerAddExactNode'class                AddNode #_"'class", IntegerExactArithmeticNode)
-,   ,   ,   ,   ,   (defr!  AndNode'class                               BinaryArithmeticNode #_"'class" #_"<And>", BinaryCommutative #_"<ValueNode>")
-,   ,   ,   ,   ,   (defr!  IntegerMulHighNode'class                    BinaryArithmeticNode #_"'class" #_"<MulHigh>", BinaryCommutative #_"<ValueNode>")
-,   ,   ,   ,   ,   (defr   MulNode'class                               BinaryArithmeticNode #_"'class" #_"<Mul>", MulNode, BinaryCommutative #_"<ValueNode>")
-,   ,   ,   ,   ,   ,   (defr! IntegerMulExactNode'class                MulNode #_"'class", IntegerExactArithmeticNode)
-,   ,   ,   ,   ,   (defr!  OrNode'class                                BinaryArithmeticNode #_"'class" #_"<Or>", BinaryCommutative #_"<ValueNode>")
+,   ,   ,   ,   ,   (defr   AddNode'class                               BinaryArithmeticNode #_"'class" #_"<Add>", AddNode, Binary #_"<ValueNode>", BinaryCommutative, Canonicalizable)
+,   ,   ,   ,   ,   ,   (defr! IntegerAddExactNode'class                AddNode #_"'class", IntegerExactArithmeticNode, Lowerable)
+,   ,   ,   ,   ,   (defr!  AndNode'class                               BinaryArithmeticNode #_"'class" #_"<And>", Binary #_"<ValueNode>", BinaryCommutative, Canonicalizable)
+,   ,   ,   ,   ,   (defr!  IntegerMulHighNode'class                    BinaryArithmeticNode #_"'class" #_"<MulHigh>", Binary #_"<ValueNode>", BinaryCommutative, Canonicalizable)
+,   ,   ,   ,   ,   (defr   MulNode'class                               BinaryArithmeticNode #_"'class" #_"<Mul>", MulNode, Binary #_"<ValueNode>", BinaryCommutative, Canonicalizable)
+,   ,   ,   ,   ,   ,   (defr! IntegerMulExactNode'class                MulNode #_"'class", IntegerExactArithmeticNode, Lowerable)
+,   ,   ,   ,   ,   (defr!  OrNode'class                                BinaryArithmeticNode #_"'class" #_"<Or>", Binary #_"<ValueNode>", BinaryCommutative, Canonicalizable)
 ,   ,   ,   ,   ,   (defr!  RemNode'class                               BinaryArithmeticNode #_"'class" #_"<Rem>", Lowerable)
 ,   ,   ,   ,   ,   (defr   SubNode'class                               BinaryArithmeticNode #_"'class" #_"<Sub>", SubNode)
-,   ,   ,   ,   ,   ,   (defr! IntegerSubExactNode'class                SubNode #_"'class", IntegerExactArithmeticNode)
-,   ,   ,   ,   ,   (defr!  UnsignedMulHighNode'class                   BinaryArithmeticNode #_"'class" #_"<UMulHigh>", BinaryCommutative #_"<ValueNode>")
-,   ,   ,   ,   ,   (defr!  XorNode'class                               BinaryArithmeticNode #_"'class" #_"<Xor>", BinaryCommutative #_"<ValueNode>")
+,   ,   ,   ,   ,   ,   (defr! IntegerSubExactNode'class                SubNode #_"'class", IntegerExactArithmeticNode, Lowerable)
+,   ,   ,   ,   ,   (defr!  UnsignedMulHighNode'class                   BinaryArithmeticNode #_"'class" #_"<UMulHigh>", Binary #_"<ValueNode>", BinaryCommutative, Canonicalizable)
+,   ,   ,   ,   ,   (defr!  XorNode'class                               BinaryArithmeticNode #_"'class" #_"<Xor>", Binary #_"<ValueNode>", BinaryCommutative, Canonicalizable)
 ,   ,   ,   ,   (defr!      NormalizeCompareNode'class                  BinaryNode #_"'class", IterableNodeType)
 ,   ,   ,   ,   (defr       ShiftNode'class #_"<OP>"                    BinaryNode #_"'class", ShiftNode, ArithmeticOperation, LIRLowerable)
 ,   ,   ,   ,   ,   (defr!  LeftShiftNode'class                         ShiftNode #_"'class" #_"<Shl>")
@@ -8567,11 +8567,11 @@ ZeroExtendNode'new-4
 ,   ,   ,   (defr!          ConditionalNode'class                       FloatingNode #_"'class", Canonicalizable, LIRLowerable)
 ,   ,   ,   (defr!          ConstantNode'class                          FloatingNode #_"'class", LIRLowerable)
 ,   ,   ,   (defr           FloatingAnchoredNode'class                  FloatingNode #_"'class", FloatingAnchoredNode)
-,   ,   ,   ,   (defr!      GuardNode'class                             FloatingAnchoredNode #_"'class", Canonicalizable, GuardingNode, DeoptimizingGuard, IterableNodeType)
+,   ,   ,   ,   (defr!      GuardNode'class                             FloatingAnchoredNode #_"'class", Canonicalizable, GuardingNode, DeoptimizingGuard, StaticDeoptimizingNode, IterableNodeType)
 ,   ,   ,   (defr           FloatingGuardedNode'class                   FloatingNode #_"'class", FloatingGuardedNode, GuardedNode)
-,   ,   ,   ,   (defr       FloatingAccessNode'class                    FloatingGuardedNode #_"'class", FloatingAccessNode, Access, MemoryAccess)
-,   ,   ,   ,   ,   (defr!  FloatingReadNode'class                      FloatingAccessNode #_"'class", LIRLowerableAccess, Canonicalizable)
-,   ,   ,   ,   (defr       PiNode'class                                FloatingGuardedNode #_"'class", PiNode, LIRLowerable, Virtualizable, IterableNodeType, Canonicalizable, ValueProxy)
+,   ,   ,   ,   (defr       FloatingAccessNode'class                    FloatingGuardedNode #_"'class", FloatingAccessNode, Access, GuardedNode, HeapAccess, MemoryAccess)
+,   ,   ,   ,   ,   (defr!  FloatingReadNode'class                      FloatingAccessNode #_"'class", LIRLowerableAccess, LIRLowerable, Access, GuardedNode, HeapAccess, Canonicalizable)
+,   ,   ,   ,   (defr       PiNode'class                                FloatingGuardedNode #_"'class", PiNode, LIRLowerable, Virtualizable, IterableNodeType, Canonicalizable, ValueProxy, LimitedValueProxy, Proxy)
 ,   ,   ,   ,   ,   (defr!  PiArrayNode'class                           PiNode #_"'class", ArrayLengthProvider)
 ,   ,   ,   ,   (defr       Placeholder'class                           FloatingGuardedNode #_"'class", Placeholder)
 ,   ,   ,   ,   ,   (defr!  ArrayPlaceholder'class                      Placeholder #_"'class")
@@ -8581,21 +8581,21 @@ ZeroExtendNode'new-4
 ,   ,   ,   (defr!          KlassLayoutHelperNode'class                 FloatingNode #_"'class", Canonicalizable, Lowerable)
 ,   ,   ,   (defr!          LoadHubNode'class                           FloatingNode #_"'class", Lowerable, Canonicalizable, Virtualizable)
 ,   ,   ,   (defr           LogicNode'class                             FloatingNode #_"'class", LogicNode, IndirectCanonicalization)
-,   ,   ,   ,   (defr       BinaryOpLogicNode'class                     LogicNode #_"'class", BinaryOpLogicNode, LIRLowerable, Binary #_"<ValueNode>")
+,   ,   ,   ,   (defr       BinaryOpLogicNode'class                     LogicNode #_"'class", BinaryOpLogicNode, LIRLowerable, Binary #_"<ValueNode>", Canonicalizable)
 ,   ,   ,   ,   ,   (defr!  ClassIsAssignableFromNode'class             BinaryOpLogicNode #_"'class", Lowerable)
 ,   ,   ,   ,   ,   (defr   CompareNode'class                           BinaryOpLogicNode #_"'class", CompareNode)
-,   ,   ,   ,   ,   ,   (defr! IntegerEqualsNode'class                  CompareNode #_"'class", BinaryCommutative #_"<ValueNode>")
+,   ,   ,   ,   ,   ,   (defr! IntegerEqualsNode'class                  CompareNode #_"'class", Binary #_"<ValueNode>", BinaryCommutative, Canonicalizable)
 ,   ,   ,   ,   ,   ,   (defr IntegerLowerThanNode'class                CompareNode #_"'class", IntegerLowerThanNode)
 ,   ,   ,   ,   ,   ,   ,   (defr! IntegerBelowNode'class               IntegerLowerThanNode #_"'class")
 ,   ,   ,   ,   ,   ,   ,   (defr! IntegerLessThanNode'class            IntegerLowerThanNode #_"'class")
-,   ,   ,   ,   ,   ,   (defr PointerEqualsNode'class                   CompareNode #_"'class", PointerEqualsNode, BinaryCommutative #_"<ValueNode>")
+,   ,   ,   ,   ,   ,   (defr PointerEqualsNode'class                   CompareNode #_"'class", PointerEqualsNode, Binary #_"<ValueNode>", BinaryCommutative, Canonicalizable)
 ,   ,   ,   ,   ,   ,   ,   (defr! ObjectEqualsNode'class               PointerEqualsNode #_"'class", Virtualizable)
 ,   ,   ,   ,   ,   (defr!  InstanceOfDynamicNode'class                 BinaryOpLogicNode #_"'class", Lowerable)
-,   ,   ,   ,   ,   (defr!  IntegerTestNode'class                       BinaryOpLogicNode #_"'class", BinaryCommutative #_"<ValueNode>")
+,   ,   ,   ,   ,   (defr!  IntegerTestNode'class                       BinaryOpLogicNode #_"'class", Binary #_"<ValueNode>", BinaryCommutative, Canonicalizable)
 ,   ,   ,   ,   (defr!      LogicConstantNode'class                     LogicNode #_"'class", LIRLowerable)
-,   ,   ,   ,   (defr!      LogicNegationNode'class                     LogicNode #_"'class", Unary #_"<LogicNode>")
-,   ,   ,   ,   (defr!      ShortCircuitOrNode'class                    LogicNode #_"'class", IterableNodeType, Binary #_"<LogicNode>")
-,   ,   ,   ,   (defr       UnaryOpLogicNode'class                      LogicNode #_"'class", UnaryOpLogicNode, LIRLowerable, Unary #_"<ValueNode>")
+,   ,   ,   ,   (defr!      LogicNegationNode'class                     LogicNode #_"'class", Unary #_"<LogicNode>", Canonicalizable)
+,   ,   ,   ,   (defr!      ShortCircuitOrNode'class                    LogicNode #_"'class", IterableNodeType, Binary #_"<LogicNode>", Canonicalizable)
+,   ,   ,   ,   (defr       UnaryOpLogicNode'class                      LogicNode #_"'class", UnaryOpLogicNode, LIRLowerable, Unary #_"<ValueNode>", Canonicalizable)
 ,   ,   ,   ,   ,   (defr!  InstanceOfNode'class                        UnaryOpLogicNode #_"'class", Lowerable, Virtualizable)
 ,   ,   ,   ,   ,   (defr!  IsNullNode'class                            UnaryOpLogicNode #_"'class", LIRLowerable, Virtualizable)
 ,   ,   ,   (defr!          MemoryMapNode'class                         FloatingNode #_"'class", MemoryMap, MemoryNode, LIRLowerable)
@@ -8607,9 +8607,9 @@ ZeroExtendNode'new-4
 ,   ,   ,   (defr!          PointerCastNode'class                       FloatingNode #_"'class", LIRLowerable)
 ,   ,   ,   (defr           ProxyNode'class                             FloatingNode #_"'class", ProxyNode)
 ,   ,   ,   ,   (defr!      GuardProxyNode'class                        ProxyNode #_"'class", GuardingNode, Proxy, LIRLowerable, Canonicalizable)
-,   ,   ,   ,   (defr!      ValueProxyNode'class                        ProxyNode #_"'class", Canonicalizable, Virtualizable, ValueProxy)
+,   ,   ,   ,   (defr!      ValueProxyNode'class                        ProxyNode #_"'class", Canonicalizable, Virtualizable, ValueProxy, LimitedValueProxy, Proxy)
 ,   ,   ,   (defr!          RandomSeedNode'class                        FloatingNode #_"'class", LIRLowerable)
-,   ,   ,   (defr           UnaryNode'class                             FloatingNode #_"'class", UnaryNode, Unary #_"<ValueNode>")
+,   ,   ,   (defr           UnaryNode'class                             FloatingNode #_"'class", UnaryNode, Unary #_"<ValueNode>", Canonicalizable)
 ,   ,   ,   ,   (defr!      BitCountNode'class                          UnaryNode #_"'class", LIRLowerable)
 ,   ,   ,   ,   (defr       CompressionNode'class                       UnaryNode #_"'class", CompressionNode, ConvertNode, LIRLowerable)
 ,   ,   ,   ,   ,   (defr!  HotSpotCompressionNode'class                CompressionNode #_"'class")
@@ -8646,7 +8646,7 @@ ZeroExtendNode'new-4
 (defr!                      NodeMap'class #_"<T>"                       #_"EconomicMap" #_"<Node, T>")
 (defr!                      NodeMark'class)
 (defr!                      NodeStack'class)
-(defr!                      NodeUsageIterable'class                     NodeIterable)
+(defr!                      NodeUsageIterable'class                     NodeIterable, #_"Iterable" #_"<Node>")
 (defr!                      NodeUsageIterator'class                     #_"Iterator" #_"<Node>")
 
 (defr                       NodeWorkList'class                          NodeWorkList, #_"Iterable" #_"<Node>")
@@ -8669,7 +8669,7 @@ ZeroExtendNode'new-4
 (defr!                      PhiInfoElement'class)
 (defr!                      Plugins'class)
 (defr!                      Position'class)
-(defr!                      PositiveTypePredicate'class                 NodePredicate)
+(defr!                      PositiveTypePredicate'class                 NodePredicate, #_"Predicate" #_"<Node>")
 (defr!                      ProcessFrame'class)
 (defr!                      PropagateDeoptimizeProbabilityPhase'class   Phase)
 (defr!                      RMEOptimization'class)
@@ -8746,8 +8746,8 @@ ZeroExtendNode'new-4
 ,   ,   (defr!              RangesStrategy'class                        PrimitiveStrategy #_"'class")
 ,   (defr!                  SequentialStrategy'class                    SwitchStrategy #_"'class")
 
-(defr!                      TautologyPredicate'class                    NodePredicate)
-(defr!                      Tool'class                                  SimplifierTool)
+(defr!                      TautologyPredicate'class                    NodePredicate, #_"Predicate" #_"<Node>")
+(defr!                      Tool'class                                  SimplifierTool, CanonicalizerTool)
 (defr!                      TypeReference'class)
 (defr!                      TypedGraphNodeIterator'class #_"<T extends IterableNodeType>" #_"Iterator" #_"<T>")
 (defr!                      UnsignedLong'class)
