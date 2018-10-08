@@ -1,5 +1,5 @@
 (ns graalfn.core
-    (:refer-clojure :only [* *ns* + - -> / < <= = > >= aget and apply aset assoc bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean-array byte byte-array case char cond condp cons contains? count dec declare defmacro defn defprotocol defrecord doseq dotimes double double-array empty? extend-protocol extend-type filter first get hash-map if-not import inc instance? int int-array into-array keys let letfn locking long long-array loop make-array map max merge min neg? next nil? not not= ns-imports ns-unmap nth object-array or pos? quot reduce reify rem remove repeat rest satisfies? second seq sequential? short some? str symbol symbol? unsigned-bit-shift-right update update-in vals vary-meta vec vector? volatile! vswap! when-some while zero?])
+    (:refer-clojure :only [* *ns* + - -> / < <= = > >= aget and apply aset assoc bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean-array byte byte-array case char cond condp conj cons contains? count dec declare defmacro defn defprotocol defrecord doseq dotimes double double-array empty? extend-protocol extend-type filter first get hash-map if-not import inc instance? int int-array into-array keys let letfn locking long long-array loop make-array map max merge min neg? next nil? not not= ns-imports ns-unmap nth object-array or pos? quot reduce reify rem remove repeat rest satisfies? second seq sequential? short some? str symbol symbol? unsigned-bit-shift-right update update-in vals vary-meta vec vector? volatile! vswap! when-some while zero?])
 )
 
 (defmacro § [& _])
@@ -372,7 +372,6 @@ AMD64Shift'ROR
 AMD64Shift'SAR
 AMD64Shift'SHL
 AMD64Shift'SHR
-AMD64Shift'new-1
 AMD64ShiftOp'new-5
 AMD64SignExtendOp'new-3
 AMD64StackMove'new-4
@@ -417,11 +416,7 @@ AbstractMoveOp'new-1
 AbstractNewArrayNode'new-4
 AbstractNewObjectNode'new-3
 AbstractObjectStamp''isExactType-1
-AbstractObjectStamp''join0-3
 AbstractObjectStamp'isConcreteType-1
-AbstractObjectStamp'isInterfaceOrArrayOfInterface-1
-AbstractObjectStamp'meetOrderedNonNullTypes-2
-AbstractObjectStamp'meetTypes-2
 AbstractObjectStamp'new-4
 AbstractPointerStamp''asAlwaysNull-1
 AbstractPointerStamp''asMaybeNull-1
@@ -442,7 +437,6 @@ AccessIndexedNode'new-4
 AccessMonitorNode'new-2
 AcquiredCASLockNode'new-1
 Add'new-2
-AddNode'canonical-4
 AddNode'create-2
 AddNode'new-2
 AddressLowering''improve-5
@@ -450,11 +444,7 @@ AddressLowering''improveUncompression-4
 AddressLowering''lower-3
 AddressLowering''postProcess-2
 AddressLowering''preProcess-2
-AddressLowering'applicableToImplicitZeroExtend-1
-AddressLowering'improveConstDisp-6
 AddressLowering'new-1
-AddressLowering'optimizeAdd-4
-AddressLowering'signExtend-2
 AddressLowering'updateDisplacement-3
 AddressLoweringPhase'new-1
 AddressNode'new-0
@@ -462,20 +452,9 @@ AllocatableRegisters'new-3
 AllocatedObjectNode''setCommit-2
 AllocatedObjectNode'new-1
 AllocationStage'new-0
-Allocator''activateNext-1
-Allocator''activePeekId-1
-Allocator''allocate-1
-Allocator''allocateSlot-2
-Allocator''allocateStackSlots-1
-Allocator''assignStackSlots-2
-Allocator''buildIntervals-1
-Allocator''findFreeSlot-2
-Allocator''finished-2
-Allocator''get-2
-Allocator'new-2
-Allocator'numberInstructions-2
+Allocator''allocate-1
+Allocator'new-2
 And'new-2
-AndNode'canonical-5
 AndNode'create-2
 AndNode'new-2
 AndPredicate'new-2
@@ -491,7 +470,6 @@ ArithmeticStamp'new-1
 ArrayLengthNode'create-1
 ArrayLengthNode'new-1
 ArrayLengthNode'readArrayLength-1
-ArrayLengthNode'readArrayLengthConstant-1
 ArrayPlaceholder'new-2
 Assembler''addl-3ai
 Assembler''addl-3ri
@@ -640,15 +618,6 @@ Assembler''prefetcht0-2
 Assembler''prefetcht1-2
 Assembler''prefetcht2-2
 Assembler''prefetchw-2
-Assembler''prefix-2
-Assembler''prefix-3
-Assembler''prefix-4
-Assembler''prefixAndEncode-2
-Assembler''prefixAndEncode-3b
-Assembler''prefixAndEncode-3i
-Assembler''prefixAndEncode-5
-Assembler''prefixq-3
-Assembler''prefixqAndEncode-3
 Assembler''push-2
 Assembler''rdtsc-1
 Assembler''recordDataReferenceInCode-3a
@@ -718,12 +687,7 @@ BciBlock''setJsrSuccessor-2
 BciBlock''setRetSuccessor-2
 BciBlock'copy-1
 BciBlock'new-1
-BciBlockMapping''addSwitchSuccessors-4
 BciBlockMapping''build-2
-BciBlockMapping''handleLoopHeader-5
-BciBlockMapping''makeBlock-3
-BciBlockMapping''makeLoopHeader-2
-BciBlockMapping'addSuccessor-3
 BciBlockMapping'create-2
 BeginLockScopeNode'new-1
 BeginLockScopeNode'new-2
@@ -760,7 +724,6 @@ BinaryOp''isAssociative-1
 BinaryOp''isCommutative-1
 BinaryOp'new-3
 BinaryOpLogicNode'new-2
-BinaryStrategy''recurseBinarySwitch-5
 BinaryStrategy'new-2
 BindToRegisterNode'new-1
 BindToRegisterOp'new-1
@@ -772,8 +735,6 @@ BitMap2D''setBit-3
 BitMap2D'new-2
 BlackholeNode'new-1
 BlackholeOp'new-1
-Block''calcKillLocations-1
-Block''calcKillLocationsBetweenThisAndTarget-3
 Block''canKill-2
 Block''canKillBetweenThisAndDominator-2
 Block''delete-1
@@ -781,7 +742,6 @@ Block''getDominator-2
 Block''getFirstPredecessor-1
 Block''getFirstSuccessor-1
 Block''getKillLocations-1
-Block''getKillLocationsBetweenThisAndDominator-1
 Block''getLoopDepth-1
 Block''getLoopExit-1
 Block''getNodes-1
@@ -802,11 +762,9 @@ Block''setProbability-2
 Block''setSuccessors-2
 Block'EMPTY_ARRAY
 Block'new-1
-BlockClosure''addDef-3
+BlockClosure'new-2
 BlockClosure''addRegisterHint-6
-BlockClosure''addUse-4
-BlockClosure''processInstructionBottomUp-2
-BlockClosure'new-2
+BlockClosure''processInstructionBottomUp-2
 BlockData'new-0
 BlockIteratorClosure'new-0
 BlockLoopInfo'new-2
@@ -815,8 +773,8 @@ BlockMap''put-3
 BlockMap'new-1
 BlockNodeIterator'new-1
 BlockOrderComparator'new-0
-BlockScope''doBlockStart-1
-BlockScope'new-2
+BlockScope''doBlockStart-1
+BlockScope'new-2
 BlockStates'new-1
 BoxNode''createVirtualBoxingNode-1
 BoxNode'new-3
@@ -842,41 +800,22 @@ BytecodeLookupSwitch'new-2
 BytecodeParser''add-2
 BytecodeParser''addPush-3
 BytecodeParser''appendConstant-2
-BytecodeParser''appendGoto-2
 BytecodeParser''appendInvoke-4
-BytecodeParser''appendLoopBegin-3
 BytecodeParser''bci-1
 BytecodeParser''build-3
 BytecodeParser''buildRootMethod-1
 BytecodeParser''canInlinePartialIntrinsicExit-1
-BytecodeParser''checkPositiveIntConstantPushed-2
-BytecodeParser''clampProbability-2
 BytecodeParser''cleanupFinalGraph-1
-BytecodeParser''createBlockTarget-4
-BytecodeParser''createFrameState-3
 BytecodeParser''createInstanceOf-3
 BytecodeParser''createInstanceOfAllowNull-3
 BytecodeParser''createInvoke-4
-BytecodeParser''createLogicNode-4
 BytecodeParser''createMonitorEnterNode-3
 BytecodeParser''createNewArray-4
 BytecodeParser''createNewInstance-3
 BytecodeParser''createNonInlinedInvoke-7
-BytecodeParser''createStateAfterStartOfReplacementGraph-1
-BytecodeParser''createTarget-3
-BytecodeParser''createTarget-5
 BytecodeParser''emitCheckForInvokeSuperSpecial-2
 BytecodeParser''genAnd-3
 BytecodeParser''genConditional-2
-BytecodeParser''genConditionalForIf-7
-BytecodeParser''genConstantTargetIf-4
-BytecodeParser''genDynamicInvokeHelper-4
-BytecodeParser''genGetField-3f
-BytecodeParser''genGetField-3i
-BytecodeParser''genGetField-3r
-BytecodeParser''genGetField-4
-BytecodeParser''genGetStatic-2
-BytecodeParser''genGetStatic-3
 BytecodeParser''genGoto-1
 BytecodeParser''genIf-4
 BytecodeParser''genIf-5
@@ -899,7 +838,6 @@ BytecodeParser''genInvokeStatic-2
 BytecodeParser''genInvokeStatic-3
 BytecodeParser''genInvokeVirtual-2
 BytecodeParser''genInvokeVirtual-3
-BytecodeParser''genInvokeVirtualHelper-2
 BytecodeParser''genJsr-2
 BytecodeParser''genLeftShift-3
 BytecodeParser''genLoadField-3
@@ -908,16 +846,9 @@ BytecodeParser''genMonitorEnter-3
 BytecodeParser''genMonitorExit-4
 BytecodeParser''genNarrow-3v
 BytecodeParser''genNegateOp-2v
-BytecodeParser''genNewInstance-2i
-BytecodeParser''genNewInstance-2t
 BytecodeParser''genNormalizeCompare-3
 BytecodeParser''genObjectEquals-3
 BytecodeParser''genOr-3
-BytecodeParser''genPutField-2
-BytecodeParser''genPutField-3f
-BytecodeParser''genPutField-3i
-BytecodeParser''genPutStatic-2
-BytecodeParser''genPutStatic-3
 BytecodeParser''genRet-2
 BytecodeParser''genReturn-3
 BytecodeParser''genRightShift-3
@@ -931,16 +862,11 @@ BytecodeParser''genVolatileFieldReadProxy-2
 BytecodeParser''genXor-3
 BytecodeParser''genZeroExtend-3v
 BytecodeParser''getDepth-1
-BytecodeParser''getEntryState-2
-BytecodeParser''getFirstInstruction-2
 BytecodeParser''getInvokeKind-1
 BytecodeParser''getInvokeReturnStamp-1
 BytecodeParser''getInvokeReturnType-1
-BytecodeParser''getJsrConstant-2
 BytecodeParser''getNonIntrinsicAncestor-1
 BytecodeParser''getParent-1
-BytecodeParser''getProfileProbability-2
-BytecodeParser''gotoOrFallThroughAfterConstant-2
 BytecodeParser''handleReplacedInvoke-5
 BytecodeParser''handleUnresolvedCheckCast-3
 BytecodeParser''handleUnresolvedInstanceOf-3
@@ -950,16 +876,10 @@ BytecodeParser''handleUnresolvedLoadField-3
 BytecodeParser''handleUnresolvedNewInstance-2
 BytecodeParser''handleUnresolvedNewObjectArray-3
 BytecodeParser''handleUnresolvedStoreField-4
-BytecodeParser''inline-5
 BytecodeParser''isNeverExecutedCode-2
 BytecodeParser''iterateBytecodesForBlock-2
 BytecodeParser''loadLocal-3
 BytecodeParser''loadLocalObject-2
-BytecodeParser''lookupConstant-3
-BytecodeParser''lookupField-3
-BytecodeParser''lookupMethod-3
-BytecodeParser''lookupType-3
-BytecodeParser''maybeEagerlyResolve-3
 BytecodeParser''notifyAfterInline-2
 BytecodeParser''notifyBeforeInline-2
 BytecodeParser''nullCheckedValue-2
@@ -968,26 +888,12 @@ BytecodeParser''parseAndInlineCallee-4
 BytecodeParser''processBlock-2
 BytecodeParser''processBytecode-3
 BytecodeParser''push-3
-BytecodeParser''resolveStaticFieldAccess-3
-BytecodeParser''returnAfterConstant-2
 BytecodeParser''setCurrentFrameState-2
-BytecodeParser''setEntryState-3
-BytecodeParser''setFirstInstruction-3
-BytecodeParser''setMergeStateAfter-3
 BytecodeParser''setStateAfter-2
 BytecodeParser''storeLocal-3
-BytecodeParser''synchronizedEpilogue-4
-BytecodeParser''synchronizedObject-3
-BytecodeParser''tryGenConditionalForIf-7
-BytecodeParser''tryInline-3
-BytecodeParser''tryNodePluginForInvocation-3
-BytecodeParser''updateLastInstruction-2
-BytecodeParser'SUCCESSFULLY_INLINED
-BytecodeParser'extractInjectedProbability-1
 BytecodeParser'new-5
 BytecodeStream''currentBC-1
 BytecodeStream''endBCI-1
-BytecodeStream''lengthOf-1
 BytecodeStream''next-1
 BytecodeStream''readBranchDest-1
 BytecodeStream''readByte-1
@@ -1157,18 +1063,10 @@ Bytes'beS2-2
 Bytes'beS4-2
 Bytes'beU1-2
 Bytes'beU2-2
-CFOptimizer''deleteEmptyBlocks-2
-CFOptimizer'new-1
-CLOptimization''addUsageToBlockMap-2
-CLOptimization''analyzeBlock-2
-CLOptimization''apply-1
-CLOptimization''createConstantTree-2
-CLOptimization''createLoads-4
-CLOptimization''deleteInstruction-2
-CLOptimization''getInsertionBuffer-2
-CLOptimization''insertLoad-5
-CLOptimization''rewriteBlock-2
-CLOptimization'new-2
+CFOptimizer''deleteEmptyBlocks-2
+CFOptimizer'new-1
+CLOptimization''apply-1
+CLOptimization'new-2
 CRuntimeCallEpilogueOp'new-4
 CRuntimeCallPrologueOp'new-2
 CacheEntry'new-2
@@ -1180,7 +1078,6 @@ CallTargetNode''setTargetMethod-2
 CallTargetNode'new-4
 CallsiteHolder'new-0
 CallsiteHolderExplorable''computeProbabilities-1
-CallsiteHolderExplorable''fixedParamsAt-2
 CallsiteHolderExplorable''invokeProbability-2
 CallsiteHolderExplorable''invokeRelevance-2
 CallsiteHolderExplorable''popInvoke-1
@@ -1192,16 +1089,8 @@ CanonicalCondition'LT
 CanonicalizableLocation''findReadHub-2
 CanonicalizableLocation'foldIndirection-3
 CanonicalizableLocation'new-1
-CanonicalizedCondition'new-3
-CanonicalizerInstance''performReplacement-3
-CanonicalizerInstance''processNode-2
-CanonicalizerInstance''processWorkSet-2
+CanonicalizerInstance'new-3
 CanonicalizerInstance''tryCanonicalize-3
-CanonicalizerInstance''tryInferStamp-2
-CanonicalizerInstance'new-1
-CanonicalizerInstance'new-2i
-CanonicalizerInstance'new-2m
-CanonicalizerInstance'new-3
 CanonicalizerPhase''applyIncremental-3i
 CanonicalizerPhase''applyIncremental-3m
 CanonicalizerPhase''applyIncremental-4
@@ -1216,14 +1105,10 @@ ClassRef''resolve-2
 ClassRef'new-1
 Classfile''getCode-3
 Classfile'new-3
-Classfile'readMethods-3
-Classfile'skipAttributes-1
-Classfile'skipFields-1
 Classfile'skipFully-2
 ClassfileBytecode'new-3
 ClassfileBytecodeProvider''findField-5
 ClassfileBytecodeProvider''findMethod-5
-ClassfileBytecodeProvider''getClassfile-2
 ClassfileBytecodeProvider''resolveToClass-2
 ClassfileBytecodeProvider'new-0
 ClassfileConstant'CONSTANT_Class
@@ -1247,9 +1132,6 @@ ClassfileConstant'resolveMethod-5
 ClassfileConstantPool''get-3
 ClassfileConstantPool'new-2
 Closure'new-0
-Closure0''process-2
-Closure0''replaceStackMoves-2
-Closure0'new-0
 CodeBuffer''close-2
 CodeBuffer''emitByte-2
 CodeBuffer''emitByte-3
@@ -1265,7 +1147,6 @@ CodeBuffer''getShort-2
 CodeBuffer''position-1
 CodeBuffer'InitialSize
 CodeBuffer'new-1
-CollectVirtualObjectsClosure'new-4
 CommitAllocationNode''addLocks-2
 CommitAllocationNode''getLocks-2
 CommitAllocationNode'new-0
@@ -1280,9 +1161,7 @@ CompareNode'createCompareNode-5
 CompareNode'new-3
 CompareNode'tryConstantFold-3
 CompareNode'tryConstantFoldPrimitive-3
-CompareOp'canonicalConvertConstant-3
 CompareOp'new-0
-CompareOp'optimizeConditional-3
 CompilationContext'INLINE_AFTER_PARSING
 CompilationContext'INLINE_DURING_PARSING
 CompilationContext'ROOT_COMPILATION
@@ -1313,22 +1192,14 @@ CompressionOp'Uncompress
 ComputeBlockOrder'computeCodeEmittingOrder-2
 ComputeBlockOrder'computeLinearScanOrder-2
 ComputeInliningRelevance''compute-1
-ComputeInliningRelevance''createLoopScope-4
-ComputeInliningRelevance''getMaxProbabilityLoopExit-3
-ComputeInliningRelevance''getMinPathProbability-3
 ComputeInliningRelevance''getRelevance-2
-ComputeInliningRelevance'getMaxProbabilitySux-2
 ComputeInliningRelevance'new-2
-ComputeInliningRelevance'truncate-2
 ComputeLoopFrequenciesClosure'PHASE_INSTANCE
 ComputeLoopFrequenciesClosure'compute-1
-ComputeLoopFrequenciesClosure'new-0
 ComputeLoopFrequencyPhase'new-0
 ComputeObjectAddressNode'new-2
 CondMoveOp'new-4
 CondSetOp'new-2
-Condition''canonicalMirror-1
-Condition''canonicalNegate-1
 Condition''canonicalize-1
 Condition''foldCondition-3c
 Condition''foldCondition-3p
@@ -1373,14 +1244,11 @@ ConditionFlag'Overflow
 ConditionFlag'Parity
 ConditionFlag'Positive
 ConditionFlag'Zero
-ConditionalEliminationInstance''canScheduleAbove-4
 ConditionalEliminationInstance''foldGuard-6
 ConditionalEliminationInstance''foldPendingTest-5
 ConditionalEliminationInstance''getInfoElements-2
 ConditionalEliminationInstance''introducePisForPhis-2
-ConditionalEliminationInstance''nextElement-2
 ConditionalEliminationInstance''processAbstractBegin-2
-ConditionalEliminationInstance''processBlock-2
 ConditionalEliminationInstance''processConditionAnchor-2
 ConditionalEliminationInstance''processEnd-2
 ConditionalEliminationInstance''processFixedGuard-2
@@ -1398,15 +1266,11 @@ ConditionalEliminationInstance''registerNewStamp-5
 ConditionalEliminationInstance''rewireGuards-6
 ConditionalEliminationInstance''tryProveCondition-3
 ConditionalEliminationInstance''tryProveGuardCondition-4
-ConditionalEliminationInstance'getOtherSafeStamp-1
-ConditionalEliminationInstance'getSafeStamp-1
-ConditionalEliminationInstance'maybeMultipleUsages-1
 ConditionalEliminationInstance'new-3
 ConditionalEliminationPhase'new-1
 ConditionalNode'canonicalizeConditional-4
 ConditionalNode'create-1
 ConditionalNode'create-3
-ConditionalNode'findSynonym-3
 ConditionalNode'new-1
 ConditionalNode'new-3
 ConditionalNode'new-4
@@ -1421,7 +1285,6 @@ ConstantFields'isStaticFieldConstant-1
 ConstantFields'readConstantField-2
 ConstantFields'tryConstantFold-2
 ConstantLoadOptimization'new-0
-ConstantNode''onlyUsedInVirtualState-1
 ConstantNode'defaultForKind-1
 ConstantNode'defaultForKind-2
 ConstantNode'forBoolean-1
@@ -1436,9 +1299,7 @@ ConstantNode'forConstant-3s
 ConstantNode'forConstant-4
 ConstantNode'forInt-1
 ConstantNode'forInt-2
-ConstantNode'forIntegerBits-2c
 ConstantNode'forIntegerBits-2l
-ConstantNode'forIntegerBits-3c
 ConstantNode'forIntegerBits-3l
 ConstantNode'forIntegerKind-2
 ConstantNode'forIntegerKind-3
@@ -1453,7 +1314,6 @@ ConstantNode'forPrimitive-3
 ConstantNode'forShort-2
 ConstantNode'new-2
 ConstantTree''getOrInitCost-2
-ConstantTree''getOrInitList-2
 ConstantTree''getUsages-2
 ConstantTree''isLeafBlock-2
 ConstantTree''isMarked-2
@@ -1461,15 +1321,7 @@ ConstantTree''markBlocks-1
 ConstantTree''size-1
 ConstantTree''traverseTreeWhileTrue-3
 ConstantTree'new-2
-ConstantTreeAnalyzer''analyzeBlocks-2
-ConstantTreeAnalyzer''filteredPush-3
-ConstantTreeAnalyzer''isLeafBlock-2
-ConstantTreeAnalyzer''isMarked-2
-ConstantTreeAnalyzer''leafCost-2
-ConstantTreeAnalyzer''process-2
 ConstantTreeAnalyzer'analyze-2
-ConstantTreeAnalyzer'new-1
-ConstantTreeAnalyzer'shouldMaterializerInCurrentBlock-3
 ConstantValue'new-2
 ConsumerConstOp'new-4a
 ConsumerConstOp'new-4b
@@ -1478,12 +1330,8 @@ ConsumerOp'new-4
 ContradictionPredicate'INSTANCE
 ControlFlowAnchorNode'new-0
 ControlFlowGraph''blockFor-2
-ControlFlowGraph''computeDominators-1
-ControlFlowGraph''computeLoopInformation-1
 ControlFlowGraph''computePostdominators-1
-ControlFlowGraph''computeProbabilities-1
 ControlFlowGraph''getStartBlock-1
-ControlFlowGraph''identifyBlocks-1
 ControlFlowGraph''setNodeToBlock-2
 ControlFlowGraph''visitDominatorTree-3
 ControlFlowGraph''visitDominatorTreeDefault-2
@@ -1492,26 +1340,17 @@ ControlFlowGraph'BLOCK_ID_INITIAL
 ControlFlowGraph'BLOCK_ID_VISITED
 ControlFlowGraph'MAX_PROBABILITY
 ControlFlowGraph'MIN_PROBABILITY
-ControlFlowGraph'addDeferredExit-2
-ControlFlowGraph'calcDominatorRanges-2
 ControlFlowGraph'commonDominator-2
-ControlFlowGraph'commonDominatorRaw-2
-ControlFlowGraph'commonDominatorRawSameDepth-2
-ControlFlowGraph'commonPostdominator-2
 ControlFlowGraph'compute-5
-ControlFlowGraph'computeLoopBlocks-4
-ControlFlowGraph'computeLoopPredecessors-3
 ControlFlowGraph'dominates-2
 ControlFlowGraph'isDominatedBy-2
 ControlFlowGraph'isDominatorTreeLoopExit-1
 ControlFlowGraph'multiplyProbabilities-2
-ControlFlowGraph'skipPostDom-1
 ControlFlowGraph'strictlyDominates-2
 ControlFlowOptimizer'new-0
 ControlSinkNode'new-1
 ControlSplitNode'new-1
 ConvertDeoptimizeToGuardPhase'new-0
-CountLeadingZerosNode'computeStamp-2
 CountLeadingZerosNode'new-1
 CountLeadingZerosNode'tryFold-1
 CountTrailingZerosNode'computeStamp-2
@@ -1529,7 +1368,6 @@ CountedLoopInfo''isConstantMaxTripCount-1
 CountedLoopInfo''isExactTripCount-1
 CountedLoopInfo''maxTripCountNode-1
 CountedLoopInfo''maxTripCountNode-2
-CountedLoopInfo''rawConstantMaxTripCount-1
 CountedLoopInfo'new-6
 CountingClosure'new-0
 CurrentInvoke'new-3
@@ -1548,13 +1386,10 @@ DataSection'lcm-2
 DataSection'new-0
 DataTwoOp'new-5
 DataTwoOp'new-6
-DeadCodeEliminationPhase'deleteNodes-2
-DeadCodeEliminationPhase'iterateSuccessorsAndInputs-1
 DeadCodeEliminationPhase'new-0
 DeadCodeEliminationPhase'new-1
 Decision'NO
 Decision'YES
-Decision'new-2
 DefUseTree''addUsage-4
 DefUseTree''forEach-2
 DefUseTree''getConstant-1
@@ -1576,8 +1411,6 @@ DeoptimizingFixedWithNextNode'new-2
 DerivedConvertedInductionVariable'new-4
 DerivedInductionVariable''getBase-1
 DerivedInductionVariable'new-2
-DerivedOffsetInductionVariable''op-3l
-DerivedOffsetInductionVariable''op-3v
 DerivedOffsetInductionVariable'new-4
 DerivedScaledInductionVariable'new-3
 DerivedScaledInductionVariable'new-4
@@ -1616,9 +1449,9 @@ DynamicNewInstanceNode'new-2
 DynamicNewInstanceNode'new-3
 DynamicNewInstanceNode'throwsInstantiationException-1
 DynamicNewInstanceNode'throwsInstantiationException-2
-EMOptimizer''optimizeMovesAtBlockBegin-2
-EMOptimizer''optimizeMovesAtBlockEnd-2
 EMOptimizer'new-1
+EMOptimizer''optimizeMovesAtBlockBegin-2
+EMOptimizer''optimizeMovesAtBlockEnd-2
 EagerSnippetInfo'new-2
 EarlyReadEliminationPhase'new-1
 EdgeInfo'new-4
@@ -1630,7 +1463,6 @@ Edges''initializeList-4
 Edges''initializeLists-3
 Edges''initializeNode-4
 Edges''setNode-4
-Edges''verifyUpdateValid-4
 Edges'getNode-3
 Edges'getNodeList-3
 Edges'getNodeListUnsafe-2
@@ -1640,7 +1472,6 @@ Edges'putNodeListUnsafe-3
 Edges'putNodeUnsafe-3
 Edges'translateInto-2
 EdgesIterator''forward-1
-EdgesIterator''forwardNodeList-1
 EdgesIterator'new-2
 EdgesType'Inputs
 EdgesType'Successors
@@ -1657,10 +1488,8 @@ EffectsBlockState'copy-1
 EffectsBlockState'isSubMapOf-2
 EffectsBlockState'new-0
 EffectsClosure''addScalarAlias-3
-EffectsClosure''doMergeWithoutDead-3
 EffectsClosure''getScalarAlias-2
 EffectsClosure''hasScalarReplacedInputs-2
-EffectsClosure'isSignificantNode-1
 EffectsClosure'new-2
 EffectsPhase''postIteration-3
 EffectsPhase''runAnalysis-2
@@ -1676,13 +1505,7 @@ EscapeObjectState'new-1
 ExactInlineInfo'new-2
 ExecutableRef''resolve-3
 ExecutableRef'new-2
-ExpandLogicPhase'doubleEquals-2
 ExpandLogicPhase'new-0
-ExpandLogicPhase'processBinary-1
-ExpandLogicPhase'processConditional-5
-ExpandLogicPhase'processIf-6
-ExpandLogicPhase'processNormalizeCompareNode-1
-ExpandLogicPhase'sanitizeProbability-1
 ExplodeLoopNode''findLoopBegin-1
 ExplodeLoopNode'new-0
 FastAcquireBiasedLockNode'new-1
@@ -1718,12 +1541,6 @@ FinalFieldBarrierNode'new-1
 FinalState'copy-1
 FinalState'new-0
 FixPointIntervalBuilder''build-1
-FixPointIntervalBuilder''getIntervalFromStackId-2
-FixPointIntervalBuilder''markInInterval-3
-FixPointIntervalBuilder''markOutInterval-3
-FixPointIntervalBuilder''processBlock-3
-FixPointIntervalBuilder'getBlockBegin-1
-FixPointIntervalBuilder'getBlockEnd-1
 FixPointIntervalBuilder'new-3
 FixReadsClosure'new-0
 FixReadsPhase'new-1
@@ -1736,8 +1553,6 @@ FixedGuardNode'new-5
 FixedNode'new-1
 FixedNodeIterator'new-1
 FixedNodeProbabilityCache''applyAsDouble-2
-FixedNodeProbabilityCache''handleMerge-3
-FixedNodeProbabilityCache'findBegin-1
 FixedNodeProbabilityCache'new-0
 FixedTarget'new-2
 FixedValueAnchorNode'new-1
@@ -1755,14 +1570,7 @@ FloatingAnchoredNode''getAnchor-1
 FloatingAnchoredNode'new-2
 FloatingGuardedNode'new-2
 FloatingNode'new-1
-FloatingReadClosure'createMemoryPhi-4
 FloatingReadClosure'new-3
-FloatingReadClosure'processAccess-2
-FloatingReadClosure'processAnchor-2
-FloatingReadClosure'processCheckpoint-2m
-FloatingReadClosure'processCheckpoint-2s
-FloatingReadClosure'processFloatable-2
-FloatingReadClosure'processIdentity-3
 FloatingReadNode'new-4
 FloatingReadNode'new-5
 FloatingReadNode'new-6
@@ -1771,7 +1579,6 @@ FloatingReadPhase''processNode-3
 FloatingReadPhase'mergeMemoryMaps-2
 FloatingReadPhase'new-0
 FloatingReadPhase'new-2
-FloatingReadPhase'processIdentity-2
 ForeignCallDescriptor'DEOPTIMIZATION_HANDLER
 ForeignCallDescriptor'DYNAMIC_NEW_ARRAY
 ForeignCallDescriptor'DYNAMIC_NEW_INSTANCE
@@ -1790,8 +1597,6 @@ ForeignCallLinkage''finalizeAddress-1
 ForeignCallLinkage''getMaxCallTargetOffset-1
 ForeignCallLinkage''isGuaranteedSafepoint-1
 ForeignCallLinkage''needsJavaFrameAnchor-1
-ForeignCallLinkage''setCompiledStub-2
-ForeignCallLinkage'asJavaType-1
 ForeignCallLinkage'create-8*
 ForeignCallLinkage'createCallingConvention-2
 ForeignCallLinkage'new-8*
@@ -1801,12 +1606,8 @@ ForeignCallNode''setBci-2
 ForeignCallNode'intrinsify-5*
 ForeignCallNode'new-2*
 ForeignCallOp'new-4
-ForeignCallStub''createParameters-3
-ForeignCallStub''createTargetCall-4
-ForeignCallStub''createTargetParameters-2
 ForeignCallStub'new-6*
 ForeignCalls''getKilledLocations-2
-ForeignCalls''initialize-1
 ForeignCalls''isGuaranteedSafepoint-2
 ForeignCalls''isReexecutable-2
 ForeignCalls''linkForeignCall-7*
@@ -1814,12 +1615,6 @@ ForeignCalls''lookupForeignCall-2
 ForeignCalls''register-2
 ForeignCalls''registerForeignCall-8*
 ForeignCalls''registerStubCall-5*
-ForeignCalls'DONT_PREPEND_THREAD
-ForeignCalls'NOT_REEXECUTABLE
-ForeignCalls'NO_LOCATIONS
-ForeignCalls'PREPEND_THREAD
-ForeignCalls'REEXECUTABLE
-ForeignCalls'link-1
 ForeignCalls'nativeABICallerSaveRegisters
 ForeignCalls'new-0
 FrameContext''enter-2
@@ -1873,8 +1668,6 @@ FrameStateBuilder''clearStack-1
 FrameStateBuilder''contains-2
 FrameStateBuilder''create-3
 FrameStateBuilder''create-6
-FrameStateBuilder''createLoopPhi-4
-FrameStateBuilder''createValuePhi-4
 FrameStateBuilder''getMethod-1
 FrameStateBuilder''inferPhiStamps-2
 FrameStateBuilder''initializeForMethodStart-3
@@ -1885,7 +1678,6 @@ FrameStateBuilder''isCompatibleWith-2
 FrameStateBuilder''loadLocal-3
 FrameStateBuilder''lockDepth-2
 FrameStateBuilder''merge-3
-FrameStateBuilder''merge-4
 FrameStateBuilder''peekMonitorId-1
 FrameStateBuilder''pop-2
 FrameStateBuilder''popArguments-2
@@ -1895,10 +1687,7 @@ FrameStateBuilder''pushLock-3
 FrameStateBuilder''pushReturn-3
 FrameStateBuilder''stackOp-2
 FrameStateBuilder''storeLocal-4
-FrameStateBuilder''xpop-1
-FrameStateBuilder''xpush-2
 FrameStateBuilder'copy-1
-FrameStateBuilder'inferPhiStamp-2
 FrameStateBuilder'new-3c
 FrameStateBuilder'new-3m
 G1PostWriteBarrier'new-4
@@ -1985,11 +1774,8 @@ Graph''addAfterFixed-3
 Graph''addBeforeFixed-3
 Graph''addDuplicates-5m
 Graph''addDuplicates-5r
-Graph''addInputs-2
 Graph''addOrUniqueWithInputs-2
 Graph''clearAllStateAfter-1
-Graph''findFirstLiveIterable-3
-Graph''findNextLiveiterable-2
 Graph''freeze-1
 Graph''getInvokes-1
 Graph''getIterableNodeNext-2
@@ -2059,7 +1845,6 @@ GraphKit''startIf-3
 GraphKit''thenPart-1
 GraphKit'findMethod-3*
 GraphKit'new-1
-GraphNodeIterator''forward-1
 GraphNodeIterator'new-1
 GraphNodeIterator'new-2
 GraphUtil'arrayLength-1
@@ -2069,7 +1854,6 @@ GraphUtil'isFloatingNode-1
 GraphUtil'killCFG-1
 GraphUtil'killWithUnusedFloatingInputs-1
 GraphUtil'killWithUnusedFloatingInputs-2
-GraphUtil'normalizeLoopBegin-1
 GraphUtil'normalizeLoops-1
 GraphUtil'originalValue-1
 GraphUtil'predecessorIterable-1
@@ -2084,11 +1868,6 @@ GreedyInliningPolicy'new-0
 GuardLoweringPhase'new-0
 GuardNode''lowerGuard-1
 GuardNode'new-6
-GuardOrder'addNodeToResort-5
-GuardOrder'checkIfAvailable-6
-GuardOrder'propagatePriority-4
-GuardOrder'resortGuards-3
-GuardOrder'resortGuards-4
 GuardPhiNode'new-1
 GuardPriority'None
 GuardPriority'Profile
@@ -2271,41 +2050,16 @@ HotSpotDirectCallTargetNode'new-6
 HotSpotNarrowOopStamp'compressed-2
 HotSpotNarrowOopStamp'mkStamp-3
 HotSpotNodePlugin'new-1
-HotSpotNodePlugin'tryConstantFold-3
-HotSpotNodePlugin'tryReadField-3
 HotSpotSwitchClosure'new-3
 HubGetClassNode'new-1
-IfNode''canonicalizeConditionalCascade-4
-IfNode''checkForUnsignedCompare-2
-IfNode''cleanupMerge-2
-IfNode''conditionalNodeOptimization-2
-IfNode''connectEnds-6
 IfNode''eliminateNegation-1
 IfNode''getSuccessor-2
-IfNode''insertMerge-2
-IfNode''propagateZeroProbability-2
-IfNode''proxyReplacement-2
-IfNode''pushNodesThroughIf-2
-IfNode''removeIntermediateMaterialization-2
-IfNode''removeOrMaterializeIf-2
-IfNode''removeThroughFalseBranch-3
 IfNode''setCondition-2
 IfNode''setFalseSuccessor-2
 IfNode''setTrueSuccessor-2
 IfNode''setTrueSuccessorProbability-2
-IfNode''splitIfAtPhi-2
-IfNode''successor-2
-IfNode''tryEliminateBoxedReferenceEquals-2
-IfNode'checkFrameState-1
-IfNode'computeCondition-4
-IfNode'conditionUses-2
-IfNode'constantValues-3
 IfNode'new-4b
 IfNode'new-4f
-IfNode'prepareForSwap-3
-IfNode'sameDestination-2
-IfNode'transferProxies-2
-IfNode'valuesDistinct-3
 IfState'CONDITION
 IfState'ELSE_PART
 IfState'FINISHED
@@ -2321,29 +2075,18 @@ InlineDuringParsingPlugin'new-0
 InlineInvokeInfo''allowsInlining-1
 InlineInvokeInfo'createIntrinsicInlineInfo-1
 InlineInvokeInfo'createStandardInlineInfo-1
-InlineableGraph''specializeGraphToArguments-3
 InlineableGraph'new-4
 InliningData''countRecursiveInlining-2
-InliningData''currentGraph-1
-InliningData''getExactInlineInfo-3
 InliningData''hasUnprocessedGraphs-1
 InliningData''inliningDepth-1
 InliningData''moveForward-1
-InliningData''pushInvocationAndGraphs-2
 InliningData'freshlyInstantiatedArguments-2
 InliningData'isFreshInstantiation-1
 InliningData'new-5
 InliningIterator''apply-1
-InliningIterator''forcedQueue-2
-InliningIterator''nextQueuedNode-1
-InliningIterator''queue-2
-InliningIterator''queueMerge-2
-InliningIterator''queueSuccessors-2
-InliningIterator''visitedAllEnds-2
 InliningIterator'new-1
 InliningPhase'new-1
 InliningUtil'checkInvokeConditions-1
-InliningUtil'finishInlining-5
 InliningUtil'inline-4
 InliningUtil'inlineForCanonicalization-4
 InliningUtil'nonNullReceiver-1
@@ -2365,7 +2108,6 @@ InstanceOfDynamicNode''isMirror-1
 InstanceOfDynamicNode''setMirror-2
 InstanceOfDynamicNode'create-3
 InstanceOfDynamicNode'create-4
-InstanceOfDynamicNode'findSynonym-4
 InstanceOfDynamicNode'new-4
 InstanceOfNode''allowsNull-1
 InstanceOfNode''type-1
@@ -2394,7 +2136,6 @@ IntList'copy-3
 IntList'copy-4
 IntList'new-1
 IntList'new-2
-IntegerAddExactNode'canonicalXconstant-2
 IntegerAddExactNode'new-2
 IntegerAddExactSplitNode'new-5
 IntegerBelowNode'create-2
@@ -2425,13 +2166,9 @@ IntegerLessThanNode'create-3
 IntegerLessThanNode'new-2
 IntegerLessThanNode'subtractMayOverflow-3
 IntegerLessThanNode'subtractMayUnderflow-3
-IntegerLowerThanNode''getSucceedingStampForX-5
-IntegerLowerThanNode''getSucceedingStampForX-7
 IntegerLowerThanNode'new-3
-IntegerMulExactNode''canonicalXconstant-3
 IntegerMulExactNode'new-2
 IntegerMulExactSplitNode'new-5
-IntegerMulHighNode'canonical-2
 IntegerMulHighNode'new-2
 IntegerStamp''canBeNegative-1
 IntegerStamp''canBePositive-1
@@ -2440,7 +2177,6 @@ IntegerStamp''isNegative-1
 IntegerStamp''isPositive-1
 IntegerStamp''isStrictlyNegative-1
 IntegerStamp''isStrictlyPositive-1
-IntegerStamp''sameSignBounds-1
 IntegerStamp''unsignedLowerBound-1
 IntegerStamp''unsignedUpperBound-1
 IntegerStamp'OPS
@@ -2450,24 +2186,17 @@ IntegerStamp'addOverflowsPositively-3
 IntegerStamp'carryBits-2
 IntegerStamp'create-3
 IntegerStamp'create-5
-IntegerStamp'maxValueForMasks-3
-IntegerStamp'minValueForMasks-3
 IntegerStamp'multiplicationCanOverflow-2
 IntegerStamp'multiplicationOverflows-3
 IntegerStamp'sameSign-2
 IntegerStamp'stampForMask-3
 IntegerStamp'subtractionCanOverflow-2
 IntegerStamp'subtractionOverflows-3
-IntegerSubExactNode''canonicalXYconstant-3
 IntegerSubExactNode'new-2
 IntegerSubExactSplitNode'new-5
-IntegerSwitchNode''doReplace-6
-IntegerSwitchNode''tryOptimizeEnumSwitch-2
 IntegerSwitchNode''tryRemoveUnreachableKeys-3
-IntegerSwitchNode'addNewSuccessor-2
 IntegerSwitchNode'new-5a
 IntegerSwitchNode'new-5i
-IntegerTestNode'getSucceedingStamp-3
 IntegerTestNode'new-2
 InterfaceMethodRef'new-1
 Interval''addMaterializationValue-2
@@ -2521,18 +2250,14 @@ IntervalState'Active
 IntervalState'Handled
 IntervalState'Inactive
 IntervalState'Unhandled
-IntervalWalker''intervalMoved-4
 IntervalWalker''removeFromList-2
-IntervalWalker''updateUnhandledStackIntervals-2
 IntervalWalker''walkTo-2
-IntervalWalker''walkTo-4
 IntervalWalker'new-3
 IntrinsicContext''createFrameState-4
 IntrinsicContext''isCallToOriginal-2
 IntrinsicContext''isCompilationRoot-1
 IntrinsicContext''isPostParseInlined-1
 IntrinsicContext'new-4
-IntrinsicScope''processPlaceholderFrameStates-2
 IntrinsicScope'new-1
 IntrinsicScope'new-3
 InvariantPredicate'new-1
@@ -2554,12 +2279,10 @@ InvokeNode''setClassInit-2
 InvokeNode''setUseForInlining-2
 InvokeNode'new-2
 InvokeNode'new-3
-IsNullNode'canonicalized-2
 IsNullNode'create-1
 IsNullNode'new-1
 IsNullNode'tryCanonicalize-1
 IterativeConditionalEliminationPhase'new-2
-IterativeNodeWorkList''inflateToBitMap-2
 IterativeNodeWorkList'new-3
 JSRData'new-0
 JVMCI'backend
@@ -2579,7 +2302,6 @@ JumpOp''setPhiValues-2
 JumpOp'new-1
 JumpOp'outgoingFlags
 KeyData'new-3
-KlassLayoutHelperNode'canonical-3
 KlassLayoutHelperNode'create-1
 KlassLayoutHelperNode'intrinsify-3
 KlassLayoutHelperNode'new-1
@@ -2589,8 +2311,6 @@ KlassPointerStamp''uncompressed-1
 KlassPointerStamp'KLASS
 KlassPointerStamp'KLASS_ALWAYS_NULL
 KlassPointerStamp'KLASS_NON_NULL
-KlassPointerStamp'new-2
-KlassPointerStamp'new-3
 LIR''getLIRforBlock-2
 LIR''nextVariable-1
 LIR''setHasArgInCallerFrame-1
@@ -2609,7 +2329,6 @@ LIRBuilder''emitIf-2
 LIRBuilder''emitIntegerTestBranch-5
 LIRBuilder''emitInvoke-2
 LIRBuilder''emitNode-2
-LIRBuilder''emitNullCheckBranch-5
 LIRBuilder''emitOverflowCheckBranch-5
 LIRBuilder''emitPrologue-2
 LIRBuilder''emitSwitch-2
@@ -2644,10 +2363,7 @@ LIRGenerator''emitAddress-2
 LIRGenerator''emitAnd-3
 LIRGenerator''emitAtomicReadAndAdd-3
 LIRGenerator''emitAtomicReadAndWrite-3
-LIRGenerator''emitBinaryConst-6
-LIRGenerator''emitBinaryConst-8
 LIRGenerator''emitBinaryMemory-5
-LIRGenerator''emitBinaryVar-7
 LIRGenerator''emitBitCount-2
 LIRGenerator''emitBitScanForward-2
 LIRGenerator''emitBitScanReverse-2
@@ -2731,17 +2447,11 @@ LIRGenerator''newVariable-2
 LIRGenerator''resultOperandFor-3
 LIRGenerator''setLockStackHolder-2
 LIRGenerator''toRegisterKind-2
-LIRGenerator'getMOp-2
 LIRGenerator'new-1
 LIRInsertionBuffer''append-3
-LIRInsertionBuffer''appendNew-3
-LIRInsertionBuffer''countAt-2
 LIRInsertionBuffer''finish-1
-LIRInsertionBuffer''indexAt-2
 LIRInsertionBuffer''init-2
 LIRInsertionBuffer''initialized-1
-LIRInsertionBuffer''numberOfInsertionPoints-1
-LIRInsertionBuffer''setCountAt-3
 LIRInsertionBuffer'new-0
 LIRInstruction''forEachAlive-2i
 LIRInstruction''forEachAlive-2v
@@ -2832,18 +2542,15 @@ LabelOp''getIncomingSize-1
 LabelOp''getIncomingValue-2
 LabelOp''isPhiIn-1
 LabelOp''setIncomingValues-2
-LabelOp''setNumberOfPhis-2
 LabelOp''setPhiValues-2
 LabelOp'new-2
 LabelRef''getTargetBlock-1
 LabelRef''label-1
-LabelRef'forSuccessor-3
-LabelRef'new-3
+LabelRef'new-3
 LargeLocalLiveness'new-3
 Lazy'new-1
 LazySnippetInfo'new-2
 LeaOp'new-3
-LeftShiftNode'canonical-5
 LeftShiftNode'create-2
 LeftShiftNode'new-2
 LessThanOp'new-0
@@ -2910,7 +2617,6 @@ LSLifetimeAnalysisPhase''isIntervalInLoop-3
 LSLifetimeAnalysisPhase''numberInstructions-1
 LSLifetimeAnalysisPhase'new-1
 LSLifetimeAnalysisPhase'registerPriorityOfInputOperand-1
-LSLifetimeAnalysisPhase'trimClone-1
 LSOptimizeSpillPositionPhase'new-1
 LinearScanPhase'new-0
 LSRegisterAllocationPhase'new-1
@@ -2921,7 +2627,6 @@ LSResolveDataFlowPhase''resolveFindInsertPos-4
 LSResolveDataFlowPhase'new-1
 LinearScanWalker''allocFreeRegister-2
 LinearScanWalker''allocLockedRegister-2
-LinearScanWalker''changeSpillState-3
 LinearScanWalker''combineSpilledIntervals-2
 LinearScanWalker''excludeFromUse-2
 LinearScanWalker''findOptimalSplitPos-4
@@ -2954,7 +2659,6 @@ LinearScanWalker'isMove-3
 LinearScanWalker'new-3
 LoadCacheEntry'new-2
 LoadConfigValueOp'new-2
-LoadFieldNode'canonical-6
 LoadFieldNode'create-2
 LoadFieldNode'create-4
 LoadFieldNode'createOverrideStamp-3
@@ -2965,19 +2669,12 @@ LoadHubNode'findSynonym-2
 LoadHubNode'new-1
 LoadHubNode'new-2
 LoadIndexedNode'create-3
-LoadIndexedNode'createStamp-2
-LoadIndexedNode'determinePreciseArrayElementType-2
 LoadIndexedNode'new-3
 LoadIndexedNode'new-4
-LoadIndexedNode'tryConstantFold-2
 LoadIndexedPointerNode'new-3
 LoadMetaspaceConstantOp'new-2
 LoadObjectConstantOp'new-2
 LoadSnippetVarargParameterNode'new-3
-LocalLiveness''computeLiveness-2
-LocalLiveness''computeLocalLiveness-3
-LocalLiveness''loadTwo-3
-LocalLiveness''storeTwo-3
 LocalLiveness'compute-4
 LocalLiveness'new-1
 LocationSet''add-2
@@ -3001,7 +2698,6 @@ LogicConstantNode'new-1
 LogicConstantNode'tautology-0
 LogicConstantNode'tautology-1
 LogicNegationNode'create-1
-LogicNegationNode'findSynonym-1
 LogicNegationNode'new-1
 LogicNode''isContradiction-1
 LogicNode''isTautology-1
@@ -3058,8 +2754,6 @@ LoopEx''nodesInLoopBranch-3
 LoopEx''reassociateInvariants-1
 LoopEx''size-1
 LoopEx''whole-1
-LoopEx'addSub-3
-LoopEx'mul-3
 LoopEx'new-2
 LoopExitNode''proxies-1
 LoopExitNode''removeProxies-1
@@ -3075,7 +2769,6 @@ LoopFragment'computeNodes-2
 LoopFragment'computeNodes-3
 LoopFragment'computeNodes-4
 LoopFragment'isLoopNode-3
-LoopFragment'markFloating-4
 LoopFragment'new-1
 LoopFragment'new-2
 LoopFragment'toHirBlocks-1
@@ -3120,10 +2813,7 @@ LoopsData''detectedCountedLoops-1
 LoopsData''loop-2
 LoopsData'new-1
 LowTier'new-0
-LowerGuards''insertLoopExits-2
-LowerGuards''lowerToIf-2
 LowerGuards'new-1
-LowerOp''canonicalizeXLowerXPlusA-5
 LowerOp''getSucceedingStampForX-5
 LowerOp''getSucceedingStampForXLowerXPlusA-4
 LowerOp''max-4
@@ -3165,7 +2855,6 @@ Lowerer'writeBarrierSnippets
 LoweringPhase'new-2
 LoweringPhase'processBlock-1
 LoweringPhase'processBlockBounded-1
-LoweringRound'new-1
 LoweringStage'HIGH_TIER
 LoweringStage'LOW_TIER
 LoweringStage'MID_TIER
@@ -3181,13 +2870,11 @@ MacroNode''replaceWithInvoke-1
 MacroNode'new-5*
 MacroStateSplitNode'new-5*
 MapReplacement'new-1
-MarkedNodeIterator''forward-1
 MarkedNodeIterator'new-1
 MaterializationUsageReplacer'new-5
 MaterializedObjectState'new-2
 MathUtil'add-3
 MathUtil'divBefore-4
-MathUtil'fixedDivBefore-5
 MathUtil'mul-3
 MathUtil'sub-3
 MathUtil'unsignedDivBefore-4
@@ -3218,9 +2905,7 @@ MergeProcessor''getPhiValueAt-3
 MergeProcessor''getPhis-1
 MergeProcessor''getPredecessor-2
 MergeProcessor''graph-1
-MergeProcessor''setNewState-2
 MergeProcessor''setPhiInput-4
-MergeProcessor''setStateIndexes-2
 MergeProcessor'new-1
 MetaspaceOpcode'FROM_POINTER
 MetaspaceOpcode'IS_NULL
@@ -3236,10 +2921,6 @@ MethodCallTargetNode''returnKind-1
 MethodCallTargetNode'devirtualizeCall-4
 MethodCallTargetNode'findSpecialCallTarget-4
 MethodCallTargetNode'new-4
-MethodHandleNode'createTargetInvokeNode-6
-MethodHandleNode'getInvokeBasicTarget-7
-MethodHandleNode'getLinkToTarget-7
-MethodHandleNode'maybeCastArgument-4
 MethodHandleNode'new-6*
 MethodHandleNode'tryResolveTargetInvoke-7*
 MethodHandlePlugin'new-2
@@ -3261,10 +2942,6 @@ MonitorExitNode''clearEscapedReturnValue-1
 MonitorExitNode'new-3
 MonitorIdNode''setLockDepth-2
 MonitorIdNode'new-1
-MonitorSnippets'inlineFastLockSupported-0
-MonitorSnippets'tryEnterBiased-5
-MonitorSnippets'tryEnterInflated-4
-MonitorSnippets'tryExitInflated-4
 MonitorTemplates''lower-3i
 MonitorTemplates''lower-3o
 MonitorTemplates'new-1
@@ -3293,7 +2970,6 @@ MoveToRegOp'new-3
 Mul'new-2
 MulHigh'new-2
 MulNode'canonical-3
-MulNode'canonical-5
 MulNode'create-2
 MulNode'new-2
 NameAndType''getName-2
@@ -3301,7 +2977,6 @@ NameAndType''getType-2
 NameAndType'new-1
 NamedLocationIdentity'ARRAY_LENGTH_LOCATION
 NamedLocationIdentity'FINAL_LOCATION
-NamedLocationIdentity'create-2
 NamedLocationIdentity'getArrayLocation-1
 NamedLocationIdentity'immutable-1
 NamedLocationIdentity'mutable-1
@@ -3332,13 +3007,8 @@ NewInstanceStub'edenAllocate-1
 NewInstanceStub'new-1
 NewInstanceStub'refillAllocate-3
 NewObjectSnippets'MAX_ARRAY_FAST_PATH_ALLOCATION_LENGTH
-NewObjectSnippets'allocateArrayDynamicImpl-8
-NewObjectSnippets'allocateArrayImpl-9
-NewObjectSnippets'allocateInstanceDynamicHelper-4
 NewObjectSnippets'allocateInstanceHelper-6
-NewObjectSnippets'dynamicNewInstanceStub-1
 NewObjectSnippets'emitPrefetchAllocate-2
-NewObjectSnippets'fillMemory-6
 NewObjectSnippets'formatArray-8
 NewObjectSnippets'formatObject-6
 NewObjectSnippets'formatObjectForStub-4
@@ -3371,19 +3041,13 @@ Node''isAlive-1
 Node''isDeleted-1
 Node''isUnregistered-1
 Node''markDeleted-1
-Node''maybeNotifyInputChanged-2
 Node''maybeNotifyZeroUsages-2
-Node''movUsageFromEndToExtraUsages-2
-Node''movUsageFromEndToIndexOne-1
-Node''movUsageFromEndToIndexZero-1
 Node''removeThisFromUsages-2
 Node''removeUsage-2
 Node''replaceAndDelete-2
 Node''replaceAtAllUsages-3
 Node''replaceAtMatchingUsages-3
-Node''replaceAtMatchingUsages-4
 Node''replaceAtPredecessor-2
-Node''replaceAtUsage-4
 Node''replaceAtUsages-2
 Node''replaceAtUsages-3
 Node''replaceAtUsagesAndDelete-2
@@ -3422,13 +3086,10 @@ NodeBitMap''markAll-2
 NodeBitMap''markAndGrow-2
 NodeBitMap''nextMarkedNode-2
 NodeBitMap'copy-1
-NodeBitMap'getPartOfWord-2
 NodeBitMap'new-1
-NodeClass''addIterableId-2
 NodeClass''applyInputs-3
 NodeClass''applySuccessors-3
 NodeClass''dataEquals-3
-NodeClass''equalEdges-4
 NodeClass''equalInputs-3
 NodeClass''equalSuccessors-3
 NodeClass''getEdges-2
@@ -3448,15 +3109,9 @@ NodeClass'MAX_LIST_EDGES
 NodeClass'NEXT_EDGE
 NodeClass'OFFSET_MASK
 NodeClass'addGraphDuplicate-5
-NodeClass'applyEdges-3
 NodeClass'computeIterationMask-3
-NodeClass'createNodeDuplicates-4
-NodeClass'deepEquals-2
 NodeClass'new-2
 NodeClass'replaceFirstEdge-4
-NodeClass'transferEdges-6
-NodeClass'transferEdgesDifferentNodeClass-5
-NodeClass'updateEdgeListCopy-4
 NodeClass'updateEdgesInPlace-3
 NodeClosure'new-0
 NodeCost''getUsages-1
@@ -3486,7 +3141,6 @@ NodeList'new-2i
 NodeList'new-2s
 NodeLoopInfo'new-2
 NodeMap''capacity-1
-NodeMap''checkAndGrow-2
 NodeMap''getAndGrow-2
 NodeMap''getKey-2
 NodeMap''isNew-2
@@ -3499,7 +3153,6 @@ NodeMark''isStart-1
 NodeMark'new-1
 NodeStack''clear-1
 NodeStack''get-2
-NodeStack''grow-1
 NodeStack''isEmpty-1
 NodeStack''peek-1
 NodeStack''pop-1
@@ -3589,23 +3242,13 @@ OptimisticOptimizations'new-1
 Optimization'RemoveNeverExecutedCode
 Optimization'UseLoopLimitChecks
 Optimization'UseTypeCheckedInlining
-OptimizingLinearScanWalker''optimize-5
-OptimizingLinearScanWalker''optimizeBlock-2
-OptimizingLinearScanWalker''splitRegisterInterval-3
 OptimizingLinearScanWalker'new-3
 Optionality'Optional
 Optionality'Required
 Or'new-2
-OrNode'canonical-5
 OrNode'create-2
 OrNode'new-2
 PEMergeProcessor''getPhi-3
-PEMergeProcessor''getPhiCached-3
-PEMergeProcessor''getValuePhisCached-3
-PEMergeProcessor''isSingleUsageAllocation-4
-PEMergeProcessor''mergeObjectEntry-5
-PEMergeProcessor''mergeObjectStates-4
-PEMergeProcessor''processPhi-3
 PEMergeProcessor'new-2
 PEReadEliminationBlockState''addReadCache-8
 PEReadEliminationBlockState''getReadCache-6
@@ -3613,18 +3256,7 @@ PEReadEliminationBlockState''killReadCache-1
 PEReadEliminationBlockState''killReadCache-3
 PEReadEliminationBlockState'copy-1
 PEReadEliminationBlockState'new-0
-PEReadEliminationClosure''processArrayLength-4
-PEReadEliminationClosure''processLoadField-4
-PEReadEliminationClosure''processLoadIndexed-4
-PEReadEliminationClosure''processStoreField-4
-PEReadEliminationClosure''processStoreIndexed-4
-PEReadEliminationClosure''processUnbox-4
-PEReadEliminationClosure''processUnsafeLoad-4
-PEReadEliminationClosure''processUnsafeStore-4
 PEReadEliminationClosure'new-1
-PEReadEliminationClosure'processIdentity-2
-PEReadEliminationMergeProcessor''mergeReadCache-2
-PEReadEliminationMergeProcessor''mergeReadCachePhi-7
 PEReadEliminationMergeProcessor'new-2
 ParameterNode'new-2
 PartialEscapeBlockState''addLock-3
@@ -3637,7 +3269,6 @@ PartialEscapeBlockState''getObjectState-2n
 PartialEscapeBlockState''getObjectStateOptional-2i
 PartialEscapeBlockState''getObjectStateOptional-2n
 PartialEscapeBlockState''materializeBefore-4
-PartialEscapeBlockState''materializeWithCommit-8
 PartialEscapeBlockState''removeLock-2
 PartialEscapeBlockState''resetObjectStates-2
 PartialEscapeBlockState''setEntry-4
@@ -3647,26 +3278,13 @@ PartialEscapeBlockState'identicalObjectStates-1
 PartialEscapeBlockState'identicalObjectStates-2
 PartialEscapeBlockState'new-0
 PartialEscapeClosure''addVirtualAlias-3
-PartialEscapeClosure''addVirtualMappings-5
-PartialEscapeClosure''collectLockedVirtualObjects-3
-PartialEscapeClosure''collectReferencedVirtualObjects-3
 PartialEscapeClosure''ensureMaterialized-5
 PartialEscapeClosure''getAlias-2
 PartialEscapeClosure''getAliasAndResolve-3
 PartialEscapeClosure''getObjectState-3
-PartialEscapeClosure''markVirtualUsages-2
-PartialEscapeClosure''prepareCanonicalNode-4
-PartialEscapeClosure''processNodeInputs-5
-PartialEscapeClosure''processNodeInternal-5
-PartialEscapeClosure''processNodeWithScalarReplacedInputs-5
-PartialEscapeClosure''processNodeWithState-4
-PartialEscapeClosure''processVirtualizable-5
 PartialEscapeClosure''requiresProcessing-2
 PartialEscapeClosure''virtualize-3
-PartialEscapeClosure'getUniqueFramestate-2
 PartialEscapeClosure'new-1
-PartialEscapeClosure'processMaterializedAtLoopExit-7
-PartialEscapeClosure'processVirtualAtLoopExit-6
 PartialEscapeClosure'updateStatesForMaterialized-3
 PartialEscapePhase'new-2
 PartialEscapePhase'new-3
@@ -3699,7 +3317,6 @@ PiNode'new-2
 PiNode'new-3
 Placeholder'new-1
 PlaceholderStamp'SINGLETON
-PlaceholderStamp'new-0
 Plugins''appendInlineInvokePlugin-2
 Plugins''appendNodePlugin-2
 Plugins''appendTypePlugin-2
@@ -3768,20 +3385,7 @@ PropagateDeoptimizeProbabilityPhase'new-0
 ProxyNode'forGuard-3
 ProxyNode'forValue-3
 ProxyNode'new-2
-RMEOptimization''doOptimize-2
-RMEOptimization''eliminateMoves-2
-RMEOptimization''getOffset-2
-RMEOptimization''getStateIdx-2
-RMEOptimization''initBlockData-2
-RMEOptimization''solveDataFlow-2
-RMEOptimization''updateState-4
-RMEOptimization'INIT_VALUE
-RMEOptimization'clearValues-2
-RMEOptimization'copyState-2
-RMEOptimization'encodeValueNum-2
-RMEOptimization'isEligibleMove-1
-RMEOptimization'isObjectValue-1
-RMEOptimization'mergeState-3
+RMEOptimization''doOptimize-2
 RMEOptimization'new-1
 RMIOp'new-5
 RMOp'new-4
@@ -3803,14 +3407,12 @@ RawConditionalEliminationVisitor''processNode-2
 RawConditionalEliminationVisitor''processUnary-2
 RawConditionalEliminationVisitor''registerCombinedStamps-2
 RawConditionalEliminationVisitor''registerCondition-3
-RawConditionalEliminationVisitor''registerIntegerSwitch-3
 RawConditionalEliminationVisitor''registerNewCondition-3
 RawConditionalEliminationVisitor''registerNewStamp-3
 RawConditionalEliminationVisitor''registerNewValueStamp-3
 RawConditionalEliminationVisitor''replaceConstantInputs-2
 RawConditionalEliminationVisitor''replaceInput-4
 RawConditionalEliminationVisitor''tryProveCondition-2
-RawConditionalEliminationVisitor'getBlock-2
 RawConditionalEliminationVisitor'new-2
 RawData'new-2
 RawEdgesIterator''advanceInput-1
@@ -3829,12 +3431,8 @@ ReadEliminationBlockState''killReadCache-1
 ReadEliminationBlockState''killReadCache-2
 ReadEliminationBlockState'copy-1
 ReadEliminationBlockState'new-0
-ReadEliminationClosure'areValuesReplaceable-3
-ReadEliminationClosure'getGuard-1
 ReadEliminationClosure'new-2
-ReadEliminationClosure'processIdentity-2
 ReadEliminationMergeProcessor''getCachedPhi-3
-ReadEliminationMergeProcessor''mergeReadCachePhi-4
 ReadEliminationMergeProcessor'new-1
 ReadNode'canonicalizeRead-4
 ReadNode'new-4
@@ -3943,7 +3541,6 @@ ReplacementsUtil'writePendingDeoptimization-2
 ReplacementsUtil'writeTlabTop-2
 ResolvedJavaMethodBytecode'new-1
 ResolvedJavaMethodBytecodeProvider'INSTANCE
-ResolvedJavaMethodBytecodeProvider'new-0
 ResolvedMethodHandleCallTargetNode'new-7
 ReturnNode''setMemoryMap-2
 ReturnNode'new-1
@@ -3951,17 +3548,13 @@ ReturnNode'new-2
 ReturnOp'new-1
 ReturnToCallerData'containsReturnValue-2
 ReturnToCallerData'new-2
-RightShiftNode'canonical-5
 RightShiftNode'create-2
 RightShiftNode'new-2
 SSALinearScan'new-3
-SSALinearScanEliminateSpillMovePhase''isPhiResolutionMove-4
 SSALinearScanEliminateSpillMovePhase'new-1
 SSALinearScanLifetimeAnalysisPhase'new-1
 SSALinearScanLifetimeAnalysisPhase'setHint-3
 SSALinearScanResolveDataFlowPhase'new-1
-SSAMoveResolver''getStackArrayIndex-2i
-SSAMoveResolver''getStackArrayIndex-2s
 SSAMoveResolver'new-1
 SSAUtil'forEachPhiRegisterHint-6
 SSAUtil'forEachPhiValuePair-4
@@ -3984,22 +3577,10 @@ Scale'fromInt-1
 Scale'fromShift-1
 ScheduleInstance''calcLatestBlock-9
 ScheduleInstance''run-3
-ScheduleInstance'calcBlockForUsage-4
 ScheduleInstance'checkKillsBetween-3
-ScheduleInstance'checkWatchList-6a
-ScheduleInstance'checkWatchList-6b
-ScheduleInstance'fillKillSet-2
-ScheduleInstance'getUnproxifiedUncompressed-1
-ScheduleInstance'isImplicitNullOpportunity-2
 ScheduleInstance'new-0
 ScheduleInstance'new-1
-ScheduleInstance'processInputs-4
-ScheduleInstance'processNodes-5
-ScheduleInstance'processStack-5
 ScheduleInstance'selectLatestBlock-7
-ScheduleInstance'sortIntoList-6
-ScheduleInstance'sortNodesLatestWithinBlock-6b
-ScheduleInstance'sortNodesLatestWithinBlock-6c
 SchedulePhase'new-0
 SchedulePhase'new-1
 SchedulePhase'run-3
@@ -4030,11 +3611,8 @@ ShiftOp'new-1
 Shl'new-0
 ShortCircuitOrNode''canonicalizeNegation-3
 ShortCircuitOrNode'new-5
-ShortCircuitOrNode'optimizeShortCircuit-4
-ShortCircuitOrNode'skipThroughPisAndProxies-1
 Shr'new-0
 SignExtend'new-0
-SignExtendNode'canonical-4
 SignExtendNode'create-2
 SignExtendNode'create-3
 SignExtendNode'new-2
@@ -4043,7 +3621,6 @@ SignedDivNode'canonical-2
 SignedDivNode'canonical-3
 SignedDivNode'create-2
 SignedDivNode'new-2
-SignedRemNode'canonical-4
 SignedRemNode'create-2
 SignedRemNode'new-2
 Signedness'SIGNED
@@ -4073,14 +3650,11 @@ SnippetStub''getConstantParameterValue-3
 SnippetStub'new-2
 SnippetTemplate''forBoxed-3
 SnippetTemplate''getConstantArgs-2
-SnippetTemplate''inlineSnippet-4
 SnippetTemplate''instantiate-4x
 SnippetTemplate''instantiate-4y
 SnippetTemplate''instantiate-5x
 SnippetTemplate''instantiate-5y
-SnippetTemplate''replaceMemoryUsages-3
 SnippetTemplate''rewireFrameStates-3
-SnippetTemplate''updateStamps-3
 SnippetTemplate'DEFAULT_REPLACER
 SnippetTemplate'explodeLoops-1
 SnippetTemplate'new-2
@@ -4159,7 +3733,6 @@ StubForeignCallNode''operands-2
 StubForeignCallNode'new-3*
 StubStartNode'new-1
 Sub'new-2
-SubNode'canonical-5
 SubNode'create-2
 SubNode'new-2
 SuccessorEdges'new-2
@@ -4196,7 +3769,6 @@ TypeReference''asExactReference-1
 TypeReference'create-1
 TypeReference'createExactTrusted-1
 TypeReference'createTrusted-1
-TypeReference'filterInterfaceTypesOut-1
 TypedGraphNodeIterator'new-2
 UMulHigh'new-2
 UShr'new-0
@@ -4208,7 +3780,6 @@ UnaryOp'new-1
 UnaryOpLogicNode''getSucceedingStampForValue-3
 UnaryOpLogicNode'new-1
 UnboxNode'create-2
-UnboxNode'findSynonym-2
 UnboxNode'new-2
 UncompressPointerOp'new-5
 UnpackEndianHalfNode'create-2
@@ -4232,7 +3803,6 @@ UnsafeCompareAndSwapNode'new-6
 UnsafeLoadCacheEntry'new-3
 UnsafeLoadTemplates''lower-3
 UnsafeLoadTemplates'new-0
-UnsignedDivNode'canonical-4
 UnsignedDivNode'create-2
 UnsignedDivNode'new-2
 UnsignedLong''asLong-1
@@ -4253,12 +3823,10 @@ UnsignedMath'belowOrEqual-2i
 UnsignedMath'belowOrEqual-2l
 UnsignedMath'belowThan-2i
 UnsignedMath'belowThan-2l
-UnsignedMulHighNode'canonical-2
 UnsignedMulHighNode'new-2
 UnsignedRemNode'canonical-4
 UnsignedRemNode'create-2
 UnsignedRemNode'new-2
-UnsignedRightShiftNode'canonical-5
 UnsignedRightShiftNode'create-2
 UnsignedRightShiftNode'new-2
 Unsupported'new-2
@@ -4334,7 +3902,6 @@ VirtualStackSlotRange''getObjects-1
 VirtualStackSlotRange'new-4
 VirtualState'new-0
 VirtualizableInvokeMacroNode'new-5*
-VirtualizerTool''getIllegalConstant-1
 VirtualizerTool''reset-5
 VirtualizerTool'new-1
 VoidStamp'instance
@@ -4490,7 +4057,6 @@ WordOpcode'WRITE_BARRIERED
 WordOpcode'WRITE_OBJECT
 WordOpcode'WRITE_POINTER
 WordOperationPlugin''casOp-7
-WordOperationPlugin''comparisonOp-5
 WordOperationPlugin''convert-5
 WordOperationPlugin''createStoreIndexedNode-4
 WordOperationPlugin''fromSigned-3
@@ -4499,7 +4065,6 @@ WordOperationPlugin''makeAddress-4
 WordOperationPlugin''readOp-6
 WordOperationPlugin''toUnsigned-4
 WordOperationPlugin''writeOp-7
-WordOperationPlugin'createBinaryNodeInstance-3
 WordOperationPlugin'new-0
 WordOperationPlugin'readOp-6
 WordTypes'asKind-1
@@ -4512,13 +4077,6 @@ WordTypes'word
 WordTypes'wordKind
 WorkListEntry'new-2
 WriteBarrier'new-0
-WriteBarrierAdditionPhase''addAtomicReadWriteNodeBarriers-3
-WriteBarrierAdditionPhase''addCASBarriers-3
-WriteBarrierAdditionPhase''addG1PostWriteBarrier-6
-WriteBarrierAdditionPhase''addReadNodeBarriers-3
-WriteBarrierAdditionPhase''addSerialPostWriteBarrier-6
-WriteBarrierAdditionPhase''addWriteNodeBarriers-3
-WriteBarrierAdditionPhase'addG1PreWriteBarrier-6
 WriteBarrierAdditionPhase'new-0
 WriteBarrierSnippets'GC_CARD_LOCATION
 WriteBarrierSnippets'GC_INDEX_LOCATION
@@ -4526,13 +4084,11 @@ WriteBarrierSnippets'GC_LOG_LOCATION
 WriteBarrierTemplates'new-1
 WriteNode'new-4
 Xor'new-2
-XorNode'canonical-5
 XorNode'create-2
 XorNode'new-2
 ZeroData'create-2
 ZeroData'new-2
 ZeroExtend'new-0
-ZeroExtendNode'canonical-5
 ZeroExtendNode'create-2
 ZeroExtendNode'create-3
 ZeroExtendNode'create-4
@@ -5797,7 +5353,6 @@ ZeroExtendNode'new-4
 ,   (defr                   Utf8                                        ClassfileConstant)
 
 (defr                       ClassfileConstantPool                       #_"ConstantPool")
-(defr                       Closure0)
 (defr                       CodeBuffer)
 
 (defr                       CompareOp)
@@ -8413,6 +7968,188 @@ ZeroExtendNode'new-4
         nil
     )
 
+    (defn- #_"int" Assembler''prefixAndEncode-3b [#_"Assembler" this, #_"int" regEnc, #_"boolean" byte-inst?]
+        (if (< regEnc 8)
+            (do
+                (when (and byte-inst? (<= 4 regEnc))
+                    (Assembler''emitByte-2 this, Prefix'REX)
+                )
+                regEnc
+            )
+            (do
+                (Assembler''emitByte-2 this, Prefix'REXB)
+                (- regEnc 8)
+            )
+        )
+    )
+
+    (defn- #_"int" Assembler''prefixAndEncode-2 [#_"Assembler" this, #_"int" regEnc]
+        (Assembler''prefixAndEncode-3b this, regEnc, false)
+    )
+
+    (defn- #_"int" Assembler''prefixqAndEncode-2 [#_"Assembler" this, #_"int" regEnc]
+        (if (< regEnc 8)
+            (do
+                (Assembler''emitByte-2 this, Prefix'REXW)
+                regEnc
+            )
+            (do
+                (Assembler''emitByte-2 this, Prefix'REXWB)
+                (- regEnc 8)
+            )
+        )
+    )
+
+    (defn- #_"int" Assembler''prefixAndEncode-5 [#_"Assembler" this, #_"int" dstEncoding, #_"boolean" dstIsByte, #_"int" srcEncoding, #_"boolean" srcIsByte]
+        (let [
+            #_"int" src srcEncoding
+            #_"int" dst dstEncoding
+            [src dst]
+                (if (< dst 8)
+                    (if (< src 8)
+                        (do
+                            (when (or (and srcIsByte (<= 4 src)) (and dstIsByte (<= 4 dst)))
+                                (Assembler''emitByte-2 this, Prefix'REX)
+                            )
+                            [src dst]
+                        )
+                        (do
+                            (Assembler''emitByte-2 this, Prefix'REXB)
+                            [(- src 8) dst]
+                        )
+                    )
+                    (if (< src 8)
+                        (do (Assembler''emitByte-2 this, Prefix'REXR)  [   src    (- dst 8)])
+                        (do (Assembler''emitByte-2 this, Prefix'REXRB) [(- src 8) (- dst 8)])
+                    )
+                )
+        ]
+            (| (<< dst 3) src)
+        )
+    )
+
+    (defn- #_"int" Assembler''prefixAndEncode-3i [#_"Assembler" this, #_"int" dstEnc, #_"int" srcEnc]
+        (Assembler''prefixAndEncode-5 this, dstEnc, false, srcEnc, false)
+    )
+
+    ;;;
+     ; Creates prefix and the encoding of the lower 6 bits of the ModRM-Byte. It emits an operand
+     ; prefix. If the given operands exceed 3 bits, the 4th bit is encoded in the prefix.
+     ;
+     ; @param regEncoding the encoding of the register part of the ModRM-Byte
+     ; @param rmEncoding the encoding of the r/m part of the ModRM-Byte
+     ; @return the lower 6 bits of the ModRM-Byte that should be emitted
+     ;;
+    (defn- #_"int" Assembler''prefixqAndEncode-3 [#_"Assembler" this, #_"int" regEncoding, #_"int" rmEncoding]
+        (let [
+            #_"int" rm rmEncoding
+            #_"int" reg regEncoding
+            [rm reg]
+                (if (< reg 8)
+                    (if (< rm 8)
+                        (do (Assembler''emitByte-2 this, Prefix'REXW)   [   rm    reg])
+                        (do (Assembler''emitByte-2 this, Prefix'REXWB)  [(- rm 8) reg])
+                    )
+                    (if (< rm 8)
+                        (do (Assembler''emitByte-2 this, Prefix'REXWR)  [   rm    (- reg 8)])
+                        (do (Assembler''emitByte-2 this, Prefix'REXWRB) [(- rm 8) (- reg 8)])
+                    )
+                )
+        ]
+            (| (<< reg 3) rm)
+        )
+    )
+
+    (defn- #_"boolean" Assembler'needsRex-1 [#_"Register" reg]
+        (<= Assembler'MinEncodingNeedsRex (.encoding reg))
+    )
+
+    (defn- #_"void" Assembler''prefix-2 [#_"Assembler" this, #_"AMD64Address" adr]
+        (if (Assembler'needsRex-1 (:base adr))
+            (if (Assembler'needsRex-1 (:index adr))
+                (Assembler''emitByte-2 this, Prefix'REXXB)
+                (Assembler''emitByte-2 this, Prefix'REXB)
+            )
+            (when (Assembler'needsRex-1 (:index adr))
+                (Assembler''emitByte-2 this, Prefix'REXX)
+            )
+        )
+        nil
+    )
+
+    (defn- #_"void" Assembler''prefixq-2 [#_"Assembler" this, #_"AMD64Address" adr]
+        (if (Assembler'needsRex-1 (:base adr))
+            (if (Assembler'needsRex-1 (:index adr))
+                (Assembler''emitByte-2 this, Prefix'REXWXB)
+                (Assembler''emitByte-2 this, Prefix'REXWB)
+            )
+            (if (Assembler'needsRex-1 (:index adr))
+                (Assembler''emitByte-2 this, Prefix'REXWX)
+                (Assembler''emitByte-2 this, Prefix'REXW)
+            )
+        )
+        nil
+    )
+
+    (defn- #_"void" Assembler''prefix-4 [#_"Assembler" this, #_"AMD64Address" adr, #_"Register" reg, #_"boolean" byte-inst?]
+        (if (< (.encoding reg) 8)
+            (if (Assembler'needsRex-1 (:base adr))
+                (if (Assembler'needsRex-1 (:index adr))
+                    (Assembler''emitByte-2 this, Prefix'REXXB)
+                    (Assembler''emitByte-2 this, Prefix'REXB)
+                )
+                (cond
+                    (Assembler'needsRex-1 (:index adr))
+                        (Assembler''emitByte-2 this, Prefix'REXX)
+                    (and byte-inst? (<= 4 (.encoding reg)))
+                        (Assembler''emitByte-2 this, Prefix'REX)
+                )
+            )
+            (if (Assembler'needsRex-1 (:base adr))
+                (if (Assembler'needsRex-1 (:index adr))
+                    (Assembler''emitByte-2 this, Prefix'REXRXB)
+                    (Assembler''emitByte-2 this, Prefix'REXRB)
+                )
+                (if (Assembler'needsRex-1 (:index adr))
+                    (Assembler''emitByte-2 this, Prefix'REXRX)
+                    (Assembler''emitByte-2 this, Prefix'REXR)
+                )
+            )
+        )
+        nil
+    )
+
+    (defn- #_"void" Assembler''prefix-3 [#_"Assembler" this, #_"AMD64Address" adr, #_"Register" reg]
+        (Assembler''prefix-4 this, adr, reg, false)
+        nil
+    )
+
+    (defn- #_"void" Assembler''prefixq-3 [#_"Assembler" this, #_"AMD64Address" adr, #_"Register" src]
+        (if (< (.encoding src) 8)
+            (if (Assembler'needsRex-1 (:base adr))
+                (if (Assembler'needsRex-1 (:index adr))
+                    (Assembler''emitByte-2 this, Prefix'REXWXB)
+                    (Assembler''emitByte-2 this, Prefix'REXWB)
+                )
+                (if (Assembler'needsRex-1 (:index adr))
+                    (Assembler''emitByte-2 this, Prefix'REXWX)
+                    (Assembler''emitByte-2 this, Prefix'REXW)
+                )
+            )
+            (if (Assembler'needsRex-1 (:base adr))
+                (if (Assembler'needsRex-1 (:index adr))
+                    (Assembler''emitByte-2 this, Prefix'REXWRXB)
+                    (Assembler''emitByte-2 this, Prefix'REXWRB)
+                )
+                (if (Assembler'needsRex-1 (:index adr))
+                    (Assembler''emitByte-2 this, Prefix'REXWRX)
+                    (Assembler''emitByte-2 this, Prefix'REXWR)
+                )
+            )
+        )
+        nil
+    )
+
     (defn #_"void" Assembler''addl-3ai [#_"Assembler" this, #_"AMD64Address" dst, #_"int" imm32]
         (AMD64MIOp''emit-5a (BinaryArithmetic''getMIOpcode-3 BinaryArithmetic'ADD, OperandSize'DWORD, (NumUtil'isByte-1i imm32)), this, OperandSize'DWORD, dst, imm32)
         nil
@@ -9404,188 +9141,6 @@ ZeroExtendNode'new-4
         ]
             (Assembler''emitByte-2 this, 0xff)
             (Assembler''emitByte-2 this, (| 0xc0 encode))
-        )
-        nil
-    )
-
-    (defn- #_"int" Assembler''prefixAndEncode-2 [#_"Assembler" this, #_"int" regEnc]
-        (Assembler''prefixAndEncode-3b this, regEnc, false)
-    )
-
-    (defn- #_"int" Assembler''prefixAndEncode-3b [#_"Assembler" this, #_"int" regEnc, #_"boolean" byte-inst?]
-        (if (< regEnc 8)
-            (do
-                (when (and byte-inst? (<= 4 regEnc))
-                    (Assembler''emitByte-2 this, Prefix'REX)
-                )
-                regEnc
-            )
-            (do
-                (Assembler''emitByte-2 this, Prefix'REXB)
-                (- regEnc 8)
-            )
-        )
-    )
-
-    (defn- #_"int" Assembler''prefixqAndEncode-2 [#_"Assembler" this, #_"int" regEnc]
-        (if (< regEnc 8)
-            (do
-                (Assembler''emitByte-2 this, Prefix'REXW)
-                regEnc
-            )
-            (do
-                (Assembler''emitByte-2 this, Prefix'REXWB)
-                (- regEnc 8)
-            )
-        )
-    )
-
-    (defn- #_"int" Assembler''prefixAndEncode-3i [#_"Assembler" this, #_"int" dstEnc, #_"int" srcEnc]
-        (Assembler''prefixAndEncode-5 this, dstEnc, false, srcEnc, false)
-    )
-
-    (defn- #_"int" Assembler''prefixAndEncode-5 [#_"Assembler" this, #_"int" dstEncoding, #_"boolean" dstIsByte, #_"int" srcEncoding, #_"boolean" srcIsByte]
-        (let [
-            #_"int" src srcEncoding
-            #_"int" dst dstEncoding
-            [src dst]
-                (if (< dst 8)
-                    (if (< src 8)
-                        (do
-                            (when (or (and srcIsByte (<= 4 src)) (and dstIsByte (<= 4 dst)))
-                                (Assembler''emitByte-2 this, Prefix'REX)
-                            )
-                            [src dst]
-                        )
-                        (do
-                            (Assembler''emitByte-2 this, Prefix'REXB)
-                            [(- src 8) dst]
-                        )
-                    )
-                    (if (< src 8)
-                        (do (Assembler''emitByte-2 this, Prefix'REXR)  [   src    (- dst 8)])
-                        (do (Assembler''emitByte-2 this, Prefix'REXRB) [(- src 8) (- dst 8)])
-                    )
-                )
-        ]
-            (| (<< dst 3) src)
-        )
-    )
-
-    ;;;
-     ; Creates prefix and the encoding of the lower 6 bits of the ModRM-Byte. It emits an operand
-     ; prefix. If the given operands exceed 3 bits, the 4th bit is encoded in the prefix.
-     ;
-     ; @param regEncoding the encoding of the register part of the ModRM-Byte
-     ; @param rmEncoding the encoding of the r/m part of the ModRM-Byte
-     ; @return the lower 6 bits of the ModRM-Byte that should be emitted
-     ;;
-    (defn- #_"int" Assembler''prefixqAndEncode-3 [#_"Assembler" this, #_"int" regEncoding, #_"int" rmEncoding]
-        (let [
-            #_"int" rm rmEncoding
-            #_"int" reg regEncoding
-            [rm reg]
-                (if (< reg 8)
-                    (if (< rm 8)
-                        (do (Assembler''emitByte-2 this, Prefix'REXW)   [   rm    reg])
-                        (do (Assembler''emitByte-2 this, Prefix'REXWB)  [(- rm 8) reg])
-                    )
-                    (if (< rm 8)
-                        (do (Assembler''emitByte-2 this, Prefix'REXWR)  [   rm    (- reg 8)])
-                        (do (Assembler''emitByte-2 this, Prefix'REXWRB) [(- rm 8) (- reg 8)])
-                    )
-                )
-        ]
-            (| (<< reg 3) rm)
-        )
-    )
-
-    (defn- #_"boolean" Assembler'needsRex-1 [#_"Register" reg]
-        (<= Assembler'MinEncodingNeedsRex (.encoding reg))
-    )
-
-    (defn- #_"void" Assembler''prefix-2 [#_"Assembler" this, #_"AMD64Address" adr]
-        (if (Assembler'needsRex-1 (:base adr))
-            (if (Assembler'needsRex-1 (:index adr))
-                (Assembler''emitByte-2 this, Prefix'REXXB)
-                (Assembler''emitByte-2 this, Prefix'REXB)
-            )
-            (when (Assembler'needsRex-1 (:index adr))
-                (Assembler''emitByte-2 this, Prefix'REXX)
-            )
-        )
-        nil
-    )
-
-    (defn- #_"void" Assembler''prefixq-2 [#_"Assembler" this, #_"AMD64Address" adr]
-        (if (Assembler'needsRex-1 (:base adr))
-            (if (Assembler'needsRex-1 (:index adr))
-                (Assembler''emitByte-2 this, Prefix'REXWXB)
-                (Assembler''emitByte-2 this, Prefix'REXWB)
-            )
-            (if (Assembler'needsRex-1 (:index adr))
-                (Assembler''emitByte-2 this, Prefix'REXWX)
-                (Assembler''emitByte-2 this, Prefix'REXW)
-            )
-        )
-        nil
-    )
-
-    (defn- #_"void" Assembler''prefix-3 [#_"Assembler" this, #_"AMD64Address" adr, #_"Register" reg]
-        (Assembler''prefix-4 this, adr, reg, false)
-        nil
-    )
-
-    (defn- #_"void" Assembler''prefix-4 [#_"Assembler" this, #_"AMD64Address" adr, #_"Register" reg, #_"boolean" byte-inst?]
-        (if (< (.encoding reg) 8)
-            (if (Assembler'needsRex-1 (:base adr))
-                (if (Assembler'needsRex-1 (:index adr))
-                    (Assembler''emitByte-2 this, Prefix'REXXB)
-                    (Assembler''emitByte-2 this, Prefix'REXB)
-                )
-                (cond
-                    (Assembler'needsRex-1 (:index adr))
-                        (Assembler''emitByte-2 this, Prefix'REXX)
-                    (and byte-inst? (<= 4 (.encoding reg)))
-                        (Assembler''emitByte-2 this, Prefix'REX)
-                )
-            )
-            (if (Assembler'needsRex-1 (:base adr))
-                (if (Assembler'needsRex-1 (:index adr))
-                    (Assembler''emitByte-2 this, Prefix'REXRXB)
-                    (Assembler''emitByte-2 this, Prefix'REXRB)
-                )
-                (if (Assembler'needsRex-1 (:index adr))
-                    (Assembler''emitByte-2 this, Prefix'REXRX)
-                    (Assembler''emitByte-2 this, Prefix'REXR)
-                )
-            )
-        )
-        nil
-    )
-
-    (defn- #_"void" Assembler''prefixq-3 [#_"Assembler" this, #_"AMD64Address" adr, #_"Register" src]
-        (if (< (.encoding src) 8)
-            (if (Assembler'needsRex-1 (:base adr))
-                (if (Assembler'needsRex-1 (:index adr))
-                    (Assembler''emitByte-2 this, Prefix'REXWXB)
-                    (Assembler''emitByte-2 this, Prefix'REXWB)
-                )
-                (if (Assembler'needsRex-1 (:index adr))
-                    (Assembler''emitByte-2 this, Prefix'REXWX)
-                    (Assembler''emitByte-2 this, Prefix'REXW)
-                )
-            )
-            (if (Assembler'needsRex-1 (:base adr))
-                (if (Assembler'needsRex-1 (:index adr))
-                    (Assembler''emitByte-2 this, Prefix'REXWRXB)
-                    (Assembler''emitByte-2 this, Prefix'REXWRB)
-                )
-                (if (Assembler'needsRex-1 (:index adr))
-                    (Assembler''emitByte-2 this, Prefix'REXWRX)
-                    (Assembler''emitByte-2 this, Prefix'REXWR)
-                )
-            )
         )
         nil
     )
@@ -10830,14 +10385,6 @@ ZeroExtendNode'new-4
  ; Shift operation with operand order of M1, MC or MI.
  ;;
 (class-ns AMD64Shift
-    (§ def #_"AMD64Shift" AMD64Shift'ROL (AMD64Shift'new-1 0))
-    (§ def #_"AMD64Shift" AMD64Shift'ROR (AMD64Shift'new-1 1))
-    (§ def #_"AMD64Shift" AMD64Shift'RCL (AMD64Shift'new-1 2))
-    (§ def #_"AMD64Shift" AMD64Shift'RCR (AMD64Shift'new-1 3))
-    (§ def #_"AMD64Shift" AMD64Shift'SHL (AMD64Shift'new-1 4))
-    (§ def #_"AMD64Shift" AMD64Shift'SHR (AMD64Shift'new-1 5))
-    (§ def #_"AMD64Shift" AMD64Shift'SAR (AMD64Shift'new-1 7))
-
     (defn- #_"AMD64Shift" AMD64Shift'new-1 [#_"int" code]
         (merge (AMD64Shift'class.)
             (hash-map
@@ -10847,6 +10394,14 @@ ZeroExtendNode'new-4
             )
         )
     )
+
+    (§ def #_"AMD64Shift" AMD64Shift'ROL (AMD64Shift'new-1 0))
+    (§ def #_"AMD64Shift" AMD64Shift'ROR (AMD64Shift'new-1 1))
+    (§ def #_"AMD64Shift" AMD64Shift'RCL (AMD64Shift'new-1 2))
+    (§ def #_"AMD64Shift" AMD64Shift'RCR (AMD64Shift'new-1 3))
+    (§ def #_"AMD64Shift" AMD64Shift'SHL (AMD64Shift'new-1 4))
+    (§ def #_"AMD64Shift" AMD64Shift'SHR (AMD64Shift'new-1 5))
+    (§ def #_"AMD64Shift" AMD64Shift'SAR (AMD64Shift'new-1 7))
 )
 
 ;;;
@@ -11640,6 +11195,30 @@ ZeroExtendNode'new-4
     )
 
     ;;;
+     ; Gets the length of the current bytecode.
+     ;;
+    (defn- #_"int" BytecodeStream''lengthOf-1 [#_"BytecodeStream" this]
+        (let [
+            #_"int" n (Bytecodes'lengthOf-1 (:opcode this))
+        ]
+            (when (zero? n) => n
+                (condp = (:opcode this)
+                    Bytecodes'TABLESWITCH
+                        (BytecodeSwitch'''size-1 (BytecodeTableSwitch'new-2 this, (:curBCI this)))
+                    Bytecodes'LOOKUPSWITCH
+                        (BytecodeSwitch'''size-1 (BytecodeLookupSwitch'new-2 this, (:curBCI this)))
+                    Bytecodes'WIDE
+                        (condp = (Bytes'beU1-2 (:code this), (inc (:curBCI this)))
+                            Bytecodes'RET  4
+                            Bytecodes'IINC 6
+                                           4 ;; a load or store bytecode
+                        )
+                )
+            )
+        )
+    )
+
+    ;;;
      ; Sets the bytecode index to the specified value. If {@code bci} is beyond the end of the array,
      ; #currentBC will return Bytecodes#END and other methods may throw ArrayIndexOutOfBoundsException.
      ;
@@ -11661,30 +11240,6 @@ ZeroExtendNode'new-4
                     this (assoc this :nextBCI (:curBCI this))
                 ]
                     this
-                )
-            )
-        )
-    )
-
-    ;;;
-     ; Gets the length of the current bytecode.
-     ;;
-    (defn- #_"int" BytecodeStream''lengthOf-1 [#_"BytecodeStream" this]
-        (let [
-            #_"int" n (Bytecodes'lengthOf-1 (:opcode this))
-        ]
-            (when (zero? n) => n
-                (condp = (:opcode this)
-                    Bytecodes'TABLESWITCH
-                        (BytecodeSwitch'''size-1 (BytecodeTableSwitch'new-2 this, (:curBCI this)))
-                    Bytecodes'LOOKUPSWITCH
-                        (BytecodeSwitch'''size-1 (BytecodeLookupSwitch'new-2 this, (:curBCI this)))
-                    Bytecodes'WIDE
-                        (condp = (Bytes'beU1-2 (:code this), (inc (:curBCI this)))
-                            Bytecodes'RET  4
-                            Bytecodes'IINC 6
-                                           4 ;; a load or store bytecode
-                        )
                 )
             )
         )
@@ -11903,14 +11458,14 @@ ZeroExtendNode'new-4
  ; BytecodeProvider that returns ResolvedJavaMethodBytecode objects.
  ;;
 (class-ns ResolvedJavaMethodBytecodeProvider
-    ;;;
-     ; A state-less, shared ResolvedJavaMethodBytecodeProvider instance.
-     ;;
-    (§ def #_"ResolvedJavaMethodBytecodeProvider" ResolvedJavaMethodBytecodeProvider'INSTANCE (ResolvedJavaMethodBytecodeProvider'new-0))
-
     (defn- #_"ResolvedJavaMethodBytecodeProvider" ResolvedJavaMethodBytecodeProvider'new-0 []
         (ResolvedJavaMethodBytecodeProvider'class.)
     )
+
+    ;;;
+     ; A state-less, shared ResolvedJavaMethodBytecodeProvider instance.
+     ;;
+    (def #_"ResolvedJavaMethodBytecodeProvider" ResolvedJavaMethodBytecodeProvider'INSTANCE (ResolvedJavaMethodBytecodeProvider'new-0))
 
     (defm ResolvedJavaMethodBytecodeProvider BytecodeProvider
         (#_"Bytecode" BytecodeProvider'''getBytecode-2 [#_"ResolvedJavaMethodBytecodeProvider" this, #_"ResolvedJavaMethod" method]
@@ -12367,6 +11922,14 @@ ZeroExtendNode'new-4
         )
     )
 
+    (defn- #_"ValueNode" AddressLowering'improveConstDisp-6 [#_"AMD64AddressNode" address, #_"ValueNode" original, #_"JavaConstant" constant, #_"ValueNode" other, #_"int" shift, #_"boolean" negateExtractedDisplacement]
+        (when (#_"JavaKind" .isNumericInteger (#_"JavaConstant" .getJavaKind constant)) => original
+            (when (AddressLowering'updateDisplacement-3 address, (<< (#_"JavaConstant" .asLong constant) shift), negateExtractedDisplacement) => original
+                other
+            )
+        )
+    )
+
     (defn- #_"ValueNode" AddressLowering'improveInput-4 [#_"AMD64AddressNode" address, #_"ValueNode" node, #_"int" shift, #_"boolean" negateExtractedDisplacement]
         (when (some? node)
             (let [
@@ -12398,14 +11961,6 @@ ZeroExtendNode'new-4
                     :else
                         node
                 )
-            )
-        )
-    )
-
-    (defn- #_"ValueNode" AddressLowering'improveConstDisp-6 [#_"AMD64AddressNode" address, #_"ValueNode" original, #_"JavaConstant" constant, #_"ValueNode" other, #_"int" shift, #_"boolean" negateExtractedDisplacement]
-        (when (#_"JavaKind" .isNumericInteger (#_"JavaConstant" .getJavaKind constant)) => original
-            (when (AddressLowering'updateDisplacement-3 address, (<< (#_"JavaConstant" .asLong constant) shift), negateExtractedDisplacement) => original
-                other
             )
         )
     )
@@ -12615,41 +12170,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"void" AddressLowering'tryOptimize-2 [#_"OffsetAddressNode" offsetAddress, #_"LoopEx" loop]
-        (loop-when [#_"InductionVariable" iv (get (LoopEx''getInductionVariables-1 loop) (:offset offsetAddress))] (some? iv)
-            (when (satisfies? DerivedInductionVariable iv)
-                (let [
-                    #_"ValueNode" value (InductionVariable'''valueNode-1 iv)
-                ]
-                    (when-not (Node''isDeleted-1 value)
-                        (when (and (satisfies? ZeroExtendNode value) (AddressLowering'applicableToImplicitZeroExtend-1 value))
-                            (let [
-                                #_"ValueNode" input (Unary'''getValue-1 value)
-                            ]
-                                (when (satisfies? AddNode input)
-                                    (cond
-                                        (satisfies? ConstantNode (:x input)) (AddressLowering'optimizeAdd-4 value, (:x input), (:y input), loop)
-                                        (satisfies? ConstantNode (:y input)) (AddressLowering'optimizeAdd-4 value, (:y input), (:x input), loop)
-                                    )
-                                )
-                            )
-                        )
-                        (recur (DerivedInductionVariable''getBase-1 iv))
-                    )
-                )
-            )
-        )
-        nil
-    )
-
-    ;;;
-     ; Given that Add(a, cst) is always positive, performs the following: ZeroExtend(Add(a, cst)) -> Add(SignExtend(a), SignExtend(cst)).
-     ;;
-    (defn- #_"void" AddressLowering'optimizeAdd-4 [#_"ZeroExtendNode" node, #_"ConstantNode" constant, #_"ValueNode" other, #_"LoopEx" loop]
-        (§ ass! node (Node''replaceAtUsages-2 node, (Graph''add-2 (:graph node), (AddNode'new-2 (AddressLowering'signExtend-2 other, loop), (ConstantNode'forLong-2 (#_"JavaConstant" .asInt (ValueNode''asJavaConstant-1 constant)), (:graph node))))))
-        nil
-    )
-
     ;;;
      ; Create a sign extend for {@code input}, or zero extend if {@code input} can be proven positive.
      ;;
@@ -12697,8 +12217,43 @@ ZeroExtendNode'new-4
         )
     )
 
+    ;;;
+     ; Given that Add(a, cst) is always positive, performs the following: ZeroExtend(Add(a, cst)) -> Add(SignExtend(a), SignExtend(cst)).
+     ;;
+    (defn- #_"void" AddressLowering'optimizeAdd-4 [#_"ZeroExtendNode" node, #_"ConstantNode" constant, #_"ValueNode" other, #_"LoopEx" loop]
+        (§ ass! node (Node''replaceAtUsages-2 node, (Graph''add-2 (:graph node), (AddNode'new-2 (AddressLowering'signExtend-2 other, loop), (ConstantNode'forLong-2 (#_"JavaConstant" .asInt (ValueNode''asJavaConstant-1 constant)), (:graph node))))))
+        nil
+    )
+
     (defn- #_"boolean" AddressLowering'applicableToImplicitZeroExtend-1 [#_"ZeroExtendNode" node]
         (and (:inputAlwaysPositive node) (= (IntegerConvertNode''getInputBits-1 node) AddressLowering'INT_BITS) (= (IntegerConvertNode''getResultBits-1 node) AddressLowering'ADDRESS_BITS))
+    )
+
+    (defn- #_"void" AddressLowering'tryOptimize-2 [#_"OffsetAddressNode" offsetAddress, #_"LoopEx" loop]
+        (loop-when [#_"InductionVariable" iv (get (LoopEx''getInductionVariables-1 loop) (:offset offsetAddress))] (some? iv)
+            (when (satisfies? DerivedInductionVariable iv)
+                (let [
+                    #_"ValueNode" value (InductionVariable'''valueNode-1 iv)
+                ]
+                    (when-not (Node''isDeleted-1 value)
+                        (when (and (satisfies? ZeroExtendNode value) (AddressLowering'applicableToImplicitZeroExtend-1 value))
+                            (let [
+                                #_"ValueNode" input (Unary'''getValue-1 value)
+                            ]
+                                (when (satisfies? AddNode input)
+                                    (cond
+                                        (satisfies? ConstantNode (:x input)) (AddressLowering'optimizeAdd-4 value, (:x input), (:y input), loop)
+                                        (satisfies? ConstantNode (:y input)) (AddressLowering'optimizeAdd-4 value, (:y input), (:x input), loop)
+                                    )
+                                )
+                            )
+                        )
+                        (recur (DerivedInductionVariable''getBase-1 iv))
+                    )
+                )
+            )
+        )
+        nil
     )
 
     (defn- #_"ValueNode" AddressLowering'tryImplicitZeroExtend-1 [#_"ValueNode" input]
@@ -13251,6 +12806,18 @@ ZeroExtendNode'new-4
     )
 )
 
+(class-ns CanonicalizedCondition
+    (defn #_"CanonicalizedCondition" CanonicalizedCondition'new-3 [#_"CanonicalCondition" canonicalCondition, #_"boolean" mirror?, #_"boolean" negate?]
+        (merge (CanonicalizedCondition'class.)
+            (hash-map
+                #_"CanonicalCondition" :canonicalCondition canonicalCondition
+                #_"boolean" :mirror? mirror?
+                #_"boolean" :negate? negate?
+            )
+        )
+    )
+)
+
 ;;;
  ; Condition codes used in conditionals.
  ;;
@@ -13263,29 +12830,16 @@ ZeroExtendNode'new-4
         )
     )
 
-    (§ def #_"Condition" Condition'EQ (Condition'new-1 "=="))   ;; equal
-    (§ def #_"Condition" Condition'NE (Condition'new-1 "!="))   ;; not equal
-    (§ def #_"Condition" Condition'LT (Condition'new-1 "<"))    ;; signed less than
-    (§ def #_"Condition" Condition'LE (Condition'new-1 "<="))   ;; signed less than or equal
-    (§ def #_"Condition" Condition'GT (Condition'new-1 ">"))    ;; signed greater than
-    (§ def #_"Condition" Condition'GE (Condition'new-1 ">="))   ;; signed greater than or equal
-    (§ def #_"Condition" Condition'AE (Condition'new-1 "|>=|")) ;; unsigned greater than or equal ("above than or equal")
-    (§ def #_"Condition" Condition'BE (Condition'new-1 "|<=|")) ;; unsigned less than or equal ("below than or equal")
-    (§ def #_"Condition" Condition'AT (Condition'new-1 "|>|"))  ;; unsigned greater than ("above than")
-    (§ def #_"Condition" Condition'BT (Condition'new-1 "|<|"))  ;; unsigned less than ("below than")
-
-    (defn #_"CanonicalizedCondition" Condition''canonicalize-1 [#_"Condition" this]
-        (let [
-            #_"CanonicalCondition" canonicalCondition
-                (condp =? this
-                    [Condition'EQ Condition'NE]                           CanonicalCondition'EQ
-                    [Condition'LT Condition'LE Condition'GT Condition'GE] CanonicalCondition'LT
-                    [Condition'BT Condition'BE Condition'AT Condition'AE] CanonicalCondition'BT
-                )
-        ]
-            (CanonicalizedCondition'new-3 canonicalCondition, (Condition''canonicalMirror-1 this), (Condition''canonicalNegate-1 this))
-        )
-    )
+    (def #_"Condition" Condition'EQ (Condition'new-1 "=="))   ;; equal
+    (def #_"Condition" Condition'NE (Condition'new-1 "!="))   ;; not equal
+    (def #_"Condition" Condition'LT (Condition'new-1 "<"))    ;; signed less than
+    (def #_"Condition" Condition'LE (Condition'new-1 "<="))   ;; signed less than or equal
+    (def #_"Condition" Condition'GT (Condition'new-1 ">"))    ;; signed greater than
+    (def #_"Condition" Condition'GE (Condition'new-1 ">="))   ;; signed greater than or equal
+    (def #_"Condition" Condition'AE (Condition'new-1 "|>=|")) ;; unsigned greater than or equal ("above than or equal")
+    (def #_"Condition" Condition'BE (Condition'new-1 "|<=|")) ;; unsigned less than or equal ("below than or equal")
+    (def #_"Condition" Condition'AT (Condition'new-1 "|>|"))  ;; unsigned greater than ("above than")
+    (def #_"Condition" Condition'BT (Condition'new-1 "|<|"))  ;; unsigned less than ("below than")
 
     ;;;
      ; Given a condition and its negation, this method returns true for one of the two and false
@@ -13344,6 +12898,19 @@ ZeroExtendNode'new-4
             Condition'BE true
             Condition'AT false
             Condition'AE true
+        )
+    )
+
+    (defn #_"CanonicalizedCondition" Condition''canonicalize-1 [#_"Condition" this]
+        (let [
+            #_"CanonicalCondition" canonicalCondition
+                (condp =? this
+                    [Condition'EQ Condition'NE]                           CanonicalCondition'EQ
+                    [Condition'LT Condition'LE Condition'GT Condition'GE] CanonicalCondition'LT
+                    [Condition'BT Condition'BE Condition'AT Condition'AE] CanonicalCondition'BT
+                )
+        ]
+            (CanonicalizedCondition'new-3 canonicalCondition, (Condition''canonicalMirror-1 this), (Condition''canonicalNegate-1 this))
         )
     )
 
@@ -13601,18 +13168,6 @@ ZeroExtendNode'new-4
                     (any = other Condition'EQ Condition'AE) Condition'AE
                     (any = other Condition'NE Condition'BT) Condition'NE
                 )
-        )
-    )
-)
-
-(class-ns CanonicalizedCondition
-    (defn- #_"CanonicalizedCondition" CanonicalizedCondition'new-3 [#_"CanonicalCondition" canonicalCondition, #_"boolean" mirror?, #_"boolean" negate?]
-        (merge (CanonicalizedCondition'class.)
-            (hash-map
-                #_"CanonicalCondition" :canonicalCondition canonicalCondition
-                #_"boolean" :mirror? mirror?
-                #_"boolean" :negate? negate?
-            )
         )
     )
 )
@@ -14583,6 +14138,121 @@ ZeroExtendNode'new-4
         (and (:exactType this) (some? (:type this)))
     )
 
+    (defn- #_"boolean" AbstractObjectStamp'isInterfaceOrArrayOfInterface-1 [#_"ResolvedJavaType" t]
+        (or (#_"ResolvedJavaType" .isInterface t) (and (#_"ResolvedJavaType" .isArray t) (#_"ResolvedJavaType" .isInterface (#_"ResolvedJavaType" .getElementalType t))))
+    )
+
+    (defn- #_"Stamp" AbstractObjectStamp''join0-3 [#_"AbstractObjectStamp" this, #_"Stamp" that, #_"boolean" improve?]
+        (if (= this that)
+            this
+            (let [
+                #_"AbstractObjectStamp" a this
+                #_"AbstractObjectStamp" b that
+            ]
+                (cond
+                    (Stamp''isEmpty-1 a) a
+                    (Stamp''isEmpty-1 b) b
+                    :else
+                        (let [
+                            #_"boolean" always-nil? (or (:always-nil? a) (:always-nil? b))
+                            #_"boolean" never-nil? (or (:never-nil? a) (:never-nil? b))
+                            #_"boolean" exactType (or (:exactType a) (:exactType b))
+                            [#_"ResolvedJavaType" type exactType always-nil?]
+                                (cond
+                                    (= (:type a) (:type b))                                       [(:type a) exactType always-nil?]
+                                    (nil? (:type a))                                              [(:type b) exactType always-nil?]
+                                    (nil? (:type b))                                              [(:type a) exactType always-nil?]
+                                    (#_"ResolvedJavaType" .isAssignableFrom (:type a), (:type b)) [(:type b) exactType (or (:exactType a) always-nil?)]
+                                    (#_"ResolvedJavaType" .isAssignableFrom (:type b), (:type a)) [(:type a) exactType (or (:exactType b) always-nil?)]
+                                    :else
+                                        (let [
+                                            [type exactType] (if improve? [(:type a) (:exactType a)] [nil exactType])
+                                            always-nil?
+                                                (or exactType
+                                                    (and (not (AbstractObjectStamp'isInterfaceOrArrayOfInterface-1 (:type a)))
+                                                         (not (AbstractObjectStamp'isInterfaceOrArrayOfInterface-1 (:type b)))
+                                                    )
+                                                    always-nil?
+                                                )
+                                        ]
+                                            [type exactType always-nil?]
+                                        )
+                                )
+                            [type exactType] (if always-nil? [nil false] [type exactType])
+                        ]
+                            (cond
+                                (and exactType (nil? type))                                       (Stamp'''empty-1 a)
+                                (and always-nil? never-nil?)                                      (Stamp'''empty-1 a)
+                                (and exactType (not (AbstractObjectStamp'isConcreteType-1 type))) (Stamp'''empty-1 a)
+                                (and (= type (:type a)) (= exactType (:exactType a)) (= never-nil? (:never-nil? a)) (= always-nil? (:always-nil? a)))
+                                    a
+                                (and (= type (:type b)) (= exactType (:exactType b)) (= never-nil? (:never-nil? b)) (= always-nil? (:always-nil? b)))
+                                    b
+                                :else
+                                    (AbstractObjectStamp'''copyWith-5 a, type, exactType, never-nil?, always-nil?)
+                            )
+                        )
+                )
+            )
+        )
+    )
+
+    (declare AbstractObjectStamp'meetTypes-2)
+
+    (defn- #_"ResolvedJavaType" AbstractObjectStamp'meetOrderedNonNullTypes-2 [#_"ResolvedJavaType" a, #_"ResolvedJavaType" b]
+        (let [
+            #_"ResolvedJavaType" type (#_"ResolvedJavaType" .findLeastCommonAncestor a, b)
+        ]
+            (when (and (#_"ResolvedJavaType" .isJavaLangObject type) (#_"ResolvedJavaType" .isInterface a) (#_"ResolvedJavaType" .isInterface b)) => type
+                ;; Both types are incompatible interfaces => search for first possible common
+                ;; ancestor match among super interfaces.
+                (let [
+                    #_"ResolvedJavaType[]" a* (#_"ResolvedJavaType" .getInterfaces a)
+                    #_"ResolvedJavaType[]" b* (#_"ResolvedJavaType" .getInterfaces b)
+                ]
+                    (loop-when [#_"int" i 0] (< i (count a*)) => type
+                        (loop-when [#_"int" j 0] (< j (count b*))
+                            (let [
+                                #_"ResolvedJavaType" leastCommon (AbstractObjectStamp'meetTypes-2 (nth a* i), (nth b* j))
+                            ]
+                                (when (#_"ResolvedJavaType" .isInterface leastCommon) => (recur (inc j))
+                                    (§ return leastCommon)
+                                )
+                            )
+                        )
+                        (recur (inc i))
+                    )
+                )
+            )
+        )
+    )
+
+    (defn- #_"ResolvedJavaType" AbstractObjectStamp'meetTypes-2 [#_"ResolvedJavaType" a, #_"ResolvedJavaType" b]
+        (cond
+            (= a b) a
+            (or (nil? a) (nil? b))  nil
+            :else
+                ;; The 'meetTypes' operation must be commutative. One way to achieve this is
+                ;; to totally order the types and always call 'meetOrderedNonNullTypes' in the
+                ;; same order. We establish the order by first comparing the hash-codes for
+                ;; performance reasons, and then comparing the internal names of the types.
+                (let [
+                    #_"int" hashA (#_"Object" .hashCode (#_"ResolvedJavaType" .getName a))
+                    #_"int" hashB (#_"Object" .hashCode (#_"ResolvedJavaType" .getName b))
+                ]
+                    (cond
+                        (< hashA hashB) (AbstractObjectStamp'meetOrderedNonNullTypes-2 a, b)
+                        (< hashB hashA) (AbstractObjectStamp'meetOrderedNonNullTypes-2 b, a)
+                        :else
+                            (if (<= (#_"String" .compareTo (#_"ResolvedJavaType" .getName a), (#_"ResolvedJavaType" .getName b)) 0)
+                                (AbstractObjectStamp'meetOrderedNonNullTypes-2 a, b)
+                                (AbstractObjectStamp'meetOrderedNonNullTypes-2 b, a)
+                            )
+                    )
+                )
+        )
+    )
+
     (defm AbstractObjectStamp Stamp
         (#_"Stamp" Stamp'''meet-2 [#_"AbstractObjectStamp" this, #_"Stamp" that]
             (if (= this that)
@@ -14635,142 +14305,27 @@ ZeroExtendNode'new-4
         (#_"Stamp" Stamp'''join-2 [#_"AbstractObjectStamp" this, #_"Stamp" that]
             (AbstractObjectStamp''join0-3 this, that, false)
         )
-    )
 
-    ;;;
-     ; Returns the stamp representing the type of this stamp after a cast to the type represented by
-     ; the {@code to} stamp. While this is very similar to a #join operation, in the case where both
-     ; types are not obviously related, the cast operation will prefer the type of the {@code to} stamp.
-     ; This is necessary as long as ObjectStamps are not able to accurately represent intersection types.
-     ;
-     ; For example when joining the RandomAccess type with the AbstractList type, without intersection
-     ; types, this would result in the most generic type (Object). For this reason, in some cases
-     ; a {@code castTo} operation is preferable in order to keep at least the AbstractList type.
-     ;
-     ; @param that the stamp this stamp should be casted to
-     ; @return the new improved stamp or nil if this stamp cannot be improved
-     ;;
-    (defm AbstractObjectStamp Stamp
+        ;;;
+         ; Returns the stamp representing the type of this stamp after a cast to the type represented by
+         ; the {@code to} stamp. While this is very similar to a #join operation, in the case where both
+         ; types are not obviously related, the cast operation will prefer the type of the {@code to} stamp.
+         ; This is necessary as long as ObjectStamps are not able to accurately represent intersection types.
+         ;
+         ; For example when joining the RandomAccess type with the AbstractList type, without intersection
+         ; types, this would result in the most generic type (Object). For this reason, in some cases
+         ; a {@code castTo} operation is preferable in order to keep at least the AbstractList type.
+         ;
+         ; @param that the stamp this stamp should be casted to
+         ; @return the new improved stamp or nil if this stamp cannot be improved
+         ;;
         (#_"Stamp" Stamp'''improveWith-2 [#_"AbstractObjectStamp" this, #_"Stamp" that]
             (AbstractObjectStamp''join0-3 this, that, true)
         )
     )
 
-    (defn- #_"Stamp" AbstractObjectStamp''join0-3 [#_"AbstractObjectStamp" this, #_"Stamp" that, #_"boolean" improve?]
-        (if (= this that)
-            this
-            (let [
-                #_"AbstractObjectStamp" a this
-                #_"AbstractObjectStamp" b that
-            ]
-                (cond
-                    (Stamp''isEmpty-1 a) a
-                    (Stamp''isEmpty-1 b) b
-                    :else
-                        (let [
-                            #_"boolean" always-nil? (or (:always-nil? a) (:always-nil? b))
-                            #_"boolean" never-nil? (or (:never-nil? a) (:never-nil? b))
-                            #_"boolean" exactType (or (:exactType a) (:exactType b))
-                            [#_"ResolvedJavaType" type exactType always-nil?]
-                                (cond
-                                    (= (:type a) (:type b))                                     [(:type a) exactType always-nil?]
-                                    (nil? (:type a))                                            [(:type b) exactType always-nil?]
-                                    (nil? (:type b))                                            [(:type a) exactType always-nil?]
-                                    (#_"ResolvedJavaType" .isAssignableFrom (:type a), (:type b)) [(:type b) exactType (or (:exactType a) always-nil?)]
-                                    (#_"ResolvedJavaType" .isAssignableFrom (:type b), (:type a)) [(:type a) exactType (or (:exactType b) always-nil?)]
-                                    :else
-                                        (let [
-                                            [type exactType] (if improve? [(:type a) (:exactType a)] [nil exactType])
-                                            always-nil?
-                                                (or exactType
-                                                    (and (not (AbstractObjectStamp'isInterfaceOrArrayOfInterface-1 (:type a)))
-                                                         (not (AbstractObjectStamp'isInterfaceOrArrayOfInterface-1 (:type b)))
-                                                    )
-                                                    always-nil?
-                                                )
-                                        ]
-                                            [type exactType always-nil?]
-                                        )
-                                )
-                            [type exactType] (if always-nil? [nil false] [type exactType])
-                        ]
-                            (cond
-                                (and exactType (nil? type))                                       (Stamp'''empty-1 a)
-                                (and always-nil? never-nil?)                                      (Stamp'''empty-1 a)
-                                (and exactType (not (AbstractObjectStamp'isConcreteType-1 type))) (Stamp'''empty-1 a)
-                                (and (= type (:type a)) (= exactType (:exactType a)) (= never-nil? (:never-nil? a)) (= always-nil? (:always-nil? a)))
-                                    a
-                                (and (= type (:type b)) (= exactType (:exactType b)) (= never-nil? (:never-nil? b)) (= always-nil? (:always-nil? b)))
-                                    b
-                                :else
-                                    (AbstractObjectStamp'''copyWith-5 a, type, exactType, never-nil?, always-nil?)
-                            )
-                        )
-                )
-            )
-        )
-    )
-
-    (defn- #_"boolean" AbstractObjectStamp'isInterfaceOrArrayOfInterface-1 [#_"ResolvedJavaType" t]
-        (or (#_"ResolvedJavaType" .isInterface t) (and (#_"ResolvedJavaType" .isArray t) (#_"ResolvedJavaType" .isInterface (#_"ResolvedJavaType" .getElementalType t))))
-    )
-
     (defn #_"boolean" AbstractObjectStamp'isConcreteType-1 [#_"ResolvedJavaType" type]
         (not (and (#_"ResolvedJavaType" .isAbstract type) (not (#_"ResolvedJavaType" .isArray type))))
-    )
-
-    (defn- #_"ResolvedJavaType" AbstractObjectStamp'meetTypes-2 [#_"ResolvedJavaType" a, #_"ResolvedJavaType" b]
-        (cond
-            (= a b) a
-            (or (nil? a) (nil? b))  nil
-            :else
-                ;; The 'meetTypes' operation must be commutative. One way to achieve this is
-                ;; to totally order the types and always call 'meetOrderedNonNullTypes' in the
-                ;; same order. We establish the order by first comparing the hash-codes for
-                ;; performance reasons, and then comparing the internal names of the types.
-                (let [
-                    #_"int" hashA (#_"Object" .hashCode (#_"ResolvedJavaType" .getName a))
-                    #_"int" hashB (#_"Object" .hashCode (#_"ResolvedJavaType" .getName b))
-                ]
-                    (cond
-                        (< hashA hashB) (AbstractObjectStamp'meetOrderedNonNullTypes-2 a, b)
-                        (< hashB hashA) (AbstractObjectStamp'meetOrderedNonNullTypes-2 b, a)
-                        :else
-                            (if (<= (#_"String" .compareTo (#_"ResolvedJavaType" .getName a), (#_"ResolvedJavaType" .getName b)) 0)
-                                (AbstractObjectStamp'meetOrderedNonNullTypes-2 a, b)
-                                (AbstractObjectStamp'meetOrderedNonNullTypes-2 b, a)
-                            )
-                    )
-                )
-        )
-    )
-
-    (defn- #_"ResolvedJavaType" AbstractObjectStamp'meetOrderedNonNullTypes-2 [#_"ResolvedJavaType" a, #_"ResolvedJavaType" b]
-        (let [
-            #_"ResolvedJavaType" type (#_"ResolvedJavaType" .findLeastCommonAncestor a, b)
-        ]
-            (when (and (#_"ResolvedJavaType" .isJavaLangObject type) (#_"ResolvedJavaType" .isInterface a) (#_"ResolvedJavaType" .isInterface b)) => type
-                ;; Both types are incompatible interfaces => search for first possible common
-                ;; ancestor match among super interfaces.
-                (let [
-                    #_"ResolvedJavaType[]" a* (#_"ResolvedJavaType" .getInterfaces a)
-                    #_"ResolvedJavaType[]" b* (#_"ResolvedJavaType" .getInterfaces b)
-                ]
-                    (loop-when [#_"int" i 0] (< i (count a*)) => type
-                        (loop-when [#_"int" j 0] (< j (count b*))
-                            (let [
-                                #_"ResolvedJavaType" leastCommon (AbstractObjectStamp'meetTypes-2 (nth a* i), (nth b* j))
-                            ]
-                                (when (#_"ResolvedJavaType" .isInterface leastCommon) => (recur (inc j))
-                                    (§ return leastCommon)
-                                )
-                            )
-                        )
-                        (recur (inc i))
-                    )
-                )
-            )
-        )
     )
 
     (§ override #_"boolean" #_"Object." equals [#_"AbstractObjectStamp" this, #_"Object" that]
@@ -15213,6 +14768,24 @@ ZeroExtendNode'new-4
         )
     )
 
+    (defn- #_"long" IntegerStamp'minValueForMasks-3 [#_"int" bits, #_"long" downMask, #_"long" upMask]
+        (if (zero? (IntegerStamp'significantBit-2 bits, upMask))
+            ;; Value is always positive. Minimum value always positive.
+            downMask
+            ;; Value can be positive or negative. Minimum value always negative.
+            (| downMask (<< -1 (dec bits)))
+        )
+    )
+
+    (defn- #_"long" IntegerStamp'maxValueForMasks-3 [#_"int" bits, #_"long" downMask, #_"long" upMask]
+        (if (= (IntegerStamp'significantBit-2 bits, downMask) 1)
+            ;; Value is always negative. Maximum value always negative.
+            (CodeUtil/signExtend upMask, bits)
+            ;; Value can be positive or negative. Maximum value always positive.
+            (& upMask (>>> (CodeUtil/mask bits) 1))
+        )
+    )
+
     (defn #_"IntegerStamp" IntegerStamp'create-5 [#_"int" bits, #_"long" lowerBoundInput, #_"long" upperBoundInput, #_"long" downMask, #_"long" upMask]
         ;; Set lower bound, use masks to make it more precise.
         (let [
@@ -15258,24 +14831,6 @@ ZeroExtendNode'new-4
 
     (defn- #_"long" IntegerStamp'significantBit-2 [#_"long" bits, #_"long" value]
         (& (>>> value (dec bits)) 1)
-    )
-
-    (defn- #_"long" IntegerStamp'minValueForMasks-3 [#_"int" bits, #_"long" downMask, #_"long" upMask]
-        (if (zero? (IntegerStamp'significantBit-2 bits, upMask))
-            ;; Value is always positive. Minimum value always positive.
-            downMask
-            ;; Value can be positive or negative. Minimum value always negative.
-            (| downMask (<< -1 (dec bits)))
-        )
-    )
-
-    (defn- #_"long" IntegerStamp'maxValueForMasks-3 [#_"int" bits, #_"long" downMask, #_"long" upMask]
-        (if (= (IntegerStamp'significantBit-2 bits, downMask) 1)
-            ;; Value is always negative. Maximum value always negative.
-            (CodeUtil/signExtend upMask, bits)
-            ;; Value can be positive or negative. Maximum value always positive.
-            (& upMask (>>> (CodeUtil/mask bits) 1))
-        )
     )
 
     (defn #_"IntegerStamp" IntegerStamp'stampForMask-3 [#_"int" bits, #_"long" downMask, #_"long" upMask]
@@ -15397,6 +14952,10 @@ ZeroExtendNode'new-4
         )
     )
 
+    (defn- #_"boolean" IntegerStamp''sameSignBounds-1 [#_"IntegerStamp" this]
+        (NumUtil'sameSign-2 (:lowerBound this), (:upperBound this))
+    )
+
     (defn #_"long" IntegerStamp''unsignedUpperBound-1 [#_"IntegerStamp" this]
         (if (IntegerStamp''sameSignBounds-1 this)
             (CodeUtil/zeroExtend (:upperBound this), (:bits this))
@@ -15409,10 +14968,6 @@ ZeroExtendNode'new-4
             (CodeUtil/zeroExtend (:lowerBound this), (:bits this))
             0
         )
-    )
-
-    (defn- #_"boolean" IntegerStamp''sameSignBounds-1 [#_"IntegerStamp" this]
-        (NumUtil'sameSign-2 (:lowerBound this), (:upperBound this))
     )
 
     (defn- #_"long" IntegerStamp'upMaskFor-3 [#_"int" bits, #_"long" lowerBound, #_"long" upperBound]
@@ -16911,6 +16466,21 @@ ZeroExtendNode'new-4
         (when (some? type) (TypeReference'new-2 type, true))
     )
 
+    (defn- #_"ResolvedJavaType" TypeReference'filterInterfaceTypesOut-1 [#_"ResolvedJavaType" type]
+        (when (some? type)
+            (if (#_"ResolvedJavaType" .isArray type)
+                (let [
+                    #_"ResolvedJavaType" componentType (TypeReference'filterInterfaceTypesOut-1 (#_"ResolvedJavaType" .getComponentType type))
+                ]
+                    (#_"ResolvedJavaType" .getArrayClass (or componentType (#_"ResolvedJavaType" .getSuperclass type))) ;; returns Object[].class
+                )
+                (when-not (#_"ResolvedJavaType" .isInterface type)
+                    type
+                )
+            )
+        )
+    )
+
     ;;;
      ; Creates a type reference using the given type without trusting interface types.
      ;;
@@ -16937,21 +16507,6 @@ ZeroExtendNode'new-4
     #_unused
     (defn #_"TypeReference" TypeReference''asExactReference-1 [#_"TypeReference" this]
         (if (:exactReference this) this (TypeReference'new-2 (:type this), true))
-    )
-
-    (defn- #_"ResolvedJavaType" TypeReference'filterInterfaceTypesOut-1 [#_"ResolvedJavaType" type]
-        (when (some? type)
-            (if (#_"ResolvedJavaType" .isArray type)
-                (let [
-                    #_"ResolvedJavaType" componentType (TypeReference'filterInterfaceTypesOut-1 (#_"ResolvedJavaType" .getComponentType type))
-                ]
-                    (#_"ResolvedJavaType" .getArrayClass (or componentType (#_"ResolvedJavaType" .getSuperclass type))) ;; returns Object[].class
-                )
-                (when-not (#_"ResolvedJavaType" .isInterface type)
-                    type
-                )
-            )
-        )
     )
 )
 
@@ -17460,6 +17015,13 @@ ZeroExtendNode'new-4
         nil
     )
 
+    (defn- #_"void" Edges''verifyUpdateValid-4 [#_"Edges" this, #_"Node" node, #_"int" index, #_"Object" newValue]
+        (when (and (some? newValue) (not (#_"Class" .isAssignableFrom (Fields''getType-2 this, index), (#_"Object" .getClass newValue))))
+            (throw (IllegalArgumentException. (str "Can not assign " (#_"Object" .getClass newValue) " to " (Fields''getType-2 this, index) " in " node)))
+        )
+        nil
+    )
+
     ;;;
      ; Sets the value of a given edge without notifying the new and old nodes on the other end of the edge of the change.
      ;
@@ -17476,13 +17038,6 @@ ZeroExtendNode'new-4
     (defn #_"void" Edges''initializeList-4 [#_"Edges" this, #_"Node" node, #_"int" index, #_"NodeList" value]
         (Edges''verifyUpdateValid-4 this, node, index, value)
         (Edges'putNodeListUnsafe-3 node, (nth (:offsets this) index), value)
-        nil
-    )
-
-    (defn- #_"void" Edges''verifyUpdateValid-4 [#_"Edges" this, #_"Node" node, #_"int" index, #_"Object" newValue]
-        (when (and (some? newValue) (not (#_"Class" .isAssignableFrom (Fields''getType-2 this, index), (#_"Object" .getClass newValue))))
-            (throw (IllegalArgumentException. (str "Can not assign " (#_"Object" .getClass newValue) " to " (Fields''getType-2 this, index) " in " node)))
-        )
         nil
     )
 
@@ -17547,6 +17102,23 @@ ZeroExtendNode'new-4
         )
     )
 
+    (defn- #_"EdgesIterator" EdgesIterator''forwardNodeList-1 [#_"EdgesIterator" this]
+        (loop [this this]
+            (let [
+                #_"NodeList" list (Edges'getNodeList-3 (:node this), (:offsets this), (:index this))
+            ]
+                (when-not (and (some? list) (< (:subIndex this) (count list))) => this
+                    (let [
+                        this (assoc this :subIndex 0)
+                        this (update this :index inc)
+                    ]
+                        (recur-if (< (:index this) (count (:offsets (:edges this)))) [this] => this)
+                    )
+                )
+            )
+        )
+    )
+
     (defn #_"EdgesIterator" EdgesIterator''forward-1 [#_"EdgesIterator" this]
         (let [
             this (assoc this :needsForward false)
@@ -17563,23 +17135,6 @@ ZeroExtendNode'new-4
         ]
             (when (< (:index this) (count (:offsets (:edges this)))) => this
                 (EdgesIterator''forwardNodeList-1 this)
-            )
-        )
-    )
-
-    (defn- #_"EdgesIterator" EdgesIterator''forwardNodeList-1 [#_"EdgesIterator" this]
-        (loop [this this]
-            (let [
-                #_"NodeList" list (Edges'getNodeList-3 (:node this), (:offsets this), (:index this))
-            ]
-                (when-not (and (some? list) (< (:subIndex this) (count list))) => this
-                    (let [
-                        this (assoc this :subIndex 0)
-                        this (update this :index inc)
-                    ]
-                        (recur-if (< (:index this) (count (:offsets (:edges this)))) [this] => this)
-                    )
-                )
             )
         )
     )
@@ -17608,6 +17163,18 @@ ZeroExtendNode'new-4
         (GraphNodeIterator'new-2 graph, 0)
     )
 
+    (defn- #_"GraphNodeIterator" GraphNodeIterator''forward-1 [#_"GraphNodeIterator" this]
+        (when (< (:index this) (:nodesSize (:graph this))) => this
+            (loop [this this]
+                (let [
+                    this (update this :index inc)
+                ]
+                    (recur-if (and (< (:index this) (:nodesSize (:graph this))) (nil? (nth (:nodes (:graph this)) (:index this)))) [this] => this)
+                )
+            )
+        )
+    )
+
     (defn #_"GraphNodeIterator" GraphNodeIterator'new-2 [#_"Graph" graph, #_"int" index]
         (let [
             #_"GraphNodeIterator" this
@@ -17619,18 +17186,6 @@ ZeroExtendNode'new-4
                 )
         ]
             (GraphNodeIterator''forward-1 this)
-        )
-    )
-
-    (defn- #_"GraphNodeIterator" GraphNodeIterator''forward-1 [#_"GraphNodeIterator" this]
-        (when (< (:index this) (:nodesSize (:graph this))) => this
-            (loop [this this]
-                (let [
-                    this (update this :index inc)
-                ]
-                    (recur-if (and (< (:index this) (:nodesSize (:graph this))) (nil? (nth (:nodes (:graph this)) (:index this)))) [this] => this)
-                )
-            )
         )
     )
 
@@ -17747,6 +17302,19 @@ ZeroExtendNode'new-4
         )
     )
 
+    (defn- #_"IterativeNodeWorkList" IterativeNodeWorkList''inflateToBitMap-2 [#_"IterativeNodeWorkList" this, #_"Graph" graph]
+        (let [
+            this (assoc this :inQueue (NodeBitMap'new-1 graph))
+        ]
+            (doseq [#_"Node" queuedNode (:worklist this)]
+                (when (Node''isAlive-1 queuedNode)
+                    (NodeBitMap''mark-2 (:inQueue this), queuedNode)
+                )
+            )
+            this
+        )
+    )
+
     (defm IterativeNodeWorkList NodeWorkList
         (#_"void" NodeWorkList'''add-2 [#_"IterativeNodeWorkList" this, #_"Node" node]
             (when (some? node)
@@ -17773,19 +17341,6 @@ ZeroExtendNode'new-4
                 )
             )
             nil
-        )
-    )
-
-    (defn- #_"IterativeNodeWorkList" IterativeNodeWorkList''inflateToBitMap-2 [#_"IterativeNodeWorkList" this, #_"Graph" graph]
-        (let [
-            this (assoc this :inQueue (NodeBitMap'new-1 graph))
-        ]
-            (doseq [#_"Node" queuedNode (:worklist this)]
-                (when (Node''isAlive-1 queuedNode)
-                    (NodeBitMap''mark-2 (:inQueue this), queuedNode)
-                )
-            )
-            this
         )
     )
 )
@@ -18173,14 +17728,6 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"Node" Node''movUsageFromEndTo-2 [#_"Node" this, #_"int" destIndex]
-        (cond
-            (<= Node'INLINE_USAGE_COUNT destIndex) (Node''movUsageFromEndToExtraUsages-2 this, (- destIndex Node'INLINE_USAGE_COUNT))
-            (= destIndex 1)                        (Node''movUsageFromEndToIndexOne-1 this)
-            :else                                  (Node''movUsageFromEndToIndexZero-1 this)
-        )
-    )
-
     (defn- #_"Node" Node''movUsageFromEndToExtraUsages-2 [#_"Node" this, #_"int" destExtraIndex]
         (let [
             this (update this :extraUsagesCount dec)
@@ -18188,6 +17735,18 @@ ZeroExtendNode'new-4
             (aset (:extraUsages this) destExtraIndex (nth (:extraUsages this) (:extraUsagesCount this)))
             (aset (:extraUsages this) (:extraUsagesCount this) nil)
             this
+        )
+    )
+
+    (defn- #_"Node" Node''movUsageFromEndToIndexOne-1 [#_"Node" this]
+        (when (pos? (:extraUsagesCount this)) => (assoc this :usage1 nil)
+            (let [
+                this (update this :extraUsagesCount dec)
+                this (assoc this :usage1 (nth (:extraUsages this) (:extraUsagesCount this)))
+            ]
+                (aset (:extraUsages this) (:extraUsagesCount this) nil)
+                this
+            )
         )
     )
 
@@ -18213,15 +17772,11 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"Node" Node''movUsageFromEndToIndexOne-1 [#_"Node" this]
-        (when (pos? (:extraUsagesCount this)) => (assoc this :usage1 nil)
-            (let [
-                this (update this :extraUsagesCount dec)
-                this (assoc this :usage1 (nth (:extraUsages this) (:extraUsagesCount this)))
-            ]
-                (aset (:extraUsages this) (:extraUsagesCount this) nil)
-                this
-            )
+    (defn- #_"Node" Node''movUsageFromEndTo-2 [#_"Node" this, #_"int" destIndex]
+        (cond
+            (<= Node'INLINE_USAGE_COUNT destIndex) (Node''movUsageFromEndToExtraUsages-2 this, (- destIndex Node'INLINE_USAGE_COUNT))
+            (= destIndex 1)                        (Node''movUsageFromEndToIndexOne-1 this)
+            :else                                  (Node''movUsageFromEndToIndexZero-1 this)
         )
     )
 
@@ -18269,6 +17824,19 @@ ZeroExtendNode'new-4
     #_unused
     (defn #_"boolean" Node''isUnregistered-1 [#_"Node" this]
         (= (:id this) Node'INITIAL_ID)
+    )
+
+    (defn- #_"void" Node''maybeNotifyInputChanged-2 [#_"Node" this, #_"Node" node]
+        (when (some? (:graph this))
+            (let [
+                #_"NodeEventListener" listener (:nodeEventListener (:graph this))
+            ]
+                (when (some? listener)
+                    (NodeEventListener''event-3 listener, NodeEvent'INPUT_CHANGED, node)
+                )
+            )
+        )
+        nil
     )
 
     ;;;
@@ -18354,6 +17922,34 @@ ZeroExtendNode'new-4
         nil
     )
 
+    (defn- #_"void" Node''replaceAtUsage-4 [#_"Node" this, #_"Node" other, #_"Node" toBeDeleted, #_"Node" usage]
+        (NodeClass''replaceFirstInput-4 (:nodeClass usage), usage, this, other)
+        ;; Don't notify for nodes which are about to be deleted.
+        (when (or (nil? toBeDeleted) (not= usage toBeDeleted))
+            (Node''maybeNotifyInputChanged-2 this, usage)
+        )
+        (when (some? other)
+            (Node''addUsage-2 other, usage)
+        )
+        nil
+    )
+
+    (defn- #_"Node" Node''replaceAtMatchingUsages-4 [#_"Node" this, #_"Node" other, #_"Predicate<Node>" filter, #_"Node" toBeDeleted]
+        (when (some? filter) => (throw! "filter cannot be nil")
+            (Node''checkReplaceWith-2 this, other)
+            (loop-when [this this #_"int" i 0] (< i (Node''getUsageCount-1 this)) => this
+                (let [
+                    #_"Node" usage (Node''getUsageAt-2 this, i)
+                ]
+                    (when (#_"Predicate" .test filter, usage) => (recur this (inc i))
+                        (Node''replaceAtUsage-4 this, other, toBeDeleted, usage)
+                        (recur (Node''movUsageFromEndTo-2 this, i) i)
+                    )
+                )
+            )
+        )
+    )
+
     (defm Node Node
         (#_"void" Node'''replaceAtUsages-4 [#_"Node" this, #_"Node" other, #_"Predicate<Node>" filter, #_"Node" toBeDeleted]
             (if (some? filter)
@@ -18393,34 +17989,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"void" Node''replaceAtUsage-4 [#_"Node" this, #_"Node" other, #_"Node" toBeDeleted, #_"Node" usage]
-        (NodeClass''replaceFirstInput-4 (:nodeClass usage), usage, this, other)
-        ;; Don't notify for nodes which are about to be deleted.
-        (when (or (nil? toBeDeleted) (not= usage toBeDeleted))
-            (Node''maybeNotifyInputChanged-2 this, usage)
-        )
-        (when (some? other)
-            (Node''addUsage-2 other, usage)
-        )
-        nil
-    )
-
-    (defn- #_"Node" Node''replaceAtMatchingUsages-4 [#_"Node" this, #_"Node" other, #_"Predicate<Node>" filter, #_"Node" toBeDeleted]
-        (when (some? filter) => (throw! "filter cannot be nil")
-            (Node''checkReplaceWith-2 this, other)
-            (loop-when [this this #_"int" i 0] (< i (Node''getUsageCount-1 this)) => this
-                (let [
-                    #_"Node" usage (Node''getUsageAt-2 this, i)
-                ]
-                    (when (#_"Predicate" .test filter, usage) => (recur this (inc i))
-                        (Node''replaceAtUsage-4 this, other, toBeDeleted, usage)
-                        (recur (Node''movUsageFromEndTo-2 this, i) i)
-                    )
-                )
-            )
-        )
-    )
-
     (defn #_"Node" Node''getUsageAt-2 [#_"Node" this, #_"int" index]
         (case index
             0 (:usage0 this)
@@ -18446,19 +18014,6 @@ ZeroExtendNode'new-4
             )
             nil
         )
-    )
-
-    (defn- #_"void" Node''maybeNotifyInputChanged-2 [#_"Node" this, #_"Node" node]
-        (when (some? (:graph this))
-            (let [
-                #_"NodeEventListener" listener (:nodeEventListener (:graph this))
-            ]
-                (when (some? listener)
-                    (NodeEventListener''event-3 listener, NodeEvent'INPUT_CHANGED, node)
-                )
-            )
-        )
-        nil
     )
 
     (defn #_"void" Node''maybeNotifyZeroUsages-2 [#_"Node" this, #_"Node" node]
@@ -18796,6 +18351,10 @@ ZeroExtendNode'new-4
         nil
     )
 
+    (defn- #_"long" NodeBitMap'getPartOfWord-2 [#_"long" word, #_"int" firstNodeIdToInclude]
+        (& word (<< 0xffffffffffffffff firstNodeIdToInclude))
+    )
+
     (defn #_"Node" NodeBitMap''nextMarkedNode-2 [#_"NodeBitMap" this, #_"int" fromNodeId]
         (let [
             #_"int" i (>> fromNodeId NodeBitMap'SHIFT)
@@ -18835,10 +18394,6 @@ ZeroExtendNode'new-4
                 )
             )
         )
-    )
-
-    (defn- #_"long" NodeBitMap'getPartOfWord-2 [#_"long" word, #_"int" firstNodeIdToInclude]
-        (& word (<< 0xffffffffffffffff firstNodeIdToInclude))
     )
 
     (§ override! #_"Iterator<Node>" #_"Iterable." iterator [#_"NodeBitMap" this]
@@ -18898,6 +18453,14 @@ ZeroExtendNode'new-4
  ; in the corresponding Graph.
  ;;
 (class-ns MarkedNodeIterator
+    (defn- #_"MarkedNodeIterator" MarkedNodeIterator''forward-1 [#_"MarkedNodeIterator" this]
+        (let [
+            this (assoc this :currentNode (NodeBitMap''nextMarkedNode-2 (:bitMap this), (inc (:currentNodeId this))))
+        ]
+            (assoc this :currentNodeId (if (some? (:currentNode this)) (:id (:currentNode this)) -1))
+        )
+    )
+
     (defn #_"MarkedNodeIterator" MarkedNodeIterator'new-1 [#_"NodeBitMap" bitMap]
         (let [
             #_"MarkedNodeIterator" this
@@ -18910,14 +18473,6 @@ ZeroExtendNode'new-4
                 )
         ]
             (MarkedNodeIterator''forward-1 this)
-        )
-    )
-
-    (defn- #_"MarkedNodeIterator" MarkedNodeIterator''forward-1 [#_"MarkedNodeIterator" this]
-        (let [
-            this (assoc this :currentNode (NodeBitMap''nextMarkedNode-2 (:bitMap this), (inc (:currentNodeId this))))
-        ]
-            (assoc this :currentNodeId (if (some? (:currentNode this)) (:id (:currentNode this)) -1))
         )
     )
 
@@ -18959,6 +18514,17 @@ ZeroExtendNode'new-4
     (def #_"long" NodeClass'NEXT_EDGE 0x08)
 
     (def- #_"AtomicInteger" NodeClass'nextIterableId (AtomicInteger.))
+
+    (defn- #_"NodeClass<T>" NodeClass''addIterableId-2 [#_"NodeClass<T>" this, #_"int" newIterableId]
+        (locking this
+            (let [
+                #_"int[]" copy (Arrays/copyOf (:iterableIds this), (inc (count (:iterableIds this))))
+            ]
+                (aset copy (count (:iterableIds this)) newIterableId)
+                (assoc this :iterableIds copy)
+            )
+        )
+    )
 
     #_unused
     (defn #_"NodeClass" NodeClass'new-2 [#_"Class<T>" clazz, #_"NodeClass<? super T>" superNodeClass]
@@ -19034,13 +18600,16 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"NodeClass<T>" NodeClass''addIterableId-2 [#_"NodeClass<T>" this, #_"int" newIterableId]
-        (locking this
-            (let [
-                #_"int[]" copy (Arrays/copyOf (:iterableIds this), (inc (count (:iterableIds this))))
-            ]
-                (aset copy (count (:iterableIds this)) newIterableId)
-                (assoc this :iterableIds copy)
+    (defn- #_"boolean" NodeClass'deepEquals-2 [#_"Object*" a1, #_"Object*" a2]
+        (let [
+            #_"int" n (count a1)
+        ]
+            (and (= (count a2) n)
+                (loop-when [#_"int" i 0] (< i n) => true
+                    (and (NodeClass'deepEquals0-2 (nth a1 i), (nth a2 i))
+                        (recur (inc i))
+                    )
+                )
             )
         )
     )
@@ -19061,20 +18630,6 @@ ZeroExtendNode'new-4
                             double'array  (ß Arrays/equals (§ cast #_"double[]" e1), (§ cast #_"double[]" e2))
                             boolean'array (ß Arrays/equals (§ cast #_"boolean[]" e1), (§ cast #_"boolean[]" e2))
                         )
-                    )
-                )
-            )
-        )
-    )
-
-    (defn- #_"boolean" NodeClass'deepEquals-2 [#_"Object*" a1, #_"Object*" a2]
-        (let [
-            #_"int" n (count a1)
-        ]
-            (and (= (count a2) n)
-                (loop-when [#_"int" i 0] (< i n) => true
-                    (and (NodeClass'deepEquals0-2 (nth a1 i), (nth a2 i))
-                        (recur (inc i))
                     )
                 )
             )
@@ -19122,6 +18677,23 @@ ZeroExtendNode'new-4
         )
     )
 
+    (defn- #_"NodeList" NodeClass'updateEdgeListCopy-4 [#_"Node" node, #_"NodeList" list, #_"InplaceUpdateClosure" duplicationReplacement, #_"EdgesType" type]
+        (let [
+            #_"NodeList" result (if (= type EdgesType'Inputs) (NodeInputList'new-2i node, (count list)) (NodeSuccessorList'new-2i node, (count list)))
+        ]
+            (dotimes [#_"int" i (count list)]
+                (let [
+                    #_"Node" oldNode (nth list i)
+                ]
+                    (when (some? oldNode)
+                        (#_"List" .set result, i, (InplaceUpdateClosure'''replacement-3 duplicationReplacement, oldNode, type))
+                    )
+                )
+            )
+            result
+        )
+    )
+
     (defn #_"void" NodeClass'updateEdgesInPlace-3 [#_"Node" node, #_"InplaceUpdateClosure" duplicationReplacement, #_"Edges" edges]
         (let [
             #_"EdgesType" type (:type edges)
@@ -19164,28 +18736,65 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"NodeList" NodeClass'updateEdgeListCopy-4 [#_"Node" node, #_"NodeList" list, #_"InplaceUpdateClosure" duplicationReplacement, #_"EdgesType" type]
-        (let [
-            #_"NodeList" result (if (= type EdgesType'Inputs) (NodeInputList'new-2i node, (count list)) (NodeSuccessorList'new-2i node, (count list)))
-        ]
-            (dotimes [#_"int" i (count list)]
-                (let [
-                    #_"Node" oldNode (nth list i)
-                ]
-                    (when (some? oldNode)
-                        (#_"List" .set result, i, (InplaceUpdateClosure'''replacement-3 duplicationReplacement, oldNode, type))
-                    )
-                )
-            )
-            result
-        )
-    )
-
     ;;;
      ; Gets the input or successor edges defined by this node class.
      ;;
     (defn #_"Edges" NodeClass''getEdges-2 [#_"NodeClass<T>" this, #_"EdgesType" type]
         (if (= type EdgesType'Inputs) (:inputs this) (:successors this))
+    )
+
+    (defn- #_"void" NodeClass'createNodeDuplicates-4 [#_"Graph" graph, #_"Iterable<Node>" nodes, #_"DuplicationReplacement" replacements, #_"EconomicMap<Node, Node>" newNodes]
+        (doseq [#_"Node" node nodes]
+            (when (some? node)
+                (let [
+                    #_"Node" replacement (if (some? replacements) (DuplicationReplacement'''replacement-2 replacements, node) node)
+                ]
+                    (#_"EconomicMap" .put newNodes, node, (if (not= replacement node) replacement (Node''clone-3 node, graph, Node'WithAllEdges)))
+                )
+            )
+        )
+        nil
+    )
+
+    (defn- #_"void" NodeClass'transferEdges-6 [#_"Graph" graph, #_"DuplicationReplacement" replacements, #_"EconomicMap<Node, Node>" newNodes, #_"Node" oldNode, #_"Node" node, #_"EdgesType" type]
+        (let [
+            #_"NodeClass" nodeClass (:nodeClass node)
+            #_"NodeClass" oldNodeClass (:nodeClass oldNode)
+            #_"Edges" oldEdges (NodeClass''getEdges-2 oldNodeClass, type)
+        ]
+            (doseq [#_"Position" pos (Edges''getPositionsIterable-2 oldEdges, oldNode)]
+                (when (NodeClass''isValid-4 nodeClass, pos, oldNodeClass, oldEdges)
+                    (let [
+                        #_"Node" oldEdge (Position''get-2 pos, oldNode)
+                    ]
+                        (when (some? oldEdge)
+                            (let [
+                                #_"Node" target
+                                    (or (get newNodes oldEdge)
+                                        (let [
+                                            #_"Node" replacement (if (some? replacements) (DuplicationReplacement'''replacement-2 replacements, oldEdge) oldEdge)
+                                        ]
+                                            (cond
+                                                (not= replacement oldEdge)                                 replacement
+                                                (and (= (:graph oldEdge) graph) (= type EdgesType'Inputs)) oldEdge ;; patch to the outer world
+                                            )
+                                        )
+                                    )
+                            ]
+                                (Position''set-3 pos, node, target)
+                            )
+                        )
+                    )
+                )
+            )
+        )
+        nil
+    )
+
+    (defn- #_"void" NodeClass'transferEdgesDifferentNodeClass-5 [#_"Graph" graph, #_"DuplicationReplacement" replacements, #_"EconomicMap<Node, Node>" newNodes, #_"Node" oldNode, #_"Node" node]
+        (NodeClass'transferEdges-6 graph, replacements, newNodes, oldNode, node, EdgesType'Inputs)
+        (NodeClass'transferEdges-6 graph, replacements, newNodes, oldNode, node, EdgesType'Successors)
+        nil
     )
 
     (defn #_"EconomicMap<Node, Node>" NodeClass'addGraphDuplicate-5 [#_"Graph" graph, #_"Graph" oldGraph, #_"int" estimatedNodeCount, #_"Iterable<Node>" nodes, #_"DuplicationReplacement" replacements]
@@ -19234,60 +18843,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"void" NodeClass'createNodeDuplicates-4 [#_"Graph" graph, #_"Iterable<Node>" nodes, #_"DuplicationReplacement" replacements, #_"EconomicMap<Node, Node>" newNodes]
-        (doseq [#_"Node" node nodes]
-            (when (some? node)
-                (let [
-                    #_"Node" replacement (if (some? replacements) (DuplicationReplacement'''replacement-2 replacements, node) node)
-                ]
-                    (#_"EconomicMap" .put newNodes, node, (if (not= replacement node) replacement (Node''clone-3 node, graph, Node'WithAllEdges)))
-                )
-            )
-        )
-        nil
-    )
-
-    (defn- #_"void" NodeClass'transferEdgesDifferentNodeClass-5 [#_"Graph" graph, #_"DuplicationReplacement" replacements, #_"EconomicMap<Node, Node>" newNodes, #_"Node" oldNode, #_"Node" node]
-        (NodeClass'transferEdges-6 graph, replacements, newNodes, oldNode, node, EdgesType'Inputs)
-        (NodeClass'transferEdges-6 graph, replacements, newNodes, oldNode, node, EdgesType'Successors)
-        nil
-    )
-
-    (defn- #_"void" NodeClass'transferEdges-6 [#_"Graph" graph, #_"DuplicationReplacement" replacements, #_"EconomicMap<Node, Node>" newNodes, #_"Node" oldNode, #_"Node" node, #_"EdgesType" type]
-        (let [
-            #_"NodeClass" nodeClass (:nodeClass node)
-            #_"NodeClass" oldNodeClass (:nodeClass oldNode)
-            #_"Edges" oldEdges (NodeClass''getEdges-2 oldNodeClass, type)
-        ]
-            (doseq [#_"Position" pos (Edges''getPositionsIterable-2 oldEdges, oldNode)]
-                (when (NodeClass''isValid-4 nodeClass, pos, oldNodeClass, oldEdges)
-                    (let [
-                        #_"Node" oldEdge (Position''get-2 pos, oldNode)
-                    ]
-                        (when (some? oldEdge)
-                            (let [
-                                #_"Node" target
-                                    (or (get newNodes oldEdge)
-                                        (let [
-                                            #_"Node" replacement (if (some? replacements) (DuplicationReplacement'''replacement-2 replacements, oldEdge) oldEdge)
-                                        ]
-                                            (cond
-                                                (not= replacement oldEdge)                                 replacement
-                                                (and (= (:graph oldEdge) graph) (= type EdgesType'Inputs)) oldEdge ;; patch to the outer world
-                                            )
-                                        )
-                                    )
-                            ]
-                                (Position''set-3 pos, node, target)
-                            )
-                        )
-                    )
-                )
-            )
-        )
-        nil
-    )
-
     (defn #_"NodeIterable" NodeClass''getSuccessorIterable-2 [#_"NodeClass<T>" this, #_"Node" node]
         (let [
             #_"long" mask (:successorIteration this)
@@ -19310,15 +18865,6 @@ ZeroExtendNode'new-4
                 )
             )
         )
-    )
-
-    #_unused
-    (defn #_"boolean" NodeClass''equalSuccessors-3 [#_"NodeClass<T>" this, #_"Node" node, #_"Node" other]
-        (NodeClass''equalEdges-4 this, node, other, (:successorIteration this))
-    )
-
-    (defn #_"boolean" NodeClass''equalInputs-3 [#_"NodeClass<T>" this, #_"Node" node, #_"Node" other]
-        (NodeClass''equalEdges-4 this, node, other, (:inputsIteration this))
     )
 
     (defn- #_"boolean" NodeClass''equalEdges-4 [#_"NodeClass<T>" this, #_"Node" node, #_"Node" other, #_"long" mask]
@@ -19346,14 +18892,13 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"void" NodeClass''applySuccessors-3 [#_"NodeClass<T>" this, #_"Node" node, #_"EdgeVisitor" consumer]
-        (NodeClass'applyEdges-3 node, consumer, (:successorIteration this))
-        nil
+    #_unused
+    (defn #_"boolean" NodeClass''equalSuccessors-3 [#_"NodeClass<T>" this, #_"Node" node, #_"Node" other]
+        (NodeClass''equalEdges-4 this, node, other, (:successorIteration this))
     )
 
-    (defn #_"void" NodeClass''applyInputs-3 [#_"NodeClass<T>" this, #_"Node" node, #_"EdgeVisitor" consumer]
-        (NodeClass'applyEdges-3 node, consumer, (:inputsIteration this))
-        nil
+    (defn #_"boolean" NodeClass''equalInputs-3 [#_"NodeClass<T>" this, #_"Node" node, #_"Node" other]
+        (NodeClass''equalEdges-4 this, node, other, (:inputsIteration this))
     )
 
     (defn- #_"void" NodeClass'applyEdges-3 [#_"Node" node, #_"EdgeVisitor" consumer, #_"long" mask]
@@ -19399,6 +18944,16 @@ ZeroExtendNode'new-4
                 )
             )
         )
+        nil
+    )
+
+    (defn #_"void" NodeClass''applySuccessors-3 [#_"NodeClass<T>" this, #_"Node" node, #_"EdgeVisitor" consumer]
+        (NodeClass'applyEdges-3 node, consumer, (:successorIteration this))
+        nil
+    )
+
+    (defn #_"void" NodeClass''applyInputs-3 [#_"NodeClass<T>" this, #_"Node" node, #_"EdgeVisitor" consumer]
+        (NodeClass'applyEdges-3 node, consumer, (:inputsIteration this))
         nil
     )
 
@@ -20197,15 +19752,15 @@ ZeroExtendNode'new-4
         (§ cast #_"T" (nth (:values this) (:id node)))
     )
 
-    (defn #_"T" NodeMap''getAndGrow-2 [#_"NodeMap<T>" this, #_"Node" node]
-        (§ ass! this (NodeMap''checkAndGrow-2 this, node))
-        (§ cast #_"T" (nth (:values this) (:id node)))
-    )
-
     (defn- #_"NodeMap<T>" NodeMap''checkAndGrow-2 [#_"NodeMap<T>" this, #_"Node" node]
         (when (NodeMap''isNew-2 this, node) => this
             (assoc this :values (Arrays/copyOf (:values this), (max NodeMap'MIN_REALLOC_SIZE (quot (* (:nodesSize (:graph this)) 3) 2))))
         )
+    )
+
+    (defn #_"T" NodeMap''getAndGrow-2 [#_"NodeMap<T>" this, #_"Node" node]
+        (§ ass! this (NodeMap''checkAndGrow-2 this, node))
+        (§ cast #_"T" (nth (:values this) (:id node)))
     )
 
     (§ override! #_"boolean" #_"Map." containsKey [#_"NodeMap<T>" this, #_"Node" node]
@@ -20376,6 +19931,16 @@ ZeroExtendNode'new-4
         )
     )
 
+    (defn- #_"NodeStack" NodeStack''grow-1 [#_"NodeStack" this]
+        (let [
+            #_"int" n (count (:values this))
+            #_"Node[]" a (make-array Node'iface (<< n 1))
+        ]
+            (System/arraycopy (:values this), 0, a, 0, n)
+            (assoc this :values a)
+        )
+    )
+
     (defn #_"NodeStack" NodeStack''push-2 [#_"NodeStack" this, #_"Node" node]
         (let [
             #_"int" i (:tos this)
@@ -20387,16 +19952,6 @@ ZeroExtendNode'new-4
         ]
             (aset (:values this) i node)
             this
-        )
-    )
-
-    (defn- #_"NodeStack" NodeStack''grow-1 [#_"NodeStack" this]
-        (let [
-            #_"int" n (count (:values this))
-            #_"Node[]" a (make-array Node'iface (<< n 1))
-        ]
-            (System/arraycopy (:values this), 0, a, 0, n)
-            (assoc this :values a)
         )
     )
 
@@ -21156,7 +20711,7 @@ ZeroExtendNode'new-4
         ]
             (loop-when [#_"int" i 0 #_"ISeq" s (seq (:successors (:currentBlock (:gen this))))] (some? s) => (throw! "Block not in successor list of current block")
                 (if (= (first s) block)
-                    (LabelRef'forSuccessor-3 (:lir (:res (:gen this))), (:currentBlock (:gen this)), i)
+                    (LabelRef'new-3 (:lir (:res (:gen this))), (:currentBlock (:gen this)), i)
                     (recur (inc i) (next s))
                 )
             )
@@ -21421,6 +20976,16 @@ ZeroExtendNode'new-4
         (JumpOp'new-1 ref)
     )
 
+    (defn- #_"void" LIRBuilder''emitNullCheckBranch-5 [#_"LIRBuilder" this, #_"IsNullNode" node, #_"LabelRef" trueSuccessor, #_"LabelRef" falseSuccessor, #_"double" trueSuccessorProbability]
+        (let [
+            #_"LIRKind" kind (Stamp'''getLIRKind-1 (:stamp (Unary'''getValue-1 node)))
+            #_"Value" nullValue (LIRGenerator''emitConstant-3 (:gen this), kind, JavaConstant/NULL_POINTER)
+        ]
+            (LIRGenerator''emitCompareBranch-8 (:gen this), (#_"ValueKind" .getPlatformKind kind), (LIRBuilder''operand-2 this, (Unary'''getValue-1 node)), nullValue, Condition'EQ, trueSuccessor, falseSuccessor, trueSuccessorProbability)
+        )
+        nil
+    )
+
     (defn #_"void" LIRBuilder''emitBranch-5 [#_"LIRBuilder" this, #_"LogicNode" node, #_"LabelRef" trueSuccessor, #_"LabelRef" falseSuccessor, #_"double" trueSuccessorProbability]
         (condp satisfies? node
             IsNullNode        (LIRBuilder''emitNullCheckBranch-5 this, node, trueSuccessor, falseSuccessor, trueSuccessorProbability)
@@ -21433,16 +20998,6 @@ ZeroExtendNode'new-4
 
     (defn #_"void" LIRBuilder''emitIf-2 [#_"LIRBuilder" this, #_"IfNode" node]
         (LIRBuilder''emitBranch-5 this, (:condition node), (LIRBuilder''getLIRBlock-2 this, (:trueSuccessor node)), (LIRBuilder''getLIRBlock-2 this, (:falseSuccessor node)), (ControlSplitNode'''probability-2 node, (:trueSuccessor node)))
-        nil
-    )
-
-    (defn- #_"void" LIRBuilder''emitNullCheckBranch-5 [#_"LIRBuilder" this, #_"IsNullNode" node, #_"LabelRef" trueSuccessor, #_"LabelRef" falseSuccessor, #_"double" trueSuccessorProbability]
-        (let [
-            #_"LIRKind" kind (Stamp'''getLIRKind-1 (:stamp (Unary'''getValue-1 node)))
-            #_"Value" nullValue (LIRGenerator''emitConstant-3 (:gen this), kind, JavaConstant/NULL_POINTER)
-        ]
-            (LIRGenerator''emitCompareBranch-8 (:gen this), (#_"ValueKind" .getPlatformKind kind), (LIRBuilder''operand-2 this, (Unary'''getValue-1 node)), nullValue, Condition'EQ, trueSuccessor, falseSuccessor, trueSuccessorProbability)
-        )
         nil
     )
 
@@ -21901,6 +21456,16 @@ ZeroExtendNode'new-4
         )
     )
 
+    (defn- #_"JavaType" ForeignCallLinkage'asJavaType-1 [#_"Class" type]
+        (let [
+            #_"ResolvedJavaType" javaType (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, type)
+        ]
+            (when (WordTypes'isWord-1j javaType) => javaType
+                (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, (#_"JavaKind" .toJavaClass WordTypes'wordKind))
+            )
+        )
+    )
+
     ;;;
      ; Gets a calling convention for a given descriptor and call type.
      ;;
@@ -21920,16 +21485,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"JavaType" ForeignCallLinkage'asJavaType-1 [#_"Class" type]
-        (let [
-            #_"ResolvedJavaType" javaType (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, type)
-        ]
-            (when (WordTypes'isWord-1j javaType) => javaType
-                (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, (#_"JavaKind" .toJavaClass WordTypes'wordKind))
-            )
-        )
-    )
-
     ;;;
      ; Identifies foreign calls which are guaranteed to include a safepoint check.
      ;;
@@ -21943,10 +21498,6 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"long" ForeignCallLinkage''getMaxCallTargetOffset-1 [#_"ForeignCallLinkage" this]
         (#_"CodeCacheProvider" .getMaxCallTargetOffset HotSpot'codeCache, (:address this))
-    )
-
-    (defn #_"ForeignCallLinkage" ForeignCallLinkage''setCompiledStub-2 [#_"ForeignCallLinkage" this, #_"Stub" stub]
-        (assoc this :stub stub)
     )
 
     (defn #_"ForeignCallLinkage" ForeignCallLinkage''finalizeAddress-1 [#_"ForeignCallLinkage" this]
@@ -22082,21 +21633,7 @@ ZeroExtendNode'new-4
     ;;;
      ; Registers that must be saved across a foreign call into the runtime.
      ;;
-    (§ def #_"Value[]" ForeignCalls'nativeABICallerSaveRegisters (ForeignCalls'createNativeABICallerSaveRegisters-0))
-
-    (defn #_"ForeignCalls" ForeignCalls'new-0 []
-        (let [
-            #_"ForeignCalls" this
-                (merge (ForeignCalls'class.)
-                    (hash-map
-                        #_"EconomicMap<ForeignCallDescriptor, ForeignCallLinkage>" :foreignCalls (EconomicMap/create)
-                    )
-                )
-        ]
-            (ForeignCalls''initialize-1 this)
-            this
-        )
-    )
+    (def #_"Value[]" ForeignCalls'nativeABICallerSaveRegisters (ForeignCalls'createNativeABICallerSaveRegisters-0))
 
     ;;;
      ; Registers the linkage for a foreign call.
@@ -22145,13 +21682,16 @@ ZeroExtendNode'new-4
         nil
     )
 
+    (defn- #_"Stub" ForeignCalls'link-1 [#_"Stub" stub]
+        (ß update-in stub [:linkage :stub] stub)
+    )
+
     ;;;
      ; Creates a stub for a foreign call.
      ;
      ; @param descriptor the signature of the call to the stub
      ; @param address the address of the foreign code to call
-     ; @param prependThread true if the JavaThread value for the current thread is to be prepended
-     ;            to the arguments for the call to {@code address}
+     ; @param prependThread true if the JavaThread value for the current thread is to be prepended to the arguments for the call to {@code address}
      ; @param transition specifies if this is a {@linkplain Transition#LEAF leaf} call
      ; @param reexecutable specifies if the foreign call can be re-executed without (meaningful) side effects.
      ;            Deoptimization will not return to a point before a foreign call that cannot be re-executed.
@@ -22159,22 +21699,42 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"void" ForeignCalls''linkForeignCall-7* [#_"ForeignCalls" this, #_"ForeignCallDescriptor" descriptor, #_"long" address, #_"boolean" prependThread, #_"Transition" transition, #_"boolean" reexecutable & #_"LocationIdentity..." killedLocations]
         (let [
-            #_"ForeignCallStub" stub (apply ForeignCallStub'new-6* address, descriptor, prependThread, transition, reexecutable, killedLocations)
+            #_"ForeignCallStub" stub (ForeignCalls'link-1 (apply ForeignCallStub'new-6* address, descriptor, prependThread, transition, reexecutable, killedLocations))
         ]
-            (§ ass! (:linkage stub) (ForeignCallLinkage''setCompiledStub-2 (:linkage stub), stub))
             (ForeignCalls''register-2 this, (:linkage stub))
             (ForeignCalls''register-2 this, (:target stub))
         )
         nil
     )
 
-    (def #_"boolean" ForeignCalls'PREPEND_THREAD true)
-    (def #_"boolean" ForeignCalls'DONT_PREPEND_THREAD (not ForeignCalls'PREPEND_THREAD))
+    (defn #_"ForeignCalls" ForeignCalls'new-0 []
+        (let [
+            #_"ForeignCalls" this
+                (merge (ForeignCalls'class.)
+                    (hash-map
+                        #_"EconomicMap<ForeignCallDescriptor, ForeignCallLinkage>" :foreignCalls (EconomicMap/create)
+                    )
+                )
+        ]
+            (apply ForeignCalls''registerForeignCall-8* this, ForeignCallDescriptor'DEOPTIMIZATION_HANDLER, HotSpot'handleDeoptStub, HotSpotCallingConventionType/NativeCall, RegisterEffect'PRESERVES_REGISTERS, Transition'LEAF_NOFP, true)
+            (apply ForeignCalls''registerForeignCall-8* this, ForeignCallDescriptor'UNCOMMON_TRAP_HANDLER, HotSpot'uncommonTrapStub, HotSpotCallingConventionType/NativeCall, RegisterEffect'PRESERVES_REGISTERS, Transition'LEAF_NOFP, true)
 
-    (def #_"boolean" ForeignCalls'REEXECUTABLE true)
-    (def #_"boolean" ForeignCalls'NOT_REEXECUTABLE (not ForeignCalls'REEXECUTABLE))
+            (ForeignCalls'link-1 (NewArrayStub'new-1 (ForeignCalls''registerStubCall-5* this, ForeignCallDescriptor'NEW_ARRAY, true, Transition'SAFEPOINT, ReplacementsUtil'TLAB_TOP_LOCATION, ReplacementsUtil'TLAB_END_LOCATION)))
+            (ForeignCalls'link-1 (NewInstanceStub'new-1 (ForeignCalls''registerStubCall-5* this, ForeignCallDescriptor'NEW_INSTANCE, true, Transition'SAFEPOINT, ReplacementsUtil'TLAB_TOP_LOCATION, ReplacementsUtil'TLAB_END_LOCATION)))
 
-    (def #_"LocationIdentity[]" ForeignCalls'NO_LOCATIONS (make-array LocationIdentity 0))
+            (ForeignCalls''registerForeignCall-8* this, ForeignCallDescriptor'NEW_ARRAY_C, HotSpot'newArrayAddress, HotSpotCallingConventionType/NativeCall, RegisterEffect'DESTROYS_REGISTERS, Transition'SAFEPOINT, true, (LocationIdentity/any))
+            (ForeignCalls''registerForeignCall-8* this, ForeignCallDescriptor'NEW_INSTANCE_C, HotSpot'newInstanceAddress, HotSpotCallingConventionType/NativeCall, RegisterEffect'DESTROYS_REGISTERS, Transition'SAFEPOINT, true, (LocationIdentity/any))
+            (ForeignCalls''linkForeignCall-7* this, ForeignCallDescriptor'DYNAMIC_NEW_ARRAY, HotSpot'dynamicNewArrayAddress, true, Transition'SAFEPOINT, true)
+            (ForeignCalls''linkForeignCall-7* this, ForeignCallDescriptor'DYNAMIC_NEW_INSTANCE, HotSpot'dynamicNewInstanceAddress, true, Transition'SAFEPOINT, true)
+
+            (ForeignCalls''linkForeignCall-7* this, ForeignCallDescriptor'MONITORENTER, HotSpot'monitorenterAddress, true, Transition'SAFEPOINT, false, (LocationIdentity/any))
+            (ForeignCalls''linkForeignCall-7* this, ForeignCallDescriptor'MONITOREXIT, HotSpot'monitorexitAddress, true, Transition'STACK_INSPECTABLE_LEAF, false, (LocationIdentity/any))
+
+            (apply ForeignCalls''linkForeignCall-7* this, ForeignCallDescriptor'G1WBPRECALL, HotSpot'writeBarrierPreAddress, true, Transition'LEAF_NOFP, true)
+            (apply ForeignCalls''linkForeignCall-7* this, ForeignCallDescriptor'G1WBPOSTCALL, HotSpot'writeBarrierPostAddress, true, Transition'LEAF_NOFP, true)
+            this
+        )
+    )
 
     ;;;
      ; Gets the linkage for a foreign call.
@@ -22210,30 +21770,6 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"LocationIdentity[]" ForeignCalls''getKilledLocations-2 [#_"ForeignCalls" this, #_"ForeignCallDescriptor" descriptor]
         (:killedLocations (get (:foreignCalls this) descriptor))
-    )
-
-    (defn #_"void" ForeignCalls'link-1 [#_"Stub" stub]
-        (§ ass! (:linkage stub) (ForeignCallLinkage''setCompiledStub-2 (:linkage stub), stub))
-        nil
-    )
-
-    (defn- #_"void" ForeignCalls''initialize-1 [#_"ForeignCalls" this]
-        (apply ForeignCalls''registerForeignCall-8* this, ForeignCallDescriptor'DEOPTIMIZATION_HANDLER, HotSpot'handleDeoptStub, HotSpotCallingConventionType/NativeCall, RegisterEffect'PRESERVES_REGISTERS, Transition'LEAF_NOFP, ForeignCalls'REEXECUTABLE, ForeignCalls'NO_LOCATIONS)
-        (apply ForeignCalls''registerForeignCall-8* this, ForeignCallDescriptor'UNCOMMON_TRAP_HANDLER, HotSpot'uncommonTrapStub, HotSpotCallingConventionType/NativeCall, RegisterEffect'PRESERVES_REGISTERS, Transition'LEAF_NOFP, ForeignCalls'REEXECUTABLE, ForeignCalls'NO_LOCATIONS)
-
-        (ForeignCalls'link-1 (NewArrayStub'new-1 (ForeignCalls''registerStubCall-5* this, ForeignCallDescriptor'NEW_ARRAY, ForeignCalls'REEXECUTABLE, Transition'SAFEPOINT, ReplacementsUtil'TLAB_TOP_LOCATION, ReplacementsUtil'TLAB_END_LOCATION)))
-        (ForeignCalls'link-1 (NewInstanceStub'new-1 (ForeignCalls''registerStubCall-5* this, ForeignCallDescriptor'NEW_INSTANCE, ForeignCalls'REEXECUTABLE, Transition'SAFEPOINT, ReplacementsUtil'TLAB_TOP_LOCATION, ReplacementsUtil'TLAB_END_LOCATION)))
-        (ForeignCalls''registerForeignCall-8* this, ForeignCallDescriptor'NEW_ARRAY_C, HotSpot'newArrayAddress, HotSpotCallingConventionType/NativeCall, RegisterEffect'DESTROYS_REGISTERS, Transition'SAFEPOINT, ForeignCalls'REEXECUTABLE, (LocationIdentity/any))
-        (ForeignCalls''registerForeignCall-8* this, ForeignCallDescriptor'NEW_INSTANCE_C, HotSpot'newInstanceAddress, HotSpotCallingConventionType/NativeCall, RegisterEffect'DESTROYS_REGISTERS, Transition'SAFEPOINT, ForeignCalls'REEXECUTABLE, (LocationIdentity/any))
-        (ForeignCalls''linkForeignCall-7* this, ForeignCallDescriptor'DYNAMIC_NEW_ARRAY, HotSpot'dynamicNewArrayAddress, ForeignCalls'PREPEND_THREAD, Transition'SAFEPOINT, ForeignCalls'REEXECUTABLE)
-        (ForeignCalls''linkForeignCall-7* this, ForeignCallDescriptor'DYNAMIC_NEW_INSTANCE, HotSpot'dynamicNewInstanceAddress, ForeignCalls'PREPEND_THREAD, Transition'SAFEPOINT, ForeignCalls'REEXECUTABLE)
-
-        (ForeignCalls''linkForeignCall-7* this, ForeignCallDescriptor'MONITORENTER, HotSpot'monitorenterAddress, ForeignCalls'PREPEND_THREAD, Transition'SAFEPOINT, ForeignCalls'NOT_REEXECUTABLE, (LocationIdentity/any))
-        (ForeignCalls''linkForeignCall-7* this, ForeignCallDescriptor'MONITOREXIT, HotSpot'monitorexitAddress, ForeignCalls'PREPEND_THREAD, Transition'STACK_INSPECTABLE_LEAF, ForeignCalls'NOT_REEXECUTABLE, (LocationIdentity/any))
-
-        (apply ForeignCalls''linkForeignCall-7* this, ForeignCallDescriptor'G1WBPRECALL, HotSpot'writeBarrierPreAddress, ForeignCalls'PREPEND_THREAD, Transition'LEAF_NOFP, ForeignCalls'REEXECUTABLE, ForeignCalls'NO_LOCATIONS)
-        (apply ForeignCalls''linkForeignCall-7* this, ForeignCallDescriptor'G1WBPOSTCALL, HotSpot'writeBarrierPostAddress, ForeignCalls'PREPEND_THREAD, Transition'LEAF_NOFP, ForeignCalls'REEXECUTABLE, ForeignCalls'NO_LOCATIONS)
-        nil
     )
 )
 
@@ -22352,6 +21888,23 @@ ZeroExtendNode'new-4
         )
     )
 
+    (defn- #_"boolean" HotSpotNodePlugin'tryConstantFold-3 [#_"BytecodeParser" parser, #_"ResolvedJavaField" field, #_"JavaConstant" object]
+        (let [
+            #_"ConstantNode" constant (ConstantFields'tryConstantFold-2 field, object)
+        ]
+            (and (some? constant)
+                (do
+                    (BytecodeParser''push-3 parser, (#_"ResolvedJavaField" .getJavaKind field), (Graph''add-2 (:graph parser), constant))
+                    true
+                )
+            )
+        )
+    )
+
+    (defn- #_"boolean" HotSpotNodePlugin'tryReadField-3 [#_"BytecodeParser" parser, #_"ResolvedJavaField" field, #_"JavaConstant" object]
+        (HotSpotNodePlugin'tryConstantFold-3 parser, field, object)
+    )
+
     (defm HotSpotNodePlugin NodePlugin
         (#_"boolean" NodePlugin'''handleInvoke-4 [#_"HotSpotNodePlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"ValueNode[]" args]
             (and (GraphBuilder'''parsingIntrinsic-1 parser)
@@ -22376,26 +21929,7 @@ ZeroExtendNode'new-4
                 )
             )
         )
-    )
 
-    (defn- #_"boolean" HotSpotNodePlugin'tryReadField-3 [#_"BytecodeParser" parser, #_"ResolvedJavaField" field, #_"JavaConstant" object]
-        (HotSpotNodePlugin'tryConstantFold-3 parser, field, object)
-    )
-
-    (defn- #_"boolean" HotSpotNodePlugin'tryConstantFold-3 [#_"BytecodeParser" parser, #_"ResolvedJavaField" field, #_"JavaConstant" object]
-        (let [
-            #_"ConstantNode" constant (ConstantFields'tryConstantFold-2 field, object)
-        ]
-            (and (some? constant)
-                (do
-                    (BytecodeParser''push-3 parser, (#_"ResolvedJavaField" .getJavaKind field), (Graph''add-2 (:graph parser), constant))
-                    true
-                )
-            )
-        )
-    )
-
-    (defm HotSpotNodePlugin NodePlugin
         (#_"boolean" NodePlugin'''handleStoreField-5 [#_"HotSpotNodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaField" field, #_"ValueNode" value]
             (and (GraphBuilder'''parsingIntrinsic-1 parser)
                 (NodePlugin'''handleStoreField-5 (:wordOperationPlugin this), parser, object, field, value)
@@ -23078,14 +22612,6 @@ ZeroExtendNode'new-4
 )
 
 (class-ns KlassPointerStamp
-    (§ def #_"KlassPointerStamp" KlassPointerStamp'KLASS             (KlassPointerStamp'new-2 false, false))
-    (§ def #_"KlassPointerStamp" KlassPointerStamp'KLASS_NON_NULL    (KlassPointerStamp'new-2 true, false))
-    (§ def #_"KlassPointerStamp" KlassPointerStamp'KLASS_ALWAYS_NULL (KlassPointerStamp'new-2 false, true))
-
-    (defn- #_"KlassPointerStamp" KlassPointerStamp'new-2 [#_"boolean" never-nil?, #_"boolean" always-nil?]
-        (KlassPointerStamp'new-3 never-nil?, always-nil?, nil)
-    )
-
     (defn- #_"KlassPointerStamp" KlassPointerStamp'new-3 [#_"boolean" never-nil?, #_"boolean" always-nil?, #_"CompressEncoding" encoding]
         (merge (KlassPointerStamp'class.) (AbstractPointerStamp'new-2 never-nil?, always-nil?)
             (hash-map
@@ -23093,6 +22619,14 @@ ZeroExtendNode'new-4
             )
         )
     )
+
+    (defn- #_"KlassPointerStamp" KlassPointerStamp'new-2 [#_"boolean" never-nil?, #_"boolean" always-nil?]
+        (KlassPointerStamp'new-3 never-nil?, always-nil?, nil)
+    )
+
+    (§ def #_"KlassPointerStamp" KlassPointerStamp'KLASS             (KlassPointerStamp'new-2 false, false))
+    (§ def #_"KlassPointerStamp" KlassPointerStamp'KLASS_NON_NULL    (KlassPointerStamp'new-2 true, false))
+    (§ def #_"KlassPointerStamp" KlassPointerStamp'KLASS_ALWAYS_NULL (KlassPointerStamp'new-2 false, true))
 
     (defm KlassPointerStamp AbstractPointerStamp
         (#_"AbstractPointerStamp" AbstractPointerStamp'''copyWith-3 [#_"KlassPointerStamp" this, #_"boolean" newNonNull, #_"boolean" newAlwaysNull]
@@ -23205,29 +22739,7 @@ ZeroExtendNode'new-4
         (WriteBarrierAdditionPhase'class.)
     )
 
-    (defm WriteBarrierAdditionPhase Phase
-        (#_"Graph" Phase'''run-3 [#_"WriteBarrierAdditionPhase" this, #_"Graph" graph, #_"PhaseContext" context]
-            (doseq [#_"Node" node (Graph''getNodes-1 graph)]
-                (condp satisfies? node
-                    ReadNode                      (WriteBarrierAdditionPhase''addReadNodeBarriers-3 this, node, graph)
-                    WriteNode                     (WriteBarrierAdditionPhase''addWriteNodeBarriers-3 this, node, graph)
-                    LoweredAtomicReadAndWriteNode (WriteBarrierAdditionPhase''addAtomicReadWriteNodeBarriers-3 this, node, graph)
-                    AbstractCompareAndSwapNode    (WriteBarrierAdditionPhase''addCASBarriers-3 this, node, graph)
-                    nil
-                )
-            )
-            graph
-        )
-    )
-
-    (defn- #_"void" WriteBarrierAdditionPhase''addReadNodeBarriers-3 [#_"WriteBarrierAdditionPhase" this, #_"ReadNode" node, #_"Graph" graph]
-        (when (= (HeapAccess'''getBarrierType-1 node) BarrierType'PRECISE)
-            (Graph''addAfterFixed-3 graph, node, (Graph''add-2 graph, (G1ReferentFieldReadBarrier'new-3 (Access'''getAddress-1 node), node, false)))
-        )
-        nil
-    )
-
-    (defn #_"void" WriteBarrierAdditionPhase'addG1PreWriteBarrier-6 [#_"FixedAccessNode" node, #_"AddressNode" address, #_"ValueNode" value, #_"boolean" doLoad, #_"boolean" nullCheck, #_"Graph" graph]
+    (defn- #_"void" WriteBarrierAdditionPhase'addG1PreWriteBarrier-6 [#_"FixedAccessNode" node, #_"AddressNode" address, #_"ValueNode" value, #_"boolean" doLoad, #_"boolean" nullCheck, #_"Graph" graph]
         (let [
             #_"G1PreWriteBarrier" preBarrier (Graph''add-2 graph, (G1PreWriteBarrier'new-4 address, value, doLoad, nullCheck))
         ]
@@ -23239,14 +22751,21 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn #_"void" WriteBarrierAdditionPhase''addG1PostWriteBarrier-6 [#_"WriteBarrierAdditionPhase" this, #_"FixedAccessNode" node, #_"AddressNode" address, #_"ValueNode" value, #_"boolean" precise?, #_"Graph" graph]
+    (defn- #_"void" WriteBarrierAdditionPhase''addG1PostWriteBarrier-6 [#_"WriteBarrierAdditionPhase" this, #_"FixedAccessNode" node, #_"AddressNode" address, #_"ValueNode" value, #_"boolean" precise?, #_"Graph" graph]
         (Graph''addAfterFixed-3 graph, node, (Graph''add-2 graph, (G1PostWriteBarrier'new-4 address, value, precise?, (StampTool'isPointerAlwaysNull-1 (:stamp value)))))
         nil
     )
 
-    (defn #_"void" WriteBarrierAdditionPhase''addSerialPostWriteBarrier-6 [#_"WriteBarrierAdditionPhase" this, #_"FixedAccessNode" node, #_"AddressNode" address, #_"ValueNode" value, #_"boolean" precise?, #_"Graph" graph]
+    (defn- #_"void" WriteBarrierAdditionPhase''addSerialPostWriteBarrier-6 [#_"WriteBarrierAdditionPhase" this, #_"FixedAccessNode" node, #_"AddressNode" address, #_"ValueNode" value, #_"boolean" precise?, #_"Graph" graph]
         (when-not (StampTool'isPointerAlwaysNull-1 (:stamp value)) ;; serial barrier isn't needed for nil value
             (Graph''addAfterFixed-3 graph, node, (Graph''add-2 graph, (SerialWriteBarrier'new-2 address, precise?)))
+        )
+        nil
+    )
+
+    (defn- #_"void" WriteBarrierAdditionPhase''addReadNodeBarriers-3 [#_"WriteBarrierAdditionPhase" this, #_"ReadNode" node, #_"Graph" graph]
+        (when (= (HeapAccess'''getBarrierType-1 node) BarrierType'PRECISE)
+            (Graph''addAfterFixed-3 graph, node, (Graph''add-2 graph, (G1ReferentFieldReadBarrier'new-3 (Access'''getAddress-1 node), node, false)))
         )
         nil
     )
@@ -23320,6 +22839,21 @@ ZeroExtendNode'new-4
             )
         )
         nil
+    )
+
+    (defm WriteBarrierAdditionPhase Phase
+        (#_"Graph" Phase'''run-3 [#_"WriteBarrierAdditionPhase" this, #_"Graph" graph, #_"PhaseContext" context]
+            (doseq [#_"Node" node (Graph''getNodes-1 graph)]
+                (condp satisfies? node
+                    ReadNode                      (WriteBarrierAdditionPhase''addReadNodeBarriers-3 this, node, graph)
+                    WriteNode                     (WriteBarrierAdditionPhase''addWriteNodeBarriers-3 this, node, graph)
+                    LoweredAtomicReadAndWriteNode (WriteBarrierAdditionPhase''addAtomicReadWriteNodeBarriers-3 this, node, graph)
+                    AbstractCompareAndSwapNode    (WriteBarrierAdditionPhase''addCASBarriers-3 this, node, graph)
+                    nil
+                )
+            )
+            graph
+        )
     )
 )
 
@@ -24063,6 +23597,29 @@ ZeroExtendNode'new-4
         )
     )
 
+    (defn- #_"ValueNode" KlassLayoutHelperNode'canonical-3 [#_"KlassLayoutHelperNode" node, #_"ValueNode" klass, #_"Stamp" stamp]
+        (when (and (satisfies? ConstantNode klass) (not (#_"Constant" .isDefaultForKind (:value klass))))
+            (§ return (ConstantNode'forConstant-2s stamp, (Stamp'''readConstant-4 stamp, (#_"ConstantReflectionProvider" .getMemoryAccessProvider HotSpot'constantReflection), (:value klass), HotSpot'klassLayoutHelperOffset)))
+        )
+        (when (satisfies? LoadHubNode klass)
+            (let [
+                #_"Stamp" hubStamp (:stamp (:value klass))
+            ]
+                (when (satisfies? ObjectStamp hubStamp)
+                    (let [
+                        #_"HotSpotResolvedObjectType" type (:type hubStamp)
+                    ]
+                        (when (and (some? type) (#_"HotSpotResolvedObjectType" .isArray type) (not (#_"ResolvedJavaType" .isPrimitive (#_"HotSpotResolvedObjectType" .getComponentType type))))
+                            ;; The layout for all object arrays is the same.
+                            (§ return (ConstantNode'forConstant-2s stamp, (Stamp'''readConstant-4 stamp, (#_"ConstantReflectionProvider" .getMemoryAccessProvider HotSpot'constantReflection), (#_"HotSpotResolvedObjectType" .klass type), HotSpot'klassLayoutHelperOffset)))
+                        )
+                    )
+                )
+            )
+        )
+        (or node (KlassLayoutHelperNode'new-1 klass))
+    )
+
     (defn #_"ValueNode" KlassLayoutHelperNode'create-1 [#_"ValueNode" klass]
         (KlassLayoutHelperNode'canonical-3 nil, klass, (StampFactory'forKind-1 JavaKind/Int))
     )
@@ -24107,29 +23664,6 @@ ZeroExtendNode'new-4
                 (KlassLayoutHelperNode'canonical-3 this, (:klass this), (:stamp this))
             )
         )
-    )
-
-    (defn- #_"ValueNode" KlassLayoutHelperNode'canonical-3 [#_"KlassLayoutHelperNode" node, #_"ValueNode" klass, #_"Stamp" stamp]
-        (when (and (satisfies? ConstantNode klass) (not (#_"Constant" .isDefaultForKind (:value klass))))
-            (§ return (ConstantNode'forConstant-2s stamp, (Stamp'''readConstant-4 stamp, (#_"ConstantReflectionProvider" .getMemoryAccessProvider HotSpot'constantReflection), (:value klass), HotSpot'klassLayoutHelperOffset)))
-        )
-        (when (satisfies? LoadHubNode klass)
-            (let [
-                #_"Stamp" hubStamp (:stamp (:value klass))
-            ]
-                (when (satisfies? ObjectStamp hubStamp)
-                    (let [
-                        #_"HotSpotResolvedObjectType" type (:type hubStamp)
-                    ]
-                        (when (and (some? type) (#_"HotSpotResolvedObjectType" .isArray type) (not (#_"ResolvedJavaType" .isPrimitive (#_"HotSpotResolvedObjectType" .getComponentType type))))
-                            ;; The layout for all object arrays is the same.
-                            (§ return (ConstantNode'forConstant-2s stamp, (Stamp'''readConstant-4 stamp, (#_"ConstantReflectionProvider" .getMemoryAccessProvider HotSpot'constantReflection), (#_"HotSpotResolvedObjectType" .klass type), HotSpot'klassLayoutHelperOffset)))
-                        )
-                    )
-                )
-            )
-        )
-        (or node (KlassLayoutHelperNode'new-1 klass))
     )
 
     (defm KlassLayoutHelperNode Lowerable
@@ -24224,76 +23758,6 @@ ZeroExtendNode'new-4
  ; appropriately to comply with the layouts above.
  ;;
 (value-ns MonitorSnippets (§ implements Snippets)
-    (§ snippet! #_"void" #_"MonitorSnippets" "monitorenter" [#_"Object" object, #_"KlassPointer" hub, #_@ConstantParameter #_"int" lockDepth, #_@ConstantParameter #_"Register" threadRegister, #_@ConstantParameter #_"Register" stackPointerRegister]
-        ;; load the mark word - this includes a nil-check on object
-        (let [
-            #_"Word" mark (ReplacementsUtil'loadWordFromObject-2 object, HotSpot'markOffset)
-            #_"Word" lock (BeginLockScopeNode'beginLockScope-1 lockDepth)
-            #_"Word" objectPointer (Word'objectToTrackedPointer-1 object)
-        ]
-            (when (and HotSpot'useBiasedLocking (MonitorSnippets'tryEnterBiased-5 object, hub, lock, mark, threadRegister))
-                (§ return )
-                ;; not biased, fall-through
-            )
-            (if (and (MonitorSnippets'inlineFastLockSupported-0) (BranchProbabilityNode'probability-2 BranchProbabilityNode'SLOW_PATH_PROBABILITY, (Word''notEqual-2i (Word''and-2i mark, HotSpot'monitorMask), 0)))
-                ;; inflated case
-                (when (MonitorSnippets'tryEnterInflated-4 object, lock, mark, threadRegister)
-                    (§ return )
-                )
-                ;; create the unlocked mark word pattern
-                (let [
-                    #_"Word" unlockedMark (Word''or-2i mark, HotSpot'unlockedMask)
-                ]
-                    ;; copy this unlocked mark word into the lock slot on the stack
-                    (Word''writeWord-4i lock, HotSpot'lockDisplacedMarkOffset, unlockedMark, ReplacementsUtil'DISPLACED_MARK_WORD_LOCATION)
-
-                    ;; make sure previous store does not float below compareAndSwap
-                    (MembarNode'memoryBarrier-1 MemoryBarriers/STORE_STORE)
-
-                    ;; Test if the object's mark word is unlocked, and if so, store the (address of) the lock slot into the object's mark word.
-                    (let [
-                        #_"Word" currentMark (Word''compareAndSwapWord-5 objectPointer, HotSpot'markOffset, unlockedMark, lock, ReplacementsUtil'MARK_WORD_LOCATION)
-                    ]
-                        (if (BranchProbabilityNode'probability-2 BranchProbabilityNode'FAST_PATH_PROBABILITY, (Word''equal-2w currentMark, unlockedMark))
-                            (do
-                                (AcquiredCASLockNode'mark-1 object)
-                                (§ return )
-                            )
-                            ;; The mark word in the object header was not the same.
-                            ;; Either the object is locked by another thread or is already locked
-                            ;; by the current thread. The latter is true if the mark word
-                            ;; is a stack pointer into the current thread's stack, i.e.:
-                            ;;
-                            ;; 1. (currentMark & aligned_mask) == 0
-                            ;; 2. rsp <= currentMark
-                            ;; 3. currentMark <= rsp + page_size
-                            ;;
-                            ;; These 3 tests can be done by evaluating the following expression:
-                            ;;
-                            ;; (currentMark - rsp) & (aligned_mask - page_size)
-                            ;;
-                            ;; assuming both the stack pointer and page_size have their least
-                            ;; significant 2 bits cleared and page_size is a power of 2
-                            (let [
-                                #_"Word" alignedMask (WordFactory'unsigned-1i (dec (.wordSize HotSpot'target)))
-                                #_"Word" stackPointer (Word''add-2i (ReplacementsUtil'registerAsWord-1 stackPointerRegister), HotSpot'stackBias)
-                            ]
-                                (when (BranchProbabilityNode'probability-2 BranchProbabilityNode'FAST_PATH_PROBABILITY, (Word''equal-2i (Word''and-2w (Word''subtract-2w currentMark, stackPointer), (Word''subtract-2i alignedMask, (.pageSize HotSpot'unsafe))), 0))
-                                    ;; recursively locked => write 0 to the lock slot
-                                    (Word''writeWord-4i lock, HotSpot'lockDisplacedMarkOffset, (WordFactory'zero-0), ReplacementsUtil'DISPLACED_MARK_WORD_LOCATION)
-                                    (§ return )
-                                )
-                            )
-                        )
-                    )
-                )
-            )
-            ;; slow-path runtime-call
-            (ForeignCallNode'monitorenterStubC-3 ForeignCallDescriptor'MONITORENTER, object, lock)
-        )
-        nil
-    )
-
     (defn- #_"boolean" MonitorSnippets'tryEnterBiased-5 [#_"Object" object, #_"KlassPointer" hub, #_"Word" lock, #_"Word" mark, #_"Register" threadRegister]
         ;; See whether the lock is currently biased toward our thread and whether the epoch is still valid.
         ;; Note that the runtime guarantees sufficient alignment of JavaThread pointers to allow age to be placed into low bits.
@@ -24406,6 +23870,76 @@ ZeroExtendNode'new-4
         )
     )
 
+    (§ snippet! #_"void" #_"MonitorSnippets" "monitorenter" [#_"Object" object, #_"KlassPointer" hub, #_@ConstantParameter #_"int" lockDepth, #_@ConstantParameter #_"Register" threadRegister, #_@ConstantParameter #_"Register" stackPointerRegister]
+        ;; load the mark word - this includes a nil-check on object
+        (let [
+            #_"Word" mark (ReplacementsUtil'loadWordFromObject-2 object, HotSpot'markOffset)
+            #_"Word" lock (BeginLockScopeNode'beginLockScope-1 lockDepth)
+            #_"Word" objectPointer (Word'objectToTrackedPointer-1 object)
+        ]
+            (when (and HotSpot'useBiasedLocking (MonitorSnippets'tryEnterBiased-5 object, hub, lock, mark, threadRegister))
+                (§ return )
+                ;; not biased, fall-through
+            )
+            (if (and (MonitorSnippets'inlineFastLockSupported-0) (BranchProbabilityNode'probability-2 BranchProbabilityNode'SLOW_PATH_PROBABILITY, (Word''notEqual-2i (Word''and-2i mark, HotSpot'monitorMask), 0)))
+                ;; inflated case
+                (when (MonitorSnippets'tryEnterInflated-4 object, lock, mark, threadRegister)
+                    (§ return )
+                )
+                ;; create the unlocked mark word pattern
+                (let [
+                    #_"Word" unlockedMark (Word''or-2i mark, HotSpot'unlockedMask)
+                ]
+                    ;; copy this unlocked mark word into the lock slot on the stack
+                    (Word''writeWord-4i lock, HotSpot'lockDisplacedMarkOffset, unlockedMark, ReplacementsUtil'DISPLACED_MARK_WORD_LOCATION)
+
+                    ;; make sure previous store does not float below compareAndSwap
+                    (MembarNode'memoryBarrier-1 MemoryBarriers/STORE_STORE)
+
+                    ;; Test if the object's mark word is unlocked, and if so, store the (address of) the lock slot into the object's mark word.
+                    (let [
+                        #_"Word" currentMark (Word''compareAndSwapWord-5 objectPointer, HotSpot'markOffset, unlockedMark, lock, ReplacementsUtil'MARK_WORD_LOCATION)
+                    ]
+                        (if (BranchProbabilityNode'probability-2 BranchProbabilityNode'FAST_PATH_PROBABILITY, (Word''equal-2w currentMark, unlockedMark))
+                            (do
+                                (AcquiredCASLockNode'mark-1 object)
+                                (§ return )
+                            )
+                            ;; The mark word in the object header was not the same.
+                            ;; Either the object is locked by another thread or is already locked
+                            ;; by the current thread. The latter is true if the mark word
+                            ;; is a stack pointer into the current thread's stack, i.e.:
+                            ;;
+                            ;; 1. (currentMark & aligned_mask) == 0
+                            ;; 2. rsp <= currentMark
+                            ;; 3. currentMark <= rsp + page_size
+                            ;;
+                            ;; These 3 tests can be done by evaluating the following expression:
+                            ;;
+                            ;; (currentMark - rsp) & (aligned_mask - page_size)
+                            ;;
+                            ;; assuming both the stack pointer and page_size have their least
+                            ;; significant 2 bits cleared and page_size is a power of 2
+                            (let [
+                                #_"Word" alignedMask (WordFactory'unsigned-1i (dec (.wordSize HotSpot'target)))
+                                #_"Word" stackPointer (Word''add-2i (ReplacementsUtil'registerAsWord-1 stackPointerRegister), HotSpot'stackBias)
+                            ]
+                                (when (BranchProbabilityNode'probability-2 BranchProbabilityNode'FAST_PATH_PROBABILITY, (Word''equal-2i (Word''and-2w (Word''subtract-2w currentMark, stackPointer), (Word''subtract-2i alignedMask, (.pageSize HotSpot'unsafe))), 0))
+                                    ;; recursively locked => write 0 to the lock slot
+                                    (Word''writeWord-4i lock, HotSpot'lockDisplacedMarkOffset, (WordFactory'zero-0), ReplacementsUtil'DISPLACED_MARK_WORD_LOCATION)
+                                    (§ return )
+                                )
+                            )
+                        )
+                    )
+                )
+            )
+            ;; slow-path runtime-call
+            (ForeignCallNode'monitorenterStubC-3 ForeignCallDescriptor'MONITORENTER, object, lock)
+        )
+        nil
+    )
+
     ;;;
      ; Calls straight out to the monitorenter stub.
      ;;
@@ -24416,6 +23950,42 @@ ZeroExtendNode'new-4
         ;; BeginLockScope nodes do not read from object, so a use of object cannot float about the nil-check above.
         (ForeignCallNode'monitorenterStubC-3 ForeignCallDescriptor'MONITORENTER, object, (BeginLockScopeNode'beginLockScope-1 lockDepth))
         nil
+    )
+
+    (defn- #_"boolean" MonitorSnippets'tryExitInflated-4 [#_"Object" object, #_"Word" mark, #_"Word" lock, #_"Register" threadRegister]
+        (and (MonitorSnippets'inlineFastUnlockSupported-0)
+             (BranchProbabilityNode'probability-2 BranchProbabilityNode'SLOW_PATH_PROBABILITY, (Word''notEqual-2i (Word''and-2i mark, HotSpot'monitorMask), 0))
+            ;; inflated case
+            ;; mark is a pointer to the ObjectMonitor + monitorMask
+            (let [
+                #_"Word" monitor (Word''subtract-2i mark, HotSpot'monitorMask)
+                #_"int" ownerOffset HotSpot'objectMonitorOwnerOffset
+                #_"Word" owner (Word''readWord-3i monitor, ownerOffset, ReplacementsUtil'OBJECT_MONITOR_OWNER_LOCATION)
+                #_"int" recursionsOffset HotSpot'objectMonitorRecursionsOffset
+                #_"Word" recursions (Word''readWord-3i monitor, recursionsOffset, ReplacementsUtil'OBJECT_MONITOR_RECURSION_LOCATION)
+                #_"Word" thread (ReplacementsUtil'registerAsWord-1 threadRegister)
+            ]
+                (when (BranchProbabilityNode'probability-2 BranchProbabilityNode'FAST_PATH_PROBABILITY, (Word''equal-2i (Word''or-2w (Word''xor-2w owner, thread), recursions), 0))
+                    ;; owner == thread && recursions == 0
+                    (let [
+                        #_"int" cxqOffset HotSpot'objectMonitorCxqOffset
+                        #_"Word" cxq (Word''readWord-3i monitor, cxqOffset, ReplacementsUtil'OBJECT_MONITOR_CXQ_LOCATION)
+                        #_"int" entryListOffset HotSpot'objectMonitorEntryListOffset
+                        #_"Word" entryList (Word''readWord-3i monitor, entryListOffset, ReplacementsUtil'OBJECT_MONITOR_ENTRY_LIST_LOCATION)
+                    ]
+                        (when (BranchProbabilityNode'probability-2 BranchProbabilityNode'FREQUENT_PROBABILITY, (Word''equal-2i (Word''or-2w cxq, entryList), 0))
+                            ;; cxq == 0 && entryList == 0
+                            ;; nobody is waiting, success
+                            (MembarNode'memoryBarrier-1 (| MemoryBarriers/LOAD_STORE MemoryBarriers/STORE_STORE))
+                            (Word''writeWord-3i monitor, ownerOffset, (WordFactory'zero-0))
+                            (§ return true)
+                        )
+                    )
+                )
+                (ForeignCallNode'monitorexitStubC-3 ForeignCallDescriptor'MONITOREXIT, object, lock)
+                true
+            )
+        )
     )
 
     (§ snippet! #_"void" #_"MonitorSnippets" "monitorexit" [#_"Object" object, #_@ConstantParameter #_"int" lockDepth, #_@ConstantParameter #_"Register" threadRegister]
@@ -24471,42 +24041,6 @@ ZeroExtendNode'new-4
             (<= 0 HotSpot'monitorMask)
             (<= 0 HotSpot'objectMonitorOwnerOffset)
             (<= 0 HotSpot'objectMonitorRecursionsOffset)
-        )
-    )
-
-    (defn- #_"boolean" MonitorSnippets'tryExitInflated-4 [#_"Object" object, #_"Word" mark, #_"Word" lock, #_"Register" threadRegister]
-        (and (MonitorSnippets'inlineFastUnlockSupported-0)
-             (BranchProbabilityNode'probability-2 BranchProbabilityNode'SLOW_PATH_PROBABILITY, (Word''notEqual-2i (Word''and-2i mark, HotSpot'monitorMask), 0))
-            ;; inflated case
-            ;; mark is a pointer to the ObjectMonitor + monitorMask
-            (let [
-                #_"Word" monitor (Word''subtract-2i mark, HotSpot'monitorMask)
-                #_"int" ownerOffset HotSpot'objectMonitorOwnerOffset
-                #_"Word" owner (Word''readWord-3i monitor, ownerOffset, ReplacementsUtil'OBJECT_MONITOR_OWNER_LOCATION)
-                #_"int" recursionsOffset HotSpot'objectMonitorRecursionsOffset
-                #_"Word" recursions (Word''readWord-3i monitor, recursionsOffset, ReplacementsUtil'OBJECT_MONITOR_RECURSION_LOCATION)
-                #_"Word" thread (ReplacementsUtil'registerAsWord-1 threadRegister)
-            ]
-                (when (BranchProbabilityNode'probability-2 BranchProbabilityNode'FAST_PATH_PROBABILITY, (Word''equal-2i (Word''or-2w (Word''xor-2w owner, thread), recursions), 0))
-                    ;; owner == thread && recursions == 0
-                    (let [
-                        #_"int" cxqOffset HotSpot'objectMonitorCxqOffset
-                        #_"Word" cxq (Word''readWord-3i monitor, cxqOffset, ReplacementsUtil'OBJECT_MONITOR_CXQ_LOCATION)
-                        #_"int" entryListOffset HotSpot'objectMonitorEntryListOffset
-                        #_"Word" entryList (Word''readWord-3i monitor, entryListOffset, ReplacementsUtil'OBJECT_MONITOR_ENTRY_LIST_LOCATION)
-                    ]
-                        (when (BranchProbabilityNode'probability-2 BranchProbabilityNode'FREQUENT_PROBABILITY, (Word''equal-2i (Word''or-2w cxq, entryList), 0))
-                            ;; cxq == 0 && entryList == 0
-                            ;; nobody is waiting, success
-                            (MembarNode'memoryBarrier-1 (| MemoryBarriers/LOAD_STORE MemoryBarriers/STORE_STORE))
-                            (Word''writeWord-3i monitor, ownerOffset, (WordFactory'zero-0))
-                            (§ return true)
-                        )
-                    )
-                )
-                (ForeignCallNode'monitorexitStubC-3 ForeignCallDescriptor'MONITOREXIT, object, lock)
-                true
-            )
         )
     )
 
@@ -24626,21 +24160,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (§ snippet! #_"Object" #_"NewObjectSnippets" "allocateInstanceDynamic" [#_"Class" type, #_"Class" classClass, #_@ConstantParameter #_"boolean" fillContents, #_@ConstantParameter #_"Register" threadRegister]
-        (when (BranchProbabilityNode'probability-2 BranchProbabilityNode'SLOW_PATH_PROBABILITY, (nil? type))
-            (DeoptimizeNode'deopt-2 DeoptimizationAction/None, DeoptimizationReason/RuntimeConstraint)
-        )
-        (let [
-            #_"Class" nonNullType (PiNode'piCastNonNull-2 type, (SnippetAnchorNode'anchor-0))
-        ]
-            (when (BranchProbabilityNode'probability-2 BranchProbabilityNode'SLOW_PATH_PROBABILITY, (DynamicNewInstanceNode'throwsInstantiationException-2 type, classClass))
-                (DeoptimizeNode'deopt-2 DeoptimizationAction/None, DeoptimizationReason/RuntimeConstraint)
-            )
-
-            (Placeholder'piCastToSnippetReplaceeStamp-1 (NewObjectSnippets'allocateInstanceDynamicHelper-4 type, fillContents, threadRegister, nonNullType))
-        )
-    )
-
     (defn- #_"Object" NewObjectSnippets'allocateInstanceDynamicHelper-4 [#_"Class" type, #_"boolean" fillContents, #_"Register" threadRegister, #_"Class" nonNullType]
         (let [
             #_"KlassPointer" hub (ClassGetHubNode'readClass-1 nonNullType)
@@ -24667,7 +24186,22 @@ ZeroExtendNode'new-4
                     )
                 )
             )
-            (NewObjectSnippets'dynamicNewInstanceStub-1 type)
+            (ForeignCallNode'dynamicNewInstanceStubCall-2 ForeignCallDescriptor'DYNAMIC_NEW_INSTANCE, type)
+        )
+    )
+
+    (§ snippet! #_"Object" #_"NewObjectSnippets" "allocateInstanceDynamic" [#_"Class" type, #_"Class" classClass, #_@ConstantParameter #_"boolean" fillContents, #_@ConstantParameter #_"Register" threadRegister]
+        (when (BranchProbabilityNode'probability-2 BranchProbabilityNode'SLOW_PATH_PROBABILITY, (nil? type))
+            (DeoptimizeNode'deopt-2 DeoptimizationAction/None, DeoptimizationReason/RuntimeConstraint)
+        )
+        (let [
+            #_"Class" nonNullType (PiNode'piCastNonNull-2 type, (SnippetAnchorNode'anchor-0))
+        ]
+            (when (BranchProbabilityNode'probability-2 BranchProbabilityNode'SLOW_PATH_PROBABILITY, (DynamicNewInstanceNode'throwsInstantiationException-2 type, classClass))
+                (DeoptimizeNode'deopt-2 DeoptimizationAction/None, DeoptimizationReason/RuntimeConstraint)
+            )
+
+            (Placeholder'piCastToSnippetReplaceeStamp-1 (NewObjectSnippets'allocateInstanceDynamicHelper-4 type, fillContents, threadRegister, nonNullType))
         )
     )
 
@@ -24675,14 +24209,6 @@ ZeroExtendNode'new-4
      ; Maximum array length for which fast path allocation is used.
      ;;
     (def #_"int" NewObjectSnippets'MAX_ARRAY_FAST_PATH_ALLOCATION_LENGTH 0x00ffffff)
-
-    (§ snippet! #_"Object" #_"NewObjectSnippets" "allocateArray" [#_"KlassPointer" hub, #_"int" length, #_"Word" prototypeMarkWord, #_@ConstantParameter #_"int" headerSize, #_@ConstantParameter #_"int" log2ElementSize, #_@ConstantParameter #_"boolean" fillContents, #_@ConstantParameter #_"Register" threadRegister, #_@ConstantParameter #_"boolean" maybeUnroll]
-        (let [
-            #_"Object" result (NewObjectSnippets'allocateArrayImpl-9 hub, length, prototypeMarkWord, headerSize, log2ElementSize, fillContents, threadRegister, maybeUnroll, false)
-        ]
-            (ArrayPlaceholder'piArrayCastToSnippetReplaceeStamp-2 result, length)
-        )
-    )
 
     (defn- #_"Object" NewObjectSnippets'allocateArrayImpl-9 [#_"KlassPointer" hub, #_"int" length, #_"Word" prototypeMarkWord, #_"int" headerSize, #_"int" log2ElementSize, #_"boolean" fillContents, #_"Register" threadRegister, #_"boolean" maybeUnroll, #_"boolean" skipNegativeCheck]
         (let [
@@ -24703,12 +24229,12 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"Object" NewObjectSnippets'dynamicNewInstanceStub-1 [#_"Class" elementType]
-        (ForeignCallNode'dynamicNewInstanceStubCall-2 ForeignCallDescriptor'DYNAMIC_NEW_INSTANCE, elementType)
-    )
-
-    (§ snippet! #_"Object" #_"NewObjectSnippets" "allocateArrayDynamic" [#_"Class" elementType, #_"Class" voidClass, #_"int" length, #_@ConstantParameter #_"boolean" fillContents, #_@ConstantParameter #_"Register" threadRegister, #_@ConstantParameter #_"JavaKind" knownElementKind, #_@ConstantParameter #_"int" knownLayoutHelper, #_"Word" prototypeMarkWord]
-        (NewObjectSnippets'allocateArrayDynamicImpl-8 elementType, voidClass, length, fillContents, threadRegister, knownElementKind, knownLayoutHelper, prototypeMarkWord)
+    (§ snippet! #_"Object" #_"NewObjectSnippets" "allocateArray" [#_"KlassPointer" hub, #_"int" length, #_"Word" prototypeMarkWord, #_@ConstantParameter #_"int" headerSize, #_@ConstantParameter #_"int" log2ElementSize, #_@ConstantParameter #_"boolean" fillContents, #_@ConstantParameter #_"Register" threadRegister, #_@ConstantParameter #_"boolean" maybeUnroll]
+        (let [
+            #_"Object" result (NewObjectSnippets'allocateArrayImpl-9 hub, length, prototypeMarkWord, headerSize, log2ElementSize, fillContents, threadRegister, maybeUnroll, false)
+        ]
+            (ArrayPlaceholder'piArrayCastToSnippetReplaceeStamp-2 result, length)
+        )
     )
 
     (defn- #_"Object" NewObjectSnippets'allocateArrayDynamicImpl-8 [#_"Class" elementType, #_"Class" voidClass, #_"int" length, #_"boolean" fillContents, #_"Register" threadRegister, #_"JavaKind" knownElementKind, #_"int" knownLayoutHelper, #_"Word" prototypeMarkWord]
@@ -24749,26 +24275,15 @@ ZeroExtendNode'new-4
         )
     )
 
+    (§ snippet! #_"Object" #_"NewObjectSnippets" "allocateArrayDynamic" [#_"Class" elementType, #_"Class" voidClass, #_"int" length, #_@ConstantParameter #_"boolean" fillContents, #_@ConstantParameter #_"Register" threadRegister, #_@ConstantParameter #_"JavaKind" knownElementKind, #_@ConstantParameter #_"int" knownLayoutHelper, #_"Word" prototypeMarkWord]
+        (NewObjectSnippets'allocateArrayDynamicImpl-8 elementType, voidClass, length, fillContents, threadRegister, knownElementKind, knownLayoutHelper, prototypeMarkWord)
+    )
+
     ;;;
      ; Maximum number of long stores to emit when zeroing an object with a constant size.
      ; Larger objects have their bodies initialized in a loop.
      ;;
     (def- #_"int" NewObjectSnippets'MAX_UNROLLED_OBJECT_ZEROING_STORES 8)
-
-    ;;;
-     ; Zero uninitialized memory in a newly allocated object, unrolling as necessary and
-     ; ensuring that stores are aligned.
-     ;
-     ; @param size number of bytes to zero
-     ; @param memory beginning of object which is being zeroed
-     ; @param constantSize is {@code size} known to be constant in the snippet
-     ; @param startOffset offset to begin zeroing. May not be word aligned.
-     ; @param manualUnroll maximally unroll zeroing
-     ;;
-    (defn- #_"void" NewObjectSnippets'zeroMemory-5 [#_"int" size, #_"Word" memory, #_"boolean" constantSize, #_"int" startOffset, #_"boolean" manualUnroll]
-        (NewObjectSnippets'fillMemory-6 0, size, memory, constantSize, startOffset, manualUnroll)
-        nil
-    )
 
     (defn- #_"void" NewObjectSnippets'fillMemory-6 [#_"long" value, #_"int" size, #_"Word" memory, #_"boolean" constantSize, #_"int" offset, #_"boolean" manualUnroll]
         (let [
@@ -24799,6 +24314,21 @@ ZeroExtendNode'new-4
                 )
             )
         )
+        nil
+    )
+
+    ;;;
+     ; Zero uninitialized memory in a newly allocated object, unrolling as necessary and
+     ; ensuring that stores are aligned.
+     ;
+     ; @param size number of bytes to zero
+     ; @param memory beginning of object which is being zeroed
+     ; @param constantSize is {@code size} known to be constant in the snippet
+     ; @param startOffset offset to begin zeroing. May not be word aligned.
+     ; @param manualUnroll maximally unroll zeroing
+     ;;
+    (defn- #_"void" NewObjectSnippets'zeroMemory-5 [#_"int" size, #_"Word" memory, #_"boolean" constantSize, #_"int" startOffset, #_"boolean" manualUnroll]
+        (NewObjectSnippets'fillMemory-6 0, size, memory, constantSize, startOffset, manualUnroll)
         nil
     )
 
@@ -25314,6 +24844,22 @@ ZeroExtendNode'new-4
  ; It also {@linkplain StubUtil#handlePendingException(Word, boolean) handles} any exceptions raised during the foreign call.
  ;;
 (class-ns ForeignCallStub
+    (defn- #_"Class[]" ForeignCallStub''createTargetParameters-2 [#_"ForeignCallStub" this, #_"ForeignCallDescriptor" descriptor]
+        (let [
+            #_"Class[]" parameters (#_"Object" .clone (:argumentTypes descriptor))
+        ]
+            (when (:prependThread this) => parameters
+                (let [
+                    #_"Class[]" a (make-array Class (inc (count parameters)))
+                ]
+                    (System/arraycopy parameters, 0, a, 1, (count parameters))
+                    (aset a 0 Word'iface)
+                    a
+                )
+            )
+        )
+    )
+
     ;;;
      ; Creates a stub for a call to code at a given address.
      ;
@@ -25348,19 +24894,38 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"Class[]" ForeignCallStub''createTargetParameters-2 [#_"ForeignCallStub" this, #_"ForeignCallDescriptor" descriptor]
+    (defn- #_"ParameterNode[]" ForeignCallStub''createParameters-3 [#_"ForeignCallStub" this, #_"GraphKit" kit, #_"Class*" args]
         (let [
-            #_"Class[]" parameters (#_"Object" .clone (:argumentTypes descriptor))
+            #_"ParameterNode[]" params (make-array ParameterNode'iface (count args))
+            #_"ResolvedJavaType" accessingClass (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, (#_"Object" .getClass this))
         ]
-            (when (:prependThread this) => parameters
+            (dotimes [#_"int" i (count args)]
                 (let [
-                    #_"Class[]" a (make-array Class (inc (count parameters)))
+                    #_"ResolvedJavaType" type (#_"ResolvedJavaType" .resolve (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, (nth args i)), accessingClass)
+                    #_"StampPair" stamp (StampFactory'forDeclaredType-2 type, false)
                 ]
-                    (System/arraycopy parameters, 0, a, 1, (count parameters))
-                    (aset a 0 Word'iface)
-                    a
+                    (aset params i (GraphKit''add-2 kit, (ParameterNode'new-2 i, stamp)))
                 )
             )
+            params
+        )
+    )
+
+    (defn- #_"StubForeignCallNode" ForeignCallStub''createTargetCall-4 [#_"ForeignCallStub" this, #_"GraphKit" kit, #_"ParameterNode*" params, #_"ReadRegisterNode" thread]
+        (let [
+            #_"Stamp" stamp (StampFactory'forKind-1 (JavaKind/fromJavaClass (:resultType (:descriptor (:target this)))))
+            params
+                (when (:prependThread this) => params
+                    (let [
+                        #_"ValueNode[]" a (make-array ValueNode'iface (inc (count params)))
+                    ]
+                        (aset a 0 thread)
+                        (System/arraycopy params, 0, a, 1, (count params))
+                        a
+                    )
+                )
+        ]
+            (GraphBuilder'''append-2 kit, (apply StubForeignCallNode'new-3* stamp, (:descriptor (:target this)), params))
         )
     )
 
@@ -25421,41 +24986,6 @@ ZeroExtendNode'new-4
                 (GraphKit''inlineInvokes-1 kit)
                 (Phase'''run-3 (RemoveValueProxyPhase'new-0), (:graph kit), nil)
             )
-        )
-    )
-
-    (defn- #_"ParameterNode[]" ForeignCallStub''createParameters-3 [#_"ForeignCallStub" this, #_"GraphKit" kit, #_"Class*" args]
-        (let [
-            #_"ParameterNode[]" params (make-array ParameterNode'iface (count args))
-            #_"ResolvedJavaType" accessingClass (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, (#_"Object" .getClass this))
-        ]
-            (dotimes [#_"int" i (count args)]
-                (let [
-                    #_"ResolvedJavaType" type (#_"ResolvedJavaType" .resolve (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, (nth args i)), accessingClass)
-                    #_"StampPair" stamp (StampFactory'forDeclaredType-2 type, false)
-                ]
-                    (aset params i (GraphKit''add-2 kit, (ParameterNode'new-2 i, stamp)))
-                )
-            )
-            params
-        )
-    )
-
-    (defn- #_"StubForeignCallNode" ForeignCallStub''createTargetCall-4 [#_"ForeignCallStub" this, #_"GraphKit" kit, #_"ParameterNode*" params, #_"ReadRegisterNode" thread]
-        (let [
-            #_"Stamp" stamp (StampFactory'forKind-1 (JavaKind/fromJavaClass (:resultType (:descriptor (:target this)))))
-            params
-                (when (:prependThread this) => params
-                    (let [
-                        #_"ValueNode[]" a (make-array ValueNode'iface (inc (count params)))
-                    ]
-                        (aset a 0 thread)
-                        (System/arraycopy params, 0, a, 1, (count params))
-                        a
-                    )
-                )
-        ]
-            (GraphBuilder'''append-2 kit, (apply StubForeignCallNode'new-3* stamp, (:descriptor (:target this)), params))
         )
     )
 )
@@ -25980,6 +25510,67 @@ ZeroExtendNode'new-4
         )
     )
 
+    (defn- #_"BciBlock" BciBlockMapping''makeBlock-3 [#_"BciBlockMapping" this, #_"BciBlock[]" blockMap, #_"int" startBci]
+        (let [
+            #_"BciBlock" oldBlock (nth blockMap startBci)
+        ]
+            (cond
+                (nil? oldBlock)
+                    (let [
+                        #_"BciBlock" newBlock (BciBlock'new-1 startBci)
+                    ]
+                        (§ ass! this (update this :blocksNotYetAssignedId inc))
+                        (§ aset! blockMap startBci newBlock)
+                        newBlock
+                    )
+                (not= (:startBci oldBlock) startBci)
+                    ;; Backward branch into the middle of an already processed block.
+                    ;; Add the correct fall-through successor.
+                    (let [
+                        #_"BciBlock" newBlock (BciBlock'new-1 startBci)
+                    ]
+                        (§ ass! this (update this :blocksNotYetAssignedId inc))
+                        (§ ass newBlock (assoc newBlock :endBci (:endBci oldBlock)))
+                        (doseq [#_"BciBlock" oldSuccessor (:successors oldBlock)]
+                            (BciBlock''addSuccessor-2 newBlock, oldSuccessor)
+                        )
+
+                        (§ ass oldBlock (assoc oldBlock :endBci (dec startBci)))
+                        (BciBlock''clearSucccessors-1 oldBlock)
+                        (BciBlock''addSuccessor-2 oldBlock, newBlock)
+
+                        (loop-when-recur [#_"int" i startBci] (<= i (:endBci newBlock)) [(inc i)]
+                            (§ aset! blockMap i newBlock)
+                        )
+                        newBlock
+                    )
+                :else
+                    oldBlock
+            )
+        )
+    )
+
+    (defn- #_"void" BciBlockMapping'addSuccessor-3 [#_"BciBlock*" blockMap, #_"int" predBci, #_"BciBlock" sux]
+        (BciBlock''addSuccessor-2 (nth blockMap predBci), sux)
+        nil
+    )
+
+    (defn- #_"void" BciBlockMapping''addSwitchSuccessors-4 [#_"BciBlockMapping" this, #_"BciBlock[]" blockMap, #_"int" predBci, #_"BytecodeSwitch" bswitch]
+        ;; adds distinct targets to the successor list
+        (let [
+            #_"Collection<Integer>" targets (TreeSet.)
+        ]
+            (dotimes [#_"int" i (BytecodeSwitch'''numberOfCases-1 bswitch)]
+                (#_"Collection" .add targets, (BytecodeSwitch''targetAt-2 bswitch, i))
+            )
+            (#_"Collection" .add targets, (BytecodeSwitch''defaultTarget-1 bswitch))
+            (doseq [#_"int" targetBci targets]
+                (BciBlockMapping'addSuccessor-3 blockMap, predBci, (BciBlockMapping''makeBlock-3 this, blockMap, targetBci))
+            )
+        )
+        nil
+    )
+
     (defn- #_"BciBlockMapping" BciBlockMapping''iterateOverBytecodes-3 [#_"BciBlockMapping" this, #_"BciBlock[]" blockMap, #_"BytecodeStream" stream]
         ;; iterate over the bytecodes top to bottom,
         ;; mark the entrypoints of basic blocks and build lists of successors for all bytecodes
@@ -26067,67 +25658,6 @@ ZeroExtendNode'new-4
                 (recur this block (§ ass! stream (BytecodeStream''next-1 stream)))
             )
         )
-    )
-
-    (defn- #_"BciBlock" BciBlockMapping''makeBlock-3 [#_"BciBlockMapping" this, #_"BciBlock[]" blockMap, #_"int" startBci]
-        (let [
-            #_"BciBlock" oldBlock (nth blockMap startBci)
-        ]
-            (cond
-                (nil? oldBlock)
-                    (let [
-                        #_"BciBlock" newBlock (BciBlock'new-1 startBci)
-                    ]
-                        (§ ass! this (update this :blocksNotYetAssignedId inc))
-                        (§ aset! blockMap startBci newBlock)
-                        newBlock
-                    )
-                (not= (:startBci oldBlock) startBci)
-                    ;; Backward branch into the middle of an already processed block.
-                    ;; Add the correct fall-through successor.
-                    (let [
-                        #_"BciBlock" newBlock (BciBlock'new-1 startBci)
-                    ]
-                        (§ ass! this (update this :blocksNotYetAssignedId inc))
-                        (§ ass newBlock (assoc newBlock :endBci (:endBci oldBlock)))
-                        (doseq [#_"BciBlock" oldSuccessor (:successors oldBlock)]
-                            (BciBlock''addSuccessor-2 newBlock, oldSuccessor)
-                        )
-
-                        (§ ass oldBlock (assoc oldBlock :endBci (dec startBci)))
-                        (BciBlock''clearSucccessors-1 oldBlock)
-                        (BciBlock''addSuccessor-2 oldBlock, newBlock)
-
-                        (loop-when-recur [#_"int" i startBci] (<= i (:endBci newBlock)) [(inc i)]
-                            (§ aset! blockMap i newBlock)
-                        )
-                        newBlock
-                    )
-                :else
-                    oldBlock
-            )
-        )
-    )
-
-    (defn- #_"void" BciBlockMapping'addSuccessor-3 [#_"BciBlock*" blockMap, #_"int" predBci, #_"BciBlock" sux]
-        (BciBlock''addSuccessor-2 (nth blockMap predBci), sux)
-        nil
-    )
-
-    (defn- #_"void" BciBlockMapping''addSwitchSuccessors-4 [#_"BciBlockMapping" this, #_"BciBlock[]" blockMap, #_"int" predBci, #_"BytecodeSwitch" bswitch]
-        ;; adds distinct targets to the successor list
-        (let [
-            #_"Collection<Integer>" targets (TreeSet.)
-        ]
-            (dotimes [#_"int" i (BytecodeSwitch'''numberOfCases-1 bswitch)]
-                (#_"Collection" .add targets, (BytecodeSwitch''targetAt-2 bswitch, i))
-            )
-            (#_"Collection" .add targets, (BytecodeSwitch''defaultTarget-1 bswitch))
-            (doseq [#_"int" targetBci targets]
-                (BciBlockMapping'addSuccessor-3 blockMap, predBci, (BciBlockMapping''makeBlock-3 this, blockMap, targetBci))
-            )
-        )
-        nil
     )
 
     (defn- #_"BciBlockMapping" BciBlockMapping''createJsrAlternatives-3 [#_"BciBlockMapping" this, #_"BciBlock*" blockMap, #_"BciBlock" block]
@@ -26242,6 +25772,31 @@ ZeroExtendNode'new-4
     )
 
     ;;;
+     ; Mark the block as a loop header, using the next available loop number. Also checks for corner
+     ; cases that we don't want to compile.
+     ;;
+    (defn- #_"BciBlockMapping" BciBlockMapping''makeLoopHeader-2 [#_"BciBlockMapping" this, #_"BciBlock" block]
+        (when-not (:isLoopHeader block) => this
+            (§ ass! block (assoc block :isLoopHeader true))
+            (when (<= BciBlockMapping'LOOP_HEADER_MAX_CAPACITY (:nextLoop this))
+                ;; This restriction can be removed by using a fall-back to a BitSet in case we have more than 64 loops.
+                ;; Don't compile such methods for now, until we see a concrete case that allows checking for correctness.
+                (throw! "too many loops in method")
+            )
+            (§ ass! block (assoc block :loops (<< 1 (:nextLoop this))))
+            (cond
+                (nil? (:loopHeaders this))
+                    (§ ass! this (assoc this :loopHeaders (make-array BciBlock'iface BciBlockMapping'LOOP_HEADER_INITIAL_CAPACITY)))
+                (<= (count (:loopHeaders this)) (:nextLoop this))
+                    (§ ass! this (assoc this :loopHeaders (Arrays/copyOf (:loopHeaders this), BciBlockMapping'LOOP_HEADER_MAX_CAPACITY)))
+            )
+            (aset (:loopHeaders this) (:nextLoop this) block)
+            (§ ass! block (assoc block :loopId (:nextLoop this)))
+            (update this :nextLoop inc)
+        )
+    )
+
+    ;;;
      ; Depth-first traversal of the control flow graph. The flag {@linkplain BciBlock#visited} is used to visit
      ; every block only once. The flag {@linkplain BciBlock#active} is used to detect cycles (backward edges).
      ;;
@@ -26297,6 +25852,34 @@ ZeroExtendNode'new-4
         )
     )
 
+    (defn- #_"int" BciBlockMapping''handleLoopHeader-5 [#_"BciBlockMapping" this, #_"BciBlock[]" newBlocks, #_"int" next, #_"int" i, #_"BciBlock" loopHeader]
+        (let [
+            [#_"int" endOfLoop next]
+                (loop-when [endOfLoop (dec next) next next i (inc i)] (< i (count (:blocks this))) => [endOfLoop next]
+                    (let [
+                        #_"BciBlock" block (nth (:blocks this) i)
+                        [endOfLoop next]
+                            (when (and (some? block) (not (zero? (& (:loops block) (<< 1 (:loopId loopHeader)))))) => [endOfLoop next]
+                                (§ ass! block (BciBlock''setId-2 block, next))
+                                (let [
+                                    endOfLoop next
+                                    _ (§ aset! newBlocks next block)
+                                    next (inc next)
+                                    _ (aset (:blocks this) i nil)
+                                ]
+                                    [endOfLoop (if (:isLoopHeader block) (BciBlockMapping''handleLoopHeader-5 this, newBlocks, next, i, block) next)]
+                                )
+                            )
+                    ]
+                        (recur endOfLoop next (inc i))
+                    )
+                )
+        ]
+            (§ ass! loopHeader (assoc loopHeader :loopEnd endOfLoop))
+            next
+        )
+    )
+
     (defn- #_"BciBlockMapping" BciBlockMapping''computeBlockOrder-2m [#_"BciBlockMapping" this, #_"BciBlock*" blockMap]
         (let [
             #_"int" maxBlocks (:blocksNotYetAssignedId this)
@@ -26339,59 +25922,6 @@ ZeroExtendNode'new-4
                     (assoc this :blocks newBlocks)
                 )
             )
-        )
-    )
-
-    (defn- #_"int" BciBlockMapping''handleLoopHeader-5 [#_"BciBlockMapping" this, #_"BciBlock[]" newBlocks, #_"int" next, #_"int" i, #_"BciBlock" loopHeader]
-        (let [
-            [#_"int" endOfLoop next]
-                (loop-when [endOfLoop (dec next) next next i (inc i)] (< i (count (:blocks this))) => [endOfLoop next]
-                    (let [
-                        #_"BciBlock" block (nth (:blocks this) i)
-                        [endOfLoop next]
-                            (when (and (some? block) (not (zero? (& (:loops block) (<< 1 (:loopId loopHeader)))))) => [endOfLoop next]
-                                (§ ass! block (BciBlock''setId-2 block, next))
-                                (let [
-                                    endOfLoop next
-                                    _ (§ aset! newBlocks next block)
-                                    next (inc next)
-                                    _ (aset (:blocks this) i nil)
-                                ]
-                                    [endOfLoop (if (:isLoopHeader block) (BciBlockMapping''handleLoopHeader-5 this, newBlocks, next, i, block) next)]
-                                )
-                            )
-                    ]
-                        (recur endOfLoop next (inc i))
-                    )
-                )
-        ]
-            (§ ass! loopHeader (assoc loopHeader :loopEnd endOfLoop))
-            next
-        )
-    )
-
-    ;;;
-     ; Mark the block as a loop header, using the next available loop number. Also checks for corner
-     ; cases that we don't want to compile.
-     ;;
-    (defn- #_"BciBlockMapping" BciBlockMapping''makeLoopHeader-2 [#_"BciBlockMapping" this, #_"BciBlock" block]
-        (when-not (:isLoopHeader block) => this
-            (§ ass! block (assoc block :isLoopHeader true))
-            (when (<= BciBlockMapping'LOOP_HEADER_MAX_CAPACITY (:nextLoop this))
-                ;; This restriction can be removed by using a fall-back to a BitSet in case we have more than 64 loops.
-                ;; Don't compile such methods for now, until we see a concrete case that allows checking for correctness.
-                (throw! "too many loops in method")
-            )
-            (§ ass! block (assoc block :loops (<< 1 (:nextLoop this))))
-            (cond
-                (nil? (:loopHeaders this))
-                    (§ ass! this (assoc this :loopHeaders (make-array BciBlock'iface BciBlockMapping'LOOP_HEADER_INITIAL_CAPACITY)))
-                (<= (count (:loopHeaders this)) (:nextLoop this))
-                    (§ ass! this (assoc this :loopHeaders (Arrays/copyOf (:loopHeaders this), BciBlockMapping'LOOP_HEADER_MAX_CAPACITY)))
-            )
-            (aset (:loopHeaders this) (:nextLoop this) block)
-            (§ ass! block (assoc block :loopId (:nextLoop this)))
-            (update this :nextLoop inc)
         )
     )
 
@@ -26563,49 +26093,232 @@ ZeroExtendNode'new-4
 )
 
 (class-ns BytecodeParser
-    (defn #_"BytecodeParser" BytecodeParser'new-5 [#_"GraphBuilderInstance" graphBuilderInstance, #_"Graph" graph, #_"BytecodeParser" parent, #_"ResolvedJavaMethod" method, #_"IntrinsicContext" intrinsicContext]
+    (defn #_"BytecodeParser" BytecodeParser'new-5 [#_"GraphBuilderInstance" builder, #_"Graph" graph, #_"BytecodeParser" parent, #_"ResolvedJavaMethod" method, #_"IntrinsicContext" context]
         (let [
-            #_"BytecodeParser" this
-                (merge (BytecodeParser'class.)
-                    (hash-map
-                        #_"GraphBuilderInstance" :graphBuilderInstance graphBuilderInstance
-                        #_"Graph" :graph graph
-                        #_"BciBlockMapping" :blockMap nil
-                        #_"LocalLiveness" :liveness nil
-                        #_"BytecodeParser" :parent parent
-                        #_"ValueNode" :methodSynchronizedObject nil
-                        #_"List<ReturnToCallerData>" :returnDataList nil
-                        #_"FixedWithNextNode" :lastInstr nil ;; the last instruction added
-                        #_"boolean" :controlFlowSplit false
-                        #_"FixedWithNextNode[]" :firstInstructionArray nil
-                        #_"FrameStateBuilder[]" :entryStateArray nil
-                        #_"boolean" :finalBarrierRequired false
-                        #_"ValueNode" :originalReceiver nil
-                        #_"boolean" :eagerInitializing false
-                        #_"boolean" :uninitializedIsError false
-                        #_"CurrentInvoke" :currentInvoke nil
-                        #_"FrameStateBuilder" :frameState nil
-                        #_"BciBlock" :currentBlock nil
-                        #_"BytecodeStream" :stream nil
-                        #_"GraphBuilderConfiguration" :graphBuilderConfig (:graphBuilderConfig graphBuilderInstance)
-                        #_"ResolvedJavaMethod" :method nil
-                        #_"Bytecode" :code nil
-                        #_"BytecodeProvider" :bytecodeProvider (if (some? intrinsicContext) (:bytecodeProvider intrinsicContext) ResolvedJavaMethodBytecodeProvider'INSTANCE)
-                        #_"OptimisticOptimizations" :optimisticOpts (:optimisticOpts graphBuilderInstance)
-                        #_"ConstantPool" :constantPool nil
-                        #_"IntrinsicContext" :intrinsicContext intrinsicContext
-                        #_"boolean" :forceInliningEverything false
+            #_"BytecodeProvider" bytecodeProvider (if (some? context) (:bytecodeProvider context) ResolvedJavaMethodBytecodeProvider'INSTANCE)
+            #_"Bytecode" code (BytecodeProvider'''getBytecode-2 bytecodeProvider, method)
+        ]
+            (merge (BytecodeParser'class.)
+                (hash-map
+                    #_"GraphBuilderInstance" :graphBuilderInstance builder
+                    #_"GraphBuilderConfiguration" :graphBuilderConfig (:graphBuilderConfig builder)
+                    #_"boolean" :eagerInitializing (:eagerResolving (:graphBuilderConfig builder))
+                    #_"boolean" :uninitializedIsError (:unresolvedIsError (:graphBuilderConfig builder))
+                    #_"OptimisticOptimizations" :optimisticOpts (:optimisticOpts builder)
+                    #_"Graph" :graph graph
+                    #_"BytecodeParser" :parent parent
+                    #_"IntrinsicContext" :intrinsicContext context
+                    #_"BytecodeProvider" :bytecodeProvider bytecodeProvider
+                    #_"Bytecode" :code code
+                    #_"ResolvedJavaMethod" :method (Bytecode'''getMethod-1 code)
+                    #_"ConstantPool" :constantPool (Bytecode'''getConstantPool-1 code)
+                    #_"BytecodeStream" :stream (BytecodeStream'new-1 (Bytecode'''getCode-1 code))
+
+                    #_"BciBlockMapping" :blockMap nil
+                    #_"LocalLiveness" :liveness nil
+                    #_"ValueNode" :methodSynchronizedObject nil
+                    #_"List<ReturnToCallerData>" :returnDataList nil
+                    #_"FixedWithNextNode" :lastInstr nil ;; the last instruction added
+                    #_"boolean" :controlFlowSplit false
+                    #_"FixedWithNextNode[]" :firstInstructionArray nil
+                    #_"FrameStateBuilder[]" :entryStateArray nil
+                    #_"boolean" :finalBarrierRequired false
+                    #_"ValueNode" :originalReceiver nil
+                    #_"CurrentInvoke" :currentInvoke nil
+                    #_"FrameStateBuilder" :frameState nil
+                    #_"BciBlock" :currentBlock nil
+                    #_"boolean" :forceInliningEverything false
+                )
+            )
+        )
+    )
+
+    (defn- #_"void" BytecodeParser''setEntryState-3 [#_"BytecodeParser" this, #_"BciBlock" block, #_"FrameStateBuilder" entryState]
+        (aset (:entryStateArray this) (:id block) entryState)
+        nil
+    )
+
+    (defn- #_"FrameStateBuilder" BytecodeParser''getEntryState-2 [#_"BytecodeParser" this, #_"BciBlock" block]
+        (nth (:entryStateArray this) (:id block))
+    )
+
+    (defn- #_"void" BytecodeParser''setFirstInstruction-3 [#_"BytecodeParser" this, #_"BciBlock" block, #_"FixedWithNextNode" firstInstruction]
+        (aset (:firstInstructionArray this) (:id block) firstInstruction)
+        nil
+    )
+
+    (defn- #_"FixedWithNextNode" BytecodeParser''getFirstInstruction-2 [#_"BytecodeParser" this, #_"BciBlock" block]
+        (nth (:firstInstructionArray this) (:id block))
+    )
+
+    (defn- #_"FrameState" BytecodeParser''createFrameState-3 [#_"BytecodeParser" this, #_"int" bci, #_"StateSplit" forStateSplit]
+        (when (and (some? (:currentBlock this)) (< (:endBci (:currentBlock this)) bci))
+            (FrameStateBuilder''clearNonLiveLocals-4 (:frameState this), (:currentBlock this), (:liveness this), false)
+        )
+        (FrameStateBuilder''create-3 (:frameState this), bci, forStateSplit)
+    )
+
+    ;;;
+     ; Creates the frame state after the start node of a graph for an {@link IntrinsicContext
+     ; intrinsic} that is the parse root (either for root compiling or for post-parse inlining).
+     ;;
+    (defn- #_"FrameState" BytecodeParser''createStateAfterStartOfReplacementGraph-1 [#_"BytecodeParser" this]
+        (if (IntrinsicContext''isPostParseInlined-1 (:intrinsicContext this))
+            (Graph''add-2 (:graph this), (FrameState'new-1 BytecodeFrame/BEFORE_BCI))
+            (let [
+                #_"ResolvedJavaMethod" original (:originalMethod (:intrinsicContext this))
+                #_"ValueNode[]" locals
+                    (if (or (= (#_"ResolvedJavaMethod" .getMaxLocals original) (count (:locals (:frameState this)))) (#_"ResolvedJavaMethod" .isNative original))
+                        (let [
+                            locals (make-array ValueNode'iface (#_"ResolvedJavaMethod" .getMaxLocals original))
+                        ]
+                            (dotimes [#_"int" i (count locals)]
+                                (let [
+                                    #_"ValueNode" node (nth (:locals (:frameState this)) i)
+                                ]
+                                    (aset locals i (when-not (= node FrameState'TWO_SLOT_MARKER) node))
+                                )
+                            )
+                            locals
+                        )
+                        (let [
+                            locals (make-array ValueNode'iface (#_"ResolvedJavaMethod" .getMaxLocals original))
+                            #_"int" n (#_"Signature" .getParameterCount (#_"ResolvedJavaMethod" .getSignature original), (not (#_"ResolvedJavaMethod" .isStatic original)))
+                        ]
+                            (dotimes [#_"int" i n]
+                                (let [
+                                    #_"ValueNode" param (nth (:locals (:frameState this)) i)
+                                ]
+                                    (aset locals i (when-not (= param FrameState'TWO_SLOT_MARKER) param))
+                                )
+                            )
+                            locals
+                        )
+                    )
+            ]
+                (Graph''add-2 (:graph this), (FrameState'new-9a nil, (ResolvedJavaMethodBytecode'new-1 original), 0, locals, (make-array ValueNode'iface 0), 0, (make-array ValueNode'iface 0), (Collections/emptyList), false))
+            )
+        )
+    )
+
+    (defn- #_"ValueNode" BytecodeParser''synchronizedObject-3 [#_"BytecodeParser" this, #_"FrameStateBuilder" state, #_"ResolvedJavaMethod" target]
+        (if (#_"ResolvedJavaMethod" .isStatic target)
+            (BytecodeParser''appendConstant-2 this, (#_"ConstantReflectionProvider" .asJavaClass HotSpot'constantReflection, (#_"ResolvedJavaMethod" .getDeclaringClass target)))
+            (FrameStateBuilder''loadLocal-3 state, 0, JavaKind/Object)
+        )
+    )
+
+    (defn- #_"FixedNode" BytecodeParser''createTarget-5 [#_"BytecodeParser" this, #_"BciBlock" block, #_"FrameStateBuilder" state, #_"boolean" canReuseInstruction, #_"boolean" canReuseState]
+        (when (nil? (BytecodeParser''getFirstInstruction-2 this, block))
+            ;; This is the first time we see this block as a branch target. Create and return a
+            ;; placeholder that later can be replaced with a MergeNode when we see this block again.
+            (if (and canReuseInstruction (or (= (:predecessorCount block) 1) (not (:controlFlowSplit this))) (not (:isLoopHeader block)) (zero? (& (:loops (:currentBlock this)) (bit-not (:loops block)))))
+                (do
+                    (BytecodeParser''setFirstInstruction-3 this, block, (:lastInstr this))
+                    (§ ass! this (assoc this :lastInstr nil))
+                )
+                (BytecodeParser''setFirstInstruction-3 this, block, (Graph''add-2 (:graph this), (BeginNode'new-0)))
+            )
+            (let [
+                #_"FixedNode" targetNode (BytecodeParser''getFirstInstruction-2 this, block)
+                #_"FixedTarget" target (BytecodeParser''checkLoopExit-4 this, targetNode, block, state)
+                #_"FixedNode" result (:fixed target)
+                #_"FrameStateBuilder" currentEntryState (cond (not= (:state target) state) (:state target) canReuseState state :else (FrameStateBuilder'copy-1 state))
+            ]
+                (BytecodeParser''setEntryState-3 this, block, currentEntryState)
+                (FrameStateBuilder''clearNonLiveLocals-4 currentEntryState, block, (:liveness this), true)
+
+                (§ return result)
+            )
+        )
+
+        ;; We already saw this block before, so we have to merge states.
+        (when-not (FrameStateBuilder''isCompatibleWith-2 (BytecodeParser''getEntryState-2 this, block), state)
+            (throw! (str "stacks do not match on merge from " (BytecodeParser''bci-1 this) " into " block "; bytecodes would not verify:\nexpect: " (BytecodeParser''getEntryState-2 this, block) "\nactual: " state))
+        )
+
+        (when (satisfies? LoopBeginNode (BytecodeParser''getFirstInstruction-2 this, block))
+            ;; Backward loop edge. We need to create a special LoopEndNode and merge with the
+            ;; loop begin node created before.
+            (let [
+                #_"LoopBeginNode" loopBegin (BytecodeParser''getFirstInstruction-2 this, block)
+                #_"LoopEndNode" loopEnd (Graph''add-2 (:graph this), (LoopEndNode'new-1 loopBegin))
+                #_"FixedTarget" target (BytecodeParser''checkLoopExit-4 this, loopEnd, block, state)
+                #_"FixedNode" result (:fixed target)
+            ]
+                (§ ass! (BytecodeParser''getEntryState-2 this, block) (FrameStateBuilder''merge-3 (BytecodeParser''getEntryState-2 this, block), loopBegin, (:state target)))
+
+                (§ return result)
+            )
+        )
+
+        (when (and (satisfies? AbstractBeginNode (BytecodeParser''getFirstInstruction-2 this, block)) (not (satisfies? AbstractMergeNode (BytecodeParser''getFirstInstruction-2 this, block))))
+            ;; This is the second time we see this block. Create the actual MergeNode and the
+            ;; End Node for the already existing edge.
+            (let [
+                #_"AbstractBeginNode" beginNode (BytecodeParser''getFirstInstruction-2 this, block)
+                ;; The EndNode for the already existing edge.
+                #_"EndNode" end (Graph''add-2 (:graph this), (EndNode'new-0))
+                ;; The MergeNode that replaces the placeholder.
+                #_"AbstractMergeNode" mergeNode (Graph''add-2 (:graph this), (MergeNode'new-0))
+                #_"FixedNode" next (:next beginNode)
+            ]
+                (if (satisfies? ControlSplitNode (:predecessor beginNode))
+                    (§ ass! beginNode (FixedWithNextNode''setNext-2 beginNode, end))
+                    (do
+                        (Node''replaceAtPredecessor-2 beginNode, end)
+                        (Node''safeDelete-1 beginNode)
                     )
                 )
-            this (assoc this :code (BytecodeProvider'''getBytecode-2 (:bytecodeProvider this), method))
-            this (assoc this :method (Bytecode'''getMethod-1 (:code this)))
-            this (assoc this :stream (BytecodeStream'new-1 (Bytecode'''getCode-1 (:code this))))
-            this (assoc this :constantPool (Bytecode'''getConstantPool-1 (:code this)))
-            this (assoc this :eagerInitializing (:eagerResolving (:graphBuilderConfig this)))
-            this (assoc this :uninitializedIsError (:unresolvedIsError (:graphBuilderConfig this)))
-        ]
-            this
+
+                (AbstractMergeNode''addForwardEnd-2 mergeNode, end)
+                (§ ass! mergeNode (FixedWithNextNode''setNext-2 mergeNode, next))
+
+                (BytecodeParser''setFirstInstruction-3 this, block, mergeNode)
+            )
         )
+
+        (let [
+            #_"AbstractMergeNode" mergeNode (BytecodeParser''getFirstInstruction-2 this, block)
+            ;; The EndNode for the newly merged edge.
+            #_"EndNode" newEnd (Graph''add-2 (:graph this), (EndNode'new-0))
+            #_"FixedTarget" target (BytecodeParser''checkLoopExit-4 this, newEnd, block, state)
+            #_"FixedNode" result (:fixed target)
+        ]
+            (§ ass! (BytecodeParser''getEntryState-2 this, block) (FrameStateBuilder''merge-3 (BytecodeParser''getEntryState-2 this, block), mergeNode, (:state target)))
+            (AbstractMergeNode''addForwardEnd-2 mergeNode, newEnd)
+
+            result
+        )
+    )
+
+    (defn- #_"FixedNode" BytecodeParser''createTarget-3 [#_"BytecodeParser" this, #_"BciBlock" block, #_"FrameStateBuilder" state]
+        (BytecodeParser''createTarget-5 this, block, state, false, false)
+    )
+
+    (defn- #_"FixedNode" BytecodeParser''createTarget-4 [#_"BytecodeParser" this, #_"double" probability, #_"BciBlock" block, #_"FrameStateBuilder" state]
+        (if (BytecodeParser''isNeverExecutedCode-2 this, probability)
+            (Graph''add-2 (:graph this), (DeoptimizeNode'new-2 DeoptimizationAction/InvalidateReprofile, DeoptimizationReason/UnreachedCode))
+            (BytecodeParser''createTarget-3 this, block, state)
+        )
+    )
+
+    ;;;
+     ; Returns a block begin node with the specified state. If the specified probability is 0, the block deoptimizes immediately.
+     ;;
+    (defn- #_"AbstractBeginNode" BytecodeParser''createBlockTarget-4 [#_"BytecodeParser" this, #_"double" probability, #_"BciBlock" block, #_"FrameStateBuilder" state]
+        (BeginNode'begin-1 (BytecodeParser''createTarget-4 this, probability, block, state))
+    )
+
+    (defn- #_"void" BytecodeParser''appendGoto-2 [#_"BytecodeParser" this, #_"BciBlock" successor]
+        (let [
+            #_"FixedNode" targetInstr (BytecodeParser''createTarget-5 this, successor, (:frameState this), true, true)
+        ]
+            (when (and (some? (:lastInstr this)) (not= (:lastInstr this) targetInstr))
+                (§ ass! (:lastInstr this) (FixedWithNextNode''setNext-2 (:lastInstr this), targetInstr))
+            )
+        )
+        nil
     )
 
     (defn #_"BytecodeParser" BytecodeParser''build-3 [#_"BytecodeParser" this, #_"FixedWithNextNode" startInstruction, #_"FrameStateBuilder" startFrameState]
@@ -26787,49 +26500,6 @@ ZeroExtendNode'new-4
             )
         )
         nil
-    )
-
-    ;;;
-     ; Creates the frame state after the start node of a graph for an {@link IntrinsicContext
-     ; intrinsic} that is the parse root (either for root compiling or for post-parse inlining).
-     ;;
-    (defn- #_"FrameState" BytecodeParser''createStateAfterStartOfReplacementGraph-1 [#_"BytecodeParser" this]
-        (if (IntrinsicContext''isPostParseInlined-1 (:intrinsicContext this))
-            (Graph''add-2 (:graph this), (FrameState'new-1 BytecodeFrame/BEFORE_BCI))
-            (let [
-                #_"ResolvedJavaMethod" original (:originalMethod (:intrinsicContext this))
-                #_"ValueNode[]" locals
-                    (if (or (= (#_"ResolvedJavaMethod" .getMaxLocals original) (count (:locals (:frameState this)))) (#_"ResolvedJavaMethod" .isNative original))
-                        (let [
-                            locals (make-array ValueNode'iface (#_"ResolvedJavaMethod" .getMaxLocals original))
-                        ]
-                            (dotimes [#_"int" i (count locals)]
-                                (let [
-                                    #_"ValueNode" node (nth (:locals (:frameState this)) i)
-                                ]
-                                    (aset locals i (when-not (= node FrameState'TWO_SLOT_MARKER) node))
-                                )
-                            )
-                            locals
-                        )
-                        (let [
-                            locals (make-array ValueNode'iface (#_"ResolvedJavaMethod" .getMaxLocals original))
-                            #_"int" n (#_"Signature" .getParameterCount (#_"ResolvedJavaMethod" .getSignature original), (not (#_"ResolvedJavaMethod" .isStatic original)))
-                        ]
-                            (dotimes [#_"int" i n]
-                                (let [
-                                    #_"ValueNode" param (nth (:locals (:frameState this)) i)
-                                ]
-                                    (aset locals i (when-not (= param FrameState'TWO_SLOT_MARKER) param))
-                                )
-                            )
-                            locals
-                        )
-                    )
-            ]
-                (Graph''add-2 (:graph this), (FrameState'new-9a nil, (ResolvedJavaMethodBytecode'new-1 original), 0, locals, (make-array ValueNode'iface 0), 0, (make-array ValueNode'iface 0), (Collections/emptyList), false))
-            )
-        )
     )
 
     ;;;
@@ -27073,6 +26743,57 @@ ZeroExtendNode'new-4
         )
     )
 
+    (defn- #_"void" BytecodeParser''maybeEagerlyResolve-3 [#_"BytecodeParser" this, #_"int" cpi, #_"int" bytecode]
+        (cond
+            (some? (:intrinsicContext this))
+                (#_"ConstantPool" .loadReferencedType (:constantPool this), cpi, bytecode)
+            (:eagerResolving (:graphBuilderConfig this))
+                ;; Since we're potentially triggering class initialization here, we need synchronization
+                ;; to mitigate the potential for class initialization related deadlock being caused by
+                ;; the compiler (e.g. https://github.com/graalvm/graal-core/pull/232/files#r90788550).
+                (locking BytecodeParser'iface
+                    (#_"ConstantPool" .loadReferencedType (:constantPool this), cpi, bytecode)
+                )
+        )
+        nil
+    )
+
+    (defn- #_"JavaType" BytecodeParser''lookupType-3 [#_"BytecodeParser" this, #_"int" cpi, #_"int" bytecode]
+        (BytecodeParser''maybeEagerlyResolve-3 this, cpi, bytecode)
+        (#_"ConstantPool" .lookupType (:constantPool this), cpi, bytecode)
+    )
+
+    (defn- #_"JavaMethod" BytecodeParser''lookupMethod-3 [#_"BytecodeParser" this, #_"int" cpi, #_"int" opcode]
+        (BytecodeParser''maybeEagerlyResolve-3 this, cpi, opcode)
+        (#_"ConstantPool" .lookupMethod (:constantPool this), cpi, opcode)
+    )
+
+    (defn- #_"JavaField" BytecodeParser''lookupField-3 [#_"BytecodeParser" this, #_"int" cpi, #_"int" opcode]
+        (BytecodeParser''maybeEagerlyResolve-3 this, cpi, opcode)
+        (let [
+            #_"JavaField" result (#_"ConstantPool" .lookupField (:constantPool this), cpi, (:method this), opcode)
+        ]
+            (when (or (GraphBuilder'''parsingIntrinsic-1 this) (:eagerInitializing this))
+                (when (instance? ResolvedJavaField result)
+                    (let [
+                        #_"ResolvedJavaType" declaringClass (#_"ResolvedJavaField" .getDeclaringClass result)
+                    ]
+                        (when-not (#_"ResolvedJavaType" .isInitialized declaringClass)
+                            ;; even with eager initialization, superinterfaces are not always initialized (see StaticInterfaceFieldTest)
+                            (BytecodeParser'initialize-1 declaringClass)
+                        )
+                    )
+                )
+            )
+            result
+        )
+    )
+
+    (defn- #_"Object" BytecodeParser''lookupConstant-3 [#_"BytecodeParser" this, #_"int" cpi, #_"int" opcode]
+        (BytecodeParser''maybeEagerlyResolve-3 this, cpi, opcode)
+        (#_"ConstantPool" .lookupConstant (:constantPool this), cpi)
+    )
+
     (defn #_"void" BytecodeParser''genInvokeStatic-3 [#_"BytecodeParser" this, #_"int" cpi, #_"int" opcode]
         (BytecodeParser''genInvokeStatic-2 this, (BytecodeParser''lookupMethod-3 this, cpi, opcode))
         nil
@@ -27110,18 +26831,6 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn #_"void" BytecodeParser''genInvokeDynamic-2 [#_"BytecodeParser" this, #_"JavaMethod" target]
-        (when-not (and (instance? ResolvedJavaMethod target) (BytecodeParser''genDynamicInvokeHelper-4 this, target, (BytecodeStream''readCPI4-1 (:stream this)), Bytecodes'INVOKEDYNAMIC))
-            (BytecodeParser''handleUnresolvedInvoke-3 this, target, InvokeKind'Static)
-        )
-        nil
-    )
-
-    (defn #_"void" BytecodeParser''genInvokeVirtual-3 [#_"BytecodeParser" this, #_"int" cpi, #_"int" opcode]
-        (BytecodeParser''genInvokeVirtual-2 this, (BytecodeParser''lookupMethod-3 this, cpi, opcode))
-        nil
-    )
-
     (defn- #_"boolean" BytecodeParser''genDynamicInvokeHelper-4 [#_"BytecodeParser" this, #_"ResolvedJavaMethod" target, #_"int" cpi, #_"int" opcode]
         (let [
             #_"JavaConstant" appendix (#_"ConstantPool" .lookupAppendix (:constantPool this), cpi, opcode)
@@ -27141,10 +26850,15 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"void" BytecodeParser''genInvokeVirtual-2 [#_"BytecodeParser" this, #_"JavaMethod" target]
-        (when-not (BytecodeParser''genInvokeVirtualHelper-2 this, target)
-            (BytecodeParser''handleUnresolvedInvoke-3 this, target, InvokeKind'Virtual)
+    (defn #_"void" BytecodeParser''genInvokeDynamic-2 [#_"BytecodeParser" this, #_"JavaMethod" target]
+        (when-not (and (instance? ResolvedJavaMethod target) (BytecodeParser''genDynamicInvokeHelper-4 this, target, (BytecodeStream''readCPI4-1 (:stream this)), Bytecodes'INVOKEDYNAMIC))
+            (BytecodeParser''handleUnresolvedInvoke-3 this, target, InvokeKind'Static)
         )
+        nil
+    )
+
+    (defn #_"void" BytecodeParser''genInvokeVirtual-3 [#_"BytecodeParser" this, #_"int" cpi, #_"int" opcode]
+        (BytecodeParser''genInvokeVirtual-2 this, (BytecodeParser''lookupMethod-3 this, cpi, opcode))
         nil
     )
 
@@ -27168,6 +26882,13 @@ ZeroExtendNode'new-4
                 )
             )
         )
+    )
+
+    (defn #_"void" BytecodeParser''genInvokeVirtual-2 [#_"BytecodeParser" this, #_"JavaMethod" target]
+        (when-not (BytecodeParser''genInvokeVirtualHelper-2 this, target)
+            (BytecodeParser''handleUnresolvedInvoke-3 this, target, InvokeKind'Virtual)
+        )
+        nil
     )
 
     (defn #_"void" BytecodeParser''genInvokeSpecial-3 [#_"BytecodeParser" this, #_"int" cpi, #_"int" opcode]
@@ -27220,6 +26941,99 @@ ZeroExtendNode'new-4
                 )
             )
             this
+        )
+    )
+
+    (defn- #_"boolean" BytecodeParser''tryNodePluginForInvocation-3 [#_"BytecodeParser" this, #_"ValueNode[]" args, #_"ResolvedJavaMethod" targetMethod]
+        (loop [#_"ISeq" s (seq (:nodePlugins (:plugins (:graphBuilderConfig this))))]
+            (and (some? s)
+                (or (NodePlugin'''handleInvoke-4 (first s), this, targetMethod, args)
+                    (recur (next s))
+                )
+            )
+        )
+    )
+
+    (defn- #_"boolean" BytecodeParser''inline-5 [#_"BytecodeParser" this, #_"ResolvedJavaMethod" targetMethod, #_"ResolvedJavaMethod" inlinedMethod, #_"BytecodeProvider" intrinsicBytecodeProvider, #_"ValueNode[]" args]
+        (let [
+            #_"IntrinsicContext" intrinsic (:intrinsicContext this)
+        ]
+            (or (and (nil? intrinsic) (= targetMethod inlinedMethod) (zero? (& (#_"ResolvedJavaMethod" .getModifiers targetMethod) (| Modifier/STATIC Modifier/SYNCHRONIZED))) (BytecodeParser''tryFastInlineAccessor-3 this, targetMethod, args))
+                (if (and (some? intrinsic) (IntrinsicContext''isCallToOriginal-2 intrinsic, targetMethod))
+                    (if (IntrinsicContext''isCompilationRoot-1 intrinsic)
+                        (do
+                            ;; A root compiled intrinsic needs to deoptimize if the slow path is taken. During frame state
+                            ;; assignment, the deopt node will get its stateBefore from the start node of the intrinsic.
+                            (GraphBuilder'''append-2 this, (DeoptimizeNode'new-2 DeoptimizationAction/InvalidateRecompile, DeoptimizationReason/RuntimeConstraint))
+                            true
+                        )
+                        (and (not (#_"ResolvedJavaMethod" .isNative (:originalMethod intrinsic)))
+                            (BytecodeParser''canInlinePartialIntrinsicExit-1 this) GraalOptions'inlinePartialIntrinsicExitDuringParsing
+                            (do
+                                ;; Otherwise inline the original method. Any frame state created during the inlining
+                                ;; will exclude frame(s) in the intrinsic method (see FrameStateBuilder.create(int bci)).
+                                (BytecodeParser''notifyBeforeInline-2 this, inlinedMethod)
+                                (§ ass! this (BytecodeParser''parseAndInlineCallee-4 this, (:originalMethod intrinsic), args, nil))
+                                (BytecodeParser''notifyAfterInline-2 this, inlinedMethod)
+                                true
+                            )
+                        )
+                    )
+                    (let [
+                        intrinsic
+                            (when (and (nil? intrinsic) (some? intrinsicBytecodeProvider)) => intrinsic
+                                (IntrinsicContext'new-4 targetMethod, inlinedMethod, intrinsicBytecodeProvider, CompilationContext'INLINE_DURING_PARSING)
+                            )
+                    ]
+                        (and (#_"ResolvedJavaMethod" .hasBytecodes inlinedMethod)
+                            (do
+                                (BytecodeParser''notifyBeforeInline-2 this, inlinedMethod)
+                                (§ ass! this (BytecodeParser''parseAndInlineCallee-4 this, inlinedMethod, args, intrinsic))
+                                (BytecodeParser''notifyAfterInline-2 this, inlinedMethod)
+                                true
+                            )
+                        )
+                    )
+                )
+            )
+        )
+    )
+
+    (def- #_"InlineInvokeInfo" BytecodeParser'SUCCESSFULLY_INLINED (§ soon InlineInvokeInfo'createStandardInlineInfo-1 nil))
+
+    ;;;
+     ; Try to inline a method. If the method was inlined, returns #SUCCESSFULLY_INLINED.
+     ; Otherwise, it returns the InlineInvokeInfo that lead to the decision to not
+     ; inline it, or nil if there is no InlineInvokeInfo for this method.
+     ;;
+    (defn- #_"InlineInvokeInfo" BytecodeParser''tryInline-3 [#_"BytecodeParser" this, #_"ValueNode[]" args, #_"ResolvedJavaMethod" targetMethod]
+        (when (or (:forceInliningEverything this) (GraphBuilder'''parsingIntrinsic-1 this) (#_"ResolvedJavaMethod" .canBeInlined targetMethod))
+            (if (:forceInliningEverything this)
+                (when (BytecodeParser''inline-5 this, targetMethod, targetMethod, nil, args)
+                    BytecodeParser'SUCCESSFULLY_INLINED
+                )
+                (loop [#_"ISeq" s (seq (:inlineInvokePlugins (:plugins (:graphBuilderConfig this))))]
+                    (if (some? s)
+                        (let [
+                            #_"InlineInvokeInfo" inlineInfo (InlineInvokePlugin'''shouldInlineInvoke-4 (first s), this, targetMethod, args)
+                        ]
+                            (when (some? inlineInfo) => (recur (next s))
+                                (when (some? (:methodToInline inlineInfo)) => inlineInfo ;; do not inline, and do not ask the remaining plugins
+                                    (when (BytecodeParser''inline-5 this, targetMethod, (:methodToInline inlineInfo), (:intrinsicBytecodeProvider inlineInfo), args)
+                                        BytecodeParser'SUCCESSFULLY_INLINED
+                                    )
+                                )
+                            )
+                        )
+                        ;; There was no inline plugin with a definite answer to whether or not to inline.
+                        ;; If we're parsing an intrinsic, then we need to enforce the invariant here
+                        ;; that methods are always force inlined in intrinsics/snippets.
+                        (when (and (GraphBuilder'''parsingIntrinsic-1 this) (BytecodeParser''inline-5 this, targetMethod, targetMethod, (:bytecodeProvider this), args))
+                            BytecodeParser'SUCCESSFULLY_INLINED
+                        )
+                    )
+                )
+            )
         )
     )
 
@@ -27377,54 +27191,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"boolean" BytecodeParser''tryNodePluginForInvocation-3 [#_"BytecodeParser" this, #_"ValueNode[]" args, #_"ResolvedJavaMethod" targetMethod]
-        (loop [#_"ISeq" s (seq (:nodePlugins (:plugins (:graphBuilderConfig this))))]
-            (and (some? s)
-                (or (NodePlugin'''handleInvoke-4 (first s), this, targetMethod, args)
-                    (recur (next s))
-                )
-            )
-        )
-    )
-
-    (def- #_"InlineInvokeInfo" BytecodeParser'SUCCESSFULLY_INLINED (§ soon InlineInvokeInfo'createStandardInlineInfo-1 nil))
-
-    ;;;
-     ; Try to inline a method. If the method was inlined, returns #SUCCESSFULLY_INLINED.
-     ; Otherwise, it returns the InlineInvokeInfo that lead to the decision to not
-     ; inline it, or nil if there is no InlineInvokeInfo for this method.
-     ;;
-    (defn- #_"InlineInvokeInfo" BytecodeParser''tryInline-3 [#_"BytecodeParser" this, #_"ValueNode[]" args, #_"ResolvedJavaMethod" targetMethod]
-        (when (or (:forceInliningEverything this) (GraphBuilder'''parsingIntrinsic-1 this) (#_"ResolvedJavaMethod" .canBeInlined targetMethod))
-            (if (:forceInliningEverything this)
-                (when (BytecodeParser''inline-5 this, targetMethod, targetMethod, nil, args)
-                    BytecodeParser'SUCCESSFULLY_INLINED
-                )
-                (loop [#_"ISeq" s (seq (:inlineInvokePlugins (:plugins (:graphBuilderConfig this))))]
-                    (if (some? s)
-                        (let [
-                            #_"InlineInvokeInfo" inlineInfo (InlineInvokePlugin'''shouldInlineInvoke-4 (first s), this, targetMethod, args)
-                        ]
-                            (when (some? inlineInfo) => (recur (next s))
-                                (when (some? (:methodToInline inlineInfo)) => inlineInfo ;; do not inline, and do not ask the remaining plugins
-                                    (when (BytecodeParser''inline-5 this, targetMethod, (:methodToInline inlineInfo), (:intrinsicBytecodeProvider inlineInfo), args)
-                                        BytecodeParser'SUCCESSFULLY_INLINED
-                                    )
-                                )
-                            )
-                        )
-                        ;; There was no inline plugin with a definite answer to whether or not to inline.
-                        ;; If we're parsing an intrinsic, then we need to enforce the invariant here
-                        ;; that methods are always force inlined in intrinsics/snippets.
-                        (when (and (GraphBuilder'''parsingIntrinsic-1 this) (BytecodeParser''inline-5 this, targetMethod, targetMethod, (:bytecodeProvider this), args))
-                            BytecodeParser'SUCCESSFULLY_INLINED
-                        )
-                    )
-                )
-            )
-        )
-    )
-
     ;;;
      ; Gets the receiver value with optional nil-check.
      ;;
@@ -27439,6 +27205,54 @@ ZeroExtendNode'new-4
                 value
             )
         )
+    )
+
+    (defn- #_"void" BytecodeParser''genGetField-3r [#_"BytecodeParser" this, #_"ResolvedJavaField" resolvedField, #_"ValueNode" receiver]
+        (or
+            (loop-when [#_"ISeq" s (seq (:nodePlugins (:plugins (:graphBuilderConfig this))))] (some? s)
+                (when (NodePlugin'''handleLoadField-4 (first s), this, receiver, resolvedField) => (recur (next s))
+                    :done
+                )
+            )
+            (let [
+                #_"ValueNode" fieldRead (GraphBuilder'''append-2 this, (BytecodeParser''genLoadField-3 this, receiver, resolvedField))
+            ]
+                (when (and (= (#_"ResolvedJavaType" .getName (#_"ResolvedJavaField" .getDeclaringClass resolvedField)) "Ljava/lang/ref/Reference;") (= (#_"ResolvedJavaField" .getName resolvedField) "referent"))
+                    (GraphBuilder'''append-2 this, (MembarNode'new-2 0, (FieldLocationIdentity'new-1 resolvedField)))
+                )
+                (let [
+                    #_"JavaKind" fieldKind (#_"ResolvedJavaField" .getJavaKind resolvedField)
+                ]
+                    (if (and (#_"ResolvedJavaField" .isVolatile resolvedField) (satisfies? LoadFieldNode fieldRead))
+                        (let [
+                            #_"StateSplitProxyNode" readProxy (GraphBuilder'''append-2 this, (BytecodeParser''genVolatileFieldReadProxy-2 this, fieldRead))
+                        ]
+                            (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), fieldKind, readProxy))
+                            (StateSplit'''setStateAfter-2 readProxy, (FrameStateBuilder''create-3 (:frameState this), (:nextBCI (:stream this)), readProxy))
+                        )
+                        (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), fieldKind, fieldRead))
+                    )
+                )
+            )
+        )
+        nil
+    )
+
+    (defn- #_"void" BytecodeParser''genGetField-3f [#_"BytecodeParser" this, #_"JavaField" field, #_"ValueNode" receiver]
+        (when (instance? ResolvedJavaField field) => (BytecodeParser''handleUnresolvedLoadField-3 this, field, receiver)
+            (BytecodeParser''genGetField-3r this, field, receiver)
+        )
+        nil
+    )
+
+    (defn- #_"void" BytecodeParser''genGetField-4 [#_"BytecodeParser" this, #_"int" cpi, #_"int" opcode, #_"ValueNode" receiver]
+        (BytecodeParser''genGetField-3f this, (BytecodeParser''lookupField-3 this, cpi, opcode), receiver)
+        nil
+    )
+
+    (defn- #_"void" BytecodeParser''genGetField-3i [#_"BytecodeParser" this, #_"int" cpi, #_"int" opcode]
+        (BytecodeParser''genGetField-4 this, cpi, opcode, (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Object))
+        nil
     )
 
     (def- #_"int" BytecodeParser'ACCESSOR_BYTECODE_LENGTH 5)
@@ -27467,51 +27281,6 @@ ZeroExtendNode'new-4
                                     (BytecodeParser''notifyAfterInline-2 this, targetMethod)
                                     true
                                 )
-                            )
-                        )
-                    )
-                )
-            )
-        )
-    )
-
-    (defn- #_"boolean" BytecodeParser''inline-5 [#_"BytecodeParser" this, #_"ResolvedJavaMethod" targetMethod, #_"ResolvedJavaMethod" inlinedMethod, #_"BytecodeProvider" intrinsicBytecodeProvider, #_"ValueNode[]" args]
-        (let [
-            #_"IntrinsicContext" intrinsic (:intrinsicContext this)
-        ]
-            (or (and (nil? intrinsic) (= targetMethod inlinedMethod) (zero? (& (#_"ResolvedJavaMethod" .getModifiers targetMethod) (| Modifier/STATIC Modifier/SYNCHRONIZED))) (BytecodeParser''tryFastInlineAccessor-3 this, targetMethod, args))
-                (if (and (some? intrinsic) (IntrinsicContext''isCallToOriginal-2 intrinsic, targetMethod))
-                    (if (IntrinsicContext''isCompilationRoot-1 intrinsic)
-                        (do
-                            ;; A root compiled intrinsic needs to deoptimize if the slow path is taken. During frame state
-                            ;; assignment, the deopt node will get its stateBefore from the start node of the intrinsic.
-                            (GraphBuilder'''append-2 this, (DeoptimizeNode'new-2 DeoptimizationAction/InvalidateRecompile, DeoptimizationReason/RuntimeConstraint))
-                            true
-                        )
-                        (and (not (#_"ResolvedJavaMethod" .isNative (:originalMethod intrinsic)))
-                            (BytecodeParser''canInlinePartialIntrinsicExit-1 this) GraalOptions'inlinePartialIntrinsicExitDuringParsing
-                            (do
-                                ;; Otherwise inline the original method. Any frame state created during the inlining
-                                ;; will exclude frame(s) in the intrinsic method (see FrameStateBuilder.create(int bci)).
-                                (BytecodeParser''notifyBeforeInline-2 this, inlinedMethod)
-                                (§ ass! this (BytecodeParser''parseAndInlineCallee-4 this, (:originalMethod intrinsic), args, nil))
-                                (BytecodeParser''notifyAfterInline-2 this, inlinedMethod)
-                                true
-                            )
-                        )
-                    )
-                    (let [
-                        intrinsic
-                            (when (and (nil? intrinsic) (some? intrinsicBytecodeProvider)) => intrinsic
-                                (IntrinsicContext'new-4 targetMethod, inlinedMethod, intrinsicBytecodeProvider, CompilationContext'INLINE_DURING_PARSING)
-                            )
-                    ]
-                        (and (#_"ResolvedJavaMethod" .hasBytecodes inlinedMethod)
-                            (do
-                                (BytecodeParser''notifyBeforeInline-2 this, inlinedMethod)
-                                (§ ass! this (BytecodeParser''parseAndInlineCallee-4 this, inlinedMethod, args, intrinsic))
-                                (BytecodeParser''notifyAfterInline-2 this, inlinedMethod)
-                                true
                             )
                         )
                     )
@@ -27635,6 +27404,19 @@ ZeroExtendNode'new-4
         )
     )
 
+    (defn- #_"void" BytecodeParser''synchronizedEpilogue-4 [#_"BytecodeParser" this, #_"int" bci, #_"ValueNode" currentReturnValue, #_"JavaKind" currentReturnValueKind]
+        (when (#_"ResolvedJavaMethod" .isSynchronized (:method this))
+            (when (some? currentReturnValue)
+                (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), currentReturnValueKind, currentReturnValue))
+            )
+            (BytecodeParser''genMonitorExit-4 this, (:methodSynchronizedObject this), currentReturnValue, bci)
+        )
+        (when-not (zero? (FrameStateBuilder''lockDepth-2 (:frameState this), false))
+            (throw! "unbalanced monitors: too few exits exiting frame")
+        )
+        nil
+    )
+
     (defn- #_"void" BytecodeParser''beforeReturn-3 [#_"BytecodeParser" this, #_"ValueNode" x, #_"JavaKind" kind]
         (when (:finalBarrierRequired this)
             (GraphBuilder'''append-2 this, (FinalFieldBarrierNode'new-1 (:originalReceiver this)))
@@ -27715,6 +27497,14 @@ ZeroExtendNode'new-4
         nil
     )
 
+    (defn- #_"ConstantNode" BytecodeParser''getJsrConstant-2 [#_"BytecodeParser" this, #_"long" bci]
+        (let [
+            #_"JavaConstant" nextBciConstant (RawConstant. bci)
+        ]
+            (Graph''add-2 (:graph this), (ConstantNode'new-2 nextBciConstant, (StampFactory'forPrimitiveConstant-1 nextBciConstant)))
+        )
+    )
+
     (defn #_"void" BytecodeParser''genJsr-2 [#_"BytecodeParser" this, #_"int" dest]
         (let [
             #_"BciBlock" successor (BciBlock''getJsrSuccessor-1 (:currentBlock this))
@@ -27748,14 +27538,6 @@ ZeroExtendNode'new-4
             )
         )
         nil
-    )
-
-    (defn- #_"ConstantNode" BytecodeParser''getJsrConstant-2 [#_"BytecodeParser" this, #_"long" bci]
-        (let [
-            #_"JavaConstant" nextBciConstant (RawConstant. bci)
-        ]
-            (Graph''add-2 (:graph this), (ConstantNode'new-2 nextBciConstant, (StampFactory'forPrimitiveConstant-1 nextBciConstant)))
-        )
     )
 
     ;;;
@@ -27804,6 +27586,16 @@ ZeroExtendNode'new-4
         (ConstantNode'forConstant-2c constant, (:graph this))
     )
 
+    (defn- #_"BytecodeParser" BytecodeParser''updateLastInstruction-2 [#_"BytecodeParser" this, #_"ValueNode" node]
+        (when (satisfies? FixedNode node) => this
+            (let [
+                _ (§ ass! (:lastInstr this) (FixedWithNextNode''setNext-2 (:lastInstr this), node))
+            ]
+                (assoc this :lastInstr (when (satisfies? FixedWithNextNode node) node))
+            )
+        )
+    )
+
     (defm BytecodeParser GraphBuilder
         (#_"ValueNode" GraphBuilder'''append-2 [#_"BytecodeParser" this, #_"ValueNode" node]
             (if (some? (:graph node))
@@ -27816,16 +27608,6 @@ ZeroExtendNode'new-4
                     )
                     added
                 )
-            )
-        )
-    )
-
-    (defn- #_"BytecodeParser" BytecodeParser''updateLastInstruction-2 [#_"BytecodeParser" this, #_"ValueNode" node]
-        (when (satisfies? FixedNode node) => this
-            (let [
-                _ (§ ass! (:lastInstr this) (FixedWithNextNode''setNext-2 (:lastInstr this), node))
-            ]
-                (assoc this :lastInstr (when (satisfies? FixedWithNextNode node) node))
             )
         )
     )
@@ -27890,131 +27672,11 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"FrameStateBuilder" BytecodeParser''getEntryState-2 [#_"BytecodeParser" this, #_"BciBlock" block]
-        (nth (:entryStateArray this) (:id block))
-    )
-
-    (defn- #_"void" BytecodeParser''setEntryState-3 [#_"BytecodeParser" this, #_"BciBlock" block, #_"FrameStateBuilder" entryState]
-        (aset (:entryStateArray this) (:id block) entryState)
+    (defn- #_"void" BytecodeParser''setMergeStateAfter-3 [#_"BytecodeParser" this, #_"BciBlock" block, #_"FixedWithNextNode" firstInstruction]
+        (when (nil? (:stateAfter firstInstruction))
+            (StateSplit'''setStateAfter-2 firstInstruction, (BytecodeParser''createFrameState-3 this, (:startBci block), firstInstruction))
+        )
         nil
-    )
-
-    (defn- #_"void" BytecodeParser''setFirstInstruction-3 [#_"BytecodeParser" this, #_"BciBlock" block, #_"FixedWithNextNode" firstInstruction]
-        (aset (:firstInstructionArray this) (:id block) firstInstruction)
-        nil
-    )
-
-    (defn- #_"FixedWithNextNode" BytecodeParser''getFirstInstruction-2 [#_"BytecodeParser" this, #_"BciBlock" block]
-        (nth (:firstInstructionArray this) (:id block))
-    )
-
-    (defn- #_"FixedNode" BytecodeParser''createTarget-4 [#_"BytecodeParser" this, #_"double" probability, #_"BciBlock" block, #_"FrameStateBuilder" stateAfter]
-        (if (BytecodeParser''isNeverExecutedCode-2 this, probability)
-            (Graph''add-2 (:graph this), (DeoptimizeNode'new-2 DeoptimizationAction/InvalidateReprofile, DeoptimizationReason/UnreachedCode))
-            (BytecodeParser''createTarget-3 this, block, stateAfter)
-        )
-    )
-
-    (defn- #_"FixedNode" BytecodeParser''createTarget-3 [#_"BytecodeParser" this, #_"BciBlock" block, #_"FrameStateBuilder" state]
-        (BytecodeParser''createTarget-5 this, block, state, false, false)
-    )
-
-    (defn- #_"FixedNode" BytecodeParser''createTarget-5 [#_"BytecodeParser" this, #_"BciBlock" block, #_"FrameStateBuilder" state, #_"boolean" canReuseInstruction, #_"boolean" canReuseState]
-        (when (nil? (BytecodeParser''getFirstInstruction-2 this, block))
-            ;; This is the first time we see this block as a branch target. Create and return a
-            ;; placeholder that later can be replaced with a MergeNode when we see this block again.
-            (if (and canReuseInstruction (or (= (:predecessorCount block) 1) (not (:controlFlowSplit this))) (not (:isLoopHeader block)) (zero? (& (:loops (:currentBlock this)) (bit-not (:loops block)))))
-                (do
-                    (BytecodeParser''setFirstInstruction-3 this, block, (:lastInstr this))
-                    (§ ass! this (assoc this :lastInstr nil))
-                )
-                (BytecodeParser''setFirstInstruction-3 this, block, (Graph''add-2 (:graph this), (BeginNode'new-0)))
-            )
-            (let [
-                #_"FixedNode" targetNode (BytecodeParser''getFirstInstruction-2 this, block)
-                #_"FixedTarget" target (BytecodeParser''checkLoopExit-4 this, targetNode, block, state)
-                #_"FixedNode" result (:fixed target)
-                #_"FrameStateBuilder" currentEntryState (cond (not= (:state target) state) (:state target) canReuseState state :else (FrameStateBuilder'copy-1 state))
-            ]
-                (BytecodeParser''setEntryState-3 this, block, currentEntryState)
-                (FrameStateBuilder''clearNonLiveLocals-4 currentEntryState, block, (:liveness this), true)
-
-                (§ return result)
-            )
-        )
-
-        ;; We already saw this block before, so we have to merge states.
-        (when-not (FrameStateBuilder''isCompatibleWith-2 (BytecodeParser''getEntryState-2 this, block), state)
-            (throw! (str "stacks do not match on merge from " (BytecodeParser''bci-1 this) " into " block "; bytecodes would not verify:\nexpect: " (BytecodeParser''getEntryState-2 this, block) "\nactual: " state))
-        )
-
-        (when (satisfies? LoopBeginNode (BytecodeParser''getFirstInstruction-2 this, block))
-            ;; Backward loop edge. We need to create a special LoopEndNode and merge with the
-            ;; loop begin node created before.
-            (let [
-                #_"LoopBeginNode" loopBegin (BytecodeParser''getFirstInstruction-2 this, block)
-                #_"LoopEndNode" loopEnd (Graph''add-2 (:graph this), (LoopEndNode'new-1 loopBegin))
-                #_"FixedTarget" target (BytecodeParser''checkLoopExit-4 this, loopEnd, block, state)
-                #_"FixedNode" result (:fixed target)
-            ]
-                (§ ass! (BytecodeParser''getEntryState-2 this, block) (FrameStateBuilder''merge-3 (BytecodeParser''getEntryState-2 this, block), loopBegin, (:state target)))
-
-                (§ return result)
-            )
-        )
-
-        (when (and (satisfies? AbstractBeginNode (BytecodeParser''getFirstInstruction-2 this, block)) (not (satisfies? AbstractMergeNode (BytecodeParser''getFirstInstruction-2 this, block))))
-            ;; This is the second time we see this block. Create the actual MergeNode and the
-            ;; End Node for the already existing edge.
-            (let [
-                #_"AbstractBeginNode" beginNode (BytecodeParser''getFirstInstruction-2 this, block)
-                ;; The EndNode for the already existing edge.
-                #_"EndNode" end (Graph''add-2 (:graph this), (EndNode'new-0))
-                ;; The MergeNode that replaces the placeholder.
-                #_"AbstractMergeNode" mergeNode (Graph''add-2 (:graph this), (MergeNode'new-0))
-                #_"FixedNode" next (:next beginNode)
-            ]
-                (if (satisfies? ControlSplitNode (:predecessor beginNode))
-                    (§ ass! beginNode (FixedWithNextNode''setNext-2 beginNode, end))
-                    (do
-                        (Node''replaceAtPredecessor-2 beginNode, end)
-                        (Node''safeDelete-1 beginNode)
-                    )
-                )
-
-                (AbstractMergeNode''addForwardEnd-2 mergeNode, end)
-                (§ ass! mergeNode (FixedWithNextNode''setNext-2 mergeNode, next))
-
-                (BytecodeParser''setFirstInstruction-3 this, block, mergeNode)
-            )
-        )
-
-        (let [
-            #_"AbstractMergeNode" mergeNode (BytecodeParser''getFirstInstruction-2 this, block)
-            ;; The EndNode for the newly merged edge.
-            #_"EndNode" newEnd (Graph''add-2 (:graph this), (EndNode'new-0))
-            #_"FixedTarget" target (BytecodeParser''checkLoopExit-4 this, newEnd, block, state)
-            #_"FixedNode" result (:fixed target)
-        ]
-            (§ ass! (BytecodeParser''getEntryState-2 this, block) (FrameStateBuilder''merge-3 (BytecodeParser''getEntryState-2 this, block), mergeNode, (:state target)))
-            (AbstractMergeNode''addForwardEnd-2 mergeNode, newEnd)
-
-            result
-        )
-    )
-
-    ;;;
-     ; Returns a block begin node with the specified state. If the specified probability is 0, the block deoptimizes immediately.
-     ;;
-    (defn- #_"AbstractBeginNode" BytecodeParser''createBlockTarget-4 [#_"BytecodeParser" this, #_"double" probability, #_"BciBlock" block, #_"FrameStateBuilder" stateAfter]
-        (BeginNode'begin-1 (BytecodeParser''createTarget-4 this, probability, block, stateAfter))
-    )
-
-    (defn- #_"ValueNode" BytecodeParser''synchronizedObject-3 [#_"BytecodeParser" this, #_"FrameStateBuilder" state, #_"ResolvedJavaMethod" target]
-        (if (#_"ResolvedJavaMethod" .isStatic target)
-            (BytecodeParser''appendConstant-2 this, (#_"ConstantReflectionProvider" .asJavaClass HotSpot'constantReflection, (#_"ResolvedJavaMethod" .getDeclaringClass target)))
-            (FrameStateBuilder''loadLocal-3 state, 0, JavaKind/Object)
-        )
     )
 
     (defn #_"BytecodeParser" BytecodeParser''processBlock-2 [#_"BytecodeParser" this, #_"BciBlock" block]
@@ -28038,35 +27700,20 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"void" BytecodeParser''setMergeStateAfter-3 [#_"BytecodeParser" this, #_"BciBlock" block, #_"FixedWithNextNode" firstInstruction]
-        (when (nil? (:stateAfter firstInstruction))
-            (StateSplit'''setStateAfter-2 firstInstruction, (BytecodeParser''createFrameState-3 this, (:startBci block), firstInstruction))
-        )
-        nil
-    )
-
-    (defn- #_"void" BytecodeParser''synchronizedEpilogue-4 [#_"BytecodeParser" this, #_"int" bci, #_"ValueNode" currentReturnValue, #_"JavaKind" currentReturnValueKind]
-        (when (#_"ResolvedJavaMethod" .isSynchronized (:method this))
-            (when (some? currentReturnValue)
-                (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), currentReturnValueKind, currentReturnValue))
-            )
-            (BytecodeParser''genMonitorExit-4 this, (:methodSynchronizedObject this), currentReturnValue, bci)
-        )
-        (when-not (zero? (FrameStateBuilder''lockDepth-2 (:frameState this), false))
-            (throw! "unbalanced monitors: too few exits exiting frame")
-        )
-        nil
-    )
-
-    (defn- #_"void" BytecodeParser''appendGoto-2 [#_"BytecodeParser" this, #_"BciBlock" successor]
+    (defn- #_"LoopBeginNode" BytecodeParser''appendLoopBegin-3 [#_"BytecodeParser" this, #_"FixedWithNextNode" fixedWithNext, #_"int" startBci]
         (let [
-            #_"FixedNode" targetInstr (BytecodeParser''createTarget-5 this, successor, (:frameState this), true, true)
+            #_"EndNode" preLoopEnd (Graph''add-2 (:graph this), (EndNode'new-0))
+            #_"LoopBeginNode" loopBegin (Graph''add-2 (:graph this), (LoopBeginNode'new-0))
+            loopBegin
+                (when (GraphBuilder'''parsingIntrinsic-1 this) => loopBegin
+                    (LoopBeginNode''disableSafepoint-1 loopBegin)
+                )
         ]
-            (when (and (some? (:lastInstr this)) (not= (:lastInstr this) targetInstr))
-                (§ ass! (:lastInstr this) (FixedWithNextNode''setNext-2 (:lastInstr this), targetInstr))
-            )
+            (§ ass! fixedWithNext (FixedWithNextNode''setNext-2 fixedWithNext, preLoopEnd))
+            ;; Add the single non-loop predecessor of the loop header.
+            (AbstractMergeNode''addForwardEnd-2 loopBegin, preLoopEnd)
+            loopBegin
         )
-        nil
     )
 
     (defn #_"BytecodeParser" BytecodeParser''iterateBytecodesForBlock-2 [#_"BytecodeParser" this, #_"BciBlock" block]
@@ -28121,19 +27768,45 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"LoopBeginNode" BytecodeParser''appendLoopBegin-3 [#_"BytecodeParser" this, #_"FixedWithNextNode" fixedWithNext, #_"int" startBci]
+    (defn- #_"LogicNode" BytecodeParser''createLogicNode-4 [#_"BytecodeParser" this, #_"CanonicalCondition" condition, #_"ValueNode" a, #_"ValueNode" b]
+        (condp = condition
+            CanonicalCondition'EQ
+                (if (= (ValueNode''getStackKind-1 a) JavaKind/Object)
+                    (BytecodeParser''genObjectEquals-3 this, a, b)
+                    (BytecodeParser''genIntegerEquals-3 this, a, b)
+                )
+            CanonicalCondition'LT
+                (BytecodeParser''genIntegerLessThan-3 this, a, b)
+        )
+    )
+
+    (defn- #_"double" BytecodeParser'extractInjectedProbability-1 [#_"IntegerEqualsNode" equalsNode]
+        ;; Propagate injected branch probability if any.
         (let [
-            #_"EndNode" preLoopEnd (Graph''add-2 (:graph this), (EndNode'new-0))
-            #_"LoopBeginNode" loopBegin (Graph''add-2 (:graph this), (LoopBeginNode'new-0))
-            loopBegin
-                (when (GraphBuilder'''parsingIntrinsic-1 this) => loopBegin
-                    (LoopBeginNode''disableSafepoint-1 loopBegin)
+            [#_"BranchProbabilityNode" probabilityNode #_"ValueNode" valueNode]
+                (cond
+                    (satisfies? BranchProbabilityNode (:x equalsNode)) [(:x equalsNode) (:y equalsNode)]
+                    (satisfies? BranchProbabilityNode (:y equalsNode)) [(:y equalsNode) (:x equalsNode)]
                 )
         ]
-            (§ ass! fixedWithNext (FixedWithNextNode''setNext-2 fixedWithNext, preLoopEnd))
-            ;; Add the single non-loop predecessor of the loop header.
-            (AbstractMergeNode''addForwardEnd-2 loopBegin, preLoopEnd)
-            loopBegin
+            (if (and (some? probabilityNode) (satisfies? ConstantNode (:probability probabilityNode)) (some? valueNode) (satisfies? ConstantNode valueNode))
+                (let [
+                    #_"double" probability (#_"JavaConstant" .asDouble (ValueNode''asJavaConstant-1 (:probability probabilityNode)))
+                ]
+                    (if (zero? (#_"JavaConstant" .asInt (ValueNode''asJavaConstant-1 valueNode))) (- 1.0 probability) probability)
+                )
+                -1.0
+            )
+        )
+    )
+
+    (defn- #_"double" BytecodeParser''getProfileProbability-2 [#_"BytecodeParser" this, #_"boolean" negate?]
+        0.5
+    )
+
+    (defn- #_"double" BytecodeParser''clampProbability-2 [#_"BytecodeParser" this, #_"double" probability]
+        (when-not (OptimisticOptimizations''removeNeverExecutedCode-1 (:optimisticOpts this)) => probability
+            (case probability 0.0 0.0000001 1.0 0.999999 probability)
         )
     )
 
@@ -28158,27 +27831,74 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"double" BytecodeParser''getProfileProbability-2 [#_"BytecodeParser" this, #_"boolean" negate?]
-        0.5
+    (defn- #_"void" BytecodeParser''genConstantTargetIf-4 [#_"BytecodeParser" this, #_"BciBlock" trueBlock, #_"BciBlock" falseBlock, #_"LogicNode" logic]
+        (let [
+            #_"BciBlock" nextBlock (if (:value logic) trueBlock falseBlock)
+            #_"int" targetAtStart (BytecodeStream''readUByte-2 (:stream this), (:startBci nextBlock))
+        ]
+            ;; If this is an empty block, skip it.
+            (BytecodeParser''appendGoto-2 this, (if (and (= targetAtStart Bytecodes'GOTO) (= (:predecessorCount nextBlock) 1)) (nth (:successors nextBlock) 0) nextBlock))
+        )
+        nil
     )
 
-    (defn- #_"double" BytecodeParser'extractInjectedProbability-1 [#_"IntegerEqualsNode" equalsNode]
-        ;; Propagate injected branch probability if any.
+    (defn- #_"int" BytecodeParser''checkPositiveIntConstantPushed-2 [#_"BytecodeParser" this, #_"BciBlock" block]
+        (§ ass! (:stream this) (BytecodeStream''setBCI-2 (:stream this), (:startBci block)))
         (let [
-            [#_"BranchProbabilityNode" probabilityNode #_"ValueNode" valueNode]
-                (cond
-                    (satisfies? BranchProbabilityNode (:x equalsNode)) [(:x equalsNode) (:y equalsNode)]
-                    (satisfies? BranchProbabilityNode (:y equalsNode)) [(:y equalsNode) (:x equalsNode)]
+            #_"int" currentBC (BytecodeStream''currentBC-1 (:stream this))
+        ]
+            (if (<= Bytecodes'ICONST_0 currentBC Bytecodes'ICONST_5) (- currentBC Bytecodes'ICONST_0) -1)
+        )
+    )
+
+    (defn- #_"BytecodeParser" BytecodeParser''genConditionalForIf-7 [#_"BytecodeParser" this, #_"BciBlock" trueBlock, #_"LogicNode" logic, #_"int" oldBci, #_"int" trueBlockInt, #_"int" falseBlockInt, #_"boolean" genReturn]
+        (let [
+            #_"ConstantNode" trueValue (Graph''add-2 (:graph this), (ConstantNode'forInt-1 trueBlockInt))
+            #_"ConstantNode" falseValue (Graph''add-2 (:graph this), (ConstantNode'forInt-1 falseBlockInt))
+            #_"ValueNode" conditionalNode (ConditionalNode'create-3 logic, trueValue, falseValue)
+            conditionalNode
+                (when (nil? (:graph conditionalNode)) => conditionalNode
+                    (Graph''addOrUniqueWithInputs-2 (:graph this), conditionalNode)
                 )
         ]
-            (if (and (some? probabilityNode) (satisfies? ConstantNode (:probability probabilityNode)) (some? valueNode) (satisfies? ConstantNode valueNode))
-                (let [
-                    #_"double" probability (#_"JavaConstant" .asDouble (ValueNode''asJavaConstant-1 (:probability probabilityNode)))
-                ]
-                    (if (zero? (#_"JavaConstant" .asInt (ValueNode''asJavaConstant-1 valueNode))) (- 1.0 probability) probability)
+            (if genReturn
+                (BytecodeParser''genReturn-3 this, conditionalNode, (#_"JavaKind" .getStackKind (#_"Signature" .getReturnKind (#_"ResolvedJavaMethod" .getSignature (:method this)))))
+                (do
+                    (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), JavaKind/Int, conditionalNode))
+                    (BytecodeParser''appendGoto-2 this, (BciBlock''getSuccessor-2 trueBlock, 0))
+                    (§ ass! (:stream this) (BytecodeStream''setBCI-2 (:stream this), oldBci))
+                    this
                 )
-                -1.0
             )
+        )
+    )
+
+    (defn- #_"boolean" BytecodeParser''gotoOrFallThroughAfterConstant-2 [#_"BytecodeParser" this, #_"BciBlock" block]
+        (§ ass! (:stream this) (BytecodeStream''setBCI-2 (:stream this), (:startBci block)))
+        (§ ass! (:stream this) (BytecodeStream''setBCI-2 (:stream this), (:nextBCI (:stream this))))
+        (or (< (:endBci block) (:curBCI (:stream this))) (any = (BytecodeStream''currentBC-1 (:stream this)) Bytecodes'GOTO Bytecodes'GOTO_W))
+    )
+
+    (defn- #_"boolean" BytecodeParser''returnAfterConstant-2 [#_"BytecodeParser" this, #_"BciBlock" block]
+        (§ ass! (:stream this) (BytecodeStream''setBCI-2 (:stream this), (:startBci block)))
+        (§ ass! (:stream this) (BytecodeStream''setBCI-2 (:stream this), (:nextBCI (:stream this))))
+        (= (BytecodeStream''currentBC-1 (:stream this)) Bytecodes'IRETURN)
+    )
+
+    (defn- #_"boolean" BytecodeParser''tryGenConditionalForIf-7 [#_"BytecodeParser" this, #_"BciBlock" trueBlock, #_"BciBlock" falseBlock, #_"LogicNode" logic, #_"int" oldBci, #_"int" trueBlockInt, #_"int" falseBlockInt]
+        (cond
+            (and (BytecodeParser''gotoOrFallThroughAfterConstant-2 this, trueBlock) (BytecodeParser''gotoOrFallThroughAfterConstant-2 this, falseBlock) (= (BciBlock''getSuccessor-2 trueBlock, 0) (BciBlock''getSuccessor-2 falseBlock, 0)))
+            (do
+                (§ ass! this (BytecodeParser''genConditionalForIf-7 this, trueBlock, logic, oldBci, trueBlockInt, falseBlockInt, false))
+                true
+            )
+            (and (some? (:parent this)) (BytecodeParser''returnAfterConstant-2 this, trueBlock) (BytecodeParser''returnAfterConstant-2 this, falseBlock))
+            (do
+                (§ ass! this (BytecodeParser''genConditionalForIf-7 this, trueBlock, logic, oldBci, trueBlockInt, falseBlockInt, true))
+                true
+            )
+            :else
+                false
         )
     )
 
@@ -28238,89 +27958,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"boolean" BytecodeParser''tryGenConditionalForIf-7 [#_"BytecodeParser" this, #_"BciBlock" trueBlock, #_"BciBlock" falseBlock, #_"LogicNode" logic, #_"int" oldBci, #_"int" trueBlockInt, #_"int" falseBlockInt]
-        (cond
-            (and (BytecodeParser''gotoOrFallThroughAfterConstant-2 this, trueBlock) (BytecodeParser''gotoOrFallThroughAfterConstant-2 this, falseBlock) (= (BciBlock''getSuccessor-2 trueBlock, 0) (BciBlock''getSuccessor-2 falseBlock, 0)))
-            (do
-                (§ ass! this (BytecodeParser''genConditionalForIf-7 this, trueBlock, logic, oldBci, trueBlockInt, falseBlockInt, false))
-                true
-            )
-            (and (some? (:parent this)) (BytecodeParser''returnAfterConstant-2 this, trueBlock) (BytecodeParser''returnAfterConstant-2 this, falseBlock))
-            (do
-                (§ ass! this (BytecodeParser''genConditionalForIf-7 this, trueBlock, logic, oldBci, trueBlockInt, falseBlockInt, true))
-                true
-            )
-            :else
-                false
-        )
-    )
-
-    (defn- #_"BytecodeParser" BytecodeParser''genConditionalForIf-7 [#_"BytecodeParser" this, #_"BciBlock" trueBlock, #_"LogicNode" logic, #_"int" oldBci, #_"int" trueBlockInt, #_"int" falseBlockInt, #_"boolean" genReturn]
-        (let [
-            #_"ConstantNode" trueValue (Graph''add-2 (:graph this), (ConstantNode'forInt-1 trueBlockInt))
-            #_"ConstantNode" falseValue (Graph''add-2 (:graph this), (ConstantNode'forInt-1 falseBlockInt))
-            #_"ValueNode" conditionalNode (ConditionalNode'create-3 logic, trueValue, falseValue)
-            conditionalNode
-                (when (nil? (:graph conditionalNode)) => conditionalNode
-                    (Graph''addOrUniqueWithInputs-2 (:graph this), conditionalNode)
-                )
-        ]
-            (if genReturn
-                (BytecodeParser''genReturn-3 this, conditionalNode, (#_"JavaKind" .getStackKind (#_"Signature" .getReturnKind (#_"ResolvedJavaMethod" .getSignature (:method this)))))
-                (do
-                    (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), JavaKind/Int, conditionalNode))
-                    (BytecodeParser''appendGoto-2 this, (BciBlock''getSuccessor-2 trueBlock, 0))
-                    (§ ass! (:stream this) (BytecodeStream''setBCI-2 (:stream this), oldBci))
-                    this
-                )
-            )
-        )
-    )
-
-    (defn- #_"LogicNode" BytecodeParser''createLogicNode-4 [#_"BytecodeParser" this, #_"CanonicalCondition" condition, #_"ValueNode" a, #_"ValueNode" b]
-        (condp = condition
-            CanonicalCondition'EQ
-                (if (= (ValueNode''getStackKind-1 a) JavaKind/Object)
-                    (BytecodeParser''genObjectEquals-3 this, a, b)
-                    (BytecodeParser''genIntegerEquals-3 this, a, b)
-                )
-            CanonicalCondition'LT
-                (BytecodeParser''genIntegerLessThan-3 this, a, b)
-        )
-    )
-
-    (defn- #_"void" BytecodeParser''genConstantTargetIf-4 [#_"BytecodeParser" this, #_"BciBlock" trueBlock, #_"BciBlock" falseBlock, #_"LogicNode" logic]
-        (let [
-            #_"BciBlock" nextBlock (if (:value logic) trueBlock falseBlock)
-            #_"int" targetAtStart (BytecodeStream''readUByte-2 (:stream this), (:startBci nextBlock))
-        ]
-            ;; If this is an empty block, skip it.
-            (BytecodeParser''appendGoto-2 this, (if (and (= targetAtStart Bytecodes'GOTO) (= (:predecessorCount nextBlock) 1)) (nth (:successors nextBlock) 0) nextBlock))
-        )
-        nil
-    )
-
-    (defn- #_"int" BytecodeParser''checkPositiveIntConstantPushed-2 [#_"BytecodeParser" this, #_"BciBlock" block]
-        (§ ass! (:stream this) (BytecodeStream''setBCI-2 (:stream this), (:startBci block)))
-        (let [
-            #_"int" currentBC (BytecodeStream''currentBC-1 (:stream this))
-        ]
-            (if (<= Bytecodes'ICONST_0 currentBC Bytecodes'ICONST_5) (- currentBC Bytecodes'ICONST_0) -1)
-        )
-    )
-
-    (defn- #_"boolean" BytecodeParser''gotoOrFallThroughAfterConstant-2 [#_"BytecodeParser" this, #_"BciBlock" block]
-        (§ ass! (:stream this) (BytecodeStream''setBCI-2 (:stream this), (:startBci block)))
-        (§ ass! (:stream this) (BytecodeStream''setBCI-2 (:stream this), (:nextBCI (:stream this))))
-        (or (< (:endBci block) (:curBCI (:stream this))) (any = (BytecodeStream''currentBC-1 (:stream this)) Bytecodes'GOTO Bytecodes'GOTO_W))
-    )
-
-    (defn- #_"boolean" BytecodeParser''returnAfterConstant-2 [#_"BytecodeParser" this, #_"BciBlock" block]
-        (§ ass! (:stream this) (BytecodeStream''setBCI-2 (:stream this), (:startBci block)))
-        (§ ass! (:stream this) (BytecodeStream''setBCI-2 (:stream this), (:nextBCI (:stream this))))
-        (= (BytecodeStream''currentBC-1 (:stream this)) Bytecodes'IRETURN)
-    )
-
     ;;;
      ; Pushes a given value to the frame state stack using an explicit kind. This should be used
      ; when {@code value.getJavaKind()} is different from the kind that the bytecode instruction
@@ -28340,13 +27977,6 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"BytecodeParser" BytecodeParser''getParent-1 [#_"BytecodeParser" this]
         (:parent this)
-    )
-
-    (defn- #_"FrameState" BytecodeParser''createFrameState-3 [#_"BytecodeParser" this, #_"int" bci, #_"StateSplit" forStateSplit]
-        (when (and (some? (:currentBlock this)) (< (:endBci (:currentBlock this)) bci))
-            (FrameStateBuilder''clearNonLiveLocals-4 (:frameState this), (:currentBlock this), (:liveness this), false)
-        )
-        (FrameStateBuilder''create-3 (:frameState this), bci, forStateSplit)
     )
 
     ;;;
@@ -28622,57 +28252,6 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn #_"JavaType" BytecodeParser''lookupType-3 [#_"BytecodeParser" this, #_"int" cpi, #_"int" bytecode]
-        (BytecodeParser''maybeEagerlyResolve-3 this, cpi, bytecode)
-        (#_"ConstantPool" .lookupType (:constantPool this), cpi, bytecode)
-    )
-
-    (defn- #_"JavaMethod" BytecodeParser''lookupMethod-3 [#_"BytecodeParser" this, #_"int" cpi, #_"int" opcode]
-        (BytecodeParser''maybeEagerlyResolve-3 this, cpi, opcode)
-        (#_"ConstantPool" .lookupMethod (:constantPool this), cpi, opcode)
-    )
-
-    (defn #_"JavaField" BytecodeParser''lookupField-3 [#_"BytecodeParser" this, #_"int" cpi, #_"int" opcode]
-        (BytecodeParser''maybeEagerlyResolve-3 this, cpi, opcode)
-        (let [
-            #_"JavaField" result (#_"ConstantPool" .lookupField (:constantPool this), cpi, (:method this), opcode)
-        ]
-            (when (or (GraphBuilder'''parsingIntrinsic-1 this) (:eagerInitializing this))
-                (when (instance? ResolvedJavaField result)
-                    (let [
-                        #_"ResolvedJavaType" declaringClass (#_"ResolvedJavaField" .getDeclaringClass result)
-                    ]
-                        (when-not (#_"ResolvedJavaType" .isInitialized declaringClass)
-                            ;; even with eager initialization, superinterfaces are not always initialized (see StaticInterfaceFieldTest)
-                            (BytecodeParser'initialize-1 declaringClass)
-                        )
-                    )
-                )
-            )
-            result
-        )
-    )
-
-    (defn- #_"Object" BytecodeParser''lookupConstant-3 [#_"BytecodeParser" this, #_"int" cpi, #_"int" opcode]
-        (BytecodeParser''maybeEagerlyResolve-3 this, cpi, opcode)
-        (#_"ConstantPool" .lookupConstant (:constantPool this), cpi)
-    )
-
-    (defn #_"void" BytecodeParser''maybeEagerlyResolve-3 [#_"BytecodeParser" this, #_"int" cpi, #_"int" bytecode]
-        (cond
-            (some? (:intrinsicContext this))
-                (#_"ConstantPool" .loadReferencedType (:constantPool this), cpi, bytecode)
-            (:eagerResolving (:graphBuilderConfig this))
-                ;; Since we're potentially triggering class initialization here, we need synchronization
-                ;; to mitigate the potential for class initialization related deadlock being caused by
-                ;; the compiler (e.g. https://github.com/graalvm/graal-core/pull/232/files#r90788550).
-                (locking BytecodeParser'iface
-                    (#_"ConstantPool" .loadReferencedType (:constantPool this), cpi, bytecode)
-                )
-        )
-        nil
-    )
-
     (defn- #_"void" BytecodeParser''genCheckCast-1 [#_"BytecodeParser" this]
         (let [
             #_"int" cpi (BytecodeStream''readCPI-1 (:stream this))
@@ -28763,12 +28342,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"void" BytecodeParser''genNewInstance-2i [#_"BytecodeParser" this, #_"int" cpi]
-        (BytecodeParser''genNewInstance-2t this, (BytecodeParser''lookupType-3 this, cpi, Bytecodes'NEW))
-        nil
-    )
-
-    (defn #_"void" BytecodeParser''genNewInstance-2t [#_"BytecodeParser" this, #_"JavaType" type]
+    (defn- #_"void" BytecodeParser''genNewInstance-2t [#_"BytecodeParser" this, #_"JavaType" type]
         (when (and (instance? ResolvedJavaType type) (#_"ResolvedJavaType" .isInitialized type)) => (BytecodeParser''handleUnresolvedNewInstance-2 this, type)
             (or
                 (loop-when [#_"ISeq" s (seq (:nodePlugins (:plugins (:graphBuilderConfig this))))] (some? s)
@@ -28779,6 +28353,11 @@ ZeroExtendNode'new-4
                 (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), JavaKind/Object, (GraphBuilder'''append-2 this, (BytecodeParser''createNewInstance-3 this, type, true))))
             )
         )
+        nil
+    )
+
+    (defn- #_"void" BytecodeParser''genNewInstance-2i [#_"BytecodeParser" this, #_"int" cpi]
+        (BytecodeParser''genNewInstance-2t this, (BytecodeParser''lookupType-3 this, cpi, Bytecodes'NEW))
         nil
     )
 
@@ -28837,62 +28416,6 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn #_"void" BytecodeParser''genGetField-3i [#_"BytecodeParser" this, #_"int" cpi, #_"int" opcode]
-        (BytecodeParser''genGetField-4 this, cpi, opcode, (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Object))
-        nil
-    )
-
-    (defn #_"void" BytecodeParser''genGetField-4 [#_"BytecodeParser" this, #_"int" cpi, #_"int" opcode, #_"ValueNode" receiver]
-        (BytecodeParser''genGetField-3f this, (BytecodeParser''lookupField-3 this, cpi, opcode), receiver)
-        nil
-    )
-
-    (defn- #_"void" BytecodeParser''genGetField-3f [#_"BytecodeParser" this, #_"JavaField" field, #_"ValueNode" receiver]
-        (when (instance? ResolvedJavaField field) => (BytecodeParser''handleUnresolvedLoadField-3 this, field, receiver)
-            (BytecodeParser''genGetField-3r this, field, receiver)
-        )
-        nil
-    )
-
-    (defn- #_"void" BytecodeParser''genGetField-3r [#_"BytecodeParser" this, #_"ResolvedJavaField" resolvedField, #_"ValueNode" receiver]
-        (or
-            (loop-when [#_"ISeq" s (seq (:nodePlugins (:plugins (:graphBuilderConfig this))))] (some? s)
-                (when (NodePlugin'''handleLoadField-4 (first s), this, receiver, resolvedField) => (recur (next s))
-                    :done
-                )
-            )
-            (let [
-                #_"ValueNode" fieldRead (GraphBuilder'''append-2 this, (BytecodeParser''genLoadField-3 this, receiver, resolvedField))
-            ]
-                (when (and (= (#_"ResolvedJavaType" .getName (#_"ResolvedJavaField" .getDeclaringClass resolvedField)) "Ljava/lang/ref/Reference;") (= (#_"ResolvedJavaField" .getName resolvedField) "referent"))
-                    (GraphBuilder'''append-2 this, (MembarNode'new-2 0, (FieldLocationIdentity'new-1 resolvedField)))
-                )
-                (let [
-                    #_"JavaKind" fieldKind (#_"ResolvedJavaField" .getJavaKind resolvedField)
-                ]
-                    (if (and (#_"ResolvedJavaField" .isVolatile resolvedField) (satisfies? LoadFieldNode fieldRead))
-                        (let [
-                            #_"StateSplitProxyNode" readProxy (GraphBuilder'''append-2 this, (BytecodeParser''genVolatileFieldReadProxy-2 this, fieldRead))
-                        ]
-                            (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), fieldKind, readProxy))
-                            (StateSplit'''setStateAfter-2 readProxy, (FrameStateBuilder''create-3 (:frameState this), (:nextBCI (:stream this)), readProxy))
-                        )
-                        (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), fieldKind, fieldRead))
-                    )
-                )
-            )
-        )
-        nil
-    )
-
-    (defn #_"BytecodeParser" BytecodeParser''genPutField-3i [#_"BytecodeParser" this, #_"int" cpi, #_"int" opcode]
-        (BytecodeParser''genPutField-2 this, (BytecodeParser''lookupField-3 this, cpi, opcode))
-    )
-
-    (defn #_"BytecodeParser" BytecodeParser''genPutField-2 [#_"BytecodeParser" this, #_"JavaField" field]
-        (BytecodeParser''genPutField-3f this, field, (FrameStateBuilder''pop-2 (:frameState this), (#_"JavaField" .getJavaKind field)))
-    )
-
     (defn- #_"BytecodeParser" BytecodeParser''genPutField-3f [#_"BytecodeParser" this, #_"JavaField" field, #_"ValueNode" value]
         (let [
             #_"ValueNode" receiver (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Object)
@@ -28916,8 +28439,31 @@ ZeroExtendNode'new-4
         this
     )
 
-    (defn #_"void" BytecodeParser''genGetStatic-3 [#_"BytecodeParser" this, #_"int" cpi, #_"int" opcode]
-        (BytecodeParser''genGetStatic-2 this, (BytecodeParser''lookupField-3 this, cpi, opcode))
+    (defn- #_"BytecodeParser" BytecodeParser''genPutField-2 [#_"BytecodeParser" this, #_"JavaField" field]
+        (BytecodeParser''genPutField-3f this, field, (FrameStateBuilder''pop-2 (:frameState this), (#_"JavaField" .getJavaKind field)))
+    )
+
+    (defn- #_"BytecodeParser" BytecodeParser''genPutField-3i [#_"BytecodeParser" this, #_"int" cpi, #_"int" opcode]
+        (BytecodeParser''genPutField-2 this, (BytecodeParser''lookupField-3 this, cpi, opcode))
+    )
+
+    (defn- #_"ResolvedJavaField" BytecodeParser''resolveStaticFieldAccess-3 [#_"BytecodeParser" this, #_"JavaField" field, #_"ValueNode" value]
+        (when (instance? ResolvedJavaField field)
+            (when (#_"ResolvedJavaType" .isInitialized (#_"ResolvedJavaField" .getDeclaringClass field))
+                (§ return field)
+            )
+            ;; Static fields have initialization semantics but may be safely accessed under certain
+            ;; conditions while the class is being initialized. Executing in the clinit or init of
+            ;; classes which are subtypes of the field holder are sure to be running in a context
+            ;; where the access is safe.
+            (when (and (#_"ResolvedJavaType" .isAssignableFrom (#_"ResolvedJavaField" .getDeclaringClass field), (#_"ResolvedJavaMethod" .getDeclaringClass (:method this))) (or (#_"ResolvedJavaMethod" .isClassInitializer (:method this)) (#_"ResolvedJavaMethod" .isConstructor (:method this))))
+                (§ return field)
+            )
+        )
+        (if (nil? value)
+            (BytecodeParser''handleUnresolvedLoadField-3 this, field, nil)
+            (BytecodeParser''handleUnresolvedStoreField-4 this, field, value, nil)
+        )
         nil
     )
 
@@ -28945,32 +28491,12 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"ResolvedJavaField" BytecodeParser''resolveStaticFieldAccess-3 [#_"BytecodeParser" this, #_"JavaField" field, #_"ValueNode" value]
-        (when (instance? ResolvedJavaField field)
-            (when (#_"ResolvedJavaType" .isInitialized (#_"ResolvedJavaField" .getDeclaringClass field))
-                (§ return field)
-            )
-            ;; Static fields have initialization semantics but may be safely accessed under certain
-            ;; conditions while the class is being initialized. Executing in the clinit or init of
-            ;; classes which are subtypes of the field holder are sure to be running in a context
-            ;; where the access is safe.
-            (when (and (#_"ResolvedJavaType" .isAssignableFrom (#_"ResolvedJavaField" .getDeclaringClass field), (#_"ResolvedJavaMethod" .getDeclaringClass (:method this))) (or (#_"ResolvedJavaMethod" .isClassInitializer (:method this)) (#_"ResolvedJavaMethod" .isConstructor (:method this))))
-                (§ return field)
-            )
-        )
-        (if (nil? value)
-            (BytecodeParser''handleUnresolvedLoadField-3 this, field, nil)
-            (BytecodeParser''handleUnresolvedStoreField-4 this, field, value, nil)
-        )
+    (defn- #_"void" BytecodeParser''genGetStatic-3 [#_"BytecodeParser" this, #_"int" cpi, #_"int" opcode]
+        (BytecodeParser''genGetStatic-2 this, (BytecodeParser''lookupField-3 this, cpi, opcode))
         nil
     )
 
-    (defn #_"void" BytecodeParser''genPutStatic-3 [#_"BytecodeParser" this, #_"int" cpi, #_"int" opcode]
-        (BytecodeParser''genPutStatic-2 this, (BytecodeParser''lookupField-3 this, cpi, opcode))
-        nil
-    )
-
-    (defn #_"void" BytecodeParser''genPutStatic-2 [#_"BytecodeParser" this, #_"JavaField" field]
+    (defn- #_"void" BytecodeParser''genPutStatic-2 [#_"BytecodeParser" this, #_"JavaField" field]
         (let [
             #_"ValueNode" value (FrameStateBuilder''pop-2 (:frameState this), (#_"JavaField" .getJavaKind field))
             #_"ResolvedJavaField" resolvedField (BytecodeParser''resolveStaticFieldAccess-3 this, field, value)
@@ -28986,6 +28512,11 @@ ZeroExtendNode'new-4
                 )
             )
         )
+        nil
+    )
+
+    (defn- #_"void" BytecodeParser''genPutStatic-3 [#_"BytecodeParser" this, #_"int" cpi, #_"int" opcode]
+        (BytecodeParser''genPutStatic-2 this, (BytecodeParser''lookupField-3 this, cpi, opcode))
         nil
     )
 
@@ -29103,12 +28634,6 @@ ZeroExtendNode'new-4
 
     (defn #_"boolean" BytecodeParser''isNeverExecutedCode-2 [#_"BytecodeParser" this, #_"double" probability]
         (and (zero? probability) (OptimisticOptimizations''removeNeverExecutedCode-1 (:optimisticOpts this)))
-    )
-
-    (defn- #_"double" BytecodeParser''clampProbability-2 [#_"BytecodeParser" this, #_"double" probability]
-        (when-not (OptimisticOptimizations''removeNeverExecutedCode-1 (:optimisticOpts this)) => probability
-            (case probability 0.0 0.0000001 1.0 0.999999 probability)
-        )
     )
 
     (defn #_"BytecodeParser" BytecodeParser''processBytecode-3 [#_"BytecodeParser" this, #_"int" bci, #_"int" opcode]
@@ -29318,17 +28843,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (§ override! #_"void" #_"AutoCloseable." close [#_"IntrinsicScope" this]
-        (let [
-            #_"IntrinsicContext" intrinsic (:intrinsicContext (:parser this))
-        ]
-            (when-not (and (some? intrinsic) (IntrinsicContext''isPostParseInlined-1 intrinsic))
-                (§ ass! this (IntrinsicScope''processPlaceholderFrameStates-2 this, intrinsic))
-            )
-        )
-        nil
-    )
-
     ;;;
      ; Fixes up the {@linkplain BytecodeFrame#isPlaceholderBci(int) placeholder} frame states
      ; added to the graph while parsing/inlining the intrinsic for which this object exists.
@@ -29427,6 +28941,17 @@ ZeroExtendNode'new-4
             )
             this
         )
+    )
+
+    (§ override! #_"void" #_"AutoCloseable." close [#_"IntrinsicScope" this]
+        (let [
+            #_"IntrinsicContext" context (:intrinsicContext (:parser this))
+        ]
+            (when-not (and (some? context) (IntrinsicContext''isPostParseInlined-1 context))
+                (§ ass! this (IntrinsicScope''processPlaceholderFrameStates-2 this, context))
+            )
+        )
+        nil
     )
 )
 
@@ -29782,22 +29307,15 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"FrameStateBuilder" FrameStateBuilder''merge-3 [#_"FrameStateBuilder" this, #_"AbstractMergeNode" block, #_"FrameStateBuilder" other]
-        (dotimes [#_"int" i (count (:locals this))]
-            (aset (:locals this) i (FrameStateBuilder''merge-4 this, (nth (:locals this) i), (nth (:locals other) i), block))
-        )
-        (dotimes [#_"int" i (:stackSize this)]
-            (aset (:stack this) i (FrameStateBuilder''merge-4 this, (nth (:stack this) i), (nth (:stack other) i), block))
-        )
-        (dotimes [#_"int" i (count (:lockedObjects this))]
-            (aset (:lockedObjects this) i (FrameStateBuilder''merge-4 this, (nth (:lockedObjects this) i), (nth (:lockedObjects other) i), block))
-        )
-
-        (when (some? (:sideEffects this)) => (assoc this :sideEffects (:sideEffects other))
-            (when (some? (:sideEffects other))
-                (#_"List" .addAll (:sideEffects this), (:sideEffects other))
+    (defn- #_"ValuePhiNode" FrameStateBuilder''createValuePhi-4 [#_"FrameStateBuilder" this, #_"ValueNode" currentValue, #_"ValueNode" otherValue, #_"AbstractMergeNode" block]
+        (let [
+            #_"ValuePhiNode" phi (Graph''add-2 (:graph this), (ValuePhiNode'new-2 (Stamp'''unrestricted-1 (:stamp currentValue)), block))
+        ]
+            (dotimes [#_"int" i (AbstractMergeNode'''phiPredecessorCount-1 block)]
+                (PhiNode''addInput-2 phi, currentValue)
             )
-            this
+            (PhiNode''addInput-2 phi, otherValue)
+            phi
         )
     )
 
@@ -29823,16 +29341,30 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"ValuePhiNode" FrameStateBuilder''createValuePhi-4 [#_"FrameStateBuilder" this, #_"ValueNode" currentValue, #_"ValueNode" otherValue, #_"AbstractMergeNode" block]
-        (let [
-            #_"ValuePhiNode" phi (Graph''add-2 (:graph this), (ValuePhiNode'new-2 (Stamp'''unrestricted-1 (:stamp currentValue)), block))
-        ]
-            (dotimes [#_"int" i (AbstractMergeNode'''phiPredecessorCount-1 block)]
-                (PhiNode''addInput-2 phi, currentValue)
-            )
-            (PhiNode''addInput-2 phi, otherValue)
-            phi
+    (defn #_"FrameStateBuilder" FrameStateBuilder''merge-3 [#_"FrameStateBuilder" this, #_"AbstractMergeNode" block, #_"FrameStateBuilder" other]
+        (dotimes [#_"int" i (count (:locals this))]
+            (aset (:locals this) i (FrameStateBuilder''merge-4 this, (nth (:locals this) i), (nth (:locals other) i), block))
         )
+        (dotimes [#_"int" i (:stackSize this)]
+            (aset (:stack this) i (FrameStateBuilder''merge-4 this, (nth (:stack this) i), (nth (:stack other) i), block))
+        )
+        (dotimes [#_"int" i (count (:lockedObjects this))]
+            (aset (:lockedObjects this) i (FrameStateBuilder''merge-4 this, (nth (:lockedObjects this) i), (nth (:lockedObjects other) i), block))
+        )
+
+        (when (some? (:sideEffects this)) => (assoc this :sideEffects (:sideEffects other))
+            (when (some? (:sideEffects other))
+                (#_"List" .addAll (:sideEffects this), (:sideEffects other))
+            )
+            this
+        )
+    )
+
+    (defn- #_"void" FrameStateBuilder'inferPhiStamp-2 [#_"AbstractMergeNode" block, #_"ValueNode" node]
+        (when (AbstractMergeNode''isPhiAtMerge-2 block, node)
+            (ValueNode'''inferStamp-1 node)
+        )
+        nil
     )
 
     (defn #_"void" FrameStateBuilder''inferPhiStamps-2 [#_"FrameStateBuilder" this, #_"AbstractMergeNode" block]
@@ -29848,11 +29380,15 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"void" FrameStateBuilder'inferPhiStamp-2 [#_"AbstractMergeNode" block, #_"ValueNode" node]
-        (when (AbstractMergeNode''isPhiAtMerge-2 block, node)
-            (ValueNode'''inferStamp-1 node)
+    (defn- #_"ValueNode" FrameStateBuilder''createLoopPhi-4 [#_"FrameStateBuilder" this, #_"AbstractMergeNode" block, #_"ValueNode" value, #_"boolean" stampFromValue]
+        (when (and (some? value) (not= value FrameState'TWO_SLOT_MARKER)) => value
+            (let [
+                #_"ValuePhiNode" phi (Graph''add-2 (:graph this), (ValuePhiNode'new-2 (if stampFromValue (:stamp value) (Stamp'''unrestricted-1 (:stamp value))), block))
+            ]
+                (PhiNode''addInput-2 phi, value)
+                phi
+            )
         )
-        nil
     )
 
     (defn #_"void" FrameStateBuilder''insertLoopPhis-6 [#_"FrameStateBuilder" this, #_"LocalLiveness" liveness, #_"int" loopId, #_"LoopBeginNode" loopBegin, #_"boolean" forcePhis, #_"boolean" stampFromValueForForcedPhis]
@@ -29903,17 +29439,6 @@ ZeroExtendNode'new-4
             )
         )
         nil
-    )
-
-    (defn- #_"ValueNode" FrameStateBuilder''createLoopPhi-4 [#_"FrameStateBuilder" this, #_"AbstractMergeNode" block, #_"ValueNode" value, #_"boolean" stampFromValue]
-        (when (and (some? value) (not= value FrameState'TWO_SLOT_MARKER)) => value
-            (let [
-                #_"ValuePhiNode" phi (Graph''add-2 (:graph this), (ValuePhiNode'new-2 (if stampFromValue (:stamp value) (Stamp'''unrestricted-1 (:stamp value))), block))
-            ]
-                (PhiNode''addInput-2 phi, value)
-                phi
-            )
-        )
     )
 
     ;;;
@@ -30044,6 +29569,20 @@ ZeroExtendNode'new-4
         nil
     )
 
+    (defn- #_"FrameStateBuilder" FrameStateBuilder''xpush-2 [#_"FrameStateBuilder" this, #_"ValueNode" x]
+        (aset (:stack this) (:stackSize this) x)
+        (update this :stackSize inc)
+    )
+
+    (defn- #_"ValueNode" FrameStateBuilder''xpop-1 [#_"FrameStateBuilder" this]
+        (§ ass! this (update this :stackSize dec))
+        (nth (:stack this) (:stackSize this))
+    )
+
+    (defn- #_"ValueNode" FrameStateBuilder''xpeek-1 [#_"FrameStateBuilder" this]
+        (nth (:stack this) (dec (:stackSize this)))
+    )
+
     ;;;
      ; Pushes an instruction onto the stack with the expected type.
      ;
@@ -30077,20 +29616,6 @@ ZeroExtendNode'new-4
             (FrameStateBuilder''xpop-1 this)
         )
         (FrameStateBuilder''xpop-1 this)
-    )
-
-    (defn- #_"FrameStateBuilder" FrameStateBuilder''xpush-2 [#_"FrameStateBuilder" this, #_"ValueNode" x]
-        (aset (:stack this) (:stackSize this) x)
-        (update this :stackSize inc)
-    )
-
-    (defn- #_"ValueNode" FrameStateBuilder''xpop-1 [#_"FrameStateBuilder" this]
-        (§ ass! this (update this :stackSize dec))
-        (nth (:stack this) (:stackSize this))
-    )
-
-    (defn- #_"ValueNode" FrameStateBuilder''xpeek-1 [#_"FrameStateBuilder" this]
-        (nth (:stack this) (dec (:stackSize this)))
     )
 
     ;;;
@@ -30411,15 +29936,6 @@ ZeroExtendNode'new-4
 )
 
 (class-ns LocalLiveness
-    (defn #_"LocalLiveness" LocalLiveness'compute-4 [#_"BytecodeStream" stream, #_"BciBlock[]" blocks, #_"int" maxLocals, #_"int" loopCount]
-        (let [
-            #_"LocalLiveness" liveness (if (<= maxLocals 64) (SmallLocalLiveness'new-3 blocks, maxLocals, loopCount) (LargeLocalLiveness'new-3 blocks, maxLocals, loopCount))
-        ]
-            (LocalLiveness''computeLiveness-2 liveness, stream)
-            liveness
-        )
-    )
-
     (defn #_"LocalLiveness" LocalLiveness'new-1 [#_"BciBlock[]" blocks]
         (merge (LocalLiveness'class.)
             (hash-map
@@ -30428,39 +29944,15 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"void" LocalLiveness''computeLiveness-2 [#_"LocalLiveness" this, #_"BytecodeStream" stream]
-        (doseq [#_"BciBlock" block (:blocks this)]
-            (LocalLiveness''computeLocalLiveness-3 this, stream, block)
-        )
-        (loop [#_"int" iteration 0]
-            (let [
-                #_"boolean" changed?
-                    (loop-when [changed? false #_"int" i (dec (count (:blocks this)))] (<= 0 i) => changed?
-                        (let [
-                            #_"BciBlock" block (nth (:blocks this) i)
-                            #_"boolean" blockChanged (zero? iteration)
-                            blockChanged
-                                (when (seq (:successors block)) => blockChanged
-                                    (let [
-                                        #_"int" o'cardinality (LocalLiveness'''liveOutCardinality-2 this, (:id block))
-                                    ]
-                                        (doseq [#_"BciBlock" sux (:successors block)]
-                                            (LocalLiveness'''propagateLiveness-3 this, (:id block), (:id sux))
-                                        )
-                                        (or blockChanged (not= o'cardinality (LocalLiveness'''liveOutCardinality-2 this, (:id block))))
-                                    )
-                                )
-                        ]
-                            (when blockChanged
-                                (LocalLiveness'''updateLiveness-2 this, (:id block))
-                            )
-                            (recur (or changed? blockChanged) (dec i))
-                        )
-                    )
-            ]
-                (recur-if changed? [(inc iteration)])
-            )
-        )
+    (defn- #_"void" LocalLiveness''loadTwo-3 [#_"LocalLiveness" this, #_"int" blockID, #_"int" local]
+        (LocalLiveness'''loadOne-3 this, blockID, local)
+        (LocalLiveness'''loadOne-3 this, blockID, (inc local))
+        nil
+    )
+
+    (defn- #_"void" LocalLiveness''storeTwo-3 [#_"LocalLiveness" this, #_"int" blockID, #_"int" local]
+        (LocalLiveness'''storeOne-3 this, blockID, local)
+        (LocalLiveness'''storeOne-3 this, blockID, (inc local))
         nil
     )
 
@@ -30504,16 +29996,49 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"void" LocalLiveness''loadTwo-3 [#_"LocalLiveness" this, #_"int" blockID, #_"int" local]
-        (LocalLiveness'''loadOne-3 this, blockID, local)
-        (LocalLiveness'''loadOne-3 this, blockID, (inc local))
+    (defn- #_"void" LocalLiveness''computeLiveness-2 [#_"LocalLiveness" this, #_"BytecodeStream" stream]
+        (doseq [#_"BciBlock" block (:blocks this)]
+            (LocalLiveness''computeLocalLiveness-3 this, stream, block)
+        )
+        (loop [#_"int" iteration 0]
+            (let [
+                #_"boolean" changed?
+                    (loop-when [changed? false #_"int" i (dec (count (:blocks this)))] (<= 0 i) => changed?
+                        (let [
+                            #_"BciBlock" block (nth (:blocks this) i)
+                            #_"boolean" blockChanged (zero? iteration)
+                            blockChanged
+                                (when (seq (:successors block)) => blockChanged
+                                    (let [
+                                        #_"int" o'cardinality (LocalLiveness'''liveOutCardinality-2 this, (:id block))
+                                    ]
+                                        (doseq [#_"BciBlock" sux (:successors block)]
+                                            (LocalLiveness'''propagateLiveness-3 this, (:id block), (:id sux))
+                                        )
+                                        (or blockChanged (not= o'cardinality (LocalLiveness'''liveOutCardinality-2 this, (:id block))))
+                                    )
+                                )
+                        ]
+                            (when blockChanged
+                                (LocalLiveness'''updateLiveness-2 this, (:id block))
+                            )
+                            (recur (or changed? blockChanged) (dec i))
+                        )
+                    )
+            ]
+                (recur-if changed? [(inc iteration)])
+            )
+        )
         nil
     )
 
-    (defn- #_"void" LocalLiveness''storeTwo-3 [#_"LocalLiveness" this, #_"int" blockID, #_"int" local]
-        (LocalLiveness'''storeOne-3 this, blockID, local)
-        (LocalLiveness'''storeOne-3 this, blockID, (inc local))
-        nil
+    (defn #_"LocalLiveness" LocalLiveness'compute-4 [#_"BytecodeStream" stream, #_"BciBlock[]" blocks, #_"int" maxLocals, #_"int" loopCount]
+        (let [
+            #_"LocalLiveness" liveness (if (<= maxLocals 64) (SmallLocalLiveness'new-3 blocks, maxLocals, loopCount) (LargeLocalLiveness'new-3 blocks, maxLocals, loopCount))
+        ]
+            (LocalLiveness''computeLiveness-2 liveness, stream)
+            liveness
+        )
     )
 )
 
@@ -31513,10 +31038,9 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"void" IntervalWalker''walkTo-3 [#_"IntervalWalker" this, #_"IntervalState" state, #_"int" from]
-        (doseq [#_"RegisterBinding" binding RegisterBinding'VALUES]
-            (IntervalWalker''walkTo-4 this, state, from, binding)
-        )
+    (defn- #_"void" IntervalWalker''intervalMoved-4 [#_"IntervalWalker" this, #_"Interval" interval, #_"IntervalState" from, #_"IntervalState" to]
+        ;; intervalMoved() is called whenever an interval moves from one interval list to another.
+        ;; In the implementation of this method it is prohibited to move the interval to any list.
         nil
     )
 
@@ -31587,6 +31111,13 @@ ZeroExtendNode'new-4
         nil
     )
 
+    (defn- #_"void" IntervalWalker''walkTo-3 [#_"IntervalWalker" this, #_"IntervalState" state, #_"int" from]
+        (doseq [#_"RegisterBinding" binding RegisterBinding'VALUES]
+            (IntervalWalker''walkTo-4 this, state, from, binding)
+        )
+        nil
+    )
+
     ;;;
      ; Get the next interval from {@linkplain #unhandledLists} which starts before or at
      ; {@code toOpId}. The returned interval is removed and #currentBinding is set.
@@ -31620,6 +31151,39 @@ ZeroExtendNode'new-4
                 interval
             )
         )
+    )
+
+    ;;;
+     ; Move {@linkplain #unhandledLists unhandled} stack intervals to {@linkplain IntervalWalker #activeLists active}.
+     ;
+     ; Note that for {@linkplain RegisterBinding#Fixed fixed} and {@linkplain RegisterBinding#Any any} intervals
+     ; this is done in #nextInterval(int).
+     ;;
+    (defn- #_"void" IntervalWalker''updateUnhandledStackIntervals-2 [#_"IntervalWalker" this, #_"int" opId]
+        (let [
+            #_"Interval" interval
+                (loop-when [interval (RegisterBindingLists''get-2 (:unhandledLists this), RegisterBinding'Stack)] (and (not (Interval''isEndMarker-1 interval)) (<= (Interval''from-1 interval) opId)) => interval
+                    (let [
+                        #_"Interval" next (:next interval)
+                    ]
+                        (if (< opId (Interval''to-1 interval))
+                            (do
+                                (§ ass! interval (assoc interval :state IntervalState'Active))
+                                (§ ass! (:activeLists this) (RegisterBindingLists''addToListSortedByCurrentFromPositions-3 (:activeLists this), RegisterBinding'Stack, interval))
+                                (IntervalWalker''intervalMoved-4 this, interval, IntervalState'Unhandled, IntervalState'Active)
+                            )
+                            (do
+                                (§ ass! interval (assoc interval :state IntervalState'Handled))
+                                (IntervalWalker''intervalMoved-4 this, interval, IntervalState'Unhandled, IntervalState'Handled)
+                            )
+                        )
+                        (recur next)
+                    )
+                )
+        ]
+            (§ ass! (:unhandledLists this) (RegisterBindingLists''set-3 (:unhandledLists this), RegisterBinding'Stack, interval))
+        )
+        nil
     )
 
     ;;;
@@ -31665,46 +31229,6 @@ ZeroExtendNode'new-4
             )
             this
         )
-    )
-
-    (defn- #_"void" IntervalWalker''intervalMoved-4 [#_"IntervalWalker" this, #_"Interval" interval, #_"IntervalState" from, #_"IntervalState" to]
-        ;; intervalMoved() is called whenever an interval moves from one interval list to another.
-        ;; In the implementation of this method it is prohibited to move the interval to any list.
-        nil
-    )
-
-    ;;;
-     ; Move {@linkplain #unhandledLists unhandled} stack intervals to
-     ; {@linkplain IntervalWalker #activeLists active}.
-     ;
-     ; Note that for {@linkplain RegisterBinding#Fixed fixed} and {@linkplain RegisterBinding#Any
-     ; any} intervals this is done in #nextInterval(int).
-     ;;
-    (defn- #_"void" IntervalWalker''updateUnhandledStackIntervals-2 [#_"IntervalWalker" this, #_"int" opId]
-        (let [
-            #_"Interval" interval
-                (loop-when [interval (RegisterBindingLists''get-2 (:unhandledLists this), RegisterBinding'Stack)] (and (not (Interval''isEndMarker-1 interval)) (<= (Interval''from-1 interval) opId)) => interval
-                    (let [
-                        #_"Interval" next (:next interval)
-                    ]
-                        (if (< opId (Interval''to-1 interval))
-                            (do
-                                (§ ass! interval (assoc interval :state IntervalState'Active))
-                                (§ ass! (:activeLists this) (RegisterBindingLists''addToListSortedByCurrentFromPositions-3 (:activeLists this), RegisterBinding'Stack, interval))
-                                (IntervalWalker''intervalMoved-4 this, interval, IntervalState'Unhandled, IntervalState'Active)
-                            )
-                            (do
-                                (§ ass! interval (assoc interval :state IntervalState'Handled))
-                                (IntervalWalker''intervalMoved-4 this, interval, IntervalState'Unhandled, IntervalState'Handled)
-                            )
-                        )
-                        (recur next)
-                    )
-                )
-        ]
-            (§ ass! (:unhandledLists this) (RegisterBindingLists''set-3 (:unhandledLists this), RegisterBinding'Stack, interval))
-        )
-        nil
     )
 )
 
@@ -32584,6 +32108,21 @@ ZeroExtendNode'new-4
     )
 
     ;;;
+     ; Creates a trimmed copy a bit set.
+     ;
+     ; BitSet#clone() cannot be used since it will not {@linkplain BitSet#trimToSize trim}
+     ; the array if the bit set is {@linkplain BitSet#sizeIsSticky sticky}.
+     ;;
+    (defn- #_"BitSet" LSLifetimeAnalysisPhase'trimClone-1 [#_"BitSet" bits]
+        (let [
+            #_"BitSet" trimmed (BitSet. 0) ;; zero-length words array, sticky
+        ]
+            (#_"BitSet" .or trimmed, bits) ;; words size ensured to be words-in-use of set, also makes it non-sticky
+            trimmed
+        )
+    )
+
+    ;;;
      ; Computes local live sets (i.e. BlockData#liveGen and BlockData#liveKill) separately for each block.
      ;;
     (defn #_"LSLifetimeAnalysisPhase" LSLifetimeAnalysisPhase''computeLocalLiveSets-1 [#_"LSLifetimeAnalysisPhase" this]
@@ -32729,21 +32268,6 @@ ZeroExtendNode'new-4
             )
         )
         nil
-    )
-
-    ;;;
-     ; Creates a trimmed copy a bit set.
-     ;
-     ; BitSet#clone() cannot be used since it will not {@linkplain BitSet#trimToSize trim}
-     ; the array if the bit set is {@linkplain BitSet#sizeIsSticky sticky}.
-     ;;
-    (defn- #_"BitSet" LSLifetimeAnalysisPhase'trimClone-1 [#_"BitSet" set]
-        (let [
-            #_"BitSet" trimmedSet (BitSet. 0) ;; zero-length words array, sticky
-        ]
-            (#_"BitSet" .or trimmedSet, set) ;; words size ensured to be words-in-use of set, also makes it non-sticky
-            trimmedSet
-        )
     )
 
     (defn- #_"void" LSLifetimeAnalysisPhase''addUse-6 [#_"LSLifetimeAnalysisPhase" this, #_"AllocatableValue" operand, #_"int" from, #_"int" to, #_"RegisterPriority" registerPriority, #_"ValueKind" kind]
@@ -33721,7 +33245,43 @@ ZeroExtendNode'new-4
         nil
     )
 
-    ;; split an interval at the optimal position between minSplitPos and maxSplitPos in two parts:
+    (defn- #_"void" LinearScanWalker''changeSpillState-3 [#_"LinearScanWalker" this, #_"Interval" interval, #_"int" spillPos]
+        (condp = (Interval''spillState-1 interval)
+            SpillState'NoSpillStore
+                (let [
+                    #_"int" defLoopDepth (Block''getLoopDepth-1 (LinearScan''blockForId-2 (:allocator this), (Interval''spillDefinitionPos-1 interval)))
+                    #_"int" spillLoopDepth (Block''getLoopDepth-1 (LinearScan''blockForId-2 (:allocator this), spillPos))
+                ]
+                    (if (< defLoopDepth spillLoopDepth)
+                        ;; The loop depth of the spilling position is higher then the loop depth at
+                        ;; the definition of the interval. Move write to memory out of loop.
+                        (if GraalOptions'lirOptLSRAOptimizeSpillPosition
+                            (Interval''setSpillState-2 interval, SpillState'SpillInDominator)  ;; find best spill position in the dominator tree
+                            (Interval''setSpillState-2 interval, SpillState'StoreAtDefinition) ;; store at definition of the interval
+                        )
+                        ;; The interval is currently spilled only once, so for now there is no reason
+                        ;; to store the interval at the definition.
+                        (Interval''setSpillState-2 interval, SpillState'OneSpillStore)
+                    )
+                )
+            SpillState'OneSpillStore
+                (let [
+                    #_"int" defLoopDepth (Block''getLoopDepth-1 (LinearScan''blockForId-2 (:allocator this), (Interval''spillDefinitionPos-1 interval)))
+                    #_"int" spillLoopDepth (Block''getLoopDepth-1 (LinearScan''blockForId-2 (:allocator this), spillPos))
+                ]
+                    (when (<= defLoopDepth spillLoopDepth)
+                        (if GraalOptions'lirOptLSRAOptimizeSpillPosition
+                            (Interval''setSpillState-2 interval, SpillState'SpillInDominator)  ;; the interval is spilled more then once
+                            (Interval''setSpillState-2 interval, SpillState'StoreAtDefinition) ;; it is better to store it to memory at the definition
+                        )
+                    )
+                )
+            nil
+        )
+        nil
+    )
+
+    ;; Split an interval at the optimal position between minSplitPos and maxSplitPos in two parts:
     ;;
     ;; (1) the left part has already a location assigned
     ;; (2) the right part is always on the stack and therefore ignored in further processing
@@ -33789,43 +33349,6 @@ ZeroExtendNode'new-4
                     (Interval''makeCurrentSplitChild-1 spilledPart)
                 )
             )
-        )
-        nil
-    )
-
-    ;; called during register allocation
-    (defn- #_"void" LinearScanWalker''changeSpillState-3 [#_"LinearScanWalker" this, #_"Interval" interval, #_"int" spillPos]
-        (condp = (Interval''spillState-1 interval)
-            SpillState'NoSpillStore
-            (let [
-                #_"int" defLoopDepth (Block''getLoopDepth-1 (LinearScan''blockForId-2 (:allocator this), (Interval''spillDefinitionPos-1 interval)))
-                #_"int" spillLoopDepth (Block''getLoopDepth-1 (LinearScan''blockForId-2 (:allocator this), spillPos))
-            ]
-                (if (< defLoopDepth spillLoopDepth)
-                    ;; The loop depth of the spilling position is higher then the loop depth at
-                    ;; the definition of the interval. Move write to memory out of loop.
-                    (if GraalOptions'lirOptLSRAOptimizeSpillPosition
-                        (Interval''setSpillState-2 interval, SpillState'SpillInDominator)  ;; find best spill position in the dominator tree
-                        (Interval''setSpillState-2 interval, SpillState'StoreAtDefinition) ;; store at definition of the interval
-                    )
-                    ;; The interval is currently spilled only once, so for now there is no reason
-                    ;; to store the interval at the definition.
-                    (Interval''setSpillState-2 interval, SpillState'OneSpillStore)
-                )
-            )
-            SpillState'OneSpillStore
-            (let [
-                #_"int" defLoopDepth (Block''getLoopDepth-1 (LinearScan''blockForId-2 (:allocator this), (Interval''spillDefinitionPos-1 interval)))
-                #_"int" spillLoopDepth (Block''getLoopDepth-1 (LinearScan''blockForId-2 (:allocator this), spillPos))
-            ]
-                (when (<= defLoopDepth spillLoopDepth)
-                    (if GraalOptions'lirOptLSRAOptimizeSpillPosition
-                        (Interval''setSpillState-2 interval, SpillState'SpillInDominator)  ;; the interval is spilled more then once
-                        (Interval''setSpillState-2 interval, SpillState'StoreAtDefinition) ;; it is better to store it to memory at the definition
-                    )
-                )
-            )
-            nil
         )
         nil
     )
@@ -33974,7 +33497,6 @@ ZeroExtendNode'new-4
                 ;; collect current usage of registers
                 (LinearScanWalker''initUseLists-2 this, false)
                 (LinearScanWalker''spillExcludeActiveFixed-1 this)
-                ;; spillBlockUnhandledFixed(cur);
                 (LinearScanWalker''spillBlockInactiveFixed-2 this, interval)
                 (LinearScanWalker''spillCollectActiveAny-2 this, registerPriority)
                 (LinearScanWalker''spillCollectInactiveAny-2 this, interval)
@@ -34496,41 +34018,35 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defm OptimizingLinearScanWalker IntervalWalker
-        (#_"void" IntervalWalker'''walk-1 [#_"OptimizingLinearScanWalker" this]
-            (doseq [#_"Block" block (LinearScan''sortedBlocks-1 (:allocator this))]
-                (OptimizingLinearScanWalker''optimizeBlock-2 this, block)
-            )
-            (IntervalWalker'''walk-1 (§ super LinearScanWalker'iface))
-            nil
-        )
-    )
+    (defn- #_"OptimizingLinearScanWalker" OptimizingLinearScanWalker''splitRegisterInterval-3 [#_"OptimizingLinearScanWalker" this, #_"Interval" interval, #_"Register" reg]
+        (let [
+            this (LinearScanWalker''initVarsForAlloc-2 this, interval)
+        ]
+            ;; collect current usage of registers
+            (LinearScanWalker''initUseLists-2 this, false)
+            (LinearScanWalker''spillExcludeActiveFixed-1 this)
+            (LinearScanWalker''spillBlockInactiveFixed-2 this, interval)
+            (LinearScanWalker''spillCollectActiveAny-2 this, RegisterPriority'LiveAtLoopEnd)
+            (LinearScanWalker''spillCollectInactiveAny-2 this, interval)
 
-    (defn- #_"void" OptimizingLinearScanWalker''optimizeBlock-2 [#_"OptimizingLinearScanWalker" this, #_"Block" block]
-        (when (= (count (:predecessors block)) 1)
+            ;; the register must be free at least until this position
             (let [
-                #_"int" nextBlock (LinearScan''getFirstLirInstructionId-2 (:allocator this), block)
+                #_"boolean" split? (<= (nth (:blockPos this) (.number reg)) (Interval''to-1 interval))
+                #_"int" pos (nth (:blockPos this) (.number reg))
             ]
-                (§ ass! this (IntervalWalker''walkTo-2 this, nextBlock))
-                ;; we need to do this because the active lists might change
-                (loop []
-                    (or
-                        (loop-when [#_"Interval" active (RegisterBindingLists''get-2 (:activeLists this), RegisterBinding'Any)] (not (Interval''isEndMarker-1 active))
-                            (or (OptimizingLinearScanWalker''optimize-5 this, nextBlock, block, active, RegisterBinding'Any)
-                                (recur (:next active))
-                            )
-                        )
-                        (loop-when [#_"Interval" active (RegisterBindingLists''get-2 (:activeLists this), RegisterBinding'Stack)] (not (Interval''isEndMarker-1 active))
-                            (or (OptimizingLinearScanWalker''optimize-5 this, nextBlock, block, active, RegisterBinding'Stack)
-                                (recur (:next active))
-                            )
-                        )
-                        (recur)
-                    )
+                (§ ass! interval (Interval''assignLocation-2 interval, (#_"Register" .asValue reg, (:kind interval))))
+                (when split?
+                    ;; register not available for full interval, so split it
+                    (LinearScanWalker''splitWhenPartialRegisterAvailable-3 this, interval, pos)
                 )
+                ;; perform splitting and spilling for all affected intervals
+                (LinearScanWalker''splitAndSpillIntersectingIntervals-2 this, reg)
+                ;; activate interval
+                (§ ass! (:activeLists this) (RegisterBindingLists''addToListSortedByCurrentFromPositions-3 (:activeLists this), RegisterBinding'Any, interval))
+                (§ ass! interval (assoc interval :state IntervalState'Active))
+                this
             )
         )
-        nil
     )
 
     (defn- #_"boolean" OptimizingLinearScanWalker''optimize-5 [#_"OptimizingLinearScanWalker" this, #_"int" currentPos, #_"Block" currentBlock, #_"Interval" currentInterval, #_"RegisterBinding" binding]
@@ -34563,7 +34079,7 @@ ZeroExtendNode'new-4
                                         ;; just add the split interval to the unhandled list
                                         (§ ass! (:unhandledLists this) (RegisterBindingLists''addToListSortedByStartAndUsePositions-3 (:unhandledLists this), RegisterBinding'Any, splitPart))
                                     (instance? RegisterValue predecessorLocation)
-                                        (OptimizingLinearScanWalker''splitRegisterInterval-3 this, splitPart, (#_"RegisterValue" .getRegister predecessorLocation))
+                                        (§ ass! this (OptimizingLinearScanWalker''splitRegisterInterval-3 this, splitPart, (#_"RegisterValue" .getRegister predecessorLocation)))
                                     :else
                                     (do
                                         (§ ass! splitPart (Interval''assignLocation-2 splitPart, predecessorLocation))
@@ -34580,35 +34096,41 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"void" OptimizingLinearScanWalker''splitRegisterInterval-3 [#_"OptimizingLinearScanWalker" this, #_"Interval" interval, #_"Register" reg]
-        ;; collect current usage of registers
-        (§ ass! this (LinearScanWalker''initVarsForAlloc-2 this, interval))
-        (LinearScanWalker''initUseLists-2 this, false)
-        (LinearScanWalker''spillExcludeActiveFixed-1 this)
-        ;; spillBlockUnhandledFixed(cur);
-        (LinearScanWalker''spillBlockInactiveFixed-2 this, interval)
-        (LinearScanWalker''spillCollectActiveAny-2 this, RegisterPriority'LiveAtLoopEnd)
-        (LinearScanWalker''spillCollectInactiveAny-2 this, interval)
-
-        ;; the register must be free at least until this position
-        (let [
-            #_"boolean" needSplit (<= (nth (:blockPos this) (.number reg)) (Interval''to-1 interval))
-            #_"int" splitPos (nth (:blockPos this) (.number reg))
-        ]
-            (§ ass! interval (Interval''assignLocation-2 interval, (#_"Register" .asValue reg, (:kind interval))))
-            (when needSplit
-                ;; register not available for full interval : so split it
-                (LinearScanWalker''splitWhenPartialRegisterAvailable-3 this, interval, splitPos)
+    (defn- #_"void" OptimizingLinearScanWalker''optimizeBlock-2 [#_"OptimizingLinearScanWalker" this, #_"Block" block]
+        (when (= (count (:predecessors block)) 1)
+            (let [
+                #_"int" nextBlock (LinearScan''getFirstLirInstructionId-2 (:allocator this), block)
+            ]
+                (§ ass! this (IntervalWalker''walkTo-2 this, nextBlock))
+                ;; we need to do this because the active lists might change
+                (loop []
+                    (or
+                        (loop-when [#_"Interval" active (RegisterBindingLists''get-2 (:activeLists this), RegisterBinding'Any)] (not (Interval''isEndMarker-1 active))
+                            (or (OptimizingLinearScanWalker''optimize-5 this, nextBlock, block, active, RegisterBinding'Any)
+                                (recur (:next active))
+                            )
+                        )
+                        (loop-when [#_"Interval" active (RegisterBindingLists''get-2 (:activeLists this), RegisterBinding'Stack)] (not (Interval''isEndMarker-1 active))
+                            (or (OptimizingLinearScanWalker''optimize-5 this, nextBlock, block, active, RegisterBinding'Stack)
+                                (recur (:next active))
+                            )
+                        )
+                        (recur)
+                    )
+                )
             )
-
-            ;; perform splitting and spilling for all affected intervals
-            (LinearScanWalker''splitAndSpillIntersectingIntervals-2 this, reg)
-
-            ;; activate interval
-            (§ ass! (:activeLists this) (RegisterBindingLists''addToListSortedByCurrentFromPositions-3 (:activeLists this), RegisterBinding'Any, interval))
-            (§ ass interval (assoc interval :state IntervalState'Active))
         )
         nil
+    )
+
+    (defm OptimizingLinearScanWalker IntervalWalker
+        (#_"void" IntervalWalker'''walk-1 [#_"OptimizingLinearScanWalker" this]
+            (doseq [#_"Block" block (LinearScan''sortedBlocks-1 (:allocator this))]
+                (OptimizingLinearScanWalker''optimizeBlock-2 this, block)
+            )
+            (IntervalWalker'''walk-1 (§ super LinearScanWalker'iface))
+            nil
+        )
     )
 )
 
@@ -34731,6 +34253,15 @@ ZeroExtendNode'new-4
         (merge (SSALinearScanEliminateSpillMovePhase'class.) (LSEliminateSpillMovePhase'new-1 allocator))
     )
 
+    (defn- #_"boolean" SSALinearScanEliminateSpillMovePhase''isPhiResolutionMove-4 [#_"SSALinearScanEliminateSpillMovePhase" this, #_"Block" block, #_"MoveOp" move, #_"Interval" to]
+        (and (Interval''isSplitParent-1 to)
+             (zero? (& (Interval''from-1 to) 1))
+             (= (count (:successors block)) 1)
+             (satisfies? LabelOp (LinearScan''instructionForId-2 (:allocator this), (Interval''from-1 to)))
+             (= (nth (:successors block) 0) (LinearScan''blockForId-2 (:allocator this), (Interval''from-1 to)))
+        )
+    )
+
     (defm SSALinearScanEliminateSpillMovePhase LSEliminateSpillMovePhase
         (#_"int" LSEliminateSpillMovePhase'''firstInstructionOfInterest-1 [#_"SSALinearScanEliminateSpillMovePhase" this]
             ;; also look at Labels as they define PHI values
@@ -34742,15 +34273,6 @@ ZeroExtendNode'new-4
                 ;; SSA Linear Scan might introduce moves to stack slots
                 (not (SSALinearScanEliminateSpillMovePhase''isPhiResolutionMove-4 this, block, move, (LinearScan''intervalFor-2v (:allocator this), (MoveOp'''getResult-1 move))))
             )
-        )
-    )
-
-    (defn- #_"boolean" SSALinearScanEliminateSpillMovePhase''isPhiResolutionMove-4 [#_"SSALinearScanEliminateSpillMovePhase" this, #_"Block" block, #_"MoveOp" move, #_"Interval" to]
-        (and (Interval''isSplitParent-1 to)
-             (zero? (& (Interval''from-1 to) 1))
-             (= (count (:successors block)) 1)
-             (satisfies? LabelOp (LinearScan''instructionForId-2 (:allocator this), (Interval''from-1 to)))
-             (= (nth (:successors block) 0) (LinearScan''blockForId-2 (:allocator this), (Interval''from-1 to)))
         )
     )
 )
@@ -34875,19 +34397,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defm SSAMoveResolver MoveResolver
-        (#_"boolean" MoveResolver'''mightBeBlocked-2 [#_"SSAMoveResolver" this, #_"Value" location]
-            (or (MoveResolver'''mightBeBlocked-2 (§ super MoveResolver'iface), location) (LIRValueUtil'isStackSlotValue-1 location))
-        )
-    )
-
-    (defn- #_"int" SSAMoveResolver''getStackArrayIndex-2v [#_"SSAMoveResolver" this, #_"Value" stackSlotValue]
-        (condp instance? stackSlotValue
-            StackSlot        (SSAMoveResolver''getStackArrayIndex-2s this, stackSlotValue)
-            VirtualStackSlot'iface (SSAMoveResolver''getStackArrayIndex-2i this, stackSlotValue)
-        )
-    )
-
     (defn- #_"int" SSAMoveResolver''getStackArrayIndex-2s [#_"SSAMoveResolver" this, #_"StackSlot" stackSlot]
         ;; incoming stack arguments can be ignored
         (if (#_"StackSlot" .isInCallerFrame stackSlot) SSAMoveResolver'STACK_SLOT_IN_CALLER_FRAME_IDX (- (#_"StackSlot" .getRawOffset stackSlot)))
@@ -34897,7 +34406,18 @@ ZeroExtendNode'new-4
         (+ (:firstVirtualStackIndex this) (:id virtualStackSlot))
     )
 
+    (defn- #_"int" SSAMoveResolver''getStackArrayIndex-2v [#_"SSAMoveResolver" this, #_"Value" stackSlotValue]
+        (condp instance? stackSlotValue
+            StackSlot        (SSAMoveResolver''getStackArrayIndex-2s this, stackSlotValue)
+            VirtualStackSlot'iface (SSAMoveResolver''getStackArrayIndex-2i this, stackSlotValue)
+        )
+    )
+
     (defm SSAMoveResolver MoveResolver
+        (#_"boolean" MoveResolver'''mightBeBlocked-2 [#_"SSAMoveResolver" this, #_"Value" location]
+            (or (MoveResolver'''mightBeBlocked-2 (§ super MoveResolver'iface), location) (LIRValueUtil'isStackSlotValue-1 location))
+        )
+
         (#_"void" MoveResolver'''setValueBlocked-3 [#_"SSAMoveResolver" this, #_"Value" location, #_"int" direction]
             (when (LIRValueUtil'isStackSlotValue-1 location) => (MoveResolver'''setValueBlocked-3 (§ super MoveResolver'iface), location, direction)
                 (let [
@@ -36509,13 +36029,13 @@ ZeroExtendNode'new-4
 
 ; @LIROpcode
 (class-ns AMD64MultiStackMove
-    (defn #_"AMD64MultiStackMove" AMD64MultiStackMove'new-4 [#_"AllocatableValue[]" results, #_"Value[]" inputs, #_"Register" scratch, #_"AllocatableValue" backupSlot]
+    (defn #_"AMD64MultiStackMove" AMD64MultiStackMove'new-4 [#_"AllocatableValue*" results, #_"Value*" inputs, #_"Register" scratch, #_"AllocatableValue" backupSlot]
         (merge (AMD64MultiStackMove'class.) (LIRInstruction'new-0)
             (hash-map
                 ; @OperandMode'DEF({OperandFlag'STACK})
-                #_"AllocatableValue[]" :results results
+                #_"AllocatableValue*" :results results
                 ; @OperandMode'USE({OperandFlag'STACK})
-                #_"Value[]" :inputs inputs
+                #_"Value*" :inputs inputs
                 ; @OperandMode'ALIVE({OperandFlag'STACK, OperandFlag'UNINITIALIZED})
                 #_"AllocatableValue" :backupSlot backupSlot
                 #_"Register" :scratch scratch
@@ -37225,8 +36745,8 @@ ZeroExtendNode'new-4
 )
 
 ;;;
- ; Replaces sequential AMD64StackMoves of the same type with a single
- ; AMD64MultiStackMove to avoid storing/restoring the scratch register multiple times.
+ ; Replaces sequential AMD64StackMoves of the same type with a single AMD64MultiStackMove
+ ; to avoid storing/restoring the scratch register multiple times.
  ;
  ; Note: this phase must be inserted <b>after</b> RedundantMoveElimination phase because
  ; AMD64MultiStackMove are not probably detected.
@@ -37236,116 +36756,73 @@ ZeroExtendNode'new-4
         (StackMoveOptimizationPhase'class.)
     )
 
-    (defm StackMoveOptimizationPhase LIRPhase
-        (#_"void" LIRPhase'''run-3 [#_"StackMoveOptimizationPhase" this, #_"LIRGenerationResult" lirGenRes, #_"LIRPhaseContext" context]
-            (let [
-                #_"LIR" lir (:lir lirGenRes)
-            ]
-                (doseq [#_"Block" block (:reversePostOrder (:cfg lir))]
-                    (§ ass! (Closure0'new-0) (Closure0''process-2 (Closure0'new-0), (LIR''getLIRforBlock-2 lir, block)))
-                )
-            )
-            nil
-        )
-    )
-)
-
-(class-ns Closure0
-    (def- #_"int" Closure0'NONE -1)
-
-    (defn #_"Closure0" Closure0'new-0 []
-        (merge (Closure0'class.)
-            (hash-map
-                #_"int" :begin Closure0'NONE
-                #_"Register" :reg nil
-                #_"List<AllocatableValue>" :dst nil
-                #_"List<Value>" :src nil
-                #_"AllocatableValue" :slot nil
-                #_"boolean" :removed false
-            )
-        )
-    )
-
-    (defn #_"Closure0" Closure0''process-2 [#_"Closure0" this, #_"List<LIRInstruction>" ops]
+    (defn- #_"List<LIRInstruction>" StackMoveOptimizationPhase'replaceStackMoves-2 [#_"List<LIRInstruction>" ops, #_"Closure0" c]
         (let [
-            this
-                (loop-when [this this #_"int" i 0] (< i (count ops)) => this
+            #_"int" i (:begin c)
+            #_"int" n (count (:dst c))
+        ]
+            (when (< 1 n) => ops
+                (#_"List" .set ops, i, (AMD64MultiStackMove'new-4 (:dst c), (:src c), (:reg c), (:slot c)))
+                (Collections/fill (#_"List" .subList ops, (inc i), (+ i n)), nil)
+                ops
+            )
+        )
+    )
+
+    (defn- #_"List<LIRInstruction>" StackMoveOptimizationPhase'process-1 [#_"List<LIRInstruction>" ops]
+        (let [
+            #_"Closure0" c0
+                (hash-map
+                    #_"int" :begin -1
+                    #_"[AllocatableValue]" :dst []
+                    #_"[Value]" :src []
+                    #_"Register" :reg nil
+                    #_"AllocatableValue" :slot nil
+                )
+            ops
+                (loop-when [ops ops #_"Closure0" c c0 #_"int" i 0] (< i (count ops)) => ops
                     (let [
                         #_"LIRInstruction" op (nth ops i)
-                        this
+                        [ops c]
                             (if (satisfies? AMD64StackMove op)
                                 (let [
-                                    this
-                                        (when (and (some? (:reg this)) (not (= (:reg this) (:scratch op)))) => this
-                                            ;; end of trace & start of new
-                                            (Closure0''replaceStackMoves-2 this, ops)
+                                    [ops c]
+                                        (when (and (some? (:reg c)) (not (= (:reg c) (:scratch op)))) => [ops c]
+                                            [(StackMoveOptimizationPhase'replaceStackMoves-2 ops, c) c0]
                                         )
-                                    ;; lazy initialize
-                                    this
-                                        (when (nil? (:dst this)) => this
-                                            (let [
-                                                this (assoc this :dst (ArrayList.))
-                                                this (assoc this :src (ArrayList.))
-                                            ]
-                                                this
-                                            )
+                                    c (update c :dst conj (MoveOp'''getResult-1 op))
+                                    c (update c :src conj (ValueMoveOp'''getInput-1 op))
+                                    c
+                                        (when (= (:begin c) -1) => c
+                                            (assoc c :begin i :reg (:scratch op) :slot (:backupSlot op))
                                         )
-                                    _ (#_"List" .add (:dst this), (MoveOp'''getResult-1 op))
-                                    _ (#_"List" .add (:src this), (ValueMoveOp'''getInput-1 op))
                                 ]
-                                    (when (= (:begin this) Closure0'NONE) => this
-                                        ;; trace begin
-                                        (let [
-                                            this (assoc this :begin i)
-                                            this (assoc this :reg (:scratch op))
-                                            this (assoc this :slot (:backupSlot op))
-                                        ]
-                                            this
-                                        )
-                                    )
+                                    [ops c]
                                 )
-                                (when-not (= (:begin this) Closure0'NONE) => this
-                                    ;; end of trace
-                                    (Closure0''replaceStackMoves-2 this, ops)
+                                (when-not (= (:begin c) -1) => [ops c]
+                                    [(StackMoveOptimizationPhase'replaceStackMoves-2 ops, c) c0]
                                 )
                             )
                     ]
-                        (recur this (inc i))
+                        (recur ops c (inc i))
                     )
                 )
         ]
-            ;; remove instructions
-            (when (:removed this)
-                (#_"List" .removeAll ops, (Collections/singleton nil))
-            )
-            this
+            (#_"List" .removeAll ops, (Collections/singleton nil))
+            ops
         )
     )
 
-    (defn- #_"Closure0" Closure0''replaceStackMoves-2 [#_"Closure0" this, #_"List<LIRInstruction>" ops]
-        (let [
-            #_"int" size (count (:dst this))
-            this
-                (when (< 1 size) => this
-                    (let [
-                        #_"AMD64MultiStackMove" multiMove (AMD64MultiStackMove'new-4 (#_"List" .toArray (:dst this), (make-array AllocatableValue size)), (#_"List" .toArray (:src this), (make-array AllocatableValue size)), (:reg this), (:slot this))
-                    ]
-                        ;; replace first instruction
-                        (#_"List" .set ops, (:begin this), multiMove)
-                        ;; and nil out others
-                        (Collections/fill (#_"List" .subList ops, (inc (:begin this)), (+ (:begin this) size)), nil)
-                        ;; removed
-                        (assoc this :removed true)
-                    )
+    (defm StackMoveOptimizationPhase LIRPhase
+        (#_"void" LIRPhase'''run-3 [#_"StackMoveOptimizationPhase" this, #_"LIRGenerationResult" res, #_"LIRPhaseContext" context]
+            (doseq [#_"Block" block (:reversePostOrder (:cfg (:lir res)))]
+                (let [
+                    #_"List<LIRInstruction>" ops (LIR''getLIRforBlock-2 (:lir res), block)
+                ]
+                    (§ ass! ops (StackMoveOptimizationPhase'process-1 ops))
                 )
-            ;; reset
-            _ (#_"List" .clear (:dst this))
-            _ (#_"List" .clear (:src this))
-            this (assoc this :begin Closure0'NONE)
-            this (assoc this :reg nil)
-            this (assoc this :slot nil)
-        ]
-            this
+            )
+            nil
         )
     )
 )
@@ -37424,7 +36901,7 @@ ZeroExtendNode'new-4
 )
 
 (class-ns CLOptimization
-    (defn- #_"CLOptimization" CLOptimization'new-2 [#_"LIR" lir, #_"LIRGenerator" lirGen]
+    (defn #_"CLOptimization" CLOptimization'new-2 [#_"LIR" lir, #_"LIRGenerator" lirGen]
         (merge (CLOptimization'class.)
             (hash-map
                 #_"LIR" :lir lir
@@ -37438,42 +36915,8 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"void" CLOptimization''apply-1 [#_"CLOptimization" this]
-        ;; build DefUseTree
-        (doseq [#_"Block" b (:reversePostOrder (:cfg (:lir this)))]
-            (CLOptimization''analyzeBlock-2 this, b)
-        )
-        ;; remove all with only one use
-        (VariableMap''filter-2 (:map this), (ß (t) -> (§ fun (< 1 (DefUseTree''usageCount-1 t)))))
-        ;; collect block map
-        (VariableMap''forEach-2 (:map this), (ß (tree) -> (§ fun (VariableMap''forEach-2 tree, (§ ffun CLOptimization''addUsageToBlockMap-2)))))
-
-        ;; create ConstantTree
-        (VariableMap''forEach-2 (:map this), (§ ffun CLOptimization''createConstantTree-2))
-
-        ;; insert moves, delete nil instructions and reset instruction ids
-        (doseq [#_"Block" b (:reversePostOrder (:cfg (:lir this)))]
-            (CLOptimization''rewriteBlock-2 this, b)
-        )
-        nil
-    )
-
     (defn- #_"boolean" CLOptimization'isConstantLoad-1 [#_"LIRInstruction" op]
         (and (LIRInstruction''isLoadConstantOp-1 op) (satisfies? Variable (MoveOp'''getResult-1 op)))
-    )
-
-    (defn- #_"void" CLOptimization''addUsageToBlockMap-2 [#_"CLOptimization" this, #_"UseEntry" entry]
-        (let [
-            #_"Block" block (:block entry)
-            #_"List<UseEntry>" list (BlockMap''get-2 (:blockMap this), block)
-        ]
-            (when (nil? list)
-                (§ ass list (ArrayList.))
-                (BlockMap''put-3 (:blockMap this), block, list)
-            )
-            (#_"List" .add list, entry)
-        )
-        nil
     )
 
     ;;;
@@ -37530,29 +36973,49 @@ ZeroExtendNode'new-4
         nil
     )
 
-    ;;;
-     ; Creates the dominator tree and searches for an solution.
-     ;;
-    (defn- #_"void" CLOptimization''createConstantTree-2 [#_"CLOptimization" this, #_"DefUseTree" tree]
+    (defn- #_"void" CLOptimization''addUsageToBlockMap-2 [#_"CLOptimization" this, #_"UseEntry" entry]
         (let [
-            #_"ConstantTree" constTree (ConstantTree'new-2 (:cfg (:lir this)), tree)
+            #_"Block" block (:block entry)
+            #_"List<UseEntry>" list (BlockMap''get-2 (:blockMap this), block)
         ]
-            (DominatorOptimizationProblem''set-3 constTree, Flags'IN_SUBTREE, (:block tree))
-            (DefUseTree''forEach-2 tree, (ß (u) -> (§ fun (DominatorOptimizationProblem''set-3 constTree, Flags'HAS_USAGE, (:block u)))))
+            (when (nil? list)
+                (§ ass list (ArrayList.))
+                (BlockMap''put-3 (:blockMap this), block, list)
+            )
+            (#_"List" .add list, entry)
+        )
+        nil
+    )
 
-            (when-not (DominatorOptimizationProblem''get-3 constTree, Flags'HAS_USAGE, (:block tree)) ;; => usage in the definition block -> no optimization
-                (ConstantTree''markBlocks-1 constTree)
+    (defn- #_"void" CLOptimization''deleteInstruction-2 [#_"CLOptimization" this, #_"DefUseTree" tree]
+        (#_"ArrayList" .set (LIR''getLIRforBlock-2 (:lir this), (:block tree)), (:id (:instruction tree)), nil)
+        nil
+    )
 
-                (let [
-                    #_"NodeCost" cost (ConstantTreeAnalyzer'analyze-2 constTree, (:block tree))
-                ]
-                    (when (or (< 1 (:numMat cost)) (< (:bestCost cost) (:probability (:block tree)))) ;; => no better solution found
-                        ;; mark original load for removal
-                        (CLOptimization''deleteInstruction-2 this, tree)
-                        ;; collect result
-                        (CLOptimization''createLoads-4 this, tree, constTree, (:block tree))
-                    )
-                )
+    (defn- #_"LIRInsertionBuffer" CLOptimization''getInsertionBuffer-2 [#_"CLOptimization" this, #_"Block" block]
+        (or (BlockMap''get-2 (:insertionBuffers this), block)
+            (let [
+                #_"LIRInsertionBuffer" buffer (LIRInsertionBuffer'new-0)
+            ]
+                (BlockMap''put-3 (:insertionBuffers this), block, buffer)
+                (§ ass! buffer (LIRInsertionBuffer''init-2 buffer, (LIR''getLIRforBlock-2 (:lir this), block)))
+                buffer
+            )
+        )
+    )
+
+    (defn- #_"void" CLOptimization''insertLoad-5 [#_"CLOptimization" this, #_"Constant" constant, #_"ValueKind" kind, #_"Block" block, #_"List<UseEntry>" usages]
+        ;; create variable
+        (let [
+            #_"Variable" variable (LIRGenerator''newVariable-2 (:lirGen this), kind)
+            ;; create move
+            #_"LIRInstruction" move (MoveFactory''createLoad-3 (:moveFactory (:lirGen this)), variable, constant)
+        ]
+            ;; insert instruction
+            (§ ass! (CLOptimization''getInsertionBuffer-2 this, block) (LIRInsertionBuffer''append-3 (CLOptimization''getInsertionBuffer-2 this, block), 1, move))
+            ;; update usages
+            (doseq [#_"UseEntry" u usages]
+                (UseEntry''setValue-2 u, variable)
             )
         )
         nil
@@ -37585,18 +37048,29 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"void" CLOptimization''insertLoad-5 [#_"CLOptimization" this, #_"Constant" constant, #_"ValueKind" kind, #_"Block" block, #_"List<UseEntry>" usages]
-        ;; create variable
+    ;;;
+     ; Creates the dominator tree and searches for an solution.
+     ;;
+    (defn- #_"void" CLOptimization''createConstantTree-2 [#_"CLOptimization" this, #_"DefUseTree" tree]
         (let [
-            #_"Variable" variable (LIRGenerator''newVariable-2 (:lirGen this), kind)
-            ;; create move
-            #_"LIRInstruction" move (MoveFactory''createLoad-3 (:moveFactory (:lirGen this)), variable, constant)
+            #_"ConstantTree" constTree (ConstantTree'new-2 (:cfg (:lir this)), tree)
         ]
-            ;; insert instruction
-            (§ ass! (CLOptimization''getInsertionBuffer-2 this, block) (LIRInsertionBuffer''append-3 (CLOptimization''getInsertionBuffer-2 this, block), 1, move))
-            ;; update usages
-            (doseq [#_"UseEntry" u usages]
-                (UseEntry''setValue-2 u, variable)
+            (DominatorOptimizationProblem''set-3 constTree, Flags'IN_SUBTREE, (:block tree))
+            (DefUseTree''forEach-2 tree, (ß (u) -> (§ fun (DominatorOptimizationProblem''set-3 constTree, Flags'HAS_USAGE, (:block u)))))
+
+            (when-not (DominatorOptimizationProblem''get-3 constTree, Flags'HAS_USAGE, (:block tree)) ;; => usage in the definition block -> no optimization
+                (ConstantTree''markBlocks-1 constTree)
+
+                (let [
+                    #_"NodeCost" cost (ConstantTreeAnalyzer'analyze-2 constTree, (:block tree))
+                ]
+                    (when (or (< 1 (:numMat cost)) (< (:bestCost cost) (:probability (:block tree)))) ;; => no better solution found
+                        ;; mark original load for removal
+                        (CLOptimization''deleteInstruction-2 this, tree)
+                        ;; collect result
+                        (CLOptimization''createLoads-4 this, tree, constTree, (:block tree))
+                    )
+                )
             )
         )
         nil
@@ -37639,21 +37113,24 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"void" CLOptimization''deleteInstruction-2 [#_"CLOptimization" this, #_"DefUseTree" tree]
-        (#_"ArrayList" .set (LIR''getLIRforBlock-2 (:lir this), (:block tree)), (:id (:instruction tree)), nil)
-        nil
-    )
-
-    (defn- #_"LIRInsertionBuffer" CLOptimization''getInsertionBuffer-2 [#_"CLOptimization" this, #_"Block" block]
-        (or (BlockMap''get-2 (:insertionBuffers this), block)
-            (let [
-                #_"LIRInsertionBuffer" buffer (LIRInsertionBuffer'new-0)
-            ]
-                (BlockMap''put-3 (:insertionBuffers this), block, buffer)
-                (§ ass! buffer (LIRInsertionBuffer''init-2 buffer, (LIR''getLIRforBlock-2 (:lir this), block)))
-                buffer
-            )
+    (defn #_"void" CLOptimization''apply-1 [#_"CLOptimization" this]
+        ;; build DefUseTree
+        (doseq [#_"Block" b (:reversePostOrder (:cfg (:lir this)))]
+            (CLOptimization''analyzeBlock-2 this, b)
         )
+        ;; remove all with only one use
+        (VariableMap''filter-2 (:map this), (ß (t) -> (§ fun (< 1 (DefUseTree''usageCount-1 t)))))
+        ;; collect block map
+        (VariableMap''forEach-2 (:map this), (ß (tree) -> (§ fun (VariableMap''forEach-2 tree, (§ ffun CLOptimization''addUsageToBlockMap-2)))))
+
+        ;; create ConstantTree
+        (VariableMap''forEach-2 (:map this), (§ ffun CLOptimization''createConstantTree-2))
+
+        ;; insert moves, delete nil instructions and reset instruction ids
+        (doseq [#_"Block" b (:reversePostOrder (:cfg (:lir this)))]
+            (CLOptimization''rewriteBlock-2 this, b)
+        )
+        nil
     )
 )
 
@@ -37668,6 +37145,17 @@ ZeroExtendNode'new-4
  ; Represents a dominator (sub-)tree for a constant definition.
  ;;
 (class-ns ConstantTree
+    (defn- #_"List<UseEntry>" ConstantTree''getOrInitList-2 [#_"ConstantTree" this, #_"Block" block]
+        (or (BlockMap''get-2 (:blockMap this), block)
+            (let [
+                #_"List<UseEntry>" list (ArrayList.)
+            ]
+                (BlockMap''put-3 (:blockMap this), block, list)
+                list
+            )
+        )
+    )
+
     (defn #_"ConstantTree" ConstantTree'new-2 [#_"ControlFlowGraph" cfg, #_"DefUseTree" tree]
         (let [
             #_"ConstantTree" this
@@ -37679,17 +37167,6 @@ ZeroExtendNode'new-4
         ]
             (DefUseTree''forEach-2 tree, (ß (u) -> (§ fun (#_"List" .add (ConstantTree''getOrInitList-2 this, (:block u)), u))))
             this
-        )
-    )
-
-    (defn- #_"List<UseEntry>" ConstantTree''getOrInitList-2 [#_"ConstantTree" this, #_"Block" block]
-        (or (BlockMap''get-2 (:blockMap this), block)
-            (let [
-                #_"List<UseEntry>" list (ArrayList.)
-            ]
-                (BlockMap''put-3 (:blockMap this), block, list)
-                list
-            )
         )
     )
 
@@ -37775,15 +37252,6 @@ ZeroExtendNode'new-4
  ; Analyzes a ConstantTree and marks potential materialization positions.
  ;;
 (class-ns ConstantTreeAnalyzer
-    (defn #_"NodeCost" ConstantTreeAnalyzer'analyze-2 [#_"ConstantTree" tree, #_"Block" startBlock]
-        (let [
-            #_"ConstantTreeAnalyzer" analyzer (ConstantTreeAnalyzer'new-1 tree)
-        ]
-            (ConstantTreeAnalyzer''analyzeBlocks-2 analyzer, startBlock)
-            (DominatorOptimizationProblem''getCost-2 tree, startBlock)
-        )
-    )
-
     (defn- #_"ConstantTreeAnalyzer" ConstantTreeAnalyzer'new-1 [#_"ConstantTree" tree]
         (merge (ConstantTreeAnalyzer'class.)
             (hash-map
@@ -37793,34 +37261,34 @@ ZeroExtendNode'new-4
         )
     )
 
-    ;;;
-     ; Queues all relevant blocks for {@linkplain #process processing}.
-     ;
-     ; This is a worklist-style algorithm because a (more elegant) recursive implementation may
-     ; cause stack overflows on larger graphs.
-     ;
-     ; @param startBlock The start block of the dominator subtree.
-     ;;
-    (defn- #_"void" ConstantTreeAnalyzer''analyzeBlocks-2 [#_"ConstantTreeAnalyzer" this, #_"Block" startBlock]
-        (let [
-            #_"Deque<Block>" worklist (ArrayDeque.)
-        ]
-            (loop-when-recur [#_"Block" block startBlock] (some? block) [(#_"Deque" .pollLast worklist)]
-                (cond
-                    (ConstantTreeAnalyzer''isLeafBlock-2 this, block) (ConstantTreeAnalyzer''leafCost-2 this, block)
-                    (#_"BitSet" .get (:visited this), (:id block))      (ConstantTreeAnalyzer''process-2 this, block)
-                    :else
-                        (do ;; If not yet visited (and not a leaf block), process all children first!
-                            (#_"Deque" .offerLast worklist, block)
-                            (loop-when-recur [#_"Block" dominated (:firstDominated block)] (some? dominated) [(:dominatedSibling dominated)]
-                                (ConstantTreeAnalyzer''filteredPush-3 this, worklist, dominated)
-                            )
-                            (#_"BitSet" .set (:visited this), (:id block))
-                        )
-                )
-            )
-        )
+    (defn- #_"boolean" ConstantTreeAnalyzer''isLeafBlock-2 [#_"ConstantTreeAnalyzer" this, #_"Block" block]
+        (ConstantTree''isLeafBlock-2 (:tree this), block)
+    )
+
+    (defn- #_"boolean" ConstantTreeAnalyzer''isMarked-2 [#_"ConstantTreeAnalyzer" this, #_"Block" block]
+        (ConstantTree''isMarked-2 (:tree this), block)
+    )
+
+    (defn- #_"void" ConstantTreeAnalyzer''leafCost-2 [#_"ConstantTreeAnalyzer" this, #_"Block" block]
+        (DominatorOptimizationProblem''set-3 (:tree this), Flags'CANDIDATE, block)
+        (ConstantTree''getOrInitCost-2 (:tree this), block)
         nil
+    )
+
+    ;;;
+     ; This is the cost function that decides whether a materialization should be inserted in the
+     ; current block.
+     ;
+     ; Note that this function does not take into account if a materialization is required despite
+     ; the probabilities (e.g. there are usages in the current block).
+     ;
+     ; @param probabilityBlock Probability of the current block.
+     ; @param probabilityChildren Accumulated probability of the children.
+     ; @param numMat Number of materializations along the subtrees. We use {@code numMat - 1} to
+     ;            insert materializations as late as possible if the probabilities are the same.
+     ;;
+    (defn- #_"boolean" ConstantTreeAnalyzer'shouldMaterializerInCurrentBlock-3 [#_"double" probabilityBlock, #_"double" probabilityChildren, #_"int" numMat]
+        (< (* probabilityBlock (Math/pow 0.9, (dec numMat))) probabilityChildren)
     )
 
     ;;;
@@ -37867,22 +37335,6 @@ ZeroExtendNode'new-4
         nil
     )
 
-    ;;;
-     ; This is the cost function that decides whether a materialization should be inserted in the
-     ; current block.
-     ;
-     ; Note that this function does not take into account if a materialization is required despite
-     ; the probabilities (e.g. there are usages in the current block).
-     ;
-     ; @param probabilityBlock Probability of the current block.
-     ; @param probabilityChildren Accumulated probability of the children.
-     ; @param numMat Number of materializations along the subtrees. We use {@code numMat - 1} to
-     ;            insert materializations as late as possible if the probabilities are the same.
-     ;;
-    (defn- #_"boolean" ConstantTreeAnalyzer'shouldMaterializerInCurrentBlock-3 [#_"double" probabilityBlock, #_"double" probabilityChildren, #_"int" numMat]
-        (< (* probabilityBlock (Math/pow 0.9, (dec numMat))) probabilityChildren)
-    )
-
     (defn- #_"void" ConstantTreeAnalyzer''filteredPush-3 [#_"ConstantTreeAnalyzer" this, #_"Deque<Block>" worklist, #_"Block" block]
         (when (ConstantTreeAnalyzer''isMarked-2 this, block)
             (#_"Deque" .offerLast worklist, block)
@@ -37890,18 +37342,43 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"void" ConstantTreeAnalyzer''leafCost-2 [#_"ConstantTreeAnalyzer" this, #_"Block" block]
-        (DominatorOptimizationProblem''set-3 (:tree this), Flags'CANDIDATE, block)
-        (ConstantTree''getOrInitCost-2 (:tree this), block)
+    ;;;
+     ; Queues all relevant blocks for {@linkplain #process processing}.
+     ;
+     ; This is a worklist-style algorithm because a (more elegant) recursive implementation may
+     ; cause stack overflows on larger graphs.
+     ;
+     ; @param startBlock The start block of the dominator subtree.
+     ;;
+    (defn- #_"void" ConstantTreeAnalyzer''analyzeBlocks-2 [#_"ConstantTreeAnalyzer" this, #_"Block" startBlock]
+        (let [
+            #_"Deque<Block>" worklist (ArrayDeque.)
+        ]
+            (loop-when-recur [#_"Block" block startBlock] (some? block) [(#_"Deque" .pollLast worklist)]
+                (cond
+                    (ConstantTreeAnalyzer''isLeafBlock-2 this, block) (ConstantTreeAnalyzer''leafCost-2 this, block)
+                    (#_"BitSet" .get (:visited this), (:id block))    (ConstantTreeAnalyzer''process-2 this, block)
+                    :else
+                        (do ;; If not yet visited (and not a leaf block), process all children first!
+                            (#_"Deque" .offerLast worklist, block)
+                            (loop-when-recur [#_"Block" dominated (:firstDominated block)] (some? dominated) [(:dominatedSibling dominated)]
+                                (ConstantTreeAnalyzer''filteredPush-3 this, worklist, dominated)
+                            )
+                            (#_"BitSet" .set (:visited this), (:id block))
+                        )
+                )
+            )
+        )
         nil
     )
 
-    (defn- #_"boolean" ConstantTreeAnalyzer''isMarked-2 [#_"ConstantTreeAnalyzer" this, #_"Block" block]
-        (ConstantTree''isMarked-2 (:tree this), block)
-    )
-
-    (defn- #_"boolean" ConstantTreeAnalyzer''isLeafBlock-2 [#_"ConstantTreeAnalyzer" this, #_"Block" block]
-        (ConstantTree''isLeafBlock-2 (:tree this), block)
+    (defn #_"NodeCost" ConstantTreeAnalyzer'analyze-2 [#_"ConstantTree" tree, #_"Block" startBlock]
+        (let [
+            #_"ConstantTreeAnalyzer" analyzer (ConstantTreeAnalyzer'new-1 tree)
+        ]
+            (ConstantTreeAnalyzer''analyzeBlocks-2 analyzer, startBlock)
+            (DominatorOptimizationProblem''getCost-2 tree, startBlock)
+        )
     )
 )
 
@@ -38052,7 +37529,7 @@ ZeroExtendNode'new-4
 )
 
 (class-ns CFOptimizer
-    (defn- #_"CFOptimizer" CFOptimizer'new-1 [#_"LIR" lir]
+    (defn #_"CFOptimizer" CFOptimizer'new-1 [#_"LIR" lir]
         (merge (CFOptimizer'class.)
             (hash-map
                 #_"LIR" :lir lir
@@ -38086,7 +37563,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"void" CFOptimizer''deleteEmptyBlocks-2 [#_"CFOptimizer" this, #_"Block[]" blocks]
+    (defn #_"void" CFOptimizer''deleteEmptyBlocks-2 [#_"CFOptimizer" this, #_"Block[]" blocks]
         (loop-when-recur [#_"int" i 0] (< i (count blocks)) [(inc i)]
             (let [
                 #_"Block" block (nth blocks i)
@@ -38191,7 +37668,7 @@ ZeroExtendNode'new-4
     ;;;
      ; Move the longest common subsequence at the end of predecessors to the start of block.
      ;;
-    (defn- #_"void" EMOptimizer''optimizeMovesAtBlockEnd-2 [#_"EMOptimizer" this, #_"Block" block]
+    (defn #_"void" EMOptimizer''optimizeMovesAtBlockEnd-2 [#_"EMOptimizer" this, #_"Block" block]
         ;; currently we can't handle this correctly.
         (when-not (loop [#_"ISeq" s (seq (:predecessors block))] (and (some? s) (or (= (first s) block) (recur (next s)))))
             ;; clear all internal data structures
@@ -38260,7 +37737,7 @@ ZeroExtendNode'new-4
      ; Move the longest common subsequence at the start of successors to the end of block
      ; just prior to the branch instruction ending block.
      ;;
-    (defn- #_"void" EMOptimizer''optimizeMovesAtBlockBegin-2 [#_"EMOptimizer" this, #_"Block" block]
+    (defn #_"void" EMOptimizer''optimizeMovesAtBlockBegin-2 [#_"EMOptimizer" this, #_"Block" block]
         (#_"List" .clear (:edgeInstructionSeqences this))
         (let [
             #_"List<LIRInstruction>" ops (LIR''getLIRforBlock-2 (:lir this), block)
@@ -39556,20 +39033,31 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"Variable" LIRGenerator''emitBinary-8 [#_"LIRGenerator" this, #_"LIRKind" resultKind, #_"BinaryArithmetic" op, #_"OperandSize" size, #_"boolean" commutative?, #_"Value" a, #_"Value" b, #_"boolean" set-flags?]
-        (cond
-            (LIRValueUtil'isJavaConstant-1 b)                    (LIRGenerator''emitBinaryConst-8 this, resultKind, op, size, commutative?, (LIRGenerator''asAllocatable-2 this, a), b, set-flags?)
-            (and commutative? (LIRValueUtil'isJavaConstant-1 a)) (LIRGenerator''emitBinaryConst-8 this, resultKind, op, size, commutative?, (LIRGenerator''asAllocatable-2 this, b), a, set-flags?)
-            :else                                                (LIRGenerator''emitBinaryVar-7 this, resultKind, (BinaryArithmetic''getRMOpcode-2 op, size), size, commutative?, (LIRGenerator''asAllocatable-2 this, a), (LIRGenerator''asAllocatable-2 this, b))
+    (defn- #_"AMD64MOp" LIRGenerator'getMOp-2 [#_"BinaryArithmetic" op, #_"int" constant]
+        (case constant
+            1   (condp = op
+                    BinaryArithmetic'ADD AMD64MOp'INC
+                    BinaryArithmetic'SUB AMD64MOp'DEC
+                    nil
+                )
+            -1  (condp = op
+                    BinaryArithmetic'ADD AMD64MOp'DEC
+                    BinaryArithmetic'SUB AMD64MOp'INC
+                    nil
+                )
+            nil
         )
     )
 
-    #_unused
-    (defn- #_"Variable" LIRGenerator''emitBinary-7 [#_"LIRGenerator" this, #_"LIRKind" resultKind, #_"AMD64RMOp" op, #_"OperandSize" size, #_"boolean" commutative?, #_"Value" a, #_"Value" b]
-        (cond
-            (LIRValueUtil'isJavaConstant-1 b)                    (LIRGenerator''emitBinaryConst-6 this, resultKind, op, size, (LIRGenerator''asAllocatable-2 this, a), (:constant b))
-            (and commutative? (LIRValueUtil'isJavaConstant-1 a)) (LIRGenerator''emitBinaryConst-6 this, resultKind, op, size, (LIRGenerator''asAllocatable-2 this, b), (:constant a))
-            :else                                                (LIRGenerator''emitBinaryVar-7 this, resultKind, op, size, commutative?, (LIRGenerator''asAllocatable-2 this, a), (LIRGenerator''asAllocatable-2 this, b))
+    (defn- #_"Variable" LIRGenerator''emitBinaryVar-7 [#_"LIRGenerator" this, #_"LIRKind" resultKind, #_"AMD64RMOp" op, #_"OperandSize" size, #_"boolean" commutative?, #_"AllocatableValue" a, #_"AllocatableValue" b]
+        (let [
+            #_"Variable" result (LIRGenerator''newVariable-2 this, resultKind)
+        ]
+            (if commutative?
+                (LIRGenerator''append-2 this, (CommutativeTwoOp'new-5 op, size, result, a, b))
+                (LIRGenerator''append-2 this, (TwoOp'new-5 op, size, result, a, b))
+            )
+            result
         )
     )
 
@@ -39601,19 +39089,11 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"AMD64MOp" LIRGenerator'getMOp-2 [#_"BinaryArithmetic" op, #_"int" constant]
-        (case constant
-            1   (condp = op
-                    BinaryArithmetic'ADD AMD64MOp'INC
-                    BinaryArithmetic'SUB AMD64MOp'DEC
-                    nil
-                )
-            -1  (condp = op
-                    BinaryArithmetic'ADD AMD64MOp'DEC
-                    BinaryArithmetic'SUB AMD64MOp'INC
-                    nil
-                )
-            nil
+    (defn- #_"Variable" LIRGenerator''emitBinary-8 [#_"LIRGenerator" this, #_"LIRKind" resultKind, #_"BinaryArithmetic" op, #_"OperandSize" size, #_"boolean" commutative?, #_"Value" a, #_"Value" b, #_"boolean" set-flags?]
+        (cond
+            (LIRValueUtil'isJavaConstant-1 b)                    (LIRGenerator''emitBinaryConst-8 this, resultKind, op, size, commutative?, (LIRGenerator''asAllocatable-2 this, a), b, set-flags?)
+            (and commutative? (LIRValueUtil'isJavaConstant-1 a)) (LIRGenerator''emitBinaryConst-8 this, resultKind, op, size, commutative?, (LIRGenerator''asAllocatable-2 this, b), a, set-flags?)
+            :else                                                (LIRGenerator''emitBinaryVar-7 this, resultKind, (BinaryArithmetic''getRMOpcode-2 op, size), size, commutative?, (LIRGenerator''asAllocatable-2 this, a), (LIRGenerator''asAllocatable-2 this, b))
         )
     )
 
@@ -39626,15 +39106,12 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"Variable" LIRGenerator''emitBinaryVar-7 [#_"LIRGenerator" this, #_"LIRKind" resultKind, #_"AMD64RMOp" op, #_"OperandSize" size, #_"boolean" commutative?, #_"AllocatableValue" a, #_"AllocatableValue" b]
-        (let [
-            #_"Variable" result (LIRGenerator''newVariable-2 this, resultKind)
-        ]
-            (if commutative?
-                (LIRGenerator''append-2 this, (CommutativeTwoOp'new-5 op, size, result, a, b))
-                (LIRGenerator''append-2 this, (TwoOp'new-5 op, size, result, a, b))
-            )
-            result
+    #_unused
+    (defn- #_"Variable" LIRGenerator''emitBinary-7 [#_"LIRGenerator" this, #_"LIRKind" resultKind, #_"AMD64RMOp" op, #_"OperandSize" size, #_"boolean" commutative?, #_"Value" a, #_"Value" b]
+        (cond
+            (LIRValueUtil'isJavaConstant-1 b)                    (LIRGenerator''emitBinaryConst-6 this, resultKind, op, size, (LIRGenerator''asAllocatable-2 this, a), (:constant b))
+            (and commutative? (LIRValueUtil'isJavaConstant-1 a)) (LIRGenerator''emitBinaryConst-6 this, resultKind, op, size, (LIRGenerator''asAllocatable-2 this, b), (:constant a))
+            :else                                                (LIRGenerator''emitBinaryVar-7 this, resultKind, op, size, commutative?, (LIRGenerator''asAllocatable-2 this, a), (LIRGenerator''asAllocatable-2 this, b))
         )
     )
 
@@ -40298,7 +39775,7 @@ ZeroExtendNode'new-4
 )
 
 (class-ns BlockScope
-    (defn- #_"BlockScope" BlockScope'new-2 [#_"LIRGenerator" gen, #_"Block" block]
+    (defn #_"BlockScope" BlockScope'new-2 [#_"LIRGenerator" gen, #_"Block" block]
         (let [
             #_"BlockScope" this
                 (merge (BlockScope'class.)
@@ -40312,7 +39789,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"void" BlockScope''doBlockStart-1 [#_"BlockScope" this]
+    (defn #_"void" BlockScope''doBlockStart-1 [#_"BlockScope" this]
         ;; set up the list of LIR instructions
         (LIR''setLIRforBlock-3 (:lir (:res (:gen this))), (:currentBlock (:gen this)), (ArrayList.))
 
@@ -40332,12 +39809,11 @@ ZeroExtendNode'new-4
 )
 
 ;;;
- ; LIR instructions such as JumpOp and BranchOp need
- ; to reference their target Block. However, direct references are not possible
- ; since the control flow graph (and therefore successors lists) can be changed by optimizations -
- ; and fixing the instructions is error prone. Therefore, we represent an edge to block B from block
- ; A via the tuple {@code (A, successor-index-of-B)}. That is, indirectly by storing the index into
- ; the successor list of A. Note therefore that the successor list cannot be re-ordered.
+ ; LIR instructions such as JumpOp and BranchOp need to reference their target Block. However, direct
+ ; references are not possible since the control flow graph (and therefore successors lists) can be
+ ; changed by optimizations - and fixing the instructions is error prone. Therefore, we represent an edge
+ ; to block B from block A via the tuple {@code (A, successor-index-of-B)}. That is, indirectly by storing
+ ; the index into the successor list of A. Note therefore that the successor list cannot be re-ordered.
  ;;
 (class-ns LabelRef
     ;;;
@@ -40345,19 +39821,8 @@ ZeroExtendNode'new-4
      ;
      ; @param block The base block that contains the successor list.
      ; @param suxIndex The index of the successor.
-     ; @return the newly created label reference
      ;;
-    (defn #_"LabelRef" LabelRef'forSuccessor-3 [#_"LIR" lir, #_"Block" block, #_"int" suxIndex]
-        (LabelRef'new-3 lir, block, suxIndex)
-    )
-
-    ;;;
-     ; Returns a new reference to a successor of the given block.
-     ;
-     ; @param block The base block that contains the successor list.
-     ; @param suxIndex The index of the successor.
-     ;;
-    (defn- #_"LabelRef" LabelRef'new-3 [#_"LIR" lir, #_"Block" block, #_"int" suxIndex]
+    (defn #_"LabelRef" LabelRef'new-3 [#_"LIR" lir, #_"Block" block, #_"int" suxIndex]
         (merge (LabelRef'class.)
             (hash-map
                 #_"LIR" :lir lir
@@ -40487,6 +39952,38 @@ ZeroExtendNode'new-4
         (some? (:lir this))
     )
 
+    (defn- #_"int" LIRInsertionBuffer''numberOfInsertionPoints-1 [#_"LIRInsertionBuffer" this]
+        (>> (:indexAndCountSize this) 1)
+    )
+
+    (defn- #_"int" LIRInsertionBuffer''indexAt-2 [#_"LIRInsertionBuffer" this, #_"int" i]
+        (nth (:indexAndCount this) (<< i 1))
+    )
+
+    (defn- #_"LIRInsertionBuffer" LIRInsertionBuffer''appendNew-3 [#_"LIRInsertionBuffer" this, #_"int" index, #_"int" count]
+        (let [
+            #_"int" oldSize (:indexAndCountSize this)
+            #_"int" newSize (+ oldSize 2)
+            this
+                (when (< (count (:indexAndCount this)) newSize) => this
+                    (assoc this :indexAndCount (Arrays/copyOf (:indexAndCount this), (* newSize 2)))
+                )
+        ]
+            (aset (:indexAndCount this) oldSize index)
+            (aset (:indexAndCount this) (inc oldSize) count)
+            (assoc this :indexAndCountSize newSize)
+        )
+    )
+
+    (defn- #_"void" LIRInsertionBuffer''setCountAt-3 [#_"LIRInsertionBuffer" this, #_"int" i, #_"int" value]
+        (aset (:indexAndCount this) (inc (<< i 1)) value)
+        nil
+    )
+
+    (defn- #_"int" LIRInsertionBuffer''countAt-2 [#_"LIRInsertionBuffer" this, #_"int" i]
+        (nth (:indexAndCount this) (inc (<< i 1)))
+    )
+
     ;;;
      ; Enqueue a new instruction that will be appended to the instruction list when #finish() is called.
      ; The new instruction is added <b>before</b> the existing instruction with the given index.
@@ -40551,38 +40048,6 @@ ZeroExtendNode'new-4
                 )
             )
         )
-    )
-
-    (defn- #_"LIRInsertionBuffer" LIRInsertionBuffer''appendNew-3 [#_"LIRInsertionBuffer" this, #_"int" index, #_"int" count]
-        (let [
-            #_"int" oldSize (:indexAndCountSize this)
-            #_"int" newSize (+ oldSize 2)
-            this
-                (when (< (count (:indexAndCount this)) newSize) => this
-                    (assoc this :indexAndCount (Arrays/copyOf (:indexAndCount this), (* newSize 2)))
-                )
-        ]
-            (aset (:indexAndCount this) oldSize index)
-            (aset (:indexAndCount this) (inc oldSize) count)
-            (assoc this :indexAndCountSize newSize)
-        )
-    )
-
-    (defn- #_"void" LIRInsertionBuffer''setCountAt-3 [#_"LIRInsertionBuffer" this, #_"int" i, #_"int" value]
-        (aset (:indexAndCount this) (inc (<< i 1)) value)
-        nil
-    )
-
-    (defn- #_"int" LIRInsertionBuffer''numberOfInsertionPoints-1 [#_"LIRInsertionBuffer" this]
-        (>> (:indexAndCountSize this) 1)
-    )
-
-    (defn- #_"int" LIRInsertionBuffer''indexAt-2 [#_"LIRInsertionBuffer" this, #_"int" i]
-        (nth (:indexAndCount this) (<< i 1))
-    )
-
-    (defn- #_"int" LIRInsertionBuffer''countAt-2 [#_"LIRInsertionBuffer" this, #_"int" i]
-        (nth (:indexAndCount this) (inc (<< i 1)))
     )
 )
 
@@ -41459,9 +40924,6 @@ ZeroExtendNode'new-4
 )
 
 (class-ns RMEOptimization
-    ;; Pseudo value for a not yet assigned location.
-    (def #_"int" RMEOptimization'INIT_VALUE 0)
-
     (defn #_"RMEOptimization" RMEOptimization'new-1 [#_"FrameMap" frameMap]
         (merge (RMEOptimization'class.)
             (hash-map
@@ -41482,27 +40944,17 @@ ZeroExtendNode'new-4
         )
     )
 
+    (defn- #_"int" RMEOptimization''getOffset-2 [#_"RMEOptimization" this, #_"StackSlot" stackSlot]
+        (#_"StackSlot" .getOffset stackSlot, (FrameMap'''totalFrameSize-1 (:frameMap this)))
+    )
+
     ;;;
-     ; The main method doing the elimination of redundant moves.
+     ; Returns true for a move instruction which is a candidate for elimination.
      ;;
-    (defn- #_"RMEOptimization" RMEOptimization''doOptimize-2 [#_"RMEOptimization" this, #_"LIR" lir]
-        (let [
-            this (assoc this :callerSaveRegs (#_"RegisterConfig" .getCallerSaveRegisters HotSpot'registerConfig))
-            this (RMEOptimization''initBlockData-2 this, lir)
-            ;; Compute a table of the registers which are eligible for move optimization.
-            ;; Unallocatable registers should never be optimized.
-            this (assoc this :eligibleRegs (int-array (:numRegs this)))
-            _ (Arrays/fill (:eligibleRegs this), -1)
-        ]
-            (doseq [#_"Register" reg (#_"RegisterConfig" .getAllocatableRegisters HotSpot'registerConfig)]
-                (when (< (.number reg) (:numRegs this))
-                    (aset (:eligibleRegs this) (.number reg) (.number reg))
-                )
-            )
-            (when (RMEOptimization''solveDataFlow-2 this, lir)
-                (RMEOptimization''eliminateMoves-2 this, lir)
-            )
-            this
+    (defn- #_"boolean" RMEOptimization'isEligibleMove-1 [#_"LIRInstruction" op]
+        (and (LIRInstruction''isValueMoveOp-1 op)
+            ;; Moves with mismatching kinds are not moves, but memory loads/stores!
+            (= (#_"Value" .getValueKind (ValueMoveOp'''getInput-1 op)) (#_"Value" .getValueKind (MoveOp'''getResult-1 op)))
         )
     )
 
@@ -41573,8 +41025,135 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"int" RMEOptimization''getOffset-2 [#_"RMEOptimization" this, #_"StackSlot" stackSlot]
-        (#_"StackSlot" .getOffset stackSlot, (FrameMap'''totalFrameSize-1 (:frameMap this)))
+    ;;;
+     ; Encodes a value number + the is-object information to a number to be stored in a state.
+     ;;
+    (defn- #_"int" RMEOptimization'encodeValueNum-2 [#_"int" valueNum, #_"boolean" object?]
+        (if object? (- valueNum) valueNum)
+    )
+
+    (defn- #_"void" RMEOptimization'clearValues-2 [#_"int[]" state, #_"int" defNum]
+        (dotimes [#_"int" i (count state)]
+            ;; Let the killed values assume to be object references: it's the save default.
+            (§ aset! state i (RMEOptimization'encodeValueNum-2 (+ defNum i), true))
+        )
+        nil
+    )
+
+    ;; Pseudo value for a not yet assigned location.
+    (def- #_"int" RMEOptimization'INIT_VALUE 0)
+
+    ;;;
+     ; Returns true if an encoded value number (which is stored in a state) refers to an object reference.
+     ;;
+    (defn- #_"boolean" RMEOptimization'isObjectValue-1 [#_"int" encodedValueNum]
+        (neg? encodedValueNum)
+    )
+
+    ;;;
+     ; The state merge function for dataflow joins.
+     ;;
+    (defn- #_"boolean" RMEOptimization'mergeState-3 [#_"int[]" dst*, #_"int[]" src*, #_"int" defNum]
+        (loop-when [#_"boolean" changed? false #_"int" i 0] (< i (count src*)) => changed?
+            (let [
+                #_"int" phiNum (+ defNum i)
+                #_"int" dst (nth dst* i)
+                #_"int" src (nth src* i)
+                changed?
+                    (when (and (not= dst src) (not= src RMEOptimization'INIT_VALUE) (not= dst (RMEOptimization'encodeValueNum-2 phiNum, (RMEOptimization'isObjectValue-1 dst)))) => changed?
+                        (aset dst* i (if (not= dst RMEOptimization'INIT_VALUE) (RMEOptimization'encodeValueNum-2 phiNum, (or (RMEOptimization'isObjectValue-1 dst) (RMEOptimization'isObjectValue-1 src))) src))
+                        true
+                    )
+            ]
+                (recur changed? (inc i))
+            )
+        )
+    )
+
+    (defn- #_"void" RMEOptimization'copyState-2 [#_"int[]" dest, #_"int*" source]
+        (dotimes [#_"int" i (count source)]
+            (§ aset! dest i (nth source i))
+        )
+        nil
+    )
+
+    ;;;
+     ; Returns the index to the state arrays in BlockStates for a specific location.
+     ;;
+    (defn- #_"int" RMEOptimization''getStateIdx-2 [#_"RMEOptimization" this, #_"Value" location]
+        (condp instance? location
+            RegisterValue
+                (let [
+                    #_"int" n (.number (#_"RegisterValue" .getRegister location))
+                ]
+                    (if (< n (:numRegs this)) (nth (:eligibleRegs this) n) -1)
+                )
+            StackSlot
+                (let [
+                    #_"Integer" i (get (:stackIndices this) (RMEOptimization''getOffset-2 this, location))
+                ]
+                    (if (some? i) (+ (#_"Integer" .intValue i) (:numRegs this)) -1)
+                )
+            -1
+        )
+    )
+
+    ;;;
+     ; Updates the state for one instruction.
+     ;;
+    (defn- #_"int" RMEOptimization''updateState-4 [#_"RMEOptimization" this, #_"int[]" state, #_"LIRInstruction" op, #_"int" initValueNum]
+        (when (RMEOptimization'isEligibleMove-1 op)
+            ;; handle the special case of a move instruction
+            (let [
+                #_"int" src (RMEOptimization''getStateIdx-2 this, (ValueMoveOp'''getInput-1 op))
+                #_"int" dst (RMEOptimization''getStateIdx-2 this, (MoveOp'''getResult-1 op))
+            ]
+                (when (and (<= 0 src) (<= 0 dst))
+                    (§ aset! state dst (nth state src))
+                    (§ return initValueNum)
+                )
+            )
+        )
+
+        (let [
+            #_"int[]" valueNum (int-array [ initValueNum ])
+        ]
+            (when (LIRInstruction'''destroysCallerSavedRegisters-1 op)
+                (doseq [#_"Register" reg (:callerSaveRegs this)]
+                    (when (< (.number reg) (:numRegs this))
+                        ;; Kind.Object is the save default
+                        (§ aset! state (.number reg) (RMEOptimization'encodeValueNum-2 (nth valueNum 0), true))
+                        (aswap valueNum 0 inc)
+                    )
+                )
+            )
+
+            ;; Value procedure for the instruction's output and temp values.
+            (let [
+                #_"RMEOptimization" optimization this
+                #_"ValueConsumer" outputValueConsumer
+                    (reify ValueConsumer
+                        (#_"void" ValueConsumer'''visitValue-4 [#_"ValueConsumer" this, #_"Value" operand, #_"OperandMode" mode, #_"EnumSet<OperandFlag>" flags]
+                            (let [
+                                #_"int" i (RMEOptimization''getStateIdx-2 optimization, operand)
+                            ]
+                                (when (<= 0 i)
+                                    ;; Assign a unique number to the output or temp location.
+                                    (§ aset! state i (RMEOptimization'encodeValueNum-2 (nth valueNum 0), (not (LIRKind'isValue-1v operand))))
+                                    (aswap valueNum 0 inc)
+                                )
+                            )
+                            nil
+                        )
+                    )
+            ]
+                (LIRInstruction''visitEachTemp-2v op, outputValueConsumer)
+                ;; Semantically the output values are written _after_ the temp values.
+                (LIRInstruction''visitEachOutput-2v op, outputValueConsumer)
+
+                (nth valueNum 0)
+            )
+        )
     )
 
     ;;;
@@ -41704,140 +41283,26 @@ ZeroExtendNode'new-4
     )
 
     ;;;
-     ; Updates the state for one instruction.
+     ; The main method doing the elimination of redundant moves.
      ;;
-    (defn- #_"int" RMEOptimization''updateState-4 [#_"RMEOptimization" this, #_"int[]" state, #_"LIRInstruction" op, #_"int" initValueNum]
-        (when (RMEOptimization'isEligibleMove-1 op)
-            ;; handle the special case of a move instruction
-            (let [
-                #_"int" src (RMEOptimization''getStateIdx-2 this, (ValueMoveOp'''getInput-1 op))
-                #_"int" dst (RMEOptimization''getStateIdx-2 this, (MoveOp'''getResult-1 op))
-            ]
-                (when (and (<= 0 src) (<= 0 dst))
-                    (§ aset! state dst (nth state src))
-                    (§ return initValueNum)
-                )
-            )
-        )
-
+    (defn #_"RMEOptimization" RMEOptimization''doOptimize-2 [#_"RMEOptimization" this, #_"LIR" lir]
         (let [
-            #_"int[]" valueNum (int-array [ initValueNum ])
+            this (assoc this :callerSaveRegs (#_"RegisterConfig" .getCallerSaveRegisters HotSpot'registerConfig))
+            this (RMEOptimization''initBlockData-2 this, lir)
+            ;; Compute a table of the registers which are eligible for move optimization.
+            ;; Unallocatable registers should never be optimized.
+            this (assoc this :eligibleRegs (int-array (:numRegs this)))
+            _ (Arrays/fill (:eligibleRegs this), -1)
         ]
-            (when (LIRInstruction'''destroysCallerSavedRegisters-1 op)
-                (doseq [#_"Register" reg (:callerSaveRegs this)]
-                    (when (< (.number reg) (:numRegs this))
-                        ;; Kind.Object is the save default
-                        (§ aset! state (.number reg) (RMEOptimization'encodeValueNum-2 (nth valueNum 0), true))
-                        (aswap valueNum 0 inc)
-                    )
+            (doseq [#_"Register" reg (#_"RegisterConfig" .getAllocatableRegisters HotSpot'registerConfig)]
+                (when (< (.number reg) (:numRegs this))
+                    (aset (:eligibleRegs this) (.number reg) (.number reg))
                 )
             )
-
-            ;; Value procedure for the instruction's output and temp values.
-            (let [
-                #_"RMEOptimization" optimization this
-                #_"ValueConsumer" outputValueConsumer
-                    (reify ValueConsumer
-                        (#_"void" ValueConsumer'''visitValue-4 [#_"ValueConsumer" this, #_"Value" operand, #_"OperandMode" mode, #_"EnumSet<OperandFlag>" flags]
-                            (let [
-                                #_"int" i (RMEOptimization''getStateIdx-2 optimization, operand)
-                            ]
-                                (when (<= 0 i)
-                                    ;; Assign a unique number to the output or temp location.
-                                    (§ aset! state i (RMEOptimization'encodeValueNum-2 (nth valueNum 0), (not (LIRKind'isValue-1v operand))))
-                                    (aswap valueNum 0 inc)
-                                )
-                            )
-                            nil
-                        )
-                    )
-            ]
-                (LIRInstruction''visitEachTemp-2v op, outputValueConsumer)
-                ;; Semantically the output values are written _after_ the temp values.
-                (LIRInstruction''visitEachOutput-2v op, outputValueConsumer)
-
-                (nth valueNum 0)
+            (when (RMEOptimization''solveDataFlow-2 this, lir)
+                (RMEOptimization''eliminateMoves-2 this, lir)
             )
-        )
-    )
-
-    ;;;
-     ; The state merge function for dataflow joins.
-     ;;
-    (defn- #_"boolean" RMEOptimization'mergeState-3 [#_"int[]" dst*, #_"int[]" src*, #_"int" defNum]
-        (loop-when [#_"boolean" changed? false #_"int" i 0] (< i (count src*)) => changed?
-            (let [
-                #_"int" phiNum (+ defNum i)
-                #_"int" dst (nth dst* i)
-                #_"int" src (nth src* i)
-                changed?
-                    (when (and (not= dst src) (not= src RMEOptimization'INIT_VALUE) (not= dst (RMEOptimization'encodeValueNum-2 phiNum, (RMEOptimization'isObjectValue-1 dst)))) => changed?
-                        (aset dst* i (if (not= dst RMEOptimization'INIT_VALUE) (RMEOptimization'encodeValueNum-2 phiNum, (or (RMEOptimization'isObjectValue-1 dst) (RMEOptimization'isObjectValue-1 src))) src))
-                        true
-                    )
-            ]
-                (recur changed? (inc i))
-            )
-        )
-    )
-
-    (defn- #_"void" RMEOptimization'copyState-2 [#_"int[]" dest, #_"int*" source]
-        (dotimes [#_"int" i (count source)]
-            (§ aset! dest i (nth source i))
-        )
-        nil
-    )
-
-    (defn- #_"void" RMEOptimization'clearValues-2 [#_"int[]" state, #_"int" defNum]
-        (dotimes [#_"int" i (count state)]
-            ;; Let the killed values assume to be object references: it's the save default.
-            (§ aset! state i (RMEOptimization'encodeValueNum-2 (+ defNum i), true))
-        )
-        nil
-    )
-
-    ;;;
-     ; Returns the index to the state arrays in BlockStates for a specific location.
-     ;;
-    (defn- #_"int" RMEOptimization''getStateIdx-2 [#_"RMEOptimization" this, #_"Value" location]
-        (condp instance? location
-            RegisterValue
-                (let [
-                    #_"int" n (.number (#_"RegisterValue" .getRegister location))
-                ]
-                    (if (< n (:numRegs this)) (nth (:eligibleRegs this) n) -1)
-                )
-            StackSlot
-                (let [
-                    #_"Integer" i (get (:stackIndices this) (RMEOptimization''getOffset-2 this, location))
-                ]
-                    (if (some? i) (+ (#_"Integer" .intValue i) (:numRegs this)) -1)
-                )
-            -1
-        )
-    )
-
-    ;;;
-     ; Encodes a value number + the is-object information to a number to be stored in a state.
-     ;;
-    (defn- #_"int" RMEOptimization'encodeValueNum-2 [#_"int" valueNum, #_"boolean" object?]
-        (if object? (- valueNum) valueNum)
-    )
-
-    ;;;
-     ; Returns true if an encoded value number (which is stored in a state) refers to an object reference.
-     ;;
-    (defn- #_"boolean" RMEOptimization'isObjectValue-1 [#_"int" encodedValueNum]
-        (neg? encodedValueNum)
-    )
-
-    ;;;
-     ; Returns true for a move instruction which is a candidate for elimination.
-     ;;
-    (defn- #_"boolean" RMEOptimization'isEligibleMove-1 [#_"LIRInstruction" op]
-        (and (LIRInstruction''isValueMoveOp-1 op)
-            ;; Moves with mismatching kinds are not moves, but memory loads/stores!
-            (= (#_"Value" .getValueKind (ValueMoveOp'''getInput-1 op)) (#_"Value" .getValueKind (MoveOp'''getResult-1 op)))
+            this
         )
     )
 )
@@ -41920,7 +41385,7 @@ ZeroExtendNode'new-4
                 #_"LabelOp" label (SSAUtil'phiIn-2 lir, merge)
                 #_"JumpOp" jump (SSAUtil'phiOut-2 lir, pred)
             ]
-                (dotimes [#_"int" i (:numbPhis label)]
+                (dotimes [#_"int" i (:numPhis label)]
                     (PhiValueVisitor'''visit-3 visitor, (LabelOp''getIncomingValue-2 label, i), (JumpOp''getOutgoingValue-2 jump, i))
                 )
             )
@@ -41972,26 +41437,13 @@ ZeroExtendNode'new-4
         )
     )
 
-    ;;;
-     ; Builds the lifetime intervals for {@link VirtualStackSlot virtual stack slots}, sets up #stackSlotMap
-     ; and returns a set of use positions, i.e. instructions that contain virtual stack slots.
-     ;;
-    (defn #_"EconomicSet<LIRInstruction>" FixPointIntervalBuilder''build-1 [#_"FixPointIntervalBuilder" this]
-        (let [
-            #_"Deque<Block>" worklist (ArrayDeque.)
-            #_"Block[]" blocks (:reversePostOrder (:cfg (:lir this)))
-        ]
-            (loop-when-recur [#_"int" i (dec (count blocks))] (<= 0 i) [(dec i)]
-                (#_"Deque" .add worklist, (nth blocks i))
-            )
-            (doseq [#_"Block" block (:reversePostOrder (:cfg (:lir this)))]
-                (BlockMap''put-3 (:liveInMap this), block, (BitSet. (count (:stackSlotMap this))))
-            )
-            (while (seq worklist)
-                (FixPointIntervalBuilder''processBlock-3 this, (#_"Deque" .poll worklist), worklist)
-            )
-            (:usePos this)
-        )
+    (defn- #_"StackInterval" FixPointIntervalBuilder''get-2 [#_"FixPointIntervalBuilder" this, #_"VirtualStackSlot" stackSlot]
+        (nth (:stackSlotMap this) (:id stackSlot))
+    )
+
+    (defn- #_"void" FixPointIntervalBuilder''put-3 [#_"FixPointIntervalBuilder" this, #_"VirtualStackSlot" stackSlot, #_"StackInterval" interval]
+        (aset (:stackSlotMap this) (:id stackSlot) interval)
+        nil
     )
 
     ;;;
@@ -42014,6 +41466,40 @@ ZeroExtendNode'new-4
                 )
             )
         )
+    )
+
+    (defn- #_"void" FixPointIntervalBuilder''markOutInterval-3 [#_"FixPointIntervalBuilder" this, #_"BitSet" outSet, #_"int" blockEndOpId]
+        (loop-when-recur [#_"int" i (#_"BitSet" .nextSetBit outSet, 0)] (<= 0 i) [(#_"BitSet" .nextSetBit outSet, (inc i))]
+            (§ ass! (nth (:stackSlotMap this) i) (StackInterval''addTo-2 (nth (:stackSlotMap this) i), blockEndOpId))
+        )
+        nil
+    )
+
+    (defn- #_"void" FixPointIntervalBuilder''markInInterval-3 [#_"FixPointIntervalBuilder" this, #_"BitSet" inSet, #_"int" blockFirstOpId]
+        (loop-when-recur [#_"int" i (#_"BitSet" .nextSetBit inSet, 0)] (<= 0 i) [(#_"BitSet" .nextSetBit inSet, (inc i))]
+            (§ ass! (nth (:stackSlotMap this) i) (StackInterval''addFrom-2 (nth (:stackSlotMap this) i), blockFirstOpId))
+        )
+        nil
+    )
+
+    (defn- #_"StackInterval" FixPointIntervalBuilder''getOrCreateInterval-2 [#_"FixPointIntervalBuilder" this, #_"VirtualStackSlot" stackSlot]
+        (let [
+            #_"StackInterval" interval (FixPointIntervalBuilder''get-2 this, stackSlot)
+        ]
+            (when (nil? interval)
+                (§ ass interval (StackInterval'new-2 stackSlot, (#_"Value" .getValueKind stackSlot)))
+                (FixPointIntervalBuilder''put-3 this, stackSlot, interval)
+            )
+            interval
+        )
+    )
+
+    (defn- #_"int" FixPointIntervalBuilder'getBlockBegin-1 [#_"List<LIRInstruction>" ops]
+        (:id (nth ops 0))
+    )
+
+    (defn- #_"int" FixPointIntervalBuilder'getBlockEnd-1 [#_"List<LIRInstruction>" ops]
+        (inc (:id (nth ops (dec (count ops)))))
     )
 
     (defn- #_"void" FixPointIntervalBuilder''processBlock-3 [#_"FixPointIntervalBuilder" this, #_"Block" block, #_"Deque<Block>" worklist]
@@ -42050,56 +41536,52 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"void" FixPointIntervalBuilder''markOutInterval-3 [#_"FixPointIntervalBuilder" this, #_"BitSet" outSet, #_"int" blockEndOpId]
-        (loop-when-recur [#_"int" i (#_"BitSet" .nextSetBit outSet, 0)] (<= 0 i) [(#_"BitSet" .nextSetBit outSet, (inc i))]
-            (§ ass! (FixPointIntervalBuilder''getIntervalFromStackId-2 this, i) (StackInterval''addTo-2 (FixPointIntervalBuilder''getIntervalFromStackId-2 this, i), blockEndOpId))
-        )
-        nil
-    )
-
-    (defn- #_"void" FixPointIntervalBuilder''markInInterval-3 [#_"FixPointIntervalBuilder" this, #_"BitSet" inSet, #_"int" blockFirstOpId]
-        (loop-when-recur [#_"int" i (#_"BitSet" .nextSetBit inSet, 0)] (<= 0 i) [(#_"BitSet" .nextSetBit inSet, (inc i))]
-            (§ ass! (FixPointIntervalBuilder''getIntervalFromStackId-2 this, i) (StackInterval''addFrom-2 (FixPointIntervalBuilder''getIntervalFromStackId-2 this, i), blockFirstOpId))
-        )
-        nil
-    )
-
-    (defn- #_"StackInterval" FixPointIntervalBuilder''get-2 [#_"FixPointIntervalBuilder" this, #_"VirtualStackSlot" stackSlot]
-        (nth (:stackSlotMap this) (:id stackSlot))
-    )
-
-    (defn- #_"void" FixPointIntervalBuilder''put-3 [#_"FixPointIntervalBuilder" this, #_"VirtualStackSlot" stackSlot, #_"StackInterval" interval]
-        (aset (:stackSlotMap this) (:id stackSlot) interval)
-        nil
-    )
-
-    (defn- #_"StackInterval" FixPointIntervalBuilder''getOrCreateInterval-2 [#_"FixPointIntervalBuilder" this, #_"VirtualStackSlot" stackSlot]
+    ;;;
+     ; Builds the lifetime intervals for {@link VirtualStackSlot virtual stack slots}, sets up #stackSlotMap
+     ; and returns a set of use positions, i.e. instructions that contain virtual stack slots.
+     ;;
+    (defn #_"EconomicSet<LIRInstruction>" FixPointIntervalBuilder''build-1 [#_"FixPointIntervalBuilder" this]
         (let [
-            #_"StackInterval" interval (FixPointIntervalBuilder''get-2 this, stackSlot)
+            #_"Deque<Block>" worklist (ArrayDeque.)
+            #_"Block[]" blocks (:reversePostOrder (:cfg (:lir this)))
         ]
-            (when (nil? interval)
-                (§ ass interval (StackInterval'new-2 stackSlot, (#_"Value" .getValueKind stackSlot)))
-                (FixPointIntervalBuilder''put-3 this, stackSlot, interval)
+            (loop-when-recur [#_"int" i (dec (count blocks))] (<= 0 i) [(dec i)]
+                (#_"Deque" .add worklist, (nth blocks i))
             )
-            interval
+            (doseq [#_"Block" block (:reversePostOrder (:cfg (:lir this)))]
+                (BlockMap''put-3 (:liveInMap this), block, (BitSet. (count (:stackSlotMap this))))
+            )
+            (while (seq worklist)
+                (FixPointIntervalBuilder''processBlock-3 this, (#_"Deque" .poll worklist), worklist)
+            )
+            (:usePos this)
         )
-    )
-
-    (defn- #_"StackInterval" FixPointIntervalBuilder''getIntervalFromStackId-2 [#_"FixPointIntervalBuilder" this, #_"int" id]
-        (nth (:stackSlotMap this) id)
-    )
-
-    (defn- #_"int" FixPointIntervalBuilder'getBlockBegin-1 [#_"List<LIRInstruction>" ops]
-        (:id (nth ops 0))
-    )
-
-    (defn- #_"int" FixPointIntervalBuilder'getBlockEnd-1 [#_"List<LIRInstruction>" ops]
-        (inc (:id (nth ops (dec (count ops)))))
     )
 )
 
 (class-ns BlockClosure
-    (defn- #_"BlockClosure" BlockClosure'new-2 [#_"FixPointIntervalBuilder" builder, #_"BitSet" set]
+    (defn- #_"void" BlockClosure''addDef-3 [#_"BlockClosure" this, #_"VirtualStackSlot" stackSlot, #_"LIRInstruction" op]
+        (§ ass! (FixPointIntervalBuilder''getOrCreateInterval-2 (:builder this), stackSlot) (StackInterval''addFrom-2 (FixPointIntervalBuilder''getOrCreateInterval-2 (:builder this), stackSlot), (:id op)))
+        nil
+    )
+
+    (defn- #_"void" BlockClosure''addUse-4 [#_"BlockClosure" this, #_"VirtualStackSlot" stackSlot, #_"LIRInstruction" op, #_"EnumSet<OperandFlag>" flags]
+        (let [
+            #_"StackInterval" interval (FixPointIntervalBuilder''getOrCreateInterval-2 (:builder this), stackSlot)
+        ]
+            (if (#_"EnumSet" .contains flags, OperandFlag'UNINITIALIZED)
+                (do
+                    ;; Stack slot is marked uninitialized so we have to assume it is live all the time.
+                    (§ ass! interval (StackInterval''addFrom-2 interval, 0))
+                    (§ ass! interval (StackInterval''addTo-2 interval, (:maxOpId (:builder this))))
+                )
+                (§ ass! interval (StackInterval''addTo-2 interval, (:id op)))
+            )
+        )
+        nil
+    )
+
+    (defn #_"BlockClosure" BlockClosure'new-2 [#_"FixPointIntervalBuilder" builder, #_"BitSet" set]
         (let [
             #_"BlockClosure" this
                 (merge (BlockClosure'class.)
@@ -42148,33 +41630,12 @@ ZeroExtendNode'new-4
      ; Process all values of an instruction bottom-up, i.e. definitions before usages.
      ; Values that start or end at the current operation are not included.
      ;;
-    (defn- #_"void" BlockClosure''processInstructionBottomUp-2 [#_"BlockClosure" this, #_"LIRInstruction" op]
+    (defn #_"void" BlockClosure''processInstructionBottomUp-2 [#_"BlockClosure" this, #_"LIRInstruction" op]
         (LIRInstruction''visitEachTemp-2i op, (:defConsumer this))
         (LIRInstruction''visitEachOutput-2i op, (:defConsumer this))
 
         (LIRInstruction''visitEachAlive-2i op, (:useConsumer this))
         (LIRInstruction''visitEachInput-2i op, (:useConsumer this))
-        nil
-    )
-
-    (defn- #_"void" BlockClosure''addUse-4 [#_"BlockClosure" this, #_"VirtualStackSlot" stackSlot, #_"LIRInstruction" op, #_"EnumSet<OperandFlag>" flags]
-        (let [
-            #_"StackInterval" interval (FixPointIntervalBuilder''getOrCreateInterval-2 (:builder this), stackSlot)
-        ]
-            (if (#_"EnumSet" .contains flags, OperandFlag'UNINITIALIZED)
-                (do
-                    ;; Stack slot is marked uninitialized so we have to assume it is live all the time.
-                    (§ ass! interval (StackInterval''addFrom-2 interval, 0))
-                    (§ ass! interval (StackInterval''addTo-2 interval, (:maxOpId (:builder this))))
-                )
-                (§ ass! interval (StackInterval''addTo-2 interval, (:id op)))
-            )
-        )
-        nil
-    )
-
-    (defn- #_"void" BlockClosure''addDef-3 [#_"BlockClosure" this, #_"VirtualStackSlot" stackSlot, #_"LIRInstruction" op]
-        (§ ass! (FixPointIntervalBuilder''getOrCreateInterval-2 (:builder this), stackSlot) (StackInterval''addFrom-2 (FixPointIntervalBuilder''getOrCreateInterval-2 (:builder this), stackSlot), (:id op)))
         nil
     )
 
@@ -42239,36 +41700,6 @@ ZeroExtendNode'new-4
 )
 
 (class-ns Allocator
-    (defn- #_"Allocator" Allocator'new-2 [#_"LIR" lir, #_"FrameMapBuilderTool" frameMapBuilder]
-        (merge (Allocator'class.)
-            (hash-map
-                #_"LIR" :lir lir
-                #_"FrameMapBuilderTool" :frameMapBuilder frameMapBuilder
-                #_"StackInterval[]" :stackSlotMap (make-array StackInterval'iface (FrameMapBuilderTool'''getNumberOfStackSlots-1 frameMapBuilder))
-                ;; insert by from
-                #_"PriorityQueue<StackInterval>" :unhandled (ß PriorityQueue. (ß (a, b) -> (§ fun (- (:from a) (:from b)))))
-                ;; insert by to
-                #_"PriorityQueue<StackInterval>" :active (ß PriorityQueue. (ß (a, b) -> (§ fun (- (:to a) (:to b)))))
-                #_"Block[]" :sortedBlocks (:reversePostOrder (:cfg lir))
-                ;;;
-                 ; Highest instruction id.
-                 ;;
-                #_"int" :maxOpId (Allocator'numberInstructions-2 lir, (:reversePostOrder (:cfg lir)))
-                #_"EnumMap<SlotSize, Deque<StackSlot>>" :freeSlots nil
-            )
-        )
-    )
-
-    (defn- #_"void" Allocator''allocate-1 [#_"Allocator" this]
-        (let [
-            #_"EconomicSet<LIRInstruction>" usePos (Allocator''buildIntervals-1 this)
-        ]
-            (Allocator''allocateStackSlots-1 this)
-            (Allocator''assignStackSlots-2 this, usePos)
-        )
-        nil
-    )
-
     ;;;
      ; Numbers all instructions in all blocks.
      ;
@@ -42290,50 +41721,28 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"EconomicSet<LIRInstruction>" Allocator''buildIntervals-1 [#_"Allocator" this]
-        (FixPointIntervalBuilder''build-1 (FixPointIntervalBuilder'new-3 (:lir this), (:stackSlotMap this), (:maxOpId this)))
-    )
-
-    (defn- #_"void" Allocator''allocateStackSlots-1 [#_"Allocator" this]
-        ;; create unhandled lists
-        (doseq [#_"StackInterval" interval (:stackSlotMap this)]
-            (when (some? interval)
-                (#_"PriorityQueue" .add (:unhandled this), interval)
+    (defn #_"Allocator" Allocator'new-2 [#_"LIR" lir, #_"FrameMapBuilderTool" frameMapBuilder]
+        (merge (Allocator'class.)
+            (hash-map
+                #_"LIR" :lir lir
+                #_"FrameMapBuilderTool" :frameMapBuilder frameMapBuilder
+                #_"StackInterval[]" :stackSlotMap (make-array StackInterval'iface (FrameMapBuilderTool'''getNumberOfStackSlots-1 frameMapBuilder))
+                ;; insert by from
+                #_"PriorityQueue<StackInterval>" :unhandled (ß PriorityQueue. (ß (a, b) -> (§ fun (- (:from a) (:from b)))))
+                ;; insert by to
+                #_"PriorityQueue<StackInterval>" :active (ß PriorityQueue. (ß (a, b) -> (§ fun (- (:to a) (:to b)))))
+                #_"Block[]" :sortedBlocks (:reversePostOrder (:cfg lir))
+                ;;;
+                 ; Highest instruction id.
+                 ;;
+                #_"int" :maxOpId (Allocator'numberInstructions-2 lir, (:reversePostOrder (:cfg lir)))
+                #_"EnumMap<SlotSize, Deque<StackSlot>>" :freeSlots nil
             )
         )
-
-        (loop-when-recur [#_"StackInterval" current (Allocator''activateNext-1 this)] (some? current) [(Allocator''activateNext-1 this)]
-            (Allocator''allocateSlot-2 this, current)
-        )
-        nil
     )
 
-    (defn- #_"void" Allocator''allocateSlot-2 [#_"Allocator" this, #_"StackInterval" current]
-        (let [
-            #_"VirtualStackSlot" virtualSlot (:operand current)
-            #_"StackSlot" location
-                (if (satisfies? VirtualStackSlotRange virtualSlot)
-                    ;; No reuse of ranges (yet).
-                    (let [
-                        #_"VirtualStackSlotRange" slotRange virtualSlot
-                    ]
-                        (FrameMap''allocateStackSlots-3 (FrameMapBuilderTool'''getFrameMap-1 (:frameMapBuilder this)), (:slots slotRange), (VirtualStackSlotRange''getObjects-1 slotRange))
-                    )
-                    (let [
-                        #_"StackSlot" slot (Allocator''findFreeSlot-2 this, virtualSlot)
-                    ]
-                        (if (some? slot)
-                            ;; Free stack slot available. Note that we create a new one because the kind might not match.
-                            (StackSlot/get (:kind current), (#_"StackSlot" .getRawOffset slot), (#_"StackSlot" .getRawAddFrameSize slot))
-                            ;; Allocate new stack slot.
-                            (FrameMap''allocateSpillSlot-2 (FrameMapBuilderTool'''getFrameMap-1 (:frameMapBuilder this)), (#_"Value" .getValueKind virtualSlot))
-                        )
-                    )
-                )
-        ]
-            (§ ass! current (StackInterval''setLocation-2 current, location))
-        )
-        nil
+    (defn- #_"StackInterval" Allocator''get-2 [#_"Allocator" this, #_"VirtualStackSlot" stackSlot]
+        (nth (:stackSlotMap this) (:id stackSlot))
     )
 
     (defn- #_"SlotSize" Allocator''forKind-2 [#_"Allocator" this, #_"ValueKind" kind]
@@ -42380,6 +41789,10 @@ ZeroExtendNode'new-4
         )
     )
 
+    (defn- #_"EconomicSet<LIRInstruction>" Allocator''buildIntervals-1 [#_"Allocator" this]
+        (FixPointIntervalBuilder''build-1 (FixPointIntervalBuilder'new-3 (:lir this), (:stackSlotMap this), (:maxOpId this)))
+    )
+
     ;;;
      ; Gets a free stack slot for {@code slot} or nil if there is none.
      ;;
@@ -42399,6 +41812,46 @@ ZeroExtendNode'new-4
         )
     )
 
+    (defn- #_"void" Allocator''allocateSlot-2 [#_"Allocator" this, #_"StackInterval" current]
+        (let [
+            #_"VirtualStackSlot" virtualSlot (:operand current)
+            #_"StackSlot" location
+                (if (satisfies? VirtualStackSlotRange virtualSlot)
+                    ;; No reuse of ranges (yet).
+                    (let [
+                        #_"VirtualStackSlotRange" slotRange virtualSlot
+                    ]
+                        (FrameMap''allocateStackSlots-3 (FrameMapBuilderTool'''getFrameMap-1 (:frameMapBuilder this)), (:slots slotRange), (VirtualStackSlotRange''getObjects-1 slotRange))
+                    )
+                    (let [
+                        #_"StackSlot" slot (Allocator''findFreeSlot-2 this, virtualSlot)
+                    ]
+                        (if (some? slot)
+                            ;; Free stack slot available. Note that we create a new one because the kind might not match.
+                            (StackSlot/get (:kind current), (#_"StackSlot" .getRawOffset slot), (#_"StackSlot" .getRawAddFrameSize slot))
+                            ;; Allocate new stack slot.
+                            (FrameMap''allocateSpillSlot-2 (FrameMapBuilderTool'''getFrameMap-1 (:frameMapBuilder this)), (#_"Value" .getValueKind virtualSlot))
+                        )
+                    )
+                )
+        ]
+            (§ ass! current (StackInterval''setLocation-2 current, location))
+        )
+        nil
+    )
+
+    ;;;
+     ; Gets the lowest {@link StackInterval#to() end position} of all active intervals.
+     ; If there is none Integer#MAX_VALUE is returned.
+     ;;
+    (defn- #_"int" Allocator''activePeekId-1 [#_"Allocator" this]
+        (let [
+            #_"StackInterval" interval (#_"PriorityQueue" .peek (:active this))
+        ]
+            (if (some? interval) (:to interval) Integer/MAX_VALUE)
+        )
+    )
+
     ;;;
      ; Adds a stack slot to the list of free slots.
      ;;
@@ -42410,6 +41863,14 @@ ZeroExtendNode'new-4
                 (#_"Deque" .addLast (Allocator''getOrInitFreeSlots-2 this, size), slot)
             )
         )
+        nil
+    )
+
+    ;;;
+     ; Finishes {@code interval} by adding its location to the list of free stack slots.
+     ;;
+    (defn- #_"void" Allocator''finished-2 [#_"Allocator" this, #_"StackInterval" interval]
+        (Allocator''freeSlot-2 this, (:location interval))
         nil
     )
 
@@ -42431,23 +41892,17 @@ ZeroExtendNode'new-4
         )
     )
 
-    ;;;
-     ; Gets the lowest {@link StackInterval#to() end position} of all active intervals.
-     ; If there is none Integer#MAX_VALUE is returned.
-     ;;
-    (defn- #_"int" Allocator''activePeekId-1 [#_"Allocator" this]
-        (let [
-            #_"StackInterval" interval (#_"PriorityQueue" .peek (:active this))
-        ]
-            (if (some? interval) (:to interval) Integer/MAX_VALUE)
+    (defn- #_"void" Allocator''allocateStackSlots-1 [#_"Allocator" this]
+        ;; create unhandled lists
+        (doseq [#_"StackInterval" interval (:stackSlotMap this)]
+            (when (some? interval)
+                (#_"PriorityQueue" .add (:unhandled this), interval)
+            )
         )
-    )
 
-    ;;;
-     ; Finishes {@code interval} by adding its location to the list of free stack slots.
-     ;;
-    (defn- #_"void" Allocator''finished-2 [#_"Allocator" this, #_"StackInterval" interval]
-        (Allocator''freeSlot-2 this, (:location interval))
+        (loop-when-recur [#_"StackInterval" current (Allocator''activateNext-1 this)] (some? current) [(Allocator''activateNext-1 this)]
+            (Allocator''allocateSlot-2 this, current)
+        )
         nil
     )
 
@@ -42473,8 +41928,14 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"StackInterval" Allocator''get-2 [#_"Allocator" this, #_"VirtualStackSlot" stackSlot]
-        (nth (:stackSlotMap this) (:id stackSlot))
+    (defn #_"void" Allocator''allocate-1 [#_"Allocator" this]
+        (let [
+            #_"EconomicSet<LIRInstruction>" usePos (Allocator''buildIntervals-1 this)
+        ]
+            (Allocator''allocateStackSlots-1 this)
+            (Allocator''assignStackSlots-2 this, usePos)
+        )
+        nil
     )
 )
 
@@ -42621,22 +42082,9 @@ ZeroExtendNode'new-4
                 #_"Value[]" :incomingValues Value/NO_VALUES
                 #_"Label" :label label
                 #_"boolean" :aligned? aligned?
-                #_"int" :numbPhis 0
+                #_"int" :numPhis 0
             )
         )
-    )
-
-    (defn #_"LabelOp" LabelOp''setPhiValues-2 [#_"LabelOp" this, #_"Value[]" values]
-        (let [
-            this (LabelOp''setIncomingValues-2 this, values)
-            this (LabelOp''setNumberOfPhis-2 this, (count values))
-        ]
-            this
-        )
-    )
-
-    (defn- #_"LabelOp" LabelOp''setNumberOfPhis-2 [#_"LabelOp" this, #_"int" numPhis]
-        (assoc this :numbPhis numPhis)
     )
 
     (defn #_"LabelOp" LabelOp''setIncomingValues-2 [#_"LabelOp" this, #_"Value[]" values]
@@ -42667,6 +42115,22 @@ ZeroExtendNode'new-4
         )
     )
 
+    (defn #_"LabelOp" LabelOp''setPhiValues-2 [#_"LabelOp" this, #_"Value[]" values]
+        (let [
+            this (LabelOp''setIncomingValues-2 this, values)
+            this (assoc this :numPhis (count values))
+        ]
+            this
+        )
+    )
+
+    ;;;
+     ; @return true if this label acts as a PhiIn
+     ;;
+    (defn #_"boolean" LabelOp''isPhiIn-1 [#_"LabelOp" this]
+        (pos? (:numPhis this))
+    )
+
     (defm LabelOp LIRInstruction
         (#_"void" LIRInstruction'''emitCode-2 [#_"LabelOp" this, #_"Assembler" asm]
             (when (:aligned? this)
@@ -42675,13 +42139,6 @@ ZeroExtendNode'new-4
             (Assembler''bind-2 asm, (:label this))
             nil
         )
-    )
-
-    ;;;
-     ; @return true if this label acts as a PhiIn
-     ;;
-    (defn #_"boolean" LabelOp''isPhiIn-1 [#_"LabelOp" this]
-        (pos? (:numbPhis this))
     )
 )
 
@@ -43209,13 +42666,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defm BinaryStrategy SwitchStrategy
-        (#_"void" SwitchStrategy'''run-2 [#_"BinaryStrategy" this, #_"SwitchClosure" closure]
-            (BinaryStrategy''recurseBinarySwitch-5 this, closure, 0, (dec (count (:keyConstants this))), 0)
-            nil
-        )
-    )
-
     ;;;
      ; Recursively generate a list of comparisons that always subdivides the keys in the given
      ; (inclusive) range in the middle (in terms of probability, not index). If left is bigger
@@ -43330,6 +42780,13 @@ ZeroExtendNode'new-4
             )
         )
         nil
+    )
+
+    (defm BinaryStrategy SwitchStrategy
+        (#_"void" SwitchStrategy'''run-2 [#_"BinaryStrategy" this, #_"SwitchClosure" closure]
+            (BinaryStrategy''recurseBinarySwitch-5 this, closure, 0, (dec (count (:keyConstants this))), 0)
+            nil
+        )
     )
 )
 
@@ -43578,10 +43035,6 @@ ZeroExtendNode'new-4
         (and (satisfies? ConstantNode (:end this)) (InductionVariable'''isConstantInit-1 (:iv this)) (InductionVariable'''isConstantStride-1 (:iv this)))
     )
 
-    (defn #_"UnsignedLong" CountedLoopInfo''constantMaxTripCount-1 [#_"CountedLoopInfo" this]
-        (UnsignedLong'new-1 (CountedLoopInfo''rawConstantMaxTripCount-1 this))
-    )
-
     ;;;
      ; Compute the raw value of the trip count for this loop. THIS IS AN UNSIGNED VALUE!
      ;;
@@ -43604,6 +43057,10 @@ ZeroExtendNode'new-4
         ]
             (Long/divideUnsigned (dec (+ range absStride)), absStride)
         )
+    )
+
+    (defn #_"UnsignedLong" CountedLoopInfo''constantMaxTripCount-1 [#_"CountedLoopInfo" this]
+        (UnsignedLong'new-1 (CountedLoopInfo''rawConstantMaxTripCount-1 this))
     )
 
     (defn #_"boolean" CountedLoopInfo''isExactTripCount-1 [#_"CountedLoopInfo" this]
@@ -43919,6 +43376,30 @@ ZeroExtendNode'new-4
         )
     )
 
+    (defn- #_"long" DerivedOffsetInductionVariable''op-3l [#_"DerivedOffsetInductionVariable" this, #_"long" b, #_"long" o]
+        (condp satisfies? (:value this)
+            AddNode
+                (+ b o)
+            SubNode
+                (if (= (InductionVariable'''valueNode-1 (:base this)) (:x (:value this)))
+                    (- b o)
+                    (- o b)
+                )
+        )
+    )
+
+    (defn- #_"ValueNode" DerivedOffsetInductionVariable''op-3v [#_"DerivedOffsetInductionVariable" this, #_"ValueNode" b, #_"ValueNode" o]
+        (condp satisfies? (:value this)
+            AddNode
+                (MathUtil'add-3 (InductionVariable'''graph-1 this), b, o)
+            SubNode
+                (if (= (InductionVariable'''valueNode-1 (:base this)) (:x (:value this)))
+                    (MathUtil'sub-3 (InductionVariable'''graph-1 this), b, o)
+                    (MathUtil'sub-3 (InductionVariable'''graph-1 this), o, b)
+                )
+        )
+    )
+
     (defm DerivedOffsetInductionVariable InductionVariable
         (#_"Direction" InductionVariable'''direction-1 [#_"DerivedOffsetInductionVariable" this]
             (InductionVariable'''direction-1 (:base this))
@@ -43969,33 +43450,7 @@ ZeroExtendNode'new-4
         (#_"long" InductionVariable'''constantExtremum-1 [#_"DerivedOffsetInductionVariable" this]
             (DerivedOffsetInductionVariable''op-3l this, (InductionVariable'''constantExtremum-1 (:base this)), (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 (:offset this))))
         )
-    )
 
-    (defn- #_"long" DerivedOffsetInductionVariable''op-3l [#_"DerivedOffsetInductionVariable" this, #_"long" b, #_"long" o]
-        (condp satisfies? (:value this)
-            AddNode
-                (+ b o)
-            SubNode
-                (if (= (InductionVariable'''valueNode-1 (:base this)) (:x (:value this)))
-                    (- b o)
-                    (- o b)
-                )
-        )
-    )
-
-    (defn- #_"ValueNode" DerivedOffsetInductionVariable''op-3v [#_"DerivedOffsetInductionVariable" this, #_"ValueNode" b, #_"ValueNode" o]
-        (condp satisfies? (:value this)
-            AddNode
-                (MathUtil'add-3 (InductionVariable'''graph-1 this), b, o)
-            SubNode
-                (if (= (InductionVariable'''valueNode-1 (:base this)) (:x (:value this)))
-                    (MathUtil'sub-3 (InductionVariable'''graph-1 this), b, o)
-                    (MathUtil'sub-3 (InductionVariable'''graph-1 this), o, b)
-                )
-        )
-    )
-
-    (defm DerivedOffsetInductionVariable InductionVariable
         (#_"void" InductionVariable'''deleteUnusedNodes-1 [#_"DerivedOffsetInductionVariable" this]
             nil
         )
@@ -44341,6 +43796,30 @@ ZeroExtendNode'new-4
         nil
     )
 
+    (defn- #_"ValueNode" LoopEx'addSub-3 [#_"LoopEx" loop, #_"ValueNode" op, #_"ValueNode" base]
+        (when (and (satisfies? IntegerStamp (:stamp op)) (or (satisfies? AddNode op) (satisfies? SubNode op)))
+            (cond
+                (and (= (:x op) base) (LoopEx''isOutsideLoop-2 loop, (:y op))) (:y op)
+                (and (= (:y op) base) (LoopEx''isOutsideLoop-2 loop, (:x op))) (:x op)
+            )
+        )
+    )
+
+    (defn- #_"ValueNode" LoopEx'mul-3 [#_"LoopEx" loop, #_"ValueNode" op, #_"ValueNode" base]
+        (condp satisfies? op
+            MulNode
+                (cond
+                    (and (= (:x op) base) (LoopEx''isOutsideLoop-2 loop, (:y op))) (:y op)
+                    (and (= (:y op) base) (LoopEx''isOutsideLoop-2 loop, (:x op))) (:x op)
+                )
+            LeftShiftNode
+                (when (and (= (:x op) base) (satisfies? ConstantNode (:y op)))
+                    (ConstantNode'forIntegerStamp-3 (:stamp base), (<< 1 (#_"JavaConstant" .asInt (ValueNode''asJavaConstant-1 (:y op)))), (:graph base))
+                )
+            nil
+        )
+    )
+
     ;;;
      ; Collect all the basic induction variables for the loop and the find any induction variables
      ; which are derived from the basic ones.
@@ -44390,7 +43869,7 @@ ZeroExtendNode'new-4
                                     #_"ValueNode" offset (LoopEx'addSub-3 loop, op, baseIvNode)
                                     #_"InductionVariable" iv
                                         (cond
-                                            (some? offset)            (DerivedOffsetInductionVariable'new-4 loop, baseIv, offset, op)
+                                            (some? offset)             (DerivedOffsetInductionVariable'new-4 loop, baseIv, offset, op)
                                             (satisfies? NegateNode op) (DerivedScaledInductionVariable'new-3 loop, baseIv,         op)
                                             :else
                                                 (let [
@@ -44432,30 +43911,6 @@ ZeroExtendNode'new-4
             (§ ass! this (assoc this :ivs (LoopEx'findInductionVariables-1 this)))
         )
         (:ivs this)
-    )
-
-    (defn- #_"ValueNode" LoopEx'addSub-3 [#_"LoopEx" loop, #_"ValueNode" op, #_"ValueNode" base]
-        (when (and (satisfies? IntegerStamp (:stamp op)) (or (satisfies? AddNode op) (satisfies? SubNode op)))
-            (cond
-                (and (= (:x op) base) (LoopEx''isOutsideLoop-2 loop, (:y op))) (:y op)
-                (and (= (:y op) base) (LoopEx''isOutsideLoop-2 loop, (:x op))) (:x op)
-            )
-        )
-    )
-
-    (defn- #_"ValueNode" LoopEx'mul-3 [#_"LoopEx" loop, #_"ValueNode" op, #_"ValueNode" base]
-        (condp satisfies? op
-            MulNode
-                (cond
-                    (and (= (:x op) base) (LoopEx''isOutsideLoop-2 loop, (:y op))) (:y op)
-                    (and (= (:y op) base) (LoopEx''isOutsideLoop-2 loop, (:x op))) (:x op)
-                )
-            LeftShiftNode
-                (when (and (= (:x op) base) (satisfies? ConstantNode (:y op)))
-                    (ConstantNode'forIntegerStamp-3 (:stamp base), (<< 1 (#_"JavaConstant" .asInt (ValueNode''asJavaConstant-1 (:y op)))), (:graph base))
-                )
-            nil
-        )
     )
 
     ;;;
@@ -44592,18 +44047,55 @@ ZeroExtendNode'new-4
         )
     )
 
-    #_unused
-    (defn #_"NodeBitMap" LoopFragment'computeNodes-2 [#_"Graph" graph, #_"Iterable<AbstractBeginNode>" blocks]
-        (LoopFragment'computeNodes-3 graph, blocks, (Collections/emptyList))
-    )
-
-    (defn #_"NodeBitMap" LoopFragment'computeNodes-3 [#_"Graph" graph, #_"Iterable<AbstractBeginNode>" blocks, #_"Iterable<AbstractBeginNode>" earlyExits]
-        (let [
-            #_"NodeBitMap" nodes (NodeBitMap'new-1 graph)
-        ]
-            (LoopFragment'computeNodes-4 nodes, graph, blocks, earlyExits)
-            nodes
+    (defn- #_"void" LoopFragment'markFloating-4 [#_"Deque<WorkListEntry>" workList, #_"Node" start, #_"NodeBitMap" loopNodes, #_"NodeBitMap" nonLoopNodes]
+        (when-not (#_"TriState" .isKnown (LoopFragment'isLoopNode-3 start, loopNodes, nonLoopNodes))
+            (#_"Deque" .push workList, (WorkListEntry'new-2 start, loopNodes))
+            (while (seq workList)
+                (let [
+                    #_"WorkListEntry" currentEntry (#_"Deque" .peek workList)
+                ]
+                    (if (#_"Iterator" .hasNext (:usages currentEntry))
+                        (let [
+                            #_"Node" current (#_"Iterator" .next (:usages currentEntry))
+                            #_"TriState" result (LoopFragment'isLoopNode-3 current, loopNodes, nonLoopNodes)
+                        ]
+                            (if (#_"TriState" .isKnown result)
+                                (when (#_"TriState" .toBoolean result)
+                                    (§ ass currentEntry (assoc currentEntry :isLoopNode true))
+                                )
+                                (#_"Deque" .push workList, (WorkListEntry'new-2 current, loopNodes))
+                            )
+                        )
+                        (do
+                            (#_"Deque" .pop workList)
+                            (let [
+                                #_"boolean" isLoopNode (:isLoopNode currentEntry)
+                                #_"Node" current (:n currentEntry)
+                            ]
+                                (when (and (not isLoopNode) (satisfies? GuardNode current))
+                                    ;; this is only OK if we are not going to make loop transforms based on this
+                                    (§ ass isLoopNode true)
+                                )
+                                (if isLoopNode
+                                    (do
+                                        (NodeBitMap''mark-2 loopNodes, current)
+                                        (loop-when-recur [#_"ISeq" s (seq workList)] (some? s) [(next s)]
+                                            (let [
+                                                #_"WorkListEntry" e (first s)
+                                            ]
+                                                (§ ass! e (assoc e :isLoopNode true))
+                                            )
+                                        )
+                                    )
+                                    (NodeBitMap''mark-2 nonLoopNodes, current)
+                                )
+                            )
+                        )
+                    )
+                )
+            )
         )
+        nil
     )
 
     (defn #_"void" LoopFragment'computeNodes-4 [#_"NodeBitMap" nodes, #_"Graph" graph, #_"Iterable<AbstractBeginNode>" blocks, #_"Iterable<AbstractBeginNode>" earlyExits]
@@ -44678,6 +44170,20 @@ ZeroExtendNode'new-4
         nil
     )
 
+    (defn #_"NodeBitMap" LoopFragment'computeNodes-3 [#_"Graph" graph, #_"Iterable<AbstractBeginNode>" blocks, #_"Iterable<AbstractBeginNode>" earlyExits]
+        (let [
+            #_"NodeBitMap" nodes (NodeBitMap'new-1 graph)
+        ]
+            (LoopFragment'computeNodes-4 nodes, graph, blocks, earlyExits)
+            nodes
+        )
+    )
+
+    #_unused
+    (defn #_"NodeBitMap" LoopFragment'computeNodes-2 [#_"Graph" graph, #_"Iterable<AbstractBeginNode>" blocks]
+        (LoopFragment'computeNodes-3 graph, blocks, (Collections/emptyList))
+    )
+
     (defn #_"TriState" LoopFragment'isLoopNode-3 [#_"Node" node, #_"NodeBitMap" loopNodes, #_"NodeBitMap" nonLoopNodes]
         (cond
             (NodeBitMap''isMarked-2n loopNodes, node)                 TriState/TRUE
@@ -44686,57 +44192,6 @@ ZeroExtendNode'new-4
             (or (satisfies? FixedNode node) (satisfies? PhiNode node)) TriState/FALSE
             :else                                                    TriState/UNKNOWN
         )
-    )
-
-    (defn- #_"void" LoopFragment'markFloating-4 [#_"Deque<WorkListEntry>" workList, #_"Node" start, #_"NodeBitMap" loopNodes, #_"NodeBitMap" nonLoopNodes]
-        (when-not (#_"TriState" .isKnown (LoopFragment'isLoopNode-3 start, loopNodes, nonLoopNodes))
-            (#_"Deque" .push workList, (WorkListEntry'new-2 start, loopNodes))
-            (while (seq workList)
-                (let [
-                    #_"WorkListEntry" currentEntry (#_"Deque" .peek workList)
-                ]
-                    (if (#_"Iterator" .hasNext (:usages currentEntry))
-                        (let [
-                            #_"Node" current (#_"Iterator" .next (:usages currentEntry))
-                            #_"TriState" result (LoopFragment'isLoopNode-3 current, loopNodes, nonLoopNodes)
-                        ]
-                            (if (#_"TriState" .isKnown result)
-                                (when (#_"TriState" .toBoolean result)
-                                    (§ ass currentEntry (assoc currentEntry :isLoopNode true))
-                                )
-                                (#_"Deque" .push workList, (WorkListEntry'new-2 current, loopNodes))
-                            )
-                        )
-                        (do
-                            (#_"Deque" .pop workList)
-                            (let [
-                                #_"boolean" isLoopNode (:isLoopNode currentEntry)
-                                #_"Node" current (:n currentEntry)
-                            ]
-                                (when (and (not isLoopNode) (satisfies? GuardNode current))
-                                    ;; this is only OK if we are not going to make loop transforms based on this
-                                    (§ ass isLoopNode true)
-                                )
-                                (if isLoopNode
-                                    (do
-                                        (NodeBitMap''mark-2 loopNodes, current)
-                                        (loop-when-recur [#_"ISeq" s (seq workList)] (some? s) [(next s)]
-                                            (let [
-                                                #_"WorkListEntry" e (first s)
-                                            ]
-                                                (§ ass! e (assoc e :isLoopNode true))
-                                            )
-                                        )
-                                    )
-                                    (NodeBitMap''mark-2 nonLoopNodes, current)
-                                )
-                            )
-                        )
-                    )
-                )
-            )
-        )
-        nil
     )
 
     (defn #_"NodeIterable<AbstractBeginNode>" LoopFragment'toHirBlocks-1 [#_"Iterable<Block>" blocks]
@@ -45722,15 +45177,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    #_unused
-    (defn #_"ValueNode" MathUtil'divBefore-4 [#_"Graph" graph, #_"FixedNode" before, #_"ValueNode" dividend, #_"ValueNode" divisor]
-        (MathUtil'fixedDivBefore-5 graph, before, dividend, divisor, (ß (dend, sor) -> (§ fun (SignedDivNode'create-2 dend, sor))))
-    )
-
-    (defn #_"ValueNode" MathUtil'unsignedDivBefore-4 [#_"Graph" graph, #_"FixedNode" before, #_"ValueNode" dividend, #_"ValueNode" divisor]
-        (MathUtil'fixedDivBefore-5 graph, before, dividend, divisor, (ß (dend, sor) -> (§ fun (UnsignedDivNode'create-2 dend, sor))))
-    )
-
     (defn- #_"ValueNode" MathUtil'fixedDivBefore-5 [#_"Graph" graph, #_"FixedNode" before, #_"ValueNode" dividend, #_"ValueNode" divisor, #_"BiFunction<ValueNode, ValueNode, ValueNode>" createDiv]
         (when-not (MathUtil'isConstantOne-1 divisor) => dividend
             (let [
@@ -45750,6 +45196,15 @@ ZeroExtendNode'new-4
                 )
             )
         )
+    )
+
+    #_unused
+    (defn #_"ValueNode" MathUtil'divBefore-4 [#_"Graph" graph, #_"FixedNode" before, #_"ValueNode" dividend, #_"ValueNode" divisor]
+        (MathUtil'fixedDivBefore-5 graph, before, dividend, divisor, (ß (dend, sor) -> (§ fun (SignedDivNode'create-2 dend, sor))))
+    )
+
+    (defn #_"ValueNode" MathUtil'unsignedDivBefore-4 [#_"Graph" graph, #_"FixedNode" before, #_"ValueNode" dividend, #_"ValueNode" divisor]
+        (MathUtil'fixedDivBefore-5 graph, before, dividend, divisor, (ß (dend, sor) -> (§ fun (UnsignedDivNode'create-2 dend, sor))))
     )
 )
 
@@ -47167,19 +46622,6 @@ ZeroExtendNode'new-4
         (merge (AddNode'class.) (BinaryArithmeticNode'new-3 :add, x, y))
     )
 
-    (defn #_"ValueNode" AddNode'create-2 [#_"ValueNode" x, #_"ValueNode" y]
-        (let [
-            #_"BinaryOp<Add>" op (:add (ArithmeticOpTable'forStamp-1 (:stamp x)))
-        ]
-            (or (BinaryArithmeticNode'tryConstantFold-4 op, x, y, (BinaryOp'''foldStamp-3 op, (:stamp x), (:stamp y)))
-                (if (and (satisfies? ConstantNode x) (not (satisfies? ConstantNode y)))
-                    (AddNode'canonical-4 nil, op, y, x)
-                    (AddNode'canonical-4 nil, op, x, y)
-                )
-            )
-        )
-    )
-
     (defn- #_"ValueNode" AddNode'canonical-4 [#_"AddNode" self, #_"BinaryOp<Add>" op, #_"ValueNode" forX, #_"ValueNode" forY]
         (let [
             #_"boolean" associative? (BinaryOp''isAssociative-1 op)
@@ -47211,6 +46653,19 @@ ZeroExtendNode'new-4
                 (satisfies? NegateNode forX) (BinaryArithmeticNode'sub-2 forY, (Unary'''getValue-1 forX))
                 (satisfies? NegateNode forY) (BinaryArithmeticNode'sub-2 forX, (Unary'''getValue-1 forY))
                 :else                       (or self (Binary'''maybeCommuteInputs-1 (AddNode'new-2 forX, forY)))
+            )
+        )
+    )
+
+    (defn #_"ValueNode" AddNode'create-2 [#_"ValueNode" x, #_"ValueNode" y]
+        (let [
+            #_"BinaryOp<Add>" op (:add (ArithmeticOpTable'forStamp-1 (:stamp x)))
+        ]
+            (or (BinaryArithmeticNode'tryConstantFold-4 op, x, y, (BinaryOp'''foldStamp-3 op, (:stamp x), (:stamp y)))
+                (if (and (satisfies? ConstantNode x) (not (satisfies? ConstantNode y)))
+                    (AddNode'canonical-4 nil, op, y, x)
+                    (AddNode'canonical-4 nil, op, x, y)
+                )
             )
         )
     )
@@ -47260,29 +46715,6 @@ ZeroExtendNode'new-4
         (merge (AndNode'class.) (BinaryArithmeticNode'new-3 :and, x, y))
     )
 
-    (defn #_"ValueNode" AndNode'create-2 [#_"ValueNode" x, #_"ValueNode" y]
-        (let [
-            #_"BinaryOp<And>" op (:and (ArithmeticOpTable'forStamp-1 (:stamp x)))
-            #_"Stamp" stamp (BinaryOp'''foldStamp-3 op, (:stamp x), (:stamp y))
-        ]
-            (or (BinaryArithmeticNode'tryConstantFold-4 op, x, y, stamp)
-                (AndNode'canonical-5 nil, op, stamp, x, y)
-            )
-        )
-    )
-
-    (defm AndNode Binary
-        (#_"ValueNode" Binary'''canonical-4 [#_"AndNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
-            (let [
-                #_"ValueNode" ret (Binary'''canonical-4 (§ super BinaryArithmeticNode'iface), tool, forX, forY)
-            ]
-                (when (= ret this) => ret
-                    (AndNode'canonical-5 this, (BinaryArithmeticNode''getOp-3 this, forX, forY), (:stamp this), forX, forY)
-                )
-            )
-        )
-    )
-
     (defn- #_"ValueNode" AndNode'canonical-5 [#_"AndNode" self, #_"BinaryOp<And>" op, #_"Stamp" stamp, #_"ValueNode" forX, #_"ValueNode" forY]
         (cond
             (= (GraphUtil'unproxify-1n forX) (GraphUtil'unproxify-1n forY))
@@ -47317,6 +46749,29 @@ ZeroExtendNode'new-4
                 (NotNode'new-1 (OrNode'create-2 (Unary'''getValue-1 forX), (Unary'''getValue-1 forY)))
             :else
                 (or self (Binary'''maybeCommuteInputs-1 (AndNode'new-2 forX, forY)))
+        )
+    )
+
+    (defn #_"ValueNode" AndNode'create-2 [#_"ValueNode" x, #_"ValueNode" y]
+        (let [
+            #_"BinaryOp<And>" op (:and (ArithmeticOpTable'forStamp-1 (:stamp x)))
+            #_"Stamp" stamp (BinaryOp'''foldStamp-3 op, (:stamp x), (:stamp y))
+        ]
+            (or (BinaryArithmeticNode'tryConstantFold-4 op, x, y, stamp)
+                (AndNode'canonical-5 nil, op, stamp, x, y)
+            )
+        )
+    )
+
+    (defm AndNode Binary
+        (#_"ValueNode" Binary'''canonical-4 [#_"AndNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+            (let [
+                #_"ValueNode" ret (Binary'''canonical-4 (§ super BinaryArithmeticNode'iface), tool, forX, forY)
+            ]
+                (when (= ret this) => ret
+                    (AndNode'canonical-5 this, (BinaryArithmeticNode''getOp-3 this, forX, forY), (:stamp this), forX, forY)
+                )
+            )
         )
     )
 
@@ -47698,6 +47153,38 @@ ZeroExtendNode'new-4
         (CompareOp'class.)
     )
 
+    (defn- #_"LogicNode" CompareOp'optimizeConditional-3 [#_"Constant" constant, #_"ConditionalNode" conditionalNode, #_"Condition" condition]
+        (let [
+            #_"Constant" trueConstant (ValueNode''asConstant-1 (:trueValue conditionalNode))
+            #_"Constant" falseConstant (ValueNode''asConstant-1 (:falseValue conditionalNode))
+        ]
+            (when (and (some? falseConstant) (some? trueConstant) (some? HotSpot'constantReflection))
+                (let [
+                    #_"boolean" trueResult (Condition''foldCondition-3c condition, trueConstant, constant)
+                    #_"boolean" falseResult (Condition''foldCondition-3c condition, falseConstant, constant)
+                ]
+                    (cond
+                        (= trueResult falseResult) (LogicConstantNode'forBoolean-1 trueResult)
+                        trueResult                 (:condition conditionalNode)
+                        :else                      (LogicNegationNode'create-1 (:condition conditionalNode))
+                    )
+                )
+            )
+        )
+    )
+
+    (defn- #_"ConstantNode" CompareOp'canonicalConvertConstant-3 [#_"CanonicalCondition" condition, #_"ConvertNode" convert, #_"Constant" constant]
+        (when (ConvertNode'''preservesOrder-3 convert, condition, constant)
+            (let [
+                #_"Constant" reverseConverted (ConvertNode'''reverse-2 convert, constant)
+            ]
+                (when (and (some? reverseConverted) (= (ConvertNode'''convert-2 convert, reverseConverted) constant))
+                    (ConstantNode'forConstant-2s (:stamp (ConvertNode'''getValue-1 convert)), reverseConverted)
+                )
+            )
+        )
+    )
+
     (defm CompareOp CompareOp
         (#_"LogicNode" CompareOp'''canonical-5 [#_"CompareOp" this, #_"Integer" smallestCompareWidth, #_"CanonicalCondition" condition, #_"ValueNode" forX, #_"ValueNode" forY]
             (or (CompareNode'tryConstantFold-3 condition, forX, forY)
@@ -47759,43 +47246,9 @@ ZeroExtendNode'new-4
                 nil
             )
         )
-    )
 
-    (defn- #_"ConstantNode" CompareOp'canonicalConvertConstant-3 [#_"CanonicalCondition" condition, #_"ConvertNode" convert, #_"Constant" constant]
-        (when (ConvertNode'''preservesOrder-3 convert, condition, constant)
-            (let [
-                #_"Constant" reverseConverted (ConvertNode'''reverse-2 convert, constant)
-            ]
-                (when (and (some? reverseConverted) (= (ConvertNode'''convert-2 convert, reverseConverted) constant))
-                    (ConstantNode'forConstant-2s (:stamp (ConvertNode'''getValue-1 convert)), reverseConverted)
-                )
-            )
-        )
-    )
-
-    (defm CompareOp CompareOp
         (#_"LogicNode" CompareOp'''optimizeNormalizeCompare-5 [#_"CompareOp" this, #_"Integer" smallestCompareWidth, #_"Constant" constant, #_"NormalizeCompareNode" normalizeNode, #_"boolean" mirrored?]
             (throw! (str "NormalizeCompareNode connected to " this " (" constant " " normalizeNode " " mirrored? ")"))
-        )
-    )
-
-    (defn- #_"LogicNode" CompareOp'optimizeConditional-3 [#_"Constant" constant, #_"ConditionalNode" conditionalNode, #_"Condition" condition]
-        (let [
-            #_"Constant" trueConstant (ValueNode''asConstant-1 (:trueValue conditionalNode))
-            #_"Constant" falseConstant (ValueNode''asConstant-1 (:falseValue conditionalNode))
-        ]
-            (when (and (some? falseConstant) (some? trueConstant) (some? HotSpot'constantReflection))
-                (let [
-                    #_"boolean" trueResult (Condition''foldCondition-3c condition, trueConstant, constant)
-                    #_"boolean" falseResult (Condition''foldCondition-3c condition, falseConstant, constant)
-                ]
-                    (cond
-                        (= trueResult falseResult) (LogicConstantNode'forBoolean-1 trueResult)
-                        trueResult                 (:condition conditionalNode)
-                        :else                      (LogicNegationNode'create-1 (:condition conditionalNode))
-                    )
-                )
-            )
         )
     )
 )
@@ -47827,73 +47280,11 @@ ZeroExtendNode'new-4
         (ConditionalNode'new-1 (CompareNode'createCompareNode-4g graph, condition, x, y))
     )
 
-    (defn #_"ValueNode" ConditionalNode'create-3 [#_"LogicNode" condition, #_"ValueNode" trueValue, #_"ValueNode" falseValue]
-        (or (ConditionalNode'findSynonym-3 condition, trueValue, falseValue)
-            (ConditionalNode'canonicalizeConditional-4 condition, trueValue, falseValue, (Stamp'''meet-2 (:stamp trueValue), (:stamp falseValue)))
-            (ConditionalNode'new-3 condition, trueValue, falseValue)
-        )
-    )
-
-    (defn #_"ValueNode" ConditionalNode'create-1 [#_"LogicNode" condition]
-        (ConditionalNode'create-3 condition, (ConstantNode'forInt-2 1, (:graph condition)), (ConstantNode'forInt-2 0, (:graph condition)))
-    )
-
-    (defm ConditionalNode ValueNode
-        (#_"boolean" ValueNode'''inferStamp-1 [#_"ConditionalNode" this]
-            (let [
-                #_"Stamp" valueStamp (Stamp'''meet-2 (:stamp (:trueValue this)), (:stamp (:falseValue this)))
-            ]
-                (when (satisfies? IntegerLessThanNode (:condition this))
-                    (let [
-                        #_"IntegerLessThanNode" lessThan (:condition this)
-                    ]
-                        (cond
-                            (and (= (:x lessThan) (:trueValue this)) (= (:y lessThan) (:falseValue this)))
-                                ;; this encodes a min operation
-                                (let [
-                                    #_"JavaConstant" constant
-                                        (or (ValueNode''asJavaConstant-1 (:x lessThan))
-                                            (ValueNode''asJavaConstant-1 (:y lessThan))
-                                        )
-                                ]
-                                    (when (some? constant)
-                                        (let [
-                                            #_"IntegerStamp" bounds (StampFactory'forInteger-3k (#_"JavaConstant" .getJavaKind constant), (#_"JavaKind" .getMinValue (#_"JavaConstant" .getJavaKind constant)), (#_"JavaConstant" .asLong constant))
-                                        ]
-                                            (§ ass valueStamp (Stamp'''join-2 valueStamp, bounds))
-                                        )
-                                    )
-                                )
-                            (and (= (:x lessThan) (:falseValue this)) (= (:y lessThan) (:trueValue this)))
-                                ;; this encodes a max operation
-                                (let [
-                                    #_"JavaConstant" constant
-                                        (or (ValueNode''asJavaConstant-1 (:x lessThan))
-                                            (ValueNode''asJavaConstant-1 (:y lessThan))
-                                        )
-                                ]
-                                    (when (some? constant)
-                                        (let [
-                                            #_"IntegerStamp" bounds (StampFactory'forInteger-3k (#_"JavaConstant" .getJavaKind constant), (#_"JavaConstant" .asLong constant), (#_"JavaKind" .getMaxValue (#_"JavaConstant" .getJavaKind constant)))
-                                        ]
-                                            (§ ass valueStamp (Stamp'''join-2 valueStamp, bounds))
-                                        )
-                                    )
-                                )
-                        )
-                    )
-                )
-                (ValueNode''updateStamp-2 this, valueStamp)
-            )
-        )
-    )
-
-    (defm ConditionalNode Canonicalizable
-        (#_"ValueNode" Canonicalizable'''canonical-2 [#_"ConditionalNode" this, #_"CanonicalizerTool" tool]
-            (or (ConditionalNode'findSynonym-3 (:condition this), (:trueValue this), (:falseValue this))
-                (ConditionalNode'canonicalizeConditional-4 (:condition this), (:trueValue this), (:falseValue this), (:stamp this))
-                this
-            )
+    (defn- #_"ValueNode" ConditionalNode'findSynonym-3 [#_"ValueNode" condition, #_"ValueNode" trueValue, #_"ValueNode" falseValue]
+        (condp satisfies? condition
+            LogicNegationNode (ConditionalNode'create-3 (Unary'''getValue-1 condition), falseValue, trueValue)
+            LogicConstantNode (if (:value condition) trueValue falseValue)
+            nil
         )
     )
 
@@ -47987,11 +47378,73 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"ValueNode" ConditionalNode'findSynonym-3 [#_"ValueNode" condition, #_"ValueNode" trueValue, #_"ValueNode" falseValue]
-        (condp satisfies? condition
-            LogicNegationNode (ConditionalNode'create-3 (Unary'''getValue-1 condition), falseValue, trueValue)
-            LogicConstantNode (if (:value condition) trueValue falseValue)
-            nil
+    (defn #_"ValueNode" ConditionalNode'create-3 [#_"LogicNode" logic, #_"ValueNode" trueValue, #_"ValueNode" falseValue]
+        (or (ConditionalNode'findSynonym-3 logic, trueValue, falseValue)
+            (ConditionalNode'canonicalizeConditional-4 logic, trueValue, falseValue, (Stamp'''meet-2 (:stamp trueValue), (:stamp falseValue)))
+            (ConditionalNode'new-3 logic, trueValue, falseValue)
+        )
+    )
+
+    (defn #_"ValueNode" ConditionalNode'create-1 [#_"LogicNode" logic]
+        (ConditionalNode'create-3 logic, (ConstantNode'forInt-2 1, (:graph logic)), (ConstantNode'forInt-2 0, (:graph logic)))
+    )
+
+    (defm ConditionalNode ValueNode
+        (#_"boolean" ValueNode'''inferStamp-1 [#_"ConditionalNode" this]
+            (let [
+                #_"Stamp" valueStamp (Stamp'''meet-2 (:stamp (:trueValue this)), (:stamp (:falseValue this)))
+            ]
+                (when (satisfies? IntegerLessThanNode (:condition this))
+                    (let [
+                        #_"IntegerLessThanNode" lessThan (:condition this)
+                    ]
+                        (cond
+                            (and (= (:x lessThan) (:trueValue this)) (= (:y lessThan) (:falseValue this)))
+                                ;; this encodes a min operation
+                                (let [
+                                    #_"JavaConstant" constant
+                                        (or (ValueNode''asJavaConstant-1 (:x lessThan))
+                                            (ValueNode''asJavaConstant-1 (:y lessThan))
+                                        )
+                                ]
+                                    (when (some? constant)
+                                        (let [
+                                            #_"IntegerStamp" bounds (StampFactory'forInteger-3k (#_"JavaConstant" .getJavaKind constant), (#_"JavaKind" .getMinValue (#_"JavaConstant" .getJavaKind constant)), (#_"JavaConstant" .asLong constant))
+                                        ]
+                                            (§ ass valueStamp (Stamp'''join-2 valueStamp, bounds))
+                                        )
+                                    )
+                                )
+                            (and (= (:x lessThan) (:falseValue this)) (= (:y lessThan) (:trueValue this)))
+                                ;; this encodes a max operation
+                                (let [
+                                    #_"JavaConstant" constant
+                                        (or (ValueNode''asJavaConstant-1 (:x lessThan))
+                                            (ValueNode''asJavaConstant-1 (:y lessThan))
+                                        )
+                                ]
+                                    (when (some? constant)
+                                        (let [
+                                            #_"IntegerStamp" bounds (StampFactory'forInteger-3k (#_"JavaConstant" .getJavaKind constant), (#_"JavaConstant" .asLong constant), (#_"JavaKind" .getMaxValue (#_"JavaConstant" .getJavaKind constant)))
+                                        ]
+                                            (§ ass valueStamp (Stamp'''join-2 valueStamp, bounds))
+                                        )
+                                    )
+                                )
+                        )
+                    )
+                )
+                (ValueNode''updateStamp-2 this, valueStamp)
+            )
+        )
+    )
+
+    (defm ConditionalNode Canonicalizable
+        (#_"ValueNode" Canonicalizable'''canonical-2 [#_"ConditionalNode" this, #_"CanonicalizerTool" tool]
+            (or (ConditionalNode'findSynonym-3 (:condition this), (:trueValue this), (:falseValue this))
+                (ConditionalNode'canonicalizeConditional-4 (:condition this), (:trueValue this), (:falseValue this), (:stamp this))
+                this
+            )
         )
     )
 
@@ -48719,13 +48172,9 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defm IntegerLowerThanNode BinaryOpLogicNode
-        (#_"Stamp" BinaryOpLogicNode'''getSucceedingStampForX-4 [#_"IntegerLowerThanNode" this, #_"boolean" negated?, #_"Stamp" xStamp, #_"Stamp" yStamp]
-            (IntegerLowerThanNode''getSucceedingStampForX-7 this, negated?, (not negated?), xStamp, yStamp, (:x this), (:y this))
-        )
-
-        (#_"Stamp" BinaryOpLogicNode'''getSucceedingStampForY-4 [#_"IntegerLowerThanNode" this, #_"boolean" negated?, #_"Stamp" xStamp, #_"Stamp" yStamp]
-            (IntegerLowerThanNode''getSucceedingStampForX-7 this, (not negated?), (not negated?), yStamp, xStamp, (:y this), (:x this))
+    (defn- #_"Stamp" IntegerLowerThanNode''getSucceedingStampForX-5 [#_"IntegerLowerThanNode" this, #_"boolean" mirror?, #_"boolean" strict?, #_"Stamp" xStamp, #_"Stamp" yStamp]
+        (when (and (satisfies? IntegerStamp xStamp) (satisfies? IntegerStamp yStamp))
+            (LowerOp''getSucceedingStampForX-5 (:op this), xStamp, yStamp, mirror?, strict?)
         )
     )
 
@@ -48758,13 +48207,15 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"Stamp" IntegerLowerThanNode''getSucceedingStampForX-5 [#_"IntegerLowerThanNode" this, #_"boolean" mirror?, #_"boolean" strict?, #_"Stamp" xStamp, #_"Stamp" yStamp]
-        (when (and (satisfies? IntegerStamp xStamp) (satisfies? IntegerStamp yStamp))
-            (LowerOp''getSucceedingStampForX-5 (:op this), xStamp, yStamp, mirror?, strict?)
-        )
-    )
-
     (defm IntegerLowerThanNode BinaryOpLogicNode
+        (#_"Stamp" BinaryOpLogicNode'''getSucceedingStampForX-4 [#_"IntegerLowerThanNode" this, #_"boolean" negated?, #_"Stamp" xStamp, #_"Stamp" yStamp]
+            (IntegerLowerThanNode''getSucceedingStampForX-7 this, negated?, (not negated?), xStamp, yStamp, (:x this), (:y this))
+        )
+
+        (#_"Stamp" BinaryOpLogicNode'''getSucceedingStampForY-4 [#_"IntegerLowerThanNode" this, #_"boolean" negated?, #_"Stamp" xStamp, #_"Stamp" yStamp]
+            (IntegerLowerThanNode''getSucceedingStampForX-7 this, (not negated?), (not negated?), yStamp, xStamp, (:y this), (:x this))
+        )
+
         (#_"TriState" BinaryOpLogicNode'''tryFold-3 [#_"IntegerLowerThanNode" this, #_"Stamp" xStamp, #_"Stamp" yStamp]
             (LowerOp''tryFold-3 (:op this), xStamp, yStamp)
         )
@@ -48790,6 +48241,35 @@ ZeroExtendNode'new-4
 
     (defn #_"long" LowerOp''max-4 [#_"LowerOp" this, #_"long" a, #_"long" b, #_"int" bits]
         (LowerOp'''max-3 this, (LowerOp'''cast-3 this, a, bits), (LowerOp'''cast-3 this, b, bits))
+    )
+
+    (defn- #_"LogicNode" LowerOp''canonicalizeXLowerXPlusA-5 [#_"LowerOp" this, #_"ValueNode" forX, #_"AddNode" addNode, #_"boolean" mirrored?, #_"boolean" strict?]
+        ;; x < x + a
+        (let [
+            [#_"IntegerStamp" succeedingXStamp #_"boolean" exact?]
+                (cond
+                    (and (= (:x addNode) forX) (satisfies? IntegerStamp (:stamp (:y addNode))))
+                        [(LowerOp''getSucceedingStampForXLowerXPlusA-4 this, mirrored?, strict?, (:stamp (:y addNode))) (= (:lowerBound (:stamp (:y addNode))) (:upperBound (:stamp (:y addNode))))]
+                    (and (= (:y addNode) forX) (satisfies? IntegerStamp (:stamp (:x addNode))))
+                        [(LowerOp''getSucceedingStampForXLowerXPlusA-4 this, mirrored?, strict?, (:stamp (:x addNode))) (= (:lowerBound (:stamp (:x addNode))) (:upperBound (:stamp (:x addNode))))]
+                    :else
+                        (§ return nil)
+                )
+        ]
+            (cond
+                (Stamp''isEmpty-1 (Stamp'''join-2 succeedingXStamp, (:stamp forX)))
+                    (LogicConstantNode'contradiction-0)
+                (and exact? (not (Stamp''isEmpty-1 succeedingXStamp)))
+                    (cond
+                        (pos? (LowerOp'''compare-3 this, (LowerOp'''lowerBound-2 this, succeedingXStamp), (LowerOp'''minValue-2 this, (:bits succeedingXStamp))))
+                            ;; x must be in [L..MAX] <=> x >= L <=> !(x < L)
+                            (LogicNegationNode'create-1 (LowerOp'''create-3 this, forX, (ConstantNode'forIntegerStamp-2 succeedingXStamp, (LowerOp'''lowerBound-2 this, succeedingXStamp))))
+                        (neg? (LowerOp'''compare-3 this, (LowerOp'''upperBound-2 this, succeedingXStamp), (LowerOp'''maxValue-2 this, (:bits succeedingXStamp))))
+                            ;; x must be in [MIN..H] <=> x <= H <=> !(H < x)
+                            (LogicNegationNode'create-1 (LowerOp'''create-3 this, (ConstantNode'forIntegerStamp-2 succeedingXStamp, (LowerOp'''upperBound-2 this, succeedingXStamp)), forX))
+                    )
+            )
+        )
     )
 
     (defm LowerOp LowerOp
@@ -48853,35 +48333,6 @@ ZeroExtendNode'new-4
                             )
                     )
                 )
-            )
-        )
-    )
-
-    (defn- #_"LogicNode" LowerOp''canonicalizeXLowerXPlusA-5 [#_"LowerOp" this, #_"ValueNode" forX, #_"AddNode" addNode, #_"boolean" mirrored?, #_"boolean" strict?]
-        ;; x < x + a
-        (let [
-            [#_"IntegerStamp" succeedingXStamp #_"boolean" exact?]
-                (cond
-                    (and (= (:x addNode) forX) (satisfies? IntegerStamp (:stamp (:y addNode))))
-                        [(LowerOp''getSucceedingStampForXLowerXPlusA-4 this, mirrored?, strict?, (:stamp (:y addNode))) (= (:lowerBound (:stamp (:y addNode))) (:upperBound (:stamp (:y addNode))))]
-                    (and (= (:y addNode) forX) (satisfies? IntegerStamp (:stamp (:x addNode))))
-                        [(LowerOp''getSucceedingStampForXLowerXPlusA-4 this, mirrored?, strict?, (:stamp (:x addNode))) (= (:lowerBound (:stamp (:x addNode))) (:upperBound (:stamp (:x addNode))))]
-                    :else
-                        (§ return nil)
-                )
-        ]
-            (cond
-                (Stamp''isEmpty-1 (Stamp'''join-2 succeedingXStamp, (:stamp forX)))
-                    (LogicConstantNode'contradiction-0)
-                (and exact? (not (Stamp''isEmpty-1 succeedingXStamp)))
-                    (cond
-                        (pos? (LowerOp'''compare-3 this, (LowerOp'''lowerBound-2 this, succeedingXStamp), (LowerOp'''minValue-2 this, (:bits succeedingXStamp))))
-                            ;; x must be in [L..MAX] <=> x >= L <=> !(x < L)
-                            (LogicNegationNode'create-1 (LowerOp'''create-3 this, forX, (ConstantNode'forIntegerStamp-2 succeedingXStamp, (LowerOp'''lowerBound-2 this, succeedingXStamp))))
-                        (neg? (LowerOp'''compare-3 this, (LowerOp'''upperBound-2 this, succeedingXStamp), (LowerOp'''maxValue-2 this, (:bits succeedingXStamp))))
-                            ;; x must be in [MIN..H] <=> x <= H <=> !(H < x)
-                            (LogicNegationNode'create-1 (LowerOp'''create-3 this, (ConstantNode'forIntegerStamp-2 succeedingXStamp, (LowerOp'''upperBound-2 this, succeedingXStamp)), forX))
-                    )
             )
         )
     )
@@ -49013,12 +48464,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defm IntegerTestNode BinaryOpLogicNode
-        (#_"Stamp" BinaryOpLogicNode'''getSucceedingStampForX-4 [#_"IntegerTestNode" this, #_"boolean" negated?, #_"Stamp" xStamp, #_"Stamp" yStamp]
-            (IntegerTestNode'getSucceedingStamp-3 negated?, xStamp, yStamp)
-        )
-    )
-
     (defn- #_"Stamp" IntegerTestNode'getSucceedingStamp-3 [#_"boolean" negated?, #_"Stamp" xStamp, #_"Stamp" otherStamp]
         (when (and (satisfies? IntegerStamp xStamp) (satisfies? IntegerStamp otherStamp))
             (if negated?
@@ -49043,6 +48488,10 @@ ZeroExtendNode'new-4
     )
 
     (defm IntegerTestNode BinaryOpLogicNode
+        (#_"Stamp" BinaryOpLogicNode'''getSucceedingStampForX-4 [#_"IntegerTestNode" this, #_"boolean" negated?, #_"Stamp" xStamp, #_"Stamp" yStamp]
+            (IntegerTestNode'getSucceedingStamp-3 negated?, xStamp, yStamp)
+        )
+
         (#_"Stamp" BinaryOpLogicNode'''getSucceedingStampForY-4 [#_"IntegerTestNode" this, #_"boolean" negated?, #_"Stamp" xStamp, #_"Stamp" yStamp]
             (IntegerTestNode'getSucceedingStamp-3 negated?, yStamp, xStamp)
         )
@@ -49067,6 +48516,16 @@ ZeroExtendNode'new-4
         (merge (IsNullNode'class.) (UnaryOpLogicNode'new-1 object))
     )
 
+    (defn- #_"LogicNode" IsNullNode'canonicalized-2 [#_"IsNullNode" self, #_"ValueNode" value]
+        (or (IsNullNode'tryCanonicalize-1 value)
+            (cond
+                (satisfies? PiNode value)                                                               (IsNullNode'create-1 (GraphUtil'skipPi-1 value))
+                (and (satisfies? ConvertNode value) (ConvertNode'''mayNullCheckSkipConversion-1 value)) (IsNullNode'create-1 (ConvertNode'''getValue-1 value))
+                :else                                                                                   (or self (IsNullNode'new-1 (GraphUtil'skipPi-1 value)))
+            )
+        )
+    )
+
     (defn #_"LogicNode" IsNullNode'create-1 [#_"ValueNode" value]
         (IsNullNode'canonicalized-2 nil, value)
     )
@@ -49088,16 +48547,6 @@ ZeroExtendNode'new-4
     (defm IsNullNode Unary
         (#_"ValueNode" Unary'''canonical-3 [#_"IsNullNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
             (IsNullNode'canonicalized-2 this, value)
-        )
-    )
-
-    (defn- #_"LogicNode" IsNullNode'canonicalized-2 [#_"IsNullNode" self, #_"ValueNode" value]
-        (or (IsNullNode'tryCanonicalize-1 value)
-            (cond
-                (satisfies? PiNode value)                                                              (IsNullNode'create-1 (GraphUtil'skipPi-1 value))
-                (and (satisfies? ConvertNode value) (ConvertNode'''mayNullCheckSkipConversion-1 value)) (IsNullNode'create-1 (ConvertNode'''getValue-1 value))
-                :else                                                                                 (or self (IsNullNode'new-1 (GraphUtil'skipPi-1 value)))
-            )
         )
     )
 
@@ -49141,27 +48590,6 @@ ZeroExtendNode'new-4
         (merge (LeftShiftNode'class.) (ShiftNode'new-3 :shl, x, y))
     )
 
-    (defn #_"ValueNode" LeftShiftNode'create-2 [#_"ValueNode" x, #_"ValueNode" y]
-        (let [
-            #_"ShiftOp<Shl>" op (:shl (ArithmeticOpTable'forStamp-1 (:stamp x)))
-            #_"Stamp" stamp (ShiftOp'''foldStamp-3 op, (:stamp x), (:stamp y))
-        ]
-            (or (ShiftNode'canonical-4 op, stamp, x, y) (LeftShiftNode'canonical-5 nil, op, stamp, x, y))
-        )
-    )
-
-    (defm LeftShiftNode Binary
-        (#_"ValueNode" Binary'''canonical-4 [#_"LeftShiftNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
-            (let [
-                #_"ValueNode" ret (Binary'''canonical-4 (§ super #_"ShiftNode"), tool, forX, forY)
-            ]
-                (when (= ret this) => ret
-                    (LeftShiftNode'canonical-5 this, (ArithmeticOperation'''getArithmeticOp-1 this), (:stamp this), forX, forY)
-                )
-            )
-        )
-    )
-
     (defn- #_"ValueNode" LeftShiftNode'canonical-5 [#_"LeftShiftNode" self, #_"ShiftOp<Shl>" op, #_"Stamp" stamp, #_"ValueNode" forX, #_"ValueNode" forY]
         (when (satisfies? ConstantNode forY)
             (let [
@@ -49203,6 +48631,27 @@ ZeroExtendNode'new-4
         (or self (LeftShiftNode'new-2 forX, forY))
     )
 
+    (defn #_"ValueNode" LeftShiftNode'create-2 [#_"ValueNode" x, #_"ValueNode" y]
+        (let [
+            #_"ShiftOp<Shl>" op (:shl (ArithmeticOpTable'forStamp-1 (:stamp x)))
+            #_"Stamp" stamp (ShiftOp'''foldStamp-3 op, (:stamp x), (:stamp y))
+        ]
+            (or (ShiftNode'canonical-4 op, stamp, x, y) (LeftShiftNode'canonical-5 nil, op, stamp, x, y))
+        )
+    )
+
+    (defm LeftShiftNode Binary
+        (#_"ValueNode" Binary'''canonical-4 [#_"LeftShiftNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+            (let [
+                #_"ValueNode" ret (Binary'''canonical-4 (§ super #_"ShiftNode"), tool, forX, forY)
+            ]
+                (when (= ret this) => ret
+                    (LeftShiftNode'canonical-5 this, (ArithmeticOperation'''getArithmeticOp-1 this), (:stamp this), forX, forY)
+                )
+            )
+        )
+    )
+
     (defm LeftShiftNode LIRLowerable
         (#_"void" LIRLowerable'''generate-2 [#_"LeftShiftNode" this, #_"LIRBuilder" builder]
             (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitShl-3 (:gen builder), (LIRBuilder''operand-2 builder, (:x this)), (LIRBuilder''operand-2 builder, (:y this))))
@@ -49214,6 +48663,34 @@ ZeroExtendNode'new-4
 (class-ns MulNode
     (defn #_"MulNode" MulNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
         (merge (MulNode'class.) (BinaryArithmeticNode'new-3 :mul, x, y))
+    )
+
+    (defn- #_"ValueNode" MulNode'canonical-5 [#_"MulNode" self, #_"BinaryOp<Mul>" op, #_"Stamp" stamp, #_"ValueNode" forX, #_"ValueNode" forY]
+        (when (satisfies? ConstantNode forY)
+            (let [
+                #_"Constant" c (:value forY)
+            ]
+                (when (BinaryOp'''isNeutral-2 op, c)
+                    (§ return forX)
+                )
+
+                (when (and (instance? PrimitiveConstant c) (#_"JavaKind" .isNumericInteger (#_"PrimitiveConstant" .getJavaKind c)))
+                    (let [
+                        #_"ValueNode" result (MulNode'canonical-3 stamp, forX, (#_"PrimitiveConstant" .asLong c))
+                    ]
+                        (when (some? result)
+                            (§ return result)
+                        )
+                    )
+                )
+
+                (when (BinaryOp''isAssociative-1 op)
+                    ;; canonicalize expressions like "(a * 1) * 2"
+                    (§ return (BinaryArithmeticNode'reassociate-4 (or self (Binary'''maybeCommuteInputs-1 (MulNode'new-2 forX, forY))), (ValueNode'isConstantPredicate-0), forX, forY))
+                )
+            )
+        )
+        (or self (Binary'''maybeCommuteInputs-1 (MulNode'new-2 forX, forY)))
     )
 
     (defn #_"ValueNode" MulNode'create-2 [#_"ValueNode" x, #_"ValueNode" y]
@@ -49246,34 +48723,6 @@ ZeroExtendNode'new-4
                 )
             )
         )
-    )
-
-    (defn- #_"ValueNode" MulNode'canonical-5 [#_"MulNode" self, #_"BinaryOp<Mul>" op, #_"Stamp" stamp, #_"ValueNode" forX, #_"ValueNode" forY]
-        (when (satisfies? ConstantNode forY)
-            (let [
-                #_"Constant" c (:value forY)
-            ]
-                (when (BinaryOp'''isNeutral-2 op, c)
-                    (§ return forX)
-                )
-
-                (when (and (instance? PrimitiveConstant c) (#_"JavaKind" .isNumericInteger (#_"PrimitiveConstant" .getJavaKind c)))
-                    (let [
-                        #_"ValueNode" result (MulNode'canonical-3 stamp, forX, (#_"PrimitiveConstant" .asLong c))
-                    ]
-                        (when (some? result)
-                            (§ return result)
-                        )
-                    )
-                )
-
-                (when (BinaryOp''isAssociative-1 op)
-                    ;; canonicalize expressions like "(a * 1) * 2"
-                    (§ return (BinaryArithmeticNode'reassociate-4 (or self (Binary'''maybeCommuteInputs-1 (MulNode'new-2 forX, forY))), (ValueNode'isConstantPredicate-0), forX, forY))
-                )
-            )
-        )
-        (or self (Binary'''maybeCommuteInputs-1 (MulNode'new-2 forX, forY)))
     )
 
     (defn #_"ValueNode" MulNode'canonical-3 [#_"Stamp" stamp, #_"ValueNode" forX, #_"long" i]
@@ -49722,29 +49171,6 @@ ZeroExtendNode'new-4
         (merge (OrNode'class.) (BinaryArithmeticNode'new-3 :or, x, y))
     )
 
-    (defn #_"ValueNode" OrNode'create-2 [#_"ValueNode" x, #_"ValueNode" y]
-        (let [
-            #_"BinaryOp<Or>" op (:or (ArithmeticOpTable'forStamp-1 (:stamp x)))
-            #_"Stamp" stamp (BinaryOp'''foldStamp-3 op, (:stamp x), (:stamp y))
-        ]
-            (or (BinaryArithmeticNode'tryConstantFold-4 op, x, y, stamp)
-                (OrNode'canonical-5 nil, op, stamp, x, y)
-            )
-        )
-    )
-
-    (defm OrNode Binary
-        (#_"ValueNode" Binary'''canonical-4 [#_"OrNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
-            (let [
-                #_"ValueNode" ret (Binary'''canonical-4 (§ super BinaryArithmeticNode'iface), tool, forX, forY)
-            ]
-                (when (= ret this) => ret
-                    (OrNode'canonical-5 this, (BinaryArithmeticNode''getOp-3 this, forX, forY), (:stamp this), forX, forY)
-                )
-            )
-        )
-    )
-
     (defn- #_"ValueNode" OrNode'canonical-5 [#_"OrNode" self, #_"BinaryOp<Or>" op, #_"Stamp" stamp, #_"ValueNode" forX, #_"ValueNode" forY]
         (cond
             (= (GraphUtil'unproxify-1n forX) (GraphUtil'unproxify-1n forY))
@@ -49776,6 +49202,29 @@ ZeroExtendNode'new-4
                 (NotNode'new-1 (AndNode'create-2 (Unary'''getValue-1 forX), (Unary'''getValue-1 forY)))
             :else
                 (or self (Binary'''maybeCommuteInputs-1 (OrNode'new-2 forX, forY)))
+        )
+    )
+
+    (defn #_"ValueNode" OrNode'create-2 [#_"ValueNode" x, #_"ValueNode" y]
+        (let [
+            #_"BinaryOp<Or>" op (:or (ArithmeticOpTable'forStamp-1 (:stamp x)))
+            #_"Stamp" stamp (BinaryOp'''foldStamp-3 op, (:stamp x), (:stamp y))
+        ]
+            (or (BinaryArithmeticNode'tryConstantFold-4 op, x, y, stamp)
+                (OrNode'canonical-5 nil, op, stamp, x, y)
+            )
+        )
+    )
+
+    (defm OrNode Binary
+        (#_"ValueNode" Binary'''canonical-4 [#_"OrNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+            (let [
+                #_"ValueNode" ret (Binary'''canonical-4 (§ super BinaryArithmeticNode'iface), tool, forX, forY)
+            ]
+                (when (= ret this) => ret
+                    (OrNode'canonical-5 this, (BinaryArithmeticNode''getOp-3 this, forX, forY), (:stamp this), forX, forY)
+                )
+            )
         )
     )
 
@@ -49905,27 +49354,6 @@ ZeroExtendNode'new-4
         (merge (RightShiftNode'class.) (ShiftNode'new-3 :shr, x, y))
     )
 
-    (defn #_"ValueNode" RightShiftNode'create-2 [#_"ValueNode" x, #_"ValueNode" y]
-        (let [
-            #_"ShiftOp<Shr>" op (:shr (ArithmeticOpTable'forStamp-1 (:stamp x)))
-            #_"Stamp" stamp (ShiftOp'''foldStamp-3 op, (:stamp x), (:stamp y))
-        ]
-            (or (ShiftNode'canonical-4 op, stamp, x, y) (RightShiftNode'canonical-5 nil, op, stamp, x, y))
-        )
-    )
-
-    (defm RightShiftNode Binary
-        (#_"ValueNode" Binary'''canonical-4 [#_"RightShiftNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
-            (let [
-                #_"ValueNode" ret (Binary'''canonical-4 (§ super #_"ShiftNode"), tool, forX, forY)
-            ]
-                (when (= ret this) => ret
-                    (RightShiftNode'canonical-5 this, (ArithmeticOperation'''getArithmeticOp-1 this), (:stamp this), forX, forY)
-                )
-            )
-        )
-    )
-
     (defn- #_"ValueNode" RightShiftNode'canonical-5 [#_"RightShiftNode" self, #_"ShiftOp<Shr>" op, #_"Stamp" stamp, #_"ValueNode" forX, #_"ValueNode" forY]
         (if (and (satisfies? IntegerStamp (:stamp forX)) (IntegerStamp''isPositive-1 (:stamp forX)))
             (UnsignedRightShiftNode'new-2 forX, forY)
@@ -49955,6 +49383,27 @@ ZeroExtendNode'new-4
                             )
                         )
                     )
+                )
+            )
+        )
+    )
+
+    (defn #_"ValueNode" RightShiftNode'create-2 [#_"ValueNode" x, #_"ValueNode" y]
+        (let [
+            #_"ShiftOp<Shr>" op (:shr (ArithmeticOpTable'forStamp-1 (:stamp x)))
+            #_"Stamp" stamp (ShiftOp'''foldStamp-3 op, (:stamp x), (:stamp y))
+        ]
+            (or (ShiftNode'canonical-4 op, stamp, x, y) (RightShiftNode'canonical-5 nil, op, stamp, x, y))
+        )
+    )
+
+    (defm RightShiftNode Binary
+        (#_"ValueNode" Binary'''canonical-4 [#_"RightShiftNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+            (let [
+                #_"ValueNode" ret (Binary'''canonical-4 (§ super #_"ShiftNode"), tool, forX, forY)
+            ]
+                (when (= ret this) => ret
+                    (RightShiftNode'canonical-5 this, (ArithmeticOperation'''getArithmeticOp-1 this), (:stamp this), forX, forY)
                 )
             )
         )
@@ -50114,26 +49563,6 @@ ZeroExtendNode'new-4
         (merge (SignedRemNode'class.) (IntegerDivRemNode'new-5 (BinaryOp'''foldStamp-3 (:rem IntegerStamp'OPS), (:stamp x), (:stamp y)), DivRemOp'REM, Signedness'SIGNED, x, y))
     )
 
-    (defn #_"ValueNode" SignedRemNode'create-2 [#_"ValueNode" x, #_"ValueNode" y]
-        (let [
-            #_"Stamp" stamp (BinaryOp'''foldStamp-3 (:rem IntegerStamp'OPS), (:stamp x), (:stamp y))
-        ]
-            (SignedRemNode'canonical-4 nil, x, y, stamp)
-        )
-    )
-
-    (defm SignedRemNode ValueNode
-        (#_"boolean" ValueNode'''inferStamp-1 [#_"SignedRemNode" this]
-            (ValueNode''updateStamp-2 this, (BinaryOp'''foldStamp-3 (:rem IntegerStamp'OPS), (:stamp (:x this)), (:stamp (:y this))))
-        )
-    )
-
-    (defm SignedRemNode Binary
-        (#_"ValueNode" Binary'''canonical-4 [#_"SignedRemNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
-            (SignedRemNode'canonical-4 this, forX, forY, (:stamp this))
-        )
-    )
-
     (defn- #_"ValueNode" SignedRemNode'canonical-4 [#_"SignedRemNode" self, #_"ValueNode" forX, #_"ValueNode" forY, #_"Stamp" stamp]
         (cond
             (and (satisfies? ConstantNode forX) (satisfies? ConstantNode forY))
@@ -50174,6 +49603,26 @@ ZeroExtendNode'new-4
         )
     )
 
+    (defn #_"ValueNode" SignedRemNode'create-2 [#_"ValueNode" x, #_"ValueNode" y]
+        (let [
+            #_"Stamp" stamp (BinaryOp'''foldStamp-3 (:rem IntegerStamp'OPS), (:stamp x), (:stamp y))
+        ]
+            (SignedRemNode'canonical-4 nil, x, y, stamp)
+        )
+    )
+
+    (defm SignedRemNode ValueNode
+        (#_"boolean" ValueNode'''inferStamp-1 [#_"SignedRemNode" this]
+            (ValueNode''updateStamp-2 this, (BinaryOp'''foldStamp-3 (:rem IntegerStamp'OPS), (:stamp (:x this)), (:stamp (:y this))))
+        )
+    )
+
+    (defm SignedRemNode Binary
+        (#_"ValueNode" Binary'''canonical-4 [#_"SignedRemNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+            (SignedRemNode'canonical-4 this, forX, forY, (:stamp this))
+        )
+    )
+
     (defm SignedRemNode LIRLowerable
         (#_"void" LIRLowerable'''generate-2 [#_"SignedRemNode" this, #_"LIRBuilder" builder]
             (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitRem-3 (:gen builder), (LIRBuilder''operand-2 builder, (:x this)), (LIRBuilder''operand-2 builder, (:y this))))
@@ -50192,38 +49641,6 @@ ZeroExtendNode'new-4
 
     (defn #_"SignExtendNode" SignExtendNode'new-3 [#_"ValueNode" input, #_"int" inputBits, #_"int" resultBits]
         (merge (SignExtendNode'class.) (IntegerConvertNode'new-5 :signExtend, :narrow, inputBits, resultBits, input))
-    )
-
-    (defn #_"ValueNode" SignExtendNode'create-2 [#_"ValueNode" input, #_"int" resultBits]
-        (SignExtendNode'create-3 input, (PrimitiveStamp'getBits-1 (:stamp input)), resultBits)
-    )
-
-    (defn #_"ValueNode" SignExtendNode'create-3 [#_"ValueNode" input, #_"int" inputBits, #_"int" resultBits]
-        (let [
-            #_"IntegerConvertOp<SignExtend>" signExtend (:signExtend (ArithmeticOpTable'forStamp-1 (:stamp input)))
-        ]
-            (or (IntegerConvertNode'findSynonym-5 signExtend, input, inputBits, resultBits, (IntegerConvertOp'''foldStamp-4 signExtend, inputBits, resultBits, (:stamp input)))
-                (SignExtendNode'canonical-4 nil, input, inputBits, resultBits)
-            )
-        )
-    )
-
-    (defm SignExtendNode ConvertNode
-        (#_"boolean" ConvertNode'''isLossless-1 [#_"SignExtendNode" this]
-            true
-        )
-    )
-
-    (defm SignExtendNode Unary
-        (#_"ValueNode" Unary'''canonical-3 [#_"SignExtendNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
-            (let [
-                #_"ValueNode" ret (Unary'''canonical-3 (§ super #_"IntegerConvertNode"), tool, value)
-            ]
-                (when (= ret this) => ret
-                    (SignExtendNode'canonical-4 this, value, (IntegerConvertNode''getInputBits-1 this), (IntegerConvertNode''getResultBits-1 this))
-                )
-            )
-        )
     )
 
     (defn- #_"ValueNode" SignExtendNode'canonical-4 [#_"SignExtendNode" self, #_"ValueNode" forValue, #_"int" inputBits, #_"int" resultBits]
@@ -50248,16 +49665,46 @@ ZeroExtendNode'new-4
         )
     )
 
+    (defn #_"ValueNode" SignExtendNode'create-3 [#_"ValueNode" input, #_"int" inputBits, #_"int" resultBits]
+        (let [
+            #_"IntegerConvertOp<SignExtend>" signExtend (:signExtend (ArithmeticOpTable'forStamp-1 (:stamp input)))
+        ]
+            (or (IntegerConvertNode'findSynonym-5 signExtend, input, inputBits, resultBits, (IntegerConvertOp'''foldStamp-4 signExtend, inputBits, resultBits, (:stamp input)))
+                (SignExtendNode'canonical-4 nil, input, inputBits, resultBits)
+            )
+        )
+    )
+
+    (defn #_"ValueNode" SignExtendNode'create-2 [#_"ValueNode" input, #_"int" resultBits]
+        (SignExtendNode'create-3 input, (PrimitiveStamp'getBits-1 (:stamp input)), resultBits)
+    )
+
+    (defm SignExtendNode ConvertNode
+        (#_"boolean" ConvertNode'''isLossless-1 [#_"SignExtendNode" this]
+            true
+        )
+
+        (#_"boolean" ConvertNode'''mayNullCheckSkipConversion-1 [#_"SignExtendNode" this]
+            true
+        )
+    )
+
+    (defm SignExtendNode Unary
+        (#_"ValueNode" Unary'''canonical-3 [#_"SignExtendNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
+            (let [
+                #_"ValueNode" ret (Unary'''canonical-3 (§ super #_"IntegerConvertNode"), tool, value)
+            ]
+                (when (= ret this) => ret
+                    (SignExtendNode'canonical-4 this, value, (IntegerConvertNode''getInputBits-1 this), (IntegerConvertNode''getResultBits-1 this))
+                )
+            )
+        )
+    )
+
     (defm SignExtendNode LIRLowerable
         (#_"void" LIRLowerable'''generate-2 [#_"SignExtendNode" this, #_"LIRBuilder" builder]
             (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitSignExtend-4 (:gen builder), (LIRBuilder''operand-2 builder, (Unary'''getValue-1 this)), (IntegerConvertNode''getInputBits-1 this), (IntegerConvertNode''getResultBits-1 this)))
             nil
-        )
-    )
-
-    (defm SignExtendNode ConvertNode
-        (#_"boolean" ConvertNode'''mayNullCheckSkipConversion-1 [#_"SignExtendNode" this]
-            true
         )
     )
 )
@@ -50265,17 +49712,6 @@ ZeroExtendNode'new-4
 (class-ns SubNode
     (defn #_"SubNode" SubNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
         (merge (SubNode'class.) (BinaryArithmeticNode'new-3 :sub, x, y))
-    )
-
-    (defn #_"ValueNode" SubNode'create-2 [#_"ValueNode" x, #_"ValueNode" y]
-        (let [
-            #_"BinaryOp<Sub>" op (:sub (ArithmeticOpTable'forStamp-1 (:stamp x)))
-            #_"Stamp" stamp (BinaryOp'''foldStamp-3 op, (:stamp x), (:stamp y))
-        ]
-            (or (BinaryArithmeticNode'tryConstantFold-4 op, x, y, stamp)
-                (SubNode'canonical-5 nil, op, stamp, x, y)
-            )
-        )
     )
 
     (defn- #_"ValueNode" SubNode'canonical-5 [#_"SubNode" self, #_"BinaryOp<Sub>" op, #_"Stamp" stamp, #_"ValueNode" forX, #_"ValueNode" forY]
@@ -50376,6 +49812,17 @@ ZeroExtendNode'new-4
             (if (satisfies? NegateNode forY)
                 (BinaryArithmeticNode'add-2 forX, (Unary'''getValue-1 forY))
                 (or self (SubNode'new-2 forX, forY))
+            )
+        )
+    )
+
+    (defn #_"ValueNode" SubNode'create-2 [#_"ValueNode" x, #_"ValueNode" y]
+        (let [
+            #_"BinaryOp<Sub>" op (:sub (ArithmeticOpTable'forStamp-1 (:stamp x)))
+            #_"Stamp" stamp (BinaryOp'''foldStamp-3 op, (:stamp x), (:stamp y))
+        ]
+            (or (BinaryArithmeticNode'tryConstantFold-4 op, x, y, stamp)
+                (SubNode'canonical-5 nil, op, stamp, x, y)
             )
         )
     )
@@ -50529,16 +49976,6 @@ ZeroExtendNode'new-4
         (merge (UnsignedDivNode'class.) (IntegerDivRemNode'new-5 (Stamp'''unrestricted-1 (:stamp x)), DivRemOp'DIV, Signedness'UNSIGNED, x, y))
     )
 
-    (defn #_"ValueNode" UnsignedDivNode'create-2 [#_"ValueNode" x, #_"ValueNode" y]
-        (UnsignedDivNode'canonical-4 nil, x, y, (Stamp'''unrestricted-1 (:stamp x)))
-    )
-
-    (defm UnsignedDivNode Binary
-        (#_"ValueNode" Binary'''canonical-4 [#_"UnsignedDivNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
-            (UnsignedDivNode'canonical-4 this, forX, forY, (:stamp this))
-        )
-    )
-
     (defn- #_"ValueNode" UnsignedDivNode'canonical-4 [#_"UnsignedDivNode" self, #_"ValueNode" forX, #_"ValueNode" forY, #_"Stamp" stamp]
         (let [
             #_"int" bits (:bits stamp)
@@ -50566,6 +50003,16 @@ ZeroExtendNode'new-4
                     )
             )
             (or self (UnsignedDivNode'new-2 forX, forY))
+        )
+    )
+
+    (defn #_"ValueNode" UnsignedDivNode'create-2 [#_"ValueNode" x, #_"ValueNode" y]
+        (UnsignedDivNode'canonical-4 nil, x, y, (Stamp'''unrestricted-1 (:stamp x)))
+    )
+
+    (defm UnsignedDivNode Binary
+        (#_"ValueNode" Binary'''canonical-4 [#_"UnsignedDivNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+            (UnsignedDivNode'canonical-4 this, forX, forY, (:stamp this))
         )
     )
 
@@ -50636,27 +50083,6 @@ ZeroExtendNode'new-4
         (merge (UnsignedRightShiftNode'class.) (ShiftNode'new-3 :ushr, x, y))
     )
 
-    (defn #_"ValueNode" UnsignedRightShiftNode'create-2 [#_"ValueNode" x, #_"ValueNode" y]
-        (let [
-            #_"ShiftOp<UShr>" op (:ushr (ArithmeticOpTable'forStamp-1 (:stamp x)))
-            #_"Stamp" stamp (ShiftOp'''foldStamp-3 op, (:stamp x), (:stamp y))
-        ]
-            (or (ShiftNode'canonical-4 op, stamp, x, y) (UnsignedRightShiftNode'canonical-5 nil, op, stamp, x, y))
-        )
-    )
-
-    (defm UnsignedRightShiftNode Binary
-        (#_"ValueNode" Binary'''canonical-4 [#_"UnsignedRightShiftNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
-            (let [
-                #_"ValueNode" ret (Binary'''canonical-4 (§ super #_"ShiftNode"), tool, forX, forY)
-            ]
-                (when (= ret this) => ret
-                    (UnsignedRightShiftNode'canonical-5 this, (ArithmeticOperation'''getArithmeticOp-1 this), (:stamp this), forX, forY)
-                )
-            )
-        )
-    )
-
     (defn- #_"ValueNode" UnsignedRightShiftNode'canonical-5 [#_"UnsignedRightShiftNode" self, #_"ShiftOp<UShr>" op, #_"Stamp" stamp, #_"ValueNode" forX, #_"ValueNode" forY]
         (when (satisfies? ConstantNode forY) => (or self (UnsignedRightShiftNode'new-2 forX, forY))
             (let [
@@ -50699,6 +50125,27 @@ ZeroExtendNode'new-4
         )
     )
 
+    (defn #_"ValueNode" UnsignedRightShiftNode'create-2 [#_"ValueNode" x, #_"ValueNode" y]
+        (let [
+            #_"ShiftOp<UShr>" op (:ushr (ArithmeticOpTable'forStamp-1 (:stamp x)))
+            #_"Stamp" stamp (ShiftOp'''foldStamp-3 op, (:stamp x), (:stamp y))
+        ]
+            (or (ShiftNode'canonical-4 op, stamp, x, y) (UnsignedRightShiftNode'canonical-5 nil, op, stamp, x, y))
+        )
+    )
+
+    (defm UnsignedRightShiftNode Binary
+        (#_"ValueNode" Binary'''canonical-4 [#_"UnsignedRightShiftNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+            (let [
+                #_"ValueNode" ret (Binary'''canonical-4 (§ super #_"ShiftNode"), tool, forX, forY)
+            ]
+                (when (= ret this) => ret
+                    (UnsignedRightShiftNode'canonical-5 this, (ArithmeticOperation'''getArithmeticOp-1 this), (:stamp this), forX, forY)
+                )
+            )
+        )
+    )
+
     (defm UnsignedRightShiftNode LIRLowerable
         (#_"void" LIRLowerable'''generate-2 [#_"UnsignedRightShiftNode" this, #_"LIRBuilder" builder]
             (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitUShr-3 (:gen builder), (LIRBuilder''operand-2 builder, (:x this)), (LIRBuilder''operand-2 builder, (:y this))))
@@ -50710,27 +50157,6 @@ ZeroExtendNode'new-4
 (class-ns XorNode
     (defn #_"XorNode" XorNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
         (merge (XorNode'class.) (BinaryArithmeticNode'new-3 :xor, x, y))
-    )
-
-    (defn #_"ValueNode" XorNode'create-2 [#_"ValueNode" x, #_"ValueNode" y]
-        (let [
-            #_"BinaryOp<Xor>" op (:xor (ArithmeticOpTable'forStamp-1 (:stamp x)))
-            #_"Stamp" stamp (BinaryOp'''foldStamp-3 op, (:stamp x), (:stamp y))
-        ]
-            (or (BinaryArithmeticNode'tryConstantFold-4 op, x, y, stamp) (XorNode'canonical-5 nil, op, stamp, x, y))
-        )
-    )
-
-    (defm XorNode Binary
-        (#_"ValueNode" Binary'''canonical-4 [#_"XorNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
-            (let [
-                #_"ValueNode" ret (Binary'''canonical-4 (§ super BinaryArithmeticNode'iface), tool, forX, forY)
-            ]
-                (when (= ret this) => ret
-                    (XorNode'canonical-5 this, (BinaryArithmeticNode''getOp-3 this, forX, forY), (:stamp this), forX, forY)
-                )
-            )
-        )
     )
 
     (defn- #_"ValueNode" XorNode'canonical-5 [#_"XorNode" self, #_"BinaryOp<Xor>" op, #_"Stamp" stamp, #_"ValueNode" forX, #_"ValueNode" forY]
@@ -50764,6 +50190,27 @@ ZeroExtendNode'new-4
         )
     )
 
+    (defn #_"ValueNode" XorNode'create-2 [#_"ValueNode" x, #_"ValueNode" y]
+        (let [
+            #_"BinaryOp<Xor>" op (:xor (ArithmeticOpTable'forStamp-1 (:stamp x)))
+            #_"Stamp" stamp (BinaryOp'''foldStamp-3 op, (:stamp x), (:stamp y))
+        ]
+            (or (BinaryArithmeticNode'tryConstantFold-4 op, x, y, stamp) (XorNode'canonical-5 nil, op, stamp, x, y))
+        )
+    )
+
+    (defm XorNode Binary
+        (#_"ValueNode" Binary'''canonical-4 [#_"XorNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+            (let [
+                #_"ValueNode" ret (Binary'''canonical-4 (§ super BinaryArithmeticNode'iface), tool, forX, forY)
+            ]
+                (when (= ret this) => ret
+                    (XorNode'canonical-5 this, (BinaryArithmeticNode''getOp-3 this, forX, forY), (:stamp this), forX, forY)
+                )
+            )
+        )
+    )
+
     (defm XorNode LIRLowerable
         (#_"void" LIRLowerable'''generate-2 [#_"XorNode" this, #_"LIRBuilder" builder]
             (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitXor-3 (:gen builder), (LIRBuilder''operand-2 builder, (:x this)), (LIRBuilder''operand-2 builder, (:y this))))
@@ -50784,47 +50231,6 @@ ZeroExtendNode'new-4
         (merge (ZeroExtendNode'class.) (IntegerConvertNode'new-5 :zeroExtend, :narrow, inputBits, resultBits, input)
             (hash-map
                 #_"boolean" :inputAlwaysPositive inputAlwaysPositive
-            )
-        )
-    )
-
-    (defn #_"ValueNode" ZeroExtendNode'create-2 [#_"ValueNode" input, #_"int" resultBits]
-        (ZeroExtendNode'create-4 input, (PrimitiveStamp'getBits-1 (:stamp input)), resultBits, false)
-    )
-
-    #_unused
-    (defn #_"ValueNode" ZeroExtendNode'create-3 [#_"ValueNode" input, #_"int" inputBits, #_"int" resultBits]
-        (ZeroExtendNode'create-4 input, inputBits, resultBits, false)
-    )
-
-    (defn #_"ValueNode" ZeroExtendNode'create-4 [#_"ValueNode" input, #_"int" inputBits, #_"int" resultBits, #_"boolean" alwaysPositive]
-        (let [
-            #_"IntegerConvertOp<ZeroExtend>" signExtend (:zeroExtend (ArithmeticOpTable'forStamp-1 (:stamp input)))
-        ]
-            (or (IntegerConvertNode'findSynonym-5 signExtend, input, inputBits, resultBits, (IntegerConvertOp'''foldStamp-4 signExtend, inputBits, resultBits, (:stamp input)))
-                (ZeroExtendNode'canonical-5 nil, input, inputBits, resultBits, alwaysPositive)
-            )
-        )
-    )
-
-    (defm ZeroExtendNode ConvertNode
-        (#_"boolean" ConvertNode'''isLossless-1 [#_"ZeroExtendNode" this]
-            true
-        )
-
-        (#_"boolean" ConvertNode'''preservesOrder-2 [#_"ZeroExtendNode" this, #_"CanonicalCondition" condition]
-            (not= condition CanonicalCondition'LT)
-        )
-    )
-
-    (defm ZeroExtendNode Unary
-        (#_"ValueNode" Unary'''canonical-3 [#_"ZeroExtendNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
-            (let [
-                #_"ValueNode" ret (Unary'''canonical-3 (§ super #_"IntegerConvertNode"), tool, value)
-            ]
-                (when (= ret this) => ret
-                    (ZeroExtendNode'canonical-5 this, value, (IntegerConvertNode''getInputBits-1 this), (IntegerConvertNode''getResultBits-1 this), (:inputAlwaysPositive this))
-                )
             )
         )
     )
@@ -50854,6 +50260,47 @@ ZeroExtendNode'new-4
                     )
                 )
             (or self (ZeroExtendNode'new-4 forValue, inputBits, resultBits, alwaysPositive))
+        )
+    )
+
+    (defn #_"ValueNode" ZeroExtendNode'create-4 [#_"ValueNode" input, #_"int" inputBits, #_"int" resultBits, #_"boolean" alwaysPositive]
+        (let [
+            #_"IntegerConvertOp<ZeroExtend>" signExtend (:zeroExtend (ArithmeticOpTable'forStamp-1 (:stamp input)))
+        ]
+            (or (IntegerConvertNode'findSynonym-5 signExtend, input, inputBits, resultBits, (IntegerConvertOp'''foldStamp-4 signExtend, inputBits, resultBits, (:stamp input)))
+                (ZeroExtendNode'canonical-5 nil, input, inputBits, resultBits, alwaysPositive)
+            )
+        )
+    )
+
+    (defn #_"ValueNode" ZeroExtendNode'create-2 [#_"ValueNode" input, #_"int" resultBits]
+        (ZeroExtendNode'create-4 input, (PrimitiveStamp'getBits-1 (:stamp input)), resultBits, false)
+    )
+
+    #_unused
+    (defn #_"ValueNode" ZeroExtendNode'create-3 [#_"ValueNode" input, #_"int" inputBits, #_"int" resultBits]
+        (ZeroExtendNode'create-4 input, inputBits, resultBits, false)
+    )
+
+    (defm ZeroExtendNode ConvertNode
+        (#_"boolean" ConvertNode'''isLossless-1 [#_"ZeroExtendNode" this]
+            true
+        )
+
+        (#_"boolean" ConvertNode'''preservesOrder-2 [#_"ZeroExtendNode" this, #_"CanonicalCondition" condition]
+            (not= condition CanonicalCondition'LT)
+        )
+    )
+
+    (defm ZeroExtendNode Unary
+        (#_"ValueNode" Unary'''canonical-3 [#_"ZeroExtendNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
+            (let [
+                #_"ValueNode" ret (Unary'''canonical-3 (§ super #_"IntegerConvertNode"), tool, value)
+            ]
+                (when (= ret this) => ret
+                    (ZeroExtendNode'canonical-5 this, value, (IntegerConvertNode''getInputBits-1 this), (IntegerConvertNode''getResultBits-1 this), (:inputAlwaysPositive this))
+                )
+            )
         )
     )
 
@@ -51072,13 +50519,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"LocationSet" Block''getKillLocations-1 [#_"Block" this]
-        (when (nil? (:killLocations this))
-            (§ ass! this (assoc this :killLocations (Block''calcKillLocations-1 this)))
-        )
-        (:killLocations this)
-    )
-
     (defn- #_"LocationSet" Block''calcKillLocations-1 [#_"Block" this]
         (let [
             #_"LocationSet" result (LocationSet'new-0)
@@ -51109,10 +50549,32 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"boolean" Block''canKillBetweenThisAndDominator-2 [#_"Block" this, #_"LocationIdentity" location]
-        (and (not (#_"LocationIdentity" .isImmutable location))
-            (LocationSet''contains-2 (Block''getKillLocationsBetweenThisAndDominator-1 this), location)
+    (defn #_"LocationSet" Block''getKillLocations-1 [#_"Block" this]
+        (when (nil? (:killLocations this))
+            (§ ass! this (assoc this :killLocations (Block''calcKillLocations-1 this)))
         )
+        (:killLocations this)
+    )
+
+    (declare Block''getKillLocationsBetweenThisAndDominator-1)
+
+    (defn- #_"void" Block''calcKillLocationsBetweenThisAndTarget-3 [#_"Block" this, #_"LocationSet" result, #_"Block" stopBlock]
+        (if (or (= stopBlock this) (LocationSet''isAny-1 result))
+            nil ;; We reached the stop block => nothing to do.
+            (if (= stopBlock (:dominator this))
+                (§ ass! result (LocationSet''addAll-2 result, (Block''getKillLocationsBetweenThisAndDominator-1 this)))
+                (do
+                    ;; Divide and conquer: Aggregate kill locations from this to the dominator and then
+                    ;; from the dominator onwards.
+                    (Block''calcKillLocationsBetweenThisAndTarget-3 this, result, (:dominator this))
+                    (§ ass! result (LocationSet''addAll-2 result, (Block''getKillLocations-1 (:dominator this))))
+                    (when-not (LocationSet''isAny-1 result)
+                        (Block''calcKillLocationsBetweenThisAndTarget-3 (:dominator this), result, stopBlock)
+                    )
+                )
+            )
+        )
+        nil
     )
 
     (defn- #_"LocationSet" Block''getKillLocationsBetweenThisAndDominator-1 [#_"Block" this]
@@ -51155,23 +50617,10 @@ ZeroExtendNode'new-4
         (:killLocationsBetweenThisAndDominator this)
     )
 
-    (defn- #_"void" Block''calcKillLocationsBetweenThisAndTarget-3 [#_"Block" this, #_"LocationSet" result, #_"Block" stopBlock]
-        (if (or (= stopBlock this) (LocationSet''isAny-1 result))
-            nil ;; We reached the stop block => nothing to do.
-            (if (= stopBlock (:dominator this))
-                (§ ass! result (LocationSet''addAll-2 result, (Block''getKillLocationsBetweenThisAndDominator-1 this)))
-                (do
-                    ;; Divide and conquer: Aggregate kill locations from this to the dominator and then
-                    ;; from the dominator onwards.
-                    (Block''calcKillLocationsBetweenThisAndTarget-3 this, result, (:dominator this))
-                    (§ ass! result (LocationSet''addAll-2 result, (Block''getKillLocations-1 (:dominator this))))
-                    (when-not (LocationSet''isAny-1 result)
-                        (Block''calcKillLocationsBetweenThisAndTarget-3 (:dominator this), result, stopBlock)
-                    )
-                )
-            )
+    (defn #_"boolean" Block''canKillBetweenThisAndDominator-2 [#_"Block" this, #_"LocationIdentity" location]
+        (and (not (#_"LocationIdentity" .isImmutable location))
+            (LocationSet''contains-2 (Block''getKillLocationsBetweenThisAndDominator-1 this), location)
         )
-        nil
     )
 
     (defn #_"void" Block''delete-1 [#_"Block" this]
@@ -51280,380 +50729,16 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"ControlFlowGraph" ControlFlowGraph'compute-5 [#_"Graph" graph, #_"boolean" connectBlocks, #_"boolean" computeLoops, #_"boolean" computeDominators, #_"boolean" computePostdominators]
-        (let [
-            #_"ControlFlowGraph" cfg (ControlFlowGraph'new-1 graph)
-        ]
-            (§ ass! cfg (ControlFlowGraph''identifyBlocks-1 cfg))
-            (ControlFlowGraph''computeProbabilities-1 cfg)
-
-            (when computeLoops
-                (§ ass! cfg (ControlFlowGraph''computeLoopInformation-1 cfg))
-            )
-            (when computeDominators
-                (§ ass! cfg (ControlFlowGraph''computeDominators-1 cfg))
-            )
-            (when computePostdominators
-                (ControlFlowGraph''computePostdominators-1 cfg)
-            )
-
-            cfg
-        )
-    )
-
-    (defn #_"<V> void" ControlFlowGraph''visitDominatorTreeDefault-2 [#_"ControlFlowGraph" this, #_"RecursiveVisitor<V>" visitor]
-        (let [
-            #_"Block[]" stack (make-array Block'iface (inc (:maxDominatorDepth this)))
-        ]
-            (loop-when [#_"Block" block (ControlFlowGraph''getStartBlock-1 this) #_"Object[]" values nil #_"int" j 0 #_"int" i 0] (<= 0 i)
-                (let [
-                    #_"Block" state (nth stack i)
-                ]
-                    (when-not (and (some? state) (some? (:dominator state)) (= (:postdominator (:dominator state)) state))
-                        (if (nil? state)
-                            ;; We enter this block for the first time.
-                            (let [
-                                #_"V" value (RecursiveVisitor'''enter-2 visitor, block)
-                            ]
-                                (when (or (some? value) (some? values))
-                                    (when (nil? values)
-                                        (§ ass values (make-array Object (inc (:maxDominatorDepth this))))
-                                    )
-                                    (aset values j value)
-                                    (§ ass j (inc j))
-                                )
-
-                                (let [
-                                    #_"Block" dominated (ControlFlowGraph'skipPostDom-1 (:firstDominated block))
-                                ]
-                                    (when (some? dominated)
-                                        ;; Descend into dominated.
-                                        (aset stack i dominated)
-                                        (§ ass block dominated)
-                                        (§ ass i (inc i))
-                                        (aset stack i nil)
-                                        (§ continue )
-                                    )
-                                )
-                            )
-                            (let [
-                                #_"Block" next (ControlFlowGraph'skipPostDom-1 (:dominatedSibling state))
-                            ]
-                                (when (some? next)
-                                    ;; Descend into dominated.
-                                    (aset stack i next)
-                                    (§ ass block next)
-                                    (§ ass i (inc i))
-                                    (aset stack i nil)
-                                    (§ continue )
-                                )
-                            )
-                        )
-
-                        ;; Finished processing all normal dominators.
-                        (let [
-                            #_"Block" postDom (:postdominator block)
-                        ]
-                            (when (and (some? postDom) (= (:dominator postDom) block))
-                                ;; Descend into post dominator.
-                                (aset stack i postDom)
-                                (§ ass block postDom)
-                                (§ ass i (inc i))
-                                (aset stack i nil)
-                                (§ continue )
-                            )
-                        )
-                    )
-
-                    ;; Finished processing this node, exit and pop from stack.
-                    (let [
-                        [j #_"V" value]
-                            (when (and (some? values) (pos? j)) => [j nil]
-                                (let [
-                                    j (dec j)
-                                ]
-                                    [j (§ cast #_"V" (nth values j))]
-                                )
-                            )
-                    ]
-                        (RecursiveVisitor'''exit-3 visitor, block, value)
-                        (recur (:dominator block) values j (dec i))
-                    )
-                )
-            )
-        )
-        nil
-    )
-
-    (defn- #_"Block" ControlFlowGraph'skipPostDom-1 [#_"Block" block]
-        (when (and (some? block) (= (:postdominator (:dominator block)) block)) => block
-            ;; This is an always reached block.
-            (:dominatedSibling block)
-        )
-    )
-
-    (defn #_"void" ControlFlowGraph'addDeferredExit-2 [#_"DeferredExit[]" deferredExits, #_"Block" block]
-        (let [
-            #_"Loop" exitBlockLoop (:loop block)
-            #_"int" i
-                (loop-when-recur [#_"Loop" outermostExited (:loop (:dominator block))]
-                                 (and (some? (:parent outermostExited)) (not= (:parent outermostExited) exitBlockLoop))
-                                 [(:parent outermostExited)]
-                              => (:index outermostExited)
-                )
-        ]
-            (aset deferredExits i (DeferredExit'new-2 block, (nth deferredExits i)))
-        )
-        nil
-    )
-
-    (defn #_"<V> void" ControlFlowGraph''visitDominatorTreeDeferLoopExits-2 [#_"ControlFlowGraph" this, #_"RecursiveVisitor<V>" visitor]
-        (let [
-            #_"Block[]" stack (make-array Block'iface (count (:reversePostOrder this)))
-            _ (aset stack 0 (ControlFlowGraph''getStartBlock-1 this))
-            #_"BitSet" visited (BitSet. (count (:reversePostOrder this)))
-            #_"DeferredExit[]" deferredExits (make-array DeferredExit'iface (count (:loops this)))
-        ]
-            (loop-when [#_"Object[]" values nil #_"int" j 0 #_"int" i 0] (<= 0 i)
-                (let [
-                    #_"Block" block (nth stack i)
-                ]
-                    (if (#_"BitSet" .get visited, (:id block))
-                        (let [
-                            [j #_"V" value]
-                                (when (and (some? values) (pos? j)) => [j nil]
-                                    (let [
-                                        j (dec j)
-                                    ]
-                                        [j (nth values j)]
-                                    )
-                                )
-                            _ (RecursiveVisitor'''exit-3 visitor, block, value)
-                            i (dec i)
-                            i
-                                (when (Block''isLoopHeader-1 block) => i
-                                    (let [
-                                        #_"int" loopIndex (:index (:loop block))
-                                        #_"DeferredExit" deferredExit (nth deferredExits loopIndex)
-                                    ]
-                                        (when (some? deferredExit) => i
-                                            (let [
-                                                i
-                                                    (loop-when [i i deferredExit deferredExit] (some? deferredExit) => i
-                                                        (let [
-                                                            i (inc i)
-                                                        ]
-                                                            (aset stack i (:block deferredExit))
-                                                            (recur i (:next deferredExit))
-                                                        )
-                                                    )
-                                            ]
-                                                (aset deferredExits loopIndex nil)
-                                                i
-                                            )
-                                        )
-                                    )
-                                )
-                        ]
-                            (recur values j i)
-                        )
-                        (let [
-                            _ (#_"BitSet" .set visited, (:id block))
-                            #_"V" value (RecursiveVisitor'''enter-2 visitor, block)
-                            [values j]
-                                (when (or (some? value) (some? values)) => [values j]
-                                    (let [
-                                        values (or values (make-array Object (inc (:maxDominatorDepth this))))
-                                    ]
-                                        (aset values j value)
-                                        [values (inc j)]
-                                    )
-                                )
-                            #_"Block" alwaysReached (:postdominator block)
-                            [alwaysReached i]
-                                (when (and (some? alwaysReached) (= (:dominator alwaysReached) block)) => [nil i]
-                                    (if (ControlFlowGraph'isDominatorTreeLoopExit-1 alwaysReached)
-                                        (do
-                                            (ControlFlowGraph'addDeferredExit-2 deferredExits, alwaysReached)
-                                            [alwaysReached i]
-                                        )
-                                        (let [
-                                            i (inc i)
-                                        ]
-                                            (aset stack i alwaysReached)
-                                            [alwaysReached i]
-                                        )
-                                    )
-                                )
-                            i
-                                (loop-when [i i #_"Block" b (:firstDominated block)] (some? b) => i
-                                    (let [
-                                        i
-                                            (when-not (= b alwaysReached) => i
-                                                (if (ControlFlowGraph'isDominatorTreeLoopExit-1 b)
-                                                    (do
-                                                        (ControlFlowGraph'addDeferredExit-2 deferredExits, b)
-                                                        i
-                                                    )
-                                                    (let [
-                                                        i (inc i)
-                                                    ]
-                                                        (aset stack i b)
-                                                        i
-                                                    )
-                                                )
-                                            )
-                                    ]
-                                        (recur i (:dominatedSibling b))
-                                    )
-                                )
-                        ]
-                            (recur values j i)
-                        )
-                    )
-                )
-            )
-        )
-        nil
-    )
-
-    (defn #_"<V> void" ControlFlowGraph''visitDominatorTree-3 [#_"ControlFlowGraph" this, #_"RecursiveVisitor<V>" visitor, #_"boolean" deferLoopExits]
-        (if (and deferLoopExits (seq (:loops this)))
-            (ControlFlowGraph''visitDominatorTreeDeferLoopExits-2 this, visitor)
-            (ControlFlowGraph''visitDominatorTreeDefault-2 this, visitor)
-        )
-        nil
-    )
-
-    (defn #_"boolean" ControlFlowGraph'isDominatorTreeLoopExit-1 [#_"Block" b]
-        (let [
-            #_"Block" dominator (:dominator b)
-        ]
-            (and (some? dominator) (not= (:loop b) (:loop dominator)) (or (not (Block''isLoopHeader-1 b)) (<= (Block''getLoopDepth-1 b) (Block''getLoopDepth-1 dominator))))
-        )
-    )
-
-    (defn- #_"ControlFlowGraph" ControlFlowGraph''computeDominators-1 [#_"ControlFlowGraph" this]
-        (let [
-            #_"Block[]" blocks (:reversePostOrder this)
-            #_"int" curMaxDominatorDepth
-                (loop-when [curMaxDominatorDepth 0 #_"int" i 1] (< i (count blocks)) => curMaxDominatorDepth
-                    (let [
-                        #_"Block" block (nth blocks i)
-                        #_"Block" dominator
-                            (loop-when [dominator nil #_"ISeq" s (seq (:predecessors block))] (some? s) => dominator
-                                (let [
-                                    #_"Block" pred (first s)
-                                    dominator
-                                        (when-not (Block''isLoopEnd-1 pred) => dominator
-                                            (if (some? dominator) (ControlFlowGraph'commonDominatorRaw-2 dominator, pred) pred)
-                                        )
-                                ]
-                                    (recur dominator (next s))
-                                )
-                            )
-                    ]
-                        ;; Set dominator.
-                        (§ ass! block (Block''setDominator-2 block, dominator))
-
-                        ;; Keep dominated linked list sorted by block ID such that predecessor blocks are always
-                        ;; before successor blocks.
-                        (let [
-                            #_"Block" currentDominated (:firstDominated dominator)
-                        ]
-                            (if (and (some? currentDominated) (< (:id currentDominated) (:id block)))
-                                (let [
-                                    currentDominated
-                                        (loop-when-recur currentDominated
-                                                         (and (some? (:dominatedSibling currentDominated)) (< (:id (:dominatedSibling currentDominated)) (:id block)))
-                                                         (:dominatedSibling currentDominated)
-                                                      => currentDominated
-                                        )
-                                ]
-                                    (§ ass! block (Block''setDominatedSibling-2 block, (:dominatedSibling currentDominated)))
-                                    (§ ass! currentDominated (Block''setDominatedSibling-2 currentDominated, block))
-                                )
-                                (do
-                                    (§ ass! block (Block''setDominatedSibling-2 block, (:firstDominated dominator)))
-                                    (§ ass! dominator (Block''setFirstDominated-2 dominator, block))
-                                )
-                            )
-
-                            (recur (max curMaxDominatorDepth (:domDepth block)) (inc i))
-                        )
-                    )
-                )
-            this (assoc this :maxDominatorDepth curMaxDominatorDepth)
-        ]
-            (ControlFlowGraph'calcDominatorRanges-2 (ControlFlowGraph''getStartBlock-1 this), (count (:reversePostOrder this)))
-            this
-        )
-    )
-
-    (defn- #_"void" ControlFlowGraph'calcDominatorRanges-2 [#_"Block" block, #_"int" size]
-        (let [
-            #_"Block[]" stack (make-array Block'iface size)
-        ]
-            (aset stack 0 block)
-            (let [
-                #_"int" tos 0
-                #_"int" n 0
-            ]
-                (loop []
-                    (let [
-                        #_"Block" cur (nth stack tos)
-                        #_"Block" dominated (:firstDominated cur)
-                    ]
-                        (if (= (:domNumber cur) -1)
-                            (do
-                                (§ ass! cur (Block''setDominatorNumber-2 cur, n))
-                                (if (some? dominated)
-                                    (do
-                                        ;; Push children onto stack.
-                                        (loop []
-                                            (§ ass tos (inc tos))
-                                            (aset stack tos dominated)
-                                            (§ ass dominated (:dominatedSibling dominated))
-                                            (recur-if (some? dominated) [])
-                                        )
-                                    )
-                                    (do
-                                        (§ ass! cur (Block''setMaxChildDomNumber-2 cur, n))
-                                        (§ ass tos (dec tos))
-                                    )
-                                )
-                                (§ ass n (inc n))
-                            )
-                            (do
-                                (§ ass! cur (Block''setMaxChildDomNumber-2 cur, (:maxChildDomNumber dominated)))
-                                (§ ass tos (dec tos))
-                            )
-                        )
-                        (recur-if (<= 0 tos) [])
-                    )
-                )
-            )
-        )
-        nil
-    )
-
-    (defn- #_"Block" ControlFlowGraph'commonDominatorRaw-2 [#_"Block" a, #_"Block" b]
-        (if (< (:domDepth b) (:domDepth a))
-            (ControlFlowGraph'commonDominatorRawSameDepth-2 (Block''getDominator-2 a, (- (:domDepth a) (:domDepth b))), b)
-            (ControlFlowGraph'commonDominatorRawSameDepth-2 a, (Block''getDominator-2 b, (- (:domDepth b) (:domDepth a))))
-        )
-    )
-
-    (defn- #_"Block" ControlFlowGraph'commonDominatorRawSameDepth-2 [#_"Block" a, #_"Block" b]
-        (loop-when-recur [a a b b] (not= a b) [(:dominator a) (:dominator b)] => a)
-    )
-
-    (defn #_"Block" ControlFlowGraph''getStartBlock-1 [#_"ControlFlowGraph" this]
-        (nth (:reversePostOrder this) 0)
+    (defn #_"ControlFlowGraph" ControlFlowGraph''setNodeToBlock-2 [#_"ControlFlowGraph" this, #_"NodeMap<Block>" nodeMap]
+        (assoc this :nodeToBlock nodeMap)
     )
 
     (defn #_"Block" ControlFlowGraph''blockFor-2 [#_"ControlFlowGraph" this, #_"Node" node]
         (get (:nodeToBlock this) node)
+    )
+
+    (defn #_"Block" ControlFlowGraph''getStartBlock-1 [#_"ControlFlowGraph" this]
+        (nth (:reversePostOrder this) 0)
     )
 
     (defn- #_"void" ControlFlowGraph''identifyBlock-2 [#_"ControlFlowGraph" this, #_"Block" block]
@@ -51673,6 +50758,23 @@ ZeroExtendNode'new-4
                     )
                 )
             )
+        )
+        nil
+    )
+
+    (defn- #_"void" ControlFlowGraph'computeLoopPredecessors-3 [#_"NodeMap<Block>" nodeMap, #_"Block" block, #_"LoopBeginNode" loopBeginNode]
+        (let [
+            #_"int" forwardEndCount (AbstractMergeNode''forwardEndCount-1 loopBeginNode)
+            #_"LoopEndNode[]" loopEnds (LoopBeginNode''orderedLoopEnds-1 loopBeginNode)
+            #_"Block[]" predecessors (make-array Block'iface (+ forwardEndCount (count loopEnds)))
+        ]
+            (dotimes [#_"int" i forwardEndCount]
+                (aset predecessors i (get nodeMap (AbstractMergeNode''forwardEndAt-2 loopBeginNode, i)))
+            )
+            (dotimes [#_"int" i (count loopEnds)]
+                (aset predecessors (+ i forwardEndCount) (get nodeMap (nth loopEnds i)))
+            )
+            (§ ass! block (Block''setPredecessors-2 block, predecessors))
         )
         nil
     )
@@ -51816,23 +50918,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"void" ControlFlowGraph'computeLoopPredecessors-3 [#_"NodeMap<Block>" nodeMap, #_"Block" block, #_"LoopBeginNode" loopBeginNode]
-        (let [
-            #_"int" forwardEndCount (AbstractMergeNode''forwardEndCount-1 loopBeginNode)
-            #_"LoopEndNode[]" loopEnds (LoopBeginNode''orderedLoopEnds-1 loopBeginNode)
-            #_"Block[]" predecessors (make-array Block'iface (+ forwardEndCount (count loopEnds)))
-        ]
-            (dotimes [#_"int" i forwardEndCount]
-                (aset predecessors i (get nodeMap (AbstractMergeNode''forwardEndAt-2 loopBeginNode, i)))
-            )
-            (dotimes [#_"int" i (count loopEnds)]
-                (aset predecessors (+ i forwardEndCount) (get nodeMap (nth loopEnds i)))
-            )
-            (§ ass! block (Block''setPredecessors-2 block, predecessors))
-        )
-        nil
-    )
-
     (defn- #_"void" ControlFlowGraph''computeProbabilities-1 [#_"ControlFlowGraph" this]
         (doseq [#_"Block" block (:reversePostOrder this)]
             (let [
@@ -51872,6 +50957,43 @@ ZeroExtendNode'new-4
                     )
             ]
                 (§ ass! block (Block''setProbability-2 block, probability))
+            )
+        )
+        nil
+    )
+
+    (defn- #_"void" ControlFlowGraph'computeLoopBlocks-4 [#_"Block" start, #_"Loop" looq, #_"Block[]" stack, #_"boolean" usePred]
+        (when-not (= (:loop start) looq)
+            (§ ass! start (Block''setLoop-2 start, looq))
+            (§ aset! stack 0 start)
+            (#_"List" .add (:blocks looq), start)
+            (loop [#_"int" tos 0]
+                (let [
+                    #_"Block" block (nth stack tos)
+                    tos (dec tos)
+                    ;; Add predecessors or successors to the loop.
+                    tos
+                        (loop-when [tos tos #_"ISeq" s (seq (if usePred (:predecessors block) (:successors block)))] (some? s) => tos
+                            (let [
+                                #_"Block" b (first s)
+                                tos
+                                    (when-not (= (:loop b) looq) => tos
+                                        (let [
+                                            tos (inc tos)
+                                        ]
+                                            (§ aset! stack tos b)
+                                            (§ ass! b (Block''setLoop-2 b, looq))
+                                            (#_"List" .add (:blocks looq), b)
+                                            tos
+                                        )
+                                    )
+                            ]
+                                (recur tos (next s))
+                            )
+                        )
+                ]
+                    (recur-if (<= 0 tos) [tos])
+                )
             )
         )
         nil
@@ -51969,41 +51091,136 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"void" ControlFlowGraph'computeLoopBlocks-4 [#_"Block" start, #_"Loop" looq, #_"Block[]" stack, #_"boolean" usePred]
-        (when-not (= (:loop start) looq)
-            (§ ass! start (Block''setLoop-2 start, looq))
-            (§ aset! stack 0 start)
-            (#_"List" .add (:blocks looq), start)
-            (loop [#_"int" tos 0]
-                (let [
-                    #_"Block" block (nth stack tos)
-                    tos (dec tos)
-                    ;; Add predecessors or successors to the loop.
-                    tos
-                        (loop-when [tos tos #_"ISeq" s (seq (if usePred (:predecessors block) (:successors block)))] (some? s) => tos
-                            (let [
-                                #_"Block" b (first s)
-                                tos
-                                    (when-not (= (:loop b) looq) => tos
-                                        (let [
-                                            tos (inc tos)
-                                        ]
-                                            (§ aset! stack tos b)
-                                            (§ ass! b (Block''setLoop-2 b, looq))
-                                            (#_"List" .add (:blocks looq), b)
-                                            tos
+    (defn- #_"Block" ControlFlowGraph'commonDominatorRawSameDepth-2 [#_"Block" a, #_"Block" b]
+        (loop-when-recur [a a b b] (not= a b) [(:dominator a) (:dominator b)] => a)
+    )
+
+    (defn- #_"Block" ControlFlowGraph'commonDominatorRaw-2 [#_"Block" a, #_"Block" b]
+        (if (< (:domDepth b) (:domDepth a))
+            (ControlFlowGraph'commonDominatorRawSameDepth-2 (Block''getDominator-2 a, (- (:domDepth a) (:domDepth b))), b)
+            (ControlFlowGraph'commonDominatorRawSameDepth-2 a, (Block''getDominator-2 b, (- (:domDepth b) (:domDepth a))))
+        )
+    )
+
+    (defn- #_"void" ControlFlowGraph'calcDominatorRanges-2 [#_"Block" block, #_"int" size]
+        (let [
+            #_"Block[]" stack (make-array Block'iface size)
+        ]
+            (aset stack 0 block)
+            (let [
+                #_"int" tos 0
+                #_"int" n 0
+            ]
+                (loop []
+                    (let [
+                        #_"Block" cur (nth stack tos)
+                        #_"Block" dominated (:firstDominated cur)
+                    ]
+                        (if (= (:domNumber cur) -1)
+                            (do
+                                (§ ass! cur (Block''setDominatorNumber-2 cur, n))
+                                (if (some? dominated)
+                                    (do
+                                        ;; Push children onto stack.
+                                        (loop []
+                                            (§ ass tos (inc tos))
+                                            (aset stack tos dominated)
+                                            (§ ass dominated (:dominatedSibling dominated))
+                                            (recur-if (some? dominated) [])
                                         )
                                     )
-                            ]
-                                (recur tos (next s))
+                                    (do
+                                        (§ ass! cur (Block''setMaxChildDomNumber-2 cur, n))
+                                        (§ ass tos (dec tos))
+                                    )
+                                )
+                                (§ ass n (inc n))
+                            )
+                            (do
+                                (§ ass! cur (Block''setMaxChildDomNumber-2 cur, (:maxChildDomNumber dominated)))
+                                (§ ass tos (dec tos))
                             )
                         )
-                ]
-                    (recur-if (<= 0 tos) [tos])
+                        (recur-if (<= 0 tos) [])
+                    )
                 )
             )
         )
         nil
+    )
+
+    (defn- #_"ControlFlowGraph" ControlFlowGraph''computeDominators-1 [#_"ControlFlowGraph" this]
+        (let [
+            #_"Block[]" blocks (:reversePostOrder this)
+            #_"int" curMaxDominatorDepth
+                (loop-when [curMaxDominatorDepth 0 #_"int" i 1] (< i (count blocks)) => curMaxDominatorDepth
+                    (let [
+                        #_"Block" block (nth blocks i)
+                        #_"Block" dominator
+                            (loop-when [dominator nil #_"ISeq" s (seq (:predecessors block))] (some? s) => dominator
+                                (let [
+                                    #_"Block" pred (first s)
+                                    dominator
+                                        (when-not (Block''isLoopEnd-1 pred) => dominator
+                                            (if (some? dominator) (ControlFlowGraph'commonDominatorRaw-2 dominator, pred) pred)
+                                        )
+                                ]
+                                    (recur dominator (next s))
+                                )
+                            )
+                    ]
+                        ;; Set dominator.
+                        (§ ass! block (Block''setDominator-2 block, dominator))
+
+                        ;; Keep dominated linked list sorted by block ID such that predecessor blocks are always
+                        ;; before successor blocks.
+                        (let [
+                            #_"Block" currentDominated (:firstDominated dominator)
+                        ]
+                            (if (and (some? currentDominated) (< (:id currentDominated) (:id block)))
+                                (let [
+                                    currentDominated
+                                        (loop-when-recur currentDominated
+                                                         (and (some? (:dominatedSibling currentDominated)) (< (:id (:dominatedSibling currentDominated)) (:id block)))
+                                                         (:dominatedSibling currentDominated)
+                                                      => currentDominated
+                                        )
+                                ]
+                                    (§ ass! block (Block''setDominatedSibling-2 block, (:dominatedSibling currentDominated)))
+                                    (§ ass! currentDominated (Block''setDominatedSibling-2 currentDominated, block))
+                                )
+                                (do
+                                    (§ ass! block (Block''setDominatedSibling-2 block, (:firstDominated dominator)))
+                                    (§ ass! dominator (Block''setFirstDominated-2 dominator, block))
+                                )
+                            )
+
+                            (recur (max curMaxDominatorDepth (:domDepth block)) (inc i))
+                        )
+                    )
+                )
+            this (assoc this :maxDominatorDepth curMaxDominatorDepth)
+        ]
+            (ControlFlowGraph'calcDominatorRanges-2 (ControlFlowGraph''getStartBlock-1 this), (count (:reversePostOrder this)))
+            this
+        )
+    )
+
+    (defn- #_"Block" ControlFlowGraph'commonPostdominator-2 [#_"Block" a, #_"Block" b]
+        (loop-when [a a b b] (not= a b) => a
+            (if (< (:id a) (:id b))
+                (let [
+                    a (:postdominator a)
+                ]
+                    (recur-if (some? a) [a b])
+                )
+                (let [
+                    b (:postdominator b)
+                ]
+                    (recur-if (some? b) [a b])
+                )
+            )
+        )
     )
 
     (defn #_"void" ControlFlowGraph''computePostdominators-1 [#_"ControlFlowGraph" this]
@@ -52036,25 +51253,257 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"Block" ControlFlowGraph'commonPostdominator-2 [#_"Block" a, #_"Block" b]
-        (loop-when [a a b b] (not= a b) => a
-            (if (< (:id a) (:id b))
-                (let [
-                    a (:postdominator a)
-                ]
-                    (recur-if (some? a) [a b])
-                )
-                (let [
-                    b (:postdominator b)
-                ]
-                    (recur-if (some? b) [a b])
-                )
+    (defn #_"ControlFlowGraph" ControlFlowGraph'compute-5 [#_"Graph" graph, #_"boolean" connectBlocks, #_"boolean" computeLoops, #_"boolean" computeDominators, #_"boolean" computePostdominators]
+        (let [
+            #_"ControlFlowGraph" cfg (ControlFlowGraph'new-1 graph)
+        ]
+            (§ ass! cfg (ControlFlowGraph''identifyBlocks-1 cfg))
+            (ControlFlowGraph''computeProbabilities-1 cfg)
+
+            (when computeLoops
+                (§ ass! cfg (ControlFlowGraph''computeLoopInformation-1 cfg))
             )
+            (when computeDominators
+                (§ ass! cfg (ControlFlowGraph''computeDominators-1 cfg))
+            )
+            (when computePostdominators
+                (ControlFlowGraph''computePostdominators-1 cfg)
+            )
+
+            cfg
         )
     )
 
-    (defn #_"ControlFlowGraph" ControlFlowGraph''setNodeToBlock-2 [#_"ControlFlowGraph" this, #_"NodeMap<Block>" nodeMap]
-        (assoc this :nodeToBlock nodeMap)
+    (defn- #_"Block" ControlFlowGraph'skipPostDom-1 [#_"Block" block]
+        (when (and (some? block) (= (:postdominator (:dominator block)) block)) => block
+            ;; This is an always reached block.
+            (:dominatedSibling block)
+        )
+    )
+
+    (defn #_"<V> void" ControlFlowGraph''visitDominatorTreeDefault-2 [#_"ControlFlowGraph" this, #_"RecursiveVisitor<V>" visitor]
+        (let [
+            #_"Block[]" stack (make-array Block'iface (inc (:maxDominatorDepth this)))
+        ]
+            (loop-when [#_"Block" block (ControlFlowGraph''getStartBlock-1 this) #_"Object[]" values nil #_"int" j 0 #_"int" i 0] (<= 0 i)
+                (let [
+                    #_"Block" state (nth stack i)
+                ]
+                    (when-not (and (some? state) (some? (:dominator state)) (= (:postdominator (:dominator state)) state))
+                        (if (nil? state)
+                            ;; We enter this block for the first time.
+                            (let [
+                                #_"V" value (RecursiveVisitor'''enter-2 visitor, block)
+                            ]
+                                (when (or (some? value) (some? values))
+                                    (when (nil? values)
+                                        (§ ass values (make-array Object (inc (:maxDominatorDepth this))))
+                                    )
+                                    (aset values j value)
+                                    (§ ass j (inc j))
+                                )
+
+                                (let [
+                                    #_"Block" dominated (ControlFlowGraph'skipPostDom-1 (:firstDominated block))
+                                ]
+                                    (when (some? dominated)
+                                        ;; Descend into dominated.
+                                        (aset stack i dominated)
+                                        (§ ass block dominated)
+                                        (§ ass i (inc i))
+                                        (aset stack i nil)
+                                        (§ continue )
+                                    )
+                                )
+                            )
+                            (let [
+                                #_"Block" next (ControlFlowGraph'skipPostDom-1 (:dominatedSibling state))
+                            ]
+                                (when (some? next)
+                                    ;; Descend into dominated.
+                                    (aset stack i next)
+                                    (§ ass block next)
+                                    (§ ass i (inc i))
+                                    (aset stack i nil)
+                                    (§ continue )
+                                )
+                            )
+                        )
+
+                        ;; Finished processing all normal dominators.
+                        (let [
+                            #_"Block" postDom (:postdominator block)
+                        ]
+                            (when (and (some? postDom) (= (:dominator postDom) block))
+                                ;; Descend into post dominator.
+                                (aset stack i postDom)
+                                (§ ass block postDom)
+                                (§ ass i (inc i))
+                                (aset stack i nil)
+                                (§ continue )
+                            )
+                        )
+                    )
+
+                    ;; Finished processing this node, exit and pop from stack.
+                    (let [
+                        [j #_"V" value]
+                            (when (and (some? values) (pos? j)) => [j nil]
+                                (let [
+                                    j (dec j)
+                                ]
+                                    [j (§ cast #_"V" (nth values j))]
+                                )
+                            )
+                    ]
+                        (RecursiveVisitor'''exit-3 visitor, block, value)
+                        (recur (:dominator block) values j (dec i))
+                    )
+                )
+            )
+        )
+        nil
+    )
+
+    (defn- #_"void" ControlFlowGraph'addDeferredExit-2 [#_"DeferredExit[]" deferredExits, #_"Block" block]
+        (let [
+            #_"Loop" exitBlockLoop (:loop block)
+            #_"int" i
+                (loop-when-recur [#_"Loop" outermostExited (:loop (:dominator block))]
+                                 (and (some? (:parent outermostExited)) (not= (:parent outermostExited) exitBlockLoop))
+                                 [(:parent outermostExited)]
+                              => (:index outermostExited)
+                )
+        ]
+            (aset deferredExits i (DeferredExit'new-2 block, (nth deferredExits i)))
+        )
+        nil
+    )
+
+    (defn #_"<V> void" ControlFlowGraph''visitDominatorTreeDeferLoopExits-2 [#_"ControlFlowGraph" this, #_"RecursiveVisitor<V>" visitor]
+        (let [
+            #_"Block[]" stack (make-array Block'iface (count (:reversePostOrder this)))
+            _ (aset stack 0 (ControlFlowGraph''getStartBlock-1 this))
+            #_"BitSet" visited (BitSet. (count (:reversePostOrder this)))
+            #_"DeferredExit[]" deferredExits (make-array DeferredExit'iface (count (:loops this)))
+        ]
+            (loop-when [#_"Object[]" values nil #_"int" j 0 #_"int" i 0] (<= 0 i)
+                (let [
+                    #_"Block" block (nth stack i)
+                ]
+                    (if (#_"BitSet" .get visited, (:id block))
+                        (let [
+                            [j #_"V" value]
+                                (when (and (some? values) (pos? j)) => [j nil]
+                                    (let [
+                                        j (dec j)
+                                    ]
+                                        [j (nth values j)]
+                                    )
+                                )
+                            _ (RecursiveVisitor'''exit-3 visitor, block, value)
+                            i (dec i)
+                            i
+                                (when (Block''isLoopHeader-1 block) => i
+                                    (let [
+                                        #_"int" loopIndex (:index (:loop block))
+                                        #_"DeferredExit" deferredExit (nth deferredExits loopIndex)
+                                    ]
+                                        (when (some? deferredExit) => i
+                                            (let [
+                                                i
+                                                    (loop-when [i i deferredExit deferredExit] (some? deferredExit) => i
+                                                        (let [
+                                                            i (inc i)
+                                                        ]
+                                                            (aset stack i (:block deferredExit))
+                                                            (recur i (:next deferredExit))
+                                                        )
+                                                    )
+                                            ]
+                                                (aset deferredExits loopIndex nil)
+                                                i
+                                            )
+                                        )
+                                    )
+                                )
+                        ]
+                            (recur values j i)
+                        )
+                        (let [
+                            _ (#_"BitSet" .set visited, (:id block))
+                            #_"V" value (RecursiveVisitor'''enter-2 visitor, block)
+                            [values j]
+                                (when (or (some? value) (some? values)) => [values j]
+                                    (let [
+                                        values (or values (make-array Object (inc (:maxDominatorDepth this))))
+                                    ]
+                                        (aset values j value)
+                                        [values (inc j)]
+                                    )
+                                )
+                            #_"Block" alwaysReached (:postdominator block)
+                            [alwaysReached i]
+                                (when (and (some? alwaysReached) (= (:dominator alwaysReached) block)) => [nil i]
+                                    (if (ControlFlowGraph'isDominatorTreeLoopExit-1 alwaysReached)
+                                        (do
+                                            (ControlFlowGraph'addDeferredExit-2 deferredExits, alwaysReached)
+                                            [alwaysReached i]
+                                        )
+                                        (let [
+                                            i (inc i)
+                                        ]
+                                            (aset stack i alwaysReached)
+                                            [alwaysReached i]
+                                        )
+                                    )
+                                )
+                            i
+                                (loop-when [i i #_"Block" b (:firstDominated block)] (some? b) => i
+                                    (let [
+                                        i
+                                            (when-not (= b alwaysReached) => i
+                                                (if (ControlFlowGraph'isDominatorTreeLoopExit-1 b)
+                                                    (do
+                                                        (ControlFlowGraph'addDeferredExit-2 deferredExits, b)
+                                                        i
+                                                    )
+                                                    (let [
+                                                        i (inc i)
+                                                    ]
+                                                        (aset stack i b)
+                                                        i
+                                                    )
+                                                )
+                                            )
+                                    ]
+                                        (recur i (:dominatedSibling b))
+                                    )
+                                )
+                        ]
+                            (recur values j i)
+                        )
+                    )
+                )
+            )
+        )
+        nil
+    )
+
+    (defn #_"<V> void" ControlFlowGraph''visitDominatorTree-3 [#_"ControlFlowGraph" this, #_"RecursiveVisitor<V>" visitor, #_"boolean" deferLoopExits]
+        (if (and deferLoopExits (seq (:loops this)))
+            (ControlFlowGraph''visitDominatorTreeDeferLoopExits-2 this, visitor)
+            (ControlFlowGraph''visitDominatorTreeDefault-2 this, visitor)
+        )
+        nil
+    )
+
+    (defn #_"boolean" ControlFlowGraph'isDominatorTreeLoopExit-1 [#_"Block" b]
+        (let [
+            #_"Block" dominator (:dominator b)
+        ]
+            (and (some? dominator) (not= (:loop b) (:loop dominator)) (or (not (Block''isLoopHeader-1 b)) (<= (Block''getLoopDepth-1 b) (Block''getLoopDepth-1 dominator))))
+        )
     )
 
     ;;;
@@ -52380,6 +51829,14 @@ ZeroExtendNode'new-4
         (ConstantNode'new-4 value, stamp, 0, false)
     )
 
+    (defn- #_"boolean" ConstantNode''onlyUsedInVirtualState-1 [#_"ConstantNode" this]
+        (loop-when [#_"ISeq" s (seq (Node''usages-1 this))] (some? s) => true
+            (and (satisfies? VirtualState (first s))
+                (recur (next s))
+            )
+        )
+    )
+
     (defm ConstantNode LIRLowerable
         (#_"void" LIRLowerable'''generate-2 [#_"ConstantNode" this, #_"LIRBuilder" builder]
             (let [
@@ -52391,14 +51848,6 @@ ZeroExtendNode'new-4
                 )
             )
             nil
-        )
-    )
-
-    (defn- #_"boolean" ConstantNode''onlyUsedInVirtualState-1 [#_"ConstantNode" this]
-        (loop-when [#_"ISeq" s (seq (Node''usages-1 this))] (some? s) => true
-            (and (satisfies? VirtualState (first s))
-                (recur (next s))
-            )
         )
     )
 
@@ -52442,6 +51891,36 @@ ZeroExtendNode'new-4
 
     (defn #_"ConstantNode" ConstantNode'forConstant-2s [#_"Stamp" stamp, #_"Constant" constant]
         (ConstantNode'new-2 constant, (Stamp'''constant-2 stamp, constant))
+    )
+
+    (defn- #_"ConstantNode" ConstantNode'forIntegerBits-3c [#_"int" bits, #_"JavaConstant" constant, #_"Graph" graph]
+        (let [
+            #_"long" bounds (CodeUtil/signExtend (#_"JavaConstant" .asLong constant), bits)
+        ]
+            (Graph''add-2 graph, (ConstantNode'new-2 constant, (StampFactory'forInteger-3i bits, bounds, bounds)))
+        )
+    )
+
+    ;;;
+     ; Returns a node for a constant integer that's not directly representable as Java primitive (e.g. short).
+     ;;
+    (defn #_"ConstantNode" ConstantNode'forIntegerBits-3l [#_"int" bits, #_"long" value, #_"Graph" graph]
+        (ConstantNode'forIntegerBits-3c bits, (JavaConstant/forPrimitiveInt bits, value), graph)
+    )
+
+    (defn- #_"ConstantNode" ConstantNode'forIntegerBits-2c [#_"int" bits, #_"JavaConstant" constant]
+        (let [
+            #_"long" bounds (CodeUtil/signExtend (#_"JavaConstant" .asLong constant), bits)
+        ]
+            (ConstantNode'new-2 constant, (StampFactory'forInteger-3i bits, bounds, bounds))
+        )
+    )
+
+    ;;;
+     ; Returns a node for a constant integer that's not directly representable as Java primitive (e.g. short).
+     ;;
+    (defn #_"ConstantNode" ConstantNode'forIntegerBits-2l [#_"int" bits, #_"long" value]
+        (ConstantNode'forIntegerBits-2c bits, (JavaConstant/forPrimitiveInt bits, value))
     )
 
     ;;;
@@ -52571,36 +52050,6 @@ ZeroExtendNode'new-4
     #_unused
     (defn #_"ConstantNode" ConstantNode'forShort-2 [#_"short" i, #_"Graph" graph]
         (Graph''add-2 graph, (ConstantNode'createPrimitive-1 (JavaConstant/forInt i)))
-    )
-
-    (defn- #_"ConstantNode" ConstantNode'forIntegerBits-3c [#_"int" bits, #_"JavaConstant" constant, #_"Graph" graph]
-        (let [
-            #_"long" bounds (CodeUtil/signExtend (#_"JavaConstant" .asLong constant), bits)
-        ]
-            (Graph''add-2 graph, (ConstantNode'new-2 constant, (StampFactory'forInteger-3i bits, bounds, bounds)))
-        )
-    )
-
-    ;;;
-     ; Returns a node for a constant integer that's not directly representable as Java primitive (e.g. short).
-     ;;
-    (defn #_"ConstantNode" ConstantNode'forIntegerBits-3l [#_"int" bits, #_"long" value, #_"Graph" graph]
-        (ConstantNode'forIntegerBits-3c bits, (JavaConstant/forPrimitiveInt bits, value), graph)
-    )
-
-    (defn- #_"ConstantNode" ConstantNode'forIntegerBits-2c [#_"int" bits, #_"JavaConstant" constant]
-        (let [
-            #_"long" bounds (CodeUtil/signExtend (#_"JavaConstant" .asLong constant), bits)
-        ]
-            (ConstantNode'new-2 constant, (StampFactory'forInteger-3i bits, bounds, bounds))
-        )
-    )
-
-    ;;;
-     ; Returns a node for a constant integer that's not directly representable as Java primitive (e.g. short).
-     ;;
-    (defn #_"ConstantNode" ConstantNode'forIntegerBits-2l [#_"int" bits, #_"long" value]
-        (ConstantNode'forIntegerBits-2c bits, (JavaConstant/forPrimitiveInt bits, value))
     )
 
     ;;;
@@ -53368,72 +52817,100 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defm IntegerSwitchNode Simplifiable
-        (#_"void" Simplifiable'''simplify-2 [#_"IntegerSwitchNode" this, #_"SimplifierTool" tool]
-            (cond
-                (= (count (:successors this)) 1)
-                (do
-                    (SimplifierTool'''addToWorkList-2n tool, (SwitchNode''defaultSuccessor-1 this))
-                    (Graph''removeSplitPropagate-3 (:graph this), this, (SwitchNode''defaultSuccessor-1 this))
+    (defn- #_"int" IntegerSwitchNode'addNewSuccessor-2 [#_"AbstractBeginNode" newSuccessor, #_"ArrayList<AbstractBeginNode>" newSuccessors]
+        (let [
+            #_"int" index (#_"ArrayList" .indexOf newSuccessors, newSuccessor)
+        ]
+            (when (= index -1) => index
+                (let [
+                    index (count newSuccessors)
+                ]
+                    (#_"ArrayList" .add newSuccessors, newSuccessor)
+                    index
                 )
-                (satisfies? ConstantNode (:value this))
-                    (SwitchNode''killOtherSuccessors-3 this, tool, (IntegerSwitchNode''successorIndexAtKey-2 this, (#_"JavaConstant" .asInt (ValueNode''asJavaConstant-1 (:value this)))))
-                (IntegerSwitchNode''tryOptimizeEnumSwitch-2 this, tool)
-                    nil
-                (IntegerSwitchNode''tryRemoveUnreachableKeys-3 this, tool, (:stamp (:value this)))
-                    nil
             )
-            nil
         )
     )
 
-    ;;;
-     ; Remove unreachable keys from the switch based on the stamp of the value,
-     ; i.e. based on the known range of the switch value.
-     ;;
-    (defn #_"boolean" IntegerSwitchNode''tryRemoveUnreachableKeys-3 [#_"IntegerSwitchNode" this, #_"SimplifierTool" tool, #_"Stamp" stamp]
-        (and (satisfies? IntegerStamp stamp) (not (Stamp'''isUnrestricted-1 stamp))
+    (defn- #_"void" IntegerSwitchNode''doReplace-6 [#_"IntegerSwitchNode" this, #_"ValueNode" newValue, #_"List<KeyData>" newKeyDatas, #_"ArrayList<AbstractBeginNode>" newSuccessors, #_"int" newDefaultSuccessor, #_"double" newDefaultProbability]
+        ;; Sort the new keys (invariant of the IntegerSwitchNode).
+        (#_"List" .sort newKeyDatas, (Comparator/comparingInt (ß (k) -> (§ fun (:key k)))))
+
+        ;; Create the final data arrays.
+        (let [
+            #_"int" newKeyCount (count newKeyDatas)
+            #_"int[]" newKeys (int-array newKeyCount)
+            #_"double[]" newKeyProbabilities (double-array (inc newKeyCount))
+            #_"int[]" newKeySuccessors (int-array (inc newKeyCount))
+        ]
+            (dotimes [#_"int" i newKeyCount]
+                (let [
+                    #_"KeyData" keyData (nth newKeyDatas i)
+                ]
+                    (aset newKeys i (:key keyData))
+                    (aset newKeyProbabilities i (:keyProbability keyData))
+                    (aset newKeySuccessors i (:keySuccessor keyData))
+                )
+            )
+
+            (aset newKeySuccessors newKeyCount newDefaultSuccessor)
+            (aset newKeyProbabilities newKeyCount newDefaultProbability)
+
+            ;; Normalize new probabilities so that they sum up to 1.
             (let [
-                #_"List<KeyData>" newKeys (ArrayList.)
-                #_"ArrayList<AbstractBeginNode>" newSuccessors (ArrayList.)
-                _
-                    (dotimes [#_"int" i (count (:keys this))]
-                        (when (and (IntegerStamp''contains-2 stamp, (nth (:keys this) i)) (not= (SwitchNode''keySuccessor-2 this, i) (SwitchNode''defaultSuccessor-1 this)))
-                            (#_"List" .add newKeys, (KeyData'new-3 (nth (:keys this) i), (nth (:keyProbabilities this) i), (IntegerSwitchNode'addNewSuccessor-2 (SwitchNode''keySuccessor-2 this, i), newSuccessors)))
-                        )
+                #_"double" totalProbability
+                    (loop-when-recur [totalProbability 0.0 #_"ISeq" s (seq newKeyProbabilities)]
+                                     (some? s)
+                                     [(+ totalProbability (first s)) (next s)]
+                                  => totalProbability
                     )
             ]
-                (cond
-                    (= (count newKeys) (count (:keys this)))
-                        false ;; all keys are reachable
-                    (empty? newKeys)
-                        (do
-                            (when (some? tool)
-                                (SimplifierTool'''addToWorkList-2n tool, (SwitchNode''defaultSuccessor-1 this))
-                            )
-                            (Graph''removeSplitPropagate-3 (:graph this), this, (SwitchNode''defaultSuccessor-1 this))
-                            true
+                (if (pos? totalProbability)
+                    (dotimes [#_"int" i (count newKeyProbabilities)]
+                        (aswap newKeyProbabilities i / totalProbability)
+                    )
+                    (dotimes [#_"int" i (count newKeyProbabilities)]
+                        (aset newKeyProbabilities i (/ 1.0 (count newKeyProbabilities)))
+                    )
+                )
+
+                ;; Collect dead successors. Successors have to be cleaned before adding the new node to the graph.
+                (let [
+                    #_"List<AbstractBeginNode>" deadSuccessors (NodeIterable'''snapshot-1 (NodeIterable'''filter-2p (:successors this), #_"NodePredicate" (ß (s) -> (§ fun (not (#_"ArrayList" .contains newSuccessors, s))))))
+                ]
+                    (#_"List" .clear (:successors this))
+
+                    ;; Create the new switch node. This is done before removing dead successors as 'killCFG' could edit
+                    ;; some of the inputs (e.g. if 'newValue' is a loop-phi of the loop that dies while removing successors).
+                    (let [
+                        #_"AbstractBeginNode[]" successorsArray (#_"ArrayList" .toArray newSuccessors, (make-array AbstractBeginNode'iface (count newSuccessors)))
+                        #_"SwitchNode" newSwitch (Graph''add-2 (:graph this), (IntegerSwitchNode'new-5a newValue, successorsArray, newKeys, newKeyProbabilities, newKeySuccessors))
+                    ]
+                        ;; remove dead successors
+                        (doseq [#_"AbstractBeginNode" successor deadSuccessors]
+                            (GraphUtil'killCFG-1 successor)
                         )
-                    :else
-                        (do
-                            (IntegerSwitchNode''doReplace-6 this, (:value this), newKeys, newSuccessors, (IntegerSwitchNode'addNewSuccessor-2 (SwitchNode''defaultSuccessor-1 this), newSuccessors), (nth (:keyProbabilities this) (dec (count (:keyProbabilities this)))))
-                            true
-                        )
+
+                        ;; replace ourselves with the new switch
+                        (§ ass! (:predecessor this) (FixedWithNextNode''setNext-2 (:predecessor this), newSwitch))
+                        (GraphUtil'killWithUnusedFloatingInputs-1 this)
+                    )
                 )
             )
         )
+        nil
     )
 
     ;;;
      ; For switch statements on enum values, the Java compiler has to generate complicated code:
-     ; because Enum#ordinal() can change when recompiling an enum, it cannot be used
-     ; directly as the value that is switched on. An intermediate int[] array, which is initialized
-     ; once at run time based on the actual Enum#ordinal() values, is used.
+     ; because Enum#ordinal() can change when recompiling an enum, it cannot be used directly
+     ; as the value that is switched on. An intermediate int[] array, which is initialized once
+     ; at run time based on the actual Enum#ordinal() values, is used.
      ;
      ; The ConstantFields of Graal already detects the int[] arrays and marks them as
-     ; {@link ConstantNode#isDefaultStable() stable}, i.e. the array elements are constant. The
-     ; code in this method detects array loads from such a stable array and re-wires the switch to
-     ; use the keys from the array elements, so that the array load is unnecessary.
+     ; {@link ConstantNode#isDefaultStable() stable}, i.e. the array elements are constant.
+     ; The code in this method detects array loads from such a stable array and re-wires the
+     ; switch to use the keys from the array elements, so that the array load is unnecessary.
      ;;
     (defn- #_"boolean" IntegerSwitchNode''tryOptimizeEnumSwitch-2 [#_"IntegerSwitchNode" this, #_"SimplifierTool" tool]
         (and (satisfies? LoadIndexedNode (:value this))
@@ -53529,88 +53006,60 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"int" IntegerSwitchNode'addNewSuccessor-2 [#_"AbstractBeginNode" newSuccessor, #_"ArrayList<AbstractBeginNode>" newSuccessors]
-        (let [
-            #_"int" index (#_"ArrayList" .indexOf newSuccessors, newSuccessor)
-        ]
-            (when (= index -1) => index
-                (let [
-                    index (count newSuccessors)
-                ]
-                    (#_"ArrayList" .add newSuccessors, newSuccessor)
-                    index
+    (defm IntegerSwitchNode Simplifiable
+        (#_"void" Simplifiable'''simplify-2 [#_"IntegerSwitchNode" this, #_"SimplifierTool" tool]
+            (cond
+                (= (count (:successors this)) 1)
+                (do
+                    (SimplifierTool'''addToWorkList-2n tool, (SwitchNode''defaultSuccessor-1 this))
+                    (Graph''removeSplitPropagate-3 (:graph this), this, (SwitchNode''defaultSuccessor-1 this))
                 )
+                (satisfies? ConstantNode (:value this))
+                    (SwitchNode''killOtherSuccessors-3 this, tool, (IntegerSwitchNode''successorIndexAtKey-2 this, (#_"JavaConstant" .asInt (ValueNode''asJavaConstant-1 (:value this)))))
+                (IntegerSwitchNode''tryOptimizeEnumSwitch-2 this, tool)
+                    nil
+                (IntegerSwitchNode''tryRemoveUnreachableKeys-3 this, tool, (:stamp (:value this)))
+                    nil
             )
+            nil
         )
     )
 
-    (defn- #_"void" IntegerSwitchNode''doReplace-6 [#_"IntegerSwitchNode" this, #_"ValueNode" newValue, #_"List<KeyData>" newKeyDatas, #_"ArrayList<AbstractBeginNode>" newSuccessors, #_"int" newDefaultSuccessor, #_"double" newDefaultProbability]
-        ;; Sort the new keys (invariant of the IntegerSwitchNode).
-        (#_"List" .sort newKeyDatas, (Comparator/comparingInt (ß (k) -> (§ fun (:key k)))))
-
-        ;; Create the final data arrays.
-        (let [
-            #_"int" newKeyCount (count newKeyDatas)
-            #_"int[]" newKeys (int-array newKeyCount)
-            #_"double[]" newKeyProbabilities (double-array (inc newKeyCount))
-            #_"int[]" newKeySuccessors (int-array (inc newKeyCount))
-        ]
-            (dotimes [#_"int" i newKeyCount]
-                (let [
-                    #_"KeyData" keyData (nth newKeyDatas i)
-                ]
-                    (aset newKeys i (:key keyData))
-                    (aset newKeyProbabilities i (:keyProbability keyData))
-                    (aset newKeySuccessors i (:keySuccessor keyData))
-                )
-            )
-
-            (aset newKeySuccessors newKeyCount newDefaultSuccessor)
-            (aset newKeyProbabilities newKeyCount newDefaultProbability)
-
-            ;; Normalize new probabilities so that they sum up to 1.
+    ;;;
+     ; Remove unreachable keys from the switch based on the stamp of the value,
+     ; i.e. based on the known range of the switch value.
+     ;;
+    (defn #_"boolean" IntegerSwitchNode''tryRemoveUnreachableKeys-3 [#_"IntegerSwitchNode" this, #_"SimplifierTool" tool, #_"Stamp" stamp]
+        (and (satisfies? IntegerStamp stamp) (not (Stamp'''isUnrestricted-1 stamp))
             (let [
-                #_"double" totalProbability
-                    (loop-when-recur [totalProbability 0.0 #_"ISeq" s (seq newKeyProbabilities)]
-                                     (some? s)
-                                     [(+ totalProbability (first s)) (next s)]
-                                  => totalProbability
+                #_"List<KeyData>" newKeys (ArrayList.)
+                #_"ArrayList<AbstractBeginNode>" newSuccessors (ArrayList.)
+                _
+                    (dotimes [#_"int" i (count (:keys this))]
+                        (when (and (IntegerStamp''contains-2 stamp, (nth (:keys this) i)) (not= (SwitchNode''keySuccessor-2 this, i) (SwitchNode''defaultSuccessor-1 this)))
+                            (#_"List" .add newKeys, (KeyData'new-3 (nth (:keys this) i), (nth (:keyProbabilities this) i), (IntegerSwitchNode'addNewSuccessor-2 (SwitchNode''keySuccessor-2 this, i), newSuccessors)))
+                        )
                     )
             ]
-                (if (pos? totalProbability)
-                    (dotimes [#_"int" i (count newKeyProbabilities)]
-                        (aswap newKeyProbabilities i / totalProbability)
-                    )
-                    (dotimes [#_"int" i (count newKeyProbabilities)]
-                        (aset newKeyProbabilities i (/ 1.0 (count newKeyProbabilities)))
-                    )
-                )
-
-                ;; Collect dead successors. Successors have to be cleaned before adding the new node to the graph.
-                (let [
-                    #_"List<AbstractBeginNode>" deadSuccessors (NodeIterable'''snapshot-1 (NodeIterable'''filter-2p (:successors this), #_"NodePredicate" (ß (s) -> (§ fun (not (#_"ArrayList" .contains newSuccessors, s))))))
-                ]
-                    (#_"List" .clear (:successors this))
-
-                    ;; Create the new switch node. This is done before removing dead successors as 'killCFG' could edit
-                    ;; some of the inputs (e.g. if 'newValue' is a loop-phi of the loop that dies while removing successors).
-                    (let [
-                        #_"AbstractBeginNode[]" successorsArray (#_"ArrayList" .toArray newSuccessors, (make-array AbstractBeginNode'iface (count newSuccessors)))
-                        #_"SwitchNode" newSwitch (Graph''add-2 (:graph this), (IntegerSwitchNode'new-5a newValue, successorsArray, newKeys, newKeyProbabilities, newKeySuccessors))
-                    ]
-                        ;; remove dead successors
-                        (doseq [#_"AbstractBeginNode" successor deadSuccessors]
-                            (GraphUtil'killCFG-1 successor)
+                (cond
+                    (= (count newKeys) (count (:keys this)))
+                        false ;; all keys are reachable
+                    (empty? newKeys)
+                        (do
+                            (when (some? tool)
+                                (SimplifierTool'''addToWorkList-2n tool, (SwitchNode''defaultSuccessor-1 this))
+                            )
+                            (Graph''removeSplitPropagate-3 (:graph this), this, (SwitchNode''defaultSuccessor-1 this))
+                            true
                         )
-
-                        ;; replace ourselves with the new switch
-                        (§ ass! (:predecessor this) (FixedWithNextNode''setNext-2 (:predecessor this), newSwitch))
-                        (GraphUtil'killWithUnusedFloatingInputs-1 this)
-                    )
+                    :else
+                        (do
+                            (IntegerSwitchNode''doReplace-6 this, (:value this), newKeys, newSuccessors, (IntegerSwitchNode'addNewSuccessor-2 (SwitchNode''defaultSuccessor-1 this), newSuccessors), (nth (:keyProbabilities this) (dec (count (:keyProbabilities this)))))
+                            true
+                        )
                 )
             )
         )
-        nil
     )
 
     (defm IntegerSwitchNode SwitchNode
@@ -54365,6 +53814,23 @@ ZeroExtendNode'new-4
         )
     )
 
+    (defn- #_"ValueNode" UnboxNode'findSynonym-2 [#_"ValueNode" value, #_"JavaKind" boxingKind]
+        (cond
+            (satisfies? ConstantNode value)
+                (let [
+                    #_"JavaConstant" unboxed (#_"ConstantReflectionProvider" .unboxPrimitive HotSpot'constantReflection, (ValueNode''asJavaConstant-1 value))
+                ]
+                    (when (and (some? unboxed) (= (#_"JavaConstant" .getJavaKind unboxed) boxingKind))
+                        (ConstantNode'forConstant-1 unboxed)
+                    )
+                )
+            (satisfies? BoxNode value)
+                (when (= boxingKind (:boxingKind value))
+                    (Unary'''getValue-1 value)
+                )
+        )
+    )
+
     #_unused
     (defn #_"ValueNode" UnboxNode'create-2 [#_"ValueNode" value, #_"JavaKind" boxingKind]
         (or (UnboxNode'findSynonym-2 value, boxingKind) (UnboxNode'new-2 value, boxingKind))
@@ -54410,23 +53876,6 @@ ZeroExtendNode'new-4
     (defm UnboxNode Canonicalizable
         (#_"ValueNode" Canonicalizable'''canonical-2 [#_"UnboxNode" this, #_"CanonicalizerTool" tool]
             (Unary'''canonical-3 this, tool, (Unary'''getValue-1 this))
-        )
-    )
-
-    (defn- #_"ValueNode" UnboxNode'findSynonym-2 [#_"ValueNode" value, #_"JavaKind" boxingKind]
-        (cond
-            (satisfies? ConstantNode value)
-                (let [
-                    #_"JavaConstant" unboxed (#_"ConstantReflectionProvider" .unboxPrimitive HotSpot'constantReflection, (ValueNode''asJavaConstant-1 value))
-                ]
-                    (when (and (some? unboxed) (= (#_"JavaConstant" .getJavaKind unboxed) boxingKind))
-                        (ConstantNode'forConstant-1 unboxed)
-                    )
-                )
-            (satisfies? BoxNode value)
-                (when (= boxingKind (:boxingKind value))
-                    (Unary'''getValue-1 value)
-                )
         )
     )
 )
@@ -55509,8 +54958,7 @@ ZeroExtendNode'new-4
      ; @param istrue true if the true successor is requested, false otherwise
      ; @return the corresponding successor
      ;;
-    #_unused
-    (defn #_"AbstractBeginNode" IfNode''successor-2 [#_"IfNode" this, #_"boolean" istrue]
+    (defn #_"AbstractBeginNode" IfNode''getSuccessor-2 [#_"IfNode" this, #_"boolean" istrue]
         (if istrue (:trueSuccessor this) (:falseSuccessor this))
     )
 
@@ -55538,237 +54986,6 @@ ZeroExtendNode'new-4
             this (IfNode''setCondition-2 this, (Unary'''getValue-1 (§ cast #_"LogicNegationNode" (:condition this))))
         ]
             this
-        )
-    )
-
-    (defm IfNode Simplifiable
-        (#_"void" Simplifiable'''simplify-2 [#_"IfNode" this, #_"SimplifierTool" tool]
-            (cond
-                (satisfies? DeoptimizeNode (:next (:trueSuccessor this)))
-                    (when-not (= (:trueSuccessorProbability this) 0)
-                        (§ ass! this (assoc this :trueSuccessorProbability 0))
-                    )
-                (satisfies? DeoptimizeNode (:next (:falseSuccessor this)))
-                    (when-not (= (:trueSuccessorProbability this) 1)
-                        (§ ass! this (assoc this :trueSuccessorProbability 1))
-                    )
-            )
-            (when (satisfies? LogicNegationNode (:condition this))
-                (§ ass! this (IfNode''eliminateNegation-1 this))
-            )
-            (or
-                (when (satisfies? LogicConstantNode (:condition this))
-                    (if (:value (:condition this))
-                        (do
-                            (SimplifierTool'''deleteBranch-2 tool, (:falseSuccessor this))
-                            (SimplifierTool'''addToWorkList-2n tool, (:trueSuccessor this))
-                            (Graph''removeSplit-3 (:graph this), this, (:trueSuccessor this))
-                        )
-                        (do
-                            (SimplifierTool'''deleteBranch-2 tool, (:trueSuccessor this))
-                            (SimplifierTool'''addToWorkList-2n tool, (:falseSuccessor this))
-                            (Graph''removeSplit-3 (:graph this), this, (:falseSuccessor this))
-                        )
-                    )
-                    :done
-                )
-                (when (and (CanonicalizerTool'''allUsagesAvailable-1 tool) (Node''hasNoUsages-1 (:trueSuccessor this)) (Node''hasNoUsages-1 (:falseSuccessor this)))
-                    (IfNode''pushNodesThroughIf-2 this, tool)
-                    (when (or (IfNode''checkForUnsignedCompare-2 this, tool) (IfNode''removeOrMaterializeIf-2 this, tool))
-                        :done
-                    )
-                )
-                (when (IfNode''removeIntermediateMaterialization-2 this, tool)
-                    :done
-                )
-                (when (IfNode''splitIfAtPhi-2 this, tool)
-                    :done
-                )
-                (when (IfNode''conditionalNodeOptimization-2 this, tool)
-                    :done
-                )
-                (when (and (Node''hasNoUsages-1 (:falseSuccessor this)) (not (satisfies? LoopExitNode (:falseSuccessor this))) (satisfies? IfNode (:next (:falseSuccessor this))))
-                    (let [
-                        #_"AbstractBeginNode" intermediateBegin (:falseSuccessor this)
-                        #_"IfNode" nextIf (:next intermediateBegin)
-                        #_"double" probabilityB (* (- 1.0 (:trueSuccessorProbability this)) (:trueSuccessorProbability nextIf))
-                    ]
-                        ;; Reordering of those two if statements is beneficial from the point of view of their probabilities.
-                        ;; Reordering is allowed from (if1 => begin => if2) to (if2 => begin => if1).
-                        (when (and (< (:trueSuccessorProbability this) probabilityB) (IfNode'prepareForSwap-3 tool, (:condition this), (:condition nextIf)))
-                            (let [
-                                #_"AbstractBeginNode" bothFalseBegin (:falseSuccessor nextIf)
-                            ]
-                                (§ ass! nextIf (IfNode''setFalseSuccessor-2 nextIf, nil))
-                                (§ ass! intermediateBegin (FixedWithNextNode''setNext-2 intermediateBegin, nil))
-                                (§ ass! this (IfNode''setFalseSuccessor-2 this, nil))
-
-                                (Node''replaceAtPredecessor-2 this, nextIf)
-                                (§ ass! nextIf (IfNode''setFalseSuccessor-2 nextIf, intermediateBegin))
-                                (§ ass! intermediateBegin (FixedWithNextNode''setNext-2 intermediateBegin, this))
-                                (§ ass! this (IfNode''setFalseSuccessor-2 this, bothFalseBegin))
-
-                                (§ ass! nextIf (IfNode''setTrueSuccessorProbability-2 nextIf, probabilityB))
-                                (§ ass! this (IfNode''setTrueSuccessorProbability-2 this, (if (= probabilityB 1.0) 0.0 (min 1.0 (/ (:trueSuccessorProbability this) (- 1.0 probabilityB))))))
-                                :done
-                            )
-                        )
-                    )
-                )
-                (when (IfNode''tryEliminateBoxedReferenceEquals-2 this, tool)
-                    :done
-                )
-            )
-            nil
-        )
-    )
-
-    (defn- #_"boolean" IfNode''isUnboxedFrom-3 [#_"IfNode" this, #_"ValueNode" x, #_"ValueNode" src]
-        (or (= x src)
-            (condp satisfies? x
-                UnboxNode (IfNode''isUnboxedFrom-3 this, (Unary'''getValue-1 x), src)
-                PiNode    (IfNode''isUnboxedFrom-3 this, (Proxy'''getOriginalNode-1 x), src)
-                LoadFieldNode
-                    (let [
-                        #_"ValueNode" value (Unary'''getValue-1 x)
-                    ]
-                        (and (= (Stamp'''javaType-1 (:stamp value)) (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, Integer))
-                            (IfNode''isUnboxedFrom-3 this, value, src)
-                        )
-                    )
-                false
-            )
-        )
-    )
-
-    ;;;
-     ; Attempts to replace the following pattern:
-     ;
-     ; Integer x = ...;
-     ; Integer y = ...;
-     ; if ((x == y) || x.equals(y)) { ... }
-     ;
-     ; with:
-     ;
-     ; Integer x = ...;
-     ; Integer y = ...;
-     ; if (x.equals(y)) { ... }
-     ;
-     ; whenever the probability that the reference check will pass is relatively small.
-     ;
-     ; See GR-1315 for more information.
-     ;;
-    (defn- #_"boolean" IfNode''tryEliminateBoxedReferenceEquals-2 [#_"IfNode" this, #_"SimplifierTool" tool]
-        (and (satisfies? ObjectEqualsNode (:condition this))
-            (let [
-                #_"ValueNode" x (:x (:condition this))
-                #_"ValueNode" y (:y (:condition this))
-                #_"ResolvedJavaType" integerType (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, Integer)
-            ]
-                (and
-                    ;; At least one argument for reference equal must be a boxed primitive.
-                    (or (= (Stamp'''javaType-1 (:stamp x)) integerType) (= (Stamp'''javaType-1 (:stamp y)) integerType))
-                    ;; The reference equality check is usually more efficient compared to a boxing check.
-                    ;; The success of the reference equals must therefore be relatively rare, otherwise
-                    ;; it makes no sense to eliminate it.
-                    (<= (:trueSuccessorProbability this) 0.4)
-                    ;; True branch must be empty.
-                    (and (or (satisfies? BeginNode (:trueSuccessor this)) (satisfies? LoopExitNode (:trueSuccessor this)))
-                        (satisfies? EndNode (:next (:trueSuccessor this))) ;; Empty true branch.
-                    )
-                    ;; False branch must only check the unboxed values.
-                    (let [
-                        [#_"UnboxNode" unbox #_"FixedGuardNode" unboxCheck]
-                            (loop-when [unbox nil unboxCheck nil #_"ISeq" s (seq (AbstractBeginNode''getBlockNodes-1 (:falseSuccessor this)))] (some? s) => [unbox unboxCheck]
-                                (let [
-                                    #_"FixedNode" node (first s)
-                                ]
-                                    (when (or (satisfies? BeginNode node) (satisfies? UnboxNode node) (satisfies? FixedGuardNode node) (satisfies? EndNode node) (satisfies? LoadFieldNode node) (satisfies? LoopExitNode node))
-                                        (let [
-                                            unbox
-                                                (when (satisfies? UnboxNode node) => unbox
-                                                    (when (nil? unbox) => (§ return nil)
-                                                        node
-                                                    )
-                                                )
-                                        ]
-                                            (let [
-                                                unboxCheck
-                                                    (when (and (satisfies? FixedGuardNode node) (satisfies? IntegerEqualsNode (DeoptimizingGuard'''getCondition-1 node))) => unboxCheck
-                                                        (let [
-                                                            #_"IntegerEqualsNode" equals (DeoptimizingGuard'''getCondition-1 node)
-                                                        ]
-                                                            (when (or (and (IfNode''isUnboxedFrom-3 this, (:x equals), x) (IfNode''isUnboxedFrom-3 this, (:y equals), y)) (and (IfNode''isUnboxedFrom-3 this, (:x equals), y) (IfNode''isUnboxedFrom-3 this, (:y equals), x))) => unboxCheck
-                                                                node
-                                                            )
-                                                        )
-                                                    )
-                                            ]
-                                                (recur unbox unboxCheck (next s))
-                                            )
-                                        )
-                                    )
-                                )
-                            )
-                    ]
-                        (and (some? unbox) (some? unboxCheck)
-                            (do
-                                ;; Falsify the reference check.
-                                (§ ass! this (IfNode''setCondition-2 this, (Graph''addOrUniqueWithInputs-2 (:graph this), (LogicConstantNode'contradiction-0))))
-                                true
-                            )
-                        )
-                    )
-                )
-            )
-        )
-    )
-
-    ;;;
-     ; Try to optimize this as if it were a ConditionalNode.
-     ;;
-    (defn- #_"boolean" IfNode''conditionalNodeOptimization-2 [#_"IfNode" this, #_"SimplifierTool" tool]
-        (and (satisfies? AbstractEndNode (:next (:trueSuccessor this)))
-             (satisfies? AbstractEndNode (:next (:falseSuccessor this)))
-            (let [
-                #_"AbstractEndNode" trueEnd (:next (:trueSuccessor this))
-                #_"AbstractEndNode" falseEnd (:next (:falseSuccessor this))
-            ]
-                (and (= (AbstractEndNode'''merge-1 trueEnd) (AbstractEndNode'''merge-1 falseEnd)) (satisfies? MergeNode (AbstractEndNode'''merge-1 trueEnd))
-                    (let [
-                        #_"MergeNode" merge (AbstractEndNode'''merge-1 trueEnd)
-                    ]
-                        (and (= (NodeIterable'''count-1 (Node''usages-1 merge)) 1) (= (NodeIterable'''count-1 (AbstractMergeNode''phis-1 merge)) 1)
-                            (if (or (NodeIterable'''isNotEmpty-1 (AbstractBeginNode'''anchored-1 (:trueSuccessor this)))
-                                    (NodeIterable'''isNotEmpty-1 (AbstractBeginNode'''anchored-1 (:falseSuccessor this)))
-                                )
-                                false
-                                (let [
-                                    #_"PhiNode" phi (NodeIterable'''first-1 (AbstractMergeNode''phis-1 merge))
-                                    #_"ValueNode" result (ConditionalNode'canonicalizeConditional-4 (:condition this), (PhiNode''valueAt-2n phi, trueEnd), (PhiNode''valueAt-2n phi, falseEnd), (:stamp phi))
-                                ]
-                                    (and (some? result)
-                                        ;; canonicalizeConditional returns possibly new nodes so add them to the graph
-                                        (let [
-                                            result
-                                                (when (nil? (:graph result)) => result
-                                                    (Graph''addOrUniqueWithInputs-2 (:graph this), result)
-                                                )
-                                            result (IfNode''proxyReplacement-2 this, result)
-                                        ]
-                                            ;; This optimization can be performed even if multiple values merge at this phi
-                                            ;; since the two inputs get simplified into one.
-                                            (PhiNode''setValueAt-3n phi, trueEnd, result)
-                                            (IfNode''removeThroughFalseBranch-3 this, tool, merge)
-                                            true
-                                        )
-                                    )
-                                )
-                            )
-                        )
-                    )
-                )
-            )
         )
     )
 
@@ -55812,6 +55029,47 @@ ZeroExtendNode'new-4
             )
         )
         nil
+    )
+
+    ;;;
+     ; Check it these two blocks end up at the same place. Meeting at the same merge, or deoptimizing in the same way.
+     ;;
+    (defn- #_"boolean" IfNode'sameDestination-2 [#_"AbstractBeginNode" succ1, #_"AbstractBeginNode" succ2]
+        (let [
+            #_"Node" next1 (:next succ1)
+            #_"Node" next2 (:next succ2)
+        ]
+            (cond
+                ;; go to the same MergeNode and merge the same values
+                (and (satisfies? EndNode next1) (satisfies? EndNode next2))
+                    (and (= (AbstractEndNode'''merge-1 next1) (AbstractEndNode'''merge-1 next2))
+                        (loop-when [#_"ISeq" s (seq (AbstractMergeNode''phis-1 (AbstractEndNode'''merge-1 next1)))] (some? s) => true
+                            (let [
+                                #_"PhiNode" phi (first s)
+                            ]
+                                (and (= (PhiNode''valueAt-2n phi, next1) (PhiNode''valueAt-2n phi, next2))
+                                    (recur (next s))
+                                )
+                            )
+                        )
+                    )
+                ;; same deoptimization reason and action
+                (and (satisfies? DeoptimizeNode next1) (satisfies? DeoptimizeNode next2))
+                    (and (= (:reason next1) (:reason next2)) (= (:action next1) (:action next2)))
+                ;; exit the same loop and end up at the same place
+                (and (satisfies? LoopExitNode next1) (satisfies? LoopExitNode next2))
+                    (and (= (:loopBegin next1) (:loopBegin next2))
+                         (= (:stateAfter next1) (:stateAfter next2))
+                         (nil? (:stateAfter next1))
+                         (IfNode'sameDestination-2 next1, next2)
+                    )
+                ;; exit the same loop and end up at the same place
+                (and (satisfies? ReturnNode next1) (satisfies? ReturnNode next2))
+                    (= (:result next1) (:result next2))
+                :else
+                    false
+            )
+        )
     )
 
     ;;;
@@ -55883,210 +55141,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    ;;;
-     ; Check it these two blocks end up at the same place. Meeting at the same merge, or deoptimizing in the same way.
-     ;;
-    (defn- #_"boolean" IfNode'sameDestination-2 [#_"AbstractBeginNode" succ1, #_"AbstractBeginNode" succ2]
-        (let [
-            #_"Node" next1 (:next succ1)
-            #_"Node" next2 (:next succ2)
-        ]
-            (cond
-                ;; go to the same MergeNode and merge the same values
-                (and (satisfies? EndNode next1) (satisfies? EndNode next2))
-                    (and (= (AbstractEndNode'''merge-1 next1) (AbstractEndNode'''merge-1 next2))
-                        (loop-when [#_"ISeq" s (seq (AbstractMergeNode''phis-1 (AbstractEndNode'''merge-1 next1)))] (some? s) => true
-                            (let [
-                                #_"PhiNode" phi (first s)
-                            ]
-                                (and (= (PhiNode''valueAt-2n phi, next1) (PhiNode''valueAt-2n phi, next2))
-                                    (recur (next s))
-                                )
-                            )
-                        )
-                    )
-                ;; same deoptimization reason and action
-                (and (satisfies? DeoptimizeNode next1) (satisfies? DeoptimizeNode next2))
-                    (and (= (:reason next1) (:reason next2)) (= (:action next1) (:action next2)))
-                ;; exit the same loop and end up at the same place
-                (and (satisfies? LoopExitNode next1) (satisfies? LoopExitNode next2))
-                    (and (= (:loopBegin next1) (:loopBegin next2))
-                         (= (:stateAfter next1) (:stateAfter next2))
-                         (nil? (:stateAfter next1))
-                         (IfNode'sameDestination-2 next1, next2)
-                    )
-                ;; exit the same loop and end up at the same place
-                (and (satisfies? ReturnNode next1) (satisfies? ReturnNode next2))
-                    (= (:result next1) (:result next2))
-                :else
-                    false
-            )
-        )
-    )
-
-    (defn- #_"boolean" IfNode'prepareForSwap-3 [#_"SimplifierTool" tool, #_"LogicNode" a, #_"LogicNode" b]
-        (condp satisfies? a
-            InstanceOfNode
-                (condp satisfies? b
-                    IsNullNode
-                        (= (Unary'''getValue-1 b) (Unary'''getValue-1 a))
-                    InstanceOfNode
-                        ;; Two instanceof on the same value with mutually exclusive types.
-                        (and (= (Unary'''getValue-1 a) (Unary'''getValue-1 b))
-                             (not (#_"ResolvedJavaType" .isInterface (:type (InstanceOfNode''type-1 a))))
-                             (not (#_"ResolvedJavaType" .isInterface (:type (InstanceOfNode''type-1 b))))
-                             (not (#_"ResolvedJavaType" .isAssignableFrom (:type (InstanceOfNode''type-1 a)), (:type (InstanceOfNode''type-1 b))))
-                             (not (#_"ResolvedJavaType" .isAssignableFrom (:type (InstanceOfNode''type-1 b)), (:type (InstanceOfNode''type-1 a))))
-                        )
-                    false
-                )
-            CompareNode
-                (let [
-                    #_"Condition" conditionA (:condition (CompareNode''condition-1 a))
-                ]
-                    (and (satisfies? CompareNode b) (not= a b)
-                        (let [
-                            #_"Condition" conditionB (:condition (CompareNode''condition-1 b))
-                            #_"Condition" comparableCondition
-                                (cond
-                                    (and (= (:x b) (:x a)) (= (:y b) (:y a)))                      conditionB
-                                    (and (= (:x b) (:y a)) (= (:y b) (:x a))) (Condition''mirror-1 conditionB)
-                                )
-                        ]
-                            (if (nil? comparableCondition)
-                                (and (= conditionA conditionB Condition'EQ)
-                                    (or (and (= (:x a) (:x b)) (IfNode'valuesDistinct-3 tool, (:y a), (:y b)))
-                                        (and (= (:x a) (:y b)) (IfNode'valuesDistinct-3 tool, (:y a), (:x b)))
-                                        (and (= (:y a) (:x b)) (IfNode'valuesDistinct-3 tool, (:x a), (:y b)))
-                                        (and (= (:y a) (:y b)) (IfNode'valuesDistinct-3 tool, (:x a), (:x b)))
-                                    )
-                                )
-                                ;; The two conditions are disjoint => can reorder.
-                                (nil? (Condition''join-2 conditionA, comparableCondition))
-                            )
-                        )
-                    )
-                )
-            false
-        )
-    )
-
-    (defn- #_"boolean" IfNode'valuesDistinct-3 [#_"SimplifierTool" tool, #_"ValueNode" a, #_"ValueNode" b]
-        (when (and (satisfies? ConstantNode a) (satisfies? ConstantNode b))
-            (let [
-                #_"Boolean" equal (#_"ConstantReflectionProvider" .constantEquals HotSpot'constantReflection, (:value a), (:value b))
-            ]
-                (when (some? equal)
-                    (§ return (not (#_"Boolean" .booleanValue equal)))
-                )
-            )
-        )
-
-        (Stamp'''alwaysDistinct-2 (:stamp a), (:stamp b))
-    )
-
-    ;;;
-     ; Tries to remove an empty if construct or replace an if construct with a materialization.
-     ;
-     ; @return true if a transformation was made, false otherwise
-     ;;
-    (defn- #_"boolean" IfNode''removeOrMaterializeIf-2 [#_"IfNode" this, #_"SimplifierTool" tool]
-        (let [
-            #_"FixedNode" trueEnd (:next (:trueSuccessor this))
-            #_"FixedNode" falseEnd (:next (:falseSuccessor this))
-        ]
-            (when (and (satisfies? AbstractEndNode trueEnd) (satisfies? AbstractEndNode falseEnd))
-                (let [
-                    #_"AbstractMergeNode" merge (AbstractEndNode'''merge-1 trueEnd)
-                ]
-                    (when (and (= merge (AbstractEndNode'''merge-1 falseEnd)) (NodeIterable'''isEmpty-1 (AbstractBeginNode'''anchored-1 (:trueSuccessor this))) (NodeIterable'''isEmpty-1 (AbstractBeginNode'''anchored-1 (:falseSuccessor this))))
-                        (let [
-                            [#_"PhiNode" singlePhi #_"int" distinct]
-                                (loop-when [singlePhi nil distinct 0 #_"ISeq" s (seq (AbstractMergeNode''phis-1 merge))] (some? s) => [singlePhi distinct]
-                                    (let [
-                                        #_"PhiNode" phi (first s)
-                                    ]
-                                        (if (= (PhiNode''valueAt-2n phi, trueEnd) (PhiNode''valueAt-2n phi, falseEnd))
-                                            (recur singlePhi distinct (next s))
-                                            (recur phi (inc distinct) (next s))
-                                        )
-                                    )
-                                )
-                        ]
-                            (case distinct
-                                0
-                                    (do
-                                        ;; multiple phis, but merging same values for true and false, so simply delete the path
-                                        (IfNode''removeThroughFalseBranch-3 this, tool, merge)
-                                        (§ return true)
-                                    )
-                                1
-                                    (let [
-                                        #_"ValueNode" trueValue (PhiNode''valueAt-2n singlePhi, trueEnd)
-                                        #_"ValueNode" falseValue (PhiNode''valueAt-2n singlePhi, falseEnd)
-                                        #_"ValueNode" conditional (IfNode''canonicalizeConditionalCascade-4 this, tool, trueValue, falseValue)
-                                    ]
-                                        (when (some? conditional)
-                                            (PhiNode''setValueAt-3n singlePhi, trueEnd, (IfNode''proxyReplacement-2 this, conditional))
-                                            (IfNode''removeThroughFalseBranch-3 this, tool, merge)
-                                            (§ return true)
-                                        )
-                                    )
-                                nil
-                            )
-                        )
-                    )
-                )
-            )
-            (and (satisfies? ReturnNode trueEnd) (satisfies? ReturnNode falseEnd)
-                (let [
-                    #_"ValueNode" trueValue (:result trueEnd)
-                    #_"ValueNode" falseValue (:result falseEnd)
-                    #_"ValueNode" value nil
-                ]
-                    (when (some? trueValue)
-                        (if (= trueValue falseValue)
-                            (§ ass value trueValue)
-                            (do
-                                (§ ass value (IfNode''canonicalizeConditionalCascade-4 this, tool, trueValue, falseValue))
-                                (when (nil? value)
-                                    (§ return false)
-                                )
-                            )
-                        )
-                    )
-                    (Node''replaceAtPredecessor-2 this, (Graph''add-2 (:graph this), (ReturnNode'new-1 value)))
-                    (GraphUtil'killCFG-1 this)
-                    true
-                )
-            )
-        )
-    )
-
-    (defn- #_"ValueNode" IfNode''proxyReplacement-2 [#_"IfNode" this, #_"ValueNode" replacement]
-        ;; Special case: Every empty diamond we collapse to a conditional node can potentially
-        ;; contain loop exit nodes on both branches. See the graph below: The two loop exits
-        ;; (instanceof begin node) exit the same loop. The resulting phi is defined outside the
-        ;; loop, but the resulting conditional node will be inside the loop, so we need to proxy the
-        ;; resulting conditional node. Callers of this method ensure that true and false successor
-        ;; have no usages, therefore a and b in the graph below can never be proxies themselves.
-        ;;
-        ;;              +--+
-        ;;              |If|
-        ;;              +--+      +-----+ +-----+
-        ;;         +----+  +----+ |  a  | |  b  |
-        ;;         |Lex |  |Lex | +----^+ +^----+
-        ;;         +----+  +----+      |   |
-        ;;           +-------+         +---+
-        ;;           | Merge +---------+Phi|
-        ;;           +-------+         +---+
-        (if (and (:hasValueProxies (:graph this)) (satisfies? LoopExitNode (:trueSuccessor this)) (satisfies? LoopExitNode (:falseSuccessor this)))
-            (Graph''add-2 (:graph this), (ValueProxyNode'new-2 replacement, (:trueSuccessor this)))
-            replacement
-        )
-    )
-
-    (defn #_"void" IfNode''removeThroughFalseBranch-3 [#_"IfNode" this, #_"SimplifierTool" tool, #_"AbstractMergeNode" merge]
+    (defn- #_"void" IfNode''removeThroughFalseBranch-3 [#_"IfNode" this, #_"SimplifierTool" tool, #_"AbstractMergeNode" merge]
         (let [
             #_"AbstractBeginNode" trueBegin (:trueSuccessor this)
             #_"LogicNode" logic (:condition this)
@@ -56173,216 +55228,259 @@ ZeroExtendNode'new-4
         )
     )
 
-    ;;;
-     ; Take an if that is immediately dominated by a merge with a single phi and split off any paths
-     ; where the test would be statically decidable creating a new merge below the approriate side
-     ; of the IfNode. Any undecidable tests will continue to use the original IfNode.
-     ;;
-    (defn- #_"boolean" IfNode''splitIfAtPhi-2 [#_"IfNode" this, #_"SimplifierTool" tool]
-        ;; disabled until we make sure we have no FrameState-less merges at this stage
-        (and (not (GuardsStage'areFrameStatesAtSideEffects-1 (:guardsStage (:graph this))))
-            (satisfies? MergeNode (:predecessor this))
-            (let [
-                #_"MergeNode" merge (:predecessor this)
-            ]
-                (and (not (= (AbstractMergeNode''forwardEndCount-1 merge) 1)) ;; don't bother
-                    (= (NodeIterable'''count-1 (Node''usages-1 merge)) 1) (= (NodeIterable'''count-1 (AbstractMergeNode''phis-1 merge)) 1)
-                    (nil? (:stateAfter merge)) ;; we'll get the chance to simplify this after frame state assignment
-                    (let [
-                        #_"PhiNode" phi (NodeIterable'''first-1 (AbstractMergeNode''phis-1 merge))
-                    ]
-                        (and
-                            ;; for simplicity, the code below assumes that phi goes dead at the end, so skip this case
-                            (= (NodeIterable'''count-1 (Node''usages-1 phi)) 1)
-                            ;; check that the condition uses the phi and that there is only one user of the condition expression
-                            (IfNode'conditionUses-2 (:condition this), phi)
-                            ;; We could additionally filter for the case that at least some of the Phi inputs or one of
-                            ;; the condition inputs are constants but there are cases where a non-constant is simplifiable,
-                            ;; usually where the stamp allows the question to be answered.
+    (defn- #_"ValueNode" IfNode''proxyReplacement-2 [#_"IfNode" this, #_"ValueNode" replacement]
+        ;; Special case: Every empty diamond we collapse to a conditional node can potentially
+        ;; contain loop exit nodes on both branches. See the graph below: The two loop exits
+        ;; (instanceof begin node) exit the same loop. The resulting phi is defined outside the
+        ;; loop, but the resulting conditional node will be inside the loop, so we need to proxy the
+        ;; resulting conditional node. Callers of this method ensure that true and false successor
+        ;; have no usages, therefore a and b in the graph below can never be proxies themselves.
+        ;;
+        ;;              +--+
+        ;;              |If|
+        ;;              +--+      +-----+ +-----+
+        ;;         +----+  +----+ |  a  | |  b  |
+        ;;         |Lex |  |Lex | +----^+ +^----+
+        ;;         +----+  +----+      |   |
+        ;;           +-------+         +---+
+        ;;           | Merge +---------+Phi|
+        ;;           +-------+         +---+
+        (if (and (:hasValueProxies (:graph this)) (satisfies? LoopExitNode (:trueSuccessor this)) (satisfies? LoopExitNode (:falseSuccessor this)))
+            (Graph''add-2 (:graph this), (ValueProxyNode'new-2 replacement, (:trueSuccessor this)))
+            replacement
+        )
+    )
 
-                            ;; each successor of the if gets a new merge if needed
-                            (let [
-                                [#_"MergeNode" trueMerge #_"MergeNode" falseMerge]
-                                    (loop-when [trueMerge nil falseMerge nil #_"ISeq" s (seq (NodeIterable'''snapshot-1 (:ends merge)))] (some? s) => [trueMerge falseMerge]
-                                        (let [
-                                            #_"EndNode" end (first s)
-                                            #_"Node" value (PhiNode''valueAt-2n phi, end)
-                                            #_"LogicNode" result (IfNode'computeCondition-4 tool, (:condition this), phi, value)
-                                            [trueMerge falseMerge]
-                                                (cond
-                                                    (satisfies? LogicConstantNode result)
-                                                        (do
-                                                            (AbstractMergeNode''removeEnd-2 merge, end)
-                                                            (if (:value result)
-                                                                (let [
-                                                                    trueMerge (or trueMerge (IfNode''insertMerge-2 this, (:trueSuccessor this)))
-                                                                ]
-                                                                    (AbstractMergeNode''addForwardEnd-2 trueMerge, end)
-                                                                    [trueMerge falseMerge]
-                                                                )
-                                                                (let [
-                                                                    falseMerge (or falseMerge (IfNode''insertMerge-2 this, (:falseSuccessor this)))
-                                                                ]
-                                                                    (AbstractMergeNode''addForwardEnd-2 falseMerge, end)
-                                                                    [trueMerge falseMerge]
-                                                                )
-                                                            )
-                                                        )
-                                                    (= result (:condition this))
-                                                        [trueMerge falseMerge]
-                                                    :else
-                                                        ;; build a new IfNode using the new condition
-                                                        (let [
-                                                            #_"BeginNode" trueBegin (Graph''add-2 (:graph this), (BeginNode'new-0))
-                                                            #_"BeginNode" falseBegin (Graph''add-2 (:graph this), (BeginNode'new-0))
-                                                            result (if (some? (:graph result)) result (Graph''addOrUniqueWithInputs-2 (:graph this), result))
-                                                            #_"IfNode" newIfNode (Graph''add-2 (:graph this), (IfNode'new-4b result, trueBegin, falseBegin, (:trueSuccessorProbability this)))
-                                                            _ (AbstractMergeNode''removeEnd-2 merge, end)
-                                                            _ (§ ass! (:predecessor end) (FixedWithNextNode''setNext-2 (:predecessor end), newIfNode))
-                                                            trueMerge (or trueMerge (IfNode''insertMerge-2 this, (:trueSuccessor this)))
-                                                            _ (§ ass! trueBegin (FixedWithNextNode''setNext-2 trueBegin, (Graph''add-2 (:graph this), (EndNode'new-0))))
-                                                            _ (AbstractMergeNode''addForwardEnd-2 trueMerge, (:next trueBegin))
-                                                            falseMerge (or falseMerge (IfNode''insertMerge-2 this, (:falseSuccessor this)))
-                                                            _ (§ ass! falseBegin (FixedWithNextNode''setNext-2 falseBegin, (Graph''add-2 (:graph this), (EndNode'new-0))))
-                                                            _ (AbstractMergeNode''addForwardEnd-2 falseMerge, (:next falseBegin))
-                                                            _ (Node''safeDelete-1 end)
-                                                        ]
-                                                            [trueMerge falseMerge]
-                                                        )
-                                                )
-                                        ]
-                                            (recur trueMerge falseMerge (next s))
+    ;;;
+     ; Tries to remove an empty if construct or replace an if construct with a materialization.
+     ;
+     ; @return true if a transformation was made, false otherwise
+     ;;
+    (defn- #_"boolean" IfNode''removeOrMaterializeIf-2 [#_"IfNode" this, #_"SimplifierTool" tool]
+        (let [
+            #_"FixedNode" trueEnd (:next (:trueSuccessor this))
+            #_"FixedNode" falseEnd (:next (:falseSuccessor this))
+        ]
+            (when (and (satisfies? AbstractEndNode trueEnd) (satisfies? AbstractEndNode falseEnd))
+                (let [
+                    #_"AbstractMergeNode" merge (AbstractEndNode'''merge-1 trueEnd)
+                ]
+                    (when (and (= merge (AbstractEndNode'''merge-1 falseEnd)) (NodeIterable'''isEmpty-1 (AbstractBeginNode'''anchored-1 (:trueSuccessor this))) (NodeIterable'''isEmpty-1 (AbstractBeginNode'''anchored-1 (:falseSuccessor this))))
+                        (let [
+                            [#_"PhiNode" singlePhi #_"int" distinct]
+                                (loop-when [singlePhi nil distinct 0 #_"ISeq" s (seq (AbstractMergeNode''phis-1 merge))] (some? s) => [singlePhi distinct]
+                                    (let [
+                                        #_"PhiNode" phi (first s)
+                                    ]
+                                        (if (= (PhiNode''valueAt-2n phi, trueEnd) (PhiNode''valueAt-2n phi, falseEnd))
+                                            (recur singlePhi distinct (next s))
+                                            (recur phi (inc distinct) (next s))
                                         )
                                     )
-                            ]
-                                (IfNode'transferProxies-2 (:trueSuccessor this), trueMerge)
-                                (IfNode'transferProxies-2 (:falseSuccessor this), falseMerge)
-
-                                (IfNode''cleanupMerge-2 this, merge)
-                                (IfNode''cleanupMerge-2 this, trueMerge)
-                                (IfNode''cleanupMerge-2 this, falseMerge)
-
-                                true
+                                )
+                        ]
+                            (case distinct
+                                0
+                                    (do
+                                        ;; multiple phis, but merging same values for true and false, so simply delete the path
+                                        (IfNode''removeThroughFalseBranch-3 this, tool, merge)
+                                        (§ return true)
+                                    )
+                                1
+                                    (let [
+                                        #_"ValueNode" trueValue (PhiNode''valueAt-2n singlePhi, trueEnd)
+                                        #_"ValueNode" falseValue (PhiNode''valueAt-2n singlePhi, falseEnd)
+                                        #_"ValueNode" conditional (IfNode''canonicalizeConditionalCascade-4 this, tool, trueValue, falseValue)
+                                    ]
+                                        (when (some? conditional)
+                                            (PhiNode''setValueAt-3n singlePhi, trueEnd, (IfNode''proxyReplacement-2 this, conditional))
+                                            (IfNode''removeThroughFalseBranch-3 this, tool, merge)
+                                            (§ return true)
+                                        )
+                                    )
+                                nil
                             )
                         )
                     )
                 )
             )
-        )
-    )
-
-    ;;;
-     ; Return true if the passed in {@code logic} uses {@code phi} and the condition is only used once.
-     ; Since the phi will go dead, the logic using it will also have to be dead after the optimization.
-     ;;
-    (defn- #_"boolean" IfNode'conditionUses-2 [#_"LogicNode" logic, #_"PhiNode" phi]
-        (and (= (NodeIterable'''count-1 (Node''usages-1 logic)) 1)
-            (condp satisfies? logic
-                ShortCircuitOrNode
-                    (and (GuardsStage'areDeoptsFixed-1 (:guardsStage (:graph logic)))
-                        ;; It can be unsafe to simplify a ShortCircuitOr before deopts are fixed because
-                        ;; conversion to guards assumes that all the required conditions are being tested.
-                        ;; Simplfying the condition based on context before this happens may lose a condition.
-                        (or (IfNode'conditionUses-2 (:x logic), phi) (IfNode'conditionUses-2 (:y logic), phi))
-                    )
-                Unary  (= (Unary'''getValue-1 logic) phi)
-                Binary (or (= (:x logic) phi) (= (:y logic) phi))
-                       false
-            )
-        )
-    )
-
-    ;;;
-     ; Canonicalize {@code logic} using {@code value} in place of {@code phi}.
-     ;;
-    (defn- #_"LogicNode" IfNode'computeCondition-4 [#_"SimplifierTool" tool, #_"LogicNode" logic, #_"PhiNode" phi, #_"Node" value]
-        (condp satisfies? logic
-            ShortCircuitOrNode
-                (when (and (GuardsStage'areDeoptsFixed-1 (:guardsStage (:graph logic))) (not (:isAfterExpandLogic (:graph logic))))
-                    (let [
-                        #_"LogicNode" resultX (IfNode'computeCondition-4 tool, (:x logic), phi, value)
-                        #_"LogicNode" resultY (IfNode'computeCondition-4 tool, (:y logic), phi, value)
-                    ]
-                        (when-not (and (= resultX (:x logic)) (= resultY (:y logic)))
-                            (let [
-                                #_"LogicNode" canon (Binary'''canonical-4 logic, tool, resultX, resultY)
-                            ]
-                                (if-not (= canon logic)
-                                    (§ return canon)
-                                    ;; Create a new node to carry the optimized inputs.
-                                    (§ return (Canonicalizable'''canonical-2 (ShortCircuitOrNode'new-5 resultX, (:xNegated logic), resultY, (:yNegated logic), (:shortCircuitProbability logic)), tool))
+            (and (satisfies? ReturnNode trueEnd) (satisfies? ReturnNode falseEnd)
+                (let [
+                    #_"ValueNode" trueValue (:result trueEnd)
+                    #_"ValueNode" falseValue (:result falseEnd)
+                    #_"ValueNode" value nil
+                ]
+                    (when (some? trueValue)
+                        (if (= trueValue falseValue)
+                            (§ ass value trueValue)
+                            (do
+                                (§ ass value (IfNode''canonicalizeConditionalCascade-4 this, tool, trueValue, falseValue))
+                                (when (nil? value)
+                                    (§ return false)
                                 )
                             )
                         )
-                        (§ return logic)
                     )
+                    (Node''replaceAtPredecessor-2 this, (Graph''add-2 (:graph this), (ReturnNode'new-1 value)))
+                    (GraphUtil'killCFG-1 this)
+                    true
                 )
-            Binary
-                (cond
-                    (= (:x logic) phi)
-                        (§ return (Binary'''canonical-4 logic, tool, value, (:y logic)))
-                    (= (:y logic) phi)
-                        (§ return (Binary'''canonical-4 logic, tool, (:x logic), value))
-                )
-            Unary
-                (when (= (Unary'''getValue-1 logic) phi)
-                    (§ return (Unary'''canonical-3 logic, tool, value))
-                )
-            nil
-        )
-        (if (satisfies? Canonicalizable logic) (Canonicalizable'''canonical-2 logic, tool) logic)
-    )
-
-    (defn- #_"void" IfNode'transferProxies-2 [#_"AbstractBeginNode" successor, #_"MergeNode" falseMerge]
-        (when (and (satisfies? LoopExitNode successor) (some? falseMerge))
-            (doseq [#_"ProxyNode" proxy (NodeIterable'''snapshot-1 (LoopExitNode''proxies-1 successor))]
-                (Node''replaceFirstInput-3 proxy, successor, falseMerge)
             )
         )
-        nil
     )
 
-    (defn- #_"void" IfNode''cleanupMerge-2 [#_"IfNode" this, #_"MergeNode" merge]
-        (when (and (some? merge) (Node''isAlive-1 merge))
-            (case (AbstractMergeNode''forwardEndCount-1 merge)
-                0 (GraphUtil'killCFG-1 merge)
-                1 (Graph''reduceTrivialMerge-2 (:graph this), merge)
-                nil
-            )
-        )
-        nil
-    )
-
-    (defn- #_"MergeNode" IfNode''insertMerge-2 [#_"IfNode" this, #_"AbstractBeginNode" begin]
-        (let [
-            #_"MergeNode" merge (Graph''add-2 (:graph this), (MergeNode'new-0))
-        ]
-            (when-not (NodeIterable'''isEmpty-1 (AbstractBeginNode'''anchored-1 begin))
-                (Node'''replaceAtUsages-3 begin, InputType'Guard, merge)
-                (Node'''replaceAtUsages-3 begin, InputType'Anchor, merge)
-            )
-
-            (let [
-                #_"AbstractBeginNode" theBegin
-                    (when (satisfies? LoopExitNode begin) => begin
-                        ;; Insert an extra begin to make it easier.
+    ;;;
+     ; Gets an array of constants derived from a node that is either a ConstantNode or a
+     ; PhiNode whose input values are all constants. The length of the returned array is
+     ; equal to the number of ends terminating in a given merge node.
+     ;
+     ; @return nil if {@code node} is neither a ConstantNode nor a PhiNode whose
+     ;         input values are all constants
+     ;;
+    (defn- #_"Constant[]" IfNode'constantValues-3 [#_"ValueNode" node, #_"AbstractMergeNode" merge, #_"boolean" allow-nil?]
+        (cond
+            (satisfies? ConstantNode node)
+                (let [
+                    #_"Constant[]" constants (make-array Constant (AbstractMergeNode''forwardEndCount-1 merge))
+                ]
+                    (Arrays/fill constants, (:value node))
+                    constants
+                )
+            (and (satisfies? PhiNode node) (= (:merge node) merge) (satisfies? ValuePhiNode node) (= (PhiNode''valueCount-1 node) (AbstractMergeNode''forwardEndCount-1 merge)))
+                (let [
+                    #_"Constant[]" constants (make-array Constant (AbstractMergeNode''forwardEndCount-1 merge))
+                ]
+                    (loop-when [#_"int" i 0 #_"ISeq" s (seq (:values node))] (some? s) => constants
                         (let [
-                            theBegin (Graph''add-2 (:graph this), (BeginNode'new-0))
+                            #_"ValueNode" n (first s)
                         ]
-                            (Node''replaceAtPredecessor-2 begin, theBegin)
-                            (§ ass! theBegin (FixedWithNextNode''setNext-2 theBegin, begin))
-                            theBegin
+                            (when (or allow-nil? (satisfies? ConstantNode n))
+                                (aset constants i (ValueNode''asConstant-1 n))
+                                (recur (inc i) (next s))
+                            )
                         )
                     )
-                #_"FixedNode" next (:next theBegin)
-            ]
-                (Node''replaceAtPredecessor-2 next, merge)
-                (§ ass! theBegin (FixedWithNextNode''setNext-2 theBegin, (Graph''add-2 (:graph this), (EndNode'new-0))))
-                (AbstractMergeNode''addForwardEnd-2 merge, (:next theBegin))
-                (§ ass! merge (FixedWithNextNode''setNext-2 merge, next))
-                merge
+                )
+        )
+    )
+
+    (defn- #_"boolean" IfNode'checkFrameState-1 [#_"FixedNode" node]
+        (loop [node node]
+            (condp satisfies? node
+                AbstractMergeNode
+                    (§ return (some? (:stateAfter node)))
+                StateSplit
+                    (when (some? (:stateAfter node))
+                        (§ return true)
+                    )
+                nil
+            )
+
+            (condp satisfies? node
+                ControlSplitNode
+                    (loop-when [#_"ISeq" s (seq (Node'''cfgSuccessors-1 node))] (some? s) => false
+                        (or (IfNode'checkFrameState-1 (first s))
+                            (recur (next s))
+                        )
+                    )
+                FixedWithNextNode (recur (:next node))
+                AbstractEndNode   (recur (AbstractEndNode'''merge-1 node))
+                ControlSinkNode   true
+                                  false
             )
         )
+    )
+
+    ;;;
+     ; Connects a set of ends to a given successor, inserting a merge node if there is more than
+     ; one end. If {@code ends} is not empty, then {@code successor} is added to {@code tool}'s
+     ; {@linkplain SimplifierTool#addToWorkList(Node) work list}.
+     ;
+     ; @param oldMerge the merge being removed
+     ; @param phiValues the values of the phi at the merge, keyed by the merge ends
+     ;;
+    (defn- #_"void" IfNode''connectEnds-6 [#_"IfNode" this, #_"List<EndNode>" ends, #_"EconomicMap<AbstractEndNode, ValueNode>" phiValues, #_"AbstractBeginNode" successor, #_"AbstractMergeNode" oldMerge, #_"SimplifierTool" tool]
+        (when (seq ends)
+            (if (= (count ends) 1)
+                (let [
+                    #_"AbstractEndNode" end (nth ends 0)
+                ]
+                    (§ ass! (:predecessor end) (FixedWithNextNode''setNext-2 (:predecessor end), successor))
+                    (AbstractMergeNode''removeEnd-2 oldMerge, end)
+                    (GraphUtil'killCFG-1 end)
+                )
+                ;; need a new phi in case the frame state is used by more than the merge being removed
+                (let [
+                    #_"AbstractMergeNode" newMerge (Graph''add-2 (:graph this), (MergeNode'new-0))
+                    #_"PhiNode" oldPhi (NodeIterable'''first-1 (Node''usages-1 oldMerge))
+                    #_"PhiNode" newPhi (Graph''add-2 (:graph this), (ValuePhiNode'new-2 (:stamp oldPhi), newMerge))
+                ]
+                    (doseq [#_"EndNode" end ends]
+                        (PhiNode''addInput-2 newPhi, (get phiValues end))
+                        (AbstractMergeNode''addForwardEnd-2 newMerge, end)
+                    )
+
+                    (let [
+                        #_"FrameState" stateAfter (:stateAfter oldMerge)
+                    ]
+                        (when (some? stateAfter)
+                            (§ ass stateAfter (FrameState''duplicate-1 stateAfter))
+                            (Node''replaceFirstInput-3 stateAfter, oldPhi, newPhi)
+                            (StateSplit'''setStateAfter-2 newMerge, stateAfter)
+                        )
+
+                        (§ ass! newMerge (FixedWithNextNode''setNext-2 newMerge, successor))
+                    )
+                )
+            )
+            (SimplifierTool'''addToWorkList-2n tool, successor)
+        )
+        nil
+    )
+
+    (defn- #_"void" IfNode''propagateZeroProbability-2 [#_"IfNode" this, #_"FixedNode" startNode]
+        (loop-when [#_"Node" prev nil #_"ISeq" s (seq (GraphUtil'predecessorIterable-1 startNode))] (some? s)
+            (let [
+                #_"FixedNode" node (first s)
+            ]
+                (and
+                    (cond
+                        (satisfies? IfNode node)
+                            (condp = prev
+                                (:trueSuccessor node)
+                                    (case (:trueSuccessorProbability node)
+                                        0.0 nil
+                                        1.0 :continue
+                                        (do
+                                            (§ ass! node (IfNode''setTrueSuccessorProbability-2 node, 0.0))
+                                            nil
+                                        )
+                                    )
+                                (:falseSuccessor node)
+                                    (case (:trueSuccessorProbability node)
+                                        1.0 nil
+                                        0.0 :continue
+                                        (do
+                                            (§ ass! node (IfNode''setTrueSuccessorProbability-2 node, 1.0))
+                                            nil
+                                        )
+                                    )
+                            )
+                        (and (satisfies? AbstractMergeNode node) (not (satisfies? LoopBeginNode node)))
+                            (do
+                                (doseq [#_"AbstractEndNode" endNode (Node'''cfgPredecessors-1 node)]
+                                    (IfNode''propagateZeroProbability-2 this, endNode)
+                                )
+                                nil
+                            )
+                        :else
+                            :continue
+                    )
+                    (recur node (next s))
+                )
+            )
+        )
+        nil
     )
 
     ;;;
@@ -56524,157 +55622,507 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"void" IfNode''propagateZeroProbability-2 [#_"IfNode" this, #_"FixedNode" startNode]
-        (loop-when [#_"Node" prev nil #_"ISeq" s (seq (GraphUtil'predecessorIterable-1 startNode))] (some? s)
-            (let [
-                #_"FixedNode" node (first s)
-            ]
-                (and
-                    (cond
-                        (satisfies? IfNode node)
-                            (condp = prev
-                                (:trueSuccessor node)
-                                    (case (:trueSuccessorProbability node)
-                                        0.0 nil
-                                        1.0 :continue
-                                        (do
-                                            (§ ass! node (IfNode''setTrueSuccessorProbability-2 node, 0.0))
-                                            nil
-                                        )
-                                    )
-                                (:falseSuccessor node)
-                                    (case (:trueSuccessorProbability node)
-                                        1.0 nil
-                                        0.0 :continue
-                                        (do
-                                            (§ ass! node (IfNode''setTrueSuccessorProbability-2 node, 1.0))
-                                            nil
-                                        )
-                                    )
-                            )
-                        (and (satisfies? AbstractMergeNode node) (not (satisfies? LoopBeginNode node)))
-                            (do
-                                (doseq [#_"AbstractEndNode" endNode (Node'''cfgPredecessors-1 node)]
-                                    (IfNode''propagateZeroProbability-2 this, endNode)
-                                )
-                                nil
-                            )
-                        :else
-                            :continue
+    ;;;
+     ; Return true if the passed in {@code logic} uses {@code phi} and the condition is only used once.
+     ; Since the phi will go dead, the logic using it will also have to be dead after the optimization.
+     ;;
+    (defn- #_"boolean" IfNode'conditionUses-2 [#_"LogicNode" logic, #_"PhiNode" phi]
+        (and (= (NodeIterable'''count-1 (Node''usages-1 logic)) 1)
+            (condp satisfies? logic
+                ShortCircuitOrNode
+                    (and (GuardsStage'areDeoptsFixed-1 (:guardsStage (:graph logic)))
+                        ;; It can be unsafe to simplify a ShortCircuitOr before deopts are fixed because
+                        ;; conversion to guards assumes that all the required conditions are being tested.
+                        ;; Simplfying the condition based on context before this happens may lose a condition.
+                        (or (IfNode'conditionUses-2 (:x logic), phi) (IfNode'conditionUses-2 (:y logic), phi))
                     )
-                    (recur node (next s))
+                Unary  (= (Unary'''getValue-1 logic) phi)
+                Binary (or (= (:x logic) phi) (= (:y logic) phi))
+                       false
+            )
+        )
+    )
+
+    ;;;
+     ; Canonicalize {@code logic} using {@code value} in place of {@code phi}.
+     ;;
+    (defn- #_"LogicNode" IfNode'computeCondition-4 [#_"SimplifierTool" tool, #_"LogicNode" logic, #_"PhiNode" phi, #_"Node" value]
+        (condp satisfies? logic
+            ShortCircuitOrNode
+                (when (and (GuardsStage'areDeoptsFixed-1 (:guardsStage (:graph logic))) (not (:isAfterExpandLogic (:graph logic))))
+                    (let [
+                        #_"LogicNode" resultX (IfNode'computeCondition-4 tool, (:x logic), phi, value)
+                        #_"LogicNode" resultY (IfNode'computeCondition-4 tool, (:y logic), phi, value)
+                    ]
+                        (when-not (and (= resultX (:x logic)) (= resultY (:y logic)))
+                            (let [
+                                #_"LogicNode" canon (Binary'''canonical-4 logic, tool, resultX, resultY)
+                            ]
+                                (if-not (= canon logic)
+                                    (§ return canon)
+                                    ;; Create a new node to carry the optimized inputs.
+                                    (§ return (Canonicalizable'''canonical-2 (ShortCircuitOrNode'new-5 resultX, (:xNegated logic), resultY, (:yNegated logic), (:shortCircuitProbability logic)), tool))
+                                )
+                            )
+                        )
+                        (§ return logic)
+                    )
                 )
+            Binary
+                (cond
+                    (= (:x logic) phi)
+                        (§ return (Binary'''canonical-4 logic, tool, value, (:y logic)))
+                    (= (:y logic) phi)
+                        (§ return (Binary'''canonical-4 logic, tool, (:x logic), value))
+                )
+            Unary
+                (when (= (Unary'''getValue-1 logic) phi)
+                    (§ return (Unary'''canonical-3 logic, tool, value))
+                )
+            nil
+        )
+        (if (satisfies? Canonicalizable logic) (Canonicalizable'''canonical-2 logic, tool) logic)
+    )
+
+    (defn- #_"MergeNode" IfNode''insertMerge-2 [#_"IfNode" this, #_"AbstractBeginNode" begin]
+        (let [
+            #_"MergeNode" merge (Graph''add-2 (:graph this), (MergeNode'new-0))
+        ]
+            (when-not (NodeIterable'''isEmpty-1 (AbstractBeginNode'''anchored-1 begin))
+                (Node'''replaceAtUsages-3 begin, InputType'Guard, merge)
+                (Node'''replaceAtUsages-3 begin, InputType'Anchor, merge)
+            )
+
+            (let [
+                #_"AbstractBeginNode" theBegin
+                    (when (satisfies? LoopExitNode begin) => begin
+                        ;; Insert an extra begin to make it easier.
+                        (let [
+                            theBegin (Graph''add-2 (:graph this), (BeginNode'new-0))
+                        ]
+                            (Node''replaceAtPredecessor-2 begin, theBegin)
+                            (§ ass! theBegin (FixedWithNextNode''setNext-2 theBegin, begin))
+                            theBegin
+                        )
+                    )
+                #_"FixedNode" next (:next theBegin)
+            ]
+                (Node''replaceAtPredecessor-2 next, merge)
+                (§ ass! theBegin (FixedWithNextNode''setNext-2 theBegin, (Graph''add-2 (:graph this), (EndNode'new-0))))
+                (AbstractMergeNode''addForwardEnd-2 merge, (:next theBegin))
+                (§ ass! merge (FixedWithNextNode''setNext-2 merge, next))
+                merge
+            )
+        )
+    )
+
+    (defn- #_"void" IfNode'transferProxies-2 [#_"AbstractBeginNode" successor, #_"MergeNode" falseMerge]
+        (when (and (satisfies? LoopExitNode successor) (some? falseMerge))
+            (doseq [#_"ProxyNode" proxy (NodeIterable'''snapshot-1 (LoopExitNode''proxies-1 successor))]
+                (Node''replaceFirstInput-3 proxy, successor, falseMerge)
             )
         )
         nil
     )
 
-    (defn- #_"boolean" IfNode'checkFrameState-1 [#_"FixedNode" node]
-        (loop [node node]
-            (condp satisfies? node
-                AbstractMergeNode
-                    (§ return (some? (:stateAfter node)))
-                StateSplit
-                    (when (some? (:stateAfter node))
-                        (§ return true)
-                    )
+    (defn- #_"void" IfNode''cleanupMerge-2 [#_"IfNode" this, #_"MergeNode" merge]
+        (when (and (some? merge) (Node''isAlive-1 merge))
+            (case (AbstractMergeNode''forwardEndCount-1 merge)
+                0 (GraphUtil'killCFG-1 merge)
+                1 (Graph''reduceTrivialMerge-2 (:graph this), merge)
                 nil
             )
-
-            (condp satisfies? node
-                ControlSplitNode
-                    (loop-when [#_"ISeq" s (seq (Node'''cfgSuccessors-1 node))] (some? s) => false
-                        (or (IfNode'checkFrameState-1 (first s))
-                            (recur (next s))
-                        )
-                    )
-                FixedWithNextNode (recur (:next node))
-                AbstractEndNode   (recur (AbstractEndNode'''merge-1 node))
-                ControlSinkNode   true
-                                  false
-            )
-        )
-    )
-
-    ;;;
-     ; Connects a set of ends to a given successor, inserting a merge node if there is more than
-     ; one end. If {@code ends} is not empty, then {@code successor} is added to {@code tool}'s
-     ; {@linkplain SimplifierTool#addToWorkList(Node) work list}.
-     ;
-     ; @param oldMerge the merge being removed
-     ; @param phiValues the values of the phi at the merge, keyed by the merge ends
-     ;;
-    (defn- #_"void" IfNode''connectEnds-6 [#_"IfNode" this, #_"List<EndNode>" ends, #_"EconomicMap<AbstractEndNode, ValueNode>" phiValues, #_"AbstractBeginNode" successor, #_"AbstractMergeNode" oldMerge, #_"SimplifierTool" tool]
-        (when (seq ends)
-            (if (= (count ends) 1)
-                (let [
-                    #_"AbstractEndNode" end (nth ends 0)
-                ]
-                    (§ ass! (:predecessor end) (FixedWithNextNode''setNext-2 (:predecessor end), successor))
-                    (AbstractMergeNode''removeEnd-2 oldMerge, end)
-                    (GraphUtil'killCFG-1 end)
-                )
-                ;; need a new phi in case the frame state is used by more than the merge being removed
-                (let [
-                    #_"AbstractMergeNode" newMerge (Graph''add-2 (:graph this), (MergeNode'new-0))
-                    #_"PhiNode" oldPhi (NodeIterable'''first-1 (Node''usages-1 oldMerge))
-                    #_"PhiNode" newPhi (Graph''add-2 (:graph this), (ValuePhiNode'new-2 (:stamp oldPhi), newMerge))
-                ]
-                    (doseq [#_"EndNode" end ends]
-                        (PhiNode''addInput-2 newPhi, (get phiValues end))
-                        (AbstractMergeNode''addForwardEnd-2 newMerge, end)
-                    )
-
-                    (let [
-                        #_"FrameState" stateAfter (:stateAfter oldMerge)
-                    ]
-                        (when (some? stateAfter)
-                            (§ ass stateAfter (FrameState''duplicate-1 stateAfter))
-                            (Node''replaceFirstInput-3 stateAfter, oldPhi, newPhi)
-                            (StateSplit'''setStateAfter-2 newMerge, stateAfter)
-                        )
-
-                        (§ ass! newMerge (FixedWithNextNode''setNext-2 newMerge, successor))
-                    )
-                )
-            )
-            (SimplifierTool'''addToWorkList-2n tool, successor)
         )
         nil
     )
 
     ;;;
-     ; Gets an array of constants derived from a node that is either a ConstantNode or a
-     ; PhiNode whose input values are all constants. The length of the returned array is
-     ; equal to the number of ends terminating in a given merge node.
-     ;
-     ; @return nil if {@code node} is neither a ConstantNode nor a PhiNode whose
-     ;         input values are all constants
+     ; Take an if that is immediately dominated by a merge with a single phi and split off any paths
+     ; where the test would be statically decidable creating a new merge below the approriate side
+     ; of the IfNode. Any undecidable tests will continue to use the original IfNode.
      ;;
-    (defn #_"Constant[]" IfNode'constantValues-3 [#_"ValueNode" node, #_"AbstractMergeNode" merge, #_"boolean" allow-nil?]
-        (cond
-            (satisfies? ConstantNode node)
-                (let [
-                    #_"Constant[]" constants (make-array Constant (AbstractMergeNode''forwardEndCount-1 merge))
-                ]
-                    (Arrays/fill constants, (:value node))
-                    constants
-                )
-            (and (satisfies? PhiNode node) (= (:merge node) merge) (satisfies? ValuePhiNode node) (= (PhiNode''valueCount-1 node) (AbstractMergeNode''forwardEndCount-1 merge)))
-                (let [
-                    #_"Constant[]" constants (make-array Constant (AbstractMergeNode''forwardEndCount-1 merge))
-                ]
-                    (loop-when [#_"int" i 0 #_"ISeq" s (seq (:values node))] (some? s) => constants
-                        (let [
-                            #_"ValueNode" n (first s)
-                        ]
-                            (when (or allow-nil? (satisfies? ConstantNode n))
-                                (aset constants i (ValueNode''asConstant-1 n))
-                                (recur (inc i) (next s))
+    (defn- #_"boolean" IfNode''splitIfAtPhi-2 [#_"IfNode" this, #_"SimplifierTool" tool]
+        ;; disabled until we make sure we have no FrameState-less merges at this stage
+        (and (not (GuardsStage'areFrameStatesAtSideEffects-1 (:guardsStage (:graph this))))
+            (satisfies? MergeNode (:predecessor this))
+            (let [
+                #_"MergeNode" merge (:predecessor this)
+            ]
+                (and (not (= (AbstractMergeNode''forwardEndCount-1 merge) 1)) ;; don't bother
+                    (= (NodeIterable'''count-1 (Node''usages-1 merge)) 1) (= (NodeIterable'''count-1 (AbstractMergeNode''phis-1 merge)) 1)
+                    (nil? (:stateAfter merge)) ;; we'll get the chance to simplify this after frame state assignment
+                    (let [
+                        #_"PhiNode" phi (NodeIterable'''first-1 (AbstractMergeNode''phis-1 merge))
+                    ]
+                        (and
+                            ;; for simplicity, the code below assumes that phi goes dead at the end, so skip this case
+                            (= (NodeIterable'''count-1 (Node''usages-1 phi)) 1)
+                            ;; check that the condition uses the phi and that there is only one user of the condition expression
+                            (IfNode'conditionUses-2 (:condition this), phi)
+                            ;; We could additionally filter for the case that at least some of the Phi inputs or one of
+                            ;; the condition inputs are constants but there are cases where a non-constant is simplifiable,
+                            ;; usually where the stamp allows the question to be answered.
+
+                            ;; each successor of the if gets a new merge if needed
+                            (let [
+                                [#_"MergeNode" trueMerge #_"MergeNode" falseMerge]
+                                    (loop-when [trueMerge nil falseMerge nil #_"ISeq" s (seq (NodeIterable'''snapshot-1 (:ends merge)))] (some? s) => [trueMerge falseMerge]
+                                        (let [
+                                            #_"EndNode" end (first s)
+                                            #_"Node" value (PhiNode''valueAt-2n phi, end)
+                                            #_"LogicNode" result (IfNode'computeCondition-4 tool, (:condition this), phi, value)
+                                            [trueMerge falseMerge]
+                                                (cond
+                                                    (satisfies? LogicConstantNode result)
+                                                        (do
+                                                            (AbstractMergeNode''removeEnd-2 merge, end)
+                                                            (if (:value result)
+                                                                (let [
+                                                                    trueMerge (or trueMerge (IfNode''insertMerge-2 this, (:trueSuccessor this)))
+                                                                ]
+                                                                    (AbstractMergeNode''addForwardEnd-2 trueMerge, end)
+                                                                    [trueMerge falseMerge]
+                                                                )
+                                                                (let [
+                                                                    falseMerge (or falseMerge (IfNode''insertMerge-2 this, (:falseSuccessor this)))
+                                                                ]
+                                                                    (AbstractMergeNode''addForwardEnd-2 falseMerge, end)
+                                                                    [trueMerge falseMerge]
+                                                                )
+                                                            )
+                                                        )
+                                                    (= result (:condition this))
+                                                        [trueMerge falseMerge]
+                                                    :else
+                                                        ;; build a new IfNode using the new condition
+                                                        (let [
+                                                            #_"BeginNode" trueBegin (Graph''add-2 (:graph this), (BeginNode'new-0))
+                                                            #_"BeginNode" falseBegin (Graph''add-2 (:graph this), (BeginNode'new-0))
+                                                            result (if (some? (:graph result)) result (Graph''addOrUniqueWithInputs-2 (:graph this), result))
+                                                            #_"IfNode" newIfNode (Graph''add-2 (:graph this), (IfNode'new-4b result, trueBegin, falseBegin, (:trueSuccessorProbability this)))
+                                                            _ (AbstractMergeNode''removeEnd-2 merge, end)
+                                                            _ (§ ass! (:predecessor end) (FixedWithNextNode''setNext-2 (:predecessor end), newIfNode))
+                                                            trueMerge (or trueMerge (IfNode''insertMerge-2 this, (:trueSuccessor this)))
+                                                            _ (§ ass! trueBegin (FixedWithNextNode''setNext-2 trueBegin, (Graph''add-2 (:graph this), (EndNode'new-0))))
+                                                            _ (AbstractMergeNode''addForwardEnd-2 trueMerge, (:next trueBegin))
+                                                            falseMerge (or falseMerge (IfNode''insertMerge-2 this, (:falseSuccessor this)))
+                                                            _ (§ ass! falseBegin (FixedWithNextNode''setNext-2 falseBegin, (Graph''add-2 (:graph this), (EndNode'new-0))))
+                                                            _ (AbstractMergeNode''addForwardEnd-2 falseMerge, (:next falseBegin))
+                                                            _ (Node''safeDelete-1 end)
+                                                        ]
+                                                            [trueMerge falseMerge]
+                                                        )
+                                                )
+                                        ]
+                                            (recur trueMerge falseMerge (next s))
+                                        )
+                                    )
+                            ]
+                                (IfNode'transferProxies-2 (:trueSuccessor this), trueMerge)
+                                (IfNode'transferProxies-2 (:falseSuccessor this), falseMerge)
+
+                                (IfNode''cleanupMerge-2 this, merge)
+                                (IfNode''cleanupMerge-2 this, trueMerge)
+                                (IfNode''cleanupMerge-2 this, falseMerge)
+
+                                true
                             )
                         )
                     )
                 )
+            )
+        )
+    )
+
+    ;;;
+     ; Try to optimize this as if it were a ConditionalNode.
+     ;;
+    (defn- #_"boolean" IfNode''conditionalNodeOptimization-2 [#_"IfNode" this, #_"SimplifierTool" tool]
+        (and (satisfies? AbstractEndNode (:next (:trueSuccessor this)))
+             (satisfies? AbstractEndNode (:next (:falseSuccessor this)))
+            (let [
+                #_"AbstractEndNode" trueEnd (:next (:trueSuccessor this))
+                #_"AbstractEndNode" falseEnd (:next (:falseSuccessor this))
+            ]
+                (and (= (AbstractEndNode'''merge-1 trueEnd) (AbstractEndNode'''merge-1 falseEnd)) (satisfies? MergeNode (AbstractEndNode'''merge-1 trueEnd))
+                    (let [
+                        #_"MergeNode" merge (AbstractEndNode'''merge-1 trueEnd)
+                    ]
+                        (and (= (NodeIterable'''count-1 (Node''usages-1 merge)) 1) (= (NodeIterable'''count-1 (AbstractMergeNode''phis-1 merge)) 1)
+                            (if (or (NodeIterable'''isNotEmpty-1 (AbstractBeginNode'''anchored-1 (:trueSuccessor this)))
+                                    (NodeIterable'''isNotEmpty-1 (AbstractBeginNode'''anchored-1 (:falseSuccessor this)))
+                                )
+                                false
+                                (let [
+                                    #_"PhiNode" phi (NodeIterable'''first-1 (AbstractMergeNode''phis-1 merge))
+                                    #_"ValueNode" result (ConditionalNode'canonicalizeConditional-4 (:condition this), (PhiNode''valueAt-2n phi, trueEnd), (PhiNode''valueAt-2n phi, falseEnd), (:stamp phi))
+                                ]
+                                    (and (some? result)
+                                        ;; canonicalizeConditional returns possibly new nodes so add them to the graph
+                                        (let [
+                                            result
+                                                (when (nil? (:graph result)) => result
+                                                    (Graph''addOrUniqueWithInputs-2 (:graph this), result)
+                                                )
+                                            result (IfNode''proxyReplacement-2 this, result)
+                                        ]
+                                            ;; This optimization can be performed even if multiple values merge at this phi
+                                            ;; since the two inputs get simplified into one.
+                                            (PhiNode''setValueAt-3n phi, trueEnd, result)
+                                            (IfNode''removeThroughFalseBranch-3 this, tool, merge)
+                                            true
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
+                )
+            )
+        )
+    )
+
+    (defn- #_"boolean" IfNode'valuesDistinct-3 [#_"SimplifierTool" tool, #_"ValueNode" a, #_"ValueNode" b]
+        (when (and (satisfies? ConstantNode a) (satisfies? ConstantNode b))
+            (let [
+                #_"Boolean" equal (#_"ConstantReflectionProvider" .constantEquals HotSpot'constantReflection, (:value a), (:value b))
+            ]
+                (when (some? equal)
+                    (§ return (not (#_"Boolean" .booleanValue equal)))
+                )
+            )
+        )
+
+        (Stamp'''alwaysDistinct-2 (:stamp a), (:stamp b))
+    )
+
+    (defn- #_"boolean" IfNode'prepareForSwap-3 [#_"SimplifierTool" tool, #_"LogicNode" a, #_"LogicNode" b]
+        (condp satisfies? a
+            InstanceOfNode
+                (condp satisfies? b
+                    IsNullNode
+                        (= (Unary'''getValue-1 b) (Unary'''getValue-1 a))
+                    InstanceOfNode
+                        ;; Two instanceof on the same value with mutually exclusive types.
+                        (and (= (Unary'''getValue-1 a) (Unary'''getValue-1 b))
+                             (not (#_"ResolvedJavaType" .isInterface (:type (InstanceOfNode''type-1 a))))
+                             (not (#_"ResolvedJavaType" .isInterface (:type (InstanceOfNode''type-1 b))))
+                             (not (#_"ResolvedJavaType" .isAssignableFrom (:type (InstanceOfNode''type-1 a)), (:type (InstanceOfNode''type-1 b))))
+                             (not (#_"ResolvedJavaType" .isAssignableFrom (:type (InstanceOfNode''type-1 b)), (:type (InstanceOfNode''type-1 a))))
+                        )
+                    false
+                )
+            CompareNode
+                (let [
+                    #_"Condition" conditionA (:condition (CompareNode''condition-1 a))
+                ]
+                    (and (satisfies? CompareNode b) (not= a b)
+                        (let [
+                            #_"Condition" conditionB (:condition (CompareNode''condition-1 b))
+                            #_"Condition" comparableCondition
+                                (cond
+                                    (and (= (:x b) (:x a)) (= (:y b) (:y a)))                      conditionB
+                                    (and (= (:x b) (:y a)) (= (:y b) (:x a))) (Condition''mirror-1 conditionB)
+                                )
+                        ]
+                            (if (nil? comparableCondition)
+                                (and (= conditionA conditionB Condition'EQ)
+                                    (or (and (= (:x a) (:x b)) (IfNode'valuesDistinct-3 tool, (:y a), (:y b)))
+                                        (and (= (:x a) (:y b)) (IfNode'valuesDistinct-3 tool, (:y a), (:x b)))
+                                        (and (= (:y a) (:x b)) (IfNode'valuesDistinct-3 tool, (:x a), (:y b)))
+                                        (and (= (:y a) (:y b)) (IfNode'valuesDistinct-3 tool, (:x a), (:x b)))
+                                    )
+                                )
+                                ;; The two conditions are disjoint => can reorder.
+                                (nil? (Condition''join-2 conditionA, comparableCondition))
+                            )
+                        )
+                    )
+                )
+            false
+        )
+    )
+
+    (defn- #_"boolean" IfNode''isUnboxedFrom-3 [#_"IfNode" this, #_"ValueNode" x, #_"ValueNode" src]
+        (or (= x src)
+            (condp satisfies? x
+                UnboxNode (IfNode''isUnboxedFrom-3 this, (Unary'''getValue-1 x), src)
+                PiNode    (IfNode''isUnboxedFrom-3 this, (Proxy'''getOriginalNode-1 x), src)
+                LoadFieldNode
+                    (let [
+                        #_"ValueNode" value (Unary'''getValue-1 x)
+                    ]
+                        (and (= (Stamp'''javaType-1 (:stamp value)) (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, Integer))
+                            (IfNode''isUnboxedFrom-3 this, value, src)
+                        )
+                    )
+                false
+            )
+        )
+    )
+
+    ;;;
+     ; Attempts to replace the following pattern:
+     ;
+     ; Integer x = ...;
+     ; Integer y = ...;
+     ; if ((x == y) || x.equals(y)) { ... }
+     ;
+     ; with:
+     ;
+     ; Integer x = ...;
+     ; Integer y = ...;
+     ; if (x.equals(y)) { ... }
+     ;
+     ; whenever the probability that the reference check will pass is relatively small.
+     ;
+     ; See GR-1315 for more information.
+     ;;
+    (defn- #_"boolean" IfNode''tryEliminateBoxedReferenceEquals-2 [#_"IfNode" this, #_"SimplifierTool" tool]
+        (and (satisfies? ObjectEqualsNode (:condition this))
+            (let [
+                #_"ValueNode" x (:x (:condition this))
+                #_"ValueNode" y (:y (:condition this))
+                #_"ResolvedJavaType" integerType (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, Integer)
+            ]
+                (and
+                    ;; At least one argument for reference equal must be a boxed primitive.
+                    (or (= (Stamp'''javaType-1 (:stamp x)) integerType) (= (Stamp'''javaType-1 (:stamp y)) integerType))
+                    ;; The reference equality check is usually more efficient compared to a boxing check.
+                    ;; The success of the reference equals must therefore be relatively rare, otherwise
+                    ;; it makes no sense to eliminate it.
+                    (<= (:trueSuccessorProbability this) 0.4)
+                    ;; True branch must be empty.
+                    (and (or (satisfies? BeginNode (:trueSuccessor this)) (satisfies? LoopExitNode (:trueSuccessor this)))
+                        (satisfies? EndNode (:next (:trueSuccessor this))) ;; Empty true branch.
+                    )
+                    ;; False branch must only check the unboxed values.
+                    (let [
+                        [#_"UnboxNode" unbox #_"FixedGuardNode" unboxCheck]
+                            (loop-when [unbox nil unboxCheck nil #_"ISeq" s (seq (AbstractBeginNode''getBlockNodes-1 (:falseSuccessor this)))] (some? s) => [unbox unboxCheck]
+                                (let [
+                                    #_"FixedNode" node (first s)
+                                ]
+                                    (when (or (satisfies? BeginNode node) (satisfies? UnboxNode node) (satisfies? FixedGuardNode node) (satisfies? EndNode node) (satisfies? LoadFieldNode node) (satisfies? LoopExitNode node))
+                                        (let [
+                                            unbox
+                                                (when (satisfies? UnboxNode node) => unbox
+                                                    (when (nil? unbox) => (§ return nil)
+                                                        node
+                                                    )
+                                                )
+                                        ]
+                                            (let [
+                                                unboxCheck
+                                                    (when (and (satisfies? FixedGuardNode node) (satisfies? IntegerEqualsNode (DeoptimizingGuard'''getCondition-1 node))) => unboxCheck
+                                                        (let [
+                                                            #_"IntegerEqualsNode" equals (DeoptimizingGuard'''getCondition-1 node)
+                                                        ]
+                                                            (when (or (and (IfNode''isUnboxedFrom-3 this, (:x equals), x) (IfNode''isUnboxedFrom-3 this, (:y equals), y)) (and (IfNode''isUnboxedFrom-3 this, (:x equals), y) (IfNode''isUnboxedFrom-3 this, (:y equals), x))) => unboxCheck
+                                                                node
+                                                            )
+                                                        )
+                                                    )
+                                            ]
+                                                (recur unbox unboxCheck (next s))
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                    ]
+                        (and (some? unbox) (some? unboxCheck)
+                            (do
+                                ;; Falsify the reference check.
+                                (§ ass! this (IfNode''setCondition-2 this, (Graph''addOrUniqueWithInputs-2 (:graph this), (LogicConstantNode'contradiction-0))))
+                                true
+                            )
+                        )
+                    )
+                )
+            )
+        )
+    )
+
+    (defm IfNode Simplifiable
+        (#_"void" Simplifiable'''simplify-2 [#_"IfNode" this, #_"SimplifierTool" tool]
+            (cond
+                (satisfies? DeoptimizeNode (:next (:trueSuccessor this)))
+                    (when-not (= (:trueSuccessorProbability this) 0)
+                        (§ ass! this (assoc this :trueSuccessorProbability 0))
+                    )
+                (satisfies? DeoptimizeNode (:next (:falseSuccessor this)))
+                    (when-not (= (:trueSuccessorProbability this) 1)
+                        (§ ass! this (assoc this :trueSuccessorProbability 1))
+                    )
+            )
+            (when (satisfies? LogicNegationNode (:condition this))
+                (§ ass! this (IfNode''eliminateNegation-1 this))
+            )
+            (or
+                (when (satisfies? LogicConstantNode (:condition this))
+                    (if (:value (:condition this))
+                        (do
+                            (SimplifierTool'''deleteBranch-2 tool, (:falseSuccessor this))
+                            (SimplifierTool'''addToWorkList-2n tool, (:trueSuccessor this))
+                            (Graph''removeSplit-3 (:graph this), this, (:trueSuccessor this))
+                        )
+                        (do
+                            (SimplifierTool'''deleteBranch-2 tool, (:trueSuccessor this))
+                            (SimplifierTool'''addToWorkList-2n tool, (:falseSuccessor this))
+                            (Graph''removeSplit-3 (:graph this), this, (:falseSuccessor this))
+                        )
+                    )
+                    :done
+                )
+                (when (and (CanonicalizerTool'''allUsagesAvailable-1 tool) (Node''hasNoUsages-1 (:trueSuccessor this)) (Node''hasNoUsages-1 (:falseSuccessor this)))
+                    (IfNode''pushNodesThroughIf-2 this, tool)
+                    (when (or (IfNode''checkForUnsignedCompare-2 this, tool) (IfNode''removeOrMaterializeIf-2 this, tool))
+                        :done
+                    )
+                )
+                (when (IfNode''removeIntermediateMaterialization-2 this, tool)
+                    :done
+                )
+                (when (IfNode''splitIfAtPhi-2 this, tool)
+                    :done
+                )
+                (when (IfNode''conditionalNodeOptimization-2 this, tool)
+                    :done
+                )
+                (when (and (Node''hasNoUsages-1 (:falseSuccessor this)) (not (satisfies? LoopExitNode (:falseSuccessor this))) (satisfies? IfNode (:next (:falseSuccessor this))))
+                    (let [
+                        #_"AbstractBeginNode" intermediateBegin (:falseSuccessor this)
+                        #_"IfNode" nextIf (:next intermediateBegin)
+                        #_"double" probabilityB (* (- 1.0 (:trueSuccessorProbability this)) (:trueSuccessorProbability nextIf))
+                    ]
+                        ;; Reordering of those two if statements is beneficial from the point of view of their probabilities.
+                        ;; Reordering is allowed from (if1 => begin => if2) to (if2 => begin => if1).
+                        (when (and (< (:trueSuccessorProbability this) probabilityB) (IfNode'prepareForSwap-3 tool, (:condition this), (:condition nextIf)))
+                            (let [
+                                #_"AbstractBeginNode" bothFalseBegin (:falseSuccessor nextIf)
+                            ]
+                                (§ ass! nextIf (IfNode''setFalseSuccessor-2 nextIf, nil))
+                                (§ ass! intermediateBegin (FixedWithNextNode''setNext-2 intermediateBegin, nil))
+                                (§ ass! this (IfNode''setFalseSuccessor-2 this, nil))
+
+                                (Node''replaceAtPredecessor-2 this, nextIf)
+                                (§ ass! nextIf (IfNode''setFalseSuccessor-2 nextIf, intermediateBegin))
+                                (§ ass! intermediateBegin (FixedWithNextNode''setNext-2 intermediateBegin, this))
+                                (§ ass! this (IfNode''setFalseSuccessor-2 this, bothFalseBegin))
+
+                                (§ ass! nextIf (IfNode''setTrueSuccessorProbability-2 nextIf, probabilityB))
+                                (§ ass! this (IfNode''setTrueSuccessorProbability-2 this, (if (= probabilityB 1.0) 0.0 (min 1.0 (/ (:trueSuccessorProbability this) (- 1.0 probabilityB))))))
+                                :done
+                            )
+                        )
+                    )
+                )
+                (when (IfNode''tryEliminateBoxedReferenceEquals-2 this, tool)
+                    :done
+                )
+            )
+            nil
         )
     )
 
@@ -56682,10 +56130,6 @@ ZeroExtendNode'new-4
         (#_"AbstractBeginNode" ControlSplitNode'''getPrimarySuccessor-1 [#_"IfNode" this]
             nil
         )
-    )
-
-    (defn #_"AbstractBeginNode" IfNode''getSuccessor-2 [#_"IfNode" this, #_"boolean" result]
-        (if result (:trueSuccessor this) (:falseSuccessor this))
     )
 
     (defm IfNode ControlSplitNode
@@ -57290,17 +56734,33 @@ ZeroExtendNode'new-4
  ; The ArrayLength instruction gets the length of an array.
  ;;
 (class-ns ArrayLengthNode
-    (defm ArrayLengthNode Unary
-        (#_"ValueNode" Unary'''getValue-1 [#_"ArrayLengthNode" this]
-            (:array this)
-        )
-    )
-
     (defn #_"ArrayLengthNode" ArrayLengthNode'new-1 [#_"ValueNode" array]
         (merge (ArrayLengthNode'class.) (FixedWithNextNode'new-1 StampFactory'nonNegativeInt)
             (hash-map
                 ; @Input
                 #_"ValueNode" :array array
+            )
+        )
+    )
+
+    (defn- #_"ValueNode" ArrayLengthNode'readArrayLengthConstant-1 [#_"ValueNode" originalArray]
+        (let [
+            #_"ValueNode" array (GraphUtil'unproxify-1n originalArray)
+        ]
+            (when (and (some? HotSpot'constantReflection) (satisfies? ConstantNode array) (not (ValueNode''isNullConstant-1 array)))
+                (let [
+                    #_"JavaConstant" constantValue (ValueNode''asJavaConstant-1 array)
+                ]
+                    (when (and (some? constantValue) (#_"JavaConstant" .isNonNull constantValue))
+                        (let [
+                            #_"Integer" constantLength (#_"ConstantReflectionProvider" .readArrayLength HotSpot'constantReflection, constantValue)
+                        ]
+                            (when (some? constantLength)
+                                (ConstantNode'forInt-1 constantLength)
+                            )
+                        )
+                    )
+                )
             )
         )
     )
@@ -57314,6 +56774,10 @@ ZeroExtendNode'new-4
     )
 
     (defm ArrayLengthNode Unary
+        (#_"ValueNode" Unary'''getValue-1 [#_"ArrayLengthNode" this]
+            (:array this)
+        )
+
         (#_"ValueNode" Unary'''canonical-3 [#_"ArrayLengthNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
             (or (ArrayLengthNode'readArrayLength-1 value)
                 this
@@ -57360,28 +56824,6 @@ ZeroExtendNode'new-4
                 ;; ensure that any proxies on the original value end up on the length value
                 (ArrayLengthNode'reproxyValue-2 originalArray, length)
                 (ArrayLengthNode'readArrayLengthConstant-1 originalArray)
-            )
-        )
-    )
-
-    (defn- #_"ValueNode" ArrayLengthNode'readArrayLengthConstant-1 [#_"ValueNode" originalArray]
-        (let [
-            #_"ValueNode" array (GraphUtil'unproxify-1n originalArray)
-        ]
-            (when (and (some? HotSpot'constantReflection) (satisfies? ConstantNode array) (not (ValueNode''isNullConstant-1 array)))
-                (let [
-                    #_"JavaConstant" constantValue (ValueNode''asJavaConstant-1 array)
-                ]
-                    (when (and (some? constantValue) (#_"JavaConstant" .isNonNull constantValue))
-                        (let [
-                            #_"Integer" constantLength (#_"ConstantReflectionProvider" .readArrayLength HotSpot'constantReflection, constantValue)
-                        ]
-                            (when (some? constantLength)
-                                (ConstantNode'forInt-1 constantLength)
-                            )
-                        )
-                    )
-                )
             )
         )
     )
@@ -57725,6 +57167,40 @@ ZeroExtendNode'new-4
  ; known at compile time. This is used, for instance, to intrinsify Class#isInstance(Object).
  ;;
 (class-ns InstanceOfDynamicNode
+    (defn #_"InstanceOfDynamicNode" InstanceOfDynamicNode'new-4 [#_"ValueNode" mirror, #_"ValueNode" object, #_"boolean" allow-nil?, #_"boolean" exact?]
+        (merge (InstanceOfDynamicNode'class.) (BinaryOpLogicNode'new-2 mirror, object)
+            (hash-map
+                #_"boolean" :allow-nil? allow-nil?
+                #_"boolean" :exact? exact?
+            )
+        )
+    )
+
+    (defn- #_"LogicNode" InstanceOfDynamicNode'findSynonym-4 [#_"ValueNode" forMirror, #_"ValueNode" forObject, #_"boolean" allow-nil?, #_"boolean" exact?]
+        (when (satisfies? ConstantNode forMirror)
+            (let [
+                #_"ResolvedJavaType" t (#_"ConstantReflectionProvider" .asJavaType HotSpot'constantReflection, (:value forMirror))
+            ]
+                (when (some? t)
+                    (if (#_"ResolvedJavaType" .isPrimitive t)
+                        (if allow-nil?
+                            (IsNullNode'create-1 forObject)
+                            (LogicConstantNode'contradiction-0)
+                        )
+                        (let [
+                            #_"TypeReference" type (if exact? (TypeReference'createExactTrusted-1 t) (TypeReference'createTrusted-1 t))
+                        ]
+                            (if allow-nil?
+                                (InstanceOfNode'createAllowNull-2 type, forObject)
+                                (InstanceOfNode'create-2 type, forObject)
+                            )
+                        )
+                    )
+                )
+            )
+        )
+    )
+
     (defn #_"LogicNode" InstanceOfDynamicNode'create-4 [#_"ValueNode" mirror, #_"ValueNode" object, #_"boolean" allow-nil?, #_"boolean" exact?]
         (or (InstanceOfDynamicNode'findSynonym-4 mirror, object, allow-nil?, exact?)
             (InstanceOfDynamicNode'new-4 mirror, object, allow-nil?, exact?)
@@ -57733,15 +57209,6 @@ ZeroExtendNode'new-4
 
     (defn #_"LogicNode" InstanceOfDynamicNode'create-3 [#_"ValueNode" mirror, #_"ValueNode" object, #_"boolean" allow-nil?]
         (InstanceOfDynamicNode'create-4 mirror, object, allow-nil?, false)
-    )
-
-    (defn #_"InstanceOfDynamicNode" InstanceOfDynamicNode'new-4 [#_"ValueNode" mirror, #_"ValueNode" object, #_"boolean" allow-nil?, #_"boolean" exact?]
-        (merge (InstanceOfDynamicNode'class.) (BinaryOpLogicNode'new-2 mirror, object)
-            (hash-map
-                #_"boolean" :allow-nil? allow-nil?
-                #_"boolean" :exact? exact?
-            )
-        )
     )
 
     (defn #_"boolean" InstanceOfDynamicNode''isMirror-1 [#_"InstanceOfDynamicNode" this]
@@ -57772,31 +57239,6 @@ ZeroExtendNode'new-4
                 )
             )
             nil
-        )
-    )
-
-    (defn- #_"LogicNode" InstanceOfDynamicNode'findSynonym-4 [#_"ValueNode" forMirror, #_"ValueNode" forObject, #_"boolean" allow-nil?, #_"boolean" exact?]
-        (when (satisfies? ConstantNode forMirror)
-            (let [
-                #_"ResolvedJavaType" t (#_"ConstantReflectionProvider" .asJavaType HotSpot'constantReflection, (:value forMirror))
-            ]
-                (when (some? t)
-                    (if (#_"ResolvedJavaType" .isPrimitive t)
-                        (if allow-nil?
-                            (IsNullNode'create-1 forObject)
-                            (LogicConstantNode'contradiction-0)
-                        )
-                        (let [
-                            #_"TypeReference" type (if exact? (TypeReference'createExactTrusted-1 t) (TypeReference'createTrusted-1 t))
-                        ]
-                            (if allow-nil?
-                                (InstanceOfNode'createAllowNull-2 type, forObject)
-                                (InstanceOfNode'create-2 type, forObject)
-                            )
-                        )
-                    )
-                )
-            )
         )
     )
 
@@ -57975,12 +57417,29 @@ ZeroExtendNode'new-4
         (LoadFieldNode'new-3 (StampFactory'forDeclaredType-2 (#_"ResolvedJavaField" .getType field), false), object, field)
     )
 
-    (defn #_"ValueNode" LoadFieldNode'create-4 [#_"ValueNode" object, #_"ResolvedJavaField" field, #_"boolean" canonicalizeReads, #_"boolean" allUsagesAvailable]
-        (LoadFieldNode'canonical-6 nil, (StampFactory'forDeclaredType-2 (#_"ResolvedJavaField" .getType field), false), object, field, canonicalizeReads, allUsagesAvailable)
-    )
-
     (defn #_"LoadFieldNode" LoadFieldNode'createOverrideStamp-3 [#_"StampPair" stamp, #_"ValueNode" object, #_"ResolvedJavaField" field]
         (LoadFieldNode'new-3 stamp, object, field)
+    )
+
+    (defn- #_"ValueNode" LoadFieldNode'canonical-6 [#_"LoadFieldNode" self, #_"StampPair" stamp, #_"ValueNode" forObject, #_"ResolvedJavaField" field, #_"boolean" canonicalizeReads, #_"boolean" allUsagesAvailable]
+        (or
+            (when (and canonicalizeReads (some? HotSpot'metaAccess))
+                (or
+                    (LoadFieldNode'asConstant-2 forObject, field)
+                    (when allUsagesAvailable
+                        (LoadFieldNode'asPhi-3 forObject, field, (:trustedStamp stamp))
+                    )
+                )
+            )
+            (if (and (some? self) (not (#_"ResolvedJavaField" .isStatic field)) (ValueNode''isNullConstant-1 forObject))
+                (DeoptimizeNode'new-2 DeoptimizationAction/InvalidateReprofile, DeoptimizationReason/NullCheckException)
+                (or self (LoadFieldNode'new-3 stamp, forObject, field))
+            )
+        )
+    )
+
+    (defn #_"ValueNode" LoadFieldNode'create-4 [#_"ValueNode" object, #_"ResolvedJavaField" field, #_"boolean" canonicalizeReads, #_"boolean" allUsagesAvailable]
+        (LoadFieldNode'canonical-6 nil, (StampFactory'forDeclaredType-2 (#_"ResolvedJavaField" .getType field), false), object, field, canonicalizeReads, allUsagesAvailable)
     )
 
     (defn #_"ValueNode" LoadFieldNode'createOverrideStamp-5 [#_"StampPair" stamp, #_"ValueNode" object, #_"ResolvedJavaField" field, #_"boolean" canonicalizeReads, #_"boolean" allUsagesAvailable]
@@ -58033,23 +57492,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"ValueNode" LoadFieldNode'canonical-6 [#_"LoadFieldNode" self, #_"StampPair" stamp, #_"ValueNode" forObject, #_"ResolvedJavaField" field, #_"boolean" canonicalizeReads, #_"boolean" allUsagesAvailable]
-        (or
-            (when (and canonicalizeReads (some? HotSpot'metaAccess))
-                (or
-                    (LoadFieldNode'asConstant-2 forObject, field)
-                    (when allUsagesAvailable
-                        (LoadFieldNode'asPhi-3 forObject, field, (:trustedStamp stamp))
-                    )
-                )
-            )
-            (if (and (some? self) (not (#_"ResolvedJavaField" .isStatic field)) (ValueNode''isNullConstant-1 forObject))
-                (DeoptimizeNode'new-2 DeoptimizationAction/InvalidateReprofile, DeoptimizationReason/NullCheckException)
-                (or self (LoadFieldNode'new-3 stamp, forObject, field))
-            )
-        )
-    )
-
     (defm LoadFieldNode Virtualizable
         (#_"void" Virtualizable'''virtualize-2 [#_"LoadFieldNode" this, #_"VirtualizerTool" tool]
             (let [
@@ -58080,25 +57522,20 @@ ZeroExtendNode'new-4
  ; The LoadIndexedNode represents a read from an element of an array.
  ;;
 (class-ns LoadIndexedNode
-    ;;;
-     ; Creates a new LoadIndexedNode.
-     ;
-     ; @param array the instruction producing the array
-     ; @param index the instruction producing the index
-     ; @param elementKind the element type
-     ;;
-    (defn #_"LoadIndexedNode" LoadIndexedNode'new-3 [#_"ValueNode" array, #_"ValueNode" index, #_"JavaKind" elementKind]
-        (LoadIndexedNode'new-4 (LoadIndexedNode'createStamp-2 array, elementKind), array, index, elementKind)
-    )
-
-    (defn #_"ValueNode" LoadIndexedNode'create-3 [#_"ValueNode" array, #_"ValueNode" index, #_"JavaKind" elementKind]
-        (or (LoadIndexedNode'tryConstantFold-2 array, index)
-            (LoadIndexedNode'new-3 array, index, elementKind)
-        )
-    )
-
     (defn #_"LoadIndexedNode" LoadIndexedNode'new-4 [#_"Stamp" stamp, #_"ValueNode" array, #_"ValueNode" index, #_"JavaKind" elementKind]
         (merge (LoadIndexedNode'class.) (AccessIndexedNode'new-4 stamp, array, index, elementKind))
+    )
+
+    (defn- #_"JavaKind" LoadIndexedNode'determinePreciseArrayElementType-2 [#_"ValueNode" array, #_"JavaKind" kind]
+        (when (= kind JavaKind/Byte) => kind
+            (let [
+                #_"ResolvedJavaType" type (:type (:stamp array))
+            ]
+                (when (and (some? type) (#_"ResolvedJavaType" .isArray type) (some? (#_"ResolvedJavaType" .getComponentType type)) (= (#_"ResolvedJavaType" .getJavaKind (#_"ResolvedJavaType" .getComponentType type)) JavaKind/Boolean)) => kind
+                    JavaKind/Boolean
+                )
+            )
+        )
     )
 
     (defn- #_"Stamp" LoadIndexedNode'createStamp-2 [#_"ValueNode" array, #_"JavaKind" kind]
@@ -58112,15 +57549,38 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"JavaKind" LoadIndexedNode'determinePreciseArrayElementType-2 [#_"ValueNode" array, #_"JavaKind" kind]
-        (when (= kind JavaKind/Byte) => kind
+    ;;;
+     ; Creates a new LoadIndexedNode.
+     ;
+     ; @param array the instruction producing the array
+     ; @param index the instruction producing the index
+     ; @param elementKind the element type
+     ;;
+    (defn #_"LoadIndexedNode" LoadIndexedNode'new-3 [#_"ValueNode" array, #_"ValueNode" index, #_"JavaKind" elementKind]
+        (LoadIndexedNode'new-4 (LoadIndexedNode'createStamp-2 array, elementKind), array, index, elementKind)
+    )
+
+    (defn- #_"ValueNode" LoadIndexedNode'tryConstantFold-2 [#_"ValueNode" array, #_"ValueNode" index]
+        (when (and (satisfies? ConstantNode array) (not (ValueNode''isNullConstant-1 array)) (satisfies? ConstantNode index))
             (let [
-                #_"ResolvedJavaType" type (:type (:stamp array))
+                #_"JavaConstant" arrayConstant (ValueNode''asJavaConstant-1 array)
             ]
-                (when (and (some? type) (#_"ResolvedJavaType" .isArray type) (some? (#_"ResolvedJavaType" .getComponentType type)) (= (#_"ResolvedJavaType" .getJavaKind (#_"ResolvedJavaType" .getComponentType type)) JavaKind/Boolean)) => kind
-                    JavaKind/Boolean
+                (when (and (some? arrayConstant) (pos? (:stableDimension array)))
+                    (let [
+                        #_"JavaConstant" constant (#_"ConstantReflectionProvider" .readArrayElement HotSpot'constantReflection, arrayConstant, (#_"JavaConstant" .asInt (ValueNode''asJavaConstant-1 index)))
+                    ]
+                        (when (and (some? constant) (or (:isDefaultStable array) (not (#_"JavaConstant" .isDefaultForKind constant))))
+                            (ConstantNode'forConstant-3c constant, (dec (:stableDimension array)), (:isDefaultStable array))
+                        )
+                    )
                 )
             )
+        )
+    )
+
+    (defn #_"ValueNode" LoadIndexedNode'create-3 [#_"ValueNode" array, #_"ValueNode" index, #_"JavaKind" elementKind]
+        (or (LoadIndexedNode'tryConstantFold-2 array, index)
+            (LoadIndexedNode'new-3 array, index, elementKind)
         )
     )
 
@@ -58160,24 +57620,6 @@ ZeroExtendNode'new-4
         (#_"Node" Canonicalizable'''canonical-2 [#_"LoadIndexedNode" this, #_"CanonicalizerTool" tool]
             (or (LoadIndexedNode'tryConstantFold-2 (:array this), (AccessIndexedNode''index-1 this))
                 this
-            )
-        )
-    )
-
-    (defn- #_"ValueNode" LoadIndexedNode'tryConstantFold-2 [#_"ValueNode" array, #_"ValueNode" index]
-        (when (and (satisfies? ConstantNode array) (not (ValueNode''isNullConstant-1 array)) (satisfies? ConstantNode index))
-            (let [
-                #_"JavaConstant" arrayConstant (ValueNode''asJavaConstant-1 array)
-            ]
-                (when (and (some? arrayConstant) (pos? (:stableDimension array)))
-                    (let [
-                        #_"JavaConstant" constant (#_"ConstantReflectionProvider" .readArrayElement HotSpot'constantReflection, arrayConstant, (#_"JavaConstant" .asInt (ValueNode''asJavaConstant-1 index)))
-                    ]
-                        (when (and (some? constant) (or (:isDefaultStable array) (not (#_"JavaConstant" .isDefaultForKind constant))))
-                            (ConstantNode'forConstant-3c constant, (dec (:stableDimension array)), (:isDefaultStable array))
-                        )
-                    )
-                )
             )
         )
     )
@@ -58921,17 +58363,17 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"LogicNode" LogicNegationNode'create-1 [#_"LogicNode" value]
-        (or (LogicNegationNode'findSynonym-1 value)
-            (LogicNegationNode'new-1 value)
-        )
-    )
-
     (defn- #_"LogicNode" LogicNegationNode'findSynonym-1 [#_"LogicNode" value]
         (condp satisfies? value
             LogicConstantNode (LogicConstantNode'forBoolean-1 (not (:value value)))
             LogicNegationNode (Unary'''getValue-1 value)
             nil
+        )
+    )
+
+    (defn #_"LogicNode" LogicNegationNode'create-1 [#_"LogicNode" value]
+        (or (LogicNegationNode'findSynonym-1 value)
+            (LogicNegationNode'new-1 value)
         )
     )
 
@@ -60117,6 +59559,12 @@ ZeroExtendNode'new-4
      ;;
     (§ def #_"LocationIdentity" NamedLocationIdentity'ARRAY_LENGTH_LOCATION (NamedLocationIdentity'immutable-1 "[].length"))
 
+    ;;;
+     ; Creates a named unique location identity for read and write operations.
+     ;
+     ; @param name the name of the new location identity
+     ; @param immutable true if the location is immutable
+     ;;
     (defn #_"NamedLocationIdentity" NamedLocationIdentity'new-2 [#_"String" name, #_"boolean" immutable]
         (merge (NamedLocationIdentity'class.) (LocationIdentity.)
             (hash-map
@@ -60132,7 +59580,7 @@ ZeroExtendNode'new-4
      ; @param name the name of the new location identity
      ;;
     (defn #_"NamedLocationIdentity" NamedLocationIdentity'mutable-1 [#_"String" name]
-        (NamedLocationIdentity'create-2 name, false)
+        (NamedLocationIdentity'new-2 name, false)
     )
 
     ;;;
@@ -60142,17 +59590,7 @@ ZeroExtendNode'new-4
      ; @param name the name of the new location identity
      ;;
     (defn #_"NamedLocationIdentity" NamedLocationIdentity'immutable-1 [#_"String" name]
-        (NamedLocationIdentity'create-2 name, true)
-    )
-
-    ;;;
-     ; Creates a named unique location identity for read and write operations.
-     ;
-     ; @param name the name of the new location identity
-     ; @param immutable true if the location is immutable
-     ;;
-    (defn- #_"NamedLocationIdentity" NamedLocationIdentity'create-2 [#_"String" name, #_"boolean" immutable]
-        (NamedLocationIdentity'new-2 name, immutable)
+        (NamedLocationIdentity'new-2 name, true)
     )
 
     (§ override! #_"boolean" #_"LocationIdentity." isImmutable [#_"NamedLocationIdentity" this]
@@ -60702,6 +60140,74 @@ ZeroExtendNode'new-4
         )
     )
 
+    (defn- #_"LogicNode" ShortCircuitOrNode'optimizeShortCircuit-4 [#_"ShortCircuitOrNode" inner, #_"boolean" innerNegated, #_"boolean" matchNegated, #_"boolean" matchIsInnerX]
+        (let [
+            #_"boolean" innerMatchNegated (if matchIsInnerX (:xNegated inner) (:yNegated inner))
+        ]
+            (if (not innerNegated)
+                ;; The four digit results of the expression used in the 16 subsequent formula
+                ;; comments correspond to results when using the following truth table for
+                ;; inputs a and b and testing all 4 possible input combinations:
+                ;; _ 1234
+                ;; a 1100
+                ;; b 1010
+                (if (= innerMatchNegated matchNegated)
+                    ;; ( (!a ||!b) ||!a) => 0111 (!a ||!b)
+                    ;; ( (!a || b) ||!a) => 1011 (!a || b)
+                    ;; ( ( a ||!b) || a) => 1101 ( a ||!b)
+                    ;; ( ( a || b) || a) => 1110 ( a || b)
+                    ;; Only the inner or is relevant, the outer or never adds information.
+                    inner
+                    ;; ( ( a || b) ||!a) => 1111 (true)
+                    ;; ( (!a ||!b) || a) => 1111 (true)
+                    ;; ( (!a || b) || a) => 1111 (true)
+                    ;; ( ( a ||!b) ||!a) => 1111 (true)
+                    ;; The result of the expression is always true.
+                    (LogicConstantNode'tautology-0)
+                )
+                (if (= innerMatchNegated matchNegated)
+                    ;; (!(!a ||!b) ||!a) => 1011 (!a || b)
+                    ;; (!(!a || b) ||!a) => 0111 (!a ||!b)
+                    ;; (!( a ||!b) || a) => 1110 ( a || b)
+                    ;; (!( a || b) || a) => 1101 ( a ||!b)
+                    (let [
+                        #_"boolean" newInnerXNegated (:xNegated inner)
+                        #_"boolean" newInnerYNegated (:yNegated inner)
+                        #_"double" newProbability (:shortCircuitProbability inner)
+                        [newInnerXNegated newInnerYNegated newProbability]
+                            (if matchIsInnerX
+                                [newInnerXNegated (not newInnerYNegated) newProbability]
+                                [(not newInnerXNegated) newInnerYNegated (- 1.0 newProbability)]
+                            )
+                    ]
+                        ;; The expression can be transformed into a single or.
+                        (ShortCircuitOrNode'new-5 (:x inner), newInnerXNegated, (:y inner), newInnerYNegated, newProbability)
+                    )
+                    ;; (!(!a ||!b) || a) => 1100 (a)
+                    ;; (!(!a || b) || a) => 1100 (a)
+                    ;; (!( a ||!b) ||!a) => 0011 (!a)
+                    ;; (!( a || b) ||!a) => 0011 (!a)
+                    (let [
+                        #_"LogicNode" result (if matchIsInnerX (:x inner) (:y inner))
+                    ]
+                        ;; Only the second part of the outer or is relevant.
+                        (if matchNegated (LogicNegationNode'create-1 result) result)
+                    )
+                )
+            )
+        )
+    )
+
+    (defn- #_"ValueNode" ShortCircuitOrNode'skipThroughPisAndProxies-1 [#_"ValueNode" node]
+        (loop [node node]
+            (condp satisfies? node
+                PiNode     (recur (Proxy'''getOriginalNode-1 node))
+                ValueProxy (recur (Proxy'''getOriginalNode-1 node))
+                node
+            )
+        )
+    )
+
     (defm ShortCircuitOrNode Binary
         (#_"LogicNode" Binary'''canonical-4 [#_"ShortCircuitOrNode" this, #_"CanonicalizerTool" tool, #_"LogicNode" forX, #_"LogicNode" forY]
             (let [
@@ -60771,74 +60277,6 @@ ZeroExtendNode'new-4
     (defm ShortCircuitOrNode Canonicalizable
         (#_"LogicNode" Canonicalizable'''canonical-2 [#_"ShortCircuitOrNode" this, #_"CanonicalizerTool" tool]
             (Binary'''canonical-4 this, tool, (:x this), (:y this))
-        )
-    )
-
-    (defn- #_"ValueNode" ShortCircuitOrNode'skipThroughPisAndProxies-1 [#_"ValueNode" node]
-        (loop [node node]
-            (condp satisfies? node
-                PiNode     (recur (Proxy'''getOriginalNode-1 node))
-                ValueProxy (recur (Proxy'''getOriginalNode-1 node))
-                node
-            )
-        )
-    )
-
-    (defn- #_"LogicNode" ShortCircuitOrNode'optimizeShortCircuit-4 [#_"ShortCircuitOrNode" inner, #_"boolean" innerNegated, #_"boolean" matchNegated, #_"boolean" matchIsInnerX]
-        (let [
-            #_"boolean" innerMatchNegated (if matchIsInnerX (:xNegated inner) (:yNegated inner))
-        ]
-            (if (not innerNegated)
-                ;; The four digit results of the expression used in the 16 subsequent formula
-                ;; comments correspond to results when using the following truth table for
-                ;; inputs a and b and testing all 4 possible input combinations:
-                ;; _ 1234
-                ;; a 1100
-                ;; b 1010
-                (if (= innerMatchNegated matchNegated)
-                    ;; ( (!a ||!b) ||!a) => 0111 (!a ||!b)
-                    ;; ( (!a || b) ||!a) => 1011 (!a || b)
-                    ;; ( ( a ||!b) || a) => 1101 ( a ||!b)
-                    ;; ( ( a || b) || a) => 1110 ( a || b)
-                    ;; Only the inner or is relevant, the outer or never adds information.
-                    inner
-                    ;; ( ( a || b) ||!a) => 1111 (true)
-                    ;; ( (!a ||!b) || a) => 1111 (true)
-                    ;; ( (!a || b) || a) => 1111 (true)
-                    ;; ( ( a ||!b) ||!a) => 1111 (true)
-                    ;; The result of the expression is always true.
-                    (LogicConstantNode'tautology-0)
-                )
-                (if (= innerMatchNegated matchNegated)
-                    ;; (!(!a ||!b) ||!a) => 1011 (!a || b)
-                    ;; (!(!a || b) ||!a) => 0111 (!a ||!b)
-                    ;; (!( a ||!b) || a) => 1110 ( a || b)
-                    ;; (!( a || b) || a) => 1101 ( a ||!b)
-                    (let [
-                        #_"boolean" newInnerXNegated (:xNegated inner)
-                        #_"boolean" newInnerYNegated (:yNegated inner)
-                        #_"double" newProbability (:shortCircuitProbability inner)
-                        [newInnerXNegated newInnerYNegated newProbability]
-                            (if matchIsInnerX
-                                [newInnerXNegated (not newInnerYNegated) newProbability]
-                                [(not newInnerXNegated) newInnerYNegated (- 1.0 newProbability)]
-                            )
-                    ]
-                        ;; The expression can be transformed into a single or.
-                        (ShortCircuitOrNode'new-5 (:x inner), newInnerXNegated, (:y inner), newInnerYNegated, newProbability)
-                    )
-                    ;; (!(!a ||!b) || a) => 1100 (a)
-                    ;; (!(!a || b) || a) => 1100 (a)
-                    ;; (!( a ||!b) ||!a) => 0011 (!a)
-                    ;; (!( a || b) ||!a) => 0011 (!a)
-                    (let [
-                        #_"LogicNode" result (if matchIsInnerX (:x inner) (:y inner))
-                    ]
-                        ;; Only the second part of the outer or is relevant.
-                        (if matchNegated (LogicNegationNode'create-1 result) result)
-                    )
-                )
-            )
         )
     )
 )
@@ -61011,12 +60449,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"Node" Graph''addOrUniqueWithInputs-2 [#_"Graph" this, #_"Node" node]
-        (when-not (Node''isAlive-1 node) => node
-            (Graph''addInputs-2 this, node)
-            (Graph''add-2 this, node)
-        )
-    )
+    (declare Graph''addOrUniqueWithInputs-2)
 
     (defn- #_"void" Graph''addInputs-2 [#_"Graph" this, #_"Node" node]
         (let [
@@ -61031,6 +60464,13 @@ ZeroExtendNode'new-4
             (Node''applyInputs-2 node, addInputsFilter)
         )
         nil
+    )
+
+    (defn #_"Node" Graph''addOrUniqueWithInputs-2 [#_"Graph" this, #_"Node" node]
+        (when-not (Node''isAlive-1 node) => node
+            (Graph''addInputs-2 this, node)
+            (Graph''add-2 this, node)
+        )
     )
 
     ;;;
@@ -61108,21 +60548,6 @@ ZeroExtendNode'new-4
         (#_"Iterator" .hasNext (#_"Iterable" .iterator (Graph''getNodes-2 this, type)))
     )
 
-    ;;;
-     ; @return the first live Node with a matching iterableId
-     ;;
-    (defn #_"Node" Graph''getIterableNodeStart-2 [#_"Graph" this, #_"int" iterableId]
-        (when (< iterableId (count (:iterableNodesFirst this)))
-            (let [
-                #_"Node" node (nth (:iterableNodesFirst this) iterableId)
-            ]
-                (when (and (some? node) (Node''isDeleted-1 node)) => node
-                    (Graph''findFirstLiveIterable-3 this, iterableId, node)
-                )
-            )
-        )
-    )
-
     (defn- #_"Node" Graph''findFirstLiveIterable-3 [#_"Graph" this, #_"int" iterableId, #_"Node" node]
         (let [
             node (loop-when-recur node (and (some? node) (Node''isDeleted-1 node)) (:typeCacheNext node) => node)
@@ -61138,11 +60563,17 @@ ZeroExtendNode'new-4
     )
 
     ;;;
-     ; @return return the first live Node with a matching iterableId starting from {@code node}
+     ; @return the first live Node with a matching iterableId
      ;;
-    (defn #_"Node" Graph''getIterableNodeNext-2 [#_"Graph" this, #_"Node" node]
-        (when (and (some? node) (Node''isDeleted-1 node)) => node
-            (Graph''findNextLiveiterable-2 this, node)
+    (defn #_"Node" Graph''getIterableNodeStart-2 [#_"Graph" this, #_"int" iterableId]
+        (when (< iterableId (count (:iterableNodesFirst this)))
+            (let [
+                #_"Node" node (nth (:iterableNodesFirst this) iterableId)
+            ]
+                (when (and (some? node) (Node''isDeleted-1 node)) => node
+                    (Graph''findFirstLiveIterable-3 this, iterableId, node)
+                )
+            )
         )
     )
 
@@ -61163,6 +60594,15 @@ ZeroExtendNode'new-4
                 )
             )
             node
+        )
+    )
+
+    ;;;
+     ; @return return the first live Node with a matching iterableId starting from {@code node}
+     ;;
+    (defn #_"Node" Graph''getIterableNodeNext-2 [#_"Graph" this, #_"Node" node]
+        (when (and (some? node) (Node''isDeleted-1 node)) => node
+            (Graph''findNextLiveiterable-2 this, node)
         )
     )
 
@@ -62309,6 +61749,19 @@ ZeroExtendNode'new-4
         nil
     )
 
+    (defn- #_"void" GraphUtil'normalizeLoopBegin-1 [#_"LoopBeginNode" begin]
+        ;; Delete unnecessary loop phi functions, i.e. phi functions where all inputs are either the same or the phi itself.
+        (doseq [#_"PhiNode" phi (NodeIterable'''snapshot-1 (AbstractMergeNode''phis-1 begin))]
+            (GraphUtil'checkRedundantPhi-1 phi)
+        )
+        (doseq [#_"LoopExitNode" exit (LoopBeginNode''loopExits-1 begin)]
+            (doseq [#_"ProxyNode" vpn (NodeIterable'''snapshot-1 (LoopExitNode''proxies-1 exit))]
+                (GraphUtil'checkRedundantProxy-1 vpn)
+            )
+        )
+        nil
+    )
+
     ;;;
      ; Remove loop header without loop ends. This can happen with degenerated loops like this one:
      ;
@@ -62349,19 +61802,6 @@ ZeroExtendNode'new-4
                         (GraphUtil'checkRedundantPhi-1 node)
                     )
                 )
-            )
-        )
-        nil
-    )
-
-    (defn- #_"void" GraphUtil'normalizeLoopBegin-1 [#_"LoopBeginNode" begin]
-        ;; Delete unnecessary loop phi functions, i.e. phi functions where all inputs are either the same or the phi itself.
-        (doseq [#_"PhiNode" phi (NodeIterable'''snapshot-1 (AbstractMergeNode''phis-1 begin))]
-            (GraphUtil'checkRedundantPhi-1 phi)
-        )
-        (doseq [#_"LoopExitNode" exit (LoopBeginNode''loopExits-1 begin)]
-            (doseq [#_"ProxyNode" vpn (NodeIterable'''snapshot-1 (LoopExitNode''proxies-1 exit))]
-                (GraphUtil'checkRedundantProxy-1 vpn)
             )
         )
         nil
@@ -63533,8 +62973,6 @@ ZeroExtendNode'new-4
 )
 
 (class-ns CanonicalizerPhase
-    (def- #_"int" CanonicalizerPhase'MAX_ITERATION_PER_NODE 10)
-
     (defn #_"CanonicalizerPhase" CanonicalizerPhase'new-0 []
         (merge (CanonicalizerPhase'class.)
             (hash-map
@@ -63547,7 +62985,7 @@ ZeroExtendNode'new-4
      ; @param newNodesMark only the {@linkplain Graph#getNewNodes(NodeMark) new nodes} specified by this mark are processed
      ;;
     (defn #_"void" CanonicalizerPhase''applyIncremental-3m [#_"CanonicalizerPhase" this, #_"Graph" graph, #_"NodeMark" newNodesMark]
-        (§ ass! graph (Phase'''run-3 (CanonicalizerInstance'new-2m this, newNodesMark), graph, nil))
+        (§ ass! graph (Phase'''run-3 (CanonicalizerInstance'new-3 this, nil, newNodesMark), graph, nil))
         nil
     )
 
@@ -63555,7 +62993,7 @@ ZeroExtendNode'new-4
      ; @param workingSet the initial working set of nodes on which the canonicalizer works, should be an auto-grow node bitmap
      ;;
     (defn #_"void" CanonicalizerPhase''applyIncremental-3i [#_"CanonicalizerPhase" this, #_"Graph" graph, #_"Iterable<Node>" workingSet]
-        (§ ass! graph (Phase'''run-3 (CanonicalizerInstance'new-2i this, workingSet), graph, nil))
+        (§ ass! graph (Phase'''run-3 (CanonicalizerInstance'new-3 this, workingSet, nil), graph, nil))
         nil
     )
 
@@ -63566,25 +63004,13 @@ ZeroExtendNode'new-4
 
     (defm CanonicalizerPhase Phase
         (#_"Graph" Phase'''run-3 [#_"CanonicalizerPhase" this, #_"Graph" graph, #_"PhaseContext" context]
-            (Phase'''run-3 (CanonicalizerInstance'new-1 this), graph, nil)
+            (Phase'''run-3 (CanonicalizerInstance'new-3 this, nil, nil), graph, nil)
         )
     )
 )
 
 (class-ns CanonicalizerInstance
-    (defn- #_"CanonicalizerInstance" CanonicalizerInstance'new-1 [#_"CanonicalizerPhase" phase]
-        (CanonicalizerInstance'new-3 phase, nil, nil)
-    )
-
-    (defn- #_"CanonicalizerInstance" CanonicalizerInstance'new-2i [#_"CanonicalizerPhase" phase, #_"Iterable<Node>" workingSet]
-        (CanonicalizerInstance'new-3 phase, workingSet, nil)
-    )
-
-    (defn- #_"CanonicalizerInstance" CanonicalizerInstance'new-2m [#_"CanonicalizerPhase" phase, #_"NodeMark" newNodesMark]
-        (CanonicalizerInstance'new-3 phase, nil, newNodesMark)
-    )
-
-    (defn- #_"CanonicalizerInstance" CanonicalizerInstance'new-3 [#_"CanonicalizerPhase" phase, #_"Iterable<Node>" workingSet, #_"NodeMark" newNodesMark]
+    (defn #_"CanonicalizerInstance" CanonicalizerInstance'new-3 [#_"CanonicalizerPhase" phase, #_"Iterable<Node>" workingSet, #_"NodeMark" newNodesMark]
         (merge (CanonicalizerInstance'class.)
             (hash-map
                 #_"CanonicalizerPhase" :phase phase
@@ -63596,24 +63022,52 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defm CanonicalizerInstance Phase
-        (#_"Graph" Phase'''run-3 [#_"CanonicalizerInstance" this, #_"Graph" graph, #_"PhaseContext" context]
-            (let [
-                #_"boolean" wholeGraph (or (nil? (:newNodesMark this)) (NodeMark''isStart-1 (:newNodesMark this)))
-            ]
-                (if (nil? (:initWorkingSet this))
-                    (§ ass! this (assoc this :workList (IterativeNodeWorkList'new-3 graph, wholeGraph, CanonicalizerPhase'MAX_ITERATION_PER_NODE)))
-                    (do
-                        (§ ass! this (assoc this :workList (IterativeNodeWorkList'new-3 graph, false, CanonicalizerPhase'MAX_ITERATION_PER_NODE)))
-                        (NodeWorkList''addAll-2 (:workList this), (:initWorkingSet this))
+    ;;;
+     ; Calls ValueNode#inferStamp() on the node and if it returns true (which means that the stamp has changed),
+     ; re-queues the node's usages. If the stamp has changed, then this method also checks
+     ; if the stamp now describes a constant integer value, in which case the node is replaced with a constant.
+     ;;
+    (defn- #_"boolean" CanonicalizerInstance''tryInferStamp-2 [#_"CanonicalizerInstance" this, #_"ValueNode" node]
+        (and (Node''isAlive-1 node) (ValueNode'''inferStamp-1 node)
+            (do
+                (doseq [#_"Node" usage (Node''usages-1 node)]
+                    (NodeWorkList'''add-2 (:workList this), usage)
+                )
+                true
+            )
+        )
+    )
+
+    ;;;
+     ; @return true if the graph was changed
+     ;;
+    (defn- #_"boolean" CanonicalizerInstance''processNode-2 [#_"CanonicalizerInstance" this, #_"Node" node]
+        (and (Node''isAlive-1 node)
+            (or (GraphUtil'tryKillUnused-1 node)
+                (CanonicalizerInstance''tryCanonicalize-3 this, node, (:nodeClass node))
+                (and (satisfies? ValueNode node)
+                    (let [
+                        #_"boolean" improved? (CanonicalizerInstance''tryInferStamp-2 this, node)
+                        #_"Constant" constant (Stamp'''asConstant-1 (:stamp node))
+                    ]
+                        (if (and (some? constant) (not (satisfies? ConstantNode node)))
+                            (do
+                                (Node'''replaceAtUsages-3 node, InputType'Value, (ConstantNode'forConstant-3s (:stamp node), constant, (:graph node)))
+                                (GraphUtil'tryKillUnused-1 node)
+                                true
+                            )
+                            (and improved?
+                                ;; the improved stamp may enable additional canonicalization
+                                (or (CanonicalizerInstance''tryCanonicalize-3 this, node, (:nodeClass node))
+                                    (do
+                                        (#_"Iterable" .forEach (Node''usages-1 node), (ß (:workList this)(§ ffun )NodeWorkList'''add-2))
+                                        false
+                                    )
+                                )
+                            )
+                        )
                     )
                 )
-                (when-not wholeGraph
-                    (NodeWorkList''addAll-2 (:workList this), (Graph''getNewNodes-2 graph, (:newNodesMark this)))
-                )
-                (§ ass! this (assoc this :tool (Tool'new-1 this)))
-                (CanonicalizerInstance''processWorkSet-2 this, graph)
-                graph
             )
         )
     )
@@ -63654,61 +63108,26 @@ ZeroExtendNode'new-4
         nil
     )
 
-    ;;;
-     ; @return true if the graph was changed
-     ;;
-    (defn- #_"boolean" CanonicalizerInstance''processNode-2 [#_"CanonicalizerInstance" this, #_"Node" node]
-        (and (Node''isAlive-1 node)
-            (or (GraphUtil'tryKillUnused-1 node)
-                (CanonicalizerInstance''tryCanonicalize-3 this, node, (:nodeClass node))
-                (and (satisfies? ValueNode node)
-                    (let [
-                        #_"boolean" improved? (CanonicalizerInstance''tryInferStamp-2 this, node)
-                        #_"Constant" constant (Stamp'''asConstant-1 (:stamp node))
-                    ]
-                        (if (and (some? constant) (not (satisfies? ConstantNode node)))
-                            (do
-                                (Node'''replaceAtUsages-3 node, InputType'Value, (ConstantNode'forConstant-3s (:stamp node), constant, (:graph node)))
-                                (GraphUtil'tryKillUnused-1 node)
-                                true
-                            )
-                            (and improved?
-                                ;; the improved stamp may enable additional canonicalization
-                                (or (CanonicalizerInstance''tryCanonicalize-3 this, node, (:nodeClass node))
-                                    (do
-                                        (#_"Iterable" .forEach (Node''usages-1 node), (ß (:workList this)(§ ffun )NodeWorkList'''add-2))
-                                        false
-                                    )
-                                )
-                            )
-                        )
+    (def- #_"int" CanonicalizerInstance'MAX_ITERATION_PER_NODE 10)
+
+    (defm CanonicalizerInstance Phase
+        (#_"Graph" Phase'''run-3 [#_"CanonicalizerInstance" this, #_"Graph" graph, #_"PhaseContext" context]
+            (let [
+                #_"boolean" wholeGraph (or (nil? (:newNodesMark this)) (NodeMark''isStart-1 (:newNodesMark this)))
+            ]
+                (if (nil? (:initWorkingSet this))
+                    (§ ass! this (assoc this :workList (IterativeNodeWorkList'new-3 graph, wholeGraph, CanonicalizerInstance'MAX_ITERATION_PER_NODE)))
+                    (do
+                        (§ ass! this (assoc this :workList (IterativeNodeWorkList'new-3 graph, false, CanonicalizerInstance'MAX_ITERATION_PER_NODE)))
+                        (NodeWorkList''addAll-2 (:workList this), (:initWorkingSet this))
                     )
                 )
-            )
-        )
-    )
-
-    (defn #_"boolean" CanonicalizerInstance''tryCanonicalize-3 [#_"CanonicalizerInstance" this, #_"Node" node, #_"NodeClass" nodeClass]
-        (or
-            (and (:canonicalizable? nodeClass)
-                (let [
-                    #_"Node" canonical
-                        (let [
-                            canonical (Canonicalizable'''canonical-2 node, (:tool this))
-                        ]
-                            (when (and (= canonical node) (:commutative? nodeClass)) => canonical
-                                (Binary'''maybeCommuteInputs-1 node)
-                            )
-                        )
-                ]
-                    (CanonicalizerInstance''performReplacement-3 this, node, canonical)
+                (when-not wholeGraph
+                    (NodeWorkList''addAll-2 (:workList this), (Graph''getNewNodes-2 graph, (:newNodesMark this)))
                 )
-            )
-            (and (:simplifiable? nodeClass)
-                (do
-                    (Simplifiable'''simplify-2 node, (:tool this))
-                    (Node''isDeleted-1 node)
-                )
+                (§ ass! this (assoc this :tool (Tool'new-1 this)))
+                (CanonicalizerInstance''processWorkSet-2 this, graph)
+                graph
             )
         )
     )
@@ -63779,19 +63198,27 @@ ZeroExtendNode'new-4
         )
     )
 
-    ;;;
-     ; Calls ValueNode#inferStamp() on the node and, if it returns true (which means
-     ; that the stamp has changed), re-queues the node's usages. If the stamp has changed then
-     ; this method also checks if the stamp now describes a constant integer value, in which
-     ; case the node is replaced with a constant.
-     ;;
-    (defn- #_"boolean" CanonicalizerInstance''tryInferStamp-2 [#_"CanonicalizerInstance" this, #_"ValueNode" node]
-        (and (Node''isAlive-1 node) (ValueNode'''inferStamp-1 node)
-            (do
-                (doseq [#_"Node" usage (Node''usages-1 node)]
-                    (NodeWorkList'''add-2 (:workList this), usage)
+    (defn #_"boolean" CanonicalizerInstance''tryCanonicalize-3 [#_"CanonicalizerInstance" this, #_"Node" node, #_"NodeClass" nodeClass]
+        (or
+            (and (:canonicalizable? nodeClass)
+                (let [
+                    #_"Node" canonical
+                        (let [
+                            canonical (Canonicalizable'''canonical-2 node, (:tool this))
+                        ]
+                            (when (and (= canonical node) (:commutative? nodeClass)) => canonical
+                                (Binary'''maybeCommuteInputs-1 node)
+                            )
+                        )
+                ]
+                    (CanonicalizerInstance''performReplacement-3 this, node, canonical)
                 )
-                true
+            )
+            (and (:simplifiable? nodeClass)
+                (do
+                    (Simplifiable'''simplify-2 node, (:tool this))
+                    (Node''isDeleted-1 node)
+                )
             )
         )
     )
@@ -64107,18 +63534,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"void" ConditionalEliminationInstance''processNodes-2 [#_"ConditionalEliminationInstance" this, #_"Block" block]
-        (if (some? (:blockToNodes this))
-            (doseq [#_"Node" node (BlockMap''get-2 (:blockToNodes this), block)]
-                (when (Node''isAlive-1 node)
-                    (ConditionalEliminationInstance''processNode-2 this, node)
-                )
-            )
-            (ConditionalEliminationInstance''processBlock-2 this, block)
-        )
-        nil
-    )
-
     (defn- #_"void" ConditionalEliminationInstance''processBlock-2 [#_"ConditionalEliminationInstance" this, #_"Block" block]
         (let [
             #_"FixedNode" end (:endNode block)
@@ -64138,6 +63553,18 @@ ZeroExtendNode'new-4
                     )
                 )
             )
+        )
+        nil
+    )
+
+    (defn #_"void" ConditionalEliminationInstance''processNodes-2 [#_"ConditionalEliminationInstance" this, #_"Block" block]
+        (if (some? (:blockToNodes this))
+            (doseq [#_"Node" node (BlockMap''get-2 (:blockToNodes this), block)]
+                (when (Node''isAlive-1 node)
+                    (ConditionalEliminationInstance''processNode-2 this, node)
+                )
+            )
+            (ConditionalEliminationInstance''processBlock-2 this, block)
         )
         nil
     )
@@ -64381,7 +63808,7 @@ ZeroExtendNode'new-4
      ; We may directly use the stamp here without restriction, because any later lookup of the
      ; registered info elements is in the same chain of pi nodes.
      ;;
-    (defn- #_"Stamp" ConditionalEliminationInstance'getSafeStamp-1 [#_"ValueNode" x]
+    (defn- #_"Stamp" ConditionalEliminationInstance'getSafeStamp-1 [#_"ValueNode" x]
         (:stamp x)
     )
 
@@ -64393,7 +63820,7 @@ ZeroExtendNode'new-4
      ; of a parameter after inlining, or the stamp of a fixed node that can never be replaced
      ; with a pi node via canonicalization).
      ;;
-    (defn- #_"Stamp" ConditionalEliminationInstance'getOtherSafeStamp-1 [#_"ValueNode" x]
+    (defn- #_"Stamp" ConditionalEliminationInstance'getOtherSafeStamp-1 [#_"ValueNode" x]
         (if (or (satisfies? ConstantNode x) (:isAfterFixedReadPhase (:graph x)))
             (:stamp x)
             (Stamp'''unrestricted-1 (:stamp x))
@@ -64463,7 +63890,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"boolean" ConditionalEliminationInstance''canScheduleAbove-4 [#_"ConditionalEliminationInstance" this, #_"Node" test, #_"Node" target, #_"ValueNode" knownToBeAbove]
+    (defn- #_"boolean" ConditionalEliminationInstance''canScheduleAbove-4 [#_"ConditionalEliminationInstance" this, #_"Node" test, #_"Node" target, #_"ValueNode" knownToBeAbove]
         (let [
             #_"Block" targetBlock (get (:nodeToBlock this) target)
             #_"Block" testBlock (get (:nodeToBlock this) test)
@@ -64581,7 +64008,7 @@ ZeroExtendNode'new-4
         (ConditionalEliminationInstance''tryProveGuardCondition-4 this, nil, node, rewireGuardFunction)
     )
 
-    (defn- #_"InfoElement" ConditionalEliminationInstance''nextElement-2 [#_"ConditionalEliminationInstance" this, #_"InfoElement" current]
+    (defn- #_"InfoElement" ConditionalEliminationInstance''nextElement-2 [#_"ConditionalEliminationInstance" this, #_"InfoElement" current]
         (or (:parent current)
             (let [
                 #_"ValueNode" proxifiedInput (:proxifiedInput current)
@@ -64805,7 +64232,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"boolean" ConditionalEliminationInstance'maybeMultipleUsages-1 [#_"ValueNode" value]
+    (defn- #_"boolean" ConditionalEliminationInstance'maybeMultipleUsages-1 [#_"ValueNode" value]
         (or (Node''hasMoreThanOneUsage-1 value) (satisfies? ProxyNode value) (satisfies? PiNode value) (satisfies? StampInverter value))
     )
 
@@ -65108,7 +64535,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"void" DeadCodeEliminationPhase'iterateSuccessorsAndInputs-1 [#_"NodeFlood" flood]
+    (defn- #_"void" DeadCodeEliminationPhase'iterateSuccessorsAndInputs-1 [#_"NodeFlood" flood]
         (let [
             #_"EdgeVisitor" consumer
                 (§ proxy #_"EdgeVisitor" (EdgeVisitor'new-0)
@@ -65131,7 +64558,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"void" DeadCodeEliminationPhase'deleteNodes-2 [#_"NodeFlood" flood, #_"Graph" graph]
+    (defn- #_"void" DeadCodeEliminationPhase'deleteNodes-2 [#_"NodeFlood" flood, #_"Graph" graph]
         (let [
             #_"EdgeVisitor" consumer
                 (§ proxy #_"EdgeVisitor" (EdgeVisitor'new-0)
@@ -65261,7 +64688,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"void" ExpandLogicPhase'processNormalizeCompareNode-1 [#_"NormalizeCompareNode" normalize]
+    (defn- #_"void" ExpandLogicPhase'processNormalizeCompareNode-1 [#_"NormalizeCompareNode" normalize]
         (let [
             #_"Graph" graph (:graph normalize)
             #_"ValueNode" x (:x normalize)
@@ -65277,7 +64704,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"void" ExpandLogicPhase'processBinary-1 [#_"ShortCircuitOrNode" binary]
+    (defn- #_"void" ExpandLogicPhase'processBinary-1 [#_"ShortCircuitOrNode" binary]
         (while (NodeIterable'''isNotEmpty-1 (Node''usages-1 binary))
             (let [
                 #_"Node" usage (NodeIterable'''first-1 (Node''usages-1 binary))
@@ -65293,7 +64720,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"void" ExpandLogicPhase'processIf-6 [#_"LogicNode" x, #_"boolean" xNegated, #_"LogicNode" y, #_"boolean" yNegated, #_"IfNode" ifNode, #_"double" shortCircuitProbability]
+    (defn- #_"void" ExpandLogicPhase'processIf-6 [#_"LogicNode" x, #_"boolean" xNegated, #_"LogicNode" y, #_"boolean" yNegated, #_"IfNode" ifNode, #_"double" shortCircuitProbability]
         ;; This method splits an IfNode, which has a ShortCircuitOrNode as its condition,
         ;; into two separate IfNodes: if(X) and if(Y)
         ;;
@@ -65359,11 +64786,11 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"boolean" ExpandLogicPhase'doubleEquals-2 [#_"double" a, #_"double" b]
+    (defn- #_"boolean" ExpandLogicPhase'doubleEquals-2 [#_"double" a, #_"double" b]
         (< (- a ExpandLogicPhase'EPSILON) b (+ a ExpandLogicPhase'EPSILON))
     )
 
-    (defn- #_"double" ExpandLogicPhase'sanitizeProbability-1 [#_"double" value]
+    (defn- #_"double" ExpandLogicPhase'sanitizeProbability-1 [#_"double" value]
         (let [
             #_"double" newValue (min 1.0 (max 0.0 value))
         ]
@@ -65371,7 +64798,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"void" ExpandLogicPhase'processConditional-5 [#_"LogicNode" x, #_"boolean" xNegated, #_"LogicNode" y, #_"boolean" yNegated, #_"ConditionalNode" conditional]
+    (defn- #_"void" ExpandLogicPhase'processConditional-5 [#_"LogicNode" x, #_"boolean" xNegated, #_"LogicNode" y, #_"boolean" yNegated, #_"ConditionalNode" conditional]
         (let [
             #_"ValueNode" trueTarget (:trueValue conditional)
             #_"ValueNode" falseTarget (:falseValue conditional)
@@ -65621,7 +65048,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"Block" RawConditionalEliminationVisitor'getBlock-2 [#_"ValueNode" node, #_"NodeMap<Block>" blockToNodeMap]
+    (defn- #_"Block" RawConditionalEliminationVisitor'getBlock-2 [#_"ValueNode" node, #_"NodeMap<Block>" blockToNodeMap]
         (get blockToNodeMap (if (satisfies? PhiNode node) (:merge node) node))
     )
 
@@ -65732,7 +65159,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"void" RawConditionalEliminationVisitor''registerIntegerSwitch-3 [#_"RawConditionalEliminationVisitor" this, #_"AbstractBeginNode" beginNode, #_"IntegerSwitchNode" integerSwitchNode]
+    (defn- #_"void" RawConditionalEliminationVisitor''registerIntegerSwitch-3 [#_"RawConditionalEliminationVisitor" this, #_"AbstractBeginNode" beginNode, #_"IntegerSwitchNode" integerSwitchNode]
         (RawConditionalEliminationVisitor''registerNewValueStamp-3 this, (:value integerSwitchNode), (SwitchNode'''getValueStampForSuccessor-2 integerSwitchNode, beginNode))
         nil
     )
@@ -65893,7 +65320,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"void" FloatingReadPhase'processIdentity-2 [#_"EconomicSet<LocationIdentity>" currentState, #_"LocationIdentity" identity]
+    (defn- #_"void" FloatingReadPhase'processIdentity-2 [#_"EconomicSet<LocationIdentity>" currentState, #_"LocationIdentity" identity]
         (when (#_"LocationIdentity" .isMutable identity)
             (#_"EconomicSet" .add currentState, identity)
         )
@@ -66096,7 +65523,7 @@ ZeroExtendNode'new-4
     ;;;
      ; Improve the memory graph by re-wiring all usages of a MemoryAnchorNode to the real last access location.
      ;;
-    (defn- #_"void" FloatingReadClosure'processAnchor-2 [#_"MemoryAnchorNode" anchor, #_"MemoryMap0" state]
+    (defn- #_"void" FloatingReadClosure'processAnchor-2 [#_"MemoryAnchorNode" anchor, #_"MemoryMap0" state]
         (doseq [#_"Node" node (NodeIterable'''snapshot-1 (Node''usages-1 anchor))]
             (when (and (satisfies? MemoryAccess node) (= (:lastLocationAccess node) anchor))
                 (MemoryAccess'''setLastLocationAccess-2 node, (MemoryMap'''getLastLocationAccess-2 state, (MemoryAccess'''getLocationIdentity-1 node)))
@@ -66109,7 +65536,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"void" FloatingReadClosure'processAccess-2 [#_"MemoryAccess" access, #_"MemoryMap0" state]
+    (defn- #_"void" FloatingReadClosure'processAccess-2 [#_"MemoryAccess" access, #_"MemoryMap0" state]
         (let [
             #_"LocationIdentity" locationIdentity (MemoryAccess'''getLocationIdentity-1 access)
         ]
@@ -66120,19 +65547,19 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"void" FloatingReadClosure'processCheckpoint-2s [#_"Single" checkpoint, #_"MemoryMap0" state]
+    (defn- #_"void" FloatingReadClosure'processCheckpoint-2s [#_"Single" checkpoint, #_"MemoryMap0" state]
         (FloatingReadClosure'processIdentity-3 (Single'''getLocationIdentity-1 checkpoint), checkpoint, state)
         nil
     )
 
-    (defn- #_"void" FloatingReadClosure'processCheckpoint-2m [#_"Multi" checkpoint, #_"MemoryMap0" state]
+    (defn- #_"void" FloatingReadClosure'processCheckpoint-2m [#_"Multi" checkpoint, #_"MemoryMap0" state]
         (doseq [#_"LocationIdentity" identity (Multi'''getLocationIdentities-1 checkpoint)]
             (FloatingReadClosure'processIdentity-3 identity, checkpoint, state)
         )
         nil
     )
 
-    (defn- #_"void" FloatingReadClosure'processIdentity-3 [#_"LocationIdentity" identity, #_"MemoryCheckpoint" checkpoint, #_"MemoryMap0" state]
+    (defn- #_"void" FloatingReadClosure'processIdentity-3 [#_"LocationIdentity" identity, #_"MemoryCheckpoint" checkpoint, #_"MemoryMap0" state]
         (when (#_"LocationIdentity" .isAny identity)
             (#_"EconomicMap" .clear (:lastMemorySnapshot state))
         )
@@ -66142,7 +65569,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"void" FloatingReadClosure'processFloatable-2 [#_"FloatableAccessNode" accessNode, #_"MemoryMap0" state]
+    (defn- #_"void" FloatingReadClosure'processFloatable-2 [#_"FloatableAccessNode" accessNode, #_"MemoryMap0" state]
         (let [
             #_"LocationIdentity" locationIdentity (ß FixedAccessNode''getLocationIdentity-1 accessNode)
         ]
@@ -66207,7 +65634,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"void" FloatingReadClosure'createMemoryPhi-4 [#_"LoopBeginNode" loop, #_"MemoryMap0" initialState, #_"EconomicMap<LocationIdentity, MemoryPhiNode>" phis, #_"LocationIdentity" location]
+    (defn- #_"void" FloatingReadClosure'createMemoryPhi-4 [#_"LoopBeginNode" loop, #_"MemoryMap0" initialState, #_"EconomicMap<LocationIdentity, MemoryPhiNode>" phis, #_"LocationIdentity" location]
         (let [
             #_"MemoryPhiNode" phi (Graph''add-2 (:graph loop), (MemoryPhiNode'new-2 loop, location))
         ]
@@ -66383,7 +65810,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"void" LowerGuards''lowerToIf-2 [#_"LowerGuards" this, #_"GuardNode" guard]
+    (defn- #_"void" LowerGuards''lowerToIf-2 [#_"LowerGuards" this, #_"GuardNode" guard]
         (let [
             #_"Graph" graph (:graph guard)
             #_"AbstractBeginNode" fastPath (Graph''add-2 graph, (BeginNode'new-0))
@@ -66402,7 +65829,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"void" LowerGuards''insertLoopExits-2 [#_"LowerGuards" this, #_"DeoptimizeNode" deopt]
+    (defn- #_"void" LowerGuards''insertLoopExits-2 [#_"LowerGuards" this, #_"DeoptimizeNode" deopt]
         (let [
             #_"Graph" graph (:graph deopt)
         ]
@@ -66611,7 +66038,7 @@ ZeroExtendNode'new-4
      ; @return true iff one or more parameters {@code newGraph} were specialized to account for
      ;         a constant argument, or an argument with a more specific stamp
      ;;
-    (defn- #_"boolean" InlineableGraph''specializeGraphToArguments-3 [#_"InlineableGraph" this, #_"InvokeNode" invoke, #_"CanonicalizerPhase" canonicalizer]
+    (defn- #_"boolean" InlineableGraph''specializeGraphToArguments-3 [#_"InlineableGraph" this, #_"InvokeNode" invoke, #_"CanonicalizerPhase" canonicalizer]
         (let [
             #_"ArrayList<Node>" parameterUsages (InlineableGraph''replaceParamsWithMoreInformativeArguments-2 this, invoke)
         ]
@@ -66939,7 +66366,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"ValueNode" InliningUtil'finishInlining-5 [#_"InvokeNode" invoke, #_"Graph" graph, #_"FixedNode" firstNode, #_"List<ReturnNode>" returnNodes, #_"Graph" inlineGraph]
+    (defn- #_"ValueNode" InliningUtil'finishInlining-5 [#_"InvokeNode" invoke, #_"Graph" graph, #_"FixedNode" firstNode, #_"List<ReturnNode>" returnNodes, #_"Graph" inlineGraph]
         (let [
             #_"FixedNode" invokeNode invoke
             #_"FrameState" stateAfter (:stateAfter invoke)
@@ -67205,7 +66632,7 @@ ZeroExtendNode'new-4
     (§ def #_"Decision" Decision'YES (Decision'new-2 true, "(unknown reason)"))
     (§ def #_"Decision" Decision'NO (Decision'new-2 false, "(unknown reason)"))
 
-    (defn- #_"Decision" Decision'new-2 [#_"boolean" shouldInline, #_"String" reason]
+    (defn- #_"Decision" Decision'new-2 [#_"boolean" shouldInline, #_"String" reason]
         (merge (Decision'class.)
             (hash-map
                 #_"boolean" :shouldInline shouldInline
@@ -67280,7 +66707,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"EconomicSet<ParameterNode>" CallsiteHolderExplorable''fixedParamsAt-2 [#_"CallsiteHolderExplorable" this, #_"BitSet" freshlyInstantiatedArguments]
+    (defn- #_"EconomicSet<ParameterNode>" CallsiteHolderExplorable''fixedParamsAt-2 [#_"CallsiteHolderExplorable" this, #_"BitSet" freshlyInstantiatedArguments]
         (let [
             #_"EconomicSet<ParameterNode>" params (EconomicSet/create Equivalence/IDENTITY)
         ]
@@ -67398,7 +66825,7 @@ ZeroExtendNode'new-4
      ; Determines the parent of the given loop and creates a Scope object for each one.
      ; This method will call itself recursively if no Scope for the parent loop exists.
      ;;
-    (defn- #_"Scope" ComputeInliningRelevance''createLoopScope-4 [#_"ComputeInliningRelevance" this, #_"LoopBeginNode" loopBegin, #_"EconomicMap<LoopBeginNode, Scope>" loops, #_"Scope" topScope]
+    (defn- #_"Scope" ComputeInliningRelevance''createLoopScope-4 [#_"ComputeInliningRelevance" this, #_"LoopBeginNode" loopBegin, #_"EconomicMap<LoopBeginNode, Scope>" loops, #_"Scope" topScope]
         (or (get loops loopBegin)
             ;; look for the parent scope
             (let [
@@ -67475,7 +66902,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"double" ComputeInliningRelevance''getMinPathProbability-3 [#_"ComputeInliningRelevance" this, #_"FixedNode" node, #_"double" minPathProbability]
+    (defn- #_"double" ComputeInliningRelevance''getMinPathProbability-3 [#_"ComputeInliningRelevance" this, #_"FixedNode" node, #_"double" minPathProbability]
         (if (some? node) (min minPathProbability (#_"ToDoubleFunction" .applyAsDouble (:nodeProbabilities this), node)) minPathProbability)
     )
 
@@ -67483,7 +66910,7 @@ ZeroExtendNode'new-4
      ; Returns the most probable successor. If multiple successors share the maximum probability,
      ; one is returned and the others are enqueued in pathBeginNodes.
      ;;
-    (defn- #_"Node" ComputeInliningRelevance'getMaxProbabilitySux-2 [#_"ControlSplitNode" controlSplit, #_"ArrayList<FixedNode>" pathBeginNodes]
+    (defn- #_"Node" ComputeInliningRelevance'getMaxProbabilitySux-2 [#_"ControlSplitNode" controlSplit, #_"ArrayList<FixedNode>" pathBeginNodes]
         (let [
             #_"int" pathBeginCount (count pathBeginNodes)
         ]
@@ -67515,7 +66942,7 @@ ZeroExtendNode'new-4
      ; Returns the most probable loop exit. If multiple successors share the maximum probability,
      ; one is returned and the others are enqueued in pathBeginNodes.
      ;;
-    (defn- #_"Node" ComputeInliningRelevance''getMaxProbabilityLoopExit-3 [#_"ComputeInliningRelevance" this, #_"LoopBeginNode" loopBegin, #_"ArrayList<FixedNode>" pathBeginNodes]
+    (defn- #_"Node" ComputeInliningRelevance''getMaxProbabilityLoopExit-3 [#_"ComputeInliningRelevance" this, #_"LoopBeginNode" loopBegin, #_"ArrayList<FixedNode>" pathBeginNodes]
         (let [
             #_"int" pathBeginCount (count pathBeginNodes)
         ]
@@ -67543,7 +66970,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"void" ComputeInliningRelevance'truncate-2 [#_"ArrayList<FixedNode>" pathBeginNodes, #_"int" pathBeginCount]
+    (defn- #_"void" ComputeInliningRelevance'truncate-2 [#_"ArrayList<FixedNode>" pathBeginNodes, #_"int" pathBeginCount]
         (loop-when-recur [#_"int" i (- (count pathBeginNodes) pathBeginCount)] (pos? i) [(dec i)]
             (#_"ArrayList" .remove pathBeginNodes, (dec (count pathBeginNodes)))
         )
@@ -67768,7 +67195,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"InlineInfo" InliningData''getExactInlineInfo-3 [#_"InliningData" this, #_"InvokeNode" invoke, #_"ResolvedJavaMethod" targetMethod]
+    (defn- #_"InlineInfo" InliningData''getExactInlineInfo-3 [#_"InliningData" this, #_"InvokeNode" invoke, #_"ResolvedJavaMethod" targetMethod]
         (when (InliningData''checkTargetConditions-2 this, targetMethod)
             (ExactInlineInfo'new-2 invoke, targetMethod)
         )
@@ -67907,7 +67334,7 @@ ZeroExtendNode'new-4
         (not (#_"ArrayDeque" .isEmpty (:graphQueue this)))
     )
 
-    (defn- #_"CallsiteHolder" InliningData''currentGraph-1 [#_"InliningData" this]
+    (defn- #_"CallsiteHolder" InliningData''currentGraph-1 [#_"InliningData" this]
         (#_"ArrayDeque" .peek (:graphQueue this))
     )
 
@@ -67927,7 +67354,7 @@ ZeroExtendNode'new-4
         (#_"ArrayDeque" .peekFirst (:invocationQueue this))
     )
 
-    (defn- #_"InliningData" InliningData''pushInvocationAndGraphs-2 [#_"InliningData" this, #_"MethodInvocation" methodInvocation]
+    (defn- #_"InliningData" InliningData''pushInvocationAndGraphs-2 [#_"InliningData" this, #_"MethodInvocation" methodInvocation]
         (#_"ArrayDeque" .addFirst (:invocationQueue this), methodInvocation)
         (let [
             #_"int" n (InlineInfo'''numberOfMethods-1 (:callee methodInvocation))
@@ -68078,33 +67505,33 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"void" InliningIterator''queueSuccessors-2 [#_"InliningIterator" this, #_"FixedNode" x]
+    (defn- #_"void" InliningIterator''queueSuccessors-2 [#_"InliningIterator" this, #_"FixedNode" x]
         (doseq [#_"Node" node (Node''successors-1 x)]
             (InliningIterator''queue-2 this, node)
         )
         nil
     )
 
-    (defn- #_"void" InliningIterator''queue-2 [#_"InliningIterator" this, #_"Node" node]
+    (defn- #_"void" InliningIterator''queue-2 [#_"InliningIterator" this, #_"Node" node]
         (when (and (some? node) (not (NodeBitMap''isMarked-2n (:queuedNodes this), node)))
             (InliningIterator''forcedQueue-2 this, node)
         )
         nil
     )
 
-    (defn- #_"void" InliningIterator''forcedQueue-2 [#_"InliningIterator" this, #_"Node" node]
+    (defn- #_"void" InliningIterator''forcedQueue-2 [#_"InliningIterator" this, #_"Node" node]
         (NodeBitMap''mark-2 (:queuedNodes this), node)
         (#_"Deque" .addFirst (:nodeQueue this), node)
         nil
     )
 
-    (defn- #_"FixedNode" InliningIterator''nextQueuedNode-1 [#_"InliningIterator" this]
+    (defn- #_"FixedNode" InliningIterator''nextQueuedNode-1 [#_"InliningIterator" this]
         (when (seq (:nodeQueue this))
             (#_"Deque" .removeFirst (:nodeQueue this))
         )
     )
 
-    (defn- #_"void" InliningIterator''queueMerge-2 [#_"InliningIterator" this, #_"AbstractEndNode" end]
+    (defn- #_"void" InliningIterator''queueMerge-2 [#_"InliningIterator" this, #_"AbstractEndNode" end]
         (let [
             #_"AbstractMergeNode" merge (AbstractEndNode'''merge-1 end)
         ]
@@ -68116,7 +67543,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"boolean" InliningIterator''visitedAllEnds-2 [#_"InliningIterator" this, #_"AbstractMergeNode" merge]
+    (defn- #_"boolean" InliningIterator''visitedAllEnds-2 [#_"InliningIterator" this, #_"AbstractMergeNode" merge]
         (loop-when [#_"int" i 0] (< i (AbstractMergeNode''forwardEndCount-1 merge)) => true
             (and (NodeBitMap''isMarked-2n (:queuedNodes this), (AbstractMergeNode''forwardEndAt-2 merge, i))
                 (recur (inc i))
@@ -68565,7 +67992,7 @@ ZeroExtendNode'new-4
 )
 
 (class-ns LoweringRound
-    (defn- #_"LoweringRound" LoweringRound'new-1 [#_"LoweringPhase" phase]
+    (defn- #_"LoweringRound" LoweringRound'new-1 [#_"LoweringPhase" phase]
         (merge (LoweringRound'class.)
             (hash-map
                 #_"LoweringPhase" :phase phase
@@ -69108,7 +68535,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"double" FixedNodeProbabilityCache''handleMerge-3 [#_"FixedNodeProbabilityCache" this, #_"FixedNode" node, #_"double" probability]
+    (defn- #_"double" FixedNodeProbabilityCache''handleMerge-3 [#_"FixedNodeProbabilityCache" this, #_"FixedNode" node, #_"double" probability]
         ;; Use simple iteration instead of streams, since the stream infrastructure adds many frames
         ;; which causes the recursion to overflow the stack earlier than it would otherwise.
         (let [
@@ -69125,7 +68552,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"FixedNode" FixedNodeProbabilityCache'findBegin-1 [#_"FixedNode" node]
+    (defn- #_"FixedNode" FixedNodeProbabilityCache'findBegin-1 [#_"FixedNode" node]
         (loop [node node]
             (let [
                 #_"Node" predecessor (:predecessor node)
@@ -70042,7 +69469,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"void" ScheduleInstance'fillKillSet-2 [#_"LocationSet" killed, #_"List<Node>" nodes]
+    (defn- #_"void" ScheduleInstance'fillKillSet-2 [#_"LocationSet" killed, #_"List<Node>" nodes]
         (when-not (LocationSet''isAny-1 killed)
             (loop-when [#_"ISeq" s (seq nodes)] (some? s)
                 (let [
@@ -70075,7 +69502,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"void" ScheduleInstance'sortNodesLatestWithinBlock-6c [#_"ControlFlowGraph" cfg, #_"BlockMap<List<Node>>" earliestBlockToNodesMap, #_"BlockMap<List<Node>>" latestBlockToNodesMap, #_"NodeMap<Block>" currentNodeMap, #_"BlockMap<ArrayList<FloatingReadNode>>" watchListMap, #_"NodeBitMap" visited]
+    (defn- #_"void" ScheduleInstance'sortNodesLatestWithinBlock-6c [#_"ControlFlowGraph" cfg, #_"BlockMap<List<Node>>" earliestBlockToNodesMap, #_"BlockMap<List<Node>>" latestBlockToNodesMap, #_"NodeMap<Block>" currentNodeMap, #_"BlockMap<ArrayList<FloatingReadNode>>" watchListMap, #_"NodeBitMap" visited]
         (doseq [#_"Block" block (:reversePostOrder cfg)]
             (ScheduleInstance'sortNodesLatestWithinBlock-6b block, earliestBlockToNodesMap, latestBlockToNodesMap, currentNodeMap, watchListMap, visited)
         )
@@ -70086,7 +69513,7 @@ ZeroExtendNode'new-4
         (or (satisfies? ControlSplitNode endNode) (satisfies? ControlSinkNode endNode) (satisfies? AbstractEndNode endNode))
     )
 
-    (defn- #_"void" ScheduleInstance'sortNodesLatestWithinBlock-6b [#_"Block" block, #_"BlockMap<List<Node>>" earliestBlockToNodesMap, #_"BlockMap<List<Node>>" latestBlockToNodesMap, #_"NodeMap<Block>" nodeMap, #_"BlockMap<ArrayList<FloatingReadNode>>" watchListMap, #_"NodeBitMap" unprocessed]
+    (defn- #_"void" ScheduleInstance'sortNodesLatestWithinBlock-6b [#_"Block" block, #_"BlockMap<List<Node>>" earliestBlockToNodesMap, #_"BlockMap<List<Node>>" latestBlockToNodesMap, #_"NodeMap<Block>" nodeMap, #_"BlockMap<ArrayList<FloatingReadNode>>" watchListMap, #_"NodeBitMap" unprocessed]
         (let [
             #_"List<Node>" earliestSorting (BlockMap''get-2 earliestBlockToNodesMap, block)
             #_"ArrayList<Node>" result (ArrayList.)
@@ -70163,7 +69590,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"void" ScheduleInstance'checkWatchList-6b [#_"Block" block, #_"NodeMap<Block>" nodeMap, #_"NodeBitMap" unprocessed, #_"ArrayList<Node>" result, #_"ArrayList<FloatingReadNode>" watchList, #_"Node" node]
+    (defn- #_"void" ScheduleInstance'checkWatchList-6b [#_"Block" block, #_"NodeMap<Block>" nodeMap, #_"NodeBitMap" unprocessed, #_"ArrayList<Node>" result, #_"ArrayList<FloatingReadNode>" watchList, #_"Node" node]
         (when (seq watchList)
             ;; Check if this node kills a node in the watch list.
             (condp satisfies? node
@@ -70183,7 +69610,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"void" ScheduleInstance'checkWatchList-6a [#_"ArrayList<FloatingReadNode>" watchList, #_"LocationIdentity" identity, #_"Block" b, #_"ArrayList<Node>" result, #_"NodeMap<Block>" nodeMap, #_"NodeBitMap" unprocessed]
+    (defn- #_"void" ScheduleInstance'checkWatchList-6a [#_"ArrayList<FloatingReadNode>" watchList, #_"LocationIdentity" identity, #_"Block" b, #_"ArrayList<Node>" result, #_"NodeMap<Block>" nodeMap, #_"NodeBitMap" unprocessed]
         (cond
             (#_"LocationIdentity" .isImmutable identity)
                 nil ;; Nothing to do. This can happen for an initialization write.
@@ -70220,7 +69647,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"void" ScheduleInstance'sortIntoList-6 [#_"Node" node, #_"Block" block, #_"ArrayList<Node>" result, #_"NodeMap<Block>" nodeMap, #_"NodeBitMap" unprocessed, #_"Node" excludeNode]
+    (defn- #_"void" ScheduleInstance'sortIntoList-6 [#_"Node" node, #_"Block" block, #_"ArrayList<Node>" result, #_"NodeMap<Block>" nodeMap, #_"NodeBitMap" unprocessed, #_"Node" excludeNode]
         (when-not (satisfies? PhiNode node)
             (NodeBitMap''clear-2 unprocessed, node)
             (doseq [#_"Node" input (Node''inputs-1 node)]
@@ -70269,7 +69696,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"boolean" ScheduleInstance'isImplicitNullOpportunity-2 [#_"FloatingReadNode" floatingReadNode, #_"Block" block]
+    (defn- #_"boolean" ScheduleInstance'isImplicitNullOpportunity-2 [#_"FloatingReadNode" floatingReadNode, #_"Block" block]
         (let [
             #_"Node" pred (:predecessor (:beginNode block))
         ]
@@ -70281,7 +69708,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"Node" ScheduleInstance'getUnproxifiedUncompressed-1 [#_"Node" node]
+    (defn- #_"Node" ScheduleInstance'getUnproxifiedUncompressed-1 [#_"Node" node]
         (loop [node node]
             (condp satisfies? node
                 ValueProxy
@@ -70295,7 +69722,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"Block" ScheduleInstance'calcBlockForUsage-4 [#_"Node" node, #_"Node" usage, #_"Block" block, #_"NodeMap<Block>" currentNodeMap]
+    (defn- #_"Block" ScheduleInstance'calcBlockForUsage-4 [#_"Node" node, #_"Node" usage, #_"Block" block, #_"NodeMap<Block>" currentNodeMap]
         (condp satisfies? usage
             PhiNode
                 ;; An input to a PhiNode is used at the end of the predecessor block that
@@ -70325,7 +69752,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"void" ScheduleInstance'processNodes-5 [#_"NodeBitMap" visited, #_"NodeMap<MicroBlock>" entries, #_"NodeStack" stack, #_"MicroBlock" startBlock, #_"Iterable<Node>" nodes]
+    (defn- #_"void" ScheduleInstance'processNodes-5 [#_"NodeBitMap" visited, #_"NodeMap<MicroBlock>" entries, #_"NodeStack" stack, #_"MicroBlock" startBlock, #_"Iterable<Node>" nodes]
         (doseq [#_"Node" node nodes]
             (when (nil? (get entries node))
                 (ScheduleInstance'processStack-5 node, startBlock, entries, visited, stack)
@@ -70374,7 +69801,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"void" ScheduleInstance'processStack-5 [#_"Node" first, #_"MicroBlock" startBlock, #_"NodeMap<MicroBlock>" nodeToMicroBlock, #_"NodeBitMap" visited, #_"NodeStack" stack]
+    (defn- #_"void" ScheduleInstance'processStack-5 [#_"Node" first, #_"MicroBlock" startBlock, #_"NodeMap<MicroBlock>" nodeToMicroBlock, #_"NodeBitMap" visited, #_"NodeStack" stack]
         (§ ass! stack (NodeStack''push-2 stack, first))
         (loop [#_"Node" node first]
             (condp satisfies? node
@@ -70410,7 +69837,7 @@ ZeroExtendNode'new-4
      ; nil if there were still unprocessed inputs, otherwise returns the earliest block given
      ; node can be scheduled in.
      ;;
-    (defn- #_"MicroBlock" ScheduleInstance'processInputs-4 [#_"NodeMap<MicroBlock>" nodeToBlock, #_"NodeStack" stack, #_"MicroBlock" startBlock, #_"Node" current]
+    (defn- #_"MicroBlock" ScheduleInstance'processInputs-4 [#_"NodeMap<MicroBlock>" nodeToBlock, #_"NodeStack" stack, #_"MicroBlock" startBlock, #_"Node" current]
         (when-not (:isLeafNode (:nodeClass current)) => startBlock
             (loop-when [#_"MicroBlock" earliestBlock startBlock #_"ISeq" s (seq (Node''inputs-1 current))] (some? s) => earliestBlock
                 (let [
@@ -70525,7 +69952,7 @@ ZeroExtendNode'new-4
      ; {@linkplain MicroBlock micro-blocks},
      ; nodes will not be moved from one micro-block to another.
      ;;
-    (defn- #_"void" GuardOrder'resortGuards-3 [#_"Graph" graph, #_"NodeMap<MicroBlock>" entries, #_"NodeStack" stack]
+    (defn- #_"void" GuardOrder'resortGuards-3 [#_"Graph" graph, #_"NodeMap<MicroBlock>" entries, #_"NodeStack" stack]
         (let [
             #_"EconomicSet<MicroBlock>" blocksWithGuards (EconomicSet/create Equivalence/IDENTITY)
         ]
@@ -70559,7 +69986,7 @@ ZeroExtendNode'new-4
      ; data-structures which are allocated once by the callers of this method. They should
      ; be in their "initial"/"empty" state when calling this method and when it returns.
      ;;
-    (defn- #_"MicroBlock" GuardOrder'resortGuards-4 [#_"MicroBlock" block, #_"NodeStack" stack, #_"NodeBitMap" blockNodes, #_"NodeMap<GuardPriority>" priorities]
+    (defn- #_"MicroBlock" GuardOrder'resortGuards-4 [#_"MicroBlock" block, #_"NodeStack" stack, #_"NodeBitMap" blockNodes, #_"NodeMap<GuardPriority>" priorities]
         (when (GuardOrder'propagatePriority-4 block, stack, priorities, blockNodes)
             (let [
                 #_"Function<GuardNode, GuardPriority>" transitiveGuardPriorityGetter (§ ffun #_"Map" .get)
@@ -70598,7 +70025,7 @@ ZeroExtendNode'new-4
      ; This checks if {@code node} can be scheduled, if it is the case, it schedules it now
      ; by calling #addNodeToResort(Node, NodeStack, NodeBitMap, MicroBlock, boolean).
      ;;
-    (defn- #_"void" GuardOrder'checkIfAvailable-6 [#_"Node" node, #_"NodeStack" stack, #_"NodeBitMap" sorted, #_"MicroBlock" newBlock, #_"SortedSet<GuardNode>" availableGuardNodes, #_"boolean" pushUsages]
+    (defn- #_"void" GuardOrder'checkIfAvailable-6 [#_"Node" node, #_"NodeStack" stack, #_"NodeBitMap" sorted, #_"MicroBlock" newBlock, #_"SortedSet<GuardNode>" availableGuardNodes, #_"boolean" pushUsages]
         (when-not (NodeBitMap''isMarked-2n sorted, node)
             (loop [#_"ISeq" s (seq (Node''inputs-1 node))]
                 (if (some? s)
@@ -70619,7 +70046,7 @@ ZeroExtendNode'new-4
      ; Add a node to the re-sorted micro-block. This also pushes nodes that need to be
      ; (re-)examined on the stack.
      ;;
-    (defn- #_"void" GuardOrder'addNodeToResort-5 [#_"Node" node, #_"NodeStack" stack, #_"NodeBitMap" sorted, #_"MicroBlock" newBlock, #_"boolean" pushUsages]
+    (defn- #_"void" GuardOrder'addNodeToResort-5 [#_"Node" node, #_"NodeStack" stack, #_"NodeBitMap" sorted, #_"MicroBlock" newBlock, #_"boolean" pushUsages]
         (NodeBitMap''mark-2 sorted, node)
         (§ ass! newBlock (MicroBlock''add-2 newBlock, node))
         (when pushUsages
@@ -70641,7 +70068,7 @@ ZeroExtendNode'new-4
      ;
      ; This method returns false if no re-ordering is necessary in this micro-block.
      ;;
-    (defn- #_"boolean" GuardOrder'propagatePriority-4 [#_"MicroBlock" block, #_"NodeStack" stack, #_"NodeMap<GuardPriority>" priorities, #_"NodeBitMap" blockNodes]
+    (defn- #_"boolean" GuardOrder'propagatePriority-4 [#_"MicroBlock" block, #_"NodeStack" stack, #_"NodeMap<GuardPriority>" priorities, #_"NodeBitMap" blockNodes]
         (let [
             #_"GuardPriority" lowestPriority
                 (loop-when [lowestPriority (GuardPriority'highest-0) #_"NodeEntry" e (:head block)] (some? e) => lowestPriority
@@ -70790,7 +70217,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"Stamp" CountLeadingZerosNode'computeStamp-2 [#_"Stamp" stamp, #_"ValueNode" value]
+    (defn- #_"Stamp" CountLeadingZerosNode'computeStamp-2 [#_"Stamp" stamp, #_"ValueNode" value]
         (StampTool'stampForLeadingZeros-1 stamp)
     )
 
@@ -71013,7 +70440,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"void" Classfile'skipAttributes-1 [#_"DataInputStream" stream]
+    (defn- #_"void" Classfile'skipAttributes-1 [#_"DataInputStream" stream]
         (dotimes [_ (#_"DataInputStream" .readUnsignedShort stream)]
             (Classfile'skipFully-2 stream, 2) ;; name_index
             (Classfile'skipFully-2 stream, (#_"DataInputStream" .readInt stream))
@@ -71073,7 +70500,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"void" Classfile'skipFields-1 [#_"DataInputStream" stream]
+    (defn- #_"void" Classfile'skipFields-1 [#_"DataInputStream" stream]
         (let [
             #_"int" n (#_"DataInputStream" .readUnsignedShort stream)
         ]
@@ -71085,7 +70512,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"List<ClassfileBytecode>" Classfile'readMethods-3 [#_"DataInputStream" stream, #_"ClassfileConstantPool" cp, #_"ResolvedJavaType" type]
+    (defn- #_"List<ClassfileBytecode>" Classfile'readMethods-3 [#_"DataInputStream" stream, #_"ClassfileConstantPool" cp, #_"ResolvedJavaType" type]
         (let [
             #_"int" n (#_"DataInputStream" .readUnsignedShort stream)
             #_"List<ClassfileBytecode>" methods (ArrayList.)
@@ -71233,7 +70660,7 @@ ZeroExtendNode'new-4
      ;
      ; @throws NoClassDefFoundError if the class file cannot be found
      ;;
-    (defn- #_"Classfile" ClassfileBytecodeProvider''getClassfile-2 [#_"ClassfileBytecodeProvider" this, #_"Class" c]
+    (defn- #_"Classfile" ClassfileBytecodeProvider''getClassfile-2 [#_"ClassfileBytecodeProvider" this, #_"Class" c]
         (locking this
             (or (get (:classfiles this) c)
                 (let [
@@ -72870,7 +72297,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"ConstantNode" IntegerAddExactNode'canonicalXconstant-2 [#_"ValueNode" forX, #_"ValueNode" forY]
+    (defn- #_"ConstantNode" IntegerAddExactNode'canonicalXconstant-2 [#_"ValueNode" forX, #_"ValueNode" forY]
         (let [
             #_"JavaConstant" xConst (ValueNode''asJavaConstant-1 forX)
             #_"JavaConstant" yConst (ValueNode''asJavaConstant-1 forY)
@@ -73053,7 +72480,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"ValueNode" IntegerMulExactNode''canonicalXconstant-3 [#_"IntegerMulExactNode" this, #_"ValueNode" forX, #_"ValueNode" forY]
+    (defn- #_"ValueNode" IntegerMulExactNode''canonicalXconstant-3 [#_"IntegerMulExactNode" this, #_"ValueNode" forX, #_"ValueNode" forY]
         (let [
             #_"JavaConstant" xConst (ValueNode''asJavaConstant-1 forX)
             #_"JavaConstant" yConst (ValueNode''asJavaConstant-1 forY)
@@ -73151,7 +72578,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"ValueNode" IntegerMulHighNode'canonical-2 [#_"IntegerMulHighNode" self, #_"ValueNode" forY]
+    (defn- #_"ValueNode" IntegerMulHighNode'canonical-2 [#_"IntegerMulHighNode" self, #_"ValueNode" forY]
         (when (satisfies? ConstantNode forY) => self
             (let [
                 #_"Constant" constant (:value forY)
@@ -73200,7 +72627,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"ValueNode" IntegerSubExactNode''canonicalXYconstant-3 [#_"IntegerSubExactNode" this, #_"ValueNode" forX, #_"ValueNode" forY]
+    (defn- #_"ValueNode" IntegerSubExactNode''canonicalXYconstant-3 [#_"IntegerSubExactNode" this, #_"ValueNode" forX, #_"ValueNode" forY]
         (let [
             #_"JavaConstant" xConst (ValueNode''asJavaConstant-1 forX)
             #_"JavaConstant" yConst (ValueNode''asJavaConstant-1 forY)
@@ -73298,7 +72725,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"ValueNode" UnsignedMulHighNode'canonical-2 [#_"UnsignedMulHighNode" self, #_"ValueNode" forY]
+    (defn- #_"ValueNode" UnsignedMulHighNode'canonical-2 [#_"UnsignedMulHighNode" self, #_"ValueNode" forY]
         (when (satisfies? ConstantNode forY) => self
             (let [
                 #_"Constant" constant (:value forY)
@@ -73689,7 +73116,7 @@ ZeroExtendNode'new-4
      ;
      ; @return invoke node for the {@link java.lang.invoke.MethodHandle} target
      ;;
-    (defn- #_"InvokeNode" MethodHandleNode'getInvokeBasicTarget-7 [#_"GraphAdder" adder, #_"MethodHandleAccessProvider$IntrinsicMethod" intrinsicMethod, #_"MethodHandleAccessProvider" methodHandleAccess, #_"ResolvedJavaMethod" original, #_"int" bci, #_"StampPair" returnStamp, #_"ValueNode*" arguments]
+    (defn- #_"InvokeNode" MethodHandleNode'getInvokeBasicTarget-7 [#_"GraphAdder" adder, #_"MethodHandleAccessProvider$IntrinsicMethod" intrinsicMethod, #_"MethodHandleAccessProvider" methodHandleAccess, #_"ResolvedJavaMethod" original, #_"int" bci, #_"StampPair" returnStamp, #_"ValueNode*" arguments]
         (let [
             #_"ValueNode" methodHandleNode (MethodHandleNode'getReceiver-1 arguments)
         ]
@@ -73707,7 +73134,7 @@ ZeroExtendNode'new-4
      ;
      ; @return invoke node for the member name target
      ;;
-    (defn- #_"InvokeNode" MethodHandleNode'getLinkToTarget-7 [#_"GraphAdder" adder, #_"MethodHandleAccessProvider$IntrinsicMethod" intrinsicMethod, #_"MethodHandleAccessProvider" methodHandleAccess, #_"ResolvedJavaMethod" original, #_"int" bci, #_"StampPair" returnStamp, #_"ValueNode*" arguments]
+    (defn- #_"InvokeNode" MethodHandleNode'getLinkToTarget-7 [#_"GraphAdder" adder, #_"MethodHandleAccessProvider$IntrinsicMethod" intrinsicMethod, #_"MethodHandleAccessProvider" methodHandleAccess, #_"ResolvedJavaMethod" original, #_"int" bci, #_"StampPair" returnStamp, #_"ValueNode*" arguments]
         (let [
             #_"ValueNode" memberNameNode (MethodHandleNode'getMemberName-1 arguments)
         ]
@@ -73723,7 +73150,7 @@ ZeroExtendNode'new-4
      ; @param index of the argument to be cast
      ; @param type the type the argument should be cast to
      ;;
-    (defn- #_"void" MethodHandleNode'maybeCastArgument-4 [#_"GraphAdder" adder, #_"ValueNode[]" arguments, #_"int" index, #_"JavaType" type]
+    (defn- #_"void" MethodHandleNode'maybeCastArgument-4 [#_"GraphAdder" adder, #_"ValueNode[]" arguments, #_"int" index, #_"JavaType" type]
         (when (and (instance? ResolvedJavaType type) (not (#_"ResolvedJavaType" .isJavaLangObject type)))
             (let [
                 #_"TypeReference" targetType (TypeReference'create-1 type)
@@ -73762,7 +73189,7 @@ ZeroExtendNode'new-4
     ;;;
      ; Creates an InvokeNode for the given target method. The CallTargetNode passed to the InvokeNode is in fact a ResolvedMethodHandleCallTargetNode.
      ;;
-    (defn- #_"InvokeNode" MethodHandleNode'createTargetInvokeNode-6 [#_"MethodHandleAccessProvider$IntrinsicMethod" intrinsicMethod, #_"ResolvedJavaMethod" target, #_"ResolvedJavaMethod" original, #_"int" bci, #_"StampPair" returnStamp, #_"ValueNode*" arguments]
+    (defn- #_"InvokeNode" MethodHandleNode'createTargetInvokeNode-6 [#_"MethodHandleAccessProvider$IntrinsicMethod" intrinsicMethod, #_"ResolvedJavaMethod" target, #_"ResolvedJavaMethod" original, #_"int" bci, #_"StampPair" returnStamp, #_"ValueNode*" arguments]
         (let [
             #_"InvokeKind" targetInvokeKind (if (#_"ResolvedJavaMethod" .isStatic target) InvokeKind'Static InvokeKind'Special)
             #_"JavaType" targetReturnType (#_"Signature" .getReturnType (#_"ResolvedJavaMethod" .getSignature target), nil)
@@ -74471,7 +73898,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"void" SnippetTemplate''replaceMemoryUsages-3 [#_"SnippetTemplate" this, #_"ValueNode" node, #_"MemoryMap" map]
+    (defn- #_"void" SnippetTemplate''replaceMemoryUsages-3 [#_"SnippetTemplate" this, #_"ValueNode" node, #_"MemoryMap" map]
         (doseq [#_"Node" usage (NodeIterable'''snapshot-1 (Node''usages-1 node))]
             (when-not (satisfies? MemoryMapNode usage)
                 (when-some [#_"LocationIdentity" location (SnippetTemplate'getLocationIdentity-1 usage)]
@@ -74606,7 +74033,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"UnmodifiableEconomicMap<Node, Node>" SnippetTemplate''inlineSnippet-4 [#_"SnippetTemplate" this, #_"Node" replacee, #_"Graph" replaceeGraph, #_"EconomicMap<Node, Node>" replacements]
+    (defn- #_"UnmodifiableEconomicMap<Node, Node>" SnippetTemplate''inlineSnippet-4 [#_"SnippetTemplate" this, #_"Node" replacee, #_"Graph" replaceeGraph, #_"EconomicMap<Node, Node>" replacements]
         (Graph''addDuplicates-5m replaceeGraph, (:nodes this), (:snippet this), (Graph''getNodeCount-1 (:snippet this)), replacements)
     )
 
@@ -74619,7 +74046,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"void" SnippetTemplate''updateStamps-3 [#_"SnippetTemplate" this, #_"ValueNode" replacee, #_"UnmodifiableEconomicMap<Node, Node>" duplicates]
+    (defn- #_"void" SnippetTemplate''updateStamps-3 [#_"SnippetTemplate" this, #_"ValueNode" replacee, #_"UnmodifiableEconomicMap<Node, Node>" duplicates]
         (doseq [#_"ValueNode" node (:placeholderStampedNodes this)]
             (let [
                 #_"ValueNode" dup (get duplicates node)
@@ -75434,7 +74861,7 @@ ZeroExtendNode'new-4
      ; are not considered to be "important". If only changes to those nodes are discovered during
      ; analysis, the effects need not be applied.
      ;;
-    (defn- #_"boolean" EffectsClosure'isSignificantNode-1 [#_"Node" node]
+    (defn- #_"boolean" EffectsClosure'isSignificantNode-1 [#_"Node" node]
         (not (or (satisfies? CommitAllocationNode node) (satisfies? AllocatedObjectNode node) (satisfies? BoxNode node)))
     )
 
@@ -75544,7 +74971,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"void" EffectsClosure''doMergeWithoutDead-3 [#_"EffectsClosure<T implements EffectsBlockState<T>>" this, #_"MergeProcessor<T>" mergeProcessor, #_"List<T>" states]
+    (defn- #_"void" EffectsClosure''doMergeWithoutDead-3 [#_"EffectsClosure<T implements EffectsBlockState<T>>" this, #_"MergeProcessor<T>" mergeProcessor, #_"List<T>" states]
         (let [
             #_"int" alive
                 (loop-when-recur [alive 0 #_"ISeq" s (seq states)]
@@ -75688,7 +75115,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"MergeProcessor<T implements EffectsBlockState<T>>" MergeProcessor''setNewState-2 [#_"MergeProcessor<T implements EffectsBlockState<T>>" this, #_"T" state]
+    (defn- #_"MergeProcessor<T implements EffectsBlockState<T>>" MergeProcessor''setNewState-2 [#_"MergeProcessor<T implements EffectsBlockState<T>>" this, #_"T" state]
         (let [
             this (assoc this :newState state)
         ]
@@ -75698,7 +75125,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"MergeProcessor<T implements EffectsBlockState<T>>" MergeProcessor''setStateIndexes-2 [#_"MergeProcessor<T implements EffectsBlockState<T>>" this, #_"int[]" stateIndexes]
+    (defn- #_"MergeProcessor<T implements EffectsBlockState<T>>" MergeProcessor''setStateIndexes-2 [#_"MergeProcessor<T implements EffectsBlockState<T>>" this, #_"int[]" stateIndexes]
         (assoc this :stateIndexes stateIndexes)
     )
 
@@ -76438,7 +75865,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"void" PartialEscapeBlockState''materializeWithCommit-8 [#_"PartialEscapeBlockState<T implements PartialEscapeBlockState<T>>" this, #_"FixedNode" fixed, #_"VirtualObjectNode" virtual, #_"List<AllocatedObjectNode>" objects, #_"List<List<MonitorIdNode>>" locks, #_"List<ValueNode>" values, #_"List<Boolean>" ensureVirtual, #_"List<ValueNode>" otherAllocations]
+    (defn- #_"void" PartialEscapeBlockState''materializeWithCommit-8 [#_"PartialEscapeBlockState<T implements PartialEscapeBlockState<T>>" this, #_"FixedNode" fixed, #_"VirtualObjectNode" virtual, #_"List<AllocatedObjectNode>" objects, #_"List<List<MonitorIdNode>>" locks, #_"List<ValueNode>" values, #_"List<Boolean>" ensureVirtual, #_"List<ValueNode>" otherAllocations]
         (let [
             #_"ObjectState" obj (PartialEscapeBlockState''getObjectState-2n this, virtual)
             #_"ValueNode[]" entries (:entries obj)
@@ -76657,7 +76084,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"boolean" PartialEscapeClosure''processNodeInternal-5 [#_"PartialEscapeClosure<T implements PartialEscapeBlockState<T>>" this, #_"Node" node, #_"T" state, #_"GraphEffectList" effects, #_"FixedWithNextNode" lastFixedNode]
+    (defn- #_"boolean" PartialEscapeClosure''processNodeInternal-5 [#_"PartialEscapeClosure<T implements PartialEscapeBlockState<T>>" this, #_"Node" node, #_"T" state, #_"GraphEffectList" effects, #_"FixedWithNextNode" lastFixedNode]
         (let [
             #_"FixedNode" nextFixedNode (when (some? lastFixedNode) (:next lastFixedNode))
         ]
@@ -76689,7 +76116,7 @@ ZeroExtendNode'new-4
         (satisfies? VirtualizableAllocation node)
     )
 
-    (defn- #_"boolean" PartialEscapeClosure''processVirtualizable-5 [#_"PartialEscapeClosure<T implements PartialEscapeBlockState<T>>" this, #_"ValueNode" node, #_"FixedNode" insertBefore, #_"T" state, #_"GraphEffectList" effects]
+    (defn- #_"boolean" PartialEscapeClosure''processVirtualizable-5 [#_"PartialEscapeClosure<T implements PartialEscapeBlockState<T>>" this, #_"ValueNode" node, #_"FixedNode" insertBefore, #_"T" state, #_"GraphEffectList" effects]
         (§ ass! (:tool this) (VirtualizerTool''reset-5 (:tool this), state, node, insertBefore, effects))
         (PartialEscapeClosure''virtualize-3 this, node, (:tool this))
     )
@@ -76702,7 +76129,7 @@ ZeroExtendNode'new-4
     ;;;
      ; This tries to canonicalize the node based on improved (replaced) inputs.
      ;;
-    (defn- #_"boolean" PartialEscapeClosure''processNodeWithScalarReplacedInputs-5 [#_"PartialEscapeClosure<T implements PartialEscapeBlockState<T>>" this, #_"ValueNode" node, #_"FixedNode" insertBefore, #_"T" state, #_"GraphEffectList" effects]
+    (defn- #_"boolean" PartialEscapeClosure''processNodeWithScalarReplacedInputs-5 [#_"PartialEscapeClosure<T implements PartialEscapeBlockState<T>>" this, #_"ValueNode" node, #_"FixedNode" insertBefore, #_"T" state, #_"GraphEffectList" effects]
         (let [
             #_"ValueNode" canonicalizedValue
                 (condp satisfies? node
@@ -76769,7 +76196,7 @@ ZeroExtendNode'new-4
     ;;;
      ; Nodes created during canonicalizations need to be scanned for values that were replaced.
      ;;
-    (defn- #_"boolean" PartialEscapeClosure''prepareCanonicalNode-4 [#_"PartialEscapeClosure<T implements PartialEscapeBlockState<T>>" this, #_"ValueNode" node, #_"T" state, #_"GraphEffectList" effects]
+    (defn- #_"boolean" PartialEscapeClosure''prepareCanonicalNode-4 [#_"PartialEscapeClosure<T implements PartialEscapeBlockState<T>>" this, #_"ValueNode" node, #_"T" state, #_"GraphEffectList" effects]
         (loop-when [#_"ISeq" s (seq (Node''inputPositions-1 node))] (some? s) => true
             (let [
                 #_"Position" pos (first s)
@@ -76811,7 +76238,7 @@ ZeroExtendNode'new-4
      ; materializing if necessary.
      ; Also takes care of frame states, adding the necessary VirtualObjectState.
      ;;
-    (defn- #_"void" PartialEscapeClosure''processNodeInputs-5 [#_"PartialEscapeClosure<T implements PartialEscapeBlockState<T>>" this, #_"ValueNode" node, #_"FixedNode" insertBefore, #_"T" state, #_"GraphEffectList" effects]
+    (defn- #_"void" PartialEscapeClosure''processNodeInputs-5 [#_"PartialEscapeClosure<T implements PartialEscapeBlockState<T>>" this, #_"ValueNode" node, #_"FixedNode" insertBefore, #_"T" state, #_"GraphEffectList" effects]
         (doseq [#_"Node" input (Node''inputs-1 node)]
             (when (satisfies? ValueNode input)
                 (let [
@@ -76834,7 +76261,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"void" PartialEscapeClosure''processNodeWithState-4 [#_"PartialEscapeClosure<T implements PartialEscapeBlockState<T>>" this, #_"NodeWithState" nodeWithState, #_"T" state, #_"GraphEffectList" effects]
+    (defn- #_"void" PartialEscapeClosure''processNodeWithState-4 [#_"PartialEscapeClosure<T implements PartialEscapeBlockState<T>>" this, #_"NodeWithState" nodeWithState, #_"T" state, #_"GraphEffectList" effects]
         (doseq [#_"FrameState" fs (NodeWithState'''states-1 nodeWithState)]
             (let [
                 #_"FrameState" frameState (PartialEscapeClosure'getUniqueFramestate-2 nodeWithState, fs)
@@ -76849,7 +76276,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"FrameState" PartialEscapeClosure'getUniqueFramestate-2 [#_"NodeWithState" nodeWithState, #_"FrameState" frameState]
+    (defn- #_"FrameState" PartialEscapeClosure'getUniqueFramestate-2 [#_"NodeWithState" nodeWithState, #_"FrameState" frameState]
         (when (Node''hasMoreThanOneUsage-1 frameState) => frameState
             ;; Can happen for example from inlined snippets with multiple state split nodes.
             (let [
@@ -76861,14 +76288,14 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"void" PartialEscapeClosure''addVirtualMappings-5 [#_"PartialEscapeClosure<T implements PartialEscapeBlockState<T>>" this, #_"FrameState" frameState, #_"EconomicSet<VirtualObjectNode>" virtual, #_"T" state, #_"GraphEffectList" effects]
+    (defn- #_"void" PartialEscapeClosure''addVirtualMappings-5 [#_"PartialEscapeClosure<T implements PartialEscapeBlockState<T>>" this, #_"FrameState" frameState, #_"EconomicSet<VirtualObjectNode>" virtual, #_"T" state, #_"GraphEffectList" effects]
         (doseq [#_"VirtualObjectNode" obj virtual]
             (GraphEffectList''addVirtualMapping-3 effects, frameState, (ObjectState''createEscapeObjectState-2 (PartialEscapeBlockState''getObjectState-2n state, obj), obj))
         )
         nil
     )
 
-    (defn- #_"void" PartialEscapeClosure''collectReferencedVirtualObjects-3 [#_"PartialEscapeClosure<T implements PartialEscapeBlockState<T>>" this, #_"T" state, #_"EconomicSet<VirtualObjectNode>" virtual]
+    (defn- #_"void" PartialEscapeClosure''collectReferencedVirtualObjects-3 [#_"PartialEscapeClosure<T implements PartialEscapeBlockState<T>>" this, #_"T" state, #_"EconomicSet<VirtualObjectNode>" virtual]
         (let [
             #_"Iterator<VirtualObjectNode>" it (#_"EconomicSet" .iterator virtual)
         ]
@@ -76897,7 +76324,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"void" PartialEscapeClosure''collectLockedVirtualObjects-3 [#_"PartialEscapeClosure<T implements PartialEscapeBlockState<T>>" this, #_"T" state, #_"EconomicSet<VirtualObjectNode>" virtual]
+    (defn- #_"void" PartialEscapeClosure''collectLockedVirtualObjects-3 [#_"PartialEscapeClosure<T implements PartialEscapeBlockState<T>>" this, #_"T" state, #_"EconomicSet<VirtualObjectNode>" virtual]
         (dotimes [#_"int" i (count (:objectStates state))]
             (let [
                 #_"ObjectState" objState (PartialEscapeBlockState''getObjectStateOptional-2i state, i)
@@ -77081,7 +76508,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"void" PartialEscapeClosure'processMaterializedAtLoopExit-7 [#_"LoopExitNode" exitNode, #_"GraphEffectList" effects, #_"EconomicMap<Integer, ProxyNode>" proxies, #_"int" object, #_"ObjectState" exitObjState, #_"ObjectState" initialObjState, #_"PartialEscapeBlockState" exitState]
+    (defn- #_"void" PartialEscapeClosure'processMaterializedAtLoopExit-7 [#_"LoopExitNode" exitNode, #_"GraphEffectList" effects, #_"EconomicMap<Integer, ProxyNode>" proxies, #_"int" object, #_"ObjectState" exitObjState, #_"ObjectState" initialObjState, #_"PartialEscapeBlockState" exitState]
         (when (or (nil? initialObjState) (ObjectState''isVirtual-1 initialObjState))
             (let [
                 #_"ProxyNode" proxy (get proxies object)
@@ -77102,7 +76529,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"void" PartialEscapeClosure'processVirtualAtLoopExit-6 [#_"LoopExitNode" exitNode, #_"GraphEffectList" effects, #_"int" object, #_"ObjectState" exitObjState, #_"ObjectState" initialObjState, #_"PartialEscapeBlockState" exitState]
+    (defn- #_"void" PartialEscapeClosure'processVirtualAtLoopExit-6 [#_"LoopExitNode" exitNode, #_"GraphEffectList" effects, #_"int" object, #_"ObjectState" exitObjState, #_"ObjectState" initialObjState, #_"PartialEscapeBlockState" exitState]
         (dotimes [#_"int" i (count (:entries exitObjState))]
             (let [
                 #_"ValueNode" value (ObjectState''getEntry-2 (PartialEscapeBlockState''getObjectState-2i exitState, object), i)
@@ -77177,7 +76604,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"void" PartialEscapeClosure''markVirtualUsages-2 [#_"PartialEscapeClosure<T implements PartialEscapeBlockState<T>>" this, #_"Node" node]
+    (defn- #_"void" PartialEscapeClosure''markVirtualUsages-2 [#_"PartialEscapeClosure<T implements PartialEscapeBlockState<T>>" this, #_"Node" node]
         (when (and (not (NodeBitMap''isNew-2 (:hasVirtualInputs this), node)) (not (NodeBitMap''isMarked-2n (:hasVirtualInputs this), node)))
             (NodeBitMap''mark-2 (:hasVirtualInputs this), node)
             (when (satisfies? VirtualState node)
@@ -77211,7 +76638,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"<T> PhiNode" PEMergeProcessor''getPhiCached-3 [#_"PEMergeProcessor<T implements PartialEscapeBlockState<T>>" this, #_"T" virtual, #_"Stamp" stamp]
+    (defn- #_"<T> PhiNode" PEMergeProcessor''getPhiCached-3 [#_"PEMergeProcessor<T implements PartialEscapeBlockState<T>>" this, #_"T" virtual, #_"Stamp" stamp]
         (when (nil? (:materializedPhis this))
             (§ ass! this (assoc this :materializedPhis (EconomicMap/create Equivalence/DEFAULT)))
         )
@@ -77233,7 +76660,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"PhiNode[]" PEMergeProcessor''getValuePhisCached-3 [#_"PEMergeProcessor<T implements PartialEscapeBlockState<T>>" this, #_"ValueNode" key, #_"int" entryCount]
+    (defn- #_"PhiNode[]" PEMergeProcessor''getValuePhisCached-3 [#_"PEMergeProcessor<T implements PartialEscapeBlockState<T>>" this, #_"ValueNode" key, #_"int" entryCount]
         (when (nil? (:valuePhis this))
             (§ ass! this (assoc this :valuePhis (EconomicMap/create Equivalence/IDENTITY_WITH_SYSTEM_HASHCODE)))
         )
@@ -77431,7 +76858,7 @@ ZeroExtendNode'new-4
      ; @param states the predecessor block states of the merge
      ; @return true if materialization happened during the merge, false otherwise
      ;;
-    (defn- #_"boolean" PEMergeProcessor''mergeObjectStates-4 [#_"PEMergeProcessor<T implements PartialEscapeBlockState<T>>" this, #_"int" resultObject, #_"int*" sourceObjects, #_"PartialEscapeBlockState*" states]
+    (defn- #_"boolean" PEMergeProcessor''mergeObjectStates-4 [#_"PEMergeProcessor<T implements PartialEscapeBlockState<T>>" this, #_"int" resultObject, #_"int*" sourceObjects, #_"PartialEscapeBlockState*" states]
         (let [
             #_"IntUnaryOperator" getObject (ß (index) -> (§ fun (if (some? sourceObjects) (nth sourceObjects index) resultObject)))
             #_"VirtualObjectNode" virtual (nth (:virtualObjects (:peClosure this)) resultObject)
@@ -77602,7 +77029,7 @@ ZeroExtendNode'new-4
      ;
      ; @return true if materialization happened during the merge, false otherwise
      ;;
-    (defn- #_"boolean" PEMergeProcessor''mergeObjectEntry-5 [#_"PEMergeProcessor<T implements PartialEscapeBlockState<T>>" this, #_"IntUnaryOperator" objectIdFunc, #_"PartialEscapeBlockState*" states, #_"PhiNode" phi, #_"int" index]
+    (defn- #_"boolean" PEMergeProcessor''mergeObjectEntry-5 [#_"PEMergeProcessor<T implements PartialEscapeBlockState<T>>" this, #_"IntUnaryOperator" objectIdFunc, #_"PartialEscapeBlockState*" states, #_"PhiNode" phi, #_"int" index]
         (loop-when [#_"boolean" materialized? false #_"int" i 0] (< i (count states)) => materialized?
             (let [
                 #_"int" object (#_"IntUnaryOperator" .applyAsInt objectIdFunc, i)
@@ -77647,7 +77074,7 @@ ZeroExtendNode'new-4
      ; @param states the predecessor block states of the merge
      ; @return true if materialization happened during the merge, false otherwise
      ;;
-    (defn- #_"boolean" PEMergeProcessor''processPhi-3 [#_"PEMergeProcessor<T implements PartialEscapeBlockState<T>>" this, #_"ValuePhiNode" phi, #_"PartialEscapeBlockState*" states]
+    (defn- #_"boolean" PEMergeProcessor''processPhi-3 [#_"PEMergeProcessor<T implements PartialEscapeBlockState<T>>" this, #_"ValuePhiNode" phi, #_"PartialEscapeBlockState*" states]
         ;; determine how many inputs are virtual and if they're all the same virtual object
         (let [
             #_"VirtualObjectNode[]" objects (make-array VirtualObjectNode'iface (count states))
@@ -77777,7 +77204,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"boolean" PEMergeProcessor''isSingleUsageAllocation-4 [#_"PEMergeProcessor<T implements PartialEscapeBlockState<T>>" this, #_"ValueNode" value, #_"VirtualObjectNode*" objects, #_"PartialEscapeBlockState" state]
+    (defn- #_"boolean" PEMergeProcessor''isSingleUsageAllocation-4 [#_"PEMergeProcessor<T implements PartialEscapeBlockState<T>>" this, #_"ValueNode" value, #_"VirtualObjectNode*" objects, #_"PartialEscapeBlockState" state]
         ;; If the phi input is an allocation, we know that it is a "fresh" value, i.e. that
         ;; this is a value that will only appear through this source, and cannot appear anywhere
         ;; else. If the phi is also the only usage of this input, we know that no other place
@@ -77805,7 +77232,7 @@ ZeroExtendNode'new-4
 )
 
 (class-ns CollectVirtualObjectsClosure #_"<T implements PartialEscapeBlockState<T>>"
-    (defn- #_"CollectVirtualObjectsClosure" CollectVirtualObjectsClosure'new-4 [#_"PartialEscapeClosure<T>" peClosure, #_"EconomicSet<VirtualObjectNode>" virtual, #_"GraphEffectList" effects, #_"T" state]
+    (defn- #_"CollectVirtualObjectsClosure" CollectVirtualObjectsClosure'new-4 [#_"PartialEscapeClosure<T>" peClosure, #_"EconomicSet<VirtualObjectNode>" virtual, #_"GraphEffectList" effects, #_"T" state]
         (merge (CollectVirtualObjectsClosure'class.) (NodeClosure'new-0)
             (hash-map
                 #_"PartialEscapeClosure<T>" :peClosure peClosure
@@ -78118,7 +77545,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"boolean" PEReadEliminationClosure''processUnsafeLoad-4 [#_"PEReadEliminationClosure" this, #_"RawLoadNode" load, #_"PEReadEliminationBlockState" state, #_"GraphEffectList" effects]
+    (defn- #_"boolean" PEReadEliminationClosure''processUnsafeLoad-4 [#_"PEReadEliminationClosure" this, #_"RawLoadNode" load, #_"PEReadEliminationBlockState" state, #_"GraphEffectList" effects]
         (and (satisfies? ConstantNode (:offset load))
             (let [
                 #_"ResolvedJavaType" type (StampTool'typeOrNull-1 (:stamp (:object load)))
@@ -78150,7 +77577,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"boolean" PEReadEliminationClosure''processUnsafeStore-4 [#_"PEReadEliminationClosure" this, #_"RawStoreNode" store, #_"PEReadEliminationBlockState" state, #_"GraphEffectList" effects]
+    (defn- #_"boolean" PEReadEliminationClosure''processUnsafeStore-4 [#_"PEReadEliminationClosure" this, #_"RawStoreNode" store, #_"PEReadEliminationBlockState" state, #_"GraphEffectList" effects]
         (let [
             #_"ResolvedJavaType" type (StampTool'typeOrNull-1 (:stamp (:object store)))
         ]
@@ -78182,11 +77609,11 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"boolean" PEReadEliminationClosure''processArrayLength-4 [#_"PEReadEliminationClosure" this, #_"ArrayLengthNode" length, #_"PEReadEliminationBlockState" state, #_"GraphEffectList" effects]
+    (defn- #_"boolean" PEReadEliminationClosure''processArrayLength-4 [#_"PEReadEliminationClosure" this, #_"ArrayLengthNode" length, #_"PEReadEliminationBlockState" state, #_"GraphEffectList" effects]
         (PEReadEliminationClosure''processLoad-8 this, length, (:array length), NamedLocationIdentity'ARRAY_LENGTH_LOCATION, -1, JavaKind/Int, state, effects)
     )
 
-    (defn- #_"boolean" PEReadEliminationClosure''processStoreField-4 [#_"PEReadEliminationClosure" this, #_"StoreFieldNode" store, #_"PEReadEliminationBlockState" state, #_"GraphEffectList" effects]
+    (defn- #_"boolean" PEReadEliminationClosure''processStoreField-4 [#_"PEReadEliminationClosure" this, #_"StoreFieldNode" store, #_"PEReadEliminationBlockState" state, #_"GraphEffectList" effects]
         (if (AccessFieldNode''isVolatile-1 store)
             (do
                 (PEReadEliminationBlockState''killReadCache-1 state)
@@ -78200,7 +77627,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"boolean" PEReadEliminationClosure''processLoadField-4 [#_"PEReadEliminationClosure" this, #_"LoadFieldNode" load, #_"PEReadEliminationBlockState" state, #_"GraphEffectList" effects]
+    (defn- #_"boolean" PEReadEliminationClosure''processLoadField-4 [#_"PEReadEliminationClosure" this, #_"LoadFieldNode" load, #_"PEReadEliminationBlockState" state, #_"GraphEffectList" effects]
         (if (AccessFieldNode''isVolatile-1 load)
             (do
                 (PEReadEliminationBlockState''killReadCache-1 state)
@@ -78220,7 +77647,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"boolean" PEReadEliminationClosure''processStoreIndexed-4 [#_"PEReadEliminationClosure" this, #_"StoreIndexedNode" store, #_"PEReadEliminationBlockState" state, #_"GraphEffectList" effects]
+    (defn- #_"boolean" PEReadEliminationClosure''processStoreIndexed-4 [#_"PEReadEliminationClosure" this, #_"StoreIndexedNode" store, #_"PEReadEliminationBlockState" state, #_"GraphEffectList" effects]
         (let [
             #_"int" index (if (satisfies? ConstantNode (AccessIndexedNode''index-1 store)) (#_"JavaConstant" .asInt (:value (AccessIndexedNode''index-1 store))) -1)
             ;; BASTORE (with elementKind being Byte) can be used to store values in boolean arrays.
@@ -78250,7 +77677,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"boolean" PEReadEliminationClosure''processLoadIndexed-4 [#_"PEReadEliminationClosure" this, #_"LoadIndexedNode" load, #_"PEReadEliminationBlockState" state, #_"GraphEffectList" effects]
+    (defn- #_"boolean" PEReadEliminationClosure''processLoadIndexed-4 [#_"PEReadEliminationClosure" this, #_"LoadIndexedNode" load, #_"PEReadEliminationBlockState" state, #_"GraphEffectList" effects]
         (and (satisfies? ConstantNode (AccessIndexedNode''index-1 load))
             (let [
                 #_"int" index (#_"JavaConstant" .asInt (:value (AccessIndexedNode''index-1 load)))
@@ -78276,11 +77703,11 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"boolean" PEReadEliminationClosure''processUnbox-4 [#_"PEReadEliminationClosure" this, #_"UnboxNode" unbox, #_"PEReadEliminationBlockState" state, #_"GraphEffectList" effects]
+    (defn- #_"boolean" PEReadEliminationClosure''processUnbox-4 [#_"PEReadEliminationClosure" this, #_"UnboxNode" unbox, #_"PEReadEliminationBlockState" state, #_"GraphEffectList" effects]
         (PEReadEliminationClosure''processLoad-8 this, unbox, (Unary'''getValue-1 unbox), (get PEReadEliminationClosure'UNBOX_LOCATIONS (:boxingKind unbox)), -1, (:boxingKind unbox), state, effects)
     )
 
-    (defn- #_"void" PEReadEliminationClosure'processIdentity-2 [#_"PEReadEliminationBlockState" state, #_"LocationIdentity" identity]
+    (defn- #_"void" PEReadEliminationClosure'processIdentity-2 [#_"PEReadEliminationBlockState" state, #_"LocationIdentity" identity]
         (if (#_"LocationIdentity" .isAny identity)
             (PEReadEliminationBlockState''killReadCache-1 state)
             (PEReadEliminationBlockState''killReadCache-3 state, identity, -1)
@@ -78455,7 +77882,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"void" PEReadEliminationMergeProcessor''mergeReadCache-2 [#_"PEReadEliminationMergeProcessor" this, #_"List<PEReadEliminationBlockState>" states]
+    (defn- #_"void" PEReadEliminationMergeProcessor''mergeReadCache-2 [#_"PEReadEliminationMergeProcessor" this, #_"List<PEReadEliminationBlockState>" states]
         (let [
             #_"MapCursor<ReadCacheEntry, ValueNode>" cursor (#_"EconomicMap" .getEntries (:readCache (nth states 0)))
         ]
@@ -78505,7 +77932,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"void" PEReadEliminationMergeProcessor''mergeReadCachePhi-7 [#_"PEReadEliminationMergeProcessor" this, #_"PhiNode" phi, #_"LocationIdentity" identity, #_"int" index, #_"JavaKind" kind, #_"boolean" overflowAccess, #_"List<PEReadEliminationBlockState>" states]
+    (defn- #_"void" PEReadEliminationMergeProcessor''mergeReadCachePhi-7 [#_"PEReadEliminationMergeProcessor" this, #_"PhiNode" phi, #_"LocationIdentity" identity, #_"int" index, #_"JavaKind" kind, #_"boolean" overflowAccess, #_"List<PEReadEliminationBlockState>" states]
         (let [
             #_"ValueNode[]" values (make-array ValueNode'iface (count states))
         ]
@@ -78819,17 +78246,17 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"boolean" ReadEliminationClosure'areValuesReplaceable-3 [#_"ValueNode" originalValue, #_"ValueNode" replacementValue, #_"boolean" considerGuards]
+    (defn- #_"boolean" ReadEliminationClosure'areValuesReplaceable-3 [#_"ValueNode" originalValue, #_"ValueNode" replacementValue, #_"boolean" considerGuards]
         (and (Stamp'''isCompatible-2s (:stamp originalValue), (:stamp replacementValue)) (or (not considerGuards) (nil? (ReadEliminationClosure'getGuard-1 originalValue)) (= (ReadEliminationClosure'getGuard-1 originalValue) (ReadEliminationClosure'getGuard-1 replacementValue))))
     )
 
-    (defn- #_"GuardingNode" ReadEliminationClosure'getGuard-1 [#_"ValueNode" node]
+    (defn- #_"GuardingNode" ReadEliminationClosure'getGuard-1 [#_"ValueNode" node]
         (when (satisfies? GuardedNode node)
             (GuardedNode'''getGuard-1 node)
         )
     )
 
-    (defn- #_"void" ReadEliminationClosure'processIdentity-2 [#_"ReadEliminationBlockState" state, #_"LocationIdentity" identity]
+    (defn- #_"void" ReadEliminationClosure'processIdentity-2 [#_"ReadEliminationBlockState" state, #_"LocationIdentity" identity]
         (if (#_"LocationIdentity" .isAny identity)
             (ReadEliminationBlockState''killReadCache-1 state)
             (ReadEliminationBlockState''killReadCache-2 state, identity)
@@ -79008,7 +78435,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"void" ReadEliminationMergeProcessor''mergeReadCachePhi-4 [#_"ReadEliminationMergeProcessor" this, #_"PhiNode" phi, #_"CacheEntry" identifier, #_"List<ReadEliminationBlockState>" states]
+    (defn- #_"void" ReadEliminationMergeProcessor''mergeReadCachePhi-4 [#_"ReadEliminationMergeProcessor" this, #_"PhiNode" phi, #_"CacheEntry" identifier, #_"List<ReadEliminationBlockState>" states]
         (let [
             #_"ValueNode[]" values (make-array ValueNode'iface (count states))
         ]
@@ -79139,7 +78566,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"ValueNode" VirtualizerTool''getIllegalConstant-1 [#_"VirtualizerTool" this]
+    (defn- #_"ValueNode" VirtualizerTool''getIllegalConstant-1 [#_"VirtualizerTool" this]
         (when (nil? (:illegalConstant this))
             (§ ass! this (assoc this :illegalConstant (ConstantNode'forConstant-1 (JavaConstant/forIllegal))))
             (VirtualizerTool'''addNode-2 this, (:illegalConstant this))
@@ -80530,11 +79957,11 @@ ZeroExtendNode'new-4
      ; This method is called for all Word operations which are annotated with
      ; @WordOperation(node = ...) and encapsulates the reflective allocation of the node.
      ;;
-    (defn- #_"ValueNode" WordOperationPlugin'createBinaryNodeInstance-3 [#_"Class<? implements ValueNode>" nodeClass, #_"ValueNode" left, #_"ValueNode" right]
+    (defn- #_"ValueNode" WordOperationPlugin'createBinaryNodeInstance-3 [#_"Class<? implements ValueNode>" nodeClass, #_"ValueNode" left, #_"ValueNode" right]
         (#_"Constructor" .newInstance (#_"Class" .getDeclaredConstructor nodeClass, ValueNode'iface, ValueNode'iface), left, right)
     )
 
-    (defn- #_"ValueNode" WordOperationPlugin''comparisonOp-5 [#_"WordOperationPlugin" this, #_"BytecodeParser" parser, #_"Condition" condition, #_"ValueNode" left, #_"ValueNode" right]
+    (defn- #_"ValueNode" WordOperationPlugin''comparisonOp-5 [#_"WordOperationPlugin" this, #_"BytecodeParser" parser, #_"Condition" condition, #_"ValueNode" left, #_"ValueNode" right]
         (let [
             #_"CanonicalizedCondition" canonical (Condition''canonicalize-1 condition)
             #_"ValueNode" a (if (:mirror? canonical) right left)
