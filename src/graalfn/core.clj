@@ -1,16 +1,16 @@
 (ns graalfn.core
-    (:refer-clojure :only [* *ns* + - -> / < <= = > >= aget and apply aset assoc bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean-array byte byte-array case char cond condp conj cons contains? count dec declare defmacro defn defprotocol defrecord doseq dotimes double double-array empty? extend-protocol extend-type filter first get hash-map if-not import inc instance? int int-array into-array keys let letfn locking long long-array loop make-array map max merge min neg? next nil? not not= ns-imports ns-unmap nth object-array or pos? quot reduce reify rem remove repeat rest satisfies? second seq sequential? short some? str symbol symbol? unsigned-bit-shift-right update update-in vals vary-meta vec vector? volatile! vswap! when-some while zero?])
+    (:refer-clojure :only [* *ns* + - -> / < <= = > >= aget and apply aset assoc bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean-array byte byte-array case char cond condp conj cons contains? count dec declare defmacro defn defprotocol defrecord doseq dotimes double double-array empty? extend-protocol extend-type filter first get hash-map if-not import inc instance? int int-array into-array keys let letfn list locking long long-array loop make-array map max merge min neg? next nil? not not= ns-imports ns-unmap nth object-array or pos? quot reduce reify rem remove repeat rest satisfies? second seq sequential? short some? str symbol symbol? unsigned-bit-shift-right update update-in vals vary-meta vec vector? volatile! vswap! when-some while zero?])
 )
 
 (defmacro § [& _])
 (defmacro ß [& _])
 
 (defmacro defp [p & s] (let [i (symbol (str p "'iface"))] `(do (defprotocol ~p ~@s) (def ~i (:on-interface ~p)) ~p)))
-(defmacro defr [r & s] (let [c (symbol (str r "'class"))] `(do (defrecord ~c []) (defp ~r) (extend-type ~c ~r ~@s) ~c)))
-(defmacro defm [r p & s] (let [i (:on r)]                 `(do                             (extend-type ~i ~p ~@s) ~i)))
+(defmacro defr [r & s] (let [c (symbol (str r "'class"))] `(do (defrecord ~c [])    (extend-type ~c ~r ~@s)     ~c)))
+(defmacro defm [r p & s] (let [i (:on r)]                 `(do                      (extend-type ~i ~p ~@s)     ~i)))
 
-(defmacro class-ns [_ & s] (cons 'do s))
-(defmacro value-ns [_ & s] (cons 'do s))
+(defmacro class-ns [r [& s] & z] `(do (defr ~r ~@s) ~@z))
+(defmacro value-ns [_ & z] (cons 'do z))
 
 (doseq [% (keys (ns-imports *ns*))] (ns-unmap *ns* %))
 
@@ -393,9 +393,9 @@ AbstractFixedGuardNode''lowerToIf-1
 AbstractFixedGuardNode'new-5
 AbstractInlineInfo'inline-4
 AbstractInlineInfo'new-1
-AbstractInliningPolicy''computeMaximumSize-3
 AbstractInliningPolicy'CapInheritedRelevance
 AbstractInliningPolicy'RelevanceCapForInlining
+AbstractInliningPolicy'computeMaximumSize-2
 AbstractInliningPolicy'determineInvokeProbability-1
 AbstractInliningPolicy'new-0
 AbstractLocalNode''index-1
@@ -424,7 +424,7 @@ AbstractPointerStamp''asNonNull-1
 AbstractPointerStamp''defaultPointerJoin-2
 AbstractPointerStamp'new-2
 AbstractStateSplit'new-2
-AbstractTemplates''snippet-4*
+AbstractTemplates''snippet-3*
 AbstractTemplates'findMethod-3
 AbstractTemplates'new-0
 AbstractWriteNode'new-4
@@ -442,8 +442,8 @@ AddNode'new-2
 AddressLowering''improve-5
 AddressLowering''improveUncompression-4
 AddressLowering''lower-3
-AddressLowering''postProcess-2
-AddressLowering''preProcess-2
+AddressLowering'postProcess-1
+AddressLowering'preProcess-1
 AddressLowering'new-1
 AddressLowering'updateDisplacement-3
 AddressLoweringPhase'new-1
@@ -1856,7 +1856,6 @@ GraphUtil'killWithUnusedFloatingInputs-1
 GraphUtil'killWithUnusedFloatingInputs-2
 GraphUtil'normalizeLoops-1
 GraphUtil'originalValue-1
-GraphUtil'predecessorIterable-1
 GraphUtil'removeFixedWithUnusedInputs-1
 GraphUtil'skipPi-1
 GraphUtil'skipPiWhileNonNull-1
@@ -3708,7 +3707,6 @@ StampFactory'objectNonNull-1
 StampFactory'objectNonNullStamp
 StampFactory'objectStamp
 StampFactory'rawPointer
-StampPair'new-2
 StampTool'isExactType-1
 StampTool'isPointerAlwaysNull-1
 StampTool'isPointerNeverNull-1
@@ -4159,21 +4157,10 @@ ZeroExtendNode'new-4
     (§ value #_"MetaspaceOpcode" opcode nil)
 )
 
-(§ annotation Use
-    (§ value #_"OperandFlag[]" value OperandFlag'REG)
-)
-
-(§ annotation Alive
-    (§ value #_"OperandFlag[]" value OperandFlag'REG)
-)
-
-(§ annotation Temp
-    (§ value #_"OperandFlag[]" value OperandFlag'REG)
-)
-
-(§ annotation Def
-    (§ value #_"OperandFlag[]" value OperandFlag'REG)
-)
+(§ annotation Use   (§ value #_"OperandFlag[]" value OperandFlag'REG))
+(§ annotation Alive (§ value #_"OperandFlag[]" value OperandFlag'REG))
+(§ annotation Temp  (§ value #_"OperandFlag[]" value OperandFlag'REG))
+(§ annotation Def   (§ value #_"OperandFlag[]" value OperandFlag'REG))
 
 ;;;
  ; Denotes an opcode name for an annotated LIRInstruction.
@@ -4193,13 +4180,350 @@ ZeroExtendNode'new-4
  ;;
 (§ annotation WordOperation
     (§ value #_"Class<? implements ValueNode>" WordOperation''node-1 ValueNode'iface)
-
     (§ value #_"boolean" WordOperation''rightOperandIsInt-1 false)
-
     (§ value #_"WordOpcode" WordOperation''opcode-1 WordOpcode'NODE_CLASS)
-
     (§ value #_"Condition" WordOperation''condition-1 Condition'EQ)
 )
+
+(defp AMD64Address)
+(defp AMD64AddressNode)
+(defp AMD64AddressValue)
+(defp AMD64ByteSwapOp)
+(defp AMD64CCall)
+(defp AMD64ClearRegisterOp)
+(defp AMD64DeoptimizeOp)
+(defp AMD64FrameMap)
+(defp AMD64FrameMapBuilder)
+
+(defp AMD64HotSpotRestoreRbpOp
+    ;;;
+     ; The type of location (i.e. stack or register) in which RBP is saved is not known until initial LIR generation
+     ; is finished. Until then, we use a placeholder variable so that LIR verification is successful.
+     ;;
+  #_(§ def #_"Variable" AMD64HotSpotRestoreRbpOp'PLACEHOLDER (Variable'new-2 (LIRKind'value-1 AMD64Kind/QWORD), Integer/MAX_VALUE))
+
+    (#_"void" AMD64HotSpotRestoreRbpOp'''setSavedRbp-2 [#_"AMD64HotSpotRestoreRbpOp" this, #_"AllocatableValue" value])
+)
+
+(defp AMD64HotSpotReturnOp)
+(defp AMD64HotSpotStrategySwitchOp)
+(defp AMD64ImmOp)
+(defp AMD64LFenceOp)
+(defp AMD64MIOp)
+(defp AMD64MOp)
+(defp AMD64MROp)
+(defp AMD64MulDivOp)
+(defp AMD64MultiStackMove)
+(defp AMD64Op)
+(defp AMD64PrefetchOp)
+(defp AMD64PushPopStackMove)
+(defp AMD64RMIOp)
+(defp AMD64RMOp)
+
+;;;
+ ; Opcode with operand order of either RM or MR for 2 address forms.
+ ;;
+(defp AMD64RROp
+    (#_"void" AMD64RROp'''emit-5 [#_"AMD64RROp" this, #_"Assembler" asm, #_"OperandSize" size, #_"Register" dst, #_"Register" src])
+)
+
+(defp AMD64RestoreRegistersOp)
+(defp AMD64SaveRegistersOp)
+(defp AMD64Shift)
+(defp AMD64ShiftOp)
+(defp AMD64SignExtendOp)
+(defp AMD64StackMove)
+
+(defp AMD64SwitchClosure
+    (#_"void" AMD64SwitchClosure'''emitComparison-2 [#_"AMD64SwitchClosure" this, #_"Constant" c])
+)
+
+(defp AMD64TailcallOp)
+(defp Abs)
+(defp AbstractAddress)
+
+(defp AbstractBeginNode
+    (#_"void" AbstractBeginNode'''prepareDelete-2 [#_"AbstractBeginNode" this, #_"FixedNode" evacuateFrom])
+    (#_"NodeIterable" AbstractBeginNode'''anchored-1 [#_"AbstractBeginNode" this])
+)
+
+(defp AbstractCompareAndSwapNode)
+
+;;;
+ ; This node represents an unconditional explicit request for immediate deoptimization.
+ ;
+ ; After this node, execution will continue using a fallback execution engine (such as an
+ ; interpreter) at the position described by the {@link #stateBefore() deoptimization state}.
+ ;;
+(defp AbstractDeoptimizeNode
+    (#_"ValueNode" AbstractDeoptimizeNode'''getActionAndReason-1 [#_"AbstractDeoptimizeNode" this])
+    (#_"ValueNode" AbstractDeoptimizeNode'''getSpeculation-1 [#_"AbstractDeoptimizeNode" this])
+)
+
+(defp AbstractEndNode
+    (#_"AbstractMergeNode" AbstractEndNode'''merge-1 [#_"AbstractEndNode" this])
+)
+
+(defp AbstractFixedGuardNode)
+(defp AbstractInlineInfo)
+(defp AbstractInliningPolicy)
+(defp AbstractLocalNode)
+(defp AbstractMemoryCheckpoint)
+
+;;;
+ ; Denotes the merging of multiple control-flow paths.
+ ;;
+(defp AbstractMergeNode
+    (#_"void" AbstractMergeNode'''deleteEnd-2 [#_"AbstractMergeNode" this, #_"AbstractEndNode" end])
+    (#_"int" AbstractMergeNode'''phiPredecessorCount-1 [#_"AbstractMergeNode" this])
+    (#_"int" AbstractMergeNode'''phiPredecessorIndex-2 [#_"AbstractMergeNode" this, #_"AbstractEndNode" pred])
+    (#_"AbstractEndNode" AbstractMergeNode'''phiPredecessorAt-2 [#_"AbstractMergeNode" this, #_"int" index])
+)
+
+(defp AbstractMoveOp)
+(defp AbstractNewArrayNode)
+(defp AbstractNewObjectNode)
+
+;;;
+ ; Type describing all pointers to Java objects.
+ ;;
+(defp AbstractObjectStamp
+    (#_"AbstractObjectStamp" AbstractObjectStamp'''copyWith-5 [#_"AbstractObjectStamp" this, #_"ResolvedJavaType" newType, #_"boolean" newExactType, #_"boolean" newNonNull, #_"boolean" newAlwaysNull])
+)
+
+;;;
+ ; Abstract base class of all pointer types.
+ ;;
+(defp AbstractPointerStamp
+    (#_"AbstractPointerStamp" AbstractPointerStamp'''copyWith-3 [#_"AbstractPointerStamp" this, #_"boolean" newNonNull, #_"boolean" newAlwaysNull])
+)
+
+(defp AbstractStateSplit)
+(defp AbstractTemplates)
+(defp AbstractWriteNode)
+
+(defp Access
+    (#_"AddressNode" Access'''getAddress-1 [#_"Access" this])
+    (#_"LocationIdentity" Access'''getLocationIdentity-1 [#_"Access" this])
+    (#_"boolean" Access'''canNullCheck-1 [#_"Access" this])
+)
+
+(defp AccessArrayNode)
+(defp AccessFieldNode)
+(defp AccessIndexedNode)
+(defp AccessMonitorNode)
+(defp AcquiredCASLockNode)
+(defp Add)
+(defp AddNode)
+
+(defp Address
+)
+
+(defp AddressLowering)
+(defp AddressLoweringPhase)
+
+;;;
+ ; Base class for nodes that deal with addressing calculation.
+ ;;
+(defp AddressNode
+    (#_"ValueNode" AddressNode'''getBase-1 [#_"AddressNode" this])
+    (#_"ValueNode" AddressNode'''getIndex-1 [#_"AddressNode" this])
+    ;;;
+     ; Constant that is the maximum displacement from the base and index for this address. This value
+     ; is used to determine whether using the access as an implicit nil-check on the base is valid.
+     ;
+     ; @return the maximum distance in bytes from the base that this address can be
+     ;;
+    (#_"long" AddressNode'''getMaxConstantDisplacement-1 [#_"AddressNode" this])
+)
+
+(defp AllocatableRegisters)
+(defp AllocatedObjectNode)
+(defp AllocationStage)
+(defp Allocator)
+
+(defp AnchoringNode
+)
+
+(defp And)
+(defp AndNode)
+(defp AndPredicate)
+(defp Arguments)
+(defp ArithmeticOp)
+(defp ArithmeticOpTable)
+
+;;;
+ ; An ArithmeticOperation is an operation that does primitive value arithmetic without side effect.
+ ;;
+(defp ArithmeticOperation
+    (#_"ArithmeticOp" ArithmeticOperation'''getArithmeticOp-1 [#_"ArithmeticOperation" this])
+)
+
+(defp ArithmeticStamp)
+(defp ArrayLengthNode)
+
+(defp ArrayLengthProvider
+    ;;;
+     ; Returns the length of the array described by this node, or nil if it is not available.
+     ;;
+    (#_"ValueNode" ArrayLengthProvider'''length-1 [#_"ArrayLengthProvider" this])
+)
+
+(defp ArrayPlaceholder)
+(defp Assembler)
+(defp AtomicReadAndAddNode)
+(defp AtomicReadAndAddOp)
+(defp AtomicReadAndWriteNode)
+(defp AtomicReadAndWriteOp)
+
+;;;
+ ; Backends can subclass this abstract class and generate code for switch strategies by implementing
+ ; the #conditionalJump(int, Condition, Label) method.
+ ;;
+(defp BaseSwitchClosure
+    ;;;
+     ; This method generates code for a comparison between the actual value and the constant at
+     ; the given index and a condition jump to target.
+     ;;
+    (#_"void" BaseSwitchClosure'''conditionalJump-4 [#_"BaseSwitchClosure" this, #_"int" index, #_"Condition" condition, #_"Label" target])
+)
+
+(defp BasicInductionVariable)
+(defp BciBlock)
+(defp BciBlockMapping)
+(defp BeginLockScopeNode)
+(defp BeginNode)
+(defp BeginStateSplitNode)
+(defp BelowOp)
+
+;;;
+ ; This sub-interface of Canonicalizable is intended for nodes that have exactly two inputs.
+ ; It has an additional #canonical(CanonicalizerTool, Node, Node) method that looks at the given
+ ; inputs instead of the current inputs of the node - which can be used to ask "what if this
+ ; input is changed to this node" - questions.
+ ;
+ ; @param <T> the common supertype of all inputs of this node
+ ;;
+(defp Binary #_"<T implements Node>"
+    ;;;
+     ; Similar to Canonicalizable#canonical(CanonicalizerTool), except that implementations should act as if the
+     ; current input of the node was the given one, i.e. they should never look at the inputs via the this pointer.
+     ;;
+    (#_"Node" Binary'''canonical-4 [#_"Binary<T implements Node>" this, #_"CanonicalizerTool" tool, #_"T" forX, #_"T" forY])
+
+    ;;;
+     ; Ensure a canonical ordering of inputs for commutative nodes to improve GVN results.
+     ; Order the inputs by increasing Node#id and call Graph#findDuplicate(Node) on the node
+     ; if it's currently in a graph. It's assumed that if there was a constant on the left,
+     ; it's been moved to the right by other code and that ordering is left alone.
+     ;
+     ; @return the original node or another node with the same input ordering
+     ;;
+    (#_"Node" Binary'''maybeCommuteInputs-1 [#_"Binary<T implements Node>" this])
+)
+
+(defp BinaryArithmetic)
+
+(defp BinaryArithmeticNode #_"<OP>"
+    (#_"boolean" BinaryArithmeticNode'''isAssociative-1 [#_"BinaryArithmeticNode<OP>" this])
+)
+
+;;;
+ ; This sub-interface of Binary is for nodes with two inputs where the operation is commutative.
+ ; It is used to improve GVN by trying to merge nodes with the same inputs in different order.
+ ;;
+(defp BinaryCommutative
+)
+
+;;;
+ ; The BinaryNode class is the base of arithmetic and logic operations with two inputs.
+ ;;
+(defp BinaryNode
+    ;;;
+     ; Compute an improved for this node using the passed in stamps. The stamps must be compatible
+     ; with the current values of #x and #y. This code is used to provide the default implementation
+     ; of #inferStamp() and may be used by external optimizations.
+     ;;
+    (#_"Stamp" BinaryNode'''foldStamp-3 [#_"BinaryNode" this, #_"Stamp" stampX, #_"Stamp" stampY])
+)
+
+;;;
+ ; Describes a binary arithmetic operation.
+ ;;
+(defp BinaryOp #_"<T>"
+    ;;;
+     ; Applies this operation to {@code a} and {@code b}.
+     ;
+     ; @return the result of applying this operation or nil if applying it would raise
+     ;         an exception (e.g. ArithmeticException for dividing by 0)
+     ;;
+    (#_"Constant" BinaryOp'''foldConstant-3 [#_"BinaryOp<T>" this, #_"Constant" a, #_"Constant" b])
+    ;;;
+     ; Apply the operation to two Stamps.
+     ;;
+    (#_"Stamp" BinaryOp'''foldStamp-3 [#_"BinaryOp<T>" this, #_"Stamp" a, #_"Stamp" b])
+    ;;;
+     ; Check whether a Constant is a neutral element for this operation. A neutral
+     ; element is any element {@code n} where {@code a . n == a} for all a.
+     ;
+     ; @param n the Constant that should be tested
+     ; @return true iff for all {@code a}: {@code a . n == a}
+     ;;
+    (#_"boolean" BinaryOp'''isNeutral-2 [#_"BinaryOp<T>" this, #_"Constant" n])
+    ;;;
+     ; Check whether this operation has a zero {@code z == a . a} for each a. Examples of
+     ; operations having such an element are subtraction and exclusive-or. Note that this
+     ; may be different from the numbers tested by #isNeutral.
+     ;
+     ; @param stamp a Stamp
+     ; @return a unique {@code z} such that {@code z == a . a} for each {@code a} in
+     ;         {@code stamp} if it exists, otherwise nil
+     ;;
+    (#_"Constant" BinaryOp'''getZero-2 [#_"BinaryOp<T>" this, #_"Stamp" stamp])
+)
+
+(defp BinaryOpLogicNode
+    (#_"Stamp" BinaryOpLogicNode'''getSucceedingStampForX-4 [#_"BinaryOpLogicNode" this, #_"boolean" negated?, #_"Stamp" xStamp, #_"Stamp" yStamp])
+    (#_"Stamp" BinaryOpLogicNode'''getSucceedingStampForY-4 [#_"BinaryOpLogicNode" this, #_"boolean" negated?, #_"Stamp" xStamp, #_"Stamp" yStamp])
+    (#_"TriState" BinaryOpLogicNode'''tryFold-3 [#_"BinaryOpLogicNode" this, #_"Stamp" xStamp, #_"Stamp" yStamp])
+)
+
+(defp BinaryStrategy)
+(defp BindToRegisterNode)
+(defp BindToRegisterOp)
+(defp BitCountNode)
+(defp BitMap2D)
+(defp BlackholeNode)
+(defp BlackholeOp)
+(defp Block)
+(defp BlockClosure)
+(defp BlockData)
+
+;;;
+ ; A block delimiter. Every well formed block must contain exactly one such operation and it
+ ; must be the last operation in the block.
+ ;;
+(defp BlockEndOp
+)
+
+(defp BlockIteratorClosure #_"<T>"
+    (#_"T" BlockIteratorClosure'''getInitialState-1 [#_"BlockIteratorClosure<T>" this])
+    (#_"T" BlockIteratorClosure'''processBlock-3 [#_"BlockIteratorClosure<T>" this, #_"Block" block, #_"T" currentState])
+    (#_"T" BlockIteratorClosure'''merge-3 [#_"BlockIteratorClosure<T>" this, #_"Block" merge, #_"List<T>" states])
+    (#_"T" BlockIteratorClosure'''cloneState-2 [#_"BlockIteratorClosure<T>" this, #_"T" oldState])
+    (#_"List<T>" BlockIteratorClosure'''processLoop-3 [#_"BlockIteratorClosure<T>" this, #_"Loop" loop, #_"T" initialState])
+)
+
+(defp BlockLoopInfo)
+(defp BlockMap)
+(defp BlockNodeIterator)
+(defp BlockOrderComparator)
+(defp BlockScope)
+(defp BlockStates)
+(defp BoxNode)
+(defp BoxingTemplates)
+(defp BranchOp)
+(defp BranchProbabilityNode)
 
 ;;;
  ; An interface for accessing the bytecode properties of a ResolvedJavaMethod that allows for
@@ -4217,6 +4541,9 @@ ZeroExtendNode'new-4
     (#_"ConstantPool" Bytecode'''getConstantPool-1 [#_"Bytecode" this])
 )
 
+(defp BytecodeLookupSwitch)
+(defp BytecodeParser)
+
 ;;;
  ; Provides a Bytecode object for interposing on the bytecode of a ResolvedJavaMethod
  ; (i.e. potentially getting bytecode different than ResolvedJavaMethod#getCode()).
@@ -4225,46 +4552,81 @@ ZeroExtendNode'new-4
     (#_"Bytecode" BytecodeProvider'''getBytecode-2 [#_"BytecodeProvider" this, #_"ResolvedJavaMethod" method])
 )
 
-; @FunctionalInterface
-(defp Patches
-    (#_"void" Patches'''registerPatch-3 [#_"Patches" this, #_"int" position, #_"VMConstant" constant])
-)
+(defp BytecodeStream)
 
 ;;;
- ; A marker for a node type supporting {@linkplain Graph#getNodes(NodeClass) fast iteration} of its
- ; instances in a graph. The support for fast iteration comes with a memory cost (e.g. extra data
- ; structures Graph) so only node types for which fast iteration provides a compilation performance
- ; benefit should implement this interface.
+ ; An abstract class that provides the state and methods common to Bytecodes#LOOKUPSWITCH and
+ ; Bytecodes#TABLESWITCH instructions.
  ;;
-(defp IterableNodeType
+(defp BytecodeSwitch
+    ;;;
+     ; Gets the key at {@code i}'th switch target index.
+     ;
+     ; @param i the switch target index
+     ; @return the key at {@code i}'th switch target index
+     ;;
+    (#_"int" BytecodeSwitch'''keyAt-2 [#_"BytecodeSwitch" this, #_"int" i])
+    ;;;
+     ; Gets the offset from the start of the switch instruction for the {@code i}'th switch target.
+     ;
+     ; @param i the switch target index
+     ; @return the offset to the {@code i}'th switch target
+     ;;
+    (#_"int" BytecodeSwitch'''offsetAt-2 [#_"BytecodeSwitch" this, #_"int" i])
+    ;;;
+     ; Gets the number of switch targets.
+     ;
+     ; @return the number of switch targets
+     ;;
+    (#_"int" BytecodeSwitch'''numberOfCases-1 [#_"BytecodeSwitch" this])
+    ;;;
+     ; Gets the total size in bytes of the switch instruction.
+     ;
+     ; @return the total size in bytes of the switch instruction
+     ;;
+    (#_"int" BytecodeSwitch'''size-1 [#_"BytecodeSwitch" this])
 )
 
-(defp NodeIterable
-    (#_"NodeIterable" NodeIterable'''filter-2c [#_"NodeIterable" this, #_"Class<Node>" clazz])
-    (#_"FilteredNodeIterable" NodeIterable'''filter-2p [#_"NodeIterable" this, #_"NodePredicate" predicate])
-    (#_"List<Node>" NodeIterable'''snapshot-1 [#_"NodeIterable" this])
-    (#_"Node" NodeIterable'''first-1 [#_"NodeIterable" this])
-    (#_"int" NodeIterable'''count-1 [#_"NodeIterable" this])
-    (#_"boolean" NodeIterable'''isEmpty-1 [#_"NodeIterable" this])
-    (#_"boolean" NodeIterable'''isNotEmpty-1 [#_"NodeIterable" this])
-    (#_"boolean" NodeIterable'''contains-2 [#_"NodeIterable" this, #_"Node" node])
+(defp BytecodeTableSwitch)
+(defp CFOptimizer)
+(defp CLOptimization)
+(defp CRuntimeCallEpilogueOp)
+(defp CRuntimeCallPrologueOp)
+
+(defp CacheEntry #_"<T>"
+    (#_"CacheEntry<T>" CacheEntry'''duplicateWithObject-2 [#_"CacheEntry<T>" this, #_"ValueNode" newObject])
+    (#_"boolean" CacheEntry'''conflicts-2 [#_"CacheEntry<T>" this, #_"LocationIdentity" other])
+    (#_"LocationIdentity" CacheEntry'''getIdentity-1 [#_"CacheEntry<T>" this])
 )
 
-(defp NodePredicate
-    (#_"boolean" NodePredicate'''apply-2 [#_"NodePredicate" this, #_"Node" node])
-    (#_"NodePredicate" NodePredicate'''and-2 [#_"NodePredicate" this, #_"NodePredicate" other])
-)
+(defp CacheKey)
+(defp CallOp)
+(defp CallTargetNode)
 
 ;;;
- ; Marker interface for nodes that contains other nodes. When the inputs to this node changes,
- ; users of this node should also be placed on the work list for canonicalization.
+ ; Information about a graph that will potentially be inlined. This includes tracking the invocations
+ ; in graph that will subject to inlining themselves.
  ;;
-(defp IndirectCanonicalization
+(defp CallsiteHolder
+    ;;;
+     ; Gets the method associated with the {@linkplain #graph() graph} represented by this object.
+     ;;
+    (#_"ResolvedJavaMethod" CallsiteHolder'''method-1 [#_"CallsiteHolder" this])
+    ;;;
+     ; The stack realized by InliningData grows upon InliningData#moveForward() deciding
+     ; to explore (depth-first) a callsite of the graph associated to this CallsiteHolder.
+     ; The list of not-yet-considered callsites is managed by CallsiteHolderExplorable,
+     ; and this method reports whether any such candidates remain.
+     ;;
+    (#_"boolean" CallsiteHolder'''hasRemainingInvokes-1 [#_"CallsiteHolder" this])
+    ;;;
+     ; The graph about which this object contains inlining information.
+     ;;
+    (#_"Graph" CallsiteHolder'''graph-1 [#_"CallsiteHolder" this])
 )
 
-(defp InplaceUpdateClosure
-    (#_"Node" InplaceUpdateClosure'''replacement-3 [#_"InplaceUpdateClosure" this, #_"Node" node, #_"EdgesType" type])
-)
+(defp CallsiteHolderExplorable)
+(defp CanonicalCondition)
 
 ;;;
  ; Nodes can implement Canonicalizable or one of the two sub-interfaces Unary and
@@ -4305,58 +4667,13 @@ ZeroExtendNode'new-4
     (#_"Node" Canonicalizable'''canonical-2 [#_"Canonicalizable" this, #_"CanonicalizerTool" tool])
 )
 
-;;;
- ; This sub-interface of Canonicalizable is intended for nodes that have exactly one input. It has an
- ; additional #canonical(CanonicalizerTool, Node) method that looks at the given input instead of the current
- ; input of the node - which can be used to ask "what if this input is changed to this node" - questions.
- ;
- ; @param <T> the common supertype of all inputs of this node
- ;;
-(defp Unary #_"<T implements Node>"
-    ;;;
-     ; Similar to Canonicalizable#canonical(CanonicalizerTool), except that implementations should act as if the
-     ; current input of the node was the given one, i.e. they should never look at the inputs via the this pointer.
-     ;;
-    (#_"Node" Unary'''canonical-3 [#_"Unary<T implements Node>" this, #_"CanonicalizerTool" tool, #_"T" forValue])
-    ;;;
-     ; Gets the current value of the input, so that calling #canonical(CanonicalizerTool, Node) with the value
-     ; returned from this method should behave exactly like Canonicalizable#canonical(CanonicalizerTool).
-     ;;
-    (#_"T" Unary'''getValue-1 [#_"Unary<T implements Node>" this])
+(defp CanonicalizableLocation
+    (#_"ValueNode" CanonicalizableLocation'''canonicalizeRead-5 [#_"CanonicalizableLocation" this, #_"ValueNode" read, #_"AddressNode" location, #_"ValueNode" object, #_"CanonicalizerTool" tool])
 )
 
-;;;
- ; This sub-interface of Canonicalizable is intended for nodes that have exactly two inputs.
- ; It has an additional #canonical(CanonicalizerTool, Node, Node) method that looks at the given
- ; inputs instead of the current inputs of the node - which can be used to ask "what if this
- ; input is changed to this node" - questions.
- ;
- ; @param <T> the common supertype of all inputs of this node
- ;;
-(defp Binary #_"<T implements Node>"
-    ;;;
-     ; Similar to Canonicalizable#canonical(CanonicalizerTool), except that implementations should act as if the
-     ; current input of the node was the given one, i.e. they should never look at the inputs via the this pointer.
-     ;;
-    (#_"Node" Binary'''canonical-4 [#_"Binary<T implements Node>" this, #_"CanonicalizerTool" tool, #_"T" forX, #_"T" forY])
-
-    ;;;
-     ; Ensure a canonical ordering of inputs for commutative nodes to improve GVN results.
-     ; Order the inputs by increasing Node#id and call Graph#findDuplicate(Node) on the node
-     ; if it's currently in a graph. It's assumed that if there was a constant on the left,
-     ; it's been moved to the right by other code and that ordering is left alone.
-     ;
-     ; @return the original node or another node with the same input ordering
-     ;;
-    (#_"Node" Binary'''maybeCommuteInputs-1 [#_"Binary<T implements Node>" this])
-)
-
-;;;
- ; This sub-interface of Binary is for nodes with two inputs where the operation is commutative.
- ; It is used to improve GVN by trying to merge nodes with the same inputs in different order.
- ;;
-(defp BinaryCommutative
-)
+(defp CanonicalizedCondition)
+(defp CanonicalizerInstance)
+(defp CanonicalizerPhase)
 
 (defp CanonicalizerTool
     (#_"boolean" CanonicalizerTool'''canonicalizeReads-1 [#_"CanonicalizerTool" this])
@@ -4372,225 +4689,130 @@ ZeroExtendNode'new-4
     (#_"Integer" CanonicalizerTool'''smallestCompareWidth-1 [#_"CanonicalizerTool" this])
 )
 
-;;;
- ; This interface allows nodes to perform more complicated simplifications, in contrast to
- ; Canonicalizable, which supports only replacing the current node.
- ;
- ; Implementors of this interface need to be aware that they need to call
- ; SimplifierTool#addToWorkList(Node) for each node that might be influenced
- ; (in terms of simplification and canonicalization) by the actions performed in simplify.
- ;;
-(defp Simplifiable
-    (#_"void" Simplifiable'''simplify-2 [#_"Simplifiable" this, #_"SimplifierTool" tool])
-)
+(defp ChainedNodeEventListener)
+(defp ClassGetHubNode)
+(defp ClassIsAssignableFromNode)
+(defp ClassRef)
+(defp Classfile)
+(defp ClassfileBytecode)
+(defp ClassfileBytecodeProvider)
 
-(defp SimplifierTool
-    (#_"void" SimplifierTool'''deleteBranch-2 [#_"SimplifierTool" this, #_"Node" branch])
+(defp ClassfileConstant
     ;;;
-     ; Adds a node to the worklist independent of whether it has already been on the worklist.
+     ; Loads the type, if any, referenced at a specified entry.
      ;;
-    (#_"void" SimplifierTool'''addToWorkList-2n [#_"SimplifierTool" this, #_"Node" node])
-    (#_"void" SimplifierTool'''addToWorkList-2i [#_"SimplifierTool" this, #_"Iterable<Node>" nodes])
-    (#_"void" SimplifierTool'''removeIfUnused-2 [#_"SimplifierTool" this, #_"Node" node])
+    (#_"void" ClassfileConstant'''loadReferencedType-4 [#_"ClassfileConstant" this, #_"ClassfileConstantPool" cp, #_"int" index, #_"int" opcode])
 )
 
-(defp AMD64HotSpotRestoreRbpOp
-    ;;;
-     ; The type of location (i.e. stack or register) in which RBP is saved is not known until initial LIR generation
-     ; is finished. Until then, we use a placeholder variable so that LIR verification is successful.
-     ;;
-  #_(§ def #_"Variable" AMD64HotSpotRestoreRbpOp'PLACEHOLDER (Variable'new-2 (LIRKind'value-1 AMD64Kind/QWORD), Integer/MAX_VALUE))
+(defp ClassfileConstantPool)
 
-    (#_"void" AMD64HotSpotRestoreRbpOp'''setSavedRbp-2 [#_"AMD64HotSpotRestoreRbpOp" this, #_"AllocatableValue" value])
+(defp Closure #_"<T>"
+    (#_"boolean" Closure'''needsApplyEffects-1 [#_"Closure<T>" this])
+    (#_"void" Closure'''applyEffects-1 [#_"Closure<T>" this])
 )
+
+(defp CodeBuffer)
+(defp CollectVirtualObjectsClosure)
+(defp CommitAllocationNode)
+(defp CommutativeTwoOp)
+(defp CompareAndSwapOp)
+(defp CompareNode)
+
+(defp CompareOp
+    (#_"LogicNode" CompareOp'''canonical-5 [#_"CompareOp" this, #_"Integer" smallestCompareWidth, #_"CanonicalCondition" condition, #_"ValueNode" forX, #_"ValueNode" forY])
+    (#_"LogicNode" CompareOp'''canonicalizeSymmetricConstant-6 [#_"CompareOp" this, #_"Integer" smallestCompareWidth, #_"CanonicalCondition" condition, #_"Constant" constant, #_"ValueNode" node, #_"boolean" mirrored?])
+    (#_"LogicNode" CompareOp'''optimizeNormalizeCompare-5 [#_"CompareOp" this, #_"Integer" smallestCompareWidth, #_"Constant" constant, #_"NormalizeCompareNode" normalizeNode, #_"boolean" mirrored?])
+    (#_"LogicNode" CompareOp'''duplicateModified-3 [#_"CompareOp" this, #_"ValueNode" newW, #_"ValueNode" newY])
+)
+
+(defp CompilationResult)
 
 ;;;
- ; Functional interface for iterating over a list of values without modifying them.
- ; See InstructionValueProcedure for a version that can modify values.
+ ; Base class to represent values that need to be stored in more than one register. This is mainly
+ ; intended to support addresses and not general arbitrary nesting of composite values. Because of
+ ; the possibility of sharing of CompositeValues they should be immutable.
  ;;
-; @FunctionalInterface
-(defp InstructionValueConsumer
+(defp CompositeValue
     ;;;
-     ; Iterator method to be overwritten.
+     ; Invoke {@code proc} on each Value element of this CompositeValue.
+     ; If {@code proc} replaces any value then a new CompositeValue should be returned.
      ;
-     ; @param instruction The current instruction.
-     ; @param value The value that is iterated.
-     ; @param mode The operand mode for the value.
-     ; @param flags A set of flags for the value.
+     ; @return the original CompositeValue or a copy with any modified values
      ;;
-    (#_"void" InstructionValueConsumer'''visitValue-5 [#_"InstructionValueConsumer" this, #_"LIRInstruction" instruction, #_"Value" value, #_"OperandMode" mode, #_"EnumSet<OperandFlag>" flags])
+    (#_"CompositeValue" CompositeValue'''forEachComponent-4 [#_"CompositeValue" this, #_"LIRInstruction" op, #_"OperandMode" mode, #_"InstructionValueProcedure" proc])
+    (#_"void" CompositeValue'''visitEachComponent-4 [#_"CompositeValue" this, #_"LIRInstruction" op, #_"OperandMode" mode, #_"InstructionValueConsumer" proc])
 )
 
+(defp CompressEncoding)
+(defp CompressPointerOp)
+
 ;;;
- ; Functional interface for iterating over a list of values, possibly returning a value to replace
- ; the old value.
+ ; Compress or uncompress an oop or metaspace pointer.
  ;;
-; @FunctionalInterface
-(defp InstructionValueProcedure
+(defp CompressionNode
+    (#_"Constant" CompressionNode'''compress-2 [#_"CompressionNode" this, #_"Constant" constant])
+    (#_"Constant" CompressionNode'''uncompress-2 [#_"CompressionNode" this, #_"Constant" constant])
+    (#_"Stamp" CompressionNode'''mkStamp-2 [#_"CompressionNode" this, #_"Stamp" input])
+)
+
+(defp ComputeInliningRelevance)
+(defp ComputeLoopFrequenciesClosure)
+(defp ComputeLoopFrequencyPhase)
+(defp ComputeObjectAddressNode)
+(defp CondMoveOp)
+(defp CondSetOp)
+(defp Condition)
+(defp ConditionAnchorNode)
+(defp ConditionFlag)
+(defp ConditionalEliminationInstance)
+(defp ConditionalEliminationPhase)
+(defp ConditionalNode)
+(defp ConstOp)
+(defp ConstantBindingParameterPlugin)
+(defp ConstantLoadOptimization)
+(defp ConstantNode)
+(defp ConstantTree)
+(defp ConstantTreeAnalyzer)
+(defp ConstantValue)
+(defp ConsumerConstOp)
+(defp ConsumerOp)
+(defp ContradictionPredicate)
+(defp ControlFlowAnchorNode)
+
+;;;
+ ; Marker interface for nodes that prevents control flow optimizations. The node should never be duplicated.
+ ;;
+(defp ControlFlowAnchored
+)
+
+(defp ControlFlowGraph)
+(defp ControlFlowOptimizer)
+(defp ControlSinkNode)
+
+;;;
+ ; The ControlSplitNode is a base class for all instructions that split the control flow (i.e. have more than one successor).
+ ;;
+(defp ControlSplitNode
+    (#_"double" ControlSplitNode'''probability-2 [#_"ControlSplitNode" this, #_"AbstractBeginNode" successor])
     ;;;
-     ; Iterator method to be overwritten.
+     ; Attempts to set the probability for the given successor to the passed value (which has to be
+     ; in the range of 0.0 and 1.0). Returns whether setting the probability was successful.
+     ;;
+    (#_"boolean" ControlSplitNode'''setProbability-3 [#_"ControlSplitNode" this, #_"AbstractBeginNode" successor, #_"double" value])
+    ;;;
+     ; Primary successor of the control split. Data dependencies on the node have to be scheduled in
+     ; the primary successor. Returns nil if data dependencies are not expected.
      ;
-     ; @param instruction The current instruction.
-     ; @param value The value that is iterated.
-     ; @param mode The operand mode for the value.
-     ; @param flags A set of flags for the value.
-     ; @return the new value to replace the value that was passed in
+     ; @return the primary successor
      ;;
-    (#_"Value" InstructionValueProcedure'''doValue-5 [#_"InstructionValueProcedure" this, #_"LIRInstruction" instruction, #_"Value" value, #_"OperandMode" mode, #_"EnumSet<OperandFlag>" flags])
-)
-
-;;;
- ; Base for all low-level phases. Subclasses should be stateless. There will be one global instance
- ; for each phase that is shared for all compilations.
- ;;
-(defp LIRPhase #_"<C>"
-    (#_"void" LIRPhase'''run-3 [#_"LIRPhase<C>" this, #_"LIRGenerationResult" lirGenRes, #_"C" context])
-)
-
-(defp PhiValueVisitor
+    (#_"AbstractBeginNode" ControlSplitNode'''getPrimarySuccessor-1 [#_"ControlSplitNode" this])
     ;;;
-     ; @param phiIn the incoming value at the merge block
-     ; @param phiOut the outgoing value from the predecessor block
+     ; Returns the number of successors.
      ;;
-    (#_"void" PhiValueVisitor'''visit-3 [#_"PhiValueVisitor" this, #_"Value" phiIn, #_"Value" phiOut])
+    (#_"int" ControlSplitNode'''getSuccessorCount-1 [#_"ControlSplitNode" this])
 )
 
-;;;
- ; A block delimiter. Every well formed block must contain exactly one such operation and it
- ; must be the last operation in the block.
- ;;
-(defp BlockEndOp
-)
-
-(defp NullCheck
-    (#_"Value" NullCheck'''getCheckedValue-1 [#_"NullCheck" this])
-)
-
-(defp ImplicitNullCheck
-    (#_"boolean" ImplicitNullCheck'''makeNullCheckFor-3 [#_"ImplicitNullCheck" this, #_"Value" value, #_"int" implicitNullCheckLimit])
-)
-
-;;;
- ; Marker interface for a LIR operation that is a conditional jump.
- ;;
-(defp StandardBranchOp
-)
-
-;;;
- ; Marker interface for a LIR operation that moves a value to #getResult().
- ;;
-(defp MoveOp
-    (#_"AllocatableValue" MoveOp'''getResult-1 [#_"MoveOp" this])
-)
-
-;;;
- ; Marker interface for a LIR operation that moves some non-constant value to another location.
- ;;
-(defp ValueMoveOp
-    (#_"AllocatableValue" ValueMoveOp'''getInput-1 [#_"ValueMoveOp" this])
-)
-
-;;;
- ; Marker interface for a LIR operation that loads a #getConstant().
- ;;
-(defp LoadConstantOp
-    (#_"Constant" LoadConstantOp'''getConstant-1 [#_"LoadConstantOp" this])
-)
-
-(defp SwitchClosure
-    ;;;
-     ; Generates a conditional or unconditional jump. The jump will be unconditional if
-     ; condition is nil. If defaultTarget is true, then the jump will go the default.
-     ;
-     ; @param index Index of the value and the jump target (only used if defaultTarget == false)
-     ; @param condition The condition on which to jump (can be nil)
-     ; @param defaultTarget true if the jump should go to the default target, false if index should be used
-     ;;
-    (#_"void" SwitchClosure'''conditionalJump-4 [#_"SwitchClosure" this, #_"int" index, #_"Condition" condition, #_"boolean" defaultTarget])
-    ;;;
-     ; Generates a conditional jump to the target with the specified index. The fall through
-     ; should go to the default target.
-     ;
-     ; @param index Index of the value and the jump target
-     ; @param condition The condition on which to jump
-     ; @param canFallThrough true if this is the last instruction in the switch statement, to allow for fall-through optimizations
-     ;;
-    (#_"void" SwitchClosure'''conditionalJumpOrDefault-4 [#_"SwitchClosure" this, #_"int" index, #_"Condition" condition, #_"boolean" canFallThrough])
-    ;;;
-     ; Create a new label and generate a conditional jump to it.
-     ;
-     ; @param index Index of the value and the jump target
-     ; @param condition The condition on which to jump
-     ; @return a new Label
-     ;;
-    (#_"Label" SwitchClosure'''conditionalJump-3 [#_"SwitchClosure" this, #_"int" index, #_"Condition" condition])
-    ;;;
-     ; Binds a label returned by #conditionalJump(int, Condition).
-     ;;
-    (#_"void" SwitchClosure'''bind-2 [#_"SwitchClosure" this, #_"Label" label])
-    ;;;
-     ; Return true iff the target of both indexes is the same.
-     ;;
-    (#_"boolean" SwitchClosure'''isSameTarget-3 [#_"SwitchClosure" this, #_"int" index1, #_"int" index2])
-)
-
-;;;
- ; Non-modifying version of ValueProcedure.
- ;;
-; @FunctionalInterface
-(defp ValueConsumer #_(§ extends InstructionValueConsumer)
-    ;;;
-     ; Iterator method to be overwritten.
-     ;
-     ; @param value The value that is iterated.
-     ; @param mode The operand mode for the value.
-     ; @param flags A set of flags for the value.
-     ;;
-    (#_"void" ValueConsumer'''visitValue-4 [#_"ValueConsumer" this, #_"Value" value, #_"OperandMode" mode, #_"EnumSet<OperandFlag>" flags])
-
-  #_(§ override! #_"void" InstructionValueConsumer'''visitValue-5 [#_"ValueConsumer" this, #_"LIRInstruction" instruction, #_"Value" value, #_"OperandMode" mode, #_"EnumSet<OperandFlag>" flags]
-        (ValueConsumer'''visitValue-4 this, value, mode, flags)
-        nil
-    )
-)
-
-;;;
- ; Similar to InstructionValueProcedure but without an LIRInstruction parameter.
- ;;
-; @FunctionalInterface
-(defp ValueProcedure #_(§ extends InstructionValueProcedure)
-    ;;;
-     ; Iterator method to be overwritten.
-     ;
-     ; @param value The value that is iterated.
-     ; @param mode The operand mode for the value.
-     ; @param flags A set of flags for the value.
-     ; @return the new value to replace the value that was passed in
-     ;;
-    (#_"Value" ValueProcedure'''doValue-4 [#_"ValueProcedure" this, #_"Value" value, #_"OperandMode" mode, #_"EnumSet<OperandFlag>" flags])
-
-  #_(§ override! #_"Value" InstructionValueProcedure'''doValue-5 [#_"ValueProcedure" this, #_"LIRInstruction" instruction, #_"Value" value, #_"OperandMode" mode, #_"EnumSet<OperandFlag>" flags]
-        (ValueProcedure'''doValue-4 this, value, mode, flags)
-    )
-)
-
-(defp LoopPolicies
-    (#_"boolean" LoopPolicies'''shouldPeel-3 [#_"LoopPolicies" this, #_"LoopEx" loop, #_"ControlFlowGraph" cfg])
-    (#_"boolean" LoopPolicies'''shouldFullUnroll-2 [#_"LoopPolicies" this, #_"LoopEx" loop])
-    (#_"boolean" LoopPolicies'''shouldPartiallyUnroll-2 [#_"LoopPolicies" this, #_"LoopEx" loop])
-    (#_"boolean" LoopPolicies'''shouldTryUnswitch-2 [#_"LoopPolicies" this, #_"LoopEx" loop])
-    (#_"boolean" LoopPolicies'''shouldUnswitch-3 [#_"LoopPolicies" this, #_"LoopEx" loop, #_"List<ControlSplitNode>" controlSplits])
-)
-
-;;;
- ; An ArithmeticOperation is an operation that does primitive value arithmetic without side effect.
- ;;
-(defp ArithmeticOperation
-    (#_"ArithmeticOp" ArithmeticOperation'''getArithmeticOp-1 [#_"ArithmeticOperation" this])
-)
-
-(defp SerializableBinaryFunction #_"<T>" #_(§ extends Function #_"<ArithmeticOpTable, BinaryOp<T>>")
-)
+(defp ConvertDeoptimizeToGuardPhase)
 
 ;;;
  ; Represents a conversion between primitive types.
@@ -4629,39 +4851,31 @@ ZeroExtendNode'new-4
     (#_"boolean" ConvertNode'''preservesOrder-3 [#_"ConvertNode" this, #_"CanonicalCondition" op, #_"Constant" value])
 )
 
-(defp SerializableIntegerConvertFunction #_"<T>" #_(§ extends Function #_"<ArithmeticOpTable, IntegerConvertOp<T>>")
+(defp CountLeadingZerosNode)
+(defp CountTrailingZerosNode)
+(defp CountedLoopInfo)
+(defp CountingClosure)
+(defp CurrentInvoke)
+(defp CurrentLockNode)
+
+(defp Data
+    (#_"void" Data'''emit-3 [#_"Data" this, #_"ByteBuffer" buffer, #_"Patches" patches])
 )
 
-(defp SerializableShiftFunction #_"<T>" #_(§ extends Function #_"<ArithmeticOpTable, ShiftOp<T>>")
-)
-
-(defp SerializableUnaryFunction #_"<T>" #_(§ extends Function #_"<ArithmeticOpTable, UnaryOp<T>>")
-)
-
-(defp RecursiveVisitor #_"<V>"
-    (#_"V" RecursiveVisitor'''enter-2 [#_"RecursiveVisitor<V>" this, #_"Block" b])
-    (#_"void" RecursiveVisitor'''exit-3 [#_"RecursiveVisitor<V>" this, #_"Block" b, #_"V" value])
-)
-
-;;;
- ; Marker interface for nodes that prevents control flow optimizations. The node should never be duplicated.
- ;;
-(defp ControlFlowAnchored
-)
-
-;;;
- ; Shared interface to capture core methods of AbstractFixedGuardNode and GuardNode.
- ;;
-(defp DeoptimizingGuard
-    (#_"LogicNode" DeoptimizingGuard'''getCondition-1 [#_"DeoptimizingGuard" this])
-    (#_"void" DeoptimizingGuard'''setCondition-3 [#_"DeoptimizingGuard" this, #_"LogicNode" x, #_"boolean" negated?])
-)
+(defp DataOp)
+(defp DataSection)
+(defp DataTwoOp)
+(defp DeadCodeEliminationPhase)
+(defp Decision)
+(defp DefUseTree)
+(defp DefaultLoopPolicies)
+(defp DefaultSimplifierTool)
+(defp DeferredExit)
 
 ;;;
- ; Interface implemented by nodes which may need deoptimization information.
+ ; Interface for nodes that need a FrameState for deoptimizing to a point after their execution.
  ;;
-(defp DeoptimizingNode
-    (#_"boolean" DeoptimizingNode'''canDeoptimize-1 [#_"DeoptimizingNode" this])
+(defp DeoptAfter
 )
 
 ;;;
@@ -4672,12 +4886,6 @@ ZeroExtendNode'new-4
      ; Sets the FrameState describing the program state before the execution of this node.
      ;;
     (#_"void" DeoptBefore'''setStateBefore-2 [#_"DeoptBefore" this, #_"FrameState" state])
-)
-
-;;;
- ; Interface for nodes that need a FrameState for deoptimizing to a point after their execution.
- ;;
-(defp DeoptAfter
 )
 
 ;;;
@@ -4695,30 +4903,262 @@ ZeroExtendNode'new-4
     (#_"void" DeoptDuring'''computeStateDuring-2 [#_"DeoptDuring" this, #_"FrameState" stateAfter])
 )
 
-(defp AnchoringNode
+(defp DeoptimizationGroupingPhase)
+(defp DeoptimizeCallerNode)
+(defp DeoptimizeCallerOp)
+(defp DeoptimizeNode)
+(defp DeoptimizingFixedWithNextNode)
+
+;;;
+ ; Shared interface to capture core methods of AbstractFixedGuardNode and GuardNode.
+ ;;
+(defp DeoptimizingGuard
+    (#_"LogicNode" DeoptimizingGuard'''getCondition-1 [#_"DeoptimizingGuard" this])
+    (#_"void" DeoptimizingGuard'''setCondition-3 [#_"DeoptimizingGuard" this, #_"LogicNode" x, #_"boolean" negated?])
 )
 
 ;;;
- ; A node that may be guarded by a guarding node.
+ ; Interface implemented by nodes which may need deoptimization information.
  ;;
-(defp GuardedNode
-    (#_"GuardingNode" GuardedNode'''getGuard-1 [#_"GuardedNode" this])
-    (#_"void" GuardedNode'''setGuard-2 [#_"GuardedNode" this, #_"GuardingNode" guard])
+(defp DeoptimizingNode
+    (#_"boolean" DeoptimizingNode'''canDeoptimize-1 [#_"DeoptimizingNode" this])
 )
 
-(defp GuardingNode
+(defp DerivedConvertedInductionVariable)
+(defp DerivedInductionVariable)
+(defp DerivedOffsetInductionVariable)
+(defp DerivedScaledInductionVariable)
+(defp DirectCallOp)
+(defp DirectCallTargetNode)
+(defp DirectFarForeignCallOp)
+(defp DirectNearForeignCallOp)
+(defp DirectStaticCallOp)
+(defp DirectVirtualCallOp)
+(defp Div)
+(defp DominatorOptimizationProblem)
+(defp DummyGuardHandle)
+
+(defp DuplicationReplacement
+    (#_"Node" DuplicationReplacement'''replacement-2 [#_"DuplicationReplacement" this, #_"Node" original])
+)
+
+(defp DynamicDeoptimizeNode)
+(defp DynamicNewArrayNode)
+(defp DynamicNewInstanceNode)
+(defp EMOptimizer)
+(defp EagerSnippetInfo)
+(defp EarlyReadEliminationPhase)
+(defp EdgeInfo)
+(defp EdgeMoveOptimizer)
+
+(defp EdgeVisitor
+    (#_"Node" EdgeVisitor'''apply-3 [#_"EdgeVisitor" this, #_"Node" source, #_"Node" target])
 )
 
 ;;;
- ; Denotes monitor locking transition.
+ ; Describes Node fields representing the set of inputs for the node or the set of the node's successors.
  ;;
-(defp MonitorEnter
+(defp Edges
+    (#_"void" Edges'''update-4 [#_"Edges" this, #_"Node" node, #_"Node" oldValue, #_"Node" newValue])
+)
+
+(defp EdgesIterator)
+
+(defp Effect
+    (#_"boolean" Effect'''isCfgKill-1 [#_"Effect" this])
+    (#_"void" Effect'''apply-3 [#_"Effect" this, #_"Graph" graph, #_"ArrayList<Node>" obsoleteNodes])
+    (#_"void" Effect'''apply-2 [#_"Effect" this, #_"Graph" graph])
 )
 
 ;;;
- ; Denotes monitor unlocking transition.
+ ; An EffectList can be used to maintain a list of Effects and backtrack to a previous
+ ; state by truncating the list.
  ;;
-(defp MonitorExit
+(defp EffectList
+    (#_"void" EffectList'''clear-1 [#_"EffectList" this])
+)
+
+(defp EffectsBlockState #_"<T implements EffectsBlockState<T>>"
+    (#_"boolean" EffectsBlockState'''equivalentTo-2 [#_"EffectsBlockState<T implements EffectsBlockState<T>>" this, #_"T" other])
+)
+
+(defp EffectsClosure #_"<T implements EffectsBlockState<T>>"
+    ;;;
+     ; Collects the effects of virtualizing the given node.
+     ;
+     ; @return true if the effects include removing the node, false otherwise
+     ;;
+    (#_"boolean" EffectsClosure'''processNode-5 [#_"EffectsClosure<T implements EffectsBlockState<T>>" this, #_"Node" node, #_"T" state, #_"GraphEffectList" effects, #_"FixedWithNextNode" lastFixedNode])
+    (#_"T" EffectsClosure'''stripKilledLoopLocations-3 [#_"EffectsClosure<T implements EffectsBlockState<T>>" this, #_"Loop" loop, #_"T" initialState])
+    (#_"void" EffectsClosure'''processKilledLoopLocations-4 [#_"EffectsClosure<T implements EffectsBlockState<T>>" this, #_"Loop" loop, #_"T" initialState, #_"T" mergedStates])
+    (#_"void" EffectsClosure'''processInitialLoopState-3 [#_"EffectsClosure<T implements EffectsBlockState<T>>" this, #_"Loop" loop, #_"T" initialState])
+    (#_"void" EffectsClosure'''processLoopExit-5 [#_"EffectsClosure<T implements EffectsBlockState<T>>" this, #_"LoopExitNode" exitNode, #_"T" initialState, #_"T" exitState, #_"GraphEffectList" effects])
+    (#_"MergeProcessor<T>" EffectsClosure'''createMergeProcessor-2 [#_"EffectsClosure<T implements EffectsBlockState<T>>" this, #_"Block" merge])
+)
+
+(defp EffectsPhase
+    (#_"Closure" EffectsPhase'''createEffectsClosure-3 [#_"EffectsPhase" this, #_"ScheduleResult" schedule, #_"ControlFlowGraph" cfg])
+)
+
+(defp EffortClosure)
+(defp EndLockScopeNode)
+(defp EndNode)
+(defp EpilogueBlockEndOp)
+(defp EscapeObjectState)
+(defp ExactInlineInfo)
+(defp ExecutableRef)
+(defp ExpandLogicPhase)
+(defp ExplodeLoopNode)
+(defp FastAcquireBiasedLockNode)
+(defp FieldInfo)
+(defp FieldIntrospection)
+(defp FieldKey)
+(defp FieldLocationIdentity)
+(defp FieldRef)
+(defp Fields)
+(defp FieldsCache)
+
+;;;
+ ; Scans the fields in a class hierarchy.
+ ;;
+(defp FieldsScanner
+    (#_"void" FieldsScanner'''scanField-3 [#_"FieldsScanner" this, #_"Field" field, #_"long" offset])
+)
+
+(defp FilteredNodeIterable)
+(defp FinalClosure)
+(defp FinalFieldBarrierNode)
+(defp FinalState)
+(defp FixPointIntervalBuilder)
+(defp FixReadsClosure)
+(defp FixReadsPhase)
+(defp FixedAccessNode)
+(defp FixedBinaryNode)
+(defp FixedGuardNode)
+(defp FixedNode)
+(defp FixedNodeIterator)
+(defp FixedNodeProbabilityCache)
+(defp FixedTarget)
+(defp FixedValueAnchorNode)
+(defp FixedWithNextNode)
+
+;;;
+ ; An FixedAccessNode that can be converted to a FloatingAccessNode.
+ ;;
+(defp FloatableAccessNode
+    (#_"FloatingAccessNode" FloatableAccessNode'''asFloatingNode-2 [#_"FloatableAccessNode" this, #_"MemoryNode" lastLocationAccess])
+)
+
+(defp FloatingAccessNode
+    (#_"FixedAccessNode" FloatingAccessNode'''asFixedNode-1 [#_"FloatingAccessNode" this])
+)
+
+(defp FloatingAnchoredNode)
+(defp FloatingGuardedNode)
+(defp FloatingNode)
+(defp FloatingReadClosure)
+(defp FloatingReadNode)
+(defp FloatingReadPhase)
+(defp ForeignCallDescriptor)
+(defp ForeignCallLinkage)
+(defp ForeignCallNode)
+(defp ForeignCallOp)
+(defp ForeignCallStub)
+(defp ForeignCalls)
+(defp FrameContext)
+
+;;;
+ ; This class is used to build the stack frame layout for a compiled method. A StackSlot is used to index slots of the
+ ; frame relative to the stack pointer. The frame size is only fixed after register allocation when all spill slots have
+ ; been allocated. Both the outgoing argument area and the spill are can grow until then. Therefore, outgoing arguments
+ ; are indexed from the stack pointer, while spill slots are indexed from the beginning of the frame (and the total frame
+ ; size has to be added to get the actual offset from the stack pointer).
+ ;;
+(defp FrameMap
+    ;;;
+     ; Gets the total frame size of the compiled frame, including the size of the
+     ; {@link Architecture#getReturnAddressSize() return address slot}.
+     ;
+     ; @return the total size of the frame (in bytes)
+     ;;
+    (#_"int" FrameMap'''totalFrameSize-1 [#_"FrameMap" this])
+    ;;;
+     ; Gets the current size of this frame. This is the size that would be returned by
+     ; #frameSize() if #finish() were called now.
+     ;;
+    (#_"int" FrameMap'''currentFrameSize-1 [#_"FrameMap" this])
+    ;;;
+     ; Aligns the given frame size to the stack alignment size and return the aligned size.
+     ;
+     ; @param size the initial frame size to be aligned
+     ; @return the aligned frame size
+     ;;
+    #_unused
+    (#_"int" FrameMap'''alignFrameSize-2 [#_"FrameMap" this, #_"int" size])
+)
+
+;;;
+ ; A FrameMapBuilder is used to collect all information necessary to {@linkplain #buildFrameMap create} a FrameMap.
+ ;;
+(defp FrameMapBuilder
+    ;;;
+     ; Reserves a spill slot in the frame of the method being compiled. The returned slot is aligned
+     ; on its natural alignment, i.e. an 8-byte spill slot is aligned at an 8-byte boundary, unless
+     ; overridden by a subclass.
+     ;
+     ; @param kind The kind of the spill slot to be reserved.
+     ; @return a spill slot denoting the reserved memory area
+     ;;
+    (#_"VirtualStackSlot" FrameMapBuilder'''allocateSpillSlot-2 [#_"FrameMapBuilder" this, #_"ValueKind" kind])
+    ;;;
+     ; Informs the frame map that the compiled code calls a particular method, which may need stack
+     ; space for outgoing arguments.
+     ;
+     ; @param cc The calling convention for the called method.
+     ;;
+    (#_"void" FrameMapBuilder'''callsMethod-2 [#_"FrameMapBuilder" this, #_"CallingConvention" cc])
+    ;;;
+     ; Creates a FrameMap based on the information collected by this FrameMapBuilder.
+     ;;
+    (#_"FrameMap" FrameMapBuilder'''buildFrameMap-2 [#_"FrameMapBuilder" this, #_"LIRGenerationResult" result])
+)
+
+(defp FrameMapBuilder0)
+
+;;;
+ ; A FrameMapBuilder that allows access to the underlying FrameMap.
+ ;;
+(defp FrameMapBuilderTool
+    ;;;
+     ; Returns the number of VirtualStackSlots created by this FrameMapBuilder.
+     ; Can be used as an upper bound for an array indexed by VirtualStackSlot#getId().
+     ;;
+    (#_"int" FrameMapBuilderTool'''getNumberOfStackSlots-1 [#_"FrameMapBuilderTool" this])
+    (#_"List<VirtualStackSlot>" FrameMapBuilderTool'''getStackSlots-1 [#_"FrameMapBuilderTool" this])
+    (#_"FrameMap" FrameMapBuilderTool'''getFrameMap-1 [#_"FrameMapBuilderTool" this])
+)
+
+(defp FrameState)
+(defp FrameStateAssignmentClosure)
+(defp FrameStateAssignmentPhase)
+(defp FrameStateBuilder)
+(defp G1PostWriteBarrier)
+(defp G1PreWriteBarrier)
+(defp G1ReferentFieldReadBarrier)
+(defp GetClassNode)
+(defp GetObjectAddressNode)
+(defp Graph)
+
+;;;
+ ; A simple utility class for adding nodes to the graph when building a MethodHandle invoke.
+ ;;
+(defp GraphAdder
+    ;;;
+     ; Call Graph#addOrUnique(Node) on {@code node} and link any FixedWithNextNodes into the current control flow.
+     ;
+     ; @return the newly added node
+     ;;
+    (#_"ValueNode" GraphAdder'''add-2 [#_"GraphAdder" this, #_"ValueNode" node])
 )
 
 ;;;
@@ -4738,6 +5178,161 @@ ZeroExtendNode'new-4
      ;;
     (#_"boolean" GraphBuilder'''parsingIntrinsic-1 [#_"GraphBuilder" this])
 )
+
+(defp GraphBuilderConfiguration)
+(defp GraphBuilderInstance)
+(defp GraphBuilderPhase)
+(defp GraphEffectList)
+(defp GraphKit)
+(defp GraphNodeIterator)
+(defp GreedyInliningPolicy)
+(defp GuardLoweringPhase)
+(defp GuardNode)
+(defp GuardPhiNode)
+(defp GuardProxyNode)
+
+; @FunctionalInterface
+(defp GuardRewirer
+    ;;;
+     ; Called if the condition could be proven to have a constant value ({@code result}) under {@code guard}.
+     ;
+     ; @param guard the guard whose result is proven
+     ; @param result the known result of the guard
+     ; @param newInput new input to pi nodes depending on the new guard
+     ; @return whether the transformation could be applied
+     ;;
+    (#_"boolean" GuardRewirer'''rewire-5 [#_"GuardRewirer" this, #_"GuardingNode" guard, #_"boolean" result, #_"Stamp" guardedValueStamp, #_"ValueNode" newInput])
+)
+
+;;;
+ ; A node that may be guarded by a guarding node.
+ ;;
+(defp GuardedNode
+    (#_"GuardingNode" GuardedNode'''getGuard-1 [#_"GuardedNode" this])
+    (#_"void" GuardedNode'''setGuard-2 [#_"GuardedNode" this, #_"GuardingNode" guard])
+)
+
+(defp GuardingNode
+)
+
+(defp HashSetNodeEventListener)
+
+;;;
+ ; Encapsulates properties of a node describing how it accesses the heap.
+ ;;
+(defp HeapAccess
+    ;;;
+     ; Gets the write barrier type for that particular access.
+     ;;
+    (#_"BarrierType" HeapAccess'''getBarrierType-1 [#_"HeapAccess" this])
+)
+
+(defp HeapBaseNode)
+(defp HighTier)
+(defp HotSpotCompressionNode)
+(defp HotSpotDirectCallTargetNode)
+(defp HotSpotNarrowOopStamp)
+(defp HotSpotNodePlugin)
+(defp HotSpotSwitchClosure)
+(defp HubGetClassNode)
+(defp IfNode)
+(defp IfStructure)
+(defp IllegalStamp)
+
+(defp ImplicitNullCheck
+    (#_"boolean" ImplicitNullCheck'''makeNullCheckFor-3 [#_"ImplicitNullCheck" this, #_"Value" value, #_"int" implicitNullCheckLimit])
+)
+
+(defp IncrementalCanonicalizerPhase)
+
+;;;
+ ; Marker interface for nodes that contains other nodes. When the inputs to this node changes,
+ ; users of this node should also be placed on the work list for canonicalization.
+ ;;
+(defp IndirectCanonicalization
+)
+
+;;;
+ ; This class describes a value node that is an induction variable in a counted loop.
+ ;;
+(defp InductionVariable
+    (#_"Graph" InductionVariable'''graph-1 [#_"InductionVariable" this])
+    (#_"Direction" InductionVariable'''direction-1 [#_"InductionVariable" this])
+    ;;;
+     ; Returns the value node that is described by this induction variable.
+     ;;
+    (#_"ValueNode" InductionVariable'''valueNode-1 [#_"InductionVariable" this])
+    ;;;
+     ; Returns the node that gives the initial value of this induction variable.
+     ;;
+    (#_"ValueNode" InductionVariable'''initNode-1 [#_"InductionVariable" this])
+    ;;;
+     ; Returns the stride of the induction variable. The stride is the value that is added to
+     ; the induction variable at each iteration.
+     ;;
+    (#_"ValueNode" InductionVariable'''strideNode-1 [#_"InductionVariable" this])
+    (#_"boolean" InductionVariable'''isConstantInit-1 [#_"InductionVariable" this])
+    (#_"boolean" InductionVariable'''isConstantStride-1 [#_"InductionVariable" this])
+    (#_"long" InductionVariable'''constantInit-1 [#_"InductionVariable" this])
+    (#_"long" InductionVariable'''constantStride-1 [#_"InductionVariable" this])
+    (#_"boolean" InductionVariable'''isConstantExtremum-1 [#_"InductionVariable" this])
+    (#_"long" InductionVariable'''constantExtremum-1 [#_"InductionVariable" this])
+    ;;;
+     ; Returns the exit value of the induction variable. The exit value is the value of the
+     ; induction variable at the loop exit.
+     ;;
+    (#_"ValueNode" InductionVariable'''exitValueNode-1 [#_"InductionVariable" this])
+    ;;;
+     ; Deletes any nodes created within the scope of this object that have no usages.
+     ;;
+    (#_"void" InductionVariable'''deleteUnusedNodes-1 [#_"InductionVariable" this])
+)
+
+(defp InfoElement)
+
+; @FunctionalInterface
+(defp InfoElementProvider
+    #_unused
+    (#_"Iterable<InfoElement>" InfoElementProvider'''getInfoElements-2 [#_"InfoElementProvider" this, #_"ValueNode" value])
+)
+
+(defp InlineDuringParsingPlugin)
+
+;;;
+ ; Represents an opportunity for inlining at a given invoke, with the given weight and level. The weight is the amortized
+ ; weight of the additional code - so smaller is better. The level is the number of nested inlinings that lead to this invoke.
+ ;;
+(defp InlineInfo
+    ;;;
+     ; The invocation that may be inlined.
+     ;;
+    (#_"InvokeNode" InlineInfo'''invoke-1 [#_"InlineInfo" this])
+    ;;;
+     ; Returns the number of methods that may be inlined by the {@link #invoke() invocation}.
+     ;;
+    (#_"int" InlineInfo'''numberOfMethods-1 [#_"InlineInfo" this])
+    (#_"ResolvedJavaMethod" InlineInfo'''methodAt-2 [#_"InlineInfo" this, #_"int" index])
+    (#_"Inlineable" InlineInfo'''inlineableElementAt-2 [#_"InlineInfo" this, #_"int" index])
+    (#_"double" InlineInfo'''probabilityAt-2 [#_"InlineInfo" this, #_"int" index])
+    (#_"double" InlineInfo'''relevanceAt-2 [#_"InlineInfo" this, #_"int" index])
+    (#_"void" InlineInfo'''setInlinableElement-3 [#_"InlineInfo" this, #_"int" index, #_"Inlineable" inlineableElement])
+    ;;;
+     ; Performs the inlining described by this object and returns the node that represents the return value
+     ; of the inlined method (or nil for void methods and methods that have no non-exceptional exit).
+     ;
+     ; @return a collection of nodes that need to be canonicalized after the inlining
+     ;;
+    (#_"EconomicSet<Node>" InlineInfo'''inline-1 [#_"InlineInfo" this])
+    ;;;
+     ; Try to make the call static bindable to avoid interface and virtual method calls.
+     ;;
+    (#_"void" InlineInfo'''tryToDevirtualizeInvoke-1 [#_"InlineInfo" this])
+    (#_"boolean" InlineInfo'''shouldInline-1 [#_"InlineInfo" this])
+    (#_"void" InlineInfo'''populateInlinableElements-4 [#_"InlineInfo" this, #_"PhaseContext" context, #_"Graph" caller, #_"CanonicalizerPhase" canonicalizer])
+    (#_"int" InlineInfo'''determineNodeCount-1 [#_"InlineInfo" this])
+)
+
+(defp InlineInvokeInfo)
 
 ;;;
  ; Plugin for specifying what is inlined during graph parsing. This plugin is also notified
@@ -4784,24 +5379,716 @@ ZeroExtendNode'new-4
     (#_"void" InlineInvokePlugin'''notifyNotInlined-4 [#_"InlineInvokePlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"InvokeNode" invoke])
 )
 
-;;;
- ; Models the state of a graph in terms of {@link StateSplit#hasSideEffect() side effects}
- ; that are control flow predecessors of the current point in a graph.
- ;;
-(defp SideEffectsState
-    ;;;
-     ; Determines if the current program point is preceded by one or more side effects.
-     ;;
-    (#_"boolean" SideEffectsState'''isAfterSideEffect-1 [#_"SideEffectsState" this])
-    ;;;
-     ; Gets the side effects preceding the current program point.
-     ;;
-    (#_"Iterable<StateSplit>" SideEffectsState'''sideEffects-1 [#_"SideEffectsState" this])
-    ;;;
-     ; Records a side effect for the current program point.
-     ;;
-    (#_"void" SideEffectsState'''addSideEffect-2 [#_"SideEffectsState" this, #_"StateSplit" sideEffect])
+(defp Inlineable
+    (#_"int" Inlineable'''getNodeCount-1 [#_"Inlineable" this])
+    (#_"Iterable<InvokeNode>" Inlineable'''getInvokes-1 [#_"Inlineable" this])
+    (#_"double" Inlineable'''getProbability-2 [#_"Inlineable" this, #_"InvokeNode" invoke])
 )
+
+(defp InlineableGraph)
+(defp InliningData)
+(defp InliningIterator)
+(defp InliningPhase)
+
+(defp InliningPolicy
+    (#_"boolean" InliningPolicy'''continueInlining-2 [#_"InliningPolicy" this, #_"Graph" graph])
+    (#_"Decision" InliningPolicy'''isWorthInlining-5 [#_"InliningPolicy" this, #_"Replacements" replacements, #_"MethodInvocation" invocation, #_"int" inliningDepth, #_"boolean" fullyProcessed])
+)
+
+(defp InplaceUpdateClosure
+    (#_"Node" InplaceUpdateClosure'''replacement-3 [#_"InplaceUpdateClosure" this, #_"Node" node, #_"EdgesType" type])
+)
+
+(defp InputEdges)
+(defp InputFilter)
+(defp InputInfo)
+(defp InstanceOfDynamicNode)
+(defp InstanceOfNode)
+
+;;;
+ ; Helper class for lowering InstanceOfNodes with snippets. The majority of the complexity
+ ; in such a lowering derives from the fact that InstanceOfNode is a floating node. A snippet
+ ; used to lower an InstanceOfNode will almost always incorporate control flow and replacing
+ ; a floating node with control flow is not trivial.
+ ;
+ ; The mechanism implemented in this class ensures that the graph for an instanceof snippet
+ ; is instantiated once per InstanceOfNode being lowered. The result produced is then re-used
+ ; by all usages of the node. Additionally, if there is a single usage that is an IfNode, the
+ ; control flow in the snippet is connected directly to the true and false successors of the
+ ; IfNode. This avoids materializing the instanceof test as a boolean which is then retested
+ ; by the IfNode.
+ ;;
+(defp InstanceOfSnippetsTemplates
+    ;;;
+     ; Gets the arguments used to retrieve and instantiate an instanceof snippet template.
+     ;;
+    (#_"Arguments" InstanceOfSnippetsTemplates'''makeArguments-3 [#_"InstanceOfSnippetsTemplates" this, #_"InstanceOfUsageReplacer" replacer, #_"LoweringTool" lowerer])
+)
+
+(defp InstanceOfTemplates)
+
+;;;
+ ; Replaces a usage of an InstanceOfNode or InstanceOfDynamicNode.
+ ;;
+(defp InstanceOfUsageReplacer
+    ;;;
+     ; Does the replacement based on a previously snippet instantiation.
+     ;;
+    (#_"void" InstanceOfUsageReplacer'''replaceUsingInstantiation-1 [#_"InstanceOfUsageReplacer" this])
+)
+
+(defp Instantiation)
+
+;;;
+ ; Functional interface for iterating over a list of values without modifying them.
+ ; See InstructionValueProcedure for a version that can modify values.
+ ;;
+; @FunctionalInterface
+(defp InstructionValueConsumer
+    ;;;
+     ; Iterator method to be overwritten.
+     ;
+     ; @param instruction The current instruction.
+     ; @param value The value that is iterated.
+     ; @param mode The operand mode for the value.
+     ; @param flags A set of flags for the value.
+     ;;
+    (#_"void" InstructionValueConsumer'''visitValue-5 [#_"InstructionValueConsumer" this, #_"LIRInstruction" instruction, #_"Value" value, #_"OperandMode" mode, #_"EnumSet<OperandFlag>" flags])
+)
+
+;;;
+ ; Functional interface for iterating over a list of values, possibly returning a value to replace
+ ; the old value.
+ ;;
+; @FunctionalInterface
+(defp InstructionValueProcedure
+    ;;;
+     ; Iterator method to be overwritten.
+     ;
+     ; @param instruction The current instruction.
+     ; @param value The value that is iterated.
+     ; @param mode The operand mode for the value.
+     ; @param flags A set of flags for the value.
+     ; @return the new value to replace the value that was passed in
+     ;;
+    (#_"Value" InstructionValueProcedure'''doValue-5 [#_"InstructionValueProcedure" this, #_"LIRInstruction" instruction, #_"Value" value, #_"OperandMode" mode, #_"EnumSet<OperandFlag>" flags])
+)
+
+(defp IntList)
+(defp IntegerAddExactNode)
+(defp IntegerAddExactSplitNode)
+(defp IntegerBelowNode)
+(defp IntegerConvertNode)
+
+(defp IntegerConvertOp #_"<T>"
+    (#_"Constant" IntegerConvertOp'''foldConstant-4 [#_"IntegerConvertOp<T>" this, #_"int" inputBits, #_"int" resultBits, #_"Constant" value])
+    (#_"Stamp" IntegerConvertOp'''foldStamp-4 [#_"IntegerConvertOp<T>" this, #_"int" inputBits, #_"int" resultBits, #_"Stamp" stamp])
+    ;;;
+     ; Computes the stamp of the input for the given output stamp.
+     ;;
+    (#_"Stamp" IntegerConvertOp'''invertStamp-4 [#_"IntegerConvertOp<T>" this, #_"int" inputBits, #_"int" resultBits, #_"Stamp" outStamp])
+)
+
+(defp IntegerDivRemNode)
+(defp IntegerEqualsNode)
+(defp IntegerEqualsOp)
+
+(defp IntegerExactArithmeticNode
+    (#_"IntegerExactArithmeticSplitNode" IntegerExactArithmeticNode'''createSplit-3 [#_"IntegerExactArithmeticNode" this, #_"AbstractBeginNode" next, #_"AbstractBeginNode" deopt])
+)
+
+(defp IntegerExactArithmeticSplitNode
+    (#_"Value" IntegerExactArithmeticSplitNode'''generateArithmetic-2 [#_"IntegerExactArithmeticSplitNode" this, #_"LIRBuilder" builder])
+)
+
+(defp IntegerLessThanNode)
+(defp IntegerLowerThanNode)
+(defp IntegerMulExactNode)
+(defp IntegerMulExactSplitNode)
+(defp IntegerMulHighNode)
+(defp IntegerStamp)
+(defp IntegerSubExactNode)
+(defp IntegerSubExactSplitNode)
+(defp IntegerSwitchNode)
+(defp IntegerTestNode)
+(defp InterfaceMethodRef)
+(defp Interval)
+(defp IntervalBlockIterator)
+
+(defp IntervalPredicate
+    (#_"boolean" IntervalPredicate'''apply-2 [#_"IntervalPredicate" this, #_"Interval" i])
+)
+
+(defp IntervalWalker
+    ;;;
+     ; Processes the {@code currentInterval} interval in an attempt to allocate a physical register
+     ; to it and thus allow it to be moved to a list of {@linkplain #activeLists active} intervals.
+     ;
+     ; @return true if a register was allocated to the {@code currentInterval} interval
+     ;;
+    (#_"boolean" IntervalWalker'''activateCurrent-2 [#_"IntervalWalker" this, #_"Interval" currentInterval])
+    (#_"void" IntervalWalker'''walk-1 [#_"IntervalWalker" this])
+)
+
+(defp IntrinsicContext)
+(defp IntrinsicScope)
+(defp InvariantPredicate)
+(defp InvokeKind)
+(defp InvokeNode)
+(defp IsNullNode)
+
+;;;
+ ; A marker for a node type supporting {@linkplain Graph#getNodes(NodeClass) fast iteration} of its
+ ; instances in a graph. The support for fast iteration comes with a memory cost (e.g. extra data
+ ; structures Graph) so only node types for which fast iteration provides a compilation performance
+ ; benefit should implement this interface.
+ ;;
+(defp IterableNodeType
+)
+
+(defp IterativeConditionalEliminationPhase)
+(defp IterativeNodeWorkList)
+(defp JSRData)
+(defp JavaReadNode)
+(defp JavaWriteNode)
+(defp JsrScope)
+(defp JumpOp)
+(defp KeyData)
+(defp KlassLayoutHelperNode)
+(defp KlassPointerStamp)
+(defp LIR)
+(defp LIRBuilder)
+
+(defp LIRFieldsScanner
+    (#_"EnumSet<OperandFlag>" LIRFieldsScanner'''getFlags-2 [#_"LIRFieldsScanner" this, #_"Field" field])
+)
+
+(defp LIRGenerationContext)
+(defp LIRGenerationPhase)
+(defp LIRGenerationResult)
+(defp LIRGenerator)
+(defp LIRInsertionBuffer)
+
+;;;
+ ; The base class for an LIRInstruction.
+ ;;
+(defp LIRInstruction
+    (#_"void" LIRInstruction'''emitCode-2 [#_"LIRInstruction" this, #_"Assembler" asm])
+    (#_"boolean" LIRInstruction'''destroysCallerSavedRegisters-1 [#_"LIRInstruction" this])
+)
+
+(defp LIRInstructionClass)
+(defp LIRInstructionFieldsScanner)
+(defp LIRIntrospection)
+(defp LIRKind)
+
+(defp LIRLowerable
+    (#_"void" LIRLowerable'''generate-2 [#_"LIRLowerable" this, #_"LIRBuilder" builder])
+)
+
+(defp LIRLowerableAccess
+    (#_"Stamp" LIRLowerableAccess'''getAccessStamp-1 [#_"LIRLowerableAccess" this])
+)
+
+;;;
+ ; Base for all low-level phases. Subclasses should be stateless. There will be one global instance
+ ; for each phase that is shared for all compilations.
+ ;;
+(defp LIRPhase #_"<C>"
+    (#_"void" LIRPhase'''run-3 [#_"LIRPhase<C>" this, #_"LIRGenerationResult" lirGenRes, #_"C" context])
+)
+
+(defp LIRPhaseContext)
+(defp LIRPhaseSuite)
+(defp LIRSuites)
+
+(defp LSAllocationPhase
+    (#_"void" LSAllocationPhase'''run-2 [#_"LSAllocationPhase" this, #_"LIRGenerationResult" lirGenRes])
+)
+
+(defp LSAssignLocationsPhase)
+
+(defp LSEliminateSpillMovePhase
+    ;;;
+     ; @return the index of the first instruction that is of interest for #eliminateSpillMoves
+     ;;
+    (#_"int" LSEliminateSpillMovePhase'''firstInstructionOfInterest-1 [#_"LSEliminateSpillMovePhase" this])
+    ;;;
+     ; @param block The block {@code move} is located in.
+     ; @param move Spill move.
+     ;;
+    (#_"boolean" LSEliminateSpillMovePhase'''canEliminateSpillMove-3 [#_"LSEliminateSpillMovePhase" this, #_"Block" block, #_"MoveOp" move])
+)
+
+(defp LSLifetimeAnalysisPhase
+    (#_"void" LSLifetimeAnalysisPhase'''addRegisterHint-6 [#_"LSLifetimeAnalysisPhase" this, #_"LIRInstruction" op, #_"Value" targetValue, #_"OperandMode" mode, #_"EnumSet<OperandFlag>" flags, #_"boolean" hintAtDef])
+    ;;;
+     ; Determines the register priority for an instruction's output/result operand.
+     ;;
+    (#_"RegisterPriority" LSLifetimeAnalysisPhase'''registerPriorityOfOutputOperand-2 [#_"LSLifetimeAnalysisPhase" this, #_"LIRInstruction" op])
+    (#_"void" LSLifetimeAnalysisPhase'''buildIntervals-1 [#_"LSLifetimeAnalysisPhase" this])
+)
+
+(defp LSOptimizeSpillPositionPhase)
+(defp LSRegisterAllocationPhase)
+
+;;;
+ ; Phase 6: resolve data flow
+ ;
+ ; Insert moves at edges between blocks if intervals have been split.
+ ;;
+(defp LSResolveDataFlowPhase
+    (#_"void" LSResolveDataFlowPhase'''resolveCollectMappings-5 [#_"LSResolveDataFlowPhase" this, #_"Block" fromBlock, #_"Block" toBlock, #_"Block" midBlock, #_"MoveResolver" moveResolver])
+)
+
+(defp LSStackSlotAllocator)
+(defp Label)
+(defp LabelOp)
+(defp LabelRef)
+(defp LargeLocalLiveness)
+(defp Lazy)
+(defp LazySnippetInfo)
+(defp LeaOp)
+(defp LeftShiftNode)
+(defp LessThanOp)
+
+;;;
+ ; This interface is like the derived ValueProxy. The difference is that only the graph builder
+ ; should see through the proxy for doing some checks. Optimizations should not see through
+ ; this proxy and therefore should only test for ValueProxy.
+ ;;
+(defp LimitedValueProxy
+  #_(§ override #_"ValueNode" Proxy'''getOriginalNode-1 [#_"LimitedValueProxy" this])
+)
+
+;;;
+ ; An implementation of the linear scan register allocator algorithm described in
+ ; <a href="http://doi.acm.org/10.1145/1064979.1064998">"Optimized Interval Splitting in a Linear Scan Register Allocator"</a>
+ ; by Christian Wimmer and Hanspeter Moessenboeck.
+ ;;
+(defp LinearScan
+    (#_"MoveResolver" LinearScan'''createMoveResolver-1 [#_"LinearScan" this])
+    (#_"void" LinearScan'''initBlockData-2 [#_"LinearScan" this, #_"Block" block])
+    (#_"Interval" LinearScan'''getOrCreateInterval-2 [#_"LinearScan" this, #_"AllocatableValue" operand])
+    (#_"void" LinearScan'''beforeSpillMoveElimination-1 [#_"LinearScan" this])
+    (#_"LSLifetimeAnalysisPhase" LinearScan'''createLifetimeAnalysisPhase-1 [#_"LinearScan" this])
+    (#_"LSResolveDataFlowPhase" LinearScan'''createResolveDataFlowPhase-1 [#_"LinearScan" this])
+    (#_"LSEliminateSpillMovePhase" LinearScan'''createSpillMoveEliminationPhase-1 [#_"LinearScan" this])
+)
+
+(defp LinearScanPhase)
+
+(defp LinearScanWalker
+    ;;;
+     ; This is called for every interval that is assigned to a stack slot.
+     ;;
+    (#_"void" LinearScanWalker'''handleSpillSlot-2 [#_"LinearScanWalker" this, #_"Interval" interval])
+)
+
+(defp LoadCacheEntry)
+(defp LoadConfigValueOp)
+
+;;;
+ ; Marker interface for a LIR operation that loads a #getConstant().
+ ;;
+(defp LoadConstantOp
+    (#_"Constant" LoadConstantOp'''getConstant-1 [#_"LoadConstantOp" this])
+)
+
+(defp LoadFieldNode)
+(defp LoadHubNode)
+(defp LoadIndexedNode)
+(defp LoadIndexedPointerNode)
+(defp LoadMetaspaceConstantOp)
+(defp LoadObjectConstantOp)
+(defp LoadSnippetVarargParameterNode)
+
+;;;
+ ; Encapsulates the liveness calculation, so that subclasses for locals <= 64 and locals > 64 can be implemented.
+ ;;
+(defp LocalLiveness
+    ;;;
+     ; Returns whether the local is live at the beginning of the given block.
+     ;;
+    (#_"boolean" LocalLiveness'''localIsLiveIn-3 [#_"LocalLiveness" this, #_"BciBlock" block, #_"int" local])
+    ;;;
+     ; Returns whether the local is set in the given loop.
+     ;;
+    (#_"boolean" LocalLiveness'''localIsChangedInLoop-3 [#_"LocalLiveness" this, #_"int" loopId, #_"int" local])
+    ;;;
+     ; Returns whether the local is live at the end of the given block.
+     ;;
+    (#_"boolean" LocalLiveness'''localIsLiveOut-3 [#_"LocalLiveness" this, #_"BciBlock" block, #_"int" local])
+    ;;;
+     ; Returns the number of live locals at the end of the given block.
+     ;;
+    (#_"int" LocalLiveness'''liveOutCardinality-2 [#_"LocalLiveness" this, #_"int" blockID])
+    ;;;
+     ; Adds all locals the are in the liveIn of the successor to the liveOut of the block.
+     ;;
+    (#_"void" LocalLiveness'''propagateLiveness-3 [#_"LocalLiveness" this, #_"int" blockID, #_"int" successorID])
+    ;;;
+     ; Calculates a new liveIn for the given block from liveOut, liveKill and liveGen.
+     ;;
+    (#_"void" LocalLiveness'''updateLiveness-2 [#_"LocalLiveness" this, #_"int" blockID])
+    ;;;
+     ; Adds the local to liveGen if it wasn't already killed in this block.
+     ;;
+    (#_"void" LocalLiveness'''loadOne-3 [#_"LocalLiveness" this, #_"int" blockID, #_"int" local])
+    ;;;
+     ; Add this local to liveKill if it wasn't already generated in this block.
+     ;;
+    (#_"void" LocalLiveness'''storeOne-3 [#_"LocalLiveness" this, #_"int" blockID, #_"int" local])
+)
+
+(defp LocationSet)
+(defp LockEliminationPhase)
+(defp LockStack)
+(defp LockStackHolder)
+(defp LockState)
+(defp LogicCompareAndSwapNode)
+(defp LogicConstantNode)
+(defp LogicNegationNode)
+(defp LogicNode)
+(defp Loop)
+(defp LoopBeginNode)
+(defp LoopEndNode)
+(defp LoopEx)
+(defp LoopExitNode)
+
+(defp LoopFragment
+    (#_"LoopFragment" LoopFragment'''duplicate-1 [#_"LoopFragment" this])
+    (#_"void" LoopFragment'''insertBefore-2 [#_"LoopFragment" this, #_"LoopEx" l])
+    ;;;
+     ; Gets the corresponding value in this fragment. Should be called on duplicate fragments
+     ; with a node from the original fragment as argument.
+     ;
+     ; @param b original value
+     ; @return corresponding value in the peel
+     ;;
+    (#_"ValueNode" LoopFragment'''prim-2 [#_"LoopFragment" this, #_"ValueNode" b])
+    (#_"NodeBitMap" LoopFragment'''nodes-1 [#_"LoopFragment" this])
+    (#_"DuplicationReplacement" LoopFragment'''getDuplicationReplacement-1 [#_"LoopFragment" this])
+    (#_"void" LoopFragment'''beforeDuplication-1 [#_"LoopFragment" this])
+    (#_"void" LoopFragment'''finishDuplication-1 [#_"LoopFragment" this])
+)
+
+(defp LoopFragmentInside)
+(defp LoopFragmentWhole)
+(defp LoopFullUnrollPhase)
+(defp LoopKillCache)
+(defp LoopPartialUnrollPhase)
+(defp LoopPeelingPhase)
+(defp LoopPhase)
+
+(defp LoopPolicies
+    (#_"boolean" LoopPolicies'''shouldPeel-3 [#_"LoopPolicies" this, #_"LoopEx" loop, #_"ControlFlowGraph" cfg])
+    (#_"boolean" LoopPolicies'''shouldFullUnroll-2 [#_"LoopPolicies" this, #_"LoopEx" loop])
+    (#_"boolean" LoopPolicies'''shouldPartiallyUnroll-2 [#_"LoopPolicies" this, #_"LoopEx" loop])
+    (#_"boolean" LoopPolicies'''shouldTryUnswitch-2 [#_"LoopPolicies" this, #_"LoopEx" loop])
+    (#_"boolean" LoopPolicies'''shouldUnswitch-3 [#_"LoopPolicies" this, #_"LoopEx" loop, #_"List<ControlSplitNode>" controlSplits])
+)
+
+(defp LoopSafepointEliminationPhase)
+(defp LoopSafepointInsertionPhase)
+(defp LoopUnswitchingPhase)
+(defp LoopsData)
+(defp LowTier)
+(defp LowerGuards)
+
+(defp LowerOp
+    (#_"long" LowerOp'''upperBound-2 [#_"LowerOp" this, #_"IntegerStamp" stamp])
+    (#_"long" LowerOp'''lowerBound-2 [#_"LowerOp" this, #_"IntegerStamp" stamp])
+    (#_"int" LowerOp'''compare-3 [#_"LowerOp" this, #_"long" a, #_"long" b])
+    (#_"long" LowerOp'''min-3 [#_"LowerOp" this, #_"long" a, #_"long" b])
+    (#_"long" LowerOp'''max-3 [#_"LowerOp" this, #_"long" a, #_"long" b])
+    (#_"long" LowerOp'''cast-3 [#_"LowerOp" this, #_"long" a, #_"int" bits])
+    (#_"long" LowerOp'''minValue-2 [#_"LowerOp" this, #_"int" bits])
+    (#_"long" LowerOp'''maxValue-2 [#_"LowerOp" this, #_"int" bits])
+    (#_"IntegerStamp" LowerOp'''forInteger-4 [#_"LowerOp" this, #_"int" bits, #_"long" min, #_"long" max])
+    (#_"CanonicalCondition" LowerOp'''getCondition-1 [#_"LowerOp" this])
+    (#_"IntegerLowerThanNode" LowerOp'''createNode-3 [#_"LowerOp" this, #_"ValueNode" x, #_"ValueNode" y])
+    (#_"LogicNode" LowerOp'''create-3 [#_"LowerOp" this, #_"ValueNode" x, #_"ValueNode" y])
+    (#_"LogicNode" LowerOp'''findSynonym-3 [#_"LowerOp" this, #_"ValueNode" forX, #_"ValueNode" forY])
+)
+
+;;;
+ ; Interface implemented by nodes that can replace themselves with lower level nodes during
+ ; a phase that transforms a graph to replace higher level nodes with lower level nodes.
+ ;;
+(defp Lowerable
+    ;;;
+     ; Expand this node into lower level nodes expressing the same semantics. If the introduced
+     ; nodes are themselves lowerable, they should be recursively lowered as part of this call.
+     ;;
+    (#_"void" Lowerable'''lower-2 [#_"Lowerable" this, #_"LoweringTool" lowerer])
+)
+
+(defp LoweredAtomicReadAndWriteNode)
+(defp LoweredCallTargetNode)
+(defp LoweringPhase)
+(defp LoweringRound)
+(defp LoweringTool)
+(defp MOp)
+(defp MROp)
+(defp MacroNode)
+(defp MacroStateSplitNode)
+(defp MapReplacement)
+(defp MarkedNodeIterator)
+(defp MaterializationUsageReplacer)
+(defp MaterializedObjectState)
+(defp MembarNode)
+(defp MembarOp)
+(defp MemberRef)
+
+;;;
+ ; This interface marks nodes that access some memory location, and that have an edge to the last
+ ; node that kills this location.
+ ;;
+(defp MemoryAccess
+    (#_"LocationIdentity" MemoryAccess'''getLocationIdentity-1 [#_"MemoryAccess" this])
+    ;;;
+     ; @param lla the MemoryNode that represents the last kill of the location
+     ;;
+    (#_"void" MemoryAccess'''setLastLocationAccess-2 [#_"MemoryAccess" this, #_"MemoryNode" lla])
+)
+
+(defp MemoryAnchorNode)
+
+;;;
+ ; This interface marks subclasses of FixedNode that kill a set of memory locations represented
+ ; by location identities (i.e. change a value at one or more locations that belong to these
+ ; location identities).
+ ;;
+(defp MemoryCheckpoint
+)
+
+(defp MemoryConstOp)
+(defp MemoryInputMap)
+(defp MemoryMROp)
+
+;;;
+ ; Maps a location to the last node that (potentially) wrote to the location.
+ ;;
+(defp MemoryMap
+    ;;;
+     ; Gets the last node that that (potentially) wrote to {@code locationIdentity}.
+     ;;
+    (#_"MemoryNode" MemoryMap'''getLastLocationAccess-2 [#_"MemoryMap" this, #_"LocationIdentity" locationIdentity])
+    ;;;
+     ; Gets the location identities in the domain of this map.
+     ;;
+    (#_"Iterable<LocationIdentity>" MemoryMap'''getLocations-1 [#_"MemoryMap" this])
+)
+
+(defp MemoryMap0)
+(defp MemoryMapNode)
+
+;;;
+ ; This interface marks nodes that are part of the memory graph.
+ ;;
+(defp MemoryNode
+)
+
+(defp MemoryOp)
+(defp MemoryOutputMap)
+(defp MemoryPhiNode)
+(defp MemoryRMOp)
+(defp MemoryTwoOp)
+(defp MemoryVMConstOp)
+(defp MergeNode)
+
+;;;
+ ; The main workhorse for merging states, both for loops and for normal merges.
+ ;;
+(defp MergeProcessor #_"<T implements EffectsBlockState<T>>"
+    (#_"void" MergeProcessor'''merge-2 [#_"MergeProcessor<T implements EffectsBlockState<T>>" this, #_"List<T>" states])
+)
+
+(defp MethodCallOp)
+(defp MethodCallTargetNode)
+(defp MethodHandleNode)
+(defp MethodHandlePlugin)
+(defp MethodInvocation)
+(defp MethodKey)
+(defp MethodRef)
+(defp MethodsCache)
+(defp MicroBlock)
+(defp MidTier)
+
+;;;
+ ; Denotes monitor locking transition.
+ ;;
+(defp MonitorEnter
+)
+
+(defp MonitorEnterNode)
+
+;;;
+ ; Denotes monitor unlocking transition.
+ ;;
+(defp MonitorExit
+)
+
+(defp MonitorExitNode)
+(defp MonitorIdNode)
+(defp MonitorTemplates)
+(defp MoveFactory)
+(defp MoveFromConstOp)
+(defp MoveFromRegOp)
+(defp MoveGuardsUpwards)
+
+;;;
+ ; Marker interface for a LIR operation that moves a value to #getResult().
+ ;;
+(defp MoveOp
+    (#_"AllocatableValue" MoveOp'''getResult-1 [#_"MoveOp" this])
+)
+
+(defp MoveResolver
+    (#_"void" MoveResolver'''setValueBlocked-3 [#_"MoveResolver" this, #_"Value" location, #_"int" direction])
+    (#_"int" MoveResolver'''valueBlocked-2 [#_"MoveResolver" this, #_"Value" location])
+    (#_"boolean" MoveResolver'''mightBeBlocked-2 [#_"MoveResolver" this, #_"Value" location])
+    ;;;
+     ; @param fromOpr {@link Interval#operand operand} of the {@code from} interval
+     ; @param toOpr {@link Interval#operand operand} of the {@code to} interval
+     ; @param fromLocation {@link Interval#location() location} of the {@code to} interval
+     ; @param toLocation {@link Interval#location() location} of the {@code to} interval
+     ;;
+    (#_"LIRInstruction" MoveResolver'''createMove-5 [#_"MoveResolver" this, #_"AllocatableValue" fromOpr, #_"AllocatableValue" toOpr, #_"AllocatableValue" fromLocation, #_"AllocatableValue" toLocation])
+    (#_"void" MoveResolver'''breakCycle-2 [#_"MoveResolver" this, #_"int" spillCandidate])
+)
+
+(defp MoveToRegOp)
+(defp Mul)
+(defp MulHigh)
+(defp MulNode)
+
+(defp Multi
+    ;;;
+     ; This method is used to determine which set of memory locations is killed by this node.
+     ; Returning the special value LocationIdentity#any() will kill all memory locations.
+     ;
+     ; @return the identities of all locations killed by this node
+     ;;
+    (#_"LocationIdentity[]" Multi'''getLocationIdentities-1 [#_"Multi" this])
+)
+
+(defp NameAndType)
+(defp NamedLocationIdentity)
+(defp Narrow)
+(defp NarrowNode)
+
+(defp NarrowOopStamp
+    (#_"Stamp" NarrowOopStamp'''uncompressed-1 [#_"NarrowOopStamp" this])
+)
+
+(defp Neg)
+(defp NegateNode)
+(defp NegativeTypePredicate)
+(defp NewArrayNode)
+(defp NewArrayStub)
+(defp NewInstanceNode)
+(defp NewInstanceStub)
+(defp NewObjectTemplates)
+(defp NoOp)
+
+;;;
+ ; This class is the base class for all nodes. It represents a node that can be inserted in a Graph.
+ ;
+ ; Once a node has been added to a graph, it has a graph-unique #id(). Edges in the subclasses are
+ ; represented with annotated fields. There are two kind of edges: Input and Successor.
+ ; If a field, of a type compatible with Node, annotated with either Input and Successor is not nil,
+ ; then there is an edge from this node to the node this field points to.
+ ;;
+(defp Node
+    (#_"void" Node'''replaceAtUsages-4 [#_"Node" this, #_"Node" other, #_"Predicate<Node>" filter, #_"Node" toBeDeleted])
+    (#_"void" Node'''replaceAtUsages-3 [#_"Node" this, #_"InputType" type, #_"Node" other])
+    (#_"void" Node'''afterClone-2 [#_"Node" this, #_"Node" other])
+    (#_"Iterable<Node>" Node'''cfgPredecessors-1 [#_"Node" this])
+    ;;;
+     ; Returns an iterator that will provide all control-flow successors of this node. Normally this
+     ; will be the contents of all fields annotated with Successor, but some node classes (like EndNode)
+     ; may return different nodes.
+     ;;
+    (#_"Iterable<Node>" Node'''cfgSuccessors-1 [#_"Node" this])
+)
+
+(defp NodeBitMap)
+(defp NodeClass)
+
+(defp NodeClosure #_"<T implements Node>"
+    (#_"void" NodeClosure'''apply-3 [#_"NodeClosure<T implements Node>" this, #_"Node" usage, #_"T" node])
+)
+
+(defp NodeCost)
+(defp NodeEntry)
+
+;;;
+ ; Client interested in one or more node related events.
+ ;;
+(defp NodeEventListener
+    ;;;
+     ; Notifies this listener about any change event in the graph.
+     ;
+     ; @param e an event
+     ; @param node the node related to {@code e}
+     ;;
+    (#_"void" NodeEventListener'''changed-3 [#_"NodeEventListener" this, #_"NodeEvent" e, #_"Node" node])
+    ;;;
+     ; Notifies this listener about a change in a node's inputs.
+     ;
+     ; @param node a node who has had one of its inputs changed
+     ;;
+    (#_"void" NodeEventListener'''inputChanged-2 [#_"NodeEventListener" this, #_"Node" node])
+    ;;;
+     ; Notifies this listener of a node becoming unused.
+     ;
+     ; @param node a node whose Node#usages() just became empty
+     ;;
+    (#_"void" NodeEventListener'''usagesDroppedToZero-2 [#_"NodeEventListener" this, #_"Node" node])
+    ;;;
+     ; Notifies this listener of an added node.
+     ;
+     ; @param node a node that was just added to the graph
+     ;;
+    (#_"void" NodeEventListener'''nodeAdded-2 [#_"NodeEventListener" this, #_"Node" node])
+    ;;;
+     ; Notifies this listener of a removed node.
+     ;;
+    (#_"void" NodeEventListener'''nodeRemoved-2 [#_"NodeEventListener" this, #_"Node" node])
+)
+
+(defp NodeEventScope)
+(defp NodeFieldsScanner)
+(defp NodeFlood)
+(defp NodeInputList)
+
+(defp NodeIterable
+    (#_"NodeIterable" NodeIterable'''filter-2c [#_"NodeIterable" this, #_"Class<Node>" clazz])
+    (#_"FilteredNodeIterable" NodeIterable'''filter-2p [#_"NodeIterable" this, #_"NodePredicate" predicate])
+    (#_"List<Node>" NodeIterable'''snapshot-1 [#_"NodeIterable" this])
+    (#_"Node" NodeIterable'''first-1 [#_"NodeIterable" this])
+    (#_"int" NodeIterable'''count-1 [#_"NodeIterable" this])
+    (#_"boolean" NodeIterable'''isEmpty-1 [#_"NodeIterable" this])
+    (#_"boolean" NodeIterable'''isNotEmpty-1 [#_"NodeIterable" this])
+    (#_"boolean" NodeIterable'''contains-2 [#_"NodeIterable" this, #_"Node" node])
+)
+
+(defp NodeIteratorClosure #_"<T>"
+    (#_"T" NodeIteratorClosure'''processNode-3 [#_"NodeIteratorClosure<T>" this, #_"FixedNode" node, #_"T" currentState])
+    (#_"T" NodeIteratorClosure'''merge-3 [#_"NodeIteratorClosure<T>" this, #_"AbstractMergeNode" merge, #_"List<T>" states])
+    (#_"T" NodeIteratorClosure'''afterSplit-3 [#_"NodeIteratorClosure<T>" this, #_"AbstractBeginNode" node, #_"T" oldState])
+    (#_"EconomicMap<LoopExitNode, T>" NodeIteratorClosure'''processLoop-3 [#_"NodeIteratorClosure<T>" this, #_"LoopBeginNode" loop, #_"T" initialState])
+)
+
+(defp NodeList
+    (#_"void" NodeList'''update-3 [#_"NodeList" this, #_"Node" oldNode, #_"Node" newNode])
+)
+
+(defp NodeLoopInfo)
+(defp NodeMap)
+(defp NodeMark)
 
 (defp NodePlugin
     ;;;
@@ -4888,126 +6175,15 @@ ZeroExtendNode'new-4
     (#_"boolean" NodePlugin'''handleInstanceOf-4 [#_"NodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaType" type])
 )
 
-(defp ParameterPlugin
-    (#_"FloatingNode" ParameterPlugin'''interceptParameter-4 [#_"ParameterPlugin" this, #_"GraphBuilder" b, #_"int" index, #_"StampPair" stamp])
+(defp NodePredicate
+    (#_"boolean" NodePredicate'''apply-2 [#_"NodePredicate" this, #_"Node" node])
+    (#_"NodePredicate" NodePredicate'''and-2 [#_"NodePredicate" this, #_"NodePredicate" other])
 )
 
-;;;
- ; Plugin for overriding types in the bytecode parser. This can be used to modify the standard
- ; behavior of Java type resolution, e.g. to introduce trusted interface types with special semantics.
- ;;
-(defp TypePlugin
-    ;;;
-     ; Intercept the type of arguments or return values.
-     ;;
-    (#_"StampPair" TypePlugin'''interceptType-4 [#_"TypePlugin" this, #_"GraphBuilder" b, #_"JavaType" declaredType, #_"boolean" never-nil?])
-)
-
-(defp Access
-    (#_"AddressNode" Access'''getAddress-1 [#_"Access" this])
-    (#_"LocationIdentity" Access'''getLocationIdentity-1 [#_"Access" this])
-    (#_"boolean" Access'''canNullCheck-1 [#_"Access" this])
-)
-
-(defp Address
-)
-
-;;;
- ; Encapsulates properties of a node describing how it accesses the heap.
- ;;
-(defp HeapAccess
-    ;;;
-     ; Gets the write barrier type for that particular access.
-     ;;
-    (#_"BarrierType" HeapAccess'''getBarrierType-1 [#_"HeapAccess" this])
-)
-
-(defp LIRLowerableAccess
-    (#_"Stamp" LIRLowerableAccess'''getAccessStamp-1 [#_"LIRLowerableAccess" this])
-)
-
-;;;
- ; This interface marks nodes that access some memory location, and that have an edge to the last
- ; node that kills this location.
- ;;
-(defp MemoryAccess
-    (#_"LocationIdentity" MemoryAccess'''getLocationIdentity-1 [#_"MemoryAccess" this])
-    ;;;
-     ; @param lla the MemoryNode that represents the last kill of the location
-     ;;
-    (#_"void" MemoryAccess'''setLastLocationAccess-2 [#_"MemoryAccess" this, #_"MemoryNode" lla])
-)
-
-;;;
- ; This interface marks subclasses of FixedNode that kill a set of memory locations represented
- ; by location identities (i.e. change a value at one or more locations that belong to these
- ; location identities).
- ;;
-(defp MemoryCheckpoint
-)
-
-(defp Single
-    ;;;
-     ; This method is used to determine which memory location is killed by this node. Returning
-     ; the special value LocationIdentity#any() will kill all memory locations.
-     ;
-     ; @return the identity of the location killed by this node
-     ;;
-    (#_"LocationIdentity" Single'''getLocationIdentity-1 [#_"Single" this])
-)
-
-(defp Multi
-    ;;;
-     ; This method is used to determine which set of memory locations is killed by this node.
-     ; Returning the special value LocationIdentity#any() will kill all memory locations.
-     ;
-     ; @return the identities of all locations killed by this node
-     ;;
-    (#_"LocationIdentity[]" Multi'''getLocationIdentities-1 [#_"Multi" this])
-)
-
-;;;
- ; Maps a location to the last node that (potentially) wrote to the location.
- ;;
-(defp MemoryMap
-    ;;;
-     ; Gets the last node that that (potentially) wrote to {@code locationIdentity}.
-     ;;
-    (#_"MemoryNode" MemoryMap'''getLastLocationAccess-2 [#_"MemoryMap" this, #_"LocationIdentity" locationIdentity])
-    ;;;
-     ; Gets the location identities in the domain of this map.
-     ;;
-    (#_"Iterable<LocationIdentity>" MemoryMap'''getLocations-1 [#_"MemoryMap" this])
-)
-
-;;;
- ; This interface marks nodes that are part of the memory graph.
- ;;
-(defp MemoryNode
-)
-
-(defp ArrayLengthProvider
-    ;;;
-     ; Returns the length of the array described by this node, or nil if it is not available.
-     ;;
-    (#_"ValueNode" ArrayLengthProvider'''length-1 [#_"ArrayLengthProvider" this])
-)
-
-(defp LIRLowerable
-    (#_"void" LIRLowerable'''generate-2 [#_"LIRLowerable" this, #_"LIRBuilder" builder])
-)
-
-;;;
- ; Interface implemented by nodes that can replace themselves with lower level nodes during
- ; a phase that transforms a graph to replace higher level nodes with lower level nodes.
- ;;
-(defp Lowerable
-    ;;;
-     ; Expand this node into lower level nodes expressing the same semantics. If the introduced
-     ; nodes are themselves lowerable, they should be recursively lowered as part of this call.
-     ;;
-    (#_"void" Lowerable'''lower-2 [#_"Lowerable" this, #_"LoweringTool" lowerer])
-)
+(defp NodeStack)
+(defp NodeSuccessorList)
+(defp NodeUsageIterable)
+(defp NodeUsageIterator)
 
 ;;;
  ; Interface for nodes which have FrameState nodes as input.
@@ -5016,1144 +6192,30 @@ ZeroExtendNode'new-4
     (#_"NodeIterable<FrameState>" NodeWithState'''states-1 [#_"NodeWithState" this])
 )
 
-;;;
- ; This interface marks nodes whose result is the same as one of their inputs. Such nodes are used
- ; to add type information, to introduce scheduling restrictions, etc.
- ;
- ; For some algorithms it is necessary or advantageous to see through these proxies.
- ;;
-(defp Proxy
-    (#_"Node" Proxy'''getOriginalNode-1 [#_"Proxy" this])
+(defp NodeWorkList
+    (#_"void" NodeWorkList'''add-2 [#_"NodeWorkList" this, #_"Node" node])
 )
 
-;;;
- ; This interface is like the derived ValueProxy. The difference is that only the graph builder
- ; should see through the proxy for doing some checks. Optimizations should not see through
- ; this proxy and therefore should only test for ValueProxy.
- ;;
-(defp LimitedValueProxy
-  #_(§ override #_"ValueNode" Proxy'''getOriginalNode-1 [#_"LimitedValueProxy" this])
+(defp NonMaterializationUsageReplacer)
+(defp NormalizeCompareNode)
+(defp Not)
+(defp NotNode)
+
+(defp NullCheck
+    (#_"Value" NullCheck'''getCheckedValue-1 [#_"NullCheck" this])
 )
 
-(defp StampInverter
-    ;;;
-     ; Computes the stamp of the input for the given output stamp.
-     ;;
-    (#_"Stamp" StampInverter'''invertStamp-2 [#_"StampInverter" this, #_"Stamp" outStamp])
-)
-
-;;;
- ; This interface marks nodes whose result is the same as one of their inputs. Such nodes are used
- ; to add type information, to introduce scheduling restrictions, etc.
- ;
- ; For some algorithms it is necessary or advantageous to see through these proxies.
- ;;
-(defp ValueProxy
-)
-
-;;;
- ; This interface allows a node to convey information about what its effect would be if some of its
- ; inputs were virtualized. The #virtualize(VirtualizerTool) method will only be called for nodes
- ; that have some interaction with virtualized nodes. However, the virtualized nodes might have
- ; been re-materialized in the meantime.
- ;;
-(defp Virtualizable
-    ;;;
-     ; A node class can implement this method to convey information about what its effect would be
-     ; if some of its inputs were virtualized. All modifications must be made through the supplied
-     ; tool, and not directly on the node, because by the time this method is called the
-     ; virtualized/non-virtualized state is still speculative and might not hold because of loops, etc.
-     ;
-     ; @param tool the tool used to describe the effects of this node
-     ;;
-    (#_"void" Virtualizable'''virtualize-2 [#_"Virtualizable" this, #_"VirtualizerTool" tool])
-)
-
-;;;
- ; This interface allows a node to convey information about what its effect would be if some of its
- ; inputs were virtualized.
- ;
- ; The difference to Virtualizable is that the #virtualize(VirtualizerTool) method will be called
- ; regardless of whether this node had any interaction with virtualized nodes. This interface can
- ; therefore be used for object allocations, for which virtualization introduces new virtualized objects.
- ;;
-(defp VirtualizableAllocation
-)
-
-;;;
- ; A state split is a node that may have a frame state associated with it.
- ;;
-(defp StateSplit
-    ;;;
-     ; Sets the FrameState corresponding to the state of the JVM after execution of this node.
-     ;;
-    (#_"void" StateSplit'''setStateAfter-2 [#_"StateSplit" this, #_"FrameState" x])
-    ;;;
-     ; Determines if this node has a side-effect. Such nodes cannot be safely re-executed because they modify
-     ; state which is visible to other threads or modify state beyond what is captured in FrameState nodes.
-     ;;
-    (#_"boolean" StateSplit'''hasSideEffect-1 [#_"StateSplit" this])
-)
-
-(defp StaticDeoptimizingNode
-    (#_"void" StaticDeoptimizingNode'''setReason-2 [#_"StaticDeoptimizingNode" this, #_"DeoptimizationReason" reason])
-    (#_"void" StaticDeoptimizingNode'''setAction-2 [#_"StaticDeoptimizingNode" this, #_"DeoptimizationAction" action])
-    (#_"GuardPriority" StaticDeoptimizingNode'''computePriority-1 [#_"StaticDeoptimizingNode" this])
-)
-
-(defp DuplicationReplacement
-    (#_"Node" DuplicationReplacement'''replacement-2 [#_"DuplicationReplacement" this, #_"Node" original])
-)
-
-(defp VirtualClosure
-    (#_"void" VirtualClosure'''apply-2 [#_"VirtualClosure" this, #_"VirtualState" node])
-)
-
-;;;
- ; Base for all compiler phases. Subclasses should be stateless. There will be one global instance
- ; for each phase that is shared for all compilations. VM-, target- and compilation-specific data
- ; can be passed with a context object.
- ;;
-(defp Phase
-    (#_"Graph" Phase'''run-3 [#_"Phase" this, #_"Graph" graph, #_"PhaseContext" context])
-)
-
-; @FunctionalInterface
-(defp InfoElementProvider
-    #_unused
-    (#_"Iterable<InfoElement>" InfoElementProvider'''getInfoElements-2 [#_"InfoElementProvider" this, #_"ValueNode" value])
-)
-
-; @FunctionalInterface
-(defp GuardRewirer
-    ;;;
-     ; Called if the condition could be proven to have a constant value ({@code result}) under {@code guard}.
-     ;
-     ; @param guard the guard whose result is proven
-     ; @param result the known result of the guard
-     ; @param newInput new input to pi nodes depending on the new guard
-     ; @return whether the transformation could be applied
-     ;;
-    (#_"boolean" GuardRewirer'''rewire-5 [#_"GuardRewirer" this, #_"GuardingNode" guard, #_"boolean" result, #_"Stamp" guardedValueStamp, #_"ValueNode" newInput])
-)
-
-(defp Inlineable
-    (#_"int" Inlineable'''getNodeCount-1 [#_"Inlineable" this])
-    (#_"Iterable<InvokeNode>" Inlineable'''getInvokes-1 [#_"Inlineable" this])
-    (#_"double" Inlineable'''getProbability-2 [#_"Inlineable" this, #_"InvokeNode" invoke])
-)
-
-;;;
- ; Represents an opportunity for inlining at a given invoke, with the given weight and level. The weight is the amortized
- ; weight of the additional code - so smaller is better. The level is the number of nested inlinings that lead to this invoke.
- ;;
-(defp InlineInfo
-    ;;;
-     ; The invocation that may be inlined.
-     ;;
-    (#_"InvokeNode" InlineInfo'''invoke-1 [#_"InlineInfo" this])
-    ;;;
-     ; Returns the number of methods that may be inlined by the {@link #invoke() invocation}.
-     ;;
-    (#_"int" InlineInfo'''numberOfMethods-1 [#_"InlineInfo" this])
-    (#_"ResolvedJavaMethod" InlineInfo'''methodAt-2 [#_"InlineInfo" this, #_"int" index])
-    (#_"Inlineable" InlineInfo'''inlineableElementAt-2 [#_"InlineInfo" this, #_"int" index])
-    (#_"double" InlineInfo'''probabilityAt-2 [#_"InlineInfo" this, #_"int" index])
-    (#_"double" InlineInfo'''relevanceAt-2 [#_"InlineInfo" this, #_"int" index])
-    (#_"void" InlineInfo'''setInlinableElement-3 [#_"InlineInfo" this, #_"int" index, #_"Inlineable" inlineableElement])
-    ;;;
-     ; Performs the inlining described by this object and returns the node that represents the return value
-     ; of the inlined method (or nil for void methods and methods that have no non-exceptional exit).
-     ;
-     ; @return a collection of nodes that need to be canonicalized after the inlining
-     ;;
-    (#_"EconomicSet<Node>" InlineInfo'''inline-1 [#_"InlineInfo" this])
-    ;;;
-     ; Try to make the call static bindable to avoid interface and virtual method calls.
-     ;;
-    (#_"void" InlineInfo'''tryToDevirtualizeInvoke-1 [#_"InlineInfo" this])
-    (#_"boolean" InlineInfo'''shouldInline-1 [#_"InlineInfo" this])
-    (#_"void" InlineInfo'''populateInlinableElements-4 [#_"InlineInfo" this, #_"PhaseContext" context, #_"Graph" caller, #_"CanonicalizerPhase" canonicalizer])
-    (#_"int" InlineInfo'''determineNodeCount-1 [#_"InlineInfo" this])
-)
-
-(defp InliningPolicy
-    (#_"boolean" InliningPolicy'''continueInlining-2 [#_"InliningPolicy" this, #_"Graph" graph])
-    (#_"Decision" InliningPolicy'''isWorthInlining-5 [#_"InliningPolicy" this, #_"Replacements" replacements, #_"MethodInvocation" invocation, #_"int" inliningDepth, #_"boolean" fullyProcessed])
-)
-
-(defp IntegerExactArithmeticNode
-    (#_"IntegerExactArithmeticSplitNode" IntegerExactArithmeticNode'''createSplit-3 [#_"IntegerExactArithmeticNode" this, #_"AbstractBeginNode" next, #_"AbstractBeginNode" deopt])
-)
-
-;;;
- ; Marker interface for a class that defines one or more Snippets.
- ;;
-(defp Snippets
-)
-
-;;;
- ; Logic for replacing a snippet-lowered node at its usages with the return value of the snippet.
- ; An alternative to the {@linkplain SnippetTemplate#DEFAULT_REPLACER default} replacement logic
- ; can be used to handle mismatches between the stamp of the node being lowered and the stamp of
- ; the snippet's return value.
- ;;
-(defp UsageReplacer
-    ;;;
-     ; Replaces all usages of {@code oldNode} with direct or indirect usages of {@code newNode}.
-     ;;
-    (#_"void" UsageReplacer'''replace-3 [#_"UsageReplacer" this, #_"ValueNode" oldNode, #_"ValueNode" newNode])
-)
-
-(defp Effect
-    (#_"boolean" Effect'''isCfgKill-1 [#_"Effect" this])
-    (#_"void" Effect'''apply-3 [#_"Effect" this, #_"Graph" graph, #_"ArrayList<Node>" obsoleteNodes])
-    (#_"void" Effect'''apply-2 [#_"Effect" this, #_"Graph" graph])
-)
-
-(defr                       AMD64Op)
-,   (defr                   AMD64ImmOp                                  AMD64Op)
-,   ,   (defr               AMD64MIOp                                   AMD64ImmOp, AMD64Op)
-,   ,   (defr               AMD64RMIOp                                  AMD64ImmOp, AMD64Op)
-,   (defr                   AMD64MOp                                    AMD64Op)
-,   (defr                   AMD64RROp                                   AMD64Op)
-,   ,   (defr               AMD64MROp                                   AMD64RROp, AMD64Op)
-,   ,   (defr               AMD64RMOp                                   AMD64RROp, AMD64Op)
-
-(defr                       AMD64Shift)
-
-(defr                       AbstractAddress)
-,   (defr                   AMD64Address                                AbstractAddress)
-
-(defr                       AbstractInlineInfo                          InlineInfo)
-,   (defr                   ExactInlineInfo                             AbstractInlineInfo, InlineInfo)
-
-(defr                       AbstractInliningPolicy                      InliningPolicy)
-,   (defr                   GreedyInliningPolicy                        AbstractInliningPolicy, InliningPolicy)
-
-,   (defr                   NodeList                                    #_"AbstractList" #_"<Node>", NodeIterable, #_"Iterable" #_"<Node>")
-,   ,   (defr               NodeInputList                               NodeList, #_"AbstractList" #_"<Node>", NodeIterable, #_"Iterable" #_"<Node>")
-,   ,   (defr               NodeSuccessorList                           NodeList, #_"AbstractList" #_"<Node>", NodeIterable, #_"Iterable" #_"<Node>")
-
-(defr                       AbstractTemplates)
-,   (defr                   BoxingTemplates                             AbstractTemplates)
-,   (defr                   InstanceOfSnippetsTemplates                 AbstractTemplates)
-,   ,   (defr               InstanceOfTemplates                         InstanceOfSnippetsTemplates, AbstractTemplates)
-,   (defr                   MonitorTemplates                            AbstractTemplates)
-,   (defr                   NewObjectTemplates                          AbstractTemplates)
-,   (defr                   UnsafeLoadTemplates                         AbstractTemplates)
-,   (defr                   WriteBarrierTemplates                       AbstractTemplates)
-
-(defr                       AddressLowering)
-(defr                       AddressLoweringPhase                        Phase)
-(defr                       AllocatableRegisters)
-
-,   (defr                   Variable                                    #_"AllocatableValue")
-,   (defr                   VirtualStackSlot                            #_"AllocatableValue")
-,   ,   (defr               SimpleVirtualStackSlot                      VirtualStackSlot, #_"AllocatableValue")
-,   ,   (defr               VirtualStackSlotRange                       VirtualStackSlot, #_"AllocatableValue")
-
-(defr                       Allocator)
-(defr                       AndPredicate                                NodePredicate, #_"Predicate" #_"<Node>")
-(defr                       Arguments)
-
-(defr                       ArithmeticOp)
-,   (defr                   BinaryOp #_"<T>"                            ArithmeticOp)
-,   ,   (defr               Add                                         BinaryOp #_"<Add>", ArithmeticOp)
-,   ,   (defr               And                                         BinaryOp #_"<And>", ArithmeticOp)
-,   ,   (defr               Div                                         BinaryOp #_"<Div>", ArithmeticOp)
-,   ,   (defr               Mul                                         BinaryOp #_"<Mul>", ArithmeticOp)
-,   ,   (defr               MulHigh                                     BinaryOp #_"<MulHigh>", ArithmeticOp)
-,   ,   (defr               Or                                          BinaryOp #_"<Or>", ArithmeticOp)
-,   ,   (defr               Rem                                         BinaryOp #_"<Rem>", ArithmeticOp)
-,   ,   (defr               Sub                                         BinaryOp #_"<Sub>", ArithmeticOp)
-,   ,   (defr               UMulHigh                                    BinaryOp #_"<UMulHigh>", ArithmeticOp)
-,   ,   (defr               Xor                                         BinaryOp #_"<Xor>", ArithmeticOp)
-,   (defr                   IntegerConvertOp #_"<T>"                    ArithmeticOp)
-,   ,   (defr               Narrow                                      IntegerConvertOp #_"<Narrow>", ArithmeticOp)
-,   ,   (defr               SignExtend                                  IntegerConvertOp #_"<SignExtend>", ArithmeticOp)
-,   ,   (defr               ZeroExtend                                  IntegerConvertOp #_"<ZeroExtend>", ArithmeticOp)
-,   (defr                   ShiftOp #_"<OP>"                            ArithmeticOp)
-,   ,   (defr               Shl                                         ShiftOp #_"<Shl>", ArithmeticOp)
-,   ,   (defr               Shr                                         ShiftOp #_"<Shr>", ArithmeticOp)
-,   ,   (defr               UShr                                        ShiftOp #_"<UShr>", ArithmeticOp)
-,   (defr                   UnaryOp #_"<T>"                             ArithmeticOp)
-,   ,   (defr               Abs                                         UnaryOp #_"<Abs>", ArithmeticOp)
-,   ,   (defr               Neg                                         UnaryOp #_"<Neg>", ArithmeticOp)
-,   ,   (defr               Not                                         UnaryOp #_"<Not>", ArithmeticOp)
-
-(defr                       ArithmeticOpTable)
-(defr                       Assembler)
-
-(defr                       BaseSwitchClosure                           SwitchClosure)
-,   (defr                   AMD64SwitchClosure                          BaseSwitchClosure, SwitchClosure)
-,   ,   (defr               HotSpotSwitchClosure                        AMD64SwitchClosure, BaseSwitchClosure, SwitchClosure)
-
-(defr                       BciBlock)
-(defr                       BciBlockMapping)
-(defr                       BinaryArithmetic)
-(defr                       BitMap2D)
-(defr                       Block)
-(defr                       BlockClosure)
-(defr                       BlockData)
-
-(defr                       BlockIteratorClosure #_"<T>")
-,   (defr                   Closure #_"<T>"                             BlockIteratorClosure #_"<T>")
-,   ,   (defr               EffectsClosure #_"<T implements EffectsBlockState<T>>" Closure #_"<T>", BlockIteratorClosure #_"<T>")
-,   ,   ,   (defr           PartialEscapeClosure #_"<T implements PartialEscapeBlockState<T>>" EffectsClosure #_"<T>", Closure #_"<T>", BlockIteratorClosure #_"<T>")
-,   ,   ,   ,   (defr       FinalClosure                                PartialEscapeClosure #_"<FinalState>", EffectsClosure #_"<FinalState>", Closure #_"<FinalState>", BlockIteratorClosure #_"<FinalState>")
-,   ,   ,   ,   (defr       PEReadEliminationClosure                    PartialEscapeClosure #_"<PEReadEliminationBlockState>", EffectsClosure #_"<PEReadEliminationBlockState>", Closure #_"<PEReadEliminationBlockState>", BlockIteratorClosure #_"<PEReadEliminationBlockState>")
-,   ,   ,   (defr           ReadEliminationClosure                      EffectsClosure #_"<ReadEliminationBlockState>", Closure #_"<ReadEliminationBlockState>", BlockIteratorClosure #_"<ReadEliminationBlockState>")
-
-(defr                       BlockLoopInfo #_"<T>")
-(defr                       BlockMap #_"<T>")
-(defr                       BlockNodeIterator                           #_"Iterator" #_"<FixedNode>")
-(defr                       BlockOrderComparator                        #_"Comparator" #_"<Block>")
-(defr                       BlockScope                                  #_"AutoCloseable")
-(defr                       BlockStates)
-(defr                       BytecodeParser                              GraphBuilder)
-(defr                       BytecodeStream)
-
-(defr                       BytecodeSwitch)
-,   (defr                   BytecodeLookupSwitch                        BytecodeSwitch)
-,   (defr                   BytecodeTableSwitch                         BytecodeSwitch)
-
-(defr                       CFOptimizer)
-(defr                       CLOptimization)
-
-(defr                       CacheEntry #_"<T>")
-,   (defr                   LoadCacheEntry                              CacheEntry #_"<LocationIdentity>")
-,   (defr                   UnsafeLoadCacheEntry                        CacheEntry #_"<ValueNode>")
-
-(defr                       CacheKey)
-
-(defr                       CallsiteHolder)
-,   (defr                   CallsiteHolderExplorable                    CallsiteHolder)
-
-(defr                       CanonicalCondition)
-(defr                       CanonicalizedCondition)
-(defr                       CanonicalizerInstance                       Phase)
-(defr                       CanonicalizerPhase                          Phase)
-(defr                       Classfile)
-(defr                       ClassfileBytecode                           Bytecode)
-(defr                       ClassfileBytecodeProvider                   BytecodeProvider)
-
-(defr                       ClassfileConstant)
-,   (defr                   ClassRef                                    ClassfileConstant)
-,   (defr                   MemberRef                                   ClassfileConstant)
-,   ,   (defr               ExecutableRef                               MemberRef, ClassfileConstant)
-,   ,   ,   (defr           InterfaceMethodRef                          ExecutableRef, MemberRef, ClassfileConstant)
-,   ,   ,   (defr           MethodRef                                   ExecutableRef, MemberRef, ClassfileConstant)
-,   ,   (defr               FieldRef                                    MemberRef, ClassfileConstant)
-,   (defr                   NameAndType                                 ClassfileConstant)
-,   (defr                   Primitive                                   ClassfileConstant)
-,   (defr                   StringRef                                   ClassfileConstant)
-,   (defr                   Unsupported                                 ClassfileConstant)
-,   (defr                   Utf8                                        ClassfileConstant)
-
-(defr                       ClassfileConstantPool                       #_"ConstantPool")
-(defr                       CodeBuffer)
-
-(defr                       CompareOp)
-,   (defr                   IntegerEqualsOp                             CompareOp)
-,   (defr                   LowerOp                                     CompareOp)
-,   ,   (defr               BelowOp                                     LowerOp, CompareOp)
-,   ,   (defr               LessThanOp                                  LowerOp, CompareOp)
-,   (defr                   PointerEqualsOp                             CompareOp)
-,   ,   (defr               ObjectEqualsOp                              PointerEqualsOp, CompareOp)
-
-(defr                       CompilationResult)
-(defr                       CompressEncoding)
-(defr                       ComputeInliningRelevance)
-(defr                       ComputeLoopFrequencyPhase                   Phase)
-(defr                       Condition)
-(defr                       ConditionFlag)
-(defr                       ConditionalEliminationInstance              RecursiveVisitor #_"<Integer>")
-(defr                       ConditionalEliminationPhase                 Phase)
-(defr                       ConstantBindingParameterPlugin              ParameterPlugin)
-(defr                       ConstantLoadOptimization                    LIRPhase #_"<LIRPhaseContext>")
-(defr                       ConstantTreeAnalyzer)
-(defr                       ContradictionPredicate                      NodePredicate, #_"Predicate" #_"<Node>")
-(defr                       ControlFlowGraph)
-(defr                       ControlFlowOptimizer                        LIRPhase #_"<LIRPhaseContext>")
-(defr                       ConvertDeoptimizeToGuardPhase               Phase)
-(defr                       CountedLoopInfo)
-(defr                       CountingClosure                             VirtualClosure)
-(defr                       CurrentInvoke)
-
-(defr                       Data)
-,   (defr                   RawData                                     Data)
-,   (defr                   ZeroData                                    Data)
-
-(defr                       DataSection)
-(defr                       DeadCodeEliminationPhase                    Phase)
-(defr                       Decision)
-(defr                       DefUseTree)
-(defr                       DefaultLoopPolicies                         LoopPolicies)
-(defr                       DefaultSimplifierTool                       SimplifierTool, CanonicalizerTool)
-(defr                       DeferredExit)
-(defr                       DeoptimizationGroupingPhase                 Phase)
-
-(defr                       DominatorOptimizationProblem #_"<E extends Enum<E>, C>")
-,   (defr                   ConstantTree                                DominatorOptimizationProblem #_"<Flags, NodeCost>")
-
-(defr                       EMOptimizer)
-(defr                       EdgeMoveOptimizer                           LIRPhase #_"<LIRPhaseContext>")
-
-(defr                       EdgeVisitor)
-,   (defr                   InputFilter                                 EdgeVisitor)
-
-(defr                       EdgesIterator                               #_"Iterator" #_"<Position>")
-
-(defr                       EffectList                                  #_"Iterable" #_"<Effect>")
-,   (defr                   GraphEffectList                             EffectList, #_"Iterable" #_"<Effect>")
-
-(defr                       EffectsBlockState #_"<T implements EffectsBlockState<T>>")
-,   (defr                   PartialEscapeBlockState #_"<T implements PartialEscapeBlockState<T>>" EffectsBlockState #_"<T>")
-,   ,   (defr               FinalState                                  PartialEscapeBlockState #_"<FinalState>", EffectsBlockState #_"<FinalState>")
-,   ,   (defr               PEReadEliminationBlockState                 PartialEscapeBlockState #_"<PEReadEliminationBlockState>", EffectsBlockState #_"<PEReadEliminationBlockState>")
-,   (defr                   ReadEliminationBlockState                   EffectsBlockState #_"<ReadEliminationBlockState>")
-
-(defr                       EffectsPhase                                Phase)
-,   (defr                   EarlyReadEliminationPhase                   EffectsPhase, Phase)
-,   (defr                   PartialEscapePhase                          EffectsPhase, Phase)
-
-(defr                       EffortClosure                               SwitchClosure)
-(defr                       ExpandLogicPhase                            Phase)
-
-(defr                       FieldInfo                                   #_"Comparable" #_"<FieldInfo>")
-,   (defr                   EdgeInfo                                    FieldInfo, #_"Comparable" #_"<FieldInfo>")
-,   ,   (defr               InputInfo                                   EdgeInfo, FieldInfo, #_"Comparable" #_"<FieldInfo>")
-,   (defr                   ValueFieldInfo                              FieldInfo, #_"Comparable" #_"<FieldInfo>")
-
-(defr                       FieldIntrospection #_"<T>")
-,   (defr                   LIRIntrospection #_"<T>"                    FieldIntrospection #_"<T>")
-,   ,   (defr               LIRInstructionClass #_"<T>"                 LIRIntrospection #_"<T>", FieldIntrospection #_"<T>")
-,   (defr                   NodeClass #_"<T>"                           FieldIntrospection #_"<T>")
-
-(defr                       FieldKey)
-
-(defr                       Fields)
-,   (defr                   Edges                                       Fields)
-,   ,   (defr               InputEdges                                  Edges, Fields)
-,   ,   (defr               SuccessorEdges                              Edges, Fields)
-,   (defr                   Values                                      Fields)
-
-(defr                       FieldsCache)
-
-(defr                       FieldsScanner)
-,   (defr                   LIRFieldsScanner                            FieldsScanner)
-,   ,   (defr               LIRInstructionFieldsScanner                 LIRFieldsScanner, FieldsScanner)
-,   (defr                   NodeFieldsScanner                           FieldsScanner)
-
-(defr                       FilteredNodeIterable                        NodeIterable, #_"Iterable" #_"<Node>")
-(defr                       FixPointIntervalBuilder)
-(defr                       FixReadsPhase                               Phase)
-(defr                       FixedNodeIterator                           #_"Iterator" #_"<FixedNode>")
-(defr                       FixedNodeProbabilityCache                   #_"ToDoubleFunction" #_"<FixedNode>")
-(defr                       FixedTarget)
-(defr                       FloatingReadPhase                           Phase)
-(defr                       ForeignCallDescriptor)
-(defr                       ForeignCallLinkage                          #_"InvokeTarget")
-(defr                       ForeignCalls)
-(defr                       FrameContext)
-
-(defr                       FrameMapBuilder)
-,   (defr                   FrameMapBuilderTool                         FrameMapBuilder)
-,   ,   (defr               FrameMapBuilder0                            FrameMapBuilderTool, FrameMapBuilder)
-,   ,   ,   (defr           AMD64FrameMapBuilder                        FrameMapBuilder0, FrameMapBuilderTool, FrameMapBuilder)
-
-(defr                       FrameMap)
-,   (defr                   AMD64FrameMap                               FrameMap)
-
-(defr                       FrameStateAssignmentPhase                   Phase)
-(defr                       FrameStateBuilder                           SideEffectsState)
-(defr                       Graph)
-(defr                       GraphBuilderConfiguration)
-(defr                       GraphBuilderInstance                        Phase)
-(defr                       GraphBuilderPhase                           Phase)
-(defr                       GraphKit                                    GraphBuilder)
-(defr                       GraphNodeIterator                           #_"Iterator" #_"<Node>")
-(defr                       GuardLoweringPhase                          Phase)
-(defr                       HotSpotNodePlugin                           NodePlugin, TypePlugin)
-
-(defr                       InductionVariable)
-,   (defr                   BasicInductionVariable                      InductionVariable)
-,   (defr                   DerivedInductionVariable                    InductionVariable)
-,   ,   (defr               DerivedConvertedInductionVariable           DerivedInductionVariable, InductionVariable)
-,   ,   (defr               DerivedOffsetInductionVariable              DerivedInductionVariable, InductionVariable)
-,   ,   (defr               DerivedScaledInductionVariable              DerivedInductionVariable, InductionVariable)
-
-(defr                       InfoElement)
-(defr                       InlineDuringParsingPlugin                   InlineInvokePlugin)
-(defr                       InlineInvokeInfo)
-(defr                       InlineableGraph                             Inlineable)
-(defr                       InliningData)
-(defr                       InliningIterator)
-(defr                       InliningPhase                               Phase)
-
-(defr                       InstanceOfUsageReplacer                     UsageReplacer)
-,   (defr                   MaterializationUsageReplacer                InstanceOfUsageReplacer, UsageReplacer)
-,   (defr                   NonMaterializationUsageReplacer             InstanceOfUsageReplacer, UsageReplacer)
-
-(defr                       Instantiation)
-(defr                       IntList)
-(defr                       Interval)
-(defr                       IntervalBlockIterator                       #_"Iterator" #_"<Block>")
-
-(defr                       IntervalWalker)
-,   (defr                   LinearScanWalker                            IntervalWalker)
-,   ,   (defr               OptimizingLinearScanWalker                  LinearScanWalker, IntervalWalker)
-
-(defr                       IntrinsicContext)
-(defr                       IntrinsicScope                              #_"AutoCloseable")
-(defr                       InvariantPredicate                          NodePredicate, #_"Predicate" #_"<Node>")
-(defr                       InvokeKind)
-(defr                       IterativeConditionalEliminationPhase        Phase)
-(defr                       JSRData)
-(defr                       JsrScope)
-(defr                       KeyData)
-(defr                       LIR)
-(defr                       LIRBuilder)
-(defr                       LIRGenerationContext)
-(defr                       LIRGenerationPhase                          LIRPhase #_"<LIRGenerationContext>")
-(defr                       LIRGenerationResult)
-(defr                       LIRGenerator)
-(defr                       LIRInsertionBuffer)
-
-(defr                       LIRInstruction)
-,   (defr                   AMD64ByteSwapOp                             LIRInstruction)
-,   (defr                   AMD64CCall                                  LIRInstruction)
-,   (defr                   AMD64ClearRegisterOp                        LIRInstruction)
-,   (defr                   AMD64DeoptimizeOp                           LIRInstruction, BlockEndOp)
-,   (defr                   AMD64LFenceOp                               LIRInstruction)
-,   (defr                   AMD64MulDivOp                               LIRInstruction)
-,   (defr                   AMD64MultiStackMove                         LIRInstruction)
-,   (defr                   AMD64PrefetchOp                             LIRInstruction)
-,   (defr                   AMD64PushPopStackMove                       LIRInstruction, ValueMoveOp, MoveOp)
-,   (defr                   AMD64RestoreRegistersOp                     LIRInstruction)
-,   (defr                   AMD64SaveRegistersOp                        LIRInstruction)
-,   (defr                   AMD64ShiftOp                                LIRInstruction)
-,   (defr                   AMD64SignExtendOp                           LIRInstruction)
-,   (defr                   AMD64StackMove                              LIRInstruction, ValueMoveOp, MoveOp)
-,   (defr                   AMD64TailcallOp                             LIRInstruction)
-,   (defr                   AbstractMoveOp                              LIRInstruction, ValueMoveOp, MoveOp)
-,   ,   (defr               MoveFromRegOp                               AbstractMoveOp, LIRInstruction, ValueMoveOp, MoveOp)
-,   ,   (defr               MoveToRegOp                                 AbstractMoveOp, LIRInstruction, ValueMoveOp, MoveOp)
-,   (defr                   AtomicReadAndAddOp                          LIRInstruction)
-,   (defr                   AtomicReadAndWriteOp                        LIRInstruction)
-,   (defr                   BindToRegisterOp                            LIRInstruction)
-,   (defr                   BlackholeOp                                 LIRInstruction)
-,   (defr                   BranchOp                                    LIRInstruction, StandardBranchOp, BlockEndOp)
-,   (defr                   CRuntimeCallEpilogueOp                      LIRInstruction)
-,   (defr                   CRuntimeCallPrologueOp                      LIRInstruction)
-,   (defr                   CallOp                                      LIRInstruction)
-,   ,   (defr               ForeignCallOp                               CallOp, LIRInstruction)
-,   ,   ,   (defr           DirectFarForeignCallOp                      ForeignCallOp, CallOp, LIRInstruction)
-,   ,   ,   (defr           DirectNearForeignCallOp                     ForeignCallOp, CallOp, LIRInstruction)
-,   ,   (defr               MethodCallOp                                CallOp, LIRInstruction)
-,   ,   ,   (defr           DirectCallOp                                MethodCallOp, CallOp, LIRInstruction)
-,   ,   ,   ,   (defr       DirectStaticCallOp                          DirectCallOp, MethodCallOp, CallOp, LIRInstruction)
-,   ,   ,   ,   (defr       DirectVirtualCallOp                         DirectCallOp, MethodCallOp, CallOp, LIRInstruction)
-,   (defr                   CommutativeTwoOp                            LIRInstruction)
-,   (defr                   CompareAndSwapOp                            LIRInstruction)
-,   (defr                   CondMoveOp                                  LIRInstruction)
-,   (defr                   CondSetOp                                   LIRInstruction)
-,   (defr                   ConstOp                                     LIRInstruction)
-,   (defr                   ConsumerConstOp                             LIRInstruction)
-,   ,   (defr               VMConstOp                                   ConsumerConstOp, LIRInstruction)
-,   (defr                   ConsumerOp                                  LIRInstruction)
-,   (defr                   DataOp                                      LIRInstruction)
-,   (defr                   DataTwoOp                                   LIRInstruction)
-,   (defr                   EpilogueBlockEndOp                          LIRInstruction, AMD64HotSpotRestoreRbpOp, BlockEndOp)
-,   ,   (defr               AMD64HotSpotReturnOp                        EpilogueBlockEndOp, LIRInstruction, AMD64HotSpotRestoreRbpOp, BlockEndOp)
-,   ,   (defr               DeoptimizeCallerOp                          EpilogueBlockEndOp, LIRInstruction, AMD64HotSpotRestoreRbpOp, BlockEndOp)
-,   (defr                   JumpOp                                      LIRInstruction, BlockEndOp)
-,   (defr                   LabelOp                                     LIRInstruction)
-,   (defr                   LeaOp                                       LIRInstruction)
-,   (defr                   LoadConfigValueOp                           LIRInstruction)
-,   (defr                   LoadMetaspaceConstantOp                     LIRInstruction, LoadConstantOp, MoveOp)
-,   (defr                   LoadObjectConstantOp                        LIRInstruction, LoadConstantOp, MoveOp)
-,   (defr                   LockStack                                   LIRInstruction)
-,   (defr                   MOp                                         LIRInstruction)
-,   (defr                   MROp                                        LIRInstruction)
-,   (defr                   MembarOp                                    LIRInstruction)
-,   (defr                   MemoryConstOp                               LIRInstruction, ImplicitNullCheck)
-,   ,   (defr               MemoryVMConstOp                             MemoryConstOp, LIRInstruction, ImplicitNullCheck)
-,   (defr                   MemoryMROp                                  LIRInstruction, ImplicitNullCheck)
-,   (defr                   MemoryOp                                    LIRInstruction, ImplicitNullCheck)
-,   (defr                   MemoryRMOp                                  LIRInstruction, ImplicitNullCheck)
-,   (defr                   MemoryTwoOp                                 LIRInstruction, ImplicitNullCheck)
-,   (defr                   MoveFromConstOp                             LIRInstruction, LoadConstantOp, MoveOp)
-,   (defr                   NoOp                                        LIRInstruction)
-,   (defr                   NullCheckOp                                 LIRInstruction, NullCheck)
-,   (defr                   PointerCompressionOp                        LIRInstruction)
-,   ,   (defr               CompressPointerOp                           PointerCompressionOp, LIRInstruction)
-,   ,   (defr               UncompressPointerOp                         PointerCompressionOp, LIRInstruction)
-,   (defr                   RMIOp                                       LIRInstruction)
-,   (defr                   RMOp                                        LIRInstruction)
-,   (defr                   ReadTimestampCounter                        LIRInstruction)
-,   (defr                   ReturnOp                                    LIRInstruction, BlockEndOp)
-,   (defr                   SafepointOp                                 LIRInstruction)
-,   (defr                   SpillRegistersOp                            LIRInstruction)
-,   (defr                   StackLeaOp                                  LIRInstruction)
-,   (defr                   StrategySwitchOp                            LIRInstruction, BlockEndOp)
-,   ,   (defr               AMD64HotSpotStrategySwitchOp                StrategySwitchOp, LIRInstruction, BlockEndOp)
-,   (defr                   TableSwitchOp                               LIRInstruction, BlockEndOp)
-,   (defr                   TwoOp                                       LIRInstruction)
-
-(defr                       LIRPhaseContext)
-(defr                       LIRPhaseSuite                               LIRPhase #_"<LIRPhaseContext>")
-,   (defr                   AllocationStage                             LIRPhaseSuite, LIRPhase #_"<LIRPhaseContext>")
-,   (defr                   PostAllocationStage                         LIRPhaseSuite, LIRPhase #_"<LIRPhaseContext>")
-,   (defr                   PreAllocationStage                          LIRPhaseSuite, LIRPhase #_"<LIRPhaseContext>")
-(defr                       LIRSuites)
-(defr                       LSStackSlotAllocator                        LIRPhase #_"<LIRPhaseContext>")
-(defr                       Label)
-(defr                       LabelRef)
-(defr                       Lazy)
-
-(defr                       LSAllocationPhase)
-,   (defr                   LSAssignLocationsPhase                      LSAllocationPhase)
-,   (defr                   LSEliminateSpillMovePhase                   LSAllocationPhase)
-,   ,   (defr               SSALinearScanEliminateSpillMovePhase        LSEliminateSpillMovePhase, LSAllocationPhase)
-,   (defr                   LSLifetimeAnalysisPhase                     LSAllocationPhase)
-,   ,   (defr               SSALinearScanLifetimeAnalysisPhase          LSLifetimeAnalysisPhase, LSAllocationPhase)
-,   (defr                   LSOptimizeSpillPositionPhase                LSAllocationPhase)
-,   (defr                   LSRegisterAllocationPhase                   LSAllocationPhase)
-,   (defr                   LSResolveDataFlowPhase                      LSAllocationPhase)
-,   ,   (defr               SSALinearScanResolveDataFlowPhase           LSResolveDataFlowPhase, LSAllocationPhase)
-
-(defr                       LinearScan)
-,   (defr                   SSALinearScan                               LinearScan)
-
-(defr                       LinearScanPhase                             LIRPhase #_"<LIRPhaseContext>")
-
-(defr                       LocalLiveness)
-,   (defr                   LargeLocalLiveness                          LocalLiveness)
-,   (defr                   SmallLocalLiveness                          LocalLiveness)
-
-,   (defr                   FieldLocationIdentity                       #_"LocationIdentity")
-,   (defr                   NamedLocationIdentity                       #_"LocationIdentity")
-,   ,   (defr               CanonicalizableLocation                     NamedLocationIdentity, #_"LocationIdentity")
-
-(defr                       LocationSet)
-(defr                       LockEliminationPhase                        Phase)
-(defr                       LockStackHolder)
-(defr                       LockState)
-(defr                       Loop)
-(defr                       LoopEx)
-
-(defr                       LoopFragment)
-,   (defr                   LoopFragmentInside                          LoopFragment)
-,   (defr                   LoopFragmentWhole                           LoopFragment)
-
-(defr                       LoopKillCache)
-
-(defr                       LoopPhase                                   Phase)
-,   (defr                   LoopFullUnrollPhase                         LoopPhase, Phase)
-,   (defr                   LoopPartialUnrollPhase                      LoopPhase, Phase)
-,   (defr                   LoopPeelingPhase                            LoopPhase, Phase)
-,   (defr                   LoopUnswitchingPhase                        LoopPhase, Phase)
-
-(defr                       LoopSafepointEliminationPhase               Phase)
-(defr                       LoopSafepointInsertionPhase                 Phase)
-(defr                       LoopsData)
-(defr                       LoweringPhase                               Phase)
-(defr                       LoweringRound                               Phase)
-(defr                       LoweringTool)
-(defr                       MapReplacement                              DuplicationReplacement)
-(defr                       MarkedNodeIterator                          #_"Iterator" #_"<Node>")
-
-(defr                       MemoryInputMap                              MemoryMap)
-,   (defr                   MemoryOutputMap                             MemoryInputMap, MemoryMap)
-
-(defr                       MemoryMap0                                  MemoryMap)
-
-(defr                       MergeProcessor #_"<T implements EffectsBlockState<T>>")
-,   (defr                   PEMergeProcessor #_"<T implements PartialEscapeBlockState<T>>" MergeProcessor #_"<T>")
-,   ,   (defr               PEReadEliminationMergeProcessor             PEMergeProcessor #_"<PEReadEliminationBlockState>", MergeProcessor #_"<PEReadEliminationBlockState>")
-,   (defr                   ReadEliminationMergeProcessor               MergeProcessor #_"<ReadEliminationBlockState>")
-
-(defr                       MethodHandlePlugin                          NodePlugin)
-(defr                       MethodInvocation)
-(defr                       MethodKey)
-(defr                       MethodsCache)
-(defr                       MicroBlock)
-(defr                       MoveFactory)
-(defr                       MoveGuardsUpwards                           RecursiveVisitor #_"<Block>")
-
-(defr                       MoveResolver)
-,   (defr                   SSAMoveResolver                             MoveResolver)
-
-(defr                       NegativeTypePredicate                       NodePredicate, #_"Predicate" #_"<Node>")
-(defr                       NodeBitMap                                  NodeIterable, #_"Iterable" #_"<Node>")
-
-(defr                       NodeClosure #_"<T implements Node>")
-,   (defr                   CollectVirtualObjectsClosure #_"<T implements PartialEscapeBlockState<T>>" NodeClosure #_"<ValueNode>")
-
-(defr                       NodeCost)
-(defr                       NodeEntry)
-
-(defr                       NodeEventListener)
-,   (defr                   ChainedNodeEventListener                    NodeEventListener)
-,   (defr                   HashSetNodeEventListener                    NodeEventListener)
-
-(defr                       NodeEventScope                              #_"AutoCloseable")
-(defr                       NodeFlood                                   #_"Iterable" #_"<Node>")
-
-(defr                       Node)
-,   (defr                   ValueNode                                   Node)
-,   ,   (defr               CallTargetNode                              ValueNode, Node, LIRLowerable)
-,   ,   ,   (defr           LoweredCallTargetNode                       CallTargetNode, ValueNode, Node, LIRLowerable)
-,   ,   ,   ,   (defr       DirectCallTargetNode                        LoweredCallTargetNode, CallTargetNode, ValueNode, Node, LIRLowerable)
-,   ,   ,   ,   ,   (defr   HotSpotDirectCallTargetNode                 DirectCallTargetNode, LoweredCallTargetNode, CallTargetNode, ValueNode, Node, LIRLowerable)
-,   ,   ,   (defr           MethodCallTargetNode                        CallTargetNode, ValueNode, Node, LIRLowerable, IterableNodeType, Simplifiable)
-,   ,   ,   ,   (defr       ResolvedMethodHandleCallTargetNode          MethodCallTargetNode, CallTargetNode, ValueNode, Node, LIRLowerable, IterableNodeType, Simplifiable, Lowerable)
-,   ,   (defr               DummyGuardHandle                            ValueNode, Node, GuardedNode)
-,   ,   (defr               FixedNode                                   ValueNode, Node)
-,   ,   ,   (defr           AbstractEndNode                             FixedNode, ValueNode, Node, LIRLowerable)
-,   ,   ,   ,   (defr       EndNode                                     AbstractEndNode, FixedNode, ValueNode, Node, LIRLowerable)
-,   ,   ,   ,   (defr       LoopEndNode                                 AbstractEndNode, FixedNode, ValueNode, Node, LIRLowerable)
-,   ,   ,   (defr           ControlSinkNode                             FixedNode, ValueNode, Node)
-,   ,   ,   ,   (defr       AbstractDeoptimizeNode                      ControlSinkNode, FixedNode, ValueNode, Node, IterableNodeType, DeoptBefore, DeoptimizingNode, NodeWithState)
-,   ,   ,   ,   ,   (defr   DeoptimizeNode                              AbstractDeoptimizeNode, ControlSinkNode, FixedNode, ValueNode, Node, IterableNodeType, DeoptBefore, DeoptimizingNode, NodeWithState, Lowerable, LIRLowerable, StaticDeoptimizingNode)
-,   ,   ,   ,   ,   (defr   DynamicDeoptimizeNode                       AbstractDeoptimizeNode, ControlSinkNode, FixedNode, ValueNode, Node, IterableNodeType, DeoptBefore, DeoptimizingNode, NodeWithState, LIRLowerable, Lowerable, Canonicalizable)
-,   ,   ,   ,   (defr       DeoptimizeCallerNode                        ControlSinkNode, FixedNode, ValueNode, Node, LIRLowerable)
-,   ,   ,   ,   (defr       ReturnNode                                  ControlSinkNode, FixedNode, ValueNode, Node, LIRLowerable, IterableNodeType)
-,   ,   ,   (defr           ControlSplitNode                            FixedNode, ValueNode, Node, IterableNodeType)
-,   ,   ,   ,   (defr       IfNode                                      ControlSplitNode, FixedNode, ValueNode, Node, IterableNodeType, Simplifiable, LIRLowerable)
-,   ,   ,   ,   (defr       IntegerExactArithmeticSplitNode             ControlSplitNode, FixedNode, ValueNode, Node, IterableNodeType, Simplifiable, LIRLowerable)
-,   ,   ,   ,   ,   (defr   IntegerAddExactSplitNode                    IntegerExactArithmeticSplitNode, ControlSplitNode, FixedNode, ValueNode, Node, IterableNodeType, Simplifiable, LIRLowerable)
-,   ,   ,   ,   ,   (defr   IntegerMulExactSplitNode                    IntegerExactArithmeticSplitNode, ControlSplitNode, FixedNode, ValueNode, Node, IterableNodeType, Simplifiable, LIRLowerable)
-,   ,   ,   ,   ,   (defr   IntegerSubExactSplitNode                    IntegerExactArithmeticSplitNode, ControlSplitNode, FixedNode, ValueNode, Node, IterableNodeType, Simplifiable, LIRLowerable)
-,   ,   ,   ,   (defr       SwitchNode                                  ControlSplitNode, FixedNode, ValueNode, Node, IterableNodeType)
-,   ,   ,   ,   ,   (defr   IntegerSwitchNode                           SwitchNode, ControlSplitNode, FixedNode, ValueNode, Node, IterableNodeType, LIRLowerable, Simplifiable)
-,   ,   ,   (defr           FixedWithNextNode                           FixedNode, ValueNode, Node)
-,   ,   ,   ,   (defr       AbstractBeginNode                           FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, GuardingNode, AnchoringNode, IterableNodeType)
-,   ,   ,   ,   ,   (defr   BeginNode                                   AbstractBeginNode, FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, GuardingNode, AnchoringNode, IterableNodeType, Simplifiable)
-,   ,   ,   ,   ,   (defr   BeginStateSplitNode                         AbstractBeginNode, FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, GuardingNode, AnchoringNode, IterableNodeType, StateSplit, NodeWithState)
-,   ,   ,   ,   ,   ,   (defr AbstractMergeNode                         BeginStateSplitNode, AbstractBeginNode, FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, GuardingNode, AnchoringNode, IterableNodeType, StateSplit, NodeWithState, IterableNodeType, Simplifiable, LIRLowerable)
-,   ,   ,   ,   ,   ,   ,   (defr LoopBeginNode                         AbstractMergeNode, BeginStateSplitNode, AbstractBeginNode, FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, GuardingNode, AnchoringNode, IterableNodeType, StateSplit, NodeWithState, IterableNodeType, Simplifiable, LIRLowerable, IterableNodeType, LIRLowerable)
-,   ,   ,   ,   ,   ,   ,   (defr MergeNode                             AbstractMergeNode, BeginStateSplitNode, AbstractBeginNode, FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, GuardingNode, AnchoringNode, IterableNodeType, StateSplit, NodeWithState, IterableNodeType, Simplifiable, LIRLowerable)
-,   ,   ,   ,   ,   ,   (defr LoopExitNode                              BeginStateSplitNode, AbstractBeginNode, FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, GuardingNode, AnchoringNode, IterableNodeType, StateSplit, NodeWithState, IterableNodeType, Simplifiable)
-,   ,   ,   ,   ,   ,   (defr StartNode                                 BeginStateSplitNode, AbstractBeginNode, FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, GuardingNode, AnchoringNode, IterableNodeType, StateSplit, NodeWithState, Single, MemoryCheckpoint, MemoryNode)
-,   ,   ,   ,   ,   ,   ,   (defr StubStartNode                         StartNode, BeginStateSplitNode, AbstractBeginNode, FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, GuardingNode, AnchoringNode, IterableNodeType, StateSplit, NodeWithState, Single, MemoryCheckpoint, MemoryNode)
-,   ,   ,   ,   (defr       AbstractStateSplit                          FixedWithNextNode, FixedNode, ValueNode, Node, StateSplit, NodeWithState)
-,   ,   ,   ,   ,   (defr   AbstractMemoryCheckpoint                    AbstractStateSplit, FixedWithNextNode, FixedNode, ValueNode, Node, StateSplit, NodeWithState, MemoryCheckpoint, MemoryNode)
-,   ,   ,   ,   ,   ,   (defr AccessMonitorNode                         AbstractMemoryCheckpoint, AbstractStateSplit, FixedWithNextNode, FixedNode, ValueNode, Node, StateSplit, NodeWithState, MemoryCheckpoint, MemoryNode, MemoryCheckpoint, MemoryNode, DeoptBefore, DeoptimizingNode, NodeWithState, DeoptAfter, StateSplit)
-,   ,   ,   ,   ,   ,   ,   (defr MonitorEnterNode                      AccessMonitorNode, AbstractMemoryCheckpoint, AbstractStateSplit, FixedWithNextNode, FixedNode, ValueNode, Node, StateSplit, NodeWithState, MemoryCheckpoint, MemoryNode, MemoryCheckpoint, MemoryNode, DeoptBefore, DeoptimizingNode, NodeWithState, DeoptAfter, StateSplit, Virtualizable, Lowerable, IterableNodeType, MonitorEnter, Single, MemoryCheckpoint, MemoryNode)
-,   ,   ,   ,   ,   ,   ,   (defr MonitorExitNode                       AccessMonitorNode, AbstractMemoryCheckpoint, AbstractStateSplit, FixedWithNextNode, FixedNode, ValueNode, Node, StateSplit, NodeWithState, MemoryCheckpoint, MemoryNode, MemoryCheckpoint, MemoryNode, DeoptBefore, DeoptimizingNode, NodeWithState, DeoptAfter, StateSplit, Virtualizable, Lowerable, IterableNodeType, MonitorExit, MemoryCheckpoint, MemoryNode, Single)
-,   ,   ,   ,   ,   ,   ,   (defr RawMonitorEnterNode                   AccessMonitorNode, AbstractMemoryCheckpoint, AbstractStateSplit, FixedWithNextNode, FixedNode, ValueNode, Node, StateSplit, NodeWithState, MemoryCheckpoint, MemoryNode, MemoryCheckpoint, MemoryNode, DeoptBefore, DeoptimizingNode, NodeWithState, DeoptAfter, StateSplit, Virtualizable, Lowerable, IterableNodeType, MonitorEnter, Single, MemoryCheckpoint, MemoryNode)
-,   ,   ,   ,   ,   ,   (defr AtomicReadAndAddNode                      AbstractMemoryCheckpoint, AbstractStateSplit, FixedWithNextNode, FixedNode, ValueNode, Node, StateSplit, NodeWithState, MemoryCheckpoint, MemoryNode, LIRLowerable, Single, MemoryCheckpoint, MemoryNode)
-,   ,   ,   ,   ,   ,   (defr AtomicReadAndWriteNode                    AbstractMemoryCheckpoint, AbstractStateSplit, FixedWithNextNode, FixedNode, ValueNode, Node, StateSplit, NodeWithState, MemoryCheckpoint, MemoryNode, Lowerable, Single, MemoryCheckpoint, MemoryNode)
-,   ,   ,   ,   ,   ,   (defr BeginLockScopeNode                        AbstractMemoryCheckpoint, AbstractStateSplit, FixedWithNextNode, FixedNode, ValueNode, Node, StateSplit, NodeWithState, MemoryCheckpoint, MemoryNode, LIRLowerable, MonitorEnter, Single, MemoryCheckpoint, MemoryNode)
-,   ,   ,   ,   ,   ,   (defr EndLockScopeNode                          AbstractMemoryCheckpoint, AbstractStateSplit, FixedWithNextNode, FixedNode, ValueNode, Node, StateSplit, NodeWithState, MemoryCheckpoint, MemoryNode, LIRLowerable, MonitorExit, MemoryCheckpoint, MemoryNode, Single)
-,   ,   ,   ,   ,   ,   (defr ForeignCallNode                           AbstractMemoryCheckpoint, AbstractStateSplit, FixedWithNextNode, FixedNode, ValueNode, Node, StateSplit, NodeWithState, MemoryCheckpoint, MemoryNode, LIRLowerable, DeoptDuring, DeoptimizingNode, NodeWithState, StateSplit, Multi, MemoryCheckpoint, MemoryNode)
-,   ,   ,   ,   ,   ,   (defr InvokeNode                                AbstractMemoryCheckpoint, AbstractStateSplit, FixedWithNextNode, FixedNode, ValueNode, Node, StateSplit, NodeWithState, MemoryCheckpoint, MemoryNode, StateSplit, NodeWithState, Lowerable, DeoptDuring, DeoptimizingNode, LIRLowerable, Single, MemoryCheckpoint, MemoryNode)
-,   ,   ,   ,   ,   ,   (defr UnsafeCompareAndSwapNode                  AbstractMemoryCheckpoint, AbstractStateSplit, FixedWithNextNode, FixedNode, ValueNode, Node, StateSplit, NodeWithState, MemoryCheckpoint, MemoryNode, Lowerable, Single, MemoryCheckpoint, MemoryNode)
-,   ,   ,   ,   (defr       AccessArrayNode                             FixedWithNextNode, FixedNode, ValueNode, Node)
-,   ,   ,   ,   ,   (defr   AccessIndexedNode                           AccessArrayNode, FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable)
-,   ,   ,   ,   ,   ,   (defr LoadIndexedNode                           AccessIndexedNode, AccessArrayNode, FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable, Virtualizable, Canonicalizable)
-,   ,   ,   ,   ,   ,   ,   (defr LoadIndexedPointerNode                LoadIndexedNode, AccessIndexedNode, AccessArrayNode, FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable, Virtualizable, Canonicalizable)
-,   ,   ,   ,   ,   ,   (defr StoreIndexedNode                          AccessIndexedNode, AccessArrayNode, FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable, StateSplit, NodeWithState, Lowerable, Virtualizable)
-,   ,   ,   ,   (defr       AccessFieldNode                             FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable)
-,   ,   ,   ,   ,   (defr   LoadFieldNode                               AccessFieldNode, FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable, Unary #_"<ValueNode>", Canonicalizable, Virtualizable)
-,   ,   ,   ,   ,   (defr   StoreFieldNode                              AccessFieldNode, FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable, StateSplit, NodeWithState, Virtualizable)
-,   ,   ,   ,   (defr       AcquiredCASLockNode                         FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable)
-,   ,   ,   ,   (defr       ArrayLengthNode                             FixedWithNextNode, FixedNode, ValueNode, Node, Unary #_"<ValueNode>", Canonicalizable, Lowerable, Virtualizable)
-,   ,   ,   ,   (defr       BindToRegisterNode                          FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable)
-,   ,   ,   ,   (defr       BlackholeNode                               FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable)
-,   ,   ,   ,   (defr       BoxNode                                     FixedWithNextNode, FixedNode, ValueNode, Node, VirtualizableAllocation, Virtualizable, Lowerable, Unary #_"<ValueNode>", Canonicalizable)
-,   ,   ,   ,   (defr       CommitAllocationNode                        FixedWithNextNode, FixedNode, ValueNode, Node, VirtualizableAllocation, Virtualizable, Lowerable, Simplifiable, Single, MemoryCheckpoint, MemoryNode)
-,   ,   ,   ,   (defr       ComputeObjectAddressNode                    FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable, ControlFlowAnchored)
-,   ,   ,   ,   (defr       ConditionAnchorNode                         FixedWithNextNode, FixedNode, ValueNode, Node, Unary #_"<Node>", Canonicalizable, Lowerable, GuardingNode)
-,   ,   ,   ,   (defr       ControlFlowAnchorNode                       FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, ControlFlowAnchored)
-,   ,   ,   ,   (defr       CurrentLockNode                             FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable)
-,   ,   ,   ,   (defr       DeoptimizingFixedWithNextNode               FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState)
-,   ,   ,   ,   ,   (defr   AbstractFixedGuardNode                      DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Simplifiable, GuardingNode, DeoptimizingGuard, StaticDeoptimizingNode)
-,   ,   ,   ,   ,   ,   (defr FixedGuardNode                            AbstractFixedGuardNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Simplifiable, GuardingNode, DeoptimizingGuard, StaticDeoptimizingNode, Lowerable, IterableNodeType)
-,   ,   ,   ,   ,   (defr   AbstractNewObjectNode                       DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Lowerable)
-,   ,   ,   ,   ,   ,   (defr AbstractNewArrayNode                      AbstractNewObjectNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Lowerable, ArrayLengthProvider)
-,   ,   ,   ,   ,   ,   ,   (defr DynamicNewArrayNode                   AbstractNewArrayNode, AbstractNewObjectNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Lowerable, ArrayLengthProvider, Canonicalizable)
-,   ,   ,   ,   ,   ,   ,   (defr NewArrayNode                          AbstractNewArrayNode, AbstractNewObjectNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Lowerable, ArrayLengthProvider, VirtualizableAllocation, Virtualizable, Simplifiable)
-,   ,   ,   ,   ,   ,   (defr DynamicNewInstanceNode                    AbstractNewObjectNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Lowerable, Canonicalizable)
-,   ,   ,   ,   ,   ,   (defr NewInstanceNode                           AbstractNewObjectNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Lowerable, VirtualizableAllocation, Virtualizable)
-,   ,   ,   ,   ,   (defr   FixedAccessNode                             DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Access, GuardedNode, HeapAccess, IterableNodeType)
-,   ,   ,   ,   ,   ,   (defr AbstractCompareAndSwapNode                FixedAccessNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Access, GuardedNode, HeapAccess, IterableNodeType, StateSplit, NodeWithState, LIRLowerableAccess, LIRLowerable, Access, GuardedNode, HeapAccess, Single, MemoryCheckpoint, MemoryNode)
-,   ,   ,   ,   ,   ,   ,   (defr LogicCompareAndSwapNode               AbstractCompareAndSwapNode, FixedAccessNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Access, GuardedNode, HeapAccess, IterableNodeType, StateSplit, NodeWithState, LIRLowerableAccess, LIRLowerable, Access, GuardedNode, HeapAccess, Single, MemoryCheckpoint, MemoryNode)
-,   ,   ,   ,   ,   ,   ,   (defr ValueCompareAndSwapNode               AbstractCompareAndSwapNode, FixedAccessNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Access, GuardedNode, HeapAccess, IterableNodeType, StateSplit, NodeWithState, LIRLowerableAccess, LIRLowerable, Access, GuardedNode, HeapAccess, Single, MemoryCheckpoint, MemoryNode)
-,   ,   ,   ,   ,   ,   (defr AbstractWriteNode                         FixedAccessNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Access, GuardedNode, HeapAccess, IterableNodeType, StateSplit, NodeWithState, Single, MemoryCheckpoint, MemoryNode, MemoryAccess, GuardingNode)
-,   ,   ,   ,   ,   ,   ,   (defr JavaWriteNode                         AbstractWriteNode, FixedAccessNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Access, GuardedNode, HeapAccess, IterableNodeType, StateSplit, NodeWithState, Single, MemoryCheckpoint, MemoryNode, MemoryAccess, GuardingNode, Lowerable, StateSplit, NodeWithState, MemoryAccess, Single, MemoryCheckpoint, MemoryNode)
-,   ,   ,   ,   ,   ,   ,   (defr WriteNode                             AbstractWriteNode, FixedAccessNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Access, GuardedNode, HeapAccess, IterableNodeType, StateSplit, NodeWithState, Single, MemoryCheckpoint, MemoryNode, MemoryAccess, GuardingNode, LIRLowerableAccess, LIRLowerable, Access, GuardedNode, HeapAccess, Canonicalizable)
-,   ,   ,   ,   ,   ,   (defr FloatableAccessNode                       FixedAccessNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Access, GuardedNode, HeapAccess, IterableNodeType)
-,   ,   ,   ,   ,   ,   ,   (defr ReadNode                              FloatableAccessNode, FixedAccessNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Access, GuardedNode, HeapAccess, IterableNodeType, LIRLowerableAccess, LIRLowerable, Access, GuardedNode, HeapAccess, Canonicalizable, Virtualizable, GuardingNode)
-,   ,   ,   ,   ,   ,   (defr JavaReadNode                              FixedAccessNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Access, GuardedNode, HeapAccess, IterableNodeType, Lowerable, GuardingNode, Canonicalizable)
-,   ,   ,   ,   ,   ,   (defr LoweredAtomicReadAndWriteNode             FixedAccessNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Access, GuardedNode, HeapAccess, IterableNodeType, StateSplit, NodeWithState, LIRLowerableAccess, LIRLowerable, Access, GuardedNode, HeapAccess, Single, MemoryCheckpoint, MemoryNode)
-,   ,   ,   ,   ,   (defr   FixedBinaryNode                             DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Binary #_"<ValueNode>", Canonicalizable)
-,   ,   ,   ,   ,   ,   (defr IntegerDivRemNode                         FixedBinaryNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Binary #_"<ValueNode>", Canonicalizable, Lowerable)
-,   ,   ,   ,   ,   ,   ,   (defr SignedDivNode                         IntegerDivRemNode, FixedBinaryNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Binary #_"<ValueNode>", Canonicalizable, Lowerable, LIRLowerable)
-,   ,   ,   ,   ,   ,   ,   (defr SignedRemNode                         IntegerDivRemNode, FixedBinaryNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Binary #_"<ValueNode>", Canonicalizable, Lowerable, LIRLowerable)
-,   ,   ,   ,   ,   ,   ,   (defr UnsignedDivNode                       IntegerDivRemNode, FixedBinaryNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Binary #_"<ValueNode>", Canonicalizable, Lowerable, LIRLowerable)
-,   ,   ,   ,   ,   ,   ,   (defr UnsignedRemNode                       IntegerDivRemNode, FixedBinaryNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Binary #_"<ValueNode>", Canonicalizable, Lowerable, LIRLowerable)
-,   ,   ,   ,   ,   (defr   NullCheckNode                               DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, LIRLowerable, GuardingNode)
-,   ,   ,   ,   ,   (defr   SafepointNode                               DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Lowerable, LIRLowerable)
-,   ,   ,   ,   (defr       ExplodeLoopNode                             FixedWithNextNode, FixedNode, ValueNode, Node)
-,   ,   ,   ,   (defr       FastAcquireBiasedLockNode                   FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable)
-,   ,   ,   ,   (defr       FinalFieldBarrierNode                       FixedWithNextNode, FixedNode, ValueNode, Node, Virtualizable, Lowerable)
-,   ,   ,   ,   (defr       FixedValueAnchorNode                        FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, ValueProxy, LimitedValueProxy, Proxy, GuardingNode)
-,   ,   ,   ,   ,   (defr   StateSplitProxyNode                         FixedValueAnchorNode, FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, ValueProxy, LimitedValueProxy, Proxy, GuardingNode, Canonicalizable, StateSplit, NodeWithState)
-,   ,   ,   ,   (defr       GetObjectAddressNode                        FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable)
-,   ,   ,   ,   (defr       LoadSnippetVarargParameterNode              FixedWithNextNode, FixedNode, ValueNode, Node, Canonicalizable)
-,   ,   ,   ,   (defr       MacroNode                                   FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable)
-,   ,   ,   ,   ,   (defr   MacroStateSplitNode                         MacroNode, FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable, StateSplit, NodeWithState, Single, MemoryCheckpoint, MemoryNode)
-,   ,   ,   ,   ,   ,   (defr MethodHandleNode                          MacroStateSplitNode, MacroNode, FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable, StateSplit, NodeWithState, Single, MemoryCheckpoint, MemoryNode, Simplifiable)
-,   ,   ,   ,   ,   ,   (defr ReflectionGetCallerClassNode              MacroStateSplitNode, MacroNode, FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable, StateSplit, NodeWithState, Single, MemoryCheckpoint, MemoryNode, Canonicalizable, Lowerable)
-,   ,   ,   ,   ,   ,   (defr VirtualizableInvokeMacroNode              MacroStateSplitNode, MacroNode, FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable, StateSplit, NodeWithState, Single, MemoryCheckpoint, MemoryNode, Virtualizable)
-,   ,   ,   ,   (defr       MembarNode                                  FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, Single, MemoryCheckpoint, MemoryNode)
-,   ,   ,   ,   (defr       MemoryAnchorNode                            FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, MemoryNode, Canonicalizable)
-,   ,   ,   ,   (defr       PrefetchAllocateNode                        FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable)
-,   ,   ,   ,   (defr       ReadRegisterNode                            FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable)
-,   ,   ,   ,   (defr       SnippetAnchorNode                           FixedWithNextNode, FixedNode, ValueNode, Node, Simplifiable, GuardingNode)
-,   ,   ,   ,   (defr       SpillRegistersNode                          FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable)
-,   ,   ,   ,   (defr       StoreHubNode                                FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable)
-,   ,   ,   ,   (defr       StubForeignCallNode                         FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, Multi, MemoryCheckpoint, MemoryNode)
-,   ,   ,   ,   (defr       UnboxNode                                   FixedWithNextNode, FixedNode, ValueNode, Node, Virtualizable, Lowerable, Unary #_"<ValueNode>", Canonicalizable)
-,   ,   ,   ,   (defr       UnsafeAccessNode                            FixedWithNextNode, FixedNode, ValueNode, Node, Canonicalizable)
-,   ,   ,   ,   ,   (defr   RawLoadNode                                 UnsafeAccessNode, FixedWithNextNode, FixedNode, ValueNode, Node, Canonicalizable, Lowerable, Virtualizable, Canonicalizable)
-,   ,   ,   ,   ,   (defr   RawStoreNode                                UnsafeAccessNode, FixedWithNextNode, FixedNode, ValueNode, Node, Canonicalizable, StateSplit, NodeWithState, Lowerable, Virtualizable, Single, MemoryCheckpoint, MemoryNode)
-,   ,   ,   ,   (defr       ValueAnchorNode                             FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, Simplifiable, Virtualizable, AnchoringNode, GuardingNode)
-,   ,   ,   ,   (defr       WordCastNode                                FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, Canonicalizable)
-,   ,   ,   ,   (defr       WriteBarrier                                FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable)
-,   ,   ,   ,   ,   (defr   ObjectWriteBarrier                          WriteBarrier, FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable)
-,   ,   ,   ,   ,   ,   (defr G1PostWriteBarrier                        ObjectWriteBarrier, WriteBarrier, FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable)
-,   ,   ,   ,   ,   ,   (defr G1PreWriteBarrier                         ObjectWriteBarrier, WriteBarrier, FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable, DeoptBefore, DeoptimizingNode, NodeWithState)
-,   ,   ,   ,   ,   ,   (defr G1ReferentFieldReadBarrier                ObjectWriteBarrier, WriteBarrier, FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable)
-,   ,   ,   ,   ,   ,   (defr SerialWriteBarrier                        ObjectWriteBarrier, WriteBarrier, FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable)
-,   ,   (defr               FloatingNode                                ValueNode, Node)
-,   ,   ,   (defr           AbstractLocalNode                           FloatingNode, ValueNode, Node)
-,   ,   ,   ,   (defr       ParameterNode                               AbstractLocalNode, FloatingNode, ValueNode, Node, IterableNodeType)
-,   ,   ,   (defr           AddressNode                                 FloatingNode, ValueNode, Node, IndirectCanonicalization)
-,   ,   ,   ,   (defr       AMD64AddressNode                            AddressNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, Simplifiable, LIRLowerable)
-,   ,   ,   ,   (defr       OffsetAddressNode                           AddressNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, Canonicalizable)
-,   ,   ,   (defr           AllocatedObjectNode                         FloatingNode, ValueNode, Node, Virtualizable, ArrayLengthProvider)
-,   ,   ,   (defr           BinaryNode                                  FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable)
-,   ,   ,   ,   (defr       BinaryArithmeticNode #_"<OP>"               BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable)
-,   ,   ,   ,   ,   (defr   AddNode                                     BinaryArithmeticNode #_"<Add>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable, Binary #_"<ValueNode>", BinaryCommutative, Canonicalizable)
-,   ,   ,   ,   ,   ,   (defr IntegerAddExactNode                       AddNode, BinaryArithmeticNode #_"<Add>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable, Binary #_"<ValueNode>", BinaryCommutative, Canonicalizable, IntegerExactArithmeticNode, Lowerable)
-,   ,   ,   ,   ,   (defr   AndNode                                     BinaryArithmeticNode #_"<And>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable, Binary #_"<ValueNode>", BinaryCommutative, Canonicalizable)
-,   ,   ,   ,   ,   (defr   IntegerMulHighNode                          BinaryArithmeticNode #_"<MulHigh>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable, Binary #_"<ValueNode>", BinaryCommutative, Canonicalizable)
-,   ,   ,   ,   ,   (defr   MulNode                                     BinaryArithmeticNode #_"<Mul>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable, Binary #_"<ValueNode>", BinaryCommutative, Canonicalizable)
-,   ,   ,   ,   ,   ,   (defr IntegerMulExactNode                       MulNode, BinaryArithmeticNode #_"<Mul>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable, Binary #_"<ValueNode>", BinaryCommutative, Canonicalizable, IntegerExactArithmeticNode, Lowerable)
-,   ,   ,   ,   ,   (defr   OrNode                                      BinaryArithmeticNode #_"<Or>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable, Binary #_"<ValueNode>", BinaryCommutative, Canonicalizable)
-,   ,   ,   ,   ,   (defr   RemNode                                     BinaryArithmeticNode #_"<Rem>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable, Lowerable)
-,   ,   ,   ,   ,   (defr   SubNode                                     BinaryArithmeticNode #_"<Sub>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable)
-,   ,   ,   ,   ,   ,   (defr IntegerSubExactNode                       SubNode, BinaryArithmeticNode #_"<Sub>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable, IntegerExactArithmeticNode, Lowerable)
-,   ,   ,   ,   ,   (defr   UnsignedMulHighNode                         BinaryArithmeticNode #_"<UMulHigh>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable, Binary #_"<ValueNode>", BinaryCommutative, Canonicalizable)
-,   ,   ,   ,   ,   (defr   XorNode                                     BinaryArithmeticNode #_"<Xor>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable, Binary #_"<ValueNode>", BinaryCommutative, Canonicalizable)
-,   ,   ,   ,   (defr       NormalizeCompareNode                        BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable, IterableNodeType)
-,   ,   ,   ,   (defr       ShiftNode #_"<OP>"                          BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable)
-,   ,   ,   ,   ,   (defr   LeftShiftNode                               ShiftNode #_"<Shl>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable)
-,   ,   ,   ,   ,   (defr   RightShiftNode                              ShiftNode #_"<Shr>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable)
-,   ,   ,   ,   ,   (defr   UnsignedRightShiftNode                      ShiftNode #_"<UShr>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable)
-,   ,   ,   (defr           BranchProbabilityNode                       FloatingNode, ValueNode, Node, Simplifiable, Lowerable)
-,   ,   ,   (defr           ClassGetHubNode                             FloatingNode, ValueNode, Node, Lowerable, Canonicalizable, ConvertNode)
-,   ,   ,   (defr           ConditionalNode                             FloatingNode, ValueNode, Node, Canonicalizable, LIRLowerable)
-,   ,   ,   (defr           ConstantNode                                FloatingNode, ValueNode, Node, LIRLowerable)
-,   ,   ,   (defr           FloatingAnchoredNode                        FloatingNode, ValueNode, Node)
-,   ,   ,   ,   (defr       GuardNode                                   FloatingAnchoredNode, FloatingNode, ValueNode, Node, Canonicalizable, GuardingNode, DeoptimizingGuard, StaticDeoptimizingNode, IterableNodeType)
-,   ,   ,   (defr           FloatingGuardedNode                         FloatingNode, ValueNode, Node, GuardedNode)
-,   ,   ,   ,   (defr       FloatingAccessNode                          FloatingGuardedNode, FloatingNode, ValueNode, Node, GuardedNode, Access, GuardedNode, HeapAccess, MemoryAccess)
-,   ,   ,   ,   ,   (defr   FloatingReadNode                            FloatingAccessNode, FloatingGuardedNode, FloatingNode, ValueNode, Node, GuardedNode, Access, GuardedNode, HeapAccess, MemoryAccess, LIRLowerableAccess, LIRLowerable, Access, GuardedNode, HeapAccess, Canonicalizable)
-,   ,   ,   ,   (defr       PiNode                                      FloatingGuardedNode, FloatingNode, ValueNode, Node, GuardedNode, LIRLowerable, Virtualizable, IterableNodeType, Canonicalizable, ValueProxy, LimitedValueProxy, Proxy)
-,   ,   ,   ,   ,   (defr   PiArrayNode                                 PiNode, FloatingGuardedNode, FloatingNode, ValueNode, Node, GuardedNode, LIRLowerable, Virtualizable, IterableNodeType, Canonicalizable, ValueProxy, LimitedValueProxy, Proxy, ArrayLengthProvider)
-,   ,   ,   ,   (defr       Placeholder                                 FloatingGuardedNode, FloatingNode, ValueNode, Node, GuardedNode)
-,   ,   ,   ,   ,   (defr   ArrayPlaceholder                            Placeholder, FloatingGuardedNode, FloatingNode, ValueNode, Node, GuardedNode)
-,   ,   ,   (defr           GetClassNode                                FloatingNode, ValueNode, Node, Lowerable, Canonicalizable, Virtualizable)
-,   ,   ,   (defr           HeapBaseNode                                FloatingNode, ValueNode, Node, LIRLowerable)
-,   ,   ,   (defr           HubGetClassNode                             FloatingNode, ValueNode, Node, Lowerable, Canonicalizable, ConvertNode)
-,   ,   ,   (defr           KlassLayoutHelperNode                       FloatingNode, ValueNode, Node, Canonicalizable, Lowerable)
-,   ,   ,   (defr           LoadHubNode                                 FloatingNode, ValueNode, Node, Lowerable, Canonicalizable, Virtualizable)
-,   ,   ,   (defr           LogicNode                                   FloatingNode, ValueNode, Node, IndirectCanonicalization)
-,   ,   ,   ,   (defr       BinaryOpLogicNode                           LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, LIRLowerable, Binary #_"<ValueNode>", Canonicalizable)
-,   ,   ,   ,   ,   (defr   ClassIsAssignableFromNode                   BinaryOpLogicNode, LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, LIRLowerable, Binary #_"<ValueNode>", Canonicalizable, Lowerable)
-,   ,   ,   ,   ,   (defr   CompareNode                                 BinaryOpLogicNode, LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, LIRLowerable, Binary #_"<ValueNode>", Canonicalizable)
-,   ,   ,   ,   ,   ,   (defr IntegerEqualsNode                         CompareNode, BinaryOpLogicNode, LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, LIRLowerable, Binary #_"<ValueNode>", Canonicalizable, Binary #_"<ValueNode>", BinaryCommutative, Canonicalizable)
-,   ,   ,   ,   ,   ,   (defr IntegerLowerThanNode                      CompareNode, BinaryOpLogicNode, LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, LIRLowerable, Binary #_"<ValueNode>", Canonicalizable)
-,   ,   ,   ,   ,   ,   ,   (defr IntegerBelowNode                      IntegerLowerThanNode, CompareNode, BinaryOpLogicNode, LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, LIRLowerable, Binary #_"<ValueNode>", Canonicalizable)
-,   ,   ,   ,   ,   ,   ,   (defr IntegerLessThanNode                   IntegerLowerThanNode, CompareNode, BinaryOpLogicNode, LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, LIRLowerable, Binary #_"<ValueNode>", Canonicalizable)
-,   ,   ,   ,   ,   ,   (defr PointerEqualsNode                         CompareNode, BinaryOpLogicNode, LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, LIRLowerable, Binary #_"<ValueNode>", Canonicalizable, Binary #_"<ValueNode>", BinaryCommutative, Canonicalizable)
-,   ,   ,   ,   ,   ,   ,   (defr ObjectEqualsNode                      PointerEqualsNode, CompareNode, BinaryOpLogicNode, LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, LIRLowerable, Binary #_"<ValueNode>", Canonicalizable, Binary #_"<ValueNode>", BinaryCommutative, Canonicalizable, Virtualizable)
-,   ,   ,   ,   ,   (defr   InstanceOfDynamicNode                       BinaryOpLogicNode, LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, LIRLowerable, Binary #_"<ValueNode>", Canonicalizable, Lowerable)
-,   ,   ,   ,   ,   (defr   IntegerTestNode                             BinaryOpLogicNode, LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, LIRLowerable, Binary #_"<ValueNode>", Canonicalizable, Binary #_"<ValueNode>", BinaryCommutative, Canonicalizable)
-,   ,   ,   ,   (defr       LogicConstantNode                           LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, LIRLowerable)
-,   ,   ,   ,   (defr       LogicNegationNode                           LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, Unary #_"<LogicNode>", Canonicalizable)
-,   ,   ,   ,   (defr       ShortCircuitOrNode                          LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, IterableNodeType, Binary #_"<LogicNode>", Canonicalizable)
-,   ,   ,   ,   (defr       UnaryOpLogicNode                            LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, LIRLowerable, Unary #_"<ValueNode>", Canonicalizable)
-,   ,   ,   ,   ,   (defr   InstanceOfNode                              UnaryOpLogicNode, LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, LIRLowerable, Unary #_"<ValueNode>", Canonicalizable, Lowerable, Virtualizable)
-,   ,   ,   ,   ,   (defr   IsNullNode                                  UnaryOpLogicNode, LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, LIRLowerable, Unary #_"<ValueNode>", Canonicalizable, LIRLowerable, Virtualizable)
-,   ,   ,   (defr           MemoryMapNode                               FloatingNode, ValueNode, Node, MemoryMap, MemoryNode, LIRLowerable)
-,   ,   ,   (defr           OpaqueNode                                  FloatingNode, ValueNode, Node, LIRLowerable)
-,   ,   ,   (defr           PhiNode                                     FloatingNode, ValueNode, Node, Canonicalizable)
-,   ,   ,   ,   (defr       GuardPhiNode                                PhiNode, FloatingNode, ValueNode, Node, Canonicalizable, GuardingNode)
-,   ,   ,   ,   (defr       MemoryPhiNode                               PhiNode, FloatingNode, ValueNode, Node, Canonicalizable, MemoryNode)
-,   ,   ,   ,   (defr       ValuePhiNode                                PhiNode, FloatingNode, ValueNode, Node, Canonicalizable, ArrayLengthProvider)
-,   ,   ,   (defr           PointerCastNode                             FloatingNode, ValueNode, Node, LIRLowerable)
-,   ,   ,   (defr           ProxyNode                                   FloatingNode, ValueNode, Node)
-,   ,   ,   ,   (defr       GuardProxyNode                              ProxyNode, FloatingNode, ValueNode, Node, GuardingNode, Proxy, LIRLowerable, Canonicalizable)
-,   ,   ,   ,   (defr       ValueProxyNode                              ProxyNode, FloatingNode, ValueNode, Node, Canonicalizable, Virtualizable, ValueProxy, LimitedValueProxy, Proxy)
-,   ,   ,   (defr           RandomSeedNode                              FloatingNode, ValueNode, Node, LIRLowerable)
-,   ,   ,   (defr           UnaryNode                                   FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", Canonicalizable)
-,   ,   ,   ,   (defr       BitCountNode                                UnaryNode, FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", Canonicalizable, LIRLowerable)
-,   ,   ,   ,   (defr       CompressionNode                             UnaryNode, FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", Canonicalizable, ConvertNode, LIRLowerable)
-,   ,   ,   ,   ,   (defr   HotSpotCompressionNode                      CompressionNode, UnaryNode, FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", Canonicalizable, ConvertNode, LIRLowerable)
-,   ,   ,   ,   (defr       CountLeadingZerosNode                       UnaryNode, FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", Canonicalizable, LIRLowerable)
-,   ,   ,   ,   (defr       CountTrailingZerosNode                      UnaryNode, FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", Canonicalizable, LIRLowerable)
-,   ,   ,   ,   (defr       IntegerConvertNode #_"<OP, REV>"            UnaryNode, FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, ConvertNode, LIRLowerable, StampInverter)
-,   ,   ,   ,   ,   (defr   NarrowNode                                  IntegerConvertNode #_"<Narrow, SignExtend>", UnaryNode, FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, ConvertNode, LIRLowerable, StampInverter)
-,   ,   ,   ,   ,   (defr   SignExtendNode                              IntegerConvertNode #_"<SignExtend, Narrow>", UnaryNode, FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, ConvertNode, LIRLowerable, StampInverter)
-,   ,   ,   ,   ,   (defr   ZeroExtendNode                              IntegerConvertNode #_"<ZeroExtend, Narrow>", UnaryNode, FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, ConvertNode, LIRLowerable, StampInverter)
-,   ,   ,   ,   (defr       UnaryArithmeticNode #_"<OP>"                UnaryNode, FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable)
-,   ,   ,   ,   ,   (defr   NegateNode                                  UnaryArithmeticNode #_"<Neg>", UnaryNode, FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable, StampInverter)
-,   ,   ,   ,   ,   (defr   NotNode                                     UnaryArithmeticNode #_"<Not>", UnaryNode, FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable, LIRLowerable, StampInverter)
-,   ,   ,   ,   (defr       UnpackEndianHalfNode                        UnaryNode, FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", Canonicalizable, Lowerable)
-,   ,   ,   (defr           VMConfigNode                                FloatingNode, ValueNode, Node, LIRLowerable, Canonicalizable)
-,   ,   ,   (defr           VarargsPlaceholderNode                      FloatingNode, ValueNode, Node, ArrayLengthProvider)
-,   ,   (defr               MonitorIdNode                               ValueNode, Node, IterableNodeType, LIRLowerable)
-,   ,   (defr               TwoSlotMarker                               ValueNode, Node)
-,   ,   (defr               VirtualObjectNode                           ValueNode, Node, LIRLowerable, IterableNodeType)
-,   ,   ,   (defr           VirtualArrayNode                            VirtualObjectNode, ValueNode, Node, LIRLowerable, IterableNodeType, ArrayLengthProvider)
-,   ,   ,   (defr           VirtualInstanceNode                         VirtualObjectNode, ValueNode, Node, LIRLowerable, IterableNodeType)
-,   ,   ,   ,   (defr       VirtualBoxingNode                           VirtualInstanceNode, VirtualObjectNode, ValueNode, Node, LIRLowerable, IterableNodeType)
-,   (defr                   VirtualState                                Node)
-,   ,   (defr               EscapeObjectState                           VirtualState, Node)
-,   ,   ,   (defr           MaterializedObjectState                     EscapeObjectState, VirtualState, Node)
-,   ,   ,   (defr           VirtualObjectState                          EscapeObjectState, VirtualState, Node)
-,   ,   (defr               FrameState                                  VirtualState, Node, IterableNodeType)
-
-(defr                       NodeIteratorClosure #_"<T>")
-,   (defr                   ComputeLoopFrequenciesClosure               NodeIteratorClosure #_"<Double>")
-,   (defr                   FloatingReadClosure                         NodeIteratorClosure #_"<MemoryMap0>")
-,   (defr                   FrameStateAssignmentClosure                 NodeIteratorClosure #_"<FrameState>")
-
-(defr                       NodeLoopInfo #_"<T>")
-(defr                       NodeMap #_"<T>"                             #_"EconomicMap" #_"<Node, T>")
-(defr                       NodeMark)
-(defr                       NodeStack)
-(defr                       NodeUsageIterable                           NodeIterable, #_"Iterable" #_"<Node>")
-(defr                       NodeUsageIterator                           #_"Iterator" #_"<Node>")
-
-(defr                       NodeWorkList                                #_"Iterable" #_"<Node>")
-,   (defr                   IterativeNodeWorkList                       NodeWorkList, #_"Iterable" #_"<Node>")
-,   (defr                   SingletonNodeWorkList                       NodeWorkList, #_"Iterable" #_"<Node>")
-
-(defr                       NullCheckOptimizer                          LIRPhase #_"<LIRPhaseContext>")
-(defr                       ObjectState)
-(defr                       OperandModeAnnotation)
-(defr                       OperandSize)
-(defr                       OptimisticOptimizations)
-(defr                       PhaseContext)
-
-(defr                       PhaseSuite                                  Phase)
-,   (defr                   HighTier                                    PhaseSuite, Phase)
-,   (defr                   IncrementalCanonicalizerPhase               PhaseSuite, Phase)
-,   (defr                   LowTier                                     PhaseSuite, Phase)
-,   (defr                   MidTier                                     PhaseSuite, Phase)
-
-(defr                       PhiInfoElement)
-(defr                       Plugins)
-(defr                       Position)
-(defr                       PositiveTypePredicate                       NodePredicate, #_"Predicate" #_"<Node>")
-(defr                       ProcessFrame)
-(defr                       PropagateDeoptimizeProbabilityPhase         Phase)
-(defr                       RMEOptimization)
-(defr                       Range)
-(defr                       RawConditionalEliminationVisitor            RecursiveVisitor #_"<Integer>")
-(defr                       RawEdgesIterator                            #_"Iterator" #_"<Node>")
-(defr                       ReadCacheEntry)
-(defr                       ReassociateInvariantPhase                   Phase)
-(defr                       RedundantMoveElimination                    LIRPhase #_"<LIRPhaseContext>")
-(defr                       RefCount)
-(defr                       RegisterBackupPair)
-(defr                       RegisterBindingLists)
-(defr                       RegisterMap)
-(defr                       RemoveValueProxyPhase                       Phase)
-(defr                       Replacements                                InlineInvokePlugin)
-(defr                       ResolvedJavaMethodBytecode                  Bytecode)
-(defr                       ResolvedJavaMethodBytecodeProvider          BytecodeProvider)
-(defr                       ReturnToCallerData)
-(defr                       SaveCalleeSaveRegisters                     LIRPhase #_"<LIRPhaseContext>")
-(defr                       SaveRbp)
-(defr                       Scale)
-(defr                       ScheduleInstance)
-(defr                       SchedulePhase                               Phase)
-(defr                       ScheduleResult)
-
-(defr                       ScheduledNodeIterator)
-,   (defr                   FixReadsClosure                             ScheduledNodeIterator)
-,   (defr                   LowerGuards                                 ScheduledNodeIterator)
-
-(defr                       Scope)
-(defr                       SimpleStackSlotAllocator                    LIRPhase #_"<LIRPhaseContext>")
-
-(defr                       SnippetInfo)
-,   (defr                   EagerSnippetInfo                            SnippetInfo)
-,   (defr                   LazySnippetInfo                             SnippetInfo)
-
-(defr                       SnippetTemplate)
-(defr                       StackInterval)
-(defr                       StackMoveOptimizationPhase                  LIRPhase #_"<LIRPhaseContext>")
-(defr                       StampElement)
-
-(defr                       Stamp)
-,   (defr                   AbstractPointerStamp                        Stamp)
-,   ,   (defr               AbstractObjectStamp                         AbstractPointerStamp, Stamp)
-,   ,   ,   (defr           NarrowOopStamp                              AbstractObjectStamp, AbstractPointerStamp, Stamp)
-,   ,   ,   ,   (defr       HotSpotNarrowOopStamp                       NarrowOopStamp, AbstractObjectStamp, AbstractPointerStamp, Stamp)
-,   ,   ,   (defr           ObjectStamp                                 AbstractObjectStamp, AbstractPointerStamp, Stamp)
-,   ,   ,   ,   (defr       PlaceholderStamp                            ObjectStamp, AbstractObjectStamp, AbstractPointerStamp, Stamp)
-,   ,   (defr               KlassPointerStamp                           AbstractPointerStamp, Stamp)
-,   ,   (defr               RawPointerStamp                             AbstractPointerStamp, Stamp)
-,   (defr                   ArithmeticStamp                             Stamp)
-,   ,   (defr               PrimitiveStamp                              ArithmeticStamp, Stamp)
-,   ,   ,   (defr           IntegerStamp                                PrimitiveStamp, ArithmeticStamp, Stamp)
-,   (defr                   IllegalStamp                                Stamp)
-,   (defr                   VoidStamp                                   Stamp)
-
-(defr                       StampPair)
-
-(defr                       Structure)
-,   (defr                   IfStructure                                 Structure)
-
-(defr                       Stub)
-,   (defr                   ForeignCallStub                             Stub)
-,   (defr                   SnippetStub                                 Stub, Snippets)
-,   ,   (defr               NewArrayStub                                SnippetStub, Stub, Snippets)
-,   ,   (defr               NewInstanceStub                             SnippetStub, Stub, Snippets)
-
-(defr                       SuccessorInfo)
-(defr                       Suites)
-
-(defr                       SwitchStrategy)
-,   (defr                   PrimitiveStrategy                           SwitchStrategy)
-,   ,   (defr               BinaryStrategy                              PrimitiveStrategy, SwitchStrategy)
-,   ,   (defr               RangesStrategy                              PrimitiveStrategy, SwitchStrategy)
-,   (defr                   SequentialStrategy                          SwitchStrategy)
-
-(defr                       TautologyPredicate                          NodePredicate, #_"Predicate" #_"<Node>")
-(defr                       Tool                                        SimplifierTool, CanonicalizerTool)
-(defr                       TypeReference)
-(defr                       TypedGraphNodeIterator #_"<T extends IterableNodeType>" #_"Iterator" #_"<T>")
-(defr                       UnsignedLong)
-(defr                       UseEntry)
-(defr                       UsePosList)
-(defr                       UseTrappingNullChecksPhase                  Phase)
-
-,   (defr                   CompositeValue                              #_"Value")
-,   ,   (defr               AMD64AddressValue                           CompositeValue, #_"Value")
-,   (defr                   ConstantValue                               #_"Value")
-
-,   (defr                   LIRKind                                     #_"ValueKind" #_"<LIRKind>")
-
-(defr                       Varargs)
-(defr                       VariableMap)
-(defr                       VirtualizerTool                             CanonicalizerTool)
-(defr                       Word)
-(defr                       WordOperationPlugin                         NodePlugin, TypePlugin, InlineInvokePlugin)
-(defr                       WorkListEntry)
-(defr                       WriteBarrierAdditionPhase                   Phase)
-
-;;;
- ; This tool can be used to query the current state (normal/virtualized/re-materialized) of values
- ; and to describe the actions that would be taken for this state.
- ;
- ; See also Virtualizable.
- ;;
-(defp VirtualizerTool
-    ;;;
-     ; This method should be used to query the maximum size of virtualized objects before attempting virtualization.
-     ;
-     ; @return the maximum number of entries for virtualized objects
-     ;;
-    (#_"int" VirtualizerTool'''getMaximumEntryCount-1 [#_"VirtualizerTool" this])
-    ;;;
-     ; Introduces a new virtual object to the current state.
-     ;
-     ; @param virtualObject the new virtual object.
-     ; @param entryState the initial state of the virtual object's fields.
-     ; @param locks the initial locking depths.
-     ; @param ensureVirtualized true if this object needs to stay virtual
-     ;;
-    (#_"void" VirtualizerTool'''createVirtualObject-5 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject, #_"ValueNode[]" entryState, #_"List<MonitorIdNode>" locks, #_"boolean" ensureVirtualized])
-    ;;;
-     ; Returns a VirtualObjectNode if the given value is aliased with a virtual object that is still
-     ; virtual, the materialized value of the given value is aliased with a virtual object that was
-     ; materialized, the replacement if the give value was replaced, otherwise the given value.
-     ;
-     ; Replacements via #replaceWithValue(ValueNode) are not immediately committed. This method can be
-     ; used to determine if a value was replaced by another one (e.g. a load field by the loaded value).
-     ;;
-    (#_"ValueNode" VirtualizerTool'''getAlias-2 [#_"VirtualizerTool" this, #_"ValueNode" value])
-    ;;;
-     ; Sets the entry (field or array element) with the given index in the virtualized object.
-     ;
-     ; @param index the index to be set.
-     ; @param value the new value for the given index.
-     ; @param accessKind the kind of the store which might be different than VirtualObjectNode#entryKind(int)
-     ; @return true if the operation was permitted
-     ;;
-    (#_"boolean" VirtualizerTool'''setVirtualEntry-6 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject, #_"int" index, #_"ValueNode" value, #_"JavaKind" accessKind, #_"long" offset])
-    (#_"void" VirtualizerTool'''setVirtualEntry-4 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject, #_"int" index, #_"ValueNode" value])
-    (#_"ValueNode" VirtualizerTool'''getEntry-3 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject, #_"int" index])
-    (#_"void" VirtualizerTool'''addLock-3 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject, #_"MonitorIdNode" monitorId])
-    (#_"MonitorIdNode" VirtualizerTool'''removeLock-2 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject])
-    #_unused
-    (#_"boolean" VirtualizerTool'''getEnsureVirtualized-2 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject])
-    ;;;
-     ; Deletes the current node and replaces it with the given virtualized object.
-     ;
-     ; @param virtualObject the virtualized object that should replace the current node.
-     ;;
-    (#_"void" VirtualizerTool'''replaceWithVirtual-2 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject])
-    ;;;
-     ; Deletes the current node and replaces it with the given value.
-     ;
-     ; @param replacement the value that should replace the current node.
-     ;;
-    (#_"void" VirtualizerTool'''replaceWithValue-2 [#_"VirtualizerTool" this, #_"ValueNode" replacement])
-    ;;;
-     ; Deletes the current node.
-     ;;
-    (#_"void" VirtualizerTool'''delete-1 [#_"VirtualizerTool" this])
-    ;;;
-     ; Replaces an input of the current node.
-     ;
-     ; @param oldInput the old input value.
-     ; @param replacement the new input value.
-     ;;
-    #_unused
-    (#_"void" VirtualizerTool'''replaceFirstInput-3 [#_"VirtualizerTool" this, #_"Node" oldInput, #_"Node" replacement])
-    ;;;
-     ; Adds the given node to the graph.This action will only be performed when, and if, the changes are committed.
-     ;
-     ; @param node the node to add.
-     ;;
-    (#_"void" VirtualizerTool'''addNode-2 [#_"VirtualizerTool" this, #_"ValueNode" node])
-    ;;;
-     ; This method performs either #replaceWithValue(ValueNode) or #replaceWithVirtual(VirtualObjectNode),
-     ; depending on the given value.
-     ;
-     ; @param value the replacement value
-     ;;
-    (#_"void" VirtualizerTool'''replaceWith-2 [#_"VirtualizerTool" this, #_"ValueNode" value])
-    ;;;
-     ; If state is virtual, materialization is performed for the given state.
-     ;
-     ; @return true if materialization happened, false if not
-     ;;
-    #_unused
-    (#_"boolean" VirtualizerTool'''ensureMaterialized-2 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject])
-)
+(defp NullCheckNode)
+(defp NullCheckOp)
+(defp NullCheckOptimizer)
+(defp ObjectEqualsNode)
+(defp ObjectEqualsOp)
+(defp ObjectStamp)
+(defp ObjectState)
+(defp ObjectWriteBarrier)
+(defp OffsetAddressNode)
+(defp OpaqueNode)
+(defp OperandModeAnnotation)
 
 ;;;
  ; The x86 operand sizes.
@@ -6165,119 +6227,188 @@ ZeroExtendNode'new-4
     (#_"void" OperandSize'''emitImmediate-3 [#_"OperandSize" this, #_"Assembler" asm, #_"int" imm])
 )
 
-;;;
- ; Opcode with operand order of either RM or MR for 2 address forms.
- ;;
-(defp AMD64RROp
-    (#_"void" AMD64RROp'''emit-5 [#_"AMD64RROp" this, #_"Assembler" asm, #_"OperandSize" size, #_"Register" dst, #_"Register" src])
+(defp OptimisticOptimizations)
+(defp OptimizingLinearScanWalker)
+(defp Or)
+(defp OrNode)
+(defp PEMergeProcessor)
+(defp PEReadEliminationBlockState)
+(defp PEReadEliminationClosure)
+(defp PEReadEliminationMergeProcessor)
+(defp ParameterNode)
+
+(defp ParameterPlugin
+    (#_"FloatingNode" ParameterPlugin'''interceptParameter-4 [#_"ParameterPlugin" this, #_"GraphBuilder" b, #_"int" index, #_"Stamp" stamp])
+)
+
+(defp PartialEscapeBlockState #_"<T implements PartialEscapeBlockState<T>>"
+    (#_"void" PartialEscapeBlockState'''objectMaterialized-4 [#_"PartialEscapeBlockState<T implements PartialEscapeBlockState<T>>" this, #_"VirtualObjectNode" virtual, #_"AllocatedObjectNode" representation, #_"List<ValueNode>" values])
+)
+
+(defp PartialEscapeClosure)
+(defp PartialEscapePhase)
+
+; @FunctionalInterface
+(defp Patches
+    (#_"void" Patches'''registerPatch-3 [#_"Patches" this, #_"int" position, #_"VMConstant" constant])
 )
 
 ;;;
- ; An abstract class that provides the state and methods common to Bytecodes#LOOKUPSWITCH and
- ; Bytecodes#TABLESWITCH instructions.
+ ; Base for all compiler phases. Subclasses should be stateless. There will be one global instance
+ ; for each phase that is shared for all compilations. VM-, target- and compilation-specific data
+ ; can be passed with a context object.
  ;;
-(defp BytecodeSwitch
-    ;;;
-     ; Gets the key at {@code i}'th switch target index.
-     ;
-     ; @param i the switch target index
-     ; @return the key at {@code i}'th switch target index
-     ;;
-    (#_"int" BytecodeSwitch'''keyAt-2 [#_"BytecodeSwitch" this, #_"int" i])
-    ;;;
-     ; Gets the offset from the start of the switch instruction for the {@code i}'th switch target.
-     ;
-     ; @param i the switch target index
-     ; @return the offset to the {@code i}'th switch target
-     ;;
-    (#_"int" BytecodeSwitch'''offsetAt-2 [#_"BytecodeSwitch" this, #_"int" i])
-    ;;;
-     ; Gets the number of switch targets.
-     ;
-     ; @return the number of switch targets
-     ;;
-    (#_"int" BytecodeSwitch'''numberOfCases-1 [#_"BytecodeSwitch" this])
-    ;;;
-     ; Gets the total size in bytes of the switch instruction.
-     ;
-     ; @return the total size in bytes of the switch instruction
-     ;;
-    (#_"int" BytecodeSwitch'''size-1 [#_"BytecodeSwitch" this])
+(defp Phase
+    (#_"Graph" Phase'''run-3 [#_"Phase" this, #_"Graph" graph, #_"PhaseContext" context])
 )
 
-(defp Data
-    (#_"void" Data'''emit-3 [#_"Data" this, #_"ByteBuffer" buffer, #_"Patches" patches])
-)
+(defp PhaseContext)
+(defp PhaseSuite)
+(defp PhiInfoElement)
 
 ;;;
- ; Scans the fields in a class hierarchy.
+ ; PhiNodes represent the merging of edges at a control flow merges (AbstractMergeNode or LoopBeginNode).
+ ; For a AbstractMergeNode, the order of the values corresponds to the order of the ends. For LoopBeginNodes,
+ ; the first value corresponds to the loop's predecessor, while the rest of the values correspond to the LoopEndNodes.
  ;;
-(defp FieldsScanner
-    (#_"void" FieldsScanner'''scanField-3 [#_"FieldsScanner" this, #_"Field" field, #_"long" offset])
+(defp PhiNode
 )
 
-;;;
- ; Type describing all pointers to Java objects.
- ;;
-(defp AbstractObjectStamp
-    (#_"AbstractObjectStamp" AbstractObjectStamp'''copyWith-5 [#_"AbstractObjectStamp" this, #_"ResolvedJavaType" newType, #_"boolean" newExactType, #_"boolean" newNonNull, #_"boolean" newAlwaysNull])
-)
-
-;;;
- ; Abstract base class of all pointer types.
- ;;
-(defp AbstractPointerStamp
-    (#_"AbstractPointerStamp" AbstractPointerStamp'''copyWith-3 [#_"AbstractPointerStamp" this, #_"boolean" newNonNull, #_"boolean" newAlwaysNull])
-)
-
-;;;
- ; Describes a unary arithmetic operation.
- ;;
-(defp UnaryOp #_"<T>"
+(defp PhiValueVisitor
     ;;;
-     ; Apply the operation to a Constant.
+     ; @param phiIn the incoming value at the merge block
+     ; @param phiOut the outgoing value from the predecessor block
      ;;
-    (#_"Constant" UnaryOp'''foldConstant-2 [#_"UnaryOp<T>" this, #_"Constant" value])
-    ;;;
-     ; Apply the operation to a Stamp.
-     ;;
-    (#_"Stamp" UnaryOp'''foldStamp-2 [#_"UnaryOp<T>" this, #_"Stamp" stamp])
+    (#_"void" PhiValueVisitor'''visit-3 [#_"PhiValueVisitor" this, #_"Value" phiIn, #_"Value" phiOut])
 )
 
+(defp PiArrayNode)
+(defp PiNode)
+
 ;;;
- ; Describes a binary arithmetic operation.
+ ; A placeholder node in a snippet that will be replaced with a PiNode when the snippet is instantiated.
  ;;
-(defp BinaryOp #_"<T>"
+(defp Placeholder
     ;;;
-     ; Applies this operation to {@code a} and {@code b}.
+     ; Replaces this node with a PiNode during snippet instantiation.
      ;
-     ; @return the result of applying this operation or nil if applying it would raise
-     ;         an exception (e.g. ArithmeticException for dividing by 0)
+     ; @param snippetReplaceeStamp the stamp of the node being replace by the snippet
      ;;
-    (#_"Constant" BinaryOp'''foldConstant-3 [#_"BinaryOp<T>" this, #_"Constant" a, #_"Constant" b])
-    ;;;
-     ; Apply the operation to two Stamps.
-     ;;
-    (#_"Stamp" BinaryOp'''foldStamp-3 [#_"BinaryOp<T>" this, #_"Stamp" a, #_"Stamp" b])
-    ;;;
-     ; Check whether a Constant is a neutral element for this operation. A neutral
-     ; element is any element {@code n} where {@code a . n == a} for all a.
-     ;
-     ; @param n the Constant that should be tested
-     ; @return true iff for all {@code a}: {@code a . n == a}
-     ;;
-    (#_"boolean" BinaryOp'''isNeutral-2 [#_"BinaryOp<T>" this, #_"Constant" n])
-    ;;;
-     ; Check whether this operation has a zero {@code z == a . a} for each a. Examples of
-     ; operations having such an element are subtraction and exclusive-or. Note that this
-     ; may be different from the numbers tested by #isNeutral.
-     ;
-     ; @param stamp a Stamp
-     ; @return a unique {@code z} such that {@code z == a . a} for each {@code a} in
-     ;         {@code stamp} if it exists, otherwise nil
-     ;;
-    (#_"Constant" BinaryOp'''getZero-2 [#_"BinaryOp<T>" this, #_"Stamp" stamp])
+    (#_"void" Placeholder'''makeReplacement-2 [#_"Placeholder" this, #_"Stamp" snippetReplaceeStamp])
 )
+
+(defp PlaceholderStamp)
+(defp Plugins)
+(defp PointerCastNode)
+(defp PointerCompressionOp)
+(defp PointerEqualsNode)
+(defp PointerEqualsOp)
+(defp Position)
+(defp PositiveTypePredicate)
+(defp PostAllocationStage)
+(defp PreAllocationStage)
+(defp PrefetchAllocateNode)
+(defp Primitive)
+(defp PrimitiveStamp)
+(defp PrimitiveStrategy)
+(defp ProcessFrame)
+(defp PropagateDeoptimizeProbabilityPhase)
+
+;;;
+ ; This interface marks nodes whose result is the same as one of their inputs. Such nodes are used
+ ; to add type information, to introduce scheduling restrictions, etc.
+ ;
+ ; For some algorithms it is necessary or advantageous to see through these proxies.
+ ;;
+(defp Proxy
+    (#_"Node" Proxy'''getOriginalNode-1 [#_"Proxy" this])
+)
+
+(defp ProxyNode)
+(defp RMEOptimization)
+(defp RMIOp)
+(defp RMOp)
+(defp RandomSeedNode)
+(defp Range)
+(defp RangesStrategy)
+(defp RawConditionalEliminationVisitor)
+(defp RawData)
+(defp RawEdgesIterator)
+(defp RawLoadNode)
+(defp RawMonitorEnterNode)
+(defp RawPointerStamp)
+(defp RawStoreNode)
+(defp ReadCacheEntry)
+(defp ReadEliminationBlockState)
+(defp ReadEliminationClosure)
+(defp ReadEliminationMergeProcessor)
+(defp ReadNode)
+(defp ReadRegisterNode)
+(defp ReadTimestampCounter)
+(defp ReassociateInvariantPhase)
+
+(defp RecursiveVisitor #_"<V>"
+    (#_"V" RecursiveVisitor'''enter-2 [#_"RecursiveVisitor<V>" this, #_"Block" b])
+    (#_"void" RecursiveVisitor'''exit-3 [#_"RecursiveVisitor<V>" this, #_"Block" b, #_"V" value])
+)
+
+(defp RedundantMoveElimination)
+(defp RefCount)
+(defp ReflectionGetCallerClassNode)
+(defp RegisterBackupPair)
+(defp RegisterBindingLists)
+(defp RegisterMap)
+(defp Rem)
+(defp RemNode)
+(defp RemoveValueProxyPhase)
+(defp Replacements)
+(defp ResolvedJavaMethodBytecode)
+(defp ResolvedJavaMethodBytecodeProvider)
+(defp ResolvedMethodHandleCallTargetNode)
+(defp ReturnNode)
+(defp ReturnOp)
+(defp ReturnToCallerData)
+(defp RightShiftNode)
+(defp SSALinearScan)
+(defp SSALinearScanEliminateSpillMovePhase)
+(defp SSALinearScanLifetimeAnalysisPhase)
+(defp SSALinearScanResolveDataFlowPhase)
+(defp SSAMoveResolver)
+(defp SafepointNode)
+(defp SafepointOp)
+(defp SaveCalleeSaveRegisters)
+(defp SaveRbp)
+(defp Scale)
+(defp ScheduleInstance)
+(defp SchedulePhase)
+(defp ScheduleResult)
+
+;;;
+ ; Iterates over a list of nodes, which usually comes from ScheduleResult#getBlockToNodesMap().
+ ;
+ ; While iterating, it is possible to {@link #insert(FixedNode, FixedWithNextNode) insert} and
+ ; {@link #replaceCurrent(FixedWithNextNode) replace} nodes.
+ ;;
+(defp ScheduledNodeIterator
+    (#_"void" ScheduledNodeIterator'''processNode-2 [#_"ScheduledNodeIterator" this, #_"Node" node])
+)
+
+(defp Scope)
+(defp SequentialStrategy)
+(defp SerialWriteBarrier)
+(defp SerializableBinaryFunction #_"<T>" #_(§ extends Function #_"<ArithmeticOpTable, BinaryOp<T>>")
+)
+
+(defp SerializableIntegerConvertFunction #_"<T>" #_(§ extends Function #_"<ArithmeticOpTable, IntegerConvertOp<T>>")
+)
+
+(defp SerializableShiftFunction #_"<T>" #_(§ extends Function #_"<ArithmeticOpTable, ShiftOp<T>>")
+)
+
+(defp SerializableUnaryFunction #_"<T>" #_(§ extends Function #_"<ArithmeticOpTable, UnaryOp<T>>")
+)
+
+(defp ShiftNode)
 
 ;;;
  ; Describes a shift operation. The right argument of a shift operation always has kind JavaKind#Int.
@@ -6297,14 +6428,101 @@ ZeroExtendNode'new-4
     (#_"int" ShiftOp'''getShiftAmountMask-2 [#_"ShiftOp<OP>" this, #_"Stamp" stamp])
 )
 
-(defp IntegerConvertOp #_"<T>"
-    (#_"Constant" IntegerConvertOp'''foldConstant-4 [#_"IntegerConvertOp<T>" this, #_"int" inputBits, #_"int" resultBits, #_"Constant" value])
-    (#_"Stamp" IntegerConvertOp'''foldStamp-4 [#_"IntegerConvertOp<T>" this, #_"int" inputBits, #_"int" resultBits, #_"Stamp" stamp])
+(defp Shl)
+(defp ShortCircuitOrNode)
+(defp Shr)
+
+;;;
+ ; Models the state of a graph in terms of {@link StateSplit#hasSideEffect() side effects}
+ ; that are control flow predecessors of the current point in a graph.
+ ;;
+(defp SideEffectsState
     ;;;
-     ; Computes the stamp of the input for the given output stamp.
+     ; Determines if the current program point is preceded by one or more side effects.
      ;;
-    (#_"Stamp" IntegerConvertOp'''invertStamp-4 [#_"IntegerConvertOp<T>" this, #_"int" inputBits, #_"int" resultBits, #_"Stamp" outStamp])
+    (#_"boolean" SideEffectsState'''isAfterSideEffect-1 [#_"SideEffectsState" this])
+    ;;;
+     ; Gets the side effects preceding the current program point.
+     ;;
+    (#_"Iterable<StateSplit>" SideEffectsState'''sideEffects-1 [#_"SideEffectsState" this])
+    ;;;
+     ; Records a side effect for the current program point.
+     ;;
+    (#_"void" SideEffectsState'''addSideEffect-2 [#_"SideEffectsState" this, #_"StateSplit" sideEffect])
 )
+
+(defp SignExtend)
+(defp SignExtendNode)
+(defp SignedDivNode)
+(defp SignedRemNode)
+(defp SimpleStackSlotAllocator)
+(defp SimpleVirtualStackSlot)
+
+;;;
+ ; This interface allows nodes to perform more complicated simplifications, in contrast to
+ ; Canonicalizable, which supports only replacing the current node.
+ ;
+ ; Implementors of this interface need to be aware that they need to call
+ ; SimplifierTool#addToWorkList(Node) for each node that might be influenced
+ ; (in terms of simplification and canonicalization) by the actions performed in simplify.
+ ;;
+(defp Simplifiable
+    (#_"void" Simplifiable'''simplify-2 [#_"Simplifiable" this, #_"SimplifierTool" tool])
+)
+
+(defp SimplifierTool
+    (#_"void" SimplifierTool'''deleteBranch-2 [#_"SimplifierTool" this, #_"Node" branch])
+    ;;;
+     ; Adds a node to the worklist independent of whether it has already been on the worklist.
+     ;;
+    (#_"void" SimplifierTool'''addToWorkList-2n [#_"SimplifierTool" this, #_"Node" node])
+    (#_"void" SimplifierTool'''addToWorkList-2i [#_"SimplifierTool" this, #_"Iterable<Node>" nodes])
+    (#_"void" SimplifierTool'''removeIfUnused-2 [#_"SimplifierTool" this, #_"Node" node])
+)
+
+(defp Single
+    ;;;
+     ; This method is used to determine which memory location is killed by this node. Returning
+     ; the special value LocationIdentity#any() will kill all memory locations.
+     ;
+     ; @return the identity of the location killed by this node
+     ;;
+    (#_"LocationIdentity" Single'''getLocationIdentity-1 [#_"Single" this])
+)
+
+(defp SingletonNodeWorkList)
+(defp SmallLocalLiveness)
+(defp SnippetAnchorNode)
+
+;;;
+ ; Holds the ResolvedJavaMethod of the snippet, together with some information about the
+ ; method that needs to be computed only once. The SnippetInfo should be created once per
+ ; snippet and then cached.
+ ;;
+(defp SnippetInfo
+    (#_"Lazy" SnippetInfo'''lazy-1 [#_"SnippetInfo" this])
+)
+
+;;;
+ ; Base class for a stub defined by a snippet.
+ ;;
+(defp SnippetStub
+    (#_"Object[]" SnippetStub'''makeConstArgs-1 [#_"SnippetStub" this])
+)
+
+(defp SnippetTemplate)
+
+;;;
+ ; Marker interface for a class that defines one or more Snippets.
+ ;;
+(defp Snippets
+)
+
+(defp SpillRegistersNode)
+(defp SpillRegistersOp)
+(defp StackInterval)
+(defp StackLeaOp)
+(defp StackMoveOptimizationPhase)
 
 ;;;
  ; A stamp is the basis for a type system.
@@ -6399,56 +6617,52 @@ ZeroExtendNode'new-4
     (#_"Stamp" Stamp'''improveWith-2 [#_"Stamp" this, #_"Stamp" other])
 )
 
-;;;
- ; Describes Node fields representing the set of inputs for the node or the set of the node's successors.
- ;;
-(defp Edges
-    (#_"void" Edges'''update-4 [#_"Edges" this, #_"Node" node, #_"Node" oldValue, #_"Node" newValue])
-)
+(defp StampElement)
 
-;;;
- ; This class is the base class for all nodes. It represents a node that can be inserted in a Graph.
- ;
- ; Once a node has been added to a graph, it has a graph-unique #id(). Edges in the subclasses are
- ; represented with annotated fields. There are two kind of edges: Input and Successor.
- ; If a field, of a type compatible with Node, annotated with either Input and Successor is not nil,
- ; then there is an edge from this node to the node this field points to.
- ;;
-(defp Node
-    (#_"void" Node'''replaceAtUsages-4 [#_"Node" this, #_"Node" other, #_"Predicate<Node>" filter, #_"Node" toBeDeleted])
-    (#_"void" Node'''replaceAtUsages-3 [#_"Node" this, #_"InputType" type, #_"Node" other])
-    (#_"void" Node'''afterClone-2 [#_"Node" this, #_"Node" other])
-    (#_"Iterable<Node>" Node'''cfgPredecessors-1 [#_"Node" this])
+(defp StampInverter
     ;;;
-     ; Returns an iterator that will provide all control-flow successors of this node. Normally this
-     ; will be the contents of all fields annotated with Successor, but some node classes (like EndNode)
-     ; may return different nodes.
+     ; Computes the stamp of the input for the given output stamp.
      ;;
-    (#_"Iterable<Node>" Node'''cfgSuccessors-1 [#_"Node" this])
-)
-
-(defp EdgeVisitor
-    (#_"Node" EdgeVisitor'''apply-3 [#_"EdgeVisitor" this, #_"Node" source, #_"Node" target])
-)
-
-(defp NodeList
-    (#_"void" NodeList'''update-3 [#_"NodeList" this, #_"Node" oldNode, #_"Node" newNode])
-)
-
-(defp NodeWorkList
-    (#_"void" NodeWorkList'''add-2 [#_"NodeWorkList" this, #_"Node" node])
-)
-
-(defp CanonicalizableLocation
-    (#_"ValueNode" CanonicalizableLocation'''canonicalizeRead-5 [#_"CanonicalizableLocation" this, #_"ValueNode" read, #_"AddressNode" location, #_"ValueNode" object, #_"CanonicalizerTool" tool])
+    (#_"Stamp" StampInverter'''invertStamp-2 [#_"StampInverter" this, #_"Stamp" outStamp])
 )
 
 ;;;
- ; Base class for a stub defined by a snippet.
+ ; Marker interface for a LIR operation that is a conditional jump.
  ;;
-(defp SnippetStub
-    (#_"Object[]" SnippetStub'''makeConstArgs-1 [#_"SnippetStub" this])
+(defp StandardBranchOp
 )
+
+(defp StartNode)
+
+;;;
+ ; A state split is a node that may have a frame state associated with it.
+ ;;
+(defp StateSplit
+    ;;;
+     ; Sets the FrameState corresponding to the state of the JVM after execution of this node.
+     ;;
+    (#_"void" StateSplit'''setStateAfter-2 [#_"StateSplit" this, #_"FrameState" x])
+    ;;;
+     ; Determines if this node has a side-effect. Such nodes cannot be safely re-executed because they modify
+     ; state which is visible to other threads or modify state beyond what is captured in FrameState nodes.
+     ;;
+    (#_"boolean" StateSplit'''hasSideEffect-1 [#_"StateSplit" this])
+)
+
+(defp StateSplitProxyNode)
+
+(defp StaticDeoptimizingNode
+    (#_"void" StaticDeoptimizingNode'''setReason-2 [#_"StaticDeoptimizingNode" this, #_"DeoptimizationReason" reason])
+    (#_"void" StaticDeoptimizingNode'''setAction-2 [#_"StaticDeoptimizingNode" this, #_"DeoptimizationAction" action])
+    (#_"GuardPriority" StaticDeoptimizingNode'''computePriority-1 [#_"StaticDeoptimizingNode" this])
+)
+
+(defp StoreFieldNode)
+(defp StoreHubNode)
+(defp StoreIndexedNode)
+(defp StrategySwitchOp)
+(defp StringRef)
+(defp Structure)
 
 ;;;
  ; Base class for implementing some low level code providing the out-of-line slow path for a snippet
@@ -6461,425 +6675,49 @@ ZeroExtendNode'new-4
     (#_"Graph" Stub'''getStubGraph-1 [#_"Stub" this])
 )
 
-;;;
- ; Encapsulates the liveness calculation, so that subclasses for locals <= 64 and locals > 64 can be implemented.
- ;;
-(defp LocalLiveness
-    ;;;
-     ; Returns whether the local is live at the beginning of the given block.
-     ;;
-    (#_"boolean" LocalLiveness'''localIsLiveIn-3 [#_"LocalLiveness" this, #_"BciBlock" block, #_"int" local])
-    ;;;
-     ; Returns whether the local is set in the given loop.
-     ;;
-    (#_"boolean" LocalLiveness'''localIsChangedInLoop-3 [#_"LocalLiveness" this, #_"int" loopId, #_"int" local])
-    ;;;
-     ; Returns whether the local is live at the end of the given block.
-     ;;
-    (#_"boolean" LocalLiveness'''localIsLiveOut-3 [#_"LocalLiveness" this, #_"BciBlock" block, #_"int" local])
-    ;;;
-     ; Returns the number of live locals at the end of the given block.
-     ;;
-    (#_"int" LocalLiveness'''liveOutCardinality-2 [#_"LocalLiveness" this, #_"int" blockID])
-    ;;;
-     ; Adds all locals the are in the liveIn of the successor to the liveOut of the block.
-     ;;
-    (#_"void" LocalLiveness'''propagateLiveness-3 [#_"LocalLiveness" this, #_"int" blockID, #_"int" successorID])
-    ;;;
-     ; Calculates a new liveIn for the given block from liveOut, liveKill and liveGen.
-     ;;
-    (#_"void" LocalLiveness'''updateLiveness-2 [#_"LocalLiveness" this, #_"int" blockID])
-    ;;;
-     ; Adds the local to liveGen if it wasn't already killed in this block.
-     ;;
-    (#_"void" LocalLiveness'''loadOne-3 [#_"LocalLiveness" this, #_"int" blockID, #_"int" local])
-    ;;;
-     ; Add this local to liveKill if it wasn't already generated in this block.
-     ;;
-    (#_"void" LocalLiveness'''storeOne-3 [#_"LocalLiveness" this, #_"int" blockID, #_"int" local])
-)
+(defp StubForeignCallNode)
+(defp StubStartNode)
+(defp Sub)
+(defp SubNode)
+(defp SuccessorEdges)
+(defp SuccessorInfo)
+(defp Suites)
 
-(defp IntervalWalker
+(defp SwitchClosure
     ;;;
-     ; Processes the {@code currentInterval} interval in an attempt to allocate a physical register
-     ; to it and thus allow it to be moved to a list of {@linkplain #activeLists active} intervals.
+     ; Generates a conditional or unconditional jump. The jump will be unconditional if
+     ; condition is nil. If defaultTarget is true, then the jump will go the default.
      ;
-     ; @return true if a register was allocated to the {@code currentInterval} interval
+     ; @param index Index of the value and the jump target (only used if defaultTarget == false)
+     ; @param condition The condition on which to jump (can be nil)
+     ; @param defaultTarget true if the jump should go to the default target, false if index should be used
      ;;
-    (#_"boolean" IntervalWalker'''activateCurrent-2 [#_"IntervalWalker" this, #_"Interval" currentInterval])
-    (#_"void" IntervalWalker'''walk-1 [#_"IntervalWalker" this])
-)
-
-;;;
- ; An implementation of the linear scan register allocator algorithm described in
- ; <a href="http://doi.acm.org/10.1145/1064979.1064998">"Optimized Interval Splitting in a Linear Scan Register Allocator"</a>
- ; by Christian Wimmer and Hanspeter Moessenboeck.
- ;;
-(defp LinearScan
-    (#_"MoveResolver" LinearScan'''createMoveResolver-1 [#_"LinearScan" this])
-    (#_"void" LinearScan'''initBlockData-2 [#_"LinearScan" this, #_"Block" block])
-    (#_"Interval" LinearScan'''getOrCreateInterval-2 [#_"LinearScan" this, #_"AllocatableValue" operand])
-    (#_"void" LinearScan'''beforeSpillMoveElimination-1 [#_"LinearScan" this])
-    (#_"LSLifetimeAnalysisPhase" LinearScan'''createLifetimeAnalysisPhase-1 [#_"LinearScan" this])
-    (#_"LSResolveDataFlowPhase" LinearScan'''createResolveDataFlowPhase-1 [#_"LinearScan" this])
-    (#_"LSEliminateSpillMovePhase" LinearScan'''createSpillMoveEliminationPhase-1 [#_"LinearScan" this])
-)
-
-(defp IntervalPredicate
-    (#_"boolean" IntervalPredicate'''apply-2 [#_"IntervalPredicate" this, #_"Interval" i])
-)
-
-(defp LSAllocationPhase
-    (#_"void" LSAllocationPhase'''run-2 [#_"LSAllocationPhase" this, #_"LIRGenerationResult" lirGenRes])
-)
-
-(defp LSEliminateSpillMovePhase
+    (#_"void" SwitchClosure'''conditionalJump-4 [#_"SwitchClosure" this, #_"int" index, #_"Condition" condition, #_"boolean" defaultTarget])
     ;;;
-     ; @return the index of the first instruction that is of interest for #eliminateSpillMoves
-     ;;
-    (#_"int" LSEliminateSpillMovePhase'''firstInstructionOfInterest-1 [#_"LSEliminateSpillMovePhase" this])
-    ;;;
-     ; @param block The block {@code move} is located in.
-     ; @param move Spill move.
-     ;;
-    (#_"boolean" LSEliminateSpillMovePhase'''canEliminateSpillMove-3 [#_"LSEliminateSpillMovePhase" this, #_"Block" block, #_"MoveOp" move])
-)
-
-(defp LSLifetimeAnalysisPhase
-    (#_"void" LSLifetimeAnalysisPhase'''addRegisterHint-6 [#_"LSLifetimeAnalysisPhase" this, #_"LIRInstruction" op, #_"Value" targetValue, #_"OperandMode" mode, #_"EnumSet<OperandFlag>" flags, #_"boolean" hintAtDef])
-    ;;;
-     ; Determines the register priority for an instruction's output/result operand.
-     ;;
-    (#_"RegisterPriority" LSLifetimeAnalysisPhase'''registerPriorityOfOutputOperand-2 [#_"LSLifetimeAnalysisPhase" this, #_"LIRInstruction" op])
-    (#_"void" LSLifetimeAnalysisPhase'''buildIntervals-1 [#_"LSLifetimeAnalysisPhase" this])
-)
-
-;;;
- ; Phase 6: resolve data flow
- ;
- ; Insert moves at edges between blocks if intervals have been split.
- ;;
-(defp LSResolveDataFlowPhase
-    (#_"void" LSResolveDataFlowPhase'''resolveCollectMappings-5 [#_"LSResolveDataFlowPhase" this, #_"Block" fromBlock, #_"Block" toBlock, #_"Block" midBlock, #_"MoveResolver" moveResolver])
-)
-
-(defp LinearScanWalker
-    ;;;
-     ; This is called for every interval that is assigned to a stack slot.
-     ;;
-    (#_"void" LinearScanWalker'''handleSpillSlot-2 [#_"LinearScanWalker" this, #_"Interval" interval])
-)
-
-(defp MoveResolver
-    (#_"void" MoveResolver'''setValueBlocked-3 [#_"MoveResolver" this, #_"Value" location, #_"int" direction])
-    (#_"int" MoveResolver'''valueBlocked-2 [#_"MoveResolver" this, #_"Value" location])
-    (#_"boolean" MoveResolver'''mightBeBlocked-2 [#_"MoveResolver" this, #_"Value" location])
-    ;;;
-     ; @param fromOpr {@link Interval#operand operand} of the {@code from} interval
-     ; @param toOpr {@link Interval#operand operand} of the {@code to} interval
-     ; @param fromLocation {@link Interval#location() location} of the {@code to} interval
-     ; @param toLocation {@link Interval#location() location} of the {@code to} interval
-     ;;
-    (#_"LIRInstruction" MoveResolver'''createMove-5 [#_"MoveResolver" this, #_"AllocatableValue" fromOpr, #_"AllocatableValue" toOpr, #_"AllocatableValue" fromLocation, #_"AllocatableValue" toLocation])
-    (#_"void" MoveResolver'''breakCycle-2 [#_"MoveResolver" this, #_"int" spillCandidate])
-)
-
-(defp AMD64SwitchClosure
-    (#_"void" AMD64SwitchClosure'''emitComparison-2 [#_"AMD64SwitchClosure" this, #_"Constant" c])
-)
-
-;;;
- ; Base class to represent values that need to be stored in more than one register. This is mainly
- ; intended to support addresses and not general arbitrary nesting of composite values. Because of
- ; the possibility of sharing of CompositeValues they should be immutable.
- ;;
-(defp CompositeValue
-    ;;;
-     ; Invoke {@code proc} on each Value element of this CompositeValue.
-     ; If {@code proc} replaces any value then a new CompositeValue should be returned.
+     ; Generates a conditional jump to the target with the specified index. The fall through
+     ; should go to the default target.
      ;
-     ; @return the original CompositeValue or a copy with any modified values
+     ; @param index Index of the value and the jump target
+     ; @param condition The condition on which to jump
+     ; @param canFallThrough true if this is the last instruction in the switch statement, to allow for fall-through optimizations
      ;;
-    (#_"CompositeValue" CompositeValue'''forEachComponent-4 [#_"CompositeValue" this, #_"LIRInstruction" op, #_"OperandMode" mode, #_"InstructionValueProcedure" proc])
-    (#_"void" CompositeValue'''visitEachComponent-4 [#_"CompositeValue" this, #_"LIRInstruction" op, #_"OperandMode" mode, #_"InstructionValueConsumer" proc])
-)
-
-;;;
- ; This class is used to build the stack frame layout for a compiled method. A StackSlot is used to index slots of the
- ; frame relative to the stack pointer. The frame size is only fixed after register allocation when all spill slots have
- ; been allocated. Both the outgoing argument area and the spill are can grow until then. Therefore, outgoing arguments
- ; are indexed from the stack pointer, while spill slots are indexed from the beginning of the frame (and the total frame
- ; size has to be added to get the actual offset from the stack pointer).
- ;;
-(defp FrameMap
+    (#_"void" SwitchClosure'''conditionalJumpOrDefault-4 [#_"SwitchClosure" this, #_"int" index, #_"Condition" condition, #_"boolean" canFallThrough])
     ;;;
-     ; Gets the total frame size of the compiled frame, including the size of the
-     ; {@link Architecture#getReturnAddressSize() return address slot}.
+     ; Create a new label and generate a conditional jump to it.
      ;
-     ; @return the total size of the frame (in bytes)
+     ; @param index Index of the value and the jump target
+     ; @param condition The condition on which to jump
+     ; @return a new Label
      ;;
-    (#_"int" FrameMap'''totalFrameSize-1 [#_"FrameMap" this])
+    (#_"Label" SwitchClosure'''conditionalJump-3 [#_"SwitchClosure" this, #_"int" index, #_"Condition" condition])
     ;;;
-     ; Gets the current size of this frame. This is the size that would be returned by
-     ; #frameSize() if #finish() were called now.
+     ; Binds a label returned by #conditionalJump(int, Condition).
      ;;
-    (#_"int" FrameMap'''currentFrameSize-1 [#_"FrameMap" this])
+    (#_"void" SwitchClosure'''bind-2 [#_"SwitchClosure" this, #_"Label" label])
     ;;;
-     ; Aligns the given frame size to the stack alignment size and return the aligned size.
-     ;
-     ; @param size the initial frame size to be aligned
-     ; @return the aligned frame size
+     ; Return true iff the target of both indexes is the same.
      ;;
-    #_unused
-    (#_"int" FrameMap'''alignFrameSize-2 [#_"FrameMap" this, #_"int" size])
-)
-
-;;;
- ; A FrameMapBuilder is used to collect all information necessary to {@linkplain #buildFrameMap create} a FrameMap.
- ;;
-(defp FrameMapBuilder
-    ;;;
-     ; Reserves a spill slot in the frame of the method being compiled. The returned slot is aligned
-     ; on its natural alignment, i.e. an 8-byte spill slot is aligned at an 8-byte boundary, unless
-     ; overridden by a subclass.
-     ;
-     ; @param kind The kind of the spill slot to be reserved.
-     ; @return a spill slot denoting the reserved memory area
-     ;;
-    (#_"VirtualStackSlot" FrameMapBuilder'''allocateSpillSlot-2 [#_"FrameMapBuilder" this, #_"ValueKind" kind])
-    ;;;
-     ; Informs the frame map that the compiled code calls a particular method, which may need stack
-     ; space for outgoing arguments.
-     ;
-     ; @param cc The calling convention for the called method.
-     ;;
-    (#_"void" FrameMapBuilder'''callsMethod-2 [#_"FrameMapBuilder" this, #_"CallingConvention" cc])
-    ;;;
-     ; Creates a FrameMap based on the information collected by this FrameMapBuilder.
-     ;;
-    (#_"FrameMap" FrameMapBuilder'''buildFrameMap-2 [#_"FrameMapBuilder" this, #_"LIRGenerationResult" result])
-)
-
-;;;
- ; A FrameMapBuilder that allows access to the underlying FrameMap.
- ;;
-(defp FrameMapBuilderTool
-    ;;;
-     ; Returns the number of VirtualStackSlots created by this FrameMapBuilder.
-     ; Can be used as an upper bound for an array indexed by VirtualStackSlot#getId().
-     ;;
-    (#_"int" FrameMapBuilderTool'''getNumberOfStackSlots-1 [#_"FrameMapBuilderTool" this])
-    (#_"List<VirtualStackSlot>" FrameMapBuilderTool'''getStackSlots-1 [#_"FrameMapBuilderTool" this])
-    (#_"FrameMap" FrameMapBuilderTool'''getFrameMap-1 [#_"FrameMapBuilderTool" this])
-)
-
-;;;
- ; The base class for an LIRInstruction.
- ;;
-(defp LIRInstruction
-    (#_"void" LIRInstruction'''emitCode-2 [#_"LIRInstruction" this, #_"Assembler" asm])
-    (#_"boolean" LIRInstruction'''destroysCallerSavedRegisters-1 [#_"LIRInstruction" this])
-)
-
-(defp LIRFieldsScanner
-    (#_"EnumSet<OperandFlag>" LIRFieldsScanner'''getFlags-2 [#_"LIRFieldsScanner" this, #_"Field" field])
-)
-
-;;;
- ; This class encapsulates different strategies on how to generate code for switch instructions.
- ;
- ; The #getBestStrategy(double[], JavaConstant[], LabelRef[]) method can be used to get strategy
- ; with the smallest average effort (average number of comparisons until a decision is reached).
- ; The strategy returned by this method will have its averageEffort set, while a strategy
- ; constructed directly will not.
- ;;
-(defp SwitchStrategy
-    (#_"double" SwitchStrategy'''getAverageEffort-1 [#_"SwitchStrategy" this])
-    (#_"void" SwitchStrategy'''run-2 [#_"SwitchStrategy" this, #_"SwitchClosure" closure])
-)
-
-;;;
- ; Backends can subclass this abstract class and generate code for switch strategies by implementing
- ; the #conditionalJump(int, Condition, Label) method.
- ;;
-(defp BaseSwitchClosure
-    ;;;
-     ; This method generates code for a comparison between the actual value and the constant at
-     ; the given index and a condition jump to target.
-     ;;
-    (#_"void" BaseSwitchClosure'''conditionalJump-4 [#_"BaseSwitchClosure" this, #_"int" index, #_"Condition" condition, #_"Label" target])
-)
-
-;;;
- ; This class describes a value node that is an induction variable in a counted loop.
- ;;
-(defp InductionVariable
-    (#_"Graph" InductionVariable'''graph-1 [#_"InductionVariable" this])
-    (#_"Direction" InductionVariable'''direction-1 [#_"InductionVariable" this])
-    ;;;
-     ; Returns the value node that is described by this induction variable.
-     ;;
-    (#_"ValueNode" InductionVariable'''valueNode-1 [#_"InductionVariable" this])
-    ;;;
-     ; Returns the node that gives the initial value of this induction variable.
-     ;;
-    (#_"ValueNode" InductionVariable'''initNode-1 [#_"InductionVariable" this])
-    ;;;
-     ; Returns the stride of the induction variable. The stride is the value that is added to
-     ; the induction variable at each iteration.
-     ;;
-    (#_"ValueNode" InductionVariable'''strideNode-1 [#_"InductionVariable" this])
-    (#_"boolean" InductionVariable'''isConstantInit-1 [#_"InductionVariable" this])
-    (#_"boolean" InductionVariable'''isConstantStride-1 [#_"InductionVariable" this])
-    (#_"long" InductionVariable'''constantInit-1 [#_"InductionVariable" this])
-    (#_"long" InductionVariable'''constantStride-1 [#_"InductionVariable" this])
-    (#_"boolean" InductionVariable'''isConstantExtremum-1 [#_"InductionVariable" this])
-    (#_"long" InductionVariable'''constantExtremum-1 [#_"InductionVariable" this])
-    ;;;
-     ; Returns the exit value of the induction variable. The exit value is the value of the
-     ; induction variable at the loop exit.
-     ;;
-    (#_"ValueNode" InductionVariable'''exitValueNode-1 [#_"InductionVariable" this])
-    ;;;
-     ; Deletes any nodes created within the scope of this object that have no usages.
-     ;;
-    (#_"void" InductionVariable'''deleteUnusedNodes-1 [#_"InductionVariable" this])
-)
-
-(defp LoopFragment
-    (#_"LoopFragment" LoopFragment'''duplicate-1 [#_"LoopFragment" this])
-    (#_"void" LoopFragment'''insertBefore-2 [#_"LoopFragment" this, #_"LoopEx" l])
-    ;;;
-     ; Gets the corresponding value in this fragment. Should be called on duplicate fragments
-     ; with a node from the original fragment as argument.
-     ;
-     ; @param b original value
-     ; @return corresponding value in the peel
-     ;;
-    (#_"ValueNode" LoopFragment'''prim-2 [#_"LoopFragment" this, #_"ValueNode" b])
-    (#_"NodeBitMap" LoopFragment'''nodes-1 [#_"LoopFragment" this])
-    (#_"DuplicationReplacement" LoopFragment'''getDuplicationReplacement-1 [#_"LoopFragment" this])
-    (#_"void" LoopFragment'''beforeDuplication-1 [#_"LoopFragment" this])
-    (#_"void" LoopFragment'''finishDuplication-1 [#_"LoopFragment" this])
-)
-
-(defp AbstractBeginNode
-    (#_"void" AbstractBeginNode'''prepareDelete-2 [#_"AbstractBeginNode" this, #_"FixedNode" evacuateFrom])
-    (#_"NodeIterable" AbstractBeginNode'''anchored-1 [#_"AbstractBeginNode" this])
-)
-
-;;;
- ; This node represents an unconditional explicit request for immediate deoptimization.
- ;
- ; After this node, execution will continue using a fallback execution engine (such as an
- ; interpreter) at the position described by the {@link #stateBefore() deoptimization state}.
- ;;
-(defp AbstractDeoptimizeNode
-    (#_"ValueNode" AbstractDeoptimizeNode'''getActionAndReason-1 [#_"AbstractDeoptimizeNode" this])
-    (#_"ValueNode" AbstractDeoptimizeNode'''getSpeculation-1 [#_"AbstractDeoptimizeNode" this])
-)
-
-(defp AbstractEndNode
-    (#_"AbstractMergeNode" AbstractEndNode'''merge-1 [#_"AbstractEndNode" this])
-)
-
-;;;
- ; Denotes the merging of multiple control-flow paths.
- ;;
-(defp AbstractMergeNode
-    (#_"void" AbstractMergeNode'''deleteEnd-2 [#_"AbstractMergeNode" this, #_"AbstractEndNode" end])
-    (#_"int" AbstractMergeNode'''phiPredecessorCount-1 [#_"AbstractMergeNode" this])
-    (#_"int" AbstractMergeNode'''phiPredecessorIndex-2 [#_"AbstractMergeNode" this, #_"AbstractEndNode" pred])
-    (#_"AbstractEndNode" AbstractMergeNode'''phiPredecessorAt-2 [#_"AbstractMergeNode" this, #_"int" index])
-)
-
-(defp BinaryOpLogicNode
-    (#_"Stamp" BinaryOpLogicNode'''getSucceedingStampForX-4 [#_"BinaryOpLogicNode" this, #_"boolean" negated?, #_"Stamp" xStamp, #_"Stamp" yStamp])
-    (#_"Stamp" BinaryOpLogicNode'''getSucceedingStampForY-4 [#_"BinaryOpLogicNode" this, #_"boolean" negated?, #_"Stamp" xStamp, #_"Stamp" yStamp])
-    (#_"TriState" BinaryOpLogicNode'''tryFold-3 [#_"BinaryOpLogicNode" this, #_"Stamp" xStamp, #_"Stamp" yStamp])
-)
-
-(defp BinaryArithmeticNode #_"<OP>"
-    (#_"boolean" BinaryArithmeticNode'''isAssociative-1 [#_"BinaryArithmeticNode<OP>" this])
-)
-
-;;;
- ; The BinaryNode class is the base of arithmetic and logic operations with two inputs.
- ;;
-(defp BinaryNode
-    ;;;
-     ; Compute an improved for this node using the passed in stamps. The stamps must be compatible
-     ; with the current values of #x and #y. This code is used to provide the default implementation
-     ; of #inferStamp() and may be used by external optimizations.
-     ;;
-    (#_"Stamp" BinaryNode'''foldStamp-3 [#_"BinaryNode" this, #_"Stamp" stampX, #_"Stamp" stampY])
-)
-
-(defp CompareOp
-    (#_"LogicNode" CompareOp'''canonical-5 [#_"CompareOp" this, #_"Integer" smallestCompareWidth, #_"CanonicalCondition" condition, #_"ValueNode" forX, #_"ValueNode" forY])
-    (#_"LogicNode" CompareOp'''canonicalizeSymmetricConstant-6 [#_"CompareOp" this, #_"Integer" smallestCompareWidth, #_"CanonicalCondition" condition, #_"Constant" constant, #_"ValueNode" node, #_"boolean" mirrored?])
-    (#_"LogicNode" CompareOp'''optimizeNormalizeCompare-5 [#_"CompareOp" this, #_"Integer" smallestCompareWidth, #_"Constant" constant, #_"NormalizeCompareNode" normalizeNode, #_"boolean" mirrored?])
-    (#_"LogicNode" CompareOp'''duplicateModified-3 [#_"CompareOp" this, #_"ValueNode" newW, #_"ValueNode" newY])
-)
-
-(defp LowerOp
-    (#_"long" LowerOp'''upperBound-2 [#_"LowerOp" this, #_"IntegerStamp" stamp])
-    (#_"long" LowerOp'''lowerBound-2 [#_"LowerOp" this, #_"IntegerStamp" stamp])
-    (#_"int" LowerOp'''compare-3 [#_"LowerOp" this, #_"long" a, #_"long" b])
-    (#_"long" LowerOp'''min-3 [#_"LowerOp" this, #_"long" a, #_"long" b])
-    (#_"long" LowerOp'''max-3 [#_"LowerOp" this, #_"long" a, #_"long" b])
-    (#_"long" LowerOp'''cast-3 [#_"LowerOp" this, #_"long" a, #_"int" bits])
-    (#_"long" LowerOp'''minValue-2 [#_"LowerOp" this, #_"int" bits])
-    (#_"long" LowerOp'''maxValue-2 [#_"LowerOp" this, #_"int" bits])
-    (#_"IntegerStamp" LowerOp'''forInteger-4 [#_"LowerOp" this, #_"int" bits, #_"long" min, #_"long" max])
-    (#_"CanonicalCondition" LowerOp'''getCondition-1 [#_"LowerOp" this])
-    (#_"IntegerLowerThanNode" LowerOp'''createNode-3 [#_"LowerOp" this, #_"ValueNode" x, #_"ValueNode" y])
-    (#_"LogicNode" LowerOp'''create-3 [#_"LowerOp" this, #_"ValueNode" x, #_"ValueNode" y])
-    (#_"LogicNode" LowerOp'''findSynonym-3 [#_"LowerOp" this, #_"ValueNode" forX, #_"ValueNode" forY])
-)
-
-;;;
- ; The UnaryNode class is the base of arithmetic and bit logic operations with exactly one input.
- ;;
-(defp UnaryNode
-    ;;;
-     ; Compute an improved for this node using the passed in stamp. The stamp must be compatible
-     ; with the current value of #value. This code is used to provide the default implementation
-     ; of #inferStamp() and may be used by external optimizations.
-     ;;
-    (#_"Stamp" UnaryNode'''foldStamp-2 [#_"UnaryNode" this, #_"Stamp" stamp])
-)
-
-;;;
- ; Compress or uncompress an oop or metaspace pointer.
- ;;
-(defp CompressionNode
-    (#_"Constant" CompressionNode'''compress-2 [#_"CompressionNode" this, #_"Constant" constant])
-    (#_"Constant" CompressionNode'''uncompress-2 [#_"CompressionNode" this, #_"Constant" constant])
-    (#_"Stamp" CompressionNode'''mkStamp-2 [#_"CompressionNode" this, #_"Stamp" input])
-)
-
-;;;
- ; The ControlSplitNode is a base class for all instructions that split the control flow (i.e. have more than one successor).
- ;;
-(defp ControlSplitNode
-    (#_"double" ControlSplitNode'''probability-2 [#_"ControlSplitNode" this, #_"AbstractBeginNode" successor])
-    ;;;
-     ; Attempts to set the probability for the given successor to the passed value (which has to be
-     ; in the range of 0.0 and 1.0). Returns whether setting the probability was successful.
-     ;;
-    (#_"boolean" ControlSplitNode'''setProbability-3 [#_"ControlSplitNode" this, #_"AbstractBeginNode" successor, #_"double" value])
-    ;;;
-     ; Primary successor of the control split. Data dependencies on the node have to be scheduled in
-     ; the primary successor. Returns nil if data dependencies are not expected.
-     ;
-     ; @return the primary successor
-     ;;
-    (#_"AbstractBeginNode" ControlSplitNode'''getPrimarySuccessor-1 [#_"ControlSplitNode" this])
-    ;;;
-     ; Returns the number of successors.
-     ;;
-    (#_"int" ControlSplitNode'''getSuccessorCount-1 [#_"ControlSplitNode" this])
+    (#_"boolean" SwitchClosure'''isSameTarget-3 [#_"SwitchClosure" this, #_"int" index1, #_"int" index2])
 )
 
 ;;;
@@ -6898,99 +6736,162 @@ ZeroExtendNode'new-4
     (#_"Stamp" SwitchNode'''getValueStampForSuccessor-2 [#_"SwitchNode" this, #_"AbstractBeginNode" beginNode])
 )
 
-(defp UnsafeAccessNode
-    (#_"ValueNode" UnsafeAccessNode'''cloneAsFieldAccess-2 [#_"UnsafeAccessNode" this, #_"ResolvedJavaField" field])
-    (#_"ValueNode" UnsafeAccessNode'''cloneAsArrayAccess-3 [#_"UnsafeAccessNode" this, #_"ValueNode" location, #_"LocationIdentity" identity])
+;;;
+ ; This class encapsulates different strategies on how to generate code for switch instructions.
+ ;
+ ; The #getBestStrategy(double[], JavaConstant[], LabelRef[]) method can be used to get strategy
+ ; with the smallest average effort (average number of comparisons until a decision is reached).
+ ; The strategy returned by this method will have its averageEffort set, while a strategy
+ ; constructed directly will not.
+ ;;
+(defp SwitchStrategy
+    (#_"double" SwitchStrategy'''getAverageEffort-1 [#_"SwitchStrategy" this])
+    (#_"void" SwitchStrategy'''run-2 [#_"SwitchStrategy" this, #_"SwitchClosure" closure])
+)
+
+(defp TableSwitchOp)
+(defp TautologyPredicate)
+(defp Tool)
+(defp TwoOp)
+(defp TwoSlotMarker)
+
+;;;
+ ; Plugin for overriding types in the bytecode parser. This can be used to modify the standard
+ ; behavior of Java type resolution, e.g. to introduce trusted interface types with special semantics.
+ ;;
+(defp TypePlugin
+    ;;;
+     ; Intercept the type of arguments or return values.
+     ;;
+    (#_"Stamp" TypePlugin'''interceptType-4 [#_"TypePlugin" this, #_"GraphBuilder" b, #_"JavaType" declaredType, #_"boolean" never-nil?])
+)
+
+(defp TypeReference)
+(defp TypedGraphNodeIterator)
+(defp UMulHigh)
+(defp UShr)
+
+;;;
+ ; This sub-interface of Canonicalizable is intended for nodes that have exactly one input. It has an
+ ; additional #canonical(CanonicalizerTool, Node) method that looks at the given input instead of the current
+ ; input of the node - which can be used to ask "what if this input is changed to this node" - questions.
+ ;
+ ; @param <T> the common supertype of all inputs of this node
+ ;;
+(defp Unary #_"<T implements Node>"
+    ;;;
+     ; Similar to Canonicalizable#canonical(CanonicalizerTool), except that implementations should act as if the
+     ; current input of the node was the given one, i.e. they should never look at the inputs via the this pointer.
+     ;;
+    (#_"Node" Unary'''canonical-3 [#_"Unary<T implements Node>" this, #_"CanonicalizerTool" tool, #_"T" forValue])
+    ;;;
+     ; Gets the current value of the input, so that calling #canonical(CanonicalizerTool, Node) with the value
+     ; returned from this method should behave exactly like Canonicalizable#canonical(CanonicalizerTool).
+     ;;
+    (#_"T" Unary'''getValue-1 [#_"Unary<T implements Node>" this])
+)
+
+(defp UnaryArithmeticNode)
+
+;;;
+ ; The UnaryNode class is the base of arithmetic and bit logic operations with exactly one input.
+ ;;
+(defp UnaryNode
+    ;;;
+     ; Compute an improved for this node using the passed in stamp. The stamp must be compatible
+     ; with the current value of #value. This code is used to provide the default implementation
+     ; of #inferStamp() and may be used by external optimizations.
+     ;;
+    (#_"Stamp" UnaryNode'''foldStamp-2 [#_"UnaryNode" this, #_"Stamp" stamp])
 )
 
 ;;;
- ; Base class for nodes that deal with addressing calculation.
+ ; Describes a unary arithmetic operation.
  ;;
-(defp AddressNode
-    (#_"ValueNode" AddressNode'''getBase-1 [#_"AddressNode" this])
-    (#_"ValueNode" AddressNode'''getIndex-1 [#_"AddressNode" this])
+(defp UnaryOp #_"<T>"
     ;;;
-     ; Constant that is the maximum displacement from the base and index for this address. This value
-     ; is used to determine whether using the access as an implicit nil-check on the base is valid.
-     ;
-     ; @return the maximum distance in bytes from the base that this address can be
+     ; Apply the operation to a Constant.
      ;;
-    (#_"long" AddressNode'''getMaxConstantDisplacement-1 [#_"AddressNode" this])
-)
-
-;;;
- ; An FixedAccessNode that can be converted to a FloatingAccessNode.
- ;;
-(defp FloatableAccessNode
-    (#_"FloatingAccessNode" FloatableAccessNode'''asFloatingNode-2 [#_"FloatableAccessNode" this, #_"MemoryNode" lastLocationAccess])
-)
-
-(defp FloatingAccessNode
-    (#_"FixedAccessNode" FloatingAccessNode'''asFixedNode-1 [#_"FloatingAccessNode" this])
-)
-
-;;;
- ; PhiNodes represent the merging of edges at a control flow merges (AbstractMergeNode or LoopBeginNode).
- ; For a AbstractMergeNode, the order of the values corresponds to the order of the ends. For LoopBeginNodes,
- ; the first value corresponds to the loop's predecessor, while the rest of the values correspond to the LoopEndNodes.
- ;;
-(defp PhiNode
-)
-
-;;;
- ; A placeholder node in a snippet that will be replaced with a PiNode when the snippet is instantiated.
- ;;
-(defp Placeholder
+    (#_"Constant" UnaryOp'''foldConstant-2 [#_"UnaryOp<T>" this, #_"Constant" value])
     ;;;
-     ; Replaces this node with a PiNode during snippet instantiation.
-     ;
-     ; @param snippetReplaceeStamp the stamp of the node being replace by the snippet
+     ; Apply the operation to a Stamp.
      ;;
-    (#_"void" Placeholder'''makeReplacement-2 [#_"Placeholder" this, #_"Stamp" snippetReplaceeStamp])
-)
-
-;;;
- ; Client interested in one or more node related events.
- ;;
-(defp NodeEventListener
-    ;;;
-     ; Notifies this listener about any change event in the graph.
-     ;
-     ; @param e an event
-     ; @param node the node related to {@code e}
-     ;;
-    (#_"void" NodeEventListener'''changed-3 [#_"NodeEventListener" this, #_"NodeEvent" e, #_"Node" node])
-    ;;;
-     ; Notifies this listener about a change in a node's inputs.
-     ;
-     ; @param node a node who has had one of its inputs changed
-     ;;
-    (#_"void" NodeEventListener'''inputChanged-2 [#_"NodeEventListener" this, #_"Node" node])
-    ;;;
-     ; Notifies this listener of a node becoming unused.
-     ;
-     ; @param node a node whose Node#usages() just became empty
-     ;;
-    (#_"void" NodeEventListener'''usagesDroppedToZero-2 [#_"NodeEventListener" this, #_"Node" node])
-    ;;;
-     ; Notifies this listener of an added node.
-     ;
-     ; @param node a node that was just added to the graph
-     ;;
-    (#_"void" NodeEventListener'''nodeAdded-2 [#_"NodeEventListener" this, #_"Node" node])
-    ;;;
-     ; Notifies this listener of a removed node.
-     ;;
-    (#_"void" NodeEventListener'''nodeRemoved-2 [#_"NodeEventListener" this, #_"Node" node])
-)
-
-(defp NarrowOopStamp
-    (#_"Stamp" NarrowOopStamp'''uncompressed-1 [#_"NarrowOopStamp" this])
+    (#_"Stamp" UnaryOp'''foldStamp-2 [#_"UnaryOp<T>" this, #_"Stamp" stamp])
 )
 
 (defp UnaryOpLogicNode
     (#_"Stamp" UnaryOpLogicNode'''getSucceedingStampForValue-2 [#_"UnaryOpLogicNode" this, #_"boolean" negated?])
     (#_"TriState" UnaryOpLogicNode'''tryFold-2 [#_"UnaryOpLogicNode" this, #_"Stamp" valueStamp])
+)
+
+(defp UnboxNode)
+(defp UncompressPointerOp)
+(defp UnpackEndianHalfNode)
+
+(defp UnsafeAccessNode
+    (#_"ValueNode" UnsafeAccessNode'''cloneAsFieldAccess-2 [#_"UnsafeAccessNode" this, #_"ResolvedJavaField" field])
+    (#_"ValueNode" UnsafeAccessNode'''cloneAsArrayAccess-3 [#_"UnsafeAccessNode" this, #_"ValueNode" location, #_"LocationIdentity" identity])
+)
+
+(defp UnsafeCompareAndSwapNode)
+(defp UnsafeLoadCacheEntry)
+(defp UnsafeLoadTemplates)
+(defp UnsignedDivNode)
+(defp UnsignedLong)
+(defp UnsignedMulHighNode)
+(defp UnsignedRemNode)
+(defp UnsignedRightShiftNode)
+(defp Unsupported)
+
+;;;
+ ; Logic for replacing a snippet-lowered node at its usages with the return value of the snippet.
+ ; An alternative to the {@linkplain SnippetTemplate#DEFAULT_REPLACER default} replacement logic
+ ; can be used to handle mismatches between the stamp of the node being lowered and the stamp of
+ ; the snippet's return value.
+ ;;
+(defp UsageReplacer
+    ;;;
+     ; Replaces all usages of {@code oldNode} with direct or indirect usages of {@code newNode}.
+     ;;
+    (#_"void" UsageReplacer'''replace-3 [#_"UsageReplacer" this, #_"ValueNode" oldNode, #_"ValueNode" newNode])
+)
+
+(defp UseEntry)
+(defp UsePosList)
+(defp UseTrappingNullChecksPhase)
+(defp Utf8)
+(defp VMConfigNode)
+(defp VMConstOp)
+(defp ValueAnchorNode)
+(defp ValueCompareAndSwapNode)
+
+;;;
+ ; Non-modifying version of ValueProcedure.
+ ;;
+; @FunctionalInterface
+(defp ValueConsumer #_(§ extends InstructionValueConsumer)
+    ;;;
+     ; Iterator method to be overwritten.
+     ;
+     ; @param value The value that is iterated.
+     ; @param mode The operand mode for the value.
+     ; @param flags A set of flags for the value.
+     ;;
+    (#_"void" ValueConsumer'''visitValue-4 [#_"ValueConsumer" this, #_"Value" value, #_"OperandMode" mode, #_"EnumSet<OperandFlag>" flags])
+
+  #_(§ override! #_"void" InstructionValueConsumer'''visitValue-5 [#_"ValueConsumer" this, #_"LIRInstruction" instruction, #_"Value" value, #_"OperandMode" mode, #_"EnumSet<OperandFlag>" flags]
+        (ValueConsumer'''visitValue-4 this, value, mode, flags)
+        nil
+    )
+)
+
+(defp ValueFieldInfo)
+
+;;;
+ ; Marker interface for a LIR operation that moves some non-constant value to another location.
+ ;;
+(defp ValueMoveOp
+    (#_"AllocatableValue" ValueMoveOp'''getInput-1 [#_"ValueMoveOp" this])
 )
 
 ;;;
@@ -7006,6 +6907,52 @@ ZeroExtendNode'new-4
      ;;
     (#_"boolean" ValueNode'''inferStamp-1 [#_"ValueNode" this])
 )
+
+(defp ValuePhiNode)
+
+;;;
+ ; Similar to InstructionValueProcedure but without an LIRInstruction parameter.
+ ;;
+; @FunctionalInterface
+(defp ValueProcedure #_(§ extends InstructionValueProcedure)
+    ;;;
+     ; Iterator method to be overwritten.
+     ;
+     ; @param value The value that is iterated.
+     ; @param mode The operand mode for the value.
+     ; @param flags A set of flags for the value.
+     ; @return the new value to replace the value that was passed in
+     ;;
+    (#_"Value" ValueProcedure'''doValue-4 [#_"ValueProcedure" this, #_"Value" value, #_"OperandMode" mode, #_"EnumSet<OperandFlag>" flags])
+
+  #_(§ override! #_"Value" InstructionValueProcedure'''doValue-5 [#_"ValueProcedure" this, #_"LIRInstruction" instruction, #_"Value" value, #_"OperandMode" mode, #_"EnumSet<OperandFlag>" flags]
+        (ValueProcedure'''doValue-4 this, value, mode, flags)
+    )
+)
+
+;;;
+ ; This interface marks nodes whose result is the same as one of their inputs. Such nodes are used
+ ; to add type information, to introduce scheduling restrictions, etc.
+ ;
+ ; For some algorithms it is necessary or advantageous to see through these proxies.
+ ;;
+(defp ValueProxy
+)
+
+(defp ValueProxyNode)
+(defp Values)
+(defp Varargs)
+(defp VarargsPlaceholderNode)
+(defp Variable)
+(defp VariableMap)
+(defp VirtualArrayNode)
+(defp VirtualBoxingNode)
+
+(defp VirtualClosure
+    (#_"void" VirtualClosure'''apply-2 [#_"VirtualClosure" this, #_"VirtualState" node])
+)
+
+(defp VirtualInstanceNode)
 
 (defp VirtualObjectNode
     ;;;
@@ -7043,6 +6990,10 @@ ZeroExtendNode'new-4
     (#_"ValueNode" VirtualObjectNode'''getMaterializedRepresentation-4 [#_"VirtualObjectNode" this, #_"FixedNode" fixed, #_"ValueNode[]" entries, #_"LockState" locks])
 )
 
+(defp VirtualObjectState)
+(defp VirtualStackSlot)
+(defp VirtualStackSlotRange)
+
 ;;;
  ; Base class for nodes that contain "virtual" state, like FrameState and VirtualObjectState.
  ; Subclasses of this class will be treated in a special way by the scheduler.
@@ -7058,170 +7009,143 @@ ZeroExtendNode'new-4
     (#_"boolean" VirtualState'''isPartOfThisState-2 [#_"VirtualState" this, #_"VirtualState" state])
 )
 
-(defp NodeClosure #_"<T implements Node>"
-    (#_"void" NodeClosure'''apply-3 [#_"NodeClosure<T implements Node>" this, #_"Node" usage, #_"T" node])
-)
-
 ;;;
- ; Information about a graph that will potentially be inlined. This includes tracking the invocations
- ; in graph that will subject to inlining themselves.
+ ; This interface allows a node to convey information about what its effect would be if some of its
+ ; inputs were virtualized. The #virtualize(VirtualizerTool) method will only be called for nodes
+ ; that have some interaction with virtualized nodes. However, the virtualized nodes might have
+ ; been re-materialized in the meantime.
  ;;
-(defp CallsiteHolder
+(defp Virtualizable
     ;;;
-     ; Gets the method associated with the {@linkplain #graph() graph} represented by this object.
-     ;;
-    (#_"ResolvedJavaMethod" CallsiteHolder'''method-1 [#_"CallsiteHolder" this])
-    ;;;
-     ; The stack realized by InliningData grows upon InliningData#moveForward() deciding
-     ; to explore (depth-first) a callsite of the graph associated to this CallsiteHolder.
-     ; The list of not-yet-considered callsites is managed by CallsiteHolderExplorable,
-     ; and this method reports whether any such candidates remain.
-     ;;
-    (#_"boolean" CallsiteHolder'''hasRemainingInvokes-1 [#_"CallsiteHolder" this])
-    ;;;
-     ; The graph about which this object contains inlining information.
-     ;;
-    (#_"Graph" CallsiteHolder'''graph-1 [#_"CallsiteHolder" this])
-)
-
-(defp BlockIteratorClosure #_"<T>"
-    (#_"T" BlockIteratorClosure'''getInitialState-1 [#_"BlockIteratorClosure<T>" this])
-    (#_"T" BlockIteratorClosure'''processBlock-3 [#_"BlockIteratorClosure<T>" this, #_"Block" block, #_"T" currentState])
-    (#_"T" BlockIteratorClosure'''merge-3 [#_"BlockIteratorClosure<T>" this, #_"Block" merge, #_"List<T>" states])
-    (#_"T" BlockIteratorClosure'''cloneState-2 [#_"BlockIteratorClosure<T>" this, #_"T" oldState])
-    (#_"List<T>" BlockIteratorClosure'''processLoop-3 [#_"BlockIteratorClosure<T>" this, #_"Loop" loop, #_"T" initialState])
-)
-
-(defp NodeIteratorClosure #_"<T>"
-    (#_"T" NodeIteratorClosure'''processNode-3 [#_"NodeIteratorClosure<T>" this, #_"FixedNode" node, #_"T" currentState])
-    (#_"T" NodeIteratorClosure'''merge-3 [#_"NodeIteratorClosure<T>" this, #_"AbstractMergeNode" merge, #_"List<T>" states])
-    (#_"T" NodeIteratorClosure'''afterSplit-3 [#_"NodeIteratorClosure<T>" this, #_"AbstractBeginNode" node, #_"T" oldState])
-    (#_"EconomicMap<LoopExitNode, T>" NodeIteratorClosure'''processLoop-3 [#_"NodeIteratorClosure<T>" this, #_"LoopBeginNode" loop, #_"T" initialState])
-)
-
-;;;
- ; Iterates over a list of nodes, which usually comes from ScheduleResult#getBlockToNodesMap().
- ;
- ; While iterating, it is possible to {@link #insert(FixedNode, FixedWithNextNode) insert} and
- ; {@link #replaceCurrent(FixedWithNextNode) replace} nodes.
- ;;
-(defp ScheduledNodeIterator
-    (#_"void" ScheduledNodeIterator'''processNode-2 [#_"ScheduledNodeIterator" this, #_"Node" node])
-)
-
-(defp ClassfileConstant
-    ;;;
-     ; Loads the type, if any, referenced at a specified entry.
-     ;;
-    (#_"void" ClassfileConstant'''loadReferencedType-4 [#_"ClassfileConstant" this, #_"ClassfileConstantPool" cp, #_"int" index, #_"int" opcode])
-)
-
-;;;
- ; Helper class for lowering InstanceOfNodes with snippets. The majority of the complexity
- ; in such a lowering derives from the fact that InstanceOfNode is a floating node. A snippet
- ; used to lower an InstanceOfNode will almost always incorporate control flow and replacing
- ; a floating node with control flow is not trivial.
- ;
- ; The mechanism implemented in this class ensures that the graph for an instanceof snippet
- ; is instantiated once per InstanceOfNode being lowered. The result produced is then re-used
- ; by all usages of the node. Additionally, if there is a single usage that is an IfNode, the
- ; control flow in the snippet is connected directly to the true and false successors of the
- ; IfNode. This avoids materializing the instanceof test as a boolean which is then retested
- ; by the IfNode.
- ;;
-(defp InstanceOfSnippetsTemplates
-    ;;;
-     ; Gets the arguments used to retrieve and instantiate an instanceof snippet template.
-     ;;
-    (#_"Arguments" InstanceOfSnippetsTemplates'''makeArguments-3 [#_"InstanceOfSnippetsTemplates" this, #_"InstanceOfUsageReplacer" replacer, #_"LoweringTool" lowerer])
-)
-
-;;;
- ; Replaces a usage of an InstanceOfNode or InstanceOfDynamicNode.
- ;;
-(defp InstanceOfUsageReplacer
-    ;;;
-     ; Does the replacement based on a previously snippet instantiation.
-     ;;
-    (#_"void" InstanceOfUsageReplacer'''replaceUsingInstantiation-1 [#_"InstanceOfUsageReplacer" this])
-)
-
-(defp IntegerExactArithmeticSplitNode
-    (#_"Value" IntegerExactArithmeticSplitNode'''generateArithmetic-2 [#_"IntegerExactArithmeticSplitNode" this, #_"LIRBuilder" builder])
-)
-
-;;;
- ; A simple utility class for adding nodes to the graph when building a MethodHandle invoke.
- ;;
-(defp GraphAdder
-    ;;;
-     ; Call Graph#addOrUnique(Node) on {@code node} and link any FixedWithNextNodes into the current control flow.
+     ; A node class can implement this method to convey information about what its effect would be
+     ; if some of its inputs were virtualized. All modifications must be made through the supplied
+     ; tool, and not directly on the node, because by the time this method is called the
+     ; virtualized/non-virtualized state is still speculative and might not hold because of loops, etc.
      ;
-     ; @return the newly added node
+     ; @param tool the tool used to describe the effects of this node
      ;;
-    (#_"ValueNode" GraphAdder'''add-2 [#_"GraphAdder" this, #_"ValueNode" node])
+    (#_"void" Virtualizable'''virtualize-2 [#_"Virtualizable" this, #_"VirtualizerTool" tool])
 )
 
 ;;;
- ; Holds the ResolvedJavaMethod of the snippet, together with some information about the
- ; method that needs to be computed only once. The SnippetInfo should be created once per
- ; snippet and then cached.
+ ; This interface allows a node to convey information about what its effect would be if some of its
+ ; inputs were virtualized.
+ ;
+ ; The difference to Virtualizable is that the #virtualize(VirtualizerTool) method will be called
+ ; regardless of whether this node had any interaction with virtualized nodes. This interface can
+ ; therefore be used for object allocations, for which virtualization introduces new virtualized objects.
  ;;
-(defp SnippetInfo
-    (#_"Lazy" SnippetInfo'''lazy-1 [#_"SnippetInfo" this])
+(defp VirtualizableAllocation
 )
+
+(defp VirtualizableInvokeMacroNode)
 
 ;;;
- ; An EffectList can be used to maintain a list of Effects and backtrack to a previous
- ; state by truncating the list.
+ ; This tool can be used to query the current state (normal/virtualized/re-materialized) of values
+ ; and to describe the actions that would be taken for this state.
+ ;
+ ; See also Virtualizable.
  ;;
-(defp EffectList
-    (#_"void" EffectList'''clear-1 [#_"EffectList" this])
-)
-
-(defp EffectsBlockState #_"<T implements EffectsBlockState<T>>"
-    (#_"boolean" EffectsBlockState'''equivalentTo-2 [#_"EffectsBlockState<T implements EffectsBlockState<T>>" this, #_"T" other])
-)
-
-(defp EffectsClosure #_"<T implements EffectsBlockState<T>>"
+(defp VirtualizerTool
     ;;;
-     ; Collects the effects of virtualizing the given node.
+     ; This method should be used to query the maximum size of virtualized objects before attempting virtualization.
      ;
-     ; @return true if the effects include removing the node, false otherwise
+     ; @return the maximum number of entries for virtualized objects
      ;;
-    (#_"boolean" EffectsClosure'''processNode-5 [#_"EffectsClosure<T implements EffectsBlockState<T>>" this, #_"Node" node, #_"T" state, #_"GraphEffectList" effects, #_"FixedWithNextNode" lastFixedNode])
-    (#_"T" EffectsClosure'''stripKilledLoopLocations-3 [#_"EffectsClosure<T implements EffectsBlockState<T>>" this, #_"Loop" loop, #_"T" initialState])
-    (#_"void" EffectsClosure'''processKilledLoopLocations-4 [#_"EffectsClosure<T implements EffectsBlockState<T>>" this, #_"Loop" loop, #_"T" initialState, #_"T" mergedStates])
-    (#_"void" EffectsClosure'''processInitialLoopState-3 [#_"EffectsClosure<T implements EffectsBlockState<T>>" this, #_"Loop" loop, #_"T" initialState])
-    (#_"void" EffectsClosure'''processLoopExit-5 [#_"EffectsClosure<T implements EffectsBlockState<T>>" this, #_"LoopExitNode" exitNode, #_"T" initialState, #_"T" exitState, #_"GraphEffectList" effects])
-    (#_"MergeProcessor<T>" EffectsClosure'''createMergeProcessor-2 [#_"EffectsClosure<T implements EffectsBlockState<T>>" this, #_"Block" merge])
+    (#_"int" VirtualizerTool'''getMaximumEntryCount-1 [#_"VirtualizerTool" this])
+    ;;;
+     ; Introduces a new virtual object to the current state.
+     ;
+     ; @param virtualObject the new virtual object.
+     ; @param entryState the initial state of the virtual object's fields.
+     ; @param locks the initial locking depths.
+     ; @param ensureVirtualized true if this object needs to stay virtual
+     ;;
+    (#_"void" VirtualizerTool'''createVirtualObject-5 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject, #_"ValueNode[]" entryState, #_"List<MonitorIdNode>" locks, #_"boolean" ensureVirtualized])
+    ;;;
+     ; Returns a VirtualObjectNode if the given value is aliased with a virtual object that is still
+     ; virtual, the materialized value of the given value is aliased with a virtual object that was
+     ; materialized, the replacement if the give value was replaced, otherwise the given value.
+     ;
+     ; Replacements via #replaceWithValue(ValueNode) are not immediately committed. This method can be
+     ; used to determine if a value was replaced by another one (e.g. a load field by the loaded value).
+     ;;
+    (#_"ValueNode" VirtualizerTool'''getAlias-2 [#_"VirtualizerTool" this, #_"ValueNode" value])
+    ;;;
+     ; Sets the entry (field or array element) with the given index in the virtualized object.
+     ;
+     ; @param index the index to be set.
+     ; @param value the new value for the given index.
+     ; @param accessKind the kind of the store which might be different than VirtualObjectNode#entryKind(int)
+     ; @return true if the operation was permitted
+     ;;
+    (#_"boolean" VirtualizerTool'''setVirtualEntry-6 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject, #_"int" index, #_"ValueNode" value, #_"JavaKind" accessKind, #_"long" offset])
+    (#_"void" VirtualizerTool'''setVirtualEntry-4 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject, #_"int" index, #_"ValueNode" value])
+    (#_"ValueNode" VirtualizerTool'''getEntry-3 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject, #_"int" index])
+    (#_"void" VirtualizerTool'''addLock-3 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject, #_"MonitorIdNode" monitorId])
+    (#_"MonitorIdNode" VirtualizerTool'''removeLock-2 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject])
+    #_unused
+    (#_"boolean" VirtualizerTool'''getEnsureVirtualized-2 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject])
+    ;;;
+     ; Deletes the current node and replaces it with the given virtualized object.
+     ;
+     ; @param virtualObject the virtualized object that should replace the current node.
+     ;;
+    (#_"void" VirtualizerTool'''replaceWithVirtual-2 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject])
+    ;;;
+     ; Deletes the current node and replaces it with the given value.
+     ;
+     ; @param replacement the value that should replace the current node.
+     ;;
+    (#_"void" VirtualizerTool'''replaceWithValue-2 [#_"VirtualizerTool" this, #_"ValueNode" replacement])
+    ;;;
+     ; Deletes the current node.
+     ;;
+    (#_"void" VirtualizerTool'''delete-1 [#_"VirtualizerTool" this])
+    ;;;
+     ; Replaces an input of the current node.
+     ;
+     ; @param oldInput the old input value.
+     ; @param replacement the new input value.
+     ;;
+    #_unused
+    (#_"void" VirtualizerTool'''replaceFirstInput-3 [#_"VirtualizerTool" this, #_"Node" oldInput, #_"Node" replacement])
+    ;;;
+     ; Adds the given node to the graph.This action will only be performed when, and if, the changes are committed.
+     ;
+     ; @param node the node to add.
+     ;;
+    (#_"void" VirtualizerTool'''addNode-2 [#_"VirtualizerTool" this, #_"ValueNode" node])
+    ;;;
+     ; This method performs either #replaceWithValue(ValueNode) or #replaceWithVirtual(VirtualObjectNode),
+     ; depending on the given value.
+     ;
+     ; @param value the replacement value
+     ;;
+    (#_"void" VirtualizerTool'''replaceWith-2 [#_"VirtualizerTool" this, #_"ValueNode" value])
+    ;;;
+     ; If state is virtual, materialization is performed for the given state.
+     ;
+     ; @return true if materialization happened, false if not
+     ;;
+    #_unused
+    (#_"boolean" VirtualizerTool'''ensureMaterialized-2 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject])
 )
 
-;;;
- ; The main workhorse for merging states, both for loops and for normal merges.
- ;;
-(defp MergeProcessor #_"<T implements EffectsBlockState<T>>"
-    (#_"void" MergeProcessor'''merge-2 [#_"MergeProcessor<T implements EffectsBlockState<T>>" this, #_"List<T>" states])
-)
-
-(defp EffectsPhase
-    (#_"Closure" EffectsPhase'''createEffectsClosure-3 [#_"EffectsPhase" this, #_"ScheduleResult" schedule, #_"ControlFlowGraph" cfg])
-)
-
-(defp Closure #_"<T>"
-    (#_"boolean" Closure'''needsApplyEffects-1 [#_"Closure<T>" this])
-    (#_"void" Closure'''applyEffects-1 [#_"Closure<T>" this])
-)
-
-(defp PartialEscapeBlockState #_"<T implements PartialEscapeBlockState<T>>"
-    (#_"void" PartialEscapeBlockState'''objectMaterialized-4 [#_"PartialEscapeBlockState<T implements PartialEscapeBlockState<T>>" this, #_"VirtualObjectNode" virtual, #_"AllocatedObjectNode" representation, #_"List<ValueNode>" values])
-)
-
-(defp CacheEntry #_"<T>"
-    (#_"CacheEntry<T>" CacheEntry'''duplicateWithObject-2 [#_"CacheEntry<T>" this, #_"ValueNode" newObject])
-    (#_"boolean" CacheEntry'''conflicts-2 [#_"CacheEntry<T>" this, #_"LocationIdentity" other])
-    (#_"LocationIdentity" CacheEntry'''getIdentity-1 [#_"CacheEntry<T>" this])
-)
+(defp VoidStamp)
+(defp Word)
+(defp WordCastNode)
+(defp WordOperationPlugin)
+(defp WorkListEntry)
+(defp WriteBarrier)
+(defp WriteBarrierAdditionPhase)
+(defp WriteBarrierTemplates)
+(defp WriteNode)
+(defp Xor)
+(defp XorNode)
+(defp ZeroData)
+(defp ZeroExtend)
+(defp ZeroExtendNode)
 
 (value-ns HotSpot
     (def #_"HotSpotJVMCIRuntime" JVMCI'runtime (HotSpotJVMCIRuntime/runtime))
@@ -12004,35 +11928,6 @@ ZeroExtendNode'new-4
             )
         )
     )
-
-    ;;;
-     ; Returns an iterator that will return the given node followed by all its predecessors,
-     ; up until the point where Node#predecessor() returns nil.
-     ;
-     ; @param start the node at which to start iterating
-     ;;
-    (defn #_"NodeIterable<FixedNode>" GraphUtil'predecessorIterable-1 [#_"FixedNode" start]
-        (ß proxy NodeIterable #_"<FixedNode>"
-            (#_"Iterator<FixedNode>" iterator [#_"NodeIterable<FixedNode>" this]
-                (reify Iterator #_"<FixedNode>"
-                  #_(§ mutable #_"FixedNode" :current start)
-
-                    (#_"boolean" hasNext [#_"Iterator<FixedNode>" this]
-                        (some? (:current this))
-                    )
-
-                    (#_"FixedNode" next [#_"Iterator<FixedNode>" this]
-                        (try
-                            (:current this)
-                            (finally
-                                (§ ass! this (assoc this :current (:predecessor (:current this))))
-                            )
-                        )
-                    )
-                )
-            )
-        )
-    )
 )
 
 (value-ns Optionality
@@ -12047,7 +11942,7 @@ ZeroExtendNode'new-4
     (defn #_"String" InliningUtil'checkInvokeConditions-1 [#_"InvokeNode" invoke]
         (cond
             (or (nil? (:predecessor invoke)) (not (Node''isAlive-1 invoke))) "the invoke is dead code"
-            (not (satisfies? MethodCallTargetNode (:callTarget invoke)))      "the invoke has already been lowered, or has been created as a low-level node"
+            (not (satisfies? MethodCallTargetNode (:callTarget invoke)))     "the invoke has already been lowered, or has been created as a low-level node"
             :else
                 (let [
                     #_"MethodCallTargetNode" callTarget (:callTarget invoke)
@@ -13443,7 +13338,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Base class for AMD64 opcodes.
  ;;
-(class-ns AMD64Op
+(class-ns AMD64Op []
     (defn #_"AMD64Op" AMD64Op'new-6 [#_"int" prefix1, #_"int" prefix2, #_"int" op, #_"boolean" dstIsByte, #_"boolean" srcIsByte, #_"AMD64$CPUFeature" feature]
         (merge (AMD64Op'class.)
             (hash-map
@@ -13483,7 +13378,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Base class for AMD64 opcodes with immediate operands.
  ;;
-(class-ns AMD64ImmOp
+(class-ns AMD64ImmOp [AMD64Op]
     (defn #_"AMD64ImmOp" AMD64ImmOp'new-5 [#_"int" prefix, #_"int" op, #_"boolean" immIsByte, #_"boolean" dstIsByte, #_"boolean" srcIsByte]
         (merge (AMD64ImmOp'class.) (AMD64Op'new-6 0, prefix, op, dstIsByte, srcIsByte, nil)
             (hash-map
@@ -13508,7 +13403,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Opcodes with operand order of MI.
  ;;
-(class-ns AMD64MIOp
+(class-ns AMD64MIOp [AMD64ImmOp, AMD64Op]
     (defn #_"AMD64MIOp" AMD64MIOp'new-1 [#_"int" op]
         (AMD64MIOp'new-5 op, 0, false, false, false)
     )
@@ -13551,7 +13446,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Opcodes with operand order of RMI.
  ;;
-(class-ns AMD64RMIOp
+(class-ns AMD64RMIOp [AMD64ImmOp, AMD64Op]
     (defn #_"AMD64RMIOp" AMD64RMIOp'new-2 [#_"int" op, #_"boolean" immIsByte]
         (merge (AMD64RMIOp'class.) (AMD64ImmOp'new-5 0, op, immIsByte, false, false))
     )
@@ -13577,7 +13472,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Opcodes with operand order of M.
  ;;
-(class-ns AMD64MOp
+(class-ns AMD64MOp [AMD64Op]
     (defn #_"AMD64MOp" AMD64MOp'new-2 [#_"int" op, #_"int" ext]
         (merge (AMD64MOp'class.) (AMD64Op'new-6 0, 0, op, false, false, nil)
             (hash-map
@@ -13610,7 +13505,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns AMD64RROp
+(class-ns AMD64RROp [AMD64Op]
     (defn #_"AMD64RROp" AMD64RROp'new-6 [#_"int" prefix1, #_"int" prefix2, #_"int" op, #_"boolean" dstIsByte, #_"boolean" srcIsByte, #_"AMD64$CPUFeature" feature]
         (merge (AMD64RROp'class.) (AMD64Op'new-6 prefix1, prefix2, op, dstIsByte, srcIsByte, feature))
     )
@@ -13619,7 +13514,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Opcode with operand order of MR.
  ;;
-(class-ns AMD64MROp
+(class-ns AMD64MROp [AMD64RROp, AMD64Op]
     (defn #_"AMD64MROp" AMD64MROp'new-1 [#_"int" op]
         (merge (AMD64MROp'class.) (AMD64RROp'new-6 0, 0, op, false, false, nil))
     )
@@ -13649,7 +13544,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Opcode with operand order of RM.
  ;;
-(class-ns AMD64RMOp
+(class-ns AMD64RMOp [AMD64RROp, AMD64Op]
     (defn #_"AMD64RMOp" AMD64RMOp'new-1 [#_"int" op]
         (merge (AMD64RMOp'class.) (AMD64RROp'new-6 0, 0, op, false, false, nil))
     )
@@ -13706,7 +13601,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Shift operation with operand order of M1, MC or MI.
  ;;
-(class-ns AMD64Shift
+(class-ns AMD64Shift []
     (defn- #_"AMD64Shift" AMD64Shift'new-1 [#_"int" code]
         (merge (AMD64Shift'class.)
             (hash-map
@@ -13729,7 +13624,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Abstract base class that represents a platform specific address.
  ;;
-(class-ns AbstractAddress
+(class-ns AbstractAddress []
     (defn #_"AbstractAddress" AbstractAddress'new-0 []
         (AbstractAddress'class.)
     )
@@ -13740,7 +13635,7 @@ ZeroExtendNode'new-4
  ; register, an index register, a displacement and a scale. Note that the base and index registers
  ; may be a variable that will get a register assigned later by the register allocator.
  ;;
-(class-ns AMD64Address
+(class-ns AMD64Address [AbstractAddress]
     ;;;
      ; Creates an AMD64Address with given base register, no scaling and no displacement.
      ;
@@ -13816,7 +13711,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns AbstractInlineInfo
+(class-ns AbstractInlineInfo [InlineInfo]
     (defn #_"AbstractInlineInfo" AbstractInlineInfo'new-1 [#_"InvokeNode" invoke]
         (merge (AbstractInlineInfo'class.)
             (hash-map
@@ -13859,7 +13754,7 @@ ZeroExtendNode'new-4
  ; Represents an inlining opportunity where the compiler can statically determine a monomorphic
  ; target method and therefore is able to determine the called method exactly.
  ;;
-(class-ns ExactInlineInfo
+(class-ns ExactInlineInfo [AbstractInlineInfo, InlineInfo]
     (defn #_"ExactInlineInfo" ExactInlineInfo'new-2 [#_"InvokeNode" invoke, #_"ResolvedJavaMethod" concrete]
         (merge (ExactInlineInfo'class.) (AbstractInlineInfo'new-1 invoke)
             (hash-map
@@ -13910,7 +13805,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns AbstractInliningPolicy
+(class-ns AbstractInliningPolicy [InliningPolicy]
     (def #_"float" AbstractInliningPolicy'RelevanceCapForInlining 1.0 #_"f")
     (def #_"float" AbstractInliningPolicy'CapInheritedRelevance 1.0 #_"f")
 
@@ -13918,7 +13813,7 @@ ZeroExtendNode'new-4
         (AbstractInliningPolicy'class.)
     )
 
-    (defn #_"double" AbstractInliningPolicy''computeMaximumSize-3 [#_"AbstractInliningPolicy" this, #_"double" relevance, #_"int" configuredMaximum]
+    (defn #_"double" AbstractInliningPolicy'computeMaximumSize-2 [#_"double" relevance, #_"int" configuredMaximum]
         (* configuredMaximum (min AbstractInliningPolicy'RelevanceCapForInlining relevance))
     )
 
@@ -13939,7 +13834,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns GreedyInliningPolicy
+(class-ns GreedyInliningPolicy [AbstractInliningPolicy, InliningPolicy]
     (defn #_"GreedyInliningPolicy" GreedyInliningPolicy'new-0 []
         (merge (GreedyInliningPolicy'class.) (AbstractInliningPolicy'new-0))
     )
@@ -13967,7 +13862,7 @@ ZeroExtendNode'new-4
                                 (< GraalOptions'limitInlinedInvokes (AbstractInliningPolicy'determineInvokeProbability-1 (:callee invocation)))
                             )
                                 Decision'NO
-                            (<= nodes (AbstractInliningPolicy''computeMaximumSize-3 this, (:relevance invocation), GraalOptions'maximumInliningSize))
+                            (<= nodes (AbstractInliningPolicy'computeMaximumSize-2 (:relevance invocation), GraalOptions'maximumInliningSize))
                                 Decision'YES
                             :else
                                 Decision'NO
@@ -13978,7 +13873,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns NodeList
+(class-ns NodeList [#_"AbstractList" #_"<Node>", NodeIterable, #_"Iterable" #_"<Node>"]
     (defn #_"NodeList" NodeList'new-1 [#_"Node" self]
         (merge (NodeList'class.) (ß AbstractList.)
             (hash-map
@@ -14229,7 +14124,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns NodeInputList
+(class-ns NodeInputList [NodeList, #_"AbstractList" #_"<Node>", NodeIterable, #_"Iterable" #_"<Node>"]
     (defn #_"NodeInputList" NodeInputList'new-1 [#_"Node" self]
         (merge (NodeInputList'class.) (NodeList'new-1 self))
     )
@@ -14250,7 +14145,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns NodeSuccessorList
+(class-ns NodeSuccessorList [NodeList, #_"AbstractList" #_"<Node>", NodeIterable, #_"Iterable" #_"<Node>"]
     #_unused
     (defn #_"NodeSuccessorList" NodeSuccessorList'new-1 [#_"Node" self]
         (merge (NodeSuccessorList'class.) (NodeList'new-1 self))
@@ -14275,7 +14170,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Base class for snippet classes. It provides a cache for SnippetTemplates.
  ;;
-(class-ns AbstractTemplates
+(class-ns AbstractTemplates []
     (defn #_"AbstractTemplates" AbstractTemplates'new-0 []
         (AbstractTemplates'class.)
     )
@@ -14295,7 +14190,7 @@ ZeroExtendNode'new-4
      ; and returns a SnippetInfo value describing it. There must be exactly one snippet method in
      ; {@code declaringClass}.
      ;;
-    (defn #_"SnippetInfo" AbstractTemplates''snippet-4* [#_"AbstractTemplates" this, #_"Class<? extends Snippets>" declaringClass, #_"String" methodName & #_"LocationIdentity..." initialPrivateLocations]
+    (defn #_"SnippetInfo" AbstractTemplates''snippet-3* [#_"Class<? extends Snippets>" declaringClass, #_"String" methodName & #_"LocationIdentity..." initialPrivateLocations]
         (let [
             #_"Method" method (AbstractTemplates'findMethod-3 declaringClass, methodName)
             #_"ResolvedJavaMethod" javaMethod (#_"MetaAccessProvider" .lookupJavaMethod HotSpot'metaAccess, method)
@@ -14308,22 +14203,23 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns BoxingTemplates
+(class-ns BoxingTemplates [AbstractTemplates]
     (defn #_"BoxingTemplates" BoxingTemplates'new-0 []
         (let [
-            #_"BoxingTemplates" this
-                (merge (BoxingTemplates'class.) (AbstractTemplates'new-0)
-                    (hash-map
-                        #_"EnumMap<JavaKind, SnippetInfo>" :boxSnippets (EnumMap. JavaKind)
-                        #_"EnumMap<JavaKind, SnippetInfo>" :unboxSnippets (EnumMap. JavaKind)
-                    )
+            #_"EnumMap<JavaKind, SnippetInfo>" boxSnippets (EnumMap. JavaKind)
+            #_"EnumMap<JavaKind, SnippetInfo>" unboxSnippets (EnumMap. JavaKind)
+            _
+                (doseq [#_"JavaKind" kind (list JavaKind/Boolean JavaKind/Byte JavaKind/Char JavaKind/Int JavaKind/Long JavaKind/Short)]
+                    (#_"EnumMap" .put boxSnippets,   kind, (AbstractTemplates''snippet-3* BoxingSnippets, (str (#_"JavaKind" .getJavaName kind) "ValueOf")))
+                    (#_"EnumMap" .put unboxSnippets, kind, (AbstractTemplates''snippet-3* BoxingSnippets, (str (#_"JavaKind" .getJavaName kind) "Value")))
                 )
         ]
-            (doseq [#_"JavaKind" kind (into-array JavaKind [ JavaKind/Boolean, JavaKind/Byte, JavaKind/Char, JavaKind/Int, JavaKind/Long, JavaKind/Short ])]
-                (#_"EnumMap" .put (:boxSnippets this), kind, (AbstractTemplates''snippet-4* this, BoxingSnippets, (str (#_"JavaKind" .getJavaName kind) "ValueOf")))
-                (#_"EnumMap" .put (:unboxSnippets this), kind, (AbstractTemplates''snippet-4* this, BoxingSnippets, (str (#_"JavaKind" .getJavaName kind) "Value")))
+            (merge (BoxingTemplates'class.) (AbstractTemplates'new-0)
+                (hash-map
+                    #_"EnumMap<JavaKind, SnippetInfo>" :boxSnippets boxSnippets
+                    #_"EnumMap<JavaKind, SnippetInfo>" :unboxSnippets unboxSnippets
+                )
             )
-            this
         )
     )
 
@@ -14356,7 +14252,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns InstanceOfSnippetsTemplates
+(class-ns InstanceOfSnippetsTemplates [AbstractTemplates]
     (defn #_"InstanceOfSnippetsTemplates" InstanceOfSnippetsTemplates'new-0 []
         (merge (InstanceOfSnippetsTemplates'class.) (AbstractTemplates'new-0))
     )
@@ -14425,15 +14321,15 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns InstanceOfTemplates
+(class-ns InstanceOfTemplates [InstanceOfSnippetsTemplates, AbstractTemplates]
     (defn #_"InstanceOfTemplates" InstanceOfTemplates'new-0 []
         (merge (InstanceOfTemplates'class.) (InstanceOfSnippetsTemplates'new-0)
             (hash-map
-                #_"SnippetInfo" :instanceofExact (AbstractTemplates''snippet-4* (ß this), InstanceOfSnippets, "instanceofExact")
-                #_"SnippetInfo" :instanceofPrimary (AbstractTemplates''snippet-4* (ß this), InstanceOfSnippets, "instanceofPrimary")
-                #_"SnippetInfo" :instanceofSecondary (AbstractTemplates''snippet-4* (ß this), InstanceOfSnippets, "instanceofSecondary", ReplacementsUtil'SECONDARY_SUPER_CACHE_LOCATION)
-                #_"SnippetInfo" :instanceofDynamic (AbstractTemplates''snippet-4* (ß this), InstanceOfSnippets, "instanceofDynamic", ReplacementsUtil'SECONDARY_SUPER_CACHE_LOCATION)
-                #_"SnippetInfo" :isAssignableFrom (AbstractTemplates''snippet-4* (ß this), InstanceOfSnippets, "isAssignableFrom", ReplacementsUtil'SECONDARY_SUPER_CACHE_LOCATION)
+                #_"SnippetInfo" :instanceofExact (AbstractTemplates''snippet-3* InstanceOfSnippets, "instanceofExact")
+                #_"SnippetInfo" :instanceofPrimary (AbstractTemplates''snippet-3* InstanceOfSnippets, "instanceofPrimary")
+                #_"SnippetInfo" :instanceofSecondary (AbstractTemplates''snippet-3* InstanceOfSnippets, "instanceofSecondary", ReplacementsUtil'SECONDARY_SUPER_CACHE_LOCATION)
+                #_"SnippetInfo" :instanceofDynamic (AbstractTemplates''snippet-3* InstanceOfSnippets, "instanceofDynamic", ReplacementsUtil'SECONDARY_SUPER_CACHE_LOCATION)
+                #_"SnippetInfo" :isAssignableFrom (AbstractTemplates''snippet-3* InstanceOfSnippets, "isAssignableFrom", ReplacementsUtil'SECONDARY_SUPER_CACHE_LOCATION)
             )
         )
     )
@@ -14517,14 +14413,14 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns MonitorTemplates
+(class-ns MonitorTemplates [AbstractTemplates]
     (defn #_"MonitorTemplates" MonitorTemplates'new-1 [#_"boolean" useFastLocking]
         (merge (MonitorTemplates'class.) (AbstractTemplates'new-0)
             (hash-map
-                #_"SnippetInfo" :monitorenter (AbstractTemplates''snippet-4* (ß this), MonitorSnippets, "monitorenter")
-                #_"SnippetInfo" :monitorexit (AbstractTemplates''snippet-4* (ß this), MonitorSnippets, "monitorexit")
-                #_"SnippetInfo" :monitorenterStub (AbstractTemplates''snippet-4* (ß this), MonitorSnippets, "monitorenterStub")
-                #_"SnippetInfo" :monitorexitStub (AbstractTemplates''snippet-4* (ß this), MonitorSnippets, "monitorexitStub")
+                #_"SnippetInfo" :monitorenter (AbstractTemplates''snippet-3* MonitorSnippets, "monitorenter")
+                #_"SnippetInfo" :monitorexit (AbstractTemplates''snippet-3* MonitorSnippets, "monitorexit")
+                #_"SnippetInfo" :monitorenterStub (AbstractTemplates''snippet-3* MonitorSnippets, "monitorenterStub")
+                #_"SnippetInfo" :monitorexitStub (AbstractTemplates''snippet-3* MonitorSnippets, "monitorexitStub")
                 #_"boolean" :useFastLocking useFastLocking
             )
         )
@@ -14575,14 +14471,14 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns NewObjectTemplates
+(class-ns NewObjectTemplates [AbstractTemplates]
     (defn #_"NewObjectTemplates" NewObjectTemplates'new-0 []
         (merge (NewObjectTemplates'class.) (AbstractTemplates'new-0)
             (hash-map
-                #_"SnippetInfo" :allocateInstance (AbstractTemplates''snippet-4* (ß this), NewObjectSnippets, "allocateInstance", ReplacementsUtil'MARK_WORD_LOCATION, ReplacementsUtil'HUB_WRITE_LOCATION, ReplacementsUtil'TLAB_TOP_LOCATION, ReplacementsUtil'TLAB_END_LOCATION)
-                #_"SnippetInfo" :allocateInstanceDynamic (AbstractTemplates''snippet-4* (ß this), NewObjectSnippets, "allocateInstanceDynamic", ReplacementsUtil'MARK_WORD_LOCATION, ReplacementsUtil'HUB_WRITE_LOCATION, ReplacementsUtil'TLAB_TOP_LOCATION, ReplacementsUtil'TLAB_END_LOCATION)
-                #_"SnippetInfo" :allocateArray (AbstractTemplates''snippet-4* (ß this), NewObjectSnippets, "allocateArray", ReplacementsUtil'MARK_WORD_LOCATION, ReplacementsUtil'HUB_WRITE_LOCATION, ReplacementsUtil'TLAB_TOP_LOCATION, ReplacementsUtil'TLAB_END_LOCATION)
-                #_"SnippetInfo" :allocateArrayDynamic (AbstractTemplates''snippet-4* (ß this), NewObjectSnippets, "allocateArrayDynamic", ReplacementsUtil'MARK_WORD_LOCATION, ReplacementsUtil'HUB_WRITE_LOCATION, ReplacementsUtil'TLAB_TOP_LOCATION, ReplacementsUtil'TLAB_END_LOCATION)
+                #_"SnippetInfo" :allocateInstance (AbstractTemplates''snippet-3* NewObjectSnippets, "allocateInstance", ReplacementsUtil'MARK_WORD_LOCATION, ReplacementsUtil'HUB_WRITE_LOCATION, ReplacementsUtil'TLAB_TOP_LOCATION, ReplacementsUtil'TLAB_END_LOCATION)
+                #_"SnippetInfo" :allocateInstanceDynamic (AbstractTemplates''snippet-3* NewObjectSnippets, "allocateInstanceDynamic", ReplacementsUtil'MARK_WORD_LOCATION, ReplacementsUtil'HUB_WRITE_LOCATION, ReplacementsUtil'TLAB_TOP_LOCATION, ReplacementsUtil'TLAB_END_LOCATION)
+                #_"SnippetInfo" :allocateArray (AbstractTemplates''snippet-3* NewObjectSnippets, "allocateArray", ReplacementsUtil'MARK_WORD_LOCATION, ReplacementsUtil'HUB_WRITE_LOCATION, ReplacementsUtil'TLAB_TOP_LOCATION, ReplacementsUtil'TLAB_END_LOCATION)
+                #_"SnippetInfo" :allocateArrayDynamic (AbstractTemplates''snippet-3* NewObjectSnippets, "allocateArrayDynamic", ReplacementsUtil'MARK_WORD_LOCATION, ReplacementsUtil'HUB_WRITE_LOCATION, ReplacementsUtil'TLAB_TOP_LOCATION, ReplacementsUtil'TLAB_END_LOCATION)
             )
         )
     )
@@ -14660,11 +14556,11 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns UnsafeLoadTemplates
+(class-ns UnsafeLoadTemplates [AbstractTemplates]
     (defn #_"UnsafeLoadTemplates" UnsafeLoadTemplates'new-0 []
         (merge (UnsafeLoadTemplates'class.) (AbstractTemplates'new-0)
             (hash-map
-                #_"SnippetInfo" :unsafeLoad (AbstractTemplates''snippet-4* (ß this), UnsafeLoadSnippets, "lowerUnsafeLoad")
+                #_"SnippetInfo" :unsafeLoad (AbstractTemplates''snippet-3* UnsafeLoadSnippets, "lowerUnsafeLoad")
             )
         )
     )
@@ -14681,15 +14577,15 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns WriteBarrierTemplates
+(class-ns WriteBarrierTemplates [AbstractTemplates]
     (defn #_"WriteBarrierTemplates" WriteBarrierTemplates'new-1 [#_"CompressEncoding" oopEncoding]
         (merge (WriteBarrierTemplates'class.) (AbstractTemplates'new-0)
             (hash-map
-                #_"SnippetInfo" :serialImpreciseWriteBarrier (AbstractTemplates''snippet-4* (ß this), WriteBarrierSnippets, "serialImpreciseWriteBarrier", WriteBarrierSnippets'GC_CARD_LOCATION)
-                #_"SnippetInfo" :serialPreciseWriteBarrier (AbstractTemplates''snippet-4* (ß this), WriteBarrierSnippets, "serialPreciseWriteBarrier", WriteBarrierSnippets'GC_CARD_LOCATION)
-                #_"SnippetInfo" :g1PreWriteBarrier (AbstractTemplates''snippet-4* (ß this), WriteBarrierSnippets, "g1PreWriteBarrier", WriteBarrierSnippets'GC_INDEX_LOCATION, WriteBarrierSnippets'GC_LOG_LOCATION)
-                #_"SnippetInfo" :g1ReferentReadBarrier (AbstractTemplates''snippet-4* (ß this), WriteBarrierSnippets, "g1PreWriteBarrier", WriteBarrierSnippets'GC_INDEX_LOCATION, WriteBarrierSnippets'GC_LOG_LOCATION)
-                #_"SnippetInfo" :g1PostWriteBarrier (AbstractTemplates''snippet-4* (ß this), WriteBarrierSnippets, "g1PostWriteBarrier", WriteBarrierSnippets'GC_CARD_LOCATION, WriteBarrierSnippets'GC_INDEX_LOCATION, WriteBarrierSnippets'GC_LOG_LOCATION)
+                #_"SnippetInfo" :serialImpreciseWriteBarrier (AbstractTemplates''snippet-3* WriteBarrierSnippets, "serialImpreciseWriteBarrier", WriteBarrierSnippets'GC_CARD_LOCATION)
+                #_"SnippetInfo" :serialPreciseWriteBarrier (AbstractTemplates''snippet-3* WriteBarrierSnippets, "serialPreciseWriteBarrier", WriteBarrierSnippets'GC_CARD_LOCATION)
+                #_"SnippetInfo" :g1PreWriteBarrier (AbstractTemplates''snippet-3* WriteBarrierSnippets, "g1PreWriteBarrier", WriteBarrierSnippets'GC_INDEX_LOCATION, WriteBarrierSnippets'GC_LOG_LOCATION)
+                #_"SnippetInfo" :g1ReferentReadBarrier (AbstractTemplates''snippet-3* WriteBarrierSnippets, "g1PreWriteBarrier", WriteBarrierSnippets'GC_INDEX_LOCATION, WriteBarrierSnippets'GC_LOG_LOCATION)
+                #_"SnippetInfo" :g1PostWriteBarrier (AbstractTemplates''snippet-3* WriteBarrierSnippets, "g1PostWriteBarrier", WriteBarrierSnippets'GC_CARD_LOCATION, WriteBarrierSnippets'GC_INDEX_LOCATION, WriteBarrierSnippets'GC_LOG_LOCATION)
                 #_"CompressEncoding" :oopEncoding oopEncoding
             )
         )
@@ -14779,7 +14675,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns AddressLowering
+(class-ns AddressLowering []
     (def- #_"int" AddressLowering'ADDRESS_BITS 64)
     (def- #_"int" AddressLowering'INT_BITS 32)
 
@@ -15126,13 +15022,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"ValueNode" AddressLowering'tryImplicitZeroExtend-1 [#_"ValueNode" input]
-        (when (and (satisfies? ZeroExtendNode input) (AddressLowering'applicableToImplicitZeroExtend-1 input)) => input
-            (Unary'''getValue-1 input)
-        )
-    )
-
-    (defn #_"void" AddressLowering''preProcess-2 [#_"AddressLowering" this, #_"Graph" graph]
+    (defn #_"void" AddressLowering'preProcess-1 [#_"Graph" graph]
         (when (Graph''hasLoops-1 graph)
             (let [
                 #_"LoopsData" loopsData (LoopsData'new-1 graph)
@@ -15148,16 +15038,25 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn #_"void" AddressLowering''postProcess-2 [#_"AddressLowering" this, #_"AddressNode" lowered]
+    (defn- #_"ValueNode" AddressLowering'tryImplicitZeroExtend-1 [#_"ValueNode" input]
+        (when (and (satisfies? ZeroExtendNode input) (AddressLowering'applicableToImplicitZeroExtend-1 input)) => input
+            (Unary'''getValue-1 input)
+        )
+    )
+
+    (defn #_"AddressNode" AddressLowering'postProcess-1 [#_"AddressNode" address]
         ;; Allow implicit zero extend for always positive input. This assumes
         ;; that the upper bits of the operand is zero out by the backend.
-        (§ ass! lowered (AMD64AddressNode''setBase-2 lowered, (AddressLowering'tryImplicitZeroExtend-1 (AddressNode'''getBase-1 lowered))))
-        (§ ass! lowered (AMD64AddressNode''setIndex-2 lowered, (AddressLowering'tryImplicitZeroExtend-1 (AddressNode'''getIndex-1 lowered))))
-        nil
+        (let [
+            address (AMD64AddressNode''setBase-2 address, (AddressLowering'tryImplicitZeroExtend-1 (AddressNode'''getBase-1 address)))
+            address (AMD64AddressNode''setIndex-2 address, (AddressLowering'tryImplicitZeroExtend-1 (AddressNode'''getIndex-1 address)))
+        ]
+            address
+        )
     )
 )
 
-(class-ns AddressLoweringPhase
+(class-ns AddressLoweringPhase [Phase]
     (defn #_"AddressLoweringPhase" AddressLoweringPhase'new-1 [#_"AddressLowering" lowering]
         (merge (AddressLoweringPhase'class.)
             (hash-map
@@ -15168,7 +15067,7 @@ ZeroExtendNode'new-4
 
     (defm AddressLoweringPhase Phase
         (#_"Graph" Phase'''run-3 [#_"AddressLoweringPhase" this, #_"Graph" graph, #_"PhaseContext" context]
-            (AddressLowering''preProcess-2 (:lowering this), graph)
+            (AddressLowering'preProcess-1 graph)
             (loop-when-recur [#_"ISeq" s (seq (Graph''getNodes-1 graph))] (some? s) [(next s)]
                 (let [
                     #_"Node" node (first s)
@@ -15177,8 +15076,7 @@ ZeroExtendNode'new-4
                         (let [
                             #_"AddressNode" lowered (AddressLowering''lower-3 (:lowering this), (AddressNode'''getBase-1 node), (:offset node))
                         ]
-                            (AddressLowering''postProcess-2 (:lowering this), lowered)
-                            (§ ass! node (Node''replaceAtUsages-2 node, lowered))
+                            (§ ass! node (Node''replaceAtUsages-2 node, (AddressLowering'postProcess-1 lowered)))
                             (GraphUtil'killWithUnusedFloatingInputs-1 node)
                         )
                     )
@@ -15189,7 +15087,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns AllocatableRegisters
+(class-ns AllocatableRegisters []
     (defn #_"AllocatableRegisters" AllocatableRegisters'new-3 [#_"RegisterArray" allocatableRegisters, #_"int" minRegisterNumber, #_"int" maxRegisterNumber]
         (merge (AllocatableRegisters'class.)
             (hash-map
@@ -15205,7 +15103,7 @@ ZeroExtendNode'new-4
  ; Represents a value that is yet to be bound to a machine location (such as a RegisterValue or StackSlot)
  ; by a register allocator.
  ;;
-(class-ns Variable
+(class-ns Variable [#_"AllocatableValue"]
     ;;;
      ; Creates a new variable.
      ;;
@@ -15226,7 +15124,7 @@ ZeroExtendNode'new-4
  ; VirtualStackSlots are stack slots that are not yet fixed to specific frame offset. They
  ; are replaced by real StackSlots with a fixed position in the frame before code emission.
  ;;
-(class-ns VirtualStackSlot
+(class-ns VirtualStackSlot [#_"AllocatableValue"]
     (defn #_"VirtualStackSlot" VirtualStackSlot'new-2 [#_"int" id, #_"ValueKind" kind]
         (merge (VirtualStackSlot'class.) (AllocatableValue. kind)
             (hash-map
@@ -15239,7 +15137,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Represents a {@link VirtualStackSlot virtual stack slot} for a specific {@link ValueKind kind}.
  ;;
-(class-ns SimpleVirtualStackSlot
+(class-ns SimpleVirtualStackSlot [VirtualStackSlot, #_"AllocatableValue"]
     (defn #_"SimpleVirtualStackSlot" SimpleVirtualStackSlot'new-2 [#_"int" id, #_"ValueKind" kind]
         (merge (SimpleVirtualStackSlot'class.) (VirtualStackSlot'new-2 id, kind))
     )
@@ -15249,7 +15147,7 @@ ZeroExtendNode'new-4
  ; Represents a {@link #getSlots() numbered} range of {@link VirtualStackSlot virtual stack slot}
  ; of size TargetDescription#wordSize.
  ;;
-(class-ns VirtualStackSlotRange
+(class-ns VirtualStackSlotRange [VirtualStackSlot, #_"AllocatableValue"]
     #_unused
     (defn #_"VirtualStackSlotRange" VirtualStackSlotRange'new-4 [#_"int" id, #_"int" slots, #_"BitSet" objects, #_"LIRKind" kind]
         (merge (VirtualStackSlotRange'class.) (VirtualStackSlot'new-2 id, kind)
@@ -15265,7 +15163,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns Allocator
+(class-ns Allocator []
     ;;;
      ; Numbers all instructions in all blocks.
      ;
@@ -15505,7 +15403,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns AndPredicate
+(class-ns AndPredicate [NodePredicate, #_"Predicate" #_"<Node>"]
     (defn #_"AndPredicate" AndPredicate'new-2 [#_"NodePredicate" a, #_"NodePredicate" b]
         (merge (AndPredicate'class.)
             (hash-map
@@ -15541,7 +15439,7 @@ ZeroExtendNode'new-4
  ; is {@link SnippetTemplate#SnippetTemplate created} for every distinct array length. The actual values
  ; are bound when the SnippetTemplate is {@link SnippetTemplate#instantiate instantiated}.
  ;;
-(class-ns Arguments
+(class-ns Arguments []
     (defn #_"Arguments" Arguments'new-3 [#_"SnippetInfo" info, #_"GuardsStage" guardsStage, #_"LoweringStage" loweringStage]
         (merge (Arguments'class.)
             (hash-map
@@ -15579,7 +15477,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns ArithmeticOp
+(class-ns ArithmeticOp []
     (defn #_"ArithmeticOp" ArithmeticOp'new-1 [#_"String" operator]
         (merge (ArithmeticOp'class.)
             (hash-map
@@ -15589,7 +15487,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns BinaryOp #_"<T>"
+(class-ns BinaryOp #_"<T>" [ArithmeticOp]
     (defn #_"BinaryOp" BinaryOp'new-3 [#_"String" operation, #_"boolean" associative?, #_"boolean" commutative?]
         (merge (BinaryOp'class.) (ArithmeticOp'new-1 operation)
             (hash-map
@@ -15631,73 +15529,73 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns Add
+(class-ns Add [BinaryOp #_"<Add>", ArithmeticOp]
     (defn #_"Add" Add'new-2 [#_"boolean" associative?, #_"boolean" commutative?]
         (merge (Add'class.) (BinaryOp'new-3 "+", associative?, commutative?))
     )
 )
 
-(class-ns And
+(class-ns And [BinaryOp #_"<And>", ArithmeticOp]
     (defn #_"And" And'new-2 [#_"boolean" associative?, #_"boolean" commutative?]
         (merge (And'class.) (BinaryOp'new-3 "&", associative?, commutative?))
     )
 )
 
-(class-ns Div
+(class-ns Div [BinaryOp #_"<Div>", ArithmeticOp]
     (defn #_"Div" Div'new-2 [#_"boolean" associative?, #_"boolean" commutative?]
         (merge (Div'class.) (BinaryOp'new-3 "/", associative?, commutative?))
     )
 )
 
-(class-ns Mul
+(class-ns Mul [BinaryOp #_"<Mul>", ArithmeticOp]
     (defn #_"Mul" Mul'new-2 [#_"boolean" associative?, #_"boolean" commutative?]
         (merge (Mul'class.) (BinaryOp'new-3 "*", associative?, commutative?))
     )
 )
 
-(class-ns MulHigh
+(class-ns MulHigh [BinaryOp #_"<MulHigh>", ArithmeticOp]
     (defn #_"MulHigh" MulHigh'new-2 [#_"boolean" associative?, #_"boolean" commutative?]
         (merge (MulHigh'class.) (BinaryOp'new-3 "*H", associative?, commutative?))
     )
 )
 
-(class-ns Or
+(class-ns Or [BinaryOp #_"<Or>", ArithmeticOp]
     (defn #_"Or" Or'new-2 [#_"boolean" associative?, #_"boolean" commutative?]
         (merge (Or'class.) (BinaryOp'new-3 "|", associative?, commutative?))
     )
 )
 
-(class-ns Rem
+(class-ns Rem [BinaryOp #_"<Rem>", ArithmeticOp]
     (defn #_"Rem" Rem'new-2 [#_"boolean" associative?, #_"boolean" commutative?]
         (merge (Rem'class.) (BinaryOp'new-3 "%", associative?, commutative?))
     )
 )
 
-(class-ns Sub
+(class-ns Sub [BinaryOp #_"<Sub>", ArithmeticOp]
     (defn #_"Sub" Sub'new-2 [#_"boolean" associative?, #_"boolean" commutative?]
         (merge (Sub'class.) (BinaryOp'new-3 "-", associative?, commutative?))
     )
 )
 
-(class-ns UMulHigh
+(class-ns UMulHigh [BinaryOp #_"<UMulHigh>", ArithmeticOp]
     (defn #_"UMulHigh" UMulHigh'new-2 [#_"boolean" associative?, #_"boolean" commutative?]
         (merge (UMulHigh'class.) (BinaryOp'new-3 "|*H|", associative?, commutative?))
     )
 )
 
-(class-ns Xor
+(class-ns Xor [BinaryOp #_"<Xor>", ArithmeticOp]
     (defn #_"Xor" Xor'new-2 [#_"boolean" associative?, #_"boolean" commutative?]
         (merge (Xor'class.) (BinaryOp'new-3 "^", associative?, commutative?))
     )
 )
 
-(class-ns IntegerConvertOp #_"<T>"
+(class-ns IntegerConvertOp #_"<T>" [ArithmeticOp]
     (defn #_"IntegerConvertOp" IntegerConvertOp'new-1 [#_"String" op]
         (merge (IntegerConvertOp'class.) (ArithmeticOp'new-1 op))
     )
 )
 
-(class-ns Narrow
+(class-ns Narrow [IntegerConvertOp #_"<Narrow>", ArithmeticOp]
     (defn #_"Narrow" Narrow'new-0 []
         (merge (Narrow'class.) (IntegerConvertOp'new-1 "Narrow"))
     )
@@ -15709,61 +15607,61 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns SignExtend
+(class-ns SignExtend [IntegerConvertOp #_"<SignExtend>", ArithmeticOp]
     (defn #_"SignExtend" SignExtend'new-0 []
         (merge (SignExtend'class.) (IntegerConvertOp'new-1 "SignExtend"))
     )
 )
 
-(class-ns ZeroExtend
+(class-ns ZeroExtend [IntegerConvertOp #_"<ZeroExtend>", ArithmeticOp]
     (defn #_"ZeroExtend" ZeroExtend'new-0 []
         (merge (ZeroExtend'class.) (IntegerConvertOp'new-1 "ZeroExtend"))
     )
 )
 
-(class-ns ShiftOp #_"<OP>"
+(class-ns ShiftOp #_"<OP>" [ArithmeticOp]
     (defn #_"ShiftOp" ShiftOp'new-1 [#_"String" operation]
         (merge (ShiftOp'class.) (ArithmeticOp'new-1 operation))
     )
 )
 
-(class-ns Shl
+(class-ns Shl [ShiftOp #_"<Shl>", ArithmeticOp]
     (defn #_"Shl" Shl'new-0 []
         (merge (Shl'class.) (ShiftOp'new-1 "<<"))
     )
 )
 
-(class-ns Shr
+(class-ns Shr [ShiftOp #_"<Shr>", ArithmeticOp]
     (defn #_"Shr" Shr'new-0 []
         (merge (Shr'class.) (ShiftOp'new-1 ">>"))
     )
 )
 
-(class-ns UShr
+(class-ns UShr [ShiftOp #_"<UShr>", ArithmeticOp]
     (defn #_"UShr" UShr'new-0 []
         (merge (UShr'class.) (ShiftOp'new-1 ">>>"))
     )
 )
 
-(class-ns UnaryOp #_"<T>"
+(class-ns UnaryOp #_"<T>" [ArithmeticOp]
     (defn #_"UnaryOp" UnaryOp'new-1 [#_"String" operation]
         (merge (UnaryOp'class.) (ArithmeticOp'new-1 operation))
     )
 )
 
-(class-ns Abs
+(class-ns Abs [UnaryOp #_"<Abs>", ArithmeticOp]
     (defn #_"Abs" Abs'new-0 []
         (merge (Abs'class.) (UnaryOp'new-1 "ABS"))
     )
 )
 
-(class-ns Neg
+(class-ns Neg [UnaryOp #_"<Neg>", ArithmeticOp]
     (defn #_"Neg" Neg'new-0 []
         (merge (Neg'class.) (UnaryOp'new-1 "-"))
     )
 )
 
-(class-ns Not
+(class-ns Not [UnaryOp #_"<Not>", ArithmeticOp]
     (defn #_"Not" Not'new-0 []
         (merge (Not'class.) (UnaryOp'new-1 "~"))
     )
@@ -15772,7 +15670,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Information about arithmetic operations.
  ;;
-(class-ns ArithmeticOpTable
+(class-ns ArithmeticOpTable []
     (defn #_"ArithmeticOpTable" ArithmeticOpTable'new-19 [#_"UnaryOp<Neg>" neg, #_"BinaryOp<Add>" add, #_"BinaryOp<Sub>" sub, #_"BinaryOp<Mul>" mul, #_"BinaryOp<MulHigh>" mulHigh, #_"BinaryOp<UMulHigh>" umulHigh, #_"BinaryOp<Div>" div, #_"BinaryOp<Rem>" rem, #_"UnaryOp<Not>" not, #_"BinaryOp<And>" and, #_"BinaryOp<Or>" or, #_"BinaryOp<Xor>" xor, #_"ShiftOp<Shl>" shl, #_"ShiftOp<Shr>" shr, #_"ShiftOp<UShr>" ushr, #_"UnaryOp<Abs>" abs, #_"IntegerConvertOp<ZeroExtend>" zeroExtend, #_"IntegerConvertOp<SignExtend>" signExtend, #_"IntegerConvertOp<Narrow>" narrow]
         (merge (ArithmeticOpTable'class.)
             (hash-map
@@ -15806,7 +15704,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns Assembler
+(class-ns Assembler []
     (def- #_"boolean" Assembler'UseNormalNop false)
     (def- #_"boolean" Assembler'UseAddressNop true)
     (def- #_"boolean" Assembler'UseIncDec true)
@@ -18112,7 +18010,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns BaseSwitchClosure
+(class-ns BaseSwitchClosure [SwitchClosure]
     (defn #_"BaseSwitchClosure" BaseSwitchClosure'new-3 [#_"Assembler" asm, #_"LabelRef[]" keyTargets, #_"LabelRef" defaultTarget]
         (merge (BaseSwitchClosure'class.)
             (hash-map
@@ -18173,7 +18071,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns AMD64SwitchClosure
+(class-ns AMD64SwitchClosure [BaseSwitchClosure, SwitchClosure]
     (defn #_"AMD64SwitchClosure" AMD64SwitchClosure'new-3 [#_"StrategySwitchOp" op, #_"Register" keyRegister, #_"Assembler" asm]
         (merge (AMD64SwitchClosure'class.) (BaseSwitchClosure'new-3 asm, (:keyTargets op), (:defaultTarget op))
             (hash-map
@@ -18208,7 +18106,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns HotSpotSwitchClosure
+(class-ns HotSpotSwitchClosure [AMD64SwitchClosure, BaseSwitchClosure, SwitchClosure]
     (defn #_"HotSpotSwitchClosure" HotSpotSwitchClosure'new-3 [#_"AMD64HotSpotStrategySwitchOp" op, #_"Register" keyRegister, #_"Assembler" asm]
         (merge (HotSpotSwitchClosure'class.) (AMD64SwitchClosure'new-3 op, keyRegister, asm))
     )
@@ -18233,7 +18131,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns BciBlock
+(class-ns BciBlock []
     (defn #_"BciBlock" BciBlock'new-1 [#_"int" startBci]
         (merge (BciBlock'class.)
             (hash-map
@@ -18395,7 +18293,7 @@ ZeroExtendNode'new-4
  ; The algorithms and analysis in this class are conservative and do not use any assumptions or
  ; profiling information.
  ;;
-(class-ns BciBlockMapping
+(class-ns BciBlockMapping []
     (def- #_"int" BciBlockMapping'LOOP_HEADER_MAX_CAPACITY Long/SIZE)
     (def- #_"int" BciBlockMapping'LOOP_HEADER_INITIAL_CAPACITY 4)
 
@@ -18867,7 +18765,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Arithmetic operation with operand order of RM, MR or MI.
  ;;
-(class-ns BinaryArithmetic
+(class-ns BinaryArithmetic []
     (defn- #_"BinaryArithmetic" BinaryArithmetic'new-1 [#_"int" code]
         (let [
             #_"int" base (<< code 3)
@@ -18916,7 +18814,7 @@ ZeroExtendNode'new-4
 ;;;
  ; This class implements a two-dimensional bitmap.
  ;;
-(class-ns BitMap2D
+(class-ns BitMap2D []
     (defn #_"BitMap2D" BitMap2D'new-2 [#_"int" sizeInSlots, #_"int" bitsPerSlot]
         (merge (BitMap2D'class.)
             (hash-map
@@ -18935,7 +18833,7 @@ ZeroExtendNode'new-4
     (defn #_"void"    BitMap2D''clearBit-3 [#_"BitMap2D" this, #_"int" i, #_"int" j] (#_"BitSet" .clear (:bits this), (BitMap2D''bitIndex-3 this, i, j)) nil)
 )
 
-(class-ns Block
+(class-ns Block []
     (def #_"Block[]" Block'EMPTY_ARRAY (make-array Block'iface 0))
 
     (defn #_"Block" Block'new-1 [#_"AbstractBeginNode" node]
@@ -19224,7 +19122,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns BlockClosure
+(class-ns BlockClosure []
     (defn- #_"void" BlockClosure''addDef-3 [#_"BlockClosure" this, #_"VirtualStackSlot" stackSlot, #_"LIRInstruction" op]
         (§ ass! (FixPointIntervalBuilder''getOrCreateInterval-2 (:builder this), stackSlot) (StackInterval''addFrom-2 (FixPointIntervalBuilder''getOrCreateInterval-2 (:builder this), stackSlot), (:id op)))
         nil
@@ -19335,7 +19233,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns BlockData
+(class-ns BlockData []
     (defn #_"BlockData" BlockData'new-0 []
         (merge (BlockData'class.)
             (hash-map
@@ -19369,19 +19267,19 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns BlockIteratorClosure #_"<T>"
+(class-ns BlockIteratorClosure #_"<T>" []
     (defn #_"BlockIteratorClosure" BlockIteratorClosure'new-0 []
         (BlockIteratorClosure'class.)
     )
 )
 
-(class-ns Closure #_"<T>"
+(class-ns Closure #_"<T>" [BlockIteratorClosure #_"<T>"]
     (defn #_"Closure" Closure'new-0 []
         (merge (Closure'class.) (BlockIteratorClosure'new-0))
     )
 )
 
-(class-ns EffectsClosure #_"<T implements EffectsBlockState<T>>"
+(class-ns EffectsClosure #_"<T implements EffectsBlockState<T>>" [Closure #_"<T>", BlockIteratorClosure #_"<T>"]
     (defn #_"EffectsClosure" EffectsClosure'new-2 [#_"ScheduleResult" schedule, #_"ControlFlowGraph" cfg]
         (let [
             #_"EffectsClosure" this
@@ -19444,49 +19342,43 @@ ZeroExtendNode'new-4
                 #_"Graph" graph (:graph (:cfg this))
                 #_"ArrayList<Node>" obsoleteNodes (ArrayList.)
                 #_"ArrayList<GraphEffectList>" effectList (ArrayList.)
-                #_"EffectsClosure<T>" effectsClosure this
-                ;; Effects are applied during a ordered iteration over the blocks to apply them in the correct
-                ;; order, e.g. apply the effect that adds a node to the graph before the node is used.
+                #_"EffectsClosure<T>" owner this
+                ;; Effects are applied during a ordered iteration over the blocks to apply them in the correct order,
+                ;; e.g. apply the effect that adds a node to the graph before the node is used.
                 #_"BlockIteratorClosure<Void>" closure
                     (§ proxy #_"BlockIteratorClosure" #_"<Void>" (BlockIteratorClosure'new-0)
                         (defm BlockIteratorClosure #_"<Void>" BlockIteratorClosure
                             (#_"Void" BlockIteratorClosure'''getInitialState-1 [#_"BlockIteratorClosure<Void>" this]
                                 nil
                             )
-                        )
 
-                        (defn- #_"void" BlockIteratorClosure''apply-2 [#_"BlockIteratorClosure<Void>" this, #_"GraphEffectList" effects]
-                            (when (and (some? effects) (not (EffectList''isEmpty-1 effects)))
-                                (#_"ArrayList" .add effectList, effects)
+                            (#_"Void" BlockIteratorClosure'''processBlock-3 [#_"BlockIteratorClosure<Void>" this, #_"Block" block, #_"Void" currentState]
+                                (let [
+                                    #_"GraphEffectList" effects (BlockMap''get-2 (:blockEffects owner), block)
+                                ]
+                                    (when (and (some? effects) (not (EffectList''isEmpty-1 effects)))
+                                        (#_"ArrayList" .add effectList, effects)
+                                    )
+                                    currentState
+                                )
                             )
-                            nil
-                        )
 
-                        (defm BlockIteratorClosure #_"<Void>" BlockIteratorClosure
-                            (#_"Void" BlockIteratorClosure'''processBlock-3 [#_"BlockIteratorClosure<Void>" this, #_"Block" block, #_"Void" currentState]
-                                (BlockIteratorClosure''apply-2 this, (BlockMap''get-2 (:blockEffects effectsClosure), block))
-                                currentState
-                            )
-                        )
-
-                        (defm BlockIteratorClosure #_"<Void>" BlockIteratorClosure
                             (#_"Void" BlockIteratorClosure'''merge-3 [#_"BlockIteratorClosure<Void>" this, #_"Block" merge, #_"List<Void>" states]
                                 nil
                             )
-                        )
 
-                        (defm BlockIteratorClosure #_"<Void>" BlockIteratorClosure
                             (#_"Void" BlockIteratorClosure'''cloneState-2 [#_"BlockIteratorClosure<Void>" this, #_"Void" oldState]
                                 oldState
                             )
-                        )
 
-                        (defm BlockIteratorClosure #_"<Void>" BlockIteratorClosure
                             (#_"List<Void>" BlockIteratorClosure'''processLoop-3 [#_"BlockIteratorClosure<Void>" this, #_"Loop" loop, #_"Void" initialState]
                                 (let [
                                     #_"BlockLoopInfo<Void>" info (ReentrantBlockIterator'processLoop-3 this, loop, initialState)
+                                    #_"GraphEffectList" effects (get (:loopMergeEffects owner) loop)
                                 ]
-                                    (BlockIteratorClosure''apply-2 this, (get (:loopMergeEffects effectsClosure) loop))
+                                    (when (and (some? effects) (not (EffectList''isEmpty-1 effects)))
+                                        (#_"ArrayList" .add effectList, effects)
+                                    )
                                     (:exitStates info)
                                 )
                             )
@@ -19749,7 +19641,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns PartialEscapeClosure #_"<T implements PartialEscapeBlockState<T>>"
+(class-ns PartialEscapeClosure #_"<T implements PartialEscapeBlockState<T>>" [EffectsClosure #_"<T>", Closure #_"<T>", BlockIteratorClosure #_"<T>"]
     (defn #_"PartialEscapeClosure" PartialEscapeClosure'new-1 [#_"ScheduleResult" schedule]
         (let [
             #_"PartialEscapeClosure" this
@@ -20361,7 +20253,7 @@ ZeroExtendNode'new-4
  ; Final subclass of PartialEscapeClosure, for performance and to make everything
  ; behave nicely with generics.
  ;;
-(class-ns FinalClosure
+(class-ns FinalClosure [PartialEscapeClosure #_"<FinalState>", EffectsClosure #_"<FinalState>", Closure #_"<FinalState>", BlockIteratorClosure #_"<FinalState>"]
     (defn #_"FinalClosure" FinalClosure'new-1 [#_"ScheduleResult" schedule]
         (merge (FinalClosure'class.) (PartialEscapeClosure'new-1 schedule))
     )
@@ -20377,7 +20269,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns PEReadEliminationClosure
+(class-ns PEReadEliminationClosure [PartialEscapeClosure #_"<PEReadEliminationBlockState>", EffectsClosure #_"<PEReadEliminationBlockState>", Closure #_"<PEReadEliminationBlockState>", BlockIteratorClosure #_"<PEReadEliminationBlockState>"]
     (def- #_"EnumMap<JavaKind, LocationIdentity>" PEReadEliminationClosure'UNBOX_LOCATIONS
         (let [
             #_"EnumMap<JavaKind, LocationIdentity>" m (EnumMap. JavaKind)
@@ -20807,7 +20699,7 @@ ZeroExtendNode'new-4
  ; This closure initially handled a set of nodes that is disjunct from PEReadEliminationClosure,
  ; but over time both have evolved so that there's a significant overlap.
  ;;
-(class-ns ReadEliminationClosure
+(class-ns ReadEliminationClosure [EffectsClosure #_"<ReadEliminationBlockState>", Closure #_"<ReadEliminationBlockState>", BlockIteratorClosure #_"<ReadEliminationBlockState>"]
     (defn #_"ReadEliminationClosure" ReadEliminationClosure'new-2 [#_"ControlFlowGraph" cfg, #_"boolean" considerGuards]
         (merge (ReadEliminationClosure'class.) (EffectsClosure'new-2 nil, cfg)
             (hash-map
@@ -21080,7 +20972,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns BlockLoopInfo #_"<T>"
+(class-ns BlockLoopInfo #_"<T>" []
     (defn #_"BlockLoopInfo" BlockLoopInfo'new-2 [#_"int" endCount, #_"int" exitCount]
         (merge (BlockLoopInfo'class.)
             (hash-map
@@ -21091,7 +20983,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns BlockMap #_"<T>"
+(class-ns BlockMap #_"<T>" []
     (defn #_"BlockMap" BlockMap'new-1 [#_"ControlFlowGraph" cfg]
         (merge (BlockMap'class.)
             (hash-map
@@ -21110,7 +21002,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns BlockNodeIterator
+(class-ns BlockNodeIterator [#_"Iterator" #_"<FixedNode>"]
     (defn #_"BlockNodeIterator" BlockNodeIterator'new-1 [#_"FixedNode" next]
         (merge (BlockNodeIterator'class.)
             (hash-map
@@ -21146,7 +21038,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Comparator for sorting blocks based on loop depth and probability.
  ;;
-(class-ns BlockOrderComparator
+(class-ns BlockOrderComparator [#_"Comparator" #_"<Block>"]
     (defn #_"BlockOrderComparator" BlockOrderComparator'new-0 []
         (BlockOrderComparator'class.)
     )
@@ -21172,7 +21064,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns BlockScope
+(class-ns BlockScope [#_"AutoCloseable"]
     (defn #_"BlockScope" BlockScope'new-2 [#_"LIRGenerator" gen, #_"Block" block]
         (let [
             #_"BlockScope" this
@@ -21217,7 +21109,7 @@ ZeroExtendNode'new-4
  ; The value numbers also contain information if it is an object kind value or not: if the
  ; number is negative it is an object kind value.
  ;;
-(class-ns BlockStates
+(class-ns BlockStates []
     (defn #_"BlockStates" BlockStates'new-1 [#_"int" stateSize]
         (merge (BlockStates'class.)
             (hash-map
@@ -21234,7 +21126,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns BytecodeParser
+(class-ns BytecodeParser [GraphBuilder]
     (defn #_"BytecodeParser" BytecodeParser'new-5 [#_"GraphBuilderInstance" builder, #_"Graph" graph, #_"BytecodeParser" parent, #_"ResolvedJavaMethod" method, #_"IntrinsicContext" context]
         (let [
             #_"BytecodeProvider" bytecodeProvider (if (some? context) (:bytecodeProvider context) ResolvedJavaMethodBytecodeProvider'INSTANCE)
@@ -21646,7 +21538,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"StampPair" BytecodeParser''getInvokeReturnStamp-1 [#_"BytecodeParser" this]
+    (defn #_"Stamp" BytecodeParser''getInvokeReturnStamp-1 [#_"BytecodeParser" this]
         (StampFactory'forDeclaredType-2 (BytecodeParser''getInvokeReturnType-1 this), false)
     )
 
@@ -21906,7 +21798,7 @@ ZeroExtendNode'new-4
 
     (defn #_"ValueNode" BytecodeParser''genLoadField-3 [#_"BytecodeParser" this, #_"ValueNode" receiver, #_"ResolvedJavaField" field]
         (let [
-            #_"StampPair" stamp (Plugins''getOverridingStamp-4 (:plugins (:graphBuilderConfig this)), this, (#_"ResolvedJavaField" .getType field), false)
+            #_"Stamp" stamp (Plugins''getOverridingStamp-4 (:plugins (:graphBuilderConfig this)), this, (#_"ResolvedJavaField" .getType field), false)
         ]
             (if (some? stamp)
                 (LoadFieldNode'createOverrideStamp-5 stamp, receiver, field, false, false)
@@ -22486,7 +22378,7 @@ ZeroExtendNode'new-4
 
     (defn #_"InvokeNode" BytecodeParser''createNonInlinedInvoke-7 [#_"BytecodeParser" this, #_"int" invokeBci, #_"ValueNode*" invokeArgs, #_"ResolvedJavaMethod" targetMethod, #_"InvokeKind" invokeKind, #_"JavaKind" resultType, #_"JavaType" returnType]
         (let [
-            #_"StampPair" returnStamp
+            #_"Stamp" returnStamp
                 (or (Plugins''getOverridingStamp-4 (:plugins (:graphBuilderConfig this)), this, returnType, false)
                     (StampFactory'forDeclaredType-2 returnType, false)
                 )
@@ -23951,7 +23843,7 @@ ZeroExtendNode'new-4
  ; A utility class that makes iterating over bytecodes and reading operands simpler and less error prone.
  ; For example, it handles the Bytecodes#WIDE instruction and wide variants of instructions internally.
  ;;
-(class-ns BytecodeStream
+(class-ns BytecodeStream []
     ;;;
      ; Creates a new BytecodeStream for the specified bytecode.
      ;;
@@ -24156,7 +24048,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns BytecodeSwitch
+(class-ns BytecodeSwitch []
     ;;;
      ; Constructor for a BytecodeStream.
      ;
@@ -24215,7 +24107,7 @@ ZeroExtendNode'new-4
 ;;;
  ; A utility for processing Bytecodes#LOOKUPSWITCH bytecodes.
  ;;
-(class-ns BytecodeLookupSwitch
+(class-ns BytecodeLookupSwitch [BytecodeSwitch]
     (def- #_"int" BytecodeLookupSwitch'OFFSET_TO_NUMBER_PAIRS 4)
     (def- #_"int" BytecodeLookupSwitch'OFFSET_TO_FIRST_PAIR_MATCH 8)
     (def- #_"int" BytecodeLookupSwitch'OFFSET_TO_FIRST_PAIR_OFFSET 12)
@@ -24253,7 +24145,7 @@ ZeroExtendNode'new-4
 ;;;
  ; A utility for processing Bytecodes#TABLESWITCH bytecodes.
  ;;
-(class-ns BytecodeTableSwitch
+(class-ns BytecodeTableSwitch [BytecodeSwitch]
     (def- #_"int" BytecodeTableSwitch'OFFSET_TO_LOW_KEY 4)
     (def- #_"int" BytecodeTableSwitch'OFFSET_TO_HIGH_KEY 8)
     (def- #_"int" BytecodeTableSwitch'OFFSET_TO_FIRST_JUMP_OFFSET 12)
@@ -24302,7 +24194,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns CFOptimizer
+(class-ns CFOptimizer []
     (defn #_"CFOptimizer" CFOptimizer'new-1 [#_"LIR" lir]
         (merge (CFOptimizer'class.)
             (hash-map
@@ -24356,7 +24248,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns CLOptimization
+(class-ns CLOptimization []
     (defn #_"CLOptimization" CLOptimization'new-2 [#_"LIR" lir, #_"LIRGenerator" lirGen]
         (merge (CLOptimization'class.)
             (hash-map
@@ -24590,7 +24482,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns CacheEntry #_"<T>"
+(class-ns CacheEntry #_"<T>" []
     (defn #_"CacheEntry" CacheEntry'new-2 [#_"ValueNode" object, #_"T" identity]
         (merge (CacheEntry'class.)
             (hash-map
@@ -24601,7 +24493,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LoadCacheEntry
+(class-ns LoadCacheEntry [CacheEntry #_"<LocationIdentity>"]
     (defn #_"LoadCacheEntry" LoadCacheEntry'new-2 [#_"ValueNode" object, #_"LocationIdentity" identity]
         (merge (LoadCacheEntry'class.) (CacheEntry'new-2 object, identity))
     )
@@ -24625,7 +24517,7 @@ ZeroExtendNode'new-4
  ; CacheEntry describing an Unsafe memory reference. The memory location and the location identity
  ; are separate so both must be considered when looking for optimizable memory accesses.
  ;;
-(class-ns UnsafeLoadCacheEntry
+(class-ns UnsafeLoadCacheEntry [CacheEntry #_"<ValueNode>"]
     (defn #_"UnsafeLoadCacheEntry" UnsafeLoadCacheEntry'new-3 [#_"ValueNode" object, #_"ValueNode" location, #_"LocationIdentity" locationIdentity]
         (merge (UnsafeLoadCacheEntry'class.) (CacheEntry'new-2 object, location)
             (hash-map
@@ -24649,7 +24541,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns CacheKey
+(class-ns CacheKey []
     (defn #_"CacheKey" CacheKey'new-3 [#_"SnippetInfo" info, #_"GuardsStage" guardsStage, #_"LoweringStage" loweringStage]
         (merge (CacheKey'class.)
             (hash-map
@@ -24667,7 +24559,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns CallsiteHolder
+(class-ns CallsiteHolder []
     (defn #_"CallsiteHolder" CallsiteHolder'new-0 []
         (CallsiteHolder'class.)
     )
@@ -24681,7 +24573,7 @@ ZeroExtendNode'new-4
  ; there: just the InvokeNodes from it. Such nodes are candidates for depth-first search of further
  ; inlining opportunities (thus the adjective "explorable" given to this class).
  ;;
-(class-ns CallsiteHolderExplorable
+(class-ns CallsiteHolderExplorable [CallsiteHolder]
     (defn- #_"EconomicSet<ParameterNode>" CallsiteHolderExplorable''fixedParamsAt-2 [#_"CallsiteHolderExplorable" this, #_"BitSet" freshlyInstantiatedArguments]
         (let [
             #_"EconomicSet<ParameterNode>" params (EconomicSet/create Equivalence/IDENTITY)
@@ -24784,7 +24676,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns CanonicalCondition
+(class-ns CanonicalCondition []
     (defn- #_"CanonicalCondition" CanonicalCondition'new-1 [#_"Condition" condition]
         (merge (CanonicalCondition'class.)
             (hash-map
@@ -24798,7 +24690,7 @@ ZeroExtendNode'new-4
     (§ def #_"CanonicalCondition" CanonicalCondition'BT (CanonicalCondition'new-1 Condition'BT))
 )
 
-(class-ns CanonicalizedCondition
+(class-ns CanonicalizedCondition []
     (defn #_"CanonicalizedCondition" CanonicalizedCondition'new-3 [#_"CanonicalCondition" canonicalCondition, #_"boolean" mirror?, #_"boolean" negate?]
         (merge (CanonicalizedCondition'class.)
             (hash-map
@@ -24810,7 +24702,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns CanonicalizerInstance
+(class-ns CanonicalizerInstance [Phase]
     (defn #_"CanonicalizerInstance" CanonicalizerInstance'new-3 [#_"CanonicalizerPhase" phase, #_"Iterable<Node>" workingSet, #_"NodeMark" newNodesMark]
         (merge (CanonicalizerInstance'class.)
             (hash-map
@@ -25025,7 +24917,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns CanonicalizerPhase
+(class-ns CanonicalizerPhase [Phase]
     (defn #_"CanonicalizerPhase" CanonicalizerPhase'new-0 []
         (merge (CanonicalizerPhase'class.)
             (hash-map
@@ -25065,7 +24957,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Container for objects representing the Code attributes parsed from a class file.
  ;;
-(class-ns Classfile
+(class-ns Classfile []
     (def- #_"int" Classfile'MAGIC 0xcafebabe)
     (def- #_"int" Classfile'MAJOR_VERSION_JAVA_MIN 51) ;; JDK7
     (def- #_"int" Classfile'MAJOR_VERSION_JAVA_MAX 55) ;; JDK11
@@ -25212,7 +25104,7 @@ ZeroExtendNode'new-4
  ; The bytecode properties of a method as parsed directly from a class file without any
  ; instrumentation or other rewriting performed on the bytecode.
  ;;
-(class-ns ClassfileBytecode
+(class-ns ClassfileBytecode [Bytecode]
     (def- #_"int" ClassfileBytecode'EXCEPTION_HANDLER_TABLE_SIZE_IN_BYTES 8)
 
     (defn- #_"void" ClassfileBytecode'skipCodeAttributes-1 [#_"DataInputStream" stream]
@@ -25292,7 +25184,7 @@ ZeroExtendNode'new-4
  ; appropriate LinkageError being thrown. The only way to avoid this is to have a completely isolated
  ; {@code jdk.vm.ci.meta} implementation for parsing snippet/intrinsic bytecodes.
  ;;
-(class-ns ClassfileBytecodeProvider
+(class-ns ClassfileBytecodeProvider [BytecodeProvider]
     (defn #_"ClassfileBytecodeProvider" ClassfileBytecodeProvider'new-0 []
         (let [
             #_"ClassfileBytecodeProvider" this
@@ -25428,7 +25320,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns ClassfileConstant
+(class-ns ClassfileConstant []
     (def #_"byte" ClassfileConstant'CONSTANT_Utf8               1)
     (def #_"byte" ClassfileConstant'CONSTANT_Integer            3)
     (def #_"byte" ClassfileConstant'CONSTANT_Float              4)
@@ -25486,7 +25378,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns ClassRef
+(class-ns ClassRef [ClassfileConstant]
     (defn #_"ClassRef" ClassRef'new-1 [#_"DataInputStream" stream]
         (merge (ClassRef'class.) (ClassfileConstant'new-1 ClassfileConstant'CONSTANT_Class)
             (hash-map
@@ -25511,7 +25403,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns MemberRef
+(class-ns MemberRef [ClassfileConstant]
     (defn #_"MemberRef" MemberRef'new-2 [#_"byte" tag, #_"DataInputStream" stream]
         (merge (MemberRef'class.) (ClassfileConstant'new-1 tag)
             (hash-map
@@ -25529,7 +25421,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns ExecutableRef
+(class-ns ExecutableRef [MemberRef, ClassfileConstant]
     (defn #_"ExecutableRef" ExecutableRef'new-2 [#_"byte" tag, #_"DataInputStream" stream]
         (merge (ExecutableRef'class.) (MemberRef'new-2 tag, stream)
             (hash-map
@@ -25578,19 +25470,19 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns InterfaceMethodRef
+(class-ns InterfaceMethodRef [ExecutableRef, MemberRef, ClassfileConstant]
     (defn #_"InterfaceMethodRef" InterfaceMethodRef'new-1 [#_"DataInputStream" stream]
         (merge (InterfaceMethodRef'class.) (ExecutableRef'new-2 ClassfileConstant'CONSTANT_InterfaceMethodref, stream))
     )
 )
 
-(class-ns MethodRef
+(class-ns MethodRef [ExecutableRef, MemberRef, ClassfileConstant]
     (defn #_"MethodRef" MethodRef'new-1 [#_"DataInputStream" stream]
         (merge (MethodRef'class.) (ExecutableRef'new-2 ClassfileConstant'CONSTANT_Methodref, stream))
     )
 )
 
-(class-ns FieldRef
+(class-ns FieldRef [MemberRef, ClassfileConstant]
     (defn #_"FieldRef" FieldRef'new-1 [#_"DataInputStream" stream]
         (merge (FieldRef'class.) (MemberRef'new-2 ClassfileConstant'CONSTANT_Fieldref, stream)
             (hash-map
@@ -25617,7 +25509,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns NameAndType
+(class-ns NameAndType [ClassfileConstant]
     (defn #_"NameAndType" NameAndType'new-1 [#_"DataInputStream" stream]
         (merge (NameAndType'class.) (ClassfileConstant'new-1 ClassfileConstant'CONSTANT_NameAndType)
             (hash-map
@@ -25644,7 +25536,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns Primitive
+(class-ns Primitive [ClassfileConstant]
     (defn #_"Primitive" Primitive'new-2 [#_"byte" tag, #_"JavaConstant" value]
         (merge (Primitive'class.) (ClassfileConstant'new-1 tag)
             (hash-map
@@ -25654,7 +25546,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns StringRef
+(class-ns StringRef [ClassfileConstant]
     (defn #_"StringRef" StringRef'new-1 [#_"DataInputStream" stream]
         (merge (StringRef'class.) (ClassfileConstant'new-1 ClassfileConstant'CONSTANT_String)
             (hash-map
@@ -25672,7 +25564,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns Unsupported
+(class-ns Unsupported [ClassfileConstant]
     (defn #_"Unsupported" Unsupported'new-2 [#_"byte" tag, #_"String" name]
         (merge (Unsupported'class.) (ClassfileConstant'new-1 tag)
             (hash-map
@@ -25688,7 +25580,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns Utf8
+(class-ns Utf8 [ClassfileConstant]
     (defn #_"Utf8" Utf8'new-1 [#_"String" value]
         (merge (Utf8'class.) (ClassfileConstant'new-1 ClassfileConstant'CONSTANT_Utf8)
             (hash-map
@@ -25698,7 +25590,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns ClassfileConstantPool
+(class-ns ClassfileConstantPool [#_"ConstantPool"]
     (defn- #_"ClassfileConstant" ClassfileConstantPool'readConstant-1 [#_"DataInputStream" stream]
         (let [
             #_"byte" tag (#_"DataInputStream" .readByte stream)
@@ -25815,7 +25707,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Code buffer management for the assembler.
  ;;
-(class-ns CodeBuffer
+(class-ns CodeBuffer []
     (def #_"int" CodeBuffer'InitialSize 232)
 
     (defn #_"CodeBuffer" CodeBuffer'new-1 [#_"ByteOrder" order]
@@ -25962,7 +25854,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns CompareOp
+(class-ns CompareOp []
     (defn #_"CompareOp" CompareOp'new-0 []
         (CompareOp'class.)
     )
@@ -26067,7 +25959,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns IntegerEqualsOp
+(class-ns IntegerEqualsOp [CompareOp]
     (defn #_"IntegerEqualsOp" IntegerEqualsOp'new-0 []
         (merge (IntegerEqualsOp'class.) (CompareOp'new-0))
     )
@@ -26191,7 +26083,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LowerOp
+(class-ns LowerOp [CompareOp]
     (defn #_"LowerOp" LowerOp'new-0 []
         (merge (LowerOp'class.) (CompareOp'new-0))
     )
@@ -26401,7 +26293,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns BelowOp
+(class-ns BelowOp [LowerOp, CompareOp]
     (defn #_"BelowOp" BelowOp'new-0 []
         (merge (BelowOp'class.) (LowerOp'new-0))
     )
@@ -26459,7 +26351,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LessThanOp
+(class-ns LessThanOp [LowerOp, CompareOp]
     (defn #_"LessThanOp" LessThanOp'new-0 []
         (merge (LessThanOp'class.) (LowerOp'new-0))
     )
@@ -26639,7 +26531,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns PointerEqualsOp
+(class-ns PointerEqualsOp [CompareOp]
     (defn #_"PointerEqualsOp" PointerEqualsOp'new-0 []
         (merge (PointerEqualsOp'class.) (CompareOp'new-0))
     )
@@ -26657,7 +26549,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns ObjectEqualsOp
+(class-ns ObjectEqualsOp [PointerEqualsOp, CompareOp]
     (defn #_"ObjectEqualsOp" ObjectEqualsOp'new-0 []
         (merge (ObjectEqualsOp'class.) (PointerEqualsOp'new-0))
     )
@@ -26691,7 +26583,7 @@ ZeroExtendNode'new-4
  ; Represents the output from compiling a method, including the compiled machine code, associated
  ; data and references, relocation information, deoptimization information, etc.
  ;;
-(class-ns CompilationResult
+(class-ns CompilationResult []
     (defn #_"CompilationResult" CompilationResult'new-1 [#_"int" totalFrameSize]
         (merge (CompilationResult'class.)
             (hash-map
@@ -26783,7 +26675,7 @@ ZeroExtendNode'new-4
 ;;;
  ; A compact representation of the different encoding strategies for objects and metadata.
  ;;
-(class-ns CompressEncoding
+(class-ns CompressEncoding []
     (defn #_"CompressEncoding" CompressEncoding'new-2 [#_"long" base, #_"int" shift]
         (merge (CompressEncoding'class.)
             (hash-map
@@ -26803,7 +26695,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns ComputeInliningRelevance
+(class-ns ComputeInliningRelevance []
     (def- #_"double" ComputeInliningRelevance'EPSILON (/ 1.0 Integer/MAX_VALUE))
     (def- #_"double" ComputeInliningRelevance'UNINITIALIZED -1.0)
 
@@ -27022,7 +26914,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns ComputeLoopFrequencyPhase
+(class-ns ComputeLoopFrequencyPhase [Phase]
     (defn #_"ComputeLoopFrequencyPhase" ComputeLoopFrequencyPhase'new-0 []
         (ComputeLoopFrequencyPhase'class.)
     )
@@ -27038,7 +26930,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Condition codes used in conditionals.
  ;;
-(class-ns Condition
+(class-ns Condition []
     (defn- #_"Condition" Condition'new-1 [#_"String" operator]
         (merge (Condition'class.)
             (hash-map
@@ -27392,7 +27284,7 @@ ZeroExtendNode'new-4
 ;;;
  ; The x86 condition codes used for conditional jumps/moves.
  ;;
-(class-ns ConditionFlag
+(class-ns ConditionFlag []
     (defn- #_"ConditionFlag" ConditionFlag'new-2 [#_"int" value, #_"String" operator]
         (merge (ConditionFlag'class.)
             (hash-map
@@ -27449,7 +27341,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns ConditionalEliminationInstance
+(class-ns ConditionalEliminationInstance [RecursiveVisitor #_"<Integer>"]
     (defn #_"ConditionalEliminationInstance" ConditionalEliminationInstance'new-3 [#_"Graph" graph, #_"BlockMap<List<Node>>" blockToNodes, #_"NodeMap<Block>" nodeToBlock]
         (merge (ConditionalEliminationInstance'class.)
             (hash-map
@@ -28304,7 +28196,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns ConditionalEliminationPhase
+(class-ns ConditionalEliminationPhase [Phase]
     (defn #_"ConditionalEliminationPhase" ConditionalEliminationPhase'new-1 [#_"boolean" fullSchedule]
         (merge (ConditionalEliminationPhase'class.)
             (hash-map
@@ -28334,11 +28226,10 @@ ZeroExtendNode'new-4
 ;;;
  ; A ParameterPlugin that binds constant values to some parameters.
  ;;
-(class-ns ConstantBindingParameterPlugin
+(class-ns ConstantBindingParameterPlugin [ParameterPlugin]
     ;;;
-     ; Creates a plugin that will create ConstantNodes for each parameter with
-     ; an index equal to that of a non-nil object in {@code constantArgs} (from which
-     ; the ConstantNode is created if it isn't already a ConstantNode).
+     ; Creates a plugin that will create ConstantNodes for each parameter with an index equal to that of a non-nil
+     ; object in {@code constantArgs} (from which the ConstantNode is created if it isn't already a ConstantNode).
      ;;
     (defn #_"ConstantBindingParameterPlugin" ConstantBindingParameterPlugin'new-1 [#_"Object[]" constantArgs]
         (merge (ConstantBindingParameterPlugin'class.)
@@ -28349,18 +28240,18 @@ ZeroExtendNode'new-4
     )
 
     (defm ConstantBindingParameterPlugin ParameterPlugin
-        (#_"FloatingNode" ParameterPlugin'''interceptParameter-4 [#_"ConstantBindingParameterPlugin" this, #_"GraphBuilder" b, #_"int" index, #_"StampPair" stamp]
+        (#_"FloatingNode" ParameterPlugin'''interceptParameter-4 [#_"ConstantBindingParameterPlugin" this, #_"GraphBuilder" b, #_"int" index, #_"Stamp" stamp]
             (when-some [#_"Object" arg (nth (:constantArgs this) index)]
                 (condp instance? arg
                     ConstantNode'iface
                         (when-not (= (:graph arg) (:graph b)) => arg
                             ;; This is a node from another graph, so copy over extra state into a new ConstantNode.
-                            (ConstantNode'forConstant-4 (:trustedStamp stamp), (:value arg), (:stableDimension arg), (:isDefaultStable arg))
+                            (ConstantNode'forConstant-4 stamp, (:value arg), (:stableDimension arg), (:isDefaultStable arg))
                         )
                     Constant
-                        (ConstantNode'forConstant-2s (:trustedStamp stamp), arg)
+                        (ConstantNode'forConstant-2s stamp, arg)
                     #_else
-                        (ConstantNode'forConstant-1 (SnippetReflection'forBoxed-2 (Stamp'''getStackKind-1 (:trustedStamp stamp)), arg))
+                        (ConstantNode'forConstant-1 (SnippetReflection'forBoxed-2 (Stamp'''getStackKind-1 stamp), arg))
                 )
             )
         )
@@ -28368,11 +28259,10 @@ ZeroExtendNode'new-4
 )
 
 ;;;
- ; This optimization tries to improve the handling of constants by replacing a single definition of
- ; a constant, which is potentially scheduled into a block with high probability, with one or more
- ; definitions in blocks with a lower probability.
+ ; This optimization tries to improve the handling of constants by replacing a single definition of a constant, which is
+ ; potentially scheduled into a block with high probability, with one or more definitions in blocks with a lower probability.
  ;;
-(class-ns ConstantLoadOptimization ;; PreAllocationPhase
+(class-ns ConstantLoadOptimization [LIRPhase #_"<LIRPhaseContext>"] ;; PreAllocationPhase
     (defn #_"ConstantLoadOptimization" ConstantLoadOptimization'new-0 []
         (ConstantLoadOptimization'class.)
     )
@@ -28388,7 +28278,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Analyzes a ConstantTree and marks potential materialization positions.
  ;;
-(class-ns ConstantTreeAnalyzer
+(class-ns ConstantTreeAnalyzer []
     (defn- #_"ConstantTreeAnalyzer" ConstantTreeAnalyzer'new-1 [#_"ConstantTree" tree]
         (merge (ConstantTreeAnalyzer'class.)
             (hash-map
@@ -28519,7 +28409,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns ContradictionPredicate
+(class-ns ContradictionPredicate [NodePredicate, #_"Predicate" #_"<Node>"]
     (defn- #_"ContradictionPredicate" ContradictionPredicate'new-0 []
         (ContradictionPredicate'class.)
     )
@@ -28537,7 +28427,7 @@ ZeroExtendNode'new-4
     (§ def #_"ContradictionPredicate" ContradictionPredicate'INSTANCE (ContradictionPredicate'new-0))
 )
 
-(class-ns ControlFlowGraph
+(class-ns ControlFlowGraph []
     (def #_"int" ControlFlowGraph'BLOCK_ID_INITIAL -1)
     (def #_"int" ControlFlowGraph'BLOCK_ID_VISITED -2)
 
@@ -29407,7 +29297,7 @@ ZeroExtendNode'new-4
 ;;;
  ; This class performs basic optimizations on the control flow graph after LIR generation.
  ;;
-(class-ns ControlFlowOptimizer ;; PostAllocationPhase
+(class-ns ControlFlowOptimizer [LIRPhase #_"<LIRPhaseContext>"] ;; PostAllocationPhase
     (defn #_"ControlFlowOptimizer" ControlFlowOptimizer'new-0 []
         (ControlFlowOptimizer'class.)
     )
@@ -29438,7 +29328,7 @@ ZeroExtendNode'new-4
  ; a branch starting at an other kind of ControlSplitNode, it will only bring the
  ; DeoptimizeNode as close to the ControlSplitNode as possible.
  ;;
-(class-ns ConvertDeoptimizeToGuardPhase
+(class-ns ConvertDeoptimizeToGuardPhase [Phase]
     (defn #_"ConvertDeoptimizeToGuardPhase" ConvertDeoptimizeToGuardPhase'new-0 []
         (ConvertDeoptimizeToGuardPhase'class.)
     )
@@ -29588,7 +29478,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns CountedLoopInfo
+(class-ns CountedLoopInfo []
     (defn #_"CountedLoopInfo" CountedLoopInfo'new-6 [#_"LoopEx" loop, #_"InductionVariable" iv, #_"IfNode" ifNode, #_"ValueNode" end, #_"boolean" oneOff, #_"AbstractBeginNode" body]
         (merge (CountedLoopInfo'class.)
             (hash-map
@@ -29751,7 +29641,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns CountingClosure
+(class-ns CountingClosure [VirtualClosure]
     (defn #_"CountingClosure" CountingClosure'new-0 []
         (merge (CountingClosure'class.)
             (hash-map
@@ -29768,7 +29658,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns CurrentInvoke
+(class-ns CurrentInvoke []
     (defn #_"CurrentInvoke" CurrentInvoke'new-3 [#_"ValueNode[]" args, #_"InvokeKind" kind, #_"JavaType" returnType]
         (merge (CurrentInvoke'class.)
             (hash-map
@@ -29780,7 +29670,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns Data
+(class-ns Data []
     (defn #_"Data" Data'new-2 [#_"int" alignment, #_"int" size]
         (merge (Data'class.)
             (hash-map
@@ -29799,7 +29689,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns RawData
+(class-ns RawData [Data]
     (defn #_"RawData" RawData'new-2 [#_"byte[]" data, #_"int" alignment]
         (merge (RawData'class.) (Data'new-2 alignment, (count data))
             (hash-map
@@ -29816,7 +29706,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns ZeroData
+(class-ns ZeroData [Data]
     (defn #_"ZeroData" ZeroData'new-2 [#_"int" alignment, #_"int" size]
         (merge (ZeroData'class.) (Data'new-2 alignment, size))
     )
@@ -29876,7 +29766,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns DataSection
+(class-ns DataSection []
     (defn #_"DataSection" DataSection'new-0 []
         (merge (DataSection'class.)
             (hash-map
@@ -30009,7 +29899,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns DeadCodeEliminationPhase
+(class-ns DeadCodeEliminationPhase [Phase]
     ;;;
      ; Creates a dead code elimination phase that will be run only if it is
      ; {@linkplain Optionality#Required non-optional} or GraalOptions#reduceDCE is false.
@@ -30115,7 +30005,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns Decision
+(class-ns Decision []
     (defn- #_"Decision" Decision'new-1 [#_"boolean" shouldInline]
         (merge (Decision'class.)
             (hash-map
@@ -30132,7 +30022,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Represents def-use tree of a constant.
  ;;
-(class-ns DefUseTree
+(class-ns DefUseTree []
     (defn #_"DefUseTree" DefUseTree'new-2 [#_"LIRInstruction" instruction, #_"Block" block]
         (merge (DefUseTree'class.)
             (hash-map
@@ -30166,7 +30056,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns DefaultLoopPolicies
+(class-ns DefaultLoopPolicies [LoopPolicies]
     (defn #_"DefaultLoopPolicies" DefaultLoopPolicies'new-0 []
         (DefaultLoopPolicies'class.)
     )
@@ -30310,7 +30200,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns DefaultSimplifierTool
+(class-ns DefaultSimplifierTool [SimplifierTool, CanonicalizerTool]
     (defn #_"DefaultSimplifierTool" DefaultSimplifierTool'new-1 [#_"boolean" canonicalizeReads]
         (merge (DefaultSimplifierTool'class.)
             (hash-map
@@ -30357,7 +30247,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns DeferredExit
+(class-ns DeferredExit []
     (defn #_"DeferredExit" DeferredExit'new-2 [#_"Block" block, #_"DeferredExit" next]
         (merge (DeferredExit'class.)
             (hash-map
@@ -30372,7 +30262,7 @@ ZeroExtendNode'new-4
  ; This phase tries to find {@link AbstractDeoptimizeNode DeoptimizeNodes} which use the same
  ; FrameState and merges them together.
  ;;
-(class-ns DeoptimizationGroupingPhase
+(class-ns DeoptimizationGroupingPhase [Phase]
     (defn #_"DeoptimizationGroupingPhase" DeoptimizationGroupingPhase'new-0 []
         (DeoptimizationGroupingPhase'class.)
     )
@@ -30460,7 +30350,7 @@ ZeroExtendNode'new-4
  ;            information needed to calculate the solution. Note that C should not contain
  ;            boolean flags. Use an enum entry in E instead.
  ;;
-(class-ns DominatorOptimizationProblem #_"<E extends Enum<E>, C>"
+(class-ns DominatorOptimizationProblem #_"<E extends Enum<E>, C>" []
     (defn #_"DominatorOptimizationProblem" DominatorOptimizationProblem'new-2 [#_"Class<E>" flagType, #_"ControlFlowGraph" cfg]
         (merge (DominatorOptimizationProblem'class.)
             (hash-map
@@ -30537,7 +30427,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Represents a dominator (sub-)tree for a constant definition.
  ;;
-(class-ns ConstantTree
+(class-ns ConstantTree [DominatorOptimizationProblem #_"<Flags, NodeCost>"]
     (defn- #_"List<UseEntry>" ConstantTree''getOrInitList-2 [#_"ConstantTree" this, #_"Block" block]
         (or (BlockMap''get-2 (:blockMap this), block)
             (let [
@@ -30622,7 +30512,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns EMOptimizer
+(class-ns EMOptimizer []
     (defn #_"EMOptimizer" EMOptimizer'new-1 [#_"LIR" lir]
         (merge (EMOptimizer'class.)
             (hash-map
@@ -30823,7 +30713,7 @@ ZeroExtendNode'new-4
  ; Because this optimization works best when a block contains only a few moves, it has a huge impact
  ; on the number of blocks that are totally empty.
  ;;
-(class-ns EdgeMoveOptimizer ;; PostAllocationPhase
+(class-ns EdgeMoveOptimizer [LIRPhase #_"<LIRPhaseContext>"] ;; PostAllocationPhase
     (defn #_"EdgeMoveOptimizer" EdgeMoveOptimizer'new-0 []
         (EdgeMoveOptimizer'class.)
     )
@@ -30853,7 +30743,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns EdgeVisitor
+(class-ns EdgeVisitor []
     (defn #_"EdgeVisitor" EdgeVisitor'new-0 []
         (EdgeVisitor'class.)
     )
@@ -30862,7 +30752,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Checks for safe nodes when moving pending tests up.
  ;;
-(class-ns InputFilter
+(class-ns InputFilter [EdgeVisitor]
     (defn #_"InputFilter" InputFilter'new-1 [#_"ValueNode" value]
         (merge (InputFilter'class.) (EdgeVisitor'new-0)
             (hash-map
@@ -30892,7 +30782,7 @@ ZeroExtendNode'new-4
  ;
  ; An iterator of this type will not return nil values, unless edges are modified concurrently.
  ;;
-(class-ns EdgesIterator
+(class-ns EdgesIterator [#_"Iterator" #_"<Position>"]
     ;;;
      ; Creates an iterator that will iterate over some given edges in a given node.
      ;;
@@ -30963,7 +30853,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns EffectList
+(class-ns EffectList [#_"Iterable" #_"<Effect>"]
     (def- #_"Effect[]" EffectList'EMPTY_ARRAY (make-array Effect'iface 0))
     (def- #_"String[]" EffectList'EMPTY_STRING_ARRAY (make-array String 0))
 
@@ -31067,7 +30957,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns GraphEffectList
+(class-ns GraphEffectList [EffectList, #_"Iterable" #_"<Effect>"]
     (defn #_"GraphEffectList" GraphEffectList'new-0 []
         (merge (GraphEffectList'class.) (EffectList'new-0)
             (hash-map
@@ -31282,7 +31172,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns EffectsBlockState #_"<T implements EffectsBlockState<T>>"
+(class-ns EffectsBlockState #_"<T implements EffectsBlockState<T>>" []
     (defn #_"EffectsBlockState" EffectsBlockState'new-0 []
         (merge (EffectsBlockState'class.)
             (hash-map
@@ -31332,7 +31222,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns PartialEscapeBlockState #_"<T implements PartialEscapeBlockState<T>>"
+(class-ns PartialEscapeBlockState #_"<T implements PartialEscapeBlockState<T>>" [EffectsBlockState #_"<T>"]
     (defn- #_"PartialEscapeBlockState" PartialEscapeBlockState'init-0 []
         (hash-map
             ;;;
@@ -31682,7 +31572,7 @@ ZeroExtendNode'new-4
  ; Final subclass of PartialEscapeBlockState, for performance and to make everything
  ; behave nicely with generics.
  ;;
-(class-ns FinalState
+(class-ns FinalState [PartialEscapeBlockState #_"<FinalState>", EffectsBlockState #_"<FinalState>"]
     (defn #_"FinalState" FinalState'new-0 []
         (merge (FinalState'class.) (PartialEscapeBlockState'new-0))
     )
@@ -31692,7 +31582,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns PEReadEliminationBlockState
+(class-ns PEReadEliminationBlockState [PartialEscapeBlockState #_"<PEReadEliminationBlockState>", EffectsBlockState #_"<PEReadEliminationBlockState>"]
     (defn #_"PEReadEliminationBlockState" PEReadEliminationBlockState'new-0 []
         (merge (PEReadEliminationBlockState'class.) (PartialEscapeBlockState'new-0)
             (hash-map
@@ -31798,7 +31688,7 @@ ZeroExtendNode'new-4
 ;;;
  ; This class maintains a set of known values, identified by base object, locations and offset.
  ;;
-(class-ns ReadEliminationBlockState
+(class-ns ReadEliminationBlockState [EffectsBlockState #_"<ReadEliminationBlockState>"]
     (defn #_"ReadEliminationBlockState" ReadEliminationBlockState'new-0 []
         (merge (ReadEliminationBlockState'class.) (EffectsBlockState'new-0)
             (hash-map
@@ -31849,7 +31739,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns EffectsPhase
+(class-ns EffectsPhase [Phase]
     (defn #_"EffectsPhase" EffectsPhase'new-2 [#_"int" maxIterations, #_"CanonicalizerPhase" canonicalizer]
         (EffectsPhase'new-3 maxIterations, canonicalizer, false)
     )
@@ -31926,7 +31816,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns EarlyReadEliminationPhase
+(class-ns EarlyReadEliminationPhase [EffectsPhase, Phase]
     (defn #_"EarlyReadEliminationPhase" EarlyReadEliminationPhase'new-1 [#_"CanonicalizerPhase" canonicalizer]
         (merge (EarlyReadEliminationPhase'class.) (EffectsPhase'new-3 1, canonicalizer, true))
     )
@@ -31945,7 +31835,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns PartialEscapePhase
+(class-ns PartialEscapePhase [EffectsPhase, Phase]
     (defn #_"PartialEscapePhase" PartialEscapePhase'new-2 [#_"boolean" iterative, #_"CanonicalizerPhase" canonicalizer]
         (PartialEscapePhase'new-3 iterative, GraalOptions'optEarlyReadElimination, canonicalizer)
     )
@@ -31984,7 +31874,7 @@ ZeroExtendNode'new-4
  ; This closure is used internally to determine the average effort for a certain strategy on a
  ; given switch instruction.
  ;;
-(class-ns EffortClosure
+(class-ns EffortClosure [SwitchClosure]
     (defn #_"EffortClosure" EffortClosure'new-2 [#_"SwitchStrategy" strategy, #_"LabelRef[]" keyTargets]
         (merge (EffortClosure'class.)
             (hash-map
@@ -32035,7 +31925,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns ExpandLogicPhase
+(class-ns ExpandLogicPhase [Phase]
     (defn #_"ExpandLogicPhase" ExpandLogicPhase'new-0 []
         (ExpandLogicPhase'class.)
     )
@@ -32181,7 +32071,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Describes a field in a class during scanning.
  ;;
-(class-ns FieldInfo
+(class-ns FieldInfo [#_"Comparable" #_"<FieldInfo>"]
     (defn #_"FieldInfo" FieldInfo'new-4 [#_"long" offset, #_"String" name, #_"Class" type, #_"Class" declaringClass]
         (merge (FieldInfo'class.)
             (hash-map
@@ -32204,7 +32094,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Describes a field representing an input or successor edge in a node.
  ;;
-(class-ns EdgeInfo
+(class-ns EdgeInfo [FieldInfo, #_"Comparable" #_"<FieldInfo>"]
     (defn #_"EdgeInfo" EdgeInfo'new-4 [#_"long" offset, #_"String" name, #_"Class" type, #_"Class" declaringClass]
         (merge (EdgeInfo'class.) (FieldInfo'new-4 offset, name, type, declaringClass))
     )
@@ -32228,7 +32118,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Describes a field representing an {@linkplain EdgesType#Inputs input} edge in a node.
  ;;
-(class-ns InputInfo
+(class-ns InputInfo [EdgeInfo, FieldInfo, #_"Comparable" #_"<FieldInfo>"]
     (defn #_"InputInfo" InputInfo'new-6 [#_"long" offset, #_"String" name, #_"Class" type, #_"Class" declaringClass, #_"InputType" inputType, #_"boolean" optional]
         (merge (InputInfo'class.) (EdgeInfo'new-4 offset, name, type, declaringClass)
             (hash-map
@@ -32239,7 +32129,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns ValueFieldInfo
+(class-ns ValueFieldInfo [FieldInfo, #_"Comparable" #_"<FieldInfo>"]
     (defn #_"ValueFieldInfo" ValueFieldInfo'new-5 [#_"long" offset, #_"String" name, #_"Class" type, #_"Class" declaringClass, #_"EnumSet<OperandFlag>" flags]
         (merge (ValueFieldInfo'class.) (FieldInfo'new-4 offset, name, type, declaringClass)
             (hash-map
@@ -32264,7 +32154,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns FieldIntrospection #_"<T>"
+(class-ns FieldIntrospection #_"<T>" []
     (defn #_"FieldIntrospection" FieldIntrospection'new-1 [#_"Class<T>" clazz]
         (merge (FieldIntrospection'class.)
             (hash-map
@@ -32278,7 +32168,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LIRIntrospection #_"<T>"
+(class-ns LIRIntrospection #_"<T>" [FieldIntrospection #_"<T>"]
     (def- #_"Class<Value>" LIRIntrospection'VALUE_CLASS Value)
     (def- #_"Class<ConstantValue>" LIRIntrospection'CONSTANT_VALUE_CLASS ConstantValue'iface)
     (def- #_"Class<Variable>" LIRIntrospection'VARIABLE_CLASS Variable'iface)
@@ -32366,7 +32256,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LIRInstructionClass #_"<T>"
+(class-ns LIRInstructionClass #_"<T>" [LIRIntrospection #_"<T>", FieldIntrospection #_"<T>"]
     #_unused
     (defn #_"LIRInstructionClass" LIRInstructionClass'new-1 [#_"Class<T>" clazz]
         (let [
@@ -32471,7 +32361,7 @@ ZeroExtendNode'new-4
  ; (1) The offsets of fields annotated with Input and Successor as well as methods for iterating over such fields.
  ; (2) The identifier for an IterableNodeType class.
  ;;
-(class-ns NodeClass #_"<T>"
+(class-ns NodeClass #_"<T>" [FieldIntrospection #_"<T>"]
     (def #_"long" NodeClass'MAX_EDGES 8)
     (def #_"long" NodeClass'MAX_LIST_EDGES 6)
     (def #_"long" NodeClass'OFFSET_MASK 0xfc)
@@ -33109,7 +32999,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Name and type of a field.
  ;;
-(class-ns FieldKey
+(class-ns FieldKey []
     (defn #_"FieldKey" FieldKey'new-2 [#_"String" name, #_"String" type]
         (merge (FieldKey'class.)
             (hash-map
@@ -33123,7 +33013,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Describes fields in a class, primarily for access via Unsafe.
  ;;
-(class-ns Fields
+(class-ns Fields []
     (defn #_"Fields" Fields'new-1 [#_"ArrayList<? extends FieldInfo>" fields]
         (Collections/sort fields)
         (let [
@@ -33222,7 +33112,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns Edges
+(class-ns Edges [Fields]
     (defn #_"Edges" Edges'new-3 [#_"EdgesType" type, #_"int" directCount, #_"ArrayList<? extends FieldInfo>" edges]
         (merge (Edges'class.) (Fields'new-1 edges)
             (hash-map
@@ -33389,7 +33279,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns InputEdges
+(class-ns InputEdges [Edges, Fields]
     (defn #_"InputEdges" InputEdges'new-2 [#_"int" directCount, #_"ArrayList<InputInfo>" edges]
         (let [
             #_"InputEdges" this
@@ -33431,7 +33321,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns SuccessorEdges
+(class-ns SuccessorEdges [Edges, Fields]
     (defn #_"SuccessorEdges" SuccessorEdges'new-2 [#_"int" directCount, #_"ArrayList<EdgeInfo>" edges]
         (merge (SuccessorEdges'class.) (Edges'new-3 EdgesType'Successors, directCount, edges))
     )
@@ -33444,7 +33334,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns Values
+(class-ns Values [Fields]
     (defn #_"Values" Values'new-1 [#_"OperandModeAnnotation" mode]
         (merge (Values'class.) (Fields'new-1 (:values mode))
             (hash-map
@@ -33477,7 +33367,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Field cache for a ResolvedJavaType.
  ;;
-(class-ns FieldsCache
+(class-ns FieldsCache []
     (defn #_"FieldsCache" FieldsCache'new-0 []
         (FieldsCache'class.)
     )
@@ -33520,7 +33410,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns FieldsScanner
+(class-ns FieldsScanner []
     (defn #_"FieldsScanner" FieldsScanner'new-0 []
         (merge (FieldsScanner'class.)
             (hash-map
@@ -33561,7 +33451,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LIRFieldsScanner
+(class-ns LIRFieldsScanner [FieldsScanner]
     (defn #_"LIRFieldsScanner" LIRFieldsScanner'new-0 []
         (merge (LIRFieldsScanner'class.) (FieldsScanner'new-0)
             (hash-map
@@ -33617,7 +33507,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LIRInstructionFieldsScanner
+(class-ns LIRInstructionFieldsScanner [LIRFieldsScanner, FieldsScanner]
     (defn #_"LIRInstructionFieldsScanner" LIRInstructionFieldsScanner'new-0 []
         (let [
             #_"LIRInstructionFieldsScanner" this
@@ -33699,7 +33589,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns NodeFieldsScanner
+(class-ns NodeFieldsScanner [FieldsScanner]
     (defn #_"NodeFieldsScanner" NodeFieldsScanner'new-1 [#_"NodeClass" superNodeClass]
         (let [
             #_"NodeFieldsScanner" this
@@ -33810,7 +33700,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns FilteredNodeIterable
+(class-ns FilteredNodeIterable [NodeIterable, #_"Iterable" #_"<Node>"]
     (defn #_"FilteredNodeIterable" FilteredNodeIterable'new-1 [#_"NodeIterable" nodeIterable]
         (merge (FilteredNodeIterable'class.)
             (hash-map
@@ -33924,7 +33814,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Calculates the stack intervals using a worklist-based backwards data-flow analysis.
  ;;
-(class-ns FixPointIntervalBuilder
+(class-ns FixPointIntervalBuilder []
     (defn #_"FixPointIntervalBuilder" FixPointIntervalBuilder'new-3 [#_"LIR" lir, #_"StackInterval[]" stackSlotMap, #_"int" maxOpId]
         (merge (FixPointIntervalBuilder'class.)
             (hash-map
@@ -34063,7 +33953,7 @@ ZeroExtendNode'new-4
 ;;;
  ; This phase lowers FloatingReadNodes into corresponding fixed reads.
  ;;
-(class-ns FixReadsPhase
+(class-ns FixReadsPhase [Phase]
     (defn #_"FixReadsPhase" FixReadsPhase'new-1 [#_"Phase" schedulePhase]
         (merge (FixReadsPhase'class.)
             (hash-map
@@ -34091,7 +33981,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns FixedNodeIterator
+(class-ns FixedNodeIterator [#_"Iterator" #_"<FixedNode>"]
     (defn #_"FixedNodeIterator" FixedNodeIterator'new-1 [#_"Block" block]
         (merge (FixedNodeIterator'class.)
             (hash-map
@@ -34124,7 +34014,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Compute probabilities for fixed nodes on the fly and cache them at AbstractBeginNodes.
  ;;
-(class-ns FixedNodeProbabilityCache
+(class-ns FixedNodeProbabilityCache [#_"ToDoubleFunction" #_"<FixedNode>"]
     (defn #_"FixedNodeProbabilityCache" FixedNodeProbabilityCache'new-0 []
         (merge (FixedNodeProbabilityCache'class.)
             (hash-map
@@ -34211,7 +34101,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns FixedTarget
+(class-ns FixedTarget []
     (defn #_"FixedTarget" FixedTarget'new-2 [#_"FixedNode" fixed, #_"FrameStateBuilder" state]
         (merge (FixedTarget'class.)
             (hash-map
@@ -34222,7 +34112,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns FloatingReadPhase
+(class-ns FloatingReadPhase [Phase]
     (defn #_"FloatingReadPhase" FloatingReadPhase'new-0 []
         (FloatingReadPhase'new-2 true, false)
     )
@@ -34414,7 +34304,7 @@ ZeroExtendNode'new-4
  ; standard Java call if the foreign routine is a normal Java method and the runtime supports
  ; linking Java calls at arbitrary bytecodes.
  ;;
-(class-ns ForeignCallDescriptor
+(class-ns ForeignCallDescriptor []
     (defn #_"ForeignCallDescriptor" ForeignCallDescriptor'new-3* [#_"String" name, #_"Class" resultType & #_"Class..." argumentTypes]
         (merge (ForeignCallDescriptor'class.)
             (hash-map
@@ -34445,7 +34335,7 @@ ZeroExtendNode'new-4
 ;;;
  ; The runtime specific details of a foreign call.
  ;;
-(class-ns ForeignCallLinkage
+(class-ns ForeignCallLinkage [#_"InvokeTarget"]
     (defn #_"ForeignCallLinkage" ForeignCallLinkage'new-8* [#_"ForeignCallDescriptor" descriptor, #_"long" address, #_"RegisterEffect" effect, #_"Transition" transition, #_"CallingConvention" outgoingCallingConvention, #_"CallingConvention" incomingCallingConvention, #_"boolean" reexecutable & #_"LocationIdentity..." killedLocations]
         (merge (ForeignCallLinkage'class.)
             (hash-map
@@ -34580,7 +34470,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Details about a set of supported {@link ForeignCallDescriptor foreign calls}.
  ;;
-(class-ns ForeignCalls
+(class-ns ForeignCalls []
     ;;;
      ; System V Application Binary Interface, AMD64 Architecture Processor Supplement, Draft Version 0.96, 3.2.1
      ;
@@ -34746,7 +34636,7 @@ ZeroExtendNode'new-4
  ; Code for managing a method's native frame.
  ; Emits code at the verified entry point and return point(s) of a method.
  ;;
-(class-ns FrameContext
+(class-ns FrameContext []
     ;;;
      ; The size of the instruction used to patch the verified entry point of an nmethod when the
      ; nmethod is made non-entrant or a zombie (e.g. during deopt or class unloading). The first
@@ -34816,13 +34706,13 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns FrameMapBuilder
+(class-ns FrameMapBuilder []
     (defn #_"FrameMapBuilder" FrameMapBuilder'new-0 []
         (FrameMapBuilder'class.)
     )
 )
 
-(class-ns FrameMapBuilderTool
+(class-ns FrameMapBuilderTool [FrameMapBuilder]
     (defn #_"FrameMapBuilderTool" FrameMapBuilderTool'new-0 []
         (merge (FrameMapBuilderTool'class.) (FrameMapBuilder'new-0))
     )
@@ -34831,7 +34721,7 @@ ZeroExtendNode'new-4
 ;;;
  ; A FrameMapBuilder that records allocation.
  ;;
-(class-ns FrameMapBuilder0
+(class-ns FrameMapBuilder0 [FrameMapBuilderTool, FrameMapBuilder]
     (defn #_"FrameMapBuilder0" FrameMapBuilder0'new-1 [#_"FrameMap" frameMap]
         (merge (FrameMapBuilder0'class.) (FrameMapBuilderTool'new-0)
             (hash-map
@@ -34887,7 +34777,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns AMD64FrameMapBuilder
+(class-ns AMD64FrameMapBuilder [FrameMapBuilder0, FrameMapBuilderTool, FrameMapBuilder]
     (defn #_"AMD64FrameMapBuilder" AMD64FrameMapBuilder'new-1 [#_"FrameMap" frameMap]
         (merge (AMD64FrameMapBuilder'class.) (FrameMapBuilder0'new-1 frameMap))
     )
@@ -34906,7 +34796,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns FrameMap
+(class-ns FrameMap []
     ;;;
      ; Creates a new frame map for the specified method.
      ;;
@@ -35157,7 +35047,7 @@ ZeroExtendNode'new-4
  ; call-free methods also have this space reserved. Then the VM can use the memory at offset 0
  ; relative to the stack pointer.
  ;;
-(class-ns AMD64FrameMap
+(class-ns AMD64FrameMap [FrameMap]
     (defn #_"AMD64FrameMap" AMD64FrameMap'new-0 []
         (let [
             #_"AMD64FrameMap" this
@@ -35211,7 +35101,7 @@ ZeroExtendNode'new-4
  ; This Phase processes the graph in post order, assigning the FrameState from the last
  ; StateSplit node to DeoptimizingNodes.
  ;;
-(class-ns FrameStateAssignmentPhase
+(class-ns FrameStateAssignmentPhase [Phase]
     (defn #_"FrameStateAssignmentPhase" FrameStateAssignmentPhase'new-0 []
         (FrameStateAssignmentPhase'class.)
     )
@@ -35231,7 +35121,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns FrameStateBuilder
+(class-ns FrameStateBuilder [SideEffectsState]
     (defn- #_"FrameStateBuilder" FrameStateBuilder'init-0 []
         (hash-map
             #_"BytecodeParser" :parser nil
@@ -35345,7 +35235,7 @@ ZeroExtendNode'new-4
             [#_"int" i #_"int" j]
                 (when-not (#_"ResolvedJavaMethod" .isStatic method) => [0 0]
                     (let [
-                        #_"StampPair" receiverStamp
+                        #_"Stamp" receiverStamp
                             (or (when (some? plugins) (Plugins''getOverridingStamp-4 plugins, (:tool this), originalType, true))
                                 (StampFactory'forDeclaredType-2 originalType, true)
                             )
@@ -35369,7 +35259,7 @@ ZeroExtendNode'new-4
                     #_"JavaType" type (#_"Signature" .getParameterType sig, k, originalType)
                     type (if eagerResolve (#_"JavaType" .resolve type, originalType) type)
                     #_"JavaKind" kind (#_"JavaType" .getJavaKind type)
-                    #_"StampPair" stamp
+                    #_"Stamp" stamp
                         (or (when (some? plugins) (Plugins''getOverridingStamp-4 plugins, (:tool this), type, false))
                             (StampFactory'forDeclaredType-2 type, false)
                         )
@@ -35930,7 +35820,7 @@ ZeroExtendNode'new-4
  ; A graph contains at least one distinguished node, the {@link #start() start} node.
  ; This node is the start of the control flow of the graph.
  ;;
-(class-ns Graph
+(class-ns Graph []
     (def #_"long" Graph'INVALID_GRAPH_ID -1)
     (def- #_"AtomicLong" Graph'uniqueGraphIds (AtomicLong.))
 
@@ -36564,7 +36454,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns GraphBuilderConfiguration
+(class-ns GraphBuilderConfiguration []
     (defn- #_"GraphBuilderConfiguration" GraphBuilderConfiguration'new-3 [#_"boolean" eagerResolving, #_"boolean" unresolvedIsError, #_"Plugins" plugins]
         (merge (GraphBuilderConfiguration'class.)
             (hash-map
@@ -36584,7 +36474,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns GraphBuilderInstance
+(class-ns GraphBuilderInstance [Phase]
     (defn #_"GraphBuilderInstance" GraphBuilderInstance'new-3 [#_"GraphBuilderConfiguration" graphBuilderConfig, #_"OptimisticOptimizations" optimisticOpts, #_"IntrinsicContext" initialIntrinsicContext]
         (merge (GraphBuilderInstance'class.)
             (hash-map
@@ -36610,7 +36500,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Parses the bytecodes of a method and builds the IR graph.
  ;;
-(class-ns GraphBuilderPhase
+(class-ns GraphBuilderPhase [Phase]
     (defn #_"GraphBuilderPhase" GraphBuilderPhase'new-0 []
         (merge (GraphBuilderPhase'class.)
             (hash-map
@@ -36631,7 +36521,7 @@ ZeroExtendNode'new-4
  ; subsystems that employ manual graph creation (as opposed to {@linkplain GraphBuilderPhase
  ; bytecode parsing} based graph creation).
  ;;
-(class-ns GraphKit
+(class-ns GraphKit [GraphBuilder]
     (defn #_"GraphKit" GraphKit'new-1 [#_"ResolvedJavaMethod" stubMethod]
         (let [
             #_"Graph" graph (Graph'new-1 stubMethod)
@@ -36709,7 +36599,7 @@ ZeroExtendNode'new-4
         (let [
             #_"Signature" signature (#_"ResolvedJavaMethod" .getSignature method)
             #_"JavaType" returnType (#_"Signature" .getReturnType signature, nil)
-            #_"StampPair" returnStamp
+            #_"Stamp" returnStamp
                 (or (Plugins''getOverridingStamp-4 HotSpot'plugins, this, returnType, false)
                     (StampFactory'forDeclaredType-2 returnType, false)
                 )
@@ -36898,7 +36788,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Iterates over the nodes in a given graph.
  ;;
-(class-ns GraphNodeIterator
+(class-ns GraphNodeIterator [#_"Iterator" #_"<Node>"]
     (defn #_"GraphNodeIterator" GraphNodeIterator'new-1 [#_"Graph" graph]
         (GraphNodeIterator'new-2 graph, 0)
     )
@@ -36959,7 +36849,7 @@ ZeroExtendNode'new-4
  ; implicit nil-checks performed by access to the objects that need to be nil-checked.
  ; The second phase does the actual control-flow expansion of the remaining GuardNodes.
  ;;
-(class-ns GuardLoweringPhase
+(class-ns GuardLoweringPhase [Phase]
     (defn #_"GuardLoweringPhase" GuardLoweringPhase'new-0 []
         (GuardLoweringPhase'class.)
     )
@@ -36991,7 +36881,7 @@ ZeroExtendNode'new-4
  ;
  ; Constant folding of field loads.
  ;;
-(class-ns HotSpotNodePlugin
+(class-ns HotSpotNodePlugin [NodePlugin, TypePlugin]
     (defn #_"HotSpotNodePlugin" HotSpotNodePlugin'new-1 [#_"WordOperationPlugin" wordOperationPlugin]
         (merge (HotSpotNodePlugin'class.)
             (hash-map
@@ -37001,7 +36891,7 @@ ZeroExtendNode'new-4
     )
 
     (defm HotSpotNodePlugin TypePlugin
-        (#_"StampPair" TypePlugin'''interceptType-4 [#_"HotSpotNodePlugin" this, #_"GraphBuilder" b, #_"JavaType" declaredType, #_"boolean" never-nil?]
+        (#_"Stamp" TypePlugin'''interceptType-4 [#_"HotSpotNodePlugin" this, #_"GraphBuilder" b, #_"JavaType" declaredType, #_"boolean" never-nil?]
             (when (GraphBuilder'''parsingIntrinsic-1 b)
                 (TypePlugin'''interceptType-4 (:wordOperationPlugin this), b, declaredType, never-nil?)
             )
@@ -37088,7 +36978,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns InductionVariable
+(class-ns InductionVariable []
     (defn #_"InductionVariable" InductionVariable'new-1 [#_"LoopEx" loop]
         (merge (InductionVariable'class.)
             (hash-map
@@ -37098,7 +36988,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns BasicInductionVariable
+(class-ns BasicInductionVariable [InductionVariable]
     (defn #_"BasicInductionVariable" BasicInductionVariable'new-5 [#_"LoopEx" loop, #_"ValuePhiNode" phi, #_"ValueNode" init, #_"ValueNode" rawStride, #_"BinaryArithmeticNode" op]
         (merge (BasicInductionVariable'class.) (InductionVariable'new-1 loop)
             (hash-map
@@ -37205,7 +37095,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Base class of the derived induction variables.
  ;;
-(class-ns DerivedInductionVariable
+(class-ns DerivedInductionVariable [InductionVariable]
     (defn #_"DerivedInductionVariable" DerivedInductionVariable'new-2 [#_"LoopEx" loop, #_"InductionVariable" base]
         (merge (DerivedInductionVariable'class.) (InductionVariable'new-1 loop)
             (hash-map
@@ -37225,7 +37115,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns DerivedConvertedInductionVariable
+(class-ns DerivedConvertedInductionVariable [DerivedInductionVariable, InductionVariable]
     (defn #_"DerivedConvertedInductionVariable" DerivedConvertedInductionVariable'new-4 [#_"LoopEx" loop, #_"InductionVariable" base, #_"Stamp" stamp, #_"ValueNode" value]
         (merge (DerivedConvertedInductionVariable'class.) (DerivedInductionVariable'new-2 loop, base)
             (hash-map
@@ -37286,7 +37176,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns DerivedOffsetInductionVariable
+(class-ns DerivedOffsetInductionVariable [DerivedInductionVariable, InductionVariable]
     (defn #_"DerivedOffsetInductionVariable" DerivedOffsetInductionVariable'new-4 [#_"LoopEx" loop, #_"InductionVariable" base, #_"ValueNode" offset, #_"BinaryArithmeticNode" value]
         (merge (DerivedOffsetInductionVariable'class.) (DerivedInductionVariable'new-2 loop, base)
             (hash-map
@@ -37377,7 +37267,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns DerivedScaledInductionVariable
+(class-ns DerivedScaledInductionVariable [DerivedInductionVariable, InductionVariable]
     (defn #_"DerivedScaledInductionVariable" DerivedScaledInductionVariable'new-4 [#_"LoopEx" loop, #_"InductionVariable" base, #_"ValueNode" scale, #_"ValueNode" value]
         (merge (DerivedScaledInductionVariable'class.) (DerivedInductionVariable'new-2 loop, base)
             (hash-map
@@ -37452,7 +37342,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns InfoElement
+(class-ns InfoElement []
     (defn #_"InfoElement" InfoElement'new-4 [#_"Stamp" stamp, #_"GuardingNode" guard, #_"ValueNode" proxifiedInput, #_"InfoElement" parent]
         (merge (InfoElement'class.)
             (hash-map
@@ -37465,7 +37355,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns InlineDuringParsingPlugin
+(class-ns InlineDuringParsingPlugin [InlineInvokePlugin]
     (defn #_"InlineDuringParsingPlugin" InlineDuringParsingPlugin'new-0 []
         (InlineDuringParsingPlugin'class.)
     )
@@ -37532,7 +37422,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Result of a {@link #shouldInlineInvoke inlining decision}.
  ;;
-(class-ns InlineInvokeInfo
+(class-ns InlineInvokeInfo []
     (defn- #_"InlineInvokeInfo" InlineInvokeInfo'new-2 [#_"ResolvedJavaMethod" methodToInline, #_"BytecodeProvider" intrinsicBytecodeProvider]
         (merge (InlineInvokeInfo'class.)
             (hash-map
@@ -37571,7 +37461,7 @@ ZeroExtendNode'new-4
  ;
  ; Instances of this class don't make sense in isolation but as part of an InlineInfo.
  ;;
-(class-ns InlineableGraph
+(class-ns InlineableGraph [Inlineable]
     ;;;
      ; This method builds the IR nodes for the given {@code method} and canonicalizes them.
      ; Provided profiling info is mature, the resulting graph is cached. The caller is responsible
@@ -37730,7 +37620,7 @@ ZeroExtendNode'new-4
  ; the unknown caller of the root graph)
  ; (2) a single CallsiteHolder (the root one, for the method on which inlining was called)
  ;;
-(class-ns InliningData
+(class-ns InliningData []
     (defn #_"InliningData" InliningData'new-5 [#_"Graph" rootGraph, #_"PhaseContext" context, #_"CanonicalizerPhase" canonicalizer, #_"InliningPolicy" inliningPolicy, #_"LinkedList<InvokeNode>" rootInvokes]
         (let [
             #_"InliningData" this
@@ -38117,7 +38007,7 @@ ZeroExtendNode'new-4
  ; Given a graph, visit all fixed nodes in dominator-based order, collecting in the process
  ; the InvokeNodes with MethodCallTargetNode. Such list of callsites is returned by #apply().
  ;;
-(class-ns InliningIterator
+(class-ns InliningIterator []
     (defn #_"InliningIterator" InliningIterator'new-1 [#_"Graph" graph]
         (merge (InliningIterator'class.)
             (hash-map
@@ -38206,7 +38096,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns InliningPhase
+(class-ns InliningPhase [Phase]
     (defn #_"InliningPhase" InliningPhase'new-1 [#_"CanonicalizerPhase" canonicalizer]
         (merge (InliningPhase'class.)
             (hash-map
@@ -38234,7 +38124,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns InstanceOfUsageReplacer
+(class-ns InstanceOfUsageReplacer [UsageReplacer]
     (defn #_"InstanceOfUsageReplacer" InstanceOfUsageReplacer'new-4 [#_"Instantiation" instantiation, #_"FloatingNode" instanceOf, #_"ValueNode" trueValue, #_"ValueNode" falseValue]
         (merge (InstanceOfUsageReplacer'class.)
             (hash-map
@@ -38251,7 +38141,7 @@ ZeroExtendNode'new-4
  ; Replaces the usage of an InstanceOfNode or InstanceOfDynamicNode that does
  ; materializes the result of the type test.
  ;;
-(class-ns MaterializationUsageReplacer
+(class-ns MaterializationUsageReplacer [InstanceOfUsageReplacer, UsageReplacer]
     (defn #_"MaterializationUsageReplacer" MaterializationUsageReplacer'new-5 [#_"Instantiation" instantiation, #_"ValueNode" trueValue, #_"ValueNode" falseValue, #_"FloatingNode" instanceOf, #_"ConditionalNode" usage]
         (merge (MaterializationUsageReplacer'class.) (InstanceOfUsageReplacer'new-4 instantiation, instanceOf, trueValue, falseValue)
             (hash-map
@@ -38287,7 +38177,7 @@ ZeroExtendNode'new-4
  ; Replaces the usage of an InstanceOfNode or InstanceOfDynamicNode that does
  ; not materialize the result of the type test.
  ;;
-(class-ns NonMaterializationUsageReplacer
+(class-ns NonMaterializationUsageReplacer [InstanceOfUsageReplacer, UsageReplacer]
     (defn #_"NonMaterializationUsageReplacer" NonMaterializationUsageReplacer'new-5 [#_"Instantiation" instantiation, #_"ValueNode" trueValue, #_"ValueNode" falseValue, #_"FloatingNode" instanceOf, #_"Node" usage]
         (merge (NonMaterializationUsageReplacer'class.) (InstanceOfUsageReplacer'new-4 instantiation, instanceOf, trueValue, falseValue)
             (hash-map
@@ -38317,7 +38207,7 @@ ZeroExtendNode'new-4
  ; The result of instantiating an instanceof snippet. This enables a snippet instantiation to be
  ; re-used which reduces compile time and produces better code.
  ;;
-(class-ns Instantiation
+(class-ns Instantiation []
     (defn #_"Instantiation" Instantiation'new-0 []
         (merge (Instantiation'class.)
             (hash-map
@@ -38384,7 +38274,7 @@ ZeroExtendNode'new-4
  ;
  ; This class avoids the boxing/unboxing incurred by {@code ArrayList<Integer>}.
  ;;
-(class-ns IntList
+(class-ns IntList []
     ;;;
      ; Creates an int list with a specified initial array.
      ;
@@ -38496,7 +38386,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Represents an interval in the linear scan register allocator.
  ;;
-(class-ns Interval
+(class-ns Interval []
     (def #_"int" Interval'END_MARKER_OPERAND_NUMBER Integer/MIN_VALUE)
 
     (defn #_"Interval" Interval''assignLocation-2 [#_"Interval" this, #_"AllocatableValue" newLocation]
@@ -39032,7 +38922,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Iterate over all {@link Block blocks} of an interval.
  ;;
-(class-ns IntervalBlockIterator
+(class-ns IntervalBlockIterator [#_"Iterator" #_"<Block>"]
     (defn #_"IntervalBlockIterator" IntervalBlockIterator'new-2 [#_"LSOptimizeSpillPositionPhase" phase, #_"Interval" interval]
         (merge (IntervalBlockIterator'class.)
             (hash-map
@@ -39070,7 +38960,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns IntervalWalker
+(class-ns IntervalWalker []
     ;;;
      ; Creates a new interval walker.
      ;
@@ -39319,7 +39209,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LinearScanWalker
+(class-ns LinearScanWalker [IntervalWalker]
     ;;;
      ; Only 10% of the lists in #spillIntervals are actually used. But when they are used,
      ; they can grow quite long. The maximum length observed was 45 (all numbers taken from a
@@ -40063,7 +39953,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns OptimizingLinearScanWalker
+(class-ns OptimizingLinearScanWalker [LinearScanWalker, IntervalWalker]
     (defn #_"OptimizingLinearScanWalker" OptimizingLinearScanWalker'new-3 [#_"LinearScan" allocator, #_"Interval" unhandledFixedFirst, #_"Interval" unhandledAnyFirst]
         (merge (OptimizingLinearScanWalker'class.) (LinearScanWalker'new-3 allocator, unhandledFixedFirst, unhandledAnyFirst))
     )
@@ -40202,7 +40092,7 @@ ZeroExtendNode'new-4
  ; through the JVM state since intrinsics can employ non-Java kinds to represent values such as
  ; raw machine words and pointers.
  ;;
-(class-ns IntrinsicContext
+(class-ns IntrinsicContext []
     (defn #_"IntrinsicContext" IntrinsicContext'new-4 [#_"ResolvedJavaMethod" method, #_"ResolvedJavaMethod" intrinsic, #_"BytecodeProvider" bytecodeProvider, #_"CompilationContext" compilationContext]
         (merge (IntrinsicContext'class.)
             (hash-map
@@ -40273,7 +40163,7 @@ ZeroExtendNode'new-4
  ; A scoped object for tasks to be performed after parsing an intrinsic such as processing
  ; {@linkplain BytecodeFrame#isPlaceholderBci(int) placeholder} frames states.
  ;;
-(class-ns IntrinsicScope
+(class-ns IntrinsicScope [#_"AutoCloseable"]
     ;;;
      ; Creates a scope for root parsing an intrinsic.
      ;
@@ -40419,7 +40309,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns InvariantPredicate
+(class-ns InvariantPredicate [NodePredicate, #_"Predicate" #_"<Node>"]
     (defn #_"InvariantPredicate" InvariantPredicate'new-1 [#_"LoopEx" loopEx]
         (merge (InvariantPredicate'class.)
             (hash-map
@@ -40442,7 +40332,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns InvokeKind
+(class-ns InvokeKind []
     (§ enum InvokeKind'Interface (InvokeKind'new-1 false))
     (§ enum InvokeKind'Special   (InvokeKind'new-1 true))
     (§ enum InvokeKind'Static    (InvokeKind'new-1 true))
@@ -40470,7 +40360,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns IterativeConditionalEliminationPhase
+(class-ns IterativeConditionalEliminationPhase [Phase]
     (def- #_"int" IterativeConditionalEliminationPhase'MAX_ITERATIONS 256)
 
     (defn #_"IterativeConditionalEliminationPhase" IterativeConditionalEliminationPhase'new-2 [#_"CanonicalizerPhase" canonicalizer, #_"boolean" fullSchedule]
@@ -40518,7 +40408,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns JSRData
+(class-ns JSRData []
     (defn #_"JSRData" JSRData'new-0 []
         (merge (JSRData'class.)
             (hash-map
@@ -40533,7 +40423,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns JsrScope
+(class-ns JsrScope []
     (§ def #_"JsrScope" JsrScope'EMPTY_SCOPE (JsrScope'new-0))
 
     (defn- #_"JsrScope" JsrScope'new-1 [#_"long" scope]
@@ -40572,7 +40462,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns KeyData
+(class-ns KeyData []
     (defn #_"KeyData" KeyData'new-3 [#_"int" key, #_"double" keyProbability, #_"int" keySuccessor]
         (merge (KeyData'class.)
             (hash-map
@@ -40588,7 +40478,7 @@ ZeroExtendNode'new-4
  ; This class implements the overall container for the LIR graph and directs its construction,
  ; optimization, and finalization.
  ;;
-(class-ns LIR
+(class-ns LIR []
     ;;;
      ; Creates a new LIR instance for the specified compilation.
      ;;
@@ -40649,7 +40539,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LIRBuilder
+(class-ns LIRBuilder []
     (defn #_"LIRBuilder" LIRBuilder'new-2 [#_"Graph" graph, #_"LIRGenerator" gen]
         (let [
             #_"LIRBuilder" this
@@ -41172,7 +41062,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LIRGenerationContext
+(class-ns LIRGenerationContext []
     (defn #_"LIRGenerationContext" LIRGenerationContext'new-4 [#_"LIRGenerator" lirGen, #_"LIRBuilder" nodeLirBuilder, #_"Graph" graph, #_"ScheduleResult" schedule]
         (merge (LIRGenerationContext'class.)
             (hash-map
@@ -41185,7 +41075,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LIRGenerationPhase
+(class-ns LIRGenerationPhase [LIRPhase #_"<LIRGenerationContext>"]
     (defn #_"LIRGenerationPhase" LIRGenerationPhase'new-0 []
         (LIRGenerationPhase'class.)
     )
@@ -41201,7 +41091,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LIRGenerationResult
+(class-ns LIRGenerationResult []
     (defn #_"LIRGenerationResult" LIRGenerationResult'new-4 [#_"LIR" lir, #_"FrameMapBuilder" frameMapBuilder, #_"CallingConvention" callingConvention, #_"Object" stub]
         (merge (LIRGenerationResult'class.)
             (hash-map
@@ -41247,7 +41137,7 @@ ZeroExtendNode'new-4
 ;;;
  ; This namespace traverses the HIR instructions and generates LIR instructions from them.
  ;;
-(class-ns LIRGenerator
+(class-ns LIRGenerator []
     (defn #_"LIRGenerator" LIRGenerator'new-1 [#_"LIRGenerationResult" res]
         (merge (LIRGenerator'class.)
             (hash-map
@@ -42861,7 +42751,7 @@ ZeroExtendNode'new-4
  ;
  ; Note: This class does not depend on LIRInstruction, so we could make it a generic utility class.
  ;;
-(class-ns LIRInsertionBuffer
+(class-ns LIRInsertionBuffer []
     (defn #_"LIRInsertionBuffer" LIRInsertionBuffer'new-0 []
         (merge (LIRInsertionBuffer'class.)
             (hash-map
@@ -42994,7 +42884,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LIRInstruction
+(class-ns LIRInstruction []
     ;;;
      ; Constructs a new LIR instruction.
      ;;
@@ -43180,7 +43070,7 @@ ZeroExtendNode'new-4
 )
 
 ; @LIROpcode
-(class-ns AMD64ByteSwapOp
+(class-ns AMD64ByteSwapOp [LIRInstruction]
     (defn #_"AMD64ByteSwapOp" AMD64ByteSwapOp'new-2 [#_"Value" result, #_"Value" input]
         (merge (AMD64ByteSwapOp'class.) (LIRInstruction'new-0)
             (hash-map
@@ -43204,7 +43094,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns AMD64CCall
+(class-ns AMD64CCall [LIRInstruction]
     (defn #_"AMD64CCall" AMD64CCall'new-3 [#_"Value" result, #_"Value" functionPtr, #_"Value[]" parameters]
         (merge (AMD64CCall'class.) (LIRInstruction'new-0)
             (hash-map
@@ -43235,7 +43125,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns AMD64ClearRegisterOp
+(class-ns AMD64ClearRegisterOp [LIRInstruction]
     (defn #_"AMD64ClearRegisterOp" AMD64ClearRegisterOp'new-2 [#_"OperandSize" size, #_"AllocatableValue" result]
         (merge (AMD64ClearRegisterOp'class.) (LIRInstruction'new-0)
             (hash-map
@@ -43257,7 +43147,7 @@ ZeroExtendNode'new-4
 )
 
 ; @LIROpcode
-(class-ns AMD64DeoptimizeOp
+(class-ns AMD64DeoptimizeOp [LIRInstruction, BlockEndOp]
     (defn #_"AMD64DeoptimizeOp" AMD64DeoptimizeOp'new-0 []
         (merge (AMD64DeoptimizeOp'class.) (LIRInstruction'new-0))
     )
@@ -43271,7 +43161,7 @@ ZeroExtendNode'new-4
 )
 
 ; @LIROpcode
-(class-ns AMD64LFenceOp
+(class-ns AMD64LFenceOp [LIRInstruction]
     (defn #_"AMD64LFenceOp" AMD64LFenceOp'new-0 []
         (merge (AMD64LFenceOp'class.) (LIRInstruction'new-0))
     )
@@ -43288,7 +43178,7 @@ ZeroExtendNode'new-4
  ; AMD64 mul/div operation. This operation has a single operand for the second input. The first
  ; input must be in RAX for mul and in RDX:RAX for div. The result is in RDX:RAX.
  ;;
-(class-ns AMD64MulDivOp
+(class-ns AMD64MulDivOp [LIRInstruction]
     (defn #_"AMD64MulDivOp" AMD64MulDivOp'new-5 [#_"AMD64MOp" opcode, #_"OperandSize" size, #_"LIRKind" resultKind, #_"AllocatableValue" x, #_"AllocatableValue" y]
         (AMD64MulDivOp'new-6 opcode, size, resultKind, Value/ILLEGAL, x, y)
     )
@@ -43325,7 +43215,7 @@ ZeroExtendNode'new-4
 )
 
 ; @LIROpcode
-(class-ns AMD64MultiStackMove
+(class-ns AMD64MultiStackMove [LIRInstruction]
     (defn #_"AMD64MultiStackMove" AMD64MultiStackMove'new-4 [#_"AllocatableValue*" results, #_"Value*" inputs, #_"Register" scratch, #_"AllocatableValue" backupSlot]
         (merge (AMD64MultiStackMove'class.) (LIRInstruction'new-0)
             (hash-map
@@ -43365,7 +43255,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns AMD64PrefetchOp
+(class-ns AMD64PrefetchOp [LIRInstruction]
     (defn #_"AMD64PrefetchOp" AMD64PrefetchOp'new-2 [#_"AMD64AddressValue" address, #_"int" instr]
         (merge (AMD64PrefetchOp'class.) (LIRInstruction'new-0)
             (hash-map
@@ -43390,7 +43280,7 @@ ZeroExtendNode'new-4
 )
 
 ; @LIROpcode
-(class-ns AMD64PushPopStackMove
+(class-ns AMD64PushPopStackMove [LIRInstruction, ValueMoveOp, MoveOp]
     (defn #_"AMD64PushPopStackMove" AMD64PushPopStackMove'new-3 [#_"OperandSize" size, #_"AllocatableValue" result, #_"AllocatableValue" input]
         (merge (AMD64PushPopStackMove'class.) (LIRInstruction'new-0)
             (hash-map
@@ -43428,7 +43318,7 @@ ZeroExtendNode'new-4
  ; Restores registers from stack slots.
  ;;
 ; @LIROpcode
-(class-ns AMD64RestoreRegistersOp
+(class-ns AMD64RestoreRegistersOp [LIRInstruction]
     (defn #_"AMD64RestoreRegistersOp" AMD64RestoreRegistersOp'new-2 [#_"AllocatableValue[]" values, #_"AMD64SaveRegistersOp" save]
         (merge (AMD64RestoreRegistersOp'class.) (LIRInstruction'new-0)
             (hash-map
@@ -43470,7 +43360,7 @@ ZeroExtendNode'new-4
  ; Saves registers to stack slots.
  ;;
 ; @LIROpcode
-(class-ns AMD64SaveRegistersOp
+(class-ns AMD64SaveRegistersOp [LIRInstruction]
     ;;;
      ; @param savedRegisters the registers saved by this operation which may be subject to {@linkplain #remove(EconomicSet) pruning}
      ; @param savedRegisterLocations the slots to which the registers are saved
@@ -43512,7 +43402,7 @@ ZeroExtendNode'new-4
  ; AMD64 shift/rotate operation. This operation has a single operand for the first input and output.
  ; The second input must be in the RCX register.
  ;;
-(class-ns AMD64ShiftOp
+(class-ns AMD64ShiftOp [LIRInstruction]
     (defn #_"AMD64ShiftOp" AMD64ShiftOp'new-5 [#_"AMD64MOp" opcode, #_"OperandSize" size, #_"AllocatableValue" result, #_"AllocatableValue" x, #_"AllocatableValue" y]
         (merge (AMD64ShiftOp'class.) (LIRInstruction'new-0)
             (hash-map
@@ -43539,7 +43429,7 @@ ZeroExtendNode'new-4
 )
 
 ; @LIROpcode
-(class-ns AMD64SignExtendOp
+(class-ns AMD64SignExtendOp [LIRInstruction]
     (defn #_"AMD64SignExtendOp" AMD64SignExtendOp'new-3 [#_"OperandSize" size, #_"LIRKind" resultKind, #_"AllocatableValue" input]
         (merge (AMD64SignExtendOp'class.) (LIRInstruction'new-0)
             (hash-map
@@ -43566,7 +43456,7 @@ ZeroExtendNode'new-4
 )
 
 ; @LIROpcode
-(class-ns AMD64StackMove
+(class-ns AMD64StackMove [LIRInstruction, ValueMoveOp, MoveOp]
     (defn #_"AMD64StackMove" AMD64StackMove'new-4 [#_"AllocatableValue" result, #_"AllocatableValue" input, #_"Register" scratch, #_"AllocatableValue" backupSlot]
         (merge (AMD64StackMove'class.) (LIRInstruction'new-0)
             (hash-map
@@ -43615,7 +43505,7 @@ ZeroExtendNode'new-4
  ; Performs a hard-coded tail call to the specified target, which normally should be an InstalledCode instance.
  ;;
 ; @LIROpcode
-(class-ns AMD64TailcallOp
+(class-ns AMD64TailcallOp [LIRInstruction]
     (defn #_"AMD64TailcallOp" AMD64TailcallOp'new-2 [#_"Value[]" parameters, #_"Value" target]
         (merge (AMD64TailcallOp'class.) (LIRInstruction'new-0)
             (hash-map
@@ -43640,7 +43530,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns AbstractMoveOp
+(class-ns AbstractMoveOp [LIRInstruction, ValueMoveOp, MoveOp]
     (defn #_"AbstractMoveOp" AbstractMoveOp'new-1 [#_"AMD64Kind" moveKind]
         (merge (AbstractMoveOp'class.) (LIRInstruction'new-0)
             (hash-map
@@ -43658,7 +43548,7 @@ ZeroExtendNode'new-4
 )
 
 ; @LIROpcode
-(class-ns MoveFromRegOp
+(class-ns MoveFromRegOp [AbstractMoveOp, LIRInstruction, ValueMoveOp, MoveOp]
     (defn #_"MoveFromRegOp" MoveFromRegOp'new-3 [#_"AMD64Kind" moveKind, #_"AllocatableValue" result, #_"AllocatableValue" input]
         (merge (MoveFromRegOp'class.) (AbstractMoveOp'new-1 moveKind)
             (hash-map
@@ -43684,7 +43574,7 @@ ZeroExtendNode'new-4
 )
 
 ; @LIROpcode
-(class-ns MoveToRegOp
+(class-ns MoveToRegOp [AbstractMoveOp, LIRInstruction, ValueMoveOp, MoveOp]
     (defn #_"MoveToRegOp" MoveToRegOp'new-3 [#_"AMD64Kind" moveKind, #_"AllocatableValue" result, #_"AllocatableValue" input]
         (merge (MoveToRegOp'class.) (AbstractMoveOp'new-1 moveKind)
             (hash-map
@@ -43710,7 +43600,7 @@ ZeroExtendNode'new-4
 )
 
 ; @LIROpcode
-(class-ns AtomicReadAndAddOp
+(class-ns AtomicReadAndAddOp [LIRInstruction]
     (defn #_"AtomicReadAndAddOp" AtomicReadAndAddOp'new-4 [#_"AMD64Kind" accessKind, #_"AllocatableValue" result, #_"AMD64AddressValue" address, #_"AllocatableValue" delta]
         (merge (AtomicReadAndAddOp'class.) (LIRInstruction'new-0)
             (hash-map
@@ -43741,7 +43631,7 @@ ZeroExtendNode'new-4
 )
 
 ; @LIROpcode
-(class-ns AtomicReadAndWriteOp
+(class-ns AtomicReadAndWriteOp [LIRInstruction]
     (defn #_"AtomicReadAndWriteOp" AtomicReadAndWriteOp'new-4 [#_"AMD64Kind" accessKind, #_"AllocatableValue" result, #_"AMD64AddressValue" address, #_"AllocatableValue" newValue]
         (merge (AtomicReadAndWriteOp'class.) (LIRInstruction'new-0)
             (hash-map
@@ -43768,7 +43658,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns BindToRegisterOp
+(class-ns BindToRegisterOp [LIRInstruction]
     (defn #_"BindToRegisterOp" BindToRegisterOp'new-1 [#_"Value" value]
         (merge (BindToRegisterOp'class.) (LIRInstruction'new-0)
             (hash-map
@@ -43787,7 +43677,7 @@ ZeroExtendNode'new-4
 )
 
 ; @LIROpcode
-(class-ns BlackholeOp
+(class-ns BlackholeOp [LIRInstruction]
     (defn #_"BlackholeOp" BlackholeOp'new-1 [#_"Value" value]
         (merge (BlackholeOp'class.) (LIRInstruction'new-0)
             (hash-map
@@ -43805,7 +43695,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns BranchOp
+(class-ns BranchOp [LIRInstruction, StandardBranchOp, BlockEndOp]
     (defn #_"BranchOp" BranchOp'new-4c [#_"Condition" condition, #_"LabelRef" trueDestination, #_"LabelRef" falseDestination, #_"double" trueDestinationProbability]
         (BranchOp'new-4f (AMD64ControlFlow'intCond-1 condition), trueDestination, falseDestination, trueDestinationProbability)
     )
@@ -43860,7 +43750,7 @@ ZeroExtendNode'new-4
 )
 
 ; @LIROpcode
-(class-ns CRuntimeCallEpilogueOp
+(class-ns CRuntimeCallEpilogueOp [LIRInstruction]
     (defn #_"CRuntimeCallEpilogueOp" CRuntimeCallEpilogueOp'new-4 [#_"int" threadLastJavaSpOffset, #_"int" threadLastJavaFpOffset, #_"int" threadLastJavaPcOffset, #_"Register" thread]
         (merge (CRuntimeCallEpilogueOp'class.) (LIRInstruction'new-0)
             (hash-map
@@ -43884,7 +43774,7 @@ ZeroExtendNode'new-4
 )
 
 ; @LIROpcode
-(class-ns CRuntimeCallPrologueOp
+(class-ns CRuntimeCallPrologueOp [LIRInstruction]
     (defn #_"CRuntimeCallPrologueOp" CRuntimeCallPrologueOp'new-2 [#_"int" threadLastJavaSpOffset, #_"Register" thread]
         (merge (CRuntimeCallPrologueOp'class.) (LIRInstruction'new-0)
             (hash-map
@@ -43903,7 +43793,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns CallOp
+(class-ns CallOp [LIRInstruction]
     (defn #_"CallOp" CallOp'new-3 [#_"Value" result, #_"Value[]" parameters, #_"Value[]" temporaries]
         (merge (CallOp'class.) (LIRInstruction'new-0)
             (hash-map
@@ -43924,7 +43814,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns ForeignCallOp
+(class-ns ForeignCallOp [CallOp, LIRInstruction]
     (defn #_"ForeignCallOp" ForeignCallOp'new-4 [#_"ForeignCallLinkage" callTarget, #_"Value" result, #_"Value[]" parameters, #_"Value[]" temps]
         (merge (ForeignCallOp'class.) (CallOp'new-3 result, parameters, temps)
             (hash-map
@@ -43941,7 +43831,7 @@ ZeroExtendNode'new-4
 )
 
 ; @LIROpcode
-(class-ns DirectFarForeignCallOp
+(class-ns DirectFarForeignCallOp [ForeignCallOp, CallOp, LIRInstruction]
     (defn #_"DirectFarForeignCallOp" DirectFarForeignCallOp'new-4 [#_"ForeignCallLinkage" callTarget, #_"Value" result, #_"Value[]" parameters, #_"Value[]" temps]
         (merge (DirectFarForeignCallOp'class.) (ForeignCallOp'new-4 callTarget, result, parameters, temps)
             (hash-map
@@ -43961,7 +43851,7 @@ ZeroExtendNode'new-4
 )
 
 ; @LIROpcode
-(class-ns DirectNearForeignCallOp
+(class-ns DirectNearForeignCallOp [ForeignCallOp, CallOp, LIRInstruction]
     (defn #_"DirectNearForeignCallOp" DirectNearForeignCallOp'new-4 [#_"ForeignCallLinkage" linkage, #_"Value" result, #_"Value[]" parameters, #_"Value[]" temps]
         (merge (DirectNearForeignCallOp'class.) (ForeignCallOp'new-4 linkage, result, parameters, temps))
     )
@@ -43974,7 +43864,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns MethodCallOp
+(class-ns MethodCallOp [CallOp, LIRInstruction]
     (defn #_"MethodCallOp" MethodCallOp'new-4 [#_"ResolvedJavaMethod" callTarget, #_"Value" result, #_"Value[]" parameters, #_"Value[]" temps]
         (merge (MethodCallOp'class.) (CallOp'new-3 result, parameters, temps)
             (hash-map
@@ -43985,7 +43875,7 @@ ZeroExtendNode'new-4
 )
 
 ; @LIROpcode
-(class-ns DirectCallOp
+(class-ns DirectCallOp [MethodCallOp, CallOp, LIRInstruction]
     (defn #_"DirectCallOp" DirectCallOp'new-4 [#_"ResolvedJavaMethod" callTarget, #_"Value" result, #_"Value[]" parameters, #_"Value[]" temps]
         (merge (DirectCallOp'class.) (MethodCallOp'new-4 callTarget, result, parameters, temps))
     )
@@ -44007,7 +43897,7 @@ ZeroExtendNode'new-4
  ; inline cache so it's just a patchable call site.
  ;;
 ; @LIROpcode
-(class-ns DirectStaticCallOp
+(class-ns DirectStaticCallOp [DirectCallOp, MethodCallOp, CallOp, LIRInstruction]
     (defn #_"DirectStaticCallOp" DirectStaticCallOp'new-5 [#_"ResolvedJavaMethod" target, #_"Value" result, #_"Value[]" parameters, #_"Value[]" temps, #_"InvokeKind" invokeKind]
         (merge (DirectStaticCallOp'class.) (DirectCallOp'new-4 target, result, parameters, temps)
             (hash-map
@@ -44030,7 +43920,7 @@ ZeroExtendNode'new-4
  ; calls using an inline cache, a MOVE instruction is emitted just prior to the aligned direct call.
  ;;
 ; @LIROpcode
-(class-ns DirectVirtualCallOp
+(class-ns DirectVirtualCallOp [DirectCallOp, MethodCallOp, CallOp, LIRInstruction]
     (defn #_"DirectVirtualCallOp" DirectVirtualCallOp'new-5 [#_"ResolvedJavaMethod" target, #_"Value" result, #_"Value[]" parameters, #_"Value[]" temps, #_"InvokeKind" invokeKind]
         (merge (DirectVirtualCallOp'class.) (DirectCallOp'new-4 target, result, parameters, temps)
             (hash-map
@@ -44055,7 +43945,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Commutative instruction that has two AllocatableValue operands.
  ;;
-(class-ns CommutativeTwoOp
+(class-ns CommutativeTwoOp [LIRInstruction]
     (defn #_"CommutativeTwoOp" CommutativeTwoOp'new-5 [#_"AMD64RMOp" opcode, #_"OperandSize" size, #_"AllocatableValue" result, #_"AllocatableValue" x, #_"AllocatableValue" y]
         (merge (CommutativeTwoOp'class.) (LIRInstruction'new-0)
             (hash-map
@@ -44092,7 +43982,7 @@ ZeroExtendNode'new-4
 )
 
 ; @LIROpcode
-(class-ns CompareAndSwapOp
+(class-ns CompareAndSwapOp [LIRInstruction]
     (defn #_"CompareAndSwapOp" CompareAndSwapOp'new-5 [#_"AMD64Kind" accessKind, #_"AllocatableValue" result, #_"AMD64AddressValue" address, #_"AllocatableValue" cmpValue, #_"AllocatableValue" newValue]
         (merge (CompareAndSwapOp'class.) (LIRInstruction'new-0)
             (hash-map
@@ -44124,7 +44014,7 @@ ZeroExtendNode'new-4
 )
 
 ; @LIROpcode
-(class-ns CondMoveOp
+(class-ns CondMoveOp [LIRInstruction]
     (defn #_"CondMoveOp" CondMoveOp'new-4 [#_"Variable" result, #_"Condition" condition, #_"AllocatableValue" trueValue, #_"Value" falseValue]
         (merge (CondMoveOp'class.) (LIRInstruction'new-0)
             (hash-map
@@ -44149,7 +44039,7 @@ ZeroExtendNode'new-4
 )
 
 ; @LIROpcode
-(class-ns CondSetOp
+(class-ns CondSetOp [LIRInstruction]
     (defn #_"CondSetOp" CondSetOp'new-2 [#_"Variable" result, #_"Condition" condition]
         (merge (CondSetOp'class.) (LIRInstruction'new-0)
             (hash-map
@@ -44171,7 +44061,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Instruction that has one AllocatableValue operand and one 32-bit immediate operand.
  ;;
-(class-ns ConstOp
+(class-ns ConstOp [LIRInstruction]
     (defn #_"ConstOp" ConstOp'new-5b [#_"BinaryArithmetic" opcode, #_"OperandSize" size, #_"AllocatableValue" result, #_"AllocatableValue" x, #_"int" y]
         (ConstOp'new-5a (BinaryArithmetic''getMIOpcode-3 opcode, size, (NumUtil'isByte-1i y)), size, result, x, y)
     )
@@ -44203,7 +44093,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Instruction that has one AllocatableValue operand and one 32-bit immediate operand.
  ;;
-(class-ns ConsumerConstOp
+(class-ns ConsumerConstOp [LIRInstruction]
     (defn #_"ConsumerConstOp" ConsumerConstOp'new-4b [#_"BinaryArithmetic" opcode, #_"OperandSize" size, #_"AllocatableValue" x, #_"int" y]
         (ConsumerConstOp'new-4a (BinaryArithmetic''getMIOpcode-3 opcode, size, (NumUtil'isByte-1i y)), size, x, y)
     )
@@ -44240,7 +44130,7 @@ ZeroExtendNode'new-4
  ; Instruction that has one AllocatableValue operand and one 32-bit immediate operand
  ; that needs to be patched at runtime.
  ;;
-(class-ns VMConstOp
+(class-ns VMConstOp [ConsumerConstOp, LIRInstruction]
     (defn #_"VMConstOp" VMConstOp'new-3 [#_"AMD64MIOp" opcode, #_"AllocatableValue" x, #_"VMConstant" c]
         (merge (VMConstOp'class.) (ConsumerConstOp'new-4 opcode, OperandSize'DWORD, x, 0xdeaddead)
             (hash-map
@@ -44261,7 +44151,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Instruction that has two AllocatableValue operands.
  ;;
-(class-ns ConsumerOp
+(class-ns ConsumerOp [LIRInstruction]
     (defn #_"ConsumerOp" ConsumerOp'new-4 [#_"AMD64RMOp" opcode, #_"OperandSize" size, #_"AllocatableValue" x, #_"AllocatableValue" y]
         (merge (ConsumerOp'class.) (LIRInstruction'new-0)
             (hash-map
@@ -44290,7 +44180,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Instruction that has one AllocatableValue operand and one DataSectionReference operand.
  ;;
-(class-ns DataOp
+(class-ns DataOp [LIRInstruction]
     (defn #_"DataOp" DataOp'new-4 [#_"AMD64RMOp" opcode, #_"OperandSize" size, #_"AllocatableValue" x, #_"Constant" y]
         (DataOp'new-5 opcode, size, x, y, (:bytes size))
     )
@@ -44321,7 +44211,7 @@ ZeroExtendNode'new-4
  ; Instruction that has one AllocatableValue operand and one
  ; DataSectionReference operand.
  ;;
-(class-ns DataTwoOp
+(class-ns DataTwoOp [LIRInstruction]
     (defn #_"DataTwoOp" DataTwoOp'new-5 [#_"AMD64RMOp" opcode, #_"OperandSize" size, #_"AllocatableValue" result, #_"AllocatableValue" x, #_"JavaConstant" y]
         (DataTwoOp'new-6 opcode, size, result, x, y, (#_"JavaKind" .getByteCount (#_"JavaConstant" .getJavaKind y)))
     )
@@ -44351,7 +44241,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns EpilogueBlockEndOp
+(class-ns EpilogueBlockEndOp [LIRInstruction, AMD64HotSpotRestoreRbpOp, BlockEndOp]
     (defn #_"EpilogueBlockEndOp" EpilogueBlockEndOp'new-0 []
         (merge (EpilogueBlockEndOp'class.) (LIRInstruction'new-0)
             (hash-map
@@ -44396,7 +44286,7 @@ ZeroExtendNode'new-4
  ; Returns from a function.
  ;;
 ; @LIROpcode
-(class-ns AMD64HotSpotReturnOp
+(class-ns AMD64HotSpotReturnOp [EpilogueBlockEndOp, LIRInstruction, AMD64HotSpotRestoreRbpOp, BlockEndOp]
     (defn #_"AMD64HotSpotReturnOp" AMD64HotSpotReturnOp'new-4 [#_"Value" value, #_"boolean" isStub, #_"Register" thread, #_"Register" scratchForSafepointOnReturn]
         (merge (AMD64HotSpotReturnOp'class.) (EpilogueBlockEndOp'new-0)
             (hash-map
@@ -44426,7 +44316,7 @@ ZeroExtendNode'new-4
  ; Removes the current frame and tail calls the uncommon trap routine.
  ;;
 ; @LIROpcode
-(class-ns DeoptimizeCallerOp
+(class-ns DeoptimizeCallerOp [EpilogueBlockEndOp, LIRInstruction, AMD64HotSpotRestoreRbpOp, BlockEndOp]
     (defn #_"DeoptimizeCallerOp" DeoptimizeCallerOp'new-0 []
         (merge (DeoptimizeCallerOp'class.) (EpilogueBlockEndOp'new-0))
     )
@@ -44443,7 +44333,7 @@ ZeroExtendNode'new-4
 ;;;
  ; LIR operation that is an unconditional jump to a #destination().
  ;;
-(class-ns JumpOp
+(class-ns JumpOp [LIRInstruction, BlockEndOp]
     (§ def #_"EnumSet<OperandFlag>" JumpOp'outgoingFlags (EnumSet/of OperandFlag'REG, OperandFlag'STACK, OperandFlag'CONST, OperandFlag'OUTGOING))
 
     (defn #_"JumpOp" JumpOp'new-1 [#_"LabelRef" destination]
@@ -44481,7 +44371,7 @@ ZeroExtendNode'new-4
 ;;;
  ; LIR operation that defines the position of a label.
  ;;
-(class-ns LabelOp
+(class-ns LabelOp [LIRInstruction]
     (defn #_"LabelOp" LabelOp'new-2 [#_"Label" label, #_"boolean" aligned?]
         (merge (LabelOp'class.) (LIRInstruction'new-0)
             (hash-map
@@ -44557,7 +44447,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LeaOp
+(class-ns LeaOp [LIRInstruction]
     (defn #_"LeaOp" LeaOp'new-3 [#_"AllocatableValue" result, #_"AMD64AddressValue" address, #_"OperandSize" size]
         (merge (LeaOp'class.) (LIRInstruction'new-0)
             (hash-map
@@ -44581,7 +44471,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LoadConfigValueOp
+(class-ns LoadConfigValueOp [LIRInstruction]
     (defn #_"LoadConfigValueOp" LoadConfigValueOp'new-2 [#_"int" markId, #_"AllocatableValue" result]
         (merge (LoadConfigValueOp'class.) (LIRInstruction'new-0)
             (hash-map
@@ -44599,7 +44489,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LoadMetaspaceConstantOp
+(class-ns LoadMetaspaceConstantOp [LIRInstruction, LoadConstantOp, MoveOp]
     (defn #_"LoadMetaspaceConstantOp" LoadMetaspaceConstantOp'new-2 [#_"AllocatableValue" result, #_"HotSpotMetaspaceConstant" input]
         (merge (LoadMetaspaceConstantOp'class.) (LIRInstruction'new-0)
             (hash-map
@@ -44651,7 +44541,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LoadObjectConstantOp
+(class-ns LoadObjectConstantOp [LIRInstruction, LoadConstantOp, MoveOp]
     (defn #_"LoadObjectConstantOp" LoadObjectConstantOp'new-2 [#_"AllocatableValue" result, #_"HotSpotObjectConstant" input]
         (merge (LoadObjectConstantOp'class.) (LIRInstruction'new-0)
             (hash-map
@@ -44714,7 +44604,7 @@ ZeroExtendNode'new-4
  ; Manages allocation and re-use of lock slots in a scoped manner. The slots are used in HotSpot's
  ; lightweight locking mechanism to store the mark word of an object being locked.
  ;;
-(class-ns LockStack
+(class-ns LockStack [LIRInstruction]
     (def- #_"AllocatableValue[]" LockStack'EMPTY (make-array AllocatableValue 0))
 
     (defn #_"LockStack" LockStack'new-2 [#_"FrameMapBuilder" frameMapBuilder, #_"LIRKind" slotKind]
@@ -44755,7 +44645,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Instruction with a single operand that is both input and output.
  ;;
-(class-ns MOp
+(class-ns MOp [LIRInstruction]
     (defn #_"MOp" MOp'new-4 [#_"AMD64MOp" opcode, #_"OperandSize" size, #_"AllocatableValue" result, #_"AllocatableValue" value]
         (merge (MOp'class.) (LIRInstruction'new-0)
             (hash-map
@@ -44782,7 +44672,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Instruction with separate input and output operands, and an operand encoding of MR.
  ;;
-(class-ns MROp
+(class-ns MROp [LIRInstruction]
     (defn #_"MROp" MROp'new-4 [#_"AMD64MROp" opcode, #_"OperandSize" size, #_"AllocatableValue" result, #_"AllocatableValue" value]
         (merge (MROp'class.) (LIRInstruction'new-0)
             (hash-map
@@ -44808,7 +44698,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns MembarOp
+(class-ns MembarOp [LIRInstruction]
     (defn #_"MembarOp" MembarOp'new-1 [#_"int" barriers]
         (merge (MembarOp'class.) (LIRInstruction'new-0)
             (hash-map
@@ -44828,7 +44718,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Instruction that has one {@link AMD64AddressValue memory} operand and one 32-bit immediate operand.
  ;;
-(class-ns MemoryConstOp
+(class-ns MemoryConstOp [LIRInstruction, ImplicitNullCheck]
     #_unused
     (defn #_"MemoryConstOp" MemoryConstOp'new-4b [#_"BinaryArithmetic" opcode, #_"OperandSize" size, #_"AMD64AddressValue" x, #_"int" y]
         (MemoryConstOp'new-4a (BinaryArithmetic''getMIOpcode-3 opcode, size, (NumUtil'isByte-1i y)), size, x, y)
@@ -44869,7 +44759,7 @@ ZeroExtendNode'new-4
  ; Instruction that has one {@link AMD64AddressValue memory} operand and one 32-bit immediate
  ; operand that needs to be patched at runtime.
  ;;
-(class-ns MemoryVMConstOp
+(class-ns MemoryVMConstOp [MemoryConstOp, LIRInstruction, ImplicitNullCheck]
     (defn #_"MemoryVMConstOp" MemoryVMConstOp'new-3 [#_"AMD64MIOp" opcode, #_"AMD64AddressValue" x, #_"VMConstant" c]
         (merge (MemoryVMConstOp'class.) (MemoryConstOp'new-4 opcode, OperandSize'DWORD, x, 0xdeaddead)
             (hash-map
@@ -44890,7 +44780,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Instruction that has a {@link AMD64AddressValue memory} operand as first input and an AllocatableValue as second input.
  ;;
-(class-ns MemoryMROp
+(class-ns MemoryMROp [LIRInstruction, ImplicitNullCheck]
     (defn #_"MemoryMROp" MemoryMROp'new-4 [#_"AMD64MROp" opcode, #_"OperandSize" size, #_"AMD64AddressValue" x, #_"AllocatableValue" y]
         (merge (MemoryMROp'class.) (LIRInstruction'new-0)
             (hash-map
@@ -44922,7 +44812,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Instruction with a {@link AMD64AddressValue memory} operand.
  ;;
-(class-ns MemoryOp
+(class-ns MemoryOp [LIRInstruction, ImplicitNullCheck]
     (defn #_"MemoryOp" MemoryOp'new-4 [#_"AMD64RMOp" opcode, #_"OperandSize" size, #_"AllocatableValue" result, #_"AMD64AddressValue" input]
         (merge (MemoryOp'class.) (LIRInstruction'new-0)
             (hash-map
@@ -44954,7 +44844,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Instruction that has an AllocatableValue as first input and a {@link AMD64AddressValue memory} operand as second input.
  ;;
-(class-ns MemoryRMOp
+(class-ns MemoryRMOp [LIRInstruction, ImplicitNullCheck]
     #_unused
     (defn #_"MemoryRMOp" MemoryRMOp'new-4 [#_"AMD64RMOp" opcode, #_"OperandSize" size, #_"AllocatableValue" x, #_"AMD64AddressValue" y]
         (merge (MemoryRMOp'class.) (LIRInstruction'new-0)
@@ -44988,7 +44878,7 @@ ZeroExtendNode'new-4
  ; Instruction that has one AllocatableValue operand and one {@link AMD64AddressValue
  ; memory} operand.
  ;;
-(class-ns MemoryTwoOp
+(class-ns MemoryTwoOp [LIRInstruction, ImplicitNullCheck]
     (defn #_"MemoryTwoOp" MemoryTwoOp'new-5 [#_"AMD64RMOp" opcode, #_"OperandSize" size, #_"AllocatableValue" result, #_"AllocatableValue" x, #_"AMD64AddressValue" y]
         (merge (MemoryTwoOp'class.) (LIRInstruction'new-0)
             (hash-map
@@ -45021,7 +44911,7 @@ ZeroExtendNode'new-4
 )
 
 ; @LIROpcode
-(class-ns MoveFromConstOp
+(class-ns MoveFromConstOp [LIRInstruction, LoadConstantOp, MoveOp]
     (defn #_"MoveFromConstOp" MoveFromConstOp'new-2 [#_"AllocatableValue" result, #_"JavaConstant" input]
         (merge (MoveFromConstOp'class.) (LIRInstruction'new-0)
             (hash-map
@@ -45059,7 +44949,7 @@ ZeroExtendNode'new-4
  ; A LIR operation that does nothing. If the operation records its position, it can be
  ; subsequently {@linkplain #replace(LIR, LIRInstruction) replaced}.
  ;;
-(class-ns NoOp
+(class-ns NoOp [LIRInstruction]
     (defn #_"NoOp" NoOp'new-2 [#_"Block" block, #_"int" index]
         (merge (NoOp'class.) (LIRInstruction'new-0)
             (hash-map
@@ -45090,7 +44980,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns NullCheckOp
+(class-ns NullCheckOp [LIRInstruction, NullCheck]
     (defn #_"NullCheckOp" NullCheckOp'new-1 [#_"AMD64AddressValue" address]
         (merge (NullCheckOp'class.) (LIRInstruction'new-0)
             (hash-map
@@ -45114,7 +45004,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns PointerCompressionOp
+(class-ns PointerCompressionOp [LIRInstruction]
     (defn #_"PointerCompressionOp" PointerCompressionOp'new-5 [#_"AllocatableValue" result, #_"Value" input, #_"AllocatableValue" baseRegister, #_"CompressEncoding" encoding, #_"boolean" never-nil?]
         (merge (PointerCompressionOp'class.) (LIRInstruction'new-0)
             (hash-map
@@ -45148,7 +45038,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns CompressPointerOp
+(class-ns CompressPointerOp [PointerCompressionOp, LIRInstruction]
     (defn #_"CompressPointerOp" CompressPointerOp'new-5 [#_"AllocatableValue" result, #_"Value" input, #_"AllocatableValue" baseRegister, #_"CompressEncoding" encoding, #_"boolean" never-nil?]
         (merge (CompressPointerOp'class.) (PointerCompressionOp'new-5 result, input, baseRegister, encoding, never-nil?))
     )
@@ -45185,7 +45075,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns UncompressPointerOp
+(class-ns UncompressPointerOp [PointerCompressionOp, LIRInstruction]
     (defn #_"UncompressPointerOp" UncompressPointerOp'new-5 [#_"AllocatableValue" result, #_"Value" input, #_"AllocatableValue" baseRegister, #_"CompressEncoding" encoding, #_"boolean" never-nil?]
         (merge (UncompressPointerOp'class.) (PointerCompressionOp'new-5 result, input, baseRegister, encoding, never-nil?))
     )
@@ -45231,7 +45121,7 @@ ZeroExtendNode'new-4
  ; Instruction with a separate result operand, one AllocatableValue input and one 32-bit
  ; immediate input.
  ;;
-(class-ns RMIOp
+(class-ns RMIOp [LIRInstruction]
     (defn #_"RMIOp" RMIOp'new-5 [#_"AMD64RMIOp" opcode, #_"OperandSize" size, #_"AllocatableValue" result, #_"AllocatableValue" x, #_"int" y]
         (merge (RMIOp'class.) (LIRInstruction'new-0)
             (hash-map
@@ -45261,7 +45151,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Instruction with separate input and output operands, and an operand encoding of RM.
  ;;
-(class-ns RMOp
+(class-ns RMOp [LIRInstruction]
     (defn #_"RMOp" RMOp'new-4 [#_"AMD64RMOp" opcode, #_"OperandSize" size, #_"AllocatableValue" result, #_"AllocatableValue" value]
         (merge (RMOp'class.) (LIRInstruction'new-0)
             (hash-map
@@ -45291,7 +45181,7 @@ ZeroExtendNode'new-4
  ; AMD64 rdtsc operation. The result is in EDX:EAX.
  ;;
 ; @LIROpcode
-(class-ns ReadTimestampCounter
+(class-ns ReadTimestampCounter [LIRInstruction]
     (defn #_"ReadTimestampCounter" ReadTimestampCounter'new-0 []
         (merge (ReadTimestampCounter'class.) (LIRInstruction'new-0)
             (hash-map
@@ -45311,7 +45201,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns ReturnOp
+(class-ns ReturnOp [LIRInstruction, BlockEndOp]
     #_unused
     (defn #_"ReturnOp" ReturnOp'new-1 [#_"Value" x]
         (merge (ReturnOp'class.) (LIRInstruction'new-0)
@@ -45335,7 +45225,7 @@ ZeroExtendNode'new-4
  ; Emits a safepoint poll.
  ;;
 ; @LIROpcode
-(class-ns SafepointOp
+(class-ns SafepointOp [LIRInstruction]
     ;;;
      ; Tests if the polling page address can be reached from the code cache with 32-bit displacements.
      ;;
@@ -45398,7 +45288,7 @@ ZeroExtendNode'new-4
 )
 
 ; @LIROpcode
-(class-ns SpillRegistersOp
+(class-ns SpillRegistersOp [LIRInstruction]
     (defn #_"SpillRegistersOp" SpillRegistersOp'new-0 []
         (merge (SpillRegistersOp'class.) (LIRInstruction'new-0))
     )
@@ -45415,7 +45305,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns StackLeaOp
+(class-ns StackLeaOp [LIRInstruction]
     (defn #_"StackLeaOp" StackLeaOp'new-2 [#_"AllocatableValue" result, #_"AllocatableValue" slot]
         (merge (StackLeaOp'class.) (LIRInstruction'new-0)
             (hash-map
@@ -45435,7 +45325,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns StrategySwitchOp
+(class-ns StrategySwitchOp [LIRInstruction, BlockEndOp]
     (defn #_"StrategySwitchOp" StrategySwitchOp'new-5 [#_"SwitchStrategy" strategy, #_"LabelRef[]" keyTargets, #_"LabelRef" defaultTarget, #_"Value" key, #_"Value" scratch]
         (merge (StrategySwitchOp'class.) (LIRInstruction'new-0)
             (hash-map
@@ -45459,7 +45349,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns AMD64HotSpotStrategySwitchOp
+(class-ns AMD64HotSpotStrategySwitchOp [StrategySwitchOp, LIRInstruction, BlockEndOp]
     (defn #_"AMD64HotSpotStrategySwitchOp" AMD64HotSpotStrategySwitchOp'new-5 [#_"SwitchStrategy" strategy, #_"LabelRef[]" keyTargets, #_"LabelRef" defaultTarget, #_"Value" key, #_"Value" scratch]
         (merge (AMD64HotSpotStrategySwitchOp'class.) (StrategySwitchOp'new-5 strategy, keyTargets, defaultTarget, key, scratch))
     )
@@ -45472,7 +45362,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns TableSwitchOp
+(class-ns TableSwitchOp [LIRInstruction, BlockEndOp]
     (defn #_"TableSwitchOp" TableSwitchOp'new-6 [#_"int" lowKey, #_"LabelRef" defaultTarget, #_"LabelRef[]" targets, #_"Value" index, #_"Variable" scratch, #_"Variable" idxScratch]
         (merge (TableSwitchOp'class.) (LIRInstruction'new-0)
             (hash-map
@@ -45571,7 +45461,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Instruction that has two AllocatableValue operands.
  ;;
-(class-ns TwoOp
+(class-ns TwoOp [LIRInstruction]
     (defn #_"TwoOp" TwoOp'new-5 [#_"AMD64RMOp" opcode, #_"OperandSize" size, #_"AllocatableValue" result, #_"AllocatableValue" x, #_"AllocatableValue" y]
         (merge (TwoOp'class.) (LIRInstruction'new-0)
             (hash-map
@@ -45604,7 +45494,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LIRPhaseContext
+(class-ns LIRPhaseContext []
     (defn #_"LIRPhaseContext" LIRPhaseContext'new-1 [#_"LIRGenerator" lirGen]
         (merge (LIRPhaseContext'class.)
             (hash-map
@@ -45614,7 +45504,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LIRPhaseSuite
+(class-ns LIRPhaseSuite [LIRPhase #_"<LIRPhaseContext>"]
     (defn #_"LIRPhaseSuite" LIRPhaseSuite'new-0 []
         (merge (LIRPhaseSuite'class.)
             (hash-map
@@ -45638,7 +45528,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns AllocationStage
+(class-ns AllocationStage [LIRPhaseSuite, LIRPhase #_"<LIRPhaseContext>"]
     (defn #_"AllocationStage" AllocationStage'new-0 []
         (let [
             #_"AllocationStage" this (merge (AllocationStage'class.) (LIRPhaseSuite'new-0))
@@ -45655,7 +45545,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns PostAllocationStage
+(class-ns PostAllocationStage [LIRPhaseSuite, LIRPhase #_"<LIRPhaseContext>"]
     (defn #_"PostAllocationStage" PostAllocationStage'new-0 []
         (let [
             #_"PostAllocationStage" this (merge (PostAllocationStage'class.) (LIRPhaseSuite'new-0))
@@ -45677,7 +45567,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns PreAllocationStage
+(class-ns PreAllocationStage [LIRPhaseSuite, LIRPhase #_"<LIRPhaseContext>"]
     (defn #_"PreAllocationStage" PreAllocationStage'new-0 []
         (let [
             #_"PreAllocationStage" this (merge (PreAllocationStage'class.) (LIRPhaseSuite'new-0))
@@ -45691,7 +45581,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LIRSuites
+(class-ns LIRSuites []
     (defn #_"LIRSuites" LIRSuites'new-3 [#_"LIRPhaseSuite" preAllocStage, #_"LIRPhaseSuite" allocStage, #_"LIRPhaseSuite" postAllocStage]
         (merge (LIRSuites'class.)
             (hash-map
@@ -45728,7 +45618,7 @@ ZeroExtendNode'new-4
  ; e.g. a registers, and this location is referenced later on, the {@link Use usage} of the stack slot must be
  ; marked with the OperandFlag#UNINITIALIZED. Otherwise the stack slot might be reused and its content destroyed.
  ;;
-(class-ns LSStackSlotAllocator ;; AllocationPhase
+(class-ns LSStackSlotAllocator [LIRPhase #_"<LIRPhaseContext>"] ;; AllocationPhase
     (defn #_"LSStackSlotAllocator" LSStackSlotAllocator'new-0 []
         (LSStackSlotAllocator'class.)
     )
@@ -45752,7 +45642,7 @@ ZeroExtendNode'new-4
 ;;;
  ; This class represents a label within assembly code.
  ;;
-(class-ns Label
+(class-ns Label []
     (defn #_"Label" Label'new-0 []
         (merge (Label'class.)
             (hash-map
@@ -45810,7 +45700,7 @@ ZeroExtendNode'new-4
  ; to block B from block A via the tuple {@code (A, successor-index-of-B)}. That is, indirectly by storing
  ; the index into the successor list of A. Note therefore that the successor list cannot be re-ordered.
  ;;
-(class-ns LabelRef
+(class-ns LabelRef []
     ;;;
      ; Returns a new reference to a successor of the given block.
      ;
@@ -45839,7 +45729,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Lazily constructed parts of SnippetInfo.
  ;;
-(class-ns Lazy
+(class-ns Lazy []
     (defn #_"Lazy" Lazy'new-1 [#_"ResolvedJavaMethod" method]
         (let [
             #_"int" n (#_"Signature" .getParameterCount (#_"ResolvedJavaMethod" .getSignature method), false)
@@ -45863,7 +45753,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LSAllocationPhase
+(class-ns LSAllocationPhase []
     (defn #_"LSAllocationPhase" LSAllocationPhase'new-0 []
         (LSAllocationPhase'class.)
     )
@@ -45872,7 +45762,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Phase 7: Assign register numbers back to LIR.
  ;;
-(class-ns LSAssignLocationsPhase
+(class-ns LSAssignLocationsPhase [LSAllocationPhase]
     (defn #_"LSAssignLocationsPhase" LSAssignLocationsPhase'new-1 [#_"LinearScan" allocator]
         (merge (LSAssignLocationsPhase'class.) (LSAllocationPhase'new-0)
             (hash-map
@@ -45992,7 +45882,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LSEliminateSpillMovePhase
+(class-ns LSEliminateSpillMovePhase [LSAllocationPhase]
     (def- #_"IntervalPredicate" LSEliminateSpillMovePhase'mustStoreAtDefinition
         (reify IntervalPredicate
             (#_"boolean" IntervalPredicate'''apply-2 [#_"IntervalPredicate" this, #_"Interval" i]
@@ -46094,7 +45984,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns SSALinearScanEliminateSpillMovePhase
+(class-ns SSALinearScanEliminateSpillMovePhase [LSEliminateSpillMovePhase, LSAllocationPhase]
     (defn #_"SSALinearScanEliminateSpillMovePhase" SSALinearScanEliminateSpillMovePhase'new-1 [#_"LinearScan" allocator]
         (merge (SSALinearScanEliminateSpillMovePhase'class.) (LSEliminateSpillMovePhase'new-1 allocator))
     )
@@ -46123,7 +46013,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LSLifetimeAnalysisPhase
+(class-ns LSLifetimeAnalysisPhase [LSAllocationPhase]
     (defn #_"LSLifetimeAnalysisPhase" LSLifetimeAnalysisPhase'new-1 [#_"LinearScan" linearScan]
         (merge (LSLifetimeAnalysisPhase'class.) (LSAllocationPhase'new-0)
             (hash-map
@@ -46668,7 +46558,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns SSALinearScanLifetimeAnalysisPhase
+(class-ns SSALinearScanLifetimeAnalysisPhase [LSLifetimeAnalysisPhase, LSAllocationPhase]
     (defn #_"SSALinearScanLifetimeAnalysisPhase" SSALinearScanLifetimeAnalysisPhase'new-1 [#_"LinearScan" linearScan]
         (merge (SSALinearScanLifetimeAnalysisPhase'class.) (LSLifetimeAnalysisPhase'new-1 linearScan))
     )
@@ -46720,7 +46610,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LSOptimizeSpillPositionPhase
+(class-ns LSOptimizeSpillPositionPhase [LSAllocationPhase]
     (defn #_"LSOptimizeSpillPositionPhase" LSOptimizeSpillPositionPhase'new-1 [#_"LinearScan" allocator]
         (merge (LSOptimizeSpillPositionPhase'class.) (LSAllocationPhase'new-0)
             (hash-map
@@ -46862,7 +46752,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LSRegisterAllocationPhase
+(class-ns LSRegisterAllocationPhase [LSAllocationPhase]
     (defn #_"LSRegisterAllocationPhase" LSRegisterAllocationPhase'new-1 [#_"LinearScan" allocator]
         (merge (LSRegisterAllocationPhase'class.) (LSAllocationPhase'new-0)
             (hash-map
@@ -46892,7 +46782,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LSResolveDataFlowPhase
+(class-ns LSResolveDataFlowPhase [LSAllocationPhase]
     (defn #_"LSResolveDataFlowPhase" LSResolveDataFlowPhase'new-1 [#_"LinearScan" allocator]
         (merge (LSResolveDataFlowPhase'class.) (LSAllocationPhase'new-0)
             (hash-map
@@ -47023,7 +46913,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns SSALinearScanResolveDataFlowPhase
+(class-ns SSALinearScanResolveDataFlowPhase [LSResolveDataFlowPhase, LSAllocationPhase]
     (defn #_"SSALinearScanResolveDataFlowPhase" SSALinearScanResolveDataFlowPhase'new-1 [#_"LinearScan" allocator]
         (merge (SSALinearScanResolveDataFlowPhase'class.) (LSResolveDataFlowPhase'new-1 allocator))
     )
@@ -47074,7 +46964,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LinearScan
+(class-ns LinearScan []
     (def #_"int" LinearScan'DOMINATOR_SPILL_MOVE_ID -2)
     (def- #_"int" LinearScan'SPLIT_INTERVALS_CAPACITY_RIGHT_SHIFT 1)
 
@@ -47609,7 +47499,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns SSALinearScan
+(class-ns SSALinearScan [LinearScan]
     (defn #_"SSALinearScan" SSALinearScan'new-3 [#_"LIRGenerationResult" res, #_"MoveFactory" moveFactory, #_"Block[]" sortedBlocks]
         (merge (SSALinearScan'class.) (LinearScan'new-3 res, moveFactory, sortedBlocks))
     )
@@ -47643,7 +47533,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LinearScanPhase ;; AllocationPhase
+(class-ns LinearScanPhase [LIRPhase #_"<LIRPhaseContext>"] ;; AllocationPhase
     (defn #_"LinearScanPhase" LinearScanPhase'new-0 []
         (LinearScanPhase'class.)
     )
@@ -47660,7 +47550,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LocalLiveness
+(class-ns LocalLiveness []
     (defn #_"LocalLiveness" LocalLiveness'new-1 [#_"BciBlock[]" blocks]
         (merge (LocalLiveness'class.)
             (hash-map
@@ -47767,7 +47657,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LargeLocalLiveness
+(class-ns LargeLocalLiveness [LocalLiveness]
     (defn #_"LargeLocalLiveness" LargeLocalLiveness'new-3 [#_"BciBlock[]" blocks, #_"int" maxLocals, #_"int" loopCount]
         (let [
             #_"int" n (count blocks)
@@ -47852,7 +47742,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns SmallLocalLiveness
+(class-ns SmallLocalLiveness [LocalLiveness]
     ;; local n is represented by the bit accessible as (1 << n)
 
     (defn #_"SmallLocalLiveness" SmallLocalLiveness'new-3 [#_"BciBlock[]" blocks, #_"int" maxLocals, #_"int" loopCount]
@@ -47928,7 +47818,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns FieldLocationIdentity
+(class-ns FieldLocationIdentity [#_"LocationIdentity"]
     (defn #_"FieldLocationIdentity" FieldLocationIdentity'new-1 [#_"ResolvedJavaField" inner]
         (merge (FieldLocationIdentity'class.) (LocationIdentity.)
             (hash-map
@@ -47945,7 +47835,7 @@ ZeroExtendNode'new-4
 ;;;
  ; A LocationIdentity with a name.
  ;;
-(class-ns NamedLocationIdentity
+(class-ns NamedLocationIdentity [#_"LocationIdentity"]
     ;;;
      ; Denotes the location of a value that is guaranteed to be unchanging.
      ;;
@@ -48015,7 +47905,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns CanonicalizableLocation
+(class-ns CanonicalizableLocation [NamedLocationIdentity, #_"LocationIdentity"]
     (defn #_"CanonicalizableLocation" CanonicalizableLocation'new-1 [#_"String" name]
         (merge (CanonicalizableLocation'class.) (NamedLocationIdentity'new-2 name, true))
     )
@@ -48060,7 +47950,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LocationSet
+(class-ns LocationSet []
     (defn #_"LocationSet" LocationSet'new-0 []
         (merge (LocationSet'class.)
             (hash-map
@@ -48125,7 +48015,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LockEliminationPhase
+(class-ns LockEliminationPhase [Phase]
     (defn #_"LockEliminationPhase" LockEliminationPhase'new-0 []
         (LockEliminationPhase'class.)
     )
@@ -48164,7 +48054,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LockStackHolder
+(class-ns LockStackHolder []
     (defn #_"LockStackHolder" LockStackHolder'new-1 [#_"LockStack" lockStack]
         (merge (LockStackHolder'class.)
             (hash-map
@@ -48178,7 +48068,7 @@ ZeroExtendNode'new-4
  ; The class implements a simple linked list of MonitorIdNodes, which can be used to describe the
  ; current lock state of an object.
  ;;
-(class-ns LockState
+(class-ns LockState []
     (defn #_"LockState" LockState'new-2 [#_"MonitorIdNode" monitorId, #_"LockState" next]
         (merge (LockState'class.)
             (hash-map
@@ -48206,7 +48096,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns Loop
+(class-ns Loop []
     (defn #_"Loop" Loop'new-3 [#_"Loop" parent, #_"int" index, #_"Block" header]
         (merge (Loop'class.)
             (hash-map
@@ -48265,7 +48155,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LoopEx
+(class-ns LoopEx []
     (defn #_"LoopEx" LoopEx'new-2 [#_"Loop" loop, #_"LoopsData" data]
         (merge (LoopEx'class.)
             (hash-map
@@ -48648,7 +48538,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LoopFragment
+(class-ns LoopFragment []
     (defn #_"LoopFragment" LoopFragment'new-2 [#_"LoopEx" loop, #_"LoopFragment" original]
         (merge (LoopFragment'class.)
             (hash-map
@@ -49028,7 +48918,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LoopFragmentInside
+(class-ns LoopFragmentInside [LoopFragment]
     (defn- #_"LoopFragmentInside" LoopFragmentInside'init-0 []
         (hash-map
             ;;;
@@ -49632,7 +49522,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LoopFragmentWhole
+(class-ns LoopFragmentWhole [LoopFragment]
     (defn #_"LoopFragmentWhole" LoopFragmentWhole'new-1e [#_"LoopEx" loop]
         (merge (LoopFragmentWhole'class.) (LoopFragment'new-1 loop))
     )
@@ -49754,7 +49644,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LoopKillCache
+(class-ns LoopKillCache []
     (defn #_"LoopKillCache" LoopKillCache'new-1 [#_"int" visits]
         (merge (LoopKillCache'class.)
             (hash-map
@@ -49812,7 +49702,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LoopPhase
+(class-ns LoopPhase [Phase]
     (defn #_"LoopPhase" LoopPhase'new-1 [#_"LoopPolicies" policies]
         (merge (LoopPhase'class.)
             (hash-map
@@ -49822,7 +49712,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LoopFullUnrollPhase
+(class-ns LoopFullUnrollPhase [LoopPhase, Phase]
     (defn #_"LoopFullUnrollPhase" LoopFullUnrollPhase'new-2 [#_"CanonicalizerPhase" canonicalizer, #_"LoopPolicies" policies]
         (merge (LoopFullUnrollPhase'class.) (LoopPhase'new-1 policies)
             (hash-map
@@ -49863,7 +49753,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LoopPartialUnrollPhase
+(class-ns LoopPartialUnrollPhase [LoopPhase, Phase]
     (defn #_"LoopPartialUnrollPhase" LoopPartialUnrollPhase'new-2 [#_"LoopPolicies" policies, #_"CanonicalizerPhase" canonicalizer]
         (merge (LoopPartialUnrollPhase'class.) (LoopPhase'new-1 policies)
             (hash-map
@@ -49927,7 +49817,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LoopPeelingPhase
+(class-ns LoopPeelingPhase [LoopPhase, Phase]
     (defn #_"LoopPeelingPhase" LoopPeelingPhase'new-1 [#_"LoopPolicies" policies]
         (merge (LoopPeelingPhase'class.) (LoopPhase'new-1 policies))
     )
@@ -49951,7 +49841,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LoopUnswitchingPhase
+(class-ns LoopUnswitchingPhase [LoopPhase, Phase]
     (defn #_"LoopUnswitchingPhase" LoopUnswitchingPhase'new-1 [#_"LoopPolicies" policies]
         (merge (LoopUnswitchingPhase'class.) (LoopPhase'new-1 policies))
     )
@@ -49989,7 +49879,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LoopSafepointEliminationPhase
+(class-ns LoopSafepointEliminationPhase [Phase]
     (defn #_"LoopSafepointEliminationPhase" LoopSafepointEliminationPhase'new-0 []
         (LoopSafepointEliminationPhase'class.)
     )
@@ -50046,7 +49936,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Adds safepoints to loops.
  ;;
-(class-ns LoopSafepointInsertionPhase
+(class-ns LoopSafepointInsertionPhase [Phase]
     (defn #_"LoopSafepointInsertionPhase" LoopSafepointInsertionPhase'new-0 []
         (LoopSafepointInsertionPhase'class.)
     )
@@ -50067,7 +49957,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LoopsData
+(class-ns LoopsData []
     (defn #_"LoopsData" LoopsData'new-1 [#_"Graph" graph]
         (let [
             #_"LoopsData" this
@@ -50130,7 +50020,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Processes all Lowerable nodes to do their lowering.
  ;;
-(class-ns LoweringPhase
+(class-ns LoweringPhase [Phase]
     (defn #_"LoweringPhase" LoweringPhase'new-2 [#_"CanonicalizerPhase" canonicalizer, #_"LoweringStage" loweringStage]
         (merge (LoweringPhase'class.)
             (hash-map
@@ -50308,7 +50198,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LoweringRound
+(class-ns LoweringRound [Phase]
     (defn #_"LoweringRound" LoweringRound'new-1 [#_"LoweringPhase" phase]
         (merge (LoweringRound'class.)
             (hash-map
@@ -50420,7 +50310,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LoweringTool
+(class-ns LoweringTool []
     (defn #_"LoweringTool" LoweringTool'new-4 [#_"LoweringPhase" phase, #_"AnchoringNode" guardAnchor, #_"NodeBitMap" activeGuards, #_"FixedWithNextNode" lastFixedNode]
         (merge (LoweringTool'class.)
             (hash-map
@@ -50490,7 +50380,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns MapReplacement
+(class-ns MapReplacement [DuplicationReplacement]
     (defn #_"MapReplacement" MapReplacement'new-1 [#_"EconomicMap<Node, Node>" map]
         (merge (MapReplacement'class.)
             (hash-map
@@ -50510,7 +50400,7 @@ ZeroExtendNode'new-4
  ; This iterator only returns nodes that are marked in the NodeBitMap and are alive
  ; in the corresponding Graph.
  ;;
-(class-ns MarkedNodeIterator
+(class-ns MarkedNodeIterator [#_"Iterator" #_"<Node>"]
     (defn- #_"MarkedNodeIterator" MarkedNodeIterator''forward-1 [#_"MarkedNodeIterator" this]
         (let [
             this (assoc this :currentNode (NodeBitMap''nextMarkedNode-2 (:bitMap this), (inc (:currentNodeId this))))
@@ -50558,7 +50448,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns MemoryInputMap
+(class-ns MemoryInputMap [MemoryMap]
     (defn #_"MemoryInputMap" MemoryInputMap'new-1 [#_"ValueNode" replacee]
         (let [
             ? (satisfies? MemoryAccess replacee)
@@ -50585,7 +50475,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns MemoryOutputMap
+(class-ns MemoryOutputMap [MemoryInputMap, MemoryMap]
     (defn #_"MemoryOutputMap" MemoryOutputMap'new-3 [#_"SnippetTemplate" template, #_"ValueNode" replacee, #_"UnmodifiableEconomicMap<Node, Node>" duplicates]
         (merge (MemoryOutputMap'class.) (MemoryInputMap'new-1 replacee)
             (hash-map
@@ -50613,7 +50503,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns MemoryMap0
+(class-ns MemoryMap0 [MemoryMap]
     (defn #_"MemoryMap0" MemoryMap0'new-0 []
         (merge (MemoryMap0'class.)
             (hash-map
@@ -50654,7 +50544,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns MergeProcessor #_"<T implements EffectsBlockState<T>>"
+(class-ns MergeProcessor #_"<T implements EffectsBlockState<T>>" []
     (defn #_"MergeProcessor" MergeProcessor'new-1 [#_"Block" mergeBlock]
         (merge (MergeProcessor'class.)
             (hash-map
@@ -50712,7 +50602,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns PEMergeProcessor #_"<T implements PartialEscapeBlockState<T>>"
+(class-ns PEMergeProcessor #_"<T implements PartialEscapeBlockState<T>>" [MergeProcessor #_"<T>"]
     (defn #_"PEMergeProcessor" PEMergeProcessor'new-2 [#_"PartialEscapeClosure<T>" peClosure, #_"Block" mergeBlock]
         (merge (PEMergeProcessor'class.) (MergeProcessor'new-1 mergeBlock)
             (hash-map
@@ -51326,7 +51216,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns PEReadEliminationMergeProcessor
+(class-ns PEReadEliminationMergeProcessor [PEMergeProcessor #_"<PEReadEliminationBlockState>", MergeProcessor #_"<PEReadEliminationBlockState>"]
     (defn #_"PEReadEliminationMergeProcessor" PEReadEliminationMergeProcessor'new-2 [#_"PEReadEliminationClosure" reClosure, #_"Block" mergeBlock]
         (merge (PEReadEliminationMergeProcessor'class.) (PEMergeProcessor'new-2 reClosure, mergeBlock))
     )
@@ -51424,7 +51314,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns ReadEliminationMergeProcessor
+(class-ns ReadEliminationMergeProcessor [MergeProcessor #_"<ReadEliminationBlockState>"]
     (defn #_"ReadEliminationMergeProcessor" ReadEliminationMergeProcessor'new-1 [#_"Block" mergeBlock]
         (merge (ReadEliminationMergeProcessor'class.) (MergeProcessor'new-1 mergeBlock)
             (hash-map
@@ -51532,7 +51422,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns MethodHandlePlugin
+(class-ns MethodHandlePlugin [NodePlugin]
     (defn #_"MethodHandlePlugin" MethodHandlePlugin'new-2 [#_"MethodHandleAccessProvider" methodHandleAccess, #_"boolean" safeForDeoptimization]
         (merge (MethodHandlePlugin'class.)
             (hash-map
@@ -51564,7 +51454,7 @@ ZeroExtendNode'new-4
                         )
 
                         (let [
-                            #_"StampPair" invokeReturnStamp (BytecodeParser''getInvokeReturnStamp-1 parser)
+                            #_"Stamp" invokeReturnStamp (BytecodeParser''getInvokeReturnStamp-1 parser)
                             #_"GraphAdder" adder
                                 (reify GraphAdder
                                     (#_"ValueNode" GraphAdder'''add-2 [#_"GraphAdder" this, #_"ValueNode" node]
@@ -51577,9 +51467,9 @@ ZeroExtendNode'new-4
                                 (let [
                                     #_"MethodHandleNode" methodHandleNode (apply MethodHandleNode'new-6* intrinsicMethod, invokeKind, method, (BytecodeParser''bci-1 parser), invokeReturnStamp, args)
                                 ]
-                                    (if (= (Stamp'''getStackKind-1 (:trustedStamp invokeReturnStamp)) JavaKind/Void)
+                                    (if (= (Stamp'''getStackKind-1 invokeReturnStamp) JavaKind/Void)
                                         (BytecodeParser''add-2 parser, methodHandleNode)
-                                        (BytecodeParser''addPush-3 parser, (Stamp'''getStackKind-1 (:trustedStamp invokeReturnStamp)), methodHandleNode)
+                                        (BytecodeParser''addPush-3 parser, (Stamp'''getStackKind-1 invokeReturnStamp), methodHandleNode)
                                     )
                                     true
                                 )
@@ -51656,7 +51546,7 @@ ZeroExtendNode'new-4
  ; Each element of the InliningData stack contains one such instance, the accompanying
  ; CallsiteHolders in that element represent feasible targets for the callsite in question.
  ;;
-(class-ns MethodInvocation
+(class-ns MethodInvocation []
     (defn #_"MethodInvocation" MethodInvocation'new-4 [#_"InlineInfo" info, #_"double" probability, #_"double" relevance, #_"BitSet" freshlyInstantiatedArguments]
         (merge (MethodInvocation'class.)
             (hash-map
@@ -51707,7 +51597,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Name and descriptor of a method.
  ;;
-(class-ns MethodKey
+(class-ns MethodKey []
     (defn #_"MethodKey" MethodKey'new-2 [#_"String" name, #_"String" descriptor]
         (merge (MethodKey'class.)
             (hash-map
@@ -51721,7 +51611,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Method cache for a ResolvedJavaType.
  ;;
-(class-ns MethodsCache
+(class-ns MethodsCache []
     (defn #_"MethodsCache" MethodsCache'new-0 []
         (MethodsCache'class.)
     )
@@ -51772,7 +51662,7 @@ ZeroExtendNode'new-4
  ; Micro block that is allocated for each fixed node and captures all floating nodes that
  ; need to be scheduled immediately after the corresponding fixed node.
  ;;
-(class-ns MicroBlock
+(class-ns MicroBlock []
     (defn #_"MicroBlock" MicroBlock'new-1 [#_"int" id]
         (merge (MicroBlock'class.)
             (hash-map
@@ -51844,7 +51734,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Factory for creating moves.
  ;;
-(class-ns MoveFactory
+(class-ns MoveFactory []
     (defn #_"MoveFactory" MoveFactory'new-1 [#_"FrameMapBuilder" frameMapBuilder]
         (merge (MoveFactory'class.)
             (hash-map
@@ -51953,7 +51843,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns MoveGuardsUpwards
+(class-ns MoveGuardsUpwards [RecursiveVisitor #_"<Block>"]
     (defn #_"MoveGuardsUpwards" MoveGuardsUpwards'new-0 []
         (merge (MoveGuardsUpwards'class.)
             (hash-map
@@ -52044,7 +51934,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns MoveResolver
+(class-ns MoveResolver []
     (defm MoveResolver MoveResolver
         (#_"void" MoveResolver'''setValueBlocked-3 [#_"MoveResolver" this, #_"Value" location, #_"int" direction]
             (when (instance? RegisterValue location) => (throw! (str "unhandled value " location))
@@ -52367,7 +52257,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns SSAMoveResolver
+(class-ns SSAMoveResolver [MoveResolver]
     (def- #_"int" SSAMoveResolver'STACK_SLOT_IN_CALLER_FRAME_IDX -1)
 
     (defn #_"SSAMoveResolver" SSAMoveResolver'new-1 [#_"LinearScan" allocator]
@@ -52460,7 +52350,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns NegativeTypePredicate
+(class-ns NegativeTypePredicate [NodePredicate, #_"Predicate" #_"<Node>"]
     (defn #_"NegativeTypePredicate" NegativeTypePredicate'new-1 [#_"Class" type]
         (merge (NegativeTypePredicate'class.)
             (hash-map
@@ -52489,7 +52379,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns NodeBitMap
+(class-ns NodeBitMap [NodeIterable, #_"Iterable" #_"<Node>"]
     (def- #_"int" NodeBitMap'SHIFT 6)
 
     (defn- #_"int" NodeBitMap'sizeForNodeCount-1 [#_"int" nodeCount]
@@ -52709,13 +52599,13 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns NodeClosure #_"<T implements Node>"
+(class-ns NodeClosure #_"<T implements Node>" []
     (defn #_"NodeClosure" NodeClosure'new-0 []
         (NodeClosure'class.)
     )
 )
 
-(class-ns CollectVirtualObjectsClosure #_"<T implements PartialEscapeBlockState<T>>"
+(class-ns CollectVirtualObjectsClosure #_"<T implements PartialEscapeBlockState<T>>" [NodeClosure #_"<ValueNode>"]
     (defn #_"CollectVirtualObjectsClosure" CollectVirtualObjectsClosure'new-4 [#_"PartialEscapeClosure<T>" peClosure, #_"EconomicSet<VirtualObjectNode>" virtual, #_"GraphEffectList" effects, #_"T" state]
         (merge (CollectVirtualObjectsClosure'class.) (NodeClosure'new-0)
             (hash-map
@@ -52750,7 +52640,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Costs associated with a block.
  ;;
-(class-ns NodeCost
+(class-ns NodeCost []
     (defn #_"NodeCost" NodeCost'new-3 [#_"double" bestCost, #_"List<UseEntry>" usages, #_"int" numMat]
         (merge (NodeCost'class.)
             (hash-map
@@ -52769,7 +52659,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Entry in the linked list of nodes.
  ;;
-(class-ns NodeEntry
+(class-ns NodeEntry []
     (defn #_"NodeEntry" NodeEntry'new-1 [#_"Node" node]
         (merge (NodeEntry'class.)
             (hash-map
@@ -52780,7 +52670,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns NodeEventListener
+(class-ns NodeEventListener []
     (defn #_"NodeEventListener" NodeEventListener'new-0 []
         (NodeEventListener'class.)
     )
@@ -52829,7 +52719,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns ChainedNodeEventListener
+(class-ns ChainedNodeEventListener [NodeEventListener]
     (defn #_"ChainedNodeEventListener" ChainedNodeEventListener'new-2 [#_"NodeEventListener" head, #_"NodeEventListener" next]
         (merge (ChainedNodeEventListener'class.) (NodeEventListener'new-0)
             (hash-map
@@ -52875,7 +52765,7 @@ ZeroExtendNode'new-4
 ;;;
  ; A simple NodeEventListener implementation that accumulates event nodes in a HashSet.
  ;;
-(class-ns HashSetNodeEventListener
+(class-ns HashSetNodeEventListener [NodeEventListener]
     ;;;
      ; Creates a NodeEventListener that collects nodes from all events that match a given filter.
      ;;
@@ -52924,7 +52814,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Registers a given NodeEventListener with the enclosing graph until this object is {@linkplain #close() closed}.
  ;;
-(class-ns NodeEventScope
+(class-ns NodeEventScope [#_"AutoCloseable"]
     (defn #_"NodeEventScope" NodeEventScope'new-2 [#_"Graph" graph, #_"NodeEventListener" listener]
         (let [
             #_"NodeEventScope" this
@@ -52951,7 +52841,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns NodeFlood
+(class-ns NodeFlood [#_"Iterable" #_"<Node>"]
     (defn #_"NodeFlood" NodeFlood'new-1 [#_"Graph" graph]
         (merge (NodeFlood'class.)
             (hash-map
@@ -52991,7 +52881,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns Node
+(class-ns Node []
     (def #_"int" Node'DELETED_ID_START -1000000000)
     (def #_"int" Node'INITIAL_ID -1)
     (def #_"int" Node'ALIVE_ID_START 0)
@@ -53642,7 +53532,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns ValueNode
+(class-ns ValueNode [Node]
     (defn #_"ValueNode" ValueNode'new-1 [#_"Stamp" stamp]
         (merge (ValueNode'class.) (Node'new-0)
             (hash-map
@@ -53755,8 +53645,8 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns CallTargetNode
-    (defn #_"CallTargetNode" CallTargetNode'new-4 [#_"ValueNode*" arguments, #_"ResolvedJavaMethod" targetMethod, #_"InvokeKind" invokeKind, #_"StampPair" returnStamp]
+(class-ns CallTargetNode [ValueNode, Node, LIRLowerable]
+    (defn #_"CallTargetNode" CallTargetNode'new-4 [#_"ValueNode*" arguments, #_"ResolvedJavaMethod" targetMethod, #_"InvokeKind" invokeKind, #_"Stamp" returnStamp]
         (merge (CallTargetNode'class.) (ValueNode'new-1 VoidStamp'instance)
             (hash-map
                 ; @Input
@@ -53766,7 +53656,7 @@ ZeroExtendNode'new-4
                  ;;
                 #_"ResolvedJavaMethod" :targetMethod targetMethod
                 #_"InvokeKind" :invokeKind invokeKind
-                #_"StampPair" :returnStamp returnStamp
+                #_"Stamp" :returnStamp returnStamp
             )
         )
     )
@@ -53787,8 +53677,8 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LoweredCallTargetNode
-    (defn #_"LoweredCallTargetNode" LoweredCallTargetNode'new-6 [#_"ValueNode*" arguments, #_"StampPair" returnStamp, #_"JavaType[]" signature, #_"ResolvedJavaMethod" target, #_"CallingConvention$Type" callType, #_"InvokeKind" invokeKind]
+(class-ns LoweredCallTargetNode [CallTargetNode, ValueNode, Node, LIRLowerable]
+    (defn #_"LoweredCallTargetNode" LoweredCallTargetNode'new-6 [#_"ValueNode*" arguments, #_"Stamp" returnStamp, #_"JavaType[]" signature, #_"ResolvedJavaMethod" target, #_"CallingConvention$Type" callType, #_"InvokeKind" invokeKind]
         (merge (LoweredCallTargetNode'class.) (CallTargetNode'new-4 arguments, target, invokeKind, returnStamp)
             (hash-map
                 #_"JavaType[]" :signature signature
@@ -53806,20 +53696,20 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns DirectCallTargetNode
-    (defn #_"DirectCallTargetNode" DirectCallTargetNode'new-6 [#_"ValueNode*" arguments, #_"StampPair" returnStamp, #_"JavaType[]" signature, #_"ResolvedJavaMethod" target, #_"CallingConvention$Type" callType, #_"InvokeKind" invokeKind]
+(class-ns DirectCallTargetNode [LoweredCallTargetNode, CallTargetNode, ValueNode, Node, LIRLowerable]
+    (defn #_"DirectCallTargetNode" DirectCallTargetNode'new-6 [#_"ValueNode*" arguments, #_"Stamp" returnStamp, #_"JavaType[]" signature, #_"ResolvedJavaMethod" target, #_"CallingConvention$Type" callType, #_"InvokeKind" invokeKind]
         (merge (DirectCallTargetNode'class.) (LoweredCallTargetNode'new-6 arguments, returnStamp, signature, target, callType, invokeKind))
     )
 )
 
-(class-ns HotSpotDirectCallTargetNode
-    (defn #_"HotSpotDirectCallTargetNode" HotSpotDirectCallTargetNode'new-6 [#_"ValueNode*" arguments, #_"StampPair" returnStamp, #_"JavaType[]" signature, #_"ResolvedJavaMethod" target, #_"CallingConvention$Type" callType, #_"InvokeKind" invokeKind]
+(class-ns HotSpotDirectCallTargetNode [DirectCallTargetNode, LoweredCallTargetNode, CallTargetNode, ValueNode, Node, LIRLowerable]
+    (defn #_"HotSpotDirectCallTargetNode" HotSpotDirectCallTargetNode'new-6 [#_"ValueNode*" arguments, #_"Stamp" returnStamp, #_"JavaType[]" signature, #_"ResolvedJavaMethod" target, #_"CallingConvention$Type" callType, #_"InvokeKind" invokeKind]
         (merge (HotSpotDirectCallTargetNode'class.) (DirectCallTargetNode'new-6 arguments, returnStamp, signature, target, callType, invokeKind))
     )
 )
 
-(class-ns MethodCallTargetNode
-    (defn #_"MethodCallTargetNode" MethodCallTargetNode'new-4 [#_"InvokeKind" invokeKind, #_"ResolvedJavaMethod" targetMethod, #_"ValueNode*" arguments, #_"StampPair" returnStamp]
+(class-ns MethodCallTargetNode [CallTargetNode, ValueNode, Node, LIRLowerable, IterableNodeType, Simplifiable]
+    (defn #_"MethodCallTargetNode" MethodCallTargetNode'new-4 [#_"InvokeKind" invokeKind, #_"ResolvedJavaMethod" targetMethod, #_"ValueNode*" arguments, #_"Stamp" returnStamp]
         (merge (MethodCallTargetNode'class.) (CallTargetNode'new-4 arguments, targetMethod, invokeKind, returnStamp))
     )
 
@@ -53914,15 +53804,15 @@ ZeroExtendNode'new-4
  ; one of the MethodHandle.linkTo* methods. An {@linkplain MethodHandleNode#tryResolveTargetInvoke resolved}
  ; MethodHandle invocation drops these arguments which means the interpreter won't find them.
  ;;
-(class-ns ResolvedMethodHandleCallTargetNode
+(class-ns ResolvedMethodHandleCallTargetNode [MethodCallTargetNode, CallTargetNode, ValueNode, Node, LIRLowerable, IterableNodeType, Simplifiable, Lowerable]
     ;;;
      ; Creates a call target for an invocation on a direct target derived by resolving a constant MethodHandle.
      ;;
-    (defn #_"ResolvedMethodHandleCallTargetNode" ResolvedMethodHandleCallTargetNode'new-7 [#_"InvokeKind" invokeKind, #_"ResolvedJavaMethod" targetMethod, #_"ValueNode*" arguments, #_"StampPair" returnStamp, #_"ResolvedJavaMethod" originalTargetMethod, #_"ValueNode*" originalArguments, #_"StampPair" originalReturnStamp]
+    (defn #_"ResolvedMethodHandleCallTargetNode" ResolvedMethodHandleCallTargetNode'new-7 [#_"InvokeKind" invokeKind, #_"ResolvedJavaMethod" targetMethod, #_"ValueNode*" arguments, #_"Stamp" returnStamp, #_"ResolvedJavaMethod" originalTargetMethod, #_"ValueNode*" originalArguments, #_"Stamp" originalReturnStamp]
         (merge (ResolvedMethodHandleCallTargetNode'class.) (MethodCallTargetNode'new-4 invokeKind, targetMethod, arguments, returnStamp)
             (hash-map
                 #_"ResolvedJavaMethod" :originalTargetMethod originalTargetMethod
-                #_"StampPair" :originalReturnStamp originalReturnStamp
+                #_"Stamp" :originalReturnStamp originalReturnStamp
                 ; @Input
                 #_"NodeInputList<ValueNode>" :originalArguments (NodeInputList'new-2s (ß this), originalArguments)
             )
@@ -53949,7 +53839,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns DummyGuardHandle
+(class-ns DummyGuardHandle [ValueNode, Node, GuardedNode]
     (defn #_"DummyGuardHandle" DummyGuardHandle'new-1 [#_"GuardingNode" guard]
         (merge (DummyGuardHandle'class.) (ValueNode'new-1 VoidStamp'instance)
             (hash-map
@@ -53972,13 +53862,13 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns FixedNode
+(class-ns FixedNode [ValueNode, Node]
     (defn #_"FixedNode" FixedNode'new-1 [#_"Stamp" stamp]
         (merge (FixedNode'class.) (ValueNode'new-1 stamp))
     )
 )
 
-(class-ns AbstractEndNode
+(class-ns AbstractEndNode [FixedNode, ValueNode, Node, LIRLowerable]
     (defn #_"AbstractEndNode" AbstractEndNode'new-0 []
         (merge (AbstractEndNode'class.) (FixedNode'new-1 VoidStamp'instance))
     )
@@ -54007,7 +53897,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns EndNode
+(class-ns EndNode [AbstractEndNode, FixedNode, ValueNode, Node, LIRLowerable]
     (defn #_"EndNode" EndNode'new-0 []
         (merge (EndNode'class.) (AbstractEndNode'new-0))
     )
@@ -54017,7 +53907,7 @@ ZeroExtendNode'new-4
  ; LoopEnd nodes represent a loop back-edge. When a LoopEnd is reached, execution continues at the
  ; {@linkplain #loopBegin() loop header}.
  ;;
-(class-ns LoopEndNode
+(class-ns LoopEndNode [AbstractEndNode, FixedNode, ValueNode, Node, LIRLowerable]
     (defn #_"LoopEndNode" LoopEndNode'new-1 [#_"LoopBeginNode" begin]
         (merge (LoopEndNode'class.) (AbstractEndNode'new-0)
             (hash-map
@@ -54092,13 +53982,13 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns ControlSinkNode
+(class-ns ControlSinkNode [FixedNode, ValueNode, Node]
     (defn #_"ControlSinkNode" ControlSinkNode'new-1 [#_"Stamp" stamp]
         (merge (ControlSinkNode'class.) (FixedNode'new-1 stamp))
     )
 )
 
-(class-ns AbstractDeoptimizeNode
+(class-ns AbstractDeoptimizeNode [ControlSinkNode, FixedNode, ValueNode, Node, IterableNodeType, DeoptBefore, DeoptimizingNode, NodeWithState]
     (defn #_"AbstractDeoptimizeNode" AbstractDeoptimizeNode'new-1 [#_"FrameState" stateBefore]
         (merge (AbstractDeoptimizeNode'class.) (ControlSinkNode'new-1 VoidStamp'instance)
             (hash-map
@@ -54129,7 +54019,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns DeoptimizeNode
+(class-ns DeoptimizeNode [AbstractDeoptimizeNode, ControlSinkNode, FixedNode, ValueNode, Node, IterableNodeType, DeoptBefore, DeoptimizingNode, NodeWithState, Lowerable, LIRLowerable, StaticDeoptimizingNode]
     (def #_"int" DeoptimizeNode'DEFAULT_DEBUG_ID 0)
 
     (§ intrinsic! #_"void" DeoptimizeNode'deopt-2 [#_"DeoptimizationAction" action, #_"DeoptimizationReason" reason])
@@ -54207,7 +54097,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns DynamicDeoptimizeNode
+(class-ns DynamicDeoptimizeNode [AbstractDeoptimizeNode, ControlSinkNode, FixedNode, ValueNode, Node, IterableNodeType, DeoptBefore, DeoptimizingNode, NodeWithState, LIRLowerable, Lowerable, Canonicalizable]
     (defn #_"DynamicDeoptimizeNode" DynamicDeoptimizeNode'new-2 [#_"ValueNode" actionAndReason, #_"ValueNode" speculation]
         (merge (DynamicDeoptimizeNode'class.) (AbstractDeoptimizeNode'new-1 nil)
             (hash-map
@@ -54258,7 +54148,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Removes the current frame and tail calls the uncommon trap routine.
  ;;
-(class-ns DeoptimizeCallerNode
+(class-ns DeoptimizeCallerNode [ControlSinkNode, FixedNode, ValueNode, Node, LIRLowerable]
     (§ intrinsic! #_"void" DeoptimizeCallerNode'deopt-2 [#_"DeoptimizationAction" action, #_"DeoptimizationReason" reason])
 
     #_intrinsifier
@@ -54279,7 +54169,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns ReturnNode
+(class-ns ReturnNode [ControlSinkNode, FixedNode, ValueNode, Node, LIRLowerable, IterableNodeType]
     (defn #_"ReturnNode" ReturnNode'new-1 [#_"ValueNode" result]
         (ReturnNode'new-2 result, nil)
     )
@@ -54311,7 +54201,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns ControlSplitNode
+(class-ns ControlSplitNode [FixedNode, ValueNode, Node, IterableNodeType]
     (defn #_"ControlSplitNode" ControlSplitNode'new-1 [#_"Stamp" stamp]
         (merge (ControlSplitNode'class.) (FixedNode'new-1 stamp))
     )
@@ -54321,7 +54211,7 @@ ZeroExtendNode'new-4
  ; The IfNode represents a branch that can go one of two directions depending on the outcome
  ; of a comparison.
  ;;
-(class-ns IfNode
+(class-ns IfNode [ControlSplitNode, FixedNode, ValueNode, Node, IterableNodeType, Simplifiable, LIRLowerable]
     (defn #_"IfNode" IfNode''setCondition-2 [#_"IfNode" this, #_"LogicNode" x]
         (Node''updateUsages-3 this, (:condition this), x)
         (assoc this :condition x)
@@ -54847,46 +54737,42 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"void" IfNode''propagateZeroProbability-2 [#_"IfNode" this, #_"FixedNode" startNode]
-        (loop-when [#_"Node" prev nil #_"ISeq" s (seq (GraphUtil'predecessorIterable-1 startNode))] (some? s)
-            (let [
-                #_"FixedNode" node (first s)
-            ]
-                (and
-                    (cond
-                        (satisfies? IfNode node)
-                            (condp = prev
-                                (:trueSuccessor node)
-                                    (case (:trueSuccessorProbability node)
-                                        0.0 nil
-                                        1.0 :continue
-                                        (do
-                                            (§ ass! node (IfNode''setTrueSuccessorProbability-2 node, 0.0))
-                                            nil
-                                        )
+    (defn- #_"void" IfNode'propagateZeroProbability-1 [#_"FixedNode" start]
+        (loop-when [#_"FixedNode" prev nil #_"FixedNode" node start] (some? node)
+            (and
+                (cond
+                    (satisfies? IfNode node)
+                        (condp = prev
+                            (:trueSuccessor node)
+                                (case (:trueSuccessorProbability node)
+                                    0.0 nil
+                                    1.0 :continue
+                                    (do
+                                        (§ ass! node (IfNode''setTrueSuccessorProbability-2 node, 0.0))
+                                        nil
                                     )
-                                (:falseSuccessor node)
-                                    (case (:trueSuccessorProbability node)
-                                        1.0 nil
-                                        0.0 :continue
-                                        (do
-                                            (§ ass! node (IfNode''setTrueSuccessorProbability-2 node, 1.0))
-                                            nil
-                                        )
-                                    )
-                            )
-                        (and (satisfies? AbstractMergeNode node) (not (satisfies? LoopBeginNode node)))
-                            (do
-                                (doseq [#_"AbstractEndNode" endNode (Node'''cfgPredecessors-1 node)]
-                                    (IfNode''propagateZeroProbability-2 this, endNode)
                                 )
-                                nil
+                            (:falseSuccessor node)
+                                (case (:trueSuccessorProbability node)
+                                    1.0 nil
+                                    0.0 :continue
+                                    (do
+                                        (§ ass! node (IfNode''setTrueSuccessorProbability-2 node, 1.0))
+                                        nil
+                                    )
+                                )
+                        )
+                    (and (satisfies? AbstractMergeNode node) (not (satisfies? LoopBeginNode node)))
+                        (do
+                            (doseq [#_"AbstractEndNode" endNode (Node'''cfgPredecessors-1 node)]
+                                (IfNode'propagateZeroProbability-1 endNode)
                             )
-                        :else
-                            :continue
-                    )
-                    (recur node (next s))
+                            nil
+                        )
+                    :else
+                        :continue
                 )
+                (recur node (:predecessor node))
             )
         )
         nil
@@ -54996,13 +54882,13 @@ ZeroExtendNode'new-4
 
                                                         (when (= (:trueSuccessorProbability this) 0.0)
                                                             (doseq [#_"AbstractEndNode" endNode trueEnds]
-                                                                (IfNode''propagateZeroProbability-2 this, endNode)
+                                                                (IfNode'propagateZeroProbability-1 endNode)
                                                             )
                                                         )
 
                                                         (when (= (:trueSuccessorProbability this) 1.0)
                                                             (doseq [#_"AbstractEndNode" endNode falseEnds]
-                                                                (IfNode''propagateZeroProbability-2 this, endNode)
+                                                                (IfNode'propagateZeroProbability-1 endNode)
                                                             )
                                                         )
 
@@ -55564,7 +55450,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns IntegerExactArithmeticSplitNode
+(class-ns IntegerExactArithmeticSplitNode [ControlSplitNode, FixedNode, ValueNode, Node, IterableNodeType, Simplifiable, LIRLowerable]
     (defn #_"IntegerExactArithmeticSplitNode" IntegerExactArithmeticSplitNode'new-5 [#_"Stamp" stamp, #_"ValueNode" x, #_"ValueNode" y, #_"AbstractBeginNode" next, #_"AbstractBeginNode" overflowSuccessor]
         (merge (IntegerExactArithmeticSplitNode'class.) (ControlSplitNode'new-1 stamp)
             (hash-map
@@ -55638,7 +55524,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns IntegerAddExactSplitNode
+(class-ns IntegerAddExactSplitNode [IntegerExactArithmeticSplitNode, ControlSplitNode, FixedNode, ValueNode, Node, IterableNodeType, Simplifiable, LIRLowerable]
     (defn #_"IntegerAddExactSplitNode" IntegerAddExactSplitNode'new-5 [#_"Stamp" stamp, #_"ValueNode" x, #_"ValueNode" y, #_"AbstractBeginNode" next, #_"AbstractBeginNode" overflowSuccessor]
         (merge (IntegerAddExactSplitNode'class.) (IntegerExactArithmeticSplitNode'new-5 stamp, x, y, next, overflowSuccessor))
     )
@@ -55666,7 +55552,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns IntegerMulExactSplitNode
+(class-ns IntegerMulExactSplitNode [IntegerExactArithmeticSplitNode, ControlSplitNode, FixedNode, ValueNode, Node, IterableNodeType, Simplifiable, LIRLowerable]
     (defn #_"IntegerMulExactSplitNode" IntegerMulExactSplitNode'new-5 [#_"Stamp" stamp, #_"ValueNode" x, #_"ValueNode" y, #_"AbstractBeginNode" next, #_"AbstractBeginNode" overflowSuccessor]
         (merge (IntegerMulExactSplitNode'class.) (IntegerExactArithmeticSplitNode'new-5 stamp, x, y, next, overflowSuccessor))
     )
@@ -55694,7 +55580,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns IntegerSubExactSplitNode
+(class-ns IntegerSubExactSplitNode [IntegerExactArithmeticSplitNode, ControlSplitNode, FixedNode, ValueNode, Node, IterableNodeType, Simplifiable, LIRLowerable]
     (defn #_"IntegerSubExactSplitNode" IntegerSubExactSplitNode'new-5 [#_"Stamp" stamp, #_"ValueNode" x, #_"ValueNode" y, #_"AbstractBeginNode" next, #_"AbstractBeginNode" overflowSuccessor]
         (merge (IntegerSubExactSplitNode'class.) (IntegerExactArithmeticSplitNode'new-5 stamp, x, y, next, overflowSuccessor))
     )
@@ -55722,7 +55608,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns SwitchNode
+(class-ns SwitchNode [ControlSplitNode, FixedNode, ValueNode, Node, IterableNodeType]
     ;;;
      ; Constructs a new Switch.
      ;
@@ -55866,7 +55752,7 @@ ZeroExtendNode'new-4
  ; The IntegerSwitchNode represents a switch on integer keys, with a sorted array of key values.
  ; The actual implementation of the switch will be decided by the backend.
  ;;
-(class-ns IntegerSwitchNode
+(class-ns IntegerSwitchNode [SwitchNode, ControlSplitNode, FixedNode, ValueNode, Node, IterableNodeType, LIRLowerable, Simplifiable]
     (defn #_"IntegerSwitchNode" IntegerSwitchNode'new-5a [#_"ValueNode" value, #_"AbstractBeginNode[]" successors, #_"int[]" keys, #_"double[]" keyProbabilities, #_"int[]" keySuccessors]
         (merge (IntegerSwitchNode'class.) (SwitchNode'new-4 value, successors, keySuccessors, keyProbabilities)
             (hash-map
@@ -56187,7 +56073,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Base class of all nodes that are fixed within the control flow graph and have an immediate successor.
  ;;
-(class-ns FixedWithNextNode
+(class-ns FixedWithNextNode [FixedNode, ValueNode, Node]
     (defn #_"FixedWithNextNode" FixedWithNextNode''setNext-2 [#_"FixedWithNextNode" this, #_"FixedNode" node]
         (Node''updatePredecessor-3 this, (:next this), node)
         (assoc this :next node)
@@ -56203,7 +56089,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns AbstractBeginNode
+(class-ns AbstractBeginNode [FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, GuardingNode, AnchoringNode, IterableNodeType]
     (defn #_"AbstractBeginNode" AbstractBeginNode'new-1 [#_"Stamp" stamp]
         (merge (AbstractBeginNode'class.) (FixedWithNextNode'new-1 stamp))
     )
@@ -56277,7 +56163,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns BeginNode
+(class-ns BeginNode [AbstractBeginNode, FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, GuardingNode, AnchoringNode, IterableNodeType, Simplifiable]
     (defn #_"BeginNode" BeginNode'new-1 [#_"Stamp" stamp]
         (merge (BeginNode'class.) (AbstractBeginNode'new-1 stamp))
     )
@@ -56327,7 +56213,7 @@ ZeroExtendNode'new-4
  ; TODO this not needed until AbstractBeginNode no longer implements StateSplit
  ; which is not possible until loop peeling works without requiring begin nodes to have frames states.
  ;;
-(class-ns BeginStateSplitNode
+(class-ns BeginStateSplitNode [AbstractBeginNode, FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, GuardingNode, AnchoringNode, IterableNodeType, StateSplit, NodeWithState]
     (defn #_"BeginStateSplitNode" BeginStateSplitNode'new-1 [#_"Stamp" stamp]
         (merge (BeginStateSplitNode'class.) (AbstractBeginNode'new-1 stamp)
             (hash-map
@@ -56365,7 +56251,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns AbstractMergeNode
+(class-ns AbstractMergeNode [BeginStateSplitNode, AbstractBeginNode, FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, GuardingNode, AnchoringNode, IterableNodeType, StateSplit, NodeWithState, IterableNodeType, Simplifiable, LIRLowerable]
     (defn #_"AbstractMergeNode" AbstractMergeNode'new-0 []
         (merge (AbstractMergeNode'class.) (BeginStateSplitNode'new-0)
             (hash-map
@@ -56626,7 +56512,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LoopBeginNode
+(class-ns LoopBeginNode [AbstractMergeNode, BeginStateSplitNode, AbstractBeginNode, FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, GuardingNode, AnchoringNode, IterableNodeType, StateSplit, NodeWithState, IterableNodeType, Simplifiable, LIRLowerable, IterableNodeType, LIRLowerable]
     (defn #_"LoopBeginNode" LoopBeginNode'new-0 []
         (merge (LoopBeginNode'class.) (AbstractMergeNode'new-0)
             (hash-map
@@ -56980,13 +56866,13 @@ ZeroExtendNode'new-4
 ;;;
  ; Denotes the merging of multiple control-flow paths.
  ;;
-(class-ns MergeNode
+(class-ns MergeNode [AbstractMergeNode, BeginStateSplitNode, AbstractBeginNode, FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, GuardingNode, AnchoringNode, IterableNodeType, StateSplit, NodeWithState, IterableNodeType, Simplifiable, LIRLowerable]
     (defn #_"MergeNode" MergeNode'new-0 []
         (merge (MergeNode'class.) (AbstractMergeNode'new-0))
     )
 )
 
-(class-ns LoopExitNode
+(class-ns LoopExitNode [BeginStateSplitNode, AbstractBeginNode, FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, GuardingNode, AnchoringNode, IterableNodeType, StateSplit, NodeWithState, IterableNodeType, Simplifiable]
     (defn #_"LoopExitNode" LoopExitNode'new-1 [#_"LoopBeginNode" loop]
         (merge (LoopExitNode'class.) (BeginStateSplitNode'new-0)
             (hash-map
@@ -57060,7 +56946,7 @@ ZeroExtendNode'new-4
 ;;;
  ; The start node of a graph.
  ;;
-(class-ns StartNode
+(class-ns StartNode [BeginStateSplitNode, AbstractBeginNode, FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, GuardingNode, AnchoringNode, IterableNodeType, StateSplit, NodeWithState, Single, MemoryCheckpoint, MemoryNode]
     (defn #_"StartNode" StartNode'new-0 []
         (merge (StartNode'class.) (BeginStateSplitNode'new-0))
     )
@@ -57076,7 +56962,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Start node for a Stub's graph.
  ;;
-(class-ns StubStartNode
+(class-ns StubStartNode [StartNode, BeginStateSplitNode, AbstractBeginNode, FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, GuardingNode, AnchoringNode, IterableNodeType, StateSplit, NodeWithState, Single, MemoryCheckpoint, MemoryNode]
     (defn #_"StubStartNode" StubStartNode'new-1 [#_"Stub" stub]
         (merge (StubStartNode'class.) (StartNode'new-0)
             (hash-map
@@ -57089,7 +56975,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Provides an implementation of StateSplit.
  ;;
-(class-ns AbstractStateSplit
+(class-ns AbstractStateSplit [FixedWithNextNode, FixedNode, ValueNode, Node, StateSplit, NodeWithState]
     (defn #_"AbstractStateSplit" AbstractStateSplit'new-2 [#_"Stamp" stamp, #_"FrameState" stateAfter]
         (merge (AbstractStateSplit'class.) (FixedWithNextNode'new-1 stamp)
             (hash-map
@@ -57121,7 +57007,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Provides an implementation of StateSplit.
  ;;
-(class-ns AbstractMemoryCheckpoint
+(class-ns AbstractMemoryCheckpoint [AbstractStateSplit, FixedWithNextNode, FixedNode, ValueNode, Node, StateSplit, NodeWithState, MemoryCheckpoint, MemoryNode]
     (defn #_"AbstractMemoryCheckpoint" AbstractMemoryCheckpoint'new-1 [#_"Stamp" stamp]
         (AbstractMemoryCheckpoint'new-2 stamp, nil)
     )
@@ -57136,7 +57022,7 @@ ZeroExtendNode'new-4
  ;
  ; The Java bytecode specification allows non-balanced locking. Graal does not handle such cases.
  ;;
-(class-ns AccessMonitorNode
+(class-ns AccessMonitorNode [AbstractMemoryCheckpoint, AbstractStateSplit, FixedWithNextNode, FixedNode, ValueNode, Node, StateSplit, NodeWithState, MemoryCheckpoint, MemoryNode, MemoryCheckpoint, MemoryNode, DeoptBefore, DeoptimizingNode, NodeWithState, DeoptAfter, StateSplit]
     (defm AccessMonitorNode DeoptimizingNode
         (#_"boolean" DeoptimizingNode'''canDeoptimize-1 [#_"AccessMonitorNode" this]
             true
@@ -57173,7 +57059,7 @@ ZeroExtendNode'new-4
 ;;;
  ; The MonitorEnterNode represents the acquisition of a monitor.
  ;;
-(class-ns MonitorEnterNode
+(class-ns MonitorEnterNode [AccessMonitorNode, AbstractMemoryCheckpoint, AbstractStateSplit, FixedWithNextNode, FixedNode, ValueNode, Node, StateSplit, NodeWithState, MemoryCheckpoint, MemoryNode, MemoryCheckpoint, MemoryNode, DeoptBefore, DeoptimizingNode, NodeWithState, DeoptAfter, StateSplit, Virtualizable, Lowerable, IterableNodeType, MonitorEnter, Single, MemoryCheckpoint, MemoryNode]
     (defn #_"MonitorEnterNode" MonitorEnterNode'new-2 [#_"ValueNode" object, #_"MonitorIdNode" monitorId]
         (merge (MonitorEnterNode'class.) (AccessMonitorNode'new-2 object, monitorId))
     )
@@ -57220,7 +57106,7 @@ ZeroExtendNode'new-4
  ; of a synchronized method, then the return value of the method will be referenced via the edge
  ; #escapedReturnValue, so that it will be materialized before releasing the monitor.
  ;;
-(class-ns MonitorExitNode
+(class-ns MonitorExitNode [AccessMonitorNode, AbstractMemoryCheckpoint, AbstractStateSplit, FixedWithNextNode, FixedNode, ValueNode, Node, StateSplit, NodeWithState, MemoryCheckpoint, MemoryNode, MemoryCheckpoint, MemoryNode, DeoptBefore, DeoptimizingNode, NodeWithState, DeoptAfter, StateSplit, Virtualizable, Lowerable, IterableNodeType, MonitorExit, MemoryCheckpoint, MemoryNode, Single]
     (defn #_"MonitorExitNode" MonitorExitNode'new-3 [#_"ValueNode" object, #_"MonitorIdNode" monitorId, #_"ValueNode" escapedReturnValue]
         (merge (MonitorExitNode'class.) (AccessMonitorNode'new-2 object, monitorId)
             (hash-map
@@ -57276,7 +57162,7 @@ ZeroExtendNode'new-4
  ; The RawMonitorEnterNode represents the acquisition of a monitor. The object needs to
  ; already be non-nil and the hub is an additional parameter to the node.
  ;;
-(class-ns RawMonitorEnterNode
+(class-ns RawMonitorEnterNode [AccessMonitorNode, AbstractMemoryCheckpoint, AbstractStateSplit, FixedWithNextNode, FixedNode, ValueNode, Node, StateSplit, NodeWithState, MemoryCheckpoint, MemoryNode, MemoryCheckpoint, MemoryNode, DeoptBefore, DeoptimizingNode, NodeWithState, DeoptAfter, StateSplit, Virtualizable, Lowerable, IterableNodeType, MonitorEnter, Single, MemoryCheckpoint, MemoryNode]
     (defn #_"RawMonitorEnterNode" RawMonitorEnterNode'new-3 [#_"ValueNode" object, #_"ValueNode" hub, #_"MonitorIdNode" monitorId]
         (merge (RawMonitorEnterNode'class.) (AccessMonitorNode'new-2 object, monitorId)
             (hash-map
@@ -57320,7 +57206,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Represents an atomic read-and-add operation like {@link sun.misc.Unsafe#getAndAddInt(Object, long, int)}.
  ;;
-(class-ns AtomicReadAndAddNode
+(class-ns AtomicReadAndAddNode [AbstractMemoryCheckpoint, AbstractStateSplit, FixedWithNextNode, FixedNode, ValueNode, Node, StateSplit, NodeWithState, MemoryCheckpoint, MemoryNode, LIRLowerable, Single, MemoryCheckpoint, MemoryNode]
     #_unused
     (defn #_"AtomicReadAndAddNode" AtomicReadAndAddNode'new-3 [#_"AddressNode" address, #_"ValueNode" delta, #_"LocationIdentity" locationIdentity]
         (merge (AtomicReadAndAddNode'class.) (AbstractMemoryCheckpoint'new-1 (StampFactory'forKind-1 (ValueNode''getStackKind-1 delta)))
@@ -57352,7 +57238,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Represents an atomic read-and-write operation like {@link sun.misc.Unsafe#getAndSetInt(Object, long, int)}.
  ;;
-(class-ns AtomicReadAndWriteNode
+(class-ns AtomicReadAndWriteNode [AbstractMemoryCheckpoint, AbstractStateSplit, FixedWithNextNode, FixedNode, ValueNode, Node, StateSplit, NodeWithState, MemoryCheckpoint, MemoryNode, Lowerable, Single, MemoryCheckpoint, MemoryNode]
     #_unused
     (defn #_"AtomicReadAndWriteNode" AtomicReadAndWriteNode'new-5 [#_"ValueNode" object, #_"ValueNode" offset, #_"ValueNode" newValue, #_"JavaKind" valueKind, #_"LocationIdentity" locationIdentity]
         (merge (AtomicReadAndWriteNode'class.) (AbstractMemoryCheckpoint'new-1 (StampFactory'forKind-1 (ValueNode''getStackKind-1 newValue)))
@@ -57405,7 +57291,7 @@ ZeroExtendNode'new-4
  ; with an EndLockScopeNode. The frame state after this node denotes that the object is locked (ensuring
  ; the GC sees and updates the object) so it must come after any nil pointer check on the object.
  ;;
-(class-ns BeginLockScopeNode
+(class-ns BeginLockScopeNode [AbstractMemoryCheckpoint, AbstractStateSplit, FixedWithNextNode, FixedNode, ValueNode, Node, StateSplit, NodeWithState, MemoryCheckpoint, MemoryNode, LIRLowerable, MonitorEnter, Single, MemoryCheckpoint, MemoryNode]
     (defn #_"BeginLockScopeNode" BeginLockScopeNode'new-2 [#_"JavaKind" kind, #_"int" lockDepth]
         (merge (BeginLockScopeNode'class.) (AbstractMemoryCheckpoint'new-1 (StampFactory'forKind-1 kind))
             (hash-map
@@ -57445,7 +57331,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Intrinsic for closing a scope binding a stack-based lock with an object.
  ;;
-(class-ns EndLockScopeNode
+(class-ns EndLockScopeNode [AbstractMemoryCheckpoint, AbstractStateSplit, FixedWithNextNode, FixedNode, ValueNode, Node, StateSplit, NodeWithState, MemoryCheckpoint, MemoryNode, LIRLowerable, MonitorExit, MemoryCheckpoint, MemoryNode, Single]
     (§ intrinsic! #_"void" EndLockScopeNode'endLockScope-0 [])
 
     #_intrinsifier
@@ -57476,7 +57362,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Node for a foreign call.
  ;;
-(class-ns ForeignCallNode
+(class-ns ForeignCallNode [AbstractMemoryCheckpoint, AbstractStateSplit, FixedWithNextNode, FixedNode, ValueNode, Node, StateSplit, NodeWithState, MemoryCheckpoint, MemoryNode, LIRLowerable, DeoptDuring, DeoptimizingNode, NodeWithState, StateSplit, Multi, MemoryCheckpoint, MemoryNode]
     (defn #_"ForeignCallNode" ForeignCallNode'new-2* [#_"ForeignCallDescriptor" descriptor & #_"ValueNode..." arguments]
         (merge (ForeignCallNode'class.) (AbstractMemoryCheckpoint'new-1 (StampFactory'forKind-1 (JavaKind/fromJavaClass (:resultType descriptor))))
             (hash-map
@@ -57608,11 +57494,7 @@ ZeroExtendNode'new-4
 ;;;
  ; The InvokeNode represents all kinds of method calls.
  ;;
-(class-ns InvokeNode
-    (defn #_"InvokeNode" InvokeNode'new-2 [#_"CallTargetNode" callTarget, #_"int" bci]
-        (InvokeNode'new-3 callTarget, bci, (:trustedStamp (:returnStamp callTarget)))
-    )
-
+(class-ns InvokeNode [AbstractMemoryCheckpoint, AbstractStateSplit, FixedWithNextNode, FixedNode, ValueNode, Node, StateSplit, NodeWithState, MemoryCheckpoint, MemoryNode, StateSplit, NodeWithState, Lowerable, DeoptDuring, DeoptimizingNode, LIRLowerable, Single, MemoryCheckpoint, MemoryNode]
     (defn #_"InvokeNode" InvokeNode'new-3 [#_"CallTargetNode" callTarget, #_"int" bci, #_"Stamp" stamp]
         (merge (InvokeNode'class.) (AbstractMemoryCheckpoint'new-1 stamp)
             (hash-map
@@ -57628,12 +57510,13 @@ ZeroExtendNode'new-4
         )
     )
 
+    (defn #_"InvokeNode" InvokeNode'new-2 [#_"CallTargetNode" callTarget, #_"int" bci]
+        (InvokeNode'new-3 callTarget, bci, (:returnStamp callTarget))
+    )
+
     ;;;
-     ; Returns the method from which this invoke is executed.
-     ; This is the caller method and in the case of inlining may be different from the method
-     ; of the graph this node is in.
-     ;
-     ; @return the method from which this invoke is executed
+     ; Returns the method from which this invoke is executed. This is the caller method and in
+     ; the case of inlining it may be different from the method of the graph this node is in.
      ;;
     (defn #_"ResolvedJavaMethod" InvokeNode''getContextMethod-1 [#_"InvokeNode" this]
         (FrameState''getMethod-1 (or (:stateAfter this) (:stateDuring this)))
@@ -57642,8 +57525,6 @@ ZeroExtendNode'new-4
     ;;;
      ; Returns the type from which this invoke is executed.
      ; This is the declaring type of the caller method.
-     ;
-     ; @return the type from which this invoke is executed
      ;;
     (defn #_"ResolvedJavaType" InvokeNode''getContextType-1 [#_"InvokeNode" this]
         (let [
@@ -57786,7 +57667,7 @@ ZeroExtendNode'new-4
  ; Represents an atomic compare-and-swap operation The result is a boolean that contains whether the
  ; value matched the expected value.
  ;;
-(class-ns UnsafeCompareAndSwapNode
+(class-ns UnsafeCompareAndSwapNode [AbstractMemoryCheckpoint, AbstractStateSplit, FixedWithNextNode, FixedNode, ValueNode, Node, StateSplit, NodeWithState, MemoryCheckpoint, MemoryNode, Lowerable, Single, MemoryCheckpoint, MemoryNode]
     #_unused
     (defn #_"UnsafeCompareAndSwapNode" UnsafeCompareAndSwapNode'new-6 [#_"ValueNode" object, #_"ValueNode" offset, #_"ValueNode" expected, #_"ValueNode" newValue, #_"JavaKind" valueKind, #_"LocationIdentity" locationIdentity]
         (merge (UnsafeCompareAndSwapNode'class.) (AbstractMemoryCheckpoint'new-1 (StampFactory'forKind-1 (#_"JavaKind" .getStackKind JavaKind/Boolean)))
@@ -57833,7 +57714,7 @@ ZeroExtendNode'new-4
 ;;;
  ; This the base class of all array operations.
  ;;
-(class-ns AccessArrayNode
+(class-ns AccessArrayNode [FixedWithNextNode, FixedNode, ValueNode, Node]
     ;;;
      ; Creates a new AccessArrayNode.
      ;
@@ -57853,7 +57734,7 @@ ZeroExtendNode'new-4
  ; The AccessIndexedNode class is the base class of instructions that read or write elements
  ; of an array.
  ;;
-(class-ns AccessIndexedNode
+(class-ns AccessIndexedNode [AccessArrayNode, FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable]
     (defn #_"ValueNode" AccessIndexedNode''index-1 [#_"AccessIndexedNode" this]
         (:index this)
     )
@@ -57965,7 +57846,7 @@ ZeroExtendNode'new-4
 ;;;
  ; The LoadIndexedNode represents a read from an element of an array.
  ;;
-(class-ns LoadIndexedNode
+(class-ns LoadIndexedNode [AccessIndexedNode, AccessArrayNode, FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable, Virtualizable, Canonicalizable]
     (defn #_"LoadIndexedNode" LoadIndexedNode'new-4 [#_"Stamp" stamp, #_"ValueNode" array, #_"ValueNode" index, #_"JavaKind" elementKind]
         (merge (LoadIndexedNode'class.) (AccessIndexedNode'new-4 stamp, array, index, elementKind))
     )
@@ -58069,7 +57950,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LoadIndexedPointerNode
+(class-ns LoadIndexedPointerNode [LoadIndexedNode, AccessIndexedNode, AccessArrayNode, FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable, Virtualizable, Canonicalizable]
     (defn #_"LoadIndexedPointerNode" LoadIndexedPointerNode'new-3 [#_"Stamp" stamp, #_"ValueNode" array, #_"ValueNode" index]
         (merge (LoadIndexedPointerNode'class.) (LoadIndexedNode'new-4 stamp, array, index, JavaKind/Illegal))
     )
@@ -58084,7 +57965,7 @@ ZeroExtendNode'new-4
 ;;;
  ; The StoreIndexedNode represents a write to an array element.
  ;;
-(class-ns StoreIndexedNode
+(class-ns StoreIndexedNode [AccessIndexedNode, AccessArrayNode, FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable, StateSplit, NodeWithState, Lowerable, Virtualizable]
     (defm StoreIndexedNode StateSplit
         (#_"void" StateSplit'''setStateAfter-2 [#_"StoreIndexedNode" this, #_"FrameState" x]
             (Node''updateUsages-3 this, (:stateAfter this), x)
@@ -58145,7 +58026,7 @@ ZeroExtendNode'new-4
 ;;;
  ; The base class of all instructions that access fields.
  ;;
-(class-ns AccessFieldNode
+(class-ns AccessFieldNode [FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable]
     ;;;
      ; Constructs a new access field object.
      ;
@@ -58240,20 +58121,16 @@ ZeroExtendNode'new-4
 ;;;
  ; The LoadFieldNode represents a read of a static or instance field.
  ;;
-(class-ns LoadFieldNode
-    (defn #_"LoadFieldNode" LoadFieldNode'new-3 [#_"StampPair" stamp, #_"ValueNode" object, #_"ResolvedJavaField" field]
-        (merge (LoadFieldNode'class.) (AccessFieldNode'new-3 (:trustedStamp stamp), object, field)
-            (hash-map
-                #_"Stamp" :uncheckedStamp (:uncheckedStamp stamp)
-            )
-        )
+(class-ns LoadFieldNode [AccessFieldNode, FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable, Unary #_"<ValueNode>", Canonicalizable, Virtualizable]
+    (defn #_"LoadFieldNode" LoadFieldNode'new-3 [#_"Stamp" stamp, #_"ValueNode" object, #_"ResolvedJavaField" field]
+        (merge (LoadFieldNode'class.) (AccessFieldNode'new-3 stamp, object, field))
     )
 
     (defn #_"LoadFieldNode" LoadFieldNode'create-2 [#_"ValueNode" object, #_"ResolvedJavaField" field]
         (LoadFieldNode'new-3 (StampFactory'forDeclaredType-2 (#_"ResolvedJavaField" .getType field), false), object, field)
     )
 
-    (defn #_"LoadFieldNode" LoadFieldNode'createOverrideStamp-3 [#_"StampPair" stamp, #_"ValueNode" object, #_"ResolvedJavaField" field]
+    (defn #_"LoadFieldNode" LoadFieldNode'createOverrideStamp-3 [#_"Stamp" stamp, #_"ValueNode" object, #_"ResolvedJavaField" field]
         (LoadFieldNode'new-3 stamp, object, field)
     )
 
@@ -58285,13 +58162,13 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"ValueNode" LoadFieldNode'canonical-6 [#_"LoadFieldNode" self, #_"StampPair" stamp, #_"ValueNode" forObject, #_"ResolvedJavaField" field, #_"boolean" canonicalizeReads, #_"boolean" allUsagesAvailable]
+    (defn- #_"ValueNode" LoadFieldNode'canonical-6 [#_"LoadFieldNode" self, #_"Stamp" stamp, #_"ValueNode" forObject, #_"ResolvedJavaField" field, #_"boolean" canonicalizeReads, #_"boolean" allUsagesAvailable]
         (or
             (when (and canonicalizeReads (some? HotSpot'metaAccess))
                 (or
                     (LoadFieldNode'asConstant-2 forObject, field)
                     (when allUsagesAvailable
-                        (LoadFieldNode'asPhi-3 forObject, field, (:trustedStamp stamp))
+                        (LoadFieldNode'asPhi-3 forObject, field, stamp)
                     )
                 )
             )
@@ -58306,7 +58183,7 @@ ZeroExtendNode'new-4
         (LoadFieldNode'canonical-6 nil, (StampFactory'forDeclaredType-2 (#_"ResolvedJavaField" .getType field), false), object, field, canonicalizeReads, allUsagesAvailable)
     )
 
-    (defn #_"ValueNode" LoadFieldNode'createOverrideStamp-5 [#_"StampPair" stamp, #_"ValueNode" object, #_"ResolvedJavaField" field, #_"boolean" canonicalizeReads, #_"boolean" allUsagesAvailable]
+    (defn #_"ValueNode" LoadFieldNode'createOverrideStamp-5 [#_"Stamp" stamp, #_"ValueNode" object, #_"ResolvedJavaField" field, #_"boolean" canonicalizeReads, #_"boolean" allUsagesAvailable]
         (LoadFieldNode'canonical-6 nil, stamp, object, field, canonicalizeReads, allUsagesAvailable)
     )
 
@@ -58317,7 +58194,7 @@ ZeroExtendNode'new-4
 
         (#_"ValueNode" Unary'''canonical-3 [#_"LoadFieldNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forObject]
             (when-not (and (CanonicalizerTool'''allUsagesAvailable-1 tool) (Node''hasNoUsages-1 this) (not (AccessFieldNode''isVolatile-1 this)) (or (AccessFieldNode''isStatic-1 this) (StampTool'isPointerNeverNull-1 (:stamp forObject))))
-                (LoadFieldNode'canonical-6 this, (StampPair'new-2 (:stamp this), (:uncheckedStamp this)), forObject, (:field this), (CanonicalizerTool'''canonicalizeReads-1 tool), (CanonicalizerTool'''allUsagesAvailable-1 tool))
+                (LoadFieldNode'canonical-6 this, (:stamp this), forObject, (:field this), (CanonicalizerTool'''canonicalizeReads-1 tool), (CanonicalizerTool'''allUsagesAvailable-1 tool))
             )
         )
     )
@@ -58357,7 +58234,7 @@ ZeroExtendNode'new-4
 ;;;
  ; The StoreFieldNode represents a write to a static or instance field.
  ;;
-(class-ns StoreFieldNode
+(class-ns StoreFieldNode [AccessFieldNode, FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable, StateSplit, NodeWithState, Virtualizable]
     (defn #_"StoreFieldNode" StoreFieldNode'new-4 [#_"ValueNode" object, #_"ResolvedJavaField" field, #_"ValueNode" value, #_"FrameState" state]
         (merge (StoreFieldNode'class.) (AccessFieldNode'new-3 VoidStamp'instance, object, field)
             (hash-map
@@ -58416,7 +58293,7 @@ ZeroExtendNode'new-4
  ; Marks the control flow path where an object acquired a lightweight lock based on an atomic
  ; compare-and-swap (CAS) of the mark word in the object's header.
  ;;
-(class-ns AcquiredCASLockNode
+(class-ns AcquiredCASLockNode [FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable]
     (§ intrinsic! #_"void" AcquiredCASLockNode'mark-1 [#_"Object" object])
 
     #_intrinsifier
@@ -58440,7 +58317,7 @@ ZeroExtendNode'new-4
 ;;;
  ; The ArrayLength instruction gets the length of an array.
  ;;
-(class-ns ArrayLengthNode
+(class-ns ArrayLengthNode [FixedWithNextNode, FixedNode, ValueNode, Node, Unary #_"<ValueNode>", Canonicalizable, Lowerable, Virtualizable]
     (defn #_"ArrayLengthNode" ArrayLengthNode'new-1 [#_"ValueNode" array]
         (merge (ArrayLengthNode'class.) (FixedWithNextNode'new-1 StampFactory'nonNegativeInt)
             (hash-map
@@ -58557,7 +58434,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns BindToRegisterNode
+(class-ns BindToRegisterNode [FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable]
     #_unused
     (defn #_"BindToRegisterNode" BindToRegisterNode'new-1 [#_"ValueNode" value]
         (merge (BindToRegisterNode'class.) (FixedWithNextNode'new-1 VoidStamp'instance)
@@ -58576,7 +58453,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns BlackholeNode
+(class-ns BlackholeNode [FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable]
     #_unused
     (defn #_"BlackholeNode" BlackholeNode'new-1 [#_"ValueNode" value]
         (merge (BlackholeNode'class.) (FixedWithNextNode'new-1 VoidStamp'instance)
@@ -58599,7 +58476,7 @@ ZeroExtendNode'new-4
  ; This node represents the boxing of a primitive value. This corresponds to a call to the valueOf
  ; methods in Integer, Long, etc.
  ;;
-(class-ns BoxNode
+(class-ns BoxNode [FixedWithNextNode, FixedNode, ValueNode, Node, VirtualizableAllocation, Virtualizable, Lowerable, Unary #_"<ValueNode>", Canonicalizable]
     (defn #_"BoxNode" BoxNode'new-3 [#_"ValueNode" value, #_"ResolvedJavaType" resultType, #_"JavaKind" boxingKind]
         (merge (BoxNode'class.) (FixedWithNextNode'new-1 (StampFactory'objectNonNull-1 (TypeReference'createExactTrusted-1 resultType)))
             (hash-map
@@ -58655,7 +58532,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns CommitAllocationNode
+(class-ns CommitAllocationNode [FixedWithNextNode, FixedNode, ValueNode, Node, VirtualizableAllocation, Virtualizable, Lowerable, Simplifiable, Single, MemoryCheckpoint, MemoryNode]
     (defn #_"CommitAllocationNode" CommitAllocationNode'new-0 []
         (merge (CommitAllocationNode'class.) (FixedWithNextNode'new-1 VoidStamp'instance)
             (hash-map
@@ -59037,7 +58914,7 @@ ZeroExtendNode'new-4
  ; A high-level intrinsic for getting an address inside of an object. During lowering it will be
  ; moved next to any uses to avoid creating a derived pointer that is live across a safepoint.
  ;;
-(class-ns ComputeObjectAddressNode
+(class-ns ComputeObjectAddressNode [FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable, ControlFlowAnchored]
     (§ intrinsic! #_"long" ComputeObjectAddressNode'get-2 [#_"Object" array, #_"long" offset])
 
     #_intrinsifier
@@ -59076,7 +58953,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns ConditionAnchorNode
+(class-ns ConditionAnchorNode [FixedWithNextNode, FixedNode, ValueNode, Node, Unary #_"<Node>", Canonicalizable, Lowerable, GuardingNode]
     #_unused
     (defn #_"ConditionAnchorNode" ConditionAnchorNode'new-1 [#_"LogicNode" condition]
         (ConditionAnchorNode'new-2 condition, false)
@@ -59134,7 +59011,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns ControlFlowAnchorNode
+(class-ns ControlFlowAnchorNode [FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, ControlFlowAnchored]
     #_unused
     (defn #_"ControlFlowAnchorNode" ControlFlowAnchorNode'new-0 []
         (merge (ControlFlowAnchorNode'class.) (FixedWithNextNode'new-1 VoidStamp'instance))
@@ -59157,7 +59034,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Intrinsic for getting the lock in the current lock scope.
  ;;
-(class-ns CurrentLockNode
+(class-ns CurrentLockNode [FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable]
     (§ intrinsic! #_"Word" CurrentLockNode'currentLock-1 [#_"int" lockDepth])
 
     #_intrinsifier
@@ -59178,7 +59055,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns DeoptimizingFixedWithNextNode
+(class-ns DeoptimizingFixedWithNextNode [FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState]
     (defn #_"DeoptimizingFixedWithNextNode" DeoptimizingFixedWithNextNode'new-2 [#_"Stamp" stamp, #_"FrameState" state]
         (merge (DeoptimizingFixedWithNextNode'class.) (FixedWithNextNode'new-1 stamp)
             (hash-map
@@ -59207,7 +59084,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns AbstractFixedGuardNode
+(class-ns AbstractFixedGuardNode [DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Simplifiable, GuardingNode, DeoptimizingGuard, StaticDeoptimizingNode]
     (defn #_"AbstractFixedGuardNode" AbstractFixedGuardNode'new-5 [#_"LogicNode" condition, #_"DeoptimizationReason" reason, #_"DeoptimizationAction" action, #_"JavaConstant" speculation, #_"boolean" negated?]
         (merge (AbstractFixedGuardNode'class.) (DeoptimizingFixedWithNextNode'new-1 VoidStamp'instance)
             (hash-map
@@ -59306,7 +59183,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns FixedGuardNode
+(class-ns FixedGuardNode [AbstractFixedGuardNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Simplifiable, GuardingNode, DeoptimizingGuard, StaticDeoptimizingNode, Lowerable, IterableNodeType]
     (defn #_"FixedGuardNode" FixedGuardNode'new-3 [#_"LogicNode" logic, #_"DeoptimizationReason" reason, #_"DeoptimizationAction" action]
         (FixedGuardNode'new-5 logic, reason, action, JavaConstant/NULL_POINTER, false)
     )
@@ -59386,7 +59263,7 @@ ZeroExtendNode'new-4
 ;;;
  ; The AbstractNewObjectNode is the base class for the new instance and new array nodes.
  ;;
-(class-ns AbstractNewObjectNode
+(class-ns AbstractNewObjectNode [DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Lowerable]
     (defn #_"AbstractNewObjectNode" AbstractNewObjectNode'new-3 [#_"Stamp" stamp, #_"boolean" fillContents, #_"FrameState" stateBefore]
         (merge (AbstractNewObjectNode'class.) (DeoptimizingFixedWithNextNode'new-2 stamp, stateBefore)
             (hash-map
@@ -59452,7 +59329,7 @@ ZeroExtendNode'new-4
 ;;;
  ; The AbstractNewArrayNode is used for all 1-dimensional array allocations.
  ;;
-(class-ns AbstractNewArrayNode
+(class-ns AbstractNewArrayNode [AbstractNewObjectNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Lowerable, ArrayLengthProvider]
     (defn #_"AbstractNewArrayNode" AbstractNewArrayNode'new-4 [#_"Stamp" stamp, #_"ValueNode" length, #_"boolean" fillContents, #_"FrameState" stateBefore]
         (merge (AbstractNewArrayNode'class.) (AbstractNewObjectNode'new-3 stamp, fillContents, stateBefore)
             (hash-map
@@ -59472,7 +59349,7 @@ ZeroExtendNode'new-4
 ;;;
  ; The DynamicNewArrayNode is used for allocation of arrays when the type is not a compile-time constant.
  ;;
-(class-ns DynamicNewArrayNode
+(class-ns DynamicNewArrayNode [AbstractNewArrayNode, AbstractNewObjectNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Lowerable, ArrayLengthProvider, Canonicalizable]
     (§ intrinsic! #_"Object" DynamicNewArrayNode'newArray-3 [#_"Class" componentType, #_"int" length, #_"boolean" fillContents])
 
     #_intrinsifier
@@ -59570,7 +59447,7 @@ ZeroExtendNode'new-4
  ; The NewArrayNode is used for all array allocations where the element type is know at
  ; compile time.
  ;;
-(class-ns NewArrayNode
+(class-ns NewArrayNode [AbstractNewArrayNode, AbstractNewObjectNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Lowerable, ArrayLengthProvider, VirtualizableAllocation, Virtualizable, Simplifiable]
     (§ intrinsic! #_"Object" NewArrayNode'newArray-3 [#_"Class" elementType, #_"int" length, #_"boolean" fillContents])
 
     #_intrinsifier
@@ -59647,7 +59524,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns DynamicNewInstanceNode
+(class-ns DynamicNewInstanceNode [AbstractNewObjectNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Lowerable, Canonicalizable]
     #_unused
     (defn #_"DynamicNewInstanceNode" DynamicNewInstanceNode'new-2 [#_"ValueNode" clazz, #_"boolean" fillContents]
         (DynamicNewInstanceNode'new-3 clazz, fillContents, nil)
@@ -59706,7 +59583,7 @@ ZeroExtendNode'new-4
 ;;;
  ; The NewInstanceNode represents the allocation of an instance class object.
  ;;
-(class-ns NewInstanceNode
+(class-ns NewInstanceNode [AbstractNewObjectNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Lowerable, VirtualizableAllocation, Virtualizable]
     (defn #_"NewInstanceNode" NewInstanceNode'new-2 [#_"ResolvedJavaType" type, #_"boolean" fillContents]
         (NewInstanceNode'new-3 type, fillContents, nil)
     )
@@ -59756,7 +59633,7 @@ ZeroExtendNode'new-4
  ; Accesses a value at an memory address specified by an {@linkplain #address address}. The access
  ; does not include a nil-check on the object.
  ;;
-(class-ns FixedAccessNode
+(class-ns FixedAccessNode [DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Access, GuardedNode, HeapAccess, IterableNodeType]
     (defn #_"FixedAccessNode" FixedAccessNode'new-4 [#_"AddressNode" address, #_"LocationIdentity" location, #_"Stamp" stamp, #_"BarrierType" barrierType]
         (merge (FixedAccessNode'class.) (DeoptimizingFixedWithNextNode'new-1 stamp)
             (hash-map
@@ -59815,7 +59692,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Low-level atomic compare-and-swap operation.
  ;;
-(class-ns AbstractCompareAndSwapNode
+(class-ns AbstractCompareAndSwapNode [FixedAccessNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Access, GuardedNode, HeapAccess, IterableNodeType, StateSplit, NodeWithState, LIRLowerableAccess, LIRLowerable, Access, GuardedNode, HeapAccess, Single, MemoryCheckpoint, MemoryNode]
     (defm AbstractCompareAndSwapNode StateSplit
         (#_"void" StateSplit'''setStateAfter-2 [#_"AbstractCompareAndSwapNode" this, #_"FrameState" x]
             (Node''updateUsages-3 this, (:stateAfter this), x)
@@ -59863,7 +59740,7 @@ ZeroExtendNode'new-4
  ;
  ; This version returns a boolean indicating is the CAS was successful or not.
  ;;
-(class-ns LogicCompareAndSwapNode
+(class-ns LogicCompareAndSwapNode [AbstractCompareAndSwapNode, FixedAccessNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Access, GuardedNode, HeapAccess, IterableNodeType, StateSplit, NodeWithState, LIRLowerableAccess, LIRLowerable, Access, GuardedNode, HeapAccess, Single, MemoryCheckpoint, MemoryNode]
     (defn #_"LogicCompareAndSwapNode" LogicCompareAndSwapNode'new-4 [#_"ValueNode" address, #_"ValueNode" expectedValue, #_"ValueNode" newValue, #_"LocationIdentity" location]
         (LogicCompareAndSwapNode'new-5 address, location, expectedValue, newValue, BarrierType'NONE)
     )
@@ -59891,7 +59768,7 @@ ZeroExtendNode'new-4
  ; A special purpose store node that differs from LogicCompareAndSwapNode in that it returns
  ; either the expected value or the compared against value instead of a boolean.
  ;;
-(class-ns ValueCompareAndSwapNode
+(class-ns ValueCompareAndSwapNode [AbstractCompareAndSwapNode, FixedAccessNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Access, GuardedNode, HeapAccess, IterableNodeType, StateSplit, NodeWithState, LIRLowerableAccess, LIRLowerable, Access, GuardedNode, HeapAccess, Single, MemoryCheckpoint, MemoryNode]
     (defn #_"ValueCompareAndSwapNode" ValueCompareAndSwapNode'new-4 [#_"ValueNode" address, #_"ValueNode" expectedValue, #_"ValueNode" newValue, #_"LocationIdentity" location]
         (ValueCompareAndSwapNode'new-5 address, expectedValue, newValue, location, BarrierType'NONE)
     )
@@ -59908,7 +59785,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns AbstractWriteNode
+(class-ns AbstractWriteNode [FixedAccessNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Access, GuardedNode, HeapAccess, IterableNodeType, StateSplit, NodeWithState, Single, MemoryCheckpoint, MemoryNode, MemoryAccess, GuardingNode]
     (defm AbstractWriteNode StateSplit
         (#_"void" StateSplit'''setStateAfter-2 [#_"AbstractWriteNode" this, #_"FrameState" x]
             (Node''updateUsages-3 this, (:stateAfter this), x)
@@ -59947,7 +59824,7 @@ ZeroExtendNode'new-4
  ; Write a raw memory location according to Java field or array write semantics. It will perform
  ; write barriers, implicit conversions and optionally oop compression.
  ;;
-(class-ns JavaWriteNode
+(class-ns JavaWriteNode [AbstractWriteNode, FixedAccessNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Access, GuardedNode, HeapAccess, IterableNodeType, StateSplit, NodeWithState, Single, MemoryCheckpoint, MemoryNode, MemoryAccess, GuardingNode, Lowerable, StateSplit, NodeWithState, MemoryAccess, Single, MemoryCheckpoint, MemoryNode]
     (defn #_"JavaWriteNode" JavaWriteNode'new-6 [#_"JavaKind" writeKind, #_"AddressNode" address, #_"LocationIdentity" location, #_"ValueNode" value, #_"BarrierType" barrierType, #_"boolean" compressible?]
         (merge (JavaWriteNode'class.) (AbstractWriteNode'new-4 address, location, value, barrierType)
             (hash-map
@@ -59981,7 +59858,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Writes a given {@linkplain #value() value} a memory location.
  ;;
-(class-ns WriteNode
+(class-ns WriteNode [AbstractWriteNode, FixedAccessNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Access, GuardedNode, HeapAccess, IterableNodeType, StateSplit, NodeWithState, Single, MemoryCheckpoint, MemoryNode, MemoryAccess, GuardingNode, LIRLowerableAccess, LIRLowerable, Access, GuardedNode, HeapAccess, Canonicalizable]
     (defn #_"WriteNode" WriteNode'new-4 [#_"AddressNode" address, #_"LocationIdentity" location, #_"ValueNode" value, #_"BarrierType" barrierType]
         (merge (WriteNode'class.) (AbstractWriteNode'new-4 address, location, value, barrierType))
     )
@@ -60025,7 +59902,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns FloatableAccessNode
+(class-ns FloatableAccessNode [FixedAccessNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Access, GuardedNode, HeapAccess, IterableNodeType]
     (defn #_"FloatableAccessNode" FloatableAccessNode'new-4 [#_"AddressNode" address, #_"LocationIdentity" location, #_"Stamp" stamp, #_"BarrierType" barrierType]
         (merge (FloatableAccessNode'class.) (FixedAccessNode'new-4 address, location, stamp, barrierType)
             (hash-map
@@ -60051,7 +59928,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Reads an accessed value.
  ;;
-(class-ns ReadNode
+(class-ns ReadNode [FloatableAccessNode, FixedAccessNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Access, GuardedNode, HeapAccess, IterableNodeType, LIRLowerableAccess, LIRLowerable, Access, GuardedNode, HeapAccess, Canonicalizable, Virtualizable, GuardingNode]
     (defn #_"ReadNode" ReadNode'new-4 [#_"AddressNode" address, #_"LocationIdentity" location, #_"Stamp" stamp, #_"BarrierType" barrierType]
         (merge (ReadNode'class.) (FloatableAccessNode'new-4 address, location, stamp, barrierType))
     )
@@ -60147,7 +60024,7 @@ ZeroExtendNode'new-4
  ; Read a raw memory location according to Java field or array read semantics. It will perform read
  ; barriers, implicit conversions and optionally oop uncompression.
  ;;
-(class-ns JavaReadNode
+(class-ns JavaReadNode [FixedAccessNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Access, GuardedNode, HeapAccess, IterableNodeType, Lowerable, GuardingNode, Canonicalizable]
     (defn #_"JavaReadNode" JavaReadNode'new-5 [#_"JavaKind" readKind, #_"AddressNode" address, #_"LocationIdentity" location, #_"BarrierType" barrierType, #_"boolean" compressible?]
         (merge (JavaReadNode'class.) (FixedAccessNode'new-4 address, location, (StampFactory'forKind-1 readKind), barrierType)
             (hash-map
@@ -60193,7 +60070,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Represents the lowered version of an atomic read-and-write operation like {@link sun.misc.Unsafe#getAndSetInt(Object, long, int)}.
  ;;
-(class-ns LoweredAtomicReadAndWriteNode
+(class-ns LoweredAtomicReadAndWriteNode [FixedAccessNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Access, GuardedNode, HeapAccess, IterableNodeType, StateSplit, NodeWithState, LIRLowerableAccess, LIRLowerable, Access, GuardedNode, HeapAccess, Single, MemoryCheckpoint, MemoryNode]
     (defn #_"LoweredAtomicReadAndWriteNode" LoweredAtomicReadAndWriteNode'new-4 [#_"AddressNode" address, #_"LocationIdentity" location, #_"ValueNode" newValue, #_"BarrierType" barrierType]
         (merge (LoweredAtomicReadAndWriteNode'class.) (FixedAccessNode'new-4 address, location, (Stamp'''unrestricted-1 (:stamp newValue)), barrierType)
             (hash-map
@@ -60241,7 +60118,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns FixedBinaryNode
+(class-ns FixedBinaryNode [DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Binary #_"<ValueNode>", Canonicalizable]
     (defn #_"FixedBinaryNode" FixedBinaryNode'new-3 [#_"Stamp" stamp, #_"ValueNode" x, #_"ValueNode" y]
         (merge (FixedBinaryNode'class.) (DeoptimizingFixedWithNextNode'new-1 stamp)
             (hash-map
@@ -60260,7 +60137,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns IntegerDivRemNode
+(class-ns IntegerDivRemNode [FixedBinaryNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Binary #_"<ValueNode>", Canonicalizable, Lowerable]
     (defn #_"IntegerDivRemNode" IntegerDivRemNode'new-5 [#_"Stamp" stamp, #_"DivRemOp" op, #_"Signedness" type, #_"ValueNode" x, #_"ValueNode" y]
         (let [
             #_"IntegerDivRemNode" this
@@ -60296,7 +60173,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns SignedDivNode
+(class-ns SignedDivNode [IntegerDivRemNode, FixedBinaryNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Binary #_"<ValueNode>", Canonicalizable, Lowerable, LIRLowerable]
     (defn #_"SignedDivNode" SignedDivNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
         (merge (SignedDivNode'class.) (IntegerDivRemNode'new-5 (BinaryOp'''foldStamp-3 (:div IntegerStamp'OPS), (:stamp x), (:stamp y)), DivRemOp'DIV, Signedness'SIGNED, x, y))
     )
@@ -60384,7 +60261,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns SignedRemNode
+(class-ns SignedRemNode [IntegerDivRemNode, FixedBinaryNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Binary #_"<ValueNode>", Canonicalizable, Lowerable, LIRLowerable]
     (defn #_"SignedRemNode" SignedRemNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
         (merge (SignedRemNode'class.) (IntegerDivRemNode'new-5 (BinaryOp'''foldStamp-3 (:rem IntegerStamp'OPS), (:stamp x), (:stamp y)), DivRemOp'REM, Signedness'SIGNED, x, y))
     )
@@ -60457,7 +60334,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns UnsignedDivNode
+(class-ns UnsignedDivNode [IntegerDivRemNode, FixedBinaryNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Binary #_"<ValueNode>", Canonicalizable, Lowerable, LIRLowerable]
     (defn #_"UnsignedDivNode" UnsignedDivNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
         (merge (UnsignedDivNode'class.) (IntegerDivRemNode'new-5 (Stamp'''unrestricted-1 (:stamp x)), DivRemOp'DIV, Signedness'UNSIGNED, x, y))
     )
@@ -60510,7 +60387,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns UnsignedRemNode
+(class-ns UnsignedRemNode [IntegerDivRemNode, FixedBinaryNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Binary #_"<ValueNode>", Canonicalizable, Lowerable, LIRLowerable]
     (defn #_"UnsignedRemNode" UnsignedRemNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
         (merge (UnsignedRemNode'class.) (IntegerDivRemNode'new-5 (Stamp'''unrestricted-1 (:stamp x)), DivRemOp'REM, Signedness'UNSIGNED, x, y))
     )
@@ -60564,7 +60441,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns NullCheckNode
+(class-ns NullCheckNode [DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, LIRLowerable, GuardingNode]
     (§ intrinsic! #_"void" NullCheckNode'nullCheck-1 [#_"Object" object])
 
     #_intrinsifier
@@ -60594,7 +60471,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Marks a position in the graph where a safepoint should be emitted.
  ;;
-(class-ns SafepointNode
+(class-ns SafepointNode [DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Lowerable, LIRLowerable]
     (defn #_"SafepointNode" SafepointNode'new-0 []
         (merge (SafepointNode'class.) (DeoptimizingFixedWithNextNode'new-1 VoidStamp'instance))
     )
@@ -60622,7 +60499,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Placeholder node to denote to snippet preparation that the following loop must be completely unrolled.
  ;;
-(class-ns ExplodeLoopNode
+(class-ns ExplodeLoopNode [FixedWithNextNode, FixedNode, ValueNode, Node]
     ;;;
      ; A call to this method must be placed immediately prior to the loop that is to be exploded.
      ;;
@@ -60653,7 +60530,7 @@ ZeroExtendNode'new-4
  ; Marks the control flow path where an object acquired a biased lock because the lock was already
  ; biased to the object on the current thread.
  ;;
-(class-ns FastAcquireBiasedLockNode
+(class-ns FastAcquireBiasedLockNode [FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable]
     (§ intrinsic! #_"void" FastAcquireBiasedLockNode'mark-1 [#_"Object" object])
 
     #_intrinsifier
@@ -60674,7 +60551,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns FinalFieldBarrierNode
+(class-ns FinalFieldBarrierNode [FixedWithNextNode, FixedNode, ValueNode, Node, Virtualizable, Lowerable]
     (defn #_"FinalFieldBarrierNode" FinalFieldBarrierNode'new-1 [#_"ValueNode" value]
         (merge (FinalFieldBarrierNode'class.) (FixedWithNextNode'new-1 VoidStamp'instance)
             (hash-map
@@ -60701,7 +60578,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns FixedValueAnchorNode
+(class-ns FixedValueAnchorNode [FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, ValueProxy, LimitedValueProxy, Proxy, GuardingNode]
     (§ intrinsic! #_"Object" FixedValueAnchorNode'getObject-1 [#_"Object" object])
 
     #_intrinsifier
@@ -60740,7 +60617,7 @@ ZeroExtendNode'new-4
  ; easily represented. The anchored value is usually part of the FrameState since this forces uses
  ; of the value below this node so they will consume this frame state instead of an earlier one.
  ;;
-(class-ns StateSplitProxyNode
+(class-ns StateSplitProxyNode [FixedValueAnchorNode, FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, ValueProxy, LimitedValueProxy, Proxy, GuardingNode, Canonicalizable, StateSplit, NodeWithState]
     (defn #_"StateSplitProxyNode" StateSplitProxyNode'new-1 [#_"ValueNode" object]
         (StateSplitProxyNode'new-2 object, false)
     )
@@ -60791,7 +60668,7 @@ ZeroExtendNode'new-4
  ; only be guaranteed if used in a snippet that is instantiated after frame state assignment.
  ; ComputeObjectAddressNode should generally be used in preference to this node.
  ;;
-(class-ns GetObjectAddressNode
+(class-ns GetObjectAddressNode [FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable]
     (defn #_"GetObjectAddressNode" GetObjectAddressNode'new-1 [#_"ValueNode" obj]
         (merge (GetObjectAddressNode'class.) (FixedWithNextNode'new-1 (StampFactory'forKind-1 JavaKind/Long))
             (hash-map
@@ -60817,7 +60694,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Implements the semantics of VarargsParameter.
  ;;
-(class-ns LoadSnippetVarargParameterNode
+(class-ns LoadSnippetVarargParameterNode [FixedWithNextNode, FixedNode, ValueNode, Node, Canonicalizable]
     (defn #_"LoadSnippetVarargParameterNode" LoadSnippetVarargParameterNode'new-3 [#_"ParameterNode*" locals, #_"ValueNode" index, #_"Stamp" stamp]
         (merge (LoadSnippetVarargParameterNode'class.) (FixedWithNextNode'new-1 stamp)
             (hash-map
@@ -60853,15 +60730,15 @@ ZeroExtendNode'new-4
  ; (1) If #getLoweredSnippetGraph(LoweringTool) returns a non-nil result, this graph is used as a replacement.
  ; (3) Otherwise, the macro node is replaced with an InvokeNode. Note that this is only possible if the macro node is a MacroStateSplitNode.
  ;;
-(class-ns MacroNode
-    (defn #_"MacroNode" MacroNode'new-5* [#_"InvokeKind" invokeKind, #_"ResolvedJavaMethod" targetMethod, #_"int" bci, #_"StampPair" returnStamp & #_"ValueNode..." arguments]
-        (merge (MacroNode'class.) (FixedWithNextNode'new-1 (:trustedStamp returnStamp))
+(class-ns MacroNode [FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable]
+    (defn #_"MacroNode" MacroNode'new-5* [#_"InvokeKind" invokeKind, #_"ResolvedJavaMethod" targetMethod, #_"int" bci, #_"Stamp" returnStamp & #_"ValueNode..." arguments]
+        (merge (MacroNode'class.) (FixedWithNextNode'new-1 returnStamp)
             (hash-map
                 ; @Input
                 #_"NodeInputList<ValueNode>" :arguments (NodeInputList'new-2s (ß this), arguments)
                 #_"int" :bci bci
                 #_"ResolvedJavaMethod" :targetMethod targetMethod
-                #_"StampPair" :returnStamp returnStamp
+                #_"Stamp" :returnStamp returnStamp
                 #_"InvokeKind" :invokeKind invokeKind
             )
         )
@@ -60954,8 +60831,8 @@ ZeroExtendNode'new-4
 ;;;
  ; This is an extension of MacroNode that is a StateSplit and a MemoryCheckpoint.
  ;;
-(class-ns MacroStateSplitNode
-    (defn #_"MacroStateSplitNode" MacroStateSplitNode'new-5* [#_"InvokeKind" invokeKind, #_"ResolvedJavaMethod" targetMethod, #_"int" bci, #_"StampPair" returnStamp & #_"ValueNode..." arguments]
+(class-ns MacroStateSplitNode [MacroNode, FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable, StateSplit, NodeWithState, Single, MemoryCheckpoint, MemoryNode]
+    (defn #_"MacroStateSplitNode" MacroStateSplitNode'new-5* [#_"InvokeKind" invokeKind, #_"ResolvedJavaMethod" targetMethod, #_"int" bci, #_"Stamp" returnStamp & #_"ValueNode..." arguments]
         (merge (MacroStateSplitNode'class.) (apply MacroNode'new-5* invokeKind, targetMethod, bci, returnStamp, arguments)
             (hash-map
                 ; @OptionalInput
@@ -60993,8 +60870,8 @@ ZeroExtendNode'new-4
 ;;;
  ; Node for invocation methods defined on the class MethodHandle.
  ;;
-(class-ns MethodHandleNode
-    (defn #_"MethodHandleNode" MethodHandleNode'new-6* [#_"MethodHandleAccessProvider$IntrinsicMethod" intrinsicMethod, #_"InvokeKind" invokeKind, #_"ResolvedJavaMethod" targetMethod, #_"int" bci, #_"StampPair" returnStamp & #_"ValueNode..." arguments]
+(class-ns MethodHandleNode [MacroStateSplitNode, MacroNode, FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable, StateSplit, NodeWithState, Single, MemoryCheckpoint, MemoryNode, Simplifiable]
+    (defn #_"MethodHandleNode" MethodHandleNode'new-6* [#_"MethodHandleAccessProvider$IntrinsicMethod" intrinsicMethod, #_"InvokeKind" invokeKind, #_"ResolvedJavaMethod" targetMethod, #_"int" bci, #_"Stamp" returnStamp & #_"ValueNode..." arguments]
         (merge (MethodHandleNode'class.) (apply MacroStateSplitNode'new-5* invokeKind, targetMethod, bci, returnStamp, arguments)
             (hash-map
                 #_"MethodHandleAccessProvider$IntrinsicMethod" :intrinsicMethod intrinsicMethod
@@ -61065,7 +60942,7 @@ ZeroExtendNode'new-4
     ;;;
      ; Creates an InvokeNode for the given target method. The CallTargetNode passed to the InvokeNode is in fact a ResolvedMethodHandleCallTargetNode.
      ;;
-    (defn- #_"InvokeNode" MethodHandleNode'createTargetInvokeNode-6 [#_"MethodHandleAccessProvider$IntrinsicMethod" intrinsicMethod, #_"ResolvedJavaMethod" target, #_"ResolvedJavaMethod" original, #_"int" bci, #_"StampPair" returnStamp, #_"ValueNode*" arguments]
+    (defn- #_"InvokeNode" MethodHandleNode'createTargetInvokeNode-6 [#_"MethodHandleAccessProvider$IntrinsicMethod" intrinsicMethod, #_"ResolvedJavaMethod" target, #_"ResolvedJavaMethod" original, #_"int" bci, #_"Stamp" returnStamp, #_"ValueNode*" arguments]
         (let [
             #_"InvokeKind" targetInvokeKind (if (#_"ResolvedJavaMethod" .isStatic target) InvokeKind'Static InvokeKind'Special)
             #_"JavaType" targetReturnType (#_"Signature" .getReturnType (#_"ResolvedJavaMethod" .getSignature target), nil)
@@ -61080,13 +60957,12 @@ ZeroExtendNode'new-4
                     MethodHandleAccessProvider$IntrinsicMethod/LINK_TO_INTERFACE]
                         (Arrays/copyOfRange arguments, 0, (dec (count arguments)))
                 )
-            #_"StampPair" targetReturnStamp (StampFactory'forDeclaredType-2 targetReturnType, false)
-            #_"MethodCallTargetNode" callTarget (ResolvedMethodHandleCallTargetNode'new-7 targetInvokeKind, target, targetArguments, targetReturnStamp, original, arguments, returnStamp)
+            #_"MethodCallTargetNode" callTarget (ResolvedMethodHandleCallTargetNode'new-7 targetInvokeKind, target, targetArguments, (StampFactory'forDeclaredType-2 targetReturnType, false), original, arguments, returnStamp)
         ]
             ;; The call target can have a different return type than the invoker, e.g. the target returns an Object but the invoker is void.
             ;; In this case we need to use the stamp of the invoker.
             ;; Note: always using the invoker's stamp would be wrong, because it's a less concrete type (usually java.lang.Object).
-            (if (= (Stamp'''getStackKind-1 (:trustedStamp returnStamp)) JavaKind/Void)
+            (if (= (Stamp'''getStackKind-1 returnStamp) JavaKind/Void)
                 (InvokeNode'new-3 callTarget, bci, VoidStamp'instance)
                 (InvokeNode'new-2 callTarget, bci)
             )
@@ -61100,7 +60976,7 @@ ZeroExtendNode'new-4
      ;
      ; @return invoke node for the member name target
      ;;
-    (defn- #_"InvokeNode" MethodHandleNode'getTargetInvokeNode-7 [#_"GraphAdder" adder, #_"MethodHandleAccessProvider$IntrinsicMethod" intrinsicMethod, #_"int" bci, #_"StampPair" returnStamp, #_"ValueNode*" originalArguments, #_"ResolvedJavaMethod" target, #_"ResolvedJavaMethod" original]
+    (defn- #_"InvokeNode" MethodHandleNode'getTargetInvokeNode-7 [#_"GraphAdder" adder, #_"MethodHandleAccessProvider$IntrinsicMethod" intrinsicMethod, #_"int" bci, #_"Stamp" returnStamp, #_"ValueNode*" originalArguments, #_"ResolvedJavaMethod" target, #_"ResolvedJavaMethod" original]
         (when (some? target)
             ;; In lambda forms we erase signature types to avoid resolving issues involving
             ;; class loaders. When we optimize a method handle invoke to a direct call
@@ -61139,7 +61015,7 @@ ZeroExtendNode'new-4
      ;
      ; @return invoke node for the {@link java.lang.invoke.MethodHandle} target
      ;;
-    (defn- #_"InvokeNode" MethodHandleNode'getInvokeBasicTarget-7 [#_"GraphAdder" adder, #_"MethodHandleAccessProvider$IntrinsicMethod" intrinsicMethod, #_"MethodHandleAccessProvider" methodHandleAccess, #_"ResolvedJavaMethod" original, #_"int" bci, #_"StampPair" returnStamp, #_"ValueNode*" arguments]
+    (defn- #_"InvokeNode" MethodHandleNode'getInvokeBasicTarget-7 [#_"GraphAdder" adder, #_"MethodHandleAccessProvider$IntrinsicMethod" intrinsicMethod, #_"MethodHandleAccessProvider" methodHandleAccess, #_"ResolvedJavaMethod" original, #_"int" bci, #_"Stamp" returnStamp, #_"ValueNode*" arguments]
         (let [
             #_"ValueNode" methodHandleNode (MethodHandleNode'getReceiver-1 arguments)
         ]
@@ -61157,7 +61033,7 @@ ZeroExtendNode'new-4
      ;
      ; @return invoke node for the member name target
      ;;
-    (defn- #_"InvokeNode" MethodHandleNode'getLinkToTarget-7 [#_"GraphAdder" adder, #_"MethodHandleAccessProvider$IntrinsicMethod" intrinsicMethod, #_"MethodHandleAccessProvider" methodHandleAccess, #_"ResolvedJavaMethod" original, #_"int" bci, #_"StampPair" returnStamp, #_"ValueNode*" arguments]
+    (defn- #_"InvokeNode" MethodHandleNode'getLinkToTarget-7 [#_"GraphAdder" adder, #_"MethodHandleAccessProvider$IntrinsicMethod" intrinsicMethod, #_"MethodHandleAccessProvider" methodHandleAccess, #_"ResolvedJavaMethod" original, #_"int" bci, #_"Stamp" returnStamp, #_"ValueNode*" arguments]
         (let [
             #_"ValueNode" memberNameNode (MethodHandleNode'getMemberName-1 arguments)
         ]
@@ -61178,7 +61054,7 @@ ZeroExtendNode'new-4
      ; @param arguments arguments to the original MethodHandle call
      ; @return a more direct invocation derived from the MethodHandle call or nil
      ;;
-    (defn #_"InvokeNode" MethodHandleNode'tryResolveTargetInvoke-7* [#_"GraphAdder" adder, #_"MethodHandleAccessProvider" methodHandleAccess, #_"MethodHandleAccessProvider$IntrinsicMethod" intrinsicMethod, #_"ResolvedJavaMethod" original, #_"int" bci, #_"StampPair" returnStamp & #_"ValueNode..." arguments]
+    (defn #_"InvokeNode" MethodHandleNode'tryResolveTargetInvoke-7* [#_"GraphAdder" adder, #_"MethodHandleAccessProvider" methodHandleAccess, #_"MethodHandleAccessProvider$IntrinsicMethod" intrinsicMethod, #_"ResolvedJavaMethod" original, #_"int" bci, #_"Stamp" returnStamp & #_"ValueNode..." arguments]
         (condp =? intrinsicMethod
             MethodHandleAccessProvider$IntrinsicMethod/INVOKE_BASIC
                 (MethodHandleNode'getInvokeBasicTarget-7 adder, intrinsicMethod, methodHandleAccess, original, bci, returnStamp, arguments)
@@ -61228,8 +61104,8 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns ReflectionGetCallerClassNode
-    (defn #_"ReflectionGetCallerClassNode" ReflectionGetCallerClassNode'new-5* [#_"InvokeKind" invokeKind, #_"ResolvedJavaMethod" targetMethod, #_"int" bci, #_"StampPair" returnStamp & #_"ValueNode..." arguments]
+(class-ns ReflectionGetCallerClassNode [MacroStateSplitNode, MacroNode, FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable, StateSplit, NodeWithState, Single, MemoryCheckpoint, MemoryNode, Canonicalizable, Lowerable]
+    (defn #_"ReflectionGetCallerClassNode" ReflectionGetCallerClassNode'new-5* [#_"InvokeKind" invokeKind, #_"ResolvedJavaMethod" targetMethod, #_"int" bci, #_"Stamp" returnStamp & #_"ValueNode..." arguments]
         (merge (ReflectionGetCallerClassNode'class.) (apply MacroStateSplitNode'new-5* invokeKind, targetMethod, bci, returnStamp, arguments))
     )
 
@@ -61289,8 +61165,8 @@ ZeroExtendNode'new-4
 ;;;
  ; A helper class to allow elimination of byte code instrumentation that could interfere with escape analysis.
  ;;
-(class-ns VirtualizableInvokeMacroNode
-    (defn #_"VirtualizableInvokeMacroNode" VirtualizableInvokeMacroNode'new-5* [#_"InvokeKind" invokeKind, #_"ResolvedJavaMethod" targetMethod, #_"int" bci, #_"StampPair" returnStamp & #_"ValueNode..." arguments]
+(class-ns VirtualizableInvokeMacroNode [MacroStateSplitNode, MacroNode, FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable, StateSplit, NodeWithState, Single, MemoryCheckpoint, MemoryNode, Virtualizable]
+    (defn #_"VirtualizableInvokeMacroNode" VirtualizableInvokeMacroNode'new-5* [#_"InvokeKind" invokeKind, #_"ResolvedJavaMethod" targetMethod, #_"int" bci, #_"Stamp" returnStamp & #_"ValueNode..." arguments]
         (merge (VirtualizableInvokeMacroNode'class.) (apply MacroStateSplitNode'new-5* invokeKind, targetMethod, bci, returnStamp, arguments))
     )
 
@@ -61313,7 +61189,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Creates a memory barrier.
  ;;
-(class-ns MembarNode
+(class-ns MembarNode [FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, Single, MemoryCheckpoint, MemoryNode]
     (§ intrinsic! #_"void" MembarNode'memoryBarrier-1 [#_"int" barriers])
 
     #_intrinsifier
@@ -61348,7 +61224,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns MemoryAnchorNode
+(class-ns MemoryAnchorNode [FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, MemoryNode, Canonicalizable]
     (defn #_"MemoryAnchorNode" MemoryAnchorNode'new-0 []
         (merge (MemoryAnchorNode'class.) (FixedWithNextNode'new-1 VoidStamp'instance))
     )
@@ -61369,7 +61245,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns PrefetchAllocateNode
+(class-ns PrefetchAllocateNode [FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable]
     (§ intrinsic! #_"void" PrefetchAllocateNode'prefetch-1 [#_"Address" address])
 
     #_intrinsifier
@@ -61393,7 +61269,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Access the value of a specific register.
  ;;
-(class-ns ReadRegisterNode
+(class-ns ReadRegisterNode [FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable]
     (§ intrinsic! #_"Word" ReadRegisterNode'registerAsWord-3 [#_"Register" register, #_"boolean" directUse, #_"boolean" incoming])
 
     #_intrinsifier
@@ -61442,7 +61318,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns SnippetAnchorNode
+(class-ns SnippetAnchorNode [FixedWithNextNode, FixedNode, ValueNode, Node, Simplifiable, GuardingNode]
     (§ intrinsic! #_"GuardingNode" SnippetAnchorNode'anchor-0 [])
 
     #_intrinsifier
@@ -61466,7 +61342,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns SpillRegistersNode
+(class-ns SpillRegistersNode [FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable]
     #_unused
     (defn #_"SpillRegistersNode" SpillRegistersNode'new-0 []
         (merge (SpillRegistersNode'class.) (FixedWithNextNode'new-1 VoidStamp'instance))
@@ -61480,7 +61356,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns StoreHubNode
+(class-ns StoreHubNode [FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable]
     (§ intrinsic! #_"void" StoreHubNode'write-2 [#_"Object" object, #_"Object" value])
 
     #_intrinsifier
@@ -61515,7 +61391,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Node for a foreign call from within a stub.
  ;;
-(class-ns StubForeignCallNode
+(class-ns StubForeignCallNode [FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, Multi, MemoryCheckpoint, MemoryNode]
     (§ intrinsic! #_"void" StubForeignCallNode'newInstanceC-3 [#_"ForeignCallDescriptor" newInstanceC, #_"Word" thread, #_"KlassPointer" hub])
     (§ intrinsic! #_"void" StubForeignCallNode'newArrayC-4 [#_"ForeignCallDescriptor" newArrayC, #_"Word" thread, #_"KlassPointer" hub, #_"int" length])
 
@@ -61569,7 +61445,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns UnboxNode
+(class-ns UnboxNode [FixedWithNextNode, FixedNode, ValueNode, Node, Virtualizable, Lowerable, Unary #_"<ValueNode>", Canonicalizable]
     (defm UnboxNode Unary
         (#_"ValueNode" Unary'''getValue-1 [#_"UnboxNode" this]
             (:value this)
@@ -61652,7 +61528,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns UnsafeAccessNode
+(class-ns UnsafeAccessNode [FixedWithNextNode, FixedNode, ValueNode, Node, Canonicalizable]
     (defn #_"UnsafeAccessNode" UnsafeAccessNode'new-6 [#_"Stamp" stamp, #_"ValueNode" object, #_"ValueNode" offset, #_"JavaKind" accessKind, #_"LocationIdentity" locationIdentity, #_"boolean" forceAnyLocation]
         (merge (UnsafeAccessNode'class.) (FixedWithNextNode'new-1 stamp)
             (hash-map
@@ -61707,7 +61583,7 @@ ZeroExtendNode'new-4
  ; Load of a value from a location specified as an offset relative to an object. No nil-check is
  ; performed before the load.
  ;;
-(class-ns RawLoadNode
+(class-ns RawLoadNode [UnsafeAccessNode, FixedWithNextNode, FixedNode, ValueNode, Node, Canonicalizable, Lowerable, Virtualizable, Canonicalizable]
     (§ intrinsic! #_"Word" RawLoadNode'loadWordFromObjectIntrinsic-4 [#_"Object" object, #_"long" offset, #_"LocationIdentity" locationIdentity, #_"JavaKind" wordKind])
 
     (§ intrinsic! #_"KlassPointer" RawLoadNode'loadKlassFromObjectIntrinsic-4 [#_"Object" object, #_"long" offset, #_"LocationIdentity" locationIdentity, #_"JavaKind" wordKind])
@@ -61875,7 +61751,7 @@ ZeroExtendNode'new-4
  ; Store of a value at a location specified as an offset relative to an object. No nil-check is
  ; performed before the store.
  ;;
-(class-ns RawStoreNode
+(class-ns RawStoreNode [UnsafeAccessNode, FixedWithNextNode, FixedNode, ValueNode, Node, Canonicalizable, StateSplit, NodeWithState, Lowerable, Virtualizable, Single, MemoryCheckpoint, MemoryNode]
     (defn #_"RawStoreNode" RawStoreNode'new-8 [#_"ValueNode" object, #_"ValueNode" offset, #_"ValueNode" value, #_"JavaKind" accessKind, #_"LocationIdentity" locationIdentity, #_"boolean" needsBarrier, #_"FrameState" stateAfter, #_"boolean" forceAnyLocation]
         (merge (RawStoreNode'class.) (UnsafeAccessNode'new-6 VoidStamp'instance, object, offset, accessKind, locationIdentity, forceAnyLocation)
             (hash-map
@@ -61967,7 +61843,7 @@ ZeroExtendNode'new-4
 ;;;
  ; The ValueAnchor instruction keeps non-CFG (floating) nodes above a certain point in the graph.
  ;;
-(class-ns ValueAnchorNode
+(class-ns ValueAnchorNode [FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, Simplifiable, Virtualizable, AnchoringNode, GuardingNode]
     (defn #_"ValueAnchorNode" ValueAnchorNode'new-1 [#_"ValueNode" value]
         (merge (ValueAnchorNode'class.) (FixedWithNextNode'new-1 VoidStamp'instance)
             (hash-map
@@ -62035,7 +61911,7 @@ ZeroExtendNode'new-4
  ; Word#objectToUntrackedPointer and Word#toObject() operations. It has an impact on the pointer
  ; maps for the GC, so it must not be scheduled or optimized away.
  ;;
-(class-ns WordCastNode
+(class-ns WordCastNode [FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, Canonicalizable]
     (defn #_"WordCastNode" WordCastNode'new-2 [#_"Stamp" stamp, #_"ValueNode" input]
         (merge (WordCastNode'class.) (FixedWithNextNode'new-1 stamp)
             (hash-map
@@ -62111,7 +61987,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns WriteBarrier
+(class-ns WriteBarrier [FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable]
     (defn #_"WriteBarrier" WriteBarrier'new-0 []
         (merge (WriteBarrier'class.) (FixedWithNextNode'new-1 VoidStamp'instance))
     )
@@ -62124,7 +62000,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns ObjectWriteBarrier
+(class-ns ObjectWriteBarrier [WriteBarrier, FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable]
     (defn #_"ObjectWriteBarrier" ObjectWriteBarrier'new-3 [#_"AddressNode" address, #_"ValueNode" value, #_"boolean" precise?]
         (merge (ObjectWriteBarrier'class.) (WriteBarrier'new-0)
             (hash-map
@@ -62138,7 +62014,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns G1PostWriteBarrier
+(class-ns G1PostWriteBarrier [ObjectWriteBarrier, WriteBarrier, FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable]
     (defn #_"G1PostWriteBarrier" G1PostWriteBarrier'new-4 [#_"AddressNode" address, #_"ValueNode" value, #_"boolean" precise?, #_"boolean" always-nil?]
         (merge (G1PostWriteBarrier'class.) (ObjectWriteBarrier'new-3 address, value, precise?)
             (hash-map
@@ -62148,7 +62024,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns G1PreWriteBarrier
+(class-ns G1PreWriteBarrier [ObjectWriteBarrier, WriteBarrier, FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable, DeoptBefore, DeoptimizingNode, NodeWithState]
     (defn #_"G1PreWriteBarrier" G1PreWriteBarrier'new-4 [#_"AddressNode" address, #_"ValueNode" expectedObject, #_"boolean" doLoad, #_"boolean" nullCheck]
         (merge (G1PreWriteBarrier'class.) (ObjectWriteBarrier'new-3 address, expectedObject, true)
             (hash-map
@@ -62187,7 +62063,7 @@ ZeroExtendNode'new-4
  ; The return value of the read is passed to the snippet implementing the read barrier and
  ; consequently is added to the SATB queue if the concurrent marker is enabled.
  ;;
-(class-ns G1ReferentFieldReadBarrier
+(class-ns G1ReferentFieldReadBarrier [ObjectWriteBarrier, WriteBarrier, FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable]
     (defn #_"G1ReferentFieldReadBarrier" G1ReferentFieldReadBarrier'new-3 [#_"AddressNode" address, #_"ValueNode" expectedObject, #_"boolean" doLoad]
         (merge (G1ReferentFieldReadBarrier'class.) (ObjectWriteBarrier'new-3 address, expectedObject, true)
             (hash-map
@@ -62201,19 +62077,19 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns SerialWriteBarrier
+(class-ns SerialWriteBarrier [ObjectWriteBarrier, WriteBarrier, FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable]
     (defn #_"SerialWriteBarrier" SerialWriteBarrier'new-2 [#_"AddressNode" address, #_"boolean" precise?]
         (merge (SerialWriteBarrier'class.) (ObjectWriteBarrier'new-3 address, nil, precise?))
     )
 )
 
-(class-ns FloatingNode
+(class-ns FloatingNode [ValueNode, Node]
     (defn #_"FloatingNode" FloatingNode'new-1 [#_"Stamp" stamp]
         (merge (FloatingNode'class.) (ValueNode'new-1 stamp))
     )
 )
 
-(class-ns AbstractLocalNode
+(class-ns AbstractLocalNode [FloatingNode, ValueNode, Node]
     (defn #_"AbstractLocalNode" AbstractLocalNode'new-2 [#_"int" index, #_"Stamp" stamp]
         (merge (AbstractLocalNode'class.) (FloatingNode'new-1 stamp)
             (hash-map
@@ -62235,17 +62111,13 @@ ZeroExtendNode'new-4
 ;;;
  ; The Parameter instruction is a placeholder for an incoming argument to a function call.
  ;;
-(class-ns ParameterNode
-    (defn #_"ParameterNode" ParameterNode'new-2 [#_"int" index, #_"StampPair" stamp]
-        (merge (ParameterNode'class.) (AbstractLocalNode'new-2 index, (:trustedStamp stamp))
-            (hash-map
-                #_"Stamp" :uncheckedStamp (:uncheckedStamp stamp)
-            )
-        )
+(class-ns ParameterNode [AbstractLocalNode, FloatingNode, ValueNode, Node, IterableNodeType]
+    (defn #_"ParameterNode" ParameterNode'new-2 [#_"int" index, #_"Stamp" stamp]
+        (merge (ParameterNode'class.) (AbstractLocalNode'new-2 index, stamp))
     )
 )
 
-(class-ns AddressNode
+(class-ns AddressNode [FloatingNode, ValueNode, Node, IndirectCanonicalization]
     (defn #_"AddressNode" AddressNode'new-0 []
         (merge (AddressNode'class.) (FloatingNode'new-1 StampFactory'rawPointer))
     )
@@ -62254,7 +62126,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Represents an address of the form [base + index*scale + displacement]. Both base and index are optional.
  ;;
-(class-ns AMD64AddressNode
+(class-ns AMD64AddressNode [AddressNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, Simplifiable, LIRLowerable]
     (defn #_"AMD64AddressNode" AMD64AddressNode'new-2 [#_"ValueNode" base, #_"ValueNode" index]
         (merge (AMD64AddressNode'class.) (AddressNode'new-0)
             (hash-map
@@ -62368,7 +62240,7 @@ ZeroExtendNode'new-4
  ; Represents an address that is composed of a base and an offset. The base can be either a
  ; JavaKind#Object, a word-sized integer or another pointer. The offset must be a word-sized integer.
  ;;
-(class-ns OffsetAddressNode
+(class-ns OffsetAddressNode [AddressNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, Canonicalizable]
     (§ intrinsic! #_"Address" OffsetAddressNode'address-2 [#_"Object" base, #_"long" offset])
 
     #_intrinsifier
@@ -62428,7 +62300,7 @@ ZeroExtendNode'new-4
  ; Selects one object from a CommitAllocationNode. The object is identified by its
  ; VirtualObjectNode.
  ;;
-(class-ns AllocatedObjectNode
+(class-ns AllocatedObjectNode [FloatingNode, ValueNode, Node, Virtualizable, ArrayLengthProvider]
     (defn #_"AllocatedObjectNode" AllocatedObjectNode'new-1 [#_"VirtualObjectNode" virtualObject]
         (merge (AllocatedObjectNode'class.) (FloatingNode'new-1 (StampFactory'objectNonNull-1 (TypeReference'createExactTrusted-1 (VirtualObjectNode'''type-1 virtualObject))))
             (hash-map
@@ -62461,7 +62333,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns BinaryNode
+(class-ns BinaryNode [FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable]
     ;;;
      ; Creates a new BinaryNode instance.
      ;
@@ -62493,7 +62365,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns BinaryArithmeticNode #_"<OP>"
+(class-ns BinaryArithmeticNode #_"<OP>" [BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable]
     (defn #_"BinaryArithmeticNode" BinaryArithmeticNode'new-3 [#_"SerializableBinaryFunction<OP>" getOp, #_"ValueNode" x, #_"ValueNode" y]
         (merge (BinaryArithmeticNode'class.) (BinaryNode'new-3 (BinaryOp'''foldStamp-3 (#_"Function" .apply getOp, (ArithmeticOpTable'forStamp-1 (:stamp x))), (:stamp x), (:stamp y)), x, y)
             (hash-map
@@ -62719,7 +62591,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns AddNode
+(class-ns AddNode [BinaryArithmeticNode #_"<Add>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable, Binary #_"<ValueNode>", BinaryCommutative, Canonicalizable]
     (defn #_"AddNode" AddNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
         (merge (AddNode'class.) (BinaryArithmeticNode'new-3 :add, x, y))
     )
@@ -62816,7 +62688,7 @@ ZeroExtendNode'new-4
  ; Node representing an exact integer addition that will throw an ArithmeticException in
  ; case the addition would overflow the 32 bit range.
  ;;
-(class-ns IntegerAddExactNode
+(class-ns IntegerAddExactNode [AddNode, BinaryArithmeticNode #_"<Add>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable, Binary #_"<ValueNode>", BinaryCommutative, Canonicalizable, IntegerExactArithmeticNode, Lowerable]
     (defn #_"IntegerAddExactNode" IntegerAddExactNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
         (let [
             #_"IntegerAddExactNode" this (merge (IntegerAddExactNode'class.) (AddNode'new-2 x, y))
@@ -62931,7 +62803,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns AndNode
+(class-ns AndNode [BinaryArithmeticNode #_"<And>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable, Binary #_"<ValueNode>", BinaryCommutative, Canonicalizable]
     (defn #_"AndNode" AndNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
         (merge (AndNode'class.) (BinaryArithmeticNode'new-3 :and, x, y))
     )
@@ -63004,7 +62876,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns IntegerMulHighNode
+(class-ns IntegerMulHighNode [BinaryArithmeticNode #_"<MulHigh>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable, Binary #_"<ValueNode>", BinaryCommutative, Canonicalizable]
     (defn #_"IntegerMulHighNode" IntegerMulHighNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
         (merge (IntegerMulHighNode'class.) (BinaryArithmeticNode'new-3 :mulHigh, x, y))
     )
@@ -63056,7 +62928,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns MulNode
+(class-ns MulNode [BinaryArithmeticNode #_"<Mul>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable, Binary #_"<ValueNode>", BinaryCommutative, Canonicalizable]
     (defn #_"MulNode" MulNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
         (merge (MulNode'class.) (BinaryArithmeticNode'new-3 :mul, x, y))
     )
@@ -63186,7 +63058,7 @@ ZeroExtendNode'new-4
  ; Node representing an exact integer multiplication that will throw an ArithmeticException
  ; in case the addition would overflow the 32 bit range.
  ;;
-(class-ns IntegerMulExactNode
+(class-ns IntegerMulExactNode [MulNode, BinaryArithmeticNode #_"<Mul>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable, Binary #_"<ValueNode>", BinaryCommutative, Canonicalizable, IntegerExactArithmeticNode, Lowerable]
     (defn #_"IntegerMulExactNode" IntegerMulExactNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
         (let [
             #_"IntegerMulExactNode" this (merge (IntegerMulExactNode'class.) (MulNode'new-2 x, y))
@@ -63261,7 +63133,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns OrNode
+(class-ns OrNode [BinaryArithmeticNode #_"<Or>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable, Binary #_"<ValueNode>", BinaryCommutative, Canonicalizable]
     (defn #_"OrNode" OrNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
         (merge (OrNode'class.) (BinaryArithmeticNode'new-3 :or, x, y))
     )
@@ -63331,7 +63203,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns RemNode
+(class-ns RemNode [BinaryArithmeticNode #_"<Rem>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable, Lowerable]
     (defn #_"RemNode" RemNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
         (merge (RemNode'class.) (BinaryArithmeticNode'new-3 :rem, x, y))
     )
@@ -63361,7 +63233,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns SubNode
+(class-ns SubNode [BinaryArithmeticNode #_"<Sub>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable]
     (defn #_"SubNode" SubNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
         (merge (SubNode'class.) (BinaryArithmeticNode'new-3 :sub, x, y))
     )
@@ -63503,7 +63375,7 @@ ZeroExtendNode'new-4
  ; Node representing an exact integer substraction that will throw an ArithmeticException in
  ; case the addition would overflow the 32 bit range.
  ;;
-(class-ns IntegerSubExactNode
+(class-ns IntegerSubExactNode [SubNode, BinaryArithmeticNode #_"<Sub>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable, IntegerExactArithmeticNode, Lowerable]
     #_unused
     (defn #_"IntegerSubExactNode" IntegerSubExactNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
         (let [
@@ -63566,7 +63438,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns UnsignedMulHighNode
+(class-ns UnsignedMulHighNode [BinaryArithmeticNode #_"<UMulHigh>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable, Binary #_"<ValueNode>", BinaryCommutative, Canonicalizable]
     (defn #_"UnsignedMulHighNode" UnsignedMulHighNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
         (merge (UnsignedMulHighNode'class.) (BinaryArithmeticNode'new-3 :umulHigh, x, y))
     )
@@ -63618,7 +63490,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns XorNode
+(class-ns XorNode [BinaryArithmeticNode #_"<Xor>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable, Binary #_"<ValueNode>", BinaryCommutative, Canonicalizable]
     (defn #_"XorNode" XorNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
         (merge (XorNode'class.) (BinaryArithmeticNode'new-3 :xor, x, y))
     )
@@ -63686,7 +63558,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Returns -1, 0, or 1 if either x < y, x == y, or x > y.
  ;;
-(class-ns NormalizeCompareNode
+(class-ns NormalizeCompareNode [BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable, IterableNodeType]
     (defn #_"NormalizeCompareNode" NormalizeCompareNode'new-3 [#_"ValueNode" x, #_"ValueNode" y, #_"JavaKind" kind]
         (merge (NormalizeCompareNode'class.) (BinaryNode'new-3 (StampFactory'forInteger-3k kind, -1, 1), x, y))
     )
@@ -63741,7 +63613,7 @@ ZeroExtendNode'new-4
 ;;;
  ; The ShiftOp class represents shift operations.
  ;;
-(class-ns ShiftNode #_"<OP>"
+(class-ns ShiftNode #_"<OP>" [BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable]
     ;;;
      ; Creates a new shift operation.
      ;
@@ -63791,7 +63663,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LeftShiftNode
+(class-ns LeftShiftNode [ShiftNode #_"<Shl>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable]
     (defn #_"LeftShiftNode" LeftShiftNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
         (merge (LeftShiftNode'class.) (ShiftNode'new-3 :shl, x, y))
     )
@@ -63866,7 +63738,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns RightShiftNode
+(class-ns RightShiftNode [ShiftNode #_"<Shr>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable]
     (defn #_"RightShiftNode" RightShiftNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
         (merge (RightShiftNode'class.) (ShiftNode'new-3 :shr, x, y))
     )
@@ -63934,7 +63806,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns UnsignedRightShiftNode
+(class-ns UnsignedRightShiftNode [ShiftNode #_"<UShr>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable]
     (defn #_"UnsignedRightShiftNode" UnsignedRightShiftNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
         (merge (UnsignedRightShiftNode'class.) (ShiftNode'new-3 :ushr, x, y))
     )
@@ -64015,7 +63887,7 @@ ZeroExtendNode'new-4
  ; the if node's taken probability. Then the branch probability node will be removed. This node is
  ; intended primarily for snippets, so that they can define their fast and slow paths.
  ;;
-(class-ns BranchProbabilityNode
+(class-ns BranchProbabilityNode [FloatingNode, ValueNode, Node, Simplifiable, Lowerable]
     (def #_"double" BranchProbabilityNode'LIKELY_PROBABILITY 0.6)
     (§ def #_"double" BranchProbabilityNode'NOT_LIKELY_PROBABILITY (- 1.0 BranchProbabilityNode'LIKELY_PROBABILITY))
 
@@ -64125,7 +63997,7 @@ ZeroExtendNode'new-4
  ; to replace {@code _klass._java_mirror._klass} with {@code _klass}. The constant folding could be
  ; handled by ReadNode#canonicalizeRead(ValueNode, AddressNode, LocationIdentity, CanonicalizerTool).
  ;;
-(class-ns ClassGetHubNode
+(class-ns ClassGetHubNode [FloatingNode, ValueNode, Node, Lowerable, Canonicalizable, ConvertNode]
     (defn #_"ClassGetHubNode" ClassGetHubNode'new-1 [#_"ValueNode" clazz]
         (merge (ClassGetHubNode'class.) (FloatingNode'new-1 KlassPointerStamp'KLASS)
             (hash-map
@@ -64235,7 +64107,7 @@ ZeroExtendNode'new-4
  ; The ConditionalNode class represents a comparison that yields one of two (eagerly
  ; evaluated) values.
  ;;
-(class-ns ConditionalNode
+(class-ns ConditionalNode [FloatingNode, ValueNode, Node, Canonicalizable, LIRLowerable]
     (defn #_"ConditionalNode" ConditionalNode'new-3 [#_"LogicNode" condition, #_"ValueNode" trueValue, #_"ValueNode" falseValue]
         (merge (ConditionalNode'class.) (FloatingNode'new-1 (Stamp'''meet-2 (:stamp trueValue), (:stamp falseValue)))
             (hash-map
@@ -64437,7 +64309,7 @@ ZeroExtendNode'new-4
 ;;;
  ; The ConstantNode represents a {@link Constant constant}.
  ;;
-(class-ns ConstantNode
+(class-ns ConstantNode [FloatingNode, ValueNode, Node, LIRLowerable]
     (defn- #_"ConstantNode" ConstantNode'new-4 [#_"Constant" value, #_"Stamp" stamp, #_"int" stableDimension, #_"boolean" isDefaultStable]
         (merge (ConstantNode'class.) (FloatingNode'new-1 stamp)
             (hash-map
@@ -64739,7 +64611,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns FloatingAnchoredNode
+(class-ns FloatingAnchoredNode [FloatingNode, ValueNode, Node]
     (defn #_"FloatingAnchoredNode" FloatingAnchoredNode'new-2 [#_"Stamp" stamp, #_"AnchoringNode" anchor]
         (merge (FloatingAnchoredNode'class.) (FloatingNode'new-1 stamp)
             (hash-map
@@ -64766,7 +64638,7 @@ ZeroExtendNode'new-4
  ; maximum flexibility for the guard node and guarantees that deoptimization occurs only if the
  ; control flow would have reached the guarded node (without taking exceptions into account).
  ;;
-(class-ns GuardNode
+(class-ns GuardNode [FloatingAnchoredNode, FloatingNode, ValueNode, Node, Canonicalizable, GuardingNode, DeoptimizingGuard, StaticDeoptimizingNode, IterableNodeType]
     (defn #_"GuardNode" GuardNode'new-6 [#_"LogicNode" condition, #_"AnchoringNode" anchor, #_"DeoptimizationReason" reason, #_"DeoptimizationAction" action, #_"boolean" negated?, #_"JavaConstant" speculation]
         (merge (GuardNode'class.) (FloatingAnchoredNode'new-2 VoidStamp'instance, anchor)
             (hash-map
@@ -64846,7 +64718,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns FloatingGuardedNode
+(class-ns FloatingGuardedNode [FloatingNode, ValueNode, Node, GuardedNode]
     (defn #_"FloatingGuardedNode" FloatingGuardedNode'new-2 [#_"Stamp" stamp, #_"GuardingNode" guard]
         (merge (FloatingGuardedNode'class.) (FloatingNode'new-1 stamp)
             (hash-map
@@ -64869,7 +64741,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns FloatingAccessNode
+(class-ns FloatingAccessNode [FloatingGuardedNode, FloatingNode, ValueNode, Node, GuardedNode, Access, GuardedNode, HeapAccess, MemoryAccess]
     (defn #_"FloatingAccessNode" FloatingAccessNode'new-5 [#_"AddressNode" address, #_"LocationIdentity" location, #_"Stamp" stamp, #_"GuardingNode" guard, #_"BarrierType" barrierType]
         (merge (FloatingAccessNode'class.) (FloatingGuardedNode'new-2 stamp, guard)
             (hash-map
@@ -64910,7 +64782,7 @@ ZeroExtendNode'new-4
  ; A floating read of a value from memory specified in terms of an object base and an object
  ; relative location. This node does not nil-check the object.
  ;;
-(class-ns FloatingReadNode
+(class-ns FloatingReadNode [FloatingAccessNode, FloatingGuardedNode, FloatingNode, ValueNode, Node, GuardedNode, Access, GuardedNode, HeapAccess, MemoryAccess, LIRLowerableAccess, LIRLowerable, Access, GuardedNode, HeapAccess, Canonicalizable]
     #_unused
     (defn #_"FloatingReadNode" FloatingReadNode'new-4 [#_"AddressNode" address, #_"LocationIdentity" location, #_"MemoryNode" lastLocationAccess, #_"Stamp" stamp]
         (FloatingReadNode'new-6 address, location, lastLocationAccess, stamp, nil, BarrierType'NONE)
@@ -64996,7 +64868,7 @@ ZeroExtendNode'new-4
  ; input is as narrow or narrower than the PiNode's type. The PiNode, and therefore
  ; also the scheduling restriction enforced by the guard, will go away.
  ;;
-(class-ns PiNode
+(class-ns PiNode [FloatingGuardedNode, FloatingNode, ValueNode, Node, GuardedNode, LIRLowerable, Virtualizable, IterableNodeType, Canonicalizable, ValueProxy, LimitedValueProxy, Proxy]
     (defn #_"PiNode" PiNode'new-2 [#_"ValueNode" object, #_"Stamp" stamp]
         (PiNode'new-3 object, stamp, nil)
     )
@@ -65121,7 +64993,7 @@ ZeroExtendNode'new-4
  ; that reads the array length, such as an ArrayLengthNode, can be canonicalized based on
  ; this information.
  ;;
-(class-ns PiArrayNode
+(class-ns PiArrayNode [PiNode, FloatingGuardedNode, FloatingNode, ValueNode, Node, GuardedNode, LIRLowerable, Virtualizable, IterableNodeType, Canonicalizable, ValueProxy, LimitedValueProxy, Proxy, ArrayLengthProvider]
     (defm PiArrayNode ArrayLengthProvider
         (#_"ValueNode" ArrayLengthProvider'''length-1 [#_"PiArrayNode" this]
             (:length this)
@@ -65146,7 +65018,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns Placeholder
+(class-ns Placeholder [FloatingGuardedNode, FloatingNode, ValueNode, Node, GuardedNode]
     ;;;
      ; Changes the stamp of an object inside a snippet to be the stamp of the node replaced by the snippet.
      ;;
@@ -65174,7 +65046,7 @@ ZeroExtendNode'new-4
  ; A placeholder node in a snippet that will be replaced with a PiArrayNode when the
  ; snippet is instantiated.
  ;;
-(class-ns ArrayPlaceholder
+(class-ns ArrayPlaceholder [Placeholder, FloatingGuardedNode, FloatingNode, ValueNode, Node, GuardedNode]
     ;;;
      ; Changes the stamp of an object inside a snippet to be the stamp of the node replaced by the snippet.
      ;;
@@ -65205,7 +65077,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Loads an object's class (i.e. this node can be created for {@code object.getClass()}).
  ;;
-(class-ns GetClassNode
+(class-ns GetClassNode [FloatingNode, ValueNode, Node, Lowerable, Canonicalizable, Virtualizable]
     #_unused
     (defn #_"GetClassNode" GetClassNode'new-2 [#_"Stamp" stamp, #_"ValueNode" object]
         (merge (GetClassNode'class.) (FloatingNode'new-1 stamp)
@@ -65258,7 +65130,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns HeapBaseNode
+(class-ns HeapBaseNode [FloatingNode, ValueNode, Node, LIRLowerable]
     (defn #_"HeapBaseNode" HeapBaseNode'new-1 [#_"Register" heapBaseRegister]
         (merge (HeapBaseNode'class.) (FloatingNode'new-1 StampFactory'rawPointer)
             (hash-map
@@ -65279,7 +65151,7 @@ ZeroExtendNode'new-4
  ; Read {@code Klass::_java_mirror} and incorporate non-nil type information into stamp. This is
  ; also used by ClassGetHubNode to eliminate chains of {@code klass._java_mirror._klass}.
  ;;
-(class-ns HubGetClassNode
+(class-ns HubGetClassNode [FloatingNode, ValueNode, Node, Lowerable, Canonicalizable, ConvertNode]
     (defn #_"HubGetClassNode" HubGetClassNode'new-1 [#_"ValueNode" hub]
         (merge (HubGetClassNode'class.) (FloatingNode'new-1 (StampFactory'objectNonNull-1 (TypeReference'create-1 (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, Class))))
             (hash-map
@@ -65375,7 +65247,7 @@ ZeroExtendNode'new-4
  ; Read {@code Klass::_layout_helper} and incorporate any useful stamp information based on any type
  ; information in {@code klass}.
  ;;
-(class-ns KlassLayoutHelperNode
+(class-ns KlassLayoutHelperNode [FloatingNode, ValueNode, Node, Canonicalizable, Lowerable]
     (defn #_"KlassLayoutHelperNode" KlassLayoutHelperNode'new-1 [#_"ValueNode" klass]
         (merge (KlassLayoutHelperNode'class.) (FloatingNode'new-1 (StampFactory'forKind-1 JavaKind/Int))
             (hash-map
@@ -65472,7 +65344,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Loads an object's hub. The object is not nil-checked by this operation.
  ;;
-(class-ns LoadHubNode
+(class-ns LoadHubNode [FloatingNode, ValueNode, Node, Lowerable, Canonicalizable, Virtualizable]
     (defn #_"ValueNode" LoadHubNode'create-1 [#_"ValueNode" value]
         (let [
             #_"Stamp" stamp KlassPointerStamp'KLASS_NON_NULL
@@ -65540,7 +65412,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LogicNode
+(class-ns LogicNode [FloatingNode, ValueNode, Node, IndirectCanonicalization]
     (defn #_"LogicNode" LogicNode'new-0 []
         (merge (LogicNode'class.) (FloatingNode'new-1 VoidStamp'instance))
     )
@@ -65581,7 +65453,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns BinaryOpLogicNode
+(class-ns BinaryOpLogicNode [LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, LIRLowerable, Binary #_"<ValueNode>", Canonicalizable]
     (defn #_"BinaryOpLogicNode" BinaryOpLogicNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
         (merge (BinaryOpLogicNode'class.) (LogicNode'new-0)
             (hash-map
@@ -65624,7 +65496,7 @@ ZeroExtendNode'new-4
  ; The ClassIsAssignableFromNode represents a type check against Class instead of against instances.
  ; This is used, for instance, to intrinsify Class#isAssignableFrom(Class).
  ;;
-(class-ns ClassIsAssignableFromNode
+(class-ns ClassIsAssignableFromNode [BinaryOpLogicNode, LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, LIRLowerable, Binary #_"<ValueNode>", Canonicalizable, Lowerable]
     #_unused
     (defn #_"ClassIsAssignableFromNode" ClassIsAssignableFromNode'new-2 [#_"ValueNode" thisClass, #_"ValueNode" otherClass]
         (merge (ClassIsAssignableFromNode'class.) (BinaryOpLogicNode'new-2 thisClass, otherClass))
@@ -65669,7 +65541,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns CompareNode
+(class-ns CompareNode [BinaryOpLogicNode, LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, LIRLowerable, Binary #_"<ValueNode>", Canonicalizable]
     ;;;
      ; Constructs a new Compare instruction.
      ;
@@ -65757,7 +65629,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns IntegerEqualsNode
+(class-ns IntegerEqualsNode [CompareNode, BinaryOpLogicNode, LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, LIRLowerable, Binary #_"<ValueNode>", Canonicalizable, Binary #_"<ValueNode>", BinaryCommutative, Canonicalizable]
     (def- #_"IntegerEqualsOp" IntegerEqualsNode'OP (§ soon IntegerEqualsOp'new-0))
 
     (defn #_"IntegerEqualsNode" IntegerEqualsNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
@@ -65828,7 +65700,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Common super-class for "a < b" comparisons both signed and unsigned.
  ;;
-(class-ns IntegerLowerThanNode
+(class-ns IntegerLowerThanNode [CompareNode, BinaryOpLogicNode, LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, LIRLowerable, Binary #_"<ValueNode>", Canonicalizable]
     (defn #_"IntegerLowerThanNode" IntegerLowerThanNode'new-3 [#_"ValueNode" x, #_"ValueNode" y, #_"LowerOp" op]
         (merge (IntegerLowerThanNode'class.) (CompareNode'new-3 (LowerOp'''getCondition-1 op), x, y)
             (hash-map
@@ -65887,7 +65759,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns IntegerBelowNode
+(class-ns IntegerBelowNode [IntegerLowerThanNode, CompareNode, BinaryOpLogicNode, LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, LIRLowerable, Binary #_"<ValueNode>", Canonicalizable]
     (def- #_"BelowOp" IntegerBelowNode'OP (§ soon BelowOp'new-0))
 
     (defn #_"IntegerBelowNode" IntegerBelowNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
@@ -65913,7 +65785,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns IntegerLessThanNode
+(class-ns IntegerLessThanNode [IntegerLowerThanNode, CompareNode, BinaryOpLogicNode, LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, LIRLowerable, Binary #_"<ValueNode>", Canonicalizable]
     (def #_"LessThanOp" IntegerLessThanNode'OP (§ soon LessThanOp'new-0))
 
     (defn #_"IntegerLessThanNode" IntegerLessThanNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
@@ -65959,7 +65831,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns PointerEqualsNode
+(class-ns PointerEqualsNode [CompareNode, BinaryOpLogicNode, LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, LIRLowerable, Binary #_"<ValueNode>", Canonicalizable, Binary #_"<ValueNode>", BinaryCommutative, Canonicalizable]
     (def- #_"PointerEqualsOp" PointerEqualsNode'OP (§ soon PointerEqualsOp'new-0))
 
     (defn #_"PointerEqualsNode" PointerEqualsNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
@@ -66024,7 +65896,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns ObjectEqualsNode
+(class-ns ObjectEqualsNode [PointerEqualsNode, CompareNode, BinaryOpLogicNode, LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, LIRLowerable, Binary #_"<ValueNode>", Canonicalizable, Binary #_"<ValueNode>", BinaryCommutative, Canonicalizable, Virtualizable]
     (def- #_"ObjectEqualsOp" ObjectEqualsNode'OP (§ soon ObjectEqualsOp'new-0))
 
     (defn #_"ObjectEqualsNode" ObjectEqualsNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
@@ -66127,7 +65999,7 @@ ZeroExtendNode'new-4
  ; The InstanceOfDynamicNode represents a type check where the type being checked is not
  ; known at compile time. This is used, for instance, to intrinsify Class#isInstance(Object).
  ;;
-(class-ns InstanceOfDynamicNode
+(class-ns InstanceOfDynamicNode [BinaryOpLogicNode, LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, LIRLowerable, Binary #_"<ValueNode>", Canonicalizable, Lowerable]
     (defn #_"InstanceOfDynamicNode" InstanceOfDynamicNode'new-4 [#_"ValueNode" mirror, #_"ValueNode" object, #_"boolean" allow-nil?, #_"boolean" exact?]
         (merge (InstanceOfDynamicNode'class.) (BinaryOpLogicNode'new-2 mirror, object)
             (hash-map
@@ -66236,7 +66108,7 @@ ZeroExtendNode'new-4
  ; expression "(x & y) == 0", meaning that it will return true if (and only if) no bit is set in
  ; both x and y.
  ;;
-(class-ns IntegerTestNode
+(class-ns IntegerTestNode [BinaryOpLogicNode, LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, LIRLowerable, Binary #_"<ValueNode>", Canonicalizable, Binary #_"<ValueNode>", BinaryCommutative, Canonicalizable]
     (defn #_"IntegerTestNode" IntegerTestNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
         (merge (IntegerTestNode'class.) (BinaryOpLogicNode'new-2 x, y))
     )
@@ -66310,7 +66182,7 @@ ZeroExtendNode'new-4
 ;;;
  ; The LogicConstantNode represents a boolean constant.
  ;;
-(class-ns LogicConstantNode
+(class-ns LogicConstantNode [LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, LIRLowerable]
     (defn #_"LogicConstantNode" LogicConstantNode'new-1 [#_"boolean" value]
         (merge (LogicConstantNode'class.) (LogicNode'new-0)
             (hash-map
@@ -66379,7 +66251,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Logic node that negates its argument.
  ;;
-(class-ns LogicNegationNode
+(class-ns LogicNegationNode [LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, Unary #_"<LogicNode>", Canonicalizable]
     (defn #_"LogicNegationNode" LogicNegationNode'new-1 [#_"LogicNode" value]
         (merge (LogicNegationNode'class.) (LogicNode'new-0)
             (hash-map
@@ -66422,7 +66294,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns ShortCircuitOrNode
+(class-ns ShortCircuitOrNode [LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, IterableNodeType, Binary #_"<LogicNode>", Canonicalizable]
     (defn #_"ShortCircuitOrNode" ShortCircuitOrNode'new-5 [#_"LogicNode" x, #_"boolean" xNegated, #_"LogicNode" y, #_"boolean" yNegated, #_"double" shortCircuitProbability]
         (merge (ShortCircuitOrNode'class.) (LogicNode'new-0)
             (hash-map
@@ -66603,7 +66475,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns UnaryOpLogicNode
+(class-ns UnaryOpLogicNode [LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, LIRLowerable, Unary #_"<ValueNode>", Canonicalizable]
     (defm UnaryOpLogicNode Unary
         (#_"ValueNode" Unary'''getValue-1 [#_"UnaryOpLogicNode" this]
             (:value this)
@@ -66646,7 +66518,7 @@ ZeroExtendNode'new-4
 ;;;
  ; The InstanceOfNode represents an instanceof test.
  ;;
-(class-ns InstanceOfNode
+(class-ns InstanceOfNode [UnaryOpLogicNode, LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, LIRLowerable, Unary #_"<ValueNode>", Canonicalizable, Lowerable, Virtualizable]
     (defn #_"InstanceOfNode" InstanceOfNode'new-3 [#_"ObjectStamp" checkedStamp, #_"ValueNode" object, #_"AnchoringNode" anchor]
         (merge (InstanceOfNode'class.) (UnaryOpLogicNode'new-1 object)
             (hash-map
@@ -66777,7 +66649,7 @@ ZeroExtendNode'new-4
 ;;;
  ; An IsNullNode will be true if the supplied value is nil, and false if it is non-nil.
  ;;
-(class-ns IsNullNode
+(class-ns IsNullNode [UnaryOpLogicNode, LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, LIRLowerable, Unary #_"<ValueNode>", Canonicalizable, LIRLowerable, Virtualizable]
     (defn #_"IsNullNode" IsNullNode'new-1 [#_"ValueNode" object]
         (merge (IsNullNode'class.) (UnaryOpLogicNode'new-1 object))
     )
@@ -66851,7 +66723,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns MemoryMapNode
+(class-ns MemoryMapNode [FloatingNode, ValueNode, Node, MemoryMap, MemoryNode, LIRLowerable]
     (defn #_"MemoryMapNode" MemoryMapNode'new-1 [#_"EconomicMap<LocationIdentity, MemoryNode>" mmap]
         (let [
             #_"MemoryMapNode" this
@@ -66911,7 +66783,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns OpaqueNode
+(class-ns OpaqueNode [FloatingNode, ValueNode, Node, LIRLowerable]
     #_unused
     (defn #_"OpaqueNode" OpaqueNode'new-1 [#_"ValueNode" value]
         (merge (OpaqueNode'class.) (FloatingNode'new-1 (Stamp'''unrestricted-1 (:stamp value)))
@@ -66930,7 +66802,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns PhiNode
+(class-ns PhiNode [FloatingNode, ValueNode, Node, Canonicalizable]
     (defn #_"PhiNode" PhiNode'new-2 [#_"Stamp" stamp, #_"AbstractMergeNode" merge]
         (merge (PhiNode'class.) (FloatingNode'new-1 stamp)
             (hash-map
@@ -67068,7 +66940,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Guard PhiNodes merge guard dependencies at control flow merges.
  ;;
-(class-ns GuardPhiNode
+(class-ns GuardPhiNode [PhiNode, FloatingNode, ValueNode, Node, Canonicalizable, GuardingNode]
     (defn #_"GuardPhiNode" GuardPhiNode'new-1 [#_"AbstractMergeNode" merge]
         (merge (GuardPhiNode'class.) (PhiNode'new-2 VoidStamp'instance, merge)
             (hash-map
@@ -67082,7 +66954,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Memory PhiNodes merge memory dependencies at control flow merges.
  ;;
-(class-ns MemoryPhiNode
+(class-ns MemoryPhiNode [PhiNode, FloatingNode, ValueNode, Node, Canonicalizable, MemoryNode]
     (defn #_"MemoryPhiNode" MemoryPhiNode'new-2 [#_"AbstractMergeNode" merge, #_"LocationIdentity" locationIdentity]
         (merge (MemoryPhiNode'class.) (PhiNode'new-2 VoidStamp'instance, merge)
             (hash-map
@@ -67097,7 +66969,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Value PhiNodes merge data flow values at control flow merges.
  ;;
-(class-ns ValuePhiNode
+(class-ns ValuePhiNode [PhiNode, FloatingNode, ValueNode, Node, Canonicalizable, ArrayLengthProvider]
     (defn #_"ValuePhiNode" ValuePhiNode'new-2 [#_"Stamp" stamp, #_"AbstractMergeNode" merge]
         (merge (ValuePhiNode'class.) (PhiNode'new-2 stamp, merge)
             (hash-map
@@ -67158,7 +67030,7 @@ ZeroExtendNode'new-4
  ; Cast between Word and metaspace pointers exposed by the MetaspaceOpcode#FROM_POINTER
  ; and MetaspaceOpcode#TO_KLASS_POINTER operations.
  ;;
-(class-ns PointerCastNode
+(class-ns PointerCastNode [FloatingNode, ValueNode, Node, LIRLowerable]
     (defn #_"PointerCastNode" PointerCastNode'new-2 [#_"Stamp" stamp, #_"ValueNode" input]
         (merge (PointerCastNode'class.) (FloatingNode'new-1 stamp)
             (hash-map
@@ -67180,7 +67052,7 @@ ZeroExtendNode'new-4
  ; A proxy is inserted at loop exits for any value that is created inside the loop (i.e. was not
  ; live on entry to the loop) and is (potentially) used after the loop.
  ;;
-(class-ns ProxyNode
+(class-ns ProxyNode [FloatingNode, ValueNode, Node]
     (defn #_"ProxyNode" ProxyNode'new-2 [#_"Stamp" stamp, #_"LoopExitNode" proxyPoint]
         (merge (ProxyNode'class.) (FloatingNode'new-1 stamp)
             (hash-map
@@ -67199,7 +67071,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns GuardProxyNode
+(class-ns GuardProxyNode [ProxyNode, FloatingNode, ValueNode, Node, GuardingNode, Proxy, LIRLowerable, Canonicalizable]
     (defn #_"GuardProxyNode" GuardProxyNode'new-2 [#_"GuardingNode" value, #_"LoopExitNode" proxyPoint]
         (merge (GuardProxyNode'class.) (ProxyNode'new-2 VoidStamp'instance, proxyPoint)
             (hash-map
@@ -67230,7 +67102,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns ValueProxyNode
+(class-ns ValueProxyNode [ProxyNode, FloatingNode, ValueNode, Node, Canonicalizable, Virtualizable, ValueProxy, LimitedValueProxy, Proxy]
     (defn #_"ValueProxyNode" ValueProxyNode'new-2 [#_"ValueNode" value, #_"LoopExitNode" loopExit]
         (merge (ValueProxyNode'class.) (ProxyNode'new-2 (:stamp value), loopExit)
             (hash-map
@@ -67278,7 +67150,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns RandomSeedNode
+(class-ns RandomSeedNode [FloatingNode, ValueNode, Node, LIRLowerable]
     #_unused
     (defn #_"RandomSeedNode" RandomSeedNode'new-0 []
         (merge (RandomSeedNode'class.) (FloatingNode'new-1 (StampFactory'forKind-1 JavaKind/Int)))
@@ -67292,7 +67164,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns UnaryNode
+(class-ns UnaryNode [FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", Canonicalizable]
     (defm UnaryNode Unary
         (#_"ValueNode" Unary'''getValue-1 [#_"UnaryNode" this]
             (:value this)
@@ -67333,7 +67205,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns BitCountNode
+(class-ns BitCountNode [UnaryNode, FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", Canonicalizable, LIRLowerable]
     #_unused
     (defn #_"BitCountNode" BitCountNode'new-1 [#_"ValueNode" value]
         (merge (BitCountNode'class.) (UnaryNode'new-2 (BitCountNode'computeStamp-2 (:stamp value), value), value))
@@ -67369,7 +67241,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns CompressionNode
+(class-ns CompressionNode [UnaryNode, FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", Canonicalizable, ConvertNode, LIRLowerable]
     (defn #_"CompressionNode" CompressionNode'new-4 [#_"CompressionOp" op, #_"ValueNode" input, #_"Stamp" stamp, #_"CompressEncoding" encoding]
         (merge (CompressionNode'class.) (UnaryNode'new-2 stamp, input)
             (hash-map
@@ -67461,7 +67333,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns HotSpotCompressionNode
+(class-ns HotSpotCompressionNode [CompressionNode, UnaryNode, FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", Canonicalizable, ConvertNode, LIRLowerable]
     (defn #_"HotSpotCompressionNode" HotSpotCompressionNode'new-3 [#_"CompressionOp" op, #_"ValueNode" input, #_"CompressEncoding" encoding]
         (merge (HotSpotCompressionNode'class.) (CompressionNode'new-4 op, input, (HotSpotNarrowOopStamp'mkStamp-3 op, (:stamp input), encoding), encoding))
     )
@@ -67499,7 +67371,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Count the number of leading zeros using the {@code lzcntq} or {@code lzcntl} instructions.
  ;;
-(class-ns CountLeadingZerosNode
+(class-ns CountLeadingZerosNode [UnaryNode, FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", Canonicalizable, LIRLowerable]
     #_unused
     (defn #_"CountLeadingZerosNode" CountLeadingZerosNode'new-1 [#_"ValueNode" value]
         (merge (CountLeadingZerosNode'class.) (UnaryNode'new-2 (StampTool'stampForLeadingZeros-1 (:stamp value)), value))
@@ -67543,7 +67415,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Count the number of trailing zeros using the {@code tzcntq} or {@code tzcntl} instructions.
  ;;
-(class-ns CountTrailingZerosNode
+(class-ns CountTrailingZerosNode [UnaryNode, FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", Canonicalizable, LIRLowerable]
     #_unused
     (defn #_"CountTrailingZerosNode" CountTrailingZerosNode'new-1 [#_"ValueNode" value]
         (merge (CountTrailingZerosNode'class.) (UnaryNode'new-2 (CountTrailingZerosNode'computeStamp-2 (:stamp value), value), value))
@@ -67591,7 +67463,7 @@ ZeroExtendNode'new-4
 ;;;
  ; An IntegerConvert converts an integer to an integer of different width.
  ;;
-(class-ns IntegerConvertNode #_"<OP, REV>"
+(class-ns IntegerConvertNode #_"<OP, REV>" [UnaryNode, FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, ConvertNode, LIRLowerable, StampInverter]
     (defn #_"IntegerConvertNode" IntegerConvertNode'new-5 [#_"SerializableIntegerConvertFunction<OP>" getOp, #_"SerializableIntegerConvertFunction<REV>" getReverseOp, #_"int" inputBits, #_"int" resultBits, #_"ValueNode" input]
         (merge (IntegerConvertNode'class.) (UnaryNode'new-2 (IntegerConvertOp'''foldStamp-4 (#_"Function" .apply getOp, (ArithmeticOpTable'forStamp-1 (:stamp input))), inputBits, resultBits, (:stamp input)), input)
             (hash-map
@@ -67722,7 +67594,7 @@ ZeroExtendNode'new-4
 ;;;
  ; The NarrowNode converts an integer to a narrower integer.
  ;;
-(class-ns NarrowNode
+(class-ns NarrowNode [IntegerConvertNode #_"<Narrow, SignExtend>", UnaryNode, FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, ConvertNode, LIRLowerable, StampInverter]
     (defn #_"NarrowNode" NarrowNode'new-2 [#_"ValueNode" input, #_"int" resultBits]
         (NarrowNode'new-3 input, (PrimitiveStamp'getBits-1 (:stamp input)), resultBits)
     )
@@ -67825,7 +67697,7 @@ ZeroExtendNode'new-4
 ;;;
  ; The SignExtendNode converts an integer to a wider integer using sign extension.
  ;;
-(class-ns SignExtendNode
+(class-ns SignExtendNode [IntegerConvertNode #_"<SignExtend, Narrow>", UnaryNode, FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, ConvertNode, LIRLowerable, StampInverter]
     (defn #_"SignExtendNode" SignExtendNode'new-2 [#_"ValueNode" input, #_"int" resultBits]
         (SignExtendNode'new-3 input, (PrimitiveStamp'getBits-1 (:stamp input)), resultBits)
     )
@@ -67903,7 +67775,7 @@ ZeroExtendNode'new-4
 ;;;
  ; The ZeroExtendNode converts an integer to a wider integer using zero extension.
  ;;
-(class-ns ZeroExtendNode
+(class-ns ZeroExtendNode [IntegerConvertNode #_"<ZeroExtend, Narrow>", UnaryNode, FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, ConvertNode, LIRLowerable, StampInverter]
     (defn #_"ZeroExtendNode" ZeroExtendNode'new-2 [#_"ValueNode" input, #_"int" resultBits]
         (ZeroExtendNode'new-4 input, (PrimitiveStamp'getBits-1 (:stamp input)), resultBits, false)
     )
@@ -67999,7 +67871,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns UnaryArithmeticNode #_"<OP>"
+(class-ns UnaryArithmeticNode #_"<OP>" [UnaryNode, FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable]
     (defn #_"UnaryArithmeticNode" UnaryArithmeticNode'new-2 [#_"SerializableUnaryFunction<OP>" getOp, #_"ValueNode" value]
         (merge (UnaryArithmeticNode'class.) (UnaryNode'new-2 (UnaryOp'''foldStamp-2 (#_"Function" .apply getOp, (ArithmeticOpTable'forStamp-1 (:stamp value))), (:stamp value)), value)
             (hash-map
@@ -68042,7 +67914,7 @@ ZeroExtendNode'new-4
 ;;;
  ; The NegateNode node negates its operand.
  ;;
-(class-ns NegateNode
+(class-ns NegateNode [UnaryArithmeticNode #_"<Neg>", UnaryNode, FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable, StampInverter]
     (defn #_"NegateNode" NegateNode'new-1 [#_"ValueNode" value]
         (merge (NegateNode'class.) (UnaryArithmeticNode'new-2 :neg, value))
     )
@@ -68088,7 +67960,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Binary negation of long or integer values.
  ;;
-(class-ns NotNode
+(class-ns NotNode [UnaryArithmeticNode #_"<Not>", UnaryNode, FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable, LIRLowerable, StampInverter]
     (defn #_"NotNode" NotNode'new-1 [#_"ValueNode" value]
         (merge (NotNode'class.) (UnaryArithmeticNode'new-2 :not, value))
     )
@@ -68135,7 +68007,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Produces the platform dependent first or second half of a long or double value as an int.
  ;;
-(class-ns UnpackEndianHalfNode
+(class-ns UnpackEndianHalfNode [UnaryNode, FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", Canonicalizable, Lowerable]
     (defn #_"UnpackEndianHalfNode" UnpackEndianHalfNode'new-2 [#_"ValueNode" value, #_"boolean" firstHalf]
         (merge (UnpackEndianHalfNode'class.) (UnaryNode'new-2 (StampFactory'forKind-1 JavaKind/Int), value)
             (hash-map
@@ -68178,7 +68050,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Represents HotSpot values that may change after compilation.
  ;;
-(class-ns VMConfigNode
+(class-ns VMConfigNode [FloatingNode, ValueNode, Node, LIRLowerable, Canonicalizable]
     (§ intrinsic! #_"boolean" VMConfigNode'areConfigValuesConstant-0 [])
 
     #_intrinsifier
@@ -68235,7 +68107,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns VarargsPlaceholderNode
+(class-ns VarargsPlaceholderNode [FloatingNode, ValueNode, Node, ArrayLengthProvider]
     (defn #_"VarargsPlaceholderNode" VarargsPlaceholderNode'new-1 [#_"Varargs" varargs]
         (merge (VarargsPlaceholderNode'class.) (FloatingNode'new-1 (StampFactory'objectNonNull-1 (TypeReference'createExactTrusted-1 (#_"ResolvedJavaType" .getArrayClass (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, (:componentType varargs))))))
             (hash-map
@@ -68255,7 +68127,7 @@ ZeroExtendNode'new-4
  ; This node describes one locking scope; it ties the monitor enter, monitor exit and the frame states together.
  ; It is thus referenced from the MonitorEnterNode, from the MonitorExitNode and from the FrameState.
  ;;
-(class-ns MonitorIdNode
+(class-ns MonitorIdNode [ValueNode, Node, IterableNodeType, LIRLowerable]
     (defn #_"MonitorIdNode" MonitorIdNode'new-1 [#_"int" lockDepth]
         (merge (MonitorIdNode'class.) (ValueNode'new-1 VoidStamp'instance)
             (hash-map
@@ -68276,13 +68148,13 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns TwoSlotMarker
+(class-ns TwoSlotMarker [ValueNode, Node]
     (defn #_"TwoSlotMarker" TwoSlotMarker'new-0 []
         (merge (TwoSlotMarker'class.) (ValueNode'new-1 (StampFactory'forKind-1 JavaKind/Illegal)))
     )
 )
 
-(class-ns VirtualObjectNode
+(class-ns VirtualObjectNode [ValueNode, Node, LIRLowerable, IterableNodeType]
     (defn #_"VirtualObjectNode" VirtualObjectNode'new-2 [#_"ResolvedJavaType" type, #_"boolean" hasIdentity]
         (merge (VirtualObjectNode'class.) (ValueNode'new-1 (StampFactory'objectNonNull-1 (TypeReference'createExactTrusted-1 type)))
             (hash-map
@@ -68320,7 +68192,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns VirtualArrayNode
+(class-ns VirtualArrayNode [VirtualObjectNode, ValueNode, Node, LIRLowerable, IterableNodeType, ArrayLengthProvider]
     (defn #_"VirtualArrayNode" VirtualArrayNode'new-2 [#_"ResolvedJavaType" componentType, #_"int" length]
         (merge (VirtualArrayNode'class.) (VirtualObjectNode'new-2 (#_"ResolvedJavaType" .getArrayClass componentType), true)
             (hash-map
@@ -68401,7 +68273,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns VirtualInstanceNode
+(class-ns VirtualInstanceNode [VirtualObjectNode, ValueNode, Node, LIRLowerable, IterableNodeType]
     (defn #_"VirtualInstanceNode" VirtualInstanceNode'new-3 [#_"ResolvedJavaType" type, #_"ResolvedJavaField[]" fields, #_"boolean" hasIdentity]
         (merge (VirtualInstanceNode'class.) (VirtualObjectNode'new-2 type, hasIdentity)
             (hash-map
@@ -68462,7 +68334,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns VirtualBoxingNode
+(class-ns VirtualBoxingNode [VirtualInstanceNode, VirtualObjectNode, ValueNode, Node, LIRLowerable, IterableNodeType]
     (defn #_"VirtualBoxingNode" VirtualBoxingNode'new-2 [#_"ResolvedJavaType" type, #_"JavaKind" boxingKind]
         (merge (VirtualBoxingNode'class.) (VirtualInstanceNode'new-2 type, false)
             (hash-map
@@ -68486,13 +68358,13 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns VirtualState
+(class-ns VirtualState [Node]
     (defn #_"VirtualState" VirtualState'new-0 []
         (merge (VirtualState'class.) (Node'new-0))
     )
 )
 
-(class-ns EscapeObjectState
+(class-ns EscapeObjectState [VirtualState, Node]
     (defn #_"EscapeObjectState" EscapeObjectState'new-1 [#_"VirtualObjectNode" object]
         (merge (EscapeObjectState'class.) (VirtualState'new-0)
             (hash-map
@@ -68517,7 +68389,7 @@ ZeroExtendNode'new-4
 ;;;
  ; This class encapsulated the materialized state of an escape analyzed object.
  ;;
-(class-ns MaterializedObjectState
+(class-ns MaterializedObjectState [EscapeObjectState, VirtualState, Node]
     (defn #_"MaterializedObjectState" MaterializedObjectState'new-2 [#_"VirtualObjectNode" object, #_"ValueNode" materializedValue]
         (merge (MaterializedObjectState'class.) (EscapeObjectState'new-1 object)
             (hash-map
@@ -68542,7 +68414,7 @@ ZeroExtendNode'new-4
 ;;;
  ; This class encapsulated the virtual state of an escape analyzed object.
  ;;
-(class-ns VirtualObjectState
+(class-ns VirtualObjectState [EscapeObjectState, VirtualState, Node]
     (defn #_"VirtualObjectState" VirtualObjectState'new-2 [#_"VirtualObjectNode" object, #_"ValueNode*" values]
         (merge (VirtualObjectState'class.) (EscapeObjectState'new-1 object)
             (hash-map
@@ -68574,7 +68446,7 @@ ZeroExtendNode'new-4
  ;
  ; This can be used as debug or deoptimization information.
  ;;
-(class-ns FrameState
+(class-ns FrameState [VirtualState, Node, IterableNodeType]
     ;;;
      ; Marker value for the second slot of values that occupy two local variable or expression stack slots.
      ; The marker value is used by the bytecode parser, but replaced with nil in the #values of the FrameState.
@@ -68938,13 +68810,13 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns NodeIteratorClosure #_"<T>"
+(class-ns NodeIteratorClosure #_"<T>" []
     (defn #_"NodeIteratorClosure" NodeIteratorClosure'new-0 []
         (NodeIteratorClosure'class.)
     )
 )
 
-(class-ns ComputeLoopFrequenciesClosure
+(class-ns ComputeLoopFrequenciesClosure [NodeIteratorClosure #_"<Double>"]
     (defn- #_"ComputeLoopFrequenciesClosure" ComputeLoopFrequenciesClosure'new-0 []
         (merge (ComputeLoopFrequenciesClosure'class.) (NodeIteratorClosure'new-0))
     )
@@ -69002,7 +68874,7 @@ ZeroExtendNode'new-4
     (§ def #_"ComputeLoopFrequencyPhase" ComputeLoopFrequenciesClosure'PHASE_INSTANCE (ComputeLoopFrequencyPhase'new-0))
 )
 
-(class-ns FloatingReadClosure
+(class-ns FloatingReadClosure [NodeIteratorClosure #_"<MemoryMap0>"]
     (defn #_"FloatingReadClosure" FloatingReadClosure'new-3 [#_"EconomicMap<LoopBeginNode, EconomicSet<LocationIdentity>>" modifiedInLoops, #_"boolean" createFloatingReads, #_"boolean" createMemoryMapNodes]
         (merge (FloatingReadClosure'class.) (NodeIteratorClosure'new-0)
             (hash-map
@@ -69166,7 +69038,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns FrameStateAssignmentClosure
+(class-ns FrameStateAssignmentClosure [NodeIteratorClosure #_"<FrameState>"]
     (defn #_"FrameStateAssignmentClosure" FrameStateAssignmentClosure'new-0 []
         (merge (FrameStateAssignmentClosure'class.) (NodeIteratorClosure'new-0))
     )
@@ -69245,7 +69117,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns NodeLoopInfo #_"<T>"
+(class-ns NodeLoopInfo #_"<T>" []
     (defn #_"NodeLoopInfo" NodeLoopInfo'new-2 [#_"int" endCount, #_"int" exitCount]
         (merge (NodeLoopInfo'class.)
             (hash-map
@@ -69256,7 +69128,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns NodeMap #_"<T>"
+(class-ns NodeMap #_"<T>" [#_"EconomicMap" #_"<Node, T>"]
     (def- #_"int" NodeMap'MIN_REALLOC_SIZE 16)
 
     (defn #_"NodeMap" NodeMap'new-1g [#_"Graph" graph]
@@ -69447,7 +69319,7 @@ ZeroExtendNode'new-4
 ;;;
  ; A snapshot of the {@linkplain Graph#getNodeCount() live node count} in a graph.
  ;;
-(class-ns NodeMark
+(class-ns NodeMark []
     (defn #_"NodeMark" NodeMark'new-1 [#_"Graph" graph]
         (merge (NodeMark'class.)
             (hash-map
@@ -69476,7 +69348,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns NodeStack
+(class-ns NodeStack []
     (def- #_"int" NodeStack'DEFAULT_INITIAL_SIZE 8)
 
     (defn #_"NodeStack" NodeStack'new-0 []
@@ -69538,7 +69410,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns NodeUsageIterable
+(class-ns NodeUsageIterable [NodeIterable, #_"Iterable" #_"<Node>"]
     (defn #_"NodeUsageIterable" NodeUsageIterable'new-1 [#_"Node" node]
         (merge (NodeUsageIterable'class.)
             (hash-map
@@ -69597,7 +69469,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns NodeUsageIterator
+(class-ns NodeUsageIterator [#_"Iterator" #_"<Node>"]
     (defn #_"NodeUsageIterator" NodeUsageIterator''advance-1 [#_"NodeUsageIterator" this]
         (let [
             this (assoc this :current nil)
@@ -69649,7 +69521,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns NodeWorkList
+(class-ns NodeWorkList [#_"Iterable" #_"<Node>"]
     (defn #_"NodeWorkList" NodeWorkList'new-2 [#_"Graph" graph, #_"boolean" fill]
         (let [
             #_"NodeWorkList" this
@@ -69678,7 +69550,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns IterativeNodeWorkList
+(class-ns IterativeNodeWorkList [NodeWorkList, #_"Iterable" #_"<Node>"]
     (def- #_"int" IterativeNodeWorkList'EXPLICIT_BITMAP_THRESHOLD 10)
 
     (defn #_"IterativeNodeWorkList" IterativeNodeWorkList'new-3 [#_"Graph" graph, #_"boolean" fill, #_"int" iterationLimitPerNode]
@@ -69773,7 +69645,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns SingletonNodeWorkList
+(class-ns SingletonNodeWorkList [NodeWorkList, #_"Iterable" #_"<Node>"]
     (defn #_"SingletonNodeWorkList" SingletonNodeWorkList'new-1 [#_"Graph" graph]
         (merge (SingletonNodeWorkList'class.) (NodeWorkList'new-2 graph, false)
             (hash-map
@@ -69820,7 +69692,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns NullCheckOptimizer ;; PostAllocationPhase
+(class-ns NullCheckOptimizer [LIRPhase #_"<LIRPhaseContext>"] ;; PostAllocationPhase
     (defn #_"NullCheckOptimizer" NullCheckOptimizer'new-0 []
         (NullCheckOptimizer'class.)
     )
@@ -69859,7 +69731,7 @@ ZeroExtendNode'new-4
  ; It describes the fields or array elements (called "entries") and the lock count if the object is
  ; still virtual. If the object was materialized, it contains the current materialized value.
  ;;
-(class-ns ObjectState
+(class-ns ObjectState []
     (defn- #_"ObjectState" ObjectState'init-0 []
         (hash-map
             ;;;
@@ -70040,7 +69912,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns OperandModeAnnotation
+(class-ns OperandModeAnnotation []
     (defn #_"OperandModeAnnotation" OperandModeAnnotation'new-0 []
         (merge (OperandModeAnnotation'class.)
             (hash-map
@@ -70054,7 +69926,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns OperandSize
+(class-ns OperandSize []
     (§ enum OperandSize'BYTE
         (§ proxy #_"OperandSize" (OperandSize'new-2 1, AMD64Kind/BYTE)
             (#_"void" OperandSize'''emitImmediate-3 [#_"OperandSize" this, #_"Assembler" asm, #_"int" imm]
@@ -70106,7 +69978,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns OptimisticOptimizations
+(class-ns OptimisticOptimizations []
     (defn #_"OptimisticOptimizations" OptimisticOptimizations'new-1 [#_"Set<Optimization>" enabledOpts]
         (merge (OptimisticOptimizations'class.)
             (hash-map
@@ -70145,7 +70017,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns PhaseContext
+(class-ns PhaseContext []
     (defn #_"PhaseContext" PhaseContext'new-1 [#_"OptimisticOptimizations" optimisticOpts]
         (merge (PhaseContext'class.)
             (hash-map
@@ -70158,7 +70030,7 @@ ZeroExtendNode'new-4
 ;;;
  ; A compiler phase that can apply an ordered collection of phases to a graph.
  ;;
-(class-ns PhaseSuite
+(class-ns PhaseSuite [Phase]
     (defn #_"PhaseSuite" PhaseSuite'new-0 []
         (merge (PhaseSuite'class.)
             (hash-map
@@ -70225,7 +70097,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns HighTier
+(class-ns HighTier [PhaseSuite, Phase]
     (defn #_"HighTier" HighTier'new-0 []
         (let [
             #_"HighTier" this (merge (HighTier'class.) (PhaseSuite'new-0))
@@ -70272,7 +70144,7 @@ ZeroExtendNode'new-4
  ; A phase suite that applies canonicalization to a graph after all
  ; phases in the suite have been applied if any of the phases changed the graph.
  ;;
-(class-ns IncrementalCanonicalizerPhase
+(class-ns IncrementalCanonicalizerPhase [PhaseSuite, Phase]
     (defn #_"IncrementalCanonicalizerPhase" IncrementalCanonicalizerPhase'new-1 [#_"CanonicalizerPhase" canonicalizer]
         (merge (IncrementalCanonicalizerPhase'class.) (PhaseSuite'new-0)
             (hash-map
@@ -70309,7 +70181,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LowTier
+(class-ns LowTier [PhaseSuite, Phase]
     (defn #_"LowTier" LowTier'new-0 []
         (let [
             #_"LowTier" this (merge (LowTier'class.) (PhaseSuite'new-0))
@@ -70329,7 +70201,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns MidTier
+(class-ns MidTier [PhaseSuite, Phase]
     (defn #_"MidTier" MidTier'new-0 []
         (let [
             #_"MidTier" this (merge (MidTier'class.) (PhaseSuite'new-0))
@@ -70365,7 +70237,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns PhiInfoElement
+(class-ns PhiInfoElement []
     (defn #_"PhiInfoElement" PhiInfoElement'new-0 []
         (merge (PhiInfoElement'class.)
             (hash-map
@@ -70393,7 +70265,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns Plugins
+(class-ns Plugins []
     (defn #_"Plugins" Plugins'new-0 []
         (merge (Plugins'class.)
             (hash-map
@@ -70476,20 +70348,19 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"StampPair" Plugins''getOverridingStamp-4 [#_"Plugins" this, #_"GraphBuilder" b, #_"JavaType" type, #_"boolean" never-nil?]
+    (defn #_"Stamp" Plugins''getOverridingStamp-4 [#_"Plugins" this, #_"GraphBuilder" b, #_"JavaType" type, #_"boolean" never-nil?]
         (loop-when [#_"ISeq" s (seq (:typePlugins this))] (some? s)
             (or (TypePlugin'''interceptType-4 (first s), b, type, never-nil?)
                 (recur (next s))
             )
         )
-        nil
     )
 )
 
 ;;;
  ; Describes an edge slot for a NodeClass.
  ;;
-(class-ns Position
+(class-ns Position []
     (defn #_"Position" Position'new-3 [#_"Edges" edges, #_"int" index, #_"int" subIndex]
         (merge (Position'class.)
             (hash-map
@@ -70537,7 +70408,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns PositiveTypePredicate
+(class-ns PositiveTypePredicate [NodePredicate, #_"Predicate" #_"<Node>"]
     (defn #_"PositiveTypePredicate" PositiveTypePredicate'new-1 [#_"Class" type]
         (merge (PositiveTypePredicate'class.)
             (hash-map
@@ -70566,7 +70437,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns ProcessFrame
+(class-ns ProcessFrame []
     (defn #_"ProcessFrame" ProcessFrame'new-5 [#_"ProcessFrame" parent, #_"LoweringRound" round, #_"Block" block, #_"NodeBitMap" activeGuards, #_"AnchoringNode" anchor]
         (merge (ProcessFrame'class.)
             (hash-map
@@ -70616,7 +70487,7 @@ ZeroExtendNode'new-4
 ;;;
  ; This phase will make sure that the branch leading towards this deopt has 0.0 probability.
  ;;
-(class-ns PropagateDeoptimizeProbabilityPhase
+(class-ns PropagateDeoptimizeProbabilityPhase [Phase]
     (defn #_"PropagateDeoptimizeProbabilityPhase" PropagateDeoptimizeProbabilityPhase'new-0 []
         (PropagateDeoptimizeProbabilityPhase'class.)
     )
@@ -70692,7 +70563,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns RMEOptimization
+(class-ns RMEOptimization []
     (defn #_"RMEOptimization" RMEOptimization'new-1 [#_"FrameMap" frameMap]
         (merge (RMEOptimization'class.)
             (hash-map
@@ -71079,7 +70950,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Represents a range of integers from a start (inclusive) to an end (exclusive).
  ;;
-(class-ns Range
+(class-ns Range []
     (defn #_"boolean" Range''intersects-2 [#_"Range" this, #_"Range" r]
         (not= (Range''intersectsAt-2 this, r) -1)
     )
@@ -71156,7 +71027,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns RawConditionalEliminationVisitor
+(class-ns RawConditionalEliminationVisitor [RecursiveVisitor #_"<Integer>"]
     (defn #_"RawConditionalEliminationVisitor" RawConditionalEliminationVisitor'new-2 [#_"Graph" graph, #_"ScheduleResult" schedule]
         (merge (RawConditionalEliminationVisitor'class.)
             (hash-map
@@ -71535,7 +71406,7 @@ ZeroExtendNode'new-4
  ;
  ; An iterator of this type will not return nil values, unless edges are modified concurrently.
  ;;
-(class-ns RawEdgesIterator
+(class-ns RawEdgesIterator [#_"Iterator" #_"<Node>"]
     (defn #_"RawEdgesIterator" RawEdgesIterator'new-2 [#_"Node" node, #_"long" mask]
         (merge (RawEdgesIterator'class.)
             (hash-map
@@ -71635,7 +71506,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns ReadCacheEntry
+(class-ns ReadCacheEntry []
     (defn #_"ReadCacheEntry" ReadCacheEntry'new-5 [#_"LocationIdentity" identity, #_"ValueNode" object, #_"int" index, #_"JavaKind" kind, #_"boolean" overflowAccess]
         (merge (ReadCacheEntry'class.)
             (hash-map
@@ -71654,7 +71525,7 @@ ZeroExtendNode'new-4
  ; Rearrange {@link BinaryArithmeticNode#isAssociative() associative binary operations} so that
  ; invariant parts of the expression can be moved outside of the loop.
  ;;
-(class-ns ReassociateInvariantPhase
+(class-ns ReassociateInvariantPhase [Phase]
     (defn #_"ReassociateInvariantPhase" ReassociateInvariantPhase'new-0 []
         (ReassociateInvariantPhase'class.)
     )
@@ -71683,7 +71554,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Removes move instructions, where the destination value is already in place.
  ;;
-(class-ns RedundantMoveElimination ;; PostAllocationPhase
+(class-ns RedundantMoveElimination [LIRPhase #_"<LIRPhaseContext>"] ;; PostAllocationPhase
     (defn #_"RedundantMoveElimination" RedundantMoveElimination'new-0 []
         (RedundantMoveElimination'class.)
     )
@@ -71700,7 +71571,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns RefCount
+(class-ns RefCount []
     (defn #_"RefCount" RefCount'new-0 []
         (merge (RefCount'class.)
             (hash-map
@@ -71710,7 +71581,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns RegisterBackupPair
+(class-ns RegisterBackupPair []
     (defn #_"RegisterBackupPair" RegisterBackupPair'new-2 [#_"Register" register, #_"VirtualStackSlot" backupSlot]
         (merge (RegisterBackupPair'class.)
             (hash-map
@@ -71724,7 +71595,7 @@ ZeroExtendNode'new-4
 ;;;
  ; A set of interval lists, one per binding type.
  ;;
-(class-ns RegisterBindingLists
+(class-ns RegisterBindingLists []
     (defn #_"RegisterBindingLists" RegisterBindingLists'new-3 [#_"Interval" fixed, #_"Interval" any, #_"Interval" stack]
         (merge (RegisterBindingLists'class.)
             (hash-map
@@ -71837,7 +71708,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns RegisterMap
+(class-ns RegisterMap []
     (defn #_"RegisterMap" RegisterMap'new-1 [#_"Architecture" arch]
         (merge (RegisterMap'class.)
             (hash-map
@@ -71866,7 +71737,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns RemoveValueProxyPhase
+(class-ns RemoveValueProxyPhase [Phase]
     (defn #_"RemoveValueProxyPhase" RemoveValueProxyPhase'new-0 []
         (RemoveValueProxyPhase'class.)
     )
@@ -71893,7 +71764,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns Replacements
+(class-ns Replacements [InlineInvokePlugin]
     (defn #_"Replacements" Replacements'new-0 []
         (Replacements'class.)
     )
@@ -71990,7 +71861,7 @@ ZeroExtendNode'new-4
  ; Direct access to the bytecode of a ResolvedJavaMethod that will reflect any
  ; instrumentation and rewriting performed on the ResolvedJavaMethod.
  ;;
-(class-ns ResolvedJavaMethodBytecode
+(class-ns ResolvedJavaMethodBytecode [Bytecode]
     (defn #_"ResolvedJavaMethodBytecode" ResolvedJavaMethodBytecode'new-1 [#_"ResolvedJavaMethod" method]
         (merge (ResolvedJavaMethodBytecode'class.)
             (hash-map
@@ -72029,7 +71900,7 @@ ZeroExtendNode'new-4
 ;;;
  ; BytecodeProvider that returns ResolvedJavaMethodBytecode objects.
  ;;
-(class-ns ResolvedJavaMethodBytecodeProvider
+(class-ns ResolvedJavaMethodBytecodeProvider [BytecodeProvider]
     (defn- #_"ResolvedJavaMethodBytecodeProvider" ResolvedJavaMethodBytecodeProvider'new-0 []
         (ResolvedJavaMethodBytecodeProvider'class.)
     )
@@ -72046,7 +71917,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns ReturnToCallerData
+(class-ns ReturnToCallerData []
     (defn #_"ReturnToCallerData" ReturnToCallerData'new-2 [#_"ValueNode" returnValue, #_"FixedWithNextNode" beforeReturnNode]
         (merge (ReturnToCallerData'class.)
             (hash-map
@@ -72061,7 +71932,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns SaveCalleeSaveRegisters ;; PreAllocationPhase
+(class-ns SaveCalleeSaveRegisters [LIRPhase #_"<LIRPhaseContext>"] ;; PreAllocationPhase
     (defn #_"SaveCalleeSaveRegisters" SaveCalleeSaveRegisters'new-0 []
         (SaveCalleeSaveRegisters'class.)
     )
@@ -72139,7 +72010,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Utility for emitting the instruction to save RBP.
  ;;
-(class-ns SaveRbp
+(class-ns SaveRbp []
     (defn #_"SaveRbp" SaveRbp'new-2 [#_"LIRGenerator" gen, #_"NoOp" placeholder]
         (merge (SaveRbp'class.)
             (hash-map
@@ -72178,7 +72049,7 @@ ZeroExtendNode'new-4
 ;;;
  ; A scaling factor used in the SIB addressing mode.
  ;;
-(class-ns Scale
+(class-ns Scale []
     (defn- #_"Scale" Scale'new-2 [#_"int" value, #_"int" shift]
         (merge (Scale'class.)
             (hash-map
@@ -72203,7 +72074,7 @@ ZeroExtendNode'new-4
     (defn #_"Scale" Scale'fromShift-1 [#_"int" shift] (case shift 0 Scale'Times1 1 Scale'Times2 2 Scale'Times4 3 Scale'Times8 nil))
 )
 
-(class-ns ScheduleInstance
+(class-ns ScheduleInstance []
     (def- #_"double" ScheduleInstance'IMPLICIT_NULL_CHECK_OPPORTUNITY_PROBABILITY_FACTOR 2)
     (defn #_"ScheduleInstance" ScheduleInstance'new-0 []
         (ScheduleInstance'new-1 nil)
@@ -72885,7 +72756,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns SchedulePhase
+(class-ns SchedulePhase [Phase]
     (defn #_"SchedulePhase" SchedulePhase'new-1 [#_"SchedulingStrategy" strategy]
         (merge (SchedulePhase'class.)
             (hash-map
@@ -72911,7 +72782,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns ScheduleResult
+(class-ns ScheduleResult []
     (defn #_"ScheduleResult" ScheduleResult'new-3 [#_"ControlFlowGraph" cfg, #_"NodeMap<Block>" nodeToBlockMap, #_"BlockMap<List<Node>>" blockToNodesMap]
         (merge (ScheduleResult'class.)
             (hash-map
@@ -72927,7 +72798,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns ScheduledNodeIterator
+(class-ns ScheduledNodeIterator []
     (defn #_"ScheduledNodeIterator" ScheduledNodeIterator'new-0 []
         (merge (ScheduledNodeIterator'class.)
             (hash-map
@@ -72991,7 +72862,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns FixReadsClosure
+(class-ns FixReadsClosure [ScheduledNodeIterator]
     (defn #_"FixReadsClosure" FixReadsClosure'new-0 []
         (merge (FixReadsClosure'class.) (ScheduledNodeIterator'new-0))
     )
@@ -73024,7 +72895,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LowerGuards
+(class-ns LowerGuards [ScheduledNodeIterator]
     (defn #_"LowerGuards" LowerGuards'new-1 [#_"Block" block]
         (merge (LowerGuards'class.) (ScheduledNodeIterator'new-0)
             (hash-map
@@ -73086,7 +72957,7 @@ ZeroExtendNode'new-4
  ; It does not include child loops, i.e. the iteration in #process(NodeWorkList)
  ; explicitly excludes the nodes of child loops.
  ;;
-(class-ns Scope
+(class-ns Scope []
     (defn #_"Scope" Scope'new-3 [#_"ComputeInliningRelevance" relevance, #_"FixedNode" start, #_"Scope" parent]
         (merge (Scope'class.)
             (hash-map
@@ -73163,7 +73034,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns SimpleStackSlotAllocator ;; AllocationPhase
+(class-ns SimpleStackSlotAllocator [LIRPhase #_"<LIRPhaseContext>"] ;; AllocationPhase
     (defn #_"SimpleStackSlotAllocator" SimpleStackSlotAllocator'new-0 []
         (SimpleStackSlotAllocator'class.)
     )
@@ -73227,7 +73098,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns SnippetInfo
+(class-ns SnippetInfo []
     (defn #_"SnippetInfo" SnippetInfo'new-2 [#_"ResolvedJavaMethod" method, #_"LocationIdentity[]" privateLocations]
         (merge (SnippetInfo'class.)
             (hash-map
@@ -73254,7 +73125,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns EagerSnippetInfo
+(class-ns EagerSnippetInfo [SnippetInfo]
     (defn #_"EagerSnippetInfo" EagerSnippetInfo'new-2 [#_"ResolvedJavaMethod" method, #_"LocationIdentity[]" privateLocations]
         (merge (EagerSnippetInfo'class.) (SnippetInfo'new-2 method, privateLocations)
             (hash-map
@@ -73270,7 +73141,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LazySnippetInfo
+(class-ns LazySnippetInfo [SnippetInfo]
     (defn #_"LazySnippetInfo" LazySnippetInfo'new-2 [#_"ResolvedJavaMethod" method, #_"LocationIdentity[]" privateLocations]
         (merge (LazySnippetInfo'class.) (SnippetInfo'new-2 method, privateLocations)
             (hash-map
@@ -73293,7 +73164,7 @@ ZeroExtendNode'new-4
  ; A snippet template is a graph created by parsing a snippet method and then specialized by binding
  ; constants to the snippet's ConstantParameter parameters.
  ;;
-(class-ns SnippetTemplate
+(class-ns SnippetTemplate []
     ;; These values must be compared with equals() not '==' to support replay compilation.
     (def- #_"Object" SnippetTemplate'UNUSED_PARAMETER "UNUSED_PARAMETER")
     (def- #_"Object" SnippetTemplate'CONSTANT_PARAMETER "CONSTANT_PARAMETER")
@@ -73399,7 +73270,7 @@ ZeroExtendNode'new-4
                                 ]
                                     (dotimes [#_"int" j length]
                                         ;; use a decimal friendly numbering make it more obvious how values map
-                                        (aset params j (Graph''add-2 snippetCopy, (ParameterNode'new-2 (+ (* (inc i) 10000) j), (StampPair'new-2 (:stamp varargs), nil))))
+                                        (aset params j (Graph''add-2 snippetCopy, (ParameterNode'new-2 (+ (* (inc i) 10000) j), (:stamp varargs))))
                                     )
                                     (aset (:parameters this) i params)
 
@@ -74018,7 +73889,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns StackInterval
+(class-ns StackInterval []
     (def- #_"int" StackInterval'INVALID_START Integer/MAX_VALUE)
     (def- #_"int" StackInterval'INVALID_END Integer/MIN_VALUE)
 
@@ -74070,7 +73941,7 @@ ZeroExtendNode'new-4
  ; Note: this phase must be inserted <b>after</b> RedundantMoveElimination phase because
  ; AMD64MultiStackMove are not probably detected.
  ;;
-(class-ns StackMoveOptimizationPhase ;; PostAllocationPhase
+(class-ns StackMoveOptimizationPhase [LIRPhase #_"<LIRPhaseContext>"] ;; PostAllocationPhase
     (defn #_"StackMoveOptimizationPhase" StackMoveOptimizationPhase'new-0 []
         (StackMoveOptimizationPhase'class.)
     )
@@ -74146,7 +74017,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns StampElement
+(class-ns StampElement []
     (defn #_"StampElement" StampElement'new-2 [#_"Stamp" stamp, #_"StampElement" parent]
         (merge (StampElement'class.)
             (hash-map
@@ -74157,7 +74028,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns Stamp
+(class-ns Stamp []
     (defn #_"Stamp" Stamp'new-0 []
         (Stamp'class.)
     )
@@ -74217,7 +74088,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns AbstractPointerStamp
+(class-ns AbstractPointerStamp [Stamp]
     (defn #_"AbstractPointerStamp" AbstractPointerStamp'new-2 [#_"boolean" never-nil?, #_"boolean" always-nil?]
         (merge (AbstractPointerStamp'class.) (Stamp'new-0)
             (hash-map
@@ -74287,7 +74158,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns AbstractObjectStamp
+(class-ns AbstractObjectStamp [AbstractPointerStamp, Stamp]
     (defn #_"AbstractObjectStamp" AbstractObjectStamp'new-4 [#_"ResolvedJavaType" type, #_"boolean" exactType, #_"boolean" never-nil?, #_"boolean" always-nil?]
         (merge (AbstractObjectStamp'class.) (AbstractPointerStamp'new-2 never-nil?, always-nil?)
             (hash-map
@@ -74549,7 +74420,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns NarrowOopStamp
+(class-ns NarrowOopStamp [AbstractObjectStamp, AbstractPointerStamp, Stamp]
     (defn #_"NarrowOopStamp" NarrowOopStamp'new-5 [#_"ResolvedJavaType" type, #_"boolean" exactType, #_"boolean" never-nil?, #_"boolean" always-nil?, #_"CompressEncoding" encoding]
         (merge (NarrowOopStamp'class.) (AbstractObjectStamp'new-4 type, exactType, never-nil?, always-nil?)
             (hash-map
@@ -74583,7 +74454,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns HotSpotNarrowOopStamp
+(class-ns HotSpotNarrowOopStamp [NarrowOopStamp, AbstractObjectStamp, AbstractPointerStamp, Stamp]
     (defn- #_"HotSpotNarrowOopStamp" HotSpotNarrowOopStamp'new-5 [#_"ResolvedJavaType" type, #_"boolean" exactType, #_"boolean" never-nil?, #_"boolean" always-nil?, #_"CompressEncoding" encoding]
         (merge (HotSpotNarrowOopStamp'class.) (NarrowOopStamp'new-5 type, exactType, never-nil?, always-nil?, encoding))
     )
@@ -74636,7 +74507,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns ObjectStamp
+(class-ns ObjectStamp [AbstractObjectStamp, AbstractPointerStamp, Stamp]
     (defn #_"ObjectStamp" ObjectStamp'new-4 [#_"ResolvedJavaType" type, #_"boolean" exactType, #_"boolean" never-nil?, #_"boolean" always-nil?]
         (merge (ObjectStamp'class.) (AbstractObjectStamp'new-4 type, exactType, never-nil?, always-nil?))
     )
@@ -74681,7 +74552,7 @@ ZeroExtendNode'new-4
  ; A stamp for Placeholder nodes which are only used in snippets. It is replaced by an
  ; actual stamp when the snippet is instantiated.
  ;;
-(class-ns PlaceholderStamp
+(class-ns PlaceholderStamp [ObjectStamp, AbstractObjectStamp, AbstractPointerStamp, Stamp]
     (defn- #_"PlaceholderStamp" PlaceholderStamp'new-0 []
         (merge (PlaceholderStamp'class.) (ObjectStamp'new-4 nil, false, false, false))
     )
@@ -74693,7 +74564,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns KlassPointerStamp
+(class-ns KlassPointerStamp [AbstractPointerStamp, Stamp]
     (defn- #_"KlassPointerStamp" KlassPointerStamp'new-3 [#_"boolean" never-nil?, #_"boolean" always-nil?, #_"CompressEncoding" encoding]
         (merge (KlassPointerStamp'class.) (AbstractPointerStamp'new-2 never-nil?, always-nil?)
             (hash-map
@@ -74807,7 +74678,7 @@ ZeroExtendNode'new-4
  ; Type describing pointers to raw memory. This stamp is used for example for direct pointers
  ; to fields or array elements.
  ;;
-(class-ns RawPointerStamp
+(class-ns RawPointerStamp [AbstractPointerStamp, Stamp]
     (defn #_"RawPointerStamp" RawPointerStamp'new-0 []
         (merge (RawPointerStamp'class.) (AbstractPointerStamp'new-2 false, false))
     )
@@ -74876,7 +74747,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Type describing values that support arithmetic operations.
  ;;
-(class-ns ArithmeticStamp
+(class-ns ArithmeticStamp [Stamp]
     (defn #_"ArithmeticStamp" ArithmeticStamp'new-1 [#_"ArithmeticOpTable" ops]
         (merge (ArithmeticStamp'class.) (Stamp'new-0)
             (hash-map
@@ -74897,7 +74768,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Type describing primitive values.
  ;;
-(class-ns PrimitiveStamp
+(class-ns PrimitiveStamp [ArithmeticStamp, Stamp]
     (defn #_"PrimitiveStamp" PrimitiveStamp'new-2 [#_"int" bits, #_"ArithmeticOpTable" ops]
         (merge (PrimitiveStamp'class.) (ArithmeticStamp'new-1 ops)
             (hash-map
@@ -74931,7 +74802,7 @@ ZeroExtendNode'new-4
  ; The description consists of (inclusive) lower and upper bounds and up (may be set) and down
  ; (always set) bit-masks.
  ;;
-(class-ns IntegerStamp
+(class-ns IntegerStamp [PrimitiveStamp, ArithmeticStamp, Stamp]
     (defn- #_"IntegerStamp" IntegerStamp'new-5 [#_"int" bits, #_"long" lowerBound, #_"long" upperBound, #_"long" downMask, #_"long" upMask]
         (merge (IntegerStamp'class.) (PrimitiveStamp'new-2 bits, IntegerStamp'OPS)
             (hash-map
@@ -76202,7 +76073,7 @@ ZeroExtendNode'new-4
  ; This stamp represents the type of the JavaKind#Illegal value in the second slot
  ; of JavaKind#Long values. It can only appear in framestates or virtual objects.
  ;;
-(class-ns IllegalStamp
+(class-ns IllegalStamp [Stamp]
     (defn- #_"IllegalStamp" IllegalStamp'new-0 []
         (merge (IllegalStamp'class.) (Stamp'new-0))
     )
@@ -76271,7 +76142,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Singleton stamp representing the value of type {@code void}.
  ;;
-(class-ns VoidStamp
+(class-ns VoidStamp [Stamp]
     (defn- #_"VoidStamp" VoidStamp'new-0 []
         (merge (VoidStamp'class.) (Stamp'new-0))
     )
@@ -76342,28 +76213,13 @@ ZeroExtendNode'new-4
     (§ def #_"VoidStamp" VoidStamp'instance (VoidStamp'new-0))
 )
 
-;;;
- ; A pair of stamp with one being the stamp that can be trusted and the other one being a guess that
- ; needs a dynamic check to be used.
- ;;
-(class-ns StampPair
-    (defn #_"StampPair" StampPair'new-2 [#_"Stamp" trustedStamp, #_"Stamp" uncheckedStamp]
-        (merge (StampPair'class.)
-            (hash-map
-                #_"Stamp" :trustedStamp trustedStamp
-                #_"Stamp" :uncheckedStamp uncheckedStamp
-            )
-        )
-    )
-)
-
-(class-ns Structure
+(class-ns Structure []
     (defn #_"Structure" Structure'new-0 []
         (Structure'class.)
     )
 )
 
-(class-ns IfStructure
+(class-ns IfStructure [Structure]
     (defn #_"IfStructure" IfStructure'new-0 []
         (merge (IfStructure'class.) (Structure'new-0)
             (hash-map
@@ -76375,7 +76231,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns Stub
+(class-ns Stub []
     ;;;
      ; Creates a new stub.
      ;
@@ -76425,7 +76281,7 @@ ZeroExtendNode'new-4
  ; around the call. As such, this stub saves and restores all allocatable registers.
  ; It also {@linkplain StubUtil#handlePendingException(Word, boolean) handles} any exceptions raised during the foreign call.
  ;;
-(class-ns ForeignCallStub
+(class-ns ForeignCallStub [Stub]
     (defn- #_"Class[]" ForeignCallStub''createTargetParameters-2 [#_"ForeignCallStub" this, #_"ForeignCallDescriptor" descriptor]
         (let [
             #_"Class[]" parameters (#_"Object" .clone (:argumentTypes descriptor))
@@ -76484,9 +76340,8 @@ ZeroExtendNode'new-4
             (dotimes [#_"int" i (count args)]
                 (let [
                     #_"ResolvedJavaType" type (#_"ResolvedJavaType" .resolve (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, (nth args i)), accessingClass)
-                    #_"StampPair" stamp (StampFactory'forDeclaredType-2 type, false)
                 ]
-                    (aset params i (GraphKit''add-2 kit, (ParameterNode'new-2 i, stamp)))
+                    (aset params i (GraphKit''add-2 kit, (ParameterNode'new-2 i, (StampFactory'forDeclaredType-2 type, false))))
                 )
             )
             params
@@ -76572,7 +76427,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns SnippetStub
+(class-ns SnippetStub [Stub, Snippets]
     ;;;
      ; Creates a new snippet stub.
      ;
@@ -76646,7 +76501,7 @@ ZeroExtendNode'new-4
  ; If this stub fails to refill the TLAB or allocate the object, it calls out to the HotSpot C++
  ; runtime to complete the allocation.
  ;;
-(class-ns NewArrayStub
+(class-ns NewArrayStub [SnippetStub, Stub, Snippets]
     (defn #_"NewArrayStub" NewArrayStub'new-1 [#_"ForeignCallLinkage" linkage]
         (merge (NewArrayStub'class.) (SnippetStub'new-2 "newArray", linkage))
     )
@@ -76709,7 +76564,7 @@ ZeroExtendNode'new-4
  ; If this stub fails to refill the TLAB or allocate the object, it calls out to the HotSpot C++
  ; runtime for to complete the allocation.
  ;;
-(class-ns NewInstanceStub
+(class-ns NewInstanceStub [SnippetStub, Stub, Snippets]
     (defn #_"NewInstanceStub" NewInstanceStub'new-1 [#_"ForeignCallLinkage" linkage]
         (merge (NewInstanceStub'class.) (SnippetStub'new-2 "newInstance", linkage))
     )
@@ -76900,7 +76755,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns SuccessorInfo
+(class-ns SuccessorInfo []
     (defn #_"SuccessorInfo" SuccessorInfo'new-1 [#_"int" blockSuccessorIndex]
         (merge (SuccessorInfo'class.)
             (hash-map
@@ -76911,7 +76766,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns Suites
+(class-ns Suites []
     (defn #_"PhaseSuite" Suites'createGraphBuilderSuite-0 []
         (let [
             #_"PhaseSuite" suite (PhaseSuite'new-0)
@@ -76958,7 +76813,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns SwitchStrategy
+(class-ns SwitchStrategy []
     (defn #_"SwitchStrategy" SwitchStrategy'new-1 [#_"double[]" keyProbabilities]
         (merge (SwitchStrategy'class.)
             (hash-map
@@ -77055,7 +76910,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Base class for strategies that rely on primitive integer keys.
  ;;
-(class-ns PrimitiveStrategy
+(class-ns PrimitiveStrategy [SwitchStrategy]
     (defn #_"PrimitiveStrategy" PrimitiveStrategy'new-2 [#_"double[]" keyProbabilities, #_"JavaConstant[]" keyConstants]
         (merge (PrimitiveStrategy'class.) (SwitchStrategy'new-1 keyProbabilities)
             (hash-map
@@ -77086,7 +76941,7 @@ ZeroExtendNode'new-4
 ;;;
  ; This strategy recursively subdivides the list of keys to create a binary search based on probabilities.
  ;;
-(class-ns BinaryStrategy
+(class-ns BinaryStrategy [PrimitiveStrategy, SwitchStrategy]
     (def- #_"double" BinaryStrategy'MIN_PROBABILITY 0.00001)
 
     (defn #_"BinaryStrategy" BinaryStrategy'new-2 [#_"double[]" keyProbabilities, #_"JavaConstant[]" keyConstants]
@@ -77239,7 +77094,7 @@ ZeroExtendNode'new-4
  ; This strategy divides the keys into ranges of successive keys with the same target and
  ; creates comparisons for these ranges.
  ;;
-(class-ns RangesStrategy
+(class-ns RangesStrategy [PrimitiveStrategy, SwitchStrategy]
     (defn #_"RangesStrategy" RangesStrategy'new-2 [#_"double[]" keyProbabilities, #_"JavaConstant[]" keyConstants]
         (let [
             #_"RangesStrategy" this
@@ -77264,29 +77119,29 @@ ZeroExtendNode'new-4
     (defm RangesStrategy SwitchStrategy
         (#_"void" SwitchStrategy'''run-2 [#_"RangesStrategy" this, #_"SwitchClosure" closure]
             (let [
-                #_"int'" depth (volatile! 0)
+                #_"int'" v'depth (volatile! 0)
             ]
                 (SwitchClosure'''conditionalJump-4 closure, 0, Condition'LT, true)
-                (vswap! depth inc)
-                (§ ass! this (SwitchStrategy''registerDefaultEffort-2 this, @depth))
+                (vswap! v'depth inc)
+                (§ ass! this (SwitchStrategy''registerDefaultEffort-2 this, @v'depth))
                 (let [
                     [#_"int" start #_"int" end]
                         (loop-when [start 0 end (PrimitiveStrategy''getSliceEnd-3 this, closure, start)] (not= end (dec (count (:keyConstants this)))) => [start end]
                             (if (= start end)
                                 (do
                                     (SwitchClosure'''conditionalJump-4 closure, start, Condition'EQ, false)
-                                    (vswap! depth inc)
-                                    (SwitchStrategy''registerEffort-4 this, start, end, @depth)
+                                    (vswap! v'depth inc)
+                                    (SwitchStrategy''registerEffort-4 this, start, end, @v'depth)
                                 )
                                 (do
                                     (when (or (zero? start) (not= (inc (#_"JavaConstant" .asLong (nth (:keyConstants this) (dec start)))) (#_"JavaConstant" .asLong (nth (:keyConstants this) start))))
                                         (SwitchClosure'''conditionalJump-4 closure, start, Condition'LT, true)
-                                        (vswap! depth inc)
-                                        (§ ass! this (SwitchStrategy''registerDefaultEffort-2 this, @depth))
+                                        (vswap! v'depth inc)
+                                        (§ ass! this (SwitchStrategy''registerDefaultEffort-2 this, @v'depth))
                                     )
                                     (SwitchClosure'''conditionalJump-4 closure, end, Condition'LE, false)
-                                    (vswap! depth inc)
-                                    (SwitchStrategy''registerEffort-4 this, start, end, @depth)
+                                    (vswap! v'depth inc)
+                                    (SwitchStrategy''registerEffort-4 this, start, end, @v'depth)
                                 )
                             )
                             (let [
@@ -77299,20 +77154,20 @@ ZeroExtendNode'new-4
                     (if (= start end)
                         (do
                             (SwitchClosure'''conditionalJumpOrDefault-4 closure, start, Condition'EQ, true)
-                            (vswap! depth inc)
-                            (SwitchStrategy''registerEffort-4 this, start, end, @depth)
-                            (§ ass! this (SwitchStrategy''registerDefaultEffort-2 this, @depth))
+                            (vswap! v'depth inc)
+                            (SwitchStrategy''registerEffort-4 this, start, end, @v'depth)
+                            (§ ass! this (SwitchStrategy''registerDefaultEffort-2 this, @v'depth))
                         )
                         (do
                             (when (or (zero? start) (not= (inc (#_"JavaConstant" .asLong (nth (:keyConstants this) (dec start)))) (#_"JavaConstant" .asLong (nth (:keyConstants this) start))))
                                 (SwitchClosure'''conditionalJump-4 closure, start, Condition'LT, true)
-                                (vswap! depth inc)
-                                (§ ass! this (SwitchStrategy''registerDefaultEffort-2 this, @depth))
+                                (vswap! v'depth inc)
+                                (§ ass! this (SwitchStrategy''registerDefaultEffort-2 this, @v'depth))
                             )
                             (SwitchClosure'''conditionalJumpOrDefault-4 closure, end, Condition'LE, true)
-                            (vswap! depth inc)
-                            (SwitchStrategy''registerEffort-4 this, start, end, @depth)
-                            (§ ass! this (SwitchStrategy''registerDefaultEffort-2 this, @depth))
+                            (vswap! v'depth inc)
+                            (SwitchStrategy''registerEffort-4 this, start, end, @v'depth)
+                            (§ ass! this (SwitchStrategy''registerDefaultEffort-2 this, @v'depth))
                         )
                     )
                 )
@@ -77325,7 +77180,7 @@ ZeroExtendNode'new-4
 ;;;
  ; This strategy orders the keys according to their probability and creates one equality comparison per key.
  ;;
-(class-ns SequentialStrategy
+(class-ns SequentialStrategy [SwitchStrategy]
     (defn #_"SequentialStrategy" SequentialStrategy'new-2 [#_"double[]" keyProbabilities, #_"Constant[]" keyConstants]
         (let [
             #_"SequentialStrategy" this
@@ -77362,7 +77217,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns TautologyPredicate
+(class-ns TautologyPredicate [NodePredicate, #_"Predicate" #_"<Node>"]
     (defn- #_"TautologyPredicate" TautologyPredicate'new-0 []
         (TautologyPredicate'class.)
     )
@@ -77380,7 +77235,7 @@ ZeroExtendNode'new-4
     (§ def #_"TautologyPredicate" TautologyPredicate'INSTANCE (TautologyPredicate'new-0))
 )
 
-(class-ns Tool
+(class-ns Tool [SimplifierTool, CanonicalizerTool]
     (defn #_"Tool" Tool'new-1 [#_"CanonicalizerInstance" instance]
         (merge (Tool'class.)
             (hash-map
@@ -77449,7 +77304,7 @@ ZeroExtendNode'new-4
  ; untrusted interface types. Examples for interface types that cannot be trusted are types for
  ; parameters, fields, and return values. They are not checked by the Java verifier.
  ;;
-(class-ns TypeReference
+(class-ns TypeReference []
     (defn- #_"TypeReference" TypeReference'new-2 [#_"ResolvedJavaType" type, #_"boolean" exactReference]
         (merge (TypeReference'class.)
             (hash-map
@@ -77517,7 +77372,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns TypedGraphNodeIterator #_"<T extends IterableNodeType>"
+(class-ns TypedGraphNodeIterator #_"<T extends IterableNodeType>" [#_"Iterator" #_"<T>"]
     (defn #_"TypedGraphNodeIterator" TypedGraphNodeIterator'new-2 [#_"NodeClass" clazz, #_"Graph" graph]
         (merge (TypedGraphNodeIterator'class.)
             (hash-map
@@ -77610,7 +77465,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns UnsignedLong
+(class-ns UnsignedLong []
     (defn #_"UnsignedLong" UnsignedLong'new-1 [#_"long" value]
         (merge (UnsignedLong'class.)
             (hash-map
@@ -77669,7 +77524,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Represents a usage of a constant.
  ;;
-(class-ns UseEntry
+(class-ns UseEntry []
     (defn #_"UseEntry" UseEntry'new-3 [#_"Block" block, #_"LIRInstruction" instruction, #_"Value" value]
         (merge (UseEntry'class.)
             (hash-map
@@ -77702,7 +77557,7 @@ ZeroExtendNode'new-4
  ; List of use positions. Each entry in the list records the use position and register priority
  ; associated with the use position. The entries in the list are in descending order of use position.
  ;;
-(class-ns UsePosList
+(class-ns UsePosList []
     (defn- #_"UsePosList" UsePosList'new-1l [#_"IntList" list]
         (merge (UsePosList'class.)
             (hash-map
@@ -77785,7 +77640,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns UseTrappingNullChecksPhase
+(class-ns UseTrappingNullChecksPhase [Phase]
     (defn #_"UseTrappingNullChecksPhase" UseTrappingNullChecksPhase'new-0 []
         (UseTrappingNullChecksPhase'class.)
     )
@@ -77952,13 +77807,13 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns CompositeValue
+(class-ns CompositeValue [#_"Value"]
     (defn #_"CompositeValue" CompositeValue'new-1 [#_"ValueKind" kind]
         (merge (CompositeValue'class.) (ß Value. kind))
     )
 )
 
-(class-ns AMD64AddressValue
+(class-ns AMD64AddressValue [CompositeValue, #_"Value"]
     (def- #_"EnumSet<OperandFlag>" AMD64AddressValue'flags (ß EnumSet/of OperandFlag'REG, OperandFlag'ILLEGAL))
 
     (defn #_"AMD64AddressValue" AMD64AddressValue'new-3 [#_"ValueKind" kind, #_"AllocatableValue" base, #_"int" displacement]
@@ -78012,7 +77867,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Represents an inlined Constant value.
  ;;
-(class-ns ConstantValue
+(class-ns ConstantValue [#_"Value"]
     (defn #_"ConstantValue" ConstantValue'new-2 [#_"ValueKind" kind, #_"Constant" constant]
         (merge (ConstantValue'class.) (ß Value. kind)
             (hash-map
@@ -78053,7 +77908,7 @@ ZeroExtendNode'new-4
  ; can not track, LIRKind#unknownReference can be used. In most cases,
  ; LIRKind#combine should be used instead, since it is able to detect this automatically.
  ;;
-(class-ns LIRKind
+(class-ns LIRKind [#_"ValueKind" #_"<LIRKind>"]
     (def- #_"int" LIRKind'UNKNOWN_REFERENCE -1)
 
     (§ def #_"LIRKind" LIRKind'Illegal (LIRKind'unknownReference-1 (#_"ValueKind" .getPlatformKind ValueKind/Illegal)))
@@ -78353,7 +78208,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Wrapper for the prototype value of a varargs parameter.
  ;;
-(class-ns Varargs
+(class-ns Varargs []
     (defn #_"Varargs" Varargs'new-3 [#_"Class" componentType, #_"Stamp" stamp, #_"Object" value]
         (merge (Varargs'class.)
             (hash-map
@@ -78366,7 +78221,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns VariableMap
+(class-ns VariableMap []
     (defn #_"VariableMap" VariableMap'new-0 []
         (merge (VariableMap'class.)
             (hash-map
@@ -78423,7 +78278,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Forwards calls from VirtualizerTool to the actual PartialEscapeBlockState.
  ;;
-(class-ns VirtualizerTool
+(class-ns VirtualizerTool [CanonicalizerTool]
     (defn #_"VirtualizerTool" VirtualizerTool'new-1 [#_"PartialEscapeClosure" closure]
         (merge (VirtualizerTool'class.)
             (hash-map
@@ -78641,7 +78496,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns Word
+(class-ns Word []
     (defn- #_"Word" Word'new-1 [#_"long" rawValue]
         (merge (Word'class.)
             (hash-map
@@ -79388,7 +79243,7 @@ ZeroExtendNode'new-4
 ;;;
  ; A plugin for calls to word operations, as well as all other nodes that need special handling for Word types.
  ;;
-(class-ns WordOperationPlugin
+(class-ns WordOperationPlugin [NodePlugin, TypePlugin, InlineInvokePlugin]
     (defn #_"WordOperationPlugin" WordOperationPlugin'new-0 []
         (WordOperationPlugin'class.)
     )
@@ -79664,19 +79519,14 @@ ZeroExtendNode'new-4
     )
 
     (defm WordOperationPlugin TypePlugin
-        (#_"StampPair" TypePlugin'''interceptType-4 [#_"WordOperationPlugin" this, #_"GraphBuilder" b, #_"JavaType" type, #_"boolean" never-nil?]
-            (let [
-                #_"Stamp" wordStamp
-                    (when (instance? ResolvedJavaType type)
-                        (cond
-                            (WordTypes'isWord-1j type)
-                                (WordTypes'getWordStamp-1 type)
-                            (and (#_"ResolvedJavaType" .isArray type) (WordTypes'isWord-1j (#_"ResolvedJavaType" .getElementalType type)))
-                                (StampFactory'object-2 (TypeReference'createTrusted-1 type), never-nil?)
-                        )
-                    )
-            ]
-                (when (some? wordStamp) (StampPair'new-2 wordStamp, nil))
+        (#_"Stamp" TypePlugin'''interceptType-4 [#_"WordOperationPlugin" this, #_"GraphBuilder" b, #_"JavaType" type, #_"boolean" never-nil?]
+            (when (instance? ResolvedJavaType type)
+                (cond
+                    (WordTypes'isWord-1j type)
+                        (WordTypes'getWordStamp-1 type)
+                    (and (#_"ResolvedJavaType" .isArray type) (WordTypes'isWord-1j (#_"ResolvedJavaType" .getElementalType type)))
+                        (StampFactory'object-2 (TypeReference'createTrusted-1 type), never-nil?)
+                )
             )
         )
     )
@@ -79693,7 +79543,7 @@ ZeroExtendNode'new-4
     (defm WordOperationPlugin NodePlugin
         (#_"boolean" NodePlugin'''handleLoadField-4 [#_"WordOperationPlugin" this, #_"BytecodeParser" parser, #_"ValueNode" receiver, #_"ResolvedJavaField" field]
             (let [
-                #_"StampPair" wordStamp (TypePlugin'''interceptType-4 this, parser, (#_"ResolvedJavaField" .getType field), false)
+                #_"Stamp" wordStamp (TypePlugin'''interceptType-4 this, parser, (#_"ResolvedJavaField" .getType field), false)
             ]
                 (and (some? wordStamp)
                     (do
@@ -79824,7 +79674,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns WorkListEntry
+(class-ns WorkListEntry []
     (defn #_"WorkListEntry" WorkListEntry'new-2 [#_"Node" n, #_"NodeBitMap" loopNodes]
         (merge (WorkListEntry'class.)
             (hash-map
@@ -79840,7 +79690,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns WriteBarrierAdditionPhase
+(class-ns WriteBarrierAdditionPhase [Phase]
     (defn #_"WriteBarrierAdditionPhase" WriteBarrierAdditionPhase'new-0 []
         (WriteBarrierAdditionPhase'class.)
     )
@@ -80111,36 +79961,10 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"StampPair" StampFactory'forDeclaredType-2 [#_"JavaType" type, #_"boolean" never-nil?]
+    (defn #_"Stamp" StampFactory'forDeclaredType-2 [#_"JavaType" type, #_"boolean" never-nil?]
         (if (and (= (#_"JavaType" .getJavaKind type) JavaKind/Object) (instance? ResolvedJavaType type))
-            (let [
-                #_"TypeReference" reference (TypeReference'create-1 type)
-                #_"ResolvedJavaType" elementalType (#_"ResolvedJavaType" .getElementalType type)
-            ]
-                (if (#_"ResolvedJavaType" .isInterface elementalType)
-                    (let [
-                        #_"ResolvedJavaType" elementalImplementor (#_"ResolvedJavaType" .getSingleImplementor elementalType)
-                        #_"TypeReference" uncheckedType
-                            (if (and (some? elementalImplementor) (not (= elementalType elementalImplementor)))
-                                (let [
-                                    #_"ResolvedJavaType" implementor
-                                        (loop-when-recur [implementor elementalImplementor #_"ResolvedJavaType" t type]
-                                                         (#_"ResolvedJavaType" .isArray t)
-                                                         [(#_"ResolvedJavaType" .getArrayClass implementor) (#_"ResolvedJavaType" .getComponentType t)]
-                                                      => implementor
-                                        )
-                                ]
-                                    (TypeReference'createTrusted-1 implementor)
-                                )
-                                (TypeReference'createTrusted-1 type)
-                            )
-                    ]
-                        (StampPair'new-2 (StampFactory'object-2 reference, never-nil?), (StampFactory'object-2 uncheckedType, never-nil?))
-                    )
-                    (StampPair'new-2 (StampFactory'object-2 reference, never-nil?), nil)
-                )
-            )
-            (StampPair'new-2 (StampFactory'forKind-1 (#_"JavaType" .getJavaKind type)), nil)
+            (StampFactory'object-2 (TypeReference'create-1 type), never-nil?)
+            (StampFactory'forKind-1 (#_"JavaType" .getJavaKind type))
         )
     )
 
