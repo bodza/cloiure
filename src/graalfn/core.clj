@@ -1,5 +1,5 @@
 (ns graalfn.core
-    (:refer-clojure :only [* *ns* + - -> / < <= = > >= aget and apply aset assoc bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean-array byte byte-array case char cond condp conj cons contains? count dec declare defmacro defn defprotocol defrecord doseq dotimes double double-array empty? extend-protocol extend-type filter first get hash-map if-not import inc instance? int int-array into into-array iterator-seq keys let letfn list locking long long-array loop make-array map max merge min neg? next nil? not not= ns-imports ns-unmap nth object-array or pos? quot reduce reify rem remove repeat rest run! satisfies? second seq sequential? short some? str symbol symbol? unsigned-bit-shift-right update update-in vals vary-meta vec vector? volatile! vswap! when-some while zero?])
+    (:refer-clojure :only [* *ns* + - -> ->> / < <= = > >= aget and apply aset assoc bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean-array byte byte-array case char cond condp conj cons contains? count dec declare defmacro defn defprotocol defrecord doseq dotimes double double-array empty? extend-protocol extend-type filter first get hash-map if-not import inc instance? int int-array into into-array iterate iterator-seq keys let letfn list locking long long-array loop make-array map max merge min neg? next nil? not not= ns-imports ns-unmap nth object-array or pos? quot reduce reify rem remove repeat rest run! satisfies? second seq sequential? short some some? sorted-map str symbol symbol? take-while unsigned-bit-shift-right update update-in vals vary-meta vec vector? volatile! vswap! when-some while zero?])
 )
 
 (defmacro § [& _])
@@ -1091,7 +1091,6 @@ CanonicalizerInstance''tryCanonicalize-3
 CanonicalizerInstance'new-3
 CanonicalizerPhase''applyIncremental-3i
 CanonicalizerPhase''applyIncremental-3m
-CanonicalizerPhase''applyIncremental-4
 CanonicalizerPhase'new-0
 ChainedNodeEventListener'new-2
 ClassGetHubNode'canonical-4
@@ -1385,13 +1384,12 @@ DeadCodeEliminationPhase'new-1
 Decision'NO
 Decision'YES
 DefUseTree''addUsage-4
-DefUseTree''forEach-2
 DefUseTree''getConstant-1
 DefUseTree''getVariable-1
 DefUseTree''usageCount-1
 DefUseTree'new-2
 DefaultLoopPolicies'new-0
-DefaultSimplifierTool'new-1
+DefaultSimplifierTool'new-0
 DeferredExit'new-2
 DeoptimizationGroupingPhase'new-0
 DeoptimizeCallerNode'new-2
@@ -1780,7 +1778,6 @@ Graph''getNodes-2
 Graph''getParameter-2
 Graph''getReturnStamp-1
 Graph''hasLoops-1
-Graph''hasNode-2
 Graph''hasVirtualizableAllocation-1
 Graph''isFrozen-1
 Graph''maybeAddOrUnique-2
@@ -2758,7 +2755,6 @@ LoopFragment''isDuplicate-1
 LoopFragment''mergeEarlyExits-1
 LoopFragment''patchNodes-2
 LoopFragment''putDuplicatedNode-3
-LoopFragment'computeNodes-2
 LoopFragment'computeNodes-3
 LoopFragment'computeNodes-4
 LoopFragment'isLoopNode-3
@@ -3086,8 +3082,6 @@ NodeClass''dataEquals-3
 NodeClass''equalInputs-3
 NodeClass''equalSuccessors-3
 NodeClass''getEdges-2
-NodeClass''getInputIterable-2
-NodeClass''getSuccessorIterable-2
 NodeClass''isValid-4
 NodeClass''registerAtInputsAsUsage-2
 NodeClass''registerAtSuccessorsAsPredecessor-2
@@ -3107,7 +3101,6 @@ NodeClass'new-2
 NodeClass'replaceFirstEdge-4
 NodeClass'updateEdgesInPlace-3
 NodeClosure'new-0
-NodeCost''getUsages-1
 NodeCost'new-3
 NodeEntry'new-1
 NodeEvent'INPUT_CHANGED
@@ -3155,7 +3148,6 @@ NodeStack'new-1
 NodeSuccessorList'new-1
 NodeSuccessorList'new-2i
 NodeSuccessorList'new-2s
-NodeUsageIterable'new-1
 NodeUsageIterator''advance-1
 NodeUsageIterator'new-1
 NodeWorkList''addAll-2
@@ -5357,7 +5349,7 @@ ZeroExtendNode'new-4
 
 (defp Inlineable
     (#_"int" Inlineable'''getNodeCount-1 [#_"Inlineable" this])
-    (#_"Iterable<InvokeNode>" Inlineable'''getInvokes-1 [#_"Inlineable" this])
+    (#_"InvokeNode*" Inlineable'''getInvokes-1 [#_"Inlineable" this])
     (#_"double" Inlineable'''getProbability-2 [#_"Inlineable" this, #_"InvokeNode" invoke])
 )
 
@@ -6039,9 +6031,6 @@ ZeroExtendNode'new-4
 (defp NodeFlood)
 (defp NodeInputList)
 
-(defp NodeIterable
-)
-
 (defp NodeIteratorClosure #_"<T>"
     (#_"T" NodeIteratorClosure'''processNode-3 [#_"NodeIteratorClosure<T>" this, #_"FixedNode" node, #_"T" currentState])
     (#_"T" NodeIteratorClosure'''merge-3 [#_"NodeIteratorClosure<T>" this, #_"AbstractMergeNode" merge, #_"List<T>" states])
@@ -6148,7 +6137,6 @@ ZeroExtendNode'new-4
 
 (defp NodeStack)
 (defp NodeSuccessorList)
-(defp NodeUsageIterable)
 (defp NodeUsageIterator)
 
 ;;;
@@ -6442,7 +6430,7 @@ ZeroExtendNode'new-4
      ; Adds a node to the worklist independent of whether it has already been on the worklist.
      ;;
     (#_"void" SimplifierTool'''addToWorkList-2n [#_"SimplifierTool" this, #_"Node" node])
-    (#_"void" SimplifierTool'''addToWorkList-2i [#_"SimplifierTool" this, #_"Iterable<Node>" nodes])
+    (#_"void" SimplifierTool'''addToWorkList-2s [#_"SimplifierTool" this, #_"Node*" nodes])
     (#_"void" SimplifierTool'''removeIfUnused-2 [#_"SimplifierTool" this, #_"Node" node])
 )
 
@@ -12545,9 +12533,27 @@ ZeroExtendNode'new-4
                     (when (some? node)
                         (let [
                             state (NodeIteratorClosure'''processNode-3 closure, node, state)
-                            #_"Iterator<Node>" successors (#_"Iterable" .iterator (Node''successors-1 node))
+                            #_"Node*" successors (Node''successors-1 node)
                         ]
-                            (if (not (#_"Iterator" .hasNext successors))
+                            (if (seq successors)
+                                (let [
+                                    [#_"FixedNode" firstSuccessor & successors] successors
+                                ]
+                                    (when (seq successors)
+                                        (loop [successors successors]
+                                            (let [
+                                                [#_"AbstractBeginNode" successor & successors] successors
+                                            ]
+                                                (#_"EconomicMap" .put blockEndStates, successor, (NodeIteratorClosure'''afterSplit-3 closure, successor, state))
+                                                (#_"Deque" .add nodeQueue, successor)
+                                                (recur-if (seq successors) [successors])
+                                            )
+                                        )
+                                        (§ ass state (NodeIteratorClosure'''afterSplit-3 closure, (§ cast #_"AbstractBeginNode" firstSuccessor), state))
+                                    )
+                                    (§ ass node firstSuccessor)
+                                    (§ continue )
+                                )
                                 (condp satisfies? node
                                     LoopEndNode
                                         (#_"EconomicMap" .put blockEndStates, node, state)
@@ -12599,32 +12605,6 @@ ZeroExtendNode'new-4
                                             )
                                         )
                                     nil
-                                )
-                                (let [
-                                    #_"FixedNode" firstSuccessor (#_"Iterator" .next successors)
-                                ]
-                                    (if (not (#_"Iterator" .hasNext successors))
-                                        (do
-                                            (§ ass node firstSuccessor)
-                                            (§ continue )
-                                        )
-                                        (do
-                                            (loop []
-                                                (let [
-                                                    #_"AbstractBeginNode" successor (#_"Iterator" .next successors)
-                                                    #_"T" successorState (NodeIteratorClosure'''afterSplit-3 closure, successor, state)
-                                                ]
-                                                    (#_"EconomicMap" .put blockEndStates, successor, successorState)
-                                                    (#_"Deque" .add nodeQueue, successor)
-                                                    (recur-if (#_"Iterator" .hasNext successors) [])
-                                                )
-                                            )
-
-                                            (§ ass state (NodeIteratorClosure'''afterSplit-3 closure, (§ cast #_"AbstractBeginNode" firstSuccessor), state))
-                                            (§ ass node firstSuccessor)
-                                            (§ continue )
-                                        )
-                                    )
                                 )
                             )
                         )
@@ -12875,7 +12855,7 @@ ZeroExtendNode'new-4
 )
 
 (value-ns ValueMergeUtil
-    (defn #_"<T> ValueNode" ValueMergeUtil'mergeValueProducers-4 [#_"AbstractMergeNode" merge, #_"List<? extends T>" valueProducers, #_"Function<T, FixedWithNextNode>" lastInstrFunction, #_"Function<T, ValueNode>" valueFunction]
+    (defn #_"<T> ValueNode" ValueMergeUtil'mergeValueProducers-4 [#_"AbstractMergeNode" merge, #_"T*" valueProducers, #_"Function<T, FixedWithNextNode>" lastInstrFunction, #_"Function<T, ValueNode>" valueFunction]
         (let [
             [#_"ValueNode" singleResult #_"PhiNode" phiResult]
                 (loop-when [singleResult nil phiResult nil #_"ISeq" s (seq valueProducers)] (some? s) => [singleResult phiResult]
@@ -12928,7 +12908,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"ValueNode" ValueMergeUtil'mergeReturns-2 [#_"AbstractMergeNode" merge, #_"List<? extends ReturnNode>" returnNodes]
+    (defn #_"ValueNode" ValueMergeUtil'mergeReturns-2 [#_"AbstractMergeNode" merge, #_"ReturnNode*" returnNodes]
         (ValueMergeUtil'mergeValueProducers-4 merge, returnNodes, nil, (ß (returnNode) -> (§ fun (:result returnNode))))
     )
 )
@@ -18836,16 +18816,8 @@ ZeroExtendNode'new-4
         (nth (:successors this) 0)
     )
 
-    (defn #_"Iterable<FixedNode>" Block''getNodes-1 [#_"Block" this]
-        (let [
-            #_"Block" block this
-        ]
-            (reify Iterable #_"<FixedNode>"
-                (#_"Iterator<FixedNode>" iterator [#_"Iterable<FixedNode>" this]
-                    (FixedNodeIterator'new-1 block)
-                )
-            )
-        )
+    (defn #_"FixedNode*" Block''getNodes-1 [#_"Block" this]
+        (iterator-seq (FixedNodeIterator'new-1 this))
     )
 
     (defn #_"Block" Block''setProbability-2 [#_"Block" this, #_"double" probability]
@@ -21281,8 +21253,7 @@ ZeroExtendNode'new-4
     (defn #_"BytecodeParser" BytecodeParser''build-3 [#_"BytecodeParser" this, #_"FixedWithNextNode" startInstruction, #_"FrameStateBuilder" startFrameState]
         ;; compute the block map, setup exception handlers and get the entrypoint(s)
         (let [
-            #_"BciBlockMapping" newMapping (BciBlockMapping'create-2 (:stream this), (:code this))
-            this (assoc this :blockMap newMapping)
+            this (assoc this :blockMap (BciBlockMapping'create-2 (:stream this), (:code this)))
             this (assoc this :firstInstructionArray (make-array FixedWithNextNode'iface (count (:blocks (:blockMap this)))))
             this (assoc this :entryStateArray (make-array FrameStateBuilder'iface (count (:blocks (:blockMap this)))))
             this
@@ -24120,7 +24091,6 @@ ZeroExtendNode'new-4
                 #_"VariableMap" :map (VariableMap'new-0)
                 #_"BitSet" :phiConstants (BitSet.)
                 #_"BitSet" :defined (BitSet.)
-                #_"BlockMap<List<UseEntry>>" :blockMap (BlockMap'new-1 (:cfg lir))
                 #_"BlockMap<LIRInsertionBuffer>" :insertionBuffers (BlockMap'new-1 (:cfg lir))
             )
         )
@@ -24184,20 +24154,6 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"void" CLOptimization''addUsageToBlockMap-2 [#_"CLOptimization" this, #_"UseEntry" entry]
-        (let [
-            #_"Block" block (:block entry)
-            #_"List<UseEntry>" list (BlockMap''get-2 (:blockMap this), block)
-        ]
-            (when (nil? list)
-                (§ ass list (ArrayList.))
-                (BlockMap''put-3 (:blockMap this), block, list)
-            )
-            (#_"List" .add list, entry)
-        )
-        nil
-    )
-
     (defn- #_"void" CLOptimization''deleteInstruction-2 [#_"CLOptimization" this, #_"DefUseTree" tree]
         (#_"ArrayList" .set (LIR''getLIRforBlock-2 (:lir this), (:block tree)), (:id (:instruction tree)), nil)
         nil
@@ -24215,45 +24171,39 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"void" CLOptimization''insertLoad-5 [#_"CLOptimization" this, #_"Constant" constant, #_"ValueKind" kind, #_"Block" block, #_"List<UseEntry>" usages]
-        ;; create variable
+    (defn- #_"void" CLOptimization''insertLoad-5 [#_"CLOptimization" this, #_"Constant" constant, #_"ValueKind" kind, #_"Block" block, #_"UseEntry*" usages]
+        ;; create variable ;; create move ;; insert instruction ;; update usages
         (let [
             #_"Variable" variable (LIRGenerator''newVariable-2 (:lirGen this), kind)
-            ;; create move
             #_"LIRInstruction" move (MoveFactory''createLoad-3 (:moveFactory (:lirGen this)), variable, constant)
         ]
-            ;; insert instruction
             (§ ass! (CLOptimization''getInsertionBuffer-2 this, block) (LIRInsertionBuffer''append-3 (CLOptimization''getInsertionBuffer-2 this, block), 1, move))
-            ;; update usages
-            (doseq [#_"UseEntry" u usages]
-                (UseEntry''setValue-2 u, variable)
+            (doseq [#_"UseEntry" usage usages]
+                (UseEntry''setValue-2 usage, variable)
             )
         )
         nil
     )
 
     (defn- #_"void" CLOptimization''createLoads-4 [#_"CLOptimization" this, #_"DefUseTree" tree, #_"ConstantTree" constTree, #_"Block" startBlock]
-        (let [
-            #_"Deque<Block>" worklist (ArrayDeque.)
-            _ (#_"Deque" .add worklist, startBlock)
-        ]
-            (while (seq worklist)
-                (let [
-                    #_"Block" block (#_"Deque" .pollLast worklist)
-                ]
+        (loop-when [#_"(Block)" s (list startBlock)] (seq s)
+            (let [
+                [#_"Block" block & s] s
+                s
                     (if (DominatorOptimizationProblem''get-3 constTree, Flags'CANDIDATE, block)
-                        (do
-                            (DominatorOptimizationProblem''set-3 constTree, Flags'MATERIALIZE, block)
+                        (let [
+                            _ (DominatorOptimizationProblem''set-3 constTree, Flags'MATERIALIZE, block)
+                            #_"Constant" constant (DefUseTree''getConstant-1 tree)
+                            #_"ValueKind" kind (#_"Value" .getValueKind (DefUseTree''getVariable-1 tree))
+                        ]
                             ;; create and insert load
-                            (CLOptimization''insertLoad-5 this, (DefUseTree''getConstant-1 tree), (#_"Value" .getValueKind (DefUseTree''getVariable-1 tree)), block, (NodeCost''getUsages-1 (DominatorOptimizationProblem''getCost-2 constTree, block)))
+                            (CLOptimization''insertLoad-5 this, constant, kind, block, (:usages (DominatorOptimizationProblem''getCost-2 constTree, block)))
+                            s
                         )
-                        (loop-when-recur [#_"Block" dominated (:firstDominated block)] (some? dominated) [(:dominatedSibling dominated)]
-                            (when (ConstantTree''isMarked-2 constTree, dominated)
-                                (#_"Deque" .addLast worklist, dominated)
-                            )
-                        )
+                        (->> (:firstDominated block) (iterate :dominatedSibling) (take-while some?) (filter #(ConstantTree''isMarked-2 constTree, %)) (into s))
                     )
-                )
+            ]
+                (recur s)
             )
         )
         nil
@@ -24267,7 +24217,7 @@ ZeroExtendNode'new-4
             #_"ConstantTree" constTree (ConstantTree'new-2 (:cfg (:lir this)), tree)
         ]
             (DominatorOptimizationProblem''set-3 constTree, Flags'IN_SUBTREE, (:block tree))
-            (DefUseTree''forEach-2 tree, (ß (u) -> (§ fun (DominatorOptimizationProblem''set-3 constTree, Flags'HAS_USAGE, (:block u)))))
+            (run! #(DominatorOptimizationProblem''set-3 constTree, Flags'HAS_USAGE, (:block %)) (:uses tree))
 
             (when-not (DominatorOptimizationProblem''get-3 constTree, Flags'HAS_USAGE, (:block tree)) ;; => usage in the definition block -> no optimization
                 (ConstantTree''markBlocks-1 constTree)
@@ -24330,13 +24280,9 @@ ZeroExtendNode'new-4
             (CLOptimization''analyzeBlock-2 this, b)
         )
         ;; remove all with only one use
-        (VariableMap''filter-2 (:map this), (ß (t) -> (§ fun (< 1 (DefUseTree''usageCount-1 t)))))
-        ;; collect block map
-        (VariableMap''forEach-2 (:map this), (ß (tree) -> (§ fun (VariableMap''forEach-2 tree, (§ ffun CLOptimization''addUsageToBlockMap-2)))))
-
+        (VariableMap''filter-2 (:map this), (ß (tree) -> (§ fun (< 1 (DefUseTree''usageCount-1 tree)))))
         ;; create ConstantTree
         (VariableMap''forEach-2 (:map this), (§ ffun CLOptimization''createConstantTree-2))
-
         ;; insert moves, delete nil instructions and reset instruction ids
         (doseq [#_"Block" b (:reversePostOrder (:cfg (:lir this)))]
             (CLOptimization''rewriteBlock-2 this, b)
@@ -24566,12 +24512,12 @@ ZeroExtendNode'new-4
 )
 
 (class-ns CanonicalizerInstance [Phase]
-    (defn #_"CanonicalizerInstance" CanonicalizerInstance'new-3 [#_"CanonicalizerPhase" phase, #_"Iterable<Node>" workingSet, #_"NodeMark" newNodesMark]
+    (defn #_"CanonicalizerInstance" CanonicalizerInstance'new-3 [#_"CanonicalizerPhase" phase, #_"Node*" workingSet, #_"NodeMark" newNodesMark]
         (merge (CanonicalizerInstance'class.)
             (hash-map
                 #_"CanonicalizerPhase" :phase phase
                 #_"NodeMark" :newNodesMark newNodesMark
-                #_"Iterable<Node>" :initWorkingSet workingSet
+                #_"Node*" :initWorkingSet workingSet
                 #_"NodeWorkList" :workList nil
                 #_"Tool" :tool nil
             )
@@ -24784,11 +24730,7 @@ ZeroExtendNode'new-4
 
 (class-ns CanonicalizerPhase [Phase]
     (defn #_"CanonicalizerPhase" CanonicalizerPhase'new-0 []
-        (merge (CanonicalizerPhase'class.)
-            (hash-map
-                #_"boolean" :canonicalizeReads true
-            )
-        )
+        (CanonicalizerPhase'class.)
     )
 
     ;;;
@@ -24802,13 +24744,8 @@ ZeroExtendNode'new-4
     ;;;
      ; @param workingSet the initial working set of nodes on which the canonicalizer works, should be an auto-grow node bitmap
      ;;
-    (defn #_"void" CanonicalizerPhase''applyIncremental-3i [#_"CanonicalizerPhase" this, #_"Graph" graph, #_"Iterable<Node>" workingSet]
+    (defn #_"void" CanonicalizerPhase''applyIncremental-3i [#_"CanonicalizerPhase" this, #_"Graph" graph, #_"Node*" workingSet]
         (§ ass! graph (Phase'''run-3 (CanonicalizerInstance'new-3 this, workingSet, nil), graph, nil))
-        nil
-    )
-
-    (defn #_"void" CanonicalizerPhase''applyIncremental-4 [#_"CanonicalizerPhase" this, #_"Graph" graph, #_"Iterable<Node>" workingSet, #_"NodeMark" newNodesMark]
-        (§ ass! graph (Phase'''run-3 (CanonicalizerInstance'new-3 this, workingSet, newNodesMark), graph, nil))
         nil
     )
 
@@ -26746,7 +26683,7 @@ ZeroExtendNode'new-4
                             (let [
                                 [node minPathProbability]
                                     (cond
-                                        (and (satisfies? LoopBeginNode scopeStart) (satisfies? LoopExitNode node) (ß NodeIterable'''contains-2 (LoopBeginNode''loopExits-1 scopeStart), node))
+                                        (and (satisfies? LoopBeginNode scopeStart) (satisfies? LoopExitNode node) (some #(= % node) (LoopBeginNode''loopExits-1 scopeStart)))
                                             (§ return minPathProbability)
                                         (and (satisfies? LoopBeginNode node) (not= node scopeStart))
                                             (let [
@@ -27209,7 +27146,7 @@ ZeroExtendNode'new-4
                 #_"NodeMap<InfoElement>" :map (NodeMap'new-1g graph)
                 #_"BlockMap<List<Node>>" :blockToNodes blockToNodes
                 #_"NodeMap<Block>" :nodeToBlock nodeToBlock
-                #_"CanonicalizerTool" :tool (DefaultSimplifierTool'new-1 false)
+                #_"CanonicalizerTool" :tool (DefaultSimplifierTool'new-0)
                 #_"NodeStack" :undoOperations (NodeStack'new-0)
                 #_"Graph" :graph graph
                 #_"EconomicMap<MergeNode, EconomicMap<ValuePhiNode, PhiInfoElement>>" :mergeMaps (EconomicMap/create)
@@ -28181,41 +28118,33 @@ ZeroExtendNode'new-4
 
     ;;;
      ; Calculates the cost of a {@code block}. It is assumed that all {@code children} have already
-     ; been {@linkplain #process processed}
-     ;
-     ; @param block The block to be processed.
+     ; been {@linkplain #process processed}.
      ;;
     (defn- #_"void" ConstantTreeAnalyzer''process-2 [#_"ConstantTreeAnalyzer" this, #_"Block" block]
         (let [
-            #_"List<UseEntry>" usages (ArrayList.)
             ;; collect children costs
-            [#_"double" bestCost #_"int" numMat]
-                (loop-when [bestCost 0.0 numMat 0 #_"Block" child (:firstDominated block)] (some? child) => [bestCost numMat]
+            [#_"double" bestCost #_"[UseEntry]" usages #_"int" numMat]
+                (loop-when [bestCost 0.0 usages [] numMat 0 #_"Block" child (:firstDominated block)] (some? child) => [bestCost usages numMat]
                     (let [
-                        [bestCost numMat]
-                            (when (ConstantTreeAnalyzer''isMarked-2 this, child) => [bestCost numMat]
+                        [bestCost usages numMat]
+                            (when (ConstantTreeAnalyzer''isMarked-2 this, child) => [bestCost usages numMat]
                                 (let [
                                     #_"NodeCost" cost (DominatorOptimizationProblem''getCost-2 (:tree this), child)
                                 ]
-                                    (#_"List" .addAll usages, (NodeCost''getUsages-1 cost))
-                                    [(+ bestCost (:bestCost cost)) (+ numMat (:numMat cost))]
+                                    [(+ bestCost (:bestCost cost)) (into usages (:usages cost)) (+ numMat (:numMat cost))]
                                 )
                             )
                     ]
-                        (recur bestCost numMat (:dominatedSibling child))
+                        (recur bestCost usages numMat (:dominatedSibling child))
                     )
                 )
             ;; choose block
-            #_"List<UseEntry>" usagesBlock (ConstantTree''getUsages-2 (:tree this), block)
-            [bestCost numMat]
-                (if (or (seq usagesBlock) (ConstantTreeAnalyzer'shouldMaterializerInCurrentBlock-3 (:probability block), bestCost, numMat))
-                    (do
-                        ;; mark current block as potential materialization position
-                        (#_"List" .addAll usages, usagesBlock)
-                        (DominatorOptimizationProblem''set-3 (:tree this), Flags'CANDIDATE, block)
-                        [(:probability block) 1]
-                    )
-                    [bestCost numMat] ;; stick with the current solution
+            #_"[UseEntry]" usagesBlock (ConstantTree''getUsages-2 (:tree this), block)
+            [bestCost usages numMat]
+                (when (or (seq usagesBlock) (ConstantTreeAnalyzer'shouldMaterializerInCurrentBlock-3 (:probability block), bestCost, numMat)) => [bestCost usages numMat]
+                    ;; mark current block as potential materialization position
+                    (DominatorOptimizationProblem''set-3 (:tree this), Flags'CANDIDATE, block)
+                    [(:probability block) (into usages usagesBlock) 1]
                 )
         ]
             (DominatorOptimizationProblem''setCost-3 (:tree this), block, (NodeCost'new-3 bestCost, usages, numMat))
@@ -29227,7 +29156,7 @@ ZeroExtendNode'new-4
                                         ]
                                             (§ ass! pred (FixedWithNextNode''setNext-2 pred, guard))
                                             (§ ass! guard (FixedWithNextNode''setNext-2 guard, next))
-                                            (Simplifiable'''simplify-2 survivingSuccessor, (DefaultSimplifierTool'new-1 false))
+                                            (Simplifiable'''simplify-2 survivingSuccessor, (DefaultSimplifierTool'new-0))
                                         )
                                     )
                                 )
@@ -29875,11 +29804,6 @@ ZeroExtendNode'new-4
     (defn #_"int" DefUseTree''usageCount-1 [#_"DefUseTree" this]
         (count (:uses this))
     )
-
-    (defn #_"void" DefUseTree''forEach-2 [#_"DefUseTree" this, #_"Consumer<? super UseEntry>" action]
-        (run! action (:uses this))
-        nil
-    )
 )
 
 (class-ns DefaultLoopPolicies [LoopPolicies]
@@ -30014,17 +29938,17 @@ ZeroExtendNode'new-4
                         (- GraalOptions'maximumDesiredSize (Graph''getNodeCount-1 graph))
                     )
                 #_"int" inBranchTotal (count branchNodes)
-                #_"int" stateNodesCount 0
+                #_"int'" v'stateNodesCount (volatile! 0)
             ]
                 (VirtualState'''applyToVirtual-2 (:stateAfter (LoopEx''loopBegin-1 _loop)),
                     (reify VirtualClosure
                         (#_"void" VirtualClosure'''apply-2 [#_"VirtualClosure" this, #_"VirtualState" vs]
-                            (§ ass! stateNodesCount (inc stateNodesCount))
+                            (vswap! v'stateNodesCount inc)
                             nil
                         )
                     )
                 )
-                (and (<= (- (LoopEx''size-1 _loop) (count (AbstractMergeNode''phis-1 (LoopEx''loopBegin-1 _loop))) stateNodesCount 1 inBranchTotal) maxDiff)
+                (and (<= (- (LoopEx''size-1 _loop) (count (AbstractMergeNode''phis-1 (LoopEx''loopBegin-1 _loop))) @v'stateNodesCount 1 inBranchTotal) maxDiff)
                     ;; check whether we're allowed to unswitch this loop
                     (LoopEx''canDuplicateLoop-1 _loop)
                 )
@@ -30034,17 +29958,13 @@ ZeroExtendNode'new-4
 )
 
 (class-ns DefaultSimplifierTool [SimplifierTool, CanonicalizerTool]
-    (defn #_"DefaultSimplifierTool" DefaultSimplifierTool'new-1 [#_"boolean" canonicalizeReads]
-        (merge (DefaultSimplifierTool'class.)
-            (hash-map
-                #_"boolean" :canonicalizeReads canonicalizeReads
-            )
-        )
+    (defn #_"DefaultSimplifierTool" DefaultSimplifierTool'new-0 []
+        (DefaultSimplifierTool'class.)
     )
 
     (defm DefaultSimplifierTool CanonicalizerTool
         (#_"boolean" CanonicalizerTool'''canonicalizeReads-1 [#_"DefaultSimplifierTool" this]
-            (:canonicalizeReads this)
+            false
         )
 
         (#_"boolean" CanonicalizerTool'''allUsagesAvailable-1 [#_"DefaultSimplifierTool" this]
@@ -30068,7 +29988,7 @@ ZeroExtendNode'new-4
             nil
         )
 
-        (#_"void" SimplifierTool'''addToWorkList-2i [#_"DefaultSimplifierTool" this, #_"Iterable<Node>" nodes]
+        (#_"void" SimplifierTool'''addToWorkList-2s [#_"DefaultSimplifierTool" this, #_"Node*" nodes]
             nil
         )
     )
@@ -30261,37 +30181,16 @@ ZeroExtendNode'new-4
  ; Represents a dominator (sub-)tree for a constant definition.
  ;;
 (class-ns ConstantTree [DominatorOptimizationProblem #_"<Flags, NodeCost>"]
-    (defn- #_"List<UseEntry>" ConstantTree''getOrInitList-2 [#_"ConstantTree" this, #_"Block" block]
-        (or (BlockMap''get-2 (:blockMap this), block)
-            (let [
-                #_"List<UseEntry>" list (ArrayList.)
-            ]
-                (BlockMap''put-3 (:blockMap this), block, list)
-                list
+    (defn #_"ConstantTree" ConstantTree'new-2 [#_"ControlFlowGraph" cfg, #_"DefUseTree" tree]
+        (merge (ConstantTree'class.) (DominatorOptimizationProblem'new-2 Flags, cfg)
+            (hash-map
+                #_"{int [UseEntry]}" :usageMap (reduce #(assoc %1 (:id (:block %2)) (conj (vec (get %1 (:id (:block %2)))) %2)) (hash-map) (:uses tree))
             )
         )
     )
 
-    (defn #_"ConstantTree" ConstantTree'new-2 [#_"ControlFlowGraph" cfg, #_"DefUseTree" tree]
-        (let [
-            #_"ConstantTree" this
-                (merge (ConstantTree'class.) (DominatorOptimizationProblem'new-2 Flags, cfg)
-                    (hash-map
-                        #_"BlockMap<List<UseEntry>>" :blockMap (BlockMap'new-1 cfg)
-                    )
-                )
-        ]
-            (DefUseTree''forEach-2 tree, (ß (u) -> (§ fun (#_"List" .add (ConstantTree''getOrInitList-2 this, (:block u)), u))))
-            this
-        )
-    )
-
-    (defn #_"List<UseEntry>" ConstantTree''getUsages-2 [#_"ConstantTree" this, #_"Block" block]
-        (let [
-            #_"List<UseEntry>" list (BlockMap''get-2 (:blockMap this), block)
-        ]
-            (if (some? list) (Collections/unmodifiableList list) (Collections/emptyList))
-        )
+    (defn #_"[UseEntry]" ConstantTree''getUsages-2 [#_"ConstantTree" this, #_"Block" block]
+        (get (:usageMap this) (:id block))
     )
 
     ;;;
@@ -30300,7 +30199,7 @@ ZeroExtendNode'new-4
     (defn #_"NodeCost" ConstantTree''getOrInitCost-2 [#_"ConstantTree" this, #_"Block" block]
         (or (DominatorOptimizationProblem''getCost-2 this, block)
             (let [
-                #_"NodeCost" cost (NodeCost'new-3 (:probability block), (BlockMap''get-2 (:blockMap this), block), 1)
+                #_"NodeCost" cost (NodeCost'new-3 (:probability block), (ConstantTree''getUsages-2 this, block), 1)
             ]
                 (DominatorOptimizationProblem''setCost-3 this, block, cost)
                 cost
@@ -32432,7 +32331,7 @@ ZeroExtendNode'new-4
         (if (= type EdgesType'Inputs) (:inputs this) (:successors this))
     )
 
-    (defn- #_"void" NodeClass'createNodeDuplicates-4 [#_"Graph" graph, #_"Iterable<Node>" nodes, #_"DuplicationReplacement" replacements, #_"EconomicMap<Node, Node>" newNodes]
+    (defn- #_"void" NodeClass'createNodeDuplicates-4 [#_"Graph" graph, #_"Node*" nodes, #_"DuplicationReplacement" replacements, #_"EconomicMap<Node, Node>" newNodes]
         (doseq [#_"Node" node nodes]
             (when (some? node)
                 (let [
@@ -32486,73 +32385,45 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn #_"EconomicMap<Node, Node>" NodeClass'addGraphDuplicate-5 [#_"Graph" graph, #_"Graph" oldGraph, #_"int" estimatedNodeCount, #_"Iterable<Node>" nodes, #_"DuplicationReplacement" replacements]
+    (defn #_"EconomicMap<Node, Node>" NodeClass'addGraphDuplicate-5 [#_"Graph" graph, #_"Graph" oldGraph, #_"int" estimatedNodeCount, #_"Node*" nodes, #_"DuplicationReplacement" replacements]
         (let [
             #_"int" denseThreshold (+ (Graph''getNodeCount-1 oldGraph) (>> (:nodesDeleted oldGraph) 4))
             #_"EconomicMap<Node, Node>" newNodes
                 (if (< denseThreshold estimatedNodeCount)
-                    (NodeMap'new-1g oldGraph)                    ;; use dense map
+                    (NodeMap'new-1g oldGraph)                 ;; use dense map
                     (EconomicMap/create Equivalence/IDENTITY) ;; use sparse map
                 )
-        ]
-            (NodeClass'createNodeDuplicates-4 graph, nodes, replacements, newNodes)
-
-            (let [
-                #_"InplaceUpdateClosure" replacementClosure
-                    (reify InplaceUpdateClosure
-                        (#_"Node" InplaceUpdateClosure'''replacement-3 [#_"InplaceUpdateClosure" this, #_"Node" node, #_"EdgesType" type]
-                            (or (get newNodes node)
-                                (let [
-                                    #_"Node" replacement (if (some? replacements) (DuplicationReplacement'''replacement-2 replacements, node) node)
-                                ]
-                                    (cond
-                                        (not= replacement node)                                 replacement
-                                        (and (= (:graph node) graph) (= type EdgesType'Inputs)) node ;; patch to the outer world
-                                    )
+            _ (NodeClass'createNodeDuplicates-4 graph, nodes, replacements, newNodes)
+            #_"InplaceUpdateClosure" replacementClosure
+                (reify InplaceUpdateClosure
+                    (#_"Node" InplaceUpdateClosure'''replacement-3 [#_"InplaceUpdateClosure" this, #_"Node" node, #_"EdgesType" type]
+                        (or (get newNodes node)
+                            (let [
+                                #_"Node" replacement (if (some? replacements) (DuplicationReplacement'''replacement-2 replacements, node) node)
+                            ]
+                                (cond
+                                    (not= replacement node)                                 replacement
+                                    (and (= (:graph node) graph) (= type EdgesType'Inputs)) node ;; patch to the outer world
                                 )
                             )
                         )
                     )
-            ]
-                ;; re-wire inputs
-                (doseq [#_"Node" oldNode nodes]
-                    (let [
-                        #_"Node" node (get newNodes oldNode)
-                        #_"NodeClass" nodeClass (:nodeClass node)
-                    ]
-                        (if (or (nil? replacements) (= (DuplicationReplacement'''replacement-2 replacements, oldNode) oldNode))
-                            (NodeClass''updateInputSuccInPlace-3 nodeClass, node, replacementClosure)
-                            (NodeClass'transferEdgesDifferentNodeClass-5 graph, replacements, newNodes, oldNode, node)
-                        )
+                )
+        ]
+            ;; re-wire inputs
+            (doseq [#_"Node" oldNode nodes]
+                (let [
+                    #_"Node" node (get newNodes oldNode)
+                    #_"NodeClass" nodeClass (:nodeClass node)
+                ]
+                    (if (or (nil? replacements) (= (DuplicationReplacement'''replacement-2 replacements, oldNode) oldNode))
+                        (NodeClass''updateInputSuccInPlace-3 nodeClass, node, replacementClosure)
+                        (NodeClass'transferEdgesDifferentNodeClass-5 graph, replacements, newNodes, oldNode, node)
                     )
                 )
-
-                newNodes
             )
-        )
-    )
 
-    (defn #_"NodeIterable" NodeClass''getSuccessorIterable-2 [#_"NodeClass<T>" this, #_"Node" node]
-        (let [
-            #_"long" mask (:successorIteration this)
-        ]
-            (ß proxy NodeIterable
-                (#_"Iterator<Node>" iterator [#_"NodeIterable" this]
-                    (RawEdgesIterator'new-2 node, mask)
-                )
-            )
-        )
-    )
-
-    (defn #_"NodeIterable" NodeClass''getInputIterable-2 [#_"NodeClass<T>" this, #_"Node" node]
-        (let [
-            #_"long" mask (:inputsIteration this)
-        ]
-            (ß proxy NodeIterable
-                (#_"Iterator<Node>" iterator [#_"NodeIterable" this]
-                    (RawEdgesIterator'new-2 node, mask)
-                )
-            )
+            newNodes
         )
     )
 
@@ -35672,32 +35543,15 @@ ZeroExtendNode'new-4
     ;;;
      ; Returns an Iterable providing all nodes added since the last {@link Graph#getMark() mark}.
      ;;
-    (defn #_"NodeIterable" Graph''getNewNodes-2 [#_"Graph" this, #_"NodeMark" mark]
-        (let [
-            #_"Graph" graph this
-            #_"int" index (if (some? mark) (:value mark) 0)
-        ]
-            (ß proxy NodeIterable
-                (#_"Iterator<Node>" iterator [#_"NodeIterable" this]
-                    (GraphNodeIterator'new-2 graph, index)
-                )
-            )
-        )
+    (defn #_"Node*" Graph''getNewNodes-2 [#_"Graph" this, #_"NodeMark" mark]
+        (iterator-seq (GraphNodeIterator'new-2 this, (if (some? mark) (:value mark) 0)))
     )
 
     ;;;
      ; Returns an Iterable providing all the live nodes.
      ;;
-    (defn #_"NodeIterable" Graph''getNodes-1 [#_"Graph" this]
-        (let [
-            #_"Graph" graph this
-        ]
-            (ß proxy NodeIterable
-                (#_"Iterator<Node>" iterator [#_"NodeIterable" this]
-                    (GraphNodeIterator'new-1 graph)
-                )
-            )
-        )
+    (defn #_"Node*" Graph''getNodes-1 [#_"Graph" this]
+        (iterator-seq (GraphNodeIterator'new-1 this))
     )
 
     ;;;
@@ -35706,26 +35560,8 @@ ZeroExtendNode'new-4
      ; @param nodeClass the type of node to return
      ; @return an Iterable providing all the matching nodes
      ;;
-    (defn #_"NodeIterable" Graph''getNodes-2 [#_"Graph" this, #_"NodeClass<Node>" nodeClass]
-        (let [
-            #_"Graph" graph this
-        ]
-            (ß proxy NodeIterable
-                (#_"Iterator<Node>" iterator [#_"NodeIterable" this]
-                    (TypedGraphNodeIterator'new-2 nodeClass, graph)
-                )
-            )
-        )
-    )
-
-    ;;;
-     ; Returns whether the graph contains at least one node of the given type.
-     ;
-     ; @param type the type of node that is checked for occurrence
-     ; @return whether there is at least one such node
-     ;;
-    (defn #_"boolean" Graph''hasNode-2 [#_"Graph" this, #_"NodeClass<Node>" type]
-        (#_"Iterator" .hasNext (#_"Iterable" .iterator (Graph''getNodes-2 this, type)))
+    (defn #_"Node*" Graph''getNodes-2 [#_"Graph" this, #_"NodeClass<Node>" nodeClass]
+        (iterator-seq (TypedGraphNodeIterator'new-2 nodeClass, this))
     )
 
     (defn- #_"Node" Graph''findFirstLiveIterable-3 [#_"Graph" this, #_"int" iterableId, #_"Node" node]
@@ -35861,11 +35697,11 @@ ZeroExtendNode'new-4
      ; @param replacementsMap the replacement map (can be nil if no replacement is to be performed)
      ; @return a map which associates the original nodes from {@code nodes} to their duplicates
      ;;
-    (defn #_"UnmodifiableEconomicMap<Node, Node>" Graph''addDuplicates-5m [#_"Graph" this, #_"Iterable<Node>" newNodes, #_"Graph" oldGraph, #_"int" estimatedNodeCount, #_"EconomicMap<Node, Node>" replacementsMap]
+    (defn #_"UnmodifiableEconomicMap<Node, Node>" Graph''addDuplicates-5m [#_"Graph" this, #_"Node*" newNodes, #_"Graph" oldGraph, #_"int" estimatedNodeCount, #_"EconomicMap<Node, Node>" replacementsMap]
         (Graph''addDuplicates-5r this, newNodes, oldGraph, estimatedNodeCount, (when (some? replacementsMap) (MapReplacement'new-1 replacementsMap)))
     )
 
-    (defn #_"EconomicMap<Node, Node>" Graph''addDuplicates-5r [#_"Graph" this, #_"Iterable<Node>" newNodes, #_"Graph" oldGraph, #_"int" estimatedNodeCount, #_"DuplicationReplacement" replacements]
+    (defn #_"EconomicMap<Node, Node>" Graph''addDuplicates-5r [#_"Graph" this, #_"Node*" newNodes, #_"Graph" oldGraph, #_"int" estimatedNodeCount, #_"DuplicationReplacement" replacements]
         (NodeClass'addGraphDuplicate-5 this, oldGraph, estimatedNodeCount, newNodes, replacements)
     )
 
@@ -35915,49 +35751,12 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"Iterable<InvokeNode>" Graph''getInvokes-1 [#_"Graph" this]
-        (let [
-            #_"Graph" graph this
-        ]
-            (reify Iterable #_"<InvokeNode>"
-                (#_"Iterator<InvokeNode>" iterator [#_"Iterable<InvokeNode>" this]
-                    (let [
-                        #_"Iterator<MethodCallTargetNode>" it (#_"Iterable" .iterator (Graph''getNodes-2 graph, (ß MethodCallTargetNode'TYPE)))
-                        #_"InvokeNode" next nil
-                    ]
-                        (reify Iterator #_"<InvokeNode>"
-                            (#_"boolean" hasNext [#_"Iterator<InvokeNode>" this]
-                                (or (some? next)
-                                    (loop-when [] (#_"Iterator" .hasNext it) => false
-                                        (let [
-                                            #_"InvokeNode" invoke (MethodCallTargetNode''invoke-1 (#_"Iterator" .next it))
-                                        ]
-                                            (when (some? invoke) => (recur)
-                                                (§ ass! next invoke)
-                                                true
-                                            )
-                                        )
-                                    )
-                                )
-                            )
-
-                            (#_"InvokeNode" next [#_"Iterator<InvokeNode>" this]
-                                (let [
-                                    _ next
-                                ]
-                                    (§ ass! next nil)
-                                    _
-                                )
-                            )
-                        )
-                    )
-                )
-            )
-        )
+    (defn #_"InvokeNode*" Graph''getInvokes-1 [#_"Graph" this]
+        (->> (Graph''getNodes-2 this, (ß MethodCallTargetNode'TYPE)) (map MethodCallTargetNode''invoke-1) (remove nil?))
     )
 
     (defn #_"boolean" Graph''hasLoops-1 [#_"Graph" this]
-        (Graph''hasNode-2 this, (ß LoopBeginNode'TYPE))
+        (seq (Graph''getNodes-2 this, (ß LoopBeginNode'TYPE)))
     )
 
     ;;;
@@ -36010,7 +35809,7 @@ ZeroExtendNode'new-4
 
     (defn #_"void" Graph''removeSplitPropagate-3 [#_"Graph" this, #_"ControlSplitNode" node, #_"AbstractBeginNode" survivingSuccessor]
         (let [
-            #_"List<Node>" snapshot (§ snap (Node''successors-1 node))
+            #_"Node*" snapshot (§ snap (Node''successors-1 node))
         ]
             (Node''clearSuccessors-1 node)
             (Node''replaceAtPredecessor-2 node, survivingSuccessor)
@@ -37320,7 +37119,7 @@ ZeroExtendNode'new-4
             (Graph''getNodeCount-1 (:graph this))
         )
 
-        (#_"Iterable<InvokeNode>" Inlineable'''getInvokes-1 [#_"InlineableGraph" this]
+        (#_"InvokeNode*" Inlineable'''getInvokes-1 [#_"InlineableGraph" this]
             (Graph''getInvokes-1 (:graph this))
         )
 
@@ -37498,32 +37297,22 @@ ZeroExtendNode'new-4
         (let [
             #_"Graph" callerGraph (CallsiteHolder'''graph-1 callerCallsiteHolder)
             #_"InlineInfo" calleeInfo (:callee calleeInvocation)
+            #_"EconomicSet<Node>" canonicalizedNodes (EconomicSet/create Equivalence/IDENTITY)
+            _ (#_"EconomicSet" .addAll canonicalizedNodes, (Node''usages-1 (InlineInfo'''invoke-1 calleeInfo)))
+            #_"EconomicSet<Node>" parameterUsages (InlineInfo'''inline-1 calleeInfo)
+            _ (#_"EconomicSet" .addAll canonicalizedNodes, parameterUsages)
+            #_"NodeMark" markBeforeCanonicalization (NodeMark'new-1 callerGraph)
         ]
-            (let [
-                #_"EconomicSet<Node>" canonicalizedNodes (EconomicSet/create Equivalence/IDENTITY)
-            ]
-                (#_"EconomicSet" .addAll canonicalizedNodes, (Node''usages-1 (InlineInfo'''invoke-1 calleeInfo)))
-                (let [
-                    #_"EconomicSet<Node>" parameterUsages (InlineInfo'''inline-1 calleeInfo)
-                ]
-                    (#_"EconomicSet" .addAll canonicalizedNodes, parameterUsages)
+            (CanonicalizerPhase''applyIncremental-3i (:canonicalizer this), callerGraph, canonicalizedNodes)
 
-                    (let [
-                        #_"NodeMark" markBeforeCanonicalization (NodeMark'new-1 callerGraph)
-                    ]
-                        (CanonicalizerPhase''applyIncremental-3i (:canonicalizer this), callerGraph, canonicalizedNodes)
-
-                        ;; process invokes that are possibly created during canonicalization
-                        (doseq [#_"Node" newNode (Graph''getNewNodes-2 callerGraph, markBeforeCanonicalization)]
-                            (when (satisfies? InvokeNode newNode)
-                                (CallsiteHolderExplorable''pushInvoke-2 callerCallsiteHolder, newNode)
-                            )
-                        )
-
-                        (CallsiteHolderExplorable''computeProbabilities-1 callerCallsiteHolder)
-                    )
+            ;; process invokes that are possibly created during canonicalization
+            (doseq [#_"Node" newNode (Graph''getNewNodes-2 callerGraph, markBeforeCanonicalization)]
+                (when (satisfies? InvokeNode newNode)
+                    (CallsiteHolderExplorable''pushInvoke-2 callerCallsiteHolder, newNode)
                 )
             )
+
+            (CallsiteHolderExplorable''computeProbabilities-1 callerCallsiteHolder)
         )
         nil
     )
@@ -38626,8 +38415,8 @@ ZeroExtendNode'new-4
         )
     )
 
-    ;; returns true if the interval has any hole between holeFrom and holeTo
-    ;; (even if the hole has only the length 1)
+    ;; Returns true if the interval has any hole between holeFrom and holeTo
+    ;; (even if the hole has only the length 1).
     (defn #_"boolean" Interval''hasHoleBetween-3 [#_"Interval" this, #_"int" holeFrom, #_"int" holeTo]
         (loop-when [#_"Range" r (:first this)] (not (Range''isEndMarker-1 r)) => false
             (cond
@@ -38640,7 +38429,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"List<Interval>" Interval''getSplitChildren-1 [#_"Interval" this]
-        (Collections/unmodifiableList (:splitChildren this))
+        (§ snap (:splitChildren this))
     )
 )
 
@@ -48113,7 +47902,7 @@ ZeroExtendNode'new-4
                     )
                 )
             )
-            (LoopFragment'computeNodes-4 branchNodes, (:graph branch), blocks, exits)
+            (§ ass! branchNodes (LoopFragment'computeNodes-4 branchNodes, (:graph branch), blocks, exits))
         )
         nil
     )
@@ -48335,8 +48124,8 @@ ZeroExtendNode'new-4
                             )
                     )
                 _ (LoopFragment'''beforeDuplication-1 this)
-                #_"NodeIterable" nodesIterable (LoopFragment'''nodes-1 (:original this))
-                this (assoc this :duplicationMap (Graph''addDuplicates-5r (LoopFragment''graph-1 this), nodesIterable, (LoopFragment''graph-1 this), (count nodesIterable), dr))
+                #_"Node*" nodeSeq (LoopFragment'''nodes-1 (:original this))
+                this (assoc this :duplicationMap (Graph''addDuplicates-5r (LoopFragment''graph-1 this), nodeSeq, (LoopFragment''graph-1 this), (count nodeSeq), dr))
                 _ (LoopFragment'''finishDuplication-1 this)
                 this (assoc this :nodes (NodeBitMap'new-1 (LoopFragment''graph-1 this)))
             ]
@@ -48353,9 +48142,9 @@ ZeroExtendNode'new-4
                 (let [
                     #_"WorkListEntry" currentEntry (#_"Deque" .peek workList)
                 ]
-                    (if (#_"Iterator" .hasNext (:usages currentEntry))
+                    (if (seq (:usages currentEntry))
                         (let [
-                            #_"Node" current (#_"Iterator" .next (:usages currentEntry))
+                            #_"Node" current (#_"Iterator" .next (:usages currentEntry))
                             #_"TriState" result (LoopFragment'isLoopNode-3 current, loopNodes, nonLoopNodes)
                         ]
                             (if (#_"TriState" .isKnown result)
@@ -48397,7 +48186,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn #_"void" LoopFragment'computeNodes-4 [#_"NodeBitMap" nodes, #_"Graph" graph, #_"Iterable<AbstractBeginNode>" blocks, #_"Iterable<AbstractBeginNode>" earlyExits]
+    (defn #_"NodeBitMap" LoopFragment'computeNodes-4 [#_"NodeBitMap" nodes, #_"Graph" graph, #_"AbstractBeginNode*" blocks, #_"AbstractBeginNode*" earlyExits]
         (doseq [#_"AbstractBeginNode" block blocks]
             (when-not (Node''isDeleted-1 block)
                 (doseq [#_"Node" node (AbstractBeginNode''getBlockNodes-1 block)]
@@ -48481,79 +48270,33 @@ ZeroExtendNode'new-4
                     )
                 )
             )
-        )
-        nil
-    )
-
-    (defn #_"NodeBitMap" LoopFragment'computeNodes-3 [#_"Graph" graph, #_"Iterable<AbstractBeginNode>" blocks, #_"Iterable<AbstractBeginNode>" earlyExits]
-        (let [
-            #_"NodeBitMap" nodes (NodeBitMap'new-1 graph)
-        ]
-            (LoopFragment'computeNodes-4 nodes, graph, blocks, earlyExits)
             nodes
         )
     )
 
-    #_unused
-    (defn #_"NodeBitMap" LoopFragment'computeNodes-2 [#_"Graph" graph, #_"Iterable<AbstractBeginNode>" blocks]
-        (LoopFragment'computeNodes-3 graph, blocks, (Collections/emptyList))
+    (defn #_"NodeBitMap" LoopFragment'computeNodes-3 [#_"Graph" graph, #_"AbstractBeginNode*" blocks, #_"AbstractBeginNode*" earlyExits]
+        (LoopFragment'computeNodes-4 (NodeBitMap'new-1 graph), graph, blocks, earlyExits)
     )
 
     (defn #_"TriState" LoopFragment'isLoopNode-3 [#_"Node" node, #_"NodeBitMap" loopNodes, #_"NodeBitMap" nonLoopNodes]
         (cond
-            (NodeBitMap''isMarked-2n loopNodes, node)                 TriState/TRUE
-            (NodeBitMap''isMarked-2n nonLoopNodes, node)              TriState/FALSE
+            (NodeBitMap''isMarked-2n loopNodes, node)                  TriState/TRUE
+            (NodeBitMap''isMarked-2n nonLoopNodes, node)               TriState/FALSE
             ;; phi nodes are treated the same as fixed nodes in this algorithm to break cycles
             (or (satisfies? FixedNode node) (satisfies? PhiNode node)) TriState/FALSE
-            :else                                                    TriState/UNKNOWN
+            :else                                                      TriState/UNKNOWN
         )
     )
 
-    (defn #_"NodeIterable<AbstractBeginNode>" LoopFragment'toHirBlocks-1 [#_"Iterable<Block>" blocks]
-        (ß proxy NodeIterable #_"<AbstractBeginNode>"
-            (#_"Iterator<AbstractBeginNode>" iterator [#_"NodeIterable<AbstractBeginNode>" this]
-                (let [
-                    #_"Iterator<Block>" it (#_"Iterable" .iterator blocks)
-                ]
-                    (reify Iterator #_"<AbstractBeginNode>"
-                        (#_"boolean" hasNext [#_"Iterator<AbstractBeginNode>" this]
-                            (#_"Iterator" .hasNext it)
-                        )
-
-                        (#_"AbstractBeginNode" next [#_"Iterator<AbstractBeginNode>" this]
-                            (:beginNode (#_"Iterator" .next it))
-                        )
-                    )
-                )
-            )
-        )
+    (defn #_"AbstractBeginNode*" LoopFragment'toHirBlocks-1 [#_"Iterable<Block>" blocks]
+        (map :beginNode blocks)
     )
 
-    (defn #_"NodeIterable<AbstractBeginNode>" LoopFragment'toHirExits-1 [#_"Iterable<Block>" blocks]
-        (ß proxy NodeIterable #_"<AbstractBeginNode>"
-            (#_"Iterator<AbstractBeginNode>" iterator [#_"NodeIterable<AbstractBeginNode>" this]
-                (let [
-                    #_"Iterator<Block>" it (#_"Iterable" .iterator blocks)
-                ]
-                    (reify Iterator #_"<AbstractBeginNode>"
-                        (#_"boolean" hasNext [#_"Iterator<AbstractBeginNode>" this]
-                            (#_"Iterator" .hasNext it)
-                        )
-
-                        ;;;
-                         ; Return the true LoopExitNode for this loop or the BeginNode for the block.
-                         ;;
-                        (#_"AbstractBeginNode" next [#_"Iterator<AbstractBeginNode>" this]
-                            (let [
-                                #_"Block" next (#_"Iterator" .next it)
-                            ]
-                                (or (Block''getLoopExit-1 next) (:beginNode next))
-                            )
-                        )
-                    )
-                )
-            )
-        )
+    ;;;
+     ; Return the true LoopExitNode for this loop or the BeginNode for the block.
+     ;;
+    (defn #_"AbstractBeginNode*" LoopFragment'toHirExits-1 [#_"Iterable<Block>" blocks]
+        (map #(or (Block''getLoopExit-1 %) (:beginNode %)) blocks)
     )
 
     ;;;
@@ -52329,18 +52072,14 @@ ZeroExtendNode'new-4
  ; Costs associated with a block.
  ;;
 (class-ns NodeCost []
-    (defn #_"NodeCost" NodeCost'new-3 [#_"double" bestCost, #_"List<UseEntry>" usages, #_"int" numMat]
+    (defn #_"NodeCost" NodeCost'new-3 [#_"double" bestCost, #_"UseEntry*" usages, #_"int" numMat]
         (merge (NodeCost'class.)
             (hash-map
-                #_"List<UseEntry>" :usages usages
+                #_"UseEntry*" :usages usages
                 #_"double" :bestCost bestCost
                 #_"int" :numMat numMat
             )
         )
-    )
-
-    (defn #_"List<UseEntry>" NodeCost''getUsages-1 [#_"NodeCost" this]
-        (or (:usages this) (Collections/emptyList))
     )
 )
 
@@ -52602,14 +52341,14 @@ ZeroExtendNode'new-4
     )
 
     ;;;
-     ; Returns an {@link NodeIterable iterable} which can be used to traverse all non-nil input edges of this node.
+     ; Returns an iterable which can be used to traverse all non-nil input edges of this node.
      ;;
-    (defn #_"NodeIterable" Node''inputs-1 [#_"Node" this]
-        (NodeClass''getInputIterable-2 (:nodeClass this), this)
+    (defn #_"Node*" Node''inputs-1 [#_"Node" this]
+        (iterator-seq (RawEdgesIterator'new-2 this, (:inputsIteration (:nodeClass this))))
     )
 
     ;;;
-     ; Returns an {@link Iterable iterable} which can be used to traverse all non-nil input edges of this node.
+     ; Returns an iterable which can be used to traverse all non-nil input edges of this node.
      ;;
     (defn #_"Iterable<Position>" Node''inputPositions-1 [#_"Node" this]
         (Edges''getPositionsIterable-2 (:inputs (:nodeClass this)), this)
@@ -52624,25 +52363,25 @@ ZeroExtendNode'new-4
     )
 
     ;;;
+     ; Returns an iterable which can be used to traverse all non-nil successor edges of this node.
+     ;;
+    (defn #_"Node*" Node''successors-1 [#_"Node" this]
+        (iterator-seq (RawEdgesIterator'new-2 this, (:successorIteration (:nodeClass this))))
+    )
+
+    ;;;
+     ; Returns an iterable which can be used to traverse all successor edge positions of this node.
+     ;;
+    (defn #_"Iterable<Position>" Node''successorPositions-1 [#_"Node" this]
+        (Edges''getPositionsIterable-2 (:successors (:nodeClass this)), this)
+    )
+
+    ;;;
      ; Applies the given visitor to all successors of this node.
      ;;
     (defn #_"void" Node''applySuccessors-2 [#_"Node" this, #_"EdgeVisitor" visitor]
         (NodeClass''applySuccessors-3 (:nodeClass this), this, visitor)
         nil
-    )
-
-    ;;;
-     ; Returns an {@link NodeIterable iterable} which can be used to traverse all non-nil successor edges of this node.
-     ;;
-    (defn #_"NodeIterable" Node''successors-1 [#_"Node" this]
-        (NodeClass''getSuccessorIterable-2 (:nodeClass this), this)
-    )
-
-    ;;;
-     ; Returns an {@link Iterable iterable} which can be used to traverse all successor edge positions of this node.
-     ;;
-    (defn #_"Iterable<Position>" Node''successorPositions-1 [#_"Node" this]
-        (Edges''getPositionsIterable-2 (:successors (:nodeClass this)), this)
     )
 
     ;;;
@@ -52659,8 +52398,8 @@ ZeroExtendNode'new-4
     ;;;
      ; Gets the list of nodes that use this node (i.e. as an input).
      ;;
-    (defn #_"NodeIterable" Node''usages-1 [#_"Node" this]
-        (NodeUsageIterable'new-1 this)
+    (defn #_"Node*" Node''usages-1 [#_"Node" this]
+        (iterator-seq (NodeUsageIterator'new-1 this))
     )
 
     ;;;
@@ -54500,7 +54239,7 @@ ZeroExtendNode'new-4
                     ;; only consider merges with a single usage that is both a phi and an operand of the comparison
                     (let [
                         #_"AbstractMergeNode" merge (:predecessor this)
-                        #_"NodeIterable" mergeUsages (Node''usages-1 merge)
+                        #_"Node*" mergeUsages (Node''usages-1 merge)
                     ]
                         (and (= (count mergeUsages) 1)
                             (let [
@@ -54510,7 +54249,7 @@ ZeroExtendNode'new-4
                                     ;; ensure phi is used by at most the comparison and the merge's frame state (if any)
                                     (let [
                                         #_"ValuePhiNode" phi singleUsage
-                                        #_"NodeIterable" phiUsages (Node''usages-1 phi)
+                                        #_"Node*" phiUsages (Node''usages-1 phi)
                                     ]
                                         (and
                                             (<= (count phiUsages) 2)
@@ -56500,7 +56239,7 @@ ZeroExtendNode'new-4
                                                     )
                                                 )
                                                 (when (some? tool)
-                                                    (SimplifierTool'''addToWorkList-2i tool, (Node''usages-1 otherPhi))
+                                                    (SimplifierTool'''addToWorkList-2s tool, (Node''usages-1 otherPhi))
                                                 )
                                                 (§ ass! otherPhi (Node''replaceAtUsages-2 otherPhi, phi))
                                                 (GraphUtil'killWithUnusedFloatingInputs-1 otherPhi)
@@ -58456,7 +58195,7 @@ ZeroExtendNode'new-4
             ]
                 (if (zero? usedCount)
                     (let [
-                        #_"List<Node>" inputSnapshot (§ snap (Node''inputs-1 this))
+                        #_"Node*" inputSnapshot (§ snap (Node''inputs-1 this))
                     ]
                         (Graph''removeFixed-2 (:graph this), this)
                         (doseq [#_"Node" input inputSnapshot]
@@ -62183,7 +61922,7 @@ ZeroExtendNode'new-4
                  (not yHasOtherUsages)
                 (or (not (= xHasOtherUsages yHasOtherUsages))
                     (and (satisfies? ValuePhiNode (:y this))
-                         (ß NodeIterable'''contains-2 (Node''inputs-1 (:y this)), this)
+                         (some #(= % this) (Node''inputs-1 (:y this)))
                     )
                 )
             )
@@ -63557,7 +63296,7 @@ ZeroExtendNode'new-4
                                                             )
                                                     ]
                                                         (or found?
-                                                            (seq (filter #(or (satisfies? FixedGuardNode %) (satisfies? ConditionalNode %)) (Node''usages-1 node)))
+                                                            (some #(or (satisfies? FixedGuardNode %) (satisfies? ConditionalNode %)) (Node''usages-1 node))
                                                         )
                                                     )
                                                 )
@@ -63570,7 +63309,7 @@ ZeroExtendNode'new-4
                                     (do
                                         (§ ass! this (Node''replaceAndDelete-2 this, (:condition this)))
                                         (when (some? tool)
-                                            (SimplifierTool'''addToWorkList-2i tool, (Node''usages-1 (:condition this)))
+                                            (SimplifierTool'''addToWorkList-2s tool, (Node''usages-1 (:condition this)))
                                         )
                                     )
                                     (when-not (BranchProbabilityNode''isSubstitutionGraph-1 this)
@@ -68996,20 +68735,6 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns NodeUsageIterable [#_"Iterable" #_"<Node>"]
-    (defn #_"NodeUsageIterable" NodeUsageIterable'new-1 [#_"Node" node]
-        (merge (NodeUsageIterable'class.)
-            (hash-map
-                #_"Node" :node node
-            )
-        )
-    )
-
-    (§ override! #_"NodeUsageIterator" #_"Iterable." iterator [#_"NodeUsageIterable" this]
-        (NodeUsageIterator'new-1 (:node this))
-    )
-)
-
 (class-ns NodeUsageIterator [#_"Iterator" #_"<Node>"]
     (defn #_"NodeUsageIterator" NodeUsageIterator''advance-1 [#_"NodeUsageIterator" this]
         (let [
@@ -69081,7 +68806,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"void" NodeWorkList''addAll-2 [#_"NodeWorkList" this, #_"Iterable<Node>" nodes]
+    (defn #_"void" NodeWorkList''addAll-2 [#_"NodeWorkList" this, #_"Node*" nodes]
         (doseq [#_"Node" node nodes]
             (when (Node''isAlive-1 node)
                 (NodeWorkList'''add-2 this, node)
@@ -69714,7 +69439,7 @@ ZeroExtendNode'new-4
                     )
             ]
                 (when (seq (:nodes listener))
-                    (CanonicalizerPhase''applyIncremental-4 (:canonicalizer this), graph, (:nodes listener), nil)
+                    (CanonicalizerPhase''applyIncremental-3i (:canonicalizer this), graph, (:nodes listener))
                 )
                 graph
             )
@@ -70006,71 +69731,75 @@ ZeroExtendNode'new-4
 
     (defm PropagateDeoptimizeProbabilityPhase Phase
         (#_"Graph" Phase'''run-3 [#_"PropagateDeoptimizeProbabilityPhase" this, #_"Graph" graph, #_"PhaseContext" context]
-            (when (Graph''hasNode-2 graph, (ß AbstractDeoptimizeNode'TYPE))
-                (let [
-                    #_"NodeStack" stack (NodeStack'new-0)
-                    #_"EconomicMap<ControlSplitNode, EconomicSet<AbstractBeginNode>>" reachableSplits (EconomicMap/create)
-                ]
-                    ;; Mark all control flow nodes that are post-dominated by a deoptimization.
-                    (doseq [#_"AbstractDeoptimizeNode" d (Graph''getNodes-2 graph, (ß AbstractDeoptimizeNode'TYPE))]
-                        (§ ass! stack (NodeStack''push-2 stack, (AbstractBeginNode'prevBegin-1 d)))
-                        (while (not (NodeStack''isEmpty-1 stack))
-                            (let [
-                                #_"AbstractBeginNode" beginNode (NodeStack''pop-1 stack)
-                                #_"FixedNode" fixedNode (:predecessor beginNode)
-                            ]
-                                (cond
-                                    (nil? fixedNode)
-                                        nil ;; Can happen for start node.
-                                    (satisfies? AbstractMergeNode fixedNode)
-                                        (doseq [#_"AbstractEndNode" end (:ends fixedNode)]
-                                            (§ ass! stack (NodeStack''push-2 stack, (AbstractBeginNode'prevBegin-1 end)))
-                                        )
-                                    (satisfies? ControlSplitNode fixedNode)
-                                        (let [
-                                            #_"EconomicSet<AbstractBeginNode>" reachableSuccessors (get reachableSplits fixedNode)
-                                        ]
-                                            (when (nil? reachableSuccessors)
-                                                (§ ass reachableSuccessors (EconomicSet/create))
-                                                (#_"EconomicMap" .put reachableSplits, fixedNode, reachableSuccessors)
+            (let [
+                #_"AbstractDeoptimizeNode*" ds (Graph''getNodes-2 graph, (ß AbstractDeoptimizeNode'TYPE))
+            ]
+                (when (seq ds)
+                    (let [
+                        #_"NodeStack" stack (NodeStack'new-0)
+                        #_"EconomicMap<ControlSplitNode, EconomicSet<AbstractBeginNode>>" reachableSplits (EconomicMap/create)
+                    ]
+                        ;; Mark all control flow nodes that are post-dominated by a deoptimization.
+                        (doseq [#_"AbstractDeoptimizeNode" d ds]
+                            (§ ass! stack (NodeStack''push-2 stack, (AbstractBeginNode'prevBegin-1 d)))
+                            (while (not (NodeStack''isEmpty-1 stack))
+                                (let [
+                                    #_"AbstractBeginNode" beginNode (NodeStack''pop-1 stack)
+                                    #_"FixedNode" fixedNode (:predecessor beginNode)
+                                ]
+                                    (cond
+                                        (nil? fixedNode)
+                                            nil ;; Can happen for start node.
+                                        (satisfies? AbstractMergeNode fixedNode)
+                                            (doseq [#_"AbstractEndNode" end (:ends fixedNode)]
+                                                (§ ass! stack (NodeStack''push-2 stack, (AbstractBeginNode'prevBegin-1 end)))
                                             )
-
-                                            (if (= (ControlSplitNode'''getSuccessorCount-1 fixedNode) (dec (count reachableSuccessors)))
-                                                (do
-                                                    ;; All successors of this split lead to deopt, propagate reachability further upwards.
-                                                    (#_"EconomicMap" .removeKey reachableSplits, fixedNode)
-                                                    (§ ass! stack (NodeStack''push-2 stack, (AbstractBeginNode'prevBegin-1 (:predecessor fixedNode))))
+                                        (satisfies? ControlSplitNode fixedNode)
+                                            (let [
+                                                #_"EconomicSet<AbstractBeginNode>" reachableSuccessors (get reachableSplits fixedNode)
+                                            ]
+                                                (when (nil? reachableSuccessors)
+                                                    (§ ass reachableSuccessors (EconomicSet/create))
+                                                    (#_"EconomicMap" .put reachableSplits, fixedNode, reachableSuccessors)
                                                 )
-                                                (#_"EconomicSet" .add reachableSuccessors, beginNode)
+
+                                                (if (= (ControlSplitNode'''getSuccessorCount-1 fixedNode) (dec (count reachableSuccessors)))
+                                                    (do
+                                                        ;; All successors of this split lead to deopt, propagate reachability further upwards.
+                                                        (#_"EconomicMap" .removeKey reachableSplits, fixedNode)
+                                                        (§ ass! stack (NodeStack''push-2 stack, (AbstractBeginNode'prevBegin-1 (:predecessor fixedNode))))
+                                                    )
+                                                    (#_"EconomicSet" .add reachableSuccessors, beginNode)
+                                                )
                                             )
-                                        )
-                                    :else
-                                        (§ ass! stack (NodeStack''push-2 stack, (AbstractBeginNode'prevBegin-1 fixedNode)))
+                                        :else
+                                            (§ ass! stack (NodeStack''push-2 stack, (AbstractBeginNode'prevBegin-1 fixedNode)))
+                                    )
                                 )
                             )
                         )
-                    )
 
-                    ;; Make sure the probability on the path towards the deoptimization is 0.0.
-                    (let [
-                        #_"MapCursor<ControlSplitNode, EconomicSet<AbstractBeginNode>>" entries (#_"EconomicMap" .getEntries reachableSplits)
-                    ]
-                        (while (#_"MapCursor" .advance entries)
-                            (let [
-                                #_"ControlSplitNode" controlSplitNode (#_"MapCursor" .getKey entries)
-                                #_"EconomicSet<AbstractBeginNode>" value (#_"MapCursor" .getValue entries)
-                            ]
-                                (doseq [#_"AbstractBeginNode" begin value]
-                                    (when-not (= (ControlSplitNode'''probability-2 controlSplitNode, begin) 0.0)
-                                        (ControlSplitNode'''setProbability-3 controlSplitNode, begin, 0.0)
+                        ;; Make sure the probability on the path towards the deoptimization is 0.0.
+                        (let [
+                            #_"MapCursor<ControlSplitNode, EconomicSet<AbstractBeginNode>>" entries (#_"EconomicMap" .getEntries reachableSplits)
+                        ]
+                            (while (#_"MapCursor" .advance entries)
+                                (let [
+                                    #_"ControlSplitNode" controlSplitNode (#_"MapCursor" .getKey entries)
+                                    #_"EconomicSet<AbstractBeginNode>" value (#_"MapCursor" .getValue entries)
+                                ]
+                                    (doseq [#_"AbstractBeginNode" begin value]
+                                        (when-not (= (ControlSplitNode'''probability-2 controlSplitNode, begin) 0.0)
+                                            (ControlSplitNode'''setProbability-3 controlSplitNode, begin, 0.0)
+                                        )
                                     )
                                 )
                             )
                         )
                     )
                 )
+                graph
             )
-            graph
         )
     )
 )
@@ -71699,7 +71428,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"void" ScheduleInstance'processNodes-5 [#_"NodeBitMap" visited, #_"NodeMap<MicroBlock>" entries, #_"NodeStack" stack, #_"MicroBlock" startBlock, #_"Iterable<Node>" nodes]
+    (defn- #_"void" ScheduleInstance'processNodes-5 [#_"NodeBitMap" visited, #_"NodeMap<MicroBlock>" entries, #_"NodeStack" stack, #_"MicroBlock" startBlock, #_"Node*" nodes]
         (doseq [#_"Node" node nodes]
             (when (nil? (get entries node))
                 (ScheduleInstance'processStack-5 node, startBlock, entries, visited, stack)
@@ -71733,29 +71462,25 @@ ZeroExtendNode'new-4
                     )
                 )
         ]
-            (when (and (GuardsStage'allowsFloatingGuards-1 (:guardsStage graph)) (seq (Graph''getNodes-2 graph, (ß GuardNode'TYPE))))
-                ;; Now process guards.
-                (if (and GraalOptions'guardPriorities withGuardOrder)
-                    (let [
-                        #_"EnumMap<GuardPriority, List<GuardNode>>" guardsByPriority (EnumMap. GuardPriority)
-                    ]
-                        (doseq [#_"GuardNode" guard (Graph''getNodes-2 graph, (ß GuardNode'TYPE))]
-                            (#_"List" .add (#_"EnumMap" .computeIfAbsent guardsByPriority, (StaticDeoptimizingNode'''computePriority-1 guard), (ß (p) -> (§ fun (ArrayList.)))), guard)
+            (when (GuardsStage'allowsFloatingGuards-1 (:guardsStage graph))
+                (let [
+                    #_"GuardNode*" guards (Graph''getNodes-2 graph, (ß GuardNode'TYPE))
+                ]
+                    (when (seq guards)
+                        ;; Now process guards.
+                        (when (and GraalOptions'guardPriorities withGuardOrder) => (ScheduleInstance'processNodes-5 visited, entries, stack, startBlock, guards)
+                            ;; 'EnumMap.values' returns values in "natural" key order.
+                            (doseq [#_"GuardNode*" guards' (#_"EnumMap" .values (reduce #(let [#_"GuardPriority" p (StaticDeoptimizingNode'''computePriority-1 %2)] (assoc %1 p (conj (vec (get %1 p)) %2))) (sorted-map) guards))]
+                                (ScheduleInstance'processNodes-5 visited, entries, stack, startBlock, guards')
+                            )
+                            (GuardOrder'resortGuards-3 graph, entries, stack)
                         )
-                        ;; 'EnumMap.values' returns values in "natural" key order.
-                        (doseq [#_"List<GuardNode>" guards (#_"EnumMap" .values guardsByPriority)]
-                            (ScheduleInstance'processNodes-5 visited, entries, stack, startBlock, guards)
-                        )
-                        (GuardOrder'resortGuards-3 graph, entries, stack)
                     )
-                    (ScheduleInstance'processNodes-5 visited, entries, stack, startBlock, (Graph''getNodes-2 graph, (ß GuardNode'TYPE)))
                 )
             )
             ;; Now process inputs of fixed nodes.
-            (doseq [#_"Block" b (:reversePostOrder (:cfg this))]
-                (doseq [#_"FixedNode" current (AbstractBeginNode''getBlockNodes-1 (:beginNode b))]
-                    (ScheduleInstance'processNodes-5 visited, entries, stack, startBlock, (Node''inputs-1 current))
-                )
+            (doseq [#_"Block" b (:reversePostOrder (:cfg this)) #_"FixedNode" n (AbstractBeginNode''getBlockNodes-1 (:beginNode b))]
+                (ScheduleInstance'processNodes-5 visited, entries, stack, startBlock, (Node''inputs-1 n))
             )
             (when (< (:counter visited) (Graph''getNodeCount-1 graph))
                 ;; Visit back input edges of loop phis.
@@ -72917,7 +72642,7 @@ ZeroExtendNode'new-4
                                 )
 
                                 (let [
-                                    #_"List<ReturnNode>" returnNodes (§ snap (Graph''getNodes-2 (:snippet this), (ß ReturnNode'TYPE)))
+                                    #_"ReturnNode*" returnNodes (§ snap (Graph''getNodes-2 (:snippet this), (ß ReturnNode'TYPE)))
                                     this
                                         (case (count returnNodes)
                                             0 (assoc this :returnNode nil)
@@ -76740,7 +76465,7 @@ ZeroExtendNode'new-4
             nil
         )
 
-        (#_"void" SimplifierTool'''addToWorkList-2i [#_"Tool" this, #_"Iterable<Node>" nodes]
+        (#_"void" SimplifierTool'''addToWorkList-2s [#_"Tool" this, #_"Node*" nodes]
             (NodeWorkList''addAll-2 (:workList (:instance this)), nodes)
             nil
         )
@@ -76753,7 +76478,7 @@ ZeroExtendNode'new-4
 
     (defm Tool CanonicalizerTool
         (#_"boolean" CanonicalizerTool'''canonicalizeReads-1 [#_"Tool" this]
-            (:canonicalizeReads (:phase (:instance this)))
+            true
         )
 
         (#_"boolean" CanonicalizerTool'''allUsagesAvailable-1 [#_"Tool" this]
@@ -79162,7 +78887,7 @@ ZeroExtendNode'new-4
     (defn #_"WorkListEntry" WorkListEntry'new-2 [#_"Node" n, #_"NodeBitMap" loopNodes]
         (merge (WorkListEntry'class.)
             (hash-map
-                #_"Iterator<Node>" :usages (#_"Iterable" .iterator (Node''usages-1 n))
+                #_"Node*" :usages (Node''usages-1 n)
                 #_"Node" :n n
                 #_"boolean" :isLoopNode (NodeBitMap''isMarked-2n loopNodes, n)
             )
