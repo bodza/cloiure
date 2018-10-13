@@ -1,5 +1,5 @@
 (ns graalfn.core
-    (:refer-clojure :only [* *ns* + - -> ->> / < <= = > >= aget and apply aset assoc bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean-array byte byte-array case char cond condp conj cons contains? count dec declare defmacro defn defprotocol defrecord doseq dotimes double double-array empty? extend-protocol extend-type filter first get hash-map if-not import inc instance? int int-array into into-array iterate iterator-seq keys let letfn list locking long long-array loop make-array map max merge min neg? next nil? not not= ns-imports ns-unmap nth object-array or pos? quot reduce reify rem remove repeat rest run! satisfies? second seq sequential? short some some? sorted-map str symbol symbol? take-while unsigned-bit-shift-right update update-in vals vary-meta vec vector? volatile! vswap! when-some while zero?])
+    (:refer-clojure :only [* *ns* + - -> ->> / < <= = > >= aget and apply aset assoc bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean boolean-array byte byte-array case char cond condp conj cons contains? count dec declare defmacro defn defprotocol defrecord doseq dotimes double double-array empty? extend-protocol extend-type filter first get hash-map if-not import inc instance? int int-array into into-array iterate iterator-seq keys let letfn list locking long long-array loop make-array map max merge min neg? next nil? not not= ns-imports ns-unmap nth object-array or peek pop pos? quot reduce reify rem remove repeat rest run! satisfies? second seq sequential? short some some? sorted-map str symbol symbol? take-while unsigned-bit-shift-right update update-in vals vary-meta vec vector? volatile! vswap! when-some while zero?])
 )
 
 (defmacro § [& _])
@@ -1448,7 +1448,6 @@ EagerSnippetInfo'new-2
 EarlyReadEliminationPhase'new-1
 EdgeInfo'new-4
 EdgeMoveOptimizer'new-0
-EdgeVisitor'new-0
 Edges''copy-3
 Edges''getPositionsIterable-2
 Edges''initializeList-4
@@ -1541,7 +1540,6 @@ FixedGuardNode'new-3
 FixedGuardNode'new-4
 FixedGuardNode'new-5
 FixedNode'new-1
-FixedNodeIterator'new-1
 FixedNodeProbabilityCache''applyAsDouble-2
 FixedNodeProbabilityCache'new-0
 FixedTarget'new-2
@@ -3018,13 +3016,11 @@ Node''clone-3
 Node''copyWithInputs-1
 Node''copyWithInputs-2
 Node''dataFlowEquals-2
-Node''getUsageAt-2
 Node''getUsageCount-1
 Node''hasExactlyOneUsage-1
 Node''hasMoreThanOneUsage-1
 Node''hasNoUsages-1
 Node''hasUsages-1
-Node''initialize-2
 Node''inputPositions-1
 Node''inputs-1
 Node''isAlive-1
@@ -3032,16 +3028,14 @@ Node''isDeleted-1
 Node''isUnregistered-1
 Node''markDeleted-1
 Node''maybeNotifyZeroUsages-2
-Node''removeThisFromUsages-2
 Node''removeUsage-2
 Node''replaceAndDelete-2
 Node''replaceAtAllUsages-3
 Node''replaceAtMatchingUsages-3
+Node''replaceAtUsages-3
 Node''replaceAtPredecessor-2
 Node''replaceAtUsages-2
-Node''replaceAtUsages-3
 Node''replaceAtUsagesAndDelete-2
-Node''replaceAtUsagesAndDelete-3
 Node''replaceFirstInput-3
 Node''replaceFirstSuccessor-3
 Node''safeDelete-1
@@ -5004,7 +4998,6 @@ ZeroExtendNode'new-4
 (defp FixedBinaryNode)
 (defp FixedGuardNode)
 (defp FixedNode)
-(defp FixedNodeIterator)
 (defp FixedNodeProbabilityCache)
 (defp FixedTarget)
 (defp FixedValueAnchorNode)
@@ -5969,8 +5962,6 @@ ZeroExtendNode'new-4
  ; then there is an edge from this node to the node this field points to.
  ;;
 (defp Node
-    (#_"void" Node'''replaceAtUsages-4 [#_"Node" this, #_"Node" other, #_"Predicate<Node>" filter, #_"Node" toBeDeleted])
-    (#_"void" Node'''replaceAtUsages-3 [#_"Node" this, #_"InputType" type, #_"Node" other])
     (#_"void" Node'''afterClone-2 [#_"Node" this, #_"Node" other])
     (#_"Node*" Node'''cfgPredecessors-1 [#_"Node" this])
     ;;;
@@ -10695,7 +10686,7 @@ ZeroExtendNode'new-4
                                         (let [
                                             #_"AbstractBeginNode" survivingSuccessor (Position''get-2 position, duplicatedControlSplit)
                                         ]
-                                            (Node'''replaceAtUsages-3 survivingSuccessor, InputType'Guard, newBegin)
+                                            (Node''replaceAtUsages-3 survivingSuccessor, InputType'Guard, newBegin)
                                             (Graph''removeSplitPropagate-3 graph, duplicatedControlSplit, survivingSuccessor)
                                         )
                                     )
@@ -10709,7 +10700,7 @@ ZeroExtendNode'new-4
                             (let [
                                 #_"AbstractBeginNode" survivingSuccessor (Position''get-2 firstPosition, controlSplitNode)
                             ]
-                                (Node'''replaceAtUsages-3 survivingSuccessor, InputType'Guard, originalLoopBegin)
+                                (Node''replaceAtUsages-3 survivingSuccessor, InputType'Guard, originalLoopBegin)
                                 (Graph''removeSplitPropagate-3 graph, controlSplitNode, survivingSuccessor)
                             )
                         )
@@ -11561,7 +11552,7 @@ ZeroExtendNode'new-4
         (Node''markDeleted-1 node)
         (doseq [#_"Node" in (Node''inputs-1 node)]
             (when (Node''isAlive-1 in)
-                (Node''removeUsage-2 in, node)
+                (§ ass! in (Node''removeUsage-2 in, node))
                 (when (Node''hasNoUsages-1 in)
                     (Node''maybeNotifyZeroUsages-2 node, in)
                 )
@@ -11625,7 +11616,7 @@ ZeroExtendNode'new-4
                 #_"ValueNode" singleValue (PhiNode''singleValueOrThis-1 phiNode)
             ]
                 (when-not (= singleValue phiNode)
-                    (Node''replaceAtUsagesAndDelete-2 phiNode, singleValue)
+                    (§ ass! phiNode (Node''replaceAtUsagesAndDelete-2 phiNode, singleValue))
                     (doseq [#_"PhiNode" phi (§ snap (filter #(satisfies? PhiNode %) (Node''usages-1 phiNode)))]
                         (GraphUtil'checkRedundantPhi-1 phi)
                     )
@@ -11657,7 +11648,7 @@ ZeroExtendNode'new-4
                                     )
                             ]
                                 (when (= vpnValue v) => (recur (next s))
-                                    (Node''replaceAtUsagesAndDelete-2 vpn, vpnValue)
+                                    (§ ass! vpn (Node''replaceAtUsagesAndDelete-2 vpn, vpnValue))
                                     (doseq [#_"PhiNode" phi (§ snap (filter #(satisfies? PhiNode %) (Node''usages-1 vpn)))]
                                         (GraphUtil'checkRedundantPhi-1 phi)
                                     )
@@ -18817,7 +18808,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"FixedNode*" Block''getNodes-1 [#_"Block" this]
-        (iterator-seq (FixedNodeIterator'new-1 this))
+        (->> (:beginNode this) (iterate #(when (and (satisfies? FixedWithNextNode %) (not (satisfies? AbstractBeginNode (:next %)))) (:next %))) (take-while some?))
     )
 
     (defn #_"Block" Block''setProbability-2 [#_"Block" this, #_"double" probability]
@@ -24554,7 +24545,7 @@ ZeroExtendNode'new-4
                     ]
                         (if (and (some? constant) (not (satisfies? ConstantNode node)))
                             (do
-                                (Node'''replaceAtUsages-3 node, InputType'Value, (ConstantNode'forConstant-3s (:stamp node), constant, (:graph node)))
+                                (Node''replaceAtUsages-3 node, InputType'Value, (ConstantNode'forConstant-3s (:stamp node), constant, (:graph node)))
                                 (GraphUtil'tryKillUnused-1 node)
                                 true
                             )
@@ -27232,7 +27223,7 @@ ZeroExtendNode'new-4
                 (let [
                     #_"AbstractBeginNode" survivingSuccessor (IfNode''getSuccessor-2 node, result)
                 ]
-                    (Node'''replaceAtUsages-3 survivingSuccessor, InputType'Guard, guard)
+                    (Node''replaceAtUsages-3 survivingSuccessor, InputType'Guard, guard)
                     (Node''replaceAtPredecessor-2 survivingSuccessor, nil)
                     (Node''replaceAtPredecessor-2 node, survivingSuccessor)
                     (GraphUtil'killCFG-1 node)
@@ -27385,7 +27376,7 @@ ZeroExtendNode'new-4
                                                             (PhiNode''addInput-2 newPhi, valueAt)
                                                         )
                                                     )
-                                                    (Node''replaceAtUsagesAndDelete-2 phi, newPhi)
+                                                    (§ ass! phi (Node''replaceAtUsagesAndDelete-2 phi, newPhi))
                                                 )
                                             )
                                         )
@@ -29150,7 +29141,7 @@ ZeroExtendNode'new-4
                                     (let [
                                         #_"Node" newGuard (if (satisfies? LoopExitNode survivingSuccessor) (ProxyNode'forGuard-3 guard, survivingSuccessor, graph) guard)
                                     ]
-                                        (Node'''replaceAtUsages-3 survivingSuccessor, InputType'Guard, newGuard)
+                                        (Node''replaceAtUsages-3 survivingSuccessor, InputType'Guard, newGuard)
                                         (let [
                                             #_"FixedNode" next (:next pred)
                                         ]
@@ -29677,10 +29668,10 @@ ZeroExtendNode'new-4
     (defn- #_"void" DeadCodeEliminationPhase'iterateSuccessorsAndInputs-1 [#_"NodeFlood" flood]
         (let [
             #_"EdgeVisitor" consumer
-                (§ proxy #_"EdgeVisitor" (EdgeVisitor'new-0)
-                    (#_"Node" EdgeVisitor'''apply-3 [#_"EdgeVisitor" this, #_"Node" n, #_"Node" succOrInput]
-                        (§ ass! flood (NodeFlood''add-2 flood, succOrInput))
-                        succOrInput
+                (reify EdgeVisitor
+                    (#_"Node" EdgeVisitor'''apply-3 [#_"EdgeVisitor" this, #_"Node" source, #_"Node" target]
+                        (§ ass! flood (NodeFlood''add-2 flood, target))
+                        target
                     )
                 )
         ]
@@ -29700,12 +29691,11 @@ ZeroExtendNode'new-4
     (defn- #_"void" DeadCodeEliminationPhase'deleteNodes-2 [#_"NodeFlood" flood, #_"Graph" graph]
         (let [
             #_"EdgeVisitor" consumer
-                (§ proxy #_"EdgeVisitor" (EdgeVisitor'new-0)
-                    (#_"Node" EdgeVisitor'''apply-3 [#_"EdgeVisitor" this, #_"Node" n, #_"Node" input]
-                        (when (and (Node''isAlive-1 input) (NodeFlood''isMarked-2 flood, input))
-                            (Node''removeUsage-2 input, n)
+                (reify EdgeVisitor
+                    (#_"Node" EdgeVisitor'''apply-3 [#_"EdgeVisitor" this, #_"Node" source, #_"Node" target]
+                        (when (and (Node''isAlive-1 target) (NodeFlood''isMarked-2 flood, target)) => target
+                            (Node''removeUsage-2 target, source)
                         )
-                        input
                     )
                 )
         ]
@@ -30475,18 +30465,12 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns EdgeVisitor []
-    (defn #_"EdgeVisitor" EdgeVisitor'new-0 []
-        (EdgeVisitor'class.)
-    )
-)
-
 ;;;
  ; Checks for safe nodes when moving pending tests up.
  ;;
 (class-ns InputFilter [EdgeVisitor]
     (defn #_"InputFilter" InputFilter'new-1 [#_"ValueNode" value]
-        (merge (InputFilter'class.) (EdgeVisitor'new-0)
+        (merge (InputFilter'class.)
             (hash-map
                 #_"boolean" :ok true
                 #_"ValueNode" :value value
@@ -30495,16 +30479,16 @@ ZeroExtendNode'new-4
     )
 
     (defm InputFilter EdgeVisitor
-        (#_"Node" EdgeVisitor'''apply-3 [#_"InputFilter" this, #_"Node" _, #_"Node" node]
+        (#_"Node" EdgeVisitor'''apply-3 [#_"InputFilter" this, #_"Node" source, #_"Node" target]
             (when (:ok this) ;; => abort the recursion
                 (cond
-                    (not (satisfies? ValueNode node))                                                         (§ ass! this (assoc this :ok false))
-                    (or (satisfies? ConstantNode node) (= node (:value this)) (satisfies? ParameterNode node)) nil
-                    (or (satisfies? BinaryNode node) (satisfies? UnaryNode node))                              (Node''applyInputs-2 node, this)
-                    :else                                                                                    (§ ass! this (assoc this :ok false))
+                    (not (satisfies? ValueNode target))                                                              (§ ass! this (assoc this :ok false))
+                    (or (satisfies? ConstantNode target) (= target (:value this)) (satisfies? ParameterNode target)) nil
+                    (or (satisfies? BinaryNode target) (satisfies? UnaryNode target))                                (Node''applyInputs-2 target, this)
+                    :else                                                                                            (§ ass! this (assoc this :ok false))
                 )
             )
-            node
+            target
         )
     )
 )
@@ -31781,7 +31765,7 @@ ZeroExtendNode'new-4
             #_"ConditionalNode" equalValue (Graph''add-2 graph, (ConditionalNode'new-3 equalComp, (ConstantNode'forIntegerStamp-3 stamp, 0, graph), (ConstantNode'forIntegerStamp-3 stamp, 1, graph)))
             #_"ConditionalNode" value (Graph''add-2 graph, (ConditionalNode'new-3 lessComp, (ConstantNode'forIntegerStamp-3 stamp, -1, graph), equalValue))
         ]
-            (Node''replaceAtUsagesAndDelete-2 normalize, value)
+            (§ ass! normalize (Node''replaceAtUsagesAndDelete-2 normalize, value))
         )
         nil
     )
@@ -32632,7 +32616,7 @@ ZeroExtendNode'new-4
                         #_"Node" n (Edges'getNodeUnsafe-2 node, offset)
                     ]
                         (when (some? n)
-                            (Node''addUsage-2 n, node)
+                            (§ ass! n (Node''addUsage-2 n, node))
                         )
                     )
                     (let [
@@ -32644,7 +32628,7 @@ ZeroExtendNode'new-4
                                     #_"Node" n (nth list i)
                                 ]
                                     (when (some? n)
-                                        (Node''addUsage-2 n, node)
+                                        (§ ass! n (Node''addUsage-2 n, node))
                                     )
                                 )
                             )
@@ -32666,7 +32650,7 @@ ZeroExtendNode'new-4
                         #_"Node" n (Edges'getNodeUnsafe-2 node, offset)
                     ]
                         (when (some? n)
-                            (Node''removeThisFromUsages-2 node, n)
+                            (§ ass! n (Node''removeUsage-2 n, node))
                             (when (Node''hasNoUsages-1 n)
                                 (Node''maybeNotifyZeroUsages-2 node, n)
                             )
@@ -32682,7 +32666,7 @@ ZeroExtendNode'new-4
                                     #_"Node" n (nth list i)
                                 ]
                                     (when (some? n)
-                                        (Node''removeThisFromUsages-2 node, n)
+                                        (§ ass! n (Node''removeUsage-2 n, node))
                                         (when (Node''hasNoUsages-1 n)
                                             (Node''maybeNotifyZeroUsages-2 node, n)
                                         )
@@ -33569,36 +33553,6 @@ ZeroExtendNode'new-4
                 )
                 (Graph''setAfterFixReadPhase-2 graph, true)
             )
-        )
-    )
-)
-
-(class-ns FixedNodeIterator [#_"Iterator" #_"<FixedNode>"]
-    (defn #_"FixedNodeIterator" FixedNodeIterator'new-1 [#_"Block" block]
-        (merge (FixedNodeIterator'class.)
-            (hash-map
-                #_"FixedNode" :cur (:beginNode block)
-            )
-        )
-    )
-
-    (§ override! #_"boolean" #_"Iterator." hasNext [#_"FixedNodeIterator" this]
-        (some? (:cur this))
-    )
-
-    (§ override! #_"FixedNode" #_"Iterator." next [#_"FixedNodeIterator" this]
-        (let [
-            #_"FixedNode" result (:cur this)
-        ]
-            (if (satisfies? FixedWithNextNode result)
-                (let [
-                    #_"FixedNode" next (:next result)
-                ]
-                    (§ ass! this (assoc this :cur (when-not (satisfies? AbstractBeginNode next) next)))
-                )
-                (§ ass! this (assoc this :cur nil))
-            )
-            result
         )
     )
 )
@@ -35494,7 +35448,14 @@ ZeroExtendNode'new-4
      ; Adds a new node to the graph.
      ;;
     (defn #_"Node" Graph''add-2 [#_"Graph" this, #_"Node" node]
-        (Node''initialize-2 node, this)
+        (§ ass! node (assoc node :graph this))
+        (§ ass! this (Graph''register-2 this, node))
+        (let [
+            #_"NodeClass<? implements Node>" c (:nodeClass node)
+        ]
+            (NodeClass''registerAtInputsAsUsage-2 c, node)
+            (NodeClass''registerAtSuccessorsAsPredecessor-2 c, node)
+        )
         node
     )
 
@@ -35510,9 +35471,9 @@ ZeroExtendNode'new-4
         (let [
             #_"Graph" graph this
             #_"EdgeVisitor" addInputsFilter
-                (§ proxy #_"EdgeVisitor" (EdgeVisitor'new-0)
-                    (#_"Node" EdgeVisitor'''apply-3 [#_"EdgeVisitor" this, #_"Node" self, #_"Node" input]
-                        (if (Node''isAlive-1 input) input (Graph''addOrUniqueWithInputs-2 graph, input))
+                (reify EdgeVisitor
+                    (#_"Node" EdgeVisitor'''apply-3 [#_"EdgeVisitor" this, #_"Node" source, #_"Node" target]
+                        (if (Node''isAlive-1 target) target (Graph''addOrUniqueWithInputs-2 graph, target))
                     )
                 )
         ]
@@ -35789,7 +35750,7 @@ ZeroExtendNode'new-4
 
     (defn #_"Graph" Graph''replaceFixedWithFloating-3 [#_"Graph" this, #_"FixedWithNextNode" node, #_"ValueNode" replacement]
         (GraphUtil'unlinkFixedNode-1 node)
-        (Node''replaceAtUsagesAndDelete-2 node, replacement)
+        (§ ass! node (Node''replaceAtUsagesAndDelete-2 node, replacement))
         this
     )
 
@@ -35841,7 +35802,7 @@ ZeroExtendNode'new-4
     (defn #_"void" Graph''replaceSplitWithFloating-4 [#_"Graph" this, #_"ControlSplitNode" node, #_"FloatingNode" replacement, #_"AbstractBeginNode" survivingSuccessor]
         (Node''clearSuccessors-1 node)
         (Node''replaceAtPredecessor-2 node, survivingSuccessor)
-        (Node''replaceAtUsagesAndDelete-2 node, replacement)
+        (§ ass! node (Node''replaceAtUsagesAndDelete-2 node, replacement))
         nil
     )
 
@@ -35888,7 +35849,7 @@ ZeroExtendNode'new-4
                 #_"ValueNode" singleValue (PhiNode''valueAt-2i phi, 0)
             ]
                 (if (Node''hasUsages-1 phi)
-                    (Node''replaceAtUsagesAndDelete-2 phi, singleValue)
+                    (§ ass! phi (Node''replaceAtUsagesAndDelete-2 phi, singleValue))
                     (do
                         (Node''safeDelete-1 phi)
                         (when (some? singleValue)
@@ -37054,7 +37015,7 @@ ZeroExtendNode'new-4
                                         usages (InlineableGraph'trackParameterUsages-2 param, usages)
                                     ]
                                         ;; collect param usages before replacing the param
-                                        (Node''replaceAtUsagesAndDelete-2 param, (Graph''add-2 (:graph this), (ConstantNode'forConstant-4 (:stamp arg), (:value arg), (:stableDimension arg), (:isDefaultStable arg))))
+                                        (§ ass! param (Node''replaceAtUsagesAndDelete-2 param, (Graph''add-2 (:graph this), (ConstantNode'forConstant-4 (:stamp arg), (:value arg), (:stableDimension arg), (:isDefaultStable arg)))))
                                         ;; param-node gone, leaving a gap in the sequence given by param.index()
                                         usages
                                     )
@@ -52327,14 +52288,7 @@ ZeroExtendNode'new-4
                  ; therefore it points to the next Node of the same type.
                  ;;
                 #_"Node" :typeCacheNext nil
-                ;;;
-                 ; Head of usage list. The elements of the usage list in order are #usage0,
-                 ; #usage1 and #extraUsages. The first nil entry terminates the list.
-                 ;;
-                #_"Node" :usage0 nil
-                #_"Node" :usage1 nil
-                #_"Node[]" :extraUsages (make-array Node'iface 0)
-                #_"int" :extraUsagesCount 0
+                #_"[Node]" :nodeUsages []
                 #_"Node" :predecessor nil
             )
         )
@@ -52388,11 +52342,7 @@ ZeroExtendNode'new-4
      ; Gets the maximum number of usages this node has had at any point in time.
      ;;
     (defn #_"int" Node''getUsageCount-1 [#_"Node" this]
-        (cond
-            (nil? (:usage0 this)) 0
-            (nil? (:usage1 this)) 1
-            :else                 (+ 2 (:extraUsagesCount this))
-        )
+        (count (:nodeUsages this))
     )
 
     ;;;
@@ -52406,21 +52356,21 @@ ZeroExtendNode'new-4
      ; Checks whether this node has no usages.
      ;;
     (defn #_"boolean" Node''hasNoUsages-1 [#_"Node" this]
-        (nil? (:usage0 this))
+        (empty? (:nodeUsages this))
     )
 
     ;;;
      ; Checks whether this node has usages.
      ;;
     (defn #_"boolean" Node''hasUsages-1 [#_"Node" this]
-        (some? (:usage0 this))
+        (boolean (seq (:nodeUsages this)))
     )
 
     ;;;
      ; Checks whether this node has more than one usages.
      ;;
     (defn #_"boolean" Node''hasMoreThanOneUsage-1 [#_"Node" this]
-        (some? (:usage1 this))
+        (boolean (seq (next (:nodeUsages this))))
     )
 
     ;;;
@@ -52432,119 +52382,22 @@ ZeroExtendNode'new-4
 
     ;;;
      ; Adds a given node to this node's {@linkplain #usages() usages}.
-     ;
-     ; @param node the node to add
      ;;
-    (defn #_"void" Node''addUsage-2 [#_"Node" this, #_"Node" node]
-        (cond
-            (nil? (:usage0 this))
-                (§ ass! this (assoc this :usage0 node))
-            (nil? (:usage1 this))
-                (§ ass! this (assoc this :usage1 node))
-            :else
-                (let [
-                    #_"int" n (count (:extraUsages this))
-                ]
-                    (cond
-                        (zero? n)
-                            (§ ass! this (assoc this :extraUsages (make-array Node'iface 4)))
-                        (= (:extraUsagesCount this) n)
-                            (let [
-                                #_"Node[]" newExtraUsages (make-array Node'iface (inc (* n 2)))
-                            ]
-                                (System/arraycopy (:extraUsages this), 0, newExtraUsages, 0, n)
-                                (§ ass! this (assoc this :extraUsages newExtraUsages))
-                            )
-                    )
-                    (aset (:extraUsages this) (:extraUsagesCount this) node)
-                    (§ ass! this (update this :extraUsagesCount inc))
-                )
-        )
-        nil
-    )
-
-    (defn- #_"Node" Node''movUsageFromEndToExtraUsages-2 [#_"Node" this, #_"int" destExtraIndex]
-        (let [
-            this (update this :extraUsagesCount dec)
-        ]
-            (aset (:extraUsages this) destExtraIndex (nth (:extraUsages this) (:extraUsagesCount this)))
-            (aset (:extraUsages this) (:extraUsagesCount this) nil)
-            this
-        )
-    )
-
-    (defn- #_"Node" Node''movUsageFromEndToIndexOne-1 [#_"Node" this]
-        (when (pos? (:extraUsagesCount this)) => (assoc this :usage1 nil)
-            (let [
-                this (update this :extraUsagesCount dec)
-                this (assoc this :usage1 (nth (:extraUsages this) (:extraUsagesCount this)))
-            ]
-                (aset (:extraUsages this) (:extraUsagesCount this) nil)
-                this
-            )
-        )
-    )
-
-    (defn- #_"Node" Node''movUsageFromEndToIndexZero-1 [#_"Node" this]
-        (cond
-            (pos? (:extraUsagesCount this))
-                (let [
-                    this (update this :extraUsagesCount dec)
-                    this (assoc this :usage0 (nth (:extraUsages this) (:extraUsagesCount this)))
-                ]
-                    (aset (:extraUsages this) (:extraUsagesCount this) nil)
-                    this
-                )
-            (some? (:usage1 this))
-                (let [
-                    this (assoc this :usage0 (:usage1 this))
-                    this (assoc this :usage1 nil)
-                ]
-                    this
-                )
-            :else
-                (assoc this :usage0 nil)
-        )
-    )
-
-    (defn- #_"Node" Node''movUsageFromEndTo-2 [#_"Node" this, #_"int" destIndex]
-        (cond
-            (<= 2 destIndex) (Node''movUsageFromEndToExtraUsages-2 this, (- destIndex 2))
-            (= destIndex 1)  (Node''movUsageFromEndToIndexOne-1 this)
-            :else            (Node''movUsageFromEndToIndexZero-1 this)
-        )
+    (defn #_"Node" Node''addUsage-2 [#_"Node" this, #_"Node" node]
+        (update this :nodeUsages #(conj (vec %) node))
     )
 
     ;;;
      ; Removes a given node from this node's {@linkplain #usages() usages}.
-     ;
-     ; @param node the node to remove
-     ; @return whether or not {@code usage} was in the usage list
      ;;
-    (defn #_"boolean" Node''removeUsage-2 [#_"Node" this, #_"Node" node]
+    (defn #_"Node" Node''removeUsage-2 [#_"Node" this, #_"Node" node]
         ;; For large graphs, usage removal is critical for performance.
         ;; Furthermore, it is critical that this method maintains the invariant,
         ;; that the usage list has no nil element preceding a non-nil element.
-        (cond
-            (= (:usage0 this) node)
-            (do
-                (§ ass! this (Node''movUsageFromEndToIndexZero-1 this))
-                true
+        (loop-when [#_"int" i (dec (count (:nodeUsages this)))] (<= 0 i) => this
+            (when (= (nth (:nodeUsages this) i) node) => (recur (dec i))
+                (update this :nodeUsages #(assoc (pop %) i (peek %)))
             )
-            (= (:usage1 this) node)
-            (do
-                (§ ass! this (Node''movUsageFromEndToIndexOne-1 this))
-                true
-            )
-            :else
-                (loop-when [#_"int" i (dec (:extraUsagesCount this))] (<= 0 i) => false
-                    (when (= (nth (:extraUsages this) i) node) => (recur (dec i))
-                        (do
-                            (§ ass! this (Node''movUsageFromEndToExtraUsages-2 this, i))
-                            true
-                        )
-                    )
-                )
         )
     )
 
@@ -52582,11 +52435,11 @@ ZeroExtendNode'new-4
     (defn #_"void" Node''updateUsages-3 [#_"Node" this, #_"Node" oldInput, #_"Node" newInput]
         (when-not (= oldInput newInput)
             (when (some? oldInput)
-                (Node''removeThisFromUsages-2 this, oldInput)
+                (§ ass! oldInput (Node''removeUsage-2 oldInput, this))
             )
             (Node''maybeNotifyInputChanged-2 this, this)
             (when (some? newInput)
-                (Node''addUsage-2 newInput, this)
+                (§ ass! newInput (Node''addUsage-2 newInput, this))
             )
             (when (and (some? oldInput) (Node''hasNoUsages-1 oldInput))
                 (Node''maybeNotifyZeroUsages-2 this, oldInput)
@@ -52612,18 +52465,6 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn #_"void" Node''initialize-2 [#_"Node" this, #_"Graph" graph]
-        (§ ass! this (assoc this :graph graph))
-        (§ ass! graph (Graph''register-2 graph, this))
-        (let [
-            #_"NodeClass<? implements Node>" c (:nodeClass this)
-        ]
-            (NodeClass''registerAtInputsAsUsage-2 c, this)
-            (NodeClass''registerAtSuccessorsAsPredecessor-2 c, this)
-        )
-        nil
-    )
-
     (defn- #_"boolean" Node''checkReplaceWith-2 [#_"Node" this, #_"Node" other]
         (cond
             (and (some? (:graph this)) (Graph''isFrozen-1 (:graph this))) (throw! "cannot modify frozen graph")
@@ -52638,23 +52479,13 @@ ZeroExtendNode'new-4
         (Node''replaceAtAllUsages-3 this, other, nil)
     )
 
-    #_unused
-    (defn #_"void" Node''replaceAtUsages-3 [#_"Node" this, #_"Node" other, #_"Predicate<Node>" filter]
-        (Node'''replaceAtUsages-4 this, other, filter, nil)
-        nil
-    )
-
-    (defn #_"void" Node''replaceAtUsagesAndDelete-2 [#_"Node" this, #_"Node" other]
-        (Node'''replaceAtUsages-4 this, other, nil, this)
-        (Node''safeDelete-1 this)
-        nil
-    )
-
-    #_unused
-    (defn #_"void" Node''replaceAtUsagesAndDelete-3 [#_"Node" this, #_"Node" other, #_"Predicate<Node>" filter]
-        (Node'''replaceAtUsages-4 this, other, filter, this)
-        (Node''safeDelete-1 this)
-        nil
+    (defn #_"Node" Node''replaceAtUsagesAndDelete-2 [#_"Node" this, #_"Node" other]
+        (let [
+            this (Node''replaceAtAllUsages-3 this, other, this)
+        ]
+            (Node''safeDelete-1 this)
+            this
+        )
     )
 
     (defn- #_"void" Node''replaceAtUsage-4 [#_"Node" this, #_"Node" other, #_"Node" toBeDeleted, #_"Node" usage]
@@ -52664,91 +52495,46 @@ ZeroExtendNode'new-4
             (Node''maybeNotifyInputChanged-2 this, usage)
         )
         (when (some? other)
-            (Node''addUsage-2 other, usage)
+            (§ ass! other (Node''addUsage-2 other, usage))
         )
         nil
     )
 
-    (defn- #_"Node" Node''replaceAtMatchingUsages-4 [#_"Node" this, #_"Node" other, #_"Predicate<Node>" filter, #_"Node" toBeDeleted]
+    (defn #_"Node" Node''replaceAtAllUsages-3 [#_"Node" this, #_"Node" other, #_"Node" toBeDeleted]
+        (Node''checkReplaceWith-2 this, other)
+        (when (seq (:nodeUsages this)) => this
+            (doseq [#_"Node" node (:nodeUsages this)]
+                (Node''replaceAtUsage-4 this, other, toBeDeleted, node)
+            )
+            (assoc this :nodeUsages [])
+        )
+    )
+
+    (defn #_"Node" Node''replaceAtMatchingUsages-3 [#_"Node" this, #_"Node" other, #_"NodePredicate" filter]
+        (Node''checkReplaceWith-2 this, other)
         (when (some? filter) => (throw! "filter cannot be nil")
             (Node''checkReplaceWith-2 this, other)
             (loop-when [this this #_"int" i 0] (< i (Node''getUsageCount-1 this)) => this
                 (let [
-                    #_"Node" usage (Node''getUsageAt-2 this, i)
+                    #_"Node" usage (nth (:nodeUsages this) i)
                 ]
                     (when (#_"Predicate" .test filter, usage) => (recur this (inc i))
-                        (Node''replaceAtUsage-4 this, other, toBeDeleted, usage)
-                        (recur (Node''movUsageFromEndTo-2 this, i) i)
+                        (Node''replaceAtUsage-4 this, other, nil, usage)
+                        (recur (update this :nodeUsages #(assoc (pop %) i (peek %))) i)
                     )
                 )
             )
         )
     )
 
-    (defm Node Node
-        (#_"void" Node'''replaceAtUsages-4 [#_"Node" this, #_"Node" other, #_"Predicate<Node>" filter, #_"Node" toBeDeleted]
-            (if (some? filter)
-                (§ ass! this (Node''replaceAtMatchingUsages-4 this, other, filter, toBeDeleted))
-                (§ ass! this (Node''replaceAtAllUsages-3 this, other, toBeDeleted))
-            )
-            nil
-        )
-    )
-
-    (defn #_"Node" Node''replaceAtAllUsages-3 [#_"Node" this, #_"Node" other, #_"Node" toBeDeleted]
+    (defn #_"void" Node''replaceAtUsages-3 [#_"Node" this, #_"InputType" type, #_"Node" other]
         (Node''checkReplaceWith-2 this, other)
-        (when (some? (:usage0 this)) => this
-            (Node''replaceAtUsage-4 this, other, toBeDeleted, (:usage0 this))
-            (let [
-                this (assoc this :usage0 nil)
-            ]
-                (when (some? (:usage1 this)) => this
-                    (Node''replaceAtUsage-4 this, other, toBeDeleted, (:usage1 this))
-                    (let [
-                        this (assoc this :usage1 nil)
-                    ]
-                        (when (pos? (:extraUsagesCount this)) => this
-                            (dotimes [#_"int" i (:extraUsagesCount this)]
-                                (Node''replaceAtUsage-4 this, other, toBeDeleted, (nth (:extraUsages this) i))
-                            )
-                            (let [
-                                this (assoc this :extraUsages (make-array Node'iface 0))
-                                this (assoc this :extraUsagesCount 0)
-                            ]
-                                this
-                            )
-                        )
-                    )
-                )
+        (doseq [#_"Node" usage (§ snap (Node''usages-1 this)) #_"Position" pos (Node''inputPositions-1 usage)]
+            (when (and (= (Position''getInputType-1 pos) type) (= (Position''get-2 pos, usage) this))
+                (Position''set-3 pos, usage, other)
             )
         )
-    )
-
-    (defn #_"Node" Node''getUsageAt-2 [#_"Node" this, #_"int" index]
-        (case index
-            0 (:usage0 this)
-            1 (:usage1 this)
-              (nth (:extraUsages this) (- index 2))
-        )
-    )
-
-    (defn #_"Node" Node''replaceAtMatchingUsages-3 [#_"Node" this, #_"Node" other, #_"NodePredicate" usagePredicate]
-        (Node''checkReplaceWith-2 this, other)
-        (Node''replaceAtMatchingUsages-4 this, other, usagePredicate, nil)
-    )
-
-    (defm Node Node
-        (#_"void" Node'''replaceAtUsages-3 [#_"Node" this, #_"InputType" type, #_"Node" other]
-            (Node''checkReplaceWith-2 this, other)
-            (doseq [#_"Node" usage (§ snap (Node''usages-1 this))]
-                (doseq [#_"Position" pos (Node''inputPositions-1 usage)]
-                    (when (and (= (Position''getInputType-1 pos) type) (= (Position''get-2 pos, usage) this))
-                        (Position''set-3 pos, usage, other)
-                    )
-                )
-            )
-            nil
-        )
+        nil
     )
 
     (defn #_"void" Node''maybeNotifyZeroUsages-2 [#_"Node" this, #_"Node" node]
@@ -52810,10 +52596,6 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn #_"boolean" Node''removeThisFromUsages-2 [#_"Node" this, #_"Node" n]
-        (Node''removeUsage-2 n, this)
-    )
-
     (defn #_"void" Node''clearSuccessors-1 [#_"Node" this]
         (NodeClass''unregisterAtSuccessorsAsPredecessor-2 (:nodeClass this), this)
         nil
@@ -52846,7 +52628,7 @@ ZeroExtendNode'new-4
         ]
             (when insertIntoGraph
                 (doseq [#_"Node" input (Node''inputs-1 this)]
-                    (Node''addUsage-2 input, newNode)
+                    (§ ass! input (Node''addUsage-2 input, newNode))
                 )
             )
             newNode
@@ -52895,7 +52677,7 @@ ZeroExtendNode'new-4
                 (when (some? into)
                     (§ ass! into (Graph''register-2 into, node))
                 )
-            node (assoc node :extraUsages (make-array Node'iface 0))
+            node (assoc node :nodeUsages [])
         ]
             (Node'''afterClone-2 node, this)
             node
@@ -54395,8 +54177,8 @@ ZeroExtendNode'new-4
             #_"MergeNode" merge (Graph''add-2 (:graph this), (MergeNode'new-0))
         ]
             (when (seq (AbstractBeginNode'''anchored-1 begin))
-                (Node'''replaceAtUsages-3 begin, InputType'Guard, merge)
-                (Node'''replaceAtUsages-3 begin, InputType'Anchor, merge)
+                (Node''replaceAtUsages-3 begin, InputType'Guard, merge)
+                (Node''replaceAtUsages-3 begin, InputType'Anchor, merge)
             )
 
             (let [
@@ -56300,7 +56082,7 @@ ZeroExtendNode'new-4
                         #_"ProxyNode" vpn (first s)
                         #_"ValueNode" value (:value vpn)
                     ]
-                        (Node''replaceAtUsagesAndDelete-2 vpn, value)
+                        (§ ass! vpn (Node''replaceAtUsagesAndDelete-2 vpn, value))
                         ;; Guard proxy could have this input as value.
                         (or (= value this) (recur (next s)))
                     )
@@ -58005,8 +57787,8 @@ ZeroExtendNode'new-4
         ]
             (doseq [#_"Node" usage (§ snap (Node''usages-1 this))]
                 (if (satisfies? AllocatedObjectNode usage)
-                    (Node''replaceAtUsagesAndDelete-2 usage, (nth allocations (#_"List" .indexOf (:virtualObjects this), (:virtualObject usage))))
-                    (Node'''replaceAtUsages-3 this, InputType'Memory, (nth enters (dec (count enters))))
+                    (§ ass! usage (Node''replaceAtUsagesAndDelete-2 usage, (nth allocations (#_"List" .indexOf (:virtualObjects this), (:virtualObject usage)))))
+                    (Node''replaceAtUsages-3 this, InputType'Memory, (nth enters (dec (count enters))))
                 )
             )
             (doseq [#_"MonitorEnterNode" enter enters]
@@ -60682,8 +60464,8 @@ ZeroExtendNode'new-4
             (let [
                 #_"AbstractBeginNode" prevBegin (AbstractBeginNode'prevBegin-1 this)
             ]
-                (Node'''replaceAtUsages-3 this, InputType'Anchor, prevBegin)
-                (Node'''replaceAtUsages-3 this, InputType'Guard, prevBegin)
+                (Node''replaceAtUsages-3 this, InputType'Anchor, prevBegin)
+                (Node''replaceAtUsages-3 this, InputType'Guard, prevBegin)
                 (when (and (CanonicalizerTool'''allUsagesAvailable-1 tool) (Node''hasNoUsages-1 this))
                     (Graph''removeFixed-2 (:graph this), this)
                 )
@@ -63384,7 +63166,7 @@ ZeroExtendNode'new-4
                     #_"AddressNode" address (Lowerer'createOffsetAddress-3 graph, (ConvertNode'''getValue-1 this), HotSpot'klassOffset)
                     #_"FloatingReadNode" read (Graph''add-2 graph, (FloatingReadNode'new-6 address, ReplacementsUtil'CLASS_KLASS_LOCATION, nil, (:stamp this), nil, BarrierType'NONE))
                 ]
-                    (Node''replaceAtUsagesAndDelete-2 this, read)
+                    (§ ass! this (Node''replaceAtUsagesAndDelete-2 this, read))
                 )
             )
             nil
@@ -64427,7 +64209,7 @@ ZeroExtendNode'new-4
                 #_"LoadHubNode" hub (Graph''add-2 (:graph this), (LoadHubNode'new-1 (:object this)))
                 #_"HubGetClassNode" hubGetClass (Graph''add-2 (:graph this), (HubGetClassNode'new-1 hub))
             ]
-                (Node''replaceAtUsagesAndDelete-2 this, hubGetClass)
+                (§ ass! this (Node''replaceAtUsagesAndDelete-2 this, hubGetClass))
                 (Lowerable'''lower-2 hub, lowerer)
                 (Lowerable'''lower-2 hubGetClass, lowerer)
             )
@@ -64520,7 +64302,7 @@ ZeroExtendNode'new-4
                     address (Lowerer'createOffsetAddress-3 graph, read, 0)
                     read (Graph''add-2 graph, (FloatingReadNode'new-6 address, ReplacementsUtil'CLASS_MIRROR_HANDLE_LOCATION, nil, (:stamp this), nil, BarrierType'NONE))
                 ]
-                    (Node''replaceAtUsagesAndDelete-2 this, read)
+                    (§ ass! this (Node''replaceAtUsagesAndDelete-2 this, read))
                 )
             )
             nil
@@ -64666,7 +64448,7 @@ ZeroExtendNode'new-4
                     #_"Graph" graph (:graph this)
                     #_"AddressNode" address (Lowerer'createOffsetAddress-3 graph, (:klass this), HotSpot'klassLayoutHelperOffset)
                 ]
-                    (Node''replaceAtUsagesAndDelete-2 this, (Graph''add-2 graph, (FloatingReadNode'new-6 address, ReplacementsUtil'KLASS_LAYOUT_HELPER_LOCATION, nil, (:stamp this), nil, BarrierType'NONE)))
+                    (§ ass! this (Node''replaceAtUsagesAndDelete-2 this, (Graph''add-2 graph, (FloatingReadNode'new-6 address, ReplacementsUtil'KLASS_LAYOUT_HELPER_LOCATION, nil, (:stamp this), nil, BarrierType'NONE))))
                 )
             )
             nil
@@ -64707,7 +64489,7 @@ ZeroExtendNode'new-4
     (defm LoadHubNode Lowerable
         (#_"void" Lowerable'''lower-2 [#_"LoadHubNode" this, #_"LoweringTool" lowerer]
             (when (and (= (:loweringStage (:phase lowerer)) LoweringStage'LOW_TIER) (not (GuardsStage'allowsFloatingGuards-1 (:guardsStage (:graph this)))))
-                (Node''replaceAtUsagesAndDelete-2 this, (Lowerer'createReadHub-3 (:graph this), (:value this), lowerer))
+                (§ ass! this (Node''replaceAtUsagesAndDelete-2 this, (Lowerer'createReadHub-3 (:graph this), (:value this), lowerer)))
             )
             nil
         )
@@ -67373,7 +67155,7 @@ ZeroExtendNode'new-4
                         (Graph''add-2 (:graph this), (UnsignedRightShiftNode'new-2 (:value this), (ConstantNode'forInt-2 32, (:graph this))))
                     )
             ]
-                (Node''replaceAtUsagesAndDelete-2 this, (IntegerConvertNode'convert-3g result, (StampFactory'forKind-1 JavaKind/Int), (:graph this)))
+                (§ ass! this (Node''replaceAtUsagesAndDelete-2 this, (IntegerConvertNode'convert-3g result, (StampFactory'forKind-1 JavaKind/Int), (:graph this))))
             )
             nil
         )
@@ -68741,16 +68523,8 @@ ZeroExtendNode'new-4
             this (assoc this :current nil)
             this (update this :index inc)
         ]
-            (condp = (:index this)
-                0 (assoc this :current (:usage0 (:node this)))
-                1 (assoc this :current (:usage1 (:node this)))
-                (let [
-                    #_"int" i (- (:index this) 2)
-                ]
-                    (when (< i (:extraUsagesCount (:node this))) => this
-                        (assoc this :current (nth (:extraUsages (:node this)) i))
-                    )
-                )
+            (when (< (:index this) (count (:nodeUsages (:node this)))) => this
+                (assoc this :current (nth (:nodeUsages (:node this)) (:index this)))
             )
         )
     )
@@ -70461,7 +70235,7 @@ ZeroExtendNode'new-4
         ]
             (and (some? constant) (not (satisfies? ConstantNode node))
                 (do
-                    (Node'''replaceAtUsages-3 node, InputType'Value, (ConstantNode'forConstant-3s stamp, constant, (:graph this)))
+                    (Node''replaceAtUsages-3 node, InputType'Value, (ConstantNode'forConstant-3s stamp, constant, (:graph this)))
                     (GraphUtil'tryKillUnused-1 node)
                     true
                 )
@@ -70987,7 +70761,7 @@ ZeroExtendNode'new-4
         (#_"Graph" Phase'''run-3 [#_"RemoveValueProxyPhase" this, #_"Graph" graph, #_"PhaseContext" context]
             (doseq [#_"LoopExitNode" exit (Graph''getNodes-2 graph, (ß LoopExitNode'TYPE))]
                 (doseq [#_"ProxyNode" vpn (§ snap (LoopExitNode''proxies-1 exit))]
-                    (Node''replaceAtUsagesAndDelete-2 vpn, (:value vpn))
+                    (§ ass! vpn (Node''replaceAtUsagesAndDelete-2 vpn, (:value vpn)))
                 )
                 (let [
                     #_"FrameState" stateAfter (:stateAfter exit)
@@ -72583,7 +72357,7 @@ ZeroExtendNode'new-4
                         (let [
                             #_"MemoryAnchorNode" anchor (Graph''add-2 snippetCopy, (MemoryAnchorNode'new-0))
                         ]
-                            (Node'''replaceAtUsages-3 (:start snippetCopy), InputType'Memory, anchor)
+                            (Node''replaceAtUsages-3 (:start snippetCopy), InputType'Memory, anchor)
 
                             (let [
                                 this (assoc this :snippet snippetCopy)
@@ -76895,7 +76669,7 @@ ZeroExtendNode'new-4
             ;; We now have the pattern NullCheck/BeginNode/... It's possible some node is using the
             ;; BeginNode as a guard input, so replace guard users of the Begin with the NullCheck and
             ;; then remove the Begin from the graph.
-            (Node'''replaceAtUsages-3 nonTrappingContinuation, InputType'Guard, trappingNullCheck)
+            (Node''replaceAtUsages-3 nonTrappingContinuation, InputType'Guard, trappingNullCheck)
 
             (when (satisfies? BeginNode nonTrappingContinuation)
                 (GraphUtil'unlinkFixedNode-1 nonTrappingContinuation)
