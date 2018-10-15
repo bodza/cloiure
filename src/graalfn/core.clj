@@ -1,5 +1,5 @@
 (ns graalfn.core
-    (:refer-clojure :only [* *ns* + - -> ->> / < <= = > >= aget and apply aset assoc bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean boolean-array byte byte-array case char cond condp conj cons contains? count dec declare defmacro defn defprotocol defrecord doseq dotimes double double-array empty? extend-protocol extend-type filter first get hash-map if-not import inc instance? int int-array into into-array iterate iterator-seq keys let letfn list locking long long-array loop make-array map max merge min neg? next nil? not not= ns-imports ns-unmap nth object-array or peek pop pos? quot reduce reify rem remove repeat rest run! satisfies? second seq sequential? short some some? sorted-map str symbol symbol? take-while unsigned-bit-shift-right update update-in vals vary-meta vec vector? volatile! vreset! vswap! when-some while zero?])
+    (:refer-clojure :only [* *ns* + - -> ->> / < <= = > >= aget and apply aset assoc bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean boolean-array byte byte-array case char cond condp conj cons contains? count dec declare defmacro defn defprotocol defrecord doseq dotimes double double-array empty? extend-protocol extend-type filter first get hash-map if-not import inc instance? int int-array into into-array iterate iterator-seq keys let letfn list locking long long-array loop make-array map max merge min neg? next nil? not not= ns-imports ns-unmap nth object-array or peek pop pos? quot reduce reify rem remove repeat rest run! satisfies? second seq sequential? short some some? sorted-map str subvec symbol symbol? take-while unsigned-bit-shift-right update update-in vals vary-meta vec vector? volatile! vreset! vswap! when-some while zero?])
 )
 
 (defmacro § [& _])
@@ -112,7 +112,7 @@
         Deque EnumMap EnumSet HashMap Iterator LinkedList List ListIterator Map Map$Entry NoSuchElementException
         PriorityQueue Queue Set SortedSet TreeSet
     ]
-    [java.util.concurrent.atomic AtomicInteger AtomicLong AtomicReference]
+    [java.util.concurrent.atomic AtomicLong AtomicReference]
     [java.util.function BiConsumer BiFunction Consumer Function IntUnaryOperator Predicate ToDoubleFunction]
     [java.util.stream Stream Stream$Builder]
 
@@ -1767,12 +1767,11 @@ Graph''addOrUniqueWithInputs-2
 Graph''clearAllStateAfter-1
 Graph''freeze-1
 Graph''getInvokes-1
-Graph''getIterableNodeNext-2
-Graph''getIterableNodeStart-2
-Graph''getNewNodes-2
+Graph''getMark-1
 Graph''getNodeCount-1
 Graph''getNodes-1
 Graph''getNodes-2
+Graph''getNodesSince-2
 Graph''getParameter-2
 Graph''getReturnStamp-1
 Graph''hasLoops-1
@@ -1832,7 +1831,6 @@ GraphKit''startIf-3
 GraphKit''thenPart-1
 GraphKit'findMethod-3*
 GraphKit'new-1
-GraphNodeIterator'new-2
 GraphUtil'arrayLength-1
 GraphUtil'checkRedundantPhi-1
 GraphUtil'checkRedundantProxy-1
@@ -3122,9 +3120,6 @@ NodeMap''set-3
 NodeMap''setAndGrow-3
 NodeMap'new-1g
 NodeMap'new-1m
-NodeMark''isCurrent-1
-NodeMark''isStart-1
-NodeMark'new-1
 NodeStack''clear-1
 NodeStack''get-2
 NodeStack''isEmpty-1
@@ -3735,7 +3730,6 @@ TypeReference''asExactReference-1
 TypeReference'create-1
 TypeReference'createExactTrusted-1
 TypeReference'createTrusted-1
-TypedGraphNodeIterator'new-2
 UMulHigh'new-2
 UShr'new-0
 UnaryArithmeticNode''getOp-2
@@ -5136,7 +5130,6 @@ ZeroExtendNode'new-4
 (defp GraphBuilderPhase)
 (defp GraphEffectList)
 (defp GraphKit)
-(defp GraphNodeIterator)
 (defp GreedyInliningPolicy)
 (defp GuardLoweringPhase)
 (defp GuardNode)
@@ -5487,16 +5480,6 @@ ZeroExtendNode'new-4
 (defp InvokeKind)
 (defp InvokeNode)
 (defp IsNullNode)
-
-;;;
- ; A marker for a node type supporting {@linkplain Graph#getNodes(NodeClass) fast iteration} of its
- ; instances in a graph. The support for fast iteration comes with a memory cost (e.g. extra data
- ; structures Graph) so only node types for which fast iteration provides a compilation performance
- ; benefit should implement this interface.
- ;;
-(defp IterableNodeType
-)
-
 (defp IterativeConditionalEliminationPhase)
 (defp IterativeNodeWorkList)
 (defp JSRData)
@@ -6025,7 +6008,6 @@ ZeroExtendNode'new-4
 
 (defp NodeLoopInfo)
 (defp NodeMap)
-(defp NodeMark)
 
 (defp NodePlugin
     ;;;
@@ -6700,7 +6682,6 @@ ZeroExtendNode'new-4
 )
 
 (defp TypeReference)
-(defp TypedGraphNodeIterator)
 (defp UMulHigh)
 (defp UShr)
 
@@ -10619,7 +10600,7 @@ ZeroExtendNode'new-4
         ]
             (while (not (Node''isDeleted-1 loopBegin))
                 (let [
-                    #_"NodeMark" mark (NodeMark'new-1 graph)
+                    #_"int" mark (Graph''getMark-1 graph)
                 ]
                     (LoopTransformations'peel-1 _loop)
                     (CanonicalizerPhase''applyIncremental-3m canonicalizer, graph, mark)
@@ -11680,7 +11661,7 @@ ZeroExtendNode'new-4
     (defn #_"void" GraphUtil'normalizeLoops-1 [#_"Graph" graph]
         (let [
             #_"boolean" removed?
-                (loop-when [removed? false #_"ISeq" s (seq (Graph''getNodes-2 graph, (ß LoopBeginNode'TYPE)))] (some? s) => removed?
+                (loop-when [removed? false #_"ISeq" s (seq (Graph''getNodes-2 graph, LoopBeginNode))] (some? s) => removed?
                     (let [
                         #_"LoopBeginNode" begin (first s)
                         removed?
@@ -12061,7 +12042,6 @@ ZeroExtendNode'new-4
                                     )
                                 )
                             )
-                        #_"NodeMark" mark (NodeMark'new-1 graph)
                         ;; Instead, attach the inlining log of the child graph to the current inlining log.
                         #_"EconomicMap<Node, Node>" duplicates (Graph''addDuplicates-5r graph, nodes, inlineGraph, (Graph''getNodeCount-1 inlineGraph), localReplacement)
                         #_"FrameState" stateAfter (:stateAfter invoke)
@@ -12069,7 +12049,7 @@ ZeroExtendNode'new-4
                         (when (some? stateAfter)
                             (InliningUtil'processFrameStates-4 invoke, inlineGraph, duplicates, (< 1 (count returnNodes)))
                             (when-not (zero? (FrameState''nestedLockDepth-1 stateAfter))
-                                (doseq [#_"MonitorIdNode" original (Graph''getNodes-2 inlineGraph, (ß MonitorIdNode'TYPE))]
+                                (doseq [#_"MonitorIdNode" original (Graph''getNodes-2 inlineGraph, MonitorIdNode)]
                                     (InliningUtil'processMonitorId-2 (:stateAfter invoke), (get duplicates original))
                                 )
                             )
@@ -12140,7 +12120,7 @@ ZeroExtendNode'new-4
             #_"JavaKind" invokeReturnKind (ValueNode''getStackKind-1 invoke)
             #_"EconomicMap<Node, Node>" replacements (EconomicMap/create)
             #_"FrameState" outerFrameState
-                (loop-when [outerFrameState nil #_"ISeq" s (seq (Graph''getNodes-2 inlineGraph, (ß FrameState'TYPE)))] (some? s) => outerFrameState
+                (loop-when [outerFrameState nil #_"ISeq" s (seq (Graph''getNodes-2 inlineGraph, FrameState))] (some? s) => outerFrameState
                     (let [
                         #_"FrameState" frameState (get duplicates (first s))
                         outerFrameState
@@ -12808,24 +12788,16 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"void" GuardOrder'resortGuards-3 [#_"Graph" graph, #_"NodeMap<MicroBlock>" entries, #_"NodeStack" stack]
         (let [
-            #_"EconomicSet<MicroBlock>" blocksWithGuards (EconomicSet/create Equivalence/IDENTITY)
+            #_"NodeBitMap" blockNodes (NodeBitMap'new-1 graph)
+            #_"NodeMap<GuardPriority>" priorities (NodeMap'new-1g graph)
         ]
-            (doseq [#_"GuardNode" guard (Graph''getNodes-2 graph, (ß GuardNode'TYPE))]
-                (#_"EconomicSet" .add blocksWithGuards, (get entries guard))
-            )
-            (let [
-                #_"NodeMap<GuardPriority>" priorities (NodeMap'new-1g graph)
-                #_"NodeBitMap" blockNodes (NodeBitMap'new-1 graph)
-            ]
-                (loop-when-recur [#_"ISeq" s (seq blocksWithGuards)] (some? s) [(next s)]
-                    (let [
-                        #_"MicroBlock" block (first s)
-                        #_"MicroBlock" newBlock (GuardOrder'resortGuards-4 block, stack, blockNodes, priorities)
-                    ]
-                        (when (some? newBlock)
-                            (§ ass! block (assoc block :head (:head newBlock)))
-                            (§ ass! block (assoc block :tail (:tail newBlock)))
-                        )
+            (doseq [#_"MicroBlock" block (into #{} (map #(get entries %) (Graph''getNodes-2 graph, GuardNode)))]
+                (let [
+                    #_"MicroBlock" newBlock (GuardOrder'resortGuards-4 block, stack, blockNodes, priorities)
+                ]
+                    (when (some? newBlock)
+                        (§ ass! block (assoc block :head (:head newBlock)))
+                        (§ ass! block (assoc block :tail (:tail newBlock)))
                     )
                 )
             )
@@ -18082,8 +18054,8 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn #_"BciBlock" BciBlock''setId-2 [#_"BciBlock" this, #_"int" i]
-        (assoc this :id i)
+    (defn #_"BciBlock" BciBlock''setId-2 [#_"BciBlock" this, #_"int" id]
+        (assoc this :id id)
     )
 
     (defn #_"void" BciBlock''addSuccessor-2 [#_"BciBlock" this, #_"BciBlock" sux]
@@ -21389,14 +21361,14 @@ ZeroExtendNode'new-4
         (GraphUtil'normalizeLoops-1 (:graph this))
 
         ;; Remove dead parameters.
-        (doseq [#_"ParameterNode" param (Graph''getNodes-2 (:graph this), (ß ParameterNode'TYPE))]
+        (doseq [#_"ParameterNode" param (Graph''getNodes-2 (:graph this), ParameterNode)]
             (when (Node''hasNoUsages-1 param)
                 (Node''safeDelete-1 param)
             )
         )
 
         ;; Remove redundant begin nodes.
-        (doseq [#_"BeginNode" beginNode (Graph''getNodes-2 (:graph this), (ß BeginNode'TYPE))]
+        (doseq [#_"BeginNode" beginNode (Graph''getNodes-2 (:graph this), BeginNode)]
             (when (and (not (satisfies? ControlSplitNode (:predecessor beginNode))) (not (Node''hasUsages-1 beginNode)))
                 (GraphUtil'unlinkFixedNode-1 beginNode)
                 (Node''safeDelete-1 beginNode)
@@ -24363,7 +24335,7 @@ ZeroExtendNode'new-4
             #_"EconomicSet<ParameterNode>" params (EconomicSet/create Equivalence/IDENTITY)
         ]
             (when (and (some? freshlyInstantiatedArguments) (not (#_"BitSet" .isEmpty freshlyInstantiatedArguments))) => params
-                (doseq [#_"ParameterNode" param (Graph''getNodes-2 (:graph this), (ß ParameterNode'TYPE))]
+                (doseq [#_"ParameterNode" param (Graph''getNodes-2 (:graph this), ParameterNode)]
                     (when (#_"BitSet" .get freshlyInstantiatedArguments, (AbstractLocalNode''index-1 param))
                         (#_"EconomicSet" .add params, param)
                     )
@@ -24487,11 +24459,11 @@ ZeroExtendNode'new-4
 )
 
 (class-ns CanonicalizerInstance [Phase]
-    (defn #_"CanonicalizerInstance" CanonicalizerInstance'new-3 [#_"CanonicalizerPhase" phase, #_"Node*" workingSet, #_"NodeMark" newNodesMark]
+    (defn #_"CanonicalizerInstance" CanonicalizerInstance'new-3 [#_"CanonicalizerPhase" phase, #_"Node*" workingSet, #_"int" newNodesMark]
         (merge (CanonicalizerInstance'class.)
             (hash-map
                 #_"CanonicalizerPhase" :phase phase
-                #_"NodeMark" :newNodesMark newNodesMark
+                #_"int" :newNodesMark newNodesMark
                 #_"Node*" :initWorkingSet workingSet
                 #_"NodeWorkList" :workList nil
                 #_"Tool" :tool nil
@@ -24592,17 +24564,17 @@ ZeroExtendNode'new-4
     (defm CanonicalizerInstance Phase
         (#_"Graph" Phase'''run-3 [#_"CanonicalizerInstance" this, #_"Graph" graph, #_"PhaseContext" context]
             (let [
-                #_"boolean" wholeGraph (or (nil? (:newNodesMark this)) (NodeMark''isStart-1 (:newNodesMark this)))
+                #_"boolean" whole-graph? (zero? (:newNodesMark this))
             ]
                 (if (nil? (:initWorkingSet this))
-                    (§ ass! this (assoc this :workList (IterativeNodeWorkList'new-3 graph, wholeGraph, CanonicalizerInstance'MAX_ITERATION_PER_NODE)))
+                    (§ ass! this (assoc this :workList (IterativeNodeWorkList'new-3 graph, whole-graph?, CanonicalizerInstance'MAX_ITERATION_PER_NODE)))
                     (do
                         (§ ass! this (assoc this :workList (IterativeNodeWorkList'new-3 graph, false, CanonicalizerInstance'MAX_ITERATION_PER_NODE)))
                         (NodeWorkList''addAll-2 (:workList this), (:initWorkingSet this))
                     )
                 )
-                (when-not wholeGraph
-                    (NodeWorkList''addAll-2 (:workList this), (Graph''getNewNodes-2 graph, (:newNodesMark this)))
+                (when-not whole-graph?
+                    (NodeWorkList''addAll-2 (:workList this), (Graph''getNodesSince-2 graph, (:newNodesMark this)))
                 )
                 (§ ass! this (assoc this :tool (Tool'new-1 this)))
                 (CanonicalizerInstance''processWorkSet-2 this, graph)
@@ -24709,9 +24681,9 @@ ZeroExtendNode'new-4
     )
 
     ;;;
-     ; @param newNodesMark only the {@linkplain Graph#getNewNodes(NodeMark) new nodes} specified by this mark are processed
+     ; @param newNodesMark only the {@linkplain Graph#getNodesSince(int) new nodes} specified by this mark are processed
      ;;
-    (defn #_"void" CanonicalizerPhase''applyIncremental-3m [#_"CanonicalizerPhase" this, #_"Graph" graph, #_"NodeMark" newNodesMark]
+    (defn #_"void" CanonicalizerPhase''applyIncremental-3m [#_"CanonicalizerPhase" this, #_"Graph" graph, #_"int" newNodesMark]
         (§ ass! graph (Phase'''run-3 (CanonicalizerInstance'new-3 this, nil, newNodesMark), graph, nil))
         nil
     )
@@ -24720,13 +24692,13 @@ ZeroExtendNode'new-4
      ; @param workingSet the initial working set of nodes on which the canonicalizer works, should be an auto-grow node bitmap
      ;;
     (defn #_"void" CanonicalizerPhase''applyIncremental-3i [#_"CanonicalizerPhase" this, #_"Graph" graph, #_"Node*" workingSet]
-        (§ ass! graph (Phase'''run-3 (CanonicalizerInstance'new-3 this, workingSet, nil), graph, nil))
+        (§ ass! graph (Phase'''run-3 (CanonicalizerInstance'new-3 this, workingSet, 0), graph, nil))
         nil
     )
 
     (defm CanonicalizerPhase Phase
         (#_"Graph" Phase'''run-3 [#_"CanonicalizerPhase" this, #_"Graph" graph, #_"PhaseContext" context]
-            (Phase'''run-3 (CanonicalizerInstance'new-3 this, nil, nil), graph, nil)
+            (Phase'''run-3 (CanonicalizerInstance'new-3 this, nil, 0), graph, nil)
         )
     )
 )
@@ -26548,7 +26520,7 @@ ZeroExtendNode'new-4
                 #_"EconomicMap<LoopBeginNode, Scope>" loops (EconomicMap/create Equivalence/IDENTITY)
                 #_"Scope" topScope (Scope'new-3 this, (:start (:graph this)), nil)
             ]
-                (doseq [#_"LoopBeginNode" loopBegin (Graph''getNodes-2 (:graph this), (ß LoopBeginNode'TYPE))]
+                (doseq [#_"LoopBeginNode" loopBegin (Graph''getNodes-2 (:graph this), LoopBeginNode)]
                     (ComputeInliningRelevance''createLoopScope-4 this, loopBegin, loops, topScope)
                 )
                 (Scope''process-2 topScope, workList)
@@ -28279,7 +28251,7 @@ ZeroExtendNode'new-4
         ;; Find all block headers.
         (let [
             #_"int" numBlocks
-                (loop-when-recur [numBlocks 0 #_"ISeq" s (seq (Graph''getNodes-2 (:graph this), (ß AbstractBeginNode'TYPE)))] (some? s) [(inc numBlocks) (next s)] => numBlocks
+                (loop-when-recur [numBlocks 0 #_"ISeq" s (seq (Graph''getNodes-2 (:graph this), AbstractBeginNode))] (some? s) [(inc numBlocks) (next s)] => numBlocks
                     (ControlFlowGraph''identifyBlock-2 this, (Block'new-1 (first s)))
                 )
             ;; Compute reverse post order.
@@ -29225,13 +29197,13 @@ ZeroExtendNode'new-4
 
     (defm ConvertDeoptimizeToGuardPhase Phase
         (#_"Graph" Phase'''run-3 [#_"ConvertDeoptimizeToGuardPhase" this, #_"Graph" graph, #_"PhaseContext" context]
-            (doseq [#_"DeoptimizeNode" d (Graph''getNodes-2 graph, (ß DeoptimizeNode'TYPE))]
+            (doseq [#_"DeoptimizeNode" d (Graph''getNodes-2 graph, DeoptimizeNode)]
                 (when-not (= (:action d) DeoptimizationAction/None)
                     (ConvertDeoptimizeToGuardPhase''propagateFixed-3 this, d, d)
                 )
             )
             (when (some? context)
-                (doseq [#_"FixedGuardNode" fixedGuard (Graph''getNodes-2 graph, (ß FixedGuardNode'TYPE))]
+                (doseq [#_"FixedGuardNode" fixedGuard (Graph''getNodes-2 graph, FixedGuardNode)]
                     (ConvertDeoptimizeToGuardPhase''trySplitFixedGuard-2 this, fixedGuard)
                 )
             )
@@ -29719,7 +29691,7 @@ ZeroExtendNode'new-4
                     (DeadCodeEliminationPhase'iterateSuccessorsAndInputs-1 flood)
                     (let [
                         #_"boolean" changed?
-                            (loop-when [changed? false #_"ISeq" s (seq (Graph''getNodes-2 graph, (ß GuardNode'TYPE)))] (some? s) => changed?
+                            (loop-when [changed? false #_"ISeq" s (seq (Graph''getNodes-2 graph, GuardNode))] (some? s) => changed?
                                 (let [
                                     #_"GuardNode" guard (first s)
                                     changed?
@@ -30018,7 +29990,7 @@ ZeroExtendNode'new-4
 
     (defm DeoptimizationGroupingPhase Phase
         (#_"Graph" Phase'''run-3 [#_"DeoptimizationGroupingPhase" this, #_"Graph" graph, #_"PhaseContext" context]
-            (loop-when [#_"ControlFlowGraph" cfg nil #_"ISeq" s (seq (Graph''getNodes-2 graph, (ß FrameState'TYPE)))] (some? s)
+            (loop-when [#_"ControlFlowGraph" cfg nil #_"ISeq" s (seq (Graph''getNodes-2 graph, FrameState))] (some? s)
                 (let [
                     #_"FrameState" fs (first s)
                     [cfg #_"FixedNode" target #_"List<AbstractDeoptimizeNode>" obsoletes]
@@ -31545,7 +31517,7 @@ ZeroExtendNode'new-4
 
     (defm PartialEscapePhase EffectsPhase
         (#_"EffectsClosure" EffectsPhase'''createEffectsClosure-3 [#_"PartialEscapePhase" this, #_"ScheduleResult" schedule, #_"ControlFlowGraph" cfg]
-            (doseq [#_"VirtualObjectNode" virtual (Graph''getNodes-2 (:graph cfg), (ß VirtualObjectNode'TYPE))]
+            (doseq [#_"VirtualObjectNode" virtual (Graph''getNodes-2 (:graph cfg), VirtualObjectNode)]
                 (§ ass! virtual (VirtualObjectNode''resetObjectId-1 virtual))
             )
             (if (:readElimination this)
@@ -31743,10 +31715,10 @@ ZeroExtendNode'new-4
 
     (defm ExpandLogicPhase Phase
         (#_"Graph" Phase'''run-3 [#_"ExpandLogicPhase" this, #_"Graph" graph, #_"PhaseContext" context]
-            (doseq [#_"ShortCircuitOrNode" logic (Graph''getNodes-2 graph, (ß ShortCircuitOrNode'TYPE))]
+            (doseq [#_"ShortCircuitOrNode" logic (Graph''getNodes-2 graph, ShortCircuitOrNode)]
                 (ExpandLogicPhase'processBinary-1 logic)
             )
-            (doseq [#_"NormalizeCompareNode" logic (Graph''getNodes-2 graph, (ß NormalizeCompareNode'TYPE))]
+            (doseq [#_"NormalizeCompareNode" logic (Graph''getNodes-2 graph, NormalizeCompareNode)]
                 (ExpandLogicPhase'processNormalizeCompareNode-1 logic)
             )
             (Graph''setAfterExpandLogic-1 graph)
@@ -32042,10 +32014,8 @@ ZeroExtendNode'new-4
 )
 
 ;;;
- ; Metadata for every Node type. The metadata includes:
- ;
- ; (1) The offsets of fields annotated with Input and Successor as well as methods for iterating over such fields.
- ; (2) The identifier for an IterableNodeType class.
+ ; Metadata for every Node type. The metadata includes the offsets of fields annotated with Input and
+ ; Successor as well as methods for iterating over such fields.
  ;;
 (class-ns NodeClass #_"<T>" [FieldIntrospection #_"<T>"]
     (def #_"long" NodeClass'MAX_EDGES 8)
@@ -32053,19 +32023,6 @@ ZeroExtendNode'new-4
     (def #_"long" NodeClass'OFFSET_MASK 0xfc)
     (def #_"long" NodeClass'LIST_MASK 0x01)
     (def #_"long" NodeClass'NEXT_EDGE 0x08)
-
-    (def- #_"AtomicInteger" NodeClass'nextIterableId (AtomicInteger.))
-
-    (defn- #_"NodeClass<T>" NodeClass''addIterableId-2 [#_"NodeClass<T>" this, #_"int" newIterableId]
-        (locking this
-            (let [
-                #_"int[]" copy (Arrays/copyOf (:iterableIds this), (inc (count (:iterableIds this))))
-            ]
-                (aset copy (count (:iterableIds this)) newIterableId)
-                (assoc this :iterableIds copy)
-            )
-        )
-    )
 
     #_unused
     (defn #_"NodeClass" NodeClass'new-2 [#_"Class<T>" clazz, #_"NodeClass<? super T>" superNodeClass]
@@ -32076,8 +32033,6 @@ ZeroExtendNode'new-4
                         #_"InputEdges" :inputs nil
                         #_"SuccessorEdges" :successors nil
                         #_"NodeClass<? super T>" :superNodeClass superNodeClass
-                        #_"int" :iterableId 0
-                        #_"int[]" :iterableIds nil
                         #_"long" :inputsIteration 0
                         #_"long" :successorIteration 0
                         #_"boolean" :canonicalizable? (#_"Class" .isAssignableFrom Canonicalizable'iface, clazz)
@@ -32098,28 +32053,7 @@ ZeroExtendNode'new-4
             this (assoc this :data (Fields'new-1 (:data fs)))
             this (assoc this :isLeafNode (zero? (+ (count (:offsets (:inputs this))) (count (:offsets (:successors this))))))
         ]
-            (if (#_"Class" .isAssignableFrom IterableNodeType'iface, clazz)
-                (let [
-                    this (assoc this :iterableId (#_"AtomicInteger" .getAndIncrement NodeClass'nextIterableId))
-                    this
-                        (loop-when [this this #_"NodeClass" snc superNodeClass] (and (some? snc) (#_"Class" .isAssignableFrom IterableNodeType'iface, (:class snc))) => this
-                            (let [
-                                snc (NodeClass''addIterableId-2 snc, (:iterableId this))
-                            ]
-                                (recur this (:superNodeClass snc))
-                            )
-                        )
-                    this (assoc this :iterableIds (int-array [ (:iterableId this) ]))
-                ]
-                    this
-                )
-                (let [
-                    this (assoc this :iterableId Node'NOT_ITERABLE)
-                    this (assoc this :iterableIds nil)
-                ]
-                    this
-                )
-            )
+            this
         )
     )
 
@@ -34630,7 +34564,7 @@ ZeroExtendNode'new-4
                 (let [
                     graph (Graph''setGuardsStage-2 graph, GuardsStage'AFTER_FSA)
                 ]
-                    (doseq [#_"Node" node (filter Node''hasNoUsages-1 (Graph''getNodes-2 graph, (ß FrameState'TYPE)))]
+                    (doseq [#_"Node" node (filter Node''hasNoUsages-1 (Graph''getNodes-2 graph, FrameState))]
                         (ß GraphUtil'killWithUnusedFloatingInputs node)
                     )
                     graph
@@ -35352,17 +35286,7 @@ ZeroExtendNode'new-4
                         ;;;
                          ; The set of nodes in the graph, ordered by {@linkplain #register(Node) registration} time.
                          ;;
-                        #_"Node[]" :nodes (make-array Node'iface 32)
-                        ;;;
-                         ; The number of valid entries in #nodes.
-                         ;;
-                        #_"int" :nodesSize 0
-                        ;;;
-                         ; These two arrays contain one entry for each NodeClass, indexed by NodeClass.iterableId.
-                         ; They contain the first and last pointer to a linked list of all nodes with this type.
-                         ;;
-                        #_"ArrayList<Node>" :iterableNodesFirst (ArrayList.)
-                        #_"ArrayList<Node>" :iterableNodesLast (ArrayList.)
+                        #_"[Node]" :gNodes []
                         ;;;
                          ; The number of nodes which have been deleted from this graph.
                          ;;
@@ -35405,6 +35329,10 @@ ZeroExtendNode'new-4
         )
     )
 
+    (defn #_"int" Graph''getMark-1 [#_"Graph" this]
+        (count (:gNodes this))
+    )
+
     ;;;
      ; Gets the number of live nodes in this graph. That is the number of nodes which have been
      ; added to the graph minus the number of deleted nodes.
@@ -35412,7 +35340,7 @@ ZeroExtendNode'new-4
      ; @return the number of live nodes in this graph
      ;;
     (defn #_"int" Graph''getNodeCount-1 [#_"Graph" this]
-        (- (:nodesSize this) (:nodesDeleted this))
+        (- (count (:gNodes this)) (:nodesDeleted this))
     )
 
     ;;;
@@ -35473,131 +35401,32 @@ ZeroExtendNode'new-4
     )
 
     ;;;
-     ; Returns an Iterable providing all nodes added since the last {@link Graph#getMark() mark}.
+     ; Returns a sequence of all nodes added since the last {@link Graph#getMark() mark}.
      ;;
-    (defn #_"Node*" Graph''getNewNodes-2 [#_"Graph" this, #_"NodeMark" mark]
-        (iterator-seq (GraphNodeIterator'new-2 this, (if (some? mark) (:value mark) 0)))
+    (defn #_"Node*" Graph''getNodesSince-2 [#_"Graph" this, #_"int" mark]
+        (remove nil? (subvec (:gNodes this) mark))
     )
 
     ;;;
-     ; Returns an Iterable providing all the live nodes.
+     ; Returns a sequence of all the live nodes.
      ;;
     (defn #_"Node*" Graph''getNodes-1 [#_"Graph" this]
-        (iterator-seq (GraphNodeIterator'new-2 this, 0))
+        (Graph''getNodesSince-2 this, 0)
     )
 
     ;;;
      ; Returns an Iterable providing all the live nodes whose type is compatible with {@code type}.
-     ;
-     ; @param nodeClass the type of node to return
-     ; @return an Iterable providing all the matching nodes
      ;;
-    (defn #_"Node*" Graph''getNodes-2 [#_"Graph" this, #_"NodeClass<Node>" nodeClass]
-        (iterator-seq (TypedGraphNodeIterator'new-2 nodeClass, this))
-    )
-
-    (defn- #_"Node" Graph''findFirstLiveIterable-3 [#_"Graph" this, #_"int" iterableId, #_"Node" node]
-        (let [
-            node (loop-when-recur node (and (some? node) (Node''isDeleted-1 node)) (:typeCacheNext node) => node)
-        ]
-            ;; Multiple threads iterating nodes can update this cache simultaneously.
-            ;; This is a benign race, since all threads update it to the same value.
-            (#_"ArrayList" .set (:iterableNodesFirst this), iterableId, node)
-            (when (nil? node)
-                (#_"ArrayList" .set (:iterableNodesLast this), iterableId, node)
-            )
-            node
-        )
-    )
-
-    ;;;
-     ; @return the first live Node with a matching iterableId
-     ;;
-    (defn #_"Node" Graph''getIterableNodeStart-2 [#_"Graph" this, #_"int" iterableId]
-        (when (< iterableId (count (:iterableNodesFirst this)))
-            (let [
-                #_"Node" node (nth (:iterableNodesFirst this) iterableId)
-            ]
-                (when (and (some? node) (Node''isDeleted-1 node)) => node
-                    (Graph''findFirstLiveIterable-3 this, iterableId, node)
-                )
-            )
-        )
-    )
-
-    (defn- #_"Node" Graph''findNextLiveiterable-2 [#_"Graph" this, #_"Node" start]
-        (let [
-            #_"Node" node start
-            node (loop-when-recur node (and (some? node) (Node''isDeleted-1 node)) (:typeCacheNext node) => node)
-        ]
-            (if (nil? node)
-                (do
-                    ;; only dead nodes after this one
-                    (§ ass! start (assoc start :typeCacheNext nil))
-                    (#_"ArrayList" .set (:iterableNodesLast this), (:iterableId (:nodeClass start)), start)
-                )
-                (do
-                    ;; everything in between is dead
-                    (§ ass! start (assoc start :typeCacheNext node))
-                )
-            )
-            node
-        )
-    )
-
-    ;;;
-     ; @return return the first live Node with a matching iterableId starting from {@code node}
-     ;;
-    (defn #_"Node" Graph''getIterableNodeNext-2 [#_"Graph" this, #_"Node" node]
-        (when (and (some? node) (Node''isDeleted-1 node)) => node
-            (Graph''findNextLiveiterable-2 this, node)
-        )
-    )
-
-    (defn- #_"Graph" Graph''grow-1 [#_"Graph" this]
-        (let [
-            #_"Node[]" nodes (make-array Node'iface (inc (* (:nodesSize this) 2)))
-        ]
-            (System/arraycopy (:nodes this), 0, nodes, 0, (:nodesSize this))
-            (assoc this :nodes nodes)
-        )
-    )
-
-    (defn- #_"void" Graph''updateNodeCaches-2 [#_"Graph" this, #_"Node" node]
-        (let [
-            #_"int" id (:iterableId (:nodeClass node))
-        ]
-            (when-not (= id Node'NOT_ITERABLE)
-                (while (<= (count (:iterableNodesFirst this)) id)
-                    (#_"ArrayList" .add (:iterableNodesFirst this), nil)
-                    (#_"ArrayList" .add (:iterableNodesLast this), nil)
-                )
-                (let [
-                    #_"Node" prev (nth (:iterableNodesLast this) id)
-                ]
-                    (if (some? prev)
-                        (§ ass prev (assoc prev :typeCacheNext node))
-                        (#_"ArrayList" .set (:iterableNodesFirst this), id, node)
-                    )
-                    (#_"ArrayList" .set (:iterableNodesLast this), id, node)
-                )
-            )
-        )
-        nil
+    (defn #_"Node*" Graph''getNodes-2 [#_"Graph" this, #_protocol type]
+        (filter #(satisfies? type %) (Graph''getNodes-1 this))
     )
 
     (defn #_"Graph" Graph''register-2 [#_"Graph" this, #_"Node" node]
         (let [
-            this
-                (when (= (count (:nodes this)) (:nodesSize this)) => this
-                    (Graph''grow-1 this)
-                )
-            #_"int" id (:nodesSize this)
-            this (update this :nodesSize inc)
-            _ (aset (:nodes this) id node)
-            _ (§ ass node (assoc node :id id))
+            #_"int" id (count (:gNodes this))
+            _ (§ ass! node (assoc node :nodeId id))
+            this (update this :gNodes assoc id node)
         ]
-            (Graph''updateNodeCaches-2 this, node)
             (when (some? (:nodeEventListener this))
                 (NodeEventListener''event-3 (:nodeEventListener this), NodeEvent'NODE_ADDED, node)
             )
@@ -35607,13 +35436,12 @@ ZeroExtendNode'new-4
 
     (defn #_"Graph" Graph''unregister-2 [#_"Graph" this, #_"Node" node]
         (let [
-            _ (aset (:nodes this) (:id node) nil)
+            this (update this :gNodes assoc (:nodeId node) nil)
             this (update this :nodesDeleted inc)
         ]
             (when (some? (:nodeEventListener this))
                 (NodeEventListener''event-3 (:nodeEventListener this), NodeEvent'NODE_ADDED, node)
             )
-            ;; nodes aren't removed from the type cache here - they will be removed during iteration
             this
         )
     )
@@ -35651,7 +35479,7 @@ ZeroExtendNode'new-4
 
     #_unused
     (defn #_"Stamp" Graph''getReturnStamp-1 [#_"Graph" this]
-        (loop-when [#_"Stamp" stamp nil #_"ISeq" s (seq (Graph''getNodes-2 this, (ß ReturnNode'TYPE)))] (some? s) => stamp
+        (loop-when [#_"Stamp" stamp nil #_"ISeq" s (seq (Graph''getNodes-2 this, ReturnNode))] (some? s) => stamp
             (let [
                 #_"ValueNode" result (:result (first s))
                 stamp
@@ -35671,7 +35499,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"ParameterNode" Graph''getParameter-2 [#_"Graph" this, #_"int" index]
-        (loop-when [#_"ISeq" s (seq (Graph''getNodes-2 this, (ß ParameterNode'TYPE)))] (some? s)
+        (loop-when [#_"ISeq" s (seq (Graph''getNodes-2 this, ParameterNode))] (some? s)
             (let [
                 #_"ParameterNode" param (first s)
             ]
@@ -35684,11 +35512,11 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"InvokeNode*" Graph''getInvokes-1 [#_"Graph" this]
-        (->> (Graph''getNodes-2 this, (ß MethodCallTargetNode'TYPE)) (map MethodCallTargetNode''invoke-1) (remove nil?))
+        (->> (Graph''getNodes-2 this, MethodCallTargetNode) (map MethodCallTargetNode''invoke-1) (remove nil?))
     )
 
     (defn #_"boolean" Graph''hasLoops-1 [#_"Graph" this]
-        (seq (Graph''getNodes-2 this, (ß LoopBeginNode'TYPE)))
+        (seq (Graph''getNodes-2 this, LoopBeginNode))
     )
 
     ;;;
@@ -36095,7 +35923,7 @@ ZeroExtendNode'new-4
     (defn #_"void" GraphKit''inlineInvokes-1 [#_"GraphKit" this]
         (loop []
             (let [
-                #_"Node*" invokes (filter #(satisfies? InvokeNode %) (Graph''getNodes-1 (:graph this)))
+                #_"Node*" invokes (Graph''getNodes-2 (:graph this), InvokeNode)
             ]
                 (when (seq invokes)
                     (doseq [#_"InvokeNode" invoke (§ snap invokes)]
@@ -36237,55 +36065,6 @@ ZeroExtendNode'new-4
             (§ ass s (assoc s :state IfState'FINISHED))
             (GraphKit''popStructure-1 this)
             merge
-        )
-    )
-)
-
-;;;
- ; Iterates over the nodes in a given graph.
- ;;
-(class-ns GraphNodeIterator [#_"Iterator" #_"<Node>"]
-    (defn- #_"GraphNodeIterator" GraphNodeIterator''forward-1 [#_"GraphNodeIterator" this]
-        (when (< (:index this) (:nodesSize (:graph this))) => this
-            (loop [this this]
-                (let [
-                    this (update this :index inc)
-                ]
-                    (recur-if (and (< (:index this) (:nodesSize (:graph this))) (nil? (nth (:nodes (:graph this)) (:index this)))) [this] => this)
-                )
-            )
-        )
-    )
-
-    (defn #_"GraphNodeIterator" GraphNodeIterator'new-2 [#_"Graph" graph, #_"int" index]
-        (let [
-            #_"GraphNodeIterator" this
-                (merge (GraphNodeIterator'class.)
-                    (hash-map
-                        #_"Graph" :graph graph
-                        #_"int" :index (dec index)
-                    )
-                )
-        ]
-            (GraphNodeIterator''forward-1 this)
-        )
-    )
-
-    (defn- #_"GraphNodeIterator" GraphNodeIterator''checkForDeletedNode-1 [#_"GraphNodeIterator" this]
-        (loop-when-recur this (and (< (:index this) (:nodesSize (:graph this))) (nil? (nth (:nodes (:graph this)) (:index this)))) (update this :index inc) => this)
-    )
-
-    (§ override! #_"boolean" #_"Iterator." hasNext [#_"GraphNodeIterator" this]
-        (§ ass! this (GraphNodeIterator''checkForDeletedNode-1 this))
-        (< (:index this) (:nodesSize (:graph this)))
-    )
-
-    (§ override! #_"Node" #_"Iterator." next [#_"GraphNodeIterator" this]
-        (try
-            (nth (:nodes (:graph this)) (:index this))
-            (finally
-                (§ ass! this (GraphNodeIterator''forward-1 this))
-            )
         )
     )
 )
@@ -36969,7 +36748,7 @@ ZeroExtendNode'new-4
             ;; param-nodes that aren't used (e.g. as a result of canonicalization) don't occur in 'params'.
             ;; Thus, in general, the sizes of 'params' and 'args' don't always match. Still, it's always possible
             ;; to pair a param-node with its corresponding arg-node using param.index() as index into 'args'.
-            (loop-when [#_"ArrayList<Node>" usages nil #_"ISeq" s (seq (§ snap (Graph''getNodes-2 (:graph this), (ß ParameterNode'TYPE))))] (some? s) => usages
+            (loop-when [#_"ArrayList<Node>" usages nil #_"ISeq" s (seq (Graph''getNodes-2 (:graph this), ParameterNode))] (some? s) => usages
                 (let [
                     #_"ParameterNode" param (first s)
                     usages
@@ -37229,12 +37008,12 @@ ZeroExtendNode'new-4
             _ (#_"EconomicSet" .addAll canonicalizedNodes, (:nodeUsages (InlineInfo'''invoke-1 calleeInfo)))
             #_"EconomicSet<Node>" parameterUsages (InlineInfo'''inline-1 calleeInfo)
             _ (#_"EconomicSet" .addAll canonicalizedNodes, parameterUsages)
-            #_"NodeMark" markBeforeCanonicalization (NodeMark'new-1 callerGraph)
+            #_"int" mark (Graph''getMark-1 callerGraph)
         ]
             (CanonicalizerPhase''applyIncremental-3i (:canonicalizer this), callerGraph, canonicalizedNodes)
 
             ;; process invokes that are possibly created during canonicalization
-            (doseq [#_"Node" newNode (Graph''getNewNodes-2 callerGraph, markBeforeCanonicalization)]
+            (doseq [#_"Node" newNode (Graph''getNodesSince-2 callerGraph, mark)]
                 (when (satisfies? InvokeNode newNode)
                     (CallsiteHolderExplorable''pushInvoke-2 callerCallsiteHolder, newNode)
                 )
@@ -39616,7 +39395,7 @@ ZeroExtendNode'new-4
             (hash-map
                 #_"BytecodeParser" :parser parser
                 #_"FrameState" :stateBefore nil
-                #_"NodeMark" :mark nil
+                #_"int" :mark 0
                 #_"List<ReturnToCallerData>" :returnDataList nil
             )
         )
@@ -39633,7 +39412,7 @@ ZeroExtendNode'new-4
             (hash-map
                 #_"BytecodeParser" :parser parser
                 #_"FrameState" :stateBefore (FrameStateBuilder''create-6 (:frameState parser), (BytecodeParser''bci-1 parser), (BytecodeParser''getNonIntrinsicAncestor-1 parser), false, argSlotKinds, args)
-                #_"NodeMark" :mark (NodeMark'new-1 (:graph parser))
+                #_"int" :mark (Graph''getMark-1 (:graph parser))
                 #_"List<ReturnToCallerData>" :returnDataList nil
             )
         )
@@ -39647,7 +39426,7 @@ ZeroExtendNode'new-4
         (let [
             #_"Graph" graph (:graph (:parser this))
             #_"boolean" invalid?
-                (loop-when [invalid? false #_"ISeq" s (seq (Graph''getNewNodes-2 graph, (:mark this)))] (some? s) => invalid?
+                (loop-when [invalid? false #_"ISeq" s (seq (Graph''getNodesSince-2 graph, (:mark this)))] (some? s) => invalid?
                     (let [
                         #_"Node" node (first s)
                         invalid?
@@ -39756,14 +39535,14 @@ ZeroExtendNode'new-4
         (merge (InvariantPredicate'class.)
             (hash-map
                 #_"LoopEx" :loopEx loopEx
-                #_"NodeMark" :mark (NodeMark'new-1 (:graph (LoopEx''loopBegin-1 loopEx)))
+                #_"int" :mark (Graph''getMark-1 (:graph (LoopEx''loopBegin-1 loopEx)))
             )
         )
     )
 
     (defm InvariantPredicate NodePredicate
         (#_"boolean" NodePredicate'''apply-2 [#_"InvariantPredicate" this, #_"Node" node]
-            (and (< (:id node) (:value (:mark this))) ;; newly created nodes are unknown
+            (and (< (:nodeId node) (:mark this)) ;; newly created nodes are unknown
                 (LoopEx''isOutsideLoop-2 (:loopEx this), node)
             )
         )
@@ -40259,7 +40038,7 @@ ZeroExtendNode'new-4
             (LIRGenerator''emitIncomingValues-2 (:gen this), params)
             (§ ass! (:gen this) (LIRGenerator''emitSaveRbp-1 (:gen this)))
             (LIRGenerator''append-2 (:gen this), (:lockStack (:lockStackHolder this)))
-            (doseq [#_"ParameterNode" param (Graph''getNodes-2 graph, (ß ParameterNode'TYPE))]
+            (doseq [#_"ParameterNode" param (Graph''getNodes-2 graph, ParameterNode)]
                 (LIRBuilder''setResult-3 this, param, (LIRGenerator''emitMove-2 (:gen this), (nth params (AbstractLocalNode''index-1 param))))
             )
         )
@@ -47460,7 +47239,7 @@ ZeroExtendNode'new-4
 
     (defm LockEliminationPhase Phase
         (#_"Graph" Phase'''run-3 [#_"LockEliminationPhase" this, #_"Graph" graph, #_"PhaseContext" context]
-            (doseq [#_"MonitorExitNode" monitorExitNode (Graph''getNodes-2 graph, (ß MonitorExitNode'TYPE))]
+            (doseq [#_"MonitorExitNode" monitorExitNode (Graph''getNodes-2 graph, MonitorExitNode)]
                 (let [
                     #_"FixedNode" next (:next monitorExitNode)
                 ]
@@ -49379,11 +49158,9 @@ ZeroExtendNode'new-4
     (defm LoopSafepointInsertionPhase Phase
         (#_"Graph" Phase'''run-3 [#_"LoopSafepointInsertionPhase" this, #_"Graph" graph, #_"PhaseContext" context]
             (when GraalOptions'genLoopSafepoints
-                (doseq [#_"LoopBeginNode" loopBeginNode (Graph''getNodes-2 graph, (ß LoopBeginNode'TYPE))]
-                    (doseq [#_"LoopEndNode" loopEndNode (LoopBeginNode''loopEnds-1 loopBeginNode)]
-                        (when (:canSafepoint loopEndNode)
-                            (Graph''addBeforeFixed-3 graph, loopEndNode, (Graph''add-2 graph, (SafepointNode'new-0)))
-                        )
+                (doseq [#_"LoopBeginNode" loopBeginNode (Graph''getNodes-2 graph, LoopBeginNode) #_"LoopEndNode" loopEndNode (LoopBeginNode''loopEnds-1 loopBeginNode)]
+                    (when (:canSafepoint loopEndNode)
+                        (Graph''addBeforeFixed-3 graph, loopEndNode, (Graph''add-2 graph, (SafepointNode'new-0)))
                     )
                 )
             )
@@ -49840,7 +49617,7 @@ ZeroExtendNode'new-4
         (let [
             this (assoc this :currentNode (NodeBitMap''nextMarkedNode-2 (:bitMap this), (inc (:currentNodeId this))))
         ]
-            (assoc this :currentNodeId (if (some? (:currentNode this)) (:id (:currentNode this)) -1))
+            (assoc this :currentNodeId (if (some? (:currentNode this)) (:nodeId (:currentNode this)) -1))
         )
     )
 
@@ -51796,8 +51573,8 @@ ZeroExtendNode'new-4
         (merge (NodeBitMap'class.)
             (hash-map
                 #_"Graph" :graph graph
-                #_"long[]" :bits (long-array (NodeBitMap'sizeForNodeCount-1 (:nodesSize graph)))
-                #_"int" :nodeCount (:nodesSize graph)
+                #_"long[]" :bits (long-array (NodeBitMap'sizeForNodeCount-1 (count (:gNodes graph))))
+                #_"int" :nodeCount (count (:gNodes graph))
                 #_"int" :counter 0
             )
         )
@@ -51815,7 +51592,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"boolean" NodeBitMap''isNew-2 [#_"NodeBitMap" this, #_"Node" node]
-        (<= (:nodeCount this) (:id node))
+        (<= (:nodeCount this) (:nodeId node))
     )
 
     (defn #_"boolean" NodeBitMap''checkAndMarkInc-2 [#_"NodeBitMap" this, #_"Node" node]
@@ -51830,7 +51607,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"NodeBitMap" NodeBitMap''grow-1 [#_"NodeBitMap" this]
         (let [
-            this (assoc this :nodeCount (max (:nodeCount this) (:nodesSize (:graph this))))
+            this (assoc this :nodeCount (max (:nodeCount this) (count (:gNodes (:graph this)))))
             #_"int" n (NodeBitMap'sizeForNodeCount-1 (:nodeCount this))
         ]
             (when (< (count (:bits this)) n) => this
@@ -51853,22 +51630,22 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"boolean" NodeBitMap''isMarked-2n [#_"NodeBitMap" this, #_"Node" node]
-        (NodeBitMap''isMarked-2i this, (:id node))
+        (NodeBitMap''isMarked-2i this, (:nodeId node))
     )
 
     (defn #_"boolean" NodeBitMap''isMarkedAndGrow-2 [#_"NodeBitMap" this, #_"Node" node]
-        (§ ass! this (NodeBitMap''checkGrow-2 this, (:id node)))
-        (NodeBitMap''isMarked-2i this, (:id node))
+        (§ ass! this (NodeBitMap''checkGrow-2 this, (:nodeId node)))
+        (NodeBitMap''isMarked-2i this, (:nodeId node))
     )
 
     (defn #_"void" NodeBitMap''mark-2 [#_"NodeBitMap" this, #_"Node" node]
-        (aswap (:bits this) (>> (:id node) NodeBitMap'SHIFT) | (<< 1 (:id node)))
+        (aswap (:bits this) (>> (:nodeId node) NodeBitMap'SHIFT) | (<< 1 (:nodeId node)))
         nil
     )
 
     (defn #_"NodeBitMap" NodeBitMap''markAndGrow-2 [#_"NodeBitMap" this, #_"Node" node]
         (let [
-            this (NodeBitMap''checkGrow-2 this, (:id node))
+            this (NodeBitMap''checkGrow-2 this, (:nodeId node))
         ]
             (NodeBitMap''mark-2 this, node)
             this
@@ -51876,13 +51653,13 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"void" NodeBitMap''clear-2 [#_"NodeBitMap" this, #_"Node" node]
-        (aswap (:bits this) (>> (:id node) NodeBitMap'SHIFT) & (bit-not (<< 1 (:id node))))
+        (aswap (:bits this) (>> (:nodeId node) NodeBitMap'SHIFT) & (bit-not (<< 1 (:nodeId node))))
         nil
     )
 
     (defn #_"NodeBitMap" NodeBitMap''clearAndGrow-2 [#_"NodeBitMap" this, #_"Node" node]
         (let [
-            this (NodeBitMap''checkGrow-2 this, (:id node))
+            this (NodeBitMap''checkGrow-2 this, (:nodeId node))
         ]
             (NodeBitMap''clear-2 this, node)
             this
@@ -51925,7 +51702,7 @@ ZeroExtendNode'new-4
                                 #_"int" bitIndex (Long/numberOfTrailingZeros word)
                                 #_"int" nodeId (+ (* i Long/SIZE) bitIndex)
                             ]
-                                (or (nth (:nodes (:graph this)) nodeId)
+                                (or (nth (:gNodes (:graph this)) nodeId)
                                     (do
                                         ;; node was deleted -> clear the bit and continue searching
                                         (aswap (:bits this) i & (bit-not (<< 1 bitIndex)))
@@ -52248,13 +52025,8 @@ ZeroExtendNode'new-4
         (merge (Node'class.)
             (hash-map
                 #_"NodeClass<? implements Node>" :nodeClass nil
-                #_"int" :id Node'INITIAL_ID
+                #_"int" :nodeId Node'INITIAL_ID
                 #_"Graph" :graph nil
-                ;;;
-                 ; This next pointer is used in Graph to implement fast iteration over NodeClass types,
-                 ; therefore it points to the next Node of the same type.
-                 ;;
-                #_"Node" :typeCacheNext nil
                 #_"[Node]" :nodeUsages []
                 #_"Node" :predecessor nil
             )
@@ -52355,16 +52127,16 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"boolean" Node''isDeleted-1 [#_"Node" this]
-        (<= (:id this) Node'DELETED_ID_START)
+        (<= (:nodeId this) Node'DELETED_ID_START)
     )
 
     (defn #_"boolean" Node''isAlive-1 [#_"Node" this]
-        (<= Node'ALIVE_ID_START (:id this))
+        (<= Node'ALIVE_ID_START (:nodeId this))
     )
 
     #_unused
     (defn #_"boolean" Node''isUnregistered-1 [#_"Node" this]
-        (= (:id this) Node'INITIAL_ID)
+        (= (:nodeId this) Node'INITIAL_ID)
     )
 
     (defn- #_"void" Node''maybeNotifyInputChanged-2 [#_"Node" this, #_"Node" node]
@@ -52567,7 +52339,7 @@ ZeroExtendNode'new-4
 
     (defn #_"void" Node''markDeleted-1 [#_"Node" this]
         (§ ass! (:graph this) (Graph''unregister-2 (:graph this), this))
-        (§ ass! this (assoc this :id (- Node'DELETED_ID_START (:id this))))
+        (§ ass! this (assoc this :nodeId (- Node'DELETED_ID_START (:nodeId this))))
         nil
     )
 
@@ -52625,7 +52397,7 @@ ZeroExtendNode'new-4
             _ (Node''copyOrClearEdgesForClone-4 this, node, EdgesType'Inputs, edgesToCopy)
             _ (Node''copyOrClearEdgesForClone-4 this, node, EdgesType'Successors, edgesToCopy)
             node (assoc node :graph into)
-            node (assoc node :id Node'INITIAL_ID)
+            node (assoc node :nodeId Node'INITIAL_ID)
             _
                 (when (some? into)
                     (§ ass! into (Graph''register-2 into, node))
@@ -52656,7 +52428,7 @@ ZeroExtendNode'new-4
      ; stored in sets. It can give bad behavior when storing nodes of different graphs in the same set.
      ;;
     (§ override! #_"int" #_"Object." hashCode [#_"Node" this]
-        (if (Node''isDeleted-1 this) (- Node'DELETED_ID_START (:id this)) (:id this))
+        (if (Node''isDeleted-1 this) (- Node'DELETED_ID_START (:nodeId this)) (:nodeId this))
     )
 
     ;;;
@@ -52860,7 +52632,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns MethodCallTargetNode [CallTargetNode, ValueNode, Node, LIRLowerable, IterableNodeType, Simplifiable]
+(class-ns MethodCallTargetNode [CallTargetNode, ValueNode, Node, LIRLowerable, Simplifiable]
     (defn #_"MethodCallTargetNode" MethodCallTargetNode'new-4 [#_"InvokeKind" invokeKind, #_"ResolvedJavaMethod" targetMethod, #_"ValueNode*" arguments, #_"Stamp" returnStamp]
         (merge (MethodCallTargetNode'class.) (CallTargetNode'new-4 arguments, targetMethod, invokeKind, returnStamp))
     )
@@ -52956,7 +52728,7 @@ ZeroExtendNode'new-4
  ; one of the MethodHandle.linkTo* methods. An {@linkplain MethodHandleNode#tryResolveTargetInvoke resolved}
  ; MethodHandle invocation drops these arguments which means the interpreter won't find them.
  ;;
-(class-ns ResolvedMethodHandleCallTargetNode [MethodCallTargetNode, CallTargetNode, ValueNode, Node, LIRLowerable, IterableNodeType, Simplifiable, Lowerable]
+(class-ns ResolvedMethodHandleCallTargetNode [MethodCallTargetNode, CallTargetNode, ValueNode, Node, LIRLowerable, Simplifiable, Lowerable]
     ;;;
      ; Creates a call target for an invocation on a direct target derived by resolving a constant MethodHandle.
      ;;
@@ -53140,7 +52912,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns AbstractDeoptimizeNode [ControlSinkNode, FixedNode, ValueNode, Node, IterableNodeType, DeoptBefore, DeoptimizingNode, NodeWithState]
+(class-ns AbstractDeoptimizeNode [ControlSinkNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState]
     (defn #_"AbstractDeoptimizeNode" AbstractDeoptimizeNode'new-1 [#_"FrameState" stateBefore]
         (merge (AbstractDeoptimizeNode'class.) (ControlSinkNode'new-1 VoidStamp'instance)
             (hash-map
@@ -53165,7 +52937,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns DeoptimizeNode [AbstractDeoptimizeNode, ControlSinkNode, FixedNode, ValueNode, Node, IterableNodeType, DeoptBefore, DeoptimizingNode, NodeWithState, Lowerable, LIRLowerable, StaticDeoptimizingNode]
+(class-ns DeoptimizeNode [AbstractDeoptimizeNode, ControlSinkNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Lowerable, LIRLowerable, StaticDeoptimizingNode]
     (def #_"int" DeoptimizeNode'DEFAULT_DEBUG_ID 0)
 
     (§ intrinsic! #_"void" DeoptimizeNode'deopt-2 [#_"DeoptimizationAction" action, #_"DeoptimizationReason" reason])
@@ -53243,7 +53015,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns DynamicDeoptimizeNode [AbstractDeoptimizeNode, ControlSinkNode, FixedNode, ValueNode, Node, IterableNodeType, DeoptBefore, DeoptimizingNode, NodeWithState, LIRLowerable, Lowerable, Canonicalizable]
+(class-ns DynamicDeoptimizeNode [AbstractDeoptimizeNode, ControlSinkNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, LIRLowerable, Lowerable, Canonicalizable]
     (defn #_"DynamicDeoptimizeNode" DynamicDeoptimizeNode'new-2 [#_"ValueNode" actionAndReason, #_"ValueNode" speculation]
         (merge (DynamicDeoptimizeNode'class.) (AbstractDeoptimizeNode'new-1 nil)
             (hash-map
@@ -53315,7 +53087,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns ReturnNode [ControlSinkNode, FixedNode, ValueNode, Node, LIRLowerable, IterableNodeType]
+(class-ns ReturnNode [ControlSinkNode, FixedNode, ValueNode, Node, LIRLowerable]
     (defn #_"ReturnNode" ReturnNode'new-1 [#_"ValueNode" result]
         (ReturnNode'new-2 result, nil)
     )
@@ -53347,7 +53119,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns ControlSplitNode [FixedNode, ValueNode, Node, IterableNodeType]
+(class-ns ControlSplitNode [FixedNode, ValueNode, Node]
     (defn #_"ControlSplitNode" ControlSplitNode'new-1 [#_"Stamp" stamp]
         (merge (ControlSplitNode'class.) (FixedNode'new-1 stamp))
     )
@@ -53357,7 +53129,7 @@ ZeroExtendNode'new-4
  ; The IfNode represents a branch that can go one of two directions depending on the outcome
  ; of a comparison.
  ;;
-(class-ns IfNode [ControlSplitNode, FixedNode, ValueNode, Node, IterableNodeType, Simplifiable, LIRLowerable]
+(class-ns IfNode [ControlSplitNode, FixedNode, ValueNode, Node, Simplifiable, LIRLowerable]
     (defn #_"IfNode" IfNode''setCondition-2 [#_"IfNode" this, #_"LogicNode" x]
         (Node''updateUsages-3 this, (:condition this), x)
         (assoc this :condition x)
@@ -54594,7 +54366,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns IntegerExactArithmeticSplitNode [ControlSplitNode, FixedNode, ValueNode, Node, IterableNodeType, Simplifiable, LIRLowerable]
+(class-ns IntegerExactArithmeticSplitNode [ControlSplitNode, FixedNode, ValueNode, Node, Simplifiable, LIRLowerable]
     (defn #_"IntegerExactArithmeticSplitNode" IntegerExactArithmeticSplitNode'new-5 [#_"Stamp" stamp, #_"ValueNode" x, #_"ValueNode" y, #_"AbstractBeginNode" next, #_"AbstractBeginNode" overflowSuccessor]
         (merge (IntegerExactArithmeticSplitNode'class.) (ControlSplitNode'new-1 stamp)
             (hash-map
@@ -54668,7 +54440,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns IntegerAddExactSplitNode [IntegerExactArithmeticSplitNode, ControlSplitNode, FixedNode, ValueNode, Node, IterableNodeType, Simplifiable, LIRLowerable]
+(class-ns IntegerAddExactSplitNode [IntegerExactArithmeticSplitNode, ControlSplitNode, FixedNode, ValueNode, Node, Simplifiable, LIRLowerable]
     (defn #_"IntegerAddExactSplitNode" IntegerAddExactSplitNode'new-5 [#_"Stamp" stamp, #_"ValueNode" x, #_"ValueNode" y, #_"AbstractBeginNode" next, #_"AbstractBeginNode" overflowSuccessor]
         (merge (IntegerAddExactSplitNode'class.) (IntegerExactArithmeticSplitNode'new-5 stamp, x, y, next, overflowSuccessor))
     )
@@ -54696,7 +54468,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns IntegerMulExactSplitNode [IntegerExactArithmeticSplitNode, ControlSplitNode, FixedNode, ValueNode, Node, IterableNodeType, Simplifiable, LIRLowerable]
+(class-ns IntegerMulExactSplitNode [IntegerExactArithmeticSplitNode, ControlSplitNode, FixedNode, ValueNode, Node, Simplifiable, LIRLowerable]
     (defn #_"IntegerMulExactSplitNode" IntegerMulExactSplitNode'new-5 [#_"Stamp" stamp, #_"ValueNode" x, #_"ValueNode" y, #_"AbstractBeginNode" next, #_"AbstractBeginNode" overflowSuccessor]
         (merge (IntegerMulExactSplitNode'class.) (IntegerExactArithmeticSplitNode'new-5 stamp, x, y, next, overflowSuccessor))
     )
@@ -54724,7 +54496,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns IntegerSubExactSplitNode [IntegerExactArithmeticSplitNode, ControlSplitNode, FixedNode, ValueNode, Node, IterableNodeType, Simplifiable, LIRLowerable]
+(class-ns IntegerSubExactSplitNode [IntegerExactArithmeticSplitNode, ControlSplitNode, FixedNode, ValueNode, Node, Simplifiable, LIRLowerable]
     (defn #_"IntegerSubExactSplitNode" IntegerSubExactSplitNode'new-5 [#_"Stamp" stamp, #_"ValueNode" x, #_"ValueNode" y, #_"AbstractBeginNode" next, #_"AbstractBeginNode" overflowSuccessor]
         (merge (IntegerSubExactSplitNode'class.) (IntegerExactArithmeticSplitNode'new-5 stamp, x, y, next, overflowSuccessor))
     )
@@ -54752,7 +54524,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns SwitchNode [ControlSplitNode, FixedNode, ValueNode, Node, IterableNodeType]
+(class-ns SwitchNode [ControlSplitNode, FixedNode, ValueNode, Node]
     ;;;
      ; Constructs a new Switch.
      ;
@@ -54896,7 +54668,7 @@ ZeroExtendNode'new-4
  ; The IntegerSwitchNode represents a switch on integer keys, with a sorted array of key values.
  ; The actual implementation of the switch will be decided by the backend.
  ;;
-(class-ns IntegerSwitchNode [SwitchNode, ControlSplitNode, FixedNode, ValueNode, Node, IterableNodeType, LIRLowerable, Simplifiable]
+(class-ns IntegerSwitchNode [SwitchNode, ControlSplitNode, FixedNode, ValueNode, Node, LIRLowerable, Simplifiable]
     (defn #_"IntegerSwitchNode" IntegerSwitchNode'new-5a [#_"ValueNode" value, #_"AbstractBeginNode[]" successors, #_"int[]" keys, #_"double[]" keyProbabilities, #_"int[]" keySuccessors]
         (merge (IntegerSwitchNode'class.) (SwitchNode'new-4 value, successors, keySuccessors, keyProbabilities)
             (hash-map
@@ -55233,7 +55005,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns AbstractBeginNode [FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, GuardingNode, AnchoringNode, IterableNodeType]
+(class-ns AbstractBeginNode [FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, GuardingNode, AnchoringNode]
     (defn #_"AbstractBeginNode" AbstractBeginNode'new-1 [#_"Stamp" stamp]
         (merge (AbstractBeginNode'class.) (FixedWithNextNode'new-1 stamp))
     )
@@ -55299,7 +55071,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns BeginNode [AbstractBeginNode, FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, GuardingNode, AnchoringNode, IterableNodeType, Simplifiable]
+(class-ns BeginNode [AbstractBeginNode, FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, GuardingNode, AnchoringNode, Simplifiable]
     (defn #_"BeginNode" BeginNode'new-1 [#_"Stamp" stamp]
         (merge (BeginNode'class.) (AbstractBeginNode'new-1 stamp))
     )
@@ -55349,7 +55121,7 @@ ZeroExtendNode'new-4
  ; TODO this not needed until AbstractBeginNode no longer implements StateSplit
  ; which is not possible until loop peeling works without requiring begin nodes to have frames states.
  ;;
-(class-ns BeginStateSplitNode [AbstractBeginNode, FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, GuardingNode, AnchoringNode, IterableNodeType, StateSplit, NodeWithState]
+(class-ns BeginStateSplitNode [AbstractBeginNode, FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, GuardingNode, AnchoringNode, StateSplit, NodeWithState]
     (defn #_"BeginStateSplitNode" BeginStateSplitNode'new-1 [#_"Stamp" stamp]
         (merge (BeginStateSplitNode'class.) (AbstractBeginNode'new-1 stamp)
             (hash-map
@@ -55381,7 +55153,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns AbstractMergeNode [BeginStateSplitNode, AbstractBeginNode, FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, GuardingNode, AnchoringNode, IterableNodeType, StateSplit, NodeWithState, Simplifiable]
+(class-ns AbstractMergeNode [BeginStateSplitNode, AbstractBeginNode, FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, GuardingNode, AnchoringNode, StateSplit, NodeWithState, Simplifiable]
     (defn #_"AbstractMergeNode" AbstractMergeNode'new-0 []
         (merge (AbstractMergeNode'class.) (BeginStateSplitNode'new-0)
             (hash-map
@@ -55642,7 +55414,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LoopBeginNode [AbstractMergeNode, BeginStateSplitNode, AbstractBeginNode, FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, GuardingNode, AnchoringNode, IterableNodeType, StateSplit, NodeWithState, Simplifiable]
+(class-ns LoopBeginNode [AbstractMergeNode, BeginStateSplitNode, AbstractBeginNode, FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, GuardingNode, AnchoringNode, StateSplit, NodeWithState, Simplifiable]
     (defn #_"LoopBeginNode" LoopBeginNode'new-0 []
         (merge (LoopBeginNode'class.) (AbstractMergeNode'new-0)
             (hash-map
@@ -55996,13 +55768,13 @@ ZeroExtendNode'new-4
 ;;;
  ; Denotes the merging of multiple control-flow paths.
  ;;
-(class-ns MergeNode [AbstractMergeNode, BeginStateSplitNode, AbstractBeginNode, FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, GuardingNode, AnchoringNode, IterableNodeType, StateSplit, NodeWithState, Simplifiable]
+(class-ns MergeNode [AbstractMergeNode, BeginStateSplitNode, AbstractBeginNode, FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, GuardingNode, AnchoringNode, StateSplit, NodeWithState, Simplifiable]
     (defn #_"MergeNode" MergeNode'new-0 []
         (merge (MergeNode'class.) (AbstractMergeNode'new-0))
     )
 )
 
-(class-ns LoopExitNode [BeginStateSplitNode, AbstractBeginNode, FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, GuardingNode, AnchoringNode, IterableNodeType, StateSplit, NodeWithState, Simplifiable]
+(class-ns LoopExitNode [BeginStateSplitNode, AbstractBeginNode, FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, GuardingNode, AnchoringNode, StateSplit, NodeWithState, Simplifiable]
     (defn #_"LoopExitNode" LoopExitNode'new-1 [#_"LoopBeginNode" _loop]
         (merge (LoopExitNode'class.) (BeginStateSplitNode'new-0)
             (hash-map
@@ -56068,7 +55840,7 @@ ZeroExtendNode'new-4
 ;;;
  ; The start node of a graph.
  ;;
-(class-ns StartNode [BeginStateSplitNode, AbstractBeginNode, FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, GuardingNode, AnchoringNode, IterableNodeType, StateSplit, NodeWithState, Single, MemoryCheckpoint, MemoryNode]
+(class-ns StartNode [BeginStateSplitNode, AbstractBeginNode, FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, GuardingNode, AnchoringNode, StateSplit, NodeWithState, Single, MemoryCheckpoint, MemoryNode]
     (defn #_"StartNode" StartNode'new-0 []
         (merge (StartNode'class.) (BeginStateSplitNode'new-0))
     )
@@ -56084,7 +55856,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Start node for a Stub's graph.
  ;;
-(class-ns StubStartNode [StartNode, BeginStateSplitNode, AbstractBeginNode, FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, GuardingNode, AnchoringNode, IterableNodeType, StateSplit, NodeWithState, Single, MemoryCheckpoint, MemoryNode]
+(class-ns StubStartNode [StartNode, BeginStateSplitNode, AbstractBeginNode, FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, GuardingNode, AnchoringNode, StateSplit, NodeWithState, Single, MemoryCheckpoint, MemoryNode]
     (defn #_"StubStartNode" StubStartNode'new-1 [#_"Stub" stub]
         (merge (StubStartNode'class.) (StartNode'new-0)
             (hash-map
@@ -56175,7 +55947,7 @@ ZeroExtendNode'new-4
 ;;;
  ; The MonitorEnterNode represents the acquisition of a monitor.
  ;;
-(class-ns MonitorEnterNode [AccessMonitorNode, AbstractMemoryCheckpoint, AbstractStateSplit, FixedWithNextNode, FixedNode, ValueNode, Node, StateSplit, NodeWithState, MemoryCheckpoint, MemoryNode, DeoptBefore, DeoptimizingNode, DeoptAfter, Virtualizable, Lowerable, IterableNodeType, MonitorEnter, Single]
+(class-ns MonitorEnterNode [AccessMonitorNode, AbstractMemoryCheckpoint, AbstractStateSplit, FixedWithNextNode, FixedNode, ValueNode, Node, StateSplit, NodeWithState, MemoryCheckpoint, MemoryNode, DeoptBefore, DeoptimizingNode, DeoptAfter, Virtualizable, Lowerable, MonitorEnter, Single]
     (defn #_"MonitorEnterNode" MonitorEnterNode'new-2 [#_"ValueNode" object, #_"MonitorIdNode" monitorId]
         (merge (MonitorEnterNode'class.) (AccessMonitorNode'new-2 object, monitorId))
     )
@@ -56222,7 +55994,7 @@ ZeroExtendNode'new-4
  ; of a synchronized method, then the return value of the method will be referenced via the edge
  ; #escapedReturnValue, so that it will be materialized before releasing the monitor.
  ;;
-(class-ns MonitorExitNode [AccessMonitorNode, AbstractMemoryCheckpoint, AbstractStateSplit, FixedWithNextNode, FixedNode, ValueNode, Node, StateSplit, NodeWithState, MemoryCheckpoint, MemoryNode, DeoptBefore, DeoptimizingNode, DeoptAfter, Virtualizable, Lowerable, IterableNodeType, MonitorExit, Single]
+(class-ns MonitorExitNode [AccessMonitorNode, AbstractMemoryCheckpoint, AbstractStateSplit, FixedWithNextNode, FixedNode, ValueNode, Node, StateSplit, NodeWithState, MemoryCheckpoint, MemoryNode, DeoptBefore, DeoptimizingNode, DeoptAfter, Virtualizable, Lowerable, MonitorExit, Single]
     (defn #_"MonitorExitNode" MonitorExitNode'new-3 [#_"ValueNode" object, #_"MonitorIdNode" monitorId, #_"ValueNode" escapedReturnValue]
         (merge (MonitorExitNode'class.) (AccessMonitorNode'new-2 object, monitorId)
             (hash-map
@@ -56278,7 +56050,7 @@ ZeroExtendNode'new-4
  ; The RawMonitorEnterNode represents the acquisition of a monitor. The object needs to
  ; already be non-nil and the hub is an additional parameter to the node.
  ;;
-(class-ns RawMonitorEnterNode [AccessMonitorNode, AbstractMemoryCheckpoint, AbstractStateSplit, FixedWithNextNode, FixedNode, ValueNode, Node, StateSplit, NodeWithState, MemoryCheckpoint, MemoryNode, DeoptBefore, DeoptimizingNode, DeoptAfter, Virtualizable, Lowerable, IterableNodeType, MonitorEnter, Single]
+(class-ns RawMonitorEnterNode [AccessMonitorNode, AbstractMemoryCheckpoint, AbstractStateSplit, FixedWithNextNode, FixedNode, ValueNode, Node, StateSplit, NodeWithState, MemoryCheckpoint, MemoryNode, DeoptBefore, DeoptimizingNode, DeoptAfter, Virtualizable, Lowerable, MonitorEnter, Single]
     (defn #_"RawMonitorEnterNode" RawMonitorEnterNode'new-3 [#_"ValueNode" object, #_"ValueNode" hub, #_"MonitorIdNode" monitorId]
         (merge (RawMonitorEnterNode'class.) (AccessMonitorNode'new-2 object, monitorId)
             (hash-map
@@ -58281,7 +58053,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns FixedGuardNode [AbstractFixedGuardNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Simplifiable, GuardingNode, DeoptimizingGuard, StaticDeoptimizingNode, Lowerable, IterableNodeType]
+(class-ns FixedGuardNode [AbstractFixedGuardNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Simplifiable, GuardingNode, DeoptimizingGuard, StaticDeoptimizingNode, Lowerable]
     (defn #_"FixedGuardNode" FixedGuardNode'new-3 [#_"LogicNode" logic, #_"DeoptimizationReason" reason, #_"DeoptimizationAction" action]
         (FixedGuardNode'new-5 logic, reason, action, JavaConstant/NULL_POINTER, false)
     )
@@ -58731,7 +58503,7 @@ ZeroExtendNode'new-4
  ; Accesses a value at an memory address specified by an {@linkplain #address address}. The access
  ; does not include a nil-check on the object.
  ;;
-(class-ns FixedAccessNode [DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Access, GuardedNode, HeapAccess, IterableNodeType]
+(class-ns FixedAccessNode [DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Access, GuardedNode, HeapAccess]
     (defn #_"FixedAccessNode" FixedAccessNode'new-4 [#_"AddressNode" address, #_"LocationIdentity" location, #_"Stamp" stamp, #_"BarrierType" barrierType]
         (merge (FixedAccessNode'class.) (DeoptimizingFixedWithNextNode'new-1 stamp)
             (hash-map
@@ -58790,7 +58562,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Low-level atomic compare-and-swap operation.
  ;;
-(class-ns AbstractCompareAndSwapNode [FixedAccessNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Access, GuardedNode, HeapAccess, IterableNodeType, StateSplit, LIRLowerableAccess, LIRLowerable, Single, MemoryCheckpoint, MemoryNode]
+(class-ns AbstractCompareAndSwapNode [FixedAccessNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Access, GuardedNode, HeapAccess, StateSplit, LIRLowerableAccess, LIRLowerable, Single, MemoryCheckpoint, MemoryNode]
     (defm AbstractCompareAndSwapNode StateSplit
         (#_"void" StateSplit'''setStateAfter-2 [#_"AbstractCompareAndSwapNode" this, #_"FrameState" x]
             (Node''updateUsages-3 this, (:stateAfter this), x)
@@ -58838,7 +58610,7 @@ ZeroExtendNode'new-4
  ;
  ; This version returns a boolean indicating is the CAS was successful or not.
  ;;
-(class-ns LogicCompareAndSwapNode [AbstractCompareAndSwapNode, FixedAccessNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Access, GuardedNode, HeapAccess, IterableNodeType, StateSplit, LIRLowerableAccess, LIRLowerable, Single, MemoryCheckpoint, MemoryNode]
+(class-ns LogicCompareAndSwapNode [AbstractCompareAndSwapNode, FixedAccessNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Access, GuardedNode, HeapAccess, StateSplit, LIRLowerableAccess, LIRLowerable, Single, MemoryCheckpoint, MemoryNode]
     (defn #_"LogicCompareAndSwapNode" LogicCompareAndSwapNode'new-4 [#_"ValueNode" address, #_"ValueNode" expectedValue, #_"ValueNode" newValue, #_"LocationIdentity" location]
         (LogicCompareAndSwapNode'new-5 address, location, expectedValue, newValue, BarrierType'NONE)
     )
@@ -58866,7 +58638,7 @@ ZeroExtendNode'new-4
  ; A special purpose store node that differs from LogicCompareAndSwapNode in that it returns
  ; either the expected value or the compared against value instead of a boolean.
  ;;
-(class-ns ValueCompareAndSwapNode [AbstractCompareAndSwapNode, FixedAccessNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Access, GuardedNode, HeapAccess, IterableNodeType, StateSplit, LIRLowerableAccess, LIRLowerable, Single, MemoryCheckpoint, MemoryNode]
+(class-ns ValueCompareAndSwapNode [AbstractCompareAndSwapNode, FixedAccessNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Access, GuardedNode, HeapAccess, StateSplit, LIRLowerableAccess, LIRLowerable, Single, MemoryCheckpoint, MemoryNode]
     (defn #_"ValueCompareAndSwapNode" ValueCompareAndSwapNode'new-4 [#_"ValueNode" address, #_"ValueNode" expectedValue, #_"ValueNode" newValue, #_"LocationIdentity" location]
         (ValueCompareAndSwapNode'new-5 address, expectedValue, newValue, location, BarrierType'NONE)
     )
@@ -58883,7 +58655,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns AbstractWriteNode [FixedAccessNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Access, GuardedNode, HeapAccess, IterableNodeType, StateSplit, Single, MemoryCheckpoint, MemoryNode, MemoryAccess, GuardingNode]
+(class-ns AbstractWriteNode [FixedAccessNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Access, GuardedNode, HeapAccess, StateSplit, Single, MemoryCheckpoint, MemoryNode, MemoryAccess, GuardingNode]
     (defm AbstractWriteNode StateSplit
         (#_"void" StateSplit'''setStateAfter-2 [#_"AbstractWriteNode" this, #_"FrameState" x]
             (Node''updateUsages-3 this, (:stateAfter this), x)
@@ -58922,7 +58694,7 @@ ZeroExtendNode'new-4
  ; Write a raw memory location according to Java field or array write semantics. It will perform
  ; write barriers, implicit conversions and optionally oop compression.
  ;;
-(class-ns JavaWriteNode [AbstractWriteNode, FixedAccessNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Access, GuardedNode, HeapAccess, IterableNodeType, StateSplit, Single, MemoryCheckpoint, MemoryNode, MemoryAccess, GuardingNode, Lowerable]
+(class-ns JavaWriteNode [AbstractWriteNode, FixedAccessNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Access, GuardedNode, HeapAccess, StateSplit, Single, MemoryCheckpoint, MemoryNode, MemoryAccess, GuardingNode, Lowerable]
     (defn #_"JavaWriteNode" JavaWriteNode'new-6 [#_"JavaKind" writeKind, #_"AddressNode" address, #_"LocationIdentity" location, #_"ValueNode" value, #_"BarrierType" barrierType, #_"boolean" compressible?]
         (merge (JavaWriteNode'class.) (AbstractWriteNode'new-4 address, location, value, barrierType)
             (hash-map
@@ -58956,7 +58728,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Writes a given {@linkplain #value() value} a memory location.
  ;;
-(class-ns WriteNode [AbstractWriteNode, FixedAccessNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Access, GuardedNode, HeapAccess, IterableNodeType, StateSplit, Single, MemoryCheckpoint, MemoryNode, MemoryAccess, GuardingNode, LIRLowerableAccess, LIRLowerable, Canonicalizable]
+(class-ns WriteNode [AbstractWriteNode, FixedAccessNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Access, GuardedNode, HeapAccess, StateSplit, Single, MemoryCheckpoint, MemoryNode, MemoryAccess, GuardingNode, LIRLowerableAccess, LIRLowerable, Canonicalizable]
     (defn #_"WriteNode" WriteNode'new-4 [#_"AddressNode" address, #_"LocationIdentity" location, #_"ValueNode" value, #_"BarrierType" barrierType]
         (merge (WriteNode'class.) (AbstractWriteNode'new-4 address, location, value, barrierType))
     )
@@ -59000,7 +58772,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns FloatableAccessNode [FixedAccessNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Access, GuardedNode, HeapAccess, IterableNodeType]
+(class-ns FloatableAccessNode [FixedAccessNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Access, GuardedNode, HeapAccess]
     (defn #_"FloatableAccessNode" FloatableAccessNode'new-4 [#_"AddressNode" address, #_"LocationIdentity" location, #_"Stamp" stamp, #_"BarrierType" barrierType]
         (merge (FloatableAccessNode'class.) (FixedAccessNode'new-4 address, location, stamp, barrierType)
             (hash-map
@@ -59026,7 +58798,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Reads an accessed value.
  ;;
-(class-ns ReadNode [FloatableAccessNode, FixedAccessNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Access, GuardedNode, HeapAccess, IterableNodeType, LIRLowerableAccess, LIRLowerable, Canonicalizable, Virtualizable, GuardingNode]
+(class-ns ReadNode [FloatableAccessNode, FixedAccessNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Access, GuardedNode, HeapAccess, LIRLowerableAccess, LIRLowerable, Canonicalizable, Virtualizable, GuardingNode]
     (defn #_"ReadNode" ReadNode'new-4 [#_"AddressNode" address, #_"LocationIdentity" location, #_"Stamp" stamp, #_"BarrierType" barrierType]
         (merge (ReadNode'class.) (FloatableAccessNode'new-4 address, location, stamp, barrierType))
     )
@@ -59122,7 +58894,7 @@ ZeroExtendNode'new-4
  ; Read a raw memory location according to Java field or array read semantics. It will perform read
  ; barriers, implicit conversions and optionally oop uncompression.
  ;;
-(class-ns JavaReadNode [FixedAccessNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Access, GuardedNode, HeapAccess, IterableNodeType, Lowerable, GuardingNode, Canonicalizable]
+(class-ns JavaReadNode [FixedAccessNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Access, GuardedNode, HeapAccess, Lowerable, GuardingNode, Canonicalizable]
     (defn #_"JavaReadNode" JavaReadNode'new-5 [#_"JavaKind" readKind, #_"AddressNode" address, #_"LocationIdentity" location, #_"BarrierType" barrierType, #_"boolean" compressible?]
         (merge (JavaReadNode'class.) (FixedAccessNode'new-4 address, location, (StampFactory'forKind-1 readKind), barrierType)
             (hash-map
@@ -59168,7 +58940,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Represents the lowered version of an atomic read-and-write operation like {@link sun.misc.Unsafe#getAndSetInt(Object, long, int)}.
  ;;
-(class-ns LoweredAtomicReadAndWriteNode [FixedAccessNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Access, GuardedNode, HeapAccess, IterableNodeType, StateSplit, LIRLowerableAccess, LIRLowerable, Single, MemoryCheckpoint, MemoryNode]
+(class-ns LoweredAtomicReadAndWriteNode [FixedAccessNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Access, GuardedNode, HeapAccess, StateSplit, LIRLowerableAccess, LIRLowerable, Single, MemoryCheckpoint, MemoryNode]
     (defn #_"LoweredAtomicReadAndWriteNode" LoweredAtomicReadAndWriteNode'new-4 [#_"AddressNode" address, #_"LocationIdentity" location, #_"ValueNode" newValue, #_"BarrierType" barrierType]
         (merge (LoweredAtomicReadAndWriteNode'class.) (FixedAccessNode'new-4 address, location, (Stamp'''unrestricted-1 (:stamp newValue)), barrierType)
             (hash-map
@@ -61185,7 +60957,7 @@ ZeroExtendNode'new-4
 ;;;
  ; The Parameter instruction is a placeholder for an incoming argument to a function call.
  ;;
-(class-ns ParameterNode [AbstractLocalNode, FloatingNode, ValueNode, Node, IterableNodeType]
+(class-ns ParameterNode [AbstractLocalNode, FloatingNode, ValueNode, Node]
     (defn #_"ParameterNode" ParameterNode'new-2 [#_"int" index, #_"Stamp" stamp]
         (merge (ParameterNode'class.) (AbstractLocalNode'new-2 index, stamp))
     )
@@ -61635,7 +61407,7 @@ ZeroExtendNode'new-4
      ;;
     (defm BinaryArithmeticNode #_"<OP>" Binary
         (#_"BinaryNode" Binary'''maybeCommuteInputs-1 [#_"BinaryArithmeticNode<OP>" this]
-            (when (and (not (satisfies? ConstantNode (:y this))) (or (satisfies? ConstantNode (:x this)) (< (:id (:y this)) (:id (:x this))))) => this
+            (when (and (not (satisfies? ConstantNode (:y this))) (or (satisfies? ConstantNode (:x this)) (< (:nodeId (:y this)) (:nodeId (:x this))))) => this
                 (assoc this :x (:y this) :y (:x this))
             )
         )
@@ -62632,7 +62404,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Returns -1, 0, or 1 if either x < y, x == y, or x > y.
  ;;
-(class-ns NormalizeCompareNode [BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable, IterableNodeType]
+(class-ns NormalizeCompareNode [BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable]
     (defn #_"NormalizeCompareNode" NormalizeCompareNode'new-3 [#_"ValueNode" x, #_"ValueNode" y, #_"JavaKind" kind]
         (merge (NormalizeCompareNode'class.) (BinaryNode'new-3 (StampFactory'forInteger-3k kind, -1, 1), x, y))
     )
@@ -63712,7 +63484,7 @@ ZeroExtendNode'new-4
  ; maximum flexibility for the guard node and guarantees that deoptimization occurs only if the
  ; control flow would have reached the guarded node (without taking exceptions into account).
  ;;
-(class-ns GuardNode [FloatingAnchoredNode, FloatingNode, ValueNode, Node, Canonicalizable, GuardingNode, DeoptimizingGuard, StaticDeoptimizingNode, IterableNodeType]
+(class-ns GuardNode [FloatingAnchoredNode, FloatingNode, ValueNode, Node, Canonicalizable, GuardingNode, DeoptimizingGuard, StaticDeoptimizingNode]
     (defn #_"GuardNode" GuardNode'new-6 [#_"LogicNode" condition, #_"AnchoringNode" anchor, #_"DeoptimizationReason" reason, #_"DeoptimizationAction" action, #_"boolean" negated?, #_"JavaConstant" speculation]
         (merge (GuardNode'class.) (FloatingAnchoredNode'new-2 VoidStamp'instance, anchor)
             (hash-map
@@ -63936,7 +63708,7 @@ ZeroExtendNode'new-4
  ; input is as narrow or narrower than the PiNode's type. The PiNode, and therefore
  ; also the scheduling restriction enforced by the guard, will go away.
  ;;
-(class-ns PiNode [FloatingGuardedNode, FloatingNode, ValueNode, Node, GuardedNode, LIRLowerable, Virtualizable, IterableNodeType, Canonicalizable, ValueProxy, LimitedValueProxy, Proxy]
+(class-ns PiNode [FloatingGuardedNode, FloatingNode, ValueNode, Node, GuardedNode, LIRLowerable, Virtualizable, Canonicalizable, ValueProxy, LimitedValueProxy, Proxy]
     (defn #_"PiNode" PiNode'new-2 [#_"ValueNode" object, #_"Stamp" stamp]
         (PiNode'new-3 object, stamp, nil)
     )
@@ -64061,7 +63833,7 @@ ZeroExtendNode'new-4
  ; that reads the array length, such as an ArrayLengthNode, can be canonicalized based on
  ; this information.
  ;;
-(class-ns PiArrayNode [PiNode, FloatingGuardedNode, FloatingNode, ValueNode, Node, GuardedNode, LIRLowerable, Virtualizable, IterableNodeType, Canonicalizable, ValueProxy, LimitedValueProxy, Proxy, ArrayLengthProvider]
+(class-ns PiArrayNode [PiNode, FloatingGuardedNode, FloatingNode, ValueNode, Node, GuardedNode, LIRLowerable, Virtualizable, Canonicalizable, ValueProxy, LimitedValueProxy, Proxy, ArrayLengthProvider]
     (defm PiArrayNode ArrayLengthProvider
         (#_"ValueNode" ArrayLengthProvider'''length-1 [#_"PiArrayNode" this]
             (:length this)
@@ -64553,7 +64325,7 @@ ZeroExtendNode'new-4
      ;;
     (defm BinaryOpLogicNode Binary
         (#_"LogicNode" Binary'''maybeCommuteInputs-1 [#_"BinaryOpLogicNode" this]
-            (when (and (not (satisfies? ConstantNode (:y this))) (or (satisfies? ConstantNode (:x this)) (< (:id (:y this)) (:id (:x this))))) => this
+            (when (and (not (satisfies? ConstantNode (:y this))) (or (satisfies? ConstantNode (:x this)) (< (:nodeId (:y this)) (:nodeId (:x this))))) => this
                 (assoc this :x (:y this) :y (:x this))
             )
         )
@@ -65361,7 +65133,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns ShortCircuitOrNode [LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, IterableNodeType, Binary #_"<LogicNode>", Canonicalizable]
+(class-ns ShortCircuitOrNode [LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, Binary #_"<LogicNode>", Canonicalizable]
     (defn #_"ShortCircuitOrNode" ShortCircuitOrNode'new-5 [#_"LogicNode" x, #_"boolean" xNegated, #_"LogicNode" y, #_"boolean" yNegated, #_"double" shortCircuitProbability]
         (merge (ShortCircuitOrNode'class.) (LogicNode'new-0)
             (hash-map
@@ -67194,7 +66966,7 @@ ZeroExtendNode'new-4
  ; This node describes one locking scope; it ties the monitor enter, monitor exit and the frame states together.
  ; It is thus referenced from the MonitorEnterNode, from the MonitorExitNode and from the FrameState.
  ;;
-(class-ns MonitorIdNode [ValueNode, Node, IterableNodeType, LIRLowerable]
+(class-ns MonitorIdNode [ValueNode, Node, LIRLowerable]
     (defn #_"MonitorIdNode" MonitorIdNode'new-1 [#_"int" lockDepth]
         (merge (MonitorIdNode'class.) (ValueNode'new-1 VoidStamp'instance)
             (hash-map
@@ -67221,7 +66993,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns VirtualObjectNode [ValueNode, Node, LIRLowerable, IterableNodeType]
+(class-ns VirtualObjectNode [ValueNode, Node, LIRLowerable]
     (defn #_"VirtualObjectNode" VirtualObjectNode'new-2 [#_"ResolvedJavaType" type, #_"boolean" hasIdentity]
         (merge (VirtualObjectNode'class.) (ValueNode'new-1 (StampFactory'objectNonNull-1 (TypeReference'createExactTrusted-1 type)))
             (hash-map
@@ -67259,7 +67031,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns VirtualArrayNode [VirtualObjectNode, ValueNode, Node, LIRLowerable, IterableNodeType, ArrayLengthProvider]
+(class-ns VirtualArrayNode [VirtualObjectNode, ValueNode, Node, LIRLowerable, ArrayLengthProvider]
     (defn #_"VirtualArrayNode" VirtualArrayNode'new-2 [#_"ResolvedJavaType" componentType, #_"int" length]
         (merge (VirtualArrayNode'class.) (VirtualObjectNode'new-2 (#_"ResolvedJavaType" .getArrayClass componentType), true)
             (hash-map
@@ -67340,7 +67112,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns VirtualInstanceNode [VirtualObjectNode, ValueNode, Node, LIRLowerable, IterableNodeType]
+(class-ns VirtualInstanceNode [VirtualObjectNode, ValueNode, Node, LIRLowerable]
     (defn #_"VirtualInstanceNode" VirtualInstanceNode'new-3 [#_"ResolvedJavaType" type, #_"ResolvedJavaField[]" fields, #_"boolean" hasIdentity]
         (merge (VirtualInstanceNode'class.) (VirtualObjectNode'new-2 type, hasIdentity)
             (hash-map
@@ -67401,7 +67173,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns VirtualBoxingNode [VirtualInstanceNode, VirtualObjectNode, ValueNode, Node, LIRLowerable, IterableNodeType]
+(class-ns VirtualBoxingNode [VirtualInstanceNode, VirtualObjectNode, ValueNode, Node, LIRLowerable]
     (defn #_"VirtualBoxingNode" VirtualBoxingNode'new-2 [#_"ResolvedJavaType" type, #_"JavaKind" boxingKind]
         (merge (VirtualBoxingNode'class.) (VirtualInstanceNode'new-2 type, false)
             (hash-map
@@ -67513,7 +67285,7 @@ ZeroExtendNode'new-4
  ;
  ; This can be used as debug or deoptimization information.
  ;;
-(class-ns FrameState [VirtualState, Node, IterableNodeType]
+(class-ns FrameState [VirtualState, Node]
     ;;;
      ; Marker value for the second slot of values that occupy two local variable or expression stack slots.
      ; The marker value is used by the bytecode parser, but replaced with nil in the #values of the FrameState.
@@ -68202,7 +67974,7 @@ ZeroExtendNode'new-4
         (merge (NodeMap'class.)
             (hash-map
                 #_"Graph" :graph graph
-                #_"Object[]" :values (make-array Object (:nodesSize graph))
+                #_"Object[]" :values (make-array Object (count (:gNodes graph)))
             )
         )
     )
@@ -68217,18 +67989,18 @@ ZeroExtendNode'new-4
     )
 
     (§ override! #_"T" #_"Map." get [#_"NodeMap<T>" this, #_"Node" node]
-        (§ cast #_"T" (nth (:values this) (:id node)))
+        (§ cast #_"T" (nth (:values this) (:nodeId node)))
     )
 
     (defn- #_"NodeMap<T>" NodeMap''checkAndGrow-2 [#_"NodeMap<T>" this, #_"Node" node]
         (when (NodeMap''isNew-2 this, node) => this
-            (assoc this :values (Arrays/copyOf (:values this), (max NodeMap'MIN_REALLOC_SIZE (quot (* (:nodesSize (:graph this)) 3) 2))))
+            (assoc this :values (Arrays/copyOf (:values this), (max NodeMap'MIN_REALLOC_SIZE (quot (* (count (:gNodes (:graph this))) 3) 2))))
         )
     )
 
     (defn #_"T" NodeMap''getAndGrow-2 [#_"NodeMap<T>" this, #_"Node" node]
         (§ ass! this (NodeMap''checkAndGrow-2 this, node))
-        (§ cast #_"T" (nth (:values this) (:id node)))
+        (§ cast #_"T" (nth (:values this) (:nodeId node)))
     )
 
     (§ override! #_"boolean" #_"Map." containsKey [#_"NodeMap<T>" this, #_"Node" node]
@@ -68236,7 +68008,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"void" NodeMap''set-3 [#_"NodeMap<T>" this, #_"Node" node, #_"T" value]
-        (aset (:values this) (:id node) value)
+        (aset (:values this) (:nodeId node) value)
         nil
     )
 
@@ -68253,7 +68025,7 @@ ZeroExtendNode'new-4
      ; @return the key for the entry at index {@code i}
      ;;
     (defn #_"Node" NodeMap''getKey-2 [#_"NodeMap<T>" this, #_"int" i]
-        (nth (:nodes (:graph this)) i)
+        (nth (:gNodes (:graph this)) i)
     )
 
     (defn #_"int" NodeMap''capacity-1 [#_"NodeMap<T>" this]
@@ -68261,7 +68033,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"boolean" NodeMap''isNew-2 [#_"NodeMap<T>" this, #_"Node" node]
-        (<= (NodeMap''capacity-1 this) (:id node))
+        (<= (NodeMap''capacity-1 this) (:nodeId node))
     )
 
     (§ override! #_"Iterable<Node>" #_"UnmodifiableEconomicMap." getKeys [#_"NodeMap<T>" this]
@@ -68372,38 +68144,6 @@ ZeroExtendNode'new-4
             (NodeMap''set-3 this, key, value)
             result
         )
-    )
-)
-
-;;;
- ; A snapshot of the {@linkplain Graph#getNodeCount() live node count} in a graph.
- ;;
-(class-ns NodeMark []
-    (defn #_"NodeMark" NodeMark'new-1 [#_"Graph" graph]
-        (merge (NodeMark'class.)
-            (hash-map
-                #_"Graph" :graph graph
-                ;;;
-                 ; Live node count of the associated graph when this object was created.
-                 ;;
-                #_"int" :value (:nodesSize graph)
-            )
-        )
-    )
-
-    ;;;
-     ; Determines if this mark is positioned at the first live node in the graph.
-     ;;
-    (defn #_"boolean" NodeMark''isStart-1 [#_"NodeMark" this]
-        (zero? (:value this))
-    )
-
-    ;;;
-     ; Determines if this mark still represents the {@linkplain Graph#getNodeCount() live node count} of the graph.
-     ;;
-    #_unused
-    (defn #_"boolean" NodeMark''isCurrent-1 [#_"NodeMark" this]
-        (= (:value this) (:nodesSize (:graph this)))
     )
 )
 
@@ -69414,7 +69154,7 @@ ZeroExtendNode'new-4
     (defm PropagateDeoptimizeProbabilityPhase Phase
         (#_"Graph" Phase'''run-3 [#_"PropagateDeoptimizeProbabilityPhase" this, #_"Graph" graph, #_"PhaseContext" context]
             (let [
-                #_"AbstractDeoptimizeNode*" ds (Graph''getNodes-2 graph, (ß AbstractDeoptimizeNode'TYPE))
+                #_"AbstractDeoptimizeNode*" ds (Graph''getNodes-2 graph, AbstractDeoptimizeNode)
             ]
                 (when (seq ds)
                     (let [
@@ -70667,7 +70407,7 @@ ZeroExtendNode'new-4
 
     (defm RemoveValueProxyPhase Phase
         (#_"Graph" Phase'''run-3 [#_"RemoveValueProxyPhase" this, #_"Graph" graph, #_"PhaseContext" context]
-            (doseq [#_"LoopExitNode" exit (Graph''getNodes-2 graph, (ß LoopExitNode'TYPE))]
+            (doseq [#_"LoopExitNode" exit (Graph''getNodes-2 graph, LoopExitNode)]
                 (doseq [#_"ProxyNode" vpn (§ snap (LoopExitNode''proxies-1 exit))]
                     (§ ass! vpn (Node''replaceAtUsagesAndDelete-2 vpn, (:value vpn)))
                 )
@@ -71146,7 +70886,7 @@ ZeroExtendNode'new-4
         ]
             (when (GuardsStage'allowsFloatingGuards-1 (:guardsStage graph))
                 (let [
-                    #_"GuardNode*" guards (Graph''getNodes-2 graph, (ß GuardNode'TYPE))
+                    #_"GuardNode*" guards (Graph''getNodes-2 graph, GuardNode)
                 ]
                     (when (seq guards)
                         ;; Now process guards.
@@ -71169,7 +70909,7 @@ ZeroExtendNode'new-4
                 (loop []
                     (let [
                         [#_"boolean" unmarked? #_"boolean" changed?]
-                            (loop-when [unmarked? false changed? false #_"ISeq" s (seq (Graph''getNodes-2 graph, (ß LoopBeginNode'TYPE)))] (some? s) => [unmarked? changed?]
+                            (loop-when [unmarked? false changed? false #_"ISeq" s (seq (Graph''getNodes-2 graph, LoopBeginNode))] (some? s) => [unmarked? changed?]
                                 (let [
                                     #_"LoopBeginNode" loopBegin (first s)
                                     [unmarked? changed?]
@@ -72279,7 +72019,7 @@ ZeroExtendNode'new-4
                                     ;; find out if all the return memory maps point to the anchor (i.e. there's no kill anywhere)
                                     (let [
                                         #_"boolean" needsMemoryMaps
-                                            (loop-when [#_"ISeq" s (seq (Graph''getNodes-2 (:snippet this), (ß ReturnNode'TYPE)))] (some? s) => false
+                                            (loop-when [#_"ISeq" s (seq (Graph''getNodes-2 (:snippet this), ReturnNode))] (some? s) => false
                                                 (let [
                                                     #_"MemoryMapNode" memoryMap (:memoryMap (first s))
                                                 ]
@@ -72295,7 +72035,7 @@ ZeroExtendNode'new-4
                                                     needsAnchor (seq (remove #(satisfies? MemoryMapNode %) (:nodeUsages anchor)))
                                                     ;; remove the useless memory map
                                                     #_"MemoryMapNode" memoryMap
-                                                        (loop-when [memoryMap nil #_"ISeq" s (seq (Graph''getNodes-2 (:snippet this), (ß ReturnNode'TYPE)))] (some? s) => memoryMap
+                                                        (loop-when [memoryMap nil #_"ISeq" s (seq (Graph''getNodes-2 (:snippet this), ReturnNode))] (some? s) => memoryMap
                                                             (let [
                                                                 #_"ReturnNode" retNode (first s)
                                                                 memoryMap (or memoryMap (:memoryMap retNode))
@@ -72324,7 +72064,7 @@ ZeroExtendNode'new-4
                                 )
 
                                 (let [
-                                    #_"ReturnNode*" returnNodes (§ snap (Graph''getNodes-2 (:snippet this), (ß ReturnNode'TYPE)))
+                                    #_"ReturnNode*" returnNodes (Graph''getNodes-2 (:snippet this), ReturnNode)
                                     this
                                         (case (count returnNodes)
                                             0 (assoc this :returnNode nil)
@@ -72388,7 +72128,7 @@ ZeroExtendNode'new-4
         (loop []
             (let [
                 #_"boolean" exploded? false
-                #_"ExplodeLoopNode" explodeLoop (first (filter #(satisfies? ExplodeLoopNode %) (Graph''getNodes-1 snippetCopy)))
+                #_"ExplodeLoopNode" explodeLoop (first (Graph''getNodes-2 snippetCopy, ExplodeLoopNode))
             ]
                 (when (some? explodeLoop) ;; earlier canonicalization may have removed the loop altogether
                     (let [
@@ -72397,7 +72137,7 @@ ZeroExtendNode'new-4
                         (when (some? loopBegin)
                             (let [
                                 #_"LoopEx" _loop (LoopsData''loop-2 (LoopsData'new-1 snippetCopy), loopBegin)
-                                #_"NodeMark" mark (NodeMark'new-1 snippetCopy)
+                                #_"int" mark (Graph''getMark-1 snippetCopy)
                             ]
                                 (LoopTransformations'fullUnroll-2 _loop, (CanonicalizerPhase'new-0))
                                 (CanonicalizerPhase''applyIncremental-3m (CanonicalizerPhase'new-0), snippetCopy, mark)
@@ -72601,7 +72341,7 @@ ZeroExtendNode'new-4
                 )
             )
         )
-        (doseq [#_"ParameterNode" paramNode (Graph''getNodes-2 (:snippet this), (ß ParameterNode'TYPE))]
+        (doseq [#_"ParameterNode" paramNode (Graph''getNodes-2 (:snippet this), ParameterNode)]
             (doseq [#_"Node" usage (:nodeUsages paramNode)]
                 (SnippetTemplate''propagateStamp-2 this, (get duplicates usage))
             )
@@ -75367,7 +75107,7 @@ ZeroExtendNode'new-4
                 #_"Graph" graph (Graph'new-1 (:method this))
                 graph (Phase'''run-3 instance, graph, nil)
                 _
-                    (doseq [#_"ParameterNode" param (Graph''getNodes-2 graph, (ß ParameterNode'TYPE))]
+                    (doseq [#_"ParameterNode" param (Graph''getNodes-2 graph, ParameterNode)]
                         (when (some? (#_"ResolvedJavaMethod" .getParameterAnnotation (:method this), NonNullParameter, (AbstractLocalNode''index-1 param)))
                             (§ ass! param (ValueNode''setStamp-2 param, (Stamp'''join-2 (:stamp param), StampFactory'objectNonNullStamp)))
                         )
@@ -76263,91 +76003,6 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns TypedGraphNodeIterator #_"<T extends IterableNodeType>" [#_"Iterator" #_"<T>"]
-    (defn #_"TypedGraphNodeIterator" TypedGraphNodeIterator'new-2 [#_"NodeClass" clazz, #_"Graph" graph]
-        (merge (TypedGraphNodeIterator'class.)
-            (hash-map
-                #_"Graph" :graph graph
-                #_"int[]" :ids (:iterableIds clazz)
-                #_"Node[]" :current (make-array Node'iface (count (:iterableIds clazz)))
-                #_"int" :i 0
-                #_"boolean" :forward? true
-            )
-        )
-    )
-
-    (defn- #_"Node" TypedGraphNodeIterator''findNext-1 [#_"TypedGraphNodeIterator<T extends IterableNodeType>" this]
-        (let [
-            this
-                (if (:forward? this)
-                    (let [
-                        this (assoc this :forward? false)
-                        #_"int" start (:i this)
-                    ]
-                        (loop [this this]
-                            (let [
-                                #_"Node" next
-                                    (if (nil? (nth (:current this) (:i this)))
-                                        (Graph''getIterableNodeStart-2 (:graph this), (nth (:ids this) (:i this)))
-                                        (Graph''getIterableNodeNext-2 (:graph this), (:typeCacheNext (nth (:current this) (:i this))))
-                                    )
-                            ]
-                                (if (some? next)
-                                    (do
-                                        (aset (:current this) (:i this) next)
-                                        this
-                                    )
-                                    (let [
-                                        this (update this :i inc)
-                                        this
-                                            (when (<= (count (:ids this)) (:i this)) => this
-                                                (assoc this :i 0)
-                                            )
-                                    ]
-                                        (when (= (:i this) start) => (recur this)
-                                            (assoc this :forward? true)
-                                        )
-                                    )
-                                )
-                            )
-                        )
-                    )
-                    (let [
-                        #_"Node" current (nth (:current this) (:i this))
-                        #_"Node" afterDeleted (Graph''getIterableNodeNext-2 (:graph this), current)
-                    ]
-                        (when (some? afterDeleted) => (assoc this :forward? true)
-                            (when-not (= current afterDeleted)
-                                (aset (:current this) (:i this) afterDeleted)
-                            )
-                            this
-                        )
-                    )
-                )
-        ]
-            (§ ass! this this)
-            (when-not (:forward? this)
-                (nth (:current this) (:i this))
-            )
-        )
-    )
-
-    (§ override! #_"boolean" #_"Iterator." hasNext [#_"TypedGraphNodeIterator<T extends IterableNodeType>" this]
-        (some? (TypedGraphNodeIterator''findNext-1 this))
-    )
-
-    (§ override! #_"T" #_"Iterator." next [#_"TypedGraphNodeIterator<T extends IterableNodeType>" this]
-        (let [
-            #_"Node" result (TypedGraphNodeIterator''findNext-1 this)
-        ]
-            (when (some? result) => (throw (NoSuchElementException.))
-                (§ ass! this (assoc this :forward? true))
-                (§ cast #_"T" result)
-            )
-        )
-    )
-)
-
 (class-ns UnsignedLong []
     (defn #_"UnsignedLong" UnsignedLong'new-1 [#_"long" value]
         (merge (UnsignedLong'class.)
@@ -76677,10 +76332,10 @@ ZeroExtendNode'new-4
                 (let [
                     #_"long" implicitNullCheckLimit (.implicitNullCheckLimit HotSpot'target)
                 ]
-                    (doseq [#_"DeoptimizeNode" deopt (Graph''getNodes-2 graph, (ß DeoptimizeNode'TYPE))]
+                    (doseq [#_"DeoptimizeNode" deopt (Graph''getNodes-2 graph, DeoptimizeNode)]
                         (UseTrappingNullChecksPhase'tryUseTrappingNullCheck-5 deopt, (:predecessor deopt), (:reason deopt), (:speculation deopt), implicitNullCheckLimit)
                     )
-                    (doseq [#_"DynamicDeoptimizeNode" deopt (Graph''getNodes-2 graph, (ß DynamicDeoptimizeNode'TYPE))]
+                    (doseq [#_"DynamicDeoptimizeNode" deopt (Graph''getNodes-2 graph, DynamicDeoptimizeNode)]
                         (UseTrappingNullChecksPhase'tryUseTrappingNullCheck-2 deopt, implicitNullCheckLimit)
                     )
                 )
