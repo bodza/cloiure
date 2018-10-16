@@ -1,5 +1,5 @@
 (ns graalfn.core
-    (:refer-clojure :only [* *ns* + - -> ->> / < <= = > >= aget and apply aset assoc bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean boolean-array byte byte-array case char cond condp conj cons contains? count dec declare defmacro defn defprotocol defrecord doseq dotimes double double-array empty? extend-protocol extend-type filter first get hash-map if-not import inc instance? int int-array into into-array iterate iterator-seq keys let letfn list locking long long-array loop make-array map max merge min neg? next nil? not not= ns-imports ns-unmap nth object-array or peek pop pos? quot reduce reify rem remove repeat rest run! satisfies? second seq sequential? short some some? sorted-map str subvec symbol symbol? take-while unsigned-bit-shift-right update update-in vals vary-meta vec vector? volatile! vreset! vswap! when-some while zero?])
+    (:refer-clojure :only [* *ns* + - -> ->> / < <= = > >= aget and apply aset assoc bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean boolean-array byte byte-array case char comp compare cond condp conj cons contains? count dec declare defmacro defn defprotocol defrecord doseq dotimes double double-array empty? extend-protocol extend-type filter first get hash-map if-not import inc instance? int int-array into into-array iterate iterator-seq keys let letfn list locking long long-array loop make-array map max merge min neg? next nil? not not= ns-imports ns-unmap nth object-array or peek pop pos? quot reduce reify rem remove repeat rest run! satisfies? second seq sequential? short some some? sort-by sorted-map str subvec symbol symbol? take-while unsigned-bit-shift-right update update-in vals vary-meta vec vector? volatile! vreset! vswap! when-some while zero?])
 )
 
 (defmacro § [& _])
@@ -769,7 +769,6 @@ BlockLoopInfo'new-2
 BlockMap''get-2
 BlockMap''put-3
 BlockMap'new-1
-BlockNodeIterator'new-1
 BlockOrderComparator'new-0
 BlockScope''doBlockStart-1
 BlockScope'new-2
@@ -1449,7 +1448,7 @@ EarlyReadEliminationPhase'new-1
 EdgeInfo'new-4
 EdgeMoveOptimizer'new-0
 Edges''copy-3
-Edges''getPositionsIterable-2
+Edges''getPositions-2
 Edges''initializeList-4
 Edges''initializeLists-3
 Edges''initializeNode-4
@@ -1462,8 +1461,6 @@ Edges'new-3
 Edges'putNodeListUnsafe-3
 Edges'putNodeUnsafe-3
 Edges'translateInto-2
-EdgesIterator''forward-1
-EdgesIterator'new-2
 EdgesType'Inputs
 EdgesType'Successors
 EffectList''add-3
@@ -3008,7 +3005,6 @@ Node''clearInputs-1
 Node''clearSuccessors-1
 Node''clone-3
 Node''copyWithInputs-1
-Node''copyWithInputs-2
 Node''dataFlowEquals-2
 Node''hasExactlyOneUsage-1
 Node''hasMoreThanOneUsage-1
@@ -3018,7 +3014,6 @@ Node''inputPositions-1
 Node''inputs-1
 Node''isAlive-1
 Node''isDeleted-1
-Node''isUnregistered-1
 Node''markDeleted-1
 Node''maybeNotifyZeroUsages-2
 Node''removeUsage-2
@@ -3041,7 +3036,6 @@ Node'ALIVE_ID_START
 Node'DELETED_ID_START
 Node'INITIAL_ID
 Node'NODE_LIST
-Node'NOT_ITERABLE
 Node'WithAllEdges
 Node'WithNoEdges
 Node'WithOnlyInputEdges
@@ -3082,7 +3076,6 @@ NodeClass'MAX_LIST_EDGES
 NodeClass'NEXT_EDGE
 NodeClass'OFFSET_MASK
 NodeClass'addGraphDuplicate-5
-NodeClass'computeIterationMask-3
 NodeClass'new-2
 NodeClass'replaceFirstEdge-4
 NodeClass'updateEdgesInPlace-3
@@ -3378,8 +3371,6 @@ RawConditionalEliminationVisitor''replaceInput-4
 RawConditionalEliminationVisitor''tryProveCondition-2
 RawConditionalEliminationVisitor'new-2
 RawData'new-2
-RawEdgesIterator''advanceInput-1
-RawEdgesIterator''getInput-1
 RawEdgesIterator'new-2
 RawLoadNode''createUnsafeRead-2
 RawLoadNode'new-4
@@ -4471,7 +4462,6 @@ ZeroExtendNode'new-4
 
 (defp BlockLoopInfo)
 (defp BlockMap)
-(defp BlockNodeIterator)
 (defp BlockOrderComparator)
 (defp BlockScope)
 (defp BlockStates)
@@ -4907,8 +4897,6 @@ ZeroExtendNode'new-4
 (defp Edges
     (#_"void" Edges'''update-4 [#_"Edges" this, #_"Node" node, #_"Node" oldValue, #_"Node" newValue])
 )
-
-(defp EdgesIterator)
 
 (defp Effect
     (#_"boolean" Effect'''isCfgKill-1 [#_"Effect" this])
@@ -10628,19 +10616,17 @@ ZeroExtendNode'new-4
             ]
                 (Node''replaceAtPredecessor-2 (LoopFragmentWhole''entryPoint-1 originalLoop), newControlSplit)
 
-                ;; The code below assumes that all of the control split nodes have the same successor
-                ;; structure, which should have been enforced by findUnswitchable.
+                ;; The code below assumes that all of the control split nodes have the same successor structure,
+                ;; which should have been enforced by findUnswitchable.
                 (let [
-                    #_"Iterator<Position>" successors (#_"Iterable" .iterator (Node''successorPositions-1 firstNode))
                     ;; original loop is used as first successor
-                    #_"Position" firstPosition (#_"Iterator" .next successors)
+                    [#_"Position" firstPosition & #_"Position*" successors] (Node''successorPositions-1 firstNode)
                     #_"AbstractBeginNode" originalLoopBegin (BeginNode'begin-1 (LoopFragmentWhole''entryPoint-1 originalLoop))
                 ]
                     (Position''set-3 firstPosition, newControlSplit, originalLoopBegin)
 
-                    (while (#_"Iterator" .hasNext successors)
+                    (doseq [#_"Position" position successors]
                         (let [
-                            #_"Position" position (#_"Iterator" .next successors)
                             ;; create a new loop duplicate and connect it
                             #_"LoopFragmentWhole" duplicateLoop (LoopFragment'''duplicate-1 originalLoop)
                             #_"AbstractBeginNode" newBegin (BeginNode'begin-1 (LoopFragmentWhole''entryPoint-1 duplicateLoop))
@@ -20784,39 +20770,6 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns BlockNodeIterator [#_"Iterator" #_"<FixedNode>"]
-    (defn #_"BlockNodeIterator" BlockNodeIterator'new-1 [#_"FixedNode" next]
-        (merge (BlockNodeIterator'class.)
-            (hash-map
-                #_"FixedNode" :current next
-            )
-        )
-    )
-
-    (§ override! #_"boolean" #_"Iterator." hasNext [#_"BlockNodeIterator" this]
-        (some? (:current this))
-    )
-
-    (§ override! #_"FixedNode" #_"Iterator." next [#_"BlockNodeIterator" this]
-        (let [
-            #_"FixedNode" ret (:current this)
-        ]
-            (when (some? ret) => (throw (NoSuchElementException.))
-                (if (satisfies? FixedWithNextNode (:current this))
-                    (do
-                        (§ ass! this (assoc this :current (:next (:current this))))
-                        (when (satisfies? AbstractBeginNode (:current this))
-                            (§ ass! this (assoc this :current nil))
-                        )
-                    )
-                    (§ ass! this (assoc this :current nil))
-                )
-                ret
-            )
-        )
-    )
-)
-
 ;;;
  ; Comparator for sorting blocks based on loop depth and probability.
  ;;
@@ -24112,8 +24065,7 @@ ZeroExtendNode'new-4
                 #_"LIRInsertionBuffer" buffer (LIRInsertionBuffer'new-0)
             ]
                 (BlockMap''put-3 (:insertionBuffers this), block, buffer)
-                (§ ass! buffer (LIRInsertionBuffer''init-2 buffer, (LIR''getLIRforBlock-2 (:lir this), block)))
-                buffer
+                (LIRInsertionBuffer''init-2 buffer, (LIR''getLIRforBlock-2 (:lir this), block))
             )
         )
     )
@@ -29548,27 +29500,23 @@ ZeroExtendNode'new-4
         (DataSection''checkOpen-1 this)
         (let [
             this (assoc this :closed true)
-        ]
             ;; simple heuristic: put items with larger alignment requirement first
-            (#_"ArrayList" .sort (:dataItems this), (ß (a, b) -> (§ fun (- (:alignment a) (:alignment b)))))
-
-            (let [
-                [#_"int" alignment #_"int" position]
-                    (loop-when [alignment 1 position 0 #_"ISeq" s (seq (:dataItems this))] (some? s) => [alignment position]
-                        (let [
-                            #_"Data" d (first s)
-                            alignment (DataSection'lcm-2 alignment, (:alignment d))
-                            position (DataSection'align-2 position, (:alignment d))
-                        ]
-                            (#_"DataSectionReference" .setOffset (:ref d), position)
-                            (recur alignment (+ position (:size d)) (next s))
-                        )
+            this (update this :dataItems #(sort-by :alignment (comp - compare) %))
+            [#_"int" alignment #_"int" position]
+                (loop-when [alignment 1 position 0 #_"ISeq" s (seq (:dataItems this))] (some? s) => [alignment position]
+                    (let [
+                        #_"Data" d (first s)
+                        alignment (DataSection'lcm-2 alignment, (:alignment d))
+                        position (DataSection'align-2 position, (:alignment d))
+                    ]
+                        (#_"DataSectionReference" .setOffset (:ref d), position)
+                        (recur alignment (+ position (:size d)) (next s))
                     )
-                this (assoc this :sectionAlignment alignment)
-                this (assoc this :sectionSize position)
-            ]
-                this
-            )
+                )
+            this (assoc this :sectionAlignment alignment)
+            this (assoc this :sectionSize position)
+        ]
+            this
         )
     )
 
@@ -30433,82 +30381,6 @@ ZeroExtendNode'new-4
             )
             nil
         )
-    )
-)
-
-;;;
- ; An iterator that will iterate over edges.
- ;
- ; An iterator of this type will not return nil values, unless edges are modified concurrently.
- ;;
-(class-ns EdgesIterator [#_"Iterator" #_"<Position>"]
-    ;;;
-     ; Creates an iterator that will iterate over some given edges in a given node.
-     ;;
-    (defn #_"EdgesIterator" EdgesIterator'new-2 [#_"Node" node, #_"Edges" edges]
-        (merge (EdgesIterator'class.)
-            (hash-map
-                #_"Node" :node node
-                #_"Edges" :edges edges
-                #_"int" :index Node'NOT_ITERABLE
-                #_"int" :subIndex 0
-                #_"boolean" :forward? true
-                #_"int" :directCount (:directCount edges)
-                #_"long[]" :offsets (:offsets edges)
-            )
-        )
-    )
-
-    (defn- #_"EdgesIterator" EdgesIterator''forwardNodeList-1 [#_"EdgesIterator" this]
-        (loop [this this]
-            (let [
-                #_"NodeList" list (Edges'getNodeList-3 (:node this), (:offsets this), (:index this))
-            ]
-                (when-not (and (some? list) (< (:subIndex this) (count list))) => this
-                    (let [
-                        this (assoc this :subIndex 0)
-                        this (update this :index inc)
-                    ]
-                        (recur-if (< (:index this) (count (:offsets (:edges this)))) [this] => this)
-                    )
-                )
-            )
-        )
-    )
-
-    (defn #_"EdgesIterator" EdgesIterator''forward-1 [#_"EdgesIterator" this]
-        (let [
-            this (assoc this :forward? false)
-            this
-                (when (< (:index this) (:directCount this)) => (update this :subIndex inc)
-                    (let [
-                        this (update this :index inc)
-                    ]
-                        (when (< (:index this) (:directCount this)) => this
-                            (§ return this)
-                        )
-                    )
-                )
-        ]
-            (when (< (:index this) (count (:offsets (:edges this)))) => this
-                (EdgesIterator''forwardNodeList-1 this)
-            )
-        )
-    )
-
-    (§ override! #_"boolean" #_"Iterator." hasNext [#_"EdgesIterator" this]
-        (when (:forward? this)
-            (§ ass! this (EdgesIterator''forward-1 this))
-        )
-        (< (:index this) (count (:offsets (:edges this))))
-    )
-
-    (§ override! #_"Position" #_"Iterator." next [#_"EdgesIterator" this]
-        (when (:forward? this)
-            (§ ass! this (EdgesIterator''forward-1 this))
-        )
-        (§ ass! this (assoc this :forward? true))
-        (Position'new-3 (:edges this), (:index this), (if (< (:index this) (:directCount this)) Node'NOT_ITERABLE (:subIndex this)))
     )
 )
 
@@ -32024,6 +31896,24 @@ ZeroExtendNode'new-4
     (def #_"long" NodeClass'LIST_MASK 0x01)
     (def #_"long" NodeClass'NEXT_EDGE 0x08)
 
+    (defn- #_"long" NodeClass'computeIterationMask-3 [#_"EdgesType" type, #_"int" directCount, #_"long[]" offsets]
+        (when (< NodeClass'MAX_EDGES (count offsets))
+            (throw! (str "Exceeded maximum of " NodeClass'MAX_EDGES " edges (" type ")"))
+        )
+        (when (< NodeClass'MAX_LIST_EDGES (- (count offsets) directCount))
+            (throw! (str "Exceeded maximum of " NodeClass'MAX_LIST_EDGES " list edges (" type ")"))
+        )
+
+        (loop-when [#_"long" mask 0 #_"int" i (dec (count offsets))] (<= 0 i) => mask
+            (let [
+                mask (| (<< mask NodeClass'NEXT_EDGE) (nth offsets i))
+                mask (if (<= directCount i) (| mask 0x3) mask)
+            ]
+                (recur mask (dec i))
+            )
+        )
+    )
+
     #_unused
     (defn #_"NodeClass" NodeClass'new-2 [#_"Class<T>" clazz, #_"NodeClass<? super T>" superNodeClass]
         (let [
@@ -32057,62 +31947,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"long" NodeClass'computeIterationMask-3 [#_"EdgesType" type, #_"int" directCount, #_"long[]" offsets]
-        (when (< NodeClass'MAX_EDGES (count offsets))
-            (throw! (str "Exceeded maximum of " NodeClass'MAX_EDGES " edges (" type ")"))
-        )
-        (when (< NodeClass'MAX_LIST_EDGES (- (count offsets) directCount))
-            (throw! (str "Exceeded maximum of " NodeClass'MAX_LIST_EDGES " list edges (" type ")"))
-        )
-
-        (loop-when [#_"long" mask 0 #_"int" i (dec (count offsets))] (<= 0 i) => mask
-            (let [
-                mask (| (<< mask NodeClass'NEXT_EDGE) (nth offsets i))
-                mask (if (<= directCount i) (| mask 0x3) mask)
-            ]
-                (recur mask (dec i))
-            )
-        )
-    )
-
-    (declare NodeClass'deepEquals-2)
-
-    (defn- #_"boolean" NodeClass'deepEquals0-2 [#_"Object" e1, #_"Object" e2]
-        (or (= e1 e2)
-            (and (some? e1) (some? e2)
-                (when (and (#_"Class" .isArray (#_"Object" .getClass e1)) (= (#_"Object" .getClass e1) (#_"Object" .getClass e2))) => (= e1 e2)
-                    (if (and (instance? Object'array e1) (instance? Object'array e2))
-                        (NodeClass'deepEquals-2 (§ cast #_"Object[]" e1), (§ cast #_"Object[]" e2))
-                        (condp instance? e1
-                            int'array     (ß Arrays/equals (§ cast #_"int[]" e1), (§ cast #_"int[]" e2))
-                            long'array    (ß Arrays/equals (§ cast #_"long[]" e1), (§ cast #_"long[]" e2))
-                            byte'array    (ß Arrays/equals (§ cast #_"byte[]" e1), (§ cast #_"byte[]" e2))
-                            char'array    (ß Arrays/equals (§ cast #_"char[]" e1), (§ cast #_"char[]" e2))
-                            short'array   (ß Arrays/equals (§ cast #_"short[]" e1), (§ cast #_"short[]" e2))
-                            float'array   (ß Arrays/equals (§ cast #_"float[]" e1), (§ cast #_"float[]" e2))
-                            double'array  (ß Arrays/equals (§ cast #_"double[]" e1), (§ cast #_"double[]" e2))
-                            boolean'array (ß Arrays/equals (§ cast #_"boolean[]" e1), (§ cast #_"boolean[]" e2))
-                        )
-                    )
-                )
-            )
-        )
-    )
-
-    (defn- #_"boolean" NodeClass'deepEquals-2 [#_"Object*" a1, #_"Object*" a2]
-        (let [
-            #_"int" n (count a1)
-        ]
-            (and (= (count a2) n)
-                (loop-when [#_"int" i 0] (< i n) => true
-                    (and (NodeClass'deepEquals0-2 (nth a1 i), (nth a2 i))
-                        (recur (inc i))
-                    )
-                )
-            )
-        )
-    )
-
     (defn #_"boolean" NodeClass''dataEquals-3 [#_"NodeClass<T>" this, #_"Node" a, #_"Node" b]
         (loop-when [#_"int" i 0] (< i (count (:offsets (:data this)))) => true
             (let [
@@ -32132,7 +31966,7 @@ ZeroExtendNode'new-4
                             #_"Object" objectA (Fields''getObject-3 (:data this), a, i)
                             #_"Object" objectB (Fields''getObject-3 (:data this), b, i)
                         ]
-                            (or (= objectA objectB) (and (some? objectA) (some? objectB) (NodeClass'deepEquals0-2 objectA, objectB)))
+                            (or (= objectA objectB) (and (some? objectA) (some? objectB) (ß NodeClass'deepEquals0-2 objectA, objectB)))
                         )
                     )
                     (recur (inc i))
@@ -32239,7 +32073,7 @@ ZeroExtendNode'new-4
             #_"NodeClass" oldNodeClass (:nodeClass oldNode)
             #_"Edges" oldEdges (NodeClass''getEdges-2 oldNodeClass, type)
         ]
-            (doseq [#_"Position" pos (Edges''getPositionsIterable-2 oldEdges, oldNode)]
+            (doseq [#_"Position" pos (Edges''getPositions-2 oldEdges, oldNode)]
                 (when (NodeClass''isValid-4 nodeClass, pos, oldNodeClass, oldEdges)
                     (let [
                         #_"Node" oldEdge (Position''get-2 pos, oldNode)
@@ -32858,13 +32692,57 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn #_"Iterable<Position>" Edges''getPositionsIterable-2 [#_"Edges" this, #_"Node" node]
-        (let [
-            #_"Edges" edges this
-        ]
-            (reify Iterable #_"<Position>"
-                (#_"Iterator<Position>" iterator [#_"Iterable<Position>" this]
-                    (EdgesIterator'new-2 node, edges)
+    ;;;
+     ; A sequence that is iterable over edges.
+     ;;
+    (defn #_"Position*" Edges''getPositions-2 [#_"Edges" this, #_"Node" node]
+        (iterator-seq
+            (let [
+                #_"Edges" edges this
+                #_"int" i -1
+                #_"int" j 0
+                #_"boolean" forward? true
+                forward-
+                    (ß #_"void" fn []
+                        (§ ass! forward? false)
+                        (if (< i (:directCount edges))
+                            (do
+                                (§ ass! i (inc i))
+                                (when (< i (:directCount edges))
+                                    (§ return )
+                                )
+                            )
+                            (§ ass! j (inc j))
+                        )
+                        (loop-when [] (< i (count (:offsets edges)))
+                            (let [
+                                #_"NodeList" list (Edges'getNodeList-3 node, (:offsets edges), i)
+                            ]
+                                (when-not (and (some? list) (< j (count list)))
+                                    (§ ass! j 0)
+                                    (§ ass! i (inc i))
+                                    (recur)
+                                )
+                            )
+                        )
+                        nil
+                    )
+            ]
+                (reify Iterator #_"<Position>"
+                    (#_"boolean" hasNext [#_"Iterator<Position>" this]
+                        (when forward?
+                            (forward-)
+                        )
+                        (< i (count (:offsets edges)))
+                    )
+
+                    (#_"Position" next [#_"Iterator<Position>" this]
+                        (when forward?
+                            (forward-)
+                        )
+                        (§ ass! forward? true)
+                        (Position'new-3 edges, i, (if (< i (:directCount edges)) -1 j))
+                    )
                 )
             )
         )
@@ -34050,12 +33928,7 @@ ZeroExtendNode'new-4
      ; Gets the linkage for a foreign call.
      ;;
     (defn #_"ForeignCallLinkage" ForeignCalls''lookupForeignCall-2 [#_"ForeignCalls" this, #_"ForeignCallDescriptor" descriptor]
-        (let [
-            #_"ForeignCallLinkage" callTarget (get (:foreignCalls this) descriptor)
-        ]
-            (§ ass! callTarget (ForeignCallLinkage''finalizeAddress-1 callTarget))
-            callTarget
-        )
+        (ForeignCallLinkage''finalizeAddress-1 (get (:foreignCalls this) descriptor))
     )
 
     ;;;
@@ -45927,8 +45800,7 @@ ZeroExtendNode'new-4
                                                 buffer (LIRInsertionBuffer'new-0)
                                             ]
                                                 (§ aset! insertionBuffers (:id spillBlock) buffer)
-                                                (§ ass! buffer (LIRInsertionBuffer''init-2 buffer, (LIR''getLIRforBlock-2 (:lir (:allocator this)), spillBlock)))
-                                                buffer
+                                                (LIRInsertionBuffer''init-2 buffer, (LIR''getLIRforBlock-2 (:lir (:allocator this)), spillBlock))
                                             )
                                         )
                                     #_"int" spillOpId (LinearScan''getFirstLirInstructionId-2 (:allocator this), spillBlock)
@@ -49475,8 +49347,7 @@ ZeroExtendNode'new-4
                                                     #_"AbstractBeginNode" begin (Graph''add-2 (:graph node), (BeginNode'new-0))
                                                 ]
                                                     (Node''replaceFirstSuccessor-3 predecessor, nextNode, begin)
-                                                    (§ ass! begin (FixedWithNextNode''setNext-2 begin, nextNode))
-                                                    begin
+                                                    (FixedWithNextNode''setNext-2 begin, nextNode)
                                                 )
                                             )
                                     ]
@@ -52019,7 +51890,6 @@ ZeroExtendNode'new-4
     (def #_"int" Node'ALIVE_ID_START 0)
 
     (def #_"int" Node'NODE_LIST -2)
-    (def #_"int" Node'NOT_ITERABLE -1)
 
     (defn #_"Node" Node'new-0 []
         (merge (Node'class.)
@@ -52043,8 +51913,8 @@ ZeroExtendNode'new-4
     ;;;
      ; Returns an iterable which can be used to traverse all non-nil input edges of this node.
      ;;
-    (defn #_"Iterable<Position>" Node''inputPositions-1 [#_"Node" this]
-        (Edges''getPositionsIterable-2 (:inputs (:nodeClass this)), this)
+    (defn #_"Position*" Node''inputPositions-1 [#_"Node" this]
+        (Edges''getPositions-2 (:inputs (:nodeClass this)), this)
     )
 
     ;;;
@@ -52065,8 +51935,8 @@ ZeroExtendNode'new-4
     ;;;
      ; Returns an iterable which can be used to traverse all successor edge positions of this node.
      ;;
-    (defn #_"Iterable<Position>" Node''successorPositions-1 [#_"Node" this]
-        (Edges''getPositionsIterable-2 (:successors (:nodeClass this)), this)
+    (defn #_"Position*" Node''successorPositions-1 [#_"Node" this]
+        (Edges''getPositions-2 (:successors (:nodeClass this)), this)
     )
 
     ;;;
@@ -52132,11 +52002,6 @@ ZeroExtendNode'new-4
 
     (defn #_"boolean" Node''isAlive-1 [#_"Node" this]
         (<= Node'ALIVE_ID_START (:nodeId this))
-    )
-
-    #_unused
-    (defn #_"boolean" Node''isUnregistered-1 [#_"Node" this]
-        (= (:nodeId this) Node'INITIAL_ID)
     )
 
     (defn- #_"void" Node''maybeNotifyInputChanged-2 [#_"Node" this, #_"Node" node]
@@ -52327,8 +52192,7 @@ ZeroExtendNode'new-4
     )
 
     ;;;
-     ; Removes this node from its graph. This node must have no {@linkplain Node#usages() usages}
-     ; and no {@linkplain #predecessor() predecessor}.
+     ; Removes this node from its graph. This node must have no usages and no predecessor.
      ;;
     (defn #_"void" Node''safeDelete-1 [#_"Node" this]
         (Node''clearInputs-1 this)
@@ -52344,25 +52208,18 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"Node" Node''copyWithInputs-1 [#_"Node" this]
-        (Node''copyWithInputs-2 this, true)
-    )
-
-    (defn #_"Node" Node''copyWithInputs-2 [#_"Node" this, #_"boolean" insertIntoGraph]
         (let [
-            #_"Node" newNode (Node''clone-3 this, (when insertIntoGraph (:graph this)), Node'WithOnlyInputEdges)
+            #_"Node" newNode (Node''clone-3 this, (:graph this), Node'WithOnlyInputEdges)
         ]
-            (when insertIntoGraph
-                (doseq [#_"Node" input (Node''inputs-1 this)]
-                    (§ ass! input (Node''addUsage-2 input, newNode))
-                )
+            (doseq [#_"Node" input (Node''inputs-1 this)]
+                (§ ass! input (Node''addUsage-2 input, newNode))
             )
             newNode
         )
     )
 
     ;;;
-     ; @param newNode the result of cloning this node or {@link Unsafe#allocateInstance(Class) raw
-     ;            allocating} a copy of this node
+     ; @param newNode the result of cloning this node or {@link Unsafe#allocateInstance(Class) raw allocating} a copy of this node
      ; @param type the type of edges to process
      ; @param edgesToCopy if {@code type} is in this set, the edges are copied otherwise they are cleared
      ;;
@@ -53914,8 +53771,7 @@ ZeroExtendNode'new-4
                             theBegin (Graph''add-2 (:graph this), (BeginNode'new-0))
                         ]
                             (Node''replaceAtPredecessor-2 begin, theBegin)
-                            (§ ass! theBegin (FixedWithNextNode''setNext-2 theBegin, begin))
-                            theBegin
+                            (FixedWithNextNode''setNext-2 theBegin, begin)
                         )
                     )
                 #_"FixedNode" next (:next theBegin)
@@ -53923,8 +53779,7 @@ ZeroExtendNode'new-4
                 (Node''replaceAtPredecessor-2 next, merge)
                 (§ ass! theBegin (FixedWithNextNode''setNext-2 theBegin, (Graph''add-2 (:graph this), (EndNode'new-0))))
                 (AbstractMergeNode''addForwardEnd-2 merge, (:next theBegin))
-                (§ ass! merge (FixedWithNextNode''setNext-2 merge, next))
-                merge
+                (FixedWithNextNode''setNext-2 merge, next)
             )
         )
     )
@@ -54737,7 +54592,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"void" IntegerSwitchNode''doReplace-6 [#_"IntegerSwitchNode" this, #_"ValueNode" newValue, #_"List<KeyData>" newKeyDatas, #_"ArrayList<AbstractBeginNode>" newSuccessors, #_"int" newDefaultSuccessor, #_"double" newDefaultProbability]
         ;; Sort the new keys (invariant of the IntegerSwitchNode).
-        (#_"List" .sort newKeyDatas, (Comparator/comparingInt (ß (k) -> (§ fun (:key k)))))
+        (§ ass! newKeyDatas (sort-by :key newKeyDatas))
 
         ;; Create the final data arrays.
         (let [
@@ -55067,7 +54922,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"FixedNode*" AbstractBeginNode''getBlockNodes-1 [#_"AbstractBeginNode" this]
-        (iterator-seq (BlockNodeIterator'new-1 this))
+        (->> this (iterate #(when (and (satisfies? FixedWithNextNode %) (not (satisfies? AbstractBeginNode (:next %)))) (:next %))) (take-while some?))
     )
 )
 
@@ -55108,8 +54963,7 @@ ZeroExtendNode'new-4
             (let [
                 #_"BeginNode" begin (Graph''add-2 (:graph with), (BeginNode'new-0))
             ]
-                (§ ass! begin (FixedWithNextNode''setNext-2 begin, with))
-                begin
+                (FixedWithNextNode''setNext-2 begin, with)
             )
         )
     )
@@ -57477,19 +57331,14 @@ ZeroExtendNode'new-4
         ;; produce an IllegalMonitorStateException. In HotSpot some form of fast path locking should
         ;; always occur so the FrameState should never actually be used.
         (let [
-            #_"ArrayList<MonitorEnterNode>" enters
+            #_"[MonitorEnterNode]" enters
                 (loop-when [enters nil #_"int" i 0] (< i (count (:virtualObjects this))) => enters
                     (let [
-                        #_"List<MonitorIdNode>" locks (CommitAllocationNode''getLocks-2 this, i)
+                        #_"MonitorIdNode*" locks (CommitAllocationNode''getLocks-2 this, i)
+                        ;; ensure that the lock operations are performed in lock depth order
                         locks
                             (when (< 1 (count locks)) => locks
-                                ;; ensure that the lock operations are performed in lock depth order
-                                (let [
-                                    #_"ArrayList<MonitorIdNode>" newList (ArrayList. locks)
-                                ]
-                                    (#_"ArrayList" .sort newList, (ß (a, b) -> (§ fun (Integer/compare (:lockDepth a), (:lockDepth b)))))
-                                    newList
-                                )
+                                (sort-by :lockDepth locks)
                             )
                         enters
                             (loop-when [enters enters #_"ISeq" s (seq locks)] (some? s) => enters
@@ -57497,12 +57346,7 @@ ZeroExtendNode'new-4
                                     #_"MonitorEnterNode" enter (Graph''add-2 (:graph this), (MonitorEnterNode'new-2 (nth allocations i), (first s)))
                                 ]
                                     (Graph''addBeforeFixed-3 (:graph this), this, enter)
-                                    (let [
-                                        enters (or enters (ArrayList.))
-                                    ]
-                                        (#_"ArrayList" .add enters, enter)
-                                        (recur enters (next s))
-                                    )
+                                    (recur (conj (vec enters) enter) (next s))
                                 )
                             )
                     ]
@@ -57513,7 +57357,7 @@ ZeroExtendNode'new-4
             (doseq [#_"Node" usage (:nodeUsages this)]
                 (if (satisfies? AllocatedObjectNode usage)
                     (§ ass! usage (Node''replaceAtUsagesAndDelete-2 usage, (nth allocations (#_"List" .indexOf (:virtualObjects this), (:virtualObject usage)))))
-                    (Node''replaceAtUsages-3 this, InputType'Memory, (nth enters (dec (count enters))))
+                    (Node''replaceAtUsages-3 this, InputType'Memory, (peek enters))
                 )
             )
             (doseq [#_"MonitorEnterNode" enter enters]
@@ -61539,8 +61383,7 @@ ZeroExtendNode'new-4
         (let [
             #_"IntegerAddExactNode" this (merge (IntegerAddExactNode'class.) (AddNode'new-2 x, y))
         ]
-            (§ ass! this (ValueNode''setStamp-2 this, (Stamp'''unrestricted-1 (:stamp x))))
-            this
+            (ValueNode''setStamp-2 this, (Stamp'''unrestricted-1 (:stamp x)))
         )
     )
 
@@ -61909,8 +61752,7 @@ ZeroExtendNode'new-4
         (let [
             #_"IntegerMulExactNode" this (merge (IntegerMulExactNode'class.) (MulNode'new-2 x, y))
         ]
-            (§ ass! this (ValueNode''setStamp-2 this, (Stamp'''unrestricted-1 (:stamp x))))
-            this
+            (ValueNode''setStamp-2 this, (Stamp'''unrestricted-1 (:stamp x)))
         )
     )
 
@@ -63794,8 +63636,7 @@ ZeroExtendNode'new-4
                     object
                 (nil? guard) ;; Try to merge the pi node with a load node.
                     (when (and (satisfies? ReadNode object) (not (Node''hasMoreThanOneUsage-1 object)))
-                        (§ ass! object (ValueNode''setStamp-2 object, (Stamp'''improveWith-2 (:stamp object), stamp)))
-                        object
+                        (ValueNode''setStamp-2 object, (Stamp'''improveWith-2 (:stamp object), stamp))
                     )
                 :else
                     (loop-when [#_"ISeq" s (seq (:nodeUsages guard))] (some? s)
@@ -70080,42 +69921,25 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"Node" RawEdgesIterator''forward-1 [#_"RawEdgesIterator" this]
-        (loop-when [] (not (zero? (:mask this)))
-            (let [
-                #_"Node" next (RawEdgesIterator''getInput-1 this)
-            ]
-                (§ ass! this (assoc this :mask (RawEdgesIterator''advanceInput-1 this)))
-                (or next (recur))
-            )
-        )
-    )
-
-    (§ override! #_"boolean" #_"Iterator." hasNext [#_"RawEdgesIterator" this]
+    (defn- #_"Node" RawEdgesIterator''getInput-1 [#_"RawEdgesIterator" this]
         (let [
-            #_"Node" next (:nextValue this)
+            #_"int" state (int (& (:mask this) 0x03))
         ]
-            (or (some? next)
-                (do
-                    (§ ass! this (assoc this :nextValue (RawEdgesIterator''forward-1 this)))
-                    (some? (:nextValue this))
-                )
+            (case state
+                0   (Edges'getNodeUnsafe-2 (:node this), (& (:mask this) 0xfc))
+                1   ;; We are iterating a node list.
+                    (let [
+                        #_"NodeList" nodeList (Edges'getNodeListUnsafe-2 (:node this), (& (:mask this) 0xfc))
+                    ]
+                        (nth (:nodes nodeList) (- (count nodeList) 1 (int (& (>>> (:mask this) NodeClass'NEXT_EDGE) 0xffff))))
+                    )
+                ;; Node list needs to expand first.
+                nil
             )
         )
     )
 
-    (§ override! #_"Node" #_"Iterator." next [#_"RawEdgesIterator" this]
-        (let [
-            #_"Node" next (:nextValue this)
-        ]
-            (when (some? next) => (or (RawEdgesIterator''forward-1 this) (throw (NoSuchElementException.)))
-                (§ ass! this (assoc this :nextValue nil))
-                next
-            )
-        )
-    )
-
-    (defn #_"long" RawEdgesIterator''advanceInput-1 [#_"RawEdgesIterator" this]
+    (defn- #_"long" RawEdgesIterator''advanceInput-1 [#_"RawEdgesIterator" this]
         (let [
             #_"int" state (& (int (:mask this)) 0x03)
         ]
@@ -70150,20 +69974,37 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"Node" RawEdgesIterator''getInput-1 [#_"RawEdgesIterator" this]
+    (defn- #_"Node" RawEdgesIterator''forward-1 [#_"RawEdgesIterator" this]
+        (loop-when [] (not (zero? (:mask this)))
+            (let [
+                #_"Node" next (RawEdgesIterator''getInput-1 this)
+            ]
+                (§ ass! this (assoc this :mask (RawEdgesIterator''advanceInput-1 this)))
+                (or next (recur))
+            )
+        )
+    )
+
+    (§ override! #_"boolean" #_"Iterator." hasNext [#_"RawEdgesIterator" this]
         (let [
-            #_"int" state (int (& (:mask this) 0x03))
+            #_"Node" next (:nextValue this)
         ]
-            (case state
-                0   (Edges'getNodeUnsafe-2 (:node this), (& (:mask this) 0xfc))
-                1   ;; We are iterating a node list.
-                    (let [
-                        #_"NodeList" nodeList (Edges'getNodeListUnsafe-2 (:node this), (& (:mask this) 0xfc))
-                    ]
-                        (nth (:nodes nodeList) (- (count nodeList) 1 (int (& (>>> (:mask this) NodeClass'NEXT_EDGE) 0xffff))))
-                    )
-                ;; Node list needs to expand first.
-                nil
+            (or (some? next)
+                (do
+                    (§ ass! this (assoc this :nextValue (RawEdgesIterator''forward-1 this)))
+                    (some? (:nextValue this))
+                )
+            )
+        )
+    )
+
+    (§ override! #_"Node" #_"Iterator." next [#_"RawEdgesIterator" this]
+        (let [
+            #_"Node" next (:nextValue this)
+        ]
+            (when (some? next) => (or (RawEdgesIterator''forward-1 this) (throw (NoSuchElementException.)))
+                (§ ass! this (assoc this :nextValue nil))
+                next
             )
         )
     )
