@@ -1,5 +1,5 @@
 (ns graalfn.core
-    (:refer-clojure :only [* *ns* + - -> ->> / < <= = > >= aget and apply aset assoc bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean boolean-array byte byte-array case char comp compare cond condp conj cons contains? count dec declare defmacro defn defprotocol defrecord doseq dotimes double double-array empty? extend-protocol extend-type filter first get hash-map if-not import inc instance? int int-array into into-array iterate iterator-seq keys let letfn list locking long long-array loop make-array map max merge min neg? next nil? not not= ns-imports ns-unmap nth object-array or peek pop pos? quot reduce reify rem remove repeat rest run! satisfies? second seq sequential? short some some? sort-by sorted-map str subvec symbol symbol? take-while unsigned-bit-shift-right update update-in vals vary-meta vec vector? volatile! vreset! vswap! when-some while zero?])
+    (:refer-clojure :only [* *ns* + - -> ->> / < <= = > >= aget and apply aset assoc bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean boolean-array byte byte-array case char comp compare cond condp conj cons contains? count dec declare defmacro defn defprotocol defrecord doseq dotimes double double-array empty? extend-protocol extend-type filter first get hash-map if-not import inc instance? int int-array into into-array iterate iterator-seq keys let letfn list locking long long-array loop make-array map map-indexed max merge min neg? next nil? not not= ns-imports ns-unmap nth object-array or peek pop pos? quot reduce reify rem remove repeat rest run! satisfies? second seq sequential? short some some? sort-by sorted-map str subvec symbol symbol? take-while unsigned-bit-shift-right update update-in vals vary-meta vec vector? volatile! vreset! vswap! when-some while zero?])
 )
 
 (defmacro § [& _])
@@ -112,7 +112,6 @@
         Deque EnumMap EnumSet HashMap Iterator LinkedList List ListIterator Map Map$Entry NoSuchElementException
         PriorityQueue Queue Set SortedSet TreeSet
     ]
-    [java.util.concurrent.atomic AtomicLong AtomicReference]
     [java.util.function BiConsumer BiFunction Consumer Function IntUnaryOperator Predicate ToDoubleFunction]
     [java.util.stream Stream Stream$Builder]
 
@@ -227,7 +226,6 @@ StoreHubNode'write-2
 StubForeignCallNode'newArrayC-4
 StubForeignCallNode'newInstanceC-3
 VMConfigNode'areConfigValuesConstant-0
-VMConfigNode'loadByteConfigValue-1
 VMConfigNode'loadIntConfigValue-1
 VMConfigNode'loadLongConfigValue-1
 )
@@ -1443,7 +1441,6 @@ DynamicNewInstanceNode'throwsInstantiationException-2
 EMOptimizer''optimizeMovesAtBlockBegin-2
 EMOptimizer''optimizeMovesAtBlockEnd-2
 EMOptimizer'new-1
-EagerSnippetInfo'new-2
 EarlyReadEliminationPhase'new-1
 EdgeInfo'new-4
 EdgeMoveOptimizer'new-0
@@ -1686,7 +1683,6 @@ GetObjectAddressNode'new-1
 GraalOptions'canOmitFrame
 GraalOptions'conditionalElimination
 GraalOptions'deoptALot
-GraalOptions'eagerSnippets
 GraalOptions'escapeAnalysisIterations
 GraalOptions'escapeAnalysisLoopCutoff
 GraalOptions'exactFullUnrollMaxNodes
@@ -1796,7 +1792,6 @@ Graph''setLastSchedule-2
 Graph''setStart-2
 Graph''trackNodeEvents-2
 Graph''unregister-2
-Graph'INVALID_GRAPH_ID
 Graph'copy-1
 Graph'new-1
 GraphBuilderConfiguration'getDefault-0
@@ -1882,7 +1877,6 @@ HotSpot'arrayIndexScale-1
 HotSpot'arrayKlassOffset
 HotSpot'arrayLengthOffset
 HotSpot'arrayOopDescSize
-HotSpot'arrayPrototypeMarkWord
 HotSpot'biasedLockMaskInPlace
 HotSpot'biasedLockPattern
 HotSpot'cardTableAddress
@@ -1912,14 +1906,8 @@ HotSpot'g1YoungCardValue
 HotSpot'graphBuilderSuite
 HotSpot'handleDeoptStub
 HotSpot'heapBaseRegister
-HotSpot'heapEndAddress
-HotSpot'heapEndAddressMark
-HotSpot'heapTopAddress
-HotSpot'heapTopAddressMark
 HotSpot'heapWordSize
 HotSpot'hubOffset
-HotSpot'inlineContiguousAllocationSupported
-HotSpot'inlineContiguousAllocationSupportedMark
 HotSpot'instanceKlassInitStateOffset
 HotSpot'instanceKlassStateFullyInitialized
 HotSpot'invokeinterfaceMark
@@ -1933,8 +1921,6 @@ HotSpot'klassEncoding
 HotSpot'klassLayoutHelperNeutralValue
 HotSpot'klassLayoutHelperOffset
 HotSpot'klassOffset
-HotSpot'layoutHelperElementTypeMask
-HotSpot'layoutHelperElementTypeShift
 HotSpot'layoutHelperHeaderSizeMask
 HotSpot'layoutHelperHeaderSizeShift
 HotSpot'layoutHelperLog2ElementSizeMask
@@ -1943,11 +1929,6 @@ HotSpot'lockDisplacedMarkOffset
 HotSpot'logOfHeapRegionGrainBytes
 HotSpot'logOfHeapRegionGrainBytesMark
 HotSpot'markOffset
-HotSpot'markOopDescHashMask
-HotSpot'markOopDescHashMaskInPlace
-HotSpot'markOopDescHashShift
-HotSpot'markWordNoHashInPlace
-HotSpot'markWordNoLockInPlace
 HotSpot'metaAccess
 HotSpot'metaspaceArrayBaseOffset
 HotSpot'metaspaceArrayLengthOffset
@@ -1988,7 +1969,6 @@ HotSpot'stackPointerRegister
 HotSpot'stackShadowPages
 HotSpot'superCheckOffsetOffset
 HotSpot'target
-HotSpot'threadAllocatedBytesOffset
 HotSpot'threadLastJavaFpOffset
 HotSpot'threadLastJavaPcOffset
 HotSpot'threadLastJavaSpOffset
@@ -1997,17 +1977,7 @@ HotSpot'threadPollingPageOffset
 HotSpot'threadRegister
 HotSpot'threadTlabEndOffset
 HotSpot'threadTlabOffset
-HotSpot'threadTlabSizeOffset
-HotSpot'threadTlabStartOffset
 HotSpot'threadTlabTopOffset
-HotSpot'tlabAlignmentReserve
-HotSpot'tlabFastRefillWasteOffset
-HotSpot'tlabIntArrayMarkWord
-HotSpot'tlabNumberOfRefillsOffset
-HotSpot'tlabRefillWasteIncrement
-HotSpot'tlabRefillWasteLimitOffset
-HotSpot'tlabSlowAllocationsOffset
-HotSpot'tlabStats
 HotSpot'uncommonTrapStub
 HotSpot'unlockedMask
 HotSpot'unsafe
@@ -2550,8 +2520,6 @@ LabelRef''getTargetBlock-1
 LabelRef''label-1
 LabelRef'new-3
 LargeLocalLiveness'new-3
-Lazy'new-1
-LazySnippetInfo'new-2
 LeaOp'new-3
 LeftShiftNode'create-2
 LeftShiftNode'new-2
@@ -2982,15 +2950,9 @@ NewInstanceNode''createVirtualInstanceNode-2
 NewInstanceNode''defaultFieldValue-2
 NewInstanceNode'new-2
 NewInstanceNode'new-3
-NewInstanceStub'edenAllocate-1
 NewInstanceStub'new-1
-NewInstanceStub'refillAllocate-3
-NewObjectSnippets'MAX_ARRAY_FAST_PATH_ALLOCATION_LENGTH
-NewObjectSnippets'allocateInstanceHelper-6
-NewObjectSnippets'emitPrefetchAllocate-2
 NewObjectSnippets'formatArray-8
 NewObjectSnippets'formatObject-6
-NewObjectSnippets'formatObjectForStub-4
 NewObjectTemplates''lower-3a
 NewObjectTemplates''lower-3da
 NewObjectTemplates''lower-3di
@@ -3223,10 +3185,6 @@ PartialEscapeBlockState''addObject-3
 PartialEscapeBlockState''adoptAddObjectStates-2
 PartialEscapeBlockState''contains-2
 PartialEscapeBlockState''escape-3
-PartialEscapeBlockState''getObjectState-2i
-PartialEscapeBlockState''getObjectState-2n
-PartialEscapeBlockState''getObjectStateOptional-2i
-PartialEscapeBlockState''getObjectStateOptional-2n
 PartialEscapeBlockState''materializeBefore-4
 PartialEscapeBlockState''removeLock-2
 PartialEscapeBlockState''resetObjectStates-2
@@ -3443,8 +3401,6 @@ ReplacementsUtil'CLASS_MIRROR_LOCATION
 ReplacementsUtil'CLASS_STATE_LOCATION
 ReplacementsUtil'COMPRESSED_HUB_LOCATION
 ReplacementsUtil'DISPLACED_MARK_WORD_LOCATION
-ReplacementsUtil'HEAP_END_LOCATION
-ReplacementsUtil'HEAP_TOP_LOCATION
 ReplacementsUtil'HUB_LOCATION
 ReplacementsUtil'HUB_WRITE_LOCATION
 ReplacementsUtil'KLASS_LAYOUT_HELPER_LOCATION
@@ -3465,20 +3421,12 @@ ReplacementsUtil'SECONDARY_SUPERS_ELEMENT_LOCATION
 ReplacementsUtil'SECONDARY_SUPERS_LOCATION
 ReplacementsUtil'SECONDARY_SUPER_CACHE_LOCATION
 ReplacementsUtil'TLAB_END_LOCATION
-ReplacementsUtil'TLAB_FAST_REFILL_WASTE_LOCATION
-ReplacementsUtil'TLAB_NOF_REFILLS_LOCATION
-ReplacementsUtil'TLAB_REFILL_WASTE_LIMIT_LOCATION
-ReplacementsUtil'TLAB_SIZE_LOCATION
-ReplacementsUtil'TLAB_SLOW_ALLOCATIONS_LOCATION
-ReplacementsUtil'TLAB_START_LOCATION
-ReplacementsUtil'TLAB_THREAD_ALLOCATED_BYTES_LOCATION
 ReplacementsUtil'TLAB_TOP_LOCATION
 ReplacementsUtil'arrayAllocationSize-3
 ReplacementsUtil'arrayStart-1
 ReplacementsUtil'clearPendingException-1
 ReplacementsUtil'getAndClearObjectResult-1
 ReplacementsUtil'initializeObjectHeader-3
-ReplacementsUtil'initializeTlab-3
 ReplacementsUtil'instanceHeaderSize-0
 ReplacementsUtil'isInstanceKlassFullyInitialized-1
 ReplacementsUtil'loadHub-1
@@ -3487,7 +3435,6 @@ ReplacementsUtil'loadWordFromObject-2
 ReplacementsUtil'loadWordFromObject-3
 ReplacementsUtil'readPendingDeoptimization-1
 ReplacementsUtil'readTlabEnd-1
-ReplacementsUtil'readTlabStart-1
 ReplacementsUtil'readTlabTop-1
 ReplacementsUtil'referentOffset-0
 ReplacementsUtil'registerAsWord-1
@@ -3600,10 +3547,8 @@ SnippetReflection'asObject-2c
 SnippetReflection'asObject-2t
 SnippetReflection'forBoxed-2
 SnippetReflection'forObject-1
-SnippetStub''getConstantParameterValue-3
 SnippetStub'new-2
 SnippetTemplate''forBoxed-3
-SnippetTemplate''getConstantArgs-2
 SnippetTemplate''instantiate-4x
 SnippetTemplate''instantiate-4y
 SnippetTemplate''instantiate-5x
@@ -3794,9 +3739,6 @@ UsePosList'new-1i
 UseTrappingNullChecksPhase'new-0
 Utf8'new-1
 VMConfigNode'cardTableAddress-0
-VMConfigNode'heapEndAddress-0
-VMConfigNode'heapTopAddress-0
-VMConfigNode'inlineContiguousAllocationSupported-0
 VMConfigNode'isCardTableAddressConstant-0
 VMConfigNode'logOfHeapRegionGrainBytes-0
 VMConfigNode'new-0
@@ -4882,7 +4824,6 @@ ZeroExtendNode'new-4
 (defp DynamicNewArrayNode)
 (defp DynamicNewInstanceNode)
 (defp EMOptimizer)
-(defp EagerSnippetInfo)
 (defp EarlyReadEliminationPhase)
 (defp EdgeInfo)
 (defp EdgeMoveOptimizer)
@@ -5568,8 +5509,6 @@ ZeroExtendNode'new-4
 (defp LabelOp)
 (defp LabelRef)
 (defp LargeLocalLiveness)
-(defp Lazy)
-(defp LazySnippetInfo)
 (defp LeaOp)
 (defp LeftShiftNode)
 (defp LessThanOp)
@@ -6404,14 +6343,13 @@ ZeroExtendNode'new-4
  ; snippet and then cached.
  ;;
 (defp SnippetInfo
-    (#_"Lazy" SnippetInfo'''lazy-1 [#_"SnippetInfo" this])
 )
 
 ;;;
  ; Base class for a stub defined by a snippet.
  ;;
 (defp SnippetStub
-    (#_"Object[]" SnippetStub'''makeConstArgs-1 [#_"SnippetStub" this])
+    (#_"Object*" SnippetStub'''makeConstArgs-1 [#_"SnippetStub" this])
 )
 
 (defp SnippetTemplate)
@@ -7112,8 +7050,6 @@ ZeroExtendNode'new-4
     (def #_"int" HotSpot'klassLayoutHelperNeutralValue    (.getConstant HotSpot'config, "Klass::_lh_neutral_value",           Integer))
     (def #_"int" HotSpot'layoutHelperLog2ElementSizeShift (.getConstant HotSpot'config, "Klass::_lh_log2_element_size_shift", Integer))
     (def #_"int" HotSpot'layoutHelperLog2ElementSizeMask  (.getConstant HotSpot'config, "Klass::_lh_log2_element_size_mask",  Integer))
-    (def #_"int" HotSpot'layoutHelperElementTypeShift     (.getConstant HotSpot'config, "Klass::_lh_element_type_shift",      Integer))
-    (def #_"int" HotSpot'layoutHelperElementTypeMask      (.getConstant HotSpot'config, "Klass::_lh_element_type_mask",       Integer))
     (def #_"int" HotSpot'layoutHelperHeaderSizeShift      (.getConstant HotSpot'config, "Klass::_lh_header_size_shift",       Integer))
     (def #_"int" HotSpot'layoutHelperHeaderSizeMask       (.getConstant HotSpot'config, "Klass::_lh_header_size_mask",        Integer))
 
@@ -7144,10 +7080,6 @@ ZeroExtendNode'new-4
     (def #_"int" HotSpot'threadLastJavaPcOffset (+ HotSpot'javaThreadAnchorOffset (.getFieldOffset HotSpot'config, "JavaFrameAnchor::_last_Java_pc", Integer, "address")))
     (def #_"int" HotSpot'threadLastJavaFpOffset (+ HotSpot'javaThreadAnchorOffset (.getFieldOffset HotSpot'config, "JavaFrameAnchor::_last_Java_fp", Integer, "intptr_t*")))
 
-    (def #_"long" HotSpot'markOopDescHashShift       (.getConstant HotSpot'config, "markOopDesc::hash_shift",         Long))
-    (def #_"long" HotSpot'markOopDescHashMask        (.getConstant HotSpot'config, "markOopDesc::hash_mask",          Long))
-    (def #_"long" HotSpot'markOopDescHashMaskInPlace (.getConstant HotSpot'config, "markOopDesc::hash_mask_in_place", Long))
-
     ;;;
      ; Mask for a biasable, locked or unlocked mark word.
      ;
@@ -7176,12 +7108,6 @@ ZeroExtendNode'new-4
     (def #_"int" HotSpot'objectMonitorRecursionsOffset (.getFieldOffset HotSpot'config, "ObjectMonitor::_recursions", Integer, "intptr_t",      -1))
     (def #_"int" HotSpot'objectMonitorCxqOffset        (.getFieldOffset HotSpot'config, "ObjectMonitor::_cxq",        Integer, "ObjectWaiter*", -1))
     (def #_"int" HotSpot'objectMonitorEntryListOffset  (.getFieldOffset HotSpot'config, "ObjectMonitor::_EntryList",  Integer, "ObjectWaiter*", -1))
-
-    (def #_"int" HotSpot'markWordNoHashInPlace (.getConstant HotSpot'config, "markOopDesc::no_hash_in_place", Integer))
-    (def #_"int" HotSpot'markWordNoLockInPlace (.getConstant HotSpot'config, "markOopDesc::no_lock_in_place", Integer))
-
-    (def #_"long" HotSpot'arrayPrototypeMarkWord (| HotSpot'markWordNoHashInPlace HotSpot'markWordNoLockInPlace))
-    (def #_"long" HotSpot'tlabIntArrayMarkWord   (| (& HotSpot'arrayPrototypeMarkWord (bit-not HotSpot'markOopDescHashMaskInPlace)) (<< (& 0x2 HotSpot'markOopDescHashMask) HotSpot'markOopDescHashShift)))
 
     ;;;
      ; Bit pattern that represents a non-oop. Neither the high bits nor the low bits of this value
@@ -7214,29 +7140,11 @@ ZeroExtendNode'new-4
 
     (def #_"int" HotSpot'lockDisplacedMarkOffset (.getFieldOffset HotSpot'config, "BasicLock::_displaced_header", Integer, "markOop"))
 
-    (def #_"int" HotSpot'threadPollingPageOffset    (.getFieldOffset HotSpot'config, "Thread::_polling_page",    Integer, "address"))
-    (def #_"int" HotSpot'threadAllocatedBytesOffset (.getFieldOffset HotSpot'config, "Thread::_allocated_bytes", Integer, "jlong"))
+    (def #_"int" HotSpot'threadPollingPageOffset (.getFieldOffset HotSpot'config, "Thread::_polling_page", Integer, "address"))
 
-    (def #_"int" HotSpot'tlabRefillWasteIncrement (.getFlag HotSpot'config, "TLABWasteIncrement", Integer))
+    (def #_"int" HotSpot'threadTlabEndOffset (+ HotSpot'threadTlabOffset (.getFieldOffset HotSpot'config, "ThreadLocalAllocBuffer::_end", Integer, "HeapWord*")))
+    (def #_"int" HotSpot'threadTlabTopOffset (+ HotSpot'threadTlabOffset (.getFieldOffset HotSpot'config, "ThreadLocalAllocBuffer::_top", Integer, "HeapWord*")))
 
-    (def #_"int" HotSpot'tlabSlowAllocationsOffset  (+ HotSpot'threadTlabOffset (.getFieldOffset HotSpot'config, "ThreadLocalAllocBuffer::_slow_allocations",   Integer, "unsigned")))
-    (def #_"int" HotSpot'tlabFastRefillWasteOffset  (+ HotSpot'threadTlabOffset (.getFieldOffset HotSpot'config, "ThreadLocalAllocBuffer::_fast_refill_waste",  Integer, "unsigned")))
-    (def #_"int" HotSpot'tlabNumberOfRefillsOffset  (+ HotSpot'threadTlabOffset (.getFieldOffset HotSpot'config, "ThreadLocalAllocBuffer::_number_of_refills",  Integer, "unsigned")))
-    (def #_"int" HotSpot'tlabRefillWasteLimitOffset (+ HotSpot'threadTlabOffset (.getFieldOffset HotSpot'config, "ThreadLocalAllocBuffer::_refill_waste_limit", Integer, "size_t")))
-
-    (def #_"int" HotSpot'threadTlabSizeOffset  (+ HotSpot'threadTlabOffset (.getFieldOffset HotSpot'config, "ThreadLocalAllocBuffer::_desired_size", Integer, "size_t")))
-    (def #_"int" HotSpot'threadTlabStartOffset (+ HotSpot'threadTlabOffset (.getFieldOffset HotSpot'config, "ThreadLocalAllocBuffer::_start",        Integer, "HeapWord*")))
-    (def #_"int" HotSpot'threadTlabEndOffset   (+ HotSpot'threadTlabOffset (.getFieldOffset HotSpot'config, "ThreadLocalAllocBuffer::_end",          Integer, "HeapWord*")))
-    (def #_"int" HotSpot'threadTlabTopOffset   (+ HotSpot'threadTlabOffset (.getFieldOffset HotSpot'config, "ThreadLocalAllocBuffer::_top",          Integer, "HeapWord*")))
-
-    (def #_"int" HotSpot'tlabAlignmentReserve (.getFieldValue HotSpot'config, "CompilerToVM::Data::ThreadLocalAllocBuffer_alignment_reserve", Integer, "size_t"))
-
-    (def #_"boolean" HotSpot'tlabStats (.getFlag HotSpot'config, "TLABStats", Boolean))
-
-    (def #_"boolean" HotSpot'inlineContiguousAllocationSupported (.getFieldValue HotSpot'config, "CompilerToVM::Data::_supports_inline_contig_alloc", Boolean))
-
-    (def #_"long" HotSpot'heapEndAddress   (.getFieldValue HotSpot'config, "CompilerToVM::Data::_heap_end_addr",                         Long, "HeapWord**"))
-    (def #_"long" HotSpot'heapTopAddress   (.getFieldValue HotSpot'config, "CompilerToVM::Data::_heap_top_addr",                         Long, "HeapWord* volatile*"))
     (def #_"long" HotSpot'handleDeoptStub  (.getFieldValue HotSpot'config, "CompilerToVM::Data::SharedRuntime_deopt_blob_unpack",        Long, "address"))
     (def #_"long" HotSpot'uncommonTrapStub (.getFieldValue HotSpot'config, "CompilerToVM::Data::SharedRuntime_deopt_blob_uncommon_trap", Long, "address"))
 
@@ -7252,21 +7160,18 @@ ZeroExtendNode'new-4
     (def #_"long" HotSpot'writeBarrierPreAddress    (.getAddress HotSpot'config, "JVMCIRuntime::write_barrier_pre"))
     (def #_"long" HotSpot'writeBarrierPostAddress   (.getAddress HotSpot'config, "JVMCIRuntime::write_barrier_post"))
 
-    (def #_"int" HotSpot'verifiedEntryMark                       (.getConstant HotSpot'config, "CodeInstaller::VERIFIED_ENTRY",                         Integer))
-    (def #_"int" HotSpot'deoptHandlerEntryMark                   (.getConstant HotSpot'config, "CodeInstaller::DEOPT_HANDLER_ENTRY",                    Integer))
-    (def #_"int" HotSpot'invokeinterfaceMark                     (.getConstant HotSpot'config, "CodeInstaller::INVOKEINTERFACE",                        Integer))
-    (def #_"int" HotSpot'invokevirtualMark                       (.getConstant HotSpot'config, "CodeInstaller::INVOKEVIRTUAL",                          Integer))
-    (def #_"int" HotSpot'invokestaticMark                        (.getConstant HotSpot'config, "CodeInstaller::INVOKESTATIC",                           Integer))
-    (def #_"int" HotSpot'invokespecialMark                       (.getConstant HotSpot'config, "CodeInstaller::INVOKESPECIAL",                          Integer))
-    (def #_"int" HotSpot'pollNearMark                            (.getConstant HotSpot'config, "CodeInstaller::POLL_NEAR",                              Integer))
-    (def #_"int" HotSpot'pollReturnNearMark                      (.getConstant HotSpot'config, "CodeInstaller::POLL_RETURN_NEAR",                       Integer))
-    (def #_"int" HotSpot'pollFarMark                             (.getConstant HotSpot'config, "CodeInstaller::POLL_FAR",                               Integer))
-    (def #_"int" HotSpot'pollReturnFarMark                       (.getConstant HotSpot'config, "CodeInstaller::POLL_RETURN_FAR",                        Integer))
-    (def #_"int" HotSpot'cardTableAddressMark                    (.getConstant HotSpot'config, "CodeInstaller::CARD_TABLE_ADDRESS",                     Integer))
-    (def #_"int" HotSpot'heapTopAddressMark                      (.getConstant HotSpot'config, "CodeInstaller::HEAP_TOP_ADDRESS",                       Integer))
-    (def #_"int" HotSpot'heapEndAddressMark                      (.getConstant HotSpot'config, "CodeInstaller::HEAP_END_ADDRESS",                       Integer))
-    (def #_"int" HotSpot'logOfHeapRegionGrainBytesMark           (.getConstant HotSpot'config, "CodeInstaller::LOG_OF_HEAP_REGION_GRAIN_BYTES",         Integer))
-    (def #_"int" HotSpot'inlineContiguousAllocationSupportedMark (.getConstant HotSpot'config, "CodeInstaller::INLINE_CONTIGUOUS_ALLOCATION_SUPPORTED", Integer))
+    (def #_"int" HotSpot'verifiedEntryMark             (.getConstant HotSpot'config, "CodeInstaller::VERIFIED_ENTRY",                 Integer))
+    (def #_"int" HotSpot'deoptHandlerEntryMark         (.getConstant HotSpot'config, "CodeInstaller::DEOPT_HANDLER_ENTRY",            Integer))
+    (def #_"int" HotSpot'invokeinterfaceMark           (.getConstant HotSpot'config, "CodeInstaller::INVOKEINTERFACE",                Integer))
+    (def #_"int" HotSpot'invokevirtualMark             (.getConstant HotSpot'config, "CodeInstaller::INVOKEVIRTUAL",                  Integer))
+    (def #_"int" HotSpot'invokestaticMark              (.getConstant HotSpot'config, "CodeInstaller::INVOKESTATIC",                   Integer))
+    (def #_"int" HotSpot'invokespecialMark             (.getConstant HotSpot'config, "CodeInstaller::INVOKESPECIAL",                  Integer))
+    (def #_"int" HotSpot'pollNearMark                  (.getConstant HotSpot'config, "CodeInstaller::POLL_NEAR",                      Integer))
+    (def #_"int" HotSpot'pollReturnNearMark            (.getConstant HotSpot'config, "CodeInstaller::POLL_RETURN_NEAR",               Integer))
+    (def #_"int" HotSpot'pollFarMark                   (.getConstant HotSpot'config, "CodeInstaller::POLL_FAR",                       Integer))
+    (def #_"int" HotSpot'pollReturnFarMark             (.getConstant HotSpot'config, "CodeInstaller::POLL_RETURN_FAR",                Integer))
+    (def #_"int" HotSpot'cardTableAddressMark          (.getConstant HotSpot'config, "CodeInstaller::CARD_TABLE_ADDRESS",             Integer))
+    (def #_"int" HotSpot'logOfHeapRegionGrainBytesMark (.getConstant HotSpot'config, "CodeInstaller::LOG_OF_HEAP_REGION_GRAIN_BYTES", Integer))
 
     (defn- #_"?" peep [#_"Class" class #_"String" field] (let [#_"Field" f (.getDeclaredField class, field)] (.setAccessible f, true) (.get f, class)))
 
@@ -8227,9 +8132,6 @@ ZeroExtendNode'new-4
     (def #_"boolean" GraalOptions'optFloatingReads true)
     (def #_"boolean" GraalOptions'optDevirtualizeInvokesOptimistically true)
 
-    ;; @Option "Eagerly construct extra snippet info."
-    (def #_"boolean" GraalOptions'eagerSnippets false)
-
     ;; @Option "AMD64: Emit lfence instructions at the beginning of basic blocks."
     (def #_"boolean" GraalOptions'mitigateSpeculativeExecutionAttacks false)
 
@@ -8563,7 +8465,6 @@ ZeroExtendNode'new-4
 (value-ns ReplacementsUtil
     (§ def #_"LocationIdentity" ReplacementsUtil'TLAB_TOP_LOCATION               (NamedLocationIdentity'mutable-1 "TlabTop"))
     (§ def #_"LocationIdentity" ReplacementsUtil'TLAB_END_LOCATION               (NamedLocationIdentity'mutable-1 "TlabEnd"))
-    (§ def #_"LocationIdentity" ReplacementsUtil'TLAB_START_LOCATION             (NamedLocationIdentity'mutable-1 "TlabStart"))
     (§ def #_"LocationIdentity" ReplacementsUtil'PENDING_EXCEPTION_LOCATION      (NamedLocationIdentity'mutable-1 "PendingException"))
     (§ def #_"LocationIdentity" ReplacementsUtil'PENDING_DEOPTIMIZATION_LOCATION (NamedLocationIdentity'mutable-1 "PendingDeoptimization"))
     (§ def #_"LocationIdentity" ReplacementsUtil'OBJECT_RESULT_LOCATION          (NamedLocationIdentity'mutable-1 "ObjectResult"))
@@ -8576,19 +8477,8 @@ ZeroExtendNode'new-4
         (Word''readWord-3i thread, HotSpot'threadTlabEndOffset, ReplacementsUtil'TLAB_END_LOCATION)
     )
 
-    (defn #_"Word" ReplacementsUtil'readTlabStart-1 [#_"Word" thread]
-        (Word''readWord-3i thread, HotSpot'threadTlabStartOffset, ReplacementsUtil'TLAB_START_LOCATION)
-    )
-
     (defn #_"void" ReplacementsUtil'writeTlabTop-2 [#_"Word" thread, #_"Word" top]
         (Word''writeWord-4i thread, HotSpot'threadTlabTopOffset, top, ReplacementsUtil'TLAB_TOP_LOCATION)
-        nil
-    )
-
-    (defn #_"void" ReplacementsUtil'initializeTlab-3 [#_"Word" thread, #_"Word" start, #_"Word" end]
-        (Word''writeWord-4i thread, HotSpot'threadTlabStartOffset, start, ReplacementsUtil'TLAB_START_LOCATION)
-        (Word''writeWord-4i thread, HotSpot'threadTlabTopOffset, start, ReplacementsUtil'TLAB_TOP_LOCATION)
-        (Word''writeWord-4i thread, HotSpot'threadTlabEndOffset, end, ReplacementsUtil'TLAB_END_LOCATION)
         nil
     )
 
@@ -8798,16 +8688,8 @@ ZeroExtendNode'new-4
         )
     )
 
-    (§ def #_"LocationIdentity" ReplacementsUtil'CLASS_MIRROR_LOCATION                (NamedLocationIdentity'immutable-1 "Klass::_java_mirror"))
-    (§ def #_"LocationIdentity" ReplacementsUtil'CLASS_MIRROR_HANDLE_LOCATION         (NamedLocationIdentity'immutable-1 "Klass::_java_mirror handle"))
-    (§ def #_"LocationIdentity" ReplacementsUtil'HEAP_TOP_LOCATION                    (NamedLocationIdentity'mutable-1   "HeapTop"))
-    (§ def #_"LocationIdentity" ReplacementsUtil'HEAP_END_LOCATION                    (NamedLocationIdentity'mutable-1   "HeapEnd"))
-    (§ def #_"LocationIdentity" ReplacementsUtil'TLAB_SIZE_LOCATION                   (NamedLocationIdentity'mutable-1   "TlabSize"))
-    (§ def #_"LocationIdentity" ReplacementsUtil'TLAB_THREAD_ALLOCATED_BYTES_LOCATION (NamedLocationIdentity'mutable-1   "TlabThreadAllocatedBytes"))
-    (§ def #_"LocationIdentity" ReplacementsUtil'TLAB_REFILL_WASTE_LIMIT_LOCATION     (NamedLocationIdentity'mutable-1   "RefillWasteLimit"))
-    (§ def #_"LocationIdentity" ReplacementsUtil'TLAB_NOF_REFILLS_LOCATION            (NamedLocationIdentity'mutable-1   "TlabNOfRefills"))
-    (§ def #_"LocationIdentity" ReplacementsUtil'TLAB_FAST_REFILL_WASTE_LOCATION      (NamedLocationIdentity'mutable-1   "TlabFastRefillWaste"))
-    (§ def #_"LocationIdentity" ReplacementsUtil'TLAB_SLOW_ALLOCATIONS_LOCATION       (NamedLocationIdentity'mutable-1   "TlabSlowAllocations"))
+    (§ def #_"LocationIdentity" ReplacementsUtil'CLASS_MIRROR_LOCATION        (NamedLocationIdentity'immutable-1 "Klass::_java_mirror"))
+    (§ def #_"LocationIdentity" ReplacementsUtil'CLASS_MIRROR_HANDLE_LOCATION (NamedLocationIdentity'immutable-1 "Klass::_java_mirror handle"))
 
     ;; @Fold
     (defn #_"long" ReplacementsUtil'referentOffset-0 []
@@ -9320,7 +9202,7 @@ ZeroExtendNode'new-4
  ; Snippets used for implementing NEW, ANEWARRAY and NEWARRAY.
  ;;
 (value-ns NewObjectSnippets (§ implements Snippets)
-    (defn #_"void" NewObjectSnippets'emitPrefetchAllocate-2 [#_"Word" address, #_"boolean" isArray]
+    (defn- #_"void" NewObjectSnippets'emitPrefetchAllocate-2 [#_"Word" address, #_"boolean" isArray]
         (when (pos? HotSpot'allocatePrefetchStyle)
             ;; Insert a prefetch for each allocation only on the fast-path.
             ;; Generate several prefetch instructions.
@@ -9338,11 +9220,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (§ snippet! #_"Object" #_"NewObjectSnippets" "allocateInstance" [#_@ConstantParameter #_"int" size, #_"KlassPointer" hub, #_"Word" prototypeMarkWord, #_@ConstantParameter #_"boolean" fillContents, #_@ConstantParameter #_"Register" threadRegister, #_@ConstantParameter #_"boolean" constantSize]
-        (Placeholder'piCastToSnippetReplaceeStamp-1 (NewObjectSnippets'allocateInstanceHelper-6 size, hub, prototypeMarkWord, fillContents, threadRegister, constantSize))
-    )
-
-    (defn #_"Object" NewObjectSnippets'allocateInstanceHelper-6 [#_"int" size, #_"KlassPointer" hub, #_"Word" prototypeMarkWord, #_"boolean" fillContents, #_"Register" threadRegister, #_"boolean" constantSize]
+    (defn- #_"Object" NewObjectSnippets'allocateInstanceHelper-6 [#_"int" size, #_"KlassPointer" hub, #_"Word" prototypeMarkWord, #_"boolean" fillContents, #_"Register" threadRegister, #_"boolean" constantSize]
         (let [
             #_"Word" thread (ReplacementsUtil'registerAsWord-1 threadRegister)
             #_"Word" top (ReplacementsUtil'readTlabTop-1 thread)
@@ -9358,6 +9236,10 @@ ZeroExtendNode'new-4
                 (ForeignCallNode'newInstance-2 ForeignCallDescriptor'NEW_INSTANCE, hub)
             )
         )
+    )
+
+    (§ snippet! #_"Object" #_"NewObjectSnippets" "allocateInstance" [#_@ConstantParameter #_"int" size, #_"KlassPointer" hub, #_"Word" prototypeMarkWord, #_@ConstantParameter #_"boolean" fillContents, #_@ConstantParameter #_"Register" threadRegister, #_@ConstantParameter #_"boolean" constantSize]
+        (Placeholder'piCastToSnippetReplaceeStamp-1 (NewObjectSnippets'allocateInstanceHelper-6 size, hub, prototypeMarkWord, fillContents, threadRegister, constantSize))
     )
 
     (defn- #_"Object" NewObjectSnippets'allocateInstanceDynamicHelper-4 [#_"Class" type, #_"boolean" fillContents, #_"Register" threadRegister, #_"Class" nonNullType]
@@ -9408,7 +9290,7 @@ ZeroExtendNode'new-4
     ;;;
      ; Maximum array length for which fast path allocation is used.
      ;;
-    (def #_"int" NewObjectSnippets'MAX_ARRAY_FAST_PATH_ALLOCATION_LENGTH 0x00ffffff)
+    (def- #_"int" NewObjectSnippets'MAX_ARRAY_FAST_PATH_ALLOCATION_LENGTH 0x00ffffff)
 
     (defn- #_"Object" NewObjectSnippets'allocateArrayImpl-9 [#_"KlassPointer" hub, #_"int" length, #_"Word" prototypeMarkWord, #_"int" headerSize, #_"int" log2ElementSize, #_"boolean" fillContents, #_"Register" threadRegister, #_"boolean" maybeUnroll, #_"boolean" skipNegativeCheck]
         (let [
@@ -9530,14 +9412,6 @@ ZeroExtendNode'new-4
     (defn- #_"void" NewObjectSnippets'zeroMemory-5 [#_"int" size, #_"Word" memory, #_"boolean" constantSize, #_"int" startOffset, #_"boolean" manualUnroll]
         (NewObjectSnippets'fillMemory-6 0, size, memory, constantSize, startOffset, manualUnroll)
         nil
-    )
-
-    ;;;
-     ; Formats some allocated memory with an object header and zeroes out the rest.
-     ; Disables asserts since they can't be compiled in stubs.
-     ;;
-    (defn #_"Object" NewObjectSnippets'formatObjectForStub-4 [#_"KlassPointer" hub, #_"int" size, #_"Word" memory, #_"Word" compileTimePrototypeMarkWord]
-        (NewObjectSnippets'formatObject-6 hub, size, memory, compileTimePrototypeMarkWord, true, false)
     )
 
     ;;;
@@ -11194,7 +11068,7 @@ ZeroExtendNode'new-4
  ;;
 (value-ns StampTool
     #_unused
-    (defn #_"Stamp" StampTool'meet-1 [#_"Iterable<? implements ValueNode>" values]
+    (defn #_"Stamp" StampTool'meet-1 [#_"ValueNode*" values]
         (or (StampTool'meetOrNull-2 values, nil) VoidStamp'instance)
     )
 
@@ -11202,20 +11076,16 @@ ZeroExtendNode'new-4
      ; Meet a collection of ValueNodes optionally excluding {@code self}. If no values
      ; are encountered then return nil.
      ;;
-    (defn #_"Stamp" StampTool'meetOrNull-2 [#_"Iterable<? implements ValueNode>" values, #_"ValueNode" self]
-        (let [
-            #_"Iterator<? implements ValueNode>" it (#_"Iterable" .iterator values)
-        ]
-            (loop-when [#_"Stamp" stamp nil] (#_"Iterator" .hasNext it) => stamp
-                (let [
-                    #_"ValueNode" value (#_"Iterator" .next it)
-                    stamp
-                        (when-not (= value self) => stamp
-                            (if (some? stamp) (Stamp'''meet-2 stamp, (:stamp value)) (:stamp value))
-                        )
-                ]
-                    (recur stamp)
-                )
+    (defn #_"Stamp" StampTool'meetOrNull-2 [#_"ValueNode*" values, #_"ValueNode" self]
+        (loop-when [#_"Stamp" stamp nil #_"ISeq" s (seq values)] (some? s) => stamp
+            (let [
+                #_"ValueNode" value (first s)
+                stamp
+                    (when-not (= value self) => stamp
+                        (if (some? stamp) (Stamp'''meet-2 stamp, (:stamp value)) (:stamp value))
+                    )
+            ]
+                (recur stamp (next s))
             )
         )
     )
@@ -11223,7 +11093,7 @@ ZeroExtendNode'new-4
     ;;;
      ; Compute the stamp resulting from the unsigned comparison being true.
      ;
-     ; @return nil if it's can't be true or it nothing useful can be encoded
+     ; @return nil if it can't be true or if nothing useful can be encoded
      ;;
     #_unused
     (defn #_"Stamp" StampTool'unsignedCompare-2 [#_"Stamp" a, #_"Stamp" b]
@@ -14013,15 +13883,11 @@ ZeroExtendNode'new-4
      ; and returns a SnippetInfo value describing it. There must be exactly one snippet method in
      ; {@code declaringClass}.
      ;;
-    (defn #_"SnippetInfo" AbstractTemplates''snippet-3* [#_"Class<? extends Snippets>" declaringClass, #_"String" methodName & #_"LocationIdentity..." initialPrivateLocations]
+    (defn #_"SnippetInfo" AbstractTemplates''snippet-3* [#_"Class<? extends Snippets>" declaringClass, #_"String" methodName & #_"LocationIdentity..." privateLocations]
         (let [
-            #_"Method" method (AbstractTemplates'findMethod-3 declaringClass, methodName)
-            #_"ResolvedJavaMethod" javaMethod (#_"MetaAccessProvider" .lookupJavaMethod HotSpot'metaAccess, method)
+            #_"ResolvedJavaMethod" method (#_"MetaAccessProvider" .lookupJavaMethod HotSpot'metaAccess, (AbstractTemplates'findMethod-3 declaringClass, methodName))
         ]
-            (if GraalOptions'eagerSnippets
-                (EagerSnippetInfo'new-2 javaMethod, initialPrivateLocations)
-                (LazySnippetInfo'new-2 javaMethod, initialPrivateLocations)
-            )
+            (SnippetInfo'new-2 method, privateLocations)
         )
     )
 )
@@ -19487,37 +19353,35 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"void" PartialEscapeClosure''collectLockedVirtualObjects-3 [#_"PartialEscapeClosure<T>" this, #_"T" state, #_"EconomicSet<VirtualObjectNode>" virtual]
+    (defn- #_"EconomicSet<VirtualObjectNode>" PartialEscapeClosure''collectLockedVirtualObjects-3 [#_"PartialEscapeClosure<T>" this, #_"T" state, #_"EconomicSet<VirtualObjectNode>" virtual]
         (dotimes [#_"int" i (count (:objectStates state))]
             (let [
-                #_"ObjectState" objState (PartialEscapeBlockState''getObjectStateOptional-2i state, i)
+                #_"ObjectState" objState (nth (:objectStates state) i)
             ]
                 (when (and (some? objState) (ObjectState''isVirtual-1 objState) (ObjectState''hasLocks-1 objState))
                     (#_"EconomicSet" .add virtual, (nth (:virtualObjects this) i))
                 )
             )
         )
-        nil
+        virtual
     )
 
-    (defn- #_"void" PartialEscapeClosure''collectReferencedVirtualObjects-3 [#_"PartialEscapeClosure<T>" this, #_"T" state, #_"EconomicSet<VirtualObjectNode>" virtual]
+    (defn- #_"EconomicSet<VirtualObjectNode>" PartialEscapeClosure''collectReferencedVirtualObjects-3 [#_"PartialEscapeClosure<T>" this, #_"T" state, #_"EconomicSet<VirtualObjectNode>" virtual]
         (let [
-            #_"Iterator<VirtualObjectNode>" it (#_"EconomicSet" .iterator virtual)
+            #_"Iterator<VirtualObjectNode>" it (#_"EconomicSet" .iterator virtual)
         ]
-            (while (#_"Iterator" .hasNext it)
+            (loop-when-recur [virtual virtual] (#_"Iterator" .hasNext it) [virtual] => virtual
                 (let [
-                    #_"int" id (:objectId (#_"Iterator" .next it))
+                    #_"int" id (:oid (#_"Iterator" .next it))
                 ]
                     (when-not (= id -1)
                         (let [
-                            #_"ObjectState" objState (PartialEscapeBlockState''getObjectStateOptional-2i state, id)
+                            #_"ObjectState" objState (when (< id (count (:objectStates state))) (nth (:objectStates state) id))
                         ]
                             (when (and (some? objState) (ObjectState''isVirtual-1 objState))
                                 (doseq [#_"ValueNode" entry (:entries objState)]
                                     (when (satisfies? VirtualObjectNode entry)
-                                        (when-not (contains? virtual entry)
-                                            (#_"EconomicSet" .add virtual, entry)
-                                        )
+                                        (#_"EconomicSet" .add virtual, entry)
                                     )
                                 )
                             )
@@ -19526,14 +19390,6 @@ ZeroExtendNode'new-4
                 )
             )
         )
-        nil
-    )
-
-    (defn- #_"void" PartialEscapeClosure''addVirtualMappings-5 [#_"PartialEscapeClosure<T>" this, #_"FrameState" frameState, #_"EconomicSet<VirtualObjectNode>" virtual, #_"T" state, #_"GraphEffectList" effects]
-        (doseq [#_"VirtualObjectNode" obj virtual]
-            (GraphEffectList''addVirtualMapping-3 effects, frameState, (ObjectState''createEscapeObjectState-2 (PartialEscapeBlockState''getObjectState-2n state, obj), obj))
-        )
-        nil
     )
 
     (defn- #_"void" PartialEscapeClosure''processNodeWithState-4 [#_"PartialEscapeClosure<T>" this, #_"NodeWithState" nodeWithState, #_"T" state, #_"GraphEffectList" effects]
@@ -19543,9 +19399,15 @@ ZeroExtendNode'new-4
                 #_"EconomicSet<VirtualObjectNode>" virtual (EconomicSet/create Equivalence/IDENTITY_WITH_SYSTEM_HASHCODE)
             ]
                 (VirtualState'''applyToNonVirtual-2 frameState, (CollectVirtualObjectsClosure'new-4 this, virtual, effects, state))
-                (PartialEscapeClosure''collectLockedVirtualObjects-3 this, state, virtual)
-                (PartialEscapeClosure''collectReferencedVirtualObjects-3 this, state, virtual)
-                (PartialEscapeClosure''addVirtualMappings-5 this, frameState, virtual, state, effects)
+
+                (let [
+                    virtual (PartialEscapeClosure''collectLockedVirtualObjects-3 this, state, virtual)
+                    virtual (PartialEscapeClosure''collectReferencedVirtualObjects-3 this, state, virtual)
+                ]
+                    (doseq [#_"VirtualObjectNode" obj virtual]
+                        (GraphEffectList''addVirtualMapping-3 effects, frameState, (ObjectState''createEscapeObjectState-2 (nth (:objectStates state) (:oid obj)), obj))
+                    )
+                )
             )
         )
         nil
@@ -19564,10 +19426,10 @@ ZeroExtendNode'new-4
                 ]
                     (when (satisfies? VirtualObjectNode alias)
                         (let [
-                            #_"int" id (:objectId alias)
+                            #_"int" id (:oid alias)
                         ]
                             (PartialEscapeClosure''ensureMaterialized-5 this, state, id, insertBefore, effects)
-                            (GraphEffectList''replaceFirstInput-4 effects, node, input, (:materializedValue (PartialEscapeBlockState''getObjectState-2i state, id)))
+                            (GraphEffectList''replaceFirstInput-4 effects, node, input, (:materializedValue (nth (:objectStates state) id)))
                         )
                     )
                 )
@@ -19741,7 +19603,7 @@ ZeroExtendNode'new-4
      ; @return true if materialization happened, false if not
      ;;
     (defn #_"boolean" PartialEscapeClosure''ensureMaterialized-5 [#_"PartialEscapeClosure<T>" this, #_"PartialEscapeBlockState" state, #_"int" object, #_"FixedNode" materializeBefore, #_"GraphEffectList" effects]
-        (and (ObjectState''isVirtual-1 (PartialEscapeBlockState''getObjectState-2i state, object))
+        (and (ObjectState''isVirtual-1 (nth (:objectStates state) object))
             (do
                 (PartialEscapeBlockState''materializeBefore-4 state, materializeBefore, (nth (:virtualObjects this) object), effects)
                 true
@@ -19753,7 +19615,7 @@ ZeroExtendNode'new-4
         ;; update all existing states with the newly materialized object
         (loop-when [#_"boolean" changed? false #_"int" i 0] (< i (count (:objectStates state))) => changed?
             (let [
-                #_"ObjectState" objState (PartialEscapeBlockState''getObjectStateOptional-2i state, i)
+                #_"ObjectState" objState (nth (:objectStates state) i)
                 changed?
                     (when (and (some? objState) (ObjectState''isVirtual-1 objState)) => changed?
                         (let [
@@ -19796,7 +19658,7 @@ ZeroExtendNode'new-4
                     ]
                         (dotimes [#_"int" i length]
                             (let [
-                                #_"ObjectState" state (PartialEscapeBlockState''getObjectStateOptional-2i initialState, i)
+                                #_"ObjectState" state (nth (:objectStates initialState) i)
                             ]
                                 (when (and (some? state) (ObjectState''isVirtual-1 state) (:ensureVirtualized state))
                                     (#_"BitSet" .set ensureVirtualized, i)
@@ -19812,14 +19674,14 @@ ZeroExtendNode'new-4
                                             changed?
                                                 (when-not (#_"BitSet" .get ensureVirtualized, i) => changed?
                                                     (let [
-                                                        #_"ObjectState" state (PartialEscapeBlockState''getObjectStateOptional-2i initialState, i)
+                                                        #_"ObjectState" state (nth (:objectStates initialState) i)
                                                     ]
                                                         (when (and (some? state) (ObjectState''isVirtual-1 state)) => changed?
                                                             (loop-when [changed? changed? #_"ISeq" s (seq (:entries state))] (some? s) => changed?
                                                                 (let [
                                                                     #_"ValueNode" entry (first s)
                                                                 ]
-                                                                    (when (and (satisfies? VirtualObjectNode entry) (#_"BitSet" .get ensureVirtualized, (:objectId entry))) => (recur changed? (next s))
+                                                                    (when (and (satisfies? VirtualObjectNode entry) (#_"BitSet" .get ensureVirtualized, (:oid entry))) => (recur changed? (next s))
                                                                         (#_"BitSet" .set ensureVirtualized, i)
                                                                         true
                                                                     )
@@ -19839,7 +19701,7 @@ ZeroExtendNode'new-4
 
                         (dotimes [#_"int" i length]
                             (let [
-                                #_"ObjectState" state (PartialEscapeBlockState''getObjectStateOptional-2i initialState, i)
+                                #_"ObjectState" state (nth (:objectStates initialState) i)
                             ]
                                 (when (and (some? state) (ObjectState''isVirtual-1 state) (not (#_"BitSet" .get ensureVirtualized, i)))
                                     (PartialEscapeBlockState''materializeBefore-4 initialState, end, (nth (:virtualObjects this) i), (BlockMap''get-2 (:blockEffects this), loopPredecessor))
@@ -19874,7 +19736,7 @@ ZeroExtendNode'new-4
     (defn- #_"void" PartialEscapeClosure'processVirtualAtLoopExit-6 [#_"LoopExitNode" exitNode, #_"GraphEffectList" effects, #_"int" object, #_"ObjectState" exitObjState, #_"ObjectState" initialObjState, #_"PartialEscapeBlockState" exitState]
         (dotimes [#_"int" i (count (:entries exitObjState))]
             (let [
-                #_"ValueNode" value (ObjectState''getEntry-2 (PartialEscapeBlockState''getObjectState-2i exitState, object), i)
+                #_"ValueNode" value (ObjectState''getEntry-2 (nth (:objectStates exitState) object), i)
             ]
                 (when-not (or (satisfies? VirtualObjectNode value) (satisfies? ConstantNode value))
                     (when-not (and (not (AbstractMergeNode''isPhiAtMerge-2 (:loopBegin exitNode), value)) (some? initialObjState) (ObjectState''isVirtual-1 initialObjState) (= (ObjectState''getEntry-2 initialObjState, i) value))
@@ -19923,17 +19785,17 @@ ZeroExtendNode'new-4
                             #_"ValueNode" alias (PartialEscapeClosure''getAlias-2 this, (:value proxy))
                         ]
                             (when (satisfies? VirtualObjectNode alias)
-                                (#_"EconomicMap" .put proxies, (:objectId alias), proxy)
+                                (#_"EconomicMap" .put proxies, (:oid alias), proxy)
                             )
                         )
                     )
                     (dotimes [#_"int" i (count (:objectStates exitState))]
                         (let [
-                            #_"ObjectState" exitObjState (PartialEscapeBlockState''getObjectStateOptional-2i exitState, i)
+                            #_"ObjectState" exitObjState (nth (:objectStates exitState) i)
                         ]
                             (when (some? exitObjState)
                                 (let [
-                                    #_"ObjectState" initialObjState (PartialEscapeBlockState''getObjectStateOptional-2i initialState, i)
+                                    #_"ObjectState" initialObjState (when (< i (count (:objectStates initialState))) (nth (:objectStates initialState) i))
                                 ]
                                     (if (ObjectState''isVirtual-1 exitObjState)
                                         (PartialEscapeClosure'processVirtualAtLoopExit-6 exitNode, effects, i, exitObjState, initialObjState, exitState)
@@ -19961,9 +19823,13 @@ ZeroExtendNode'new-4
                 (let [
                     #_"ValueNode" object (get (:aliases this) value)
                 ]
-                    (when (satisfies? VirtualObjectNode object) (PartialEscapeBlockState''getObjectStateOptional-2n state, object))
+                    (when (satisfies? VirtualObjectNode object)
+                        (let [#_"int" id (:oid object)] (when (< id (count (:objectStates state))) (nth (:objectStates state) id)))
+                    )
                 )
-                (when (satisfies? VirtualObjectNode value) (PartialEscapeBlockState''getObjectStateOptional-2n state, value))
+                (when (satisfies? VirtualObjectNode value)
+                    (let [#_"int" id (:oid value)] (when (< id (count (:objectStates state))) (nth (:objectStates state) id)))
+                )
             )
         )
     )
@@ -19983,10 +19849,10 @@ ZeroExtendNode'new-4
         ]
             (when (satisfies? VirtualObjectNode result)
                 (let [
-                    #_"int" id (:objectId result)
+                    #_"int" id (:oid result)
                 ]
-                    (when (and (not= id -1) (not (ObjectState''isVirtual-1 (PartialEscapeBlockState''getObjectState-2i state, id))))
-                        (§ ass result (:materializedValue (PartialEscapeBlockState''getObjectState-2i state, id)))
+                    (when (and (not= id -1) (not (ObjectState''isVirtual-1 (nth (:objectStates state) id))))
+                        (§ ass result (:materializedValue (nth (:objectStates state) id)))
                     )
                 )
             )
@@ -27943,10 +27809,10 @@ ZeroExtendNode'new-4
      ; Creates a plugin that will create ConstantNodes for each parameter with an index equal to that of a non-nil
      ; object in {@code constantArgs} (from which the ConstantNode is created if it isn't already a ConstantNode).
      ;;
-    (defn #_"ConstantBindingParameterPlugin" ConstantBindingParameterPlugin'new-1 [#_"Object[]" constantArgs]
+    (defn #_"ConstantBindingParameterPlugin" ConstantBindingParameterPlugin'new-1 [#_"Object*" constantArgs]
         (merge (ConstantBindingParameterPlugin'class.)
             (hash-map
-                #_"Object[]" :constantArgs constantArgs
+                #_"Object*" :constantArgs constantArgs
             )
         )
     )
@@ -30812,29 +30678,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"ObjectState" PartialEscapeBlockState''getObjectState-2i [#_"PartialEscapeBlockState<T>" this, #_"int" object]
-        (nth (:objectStates this) object)
-    )
-
-    (defn #_"ObjectState" PartialEscapeBlockState''getObjectStateOptional-2i [#_"PartialEscapeBlockState<T>" this, #_"int" object]
-        (when (< object (count (:objectStates this))) (nth (:objectStates this) object))
-    )
-
-    ;;;
-     ; Asserts that the given virtual object is available/reachable in the current state.
-     ;;
-    (defn #_"ObjectState" PartialEscapeBlockState''getObjectState-2n [#_"PartialEscapeBlockState<T>" this, #_"VirtualObjectNode" object]
-        (nth (:objectStates this) (:objectId object))
-    )
-
-    (defn #_"ObjectState" PartialEscapeBlockState''getObjectStateOptional-2n [#_"PartialEscapeBlockState<T>" this, #_"VirtualObjectNode" object]
-        (let [
-            #_"int" id (:objectId object)
-        ]
-            (when (< id (count (:objectStates this))) (nth (:objectStates this) id))
-        )
-    )
-
     (defn- #_"ObjectState[]" PartialEscapeBlockState''getObjectStateArrayForModification-1 [#_"PartialEscapeBlockState<T>" this]
         (when (< 1 (:refCount (:arrayRefCount this)))
             (§ ass! this (assoc this :objectStates (#_"Object" .clone (:objectStates this))))
@@ -30903,11 +30746,11 @@ ZeroExtendNode'new-4
 
     (defn- #_"void" PartialEscapeBlockState''materializeWithCommit-8 [#_"PartialEscapeBlockState<T>" this, #_"FixedNode" fixed, #_"VirtualObjectNode" virtual, #_"List<AllocatedObjectNode>" objects, #_"List<List<MonitorIdNode>>" locks, #_"List<ValueNode>" values, #_"List<Boolean>" ensureVirtual, #_"List<ValueNode>" otherAllocations]
         (let [
-            #_"ObjectState" obj (PartialEscapeBlockState''getObjectState-2n this, virtual)
+            #_"ObjectState" obj (nth (:objectStates this) (:oid virtual))
             #_"ValueNode[]" entries (:entries obj)
             #_"ValueNode" representation (VirtualObjectNode'''getMaterializedRepresentation-4 virtual, fixed, entries, (:locks obj))
-            _ (PartialEscapeBlockState''escape-3 this, (:objectId virtual), representation)
-            obj (PartialEscapeBlockState''getObjectState-2n this, virtual)
+            _ (PartialEscapeBlockState''escape-3 this, (:oid virtual), representation)
+            obj (nth (:objectStates this) (:oid virtual))
             _ (PartialEscapeClosure'updateStatesForMaterialized-3 this, virtual, (:materializedValue obj))
         ]
             (when (satisfies? AllocatedObjectNode representation) => (#_"List" .add otherAllocations, representation)
@@ -30924,11 +30767,11 @@ ZeroExtendNode'new-4
                         (if (satisfies? VirtualObjectNode (nth entries i))
                             (let [
                                 #_"VirtualObjectNode" entryVirtual (nth entries i)
-                                #_"ObjectState" entryObj (PartialEscapeBlockState''getObjectState-2n this, entryVirtual)
+                                #_"ObjectState" entryObj (nth (:objectStates this) (:oid entryVirtual))
                                 entryObj
                                     (when (ObjectState''isVirtual-1 entryObj) => entryObj
                                         (PartialEscapeBlockState''materializeWithCommit-8 this, fixed, entryVirtual, objects, locks, values, ensureVirtual, otherAllocations)
-                                        (PartialEscapeBlockState''getObjectState-2n this, entryVirtual)
+                                        (nth (:objectStates this) (:oid entryVirtual))
                                     )
                             ]
                                 (#_"List" .set values, (+ pos i), (:materializedValue entryObj))
@@ -31049,7 +30892,7 @@ ZeroExtendNode'new-4
                 #_"int" n (max (count (:objectStates this)) (count (:objectStates other)))
             ]
                 (loop-when [#_"int" i 0] (< i n) => true
-                    (and (= (PartialEscapeBlockState''getObjectStateOptional-2i this, i) (PartialEscapeBlockState''getObjectStateOptional-2i other, i))
+                    (and (= (when (< i (count (:objectStates this))) (nth (:objectStates this) i)) (when (< i (count (:objectStates other))) (nth (:objectStates other) i)))
                         (recur (inc i))
                     )
                 )
@@ -35147,15 +34990,11 @@ ZeroExtendNode'new-4
  ; This node is the start of the control flow of the graph.
  ;;
 (class-ns Graph []
-    (def #_"long" Graph'INVALID_GRAPH_ID -1)
-    (def- #_"AtomicLong" Graph'uniqueGraphIds (AtomicLong.))
-
     (defn #_"Graph" Graph'new-1 [#_"ResolvedJavaMethod" method]
         (let [
             #_"Graph" this
                 (merge (Graph'class.)
                     (hash-map
-                        #_"long" :graphId (#_"AtomicLong" .incrementAndGet Graph'uniqueGraphIds)
                         ;;;
                          ; The set of nodes in the graph, ordered by {@linkplain #register(Node) registration} time.
                          ;;
@@ -35297,7 +35136,7 @@ ZeroExtendNode'new-4
     (defn #_"Graph" Graph''register-2 [#_"Graph" this, #_"Node" node]
         (let [
             #_"int" id (count (:gNodes this))
-            _ (§ ass! node (assoc node :nodeId id))
+            _ (§ ass! node (assoc node :nid id))
             this (update this :gNodes assoc id node)
         ]
             (when (some? (:nodeEventListener this))
@@ -35309,7 +35148,7 @@ ZeroExtendNode'new-4
 
     (defn #_"Graph" Graph''unregister-2 [#_"Graph" this, #_"Node" node]
         (let [
-            this (update this :gNodes assoc (:nodeId node) nil)
+            this (update this :gNodes assoc (:nid node) nil)
             this (update this :nodesDeleted inc)
         ]
             (when (some? (:nodeEventListener this))
@@ -39415,7 +39254,7 @@ ZeroExtendNode'new-4
 
     (defm InvariantPredicate NodePredicate
         (#_"boolean" NodePredicate'''apply-2 [#_"InvariantPredicate" this, #_"Node" node]
-            (and (< (:nodeId node) (:mark this)) ;; newly created nodes are unknown
+            (and (< (:nid node) (:mark this)) ;; newly created nodes are unknown
                 (LoopEx''isOutsideLoop-2 (:loopEx this), node)
             )
         )
@@ -44816,33 +44655,6 @@ ZeroExtendNode'new-4
     )
 )
 
-;;;
- ; Lazily constructed parts of SnippetInfo.
- ;;
-(class-ns Lazy []
-    (defn #_"Lazy" Lazy'new-1 [#_"ResolvedJavaMethod" method]
-        (let [
-            #_"int" n (#_"Signature" .getParameterCount (#_"ResolvedJavaMethod" .getSignature method), false)
-            #_"Lazy" this
-                (merge (Lazy'class.)
-                    (hash-map
-                        #_"boolean[]" :constantParameters (boolean-array n)
-                        #_"boolean[]" :varargsParameters (boolean-array n)
-                        #_"boolean[]" :nonNullParameters (boolean-array n)
-                    )
-                )
-            _
-                (dotimes [#_"int" i n]
-                    (aset (:constantParameters this) i (some? (#_"ResolvedJavaMethod" .getParameterAnnotation method, ConstantParameter, i)))
-                    (aset (:varargsParameters this) i (some? (#_"ResolvedJavaMethod" .getParameterAnnotation method, VarargsParameter, i)))
-                    (aset (:nonNullParameters this) i (some? (#_"ResolvedJavaMethod" .getParameterAnnotation method, NonNullParameter, i)))
-                )
-        ]
-            this
-        )
-    )
-)
-
 (class-ns LSAllocationPhase []
     (defn #_"LSAllocationPhase" LSAllocationPhase'new-0 []
         (LSAllocationPhase'class.)
@@ -49488,7 +49300,7 @@ ZeroExtendNode'new-4
         (let [
             this (assoc this :currentNode (NodeBitMap''nextMarkedNode-2 (:bitMap this), (inc (:currentNodeId this))))
         ]
-            (assoc this :currentNodeId (if (some? (:currentNode this)) (:nodeId (:currentNode this)) -1))
+            (assoc this :currentNodeId (if (some? (:currentNode this)) (:nid (:currentNode this)) -1))
         )
     )
 
@@ -49767,7 +49579,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"boolean" PEMergeProcessor'intersectObjectState-2 [#_"PartialEscapeBlockState*" states, #_"int" index]
         (loop-when [#_"int" i 0] (< i (count states)) => true
-            (and (some? (PartialEscapeBlockState''getObjectStateOptional-2i (nth states i), index))
+            (and (some? (when (< index (count (:objectStates (nth states i)))) (nth (:objectStates (nth states i)) index)))
                 (recur (inc i))
             )
         )
@@ -49830,7 +49642,7 @@ ZeroExtendNode'new-4
         (loop-when [#_"boolean" materialized? false #_"int" i 0] (< i (count states)) => materialized?
             (let [
                 #_"int" object (#_"IntUnaryOperator" .applyAsInt objectIdFunc, i)
-                #_"ObjectState" state (PartialEscapeBlockState''getObjectState-2i (nth states i), object)
+                #_"ObjectState" state (nth (:objectStates (nth states i)) object)
             ]
                 (when (ObjectState''isVirtual-1 state) => materialized?
                     (let [
@@ -49839,11 +49651,11 @@ ZeroExtendNode'new-4
                             (when (satisfies? VirtualObjectNode entry) => [materialized? entry]
                                 (let [
                                     #_"Block" predecessor (MergeProcessor''getPredecessor-2 this, i)
-                                    materialized? (or materialized? (PartialEscapeClosure''ensureMaterialized-5 (:peClosure this), (nth states i), (:objectId entry), (:endNode predecessor), (BlockMap''get-2 (:blockEffects (:peClosure this)), predecessor)))
+                                    materialized? (or materialized? (PartialEscapeClosure''ensureMaterialized-5 (:peClosure this), (nth states i), (:oid entry), (:endNode predecessor), (BlockMap''get-2 (:blockEffects (:peClosure this)), predecessor)))
                                     entry
-                                        (when (ObjectState''isVirtual-1 (PartialEscapeBlockState''getObjectState-2i (nth states i), object)) => entry
+                                        (when (ObjectState''isVirtual-1 (nth (:objectStates (nth states i)) object)) => entry
                                             (let [
-                                                entry (:materializedValue (PartialEscapeBlockState''getObjectState-2i (nth states i), (:objectId entry)))
+                                                entry (:materializedValue (nth (:objectStates (nth states i)) (:oid entry)))
                                             ]
                                                 (PartialEscapeBlockState''setEntry-4 (nth states i), object, index, entry)
                                                 entry
@@ -49882,7 +49694,7 @@ ZeroExtendNode'new-4
             [#_"boolean" ensure? #_"boolean" compatible? #_"JavaKind[]" twoSlotKinds]
                 (loop-when [ensure? true #_"int" j 0 twoSlotKinds nil] (< j (count states)) => [ensure? true twoSlotKinds]
                     (let [
-                        #_"ObjectState" objectState (PartialEscapeBlockState''getObjectState-2i (nth states j), (#_"IntUnaryOperator" .applyAsInt getObject, j))
+                        #_"ObjectState" objectState (nth (:objectStates (nth states j)) (#_"IntUnaryOperator" .applyAsInt getObject, j))
                         #_"ValueNode[]" entries (:entries objectState)
                         ensure? (and ensure? (:ensureVirtualized objectState))
                         [compatible? twoSlotKinds]
@@ -49918,7 +49730,7 @@ ZeroExtendNode'new-4
                                     (loop-when [#_"int" j 0] (< j (count states)) => true
                                         (let [
                                             #_"int" object (#_"IntUnaryOperator" .applyAsInt getObject, j)
-                                            #_"ObjectState" objectState (PartialEscapeBlockState''getObjectState-2i (nth states j), object)
+                                            #_"ObjectState" objectState (nth (:objectStates (nth states j)) object)
                                             #_"ValueNode" value (ObjectState''getEntry-2 objectState, i)
                                             #_"JavaKind" valueKind (ValueNode''getStackKind-1 value)
                                             compatible?
@@ -49950,12 +49762,12 @@ ZeroExtendNode'new-4
             (if compatible?
                 ;; virtual objects are compatible: create phis for all entries that need them
                 (let [
-                    #_"ValueNode[]" values (#_"Object" .clone (:entries (PartialEscapeBlockState''getObjectState-2i (nth states 0), (#_"IntUnaryOperator" .applyAsInt getObject, 0))))
+                    #_"ValueNode[]" values (#_"Object" .clone (:entries (nth (:objectStates (nth states 0)) (#_"IntUnaryOperator" .applyAsInt getObject, 0))))
                     #_"PhiNode[]" phis (PEMergeProcessor''getValuePhis-3 this, virtual, (VirtualObjectNode'''entryCount-1 virtual))
                 ]
                     (loop-when [#_"int" i 0] (< i (count values))
                         (loop-when-recur [#_"int" j 1] (< j (count states)) [(inc j)]
-                            (when-not (or (some? (nth phis i)) (= (nth values i) (ObjectState''getEntry-2 (PartialEscapeBlockState''getObjectState-2i (nth states j), (#_"IntUnaryOperator" .applyAsInt getObject, j)), i)))
+                            (when-not (or (some? (nth phis i)) (= (nth values i) (ObjectState''getEntry-2 (nth (:objectStates (nth states j)) (#_"IntUnaryOperator" .applyAsInt getObject, j)), i)))
                                 (aset phis i (MergeProcessor''createValuePhi-2 this, (Stamp'''unrestricted-1 (:stamp (nth values i)))))
                             )
                         )
@@ -49993,7 +49805,7 @@ ZeroExtendNode'new-4
                                                         (or materialized? (PEMergeProcessor''mergeObjectEntry-5 this, getObject, states, phi, i))
                                                         (loop-when [#_"int" j 0] (< j (count states)) => materialized?
                                                             (let [
-                                                                #_"ObjectState" state (PartialEscapeBlockState''getObjectState-2i (nth states j), (#_"IntUnaryOperator" .applyAsInt getObject, j))
+                                                                #_"ObjectState" state (nth (:objectStates (nth states j)) (#_"IntUnaryOperator" .applyAsInt getObject, j))
                                                             ]
                                                                 (when (ObjectState''isVirtual-1 state) => materialized?
                                                                     (MergeProcessor''setPhiInput-4 this, phi, j, (ObjectState''getEntry-2 state, i))
@@ -50012,7 +49824,7 @@ ZeroExtendNode'new-4
                                 )
                             )
                     ]
-                        (PartialEscapeBlockState''addObject-3 (:newState this), resultObject, (ObjectState'new-3s values, (:locks (PartialEscapeBlockState''getObjectState-2i (nth states 0), (#_"IntUnaryOperator" .applyAsInt getObject, 0))), ensure?))
+                        (PartialEscapeBlockState''addObject-3 (:newState this), resultObject, (ObjectState'new-3s values, (:locks (nth (:objectStates (nth states 0)) (#_"IntUnaryOperator" .applyAsInt getObject, 0))), ensure?))
                         materialized?
                     )
                 )
@@ -50024,12 +49836,12 @@ ZeroExtendNode'new-4
                         (let [
                             #_"Block" predecessor (MergeProcessor''getPredecessor-2 this, i)
                         ]
-                            (when (and (not ensure?) (ObjectState''isVirtual-1 (PartialEscapeBlockState''getObjectState-2i (nth states i), (#_"IntUnaryOperator" .applyAsInt getObject, i))))
+                            (when (and (not ensure?) (ObjectState''isVirtual-1 (nth (:objectStates (nth states i)) (#_"IntUnaryOperator" .applyAsInt getObject, i))))
                                 ;; we can materialize if not all inputs are "ensureVirtualized"
-                                (§ ass! (PartialEscapeBlockState''getObjectState-2i (nth states i), (#_"IntUnaryOperator" .applyAsInt getObject, i)) (ObjectState''setEnsureVirtualized-2 (PartialEscapeBlockState''getObjectState-2i (nth states i), (#_"IntUnaryOperator" .applyAsInt getObject, i)), false))
+                                (§ ass! (nth (:objectStates (nth states i)) (#_"IntUnaryOperator" .applyAsInt getObject, i)) (ObjectState''setEnsureVirtualized-2 (nth (:objectStates (nth states i)) (#_"IntUnaryOperator" .applyAsInt getObject, i)), false))
                             )
                             (PartialEscapeClosure''ensureMaterialized-5 (:peClosure this), (nth states i), (#_"IntUnaryOperator" .applyAsInt getObject, i), (:endNode predecessor), (BlockMap''get-2 (:blockEffects (:peClosure this)), predecessor))
-                            (MergeProcessor''setPhiInput-4 this, materializedValuePhi, i, (:materializedValue (PartialEscapeBlockState''getObjectState-2i (nth states i), (#_"IntUnaryOperator" .applyAsInt getObject, i))))
+                            (MergeProcessor''setPhiInput-4 this, materializedValuePhi, i, (:materializedValue (nth (:objectStates (nth states i)) (#_"IntUnaryOperator" .applyAsInt getObject, i))))
                         )
                     )
                     (PartialEscapeBlockState''addObject-3 (:newState this), resultObject, (ObjectState'new-3v materializedValuePhi, nil, ensure?))
@@ -50060,7 +49872,7 @@ ZeroExtendNode'new-4
                             (when (satisfies? VirtualObjectNode alias) => [unique? ensure? virtualInputs]
                                 (aset objects i alias)
                                 (let [
-                                    #_"ObjectState" objectState (PartialEscapeBlockState''getObjectStateOptional-2n (nth states i), alias)
+                                    #_"ObjectState" objectState (let [#_"int" id (:oid alias)] (when (< id (count (:objectStates (nth states i)))) (nth (:objectStates (nth states i)) id)))
                                 ]
                                     (when (some? objectState) => (§ return false)
                                         (when (ObjectState''isVirtual-1 objectState) => [unique? ensure? virtualInputs]
@@ -50089,7 +49901,7 @@ ZeroExtendNode'new-4
                                 (and
                                     (= (VirtualObjectNode'''type-1 (nth objects 0)) (VirtualObjectNode'''type-1 (nth objects i)))
                                     (= (VirtualObjectNode'''entryCount-1 (nth objects 0)) (VirtualObjectNode'''entryCount-1 (nth objects i)))
-                                    (ObjectState''locksEqual-2 (PartialEscapeBlockState''getObjectState-2n (nth states 0), (nth objects 0)), (PartialEscapeBlockState''getObjectState-2n (nth states i), (nth objects i)))
+                                    (ObjectState''locksEqual-2 (nth (:objectStates (nth states 0)) (:oid (nth objects 0))), (nth (:objectStates (nth states i)) (:oid (nth objects i))))
                                     (recur (inc i))
                                 )
                             )
@@ -50114,7 +49926,7 @@ ZeroExtendNode'new-4
                             ]
                                 (GraphEffectList''addFloatingNode-3 (:mergeEffects this), virtual, "valueObjectNode")
                                 (GraphEffectList''deleteNode-2 (:mergeEffects this), phi)
-                                (when (= (:objectId virtual) -1)
+                                (when (= (:oid virtual) -1)
                                     (let [
                                         #_"int" id (count (:virtualObjects (:peClosure this)))
                                     ]
@@ -50127,9 +49939,9 @@ ZeroExtendNode'new-4
                                     #_"int[]" virtualObjectIds (int-array (count states))
                                     _
                                         (dotimes [#_"int" i (count states)]
-                                            (aset virtualObjectIds i (:objectId (nth objects i)))
+                                            (aset virtualObjectIds i (:oid (nth objects i)))
                                         )
-                                    #_"boolean" materialized? (PEMergeProcessor''mergeObjectStates-4 this, (:objectId virtual), virtualObjectIds, states)
+                                    #_"boolean" materialized? (PEMergeProcessor''mergeObjectStates-4 this, (:oid virtual), virtualObjectIds, states)
                                 ]
                                     (PartialEscapeClosure''addVirtualAlias-3 (:peClosure this), virtual, virtual)
                                     (PartialEscapeClosure''addVirtualAlias-3 (:peClosure this), virtual, phi)
@@ -50151,14 +49963,14 @@ ZeroExtendNode'new-4
                                     (when (some? (nth objects i)) => materialized?
                                         (let [
                                             #_"Block" predecessor (MergeProcessor''getPredecessor-2 this, i)
-                                            #_"ObjectState" objectState (PartialEscapeBlockState''getObjectState-2n (nth states i), (nth objects i))
+                                            #_"ObjectState" objectState (nth (:objectStates (nth states i)) (:oid (nth objects i)))
                                         ]
                                             (when (and (not ensure?) (ObjectState''isVirtual-1 objectState))
                                                 ;; we can materialize if not all inputs are "ensureVirtualized"
                                                 (§ ass! objectState (ObjectState''setEnsureVirtualized-2 objectState, false))
                                             )
                                             (or materialized?
-                                                (PartialEscapeClosure''ensureMaterialized-5 (:peClosure this), (nth states i), (:objectId (nth objects i)), (:endNode predecessor), (BlockMap''get-2 (:blockEffects (:peClosure this)), predecessor))
+                                                (PartialEscapeClosure''ensureMaterialized-5 (:peClosure this), (nth states i), (:oid (nth objects i)), (:endNode predecessor), (BlockMap''get-2 (:blockEffects (:peClosure this)), predecessor))
                                             )
                                         )
                                     )
@@ -50211,14 +50023,14 @@ ZeroExtendNode'new-4
                                         #_"int" object (first s)
                                         materialized?
                                             (when (PartialEscapeBlockState'identicalObjectStates-2 states, object) => materialized?
-                                                (PartialEscapeBlockState''addObject-3 (:newState this), object, (ObjectState''share-1 (PartialEscapeBlockState''getObjectState-2i (nth states 0), object)))
+                                                (PartialEscapeBlockState''addObject-3 (:newState this), object, (ObjectState''share-1 (nth (:objectStates (nth states 0)) object)))
                                                 ;; determine if all inputs are virtual or the same materialized value
                                                 (let [
-                                                    #_"ObjectState" startObj (PartialEscapeBlockState''getObjectState-2i (nth states 0), object)
+                                                    #_"ObjectState" startObj (nth (:objectStates (nth states 0)) object)
                                                     [#_"boolean" ensureVirtual #_"int" virtualCount #_"ValueNode" uniqueMaterializedValue #_"boolean" locksMatch]
                                                         (loop-when [ensureVirtual true virtualCount 0 uniqueMaterializedValue (when-not (ObjectState''isVirtual-1 startObj) (:materializedValue startObj)) locksMatch true #_"int" i 0] (< i (count states)) => [ensureVirtual virtualCount uniqueMaterializedValue locksMatch]
                                                             (let [
-                                                                #_"ObjectState" obj (PartialEscapeBlockState''getObjectState-2i (nth states i), object)
+                                                                #_"ObjectState" obj (nth (:objectStates (nth states i)) object)
                                                                 ensureVirtual (and ensureVirtual (:ensureVirtualized obj))
                                                                 [virtualCount uniqueMaterializedValue locksMatch]
                                                                     (if (ObjectState''isVirtual-1 obj)
@@ -50245,7 +50057,7 @@ ZeroExtendNode'new-4
                                                                 materialized?
                                                                     (loop-when [materialized? materialized? #_"int" i 0] (< i (count states)) => materialized?
                                                                         (let [
-                                                                            #_"ObjectState" obj (PartialEscapeBlockState''getObjectState-2i (nth states i), object)
+                                                                            #_"ObjectState" obj (nth (:objectStates (nth states i)) object)
                                                                             [materialized? obj]
                                                                                 (when (ObjectState''isVirtual-1 obj) => [materialized? obj]
                                                                                     (let [
@@ -50255,7 +50067,7 @@ ZeroExtendNode'new-4
                                                                                             ;; we can materialize if not all inputs are "ensureVirtualized"
                                                                                             (§ ass! obj (ObjectState''setEnsureVirtualized-2 obj, false))
                                                                                         )
-                                                                                        [(or materialized? (PartialEscapeClosure''ensureMaterialized-5 (:peClosure this), (nth states i), object, (:endNode predecessor), (BlockMap''get-2 (:blockEffects (:peClosure this)), predecessor))) (PartialEscapeBlockState''getObjectState-2i (nth states i), object)]
+                                                                                        [(or materialized? (PartialEscapeClosure''ensureMaterialized-5 (:peClosure this), (nth states i), object, (:endNode predecessor), (BlockMap''get-2 (:blockEffects (:peClosure this)), predecessor))) (nth (:objectStates (nth states i)) object)]
                                                                                     )
                                                                                 )
                                                                         ]
@@ -51463,7 +51275,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"boolean" NodeBitMap''isNew-2 [#_"NodeBitMap" this, #_"Node" node]
-        (<= (:nodeCount this) (:nodeId node))
+        (<= (:nodeCount this) (:nid node))
     )
 
     (defn #_"boolean" NodeBitMap''checkAndMarkInc-2 [#_"NodeBitMap" this, #_"Node" node]
@@ -51501,22 +51313,22 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"boolean" NodeBitMap''isMarked-2n [#_"NodeBitMap" this, #_"Node" node]
-        (NodeBitMap''isMarked-2i this, (:nodeId node))
+        (NodeBitMap''isMarked-2i this, (:nid node))
     )
 
     (defn #_"boolean" NodeBitMap''isMarkedAndGrow-2 [#_"NodeBitMap" this, #_"Node" node]
-        (§ ass! this (NodeBitMap''checkGrow-2 this, (:nodeId node)))
-        (NodeBitMap''isMarked-2i this, (:nodeId node))
+        (§ ass! this (NodeBitMap''checkGrow-2 this, (:nid node)))
+        (NodeBitMap''isMarked-2i this, (:nid node))
     )
 
     (defn #_"void" NodeBitMap''mark-2 [#_"NodeBitMap" this, #_"Node" node]
-        (aswap (:bits this) (>> (:nodeId node) NodeBitMap'SHIFT) | (<< 1 (:nodeId node)))
+        (aswap (:bits this) (>> (:nid node) NodeBitMap'SHIFT) | (<< 1 (:nid node)))
         nil
     )
 
     (defn #_"NodeBitMap" NodeBitMap''markAndGrow-2 [#_"NodeBitMap" this, #_"Node" node]
         (let [
-            this (NodeBitMap''checkGrow-2 this, (:nodeId node))
+            this (NodeBitMap''checkGrow-2 this, (:nid node))
         ]
             (NodeBitMap''mark-2 this, node)
             this
@@ -51524,13 +51336,13 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"void" NodeBitMap''clear-2 [#_"NodeBitMap" this, #_"Node" node]
-        (aswap (:bits this) (>> (:nodeId node) NodeBitMap'SHIFT) & (bit-not (<< 1 (:nodeId node))))
+        (aswap (:bits this) (>> (:nid node) NodeBitMap'SHIFT) & (bit-not (<< 1 (:nid node))))
         nil
     )
 
     (defn #_"NodeBitMap" NodeBitMap''clearAndGrow-2 [#_"NodeBitMap" this, #_"Node" node]
         (let [
-            this (NodeBitMap''checkGrow-2 this, (:nodeId node))
+            this (NodeBitMap''checkGrow-2 this, (:nid node))
         ]
             (NodeBitMap''clear-2 this, node)
             this
@@ -51627,8 +51439,12 @@ ZeroExtendNode'new-4
     (defm CollectVirtualObjectsClosure #_"<T>" NodeClosure
         (#_"void" NodeClosure'''apply-3 [#_"CollectVirtualObjectsClosure<T>" this, #_"Node" usage, #_"ValueNode" value]
             (if (satisfies? VirtualObjectNode value)
-                (when (and (not= (:objectId value) -1) (some? (PartialEscapeBlockState''getObjectStateOptional-2n (:state this), value)))
-                    (#_"EconomicSet" .add (:virtual this), value)
+                (let [
+                    #_"int" id (:oid value)
+                ]
+                    (when (and (not= id -1) (some? (when (< id (count (:objectStates (:state this)))) (nth (:objectStates (:state this)) id))))
+                        (#_"EconomicSet" .add (:virtual this), value)
+                    )
                 )
                 (let [
                     #_"ValueNode" alias (PartialEscapeClosure''getAlias-2 (:peClosure this), value)
@@ -51895,7 +51711,7 @@ ZeroExtendNode'new-4
         (merge (Node'class.)
             (hash-map
                 #_"NodeClass<? implements Node>" :nodeClass nil
-                #_"int" :nodeId Node'INITIAL_ID
+                #_"int" :nid Node'INITIAL_ID
                 #_"Graph" :graph nil
                 #_"[Node]" :nodeUsages []
                 #_"Node" :predecessor nil
@@ -51997,11 +51813,11 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"boolean" Node''isDeleted-1 [#_"Node" this]
-        (<= (:nodeId this) Node'DELETED_ID_START)
+        (<= (:nid this) Node'DELETED_ID_START)
     )
 
     (defn #_"boolean" Node''isAlive-1 [#_"Node" this]
-        (<= Node'ALIVE_ID_START (:nodeId this))
+        (<= Node'ALIVE_ID_START (:nid this))
     )
 
     (defn- #_"void" Node''maybeNotifyInputChanged-2 [#_"Node" this, #_"Node" node]
@@ -52203,7 +52019,7 @@ ZeroExtendNode'new-4
 
     (defn #_"void" Node''markDeleted-1 [#_"Node" this]
         (§ ass! (:graph this) (Graph''unregister-2 (:graph this), this))
-        (§ ass! this (assoc this :nodeId (- Node'DELETED_ID_START (:nodeId this))))
+        (§ ass! this (assoc this :nid (- Node'DELETED_ID_START (:nid this))))
         nil
     )
 
@@ -52254,7 +52070,7 @@ ZeroExtendNode'new-4
             _ (Node''copyOrClearEdgesForClone-4 this, node, EdgesType'Inputs, edgesToCopy)
             _ (Node''copyOrClearEdgesForClone-4 this, node, EdgesType'Successors, edgesToCopy)
             node (assoc node :graph into)
-            node (assoc node :nodeId Node'INITIAL_ID)
+            node (assoc node :nid Node'INITIAL_ID)
             _
                 (when (some? into)
                     (§ ass! into (Graph''register-2 into, node))
@@ -52285,7 +52101,7 @@ ZeroExtendNode'new-4
      ; stored in sets. It can give bad behavior when storing nodes of different graphs in the same set.
      ;;
     (§ override! #_"int" #_"Object." hashCode [#_"Node" this]
-        (if (Node''isDeleted-1 this) (- Node'DELETED_ID_START (:nodeId this)) (:nodeId this))
+        (if (Node''isDeleted-1 this) (- Node'DELETED_ID_START (:nid this)) (:nid this))
     )
 
     ;;;
@@ -61251,7 +61067,7 @@ ZeroExtendNode'new-4
      ;;
     (defm BinaryArithmeticNode #_"<OP>" Binary
         (#_"BinaryNode" Binary'''maybeCommuteInputs-1 [#_"BinaryArithmeticNode<OP>" this]
-            (when (and (not (satisfies? ConstantNode (:y this))) (or (satisfies? ConstantNode (:x this)) (< (:nodeId (:y this)) (:nodeId (:x this))))) => this
+            (when (and (not (satisfies? ConstantNode (:y this))) (or (satisfies? ConstantNode (:x this)) (< (:nid (:y this)) (:nid (:x this))))) => this
                 (assoc this :x (:y this) :y (:x this))
             )
         )
@@ -64166,7 +63982,7 @@ ZeroExtendNode'new-4
      ;;
     (defm BinaryOpLogicNode Binary
         (#_"LogicNode" Binary'''maybeCommuteInputs-1 [#_"BinaryOpLogicNode" this]
-            (when (and (not (satisfies? ConstantNode (:y this))) (or (satisfies? ConstantNode (:x this)) (< (:nodeId (:y this)) (:nodeId (:x this))))) => this
+            (when (and (not (satisfies? ConstantNode (:y this))) (or (satisfies? ConstantNode (:x this)) (< (:nid (:y this)) (:nid (:x this))))) => this
                 (assoc this :x (:y this) :y (:x this))
             )
         )
@@ -66744,7 +66560,6 @@ ZeroExtendNode'new-4
 
     (§ intrinsic! #_"long" VMConfigNode'loadLongConfigValue-1 [#_"int" markId])
     (§ intrinsic! #_"int"  VMConfigNode'loadIntConfigValue-1  [#_"int" markId])
-    (§ intrinsic! #_"byte" VMConfigNode'loadByteConfigValue-1 [#_"int" markId])
 
     #_intrinsifier
     (defn #_"VMConfigNode" VMConfigNode'new-2 [#_@InjectedNodeParameter #_"Stamp" stamp, #_"int" markId]
@@ -66764,23 +66579,14 @@ ZeroExtendNode'new-4
 
     (defn #_"boolean" VMConfigNode'isCardTableAddressConstant-0 [] (VMConfigNode'areConfigValuesConstant-0))
     (defn #_"long"    VMConfigNode'cardTableAddress-0 []           (VMConfigNode'loadLongConfigValue-1 HotSpot'cardTableAddressMark))
-    (defn #_"long"    VMConfigNode'heapTopAddress-0 []             (VMConfigNode'loadLongConfigValue-1 HotSpot'heapTopAddressMark))
-    (defn #_"long"    VMConfigNode'heapEndAddress-0 []             (VMConfigNode'loadLongConfigValue-1 HotSpot'heapEndAddressMark))
     (defn #_"int"     VMConfigNode'logOfHeapRegionGrainBytes-0 []  (VMConfigNode'loadIntConfigValue-1 HotSpot'logOfHeapRegionGrainBytesMark))
-
-    (defn #_"boolean" VMConfigNode'inlineContiguousAllocationSupported-0 []
-        (not (zero? (VMConfigNode'loadByteConfigValue-1 HotSpot'inlineContiguousAllocationSupportedMark)))
-    )
 
     (defm VMConfigNode Canonicalizable
         (#_"Node" Canonicalizable'''canonical-2 [#_"VMConfigNode" this, #_"CanonicalizerTool" tool]
             (condp = (:markId this)
                 0                                               (ConstantNode'forBoolean-1 true)
                 HotSpot'cardTableAddressMark                    (ConstantNode'forLong-1 HotSpot'cardTableAddress)
-                HotSpot'heapTopAddressMark                      (ConstantNode'forLong-1 HotSpot'heapTopAddress)
-                HotSpot'heapEndAddressMark                      (ConstantNode'forLong-1 HotSpot'heapEndAddress)
                 HotSpot'logOfHeapRegionGrainBytesMark           (ConstantNode'forInt-1 HotSpot'logOfHeapRegionGrainBytes)
-                HotSpot'inlineContiguousAllocationSupportedMark (ConstantNode'forBoolean-1 HotSpot'inlineContiguousAllocationSupported)
                 this
             )
         )
@@ -66843,17 +66649,17 @@ ZeroExtendNode'new-4
                  ; a comparison of two virtual objects is determined by comparing their contents.
                  ;;
                 #_"boolean" :hasIdentity hasIdentity
-                #_"int" :objectId -1
+                #_"int" :oid -1
             )
         )
     )
 
     (defn #_"VirtualObjectNode" VirtualObjectNode''resetObjectId-1 [#_"VirtualObjectNode" this]
-        (assoc this :objectId -1)
+        (assoc this :oid -1)
     )
 
     (defn #_"VirtualObjectNode" VirtualObjectNode''setObjectId-2 [#_"VirtualObjectNode" this, #_"int" objectId]
-        (assoc this :objectId objectId)
+        (assoc this :oid objectId)
     )
 
     (defm VirtualObjectNode Node
@@ -67830,7 +67636,7 @@ ZeroExtendNode'new-4
     )
 
     (§ override! #_"T" #_"Map." get [#_"NodeMap<T>" this, #_"Node" node]
-        (§ cast #_"T" (nth (:values this) (:nodeId node)))
+        (§ cast #_"T" (nth (:values this) (:nid node)))
     )
 
     (defn- #_"NodeMap<T>" NodeMap''checkAndGrow-2 [#_"NodeMap<T>" this, #_"Node" node]
@@ -67841,7 +67647,7 @@ ZeroExtendNode'new-4
 
     (defn #_"T" NodeMap''getAndGrow-2 [#_"NodeMap<T>" this, #_"Node" node]
         (§ ass! this (NodeMap''checkAndGrow-2 this, node))
-        (§ cast #_"T" (nth (:values this) (:nodeId node)))
+        (§ cast #_"T" (nth (:values this) (:nid node)))
     )
 
     (§ override! #_"boolean" #_"Map." containsKey [#_"NodeMap<T>" this, #_"Node" node]
@@ -67849,7 +67655,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"void" NodeMap''set-3 [#_"NodeMap<T>" this, #_"Node" node, #_"T" value]
-        (aset (:values this) (:nodeId node) value)
+        (aset (:values this) (:nid node) value)
         nil
     )
 
@@ -67874,7 +67680,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"boolean" NodeMap''isNew-2 [#_"NodeMap<T>" this, #_"Node" node]
-        (<= (NodeMap''capacity-1 this) (:nodeId node))
+        (<= (NodeMap''capacity-1 this) (:nid node))
     )
 
     (§ override! #_"Iterable<Node>" #_"UnmodifiableEconomicMap." getKeys [#_"NodeMap<T>" this]
@@ -70305,11 +70111,11 @@ ZeroExtendNode'new-4
     ;;;
      ; Builds the initial graph for a replacement.
      ;;
-    (defn- #_"Graph" Replacements'buildInitialGraph-2 [#_"ResolvedJavaMethod" method, #_"Object[]" args]
+    (defn- #_"Graph" Replacements'buildInitialGraph-2 [#_"ResolvedJavaMethod" method, #_"Object*" args]
         (let [
             #_"Plugins" plugins (Plugins'copy-1 HotSpot'plugins)
             plugins
-                (when (some? args) => plugins
+                (when (seq args) => plugins
                     (Plugins''prependParameterPlugin-2 plugins, (ConstantBindingParameterPlugin'new-1 args))
                 )
             #_"IntrinsicContext" intrinsic
@@ -70346,7 +70152,7 @@ ZeroExtendNode'new-4
      ; @param args arguments to the snippet if available, otherwise nil
      ; @return the snippet graph, if any, that is derived from {@code method}
      ;;
-    (defn #_"Graph" Replacements'createSnippet-2 [#_"ResolvedJavaMethod" method, #_"Object[]" args]
+    (defn #_"Graph" Replacements'createSnippet-2 [#_"ResolvedJavaMethod" method, #_"Object*" args]
         (Replacements'finalizeGraph-1 (Replacements'buildInitialGraph-2 method, args))
     )
 
@@ -71602,64 +71408,36 @@ ZeroExtendNode'new-4
 
 (class-ns SnippetInfo []
     (defn #_"SnippetInfo" SnippetInfo'new-2 [#_"ResolvedJavaMethod" method, #_"LocationIdentity[]" privateLocations]
-        (merge (SnippetInfo'class.)
-            (hash-map
-                #_"ResolvedJavaMethod" :method method
-                #_"LocationIdentity[]" :privateLocations privateLocations
-            )
+        (let [
+            #_"int" n (#_"Signature" .getParameterCount (#_"ResolvedJavaMethod" .getSignature method), false)
+            #_"SnippetInfo" this
+                (merge (SnippetInfo'class.)
+                    (hash-map
+                        #_"ResolvedJavaMethod" :method method
+                        #_"LocationIdentity[]" :privateLocations privateLocations
+                        #_"boolean[]" :constantParameters (boolean-array n)
+                        #_"boolean[]" :varargsParameters (boolean-array n)
+                        #_"boolean[]" :nonNullParameters (boolean-array n)
+                    )
+                )
+            _
+                (dotimes [#_"int" i n]
+                    (aset (:constantParameters this) i (some? (#_"ResolvedJavaMethod" .getParameterAnnotation method, ConstantParameter, i)))
+                    (aset (:varargsParameters this) i (some? (#_"ResolvedJavaMethod" .getParameterAnnotation method, VarargsParameter, i)))
+                    (aset (:nonNullParameters this) i (some? (#_"ResolvedJavaMethod" .getParameterAnnotation method, NonNullParameter, i)))
+                )
+        ]
+            this
         )
     )
 
     (defn #_"int" SnippetInfo''getParameterCount-1 [#_"SnippetInfo" this]
-        (count (:constantParameters (SnippetInfo'''lazy-1 this)))
+        (count (:constantParameters this))
     )
 
-    (defn #_"boolean" SnippetInfo''isConstantParameter-2 [#_"SnippetInfo" this, #_"int" paramIdx]
-        (nth (:constantParameters (SnippetInfo'''lazy-1 this)) paramIdx)
-    )
-
-    (defn #_"boolean" SnippetInfo''isVarargsParameter-2 [#_"SnippetInfo" this, #_"int" paramIdx]
-        (nth (:varargsParameters (SnippetInfo'''lazy-1 this)) paramIdx)
-    )
-
-    (defn #_"boolean" SnippetInfo''isNonNullParameter-2 [#_"SnippetInfo" this, #_"int" paramIdx]
-        (nth (:nonNullParameters (SnippetInfo'''lazy-1 this)) paramIdx)
-    )
-)
-
-(class-ns EagerSnippetInfo [SnippetInfo]
-    (defn #_"EagerSnippetInfo" EagerSnippetInfo'new-2 [#_"ResolvedJavaMethod" method, #_"LocationIdentity[]" privateLocations]
-        (merge (EagerSnippetInfo'class.) (SnippetInfo'new-2 method, privateLocations)
-            (hash-map
-                #_"Lazy" :lazy (Lazy'new-1 method)
-            )
-        )
-    )
-
-    (defm EagerSnippetInfo SnippetInfo
-        (#_"Lazy" SnippetInfo'''lazy-1 [#_"EagerSnippetInfo" this]
-            (:lazy this)
-        )
-    )
-)
-
-(class-ns LazySnippetInfo [SnippetInfo]
-    (defn #_"LazySnippetInfo" LazySnippetInfo'new-2 [#_"ResolvedJavaMethod" method, #_"LocationIdentity[]" privateLocations]
-        (merge (LazySnippetInfo'class.) (SnippetInfo'new-2 method, privateLocations)
-            (hash-map
-                #_"AtomicReference<Lazy>" :lazy (AtomicReference. nil)
-            )
-        )
-    )
-
-    (defm LazySnippetInfo SnippetInfo
-        (#_"Lazy" SnippetInfo'''lazy-1 [#_"LazySnippetInfo" this]
-            (when (nil? (#_"AtomicReference" .get (:lazy this)))
-                (#_"AtomicReference" .compareAndSet (:lazy this), nil, (Lazy'new-1 (:method this)))
-            )
-            (#_"AtomicReference" .get (:lazy this))
-        )
-    )
+    (defn #_"boolean" SnippetInfo''isConstantParameter-2 [#_"SnippetInfo" this, #_"int" i] (nth (:constantParameters this) i))
+    (defn #_"boolean" SnippetInfo''isVarargsParameter-2  [#_"SnippetInfo" this, #_"int" i] (nth (:varargsParameters this)  i))
+    (defn #_"boolean" SnippetInfo''isNonNullParameter-2  [#_"SnippetInfo" this, #_"int" i] (nth (:nonNullParameters this)  i))
 )
 
 ;;;
@@ -71670,6 +71448,10 @@ ZeroExtendNode'new-4
     ;; These values must be compared with equals() not '==' to support replay compilation.
     (def- #_"Object" SnippetTemplate'UNUSED_PARAMETER "UNUSED_PARAMETER")
     (def- #_"Object" SnippetTemplate'CONSTANT_PARAMETER "CONSTANT_PARAMETER")
+
+    (defn- #_"Object*" SnippetTemplate'getConstantArgs-1 [#_"Arguments" args]
+        (map-indexed #(when (SnippetInfo''isConstantParameter-2 (:info args), %1) %2) (:values args))
+    )
 
     (defn #_"SnippetTemplate" SnippetTemplate'new-2 [#_"Arguments" args, #_"Node" replacee]
         (let [
@@ -71714,8 +71496,7 @@ ZeroExtendNode'new-4
                         #_"ArrayList<Node>" :nodes nil
                     )
                 )
-            #_"Object[]" constantArgs (SnippetTemplate''getConstantArgs-2 this, args)
-            #_"Graph" snippetGraph (Replacements'createSnippet-2 (:method (:info args)), constantArgs)
+            #_"Graph" snippetGraph (Replacements'createSnippet-2 (:method (:info args)), (SnippetTemplate'getConstantArgs-1 args))
             #_"ResolvedJavaMethod" method (:rootMethod snippetGraph)
             #_"Signature" signature (#_"ResolvedJavaMethod" .getSignature method)
             ;; copy snippet graph replacing constant parameters with given arguments
@@ -71993,19 +71774,6 @@ ZeroExtendNode'new-4
             )
         )
         nil
-    )
-
-    (defn #_"Object[]" SnippetTemplate''getConstantArgs-2 [#_"SnippetTemplate" this, #_"Arguments" args]
-        (let [
-            #_"Object[]" constantArgs (#_"Object" .clone (:values args))
-        ]
-            (dotimes [#_"int" i (SnippetInfo''getParameterCount-1 (:info args))]
-                (when-not (SnippetInfo''isConstantParameter-2 (:info args), i)
-                    (aset constantArgs i nil)
-                )
-            )
-            constantArgs
-        )
     )
 
     ;;;
@@ -74943,7 +74711,11 @@ ZeroExtendNode'new-4
         (#_"Graph" Stub'''getStubGraph-1 [#_"SnippetStub" this]
             (let [
                 #_"Plugins" plugins (Plugins'copy-1 HotSpot'plugins)
-                plugins (Plugins''prependParameterPlugin-2 plugins, (ConstantBindingParameterPlugin'new-1 (SnippetStub'''makeConstArgs-1 this)))
+                #_"Object*" args (SnippetStub'''makeConstArgs-1 this)
+                plugins
+                    (when (seq args) => plugins
+                        (Plugins''prependParameterPlugin-2 plugins, (ConstantBindingParameterPlugin'new-1 args))
+                    )
                 #_"GraphBuilderInstance" instance (GraphBuilderInstance'new-3 (GraphBuilderConfiguration'getSnippetDefault-1 plugins), OptimisticOptimizations'NONE, (IntrinsicContext'new-4 (:method this), (:method this), HotSpot'defaultBytecodeProvider, CompilationContext'INLINE_AFTER_PARSING))
                 #_"Graph" graph (Graph'new-1 (:method this))
                 graph (Phase'''run-3 instance, graph, nil)
@@ -74963,26 +74735,6 @@ ZeroExtendNode'new-4
             )
         )
     )
-
-    (defm SnippetStub SnippetStub
-        (#_"Object[]" SnippetStub'''makeConstArgs-1 [#_"SnippetStub" this]
-            (let [
-                #_"int" n (#_"Signature" .getParameterCount (#_"ResolvedJavaMethod" .getSignature (:method this)), false)
-                #_"Object[]" args (make-array Object n)
-            ]
-                (dotimes [#_"int" i n]
-                    (when (some? (#_"ResolvedJavaMethod" .getParameterAnnotation (:method this), ConstantParameter, i))
-                        (aset args i (SnippetStub''getConstantParameterValue-3 this, i, nil))
-                    )
-                )
-                args
-            )
-        )
-    )
-
-    (defn #_"Object" SnippetStub''getConstantParameterValue-3 [#_"SnippetStub" this, #_"int" index, #_"String" name]
-        (throw! (str (#_"Class" .getName (#_"Object" .getClass this)) " must override getConstantParameterValue() to provide a value for parameter " index (if (some? name) (str " (" name ")") "")))
-    )
 )
 
 ;;;
@@ -74997,7 +74749,7 @@ ZeroExtendNode'new-4
     )
 
     (defm NewArrayStub SnippetStub
-        (#_"Object[]" SnippetStub'''makeConstArgs-1 [#_"NewArrayStub" this]
+        (#_"Object*" SnippetStub'''makeConstArgs-1 [#_"NewArrayStub" this]
             (let [
                 #_"HotSpotResolvedObjectType" intArrayType (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, int'array)
                 #_"int" count (#_"Signature" .getParameterCount (#_"ResolvedJavaMethod" .getSignature (:method this)), false)
@@ -75015,29 +74767,13 @@ ZeroExtendNode'new-4
      ;
      ; @param hub the hub of the object to be allocated
      ; @param length the length of the array
-     ; @param fillContents Should the array be filled with zeroes?
-     ; @param intArrayHub the hub for {@code int[].class}
+     ; @param fillContents Should the array be filled with zeroes?
+     ; @param intArrayHub the hub for {@code int[].class}
      ;;
-    (§ snippet! #_"Object" #_"NewArrayStub" "newArray" [#_"KlassPointer" hub, #_"int" length, #_"boolean" fillContents, #_@ConstantParameter #_"KlassPointer" intArrayHub, #_@ConstantParameter #_"Register" threadRegister]
+    (§ snippet! #_"Object" #_"NewArrayStub" "newArray" [#_"KlassPointer" hub, #_"int" length, #_"boolean" fillContents, #_@ConstantParameter #_"KlassPointer" intArrayHub, #_@ConstantParameter #_"Register" threadRegister]
         (let [
-            #_"int" layoutHelper (KlassLayoutHelperNode'readLayoutHelper-1 hub)
-            #_"int" log2ElementSize (& (>> layoutHelper HotSpot'layoutHelperLog2ElementSizeShift) HotSpot'layoutHelperLog2ElementSizeMask)
-            #_"int" headerSize (& (>> layoutHelper HotSpot'layoutHelperHeaderSizeShift) HotSpot'layoutHelperHeaderSizeMask)
-            #_"int" elementKind (& (>> layoutHelper HotSpot'layoutHelperElementTypeShift) HotSpot'layoutHelperElementTypeMask)
-            #_"int" sizeInBytes (ReplacementsUtil'arrayAllocationSize-3 length, headerSize, log2ElementSize)
-            ;; check that array length is small enough for fast path.
             #_"Word" thread (ReplacementsUtil'registerAsWord-1 threadRegister)
         ]
-            (when (and (VMConfigNode'inlineContiguousAllocationSupported-0) (<= 0 length) (<= length NewObjectSnippets'MAX_ARRAY_FAST_PATH_ALLOCATION_LENGTH))
-                (let [
-                    #_"Word" memory (NewInstanceStub'refillAllocate-3 thread, intArrayHub, sizeInBytes)
-                ]
-                    (when (Word''notEqual-2i memory, 0)
-                        (§ return (NewObjectSnippets'formatArray-8 hub, sizeInBytes, length, headerSize, memory, (WordFactory'unsigned-1l HotSpot'arrayPrototypeMarkWord), fillContents, false))
-                    )
-                )
-            )
-
             (StubForeignCallNode'newArrayC-4 ForeignCallDescriptor'NEW_ARRAY_C, thread, hub, length)
             (when (some? (ReplacementsUtil'clearPendingException-1 thread))
                 (ReplacementsUtil'getAndClearObjectResult-1 thread)
@@ -75060,7 +74796,7 @@ ZeroExtendNode'new-4
     )
 
     (defm NewInstanceStub SnippetStub
-        (#_"Object[]" SnippetStub'''makeConstArgs-1 [#_"NewInstanceStub" this]
+        (#_"Object*" SnippetStub'''makeConstArgs-1 [#_"NewInstanceStub" this]
             (let [
                 #_"HotSpotResolvedObjectType" intArrayType (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, int'array)
                 #_"int" count (#_"Signature" .getParameterCount (#_"ResolvedJavaMethod" .getSignature (:method this)), false)
@@ -75073,174 +74809,23 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"Word" NewInstanceStub'allocate-2 [#_"Word" thread, #_"int" size]
-        (let [
-            #_"Word" top (ReplacementsUtil'readTlabTop-1 thread)
-            #_"Word" end (ReplacementsUtil'readTlabEnd-1 thread)
-            #_"Word" newTop (Word''add-2i top, size)
-        ]
-            ;; this check might lead to problems if the TLAB is within 16GB of the address space end (checked in C++ code)
-            (when (BranchProbabilityNode'probability-2 BranchProbabilityNode'FAST_PATH_PROBABILITY, (Word''belowOrEqual-2w newTop, end)) => (WordFactory'zero-0)
-                (ReplacementsUtil'writeTlabTop-2 thread, newTop)
-                top
-            )
-        )
-    )
-
     ;;;
      ; Re-attempts allocation after an initial TLAB allocation failed or was skipped (e.g. due to -XX:-UseTLAB).
      ;
      ; @param hub the hub of the object to be allocated
-     ; @param intArrayHub the hub for {@code int[].class}
+     ; @param intArrayHub the hub for {@code int[].class}
      ;;
-    (§ snippet! #_"Object" #_"NewInstanceStub" "newInstance" [#_"KlassPointer" hub, #_@ConstantParameter #_"KlassPointer" intArrayHub, #_@ConstantParameter #_"Register" threadRegister]
-        ;; The type is known to be an instance so Klass::_layout_helper is the instance size as a raw number.
+    (§ snippet! #_"Object" #_"NewInstanceStub" "newInstance" [#_"KlassPointer" hub, #_@ConstantParameter #_"KlassPointer" intArrayHub, #_@ConstantParameter #_"Register" threadRegister]
+        ;; The type is known to be an instance, so Klass::_layout_helper is the instance size as a raw number.
         (let [
             #_"Word" thread (ReplacementsUtil'registerAsWord-1 threadRegister)
         ]
-            (when (and (VMConfigNode'inlineContiguousAllocationSupported-0) (ReplacementsUtil'isInstanceKlassFullyInitialized-1 hub))
-                (let [
-                    #_"int" size (KlassLayoutHelperNode'readLayoutHelper-1 hub)
-                    #_"Word" memory (NewInstanceStub'refillAllocate-3 thread, intArrayHub, size)
-                ]
-                    (when (Word''notEqual-2i memory, 0)
-                        (NewObjectSnippets'formatObjectForStub-4 hub, size, memory, (Word''readWord-3i hub, HotSpot'prototypeMarkWordOffset, ReplacementsUtil'PROTOTYPE_MARK_WORD_LOCATION))
-                        (§ return (Word''toObject-1 memory))
-                    )
-                )
-            )
-
             (StubForeignCallNode'newInstanceC-3 ForeignCallDescriptor'NEW_INSTANCE_C, thread, hub)
             (when (some? (ReplacementsUtil'clearPendingException-1 thread))
                 (ReplacementsUtil'getAndClearObjectResult-1 thread)
                 (DeoptimizeCallerNode'deopt-2 DeoptimizationAction/None, DeoptimizationReason/RuntimeConstraint)
             )
             (ReplacementsUtil'getAndClearObjectResult-1 thread)
-        )
-    )
-
-    ;;;
-     ; Attempts to refill the current thread's TLAB and retries the allocation.
-     ;
-     ; @param intArrayHub the hub for {@code int[].class}
-     ; @param sizeInBytes the size of the allocation
-     ;
-     ; @return the newly allocated, uninitialized chunk of memory, or WordFactory#zero() if the operation was unsuccessful
-     ;;
-    (defn #_"Word" NewInstanceStub'refillAllocate-3 [#_"Word" thread, #_"KlassPointer" intArrayHub, #_"int" sizeInBytes]
-        ;; If G1 is enabled, the "eden" allocation space is not the same always
-        ;; and therefore we have to go to slowpath to allocate a new TLAB.
-        (cond
-            HotSpot'useG1GC       (WordFactory'zero-0)
-            (not HotSpot'useTLAB) (NewInstanceStub'edenAllocate-1 (WordFactory'unsigned-1i sizeInBytes))
-            :else
-                (let [
-                    #_"Word" intArrayMarkWord (WordFactory'unsigned-1l HotSpot'tlabIntArrayMarkWord)
-                    #_"int" alignmentReserveInBytes (* HotSpot'tlabAlignmentReserve (.wordSize HotSpot'target))
-                    #_"Word" top (ReplacementsUtil'readTlabTop-1 thread)
-                    #_"Word" end (ReplacementsUtil'readTlabEnd-1 thread)
-                    ;; calculate amount of free space
-                    #_"long" tlabFreeSpaceInBytes (Word''rawValue-1 (Word''subtract-2w end, top))
-                    #_"long" tlabFreeSpaceInWords (>>> tlabFreeSpaceInBytes (CodeUtil/log2 (.wordSize HotSpot'target)))
-                    ;; retain TLAB and allocate object in shared space if the amount free in the TLAB is too large to discard
-                    #_"Word" refillWasteLimit (Word''readWord-3i thread, HotSpot'tlabRefillWasteLimitOffset, ReplacementsUtil'TLAB_REFILL_WASTE_LIMIT_LOCATION)
-                ]
-                    (if (<= tlabFreeSpaceInWords (Word''rawValue-1 refillWasteLimit))
-                        (do
-                            (when HotSpot'tlabStats
-                                ;; increment number of refills
-                                (Word''writeInt-4i thread, HotSpot'tlabNumberOfRefillsOffset, (inc (Word''readInt-3i thread, HotSpot'tlabNumberOfRefillsOffset, ReplacementsUtil'TLAB_NOF_REFILLS_LOCATION)), ReplacementsUtil'TLAB_NOF_REFILLS_LOCATION)
-                                ;; accumulate wastage
-                                (let [
-                                    #_"int" wastage (+ (Word''readInt-3i thread, HotSpot'tlabFastRefillWasteOffset, ReplacementsUtil'TLAB_FAST_REFILL_WASTE_LOCATION) (int tlabFreeSpaceInWords))
-                                ]
-                                    (Word''writeInt-4i thread, HotSpot'tlabFastRefillWasteOffset, wastage, ReplacementsUtil'TLAB_FAST_REFILL_WASTE_LOCATION)
-                                )
-                            )
-
-                            ;; if TLAB is currently allocated (top or end != nil), then fill (top ... end + alignment_reserve) with array object
-                            (when (Word''notEqual-2i top, 0)
-                                (let [
-                                    #_"int" headerSize Unsafe'ARRAY_INT_BASE_OFFSET
-                                    ;; just like the HotSpot assembler stubs, assumes that tlabFreeSpaceInInts fits in an int
-                                    #_"int" tlabFreeSpaceInInts (>>> (int tlabFreeSpaceInBytes) 2)
-                                    #_"int" length (+ (>>> (- alignmentReserveInBytes headerSize) 2) tlabFreeSpaceInInts)
-                                ]
-                                    (NewObjectSnippets'formatArray-8 intArrayHub, 0, length, headerSize, top, intArrayMarkWord, false, false)
-
-                                    (let [
-                                        #_"long" allocated (+ (Word''readLong-3i thread, HotSpot'threadAllocatedBytesOffset, ReplacementsUtil'TLAB_THREAD_ALLOCATED_BYTES_LOCATION) (Word''rawValue-1 (Word''subtract-2w top, (ReplacementsUtil'readTlabStart-1 thread))))
-                                    ]
-                                        (Word''writeLong-4i thread, HotSpot'threadAllocatedBytesOffset, allocated, ReplacementsUtil'TLAB_THREAD_ALLOCATED_BYTES_LOCATION)
-                                    )
-                                )
-                            )
-
-                            ;; refill the TLAB with an eden allocation
-                            (let [
-                                #_"Word" tlabRefillSizeInWords (Word''readWord-3i thread, HotSpot'threadTlabSizeOffset, ReplacementsUtil'TLAB_SIZE_LOCATION)
-                                #_"Word" tlabRefillSizeInBytes (Word''multiply-2i tlabRefillSizeInWords, (.wordSize HotSpot'target))
-                            ]
-                                ;; allocate new TLAB, address returned in top
-                                (§ ass top (NewInstanceStub'edenAllocate-1 tlabRefillSizeInBytes))
-                                (if (Word''notEqual-2i top, 0)
-                                    (do
-                                        (§ ass end (Word''add-2w top, (Word''subtract-2i tlabRefillSizeInBytes, alignmentReserveInBytes)))
-                                        (ReplacementsUtil'initializeTlab-3 thread, top, end)
-
-                                        (NewInstanceStub'allocate-2 thread, sizeInBytes)
-                                    )
-                                    (WordFactory'zero-0)
-                                )
-                            )
-                        )
-                        ;; retain TLAB
-                        (let [
-                            #_"Word" newRefillWasteLimit (Word''add-2i refillWasteLimit, HotSpot'tlabRefillWasteIncrement)
-                        ]
-                            (Word''writeWord-4i thread, HotSpot'tlabRefillWasteLimitOffset, newRefillWasteLimit, ReplacementsUtil'TLAB_REFILL_WASTE_LIMIT_LOCATION)
-
-                            (when HotSpot'tlabStats
-                                (Word''writeInt-4i thread, HotSpot'tlabSlowAllocationsOffset, (inc (Word''readInt-3i thread, HotSpot'tlabSlowAllocationsOffset, ReplacementsUtil'TLAB_SLOW_ALLOCATIONS_LOCATION)), ReplacementsUtil'TLAB_SLOW_ALLOCATIONS_LOCATION)
-                            )
-
-                            (NewInstanceStub'edenAllocate-1 (WordFactory'unsigned-1i sizeInBytes))
-                        )
-                    )
-                )
-        )
-    )
-
-    ;;;
-     ; Attempts to allocate a chunk of memory from Eden space.
-     ;
-     ; @param sizeInBytes the size of the chunk to allocate
-     ; @return the allocated chunk or WordFactory#zero() if allocation fails
-     ;;
-    (defn #_"Word" NewInstanceStub'edenAllocate-1 [#_"Word" sizeInBytes]
-        (let [
-            #_"Word" heapTopAddress (WordFactory'unsigned-1l (VMConfigNode'heapTopAddress-0))
-            #_"Word" heapEndAddress (WordFactory'unsigned-1l (VMConfigNode'heapEndAddress-0))
-        ]
-            (loop []
-                (let [
-                    #_"Word" heapTop (Word''readWord-3i heapTopAddress, 0, ReplacementsUtil'HEAP_TOP_LOCATION)
-                    #_"Word" newHeapTop (Word''add-2w heapTop, sizeInBytes)
-                ]
-                    (if (Word''belowOrEqual-2w newHeapTop, heapTop)
-                        (WordFactory'zero-0)
-                        (let [
-                            #_"Word" heapEnd (Word''readWord-3i heapEndAddress, 0, ReplacementsUtil'HEAP_END_LOCATION)
-                        ]
-                            (cond
-                                (Word''aboveThan-2w newHeapTop, heapEnd) (WordFactory'zero-0)
-                                (Word''logicCompareAndSwapWord-5 heapTopAddress, 0, heapTop, newHeapTop, ReplacementsUtil'HEAP_TOP_LOCATION) heapTop
-                                :else (recur)
-                            )
-                        )
-                    )
-                )
-            )
         )
     )
 )
@@ -76698,12 +76283,12 @@ ZeroExtendNode'new-4
         )
 
         (#_"ValueNode" VirtualizerTool'''getEntry-3 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject, #_"int" index]
-            (ObjectState''getEntry-2 (PartialEscapeBlockState''getObjectState-2n (:state this), virtualObject), index)
+            (ObjectState''getEntry-2 (nth (:objectStates (:state this)) (:oid virtualObject)), index)
         )
 
         (#_"boolean" VirtualizerTool'''setVirtualEntry-6 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtual, #_"int" index, #_"ValueNode" value, #_"JavaKind" theAccessKind, #_"long" offset]
             (let [
-                #_"ObjectState" obj (PartialEscapeBlockState''getObjectState-2n (:state this), virtual)
+                #_"ObjectState" obj (nth (:objectStates (:state this)) (:oid virtual))
                 #_"JavaKind" entryKind (VirtualObjectNode'''entryKind-2 virtual, index)
                 #_"JavaKind" accessKind (or theAccessKind entryKind)
                 #_"ValueNode" newValue (when (some? value) (PartialEscapeClosure''getAliasAndResolve-3 (:closure this), (:state this), value))
@@ -76719,19 +76304,19 @@ ZeroExtendNode'new-4
                     )
             ]
                 (when canVirtualize => false ;; should only occur if there are mismatches between the entry and access kind
-                    (PartialEscapeBlockState''setEntry-4 (:state this), (:objectId virtual), index, newValue)
+                    (PartialEscapeBlockState''setEntry-4 (:state this), (:oid virtual), index, newValue)
                     (when (= entryKind JavaKind/Int)
                         (cond
                             (#_"JavaKind" .needsTwoSlots accessKind)
                                 ;; storing double word value two int slots
-                                (PartialEscapeBlockState''setEntry-4 (:state this), (:objectId virtual), (inc index), (VirtualizerTool''getIllegalConstant-1 this))
+                                (PartialEscapeBlockState''setEntry-4 (:state this), (:oid virtual), (inc index), (VirtualizerTool''getIllegalConstant-1 this))
                             (= (ValueNode''getStackKind-1 oldValue) JavaKind/Long)
                                 ;; splitting double word constant by storing over it with an int
                                 (let [
                                     #_"ValueNode" secondHalf (UnpackEndianHalfNode'create-2 oldValue, false)
                                 ]
                                     (VirtualizerTool'''addNode-2 this, secondHalf)
-                                    (PartialEscapeBlockState''setEntry-4 (:state this), (:objectId virtual), (inc index), secondHalf)
+                                    (PartialEscapeBlockState''setEntry-4 (:state this), (:oid virtual), (inc index), secondHalf)
                                 )
                         )
                     )
@@ -76742,7 +76327,7 @@ ZeroExtendNode'new-4
                             #_"ValueNode" firstHalf (UnpackEndianHalfNode'create-2 previous, true)
                         ]
                             (VirtualizerTool'''addNode-2 this, firstHalf)
-                            (PartialEscapeBlockState''setEntry-4 (:state this), (:objectId virtual), (dec index), firstHalf)
+                            (PartialEscapeBlockState''setEntry-4 (:state this), (:oid virtual), (dec index), firstHalf)
                         )
                     )
                     true
@@ -76761,7 +76346,7 @@ ZeroExtendNode'new-4
     #_unused
     (defm VirtualizerTool VirtualizerTool
         (#_"boolean" VirtualizerTool'''getEnsureVirtualized-2 [#_"VirtualizerTool" this, #_"VirtualObjectNode" object]
-            (:ensureVirtualized (PartialEscapeBlockState''getObjectState-2n (:state this), object))
+            (:ensureVirtualized (nth (:objectStates (:state this)) (:oid object)))
         )
 
         (#_"void" VirtualizerTool'''replaceWithVirtual-2 [#_"VirtualizerTool" this, #_"VirtualObjectNode" object]
@@ -76812,7 +76397,7 @@ ZeroExtendNode'new-4
                 )
             )
             (let [
-                #_"int" id (:objectId virtualObject)
+                #_"int" id (:oid virtualObject)
                 id
                     (when (= id -1) => id
                         (let [
@@ -76847,16 +76432,16 @@ ZeroExtendNode'new-4
     #_unused
     (defm VirtualizerTool VirtualizerTool
         (#_"boolean" VirtualizerTool'''ensureMaterialized-2 [#_"VirtualizerTool" this, #_"VirtualObjectNode" object]
-            (PartialEscapeClosure''ensureMaterialized-5 (:closure this), (:state this), (:objectId object), (:position this), (:effects this))
+            (PartialEscapeClosure''ensureMaterialized-5 (:closure this), (:state this), (:oid object), (:position this), (:effects this))
         )
 
         (#_"void" VirtualizerTool'''addLock-3 [#_"VirtualizerTool" this, #_"VirtualObjectNode" object, #_"MonitorIdNode" monitorId]
-            (PartialEscapeBlockState''addLock-3 (:state this), (:objectId object), monitorId)
+            (PartialEscapeBlockState''addLock-3 (:state this), (:oid object), monitorId)
             nil
         )
 
         (#_"MonitorIdNode" VirtualizerTool'''removeLock-2 [#_"VirtualizerTool" this, #_"VirtualObjectNode" object]
-            (PartialEscapeBlockState''removeLock-2 (:state this), (:objectId object))
+            (PartialEscapeBlockState''removeLock-2 (:state this), (:oid object))
         )
     )
 
