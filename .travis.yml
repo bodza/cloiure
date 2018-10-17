@@ -1,2 +1,4 @@
 language: clojure
 os: osx
+before_install:
+  - brew install leiningen
