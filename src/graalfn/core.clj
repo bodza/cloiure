@@ -102,31 +102,28 @@
 
 (import
     [java.io DataInputStream IOException InputStream]
-    [java.lang.annotation Annotation Inherited]
-    [java.lang.invoke ConstantCallSite MethodHandle MethodHandles MethodType MutableCallSite VolatileCallSite]
+    [java.lang.annotation Annotation]
     [java.lang.ref #_Reference]
-    [java.lang.reflect AnnotatedElement Constructor Field Method Modifier Type]
+    [java.lang.reflect AnnotatedElement Constructor Field Method Modifier]
     [java.nio ByteBuffer ByteOrder]
     [java.util
         AbstractList ArrayDeque ArrayList Arrays BitSet Collection Collections Comparator ConcurrentModificationException
-        Deque EnumMap EnumSet HashMap Iterator LinkedList List ListIterator Map Map$Entry NoSuchElementException
-        PriorityQueue Queue Set SortedSet TreeSet
+        Deque EnumMap EnumSet HashMap Iterator LinkedList List ListIterator Map Map$Entry NoSuchElementException PriorityQueue
+        Queue Set SortedSet TreeSet
     ]
     [java.util.function BiConsumer BiFunction Consumer Function IntUnaryOperator Predicate ToDoubleFunction]
     [java.util.stream Stream Stream$Builder]
 
     [jdk.vm.ci.amd64 AMD64 AMD64$CPUFeature AMD64Kind]
     [jdk.vm.ci.code
-        Architecture BytecodeFrame BytecodePosition CallingConvention CodeCacheProvider CodeUtil CompiledCode
-        InstalledCode MemoryBarriers Register RegisterArray RegisterAttributes RegisterConfig RegisterValue
-        StackSlot TargetDescription ValueKindFactory
+        Architecture BytecodeFrame CallingConvention CodeCacheProvider CodeUtil InstalledCode MemoryBarriers Register
+        RegisterArray RegisterAttributes RegisterConfig RegisterValue StackSlot TargetDescription ValueKindFactory
     ]
     [jdk.vm.ci.code.site ConstantReference DataPatch DataSectionReference Mark #_Reference Site]
     [jdk.vm.ci.hotspot
-        HotSpotCallingConventionType HotSpotCodeCacheProvider HotSpotCompiledCode HotSpotCompressedNullConstant
-        HotSpotConstant HotSpotConstantReflectionProvider HotSpotInstalledCode HotSpotJVMCIRuntime
-        HotSpotMemoryAccessProvider HotSpotMetaAccessProvider HotSpotMetaspaceConstant HotSpotObjectConstant
-        HotSpotResolvedJavaField HotSpotResolvedJavaMethod HotSpotResolvedJavaType HotSpotResolvedObjectType
+        HotSpotCallingConventionType HotSpotCompiledCode HotSpotCompressedNullConstant HotSpotConstant
+        HotSpotConstantReflectionProvider HotSpotJVMCIRuntime HotSpotMemoryAccessProvider HotSpotMetaspaceConstant
+        HotSpotObjectConstant HotSpotResolvedJavaField HotSpotResolvedJavaMethod HotSpotResolvedObjectType
         HotSpotVMConfigAccess
     ]
     [jdk.vm.ci.meta
@@ -135,7 +132,7 @@
         MethodHandleAccessProvider MethodHandleAccessProvider$IntrinsicMethod PlatformKind PrimitiveConstant RawConstant
         ResolvedJavaField ResolvedJavaMethod ResolvedJavaType Signature TriState VMConstant Value ValueKind
     ]
-    [jdk.vm.ci.runtime JVMCIBackend JVMCICompiler]
+    [jdk.vm.ci.runtime JVMCIBackend]
 
     [org.graalvm.collections EconomicMap EconomicSet Equivalence MapCursor Pair UnmodifiableEconomicMap UnmodifiableMapCursor]
     [org.graalvm.word LocationIdentity]
@@ -195,24 +192,19 @@ ComputeObjectAddressNode'get-2
 CurrentLockNode'currentLock-1
 DeoptimizeCallerNode'deopt-2
 DeoptimizeNode'deopt-2
-DynamicNewArrayNode'newArray-3
-DynamicNewArrayNode'newArray-4
 EndLockScopeNode'endLockScope-0
 ExplodeLoopNode'explodeLoop-0
 FastAcquireBiasedLockNode'mark-1
 FixedValueAnchorNode'getObject-1
-ForeignCallNode'dynamicNewInstanceStubCall-2
 ForeignCallNode'g1PostBarrierStub-2
 ForeignCallNode'g1PreBarrierStub-2
 ForeignCallNode'monitorenterStubC-3
 ForeignCallNode'monitorexitStubC-3
 ForeignCallNode'newArray-4
 ForeignCallNode'newInstance-2
-KlassLayoutHelperNode'readLayoutHelper-1
 LoadHubNode'loadHubIntrinsic-1
 MembarNode'memoryBarrier-1
 MembarNode'memoryBarrier-2
-NewArrayNode'newArray-3
 NullCheckNode'nullCheck-1
 OffsetAddressNode'address-2
 PiNode'piCastNonNull-2
@@ -411,8 +403,7 @@ AbstractMergeNode''removeEnd-2
 AbstractMergeNode''valuePhis-1
 AbstractMergeNode'new-0
 AbstractMoveOp'new-1
-AbstractNewArrayNode'new-4
-AbstractNewObjectNode'new-3
+AbstractNewObjectNode'new-2
 AbstractObjectStamp''isExactType-1
 AbstractObjectStamp'isConcreteType-1
 AbstractObjectStamp'new-4
@@ -1081,7 +1072,6 @@ CallsiteHolderExplorable'new-5
 CanonicalCondition'BT
 CanonicalCondition'EQ
 CanonicalCondition'LT
-CanonicalizableLocation'findReadHub-1
 CanonicalizableLocation'foldIndirection-3
 CanonicalizableLocation'new-1
 CanonicalizerInstance''tryCanonicalize-3
@@ -1396,7 +1386,6 @@ DeoptimizeNode'new-2
 DeoptimizeNode'new-3
 DeoptimizeNode'new-5
 DeoptimizingFixedWithNextNode'new-1
-DeoptimizingFixedWithNextNode'new-2
 DerivedConvertedInductionVariable'new-4
 DerivedInductionVariable''getBase-1
 DerivedInductionVariable'new-2
@@ -1422,22 +1411,6 @@ DominatorOptimizationProblem''setDominatorPath-3
 DominatorOptimizationProblem'new-2
 DummyGuardHandle'new-1
 DynamicDeoptimizeNode'new-2
-DynamicNewArrayNode''createNewArrayNode-2
-DynamicNewArrayNode''setVoidClass-2
-DynamicNewArrayNode'new-3
-DynamicNewArrayNode'new-4
-DynamicNewArrayNode'new-5
-DynamicNewArrayNode'newArray-2
-DynamicNewArrayNode'newArray-3
-DynamicNewArrayNode'newUninitializedArray-3
-DynamicNewArrayNode'throwsIllegalArgumentException-1
-DynamicNewArrayNode'throwsIllegalArgumentException-2
-DynamicNewInstanceNode''createNewInstanceNode-2
-DynamicNewInstanceNode''setClassClass-2
-DynamicNewInstanceNode'new-2
-DynamicNewInstanceNode'new-3
-DynamicNewInstanceNode'throwsInstantiationException-1
-DynamicNewInstanceNode'throwsInstantiationException-2
 EMOptimizer''optimizeMovesAtBlockBegin-2
 EMOptimizer''optimizeMovesAtBlockEnd-2
 EMOptimizer'new-1
@@ -1564,7 +1537,6 @@ FloatingReadPhase'new-0
 FloatingReadPhase'new-2
 ForeignCallDescriptor'DEOPTIMIZATION_HANDLER
 ForeignCallDescriptor'DYNAMIC_NEW_ARRAY
-ForeignCallDescriptor'DYNAMIC_NEW_INSTANCE
 ForeignCallDescriptor'G1WBPOSTCALL
 ForeignCallDescriptor'G1WBPRECALL
 ForeignCallDescriptor'MONITORENTER
@@ -1874,7 +1846,6 @@ HotSpot'allocatePrefetchStyle
 HotSpot'arrayBaseOffset-1
 HotSpot'arrayClassElementOffset
 HotSpot'arrayIndexScale-1
-HotSpot'arrayKlassOffset
 HotSpot'arrayLengthOffset
 HotSpot'arrayOopDescSize
 HotSpot'biasedLockMaskInPlace
@@ -1893,7 +1864,6 @@ HotSpot'defaultBytecodeProvider
 HotSpot'deoptHandlerEntryMark
 HotSpot'dirtyCardValue
 HotSpot'dynamicNewArrayAddress
-HotSpot'dynamicNewInstanceAddress
 HotSpot'epochMaskInPlace
 HotSpot'foldStableValues
 HotSpot'foreignCalls
@@ -1908,8 +1878,6 @@ HotSpot'handleDeoptStub
 HotSpot'heapBaseRegister
 HotSpot'heapWordSize
 HotSpot'hubOffset
-HotSpot'instanceKlassInitStateOffset
-HotSpot'instanceKlassStateFullyInitialized
 HotSpot'invokeinterfaceMark
 HotSpot'invokespecialMark
 HotSpot'invokestaticMark
@@ -1918,13 +1886,7 @@ HotSpot'javaThreadAnchorOffset
 HotSpot'javaThreadDirtyCardQueueOffset
 HotSpot'javaThreadSatbMarkQueueOffset
 HotSpot'klassEncoding
-HotSpot'klassLayoutHelperNeutralValue
-HotSpot'klassLayoutHelperOffset
 HotSpot'klassOffset
-HotSpot'layoutHelperHeaderSizeMask
-HotSpot'layoutHelperHeaderSizeShift
-HotSpot'layoutHelperLog2ElementSizeMask
-HotSpot'layoutHelperLog2ElementSizeShift
 HotSpot'lockDisplacedMarkOffset
 HotSpot'logOfHeapRegionGrainBytes
 HotSpot'logOfHeapRegionGrainBytesMark
@@ -2251,9 +2213,6 @@ JumpOp''setPhiValues-2
 JumpOp'new-1
 JumpOp'outgoingFlags
 KeyData'new-3
-KlassLayoutHelperNode'create-1
-KlassLayoutHelperNode'intrinsify-3
-KlassLayoutHelperNode'new-1
 KlassPointerStamp''compressed-2
 KlassPointerStamp''isCompressed-1
 KlassPointerStamp''uncompressed-1
@@ -2944,18 +2903,12 @@ NegateNode'new-1
 NewArrayNode''createVirtualArrayNode-2
 NewArrayNode''defaultElementValue-1
 NewArrayNode'new-3
-NewArrayNode'new-4
 NewArrayStub'new-1
 NewInstanceNode''createVirtualInstanceNode-2
 NewInstanceNode''defaultFieldValue-2
 NewInstanceNode'new-2
-NewInstanceNode'new-3
 NewInstanceStub'new-1
-NewObjectSnippets'formatArray-8
-NewObjectSnippets'formatObject-6
 NewObjectTemplates''lower-3a
-NewObjectTemplates''lower-3da
-NewObjectTemplates''lower-3di
 NewObjectTemplates''lower-3i
 NewObjectTemplates'new-0
 NoOp''replace-3
@@ -3393,17 +3346,13 @@ RemNode'new-2
 RemoveValueProxyPhase'new-0
 Replacements'createSnippet-2
 Replacements'new-0
-ReplacementsUtil'ARRAY_KLASS_COMPONENT_MIRROR
-ReplacementsUtil'CLASS_ARRAY_KLASS_LOCATION
 ReplacementsUtil'CLASS_KLASS_LOCATION
 ReplacementsUtil'CLASS_MIRROR_HANDLE_LOCATION
 ReplacementsUtil'CLASS_MIRROR_LOCATION
-ReplacementsUtil'CLASS_STATE_LOCATION
 ReplacementsUtil'COMPRESSED_HUB_LOCATION
 ReplacementsUtil'DISPLACED_MARK_WORD_LOCATION
 ReplacementsUtil'HUB_LOCATION
 ReplacementsUtil'HUB_WRITE_LOCATION
-ReplacementsUtil'KLASS_LAYOUT_HELPER_LOCATION
 ReplacementsUtil'KLASS_SUPER_CHECK_OFFSET_LOCATION
 ReplacementsUtil'MARK_WORD_LOCATION
 ReplacementsUtil'METASPACE_ARRAY_LENGTH_LOCATION
@@ -3428,9 +3377,7 @@ ReplacementsUtil'clearPendingException-1
 ReplacementsUtil'getAndClearObjectResult-1
 ReplacementsUtil'initializeObjectHeader-3
 ReplacementsUtil'instanceHeaderSize-0
-ReplacementsUtil'isInstanceKlassFullyInitialized-1
 ReplacementsUtil'loadHub-1
-ReplacementsUtil'loadKlassFromObject-3
 ReplacementsUtil'loadWordFromObject-2
 ReplacementsUtil'loadWordFromObject-3
 ReplacementsUtil'readPendingDeoptimization-1
@@ -4171,7 +4118,6 @@ ZeroExtendNode'new-4
 )
 
 (defp AbstractMoveOp)
-(defp AbstractNewArrayNode)
 (defp AbstractNewObjectNode)
 
 ;;;
@@ -4821,8 +4767,6 @@ ZeroExtendNode'new-4
 )
 
 (defp DynamicDeoptimizeNode)
-(defp DynamicNewArrayNode)
-(defp DynamicNewInstanceNode)
 (defp EMOptimizer)
 (defp EarlyReadEliminationPhase)
 (defp EdgeInfo)
@@ -5025,7 +4969,7 @@ ZeroExtendNode'new-4
 (defp Graph)
 
 ;;;
- ; A simple utility class for adding nodes to the graph when building a MethodHandle invoke.
+ ; A simple utility class for adding nodes to the graph when building a MethodHandle invoke.
  ;;
 (defp GraphAdder
     ;;;
@@ -5417,7 +5361,6 @@ ZeroExtendNode'new-4
 (defp JsrScope)
 (defp JumpOp)
 (defp KeyData)
-(defp KlassLayoutHelperNode)
 (defp KlassPointerStamp)
 (defp LIR)
 (defp LIRBuilder)
@@ -7045,16 +6988,6 @@ ZeroExtendNode'new-4
     (def #_"int" HotSpot'secondarySuperCacheOffset (.getFieldOffset HotSpot'config, "Klass::_secondary_super_cache", Integer, "Klass*"))
     (def #_"int" HotSpot'secondarySupersOffset     (.getFieldOffset HotSpot'config, "Klass::_secondary_supers",      Integer, "Array<Klass*>*"))
     (def #_"int" HotSpot'classMirrorOffset         (.getFieldOffset HotSpot'config, "Klass::_java_mirror",           Integer, "OopHandle"))
-    (def #_"int" HotSpot'klassLayoutHelperOffset   (.getFieldOffset HotSpot'config, "Klass::_layout_helper",         Integer, "jint"))
-
-    (def #_"int" HotSpot'klassLayoutHelperNeutralValue    (.getConstant HotSpot'config, "Klass::_lh_neutral_value",           Integer))
-    (def #_"int" HotSpot'layoutHelperLog2ElementSizeShift (.getConstant HotSpot'config, "Klass::_lh_log2_element_size_shift", Integer))
-    (def #_"int" HotSpot'layoutHelperLog2ElementSizeMask  (.getConstant HotSpot'config, "Klass::_lh_log2_element_size_mask",  Integer))
-    (def #_"int" HotSpot'layoutHelperHeaderSizeShift      (.getConstant HotSpot'config, "Klass::_lh_header_size_shift",       Integer))
-    (def #_"int" HotSpot'layoutHelperHeaderSizeMask       (.getConstant HotSpot'config, "Klass::_lh_header_size_mask",        Integer))
-
-    (def #_"int" HotSpot'instanceKlassInitStateOffset       (.getFieldOffset HotSpot'config, "InstanceKlass::_init_state", Integer, "u1"))
-    (def #_"int" HotSpot'instanceKlassStateFullyInitialized (.getConstant HotSpot'config, "InstanceKlass::fully_initialized", Integer))
 
     ;;;
      ; The offset of the array length word in an array object's header.
@@ -7136,7 +7069,6 @@ ZeroExtendNode'new-4
     (def #_"int" HotSpot'g1SATBQueueBufferOffset  (+ HotSpot'javaThreadSatbMarkQueueOffset  (.getConstant HotSpot'config, "satbMarkQueueBufferOffset",  Integer)))
 
     (def #_"int" HotSpot'klassOffset      (.getFieldValue HotSpot'config, "java_lang_Class::_klass_offset",       Integer, "int"))
-    (def #_"int" HotSpot'arrayKlassOffset (.getFieldValue HotSpot'config, "java_lang_Class::_array_klass_offset", Integer, "int"))
 
     (def #_"int" HotSpot'lockDisplacedMarkOffset (.getFieldOffset HotSpot'config, "BasicLock::_displaced_header", Integer, "markOop"))
 
@@ -7154,7 +7086,6 @@ ZeroExtendNode'new-4
     (def #_"long" HotSpot'newInstanceAddress        (.getAddress HotSpot'config, "JVMCIRuntime::new_instance"))
     (def #_"long" HotSpot'newArrayAddress           (.getAddress HotSpot'config, "JVMCIRuntime::new_array"))
     (def #_"long" HotSpot'dynamicNewArrayAddress    (.getAddress HotSpot'config, "JVMCIRuntime::dynamic_new_array"))
-    (def #_"long" HotSpot'dynamicNewInstanceAddress (.getAddress HotSpot'config, "JVMCIRuntime::dynamic_new_instance"))
     (def #_"long" HotSpot'monitorenterAddress       (.getAddress HotSpot'config, "JVMCIRuntime::monitorenter"))
     (def #_"long" HotSpot'monitorexitAddress        (.getAddress HotSpot'config, "JVMCIRuntime::monitorexit"))
     (def #_"long" HotSpot'writeBarrierPreAddress    (.getAddress HotSpot'config, "JVMCIRuntime::write_barrier_pre"))
@@ -8531,29 +8462,8 @@ ZeroExtendNode'new-4
 
     (§ def #_"LocationIdentity" ReplacementsUtil'PROTOTYPE_MARK_WORD_LOCATION (NamedLocationIdentity'mutable-1 "PrototypeMarkWord"))
 
-    (§ def #_"LocationIdentity" ReplacementsUtil'KLASS_LAYOUT_HELPER_LOCATION
-        (§ proxy #_"CanonicalizableLocation" (CanonicalizableLocation'new-1 "Klass::_layout_helper")
-            (#_"ValueNode" CanonicalizableLocation'''canonicalizeRead-5 [#_"CanonicalizableLocation" this, #_"ValueNode" read, #_"AddressNode" location, #_"ValueNode" object, #_"CanonicalizerTool" tool]
-                (let [
-                    #_"ValueNode" javaObject (CanonicalizableLocation'findReadHub-1 object)
-                ]
-                    (when (and (some? javaObject) (satisfies? ObjectStamp (:stamp javaObject))) => read
-                        (let [
-                            #_"HotSpotResolvedObjectType" type (Stamp'''javaType-1 (:stamp javaObject))
-                        ]
-                            (when (and (#_"HotSpotResolvedObjectType" .isArray type) (not (#_"ResolvedJavaType" .isPrimitive (#_"HotSpotResolvedObjectType" .getComponentType type)))) => read
-                                (ConstantNode'forInt-1 (#_"HotSpotResolvedObjectType" .layoutHelper type))
-                            )
-                        )
-                    )
-                )
-            )
-        )
-    )
-
-    (§ def #_"LocationIdentity" ReplacementsUtil'ARRAY_KLASS_COMPONENT_MIRROR (NamedLocationIdentity'immutable-1 "ArrayKlass::_component_mirror"))
-    (§ def #_"LocationIdentity" ReplacementsUtil'MARK_WORD_LOCATION           (NamedLocationIdentity'mutable-1   "MarkWord"))
-    (§ def #_"LocationIdentity" ReplacementsUtil'HUB_WRITE_LOCATION           (NamedLocationIdentity'mutable-1   "Hub:write"))
+    (§ def #_"LocationIdentity" ReplacementsUtil'MARK_WORD_LOCATION (NamedLocationIdentity'mutable-1 "MarkWord"))
+    (§ def #_"LocationIdentity" ReplacementsUtil'HUB_WRITE_LOCATION (NamedLocationIdentity'mutable-1 "Hub:write"))
 
     (§ def #_"LocationIdentity" ReplacementsUtil'HUB_LOCATION
         (§ proxy #_"CanonicalizableLocation" (CanonicalizableLocation'new-1 "Hub")
@@ -8644,10 +8554,6 @@ ZeroExtendNode'new-4
         (RawLoadNode'loadWordFromObjectIntrinsic-4 object, offset, identity, (.wordJavaKind HotSpot'target))
     )
 
-    (defn #_"KlassPointer" ReplacementsUtil'loadKlassFromObject-3 [#_"Object" object, #_"int" offset, #_"LocationIdentity" identity]
-        (RawLoadNode'loadKlassFromObjectIntrinsic-4 object, offset, identity, (.wordJavaKind HotSpot'target))
-    )
-
     ;;;
      ; Reads the value of a given register.
      ;
@@ -8658,32 +8564,10 @@ ZeroExtendNode'new-4
         (ReadRegisterNode'registerAsWord-3 register, true, false)
     )
 
-    (§ def #_"LocationIdentity" ReplacementsUtil'CLASS_STATE_LOCATION (NamedLocationIdentity'mutable-1 "ClassState"))
-
-    (defn- #_"byte" ReplacementsUtil'readInstanceKlassState-1 [#_"KlassPointer" hub]
-        (Word''readByte-3i hub, HotSpot'instanceKlassInitStateOffset, ReplacementsUtil'CLASS_STATE_LOCATION)
-    )
-
-    ;;;
-     ; @param hub the hub of an InstanceKlass
-     ; @return true is the InstanceKlass represented by hub is fully initialized
-     ;;
-    (defn #_"boolean" ReplacementsUtil'isInstanceKlassFullyInitialized-1 [#_"KlassPointer" hub]
-        (= (ReplacementsUtil'readInstanceKlassState-1 hub) HotSpot'instanceKlassStateFullyInitialized)
-    )
-
     (§ def #_"LocationIdentity" ReplacementsUtil'CLASS_KLASS_LOCATION
         (§ proxy #_"CanonicalizableLocation" (CanonicalizableLocation'new-1 "Class._klass")
             (#_"ValueNode" CanonicalizableLocation'''canonicalizeRead-5 [#_"CanonicalizableLocation" this, #_"ValueNode" read, #_"AddressNode" location, #_"ValueNode" object, #_"CanonicalizerTool" tool]
                 (CanonicalizableLocation'foldIndirection-3 read, object, ReplacementsUtil'CLASS_MIRROR_LOCATION)
-            )
-        )
-    )
-
-    (§ def #_"LocationIdentity" ReplacementsUtil'CLASS_ARRAY_KLASS_LOCATION
-        (§ proxy #_"CanonicalizableLocation" (CanonicalizableLocation'new-1 "Class._array_klass")
-            (#_"ValueNode" CanonicalizableLocation'''canonicalizeRead-5 [#_"CanonicalizableLocation" this, #_"ValueNode" read, #_"AddressNode" location, #_"ValueNode" object, #_"CanonicalizerTool" tool]
-                (CanonicalizableLocation'foldIndirection-3 read, object, ReplacementsUtil'ARRAY_KLASS_COMPONENT_MIRROR)
             )
         )
     )
@@ -9220,147 +9104,6 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"Object" NewObjectSnippets'allocateInstanceHelper-6 [#_"int" size, #_"KlassPointer" hub, #_"Word" prototypeMarkWord, #_"boolean" fillContents, #_"Register" threadRegister, #_"boolean" constantSize]
-        (let [
-            #_"Word" thread (ReplacementsUtil'registerAsWord-1 threadRegister)
-            #_"Word" top (ReplacementsUtil'readTlabTop-1 thread)
-            #_"Word" end (ReplacementsUtil'readTlabEnd-1 thread)
-            #_"Word" newTop (Word''add-2i top, size)
-        ]
-            (if (and HotSpot'useTLAB (BranchProbabilityNode'probability-2 BranchProbabilityNode'FAST_PATH_PROBABILITY, (Word''belowOrEqual-2w newTop, end)))
-                (do
-                    (ReplacementsUtil'writeTlabTop-2 thread, newTop)
-                    (NewObjectSnippets'emitPrefetchAllocate-2 newTop, false)
-                    (NewObjectSnippets'formatObject-6 hub, size, top, prototypeMarkWord, fillContents, constantSize)
-                )
-                (ForeignCallNode'newInstance-2 ForeignCallDescriptor'NEW_INSTANCE, hub)
-            )
-        )
-    )
-
-    (§ snippet! #_"Object" #_"NewObjectSnippets" "allocateInstance" [#_@ConstantParameter #_"int" size, #_"KlassPointer" hub, #_"Word" prototypeMarkWord, #_@ConstantParameter #_"boolean" fillContents, #_@ConstantParameter #_"Register" threadRegister, #_@ConstantParameter #_"boolean" constantSize]
-        (Placeholder'piCastToSnippetReplaceeStamp-1 (NewObjectSnippets'allocateInstanceHelper-6 size, hub, prototypeMarkWord, fillContents, threadRegister, constantSize))
-    )
-
-    (defn- #_"Object" NewObjectSnippets'allocateInstanceDynamicHelper-4 [#_"Class" type, #_"boolean" fillContents, #_"Register" threadRegister, #_"Class" nonNullType]
-        (let [
-            #_"KlassPointer" hub (ClassGetHubNode'readClass-1 nonNullType)
-        ]
-            (when (BranchProbabilityNode'probability-2 BranchProbabilityNode'FAST_PATH_PROBABILITY, (not (Word''klassPointerIsNull-1 hub)))
-                (let [
-                    #_"KlassPointer" nonNullHub (PiNode'piCastNonNull-2 hub, (SnippetAnchorNode'anchor-0))
-                ]
-                    (when (BranchProbabilityNode'probability-2 BranchProbabilityNode'FAST_PATH_PROBABILITY, (ReplacementsUtil'isInstanceKlassFullyInitialized-1 nonNullHub))
-                        (let [
-                            #_"int" layoutHelper (KlassLayoutHelperNode'readLayoutHelper-1 nonNullHub)
-                        ]
-                            ;; src/share/vm/oops/klass.hpp: For instances, layout helper is a positive number, the instance size.
-                            ;; This size is already passed through align_object_size and scaled to bytes. The low order bit is set
-                            ;; if instances of this class cannot be allocated using the fastpath.
-                            (when (BranchProbabilityNode'probability-2 BranchProbabilityNode'FAST_PATH_PROBABILITY, (zero? (& layoutHelper 1)))
-                                (let [
-                                    #_"Word" prototypeMarkWord (Word''readWord-3i nonNullHub, HotSpot'prototypeMarkWordOffset, ReplacementsUtil'PROTOTYPE_MARK_WORD_LOCATION)
-                                ]
-                                    (§ return (NewObjectSnippets'allocateInstanceHelper-6 layoutHelper, nonNullHub, prototypeMarkWord, fillContents, threadRegister, false))
-                                )
-                            )
-                        )
-                    )
-                )
-            )
-            (ForeignCallNode'dynamicNewInstanceStubCall-2 ForeignCallDescriptor'DYNAMIC_NEW_INSTANCE, type)
-        )
-    )
-
-    (§ snippet! #_"Object" #_"NewObjectSnippets" "allocateInstanceDynamic" [#_"Class" type, #_"Class" classClass, #_@ConstantParameter #_"boolean" fillContents, #_@ConstantParameter #_"Register" threadRegister]
-        (when (BranchProbabilityNode'probability-2 BranchProbabilityNode'SLOW_PATH_PROBABILITY, (nil? type))
-            (DeoptimizeNode'deopt-2 DeoptimizationAction/None, DeoptimizationReason/RuntimeConstraint)
-        )
-        (let [
-            #_"Class" nonNullType (PiNode'piCastNonNull-2 type, (SnippetAnchorNode'anchor-0))
-        ]
-            (when (BranchProbabilityNode'probability-2 BranchProbabilityNode'SLOW_PATH_PROBABILITY, (DynamicNewInstanceNode'throwsInstantiationException-2 type, classClass))
-                (DeoptimizeNode'deopt-2 DeoptimizationAction/None, DeoptimizationReason/RuntimeConstraint)
-            )
-
-            (Placeholder'piCastToSnippetReplaceeStamp-1 (NewObjectSnippets'allocateInstanceDynamicHelper-4 type, fillContents, threadRegister, nonNullType))
-        )
-    )
-
-    ;;;
-     ; Maximum array length for which fast path allocation is used.
-     ;;
-    (def- #_"int" NewObjectSnippets'MAX_ARRAY_FAST_PATH_ALLOCATION_LENGTH 0x00ffffff)
-
-    (defn- #_"Object" NewObjectSnippets'allocateArrayImpl-9 [#_"KlassPointer" hub, #_"int" length, #_"Word" prototypeMarkWord, #_"int" headerSize, #_"int" log2ElementSize, #_"boolean" fillContents, #_"Register" threadRegister, #_"boolean" maybeUnroll, #_"boolean" skipNegativeCheck]
-        (let [
-            #_"int" allocationSize (ReplacementsUtil'arrayAllocationSize-3 length, headerSize, log2ElementSize)
-            #_"Word" thread (ReplacementsUtil'registerAsWord-1 threadRegister)
-            #_"Word" top (ReplacementsUtil'readTlabTop-1 thread)
-            #_"Word" end (ReplacementsUtil'readTlabEnd-1 thread)
-            #_"Word" newTop (Word''add-2i top, allocationSize)
-        ]
-            (if (and (BranchProbabilityNode'probability-2 BranchProbabilityNode'FREQUENT_PROBABILITY, (or skipNegativeCheck (UnsignedMath'belowThan-2i length, NewObjectSnippets'MAX_ARRAY_FAST_PATH_ALLOCATION_LENGTH))) HotSpot'useTLAB (BranchProbabilityNode'probability-2 BranchProbabilityNode'FAST_PATH_PROBABILITY, (Word''belowOrEqual-2w newTop, end)))
-                (do
-                    (ReplacementsUtil'writeTlabTop-2 thread, newTop)
-                    (NewObjectSnippets'emitPrefetchAllocate-2 newTop, true)
-                    (NewObjectSnippets'formatArray-8 hub, allocationSize, length, headerSize, top, prototypeMarkWord, fillContents, maybeUnroll)
-                )
-                (ForeignCallNode'newArray-4 ForeignCallDescriptor'NEW_ARRAY, hub, length, fillContents)
-            )
-        )
-    )
-
-    (§ snippet! #_"Object" #_"NewObjectSnippets" "allocateArray" [#_"KlassPointer" hub, #_"int" length, #_"Word" prototypeMarkWord, #_@ConstantParameter #_"int" headerSize, #_@ConstantParameter #_"int" log2ElementSize, #_@ConstantParameter #_"boolean" fillContents, #_@ConstantParameter #_"Register" threadRegister, #_@ConstantParameter #_"boolean" maybeUnroll]
-        (let [
-            #_"Object" result (NewObjectSnippets'allocateArrayImpl-9 hub, length, prototypeMarkWord, headerSize, log2ElementSize, fillContents, threadRegister, maybeUnroll, false)
-        ]
-            (ArrayPlaceholder'piArrayCastToSnippetReplaceeStamp-2 result, length)
-        )
-    )
-
-    (defn- #_"Object" NewObjectSnippets'allocateArrayDynamicImpl-8 [#_"Class" elementType, #_"Class" voidClass, #_"int" length, #_"boolean" fillContents, #_"Register" threadRegister, #_"JavaKind" knownElementKind, #_"int" knownLayoutHelper, #_"Word" prototypeMarkWord]
-        ;; We only need the dynamic check for void when we have no static information from knownElementKind.
-        (when (and (= knownElementKind JavaKind/Illegal) (BranchProbabilityNode'probability-2 BranchProbabilityNode'SLOW_PATH_PROBABILITY, (or (nil? elementType) (DynamicNewArrayNode'throwsIllegalArgumentException-2 elementType, voidClass))))
-            (DeoptimizeNode'deopt-2 DeoptimizationAction/None, DeoptimizationReason/RuntimeConstraint)
-        )
-
-        (let [
-            #_"KlassPointer" klass (ReplacementsUtil'loadKlassFromObject-3 elementType, HotSpot'arrayKlassOffset, ReplacementsUtil'CLASS_ARRAY_KLASS_LOCATION)
-        ]
-            (when (Word''klassPointerIsNull-1 klass)
-                (DeoptimizeNode'deopt-2 DeoptimizationAction/None, DeoptimizationReason/RuntimeConstraint)
-            )
-            (let [
-                #_"KlassPointer" nonNullKlass (PiNode'piCastNonNull-2 klass, (SnippetAnchorNode'anchor-0))
-            ]
-                (when (neg? length)
-                    (DeoptimizeNode'deopt-2 DeoptimizationAction/None, DeoptimizationReason/RuntimeConstraint)
-                )
-                (let [
-                    #_"int" layoutHelper (if (= knownElementKind JavaKind/Illegal) (KlassLayoutHelperNode'readLayoutHelper-1 nonNullKlass) knownLayoutHelper)
-                    ;; For arrays, layout helper is a negative number, containing four distinct bytes,
-                    ;; as follows:
-                    ;;    MSB:[tag, hsz, ebt, log2(esz)]:LSB
-                    ;; where:
-                    ;;    tag is 0x80 if the elements are oops, 0xc0 if non-oops
-                    ;;    hsz is array header size in bytes (i.e. offset of first element)
-                    ;;    ebt is the BasicType of the elements
-                    ;;    esz is the element size in bytes
-                    #_"int" headerSize (& (>> layoutHelper HotSpot'layoutHelperHeaderSizeShift) HotSpot'layoutHelperHeaderSizeMask)
-                    #_"int" log2ElementSize (& (>> layoutHelper HotSpot'layoutHelperLog2ElementSizeShift) HotSpot'layoutHelperLog2ElementSizeMask)
-                    #_"Object" result (NewObjectSnippets'allocateArrayImpl-9 nonNullKlass, length, prototypeMarkWord, headerSize, log2ElementSize, fillContents, threadRegister, false, true)
-                ]
-                    (ArrayPlaceholder'piArrayCastToSnippetReplaceeStamp-2 result, length)
-                )
-            )
-        )
-    )
-
-    (§ snippet! #_"Object" #_"NewObjectSnippets" "allocateArrayDynamic" [#_"Class" elementType, #_"Class" voidClass, #_"int" length, #_@ConstantParameter #_"boolean" fillContents, #_@ConstantParameter #_"Register" threadRegister, #_@ConstantParameter #_"JavaKind" knownElementKind, #_@ConstantParameter #_"int" knownLayoutHelper, #_"Word" prototypeMarkWord]
-        (NewObjectSnippets'allocateArrayDynamicImpl-8 elementType, voidClass, length, fillContents, threadRegister, knownElementKind, knownLayoutHelper, prototypeMarkWord)
-    )
-
     ;;;
      ; Maximum number of long stores to emit when zeroing an object with a constant size.
      ; Larger objects have their bodies initialized in a loop.
@@ -9417,7 +9160,7 @@ ZeroExtendNode'new-4
     ;;;
      ; Formats some allocated memory with an object header and zeroes out the rest.
      ;;
-    (defn #_"Object" NewObjectSnippets'formatObject-6 [#_"KlassPointer" hub, #_"int" size, #_"Word" memory, #_"Word" compileTimePrototypeMarkWord, #_"boolean" fillContents, #_"boolean" constantSize]
+    (defn- #_"Object" NewObjectSnippets'formatObject-6 [#_"KlassPointer" hub, #_"int" size, #_"Word" memory, #_"Word" compileTimePrototypeMarkWord, #_"boolean" fillContents, #_"boolean" constantSize]
         (let [
             #_"Word" prototypeMarkWord (if HotSpot'useBiasedLocking (Word''readWord-3i hub, HotSpot'prototypeMarkWordOffset, ReplacementsUtil'PROTOTYPE_MARK_WORD_LOCATION) compileTimePrototypeMarkWord)
         ]
@@ -9430,10 +9173,32 @@ ZeroExtendNode'new-4
         )
     )
 
+    (defn- #_"Object" NewObjectSnippets'allocateInstanceHelper-6 [#_"int" size, #_"KlassPointer" hub, #_"Word" prototypeMarkWord, #_"boolean" fillContents, #_"Register" threadRegister, #_"boolean" constantSize]
+        (let [
+            #_"Word" thread (ReplacementsUtil'registerAsWord-1 threadRegister)
+            #_"Word" top (ReplacementsUtil'readTlabTop-1 thread)
+            #_"Word" end (ReplacementsUtil'readTlabEnd-1 thread)
+            #_"Word" newTop (Word''add-2i top, size)
+        ]
+            (if (and HotSpot'useTLAB (BranchProbabilityNode'probability-2 BranchProbabilityNode'FAST_PATH_PROBABILITY, (Word''belowOrEqual-2w newTop, end)))
+                (do
+                    (ReplacementsUtil'writeTlabTop-2 thread, newTop)
+                    (NewObjectSnippets'emitPrefetchAllocate-2 newTop, false)
+                    (NewObjectSnippets'formatObject-6 hub, size, top, prototypeMarkWord, fillContents, constantSize)
+                )
+                (ForeignCallNode'newInstance-2 ForeignCallDescriptor'NEW_INSTANCE, hub)
+            )
+        )
+    )
+
+    (§ snippet! #_"Object" #_"NewObjectSnippets" "allocateInstance" [#_@ConstantParameter #_"int" size, #_"KlassPointer" hub, #_"Word" prototypeMarkWord, #_@ConstantParameter #_"boolean" fillContents, #_@ConstantParameter #_"Register" threadRegister, #_@ConstantParameter #_"boolean" constantSize]
+        (Placeholder'piCastToSnippetReplaceeStamp-1 (NewObjectSnippets'allocateInstanceHelper-6 size, hub, prototypeMarkWord, fillContents, threadRegister, constantSize))
+    )
+
     ;;;
      ; Formats some allocated memory with an object header and zeroes out the rest.
      ;;
-    (defn #_"Object" NewObjectSnippets'formatArray-8 [#_"KlassPointer" hub, #_"int" allocationSize, #_"int" length, #_"int" headerSize, #_"Word" memory, #_"Word" prototypeMarkWord, #_"boolean" fillContents, #_"boolean" maybeUnroll]
+    (defn- #_"Object" NewObjectSnippets'formatArray-8 [#_"KlassPointer" hub, #_"int" allocationSize, #_"int" length, #_"int" headerSize, #_"Word" memory, #_"Word" prototypeMarkWord, #_"boolean" fillContents, #_"boolean" maybeUnroll]
         (Word''writeInt-4i memory, HotSpot'arrayLengthOffset, length, (LocationIdentity/init))
         ;; store hub last as the concurrent garbage collectors assume length is valid if hub field is not nil
         (ReplacementsUtil'initializeObjectHeader-3 memory, prototypeMarkWord, hub)
@@ -9442,6 +9207,38 @@ ZeroExtendNode'new-4
         )
         (MembarNode'memoryBarrier-2 MemoryBarriers/STORE_STORE, (LocationIdentity/init))
         (Word''toObjectNonNull-1 memory)
+    )
+
+    ;;;
+     ; Maximum array length for which fast path allocation is used.
+     ;;
+    (def- #_"int" NewObjectSnippets'MAX_ARRAY_FAST_PATH_ALLOCATION_LENGTH 0x00ffffff)
+
+    (defn- #_"Object" NewObjectSnippets'allocateArrayImpl-9 [#_"KlassPointer" hub, #_"int" length, #_"Word" prototypeMarkWord, #_"int" headerSize, #_"int" log2ElementSize, #_"boolean" fillContents, #_"Register" threadRegister, #_"boolean" maybeUnroll, #_"boolean" skipNegativeCheck]
+        (let [
+            #_"int" allocationSize (ReplacementsUtil'arrayAllocationSize-3 length, headerSize, log2ElementSize)
+            #_"Word" thread (ReplacementsUtil'registerAsWord-1 threadRegister)
+            #_"Word" top (ReplacementsUtil'readTlabTop-1 thread)
+            #_"Word" end (ReplacementsUtil'readTlabEnd-1 thread)
+            #_"Word" newTop (Word''add-2i top, allocationSize)
+        ]
+            (if (and (BranchProbabilityNode'probability-2 BranchProbabilityNode'FREQUENT_PROBABILITY, (or skipNegativeCheck (UnsignedMath'belowThan-2i length, NewObjectSnippets'MAX_ARRAY_FAST_PATH_ALLOCATION_LENGTH))) HotSpot'useTLAB (BranchProbabilityNode'probability-2 BranchProbabilityNode'FAST_PATH_PROBABILITY, (Word''belowOrEqual-2w newTop, end)))
+                (do
+                    (ReplacementsUtil'writeTlabTop-2 thread, newTop)
+                    (NewObjectSnippets'emitPrefetchAllocate-2 newTop, true)
+                    (NewObjectSnippets'formatArray-8 hub, allocationSize, length, headerSize, top, prototypeMarkWord, fillContents, maybeUnroll)
+                )
+                (ForeignCallNode'newArray-4 ForeignCallDescriptor'NEW_ARRAY, hub, length, fillContents)
+            )
+        )
+    )
+
+    (§ snippet! #_"Object" #_"NewObjectSnippets" "allocateArray" [#_"KlassPointer" hub, #_"int" length, #_"Word" prototypeMarkWord, #_@ConstantParameter #_"int" headerSize, #_@ConstantParameter #_"int" log2ElementSize, #_@ConstantParameter #_"boolean" fillContents, #_@ConstantParameter #_"Register" threadRegister, #_@ConstantParameter #_"boolean" maybeUnroll]
+        (let [
+            #_"Object" result (NewObjectSnippets'allocateArrayImpl-9 hub, length, prototypeMarkWord, headerSize, log2ElementSize, fillContents, threadRegister, maybeUnroll, false)
+        ]
+            (ArrayPlaceholder'piArrayCastToSnippetReplaceeStamp-2 result, length)
+        )
     )
 )
 
@@ -14164,9 +13961,7 @@ ZeroExtendNode'new-4
         (merge (NewObjectTemplates'class.) (AbstractTemplates'new-0)
             (hash-map
                 #_"SnippetInfo" :allocateInstance (AbstractTemplates''snippet-3* NewObjectSnippets, "allocateInstance", ReplacementsUtil'MARK_WORD_LOCATION, ReplacementsUtil'HUB_WRITE_LOCATION, ReplacementsUtil'TLAB_TOP_LOCATION, ReplacementsUtil'TLAB_END_LOCATION)
-                #_"SnippetInfo" :allocateInstanceDynamic (AbstractTemplates''snippet-3* NewObjectSnippets, "allocateInstanceDynamic", ReplacementsUtil'MARK_WORD_LOCATION, ReplacementsUtil'HUB_WRITE_LOCATION, ReplacementsUtil'TLAB_TOP_LOCATION, ReplacementsUtil'TLAB_END_LOCATION)
                 #_"SnippetInfo" :allocateArray (AbstractTemplates''snippet-3* NewObjectSnippets, "allocateArray", ReplacementsUtil'MARK_WORD_LOCATION, ReplacementsUtil'HUB_WRITE_LOCATION, ReplacementsUtil'TLAB_TOP_LOCATION, ReplacementsUtil'TLAB_END_LOCATION)
-                #_"SnippetInfo" :allocateArrayDynamic (AbstractTemplates''snippet-3* NewObjectSnippets, "allocateArrayDynamic", ReplacementsUtil'MARK_WORD_LOCATION, ReplacementsUtil'HUB_WRITE_LOCATION, ReplacementsUtil'TLAB_TOP_LOCATION, ReplacementsUtil'TLAB_END_LOCATION)
             )
         )
     )
@@ -14202,42 +13997,6 @@ ZeroExtendNode'new-4
             (Arguments''addConst-2 args, (:fillContents node))
             (Arguments''addConst-2 args, HotSpot'threadRegister)
             (Arguments''addConst-2 args, (satisfies? ConstantNode length))
-            (SnippetTemplate''instantiate-4x (SnippetTemplate'new-2 args, node), node, SnippetTemplate'DEFAULT_REPLACER, args)
-        )
-        nil
-    )
-
-    (defn #_"void" NewObjectTemplates''lower-3di [#_"NewObjectTemplates" this, #_"DynamicNewInstanceNode" node, #_"LoweringTool" lowerer]
-        (let [
-            #_"Arguments" args (Arguments'new-3 (:allocateInstanceDynamic this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)))
-        ]
-            (Arguments''add-2 args, (:class node))
-            (Arguments''add-2 args, (:classClass node))
-            (Arguments''addConst-2 args, (:fillContents node))
-            (Arguments''addConst-2 args, HotSpot'threadRegister)
-            (SnippetTemplate''instantiate-4x (SnippetTemplate'new-2 args, node), node, SnippetTemplate'DEFAULT_REPLACER, args)
-        )
-        nil
-    )
-
-    (defn- #_"HotSpotResolvedObjectType" NewObjectTemplates'lookupArrayClass-2 [#_"LoweringTool" lowerer, #_"JavaKind" kind]
-        (#_"ResolvedJavaType" .getArrayClass (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, (if (= kind JavaKind/Object) Object (#_"JavaKind" .toJavaClass kind))))
-    )
-
-    (defn #_"void" NewObjectTemplates''lower-3da [#_"NewObjectTemplates" this, #_"DynamicNewArrayNode" node, #_"LoweringTool" lowerer]
-        (let [
-            #_"ValueNode" length (ArrayLengthProvider'''length-1 node)
-            #_"Arguments" args (Arguments'new-3 (:allocateArrayDynamic this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)))
-        ]
-            (Arguments''add-2 args, (:elementType node))
-            (Arguments''add-2 args, (:voidClass node))
-            (Arguments''add-2 args, (if (Node''isAlive-1 length) length (Graph''addOrUniqueWithInputs-2 (:graph node), length)))
-            (Arguments''addConst-2 args, (:fillContents node))
-            (Arguments''addConst-2 args, HotSpot'threadRegister)
-            ;; We use Kind.Illegal as a marker value instead of nil because constant snippet parameters cannot be nil.
-            (Arguments''addConst-2 args, (if (some? (:knownElementKind node)) (:knownElementKind node) JavaKind/Illegal))
-            (Arguments''addConst-2 args, (if (some? (:knownElementKind node)) (#_"HotSpotResolvedObjectType" .layoutHelper (NewObjectTemplates'lookupArrayClass-2 lowerer, (:knownElementKind node))) 0))
-            (Arguments''add-2 args, (#_"HotSpotResolvedObjectType" .prototypeMarkWord (NewObjectTemplates'lookupArrayClass-2 lowerer, JavaKind/Object)))
             (SnippetTemplate''instantiate-4x (SnippetTemplate'new-2 args, node), node, SnippetTemplate'DEFAULT_REPLACER, args)
         )
         nil
@@ -21571,8 +21330,8 @@ ZeroExtendNode'new-4
             (let [
                 #_"int" cpi (BytecodeStream''readCPI-1 (:stream this))
             ]
-                ;; Special handling for runtimes that rewrite an invocation of MethodHandle.invoke(...) or
-                ;; MethodHandle.invokeExact(...) to a static adapter. HotSpot does this - see
+                ;; Special handling for runtimes that rewrite an invocation of MethodHandle.invoke(...) or
+                ;; MethodHandle.invokeExact(...) to a static adapter. HotSpot does this - see
                 ;; https://wiki.openjdk.java.net/display/HotSpot/Method+handles+and+invokedynamic
 
                 (or (BytecodeParser''genDynamicInvokeHelper-4 this, target, cpi, Bytecodes'INVOKEVIRTUAL)
@@ -33490,12 +33249,12 @@ ZeroExtendNode'new-4
     (§ def #_"ForeignCallDescriptor" ForeignCallDescriptor'DEOPTIMIZATION_HANDLER (ForeignCallDescriptor'new-3* "deoptHandler", void'class))
     (§ def #_"ForeignCallDescriptor" ForeignCallDescriptor'UNCOMMON_TRAP_HANDLER  (ForeignCallDescriptor'new-3* "uncommonTrapHandler", void'class))
 
-    (§ def #_"ForeignCallDescriptor" ForeignCallDescriptor'NEW_ARRAY            (ForeignCallDescriptor'new-3* "new_array", Object, #_"KlassPointer" Word'iface, int'class, boolean'class))
-    (§ def #_"ForeignCallDescriptor" ForeignCallDescriptor'NEW_INSTANCE         (ForeignCallDescriptor'new-3* "new_instance", Object, #_"KlassPointer" Word'iface))
-    (§ def #_"ForeignCallDescriptor" ForeignCallDescriptor'NEW_ARRAY_C          (ForeignCallDescriptor'new-3* "newArrayC", void'class, Word'iface, #_"KlassPointer" Word'iface, int'class))
-    (§ def #_"ForeignCallDescriptor" ForeignCallDescriptor'NEW_INSTANCE_C       (ForeignCallDescriptor'new-3* "newInstanceC", void'class, Word'iface, #_"KlassPointer" Word'iface))
-    (§ def #_"ForeignCallDescriptor" ForeignCallDescriptor'DYNAMIC_NEW_ARRAY    (ForeignCallDescriptor'new-3* "dynamic_new_array", Object, Class, int'class))
-    (§ def #_"ForeignCallDescriptor" ForeignCallDescriptor'DYNAMIC_NEW_INSTANCE (ForeignCallDescriptor'new-3* "dynamic_new_instance", Object, Class))
+    (§ def #_"ForeignCallDescriptor" ForeignCallDescriptor'NEW_ARRAY      (ForeignCallDescriptor'new-3* "new_array", Object, #_"KlassPointer" Word'iface, int'class, boolean'class))
+    (§ def #_"ForeignCallDescriptor" ForeignCallDescriptor'NEW_INSTANCE   (ForeignCallDescriptor'new-3* "new_instance", Object, #_"KlassPointer" Word'iface))
+    (§ def #_"ForeignCallDescriptor" ForeignCallDescriptor'NEW_ARRAY_C    (ForeignCallDescriptor'new-3* "newArrayC", void'class, Word'iface, #_"KlassPointer" Word'iface, int'class))
+    (§ def #_"ForeignCallDescriptor" ForeignCallDescriptor'NEW_INSTANCE_C (ForeignCallDescriptor'new-3* "newInstanceC", void'class, Word'iface, #_"KlassPointer" Word'iface))
+
+    (§ def #_"ForeignCallDescriptor" ForeignCallDescriptor'DYNAMIC_NEW_ARRAY (ForeignCallDescriptor'new-3* "dynamic_new_array", Object, Class, int'class))
 
     (§ def #_"ForeignCallDescriptor" ForeignCallDescriptor'MONITORENTER (ForeignCallDescriptor'new-3* "monitorenter", void'class, Object, Word'iface))
     (§ def #_"ForeignCallDescriptor" ForeignCallDescriptor'MONITOREXIT  (ForeignCallDescriptor'new-3* "monitorexit", void'class, Object, Word'iface))
@@ -33755,8 +33514,8 @@ ZeroExtendNode'new-4
 
             (ForeignCalls''registerForeignCall-8* this, ForeignCallDescriptor'NEW_ARRAY_C, HotSpot'newArrayAddress, HotSpotCallingConventionType/NativeCall, RegisterEffect'DESTROYS_REGISTERS, Transition'SAFEPOINT, true, (LocationIdentity/any))
             (ForeignCalls''registerForeignCall-8* this, ForeignCallDescriptor'NEW_INSTANCE_C, HotSpot'newInstanceAddress, HotSpotCallingConventionType/NativeCall, RegisterEffect'DESTROYS_REGISTERS, Transition'SAFEPOINT, true, (LocationIdentity/any))
+
             (ForeignCalls''linkForeignCall-7* this, ForeignCallDescriptor'DYNAMIC_NEW_ARRAY, HotSpot'dynamicNewArrayAddress, true, Transition'SAFEPOINT, true)
-            (ForeignCalls''linkForeignCall-7* this, ForeignCallDescriptor'DYNAMIC_NEW_INSTANCE, HotSpot'dynamicNewInstanceAddress, true, Transition'SAFEPOINT, true)
 
             (ForeignCalls''linkForeignCall-7* this, ForeignCallDescriptor'MONITORENTER, HotSpot'monitorenterAddress, true, Transition'SAFEPOINT, false, (LocationIdentity/any))
             (ForeignCalls''linkForeignCall-7* this, ForeignCallDescriptor'MONITOREXIT, HotSpot'monitorexitAddress, true, Transition'STACK_INSPECTABLE_LEAF, false, (LocationIdentity/any))
@@ -46811,28 +46570,6 @@ ZeroExtendNode'new-4
         (merge (CanonicalizableLocation'class.) (NamedLocationIdentity'new-2 name, true))
     )
 
-    (defn #_"ValueNode" CanonicalizableLocation'findReadHub-1 [#_"ValueNode" object]
-        (let [
-            #_"ValueNode" base (if (satisfies? CompressionNode object) (Unary'''getValue-1 object) object)
-        ]
-            (condp satisfies? base
-                Access
-                    (when (any = (Access'''getLocationIdentity-1 base) ReplacementsUtil'HUB_LOCATION ReplacementsUtil'COMPRESSED_HUB_LOCATION)
-                        (let [
-                            #_"AddressNode" address (Access'''getAddress-1 base)
-                        ]
-                            (when (satisfies? OffsetAddressNode address)
-                                (AddressNode'''getBase-1 address)
-                            )
-                        )
-                    )
-                LoadHubNode
-                    (:value base)
-                nil
-            )
-        )
-    )
-
     ;;;
      ; Fold reads that convert from Class -> Hub -> Class or vice versa.
      ;
@@ -52392,18 +52129,18 @@ ZeroExtendNode'new-4
 )
 
 ;;;
- ; A call target that replaces itself in the graph when being lowered by restoring the original MethodHandle
+ ; A call target that replaces itself in the graph when being lowered by restoring the original MethodHandle
  ; invocation target. Prior to https://bugs.openjdk.java.net/browse/JDK-8072008, this is required for when a
- ; MethodHandle call is resolved to a constant target but the target was not inlined. In that case,
+ ; MethodHandle call is resolved to a constant target but the target was not inlined. In that case,
  ; the original invocation must be restored with all of its original arguments. Why?
- ; HotSpot linkage for MethodHandle intrinsics (see {@code MethodHandles::generate_method_handle_dispatch})
+ ; HotSpot linkage for MethodHandle intrinsics (see {@code MethodHandles::generate_method_handle_dispatch})
  ; expects certain implicit arguments to be on the stack such as the MemberName suffix argument for a call to
- ; one of the MethodHandle.linkTo* methods. An {@linkplain MethodHandleNode#tryResolveTargetInvoke resolved}
- ; MethodHandle invocation drops these arguments which means the interpreter won't find them.
+ ; one of the MethodHandle.linkTo* methods. An {@linkplain MethodHandleNode#tryResolveTargetInvoke resolved}
+ ; MethodHandle invocation drops these arguments which means the interpreter won't find them.
  ;;
 (class-ns ResolvedMethodHandleCallTargetNode [MethodCallTargetNode, CallTargetNode, ValueNode, Node, LIRLowerable, Simplifiable, Lowerable]
     ;;;
-     ; Creates a call target for an invocation on a direct target derived by resolving a constant MethodHandle.
+     ; Creates a call target for an invocation on a direct target derived by resolving a constant MethodHandle.
      ;;
     (defn #_"ResolvedMethodHandleCallTargetNode" ResolvedMethodHandleCallTargetNode'new-7 [#_"InvokeKind" invokeKind, #_"ResolvedJavaMethod" targetMethod, #_"ValueNode*" arguments, #_"Stamp" returnStamp, #_"ResolvedJavaMethod" originalTargetMethod, #_"ValueNode*" originalArguments, #_"Stamp" originalReturnStamp]
         (merge (ResolvedMethodHandleCallTargetNode'class.) (MethodCallTargetNode'new-4 invokeKind, targetMethod, arguments, returnStamp)
@@ -55963,8 +55700,6 @@ ZeroExtendNode'new-4
     (§ intrinsic! #_"Object" ForeignCallNode'newInstance-2 [#_"ForeignCallDescriptor" descriptor, #_"KlassPointer" hub])
     (§ intrinsic! #_"Object" ForeignCallNode'newArray-4 [#_"ForeignCallDescriptor" descriptor, #_"KlassPointer" hub, #_"int" length, #_"boolean" fillContents])
 
-    (§ intrinsic! #_"Object" ForeignCallNode'dynamicNewInstanceStubCall-2 [#_"ForeignCallDescriptor" descriptor, #_"Class" elementType])
-
     (§ intrinsic! #_"void" ForeignCallNode'g1PreBarrierStub-2 [#_"ForeignCallDescriptor" descriptor, #_"Object" object])
     (§ intrinsic! #_"void" ForeignCallNode'g1PostBarrierStub-2 [#_"ForeignCallDescriptor" descriptor, #_"Word" card])
 
@@ -57592,17 +57327,13 @@ ZeroExtendNode'new-4
 )
 
 (class-ns DeoptimizingFixedWithNextNode [FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState]
-    (defn #_"DeoptimizingFixedWithNextNode" DeoptimizingFixedWithNextNode'new-2 [#_"Stamp" stamp, #_"FrameState" state]
+    (defn #_"DeoptimizingFixedWithNextNode" DeoptimizingFixedWithNextNode'new-1 [#_"Stamp" stamp]
         (merge (DeoptimizingFixedWithNextNode'class.) (FixedWithNextNode'new-1 stamp)
             (hash-map
                 ; @OptionalInput
-                #_"FrameState" :stateBefore state
+                #_"FrameState" :stateBefore nil
             )
         )
-    )
-
-    (defn #_"DeoptimizingFixedWithNextNode" DeoptimizingFixedWithNextNode'new-1 [#_"Stamp" stamp]
-        (DeoptimizingFixedWithNextNode'new-2 stamp, nil)
     )
 
     (defm DeoptimizingFixedWithNextNode DeoptBefore
@@ -57791,11 +57522,11 @@ ZeroExtendNode'new-4
 )
 
 ;;;
- ; The AbstractNewObjectNode is the base class for the new instance and new array nodes.
+ ; AbstractNewObjectNode is the base class for the new instance and new array nodes.
  ;;
 (class-ns AbstractNewObjectNode [DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Lowerable]
-    (defn #_"AbstractNewObjectNode" AbstractNewObjectNode'new-3 [#_"Stamp" stamp, #_"boolean" fillContents, #_"FrameState" stateBefore]
-        (merge (AbstractNewObjectNode'class.) (DeoptimizingFixedWithNextNode'new-2 stamp, stateBefore)
+    (defn #_"AbstractNewObjectNode" AbstractNewObjectNode'new-2 [#_"Stamp" stamp, #_"boolean" fillContents]
+        (merge (AbstractNewObjectNode'class.) (DeoptimizingFixedWithNextNode'new-1 stamp)
             (hash-map
                 ;;;
                  ; {@code true} if the object's contents should be initialized to zero/nil
@@ -57812,37 +57543,9 @@ ZeroExtendNode'new-4
                     (when (GuardsStage'areFrameStatesAtDeopts-1 (:guardsStage (:graph this)))
                         (NewObjectTemplates''lower-3i Lowerer'newObjectSnippets, this, lowerer)
                     )
-                DynamicNewInstanceNode
-                    (do
-                        (when (nil? (:classClass this))
-                            (let [
-                                #_"JavaConstant" classClassMirror (#_"HotSpotConstantReflectionProvider" .forObject HotSpot'constantReflection, Class)
-                                #_"ConstantNode" classClass (ConstantNode'forConstant-2c classClassMirror, (:graph this))
-                            ]
-                                (§ ass! this (DynamicNewInstanceNode''setClassClass-2 this, classClass))
-                            )
-                        )
-                        (when (GuardsStage'areFrameStatesAtDeopts-1 (:guardsStage (:graph this)))
-                            (NewObjectTemplates''lower-3di Lowerer'newObjectSnippets, this, lowerer)
-                        )
-                    )
                 NewArrayNode
                     (when (GuardsStage'areFrameStatesAtDeopts-1 (:guardsStage (:graph this)))
                         (NewObjectTemplates''lower-3a Lowerer'newObjectSnippets, this, lowerer)
-                    )
-                DynamicNewArrayNode
-                    (do
-                        (when (nil? (:voidClass this))
-                            (let [
-                                #_"JavaConstant" voidClassMirror (#_"HotSpotConstantReflectionProvider" .forObject HotSpot'constantReflection, void'class)
-                                #_"ConstantNode" voidClass (ConstantNode'forConstant-2c voidClassMirror, (:graph this))
-                            ]
-                                (§ ass! this (DynamicNewArrayNode''setVoidClass-2 this, voidClass))
-                            )
-                        )
-                        (when (GuardsStage'areFrameStatesAtDeopts-1 (:guardsStage (:graph this)))
-                            (NewObjectTemplates''lower-3da Lowerer'newObjectSnippets, this, lowerer)
-                        )
                     )
             )
             nil
@@ -57857,139 +57560,22 @@ ZeroExtendNode'new-4
 )
 
 ;;;
- ; The AbstractNewArrayNode is used for all 1-dimensional array allocations.
+ ; NewArrayNode represents the allocation of an array.
  ;;
-(class-ns AbstractNewArrayNode [AbstractNewObjectNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Lowerable, ArrayLengthProvider]
-    (defn #_"AbstractNewArrayNode" AbstractNewArrayNode'new-4 [#_"Stamp" stamp, #_"ValueNode" length, #_"boolean" fillContents, #_"FrameState" stateBefore]
-        (merge (AbstractNewArrayNode'class.) (AbstractNewObjectNode'new-3 stamp, fillContents, stateBefore)
+(class-ns NewArrayNode [AbstractNewObjectNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Lowerable, ArrayLengthProvider, VirtualizableAllocation, Virtualizable, Simplifiable]
+    (defn #_"NewArrayNode" NewArrayNode'new-3 [#_"ResolvedJavaType" elementType, #_"ValueNode" length, #_"boolean" fillContents]
+        (merge (NewArrayNode'class.) (AbstractNewObjectNode'new-2 (StampFactory'objectNonNull-1 (TypeReference'createExactTrusted-1 (#_"ResolvedJavaType" .getArrayClass elementType))), fillContents)
             (hash-map
                 ; @Input
                 #_"ValueNode" :length length
-            )
-        )
-    )
-
-    (defm AbstractNewArrayNode ArrayLengthProvider
-        (#_"ValueNode" ArrayLengthProvider'''length-1 [#_"AbstractNewArrayNode" this]
-            (:length this)
-        )
-    )
-)
-
-;;;
- ; The DynamicNewArrayNode is used for allocation of arrays when the type is not a compile-time constant.
- ;;
-(class-ns DynamicNewArrayNode [AbstractNewArrayNode, AbstractNewObjectNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Lowerable, ArrayLengthProvider, Canonicalizable]
-    (§ intrinsic! #_"Object" DynamicNewArrayNode'newArray-3 [#_"Class" componentType, #_"int" length, #_"boolean" fillContents])
-
-    #_intrinsifier
-    (defn #_"DynamicNewArrayNode" DynamicNewArrayNode'new-3 [#_"ValueNode" elementType, #_"ValueNode" length, #_"boolean" fillContents]
-        (DynamicNewArrayNode'new-5 elementType, length, fillContents, nil, nil)
-    )
-
-    (§ intrinsic! #_"Object" DynamicNewArrayNode'newArray-4 [#_"Class" componentType, #_"int" length, #_"boolean" fillContents, #_"JavaKind" knownElementKind])
-
-    #_intrinsifier
-    (defn #_"DynamicNewArrayNode" DynamicNewArrayNode'new-4 [#_"ValueNode" elementType, #_"ValueNode" length, #_"boolean" fillContents, #_"JavaKind" knownElementKind]
-        (DynamicNewArrayNode'new-5 elementType, length, fillContents, knownElementKind, nil)
-    )
-
-    (defn- #_"Stamp" DynamicNewArrayNode'computeStamp-1 [#_"JavaKind" knownElementKind]
-        (when (and (some? knownElementKind) (some? HotSpot'metaAccess)) => StampFactory'objectNonNullStamp
-            (let [
-                #_"ResolvedJavaType" arrayType (#_"ResolvedJavaType" .getArrayClass (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, (if (= knownElementKind JavaKind/Object) Object (#_"JavaKind" .toJavaClass knownElementKind))))
-            ]
-                (StampFactory'objectNonNull-1 (TypeReference'create-1 arrayType))
-            )
-        )
-    )
-
-    (defn #_"DynamicNewArrayNode" DynamicNewArrayNode'new-5 [#_"ValueNode" elementType, #_"ValueNode" length, #_"boolean" fillContents, #_"JavaKind" knownElementKind, #_"FrameState" stateBefore]
-        (merge (DynamicNewArrayNode'class.) (AbstractNewArrayNode'new-4 (DynamicNewArrayNode'computeStamp-1 knownElementKind), length, fillContents, stateBefore)
-            (hash-map
-                ; @Input
-                #_"ValueNode" :elementType elementType
-                ;;;
-                 ; Class pointer to void.class needs to be exposed earlier than this node is lowered so that it
-                 ; can be replaced by the AOT machinery. If it's not needed for lowering this input can be ignored.
-                 ;;
-                ; @OptionalInput
-                #_"ValueNode" :voidClass nil
-                ;;;
-                 ; A non-nil value indicating the worst case element type. Mainly useful for distinguishing
-                 ; Object arrays from primitive arrays.
-                 ;;
-                #_"JavaKind" :knownElementKind knownElementKind
-            )
-        )
-    )
-
-    (defm DynamicNewArrayNode Canonicalizable
-        (#_"Node" Canonicalizable'''canonical-2 [#_"DynamicNewArrayNode" this, #_"CanonicalizerTool" tool]
-            (when (satisfies? ConstantNode (:elementType this)) => this
-                (let [
-                    #_"ResolvedJavaType" type (#_"ConstantReflectionProvider" .asJavaType HotSpot'constantReflection, (:value (:elementType this)))
-                ]
-                    (when (and (some? type) (not (DynamicNewArrayNode'throwsIllegalArgumentException-1 type))) => this
-                        (DynamicNewArrayNode''createNewArrayNode-2 this, type)
-                    )
-                )
-            )
-        )
-    )
-
-    ;;;
-     ; Hook for subclasses to instantiate a subclass of NewArrayNode.
-     ;;
-    (defn #_"NewArrayNode" DynamicNewArrayNode''createNewArrayNode-2 [#_"DynamicNewArrayNode" this, #_"ResolvedJavaType" type]
-        (NewArrayNode'new-4 type, (ArrayLengthProvider'''length-1 this), (:fillContents this), (:stateBefore this))
-    )
-
-    (defn #_"boolean" DynamicNewArrayNode'throwsIllegalArgumentException-2 [#_"Class" elementType, #_"Class" voidClass]
-        (= elementType voidClass)
-    )
-
-    (defn #_"boolean" DynamicNewArrayNode'throwsIllegalArgumentException-1 [#_"ResolvedJavaType" elementType]
-        (= (#_"ResolvedJavaType" .getJavaKind elementType) JavaKind/Void)
-    )
-
-    #_unused
-    (defn #_"Object" DynamicNewArrayNode'newArray-2 [#_"Class" componentType, #_"int" length]
-        (DynamicNewArrayNode'newArray-3 componentType, length, true)
-    )
-
-    (defn #_"Object" DynamicNewArrayNode'newArray-3 [#_"Class" componentType, #_"int" length, #_"JavaKind" knownElementKind]
-        (DynamicNewArrayNode'newArray-4 componentType, length, true, knownElementKind)
-    )
-
-    #_unused
-    (defn #_"Object" DynamicNewArrayNode'newUninitializedArray-3 [#_"Class" componentType, #_"int" length, #_"JavaKind" knownElementKind]
-        (DynamicNewArrayNode'newArray-4 componentType, length, false, knownElementKind)
-    )
-
-    (defn #_"DynamicNewArrayNode" DynamicNewArrayNode''setVoidClass-2 [#_"DynamicNewArrayNode" this, #_"ValueNode" newVoidClass]
-        (Node''updateUsages-3 this, (:voidClass this), newVoidClass)
-        (assoc this :voidClass newVoidClass)
-    )
-)
-
-;;;
- ; The NewArrayNode is used for all array allocations where the element type is know at
- ; compile time.
- ;;
-(class-ns NewArrayNode [AbstractNewArrayNode, AbstractNewObjectNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Lowerable, ArrayLengthProvider, VirtualizableAllocation, Virtualizable, Simplifiable]
-    (§ intrinsic! #_"Object" NewArrayNode'newArray-3 [#_"Class" elementType, #_"int" length, #_"boolean" fillContents])
-
-    #_intrinsifier
-    (defn #_"NewArrayNode" NewArrayNode'new-3 [#_"ResolvedJavaType" elementType, #_"ValueNode" length, #_"boolean" fillContents]
-        (NewArrayNode'new-4 elementType, length, fillContents, nil)
-    )
-
-    (defn #_"NewArrayNode" NewArrayNode'new-4 [#_"ResolvedJavaType" elementType, #_"ValueNode" length, #_"boolean" fillContents, #_"FrameState" stateBefore]
-        (merge (NewArrayNode'class.) (AbstractNewArrayNode'new-4 (StampFactory'objectNonNull-1 (TypeReference'createExactTrusted-1 (#_"ResolvedJavaType" .getArrayClass elementType))), length, fillContents, stateBefore)
-            (hash-map
                 #_"ResolvedJavaType" :elementType elementType
             )
+        )
+    )
+
+    (defm NewArrayNode ArrayLengthProvider
+        (#_"ValueNode" ArrayLengthProvider'''length-1 [#_"NewArrayNode" this]
+            (:length this)
         )
     )
 
@@ -58054,72 +57640,12 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns DynamicNewInstanceNode [AbstractNewObjectNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Lowerable, Canonicalizable]
-    #_unused
-    (defn #_"DynamicNewInstanceNode" DynamicNewInstanceNode'new-2 [#_"ValueNode" clazz, #_"boolean" fillContents]
-        (DynamicNewInstanceNode'new-3 clazz, fillContents, nil)
-    )
-
-    (defn #_"DynamicNewInstanceNode" DynamicNewInstanceNode'new-3 [#_"ValueNode" clazz, #_"boolean" fillContents, #_"FrameState" stateBefore]
-        (merge (DynamicNewInstanceNode'class.) (AbstractNewObjectNode'new-3 StampFactory'objectNonNullStamp, fillContents, stateBefore)
-            (hash-map
-                ; @Input
-                #_"ValueNode" :class clazz
-                ;;;
-                 ; Class pointer to class.class needs to be exposed earlier than this node is lowered so that it
-                 ; can be replaced by the AOT machinery. If it's not needed for lowering this input can be ignored.
-                 ;;
-                ; @OptionalInput
-                #_"ValueNode" :classClass nil
-            )
-        )
-    )
-
-    (defm DynamicNewInstanceNode Canonicalizable
-        (#_"Node" Canonicalizable'''canonical-2 [#_"DynamicNewInstanceNode" this, #_"CanonicalizerTool" tool]
-            (when (satisfies? ConstantNode (:class this)) => this
-                (let [
-                    #_"ResolvedJavaType" type (#_"ConstantReflectionProvider" .asJavaType HotSpot'constantReflection, (:value (:class this)))
-                ]
-                    (when (and (some? type) (#_"ResolvedJavaType" .isInitialized type) (not (DynamicNewInstanceNode'throwsInstantiationException-1 type))) => this
-                        (DynamicNewInstanceNode''createNewInstanceNode-2 this, type)
-                    )
-                )
-            )
-        )
-    )
-
-    ;;;
-     ; Hook for subclasses to instantiate a subclass of NewInstanceNode.
-     ;;
-    (defn #_"NewInstanceNode" DynamicNewInstanceNode''createNewInstanceNode-2 [#_"DynamicNewInstanceNode" this, #_"ResolvedJavaType" type]
-        (NewInstanceNode'new-3 type, (:fillContents this), (:stateBefore this))
-    )
-
-    (defn #_"boolean" DynamicNewInstanceNode'throwsInstantiationException-2 [#_"Class" type, #_"Class" classClass]
-        (or (#_"Class" .isPrimitive type) (#_"Class" .isArray type) (#_"Class" .isInterface type) (Modifier/isAbstract (#_"Class" .getModifiers type)) (= type classClass))
-    )
-
-    (defn #_"boolean" DynamicNewInstanceNode'throwsInstantiationException-1 [#_"ResolvedJavaType" type]
-        (or (#_"ResolvedJavaType" .isPrimitive type) (#_"ResolvedJavaType" .isArray type) (#_"ResolvedJavaType" .isInterface type) (Modifier/isAbstract (#_"ResolvedJavaType" .getModifiers type)) (= type (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, Class)))
-    )
-
-    (defn #_"DynamicNewInstanceNode" DynamicNewInstanceNode''setClassClass-2 [#_"DynamicNewInstanceNode" this, #_"ValueNode" newClassClass]
-        (Node''updateUsages-3 this, (:classClass this), newClassClass)
-        (assoc this :classClass newClassClass)
-    )
-)
-
 ;;;
- ; The NewInstanceNode represents the allocation of an instance class object.
+ ; NewInstanceNode represents the allocation of an instance class object.
  ;;
 (class-ns NewInstanceNode [AbstractNewObjectNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Lowerable, VirtualizableAllocation, Virtualizable]
     (defn #_"NewInstanceNode" NewInstanceNode'new-2 [#_"ResolvedJavaType" type, #_"boolean" fillContents]
-        (NewInstanceNode'new-3 type, fillContents, nil)
-    )
-
-    (defn #_"NewInstanceNode" NewInstanceNode'new-3 [#_"ResolvedJavaType" type, #_"boolean" fillContents, #_"FrameState" stateBefore]
-        (merge (NewInstanceNode'class.) (AbstractNewObjectNode'new-3 (StampFactory'objectNonNull-1 (TypeReference'createExactTrusted-1 type)), fillContents, stateBefore)
+        (merge (NewInstanceNode'class.) (AbstractNewObjectNode'new-2 (StampFactory'objectNonNull-1 (TypeReference'createExactTrusted-1 type)), fillContents)
             (hash-map
                 ;;;
                  ; The instance class being allocated by this node.
@@ -58160,8 +57686,7 @@ ZeroExtendNode'new-4
 )
 
 ;;;
- ; Accesses a value at an memory address specified by an {@linkplain #address address}. The access
- ; does not include a nil-check on the object.
+ ; Accesses the value at a memory address not including the nil-check on the object.
  ;;
 (class-ns FixedAccessNode [DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Access, GuardedNode, HeapAccess]
     (defn #_"FixedAccessNode" FixedAccessNode'new-4 [#_"AddressNode" address, #_"LocationIdentity" location, #_"Stamp" stamp, #_"BarrierType" barrierType]
@@ -59386,7 +58911,7 @@ ZeroExtendNode'new-4
 )
 
 ;;;
- ; Node for invocation methods defined on the class MethodHandle.
+ ; Node for invocation methods defined on the class MethodHandle.
  ;;
 (class-ns MethodHandleNode [MacroStateSplitNode, MacroNode, FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable, StateSplit, NodeWithState, Single, MemoryCheckpoint, MemoryNode, Simplifiable]
     (defn #_"MethodHandleNode" MethodHandleNode'new-6* [#_"MethodHandleAccessProvider$IntrinsicMethod" intrinsicMethod, #_"InvokeKind" invokeKind, #_"ResolvedJavaMethod" targetMethod, #_"int" bci, #_"Stamp" returnStamp & #_"ValueNode..." arguments]
@@ -59398,7 +58923,7 @@ ZeroExtendNode'new-4
     )
 
     ;;;
-     ; Get the receiver of a MethodHandle.invokeBasic call.
+     ; Get the receiver of a MethodHandle.invokeBasic call.
      ;
      ; @return the receiver argument node
      ;;
@@ -59407,7 +58932,7 @@ ZeroExtendNode'new-4
     )
 
     ;;;
-     ; Get the MemberName argument of a MethodHandle.linkTo* call.
+     ; Get the MemberName argument of a MethodHandle.linkTo* call.
      ;
      ; @return the MemberName argument node (which is the last argument)
      ;;
@@ -59528,10 +59053,10 @@ ZeroExtendNode'new-4
     )
 
     ;;;
-     ; Used for the MethodHandle.invokeBasic method (the {@link MethodHandleAccessProvider$IntrinsicMethod#INVOKE_BASIC} method)
+     ; Used for the MethodHandle.invokeBasic method (the {@link MethodHandleAccessProvider$IntrinsicMethod#INVOKE_BASIC} method)
      ; to get the target InvokeNode if the method handle receiver is constant.
      ;
-     ; @return invoke node for the {@link java.lang.invoke.MethodHandle} target
+     ; @return invoke node for the {@link java.lang.invoke.MethodHandle} target
      ;;
     (defn- #_"InvokeNode" MethodHandleNode'getInvokeBasicTarget-7 [#_"GraphAdder" adder, #_"MethodHandleAccessProvider$IntrinsicMethod" intrinsicMethod, #_"MethodHandleAccessProvider" methodHandleAccess, #_"ResolvedJavaMethod" original, #_"int" bci, #_"Stamp" returnStamp, #_"ValueNode*" arguments]
         (let [
@@ -59544,7 +59069,7 @@ ZeroExtendNode'new-4
     )
 
     ;;;
-     ; Used for the MethodHandle.linkTo* methods (the {@link MethodHandleAccessProvider$IntrinsicMethod#LINK_TO_STATIC},
+     ; Used for the MethodHandle.linkTo* methods (the {@link MethodHandleAccessProvider$IntrinsicMethod#LINK_TO_STATIC},
      ; {@link MethodHandleAccessProvider$IntrinsicMethod#LINK_TO_SPECIAL}, {@link MethodHandleAccessProvider$IntrinsicMethod#LINK_TO_VIRTUAL},
      ; and {@link MethodHandleAccessProvider$IntrinsicMethod#LINK_TO_INTERFACE} methods) to get the target InvokeNode
      ; if the member name argument is constant.
@@ -59562,15 +59087,15 @@ ZeroExtendNode'new-4
     )
 
     ;;;
-     ; Attempts to transform application of an intrinsifiable MethodHandle method into an
+     ; Attempts to transform application of an intrinsifiable MethodHandle method into an
      ; invocation on another method with possibly transformed arguments.
      ;
-     ; @param methodHandleAccess objects for accessing the implementation internals of a MethodHandle
-     ; @param intrinsicMethod denotes the intrinsifiable MethodHandle method being processed
-     ; @param bci the BCI of the original MethodHandle call
-     ; @param returnStamp return stamp of the original MethodHandle call
-     ; @param arguments arguments to the original MethodHandle call
-     ; @return a more direct invocation derived from the MethodHandle call or nil
+     ; @param methodHandleAccess objects for accessing the implementation internals of a MethodHandle
+     ; @param intrinsicMethod denotes the intrinsifiable MethodHandle method being processed
+     ; @param bci the BCI of the original MethodHandle call
+     ; @param returnStamp return stamp of the original MethodHandle call
+     ; @param arguments arguments to the original MethodHandle call
+     ; @return a more direct invocation derived from the MethodHandle call or nil
      ;;
     (defn #_"InvokeNode" MethodHandleNode'tryResolveTargetInvoke-7* [#_"GraphAdder" adder, #_"MethodHandleAccessProvider" methodHandleAccess, #_"MethodHandleAccessProvider$IntrinsicMethod" intrinsicMethod, #_"ResolvedJavaMethod" original, #_"int" bci, #_"Stamp" returnStamp & #_"ValueNode..." arguments]
         (condp =? intrinsicMethod
@@ -60104,6 +59629,7 @@ ZeroExtendNode'new-4
 (class-ns RawLoadNode [UnsafeAccessNode, FixedWithNextNode, FixedNode, ValueNode, Node, Canonicalizable, Lowerable, Virtualizable]
     (§ intrinsic! #_"Word" RawLoadNode'loadWordFromObjectIntrinsic-4 [#_"Object" object, #_"long" offset, #_"LocationIdentity" locationIdentity, #_"JavaKind" wordKind])
 
+    #_unused
     (§ intrinsic! #_"KlassPointer" RawLoadNode'loadKlassFromObjectIntrinsic-4 [#_"Object" object, #_"long" offset, #_"LocationIdentity" locationIdentity, #_"JavaKind" wordKind])
 
     #_intrinsifier
@@ -63736,104 +63262,6 @@ ZeroExtendNode'new-4
 
         (#_"boolean" ConvertNode'''preservesOrder-3 [#_"HubGetClassNode" this, #_"CanonicalCondition" op, #_"Constant" value]
             (ConvertNode'''preservesOrder-2 this, op)
-        )
-    )
-)
-
-;;;
- ; Read {@code Klass::_layout_helper} and incorporate any useful stamp information based on any type
- ; information in {@code klass}.
- ;;
-(class-ns KlassLayoutHelperNode [FloatingNode, ValueNode, Node, Canonicalizable, Lowerable]
-    (defn #_"KlassLayoutHelperNode" KlassLayoutHelperNode'new-1 [#_"ValueNode" klass]
-        (merge (KlassLayoutHelperNode'class.) (FloatingNode'new-1 (StampFactory'forKind-1 JavaKind/Int))
-            (hash-map
-                ; @Input
-                #_"ValueNode" :klass klass
-            )
-        )
-    )
-
-    (defn- #_"ValueNode" KlassLayoutHelperNode'canonical-3 [#_"KlassLayoutHelperNode" node, #_"ValueNode" klass, #_"Stamp" stamp]
-        (when (and (satisfies? ConstantNode klass) (not (#_"Constant" .isDefaultForKind (:value klass))))
-            (§ return (ConstantNode'forConstant-2s stamp, (Stamp'''readConstant-4 stamp, (#_"ConstantReflectionProvider" .getMemoryAccessProvider HotSpot'constantReflection), (:value klass), HotSpot'klassLayoutHelperOffset)))
-        )
-        (when (satisfies? LoadHubNode klass)
-            (let [
-                #_"Stamp" hubStamp (:stamp (:value klass))
-            ]
-                (when (satisfies? ObjectStamp hubStamp)
-                    (let [
-                        #_"HotSpotResolvedObjectType" type (:type hubStamp)
-                    ]
-                        (when (and (some? type) (#_"HotSpotResolvedObjectType" .isArray type) (not (#_"ResolvedJavaType" .isPrimitive (#_"HotSpotResolvedObjectType" .getComponentType type))))
-                            ;; The layout for all object arrays is the same.
-                            (§ return (ConstantNode'forConstant-2s stamp, (Stamp'''readConstant-4 stamp, (#_"ConstantReflectionProvider" .getMemoryAccessProvider HotSpot'constantReflection), (#_"HotSpotResolvedObjectType" .klass type), HotSpot'klassLayoutHelperOffset)))
-                        )
-                    )
-                )
-            )
-        )
-        (or node (KlassLayoutHelperNode'new-1 klass))
-    )
-
-    (defn #_"ValueNode" KlassLayoutHelperNode'create-1 [#_"ValueNode" klass]
-        (KlassLayoutHelperNode'canonical-3 nil, klass, (StampFactory'forKind-1 JavaKind/Int))
-    )
-
-    (§ intrinsic! #_"int" KlassLayoutHelperNode'readLayoutHelper-1 [#_"KlassPointer" klass])
-
-    #_intrinsifier
-    (defn #_"boolean" KlassLayoutHelperNode'intrinsify-3 [#_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"ValueNode" klass]
-        (BytecodeParser''push-3 parser, JavaKind/Int, (GraphBuilder'''append-2 parser, (KlassLayoutHelperNode'create-1 klass)))
-        true
-    )
-
-    (defm KlassLayoutHelperNode ValueNode
-        (#_"boolean" ValueNode'''inferStamp-1 [#_"KlassLayoutHelperNode" this]
-            (and (satisfies? LoadHubNode (:klass this))
-                (let [
-                    #_"Stamp" stamp (:stamp (:value (:klass this)))
-                ]
-                    (and (satisfies? ObjectStamp stamp)
-                        (let [
-                            #_"ResolvedJavaType" type (:type stamp)
-                        ]
-                            (and (some? type) (not (#_"ResolvedJavaType" .isJavaLangObject type))
-                                (if (and (not (#_"ResolvedJavaType" .isArray type)) (not (#_"ResolvedJavaType" .isInterface type)))
-                                    ;; Definitely some form of instance type.
-                                    (ValueNode''updateStamp-2 this, (StampFactory'forInteger-3k JavaKind/Int, HotSpot'klassLayoutHelperNeutralValue, Integer/MAX_VALUE))
-                                    (and (#_"ResolvedJavaType" .isArray type)
-                                        (ValueNode''updateStamp-2 this, (StampFactory'forInteger-3k JavaKind/Int, Integer/MIN_VALUE, (dec HotSpot'klassLayoutHelperNeutralValue)))
-                                    )
-                                )
-                            )
-                        )
-                    )
-                )
-            )
-        )
-    )
-
-    (defm KlassLayoutHelperNode Canonicalizable
-        (#_"Node" Canonicalizable'''canonical-2 [#_"KlassLayoutHelperNode" this, #_"CanonicalizerTool" tool]
-            (when-not (and (CanonicalizerTool'''allUsagesAvailable-1 tool) (Node''hasNoUsages-1 this))
-                (KlassLayoutHelperNode'canonical-3 this, (:klass this), (:stamp this))
-            )
-        )
-    )
-
-    (defm KlassLayoutHelperNode Lowerable
-        (#_"void" Lowerable'''lower-2 [#_"KlassLayoutHelperNode" this, #_"LoweringTool" lowerer]
-            (when-not (= (:loweringStage (:phase lowerer)) LoweringStage'HIGH_TIER)
-                (let [
-                    #_"Graph" graph (:graph this)
-                    #_"AddressNode" address (Lowerer'createOffsetAddress-3 graph, (:klass this), HotSpot'klassLayoutHelperOffset)
-                ]
-                    (§ ass! this (Node''replaceAtUsagesAndDelete-2 this, (Graph''add-2 graph, (FloatingReadNode'new-6 address, ReplacementsUtil'KLASS_LAYOUT_HELPER_LOCATION, nil, (:stamp this), nil, BarrierType'NONE))))
-                )
-            )
-            nil
         )
     )
 )
@@ -78098,7 +77526,7 @@ ZeroExtendNode'new-4
     )
 
     ;;;
-     ; Turns a CompilationResult into a CompiledCode that can be passed to the VM for installation.
+     ; Turns a CompilationResult into a CompiledCode that can be passed to the VM for installation.
      ;;
     (defn #_"HotSpotCompiledCode" Compiler'createCompiledCode-1 [#_"CompilationResult" result]
         (let [
