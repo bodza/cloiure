@@ -184,7 +184,6 @@ WriteBarrierSnippets
 AcquiredCASLockNode'mark-1
 ArrayPlaceholder'piArrayCastToSnippetReplaceeStamp-2
 BeginLockScopeNode'beginLockScope-1
-BranchProbabilityNode'probability-2
 ClassGetHubNode'readClass-1
 ComputeObjectAddressNode'get-2
 CurrentLockNode'currentLock-1
@@ -769,15 +768,6 @@ BranchOp''jcc-4
 BranchOp'new-4
 BranchOp'new-4c
 BranchOp'new-4f
-BranchProbabilityNode'FAST_PATH_PROBABILITY
-BranchProbabilityNode'FREQUENT_PROBABILITY
-BranchProbabilityNode'LIKELY_PROBABILITY
-BranchProbabilityNode'NOT_FREQUENT_PROBABILITY
-BranchProbabilityNode'NOT_LIKELY_PROBABILITY
-BranchProbabilityNode'SLOW_PATH_PROBABILITY
-BranchProbabilityNode'VERY_FAST_PATH_PROBABILITY
-BranchProbabilityNode'VERY_SLOW_PATH_PROBABILITY
-BranchProbabilityNode'new-2
 BridgeMethodUtils'getAnnotation-2
 BytecodeLookupSwitch'new-2
 BytecodeParser''add-2
@@ -4319,7 +4309,6 @@ ZeroExtendNode'new-4
 (defp BoxNode)
 (defp BoxingTemplates)
 (defp BranchOp)
-(defp BranchProbabilityNode)
 
 ;;;
  ; An interface for accessing the bytecode properties of a ResolvedJavaMethod that allows for
@@ -4998,13 +4987,9 @@ ZeroExtendNode'new-4
 (defp HashSetNodeEventListener)
 
 ;;;
- ; Encapsulates properties of a node describing how it accesses the heap.
+ ; Marker interface for nodes that accesses the heap.
  ;;
 (defp HeapAccess
-    ;;;
-     ; Gets the write barrier type for that particular access.
-     ;;
-    (#_"BarrierType" HeapAccess'''getBarrierType-1 [#_"HeapAccess" this])
 )
 
 (defp HeapBaseNode)
@@ -8559,12 +8544,11 @@ ZeroExtendNode'new-4
      ; A test against a final type.
      ;;
     (§ snippet! #_"Object" #_"InstanceOfSnippets" "instanceofExact" [#_"Object" object, #_"KlassPointer" exactHub, #_"Object" trueValue, #_"Object" falseValue]
-        (if (BranchProbabilityNode'probability-2 BranchProbabilityNode'NOT_FREQUENT_PROBABILITY, (nil? object))
-            falseValue
+        (when (some? object) => falseValue
             (let [
                 #_"KlassPointer" objectHub (LoadHubNode'loadHubIntrinsic-1 (PiNode'piCastNonNull-2 object, (SnippetAnchorNode'anchor-0)))
             ]
-                (if (BranchProbabilityNode'probability-2 BranchProbabilityNode'LIKELY_PROBABILITY, (Word''klassPointersNotEqual-2 objectHub, exactHub))
+                (if (Word''klassPointersNotEqual-2 objectHub, exactHub)
                     falseValue
                     trueValue
                 )
@@ -8576,12 +8560,11 @@ ZeroExtendNode'new-4
      ; A test against a primary type.
      ;;
     (§ snippet! #_"Object" #_"InstanceOfSnippets" "instanceofPrimary" [#_"KlassPointer" hub, #_"Object" object, #_@ConstantParameter #_"int" superCheckOffset, #_"Object" trueValue, #_"Object" falseValue]
-        (if (BranchProbabilityNode'probability-2 BranchProbabilityNode'NOT_FREQUENT_PROBABILITY, (nil? object))
-            falseValue
+        (when (some? object) => falseValue
             (let [
                 #_"KlassPointer" objectHub (LoadHubNode'loadHubIntrinsic-1 (PiNode'piCastNonNull-2 object, (SnippetAnchorNode'anchor-0)))
             ]
-                (if (BranchProbabilityNode'probability-2 BranchProbabilityNode'NOT_LIKELY_PROBABILITY, (Word''klassPointersNotEqual-2 (Word''readKlassPointer-3 objectHub, superCheckOffset, ReplacementsUtil'PRIMARY_SUPERS_LOCATION), hub))
+                (if (Word''klassPointersNotEqual-2 (Word''readKlassPointer-3 objectHub, superCheckOffset, ReplacementsUtil'PRIMARY_SUPERS_LOCATION), hub)
                     falseValue
                     trueValue
                 )
@@ -8593,8 +8576,7 @@ ZeroExtendNode'new-4
      ; A test against a restricted secondary type.
      ;;
     (§ snippet! #_"Object" #_"InstanceOfSnippets" "instanceofSecondary" [#_"KlassPointer" hub, #_"Object" object, #_"Object" trueValue, #_"Object" falseValue]
-        (if (BranchProbabilityNode'probability-2 BranchProbabilityNode'NOT_FREQUENT_PROBABILITY, (nil? object))
-            falseValue
+        (when (some? object) => falseValue
             (let [
                 #_"KlassPointer" objectHub (LoadHubNode'loadHubIntrinsic-1 (PiNode'piCastNonNull-2 object, (SnippetAnchorNode'anchor-0)))
             ]
@@ -8610,13 +8592,12 @@ ZeroExtendNode'new-4
      ; Type test used when the type being tested against is not known at compile time.
      ;;
     (§ snippet! #_"Object" #_"InstanceOfSnippets" "instanceofDynamic" [#_"KlassPointer" hub, #_"Object" object, #_"Object" trueValue, #_"Object" falseValue, #_@ConstantParameter #_"boolean" allowNull]
-        (if (BranchProbabilityNode'probability-2 BranchProbabilityNode'NOT_FREQUENT_PROBABILITY, (nil? object))
-            (if allowNull trueValue falseValue)
+        (when (some? object) => (if allowNull trueValue falseValue)
             (let [
-                #_"KlassPointer" nonNullObjectHub (LoadHubNode'loadHubIntrinsic-1 (PiNode'piCastNonNull-2 object, (SnippetAnchorNode'anchor-0)))
+                #_"KlassPointer" objectHub (LoadHubNode'loadHubIntrinsic-1 (PiNode'piCastNonNull-2 object, (SnippetAnchorNode'anchor-0)))
             ]
                 ;; The hub of a primitive type can be nil => always return false in this case.
-                (if (and (BranchProbabilityNode'probability-2 BranchProbabilityNode'FAST_PATH_PROBABILITY, (not (Word''klassPointerIsNull-1 hub))) (TypeCheckSnippetUtils'checkUnknownSubType-2 hub, nonNullObjectHub))
+                (if (and (not (Word''klassPointerIsNull-1 hub)) (TypeCheckSnippetUtils'checkUnknownSubType-2 hub, objectHub))
                     trueValue
                     falseValue
                 )
@@ -8713,7 +8694,7 @@ ZeroExtendNode'new-4
             #_"Word" tmp (Word''and-2i (Word''xor-2w (Word''or-2w prototypeMarkWord, thread), mark), (bit-not HotSpot'ageMaskInPlace))
         ]
             (or
-                (and (BranchProbabilityNode'probability-2 BranchProbabilityNode'FAST_PATH_PROBABILITY, (Word''equal-2i tmp, 0))
+                (and (Word''equal-2i tmp, 0)
                     (do
                         ;; object is already biased to current thread -> done
                         (FastAcquireBiasedLockNode'mark-1 object)
@@ -8722,7 +8703,7 @@ ZeroExtendNode'new-4
                 )
 
                 ;; now check to see whether biasing is enabled for this object ;; => biasing not enabled -> fall through to lightweight locking
-                (and (BranchProbabilityNode'probability-2 BranchProbabilityNode'NOT_FREQUENT_PROBABILITY, (Word''equal-2w biasableLockBits, (WordFactory'unsigned-1i HotSpot'biasedLockPattern)))
+                (and (Word''equal-2w biasableLockBits, (WordFactory'unsigned-1i HotSpot'biasedLockPattern))
                     (let [
                         #_"Word" objectPointer (Word'objectToTrackedPointer-1 object)
                     ]
@@ -8732,14 +8713,14 @@ ZeroExtendNode'new-4
 
                         ;; If the low three bits in the xor result aren't clear, that means the prototype header is no longer biasable
                         ;; and we have to revoke the bias on this object.
-                        (if (BranchProbabilityNode'probability-2 BranchProbabilityNode'FREQUENT_PROBABILITY, (Word''equal-2i (Word''and-2i tmp, HotSpot'biasedLockMaskInPlace), 0))
+                        (if (Word''equal-2i (Word''and-2i tmp, HotSpot'biasedLockMaskInPlace), 0)
                             (or
                                 ;; Biasing is still enabled for object's type. See whether the epoch of the current bias is still valid,
                                 ;; meaning that the epoch bits of the mark word are equal to the epoch bits of the prototype mark word.
                                 ;; (Note that the prototype mark word's epoch bits only change at a safepoint.) If not, attempt to rebias
                                 ;; the object toward the current thread. Note that we must be absolutely sure that the current epoch is
                                 ;; invalid in order to do this, because otherwise the manipulations it performs on the mark word are illegal.
-                                (if (BranchProbabilityNode'probability-2 BranchProbabilityNode'FREQUENT_PROBABILITY, (Word''equal-2i (Word''and-2i tmp, HotSpot'epochMaskInPlace), 0))
+                                (if (Word''equal-2i (Word''and-2i tmp, HotSpot'epochMaskInPlace), 0)
                                     ;; The epoch of the current bias is still valid but we know nothing about the owner, it might be
                                     ;; set or it might be clear. Try to acquire the bias of the object using an atomic operation. If
                                     ;; this fails we will go in to the runtime to revoke the object's bias. Note that we first construct
@@ -8748,7 +8729,7 @@ ZeroExtendNode'new-4
                                         #_"Word" unbiasedMark (Word''and-2i mark, (| HotSpot'biasedLockMaskInPlace HotSpot'ageMaskInPlace HotSpot'epochMaskInPlace))
                                         #_"Word" biasedMark (Word''or-2w unbiasedMark, thread)
                                     ]
-                                        (and (BranchProbabilityNode'probability-2 BranchProbabilityNode'VERY_FAST_PATH_PROBABILITY, (Word''logicCompareAndSwapWord-5 objectPointer, HotSpot'markOffset, unbiasedMark, biasedMark, ReplacementsUtil'MARK_WORD_LOCATION))
+                                        (and (Word''logicCompareAndSwapWord-5 objectPointer, HotSpot'markOffset, unbiasedMark, biasedMark, ReplacementsUtil'MARK_WORD_LOCATION)
                                             ;; object is now biased to current thread -> done
                                             true
                                         )
@@ -8762,7 +8743,7 @@ ZeroExtendNode'new-4
                                     (let [
                                         #_"Word" biasedMark (Word''or-2w prototypeMarkWord, thread)
                                     ]
-                                        (and (BranchProbabilityNode'probability-2 BranchProbabilityNode'VERY_FAST_PATH_PROBABILITY, (Word''logicCompareAndSwapWord-5 objectPointer, HotSpot'markOffset, mark, biasedMark, ReplacementsUtil'MARK_WORD_LOCATION))
+                                        (and (Word''logicCompareAndSwapWord-5 objectPointer, HotSpot'markOffset, mark, biasedMark, ReplacementsUtil'MARK_WORD_LOCATION)
                                             ;; object is now biased to current thread -> done
                                             true
                                         )
@@ -8808,8 +8789,8 @@ ZeroExtendNode'new-4
             #_"Word" owner (Word''readWord-3i monitor, HotSpot'objectMonitorOwnerOffset, ReplacementsUtil'OBJECT_MONITOR_OWNER_LOCATION)
         ]
             ;; appears being unlocked when owner is 0
-            (and (BranchProbabilityNode'probability-2 BranchProbabilityNode'FREQUENT_PROBABILITY, (Word''equal-2i owner, 0))
-                 (BranchProbabilityNode'probability-2 BranchProbabilityNode'FREQUENT_PROBABILITY, (Word''logicCompareAndSwapWord-5 monitor, HotSpot'objectMonitorOwnerOffset, owner, (ReplacementsUtil'registerAsWord-1 threadRegister), ReplacementsUtil'OBJECT_MONITOR_OWNER_LOCATION))
+            (and (Word''equal-2i owner, 0)
+                 (Word''logicCompareAndSwapWord-5 monitor, HotSpot'objectMonitorOwnerOffset, owner, (ReplacementsUtil'registerAsWord-1 threadRegister), ReplacementsUtil'OBJECT_MONITOR_OWNER_LOCATION)
             )
         )
     )
@@ -8825,7 +8806,7 @@ ZeroExtendNode'new-4
                 (§ return )
                 ;; not biased, fall-through
             )
-            (if (and (MonitorSnippets'inlineFastLockSupported-0) (BranchProbabilityNode'probability-2 BranchProbabilityNode'SLOW_PATH_PROBABILITY, (Word''notEqual-2i (Word''and-2i mark, HotSpot'monitorMask), 0)))
+            (if (and (MonitorSnippets'inlineFastLockSupported-0) (Word''notEqual-2i (Word''and-2i mark, HotSpot'monitorMask), 0))
                 ;; inflated case
                 (when (MonitorSnippets'tryEnterInflated-4 object, lock, mark, threadRegister)
                     (§ return )
@@ -8844,7 +8825,7 @@ ZeroExtendNode'new-4
                     (let [
                         #_"Word" currentMark (Word''compareAndSwapWord-5 objectPointer, HotSpot'markOffset, unlockedMark, lock, ReplacementsUtil'MARK_WORD_LOCATION)
                     ]
-                        (if (BranchProbabilityNode'probability-2 BranchProbabilityNode'FAST_PATH_PROBABILITY, (Word''equal-2w currentMark, unlockedMark))
+                        (if (Word''equal-2w currentMark, unlockedMark)
                             (do
                                 (AcquiredCASLockNode'mark-1 object)
                                 (§ return )
@@ -8868,7 +8849,7 @@ ZeroExtendNode'new-4
                                 #_"Word" alignedMask (WordFactory'unsigned-1i (dec (.wordSize HotSpot'target)))
                                 #_"Word" stackPointer (Word''add-2i (ReplacementsUtil'registerAsWord-1 stackPointerRegister), HotSpot'stackBias)
                             ]
-                                (when (BranchProbabilityNode'probability-2 BranchProbabilityNode'FAST_PATH_PROBABILITY, (Word''equal-2i (Word''and-2w (Word''subtract-2w currentMark, stackPointer), (Word''subtract-2i alignedMask, (.pageSize HotSpot'unsafe))), 0))
+                                (when (Word''equal-2i (Word''and-2w (Word''subtract-2w currentMark, stackPointer), (Word''subtract-2i alignedMask, (.pageSize HotSpot'unsafe))), 0)
                                     ;; recursively locked => write 0 to the lock slot
                                     (Word''writeWord-4i lock, HotSpot'lockDisplacedMarkOffset, (WordFactory'zero-0), ReplacementsUtil'DISPLACED_MARK_WORD_LOCATION)
                                     (§ return )
@@ -8908,7 +8889,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"boolean" MonitorSnippets'tryExitInflated-4 [#_"Object" object, #_"Word" mark, #_"Word" lock, #_"Register" threadRegister]
         (and (MonitorSnippets'inlineFastUnlockSupported-0)
-             (BranchProbabilityNode'probability-2 BranchProbabilityNode'SLOW_PATH_PROBABILITY, (Word''notEqual-2i (Word''and-2i mark, HotSpot'monitorMask), 0))
+             (Word''notEqual-2i (Word''and-2i mark, HotSpot'monitorMask), 0)
             ;; inflated case
             ;; mark is a pointer to the ObjectMonitor + monitorMask
             (let [
@@ -8919,7 +8900,7 @@ ZeroExtendNode'new-4
                 #_"Word" recursions (Word''readWord-3i monitor, recursionsOffset, ReplacementsUtil'OBJECT_MONITOR_RECURSION_LOCATION)
                 #_"Word" thread (ReplacementsUtil'registerAsWord-1 threadRegister)
             ]
-                (when (BranchProbabilityNode'probability-2 BranchProbabilityNode'FAST_PATH_PROBABILITY, (Word''equal-2i (Word''or-2w (Word''xor-2w owner, thread), recursions), 0))
+                (when (Word''equal-2i (Word''or-2w (Word''xor-2w owner, thread), recursions), 0)
                     ;; owner == thread && recursions == 0
                     (let [
                         #_"int" cxqOffset HotSpot'objectMonitorCxqOffset
@@ -8927,7 +8908,7 @@ ZeroExtendNode'new-4
                         #_"int" entryListOffset HotSpot'objectMonitorEntryListOffset
                         #_"Word" entryList (Word''readWord-3i monitor, entryListOffset, ReplacementsUtil'OBJECT_MONITOR_ENTRY_LIST_LOCATION)
                     ]
-                        (when (BranchProbabilityNode'probability-2 BranchProbabilityNode'FREQUENT_PROBABILITY, (Word''equal-2i (Word''or-2w cxq, entryList), 0))
+                        (when (Word''equal-2i (Word''or-2w cxq, entryList), 0)
                             ;; cxq == 0 && entryList == 0
                             ;; nobody is waiting, success
                             (MembarNode'memoryBarrier-1 (| MemoryBarriers/LOAD_STORE MemoryBarriers/STORE_STORE))
@@ -8952,7 +8933,7 @@ ZeroExtendNode'new-4
                 ;; First, the interpreter checks for IllegalMonitorStateException at a higher level.
                 ;; Second, if the bias was revoked while we held the lock, the object could not be
                 ;; rebiased toward another thread, so the bias bit would be clear.
-                (when (BranchProbabilityNode'probability-2 BranchProbabilityNode'FREQUENT_PROBABILITY, (Word''equal-2w (Word''and-2i mark, HotSpot'biasedLockMaskInPlace), (WordFactory'unsigned-1i HotSpot'biasedLockPattern)))
+                (when (Word''equal-2w (Word''and-2i mark, HotSpot'biasedLockMaskInPlace), (WordFactory'unsigned-1i HotSpot'biasedLockPattern))
                     (EndLockScopeNode'endLockScope-0)
                     (§ return )
                 )
@@ -8963,7 +8944,7 @@ ZeroExtendNode'new-4
                 ;; load displaced mark
                 #_"Word" displacedMark (Word''readWord-3i lock, HotSpot'lockDisplacedMarkOffset, ReplacementsUtil'DISPLACED_MARK_WORD_LOCATION)
             ]
-                (if (BranchProbabilityNode'probability-2 BranchProbabilityNode'NOT_LIKELY_PROBABILITY, (Word''equal-2i displacedMark, 0))
+                (if (Word''equal-2i displacedMark, 0)
                     nil ;; recursive locking => done
                     (when-not (MonitorSnippets'tryExitInflated-4 object, mark, lock, threadRegister)
                         ;; Test if object's mark word is pointing to the displaced mark word, and if so,
@@ -8972,7 +8953,7 @@ ZeroExtendNode'new-4
                         (let [
                             #_"Word" objectPointer (Word'objectToTrackedPointer-1 object)
                         ]
-                            (if (BranchProbabilityNode'probability-2 BranchProbabilityNode'VERY_FAST_PATH_PROBABILITY, (Word''logicCompareAndSwapWord-5 objectPointer, HotSpot'markOffset, lock, displacedMark, ReplacementsUtil'MARK_WORD_LOCATION))
+                            (if (Word''logicCompareAndSwapWord-5 objectPointer, HotSpot'markOffset, lock, displacedMark, ReplacementsUtil'MARK_WORD_LOCATION)
                                 nil ;; ...
                                 (do
                                     ;; the object's mark word was not pointing to the displaced header
@@ -9099,7 +9080,7 @@ ZeroExtendNode'new-4
             #_"Word" end (ReplacementsUtil'readTlabEnd-1 thread)
             #_"Word" newTop (Word''add-2i top, size)
         ]
-            (if (and HotSpot'useTLAB (BranchProbabilityNode'probability-2 BranchProbabilityNode'FAST_PATH_PROBABILITY, (Word''belowOrEqual-2w newTop, end)))
+            (if (and HotSpot'useTLAB (Word''belowOrEqual-2w newTop, end))
                 (do
                     (ReplacementsUtil'writeTlabTop-2 thread, newTop)
                     (NewObjectSnippets'emitPrefetchAllocate-2 newTop, false)
@@ -9141,7 +9122,7 @@ ZeroExtendNode'new-4
             #_"Word" end (ReplacementsUtil'readTlabEnd-1 thread)
             #_"Word" newTop (Word''add-2i top, allocationSize)
         ]
-            (if (and (BranchProbabilityNode'probability-2 BranchProbabilityNode'FREQUENT_PROBABILITY, (UnsignedMath'belowThan-2i length, NewObjectSnippets'MAX_ARRAY_FAST_PATH_ALLOCATION_LENGTH)) HotSpot'useTLAB (BranchProbabilityNode'probability-2 BranchProbabilityNode'FAST_PATH_PROBABILITY, (Word''belowOrEqual-2w newTop, end)))
+            (if (and (UnsignedMath'belowThan-2i length, NewObjectSnippets'MAX_ARRAY_FAST_PATH_ALLOCATION_LENGTH) HotSpot'useTLAB (Word''belowOrEqual-2w newTop, end))
                 (do
                     (ReplacementsUtil'writeTlabTop-2 thread, newTop)
                     (NewObjectSnippets'emitPrefetchAllocate-2 newTop, true)
@@ -9174,7 +9155,7 @@ ZeroExtendNode'new-4
                 #_"int" n (Word''readInt-3i secondarySupers, HotSpot'metaspaceArrayLengthOffset, ReplacementsUtil'METASPACE_ARRAY_LENGTH_LOCATION)
             ]
                 (loop-when [#_"int" i 0] (< i n) => false
-                    (when (BranchProbabilityNode'probability-2 BranchProbabilityNode'NOT_LIKELY_PROBABILITY, (Word''klassPointersEqual-2 t, (TypeCheckSnippetUtils'loadSecondarySupersElement-2 secondarySupers, i))) => (recur (inc i))
+                    (when (Word''klassPointersEqual-2 t, (TypeCheckSnippetUtils'loadSecondarySupersElement-2 secondarySupers, i)) => (recur (inc i))
                         (Word''writeKlassPointer-4 s, HotSpot'secondarySuperCacheOffset, t, ReplacementsUtil'SECONDARY_SUPER_CACHE_LOCATION)
                         true
                     )
@@ -9253,20 +9234,20 @@ ZeroExtendNode'new-4
             #_"int" gcCycle 0
         ]
             ;; If the concurrent marker is enabled, the barrier is issued.
-            (when (BranchProbabilityNode'probability-2 BranchProbabilityNode'NOT_FREQUENT_PROBABILITY, (not= markingValue (byte 0)))
+            (when (not= markingValue (byte 0))
                 ;; If the previous value has to be loaded (before the write), the load is issued.
                 ;; The load is always issued except the cases of CAS and referent field.
-                (when (BranchProbabilityNode'probability-2 BranchProbabilityNode'LIKELY_PROBABILITY, doLoad)
+                (when doLoad
                     (§ ass previousOop (Word'objectToTrackedPointer-1 (Word''readObject-3ib field, 0, BarrierType'NONE)))
                 )
                 ;; If the previous value is nil the barrier should not be issued.
-                (when (BranchProbabilityNode'probability-2 BranchProbabilityNode'FREQUENT_PROBABILITY, (Word''notEqual-2i previousOop, 0))
+                (when (Word''notEqual-2i previousOop, 0)
                     ;; If the thread-local SATB buffer is full, issue a native call, which will initialize a new one and add the entry.
                     (let [
                         #_"Word" indexAddress (Word''add-2i thread, HotSpot'g1SATBQueueIndexOffset)
                         #_"Word" indexValue (Word''readWord-2i indexAddress, 0)
                     ]
-                        (if (BranchProbabilityNode'probability-2 BranchProbabilityNode'FREQUENT_PROBABILITY, (Word''notEqual-2i indexValue, 0))
+                        (if (Word''notEqual-2i indexValue, 0)
                             (let [
                                 #_"Word" bufferAddress (Word''readWord-2i thread, HotSpot'g1SATBQueueBufferOffset)
                                 #_"Word" nextIndex (Word''subtract-2i indexValue, (.wordSize HotSpot'target))
@@ -9307,19 +9288,19 @@ ZeroExtendNode'new-4
             (let [
                 #_"Word" cardAddress (Word''add-2i cardBase, displacement)
             ]
-                (when (BranchProbabilityNode'probability-2 BranchProbabilityNode'FREQUENT_PROBABILITY, (Word''notEqual-2i xorResult, 0))
+                (when (Word''notEqual-2i xorResult, 0)
                     ;; If the written value is not nil, continue with the barrier addition.
-                    (when (BranchProbabilityNode'probability-2 BranchProbabilityNode'FREQUENT_PROBABILITY, (Word''notEqual-2i writtenValue, 0))
+                    (when (Word''notEqual-2i writtenValue, 0)
                         (let [
                             #_"byte" cardByte (Word''readByte-3i cardAddress, 0, WriteBarrierSnippets'GC_CARD_LOCATION)
                         ]
                             ;; If the card is already dirty, (hence already enqueued) skip the insertion.
-                            (when (BranchProbabilityNode'probability-2 BranchProbabilityNode'NOT_FREQUENT_PROBABILITY, (not= cardByte HotSpot'g1YoungCardValue))
+                            (when (not= cardByte HotSpot'g1YoungCardValue)
                                 (MembarNode'memoryBarrier-2 MemoryBarriers/STORE_LOAD, WriteBarrierSnippets'GC_CARD_LOCATION)
                                 (let [
                                     #_"byte" cardByteReload (Word''readByte-3i cardAddress, 0, WriteBarrierSnippets'GC_CARD_LOCATION)
                                 ]
-                                    (when (BranchProbabilityNode'probability-2 BranchProbabilityNode'NOT_FREQUENT_PROBABILITY, (not= cardByteReload HotSpot'dirtyCardValue))
+                                    (when (not= cardByteReload HotSpot'dirtyCardValue)
                                         (Word''writeByte-4i cardAddress, 0, (byte 0), WriteBarrierSnippets'GC_CARD_LOCATION)
 
                                         ;; If the thread-local card queue is full, issue a native call, which will initialize a new one and add the card entry.
@@ -9327,7 +9308,7 @@ ZeroExtendNode'new-4
                                             #_"Word" indexAddress (Word''add-2i thread, HotSpot'g1CardQueueIndexOffset)
                                             #_"Word" indexValue (Word''readWord-2i thread, HotSpot'g1CardQueueIndexOffset)
                                         ]
-                                            (if (BranchProbabilityNode'probability-2 BranchProbabilityNode'FREQUENT_PROBABILITY, (Word''notEqual-2i indexValue, 0))
+                                            (if (Word''notEqual-2i indexValue, 0)
                                                 (let [
                                                     #_"Word" bufferAddress (Word''readWord-2i thread, HotSpot'g1CardQueueBufferOffset)
                                                     #_"Word" nextIndex (Word''subtract-2i indexValue, (.wordSize HotSpot'target))
@@ -22012,27 +21993,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"double" BytecodeParser'extractInjectedProbability-1 [#_"IntegerEqualsNode" equalsNode]
-        ;; Propagate injected branch probability if any.
-        (let [
-            [#_"BranchProbabilityNode" probabilityNode #_"ValueNode" valueNode]
-                (cond
-                    (satisfies? BranchProbabilityNode (:x equalsNode)) [(:x equalsNode) (:y equalsNode)]
-                    (satisfies? BranchProbabilityNode (:y equalsNode)) [(:y equalsNode) (:x equalsNode)]
-                )
-        ]
-            (if (and (some? probabilityNode) (satisfies? ConstantNode (:probability probabilityNode)) (some? valueNode) (satisfies? ConstantNode valueNode))
-                (let [
-                    #_"double" probability (#_"JavaConstant" .asDouble (ValueNode''asJavaConstant-1 (:probability probabilityNode)))
-                ]
-                    (if (zero? (#_"JavaConstant" .asInt (ValueNode''asJavaConstant-1 valueNode))) (- 1.0 probability) probability)
-                )
-                -1.0
-            )
-        )
-    )
-
-    (defn- #_"double" BytecodeParser''getProfileProbability-2 [#_"BytecodeParser" this, #_"boolean" negate?]
+    (defn- #_"double" BytecodeParser'getProfileProbability-1 [#_"boolean" negate?]
         0.5
     )
 
@@ -22053,8 +22014,7 @@ ZeroExtendNode'new-4
                     [x y] (if (:mirror? canon) [y x] [x y])
                     #_"LogicNode" logic (BytecodeParser''createLogicNode-4 this, (:canonicalCondition canon), x, y)
                     [then else] (if (:negate? canon) [else then] [then else])
-                    #_"double" probability (if (satisfies? IntegerEqualsNode logic) (BytecodeParser'extractInjectedProbability-1 logic) -1.0)
-                    probability (if (= probability -1.0) (BytecodeParser''getProfileProbability-2 this, (:negate? canon)) probability)
+                    #_"double" probability (BytecodeParser'getProfileProbability-1 (:negate? canon))
                     probability (BytecodeParser''clampProbability-2 this, probability)
                 ]
                     (BytecodeParser''genIf-5 this, logic, then, else, probability)
@@ -22546,7 +22506,7 @@ ZeroExtendNode'new-4
                                                 #_"boolean" negate? (not= value Bytecodes'IFNE)
                                                 [succ1 succ2] (if negate? [succ2 succ1] [succ1 succ2])
                                             ]
-                                                (BytecodeParser''genIf-5 this, instanceOfNode, succ1, succ2, (BytecodeParser''getProfileProbability-2 this, negate?))
+                                                (BytecodeParser''genIf-5 this, instanceOfNode, succ1, succ2, (BytecodeParser'getProfileProbability-1 negate?))
                                             )
                                         )
                                     )
@@ -57333,22 +57293,6 @@ ZeroExtendNode'new-4
         (merge (AbstractNewObjectNode'class.) (DeoptimizingFixedWithNextNode'new-1 stamp))
     )
 
-    (defm AbstractNewObjectNode Lowerable
-        (#_"void" Lowerable'''lower-2 [#_"AbstractNewObjectNode" this, #_"LoweringTool" lowerer]
-            (condp satisfies? this
-                NewInstanceNode
-                    (when (GuardsStage'areFrameStatesAtDeopts-1 (:guardsStage (:graph this)))
-                        (NewObjectTemplates''lower-3i Lowerer'newObjectSnippets, this, lowerer)
-                    )
-                NewArrayNode
-                    (when (GuardsStage'areFrameStatesAtDeopts-1 (:guardsStage (:graph this)))
-                        (NewObjectTemplates''lower-3a Lowerer'newObjectSnippets, this, lowerer)
-                    )
-            )
-            nil
-        )
-    )
-
     (defm AbstractNewObjectNode DeoptimizingNode
         (#_"boolean" DeoptimizingNode'''canDeoptimize-1 [#_"AbstractNewObjectNode" this]
             true
@@ -57367,6 +57311,15 @@ ZeroExtendNode'new-4
                 #_"ValueNode" :length length
                 #_"ResolvedJavaType" :elementType elementType
             )
+        )
+    )
+
+    (defm NewArrayNode Lowerable
+        (#_"void" Lowerable'''lower-2 [#_"NewArrayNode" this, #_"LoweringTool" lowerer]
+            (when (GuardsStage'areFrameStatesAtDeopts-1 (:guardsStage (:graph this)))
+                (NewObjectTemplates''lower-3a Lowerer'newObjectSnippets, this, lowerer)
+            )
+            nil
         )
     )
 
@@ -57452,6 +57405,15 @@ ZeroExtendNode'new-4
         )
     )
 
+    (defm NewInstanceNode Lowerable
+        (#_"void" Lowerable'''lower-2 [#_"NewInstanceNode" this, #_"LoweringTool" lowerer]
+            (when (GuardsStage'areFrameStatesAtDeopts-1 (:guardsStage (:graph this)))
+                (NewObjectTemplates''lower-3i Lowerer'newObjectSnippets, this, lowerer)
+            )
+            nil
+        )
+    )
+
     (defm NewInstanceNode Virtualizable
         (#_"void" Virtualizable'''virtualize-2 [#_"NewInstanceNode" this, #_"VirtualizerTool" tool]
             ;; Reference objects can escape into their ReferenceQueue at any safepoint, therefore they're excluded from escape analysis.
@@ -57495,6 +57457,9 @@ ZeroExtendNode'new-4
                 #_"AddressNode" :address address
                 #_"LocationIdentity" :location location
                 #_"boolean" :nullCheck false
+                ;;;
+                 ; Write barrier type.
+                 ;;
                 #_"BarrierType" :barrierType barrierType
             )
         )
@@ -57531,12 +57496,6 @@ ZeroExtendNode'new-4
             (Node''updateUsages-3 this, (:guard this), guard)
             (§ ass! this (assoc this :guard guard))
             nil
-        )
-    )
-
-    (defm FixedAccessNode HeapAccess
-        (#_"BarrierType" HeapAccess'''getBarrierType-1 [#_"FixedAccessNode" this]
-            (:barrierType this)
         )
     )
 )
@@ -57690,7 +57649,7 @@ ZeroExtendNode'new-4
         (#_"void" Lowerable'''lower-2 [#_"JavaWriteNode" this, #_"LoweringTool" lowerer]
             (let [
                 #_"ValueNode" value (Lowerer'implicitStoreConvert-4 (:graph this), (:writeKind this), (:value this), (:compressible? this))
-                #_"WriteNode" memoryWrite (Graph''add-2 (:graph this), (WriteNode'new-4 (Access'''getAddress-1 this), (ß FixedAccessNode''getLocationIdentity-1 this), value, (HeapAccess'''getBarrierType-1 this)))
+                #_"WriteNode" memoryWrite (Graph''add-2 (:graph this), (WriteNode'new-4 (Access'''getAddress-1 this), (ß FixedAccessNode''getLocationIdentity-1 this), value, (:barrierType this)))
             ]
                 (StateSplit'''setStateAfter-2 memoryWrite, (:stateAfter this))
                 (§ ass! (:graph this) (Graph''replaceFixedWithFixed-3 (:graph this), this, memoryWrite))
@@ -57773,7 +57732,7 @@ ZeroExtendNode'new-4
      ; an attached write barrier with pre-semantics can not also float.
      ;;
     (defn #_"boolean" FloatableAccessNode''canFloat-1 [#_"FloatableAccessNode" this]
-        (and (not (:forceFixed this)) (#_"LocationIdentity" .isSingle (ß FixedAccessNode''getLocationIdentity-1 this)) (= (HeapAccess'''getBarrierType-1 this) BarrierType'NONE))
+        (and (not (:forceFixed this)) (#_"LocationIdentity" .isSingle (ß FixedAccessNode''getLocationIdentity-1 this)) (= (:barrierType this) BarrierType'NONE))
     )
 )
 
@@ -57811,7 +57770,7 @@ ZeroExtendNode'new-4
 
     (defm ReadNode FloatableAccessNode
         (#_"FloatingAccessNode" FloatableAccessNode'''asFloatingNode-2 [#_"ReadNode" this, #_"MemoryNode" lastLocationAccess]
-            (Graph''add-2 (:graph this), (FloatingReadNode'new-6 (Access'''getAddress-1 this), (ß FixedAccessNode''getLocationIdentity-1 this), lastLocationAccess, (:stamp this), (GuardedNode'''getGuard-1 this), (HeapAccess'''getBarrierType-1 this)))
+            (Graph''add-2 (:graph this), (FloatingReadNode'new-6 (Access'''getAddress-1 this), (ß FixedAccessNode''getLocationIdentity-1 this), lastLocationAccess, (:stamp this), (GuardedNode'''getGuard-1 this), (:barrierType this)))
         )
     )
 
@@ -57890,7 +57849,7 @@ ZeroExtendNode'new-4
         (#_"void" Lowerable'''lower-2 [#_"JavaReadNode" this, #_"LoweringTool" lowerer]
             (let [
                 #_"Stamp" loadStamp (Lowerer'loadStamp-3 (:stamp this), (:readKind this), (:compressible? this))
-                #_"ReadNode" memoryRead (Graph''add-2 (:graph this), (ReadNode'new-4 (Access'''getAddress-1 this), (ß FixedAccessNode''getLocationIdentity-1 this), loadStamp, (HeapAccess'''getBarrierType-1 this)))
+                #_"ReadNode" memoryRead (Graph''add-2 (:graph this), (ReadNode'new-4 (Access'''getAddress-1 this), (ß FixedAccessNode''getLocationIdentity-1 this), loadStamp, (:barrierType this)))
                 #_"ValueNode" readValue (Lowerer'implicitLoadConvert-4 (:graph this), (:readKind this), memoryRead, (:compressible? this))
                 #_"GuardingNode" guard (GuardedNode'''getGuard-1 this)
             ]
@@ -61680,116 +61639,6 @@ ZeroExtendNode'new-4
 )
 
 ;;;
- ; Instances of this node class will look for a preceding if node and put the given probability into
- ; the if node's taken probability. Then the branch probability node will be removed. This node is
- ; intended primarily for snippets, so that they can define their fast and slow paths.
- ;;
-(class-ns BranchProbabilityNode [FloatingNode, ValueNode, Node, Simplifiable, Lowerable]
-    (def #_"double" BranchProbabilityNode'LIKELY_PROBABILITY 0.6)
-    (§ def #_"double" BranchProbabilityNode'NOT_LIKELY_PROBABILITY (- 1.0 BranchProbabilityNode'LIKELY_PROBABILITY))
-
-    (def #_"double" BranchProbabilityNode'FREQUENT_PROBABILITY 0.9)
-    (§ def #_"double" BranchProbabilityNode'NOT_FREQUENT_PROBABILITY (- 1.0 BranchProbabilityNode'FREQUENT_PROBABILITY))
-
-    (def #_"double" BranchProbabilityNode'FAST_PATH_PROBABILITY 0.99)
-    (§ def #_"double" BranchProbabilityNode'SLOW_PATH_PROBABILITY (- 1.0 BranchProbabilityNode'FAST_PATH_PROBABILITY))
-
-    (def #_"double" BranchProbabilityNode'VERY_FAST_PATH_PROBABILITY 0.999)
-    (§ def #_"double" BranchProbabilityNode'VERY_SLOW_PATH_PROBABILITY (- 1.0 BranchProbabilityNode'VERY_FAST_PATH_PROBABILITY))
-
-    ;;;
-     ; This intrinsic should only be used for the condition of an if statement. The parameter
-     ; condition should also only denote a simple condition and not a combined condition involving
-     ; && or || operators. It injects the probability of the condition into the if statement.
-     ;
-     ; @param probability the probability that the given condition is true as a double value between 0.0 and 1.0
-     ; @param condition the simple condition without any && or || operators
-     ; @return the condition
-     ;;
-    (§ intrinsic! #_"boolean" BranchProbabilityNode'probability-2 [#_"double" probability, #_"boolean" condition])
-
-    #_intrinsifier
-    (defn #_"BranchProbabilityNode" BranchProbabilityNode'new-2 [#_"ValueNode" probability, #_"ValueNode" condition]
-        (merge (BranchProbabilityNode'class.) (FloatingNode'new-1 (:stamp condition))
-            (hash-map
-                ; @Input
-                #_"ValueNode" :probability probability
-                ; @Input
-                #_"ValueNode" :condition condition
-            )
-        )
-    )
-
-    (defn- #_"boolean" BranchProbabilityNode''isSubstitutionGraph-1 [#_"BranchProbabilityNode" this]
-        (and (Node''hasExactlyOneUsage-1 this) (satisfies? ReturnNode (first (:nodeUsages this))))
-    )
-
-    (defm BranchProbabilityNode Simplifiable
-        (#_"void" Simplifiable'''simplify-2 [#_"BranchProbabilityNode" this, #_"SimplifierTool" tool]
-            (when (and (Node''hasUsages-1 this) (satisfies? ConstantNode (:probability this)))
-                (let [
-                    #_"double" probabilityValue (#_"JavaConstant" .asDouble (ValueNode''asJavaConstant-1 (:probability this)))
-                ]
-                    (cond
-                        (< probabilityValue 0.0) (throw! (str "A negative probability of " probabilityValue " is not allowed!"))
-                        (< 1.0 probabilityValue) (throw! (str "A probability of more than 1.0 (" probabilityValue ") is not allowed!"))
-                        ;; We allow NaN if the node is in unreachable code that will eventually fall away,
-                        ;; or else an error will be thrown during lowering since we keep the node around.
-                        (Double/isNaN probabilityValue) nil
-                        :else
-                            (let [
-                                #_"boolean" found?
-                                    (loop-when [found? false #_"ISeq" s (seq (filter #(satisfies? IntegerEqualsNode %) (:nodeUsages this)))] (some? s) => found?
-                                        (let [
-                                            #_"IntegerEqualsNode" node (first s)
-                                            #_"ValueNode" other (if (= (:x node) this) (:y node) (:x node))
-                                            found?
-                                                (when (satisfies? ConstantNode other) => found?
-                                                    (let [
-                                                        #_"double" probabilityToSet (if (zero? (#_"JavaConstant" .asInt (ValueNode''asJavaConstant-1 other))) (- 1.0 probabilityValue) probabilityValue)
-                                                        found?
-                                                            (loop-when [found? found? #_"ISeq" s (seq (filter #(satisfies? IfNode %) (:nodeUsages node)))] (some? s) => found?
-                                                                (§ ass! (first s) (IfNode''setTrueSuccessorProbability-2 (first s), probabilityToSet))
-                                                                (recur true (next s))
-                                                            )
-                                                    ]
-                                                        (or found?
-                                                            (some #(or (satisfies? FixedGuardNode %) (satisfies? ConditionalNode %)) (:nodeUsages node))
-                                                        )
-                                                    )
-                                                )
-                                        ]
-                                            (recur found? (next s))
-                                        )
-                                    )
-                            ]
-                                (if found?
-                                    (do
-                                        (§ ass! this (Node''replaceAndDelete-2 this, (:condition this)))
-                                        (when (some? tool)
-                                            (SimplifierTool'''addToWorkList-2s tool, (:nodeUsages (:condition this)))
-                                        )
-                                    )
-                                    (when-not (BranchProbabilityNode''isSubstitutionGraph-1 this)
-                                        (throw! "Wrong usage of branch probability injection!")
-                                    )
-                                )
-                            )
-                    )
-                )
-            )
-            nil
-        )
-    )
-
-    (defm BranchProbabilityNode Lowerable
-        (#_"void" Lowerable'''lower-2 [#_"BranchProbabilityNode" this, #_"LoweringTool" lowerer]
-            (throw! "Branch probability could not be injected, because the probability value did not reduce to a constant value.")
-        )
-    )
-)
-
-;;;
  ; Read {@code Class::_klass} to get the hub for a {@link java.lang.Class}. This node mostly exists
  ; to replace {@code _klass._java_mirror._klass} with {@code _klass}. The constant folding could be
  ; handled by ReadNode#canonicalizeRead(ValueNode, AddressNode, LocationIdentity, CanonicalizerTool).
@@ -62540,6 +62389,9 @@ ZeroExtendNode'new-4
                 ; @Input
                 #_"AddressNode" :address address
                 #_"LocationIdentity" :location location
+                ;;;
+                 ; Write barrier type.
+                 ;;
                 #_"BarrierType" :barrierType barrierType
             )
         )
@@ -62554,12 +62406,6 @@ ZeroExtendNode'new-4
     (ß defm FloatingAccessNode FloatingAccessNode
         (#_"LocationIdentity" FloatingAccessNode'''getLocationIdentity-1 [#_"FloatingAccessNode" this]
             (:location this)
-        )
-    )
-
-    (defm FloatingAccessNode HeapAccess
-        (#_"BarrierType" HeapAccess'''getBarrierType-1 [#_"FloatingAccessNode" this]
-            (:barrierType this)
         )
     )
 
@@ -62637,7 +62483,7 @@ ZeroExtendNode'new-4
     (defm FloatingReadNode FloatingAccessNode
         (#_"FixedAccessNode" FloatingAccessNode'''asFixedNode-1 [#_"FloatingReadNode" this]
             (let [
-                #_"ReadNode" result (Graph''add-2 (:graph this), (ReadNode'new-4 (Access'''getAddress-1 this), (ß FloatingAccessNode''getLocationIdentity-1 this), (:stamp this), (HeapAccess'''getBarrierType-1 this)))
+                #_"ReadNode" result (Graph''add-2 (:graph this), (ReadNode'new-4 (Access'''getAddress-1 this), (ß FloatingAccessNode''getLocationIdentity-1 this), (:stamp this), (:barrierType this)))
             ]
                 (GuardedNode'''setGuard-2 result, (GuardedNode'''getGuard-1 this))
                 result
@@ -76690,79 +76536,67 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"void" WriteBarrierAdditionPhase''addReadNodeBarriers-3 [#_"WriteBarrierAdditionPhase" this, #_"ReadNode" node, #_"Graph" graph]
-        (when (= (HeapAccess'''getBarrierType-1 node) BarrierType'PRECISE)
+        (when (= (:barrierType node) BarrierType'PRECISE)
             (Graph''addAfterFixed-3 graph, node, (Graph''add-2 graph, (G1ReferentFieldReadBarrier'new-3 (Access'''getAddress-1 node), node, false)))
         )
         nil
     )
 
     (defn- #_"void" WriteBarrierAdditionPhase''addWriteNodeBarriers-3 [#_"WriteBarrierAdditionPhase" this, #_"WriteNode" node, #_"Graph" graph]
-        (let [
-            #_"BarrierType" barrierType (HeapAccess'''getBarrierType-1 node)
-        ]
-            (condp =? barrierType
-               [BarrierType'IMPRECISE BarrierType'PRECISE]
-                    (let [
-                        #_"boolean" precise? (= barrierType BarrierType'PRECISE)
-                    ]
-                        (if HotSpot'useG1GC
-                            (do
-                                (when-not (#_"LocationIdentity" .isInit (ß FixedAccessNode''getLocationIdentity-1 node))
-                                    (WriteBarrierAdditionPhase'addG1PreWriteBarrier-6 node, (Access'''getAddress-1 node), nil, true, (:nullCheck node), graph)
-                                )
-                                (WriteBarrierAdditionPhase''addG1PostWriteBarrier-6 this, node, (Access'''getAddress-1 node), (:value node), precise?, graph)
+        (condp =? (:barrierType node)
+            [BarrierType'IMPRECISE BarrierType'PRECISE]
+                (let [
+                    #_"boolean" precise? (= (:barrierType node) BarrierType'PRECISE)
+                ]
+                    (if HotSpot'useG1GC
+                        (do
+                            (when-not (#_"LocationIdentity" .isInit (ß FixedAccessNode''getLocationIdentity-1 node))
+                                (WriteBarrierAdditionPhase'addG1PreWriteBarrier-6 node, (Access'''getAddress-1 node), nil, true, (:nullCheck node), graph)
                             )
-                            (WriteBarrierAdditionPhase''addSerialPostWriteBarrier-6 this, node, (Access'''getAddress-1 node), (:value node), precise?, graph)
+                            (WriteBarrierAdditionPhase''addG1PostWriteBarrier-6 this, node, (Access'''getAddress-1 node), (:value node), precise?, graph)
                         )
+                        (WriteBarrierAdditionPhase''addSerialPostWriteBarrier-6 this, node, (Access'''getAddress-1 node), (:value node), precise?, graph)
                     )
-                BarrierType'NONE nil ;; nothing to do
-            )
+                )
+            BarrierType'NONE nil ;; nothing to do
         )
         nil
     )
 
     (defn- #_"void" WriteBarrierAdditionPhase''addAtomicReadWriteNodeBarriers-3 [#_"WriteBarrierAdditionPhase" this, #_"LoweredAtomicReadAndWriteNode" node, #_"Graph" graph]
-        (let [
-            #_"BarrierType" barrierType (HeapAccess'''getBarrierType-1 node)
-        ]
-            (condp =? barrierType
-               [BarrierType'IMPRECISE BarrierType'PRECISE]
-                    (let [
-                        #_"boolean" precise? (= barrierType BarrierType'PRECISE)
-                    ]
-                        (if HotSpot'useG1GC
-                            (do
-                                (WriteBarrierAdditionPhase'addG1PreWriteBarrier-6 node, (Access'''getAddress-1 node), nil, true, (:nullCheck node), graph)
-                                (WriteBarrierAdditionPhase''addG1PostWriteBarrier-6 this, node, (Access'''getAddress-1 node), (:newValue node), precise?, graph)
-                            )
-                            (WriteBarrierAdditionPhase''addSerialPostWriteBarrier-6 this, node, (Access'''getAddress-1 node), (:newValue node), precise?, graph)
+        (condp =? (:barrierType node)
+            [BarrierType'IMPRECISE BarrierType'PRECISE]
+                (let [
+                    #_"boolean" precise? (= (:barrierType node) BarrierType'PRECISE)
+                ]
+                    (if HotSpot'useG1GC
+                        (do
+                            (WriteBarrierAdditionPhase'addG1PreWriteBarrier-6 node, (Access'''getAddress-1 node), nil, true, (:nullCheck node), graph)
+                            (WriteBarrierAdditionPhase''addG1PostWriteBarrier-6 this, node, (Access'''getAddress-1 node), (:newValue node), precise?, graph)
                         )
+                        (WriteBarrierAdditionPhase''addSerialPostWriteBarrier-6 this, node, (Access'''getAddress-1 node), (:newValue node), precise?, graph)
                     )
-                BarrierType'NONE nil ;; nothing to do
-            )
+                )
+            BarrierType'NONE nil ;; nothing to do
         )
         nil
     )
 
     (defn- #_"void" WriteBarrierAdditionPhase''addCASBarriers-3 [#_"WriteBarrierAdditionPhase" this, #_"AbstractCompareAndSwapNode" node, #_"Graph" graph]
-        (let [
-            #_"BarrierType" barrierType (HeapAccess'''getBarrierType-1 node)
-        ]
-            (condp =? barrierType
-               [BarrierType'IMPRECISE BarrierType'PRECISE]
-                    (let [
-                        #_"boolean" precise? (= barrierType BarrierType'PRECISE)
-                    ]
-                        (if HotSpot'useG1GC
-                            (do
-                                (WriteBarrierAdditionPhase'addG1PreWriteBarrier-6 node, (Access'''getAddress-1 node), (:expectedValue node), false, false, graph)
-                                (WriteBarrierAdditionPhase''addG1PostWriteBarrier-6 this, node, (Access'''getAddress-1 node), (AbstractCompareAndSwapNode''getNewValue-1 node), precise?, graph)
-                            )
-                            (WriteBarrierAdditionPhase''addSerialPostWriteBarrier-6 this, node, (Access'''getAddress-1 node), (AbstractCompareAndSwapNode''getNewValue-1 node), precise?, graph)
+        (condp =? (:barrierType node)
+            [BarrierType'IMPRECISE BarrierType'PRECISE]
+                (let [
+                    #_"boolean" precise? (= (:barrierType node) BarrierType'PRECISE)
+                ]
+                    (if HotSpot'useG1GC
+                        (do
+                            (WriteBarrierAdditionPhase'addG1PreWriteBarrier-6 node, (Access'''getAddress-1 node), (:expectedValue node), false, false, graph)
+                            (WriteBarrierAdditionPhase''addG1PostWriteBarrier-6 this, node, (Access'''getAddress-1 node), (AbstractCompareAndSwapNode''getNewValue-1 node), precise?, graph)
                         )
+                        (WriteBarrierAdditionPhase''addSerialPostWriteBarrier-6 this, node, (Access'''getAddress-1 node), (AbstractCompareAndSwapNode''getNewValue-1 node), precise?, graph)
                     )
-                BarrierType'NONE nil ;; nothing to do
-            )
+                )
+            BarrierType'NONE nil ;; nothing to do
         )
         nil
     )
