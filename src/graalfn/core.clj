@@ -160,7 +160,6 @@ MetaspaceOperation''opcode-1
 MonitorSnippets
 NewObjectSnippets
 NodeEvent
-NonNullParameter
 OperandFlag
 Optimization'values-0
 OptionalInput
@@ -171,7 +170,6 @@ Successor
 Temp
 UnsafeLoadSnippets
 Use
-VarargsParameter
 WordFactoryOperation
 WordFactoryOperation''opcode-1
 WordOperation
@@ -403,7 +401,7 @@ AbstractMergeNode''removeEnd-2
 AbstractMergeNode''valuePhis-1
 AbstractMergeNode'new-0
 AbstractMoveOp'new-1
-AbstractNewObjectNode'new-2
+AbstractNewObjectNode'new-1
 AbstractObjectStamp''isExactType-1
 AbstractObjectStamp'isConcreteType-1
 AbstractObjectStamp'new-4
@@ -448,7 +446,6 @@ AndNode'create-2
 AndNode'new-2
 Arguments''add-2
 Arguments''addConst-2
-Arguments''addVarargs-4
 Arguments'new-3
 ArithmeticOp'new-1
 ArithmeticOpTable'EMPTY
@@ -796,8 +793,8 @@ BytecodeParser''createInstanceOf-3
 BytecodeParser''createInstanceOfAllowNull-3
 BytecodeParser''createInvoke-4
 BytecodeParser''createMonitorEnterNode-3
-BytecodeParser''createNewArray-4
-BytecodeParser''createNewInstance-3
+BytecodeParser''createNewArray-3
+BytecodeParser''createNewInstance-2
 BytecodeParser''createNonInlinedInvoke-7
 BytecodeParser''emitCheckForInvokeSuperSpecial-2
 BytecodeParser''genAnd-3
@@ -1084,7 +1081,6 @@ ClassGetHubNode'canonical-4
 ClassGetHubNode'create-2
 ClassGetHubNode'intrinsify-3
 ClassGetHubNode'new-1
-ClassIsAssignableFromNode'new-2
 ClassRef''resolve-2
 ClassRef'new-1
 Classfile''getCode-3
@@ -1536,7 +1532,6 @@ FloatingReadPhase'mergeMemoryMaps-2
 FloatingReadPhase'new-0
 FloatingReadPhase'new-2
 ForeignCallDescriptor'DEOPTIMIZATION_HANDLER
-ForeignCallDescriptor'DYNAMIC_NEW_ARRAY
 ForeignCallDescriptor'G1WBPOSTCALL
 ForeignCallDescriptor'G1WBPRECALL
 ForeignCallDescriptor'MONITORENTER
@@ -1863,7 +1858,6 @@ HotSpot'constantReflection
 HotSpot'defaultBytecodeProvider
 HotSpot'deoptHandlerEntryMark
 HotSpot'dirtyCardValue
-HotSpot'dynamicNewArrayAddress
 HotSpot'epochMaskInPlace
 HotSpot'foldStableValues
 HotSpot'foreignCalls
@@ -1982,7 +1976,6 @@ IllegalStamp'instance
 IncrementalCanonicalizerPhase'new-1
 IncrementalCanonicalizerPhase'new-2
 InductionVariable'new-1
-InferStamps'inferStamps-1
 InfoElement'new-4
 InlineDuringParsingPlugin'new-0
 InlineInvokeInfo''allowsInlining-1
@@ -2580,7 +2573,6 @@ LoadIndexedNode'new-4
 LoadIndexedPointerNode'new-3
 LoadMetaspaceConstantOp'new-2
 LoadObjectConstantOp'new-2
-LoadSnippetVarargParameterNode'new-3
 LocalLiveness'compute-4
 LocalLiveness'new-1
 LocationSet''add-2
@@ -2902,11 +2894,11 @@ NegateNode'findSynonym-1
 NegateNode'new-1
 NewArrayNode''createVirtualArrayNode-2
 NewArrayNode''defaultElementValue-1
-NewArrayNode'new-3
+NewArrayNode'new-2
 NewArrayStub'new-1
 NewInstanceNode''createVirtualInstanceNode-2
 NewInstanceNode''defaultFieldValue-2
-NewInstanceNode'new-2
+NewInstanceNode'new-1
 NewInstanceStub'new-1
 NewObjectTemplates''lower-3a
 NewObjectTemplates''lower-3i
@@ -3186,12 +3178,8 @@ PiNode'new-2
 PiNode'new-3
 Placeholder'new-1
 PlaceholderStamp'SINGLETON
-Plugins''appendInlineInvokePlugin-2
-Plugins''appendNodePlugin-2
-Plugins''appendTypePlugin-2
 Plugins''getOverridingStamp-4
 Plugins''prependParameterPlugin-2
-Plugins'copy-1
 Plugins'create-0
 Plugins'new-0
 PointerCastNode'new-2
@@ -3243,11 +3231,6 @@ ProcessFrame''enterAlwaysReached-2
 ProcessFrame''postprocess-1
 ProcessFrame''preprocess-1
 ProcessFrame'new-5
-ProfileContext'AllocatedType
-ProfileContext'AllocatedTypesInMethod
-ProfileContext'AllocatingMethod
-ProfileContext'InstanceOrArray
-ProfileContext'Total
 PropagateDeoptimizeProbabilityPhase'new-0
 ProxyNode'forGuard-3
 ProxyNode'forValue-3
@@ -3379,7 +3362,6 @@ ReplacementsUtil'initializeObjectHeader-3
 ReplacementsUtil'instanceHeaderSize-0
 ReplacementsUtil'loadHub-1
 ReplacementsUtil'loadWordFromObject-2
-ReplacementsUtil'loadWordFromObject-3
 ReplacementsUtil'readPendingDeoptimization-1
 ReplacementsUtil'readTlabEnd-1
 ReplacementsUtil'readTlabTop-1
@@ -3487,8 +3469,6 @@ SmallLocalLiveness'new-3
 SnippetAnchorNode'new-0
 SnippetInfo''getParameterCount-1
 SnippetInfo''isConstantParameter-2
-SnippetInfo''isNonNullParameter-2
-SnippetInfo''isVarargsParameter-2
 SnippetInfo'new-2
 SnippetReflection'asObject-2c
 SnippetReflection'asObject-2t
@@ -3715,8 +3695,6 @@ Values''getFlags-2
 Values''getValue-3
 Values''setValue-4
 Values'new-1
-Varargs'new-3
-VarargsPlaceholderNode'new-1
 Variable'new-2
 VariableMap''filter-2
 VariableMap''forEach-2
@@ -3938,24 +3916,9 @@ ZeroExtendNode'new-4
 )
 
 ;;;
- ; Denotes a snippet parameter representing 0 or more arguments that will be bound during
- ; snippet template instantiation. During snippet template creation, its value must be an array
- ; whose length specifies the number of arguments (the contents of the array are ignored) bound
- ; to the parameter during instantiation.
- ;;
-(§ annotation VarargsParameter
-)
-
-;;;
  ; Denotes a snippet parameter that will bound to a constant value during snippet template instantiation.
  ;;
 (§ annotation ConstantParameter
-)
-
-;;;
- ; Denotes a snippet parameter that will bound to a non-nil value during snippet template instantiation.
- ;;
-(§ annotation NonNullParameter
 )
 
 ;;;
@@ -4501,7 +4464,7 @@ ZeroExtendNode'new-4
 )
 
 (defp CanonicalizableLocation
-    (#_"ValueNode" CanonicalizableLocation'''canonicalizeRead-5 [#_"CanonicalizableLocation" this, #_"ValueNode" read, #_"AddressNode" location, #_"ValueNode" object, #_"CanonicalizerTool" tool])
+    (#_"ValueNode" CanonicalizableLocation'''canonicalizeRead-4 [#_"CanonicalizableLocation" this, #_"ValueNode" read, #_"AddressNode" location, #_"ValueNode" object])
 )
 
 (defp CanonicalizedCondition)
@@ -4524,7 +4487,6 @@ ZeroExtendNode'new-4
 
 (defp ChainedNodeEventListener)
 (defp ClassGetHubNode)
-(defp ClassIsAssignableFromNode)
 (defp ClassRef)
 (defp Classfile)
 (defp ClassfileBytecode)
@@ -5505,7 +5467,6 @@ ZeroExtendNode'new-4
 (defp LoadIndexedPointerNode)
 (defp LoadMetaspaceConstantOp)
 (defp LoadObjectConstantOp)
-(defp LoadSnippetVarargParameterNode)
 
 ;;;
  ; Encapsulates the liveness calculation, so that subclasses for locals <= 64 and locals > 64 can be implemented.
@@ -6724,8 +6685,6 @@ ZeroExtendNode'new-4
 
 (defp ValueProxyNode)
 (defp Values)
-(defp Varargs)
-(defp VarargsPlaceholderNode)
 (defp Variable)
 (defp VariableMap)
 (defp VirtualArrayNode)
@@ -7068,7 +7027,7 @@ ZeroExtendNode'new-4
     (def #_"int" HotSpot'g1SATBQueueIndexOffset   (+ HotSpot'javaThreadSatbMarkQueueOffset  (.getConstant HotSpot'config, "satbMarkQueueIndexOffset",   Integer)))
     (def #_"int" HotSpot'g1SATBQueueBufferOffset  (+ HotSpot'javaThreadSatbMarkQueueOffset  (.getConstant HotSpot'config, "satbMarkQueueBufferOffset",  Integer)))
 
-    (def #_"int" HotSpot'klassOffset      (.getFieldValue HotSpot'config, "java_lang_Class::_klass_offset",       Integer, "int"))
+    (def #_"int" HotSpot'klassOffset (.getFieldValue HotSpot'config, "java_lang_Class::_klass_offset", Integer, "int"))
 
     (def #_"int" HotSpot'lockDisplacedMarkOffset (.getFieldOffset HotSpot'config, "BasicLock::_displaced_header", Integer, "markOop"))
 
@@ -7085,7 +7044,6 @@ ZeroExtendNode'new-4
 
     (def #_"long" HotSpot'newInstanceAddress        (.getAddress HotSpot'config, "JVMCIRuntime::new_instance"))
     (def #_"long" HotSpot'newArrayAddress           (.getAddress HotSpot'config, "JVMCIRuntime::new_array"))
-    (def #_"long" HotSpot'dynamicNewArrayAddress    (.getAddress HotSpot'config, "JVMCIRuntime::dynamic_new_array"))
     (def #_"long" HotSpot'monitorenterAddress       (.getAddress HotSpot'config, "JVMCIRuntime::monitorenter"))
     (def #_"long" HotSpot'monitorexitAddress        (.getAddress HotSpot'config, "JVMCIRuntime::monitorexit"))
     (def #_"long" HotSpot'writeBarrierPreAddress    (.getAddress HotSpot'config, "JVMCIRuntime::write_barrier_pre"))
@@ -8467,7 +8425,7 @@ ZeroExtendNode'new-4
 
     (§ def #_"LocationIdentity" ReplacementsUtil'HUB_LOCATION
         (§ proxy #_"CanonicalizableLocation" (CanonicalizableLocation'new-1 "Hub")
-            (#_"ValueNode" CanonicalizableLocation'''canonicalizeRead-5 [#_"CanonicalizableLocation" this, #_"ValueNode" read, #_"AddressNode" location, #_"ValueNode" object, #_"CanonicalizerTool" tool]
+            (#_"ValueNode" CanonicalizableLocation'''canonicalizeRead-4 [#_"CanonicalizableLocation" this, #_"ValueNode" read, #_"AddressNode" location, #_"ValueNode" object]
                 (let [
                     #_"TypeReference" constantType (StampTool'typeReferenceOrNull-1 (:stamp object))
                 ]
@@ -8481,7 +8439,7 @@ ZeroExtendNode'new-4
 
     (§ def #_"LocationIdentity" ReplacementsUtil'COMPRESSED_HUB_LOCATION
         (§ proxy #_"CanonicalizableLocation" (CanonicalizableLocation'new-1 "CompressedHub")
-            (#_"ValueNode" CanonicalizableLocation'''canonicalizeRead-5 [#_"CanonicalizableLocation" this, #_"ValueNode" read, #_"AddressNode" location, #_"ValueNode" object, #_"CanonicalizerTool" tool]
+            (#_"ValueNode" CanonicalizableLocation'''canonicalizeRead-4 [#_"CanonicalizableLocation" this, #_"ValueNode" read, #_"AddressNode" location, #_"ValueNode" object]
                 (let [
                     #_"TypeReference" constantType (StampTool'typeReferenceOrNull-1 (:stamp object))
                 ]
@@ -8549,11 +8507,6 @@ ZeroExtendNode'new-4
         (RawLoadNode'loadWordFromObjectIntrinsic-4 object, offset, (LocationIdentity/any), (.wordJavaKind HotSpot'target))
     )
 
-    #_unused
-    (defn #_"Word" ReplacementsUtil'loadWordFromObject-3 [#_"Object" object, #_"int" offset, #_"LocationIdentity" identity]
-        (RawLoadNode'loadWordFromObjectIntrinsic-4 object, offset, identity, (.wordJavaKind HotSpot'target))
-    )
-
     ;;;
      ; Reads the value of a given register.
      ;
@@ -8566,7 +8519,7 @@ ZeroExtendNode'new-4
 
     (§ def #_"LocationIdentity" ReplacementsUtil'CLASS_KLASS_LOCATION
         (§ proxy #_"CanonicalizableLocation" (CanonicalizableLocation'new-1 "Class._klass")
-            (#_"ValueNode" CanonicalizableLocation'''canonicalizeRead-5 [#_"CanonicalizableLocation" this, #_"ValueNode" read, #_"AddressNode" location, #_"ValueNode" object, #_"CanonicalizerTool" tool]
+            (#_"ValueNode" CanonicalizableLocation'''canonicalizeRead-4 [#_"CanonicalizableLocation" this, #_"ValueNode" read, #_"AddressNode" location, #_"ValueNode" object]
                 (CanonicalizableLocation'foldIndirection-3 read, object, ReplacementsUtil'CLASS_MIRROR_LOCATION)
             )
         )
@@ -8582,7 +8535,7 @@ ZeroExtendNode'new-4
 
     (§ def #_"LocationIdentity" ReplacementsUtil'OBJ_ARRAY_KLASS_ELEMENT_KLASS_LOCATION
         (§ proxy #_"CanonicalizableLocation" (CanonicalizableLocation'new-1 "ObjArrayKlass::_element_klass")
-            (#_"ValueNode" CanonicalizableLocation'''canonicalizeRead-5 [#_"CanonicalizableLocation" this, #_"ValueNode" read, #_"AddressNode" location, #_"ValueNode" object, #_"CanonicalizerTool" tool]
+            (#_"ValueNode" CanonicalizableLocation'''canonicalizeRead-4 [#_"CanonicalizableLocation" this, #_"ValueNode" read, #_"AddressNode" location, #_"ValueNode" object]
                 read
             )
         )
@@ -8594,11 +8547,11 @@ ZeroExtendNode'new-4
 )
 
 ;;;
- ; Snippets used for implementing the type test of an instanceof instruction. Since instanceof is a
- ; floating node, it is lowered separately for each of its usages.
+ ; Snippets used for implementing the type test of an instanceof instruction. Since instanceof is
+ ; a floating node, it is lowered separately for each of its usages.
  ;
  ; The type tests implemented are described in the paper
- ; <a href="http://dl.acm.org/citation.cfm?id=583821"> Fast subtype checking in the HotSpot JVM</a>
+ ; <a href="http://dl.acm.org/citation.cfm?id=583821">Fast subtype checking in the HotSpot JVM</a>
  ; by Cliff Click and John Rose.
  ;;
 (value-ns InstanceOfSnippets (§ implements Snippets)
@@ -8637,21 +8590,17 @@ ZeroExtendNode'new-4
     )
 
     ;;;
-     ; A test against a restricted secondary type type.
+     ; A test against a restricted secondary type.
      ;;
-    (§ snippet! #_"Object" #_"InstanceOfSnippets" "instanceofSecondary" [#_"KlassPointer" hub, #_"Object" object, #_@VarargsParameter #_"KlassPointer[]" hints, #_@VarargsParameter #_"boolean[]" hintIsPositive, #_"Object" trueValue, #_"Object" falseValue]
+    (§ snippet! #_"Object" #_"InstanceOfSnippets" "instanceofSecondary" [#_"KlassPointer" hub, #_"Object" object, #_"Object" trueValue, #_"Object" falseValue]
         (if (BranchProbabilityNode'probability-2 BranchProbabilityNode'NOT_FREQUENT_PROBABILITY, (nil? object))
             falseValue
             (let [
                 #_"KlassPointer" objectHub (LoadHubNode'loadHubIntrinsic-1 (PiNode'piCastNonNull-2 object, (SnippetAnchorNode'anchor-0)))
             ]
-                ;; if we get an exact match: succeed immediately
-                (ExplodeLoopNode'explodeLoop-0)
-                (loop-when [#_"int" i 0] (< i (count hints)) => (if (TypeCheckSnippetUtils'checkSecondarySubType-2 hub, objectHub) trueValue falseValue)
-                    (if (BranchProbabilityNode'probability-2 BranchProbabilityNode'NOT_FREQUENT_PROBABILITY, (Word''klassPointersEqual-2 (nth hints i), objectHub))
-                        (if (nth hintIsPositive i) trueValue falseValue)
-                        (recur (inc i))
-                    )
+                (if (TypeCheckSnippetUtils'checkSecondarySubType-2 hub, objectHub)
+                    trueValue
+                    falseValue
                 )
             )
         )
@@ -8674,43 +8623,14 @@ ZeroExtendNode'new-4
             )
         )
     )
-
-    (§ snippet! #_"Object" #_"InstanceOfSnippets" "isAssignableFrom" [#_@NonNullParameter #_"Class" thisClassNonNull, #_"Class" otherClass, #_"Object" trueValue, #_"Object" falseValue]
-        (if (nil? otherClass)
-            (do
-                (DeoptimizeNode'deopt-2 DeoptimizationAction/InvalidateReprofile, DeoptimizationReason/NullCheckException)
-                false
-            )
-            (let [
-                #_"Class" otherClassNonNull (PiNode'piCastNonNull-2 otherClass, (SnippetAnchorNode'anchor-0))
-            ]
-                (if (BranchProbabilityNode'probability-2 BranchProbabilityNode'NOT_LIKELY_PROBABILITY, (= thisClassNonNull otherClassNonNull))
-                    trueValue
-                    (let [
-                        #_"KlassPointer" thisHub (ClassGetHubNode'readClass-1 thisClassNonNull)
-                        #_"KlassPointer" otherHub (ClassGetHubNode'readClass-1 otherClassNonNull)
-                    ]
-                        (if (and (BranchProbabilityNode'probability-2 BranchProbabilityNode'FAST_PATH_PROBABILITY, (not (Word''klassPointerIsNull-1 thisHub)))
-                                 (BranchProbabilityNode'probability-2 BranchProbabilityNode'FAST_PATH_PROBABILITY, (not (Word''klassPointerIsNull-1 otherHub)))
-                                 (TypeCheckSnippetUtils'checkUnknownSubType-2 thisHub, (PiNode'piCastNonNull-2 otherHub, (SnippetAnchorNode'anchor-0)))
-                              )
-                            trueValue
-                            ;; If either hub is nil, one of them is a primitive type and given that the class is not equal, return false.
-                            falseValue
-                        )
-                    )
-                )
-            )
-        )
-    )
 )
 
 ;;;
  ; Snippets used for implementing the monitorenter and monitorexit instructions.
  ;
  ; The locking algorithm used is described in the paper
- ; <a href="http://dl.acm.org/citation.cfm?id=1167515.1167496"> Eliminating synchronization-related
- ; atomic operations with biased locking and bulk rebiasing</a> by Kenneth Russell and David Detlefs.
+ ; <a href="http://dl.acm.org/citation.cfm?id=1167515.1167496">Eliminating synchronization-related atomic operations with biased locking and bulk rebiasing</a>
+ ; by Kenneth Russell and David Detlefs.
  ;
  ; Comment below is reproduced from {@code markOop.hpp} for convenience:
  ;
@@ -9143,8 +9063,7 @@ ZeroExtendNode'new-4
     )
 
     ;;;
-     ; Zero uninitialized memory in a newly allocated object, unrolling as necessary and
-     ; ensuring that stores are aligned.
+     ; Zero uninitialized memory in a newly allocated object, unrolling as necessary and ensuring that stores are aligned.
      ;
      ; @param size number of bytes to zero
      ; @param memory beginning of object which is being zeroed
@@ -9173,7 +9092,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"Object" NewObjectSnippets'allocateInstanceHelper-6 [#_"int" size, #_"KlassPointer" hub, #_"Word" prototypeMarkWord, #_"boolean" fillContents, #_"Register" threadRegister, #_"boolean" constantSize]
+    (defn- #_"Object" NewObjectSnippets'allocateInstanceHelper-4 [#_"int" size, #_"KlassPointer" hub, #_"Word" prototypeMarkWord, #_"Register" threadRegister]
         (let [
             #_"Word" thread (ReplacementsUtil'registerAsWord-1 threadRegister)
             #_"Word" top (ReplacementsUtil'readTlabTop-1 thread)
@@ -9184,15 +9103,15 @@ ZeroExtendNode'new-4
                 (do
                     (ReplacementsUtil'writeTlabTop-2 thread, newTop)
                     (NewObjectSnippets'emitPrefetchAllocate-2 newTop, false)
-                    (NewObjectSnippets'formatObject-6 hub, size, top, prototypeMarkWord, fillContents, constantSize)
+                    (NewObjectSnippets'formatObject-6 hub, size, top, prototypeMarkWord, true, true)
                 )
                 (ForeignCallNode'newInstance-2 ForeignCallDescriptor'NEW_INSTANCE, hub)
             )
         )
     )
 
-    (§ snippet! #_"Object" #_"NewObjectSnippets" "allocateInstance" [#_@ConstantParameter #_"int" size, #_"KlassPointer" hub, #_"Word" prototypeMarkWord, #_@ConstantParameter #_"boolean" fillContents, #_@ConstantParameter #_"Register" threadRegister, #_@ConstantParameter #_"boolean" constantSize]
-        (Placeholder'piCastToSnippetReplaceeStamp-1 (NewObjectSnippets'allocateInstanceHelper-6 size, hub, prototypeMarkWord, fillContents, threadRegister, constantSize))
+    (§ snippet! #_"Object" #_"NewObjectSnippets" "allocateInstance" [#_@ConstantParameter #_"int" size, #_"KlassPointer" hub, #_"Word" prototypeMarkWord, #_@ConstantParameter #_"Register" threadRegister]
+        (Placeholder'piCastToSnippetReplaceeStamp-1 (NewObjectSnippets'allocateInstanceHelper-4 size, hub, prototypeMarkWord, threadRegister))
     )
 
     ;;;
@@ -9214,7 +9133,7 @@ ZeroExtendNode'new-4
      ;;
     (def- #_"int" NewObjectSnippets'MAX_ARRAY_FAST_PATH_ALLOCATION_LENGTH 0x00ffffff)
 
-    (defn- #_"Object" NewObjectSnippets'allocateArrayImpl-9 [#_"KlassPointer" hub, #_"int" length, #_"Word" prototypeMarkWord, #_"int" headerSize, #_"int" log2ElementSize, #_"boolean" fillContents, #_"Register" threadRegister, #_"boolean" maybeUnroll, #_"boolean" skipNegativeCheck]
+    (defn- #_"Object" NewObjectSnippets'allocateArrayImpl-7 [#_"KlassPointer" hub, #_"int" length, #_"Word" prototypeMarkWord, #_"int" headerSize, #_"int" log2ElementSize, #_"Register" threadRegister, #_"boolean" maybeUnroll]
         (let [
             #_"int" allocationSize (ReplacementsUtil'arrayAllocationSize-3 length, headerSize, log2ElementSize)
             #_"Word" thread (ReplacementsUtil'registerAsWord-1 threadRegister)
@@ -9222,32 +9141,20 @@ ZeroExtendNode'new-4
             #_"Word" end (ReplacementsUtil'readTlabEnd-1 thread)
             #_"Word" newTop (Word''add-2i top, allocationSize)
         ]
-            (if (and (BranchProbabilityNode'probability-2 BranchProbabilityNode'FREQUENT_PROBABILITY, (or skipNegativeCheck (UnsignedMath'belowThan-2i length, NewObjectSnippets'MAX_ARRAY_FAST_PATH_ALLOCATION_LENGTH))) HotSpot'useTLAB (BranchProbabilityNode'probability-2 BranchProbabilityNode'FAST_PATH_PROBABILITY, (Word''belowOrEqual-2w newTop, end)))
+            (if (and (BranchProbabilityNode'probability-2 BranchProbabilityNode'FREQUENT_PROBABILITY, (UnsignedMath'belowThan-2i length, NewObjectSnippets'MAX_ARRAY_FAST_PATH_ALLOCATION_LENGTH)) HotSpot'useTLAB (BranchProbabilityNode'probability-2 BranchProbabilityNode'FAST_PATH_PROBABILITY, (Word''belowOrEqual-2w newTop, end)))
                 (do
                     (ReplacementsUtil'writeTlabTop-2 thread, newTop)
                     (NewObjectSnippets'emitPrefetchAllocate-2 newTop, true)
-                    (NewObjectSnippets'formatArray-8 hub, allocationSize, length, headerSize, top, prototypeMarkWord, fillContents, maybeUnroll)
+                    (NewObjectSnippets'formatArray-8 hub, allocationSize, length, headerSize, top, prototypeMarkWord, true, maybeUnroll)
                 )
-                (ForeignCallNode'newArray-4 ForeignCallDescriptor'NEW_ARRAY, hub, length, fillContents)
+                (ForeignCallNode'newArray-4 ForeignCallDescriptor'NEW_ARRAY, hub, length, true)
             )
         )
     )
 
-    (§ snippet! #_"Object" #_"NewObjectSnippets" "allocateArray" [#_"KlassPointer" hub, #_"int" length, #_"Word" prototypeMarkWord, #_@ConstantParameter #_"int" headerSize, #_@ConstantParameter #_"int" log2ElementSize, #_@ConstantParameter #_"boolean" fillContents, #_@ConstantParameter #_"Register" threadRegister, #_@ConstantParameter #_"boolean" maybeUnroll]
-        (let [
-            #_"Object" result (NewObjectSnippets'allocateArrayImpl-9 hub, length, prototypeMarkWord, headerSize, log2ElementSize, fillContents, threadRegister, maybeUnroll, false)
-        ]
-            (ArrayPlaceholder'piArrayCastToSnippetReplaceeStamp-2 result, length)
-        )
+    (§ snippet! #_"Object" #_"NewObjectSnippets" "allocateArray" [#_"KlassPointer" hub, #_"int" length, #_"Word" prototypeMarkWord, #_@ConstantParameter #_"int" headerSize, #_@ConstantParameter #_"int" log2ElementSize, #_@ConstantParameter #_"Register" threadRegister, #_@ConstantParameter #_"boolean" maybeUnroll]
+        (ArrayPlaceholder'piArrayCastToSnippetReplaceeStamp-2 (NewObjectSnippets'allocateArrayImpl-7 hub, length, prototypeMarkWord, headerSize, log2ElementSize, threadRegister, maybeUnroll), length)
     )
-)
-
-(value-ns ProfileContext
-    (§ enum ProfileContext'AllocatingMethod)
-    (§ enum ProfileContext'InstanceOrArray)
-    (§ enum ProfileContext'AllocatedType)
-    (§ enum ProfileContext'AllocatedTypesInMethod)
-    (§ enum ProfileContext'Total)
 )
 
 ;;;
@@ -9401,7 +9308,7 @@ ZeroExtendNode'new-4
                 #_"Word" cardAddress (Word''add-2i cardBase, displacement)
             ]
                 (when (BranchProbabilityNode'probability-2 BranchProbabilityNode'FREQUENT_PROBABILITY, (Word''notEqual-2i xorResult, 0))
-                    ;; If the written value is not nil continue with the barrier addition.
+                    ;; If the written value is not nil, continue with the barrier addition.
                     (when (BranchProbabilityNode'probability-2 BranchProbabilityNode'FREQUENT_PROBABILITY, (Word''notEqual-2i writtenValue, 0))
                         (let [
                             #_"byte" cardByte (Word''readByte-3i cardAddress, 0, WriteBarrierSnippets'GC_CARD_LOCATION)
@@ -11915,51 +11822,6 @@ ZeroExtendNode'new-4
     (§ enum ProcessBlockState'ST_PROCESS_ALWAYS_REACHED)
 )
 
-(value-ns InferStamps
-    ;;;
-     ; Infer the stamps for all Object nodes in the graph, to make the stamps as precise as
-     ; possible. For example, this propagates the word-type through phi functions. To handle phi
-     ; functions at loop headers, the stamp inference is called until a fix point is reached.
-     ;
-     ; This method can be used when it is needed that stamps are inferred before the first run of
-     ; the canonicalizer. For example, word type rewriting must run before the first run of the
-     ; canonicalizer because many nodes are not prepared to see the word type during canonicalization.
-     ;;
-    #_unused
-    (defn #_"void" InferStamps'inferStamps-1 [#_"Graph" graph]
-        ;; We want to make the stamps more precise. For cyclic phi functions, this means we have to
-        ;; ignore the initial stamp because the imprecise stamp would always propagate around the
-        ;; cycle. We therefore set the stamp to an illegal stamp, which is automatically ignored
-        ;; when the phi function performs the "meet" operator on its input stamps.
-        (doseq [#_"Node" node (Graph''getNodes-1 graph)]
-            (when (and (satisfies? ValuePhiNode node) (satisfies? ObjectStamp (:stamp node)))
-                (§ ass! node (ValueNode''setStamp-2 node, (Stamp'''empty-1 (:stamp node))))
-            )
-        )
-
-        ;; The algorithm is not guaranteed to reach a stable state.
-        (loop [#_"int" iteration 0]
-            (let [
-                #_"boolean" changed?
-                    (loop-when [changed? false #_"ISeq" s (seq (Graph''getNodes-1 graph))] (some? s) => changed?
-                        (let [
-                            #_"Node" node (first s)
-                            changed?
-                                (when (and (satisfies? ValueNode node) (satisfies? ObjectStamp (:stamp node))) => changed?
-                                    (or changed? (ValueNode'''inferStamp-1 node))
-                                )
-                        ]
-                            (recur changed? (next s))
-                        )
-                    )
-            ]
-                (recur-if (and changed? (< iteration 10000)) [(inc iteration)])
-            )
-        )
-        nil
-    )
-)
-
 (value-ns ReentrantBlockIterator
     (defn- #_"<T> boolean" ReentrantBlockIterator'allEndsVisited-3 [#_"EconomicMap<FixedNode, T>" states, #_"Block" current, #_"AbstractMergeNode" merge]
         (loop-when [#_"ISeq" s (seq (:ends merge))] (some? s) => true
@@ -13814,7 +13676,6 @@ ZeroExtendNode'new-4
                 #_"SnippetInfo" :instanceofPrimary (AbstractTemplates''snippet-3* InstanceOfSnippets, "instanceofPrimary")
                 #_"SnippetInfo" :instanceofSecondary (AbstractTemplates''snippet-3* InstanceOfSnippets, "instanceofSecondary", ReplacementsUtil'SECONDARY_SUPER_CACHE_LOCATION)
                 #_"SnippetInfo" :instanceofDynamic (AbstractTemplates''snippet-3* InstanceOfSnippets, "instanceofDynamic", ReplacementsUtil'SECONDARY_SUPER_CACHE_LOCATION)
-                #_"SnippetInfo" :isAssignableFrom (AbstractTemplates''snippet-3* InstanceOfSnippets, "isAssignableFrom", ReplacementsUtil'SECONDARY_SUPER_CACHE_LOCATION)
             )
         )
     )
@@ -13859,8 +13720,6 @@ ZeroExtendNode'new-4
                                     ]
                                         (Arguments''add-2 args, hub)
                                         (Arguments''add-2 args, object)
-                                        (Arguments''addVarargs-4 args, #_"KlassPointer" Word'iface, KlassPointerStamp'KLASS_NON_NULL, (make-array ConstantNode'iface 0))
-                                        (Arguments''addVarargs-4 args, boolean'class, (StampFactory'forKind-1 JavaKind/Boolean), (boolean-array 0))
                                         args
                                     )
                             )
@@ -13880,17 +13739,6 @@ ZeroExtendNode'new-4
                         (Arguments''add-2 args, (:trueValue replacer))
                         (Arguments''add-2 args, (:falseValue replacer))
                         (Arguments''addConst-2 args, (:allow-nil? instanceOf))
-                        args
-                    )
-                ClassIsAssignableFromNode
-                    (let [
-                        #_"ClassIsAssignableFromNode" isAssignable (:instanceOf replacer)
-                        #_"Arguments" args (Arguments'new-3 (:isAssignableFrom this), (:guardsStage (:graph isAssignable)), (:loweringStage (:phase lowerer)))
-                    ]
-                        (Arguments''add-2 args, (:x isAssignable))
-                        (Arguments''add-2 args, (:y isAssignable))
-                        (Arguments''add-2 args, (:trueValue replacer))
-                        (Arguments''add-2 args, (:falseValue replacer))
                         args
                     )
             )
@@ -13974,9 +13822,7 @@ ZeroExtendNode'new-4
             (Arguments''addConst-2 args, (#_"HotSpotResolvedObjectType" .instanceSize type))
             (Arguments''add-2 args, (ConstantNode'forConstant-3s KlassPointerStamp'KLASS_NON_NULL, (#_"HotSpotResolvedObjectType" .klass type), (:graph node)))
             (Arguments''add-2 args, (#_"HotSpotResolvedObjectType" .prototypeMarkWord type))
-            (Arguments''addConst-2 args, (:fillContents node))
             (Arguments''addConst-2 args, HotSpot'threadRegister)
-            (Arguments''addConst-2 args, true)
             (SnippetTemplate''instantiate-4x (SnippetTemplate'new-2 args, node), node, SnippetTemplate'DEFAULT_REPLACER, args)
         )
         nil
@@ -13994,7 +13840,6 @@ ZeroExtendNode'new-4
             (Arguments''add-2 args, (#_"HotSpotResolvedObjectType" .prototypeMarkWord arrayType))
             (Arguments''addConst-2 args, (HotSpot'arrayBaseOffset-1 elementKind))
             (Arguments''addConst-2 args, (CodeUtil/log2 (HotSpot'arrayIndexScale-1 elementKind)))
-            (Arguments''addConst-2 args, (:fillContents node))
             (Arguments''addConst-2 args, HotSpot'threadRegister)
             (Arguments''addConst-2 args, (satisfies? ConstantNode length))
             (SnippetTemplate''instantiate-4x (SnippetTemplate'new-2 args, node), node, SnippetTemplate'DEFAULT_REPLACER, args)
@@ -14860,10 +14705,6 @@ ZeroExtendNode'new-4
  ;
  ; Use #addConst for a parameter annotated with ConstantParameter.
  ; The value is bound when the SnippetTemplate is {@link SnippetTemplate#SnippetTemplate created}.
- ;
- ; Use #addVarargs for an array parameter annotated with VarargsParameter. A separate SnippetTemplate
- ; is {@link SnippetTemplate#SnippetTemplate created} for every distinct array length. The actual values
- ; are bound when the SnippetTemplate is {@link SnippetTemplate#instantiate instantiated}.
  ;;
 (class-ns Arguments []
     (defn #_"Arguments" Arguments'new-3 [#_"SnippetInfo" info, #_"GuardsStage" guardsStage, #_"LoweringStage" loweringStage]
@@ -14888,18 +14729,6 @@ ZeroExtendNode'new-4
         (CacheKey''setParam-3 (:cacheKey this), (:nextParamIdx this), value)
         (§ ass this (update this :nextParamIdx inc))
         this
-    )
-
-    (defn #_"Arguments" Arguments''addVarargs-4 [#_"Arguments" this, #_"Class" componentType, #_"Stamp" argStamp, #_"Object" value]
-        (let [
-            #_"Varargs" varargs (Varargs'new-3 componentType, argStamp, value)
-        ]
-            (aset (:values this) (:nextParamIdx this) varargs)
-            ;; a separate template is necessary for every distinct array length
-            (CacheKey''setParam-3 (:cacheKey this), (:nextParamIdx this), (:length varargs))
-            (§ ass this (update this :nextParamIdx inc))
-            this
-        )
     )
 )
 
@@ -21147,12 +20976,12 @@ ZeroExtendNode'new-4
         (ConditionalNode'create-1 (§ cast #_"LogicNode" logic))
     )
 
-    (defn #_"NewInstanceNode" BytecodeParser''createNewInstance-3 [#_"BytecodeParser" this, #_"ResolvedJavaType" type, #_"boolean" fillContents]
-        (NewInstanceNode'new-2 type, fillContents)
+    (defn #_"NewInstanceNode" BytecodeParser''createNewInstance-2 [#_"BytecodeParser" this, #_"ResolvedJavaType" type]
+        (NewInstanceNode'new-1 type)
     )
 
-    (defn #_"NewArrayNode" BytecodeParser''createNewArray-4 [#_"BytecodeParser" this, #_"ResolvedJavaType" elementType, #_"ValueNode" length, #_"boolean" fillContents]
-        (NewArrayNode'new-3 elementType, length, fillContents)
+    (defn #_"NewArrayNode" BytecodeParser''createNewArray-3 [#_"BytecodeParser" this, #_"ResolvedJavaType" elementType, #_"ValueNode" length]
+        (NewArrayNode'new-2 elementType, length)
     )
 
     (defn #_"ValueNode" BytecodeParser''genLoadField-3 [#_"BytecodeParser" this, #_"ValueNode" receiver, #_"ResolvedJavaField" field]
@@ -22737,14 +22566,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"void" BytecodeParser''genNewInstance-2t [#_"BytecodeParser" this, #_"JavaType" type]
         (when (and (instance? ResolvedJavaType type) (#_"ResolvedJavaType" .isInitialized type)) => (BytecodeParser''handleUnresolvedNewInstance-2 this, type)
-            (or
-                (loop-when [#_"ISeq" s (seq (:nodePlugins (:plugins (:graphBuilderConfig this))))] (some? s)
-                    (when false => (recur (next s))
-                        :done
-                    )
-                )
-                (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), JavaKind/Object, (GraphBuilder'''append-2 this, (BytecodeParser''createNewInstance-3 this, type, true))))
-            )
+            (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), JavaKind/Object, (GraphBuilder'''append-2 this, (BytecodeParser''createNewInstance-2 this, type))))
         )
         nil
     )
@@ -22778,14 +22600,7 @@ ZeroExtendNode'new-4
             #_"ResolvedJavaType" elementType (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, (BytecodeParser'arrayTypeCodeToClass-1 typeCode))
             #_"ValueNode" length (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Int)
         ]
-            (or
-                (loop-when [#_"ISeq" s (seq (:nodePlugins (:plugins (:graphBuilderConfig this))))] (some? s)
-                    (when false => (recur (next s))
-                        :done
-                    )
-                )
-                (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), JavaKind/Object, (GraphBuilder'''append-2 this, (BytecodeParser''createNewArray-4 this, elementType, length, true))))
-            )
+            (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), JavaKind/Object, (GraphBuilder'''append-2 this, (BytecodeParser''createNewArray-3 this, elementType, length))))
         )
         nil
     )
@@ -22796,14 +22611,7 @@ ZeroExtendNode'new-4
             #_"ValueNode" length (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Int)
         ]
             (when (instance? ResolvedJavaType type) => (BytecodeParser''handleUnresolvedNewObjectArray-3 this, type, length)
-                (or
-                    (loop-when [#_"ISeq" s (seq (:nodePlugins (:plugins (:graphBuilderConfig this))))] (some? s)
-                        (when false => (recur (next s))
-                            :done
-                        )
-                    )
-                    (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), JavaKind/Object, (GraphBuilder'''append-2 this, (BytecodeParser''createNewArray-4 this, type, length, true))))
-                )
+                (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), JavaKind/Object, (GraphBuilder'''append-2 this, (BytecodeParser''createNewArray-3 this, type, length))))
             )
         )
         nil
@@ -33254,8 +33062,6 @@ ZeroExtendNode'new-4
     (§ def #_"ForeignCallDescriptor" ForeignCallDescriptor'NEW_ARRAY_C    (ForeignCallDescriptor'new-3* "newArrayC", void'class, Word'iface, #_"KlassPointer" Word'iface, int'class))
     (§ def #_"ForeignCallDescriptor" ForeignCallDescriptor'NEW_INSTANCE_C (ForeignCallDescriptor'new-3* "newInstanceC", void'class, Word'iface, #_"KlassPointer" Word'iface))
 
-    (§ def #_"ForeignCallDescriptor" ForeignCallDescriptor'DYNAMIC_NEW_ARRAY (ForeignCallDescriptor'new-3* "dynamic_new_array", Object, Class, int'class))
-
     (§ def #_"ForeignCallDescriptor" ForeignCallDescriptor'MONITORENTER (ForeignCallDescriptor'new-3* "monitorenter", void'class, Object, Word'iface))
     (§ def #_"ForeignCallDescriptor" ForeignCallDescriptor'MONITOREXIT  (ForeignCallDescriptor'new-3* "monitorexit", void'class, Object, Word'iface))
 
@@ -33514,8 +33320,6 @@ ZeroExtendNode'new-4
 
             (ForeignCalls''registerForeignCall-8* this, ForeignCallDescriptor'NEW_ARRAY_C, HotSpot'newArrayAddress, HotSpotCallingConventionType/NativeCall, RegisterEffect'DESTROYS_REGISTERS, Transition'SAFEPOINT, true, (LocationIdentity/any))
             (ForeignCalls''registerForeignCall-8* this, ForeignCallDescriptor'NEW_INSTANCE_C, HotSpot'newInstanceAddress, HotSpotCallingConventionType/NativeCall, RegisterEffect'DESTROYS_REGISTERS, Transition'SAFEPOINT, true, (LocationIdentity/any))
-
-            (ForeignCalls''linkForeignCall-7* this, ForeignCallDescriptor'DYNAMIC_NEW_ARRAY, HotSpot'dynamicNewArrayAddress, true, Transition'SAFEPOINT, true)
 
             (ForeignCalls''linkForeignCall-7* this, ForeignCallDescriptor'MONITORENTER, HotSpot'monitorenterAddress, true, Transition'SAFEPOINT, false, (LocationIdentity/any))
             (ForeignCalls''linkForeignCall-7* this, ForeignCallDescriptor'MONITOREXIT, HotSpot'monitorexitAddress, true, Transition'STACK_INSPECTABLE_LEAF, false, (LocationIdentity/any))
@@ -56958,8 +56762,8 @@ ZeroExtendNode'new-4
                             #_"int" entryCount (VirtualObjectNode'''entryCount-1 virtual)
                             #_"AbstractNewObjectNode" newObject
                                 (if (satisfies? VirtualInstanceNode virtual)
-                                    (Graph''add-2 (:graph this), (NewInstanceNode'new-2 (VirtualObjectNode'''type-1 virtual), true))
-                                    (Graph''add-2 (:graph this), (NewArrayNode'new-3 (:componentType virtual), (ConstantNode'forInt-2 entryCount, (:graph this)), true))
+                                    (Graph''add-2 (:graph this), (NewInstanceNode'new-1 (VirtualObjectNode'''type-1 virtual)))
+                                    (Graph''add-2 (:graph this), (NewArrayNode'new-2 (:componentType virtual), (ConstantNode'forInt-2 entryCount, (:graph this))))
                                 )
                         ]
                             (#_"List" .add recursiveLowerings, newObject)
@@ -57525,15 +57329,8 @@ ZeroExtendNode'new-4
  ; AbstractNewObjectNode is the base class for the new instance and new array nodes.
  ;;
 (class-ns AbstractNewObjectNode [DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Lowerable]
-    (defn #_"AbstractNewObjectNode" AbstractNewObjectNode'new-2 [#_"Stamp" stamp, #_"boolean" fillContents]
-        (merge (AbstractNewObjectNode'class.) (DeoptimizingFixedWithNextNode'new-1 stamp)
-            (hash-map
-                ;;;
-                 ; {@code true} if the object's contents should be initialized to zero/nil
-                 ;;
-                #_"boolean" :fillContents fillContents
-            )
-        )
+    (defn #_"AbstractNewObjectNode" AbstractNewObjectNode'new-1 [#_"Stamp" stamp]
+        (merge (AbstractNewObjectNode'class.) (DeoptimizingFixedWithNextNode'new-1 stamp))
     )
 
     (defm AbstractNewObjectNode Lowerable
@@ -57563,8 +57360,8 @@ ZeroExtendNode'new-4
  ; NewArrayNode represents the allocation of an array.
  ;;
 (class-ns NewArrayNode [AbstractNewObjectNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Lowerable, ArrayLengthProvider, VirtualizableAllocation, Virtualizable, Simplifiable]
-    (defn #_"NewArrayNode" NewArrayNode'new-3 [#_"ResolvedJavaType" elementType, #_"ValueNode" length, #_"boolean" fillContents]
-        (merge (NewArrayNode'class.) (AbstractNewObjectNode'new-2 (StampFactory'objectNonNull-1 (TypeReference'createExactTrusted-1 (#_"ResolvedJavaType" .getArrayClass elementType))), fillContents)
+    (defn #_"NewArrayNode" NewArrayNode'new-2 [#_"ResolvedJavaType" elementType, #_"ValueNode" length]
+        (merge (NewArrayNode'class.) (AbstractNewObjectNode'new-1 (StampFactory'objectNonNull-1 (TypeReference'createExactTrusted-1 (#_"ResolvedJavaType" .getArrayClass elementType))))
             (hash-map
                 ; @Input
                 #_"ValueNode" :length length
@@ -57644,8 +57441,8 @@ ZeroExtendNode'new-4
  ; NewInstanceNode represents the allocation of an instance class object.
  ;;
 (class-ns NewInstanceNode [AbstractNewObjectNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Lowerable, VirtualizableAllocation, Virtualizable]
-    (defn #_"NewInstanceNode" NewInstanceNode'new-2 [#_"ResolvedJavaType" type, #_"boolean" fillContents]
-        (merge (NewInstanceNode'class.) (AbstractNewObjectNode'new-2 (StampFactory'objectNonNull-1 (TypeReference'createExactTrusted-1 type)), fillContents)
+    (defn #_"NewInstanceNode" NewInstanceNode'new-1 [#_"ResolvedJavaType" type]
+        (merge (NewInstanceNode'class.) (AbstractNewObjectNode'new-1 (StampFactory'objectNonNull-1 (TypeReference'createExactTrusted-1 type)))
             (hash-map
                 ;;;
                  ; The instance class being allocated by this node.
@@ -58050,7 +57847,7 @@ ZeroExtendNode'new-4
                     )
                 )
                 (when (satisfies? CanonicalizableLocation locationIdentity) => read
-                    (CanonicalizableLocation'''canonicalizeRead-5 locationIdentity, read, address, object, tool)
+                    (CanonicalizableLocation'''canonicalizeRead-4 locationIdentity, read, address, object)
                 )
             )
         )
@@ -58736,36 +58533,6 @@ ZeroExtendNode'new-4
                 (LIRBuilder''setResult-3 builder, this, obj)
             )
             nil
-        )
-    )
-)
-
-;;;
- ; Implements the semantics of VarargsParameter.
- ;;
-(class-ns LoadSnippetVarargParameterNode [FixedWithNextNode, FixedNode, ValueNode, Node, Canonicalizable]
-    (defn #_"LoadSnippetVarargParameterNode" LoadSnippetVarargParameterNode'new-3 [#_"ParameterNode*" locals, #_"ValueNode" index, #_"Stamp" stamp]
-        (merge (LoadSnippetVarargParameterNode'class.) (FixedWithNextNode'new-1 stamp)
-            (hash-map
-                ; @Input
-                #_"NodeInputList<ParameterNode>" :parameters (NodeInputList'new-2s (ß this), locals)
-                ; @Input
-                #_"ValueNode" :index index
-            )
-        )
-    )
-
-    (defm LoadSnippetVarargParameterNode Canonicalizable
-        (#_"Node" Canonicalizable'''canonical-2 [#_"LoadSnippetVarargParameterNode" this, #_"CanonicalizerTool" tool]
-            (when (satisfies? ConstantNode (:index this)) => this
-                (let [
-                    #_"int" i (#_"JavaConstant" .asInt (ValueNode''asJavaConstant-1 (:index this)))
-                ]
-                    (when (< i (count (:parameters this))) => this
-                        (nth (:parameters this) i)
-                    )
-                )
-            )
         )
     )
 )
@@ -62082,6 +61849,7 @@ ZeroExtendNode'new-4
         )
     )
 
+    #_unused
     (§ intrinsic! #_"KlassPointer" ClassGetHubNode'readClass-1 [#_"Class" clazzNonNull])
 
     #_intrinsifier
@@ -63413,55 +63181,6 @@ ZeroExtendNode'new-4
             (when (and (not (satisfies? ConstantNode (:y this))) (or (satisfies? ConstantNode (:x this)) (< (:nid (:y this)) (:nid (:x this))))) => this
                 (assoc this :x (:y this) :y (:x this))
             )
-        )
-    )
-)
-
-;;;
- ; The ClassIsAssignableFromNode represents a type check against Class instead of against instances.
- ; This is used, for instance, to intrinsify Class#isAssignableFrom(Class).
- ;;
-(class-ns ClassIsAssignableFromNode [BinaryOpLogicNode, LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, LIRLowerable, Binary #_"<ValueNode>", Canonicalizable, Lowerable]
-    #_unused
-    (defn #_"ClassIsAssignableFromNode" ClassIsAssignableFromNode'new-2 [#_"ValueNode" thisClass, #_"ValueNode" otherClass]
-        (merge (ClassIsAssignableFromNode'class.) (BinaryOpLogicNode'new-2 thisClass, otherClass))
-    )
-
-    (defm ClassIsAssignableFromNode Binary
-        (#_"Node" Binary'''canonical-4 [#_"ClassIsAssignableFromNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
-            (when (and (satisfies? ConstantNode forX) (satisfies? ConstantNode forY)) => this
-                (let [
-                    #_"ResolvedJavaType" thisType (#_"ConstantReflectionProvider" .asJavaType HotSpot'constantReflection, (ValueNode''asJavaConstant-1 forX))
-                    #_"ResolvedJavaType" otherType (#_"ConstantReflectionProvider" .asJavaType HotSpot'constantReflection, (ValueNode''asJavaConstant-1 forY))
-                ]
-                    (when (and (some? thisType) (some? otherType)) => this
-                        (LogicConstantNode'forBoolean-1 (#_"ResolvedJavaType" .isAssignableFrom thisType, otherType))
-                    )
-                )
-            )
-        )
-    )
-
-    (defm ClassIsAssignableFromNode Lowerable
-        (#_"void" Lowerable'''lower-2 [#_"ClassIsAssignableFromNode" this, #_"LoweringTool" lowerer]
-            (when (GuardsStage'areDeoptsFixed-1 (:guardsStage (:graph this)))
-                (InstanceOfSnippetsTemplates''lower-3 Lowerer'instanceofSnippets, this, lowerer)
-            )
-            nil
-        )
-    )
-
-    (defm ClassIsAssignableFromNode BinaryOpLogicNode
-        (#_"Stamp" BinaryOpLogicNode'''getSucceedingStampForX-4 [#_"ClassIsAssignableFromNode" this, #_"boolean" negated?, #_"Stamp" xStamp, #_"Stamp" yStamp]
-            nil
-        )
-
-        (#_"Stamp" BinaryOpLogicNode'''getSucceedingStampForY-4 [#_"ClassIsAssignableFromNode" this, #_"boolean" negated?, #_"Stamp" xStamp, #_"Stamp" yStamp]
-            nil
-        )
-
-        (#_"TriState" BinaryOpLogicNode'''tryFold-3 [#_"ClassIsAssignableFromNode" this, #_"Stamp" xStamp, #_"Stamp" yStamp]
-            TriState/UNKNOWN
         )
     )
 )
@@ -66021,22 +65740,6 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns VarargsPlaceholderNode [FloatingNode, ValueNode, Node, ArrayLengthProvider]
-    (defn #_"VarargsPlaceholderNode" VarargsPlaceholderNode'new-1 [#_"Varargs" varargs]
-        (merge (VarargsPlaceholderNode'class.) (FloatingNode'new-1 (StampFactory'objectNonNull-1 (TypeReference'createExactTrusted-1 (#_"ResolvedJavaType" .getArrayClass (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, (:componentType varargs))))))
-            (hash-map
-                #_"Varargs" :varargs varargs
-            )
-        )
-    )
-
-    (defm VarargsPlaceholderNode ArrayLengthProvider
-        (#_"ValueNode" ArrayLengthProvider'''length-1 [#_"VarargsPlaceholderNode" this]
-            (ConstantNode'forInt-1 (:length (:varargs this)))
-        )
-    )
-)
-
 ;;;
  ; This node describes one locking scope; it ties the monitor enter, monitor exit and the frame states together.
  ; It is thus referenced from the MonitorEnterNode, from the MonitorExitNode and from the FrameState.
@@ -68032,27 +67735,17 @@ ZeroExtendNode'new-4
     (defn #_"Plugins" Plugins'new-0 []
         (merge (Plugins'class.)
             (hash-map
-                #_"NodePlugin[]" :nodePlugins (make-array NodePlugin'iface 0)
-                #_"ParameterPlugin[]" :parameterPlugins (make-array ParameterPlugin'iface 0)
-                #_"TypePlugin[]" :typePlugins (make-array TypePlugin'iface 0)
-                #_"InlineInvokePlugin[]" :inlineInvokePlugins (make-array InlineInvokePlugin'iface 0)
+                #_"TypePlugin*" :typePlugins nil
+                #_"NodePlugin*" :nodePlugins nil
+                #_"InlineInvokePlugin*" :inlineInvokePlugins nil
+                #_"ParameterPlugin*" :parameterPlugins nil
             )
         )
     )
 
-    ;;;
-     ; Creates a copy of a given set of plugins.
-     ;;
-    (defn #_"Plugins" Plugins'copy-1 [#_"Plugins" other]
-        (merge (Plugins'class.)
-            (hash-map
-                #_"NodePlugin[]" :nodePlugins (:nodePlugins other)
-                #_"ParameterPlugin[]" :parameterPlugins (:parameterPlugins other)
-                #_"TypePlugin[]" :typePlugins (:typePlugins other)
-                #_"InlineInvokePlugin[]" :inlineInvokePlugins (:inlineInvokePlugins other)
-            )
-        )
-    )
+    (defn- #_"Plugins" Plugins''appendTypePlugin-2         [#_"Plugins" this, #_"TypePlugin"         plugin] (update this :typePlugins         #(conj (vec %) plugin)))
+    (defn- #_"Plugins" Plugins''appendNodePlugin-2         [#_"Plugins" this, #_"NodePlugin"         plugin] (update this :nodePlugins         #(conj (vec %) plugin)))
+    (defn- #_"Plugins" Plugins''appendInlineInvokePlugin-2 [#_"Plugins" this, #_"InlineInvokePlugin" plugin] (update this :inlineInvokePlugins #(conj (vec %) plugin)))
 
     ;;;
      ; Creates a new set of plugins.
@@ -68074,41 +67767,8 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"Plugins" Plugins''appendNodePlugin-2 [#_"Plugins" this, #_"NodePlugin" plugin]
-        (let [
-            this (assoc this :nodePlugins (Arrays/copyOf (:nodePlugins this), (inc (count (:nodePlugins this)))))
-        ]
-            (aset (:nodePlugins this) (dec (count (:nodePlugins this))) plugin)
-            this
-        )
-    )
-
     (defn #_"Plugins" Plugins''prependParameterPlugin-2 [#_"Plugins" this, #_"ParameterPlugin" plugin]
-        (let [
-            #_"ParameterPlugin[]" a (make-array ParameterPlugin'iface (inc (count (:parameterPlugins this))))
-        ]
-            (System/arraycopy (:parameterPlugins this), 0, a, 1, (count (:parameterPlugins this)))
-            (aset a 0 plugin)
-            (assoc this :parameterPlugins a)
-        )
-    )
-
-    (defn #_"Plugins" Plugins''appendTypePlugin-2 [#_"Plugins" this, #_"TypePlugin" plugin]
-        (let [
-            this (assoc this :typePlugins (Arrays/copyOf (:typePlugins this), (inc (count (:typePlugins this)))))
-        ]
-            (aset (:typePlugins this) (dec (count (:typePlugins this))) plugin)
-            this
-        )
-    )
-
-    (defn #_"Plugins" Plugins''appendInlineInvokePlugin-2 [#_"Plugins" this, #_"InlineInvokePlugin" plugin]
-        (let [
-            this (assoc this :inlineInvokePlugins (Arrays/copyOf (:inlineInvokePlugins this), (inc (count (:inlineInvokePlugins this)))))
-        ]
-            (aset (:inlineInvokePlugins this) (dec (count (:inlineInvokePlugins this))) plugin)
-            this
-        )
+        (update this :parameterPlugins #(cons plugin %))
     )
 
     (defn #_"Stamp" Plugins''getOverridingStamp-4 [#_"Plugins" this, #_"GraphBuilder" b, #_"JavaType" type, #_"boolean" never-nil?]
@@ -69541,7 +69201,7 @@ ZeroExtendNode'new-4
      ;;
     (defn- #_"Graph" Replacements'buildInitialGraph-2 [#_"ResolvedJavaMethod" method, #_"Object*" args]
         (let [
-            #_"Plugins" plugins (Plugins'copy-1 HotSpot'plugins)
+            #_"Plugins" plugins HotSpot'plugins
             plugins
                 (when (seq args) => plugins
                     (Plugins''prependParameterPlugin-2 plugins, (ConstantBindingParameterPlugin'new-1 args))
@@ -70844,15 +70504,11 @@ ZeroExtendNode'new-4
                         #_"ResolvedJavaMethod" :method method
                         #_"LocationIdentity[]" :privateLocations privateLocations
                         #_"boolean[]" :constantParameters (boolean-array n)
-                        #_"boolean[]" :varargsParameters (boolean-array n)
-                        #_"boolean[]" :nonNullParameters (boolean-array n)
                     )
                 )
             _
                 (dotimes [#_"int" i n]
                     (aset (:constantParameters this) i (some? (#_"ResolvedJavaMethod" .getParameterAnnotation method, ConstantParameter, i)))
-                    (aset (:varargsParameters this) i (some? (#_"ResolvedJavaMethod" .getParameterAnnotation method, VarargsParameter, i)))
-                    (aset (:nonNullParameters this) i (some? (#_"ResolvedJavaMethod" .getParameterAnnotation method, NonNullParameter, i)))
                 )
         ]
             this
@@ -70863,9 +70519,9 @@ ZeroExtendNode'new-4
         (count (:constantParameters this))
     )
 
-    (defn #_"boolean" SnippetInfo''isConstantParameter-2 [#_"SnippetInfo" this, #_"int" i] (nth (:constantParameters this) i))
-    (defn #_"boolean" SnippetInfo''isVarargsParameter-2  [#_"SnippetInfo" this, #_"int" i] (nth (:varargsParameters this)  i))
-    (defn #_"boolean" SnippetInfo''isNonNullParameter-2  [#_"SnippetInfo" this, #_"int" i] (nth (:nonNullParameters this)  i))
+    (defn #_"boolean" SnippetInfo''isConstantParameter-2 [#_"SnippetInfo" this, #_"int" i]
+        (nth (:constantParameters this) i)
+    )
 )
 
 ;;;
@@ -70932,32 +70588,18 @@ ZeroExtendNode'new-4
             #_"EconomicMap<Node, Node>" nodeReplacements (EconomicMap/create Equivalence/IDENTITY)
             _ (#_"EconomicMap" .put nodeReplacements, (:start snippetGraph), (:start snippetCopy))
             #_"int" parameterCount (SnippetInfo''getParameterCount-1 (:info args))
-            #_"VarargsPlaceholderNode[]" placeholders (make-array VarargsPlaceholderNode'iface parameterCount)
             _
                 (dotimes [#_"int" i parameterCount]
                     (let [
                         #_"ParameterNode" parameter (Graph''getParameter-2 snippetGraph, i)
                     ]
-                        (when (some? parameter)
-                            (cond
-                                (SnippetInfo''isConstantParameter-2 (:info args), i)
-                                    (let [
-                                        #_"Object" arg (nth (:values args) i)
-                                        #_"JavaKind" kind (#_"Signature" .getParameterKind signature, i)
-                                        #_"ConstantNode" constantNode (ConstantNode'forConstant-2c (if (instance? Constant arg) (§ cast #_"JavaConstant" arg) (SnippetReflection'forBoxed-2 kind, arg)), snippetCopy)
-                                    ]
-                                        (#_"EconomicMap" .put nodeReplacements, parameter, constantNode)
-                                    )
-                                (SnippetInfo''isVarargsParameter-2 (:info args), i)
-                                    (let [
-                                        #_"Varargs" varargs (nth (:values args) i)
-                                        #_"VarargsPlaceholderNode" placeholder (Graph''add-2 snippetCopy, (VarargsPlaceholderNode'new-1 varargs))
-                                    ]
-                                        (#_"EconomicMap" .put nodeReplacements, parameter, placeholder)
-                                        (aset placeholders i placeholder)
-                                    )
-                                (SnippetInfo''isNonNullParameter-2 (:info args), i)
-                                    (§ ass! parameter (ValueNode''setStamp-2 parameter, (Stamp'''join-2 (:stamp parameter), StampFactory'objectNonNullStamp)))
+                        (when (and (some? parameter) (SnippetInfo''isConstantParameter-2 (:info args), i))
+                            (let [
+                                #_"Object" arg (nth (:values args) i)
+                                #_"JavaKind" kind (#_"Signature" .getParameterKind signature, i)
+                                #_"ConstantNode" constantNode (ConstantNode'forConstant-2c (if (instance? Constant arg) (§ cast #_"JavaConstant" arg) (SnippetReflection'forBoxed-2 kind, arg)), snippetCopy)
+                            ]
+                                (#_"EconomicMap" .put nodeReplacements, parameter, constantNode)
                             )
                         )
                     )
@@ -70970,42 +70612,9 @@ ZeroExtendNode'new-4
                 this (assoc this :parameters (make-array Object parameterCount))
                 _
                     (loop-when-recur [#_"int" i 0] (< i parameterCount) [(inc i)]
-                        (cond
-                            (SnippetInfo''isConstantParameter-2 (:info args), i)
-                                (aset (:parameters this) i SnippetTemplate'CONSTANT_PARAMETER)
-                            (SnippetInfo''isVarargsParameter-2 (:info args), i)
-                                (let [
-                                    #_"Varargs" varargs (nth (:values args) i)
-                                    #_"int" length (:length varargs)
-                                    #_"ParameterNode[]" params (make-array ParameterNode'iface length)
-                                ]
-                                    (dotimes [#_"int" j length]
-                                        ;; use a decimal friendly numbering make it more obvious how values map
-                                        (aset params j (Graph''add-2 snippetCopy, (ParameterNode'new-2 (+ (* (inc i) 10000) j), (:stamp varargs))))
-                                    )
-                                    (aset (:parameters this) i params)
-
-                                    (let [
-                                        #_"VarargsPlaceholderNode" placeholder (nth placeholders i)
-                                    ]
-                                        (when (some? placeholder)
-                                            (doseq [#_"Node" usage (:nodeUsages placeholder)]
-                                                (condp satisfies? usage
-                                                    LoadIndexedNode
-                                                        (§ ass! snippetCopy (Graph''replaceFixedWithFixed-3 snippetCopy, usage, (Graph''add-2 snippetCopy, (LoadSnippetVarargParameterNode'new-3 params, (AccessIndexedNode''index-1 usage), (:stamp usage)))))
-                                                    StoreIndexedNode
-                                                        ;; The template lowering doesn't really treat this as an array,
-                                                        ;; so you can't store back into the varargs. Allocate your own
-                                                        ;; array if you really need this and EA should eliminate it.
-                                                        (throw! "can't store into VarargsParameter array")
-                                                    nil
-                                                )
-                                            )
-                                        )
-                                    )
-                                )
-                            :else
-                                (aset (:parameters this) i (or (Graph''getParameter-2 snippetCopy, i) SnippetTemplate'UNUSED_PARAMETER)) ;; parameter value was eliminated
+                        (if (SnippetInfo''isConstantParameter-2 (:info args), i)
+                            (aset (:parameters this) i SnippetTemplate'CONSTANT_PARAMETER)
+                            (aset (:parameters this) i (or (Graph''getParameter-2 snippetCopy, i) SnippetTemplate'UNUSED_PARAMETER)) ;; parameter value was eliminated
                         )
                     )
             ]
@@ -74138,7 +73747,7 @@ ZeroExtendNode'new-4
     (defm SnippetStub Stub
         (#_"Graph" Stub'''getStubGraph-1 [#_"SnippetStub" this]
             (let [
-                #_"Plugins" plugins (Plugins'copy-1 HotSpot'plugins)
+                #_"Plugins" plugins HotSpot'plugins
                 #_"Object*" args (SnippetStub'''makeConstArgs-1 this)
                 plugins
                     (when (seq args) => plugins
@@ -74147,12 +73756,6 @@ ZeroExtendNode'new-4
                 #_"GraphBuilderInstance" instance (GraphBuilderInstance'new-3 (GraphBuilderConfiguration'getSnippetDefault-1 plugins), OptimisticOptimizations'NONE, (IntrinsicContext'new-4 (:method this), (:method this), HotSpot'defaultBytecodeProvider, CompilationContext'INLINE_AFTER_PARSING))
                 #_"Graph" graph (Graph'new-1 (:method this))
                 graph (Phase'''run-3 instance, graph, nil)
-                _
-                    (doseq [#_"ParameterNode" param (Graph''getNodes-2 graph, ParameterNode)]
-                        (when (some? (#_"ResolvedJavaMethod" .getParameterAnnotation (:method this), NonNullParameter, (AbstractLocalNode''index-1 param)))
-                            (§ ass! param (ValueNode''setStamp-2 param, (Stamp'''join-2 (:stamp param), StampFactory'objectNonNullStamp)))
-                        )
-                    )
                 graph (Phase'''run-3 (RemoveValueProxyPhase'new-0), graph, nil)
                 graph (Graph''setGuardsStage-2 graph, GuardsStage'FLOATING_GUARDS)
                 #_"CanonicalizerPhase" canonicalizer (CanonicalizerPhase'new-0)
@@ -74179,12 +73782,9 @@ ZeroExtendNode'new-4
     (defm NewArrayStub SnippetStub
         (#_"Object*" SnippetStub'''makeConstArgs-1 [#_"NewArrayStub" this]
             (let [
-                #_"HotSpotResolvedObjectType" intArrayType (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, int'array)
-                #_"int" count (#_"Signature" .getParameterCount (#_"ResolvedJavaMethod" .getSignature (:method this)), false)
-                #_"Object[]" args (make-array Object count)
+                #_"Object[]" args (make-array Object (#_"Signature" .getParameterCount (#_"ResolvedJavaMethod" .getSignature (:method this)), false))
             ]
-                (aset args 3 (ConstantNode'forConstant-2s KlassPointerStamp'KLASS_NON_NULL, (#_"HotSpotResolvedObjectType" .klass intArrayType)))
-                (aset args 4 HotSpot'threadRegister)
+                (aset args 2 HotSpot'threadRegister)
                 args
             )
         )
@@ -74195,10 +73795,8 @@ ZeroExtendNode'new-4
      ;
      ; @param hub the hub of the object to be allocated
      ; @param length the length of the array
-     ; @param fillContents Should the array be filled with zeroes?
-     ; @param intArrayHub the hub for {@code int[].class}
      ;;
-    (§ snippet! #_"Object" #_"NewArrayStub" "newArray" [#_"KlassPointer" hub, #_"int" length, #_"boolean" fillContents, #_@ConstantParameter #_"KlassPointer" intArrayHub, #_@ConstantParameter #_"Register" threadRegister]
+    (§ snippet! #_"Object" #_"NewArrayStub" "newArray" [#_"KlassPointer" hub, #_"int" length, #_@ConstantParameter #_"Register" threadRegister]
         (let [
             #_"Word" thread (ReplacementsUtil'registerAsWord-1 threadRegister)
         ]
@@ -74226,12 +73824,9 @@ ZeroExtendNode'new-4
     (defm NewInstanceStub SnippetStub
         (#_"Object*" SnippetStub'''makeConstArgs-1 [#_"NewInstanceStub" this]
             (let [
-                #_"HotSpotResolvedObjectType" intArrayType (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, int'array)
-                #_"int" count (#_"Signature" .getParameterCount (#_"ResolvedJavaMethod" .getSignature (:method this)), false)
-                #_"Object[]" args (make-array Object count)
+                #_"Object[]" args (make-array Object (#_"Signature" .getParameterCount (#_"ResolvedJavaMethod" .getSignature (:method this)), false))
             ]
-                (aset args 1 (ConstantNode'forConstant-2s KlassPointerStamp'KLASS_NON_NULL, (#_"HotSpotResolvedObjectType" .klass intArrayType)))
-                (aset args 2 HotSpot'threadRegister)
+                (aset args 1 HotSpot'threadRegister)
                 args
             )
         )
@@ -74241,9 +73836,8 @@ ZeroExtendNode'new-4
      ; Re-attempts allocation after an initial TLAB allocation failed or was skipped (e.g. due to -XX:-UseTLAB).
      ;
      ; @param hub the hub of the object to be allocated
-     ; @param intArrayHub the hub for {@code int[].class}
      ;;
-    (§ snippet! #_"Object" #_"NewInstanceStub" "newInstance" [#_"KlassPointer" hub, #_@ConstantParameter #_"KlassPointer" intArrayHub, #_@ConstantParameter #_"Register" threadRegister]
+    (§ snippet! #_"Object" #_"NewInstanceStub" "newInstance" [#_"KlassPointer" hub, #_@ConstantParameter #_"Register" threadRegister]
         ;; The type is known to be an instance, so Klass::_layout_helper is the instance size as a raw number.
         (let [
             #_"Word" thread (ReplacementsUtil'registerAsWord-1 threadRegister)
@@ -75592,22 +75186,6 @@ ZeroExtendNode'new-4
                         (= (:derivedReferenceBase this) (:derivedReferenceBase that))
                     )
                 )
-            )
-        )
-    )
-)
-
-;;;
- ; Wrapper for the prototype value of a varargs parameter.
- ;;
-(class-ns Varargs []
-    (defn #_"Varargs" Varargs'new-3 [#_"Class" componentType, #_"Stamp" stamp, #_"Object" value]
-        (merge (Varargs'class.)
-            (hash-map
-                #_"Class" :componentType componentType
-                #_"Stamp" :stamp stamp
-                #_"Object" :value value
-                #_"int" :length (count value)
             )
         )
     )
