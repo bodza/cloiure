@@ -1,5 +1,5 @@
 (ns graalfn.core
-    (:refer-clojure :only [* *ns* + - -> ->> / < <= = > >= aget and apply aset assoc bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean boolean-array byte byte-array case char comp compare cond condp conj cons contains? count dec declare defmacro defn defprotocol defrecord doseq dotimes double double-array empty? extend-protocol extend-type filter first get hash-map if-not import inc instance? int int-array into into-array iterate iterator-seq keys let letfn list locking long long-array loop make-array map map-indexed max merge min neg? next nil? not not= ns-imports ns-unmap nth object-array or peek pop pos? quot reduce reify rem remove repeat rest run! satisfies? second seq sequential? short some some? sort-by sorted-map str subvec symbol symbol? take-while unsigned-bit-shift-right update update-in vals vary-meta vec vector? volatile! vreset! vswap! when-some while zero?])
+    (:refer-clojure :only [* *ns* + - -> ->> / < <= = > >= aget and apply aset assoc bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean boolean-array byte byte-array case char comp compare cond condp conj cons contains? count dec declare defmacro defn defprotocol defrecord doseq dotimes double double-array empty? extend-protocol extend-type filter first get hash-map if-not import inc instance? int int-array into into-array iterate iterator-seq keys let letfn list locking long long-array loop make-array map max merge min neg? next nil? not not= ns-imports ns-unmap nth object-array or peek pop pos? quot reduce reify rem remove repeat rest run! satisfies? second seq sequential? short some some? sort-by sorted-map str subvec symbol symbol? take-while unsigned-bit-shift-right update update-in vals vary-meta vec vector? volatile! vreset! vswap! when-some while zero?])
 )
 
 (defmacro § [& _])
@@ -144,7 +144,6 @@
 Alive
 BarrierType
 BoxingSnippets
-ConstantParameter
 Def
 Flags
 GraalDirectives'UNLIKELY_PROBABILITY
@@ -444,7 +443,6 @@ And'new-2
 AndNode'create-2
 AndNode'new-2
 Arguments''add-2
-Arguments''addConst-2
 Arguments'new-3
 ArithmeticOp'new-1
 ArithmeticOpTable'EMPTY
@@ -1043,8 +1041,6 @@ CLOptimization'new-2
 CRuntimeCallEpilogueOp'new-4
 CRuntimeCallPrologueOp'new-2
 CacheEntry'new-2
-CacheKey''setParam-3
-CacheKey'new-3
 CallOp'new-3
 CallTargetNode''setInvokeKind-2
 CallTargetNode''setTargetMethod-2
@@ -1244,7 +1240,6 @@ ConditionalNode'new-3
 ConditionalNode'new-4
 ConstOp'new-5a
 ConstOp'new-5b
-ConstantBindingParameterPlugin'new-1
 ConstantFields'isFinalField-1
 ConstantFields'isFinalFieldValueConstant-3
 ConstantFields'isStableField-1
@@ -1610,7 +1605,7 @@ FrameStateBuilder''create-3
 FrameStateBuilder''create-6
 FrameStateBuilder''getMethod-1
 FrameStateBuilder''inferPhiStamps-2
-FrameStateBuilder''initializeForMethodStart-3
+FrameStateBuilder''initializeForMethodStart-1
 FrameStateBuilder''initializeFromArgumentsArray-2
 FrameStateBuilder''insertLoopPhis-6
 FrameStateBuilder''insertLoopProxies-3
@@ -1639,7 +1634,6 @@ GetClassNode'tryFold-1
 GetObjectAddressNode'new-1
 GraalOptions'canOmitFrame
 GraalOptions'conditionalElimination
-GraalOptions'deoptALot
 GraalOptions'escapeAnalysisIterations
 GraalOptions'escapeAnalysisLoopCutoff
 GraalOptions'exactFullUnrollMaxNodes
@@ -1751,9 +1745,7 @@ Graph''trackNodeEvents-2
 Graph''unregister-2
 Graph'copy-1
 Graph'new-1
-GraphBuilderConfiguration'getDefault-0
-GraphBuilderConfiguration'getSnippetDefault-1
-GraphBuilderInstance'new-3
+GraphBuilderInstance'new-2
 GraphBuilderPhase'new-0
 GraphEffectList''addFixedNodeBefore-3
 GraphEffectList''addFloatingNode-3
@@ -2866,7 +2858,6 @@ NameAndType''getName-2
 NameAndType''getType-2
 NameAndType'new-1
 NamedLocationIdentity'ARRAY_LENGTH_LOCATION
-NamedLocationIdentity'FINAL_LOCATION
 NamedLocationIdentity'getArrayLocation-1
 NamedLocationIdentity'immutable-1
 NamedLocationIdentity'mutable-1
@@ -3169,7 +3160,6 @@ PiNode'new-3
 Placeholder'new-1
 PlaceholderStamp'SINGLETON
 Plugins''getOverridingStamp-4
-Plugins''prependParameterPlugin-2
 Plugins'create-0
 Plugins'new-0
 PointerCastNode'new-2
@@ -3317,7 +3307,7 @@ Rem'new-2
 RemNode'create-2
 RemNode'new-2
 RemoveValueProxyPhase'new-0
-Replacements'createSnippet-2
+Replacements'createSnippet-1
 Replacements'new-0
 ReplacementsUtil'CLASS_KLASS_LOCATION
 ReplacementsUtil'CLASS_MIRROR_HANDLE_LOCATION
@@ -3355,7 +3345,7 @@ ReplacementsUtil'loadWordFromObject-2
 ReplacementsUtil'readPendingDeoptimization-1
 ReplacementsUtil'readTlabEnd-1
 ReplacementsUtil'readTlabTop-1
-ReplacementsUtil'referentOffset-0
+ReplacementsUtil'REFERENT_OFFSET
 ReplacementsUtil'registerAsWord-1
 ReplacementsUtil'writePendingDeoptimization-2
 ReplacementsUtil'writeTlabTop-2
@@ -3457,15 +3447,12 @@ SlotSize'Size4
 SlotSize'Size8
 SmallLocalLiveness'new-3
 SnippetAnchorNode'new-0
-SnippetInfo''getParameterCount-1
-SnippetInfo''isConstantParameter-2
 SnippetInfo'new-2
 SnippetReflection'asObject-2c
 SnippetReflection'asObject-2t
 SnippetReflection'forBoxed-2
 SnippetReflection'forObject-1
 SnippetStub'new-2
-SnippetTemplate''forBoxed-3
 SnippetTemplate''instantiate-4x
 SnippetTemplate''instantiate-4y
 SnippetTemplate''instantiate-5x
@@ -3906,12 +3893,6 @@ ZeroExtendNode'new-4
 )
 
 ;;;
- ; Denotes a snippet parameter that will bound to a constant value during snippet template instantiation.
- ;;
-(§ annotation ConstantParameter
-)
-
-;;;
  ; Denotes a non-optional (non-nil) node input. This should be applied to exactly the fields of a node
  ; that are of type Node or NodeInputList. Nodes that update fields of type Node outside of their
  ; constructor should call Node#updateUsages(Node, Node) just prior to doing the update of the input.
@@ -4077,14 +4058,14 @@ ZeroExtendNode'new-4
  ; Type describing all pointers to Java objects.
  ;;
 (defp AbstractObjectStamp
-    (#_"AbstractObjectStamp" AbstractObjectStamp'''copyWith-5 [#_"AbstractObjectStamp" this, #_"ResolvedJavaType" newType, #_"boolean" newExactType, #_"boolean" newNonNull, #_"boolean" newAlwaysNull])
+    (#_"AbstractObjectStamp" AbstractObjectStamp'''copyWith-5 [#_"AbstractObjectStamp" this, #_"ResolvedJavaType" type, #_"boolean" exact-type?, #_"boolean" never-nil?, #_"boolean" always-nil?])
 )
 
 ;;;
  ; Abstract base class of all pointer types.
  ;;
 (defp AbstractPointerStamp
-    (#_"AbstractPointerStamp" AbstractPointerStamp'''copyWith-3 [#_"AbstractPointerStamp" this, #_"boolean" newNonNull, #_"boolean" newAlwaysNull])
+    (#_"AbstractPointerStamp" AbstractPointerStamp'''copyWith-3 [#_"AbstractPointerStamp" this, #_"boolean" never-nil?, #_"boolean" always-nil?])
 )
 
 (defp AbstractStateSplit)
@@ -4093,7 +4074,7 @@ ZeroExtendNode'new-4
 
 (defp Access
     (#_"AddressNode" Access'''getAddress-1 [#_"Access" this])
-    (#_"LocationIdentity" Access'''getLocationIdentity-1 [#_"Access" this])
+    (#_"LocationIdentity" Access'''getLocationIdentity-1 [#_"Access" this])
     (#_"boolean" Access'''canNullCheck-1 [#_"Access" this])
 )
 
@@ -4384,7 +4365,6 @@ ZeroExtendNode'new-4
     (#_"LocationIdentity" CacheEntry'''getIdentity-1 [#_"CacheEntry<T>" this])
 )
 
-(defp CacheKey)
 (defp CallOp)
 (defp CallTargetNode)
 
@@ -4546,7 +4526,6 @@ ZeroExtendNode'new-4
 (defp ConditionalEliminationPhase)
 (defp ConditionalNode)
 (defp ConstOp)
-(defp ConstantBindingParameterPlugin)
 (defp ConstantLoadOptimization)
 (defp ConstantNode)
 (defp ConstantTree)
@@ -4949,7 +4928,6 @@ ZeroExtendNode'new-4
     (#_"boolean" GraphBuilder'''parsingIntrinsic-1 [#_"GraphBuilder" this])
 )
 
-(defp GraphBuilderConfiguration)
 (defp GraphBuilderInstance)
 (defp GraphBuilderPhase)
 (defp GraphEffectList)
@@ -5596,7 +5574,7 @@ ZeroExtendNode'new-4
  ; node that kills this location.
  ;;
 (defp MemoryAccess
-    (#_"LocationIdentity" MemoryAccess'''getLocationIdentity-1 [#_"MemoryAccess" this])
+    (#_"LocationIdentity" MemoryAccess'''getLocationIdentity-1 [#_"MemoryAccess" this])
     ;;;
      ; @param lla the MemoryNode that represents the last kill of the location
      ;;
@@ -5974,10 +5952,6 @@ ZeroExtendNode'new-4
 (defp PEReadEliminationMergeProcessor)
 (defp ParameterNode)
 
-(defp ParameterPlugin
-    (#_"FloatingNode" ParameterPlugin'''interceptParameter-4 [#_"ParameterPlugin" this, #_"GraphBuilder" b, #_"int" index, #_"Stamp" stamp])
-)
-
 (defp PartialEscapeBlockState #_"<T implements PartialEscapeBlockState<T>>"
     (#_"void" PartialEscapeBlockState'''objectMaterialized-4 [#_"PartialEscapeBlockState<T>" this, #_"VirtualObjectNode" virtual, #_"AllocatedObjectNode" representation, #_"List<ValueNode>" values])
 )
@@ -6219,7 +6193,7 @@ ZeroExtendNode'new-4
      ;
      ; @return the identity of the location killed by this node
      ;;
-    (#_"LocationIdentity" Single'''getLocationIdentity-1 [#_"Single" this])
+    (#_"LocationIdentity" Single'''getLocationIdentity-1 [#_"Single" this])
 )
 
 (defp SingletonNodeWorkList)
@@ -6238,7 +6212,6 @@ ZeroExtendNode'new-4
  ; Base class for a stub defined by a snippet.
  ;;
 (defp SnippetStub
-    (#_"Object*" SnippetStub'''makeConstArgs-1 [#_"SnippetStub" this])
 )
 
 (defp SnippetTemplate)
@@ -7978,7 +7951,6 @@ ZeroExtendNode'new-4
 
     ;; debugging settings
     (def #_"boolean" GraalOptions'zapStackOnMethodEntry false)
-    (def #_"boolean" GraalOptions'deoptALot false)
 
     ;; @Option "Stress the code by emitting reads at earliest instead of latest point."
     (def #_"boolean" GraalOptions'stressTestEarlyReads false)
@@ -8468,7 +8440,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"int" ReplacementsUtil'instanceHeaderSize-0 []
-        (if HotSpot'useCompressedClassPointers (- (* 2 (.wordSize HotSpot'target)) 4) (* 2 (.wordSize HotSpot'target)))
+        (- (* 2 (.wordSize HotSpot'target)) (if HotSpot'useCompressedClassPointers 4 0))
     )
 
     (§ def #_"LocationIdentity" ReplacementsUtil'KLASS_SUPER_CHECK_OFFSET_LOCATION  (NamedLocationIdentity'immutable-1 "Klass::_super_check_offset"))
@@ -8513,10 +8485,7 @@ ZeroExtendNode'new-4
     (§ def #_"LocationIdentity" ReplacementsUtil'CLASS_MIRROR_LOCATION        (NamedLocationIdentity'immutable-1 "Klass::_java_mirror"))
     (§ def #_"LocationIdentity" ReplacementsUtil'CLASS_MIRROR_HANDLE_LOCATION (NamedLocationIdentity'immutable-1 "Klass::_java_mirror handle"))
 
-    ;; @Fold
-    (defn #_"long" ReplacementsUtil'referentOffset-0 []
-        (.objectFieldOffset HotSpot'unsafe, (#_"Class" .getDeclaredField java.lang.ref.Reference, "referent"))
-    )
+    (def #_"long" ReplacementsUtil'REFERENT_OFFSET (.objectFieldOffset HotSpot'unsafe, (#_"Class" .getDeclaredField java.lang.ref.Reference, "referent")))
 
     (§ def #_"LocationIdentity" ReplacementsUtil'OBJ_ARRAY_KLASS_ELEMENT_KLASS_LOCATION
         (§ proxy #_"CanonicalizableLocation" (CanonicalizableLocation'new-1 "ObjArrayKlass::_element_klass")
@@ -8559,7 +8528,7 @@ ZeroExtendNode'new-4
     ;;;
      ; A test against a primary type.
      ;;
-    (§ snippet! #_"Object" #_"InstanceOfSnippets" "instanceofPrimary" [#_"KlassPointer" hub, #_"Object" object, #_@ConstantParameter #_"int" superCheckOffset, #_"Object" trueValue, #_"Object" falseValue]
+    (§ snippet! #_"Object" #_"InstanceOfSnippets" "instanceofPrimary" [#_"KlassPointer" hub, #_"Object" object, #_"int" superCheckOffset, #_"Object" trueValue, #_"Object" falseValue]
         (when (some? object) => falseValue
             (let [
                 #_"KlassPointer" objectHub (LoadHubNode'loadHubIntrinsic-1 (PiNode'piCastNonNull-2 object, (SnippetAnchorNode'anchor-0)))
@@ -8591,7 +8560,7 @@ ZeroExtendNode'new-4
     ;;;
      ; Type test used when the type being tested against is not known at compile time.
      ;;
-    (§ snippet! #_"Object" #_"InstanceOfSnippets" "instanceofDynamic" [#_"KlassPointer" hub, #_"Object" object, #_"Object" trueValue, #_"Object" falseValue, #_@ConstantParameter #_"boolean" allowNull]
+    (§ snippet! #_"Object" #_"InstanceOfSnippets" "instanceofDynamic" [#_"KlassPointer" hub, #_"Object" object, #_"Object" trueValue, #_"Object" falseValue, #_"boolean" allowNull]
         (when (some? object) => (if allowNull trueValue falseValue)
             (let [
                 #_"KlassPointer" objectHub (LoadHubNode'loadHubIntrinsic-1 (PiNode'piCastNonNull-2 object, (SnippetAnchorNode'anchor-0)))
@@ -8795,72 +8764,71 @@ ZeroExtendNode'new-4
         )
     )
 
-    (§ snippet! #_"void" #_"MonitorSnippets" "monitorenter" [#_"Object" object, #_"KlassPointer" hub, #_@ConstantParameter #_"int" lockDepth, #_@ConstantParameter #_"Register" threadRegister, #_@ConstantParameter #_"Register" stackPointerRegister]
+    (§ snippet! #_"void" #_"MonitorSnippets" "monitorenter" [#_"Object" object, #_"KlassPointer" hub, #_"int" lockDepth, #_"Register" threadRegister, #_"Register" stackPointerRegister]
         ;; load the mark word - this includes a nil-check on object
         (let [
             #_"Word" mark (ReplacementsUtil'loadWordFromObject-2 object, HotSpot'markOffset)
             #_"Word" lock (BeginLockScopeNode'beginLockScope-1 lockDepth)
-            #_"Word" objectPointer (Word'objectToTrackedPointer-1 object)
         ]
-            (when (and HotSpot'useBiasedLocking (MonitorSnippets'tryEnterBiased-5 object, hub, lock, mark, threadRegister))
-                (§ return )
+            (when-not (and HotSpot'useBiasedLocking (MonitorSnippets'tryEnterBiased-5 object, hub, lock, mark, threadRegister))
                 ;; not biased, fall-through
-            )
-            (if (and (MonitorSnippets'inlineFastLockSupported-0) (Word''notEqual-2i (Word''and-2i mark, HotSpot'monitorMask), 0))
-                ;; inflated case
-                (when (MonitorSnippets'tryEnterInflated-4 object, lock, mark, threadRegister)
-                    (§ return )
-                )
-                ;; create the unlocked mark word pattern
-                (let [
-                    #_"Word" unlockedMark (Word''or-2i mark, HotSpot'unlockedMask)
-                ]
-                    ;; copy this unlocked mark word into the lock slot on the stack
-                    (Word''writeWord-4i lock, HotSpot'lockDisplacedMarkOffset, unlockedMark, ReplacementsUtil'DISPLACED_MARK_WORD_LOCATION)
-
-                    ;; make sure previous store does not float below compareAndSwap
-                    (MembarNode'memoryBarrier-1 MemoryBarriers/STORE_STORE)
-
-                    ;; Test if the object's mark word is unlocked, and if so, store the (address of) the lock slot into the object's mark word.
-                    (let [
-                        #_"Word" currentMark (Word''compareAndSwapWord-5 objectPointer, HotSpot'markOffset, unlockedMark, lock, ReplacementsUtil'MARK_WORD_LOCATION)
-                    ]
-                        (if (Word''equal-2w currentMark, unlockedMark)
-                            (do
-                                (AcquiredCASLockNode'mark-1 object)
-                                (§ return )
-                            )
-                            ;; The mark word in the object header was not the same.
-                            ;; Either the object is locked by another thread or is already locked
-                            ;; by the current thread. The latter is true if the mark word
-                            ;; is a stack pointer into the current thread's stack, i.e.:
-                            ;;
-                            ;; 1. (currentMark & aligned_mask) == 0
-                            ;; 2. rsp <= currentMark
-                            ;; 3. currentMark <= rsp + page_size
-                            ;;
-                            ;; These 3 tests can be done by evaluating the following expression:
-                            ;;
-                            ;; (currentMark - rsp) & (aligned_mask - page_size)
-                            ;;
-                            ;; assuming both the stack pointer and page_size have their least
-                            ;; significant 2 bits cleared and page_size is a power of 2
+                (or
+                    (if (and (MonitorSnippets'inlineFastLockSupported-0) (Word''notEqual-2i (Word''and-2i mark, HotSpot'monitorMask), 0))
+                        ;; inflated case
+                        (when (MonitorSnippets'tryEnterInflated-4 object, lock, mark, threadRegister)
+                            :done
+                        )
+                        ;; create the unlocked mark word pattern
+                        (let [
+                            #_"Word" unlockedMark (Word''or-2i mark, HotSpot'unlockedMask)
+                        ]
+                            ;; copy this unlocked mark word into the lock slot on the stack
+                            (Word''writeWord-4i lock, HotSpot'lockDisplacedMarkOffset, unlockedMark, ReplacementsUtil'DISPLACED_MARK_WORD_LOCATION)
+                            ;; make sure previous store does not float below compareAndSwap
+                            (MembarNode'memoryBarrier-1 MemoryBarriers/STORE_STORE)
+                            ;; Test if the object's mark word is unlocked, and if so, store the (address of) the lock slot into the object's mark word.
                             (let [
-                                #_"Word" alignedMask (WordFactory'unsigned-1i (dec (.wordSize HotSpot'target)))
-                                #_"Word" stackPointer (Word''add-2i (ReplacementsUtil'registerAsWord-1 stackPointerRegister), HotSpot'stackBias)
+                                #_"Word" objectPointer (Word'objectToTrackedPointer-1 object)
+                                #_"Word" currentMark (Word''compareAndSwapWord-5 objectPointer, HotSpot'markOffset, unlockedMark, lock, ReplacementsUtil'MARK_WORD_LOCATION)
                             ]
-                                (when (Word''equal-2i (Word''and-2w (Word''subtract-2w currentMark, stackPointer), (Word''subtract-2i alignedMask, (.pageSize HotSpot'unsafe))), 0)
-                                    ;; recursively locked => write 0 to the lock slot
-                                    (Word''writeWord-4i lock, HotSpot'lockDisplacedMarkOffset, (WordFactory'zero-0), ReplacementsUtil'DISPLACED_MARK_WORD_LOCATION)
-                                    (§ return )
+                                (if (Word''equal-2w currentMark, unlockedMark)
+                                    (do
+                                        (AcquiredCASLockNode'mark-1 object)
+                                        :done
+                                    )
+                                    ;; The mark word in the object header was not the same.
+                                    ;; Either the object is locked by another thread or is already locked by the current thread.
+                                    ;; The latter is true if the mark word is a stack pointer into the current thread's stack,
+                                    ;; i.e.:
+                                    ;;
+                                    ;; 1. (currentMark & aligned_mask) == 0
+                                    ;; 2. rsp <= currentMark
+                                    ;; 3. currentMark <= rsp + page_size
+                                    ;;
+                                    ;; These 3 tests can be done by evaluating the following expression:
+                                    ;;
+                                    ;; (currentMark - rsp) & (aligned_mask - page_size)
+                                    ;;
+                                    ;; assuming both the stack pointer and page_size have their least
+                                    ;; significant 2 bits cleared and page_size is a power of 2
+                                    (let [
+                                        #_"Word" alignedMask (WordFactory'unsigned-1i (dec (.wordSize HotSpot'target)))
+                                        #_"Word" stackPointer (Word''add-2i (ReplacementsUtil'registerAsWord-1 stackPointerRegister), HotSpot'stackBias)
+                                    ]
+                                        (when (Word''equal-2i (Word''and-2w (Word''subtract-2w currentMark, stackPointer), (Word''subtract-2i alignedMask, (.pageSize HotSpot'unsafe))), 0)
+                                            ;; recursively locked => write 0 to the lock slot
+                                            (Word''writeWord-4i lock, HotSpot'lockDisplacedMarkOffset, (WordFactory'zero-0), ReplacementsUtil'DISPLACED_MARK_WORD_LOCATION)
+                                            :done
+                                        )
+                                    )
                                 )
                             )
                         )
                     )
+                    ;; slow-path runtime-call
+                    (ForeignCallNode'monitorenterStubC-3 ForeignCallDescriptor'MONITORENTER, object, lock)
                 )
             )
-            ;; slow-path runtime-call
-            (ForeignCallNode'monitorenterStubC-3 ForeignCallDescriptor'MONITORENTER, object, lock)
         )
         nil
     )
@@ -8868,7 +8836,7 @@ ZeroExtendNode'new-4
     ;;;
      ; Calls straight out to the monitorenter stub.
      ;;
-    (§ snippet! #_"void" #_"MonitorSnippets" "monitorenterStub" [#_"Object" object, #_@ConstantParameter #_"int" lockDepth]
+    (§ snippet! #_"void" #_"MonitorSnippets" "monitorenterStub" [#_"Object" object, #_"int" lockDepth]
         (when (nil? object)
             (DeoptimizeNode'deopt-2 DeoptimizationAction/InvalidateReprofile, DeoptimizationReason/NullCheckException)
         )
@@ -8890,81 +8858,62 @@ ZeroExtendNode'new-4
     (defn- #_"boolean" MonitorSnippets'tryExitInflated-4 [#_"Object" object, #_"Word" mark, #_"Word" lock, #_"Register" threadRegister]
         (and (MonitorSnippets'inlineFastUnlockSupported-0)
              (Word''notEqual-2i (Word''and-2i mark, HotSpot'monitorMask), 0)
-            ;; inflated case
-            ;; mark is a pointer to the ObjectMonitor + monitorMask
+            ;; inflated case: mark is a pointer to the ObjectMonitor + monitorMask
             (let [
                 #_"Word" monitor (Word''subtract-2i mark, HotSpot'monitorMask)
                 #_"int" ownerOffset HotSpot'objectMonitorOwnerOffset
                 #_"Word" owner (Word''readWord-3i monitor, ownerOffset, ReplacementsUtil'OBJECT_MONITOR_OWNER_LOCATION)
-                #_"int" recursionsOffset HotSpot'objectMonitorRecursionsOffset
-                #_"Word" recursions (Word''readWord-3i monitor, recursionsOffset, ReplacementsUtil'OBJECT_MONITOR_RECURSION_LOCATION)
+                #_"Word" recursions (Word''readWord-3i monitor, HotSpot'objectMonitorRecursionsOffset, ReplacementsUtil'OBJECT_MONITOR_RECURSION_LOCATION)
                 #_"Word" thread (ReplacementsUtil'registerAsWord-1 threadRegister)
             ]
-                (when (Word''equal-2i (Word''or-2w (Word''xor-2w owner, thread), recursions), 0)
-                    ;; owner == thread && recursions == 0
-                    (let [
-                        #_"int" cxqOffset HotSpot'objectMonitorCxqOffset
-                        #_"Word" cxq (Word''readWord-3i monitor, cxqOffset, ReplacementsUtil'OBJECT_MONITOR_CXQ_LOCATION)
-                        #_"int" entryListOffset HotSpot'objectMonitorEntryListOffset
-                        #_"Word" entryList (Word''readWord-3i monitor, entryListOffset, ReplacementsUtil'OBJECT_MONITOR_ENTRY_LIST_LOCATION)
-                    ]
-                        (when (Word''equal-2i (Word''or-2w cxq, entryList), 0)
-                            ;; cxq == 0 && entryList == 0
-                            ;; nobody is waiting, success
-                            (MembarNode'memoryBarrier-1 (| MemoryBarriers/LOAD_STORE MemoryBarriers/STORE_STORE))
-                            (Word''writeWord-3i monitor, ownerOffset, (WordFactory'zero-0))
-                            (§ return true)
+                (or
+                    (when (Word''equal-2i (Word''or-2w (Word''xor-2w owner, thread), recursions), 0) ;; owner == thread && recursions == 0
+                        (let [
+                            #_"Word" cxq (Word''readWord-3i monitor, HotSpot'objectMonitorCxqOffset, ReplacementsUtil'OBJECT_MONITOR_CXQ_LOCATION)
+                            #_"Word" entryList (Word''readWord-3i monitor, HotSpot'objectMonitorEntryListOffset, ReplacementsUtil'OBJECT_MONITOR_ENTRY_LIST_LOCATION)
+                        ]
+                            (when (Word''equal-2i (Word''or-2w cxq, entryList), 0) ;; cxq == 0 && entryList == 0: nobody is waiting, success
+                                (MembarNode'memoryBarrier-1 (| MemoryBarriers/LOAD_STORE MemoryBarriers/STORE_STORE))
+                                (Word''writeWord-3i monitor, ownerOffset, (WordFactory'zero-0))
+                                :done
+                            )
                         )
                     )
+                    (ForeignCallNode'monitorexitStubC-3 ForeignCallDescriptor'MONITOREXIT, object, lock)
                 )
-                (ForeignCallNode'monitorexitStubC-3 ForeignCallDescriptor'MONITOREXIT, object, lock)
                 true
             )
         )
     )
 
-    (§ snippet! #_"void" #_"MonitorSnippets" "monitorexit" [#_"Object" object, #_@ConstantParameter #_"int" lockDepth, #_@ConstantParameter #_"Register" threadRegister]
+    (§ snippet! #_"void" #_"MonitorSnippets" "monitorexit" [#_"Object" object, #_"int" lockDepth, #_"Register" threadRegister]
         (let [
             #_"Word" mark (ReplacementsUtil'loadWordFromObject-2 object, HotSpot'markOffset)
         ]
-            (when HotSpot'useBiasedLocking
-                ;; Check for biased locking unlock case, which is a no-op.
-                ;; Note: we do not have to check the thread ID for two reasons.
-                ;; First, the interpreter checks for IllegalMonitorStateException at a higher level.
-                ;; Second, if the bias was revoked while we held the lock, the object could not be
-                ;; rebiased toward another thread, so the bias bit would be clear.
-                (when (Word''equal-2w (Word''and-2i mark, HotSpot'biasedLockMaskInPlace), (WordFactory'unsigned-1i HotSpot'biasedLockPattern))
-                    (EndLockScopeNode'endLockScope-0)
-                    (§ return )
-                )
-            )
-
-            (let [
-                #_"Word" lock (CurrentLockNode'currentLock-1 lockDepth)
-                ;; load displaced mark
-                #_"Word" displacedMark (Word''readWord-3i lock, HotSpot'lockDisplacedMarkOffset, ReplacementsUtil'DISPLACED_MARK_WORD_LOCATION)
-            ]
-                (if (Word''equal-2i displacedMark, 0)
-                    nil ;; recursive locking => done
-                    (when-not (MonitorSnippets'tryExitInflated-4 object, mark, lock, threadRegister)
+            ;; Check for biased locking unlock case, which is a no-op. Note: we do not have to check the thread ID for two reasons.
+            ;; First, the interpreter checks for IllegalMonitorStateException at a higher level.
+            ;; Second, if the bias was revoked while we held the lock, the object could not be rebiased toward another thread, so the bias bit would be clear.
+            (when-not (and HotSpot'useBiasedLocking (Word''equal-2w (Word''and-2i mark, HotSpot'biasedLockMaskInPlace), (WordFactory'unsigned-1i HotSpot'biasedLockPattern)))
+                (let [
+                    #_"Word" lock (CurrentLockNode'currentLock-1 lockDepth)
+                    #_"Word" displacedMark (Word''readWord-3i lock, HotSpot'lockDisplacedMarkOffset, ReplacementsUtil'DISPLACED_MARK_WORD_LOCATION)
+                ]
+                    ;; => recursive locking, done
+                    (when (and (not (Word''equal-2i displacedMark, 0)) (not (MonitorSnippets'tryExitInflated-4 object, mark, lock, threadRegister)))
                         ;; Test if object's mark word is pointing to the displaced mark word, and if so,
-                        ;; restore the displaced mark in the object - if the object's mark word is not
-                        ;; pointing to the displaced mark word, do unlocking via runtime call.
+                        ;; restore the displaced mark in the object. Otherwise, do unlocking via runtime call.
                         (let [
                             #_"Word" objectPointer (Word'objectToTrackedPointer-1 object)
                         ]
-                            (if (Word''logicCompareAndSwapWord-5 objectPointer, HotSpot'markOffset, lock, displacedMark, ReplacementsUtil'MARK_WORD_LOCATION)
-                                nil ;; ...
-                                (do
-                                    ;; the object's mark word was not pointing to the displaced header
-                                    (ForeignCallNode'monitorexitStubC-3 ForeignCallDescriptor'MONITOREXIT, object, lock)
-                                )
+                            (when-not (Word''logicCompareAndSwapWord-5 objectPointer, HotSpot'markOffset, lock, displacedMark, ReplacementsUtil'MARK_WORD_LOCATION)
+                                ;; the object's mark word was not pointing to the displaced header
+                                (ForeignCallNode'monitorexitStubC-3 ForeignCallDescriptor'MONITOREXIT, object, lock)
                             )
                         )
                     )
                 )
-                (EndLockScopeNode'endLockScope-0)
             )
+            (EndLockScopeNode'endLockScope-0)
         )
         nil
     )
@@ -8972,7 +8921,7 @@ ZeroExtendNode'new-4
     ;;;
      ; Calls straight out to the monitorexit stub.
      ;;
-    (§ snippet! #_"void" #_"MonitorSnippets" "monitorexitStub" [#_"Object" object, #_@ConstantParameter #_"int" lockDepth]
+    (§ snippet! #_"void" #_"MonitorSnippets" "monitorexitStub" [#_"Object" object, #_"int" lockDepth]
         (let [
             #_"Word" lock (CurrentLockNode'currentLock-1 lockDepth)
         ]
@@ -9080,18 +9029,15 @@ ZeroExtendNode'new-4
             #_"Word" end (ReplacementsUtil'readTlabEnd-1 thread)
             #_"Word" newTop (Word''add-2i top, size)
         ]
-            (if (and HotSpot'useTLAB (Word''belowOrEqual-2w newTop, end))
-                (do
-                    (ReplacementsUtil'writeTlabTop-2 thread, newTop)
-                    (NewObjectSnippets'emitPrefetchAllocate-2 newTop, false)
-                    (NewObjectSnippets'formatObject-6 hub, size, top, prototypeMarkWord, true, true)
-                )
-                (ForeignCallNode'newInstance-2 ForeignCallDescriptor'NEW_INSTANCE, hub)
+            (when (and HotSpot'useTLAB (Word''belowOrEqual-2w newTop, end)) => (ForeignCallNode'newInstance-2 ForeignCallDescriptor'NEW_INSTANCE, hub)
+                (ReplacementsUtil'writeTlabTop-2 thread, newTop)
+                (NewObjectSnippets'emitPrefetchAllocate-2 newTop, false)
+                (NewObjectSnippets'formatObject-6 hub, size, top, prototypeMarkWord, true, true)
             )
         )
     )
 
-    (§ snippet! #_"Object" #_"NewObjectSnippets" "allocateInstance" [#_@ConstantParameter #_"int" size, #_"KlassPointer" hub, #_"Word" prototypeMarkWord, #_@ConstantParameter #_"Register" threadRegister]
+    (§ snippet! #_"Object" #_"NewObjectSnippets" "allocateInstance" [#_"int" size, #_"KlassPointer" hub, #_"Word" prototypeMarkWord, #_"Register" threadRegister]
         (Placeholder'piCastToSnippetReplaceeStamp-1 (NewObjectSnippets'allocateInstanceHelper-4 size, hub, prototypeMarkWord, threadRegister))
     )
 
@@ -9133,7 +9079,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (§ snippet! #_"Object" #_"NewObjectSnippets" "allocateArray" [#_"KlassPointer" hub, #_"int" length, #_"Word" prototypeMarkWord, #_@ConstantParameter #_"int" headerSize, #_@ConstantParameter #_"int" log2ElementSize, #_@ConstantParameter #_"Register" threadRegister, #_@ConstantParameter #_"boolean" maybeUnroll]
+    (§ snippet! #_"Object" #_"NewObjectSnippets" "allocateArray" [#_"KlassPointer" hub, #_"int" length, #_"Word" prototypeMarkWord, #_"int" headerSize, #_"int" log2ElementSize, #_"Register" threadRegister, #_"boolean" maybeUnroll]
         (ArrayPlaceholder'piArrayCastToSnippetReplaceeStamp-2 (NewObjectSnippets'allocateArrayImpl-7 hub, length, prototypeMarkWord, headerSize, log2ElementSize, threadRegister, maybeUnroll), length)
     )
 )
@@ -9189,7 +9135,7 @@ ZeroExtendNode'new-4
 
 (value-ns UnsafeLoadSnippets (§ implements Snippets)
     (§ snippet! #_"Object" #_"UnsafeLoadSnippets" "lowerUnsafeLoad" [#_"Object" object, #_"long" offset]
-        (Word''readObject-3ib (Word'objectToTrackedPointer-1 (FixedValueAnchorNode'getObject-1 object)), (int offset), (if (and (instance? java.lang.ref.Reference object) (= (ReplacementsUtil'referentOffset-0) offset)) BarrierType'PRECISE BarrierType'NONE))
+        (Word''readObject-3ib (Word'objectToTrackedPointer-1 (FixedValueAnchorNode'getObject-1 object)), (int offset), (if (and (instance? java.lang.ref.Reference object) (= offset ReplacementsUtil'REFERENT_OFFSET)) BarrierType'PRECISE BarrierType'NONE))
     )
 )
 
@@ -9221,7 +9167,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (§ snippet! #_"void" #_"WriteBarrierSnippets" "g1PreWriteBarrier" [#_"Address" address, #_"Object" object, #_"Object" expectedObject, #_@ConstantParameter #_"boolean" doLoad, #_@ConstantParameter #_"boolean" nullCheck, #_@ConstantParameter #_"Register" threadRegister]
+    (§ snippet! #_"void" #_"WriteBarrierSnippets" "g1PreWriteBarrier" [#_"Address" address, #_"Object" object, #_"Object" expectedObject, #_"boolean" doLoad, #_"boolean" nullCheck, #_"Register" threadRegister]
         (when nullCheck
             (NullCheckNode'nullCheck-1 address)
         )
@@ -9266,7 +9212,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (§ snippet! #_"void" #_"WriteBarrierSnippets" "g1PostWriteBarrier" [#_"Address" address, #_"Object" object, #_"Object" value, #_@ConstantParameter #_"boolean" usePrecise, #_@ConstantParameter #_"Register" threadRegister]
+    (§ snippet! #_"void" #_"WriteBarrierSnippets" "g1PostWriteBarrier" [#_"Address" address, #_"Object" object, #_"Object" value, #_"boolean" usePrecise, #_"Register" threadRegister]
         (let [
             #_"Word" thread (ReplacementsUtil'registerAsWord-1 threadRegister)
             #_"Object" fixedValue (FixedValueAnchorNode'getObject-1 value)
@@ -9343,10 +9289,10 @@ ZeroExtendNode'new-4
 )
 
 (value-ns WordTypes
-    (§ def #_"JavaKind" WordTypes'wordKind (.wordJavaKind HotSpot'target))
+    (def #_"JavaKind" WordTypes'wordKind (.wordJavaKind HotSpot'target))
 
-    (§ def #_"ResolvedJavaType" WordTypes'word             (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, Word'iface))
-    (§ def #_"ResolvedJavaType" WordTypes'klassPointer     (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, #_"KlassPointer" Word'iface))
+    (def #_"ResolvedJavaType" WordTypes'word         (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, Word'iface))
+    (def #_"ResolvedJavaType" WordTypes'klassPointer (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, #_"KlassPointer" Word'iface))
 
     ;;;
      ; Determines if a given type is a word type.
@@ -13560,9 +13506,11 @@ ZeroExtendNode'new-4
             (if (some? canonical)
                 (§ ass! (:graph box) (Graph''replaceFixedWithFloating-3 (:graph box), box, canonical))
                 (let [
-                    #_"Arguments" args (Arguments'new-3 (get (:boxSnippets this) (:boxingKind box)), (:guardsStage (:graph box)), (:loweringStage (:phase lowerer)))
+                    #_"Arguments" args
+                        (-> (Arguments'new-3 (get (:boxSnippets this) (:boxingKind box)), (:guardsStage (:graph box)), (:loweringStage (:phase lowerer)))
+                            (Arguments''add-2 (Unary'''getValue-1 box))
+                        )
                 ]
-                    (Arguments''add-2 args, (Unary'''getValue-1 box))
                     (SnippetTemplate''instantiate-4x (SnippetTemplate'new-2 args, box), box, SnippetTemplate'DEFAULT_REPLACER, args)
                 )
             )
@@ -13572,9 +13520,11 @@ ZeroExtendNode'new-4
 
     (defn #_"void" BoxingTemplates''lower-3u [#_"BoxingTemplates" this, #_"UnboxNode" unbox, #_"LoweringTool" lowerer]
         (let [
-            #_"Arguments" args (Arguments'new-3 (get (:unboxSnippets this) (:boxingKind unbox)), (:guardsStage (:graph unbox)), (:loweringStage (:phase lowerer)))
+            #_"Arguments" args
+                (-> (Arguments'new-3 (get (:unboxSnippets this) (:boxingKind unbox)), (:guardsStage (:graph unbox)), (:loweringStage (:phase lowerer)))
+                    (Arguments''add-2 (Unary'''getValue-1 unbox))
+                )
         ]
-            (Arguments''add-2 args, (Unary'''getValue-1 unbox))
             (SnippetTemplate''instantiate-4x (SnippetTemplate'new-2 args, unbox), unbox, SnippetTemplate'DEFAULT_REPLACER, args)
         )
         nil
@@ -13670,57 +13620,49 @@ ZeroExtendNode'new-4
                         #_"ValueNode" object (Unary'''getValue-1 instanceOf)
                         #_"TypeReference" targetType (InstanceOfNode''type-1 instanceOf)
                         #_"HotSpotResolvedObjectType" type (:type targetType)
-                        ;; If non-nil, then this is the only type that could pass the type check because the target of
-                        ;; the type check is a final class or has been speculated to be a final class and this value is
-                        ;; the only concrete subclass of the target type.
+                        ;; If non-nil, this is the only type that could pass the type check, because the target of the type check is a final
+                        ;; class or has been speculated to be a final class and this value is the only concrete subclass of the target type.
                         #_"ResolvedJavaType" exact (when (and (some? targetType) (:exactReference targetType)) type)
                         #_"ConstantNode" hub (ConstantNode'forConstant-3s KlassPointerStamp'KLASS_NON_NULL, (#_"HotSpotResolvedObjectType" .klass type), (:graph instanceOf))
                         #_"Graph" graph (:graph instanceOf)
-                        #_"Arguments" args
-                            (cond
-                                (some? exact)
-                                    (let [
-                                        args (Arguments'new-3 (:instanceofExact this), (:guardsStage graph), (:loweringStage (:phase lowerer)))
-                                    ]
-                                        (Arguments''add-2 args, object)
-                                        ((Arguments''add-2 args, (ConstantNode'forConstant-3s KlassPointerStamp'KLASS_NON_NULL, (#_"HotSpotResolvedObjectType" .klass exact), graph)))
-                                        args
-                                    )
-                                (#_"HotSpotResolvedObjectType" .isPrimaryType type)
-                                    (let [
-                                        args (Arguments'new-3 (:instanceofPrimary this), (:guardsStage graph), (:loweringStage (:phase lowerer)))
-                                    ]
-                                        (Arguments''add-2 args, hub)
-                                        (Arguments''add-2 args, object)
-                                        (Arguments''addConst-2 args, (#_"HotSpotResolvedObjectType" .superCheckOffset type))
-                                        args
-                                    )
-                                :else
-                                    (let [
-                                        args (Arguments'new-3 (:instanceofSecondary this), (:guardsStage graph), (:loweringStage (:phase lowerer)))
-                                    ]
-                                        (Arguments''add-2 args, hub)
-                                        (Arguments''add-2 args, object)
-                                        args
-                                    )
-                            )
                     ]
-                        (Arguments''add-2 args, (:trueValue replacer))
-                        (Arguments''add-2 args, (:falseValue replacer))
-                        args
+                        (cond
+                            (some? exact)
+                                (-> (Arguments'new-3 (:instanceofExact this), (:guardsStage graph), (:loweringStage (:phase lowerer)))
+                                    (Arguments''add-2 object)
+                                    (Arguments''add-2 (ConstantNode'forConstant-3s KlassPointerStamp'KLASS_NON_NULL, (#_"HotSpotResolvedObjectType" .klass exact), graph))
+                                    (Arguments''add-2 (:trueValue replacer))
+                                    (Arguments''add-2 (:falseValue replacer))
+                                )
+                            (#_"HotSpotResolvedObjectType" .isPrimaryType type)
+                                (-> (Arguments'new-3 (:instanceofPrimary this), (:guardsStage graph), (:loweringStage (:phase lowerer)))
+                                    (Arguments''add-2 hub)
+                                    (Arguments''add-2 object)
+                                    (Arguments''add-2 (#_"HotSpotResolvedObjectType" .superCheckOffset type))
+                                    (Arguments''add-2 (:trueValue replacer))
+                                    (Arguments''add-2 (:falseValue replacer))
+                                )
+                            :else
+                                (-> (Arguments'new-3 (:instanceofSecondary this), (:guardsStage graph), (:loweringStage (:phase lowerer)))
+                                    (Arguments''add-2 hub)
+                                    (Arguments''add-2 object)
+                                    (Arguments''add-2 (:trueValue replacer))
+                                    (Arguments''add-2 (:falseValue replacer))
+                                )
+                        )
                     )
                 InstanceOfDynamicNode
                     (let [
                         #_"InstanceOfDynamicNode" instanceOf (:instanceOf replacer)
                         #_"ValueNode" object (:y instanceOf)
-                        #_"Arguments" args (Arguments'new-3 (:instanceofDynamic this), (:guardsStage (:graph instanceOf)), (:loweringStage (:phase lowerer)))
                     ]
-                        (Arguments''add-2 args, (:x instanceOf))
-                        (Arguments''add-2 args, object)
-                        (Arguments''add-2 args, (:trueValue replacer))
-                        (Arguments''add-2 args, (:falseValue replacer))
-                        (Arguments''addConst-2 args, (:allow-nil? instanceOf))
-                        args
+                        (-> (Arguments'new-3 (:instanceofDynamic this), (:guardsStage (:graph instanceOf)), (:loweringStage (:phase lowerer)))
+                            (Arguments''add-2 (:x instanceOf))
+                            (Arguments''add-2 object)
+                            (Arguments''add-2 (:trueValue replacer))
+                            (Arguments''add-2 (:falseValue replacer))
+                            (Arguments''add-2 (:allow-nil? instanceOf))
+                        )
                     )
             )
         )
@@ -13744,22 +13686,16 @@ ZeroExtendNode'new-4
         (let [
             #_"Arguments" args
                 (if (:useFastLocking this)
-                    (let [
-                        args (Arguments'new-3 (:monitorenter this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)))
-                    ]
-                        (Arguments''add-2 args, (:object node))
-                        (Arguments''add-2 args, (:hub node))
-                        (Arguments''addConst-2 args, (:lockDepth (:monitorId node)))
-                        (Arguments''addConst-2 args, HotSpot'threadRegister)
-                        (Arguments''addConst-2 args, HotSpot'stackPointerRegister)
-                        args
+                    (-> (Arguments'new-3 (:monitorenter this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)))
+                        (Arguments''add-2 (:object node))
+                        (Arguments''add-2 (:hub node))
+                        (Arguments''add-2 (:lockDepth (:monitorId node)))
+                        (Arguments''add-2 HotSpot'threadRegister)
+                        (Arguments''add-2 HotSpot'stackPointerRegister)
                     )
-                    (let [
-                        args (Arguments'new-3 (:monitorenterStub this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)))
-                    ]
-                        (Arguments''add-2 args, (:object node))
-                        (Arguments''addConst-2 args, (:lockDepth (:monitorId node)))
-                        args
+                    (-> (Arguments'new-3 (:monitorenterStub this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)))
+                        (Arguments''add-2 (:object node))
+                        (Arguments''add-2 (:lockDepth (:monitorId node)))
                     )
                 )
         ]
@@ -13771,14 +13707,12 @@ ZeroExtendNode'new-4
     (defn #_"void" MonitorTemplates''lower-3o [#_"MonitorTemplates" this, #_"MonitorExitNode" node, #_"LoweringTool" lowerer]
         (let [
             #_"Arguments" args
-                (if (:useFastLocking this)
-                    (Arguments'new-3 (:monitorexit this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)))
-                    (Arguments'new-3 (:monitorexitStub this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)))
+                (-> (Arguments'new-3 (if (:useFastLocking this) (:monitorexit this) (:monitorexitStub this)), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)))
+                    (Arguments''add-2 (:object node))
+                    (Arguments''add-2 (:lockDepth (:monitorId node)))
+                    (Arguments''add-2 HotSpot'threadRegister)
                 )
         ]
-            (Arguments''add-2 args, (:object node))
-            (Arguments''addConst-2 args, (:lockDepth (:monitorId node)))
-            (Arguments''addConst-2 args, HotSpot'threadRegister)
             (SnippetTemplate''instantiate-4x (SnippetTemplate'new-2 args, node), node, SnippetTemplate'DEFAULT_REPLACER, args)
         )
         nil
@@ -13798,12 +13732,14 @@ ZeroExtendNode'new-4
     (defn #_"void" NewObjectTemplates''lower-3i [#_"NewObjectTemplates" this, #_"NewInstanceNode" node, #_"LoweringTool" lowerer]
         (let [
             #_"HotSpotResolvedObjectType" type (:instanceClass node)
-            #_"Arguments" args (Arguments'new-3 (:allocateInstance this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)))
+            #_"Arguments" args
+                (-> (Arguments'new-3 (:allocateInstance this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)))
+                    (Arguments''add-2 (#_"HotSpotResolvedObjectType" .instanceSize type))
+                    (Arguments''add-2 (ConstantNode'forConstant-3s KlassPointerStamp'KLASS_NON_NULL, (#_"HotSpotResolvedObjectType" .klass type), (:graph node)))
+                    (Arguments''add-2 (#_"HotSpotResolvedObjectType" .prototypeMarkWord type))
+                    (Arguments''add-2 HotSpot'threadRegister)
+                )
         ]
-            (Arguments''addConst-2 args, (#_"HotSpotResolvedObjectType" .instanceSize type))
-            (Arguments''add-2 args, (ConstantNode'forConstant-3s KlassPointerStamp'KLASS_NON_NULL, (#_"HotSpotResolvedObjectType" .klass type), (:graph node)))
-            (Arguments''add-2 args, (#_"HotSpotResolvedObjectType" .prototypeMarkWord type))
-            (Arguments''addConst-2 args, HotSpot'threadRegister)
             (SnippetTemplate''instantiate-4x (SnippetTemplate'new-2 args, node), node, SnippetTemplate'DEFAULT_REPLACER, args)
         )
         nil
@@ -13814,15 +13750,17 @@ ZeroExtendNode'new-4
             #_"HotSpotResolvedObjectType" arrayType (#_"ResolvedJavaType" .getArrayClass (:elementType node))
             #_"JavaKind" elementKind (#_"ResolvedJavaType" .getJavaKind (:elementType node))
             #_"ValueNode" length (ArrayLengthProvider'''length-1 node)
-            #_"Arguments" args (Arguments'new-3 (:allocateArray this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)))
+            #_"Arguments" args
+                (-> (Arguments'new-3 (:allocateArray this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)))
+                    (Arguments''add-2 (ConstantNode'forConstant-3s KlassPointerStamp'KLASS_NON_NULL, (#_"HotSpotResolvedObjectType" .klass arrayType), (:graph node)))
+                    (Arguments''add-2 (if (Node''isAlive-1 length) length (Graph''addOrUniqueWithInputs-2 (:graph node), length)))
+                    (Arguments''add-2 (#_"HotSpotResolvedObjectType" .prototypeMarkWord arrayType))
+                    (Arguments''add-2 (HotSpot'arrayBaseOffset-1 elementKind))
+                    (Arguments''add-2 (CodeUtil/log2 (HotSpot'arrayIndexScale-1 elementKind)))
+                    (Arguments''add-2 HotSpot'threadRegister)
+                    (Arguments''add-2 (satisfies? ConstantNode length))
+                )
         ]
-            (Arguments''add-2 args, (ConstantNode'forConstant-3s KlassPointerStamp'KLASS_NON_NULL, (#_"HotSpotResolvedObjectType" .klass arrayType), (:graph node)))
-            (Arguments''add-2 args, (if (Node''isAlive-1 length) length (Graph''addOrUniqueWithInputs-2 (:graph node), length)))
-            (Arguments''add-2 args, (#_"HotSpotResolvedObjectType" .prototypeMarkWord arrayType))
-            (Arguments''addConst-2 args, (HotSpot'arrayBaseOffset-1 elementKind))
-            (Arguments''addConst-2 args, (CodeUtil/log2 (HotSpot'arrayIndexScale-1 elementKind)))
-            (Arguments''addConst-2 args, HotSpot'threadRegister)
-            (Arguments''addConst-2 args, (satisfies? ConstantNode length))
             (SnippetTemplate''instantiate-4x (SnippetTemplate'new-2 args, node), node, SnippetTemplate'DEFAULT_REPLACER, args)
         )
         nil
@@ -13840,10 +13778,12 @@ ZeroExtendNode'new-4
 
     (defn #_"void" UnsafeLoadTemplates''lower-3 [#_"UnsafeLoadTemplates" this, #_"RawLoadNode" node, #_"LoweringTool" lowerer]
         (let [
-            #_"Arguments" args (Arguments'new-3 (:unsafeLoad this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)))
+            #_"Arguments" args
+                (-> (Arguments'new-3 (:unsafeLoad this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)))
+                    (Arguments''add-2 (:object node))
+                    (Arguments''add-2 (:offset node))
+                )
         ]
-            (Arguments''add-2 args, (:object node))
-            (Arguments''add-2 args, (:offset node))
             (SnippetTemplate''instantiate-4x (SnippetTemplate'new-2 args, node), node, SnippetTemplate'DEFAULT_REPLACER, args)
         )
         nil
@@ -13868,17 +13808,11 @@ ZeroExtendNode'new-4
         (let [
             #_"Arguments" args
                 (if (:precise? node)
-                    (let [
-                        args (Arguments'new-3 (:serialPreciseWriteBarrier this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)))
-                    ]
-                        (Arguments''add-2 args, (:address node))
-                        args
+                    (-> (Arguments'new-3 (:serialPreciseWriteBarrier this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)))
+                        (Arguments''add-2 (:address node))
                     )
-                    (let [
-                        args (Arguments'new-3 (:serialImpreciseWriteBarrier this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)))
-                    ]
-                        (Arguments''add-2 args, (AddressNode'''getBase-1 (:address node)))
-                        args
+                    (-> (Arguments'new-3 (:serialImpreciseWriteBarrier this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)))
+                        (Arguments''add-2 (AddressNode'''getBase-1 (:address node)))
                     )
                 )
         ]
@@ -13894,14 +13828,16 @@ ZeroExtendNode'new-4
                 (when (and (some? expected) (satisfies? NarrowOopStamp (:stamp expected))) => expected
                     (HotSpotCompressionNode'uncompress-2 expected, (:oopEncoding this))
                 )
-            #_"Arguments" args (Arguments'new-3 (:g1PreWriteBarrier this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)))
+            #_"Arguments" args
+                (-> (Arguments'new-3 (:g1PreWriteBarrier this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)))
+                    (Arguments''add-2 (:address node))
+                    (Arguments''add-2 (when (satisfies? OffsetAddressNode (:address node)) (AddressNode'''getBase-1 (:address node))))
+                    (Arguments''add-2 expected)
+                    (Arguments''add-2 (:doLoad node))
+                    (Arguments''add-2 (:nullCheck node))
+                    (Arguments''add-2 HotSpot'threadRegister)
+                )
         ]
-            (Arguments''add-2 args, (:address node))
-            (Arguments''add-2 args, (when (satisfies? OffsetAddressNode (:address node)) (AddressNode'''getBase-1 (:address node))))
-            (Arguments''add-2 args, expected)
-            (Arguments''addConst-2 args, (:doLoad node))
-            (Arguments''addConst-2 args, (:nullCheck node))
-            (Arguments''addConst-2 args, HotSpot'threadRegister)
             (SnippetTemplate''instantiate-4x (SnippetTemplate'new-2 args, node), node, SnippetTemplate'DEFAULT_REPLACER, args)
         )
         nil
@@ -13914,14 +13850,16 @@ ZeroExtendNode'new-4
                 (when (and (some? expected) (satisfies? NarrowOopStamp (:stamp expected))) => expected
                     (HotSpotCompressionNode'uncompress-2 expected, (:oopEncoding this))
                 )
-            #_"Arguments" args (Arguments'new-3 (:g1ReferentReadBarrier this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)))
+            #_"Arguments" args
+                (-> (Arguments'new-3 (:g1ReferentReadBarrier this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)))
+                    (Arguments''add-2 (:address node))
+                    (Arguments''add-2 (when (satisfies? OffsetAddressNode (:address node)) (AddressNode'''getBase-1 (:address node))))
+                    (Arguments''add-2 expected)
+                    (Arguments''add-2 (:doLoad node))
+                    (Arguments''add-2 false)
+                    (Arguments''add-2 HotSpot'threadRegister)
+                )
         ]
-            (Arguments''add-2 args, (:address node))
-            (Arguments''add-2 args, (when (satisfies? OffsetAddressNode (:address node)) (AddressNode'''getBase-1 (:address node))))
-            (Arguments''add-2 args, expected)
-            (Arguments''addConst-2 args, (:doLoad node))
-            (Arguments''addConst-2 args, false)
-            (Arguments''addConst-2 args, HotSpot'threadRegister)
             (SnippetTemplate''instantiate-4x (SnippetTemplate'new-2 args, node), node, SnippetTemplate'DEFAULT_REPLACER, args)
         )
         nil
@@ -13934,13 +13872,15 @@ ZeroExtendNode'new-4
                     (when (satisfies? NarrowOopStamp (:stamp (:value node))) => (:value node)
                         (HotSpotCompressionNode'uncompress-2 (:value node), (:oopEncoding this))
                     )
-                #_"Arguments" args (Arguments'new-3 (:g1PostWriteBarrier this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)))
+                #_"Arguments" args
+                    (-> (Arguments'new-3 (:g1PostWriteBarrier this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)))
+                        (Arguments''add-2 (:address node))
+                        (Arguments''add-2 (when (satisfies? OffsetAddressNode (:address node)) (AddressNode'''getBase-1 (:address node))))
+                        (Arguments''add-2 value)
+                        (Arguments''add-2 (:precise? node))
+                        (Arguments''add-2 HotSpot'threadRegister)
+                    )
             ]
-                (Arguments''add-2 args, (:address node))
-                (Arguments''add-2 args, (when (satisfies? OffsetAddressNode (:address node)) (AddressNode'''getBase-1 (:address node))))
-                (Arguments''add-2 args, value)
-                (Arguments''addConst-2 args, (:precise? node))
-                (Arguments''addConst-2 args, HotSpot'threadRegister)
                 (SnippetTemplate''instantiate-4x (SnippetTemplate'new-2 args, node), node, SnippetTemplate'DEFAULT_REPLACER, args)
             )
         )
@@ -14677,23 +14617,20 @@ ZeroExtendNode'new-4
 )
 
 ;;;
- ; Values that are bound to the snippet method parameters. The methods #add, #addConst, and #addVarargs
- ; must be called in the same order as in the signature of the snippet method. Which method needs to be
- ; called depends on the annotation of the snippet method parameter:
+ ; Values that are bound to the snippet method parameters. The methods #add and #addConst must be called in
+ ; the same order as in the signature of the snippet method. Which method needs to be called depends on the
+ ; annotation of the snippet method parameter:
  ;
- ; Use #add for a parameter without an annotation. The value is bound when the SnippetTemplate is
- ; {@link SnippetTemplate#instantiate instantiated}.
- ;
- ; Use #addConst for a parameter annotated with ConstantParameter.
- ; The value is bound when the SnippetTemplate is {@link SnippetTemplate#SnippetTemplate created}.
+ ; Use #add for a parameter without an annotation. The value is bound when the SnippetTemplate is instantiated.
  ;;
 (class-ns Arguments []
     (defn #_"Arguments" Arguments'new-3 [#_"SnippetInfo" info, #_"GuardsStage" guardsStage, #_"LoweringStage" loweringStage]
         (merge (Arguments'class.)
             (hash-map
                 #_"SnippetInfo" :info info
-                #_"CacheKey" :cacheKey (CacheKey'new-3 info, guardsStage, loweringStage)
-                #_"Object[]" :values (make-array Object (SnippetInfo''getParameterCount-1 info))
+                #_"GuardsStage" :guardsStage guardsStage
+                #_"LoweringStage" :loweringStage loweringStage
+                #_"Object[]" :values (make-array Object (#_"Signature" .getParameterCount (#_"ResolvedJavaMethod" .getSignature (:method info)), false))
                 #_"int" :nextParamIdx 0
             )
         )
@@ -14701,15 +14638,7 @@ ZeroExtendNode'new-4
 
     (defn #_"Arguments" Arguments''add-2 [#_"Arguments" this, #_"Object" value]
         (aset (:values this) (:nextParamIdx this) value)
-        (§ ass this (update this :nextParamIdx inc))
-        this
-    )
-
-    (defn #_"Arguments" Arguments''addConst-2 [#_"Arguments" this, #_"Object" value]
-        (aset (:values this) (:nextParamIdx this) value)
-        (CacheKey''setParam-3 (:cacheKey this), (:nextParamIdx this), value)
-        (§ ass this (update this :nextParamIdx inc))
-        this
+        (update this :nextParamIdx inc)
     )
 )
 
@@ -18217,7 +18146,7 @@ ZeroExtendNode'new-4
                     (condp satisfies? node
                         Single
                             (let [
-                                #_"LocationIdentity" identity (Single'''getLocationIdentity-1 node)
+                                #_"LocationIdentity" identity (Single'''getLocationIdentity-1 node)
                             ]
                                 (§ ass! result (LocationSet''add-2 result, identity))
                             )
@@ -19576,11 +19505,7 @@ ZeroExtendNode'new-4
                         )
                     )
             ]
-                (let [
-                    #_"LocationIdentity" arrayLocation (NamedLocationIdentity'getArrayLocation-1 elementKind)
-                ]
-                    (PEReadEliminationClosure''processLoad-8 this, load, (:array load), arrayLocation, index, elementKind, state, effects)
-                )
+                (PEReadEliminationClosure''processLoad-8 this, load, (:array load), (NamedLocationIdentity'getArrayLocation-1 elementKind), index, elementKind, state, effects)
             )
         )
     )
@@ -19741,7 +19666,7 @@ ZeroExtendNode'new-4
                     RawStoreNode     (PEReadEliminationClosure''processUnsafeStore-4 this, node, state, effects)
                     Single
                         (let [
-                            #_"LocationIdentity" identity (Single'''getLocationIdentity-1 node)
+                            #_"LocationIdentity" identity (Single'''getLocationIdentity-1 node)
                         ]
                             (PEReadEliminationClosure'processIdentity-2 state, identity)
                             false
@@ -20074,7 +19999,7 @@ ZeroExtendNode'new-4
                     )
                 Single
                     (let [
-                        #_"LocationIdentity" identity (Single'''getLocationIdentity-1 node)
+                        #_"LocationIdentity" identity (Single'''getLocationIdentity-1 node)
                     ]
                         (ReadEliminationClosure'processIdentity-2 state, identity)
                         false
@@ -20305,9 +20230,6 @@ ZeroExtendNode'new-4
             (merge (BytecodeParser'class.)
                 (hash-map
                     #_"GraphBuilderInstance" :graphBuilderInstance builder
-                    #_"GraphBuilderConfiguration" :graphBuilderConfig (:graphBuilderConfig builder)
-                    #_"boolean" :eagerInitializing (:eagerResolving (:graphBuilderConfig builder))
-                    #_"boolean" :uninitializedIsError (:unresolvedIsError (:graphBuilderConfig builder))
                     #_"OptimisticOptimizations" :optimisticOpts (:optimisticOpts builder)
                     #_"Graph" :graph graph
                     #_"BytecodeParser" :parent parent
@@ -20654,7 +20576,7 @@ ZeroExtendNode'new-4
         (let [
             #_"FrameStateBuilder" startFrameState (FrameStateBuilder'new-3c this, (:code this), (:graph this))
         ]
-            (FrameStateBuilder''initializeForMethodStart-3 startFrameState, (or (:eagerResolving (:graphBuilderConfig this)) (some? (:intrinsicContext this))), (:plugins (:graphBuilderConfig this)))
+            (FrameStateBuilder''initializeForMethodStart-1 startFrameState)
 
             (try (§ with [#_"IntrinsicScope" _ (when (some? (:intrinsicContext this)) (IntrinsicScope'new-1 this))])
                 (§ ass! this (BytecodeParser''build-3 this, (:start (:graph this)), startFrameState))
@@ -20967,7 +20889,7 @@ ZeroExtendNode'new-4
 
     (defn #_"ValueNode" BytecodeParser''genLoadField-3 [#_"BytecodeParser" this, #_"ValueNode" receiver, #_"ResolvedJavaField" field]
         (let [
-            #_"Stamp" stamp (Plugins''getOverridingStamp-4 (:plugins (:graphBuilderConfig this)), this, (#_"ResolvedJavaField" .getType field), false)
+            #_"Stamp" stamp (Plugins''getOverridingStamp-4 HotSpot'plugins, this, (#_"ResolvedJavaField" .getType field), false)
         ]
             (if (some? stamp)
                 (LoadFieldNode'createOverrideStamp-5 stamp, receiver, field, false, false)
@@ -21007,16 +20929,14 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"void" BytecodeParser''maybeEagerlyResolve-3 [#_"BytecodeParser" this, #_"int" cpi, #_"int" bytecode]
-        (cond
-            (some? (:intrinsicContext this))
+        (if (some? (:intrinsicContext this))
+            (#_"ConstantPool" .loadReferencedType (:constantPool this), cpi, bytecode)
+            ;; Since we're potentially triggering class initialization here, we need synchronization
+            ;; to mitigate the potential for class initialization related deadlock being caused by
+            ;; the compiler (e.g. https://github.com/graalvm/graal-core/pull/232/files#r90788550).
+            (locking BytecodeParser'iface
                 (#_"ConstantPool" .loadReferencedType (:constantPool this), cpi, bytecode)
-            (:eagerResolving (:graphBuilderConfig this))
-                ;; Since we're potentially triggering class initialization here, we need synchronization
-                ;; to mitigate the potential for class initialization related deadlock being caused by
-                ;; the compiler (e.g. https://github.com/graalvm/graal-core/pull/232/files#r90788550).
-                (locking BytecodeParser'iface
-                    (#_"ConstantPool" .loadReferencedType (:constantPool this), cpi, bytecode)
-                )
+            )
         )
         nil
     )
@@ -21046,15 +20966,13 @@ ZeroExtendNode'new-4
         (let [
             #_"JavaField" result (#_"ConstantPool" .lookupField (:constantPool this), cpi, (:method this), opcode)
         ]
-            (when (or (GraphBuilder'''parsingIntrinsic-1 this) (:eagerInitializing this))
-                (when (instance? ResolvedJavaField result)
-                    (let [
-                        #_"ResolvedJavaType" declaringClass (#_"ResolvedJavaField" .getDeclaringClass result)
-                    ]
-                        (when-not (#_"ResolvedJavaType" .isInitialized declaringClass)
-                            ;; even with eager initialization, superinterfaces are not always initialized (see StaticInterfaceFieldTest)
-                            (BytecodeParser'initialize-1 declaringClass)
-                        )
+            (when (instance? ResolvedJavaField result)
+                (let [
+                    #_"ResolvedJavaType" declaringClass (#_"ResolvedJavaField" .getDeclaringClass result)
+                ]
+                    (when-not (#_"ResolvedJavaType" .isInitialized declaringClass)
+                        ;; even with eager initialization, superinterfaces are not always initialized (see StaticInterfaceFieldTest)
+                        (BytecodeParser'initialize-1 declaringClass)
                     )
                 )
             )
@@ -21218,7 +21136,7 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"boolean" BytecodeParser''tryNodePluginForInvocation-3 [#_"BytecodeParser" this, #_"ValueNode[]" args, #_"ResolvedJavaMethod" targetMethod]
-        (loop [#_"ISeq" s (seq (:nodePlugins (:plugins (:graphBuilderConfig this))))]
+        (loop [#_"ISeq" s (seq (:nodePlugins HotSpot'plugins))]
             (and (some? s)
                 (or (NodePlugin'''handleInvoke-4 (first s), this, targetMethod, args)
                     (recur (next s))
@@ -21245,7 +21163,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"void" BytecodeParser''genGetField-3r [#_"BytecodeParser" this, #_"ResolvedJavaField" resolvedField, #_"ValueNode" receiver]
         (or
-            (loop-when [#_"ISeq" s (seq (:nodePlugins (:plugins (:graphBuilderConfig this))))] (some? s)
+            (loop-when [#_"ISeq" s (seq (:nodePlugins HotSpot'plugins))] (some? s)
                 (when (NodePlugin'''handleLoadField-4 (first s), this, receiver, resolvedField) => (recur (next s))
                     :done
                 )
@@ -21383,7 +21301,7 @@ ZeroExtendNode'new-4
                 (when (BytecodeParser''inline-5 this, targetMethod, targetMethod, nil, args)
                     BytecodeParser'SUCCESSFULLY_INLINED
                 )
-                (loop [#_"ISeq" s (seq (:inlineInvokePlugins (:plugins (:graphBuilderConfig this))))]
+                (loop [#_"ISeq" s (seq (:inlineInvokePlugins HotSpot'plugins))]
                     (if (some? s)
                         (let [
                             #_"InlineInvokeInfo" inlineInfo (InlineInvokePlugin'''shouldInlineInvoke-4 (first s), this, targetMethod, args)
@@ -21422,93 +21340,78 @@ ZeroExtendNode'new-4
                     )
                 )
             #_"JavaKind" resultType (#_"Signature" .getReturnKind (#_"ResolvedJavaMethod" .getSignature targetMethod))
+            #_"JavaType" returnType (#_"Signature" .getReturnType (#_"ResolvedJavaMethod" .getSignature targetMethod), (#_"ResolvedJavaMethod" .getDeclaringClass (:method this)))
+            returnType (#_"JavaType" .resolve returnType, (#_"ResolvedJavaMethod" .getDeclaringClass targetMethod))
         ]
-            (if (and (not (GraphBuilder'''parsingIntrinsic-1 this)) GraalOptions'deoptALot)
-                (do
-                    (GraphBuilder'''append-2 this, (DeoptimizeNode'new-2 DeoptimizationAction/None, DeoptimizationReason/RuntimeConstraint))
-                    (§ ass! (:frameState this) (FrameStateBuilder''pushReturn-3 (:frameState this), resultType, (ConstantNode'defaultForKind-2 resultType, (:graph this))))
-                    nil
+            (when (and (= initialInvokeKind InvokeKind'Special) (not (#_"ResolvedJavaMethod" .isConstructor targetMethod)))
+                (BytecodeParser''emitCheckForInvokeSuperSpecial-2 this, args)
+            )
+            (try
+                (§ ass! this (assoc this :currentInvoke (CurrentInvoke'new-3 args, invokeKind, returnType)))
+                (when (BytecodeParser''tryNodePluginForInvocation-3 this, args, targetMethod)
+                    (§ return nil)
                 )
-                (let [
-                    #_"JavaType" returnType (#_"Signature" .getReturnType (#_"ResolvedJavaMethod" .getSignature targetMethod), (#_"ResolvedJavaMethod" .getDeclaringClass (:method this)))
-                    returnType
-                        (if (or (:eagerResolving (:graphBuilderConfig this)) (GraphBuilder'''parsingIntrinsic-1 this))
-                            (#_"JavaType" .resolve returnType, (#_"ResolvedJavaMethod" .getDeclaringClass targetMethod))
-                            returnType
-                        )
-                ]
-                    (when (and (= initialInvokeKind InvokeKind'Special) (not (#_"ResolvedJavaMethod" .isConstructor targetMethod)))
-                        (BytecodeParser''emitCheckForInvokeSuperSpecial-2 this, args)
-                    )
-                    (try
-                        (§ ass! this (assoc this :currentInvoke (CurrentInvoke'new-3 args, invokeKind, returnType)))
-                        (when (BytecodeParser''tryNodePluginForInvocation-3 this, args, targetMethod)
-                            (§ return nil)
-                        )
 
-                        (when (and (InvokeKind''hasReceiver-1 invokeKind) (ValueNode''isNullConstant-1 (nth args 0)))
-                            (GraphBuilder'''append-2 this, (DeoptimizeNode'new-2 DeoptimizationAction/InvalidateRecompile, DeoptimizationReason/NullCheckException))
-                            (§ return nil)
-                        )
+                (when (and (InvokeKind''hasReceiver-1 invokeKind) (ValueNode''isNullConstant-1 (nth args 0)))
+                    (GraphBuilder'''append-2 this, (DeoptimizeNode'new-2 DeoptimizationAction/InvalidateRecompile, DeoptimizationReason/NullCheckException))
+                    (§ return nil)
+                )
 
-                        (when (and (:direct invokeKind) (= (BytecodeParser''tryInline-3 this, args, targetMethod) BytecodeParser'SUCCESSFULLY_INLINED))
-                            (§ return nil)
-                        )
-                        (finally
-                            (§ ass! this (assoc this :currentInvoke nil))
-                        )
-                    )
+                (when (and (:direct invokeKind) (= (BytecodeParser''tryInline-3 this, args, targetMethod) BytecodeParser'SUCCESSFULLY_INLINED))
+                    (§ return nil)
+                )
+                (finally
+                    (§ ass! this (assoc this :currentInvoke nil))
+                )
+            )
 
-                    (let [
-                        #_"int" invokeBci (BytecodeParser''bci-1 this)
-                        #_"boolean" partialIntrinsicExit
-                            (when (and (some? (:intrinsicContext this)) (IntrinsicContext''isCallToOriginal-2 (:intrinsicContext this), targetMethod)) => false
-                                (let [
-                                    #_"ResolvedJavaMethod" originalMethod (:originalMethod (:intrinsicContext this))
-                                    #_"BytecodeParser" intrinsicCallSiteParser (BytecodeParser''getNonIntrinsicAncestor-1 this)
-                                ]
-                                    (if (some? intrinsicCallSiteParser)
-                                        (do
-                                            ;; When exiting a partial intrinsic, the invoke to the original
-                                            ;; must use the same context as the call to the intrinsic.
-                                            (§ ass invokeBci (BytecodeParser''bci-1 intrinsicCallSiteParser))
-                                        )
-                                        (do
-                                            ;; We are parsing the intrinsic for the root compilation or for inlining.
-                                            ;; This call is a partial intrinsic exit, and we do not have profile information
-                                            ;; for this callsite. We also have to assume that the call needs an exception
-                                            ;; edge. Finally, we know that this intrinsic is parsed for late inlining,
-                                            ;; so the bci must be set to unknown, so that the inliner patches it later.
-                                            (§ ass invokeBci BytecodeFrame/UNKNOWN_BCI)
-                                        )
-                                    )
-
-                                    (if (#_"ResolvedJavaMethod" .isStatic originalMethod)
-                                        (§ ass invokeKind InvokeKind'Static)
-                                        ;; The original call to the intrinsic must have been devirtualized,
-                                        ;; otherwise we wouldn't be here.
-                                        (§ ass invokeKind InvokeKind'Special)
-                                    )
-                                    (let [
-                                        #_"Signature" sig (#_"ResolvedJavaMethod" .getSignature originalMethod)
-                                    ]
-                                        (§ ass returnType (#_"Signature" .getReturnType sig, (#_"ResolvedJavaMethod" .getDeclaringClass (:method this))))
-                                        (§ ass resultType (#_"Signature" .getReturnKind sig))
-                                        (§ ass targetMethod originalMethod)
-                                        true
-                                    )
+            (let [
+                #_"int" invokeBci (BytecodeParser''bci-1 this)
+                #_"boolean" partialIntrinsicExit
+                    (when (and (some? (:intrinsicContext this)) (IntrinsicContext''isCallToOriginal-2 (:intrinsicContext this), targetMethod)) => false
+                        (let [
+                            #_"ResolvedJavaMethod" originalMethod (:originalMethod (:intrinsicContext this))
+                            #_"BytecodeParser" intrinsicCallSiteParser (BytecodeParser''getNonIntrinsicAncestor-1 this)
+                        ]
+                            (if (some? intrinsicCallSiteParser)
+                                (do
+                                    ;; When exiting a partial intrinsic, the invoke to the original
+                                    ;; must use the same context as the call to the intrinsic.
+                                    (§ ass invokeBci (BytecodeParser''bci-1 intrinsicCallSiteParser))
+                                )
+                                (do
+                                    ;; We are parsing the intrinsic for the root compilation or for inlining.
+                                    ;; This call is a partial intrinsic exit, and we do not have profile information
+                                    ;; for this callsite. We also have to assume that the call needs an exception
+                                    ;; edge. Finally, we know that this intrinsic is parsed for late inlining,
+                                    ;; so the bci must be set to unknown, so that the inliner patches it later.
+                                    (§ ass invokeBci BytecodeFrame/UNKNOWN_BCI)
                                 )
                             )
-                        #_"InvokeNode" invoke (BytecodeParser''createNonInlinedInvoke-7 this, invokeBci, args, targetMethod, invokeKind, resultType, returnType)
-                    ]
-                        (when partialIntrinsicExit
-                            ;; This invoke must never be later inlined as it might select the intrinsic graph.
-                            ;; Until there is a mechanism to guarantee that any late inlining will not select
-                            ;; the intrinsic graph, prevent this invoke from being inlined.
-                            (§ ass! invoke (InvokeNode''setUseForInlining-2 invoke, false))
+
+                            (if (#_"ResolvedJavaMethod" .isStatic originalMethod)
+                                (§ ass invokeKind InvokeKind'Static)
+                                ;; The original call to the intrinsic must have been devirtualized,
+                                ;; otherwise we wouldn't be here.
+                                (§ ass invokeKind InvokeKind'Special)
+                            )
+                            (let [
+                                #_"Signature" sig (#_"ResolvedJavaMethod" .getSignature originalMethod)
+                            ]
+                                (§ ass returnType (#_"Signature" .getReturnType sig, (#_"ResolvedJavaMethod" .getDeclaringClass (:method this))))
+                                (§ ass resultType (#_"Signature" .getReturnKind sig))
+                                (§ ass targetMethod originalMethod)
+                                true
+                            )
                         )
-                        invoke
                     )
+                #_"InvokeNode" invoke (BytecodeParser''createNonInlinedInvoke-7 this, invokeBci, args, targetMethod, invokeKind, resultType, returnType)
+            ]
+                (when partialIntrinsicExit => invoke
+                    ;; This invoke must never be later inlined as it might select the intrinsic graph.
+                    ;; Until there is a mechanism to guarantee that any late inlining will not select
+                    ;; the intrinsic graph, prevent this invoke from being inlined.
+                    (InvokeNode''setUseForInlining-2 invoke, false)
                 )
             )
         )
@@ -21548,13 +21451,13 @@ ZeroExtendNode'new-4
     (defn #_"InvokeNode" BytecodeParser''createNonInlinedInvoke-7 [#_"BytecodeParser" this, #_"int" invokeBci, #_"ValueNode*" invokeArgs, #_"ResolvedJavaMethod" targetMethod, #_"InvokeKind" invokeKind, #_"JavaKind" resultType, #_"JavaType" returnType]
         (let [
             #_"Stamp" returnStamp
-                (or (Plugins''getOverridingStamp-4 (:plugins (:graphBuilderConfig this)), this, returnType, false)
+                (or (Plugins''getOverridingStamp-4 HotSpot'plugins, this, returnType, false)
                     (StampFactory'forDeclaredType-2 returnType, false)
                 )
             #_"MethodCallTargetNode" callTarget (Graph''add-2 (:graph this), (MethodCallTargetNode'new-4 invokeKind, targetMethod, invokeArgs, returnStamp))
             #_"InvokeNode" invoke (BytecodeParser''createInvoke-4 this, invokeBci, callTarget, resultType)
         ]
-            (doseq [#_"InlineInvokePlugin" plugin (:inlineInvokePlugins (:plugins (:graphBuilderConfig this)))]
+            (doseq [#_"InlineInvokePlugin" plugin (:inlineInvokePlugins HotSpot'plugins)]
                 (InlineInvokePlugin'''notifyNotInlined-4 plugin, this, targetMethod, invoke)
             )
 
@@ -21563,14 +21466,14 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"void" BytecodeParser''notifyBeforeInline-2 [#_"BytecodeParser" this, #_"ResolvedJavaMethod" inlinedMethod]
-        (doseq [#_"InlineInvokePlugin" plugin (:inlineInvokePlugins (:plugins (:graphBuilderConfig this)))]
+        (doseq [#_"InlineInvokePlugin" plugin (:inlineInvokePlugins HotSpot'plugins)]
             (InlineInvokePlugin'''notifyBeforeInline-2 plugin, inlinedMethod)
         )
         nil
     )
 
     (defn #_"void" BytecodeParser''notifyAfterInline-2 [#_"BytecodeParser" this, #_"ResolvedJavaMethod" inlinedMethod]
-        (doseq [#_"InlineInvokePlugin" plugin (:inlineInvokePlugins (:plugins (:graphBuilderConfig this)))]
+        (doseq [#_"InlineInvokePlugin" plugin (:inlineInvokePlugins HotSpot'plugins)]
             (InlineInvokePlugin'''notifyAfterInline-2 plugin, inlinedMethod)
         )
         nil
@@ -22250,7 +22153,7 @@ ZeroExtendNode'new-4
             #_"ValueNode" index (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Int)
             #_"ValueNode" array (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Object)
         ]
-            (loop [#_"ISeq" s (seq (:nodePlugins (:plugins (:graphBuilderConfig this))))]
+            (loop [#_"ISeq" s (seq (:nodePlugins HotSpot'plugins))]
                 (if (some? s)
                     (when-not (NodePlugin'''handleLoadIndexed-5 (first s), this, array, index, kind)
                         (recur (next s))
@@ -22268,7 +22171,7 @@ ZeroExtendNode'new-4
             #_"ValueNode" index (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Int)
             #_"ValueNode" array (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Object)
         ]
-            (loop [#_"ISeq" s (seq (:nodePlugins (:plugins (:graphBuilderConfig this))))]
+            (loop [#_"ISeq" s (seq (:nodePlugins HotSpot'plugins))]
                 (if (some? s)
                     (when-not (NodePlugin'''handleStoreIndexed-6 (first s), this, array, index, kind, value)
                         (recur (next s))
@@ -22444,7 +22347,7 @@ ZeroExtendNode'new-4
                 (let [
                     #_"TypeReference" checkedType (TypeReference'createTrusted-1 type)
                 ]
-                    (loop [#_"ISeq" s (seq (:nodePlugins (:plugins (:graphBuilderConfig this))))]
+                    (loop [#_"ISeq" s (seq (:nodePlugins HotSpot'plugins))]
                         (if (some? s)
                             (when-not (NodePlugin'''handleCheckCast-4 (first s), this, object, (:type checkedType))
                                 (recur (next s))
@@ -22480,7 +22383,7 @@ ZeroExtendNode'new-4
                 (let [
                     #_"TypeReference" resolvedType (TypeReference'createTrusted-1 type)
                 ]
-                    (loop [this this #_"ISeq" s (seq (:nodePlugins (:plugins (:graphBuilderConfig this))))]
+                    (loop [this this #_"ISeq" s (seq (:nodePlugins HotSpot'plugins))]
                         (if (some? s)
                             (when-not (NodePlugin'''handleInstanceOf-4 (first s), this, object, (:type resolvedType)) => this
                                 (recur this (next s))
@@ -22583,7 +22486,7 @@ ZeroExtendNode'new-4
         ]
             (when (instance? ResolvedJavaField field) => (BytecodeParser''handleUnresolvedStoreField-4 this, field, value, receiver)
                 (or
-                    (loop-when [#_"ISeq" s (seq (:nodePlugins (:plugins (:graphBuilderConfig this))))] (some? s)
+                    (loop-when [#_"ISeq" s (seq (:nodePlugins HotSpot'plugins))] (some? s)
                         (when (NodePlugin'''handleStoreField-5 (first s), this, receiver, field, value) => (recur (next s))
                             :done
                         )
@@ -22640,7 +22543,7 @@ ZeroExtendNode'new-4
                         (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), (#_"JavaField" .getJavaKind field), (ConstantNode'forBoolean-2 true, (:graph this))))
                         :done
                     )
-                    (loop-when [#_"ISeq" s (seq (:nodePlugins (:plugins (:graphBuilderConfig this))))] (some? s)
+                    (loop-when [#_"ISeq" s (seq (:nodePlugins HotSpot'plugins))] (some? s)
                         (when (NodePlugin'''handleLoadStaticField-3 (first s), this, resolvedField) => (recur (next s))
                             :done
                         )
@@ -22664,7 +22567,7 @@ ZeroExtendNode'new-4
         ]
             (when (some? resolvedField)
                 (or
-                    (loop-when [#_"ISeq" s (seq (:nodePlugins (:plugins (:graphBuilderConfig this))))] (some? s)
+                    (loop-when [#_"ISeq" s (seq (:nodePlugins HotSpot'plugins))] (some? s)
                         (when (NodePlugin'''handleStoreStaticField-4 (first s), this, resolvedField, value) => (recur (next s))
                             :done
                         )
@@ -23639,24 +23542,6 @@ ZeroExtendNode'new-4
         (#_"LocationIdentity" CacheEntry'''getIdentity-1 [#_"UnsafeLoadCacheEntry" this]
             (:locationIdentity this)
         )
-    )
-)
-
-(class-ns CacheKey []
-    (defn #_"CacheKey" CacheKey'new-3 [#_"SnippetInfo" info, #_"GuardsStage" guardsStage, #_"LoweringStage" loweringStage]
-        (merge (CacheKey'class.)
-            (hash-map
-                #_"ResolvedJavaMethod" :method (:method info)
-                #_"Object[]" :values (make-array Object (SnippetInfo''getParameterCount-1 info))
-                #_"GuardsStage" :guardsStage guardsStage
-                #_"LoweringStage" :loweringStage loweringStage
-            )
-        )
-    )
-
-    (defn #_"void" CacheKey''setParam-3 [#_"CacheKey" this, #_"int" paramIdx, #_"Object" value]
-        (aset (:values this) paramIdx value)
-        nil
     )
 )
 
@@ -27323,41 +27208,6 @@ ZeroExtendNode'new-4
             ]
                 (ControlFlowGraph''visitDominatorTree-3 cfg, (ConditionalEliminationInstance'new-3 graph, blockToNodes, nodeToBlock), (:hasValueProxies graph))
                 graph
-            )
-        )
-    )
-)
-
-;;;
- ; A ParameterPlugin that binds constant values to some parameters.
- ;;
-(class-ns ConstantBindingParameterPlugin [ParameterPlugin]
-    ;;;
-     ; Creates a plugin that will create ConstantNodes for each parameter with an index equal to that of a non-nil
-     ; object in {@code constantArgs} (from which the ConstantNode is created if it isn't already a ConstantNode).
-     ;;
-    (defn #_"ConstantBindingParameterPlugin" ConstantBindingParameterPlugin'new-1 [#_"Object*" constantArgs]
-        (merge (ConstantBindingParameterPlugin'class.)
-            (hash-map
-                #_"Object*" :constantArgs constantArgs
-            )
-        )
-    )
-
-    (defm ConstantBindingParameterPlugin ParameterPlugin
-        (#_"FloatingNode" ParameterPlugin'''interceptParameter-4 [#_"ConstantBindingParameterPlugin" this, #_"GraphBuilder" b, #_"int" index, #_"Stamp" stamp]
-            (when-some [#_"Object" arg (nth (:constantArgs this) index)]
-                (condp instance? arg
-                    ConstantNode'iface
-                        (when-not (= (:graph arg) (:graph b)) => arg
-                            ;; This is a node from another graph, so copy over extra state into a new ConstantNode.
-                            (ConstantNode'forConstant-4 stamp, (:value arg), (:stableDimension arg), (:isDefaultStable arg))
-                        )
-                    Constant
-                        (ConstantNode'forConstant-2s stamp, arg)
-                    #_else
-                        (ConstantNode'forConstant-1 (SnippetReflection'forBoxed-2 (Stamp'''getStackKind-1 stamp), arg))
-                )
             )
         )
     )
@@ -32867,7 +32717,7 @@ ZeroExtendNode'new-4
     (defn #_"void" FloatingReadPhase''processNode-3 [#_"FloatingReadPhase" this, #_"FixedNode" node, #_"EconomicSet<LocationIdentity>" currentState]
         (condp satisfies? node
             Single
-                (FloatingReadPhase'processIdentity-2 currentState, (Single'''getLocationIdentity-1 node))
+                (FloatingReadPhase'processIdentity-2 currentState, (Single'''getLocationIdentity-1 node))
             Multi
                 (doseq [#_"LocationIdentity" identity (Multi'''getLocationIdentities-1 node)]
                     (FloatingReadPhase'processIdentity-2 currentState, identity)
@@ -33920,7 +33770,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn #_"void" FrameStateBuilder''initializeForMethodStart-3 [#_"FrameStateBuilder" this, #_"boolean" eagerResolve, #_"Plugins" plugins]
+    (defn #_"void" FrameStateBuilder''initializeForMethodStart-1 [#_"FrameStateBuilder" this]
         (let [
             #_"ResolvedJavaMethod" method (FrameStateBuilder''getMethod-1 this)
             #_"ResolvedJavaType" originalType (#_"ResolvedJavaMethod" .getDeclaringClass method)
@@ -33928,19 +33778,11 @@ ZeroExtendNode'new-4
                 (when-not (#_"ResolvedJavaMethod" .isStatic method) => [0 0]
                     (let [
                         #_"Stamp" receiverStamp
-                            (or (when (some? plugins) (Plugins''getOverridingStamp-4 plugins, (:tool this), originalType, true))
+                            (or (Plugins''getOverridingStamp-4 HotSpot'plugins, (:tool this), originalType, true)
                                 (StampFactory'forDeclaredType-2 originalType, true)
                             )
-                        #_"FloatingNode" receiver
-                            (when (some? plugins)
-                                (loop-when [#_"ISeq" s (seq (:parameterPlugins plugins))] (some? s)
-                                    (or (ParameterPlugin'''interceptParameter-4 (first s), (:tool this), 0, receiverStamp)
-                                        (recur (next s))
-                                    )
-                                )
-                            )
                     ]
-                        (aset (:locals this) 0 (Graph''addOrUniqueWithInputs-2 (:graph this), (or receiver (ParameterNode'new-2 0, receiverStamp))))
+                        (aset (:locals this) 0 (Graph''addOrUniqueWithInputs-2 (:graph this), (ParameterNode'new-2 0, receiverStamp)))
                         [1 1]
                     )
                 )
@@ -33948,23 +33790,14 @@ ZeroExtendNode'new-4
         ]
             (loop-when [i i j j #_"int" k 0] (< k (#_"Signature" .getParameterCount sig, false))
                 (let [
-                    #_"JavaType" type (#_"Signature" .getParameterType sig, k, originalType)
-                    type (if eagerResolve (#_"JavaType" .resolve type, originalType) type)
+                    #_"JavaType" type (#_"JavaType" .resolve (#_"Signature" .getParameterType sig, k, originalType), originalType)
                     #_"JavaKind" kind (#_"JavaType" .getJavaKind type)
                     #_"Stamp" stamp
-                        (or (when (some? plugins) (Plugins''getOverridingStamp-4 plugins, (:tool this), type, false))
+                        (or (Plugins''getOverridingStamp-4 HotSpot'plugins, (:tool this), type, false)
                             (StampFactory'forDeclaredType-2 type, false)
                         )
-                    #_"FloatingNode" param
-                        (when (some? plugins)
-                            (loop-when [#_"ISeq" s (seq (:parameterPlugins plugins))] (some? s)
-                                (or (ParameterPlugin'''interceptParameter-4 (first s), (:tool this), i, stamp)
-                                    (recur (next s))
-                                )
-                            )
-                        )
                 ]
-                    (aset (:locals this) j (Graph''addOrUniqueWithInputs-2 (:graph this), (or param (ParameterNode'new-2 i, stamp))))
+                    (aset (:locals this) j (Graph''addOrUniqueWithInputs-2 (:graph this), (ParameterNode'new-2 i, stamp)))
                     (let [
                         j (inc j)
                         j
@@ -34966,31 +34799,10 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns GraphBuilderConfiguration []
-    (defn- #_"GraphBuilderConfiguration" GraphBuilderConfiguration'new-3 [#_"boolean" eagerResolving, #_"boolean" unresolvedIsError, #_"Plugins" plugins]
-        (merge (GraphBuilderConfiguration'class.)
-            (hash-map
-                #_"boolean" :eagerResolving eagerResolving
-                #_"boolean" :unresolvedIsError unresolvedIsError
-                #_"Plugins" :plugins plugins
-            )
-        )
-    )
-
-    (defn #_"GraphBuilderConfiguration" GraphBuilderConfiguration'getDefault-0 []
-        (GraphBuilderConfiguration'new-3 false, false, HotSpot'plugins)
-    )
-
-    (defn #_"GraphBuilderConfiguration" GraphBuilderConfiguration'getSnippetDefault-1 [#_"Plugins" plugins]
-        (GraphBuilderConfiguration'new-3 true, true, plugins)
-    )
-)
-
 (class-ns GraphBuilderInstance [Phase]
-    (defn #_"GraphBuilderInstance" GraphBuilderInstance'new-3 [#_"GraphBuilderConfiguration" graphBuilderConfig, #_"OptimisticOptimizations" optimisticOpts, #_"IntrinsicContext" initialIntrinsicContext]
+    (defn #_"GraphBuilderInstance" GraphBuilderInstance'new-2 [#_"OptimisticOptimizations" optimisticOpts, #_"IntrinsicContext" initialIntrinsicContext]
         (merge (GraphBuilderInstance'class.)
             (hash-map
-                #_"GraphBuilderConfiguration" :graphBuilderConfig graphBuilderConfig
                 #_"OptimisticOptimizations" :optimisticOpts optimisticOpts
                 #_"IntrinsicContext" :initialIntrinsicContext initialIntrinsicContext
             )
@@ -35014,16 +34826,12 @@ ZeroExtendNode'new-4
  ;;
 (class-ns GraphBuilderPhase [Phase]
     (defn #_"GraphBuilderPhase" GraphBuilderPhase'new-0 []
-        (merge (GraphBuilderPhase'class.)
-            (hash-map
-                #_"GraphBuilderConfiguration" :graphBuilderConfig (GraphBuilderConfiguration'getDefault-0)
-            )
-        )
+        (GraphBuilderPhase'class.)
     )
 
     (defm GraphBuilderPhase Phase
         (#_"Graph" Phase'''run-3 [#_"GraphBuilderPhase" this, #_"Graph" graph, #_"PhaseContext" context]
-            (Phase'''run-3 (GraphBuilderInstance'new-3 (:graphBuilderConfig this), (:optimisticOpts context), nil), graph, nil)
+            (Phase'''run-3 (GraphBuilderInstance'new-2 (:optimisticOpts context), nil), graph, nil)
         )
     )
 )
@@ -35138,7 +34946,7 @@ ZeroExtendNode'new-4
     (defn- #_"void" GraphKit'inline-1 [#_"InvokeNode" invoke]
         (let [
             #_"ResolvedJavaMethod" method (:targetMethod (:callTarget invoke))
-            #_"GraphBuilderInstance" instance (GraphBuilderInstance'new-3 (GraphBuilderConfiguration'getSnippetDefault-1 HotSpot'plugins), OptimisticOptimizations'NONE, (IntrinsicContext'new-4 method, method, HotSpot'defaultBytecodeProvider, CompilationContext'INLINE_AFTER_PARSING))
+            #_"GraphBuilderInstance" instance (GraphBuilderInstance'new-2 OptimisticOptimizations'NONE, (IntrinsicContext'new-4 method, method, HotSpot'defaultBytecodeProvider, CompilationContext'INLINE_AFTER_PARSING))
             #_"Graph" calleeGraph (Graph'new-1 method)
         ]
             (§ ass! calleeGraph (Phase'''run-3 instance, calleeGraph, nil))
@@ -39718,11 +39526,11 @@ ZeroExtendNode'new-4
 
     ;;;
      ; Some backends need to convert sub-word kinds to a larger kind in LIRGenerator#emitLoad and #emitLoadConstant
-     ; because sub-word registers can't be accessed. This method converts the
-     ; LIRKind of a memory location or constant to the LIRKind that will be used when it is loaded into a register.
+     ; because sub-word registers can't be accessed. This method converts the LIRKind of a memory location or constant
+     ; to the LIRKind that will be used when it is loaded into a register.
      ;
-     ; The AMD64 backend only uses DWORD and QWORD values in registers because of a performance penalty
-     ; when accessing WORD or BYTE registers. This function converts small integer kinds to DWORD.
+     ; The AMD64 backend only uses DWORD and QWORD values in registers because of a performance penalty when accessing
+     ; WORD or BYTE registers. This function converts small integer kinds to DWORD.
      ;;
     (defn #_"<K extends ValueKind<K>> K" LIRGenerator''toRegisterKind-2 [#_"LIRGenerator" this, #_"K" kind]
         (when (any = (#_"ValueKind" .getPlatformKind kind) AMD64Kind/BYTE AMD64Kind/WORD) => kind
@@ -46261,11 +46069,6 @@ ZeroExtendNode'new-4
  ;;
 (class-ns NamedLocationIdentity [#_"LocationIdentity"]
     ;;;
-     ; Denotes the location of a value that is guaranteed to be unchanging.
-     ;;
-    (§ def #_"LocationIdentity" NamedLocationIdentity'FINAL_LOCATION (NamedLocationIdentity'immutable-1 "FINAL_LOCATION"))
-
-    ;;;
      ; Denotes the location of the length field of a Java array.
      ;;
     (§ def #_"LocationIdentity" NamedLocationIdentity'ARRAY_LENGTH_LOCATION (NamedLocationIdentity'immutable-1 "[].length"))
@@ -46340,7 +46143,7 @@ ZeroExtendNode'new-4
      ; @return an earlier read or the original {@code read}
      ;;
     (defn #_"ValueNode" CanonicalizableLocation'foldIndirection-3 [#_"ValueNode" read, #_"ValueNode" object, #_"LocationIdentity" otherLocation]
-        (when (and (satisfies? Access object) (= (Access'''getLocationIdentity-1 object) otherLocation)) => read
+        (when (and (satisfies? Access object) (= (Access'''getLocationIdentity-1 object) otherLocation)) => read
             (let [
                 #_"AddressNode" address (Access'''getAddress-1 object)
             ]
@@ -48851,7 +48654,7 @@ ZeroExtendNode'new-4
         ]
             (merge (MemoryInputMap'class.)
                 (hash-map
-                    #_"LocationIdentity" :locationIdentity (when ? (MemoryAccess'''getLocationIdentity-1 replacee))
+                    #_"LocationIdentity" :locationIdentity (when ? (MemoryAccess'''getLocationIdentity-1 replacee))
                     #_"MemoryNode" :lastLocationAccess (when ? (:lastLocationAccess replacee))
                 )
             )
@@ -55016,9 +54819,8 @@ ZeroExtendNode'new-4
         (merge (StartNode'class.) (BeginStateSplitNode'new-0))
     )
 
-    #_unused
-    (ß defm StartNode StartNode
-        (#_"LocationIdentity" StartNode'''getLocationIdentity-1 [#_"StartNode" this]
+    (defm StartNode Single
+        (#_"LocationIdentity" Single'''getLocationIdentity-1 [#_"StartNode" this]
             (LocationIdentity/any)
         )
     )
@@ -55123,9 +54925,8 @@ ZeroExtendNode'new-4
         (merge (MonitorEnterNode'class.) (AccessMonitorNode'new-2 object, monitorId))
     )
 
-    #_unused
-    (ß defm MonitorEnterNode MonitorEnterNode
-        (#_"LocationIdentity" MonitorEnterNode'''getLocationIdentity-1 [#_"MonitorEnterNode" this]
+    (defm MonitorEnterNode Single
+        (#_"LocationIdentity" Single'''getLocationIdentity-1 [#_"MonitorEnterNode" this]
             (LocationIdentity/any)
         )
     )
@@ -55186,9 +54987,8 @@ ZeroExtendNode'new-4
         (assoc this :escapedReturnValue nil)
     )
 
-    #_unused
-    (ß defm MonitorExitNode MonitorExitNode
-        (#_"LocationIdentity" MonitorExitNode'''getLocationIdentity-1 [#_"MonitorExitNode" this]
+    (defm MonitorExitNode Single
+        (#_"LocationIdentity" Single'''getLocationIdentity-1 [#_"MonitorExitNode" this]
             (LocationIdentity/any)
         )
     )
@@ -55231,9 +55031,8 @@ ZeroExtendNode'new-4
         )
     )
 
-    #_unused
-    (ß defm RawMonitorEnterNode RawMonitorEnterNode
-        (#_"LocationIdentity" RawMonitorEnterNode'''getLocationIdentity-1 [#_"RawMonitorEnterNode" this]
+    (defm RawMonitorEnterNode Single
+        (#_"LocationIdentity" Single'''getLocationIdentity-1 [#_"RawMonitorEnterNode" this]
             (LocationIdentity/any)
         )
     )
@@ -55279,9 +55078,8 @@ ZeroExtendNode'new-4
         )
     )
 
-    #_unused
-    (ß defm AtomicReadAndAddNode AtomicReadAndAddNode
-        (#_"LocationIdentity" AtomicReadAndAddNode'''getLocationIdentity-1 [#_"AtomicReadAndAddNode" this]
+    (defm AtomicReadAndAddNode Single
+        (#_"LocationIdentity" Single'''getLocationIdentity-1 [#_"AtomicReadAndAddNode" this]
             (:locationIdentity this)
         )
     )
@@ -55314,8 +55112,8 @@ ZeroExtendNode'new-4
         )
     )
 
-    (ß defm AtomicReadAndWriteNode AtomicReadAndWriteNode
-        (#_"LocationIdentity" AtomicReadAndWriteNode'''getLocationIdentity-1 [#_"AtomicReadAndWriteNode" this]
+    (defm AtomicReadAndWriteNode Single
+        (#_"LocationIdentity" Single'''getLocationIdentity-1 [#_"AtomicReadAndWriteNode" this]
             (:locationIdentity this)
         )
     )
@@ -55372,9 +55170,8 @@ ZeroExtendNode'new-4
         )
     )
 
-    #_unused
-    (ß defm BeginLockScopeNode BeginLockScopeNode
-        (#_"LocationIdentity" BeginLockScopeNode'''getLocationIdentity-1 [#_"BeginLockScopeNode" this]
+    (defm BeginLockScopeNode Single
+        (#_"LocationIdentity" Single'''getLocationIdentity-1 [#_"BeginLockScopeNode" this]
             (LocationIdentity/any)
         )
     )
@@ -55404,9 +55201,8 @@ ZeroExtendNode'new-4
         )
     )
 
-    #_unused
-    (ß defm EndLockScopeNode EndLockScopeNode
-        (#_"LocationIdentity" EndLockScopeNode'''getLocationIdentity-1 [#_"EndLockScopeNode" this]
+    (defm EndLockScopeNode Single
+        (#_"LocationIdentity" Single'''getLocationIdentity-1 [#_"EndLockScopeNode" this]
             (LocationIdentity/any)
         )
     )
@@ -55624,9 +55420,8 @@ ZeroExtendNode'new-4
         (assoc this :useForInlining value)
     )
 
-    #_unused
-    (ß defm InvokeNode InvokeNode
-        (#_"LocationIdentity" InvokeNode'''getLocationIdentity-1 [#_"InvokeNode" this]
+    (defm InvokeNode Single
+        (#_"LocationIdentity" Single'''getLocationIdentity-1 [#_"InvokeNode" this]
             (LocationIdentity/any)
         )
     )
@@ -55743,8 +55538,8 @@ ZeroExtendNode'new-4
         )
     )
 
-    (ß defm UnsafeCompareAndSwapNode UnsafeCompareAndSwapNode
-        (#_"LocationIdentity" UnsafeCompareAndSwapNode'''getLocationIdentity-1 [#_"UnsafeCompareAndSwapNode" this]
+    (defm UnsafeCompareAndSwapNode Single
+        (#_"LocationIdentity" Single'''getLocationIdentity-1 [#_"UnsafeCompareAndSwapNode" this]
             (:locationIdentity this)
         )
     )
@@ -56097,23 +55892,8 @@ ZeroExtendNode'new-4
         )
     )
 
-    ;;;
-     ; Checks whether this field access is an access to a static field.
-     ;
-     ; @return true if this field access is to a static field
-     ;;
-    (defn #_"boolean" AccessFieldNode''isStatic-1 [#_"AccessFieldNode" this]
-        (#_"ResolvedJavaField" .isStatic (:field this))
-    )
-
-    ;;;
-     ; Checks whether this field is declared volatile.
-     ;
-     ; @return true if the field is resolved and declared volatile
-     ;;
-    (defn #_"boolean" AccessFieldNode''isVolatile-1 [#_"AccessFieldNode" this]
-        (#_"ResolvedJavaField" .isVolatile (:field this))
-    )
+    (defn #_"boolean" AccessFieldNode''isStatic-1   [#_"AccessFieldNode" this] (#_"ResolvedJavaField" .isStatic   (:field this)))
+    (defn #_"boolean" AccessFieldNode''isVolatile-1 [#_"AccessFieldNode" this] (#_"ResolvedJavaField" .isVolatile (:field this)))
 
     (defn- #_"ValueNode" AccessFieldNode'staticFieldBase-2 [#_"Graph" graph, #_"ResolvedJavaField" field]
         (ConstantNode'forConstant-2c (#_"HotSpotConstantReflectionProvider" .asJavaClass HotSpot'constantReflection, (#_"HotSpotResolvedJavaField" .getDeclaringClass field)), graph)
@@ -56215,7 +55995,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"ValueNode" LoadFieldNode'canonical-6 [#_"LoadFieldNode" self, #_"Stamp" stamp, #_"ValueNode" forObject, #_"ResolvedJavaField" field, #_"boolean" canonicalizeReads, #_"boolean" allUsagesAvailable]
         (or
-            (when (and canonicalizeReads (some? HotSpot'metaAccess))
+            (when canonicalizeReads
                 (or
                     (LoadFieldNode'asConstant-2 forObject, field)
                     (when allUsagesAvailable
@@ -56819,9 +56599,8 @@ ZeroExtendNode'new-4
         )
     )
 
-    #_unused
-    (ß defm CommitAllocationNode CommitAllocationNode
-        (#_"LocationIdentity" CommitAllocationNode'''getLocationIdentity-1 [#_"CommitAllocationNode" this]
+    (defm CommitAllocationNode Single
+        (#_"LocationIdentity" Single'''getLocationIdentity-1 [#_"CommitAllocationNode" this]
             (if (empty? (:locks this)) (LocationIdentity/init) (LocationIdentity/any))
         )
     )
@@ -57473,10 +57252,8 @@ ZeroExtendNode'new-4
         (#_"AddressNode" Access'''getAddress-1 [#_"FixedAccessNode" this]
             (:address this)
         )
-    )
 
-    (ß defm FixedAccessNode FixedAccessNode
-        (#_"LocationIdentity" FixedAccessNode'''getLocationIdentity-1 [#_"FixedAccessNode" this]
+        (#_"LocationIdentity" Access'''getLocationIdentity-1 [#_"FixedAccessNode" this]
             (:location this)
         )
     )
@@ -57727,9 +57504,9 @@ ZeroExtendNode'new-4
     )
 
     ;;;
-     ; AccessNodes can float only if their location identities are not ANY_LOCATION. Furthermore, in
-     ; case G1 is enabled any access (read) to the java.lang.ref.Reference.referent field which has
-     ; an attached write barrier with pre-semantics can not also float.
+     ; AccessNodes can float only if their location identities are not ANY_LOCATION. Furthermore,
+     ; in case G1 is enabled, any access (read) to the java.lang.ref.Reference.referent field which
+     ; has an attached write barrier with pre-semantics can not float either.
      ;;
     (defn #_"boolean" FloatableAccessNode''canFloat-1 [#_"FloatableAccessNode" this]
         (and (not (:forceFixed this)) (#_"LocationIdentity" .isSingle (ß FixedAccessNode''getLocationIdentity-1 this)) (= (:barrierType this) BarrierType'NONE))
@@ -57779,7 +57556,7 @@ ZeroExtendNode'new-4
             (let [
                 #_"ValueNode" object (AddressNode'''getBase-1 address)
             ]
-                (when (and (some? HotSpot'metaAccess) (satisfies? ConstantNode object) (not (ValueNode''isNullConstant-1 object)) (satisfies? ConstantNode (:offset address)))
+                (when (and (satisfies? ConstantNode object) (not (ValueNode''isNullConstant-1 object)) (satisfies? ConstantNode (:offset address)))
                     (let [
                         #_"long" displacement (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 (:offset address)))
                         #_"int" stableDimension (:stableDimension object)
@@ -58628,9 +58405,8 @@ ZeroExtendNode'new-4
         )
     )
 
-    #_unused
-    (ß defm MacroStateSplitNode MacroStateSplitNode
-        (#_"LocationIdentity" MacroStateSplitNode'''getLocationIdentity-1 [#_"MacroStateSplitNode" this]
+    (defm MacroStateSplitNode Single
+        (#_"LocationIdentity" Single'''getLocationIdentity-1 [#_"MacroStateSplitNode" this]
             (LocationIdentity/any)
         )
     )
@@ -58978,9 +58754,8 @@ ZeroExtendNode'new-4
         )
     )
 
-    #_unused
-    (ß defm MembarNode MembarNode
-        (#_"LocationIdentity" MembarNode'''getLocationIdentity-1 [#_"MembarNode" this]
+    (defm MembarNode Single
+        (#_"LocationIdentity" Single'''getLocationIdentity-1 [#_"MembarNode" this]
             (:location this)
         )
     )
@@ -61659,20 +61434,18 @@ ZeroExtendNode'new-4
 
     (defn #_"ValueNode" ClassGetHubNode'canonical-4 [#_"ClassGetHubNode" node, #_"boolean" allUsagesAvailable, #_"Stamp" stamp, #_"ValueNode" clazz]
         (when-not (and allUsagesAvailable (some? node) (Node''hasNoUsages-1 node))
-            (if (and (satisfies? ConstantNode clazz) (some? HotSpot'metaAccess))
-                (let [
-                    #_"ResolvedJavaType" exactType (#_"ConstantReflectionProvider" .asJavaType HotSpot'constantReflection, (ValueNode''asJavaConstant-1 clazz))
-                ]
-                    (if (#_"ResolvedJavaType" .isPrimitive exactType)
-                        (ConstantNode'forConstant-2s stamp, JavaConstant/NULL_POINTER)
-                        (ConstantNode'forConstant-2s stamp, (#_"ConstantReflectionProvider" .asObjectHub HotSpot'constantReflection, exactType))
+            (condp satisfies? clazz
+                ConstantNode
+                    (let [
+                        #_"ResolvedJavaType" exact (#_"ConstantReflectionProvider" .asJavaType HotSpot'constantReflection, (ValueNode''asJavaConstant-1 clazz))
+                    ]
+                        (ConstantNode'forConstant-2s stamp, (if (#_"ResolvedJavaType" .isPrimitive exact) JavaConstant/NULL_POINTER (#_"ConstantReflectionProvider" .asObjectHub HotSpot'constantReflection, exact)))
                     )
-                )
-                (condp satisfies? clazz
-                    GetClassNode    (LoadHubNode'new-2 KlassPointerStamp'KLASS_NON_NULL, (:object clazz))
-                    HubGetClassNode (:hub clazz) ;; replace: _klass._java_mirror._klass -> _klass
-                                    (or node (ClassGetHubNode'new-1 clazz))
-                )
+                GetClassNode
+                    (LoadHubNode'new-2 KlassPointerStamp'KLASS_NON_NULL, (:object clazz))
+                HubGetClassNode
+                    (:hub clazz) ;; replace: _klass._java_mirror._klass -> _klass
+                (or node (ClassGetHubNode'new-1 clazz))
             )
         )
     )
@@ -61714,12 +61487,9 @@ ZeroExtendNode'new-4
 
         (#_"Constant" ConvertNode'''convert-2 [#_"ClassGetHubNode" this, #_"Constant" constant]
             (let [
-                #_"ResolvedJavaType" exactType (#_"ConstantReflectionProvider" .asJavaType HotSpot'constantReflection, constant)
+                #_"ResolvedJavaType" exact (#_"ConstantReflectionProvider" .asJavaType HotSpot'constantReflection, constant)
             ]
-                (if (#_"ResolvedJavaType" .isPrimitive exactType)
-                    JavaConstant/NULL_POINTER
-                    (#_"ConstantReflectionProvider" .asObjectHub HotSpot'constantReflection, exactType)
-                )
+                (if (#_"ResolvedJavaType" .isPrimitive exact) JavaConstant/NULL_POINTER (#_"ConstantReflectionProvider" .asObjectHub HotSpot'constantReflection, exact))
             )
         )
 
@@ -62401,17 +62171,19 @@ ZeroExtendNode'new-4
         (#_"AddressNode" Access'''getAddress-1 [#_"FloatingAccessNode" this]
             (:address this)
         )
-    )
 
-    (ß defm FloatingAccessNode FloatingAccessNode
-        (#_"LocationIdentity" FloatingAccessNode'''getLocationIdentity-1 [#_"FloatingAccessNode" this]
+        (#_"LocationIdentity" Access'''getLocationIdentity-1 [#_"FloatingAccessNode" this]
             (:location this)
+        )
+
+        (#_"boolean" Access'''canNullCheck-1 [#_"FloatingAccessNode" this]
+            true
         )
     )
 
-    (defm FloatingAccessNode Access
-        (#_"boolean" Access'''canNullCheck-1 [#_"FloatingAccessNode" this]
-            true
+    (defm FloatingAccessNode MemoryAccess
+        (#_"LocationIdentity" MemoryAccess'''getLocationIdentity-1 [#_"FloatingAccessNode" this]
+            (:location this)
         )
     )
 )
@@ -62740,7 +62512,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"ValueNode" GetClassNode'tryFold-1 [#_"ValueNode" object]
-        (when (and (some? HotSpot'metaAccess) (some? object) (satisfies? ObjectStamp (:stamp object)) (AbstractObjectStamp''isExactType-1 (:stamp object)))
+        (when (and (some? object) (satisfies? ObjectStamp (:stamp object)) (AbstractObjectStamp''isExactType-1 (:stamp object)))
             (ConstantNode'forConstant-1 (#_"ConstantReflectionProvider" .asJavaClass HotSpot'constantReflection, (:type (:stamp object))))
         )
     )
@@ -62801,12 +62573,12 @@ ZeroExtendNode'new-4
     (defm HubGetClassNode Canonicalizable
         (#_"Node" Canonicalizable'''canonical-2 [#_"HubGetClassNode" this, #_"CanonicalizerTool" tool]
             (when-not (and (CanonicalizerTool'''allUsagesAvailable-1 tool) (Node''hasNoUsages-1 this))
-                (when (and (some? HotSpot'metaAccess) (satisfies? ConstantNode (:hub this))) => this
+                (when (satisfies? ConstantNode (:hub this)) => this
                     (let [
-                        #_"ResolvedJavaType" exactType (#_"ConstantReflectionProvider" .asJavaType HotSpot'constantReflection, (:value (:hub this)))
+                        #_"ResolvedJavaType" exact (#_"ConstantReflectionProvider" .asJavaType HotSpot'constantReflection, (:value (:hub this)))
                     ]
-                        (when (some? exactType) => this
-                            (ConstantNode'forConstant-1 (#_"ConstantReflectionProvider" .asJavaClass HotSpot'constantReflection, exactType))
+                        (when (some? exact) => this
+                            (ConstantNode'forConstant-1 (#_"ConstantReflectionProvider" .asJavaClass HotSpot'constantReflection, exact))
                         )
                     )
                 )
@@ -66354,7 +66126,7 @@ ZeroExtendNode'new-4
     (defn- #_"void" FloatingReadClosure'processAnchor-2 [#_"MemoryAnchorNode" anchor, #_"MemoryMap0" state]
         (doseq [#_"Node" node (:nodeUsages anchor)]
             (when (and (satisfies? MemoryAccess node) (= (:lastLocationAccess node) anchor))
-                (MemoryAccess'''setLastLocationAccess-2 node, (MemoryMap'''getLastLocationAccess-2 state, (MemoryAccess'''getLocationIdentity-1 node)))
+                (MemoryAccess'''setLastLocationAccess-2 node, (MemoryMap'''getLastLocationAccess-2 state, (MemoryAccess'''getLocationIdentity-1 node)))
             )
         )
 
@@ -66366,7 +66138,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"void" FloatingReadClosure'processAccess-2 [#_"MemoryAccess" access, #_"MemoryMap0" state]
         (let [
-            #_"LocationIdentity" locationIdentity (MemoryAccess'''getLocationIdentity-1 access)
+            #_"LocationIdentity" locationIdentity (MemoryAccess'''getLocationIdentity-1 access)
         ]
             (when-not (= locationIdentity (LocationIdentity/any))
                 (MemoryAccess'''setLastLocationAccess-2 access, (MemoryMap'''getLastLocationAccess-2 state, locationIdentity))
@@ -66401,7 +66173,7 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"void" FloatingReadClosure'processCheckpoint-2s [#_"Single" checkpoint, #_"MemoryMap0" state]
-        (FloatingReadClosure'processIdentity-3 (Single'''getLocationIdentity-1 checkpoint), checkpoint, state)
+        (FloatingReadClosure'processIdentity-3 (Single'''getLocationIdentity-1 checkpoint), checkpoint, state)
         nil
     )
 
@@ -67584,7 +67356,6 @@ ZeroExtendNode'new-4
                 #_"TypePlugin*" :typePlugins nil
                 #_"NodePlugin*" :nodePlugins nil
                 #_"InlineInvokePlugin*" :inlineInvokePlugins nil
-                #_"ParameterPlugin*" :parameterPlugins nil
             )
         )
     )
@@ -67611,10 +67382,6 @@ ZeroExtendNode'new-4
         ]
             this
         )
-    )
-
-    (defn #_"Plugins" Plugins''prependParameterPlugin-2 [#_"Plugins" this, #_"ParameterPlugin" plugin]
-        (update this :parameterPlugins #(cons plugin %))
     )
 
     (defn #_"Stamp" Plugins''getOverridingStamp-4 [#_"Plugins" this, #_"GraphBuilder" b, #_"JavaType" type, #_"boolean" never-nil?]
@@ -69045,13 +68812,8 @@ ZeroExtendNode'new-4
     ;;;
      ; Builds the initial graph for a replacement.
      ;;
-    (defn- #_"Graph" Replacements'buildInitialGraph-2 [#_"ResolvedJavaMethod" method, #_"Object*" args]
+    (defn- #_"Graph" Replacements'buildInitialGraph-1 [#_"ResolvedJavaMethod" method]
         (let [
-            #_"Plugins" plugins HotSpot'plugins
-            plugins
-                (when (seq args) => plugins
-                    (Plugins''prependParameterPlugin-2 plugins, (ConstantBindingParameterPlugin'new-1 args))
-                )
             #_"IntrinsicContext" intrinsic
                 (if (some? (#_"ResolvedJavaMethod" .getAnnotation method, Snippet))
                     ;; snippet
@@ -69060,7 +68822,7 @@ ZeroExtendNode'new-4
                     (IntrinsicContext'new-4 nil, method, HotSpot'defaultBytecodeProvider, CompilationContext'INLINE_AFTER_PARSING)
                 )
             #_"Graph" graph (Graph'new-1 method)
-            graph (Phase'''run-3 (GraphBuilderInstance'new-3 (GraphBuilderConfiguration'getSnippetDefault-1 plugins), OptimisticOptimizations'NONE, intrinsic), graph, nil)
+            graph (Phase'''run-3 (GraphBuilderInstance'new-2 OptimisticOptimizations'NONE, intrinsic), graph, nil)
             graph (Phase'''run-3 (CanonicalizerPhase'new-0), graph, nil)
         ]
             graph
@@ -69080,14 +68842,10 @@ ZeroExtendNode'new-4
     )
 
     ;;;
-     ; Creates a preprocessed graph for a snippet or method substitution.
-     ;
-     ; @param method the snippet or method substitution for which a graph will be created
-     ; @param args arguments to the snippet if available, otherwise nil
-     ; @return the snippet graph, if any, that is derived from {@code method}
+     ; Creates a preprocessed graph for a snippet.
      ;;
-    (defn #_"Graph" Replacements'createSnippet-2 [#_"ResolvedJavaMethod" method, #_"Object*" args]
-        (Replacements'finalizeGraph-1 (Replacements'buildInitialGraph-2 method, args))
+    (defn #_"Graph" Replacements'createSnippet-1 [#_"ResolvedJavaMethod" method]
+        (Replacements'finalizeGraph-1 (Replacements'buildInitialGraph-1 method))
     )
 
     (defm Replacements InlineInvokePlugin
@@ -69580,7 +69338,7 @@ ZeroExtendNode'new-4
                         (condp satisfies? node
                             Single
                                 (do
-                                    (§ ass! killed (LocationSet''add-2 killed, (Single'''getLocationIdentity-1 node)))
+                                    (§ ass! killed (LocationSet''add-2 killed, (Single'''getLocationIdentity-1 node)))
                                     (when (LocationSet''isAny-1 killed)
                                         :done
                                     )
@@ -69725,7 +69483,7 @@ ZeroExtendNode'new-4
             (condp satisfies? node
                 Single
                     (let [
-                        #_"LocationIdentity" identity (Single'''getLocationIdentity-1 node)
+                        #_"LocationIdentity" identity (Single'''getLocationIdentity-1 node)
                     ]
                         (ScheduleInstance'checkWatchList-6a watchList, identity, block, result, nodeMap, unprocessed)
                     )
@@ -70342,47 +70100,20 @@ ZeroExtendNode'new-4
 
 (class-ns SnippetInfo []
     (defn #_"SnippetInfo" SnippetInfo'new-2 [#_"ResolvedJavaMethod" method, #_"LocationIdentity[]" privateLocations]
-        (let [
-            #_"int" n (#_"Signature" .getParameterCount (#_"ResolvedJavaMethod" .getSignature method), false)
-            #_"SnippetInfo" this
-                (merge (SnippetInfo'class.)
-                    (hash-map
-                        #_"ResolvedJavaMethod" :method method
-                        #_"LocationIdentity[]" :privateLocations privateLocations
-                        #_"boolean[]" :constantParameters (boolean-array n)
-                    )
-                )
-            _
-                (dotimes [#_"int" i n]
-                    (aset (:constantParameters this) i (some? (#_"ResolvedJavaMethod" .getParameterAnnotation method, ConstantParameter, i)))
-                )
-        ]
-            this
+        (merge (SnippetInfo'class.)
+            (hash-map
+                #_"ResolvedJavaMethod" :method method
+                #_"LocationIdentity[]" :privateLocations privateLocations
+            )
         )
-    )
-
-    (defn #_"int" SnippetInfo''getParameterCount-1 [#_"SnippetInfo" this]
-        (count (:constantParameters this))
-    )
-
-    (defn #_"boolean" SnippetInfo''isConstantParameter-2 [#_"SnippetInfo" this, #_"int" i]
-        (nth (:constantParameters this) i)
     )
 )
 
 ;;;
  ; A snippet template is a graph created by parsing a snippet method and then specialized by binding
- ; constants to the snippet's ConstantParameter parameters.
+ ; constants to the snippet's ConstantParameter parameters.
  ;;
 (class-ns SnippetTemplate []
-    ;; These values must be compared with equals() not '==' to support replay compilation.
-    (def- #_"Object" SnippetTemplate'UNUSED_PARAMETER "UNUSED_PARAMETER")
-    (def- #_"Object" SnippetTemplate'CONSTANT_PARAMETER "CONSTANT_PARAMETER")
-
-    (defn- #_"Object*" SnippetTemplate'getConstantArgs-1 [#_"Arguments" args]
-        (map-indexed #(when (SnippetInfo''isConstantParameter-2 (:info args), %1) %2) (:values args))
-    )
-
     (defn #_"SnippetTemplate" SnippetTemplate'new-2 [#_"Arguments" args, #_"Node" replacee]
         (let [
             #_"SnippetTemplate" this
@@ -70426,205 +70157,162 @@ ZeroExtendNode'new-4
                         #_"ArrayList<Node>" :nodes nil
                     )
                 )
-            #_"Graph" snippetGraph (Replacements'createSnippet-2 (:method (:info args)), (SnippetTemplate'getConstantArgs-1 args))
+            #_"Graph" snippetGraph (Replacements'createSnippet-1 (:method (:info args)))
             #_"ResolvedJavaMethod" method (:rootMethod snippetGraph)
             #_"Signature" signature (#_"ResolvedJavaMethod" .getSignature method)
             ;; copy snippet graph replacing constant parameters with given arguments
             #_"Graph" snippetCopy (Graph'new-1 (:rootMethod snippetGraph))
             #_"EconomicMap<Node, Node>" nodeReplacements (EconomicMap/create Equivalence/IDENTITY)
             _ (#_"EconomicMap" .put nodeReplacements, (:start snippetGraph), (:start snippetCopy))
-            #_"int" parameterCount (SnippetInfo''getParameterCount-1 (:info args))
+            _ (Graph''addDuplicates-5m snippetCopy, (Graph''getNodes-1 snippetGraph), snippetGraph, (Graph''getNodeCount-1 snippetGraph), nodeReplacements)
+            ;; gather the template parameters
+            #_"int" parameterCount (#_"Signature" .getParameterCount (#_"ResolvedJavaMethod" .getSignature (:method (:info args))), false)
+            this (assoc this :parameters (make-array Object parameterCount))
             _
-                (dotimes [#_"int" i parameterCount]
-                    (let [
-                        #_"ParameterNode" parameter (Graph''getParameter-2 snippetGraph, i)
-                    ]
-                        (when (and (some? parameter) (SnippetInfo''isConstantParameter-2 (:info args), i))
-                            (let [
-                                #_"Object" arg (nth (:values args) i)
-                                #_"JavaKind" kind (#_"Signature" .getParameterKind signature, i)
-                                #_"ConstantNode" constantNode (ConstantNode'forConstant-2c (if (instance? Constant arg) (§ cast #_"JavaConstant" arg) (SnippetReflection'forBoxed-2 kind, arg)), snippetCopy)
-                            ]
-                                (#_"EconomicMap" .put nodeReplacements, parameter, constantNode)
+                (loop-when-recur [#_"int" i 0] (< i parameterCount) [(inc i)]
+                    (aset (:parameters this) i (or (Graph''getParameter-2 snippetCopy, i) "UNUSED_PARAMETER")) ;; parameter value was eliminated
+                )
+            _ (SnippetTemplate'explodeLoops-1 snippetCopy)
+            ;; perform lowering on the snippet
+            snippetCopy
+                (when-not (GuardsStage'allowsFloatingGuards-1 (:guardsStage args)) => snippetCopy
+                    (Phase'''run-3 (GuardLoweringPhase'new-0), snippetCopy, nil)
+                )
+            snippetCopy (Graph''setGuardsStage-2 snippetCopy, (:guardsStage args))
+            snippetCopy (Phase'''run-3 (LoweringPhase'new-2 (CanonicalizerPhase'new-0), (:loweringStage args)), snippetCopy, nil)
+            #_"ArrayList<StateSplit>" curSideEffectNodes (ArrayList.)
+            #_"ArrayList<DeoptimizingNode>" curDeoptNodes (ArrayList.)
+            #_"ArrayList<ValueNode>" curPlaceholderStampedNodes (ArrayList.)
+            _
+                (doseq [#_"Node" node (Graph''getNodes-1 snippetCopy)]
+                    (when (and (satisfies? ValueNode node) (= (:stamp node) PlaceholderStamp'SINGLETON))
+                        (#_"ArrayList" .add curPlaceholderStampedNodes, node)
+                    )
+                    (when (satisfies? StateSplit node)
+                        (let [
+                            #_"FrameState" frameState (:stateAfter node)
+                        ]
+                            (when (StateSplit'''hasSideEffect-1 node)
+                                (#_"ArrayList" .add curSideEffectNodes, node)
+                            )
+                            (when (some? frameState)
+                                (StateSplit'''setStateAfter-2 node, nil)
                             )
                         )
+                    )
+                    (when (and (satisfies? DeoptimizingNode node) (DeoptimizingNode'''canDeoptimize-1 node))
+                        (#_"ArrayList" .add curDeoptNodes, node)
+                    )
+                )
+            snippetCopy (Phase'''run-3 (DeadCodeEliminationPhase'new-1 Optionality'Required), snippetCopy, nil)
+            snippetCopy (Phase'''run-3 (FloatingReadPhase'new-2 true, true), snippetCopy, nil)
+            snippetCopy (Phase'''run-3 (RemoveValueProxyPhase'new-0), snippetCopy, nil)
+            #_"MemoryAnchorNode" anchor (Graph''add-2 snippetCopy, (MemoryAnchorNode'new-0))
+            _ (Node''replaceAtUsages-3 (:start snippetCopy), InputType'Memory, anchor)
+            this (assoc this :snippet snippetCopy)
+            #_"StartNode" entryPointNode (:start (:snippet this))
+            this
+                (if (Node''hasNoUsages-1 anchor)
+                    (do
+                        (Node''safeDelete-1 anchor)
+                        (assoc this :memoryAnchor nil)
+                    )
+                    ;; find out if all the return memory maps point to the anchor (i.e. there's no kill anywhere)
+                    (let [
+                        #_"boolean" needsMemoryMaps
+                            (loop-when [#_"ISeq" s (seq (Graph''getNodes-2 (:snippet this), ReturnNode))] (some? s) => false
+                                (let [
+                                    #_"MemoryMapNode" memoryMap (:memoryMap (first s))
+                                ]
+                                    (or (< 1 (count (MemoryMap'''getLocations-1 memoryMap))) (not= (MemoryMap'''getLastLocationAccess-2 memoryMap, (LocationIdentity/any)) anchor)
+                                        (recur (next s))
+                                    )
+                                )
+                            )
+                        #_"boolean" needsAnchor
+                            (or needsMemoryMaps
+                                ;; check that all those memory maps where the only usages of the anchor
+                                (let [
+                                    needsAnchor (seq (remove #(satisfies? MemoryMapNode %) (:nodeUsages anchor)))
+                                    ;; remove the useless memory map
+                                    #_"MemoryMapNode" memoryMap
+                                        (loop-when [memoryMap nil #_"ISeq" s (seq (Graph''getNodes-2 (:snippet this), ReturnNode))] (some? s) => memoryMap
+                                            (let [
+                                                #_"ReturnNode" retNode (first s)
+                                                memoryMap (or memoryMap (:memoryMap retNode))
+                                            ]
+                                                (§ ass! retNode (ReturnNode''setMemoryMap-2 retNode, nil))
+                                                (recur memoryMap (next s))
+                                            )
+                                        )
+                                ]
+                                    (Node''safeDelete-1 memoryMap)
+                                    needsAnchor
+                                )
+                            )
+                    ]
+                        (if needsAnchor
+                            (do
+                                (Graph''addAfterFixed-3 snippetCopy, (:start snippetCopy), anchor)
+                                (assoc this :memoryAnchor anchor)
+                            )
+                            (do
+                                (Node''safeDelete-1 anchor)
+                                (assoc this :memoryAnchor nil)
+                            )
+                        )
+                    )
+                )
+            #_"ReturnNode*" returnNodes (Graph''getNodes-2 (:snippet this), ReturnNode)
+            this
+                (case (count returnNodes)
+                    0 (assoc this :returnNode nil)
+                    1 (assoc this :returnNode (nth returnNodes 0))
+                    (let [
+                        #_"AbstractMergeNode" merge (Graph''add-2 (:snippet this), (MergeNode'new-0))
+                        #_"List<MemoryMapNode>" memMaps (ArrayList.)
+                        _
+                            (doseq [#_"ReturnNode" r returnNodes]
+                                (let [
+                                    #_"MemoryMapNode" memoryMapNode (:memoryMap r)
+                                ]
+                                    (when (some? memoryMapNode)
+                                        (#_"List" .add memMaps, memoryMapNode)
+                                    )
+                                )
+                            )
+                        this (assoc this :returnNode (Graph''add-2 (:snippet this), (ReturnNode'new-1 (ValueMergeUtil'mergeReturns-2 merge, returnNodes))))
+                    ]
+                        (when (seq memMaps)
+                            (let [
+                                #_"MemoryMapNode" memoryMap (Graph''add-2 (:snippet this), (MemoryMapNode'new-1 (:lastMemorySnapshot (FloatingReadPhase'mergeMemoryMaps-2 merge, memMaps))))
+                            ]
+                                (§ ass! (:returnNode this) (ReturnNode''setMemoryMap-2 (:returnNode this), memoryMap))
+                                (doseq [#_"MemoryMapNode" m memMaps]
+                                    (when (and (not= m memoryMap) (Node''isAlive-1 m))
+                                        (GraphUtil'killWithUnusedFloatingInputs-1 m)
+                                    )
+                                )
+                            )
+                        )
+                        (§ ass! merge (FixedWithNextNode''setNext-2 merge, (:returnNode this)))
+                        this
+                    )
+                )
+            this (assoc this :sideEffectNodes curSideEffectNodes)
+            this (assoc this :deoptNodes curDeoptNodes)
+            this (assoc this :placeholderStampedNodes curPlaceholderStampedNodes)
+            this (assoc this :nodes (ArrayList.))
+            _
+                (doseq [#_"Node" node (Graph''getNodes-1 (:snippet this))]
+                    (when-not (any = node entryPointNode (:stateAfter entryPointNode))
+                        (#_"ArrayList" .add (:nodes this), node)
                     )
                 )
         ]
-            (Graph''addDuplicates-5m snippetCopy, (Graph''getNodes-1 snippetGraph), snippetGraph, (Graph''getNodeCount-1 snippetGraph), nodeReplacements)
+            (§ ass! (:snippet this) (Graph''freeze-1 (:snippet this)))
 
-            ;; gather the template parameters
-            (let [
-                this (assoc this :parameters (make-array Object parameterCount))
-                _
-                    (loop-when-recur [#_"int" i 0] (< i parameterCount) [(inc i)]
-                        (if (SnippetInfo''isConstantParameter-2 (:info args), i)
-                            (aset (:parameters this) i SnippetTemplate'CONSTANT_PARAMETER)
-                            (aset (:parameters this) i (or (Graph''getParameter-2 snippetCopy, i) SnippetTemplate'UNUSED_PARAMETER)) ;; parameter value was eliminated
-                        )
-                    )
-            ]
-                (SnippetTemplate'explodeLoops-1 snippetCopy)
-
-                (let [
-                    #_"GuardsStage" guardsStage (:guardsStage (:cacheKey args))
-                ]
-                    ;; perform lowering on the snippet
-                    (when-not (GuardsStage'allowsFloatingGuards-1 guardsStage)
-                        (§ ass! snippetCopy (Phase'''run-3 (GuardLoweringPhase'new-0), snippetCopy, nil))
-                    )
-                    (§ ass! snippetCopy (Graph''setGuardsStage-2 snippetCopy, guardsStage))
-                    (§ ass! snippetCopy (Phase'''run-3 (LoweringPhase'new-2 (CanonicalizerPhase'new-0), (:loweringStage (:cacheKey args))), snippetCopy, nil))
-
-                    (let [
-                        #_"ArrayList<StateSplit>" curSideEffectNodes (ArrayList.)
-                        #_"ArrayList<DeoptimizingNode>" curDeoptNodes (ArrayList.)
-                        #_"ArrayList<ValueNode>" curPlaceholderStampedNodes (ArrayList.)
-                    ]
-                        (doseq [#_"Node" node (Graph''getNodes-1 snippetCopy)]
-                            (when (and (satisfies? ValueNode node) (= (:stamp node) PlaceholderStamp'SINGLETON))
-                                (#_"ArrayList" .add curPlaceholderStampedNodes, node)
-                            )
-                            (when (satisfies? StateSplit node)
-                                (let [
-                                    #_"FrameState" frameState (:stateAfter node)
-                                ]
-                                    (when (StateSplit'''hasSideEffect-1 node)
-                                        (#_"ArrayList" .add curSideEffectNodes, node)
-                                    )
-                                    (when (some? frameState)
-                                        (StateSplit'''setStateAfter-2 node, nil)
-                                    )
-                                )
-                            )
-                            (when (and (satisfies? DeoptimizingNode node) (DeoptimizingNode'''canDeoptimize-1 node))
-                                (#_"ArrayList" .add curDeoptNodes, node)
-                            )
-                        )
-
-                        (§ ass! snippetCopy (Phase'''run-3 (DeadCodeEliminationPhase'new-1 Optionality'Required), snippetCopy, nil))
-
-                        (§ ass! snippetCopy (Phase'''run-3 (FloatingReadPhase'new-2 true, true), snippetCopy, nil))
-                        (§ ass! snippetCopy (Phase'''run-3 (RemoveValueProxyPhase'new-0), snippetCopy, nil))
-
-                        (let [
-                            #_"MemoryAnchorNode" anchor (Graph''add-2 snippetCopy, (MemoryAnchorNode'new-0))
-                        ]
-                            (Node''replaceAtUsages-3 (:start snippetCopy), InputType'Memory, anchor)
-
-                            (let [
-                                this (assoc this :snippet snippetCopy)
-                                #_"StartNode" entryPointNode (:start (:snippet this))
-                            ]
-                                (if (Node''hasNoUsages-1 anchor)
-                                    (do
-                                        (Node''safeDelete-1 anchor)
-                                        (§ ass this (assoc this :memoryAnchor nil))
-                                    )
-                                    ;; find out if all the return memory maps point to the anchor (i.e. there's no kill anywhere)
-                                    (let [
-                                        #_"boolean" needsMemoryMaps
-                                            (loop-when [#_"ISeq" s (seq (Graph''getNodes-2 (:snippet this), ReturnNode))] (some? s) => false
-                                                (let [
-                                                    #_"MemoryMapNode" memoryMap (:memoryMap (first s))
-                                                ]
-                                                    (or (< 1 (count (MemoryMap'''getLocations-1 memoryMap))) (not= (MemoryMap'''getLastLocationAccess-2 memoryMap, (LocationIdentity/any)) anchor)
-                                                        (recur (next s))
-                                                    )
-                                                )
-                                            )
-                                        #_"boolean" needsAnchor
-                                            (or needsMemoryMaps
-                                                ;; check that all those memory maps where the only usages of the anchor
-                                                (let [
-                                                    needsAnchor (seq (remove #(satisfies? MemoryMapNode %) (:nodeUsages anchor)))
-                                                    ;; remove the useless memory map
-                                                    #_"MemoryMapNode" memoryMap
-                                                        (loop-when [memoryMap nil #_"ISeq" s (seq (Graph''getNodes-2 (:snippet this), ReturnNode))] (some? s) => memoryMap
-                                                            (let [
-                                                                #_"ReturnNode" retNode (first s)
-                                                                memoryMap (or memoryMap (:memoryMap retNode))
-                                                            ]
-                                                                (§ ass! retNode (ReturnNode''setMemoryMap-2 retNode, nil))
-                                                                (recur memoryMap (next s))
-                                                            )
-                                                        )
-                                                ]
-                                                    (Node''safeDelete-1 memoryMap)
-                                                    needsAnchor
-                                                )
-                                            )
-                                    ]
-                                        (if needsAnchor
-                                            (do
-                                                (Graph''addAfterFixed-3 snippetCopy, (:start snippetCopy), anchor)
-                                                (§ ass this (assoc this :memoryAnchor anchor))
-                                            )
-                                            (do
-                                                (Node''safeDelete-1 anchor)
-                                                (§ ass this (assoc this :memoryAnchor nil))
-                                            )
-                                        )
-                                    )
-                                )
-
-                                (let [
-                                    #_"ReturnNode*" returnNodes (Graph''getNodes-2 (:snippet this), ReturnNode)
-                                    this
-                                        (case (count returnNodes)
-                                            0 (assoc this :returnNode nil)
-                                            1 (assoc this :returnNode (nth returnNodes 0))
-                                            (let [
-                                                #_"AbstractMergeNode" merge (Graph''add-2 (:snippet this), (MergeNode'new-0))
-                                                #_"List<MemoryMapNode>" memMaps (ArrayList.)
-                                                _
-                                                    (doseq [#_"ReturnNode" retNode returnNodes]
-                                                        (let [
-                                                            #_"MemoryMapNode" memoryMapNode (:memoryMap retNode)
-                                                        ]
-                                                            (when (some? memoryMapNode)
-                                                                (#_"List" .add memMaps, memoryMapNode)
-                                                            )
-                                                        )
-                                                    )
-                                                this (assoc this :returnNode (Graph''add-2 (:snippet this), (ReturnNode'new-1 (ValueMergeUtil'mergeReturns-2 merge, returnNodes))))
-                                            ]
-                                                (when (seq memMaps)
-                                                    (let [
-                                                        #_"MemoryMapNode" memoryMap (Graph''add-2 (:snippet this), (MemoryMapNode'new-1 (:lastMemorySnapshot (FloatingReadPhase'mergeMemoryMaps-2 merge, memMaps))))
-                                                    ]
-                                                        (§ ass! (:returnNode this) (ReturnNode''setMemoryMap-2 (:returnNode this), memoryMap))
-                                                        (doseq [#_"MemoryMapNode" mm memMaps]
-                                                            (when (and (not= mm memoryMap) (Node''isAlive-1 mm))
-                                                                (GraphUtil'killWithUnusedFloatingInputs-1 mm)
-                                                            )
-                                                        )
-                                                    )
-                                                )
-                                                (§ ass! merge (FixedWithNextNode''setNext-2 merge, (:returnNode this)))
-                                                this
-                                            )
-                                        )
-                                    this (assoc this :sideEffectNodes curSideEffectNodes)
-                                    this (assoc this :deoptNodes curDeoptNodes)
-                                    this (assoc this :placeholderStampedNodes curPlaceholderStampedNodes)
-                                    this (assoc this :nodes (ArrayList.))
-                                    _
-                                        (doseq [#_"Node" node (Graph''getNodes-1 (:snippet this))]
-                                            (when-not (any = node entryPointNode (:stateAfter entryPointNode))
-                                                (#_"ArrayList" .add (:nodes this), node)
-                                            )
-                                        )
-                                ]
-                                    (§ ass! (:snippet this) (Graph''freeze-1 (:snippet this)))
-
-                                    this
-                                )
-                            )
-                        )
-                    )
-                )
-            )
+            this
         )
     )
 
@@ -70660,6 +70348,21 @@ ZeroExtendNode'new-4
     )
 
     ;;;
+     ; Converts a Java boxed value to a JavaConstant of the right kind. This adjusts for the
+     ; limitation that a Local's kind is a {@linkplain JavaKind#getStackKind() stack kind}
+     ; and so cannot be used for re-boxing primitives smaller than an int.
+     ;
+     ; @param argument a Java boxed value
+     ; @param localKind the kind of the Local to which {@code argument} will be bound
+     ;;
+    (defn- #_"JavaConstant" SnippetTemplate'forBoxed-2 [#_"Object" argument, #_"JavaKind" localKind]
+        (if (= localKind JavaKind/Int)
+            (JavaConstant/forBoxedPrimitive argument)
+            (SnippetReflection'forBoxed-2 localKind, argument)
+        )
+    )
+
+    ;;;
      ; Gets the instantiation-time bindings to this template's parameters.
      ;
      ; @return the map that will be used to bind arguments to parameters when inlining this template
@@ -70675,7 +70378,7 @@ ZeroExtendNode'new-4
                 ]
                     (condp instance? parameter
                         ParameterNode'iface
-                            (#_"EconomicMap" .put replacements, parameter, (if (satisfies? ValueNode argument) argument (ConstantNode'forConstant-2c (SnippetTemplate''forBoxed-3 this, argument, (ValueNode''getStackKind-1 parameter)), replaceeGraph)))
+                            (#_"EconomicMap" .put replacements, parameter, (if (satisfies? ValueNode argument) argument (ConstantNode'forConstant-2c (SnippetTemplate'forBoxed-2 argument, (ValueNode''getStackKind-1 parameter)), replaceeGraph)))
                         (ß ParameterNode'array)
                             (let [
                                 [#_"List" list #_"Object" array] (if (instance? List (:value argument)) [(:value argument) nil] [nil (:value argument)])
@@ -70685,7 +70388,7 @@ ZeroExtendNode'new-4
                                         #_"ParameterNode" param (nth parameter j)
                                         #_"Object" value (nth (or list array) j)
                                     ]
-                                        (#_"EconomicMap" .put replacements, param, (if (satisfies? ValueNode value) value (ConstantNode'forConstant-2c (SnippetTemplate''forBoxed-3 this, value, (ValueNode''getStackKind-1 param)), replaceeGraph)))
+                                        (#_"EconomicMap" .put replacements, param, (if (satisfies? ValueNode value) value (ConstantNode'forConstant-2c (SnippetTemplate'forBoxed-2 value, (ValueNode''getStackKind-1 param)), replaceeGraph)))
                                     )
                                 )
                             )
@@ -70694,21 +70397,6 @@ ZeroExtendNode'new-4
                 )
             )
             replacements
-        )
-    )
-
-    ;;;
-     ; Converts a Java boxed value to a JavaConstant of the right kind. This adjusts for the
-     ; limitation that a Local's kind is a {@linkplain JavaKind#getStackKind() stack kind}
-     ; and so cannot be used for re-boxing primitives smaller than an int.
-     ;
-     ; @param argument a Java boxed value
-     ; @param localKind the kind of the Local to which {@code argument} will be bound
-     ;;
-    (defn #_"JavaConstant" SnippetTemplate''forBoxed-3 [#_"SnippetTemplate" this, #_"Object" argument, #_"JavaKind" localKind]
-        (if (= localKind JavaKind/Int)
-            (JavaConstant/forBoxedPrimitive argument)
-            (SnippetReflection'forBoxed-2 localKind, argument)
         )
     )
 
@@ -70729,7 +70417,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"LocationIdentity" SnippetTemplate'getLocationIdentity-1 [#_"Node" node]
         (condp satisfies? node
-            MemoryAccess  (MemoryAccess'''getLocationIdentity-1 node)
+            MemoryAccess  (MemoryAccess'''getLocationIdentity-1 node)
             MemoryPhiNode (:locationIdentity node)
             nil
         )
@@ -71312,18 +71000,18 @@ ZeroExtendNode'new-4
 )
 
 (class-ns AbstractObjectStamp [AbstractPointerStamp, Stamp]
-    (defn #_"AbstractObjectStamp" AbstractObjectStamp'new-4 [#_"ResolvedJavaType" type, #_"boolean" exactType, #_"boolean" never-nil?, #_"boolean" always-nil?]
+    (defn #_"AbstractObjectStamp" AbstractObjectStamp'new-4 [#_"ResolvedJavaType" type, #_"boolean" exact-type?, #_"boolean" never-nil?, #_"boolean" always-nil?]
         (merge (AbstractObjectStamp'class.) (AbstractPointerStamp'new-2 never-nil?, always-nil?)
             (hash-map
                 #_"ResolvedJavaType" :type type
-                #_"boolean" :exactType exactType
+                #_"boolean" :exact-type? exact-type?
             )
         )
     )
 
     (defm AbstractObjectStamp AbstractPointerStamp
-        (#_"AbstractPointerStamp" AbstractPointerStamp'''copyWith-3 [#_"AbstractObjectStamp" this, #_"boolean" newNonNull, #_"boolean" newAlwaysNull]
-            (AbstractObjectStamp'''copyWith-5 this, (:type this), (:exactType this), newNonNull, newAlwaysNull)
+        (#_"AbstractPointerStamp" AbstractPointerStamp'''copyWith-3 [#_"AbstractObjectStamp" this, #_"boolean" never-nil?, #_"boolean" always-nil?]
+            (AbstractObjectStamp'''copyWith-5 this, (:type this), (:exact-type? this), never-nil?, always-nil?)
         )
     )
 
@@ -71345,7 +71033,7 @@ ZeroExtendNode'new-4
         )
 
         (#_"boolean" Stamp'''hasValues-1 [#_"AbstractObjectStamp" this]
-            (or (not (:exactType this)) (and (some? (:type this)) (AbstractObjectStamp'isConcreteType-1 (:type this))))
+            (or (not (:exact-type? this)) (and (some? (:type this)) (AbstractObjectStamp'isConcreteType-1 (:type this))))
         )
 
         (#_"JavaKind" Stamp'''getStackKind-1 [#_"AbstractObjectStamp" this]
@@ -71358,7 +71046,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"boolean" AbstractObjectStamp''isExactType-1 [#_"AbstractObjectStamp" this]
-        (and (:exactType this) (some? (:type this)))
+        (and (:exact-type? this) (some? (:type this)))
     )
 
     (defn- #_"boolean" AbstractObjectStamp'isInterfaceOrArrayOfInterface-1 [#_"ResolvedJavaType" t]
@@ -71379,40 +71067,40 @@ ZeroExtendNode'new-4
                         (let [
                             #_"boolean" always-nil? (or (:always-nil? a) (:always-nil? b))
                             #_"boolean" never-nil? (or (:never-nil? a) (:never-nil? b))
-                            #_"boolean" exactType (or (:exactType a) (:exactType b))
-                            [#_"ResolvedJavaType" type exactType always-nil?]
+                            #_"boolean" exact-type? (or (:exact-type? a) (:exact-type? b))
+                            [#_"ResolvedJavaType" type exact-type? always-nil?]
                                 (cond
-                                    (= (:type a) (:type b))                                       [(:type a) exactType always-nil?]
-                                    (nil? (:type a))                                              [(:type b) exactType always-nil?]
-                                    (nil? (:type b))                                              [(:type a) exactType always-nil?]
-                                    (#_"ResolvedJavaType" .isAssignableFrom (:type a), (:type b)) [(:type b) exactType (or (:exactType a) always-nil?)]
-                                    (#_"ResolvedJavaType" .isAssignableFrom (:type b), (:type a)) [(:type a) exactType (or (:exactType b) always-nil?)]
+                                    (= (:type a) (:type b))                                       [(:type a) exact-type? always-nil?]
+                                    (nil? (:type a))                                              [(:type b) exact-type? always-nil?]
+                                    (nil? (:type b))                                              [(:type a) exact-type? always-nil?]
+                                    (#_"ResolvedJavaType" .isAssignableFrom (:type a), (:type b)) [(:type b) exact-type? (or (:exact-type? a) always-nil?)]
+                                    (#_"ResolvedJavaType" .isAssignableFrom (:type b), (:type a)) [(:type a) exact-type? (or (:exact-type? b) always-nil?)]
                                     :else
                                         (let [
-                                            [type exactType] (if improve? [(:type a) (:exactType a)] [nil exactType])
+                                            [type exact-type?] (if improve? [(:type a) (:exact-type? a)] [nil exact-type?])
                                             always-nil?
-                                                (or exactType
+                                                (or exact-type?
                                                     (and (not (AbstractObjectStamp'isInterfaceOrArrayOfInterface-1 (:type a)))
                                                          (not (AbstractObjectStamp'isInterfaceOrArrayOfInterface-1 (:type b)))
                                                     )
                                                     always-nil?
                                                 )
                                         ]
-                                            [type exactType always-nil?]
+                                            [type exact-type? always-nil?]
                                         )
                                 )
-                            [type exactType] (if always-nil? [nil false] [type exactType])
+                            [type exact-type?] (if always-nil? [nil false] [type exact-type?])
                         ]
                             (cond
-                                (and exactType (nil? type))                                       (Stamp'''empty-1 a)
-                                (and always-nil? never-nil?)                                      (Stamp'''empty-1 a)
-                                (and exactType (not (AbstractObjectStamp'isConcreteType-1 type))) (Stamp'''empty-1 a)
-                                (and (= type (:type a)) (= exactType (:exactType a)) (= never-nil? (:never-nil? a)) (= always-nil? (:always-nil? a)))
+                                (and exact-type? (nil? type))                                       (Stamp'''empty-1 a)
+                                (and always-nil? never-nil?)                                        (Stamp'''empty-1 a)
+                                (and exact-type? (not (AbstractObjectStamp'isConcreteType-1 type))) (Stamp'''empty-1 a)
+                                (and (= type (:type a)) (= exact-type? (:exact-type? a)) (= never-nil? (:never-nil? a)) (= always-nil? (:always-nil? a)))
                                     a
-                                (and (= type (:type b)) (= exactType (:exactType b)) (= never-nil? (:never-nil? b)) (= always-nil? (:always-nil? b)))
+                                (and (= type (:type b)) (= exact-type? (:exact-type? b)) (= never-nil? (:never-nil? b)) (= always-nil? (:always-nil? b)))
                                     b
                                 :else
-                                    (AbstractObjectStamp'''copyWith-5 a, type, exactType, never-nil?, always-nil?)
+                                    (AbstractObjectStamp'''copyWith-5 a, type, exact-type?, never-nil?, always-nil?)
                             )
                         )
                 )
@@ -71489,35 +71177,35 @@ ZeroExtendNode'new-4
                         (Stamp''isEmpty-1 b) a
                         :else
                             (let [
-                                [#_"ResolvedJavaType" type #_"boolean" exactType #_"boolean" never-nil? #_"boolean" always-nil?]
+                                [#_"ResolvedJavaType" type #_"boolean" exact-type? #_"boolean" never-nil? #_"boolean" always-nil?]
                                     (cond
                                         (:always-nil? b)
-                                            [(:type a) (:exactType a) false (:always-nil? a)]
+                                            [(:type a) (:exact-type? a) false (:always-nil? a)]
                                         (:always-nil? a)
-                                            [(:type b) (:exactType b) false (:always-nil? b)]
+                                            [(:type b) (:exact-type? b) false (:always-nil? b)]
                                         :else
                                             (let [
                                                 type (AbstractObjectStamp'meetTypes-2 (:type a), (:type b))
-                                                exactType (and (:exactType a) (:exactType b))
-                                                exactType
-                                                    (when (and exactType (some? (:type a)) (some? (:type b))) => exactType
+                                                exact-type? (and (:exact-type? a) (:exact-type? b))
+                                                exact-type?
+                                                    (when (and exact-type? (some? (:type a)) (some? (:type b))) => exact-type?
                                                         ;; meeting two valid exact types may result in a non-exact type
                                                         (= type (:type a) (:type b))
                                                     )
                                                 never-nil? (and (:never-nil? a) (:never-nil? b))
                                                 always-nil? false
                                             ]
-                                                [type exactType never-nil? always-nil?]
+                                                [type exact-type? never-nil? always-nil?]
                                             )
                                     )
                             ]
                                 (cond
-                                    (and (= type (:type a)) (= exactType (:exactType a)) (= never-nil? (:never-nil? a)) (= always-nil? (:always-nil? a)))
+                                    (and (= type (:type a)) (= exact-type? (:exact-type? a)) (= never-nil? (:never-nil? a)) (= always-nil? (:always-nil? a)))
                                         a
-                                    (and (= type (:type b)) (= exactType (:exactType b)) (= never-nil? (:never-nil? b)) (= always-nil? (:always-nil? b)))
+                                    (and (= type (:type b)) (= exact-type? (:exact-type? b)) (= never-nil? (:never-nil? b)) (= always-nil? (:always-nil? b)))
                                         b
                                     :else
-                                        (AbstractObjectStamp'''copyWith-5 a, type, exactType, never-nil?, always-nil?)
+                                        (AbstractObjectStamp'''copyWith-5 a, type, exact-type?, never-nil?, always-nil?)
                                 )
                             )
                     )
@@ -71558,7 +71246,7 @@ ZeroExtendNode'new-4
                     #_"AbstractObjectStamp" a this
                     #_"AbstractObjectStamp" b that
                 ]
-                    (and (= (:exactType a) (:exactType b))
+                    (and (= (:exact-type? a) (:exact-type? b))
                         ;; nil == java.lang.Object
                         (cond
                             (nil? (:type a)) (or (nil? (:type b)) (#_"ResolvedJavaType" .isJavaLangObject (:type b)))
@@ -71574,8 +71262,8 @@ ZeroExtendNode'new-4
 )
 
 (class-ns NarrowOopStamp [AbstractObjectStamp, AbstractPointerStamp, Stamp]
-    (defn #_"NarrowOopStamp" NarrowOopStamp'new-5 [#_"ResolvedJavaType" type, #_"boolean" exactType, #_"boolean" never-nil?, #_"boolean" always-nil?, #_"CompressEncoding" encoding]
-        (merge (NarrowOopStamp'class.) (AbstractObjectStamp'new-4 type, exactType, never-nil?, always-nil?)
+    (defn #_"NarrowOopStamp" NarrowOopStamp'new-5 [#_"ResolvedJavaType" type, #_"boolean" exact-type?, #_"boolean" never-nil?, #_"boolean" always-nil?, #_"CompressEncoding" encoding]
+        (merge (NarrowOopStamp'class.) (AbstractObjectStamp'new-4 type, exact-type?, never-nil?, always-nil?)
             (hash-map
                 #_"CompressEncoding" :encoding encoding
             )
@@ -71608,13 +71296,13 @@ ZeroExtendNode'new-4
 )
 
 (class-ns HotSpotNarrowOopStamp [NarrowOopStamp, AbstractObjectStamp, AbstractPointerStamp, Stamp]
-    (defn- #_"HotSpotNarrowOopStamp" HotSpotNarrowOopStamp'new-5 [#_"ResolvedJavaType" type, #_"boolean" exactType, #_"boolean" never-nil?, #_"boolean" always-nil?, #_"CompressEncoding" encoding]
-        (merge (HotSpotNarrowOopStamp'class.) (NarrowOopStamp'new-5 type, exactType, never-nil?, always-nil?, encoding))
+    (defn- #_"HotSpotNarrowOopStamp" HotSpotNarrowOopStamp'new-5 [#_"ResolvedJavaType" type, #_"boolean" exact-type?, #_"boolean" never-nil?, #_"boolean" always-nil?, #_"CompressEncoding" encoding]
+        (merge (HotSpotNarrowOopStamp'class.) (NarrowOopStamp'new-5 type, exact-type?, never-nil?, always-nil?, encoding))
     )
 
     (defm HotSpotNarrowOopStamp AbstractObjectStamp
-        (#_"AbstractObjectStamp" AbstractObjectStamp'''copyWith-5 [#_"HotSpotNarrowOopStamp" this, #_"ResolvedJavaType" type, #_"boolean" exactType, #_"boolean" never-nil?, #_"boolean" always-nil?]
-            (HotSpotNarrowOopStamp'new-5 type, exactType, never-nil?, always-nil?, (NarrowOopStamp''getEncoding-1 this))
+        (#_"AbstractObjectStamp" AbstractObjectStamp'''copyWith-5 [#_"HotSpotNarrowOopStamp" this, #_"ResolvedJavaType" type, #_"boolean" exact-type?, #_"boolean" never-nil?, #_"boolean" always-nil?]
+            (HotSpotNarrowOopStamp'new-5 type, exact-type?, never-nil?, always-nil?, (NarrowOopStamp''getEncoding-1 this))
         )
     )
 
@@ -71661,13 +71349,13 @@ ZeroExtendNode'new-4
 )
 
 (class-ns ObjectStamp [AbstractObjectStamp, AbstractPointerStamp, Stamp]
-    (defn #_"ObjectStamp" ObjectStamp'new-4 [#_"ResolvedJavaType" type, #_"boolean" exactType, #_"boolean" never-nil?, #_"boolean" always-nil?]
-        (merge (ObjectStamp'class.) (AbstractObjectStamp'new-4 type, exactType, never-nil?, always-nil?))
+    (defn #_"ObjectStamp" ObjectStamp'new-4 [#_"ResolvedJavaType" type, #_"boolean" exact-type?, #_"boolean" never-nil?, #_"boolean" always-nil?]
+        (merge (ObjectStamp'class.) (AbstractObjectStamp'new-4 type, exact-type?, never-nil?, always-nil?))
     )
 
     (defm ObjectStamp AbstractObjectStamp
-        (#_"ObjectStamp" AbstractObjectStamp'''copyWith-5 [#_"ObjectStamp" this, #_"ResolvedJavaType" type, #_"boolean" exactType, #_"boolean" never-nil?, #_"boolean" always-nil?]
-            (ObjectStamp'new-4 type, exactType, never-nil?, always-nil?)
+        (#_"ObjectStamp" AbstractObjectStamp'''copyWith-5 [#_"ObjectStamp" this, #_"ResolvedJavaType" type, #_"boolean" exact-type?, #_"boolean" never-nil?, #_"boolean" always-nil?]
+            (ObjectStamp'new-4 type, exact-type?, never-nil?, always-nil?)
         )
     )
 
@@ -71735,8 +71423,8 @@ ZeroExtendNode'new-4
     (§ def #_"KlassPointerStamp" KlassPointerStamp'KLASS_ALWAYS_NULL (KlassPointerStamp'new-2 false, true))
 
     (defm KlassPointerStamp AbstractPointerStamp
-        (#_"AbstractPointerStamp" AbstractPointerStamp'''copyWith-3 [#_"KlassPointerStamp" this, #_"boolean" newNonNull, #_"boolean" newAlwaysNull]
-            (KlassPointerStamp'new-3 newNonNull, newAlwaysNull, (:encoding this))
+        (#_"AbstractPointerStamp" AbstractPointerStamp'''copyWith-3 [#_"KlassPointerStamp" this, #_"boolean" never-nil?, #_"boolean" always-nil?]
+            (KlassPointerStamp'new-3 never-nil?, always-nil?, (:encoding this))
         )
     )
 
@@ -71843,7 +71531,7 @@ ZeroExtendNode'new-4
     )
 
     (defm RawPointerStamp AbstractPointerStamp
-        (#_"AbstractPointerStamp" AbstractPointerStamp'''copyWith-3 [#_"RawPointerStamp" this, #_"boolean" newNonNull, #_"boolean" newAlwaysNull]
+        (#_"AbstractPointerStamp" AbstractPointerStamp'''copyWith-3 [#_"RawPointerStamp" this, #_"boolean" never-nil?, #_"boolean" always-nil?]
             ;; RawPointerStamp is a singleton
             this
         )
@@ -73593,13 +73281,7 @@ ZeroExtendNode'new-4
     (defm SnippetStub Stub
         (#_"Graph" Stub'''getStubGraph-1 [#_"SnippetStub" this]
             (let [
-                #_"Plugins" plugins HotSpot'plugins
-                #_"Object*" args (SnippetStub'''makeConstArgs-1 this)
-                plugins
-                    (when (seq args) => plugins
-                        (Plugins''prependParameterPlugin-2 plugins, (ConstantBindingParameterPlugin'new-1 args))
-                    )
-                #_"GraphBuilderInstance" instance (GraphBuilderInstance'new-3 (GraphBuilderConfiguration'getSnippetDefault-1 plugins), OptimisticOptimizations'NONE, (IntrinsicContext'new-4 (:method this), (:method this), HotSpot'defaultBytecodeProvider, CompilationContext'INLINE_AFTER_PARSING))
+                #_"GraphBuilderInstance" instance (GraphBuilderInstance'new-2 OptimisticOptimizations'NONE, (IntrinsicContext'new-4 (:method this), (:method this), HotSpot'defaultBytecodeProvider, CompilationContext'INLINE_AFTER_PARSING))
                 #_"Graph" graph (Graph'new-1 (:method this))
                 graph (Phase'''run-3 instance, graph, nil)
                 graph (Phase'''run-3 (RemoveValueProxyPhase'new-0), graph, nil)
@@ -73625,26 +73307,12 @@ ZeroExtendNode'new-4
         (merge (NewArrayStub'class.) (SnippetStub'new-2 "newArray", linkage))
     )
 
-    (defm NewArrayStub SnippetStub
-        (#_"Object*" SnippetStub'''makeConstArgs-1 [#_"NewArrayStub" this]
-            (let [
-                #_"Object[]" args (make-array Object (#_"Signature" .getParameterCount (#_"ResolvedJavaMethod" .getSignature (:method this)), false))
-            ]
-                (aset args 2 HotSpot'threadRegister)
-                args
-            )
-        )
-    )
-
     ;;;
      ; Re-attempts allocation after an initial TLAB allocation failed or was skipped (e.g. due to -XX:-UseTLAB).
-     ;
-     ; @param hub the hub of the object to be allocated
-     ; @param length the length of the array
      ;;
-    (§ snippet! #_"Object" #_"NewArrayStub" "newArray" [#_"KlassPointer" hub, #_"int" length, #_@ConstantParameter #_"Register" threadRegister]
+    (§ snippet! #_"Object" #_"NewArrayStub" "newArray" [#_"KlassPointer" hub, #_"int" length, #_"Register" threadRegister]
         (let [
-            #_"Word" thread (ReplacementsUtil'registerAsWord-1 threadRegister)
+            #_"Word" thread (ReplacementsUtil'registerAsWord-1 HotSpot'threadRegister)
         ]
             (StubForeignCallNode'newArrayC-4 ForeignCallDescriptor'NEW_ARRAY_C, thread, hub, length)
             (when (some? (ReplacementsUtil'clearPendingException-1 thread))
@@ -73667,26 +73335,13 @@ ZeroExtendNode'new-4
         (merge (NewInstanceStub'class.) (SnippetStub'new-2 "newInstance", linkage))
     )
 
-    (defm NewInstanceStub SnippetStub
-        (#_"Object*" SnippetStub'''makeConstArgs-1 [#_"NewInstanceStub" this]
-            (let [
-                #_"Object[]" args (make-array Object (#_"Signature" .getParameterCount (#_"ResolvedJavaMethod" .getSignature (:method this)), false))
-            ]
-                (aset args 1 HotSpot'threadRegister)
-                args
-            )
-        )
-    )
-
     ;;;
      ; Re-attempts allocation after an initial TLAB allocation failed or was skipped (e.g. due to -XX:-UseTLAB).
-     ;
-     ; @param hub the hub of the object to be allocated
      ;;
-    (§ snippet! #_"Object" #_"NewInstanceStub" "newInstance" [#_"KlassPointer" hub, #_@ConstantParameter #_"Register" threadRegister]
+    (§ snippet! #_"Object" #_"NewInstanceStub" "newInstance" [#_"KlassPointer" hub, #_"Register" threadRegister]
         ;; The type is known to be an instance, so Klass::_layout_helper is the instance size as a raw number.
         (let [
-            #_"Word" thread (ReplacementsUtil'registerAsWord-1 threadRegister)
+            #_"Word" thread (ReplacementsUtil'registerAsWord-1 HotSpot'threadRegister)
         ]
             (StubForeignCallNode'newInstanceC-3 ForeignCallDescriptor'NEW_INSTANCE_C, thread, hub)
             (when (some? (ReplacementsUtil'clearPendingException-1 thread))
@@ -74281,9 +73936,9 @@ ZeroExtendNode'new-4
     (defn #_"TypeReference" TypeReference'createTrusted-1 [#_"ResolvedJavaType" type]
         (when (some? type)
             (let [
-                #_"ResolvedJavaType" exactType (when (#_"ResolvedJavaType" .isLeaf type) type)
+                #_"ResolvedJavaType" exact (when (#_"ResolvedJavaType" .isLeaf type) type)
             ]
-                (if (some? exactType) (TypeReference'new-2 exactType, true) (TypeReference'new-2 type, false))
+                (if (some? exact) (TypeReference'new-2 exact, true) (TypeReference'new-2 type, false))
             )
         )
     )
