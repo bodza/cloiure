@@ -1,5 +1,5 @@
 (ns graalfn.core
-    (:refer-clojure :only [* *ns* + - -> ->> / < <= = > >= aget and apply aset assoc bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean boolean-array byte byte-array case char comp compare cond condp conj cons contains? count dec declare defmacro defn defprotocol defrecord doseq dotimes double double-array empty? extend-protocol extend-type filter first get hash-map if-not import inc instance? int int-array into into-array iterate iterator-seq keys let letfn list locking long long-array loop make-array map max merge min neg? next nil? not not= ns-imports ns-unmap nth object-array or peek pop pos? quot reduce reify rem remove repeat rest run! satisfies? second seq sequential? short some some? sort-by sorted-map str subvec symbol symbol? take-while unsigned-bit-shift-right update update-in vals vary-meta vec vector? volatile! vreset! vswap! when-some while zero?])
+    (:refer-clojure :only [* *ns* + - -> ->> / < <= = > >= aget and apply aset assoc bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean boolean-array byte byte-array case char comp compare cond condp conj cons contains? count dec declare defmacro defn defprotocol defrecord doseq dotimes double double-array empty? extend-protocol extend-type filter first get hash-map if-not import inc instance? int int-array into into-array iterate iterator-seq keys let letfn list locking long long-array loop make-array map mapcat max merge min neg? next nil? not not= ns-imports ns-unmap nth object-array or peek pop pos? quot reduce reify rem remove repeat rest run! satisfies? second seq sequential? short some some? sort-by sorted-map str subvec symbol symbol? take-while unsigned-bit-shift-right update update-in vals vary-meta vec vector? volatile! vreset! vswap! when-some while zero?])
 )
 
 (defmacro § [& _])
@@ -135,7 +135,6 @@
     [jdk.vm.ci.runtime JVMCIBackend]
 
     [org.graalvm.collections EconomicMap EconomicSet Equivalence MapCursor Pair UnmodifiableEconomicMap UnmodifiableMapCursor]
-    [org.graalvm.word LocationIdentity]
 
     [sun.misc Unsafe]
 )
@@ -196,8 +195,6 @@ ForeignCallNode'g1PostBarrierStub-2
 ForeignCallNode'g1PreBarrierStub-2
 ForeignCallNode'monitorenterStubC-3
 ForeignCallNode'monitorexitStubC-3
-ForeignCallNode'newArray-4
-ForeignCallNode'newInstance-2
 LoadHubNode'loadHubIntrinsic-1
 MembarNode'memoryBarrier-1
 MembarNode'memoryBarrier-2
@@ -409,9 +406,8 @@ AbstractPointerStamp''asNonNull-1
 AbstractPointerStamp''defaultPointerJoin-2
 AbstractPointerStamp'new-2
 AbstractStateSplit'new-2
-AbstractTemplates''snippet-3*
-AbstractTemplates'findMethod-3
 AbstractTemplates'new-0
+AbstractTemplates'snippet-3*
 AbstractWriteNode'new-4
 AccessArrayNode'new-2
 AccessFieldNode''isStatic-1
@@ -427,9 +423,9 @@ AddNode'new-2
 AddressLowering''improve-5
 AddressLowering''improveUncompression-4
 AddressLowering''lower-3
+AddressLowering'new-1
 AddressLowering'postProcess-1
 AddressLowering'preProcess-1
-AddressLowering'new-1
 AddressLowering'updateDisplacement-3
 AddressLoweringPhase'new-1
 AddressNode'new-0
@@ -442,8 +438,7 @@ Allocator'new-2
 And'new-2
 AndNode'create-2
 AndNode'new-2
-Arguments''add-2
-Arguments'new-3
+Arguments'new-4*
 ArithmeticOp'new-1
 ArithmeticOpTable'EMPTY
 ArithmeticOpTable'forStamp-1
@@ -1478,6 +1473,7 @@ FinalFieldBarrierNode'new-1
 FinalState'copy-1
 FinalState'new-0
 FixPointIntervalBuilder''build-1
+FixPointIntervalBuilder''getOrCreateInterval-2
 FixPointIntervalBuilder'new-3
 FixReadsClosure'new-0
 FixReadsPhase'new-1
@@ -1494,7 +1490,6 @@ FixedTarget'new-2
 FixedValueAnchorNode'new-1
 FixedWithNextNode''setNext-2
 FixedWithNextNode'new-1
-FixPointIntervalBuilder''getOrCreateInterval-2
 Flags'CANDIDATE
 Flags'HAS_USAGE
 Flags'IN_SUBTREE
@@ -1511,8 +1506,6 @@ FloatingReadClosure'new-3
 FloatingReadNode'new-4
 FloatingReadNode'new-5
 FloatingReadNode'new-6
-FloatingReadPhase''processBlock-3
-FloatingReadPhase''processNode-3
 FloatingReadPhase'mergeMemoryMaps-2
 FloatingReadPhase'new-0
 FloatingReadPhase'new-2
@@ -1522,11 +1515,9 @@ ForeignCallDescriptor'G1WBPRECALL
 ForeignCallDescriptor'MONITORENTER
 ForeignCallDescriptor'MONITOREXIT
 ForeignCallDescriptor'NEW_ARRAY
-ForeignCallDescriptor'NEW_ARRAY_C
 ForeignCallDescriptor'NEW_INSTANCE
-ForeignCallDescriptor'NEW_INSTANCE_C
 ForeignCallDescriptor'UNCOMMON_TRAP_HANDLER
-ForeignCallDescriptor'new-3*
+ForeignCallDescriptor'new-2*
 ForeignCallLinkage''destroysRegisters-1
 ForeignCallLinkage''finalizeAddress-1
 ForeignCallLinkage''getMaxCallTargetOffset-1
@@ -1549,7 +1540,6 @@ ForeignCalls''linkForeignCall-7*
 ForeignCalls''lookupForeignCall-2
 ForeignCalls''register-2
 ForeignCalls''registerForeignCall-8*
-ForeignCalls''registerStubCall-5*
 ForeignCalls'nativeABICallerSaveRegisters
 ForeignCalls'new-0
 FrameContext''enter-2
@@ -2005,6 +1995,7 @@ InstanceOfNode'createHelper-3
 InstanceOfNode'findSynonym-2
 InstanceOfNode'new-3
 InstanceOfSnippetsTemplates''lower-3
+InstanceOfSnippetsTemplates''makeArguments-3
 InstanceOfSnippetsTemplates'new-0
 InstanceOfTemplates'new-0
 InstanceOfUsageReplacer'new-4
@@ -2557,6 +2548,13 @@ LoadMetaspaceConstantOp'new-2
 LoadObjectConstantOp'new-2
 LocalLiveness'compute-4
 LocalLiveness'new-1
+LocationIdentity''isAny-1
+LocationIdentity''isInit-1
+LocationIdentity''isSingle-1
+LocationIdentity''overlaps-2
+LocationIdentity'ANY
+LocationIdentity'INIT
+LocationIdentity'new-1
 LocationSet''add-2
 LocationSet''addAll-2
 LocationSet''contains-2
@@ -2857,11 +2855,39 @@ MulNode'new-2
 NameAndType''getName-2
 NameAndType''getType-2
 NameAndType'new-1
-NamedLocationIdentity'ARRAY_LENGTH_LOCATION
+NamedLocationIdentity'ARRAY_LENGTH
+NamedLocationIdentity'CLASS_KLASS
+NamedLocationIdentity'CLASS_MIRROR
+NamedLocationIdentity'CLASS_MIRROR_HANDLE
+NamedLocationIdentity'COMPRESSED_HUB
+NamedLocationIdentity'DISPLACED_MARK_WORD
+NamedLocationIdentity'GC_CARD
+NamedLocationIdentity'GC_INDEX
+NamedLocationIdentity'GC_LOG
+NamedLocationIdentity'HUB
+NamedLocationIdentity'HUB_WRITE
+NamedLocationIdentity'KLASS_SUPER_CHECK_OFFSET
+NamedLocationIdentity'MARK_WORD
+NamedLocationIdentity'METASPACE_ARRAY_LENGTH
+NamedLocationIdentity'OBJECT_MONITOR_CXQ
+NamedLocationIdentity'OBJECT_MONITOR_ENTRY_LIST
+NamedLocationIdentity'OBJECT_MONITOR_OWNER
+NamedLocationIdentity'OBJECT_MONITOR_RECURSION
+NamedLocationIdentity'OBJECT_RESULT
+NamedLocationIdentity'OBJ_ARRAY_KLASS_ELEMENT_KLASS
+NamedLocationIdentity'PENDING_DEOPTIMIZATION
+NamedLocationIdentity'PENDING_EXCEPTION
+NamedLocationIdentity'PRIMARY_SUPERS
+NamedLocationIdentity'PROTOTYPE_MARK_WORD
+NamedLocationIdentity'SECONDARY_SUPERS
+NamedLocationIdentity'SECONDARY_SUPERS_ELEMENT
+NamedLocationIdentity'SECONDARY_SUPER_CACHE
+NamedLocationIdentity'TLAB_END
+NamedLocationIdentity'TLAB_TOP
 NamedLocationIdentity'getArrayLocation-1
+NamedLocationIdentity'getUnboxLocation-1
 NamedLocationIdentity'immutable-1
 NamedLocationIdentity'mutable-1
-NamedLocationIdentity'new-2
 Narrow'new-0
 NarrowNode'create-2
 NarrowNode'create-3
@@ -2876,11 +2902,9 @@ NegateNode'new-1
 NewArrayNode''createVirtualArrayNode-2
 NewArrayNode''defaultElementValue-1
 NewArrayNode'new-2
-NewArrayStub'new-1
 NewInstanceNode''createVirtualInstanceNode-2
 NewInstanceNode''defaultFieldValue-2
 NewInstanceNode'new-1
-NewInstanceStub'new-1
 NewObjectTemplates''lower-3a
 NewObjectTemplates''lower-3i
 NewObjectTemplates'new-0
@@ -2908,9 +2932,9 @@ Node''removeUsage-2
 Node''replaceAndDelete-2
 Node''replaceAtAllUsages-3
 Node''replaceAtMatchingUsages-3
-Node''replaceAtUsages-3
 Node''replaceAtPredecessor-2
 Node''replaceAtUsages-2
+Node''replaceAtUsages-3
 Node''replaceAtUsagesAndDelete-2
 Node''replaceFirstInput-3
 Node''replaceFirstSuccessor-3
@@ -2993,7 +3017,6 @@ NodeList'new-1
 NodeList'new-2i
 NodeList'new-2s
 NodeLoopInfo'new-0
-NodeMap''capacity-1
 NodeMap''getAndGrow-2
 NodeMap''getKey-2
 NodeMap''isNew-2
@@ -3309,43 +3332,14 @@ RemNode'new-2
 RemoveValueProxyPhase'new-0
 Replacements'createSnippet-1
 Replacements'new-0
-ReplacementsUtil'CLASS_KLASS_LOCATION
-ReplacementsUtil'CLASS_MIRROR_HANDLE_LOCATION
-ReplacementsUtil'CLASS_MIRROR_LOCATION
-ReplacementsUtil'COMPRESSED_HUB_LOCATION
-ReplacementsUtil'DISPLACED_MARK_WORD_LOCATION
-ReplacementsUtil'HUB_LOCATION
-ReplacementsUtil'HUB_WRITE_LOCATION
-ReplacementsUtil'KLASS_SUPER_CHECK_OFFSET_LOCATION
-ReplacementsUtil'MARK_WORD_LOCATION
-ReplacementsUtil'METASPACE_ARRAY_LENGTH_LOCATION
-ReplacementsUtil'OBJECT_MONITOR_CXQ_LOCATION
-ReplacementsUtil'OBJECT_MONITOR_ENTRY_LIST_LOCATION
-ReplacementsUtil'OBJECT_MONITOR_OWNER_LOCATION
-ReplacementsUtil'OBJECT_MONITOR_RECURSION_LOCATION
-ReplacementsUtil'OBJECT_RESULT_LOCATION
-ReplacementsUtil'OBJ_ARRAY_KLASS_ELEMENT_KLASS_LOCATION
-ReplacementsUtil'PENDING_DEOPTIMIZATION_LOCATION
-ReplacementsUtil'PENDING_EXCEPTION_LOCATION
-ReplacementsUtil'PRIMARY_SUPERS_LOCATION
-ReplacementsUtil'PROTOTYPE_MARK_WORD_LOCATION
-ReplacementsUtil'SECONDARY_SUPERS_ELEMENT_LOCATION
-ReplacementsUtil'SECONDARY_SUPERS_LOCATION
-ReplacementsUtil'SECONDARY_SUPER_CACHE_LOCATION
-ReplacementsUtil'TLAB_END_LOCATION
-ReplacementsUtil'TLAB_TOP_LOCATION
-ReplacementsUtil'arrayAllocationSize-3
-ReplacementsUtil'arrayStart-1
+ReplacementsUtil'REFERENT_OFFSET
 ReplacementsUtil'clearPendingException-1
 ReplacementsUtil'getAndClearObjectResult-1
-ReplacementsUtil'initializeObjectHeader-3
-ReplacementsUtil'instanceHeaderSize-0
 ReplacementsUtil'loadHub-1
 ReplacementsUtil'loadWordFromObject-2
 ReplacementsUtil'readPendingDeoptimization-1
 ReplacementsUtil'readTlabEnd-1
 ReplacementsUtil'readTlabTop-1
-ReplacementsUtil'REFERENT_OFFSET
 ReplacementsUtil'registerAsWord-1
 ReplacementsUtil'writePendingDeoptimization-2
 ReplacementsUtil'writeTlabTop-2
@@ -3452,14 +3446,8 @@ SnippetReflection'asObject-2c
 SnippetReflection'asObject-2t
 SnippetReflection'forBoxed-2
 SnippetReflection'forObject-1
-SnippetStub'new-2
-SnippetTemplate''instantiate-4x
-SnippetTemplate''instantiate-4y
-SnippetTemplate''instantiate-5x
-SnippetTemplate''instantiate-5y
-SnippetTemplate''rewireFrameStates-3
-SnippetTemplate'DEFAULT_REPLACER
-SnippetTemplate'explodeLoops-1
+SnippetTemplate''instantiate-3
+SnippetTemplate''instantiate-5
 SnippetTemplate'new-2
 SpillRegistersNode'new-0
 SpillRegistersOp'new-0
@@ -3867,9 +3855,6 @@ WordTypes'wordKind
 WorkListEntry'new-2
 WriteBarrier'new-0
 WriteBarrierAdditionPhase'new-0
-WriteBarrierSnippets'GC_CARD_LOCATION
-WriteBarrierSnippets'GC_INDEX_LOCATION
-WriteBarrierSnippets'GC_LOG_LOCATION
 WriteBarrierTemplates'new-1
 WriteNode'new-4
 Xor'new-2
@@ -5161,10 +5146,6 @@ ZeroExtendNode'new-4
  ; by the IfNode.
  ;;
 (defp InstanceOfSnippetsTemplates
-    ;;;
-     ; Gets the arguments used to retrieve and instantiate an instanceof snippet template.
-     ;;
-    (#_"Arguments" InstanceOfSnippetsTemplates'''makeArguments-3 [#_"InstanceOfSnippetsTemplates" this, #_"InstanceOfUsageReplacer" replacer, #_"LoweringTool" lowerer])
 )
 
 (defp InstanceOfTemplates)
@@ -5469,6 +5450,17 @@ ZeroExtendNode'new-4
     (#_"void" LocalLiveness'''storeOne-3 [#_"LocalLiveness" this, #_"int" blockID, #_"int" local])
 )
 
+;;;
+ ; Marker interface for location identities. A different location identity of two memory accesses
+ ; guarantees that the two accesses do not interfere.
+ ;
+ ; Clients of {@link LocationIdentity} must use {@link #equals(Object)}, not {@code ==}, when
+ ; comparing two {@link LocationIdentity} values for equality. Likewise, they must not use
+ ; {@link java.util.IdentityHashMap}s with {@link LocationIdentity} values as keys.
+ ;;
+(defp LocationIdentity
+)
+
 (defp LocationSet)
 (defp LockEliminationPhase)
 (defp LockStack)
@@ -5600,13 +5592,13 @@ ZeroExtendNode'new-4
  ;;
 (defp MemoryMap
     ;;;
-     ; Gets the last node that that (potentially) wrote to {@code locationIdentity}.
+     ; Gets the last node that that (potentially) wrote to {@code location}.
      ;;
-    (#_"MemoryNode" MemoryMap'''getLastLocationAccess-2 [#_"MemoryMap" this, #_"LocationIdentity" locationIdentity])
+    (#_"MemoryNode" MemoryMap'''getLastLocationAccess-2 [#_"MemoryMap" this, #_"LocationIdentity" location])
     ;;;
      ; Gets the location identities in the domain of this map.
      ;;
-    (#_"Iterable<LocationIdentity>" MemoryMap'''getLocations-1 [#_"MemoryMap" this])
+    (#_"LocationIdentity*" MemoryMap'''getLocations-1 [#_"MemoryMap" this])
 )
 
 (defp MemoryMap0)
@@ -5699,7 +5691,7 @@ ZeroExtendNode'new-4
      ;
      ; @return the identities of all locations killed by this node
      ;;
-    (#_"LocationIdentity[]" Multi'''getLocationIdentities-1 [#_"Multi" this])
+    (#_"LocationIdentity*" Multi'''getLocationIdentities-1 [#_"Multi" this])
 )
 
 (defp NameAndType)
@@ -5714,9 +5706,7 @@ ZeroExtendNode'new-4
 (defp Neg)
 (defp NegateNode)
 (defp NewArrayNode)
-(defp NewArrayStub)
 (defp NewInstanceNode)
-(defp NewInstanceStub)
 (defp NewObjectTemplates)
 (defp NoOp)
 
@@ -6208,12 +6198,6 @@ ZeroExtendNode'new-4
 (defp SnippetInfo
 )
 
-;;;
- ; Base class for a stub defined by a snippet.
- ;;
-(defp SnippetStub
-)
-
 (defp SnippetTemplate)
 
 ;;;
@@ -6376,7 +6360,7 @@ ZeroExtendNode'new-4
     ;;;
      ; Gets the graph that from which the code for this stub will be compiled.
      ;;
-    (#_"Graph" Stub'''getStubGraph-1 [#_"Stub" this])
+    (#_"Graph" Stub'''getStubGraph-1 [#_"Stub" this])
 )
 
 (defp StubForeignCallNode)
@@ -6532,7 +6516,7 @@ ZeroExtendNode'new-4
 
 (defp UnsafeAccessNode
     (#_"ValueNode" UnsafeAccessNode'''cloneAsFieldAccess-2 [#_"UnsafeAccessNode" this, #_"ResolvedJavaField" field])
-    (#_"ValueNode" UnsafeAccessNode'''cloneAsArrayAccess-3 [#_"UnsafeAccessNode" this, #_"ValueNode" location, #_"LocationIdentity" identity])
+    (#_"ValueNode" UnsafeAccessNode'''cloneAsArrayAccess-3 [#_"UnsafeAccessNode" this, #_"ValueNode" offset, #_"LocationIdentity" location])
 )
 
 (defp UnsafeCompareAndSwapNode)
@@ -8309,22 +8293,11 @@ ZeroExtendNode'new-4
  ; A collection of methods used in HotSpot snippets, substitutions and stubs.
  ;;
 (value-ns ReplacementsUtil
-    (§ def #_"LocationIdentity" ReplacementsUtil'TLAB_TOP_LOCATION               (NamedLocationIdentity'mutable-1 "TlabTop"))
-    (§ def #_"LocationIdentity" ReplacementsUtil'TLAB_END_LOCATION               (NamedLocationIdentity'mutable-1 "TlabEnd"))
-    (§ def #_"LocationIdentity" ReplacementsUtil'PENDING_EXCEPTION_LOCATION      (NamedLocationIdentity'mutable-1 "PendingException"))
-    (§ def #_"LocationIdentity" ReplacementsUtil'PENDING_DEOPTIMIZATION_LOCATION (NamedLocationIdentity'mutable-1 "PendingDeoptimization"))
-    (§ def #_"LocationIdentity" ReplacementsUtil'OBJECT_RESULT_LOCATION          (NamedLocationIdentity'mutable-1 "ObjectResult"))
-
-    (defn #_"Word" ReplacementsUtil'readTlabTop-1 [#_"Word" thread]
-        (Word''readWord-3i thread, HotSpot'threadTlabTopOffset, ReplacementsUtil'TLAB_TOP_LOCATION)
-    )
-
-    (defn #_"Word" ReplacementsUtil'readTlabEnd-1 [#_"Word" thread]
-        (Word''readWord-3i thread, HotSpot'threadTlabEndOffset, ReplacementsUtil'TLAB_END_LOCATION)
-    )
+    (defn #_"Word" ReplacementsUtil'readTlabTop-1 [#_"Word" thread] (Word''readWord-3i thread, HotSpot'threadTlabTopOffset, NamedLocationIdentity'TLAB_TOP))
+    (defn #_"Word" ReplacementsUtil'readTlabEnd-1 [#_"Word" thread] (Word''readWord-3i thread, HotSpot'threadTlabEndOffset, NamedLocationIdentity'TLAB_END))
 
     (defn #_"void" ReplacementsUtil'writeTlabTop-2 [#_"Word" thread, #_"Word" top]
-        (Word''writeWord-4i thread, HotSpot'threadTlabTopOffset, top, ReplacementsUtil'TLAB_TOP_LOCATION)
+        (Word''writeWord-4i thread, HotSpot'threadTlabTopOffset, top, NamedLocationIdentity'TLAB_TOP)
         nil
     )
 
@@ -8335,9 +8308,9 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"Object" ReplacementsUtil'clearPendingException-1 [#_"Word" thread]
         (let [
-            #_"Object" result (Word''readObject-3il thread, HotSpot'pendingExceptionOffset, ReplacementsUtil'PENDING_EXCEPTION_LOCATION)
+            #_"Object" result (Word''readObject-3il thread, HotSpot'pendingExceptionOffset, NamedLocationIdentity'PENDING_EXCEPTION)
         ]
-            (Word''writeObject-4 thread, HotSpot'pendingExceptionOffset, nil, ReplacementsUtil'PENDING_EXCEPTION_LOCATION)
+            (Word''writeObject-4 thread, HotSpot'pendingExceptionOffset, nil, NamedLocationIdentity'PENDING_EXCEPTION)
             result
         )
     )
@@ -8349,7 +8322,7 @@ ZeroExtendNode'new-4
      ;;
     #_unused
     (defn #_"int" ReplacementsUtil'readPendingDeoptimization-1 [#_"Word" thread]
-        (Word''readInt-3i thread, HotSpot'pendingDeoptimizationOffset, ReplacementsUtil'PENDING_DEOPTIMIZATION_LOCATION)
+        (Word''readInt-3i thread, HotSpot'pendingDeoptimizationOffset, NamedLocationIdentity'PENDING_DEOPTIMIZATION)
     )
 
     ;;;
@@ -8357,7 +8330,7 @@ ZeroExtendNode'new-4
      ;;
     #_unused
     (defn #_"void" ReplacementsUtil'writePendingDeoptimization-2 [#_"Word" thread, #_"int" value]
-        (Word''writeInt-4i thread, HotSpot'pendingDeoptimizationOffset, value, ReplacementsUtil'PENDING_DEOPTIMIZATION_LOCATION)
+        (Word''writeInt-4i thread, HotSpot'pendingDeoptimizationOffset, value, NamedLocationIdentity'PENDING_DEOPTIMIZATION)
         nil
     )
 
@@ -8368,89 +8341,12 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"Object" ReplacementsUtil'getAndClearObjectResult-1 [#_"Word" thread]
         (let [
-            #_"Object" result (Word''readObject-3il thread, HotSpot'objectResultOffset, ReplacementsUtil'OBJECT_RESULT_LOCATION)
+            #_"Object" result (Word''readObject-3il thread, HotSpot'objectResultOffset, NamedLocationIdentity'OBJECT_RESULT)
         ]
-            (Word''writeObject-4 thread, HotSpot'objectResultOffset, nil, ReplacementsUtil'OBJECT_RESULT_LOCATION)
+            (Word''writeObject-4 thread, HotSpot'objectResultOffset, nil, NamedLocationIdentity'OBJECT_RESULT)
             result
         )
     )
-
-    (§ def #_"LocationIdentity" ReplacementsUtil'PROTOTYPE_MARK_WORD_LOCATION (NamedLocationIdentity'mutable-1 "PrototypeMarkWord"))
-
-    (§ def #_"LocationIdentity" ReplacementsUtil'MARK_WORD_LOCATION (NamedLocationIdentity'mutable-1 "MarkWord"))
-    (§ def #_"LocationIdentity" ReplacementsUtil'HUB_WRITE_LOCATION (NamedLocationIdentity'mutable-1 "Hub:write"))
-
-    (§ def #_"LocationIdentity" ReplacementsUtil'HUB_LOCATION
-        (§ proxy #_"CanonicalizableLocation" (CanonicalizableLocation'new-1 "Hub")
-            (#_"ValueNode" CanonicalizableLocation'''canonicalizeRead-4 [#_"CanonicalizableLocation" this, #_"ValueNode" read, #_"AddressNode" location, #_"ValueNode" object]
-                (let [
-                    #_"TypeReference" constantType (StampTool'typeReferenceOrNull-1 (:stamp object))
-                ]
-                    (when (and (some? constantType) (:exactReference constantType)) => read
-                        (ConstantNode'forConstant-2s (:stamp read), (#_"ConstantReflectionProvider" .asObjectHub HotSpot'constantReflection, (:type constantType)))
-                    )
-                )
-            )
-        )
-    )
-
-    (§ def #_"LocationIdentity" ReplacementsUtil'COMPRESSED_HUB_LOCATION
-        (§ proxy #_"CanonicalizableLocation" (CanonicalizableLocation'new-1 "CompressedHub")
-            (#_"ValueNode" CanonicalizableLocation'''canonicalizeRead-4 [#_"CanonicalizableLocation" this, #_"ValueNode" read, #_"AddressNode" location, #_"ValueNode" object]
-                (let [
-                    #_"TypeReference" constantType (StampTool'typeReferenceOrNull-1 (:stamp object))
-                ]
-                    (when (and (some? constantType) (:exactReference constantType)) => read
-                        (ConstantNode'forConstant-2s (:stamp read), (#_"HotSpotMetaspaceConstant" .compress (#_"ConstantReflectionProvider" .asObjectHub HotSpot'constantReflection, (:type constantType))))
-                    )
-                )
-            )
-        )
-    )
-
-    (defn #_"void" ReplacementsUtil'initializeObjectHeader-3 [#_"Word" memory, #_"Word" markWord, #_"KlassPointer" hub]
-        (Word''writeWord-4i memory, HotSpot'markOffset, markWord, ReplacementsUtil'MARK_WORD_LOCATION)
-        (StoreHubNode'write-2 memory, hub)
-        nil
-    )
-
-    #_unused
-    (defn #_"Word" ReplacementsUtil'arrayStart-1 [#_"int[]" a]
-        (WordFactory'unsigned-1l (ComputeObjectAddressNode'get-2 a, Unsafe'ARRAY_INT_BASE_OFFSET))
-    )
-
-    ;;;
-     ; Computes the size of the memory chunk allocated for an array. This size accounts for the array header size,
-     ; body size and any padding after the last element to satisfy object alignment requirements.
-     ;
-     ; @param length the number of elements in the array
-     ; @param headerSize the size of the array header
-     ; @param log2ElementSize log2 of the size of an element in the array
-     ;
-     ; @return the size of the memory chunk
-     ;;
-    (defn #_"int" ReplacementsUtil'arrayAllocationSize-3 [#_"int" length, #_"int" headerSize, #_"int" log2ElementSize]
-        (let [
-            #_"int" alignment HotSpot'objectAlignment
-            #_"int" size (+ (<< length log2ElementSize) headerSize (dec alignment))
-            #_"int" mask (bit-not (dec alignment))
-        ]
-            (& size mask)
-        )
-    )
-
-    (defn #_"int" ReplacementsUtil'instanceHeaderSize-0 []
-        (- (* 2 (.wordSize HotSpot'target)) (if HotSpot'useCompressedClassPointers 4 0))
-    )
-
-    (§ def #_"LocationIdentity" ReplacementsUtil'KLASS_SUPER_CHECK_OFFSET_LOCATION  (NamedLocationIdentity'immutable-1 "Klass::_super_check_offset"))
-    (§ def #_"LocationIdentity" ReplacementsUtil'SECONDARY_SUPER_CACHE_LOCATION     (NamedLocationIdentity'mutable-1   "SecondarySuperCache"))
-    (§ def #_"LocationIdentity" ReplacementsUtil'SECONDARY_SUPERS_LOCATION          (NamedLocationIdentity'immutable-1 "SecondarySupers"))
-    (§ def #_"LocationIdentity" ReplacementsUtil'DISPLACED_MARK_WORD_LOCATION       (NamedLocationIdentity'mutable-1   "DisplacedMarkWord"))
-    (§ def #_"LocationIdentity" ReplacementsUtil'OBJECT_MONITOR_OWNER_LOCATION      (NamedLocationIdentity'mutable-1   "ObjectMonitor::_owner"))
-    (§ def #_"LocationIdentity" ReplacementsUtil'OBJECT_MONITOR_RECURSION_LOCATION  (NamedLocationIdentity'mutable-1   "ObjectMonitor::_recursions"))
-    (§ def #_"LocationIdentity" ReplacementsUtil'OBJECT_MONITOR_CXQ_LOCATION        (NamedLocationIdentity'mutable-1   "ObjectMonitor::_cxq"))
-    (§ def #_"LocationIdentity" ReplacementsUtil'OBJECT_MONITOR_ENTRY_LIST_LOCATION (NamedLocationIdentity'mutable-1   "ObjectMonitor::_EntryList"))
 
     ;;;
      ; Loads the hub of an object (without nil-checking it first).
@@ -8461,7 +8357,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"Word" ReplacementsUtil'loadWordFromObject-2 [#_"Object" object, #_"int" offset]
-        (RawLoadNode'loadWordFromObjectIntrinsic-4 object, offset, (LocationIdentity/any), (.wordJavaKind HotSpot'target))
+        (RawLoadNode'loadWordFromObjectIntrinsic-4 object, offset, LocationIdentity'ANY, (.wordJavaKind HotSpot'target))
     )
 
     ;;;
@@ -8474,30 +8370,7 @@ ZeroExtendNode'new-4
         (ReadRegisterNode'registerAsWord-3 register, true, false)
     )
 
-    (§ def #_"LocationIdentity" ReplacementsUtil'CLASS_KLASS_LOCATION
-        (§ proxy #_"CanonicalizableLocation" (CanonicalizableLocation'new-1 "Class._klass")
-            (#_"ValueNode" CanonicalizableLocation'''canonicalizeRead-4 [#_"CanonicalizableLocation" this, #_"ValueNode" read, #_"AddressNode" location, #_"ValueNode" object]
-                (CanonicalizableLocation'foldIndirection-3 read, object, ReplacementsUtil'CLASS_MIRROR_LOCATION)
-            )
-        )
-    )
-
-    (§ def #_"LocationIdentity" ReplacementsUtil'CLASS_MIRROR_LOCATION        (NamedLocationIdentity'immutable-1 "Klass::_java_mirror"))
-    (§ def #_"LocationIdentity" ReplacementsUtil'CLASS_MIRROR_HANDLE_LOCATION (NamedLocationIdentity'immutable-1 "Klass::_java_mirror handle"))
-
     (def #_"long" ReplacementsUtil'REFERENT_OFFSET (.objectFieldOffset HotSpot'unsafe, (#_"Class" .getDeclaredField java.lang.ref.Reference, "referent")))
-
-    (§ def #_"LocationIdentity" ReplacementsUtil'OBJ_ARRAY_KLASS_ELEMENT_KLASS_LOCATION
-        (§ proxy #_"CanonicalizableLocation" (CanonicalizableLocation'new-1 "ObjArrayKlass::_element_klass")
-            (#_"ValueNode" CanonicalizableLocation'''canonicalizeRead-4 [#_"CanonicalizableLocation" this, #_"ValueNode" read, #_"AddressNode" location, #_"ValueNode" object]
-                read
-            )
-        )
-    )
-
-    (§ def #_"LocationIdentity" ReplacementsUtil'PRIMARY_SUPERS_LOCATION           (NamedLocationIdentity'immutable-1 "PrimarySupers"))
-    (§ def #_"LocationIdentity" ReplacementsUtil'METASPACE_ARRAY_LENGTH_LOCATION   (NamedLocationIdentity'immutable-1 "MetaspaceArrayLength"))
-    (§ def #_"LocationIdentity" ReplacementsUtil'SECONDARY_SUPERS_ELEMENT_LOCATION (NamedLocationIdentity'immutable-1 "SecondarySupersElement"))
 )
 
 ;;;
@@ -8533,7 +8406,7 @@ ZeroExtendNode'new-4
             (let [
                 #_"KlassPointer" objectHub (LoadHubNode'loadHubIntrinsic-1 (PiNode'piCastNonNull-2 object, (SnippetAnchorNode'anchor-0)))
             ]
-                (if (Word''klassPointersNotEqual-2 (Word''readKlassPointer-3 objectHub, superCheckOffset, ReplacementsUtil'PRIMARY_SUPERS_LOCATION), hub)
+                (if (Word''klassPointersNotEqual-2 (Word''readKlassPointer-3 objectHub, superCheckOffset, NamedLocationIdentity'PRIMARY_SUPERS), hub)
                     falseValue
                     trueValue
                 )
@@ -8560,8 +8433,8 @@ ZeroExtendNode'new-4
     ;;;
      ; Type test used when the type being tested against is not known at compile time.
      ;;
-    (§ snippet! #_"Object" #_"InstanceOfSnippets" "instanceofDynamic" [#_"KlassPointer" hub, #_"Object" object, #_"Object" trueValue, #_"Object" falseValue, #_"boolean" allowNull]
-        (when (some? object) => (if allowNull trueValue falseValue)
+    (§ snippet! #_"Object" #_"InstanceOfSnippets" "instanceofDynamic" [#_"KlassPointer" hub, #_"Object" object, #_"Object" trueValue, #_"Object" falseValue, #_"boolean" allow-nil?]
+        (when (some? object) => (if allow-nil? trueValue falseValue)
             (let [
                 #_"KlassPointer" objectHub (LoadHubNode'loadHubIntrinsic-1 (PiNode'piCastNonNull-2 object, (SnippetAnchorNode'anchor-0)))
             ]
@@ -8658,7 +8531,7 @@ ZeroExtendNode'new-4
         (let [
             #_"Word" biasableLockBits (Word''and-2i mark, HotSpot'biasedLockMaskInPlace)
             ;; Check whether the bias pattern is present in the object's mark word and the bias owner and the epoch are both still current.
-            #_"Word" prototypeMarkWord (Word''readWord-3i hub, HotSpot'prototypeMarkWordOffset, ReplacementsUtil'PROTOTYPE_MARK_WORD_LOCATION)
+            #_"Word" prototypeMarkWord (Word''readWord-3i hub, HotSpot'prototypeMarkWordOffset, NamedLocationIdentity'PROTOTYPE_MARK_WORD)
             #_"Word" thread (ReplacementsUtil'registerAsWord-1 threadRegister)
             #_"Word" tmp (Word''and-2i (Word''xor-2w (Word''or-2w prototypeMarkWord, thread), mark), (bit-not HotSpot'ageMaskInPlace))
         ]
@@ -8698,7 +8571,7 @@ ZeroExtendNode'new-4
                                         #_"Word" unbiasedMark (Word''and-2i mark, (| HotSpot'biasedLockMaskInPlace HotSpot'ageMaskInPlace HotSpot'epochMaskInPlace))
                                         #_"Word" biasedMark (Word''or-2w unbiasedMark, thread)
                                     ]
-                                        (and (Word''logicCompareAndSwapWord-5 objectPointer, HotSpot'markOffset, unbiasedMark, biasedMark, ReplacementsUtil'MARK_WORD_LOCATION)
+                                        (and (Word''logicCompareAndSwapWord-5 objectPointer, HotSpot'markOffset, unbiasedMark, biasedMark, NamedLocationIdentity'MARK_WORD)
                                             ;; object is now biased to current thread -> done
                                             true
                                         )
@@ -8712,7 +8585,7 @@ ZeroExtendNode'new-4
                                     (let [
                                         #_"Word" biasedMark (Word''or-2w prototypeMarkWord, thread)
                                     ]
-                                        (and (Word''logicCompareAndSwapWord-5 objectPointer, HotSpot'markOffset, mark, biasedMark, ReplacementsUtil'MARK_WORD_LOCATION)
+                                        (and (Word''logicCompareAndSwapWord-5 objectPointer, HotSpot'markOffset, mark, biasedMark, NamedLocationIdentity'MARK_WORD)
                                             ;; object is now biased to current thread -> done
                                             true
                                         )
@@ -8733,7 +8606,7 @@ ZeroExtendNode'new-4
                             ;; CAS fails, it means that another thread raced us for the privilege of revoking the bias of this
                             ;; particular object, so it's okay to continue in the normal locking code.
                             (do
-                                (Word''compareAndSwapWord-5 objectPointer, HotSpot'markOffset, mark, prototypeMarkWord, ReplacementsUtil'MARK_WORD_LOCATION)
+                                (Word''compareAndSwapWord-5 objectPointer, HotSpot'markOffset, mark, prototypeMarkWord, NamedLocationIdentity'MARK_WORD)
                                 ;; Fall through to the normal CAS-based lock, because no matter what the result of the above CAS,
                                 ;; some thread must have succeeded in removing the bias bit from the object's header.
                                 false
@@ -8751,31 +8624,31 @@ ZeroExtendNode'new-4
 
     (defn- #_"boolean" MonitorSnippets'tryEnterInflated-4 [#_"Object" object, #_"Word" lock, #_"Word" mark, #_"Register" threadRegister]
         ;; write non-zero value to lock slot
-        (Word''writeWord-4i lock, HotSpot'lockDisplacedMarkOffset, lock, ReplacementsUtil'DISPLACED_MARK_WORD_LOCATION)
+        (Word''writeWord-4i lock, HotSpot'lockDisplacedMarkOffset, lock, NamedLocationIdentity'DISPLACED_MARK_WORD)
         ;; mark is a pointer to the ObjectMonitor + monitorMask
         (let [
             #_"Word" monitor (Word''subtract-2i mark, HotSpot'monitorMask)
-            #_"Word" owner (Word''readWord-3i monitor, HotSpot'objectMonitorOwnerOffset, ReplacementsUtil'OBJECT_MONITOR_OWNER_LOCATION)
+            #_"Word" owner (Word''readWord-3i monitor, HotSpot'objectMonitorOwnerOffset, NamedLocationIdentity'OBJECT_MONITOR_OWNER)
         ]
             ;; appears being unlocked when owner is 0
             (and (Word''equal-2i owner, 0)
-                 (Word''logicCompareAndSwapWord-5 monitor, HotSpot'objectMonitorOwnerOffset, owner, (ReplacementsUtil'registerAsWord-1 threadRegister), ReplacementsUtil'OBJECT_MONITOR_OWNER_LOCATION)
+                 (Word''logicCompareAndSwapWord-5 monitor, HotSpot'objectMonitorOwnerOffset, owner, (ReplacementsUtil'registerAsWord-1 threadRegister), NamedLocationIdentity'OBJECT_MONITOR_OWNER)
             )
         )
     )
 
-    (§ snippet! #_"void" #_"MonitorSnippets" "monitorenter" [#_"Object" object, #_"KlassPointer" hub, #_"int" lockDepth, #_"Register" threadRegister, #_"Register" stackPointerRegister]
+    (§ snippet! #_"void" #_"MonitorSnippets" "monitorenter" [#_"Object" object, #_"KlassPointer" hub, #_"int" lockDepth]
         ;; load the mark word - this includes a nil-check on object
         (let [
             #_"Word" mark (ReplacementsUtil'loadWordFromObject-2 object, HotSpot'markOffset)
             #_"Word" lock (BeginLockScopeNode'beginLockScope-1 lockDepth)
         ]
-            (when-not (and HotSpot'useBiasedLocking (MonitorSnippets'tryEnterBiased-5 object, hub, lock, mark, threadRegister))
+            (when-not (and HotSpot'useBiasedLocking (MonitorSnippets'tryEnterBiased-5 object, hub, lock, mark, HotSpot'threadRegister))
                 ;; not biased, fall-through
                 (or
                     (if (and (MonitorSnippets'inlineFastLockSupported-0) (Word''notEqual-2i (Word''and-2i mark, HotSpot'monitorMask), 0))
                         ;; inflated case
-                        (when (MonitorSnippets'tryEnterInflated-4 object, lock, mark, threadRegister)
+                        (when (MonitorSnippets'tryEnterInflated-4 object, lock, mark, HotSpot'threadRegister)
                             :done
                         )
                         ;; create the unlocked mark word pattern
@@ -8783,13 +8656,13 @@ ZeroExtendNode'new-4
                             #_"Word" unlockedMark (Word''or-2i mark, HotSpot'unlockedMask)
                         ]
                             ;; copy this unlocked mark word into the lock slot on the stack
-                            (Word''writeWord-4i lock, HotSpot'lockDisplacedMarkOffset, unlockedMark, ReplacementsUtil'DISPLACED_MARK_WORD_LOCATION)
+                            (Word''writeWord-4i lock, HotSpot'lockDisplacedMarkOffset, unlockedMark, NamedLocationIdentity'DISPLACED_MARK_WORD)
                             ;; make sure previous store does not float below compareAndSwap
                             (MembarNode'memoryBarrier-1 MemoryBarriers/STORE_STORE)
                             ;; Test if the object's mark word is unlocked, and if so, store the (address of) the lock slot into the object's mark word.
                             (let [
                                 #_"Word" objectPointer (Word'objectToTrackedPointer-1 object)
-                                #_"Word" currentMark (Word''compareAndSwapWord-5 objectPointer, HotSpot'markOffset, unlockedMark, lock, ReplacementsUtil'MARK_WORD_LOCATION)
+                                #_"Word" currentMark (Word''compareAndSwapWord-5 objectPointer, HotSpot'markOffset, unlockedMark, lock, NamedLocationIdentity'MARK_WORD)
                             ]
                                 (if (Word''equal-2w currentMark, unlockedMark)
                                     (do
@@ -8813,11 +8686,11 @@ ZeroExtendNode'new-4
                                     ;; significant 2 bits cleared and page_size is a power of 2
                                     (let [
                                         #_"Word" alignedMask (WordFactory'unsigned-1i (dec (.wordSize HotSpot'target)))
-                                        #_"Word" stackPointer (Word''add-2i (ReplacementsUtil'registerAsWord-1 stackPointerRegister), HotSpot'stackBias)
+                                        #_"Word" stackPointer (Word''add-2i (ReplacementsUtil'registerAsWord-1 HotSpot'stackPointerRegister), HotSpot'stackBias)
                                     ]
                                         (when (Word''equal-2i (Word''and-2w (Word''subtract-2w currentMark, stackPointer), (Word''subtract-2i alignedMask, (.pageSize HotSpot'unsafe))), 0)
                                             ;; recursively locked => write 0 to the lock slot
-                                            (Word''writeWord-4i lock, HotSpot'lockDisplacedMarkOffset, (WordFactory'zero-0), ReplacementsUtil'DISPLACED_MARK_WORD_LOCATION)
+                                            (Word''writeWord-4i lock, HotSpot'lockDisplacedMarkOffset, (WordFactory'zero-0), NamedLocationIdentity'DISPLACED_MARK_WORD)
                                             :done
                                         )
                                     )
@@ -8862,15 +8735,15 @@ ZeroExtendNode'new-4
             (let [
                 #_"Word" monitor (Word''subtract-2i mark, HotSpot'monitorMask)
                 #_"int" ownerOffset HotSpot'objectMonitorOwnerOffset
-                #_"Word" owner (Word''readWord-3i monitor, ownerOffset, ReplacementsUtil'OBJECT_MONITOR_OWNER_LOCATION)
-                #_"Word" recursions (Word''readWord-3i monitor, HotSpot'objectMonitorRecursionsOffset, ReplacementsUtil'OBJECT_MONITOR_RECURSION_LOCATION)
+                #_"Word" owner (Word''readWord-3i monitor, ownerOffset, NamedLocationIdentity'OBJECT_MONITOR_OWNER)
+                #_"Word" recursions (Word''readWord-3i monitor, HotSpot'objectMonitorRecursionsOffset, NamedLocationIdentity'OBJECT_MONITOR_RECURSION)
                 #_"Word" thread (ReplacementsUtil'registerAsWord-1 threadRegister)
             ]
                 (or
                     (when (Word''equal-2i (Word''or-2w (Word''xor-2w owner, thread), recursions), 0) ;; owner == thread && recursions == 0
                         (let [
-                            #_"Word" cxq (Word''readWord-3i monitor, HotSpot'objectMonitorCxqOffset, ReplacementsUtil'OBJECT_MONITOR_CXQ_LOCATION)
-                            #_"Word" entryList (Word''readWord-3i monitor, HotSpot'objectMonitorEntryListOffset, ReplacementsUtil'OBJECT_MONITOR_ENTRY_LIST_LOCATION)
+                            #_"Word" cxq (Word''readWord-3i monitor, HotSpot'objectMonitorCxqOffset, NamedLocationIdentity'OBJECT_MONITOR_CXQ)
+                            #_"Word" entryList (Word''readWord-3i monitor, HotSpot'objectMonitorEntryListOffset, NamedLocationIdentity'OBJECT_MONITOR_ENTRY_LIST)
                         ]
                             (when (Word''equal-2i (Word''or-2w cxq, entryList), 0) ;; cxq == 0 && entryList == 0: nobody is waiting, success
                                 (MembarNode'memoryBarrier-1 (| MemoryBarriers/LOAD_STORE MemoryBarriers/STORE_STORE))
@@ -8886,7 +8759,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (§ snippet! #_"void" #_"MonitorSnippets" "monitorexit" [#_"Object" object, #_"int" lockDepth, #_"Register" threadRegister]
+    (§ snippet! #_"void" #_"MonitorSnippets" "monitorexit" [#_"Object" object, #_"int" lockDepth]
         (let [
             #_"Word" mark (ReplacementsUtil'loadWordFromObject-2 object, HotSpot'markOffset)
         ]
@@ -8896,16 +8769,16 @@ ZeroExtendNode'new-4
             (when-not (and HotSpot'useBiasedLocking (Word''equal-2w (Word''and-2i mark, HotSpot'biasedLockMaskInPlace), (WordFactory'unsigned-1i HotSpot'biasedLockPattern)))
                 (let [
                     #_"Word" lock (CurrentLockNode'currentLock-1 lockDepth)
-                    #_"Word" displacedMark (Word''readWord-3i lock, HotSpot'lockDisplacedMarkOffset, ReplacementsUtil'DISPLACED_MARK_WORD_LOCATION)
+                    #_"Word" displacedMark (Word''readWord-3i lock, HotSpot'lockDisplacedMarkOffset, NamedLocationIdentity'DISPLACED_MARK_WORD)
                 ]
                     ;; => recursive locking, done
-                    (when (and (not (Word''equal-2i displacedMark, 0)) (not (MonitorSnippets'tryExitInflated-4 object, mark, lock, threadRegister)))
+                    (when (and (not (Word''equal-2i displacedMark, 0)) (not (MonitorSnippets'tryExitInflated-4 object, mark, lock, HotSpot'threadRegister)))
                         ;; Test if object's mark word is pointing to the displaced mark word, and if so,
                         ;; restore the displaced mark in the object. Otherwise, do unlocking via runtime call.
                         (let [
                             #_"Word" objectPointer (Word'objectToTrackedPointer-1 object)
                         ]
-                            (when-not (Word''logicCompareAndSwapWord-5 objectPointer, HotSpot'markOffset, lock, displacedMark, ReplacementsUtil'MARK_WORD_LOCATION)
+                            (when-not (Word''logicCompareAndSwapWord-5 objectPointer, HotSpot'markOffset, lock, displacedMark, NamedLocationIdentity'MARK_WORD)
                                 ;; the object's mark word was not pointing to the displaced header
                                 (ForeignCallNode'monitorexitStubC-3 ForeignCallDescriptor'MONITOREXIT, object, lock)
                             )
@@ -8954,6 +8827,16 @@ ZeroExtendNode'new-4
         nil
     )
 
+    (defn- #_"void" NewObjectSnippets'initializeObjectHeader-3 [#_"Word" memory, #_"Word" markWord, #_"KlassPointer" hub]
+        (Word''writeWord-4i memory, HotSpot'markOffset, markWord, NamedLocationIdentity'MARK_WORD)
+        (StoreHubNode'write-2 memory, hub)
+        nil
+    )
+
+    (defn- #_"int" NewObjectSnippets'instanceHeaderSize-0 []
+        (- (* 2 (.wordSize HotSpot'target)) (if HotSpot'useCompressedClassPointers 4 0))
+    )
+
     ;;;
      ; Maximum number of long stores to emit when zeroing an object with a constant size.
      ; Larger objects have their bodies initialized in a loop.
@@ -8964,7 +8847,7 @@ ZeroExtendNode'new-4
         (let [
             offset
                 (when-not (zero? (& offset 0x7)) => offset
-                    (Word''writeInt-4i memory, offset, (int value), (LocationIdentity/init))
+                    (Word''writeInt-4i memory, offset, (int value), LocationIdentity'INIT)
                     (+ offset 4)
                 )
         ]
@@ -8975,7 +8858,7 @@ ZeroExtendNode'new-4
                     ;; the break statement will trim excess stores.
                     (ExplodeLoopNode'explodeLoop-0)
                     (loop-when-recur [#_"int" i offset #_"int" n 0] (and (< i size) (< n NewObjectSnippets'MAX_UNROLLED_OBJECT_ZEROING_STORES)) [(+ i 8) (inc n)]
-                        (Word''initializeLong-4i memory, i, value, (LocationIdentity/init))
+                        (Word''initializeLong-4i memory, i, value, LocationIdentity'INIT)
                     )
                 )
                 ;; Use Word instead of int to avoid extension to long in generated code.
@@ -8984,7 +8867,7 @@ ZeroExtendNode'new-4
                         (ExplodeLoopNode'explodeLoop-0)
                     )
                     (loop-when-recur [#_"Word" w (WordFactory'signed-1i offset)] (< (Word''rawValue-1 w) size) [(Word''add-2i w, 8)]
-                        (Word''initializeLong-4w memory, w, value, (LocationIdentity/init))
+                        (Word''initializeLong-4w memory, w, value, LocationIdentity'INIT)
                     )
                 )
             )
@@ -9011,47 +8894,78 @@ ZeroExtendNode'new-4
      ;;
     (defn- #_"Object" NewObjectSnippets'formatObject-6 [#_"KlassPointer" hub, #_"int" size, #_"Word" memory, #_"Word" compileTimePrototypeMarkWord, #_"boolean" fillContents, #_"boolean" constantSize]
         (let [
-            #_"Word" prototypeMarkWord (if HotSpot'useBiasedLocking (Word''readWord-3i hub, HotSpot'prototypeMarkWordOffset, ReplacementsUtil'PROTOTYPE_MARK_WORD_LOCATION) compileTimePrototypeMarkWord)
+            #_"Word" prototypeMarkWord (if HotSpot'useBiasedLocking (Word''readWord-3i hub, HotSpot'prototypeMarkWordOffset, NamedLocationIdentity'PROTOTYPE_MARK_WORD) compileTimePrototypeMarkWord)
         ]
-            (ReplacementsUtil'initializeObjectHeader-3 memory, prototypeMarkWord, hub)
+            (NewObjectSnippets'initializeObjectHeader-3 memory, prototypeMarkWord, hub)
             (when fillContents
-                (NewObjectSnippets'zeroMemory-5 size, memory, constantSize, (ReplacementsUtil'instanceHeaderSize-0), false)
+                (NewObjectSnippets'zeroMemory-5 size, memory, constantSize, (NewObjectSnippets'instanceHeaderSize-0), false)
             )
-            (MembarNode'memoryBarrier-2 MemoryBarriers/STORE_STORE, (LocationIdentity/init))
+            (MembarNode'memoryBarrier-2 MemoryBarriers/STORE_STORE, LocationIdentity'INIT)
             (Word''toObjectNonNull-1 memory)
         )
     )
 
-    (defn- #_"Object" NewObjectSnippets'allocateInstanceHelper-4 [#_"int" size, #_"KlassPointer" hub, #_"Word" prototypeMarkWord, #_"Register" threadRegister]
+    (§ snippet! #_"Object" #_"NewObjectSnippets" "allocateInstance" [#_"int" size, #_"KlassPointer" hub, #_"Word" prototypeMarkWord]
         (let [
-            #_"Word" thread (ReplacementsUtil'registerAsWord-1 threadRegister)
-            #_"Word" top (ReplacementsUtil'readTlabTop-1 thread)
-            #_"Word" end (ReplacementsUtil'readTlabEnd-1 thread)
-            #_"Word" newTop (Word''add-2i top, size)
+            #_"Object" object
+                (let [
+                    #_"Word" thread (ReplacementsUtil'registerAsWord-1 HotSpot'threadRegister)
+                    #_"Word" top (ReplacementsUtil'readTlabTop-1 thread)
+                    #_"Word" end (ReplacementsUtil'readTlabEnd-1 thread)
+                    #_"Word" newTop (Word''add-2i top, size)
+                ]
+                    (if (and HotSpot'useTLAB (Word''belowOrEqual-2w newTop, end))
+                        (do
+                            (ReplacementsUtil'writeTlabTop-2 thread, newTop)
+                            (NewObjectSnippets'emitPrefetchAllocate-2 newTop, false)
+                            (NewObjectSnippets'formatObject-6 hub, size, top, prototypeMarkWord, true, true)
+                        )
+                        (do
+                            (StubForeignCallNode'newInstanceC-3 ForeignCallDescriptor'NEW_INSTANCE, thread, hub)
+                            (when (some? (ReplacementsUtil'clearPendingException-1 thread))
+                                (ReplacementsUtil'getAndClearObjectResult-1 thread)
+                                (DeoptimizeCallerNode'deopt-2 DeoptimizationAction/None, DeoptimizationReason/RuntimeConstraint)
+                            )
+                            (ReplacementsUtil'getAndClearObjectResult-1 thread)
+                        )
+                    )
+                )
         ]
-            (when (and HotSpot'useTLAB (Word''belowOrEqual-2w newTop, end)) => (ForeignCallNode'newInstance-2 ForeignCallDescriptor'NEW_INSTANCE, hub)
-                (ReplacementsUtil'writeTlabTop-2 thread, newTop)
-                (NewObjectSnippets'emitPrefetchAllocate-2 newTop, false)
-                (NewObjectSnippets'formatObject-6 hub, size, top, prototypeMarkWord, true, true)
-            )
+            (Placeholder'piCastToSnippetReplaceeStamp-1 object)
         )
     )
 
-    (§ snippet! #_"Object" #_"NewObjectSnippets" "allocateInstance" [#_"int" size, #_"KlassPointer" hub, #_"Word" prototypeMarkWord, #_"Register" threadRegister]
-        (Placeholder'piCastToSnippetReplaceeStamp-1 (NewObjectSnippets'allocateInstanceHelper-4 size, hub, prototypeMarkWord, threadRegister))
+    ;;;
+     ; Computes the size of the memory chunk allocated for an array. This size accounts for the array header size,
+     ; body size and any padding after the last element to satisfy object alignment requirements.
+     ;
+     ; @param length the number of elements in the array
+     ; @param headerSize the size of the array header
+     ; @param log2ElementSize log2 of the size of an element in the array
+     ;
+     ; @return the size of the memory chunk
+     ;;
+    (defn- #_"int" NewObjectSnippets'arrayAllocationSize-3 [#_"int" length, #_"int" headerSize, #_"int" log2ElementSize]
+        (let [
+            #_"int" alignment HotSpot'objectAlignment
+            #_"int" size (+ (<< length log2ElementSize) headerSize (dec alignment))
+            #_"int" mask (bit-not (dec alignment))
+        ]
+            (& size mask)
+        )
     )
 
     ;;;
      ; Formats some allocated memory with an object header and zeroes out the rest.
      ;;
     (defn- #_"Object" NewObjectSnippets'formatArray-8 [#_"KlassPointer" hub, #_"int" allocationSize, #_"int" length, #_"int" headerSize, #_"Word" memory, #_"Word" prototypeMarkWord, #_"boolean" fillContents, #_"boolean" maybeUnroll]
-        (Word''writeInt-4i memory, HotSpot'arrayLengthOffset, length, (LocationIdentity/init))
+        (Word''writeInt-4i memory, HotSpot'arrayLengthOffset, length, LocationIdentity'INIT)
         ;; store hub last as the concurrent garbage collectors assume length is valid if hub field is not nil
-        (ReplacementsUtil'initializeObjectHeader-3 memory, prototypeMarkWord, hub)
+        (NewObjectSnippets'initializeObjectHeader-3 memory, prototypeMarkWord, hub)
         (when fillContents
             (NewObjectSnippets'zeroMemory-5 allocationSize, memory, false, headerSize, maybeUnroll)
         )
-        (MembarNode'memoryBarrier-2 MemoryBarriers/STORE_STORE, (LocationIdentity/init))
+        (MembarNode'memoryBarrier-2 MemoryBarriers/STORE_STORE, LocationIdentity'INIT)
         (Word''toObjectNonNull-1 memory)
     )
 
@@ -9060,27 +8974,35 @@ ZeroExtendNode'new-4
      ;;
     (def- #_"int" NewObjectSnippets'MAX_ARRAY_FAST_PATH_ALLOCATION_LENGTH 0x00ffffff)
 
-    (defn- #_"Object" NewObjectSnippets'allocateArrayImpl-7 [#_"KlassPointer" hub, #_"int" length, #_"Word" prototypeMarkWord, #_"int" headerSize, #_"int" log2ElementSize, #_"Register" threadRegister, #_"boolean" maybeUnroll]
+    (§ snippet! #_"Object" #_"NewObjectSnippets" "allocateArray" [#_"KlassPointer" hub, #_"int" length, #_"Word" prototypeMarkWord, #_"int" headerSize, #_"int" log2ElementSize, #_"boolean" maybeUnroll]
         (let [
-            #_"int" allocationSize (ReplacementsUtil'arrayAllocationSize-3 length, headerSize, log2ElementSize)
-            #_"Word" thread (ReplacementsUtil'registerAsWord-1 threadRegister)
-            #_"Word" top (ReplacementsUtil'readTlabTop-1 thread)
-            #_"Word" end (ReplacementsUtil'readTlabEnd-1 thread)
-            #_"Word" newTop (Word''add-2i top, allocationSize)
-        ]
-            (if (and (UnsignedMath'belowThan-2i length, NewObjectSnippets'MAX_ARRAY_FAST_PATH_ALLOCATION_LENGTH) HotSpot'useTLAB (Word''belowOrEqual-2w newTop, end))
-                (do
-                    (ReplacementsUtil'writeTlabTop-2 thread, newTop)
-                    (NewObjectSnippets'emitPrefetchAllocate-2 newTop, true)
-                    (NewObjectSnippets'formatArray-8 hub, allocationSize, length, headerSize, top, prototypeMarkWord, true, maybeUnroll)
+            #_"Object" object
+                (let [
+                    #_"int" allocationSize (NewObjectSnippets'arrayAllocationSize-3 length, headerSize, log2ElementSize)
+                    #_"Word" thread (ReplacementsUtil'registerAsWord-1 HotSpot'threadRegister)
+                    #_"Word" top (ReplacementsUtil'readTlabTop-1 thread)
+                    #_"Word" end (ReplacementsUtil'readTlabEnd-1 thread)
+                    #_"Word" newTop (Word''add-2i top, allocationSize)
+                ]
+                    (if (and HotSpot'useTLAB (Word''belowOrEqual-2w newTop, end) (UnsignedMath'belowThan-2i length, NewObjectSnippets'MAX_ARRAY_FAST_PATH_ALLOCATION_LENGTH))
+                        (do
+                            (ReplacementsUtil'writeTlabTop-2 thread, newTop)
+                            (NewObjectSnippets'emitPrefetchAllocate-2 newTop, true)
+                            (NewObjectSnippets'formatArray-8 hub, allocationSize, length, headerSize, top, prototypeMarkWord, true, maybeUnroll)
+                        )
+                        (do
+                            (StubForeignCallNode'newArrayC-4 ForeignCallDescriptor'NEW_ARRAY, thread, hub, length)
+                            (when (some? (ReplacementsUtil'clearPendingException-1 thread))
+                                (ReplacementsUtil'getAndClearObjectResult-1 thread)
+                                (DeoptimizeCallerNode'deopt-2 DeoptimizationAction/None, DeoptimizationReason/RuntimeConstraint)
+                            )
+                            (ReplacementsUtil'getAndClearObjectResult-1 thread)
+                        )
+                    )
                 )
-                (ForeignCallNode'newArray-4 ForeignCallDescriptor'NEW_ARRAY, hub, length, true)
-            )
+        ]
+            (ArrayPlaceholder'piArrayCastToSnippetReplaceeStamp-2 object, length)
         )
-    )
-
-    (§ snippet! #_"Object" #_"NewObjectSnippets" "allocateArray" [#_"KlassPointer" hub, #_"int" length, #_"Word" prototypeMarkWord, #_"int" headerSize, #_"int" log2ElementSize, #_"Register" threadRegister, #_"boolean" maybeUnroll]
-        (ArrayPlaceholder'piArrayCastToSnippetReplaceeStamp-2 (NewObjectSnippets'allocateArrayImpl-7 hub, length, prototypeMarkWord, headerSize, log2ElementSize, threadRegister, maybeUnroll), length)
     )
 )
 
@@ -9089,7 +9011,7 @@ ZeroExtendNode'new-4
  ;;
 (value-ns TypeCheckSnippetUtils
     (defn- #_"KlassPointer" TypeCheckSnippetUtils'loadSecondarySupersElement-2 [#_"Word" metaspaceArray, #_"int" index]
-        (Word'klassPointerFromWord-1 (Word''readWord-3i metaspaceArray, (+ HotSpot'metaspaceArrayBaseOffset (* index (.wordSize HotSpot'target))), ReplacementsUtil'SECONDARY_SUPERS_ELEMENT_LOCATION))
+        (Word'klassPointerFromWord-1 (Word''readWord-3i metaspaceArray, (+ HotSpot'metaspaceArrayBaseOffset (* index (.wordSize HotSpot'target))), NamedLocationIdentity'SECONDARY_SUPERS_ELEMENT))
     )
 
     (defn- #_"boolean" TypeCheckSnippetUtils'checkSelfAndSupers-2 [#_"KlassPointer" t, #_"KlassPointer" s]
@@ -9097,12 +9019,12 @@ ZeroExtendNode'new-4
         (or (Word''klassPointersEqual-2 s, t)
             ;; if (S.scan_s_s_array(T)) { S.cache = T; return true; }
             (let [
-                #_"Word" secondarySupers (Word''readWord-3i s, HotSpot'secondarySupersOffset, ReplacementsUtil'SECONDARY_SUPERS_LOCATION)
-                #_"int" n (Word''readInt-3i secondarySupers, HotSpot'metaspaceArrayLengthOffset, ReplacementsUtil'METASPACE_ARRAY_LENGTH_LOCATION)
+                #_"Word" secondarySupers (Word''readWord-3i s, HotSpot'secondarySupersOffset, NamedLocationIdentity'SECONDARY_SUPERS)
+                #_"int" n (Word''readInt-3i secondarySupers, HotSpot'metaspaceArrayLengthOffset, NamedLocationIdentity'METASPACE_ARRAY_LENGTH)
             ]
                 (loop-when [#_"int" i 0] (< i n) => false
                     (when (Word''klassPointersEqual-2 t, (TypeCheckSnippetUtils'loadSecondarySupersElement-2 secondarySupers, i)) => (recur (inc i))
-                        (Word''writeKlassPointer-4 s, HotSpot'secondarySuperCacheOffset, t, ReplacementsUtil'SECONDARY_SUPER_CACHE_LOCATION)
+                        (Word''writeKlassPointer-4 s, HotSpot'secondarySuperCacheOffset, t, NamedLocationIdentity'SECONDARY_SUPER_CACHE)
                         true
                     )
                 )
@@ -9112,7 +9034,7 @@ ZeroExtendNode'new-4
 
     (defn #_"boolean" TypeCheckSnippetUtils'checkSecondarySubType-2 [#_"KlassPointer" t, #_"KlassPointer" sNonNull]
         ;; if (S.cache == T) return true
-        (or (Word''klassPointersEqual-2 (Word''readKlassPointer-3 sNonNull, HotSpot'secondarySuperCacheOffset, ReplacementsUtil'SECONDARY_SUPER_CACHE_LOCATION), t)
+        (or (Word''klassPointersEqual-2 (Word''readKlassPointer-3 sNonNull, HotSpot'secondarySuperCacheOffset, NamedLocationIdentity'SECONDARY_SUPER_CACHE), t)
             (TypeCheckSnippetUtils'checkSelfAndSupers-2 t, sNonNull)
         )
     )
@@ -9120,10 +9042,10 @@ ZeroExtendNode'new-4
     (defn #_"boolean" TypeCheckSnippetUtils'checkUnknownSubType-2 [#_"KlassPointer" t, #_"KlassPointer" sNonNull]
         ;; int off = T.offset
         (let [
-            #_"int" superCheckOffset (Word''readInt-3i t, HotSpot'superCheckOffsetOffset, ReplacementsUtil'KLASS_SUPER_CHECK_OFFSET_LOCATION)
+            #_"int" superCheckOffset (Word''readInt-3i t, HotSpot'superCheckOffsetOffset, NamedLocationIdentity'KLASS_SUPER_CHECK_OFFSET)
         ]
             ;; if (T = S[off]) return true
-            (or (Word''klassPointersEqual-2 (Word''readKlassPointer-3 sNonNull, superCheckOffset, ReplacementsUtil'PRIMARY_SUPERS_LOCATION), t)
+            (or (Word''klassPointersEqual-2 (Word''readKlassPointer-3 sNonNull, superCheckOffset, NamedLocationIdentity'PRIMARY_SUPERS), t)
                 ;; if (off != &cache) return false
                 (and (= superCheckOffset HotSpot'secondarySuperCacheOffset)
                     (TypeCheckSnippetUtils'checkSelfAndSupers-2 t, sNonNull)
@@ -9140,18 +9062,14 @@ ZeroExtendNode'new-4
 )
 
 (value-ns WriteBarrierSnippets (§ implements Snippets)
-    (§ def #_"LocationIdentity" WriteBarrierSnippets'GC_CARD_LOCATION (NamedLocationIdentity'mutable-1 "GC-Card"))
-    (§ def #_"LocationIdentity" WriteBarrierSnippets'GC_LOG_LOCATION (NamedLocationIdentity'mutable-1 "GC-Log"))
-    (§ def #_"LocationIdentity" WriteBarrierSnippets'GC_INDEX_LOCATION (NamedLocationIdentity'mutable-1 "GC-Index"))
-
     (defn- #_"void" WriteBarrierSnippets'serialWriteBarrier-1 [#_"Word" ptr]
         (let [
             #_"long" startAddress (VMConfigNode'cardTableAddress-0)
             #_"Word" base (Word''unsignedShiftRight-2i ptr, HotSpot'cardTableShift)
         ]
             (if (and (= (int startAddress) startAddress) (VMConfigNode'isCardTableAddressConstant-0))
-                (Word''writeByte-4i base, (int startAddress), (byte 0), WriteBarrierSnippets'GC_CARD_LOCATION)
-                (Word''writeByte-4w base, (WordFactory'unsigned-1l startAddress), (byte 0), WriteBarrierSnippets'GC_CARD_LOCATION)
+                (Word''writeByte-4i base, (int startAddress), (byte 0), NamedLocationIdentity'GC_CARD)
+                (Word''writeByte-4w base, (WordFactory'unsigned-1l startAddress), (byte 0), NamedLocationIdentity'GC_CARD)
             )
         )
         nil
@@ -9167,12 +9085,12 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (§ snippet! #_"void" #_"WriteBarrierSnippets" "g1PreWriteBarrier" [#_"Address" address, #_"Object" object, #_"Object" expectedObject, #_"boolean" doLoad, #_"boolean" nullCheck, #_"Register" threadRegister]
+    (§ snippet! #_"void" #_"WriteBarrierSnippets" "g1PreWriteBarrier" [#_"Address" address, #_"Object" object, #_"Object" expectedObject, #_"boolean" doLoad, #_"boolean" nullCheck]
         (when nullCheck
             (NullCheckNode'nullCheck-1 address)
         )
         (let [
-            #_"Word" thread (ReplacementsUtil'registerAsWord-1 threadRegister)
+            #_"Word" thread (ReplacementsUtil'registerAsWord-1 HotSpot'threadRegister)
             #_"Object" fixedExpectedObject (FixedValueAnchorNode'getObject-1 expectedObject)
             #_"Word" field (Word'fromAddress-1 address)
             #_"Word" previousOop (Word'objectToTrackedPointer-1 fixedExpectedObject)
@@ -9200,8 +9118,8 @@ ZeroExtendNode'new-4
                                 #_"Word" logAddress (Word''add-2w bufferAddress, nextIndex)
                             ]
                                 ;; Log the object to be marked as well as update the SATB's buffer next index.
-                                (Word''writeWord-4i logAddress, 0, previousOop, WriteBarrierSnippets'GC_LOG_LOCATION)
-                                (Word''writeWord-4i indexAddress, 0, nextIndex, WriteBarrierSnippets'GC_INDEX_LOCATION)
+                                (Word''writeWord-4i logAddress, 0, previousOop, NamedLocationIdentity'GC_LOG)
+                                (Word''writeWord-4i indexAddress, 0, nextIndex, NamedLocationIdentity'GC_INDEX)
                             )
                             (ForeignCallNode'g1PreBarrierStub-2 ForeignCallDescriptor'G1WBPRECALL, (Word''toObject-1 previousOop))
                         )
@@ -9212,11 +9130,11 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (§ snippet! #_"void" #_"WriteBarrierSnippets" "g1PostWriteBarrier" [#_"Address" address, #_"Object" object, #_"Object" value, #_"boolean" usePrecise, #_"Register" threadRegister]
+    (§ snippet! #_"void" #_"WriteBarrierSnippets" "g1PostWriteBarrier" [#_"Address" address, #_"Object" object, #_"Object" value, #_"boolean" precise?]
         (let [
-            #_"Word" thread (ReplacementsUtil'registerAsWord-1 threadRegister)
+            #_"Word" thread (ReplacementsUtil'registerAsWord-1 HotSpot'threadRegister)
             #_"Object" fixedValue (FixedValueAnchorNode'getObject-1 value)
-            #_"Word" oop (if usePrecise (Word'fromAddress-1 address) (Word'objectToTrackedPointer-1 object))
+            #_"Word" oop (if precise? (Word'fromAddress-1 address) (Word'objectToTrackedPointer-1 object))
             #_"int" gcCycle 0
             #_"Word" writtenValue (Word'objectToTrackedPointer-1 fixedValue)
             ;; The result of the xor reveals whether the installed pointer crosses heap regions.
@@ -9238,16 +9156,16 @@ ZeroExtendNode'new-4
                     ;; If the written value is not nil, continue with the barrier addition.
                     (when (Word''notEqual-2i writtenValue, 0)
                         (let [
-                            #_"byte" cardByte (Word''readByte-3i cardAddress, 0, WriteBarrierSnippets'GC_CARD_LOCATION)
+                            #_"byte" cardByte (Word''readByte-3i cardAddress, 0, NamedLocationIdentity'GC_CARD)
                         ]
                             ;; If the card is already dirty, (hence already enqueued) skip the insertion.
                             (when (not= cardByte HotSpot'g1YoungCardValue)
-                                (MembarNode'memoryBarrier-2 MemoryBarriers/STORE_LOAD, WriteBarrierSnippets'GC_CARD_LOCATION)
+                                (MembarNode'memoryBarrier-2 MemoryBarriers/STORE_LOAD, NamedLocationIdentity'GC_CARD)
                                 (let [
-                                    #_"byte" cardByteReload (Word''readByte-3i cardAddress, 0, WriteBarrierSnippets'GC_CARD_LOCATION)
+                                    #_"byte" cardByteReload (Word''readByte-3i cardAddress, 0, NamedLocationIdentity'GC_CARD)
                                 ]
                                     (when (not= cardByteReload HotSpot'dirtyCardValue)
-                                        (Word''writeByte-4i cardAddress, 0, (byte 0), WriteBarrierSnippets'GC_CARD_LOCATION)
+                                        (Word''writeByte-4i cardAddress, 0, (byte 0), NamedLocationIdentity'GC_CARD)
 
                                         ;; If the thread-local card queue is full, issue a native call, which will initialize a new one and add the card entry.
                                         (let [
@@ -9261,8 +9179,8 @@ ZeroExtendNode'new-4
                                                     #_"Word" logAddress (Word''add-2w bufferAddress, nextIndex)
                                                 ]
                                                     ;; Log the object to be scanned as well as update the card queue's next index.
-                                                    (Word''writeWord-4i logAddress, 0, cardAddress, WriteBarrierSnippets'GC_LOG_LOCATION)
-                                                    (Word''writeWord-4i indexAddress, 0, nextIndex, WriteBarrierSnippets'GC_INDEX_LOCATION)
+                                                    (Word''writeWord-4i logAddress, 0, cardAddress, NamedLocationIdentity'GC_LOG)
+                                                    (Word''writeWord-4i indexAddress, 0, nextIndex, NamedLocationIdentity'GC_INDEX)
                                                 )
                                                 (ForeignCallNode'g1PostBarrierStub-2 ForeignCallDescriptor'G1WBPOSTCALL, cardAddress)
                                             )
@@ -11498,12 +11416,12 @@ ZeroExtendNode'new-4
                 #_"ArrayList<Node>" nodes (ArrayList.)
                 #_"ArrayList<ReturnNode>" returnNodes (ArrayList.)
                 #_"ArrayList<InvokeNode>" partialIntrinsicExits (ArrayList.)
-                #_"StartNode" entryPointNode (:start inlineGraph)
-                #_"FixedNode" firstCFGNode (:next entryPointNode)
+                #_"StartNode" start (:start inlineGraph)
+                #_"FixedNode" firstCFGNode (:next start)
             ]
                 (when (some? firstCFGNode) => (throw (IllegalStateException. (str "Inlined graph is in invalid state: " inlineGraph)))
                     (doseq [#_"Node" node (Graph''getNodes-1 inlineGraph)]
-                        (when-not (or (= node entryPointNode) (and (= node (:stateAfter entryPointNode)) (Node''hasExactlyOneUsage-1 node)) (satisfies? ParameterNode node))
+                        (when-not (or (= node start) (and (= node (:stateAfter start)) (Node''hasExactlyOneUsage-1 node)) (satisfies? ParameterNode node))
                             (#_"ArrayList" .add nodes, node)
                             (condp satisfies? node
                                 ReturnNode
@@ -11524,7 +11442,7 @@ ZeroExtendNode'new-4
                                 (#_"Node" DuplicationReplacement'''replacement-2 [#_"DuplicationReplacement" this, #_"Node" original]
                                     (cond
                                         (satisfies? ParameterNode original) (nth parameters (AbstractLocalNode''index-1 original))
-                                        (= original entryPointNode)         prevBegin
+                                        (= original start)                  prevBegin
                                         :else                               original
                                     )
                                 )
@@ -12390,7 +12308,7 @@ ZeroExtendNode'new-4
             #_"Graph" graph (:graph array)
             #_"ValueNode" canonicalArray (Lowerer'createNullCheckedValue-3 (GraphUtil'skipPiWhileNonNull-1 array), before, lowerer)
             #_"AddressNode" address (Lowerer'createOffsetAddress-3 graph, canonicalArray, HotSpot'arrayLengthOffset)
-            #_"ReadNode" readArrayLength (Graph''add-2 graph, (ReadNode'new-4 address, NamedLocationIdentity'ARRAY_LENGTH_LOCATION, StampFactory'nonNegativeInt, BarrierType'NONE))
+            #_"ReadNode" readArrayLength (Graph''add-2 graph, (ReadNode'new-4 address, NamedLocationIdentity'ARRAY_LENGTH, StampFactory'nonNegativeInt, BarrierType'NONE))
         ]
             (Graph''addBeforeFixed-3 graph, before, readArrayLength)
             readArrayLength
@@ -12505,7 +12423,7 @@ ZeroExtendNode'new-4
                 #_"KlassPointerStamp" hubStamp KlassPointerStamp'KLASS_NON_NULL
                 hubStamp (if HotSpot'useCompressedClassPointers (KlassPointerStamp''compressed-2 hubStamp, HotSpot'klassEncoding) hubStamp)
                 #_"AddressNode" address (Lowerer'createOffsetAddress-3 graph, object, HotSpot'hubOffset)
-                #_"LocationIdentity" hubLocation (if HotSpot'useCompressedClassPointers ReplacementsUtil'COMPRESSED_HUB_LOCATION ReplacementsUtil'HUB_LOCATION)
+                #_"LocationIdentity" hubLocation (if HotSpot'useCompressedClassPointers NamedLocationIdentity'COMPRESSED_HUB NamedLocationIdentity'HUB)
                 #_"FloatingReadNode" memoryRead (Graph''add-2 graph, (FloatingReadNode'new-6 address, hubLocation, nil, hubStamp, nil, BarrierType'NONE))
             ]
                 (if HotSpot'useCompressedClassPointers (HotSpotCompressionNode'uncompress-2 memoryRead, HotSpot'klassEncoding) memoryRead)
@@ -12519,7 +12437,7 @@ ZeroExtendNode'new-4
         (let [
             #_"AddressNode" address (Lowerer'createOffsetAddress-3 graph, arrayHub, HotSpot'arrayClassElementOffset)
         ]
-            (Graph''add-2 graph, (FloatingReadNode'new-5 address, ReplacementsUtil'OBJ_ARRAY_KLASS_ELEMENT_KLASS_LOCATION, nil, KlassPointerStamp'KLASS_NON_NULL, (AbstractBeginNode'prevBegin-1 anchor)))
+            (Graph''add-2 graph, (FloatingReadNode'new-5 address, NamedLocationIdentity'OBJ_ARRAY_KLASS_ELEMENT_KLASS, nil, KlassPointerStamp'KLASS_NON_NULL, (AbstractBeginNode'prevBegin-1 anchor)))
         )
     )
 
@@ -13454,7 +13372,7 @@ ZeroExtendNode'new-4
         (AbstractTemplates'class.)
     )
 
-    (defn #_"Method" AbstractTemplates'findMethod-3 [#_"Class<? extends Snippets>" declaringClass, #_"String" methodName]
+    (defn- #_"Method" AbstractTemplates'findMethod-3 [#_"Class<? extends Snippets>" declaringClass, #_"String" methodName]
         (loop-when [#_"ISeq" s (seq (#_"Class" .getDeclaredMethods declaringClass))] (some? s)
             (let [
                 #_"Method" method (first s)
@@ -13469,7 +13387,7 @@ ZeroExtendNode'new-4
      ; and returns a SnippetInfo value describing it. There must be exactly one snippet method in
      ; {@code declaringClass}.
      ;;
-    (defn #_"SnippetInfo" AbstractTemplates''snippet-3* [#_"Class<? extends Snippets>" declaringClass, #_"String" methodName & #_"LocationIdentity..." privateLocations]
+    (defn #_"SnippetInfo" AbstractTemplates'snippet-3* [#_"Class<? extends Snippets>" declaringClass, #_"String" methodName & #_"LocationIdentity..." privateLocations]
         (let [
             #_"ResolvedJavaMethod" method (#_"MetaAccessProvider" .lookupJavaMethod HotSpot'metaAccess, (AbstractTemplates'findMethod-3 declaringClass, methodName))
         ]
@@ -13485,8 +13403,8 @@ ZeroExtendNode'new-4
             #_"EnumMap<JavaKind, SnippetInfo>" unboxSnippets (EnumMap. JavaKind)
             _
                 (doseq [#_"JavaKind" kind (list JavaKind/Boolean JavaKind/Byte JavaKind/Char JavaKind/Int JavaKind/Long JavaKind/Short)]
-                    (#_"EnumMap" .put boxSnippets,   kind, (AbstractTemplates''snippet-3* BoxingSnippets, (str (#_"JavaKind" .getJavaName kind) "ValueOf")))
-                    (#_"EnumMap" .put unboxSnippets, kind, (AbstractTemplates''snippet-3* BoxingSnippets, (str (#_"JavaKind" .getJavaName kind) "Value")))
+                    (#_"EnumMap" .put boxSnippets,   kind, (AbstractTemplates'snippet-3* BoxingSnippets, (str (#_"JavaKind" .getJavaName kind) "ValueOf")))
+                    (#_"EnumMap" .put unboxSnippets, kind, (AbstractTemplates'snippet-3* BoxingSnippets, (str (#_"JavaKind" .getJavaName kind) "Value")))
                 )
         ]
             (merge (BoxingTemplates'class.) (AbstractTemplates'new-0)
@@ -13507,11 +13425,11 @@ ZeroExtendNode'new-4
                 (§ ass! (:graph box) (Graph''replaceFixedWithFloating-3 (:graph box), box, canonical))
                 (let [
                     #_"Arguments" args
-                        (-> (Arguments'new-3 (get (:boxSnippets this) (:boxingKind box)), (:guardsStage (:graph box)), (:loweringStage (:phase lowerer)))
-                            (Arguments''add-2 (Unary'''getValue-1 box))
+                        (Arguments'new-4* (get (:boxSnippets this) (:boxingKind box)), (:guardsStage (:graph box)), (:loweringStage (:phase lowerer)),
+                            (Unary'''getValue-1 box)
                         )
                 ]
-                    (SnippetTemplate''instantiate-4x (SnippetTemplate'new-2 args, box), box, SnippetTemplate'DEFAULT_REPLACER, args)
+                    (SnippetTemplate''instantiate-3 (SnippetTemplate'new-2 args, box), box, args)
                 )
             )
         )
@@ -13521,11 +13439,11 @@ ZeroExtendNode'new-4
     (defn #_"void" BoxingTemplates''lower-3u [#_"BoxingTemplates" this, #_"UnboxNode" unbox, #_"LoweringTool" lowerer]
         (let [
             #_"Arguments" args
-                (-> (Arguments'new-3 (get (:unboxSnippets this) (:boxingKind unbox)), (:guardsStage (:graph unbox)), (:loweringStage (:phase lowerer)))
-                    (Arguments''add-2 (Unary'''getValue-1 unbox))
+                (Arguments'new-4* (get (:unboxSnippets this) (:boxingKind unbox)), (:guardsStage (:graph unbox)), (:loweringStage (:phase lowerer)),
+                    (Unary'''getValue-1 unbox)
                 )
         ]
-            (SnippetTemplate''instantiate-4x (SnippetTemplate'new-2 args, unbox), unbox, SnippetTemplate'DEFAULT_REPLACER, args)
+            (SnippetTemplate''instantiate-3 (SnippetTemplate'new-2 args, unbox), unbox, args)
         )
         nil
     )
@@ -13584,9 +13502,9 @@ ZeroExtendNode'new-4
                         ;; no need to re-instantiate the snippet - just re-use its result
                         (InstanceOfUsageReplacer'''replaceUsingInstantiation-1 replacer)
                         (let [
-                            #_"Arguments" args (InstanceOfSnippetsTemplates'''makeArguments-3 this, replacer, lowerer)
+                            #_"Arguments" args (InstanceOfSnippetsTemplates''makeArguments-3 this, replacer, lowerer)
                         ]
-                            (SnippetTemplate''instantiate-5y (SnippetTemplate'new-2 args, instanceOf), instanceOf, replacer, lowerer, args)
+                            (SnippetTemplate''instantiate-5 (SnippetTemplate'new-2 args, instanceOf), instanceOf, replacer, lowerer, args)
                         )
                     )
                 )
@@ -13603,68 +13521,69 @@ ZeroExtendNode'new-4
     (defn #_"InstanceOfTemplates" InstanceOfTemplates'new-0 []
         (merge (InstanceOfTemplates'class.) (InstanceOfSnippetsTemplates'new-0)
             (hash-map
-                #_"SnippetInfo" :instanceofExact (AbstractTemplates''snippet-3* InstanceOfSnippets, "instanceofExact")
-                #_"SnippetInfo" :instanceofPrimary (AbstractTemplates''snippet-3* InstanceOfSnippets, "instanceofPrimary")
-                #_"SnippetInfo" :instanceofSecondary (AbstractTemplates''snippet-3* InstanceOfSnippets, "instanceofSecondary", ReplacementsUtil'SECONDARY_SUPER_CACHE_LOCATION)
-                #_"SnippetInfo" :instanceofDynamic (AbstractTemplates''snippet-3* InstanceOfSnippets, "instanceofDynamic", ReplacementsUtil'SECONDARY_SUPER_CACHE_LOCATION)
+                #_"SnippetInfo" :instanceofExact (AbstractTemplates'snippet-3* InstanceOfSnippets, "instanceofExact")
+                #_"SnippetInfo" :instanceofPrimary (AbstractTemplates'snippet-3* InstanceOfSnippets, "instanceofPrimary")
+                #_"SnippetInfo" :instanceofSecondary (AbstractTemplates'snippet-3* InstanceOfSnippets, "instanceofSecondary", NamedLocationIdentity'SECONDARY_SUPER_CACHE)
+                #_"SnippetInfo" :instanceofDynamic (AbstractTemplates'snippet-3* InstanceOfSnippets, "instanceofDynamic", NamedLocationIdentity'SECONDARY_SUPER_CACHE)
             )
         )
     )
 
-    (defm InstanceOfTemplates InstanceOfSnippetsTemplates
-        (#_"Arguments" InstanceOfSnippetsTemplates'''makeArguments-3 [#_"InstanceOfTemplates" this, #_"InstanceOfUsageReplacer" replacer, #_"LoweringTool" lowerer]
-            (condp satisfies? (:instanceOf replacer)
-                InstanceOfNode
-                    (let [
-                        #_"InstanceOfNode" instanceOf (:instanceOf replacer)
-                        #_"ValueNode" object (Unary'''getValue-1 instanceOf)
-                        #_"TypeReference" targetType (InstanceOfNode''type-1 instanceOf)
-                        #_"HotSpotResolvedObjectType" type (:type targetType)
-                        ;; If non-nil, this is the only type that could pass the type check, because the target of the type check is a final
-                        ;; class or has been speculated to be a final class and this value is the only concrete subclass of the target type.
-                        #_"ResolvedJavaType" exact (when (and (some? targetType) (:exactReference targetType)) type)
-                        #_"ConstantNode" hub (ConstantNode'forConstant-3s KlassPointerStamp'KLASS_NON_NULL, (#_"HotSpotResolvedObjectType" .klass type), (:graph instanceOf))
-                        #_"Graph" graph (:graph instanceOf)
-                    ]
-                        (cond
-                            (some? exact)
-                                (-> (Arguments'new-3 (:instanceofExact this), (:guardsStage graph), (:loweringStage (:phase lowerer)))
-                                    (Arguments''add-2 object)
-                                    (Arguments''add-2 (ConstantNode'forConstant-3s KlassPointerStamp'KLASS_NON_NULL, (#_"HotSpotResolvedObjectType" .klass exact), graph))
-                                    (Arguments''add-2 (:trueValue replacer))
-                                    (Arguments''add-2 (:falseValue replacer))
-                                )
-                            (#_"HotSpotResolvedObjectType" .isPrimaryType type)
-                                (-> (Arguments'new-3 (:instanceofPrimary this), (:guardsStage graph), (:loweringStage (:phase lowerer)))
-                                    (Arguments''add-2 hub)
-                                    (Arguments''add-2 object)
-                                    (Arguments''add-2 (#_"HotSpotResolvedObjectType" .superCheckOffset type))
-                                    (Arguments''add-2 (:trueValue replacer))
-                                    (Arguments''add-2 (:falseValue replacer))
-                                )
-                            :else
-                                (-> (Arguments'new-3 (:instanceofSecondary this), (:guardsStage graph), (:loweringStage (:phase lowerer)))
-                                    (Arguments''add-2 hub)
-                                    (Arguments''add-2 object)
-                                    (Arguments''add-2 (:trueValue replacer))
-                                    (Arguments''add-2 (:falseValue replacer))
-                                )
-                        )
+    ;;;
+     ; Gets the arguments used to retrieve and instantiate an instanceof snippet template.
+     ;;
+    (defn #_"Arguments" InstanceOfSnippetsTemplates''makeArguments-3 [#_"InstanceOfTemplates" this, #_"InstanceOfUsageReplacer" replacer, #_"LoweringTool" lowerer]
+        (condp satisfies? (:instanceOf replacer)
+            InstanceOfNode
+                (let [
+                    #_"InstanceOfNode" instanceOf (:instanceOf replacer)
+                    #_"ValueNode" object (Unary'''getValue-1 instanceOf)
+                    #_"TypeReference" targetType (InstanceOfNode''type-1 instanceOf)
+                    #_"HotSpotResolvedObjectType" type (:type targetType)
+                    ;; If non-nil, this is the only type that could pass the type check, because the target of the type check is a final
+                    ;; class or has been speculated to be a final class and this value is the only concrete subclass of the target type.
+                    #_"ResolvedJavaType" exact (when (and (some? targetType) (:exactReference targetType)) type)
+                    #_"ConstantNode" hub (ConstantNode'forConstant-3s KlassPointerStamp'KLASS_NON_NULL, (#_"HotSpotResolvedObjectType" .klass type), (:graph instanceOf))
+                    #_"Graph" graph (:graph instanceOf)
+                ]
+                    (cond
+                        (some? exact)
+                            (Arguments'new-4* (:instanceofExact this), (:guardsStage graph), (:loweringStage (:phase lowerer)),
+                                object,
+                                (ConstantNode'forConstant-3s KlassPointerStamp'KLASS_NON_NULL, (#_"HotSpotResolvedObjectType" .klass exact), graph),
+                                (:trueValue replacer),
+                                (:falseValue replacer)
+                            )
+                        (#_"HotSpotResolvedObjectType" .isPrimaryType type)
+                            (Arguments'new-4* (:instanceofPrimary this), (:guardsStage graph), (:loweringStage (:phase lowerer)),
+                                hub,
+                                object,
+                                (#_"HotSpotResolvedObjectType" .superCheckOffset type),
+                                (:trueValue replacer),
+                                (:falseValue replacer)
+                            )
+                        :else
+                            (Arguments'new-4* (:instanceofSecondary this), (:guardsStage graph), (:loweringStage (:phase lowerer)),
+                                hub,
+                                object,
+                                (:trueValue replacer),
+                                (:falseValue replacer)
+                            )
                     )
-                InstanceOfDynamicNode
-                    (let [
-                        #_"InstanceOfDynamicNode" instanceOf (:instanceOf replacer)
-                        #_"ValueNode" object (:y instanceOf)
-                    ]
-                        (-> (Arguments'new-3 (:instanceofDynamic this), (:guardsStage (:graph instanceOf)), (:loweringStage (:phase lowerer)))
-                            (Arguments''add-2 (:x instanceOf))
-                            (Arguments''add-2 object)
-                            (Arguments''add-2 (:trueValue replacer))
-                            (Arguments''add-2 (:falseValue replacer))
-                            (Arguments''add-2 (:allow-nil? instanceOf))
-                        )
+                )
+            InstanceOfDynamicNode
+                (let [
+                    #_"InstanceOfDynamicNode" instanceOf (:instanceOf replacer)
+                    #_"ValueNode" object (:y instanceOf)
+                ]
+                    (Arguments'new-4* (:instanceofDynamic this), (:guardsStage (:graph instanceOf)), (:loweringStage (:phase lowerer)),
+                        (:x instanceOf),
+                        object,
+                        (:trueValue replacer),
+                        (:falseValue replacer),
+                        (:allow-nil? instanceOf)
                     )
-            )
+                )
         )
     )
 )
@@ -13673,10 +13592,10 @@ ZeroExtendNode'new-4
     (defn #_"MonitorTemplates" MonitorTemplates'new-1 [#_"boolean" useFastLocking]
         (merge (MonitorTemplates'class.) (AbstractTemplates'new-0)
             (hash-map
-                #_"SnippetInfo" :monitorenter (AbstractTemplates''snippet-3* MonitorSnippets, "monitorenter")
-                #_"SnippetInfo" :monitorexit (AbstractTemplates''snippet-3* MonitorSnippets, "monitorexit")
-                #_"SnippetInfo" :monitorenterStub (AbstractTemplates''snippet-3* MonitorSnippets, "monitorenterStub")
-                #_"SnippetInfo" :monitorexitStub (AbstractTemplates''snippet-3* MonitorSnippets, "monitorexitStub")
+                #_"SnippetInfo" :monitorenter (AbstractTemplates'snippet-3* MonitorSnippets, "monitorenter")
+                #_"SnippetInfo" :monitorexit (AbstractTemplates'snippet-3* MonitorSnippets, "monitorexit")
+                #_"SnippetInfo" :monitorenterStub (AbstractTemplates'snippet-3* MonitorSnippets, "monitorenterStub")
+                #_"SnippetInfo" :monitorexitStub (AbstractTemplates'snippet-3* MonitorSnippets, "monitorexitStub")
                 #_"boolean" :useFastLocking useFastLocking
             )
         )
@@ -13686,20 +13605,18 @@ ZeroExtendNode'new-4
         (let [
             #_"Arguments" args
                 (if (:useFastLocking this)
-                    (-> (Arguments'new-3 (:monitorenter this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)))
-                        (Arguments''add-2 (:object node))
-                        (Arguments''add-2 (:hub node))
-                        (Arguments''add-2 (:lockDepth (:monitorId node)))
-                        (Arguments''add-2 HotSpot'threadRegister)
-                        (Arguments''add-2 HotSpot'stackPointerRegister)
+                    (Arguments'new-4* (:monitorenter this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)),
+                        (:object node),
+                        (:hub node),
+                        (:lockDepth (:monitorId node))
                     )
-                    (-> (Arguments'new-3 (:monitorenterStub this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)))
-                        (Arguments''add-2 (:object node))
-                        (Arguments''add-2 (:lockDepth (:monitorId node)))
+                    (Arguments'new-4* (:monitorenterStub this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)),
+                        (:object node),
+                        (:lockDepth (:monitorId node))
                     )
                 )
         ]
-            (SnippetTemplate''instantiate-4x (SnippetTemplate'new-2 args, node), node, SnippetTemplate'DEFAULT_REPLACER, args)
+            (SnippetTemplate''instantiate-3 (SnippetTemplate'new-2 args, node), node, args)
         )
         nil
     )
@@ -13707,13 +13624,12 @@ ZeroExtendNode'new-4
     (defn #_"void" MonitorTemplates''lower-3o [#_"MonitorTemplates" this, #_"MonitorExitNode" node, #_"LoweringTool" lowerer]
         (let [
             #_"Arguments" args
-                (-> (Arguments'new-3 (if (:useFastLocking this) (:monitorexit this) (:monitorexitStub this)), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)))
-                    (Arguments''add-2 (:object node))
-                    (Arguments''add-2 (:lockDepth (:monitorId node)))
-                    (Arguments''add-2 HotSpot'threadRegister)
+                (Arguments'new-4* (if (:useFastLocking this) (:monitorexit this) (:monitorexitStub this)), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)),
+                    (:object node),
+                    (:lockDepth (:monitorId node))
                 )
         ]
-            (SnippetTemplate''instantiate-4x (SnippetTemplate'new-2 args, node), node, SnippetTemplate'DEFAULT_REPLACER, args)
+            (SnippetTemplate''instantiate-3 (SnippetTemplate'new-2 args, node), node, args)
         )
         nil
     )
@@ -13723,8 +13639,8 @@ ZeroExtendNode'new-4
     (defn #_"NewObjectTemplates" NewObjectTemplates'new-0 []
         (merge (NewObjectTemplates'class.) (AbstractTemplates'new-0)
             (hash-map
-                #_"SnippetInfo" :allocateInstance (AbstractTemplates''snippet-3* NewObjectSnippets, "allocateInstance", ReplacementsUtil'MARK_WORD_LOCATION, ReplacementsUtil'HUB_WRITE_LOCATION, ReplacementsUtil'TLAB_TOP_LOCATION, ReplacementsUtil'TLAB_END_LOCATION)
-                #_"SnippetInfo" :allocateArray (AbstractTemplates''snippet-3* NewObjectSnippets, "allocateArray", ReplacementsUtil'MARK_WORD_LOCATION, ReplacementsUtil'HUB_WRITE_LOCATION, ReplacementsUtil'TLAB_TOP_LOCATION, ReplacementsUtil'TLAB_END_LOCATION)
+                #_"SnippetInfo" :allocateInstance (AbstractTemplates'snippet-3* NewObjectSnippets, "allocateInstance", NamedLocationIdentity'MARK_WORD, NamedLocationIdentity'HUB_WRITE, NamedLocationIdentity'TLAB_TOP, NamedLocationIdentity'TLAB_END)
+                #_"SnippetInfo" :allocateArray (AbstractTemplates'snippet-3* NewObjectSnippets, "allocateArray", NamedLocationIdentity'MARK_WORD, NamedLocationIdentity'HUB_WRITE, NamedLocationIdentity'TLAB_TOP, NamedLocationIdentity'TLAB_END)
             )
         )
     )
@@ -13733,14 +13649,13 @@ ZeroExtendNode'new-4
         (let [
             #_"HotSpotResolvedObjectType" type (:instanceClass node)
             #_"Arguments" args
-                (-> (Arguments'new-3 (:allocateInstance this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)))
-                    (Arguments''add-2 (#_"HotSpotResolvedObjectType" .instanceSize type))
-                    (Arguments''add-2 (ConstantNode'forConstant-3s KlassPointerStamp'KLASS_NON_NULL, (#_"HotSpotResolvedObjectType" .klass type), (:graph node)))
-                    (Arguments''add-2 (#_"HotSpotResolvedObjectType" .prototypeMarkWord type))
-                    (Arguments''add-2 HotSpot'threadRegister)
+                (Arguments'new-4* (:allocateInstance this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)),
+                    (#_"HotSpotResolvedObjectType" .instanceSize type),
+                    (ConstantNode'forConstant-3s KlassPointerStamp'KLASS_NON_NULL, (#_"HotSpotResolvedObjectType" .klass type), (:graph node)),
+                    (#_"HotSpotResolvedObjectType" .prototypeMarkWord type)
                 )
         ]
-            (SnippetTemplate''instantiate-4x (SnippetTemplate'new-2 args, node), node, SnippetTemplate'DEFAULT_REPLACER, args)
+            (SnippetTemplate''instantiate-3 (SnippetTemplate'new-2 args, node), node, args)
         )
         nil
     )
@@ -13751,17 +13666,16 @@ ZeroExtendNode'new-4
             #_"JavaKind" elementKind (#_"ResolvedJavaType" .getJavaKind (:elementType node))
             #_"ValueNode" length (ArrayLengthProvider'''length-1 node)
             #_"Arguments" args
-                (-> (Arguments'new-3 (:allocateArray this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)))
-                    (Arguments''add-2 (ConstantNode'forConstant-3s KlassPointerStamp'KLASS_NON_NULL, (#_"HotSpotResolvedObjectType" .klass arrayType), (:graph node)))
-                    (Arguments''add-2 (if (Node''isAlive-1 length) length (Graph''addOrUniqueWithInputs-2 (:graph node), length)))
-                    (Arguments''add-2 (#_"HotSpotResolvedObjectType" .prototypeMarkWord arrayType))
-                    (Arguments''add-2 (HotSpot'arrayBaseOffset-1 elementKind))
-                    (Arguments''add-2 (CodeUtil/log2 (HotSpot'arrayIndexScale-1 elementKind)))
-                    (Arguments''add-2 HotSpot'threadRegister)
-                    (Arguments''add-2 (satisfies? ConstantNode length))
+                (Arguments'new-4* (:allocateArray this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)),
+                    (ConstantNode'forConstant-3s KlassPointerStamp'KLASS_NON_NULL, (#_"HotSpotResolvedObjectType" .klass arrayType), (:graph node)),
+                    (if (Node''isAlive-1 length) length (Graph''addOrUniqueWithInputs-2 (:graph node), length)),
+                    (#_"HotSpotResolvedObjectType" .prototypeMarkWord arrayType),
+                    (HotSpot'arrayBaseOffset-1 elementKind),
+                    (CodeUtil/log2 (HotSpot'arrayIndexScale-1 elementKind)),
+                    (satisfies? ConstantNode length)
                 )
         ]
-            (SnippetTemplate''instantiate-4x (SnippetTemplate'new-2 args, node), node, SnippetTemplate'DEFAULT_REPLACER, args)
+            (SnippetTemplate''instantiate-3 (SnippetTemplate'new-2 args, node), node, args)
         )
         nil
     )
@@ -13771,7 +13685,7 @@ ZeroExtendNode'new-4
     (defn #_"UnsafeLoadTemplates" UnsafeLoadTemplates'new-0 []
         (merge (UnsafeLoadTemplates'class.) (AbstractTemplates'new-0)
             (hash-map
-                #_"SnippetInfo" :unsafeLoad (AbstractTemplates''snippet-3* UnsafeLoadSnippets, "lowerUnsafeLoad")
+                #_"SnippetInfo" :lowerUnsafeLoad (AbstractTemplates'snippet-3* UnsafeLoadSnippets, "lowerUnsafeLoad")
             )
         )
     )
@@ -13779,12 +13693,12 @@ ZeroExtendNode'new-4
     (defn #_"void" UnsafeLoadTemplates''lower-3 [#_"UnsafeLoadTemplates" this, #_"RawLoadNode" node, #_"LoweringTool" lowerer]
         (let [
             #_"Arguments" args
-                (-> (Arguments'new-3 (:unsafeLoad this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)))
-                    (Arguments''add-2 (:object node))
-                    (Arguments''add-2 (:offset node))
+                (Arguments'new-4* (:lowerUnsafeLoad this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)),
+                    (:object node),
+                    (:offset node)
                 )
         ]
-            (SnippetTemplate''instantiate-4x (SnippetTemplate'new-2 args, node), node, SnippetTemplate'DEFAULT_REPLACER, args)
+            (SnippetTemplate''instantiate-3 (SnippetTemplate'new-2 args, node), node, args)
         )
         nil
     )
@@ -13794,11 +13708,11 @@ ZeroExtendNode'new-4
     (defn #_"WriteBarrierTemplates" WriteBarrierTemplates'new-1 [#_"CompressEncoding" oopEncoding]
         (merge (WriteBarrierTemplates'class.) (AbstractTemplates'new-0)
             (hash-map
-                #_"SnippetInfo" :serialImpreciseWriteBarrier (AbstractTemplates''snippet-3* WriteBarrierSnippets, "serialImpreciseWriteBarrier", WriteBarrierSnippets'GC_CARD_LOCATION)
-                #_"SnippetInfo" :serialPreciseWriteBarrier (AbstractTemplates''snippet-3* WriteBarrierSnippets, "serialPreciseWriteBarrier", WriteBarrierSnippets'GC_CARD_LOCATION)
-                #_"SnippetInfo" :g1PreWriteBarrier (AbstractTemplates''snippet-3* WriteBarrierSnippets, "g1PreWriteBarrier", WriteBarrierSnippets'GC_INDEX_LOCATION, WriteBarrierSnippets'GC_LOG_LOCATION)
-                #_"SnippetInfo" :g1ReferentReadBarrier (AbstractTemplates''snippet-3* WriteBarrierSnippets, "g1PreWriteBarrier", WriteBarrierSnippets'GC_INDEX_LOCATION, WriteBarrierSnippets'GC_LOG_LOCATION)
-                #_"SnippetInfo" :g1PostWriteBarrier (AbstractTemplates''snippet-3* WriteBarrierSnippets, "g1PostWriteBarrier", WriteBarrierSnippets'GC_CARD_LOCATION, WriteBarrierSnippets'GC_INDEX_LOCATION, WriteBarrierSnippets'GC_LOG_LOCATION)
+                #_"SnippetInfo" :serialImpreciseWriteBarrier (AbstractTemplates'snippet-3* WriteBarrierSnippets, "serialImpreciseWriteBarrier", NamedLocationIdentity'GC_CARD)
+                #_"SnippetInfo" :serialPreciseWriteBarrier (AbstractTemplates'snippet-3* WriteBarrierSnippets, "serialPreciseWriteBarrier", NamedLocationIdentity'GC_CARD)
+                #_"SnippetInfo" :g1PreWriteBarrier (AbstractTemplates'snippet-3* WriteBarrierSnippets, "g1PreWriteBarrier", NamedLocationIdentity'GC_INDEX, NamedLocationIdentity'GC_LOG)
+                #_"SnippetInfo" :g1ReferentReadBarrier (AbstractTemplates'snippet-3* WriteBarrierSnippets, "g1PreWriteBarrier", NamedLocationIdentity'GC_INDEX, NamedLocationIdentity'GC_LOG)
+                #_"SnippetInfo" :g1PostWriteBarrier (AbstractTemplates'snippet-3* WriteBarrierSnippets, "g1PostWriteBarrier", NamedLocationIdentity'GC_CARD, NamedLocationIdentity'GC_INDEX, NamedLocationIdentity'GC_LOG)
                 #_"CompressEncoding" :oopEncoding oopEncoding
             )
         )
@@ -13808,15 +13722,15 @@ ZeroExtendNode'new-4
         (let [
             #_"Arguments" args
                 (if (:precise? node)
-                    (-> (Arguments'new-3 (:serialPreciseWriteBarrier this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)))
-                        (Arguments''add-2 (:address node))
+                    (Arguments'new-4* (:serialPreciseWriteBarrier this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)),
+                        (:address node)
                     )
-                    (-> (Arguments'new-3 (:serialImpreciseWriteBarrier this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)))
-                        (Arguments''add-2 (AddressNode'''getBase-1 (:address node)))
+                    (Arguments'new-4* (:serialImpreciseWriteBarrier this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)),
+                        (AddressNode'''getBase-1 (:address node))
                     )
                 )
         ]
-            (SnippetTemplate''instantiate-4x (SnippetTemplate'new-2 args, node), node, SnippetTemplate'DEFAULT_REPLACER, args)
+            (SnippetTemplate''instantiate-3 (SnippetTemplate'new-2 args, node), node, args)
         )
         nil
     )
@@ -13829,16 +13743,15 @@ ZeroExtendNode'new-4
                     (HotSpotCompressionNode'uncompress-2 expected, (:oopEncoding this))
                 )
             #_"Arguments" args
-                (-> (Arguments'new-3 (:g1PreWriteBarrier this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)))
-                    (Arguments''add-2 (:address node))
-                    (Arguments''add-2 (when (satisfies? OffsetAddressNode (:address node)) (AddressNode'''getBase-1 (:address node))))
-                    (Arguments''add-2 expected)
-                    (Arguments''add-2 (:doLoad node))
-                    (Arguments''add-2 (:nullCheck node))
-                    (Arguments''add-2 HotSpot'threadRegister)
+                (Arguments'new-4* (:g1PreWriteBarrier this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)),
+                    (:address node),
+                    (when (satisfies? OffsetAddressNode (:address node)) (AddressNode'''getBase-1 (:address node))),
+                    expected,
+                    (:doLoad node),
+                    (:nullCheck node)
                 )
         ]
-            (SnippetTemplate''instantiate-4x (SnippetTemplate'new-2 args, node), node, SnippetTemplate'DEFAULT_REPLACER, args)
+            (SnippetTemplate''instantiate-3 (SnippetTemplate'new-2 args, node), node, args)
         )
         nil
     )
@@ -13851,16 +13764,15 @@ ZeroExtendNode'new-4
                     (HotSpotCompressionNode'uncompress-2 expected, (:oopEncoding this))
                 )
             #_"Arguments" args
-                (-> (Arguments'new-3 (:g1ReferentReadBarrier this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)))
-                    (Arguments''add-2 (:address node))
-                    (Arguments''add-2 (when (satisfies? OffsetAddressNode (:address node)) (AddressNode'''getBase-1 (:address node))))
-                    (Arguments''add-2 expected)
-                    (Arguments''add-2 (:doLoad node))
-                    (Arguments''add-2 false)
-                    (Arguments''add-2 HotSpot'threadRegister)
+                (Arguments'new-4* (:g1ReferentReadBarrier this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)),
+                    (:address node),
+                    (when (satisfies? OffsetAddressNode (:address node)) (AddressNode'''getBase-1 (:address node))),
+                    expected,
+                    (:doLoad node),
+                    false
                 )
         ]
-            (SnippetTemplate''instantiate-4x (SnippetTemplate'new-2 args, node), node, SnippetTemplate'DEFAULT_REPLACER, args)
+            (SnippetTemplate''instantiate-3 (SnippetTemplate'new-2 args, node), node, args)
         )
         nil
     )
@@ -13873,15 +13785,15 @@ ZeroExtendNode'new-4
                         (HotSpotCompressionNode'uncompress-2 (:value node), (:oopEncoding this))
                     )
                 #_"Arguments" args
-                    (-> (Arguments'new-3 (:g1PostWriteBarrier this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)))
-                        (Arguments''add-2 (:address node))
-                        (Arguments''add-2 (when (satisfies? OffsetAddressNode (:address node)) (AddressNode'''getBase-1 (:address node))))
-                        (Arguments''add-2 value)
-                        (Arguments''add-2 (:precise? node))
-                        (Arguments''add-2 HotSpot'threadRegister)
+                    (Arguments'new-4* (:g1PostWriteBarrier this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)),
+                        (:address node),
+                        (when (satisfies? OffsetAddressNode (:address node)) (AddressNode'''getBase-1 (:address node))),
+                        value,
+                        (:precise? node),
+                        HotSpot'threadRegister
                     )
             ]
-                (SnippetTemplate''instantiate-4x (SnippetTemplate'new-2 args, node), node, SnippetTemplate'DEFAULT_REPLACER, args)
+                (SnippetTemplate''instantiate-3 (SnippetTemplate'new-2 args, node), node, args)
             )
         )
         nil
@@ -14327,7 +14239,6 @@ ZeroExtendNode'new-4
                  ; The identifier of the variable. This is a non-zero index in a contiguous 0-based name space.
                  ;;
                 #_"int" :index index
-                #_"String" :name nil
             )
         )
     )
@@ -14617,28 +14528,18 @@ ZeroExtendNode'new-4
 )
 
 ;;;
- ; Values that are bound to the snippet method parameters. The methods #add and #addConst must be called in
- ; the same order as in the signature of the snippet method. Which method needs to be called depends on the
- ; annotation of the snippet method parameter:
- ;
- ; Use #add for a parameter without an annotation. The value is bound when the SnippetTemplate is instantiated.
+ ; Values that are bound to the snippet method parameters.
  ;;
 (class-ns Arguments []
-    (defn #_"Arguments" Arguments'new-3 [#_"SnippetInfo" info, #_"GuardsStage" guardsStage, #_"LoweringStage" loweringStage]
+    (defn #_"Arguments" Arguments'new-4* [#_"SnippetInfo" info, #_"GuardsStage" guardsStage, #_"LoweringStage" loweringStage & #_"Object..." values]
         (merge (Arguments'class.)
             (hash-map
                 #_"SnippetInfo" :info info
                 #_"GuardsStage" :guardsStage guardsStage
                 #_"LoweringStage" :loweringStage loweringStage
-                #_"Object[]" :values (make-array Object (#_"Signature" .getParameterCount (#_"ResolvedJavaMethod" .getSignature (:method info)), false))
-                #_"int" :nextParamIdx 0
+                #_"Object*" :values values
             )
         )
-    )
-
-    (defn #_"Arguments" Arguments''add-2 [#_"Arguments" this, #_"Object" value]
-        (aset (:values this) (:nextParamIdx this) value)
-        (update this :nextParamIdx inc)
     )
 )
 
@@ -18130,7 +18031,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"boolean" Block''canKill-2 [#_"Block" this, #_"LocationIdentity" location]
-        (and (not (#_"LocationIdentity" .isImmutable location))
+        (and (not (:immutable location))
             (LocationSet''contains-2 (Block''getKillLocations-1 this), location)
         )
     )
@@ -18146,13 +18047,13 @@ ZeroExtendNode'new-4
                     (condp satisfies? node
                         Single
                             (let [
-                                #_"LocationIdentity" identity (Single'''getLocationIdentity-1 node)
+                                #_"LocationIdentity" location (Single'''getLocationIdentity-1 node)
                             ]
-                                (§ ass! result (LocationSet''add-2 result, identity))
+                                (§ ass! result (LocationSet''add-2 result, location))
                             )
                         Multi
-                            (doseq [#_"LocationIdentity" identity (Multi'''getLocationIdentities-1 node)]
-                                (§ ass! result (LocationSet''add-2 result, identity))
+                            (doseq [#_"LocationIdentity" location (Multi'''getLocationIdentities-1 node)]
+                                (§ ass! result (LocationSet''add-2 result, location))
                             )
                         nil
                     )
@@ -18234,7 +18135,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"boolean" Block''canKillBetweenThisAndDominator-2 [#_"Block" this, #_"LocationIdentity" location]
-        (and (not (#_"LocationIdentity" .isImmutable location))
+        (and (not (:immutable location))
             (LocationSet''contains-2 (Block''getKillLocationsBetweenThisAndDominator-1 this), location)
         )
     )
@@ -19402,25 +19303,14 @@ ZeroExtendNode'new-4
 )
 
 (class-ns PEReadEliminationClosure [PartialEscapeClosure #_"<PEReadEliminationBlockState>", EffectsClosure #_"<PEReadEliminationBlockState>", BlockIteratorClosure #_"<PEReadEliminationBlockState>"]
-    (def- #_"EnumMap<JavaKind, LocationIdentity>" PEReadEliminationClosure'UNBOX_LOCATIONS
-        (let [
-            #_"EnumMap<JavaKind, LocationIdentity>" m (EnumMap. JavaKind)
-        ]
-            (doseq [#_"JavaKind" kind (JavaKind/values)]
-                (#_"EnumMap" .put m, kind, (§ soon NamedLocationIdentity'immutable-1 (str "PEA unbox " (#_"JavaKind" .getJavaName kind))))
-            )
-            m
-        )
-    )
-
     (defn #_"PEReadEliminationClosure" PEReadEliminationClosure'new-1 [#_"ScheduleResult" schedule]
         (merge (PEReadEliminationClosure'class.) (PartialEscapeClosure'new-1 schedule))
     )
 
-    (defn- #_"boolean" PEReadEliminationClosure''processLoad-8 [#_"PEReadEliminationClosure" this, #_"FixedNode" load, #_"ValueNode" object, #_"LocationIdentity" identity, #_"int" index, #_"JavaKind" kind, #_"PEReadEliminationBlockState" state, #_"GraphEffectList" effects]
+    (defn- #_"boolean" PEReadEliminationClosure''processLoad-8 [#_"PEReadEliminationClosure" this, #_"FixedNode" load, #_"ValueNode" object, #_"LocationIdentity" location, #_"int" index, #_"JavaKind" kind, #_"PEReadEliminationBlockState" state, #_"GraphEffectList" effects]
         (let [
             #_"ValueNode" unproxiedObject (GraphUtil'unproxify-1n object)
-            #_"ValueNode" cachedValue (PEReadEliminationBlockState''getReadCache-6 state, unproxiedObject, identity, index, kind, this)
+            #_"ValueNode" cachedValue (PEReadEliminationBlockState''getReadCache-6 state, unproxiedObject, location, index, kind, this)
         ]
             (if (some? cachedValue)
                 (do
@@ -19430,7 +19320,7 @@ ZeroExtendNode'new-4
                     true
                 )
                 (do
-                    (PEReadEliminationBlockState''addReadCache-8 state, unproxiedObject, identity, index, kind, false, load, this)
+                    (PEReadEliminationBlockState''addReadCache-8 state, unproxiedObject, location, index, kind, false, load, this)
                     false
                 )
             )
@@ -19447,10 +19337,10 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"boolean" PEReadEliminationClosure''processStore-10 [#_"PEReadEliminationClosure" this, #_"FixedNode" store, #_"ValueNode" object, #_"LocationIdentity" identity, #_"int" index, #_"JavaKind" accessKind, #_"boolean" overflowAccess, #_"ValueNode" value, #_"PEReadEliminationBlockState" state, #_"GraphEffectList" effects]
+    (defn- #_"boolean" PEReadEliminationClosure''processStore-10 [#_"PEReadEliminationClosure" this, #_"FixedNode" store, #_"ValueNode" object, #_"LocationIdentity" location, #_"int" index, #_"JavaKind" accessKind, #_"boolean" overflowAccess, #_"ValueNode" value, #_"PEReadEliminationBlockState" state, #_"GraphEffectList" effects]
         (let [
             #_"ValueNode" unproxiedObject (GraphUtil'unproxify-1n object)
-            #_"ValueNode" cachedValue (PEReadEliminationBlockState''getReadCache-6 state, object, identity, index, accessKind, this)
+            #_"ValueNode" cachedValue (PEReadEliminationBlockState''getReadCache-6 state, object, location, index, accessKind, this)
             #_"ValueNode" finalValue (EffectsClosure''getScalarAlias-2 this, value)
             #_"boolean" result
                 (when (= (GraphUtil'unproxify-1n finalValue) (GraphUtil'unproxify-1n cachedValue)) => false
@@ -19458,8 +19348,8 @@ ZeroExtendNode'new-4
                     true
                 )
         ]
-            (PEReadEliminationBlockState''killReadCache-3 state, identity, index)
-            (PEReadEliminationBlockState''addReadCache-8 state, unproxiedObject, identity, index, accessKind, overflowAccess, finalValue, this)
+            (PEReadEliminationBlockState''killReadCache-3 state, location, index)
+            (PEReadEliminationBlockState''addReadCache-8 state, unproxiedObject, location, index, accessKind, overflowAccess, finalValue, this)
             result
         )
     )
@@ -19541,11 +19431,11 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"boolean" PEReadEliminationClosure''processArrayLength-4 [#_"PEReadEliminationClosure" this, #_"ArrayLengthNode" length, #_"PEReadEliminationBlockState" state, #_"GraphEffectList" effects]
-        (PEReadEliminationClosure''processLoad-8 this, length, (:array length), NamedLocationIdentity'ARRAY_LENGTH_LOCATION, -1, JavaKind/Int, state, effects)
+        (PEReadEliminationClosure''processLoad-8 this, length, (:array length), NamedLocationIdentity'ARRAY_LENGTH, -1, JavaKind/Int, state, effects)
     )
 
     (defn- #_"boolean" PEReadEliminationClosure''processUnbox-4 [#_"PEReadEliminationClosure" this, #_"UnboxNode" unbox, #_"PEReadEliminationBlockState" state, #_"GraphEffectList" effects]
-        (PEReadEliminationClosure''processLoad-8 this, unbox, (Unary'''getValue-1 unbox), (get PEReadEliminationClosure'UNBOX_LOCATIONS (:boxingKind unbox)), -1, (:boxingKind unbox), state, effects)
+        (PEReadEliminationClosure''processLoad-8 this, unbox, (Unary'''getValue-1 unbox), (NamedLocationIdentity'getUnboxLocation-1 (:boxingKind unbox)), -1, (:boxingKind unbox), state, effects)
     )
 
     (defn- #_"boolean" PEReadEliminationClosure'isOverflowAccess-2 [#_"JavaKind" accessKind, #_"JavaKind" declaredKind]
@@ -19598,10 +19488,10 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"void" PEReadEliminationClosure'processIdentity-2 [#_"PEReadEliminationBlockState" state, #_"LocationIdentity" identity]
-        (if (#_"LocationIdentity" .isAny identity)
+    (defn- #_"void" PEReadEliminationClosure'processIdentity-2 [#_"PEReadEliminationBlockState" state, #_"LocationIdentity" location]
+        (if (LocationIdentity''isAny-1 location)
             (PEReadEliminationBlockState''killReadCache-1 state)
-            (PEReadEliminationBlockState''killReadCache-3 state, identity, -1)
+            (PEReadEliminationBlockState''killReadCache-3 state, location, -1)
         )
         nil
     )
@@ -19666,15 +19556,15 @@ ZeroExtendNode'new-4
                     RawStoreNode     (PEReadEliminationClosure''processUnsafeStore-4 this, node, state, effects)
                     Single
                         (let [
-                            #_"LocationIdentity" identity (Single'''getLocationIdentity-1 node)
+                            #_"LocationIdentity" location (Single'''getLocationIdentity-1 node)
                         ]
-                            (PEReadEliminationClosure'processIdentity-2 state, identity)
+                            (PEReadEliminationClosure'processIdentity-2 state, location)
                             false
                         )
                     Multi
                         (do
-                            (doseq [#_"LocationIdentity" identity (Multi'''getLocationIdentities-1 node)]
-                                (PEReadEliminationClosure'processIdentity-2 state, identity)
+                            (doseq [#_"LocationIdentity" location (Multi'''getLocationIdentities-1 node)]
+                                (PEReadEliminationClosure'processIdentity-2 state, location)
                             )
                             false
                         )
@@ -19846,10 +19736,10 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"void" ReadEliminationClosure'processIdentity-2 [#_"ReadEliminationBlockState" state, #_"LocationIdentity" identity]
-        (if (#_"LocationIdentity" .isAny identity)
+    (defn- #_"void" ReadEliminationClosure'processIdentity-2 [#_"ReadEliminationBlockState" state, #_"LocationIdentity" location]
+        (if (LocationIdentity''isAny-1 location)
             (ReadEliminationBlockState''killReadCache-1 state)
-            (ReadEliminationBlockState''killReadCache-2 state, identity)
+            (ReadEliminationBlockState''killReadCache-2 state, location)
         )
         nil
     )
@@ -19874,7 +19764,7 @@ ZeroExtendNode'new-4
                 AccessFieldNode
                     (if (AccessFieldNode''isVolatile-1 node)
                         (do
-                            (ReadEliminationClosure'processIdentity-2 state, (LocationIdentity/any))
+                            (ReadEliminationClosure'processIdentity-2 state, LocationIdentity'ANY)
                             false
                         )
                         (let [
@@ -19909,10 +19799,10 @@ ZeroExtendNode'new-4
                         )
                     )
                 ReadNode
-                    (and (#_"LocationIdentity" .isSingle (ß FixedAccessNode''getLocationIdentity-1 node))
+                    (and (LocationIdentity''isSingle-1 (Access'''getLocationIdentity-1 node))
                         (let [
                             #_"ValueNode" object (GraphUtil'unproxify-1n (Access'''getAddress-1 node))
-                            #_"LoadCacheEntry" identifier (LoadCacheEntry'new-2 object, (ß FixedAccessNode''getLocationIdentity-1 node))
+                            #_"LoadCacheEntry" identifier (LoadCacheEntry'new-2 object, (Access'''getLocationIdentity-1 node))
                             #_"ValueNode" cachedValue (ReadEliminationBlockState''getCacheEntry-2 state, identifier)
                         ]
                             (if (and (some? cachedValue) (ReadEliminationClosure'areValuesReplaceable-3 node, cachedValue, (:considerGuards this)))
@@ -19929,10 +19819,10 @@ ZeroExtendNode'new-4
                         )
                     )
                 WriteNode
-                    (if (#_"LocationIdentity" .isSingle (ß FixedAccessNode''getLocationIdentity-1 node))
+                    (if (LocationIdentity''isSingle-1 (Access'''getLocationIdentity-1 node))
                         (let [
                             #_"ValueNode" object (GraphUtil'unproxify-1n (Access'''getAddress-1 node))
-                            #_"LoadCacheEntry" identifier (LoadCacheEntry'new-2 object, (ß FixedAccessNode''getLocationIdentity-1 node))
+                            #_"LoadCacheEntry" identifier (LoadCacheEntry'new-2 object, (Access'''getLocationIdentity-1 node))
                             #_"ValueNode" cachedValue (ReadEliminationBlockState''getCacheEntry-2 state, identifier)
                             #_"ValueNode" value (EffectsClosure''getScalarAlias-2 this, (:value node))
                             #_"boolean" del? (= (GraphUtil'unproxify-1n value) (GraphUtil'unproxify-1n cachedValue))
@@ -19940,12 +19830,12 @@ ZeroExtendNode'new-4
                             (when del?
                                 (GraphEffectList''deleteNode-2 effects, node)
                             )
-                            (ReadEliminationClosure'processIdentity-2 state, (ß FixedAccessNode''getLocationIdentity-1 node))
+                            (ReadEliminationClosure'processIdentity-2 state, (Access'''getLocationIdentity-1 node))
                             (ReadEliminationBlockState''addCacheEntry-3 state, identifier, value)
                             del?
                         )
                         (do
-                            (ReadEliminationClosure'processIdentity-2 state, (ß FixedAccessNode''getLocationIdentity-1 node))
+                            (ReadEliminationClosure'processIdentity-2 state, (Access'''getLocationIdentity-1 node))
                             false
                         )
                     )
@@ -19955,7 +19845,7 @@ ZeroExtendNode'new-4
                     ]
                         (and (some? type) (not (#_"ResolvedJavaType" .isArray type))
                             (if (satisfies? RawLoadNode node)
-                                (and (#_"LocationIdentity" .isSingle (:locationIdentity node))
+                                (and (LocationIdentity''isSingle-1 (:locationIdentity node))
                                     (let [
                                         #_"ValueNode" object (GraphUtil'unproxify-1n (:object node))
                                         #_"UnsafeLoadCacheEntry" identifier (UnsafeLoadCacheEntry'new-3 object, (:offset node), (:locationIdentity node))
@@ -19974,7 +19864,7 @@ ZeroExtendNode'new-4
                                         )
                                     )
                                 )
-                                (if (#_"LocationIdentity" .isSingle (:locationIdentity node))
+                                (if (LocationIdentity''isSingle-1 (:locationIdentity node))
                                     (let [
                                         #_"ValueNode" object (GraphUtil'unproxify-1n (:object node))
                                         #_"UnsafeLoadCacheEntry" identifier (UnsafeLoadCacheEntry'new-3 object, (:offset node), (:locationIdentity node))
@@ -19999,15 +19889,15 @@ ZeroExtendNode'new-4
                     )
                 Single
                     (let [
-                        #_"LocationIdentity" identity (Single'''getLocationIdentity-1 node)
+                        #_"LocationIdentity" location (Single'''getLocationIdentity-1 node)
                     ]
-                        (ReadEliminationClosure'processIdentity-2 state, identity)
+                        (ReadEliminationClosure'processIdentity-2 state, location)
                         false
                     )
                 Multi
                     (do
-                        (doseq [#_"LocationIdentity" identity (Multi'''getLocationIdentities-1 node)]
-                            (ReadEliminationClosure'processIdentity-2 state, identity)
+                        (doseq [#_"LocationIdentity" location (Multi'''getLocationIdentities-1 node)]
+                            (ReadEliminationClosure'processIdentity-2 state, location)
                         )
                         false
                     )
@@ -29336,7 +29226,7 @@ ZeroExtendNode'new-4
     (defn #_"ConstantTree" ConstantTree'new-2 [#_"ControlFlowGraph" cfg, #_"DefUseTree" tree]
         (merge (ConstantTree'class.) (DominatorOptimizationProblem'new-2 Flags, cfg)
             (hash-map
-                #_"{int [UseEntry]}" :usageMap (reduce #(assoc %1 (:id (:block %2)) (conj (vec (get %1 (:id (:block %2)))) %2)) (hash-map) (:uses tree))
+                #_"{int [UseEntry]}" :usageMap (reduce #(assoc %1 (:id (:block %2)) (conj (vec (get %1 (:id (:block %2)))) %2)) {} (:uses tree))
             )
         )
     )
@@ -30387,21 +30277,21 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"void" PEReadEliminationBlockState''addReadCache-8 [#_"PEReadEliminationBlockState" this, #_"ValueNode" object, #_"LocationIdentity" identity, #_"int" index, #_"JavaKind" kind, #_"boolean" overflowAccess, #_"ValueNode" value, #_"PartialEscapeClosure" closure]
+    (defn #_"void" PEReadEliminationBlockState''addReadCache-8 [#_"PEReadEliminationBlockState" this, #_"ValueNode" object, #_"LocationIdentity" location, #_"int" index, #_"JavaKind" kind, #_"boolean" overflowAccess, #_"ValueNode" value, #_"PartialEscapeClosure" closure]
         (let [
             #_"ObjectState" obj (PartialEscapeClosure''getObjectState-3 closure, this, object)
             #_"ValueNode" cacheObject (if (some? obj) (:materializedValue obj) object)
         ]
-            (#_"EconomicMap" .put (:readCache this), (ReadCacheEntry'new-5 identity, cacheObject, index, kind, overflowAccess), value)
+            (#_"EconomicMap" .put (:readCache this), (ReadCacheEntry'new-5 location, cacheObject, index, kind, overflowAccess), value)
         )
         nil
     )
 
-    (defn #_"ValueNode" PEReadEliminationBlockState''getReadCache-6 [#_"PEReadEliminationBlockState" this, #_"ValueNode" object, #_"LocationIdentity" identity, #_"int" index, #_"JavaKind" kind, #_"PartialEscapeClosure" closure]
+    (defn #_"ValueNode" PEReadEliminationBlockState''getReadCache-6 [#_"PEReadEliminationBlockState" this, #_"ValueNode" object, #_"LocationIdentity" location, #_"int" index, #_"JavaKind" kind, #_"PartialEscapeClosure" closure]
         (let [
             #_"ObjectState" obj (PartialEscapeClosure''getObjectState-3 closure, this, object)
             #_"ValueNode" cacheObject (if (some? obj) (:materializedValue obj) object)
-            #_"ValueNode" cacheValue (get (:readCache this) (ReadCacheEntry'new-5 identity, cacheObject, index, kind, false))
+            #_"ValueNode" cacheValue (get (:readCache this) (ReadCacheEntry'new-5 location, cacheObject, index, kind, false))
             obj (PartialEscapeClosure''getObjectState-3 closure, this, cacheValue)
         ]
             (if (some? obj)
@@ -30417,7 +30307,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn #_"void" PEReadEliminationBlockState''killReadCache-3 [#_"PEReadEliminationBlockState" this, #_"LocationIdentity" identity, #_"int" index]
+    (defn #_"void" PEReadEliminationBlockState''killReadCache-3 [#_"PEReadEliminationBlockState" this, #_"LocationIdentity" location, #_"int" index]
         (let [
             #_"Iterator<ReadCacheEntry>" it (#_"Iterable" .iterator (keys (:readCache this)))
         ]
@@ -30425,7 +30315,7 @@ ZeroExtendNode'new-4
                 (let [
                     #_"ReadCacheEntry" entry (#_"Iterator" .next it)
                 ]
-                    (when (and (= (:identity entry) identity) (or (= index -1) (= (:index entry) -1) (= index (:index entry)) (:overflowAccess entry)))
+                    (when (and (= (:identity entry) location) (or (= index -1) (= (:index entry) -1) (= index (:index entry)) (:overflowAccess entry)))
                         (#_"Iterator" .remove it)
                     )
                 )
@@ -30475,12 +30365,12 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn #_"void" ReadEliminationBlockState''killReadCache-2 [#_"ReadEliminationBlockState" this, #_"LocationIdentity" identity]
+    (defn #_"void" ReadEliminationBlockState''killReadCache-2 [#_"ReadEliminationBlockState" this, #_"LocationIdentity" location]
         (let [
             #_"Iterator<CacheEntry>" it (#_"Iterable" .iterator (keys (:readCache this)))
         ]
             (while (#_"Iterator" .hasNext it)
-                (when (CacheEntry'''conflicts-2 (#_"Iterator" .next it), identity)
+                (when (CacheEntry'''conflicts-2 (#_"Iterator" .next it), location)
                     (#_"Iterator" .remove it)
                 )
             )
@@ -32680,6 +32570,40 @@ ZeroExtendNode'new-4
         )
     )
 
+    (defn- #_"{LocationIdentity}" FloatingReadPhase'processIdentity-2 [#_"{LocationIdentity}" state, #_"LocationIdentity" location]
+        (when-not (:immutable location) => state
+            (conj state location)
+        )
+    )
+
+    (defn- #_"{LocationIdentity}" FloatingReadPhase'processNode-2 [#_"{LocationIdentity}" state, #_"FixedNode" node]
+        (condp satisfies? node
+            Single        (FloatingReadPhase'processIdentity-2 state, (Single'''getLocationIdentity-1 node))
+            Multi  (reduce FloatingReadPhase'processIdentity-2 state (Multi'''getLocationIdentities-1 node))
+                                                               state
+        )
+    )
+
+    (defn- #_"{LocationIdentity}" FloatingReadPhase'processBlock-2 [#_"{LocationIdentity}" state, #_"Block" block]
+        (reduce FloatingReadPhase'processNode-2 state (Block''getNodes-1 block))
+    )
+
+    (defn- #_"{LoopBeginNode {LocationIdentity}}" FloatingReadPhase'processLoop-2 [#_"{LoopBeginNode {LocationIdentity}}" m, #_"Loop" _loop]
+        (let [
+            #_"LoopBeginNode" loopBegin (:beginNode (:header _loop))
+        ]
+            (when-not (contains? m loopBegin) => m
+                (let [
+                    m (reduce FloatingReadPhase'processLoop-2 m (:children _loop))
+                    #_"{LocationIdentity}" s (into #{} (mapcat #(get m (:beginNode (:header %))) (:children _loop)))
+                    s (reduce FloatingReadPhase'processBlock-2 s (filter #(= (:loop %) _loop) (:blocks _loop)))
+                ]
+                    (assoc m loopBegin s)
+                )
+            )
+        )
+    )
+
     ;;;
      ; Removes nodes from a given set that (transitively) have a usage outside the set.
      ;;
@@ -32707,85 +32631,27 @@ ZeroExtendNode'new-4
         set
     )
 
-    (defn- #_"void" FloatingReadPhase'processIdentity-2 [#_"EconomicSet<LocationIdentity>" currentState, #_"LocationIdentity" identity]
-        (when (#_"LocationIdentity" .isMutable identity)
-            (#_"EconomicSet" .add currentState, identity)
-        )
-        nil
-    )
-
-    (defn #_"void" FloatingReadPhase''processNode-3 [#_"FloatingReadPhase" this, #_"FixedNode" node, #_"EconomicSet<LocationIdentity>" currentState]
-        (condp satisfies? node
-            Single
-                (FloatingReadPhase'processIdentity-2 currentState, (Single'''getLocationIdentity-1 node))
-            Multi
-                (doseq [#_"LocationIdentity" identity (Multi'''getLocationIdentities-1 node)]
-                    (FloatingReadPhase'processIdentity-2 currentState, identity)
-                )
-            nil
-        )
-        nil
-    )
-
-    (defn #_"void" FloatingReadPhase''processBlock-3 [#_"FloatingReadPhase" this, #_"Block" block, #_"EconomicSet<LocationIdentity>" currentState]
-        (doseq [#_"FixedNode" node (Block''getNodes-1 block)]
-            (FloatingReadPhase''processNode-3 this, node, currentState)
-        )
-        nil
-    )
-
-    (defn- #_"EconomicSet<LocationIdentity>" FloatingReadPhase''processLoop-3 [#_"FloatingReadPhase" this, #_"Loop" _loop, #_"EconomicMap<LoopBeginNode, EconomicSet<LocationIdentity>>" modifiedInLoops]
-        (let [
-            #_"LoopBeginNode" loopBegin (:beginNode (:header _loop))
-        ]
-            (or (get modifiedInLoops loopBegin)
-                (let [
-                    #_"EconomicSet<LocationIdentity>" result (EconomicSet/create Equivalence/DEFAULT)
-                ]
-                    (doseq [#_"Loop" inner (:children _loop)]
-                        (#_"EconomicSet" .addAll result, (FloatingReadPhase''processLoop-3 this, inner, modifiedInLoops))
-                    )
-                    (doseq [#_"Block" b (:blocks _loop)]
-                        (when (= (:loop b) _loop)
-                            (FloatingReadPhase''processBlock-3 this, b, result)
-                        )
-                    )
-                    (#_"EconomicMap" .put modifiedInLoops, loopBegin, result)
-                    result
-                )
-            )
-        )
-    )
-
     ; @SuppressWarnings("try")
     (defm FloatingReadPhase Phase
         (#_"Graph" Phase'''run-3 [#_"FloatingReadPhase" this, #_"Graph" graph, #_"PhaseContext" context]
             (let [
-                #_"EconomicMap<LoopBeginNode, EconomicSet<LocationIdentity>>" modifiedInLoops nil
+                #_"{LoopBeginNode {LocationIdentity}}" modifiedInLoops
+                    (when (Graph''hasLoops-1 graph)
+                        (reduce FloatingReadPhase'processLoop-2 {} (:loops (ControlFlowGraph'compute-5 graph, true, true, false, false)))
+                    )
+                #_"HashSetNodeEventListener" listener (HashSetNodeEventListener'new-1 (EnumSet/of NodeEvent'NODE_ADDED, NodeEvent'ZERO_USAGES))
             ]
-                (when (Graph''hasLoops-1 graph)
-                    (§ ass modifiedInLoops (EconomicMap/create Equivalence/IDENTITY))
-                    (doseq [#_"Loop" l (:loops (ControlFlowGraph'compute-5 graph, true, true, false, false))]
-                        (FloatingReadPhase''processLoop-3 this, l, modifiedInLoops)
+                (try (§ with [#_"NodeEventScope" _ (Graph''trackNodeEvents-2 graph, listener)])
+                    (ReentrantNodeIterator'apply-3 (FloatingReadClosure'new-3 modifiedInLoops, (:createFloatingReads this), (:createMemoryMapNodes this)), (:start graph), (MemoryMap0'new-1 (:start graph)))
+                )
+                (doseq [#_"Node" node (FloatingReadPhase'removeExternallyUsedNodes-1 (:nodes listener))]
+                    (when (and (Node''isAlive-1 node) (satisfies? FloatingNode node))
+                        (§ ass! node (Node''replaceAtUsages-2 node, nil))
+                        (GraphUtil'killWithUnusedFloatingInputs-1 node)
                     )
                 )
-
-                (let [
-                    #_"HashSetNodeEventListener" listener (HashSetNodeEventListener'new-1 (EnumSet/of NodeEvent'NODE_ADDED, NodeEvent'ZERO_USAGES))
-                ]
-                    (try (§ with [#_"NodeEventScope" _ (Graph''trackNodeEvents-2 graph, listener)])
-                        (ReentrantNodeIterator'apply-3 (FloatingReadClosure'new-3 modifiedInLoops, (:createFloatingReads this), (:createMemoryMapNodes this)), (:start graph), (MemoryMap0'new-1 (:start graph)))
-                    )
-
-                    (doseq [#_"Node" node (FloatingReadPhase'removeExternallyUsedNodes-1 (:nodes listener))]
-                        (when (and (Node''isAlive-1 node) (satisfies? FloatingNode node))
-                            (§ ass! node (Node''replaceAtUsages-2 node, nil))
-                            (GraphUtil'killWithUnusedFloatingInputs-1 node)
-                        )
-                    )
-                    (when (:createFloatingReads this) => graph
-                        (Graph''setAfterFloatingReadPhase-2 graph, true)
-                    )
+                (when (:createFloatingReads this) => graph
+                    (Graph''setAfterFloatingReadPhase-2 graph, true)
                 )
             )
         )
@@ -32794,13 +32660,8 @@ ZeroExtendNode'new-4
     (defn #_"MemoryMap0" FloatingReadPhase'mergeMemoryMaps-2 [#_"AbstractMergeNode" merge, #_"List<? extends MemoryMap>" states]
         (let [
             #_"MemoryMap0" newState (MemoryMap0'new-0)
-            #_"EconomicSet<LocationIdentity>" keys (EconomicSet/create Equivalence/DEFAULT)
         ]
-            (doseq [#_"MemoryMap" other states]
-                (#_"EconomicSet" .addAll keys, (MemoryMap'''getLocations-1 other))
-            )
-
-            (doseq [#_"LocationIdentity" key keys]
+            (doseq [#_"LocationIdentity" key (into #{} (mapcat MemoryMap'''getLocations-1 states))]
                 (let [
                     #_"MemoryNode" merged
                         (loop-when [merged nil #_"boolean" isPhi false #_"int" n 0 #_"ISeq" s (seq states)] (some? s) => merged
@@ -32854,29 +32715,26 @@ ZeroExtendNode'new-4
  ; linking Java calls at arbitrary bytecodes.
  ;;
 (class-ns ForeignCallDescriptor []
-    (defn #_"ForeignCallDescriptor" ForeignCallDescriptor'new-3* [#_"String" name, #_"Class" resultType & #_"Class..." argumentTypes]
+    (defn #_"ForeignCallDescriptor" ForeignCallDescriptor'new-2* [#_"Class" resultType & #_"Class..." argumentTypes]
         (merge (ForeignCallDescriptor'class.)
             (hash-map
-                #_"String" :name name
                 #_"Class" :resultType resultType
                 #_"Class[]" :argumentTypes argumentTypes
             )
         )
     )
 
-    (§ def #_"ForeignCallDescriptor" ForeignCallDescriptor'DEOPTIMIZATION_HANDLER (ForeignCallDescriptor'new-3* "deoptHandler", void'class))
-    (§ def #_"ForeignCallDescriptor" ForeignCallDescriptor'UNCOMMON_TRAP_HANDLER  (ForeignCallDescriptor'new-3* "uncommonTrapHandler", void'class))
+    (§ def #_"ForeignCallDescriptor" ForeignCallDescriptor'DEOPTIMIZATION_HANDLER (ForeignCallDescriptor'new-2* void'class))
+    (§ def #_"ForeignCallDescriptor" ForeignCallDescriptor'UNCOMMON_TRAP_HANDLER  (ForeignCallDescriptor'new-2* void'class))
 
-    (§ def #_"ForeignCallDescriptor" ForeignCallDescriptor'NEW_ARRAY      (ForeignCallDescriptor'new-3* "new_array", Object, #_"KlassPointer" Word'iface, int'class, boolean'class))
-    (§ def #_"ForeignCallDescriptor" ForeignCallDescriptor'NEW_INSTANCE   (ForeignCallDescriptor'new-3* "new_instance", Object, #_"KlassPointer" Word'iface))
-    (§ def #_"ForeignCallDescriptor" ForeignCallDescriptor'NEW_ARRAY_C    (ForeignCallDescriptor'new-3* "newArrayC", void'class, Word'iface, #_"KlassPointer" Word'iface, int'class))
-    (§ def #_"ForeignCallDescriptor" ForeignCallDescriptor'NEW_INSTANCE_C (ForeignCallDescriptor'new-3* "newInstanceC", void'class, Word'iface, #_"KlassPointer" Word'iface))
+    (§ def #_"ForeignCallDescriptor" ForeignCallDescriptor'NEW_ARRAY    (ForeignCallDescriptor'new-2* void'class, Word'iface, #_"KlassPointer" Word'iface, int'class))
+    (§ def #_"ForeignCallDescriptor" ForeignCallDescriptor'NEW_INSTANCE (ForeignCallDescriptor'new-2* void'class, Word'iface, #_"KlassPointer" Word'iface))
 
-    (§ def #_"ForeignCallDescriptor" ForeignCallDescriptor'MONITORENTER (ForeignCallDescriptor'new-3* "monitorenter", void'class, Object, Word'iface))
-    (§ def #_"ForeignCallDescriptor" ForeignCallDescriptor'MONITOREXIT  (ForeignCallDescriptor'new-3* "monitorexit", void'class, Object, Word'iface))
+    (§ def #_"ForeignCallDescriptor" ForeignCallDescriptor'MONITORENTER (ForeignCallDescriptor'new-2* void'class, Object, Word'iface))
+    (§ def #_"ForeignCallDescriptor" ForeignCallDescriptor'MONITOREXIT  (ForeignCallDescriptor'new-2* void'class, Object, Word'iface))
 
-    (§ def #_"ForeignCallDescriptor" ForeignCallDescriptor'G1WBPRECALL  (ForeignCallDescriptor'new-3* "write_barrier_pre", void'class, Object))
-    (§ def #_"ForeignCallDescriptor" ForeignCallDescriptor'G1WBPOSTCALL (ForeignCallDescriptor'new-3* "write_barrier_post", void'class, Word'iface))
+    (§ def #_"ForeignCallDescriptor" ForeignCallDescriptor'G1WBPRECALL  (ForeignCallDescriptor'new-2* void'class, Object))
+    (§ def #_"ForeignCallDescriptor" ForeignCallDescriptor'G1WBPOSTCALL (ForeignCallDescriptor'new-2* void'class, Word'iface))
 )
 
 ;;;
@@ -33050,24 +32908,6 @@ ZeroExtendNode'new-4
     )
 
     ;;;
-     ; Creates and registers the details for linking a foreign call to a Stub.
-     ;
-     ; @param descriptor the signature of the call to the stub
-     ; @param reexecutable specifies if the stub call can be re-executed without (meaningful) side effects.
-     ;            Deoptimization will not return to a point before a stub call that cannot be re-executed.
-     ; @param transition specifies if this is a {@linkplain Transition#LEAF leaf} call
-     ; @param killedLocations the memory locations killed by the stub call
-     ;;
-    (defn #_"void" ForeignCalls''registerStubCall-5* [#_"ForeignCalls" this, #_"ForeignCallDescriptor" descriptor, #_"boolean" reexecutable, #_"Transition" transition & #_"LocationIdentity..." killedLocations]
-        (let [
-            #_"ForeignCallLinkage" linkage (apply ForeignCallLinkage'create-8* descriptor, 0, RegisterEffect'PRESERVES_REGISTERS, HotSpotCallingConventionType/JavaCall, HotSpotCallingConventionType/JavaCallee, transition, reexecutable, killedLocations)
-        ]
-            (ForeignCalls''register-2 this, linkage)
-        )
-        nil
-    )
-
-    ;;;
      ; Creates and registers the linkage for a foreign call.
      ;
      ; @param descriptor the signature of the foreign call
@@ -33088,7 +32928,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"Stub" ForeignCalls'link-1 [#_"Stub" stub]
+    (defn- #_"Stub" ForeignCalls'link-1 [#_"Stub" stub]
         (ß update-in stub [:linkage :stub] stub)
     )
 
@@ -33105,7 +32945,7 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"void" ForeignCalls''linkForeignCall-7* [#_"ForeignCalls" this, #_"ForeignCallDescriptor" descriptor, #_"long" address, #_"boolean" prependThread, #_"Transition" transition, #_"boolean" reexecutable & #_"LocationIdentity..." killedLocations]
         (let [
-            #_"ForeignCallStub" stub (ForeignCalls'link-1 (apply ForeignCallStub'new-6* address, descriptor, prependThread, transition, reexecutable, killedLocations))
+            #_"ForeignCallStub" stub (ForeignCalls'link-1 (apply ForeignCallStub'new-6* address, descriptor, prependThread, transition, reexecutable, killedLocations))
         ]
             (ForeignCalls''register-2 this, (:linkage stub))
             (ForeignCalls''register-2 this, (:target stub))
@@ -33122,20 +32962,17 @@ ZeroExtendNode'new-4
                     )
                 )
         ]
-            (apply ForeignCalls''registerForeignCall-8* this, ForeignCallDescriptor'DEOPTIMIZATION_HANDLER, HotSpot'handleDeoptStub, HotSpotCallingConventionType/NativeCall, RegisterEffect'PRESERVES_REGISTERS, Transition'LEAF_NOFP, true)
-            (apply ForeignCalls''registerForeignCall-8* this, ForeignCallDescriptor'UNCOMMON_TRAP_HANDLER, HotSpot'uncommonTrapStub, HotSpotCallingConventionType/NativeCall, RegisterEffect'PRESERVES_REGISTERS, Transition'LEAF_NOFP, true)
+            (ForeignCalls''registerForeignCall-8* this, ForeignCallDescriptor'DEOPTIMIZATION_HANDLER, HotSpot'handleDeoptStub, HotSpotCallingConventionType/NativeCall, RegisterEffect'PRESERVES_REGISTERS, Transition'LEAF_NOFP, true)
+            (ForeignCalls''registerForeignCall-8* this, ForeignCallDescriptor'UNCOMMON_TRAP_HANDLER, HotSpot'uncommonTrapStub, HotSpotCallingConventionType/NativeCall, RegisterEffect'PRESERVES_REGISTERS, Transition'LEAF_NOFP, true)
 
-            (ForeignCalls'link-1 (NewArrayStub'new-1 (ForeignCalls''registerStubCall-5* this, ForeignCallDescriptor'NEW_ARRAY, true, Transition'SAFEPOINT, ReplacementsUtil'TLAB_TOP_LOCATION, ReplacementsUtil'TLAB_END_LOCATION)))
-            (ForeignCalls'link-1 (NewInstanceStub'new-1 (ForeignCalls''registerStubCall-5* this, ForeignCallDescriptor'NEW_INSTANCE, true, Transition'SAFEPOINT, ReplacementsUtil'TLAB_TOP_LOCATION, ReplacementsUtil'TLAB_END_LOCATION)))
+            (ForeignCalls''registerForeignCall-8* this, ForeignCallDescriptor'NEW_ARRAY, HotSpot'newArrayAddress, HotSpotCallingConventionType/NativeCall, RegisterEffect'DESTROYS_REGISTERS, Transition'SAFEPOINT, true, LocationIdentity'ANY)
+            (ForeignCalls''registerForeignCall-8* this, ForeignCallDescriptor'NEW_INSTANCE, HotSpot'newInstanceAddress, HotSpotCallingConventionType/NativeCall, RegisterEffect'DESTROYS_REGISTERS, Transition'SAFEPOINT, true, LocationIdentity'ANY)
 
-            (ForeignCalls''registerForeignCall-8* this, ForeignCallDescriptor'NEW_ARRAY_C, HotSpot'newArrayAddress, HotSpotCallingConventionType/NativeCall, RegisterEffect'DESTROYS_REGISTERS, Transition'SAFEPOINT, true, (LocationIdentity/any))
-            (ForeignCalls''registerForeignCall-8* this, ForeignCallDescriptor'NEW_INSTANCE_C, HotSpot'newInstanceAddress, HotSpotCallingConventionType/NativeCall, RegisterEffect'DESTROYS_REGISTERS, Transition'SAFEPOINT, true, (LocationIdentity/any))
+            (ForeignCalls''linkForeignCall-7* this, ForeignCallDescriptor'MONITORENTER, HotSpot'monitorenterAddress, true, Transition'SAFEPOINT, false, LocationIdentity'ANY)
+            (ForeignCalls''linkForeignCall-7* this, ForeignCallDescriptor'MONITOREXIT, HotSpot'monitorexitAddress, true, Transition'STACK_INSPECTABLE_LEAF, false, LocationIdentity'ANY)
 
-            (ForeignCalls''linkForeignCall-7* this, ForeignCallDescriptor'MONITORENTER, HotSpot'monitorenterAddress, true, Transition'SAFEPOINT, false, (LocationIdentity/any))
-            (ForeignCalls''linkForeignCall-7* this, ForeignCallDescriptor'MONITOREXIT, HotSpot'monitorexitAddress, true, Transition'STACK_INSPECTABLE_LEAF, false, (LocationIdentity/any))
-
-            (apply ForeignCalls''linkForeignCall-7* this, ForeignCallDescriptor'G1WBPRECALL, HotSpot'writeBarrierPreAddress, true, Transition'LEAF_NOFP, true)
-            (apply ForeignCalls''linkForeignCall-7* this, ForeignCallDescriptor'G1WBPOSTCALL, HotSpot'writeBarrierPostAddress, true, Transition'LEAF_NOFP, true)
+            (ForeignCalls''linkForeignCall-7* this, ForeignCallDescriptor'G1WBPRECALL, HotSpot'writeBarrierPreAddress, true, Transition'LEAF_NOFP, true)
+            (ForeignCalls''linkForeignCall-7* this, ForeignCallDescriptor'G1WBPOSTCALL, HotSpot'writeBarrierPostAddress, true, Transition'LEAF_NOFP, true)
             this
         )
     )
@@ -34525,7 +34362,7 @@ ZeroExtendNode'new-4
      ; @param replacementsMap the replacement map (can be nil if no replacement is to be performed)
      ; @return a map which associates the original nodes from {@code nodes} to their duplicates
      ;;
-    (defn #_"UnmodifiableEconomicMap<Node, Node>" Graph''addDuplicates-5m [#_"Graph" this, #_"Node*" newNodes, #_"Graph" oldGraph, #_"int" estimatedNodeCount, #_"EconomicMap<Node, Node>" replacementsMap]
+    (defn #_"{Node Node}" Graph''addDuplicates-5m [#_"Graph" this, #_"Node*" newNodes, #_"Graph" oldGraph, #_"int" estimatedNodeCount, #_"EconomicMap<Node, Node>" replacementsMap]
         (Graph''addDuplicates-5r this, newNodes, oldGraph, estimatedNodeCount, (when (some? replacementsMap) (MapReplacement'new-1 replacementsMap)))
     )
 
@@ -34946,16 +34783,13 @@ ZeroExtendNode'new-4
     (defn- #_"void" GraphKit'inline-1 [#_"InvokeNode" invoke]
         (let [
             #_"ResolvedJavaMethod" method (:targetMethod (:callTarget invoke))
-            #_"GraphBuilderInstance" instance (GraphBuilderInstance'new-2 OptimisticOptimizations'NONE, (IntrinsicContext'new-4 method, method, HotSpot'defaultBytecodeProvider, CompilationContext'INLINE_AFTER_PARSING))
-            #_"Graph" calleeGraph (Graph'new-1 method)
-        ]
-            (§ ass! calleeGraph (Phase'''run-3 instance, calleeGraph, nil))
-
+            #_"Graph" graph (Graph'new-1 method)
+            graph (Phase'''run-3 (GraphBuilderInstance'new-2 OptimisticOptimizations'NONE, (IntrinsicContext'new-4 method, method, HotSpot'defaultBytecodeProvider, CompilationContext'INLINE_AFTER_PARSING)), graph, nil)
             ;; Remove all frame states from inlinee.
-            (Graph''clearAllStateAfter-1 calleeGraph)
-            (§ ass! calleeGraph (Phase'''run-3 (DeadCodeEliminationPhase'new-1 Optionality'Required), calleeGraph, nil))
-
-            (InliningUtil'inline-4 invoke, calleeGraph, false, method)
+            _ (Graph''clearAllStateAfter-1 graph)
+            graph (Phase'''run-3 (DeadCodeEliminationPhase'new-1 Optionality'Required), graph, nil)
+        ]
+            (InliningUtil'inline-4 invoke, graph, false, method)
         )
         nil
     )
@@ -46050,40 +45884,92 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns FieldLocationIdentity [#_"LocationIdentity"]
-    (defn #_"FieldLocationIdentity" FieldLocationIdentity'new-1 [#_"ResolvedJavaField" inner]
-        (merge (FieldLocationIdentity'class.) (LocationIdentity.)
+(class-ns LocationIdentity []
+    ;;;
+     ; Creates a new location identity. Subclasses are responsible to provide proper implementations
+     ; of {@link #equals} and {@link #hashCode}.
+     ;
+     ; @param immutable true if the location is immutable
+     ;;
+    (defn #_"LocationIdentity" LocationIdentity'new-1 [#_"boolean" immutable]
+        (merge (LocationIdentity'class.)
             (hash-map
-                #_"ResolvedJavaField" :inner inner
+                ;;;
+                 ; Denotes a location is unchanging in all cases. Not that this is different than
+                 ; the Java notion of final which only requires definite assignment.
+                 ;;
+                #_"boolean" :immutable immutable
             )
         )
     )
 
-    (§ override! #_"boolean" #_"LocationIdentity." isImmutable [#_"FieldLocationIdentity" this]
-        false
+    ;;;
+     ; Indicates that the given location is the union of all possible mutable locations. A write to
+     ; such a location kill all reads from mutable locations and a read from this location is killed
+     ; by any write (except for initialization writes).
+     ;;
+    (def #_"LocationIdentity" LocationIdentity'ANY (LocationIdentity'new-1 false))
+
+    ;;;
+     ; Location only allowed to be used for writes. Indicates that a completely new memory location
+     ; is written. Kills no read. The previous value at the given location must be either
+     ; uninitialized or null. Writes to this location do not need a GC pre-barrier.
+     ;;
+    (def #_"LocationIdentity" LocationIdentity'INIT (LocationIdentity'new-1 true))
+
+    ;;;
+     ; Returns true if this location identity is {@link #any}.
+     ;;
+    (defn #_"boolean" LocationIdentity''isAny-1 [#_"LocationIdentity" this]
+        (= this LocationIdentity'ANY)
+    )
+
+    ;;;
+     ; Returns true if this location identity is {@link #init}.
+     ;;
+    (defn #_"boolean" LocationIdentity''isInit-1 [#_"LocationIdentity" this]
+        (= this LocationIdentity'INIT)
+    )
+
+    ;;;
+     ; Returns true if this location identity is not {@link #any}.
+     ;;
+    (defn #_"boolean" LocationIdentity''isSingle-1 [#_"LocationIdentity" this]
+        (not= this LocationIdentity'ANY)
+    )
+
+    ;;;
+     ; Returns true if the memory slice denoted by this location identity may overlap with the other.
+     ;;
+    (defn #_"boolean" LocationIdentity''overlaps-2 [#_"LocationIdentity" this, #_"LocationIdentity" other]
+        (or (LocationIdentity''isAny-1 this) (LocationIdentity''isAny-1 other) (= this other))
+    )
+)
+
+(class-ns FieldLocationIdentity [LocationIdentity]
+    (defn #_"FieldLocationIdentity" FieldLocationIdentity'new-1 [#_"ResolvedJavaField" inner]
+        (merge (FieldLocationIdentity'class.) (LocationIdentity'new-1 false)
+            (hash-map
+                #_"ResolvedJavaField" :inner inner
+            )
+        )
     )
 )
 
 ;;;
  ; A LocationIdentity with a name.
  ;;
-(class-ns NamedLocationIdentity [#_"LocationIdentity"]
-    ;;;
-     ; Denotes the location of the length field of a Java array.
-     ;;
-    (§ def #_"LocationIdentity" NamedLocationIdentity'ARRAY_LENGTH_LOCATION (NamedLocationIdentity'immutable-1 "[].length"))
-
+(class-ns NamedLocationIdentity [LocationIdentity]
     ;;;
      ; Creates a named unique location identity for read and write operations.
      ;
      ; @param name the name of the new location identity
      ; @param immutable true if the location is immutable
      ;;
-    (defn #_"NamedLocationIdentity" NamedLocationIdentity'new-2 [#_"String" name, #_"boolean" immutable]
-        (merge (NamedLocationIdentity'class.) (LocationIdentity.)
+    (defn- #_"NamedLocationIdentity" NamedLocationIdentity'new-2 [#_"String" name, #_"boolean" immutable]
+        (merge (NamedLocationIdentity'class.) (LocationIdentity'new-1 immutable)
             (hash-map
                 #_"String" :name name
-                #_"boolean" :immutable immutable
             )
         )
     )
@@ -46107,16 +45993,17 @@ ZeroExtendNode'new-4
         (NamedLocationIdentity'new-2 name, true)
     )
 
-    (§ override! #_"boolean" #_"LocationIdentity." isImmutable [#_"NamedLocationIdentity" this]
-        (:immutable this)
-    )
+    ;;;
+     ; Denotes the location of the length field of a Java array.
+     ;;
+    (def #_"LocationIdentity" NamedLocationIdentity'ARRAY_LENGTH (NamedLocationIdentity'immutable-1 "[].length"))
 
-    (def- #_"EnumMap<JavaKind, LocationIdentity>" NamedLocationIdentity'ARRAY_LOCATIONS
+    (def- #_"EnumMap<JavaKind, LocationIdentity>" NamedLocationIdentity'ARRAY
         (let [
             #_"EnumMap<JavaKind, LocationIdentity>" m (EnumMap. JavaKind)
         ]
             (doseq [#_"JavaKind" kind (JavaKind/values)]
-                (#_"EnumMap" .put m, kind, (§ soon NamedLocationIdentity'mutable-1 (str "Array: " (#_"JavaKind" .getJavaName kind))))
+                (#_"EnumMap" .put m, kind, (NamedLocationIdentity'mutable-1 (str "Array: " (#_"JavaKind" .getJavaName kind))))
             )
             m
         )
@@ -46128,11 +46015,103 @@ ZeroExtendNode'new-4
      ; two distinct arrays are accessed.
      ;;
     (defn #_"LocationIdentity" NamedLocationIdentity'getArrayLocation-1 [#_"JavaKind" elementKind]
-        (get NamedLocationIdentity'ARRAY_LOCATIONS elementKind)
+        (get NamedLocationIdentity'ARRAY elementKind)
     )
+
+    (def- #_"EnumMap<JavaKind, LocationIdentity>" NamedLocationIdentity'UNBOX
+        (let [
+            #_"EnumMap<JavaKind, LocationIdentity>" m (EnumMap. JavaKind)
+        ]
+            (doseq [#_"JavaKind" kind (JavaKind/values)]
+                (#_"EnumMap" .put m, kind, (NamedLocationIdentity'immutable-1 (str "Unbox: " (#_"JavaKind" .getJavaName kind))))
+            )
+            m
+        )
+    )
+
+    (defn #_"LocationIdentity" NamedLocationIdentity'getUnboxLocation-1 [#_"JavaKind" elementKind]
+        (get NamedLocationIdentity'UNBOX elementKind)
+    )
+
+    (def #_"LocationIdentity" NamedLocationIdentity'TLAB_TOP (NamedLocationIdentity'mutable-1 "TlabTop"))
+    (def #_"LocationIdentity" NamedLocationIdentity'TLAB_END (NamedLocationIdentity'mutable-1 "TlabEnd"))
+
+    (def #_"LocationIdentity" NamedLocationIdentity'PENDING_EXCEPTION      (NamedLocationIdentity'mutable-1 "PendingException"))
+    (def #_"LocationIdentity" NamedLocationIdentity'PENDING_DEOPTIMIZATION (NamedLocationIdentity'mutable-1 "PendingDeoptimization"))
+    (def #_"LocationIdentity" NamedLocationIdentity'OBJECT_RESULT          (NamedLocationIdentity'mutable-1 "ObjectResult"))
+
+    (def #_"LocationIdentity" NamedLocationIdentity'PROTOTYPE_MARK_WORD (NamedLocationIdentity'mutable-1 "PrototypeMarkWord"))
+
+    (def #_"LocationIdentity" NamedLocationIdentity'MARK_WORD (NamedLocationIdentity'mutable-1 "MarkWord"))
+    (def #_"LocationIdentity" NamedLocationIdentity'HUB_WRITE (NamedLocationIdentity'mutable-1 "Hub:write"))
+
+    (def #_"LocationIdentity" NamedLocationIdentity'HUB
+        (§ proxy #_"CanonicalizableLocation" (CanonicalizableLocation'new-1 "Hub")
+            (#_"ValueNode" CanonicalizableLocation'''canonicalizeRead-4 [#_"CanonicalizableLocation" this, #_"ValueNode" read, #_"AddressNode" location, #_"ValueNode" object]
+                (let [
+                    #_"TypeReference" constantType (StampTool'typeReferenceOrNull-1 (:stamp object))
+                ]
+                    (when (and (some? constantType) (:exactReference constantType)) => read
+                        (ConstantNode'forConstant-2s (:stamp read), (#_"ConstantReflectionProvider" .asObjectHub HotSpot'constantReflection, (:type constantType)))
+                    )
+                )
+            )
+        )
+    )
+
+    (def #_"LocationIdentity" NamedLocationIdentity'COMPRESSED_HUB
+        (§ proxy #_"CanonicalizableLocation" (CanonicalizableLocation'new-1 "CompressedHub")
+            (#_"ValueNode" CanonicalizableLocation'''canonicalizeRead-4 [#_"CanonicalizableLocation" this, #_"ValueNode" read, #_"AddressNode" location, #_"ValueNode" object]
+                (let [
+                    #_"TypeReference" constantType (StampTool'typeReferenceOrNull-1 (:stamp object))
+                ]
+                    (when (and (some? constantType) (:exactReference constantType)) => read
+                        (ConstantNode'forConstant-2s (:stamp read), (#_"HotSpotMetaspaceConstant" .compress (#_"ConstantReflectionProvider" .asObjectHub HotSpot'constantReflection, (:type constantType))))
+                    )
+                )
+            )
+        )
+    )
+
+    (def #_"LocationIdentity" NamedLocationIdentity'KLASS_SUPER_CHECK_OFFSET (NamedLocationIdentity'immutable-1 "Klass::_super_check_offset"))
+    (def #_"LocationIdentity" NamedLocationIdentity'SECONDARY_SUPER_CACHE    (NamedLocationIdentity'mutable-1   "SecondarySuperCache"))
+    (def #_"LocationIdentity" NamedLocationIdentity'SECONDARY_SUPERS         (NamedLocationIdentity'immutable-1 "SecondarySupers"))
+
+    (def #_"LocationIdentity" NamedLocationIdentity'DISPLACED_MARK_WORD       (NamedLocationIdentity'mutable-1 "DisplacedMarkWord"))
+    (def #_"LocationIdentity" NamedLocationIdentity'OBJECT_MONITOR_OWNER      (NamedLocationIdentity'mutable-1 "ObjectMonitor::_owner"))
+    (def #_"LocationIdentity" NamedLocationIdentity'OBJECT_MONITOR_RECURSION  (NamedLocationIdentity'mutable-1 "ObjectMonitor::_recursions"))
+    (def #_"LocationIdentity" NamedLocationIdentity'OBJECT_MONITOR_CXQ        (NamedLocationIdentity'mutable-1 "ObjectMonitor::_cxq"))
+    (def #_"LocationIdentity" NamedLocationIdentity'OBJECT_MONITOR_ENTRY_LIST (NamedLocationIdentity'mutable-1 "ObjectMonitor::_EntryList"))
+
+    (def #_"LocationIdentity" NamedLocationIdentity'CLASS_KLASS
+        (§ proxy #_"CanonicalizableLocation" (CanonicalizableLocation'new-1 "Class._klass")
+            (#_"ValueNode" CanonicalizableLocation'''canonicalizeRead-4 [#_"CanonicalizableLocation" this, #_"ValueNode" read, #_"AddressNode" location, #_"ValueNode" object]
+                (CanonicalizableLocation'foldIndirection-3 read, object, NamedLocationIdentity'CLASS_MIRROR)
+            )
+        )
+    )
+
+    (def #_"LocationIdentity" NamedLocationIdentity'CLASS_MIRROR        (NamedLocationIdentity'immutable-1 "Klass::_java_mirror"))
+    (def #_"LocationIdentity" NamedLocationIdentity'CLASS_MIRROR_HANDLE (NamedLocationIdentity'immutable-1 "Klass::_java_mirror handle"))
+
+    (def #_"LocationIdentity" NamedLocationIdentity'OBJ_ARRAY_KLASS_ELEMENT_KLASS
+        (§ proxy #_"CanonicalizableLocation" (CanonicalizableLocation'new-1 "ObjArrayKlass::_element_klass")
+            (#_"ValueNode" CanonicalizableLocation'''canonicalizeRead-4 [#_"CanonicalizableLocation" this, #_"ValueNode" read, #_"AddressNode" location, #_"ValueNode" object]
+                read
+            )
+        )
+    )
+
+    (def #_"LocationIdentity" NamedLocationIdentity'PRIMARY_SUPERS           (NamedLocationIdentity'immutable-1 "PrimarySupers"))
+    (def #_"LocationIdentity" NamedLocationIdentity'METASPACE_ARRAY_LENGTH   (NamedLocationIdentity'immutable-1 "MetaspaceArrayLength"))
+    (def #_"LocationIdentity" NamedLocationIdentity'SECONDARY_SUPERS_ELEMENT (NamedLocationIdentity'immutable-1 "SecondarySupersElement"))
+
+    (def #_"LocationIdentity" NamedLocationIdentity'GC_CARD (NamedLocationIdentity'mutable-1 "GC-Card"))
+    (def #_"LocationIdentity" NamedLocationIdentity'GC_LOG (NamedLocationIdentity'mutable-1 "GC-Log"))
+    (def #_"LocationIdentity" NamedLocationIdentity'GC_INDEX (NamedLocationIdentity'mutable-1 "GC-Index"))
 )
 
-(class-ns CanonicalizableLocation [NamedLocationIdentity, #_"LocationIdentity"]
+(class-ns CanonicalizableLocation [NamedLocationIdentity, LocationIdentity]
     (defn #_"CanonicalizableLocation" CanonicalizableLocation'new-1 [#_"String" name]
         (merge (CanonicalizableLocation'class.) (NamedLocationIdentity'new-2 name, true))
     )
@@ -46166,16 +46145,16 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"boolean" LocationSet''isAny-1 [#_"LocationSet" this]
-        (and (some? (:firstLocation this)) (#_"LocationIdentity" .isAny (:firstLocation this)))
+        (and (some? (:firstLocation this)) (LocationIdentity''isAny-1 (:firstLocation this)))
     )
 
     (defn #_"LocationSet" LocationSet''add-2 [#_"LocationSet" this, #_"LocationIdentity" location]
         (cond
-            (LocationSet''isAny-1 this)                  this
-            (LocationSet''isAny-1 location)              (assoc this :firstLocation location :list nil)
-            (#_"LocationIdentity" .isImmutable location) this
-            (nil? (:firstLocation this))                 (assoc this :firstLocation location)
-            (= location (:firstLocation this))           this
+            (LocationSet''isAny-1 this)        this
+            (LocationSet''isAny-1 location)    (assoc this :firstLocation location :list nil)
+            (:immutable location)              this
+            (nil? (:firstLocation this))       (assoc this :firstLocation location)
+            (= location (:firstLocation this)) this
             :else
                 (let [
                     this
@@ -46207,11 +46186,11 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"boolean" LocationSet''contains-2 [#_"LocationSet" this, #_"LocationIdentity" locationIdentity]
-        (or (any = (:firstLocation this) (LocationIdentity/any) locationIdentity)
+    (defn #_"boolean" LocationSet''contains-2 [#_"LocationSet" this, #_"LocationIdentity" location]
+        (or (any = (:firstLocation this) LocationIdentity'ANY location)
             (and (some? (:list this))
                 (loop-when [#_"int" i 0] (< i (count (:list this))) => false
-                    (or (= locationIdentity (nth (:list this) i))
+                    (or (= location (nth (:list this) i))
                         (recur (inc i))
                     )
                 )
@@ -47872,27 +47851,27 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"boolean" LoopKillCache''containsLocation-2 [#_"LoopKillCache" this, #_"LocationIdentity" locationIdentity]
+    (defn #_"boolean" LoopKillCache''containsLocation-2 [#_"LoopKillCache" this, #_"LocationIdentity" location]
         (or (:killsAll this)
             (and (some? (:firstLocation this))
-                (or (= (:firstLocation this) locationIdentity)
-                    (and (some? (:killedLocations this)) (contains? (:killedLocations this) locationIdentity))
+                (or (= (:firstLocation this) location)
+                    (and (some? (:killedLocations this)) (contains? (:killedLocations this) location))
                 )
             )
         )
     )
 
-    (defn #_"LoopKillCache" LoopKillCache''rememberLoopKilledLocation-2 [#_"LoopKillCache" this, #_"LocationIdentity" locationIdentity]
+    (defn #_"LoopKillCache" LoopKillCache''rememberLoopKilledLocation-2 [#_"LoopKillCache" this, #_"LocationIdentity" location]
         (when-not (:killsAll this) => this
-            (if (or (nil? (:firstLocation this)) (= (:firstLocation this) locationIdentity))
-                (assoc this :firstLocation locationIdentity)
+            (if (or (nil? (:firstLocation this)) (= (:firstLocation this) location))
+                (assoc this :firstLocation location)
                 (let [
                     this
                         (when (nil? (:killedLocations this)) => this
                             (assoc this :killedLocations (EconomicSet/create Equivalence/IDENTITY))
                         )
                 ]
-                    (#_"EconomicSet" .add (:killedLocations this), locationIdentity)
+                    (#_"EconomicSet" .add (:killedLocations this), location)
                     this
                 )
             )
@@ -48479,34 +48458,6 @@ ZeroExtendNode'new-4
             (:guardAnchor lowerer)
         )
     )
-
-    ;;;
-     ; Gets all usages of a floating, lowerable node that are unscheduled.
-     ;
-     ; Given that the lowering of such nodes may introduce fixed nodes, they must be lowered in
-     ; the context of a usage that dominates all other usages. The fixed nodes resulting from
-     ; lowering are attached to the fixed node context of the dominating usage. This ensures the
-     ; post-lowering graph still has a valid schedule.
-     ;
-     ; @param node a Lowerable node
-     ;;
-    #_unused
-    (defn- #_"Collection<Node>" LoweringRound''getUnscheduledUsages-2 [#_"LoweringRound" this, #_"Node" node]
-        (let [
-            #_"List<Node>" unscheduledUsages (ArrayList.)
-        ]
-            (when (satisfies? FloatingNode node)
-                (doseq [#_"Node" usage (:nodeUsages node)]
-                    (when (and (satisfies? ValueNode usage) (not (satisfies? PhiNode usage)) (not (satisfies? ProxyNode usage)))
-                        (when (or (NodeMap''isNew-2 (:nodeToBlock (:cfg (:schedule this))), usage) (nil? (ControlFlowGraph''blockFor-2 (:cfg (:schedule this)), usage)))
-                            (#_"List" .add unscheduledUsages, usage)
-                        )
-                    )
-                )
-            )
-            unscheduledUsages
-        )
-    )
 )
 
 (class-ns LoweringTool []
@@ -48668,8 +48619,8 @@ ZeroExtendNode'new-4
             )
         )
 
-        (#_"Collection<LocationIdentity>" MemoryMap'''getLocations-1 [#_"MemoryInputMap" this]
-            (if (some? (:locationIdentity this)) (Collections/singleton (:locationIdentity this)) (Collections/emptySet))
+        (#_"LocationIdentity*" MemoryMap'''getLocations-1 [#_"MemoryInputMap" this]
+            (when (some? (:locationIdentity this)) (list (:locationIdentity this)))
         )
     )
 )
@@ -48685,18 +48636,18 @@ ZeroExtendNode'new-4
     )
 
     (defm MemoryOutputMap MemoryMap
-        (#_"MemoryNode" MemoryMap'''getLastLocationAccess-2 [#_"MemoryOutputMap" this, #_"LocationIdentity" locationIdentity]
+        (#_"MemoryNode" MemoryMap'''getLastLocationAccess-2 [#_"MemoryOutputMap" this, #_"LocationIdentity" location]
             (let [
-                #_"MemoryNode" lastLocationAccess (MemoryMap'''getLastLocationAccess-2 (:memoryMap (:returnNode (:template this))), locationIdentity)
+                #_"MemoryNode" lastLocationAccess (MemoryMap'''getLastLocationAccess-2 (:memoryMap (:returnNode (:template this))), location)
             ]
                 (if (= lastLocationAccess (:memoryAnchor (:template this)))
-                    (MemoryMap'''getLastLocationAccess-2 (§ super #_"MemoryInputMap"), locationIdentity)
+                    (MemoryMap'''getLastLocationAccess-2 (§ super #_"MemoryInputMap"), location)
                     (get (:duplicates this) lastLocationAccess)
                 )
             )
         )
 
-        (#_"Collection<LocationIdentity>" MemoryMap'''getLocations-1 [#_"MemoryOutputMap" this]
+        (#_"LocationIdentity*" MemoryMap'''getLocations-1 [#_"MemoryOutputMap" this]
             (MemoryMap'''getLocations-1 (:memoryMap (:returnNode (:template this))))
         )
     )
@@ -48715,7 +48666,7 @@ ZeroExtendNode'new-4
         (let [
             #_"MemoryMap0" this (MemoryMap0'new-0)
         ]
-            (#_"EconomicMap" .put (:lastMemorySnapshot this), (LocationIdentity/any), start)
+            (#_"EconomicMap" .put (:lastMemorySnapshot this), LocationIdentity'ANY, start)
             this
         )
     )
@@ -48729,15 +48680,15 @@ ZeroExtendNode'new-4
     )
 
     (defm MemoryMap0 MemoryMap
-        (#_"MemoryNode" MemoryMap'''getLastLocationAccess-2 [#_"MemoryMap0" this, #_"LocationIdentity" locationIdentity]
-            (when-not (#_"LocationIdentity" .isImmutable locationIdentity)
-                (or (get (:lastMemorySnapshot this) locationIdentity)
-                    (get (:lastMemorySnapshot this) (LocationIdentity/any))
+        (#_"MemoryNode" MemoryMap'''getLastLocationAccess-2 [#_"MemoryMap0" this, #_"LocationIdentity" location]
+            (when-not (:immutable location)
+                (or (get (:lastMemorySnapshot this) location)
+                    (get (:lastMemorySnapshot this) LocationIdentity'ANY)
                 )
             )
         )
 
-        (#_"Iterable<LocationIdentity>" MemoryMap'''getLocations-1 [#_"MemoryMap0" this]
+        (#_"LocationIdentity*" MemoryMap'''getLocations-1 [#_"MemoryMap0" this]
             (keys (:lastMemorySnapshot this))
         )
     )
@@ -49420,16 +49371,16 @@ ZeroExtendNode'new-4
         (merge (PEReadEliminationMergeProcessor'class.) (PEMergeProcessor'new-2 reClosure, mergeBlock))
     )
 
-    (defn- #_"void" PEReadEliminationMergeProcessor''mergeReadCachePhi-7 [#_"PEReadEliminationMergeProcessor" this, #_"PhiNode" phi, #_"LocationIdentity" identity, #_"int" index, #_"JavaKind" kind, #_"boolean" overflowAccess, #_"List<PEReadEliminationBlockState>" states]
+    (defn- #_"void" PEReadEliminationMergeProcessor''mergeReadCachePhi-7 [#_"PEReadEliminationMergeProcessor" this, #_"PhiNode" phi, #_"LocationIdentity" location, #_"int" index, #_"JavaKind" kind, #_"boolean" overflowAccess, #_"List<PEReadEliminationBlockState>" states]
         (let [
             #_"ValueNode[]" values (make-array ValueNode'iface (count states))
         ]
-            (aset values 0 (PEReadEliminationBlockState''getReadCache-6 (nth states 0), (MergeProcessor''getPhiValueAt-3 this, phi, 0), identity, index, kind, (:peClosure this)))
+            (aset values 0 (PEReadEliminationBlockState''getReadCache-6 (nth states 0), (MergeProcessor''getPhiValueAt-3 this, phi, 0), location, index, kind, (:peClosure this)))
             (when (some? (nth values 0))
                 (loop [#_"int" i 1]
                     (if (< i (count states))
                         (let [
-                            #_"ValueNode" value (PEReadEliminationBlockState''getReadCache-6 (nth states i), (MergeProcessor''getPhiValueAt-3 this, phi, i), identity, index, kind, (:peClosure this))
+                            #_"ValueNode" value (PEReadEliminationBlockState''getReadCache-6 (nth states i), (MergeProcessor''getPhiValueAt-3 this, phi, i), location, index, kind, (:peClosure this))
                         ]
                             ;; e.g. unsafe loads/stores with same identity, but different access kinds, see mergeReadCache(states)
                             (when (and (some? value) (Stamp'''isCompatible-2s (:stamp (nth values (dec i))), (:stamp value)))
@@ -49438,13 +49389,13 @@ ZeroExtendNode'new-4
                             )
                         )
                         (let [
-                            #_"PhiNode" phiNode (PEMergeProcessor''getPhi-3 this, (ReadCacheEntry'new-5 identity, phi, index, kind, overflowAccess), (Stamp'''unrestricted-1 (:stamp (nth values 0))))
+                            #_"PhiNode" phiNode (PEMergeProcessor''getPhi-3 this, (ReadCacheEntry'new-5 location, phi, index, kind, overflowAccess), (Stamp'''unrestricted-1 (:stamp (nth values 0))))
                         ]
                             (GraphEffectList''addFloatingNode-3 (:mergeEffects this), phiNode, "mergeReadCachePhi")
                             (dotimes [#_"int" i (count values)]
                                 (MergeProcessor''setPhiInput-4 this, phiNode, i, (nth values i))
                             )
-                            (#_"EconomicMap" .put (:readCache (:newState this)), (ReadCacheEntry'new-5 identity, phi, index, kind, overflowAccess), phiNode)
+                            (#_"EconomicMap" .put (:readCache (:newState this)), (ReadCacheEntry'new-5 location, phi, index, kind, overflowAccess), phiNode)
                         )
                     )
                 )
@@ -54821,7 +54772,7 @@ ZeroExtendNode'new-4
 
     (defm StartNode Single
         (#_"LocationIdentity" Single'''getLocationIdentity-1 [#_"StartNode" this]
-            (LocationIdentity/any)
+            LocationIdentity'ANY
         )
     )
 )
@@ -54927,7 +54878,7 @@ ZeroExtendNode'new-4
 
     (defm MonitorEnterNode Single
         (#_"LocationIdentity" Single'''getLocationIdentity-1 [#_"MonitorEnterNode" this]
-            (LocationIdentity/any)
+            LocationIdentity'ANY
         )
     )
 
@@ -54989,7 +54940,7 @@ ZeroExtendNode'new-4
 
     (defm MonitorExitNode Single
         (#_"LocationIdentity" Single'''getLocationIdentity-1 [#_"MonitorExitNode" this]
-            (LocationIdentity/any)
+            LocationIdentity'ANY
         )
     )
 
@@ -55033,7 +54984,7 @@ ZeroExtendNode'new-4
 
     (defm RawMonitorEnterNode Single
         (#_"LocationIdentity" Single'''getLocationIdentity-1 [#_"RawMonitorEnterNode" this]
-            (LocationIdentity/any)
+            LocationIdentity'ANY
         )
     )
 
@@ -55172,7 +55123,7 @@ ZeroExtendNode'new-4
 
     (defm BeginLockScopeNode Single
         (#_"LocationIdentity" Single'''getLocationIdentity-1 [#_"BeginLockScopeNode" this]
-            (LocationIdentity/any)
+            LocationIdentity'ANY
         )
     )
 
@@ -55203,7 +55154,7 @@ ZeroExtendNode'new-4
 
     (defm EndLockScopeNode Single
         (#_"LocationIdentity" Single'''getLocationIdentity-1 [#_"EndLockScopeNode" this]
-            (LocationIdentity/any)
+            LocationIdentity'ANY
         )
     )
 
@@ -55257,9 +55208,6 @@ ZeroExtendNode'new-4
     (§ intrinsic! #_"void" ForeignCallNode'monitorenterStubC-3 [#_"ForeignCallDescriptor" descriptor, #_"Object" object, #_"Word" lock])
     (§ intrinsic! #_"void" ForeignCallNode'monitorexitStubC-3 [#_"ForeignCallDescriptor" descriptor, #_"Object" object, #_"Word" lock])
 
-    (§ intrinsic! #_"Object" ForeignCallNode'newInstance-2 [#_"ForeignCallDescriptor" descriptor, #_"KlassPointer" hub])
-    (§ intrinsic! #_"Object" ForeignCallNode'newArray-4 [#_"ForeignCallDescriptor" descriptor, #_"KlassPointer" hub, #_"int" length, #_"boolean" fillContents])
-
     (§ intrinsic! #_"void" ForeignCallNode'g1PreBarrierStub-2 [#_"ForeignCallDescriptor" descriptor, #_"Object" object])
     (§ intrinsic! #_"void" ForeignCallNode'g1PostBarrierStub-2 [#_"ForeignCallDescriptor" descriptor, #_"Word" card])
 
@@ -55270,7 +55218,7 @@ ZeroExtendNode'new-4
     )
 
     (defm ForeignCallNode Multi
-        (#_"LocationIdentity[]" Multi'''getLocationIdentities-1 [#_"ForeignCallNode" this]
+        (#_"LocationIdentity*" Multi'''getLocationIdentities-1 [#_"ForeignCallNode" this]
             (ForeignCalls''getKilledLocations-2 HotSpot'foreignCalls, (:descriptor this))
         )
     )
@@ -55422,7 +55370,7 @@ ZeroExtendNode'new-4
 
     (defm InvokeNode Single
         (#_"LocationIdentity" Single'''getLocationIdentity-1 [#_"InvokeNode" this]
-            (LocationIdentity/any)
+            LocationIdentity'ANY
         )
     )
 
@@ -56404,7 +56352,7 @@ ZeroExtendNode'new-4
                 )
             #_"int" barrier (| MemoryBarriers/STORE_STORE (if final? MemoryBarriers/LOAD_STORE 0))
         ]
-            (Graph''addAfterFixed-3 (:graph this), this, (Graph''add-2 (:graph this), (MembarNode'new-2 barrier, (LocationIdentity/init))))
+            (Graph''addAfterFixed-3 (:graph this), this, (Graph''add-2 (:graph this), (MembarNode'new-2 barrier, LocationIdentity'INIT)))
         )
         nil
     )
@@ -56540,7 +56488,7 @@ ZeroExtendNode'new-4
                                                             )
                                                     ]
                                                         (when (some? address)
-                                                            (Graph''addAfterFixed-3 (:graph this), newObject, (Graph''add-2 (:graph this), (WriteNode'new-4 address, (LocationIdentity/init), (Lowerer'implicitStoreConvert-3 (:graph this), entryKind, value), barrierType)))
+                                                            (Graph''addAfterFixed-3 (:graph this), newObject, (Graph''add-2 (:graph this), (WriteNode'new-4 address, LocationIdentity'INIT, (Lowerer'implicitStoreConvert-3 (:graph this), entryKind, value), barrierType)))
                                                         )
                                                     )
                                             )
@@ -56574,7 +56522,7 @@ ZeroExtendNode'new-4
                                                         )
                                                 ]
                                                     (when (some? address)
-                                                        (Graph''addBeforeFixed-3 (:graph this), this, (Graph''add-2 (:graph this), (WriteNode'new-4 address, (LocationIdentity/init), (Lowerer'implicitStoreConvert-3 (:graph this), JavaKind/Object, allocValue), barrierType)))
+                                                        (Graph''addBeforeFixed-3 (:graph this), this, (Graph''add-2 (:graph this), (WriteNode'new-4 address, LocationIdentity'INIT, (Lowerer'implicitStoreConvert-3 (:graph this), JavaKind/Object, allocValue), barrierType)))
                                                     )
                                                 )
                                             )
@@ -56601,7 +56549,7 @@ ZeroExtendNode'new-4
 
     (defm CommitAllocationNode Single
         (#_"LocationIdentity" Single'''getLocationIdentity-1 [#_"CommitAllocationNode" this]
-            (if (empty? (:locks this)) (LocationIdentity/init) (LocationIdentity/any))
+            (if (empty? (:locks this)) LocationIdentity'INIT LocationIdentity'ANY)
         )
     )
 
@@ -57426,7 +57374,7 @@ ZeroExtendNode'new-4
         (#_"void" Lowerable'''lower-2 [#_"JavaWriteNode" this, #_"LoweringTool" lowerer]
             (let [
                 #_"ValueNode" value (Lowerer'implicitStoreConvert-4 (:graph this), (:writeKind this), (:value this), (:compressible? this))
-                #_"WriteNode" memoryWrite (Graph''add-2 (:graph this), (WriteNode'new-4 (Access'''getAddress-1 this), (ß FixedAccessNode''getLocationIdentity-1 this), value, (:barrierType this)))
+                #_"WriteNode" memoryWrite (Graph''add-2 (:graph this), (WriteNode'new-4 (Access'''getAddress-1 this), (Access'''getLocationIdentity-1 this), value, (:barrierType this)))
             ]
                 (StateSplit'''setStateAfter-2 memoryWrite, (:stateAfter this))
                 (§ ass! (:graph this) (Graph''replaceFixedWithFixed-3 (:graph this), this, memoryWrite))
@@ -57509,7 +57457,7 @@ ZeroExtendNode'new-4
      ; has an attached write barrier with pre-semantics can not float either.
      ;;
     (defn #_"boolean" FloatableAccessNode''canFloat-1 [#_"FloatableAccessNode" this]
-        (and (not (:forceFixed this)) (#_"LocationIdentity" .isSingle (ß FixedAccessNode''getLocationIdentity-1 this)) (= (:barrierType this) BarrierType'NONE))
+        (and (not (:forceFixed this)) (LocationIdentity''isSingle-1 (Access'''getLocationIdentity-1 this)) (= (:barrierType this) BarrierType'NONE))
     )
 )
 
@@ -57540,18 +57488,18 @@ ZeroExtendNode'new-4
                 (:nullCheck this)
                     this ;; if this read is a nil-check, then replacing it with the value is incorrect for guard-type usages
                 :else
-                    (ReadNode'canonicalizeRead-4 this, (Access'''getAddress-1 this), (ß FixedAccessNode''getLocationIdentity-1 this), tool)
+                    (ReadNode'canonicalizeRead-4 this, (Access'''getAddress-1 this), (Access'''getLocationIdentity-1 this), tool)
             )
         )
     )
 
     (defm ReadNode FloatableAccessNode
         (#_"FloatingAccessNode" FloatableAccessNode'''asFloatingNode-2 [#_"ReadNode" this, #_"MemoryNode" lastLocationAccess]
-            (Graph''add-2 (:graph this), (FloatingReadNode'new-6 (Access'''getAddress-1 this), (ß FixedAccessNode''getLocationIdentity-1 this), lastLocationAccess, (:stamp this), (GuardedNode'''getGuard-1 this), (:barrierType this)))
+            (Graph''add-2 (:graph this), (FloatingReadNode'new-6 (Access'''getAddress-1 this), (Access'''getLocationIdentity-1 this), lastLocationAccess, (:stamp this), (GuardedNode'''getGuard-1 this), (:barrierType this)))
         )
     )
 
-    (defn #_"ValueNode" ReadNode'canonicalizeRead-4 [#_"ValueNode" read, #_"AddressNode" address, #_"LocationIdentity" locationIdentity, #_"CanonicalizerTool" tool]
+    (defn #_"ValueNode" ReadNode'canonicalizeRead-4 [#_"ValueNode" read, #_"AddressNode" address, #_"LocationIdentity" location, #_"CanonicalizerTool" tool]
         (when (and (CanonicalizerTool'''canonicalizeReads-1 tool) (satisfies? OffsetAddressNode address)) => read
             (let [
                 #_"ValueNode" object (AddressNode'''getBase-1 address)
@@ -57561,10 +57509,10 @@ ZeroExtendNode'new-4
                         #_"long" displacement (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 (:offset address)))
                         #_"int" stableDimension (:stableDimension object)
                     ]
-                        (when (or (#_"LocationIdentity" .isImmutable locationIdentity) (pos? stableDimension))
+                        (when (or (:immutable location) (pos? stableDimension))
                             (let [
                                 #_"Constant" constant (Stamp'''readConstant-4 (:stamp read), (#_"ConstantReflectionProvider" .getMemoryAccessProvider HotSpot'constantReflection), (:value object), displacement)
-                                #_"boolean" isDefaultStable (or (#_"LocationIdentity" .isImmutable locationIdentity) (:isDefaultStable object))
+                                #_"boolean" isDefaultStable (or (:immutable location) (:isDefaultStable object))
                             ]
                                 (when (and (some? constant) (or isDefaultStable (not (#_"Constant" .isDefaultForKind constant))))
                                     (§ return (ConstantNode'forConstant-4 (:stamp read), constant, (max (dec stableDimension) 0), isDefaultStable))
@@ -57573,7 +57521,7 @@ ZeroExtendNode'new-4
                         )
                     )
                 )
-                (when (= locationIdentity NamedLocationIdentity'ARRAY_LENGTH_LOCATION)
+                (when (= location NamedLocationIdentity'ARRAY_LENGTH)
                     (let [
                         #_"ValueNode" length (GraphUtil'arrayLength-1 object)
                     ]
@@ -57582,8 +57530,8 @@ ZeroExtendNode'new-4
                         )
                     )
                 )
-                (when (satisfies? CanonicalizableLocation locationIdentity) => read
-                    (CanonicalizableLocation'''canonicalizeRead-4 locationIdentity, read, address, object)
+                (when (satisfies? CanonicalizableLocation location) => read
+                    (CanonicalizableLocation'''canonicalizeRead-4 location, read, address, object)
                 )
             )
         )
@@ -57626,7 +57574,7 @@ ZeroExtendNode'new-4
         (#_"void" Lowerable'''lower-2 [#_"JavaReadNode" this, #_"LoweringTool" lowerer]
             (let [
                 #_"Stamp" loadStamp (Lowerer'loadStamp-3 (:stamp this), (:readKind this), (:compressible? this))
-                #_"ReadNode" memoryRead (Graph''add-2 (:graph this), (ReadNode'new-4 (Access'''getAddress-1 this), (ß FixedAccessNode''getLocationIdentity-1 this), loadStamp, (:barrierType this)))
+                #_"ReadNode" memoryRead (Graph''add-2 (:graph this), (ReadNode'new-4 (Access'''getAddress-1 this), (Access'''getLocationIdentity-1 this), loadStamp, (:barrierType this)))
                 #_"ValueNode" readValue (Lowerer'implicitLoadConvert-4 (:graph this), (:readKind this), memoryRead, (:compressible? this))
                 #_"GuardingNode" guard (GuardedNode'''getGuard-1 this)
             ]
@@ -57650,7 +57598,7 @@ ZeroExtendNode'new-4
 
     (defm JavaReadNode Canonicalizable
         (#_"Node" Canonicalizable'''canonical-2 [#_"JavaReadNode" this, #_"CanonicalizerTool" tool]
-            (ReadNode'canonicalizeRead-4 this, (Access'''getAddress-1 this), (ß FixedAccessNode''getLocationIdentity-1 this), tool)
+            (ReadNode'canonicalizeRead-4 this, (Access'''getAddress-1 this), (Access'''getLocationIdentity-1 this), tool)
         )
     )
 )
@@ -58407,7 +58355,7 @@ ZeroExtendNode'new-4
 
     (defm MacroStateSplitNode Single
         (#_"LocationIdentity" Single'''getLocationIdentity-1 [#_"MacroStateSplitNode" this]
-            (LocationIdentity/any)
+            LocationIdentity'ANY
         )
     )
 )
@@ -58739,7 +58687,7 @@ ZeroExtendNode'new-4
 
     #_intrinsifier
     (defn #_"MembarNode" MembarNode'new-1 [#_"int" barriers]
-        (MembarNode'new-2 barriers, (LocationIdentity/any))
+        (MembarNode'new-2 barriers, LocationIdentity'ANY)
     )
 
     (§ intrinsic! #_"void" MembarNode'memoryBarrier-2 [#_"int" barriers, #_"LocationIdentity" location])
@@ -58920,7 +58868,7 @@ ZeroExtendNode'new-4
             #_"ValueNode" writeValue (if HotSpot'useCompressedClassPointers (HotSpotCompressionNode'compress-2 value, HotSpot'klassEncoding) value)
             #_"AddressNode" address (Lowerer'createOffsetAddress-3 graph, object, HotSpot'hubOffset)
         ]
-            (Graph''add-2 graph, (WriteNode'new-4 address, ReplacementsUtil'HUB_WRITE_LOCATION, writeValue, BarrierType'NONE))
+            (Graph''add-2 graph, (WriteNode'new-4 address, NamedLocationIdentity'HUB_WRITE, writeValue, BarrierType'NONE))
         )
     )
 
@@ -58951,12 +58899,12 @@ ZeroExtendNode'new-4
     )
 
     (defm StubForeignCallNode Multi
-        (#_"LocationIdentity[]" Multi'''getLocationIdentities-1 [#_"StubForeignCallNode" this]
+        (#_"LocationIdentity*" Multi'''getLocationIdentities-1 [#_"StubForeignCallNode" this]
             (let [
                 #_"LocationIdentity[]" killedLocations (ForeignCalls''getKilledLocations-2 HotSpot'foreignCalls, (:descriptor this))
                 killedLocations (Arrays/copyOf killedLocations, (inc (count killedLocations)))
             ]
-                (aset killedLocations (dec (count killedLocations)) ReplacementsUtil'PENDING_EXCEPTION_LOCATION)
+                (aset killedLocations (dec (count killedLocations)) NamedLocationIdentity'PENDING_EXCEPTION)
                 killedLocations
             )
         )
@@ -59089,7 +59037,7 @@ ZeroExtendNode'new-4
 
     (defm UnsafeAccessNode Canonicalizable
         (#_"Node" Canonicalizable'''canonical-2 [#_"UnsafeAccessNode" this, #_"CanonicalizerTool" tool]
-            (when (and (not (:forceAnyLocation this)) (#_"LocationIdentity" .isAny (:locationIdentity this))) => this
+            (when (and (not (:forceAnyLocation this)) (LocationIdentity''isAny-1 (:locationIdentity this))) => this
                 (when (satisfies? ConstantNode (:offset this))
                     (let [
                         #_"long" constantOffset (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 (:offset this)))
@@ -59124,22 +59072,21 @@ ZeroExtendNode'new-4
 )
 
 ;;;
- ; Load of a value from a location specified as an offset relative to an object. No nil-check is
- ; performed before the load.
+ ; Load of a value from a location specified as an offset relative to an object. No nil-check is performed before the load.
  ;;
 (class-ns RawLoadNode [UnsafeAccessNode, FixedWithNextNode, FixedNode, ValueNode, Node, Canonicalizable, Lowerable, Virtualizable]
-    (§ intrinsic! #_"Word" RawLoadNode'loadWordFromObjectIntrinsic-4 [#_"Object" object, #_"long" offset, #_"LocationIdentity" locationIdentity, #_"JavaKind" wordKind])
+    (§ intrinsic! #_"Word" RawLoadNode'loadWordFromObjectIntrinsic-4 [#_"Object" object, #_"long" offset, #_"LocationIdentity" location, #_"JavaKind" wordKind])
 
     #_unused
-    (§ intrinsic! #_"KlassPointer" RawLoadNode'loadKlassFromObjectIntrinsic-4 [#_"Object" object, #_"long" offset, #_"LocationIdentity" locationIdentity, #_"JavaKind" wordKind])
+    (§ intrinsic! #_"KlassPointer" RawLoadNode'loadKlassFromObjectIntrinsic-4 [#_"Object" object, #_"long" offset, #_"LocationIdentity" location, #_"JavaKind" wordKind])
 
     #_intrinsifier
-    (defn #_"RawLoadNode" RawLoadNode'new-5 [#_@InjectedNodeParameter #_"Stamp" stamp, #_"ValueNode" object, #_"ValueNode" offset, #_"LocationIdentity" locationIdentity, #_"JavaKind" accessKind]
-        (merge (RawLoadNode'class.) (UnsafeAccessNode'new-6 stamp, object, offset, accessKind, locationIdentity, false))
+    (defn #_"RawLoadNode" RawLoadNode'new-5 [#_@InjectedNodeParameter #_"Stamp" stamp, #_"ValueNode" object, #_"ValueNode" offset, #_"LocationIdentity" location, #_"JavaKind" accessKind]
+        (merge (RawLoadNode'class.) (UnsafeAccessNode'new-6 stamp, object, offset, accessKind, location, false))
     )
 
-    (defn #_"RawLoadNode" RawLoadNode'new-4 [#_"ValueNode" object, #_"ValueNode" offset, #_"JavaKind" accessKind, #_"LocationIdentity" locationIdentity]
-        (merge (RawLoadNode'class.) (UnsafeAccessNode'new-6 (StampFactory'forKind-1 (#_"JavaKind" .getStackKind accessKind)), object, offset, accessKind, locationIdentity, false))
+    (defn #_"RawLoadNode" RawLoadNode'new-4 [#_"ValueNode" object, #_"ValueNode" offset, #_"JavaKind" accessKind, #_"LocationIdentity" location]
+        (merge (RawLoadNode'class.) (UnsafeAccessNode'new-6 (StampFactory'forKind-1 (#_"JavaKind" .getStackKind accessKind)), object, offset, accessKind, location, false))
     )
 
     (defn- #_"boolean" RawLoadNode''addReadBarrier-1 [#_"RawLoadNode" this]
@@ -59241,7 +59188,7 @@ ZeroExtendNode'new-4
     (defm RawLoadNode Canonicalizable
         (#_"Node" Canonicalizable'''canonical-2 [#_"RawLoadNode" this, #_"CanonicalizerTool" tool]
             (or
-                (when (and (not (:forceAnyLocation this)) (#_"LocationIdentity" .isAny (:locationIdentity this)))
+                (when (and (not (:forceAnyLocation this)) (LocationIdentity''isAny-1 (:locationIdentity this)))
                     (let [
                         #_"ValueNode" object (:object this)
                     ]
@@ -59286,19 +59233,18 @@ ZeroExtendNode'new-4
             (LoadFieldNode'create-2 (:object this), field)
         )
 
-        (#_"ValueNode" UnsafeAccessNode'''cloneAsArrayAccess-3 [#_"RawLoadNode" this, #_"ValueNode" offset, #_"LocationIdentity" identity]
-            (RawLoadNode'new-4 (:object this), offset, (:accessKind this), identity)
+        (#_"ValueNode" UnsafeAccessNode'''cloneAsArrayAccess-3 [#_"RawLoadNode" this, #_"ValueNode" offset, #_"LocationIdentity" location]
+            (RawLoadNode'new-4 (:object this), offset, (:accessKind this), location)
         )
     )
 )
 
 ;;;
- ; Store of a value at a location specified as an offset relative to an object. No nil-check is
- ; performed before the store.
+ ; Store of a value at a location specified as an offset relative to an object. No nil-check is performed before the store.
  ;;
 (class-ns RawStoreNode [UnsafeAccessNode, FixedWithNextNode, FixedNode, ValueNode, Node, Canonicalizable, StateSplit, NodeWithState, Lowerable, Virtualizable, Single, MemoryCheckpoint, MemoryNode]
-    (defn #_"RawStoreNode" RawStoreNode'new-8 [#_"ValueNode" object, #_"ValueNode" offset, #_"ValueNode" value, #_"JavaKind" accessKind, #_"LocationIdentity" locationIdentity, #_"boolean" needsBarrier, #_"FrameState" stateAfter, #_"boolean" forceAnyLocation]
-        (merge (RawStoreNode'class.) (UnsafeAccessNode'new-6 VoidStamp'instance, object, offset, accessKind, locationIdentity, forceAnyLocation)
+    (defn #_"RawStoreNode" RawStoreNode'new-8 [#_"ValueNode" object, #_"ValueNode" offset, #_"ValueNode" value, #_"JavaKind" accessKind, #_"LocationIdentity" location, #_"boolean" needsBarrier, #_"FrameState" stateAfter, #_"boolean" forceAnyLocation]
+        (merge (RawStoreNode'class.) (UnsafeAccessNode'new-6 VoidStamp'instance, object, offset, accessKind, location, forceAnyLocation)
             (hash-map
                 ; @Input
                 #_"ValueNode" :value value
@@ -59373,8 +59319,8 @@ ZeroExtendNode'new-4
             (StoreFieldNode'new-4 (:object this), field, (:value this), (:stateAfter this))
         )
 
-        (#_"ValueNode" UnsafeAccessNode'''cloneAsArrayAccess-3 [#_"RawStoreNode" this, #_"ValueNode" location, #_"LocationIdentity" identity]
-            (RawStoreNode'new-8 (:object this), location, (:value this), (:accessKind this), identity, (:needsBarrier this), (:stateAfter this), (:forceAnyLocation this))
+        (#_"ValueNode" UnsafeAccessNode'''cloneAsArrayAccess-3 [#_"RawStoreNode" this, #_"ValueNode" offset, #_"LocationIdentity" location]
+            (RawStoreNode'new-8 (:object this), offset, (:value this), (:accessKind this), location, (:needsBarrier this), (:stateAfter this), (:forceAnyLocation this))
         )
     )
 )
@@ -61462,7 +61408,7 @@ ZeroExtendNode'new-4
                 (let [
                     #_"Graph" graph (:graph this)
                     #_"AddressNode" address (Lowerer'createOffsetAddress-3 graph, (ConvertNode'''getValue-1 this), HotSpot'klassOffset)
-                    #_"FloatingReadNode" read (Graph''add-2 graph, (FloatingReadNode'new-6 address, ReplacementsUtil'CLASS_KLASS_LOCATION, nil, (:stamp this), nil, BarrierType'NONE))
+                    #_"FloatingReadNode" read (Graph''add-2 graph, (FloatingReadNode'new-6 address, NamedLocationIdentity'CLASS_KLASS, nil, (:stamp this), nil, BarrierType'NONE))
                 ]
                     (§ ass! this (Node''replaceAtUsagesAndDelete-2 this, read))
                 )
@@ -62234,7 +62180,7 @@ ZeroExtendNode'new-4
     (defm FloatingReadNode Canonicalizable
         (#_"Node" Canonicalizable'''canonical-2 [#_"FloatingReadNode" this, #_"CanonicalizerTool" tool]
             (let [
-                #_"Node" result (ReadNode'canonicalizeRead-4 this, (Access'''getAddress-1 this), (ß FloatingAccessNode''getLocationIdentity-1 this), tool)
+                #_"Node" result (ReadNode'canonicalizeRead-4 this, (Access'''getAddress-1 this), (Access'''getLocationIdentity-1 this), tool)
             ]
                 (when (= result this) => result
                     (when (and (CanonicalizerTool'''canonicalizeReads-1 tool) (Node''hasMoreThanOneUsage-1 (Access'''getAddress-1 this)) (satisfies? WriteNode (:lastLocationAccess this))) => this
@@ -62255,7 +62201,7 @@ ZeroExtendNode'new-4
     (defm FloatingReadNode FloatingAccessNode
         (#_"FixedAccessNode" FloatingAccessNode'''asFixedNode-1 [#_"FloatingReadNode" this]
             (let [
-                #_"ReadNode" result (Graph''add-2 (:graph this), (ReadNode'new-4 (Access'''getAddress-1 this), (ß FloatingAccessNode''getLocationIdentity-1 this), (:stamp this), (:barrierType this)))
+                #_"ReadNode" result (Graph''add-2 (:graph this), (ReadNode'new-4 (Access'''getAddress-1 this), (Access'''getLocationIdentity-1 this), (:stamp this), (:barrierType this)))
             ]
                 (GuardedNode'''setGuard-2 result, (GuardedNode'''getGuard-1 this))
                 result
@@ -62592,9 +62538,9 @@ ZeroExtendNode'new-4
                 (let [
                     #_"Graph" graph (:graph this)
                     #_"AddressNode" address (Lowerer'createOffsetAddress-3 graph, (:hub this), HotSpot'classMirrorOffset)
-                    #_"FloatingReadNode" read (Graph''add-2 graph, (FloatingReadNode'new-6 address, ReplacementsUtil'CLASS_MIRROR_LOCATION, nil, (StampFactory'forKind-1 (.wordJavaKind HotSpot'target)), nil, BarrierType'NONE))
+                    #_"FloatingReadNode" read (Graph''add-2 graph, (FloatingReadNode'new-6 address, NamedLocationIdentity'CLASS_MIRROR, nil, (StampFactory'forKind-1 (.wordJavaKind HotSpot'target)), nil, BarrierType'NONE))
                     address (Lowerer'createOffsetAddress-3 graph, read, 0)
-                    read (Graph''add-2 graph, (FloatingReadNode'new-6 address, ReplacementsUtil'CLASS_MIRROR_HANDLE_LOCATION, nil, (:stamp this), nil, BarrierType'NONE))
+                    read (Graph''add-2 graph, (FloatingReadNode'new-6 address, NamedLocationIdentity'CLASS_MIRROR_HANDLE, nil, (:stamp this), nil, BarrierType'NONE))
                 ]
                     (§ ass! this (Node''replaceAtUsagesAndDelete-2 this, read))
                 )
@@ -64017,13 +63963,13 @@ ZeroExtendNode'new-4
     )
 
     (defm MemoryMapNode MemoryMap
-        (#_"MemoryNode" MemoryMap'''getLastLocationAccess-2 [#_"MemoryMapNode" this, #_"LocationIdentity" locationIdentity]
-            (when-not (#_"LocationIdentity" .isImmutable locationIdentity)
+        (#_"MemoryNode" MemoryMap'''getLastLocationAccess-2 [#_"MemoryMapNode" this, #_"LocationIdentity" location]
+            (when-not (:immutable location)
                 (let [
-                    #_"int" index (#_"List" .indexOf (:locationIdentities this), locationIdentity)
+                    #_"int" index (#_"List" .indexOf (:locationIdentities this), location)
                     index
                         (when (= index -1) => index
-                            (#_"List" .indexOf (:locationIdentities this), (LocationIdentity/any))
+                            (#_"List" .indexOf (:locationIdentities this), LocationIdentity'ANY)
                         )
                 ]
                     (nth (:nodes this) index)
@@ -64031,7 +63977,7 @@ ZeroExtendNode'new-4
             )
         )
 
-        (#_"Collection<LocationIdentity>" MemoryMap'''getLocations-1 [#_"MemoryMapNode" this]
+        (#_"LocationIdentity*" MemoryMap'''getLocations-1 [#_"MemoryMapNode" this]
             (:locationIdentities this)
         )
     )
@@ -66110,10 +66056,10 @@ ZeroExtendNode'new-4
 )
 
 (class-ns FloatingReadClosure [NodeIteratorClosure #_"<MemoryMap0>"]
-    (defn #_"FloatingReadClosure" FloatingReadClosure'new-3 [#_"EconomicMap<LoopBeginNode, EconomicSet<LocationIdentity>>" modifiedInLoops, #_"boolean" createFloatingReads, #_"boolean" createMemoryMapNodes]
+    (defn #_"FloatingReadClosure" FloatingReadClosure'new-3 [#_"{LoopBeginNode {LocationIdentity}}" modifiedInLoops, #_"boolean" createFloatingReads, #_"boolean" createMemoryMapNodes]
         (merge (FloatingReadClosure'class.) (NodeIteratorClosure'new-0)
             (hash-map
-                #_"EconomicMap<LoopBeginNode, EconomicSet<LocationIdentity>>" :modifiedInLoops modifiedInLoops
+                #_"{LoopBeginNode {LocationIdentity}}" :modifiedInLoops modifiedInLoops
                 #_"boolean" :createFloatingReads createFloatingReads
                 #_"boolean" :createMemoryMapNodes createMemoryMapNodes
             )
@@ -66138,10 +66084,10 @@ ZeroExtendNode'new-4
 
     (defn- #_"void" FloatingReadClosure'processAccess-2 [#_"MemoryAccess" access, #_"MemoryMap0" state]
         (let [
-            #_"LocationIdentity" locationIdentity (MemoryAccess'''getLocationIdentity-1 access)
+            #_"LocationIdentity" location (MemoryAccess'''getLocationIdentity-1 access)
         ]
-            (when-not (= locationIdentity (LocationIdentity/any))
-                (MemoryAccess'''setLastLocationAccess-2 access, (MemoryMap'''getLastLocationAccess-2 state, locationIdentity))
+            (when-not (= location LocationIdentity'ANY)
+                (MemoryAccess'''setLastLocationAccess-2 access, (MemoryMap'''getLastLocationAccess-2 state, location))
             )
         )
         nil
@@ -66149,11 +66095,11 @@ ZeroExtendNode'new-4
 
     (defn- #_"void" FloatingReadClosure'processFloatable-2 [#_"FloatableAccessNode" accessNode, #_"MemoryMap0" state]
         (let [
-            #_"LocationIdentity" locationIdentity (ß FixedAccessNode''getLocationIdentity-1 accessNode)
+            #_"LocationIdentity" location (MemoryAccess'''getLocationIdentity-1 accessNode)
         ]
             (when (FloatableAccessNode''canFloat-1 accessNode)
                 (let [
-                    #_"FloatingAccessNode" floatingNode (FloatableAccessNode'''asFloatingNode-2 accessNode, (MemoryMap'''getLastLocationAccess-2 state, locationIdentity))
+                    #_"FloatingAccessNode" floatingNode (FloatableAccessNode'''asFloatingNode-2 accessNode, (MemoryMap'''getLastLocationAccess-2 state, location))
                 ]
                     (§ ass! (:graph accessNode) (Graph''replaceFixedWithFloating-3 (:graph accessNode), accessNode, floatingNode))
                 )
@@ -66162,12 +66108,12 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"void" FloatingReadClosure'processIdentity-3 [#_"LocationIdentity" identity, #_"MemoryCheckpoint" checkpoint, #_"MemoryMap0" state]
-        (when (#_"LocationIdentity" .isAny identity)
+    (defn- #_"void" FloatingReadClosure'processIdentity-3 [#_"LocationIdentity" location, #_"MemoryCheckpoint" checkpoint, #_"MemoryMap0" state]
+        (when (LocationIdentity''isAny-1 location)
             (#_"EconomicMap" .clear (:lastMemorySnapshot state))
         )
-        (when (#_"LocationIdentity" .isMutable identity)
-            (#_"EconomicMap" .put (:lastMemorySnapshot state), identity, checkpoint)
+        (when-not (:immutable location)
+            (#_"EconomicMap" .put (:lastMemorySnapshot state), location, checkpoint)
         )
         nil
     )
@@ -66178,8 +66124,8 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"void" FloatingReadClosure'processCheckpoint-2m [#_"Multi" checkpoint, #_"MemoryMap0" state]
-        (doseq [#_"LocationIdentity" identity (Multi'''getLocationIdentities-1 checkpoint)]
-            (FloatingReadClosure'processIdentity-3 identity, checkpoint, state)
+        (doseq [#_"LocationIdentity" location (Multi'''getLocationIdentities-1 checkpoint)]
+            (FloatingReadClosure'processIdentity-3 location, checkpoint, state)
         )
         nil
     )
@@ -66233,18 +66179,18 @@ ZeroExtendNode'new-4
 
         (#_"EconomicMap<LoopExitNode, MemoryMap0>" NodeIteratorClosure'''processLoop-3 [#_"FloatingReadClosure" this, #_"LoopBeginNode" _loop, #_"MemoryMap0" initialState]
             (let [
-                #_"EconomicSet<LocationIdentity>" modifiedLocations (get (:modifiedInLoops this) _loop)
+                #_"{LocationIdentity}" modifiedLocations (get (:modifiedInLoops this) _loop)
+                modifiedLocations
+                    (when (contains? modifiedLocations LocationIdentity'ANY) => modifiedLocations
+                        ;; create phis for all locations if ANY is modified in the loop
+                        (into modifiedLocations (keys (:lastMemorySnapshot initialState)))
+                    )
                 #_"EconomicMap<LocationIdentity, MemoryPhiNode>" phis (EconomicMap/create Equivalence/DEFAULT)
+                _
+                    (doseq [#_"LocationIdentity" location modifiedLocations]
+                        (FloatingReadClosure'createMemoryPhi-4 _loop, initialState, phis, location)
+                    )
             ]
-                (when (contains? modifiedLocations (LocationIdentity/any))
-                    ;; create phis for all locations if ANY is modified in the loop
-                    (§ ass modifiedLocations (EconomicSet/create Equivalence/DEFAULT, modifiedLocations))
-                    (#_"EconomicSet" .addAll modifiedLocations, (keys (:lastMemorySnapshot initialState)))
-                )
-
-                (doseq [#_"LocationIdentity" location modifiedLocations]
-                    (FloatingReadClosure'createMemoryPhi-4 _loop, initialState, phis, location)
-                )
                 (#_"EconomicMap" .putAll (:lastMemorySnapshot initialState), phis)
 
                 (let [
@@ -66424,12 +66370,8 @@ ZeroExtendNode'new-4
         (nth (:gNodes (:graph this)) i)
     )
 
-    (defn #_"int" NodeMap''capacity-1 [#_"NodeMap<T>" this]
-        (count (:values this))
-    )
-
     (defn #_"boolean" NodeMap''isNew-2 [#_"NodeMap<T>" this, #_"Node" node]
-        (<= (NodeMap''capacity-1 this) (:nid node))
+        (<= (count (:values this)) (:nid node))
     )
 
     (§ override! #_"Iterable<Node>" #_"UnmodifiableEconomicMap." getKeys [#_"NodeMap<T>" this]
@@ -66442,7 +66384,7 @@ ZeroExtendNode'new-4
                         #_"int" i 0
                     ]
                         (reify Iterator #_"<Node>"
-                            (defn- #_"void" Iterator''forward-0k []
+                            (defn- #_"void" Iterator'forward-0k []
                                 (while (and (< i (count (:values owner))) (or (nil? (NodeMap''getKey-2 owner, i)) (nil? (nth (:values owner) i))))
                                     (§ ass! i (inc i))
                                 )
@@ -66450,7 +66392,7 @@ ZeroExtendNode'new-4
                             )
 
                             (#_"boolean" hasNext [#_"Iterator<Node>" this]
-                                (Iterator''forward-0k)
+                                (Iterator'forward-0k)
                                 (< i (count (:values owner)))
                             )
 
@@ -66459,7 +66401,7 @@ ZeroExtendNode'new-4
                                     #_"Node" key (NodeMap''getKey-2 owner, i)
                                 ]
                                     (§ ass! i (inc i))
-                                    (Iterator''forward-0k)
+                                    (Iterator'forward-0k)
                                     key
                                 )
                             )
@@ -66480,7 +66422,7 @@ ZeroExtendNode'new-4
                         #_"int" i 0
                     ]
                         (reify Iterator #_"<T>"
-                            (defn- #_"void" Iterator''forward-0v []
+                            (defn- #_"void" Iterator'forward-0v []
                                 (while (and (< i (count (:values owner))) (or (nil? (NodeMap''getKey-2 owner, i)) (nil? (nth (:values owner) i))))
                                     (§ ass! i (inc i))
                                 )
@@ -66488,7 +66430,7 @@ ZeroExtendNode'new-4
                             )
 
                             (#_"boolean" hasNext [#_"Iterator<T>" this]
-                                (Iterator''forward-0v)
+                                (Iterator'forward-0v)
                                 (< i (count (:values owner)))
                             )
 
@@ -66497,7 +66439,7 @@ ZeroExtendNode'new-4
                                     #_"T" value (nth (:values owner) i)
                                 ]
                                     (§ ass! i (inc i))
-                                    (Iterator''forward-0v)
+                                    (Iterator'forward-0v)
                                     value
                                 )
                             )
@@ -66649,7 +66591,7 @@ ZeroExtendNode'new-4
             #_"IterativeNodeWorkList" owner this
         ]
             (reify Iterator #_"<Node>"
-                (defn- #_"void" Iterator''dropDeleted-0i []
+                (defn- #_"void" Iterator'dropDeleted-0i []
                     (while (and (not (#_"Queue" .isEmpty (:worklist owner))) (Node''isDeleted-1 (#_"Queue" .peek (:worklist owner))))
                         (#_"Queue" .remove (:worklist owner))
                     )
@@ -66657,7 +66599,7 @@ ZeroExtendNode'new-4
                 )
 
                 (#_"boolean" hasNext [#_"Iterator<Node>" this]
-                    (Iterator''dropDeleted-0i)
+                    (Iterator'dropDeleted-0i)
                     (and (pos? (:iterationLimit owner)) (not (#_"Queue" .isEmpty (:worklist owner))))
                 )
 
@@ -66670,7 +66612,7 @@ ZeroExtendNode'new-4
                             (§ ass owner (update owner :iterationLimit dec))
                         )
                     )
-                    (Iterator''dropDeleted-0i)
+                    (Iterator'dropDeleted-0i)
                     (let [
                         #_"Node" node (#_"Queue" .remove (:worklist owner))
                     ]
@@ -66755,7 +66697,7 @@ ZeroExtendNode'new-4
             #_"SingletonNodeWorkList" owner this
         ]
             (reify Iterator #_"<Node>"
-                (defn- #_"void" Iterator''dropDeleted-0s []
+                (defn- #_"void" Iterator'dropDeleted-0s []
                     (while (and (not (#_"Queue" .isEmpty (:worklist owner))) (Node''isDeleted-1 (#_"Queue" .peek (:worklist owner))))
                         (#_"Queue" .remove (:worklist owner))
                     )
@@ -66763,12 +66705,12 @@ ZeroExtendNode'new-4
                 )
 
                 (#_"boolean" hasNext [#_"Iterator<Node>" this]
-                    (Iterator''dropDeleted-0s)
+                    (Iterator'dropDeleted-0s)
                     (not (#_"Queue" .isEmpty (:worklist owner)))
                 )
 
                 (#_"Node" next [#_"Iterator<Node>" this]
-                    (Iterator''dropDeleted-0s)
+                    (Iterator'dropDeleted-0s)
                     (#_"Queue" .remove (:worklist owner))
                 )
             )
@@ -69380,9 +69322,9 @@ ZeroExtendNode'new-4
                                             (when (satisfies? FloatingReadNode node) => [killed i' nil nil]
                                                 ;; We are scheduling a floating read node => check memory anti-dependencies.
                                                 (let [
-                                                    #_"LocationIdentity" location (ß FloatingAccessNode''getLocationIdentity-1 node)
+                                                    #_"LocationIdentity" location (Access'''getLocationIdentity-1 node)
                                                 ]
-                                                    (when (#_"LocationIdentity" .isMutable location) => [killed i' nil nil]
+                                                    (when-not (:immutable location) => [killed i' nil nil]
                                                         ;; Location can be killed.
                                                         (let [
                                                             constrainingLocation location
@@ -69440,15 +69382,15 @@ ZeroExtendNode'new-4
         (or (satisfies? ControlSplitNode endNode) (satisfies? ControlSinkNode endNode) (satisfies? AbstractEndNode endNode))
     )
 
-    (defn- #_"void" ScheduleInstance'checkWatchList-6a [#_"ArrayList<FloatingReadNode>" watchList, #_"LocationIdentity" identity, #_"Block" b, #_"ArrayList<Node>" result, #_"NodeMap<Block>" nodeMap, #_"NodeBitMap" unprocessed]
+    (defn- #_"void" ScheduleInstance'checkWatchList-6a [#_"ArrayList<FloatingReadNode>" watchList, #_"LocationIdentity" location, #_"Block" block, #_"ArrayList<Node>" result, #_"NodeMap<Block>" nodeMap, #_"NodeBitMap" unprocessed]
         (cond
-            (#_"LocationIdentity" .isImmutable identity)
+            (:immutable location)
                 nil ;; Nothing to do. This can happen for an initialization write.
-            (#_"LocationIdentity" .isAny identity)
+            (LocationIdentity''isAny-1 location)
                 (do
                     (doseq [#_"FloatingReadNode" r watchList]
                         (when (NodeBitMap''isMarked-2n unprocessed, r)
-                            (ScheduleInstance'sortIntoList-6 r, b, result, nodeMap, unprocessed, nil)
+                            (ScheduleInstance'sortIntoList-6 r, block, result, nodeMap, unprocessed, nil)
                         )
                     )
                     (#_"ArrayList" .clear watchList)
@@ -69459,8 +69401,8 @@ ZeroExtendNode'new-4
                         #_"FloatingReadNode" r (nth watchList i)
                     ]
                         (when (NodeBitMap''isMarked-2n unprocessed, r)
-                            (if (#_"LocationIdentity" .overlaps identity, (ß FloatingAccessNode''getLocationIdentity-1 r))
-                                (ScheduleInstance'sortIntoList-6 r, b, result, nodeMap, unprocessed, nil)
+                            (if (LocationIdentity''overlaps-2 location, (Access'''getLocationIdentity-1 r))
+                                (ScheduleInstance'sortIntoList-6 r, block, result, nodeMap, unprocessed, nil)
                                 (§ continue (inc i))
                             )
                         )
@@ -69483,13 +69425,13 @@ ZeroExtendNode'new-4
             (condp satisfies? node
                 Single
                     (let [
-                        #_"LocationIdentity" identity (Single'''getLocationIdentity-1 node)
+                        #_"LocationIdentity" location (Single'''getLocationIdentity-1 node)
                     ]
-                        (ScheduleInstance'checkWatchList-6a watchList, identity, block, result, nodeMap, unprocessed)
+                        (ScheduleInstance'checkWatchList-6a watchList, location, block, result, nodeMap, unprocessed)
                     )
                 Multi
-                    (doseq [#_"LocationIdentity" identity (Multi'''getLocationIdentities-1 node)]
-                        (ScheduleInstance'checkWatchList-6a watchList, identity, block, result, nodeMap, unprocessed)
+                    (doseq [#_"LocationIdentity" location (Multi'''getLocationIdentities-1 node)]
+                        (ScheduleInstance'checkWatchList-6a watchList, location, block, result, nodeMap, unprocessed)
                     )
                 nil
             )
@@ -69568,7 +69510,7 @@ ZeroExtendNode'new-4
                                                 (ScheduleInstance'sortIntoList-6 node, block, result, nodeMap, unprocessed, nil)
                                                 watchList
                                             )
-                                            (when (Block''canKill-2 block, (ß FloatingAccessNode''getLocationIdentity-1 node)) => watchList
+                                            (when (Block''canKill-2 block, (Access'''getLocationIdentity-1 node)) => watchList
                                                 ;; This read can be killed in this block, add to watch list.
                                                 (let [
                                                     watchList (or watchList (ArrayList.))
@@ -70114,6 +70056,37 @@ ZeroExtendNode'new-4
  ; constants to the snippet's ConstantParameter parameters.
  ;;
 (class-ns SnippetTemplate []
+    (defn- #_"void" SnippetTemplate'explodeLoops-1 [#_"Graph" snippetCopy]
+        ;; do any required loop explosion
+        (loop []
+            (let [
+                #_"boolean" exploded? false
+                #_"ExplodeLoopNode" explodeLoop (first (Graph''getNodes-2 snippetCopy, ExplodeLoopNode))
+            ]
+                (when (some? explodeLoop) ;; earlier canonicalization may have removed the loop altogether
+                    (let [
+                        #_"LoopBeginNode" loopBegin (ExplodeLoopNode''findLoopBegin-1 explodeLoop)
+                    ]
+                        (when (some? loopBegin)
+                            (let [
+                                #_"LoopEx" _loop (LoopsData''loop-2 (LoopsData'new-1 snippetCopy), loopBegin)
+                                #_"int" mark (Graph''getMark-1 snippetCopy)
+                            ]
+                                (LoopTransformations'fullUnroll-2 _loop, (CanonicalizerPhase'new-0))
+                                (CanonicalizerPhase''applyIncremental-3m (CanonicalizerPhase'new-0), snippetCopy, mark)
+                                (LoopEx''deleteUnusedNodes-1 _loop)
+                            )
+                        )
+                        (GraphUtil'removeFixedWithUnusedInputs-1 explodeLoop)
+                        (§ ass exploded? true)
+                    )
+                )
+                (recur-if exploded? [])
+            )
+        )
+        nil
+    )
+
     (defn #_"SnippetTemplate" SnippetTemplate'new-2 [#_"Arguments" args, #_"Node" replacee]
         (let [
             #_"SnippetTemplate" this
@@ -70210,7 +70183,7 @@ ZeroExtendNode'new-4
             #_"MemoryAnchorNode" anchor (Graph''add-2 snippetCopy, (MemoryAnchorNode'new-0))
             _ (Node''replaceAtUsages-3 (:start snippetCopy), InputType'Memory, anchor)
             this (assoc this :snippet snippetCopy)
-            #_"StartNode" entryPointNode (:start (:snippet this))
+            #_"StartNode" start (:start (:snippet this))
             this
                 (if (Node''hasNoUsages-1 anchor)
                     (do
@@ -70224,7 +70197,7 @@ ZeroExtendNode'new-4
                                 (let [
                                     #_"MemoryMapNode" memoryMap (:memoryMap (first s))
                                 ]
-                                    (or (< 1 (count (MemoryMap'''getLocations-1 memoryMap))) (not= (MemoryMap'''getLastLocationAccess-2 memoryMap, (LocationIdentity/any)) anchor)
+                                    (or (< 1 (count (MemoryMap'''getLocations-1 memoryMap))) (not= (MemoryMap'''getLastLocationAccess-2 memoryMap, LocationIdentity'ANY) anchor)
                                         (recur (next s))
                                     )
                                 )
@@ -70305,7 +70278,7 @@ ZeroExtendNode'new-4
             this (assoc this :nodes (ArrayList.))
             _
                 (doseq [#_"Node" node (Graph''getNodes-1 (:snippet this))]
-                    (when-not (any = node entryPointNode (:stateAfter entryPointNode))
+                    (when-not (any = node start (:stateAfter start))
                         (#_"ArrayList" .add (:nodes this), node)
                     )
                 )
@@ -70314,37 +70287,6 @@ ZeroExtendNode'new-4
 
             this
         )
-    )
-
-    (defn #_"void" SnippetTemplate'explodeLoops-1 [#_"Graph" snippetCopy]
-        ;; do any required loop explosion
-        (loop []
-            (let [
-                #_"boolean" exploded? false
-                #_"ExplodeLoopNode" explodeLoop (first (Graph''getNodes-2 snippetCopy, ExplodeLoopNode))
-            ]
-                (when (some? explodeLoop) ;; earlier canonicalization may have removed the loop altogether
-                    (let [
-                        #_"LoopBeginNode" loopBegin (ExplodeLoopNode''findLoopBegin-1 explodeLoop)
-                    ]
-                        (when (some? loopBegin)
-                            (let [
-                                #_"LoopEx" _loop (LoopsData''loop-2 (LoopsData'new-1 snippetCopy), loopBegin)
-                                #_"int" mark (Graph''getMark-1 snippetCopy)
-                            ]
-                                (LoopTransformations'fullUnroll-2 _loop, (CanonicalizerPhase'new-0))
-                                (CanonicalizerPhase''applyIncremental-3m (CanonicalizerPhase'new-0), snippetCopy, mark)
-                                (LoopEx''deleteUnusedNodes-1 _loop)
-                            )
-                        )
-                        (GraphUtil'removeFixedWithUnusedInputs-1 explodeLoop)
-                        (§ ass exploded? true)
-                    )
-                )
-                (recur-if exploded? [])
-            )
-        )
-        nil
     )
 
     ;;;
@@ -70400,19 +70342,44 @@ ZeroExtendNode'new-4
         )
     )
 
-    ;;;
-     ; Represents the default {@link UsageReplacer usage replacer} logic which
-     ; simply delegates to Node#replaceAtUsages(Node).
-     ;;
-    (§ def #_"UsageReplacer" SnippetTemplate'DEFAULT_REPLACER
-        (reify UsageReplacer
-            (#_"void" UsageReplacer'''replace-3 [#_"UsageReplacer" this, #_"ValueNode" oldNode, #_"ValueNode" newNode]
-                (when (some? newNode)
-                    (§ ass! oldNode (Node''replaceAtUsages-2 oldNode, newNode))
-                )
-                nil
+    (defn- #_"{Node Node}" SnippetTemplate''inlineSnippet-4 [#_"SnippetTemplate" this, #_"Node" replacee, #_"Graph" replaceeGraph, #_"EconomicMap<Node, Node>" replacements]
+        (Graph''addDuplicates-5m replaceeGraph, (:nodes this), (:snippet this), (Graph''getNodeCount-1 (:snippet this)), replacements)
+    )
+
+    (defn- #_"void" SnippetTemplate''rewireFrameStates-3 [#_"SnippetTemplate" this, #_"ValueNode" replacee, #_"{Node Node}" duplicates]
+        (when (satisfies? StateSplit replacee)
+            (doseq [#_"StateSplit" sideEffectNode (:sideEffectNodes this)]
+                (StateSplit'''setStateAfter-2 (get duplicates sideEffectNode), (:stateAfter replacee))
             )
         )
+        nil
+    )
+
+    (defn- #_"void" SnippetTemplate''propagateStamp-2 [#_"SnippetTemplate" this, #_"Node" node]
+        (when (and (satisfies? PhiNode node) (ValueNode'''inferStamp-1 node))
+            (doseq [#_"Node" usage (:nodeUsages node)]
+                (SnippetTemplate''propagateStamp-2 this, usage)
+            )
+        )
+        nil
+    )
+
+    (defn- #_"void" SnippetTemplate''updateStamps-3 [#_"SnippetTemplate" this, #_"ValueNode" replacee, #_"{Node Node}" duplicates]
+        (doseq [#_"ValueNode" node (:placeholderStampedNodes this)]
+            (let [
+                #_"ValueNode" dup (get duplicates node)
+                #_"Stamp" replaceeStamp (:stamp replacee)
+            ]
+                (if (satisfies? Placeholder node)
+                    (Placeholder'''makeReplacement-2 dup, replaceeStamp)
+                    (§ ass! dup (ValueNode''setStamp-2 dup, replaceeStamp))
+                )
+            )
+        )
+        (doseq [#_"ParameterNode" paramNode (Graph''getNodes-2 (:snippet this), ParameterNode) #_"Node" usage (:nodeUsages paramNode)]
+            (SnippetTemplate''propagateStamp-2 this, (get duplicates usage))
+        )
+        nil
     )
 
     (defn- #_"LocationIdentity" SnippetTemplate'getLocationIdentity-1 [#_"Node" node]
@@ -70446,18 +70413,10 @@ ZeroExtendNode'new-4
             (SnippetTemplate''replaceMemoryUsages-3 this, replacee, (MemoryOutputMap'new-3 this, replacee, duplicates))
 
             (when (some? (:returnNode this))
-                (let [
-                    #_"ReturnNode" ret (get duplicates (:returnNode this))
-                ]
-                    (when (some? ret)
-                        (let [
-                            #_"MemoryMapNode" memoryMap (:memoryMap ret)
-                        ]
-                            (when (some? memoryMap)
-                                (§ ass! ret (ReturnNode''setMemoryMap-2 ret, nil))
-                                (Node''safeDelete-1 memoryMap)
-                            )
-                        )
+                (when-some [#_"ReturnNode" ret (get duplicates (:returnNode this))]
+                    (when-some [#_"MemoryMapNode" memoryMap (:memoryMap ret)]
+                        (§ ass! ret (ReturnNode''setMemoryMap-2 ret, nil))
+                        (Node''safeDelete-1 memoryMap)
                     )
                 )
             )
@@ -70471,11 +70430,9 @@ ZeroExtendNode'new-4
                     (when (Node''hasNoUsages-1 memoryDuplicate)
                         (if (some? (:next memoryDuplicate))
                             (Graph''removeFixed-2 (:graph memoryDuplicate), memoryDuplicate)
-                            (do
-                                ;; this was a dummy memory node used when instantiating pure data-flow
-                                ;; snippets: it was not attached to the control flow.
-                                (Node''safeDelete-1 memoryDuplicate)
-                            )
+                            ;; this was a dummy memory node used when instantiating pure data-flow
+                            ;; snippets: it was not attached to the control flow
+                            (Node''safeDelete-1 memoryDuplicate)
                         )
                     )
                 )
@@ -70485,154 +70442,112 @@ ZeroExtendNode'new-4
     )
 
     ;;;
-     ; Replaces a given fixed node with this specialized snippet.
-     ;
-     ; @param replacee the node that will be replaced
-     ; @param replacer object that replaces the usages of {@code replacee}
-     ; @param args the arguments to be bound to the flattened positional parameters of the snippet
-     ; @return the map of duplicated nodes (original -> duplicate)
+     ; Represents the default {@link UsageReplacer usage replacer} logic which simply delegates to Node#replaceAtUsages(Node).
      ;;
-    (defn #_"UnmodifiableEconomicMap<Node, Node>" SnippetTemplate''instantiate-4x [#_"SnippetTemplate" this, #_"FixedNode" replacee, #_"UsageReplacer" replacer, #_"Arguments" args]
-        (SnippetTemplate''instantiate-5x this, replacee, replacer, args, true)
-    )
-
-    (defn- #_"UnmodifiableEconomicMap<Node, Node>" SnippetTemplate''inlineSnippet-4 [#_"SnippetTemplate" this, #_"Node" replacee, #_"Graph" replaceeGraph, #_"EconomicMap<Node, Node>" replacements]
-        (Graph''addDuplicates-5m replaceeGraph, (:nodes this), (:snippet this), (Graph''getNodeCount-1 (:snippet this)), replacements)
-    )
-
-    (defn- #_"void" SnippetTemplate''propagateStamp-2 [#_"SnippetTemplate" this, #_"Node" node]
-        (when (and (satisfies? PhiNode node) (ValueNode'''inferStamp-1 node))
-            (doseq [#_"Node" usage (:nodeUsages node)]
-                (SnippetTemplate''propagateStamp-2 this, usage)
-            )
-        )
-        nil
-    )
-
-    (defn- #_"void" SnippetTemplate''updateStamps-3 [#_"SnippetTemplate" this, #_"ValueNode" replacee, #_"UnmodifiableEconomicMap<Node, Node>" duplicates]
-        (doseq [#_"ValueNode" node (:placeholderStampedNodes this)]
-            (let [
-                #_"ValueNode" dup (get duplicates node)
-                #_"Stamp" replaceeStamp (:stamp replacee)
-            ]
-                (if (satisfies? Placeholder node)
-                    (Placeholder'''makeReplacement-2 dup, replaceeStamp)
-                    (§ ass! dup (ValueNode''setStamp-2 dup, replaceeStamp))
+    (def- #_"UsageReplacer" SnippetTemplate'DEFAULT_REPLACER
+        (reify UsageReplacer
+            (#_"void" UsageReplacer'''replace-3 [#_"UsageReplacer" this, #_"ValueNode" oldNode, #_"ValueNode" newNode]
+                (when (some? newNode)
+                    (§ ass! oldNode (Node''replaceAtUsages-2 oldNode, newNode))
                 )
+                nil
             )
         )
-        (doseq [#_"ParameterNode" paramNode (Graph''getNodes-2 (:snippet this), ParameterNode)]
-            (doseq [#_"Node" usage (:nodeUsages paramNode)]
-                (SnippetTemplate''propagateStamp-2 this, (get duplicates usage))
-            )
-        )
-        nil
     )
 
     ;;;
      ; Replaces a given fixed node with this specialized snippet.
      ;
      ; @param replacee the node that will be replaced
-     ; @param replacer object that replaces the usages of {@code replacee}
      ; @param args the arguments to be bound to the flattened positional parameters of the snippet
-     ; @param killReplacee is true, the replacee node is deleted
      ; @return the map of duplicated nodes (original -> duplicate)
      ;;
-    (defn #_"UnmodifiableEconomicMap<Node, Node>" SnippetTemplate''instantiate-5x [#_"SnippetTemplate" this, #_"FixedNode" replacee, #_"UsageReplacer" replacer, #_"Arguments" args, #_"boolean" killReplacee]
+    (defn #_"void" SnippetTemplate''instantiate-3 [#_"SnippetTemplate" this, #_"FixedNode" replacee, #_"Arguments" args]
         ;; inline the snippet nodes replacing parameters with the given args in the process
         (let [
-            #_"StartNode" entryPointNode (:start (:snippet this))
-            #_"FixedNode" firstCFGNode (:next entryPointNode)
-            #_"Graph" replaceeGraph (:graph replacee)
-            #_"EconomicMap<Node, Node>" replacements (SnippetTemplate''bind-3 this, replaceeGraph, args)
+            #_"StartNode" start (:start (:snippet this))
+            #_"FixedNode" firstCFGNode (:next start)
+            #_"EconomicMap<Node, Node>" replacements (SnippetTemplate''bind-3 this, (:graph replacee), args)
+            _ (#_"EconomicMap" .put replacements, start, (AbstractBeginNode'prevBegin-1 replacee))
+            #_"{Node Node}" duplicates (SnippetTemplate''inlineSnippet-4 this, replacee, (:graph replacee), replacements)
         ]
-            (#_"EconomicMap" .put replacements, entryPointNode, (AbstractBeginNode'prevBegin-1 replacee))
-            (let [
-                #_"UnmodifiableEconomicMap<Node, Node>" duplicates (SnippetTemplate''inlineSnippet-4 this, replacee, replaceeGraph, replacements)
-                ;; re-wire the control flow graph around the replacee
-                #_"FixedNode" firstCFGNodeDuplicate (get duplicates firstCFGNode)
-            ]
-                (Node''replaceAtPredecessor-2 replacee, firstCFGNodeDuplicate)
+            ;; re-wire the control flow graph around the replacee
+            (Node''replaceAtPredecessor-2 replacee, (get duplicates firstCFGNode))
 
-                (SnippetTemplate''rewireFrameStates-3 this, replacee, duplicates)
+            (SnippetTemplate''rewireFrameStates-3 this, replacee, duplicates)
 
-                (when (satisfies? DeoptimizingNode replacee)
-                    (let [
-                        #_"FrameState" stateBefore nil
-                        #_"FrameState" stateDuring nil
-                        #_"FrameState" stateAfter nil
-                    ]
-                        (when (DeoptimizingNode'''canDeoptimize-1 replacee)
-                            (when (satisfies? DeoptBefore replacee)
-                                (§ ass stateBefore (:stateBefore replacee))
-                            )
-                            (when (satisfies? DeoptDuring replacee)
-                                (§ ass stateDuring (:stateDuring replacee))
-                            )
-                            (when (satisfies? DeoptAfter replacee)
-                                (§ ass stateAfter (:stateAfter replacee))
-                            )
+            (when (satisfies? DeoptimizingNode replacee)
+                (let [
+                    #_"FrameState" stateBefore nil
+                    #_"FrameState" stateDuring nil
+                    #_"FrameState" stateAfter nil
+                ]
+                    (when (DeoptimizingNode'''canDeoptimize-1 replacee)
+                        (when (satisfies? DeoptBefore replacee)
+                            (§ ass stateBefore (:stateBefore replacee))
                         )
+                        (when (satisfies? DeoptDuring replacee)
+                            (§ ass stateDuring (:stateDuring replacee))
+                        )
+                        (when (satisfies? DeoptAfter replacee)
+                            (§ ass stateAfter (:stateAfter replacee))
+                        )
+                    )
 
-                        (doseq [#_"DeoptimizingNode" deoptNode (:deoptNodes this)]
-                            (let [
-                                #_"DeoptimizingNode" deoptDup (get duplicates deoptNode)
-                            ]
-                                (when (DeoptimizingNode'''canDeoptimize-1 deoptDup)
-                                    (when (satisfies? DeoptBefore deoptDup)
-                                        (DeoptBefore'''setStateBefore-2 deoptDup, stateBefore)
+                    (doseq [#_"DeoptimizingNode" deoptNode (:deoptNodes this)]
+                        (let [
+                            #_"DeoptimizingNode" deoptDup (get duplicates deoptNode)
+                        ]
+                            (when (DeoptimizingNode'''canDeoptimize-1 deoptDup)
+                                (when (satisfies? DeoptBefore deoptDup)
+                                    (DeoptBefore'''setStateBefore-2 deoptDup, stateBefore)
+                                )
+                                (when (satisfies? DeoptDuring deoptDup)
+                                    (cond
+                                        (some? stateDuring) (DeoptDuring'''setStateDuring-2 deoptDup, stateDuring)
+                                        (some? stateAfter)  (DeoptDuring'''computeStateDuring-2 deoptDup, stateAfter)
+                                        (some? stateBefore) (DeoptDuring'''setStateDuring-2 deoptDup, stateBefore)
                                     )
-                                    (when (satisfies? DeoptDuring deoptDup)
-                                        (cond
-                                            (some? stateDuring) (DeoptDuring'''setStateDuring-2 deoptDup, stateDuring)
-                                            (some? stateAfter)  (DeoptDuring'''computeStateDuring-2 deoptDup, stateAfter)
-                                            (some? stateBefore) (DeoptDuring'''setStateDuring-2 deoptDup, stateBefore)
-                                        )
-                                    )
-                                    (when (satisfies? DeoptAfter deoptDup)
-                                        (StateSplit'''setStateAfter-2 deoptDup, (or stateAfter stateBefore))
-                                    )
+                                )
+                                (when (satisfies? DeoptAfter deoptDup)
+                                    (StateSplit'''setStateAfter-2 deoptDup, (or stateAfter stateBefore))
                                 )
                             )
                         )
                     )
                 )
+            )
 
-                (SnippetTemplate''updateStamps-3 this, replacee, duplicates)
-                (SnippetTemplate''rewireMemoryGraph-3 this, replacee, duplicates)
+            (SnippetTemplate''updateStamps-3 this, replacee, duplicates)
+            (SnippetTemplate''rewireMemoryGraph-3 this, replacee, duplicates)
 
-                ;; replace all usages of the replacee with the value returned by the snippet
-                (when (and (some? (:returnNode this)) (not (satisfies? ControlSinkNode replacee)))
-                    (let [
-                        #_"ReturnNode" returnDuplicate (get duplicates (:returnNode this))
-                    ]
-                        (UsageReplacer'''replace-3 replacer, replacee, (:result returnDuplicate))
-                        (when (Node''isAlive-1 returnDuplicate)
-                            (let [
-                                #_"FixedNode" next
-                                    (when (satisfies? FixedWithNextNode replacee)
-                                        (let [
-                                            next (:next replacee)
-                                        ]
-                                            (§ ass! replacee (FixedWithNextNode''setNext-2 replacee, nil))
-                                            next
-                                        )
+            ;; replace all usages of the replacee with the value returned by the snippet
+            (when (and (some? (:returnNode this)) (not (satisfies? ControlSinkNode replacee)))
+                (let [
+                    #_"ReturnNode" returnDuplicate (get duplicates (:returnNode this))
+                ]
+                    (UsageReplacer'''replace-3 SnippetTemplate'DEFAULT_REPLACER, replacee, (:result returnDuplicate))
+                    (when (Node''isAlive-1 returnDuplicate)
+                        (let [
+                            #_"FixedNode" next
+                                (when (satisfies? FixedWithNextNode replacee)
+                                    (let [
+                                        next (:next replacee)
+                                    ]
+                                        (§ ass! replacee (FixedWithNextNode''setNext-2 replacee, nil))
+                                        next
                                     )
-                            ]
-                                (§ ass! returnDuplicate (Node''replaceAndDelete-2 returnDuplicate, next))
-                            )
+                                )
+                        ]
+                            (§ ass! returnDuplicate (Node''replaceAndDelete-2 returnDuplicate, next))
                         )
                     )
                 )
-
-                (when killReplacee
-                    ;; remove the replacee from its graph
-                    (GraphUtil'killCFG-1 replacee)
-                )
-
-                duplicates
             )
+
+            (GraphUtil'killCFG-1 replacee)
         )
+        nil
     )
 
     ;;;
@@ -70643,25 +70558,22 @@ ZeroExtendNode'new-4
      ; @param lowerer lowering tool used to insert the snippet into the control-flow
      ; @param args the arguments to be bound to the flattened positional parameters of the snippet
      ;;
-    (defn #_"void" SnippetTemplate''instantiate-5y [#_"SnippetTemplate" this, #_"FloatingNode" replacee, #_"UsageReplacer" replacer, #_"LoweringTool" lowerer, #_"Arguments" args]
+    (defn #_"void" SnippetTemplate''instantiate-5 [#_"SnippetTemplate" this, #_"FloatingNode" replacee, #_"UsageReplacer" replacer, #_"LoweringTool" lowerer, #_"Arguments" args]
         ;; inline the snippet nodes replacing parameters with the given args in the process
         (let [
-            #_"StartNode" entryPointNode (:start (:snippet this))
-            #_"FixedNode" firstCFGNode (:next entryPointNode)
-            #_"Graph" replaceeGraph (:graph replacee)
-            #_"EconomicMap<Node, Node>" replacements (SnippetTemplate''bind-3 this, replaceeGraph, args)
-            _ (#_"EconomicMap" .put replacements, entryPointNode, (:guardAnchor lowerer))
-            #_"UnmodifiableEconomicMap<Node, Node>" duplicates (SnippetTemplate''inlineSnippet-4 this, replacee, replaceeGraph, replacements)
+            #_"StartNode" start (:start (:snippet this))
+            #_"FixedNode" firstCFGNode (:next start)
+            #_"EconomicMap<Node, Node>" replacements (SnippetTemplate''bind-3 this, (:graph replacee), args)
+            _ (#_"EconomicMap" .put replacements, start, (:guardAnchor lowerer))
+            #_"{Node Node}" duplicates (SnippetTemplate''inlineSnippet-4 this, replacee, (:graph replacee), replacements)
             #_"FixedWithNextNode" lastFixedNode (:lastFixedNode lowerer)
             #_"FixedNode" next (:next lastFixedNode)
             _ (§ ass! lastFixedNode (FixedWithNextNode''setNext-2 lastFixedNode, nil))
-            #_"FixedNode" firstCFGNodeDuplicate (get duplicates firstCFGNode)
         ]
-            (Graph''addAfterFixed-3 replaceeGraph, lastFixedNode, firstCFGNodeDuplicate)
+            (Graph''addAfterFixed-3 (:graph replacee), lastFixedNode, (get duplicates firstCFGNode))
 
             (SnippetTemplate''rewireFrameStates-3 this, replacee, duplicates)
             (SnippetTemplate''updateStamps-3 this, replacee, duplicates)
-
             (SnippetTemplate''rewireMemoryGraph-3 this, replacee, duplicates)
 
             ;; replace all usages of the replacee with the value returned by the snippet
@@ -70673,57 +70585,6 @@ ZeroExtendNode'new-4
                 (when (Node''isAlive-1 returnDuplicate)
                     (§ ass! returnDuplicate (Node''replaceAndDelete-2 returnDuplicate, next))
                 )
-            )
-        )
-        nil
-    )
-
-    ;;;
-     ; Replaces a given floating node with this specialized snippet.
-     ;
-     ; This snippet must be pure data-flow.
-     ;
-     ; @param replacee the node that will be replaced
-     ; @param replacer object that replaces the usages of {@code replacee}
-     ; @param args the arguments to be bound to the flattened positional parameters of the snippet
-     ;;
-    #_unused
-    (defn #_"void" SnippetTemplate''instantiate-4y [#_"SnippetTemplate" this, #_"FloatingNode" replacee, #_"UsageReplacer" replacer, #_"Arguments" args]
-        ;; inline the snippet nodes replacing parameters with the given args in the process
-        (let [
-            #_"StartNode" start (:start (:snippet this))
-            #_"EconomicMap<Node, Node>" replacements (SnippetTemplate''bind-3 this, (:graph replacee), args)
-            #_"MemoryAnchorNode" anchorDuplicate
-                (when (some? (:memoryAnchor this))
-                    (let [
-                        anchorDuplicate (Graph''add-2 (:graph replacee), (MemoryAnchorNode'new-0))
-                    ]
-                        (#_"EconomicMap" .put replacements, (:memoryAnchor this), anchorDuplicate)
-                        anchorDuplicate
-                    )
-                )
-            #_"List<Node>" floatingNodes (ArrayList.)
-            _
-                (doseq [#_"Node" n (:nodes this)]
-                    (when-not (any = n start (:returnNode this))
-                        (#_"List" .add floatingNodes, n)
-                    )
-                )
-            #_"UnmodifiableEconomicMap<Node, Node>" duplicates (SnippetTemplate''inlineSnippet-4 this, replacee, (:graph replacee), replacements)
-        ]
-            (SnippetTemplate''rewireFrameStates-3 this, replacee, duplicates)
-            (SnippetTemplate''updateStamps-3 this, replacee, duplicates)
-            (SnippetTemplate''rewireMemoryGraph-3 this, replacee, duplicates)
-            ;; replace all usages of the replacee with the value returned by the snippet
-            (UsageReplacer'''replace-3 replacer, replacee, (get duplicates (:result (:returnNode this))))
-        )
-        nil
-    )
-
-    (defn #_"void" SnippetTemplate''rewireFrameStates-3 [#_"SnippetTemplate" this, #_"ValueNode" replacee, #_"UnmodifiableEconomicMap<Node, Node>" duplicates]
-        (when (satisfies? StateSplit replacee)
-            (doseq [#_"StateSplit" sideEffectNode (:sideEffectNodes this)]
-                (StateSplit'''setStateAfter-2 (get duplicates sideEffectNode), (:stateAfter replacee))
             )
         )
         nil
@@ -73111,11 +72972,11 @@ ZeroExtendNode'new-4
  ; It also {@linkplain StubUtil#handlePendingException(Word, boolean) handles} any exceptions raised during the foreign call.
  ;;
 (class-ns ForeignCallStub [Stub]
-    (defn- #_"Class[]" ForeignCallStub''createTargetParameters-2 [#_"ForeignCallStub" this, #_"ForeignCallDescriptor" descriptor]
+    (defn- #_"Class[]" ForeignCallStub'createTargetParameters-2 [#_"ForeignCallDescriptor" descriptor, #_"boolean" prependThread]
         (let [
             #_"Class[]" parameters (#_"Object" .clone (:argumentTypes descriptor))
         ]
-            (when (:prependThread this) => parameters
+            (when prependThread => parameters
                 (let [
                     #_"Class[]" a (make-array Class (inc (count parameters)))
                 ]
@@ -73140,24 +73001,20 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"ForeignCallStub" ForeignCallStub'new-6* [#_"long" address, #_"ForeignCallDescriptor" descriptor, #_"boolean" prependThread, #_"Transition" transition, #_"boolean" reexecutable & #_"LocationIdentity..." killedLocations]
         (let [
-            #_"ForeignCallStub" this
-                (merge (ForeignCallStub'class.) (Stub'new-1 (apply ForeignCallLinkage'create-8* descriptor, 0, RegisterEffect'PRESERVES_REGISTERS, HotSpotCallingConventionType/JavaCall, HotSpotCallingConventionType/JavaCallee, transition, reexecutable, killedLocations))
-                    (hash-map
-                        ;;;
-                         ; Linkage target for the call from this stub.
-                         ;;
-                        #_"ForeignCallLinkage" :target nil
-                        ;;;
-                         ; Specifies if the JavaThread value for the current thread is to be prepended to the arguments for the call to #target.
-                         ;;
-                        #_"boolean" :prependThread prependThread
-                    )
-                )
-            #_"Class[]" targetParameterTypes (ForeignCallStub''createTargetParameters-2 this, descriptor)
-            #_"ForeignCallDescriptor" targetSig (apply ForeignCallDescriptor'new-3* (str (:name descriptor) ":C"), (:resultType descriptor), targetParameterTypes)
-            this (assoc this :target (apply ForeignCallLinkage'create-8* targetSig, address, RegisterEffect'DESTROYS_REGISTERS, HotSpotCallingConventionType/NativeCall, HotSpotCallingConventionType/NativeCall, transition, reexecutable, killedLocations))
+            #_"ForeignCallDescriptor" targetSig (apply ForeignCallDescriptor'new-2* (:resultType descriptor), (ForeignCallStub'createTargetParameters-2 descriptor, prependThread))
         ]
-            this
+            (merge (ForeignCallStub'class.) (Stub'new-1 (apply ForeignCallLinkage'create-8* descriptor, 0, RegisterEffect'PRESERVES_REGISTERS, HotSpotCallingConventionType/JavaCall, HotSpotCallingConventionType/JavaCallee, transition, reexecutable, killedLocations))
+                (hash-map
+                    ;;;
+                     ; Linkage target for the call from this stub.
+                     ;;
+                    #_"ForeignCallLinkage" :target (apply ForeignCallLinkage'create-8* targetSig, address, RegisterEffect'DESTROYS_REGISTERS, HotSpotCallingConventionType/NativeCall, HotSpotCallingConventionType/NativeCall, transition, reexecutable, killedLocations)
+                    ;;;
+                     ; Specifies if the JavaThread value for the current thread is to be prepended to the arguments for the call to #target.
+                     ;;
+                    #_"boolean" :prependThread prependThread
+                )
+            )
         )
     )
 
@@ -73233,7 +73090,7 @@ ZeroExtendNode'new-4
      ; (i.e. %r15 on AMD64) and is only prepended if #prependThread is true.
      ;;
     (defm ForeignCallStub Stub
-        (#_"Graph" Stub'''getStubGraph-1 [#_"ForeignCallStub" this]
+        (#_"Graph" Stub'''getStubGraph-1 [#_"ForeignCallStub" this]
             (let [
                 #_"Class[]" args (#_"Object" .clone (:argumentTypes (:descriptor (:linkage this))))
                 #_"boolean" isObjectResult (not (LIRKind'isValue-1v (#_"CallingConvention" .getReturn (:outgoingCallingConvention (:linkage this)))))
@@ -73252,103 +73109,6 @@ ZeroExtendNode'new-4
                 (GraphKit''inlineInvokes-1 kit)
                 (Phase'''run-3 (RemoveValueProxyPhase'new-0), (:graph kit), nil)
             )
-        )
-    )
-)
-
-(class-ns SnippetStub [Stub, Snippets]
-    ;;;
-     ; Creates a new snippet stub.
-     ;
-     ; @param snippetMethodName name of the single Snippet annotated method in the class of this object
-     ; @param linkage linkage details for a call to the stub
-     ;;
-    (defn #_"SnippetStub" SnippetStub'new-2 [#_"String" snippetMethodName, #_"ForeignCallLinkage" linkage]
-        (let [
-            #_"SnippetStub" this
-                (merge (SnippetStub'class.) (Stub'new-1 linkage)
-                    (hash-map
-                        #_"ResolvedJavaMethod" :method nil
-                    )
-                )
-            #_"Method" method (AbstractTemplates'findMethod-3 (#_"Object" .getClass this), snippetMethodName)
-            this (assoc this :method (#_"MetaAccessProvider" .lookupJavaMethod HotSpot'metaAccess, method))
-        ]
-            this
-        )
-    )
-
-    (defm SnippetStub Stub
-        (#_"Graph" Stub'''getStubGraph-1 [#_"SnippetStub" this]
-            (let [
-                #_"GraphBuilderInstance" instance (GraphBuilderInstance'new-2 OptimisticOptimizations'NONE, (IntrinsicContext'new-4 (:method this), (:method this), HotSpot'defaultBytecodeProvider, CompilationContext'INLINE_AFTER_PARSING))
-                #_"Graph" graph (Graph'new-1 (:method this))
-                graph (Phase'''run-3 instance, graph, nil)
-                graph (Phase'''run-3 (RemoveValueProxyPhase'new-0), graph, nil)
-                graph (Graph''setGuardsStage-2 graph, GuardsStage'FLOATING_GUARDS)
-                #_"CanonicalizerPhase" canonicalizer (CanonicalizerPhase'new-0)
-                graph (Phase'''run-3 canonicalizer, graph, nil)
-                graph (Phase'''run-3 (LoweringPhase'new-2 canonicalizer, LoweringStage'HIGH_TIER), graph, nil)
-            ]
-                graph
-            )
-        )
-    )
-)
-
-;;;
- ; Stub implementing the fast path for TLAB refill during instance class allocation. This stub is
- ; called from the inline allocation code when TLAB allocation fails.
- ; If this stub fails to refill the TLAB or allocate the object, it calls out to the HotSpot C++
- ; runtime to complete the allocation.
- ;;
-(class-ns NewArrayStub [SnippetStub, Stub, Snippets]
-    (defn #_"NewArrayStub" NewArrayStub'new-1 [#_"ForeignCallLinkage" linkage]
-        (merge (NewArrayStub'class.) (SnippetStub'new-2 "newArray", linkage))
-    )
-
-    ;;;
-     ; Re-attempts allocation after an initial TLAB allocation failed or was skipped (e.g. due to -XX:-UseTLAB).
-     ;;
-    (§ snippet! #_"Object" #_"NewArrayStub" "newArray" [#_"KlassPointer" hub, #_"int" length, #_"Register" threadRegister]
-        (let [
-            #_"Word" thread (ReplacementsUtil'registerAsWord-1 HotSpot'threadRegister)
-        ]
-            (StubForeignCallNode'newArrayC-4 ForeignCallDescriptor'NEW_ARRAY_C, thread, hub, length)
-            (when (some? (ReplacementsUtil'clearPendingException-1 thread))
-                (ReplacementsUtil'getAndClearObjectResult-1 thread)
-                (DeoptimizeCallerNode'deopt-2 DeoptimizationAction/None, DeoptimizationReason/RuntimeConstraint)
-            )
-            (ReplacementsUtil'getAndClearObjectResult-1 thread)
-        )
-    )
-)
-
-;;;
- ; Stub implementing the fast path for TLAB refill during instance class allocation. This stub is
- ; called from the inline allocation code when TLAB allocation fails.
- ; If this stub fails to refill the TLAB or allocate the object, it calls out to the HotSpot C++
- ; runtime for to complete the allocation.
- ;;
-(class-ns NewInstanceStub [SnippetStub, Stub, Snippets]
-    (defn #_"NewInstanceStub" NewInstanceStub'new-1 [#_"ForeignCallLinkage" linkage]
-        (merge (NewInstanceStub'class.) (SnippetStub'new-2 "newInstance", linkage))
-    )
-
-    ;;;
-     ; Re-attempts allocation after an initial TLAB allocation failed or was skipped (e.g. due to -XX:-UseTLAB).
-     ;;
-    (§ snippet! #_"Object" #_"NewInstanceStub" "newInstance" [#_"KlassPointer" hub, #_"Register" threadRegister]
-        ;; The type is known to be an instance, so Klass::_layout_helper is the instance size as a raw number.
-        (let [
-            #_"Word" thread (ReplacementsUtil'registerAsWord-1 HotSpot'threadRegister)
-        ]
-            (StubForeignCallNode'newInstanceC-3 ForeignCallDescriptor'NEW_INSTANCE_C, thread, hub)
-            (when (some? (ReplacementsUtil'clearPendingException-1 thread))
-                (ReplacementsUtil'getAndClearObjectResult-1 thread)
-                (DeoptimizeCallerNode'deopt-2 DeoptimizationAction/None, DeoptimizationReason/RuntimeConstraint)
-            )
-            (ReplacementsUtil'getAndClearObjectResult-1 thread)
         )
     )
 )
@@ -75285,167 +75045,167 @@ ZeroExtendNode'new-4
      ; of UnsignedWord values (where the caller knows that the highest-order bit of the unsigned value is never used).
      ;;
     ; @WordOperation(opcode = WordOpcode'READ_POINTER)
-    (defn #_"byte" Word''readByte-3w [#_"Word" this, #_"Word" offset, #_"LocationIdentity" locationIdentity]
+    (defn #_"byte" Word''readByte-3w [#_"Word" this, #_"Word" offset, #_"LocationIdentity" location]
         (.getByte HotSpot'unsafe, (Word''unbox-1 (Word''add-2w this, offset)))
     )
 
     ; @WordOperation(opcode = WordOpcode'READ_POINTER)
-    (defn #_"char" Word''readChar-3w [#_"Word" this, #_"Word" offset, #_"LocationIdentity" locationIdentity]
+    (defn #_"char" Word''readChar-3w [#_"Word" this, #_"Word" offset, #_"LocationIdentity" location]
         (.getChar HotSpot'unsafe, (Word''unbox-1 (Word''add-2w this, offset)))
     )
 
     ; @WordOperation(opcode = WordOpcode'READ_POINTER)
-    (defn #_"short" Word''readShort-3w [#_"Word" this, #_"Word" offset, #_"LocationIdentity" locationIdentity]
+    (defn #_"short" Word''readShort-3w [#_"Word" this, #_"Word" offset, #_"LocationIdentity" location]
         (.getShort HotSpot'unsafe, (Word''unbox-1 (Word''add-2w this, offset)))
     )
 
     ; @WordOperation(opcode = WordOpcode'READ_POINTER)
-    (defn #_"int" Word''readInt-3w [#_"Word" this, #_"Word" offset, #_"LocationIdentity" locationIdentity]
+    (defn #_"int" Word''readInt-3w [#_"Word" this, #_"Word" offset, #_"LocationIdentity" location]
         (.getInt HotSpot'unsafe, (Word''unbox-1 (Word''add-2w this, offset)))
     )
 
     ; @WordOperation(opcode = WordOpcode'READ_POINTER)
-    (defn #_"long" Word''readLong-3w [#_"Word" this, #_"Word" offset, #_"LocationIdentity" locationIdentity]
+    (defn #_"long" Word''readLong-3w [#_"Word" this, #_"Word" offset, #_"LocationIdentity" location]
         (.getLong HotSpot'unsafe, (Word''unbox-1 (Word''add-2w this, offset)))
     )
 
     ; @WordOperation(opcode = WordOpcode'READ_POINTER)
-    (defn #_"Word" Word''readWord-3w [#_"Word" this, #_"Word" offset, #_"LocationIdentity" locationIdentity]
+    (defn #_"Word" Word''readWord-3w [#_"Word" this, #_"Word" offset, #_"LocationIdentity" location]
         (Word'box-1 (.getAddress HotSpot'unsafe, (Word''unbox-1 (Word''add-2w this, offset))))
     )
 
     ; @WordOperation(opcode = WordOpcode'READ_POINTER)
-    (§ native #_"Object" Word''readObject-3w [#_"Word" this, #_"Word" offset, #_"LocationIdentity" locationIdentity])
+    (§ native #_"Object" Word''readObject-3w [#_"Word" this, #_"Word" offset, #_"LocationIdentity" location])
 
     ; @WordOperation(opcode = WordOpcode'READ_POINTER)
-    (defn #_"byte" Word''readByte-3i [#_"Word" this, #_"int" offset, #_"LocationIdentity" locationIdentity]
-        (Word''readByte-3w this, (WordFactory'signed-1i offset), locationIdentity)
+    (defn #_"byte" Word''readByte-3i [#_"Word" this, #_"int" offset, #_"LocationIdentity" location]
+        (Word''readByte-3w this, (WordFactory'signed-1i offset), location)
     )
 
     ; @WordOperation(opcode = WordOpcode'READ_POINTER)
     #_unused
-    (defn #_"char" Word''readChar-3i [#_"Word" this, #_"int" offset, #_"LocationIdentity" locationIdentity]
-        (Word''readChar-3w this, (WordFactory'signed-1i offset), locationIdentity)
+    (defn #_"char" Word''readChar-3i [#_"Word" this, #_"int" offset, #_"LocationIdentity" location]
+        (Word''readChar-3w this, (WordFactory'signed-1i offset), location)
     )
 
     ; @WordOperation(opcode = WordOpcode'READ_POINTER)
     #_unused
-    (defn #_"short" Word''readShort-3i [#_"Word" this, #_"int" offset, #_"LocationIdentity" locationIdentity]
-        (Word''readShort-3w this, (WordFactory'signed-1i offset), locationIdentity)
+    (defn #_"short" Word''readShort-3i [#_"Word" this, #_"int" offset, #_"LocationIdentity" location]
+        (Word''readShort-3w this, (WordFactory'signed-1i offset), location)
     )
 
     ; @WordOperation(opcode = WordOpcode'READ_POINTER)
-    (defn #_"int" Word''readInt-3i [#_"Word" this, #_"int" offset, #_"LocationIdentity" locationIdentity]
-        (Word''readInt-3w this, (WordFactory'signed-1i offset), locationIdentity)
+    (defn #_"int" Word''readInt-3i [#_"Word" this, #_"int" offset, #_"LocationIdentity" location]
+        (Word''readInt-3w this, (WordFactory'signed-1i offset), location)
     )
 
     ; @WordOperation(opcode = WordOpcode'READ_POINTER)
-    (defn #_"long" Word''readLong-3i [#_"Word" this, #_"int" offset, #_"LocationIdentity" locationIdentity]
-        (Word''readLong-3w this, (WordFactory'signed-1i offset), locationIdentity)
+    (defn #_"long" Word''readLong-3i [#_"Word" this, #_"int" offset, #_"LocationIdentity" location]
+        (Word''readLong-3w this, (WordFactory'signed-1i offset), location)
     )
 
     ; @WordOperation(opcode = WordOpcode'READ_POINTER)
-    (defn #_"Word" Word''readWord-3i [#_"Word" this, #_"int" offset, #_"LocationIdentity" locationIdentity]
-        (Word''readWord-3w this, (WordFactory'signed-1i offset), locationIdentity)
+    (defn #_"Word" Word''readWord-3i [#_"Word" this, #_"int" offset, #_"LocationIdentity" location]
+        (Word''readWord-3w this, (WordFactory'signed-1i offset), location)
     )
 
     ; @WordOperation(opcode = WordOpcode'READ_POINTER)
-    (defn #_"Object" Word''readObject-3il [#_"Word" this, #_"int" offset, #_"LocationIdentity" locationIdentity]
-        (Word''readObject-3w this, (WordFactory'signed-1i offset), locationIdentity)
+    (defn #_"Object" Word''readObject-3il [#_"Word" this, #_"int" offset, #_"LocationIdentity" location]
+        (Word''readObject-3w this, (WordFactory'signed-1i offset), location)
     )
 
     ; @WordOperation(opcode = WordOpcode'WRITE_POINTER)
-    (defn #_"void" Word''writeByte-4w [#_"Word" this, #_"Word" offset, #_"byte" val, #_"LocationIdentity" locationIdentity]
+    (defn #_"void" Word''writeByte-4w [#_"Word" this, #_"Word" offset, #_"byte" val, #_"LocationIdentity" location]
         (.putByte HotSpot'unsafe, (Word''unbox-1 (Word''add-2w this, offset)), val)
         nil
     )
 
     ; @WordOperation(opcode = WordOpcode'WRITE_POINTER)
-    (defn #_"void" Word''writeChar-4w [#_"Word" this, #_"Word" offset, #_"char" val, #_"LocationIdentity" locationIdentity]
+    (defn #_"void" Word''writeChar-4w [#_"Word" this, #_"Word" offset, #_"char" val, #_"LocationIdentity" location]
         (.putChar HotSpot'unsafe, (Word''unbox-1 (Word''add-2w this, offset)), val)
         nil
     )
 
     ; @WordOperation(opcode = WordOpcode'WRITE_POINTER)
-    (defn #_"void" Word''writeShort-4w [#_"Word" this, #_"Word" offset, #_"short" val, #_"LocationIdentity" locationIdentity]
+    (defn #_"void" Word''writeShort-4w [#_"Word" this, #_"Word" offset, #_"short" val, #_"LocationIdentity" location]
         (.putShort HotSpot'unsafe, (Word''unbox-1 (Word''add-2w this, offset)), val)
         nil
     )
 
     ; @WordOperation(opcode = WordOpcode'WRITE_POINTER)
-    (defn #_"void" Word''writeInt-4w [#_"Word" this, #_"Word" offset, #_"int" val, #_"LocationIdentity" locationIdentity]
+    (defn #_"void" Word''writeInt-4w [#_"Word" this, #_"Word" offset, #_"int" val, #_"LocationIdentity" location]
         (.putInt HotSpot'unsafe, (Word''unbox-1 (Word''add-2w this, offset)), val)
         nil
     )
 
     ; @WordOperation(opcode = WordOpcode'WRITE_POINTER)
-    (defn #_"void" Word''writeLong-4w [#_"Word" this, #_"Word" offset, #_"long" val, #_"LocationIdentity" locationIdentity]
+    (defn #_"void" Word''writeLong-4w [#_"Word" this, #_"Word" offset, #_"long" val, #_"LocationIdentity" location]
         (.putLong HotSpot'unsafe, (Word''unbox-1 (Word''add-2w this, offset)), val)
         nil
     )
 
     ; @WordOperation(opcode = WordOpcode'WRITE_POINTER)
-    (defn #_"void" Word''writeWord-4w [#_"Word" this, #_"Word" offset, #_"Word" val, #_"LocationIdentity" locationIdentity]
+    (defn #_"void" Word''writeWord-4w [#_"Word" this, #_"Word" offset, #_"Word" val, #_"LocationIdentity" location]
         (.putAddress HotSpot'unsafe, (Word''unbox-1 (Word''add-2w this, offset)), (Word''unbox-1 val))
         nil
     )
 
     ; @WordOperation(opcode = WordOpcode'INITIALIZE)
-    (defn #_"void" Word''initializeLong-4w [#_"Word" this, #_"Word" offset, #_"long" val, #_"LocationIdentity" locationIdentity]
+    (defn #_"void" Word''initializeLong-4w [#_"Word" this, #_"Word" offset, #_"long" val, #_"LocationIdentity" location]
         (.putLong HotSpot'unsafe, (Word''unbox-1 (Word''add-2w this, offset)), val)
         nil
     )
 
     ; @WordOperation(opcode = WordOpcode'WRITE_POINTER)
-    (§ native #_"void" Word''writeObject-4 [#_"Word" this, #_"Word" offset, #_"Object" val, #_"LocationIdentity" locationIdentity])
+    (§ native #_"void" Word''writeObject-4 [#_"Word" this, #_"Word" offset, #_"Object" val, #_"LocationIdentity" location])
 
     ; @WordOperation(opcode = WordOpcode'WRITE_POINTER)
-    (defn #_"void" Word''writeByte-4i [#_"Word" this, #_"int" offset, #_"byte" val, #_"LocationIdentity" locationIdentity]
-        (Word''writeByte-4w this, (WordFactory'signed-1i offset), val, locationIdentity)
+    (defn #_"void" Word''writeByte-4i [#_"Word" this, #_"int" offset, #_"byte" val, #_"LocationIdentity" location]
+        (Word''writeByte-4w this, (WordFactory'signed-1i offset), val, location)
         nil
     )
 
     ; @WordOperation(opcode = WordOpcode'WRITE_POINTER)
     #_unused
-    (defn #_"void" Word''writeChar-4i [#_"Word" this, #_"int" offset, #_"char" val, #_"LocationIdentity" locationIdentity]
-        (Word''writeChar-4w this, (WordFactory'signed-1i offset), val, locationIdentity)
+    (defn #_"void" Word''writeChar-4i [#_"Word" this, #_"int" offset, #_"char" val, #_"LocationIdentity" location]
+        (Word''writeChar-4w this, (WordFactory'signed-1i offset), val, location)
         nil
     )
 
     ; @WordOperation(opcode = WordOpcode'WRITE_POINTER)
     #_unused
-    (defn #_"void" Word''writeShort-4i [#_"Word" this, #_"int" offset, #_"short" val, #_"LocationIdentity" locationIdentity]
-        (Word''writeShort-4w this, (WordFactory'signed-1i offset), val, locationIdentity)
+    (defn #_"void" Word''writeShort-4i [#_"Word" this, #_"int" offset, #_"short" val, #_"LocationIdentity" location]
+        (Word''writeShort-4w this, (WordFactory'signed-1i offset), val, location)
         nil
     )
 
     ; @WordOperation(opcode = WordOpcode'WRITE_POINTER)
-    (defn #_"void" Word''writeInt-4i [#_"Word" this, #_"int" offset, #_"int" val, #_"LocationIdentity" locationIdentity]
-        (Word''writeInt-4w this, (WordFactory'signed-1i offset), val, locationIdentity)
+    (defn #_"void" Word''writeInt-4i [#_"Word" this, #_"int" offset, #_"int" val, #_"LocationIdentity" location]
+        (Word''writeInt-4w this, (WordFactory'signed-1i offset), val, location)
         nil
     )
 
     ; @WordOperation(opcode = WordOpcode'WRITE_POINTER)
-    (defn #_"void" Word''writeLong-4i [#_"Word" this, #_"int" offset, #_"long" val, #_"LocationIdentity" locationIdentity]
-        (Word''writeLong-4w this, (WordFactory'signed-1i offset), val, locationIdentity)
+    (defn #_"void" Word''writeLong-4i [#_"Word" this, #_"int" offset, #_"long" val, #_"LocationIdentity" location]
+        (Word''writeLong-4w this, (WordFactory'signed-1i offset), val, location)
         nil
     )
 
     ; @WordOperation(opcode = WordOpcode'WRITE_POINTER)
-    (defn #_"void" Word''writeWord-4i [#_"Word" this, #_"int" offset, #_"Word" val, #_"LocationIdentity" locationIdentity]
-        (Word''writeWord-4w this, (WordFactory'signed-1i offset), val, locationIdentity)
+    (defn #_"void" Word''writeWord-4i [#_"Word" this, #_"int" offset, #_"Word" val, #_"LocationIdentity" location]
+        (Word''writeWord-4w this, (WordFactory'signed-1i offset), val, location)
         nil
     )
 
     ; @WordOperation(opcode = WordOpcode'INITIALIZE)
-    (defn #_"void" Word''initializeLong-4i [#_"Word" this, #_"int" offset, #_"long" val, #_"LocationIdentity" locationIdentity]
-        (Word''initializeLong-4w this, (WordFactory'signed-1i offset), val, locationIdentity)
+    (defn #_"void" Word''initializeLong-4i [#_"Word" this, #_"int" offset, #_"long" val, #_"LocationIdentity" location]
+        (Word''initializeLong-4w this, (WordFactory'signed-1i offset), val, location)
         nil
     )
 
     ; @WordOperation(opcode = WordOpcode'WRITE_POINTER)
-    (defn #_"void" Word''writeObject-4 [#_"Word" this, #_"int" offset, #_"Object" val, #_"LocationIdentity" locationIdentity]
-        (Word''writeObject-4 this, (WordFactory'signed-1i offset), val, locationIdentity)
+    (defn #_"void" Word''writeObject-4 [#_"Word" this, #_"int" offset, #_"Object" val, #_"LocationIdentity" location]
+        (Word''writeObject-4 this, (WordFactory'signed-1i offset), val, location)
         nil
     )
 
@@ -75560,32 +75320,32 @@ ZeroExtendNode'new-4
     )
 
     ; @WordOperation(opcode = WordOpcode'CAS_POINTER)
-    (§ native #_"int" Word''compareAndSwapInt-5 [#_"Word" this, #_"Word" offset, #_"int" expectedValue, #_"int" newValue, #_"LocationIdentity" locationIdentity])
+    (§ native #_"int" Word''compareAndSwapInt-5 [#_"Word" this, #_"Word" offset, #_"int" expectedValue, #_"int" newValue, #_"LocationIdentity" location])
 
     ; @WordOperation(opcode = WordOpcode'CAS_POINTER)
-    (§ native #_"long" Word''compareAndSwapLong-5 [#_"Word" this, #_"Word" offset, #_"long" expectedValue, #_"long" newValue, #_"LocationIdentity" locationIdentity])
+    (§ native #_"long" Word''compareAndSwapLong-5 [#_"Word" this, #_"Word" offset, #_"long" expectedValue, #_"long" newValue, #_"LocationIdentity" location])
 
     ; @WordOperation(opcode = WordOpcode'CAS_POINTER)
-    (§ native #_"Word" Word''compareAndSwapWord-5 [#_"Word" this, #_"Word" offset, #_"Word" expectedValue, #_"Word" newValue, #_"LocationIdentity" locationIdentity])
+    (§ native #_"Word" Word''compareAndSwapWord-5 [#_"Word" this, #_"Word" offset, #_"Word" expectedValue, #_"Word" newValue, #_"LocationIdentity" location])
 
     ; @WordOperation(opcode = WordOpcode'CAS_POINTER)
-    (§ native #_"Object" Word''compareAndSwapObject-5 [#_"Word" this, #_"Word" offset, #_"Object" expectedValue, #_"Object" newValue, #_"LocationIdentity" locationIdentity])
+    (§ native #_"Object" Word''compareAndSwapObject-5 [#_"Word" this, #_"Word" offset, #_"Object" expectedValue, #_"Object" newValue, #_"LocationIdentity" location])
 
     ; @WordOperation(opcode = WordOpcode'CAS_POINTER)
-    (defn #_"boolean" Word''logicCompareAndSwapInt-5w [#_"Word" this, #_"Word" offset, #_"int" expectedValue, #_"int" newValue, #_"LocationIdentity" locationIdentity]
+    (defn #_"boolean" Word''logicCompareAndSwapInt-5w [#_"Word" this, #_"Word" offset, #_"int" expectedValue, #_"int" newValue, #_"LocationIdentity" location]
         (.compareAndSwapInt HotSpot'unsafe, (Word''toObject-1 this), (Word''unbox-1 offset), expectedValue, newValue)
     )
 
     ; @WordOperation(opcode = WordOpcode'CAS_POINTER)
-    (defn #_"boolean" Word''logicCompareAndSwapLong-5w [#_"Word" this, #_"Word" offset, #_"long" expectedValue, #_"long" newValue, #_"LocationIdentity" locationIdentity]
+    (defn #_"boolean" Word''logicCompareAndSwapLong-5w [#_"Word" this, #_"Word" offset, #_"long" expectedValue, #_"long" newValue, #_"LocationIdentity" location]
         (.compareAndSwapLong HotSpot'unsafe, (Word''toObject-1 this), (Word''unbox-1 offset), expectedValue, newValue)
     )
 
     ; @WordOperation(opcode = WordOpcode'CAS_POINTER)
-    (§ native #_"boolean" Word''logicCompareAndSwapWord-5 [#_"Word" this, #_"Word" offset, #_"Word" expectedValue, #_"Word" newValue, #_"LocationIdentity" locationIdentity])
+    (§ native #_"boolean" Word''logicCompareAndSwapWord-5 [#_"Word" this, #_"Word" offset, #_"Word" expectedValue, #_"Word" newValue, #_"LocationIdentity" location])
 
     ; @WordOperation(opcode = WordOpcode'CAS_POINTER)
-    (defn #_"boolean" Word''logicCompareAndSwapObject-5w [#_"Word" this, #_"Word" offset, #_"Object" expectedValue, #_"Object" newValue, #_"LocationIdentity" locationIdentity]
+    (defn #_"boolean" Word''logicCompareAndSwapObject-5w [#_"Word" this, #_"Word" offset, #_"Object" expectedValue, #_"Object" newValue, #_"LocationIdentity" location]
         (.compareAndSwapObject HotSpot'unsafe, (Word''toObject-1 this), (Word''unbox-1 offset), expectedValue, newValue)
     )
 
@@ -75646,46 +75406,46 @@ ZeroExtendNode'new-4
     )
 
     ; @WordOperation(opcode = WordOpcode'CAS_POINTER)
-    (defn #_"int" Word''compareAndSwapInt-5 [#_"Word" this, #_"int" offset, #_"int" expectedValue, #_"int" newValue, #_"LocationIdentity" locationIdentity]
-        (Word''compareAndSwapInt-5 this, (WordFactory'signed-1i offset), expectedValue, newValue, locationIdentity)
+    (defn #_"int" Word''compareAndSwapInt-5 [#_"Word" this, #_"int" offset, #_"int" expectedValue, #_"int" newValue, #_"LocationIdentity" location]
+        (Word''compareAndSwapInt-5 this, (WordFactory'signed-1i offset), expectedValue, newValue, location)
     )
 
     ; @WordOperation(opcode = WordOpcode'CAS_POINTER)
-    (defn #_"long" Word''compareAndSwapLong-5 [#_"Word" this, #_"int" offset, #_"long" expectedValue, #_"long" newValue, #_"LocationIdentity" locationIdentity]
-        (Word''compareAndSwapLong-5 this, (WordFactory'signed-1i offset), expectedValue, newValue, locationIdentity)
+    (defn #_"long" Word''compareAndSwapLong-5 [#_"Word" this, #_"int" offset, #_"long" expectedValue, #_"long" newValue, #_"LocationIdentity" location]
+        (Word''compareAndSwapLong-5 this, (WordFactory'signed-1i offset), expectedValue, newValue, location)
     )
 
     ; @WordOperation(opcode = WordOpcode'CAS_POINTER)
-    (defn #_"Word" Word''compareAndSwapWord-5 [#_"Word" this, #_"int" offset, #_"Word" expectedValue, #_"Word" newValue, #_"LocationIdentity" locationIdentity]
-        (Word''compareAndSwapWord-5 this, (WordFactory'signed-1i offset), expectedValue, newValue, locationIdentity)
+    (defn #_"Word" Word''compareAndSwapWord-5 [#_"Word" this, #_"int" offset, #_"Word" expectedValue, #_"Word" newValue, #_"LocationIdentity" location]
+        (Word''compareAndSwapWord-5 this, (WordFactory'signed-1i offset), expectedValue, newValue, location)
     )
 
     ; @WordOperation(opcode = WordOpcode'CAS_POINTER)
-    (defn #_"Object" Word''compareAndSwapObject-5 [#_"Word" this, #_"int" offset, #_"Object" expectedValue, #_"Object" newValue, #_"LocationIdentity" locationIdentity]
-        (Word''compareAndSwapObject-5 this, (WordFactory'signed-1i offset), expectedValue, newValue, locationIdentity)
-    )
-
-    ; @WordOperation(opcode = WordOpcode'CAS_POINTER)
-    #_unused
-    (defn #_"boolean" Word''logicCompareAndSwapInt-5i [#_"Word" this, #_"int" offset, #_"int" expectedValue, #_"int" newValue, #_"LocationIdentity" locationIdentity]
-        (Word''logicCompareAndSwapInt-5w this, (WordFactory'signed-1i offset), expectedValue, newValue, locationIdentity)
+    (defn #_"Object" Word''compareAndSwapObject-5 [#_"Word" this, #_"int" offset, #_"Object" expectedValue, #_"Object" newValue, #_"LocationIdentity" location]
+        (Word''compareAndSwapObject-5 this, (WordFactory'signed-1i offset), expectedValue, newValue, location)
     )
 
     ; @WordOperation(opcode = WordOpcode'CAS_POINTER)
     #_unused
-    (defn #_"boolean" Word''logicCompareAndSwapLong-5i [#_"Word" this, #_"int" offset, #_"long" expectedValue, #_"long" newValue, #_"LocationIdentity" locationIdentity]
-        (Word''logicCompareAndSwapLong-5w this, (WordFactory'signed-1i offset), expectedValue, newValue, locationIdentity)
-    )
-
-    ; @WordOperation(opcode = WordOpcode'CAS_POINTER)
-    (defn #_"boolean" Word''logicCompareAndSwapWord-5 [#_"Word" this, #_"int" offset, #_"Word" expectedValue, #_"Word" newValue, #_"LocationIdentity" locationIdentity]
-        (Word''logicCompareAndSwapWord-5 this, (WordFactory'signed-1i offset), expectedValue, newValue, locationIdentity)
+    (defn #_"boolean" Word''logicCompareAndSwapInt-5i [#_"Word" this, #_"int" offset, #_"int" expectedValue, #_"int" newValue, #_"LocationIdentity" location]
+        (Word''logicCompareAndSwapInt-5w this, (WordFactory'signed-1i offset), expectedValue, newValue, location)
     )
 
     ; @WordOperation(opcode = WordOpcode'CAS_POINTER)
     #_unused
-    (defn #_"boolean" Word''logicCompareAndSwapObject-5i [#_"Word" this, #_"int" offset, #_"Object" expectedValue, #_"Object" newValue, #_"LocationIdentity" locationIdentity]
-        (Word''logicCompareAndSwapObject-5w this, (WordFactory'signed-1i offset), expectedValue, newValue, locationIdentity)
+    (defn #_"boolean" Word''logicCompareAndSwapLong-5i [#_"Word" this, #_"int" offset, #_"long" expectedValue, #_"long" newValue, #_"LocationIdentity" location]
+        (Word''logicCompareAndSwapLong-5w this, (WordFactory'signed-1i offset), expectedValue, newValue, location)
+    )
+
+    ; @WordOperation(opcode = WordOpcode'CAS_POINTER)
+    (defn #_"boolean" Word''logicCompareAndSwapWord-5 [#_"Word" this, #_"int" offset, #_"Word" expectedValue, #_"Word" newValue, #_"LocationIdentity" location]
+        (Word''logicCompareAndSwapWord-5 this, (WordFactory'signed-1i offset), expectedValue, newValue, location)
+    )
+
+    ; @WordOperation(opcode = WordOpcode'CAS_POINTER)
+    #_unused
+    (defn #_"boolean" Word''logicCompareAndSwapObject-5i [#_"Word" this, #_"int" offset, #_"Object" expectedValue, #_"Object" newValue, #_"LocationIdentity" location]
+        (Word''logicCompareAndSwapObject-5w this, (WordFactory'signed-1i offset), expectedValue, newValue, location)
     )
 
     ; @MetaspaceOperation(opcode = MetaspaceOpcode'POINTER_EQ)
@@ -75698,10 +75458,10 @@ ZeroExtendNode'new-4
     (§ native #_"KlassPointer" Word'klassPointerFromWord-1 [#_"Word" pointer])
 
     ; @MetaspaceOperation(opcode = MetaspaceOpcode'READ_KLASS_POINTER)
-    (§ native #_"KlassPointer" Word''readKlassPointer-3 [#_"KlassPointer" this, #_"int" offset, #_"LocationIdentity" locationIdentity])
+    (§ native #_"KlassPointer" Word''readKlassPointer-3 [#_"KlassPointer" this, #_"int" offset, #_"LocationIdentity" location])
 
     ; @WordOperation(opcode = WordOpcode'WRITE_POINTER)
-    (§ native #_"void" Word''writeKlassPointer-4 [#_"KlassPointer" this, #_"int" offset, #_"KlassPointer" t, #_"LocationIdentity" locationIdentity])
+    (§ native #_"void" Word''writeKlassPointer-4 [#_"KlassPointer" this, #_"int" offset, #_"KlassPointer" t, #_"LocationIdentity" location])
 
     ; @MetaspaceOperation(opcode = MetaspaceOpcode'IS_NULL)
     (§ native #_"boolean" Word''klassPointerIsNull-1 [#_"KlassPointer" this])
@@ -75773,8 +75533,8 @@ ZeroExtendNode'new-4
                         #_"AddressNode" address (WordOperationPlugin''makeAddress-4 this, parser, (nth args 0), (nth args 1))
                         #_"LocationIdentity" location
                             (if (= (count args) 2)
-                                (LocationIdentity/any)
-                                (SnippetReflection'asObject-2c LocationIdentity, (ValueNode''asJavaConstant-1 (nth args 2)))
+                                LocationIdentity'ANY
+                                (SnippetReflection'asObject-2c LocationIdentity'iface, (ValueNode''asJavaConstant-1 (nth args 2)))
                             )
                     ]
                         (BytecodeParser''push-3 parser, returnKind, (BytecodeParser''add-2 parser, (ReadNode'new-4 address, location, KlassPointerStamp'KLASS, BarrierType'NONE)))
@@ -75899,8 +75659,8 @@ ZeroExtendNode'new-4
                                 #_"AddressNode" address (WordOperationPlugin''makeAddress-4 this, parser, (nth args 0), (nth args 1))
                                 #_"LocationIdentity" location
                                     (if (= (count args) 2)
-                                        (LocationIdentity/any)
-                                        (SnippetReflection'asObject-2c LocationIdentity, (ValueNode''asJavaConstant-1 (nth args 2)))
+                                        LocationIdentity'ANY
+                                        (SnippetReflection'asObject-2c LocationIdentity'iface, (ValueNode''asJavaConstant-1 (nth args 2)))
                                     )
                             ]
                                 (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin''readOp-6 this, parser, readKind, address, location, (WordOperation''opcode-1 operation)))
@@ -75911,7 +75671,7 @@ ZeroExtendNode'new-4
                                 #_"AddressNode" address (WordOperationPlugin''makeAddress-4 this, parser, (nth args 0), (nth args 1))
                                 #_"BarrierType" barrierType (SnippetReflection'asObject-2c BarrierType, (ValueNode''asJavaConstant-1 (nth args 2)))
                             ]
-                                (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin'readOp-6 parser, readKind, address, (LocationIdentity/any), barrierType, true))
+                                (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin'readOp-6 parser, readKind, address, LocationIdentity'ANY, barrierType, true))
                             )
                        [WordOpcode'WRITE_POINTER WordOpcode'WRITE_OBJECT WordOpcode'WRITE_BARRIERED WordOpcode'INITIALIZE]
                             (let [
@@ -75919,8 +75679,8 @@ ZeroExtendNode'new-4
                                 #_"AddressNode" address (WordOperationPlugin''makeAddress-4 this, parser, (nth args 0), (nth args 1))
                                 #_"LocationIdentity" location
                                     (if (= (count args) 3)
-                                        (LocationIdentity/any)
-                                        (SnippetReflection'asObject-2c LocationIdentity, (ValueNode''asJavaConstant-1 (nth args 3)))
+                                        LocationIdentity'ANY
+                                        (SnippetReflection'asObject-2c LocationIdentity'iface, (ValueNode''asJavaConstant-1 (nth args 3)))
                                     )
                             ]
                                 (WordOperationPlugin''writeOp-7 this, parser, writeKind, address, location, (nth args 2), (WordOperation''opcode-1 operation))
@@ -75955,7 +75715,7 @@ ZeroExtendNode'new-4
                             (let [
                                 #_"AddressNode" address (WordOperationPlugin''makeAddress-4 this, parser, (nth args 0), (nth args 1))
                                 #_"JavaKind" valueKind (WordTypes'asKind-1 (#_"Signature" .getParameterType (#_"ResolvedJavaMethod" .getSignature method), 1, (#_"ResolvedJavaMethod" .getDeclaringClass method)))
-                                #_"LocationIdentity" location (SnippetReflection'asObject-2c LocationIdentity, (ValueNode''asJavaConstant-1 (nth args 4)))
+                                #_"LocationIdentity" location (SnippetReflection'asObject-2c LocationIdentity'iface, (ValueNode''asJavaConstant-1 (nth args 4)))
                                 #_"JavaType" returnType (#_"Signature" .getReturnType (#_"ResolvedJavaMethod" .getSignature method), (#_"ResolvedJavaMethod" .getDeclaringClass method))
                             ]
                                 (BytecodeParser''addPush-3 parser, returnKind, (WordOperationPlugin''casOp-7 this, valueKind, (WordTypes'asKind-1 returnType), address, location, (nth args 2), (nth args 3)))
@@ -76205,7 +75965,7 @@ ZeroExtendNode'new-4
                 ]
                     (if HotSpot'useG1GC
                         (do
-                            (when-not (#_"LocationIdentity" .isInit (ß FixedAccessNode''getLocationIdentity-1 node))
+                            (when-not (LocationIdentity''isInit-1 (Access'''getLocationIdentity-1 node))
                                 (WriteBarrierAdditionPhase'addG1PreWriteBarrier-6 node, (Access'''getAddress-1 node), nil, true, (:nullCheck node), graph)
                             )
                             (WriteBarrierAdditionPhase''addG1PostWriteBarrier-6 this, node, (Access'''getAddress-1 node), (:value node), precise?, graph)
@@ -76534,7 +76294,7 @@ ZeroExtendNode'new-4
 
     (defn #_"CompilationResult" Compiler'compileStub-1 [#_"Stub" stub]
         (let [
-            #_"Graph" graph (Stub'''getStubGraph-1 stub)
+            #_"Graph" graph (Stub'''getStubGraph-1 stub)
         ]
             (when-not (satisfies? StubStartNode (:start graph))
                 (let [
