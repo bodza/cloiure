@@ -191,10 +191,6 @@ EndLockScopeNode'endLockScope-0
 ExplodeLoopNode'explodeLoop-0
 FastAcquireBiasedLockNode'mark-1
 FixedValueAnchorNode'getObject-1
-ForeignCallNode'g1PostBarrierStub-2
-ForeignCallNode'g1PreBarrierStub-2
-ForeignCallNode'monitorenterStubC-3
-ForeignCallNode'monitorexitStubC-3
 LoadHubNode'loadHubIntrinsic-1
 MembarNode'memoryBarrier-1
 MembarNode'memoryBarrier-2
@@ -208,8 +204,12 @@ RawLoadNode'loadWordFromObjectIntrinsic-4
 ReadRegisterNode'registerAsWord-3
 SnippetAnchorNode'anchor-0
 StoreHubNode'write-2
-StubForeignCallNode'newArrayC-4
-StubForeignCallNode'newInstanceC-3
+StubForeignCallNode'g1PostBarrier-3
+StubForeignCallNode'g1PreBarrier-3
+StubForeignCallNode'monitorenter-4
+StubForeignCallNode'monitorexit-4
+StubForeignCallNode'newArray-4
+StubForeignCallNode'newInstance-3
 VMConfigNode'areConfigValuesConstant-0
 VMConfigNode'loadIntConfigValue-1
 VMConfigNode'loadLongConfigValue-1
@@ -765,6 +765,7 @@ BridgeMethodUtils'getAnnotation-2
 BytecodeLookupSwitch'new-2
 BytecodeParser''add-2
 BytecodeParser''addPush-3
+BytecodeParser''append-2
 BytecodeParser''appendConstant-2
 BytecodeParser''appendInvoke-4
 BytecodeParser''bci-1
@@ -851,6 +852,7 @@ BytecodeParser''notifyBeforeInline-2
 BytecodeParser''nullCheckedValue-2
 BytecodeParser''nullCheckedValue-3
 BytecodeParser''parseAndInlineCallee-4
+BytecodeParser''parsingIntrinsic-1
 BytecodeParser''processBlock-2
 BytecodeParser''processBytecode-3
 BytecodeParser''push-3
@@ -1133,12 +1135,11 @@ CompilationResult''setTargetCode-3
 CompilationResult'new-1
 Compiler'compileGraph-1
 Compiler'compileMethod-1
-Compiler'compileStub-1
 Compiler'createCompiledCode-1
 Compiler'createInstalledCode-4
-Compiler'emitBackEnd-3
+Compiler'emitBackEnd-2
 Compiler'emitFrontEnd-3
-Compiler'emitLIR-3
+Compiler'emitLIR-2
 Compiler'emitLowLevel-3
 Compiler'emitStackOverflowCheck-1
 CompositeValue'new-1
@@ -1519,7 +1520,6 @@ ForeignCallDescriptor'NEW_INSTANCE
 ForeignCallDescriptor'UNCOMMON_TRAP_HANDLER
 ForeignCallDescriptor'new-2*
 ForeignCallLinkage''destroysRegisters-1
-ForeignCallLinkage''finalizeAddress-1
 ForeignCallLinkage''getMaxCallTargetOffset-1
 ForeignCallLinkage''isGuaranteedSafepoint-1
 ForeignCallLinkage''needsJavaFrameAnchor-1
@@ -1532,14 +1532,10 @@ ForeignCallNode''setBci-2
 ForeignCallNode'intrinsify-5*
 ForeignCallNode'new-2*
 ForeignCallOp'new-4
-ForeignCallStub'new-6*
 ForeignCalls''getKilledLocations-2
 ForeignCalls''isGuaranteedSafepoint-2
 ForeignCalls''isReexecutable-2
-ForeignCalls''linkForeignCall-7*
 ForeignCalls''lookupForeignCall-2
-ForeignCalls''register-2
-ForeignCalls''registerForeignCall-8*
 ForeignCalls'nativeABICallerSaveRegisters
 ForeignCalls'new-0
 FrameContext''enter-2
@@ -1698,7 +1694,6 @@ Graph''addBeforeFixed-3
 Graph''addDuplicates-5m
 Graph''addDuplicates-5r
 Graph''addOrUniqueWithInputs-2
-Graph''clearAllStateAfter-1
 Graph''freeze-1
 Graph''getInvokes-1
 Graph''getMark-1
@@ -1748,20 +1743,6 @@ GraphEffectList''replaceAtUsages-4
 GraphEffectList''replaceFirstInput-4
 GraphEffectList''replaceWithSink-3
 GraphEffectList'new-0
-GraphKit''add-2
-GraphKit''createInvoke-4*
-GraphKit''createInvoke-6*
-GraphKit''createInvoke-7*
-GraphKit''elsePart-1
-GraphKit''endIf-1
-GraphKit''getTopStructure-2
-GraphKit''inlineInvokes-1
-GraphKit''popStructure-1
-GraphKit''pushStructure-2
-GraphKit''startIf-3
-GraphKit''thenPart-1
-GraphKit'findMethod-3*
-GraphKit'new-1
 GraphUtil'arrayLength-1
 GraphUtil'checkRedundantPhi-1
 GraphUtil'checkRedundantProxy-1
@@ -1939,11 +1920,6 @@ IfNode''setTrueSuccessor-2
 IfNode''setTrueSuccessorProbability-2
 IfNode'new-4b
 IfNode'new-4f
-IfState'CONDITION
-IfState'ELSE_PART
-IfState'FINISHED
-IfState'THEN_PART
-IfStructure'new-0
 IllegalStamp'instance
 IncrementalCanonicalizerPhase'new-1
 IncrementalCanonicalizerPhase'new-2
@@ -2225,7 +2201,7 @@ LIRGenerationContext'new-4
 LIRGenerationPhase'new-0
 LIRGenerationResult''buildFrameMap-1
 LIRGenerationResult''setForeignCall-2
-LIRGenerationResult'new-4
+LIRGenerationResult'new-3
 LIRGenerator''_emitForeignCall-3*
 LIRGenerator''append-2
 LIRGenerator''asAddressValue-2
@@ -3515,13 +3491,8 @@ StoreIndexedNode'new-4
 StrategySwitchOp'new-5
 StringRef''getValue-2
 StringRef'new-1
-Structure'new-0
-Stub''getCode-1
-Stub''preservesRegisters-1
-Stub'new-1
 StubForeignCallNode''operands-2
 StubForeignCallNode'new-3*
-StubStartNode'new-1
 Sub'new-2
 SubNode'create-2
 SubNode'new-2
@@ -4797,7 +4768,6 @@ ZeroExtendNode'new-4
 (defp ForeignCallLinkage)
 (defp ForeignCallNode)
 (defp ForeignCallOp)
-(defp ForeignCallStub)
 (defp ForeignCalls)
 (defp FrameContext)
 
@@ -4895,28 +4865,9 @@ ZeroExtendNode'new-4
     (#_"ValueNode" GraphAdder'''add-2 [#_"GraphAdder" this, #_"ValueNode" node])
 )
 
-;;;
- ; Used by a GraphBuilderPlugin to interface with an object that builds a graph.
- ;;
-(defp GraphBuilder
-    ;;;
-     ; Adds the given node to the graph and also adds recursively all referenced inputs.
-     ;
-     ; @param value the node to be added to the graph
-     ; @return either the node added or an equivalent node
-     ;;
-    (#_"ValueNode" GraphBuilder'''append-2 [#_"GraphBuilder" this, #_"ValueNode" value])
-    ;;;
-     ; Determines if this parsing context is within the bytecode of an intrinsic or a method
-     ; inlined by an intrinsic.
-     ;;
-    (#_"boolean" GraphBuilder'''parsingIntrinsic-1 [#_"GraphBuilder" this])
-)
-
 (defp GraphBuilderInstance)
 (defp GraphBuilderPhase)
 (defp GraphEffectList)
-(defp GraphKit)
 (defp GreedyInliningPolicy)
 (defp GuardLoweringPhase)
 (defp GuardNode)
@@ -4964,7 +4915,6 @@ ZeroExtendNode'new-4
 (defp HotSpotSwitchClosure)
 (defp HubGetClassNode)
 (defp IfNode)
-(defp IfStructure)
 (defp IllegalStamp)
 
 (defp ImplicitNullCheck
@@ -6350,21 +6300,7 @@ ZeroExtendNode'new-4
 (defp StoreIndexedNode)
 (defp StrategySwitchOp)
 (defp StringRef)
-(defp Structure)
-
-;;;
- ; Base class for implementing some low level code providing the out-of-line slow path for a snippet
- ; and/or a callee saved call to a HotSpot C/C++ runtime function or even a another compiled Java method.
- ;;
-(defp Stub
-    ;;;
-     ; Gets the graph that from which the code for this stub will be compiled.
-     ;;
-    (#_"Graph" Stub'''getStubGraph-1 [#_"Stub" this])
-)
-
 (defp StubForeignCallNode)
-(defp StubStartNode)
 (defp Sub)
 (defp SubNode)
 (defp SuccessorEdges)
@@ -6450,7 +6386,7 @@ ZeroExtendNode'new-4
     ;;;
      ; Intercept the type of arguments or return values.
      ;;
-    (#_"Stamp" TypePlugin'''interceptType-4 [#_"TypePlugin" this, #_"GraphBuilder" b, #_"JavaType" declaredType, #_"boolean" never-nil?])
+    (#_"Stamp" TypePlugin'''interceptType-4 [#_"TypePlugin" this, #_"BytecodeParser" parser, #_"JavaType" declaredType, #_"boolean" never-nil?])
 )
 
 (defp TypeReference)
@@ -8525,14 +8461,14 @@ ZeroExtendNode'new-4
  ; appropriately to comply with the layouts above.
  ;;
 (value-ns MonitorSnippets (§ implements Snippets)
-    (defn- #_"boolean" MonitorSnippets'tryEnterBiased-5 [#_"Object" object, #_"KlassPointer" hub, #_"Word" lock, #_"Word" mark, #_"Register" threadRegister]
+    (defn- #_"boolean" MonitorSnippets'tryEnterBiased-4 [#_"Object" object, #_"KlassPointer" hub, #_"Word" lock, #_"Word" mark]
         ;; See whether the lock is currently biased toward our thread and whether the epoch is still valid.
         ;; Note that the runtime guarantees sufficient alignment of JavaThread pointers to allow age to be placed into low bits.
         (let [
             #_"Word" biasableLockBits (Word''and-2i mark, HotSpot'biasedLockMaskInPlace)
             ;; Check whether the bias pattern is present in the object's mark word and the bias owner and the epoch are both still current.
             #_"Word" prototypeMarkWord (Word''readWord-3i hub, HotSpot'prototypeMarkWordOffset, NamedLocationIdentity'PROTOTYPE_MARK_WORD)
-            #_"Word" thread (ReplacementsUtil'registerAsWord-1 threadRegister)
+            #_"Word" thread (ReplacementsUtil'registerAsWord-1 HotSpot'threadRegister)
             #_"Word" tmp (Word''and-2i (Word''xor-2w (Word''or-2w prototypeMarkWord, thread), mark), (bit-not HotSpot'ageMaskInPlace))
         ]
             (or
@@ -8596,7 +8532,10 @@ ZeroExtendNode'new-4
 
                                 (do
                                     ;; slow-path runtime-call
-                                    (ForeignCallNode'monitorenterStubC-3 ForeignCallDescriptor'MONITORENTER, object, lock)
+                                    (StubForeignCallNode'monitorenter-4 ForeignCallDescriptor'MONITORENTER, thread, object, lock)
+                                    (when (some? (ReplacementsUtil'clearPendingException-1 thread))
+                                        (DeoptimizeCallerNode'deopt-2 DeoptimizationAction/None, DeoptimizationReason/RuntimeConstraint)
+                                    )
                                     true
                                 )
                             )
@@ -8622,17 +8561,18 @@ ZeroExtendNode'new-4
         (and GraalOptions'simpleFastInflatedLocking (<= 0 HotSpot'monitorMask) (<= 0 HotSpot'objectMonitorOwnerOffset))
     )
 
-    (defn- #_"boolean" MonitorSnippets'tryEnterInflated-4 [#_"Object" object, #_"Word" lock, #_"Word" mark, #_"Register" threadRegister]
+    (defn- #_"boolean" MonitorSnippets'tryEnterInflated-3 [#_"Object" object, #_"Word" lock, #_"Word" mark]
         ;; write non-zero value to lock slot
         (Word''writeWord-4i lock, HotSpot'lockDisplacedMarkOffset, lock, NamedLocationIdentity'DISPLACED_MARK_WORD)
         ;; mark is a pointer to the ObjectMonitor + monitorMask
         (let [
             #_"Word" monitor (Word''subtract-2i mark, HotSpot'monitorMask)
             #_"Word" owner (Word''readWord-3i monitor, HotSpot'objectMonitorOwnerOffset, NamedLocationIdentity'OBJECT_MONITOR_OWNER)
+            #_"Word" thread (ReplacementsUtil'registerAsWord-1 HotSpot'threadRegister)
         ]
             ;; appears being unlocked when owner is 0
             (and (Word''equal-2i owner, 0)
-                 (Word''logicCompareAndSwapWord-5 monitor, HotSpot'objectMonitorOwnerOffset, owner, (ReplacementsUtil'registerAsWord-1 threadRegister), NamedLocationIdentity'OBJECT_MONITOR_OWNER)
+                 (Word''logicCompareAndSwapWord-5 monitor, HotSpot'objectMonitorOwnerOffset, owner, thread, NamedLocationIdentity'OBJECT_MONITOR_OWNER)
             )
         )
     )
@@ -8643,12 +8583,12 @@ ZeroExtendNode'new-4
             #_"Word" mark (ReplacementsUtil'loadWordFromObject-2 object, HotSpot'markOffset)
             #_"Word" lock (BeginLockScopeNode'beginLockScope-1 lockDepth)
         ]
-            (when-not (and HotSpot'useBiasedLocking (MonitorSnippets'tryEnterBiased-5 object, hub, lock, mark, HotSpot'threadRegister))
+            (when-not (and HotSpot'useBiasedLocking (MonitorSnippets'tryEnterBiased-4 object, hub, lock, mark))
                 ;; not biased, fall-through
                 (or
                     (if (and (MonitorSnippets'inlineFastLockSupported-0) (Word''notEqual-2i (Word''and-2i mark, HotSpot'monitorMask), 0))
                         ;; inflated case
-                        (when (MonitorSnippets'tryEnterInflated-4 object, lock, mark, HotSpot'threadRegister)
+                        (when (MonitorSnippets'tryEnterInflated-3 object, lock, mark)
                             :done
                         )
                         ;; create the unlocked mark word pattern
@@ -8699,7 +8639,14 @@ ZeroExtendNode'new-4
                         )
                     )
                     ;; slow-path runtime-call
-                    (ForeignCallNode'monitorenterStubC-3 ForeignCallDescriptor'MONITORENTER, object, lock)
+                    (let [
+                        #_"Word" thread (ReplacementsUtil'registerAsWord-1 HotSpot'threadRegister)
+                    ]
+                        (StubForeignCallNode'monitorenter-4 ForeignCallDescriptor'MONITORENTER, thread, object, lock)
+                        (when (some? (ReplacementsUtil'clearPendingException-1 thread))
+                            (DeoptimizeCallerNode'deopt-2 DeoptimizationAction/None, DeoptimizationReason/RuntimeConstraint)
+                        )
+                    )
                 )
             )
         )
@@ -8710,11 +8657,17 @@ ZeroExtendNode'new-4
      ; Calls straight out to the monitorenter stub.
      ;;
     (§ snippet! #_"void" #_"MonitorSnippets" "monitorenterStub" [#_"Object" object, #_"int" lockDepth]
-        (when (nil? object)
-            (DeoptimizeNode'deopt-2 DeoptimizationAction/InvalidateReprofile, DeoptimizationReason/NullCheckException)
+        (when (some? object) => (DeoptimizeNode'deopt-2 DeoptimizationAction/InvalidateReprofile, DeoptimizationReason/NullCheckException)
+            (let [
+                #_"Word" thread (ReplacementsUtil'registerAsWord-1 HotSpot'threadRegister)
+            ]
+                ;; BeginLockScope nodes do not read from object, so a use of object cannot float about the nil-check above.
+                (StubForeignCallNode'monitorenter-4 ForeignCallDescriptor'MONITORENTER, thread, object, (BeginLockScopeNode'beginLockScope-1 lockDepth))
+                (when (some? (ReplacementsUtil'clearPendingException-1 thread))
+                    (DeoptimizeCallerNode'deopt-2 DeoptimizationAction/None, DeoptimizationReason/RuntimeConstraint)
+                )
+            )
         )
-        ;; BeginLockScope nodes do not read from object, so a use of object cannot float about the nil-check above.
-        (ForeignCallNode'monitorenterStubC-3 ForeignCallDescriptor'MONITORENTER, object, (BeginLockScopeNode'beginLockScope-1 lockDepth))
         nil
     )
 
@@ -8728,7 +8681,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"boolean" MonitorSnippets'tryExitInflated-4 [#_"Object" object, #_"Word" mark, #_"Word" lock, #_"Register" threadRegister]
+    (defn- #_"boolean" MonitorSnippets'tryExitInflated-3 [#_"Object" object, #_"Word" mark, #_"Word" lock]
         (and (MonitorSnippets'inlineFastUnlockSupported-0)
              (Word''notEqual-2i (Word''and-2i mark, HotSpot'monitorMask), 0)
             ;; inflated case: mark is a pointer to the ObjectMonitor + monitorMask
@@ -8737,7 +8690,7 @@ ZeroExtendNode'new-4
                 #_"int" ownerOffset HotSpot'objectMonitorOwnerOffset
                 #_"Word" owner (Word''readWord-3i monitor, ownerOffset, NamedLocationIdentity'OBJECT_MONITOR_OWNER)
                 #_"Word" recursions (Word''readWord-3i monitor, HotSpot'objectMonitorRecursionsOffset, NamedLocationIdentity'OBJECT_MONITOR_RECURSION)
-                #_"Word" thread (ReplacementsUtil'registerAsWord-1 threadRegister)
+                #_"Word" thread (ReplacementsUtil'registerAsWord-1 HotSpot'threadRegister)
             ]
                 (or
                     (when (Word''equal-2i (Word''or-2w (Word''xor-2w owner, thread), recursions), 0) ;; owner == thread && recursions == 0
@@ -8752,7 +8705,13 @@ ZeroExtendNode'new-4
                             )
                         )
                     )
-                    (ForeignCallNode'monitorexitStubC-3 ForeignCallDescriptor'MONITOREXIT, object, lock)
+
+                    (do
+                        (StubForeignCallNode'monitorexit-4 ForeignCallDescriptor'MONITOREXIT, thread, object, lock)
+                        (when (some? (ReplacementsUtil'clearPendingException-1 thread))
+                            (DeoptimizeCallerNode'deopt-2 DeoptimizationAction/None, DeoptimizationReason/RuntimeConstraint)
+                        )
+                    )
                 )
                 true
             )
@@ -8772,15 +8731,19 @@ ZeroExtendNode'new-4
                     #_"Word" displacedMark (Word''readWord-3i lock, HotSpot'lockDisplacedMarkOffset, NamedLocationIdentity'DISPLACED_MARK_WORD)
                 ]
                     ;; => recursive locking, done
-                    (when (and (not (Word''equal-2i displacedMark, 0)) (not (MonitorSnippets'tryExitInflated-4 object, mark, lock, HotSpot'threadRegister)))
+                    (when (and (not (Word''equal-2i displacedMark, 0)) (not (MonitorSnippets'tryExitInflated-3 object, mark, lock)))
                         ;; Test if object's mark word is pointing to the displaced mark word, and if so,
                         ;; restore the displaced mark in the object. Otherwise, do unlocking via runtime call.
                         (let [
+                            #_"Word" thread (ReplacementsUtil'registerAsWord-1 HotSpot'threadRegister)
                             #_"Word" objectPointer (Word'objectToTrackedPointer-1 object)
                         ]
                             (when-not (Word''logicCompareAndSwapWord-5 objectPointer, HotSpot'markOffset, lock, displacedMark, NamedLocationIdentity'MARK_WORD)
                                 ;; the object's mark word was not pointing to the displaced header
-                                (ForeignCallNode'monitorexitStubC-3 ForeignCallDescriptor'MONITOREXIT, object, lock)
+                                (StubForeignCallNode'monitorexit-4 ForeignCallDescriptor'MONITOREXIT, thread, object, lock)
+                                (when (some? (ReplacementsUtil'clearPendingException-1 thread))
+                                    (DeoptimizeCallerNode'deopt-2 DeoptimizationAction/None, DeoptimizationReason/RuntimeConstraint)
+                                )
                             )
                         )
                     )
@@ -8796,9 +8759,13 @@ ZeroExtendNode'new-4
      ;;
     (§ snippet! #_"void" #_"MonitorSnippets" "monitorexitStub" [#_"Object" object, #_"int" lockDepth]
         (let [
+            #_"Word" thread (ReplacementsUtil'registerAsWord-1 HotSpot'threadRegister)
             #_"Word" lock (CurrentLockNode'currentLock-1 lockDepth)
         ]
-            (ForeignCallNode'monitorexitStubC-3 ForeignCallDescriptor'MONITOREXIT, object, lock)
+            (StubForeignCallNode'monitorexit-4 ForeignCallDescriptor'MONITOREXIT, thread, object, lock)
+            (when (some? (ReplacementsUtil'clearPendingException-1 thread))
+                (DeoptimizeCallerNode'deopt-2 DeoptimizationAction/None, DeoptimizationReason/RuntimeConstraint)
+            )
             (EndLockScopeNode'endLockScope-0)
         )
         nil
@@ -8921,7 +8888,7 @@ ZeroExtendNode'new-4
                             (NewObjectSnippets'formatObject-6 hub, size, top, prototypeMarkWord, true, true)
                         )
                         (do
-                            (StubForeignCallNode'newInstanceC-3 ForeignCallDescriptor'NEW_INSTANCE, thread, hub)
+                            (StubForeignCallNode'newInstance-3 ForeignCallDescriptor'NEW_INSTANCE, thread, hub)
                             (when (some? (ReplacementsUtil'clearPendingException-1 thread))
                                 (ReplacementsUtil'getAndClearObjectResult-1 thread)
                                 (DeoptimizeCallerNode'deopt-2 DeoptimizationAction/None, DeoptimizationReason/RuntimeConstraint)
@@ -8991,7 +8958,7 @@ ZeroExtendNode'new-4
                             (NewObjectSnippets'formatArray-8 hub, allocationSize, length, headerSize, top, prototypeMarkWord, true, maybeUnroll)
                         )
                         (do
-                            (StubForeignCallNode'newArrayC-4 ForeignCallDescriptor'NEW_ARRAY, thread, hub, length)
+                            (StubForeignCallNode'newArray-4 ForeignCallDescriptor'NEW_ARRAY, thread, hub, length)
                             (when (some? (ReplacementsUtil'clearPendingException-1 thread))
                                 (ReplacementsUtil'getAndClearObjectResult-1 thread)
                                 (DeoptimizeCallerNode'deopt-2 DeoptimizationAction/None, DeoptimizationReason/RuntimeConstraint)
@@ -9091,37 +9058,39 @@ ZeroExtendNode'new-4
         )
         (let [
             #_"Word" thread (ReplacementsUtil'registerAsWord-1 HotSpot'threadRegister)
-            #_"Object" fixedExpectedObject (FixedValueAnchorNode'getObject-1 expectedObject)
-            #_"Word" field (Word'fromAddress-1 address)
-            #_"Word" previousOop (Word'objectToTrackedPointer-1 fixedExpectedObject)
             #_"byte" markingValue (Word''readByte-2i thread, HotSpot'g1SATBQueueMarkingOffset)
-            #_"int" gcCycle 0
         ]
             ;; If the concurrent marker is enabled, the barrier is issued.
             (when (not= markingValue (byte 0))
                 ;; If the previous value has to be loaded (before the write), the load is issued.
                 ;; The load is always issued except the cases of CAS and referent field.
-                (when doLoad
-                    (§ ass previousOop (Word'objectToTrackedPointer-1 (Word''readObject-3ib field, 0, BarrierType'NONE)))
-                )
-                ;; If the previous value is nil the barrier should not be issued.
-                (when (Word''notEqual-2i previousOop, 0)
-                    ;; If the thread-local SATB buffer is full, issue a native call, which will initialize a new one and add the entry.
-                    (let [
-                        #_"Word" indexAddress (Word''add-2i thread, HotSpot'g1SATBQueueIndexOffset)
-                        #_"Word" indexValue (Word''readWord-2i indexAddress, 0)
-                    ]
-                        (if (Word''notEqual-2i indexValue, 0)
-                            (let [
-                                #_"Word" bufferAddress (Word''readWord-2i thread, HotSpot'g1SATBQueueBufferOffset)
-                                #_"Word" nextIndex (Word''subtract-2i indexValue, (.wordSize HotSpot'target))
-                                #_"Word" logAddress (Word''add-2w bufferAddress, nextIndex)
-                            ]
-                                ;; Log the object to be marked as well as update the SATB's buffer next index.
-                                (Word''writeWord-4i logAddress, 0, previousOop, NamedLocationIdentity'GC_LOG)
-                                (Word''writeWord-4i indexAddress, 0, nextIndex, NamedLocationIdentity'GC_INDEX)
+                (let [
+                    #_"Word" previousOop (Word'objectToTrackedPointer-1 (if doLoad (Word''readObject-3ib (Word'fromAddress-1 address), 0, BarrierType'NONE) (FixedValueAnchorNode'getObject-1 expectedObject)))
+                ]
+                    ;; If the previous value is nil the barrier should not be issued.
+                    (when (Word''notEqual-2i previousOop, 0)
+                        ;; If the thread-local SATB buffer is full, issue a native call, which will initialize a new one and add the entry.
+                        (let [
+                            #_"Word" indexAddress (Word''add-2i thread, HotSpot'g1SATBQueueIndexOffset)
+                            #_"Word" indexValue (Word''readWord-2i indexAddress, 0)
+                        ]
+                            (if (Word''notEqual-2i indexValue, 0)
+                                (let [
+                                    #_"Word" bufferAddress (Word''readWord-2i thread, HotSpot'g1SATBQueueBufferOffset)
+                                    #_"Word" nextIndex (Word''subtract-2i indexValue, (.wordSize HotSpot'target))
+                                    #_"Word" logAddress (Word''add-2w bufferAddress, nextIndex)
+                                ]
+                                    ;; Log the object to be marked as well as update the SATB's buffer next index.
+                                    (Word''writeWord-4i logAddress, 0, previousOop, NamedLocationIdentity'GC_LOG)
+                                    (Word''writeWord-4i indexAddress, 0, nextIndex, NamedLocationIdentity'GC_INDEX)
+                                )
+                                (do
+                                    (StubForeignCallNode'g1PreBarrier-3 ForeignCallDescriptor'G1WBPRECALL, thread, (Word''toObject-1 previousOop))
+                                    (when (some? (ReplacementsUtil'clearPendingException-1 thread))
+                                        (DeoptimizeCallerNode'deopt-2 DeoptimizationAction/None, DeoptimizationReason/RuntimeConstraint)
+                                    )
+                                )
                             )
-                            (ForeignCallNode'g1PreBarrierStub-2 ForeignCallDescriptor'G1WBPRECALL, (Word''toObject-1 previousOop))
                         )
                     )
                 )
@@ -9132,57 +9101,54 @@ ZeroExtendNode'new-4
 
     (§ snippet! #_"void" #_"WriteBarrierSnippets" "g1PostWriteBarrier" [#_"Address" address, #_"Object" object, #_"Object" value, #_"boolean" precise?]
         (let [
-            #_"Word" thread (ReplacementsUtil'registerAsWord-1 HotSpot'threadRegister)
-            #_"Object" fixedValue (FixedValueAnchorNode'getObject-1 value)
             #_"Word" oop (if precise? (Word'fromAddress-1 address) (Word'objectToTrackedPointer-1 object))
-            #_"int" gcCycle 0
-            #_"Word" writtenValue (Word'objectToTrackedPointer-1 fixedValue)
+            #_"Word" writtenValue (Word'objectToTrackedPointer-1 (FixedValueAnchorNode'getObject-1 value))
             ;; The result of the xor reveals whether the installed pointer crosses heap regions.
             ;; In case it does the write barrier has to be issued.
             #_"Word" xorResult (Word''unsignedShiftRight-2i (Word''xor-2w oop, writtenValue), (VMConfigNode'logOfHeapRegionGrainBytes-0))
             ;; Calculate the address of the card to be enqueued to the thread local card queue.
             #_"Word" cardBase (Word''unsignedShiftRight-2i oop, HotSpot'cardTableShift)
             #_"long" startAddress (VMConfigNode'cardTableAddress-0)
-            #_"int" displacement 0
+            [cardBase #_"int" displacement]
+                (if (and (= (int startAddress) startAddress) (VMConfigNode'isCardTableAddressConstant-0))
+                    [cardBase (int startAddress)]
+                    [(Word''add-2w cardBase, (WordFactory'unsigned-1l startAddress)) 0]
+                )
+            #_"Word" cardAddress (Word''add-2i cardBase, displacement)
         ]
-            (if (and (= (int startAddress) startAddress) (VMConfigNode'isCardTableAddressConstant-0))
-                (§ ass displacement (int startAddress))
-                (§ ass cardBase (Word''add-2w cardBase, (WordFactory'unsigned-1l startAddress)))
-            )
-            (let [
-                #_"Word" cardAddress (Word''add-2i cardBase, displacement)
-            ]
-                (when (Word''notEqual-2i xorResult, 0)
-                    ;; If the written value is not nil, continue with the barrier addition.
-                    (when (Word''notEqual-2i writtenValue, 0)
+            (when (and (Word''notEqual-2i xorResult, 0) (Word''notEqual-2i writtenValue, 0))
+                ;; If the written value is not nil, continue with the barrier addition.
+                (let [
+                    #_"byte" cardByte (Word''readByte-3i cardAddress, 0, NamedLocationIdentity'GC_CARD)
+                ]
+                    ;; If the card is already dirty, (hence already enqueued) skip the insertion.
+                    (when (not= cardByte HotSpot'g1YoungCardValue)
+                        (MembarNode'memoryBarrier-2 MemoryBarriers/STORE_LOAD, NamedLocationIdentity'GC_CARD)
                         (let [
-                            #_"byte" cardByte (Word''readByte-3i cardAddress, 0, NamedLocationIdentity'GC_CARD)
+                            #_"byte" cardByteReload (Word''readByte-3i cardAddress, 0, NamedLocationIdentity'GC_CARD)
                         ]
-                            ;; If the card is already dirty, (hence already enqueued) skip the insertion.
-                            (when (not= cardByte HotSpot'g1YoungCardValue)
-                                (MembarNode'memoryBarrier-2 MemoryBarriers/STORE_LOAD, NamedLocationIdentity'GC_CARD)
+                            (when (not= cardByteReload HotSpot'dirtyCardValue)
+                                (Word''writeByte-4i cardAddress, 0, (byte 0), NamedLocationIdentity'GC_CARD)
+                                ;; If the thread-local card queue is full, issue a native call, which will initialize a new one and add the card entry.
                                 (let [
-                                    #_"byte" cardByteReload (Word''readByte-3i cardAddress, 0, NamedLocationIdentity'GC_CARD)
+                                    #_"Word" thread (ReplacementsUtil'registerAsWord-1 HotSpot'threadRegister)
+                                    #_"Word" indexAddress (Word''add-2i thread, HotSpot'g1CardQueueIndexOffset)
+                                    #_"Word" indexValue (Word''readWord-2i thread, HotSpot'g1CardQueueIndexOffset)
                                 ]
-                                    (when (not= cardByteReload HotSpot'dirtyCardValue)
-                                        (Word''writeByte-4i cardAddress, 0, (byte 0), NamedLocationIdentity'GC_CARD)
-
-                                        ;; If the thread-local card queue is full, issue a native call, which will initialize a new one and add the card entry.
+                                    (if (Word''notEqual-2i indexValue, 0)
                                         (let [
-                                            #_"Word" indexAddress (Word''add-2i thread, HotSpot'g1CardQueueIndexOffset)
-                                            #_"Word" indexValue (Word''readWord-2i thread, HotSpot'g1CardQueueIndexOffset)
+                                            #_"Word" bufferAddress (Word''readWord-2i thread, HotSpot'g1CardQueueBufferOffset)
+                                            #_"Word" nextIndex (Word''subtract-2i indexValue, (.wordSize HotSpot'target))
+                                            #_"Word" logAddress (Word''add-2w bufferAddress, nextIndex)
                                         ]
-                                            (if (Word''notEqual-2i indexValue, 0)
-                                                (let [
-                                                    #_"Word" bufferAddress (Word''readWord-2i thread, HotSpot'g1CardQueueBufferOffset)
-                                                    #_"Word" nextIndex (Word''subtract-2i indexValue, (.wordSize HotSpot'target))
-                                                    #_"Word" logAddress (Word''add-2w bufferAddress, nextIndex)
-                                                ]
-                                                    ;; Log the object to be scanned as well as update the card queue's next index.
-                                                    (Word''writeWord-4i logAddress, 0, cardAddress, NamedLocationIdentity'GC_LOG)
-                                                    (Word''writeWord-4i indexAddress, 0, nextIndex, NamedLocationIdentity'GC_INDEX)
-                                                )
-                                                (ForeignCallNode'g1PostBarrierStub-2 ForeignCallDescriptor'G1WBPOSTCALL, cardAddress)
+                                            ;; Log the object to be scanned as well as update the card queue's next index.
+                                            (Word''writeWord-4i logAddress, 0, cardAddress, NamedLocationIdentity'GC_LOG)
+                                            (Word''writeWord-4i indexAddress, 0, nextIndex, NamedLocationIdentity'GC_INDEX)
+                                        )
+                                        (do
+                                            (StubForeignCallNode'g1PostBarrier-3 ForeignCallDescriptor'G1WBPOSTCALL, thread, cardAddress)
+                                            (when (some? (ReplacementsUtil'clearPendingException-1 thread))
+                                                (DeoptimizeCallerNode'deopt-2 DeoptimizationAction/None, DeoptimizationReason/RuntimeConstraint)
                                             )
                                         )
                                     )
@@ -12490,13 +12456,6 @@ ZeroExtendNode'new-4
     )
 )
 
-(value-ns IfState
-    (§ enum IfState'CONDITION)
-    (§ enum IfState'THEN_PART)
-    (§ enum IfState'ELSE_PART)
-    (§ enum IfState'FINISHED)
-)
-
 ;;;
  ; Provides factory methods to create machine-word-sized values.
  ;;
@@ -13789,8 +13748,7 @@ ZeroExtendNode'new-4
                         (:address node),
                         (when (satisfies? OffsetAddressNode (:address node)) (AddressNode'''getBase-1 (:address node))),
                         value,
-                        (:precise? node),
-                        HotSpot'threadRegister
+                        (:precise? node)
                     )
             ]
                 (SnippetTemplate''instantiate-3 (SnippetTemplate'new-2 args, node), node, args)
@@ -14816,7 +14774,7 @@ ZeroExtendNode'new-4
                     (not (:hasArgInCallerFrame (:lir res)))
                     (not (:hasForeignCall res))
                 )
-            this (assoc this :frameContext (FrameContext'new-2 (some? (:stub res)), omit-frame?))
+            this (assoc this :frameContext (FrameContext'new-2 (some? nil), omit-frame?))
             this (assoc this :compilationResult (CompilationResult'new-1 (FrameMap'''totalFrameSize-1 (:frameMap res))))
         ]
             this
@@ -20111,7 +20069,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns BytecodeParser [GraphBuilder]
+(class-ns BytecodeParser []
     (defn #_"BytecodeParser" BytecodeParser'new-5 [#_"GraphBuilderInstance" builder, #_"Graph" graph, #_"BytecodeParser" parent, #_"ResolvedJavaMethod" method, #_"IntrinsicContext" context]
         (let [
             #_"BytecodeProvider" bytecodeProvider (if (some? context) (:bytecodeProvider context) ResolvedJavaMethodBytecodeProvider'INSTANCE)
@@ -20420,7 +20378,7 @@ ZeroExtendNode'new-4
                     (cond
                         (#_"ResolvedJavaMethod" .isSynchronized (:method this))
                             (StateSplit'''setStateAfter-2 startNode, (BytecodeParser''createFrameState-3 this, BytecodeFrame/BEFORE_BCI, startNode))
-                        (GraphBuilder'''parsingIntrinsic-1 this)
+                        (BytecodeParser''parsingIntrinsic-1 this)
                             (when (nil? (:stateAfter startNode))
                                 (StateSplit'''setStateAfter-2 startNode, (BytecodeParser''createStateAfterStartOfReplacementGraph-1 this))
                             )
@@ -20489,7 +20447,7 @@ ZeroExtendNode'new-4
     (defn #_"ValueNode" BytecodeParser''add-2 [#_"BytecodeParser" this, #_"ValueNode" value]
         (when (nil? (:graph value)) => value
             (let [
-                value (GraphBuilder'''append-2 this, value)
+                value (BytecodeParser''append-2 this, value)
             ]
                 (when (and (satisfies? StateSplit value) (nil? (:stateAfter value)) (StateSplit'''hasSideEffect-1 value))
                     (BytecodeParser''setStateAfter-2 this, value)
@@ -20509,7 +20467,7 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"ValueNode" BytecodeParser''addPush-3 [#_"BytecodeParser" this, #_"JavaKind" kind, #_"ValueNode" value]
         (let [
-            value (if (some? (:graph value)) value (GraphBuilder'''append-2 this, value))
+            value (if (some? (:graph value)) value (BytecodeParser''append-2 this, value))
         ]
             (BytecodeParser''push-3 this, kind, value)
             (when (and (satisfies? StateSplit value) (nil? (:stateAfter value)) (StateSplit'''hasSideEffect-1 value))
@@ -20542,7 +20500,7 @@ ZeroExtendNode'new-4
             (let [
                 #_"LogicNode" logic (Graph''add-2 (:graph this), (IsNullNode'create-1 value))
                 #_"Stamp" stamp (Stamp'''join-2 (:stamp value), StampFactory'objectNonNullStamp)
-                #_"FixedGuardNode" fixedGuard (GraphBuilder'''append-2 this, (FixedGuardNode'new-4 logic, DeoptimizationReason/NullCheckException, action, true))
+                #_"FixedGuardNode" fixedGuard (BytecodeParser''append-2 this, (FixedGuardNode'new-4 logic, DeoptimizationReason/NullCheckException, action, true))
                 #_"ValueNode" nonNullReceiver (Graph''addOrUniqueWithInputs-2 (:graph this), (PiNode'create-3 value, stamp, fixedGuard))
             ]
                 ;; TODO Propogating the non-nil into the frame state would remove subsequent nil-checks on the same value.
@@ -20581,7 +20539,7 @@ ZeroExtendNode'new-4
      ; @param type the unresolved type of the constant
      ;;
     (defn #_"void" BytecodeParser''handleUnresolvedLoadConstant-2 [#_"BytecodeParser" this, #_"JavaType" type]
-        (GraphBuilder'''append-2 this, (DeoptimizeNode'new-2 DeoptimizationAction/InvalidateRecompile, DeoptimizationReason/Unresolved))
+        (BytecodeParser''append-2 this, (DeoptimizeNode'new-2 DeoptimizationAction/InvalidateRecompile, DeoptimizationReason/Unresolved))
         nil
     )
 
@@ -20590,7 +20548,7 @@ ZeroExtendNode'new-4
      ; @param object the object value whose type is being checked against {@code type}
      ;;
     (defn #_"void" BytecodeParser''handleUnresolvedCheckCast-3 [#_"BytecodeParser" this, #_"JavaType" type, #_"ValueNode" object]
-        (GraphBuilder'''append-2 this, (FixedGuardNode'new-3 (Graph''addOrUniqueWithInputs-2 (:graph this), (IsNullNode'create-1 object)), DeoptimizationReason/Unresolved, DeoptimizationAction/InvalidateRecompile))
+        (BytecodeParser''append-2 this, (FixedGuardNode'new-3 (Graph''addOrUniqueWithInputs-2 (:graph this), (IsNullNode'create-1 object)), DeoptimizationReason/Unresolved, DeoptimizationAction/InvalidateRecompile))
         (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), JavaKind/Object, (BytecodeParser''appendConstant-2 this, JavaConstant/NULL_POINTER)))
         nil
     )
@@ -20604,7 +20562,7 @@ ZeroExtendNode'new-4
             #_"AbstractBeginNode" successor (Graph''add-2 (:graph this), (BeginNode'new-0))
             #_"DeoptimizeNode" deopt (Graph''add-2 (:graph this), (DeoptimizeNode'new-2 DeoptimizationAction/InvalidateRecompile, DeoptimizationReason/Unresolved))
         ]
-            (GraphBuilder'''append-2 this, (IfNode'new-4b (Graph''addOrUniqueWithInputs-2 (:graph this), (IsNullNode'create-1 object)), successor, deopt, 1))
+            (BytecodeParser''append-2 this, (IfNode'new-4b (Graph''addOrUniqueWithInputs-2 (:graph this), (IsNullNode'create-1 object)), successor, deopt, 1))
             (let [
                 this (assoc this :lastInstr successor)
             ]
@@ -20618,7 +20576,7 @@ ZeroExtendNode'new-4
      ; @param type the type being instantiated
      ;;
     (defn #_"void" BytecodeParser''handleUnresolvedNewInstance-2 [#_"BytecodeParser" this, #_"JavaType" type]
-        (GraphBuilder'''append-2 this, (DeoptimizeNode'new-2 DeoptimizationAction/InvalidateRecompile, DeoptimizationReason/Unresolved))
+        (BytecodeParser''append-2 this, (DeoptimizeNode'new-2 DeoptimizationAction/InvalidateRecompile, DeoptimizationReason/Unresolved))
         nil
     )
 
@@ -20627,7 +20585,7 @@ ZeroExtendNode'new-4
      ; @param length the length of the array
      ;;
     (defn #_"void" BytecodeParser''handleUnresolvedNewObjectArray-3 [#_"BytecodeParser" this, #_"JavaType" type, #_"ValueNode" length]
-        (GraphBuilder'''append-2 this, (DeoptimizeNode'new-2 DeoptimizationAction/InvalidateRecompile, DeoptimizationReason/Unresolved))
+        (BytecodeParser''append-2 this, (DeoptimizeNode'new-2 DeoptimizationAction/InvalidateRecompile, DeoptimizationReason/Unresolved))
         nil
     )
 
@@ -20636,7 +20594,7 @@ ZeroExtendNode'new-4
      ; @param receiver the object containing the field or nil if {@code field} is static
      ;;
     (defn #_"void" BytecodeParser''handleUnresolvedLoadField-3 [#_"BytecodeParser" this, #_"JavaField" field, #_"ValueNode" receiver]
-        (GraphBuilder'''append-2 this, (DeoptimizeNode'new-2 DeoptimizationAction/InvalidateRecompile, DeoptimizationReason/Unresolved))
+        (BytecodeParser''append-2 this, (DeoptimizeNode'new-2 DeoptimizationAction/InvalidateRecompile, DeoptimizationReason/Unresolved))
         nil
     )
 
@@ -20646,12 +20604,12 @@ ZeroExtendNode'new-4
      ; @param receiver the object containing the field or nil if {@code field} is static
      ;;
     (defn #_"void" BytecodeParser''handleUnresolvedStoreField-4 [#_"BytecodeParser" this, #_"JavaField" field, #_"ValueNode" value, #_"ValueNode" receiver]
-        (GraphBuilder'''append-2 this, (DeoptimizeNode'new-2 DeoptimizationAction/InvalidateRecompile, DeoptimizationReason/Unresolved))
+        (BytecodeParser''append-2 this, (DeoptimizeNode'new-2 DeoptimizationAction/InvalidateRecompile, DeoptimizationReason/Unresolved))
         nil
     )
 
     (defn #_"void" BytecodeParser''handleUnresolvedInvoke-3 [#_"BytecodeParser" this, #_"JavaMethod" javaMethod, #_"InvokeKind" invokeKind]
-        (GraphBuilder'''append-2 this, (DeoptimizeNode'new-2 DeoptimizationAction/InvalidateRecompile, DeoptimizationReason/Unresolved))
+        (BytecodeParser''append-2 this, (DeoptimizeNode'new-2 DeoptimizationAction/InvalidateRecompile, DeoptimizationReason/Unresolved))
         nil
     )
 
@@ -20796,7 +20754,7 @@ ZeroExtendNode'new-4
         (let [
             #_"StoreFieldNode" storeFieldNode (StoreFieldNode'new-3 receiver, field, value)
         ]
-            (GraphBuilder'''append-2 this, storeFieldNode)
+            (BytecodeParser''append-2 this, storeFieldNode)
             (StateSplit'''setStateAfter-2 storeFieldNode, (BytecodeParser''createFrameState-3 this, (:nextBCI (:stream this)), storeFieldNode))
         )
         nil
@@ -21059,17 +21017,17 @@ ZeroExtendNode'new-4
                 )
             )
             (let [
-                #_"ValueNode" fieldRead (GraphBuilder'''append-2 this, (BytecodeParser''genLoadField-3 this, receiver, resolvedField))
+                #_"ValueNode" fieldRead (BytecodeParser''append-2 this, (BytecodeParser''genLoadField-3 this, receiver, resolvedField))
             ]
                 (when (and (= (#_"ResolvedJavaType" .getName (#_"ResolvedJavaField" .getDeclaringClass resolvedField)) "Ljava/lang/ref/Reference;") (= (#_"ResolvedJavaField" .getName resolvedField) "referent"))
-                    (GraphBuilder'''append-2 this, (MembarNode'new-2 0, (FieldLocationIdentity'new-1 resolvedField)))
+                    (BytecodeParser''append-2 this, (MembarNode'new-2 0, (FieldLocationIdentity'new-1 resolvedField)))
                 )
                 (let [
                     #_"JavaKind" fieldKind (#_"ResolvedJavaField" .getJavaKind resolvedField)
                 ]
                     (if (and (#_"ResolvedJavaField" .isVolatile resolvedField) (satisfies? LoadFieldNode fieldRead))
                         (let [
-                            #_"StateSplitProxyNode" readProxy (GraphBuilder'''append-2 this, (BytecodeParser''genVolatileFieldReadProxy-2 this, fieldRead))
+                            #_"StateSplitProxyNode" readProxy (BytecodeParser''append-2 this, (BytecodeParser''genVolatileFieldReadProxy-2 this, fieldRead))
                         ]
                             (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), fieldKind, readProxy))
                             (StateSplit'''setStateAfter-2 readProxy, (FrameStateBuilder''create-3 (:frameState this), (:nextBCI (:stream this)), readProxy))
@@ -21143,7 +21101,7 @@ ZeroExtendNode'new-4
                         (do
                             ;; A root compiled intrinsic needs to deoptimize if the slow path is taken. During frame state
                             ;; assignment, the deopt node will get its stateBefore from the start node of the intrinsic.
-                            (GraphBuilder'''append-2 this, (DeoptimizeNode'new-2 DeoptimizationAction/InvalidateRecompile, DeoptimizationReason/RuntimeConstraint))
+                            (BytecodeParser''append-2 this, (DeoptimizeNode'new-2 DeoptimizationAction/InvalidateRecompile, DeoptimizationReason/RuntimeConstraint))
                             true
                         )
                         (and (not (#_"ResolvedJavaMethod" .isNative (:originalMethod intrinsic)))
@@ -21186,7 +21144,7 @@ ZeroExtendNode'new-4
      ; inline it, or nil if there is no InlineInvokeInfo for this method.
      ;;
     (defn- #_"InlineInvokeInfo" BytecodeParser''tryInline-3 [#_"BytecodeParser" this, #_"ValueNode[]" args, #_"ResolvedJavaMethod" targetMethod]
-        (when (or (:forceInliningEverything this) (GraphBuilder'''parsingIntrinsic-1 this) (#_"ResolvedJavaMethod" .canBeInlined targetMethod))
+        (when (or (:forceInliningEverything this) (BytecodeParser''parsingIntrinsic-1 this) (#_"ResolvedJavaMethod" .canBeInlined targetMethod))
             (if (:forceInliningEverything this)
                 (when (BytecodeParser''inline-5 this, targetMethod, targetMethod, nil, args)
                     BytecodeParser'SUCCESSFULLY_INLINED
@@ -21207,7 +21165,7 @@ ZeroExtendNode'new-4
                         ;; There was no inline plugin with a definite answer to whether or not to inline.
                         ;; If we're parsing an intrinsic, then we need to enforce the invariant here
                         ;; that methods are always force inlined in intrinsics/snippets.
-                        (when (and (GraphBuilder'''parsingIntrinsic-1 this) (BytecodeParser''inline-5 this, targetMethod, targetMethod, (:bytecodeProvider this), args))
+                        (when (and (BytecodeParser''parsingIntrinsic-1 this) (BytecodeParser''inline-5 this, targetMethod, targetMethod, (:bytecodeProvider this), args))
                             BytecodeParser'SUCCESSFULLY_INLINED
                         )
                     )
@@ -21243,7 +21201,7 @@ ZeroExtendNode'new-4
                 )
 
                 (when (and (InvokeKind''hasReceiver-1 invokeKind) (ValueNode''isNullConstant-1 (nth args 0)))
-                    (GraphBuilder'''append-2 this, (DeoptimizeNode'new-2 DeoptimizationAction/InvalidateRecompile, DeoptimizationReason/NullCheckException))
+                    (BytecodeParser''append-2 this, (DeoptimizeNode'new-2 DeoptimizationAction/InvalidateRecompile, DeoptimizationReason/NullCheckException))
                     (§ return nil)
                 )
 
@@ -21329,9 +21287,9 @@ ZeroExtendNode'new-4
                     #_"ValueNode" receiver (nth args 0)
                     #_"TypeReference" checkedType (TypeReference'createTrusted-1 callingClass)
                     #_"LogicNode" logic (BytecodeParser''genUnique-2l this, (BytecodeParser''createInstanceOf-3 this, checkedType, receiver))
-                    #_"FixedGuardNode" fixedGuard (GraphBuilder'''append-2 this, (FixedGuardNode'new-4 logic, DeoptimizationReason/ClassCastException, DeoptimizationAction/None, false))
+                    #_"FixedGuardNode" fixedGuard (BytecodeParser''append-2 this, (FixedGuardNode'new-4 logic, DeoptimizationReason/ClassCastException, DeoptimizationAction/None, false))
                 ]
-                    (aset args 0 (GraphBuilder'''append-2 this, (PiNode'create-3 receiver, (StampFactory'object-2 checkedType, true), fixedGuard)))
+                    (aset args 0 (BytecodeParser''append-2 this, (PiNode'create-3 receiver, (StampFactory'object-2 checkedType, true), fixedGuard)))
                 )
             )
         )
@@ -21377,7 +21335,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"BytecodeParser" BytecodeParser''parseAndInlineCallee-4 [#_"BytecodeParser" this, #_"ResolvedJavaMethod" targetMethod, #_"ValueNode[]" args, #_"IntrinsicContext" calleeIntrinsicContext]
-        (try (§ with [#_"IntrinsicScope" s (when (and (some? calleeIntrinsicContext) (not (GraphBuilder'''parsingIntrinsic-1 this))) (IntrinsicScope'new-3 this, (#_"Signature" .toParameterKinds (#_"ResolvedJavaMethod" .getSignature targetMethod), (not (#_"ResolvedJavaMethod" .isStatic targetMethod))), args))])
+        (try (§ with [#_"IntrinsicScope" s (when (and (some? calleeIntrinsicContext) (not (BytecodeParser''parsingIntrinsic-1 this))) (IntrinsicScope'new-3 this, (#_"Signature" .toParameterKinds (#_"ResolvedJavaMethod" .getSignature targetMethod), (not (#_"ResolvedJavaMethod" .isStatic targetMethod))), args))])
             (let [
                 #_"BytecodeParser" parser (BytecodeParser'new-5 (:graphBuilderInstance this), (:graph this), this, targetMethod, calleeIntrinsicContext)
                 #_"FrameStateBuilder" startFrameState (FrameStateBuilder'new-3c parser, (:code parser), (:graph this))
@@ -21424,7 +21382,7 @@ ZeroExtendNode'new-4
                         )
                 ]
                     ;; Propagate any side effects into the caller when parsing intrinsics.
-                    (when (and (SideEffectsState'''isAfterSideEffect-1 (:frameState parser)) (GraphBuilder'''parsingIntrinsic-1 this))
+                    (when (and (SideEffectsState'''isAfterSideEffect-1 (:frameState parser)) (BytecodeParser''parsingIntrinsic-1 this))
                         (doseq [#_"StateSplit" sideEffect (SideEffectsState'''sideEffects-1 (:frameState parser))]
                             (SideEffectsState'''addSideEffect-2 (:frameState this), sideEffect)
                         )
@@ -21437,7 +21395,7 @@ ZeroExtendNode'new-4
 
     (defn #_"InvokeNode" BytecodeParser''createInvoke-4 [#_"BytecodeParser" this, #_"int" invokeBci, #_"CallTargetNode" callTarget, #_"JavaKind" resultType]
         (let [
-            #_"InvokeNode" invoke (GraphBuilder'''append-2 this, (InvokeNode'new-2 callTarget, invokeBci))
+            #_"InvokeNode" invoke (BytecodeParser''append-2 this, (InvokeNode'new-2 callTarget, invokeBci))
         ]
             (§ ass! (:frameState this) (FrameStateBuilder''pushReturn-3 (:frameState this), resultType, invoke))
             (StateSplit'''setStateAfter-2 invoke, (BytecodeParser''createFrameState-3 this, (:nextBCI (:stream this)), invoke))
@@ -21457,11 +21415,11 @@ ZeroExtendNode'new-4
                     ;; the bytecode verifier doesn't check that the value is in the correct range
                     (when (or (< (:lowerBound stamp) (#_"JavaKind" .getMinValue returnKind)) (< (#_"JavaKind" .getMaxValue returnKind) (:upperBound stamp))) => value
                         (let [
-                            #_"ValueNode" narrow (GraphBuilder'''append-2 this, (BytecodeParser''genNarrow-3v this, value, (#_"JavaKind" .getBitCount returnKind)))
+                            #_"ValueNode" narrow (BytecodeParser''append-2 this, (BytecodeParser''genNarrow-3v this, value, (#_"JavaKind" .getBitCount returnKind)))
                         ]
                             (if (#_"JavaKind" .isUnsigned returnKind)
-                                (GraphBuilder'''append-2 this, (BytecodeParser''genZeroExtend-3v this, narrow, 32))
-                                (GraphBuilder'''append-2 this, (BytecodeParser''genSignExtend-3v this, narrow, 32))
+                                (BytecodeParser''append-2 this, (BytecodeParser''genZeroExtend-3v this, narrow, 32))
+                                (BytecodeParser''append-2 this, (BytecodeParser''genSignExtend-3v this, narrow, 32))
                             )
                         )
                     )
@@ -21485,14 +21443,14 @@ ZeroExtendNode'new-4
 
     (defn- #_"void" BytecodeParser''beforeReturn-3 [#_"BytecodeParser" this, #_"ValueNode" x, #_"JavaKind" kind]
         (when (:finalBarrierRequired this)
-            (GraphBuilder'''append-2 this, (FinalFieldBarrierNode'new-1 (:originalReceiver this)))
+            (BytecodeParser''append-2 this, (FinalFieldBarrierNode'new-1 (:originalReceiver this)))
         )
         (BytecodeParser''synchronizedEpilogue-4 this, BytecodeFrame/AFTER_BCI, x, kind)
         nil
     )
 
     (defn #_"BytecodeParser" BytecodeParser''genReturn-3 [#_"BytecodeParser" this, #_"ValueNode" returnVal, #_"JavaKind" returnKind]
-        (when (and (GraphBuilder'''parsingIntrinsic-1 this) (satisfies? StateSplit returnVal) (StateSplit'''hasSideEffect-1 returnVal))
+        (when (and (BytecodeParser''parsingIntrinsic-1 this) (satisfies? StateSplit returnVal) (StateSplit'''hasSideEffect-1 returnVal))
             (let [
                 #_"FrameState" stateAfter (:stateAfter returnVal)
             ]
@@ -21521,7 +21479,7 @@ ZeroExtendNode'new-4
                     (assoc this :lastInstr nil)
                 )
                 (do
-                    (GraphBuilder'''append-2 this, (ReturnNode'new-1 realReturnVal))
+                    (BytecodeParser''append-2 this, (ReturnNode'new-1 realReturnVal))
                     this
                 )
             )
@@ -21535,7 +21493,7 @@ ZeroExtendNode'new-4
     (defn #_"void" BytecodeParser''genMonitorEnter-3 [#_"BytecodeParser" this, #_"ValueNode" x, #_"int" bci]
         (let [
             #_"MonitorIdNode" monitorId (Graph''add-2 (:graph this), (MonitorIdNode'new-1 (FrameStateBuilder''lockDepth-2 (:frameState this), true)))
-            #_"MonitorEnterNode" monitorEnter (GraphBuilder'''append-2 this, (BytecodeParser''createMonitorEnterNode-3 this, x, monitorId))
+            #_"MonitorEnterNode" monitorEnter (BytecodeParser''append-2 this, (BytecodeParser''createMonitorEnterNode-3 this, x, monitorId))
         ]
             (§ ass! (:frameState this) (FrameStateBuilder''pushLock-3 (:frameState this), x, monitorId))
             (StateSplit'''setStateAfter-2 monitorEnter, (BytecodeParser''createFrameState-3 this, bci, monitorEnter))
@@ -21555,7 +21513,7 @@ ZeroExtendNode'new-4
                 (throw! (str "unbalanced monitors: mismatch at monitorexit, " (GraphUtil'originalValue-1 x) " != " (GraphUtil'originalValue-1 lockedObject)))
             )
             (let [
-                #_"MonitorExitNode" monitorExit (GraphBuilder'''append-2 this, (MonitorExitNode'new-3 lockedObject, monitorId, escapedReturnValue))
+                #_"MonitorExitNode" monitorExit (BytecodeParser''append-2 this, (MonitorExitNode'new-3 lockedObject, monitorId, escapedReturnValue))
             ]
                 (StateSplit'''setStateAfter-2 monitorExit, (BytecodeParser''createFrameState-3 this, bci, monitorExit))
             )
@@ -21598,7 +21556,7 @@ ZeroExtendNode'new-4
             #_"ConstantNode" returnBciNode (BytecodeParser''getJsrConstant-2 this, retAddress)
             #_"LogicNode" guard (Graph''addOrUniqueWithInputs-2 (:graph this), (IntegerEqualsNode'create-3 nil, local, returnBciNode))
         ]
-            (GraphBuilder'''append-2 this, (FixedGuardNode'new-3 guard, DeoptimizationReason/JavaSubroutineMismatch, DeoptimizationAction/InvalidateReprofile))
+            (BytecodeParser''append-2 this, (FixedGuardNode'new-3 guard, DeoptimizationReason/JavaSubroutineMismatch, DeoptimizationAction/InvalidateReprofile))
             (when (= (BciBlock''getJsrScope-1 successor) (JsrScope''pop-1 scope)) => (throw! "unstructured control flow (ret leaves more than one scope)")
                 (BytecodeParser''appendGoto-2 this, successor)
             )
@@ -21638,7 +21596,7 @@ ZeroExtendNode'new-4
             (let [
                 this (assoc this :controlFlowSplit true)
                 #_"double[]" successorProbabilities (BytecodeParser'successorProbabilites-3 (count actualSuccessors), keySuccessors, keyProbabilities)
-                #_"IntegerSwitchNode" switchNode (GraphBuilder'''append-2 this, (IntegerSwitchNode'new-5i value, (count actualSuccessors), keys, keyProbabilities, keySuccessors))
+                #_"IntegerSwitchNode" switchNode (BytecodeParser''append-2 this, (IntegerSwitchNode'new-5i value, (count actualSuccessors), keys, keyProbabilities, keySuccessors))
             ]
                 (dotimes [#_"int" i (count actualSuccessors)]
                     (SwitchNode''setBlockSuccessor-3 switchNode, i, (BytecodeParser''createBlockTarget-4 this, (nth successorProbabilities i), (nth actualSuccessors i), (:frameState this)))
@@ -21662,18 +21620,22 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defm BytecodeParser GraphBuilder
-        (#_"ValueNode" GraphBuilder'''append-2 [#_"BytecodeParser" this, #_"ValueNode" node]
-            (if (some? (:graph node))
-                node
-                (let [
-                    #_"ValueNode" added (Graph''addOrUniqueWithInputs-2 (:graph this), node)
-                ]
-                    (when (= added node)
-                        (§ ass! this (BytecodeParser''updateLastInstruction-2 this, node))
-                    )
-                    added
+    ;;;
+     ; Adds the given node to the graph and also adds recursively all referenced inputs.
+     ;
+     ; @param node the node to be added to the graph
+     ; @return either the node added or an equivalent node
+     ;;
+    (defn #_"ValueNode" BytecodeParser''append-2 [#_"BytecodeParser" this, #_"ValueNode" node]
+        (if (some? (:graph node))
+            node
+            (let [
+                #_"ValueNode" added (Graph''addOrUniqueWithInputs-2 (:graph this), node)
+            ]
+                (when (= added node)
+                    (§ ass! this (BytecodeParser''updateLastInstruction-2 this, node))
                 )
+                added
             )
         )
     )
@@ -21711,7 +21673,7 @@ ZeroExtendNode'new-4
             #_"EndNode" preLoopEnd (Graph''add-2 (:graph this), (EndNode'new-0))
             #_"LoopBeginNode" loopBegin (Graph''add-2 (:graph this), (LoopBeginNode'new-0))
             loopBegin
-                (when (GraphBuilder'''parsingIntrinsic-1 this) => loopBegin
+                (when (BytecodeParser''parsingIntrinsic-1 this) => loopBegin
                     (LoopBeginNode''disableSafepoint-1 loopBegin)
                 )
         ]
@@ -21902,13 +21864,13 @@ ZeroExtendNode'new-4
                     (cond
                         (BytecodeParser''isNeverExecutedCode-2 this, probability)
                             (do
-                                (GraphBuilder'''append-2 this, (FixedGuardNode'new-4 logic, DeoptimizationReason/UnreachedCode, DeoptimizationAction/InvalidateReprofile, true))
+                                (BytecodeParser''append-2 this, (FixedGuardNode'new-4 logic, DeoptimizationReason/UnreachedCode, DeoptimizationAction/InvalidateReprofile, true))
                                 (BytecodeParser''appendGoto-2 this, falseBlock)
                                 this
                             )
                         (BytecodeParser''isNeverExecutedCode-2 this, (- 1.0 probability))
                             (do
-                                (GraphBuilder'''append-2 this, (FixedGuardNode'new-4 logic, DeoptimizationReason/UnreachedCode, DeoptimizationAction/InvalidateReprofile, false))
+                                (BytecodeParser''append-2 this, (FixedGuardNode'new-4 logic, DeoptimizationReason/UnreachedCode, DeoptimizationAction/InvalidateReprofile, false))
                                 (BytecodeParser''appendGoto-2 this, trueBlock)
                                 this
                             )
@@ -21933,7 +21895,7 @@ ZeroExtendNode'new-4
                                     #_"FixedNode" trueSuccessor (BytecodeParser''createTarget-5 this, trueBlock, (:frameState this), false, false)
                                     #_"FixedNode" falseSuccessor (BytecodeParser''createTarget-5 this, falseBlock, (:frameState this), false, true)
                                 ]
-                                    (GraphBuilder'''append-2 this, (BytecodeParser''genIfNode-5 this, logic, trueSuccessor, falseSuccessor, probability))
+                                    (BytecodeParser''append-2 this, (BytecodeParser''genIfNode-5 this, logic, trueSuccessor, falseSuccessor, probability))
                                     this
                                 )
                             )
@@ -22048,7 +22010,7 @@ ZeroExtendNode'new-4
                     (when-not (NodePlugin'''handleLoadIndexed-5 (first s), this, array, index, kind)
                         (recur (next s))
                     )
-                    (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), kind, (GraphBuilder'''append-2 this, (BytecodeParser''genLoadIndexed-4 this, array, index, kind))))
+                    (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), kind, (BytecodeParser''append-2 this, (BytecodeParser''genLoadIndexed-4 this, array, index, kind))))
                 )
             )
         )
@@ -22084,7 +22046,7 @@ ZeroExtendNode'new-4
                     [Bytecodes'IMUL Bytecodes'LMUL] (BytecodeParser''genIntegerMul-3 this, x, y)
                 )
         ]
-            (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), kind, (GraphBuilder'''append-2 this, v)))
+            (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), kind, (BytecodeParser''append-2 this, v)))
         )
         nil
     )
@@ -22099,7 +22061,7 @@ ZeroExtendNode'new-4
                     [Bytecodes'IREM Bytecodes'LREM] (BytecodeParser''genIntegerRem-3 this, x, y)
                 )
         ]
-            (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), kind, (GraphBuilder'''append-2 this, v)))
+            (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), kind, (BytecodeParser''append-2 this, v)))
         )
         nil
     )
@@ -22108,7 +22070,7 @@ ZeroExtendNode'new-4
         (let [
             #_"ValueNode" x (FrameStateBuilder''pop-2 (:frameState this), kind)
         ]
-            (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), kind, (GraphBuilder'''append-2 this, (BytecodeParser''genNegateOp-2v this, x))))
+            (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), kind, (BytecodeParser''append-2 this, (BytecodeParser''genNegateOp-2v this, x))))
         )
         nil
     )
@@ -22124,7 +22086,7 @@ ZeroExtendNode'new-4
                     [Bytecodes'IUSHR Bytecodes'LUSHR] (BytecodeParser''genUnsignedRightShift-3 this, x, s)
                 )
         ]
-            (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), kind, (GraphBuilder'''append-2 this, v)))
+            (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), kind, (BytecodeParser''append-2 this, v)))
         )
         nil
     )
@@ -22140,7 +22102,7 @@ ZeroExtendNode'new-4
                     [Bytecodes'IXOR Bytecodes'LXOR] (BytecodeParser''genXor-3 this, x, y)
                 )
         ]
-            (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), kind, (GraphBuilder'''append-2 this, v)))
+            (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), kind, (BytecodeParser''append-2 this, v)))
         )
         nil
     )
@@ -22150,7 +22112,7 @@ ZeroExtendNode'new-4
             #_"ValueNode" y (FrameStateBuilder''pop-2 (:frameState this), kind)
             #_"ValueNode" x (FrameStateBuilder''pop-2 (:frameState this), kind)
         ]
-            (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), JavaKind/Int, (GraphBuilder'''append-2 this, (BytecodeParser''genNormalizeCompare-3 this, x, y))))
+            (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), JavaKind/Int, (BytecodeParser''append-2 this, (BytecodeParser''genNormalizeCompare-3 this, x, y))))
         )
         nil
     )
@@ -22160,9 +22122,9 @@ ZeroExtendNode'new-4
             #_"ValueNode" input (FrameStateBuilder''pop-2 (:frameState this), from)
         ]
             (when-not (= from (#_"JavaKind" .getStackKind from))
-                (§ ass input (GraphBuilder'''append-2 this, (BytecodeParser''genNarrow-3v this, input, (#_"JavaKind" .getBitCount from))))
+                (§ ass input (BytecodeParser''append-2 this, (BytecodeParser''genNarrow-3v this, input, (#_"JavaKind" .getBitCount from))))
             )
-            (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), to, (GraphBuilder'''append-2 this, (BytecodeParser''genSignExtend-3v this, input, (#_"JavaKind" .getBitCount to)))))
+            (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), to, (BytecodeParser''append-2 this, (BytecodeParser''genSignExtend-3v this, input, (#_"JavaKind" .getBitCount to)))))
         )
         nil
     )
@@ -22172,9 +22134,9 @@ ZeroExtendNode'new-4
             #_"ValueNode" input (FrameStateBuilder''pop-2 (:frameState this), from)
         ]
             (when-not (= from (#_"JavaKind" .getStackKind from))
-                (§ ass input (GraphBuilder'''append-2 this, (BytecodeParser''genNarrow-3v this, input, (#_"JavaKind" .getBitCount from))))
+                (§ ass input (BytecodeParser''append-2 this, (BytecodeParser''genNarrow-3v this, input, (#_"JavaKind" .getBitCount from))))
             )
-            (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), to, (GraphBuilder'''append-2 this, (BytecodeParser''genZeroExtend-3v this, input, (#_"JavaKind" .getBitCount to)))))
+            (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), to, (BytecodeParser''append-2 this, (BytecodeParser''genZeroExtend-3v this, input, (#_"JavaKind" .getBitCount to)))))
         )
         nil
     )
@@ -22183,7 +22145,7 @@ ZeroExtendNode'new-4
         (let [
             #_"ValueNode" input (FrameStateBuilder''pop-2 (:frameState this), from)
         ]
-            (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), to, (GraphBuilder'''append-2 this, (BytecodeParser''genNarrow-3v this, input, (#_"JavaKind" .getBitCount to)))))
+            (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), to, (BytecodeParser''append-2 this, (BytecodeParser''genNarrow-3v this, input, (#_"JavaKind" .getBitCount to)))))
         )
         nil
     )
@@ -22195,7 +22157,7 @@ ZeroExtendNode'new-4
             #_"ValueNode" x (FrameStateBuilder''loadLocal-3 (:frameState this), index, JavaKind/Int)
             #_"ValueNode" y (BytecodeParser''appendConstant-2 this, (JavaConstant/forInt delta))
         ]
-            (FrameStateBuilder''storeLocal-4 (:frameState this), index, JavaKind/Int, (GraphBuilder'''append-2 this, (BytecodeParser''genIntegerAdd-3 this, x, y)))
+            (FrameStateBuilder''storeLocal-4 (:frameState this), index, JavaKind/Int, (BytecodeParser''append-2 this, (BytecodeParser''genIntegerAdd-3 this, x, y)))
         )
         nil
     )
@@ -22249,7 +22211,7 @@ ZeroExtendNode'new-4
                                     ]
                                         (if (LogicNode''isTautology-1 logic)
                                             object
-                                            (GraphBuilder'''append-2 this, (PiNode'create-3 object, (StampFactory'object-2 checkedType, (:never-nil? (:stamp object))), (GraphBuilder'''append-2 this, (FixedGuardNode'new-4 logic, DeoptimizationReason/ClassCastException, DeoptimizationAction/InvalidateReprofile, false))))
+                                            (BytecodeParser''append-2 this, (PiNode'create-3 object, (StampFactory'object-2 checkedType, (:never-nil? (:stamp object))), (BytecodeParser''append-2 this, (FixedGuardNode'new-4 logic, DeoptimizationReason/ClassCastException, DeoptimizationAction/InvalidateReprofile, false))))
                                         )
                                     )
                             ]
@@ -22305,7 +22267,7 @@ ZeroExtendNode'new-4
                                     )
                                     ;; Most frequent for value is IRETURN, followed by ISTORE.
                                     (do
-                                        (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), JavaKind/Int, (GraphBuilder'''append-2 this, (BytecodeParser''genConditional-2 this, logic))))
+                                        (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), JavaKind/Int, (BytecodeParser''append-2 this, (BytecodeParser''genConditional-2 this, logic))))
                                         this
                                     )
                                 )
@@ -22319,7 +22281,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"void" BytecodeParser''genNewInstance-2t [#_"BytecodeParser" this, #_"JavaType" type]
         (when (and (instance? ResolvedJavaType type) (#_"ResolvedJavaType" .isInitialized type)) => (BytecodeParser''handleUnresolvedNewInstance-2 this, type)
-            (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), JavaKind/Object, (GraphBuilder'''append-2 this, (BytecodeParser''createNewInstance-2 this, type))))
+            (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), JavaKind/Object, (BytecodeParser''append-2 this, (BytecodeParser''createNewInstance-2 this, type))))
         )
         nil
     )
@@ -22353,7 +22315,7 @@ ZeroExtendNode'new-4
             #_"ResolvedJavaType" elementType (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, (BytecodeParser'arrayTypeCodeToClass-1 typeCode))
             #_"ValueNode" length (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Int)
         ]
-            (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), JavaKind/Object, (GraphBuilder'''append-2 this, (BytecodeParser''createNewArray-3 this, elementType, length))))
+            (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), JavaKind/Object, (BytecodeParser''append-2 this, (BytecodeParser''createNewArray-3 this, elementType, length))))
         )
         nil
     )
@@ -22364,7 +22326,7 @@ ZeroExtendNode'new-4
             #_"ValueNode" length (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Int)
         ]
             (when (instance? ResolvedJavaType type) => (BytecodeParser''handleUnresolvedNewObjectArray-3 this, type, length)
-                (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), JavaKind/Object, (GraphBuilder'''append-2 this, (BytecodeParser''createNewArray-3 this, type, length))))
+                (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), JavaKind/Object, (BytecodeParser''append-2 this, (BytecodeParser''createNewArray-3 this, type, length))))
             )
         )
         nil
@@ -22438,7 +22400,7 @@ ZeroExtendNode'new-4
                             :done
                         )
                     )
-                    (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), (#_"JavaField" .getJavaKind field), (GraphBuilder'''append-2 this, (BytecodeParser''genLoadField-3 this, nil, resolvedField))))
+                    (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), (#_"JavaField" .getJavaKind field), (BytecodeParser''append-2 this, (BytecodeParser''genLoadField-3 this, nil, resolvedField))))
                 )
             )
         )
@@ -22725,7 +22687,7 @@ ZeroExtendNode'new-4
             Bytecodes'NEW             (BytecodeParser''genNewInstance-2i this, (BytecodeStream''readCPI-1 (:stream this)))
             Bytecodes'NEWARRAY        (BytecodeParser''genNewPrimitiveArray-2 this, (BytecodeStream''readLocalIndex-1 (:stream this)))
             Bytecodes'ANEWARRAY       (BytecodeParser''genNewObjectArray-2 this, (BytecodeStream''readCPI-1 (:stream this)))
-            Bytecodes'ARRAYLENGTH     (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), JavaKind/Int, (GraphBuilder'''append-2 this, (ArrayLengthNode'create-1 (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Object)))))
+            Bytecodes'ARRAYLENGTH     (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), JavaKind/Int, (BytecodeParser''append-2 this, (ArrayLengthNode'create-1 (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Object)))))
             Bytecodes'CHECKCAST       (BytecodeParser''genCheckCast-1 this)
             Bytecodes'INSTANCEOF      (§ ass! this (BytecodeParser''genInstanceOf-1 this))
             Bytecodes'MONITORENTER    (BytecodeParser''genMonitorEnter-3 this, (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Object), (:nextBCI (:stream this)))
@@ -22741,10 +22703,8 @@ ZeroExtendNode'new-4
     ;;;
      ; Determines if this parsing context is within the bytecode of an intrinsic or a method inlined by an intrinsic.
      ;;
-    (defm BytecodeParser GraphBuilder
-        (#_"boolean" GraphBuilder'''parsingIntrinsic-1 [#_"BytecodeParser" this]
-            (some? (:intrinsicContext this))
-        )
+    (defn #_"boolean" BytecodeParser''parsingIntrinsic-1 [#_"BytecodeParser" this]
+        (some? (:intrinsicContext this))
     )
 
     ;;;
@@ -22752,7 +22712,7 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"BytecodeParser" BytecodeParser''getNonIntrinsicAncestor-1 [#_"BytecodeParser" this]
         (loop-when-recur [#_"BytecodeParser" ancestor (:parent this)]
-                         (and (some? ancestor) (GraphBuilder'''parsingIntrinsic-1 ancestor))
+                         (and (some? ancestor) (BytecodeParser''parsingIntrinsic-1 ancestor))
                          [(:parent ancestor)]
                       => ancestor
         )
@@ -26213,7 +26173,6 @@ ZeroExtendNode'new-4
                 #_"NodeMap<InfoElement>" :map (NodeMap'new-1g graph)
                 #_"BlockMap<List<Node>>" :blockToNodes blockToNodes
                 #_"NodeMap<Block>" :nodeToBlock nodeToBlock
-                #_"CanonicalizerTool" :tool (DefaultSimplifierTool'new-0)
                 #_"NodeStack" :undoOperations (NodeStack'new-0)
                 #_"Graph" :graph graph
                 #_"EconomicMap<MergeNode, EconomicMap<ValuePhiNode, PhiInfoElement>>" :mergeMaps (EconomicMap/create)
@@ -28713,6 +28672,7 @@ ZeroExtendNode'new-4
     ;;;
      ; Creates a dead code elimination phase that will be run irrespective of GraalOptions#reduceDCE.
      ;;
+    #_unused
     (defn #_"DeadCodeEliminationPhase" DeadCodeEliminationPhase'new-0 []
         (DeadCodeEliminationPhase'new-1 Optionality'Required)
     )
@@ -32719,22 +32679,22 @@ ZeroExtendNode'new-4
         (merge (ForeignCallDescriptor'class.)
             (hash-map
                 #_"Class" :resultType resultType
-                #_"Class[]" :argumentTypes argumentTypes
+                #_"Class*" :argumentTypes argumentTypes
             )
         )
     )
 
-    (§ def #_"ForeignCallDescriptor" ForeignCallDescriptor'DEOPTIMIZATION_HANDLER (ForeignCallDescriptor'new-2* void'class))
-    (§ def #_"ForeignCallDescriptor" ForeignCallDescriptor'UNCOMMON_TRAP_HANDLER  (ForeignCallDescriptor'new-2* void'class))
+    (def #_"ForeignCallDescriptor" ForeignCallDescriptor'DEOPTIMIZATION_HANDLER (ForeignCallDescriptor'new-2* void'class))
+    (def #_"ForeignCallDescriptor" ForeignCallDescriptor'UNCOMMON_TRAP_HANDLER  (ForeignCallDescriptor'new-2* void'class))
 
-    (§ def #_"ForeignCallDescriptor" ForeignCallDescriptor'NEW_ARRAY    (ForeignCallDescriptor'new-2* void'class, Word'iface, #_"KlassPointer" Word'iface, int'class))
-    (§ def #_"ForeignCallDescriptor" ForeignCallDescriptor'NEW_INSTANCE (ForeignCallDescriptor'new-2* void'class, Word'iface, #_"KlassPointer" Word'iface))
+    (def #_"ForeignCallDescriptor" ForeignCallDescriptor'NEW_INSTANCE (ForeignCallDescriptor'new-2* void'class, Word'iface, #_"KlassPointer" Word'iface))
+    (def #_"ForeignCallDescriptor" ForeignCallDescriptor'NEW_ARRAY    (ForeignCallDescriptor'new-2* void'class, Word'iface, #_"KlassPointer" Word'iface, int'class))
 
-    (§ def #_"ForeignCallDescriptor" ForeignCallDescriptor'MONITORENTER (ForeignCallDescriptor'new-2* void'class, Object, Word'iface))
-    (§ def #_"ForeignCallDescriptor" ForeignCallDescriptor'MONITOREXIT  (ForeignCallDescriptor'new-2* void'class, Object, Word'iface))
+    (def #_"ForeignCallDescriptor" ForeignCallDescriptor'MONITORENTER (ForeignCallDescriptor'new-2* void'class, Word'iface, Object, Word'iface))
+    (def #_"ForeignCallDescriptor" ForeignCallDescriptor'MONITOREXIT  (ForeignCallDescriptor'new-2* void'class, Word'iface, Object, Word'iface))
 
-    (§ def #_"ForeignCallDescriptor" ForeignCallDescriptor'G1WBPRECALL  (ForeignCallDescriptor'new-2* void'class, Object))
-    (§ def #_"ForeignCallDescriptor" ForeignCallDescriptor'G1WBPOSTCALL (ForeignCallDescriptor'new-2* void'class, Word'iface))
+    (def #_"ForeignCallDescriptor" ForeignCallDescriptor'G1WBPRECALL  (ForeignCallDescriptor'new-2* void'class, Word'iface, Object))
+    (def #_"ForeignCallDescriptor" ForeignCallDescriptor'G1WBPOSTCALL (ForeignCallDescriptor'new-2* void'class, Word'iface, Word'iface))
 )
 
 ;;;
@@ -32770,10 +32730,6 @@ ZeroExtendNode'new-4
                  ; The registers and stack slots defined/killed by the call.
                  ;;
                 #_"Value[]" :temporaries AllocatableValue/NONE
-                ;;;
-                 ; Non-null (eventually) iff this is a call to a compiled stub.
-                 ;;
-                #_"Stub" :stub nil
             )
         )
     )
@@ -32818,17 +32774,14 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"CallingConvention" ForeignCallLinkage'createCallingConvention-2 [#_"ForeignCallDescriptor" descriptor, #_"CallingConvention$Type" ccType]
         (let [
-            #_"Class[]" argumentTypes (#_"Object" .clone (:argumentTypes descriptor))
-            #_"JavaType[]" parameterTypes (make-array JavaType (count argumentTypes))
+            #_"JavaType[]" parameterTypes (make-array JavaType (count (:argumentTypes descriptor)))
+            _
+                (dotimes [#_"int" i (count parameterTypes)]
+                    (aset parameterTypes i (ForeignCallLinkage'asJavaType-1 (nth (:argumentTypes descriptor) i)))
+                )
+            #_"JavaType" returnType (ForeignCallLinkage'asJavaType-1 (:resultType descriptor))
         ]
-            (dotimes [#_"int" i (count parameterTypes)]
-                (aset parameterTypes i (ForeignCallLinkage'asJavaType-1 (nth argumentTypes i)))
-            )
-            (let [
-                #_"JavaType" returnType (ForeignCallLinkage'asJavaType-1 (:resultType descriptor))
-            ]
-                (#_"RegisterConfig" .getCallingConvention HotSpot'registerConfig, ccType, returnType, parameterTypes, HotSpot'valueKindFactory)
-            )
+            (#_"RegisterConfig" .getCallingConvention HotSpot'registerConfig, ccType, returnType, parameterTypes, HotSpot'valueKindFactory)
         )
     )
 
@@ -32847,12 +32800,6 @@ ZeroExtendNode'new-4
         (#_"CodeCacheProvider" .getMaxCallTargetOffset HotSpot'codeCache, (:address this))
     )
 
-    (defn #_"ForeignCallLinkage" ForeignCallLinkage''finalizeAddress-1 [#_"ForeignCallLinkage" this]
-        (when (zero? (:address this)) => this
-            (assoc this :address (#_"InstalledCode" .getStart (Stub''getCode-1 (:stub this))))
-        )
-    )
-
     ;;;
      ; Determines if the foreign call target destroys all registers.
      ;
@@ -32866,9 +32813,7 @@ ZeroExtendNode'new-4
      ; Determines if a JavaFrameAnchor needs to be set up and torn down around this call.
      ;;
     (defn #_"boolean" ForeignCallLinkage''needsJavaFrameAnchor-1 [#_"ForeignCallLinkage" this]
-        (and (any = (:transition this) Transition'SAFEPOINT Transition'STACK_INSPECTABLE_LEAF)
-            (nil? (:stub this)) ;; the stub will do the JavaFrameAnchor management around the runtime call(s) it makes
-        )
+        (any = (:transition this) Transition'SAFEPOINT Transition'STACK_INSPECTABLE_LEAF)
     )
 )
 
@@ -32900,57 +32845,23 @@ ZeroExtendNode'new-4
     (def #_"Value[]" ForeignCalls'nativeABICallerSaveRegisters (ForeignCalls'createNativeABICallerSaveRegisters-0))
 
     ;;;
-     ; Registers the linkage for a foreign call.
-     ;;
-    (defn #_"void" ForeignCalls''register-2 [#_"ForeignCalls" this, #_"ForeignCallLinkage" linkage]
-        (#_"EconomicMap" .put (:foreignCalls this), (:descriptor linkage), linkage)
-        nil
-    )
-
-    ;;;
      ; Creates and registers the linkage for a foreign call.
      ;
      ; @param descriptor the signature of the foreign call
-     ; @param address the address of the code to call
-     ; @param outgoingCcType outgoing (caller) calling convention type
+     ; @param address the address of the foreign code to call
      ; @param effect specifies if the call destroys or preserves all registers (apart from temporaries which are always destroyed)
      ; @param transition specifies if this is a {@linkplain Transition#LEAF leaf} call
      ; @param reexecutable specifies if the foreign call can be re-executed without (meaningful) side effects.
      ;            Deoptimization will not return to a point before a foreign call that cannot be re-executed.
      ; @param killedLocations the memory locations killed by the foreign call
      ;;
-    (defn #_"void" ForeignCalls''registerForeignCall-8* [#_"ForeignCalls" this, #_"ForeignCallDescriptor" descriptor, #_"long" address, #_"CallingConvention$Type" outgoingCcType, #_"RegisterEffect" effect, #_"Transition" transition, #_"boolean" reexecutable & #_"LocationIdentity..." killedLocations]
+    (defn- #_"ForeignCalls" ForeignCalls''register-7* [#_"ForeignCalls" this, #_"ForeignCallDescriptor" descriptor, #_"long" address, #_"RegisterEffect" effect, #_"Transition" transition, #_"boolean" reexecutable & #_"LocationIdentity..." killedLocations]
         (let [
-            #_"ForeignCallLinkage" linkage (apply ForeignCallLinkage'create-8* descriptor, address, effect, outgoingCcType, nil, transition, reexecutable, killedLocations)
+            #_"CallingConvention" callingConvention HotSpotCallingConventionType/NativeCall
+            #_"ForeignCallLinkage" linkage (apply ForeignCallLinkage'create-8* descriptor, address, effect, callingConvention, nil, transition, reexecutable, killedLocations)
         ]
-            (ForeignCalls''register-2 this, linkage)
+            (update this :foreignCalls assoc (:descriptor linkage) linkage)
         )
-        nil
-    )
-
-    (defn- #_"Stub" ForeignCalls'link-1 [#_"Stub" stub]
-        (ß update-in stub [:linkage :stub] stub)
-    )
-
-    ;;;
-     ; Creates a stub for a foreign call.
-     ;
-     ; @param descriptor the signature of the call to the stub
-     ; @param address the address of the foreign code to call
-     ; @param prependThread true if the JavaThread value for the current thread is to be prepended to the arguments for the call to {@code address}
-     ; @param transition specifies if this is a {@linkplain Transition#LEAF leaf} call
-     ; @param reexecutable specifies if the foreign call can be re-executed without (meaningful) side effects.
-     ;            Deoptimization will not return to a point before a foreign call that cannot be re-executed.
-     ; @param killedLocations the memory locations killed by the foreign call
-     ;;
-    (defn #_"void" ForeignCalls''linkForeignCall-7* [#_"ForeignCalls" this, #_"ForeignCallDescriptor" descriptor, #_"long" address, #_"boolean" prependThread, #_"Transition" transition, #_"boolean" reexecutable & #_"LocationIdentity..." killedLocations]
-        (let [
-            #_"ForeignCallStub" stub (ForeignCalls'link-1 (apply ForeignCallStub'new-6* address, descriptor, prependThread, transition, reexecutable, killedLocations))
-        ]
-            (ForeignCalls''register-2 this, (:linkage stub))
-            (ForeignCalls''register-2 this, (:target stub))
-        )
-        nil
     )
 
     (defn #_"ForeignCalls" ForeignCalls'new-0 []
@@ -32958,22 +32869,25 @@ ZeroExtendNode'new-4
             #_"ForeignCalls" this
                 (merge (ForeignCalls'class.)
                     (hash-map
-                        #_"EconomicMap<ForeignCallDescriptor, ForeignCallLinkage>" :foreignCalls (EconomicMap/create)
+                        #_"{ForeignCallDescriptor ForeignCallLinkage}" :foreignCalls {}
                     )
                 )
         ]
-            (ForeignCalls''registerForeignCall-8* this, ForeignCallDescriptor'DEOPTIMIZATION_HANDLER, HotSpot'handleDeoptStub, HotSpotCallingConventionType/NativeCall, RegisterEffect'PRESERVES_REGISTERS, Transition'LEAF_NOFP, true)
-            (ForeignCalls''registerForeignCall-8* this, ForeignCallDescriptor'UNCOMMON_TRAP_HANDLER, HotSpot'uncommonTrapStub, HotSpotCallingConventionType/NativeCall, RegisterEffect'PRESERVES_REGISTERS, Transition'LEAF_NOFP, true)
+            (reduce #(apply ForeignCalls''register-7* %1, %2) this
+                [
+                    [ForeignCallDescriptor'DEOPTIMIZATION_HANDLER HotSpot'handleDeoptStub  RegisterEffect'PRESERVES_REGISTERS Transition'LEAF_NOFP true]
+                    [ForeignCallDescriptor'UNCOMMON_TRAP_HANDLER  HotSpot'uncommonTrapStub RegisterEffect'PRESERVES_REGISTERS Transition'LEAF_NOFP true]
 
-            (ForeignCalls''registerForeignCall-8* this, ForeignCallDescriptor'NEW_ARRAY, HotSpot'newArrayAddress, HotSpotCallingConventionType/NativeCall, RegisterEffect'DESTROYS_REGISTERS, Transition'SAFEPOINT, true, LocationIdentity'ANY)
-            (ForeignCalls''registerForeignCall-8* this, ForeignCallDescriptor'NEW_INSTANCE, HotSpot'newInstanceAddress, HotSpotCallingConventionType/NativeCall, RegisterEffect'DESTROYS_REGISTERS, Transition'SAFEPOINT, true, LocationIdentity'ANY)
+                    [ForeignCallDescriptor'NEW_INSTANCE HotSpot'newInstanceAddress RegisterEffect'DESTROYS_REGISTERS Transition'SAFEPOINT true LocationIdentity'ANY]
+                    [ForeignCallDescriptor'NEW_ARRAY    HotSpot'newArrayAddress    RegisterEffect'DESTROYS_REGISTERS Transition'SAFEPOINT true LocationIdentity'ANY]
 
-            (ForeignCalls''linkForeignCall-7* this, ForeignCallDescriptor'MONITORENTER, HotSpot'monitorenterAddress, true, Transition'SAFEPOINT, false, LocationIdentity'ANY)
-            (ForeignCalls''linkForeignCall-7* this, ForeignCallDescriptor'MONITOREXIT, HotSpot'monitorexitAddress, true, Transition'STACK_INSPECTABLE_LEAF, false, LocationIdentity'ANY)
+                    [ForeignCallDescriptor'MONITORENTER HotSpot'monitorenterAddress RegisterEffect'DESTROYS_REGISTERS Transition'SAFEPOINT              false LocationIdentity'ANY]
+                    [ForeignCallDescriptor'MONITOREXIT  HotSpot'monitorexitAddress  RegisterEffect'DESTROYS_REGISTERS Transition'STACK_INSPECTABLE_LEAF false LocationIdentity'ANY]
 
-            (ForeignCalls''linkForeignCall-7* this, ForeignCallDescriptor'G1WBPRECALL, HotSpot'writeBarrierPreAddress, true, Transition'LEAF_NOFP, true)
-            (ForeignCalls''linkForeignCall-7* this, ForeignCallDescriptor'G1WBPOSTCALL, HotSpot'writeBarrierPostAddress, true, Transition'LEAF_NOFP, true)
-            this
+                    [ForeignCallDescriptor'G1WBPRECALL  HotSpot'writeBarrierPreAddress  RegisterEffect'DESTROYS_REGISTERS Transition'LEAF_NOFP true]
+                    [ForeignCallDescriptor'G1WBPOSTCALL HotSpot'writeBarrierPostAddress RegisterEffect'DESTROYS_REGISTERS Transition'LEAF_NOFP true]
+                ]
+            )
         )
     )
 
@@ -32981,7 +32895,7 @@ ZeroExtendNode'new-4
      ; Gets the linkage for a foreign call.
      ;;
     (defn #_"ForeignCallLinkage" ForeignCalls''lookupForeignCall-2 [#_"ForeignCalls" this, #_"ForeignCallDescriptor" descriptor]
-        (ForeignCallLinkage''finalizeAddress-1 (get (:foreignCalls this) descriptor))
+        (get (:foreignCalls this) descriptor)
     )
 
     ;;;
@@ -33504,7 +33418,6 @@ ZeroExtendNode'new-4
     (defn- #_"FrameStateBuilder" FrameStateBuilder'init-0 []
         (hash-map
             #_"BytecodeParser" :parser nil
-            #_"GraphBuilder" :tool nil
             #_"Bytecode" :code nil
             ;;;
              ; Current size (height) of the stack.
@@ -33530,14 +33443,13 @@ ZeroExtendNode'new-4
      ; @param code the bytecode in which the frame exists
      ; @param graph the target graph of Graal nodes created by the builder
      ;;
-    (defn #_"FrameStateBuilder" FrameStateBuilder'new-3c [#_"GraphBuilder" tool, #_"Bytecode" code, #_"Graph" graph]
+    (defn #_"FrameStateBuilder" FrameStateBuilder'new-3c [#_"BytecodeParser" parser, #_"Bytecode" code, #_"Graph" graph]
         (let [
             #_"FrameStateBuilder" this
                 (merge (FrameStateBuilder'class.)
                     (FrameStateBuilder'init-0)
                 )
-            this (assoc this :tool tool)
-            this (assoc this :parser (when (satisfies? BytecodeParser tool) tool))
+            this (assoc this :parser parser)
             this (assoc this :code code)
             this (assoc this :locals (make-array ValueNode'iface (Bytecode'''getMaxLocals-1 code)))
             this (assoc this :stack (make-array ValueNode'iface (max 1 (Bytecode'''getMaxStackSize-1 code))))
@@ -33555,8 +33467,9 @@ ZeroExtendNode'new-4
      ; @param method the method whose frame is simulated
      ; @param graph the target graph of Graal nodes created by the builder
      ;;
-    (defn #_"FrameStateBuilder" FrameStateBuilder'new-3m [#_"GraphBuilder" tool, #_"ResolvedJavaMethod" method, #_"Graph" graph]
-        (FrameStateBuilder'new-3c tool, (ResolvedJavaMethodBytecode'new-1 method), graph)
+    #_unused
+    (defn #_"FrameStateBuilder" FrameStateBuilder'new-3m [#_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"Graph" graph]
+        (FrameStateBuilder'new-3c parser, (ResolvedJavaMethodBytecode'new-1 method), graph)
     )
 
     (defn #_"FrameStateBuilder" FrameStateBuilder'copy-1 [#_"FrameStateBuilder" other]
@@ -33566,7 +33479,6 @@ ZeroExtendNode'new-4
                     (FrameStateBuilder'init-0)
                 )
             this (assoc this :parser (:parser other))
-            this (assoc this :tool (:tool other))
             this (assoc this :code (:code other))
             this (assoc this :stackSize (:stackSize other))
             this (assoc this :locals (#_"Object" .clone (:locals other)))
@@ -33615,7 +33527,7 @@ ZeroExtendNode'new-4
                 (when-not (#_"ResolvedJavaMethod" .isStatic method) => [0 0]
                     (let [
                         #_"Stamp" receiverStamp
-                            (or (Plugins''getOverridingStamp-4 HotSpot'plugins, (:tool this), originalType, true)
+                            (or (Plugins''getOverridingStamp-4 HotSpot'plugins, (:parser this), originalType, true)
                                 (StampFactory'forDeclaredType-2 originalType, true)
                             )
                     ]
@@ -33630,7 +33542,7 @@ ZeroExtendNode'new-4
                     #_"JavaType" type (#_"JavaType" .resolve (#_"Signature" .getParameterType sig, k, originalType), originalType)
                     #_"JavaKind" kind (#_"JavaType" .getJavaKind type)
                     #_"Stamp" stamp
-                        (or (Plugins''getOverridingStamp-4 HotSpot'plugins, (:tool this), type, false)
+                        (or (Plugins''getOverridingStamp-4 HotSpot'plugins, (:parser this), type, false)
                             (StampFactory'forDeclaredType-2 type, false)
                         )
                 ]
@@ -33656,7 +33568,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"FrameState" FrameStateBuilder''create-3 [#_"FrameStateBuilder" this, #_"int" bci, #_"StateSplit" forStateSplit]
-        (if (and (some? (:parser this)) (GraphBuilder'''parsingIntrinsic-1 (:parser this)))
+        (if (and (some? (:parser this)) (BytecodeParser''parsingIntrinsic-1 (:parser this)))
             (IntrinsicContext''createFrameState-4 (:intrinsicContext (:parser this)), (:graph (:parser this)), this, forStateSplit)
             ;; skip intrinsic frames
             (FrameStateBuilder''create-6 this, bci, (when (some? (:parser this)) (BytecodeParser''getNonIntrinsicAncestor-1 (:parser this))), false, nil, nil)
@@ -34606,25 +34518,6 @@ ZeroExtendNode'new-4
         (assoc this :isAfterExpandLogic true)
     )
 
-    (defn #_"void" Graph''clearAllStateAfter-1 [#_"Graph" this]
-        (doseq [#_"Node" node (Graph''getNodes-1 this)]
-            (when (satisfies? StateSplit node)
-                (let [
-                    #_"FrameState" stateAfter (:stateAfter node)
-                ]
-                    (when (some? stateAfter)
-                        (StateSplit'''setStateAfter-2 node, nil)
-                        ;; 2 nodes referencing the same framestate
-                        (when (Node''isAlive-1 stateAfter)
-                            (GraphUtil'killWithUnusedFloatingInputs-1 stateAfter)
-                        )
-                    )
-                )
-            )
-        )
-        nil
-    )
-
     (defn #_"boolean" Graph''hasVirtualizableAllocation-1 [#_"Graph" this]
         (loop [#_"ISeq" s (seq (Graph''getNodes-1 this))]
             (and (some? s)
@@ -34669,279 +34562,6 @@ ZeroExtendNode'new-4
     (defm GraphBuilderPhase Phase
         (#_"Graph" Phase'''run-3 [#_"GraphBuilderPhase" this, #_"Graph" graph, #_"PhaseContext" context]
             (Phase'''run-3 (GraphBuilderInstance'new-2 (:optimisticOpts context), nil), graph, nil)
-        )
-    )
-)
-
-;;;
- ; A utility for manually creating a graph. This will be expanded as necessary to support all
- ; subsystems that employ manual graph creation (as opposed to {@linkplain GraphBuilderPhase
- ; bytecode parsing} based graph creation).
- ;;
-(class-ns GraphKit [GraphBuilder]
-    (defn #_"GraphKit" GraphKit'new-1 [#_"ResolvedJavaMethod" stubMethod]
-        (let [
-            #_"Graph" graph (Graph'new-1 stubMethod)
-        ]
-            (merge (GraphKit'class.)
-                (hash-map
-                    #_"Graph" :graph graph
-                    #_"FixedWithNextNode" :lastFixedNode (:start graph)
-                    ;; Add a dummy element, so that the access of the last element never leads to an exception.
-                    #_"List<Structure>" :structures (let [#_"ArrayList" a (ArrayList.) _ (#_"List" .add a, (§ proxy (Structure'new-0)))] a)
-                )
-            )
-        )
-    )
-
-    (defm GraphKit GraphBuilder
-        (#_"boolean" GraphBuilder'''parsingIntrinsic-1 [#_"GraphKit" this]
-            true
-        )
-    )
-
-    (defn- #_"ValueNode" GraphKit'changeToWord-1 [#_"ValueNode" node]
-        (when (WordTypes'isWord-1v node) => node
-            (ValueNode''setStamp-2 node, (WordTypes'getWordStamp-1 (StampTool'typeOrNull-1 (:stamp node))))
-        )
-    )
-
-    ;;;
-     ; Ensures a floating node is added to or already present in the graph.
-     ;
-     ; @return a node similar to {@code node} if one exists, otherwise {@code node}
-     ;;
-    (defn #_"FloatingNode" GraphKit''add-2 [#_"GraphKit" this, #_"FloatingNode" node]
-        (Graph''add-2 (:graph this), (GraphKit'changeToWord-1 node))
-    )
-
-    (defm GraphKit GraphBuilder
-        (#_"ValueNode" GraphBuilder'''append-2 [#_"GraphKit" this, #_"ValueNode" node]
-            (let [
-                #_"ValueNode" result (Graph''addOrUniqueWithInputs-2 (:graph this), (GraphKit'changeToWord-1 node))
-            ]
-                (when (satisfies? FixedNode result)
-                    (Graph''addAfterFixed-3 (:graph this), (:lastFixedNode this), result)
-                    (§ ass! this (assoc this :lastFixedNode (when (satisfies? FixedWithNextNode result) result)))
-                )
-                result
-            )
-        )
-    )
-
-    (defn- #_"ResolvedJavaMethod" GraphKit'findMethod-3* [#_"Class" declaringClass, #_"String" name & #_"Class..." parameterTypes]
-        (#_"MetaAccessProvider" .lookupJavaMethod HotSpot'metaAccess, (#_"Class" .getDeclaredMethod declaringClass, name, parameterTypes))
-    )
-
-    ;;;
-     ; Creates and appends an InvokeNode for a call to a given method with a given set of arguments.
-     ; The method is looked up via reflection based on the declaring class and name.
-     ;
-     ; @param declaringClass the class declaring the invoked method
-     ; @param name the name of the invoked method
-     ; @param args the arguments to the invocation
-     ;;
-    (defn #_"InvokeNode" GraphKit''createInvoke-7* [#_"GraphKit" this, #_"Class" declaringClass, #_"String" name, #_"InvokeKind" invokeKind, #_"FrameStateBuilder" frameStateBuilder, #_"int" bci & #_"ValueNode..." args]
-        (apply GraphKit''createInvoke-6* this, (GraphKit'findMethod-3* declaringClass, name, (= invokeKind InvokeKind'Static)), invokeKind, frameStateBuilder, bci, args)
-    )
-
-    (defn #_"InvokeNode" GraphKit''createInvoke-4* [#_"GraphKit" this, #_"Class" declaringClass, #_"String" name & #_"ValueNode..." args]
-        (apply GraphKit''createInvoke-7* this, declaringClass, name, InvokeKind'Static, nil, BytecodeFrame/UNKNOWN_BCI, args)
-    )
-
-    ;;;
-     ; Creates and appends an InvokeNode for a call to a given method with a given set of arguments.
-     ;;
-    (defn #_"InvokeNode" GraphKit''createInvoke-6* [#_"GraphKit" this, #_"ResolvedJavaMethod" method, #_"InvokeKind" invokeKind, #_"FrameStateBuilder" frameStateBuilder, #_"int" bci & #_"ValueNode..." args]
-        (let [
-            #_"Signature" signature (#_"ResolvedJavaMethod" .getSignature method)
-            #_"JavaType" returnType (#_"Signature" .getReturnType signature, nil)
-            #_"Stamp" returnStamp
-                (or (Plugins''getOverridingStamp-4 HotSpot'plugins, this, returnType, false)
-                    (StampFactory'forDeclaredType-2 returnType, false)
-                )
-            #_"MethodCallTargetNode" callTarget (Graph''add-2 (:graph this), (MethodCallTargetNode'new-4 invokeKind, method, args, returnStamp))
-            #_"InvokeNode" invoke (GraphBuilder'''append-2 this, (InvokeNode'new-2 callTarget, bci))
-        ]
-            (when (some? frameStateBuilder)
-                (when-not (= (ValueNode''getStackKind-1 invoke) JavaKind/Void)
-                    (§ ass! frameStateBuilder (FrameStateBuilder''push-3 frameStateBuilder, (ValueNode''getStackKind-1 invoke), invoke))
-                )
-                (StateSplit'''setStateAfter-2 invoke, (FrameStateBuilder''create-3 frameStateBuilder, bci, invoke))
-                (when-not (= (ValueNode''getStackKind-1 invoke) JavaKind/Void)
-                    (FrameStateBuilder''pop-2 frameStateBuilder, (ValueNode''getStackKind-1 invoke))
-                )
-            )
-            invoke
-        )
-    )
-
-    ;;;
-     ; Inlines a given invocation to a method. The graph of the inlined method is processed in the
-     ; same manner as for snippets and method substitutions.
-     ;;
-    (defn- #_"void" GraphKit'inline-1 [#_"InvokeNode" invoke]
-        (let [
-            #_"ResolvedJavaMethod" method (:targetMethod (:callTarget invoke))
-            #_"Graph" graph (Graph'new-1 method)
-            graph (Phase'''run-3 (GraphBuilderInstance'new-2 OptimisticOptimizations'NONE, (IntrinsicContext'new-4 method, method, HotSpot'defaultBytecodeProvider, CompilationContext'INLINE_AFTER_PARSING)), graph, nil)
-            ;; Remove all frame states from inlinee.
-            _ (Graph''clearAllStateAfter-1 graph)
-            graph (Phase'''run-3 (DeadCodeEliminationPhase'new-1 Optionality'Required), graph, nil)
-        ]
-            (InliningUtil'inline-4 invoke, graph, false, method)
-        )
-        nil
-    )
-
-    ;;;
-     ; Recursively {@linkplain #inline inlines} all invocations currently in the graph.
-     ;;
-    (defn #_"void" GraphKit''inlineInvokes-1 [#_"GraphKit" this]
-        (loop []
-            (let [
-                #_"Node*" invokes (Graph''getNodes-2 (:graph this), InvokeNode)
-            ]
-                (when (seq invokes)
-                    (doseq [#_"InvokeNode" invoke (§ snap invokes)]
-                        (GraphKit'inline-1 invoke)
-                    )
-                    (recur)
-                )
-            )
-        )
-
-        ;; Clean up all code that is now dead after inlining.
-        (§ ass! (:graph this) (Phase'''run-3 (DeadCodeEliminationPhase'new-0), (:graph this), nil))
-        nil
-    )
-
-    (defn #_"void" GraphKit''pushStructure-2 [#_"GraphKit" this, #_"Structure" structure]
-        (#_"List" .add (:structures this), structure)
-        nil
-    )
-
-    (defn #_"<T extends Structure> T" GraphKit''getTopStructure-2 [#_"GraphKit" this, #_"Class<T>" expectedClass]
-        (#_"Class" .cast expectedClass, (nth (:structures this) (dec (count (:structures this)))))
-    )
-
-    (defn #_"void" GraphKit''popStructure-1 [#_"GraphKit" this]
-        (#_"List" .remove (:structures this), (dec (count (:structures this))))
-        nil
-    )
-
-    ;;;
-     ; Starts an if-block. This call can be followed by a call to #thenPart to start emitting the code
-     ; executed when the condition hold; and a call to #elsePart to start emititng the code when the
-     ; condition does not hold. It must be followed by a call to #endIf to close the if-block.
-     ;
-     ; @param condition The condition for the if-block
-     ; @param trueProbability The estimated probability the condition is true
-     ; @return the created IfNode
-     ;;
-    #_unused
-    (defn #_"IfNode" GraphKit''startIf-3 [#_"GraphKit" this, #_"LogicNode" condition, #_"double" trueProbability]
-        (let [
-            #_"AbstractBeginNode" thenSuccessor (Graph''add-2 (:graph this), (BeginNode'new-0))
-            #_"AbstractBeginNode" elseSuccessor (Graph''add-2 (:graph this), (BeginNode'new-0))
-            #_"IfNode" node (GraphBuilder'''append-2 this, (IfNode'new-4b condition, thenSuccessor, elseSuccessor, trueProbability))
-        ]
-            (§ ass! this (assoc this :lastFixedNode nil))
-
-            (let [
-                #_"IfStructure" s (IfStructure'new-0)
-                s (assoc s :state IfState'CONDITION)
-                s (assoc s :thenPart thenSuccessor)
-                s (assoc s :elsePart elseSuccessor)
-            ]
-                (GraphKit''pushStructure-2 this, s)
-                node
-            )
-        )
-    )
-
-    (defn- #_"IfStructure" GraphKit''saveLastIfNode-1 [#_"GraphKit" this]
-        (let [
-            #_"IfStructure" s (GraphKit''getTopStructure-2 this, IfStructure'iface)
-            s
-                (condp = (:state s)
-                    IfState'THEN_PART (assoc s :thenPart (:lastFixedNode this))
-                    IfState'ELSE_PART (assoc s :elsePart (:lastFixedNode this))
-                                      s
-                )
-        ]
-            (§ ass! this (assoc this :lastFixedNode nil))
-            s
-        )
-    )
-
-    #_unused
-    (defn #_"GraphKit" GraphKit''thenPart-1 [#_"GraphKit" this]
-        (let [
-            #_"IfStructure" s (GraphKit''saveLastIfNode-1 this)
-            this (assoc this :lastFixedNode (:thenPart s))
-        ]
-            (§ ass! s (assoc s :state IfState'THEN_PART))
-            this
-        )
-    )
-
-    #_unused
-    (defn #_"GraphKit" GraphKit''elsePart-1 [#_"GraphKit" this]
-        (let [
-            #_"IfStructure" s (GraphKit''saveLastIfNode-1 this)
-            this (assoc this :lastFixedNode (:elsePart s))
-        ]
-            (§ ass! s (assoc s :state IfState'ELSE_PART))
-            this
-        )
-    )
-
-    ;;;
-     ; Ends an if block started with #startIf(LogicNode, double).
-     ;
-     ; @return the created merge node, or nil if no merge node was required (for example,
-     ;         when one part ended with a control sink).
-     ;;
-    #_unused
-    (defn #_"AbstractMergeNode" GraphKit''endIf-1 [#_"GraphKit" this]
-        (let [
-            #_"IfStructure" s (GraphKit''saveLastIfNode-1 this)
-            #_"FixedWithNextNode" thenPart (when (satisfies? FixedWithNextNode (:thenPart s)) (:thenPart s))
-            #_"FixedWithNextNode" elsePart (when (satisfies? FixedWithNextNode (:elsePart s)) (:elsePart s))
-            #_"AbstractMergeNode" merge nil
-        ]
-            (cond
-                (and (some? thenPart) (some? elsePart))
-                ;; Both parts are alive, we need a real merge.
-                    (let [
-                        #_"EndNode" thenEnd (Graph''add-2 (:graph this), (EndNode'new-0))
-                    ]
-                        (Graph''addAfterFixed-3 (:graph this), thenPart, thenEnd)
-                        (let [
-                            #_"EndNode" elseEnd (Graph''add-2 (:graph this), (EndNode'new-0))
-                        ]
-                            (Graph''addAfterFixed-3 (:graph this), elsePart, elseEnd)
-
-                            (§ ass merge (Graph''add-2 (:graph this), (MergeNode'new-0)))
-                            (AbstractMergeNode''addForwardEnd-2 merge, thenEnd)
-                            (AbstractMergeNode''addForwardEnd-2 merge, elseEnd)
-
-                            (§ ass! this (assoc this :lastFixedNode merge))
-                        )
-                    )
-                (some? thenPart)
-                    ;; elsePart ended with a control sink, so we can continue with thenPart.
-                    (§ ass! this (assoc this :lastFixedNode thenPart))
-                (some? elsePart)
-                    ;; thenPart ended with a control sink, so we can continue with elsePart.
-                    (§ ass! this (assoc this :lastFixedNode elsePart))
-                :else
-                    nil ;; Both parts ended with a control sink, so no nodes can be added after the if.
-            )
-            (§ ass s (assoc s :state IfState'FINISHED))
-            (GraphKit''popStructure-1 this)
-            merge
         )
     )
 )
@@ -34999,9 +34619,9 @@ ZeroExtendNode'new-4
     )
 
     (defm HotSpotNodePlugin TypePlugin
-        (#_"Stamp" TypePlugin'''interceptType-4 [#_"HotSpotNodePlugin" this, #_"GraphBuilder" b, #_"JavaType" declaredType, #_"boolean" never-nil?]
-            (when (GraphBuilder'''parsingIntrinsic-1 b)
-                (TypePlugin'''interceptType-4 (:wordOperationPlugin this), b, declaredType, never-nil?)
+        (#_"Stamp" TypePlugin'''interceptType-4 [#_"HotSpotNodePlugin" this, #_"BytecodeParser" parser, #_"JavaType" declaredType, #_"boolean" never-nil?]
+            (when (BytecodeParser''parsingIntrinsic-1 parser)
+                (TypePlugin'''interceptType-4 (:wordOperationPlugin this), parser, declaredType, never-nil?)
             )
         )
     )
@@ -35025,7 +34645,7 @@ ZeroExtendNode'new-4
 
     (defm HotSpotNodePlugin NodePlugin
         (#_"boolean" NodePlugin'''handleInvoke-4 [#_"HotSpotNodePlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"ValueNode[]" args]
-            (and (GraphBuilder'''parsingIntrinsic-1 parser)
+            (and (BytecodeParser''parsingIntrinsic-1 parser)
                 (NodePlugin'''handleInvoke-4 (:wordOperationPlugin this), parser, method, args)
             )
         )
@@ -35034,7 +34654,7 @@ ZeroExtendNode'new-4
             (or (and (satisfies? ConstantNode object)
                     (HotSpotNodePlugin'tryReadField-3 parser, field, (ValueNode''asJavaConstant-1 object))
                 )
-                (and (GraphBuilder'''parsingIntrinsic-1 parser)
+                (and (BytecodeParser''parsingIntrinsic-1 parser)
                     (NodePlugin'''handleLoadField-4 (:wordOperationPlugin this), parser, object, field)
                 )
             )
@@ -35042,44 +34662,44 @@ ZeroExtendNode'new-4
 
         (#_"boolean" NodePlugin'''handleLoadStaticField-3 [#_"HotSpotNodePlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaField" field]
             (or (HotSpotNodePlugin'tryReadField-3 parser, field, nil)
-                (and (GraphBuilder'''parsingIntrinsic-1 parser)
+                (and (BytecodeParser''parsingIntrinsic-1 parser)
                     (NodePlugin'''handleLoadStaticField-3 (:wordOperationPlugin this), parser, field)
                 )
             )
         )
 
         (#_"boolean" NodePlugin'''handleStoreField-5 [#_"HotSpotNodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaField" field, #_"ValueNode" value]
-            (and (GraphBuilder'''parsingIntrinsic-1 parser)
+            (and (BytecodeParser''parsingIntrinsic-1 parser)
                 (NodePlugin'''handleStoreField-5 (:wordOperationPlugin this), parser, object, field, value)
             )
         )
 
         (#_"boolean" NodePlugin'''handleStoreStaticField-4 [#_"HotSpotNodePlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaField" field, #_"ValueNode" value]
-            (and (GraphBuilder'''parsingIntrinsic-1 parser)
+            (and (BytecodeParser''parsingIntrinsic-1 parser)
                 (NodePlugin'''handleStoreStaticField-4 (:wordOperationPlugin this), parser, field, value)
             )
         )
 
         (#_"boolean" NodePlugin'''handleLoadIndexed-5 [#_"HotSpotNodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" array, #_"ValueNode" index, #_"JavaKind" elementKind]
-            (and (GraphBuilder'''parsingIntrinsic-1 parser)
+            (and (BytecodeParser''parsingIntrinsic-1 parser)
                 (NodePlugin'''handleLoadIndexed-5 (:wordOperationPlugin this), parser, array, index, elementKind)
             )
         )
 
         (#_"boolean" NodePlugin'''handleStoreIndexed-6 [#_"HotSpotNodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" array, #_"ValueNode" index, #_"JavaKind" elementKind, #_"ValueNode" value]
-            (and (GraphBuilder'''parsingIntrinsic-1 parser)
+            (and (BytecodeParser''parsingIntrinsic-1 parser)
                 (NodePlugin'''handleStoreIndexed-6 (:wordOperationPlugin this), parser, array, index, elementKind, value)
             )
         )
 
         (#_"boolean" NodePlugin'''handleCheckCast-4 [#_"HotSpotNodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaType" type]
-            (and (GraphBuilder'''parsingIntrinsic-1 parser)
+            (and (BytecodeParser''parsingIntrinsic-1 parser)
                 (NodePlugin'''handleCheckCast-4 (:wordOperationPlugin this), parser, object, type)
             )
         )
 
         (#_"boolean" NodePlugin'''handleInstanceOf-4 [#_"HotSpotNodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaType" type]
-            (and (GraphBuilder'''parsingIntrinsic-1 parser)
+            (and (BytecodeParser''parsingIntrinsic-1 parser)
                 (NodePlugin'''handleInstanceOf-4 (:wordOperationPlugin this), parser, object, type)
             )
         )
@@ -39186,7 +38806,7 @@ ZeroExtendNode'new-4
 )
 
 (class-ns LIRGenerationResult []
-    (defn #_"LIRGenerationResult" LIRGenerationResult'new-4 [#_"LIR" lir, #_"FrameMapBuilder" frameMapBuilder, #_"CallingConvention" callingConvention, #_"Object" stub]
+    (defn #_"LIRGenerationResult" LIRGenerationResult'new-3 [#_"LIR" lir, #_"FrameMapBuilder" frameMapBuilder, #_"CallingConvention" callingConvention]
         (merge (LIRGenerationResult'class.)
             (hash-map
                 #_"LIR" :lir lir
@@ -39210,7 +38830,6 @@ ZeroExtendNode'new-4
                  ; Records whether the code being generated makes at least one foreign call.
                  ;;
                 #_"boolean" :hasForeignCall false
-                #_"Object" :stub stub
             )
         )
     )
@@ -39517,7 +39136,7 @@ ZeroExtendNode'new-4
                     (assoc this :pollOnReturnScratchRegister (LIRGenerator''findPollOnReturnScratchRegister-1 this))
                 )
         ]
-            (LIRGenerator''append-2 this, (AMD64HotSpotReturnOp'new-4 operand, (some? (:stub (:res this))), HotSpot'threadRegister, (:pollOnReturnScratchRegister this)))
+            (LIRGenerator''append-2 this, (AMD64HotSpotReturnOp'new-4 operand, (some? nil), HotSpot'threadRegister, (:pollOnReturnScratchRegister this)))
             this
         )
     )
@@ -39770,9 +39389,8 @@ ZeroExtendNode'new-4
     (defn #_"Variable" LIRGenerator''emitForeignCall-3* [#_"LIRGenerator" this, #_"ForeignCallLinkage" linkage & #_"Value..." args]
         (let [
             #_"boolean" destroysRegisters (ForeignCallLinkage''destroysRegisters-1 linkage)
-            #_"Stub" stub (:stub (:res this))
             #_"AMD64SaveRegistersOp" save
-                (when (and destroysRegisters (some? stub) (Stub''preservesRegisters-1 stub))
+                (when (and destroysRegisters (some? nil))
                     (let [
                         #_"Register*" savedRegisters (#_"RegisterArray" .toArray (#_"RegisterConfig" .getAllocatableRegisters HotSpot'registerConfig))
                     ]
@@ -39795,7 +39413,7 @@ ZeroExtendNode'new-4
                     (apply LIRGenerator''_emitForeignCall-3* this, linkage, args)
                 )
         ]
-            (when (and destroysRegisters (some? stub) (Stub''preservesRegisters-1 stub))
+            (when (and destroysRegisters (some? nil))
                 (LIRGenerator''emitRestoreRegisters-2 this, save)
             )
             result
@@ -49628,7 +49246,7 @@ ZeroExtendNode'new-4
                                     #_"NodeInputList<ValueNode>" argumentsList (:arguments callTarget)
                                 ]
                                     (dotimes [#_"int" i (count argumentsList)]
-                                        (NodeList''initialize-3 argumentsList, i, (GraphBuilder'''append-2 parser, (nth argumentsList i)))
+                                        (NodeList''initialize-3 argumentsList, i, (BytecodeParser''append-2 parser, (nth argumentsList i)))
                                     )
 
                                     ;; If a MemberName suffix argument is dropped, the replaced call cannot
@@ -54778,19 +54396,6 @@ ZeroExtendNode'new-4
 )
 
 ;;;
- ; Start node for a Stub's graph.
- ;;
-(class-ns StubStartNode [StartNode, BeginStateSplitNode, AbstractBeginNode, FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, GuardingNode, AnchoringNode, StateSplit, NodeWithState, Single, MemoryCheckpoint, MemoryNode]
-    (defn #_"StubStartNode" StubStartNode'new-1 [#_"Stub" stub]
-        (merge (StubStartNode'class.) (StartNode'new-0)
-            (hash-map
-                #_"Stub" :stub stub
-            )
-        )
-    )
-)
-
-;;;
  ; Provides an implementation of StateSplit.
  ;;
 (class-ns AbstractStateSplit [FixedWithNextNode, FixedNode, ValueNode, Node, StateSplit, NodeWithState]
@@ -55204,12 +54809,6 @@ ZeroExtendNode'new-4
             true
         )
     )
-
-    (§ intrinsic! #_"void" ForeignCallNode'monitorenterStubC-3 [#_"ForeignCallDescriptor" descriptor, #_"Object" object, #_"Word" lock])
-    (§ intrinsic! #_"void" ForeignCallNode'monitorexitStubC-3 [#_"ForeignCallDescriptor" descriptor, #_"Object" object, #_"Word" lock])
-
-    (§ intrinsic! #_"void" ForeignCallNode'g1PreBarrierStub-2 [#_"ForeignCallDescriptor" descriptor, #_"Object" object])
-    (§ intrinsic! #_"void" ForeignCallNode'g1PostBarrierStub-2 [#_"ForeignCallDescriptor" descriptor, #_"Word" card])
 
     (defm ForeignCallNode StateSplit
         (#_"boolean" StateSplit'''hasSideEffect-1 [#_"ForeignCallNode" this]
@@ -58787,6 +58386,7 @@ ZeroExtendNode'new-4
         )
     )
 
+    #_unused
     (defn #_"ReadRegisterNode" ReadRegisterNode'new-4r [#_"Register" register, #_"JavaKind" kind, #_"boolean" directUse, #_"boolean" incoming]
         (ReadRegisterNode'new-4i (StampFactory'forKind-1 kind), register, directUse, incoming)
     )
@@ -58881,12 +58481,45 @@ ZeroExtendNode'new-4
 )
 
 ;;;
+ ; If the stub returns an object, the graph corresponds to this pseudo code:
+ ;
+ ;     Object foreignFunctionStub(args...) {
+ ;         foreignFunction(currentThread, args);
+ ;         if (clearPendingException(thread())) {
+ ;             getAndClearObjectResult(thread());
+ ;             DeoptimizeCallerNode.deopt(InvalidateReprofile, RuntimeConstraint);
+ ;         }
+ ;         return getAndClearObjectResult(thread());
+ ;     }
+ ;
+ ; If the stub returns a primitive or word, the graph corresponds to this pseudo code
+ ; (using {@code int} as the primitive return type):
+ ;
+ ;     int foreignFunctionStub(args...) {
+ ;         int result = foreignFunction(currentThread, args);
+ ;         if (clearPendingException(thread())) {
+ ;             DeoptimizeCallerNode.deopt(InvalidateReprofile, RuntimeConstraint);
+ ;         }
+ ;         return result;
+ ;     }
+ ;
+ ; If the stub is void, the graph corresponds to this pseudo code:
+ ;
+ ;     void foreignFunctionStub(args...) {
+ ;         foreignFunction(currentThread, args);
+ ;         if (clearPendingException(thread())) {
+ ;             DeoptimizeCallerNode.deopt(InvalidateReprofile, RuntimeConstraint);
+ ;         }
+ ;     }
+ ;
+ ; In each example above, the {@code currentThread} argument is the C++ JavaThread value
+ ; (i.e. %r15 on AMD64) and is only prepended if #prependThread is true.
+ ;;
+
+;;;
  ; Node for a foreign call from within a stub.
  ;;
 (class-ns StubForeignCallNode [FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, Multi, MemoryCheckpoint, MemoryNode]
-    (§ intrinsic! #_"void" StubForeignCallNode'newInstanceC-3 [#_"ForeignCallDescriptor" newInstanceC, #_"Word" thread, #_"KlassPointer" hub])
-    (§ intrinsic! #_"void" StubForeignCallNode'newArrayC-4 [#_"ForeignCallDescriptor" newArrayC, #_"Word" thread, #_"KlassPointer" hub, #_"int" length])
-
     #_intrinsifier
     (defn #_"StubForeignCallNode" StubForeignCallNode'new-3* [#_@InjectedNodeParameter #_"Stamp" stamp, #_"ForeignCallDescriptor" descriptor & #_"ValueNode..." arguments]
         (merge (StubForeignCallNode'class.) (FixedWithNextNode'new-1 stamp)
@@ -58897,6 +58530,15 @@ ZeroExtendNode'new-4
             )
         )
     )
+
+    (§ intrinsic! #_"void" StubForeignCallNode'newInstance-3 [#_"ForeignCallDescriptor" descriptor, #_"Word" thread, #_"KlassPointer" hub])
+    (§ intrinsic! #_"void" StubForeignCallNode'newArray-4 [#_"ForeignCallDescriptor" descriptor, #_"Word" thread, #_"KlassPointer" hub, #_"int" length])
+
+    (§ intrinsic! #_"void" StubForeignCallNode'monitorenter-4 [#_"ForeignCallDescriptor" descriptor, #_"Word" thread, #_"Object" object, #_"Word" lock])
+    (§ intrinsic! #_"void" StubForeignCallNode'monitorexit-4 [#_"ForeignCallDescriptor" descriptor, #_"Word" thread, #_"Object" object, #_"Word" lock])
+
+    (§ intrinsic! #_"void" StubForeignCallNode'g1PreBarrier-3 [#_"ForeignCallDescriptor" descriptor, #_"Word" thread, #_"Object" object])
+    (§ intrinsic! #_"void" StubForeignCallNode'g1PostBarrier-3 [#_"ForeignCallDescriptor" descriptor, #_"Word" thread, #_"Word" card])
 
     (defm StubForeignCallNode Multi
         (#_"LocationIdentity*" Multi'''getLocationIdentities-1 [#_"StubForeignCallNode" this]
@@ -61422,7 +61064,7 @@ ZeroExtendNode'new-4
 
     #_intrinsifier
     (defn #_"boolean" ClassGetHubNode'intrinsify-3 [#_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"ValueNode" clazz]
-        (BytecodeParser''push-3 parser, JavaKind/Object, (GraphBuilder'''append-2 parser, (ClassGetHubNode'create-2 clazz, false)))
+        (BytecodeParser''push-3 parser, JavaKind/Object, (BytecodeParser''append-2 parser, (ClassGetHubNode'create-2 clazz, false)))
         true
     )
 
@@ -62266,7 +61908,7 @@ ZeroExtendNode'new-4
                     (PiNode'new-3 object, stamp, guard)
                 )
         ]
-            (BytecodeParser''push-3 parser, JavaKind/Object, (GraphBuilder'''append-2 parser, value))
+            (BytecodeParser''push-3 parser, JavaKind/Object, (BytecodeParser''append-2 parser, value))
             true
         )
     )
@@ -67326,9 +66968,9 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"Stamp" Plugins''getOverridingStamp-4 [#_"Plugins" this, #_"GraphBuilder" b, #_"JavaType" type, #_"boolean" never-nil?]
+    (defn #_"Stamp" Plugins''getOverridingStamp-4 [#_"Plugins" this, #_"BytecodeParser" parser, #_"JavaType" type, #_"boolean" never-nil?]
         (loop-when [#_"ISeq" s (seq (:typePlugins this))] (some? s)
-            (or (TypePlugin'''interceptType-4 (first s), b, type, never-nil?)
+            (or (TypePlugin'''interceptType-4 (first s), parser, type, never-nil?)
                 (recur (next s))
             )
         )
@@ -68731,14 +68373,14 @@ ZeroExtendNode'new-4
      ;;
     (defm Replacements InlineInvokePlugin
         (#_"InlineInvokeInfo" InlineInvokePlugin'''shouldInlineInvoke-4 [#_"Replacements" this, #_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"ValueNode[]" args]
-            (when (GraphBuilder'''parsingIntrinsic-1 parser)
+            (when (BytecodeParser''parsingIntrinsic-1 parser)
                 ;; force inlining when parsing replacements
                 (InlineInvokeInfo'createIntrinsicInlineInfo-1 method)
             )
         )
 
         (#_"void" InlineInvokePlugin'''notifyNotInlined-4 [#_"Replacements" this, #_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"InvokeNode" invoke]
-            (when (GraphBuilder'''parsingIntrinsic-1 parser)
+            (when (BytecodeParser''parsingIntrinsic-1 parser)
                 (let [
                     #_"IntrinsicContext" intrinsic (:intrinsicContext parser)
                 ]
@@ -72903,216 +72545,6 @@ ZeroExtendNode'new-4
     (§ def #_"VoidStamp" VoidStamp'instance (VoidStamp'new-0))
 )
 
-(class-ns Structure []
-    (defn #_"Structure" Structure'new-0 []
-        (Structure'class.)
-    )
-)
-
-(class-ns IfStructure [Structure]
-    (defn #_"IfStructure" IfStructure'new-0 []
-        (merge (IfStructure'class.) (Structure'new-0)
-            (hash-map
-                #_"IfState" :state nil
-                #_"FixedNode" :thenPart nil
-                #_"FixedNode" :elsePart nil
-            )
-        )
-    )
-)
-
-(class-ns Stub []
-    ;;;
-     ; Creates a new stub.
-     ;
-     ; @param linkage linkage details for a call to the stub
-     ;;
-    (defn #_"Stub" Stub'new-1 [#_"ForeignCallLinkage" linkage]
-        (merge (Stub'class.)
-            (hash-map
-                ;;;
-                 ; The linkage information for a call to this stub from compiled code.
-                 ;;
-                #_"ForeignCallLinkage" :linkage linkage
-                ;;;
-                 ; The code installed for the stub.
-                 ;;
-                #_"InstalledCode" :code nil
-            )
-        )
-    )
-
-    ;;;
-     ; Determines if this stub preserves all registers apart from those it
-     ; {@linkplain #getDestroyedCallerRegisters() destroys}.
-     ;;
-    (defn #_"boolean" Stub''preservesRegisters-1 [#_"Stub" this]
-        true
-    )
-
-    ;;;
-     ; Gets the code for this stub, compiling it first if necessary.
-     ;;
-    (defn #_"InstalledCode" Stub''getCode-1 [#_"Stub" this]
-        (locking this
-            (when (nil? (:code this))
-                (§ ass! this (assoc this :code (#_"CodeCacheProvider" .installCode HotSpot'codeCache, nil, (Compiler'createCompiledCode-1 (Compiler'compileStub-1 this)), nil, nil, false)))
-            )
-
-            (:code this)
-        )
-    )
-)
-
-;;;
- ; A {@linkplain #getGraph generated} stub for a {@link Transition non-leaf} foreign call from compiled code.
- ; A stub is required for such calls as the caller may be scheduled for deoptimization while the call is in progress.
- ; And since these are foreign/runtime calls on slow paths, we don't want to force the register allocator to spill
- ; around the call. As such, this stub saves and restores all allocatable registers.
- ; It also {@linkplain StubUtil#handlePendingException(Word, boolean) handles} any exceptions raised during the foreign call.
- ;;
-(class-ns ForeignCallStub [Stub]
-    (defn- #_"Class[]" ForeignCallStub'createTargetParameters-2 [#_"ForeignCallDescriptor" descriptor, #_"boolean" prependThread]
-        (let [
-            #_"Class[]" parameters (#_"Object" .clone (:argumentTypes descriptor))
-        ]
-            (when prependThread => parameters
-                (let [
-                    #_"Class[]" a (make-array Class (inc (count parameters)))
-                ]
-                    (System/arraycopy parameters, 0, a, 1, (count parameters))
-                    (aset a 0 Word'iface)
-                    a
-                )
-            )
-        )
-    )
-
-    ;;;
-     ; Creates a stub for a call to code at a given address.
-     ;
-     ; @param address the address of the code to call
-     ; @param descriptor the signature of the call to this stub
-     ; @param prependThread true if the JavaThread value for the current thread is to be prepended
-     ;            to the arguments for the call to {@code address}
-     ; @param reexecutable specifies if the stub call can be re-executed without (meaningful) side effects.
-     ;            Deoptimization will not return to a point before a stub call that cannot be re-executed.
-     ; @param killedLocations the memory locations killed by the stub call
-     ;;
-    (defn #_"ForeignCallStub" ForeignCallStub'new-6* [#_"long" address, #_"ForeignCallDescriptor" descriptor, #_"boolean" prependThread, #_"Transition" transition, #_"boolean" reexecutable & #_"LocationIdentity..." killedLocations]
-        (let [
-            #_"ForeignCallDescriptor" targetSig (apply ForeignCallDescriptor'new-2* (:resultType descriptor), (ForeignCallStub'createTargetParameters-2 descriptor, prependThread))
-        ]
-            (merge (ForeignCallStub'class.) (Stub'new-1 (apply ForeignCallLinkage'create-8* descriptor, 0, RegisterEffect'PRESERVES_REGISTERS, HotSpotCallingConventionType/JavaCall, HotSpotCallingConventionType/JavaCallee, transition, reexecutable, killedLocations))
-                (hash-map
-                    ;;;
-                     ; Linkage target for the call from this stub.
-                     ;;
-                    #_"ForeignCallLinkage" :target (apply ForeignCallLinkage'create-8* targetSig, address, RegisterEffect'DESTROYS_REGISTERS, HotSpotCallingConventionType/NativeCall, HotSpotCallingConventionType/NativeCall, transition, reexecutable, killedLocations)
-                    ;;;
-                     ; Specifies if the JavaThread value for the current thread is to be prepended to the arguments for the call to #target.
-                     ;;
-                    #_"boolean" :prependThread prependThread
-                )
-            )
-        )
-    )
-
-    (defn- #_"ParameterNode[]" ForeignCallStub''createParameters-3 [#_"ForeignCallStub" this, #_"GraphKit" kit, #_"Class*" args]
-        (let [
-            #_"ParameterNode[]" params (make-array ParameterNode'iface (count args))
-            #_"ResolvedJavaType" accessingClass (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, (#_"Object" .getClass this))
-        ]
-            (dotimes [#_"int" i (count args)]
-                (let [
-                    #_"ResolvedJavaType" type (#_"ResolvedJavaType" .resolve (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, (nth args i)), accessingClass)
-                ]
-                    (aset params i (GraphKit''add-2 kit, (ParameterNode'new-2 i, (StampFactory'forDeclaredType-2 type, false))))
-                )
-            )
-            params
-        )
-    )
-
-    (defn- #_"StubForeignCallNode" ForeignCallStub''createTargetCall-4 [#_"ForeignCallStub" this, #_"GraphKit" kit, #_"ParameterNode*" params, #_"ReadRegisterNode" thread]
-        (let [
-            #_"Stamp" stamp (StampFactory'forKind-1 (JavaKind/fromJavaClass (:resultType (:descriptor (:target this)))))
-            params
-                (when (:prependThread this) => params
-                    (let [
-                        #_"ValueNode[]" a (make-array ValueNode'iface (inc (count params)))
-                    ]
-                        (aset a 0 thread)
-                        (System/arraycopy params, 0, a, 1, (count params))
-                        a
-                    )
-                )
-        ]
-            (GraphBuilder'''append-2 kit, (apply StubForeignCallNode'new-3* stamp, (:descriptor (:target this)), params))
-        )
-    )
-
-    ;;;
-     ; Creates a graph for this stub.
-     ;
-     ; If the stub returns an object, the graph created corresponds to this pseudo code:
-     ;
-     ;     Object foreignFunctionStub(args...) {
-     ;         foreignFunction(currentThread,  args);
-     ;         if (clearPendingException(thread())) {
-     ;             getAndClearObjectResult(thread());
-     ;             DeoptimizeCallerNode.deopt(InvalidateReprofile, RuntimeConstraint);
-     ;         }
-     ;         return getAndClearObjectResult(thread());
-     ;     }
-     ;
-     ; If the stub returns a primitive or word, the graph created corresponds to this pseudo code
-     ; (using {@code int} as the primitive return type):
-     ;
-     ;     int foreignFunctionStub(args...) {
-     ;         int result = foreignFunction(currentThread,  args);
-     ;         if (clearPendingException(thread())) {
-     ;             DeoptimizeCallerNode.deopt(InvalidateReprofile, RuntimeConstraint);
-     ;         }
-     ;         return result;
-     ;     }
-     ;
-     ; If the stub is void, the graph created corresponds to this pseudo code:
-     ;
-     ;     void foreignFunctionStub(args...) {
-     ;         foreignFunction(currentThread,  args);
-     ;         if (clearPendingException(thread())) {
-     ;             DeoptimizeCallerNode.deopt(InvalidateReprofile, RuntimeConstraint);
-     ;         }
-     ;     }
-     ;
-     ; In each example above, the {@code currentThread} argument is the C++ JavaThread value
-     ; (i.e. %r15 on AMD64) and is only prepended if #prependThread is true.
-     ;;
-    (defm ForeignCallStub Stub
-        (#_"Graph" Stub'''getStubGraph-1 [#_"ForeignCallStub" this]
-            (let [
-                #_"Class[]" args (#_"Object" .clone (:argumentTypes (:descriptor (:linkage this))))
-                #_"boolean" isObjectResult (not (LIRKind'isValue-1v (#_"CallingConvention" .getReturn (:outgoingCallingConvention (:linkage this)))))
-                #_"ResolvedJavaMethod" thisMethod (#_"MetaAccessProvider" .lookupJavaMethod HotSpot'metaAccess, (#_"Class" .getDeclaredMethod ForeignCallStub'iface, "getStubGraph"))
-                #_"GraphKit" kit (GraphKit'new-1 thisMethod)
-                #_"ParameterNode[]" params (ForeignCallStub''createParameters-3 this, kit, args)
-                #_"ReadRegisterNode" thread (GraphBuilder'''append-2 kit, (ReadRegisterNode'new-4r HotSpot'threadRegister, WordTypes'wordKind, true, false))
-                #_"ValueNode" result (ForeignCallStub''createTargetCall-4 this, kit, params, thread)
-                _ (GraphKit''createInvoke-4* kit, (ß StubUtil), "handlePendingException", thread, (ConstantNode'forBoolean-2 isObjectResult, (:graph kit)))
-                result
-                    (when isObjectResult => result
-                        (GraphKit''createInvoke-4* kit, (ß ReplacementsUtil), "getAndClearObjectResult", thread)
-                    )
-            ]
-                (GraphBuilder'''append-2 kit, (ReturnNode'new-1 (when-not (= (:resultType (:descriptor (:linkage this))) void'class) result)))
-                (GraphKit''inlineInvokes-1 kit)
-                (Phase'''run-3 (RemoveValueProxyPhase'new-0), (:graph kit), nil)
-            )
-        )
-    )
-)
-
 (class-ns SuccessorInfo []
     (defn #_"SuccessorInfo" SuccessorInfo'new-1 [#_"int" blockSuccessorIndex]
         (merge (SuccessorInfo'class.)
@@ -75750,7 +75182,7 @@ ZeroExtendNode'new-4
     )
 
     (defm WordOperationPlugin TypePlugin
-        (#_"Stamp" TypePlugin'''interceptType-4 [#_"WordOperationPlugin" this, #_"GraphBuilder" b, #_"JavaType" type, #_"boolean" never-nil?]
+        (#_"Stamp" TypePlugin'''interceptType-4 [#_"WordOperationPlugin" this, #_"BytecodeParser" parser, #_"JavaType" type, #_"boolean" never-nil?]
             (when (instance? ResolvedJavaType type)
                 (cond
                     (WordTypes'isWord-1j type)
@@ -76249,14 +75681,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"CallingConvention" Compiler'makeCallingConvention-2 [#_"Graph" graph, #_"Stub" stub]
-        (if (some? stub)
-            (:incomingCallingConvention (:linkage stub))
-            (CodeUtil/getCallingConvention HotSpot'codeCache, HotSpotCallingConventionType/JavaCallee, (:rootMethod graph), HotSpot'valueKindFactory)
-        )
-    )
-
-    (defn #_"LIRGenerationResult" Compiler'emitLIR-3 [#_"Graph" graph, #_"Stub" stub, #_"LIRSuites" suites]
+    (defn #_"LIRGenerationResult" Compiler'emitLIR-2 [#_"Graph" graph, #_"LIRSuites" suites]
         (let [
             #_"ScheduleResult" schedule (:lastSchedule graph)
             #_"Block[]" blocks (:reversePostOrder (:cfg schedule))
@@ -76264,7 +75689,8 @@ ZeroExtendNode'new-4
             #_"Block[]" codeEmittingOrder (ComputeBlockOrder'computeCodeEmittingOrder-2 (count blocks), startBlock)
             #_"Block[]" linearScanOrder (ComputeBlockOrder'computeLinearScanOrder-2 (count blocks), startBlock)
             #_"LIR" lir (LIR'new-3 (:cfg schedule), linearScanOrder, codeEmittingOrder)
-            #_"LIRGenerationResult" res (LIRGenerationResult'new-4 lir, (AMD64FrameMapBuilder'new-1 (AMD64FrameMap'new-0)), (Compiler'makeCallingConvention-2 graph, stub), stub)
+            #_"CallingConvention" callingConvention (CodeUtil/getCallingConvention HotSpot'codeCache, HotSpotCallingConventionType/JavaCallee, (:rootMethod graph), HotSpot'valueKindFactory)
+            #_"LIRGenerationResult" res (LIRGenerationResult'new-3 lir, (AMD64FrameMapBuilder'new-1 (AMD64FrameMap'new-0)), callingConvention)
             #_"LIRGenerator" gen (LIRGenerator'new-1 res)
             #_"LIRBuilder" builder (LIRBuilder'new-2 graph, gen)
         ]
@@ -76273,9 +75699,9 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"CompilationResult" Compiler'emitBackEnd-3 [#_"Graph" graph, #_"Stub" stub, #_"LIRSuites" suites]
+    (defn #_"CompilationResult" Compiler'emitBackEnd-2 [#_"Graph" graph, #_"LIRSuites" suites]
         (let [
-            #_"Assembler" asm (Assembler'new-1 (Compiler'emitLIR-3 graph, stub, suites))
+            #_"Assembler" asm (Assembler'new-1 (Compiler'emitLIR-2 graph, suites))
         ]
             (§ ass! asm (Assembler''assemble-1 asm))
             (Assembler''finish-1 asm)
@@ -76284,35 +75710,12 @@ ZeroExtendNode'new-4
 
     (defn #_"CompilationResult" Compiler'compileGraph-1 [#_"Graph" graph]
         (Compiler'emitFrontEnd-3 graph, OptimisticOptimizations'ALL, (Suites'createSuites-0))
-        (Compiler'emitBackEnd-3 graph, nil, (Suites'createLIRSuites-0))
+        (Compiler'emitBackEnd-2 graph, (Suites'createLIRSuites-0))
     )
 
     #_unused
     (defn #_"CompilationResult" Compiler'compileMethod-1 [#_"ResolvedJavaMethod" method]
         (Compiler'compileGraph-1 (Graph'new-1 method))
-    )
-
-    (defn #_"CompilationResult" Compiler'compileStub-1 [#_"Stub" stub]
-        (let [
-            #_"Graph" graph (Stub'''getStubGraph-1 stub)
-        ]
-            (when-not (satisfies? StubStartNode (:start graph))
-                (let [
-                    #_"StubStartNode" newStart (Graph''add-2 graph, (StubStartNode'new-1 stub))
-                ]
-                    (StateSplit'''setStateAfter-2 newStart, (:stateAfter (:start graph)))
-                    (§ ass! graph (Graph''replaceFixed-3 graph, (:start graph), newStart))
-                )
-            )
-
-            (let [
-                #_"Suites" suites (Suites'createSuites-0)
-                suites (Suites'new-3 (PhaseSuite'new-0), (:midTier suites), (:lowTier suites))
-            ]
-                (Compiler'emitFrontEnd-3 graph, OptimisticOptimizations'ALL, suites)
-                (Compiler'emitBackEnd-3 graph, stub, (Suites'createLIRSuites-0))
-            )
-        )
     )
 
     ;;;
