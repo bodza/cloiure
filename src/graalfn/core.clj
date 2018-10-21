@@ -129,8 +129,8 @@
     [jdk.vm.ci.meta
         AllocatableValue Constant ConstantPool ConstantReflectionProvider DeoptimizationAction DeoptimizationReason
         InvokeTarget JavaConstant JavaField JavaKind JavaMethod JavaType MemoryAccessProvider MetaAccessProvider
-        MethodHandleAccessProvider MethodHandleAccessProvider$IntrinsicMethod PlatformKind PrimitiveConstant RawConstant
-        ResolvedJavaField ResolvedJavaMethod ResolvedJavaType Signature TriState VMConstant Value ValueKind
+        PlatformKind PrimitiveConstant RawConstant ResolvedJavaField ResolvedJavaMethod ResolvedJavaType Signature
+        TriState VMConstant Value ValueKind
     ]
     [jdk.vm.ci.runtime JVMCIBackend]
 
@@ -834,7 +834,6 @@ BytecodeParser''getInvokeReturnStamp-1
 BytecodeParser''getInvokeReturnType-1
 BytecodeParser''getNonIntrinsicAncestor-1
 BytecodeParser''getParent-1
-BytecodeParser''handleReplacedInvoke-5
 BytecodeParser''handleUnresolvedCheckCast-3
 BytecodeParser''handleUnresolvedInstanceOf-3
 BytecodeParser''handleUnresolvedInvoke-3
@@ -2772,9 +2771,6 @@ MethodCallTargetNode''returnKind-1
 MethodCallTargetNode'devirtualizeCall-4
 MethodCallTargetNode'findSpecialCallTarget-4
 MethodCallTargetNode'new-4
-MethodHandleNode'new-6*
-MethodHandleNode'tryResolveTargetInvoke-7*
-MethodHandlePlugin'new-2
 MethodInvocation''buildCallsiteHolderForElement-2
 MethodInvocation''incrementProcessedGraphs-1
 MethodInvocation''isRoot-1
@@ -3316,7 +3312,6 @@ ReplacementsUtil'writePendingDeoptimization-2
 ReplacementsUtil'writeTlabTop-2
 ResolvedJavaMethodBytecode'new-1
 ResolvedJavaMethodBytecodeProvider'INSTANCE
-ResolvedMethodHandleCallTargetNode'new-7
 ReturnNode''setMemoryMap-2
 ReturnNode'new-1
 ReturnNode'new-2
@@ -4846,19 +4841,6 @@ ZeroExtendNode'new-4
 (defp GetClassNode)
 (defp GetObjectAddressNode)
 (defp Graph)
-
-;;;
- ; A simple utility class for adding nodes to the graph when building a MethodHandle invoke.
- ;;
-(defp GraphAdder
-    ;;;
-     ; Call Graph#addOrUnique(Node) on {@code node} and link any FixedWithNextNodes into the current control flow.
-     ;
-     ; @return the newly added node
-     ;;
-    (#_"ValueNode" GraphAdder'''add-2 [#_"GraphAdder" this, #_"ValueNode" node])
-)
-
 (defp GraphBuilderInstance)
 (defp GraphBuilderPhase)
 (defp GraphEffectList)
@@ -5571,8 +5553,6 @@ ZeroExtendNode'new-4
 
 (defp MethodCallOp)
 (defp MethodCallTargetNode)
-(defp MethodHandleNode)
-(defp MethodHandlePlugin)
 (defp MethodInvocation)
 (defp MethodKey)
 (defp MethodRef)
@@ -6008,7 +5988,6 @@ ZeroExtendNode'new-4
 (defp Replacements)
 (defp ResolvedJavaMethodBytecode)
 (defp ResolvedJavaMethodBytecodeProvider)
-(defp ResolvedMethodHandleCallTargetNode)
 (defp ReturnNode)
 (defp ReturnOp)
 (defp ReturnToCallerData)
@@ -20080,7 +20059,6 @@ ZeroExtendNode'new-4
                     #_"CurrentInvoke" :currentInvoke nil
                     #_"FrameStateBuilder" :frameState nil
                     #_"BciBlock" :currentBlock nil
-                    #_"boolean" :forceInliningEverything false
                 )
             )
         )
@@ -20885,16 +20863,11 @@ ZeroExtendNode'new-4
             (let [
                 #_"int" cpi (BytecodeStream''readCPI-1 (:stream this))
             ]
-                ;; Special handling for runtimes that rewrite an invocation of MethodHandle.invoke(...) or
-                ;; MethodHandle.invokeExact(...) to a static adapter. HotSpot does this - see
-                ;; https://wiki.openjdk.java.net/display/HotSpot/Method+handles+and+invokedynamic
-
                 (or (BytecodeParser''genDynamicInvokeHelper-4 this, target, cpi, Bytecodes'INVOKEVIRTUAL)
                     (let [
                         #_"ValueNode[]" args (FrameStateBuilder''popArguments-2 (:frameState this), (#_"Signature" .getParameterCount (#_"JavaMethod" .getSignature target), true))
                     ]
                         (BytecodeParser''appendInvoke-4 this, InvokeKind'Virtual, target, args)
-
                         true
                     )
                 )
@@ -20934,32 +20907,6 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"JavaType" BytecodeParser''getInvokeReturnType-1 [#_"BytecodeParser" this]
         (when (some? (:currentInvoke this)) (:returnType (:currentInvoke this)))
-    )
-
-    ;;;
-     ; Handles an invocation that a plugin determines can replace the original invocation (i.e. the one
-     ; for which the plugin was applied). This applies all standard graph builder processing to the replaced
-     ; invocation including applying any relevant plugins.
-     ;
-     ; @param invokeKind the kind of the replacement invocation
-     ; @param targetMethod the target of the replacement invocation
-     ; @param args the arguments to the replacement invocation
-     ; @param forceInliningEverything specifies if all invocations encountered in the scope of handling
-     ;            the replaced invoke are to be force inlined
-     ;;
-    (defn #_"BytecodeParser" BytecodeParser''handleReplacedInvoke-5 [#_"BytecodeParser" this, #_"InvokeKind" invokeKind, #_"ResolvedJavaMethod" targetMethod, #_"ValueNode[]" args, #_"boolean" forceInliningEverything]
-        (let [
-            #_"boolean" previous (:forceInliningEverything this)
-            this (assoc this :forceInliningEverything (or previous forceInliningEverything))
-        ]
-            (try
-                (BytecodeParser''appendInvoke-4 this, invokeKind, targetMethod, args)
-                (finally
-                    (§ ass! this (assoc this :forceInliningEverything previous))
-                )
-            )
-            this
-        )
     )
 
     (defn- #_"boolean" BytecodeParser''tryNodePluginForInvocation-3 [#_"BytecodeParser" this, #_"ValueNode[]" args, #_"ResolvedJavaMethod" targetMethod]
@@ -21119,13 +21066,13 @@ ZeroExtendNode'new-4
 
     ;;;
      ; Try to inline a method. If the method was inlined, returns #SUCCESSFULLY_INLINED.
-     ; Otherwise, it returns the InlineInvokeInfo that lead to the decision to not
-     ; inline it, or nil if there is no InlineInvokeInfo for this method.
+     ; Otherwise, it returns the InlineInvokeInfo that lead to the decision to not inline it,
+     ; or nil if there is no InlineInvokeInfo for this method.
      ;;
     (defn- #_"InlineInvokeInfo" BytecodeParser''tryInline-3 [#_"BytecodeParser" this, #_"ValueNode[]" args, #_"ResolvedJavaMethod" targetMethod]
-        (when (or (:forceInliningEverything this) (BytecodeParser''parsingIntrinsic-1 this) (#_"ResolvedJavaMethod" .canBeInlined targetMethod))
-            (if (:forceInliningEverything this)
-                (when (BytecodeParser''inline-5 this, targetMethod, targetMethod, nil, args)
+        (when (or (BytecodeParser''parsingIntrinsic-1 this) (#_"ResolvedJavaMethod" .canBeInlined targetMethod))
+            (if false
+                (when (BytecodeParser''inline-5 this, targetMethod, targetMethod, nil, args)
                     BytecodeParser'SUCCESSFULLY_INLINED
                 )
                 (loop [#_"ISeq" s (seq (:inlineInvokePlugins HotSpot'plugins))]
@@ -49171,124 +49118,6 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns MethodHandlePlugin [NodePlugin]
-    (defn #_"MethodHandlePlugin" MethodHandlePlugin'new-2 [#_"MethodHandleAccessProvider" methodHandleAccess, #_"boolean" safeForDeoptimization]
-        (merge (MethodHandlePlugin'class.)
-            (hash-map
-                #_"MethodHandleAccessProvider" :methodHandleAccess methodHandleAccess
-                #_"boolean" :safeForDeoptimization safeForDeoptimization
-            )
-        )
-    )
-
-    (defn- #_"int" MethodHandlePlugin'countRecursiveInlining-2 [#_"BytecodeParser" parser, #_"ResolvedJavaMethod" method]
-        (loop-when-recur [#_"int" n 0 parser (BytecodeParser''getParent-1 parser)]
-                         (some? parser)
-                         [(if (= method (:method parser)) (inc n) n) (BytecodeParser''getParent-1 parser)]
-                      => n
-        )
-    )
-
-    (defm MethodHandlePlugin NodePlugin
-        (#_"boolean" NodePlugin'''handleInvoke-4 [#_"MethodHandlePlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"ValueNode[]" args]
-            (let [
-                #_"MethodHandleAccessProvider$IntrinsicMethod" intrinsicMethod (#_"MethodHandleAccessProvider" .lookupMethodHandleIntrinsic (:methodHandleAccess this), method)
-            ]
-                (and (some? intrinsicMethod)
-                    (let [
-                        #_"InvokeKind" invokeKind (BytecodeParser''getInvokeKind-1 parser)
-                    ]
-                        (when-not (= invokeKind InvokeKind'Static)
-                            (§ aset! args 0 (BytecodeParser''nullCheckedValue-2 parser, (nth args 0)))
-                        )
-
-                        (let [
-                            #_"Stamp" invokeReturnStamp (BytecodeParser''getInvokeReturnStamp-1 parser)
-                            #_"GraphAdder" adder
-                                (reify GraphAdder
-                                    (#_"ValueNode" GraphAdder'''add-2 [#_"GraphAdder" this, #_"ValueNode" node]
-                                        (BytecodeParser''add-2 parser, node)
-                                    )
-                                )
-                            #_"InvokeNode" invoke (apply MethodHandleNode'tryResolveTargetInvoke-7* adder, (:methodHandleAccess this), intrinsicMethod, method, (BytecodeParser''bci-1 parser), invokeReturnStamp, args)
-                        ]
-                            (if (nil? invoke)
-                                (let [
-                                    #_"MethodHandleNode" methodHandleNode (apply MethodHandleNode'new-6* intrinsicMethod, invokeKind, method, (BytecodeParser''bci-1 parser), invokeReturnStamp, args)
-                                ]
-                                    (if (= (Stamp'''getStackKind-1 invokeReturnStamp) JavaKind/Void)
-                                        (BytecodeParser''add-2 parser, methodHandleNode)
-                                        (BytecodeParser''addPush-3 parser, (Stamp'''getStackKind-1 invokeReturnStamp), methodHandleNode)
-                                    )
-                                    true
-                                )
-                                (let [
-                                    #_"CallTargetNode" callTarget (:callTarget invoke)
-                                    #_"NodeInputList<ValueNode>" argumentsList (:arguments callTarget)
-                                ]
-                                    (dotimes [#_"int" i (count argumentsList)]
-                                        (NodeList''initialize-3 argumentsList, i, (BytecodeParser''append-2 parser, (nth argumentsList i)))
-                                    )
-
-                                    ;; If a MemberName suffix argument is dropped, the replaced call cannot
-                                    ;; deoptimized since the necessary frame state cannot be reconstructed.
-                                    ;; As such, it needs to recursively inline everything.
-                                    (let [
-                                        #_"boolean" inlineEverything (and (:safeForDeoptimization this) (not= (count args) (count argumentsList)))
-                                        #_"ResolvedJavaMethod" targetMethod (:targetMethod callTarget)
-                                    ]
-                                        (if (and inlineEverything (not (#_"ResolvedJavaMethod" .hasBytecodes targetMethod)))
-                                            false ;; we need to force-inline but we can not, leave the invoke as-is
-                                            (and (<= (MethodHandlePlugin'countRecursiveInlining-2 parser, targetMethod) GraalOptions'maximumRecursiveInlining)
-                                                (do
-                                                    (§ ass! parser (BytecodeParser''handleReplacedInvoke-5 parser, (InvokeNode''getInvokeKind-1 invoke), targetMethod, (into-array ValueNode'iface argumentsList), inlineEverything))
-                                                    true
-                                                )
-                                            )
-                                        )
-                                    )
-                                )
-                            )
-                        )
-                    )
-                )
-            )
-        )
-
-        (#_"boolean" NodePlugin'''handleLoadField-4 [#_"MethodHandlePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaField" field]
-            false
-        )
-
-        (#_"boolean" NodePlugin'''handleLoadStaticField-3 [#_"MethodHandlePlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaField" field]
-            false
-        )
-
-        (#_"boolean" NodePlugin'''handleStoreField-5 [#_"MethodHandlePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaField" field, #_"ValueNode" value]
-            false
-        )
-
-        (#_"boolean" NodePlugin'''handleStoreStaticField-4 [#_"MethodHandlePlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaField" field, #_"ValueNode" value]
-            false
-        )
-
-        (#_"boolean" NodePlugin'''handleLoadIndexed-5 [#_"MethodHandlePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" array, #_"ValueNode" index, #_"JavaKind" elementKind]
-            false
-        )
-
-        (#_"boolean" NodePlugin'''handleStoreIndexed-6 [#_"MethodHandlePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" array, #_"ValueNode" index, #_"JavaKind" elementKind, #_"ValueNode" value]
-            false
-        )
-
-        (#_"boolean" NodePlugin'''handleCheckCast-4 [#_"MethodHandlePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaType" type]
-            false
-        )
-
-        (#_"boolean" NodePlugin'''handleInstanceOf-4 [#_"MethodHandlePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaType" type]
-            false
-        )
-    )
-)
-
 ;;;
  ; An instance of this class denotes a callsite being analyzed for inlining.
  ;
@@ -51241,51 +51070,6 @@ ZeroExtendNode'new-4
                 )
             )
             nil
-        )
-    )
-)
-
-;;;
- ; A call target that replaces itself in the graph when being lowered by restoring the original MethodHandle
- ; invocation target. Prior to https://bugs.openjdk.java.net/browse/JDK-8072008, this is required for when a
- ; MethodHandle call is resolved to a constant target but the target was not inlined. In that case,
- ; the original invocation must be restored with all of its original arguments. Why?
- ; HotSpot linkage for MethodHandle intrinsics (see {@code MethodHandles::generate_method_handle_dispatch})
- ; expects certain implicit arguments to be on the stack such as the MemberName suffix argument for a call to
- ; one of the MethodHandle.linkTo* methods. An {@linkplain MethodHandleNode#tryResolveTargetInvoke resolved}
- ; MethodHandle invocation drops these arguments which means the interpreter won't find them.
- ;;
-(class-ns ResolvedMethodHandleCallTargetNode [MethodCallTargetNode, CallTargetNode, ValueNode, Node, LIRLowerable, Simplifiable, Lowerable]
-    ;;;
-     ; Creates a call target for an invocation on a direct target derived by resolving a constant MethodHandle.
-     ;;
-    (defn #_"ResolvedMethodHandleCallTargetNode" ResolvedMethodHandleCallTargetNode'new-7 [#_"InvokeKind" invokeKind, #_"ResolvedJavaMethod" targetMethod, #_"ValueNode*" arguments, #_"Stamp" returnStamp, #_"ResolvedJavaMethod" originalTargetMethod, #_"ValueNode*" originalArguments, #_"Stamp" originalReturnStamp]
-        (merge (ResolvedMethodHandleCallTargetNode'class.) (MethodCallTargetNode'new-4 invokeKind, targetMethod, arguments, returnStamp)
-            (hash-map
-                #_"ResolvedJavaMethod" :originalTargetMethod originalTargetMethod
-                #_"Stamp" :originalReturnStamp originalReturnStamp
-                ; @Input
-                #_"NodeInputList<ValueNode>" :originalArguments (NodeInputList'new-2s (ß this), originalArguments)
-            )
-        )
-    )
-
-    (defm ResolvedMethodHandleCallTargetNode Lowerable
-        (#_"void" Lowerable'''lower-2 [#_"ResolvedMethodHandleCallTargetNode" this, #_"LoweringTool" lowerer]
-            (let [
-                #_"InvokeKind" replacementInvokeKind (if (#_"ResolvedJavaMethod" .isStatic (:originalTargetMethod this)) InvokeKind'Static InvokeKind'Special)
-                #_"MethodCallTargetNode" replacement (Graph''add-2 (:graph this), (MethodCallTargetNode'new-4 replacementInvokeKind, (:originalTargetMethod this), (into-array ValueNode'iface (:originalArguments this)), (:originalReturnStamp this)))
-            ]
-                ;; Replace myself...
-                (§ ass! this (Node''replaceAndDelete-2 this, replacement))
-            )
-            nil
-        )
-    )
-
-    (defm ResolvedMethodHandleCallTargetNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"ResolvedMethodHandleCallTargetNode" this, #_"LIRBuilder" builder]
-            (throw! "should have replaced itself")
         )
     )
 )
@@ -57812,243 +57596,6 @@ ZeroExtendNode'new-4
     (defm MacroStateSplitNode Single
         (#_"LocationIdentity" Single'''getLocationIdentity-1 [#_"MacroStateSplitNode" this]
             LocationIdentity'ANY
-        )
-    )
-)
-
-;;;
- ; Node for invocation methods defined on the class MethodHandle.
- ;;
-(class-ns MethodHandleNode [MacroStateSplitNode, MacroNode, FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable, StateSplit, NodeWithState, Single, MemoryCheckpoint, MemoryNode, Simplifiable]
-    (defn #_"MethodHandleNode" MethodHandleNode'new-6* [#_"MethodHandleAccessProvider$IntrinsicMethod" intrinsicMethod, #_"InvokeKind" invokeKind, #_"ResolvedJavaMethod" targetMethod, #_"int" bci, #_"Stamp" returnStamp & #_"ValueNode..." arguments]
-        (merge (MethodHandleNode'class.) (apply MacroStateSplitNode'new-5* invokeKind, targetMethod, bci, returnStamp, arguments)
-            (hash-map
-                #_"MethodHandleAccessProvider$IntrinsicMethod" :intrinsicMethod intrinsicMethod
-            )
-        )
-    )
-
-    ;;;
-     ; Get the receiver of a MethodHandle.invokeBasic call.
-     ;
-     ; @return the receiver argument node
-     ;;
-    (defn- #_"ValueNode" MethodHandleNode'getReceiver-1 [#_"ValueNode*" arguments]
-        (nth arguments 0)
-    )
-
-    ;;;
-     ; Get the MemberName argument of a MethodHandle.linkTo* call.
-     ;
-     ; @return the MemberName argument node (which is the last argument)
-     ;;
-    (defn- #_"ValueNode" MethodHandleNode'getMemberName-1 [#_"ValueNode*" arguments]
-        (nth arguments (dec (count arguments)))
-    )
-
-    ;;;
-     ; Inserts a node to cast the argument at index to the given type if the given type is more concrete than the argument type.
-     ;
-     ; @param index of the argument to be cast
-     ; @param type the type the argument should be cast to
-     ;;
-    (defn- #_"void" MethodHandleNode'maybeCastArgument-4 [#_"GraphAdder" adder, #_"ValueNode[]" arguments, #_"int" index, #_"JavaType" type]
-        (when (and (instance? ResolvedJavaType type) (not (#_"ResolvedJavaType" .isJavaLangObject type)))
-            (let [
-                #_"TypeReference" targetType (TypeReference'create-1 type)
-                #_"ValueNode" argument (nth arguments index)
-            ]
-                ;; When an argument is a Word type, we can have a mismatch of primitive/object types here.
-                ;; Not inserting a PiNode is a safe fallback, and Word types need no additional type information anyway.
-                (when (and (some? targetType) (not (#_"ResolvedJavaType" .isPrimitive (:type targetType))) (not (#_"JavaKind" .isPrimitive (ValueNode''getStackKind-1 argument))))
-                    (let [
-                        #_"ResolvedJavaType" argumentType (StampTool'typeOrNull-1 (:stamp argument))
-                    ]
-                        (when (or (nil? argumentType) (and (#_"ResolvedJavaType" .isAssignableFrom argumentType, (:type targetType)) (not (= argumentType (:type targetType)))))
-                            (let [
-                                #_"LogicNode" logic (InstanceOfNode'createAllowNull-2 targetType, argument)
-                            ]
-                                (when-not (LogicNode''isTautology-1 logic)
-                                    (let [
-                                        logic (GraphAdder'''add-2 adder, logic)
-                                        #_"DeoptimizationReason" reason DeoptimizationReason/ClassCastException
-                                        #_"DeoptimizationAction" action DeoptimizationAction/InvalidateRecompile
-                                        #_"JavaConstant" speculation JavaConstant/NULL_POINTER
-                                        #_"GuardingNode" guard (GraphAdder'''add-2 adder, (FixedGuardNode'new-5 logic, reason, action, speculation, false))
-                                    ]
-                                        (§ aset! arguments index (GraphAdder'''add-2 adder, (PiNode'create-3 argument, (StampFactory'object-1 targetType), guard)))
-                                    )
-                                )
-                            )
-                        )
-                    )
-                )
-            )
-        )
-        nil
-    )
-
-    ;;;
-     ; Creates an InvokeNode for the given target method. The CallTargetNode passed to the InvokeNode is in fact a ResolvedMethodHandleCallTargetNode.
-     ;;
-    (defn- #_"InvokeNode" MethodHandleNode'createTargetInvokeNode-6 [#_"MethodHandleAccessProvider$IntrinsicMethod" intrinsicMethod, #_"ResolvedJavaMethod" target, #_"ResolvedJavaMethod" original, #_"int" bci, #_"Stamp" returnStamp, #_"ValueNode*" arguments]
-        (let [
-            #_"InvokeKind" targetInvokeKind (if (#_"ResolvedJavaMethod" .isStatic target) InvokeKind'Static InvokeKind'Special)
-            #_"JavaType" targetReturnType (#_"Signature" .getReturnType (#_"ResolvedJavaMethod" .getSignature target), nil)
-            ;; MethodHandleLinkTo* nodes have a trailing MemberName argument which needs to be popped.
-            #_"ValueNode*" targetArguments
-                (condp =? intrinsicMethod
-                    MethodHandleAccessProvider$IntrinsicMethod/INVOKE_BASIC
-                        arguments
-                   [MethodHandleAccessProvider$IntrinsicMethod/LINK_TO_STATIC
-                    MethodHandleAccessProvider$IntrinsicMethod/LINK_TO_SPECIAL
-                    MethodHandleAccessProvider$IntrinsicMethod/LINK_TO_VIRTUAL
-                    MethodHandleAccessProvider$IntrinsicMethod/LINK_TO_INTERFACE]
-                        (Arrays/copyOfRange arguments, 0, (dec (count arguments)))
-                )
-            #_"MethodCallTargetNode" callTarget (ResolvedMethodHandleCallTargetNode'new-7 targetInvokeKind, target, targetArguments, (StampFactory'forDeclaredType-2 targetReturnType, false), original, arguments, returnStamp)
-        ]
-            ;; The call target can have a different return type than the invoker, e.g. the target returns an Object but the invoker is void.
-            ;; In this case we need to use the stamp of the invoker.
-            ;; Note: always using the invoker's stamp would be wrong, because it's a less concrete type (usually java.lang.Object).
-            (if (= (Stamp'''getStackKind-1 returnStamp) JavaKind/Void)
-                (InvokeNode'new-3 callTarget, bci, VoidStamp'instance)
-                (InvokeNode'new-2 callTarget, bci)
-            )
-        )
-    )
-
-    ;;;
-     ; Helper function to get the InvokeNode for the targetMethod of a java.lang.invoke.MemberName.
-     ;
-     ; @param target the target, already loaded from the member name node
-     ;
-     ; @return invoke node for the member name target
-     ;;
-    (defn- #_"InvokeNode" MethodHandleNode'getTargetInvokeNode-7 [#_"GraphAdder" adder, #_"MethodHandleAccessProvider$IntrinsicMethod" intrinsicMethod, #_"int" bci, #_"Stamp" returnStamp, #_"ValueNode*" originalArguments, #_"ResolvedJavaMethod" target, #_"ResolvedJavaMethod" original]
-        (when (some? target)
-            ;; In lambda forms we erase signature types to avoid resolving issues involving
-            ;; class loaders. When we optimize a method handle invoke to a direct call
-            ;; we must cast the receiver and arguments to its actual types.
-            (let [
-                #_"ResolvedJavaMethod" realTarget
-                    (when (#_"ResolvedJavaMethod" .canBeStaticallyBound target)
-                        target
-                    )
-            ]
-                (when (some? realTarget)
-                    (let [
-                        #_"boolean" static? (#_"ResolvedJavaMethod" .isStatic target)
-                        ;; don't mutate the passed in arguments
-                        #_"ValueNode[]" arguments (#_"Object" .clone originalArguments)
-                        #_"Signature" signature (#_"ResolvedJavaMethod" .getSignature target)
-                    ]
-                        ;; cast receiver to its type
-                        (when-not static?
-                            (MethodHandleNode'maybeCastArgument-4 adder, arguments, 0, (#_"ResolvedJavaMethod" .getDeclaringClass target))
-                        )
-                        ;; cast reference arguments to its type
-                        (dotimes [#_"int" index (#_"Signature" .getParameterCount signature, false)]
-                            (MethodHandleNode'maybeCastArgument-4 adder, arguments, (+ (if static? 0 1) index), (#_"Signature" .getParameterType signature, index, (#_"ResolvedJavaMethod" .getDeclaringClass target)))
-                        )
-                        (MethodHandleNode'createTargetInvokeNode-6 intrinsicMethod, realTarget, original, bci, returnStamp, arguments)
-                    )
-                )
-            )
-        )
-    )
-
-    ;;;
-     ; Used for the MethodHandle.invokeBasic method (the {@link MethodHandleAccessProvider$IntrinsicMethod#INVOKE_BASIC} method)
-     ; to get the target InvokeNode if the method handle receiver is constant.
-     ;
-     ; @return invoke node for the {@link java.lang.invoke.MethodHandle} target
-     ;;
-    (defn- #_"InvokeNode" MethodHandleNode'getInvokeBasicTarget-7 [#_"GraphAdder" adder, #_"MethodHandleAccessProvider$IntrinsicMethod" intrinsicMethod, #_"MethodHandleAccessProvider" methodHandleAccess, #_"ResolvedJavaMethod" original, #_"int" bci, #_"Stamp" returnStamp, #_"ValueNode*" arguments]
-        (let [
-            #_"ValueNode" methodHandleNode (MethodHandleNode'getReceiver-1 arguments)
-        ]
-            (when (satisfies? ConstantNode methodHandleNode)
-                (MethodHandleNode'getTargetInvokeNode-7 adder, intrinsicMethod, bci, returnStamp, arguments, (#_"MethodHandleAccessProvider" .resolveInvokeBasicTarget methodHandleAccess, (ValueNode''asJavaConstant-1 methodHandleNode), true), original)
-            )
-        )
-    )
-
-    ;;;
-     ; Used for the MethodHandle.linkTo* methods (the {@link MethodHandleAccessProvider$IntrinsicMethod#LINK_TO_STATIC},
-     ; {@link MethodHandleAccessProvider$IntrinsicMethod#LINK_TO_SPECIAL}, {@link MethodHandleAccessProvider$IntrinsicMethod#LINK_TO_VIRTUAL},
-     ; and {@link MethodHandleAccessProvider$IntrinsicMethod#LINK_TO_INTERFACE} methods) to get the target InvokeNode
-     ; if the member name argument is constant.
-     ;
-     ; @return invoke node for the member name target
-     ;;
-    (defn- #_"InvokeNode" MethodHandleNode'getLinkToTarget-7 [#_"GraphAdder" adder, #_"MethodHandleAccessProvider$IntrinsicMethod" intrinsicMethod, #_"MethodHandleAccessProvider" methodHandleAccess, #_"ResolvedJavaMethod" original, #_"int" bci, #_"Stamp" returnStamp, #_"ValueNode*" arguments]
-        (let [
-            #_"ValueNode" memberNameNode (MethodHandleNode'getMemberName-1 arguments)
-        ]
-            (when (satisfies? ConstantNode memberNameNode)
-                (MethodHandleNode'getTargetInvokeNode-7 adder, intrinsicMethod, bci, returnStamp, arguments, (#_"MethodHandleAccessProvider" .resolveLinkToTarget methodHandleAccess, (ValueNode''asJavaConstant-1 memberNameNode)), original)
-            )
-        )
-    )
-
-    ;;;
-     ; Attempts to transform application of an intrinsifiable MethodHandle method into an
-     ; invocation on another method with possibly transformed arguments.
-     ;
-     ; @param methodHandleAccess objects for accessing the implementation internals of a MethodHandle
-     ; @param intrinsicMethod denotes the intrinsifiable MethodHandle method being processed
-     ; @param bci the BCI of the original MethodHandle call
-     ; @param returnStamp return stamp of the original MethodHandle call
-     ; @param arguments arguments to the original MethodHandle call
-     ; @return a more direct invocation derived from the MethodHandle call or nil
-     ;;
-    (defn #_"InvokeNode" MethodHandleNode'tryResolveTargetInvoke-7* [#_"GraphAdder" adder, #_"MethodHandleAccessProvider" methodHandleAccess, #_"MethodHandleAccessProvider$IntrinsicMethod" intrinsicMethod, #_"ResolvedJavaMethod" original, #_"int" bci, #_"Stamp" returnStamp & #_"ValueNode..." arguments]
-        (condp =? intrinsicMethod
-            MethodHandleAccessProvider$IntrinsicMethod/INVOKE_BASIC
-                (MethodHandleNode'getInvokeBasicTarget-7 adder, intrinsicMethod, methodHandleAccess, original, bci, returnStamp, arguments)
-           [MethodHandleAccessProvider$IntrinsicMethod/LINK_TO_STATIC
-            MethodHandleAccessProvider$IntrinsicMethod/LINK_TO_SPECIAL
-            MethodHandleAccessProvider$IntrinsicMethod/LINK_TO_VIRTUAL
-            MethodHandleAccessProvider$IntrinsicMethod/LINK_TO_INTERFACE]
-                (MethodHandleNode'getLinkToTarget-7 adder, intrinsicMethod, methodHandleAccess, original, bci, returnStamp, arguments)
-        )
-    )
-
-    (defm MethodHandleNode Simplifiable
-        (#_"void" Simplifiable'''simplify-2 [#_"MethodHandleNode" this, #_"SimplifierTool" tool]
-            (let [
-                #_"MethodHandleAccessProvider" methodHandleAccess (#_"ConstantReflectionProvider" .getMethodHandleAccess HotSpot'constantReflection)
-                #_"ValueNode*" arguments (into-array ValueNode'iface (:arguments this))
-                #_"FixedNode" before this
-                #_"GraphAdder" adder
-                    (reify GraphAdder
-                        (#_"ValueNode" GraphAdder'''add-2 [#_"GraphAdder" this, #_"ValueNode" node]
-                            (let [
-                                #_"ValueNode" added (Graph''add-2 (:graph before), node)
-                            ]
-                                (when (satisfies? FixedWithNextNode added)
-                                    (Graph''addBeforeFixed-3 (:graph before), before, added)
-                                )
-                                added
-                            )
-                        )
-                    )
-                #_"InvokeNode" invoke (apply MethodHandleNode'tryResolveTargetInvoke-7* adder, methodHandleAccess, (:intrinsicMethod this), (:targetMethod this), (:bci this), (:returnStamp this), arguments)
-            ]
-                (when (some? invoke)
-                    (§ ass invoke (Graph''addOrUniqueWithInputs-2 (:graph this), invoke))
-                    (StateSplit'''setStateAfter-2 invoke, (:stateAfter this))
-                    (let [
-                        #_"FixedNode" currentNext (:next this)
-                    ]
-                        (§ ass! this (Node''replaceAtUsages-2 this, invoke))
-                        (GraphUtil'removeFixedWithUnusedInputs-1 this)
-                        (Graph''addBeforeFixed-3 (:graph this), currentNext, invoke)
-                    )
-                )
-            )
-            nil
         )
     )
 )
@@ -66814,7 +66361,6 @@ ZeroExtendNode'new-4
             #_"HotSpotNodePlugin" nodePlugin (HotSpotNodePlugin'new-1 (WordOperationPlugin'new-0))
             this (Plugins''appendTypePlugin-2 this, nodePlugin)
             this (Plugins''appendNodePlugin-2 this, nodePlugin)
-            this (Plugins''appendNodePlugin-2 this, (MethodHandlePlugin'new-2 (#_"ConstantReflectionProvider" .getMethodHandleAccess HotSpot'constantReflection), true))
             this (Plugins''appendInlineInvokePlugin-2 this, HotSpot'replacements)
             this
                 (when GraalOptions'inlineDuringParsing => this
