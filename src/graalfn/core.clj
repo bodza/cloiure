@@ -1526,11 +1526,6 @@ ForeignCallLinkage''needsJavaFrameAnchor-1
 ForeignCallLinkage'create-8*
 ForeignCallLinkage'createCallingConvention-2
 ForeignCallLinkage'new-8*
-ForeignCallNode''isGuaranteedSafepoint-1
-ForeignCallNode''operands-2
-ForeignCallNode''setBci-2
-ForeignCallNode'intrinsify-5*
-ForeignCallNode'new-2*
 ForeignCallOp'new-4
 ForeignCalls''getKilledLocations-2
 ForeignCalls''isGuaranteedSafepoint-2
@@ -4766,7 +4761,6 @@ ZeroExtendNode'new-4
 (defp FloatingReadPhase)
 (defp ForeignCallDescriptor)
 (defp ForeignCallLinkage)
-(defp ForeignCallNode)
 (defp ForeignCallOp)
 (defp ForeignCalls)
 (defp FrameContext)
@@ -11519,36 +11513,21 @@ ZeroExtendNode'new-4
 
     (defn- #_"FrameState" InliningUtil'handleAfterBciFrameState-3 [#_"FrameState" frameState, #_"InvokeNode" invoke, #_"boolean" alwaysDuplicateStateAfter]
         (let [
-            #_"FrameState" stateAtReturn (:stateAfter invoke)
+            #_"FrameState" atReturn (:stateAfter invoke)
             #_"JavaKind" invokeReturnKind (ValueNode''getStackKind-1 invoke)
-            #_"FrameState" stateAfterReturn stateAtReturn
-        ]
-            (when (nil? (:code frameState))
-                ;; this is a frame state for a side effect within an intrinsic that was parsed for post-parse intrinsification
-                (doseq [#_"Node" usage (:nodeUsages frameState)]
-                    (when (satisfies? ForeignCallNode usage)
-                        ;; a foreign call inside an intrinsic needs to have the BCI of the invoke being intrinsified
-                        (§ ass! usage (ForeignCallNode''setBci-2 usage, (:bci invoke)))
-                    )
-                )
-            )
             ;; pop return kind from invoke's stateAfter and replace with this frameState's return value (top of stack)
-            (let [
-                stateAfterReturn
-                    (if (and (pos? (:stackSize frameState)) (or alwaysDuplicateStateAfter (not= (FrameState''stackAt-2 stateAfterReturn, 0) (FrameState''stackAt-2 frameState, 0))))
-                        ;; a non-void return value
-                        (FrameState''duplicateModified-4 stateAtReturn, invokeReturnKind, invokeReturnKind, (FrameState''stackAt-2 frameState, 0))
-                        ;; a void return value
-                        (FrameState''duplicate-1 stateAtReturn)
-                    )
-            ]
-                ;; return value does no longer need to be limited by the monitor exit
-                (doseq [#_"MonitorExitNode" n (filter #(satisfies? MonitorExitNode %) (:nodeUsages frameState))]
-                    (§ ass! n (MonitorExitNode''clearEscapedReturnValue-1 n))
+            #_"FrameState" afterReturn
+                (if (and (pos? (:stackSize frameState)) (or alwaysDuplicateStateAfter (not= (FrameState''stackAt-2 atReturn, 0) (FrameState''stackAt-2 frameState, 0))))
+                    (FrameState''duplicateModified-4 atReturn, invokeReturnKind, invokeReturnKind, (FrameState''stackAt-2 frameState, 0)) ;; a non-void return value
+                    (FrameState''duplicate-1 atReturn) ;; a void return value
                 )
-                (§ ass! frameState (Node''replaceAndDelete-2 frameState, stateAfterReturn))
-                stateAfterReturn
+        ]
+            ;; return value does no longer need to be limited by the monitor exit
+            (doseq [#_"MonitorExitNode" node (filter #(satisfies? MonitorExitNode %) (:nodeUsages frameState))]
+                (§ ass! node (MonitorExitNode''clearEscapedReturnValue-1 node))
             )
+            (§ ass! frameState (Node''replaceAndDelete-2 frameState, afterReturn))
+            afterReturn
         )
     )
 
@@ -32902,6 +32881,7 @@ ZeroExtendNode'new-4
      ; Determines if a given foreign call is side-effect free. Deoptimization cannot return
      ; execution to a point before a foreign call that has a side effect.
      ;;
+    #_unused
     (defn #_"boolean" ForeignCalls''isReexecutable-2 [#_"ForeignCalls" this, #_"ForeignCallDescriptor" descriptor]
         (:reexecutable (get (:foreignCalls this) descriptor))
     )
@@ -32909,6 +32889,7 @@ ZeroExtendNode'new-4
     ;;;
      ; Identifies foreign calls which are guaranteed to include a safepoint check.
      ;;
+    #_unused
     (defn #_"boolean" ForeignCalls''isGuaranteedSafepoint-2 [#_"ForeignCalls" this, #_"ForeignCallDescriptor" descriptor]
         (ForeignCallLinkage''isGuaranteedSafepoint-1 (get (:foreignCalls this) descriptor))
     )
@@ -47715,7 +47696,7 @@ ZeroExtendNode'new-4
                                 (let [
                                     #_"FixedNode" node (first s)
                                 ]
-                                    (when (or (satisfies? InvokeNode node) (and (satisfies? ForeignCallNode node) (ForeignCallNode''isGuaranteedSafepoint-1 node))) => (recur (next s))
+                                    (when (satisfies? InvokeNode node) => (recur (next s))
                                         (§ ass! loopEnd (LoopEndNode''disableSafepoint-1 loopEnd))
                                         :done
                                     )
@@ -54771,127 +54752,6 @@ ZeroExtendNode'new-4
 )
 
 ;;;
- ; Node for a foreign call.
- ;;
-(class-ns ForeignCallNode [AbstractMemoryCheckpoint, AbstractStateSplit, FixedWithNextNode, FixedNode, ValueNode, Node, StateSplit, NodeWithState, MemoryCheckpoint, MemoryNode, LIRLowerable, DeoptDuring, DeoptimizingNode, Multi]
-    (defn #_"ForeignCallNode" ForeignCallNode'new-2* [#_"ForeignCallDescriptor" descriptor & #_"ValueNode..." arguments]
-        (merge (ForeignCallNode'class.) (AbstractMemoryCheckpoint'new-1 (StampFactory'forKind-1 (JavaKind/fromJavaClass (:resultType descriptor))))
-            (hash-map
-                ; @Input
-                #_"NodeInputList<ValueNode>" :arguments (NodeInputList'new-2s (ß this), arguments)
-                ; @OptionalInput
-                #_"FrameState" :stateDuring nil
-                #_"ForeignCallDescriptor" :descriptor descriptor
-                #_"int" :bci BytecodeFrame/UNKNOWN_BCI
-            )
-        )
-    )
-
-    #_intrinsifier
-    (defn #_"boolean" ForeignCallNode'intrinsify-5* [#_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_@InjectedNodeParameter #_"Stamp" returnStamp, #_"ForeignCallDescriptor" descriptor & #_"ValueNode..." arguments]
-        (let [
-            #_"ForeignCallNode" node (apply ForeignCallNode'new-2* descriptor, arguments)
-            node (ValueNode''setStamp-2 node, returnStamp)
-            ;; Need to update the BCI of a ForeignCallNode so that it gets the stateDuring in the case that the
-            ;; foreign call can deoptimize. As with all deoptimization, we need a state in a non-intrinsic method.
-            #_"BytecodeParser" nonIntrinsicAncestor (BytecodeParser''getNonIntrinsicAncestor-1 parser)
-            node
-                (when (some? nonIntrinsicAncestor) => node
-                    (ForeignCallNode''setBci-2 node, (BytecodeParser''bci-1 nonIntrinsicAncestor))
-                )
-            #_"JavaKind" returnKind (#_"Signature" .getReturnKind (#_"ResolvedJavaMethod" .getSignature method))
-        ]
-            (if (= returnKind JavaKind/Void)
-                (BytecodeParser''add-2 parser, node)
-                (BytecodeParser''addPush-3 parser, returnKind, node)
-            )
-
-            true
-        )
-    )
-
-    (defm ForeignCallNode StateSplit
-        (#_"boolean" StateSplit'''hasSideEffect-1 [#_"ForeignCallNode" this]
-            (not (ForeignCalls''isReexecutable-2 HotSpot'foreignCalls, (:descriptor this)))
-        )
-    )
-
-    (defm ForeignCallNode Multi
-        (#_"LocationIdentity*" Multi'''getLocationIdentities-1 [#_"ForeignCallNode" this]
-            (ForeignCalls''getKilledLocations-2 HotSpot'foreignCalls, (:descriptor this))
-        )
-    )
-
-    (defn #_"Value[]" ForeignCallNode''operands-2 [#_"ForeignCallNode" this, #_"LIRBuilder" builder]
-        (let [
-            #_"Value[]" operands (make-array Value (count (:arguments this)))
-        ]
-            (dotimes [#_"int" i (count operands)]
-                (aset operands i (LIRBuilder''operand-2 builder, (nth (:arguments this) i)))
-            )
-            operands
-        )
-    )
-
-    (defm ForeignCallNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"ForeignCallNode" this, #_"LIRBuilder" builder]
-            (let [
-                #_"ForeignCallLinkage" linkage (ForeignCalls''lookupForeignCall-2 HotSpot'foreignCalls, (:descriptor this))
-                #_"Value[]" operands (ForeignCallNode''operands-2 this, builder)
-                #_"Value" result (apply LIRGenerator''emitForeignCall-3* (:gen builder), linkage, operands)
-            ]
-                (when (some? result)
-                    (LIRBuilder''setResult-3 builder, this, result)
-                )
-            )
-            nil
-        )
-    )
-
-    (defm ForeignCallNode DeoptDuring
-        (#_"void" DeoptDuring'''setStateDuring-2 [#_"ForeignCallNode" this, #_"FrameState" stateDuring]
-            (Node''updateUsages-3 this, (:stateDuring this), stateDuring)
-            (§ ass! this (assoc this :stateDuring stateDuring))
-            nil
-        )
-    )
-
-    ;;;
-     ; Set the {@code bci} of the invoke bytecode for use when converting a stateAfter into a stateDuring.
-     ;;
-    (defn #_"ForeignCallNode" ForeignCallNode''setBci-2 [#_"ForeignCallNode" this, #_"int" bci]
-        (assoc this :bci bci)
-    )
-
-    (defm ForeignCallNode DeoptDuring
-        (#_"void" DeoptDuring'''computeStateDuring-2 [#_"ForeignCallNode" this, #_"FrameState" after]
-            (let [
-                #_"FrameState" during
-                    (if (or (and (< 0 (:stackSize after)) (= (FrameState''stackAt-2 after, (- (:stackSize after) 1)) this))
-                            (and (< 1 (:stackSize after)) (= (FrameState''stackAt-2 after, (- (:stackSize after) 2)) this)))
-                        ;; the result of this call is on the top of stack, so roll back to the previous bci
-                        (FrameState''duplicateModifiedDuringCall-3 after, (:bci this), (ValueNode''getStackKind-1 this))
-                        after
-                    )
-            ]
-                (DeoptDuring'''setStateDuring-2 this, during)
-            )
-            nil
-        )
-    )
-
-    (defm ForeignCallNode DeoptimizingNode
-        (#_"boolean" DeoptimizingNode'''canDeoptimize-1 [#_"ForeignCallNode" this]
-            false
-        )
-    )
-
-    (defn #_"boolean" ForeignCallNode''isGuaranteedSafepoint-1 [#_"ForeignCallNode" this]
-        (ForeignCalls''isGuaranteedSafepoint-2 HotSpot'foreignCalls, (:descriptor this))
-    )
-)
-
-;;;
  ; The InvokeNode represents all kinds of method calls.
  ;;
 (class-ns InvokeNode [AbstractMemoryCheckpoint, AbstractStateSplit, FixedWithNextNode, FixedNode, ValueNode, Node, StateSplit, NodeWithState, MemoryCheckpoint, MemoryNode, Lowerable, DeoptDuring, DeoptimizingNode, LIRLowerable, Single]
@@ -55013,9 +54873,6 @@ ZeroExtendNode'new-4
         ]
             (when (satisfies? StateSplit node)
                 (StateSplit'''setStateAfter-2 node, currentStateAfter)
-            )
-            (when (satisfies? ForeignCallNode node)
-                (§ ass! node (ForeignCallNode''setBci-2 node, (:bci this)))
             )
             (condp satisfies? node
                 FixedWithNextNode
