@@ -803,8 +803,8 @@ BytecodeParser''isNeverExecutedCode-2
 BytecodeParser''iterateBytecodesForBlock-2
 BytecodeParser''loadLocal-3
 BytecodeParser''loadLocalObject-2
-BytecodeParser''notifyAfterInline-2
-BytecodeParser''notifyBeforeInline-2
+BytecodeParser'notifyAfterInline-1
+BytecodeParser'notifyBeforeInline-1
 BytecodeParser''nullCheckedValue-2
 BytecodeParser''nullCheckedValue-3
 BytecodeParser''parseAndInlineCallee-4
@@ -1704,7 +1704,6 @@ GraphUtil'unlinkFixedNode-1
 GraphUtil'unproxify-1n
 GraphUtil'unproxify-1p
 GuardLoweringPhase'new-0
-GuardNode''lowerGuard-1
 GuardNode'new-6
 GuardOrder'resortGuards-3
 GuardPhiNode'new-1
@@ -2052,7 +2051,7 @@ IntervalState'Unhandled
 IntervalWalker''removeFromList-2
 IntervalWalker''walkTo-2
 IntervalWalker'new-3
-IntrinsicContext''createFrameState-4
+IntrinsicContext'createFrameState-3
 IntrinsicContext''isCallToOriginal-2
 IntrinsicContext''isCompilationRoot-1
 IntrinsicContext''isPostParseInlined-1
@@ -2113,7 +2112,6 @@ LIR''setHasArgInCallerFrame-1
 LIR''setLIRforBlock-3
 LIR'getNextBlock-2
 LIR'new-3
-LIRBuilder''allowObjectConstantToStackMove-1
 LIRBuilder''doBlock-4
 LIRBuilder''doBlockPrologue-2
 LIRBuilder''emitBranch-5
@@ -2131,7 +2129,6 @@ LIRBuilder''emitSwitch-2
 LIRBuilder''getExactPhiKind-2
 LIRBuilder''getLIRBlock-2
 LIRBuilder''hasOperand-2
-LIRBuilder''newJumpOp-2
 LIRBuilder''operand-2
 LIRBuilder''peephole-2
 LIRBuilder''setResult-3
@@ -2230,17 +2227,15 @@ LIRGenerator''emitValueCompareAndSwap-4
 LIRGenerator''emitXor-3
 LIRGenerator''emitZeroExtend-4
 LIRGenerator''emitZeroExtendMemory-4
-LIRGenerator''getAddressKind-4
+LIRGenerator'getAddressKind-3
 LIRGenerator''getBlockScope-2
 LIRGenerator''getLockSlot-2
 LIRGenerator''hasBlockEnd-2
-LIRGenerator''isNumericInteger-2
 LIRGenerator''load-2
 LIRGenerator''loadNonConst-2
 LIRGenerator''newVariable-2
-LIRGenerator''resultOperandFor-3
 LIRGenerator''setLockStackHolder-2
-LIRGenerator''toRegisterKind-2
+LIRGenerator'toRegisterKind-1
 LIRGenerator'new-1
 LIRInsertionBuffer''append-3
 LIRInsertionBuffer''finish-1
@@ -2333,7 +2328,6 @@ LSLifetimeAnalysisPhase''addTemp-5
 LSLifetimeAnalysisPhase''changeSpillDefinitionPos-5
 LSLifetimeAnalysisPhase''computeGlobalLiveSets-1
 LSLifetimeAnalysisPhase''computeLocalLiveSets-1
-LSLifetimeAnalysisPhase''getMaterializedValue-4
 LSLifetimeAnalysisPhase''handleMethodArguments-2
 LSLifetimeAnalysisPhase''isIntervalInLoop-3
 LSLifetimeAnalysisPhase''numberInstructions-1
@@ -2373,7 +2367,6 @@ LinearScan''attributes-2
 LinearScan''blockAt-2
 LinearScan''blockCount-1
 LinearScan''blockForId-2
-LinearScan''callKillsRegisters-1
 LinearScan''coversBlockBegin-3
 LinearScan''createAssignLocationsPhase-1
 LinearScan''createDerivedInterval-2
@@ -2661,7 +2654,6 @@ LoweringTool'new-4
 MOp'new-4
 MROp'new-4
 MacroNode''createInvoke-1
-MacroNode''getLoweredSnippetGraph-2
 MacroNode''replaceWithInvoke-1
 MacroNode'new-5*
 MacroStateSplitNode'new-5*
@@ -2740,11 +2732,11 @@ MonitorIdNode'new-1
 MonitorTemplates''lower-3i
 MonitorTemplates''lower-3o
 MonitorTemplates'new-1
-MoveFactory''allowConstantToStackMove-2
-MoveFactory''canInlineConstant-2
-MoveFactory''createLoad-3
-MoveFactory''createMove-3
-MoveFactory''createStackLoad-3
+MoveFactory'allowConstantToStackMove-1
+MoveFactory'canInlineConstant-1
+MoveFactory'createLoad-2
+MoveFactory'createMove-2
+MoveFactory'createStackLoad-2
 MoveFactory''createStackMove-3
 MoveFactory''getScratchRegister-2
 MoveFactory'new-1
@@ -2755,7 +2747,6 @@ MoveResolver''addMapping-3c
 MoveResolver''addMapping-3i
 MoveResolver''getMappingFrom-2
 MoveResolver''hasMappings-1
-MoveResolver''isMoveToSelf-3
 MoveResolver''moveInsertPosition-3
 MoveResolver''resolveAndAppendMoves-1
 MoveResolver''setInsertPosition-3
@@ -3176,7 +3167,6 @@ RawConditionalEliminationVisitor''registerNewCondition-3
 RawConditionalEliminationVisitor''registerNewStamp-3
 RawConditionalEliminationVisitor''registerNewValueStamp-3
 RawConditionalEliminationVisitor''replaceConstantInputs-2
-RawConditionalEliminationVisitor''replaceInput-4
 RawConditionalEliminationVisitor''tryProveCondition-2
 RawConditionalEliminationVisitor'new-2
 RawData'new-2
@@ -3290,12 +3280,9 @@ Scale'Times4
 Scale'Times8
 Scale'fromInt-1
 Scale'fromShift-1
-ScheduleInstance''calcLatestBlock-9
 ScheduleInstance''run-3
-ScheduleInstance'checkKillsBetween-3
 ScheduleInstance'new-0
 ScheduleInstance'new-1
-ScheduleInstance'selectLatestBlock-7
 SchedulePhase'new-0
 SchedulePhase'new-1
 SchedulePhase'run-3
@@ -3739,10 +3726,10 @@ WordOpcode'TO_RAW_VALUE
 WordOpcode'WRITE_BARRIERED
 WordOpcode'WRITE_OBJECT
 WordOpcode'WRITE_POINTER
-WordOperationPlugin''fromSigned-3
-WordOperationPlugin''fromUnsigned-3
-WordOperationPlugin''makeAddress-4
-WordOperationPlugin''toUnsigned-4
+WordOperationPlugin'fromSigned-2
+WordOperationPlugin'fromUnsigned-2
+WordOperationPlugin'makeAddress-3
+WordOperationPlugin'toUnsigned-3
 WordOperationPlugin'new-0
 WordTypes'asKind-1
 WordTypes'getWordStamp-1
@@ -13979,7 +13966,7 @@ ZeroExtendNode'new-4
         (nth (:stackSlotMap this) (:id stackSlot))
     )
 
-    (defn- #_"SlotSize" Allocator''forKind-2 [#_"Allocator" this, #_"ValueKind" kind]
+    (defn- #_"SlotSize" Allocator'forKind-1 [#_"ValueKind" kind]
         (case (FrameMap'spillSlotSize-1 kind)
             1 SlotSize'Size1
             2 SlotSize'Size2
@@ -14032,7 +14019,7 @@ ZeroExtendNode'new-4
      ;;
     (defn- #_"StackSlot" Allocator''findFreeSlot-2 [#_"Allocator" this, #_"VirtualStackSlot" slot]
         (let [
-            #_"SlotSize" size (Allocator''forKind-2 this, (#_"Value" .getValueKind slot))
+            #_"SlotSize" size (Allocator'forKind-1 (#_"Value" .getValueKind slot))
         ]
             (when-not (= size SlotSize'Illegal)
                 (let [
@@ -14083,7 +14070,7 @@ ZeroExtendNode'new-4
      ;;
     (defn- #_"void" Allocator''freeSlot-2 [#_"Allocator" this, #_"StackSlot" slot]
         (let [
-            #_"SlotSize" size (Allocator''forKind-2 this, (#_"StackSlot" .getValueKind slot))
+            #_"SlotSize" size (Allocator'forKind-1 (#_"StackSlot" .getValueKind slot))
         ]
             (when-not (= size SlotSize'Illegal)
                 (#_"Deque" .addLast (Allocator''getOrInitFreeSlots-2 this, size), slot)
@@ -20600,8 +20587,8 @@ ZeroExtendNode'new-4
                             (and (instance? ResolvedJavaField field)
                                 (do
                                     (BytecodeParser''genGetField-3r this, field, (BytecodeParser''getReceiver-3 this, args, true))
-                                    (BytecodeParser''notifyBeforeInline-2 this, targetMethod)
-                                    (BytecodeParser''notifyAfterInline-2 this, targetMethod)
+                                    (BytecodeParser'notifyBeforeInline-1 targetMethod)
+                                    (BytecodeParser'notifyAfterInline-1 targetMethod)
                                     true
                                 )
                             )
@@ -20629,9 +20616,9 @@ ZeroExtendNode'new-4
                             (do
                                 ;; Otherwise inline the original method. Any frame state created during the inlining
                                 ;; will exclude frame(s) in the intrinsic method (see FrameStateBuilder.create(int bci)).
-                                (BytecodeParser''notifyBeforeInline-2 this, inlinedMethod)
+                                (BytecodeParser'notifyBeforeInline-1 inlinedMethod)
                                 (§ ass! this (BytecodeParser''parseAndInlineCallee-4 this, (:originalMethod intrinsic), args, nil))
-                                (BytecodeParser''notifyAfterInline-2 this, inlinedMethod)
+                                (BytecodeParser'notifyAfterInline-1 inlinedMethod)
                                 true
                             )
                         )
@@ -20644,9 +20631,9 @@ ZeroExtendNode'new-4
                     ]
                         (and (#_"ResolvedJavaMethod" .hasBytecodes inlinedMethod)
                             (do
-                                (BytecodeParser''notifyBeforeInline-2 this, inlinedMethod)
+                                (BytecodeParser'notifyBeforeInline-1 inlinedMethod)
                                 (§ ass! this (BytecodeParser''parseAndInlineCallee-4 this, inlinedMethod, args, intrinsic))
-                                (BytecodeParser''notifyAfterInline-2 this, inlinedMethod)
+                                (BytecodeParser'notifyAfterInline-1 inlinedMethod)
                                 true
                             )
                         )
@@ -20828,14 +20815,14 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"void" BytecodeParser''notifyBeforeInline-2 [#_"BytecodeParser" this, #_"ResolvedJavaMethod" inlinedMethod]
+    (defn #_"void" BytecodeParser'notifyBeforeInline-1 [#_"ResolvedJavaMethod" inlinedMethod]
         (doseq [#_"InlineInvokePlugin" plugin (:inlineInvokePlugins HotSpot'plugins)]
             (InlineInvokePlugin'''notifyBeforeInline-2 plugin, inlinedMethod)
         )
         nil
     )
 
-    (defn #_"void" BytecodeParser''notifyAfterInline-2 [#_"BytecodeParser" this, #_"ResolvedJavaMethod" inlinedMethod]
+    (defn #_"void" BytecodeParser'notifyAfterInline-1 [#_"ResolvedJavaMethod" inlinedMethod]
         (doseq [#_"InlineInvokePlugin" plugin (:inlineInvokePlugins HotSpot'plugins)]
             (InlineInvokePlugin'''notifyAfterInline-2 plugin, inlinedMethod)
         )
@@ -22717,7 +22704,7 @@ ZeroExtendNode'new-4
         ;; create variable ;; create move ;; insert instruction ;; update usages
         (let [
             #_"Variable" variable (LIRGenerator''newVariable-2 (:lirGen this), kind)
-            #_"LIRInstruction" move (MoveFactory''createLoad-3 (:moveFactory (:lirGen this)), variable, constant)
+            #_"LIRInstruction" move (MoveFactory'createLoad-2 variable, constant)
         ]
             (§ ass! (CLOptimization''getInsertionBuffer-2 this, block) (LIRInsertionBuffer''append-3 (CLOptimization''getInsertionBuffer-2 this, block), 1, move))
             (doseq [#_"UseEntry" usage usages]
@@ -26121,7 +26108,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"boolean" ConditionalEliminationInstance''foldGuard-6 [#_"ConditionalEliminationInstance" this, #_"DeoptimizingGuard" thisGuard, #_"DeoptimizingGuard" otherGuard, #_"boolean" outcome, #_"Stamp" guardedValueStamp, #_"GuardRewirer" rewireGuardFunction]
+    (defn- #_"boolean" ConditionalEliminationInstance'foldGuard-5 [#_"DeoptimizingGuard" thisGuard, #_"DeoptimizingGuard" otherGuard, #_"boolean" outcome, #_"Stamp" guardedValueStamp, #_"GuardRewirer" rewireGuardFunction]
         (let [
             #_"DeoptimizationAction" action (ConditionalEliminationInstance'mergeActions-2 (:action otherGuard), (:action thisGuard))
         ]
@@ -26218,7 +26205,7 @@ ZeroExtendNode'new-4
                 ;; but it can only be moved up if we're sure there's no schedule dependence.
                 (or (and (#_"TriState" .isKnown result)
                         (ConditionalEliminationInstance''canScheduleAbove-4 this, (DeoptimizingGuard'''getCondition-1 thisGuard), pendingGuard, original)
-                        (ConditionalEliminationInstance''foldGuard-6 this, thisGuard, pendingGuard, (#_"TriState" .toBoolean result), stamp, rewireGuardFunction)
+                        (ConditionalEliminationInstance'foldGuard-5 thisGuard, pendingGuard, (#_"TriState" .toBoolean result), stamp, rewireGuardFunction)
                     )
                     (recur (next s))
                 )
@@ -32612,7 +32599,7 @@ ZeroExtendNode'new-4
     ;;;
      ; Aligns the given frame size to the stack alignment size and return the aligned size.
      ;;
-    (defn- #_"int" FrameMap''alignFrameSize-2 [#_"FrameMap" this, #_"int" size]
+    (defn- #_"int" FrameMap'alignFrameSize-1 [#_"int" size]
         (- (NumUtil'roundUp-2i (+ size FrameMap'RETURN_ADDRESS_SIZE), (.stackAlignment HotSpot'target)) FrameMap'RETURN_ADDRESS_SIZE)
     )
 
@@ -32620,7 +32607,7 @@ ZeroExtendNode'new-4
      ; Gets the current size of this frame. This is the size that would be returned by #frameSize() if #finish() were called now.
      ;;
     (defn #_"int" FrameMap''currentFrameSize-1 [#_"FrameMap" this]
-        (FrameMap''alignFrameSize-2 this, (- (+ (:outgoingSize this) (:spillSize this)) FrameMap'RETURN_ADDRESS_SIZE))
+        (FrameMap'alignFrameSize-1 (- (+ (:outgoingSize this) (:spillSize this)) FrameMap'RETURN_ADDRESS_SIZE))
     )
 
     ;;;
@@ -32949,7 +32936,7 @@ ZeroExtendNode'new-4
 
     (defn #_"FrameState" FrameStateBuilder''create-3 [#_"FrameStateBuilder" this, #_"int" bci, #_"StateSplit" forStateSplit]
         (if (and (some? (:parser this)) (BytecodeParser''parsingIntrinsic-1 (:parser this)))
-            (IntrinsicContext''createFrameState-4 (:intrinsicContext (:parser this)), (:graph (:parser this)), this, forStateSplit)
+            (IntrinsicContext'createFrameState-3 (:graph (:parser this)), this, forStateSplit)
             ;; skip intrinsic frames
             (FrameStateBuilder''create-6 this, bci, (when (some? (:parser this)) (BytecodeParser''getNonIntrinsicAncestor-1 (:parser this))), false, nil, nil)
         )
@@ -36921,7 +36908,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"boolean" LinearScanWalker''noAllocationPossible-2 [#_"LinearScanWalker" this, #_"Interval" interval]
-        (and (LinearScan''callKillsRegisters-1 (:allocator this))
+        (and (#_"RegisterConfig" .areAllAllocatableRegistersCallerSaved HotSpot'registerConfig)
             ;; fast calculation of intervals that can never get a register because
             ;; the next instruction is a call that blocks all registers
             ;; note: this only works if a call kills all registers
@@ -37231,7 +37218,7 @@ ZeroExtendNode'new-4
         (= (:compilationContext this) CompilationContext'ROOT_COMPILATION)
     )
 
-    (defn #_"FrameState" IntrinsicContext''createFrameState-4 [#_"IntrinsicContext" this, #_"Graph" graph, #_"SideEffectsState" sideEffects, #_"StateSplit" forStateSplit]
+    (defn #_"FrameState" IntrinsicContext'createFrameState-3 [#_"Graph" graph, #_"SideEffectsState" sideEffects, #_"StateSplit" forStateSplit]
         (if (StateSplit'''hasSideEffect-1 forStateSplit)
             (do
                 (when (SideEffectsState'''isAfterSideEffect-1 sideEffects)
@@ -37700,7 +37687,7 @@ ZeroExtendNode'new-4
 
     (defn #_"LIRKind" LIRBuilder''getExactPhiKind-2 [#_"LIRBuilder" this, #_"PhiNode" phi]
         ;; collect reference information
-        (loop-when [#_"LIRKind" derivedKind (LIRGenerator''toRegisterKind-2 (:gen this), (Stamp'''getLIRKind-1 (:stamp phi))) #_"int" i 0] (and (< i (PhiNode''valueCount-1 phi)) (not (LIRKind''isUnknownReference-1 derivedKind))) => derivedKind
+        (loop-when [#_"LIRKind" derivedKind (LIRGenerator'toRegisterKind-1 (Stamp'''getLIRKind-1 (:stamp phi))) #_"int" i 0] (and (< i (PhiNode''valueCount-1 phi)) (not (LIRKind''isUnknownReference-1 derivedKind))) => derivedKind
             (let [
                 #_"ValueNode" node (PhiNode''valueAt-2i phi, i)
                 #_"Value" value (LIRBuilder''getOperand-2 this, node)
@@ -37708,7 +37695,7 @@ ZeroExtendNode'new-4
                 #_"LIRKind" valueKind
                     (if (some? value)
                         (#_"Value" .getValueKind value, LIRKind'iface)
-                        (LIRGenerator''toRegisterKind-2 (:gen this), (Stamp'''getLIRKind-1 (:stamp node)))
+                        (LIRGenerator'toRegisterKind-1 (Stamp'''getLIRKind-1 (:stamp node)))
                     )
             ]
                 ;; merge the reference information of the derived kind and the input
@@ -37733,13 +37720,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    ;;;
-     ; @return true if object constant to stack moves are supported
-     ;;
-    (defn #_"boolean" LIRBuilder''allowObjectConstantToStackMove-1 [#_"LIRBuilder" this]
-        true
-    )
-
     (defn- #_"Value[]" LIRBuilder''createPhiOut-3 [#_"LIRBuilder" this, #_"AbstractMergeNode" merge, #_"AbstractEndNode" pred]
         (let [
             #_"List<Value>" values (ArrayList.)
@@ -37749,19 +37729,9 @@ ZeroExtendNode'new-4
                     #_"ValueNode" node (PhiNode''valueAt-2n phi, pred)
                     #_"Value" value (LIRBuilder''operand-2 this, node)
                 ]
-                    (cond
-                        (instance? RegisterValue value)
-                            ;; Fixed register intervals are not allowed at block boundaries so we introduce a new Variable.
-                            (§ ass value (LIRGenerator''emitMove-2 (:gen this), value))
-                        (and (not (LIRBuilder''allowObjectConstantToStackMove-1 this)) (satisfies? ConstantNode node) (not (LIRKind'isValue-1v value)))
-                            ;; Some constants are not allowed as inputs for PHIs in certain backends. Explicitly create
-                            ;; a copy of this value to force it into a register. The new variable is only used in the PHI.
-                            (let [
-                                #_"Variable" result (LIRGenerator''newVariable-2 (:gen this), (#_"Value" .getValueKind value))
-                            ]
-                                (LIRGenerator''emitMove-3 (:gen this), result, value)
-                                (§ ass value result)
-                            )
+                    (when (instance? RegisterValue value)
+                        ;; Fixed register intervals are not allowed at block boundaries, so we introduce a new Variable.
+                        (§ ass value (LIRGenerator''emitMove-2 (:gen this), value))
                     )
                     (#_"List" .add values, value)
                 )
@@ -37932,9 +37902,9 @@ ZeroExtendNode'new-4
     (defn #_"void" LIRBuilder''visitEndNode-2 [#_"LIRBuilder" this, #_"AbstractEndNode" node]
         (let [
             #_"AbstractMergeNode" merge (AbstractEndNode'''merge-1 node)
-            #_"JumpOp" jump (LIRBuilder''newJumpOp-2 this, (LIRBuilder''getLIRBlock-2 this, merge))
+            #_"JumpOp" jump (JumpOp'new-1 (LIRBuilder''getLIRBlock-2 this, merge))
+            jump (JumpOp''setPhiValues-2 jump, (LIRBuilder''createPhiOut-3 this, merge, node))
         ]
-            (§ ass! jump (JumpOp''setPhiValues-2 jump, (LIRBuilder''createPhiOut-3 this, merge, node)))
             (LIRGenerator''append-2 (:gen this), jump)
         )
         nil
@@ -37950,10 +37920,6 @@ ZeroExtendNode'new-4
     (defn #_"void" LIRBuilder''visitSafepointNode-2 [#_"LIRBuilder" this, #_"SafepointNode" node]
         (LIRGenerator''append-2 (:gen this), (SafepointOp'new-2 this, HotSpot'threadRegister))
         nil
-    )
-
-    (defn #_"JumpOp" LIRBuilder''newJumpOp-2 [#_"LIRBuilder" this, #_"LabelRef" ref]
-        (JumpOp'new-1 ref)
     )
 
     (defn- #_"void" LIRBuilder''emitNullCheckBranch-5 [#_"LIRBuilder" this, #_"IsNullNode" node, #_"LabelRef" trueSuccessor, #_"LabelRef" falseSuccessor, #_"double" trueSuccessorProbability]
@@ -38316,19 +38282,19 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"void" LIRGenerator''emitMove-3 [#_"LIRGenerator" this, #_"AllocatableValue" dst, #_"Value" src]
-        (LIRGenerator''append-2 this, (MoveFactory''createMove-3 (:moveFactory this), dst, src))
+        (LIRGenerator''append-2 this, (MoveFactory'createMove-2 dst, src))
         nil
     )
 
     (defn #_"void" LIRGenerator''emitMoveConstant-3 [#_"LIRGenerator" this, #_"AllocatableValue" dst, #_"Constant" src]
-        (LIRGenerator''append-2 this, (MoveFactory''createLoad-3 (:moveFactory this), dst, src))
+        (LIRGenerator''append-2 this, (MoveFactory'createLoad-2 dst, src))
         nil
     )
 
     (defn #_"Value" LIRGenerator''emitConstant-3 [#_"LIRGenerator" this, #_"LIRKind" kind, #_"Constant" constant]
-        (if (MoveFactory''canInlineConstant-2 (:moveFactory this), constant)
-            (ConstantValue'new-2 (LIRGenerator''toRegisterKind-2 this, kind), constant)
-            (LIRGenerator''emitLoadConstant-3 this, (LIRGenerator''toRegisterKind-2 this, kind), constant)
+        (if (MoveFactory'canInlineConstant-1 constant)
+            (ConstantValue'new-2 (LIRGenerator'toRegisterKind-1 kind), constant)
+            (LIRGenerator''emitLoadConstant-3 this, (LIRGenerator'toRegisterKind-1 kind), constant)
         )
     )
 
@@ -38364,7 +38330,7 @@ ZeroExtendNode'new-4
      ; The AMD64 backend only uses DWORD and QWORD values in registers because of a performance penalty when accessing
      ; WORD or BYTE registers. This function converts small integer kinds to DWORD.
      ;;
-    (defn #_"<K extends ValueKind<K>> K" LIRGenerator''toRegisterKind-2 [#_"LIRGenerator" this, #_"K" kind]
+    (defn #_"ValueKind" LIRGenerator'toRegisterKind-1 [#_"ValueKind" kind]
         (when (any = (#_"ValueKind" .getPlatformKind kind) AMD64Kind/BYTE AMD64Kind/WORD) => kind
             (#_"ValueKind" .changeType kind, AMD64Kind/DWORD)
         )
@@ -38484,7 +38450,18 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"Register" LIRGenerator''findPollOnReturnScratchRegister-1 [#_"LIRGenerator" this]
+    ;;;
+     ; Gets the ABI specific operand used to return a value of a given kind from a method.
+     ;
+     ; @param javaKind the kind of value being returned
+     ; @param valueKind the backend type of the value being returned
+     ; @return the operand representing the ABI defined location used return a value of kind {@code kind}
+     ;;
+    (defn- #_"AllocatableValue" LIRGenerator'resultOperandFor-2 [#_"JavaKind" javaKind, #_"ValueKind" valueKind]
+        (#_"Register" .asValue (#_"RegisterConfig" .getReturnRegister HotSpot'registerConfig, javaKind), valueKind)
+    )
+
+    (defn- #_"Register" LIRGenerator'findPollOnReturnScratchRegister-0 []
         (loop-when [#_"ISeq" s (seq (#_"RegisterConfig" .getAllocatableRegisters HotSpot'registerConfig))] (some? s) => (throw! "should not reach here")
             (let [
                 #_"Register" r (first s)
@@ -38504,7 +38481,7 @@ ZeroExtendNode'new-4
             #_"AllocatableValue" operand
                 (when (some? input) => Value/ILLEGAL
                     (let [
-                        operand (LIRGenerator''resultOperandFor-3 this, kind, (#_"Value" .getValueKind input))
+                        operand (LIRGenerator'resultOperandFor-2 kind, (#_"Value" .getValueKind input))
                     ]
                         (LIRGenerator''emitMove-3 this, operand, input)
                         operand
@@ -38512,7 +38489,7 @@ ZeroExtendNode'new-4
                 )
             this
                 (when (nil? (:pollOnReturnScratchRegister this)) => this
-                    (assoc this :pollOnReturnScratchRegister (LIRGenerator''findPollOnReturnScratchRegister-1 this))
+                    (assoc this :pollOnReturnScratchRegister (LIRGenerator'findPollOnReturnScratchRegister-0))
                 )
         ]
             (LIRGenerator''append-2 this, (AMD64HotSpotReturnOp'new-3 operand, HotSpot'threadRegister, (:pollOnReturnScratchRegister this)))
@@ -38533,21 +38510,10 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"Value" LIRGenerator''loadNonConst-2 [#_"LIRGenerator" this, #_"Value" value]
-        (if (and (satisfies? ConstantValue value) (not (MoveFactory''canInlineConstant-2 (:moveFactory this), (:constant value))))
+        (if (and (satisfies? ConstantValue value) (not (MoveFactory'canInlineConstant-1 (:constant value))))
             (LIRGenerator''emitMove-2 this, value)
             value
         )
-    )
-
-    ;;;
-     ; Gets the ABI specific operand used to return a value of a given kind from a method.
-     ;
-     ; @param javaKind the kind of value being returned
-     ; @param valueKind the backend type of the value being returned
-     ; @return the operand representing the ABI defined location used return a value of kind {@code kind}
-     ;;
-    (defn #_"AllocatableValue" LIRGenerator''resultOperandFor-3 [#_"LIRGenerator" this, #_"JavaKind" javaKind, #_"ValueKind" valueKind]
-        (#_"Register" .asValue (#_"RegisterConfig" .getReturnRegister HotSpot'registerConfig, javaKind), valueKind)
     )
 
     (defn #_"boolean" LIRGenerator''hasBlockEnd-2 [#_"LIRGenerator" this, #_"Block" block]
@@ -38785,7 +38751,7 @@ ZeroExtendNode'new-4
     )
 
     #_unused
-    (defn #_"LIRKind" LIRGenerator''getAddressKind-4 [#_"LIRGenerator" this, #_"Value" base, #_"long" displacement, #_"Value" index]
+    (defn #_"LIRKind" LIRGenerator'getAddressKind-3 [#_"Value" base, #_"long" displacement, #_"Value" index]
         (let [
             #_"PlatformKind" wordKind (#_"Architecture" .getWordKind (.arch HotSpot'target))
         ]
@@ -39098,14 +39064,10 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"boolean" LIRGenerator''isNumericInteger-2 [#_"LIRGenerator" this, #_"PlatformKind" kind]
-        (#_"AMD64Kind" .isInteger kind)
-    )
-
     (defn- #_"Variable" LIRGenerator''emitAddOrSub-5 [#_"LIRGenerator" this, #_"Value" a, #_"Value" b, #_"boolean" set-flags?, #_"boolean" isAdd]
         (let [
             [a b #_"LIRKind" resultKind]
-                (if (LIRGenerator''isNumericInteger-2 this, (#_"Value" .getPlatformKind a))
+                (if (#_"AMD64Kind" .isInteger (#_"Value" .getPlatformKind a))
                     (let [
                         #_"LIRKind" aKind (#_"Value" .getValueKind a, LIRKind'iface)
                         #_"LIRKind" bKind (#_"Value" .getValueKind b, LIRKind'iface)
@@ -39627,7 +39589,7 @@ ZeroExtendNode'new-4
     (defn #_"Variable" LIRGenerator''emitLoad-3 [#_"LIRGenerator" this, #_"LIRKind" kind, #_"Value" address]
         (let [
             #_"AMD64AddressValue" loadAddress (LIRGenerator''asAddressValue-2 this, address)
-            #_"Variable" result (LIRGenerator''newVariable-2 this, (LIRGenerator''toRegisterKind-2 this, kind))
+            #_"Variable" result (LIRGenerator''newVariable-2 this, (LIRGenerator'toRegisterKind-1 kind))
         ]
             (condp = (#_"ValueKind" .getPlatformKind kind)
                 AMD64Kind/BYTE  (LIRGenerator''append-2 this, (MemoryOp'new-4 AMD64RMOp'MOVSXB, OperandSize'DWORD, result, loadAddress))
@@ -42869,7 +42831,7 @@ ZeroExtendNode'new-4
                                                     #_"AllocatableValue" toLocation (LinearScan'canonicalSpillOpr-1 interval)
                                                 ]
                                                     (when-not (= fromLocation toLocation)
-                                                        (§ ass! buffer (LIRInsertionBuffer''append-3 buffer, (inc i), (MoveFactory''createMove-3 (:moveFactory (:allocator this)), toLocation, fromLocation)))
+                                                        (§ ass! buffer (LIRInsertionBuffer''append-3 buffer, (inc i), (MoveFactory'createMove-2 toLocation, fromLocation)))
                                                     )
                                                 )
                                             )
@@ -43201,14 +43163,14 @@ ZeroExtendNode'new-4
     ;;;
      ; Returns a value for a interval definition, which can be used for re-materialization.
      ;
-     ; @param op An instruction which defines a value
-     ; @param operand The destination operand of the instruction
+     ; @param op An instruction which defines a value.
+     ; @param operand The destination operand of the instruction.
      ; @param interval The interval for this defined value.
      ; @return the value which is moved to the instruction and which can be reused at all
      ;         reload-locations in case the interval of this instruction is spilled.
      ;         Currently this can only be a JavaConstant.
      ;;
-    (defn #_"Constant" LSLifetimeAnalysisPhase''getMaterializedValue-4 [#_"LSLifetimeAnalysisPhase" this, #_"LIRInstruction" op, #_"Value" operand, #_"Interval" interval]
+    (defn- #_"Constant" LSLifetimeAnalysisPhase'getMaterializedValue-3 [#_"LIRInstruction" op, #_"Value" operand, #_"Interval" interval]
         (when (LIRInstruction''isLoadConstantOp-1 op)
             ;; Check if the interval has any uses which would accept an stack location (priority == ShouldHaveRegister).
             ;; Rematerialization of such intervals can result in a degradation, because rematerialization always inserts
@@ -43273,7 +43235,7 @@ ZeroExtendNode'new-4
                         ;; detection of method-parameters and roundfp-results
                         (Interval''setSpillState-2 interval, SpillState'StartInMemory)
                     )
-                    (§ ass! interval (Interval''addMaterializationValue-2 interval, (LSLifetimeAnalysisPhase''getMaterializedValue-4 this, op, operand, interval)))
+                    (§ ass! interval (Interval''addMaterializationValue-2 interval, (LSLifetimeAnalysisPhase'getMaterializedValue-3 op, operand, interval)))
                 )
             )
         )
@@ -43631,7 +43593,7 @@ ZeroExtendNode'new-4
                                     #_"int" spillOpId (LinearScan''getFirstLirInstructionId-2 (:allocator this), spillBlock)
                                     #_"AllocatableValue" from (:location (Interval''getSplitChildAtOpId-4 interval, spillOpId, OperandMode'DEF, (:allocator this)))
                                     #_"AllocatableValue" to (LinearScan'canonicalSpillOpr-1 interval)
-                                    #_"LIRInstruction" move (MoveFactory''createMove-3 (:moveFactory (:allocator this)), to, from)
+                                    #_"LIRInstruction" move (MoveFactory'createMove-2 to, from)
                                 ]
                                     (§ ass! move (LIRInstruction''setId-2 move, LinearScan'DOMINATOR_SPILL_MOVE_ID))
                                     ;; We can use the insertion buffer directly because we always insert at position 1.
@@ -44406,10 +44368,6 @@ ZeroExtendNode'new-4
 
     (defn #_"RegisterArray" LinearScan''getRegisters-1 [#_"LinearScan" this]
         (:registers this)
-    )
-
-    (defn #_"boolean" LinearScan''callKillsRegisters-1 [#_"LinearScan" this]
-        (#_"RegisterConfig" .areAllAllocatableRegistersCallerSaved HotSpot'registerConfig)
     )
 )
 
@@ -48640,7 +48598,7 @@ ZeroExtendNode'new-4
      ;
      ; @return true if the constant can be used directly, false if the constant needs to be in a register
      ;;
-    (defn #_"boolean" MoveFactory''canInlineConstant-2 [#_"MoveFactory" this, #_"Constant" constant]
+    (defn #_"boolean" MoveFactory'canInlineConstant-1 [#_"Constant" constant]
         (or (= constant HotSpotCompressedNullConstant/COMPRESSED_NULL)
             (condp instance? constant
                 HotSpotObjectConstant    (KlassPointerStamp''isCompressed-1 constant)
@@ -48661,7 +48619,7 @@ ZeroExtendNode'new-4
      ; @return true if constant to stack moves are supported for this constant
      ;;
     #_unused
-    (defn #_"boolean" MoveFactory''allowConstantToStackMove-2 [#_"MoveFactory" this, #_"Constant" constant]
+    (defn #_"boolean" MoveFactory'allowConstantToStackMove-1 [#_"Constant" constant]
         (condp instance? constant
             HotSpotConstant (#_"HotSpotConstant" .isCompressed constant)
             JavaConstant    (AMD64Move'canMoveConst2Stack-1 constant)
@@ -48669,10 +48627,10 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"LIRInstruction" MoveFactory''createMove-3 [#_"MoveFactory" this, #_"AllocatableValue" dst, #_"Value" src]
+    (defn #_"LIRInstruction" MoveFactory'createMove-2 [#_"AllocatableValue" dst, #_"Value" src]
         (cond
             (satisfies? AMD64AddressValue src)                                       (LeaOp'new-3 dst, src, OperandSize'QWORD)
-            (satisfies? ConstantValue src)                                           (MoveFactory''createLoad-3 this, dst, (:constant src))
+            (satisfies? ConstantValue src)                                           (MoveFactory'createLoad-2 dst, (:constant src))
             (or (instance? RegisterValue src) (LIRValueUtil'isStackSlotValue-1 dst)) (MoveFromRegOp'new-3 (#_"Value" .getPlatformKind dst), dst, src)
             :else                                                                    (MoveToRegOp'new-3 (#_"Value" .getPlatformKind dst), dst, src)
         )
@@ -48696,7 +48654,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"LIRInstruction" MoveFactory''createLoad-3 [#_"MoveFactory" this, #_"AllocatableValue" dst, #_"Constant" src]
+    (defn #_"LIRInstruction" MoveFactory'createLoad-2 [#_"AllocatableValue" dst, #_"Constant" src]
         (when-not (= src HotSpotCompressedNullConstant/COMPRESSED_NULL) => (MoveFactory'createLoad-2 dst, JavaConstant/INT_0)
             (condp instance? src
                 HotSpotObjectConstant    (LoadObjectConstantOp'new-2 dst, src)
@@ -48712,7 +48670,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"LIRInstruction" MoveFactory''createStackLoad-3 [#_"MoveFactory" this, #_"AllocatableValue" dst, #_"Constant" src]
+    (defn #_"LIRInstruction" MoveFactory'createStackLoad-2 [#_"AllocatableValue" dst, #_"Constant" src]
         (when-not (= src HotSpotCompressedNullConstant/COMPRESSED_NULL) => (MoveFactory'createStackLoad-2 dst, JavaConstant/INT_0)
             (condp instance? src
                 HotSpotObjectConstant    (LoadObjectConstantOp'new-2 dst, src)
@@ -48882,6 +48840,15 @@ ZeroExtendNode'new-4
         nil
     )
 
+    (defn- #_"boolean" MoveResolver'isMoveToSelf-2 [#_"Value" from, #_"Value" to]
+        (or (= to from)
+            (and (some? from)
+                (instance? RegisterValue from) (instance? RegisterValue to)
+                (= (#_"RegisterValue" .getRegister from) (#_"RegisterValue" .getRegister to))
+            )
+        )
+    )
+
     ;;;
      ; Checks if the {@linkplain Interval#location() location} of {@code to} is not blocked or is only blocked by {@code from}.
      ;;
@@ -48893,19 +48860,10 @@ ZeroExtendNode'new-4
             (not (and (MoveResolver'''mightBeBlocked-2 this, location)
                       (or (< 1 (MoveResolver'''valueBlocked-2 this, location))
                           (and (= (MoveResolver'''valueBlocked-2 this, location) 1)
-                               (not (MoveResolver''isMoveToSelf-3 this, fromReg, location))
+                               (not (MoveResolver'isMoveToSelf-2 fromReg, location))
                           )
                       )
                  )
-            )
-        )
-    )
-
-    (defn #_"boolean" MoveResolver''isMoveToSelf-3 [#_"MoveResolver" this, #_"Value" from, #_"Value" to]
-        (or (= to from)
-            (and (some? from)
-                (instance? RegisterValue from) (instance? RegisterValue to)
-                (= (#_"RegisterValue" .getRegister from) (#_"RegisterValue" .getRegister to))
             )
         )
     )
@@ -48944,7 +48902,7 @@ ZeroExtendNode'new-4
 
     (defm MoveResolver MoveResolver
         (#_"LIRInstruction" MoveResolver'''createMove-5 [#_"MoveResolver" this, #_"AllocatableValue" fromOpr, #_"AllocatableValue" toOpr, #_"AllocatableValue" fromLocation, #_"AllocatableValue" toLocation]
-            (MoveFactory''createMove-3 (:moveFactory (:allocator this)), toOpr, fromOpr)
+            (MoveFactory'createMove-2 toOpr, fromOpr)
         )
     )
 
@@ -48953,8 +48911,8 @@ ZeroExtendNode'new-4
             #_"AllocatableValue" toOpr (:operand toInterval)
             #_"LIRInstruction" move
                 (if (LIRValueUtil'isStackSlotValue-1 (:location toInterval))
-                    (MoveFactory''createStackLoad-3 (:moveFactory (:allocator this)), toOpr, fromOpr)
-                    (MoveFactory''createLoad-3 (:moveFactory (:allocator this)), toOpr, fromOpr)
+                    (MoveFactory'createStackLoad-2 toOpr, fromOpr)
+                    (MoveFactory'createLoad-2 toOpr, fromOpr)
                 )
         ]
             (§ ass! (:insertionBuffer this) (LIRInsertionBuffer''append-3 (:insertionBuffer this), (:insertIdx this), move))
@@ -56792,54 +56750,27 @@ ZeroExtendNode'new-4
         )
     )
 
-    ;;;
-     ; Gets a snippet to be used for lowering this macro node. The returned graph (if non-nil) must
-     ; have been {@linkplain #lowerReplacement(Graph, LoweringTool) lowered}.
-     ;;
-    (defn #_"Graph" MacroNode''getLoweredSnippetGraph-2 [#_"MacroNode" this, #_"LoweringTool" lowerer]
-        nil
-    )
-
     (defm MacroNode Lowerable
         (#_"void" Lowerable'''lower-2 [#_"MacroNode" this, #_"LoweringTool" lowerer]
             (let [
-                #_"Graph" replacementGraph (MacroNode''getLoweredSnippetGraph-2 this, lowerer)
                 #_"InvokeNode" invoke (MacroNode''replaceWithInvoke-1 this)
             ]
-                (if (some? replacementGraph)
-                    (do
-                        ;; pull out the receiver nil-check, so that a replaced receiver can be lowered if necessary
-                        (when-not (#_"ResolvedJavaMethod" .isStatic (:targetMethod this))
-                            (let [
-                                #_"ValueNode" nonNullReceiver (InliningUtil'nonNullReceiver-1 invoke)
-                            ]
-                                (when (satisfies? Lowerable nonNullReceiver)
-                                    (Lowerable'''lower-2 nonNullReceiver, lowerer)
-                                )
-                            )
+                (when (BytecodeFrame/isPlaceholderBci (:bci invoke))
+                    (throw! (str (:graph this) ": cannot lower to invoke with placeholder BCI: " this))
+                )
+                (when (nil? (:stateAfter invoke))
+                    (let [
+                        #_"ResolvedJavaMethod" method (:rootMethod (:graph this))
+                    ]
+                        (when (some? (#_"ResolvedJavaMethod" .getAnnotation method, Snippet)) => (throw! (str (:graph this) ": cannot lower to invoke without state: " this))
+                            ;; One cause for this is that a MacroNode is created for a method that no longer
+                            ;; needs a MacroNode. For example, Class.getComponentType() only needs a MacroNode
+                            ;; prior to JDK9 as it was given a non-native implementation in JDK9.
+                            (throw! (str (#_"Class" .getSimpleName (#_"Object" .getClass this)) " macro created for call to " (#_"ResolvedJavaMethod" .format (:targetMethod this), "%h.\n(%p)") " in " (:graph this) " must be lowerable to a snippet or intrinsic graph. Maybe a macro node is not needed for this method in the current JDK?"))
                         )
-                        (InliningUtil'inline-4 invoke, replacementGraph, false, (:targetMethod this))
-                    )
-                    (do
-                        (when (BytecodeFrame/isPlaceholderBci (:bci invoke))
-                            (throw! (str (:graph this) ": cannot lower to invoke with placeholder BCI: " this))
-                        )
-
-                        (when (nil? (:stateAfter invoke))
-                            (let [
-                                #_"ResolvedJavaMethod" method (:rootMethod (:graph this))
-                            ]
-                                (when (some? (#_"ResolvedJavaMethod" .getAnnotation method, Snippet)) => (throw! (str (:graph this) ": cannot lower to invoke without state: " this))
-                                    ;; One cause for this is that a MacroNode is created for a method that no longer
-                                    ;; needs a MacroNode. For example, Class.getComponentType() only needs a MacroNode
-                                    ;; prior to JDK9 as it was given a non-native implementation in JDK9.
-                                    (throw! (str (#_"Class" .getSimpleName (#_"Object" .getClass this)) " macro created for call to " (#_"ResolvedJavaMethod" .format (:targetMethod this), "%h.\n(%p)") " in " (:graph this) " must be lowerable to a snippet or intrinsic graph. Maybe a macro node is not needed for this method in the current JDK?"))
-                                )
-                            )
-                        )
-                        (Lowerable'''lower-2 invoke, lowerer)
                     )
                 )
+                (Lowerable'''lower-2 invoke, lowerer)
             )
             nil
         )
@@ -60392,10 +60323,6 @@ ZeroExtendNode'new-4
                 )
             )
         )
-    )
-
-    (defn #_"FixedWithNextNode" GuardNode''lowerGuard-1 [#_"GuardNode" this]
-        nil
     )
 
     (defm GuardNode StaticDeoptimizingNode
@@ -66341,11 +66268,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"void" RawConditionalEliminationVisitor''replaceInput-4 [#_"RawConditionalEliminationVisitor" this, #_"Position" p, #_"Node" oldInput, #_"Node" newConstantInput]
-        (Position''set-3 p, oldInput, newConstantInput)
-        nil
-    )
-
     (defn #_"int" RawConditionalEliminationVisitor''replaceConstantInputs-2 [#_"RawConditionalEliminationVisitor" this, #_"Node" node]
         ;; Check if we can replace any of the inputs with a constant.
         (loop-when [#_"int" n 0 #_"ISeq" s (seq (Node''inputPositions-1 node))] (some? s) => n
@@ -66359,7 +66281,7 @@ ZeroExtendNode'new-4
                             #_"Constant" constant (Stamp'''asConstant-1 bestStamp)
                         ]
                             (when (some? constant) => n
-                                (RawConditionalEliminationVisitor''replaceInput-4 this, p, node, (ConstantNode'forConstant-3s bestStamp, constant, (:graph this)))
+                                (Position''set-3 p, node, (ConstantNode'forConstant-3s bestStamp, constant, (:graph this)))
                                 (inc n)
                             )
                         )
@@ -67244,7 +67166,7 @@ ZeroExtendNode'new-4
                     #_"LIRKind" lirKind (LIRKind'value-1 registerPlatformKind)
                     #_"RegisterValue" registerValue (#_"Register" .asValue register, lirKind)
                     #_"Variable" saveVariable (LIRGenerator''newVariable-2 lirGen, lirKind)
-                    #_"LIRInstruction" save (MoveFactory''createMove-3 (:moveFactory lirGen), saveVariable, registerValue)
+                    #_"LIRInstruction" save (MoveFactory'createMove-2 saveVariable, registerValue)
                 ]
                     (§ ass! buffer (LIRInsertionBuffer''append-3 buffer, 1, save))
                     (RegisterMap''put-3 saveMap, register, saveVariable)
@@ -67267,7 +67189,7 @@ ZeroExtendNode'new-4
             (§ ass! buffer (LIRInsertionBuffer''init-2 buffer, ops))
             (RegisterMap''forEach-2 calleeSaveRegisters, (ß (#_"Register" register, #_"Variable" saved) ->
                 (§ fun
-                    (§ ass! buffer (LIRInsertionBuffer''append-3 buffer, i, (MoveFactory''createMove-3 moveFactory, (#_"Register" .asValue register, (#_"Value" .getValueKind saved)), saved)))
+                    (§ ass! buffer (LIRInsertionBuffer''append-3 buffer, i, (MoveFactory'createMove-2 (#_"Register" .asValue register, (#_"Value" .getValueKind saved)), saved)))
                 ))
             )
             (§ ass! buffer (LIRInsertionBuffer''finish-1 buffer))
@@ -67649,6 +67571,138 @@ ZeroExtendNode'new-4
         nil
     )
 
+    (defn- #_"Block" ScheduleInstance'calcBlockForUsage-4 [#_"Node" node, #_"Node" usage, #_"Block" block, #_"NodeMap<Block>" currentNodeMap]
+        (condp satisfies? usage
+            PhiNode
+                ;; An input to a PhiNode is used at the end of the predecessor block that
+                ;; corresponds to the PhiNode input. One PhiNode can use an input multiple times.
+                (let [
+                    #_"Block" mergeBlock (get currentNodeMap (:merge usage))
+                ]
+                    (loop-when-recur [block block #_"int" i 0]
+                                     (< i (PhiNode''valueCount-1 usage))
+                                     [(if (= (PhiNode''valueAt-2i usage, i) node) (ControlFlowGraph'commonDominator-2 block, (nth (:predecessors mergeBlock) i)) block) (inc i)]
+                                  => block
+                    )
+                )
+            AbstractBeginNode
+                (let [
+                    #_"Block" otherBlock (get currentNodeMap usage)
+                ]
+                    (ControlFlowGraph'commonDominator-2 block, (if (satisfies? StartNode usage) otherBlock (:dominator otherBlock)))
+                )
+            #_else
+                ;; All other types of usages: Put the input into the same block as the usage.
+                (let [
+                    #_"Block" otherBlock (get currentNodeMap (if (satisfies? ProxyNode usage) (:loopExit usage) usage))
+                ]
+                    (ControlFlowGraph'commonDominator-2 block, otherBlock)
+                )
+        )
+    )
+
+    (defn- #_"Block" ScheduleInstance'checkKillsBetween-3 [#_"Block" earliest, #_"Block" latest, #_"LocationIdentity" location]
+        (let [
+            ;; Collect dominator chain that needs checking.
+            #_"List<Block>" dominators (ArrayList.)
+            _ (#_"List" .add dominators, latest)
+            _
+                (loop-when-recur [#_"Block" block (:dominator latest)] (not= block earliest) [(:dominator block)]
+                    ;; Current is an intermediate dominator between earliest and latest.
+                    (when (Block''canKill-2 block, location)
+                        (#_"List" .clear dominators)
+                    )
+                    (#_"List" .add dominators, block)
+                )
+        ]
+            ;; The first element of dominators now contains the latest possible block.
+            (loop-when [#_"Block" last earliest #_"int" i (dec (count dominators))] (<= 0 i) => last
+                (let [
+                    #_"Block" block (nth dominators i)
+                    ;; We are entering a loop boundary. The new loops must not kill the location for the crossing to be safe.
+                    ? (or (and (< (Block''getLoopDepth-1 last) (Block''getLoopDepth-1 block)) (some? (:loop block)) (Loop''canKill-2 (:loop block), location)) (Block''canKillBetweenThisAndDominator-2 block, location))
+                ]
+                    (if ? last (recur block (dec i)))
+                )
+            )
+        )
+    )
+
+    (defn- #_"Node" ScheduleInstance'getUnproxifiedUncompressed-1 [#_"Node" node]
+        (loop [node node]
+            (condp satisfies? node
+                ValueProxy
+                    (recur (Proxy'''getOriginalNode-1 node))
+                ConvertNode
+                    (when (ConvertNode'''mayNullCheckSkipConversion-1 node) => node
+                        (recur (ConvertNode'''getValue-1 node))
+                    )
+                node
+            )
+        )
+    )
+
+    (defn- #_"boolean" ScheduleInstance'isImplicitNullOpportunity-2 [#_"FloatingReadNode" floatingReadNode, #_"Block" block]
+        (let [
+            #_"Node" pred (:predecessor (:beginNode block))
+        ]
+            (and (satisfies? IfNode pred) (satisfies? IsNullNode (:condition pred))
+                (= (ScheduleInstance'getUnproxifiedUncompressed-1 (AddressNode'''getBase-1 (Access'''getAddress-1 floatingReadNode)))
+                   (ScheduleInstance'getUnproxifiedUncompressed-1 (Unary'''getValue-1 (:condition pred)))
+                )
+            )
+        )
+    )
+
+    (defn- #_"void" ScheduleInstance'selectLatestBlock-7 [#_"Node" currentNode, #_"Block" currentBlock, #_"Block" latestBlock, #_"NodeMap<Block>" currentNodeMap, #_"BlockMap<ArrayList<FloatingReadNode>>" watchListMap, #_"LocationIdentity" constrainingLocation, #_"BlockMap<List<Node>>" latestBlockToNodesMap]
+        (when-not (= currentBlock latestBlock)
+            (§ ass! currentNodeMap (NodeMap''setAndGrow-3 currentNodeMap, currentNode, latestBlock))
+
+            (when (and (some? constrainingLocation) (Block''canKill-2 latestBlock, constrainingLocation))
+                (when (nil? (BlockMap''get-2 watchListMap, latestBlock))
+                    (BlockMap''put-3 watchListMap, latestBlock, (ArrayList.))
+                )
+                (#_"ArrayList" .add (BlockMap''get-2 watchListMap, latestBlock), (§ cast #_"FloatingReadNode" currentNode))
+            )
+        )
+
+        (#_"List" .add (BlockMap''get-2 latestBlockToNodesMap, latestBlock), currentNode)
+        nil
+    )
+
+    (defn- #_"void" ScheduleInstance'calcLatestBlock-8 [#_"Block" earliest, #_"SchedulingStrategy" strategy, #_"Node" node, #_"NodeMap<Block>" nodeMap, #_"LocationIdentity" constrainingLocation, #_"BlockMap<ArrayList<FloatingReadNode>>" watchListMap, #_"BlockMap<List<Node>>" latestBlockToNodesMap, #_"NodeBitMap" visited]
+        (let [
+            #_"Block" latest
+                (when (Node''hasUsages-1 node) => earliest
+                    (let [
+                        latest
+                            (loop-when-recur [latest nil #_"ISeq" s (seq (:nodeUsages node))] (some? s) [(ScheduleInstance'calcBlockForUsage-4 node, (first s), latest, nodeMap) (next s)] => latest)
+                        latest
+                            (when (any = strategy SchedulingStrategy'FINAL_SCHEDULE SchedulingStrategy'LATEST_OUT_OF_LOOPS) => latest
+                                (loop-when [latest latest #_"Block" block latest] (and (< (Block''getLoopDepth-1 earliest) (Block''getLoopDepth-1 block)) (not= block (:dominator earliest))) => latest
+                                    (let [
+                                        #_"Block" prior block
+                                        block (:dominator block)
+                                        ;; Only assign new latest block if frequency is actually lower or if loop proxies would be required otherwise.
+                                        ? (and (Block''isLoopHeader-1 prior) (or (< (:probability block) (:probability latest)) (:hasValueProxies (:graph node))))
+                                    ]
+                                        (recur (if ? block latest) block)
+                                    )
+                                )
+                            )
+                    ]
+                        (when (and (not= latest earliest) (not= latest (:dominator earliest)) (some? constrainingLocation)) => latest
+                            (ScheduleInstance'checkKillsBetween-3 earliest, latest, constrainingLocation)
+                        )
+                    )
+                )
+            ? (and (not= latest earliest) (satisfies? FloatingReadNode node) (ScheduleInstance'isImplicitNullOpportunity-2 node, earliest) (< (:probability earliest) (* (:probability latest) ScheduleInstance'IMPLICIT_NULL_CHECK_OPPORTUNITY_PROBABILITY_FACTOR)))
+        ]
+            (ScheduleInstance'selectLatestBlock-7 node, earliest, (if ? earliest latest), nodeMap, watchListMap, constrainingLocation, latestBlockToNodesMap)
+        )
+        nil
+    )
+
     (defn- #_"BlockMap<ArrayList<FloatingReadNode>>" ScheduleInstance''calcLatestBlocks-6 [#_"ScheduleInstance" this, #_"SchedulingStrategy" strategy, #_"NodeMap<Block>" currentNodeMap, #_"BlockMap<List<Node>>" earliestBlockToNodesMap, #_"NodeBitMap" visited, #_"BlockMap<List<Node>>" latestBlockToNodesMap]
         (let [
             #_"BlockMap<ArrayList<FloatingReadNode>>" watchListMap (BlockMap'new-1 (:cfg this))
@@ -67694,7 +67748,7 @@ ZeroExtendNode'new-4
                                     ]
                                         (if (nil? latestBlock)
                                             ;; We are not constraint within earliest block => calculate optimized schedule.
-                                            (ScheduleInstance''calcLatestBlock-9 this, block, strategy, node, currentNodeMap, constrainingLocation, watchListMap, latestBlockToNodesMap, visited)
+                                            (ScheduleInstance'calcLatestBlock-8 block, strategy, node, currentNodeMap, constrainingLocation, watchListMap, latestBlockToNodesMap, visited)
                                             (ScheduleInstance'selectLatestBlock-7 node, block, latestBlock, currentNodeMap, watchListMap, constrainingLocation, latestBlockToNodesMap)
                                         )
                                         [killed i']
@@ -67784,32 +67838,6 @@ ZeroExtendNode'new-4
             )
         )
         nil
-    )
-
-    (defn- #_"Node" ScheduleInstance'getUnproxifiedUncompressed-1 [#_"Node" node]
-        (loop [node node]
-            (condp satisfies? node
-                ValueProxy
-                    (recur (Proxy'''getOriginalNode-1 node))
-                ConvertNode
-                    (when (ConvertNode'''mayNullCheckSkipConversion-1 node) => node
-                        (recur (ConvertNode'''getValue-1 node))
-                    )
-                node
-            )
-        )
-    )
-
-    (defn- #_"boolean" ScheduleInstance'isImplicitNullOpportunity-2 [#_"FloatingReadNode" floatingReadNode, #_"Block" block]
-        (let [
-            #_"Node" pred (:predecessor (:beginNode block))
-        ]
-            (and (satisfies? IfNode pred) (satisfies? IsNullNode (:condition pred))
-                (= (ScheduleInstance'getUnproxifiedUncompressed-1 (AddressNode'''getBase-1 (Access'''getAddress-1 floatingReadNode)))
-                   (ScheduleInstance'getUnproxifiedUncompressed-1 (Unary'''getValue-1 (:condition pred)))
-                )
-            )
-        )
     )
 
     (defn- #_"void" ScheduleInstance'sortNodesLatestWithinBlock-6b [#_"Block" block, #_"BlockMap<List<Node>>" earliestBlockToNodesMap, #_"BlockMap<List<Node>>" latestBlockToNodesMap, #_"NodeMap<Block>" nodeMap, #_"BlockMap<ArrayList<FloatingReadNode>>" watchListMap, #_"NodeBitMap" unprocessed]
@@ -67933,113 +67961,6 @@ ZeroExtendNode'new-4
                 this
             )
         )
-    )
-
-    (defn #_"void" ScheduleInstance'selectLatestBlock-7 [#_"Node" currentNode, #_"Block" currentBlock, #_"Block" latestBlock, #_"NodeMap<Block>" currentNodeMap, #_"BlockMap<ArrayList<FloatingReadNode>>" watchListMap, #_"LocationIdentity" constrainingLocation, #_"BlockMap<List<Node>>" latestBlockToNodesMap]
-        (when-not (= currentBlock latestBlock)
-            (§ ass! currentNodeMap (NodeMap''setAndGrow-3 currentNodeMap, currentNode, latestBlock))
-
-            (when (and (some? constrainingLocation) (Block''canKill-2 latestBlock, constrainingLocation))
-                (when (nil? (BlockMap''get-2 watchListMap, latestBlock))
-                    (BlockMap''put-3 watchListMap, latestBlock, (ArrayList.))
-                )
-                (#_"ArrayList" .add (BlockMap''get-2 watchListMap, latestBlock), (§ cast #_"FloatingReadNode" currentNode))
-            )
-        )
-
-        (#_"List" .add (BlockMap''get-2 latestBlockToNodesMap, latestBlock), currentNode)
-        nil
-    )
-
-    (defn #_"Block" ScheduleInstance'checkKillsBetween-3 [#_"Block" earliest, #_"Block" latest, #_"LocationIdentity" location]
-        (let [
-            ;; Collect dominator chain that needs checking.
-            #_"List<Block>" dominators (ArrayList.)
-            _ (#_"List" .add dominators, latest)
-            _
-                (loop-when-recur [#_"Block" block (:dominator latest)] (not= block earliest) [(:dominator block)]
-                    ;; Current is an intermediate dominator between earliest and latest.
-                    (when (Block''canKill-2 block, location)
-                        (#_"List" .clear dominators)
-                    )
-                    (#_"List" .add dominators, block)
-                )
-        ]
-            ;; The first element of dominators now contains the latest possible block.
-            (loop-when [#_"Block" last earliest #_"int" i (dec (count dominators))] (<= 0 i) => last
-                (let [
-                    #_"Block" block (nth dominators i)
-                    ;; We are entering a loop boundary. The new loops must not kill the location for the crossing to be safe.
-                    ? (or (and (< (Block''getLoopDepth-1 last) (Block''getLoopDepth-1 block)) (some? (:loop block)) (Loop''canKill-2 (:loop block), location)) (Block''canKillBetweenThisAndDominator-2 block, location))
-                ]
-                    (if ? last (recur block (dec i)))
-                )
-            )
-        )
-    )
-
-    (defn- #_"Block" ScheduleInstance'calcBlockForUsage-4 [#_"Node" node, #_"Node" usage, #_"Block" block, #_"NodeMap<Block>" currentNodeMap]
-        (condp satisfies? usage
-            PhiNode
-                ;; An input to a PhiNode is used at the end of the predecessor block that
-                ;; corresponds to the PhiNode input. One PhiNode can use an input multiple times.
-                (let [
-                    #_"Block" mergeBlock (get currentNodeMap (:merge usage))
-                ]
-                    (loop-when-recur [block block #_"int" i 0]
-                                     (< i (PhiNode''valueCount-1 usage))
-                                     [(if (= (PhiNode''valueAt-2i usage, i) node) (ControlFlowGraph'commonDominator-2 block, (nth (:predecessors mergeBlock) i)) block) (inc i)]
-                                  => block
-                    )
-                )
-            AbstractBeginNode
-                (let [
-                    #_"Block" otherBlock (get currentNodeMap usage)
-                ]
-                    (ControlFlowGraph'commonDominator-2 block, (if (satisfies? StartNode usage) otherBlock (:dominator otherBlock)))
-                )
-            #_else
-                ;; All other types of usages: Put the input into the same block as the usage.
-                (let [
-                    #_"Block" otherBlock (get currentNodeMap (if (satisfies? ProxyNode usage) (:loopExit usage) usage))
-                ]
-                    (ControlFlowGraph'commonDominator-2 block, otherBlock)
-                )
-        )
-    )
-
-    (defn #_"void" ScheduleInstance''calcLatestBlock-9 [#_"ScheduleInstance" this, #_"Block" earliest, #_"SchedulingStrategy" strategy, #_"Node" node, #_"NodeMap<Block>" nodeMap, #_"LocationIdentity" constrainingLocation, #_"BlockMap<ArrayList<FloatingReadNode>>" watchListMap, #_"BlockMap<List<Node>>" latestBlockToNodesMap, #_"NodeBitMap" visited]
-        (let [
-            #_"Block" latest
-                (when (Node''hasUsages-1 node) => earliest
-                    (let [
-                        latest
-                            (loop-when-recur [latest nil #_"ISeq" s (seq (:nodeUsages node))] (some? s) [(ScheduleInstance'calcBlockForUsage-4 node, (first s), latest, nodeMap) (next s)] => latest)
-                        latest
-                            (when (any = strategy SchedulingStrategy'FINAL_SCHEDULE SchedulingStrategy'LATEST_OUT_OF_LOOPS) => latest
-                                (loop-when [latest latest #_"Block" block latest] (and (< (Block''getLoopDepth-1 earliest) (Block''getLoopDepth-1 block)) (not= block (:dominator earliest))) => latest
-                                    (let [
-                                        #_"Block" prior block
-                                        block (:dominator block)
-                                        ;; Only assign new latest block if frequency is actually lower or
-                                        ;; if loop proxies would be required otherwise.
-                                        ? (and (Block''isLoopHeader-1 prior) (or (< (:probability block) (:probability latest)) (:hasValueProxies (:graph node))))
-                                    ]
-                                        (recur (if ? block latest) block)
-                                    )
-                                )
-                            )
-                    ]
-                        (when (and (not= latest earliest) (not= latest (:dominator earliest)) (some? constrainingLocation)) => latest
-                            (ScheduleInstance'checkKillsBetween-3 earliest, latest, constrainingLocation)
-                        )
-                    )
-                )
-            ? (and (not= latest earliest) (satisfies? FloatingReadNode node) (ScheduleInstance'isImplicitNullOpportunity-2 node, earliest) (< (:probability earliest) (* (:probability latest) ScheduleInstance'IMPLICIT_NULL_CHECK_OPPORTUNITY_PROBABILITY_FACTOR)))
-        ]
-            (ScheduleInstance'selectLatestBlock-7 node, earliest, (if ? earliest latest), nodeMap, watchListMap, constrainingLocation, latestBlockToNodesMap)
-        )
-        nil
     )
 )
 
@@ -68208,15 +68129,12 @@ ZeroExtendNode'new-4
             #_"AbstractBeginNode" fastPath (Graph''add-2 graph, (BeginNode'new-0))
             #_"DeoptimizeNode" deopt (Graph''add-2 graph, (DeoptimizeNode'new-5 (:action guard), (:reason guard), DeoptimizeNode'DEFAULT_DEBUG_ID, (:speculation guard), nil))
             #_"AbstractBeginNode" deoptBranch (BeginNode'begin-1 deopt)
+            _ (LowerGuards''insertLoopExits-2 this, deopt)
+            [#_"AbstractBeginNode" then #_"AbstractBeginNode" else] (if (:negated? guard) [deoptBranch fastPath] [fastPath deoptBranch])
+            #_"IfNode" ifNode (Graph''add-2 graph, (IfNode'new-4b (DeoptimizingGuard'''getCondition-1 guard), then, else, (if (= then fastPath) 1 0)))
         ]
-            (LowerGuards''insertLoopExits-2 this, deopt)
-            (let [
-                [#_"AbstractBeginNode" trueSuccessor #_"AbstractBeginNode" falseSuccessor] (if (:negated? guard) [deoptBranch fastPath] [fastPath deoptBranch])
-                #_"IfNode" ifNode (Graph''add-2 graph, (IfNode'new-4b (DeoptimizingGuard'''getCondition-1 guard), trueSuccessor, falseSuccessor, (if (= trueSuccessor fastPath) 1 0)))
-            ]
-                (§ ass! guard (Node''replaceAndDelete-2 guard, fastPath))
-                (§ ass! this (ScheduledNodeIterator''insert-3 this, ifNode, fastPath))
-            )
+            (§ ass! guard (Node''replaceAndDelete-2 guard, fastPath))
+            (§ ass! this (ScheduledNodeIterator''insert-3 this, ifNode, fastPath))
         )
         nil
     )
@@ -68224,14 +68142,7 @@ ZeroExtendNode'new-4
     (defm LowerGuards ScheduledNodeIterator
         (#_"void" ScheduledNodeIterator'''processNode-2 [#_"LowerGuards" this, #_"Node" node]
             (when (satisfies? GuardNode node)
-                (let [
-                    #_"FixedWithNextNode" lowered (GuardNode''lowerGuard-1 node)
-                ]
-                    (if (some? lowered)
-                        (§ ass! this (ScheduledNodeIterator''replaceCurrent-2 this, lowered))
-                        (LowerGuards''lowerToIf-2 this, node)
-                    )
-                )
+                (LowerGuards''lowerToIf-2 this, node)
             )
             nil
         )
@@ -68673,7 +68584,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"void" SnippetTemplate''replaceMemoryUsages-3 [#_"SnippetTemplate" this, #_"ValueNode" node, #_"MemoryMap" map]
+    (defn- #_"void" SnippetTemplate'replaceMemoryUsages-2 [#_"ValueNode" node, #_"MemoryMap" map]
         (doseq [#_"Node" usage (:nodeUsages node)]
             (when-not (satisfies? MemoryMapNode usage)
                 (when-some [#_"LocationIdentity" location (SnippetTemplate'getLocationIdentity-1 usage)]
@@ -68693,7 +68604,7 @@ ZeroExtendNode'new-4
     (defn- #_"void" SnippetTemplate''rewireMemoryGraph-3 [#_"SnippetTemplate" this, #_"ValueNode" replacee, #_"{Node Node}" duplicates]
         (when (:isAfterFloatingReadPhase (:graph replacee))
             ;; rewire outgoing memory edges
-            (SnippetTemplate''replaceMemoryUsages-3 this, replacee, (MemoryOutputMap'new-3 this, replacee, duplicates))
+            (SnippetTemplate'replaceMemoryUsages-2 replacee, (MemoryOutputMap'new-3 this, replacee, duplicates))
 
             (when (some? (:returnNode this))
                 (when-some [#_"ReturnNode" ret (get duplicates (:returnNode this))]
@@ -68708,7 +68619,7 @@ ZeroExtendNode'new-4
                 (let [
                     #_"MemoryAnchorNode" memoryDuplicate (get duplicates (:memoryAnchor this))
                 ]
-                    (SnippetTemplate''replaceMemoryUsages-3 this, memoryDuplicate, (MemoryInputMap'new-1 replacee))
+                    (SnippetTemplate'replaceMemoryUsages-2 memoryDuplicate, (MemoryInputMap'new-1 replacee))
 
                     (when (Node''hasNoUsages-1 memoryDuplicate)
                         (if (some? (:next memoryDuplicate))
@@ -73559,7 +73470,7 @@ ZeroExtendNode'new-4
         (WordOperationPlugin'class.)
     )
 
-    (defn- #_"ValueNode" WordOperationPlugin''convert-5 [#_"WordOperationPlugin" this, #_"BytecodeParser" parser, #_"ValueNode" value, #_"JavaKind" toKind, #_"boolean" unsigned?]
+    (defn- #_"ValueNode" WordOperationPlugin'convert-4 [#_"BytecodeParser" parser, #_"ValueNode" value, #_"JavaKind" toKind, #_"boolean" unsigned?]
         (cond
             (= (ValueNode''getStackKind-1 value) toKind) value
             (= toKind JavaKind/Int)                      (BytecodeParser''add-2 parser, (NarrowNode'new-2 value, 32))
@@ -73568,23 +73479,23 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"ValueNode" WordOperationPlugin''fromUnsigned-3 [#_"WordOperationPlugin" this, #_"BytecodeParser" parser, #_"ValueNode" value]
-        (WordOperationPlugin''convert-5 this, parser, value, WordTypes'wordKind, true)
+    (defn #_"ValueNode" WordOperationPlugin'fromUnsigned-2 [#_"BytecodeParser" parser, #_"ValueNode" value]
+        (WordOperationPlugin'convert-4 parser, value, WordTypes'wordKind, true)
     )
 
-    (defn #_"ValueNode" WordOperationPlugin''fromSigned-3 [#_"WordOperationPlugin" this, #_"BytecodeParser" parser, #_"ValueNode" value]
-        (WordOperationPlugin''convert-5 this, parser, value, WordTypes'wordKind, false)
+    (defn #_"ValueNode" WordOperationPlugin'fromSigned-2 [#_"BytecodeParser" parser, #_"ValueNode" value]
+        (WordOperationPlugin'convert-4 parser, value, WordTypes'wordKind, false)
     )
 
-    (defn #_"ValueNode" WordOperationPlugin''toUnsigned-4 [#_"WordOperationPlugin" this, #_"BytecodeParser" parser, #_"ValueNode" value, #_"JavaKind" toKind]
-        (WordOperationPlugin''convert-5 this, parser, value, toKind, true)
+    (defn #_"ValueNode" WordOperationPlugin'toUnsigned-3 [#_"BytecodeParser" parser, #_"ValueNode" value, #_"JavaKind" toKind]
+        (WordOperationPlugin'convert-4 parser, value, toKind, true)
     )
 
-    (defn #_"AddressNode" WordOperationPlugin''makeAddress-4 [#_"WordOperationPlugin" this, #_"BytecodeParser" parser, #_"ValueNode" base, #_"ValueNode" offset]
-        (BytecodeParser''add-2 parser, (OffsetAddressNode'new-2 base, (WordOperationPlugin''fromSigned-3 this, parser, offset)))
+    (defn #_"AddressNode" WordOperationPlugin'makeAddress-3 [#_"BytecodeParser" parser, #_"ValueNode" base, #_"ValueNode" offset]
+        (BytecodeParser''add-2 parser, (OffsetAddressNode'new-2 base, (WordOperationPlugin'fromSigned-2 parser, offset)))
     )
 
-    (defn- #_"void" WordOperationPlugin''processMetaspaceOperation-5 [#_"WordOperationPlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"ValueNode*" args, #_"MetaspaceOperation" operation]
+    (defn- #_"void" WordOperationPlugin'processMetaspaceOperation-4 [#_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"ValueNode*" args, #_"MetaspaceOperation" operation]
         (let [
             #_"JavaKind" returnKind (#_"Signature" .getReturnKind (#_"ResolvedJavaMethod" .getSignature method))
         ]
@@ -73610,7 +73521,7 @@ ZeroExtendNode'new-4
                     (BytecodeParser''addPush-3 parser, returnKind, (PointerCastNode'new-2 KlassPointerStamp'KLASS, (nth args 0)))
                 MetaspaceOpcode'READ_KLASS_POINTER
                     (let [
-                        #_"AddressNode" address (WordOperationPlugin''makeAddress-4 this, parser, (nth args 0), (nth args 1))
+                        #_"AddressNode" address (WordOperationPlugin'makeAddress-3 parser, (nth args 0), (nth args 1))
                         #_"LocationIdentity" location
                             (if (= (count args) 2)
                                 LocationIdentity'ANY
@@ -73633,7 +73544,7 @@ ZeroExtendNode'new-4
         (#_"Constructor" .newInstance (#_"Class" .getDeclaredConstructor nodeClass, ValueNode'iface, ValueNode'iface), left, right)
     )
 
-    (defn- #_"ValueNode" WordOperationPlugin''comparisonOp-5 [#_"WordOperationPlugin" this, #_"BytecodeParser" parser, #_"Condition" condition, #_"ValueNode" left, #_"ValueNode" right]
+    (defn- #_"ValueNode" WordOperationPlugin'comparisonOp-4 [#_"BytecodeParser" parser, #_"Condition" condition, #_"ValueNode" left, #_"ValueNode" right]
         (let [
             #_"CanonicalizedCondition" canonical (Condition''canonicalize-1 condition)
             #_"ValueNode" a (if (:mirror? canonical) right left)
@@ -73658,7 +73569,7 @@ ZeroExtendNode'new-4
         (BytecodeParser''add-2 parser, (JavaReadNode'new-5 readKind, address, location, barrierType, compressible?))
     )
 
-    (defn- #_"ValueNode" WordOperationPlugin''readOp-6 [#_"WordOperationPlugin" this, #_"BytecodeParser" parser, #_"JavaKind" readKind, #_"AddressNode" address, #_"LocationIdentity" location, #_"WordOpcode" op]
+    (defn- #_"ValueNode" WordOperationPlugin'readOp-5 [#_"BytecodeParser" parser, #_"JavaKind" readKind, #_"AddressNode" address, #_"LocationIdentity" location, #_"WordOpcode" op]
         (let [
             #_"BarrierType" barrier (if (= op WordOpcode'READ_BARRIERED) BarrierType'PRECISE BarrierType'NONE)
             #_"boolean" compressible? (any = op WordOpcode'READ_OBJECT WordOpcode'READ_BARRIERED)
@@ -73667,7 +73578,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"void" WordOperationPlugin''writeOp-7 [#_"WordOperationPlugin" this, #_"BytecodeParser" parser, #_"JavaKind" writeKind, #_"AddressNode" address, #_"LocationIdentity" location, #_"ValueNode" value, #_"WordOpcode" op]
+    (defn- #_"void" WordOperationPlugin'writeOp-6 [#_"BytecodeParser" parser, #_"JavaKind" writeKind, #_"AddressNode" address, #_"LocationIdentity" location, #_"ValueNode" value, #_"WordOpcode" op]
         (let [
             #_"BarrierType" barrier (if (= op WordOpcode'WRITE_BARRIERED) BarrierType'PRECISE BarrierType'NONE)
             #_"boolean" compressible? (any = op WordOpcode'WRITE_OBJECT WordOpcode'WRITE_BARRIERED)
@@ -73677,14 +73588,14 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"AbstractCompareAndSwapNode" WordOperationPlugin''casOp-7 [#_"WordOperationPlugin" this, #_"JavaKind" writeKind, #_"JavaKind" returnKind, #_"AddressNode" address, #_"LocationIdentity" location, #_"ValueNode" expectedValue, #_"ValueNode" newValue]
+    (defn- #_"AbstractCompareAndSwapNode" WordOperationPlugin'casOp-6 [#_"JavaKind" writeKind, #_"JavaKind" returnKind, #_"AddressNode" address, #_"LocationIdentity" location, #_"ValueNode" expectedValue, #_"ValueNode" newValue]
         (if (= returnKind JavaKind/Boolean)
             (LogicCompareAndSwapNode'new-4 address, expectedValue, newValue, location)
             (ValueCompareAndSwapNode'new-4 address, expectedValue, newValue, location)
         )
     )
 
-    (defn- #_"void" WordOperationPlugin''processWordOperation-4 [#_"WordOperationPlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"ValueNode*" args]
+    (defn- #_"void" WordOperationPlugin'processWordOperation-3 [#_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"ValueNode*" args]
         (let [
             #_"JavaKind" returnKind (#_"Signature" .getReturnKind (#_"ResolvedJavaMethod" .getSignature method))
             #_"WordFactoryOperation" factoryOperation (BridgeMethodUtils'getAnnotation-2 WordFactoryOperation, method)
@@ -73699,12 +73610,12 @@ ZeroExtendNode'new-4
                         )
                         WordFactoryOpcode'FROM_UNSIGNED
                         (do
-                            (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin''fromUnsigned-3 this, parser, (nth args 0)))
+                            (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin'fromUnsigned-2 parser, (nth args 0)))
                             :done
                         )
                         WordFactoryOpcode'FROM_SIGNED
                         (do
-                            (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin''fromSigned-3 this, parser, (nth args 0)))
+                            (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin'fromSigned-2 parser, (nth args 0)))
                             :done
                         )
                         nil
@@ -73721,34 +73632,34 @@ ZeroExtendNode'new-4
                         WordOpcode'NODE_CLASS
                             (let [
                                 #_"ValueNode" left (nth args 0)
-                                #_"ValueNode" right (if (WordOperation''rightOperandIsInt-1 operation) (WordOperationPlugin''toUnsigned-4 this, parser, (nth args 1), JavaKind/Int) (WordOperationPlugin''fromSigned-3 this, parser, (nth args 1)))
+                                #_"ValueNode" right (if (WordOperation''rightOperandIsInt-1 operation) (WordOperationPlugin'toUnsigned-3 parser, (nth args 1), JavaKind/Int) (WordOperationPlugin'fromSigned-2 parser, (nth args 1)))
                             ]
                                 (BytecodeParser''addPush-3 parser, returnKind, (WordOperationPlugin'createBinaryNodeInstance-3 (WordOperation''node-1 operation), left, right))
                             )
                         WordOpcode'COMPARISON
-                            (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin''comparisonOp-5 this, parser, (WordOperation''condition-1 operation), (nth args 0), (WordOperationPlugin''fromSigned-3 this, parser, (nth args 1))))
+                            (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin'comparisonOp-4 parser, (WordOperation''condition-1 operation), (nth args 0), (WordOperationPlugin'fromSigned-2 parser, (nth args 1))))
                         WordOpcode'IS_NULL
-                            (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin''comparisonOp-5 this, parser, Condition'EQ, (nth args 0), (ConstantNode'forIntegerKind-2 WordTypes'wordKind, 0)))
+                            (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin'comparisonOp-4 parser, Condition'EQ, (nth args 0), (ConstantNode'forIntegerKind-2 WordTypes'wordKind, 0)))
                         WordOpcode'IS_NON_NULL
-                            (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin''comparisonOp-5 this, parser, Condition'NE, (nth args 0), (ConstantNode'forIntegerKind-2 WordTypes'wordKind, 0)))
+                            (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin'comparisonOp-4 parser, Condition'NE, (nth args 0), (ConstantNode'forIntegerKind-2 WordTypes'wordKind, 0)))
                         WordOpcode'NOT
                             (BytecodeParser''addPush-3 parser, returnKind, (XorNode'new-2 (nth args 0), (BytecodeParser''add-2 parser, (ConstantNode'forIntegerKind-2 WordTypes'wordKind, -1))))
                        [WordOpcode'READ_POINTER WordOpcode'READ_OBJECT WordOpcode'READ_BARRIERED]
                             (let [
                                 #_"JavaKind" readKind (WordTypes'asKind-1 (#_"Signature" .getReturnType (#_"ResolvedJavaMethod" .getSignature method), (#_"ResolvedJavaMethod" .getDeclaringClass method)))
-                                #_"AddressNode" address (WordOperationPlugin''makeAddress-4 this, parser, (nth args 0), (nth args 1))
+                                #_"AddressNode" address (WordOperationPlugin'makeAddress-3 parser, (nth args 0), (nth args 1))
                                 #_"LocationIdentity" location
                                     (if (= (count args) 2)
                                         LocationIdentity'ANY
                                         (SnippetReflection'asObject-2c LocationIdentity'iface, (ValueNode''asJavaConstant-1 (nth args 2)))
                                     )
                             ]
-                                (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin''readOp-6 this, parser, readKind, address, location, (WordOperation''opcode-1 operation)))
+                                (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin'readOp-5 parser, readKind, address, location, (WordOperation''opcode-1 operation)))
                             )
                         WordOpcode'READ_HEAP
                             (let [
                                 #_"JavaKind" readKind (WordTypes'asKind-1 (#_"Signature" .getReturnType (#_"ResolvedJavaMethod" .getSignature method), (#_"ResolvedJavaMethod" .getDeclaringClass method)))
-                                #_"AddressNode" address (WordOperationPlugin''makeAddress-4 this, parser, (nth args 0), (nth args 1))
+                                #_"AddressNode" address (WordOperationPlugin'makeAddress-3 parser, (nth args 0), (nth args 1))
                                 #_"BarrierType" barrierType (SnippetReflection'asObject-2c BarrierType, (ValueNode''asJavaConstant-1 (nth args 2)))
                             ]
                                 (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin'readOp-6 parser, readKind, address, LocationIdentity'ANY, barrierType, true))
@@ -73756,17 +73667,17 @@ ZeroExtendNode'new-4
                        [WordOpcode'WRITE_POINTER WordOpcode'WRITE_OBJECT WordOpcode'WRITE_BARRIERED WordOpcode'INITIALIZE]
                             (let [
                                 #_"JavaKind" writeKind (WordTypes'asKind-1 (#_"Signature" .getParameterType (#_"ResolvedJavaMethod" .getSignature method), (if (#_"ResolvedJavaMethod" .isStatic method) 2 1), (#_"ResolvedJavaMethod" .getDeclaringClass method)))
-                                #_"AddressNode" address (WordOperationPlugin''makeAddress-4 this, parser, (nth args 0), (nth args 1))
+                                #_"AddressNode" address (WordOperationPlugin'makeAddress-3 parser, (nth args 0), (nth args 1))
                                 #_"LocationIdentity" location
                                     (if (= (count args) 3)
                                         LocationIdentity'ANY
                                         (SnippetReflection'asObject-2c LocationIdentity'iface, (ValueNode''asJavaConstant-1 (nth args 3)))
                                     )
                             ]
-                                (WordOperationPlugin''writeOp-7 this, parser, writeKind, address, location, (nth args 2), (WordOperation''opcode-1 operation))
+                                (WordOperationPlugin'writeOp-6 parser, writeKind, address, location, (nth args 2), (WordOperation''opcode-1 operation))
                             )
                         WordOpcode'TO_RAW_VALUE
-                            (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin''toUnsigned-4 this, parser, (nth args 0), JavaKind/Long))
+                            (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin'toUnsigned-3 parser, (nth args 0), JavaKind/Long))
                         WordOpcode'FROM_OBJECT
                             (let [
                                 #_"WordCastNode" objectToTracked (BytecodeParser''add-2 parser, (WordCastNode'objectToWord-2 (nth args 0), WordTypes'wordKind))
@@ -73793,12 +73704,12 @@ ZeroExtendNode'new-4
                             )
                         WordOpcode'CAS_POINTER
                             (let [
-                                #_"AddressNode" address (WordOperationPlugin''makeAddress-4 this, parser, (nth args 0), (nth args 1))
+                                #_"AddressNode" address (WordOperationPlugin'makeAddress-3 parser, (nth args 0), (nth args 1))
                                 #_"JavaKind" valueKind (WordTypes'asKind-1 (#_"Signature" .getParameterType (#_"ResolvedJavaMethod" .getSignature method), 1, (#_"ResolvedJavaMethod" .getDeclaringClass method)))
                                 #_"LocationIdentity" location (SnippetReflection'asObject-2c LocationIdentity'iface, (ValueNode''asJavaConstant-1 (nth args 4)))
                                 #_"JavaType" returnType (#_"Signature" .getReturnType (#_"ResolvedJavaMethod" .getSignature method), (#_"ResolvedJavaMethod" .getDeclaringClass method))
                             ]
-                                (BytecodeParser''addPush-3 parser, returnKind, (WordOperationPlugin''casOp-7 this, valueKind, (WordTypes'asKind-1 returnType), address, location, (nth args 2), (nth args 3)))
+                                (BytecodeParser''addPush-3 parser, returnKind, (WordOperationPlugin'casOp-6 valueKind, (WordTypes'asKind-1 returnType), address, location, (nth args 2), (nth args 3)))
                             )
                     )
                 )
@@ -73820,8 +73731,8 @@ ZeroExtendNode'new-4
                     #_"MetaspaceOperation" operation (BridgeMethodUtils'getAnnotation-2 MetaspaceOperation, method)
                 ]
                     (if (some? operation)
-                        (WordOperationPlugin''processMetaspaceOperation-5 this, parser, method, args, operation)
-                        (WordOperationPlugin''processWordOperation-4 this, parser, method, args)
+                        (WordOperationPlugin'processMetaspaceOperation-4 parser, method, args, operation)
+                        (WordOperationPlugin'processWordOperation-3 parser, method, args)
                     )
                     true
                 )
@@ -73870,7 +73781,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"LoadIndexedNode" WordOperationPlugin''createLoadIndexedNode-3 [#_"WordOperationPlugin" this, #_"ValueNode" array, #_"ValueNode" index]
+    (defn- #_"LoadIndexedNode" WordOperationPlugin'createLoadIndexedNode-2 [#_"ValueNode" array, #_"ValueNode" index]
         (let [
             #_"ResolvedJavaType" arrayType (StampTool'typeOrNull-1 (:stamp array))
             #_"Stamp" componentStamp (WordTypes'getWordStamp-1 (#_"ResolvedJavaType" .getComponentType arrayType))
@@ -73882,7 +73793,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"StoreIndexedNode" WordOperationPlugin''createStoreIndexedNode-4 [#_"WordOperationPlugin" this, #_"ValueNode" array, #_"ValueNode" index, #_"ValueNode" value]
+    (defn- #_"StoreIndexedNode" WordOperationPlugin'createStoreIndexedNode-3 [#_"ValueNode" array, #_"ValueNode" index, #_"ValueNode" value]
         (StoreIndexedNode'new-4 array, index, WordTypes'wordKind, value)
     )
 
@@ -73895,7 +73806,7 @@ ZeroExtendNode'new-4
                 ;; In that case we assume it is not a word type.
                 (and (some? arrayType) (WordTypes'isWord-1j (#_"ResolvedJavaType" .getComponentType arrayType))
                     (do
-                        (BytecodeParser''addPush-3 parser, elementKind, (WordOperationPlugin''createLoadIndexedNode-3 this, array, index))
+                        (BytecodeParser''addPush-3 parser, elementKind, (WordOperationPlugin'createLoadIndexedNode-2 array, index))
                         true
                     )
                 )
@@ -73933,7 +73844,7 @@ ZeroExtendNode'new-4
                         (when-not (= (ValueNode''getStackKind-1 value) WordTypes'wordKind)
                             (throw! (str "cannot store a non-word value into a word array: " (#_"ResolvedJavaType" .toJavaName arrayType, true)))
                         )
-                        (BytecodeParser''add-2 parser, (WordOperationPlugin''createStoreIndexedNode-4 this, array, index, value))
+                        (BytecodeParser''add-2 parser, (WordOperationPlugin'createStoreIndexedNode-3 array, index, value))
                         true
                     )
                     (do
@@ -74018,26 +73929,26 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"void" WriteBarrierAdditionPhase''addG1PostWriteBarrier-6 [#_"WriteBarrierAdditionPhase" this, #_"FixedAccessNode" node, #_"AddressNode" address, #_"ValueNode" value, #_"boolean" precise?, #_"Graph" graph]
+    (defn- #_"void" WriteBarrierAdditionPhase'addG1PostWriteBarrier-5 [#_"FixedAccessNode" node, #_"AddressNode" address, #_"ValueNode" value, #_"boolean" precise?, #_"Graph" graph]
         (Graph''addAfterFixed-3 graph, node, (Graph''add-2 graph, (G1PostWriteBarrier'new-4 address, value, precise?, (StampTool'isPointerAlwaysNull-1 (:stamp value)))))
         nil
     )
 
-    (defn- #_"void" WriteBarrierAdditionPhase''addSerialPostWriteBarrier-6 [#_"WriteBarrierAdditionPhase" this, #_"FixedAccessNode" node, #_"AddressNode" address, #_"ValueNode" value, #_"boolean" precise?, #_"Graph" graph]
+    (defn- #_"void" WriteBarrierAdditionPhase'addSerialPostWriteBarrier-5 [#_"FixedAccessNode" node, #_"AddressNode" address, #_"ValueNode" value, #_"boolean" precise?, #_"Graph" graph]
         (when-not (StampTool'isPointerAlwaysNull-1 (:stamp value)) ;; serial barrier isn't needed for nil value
             (Graph''addAfterFixed-3 graph, node, (Graph''add-2 graph, (SerialWriteBarrier'new-2 address, precise?)))
         )
         nil
     )
 
-    (defn- #_"void" WriteBarrierAdditionPhase''addReadNodeBarriers-3 [#_"WriteBarrierAdditionPhase" this, #_"ReadNode" node, #_"Graph" graph]
+    (defn- #_"void" WriteBarrierAdditionPhase'addReadNodeBarriers-2 [#_"ReadNode" node, #_"Graph" graph]
         (when (= (:barrierType node) BarrierType'PRECISE)
             (Graph''addAfterFixed-3 graph, node, (Graph''add-2 graph, (G1ReferentFieldReadBarrier'new-3 (Access'''getAddress-1 node), node, false)))
         )
         nil
     )
 
-    (defn- #_"void" WriteBarrierAdditionPhase''addWriteNodeBarriers-3 [#_"WriteBarrierAdditionPhase" this, #_"WriteNode" node, #_"Graph" graph]
+    (defn- #_"void" WriteBarrierAdditionPhase'addWriteNodeBarriers-2 [#_"WriteNode" node, #_"Graph" graph]
         (condp =? (:barrierType node)
             [BarrierType'IMPRECISE BarrierType'PRECISE]
                 (let [
@@ -74048,9 +73959,9 @@ ZeroExtendNode'new-4
                             (when-not (LocationIdentity''isInit-1 (Access'''getLocationIdentity-1 node))
                                 (WriteBarrierAdditionPhase'addG1PreWriteBarrier-6 node, (Access'''getAddress-1 node), nil, true, (:nullCheck node), graph)
                             )
-                            (WriteBarrierAdditionPhase''addG1PostWriteBarrier-6 this, node, (Access'''getAddress-1 node), (:value node), precise?, graph)
+                            (WriteBarrierAdditionPhase'addG1PostWriteBarrier-5 node, (Access'''getAddress-1 node), (:value node), precise?, graph)
                         )
-                        (WriteBarrierAdditionPhase''addSerialPostWriteBarrier-6 this, node, (Access'''getAddress-1 node), (:value node), precise?, graph)
+                        (WriteBarrierAdditionPhase'addSerialPostWriteBarrier-5 node, (Access'''getAddress-1 node), (:value node), precise?, graph)
                     )
                 )
             BarrierType'NONE nil ;; nothing to do
@@ -74058,7 +73969,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"void" WriteBarrierAdditionPhase''addAtomicReadWriteNodeBarriers-3 [#_"WriteBarrierAdditionPhase" this, #_"LoweredAtomicReadAndWriteNode" node, #_"Graph" graph]
+    (defn- #_"void" WriteBarrierAdditionPhase'addAtomicReadWriteNodeBarriers-2 [#_"LoweredAtomicReadAndWriteNode" node, #_"Graph" graph]
         (condp =? (:barrierType node)
             [BarrierType'IMPRECISE BarrierType'PRECISE]
                 (let [
@@ -74067,9 +73978,9 @@ ZeroExtendNode'new-4
                     (if HotSpot'useG1GC
                         (do
                             (WriteBarrierAdditionPhase'addG1PreWriteBarrier-6 node, (Access'''getAddress-1 node), nil, true, (:nullCheck node), graph)
-                            (WriteBarrierAdditionPhase''addG1PostWriteBarrier-6 this, node, (Access'''getAddress-1 node), (:newValue node), precise?, graph)
+                            (WriteBarrierAdditionPhase'addG1PostWriteBarrier-5 node, (Access'''getAddress-1 node), (:newValue node), precise?, graph)
                         )
-                        (WriteBarrierAdditionPhase''addSerialPostWriteBarrier-6 this, node, (Access'''getAddress-1 node), (:newValue node), precise?, graph)
+                        (WriteBarrierAdditionPhase'addSerialPostWriteBarrier-5 node, (Access'''getAddress-1 node), (:newValue node), precise?, graph)
                     )
                 )
             BarrierType'NONE nil ;; nothing to do
@@ -74077,7 +73988,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"void" WriteBarrierAdditionPhase''addCASBarriers-3 [#_"WriteBarrierAdditionPhase" this, #_"AbstractCompareAndSwapNode" node, #_"Graph" graph]
+    (defn- #_"void" WriteBarrierAdditionPhase'addCASBarriers-2 [#_"AbstractCompareAndSwapNode" node, #_"Graph" graph]
         (condp =? (:barrierType node)
             [BarrierType'IMPRECISE BarrierType'PRECISE]
                 (let [
@@ -74086,9 +73997,9 @@ ZeroExtendNode'new-4
                     (if HotSpot'useG1GC
                         (do
                             (WriteBarrierAdditionPhase'addG1PreWriteBarrier-6 node, (Access'''getAddress-1 node), (:expectedValue node), false, false, graph)
-                            (WriteBarrierAdditionPhase''addG1PostWriteBarrier-6 this, node, (Access'''getAddress-1 node), (AbstractCompareAndSwapNode''getNewValue-1 node), precise?, graph)
+                            (WriteBarrierAdditionPhase'addG1PostWriteBarrier-5 node, (Access'''getAddress-1 node), (AbstractCompareAndSwapNode''getNewValue-1 node), precise?, graph)
                         )
-                        (WriteBarrierAdditionPhase''addSerialPostWriteBarrier-6 this, node, (Access'''getAddress-1 node), (AbstractCompareAndSwapNode''getNewValue-1 node), precise?, graph)
+                        (WriteBarrierAdditionPhase'addSerialPostWriteBarrier-5 node, (Access'''getAddress-1 node), (AbstractCompareAndSwapNode''getNewValue-1 node), precise?, graph)
                     )
                 )
             BarrierType'NONE nil ;; nothing to do
@@ -74100,10 +74011,10 @@ ZeroExtendNode'new-4
         (#_"Graph" Phase'''run-3 [#_"WriteBarrierAdditionPhase" this, #_"Graph" graph, #_"PhaseContext" context]
             (doseq [#_"Node" node (Graph''getNodes-1 graph)]
                 (condp satisfies? node
-                    ReadNode                      (WriteBarrierAdditionPhase''addReadNodeBarriers-3 this, node, graph)
-                    WriteNode                     (WriteBarrierAdditionPhase''addWriteNodeBarriers-3 this, node, graph)
-                    LoweredAtomicReadAndWriteNode (WriteBarrierAdditionPhase''addAtomicReadWriteNodeBarriers-3 this, node, graph)
-                    AbstractCompareAndSwapNode    (WriteBarrierAdditionPhase''addCASBarriers-3 this, node, graph)
+                    ReadNode                      (WriteBarrierAdditionPhase'addReadNodeBarriers-2 node, graph)
+                    WriteNode                     (WriteBarrierAdditionPhase'addWriteNodeBarriers-2 node, graph)
+                    LoweredAtomicReadAndWriteNode (WriteBarrierAdditionPhase'addAtomicReadWriteNodeBarriers-2 node, graph)
+                    AbstractCompareAndSwapNode    (WriteBarrierAdditionPhase'addCASBarriers-2 node, graph)
                     nil
                 )
             )
