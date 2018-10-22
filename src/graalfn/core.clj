@@ -265,12 +265,6 @@ AMD64ControlFlow'cmove-4
 AMD64ControlFlow'intCond-1
 AMD64ControlFlow'setcc-3
 AMD64DeoptimizeOp'new-0
-AMD64FrameMap''allocateRBPSpillSlot-1
-AMD64FrameMap''freeRBPSpillSlot-1
-AMD64FrameMap'new-0
-AMD64FrameMapBuilder''allocateRBPSpillSlot-1
-AMD64FrameMapBuilder''freeRBPSpillSlot-1
-AMD64FrameMapBuilder'new-1
 AMD64HotSpotRestoreRbpOp'PLACEHOLDER
 AMD64HotSpotReturnOp'new-4
 AMD64HotSpotStrategySwitchOp'new-5
@@ -376,11 +370,6 @@ AbstractFixedGuardNode''lowerToIf-1
 AbstractFixedGuardNode'new-5
 AbstractInlineInfo'inline-4
 AbstractInlineInfo'new-1
-AbstractInliningPolicy'CapInheritedRelevance
-AbstractInliningPolicy'RelevanceCapForInlining
-AbstractInliningPolicy'computeMaximumSize-2
-AbstractInliningPolicy'determineInvokeProbability-1
-AbstractInliningPolicy'new-0
 AbstractLocalNode''index-1
 AbstractLocalNode'new-2
 AbstractMemoryCheckpoint'new-1
@@ -771,29 +760,13 @@ BytecodeParser''appendInvoke-4
 BytecodeParser''bci-1
 BytecodeParser''build-3
 BytecodeParser''buildRootMethod-1
-BytecodeParser''canInlinePartialIntrinsicExit-1
 BytecodeParser''cleanupFinalGraph-1
-BytecodeParser''createInstanceOf-3
-BytecodeParser''createInstanceOfAllowNull-3
 BytecodeParser''createInvoke-4
-BytecodeParser''createMonitorEnterNode-3
-BytecodeParser''createNewArray-3
-BytecodeParser''createNewInstance-2
 BytecodeParser''createNonInlinedInvoke-7
 BytecodeParser''emitCheckForInvokeSuperSpecial-2
-BytecodeParser''genAnd-3
-BytecodeParser''genConditional-2
 BytecodeParser''genGoto-1
 BytecodeParser''genIf-4
 BytecodeParser''genIf-5
-BytecodeParser''genIfNode-5
-BytecodeParser''genIntegerAdd-3
-BytecodeParser''genIntegerDiv-3
-BytecodeParser''genIntegerEquals-3
-BytecodeParser''genIntegerLessThan-3
-BytecodeParser''genIntegerMul-3
-BytecodeParser''genIntegerRem-3
-BytecodeParser''genIntegerSub-3
 BytecodeParser''genIntegerSwitch-6
 BytecodeParser''genInvokeDynamic-2
 BytecodeParser''genInvokeDynamic-3
@@ -806,34 +779,19 @@ BytecodeParser''genInvokeStatic-3
 BytecodeParser''genInvokeVirtual-2
 BytecodeParser''genInvokeVirtual-3
 BytecodeParser''genJsr-2
-BytecodeParser''genLeftShift-3
 BytecodeParser''genLoadField-3
-BytecodeParser''genLoadIndexed-4
 BytecodeParser''genMonitorEnter-3
 BytecodeParser''genMonitorExit-4
-BytecodeParser''genNarrow-3v
-BytecodeParser''genNegateOp-2v
-BytecodeParser''genNormalizeCompare-3
-BytecodeParser''genObjectEquals-3
-BytecodeParser''genOr-3
 BytecodeParser''genRet-2
 BytecodeParser''genReturn-3
-BytecodeParser''genRightShift-3
-BytecodeParser''genSignExtend-3v
 BytecodeParser''genStoreField-4
 BytecodeParser''genStoreIndexed-5
 BytecodeParser''genUnique-2l
 BytecodeParser''genUnique-2v
-BytecodeParser''genUnsignedRightShift-3
-BytecodeParser''genVolatileFieldReadProxy-2
-BytecodeParser''genXor-3
-BytecodeParser''genZeroExtend-3v
-BytecodeParser''getDepth-1
 BytecodeParser''getInvokeKind-1
 BytecodeParser''getInvokeReturnStamp-1
 BytecodeParser''getInvokeReturnType-1
 BytecodeParser''getNonIntrinsicAncestor-1
-BytecodeParser''getParent-1
 BytecodeParser''handleUnresolvedCheckCast-3
 BytecodeParser''handleUnresolvedInstanceOf-3
 BytecodeParser''handleUnresolvedInvoke-3
@@ -1041,13 +999,12 @@ CallOp'new-3
 CallTargetNode''setInvokeKind-2
 CallTargetNode''setTargetMethod-2
 CallTargetNode'new-4
-CallsiteHolder'new-0
-CallsiteHolderExplorable''computeProbabilities-1
-CallsiteHolderExplorable''invokeProbability-2
-CallsiteHolderExplorable''invokeRelevance-2
-CallsiteHolderExplorable''popInvoke-1
-CallsiteHolderExplorable''pushInvoke-2
-CallsiteHolderExplorable'new-5
+CallsiteHolder''computeProbabilities-1
+CallsiteHolder''invokeProbability-2
+CallsiteHolder''invokeRelevance-2
+CallsiteHolder''popInvoke-1
+CallsiteHolder''pushInvoke-2
+CallsiteHolder'new-4
 CanonicalCondition'BT
 CanonicalCondition'EQ
 CanonicalCondition'LT
@@ -1222,7 +1179,6 @@ ConditionalEliminationInstance''registerCondition-4
 ConditionalEliminationInstance''registerNewCondition-4
 ConditionalEliminationInstance''registerNewStamp-4
 ConditionalEliminationInstance''registerNewStamp-5
-ConditionalEliminationInstance''rewireGuards-6
 ConditionalEliminationInstance''tryProveCondition-3
 ConditionalEliminationInstance''tryProveGuardCondition-4
 ConditionalEliminationInstance'new-3
@@ -1344,8 +1300,6 @@ DataTwoOp'new-5
 DataTwoOp'new-6
 DeadCodeEliminationPhase'new-0
 DeadCodeEliminationPhase'new-1
-Decision'NO
-Decision'YES
 DefUseTree''addUsage-4
 DefUseTree''getConstant-1
 DefUseTree''getVariable-1
@@ -1536,23 +1490,27 @@ FrameContext''enter-2
 FrameContext''leave-2
 FrameContext'PATCHED_VERIFIED_ENTRY_POINT_INSTRUCTION_SIZE
 FrameContext'new-2
-FrameMap''addObjectStackSlot-2
 FrameMap''allocateNewSpillSlot-3
+FrameMap''allocateRBPSpillSlot-1
 FrameMap''allocateSpillSlot-2
 FrameMap''allocateStackSlots-3
 FrameMap''callsMethod-2
+FrameMap''currentFrameSize-1
 FrameMap''finish-1
 FrameMap''frameNeedsAllocating-1
-FrameMap''frameSize-1
+FrameMap''freeRBPSpillSlot-1
 FrameMap''offsetForStackSlot-2
 FrameMap''reserveOutgoing-2
-FrameMap''returnAddressSize-1
-FrameMap''spillSlotRangeSize-2
-FrameMap''spillSlotSize-2
+FrameMap'RETURN_ADDRESS_SIZE
+FrameMap'spillSlotSize-1
+FrameMap''totalFrameSize-1
 FrameMap'new-0
+FrameMapBuilder''allocateSpillSlot-2
+FrameMapBuilder''buildFrameMap-2
+FrameMapBuilder''callsMethod-2
+FrameMapBuilder''allocateRBPSpillSlot-1
+FrameMapBuilder''freeRBPSpillSlot-1
 FrameMapBuilder'new-0
-FrameMapBuilder0'new-1
-FrameMapBuilderTool'new-0
 FrameState''addVirtualObjectMapping-2
 FrameState''duplicate-1
 FrameState''duplicate-2
@@ -1753,7 +1711,6 @@ GraphUtil'tryKillUnused-1
 GraphUtil'unlinkFixedNode-1
 GraphUtil'unproxify-1n
 GraphUtil'unproxify-1p
-GreedyInliningPolicy'new-0
 GuardLoweringPhase'new-0
 GuardNode''lowerGuard-1
 GuardNode'new-6
@@ -1928,12 +1885,15 @@ InliningData''countRecursiveInlining-2
 InliningData''hasUnprocessedGraphs-1
 InliningData''inliningDepth-1
 InliningData''moveForward-1
-InliningData'freshlyInstantiatedArguments-2
 InliningData'isFreshInstantiation-1
-InliningData'new-5
+InliningData'new-3
 InliningIterator''apply-1
 InliningIterator'new-1
 InliningPhase'new-1
+InliningPolicy'CapInheritedRelevance
+InliningPolicy'RelevanceCapForInlining
+InliningPolicy'continueInlining-1
+InliningPolicy'isWorthInlining-3
 InliningUtil'checkInvokeConditions-1
 InliningUtil'inline-4
 InliningUtil'inlineForCanonicalization-4
@@ -2194,8 +2154,7 @@ LIRFieldsScanner'new-0
 LIRGenerationContext'new-4
 LIRGenerationPhase'new-0
 LIRGenerationResult''buildFrameMap-1
-LIRGenerationResult''setForeignCall-2
-LIRGenerationResult'new-3
+LIRGenerationResult'new-2
 LIRGenerator''_emitForeignCall-3*
 LIRGenerator''append-2
 LIRGenerator''asAddressValue-2
@@ -3115,7 +3074,6 @@ PartialEscapeClosure''ensureMaterialized-5
 PartialEscapeClosure''getAlias-2
 PartialEscapeClosure''getAliasAndResolve-3
 PartialEscapeClosure''getObjectState-3
-PartialEscapeClosure''virtualize-3
 PartialEscapeClosure'new-1
 PartialEscapeClosure'updateStatesForMaterialized-3
 PartialEscapePhase'new-2
@@ -3909,8 +3867,6 @@ ZeroExtendNode'new-4
 (defp AMD64CCall)
 (defp AMD64ClearRegisterOp)
 (defp AMD64DeoptimizeOp)
-(defp AMD64FrameMap)
-(defp AMD64FrameMapBuilder)
 
 (defp AMD64HotSpotRestoreRbpOp
     ;;;
@@ -3983,7 +3939,6 @@ ZeroExtendNode'new-4
 
 (defp AbstractFixedGuardNode)
 (defp AbstractInlineInfo)
-(defp AbstractInliningPolicy)
 (defp AbstractLocalNode)
 (defp AbstractMemoryCheckpoint)
 
@@ -4031,10 +3986,7 @@ ZeroExtendNode'new-4
 (defp AcquiredCASLockNode)
 (defp Add)
 (defp AddNode)
-
-(defp Address
-)
-
+(defp Address)
 (defp AddressLowering)
 (defp AddressLoweringPhase)
 
@@ -4057,10 +4009,7 @@ ZeroExtendNode'new-4
 (defp AllocatedObjectNode)
 (defp AllocationStage)
 (defp Allocator)
-
-(defp AnchoringNode
-)
-
+(defp AnchoringNode)
 (defp And)
 (defp AndNode)
 (defp Arguments)
@@ -4146,8 +4095,7 @@ ZeroExtendNode'new-4
  ; This sub-interface of Binary is for nodes with two inputs where the operation is commutative.
  ; It is used to improve GVN by trying to merge nodes with the same inputs in different order.
  ;;
-(defp BinaryCommutative
-)
+(defp BinaryCommutative)
 
 ;;;
  ; The BinaryNode class is the base of arithmetic and logic operations with two inputs.
@@ -4217,8 +4165,7 @@ ZeroExtendNode'new-4
  ; A block delimiter. Every well formed block must contain exactly one such operation and it
  ; must be the last operation in the block.
  ;;
-(defp BlockEndOp
-)
+(defp BlockEndOp)
 
 (defp BlockIteratorClosure #_"<T>"
     (#_"T" BlockIteratorClosure'''getInitialState-1 [#_"BlockIteratorClosure<T>" this])
@@ -4313,30 +4260,7 @@ ZeroExtendNode'new-4
 
 (defp CallOp)
 (defp CallTargetNode)
-
-;;;
- ; Information about a graph that will potentially be inlined. This includes tracking the invocations
- ; in graph that will subject to inlining themselves.
- ;;
-(defp CallsiteHolder
-    ;;;
-     ; Gets the method associated with the {@linkplain #graph() graph} represented by this object.
-     ;;
-    (#_"ResolvedJavaMethod" CallsiteHolder'''method-1 [#_"CallsiteHolder" this])
-    ;;;
-     ; The stack realized by InliningData grows upon InliningData#moveForward() deciding
-     ; to explore (depth-first) a callsite of the graph associated to this CallsiteHolder.
-     ; The list of not-yet-considered callsites is managed by CallsiteHolderExplorable,
-     ; and this method reports whether any such candidates remain.
-     ;;
-    (#_"boolean" CallsiteHolder'''hasRemainingInvokes-1 [#_"CallsiteHolder" this])
-    ;;;
-     ; The graph about which this object contains inlining information.
-     ;;
-    (#_"Graph" CallsiteHolder'''graph-1 [#_"CallsiteHolder" this])
-)
-
-(defp CallsiteHolderExplorable)
+(defp CallsiteHolder)
 (defp CanonicalCondition)
 
 ;;;
@@ -4484,8 +4408,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Marker interface for nodes that prevents control flow optimizations. The node should never be duplicated.
  ;;
-(defp ControlFlowAnchored
-)
+(defp ControlFlowAnchored)
 
 (defp ControlFlowGraph)
 (defp ControlFlowOptimizer)
@@ -4566,7 +4489,6 @@ ZeroExtendNode'new-4
 (defp DataSection)
 (defp DataTwoOp)
 (defp DeadCodeEliminationPhase)
-(defp Decision)
 (defp DefUseTree)
 (defp DefaultLoopPolicies)
 (defp DefaultSimplifierTool)
@@ -4575,8 +4497,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Interface for nodes that need a FrameState for deoptimizing to a point after their execution.
  ;;
-(defp DeoptAfter
-)
+(defp DeoptAfter)
 
 ;;;
  ; Interface for nodes that need a FrameState for deoptimizing to a point before their execution.
@@ -4759,78 +4680,8 @@ ZeroExtendNode'new-4
 (defp ForeignCallOp)
 (defp ForeignCalls)
 (defp FrameContext)
-
-;;;
- ; This class is used to build the stack frame layout for a compiled method. A StackSlot is used to index slots of the
- ; frame relative to the stack pointer. The frame size is only fixed after register allocation when all spill slots have
- ; been allocated. Both the outgoing argument area and the spill are can grow until then. Therefore, outgoing arguments
- ; are indexed from the stack pointer, while spill slots are indexed from the beginning of the frame (and the total frame
- ; size has to be added to get the actual offset from the stack pointer).
- ;;
-(defp FrameMap
-    ;;;
-     ; Gets the total frame size of the compiled frame, including the size of the
-     ; {@link Architecture#getReturnAddressSize() return address slot}.
-     ;
-     ; @return the total size of the frame (in bytes)
-     ;;
-    (#_"int" FrameMap'''totalFrameSize-1 [#_"FrameMap" this])
-    ;;;
-     ; Gets the current size of this frame. This is the size that would be returned by
-     ; #frameSize() if #finish() were called now.
-     ;;
-    (#_"int" FrameMap'''currentFrameSize-1 [#_"FrameMap" this])
-    ;;;
-     ; Aligns the given frame size to the stack alignment size and return the aligned size.
-     ;
-     ; @param size the initial frame size to be aligned
-     ; @return the aligned frame size
-     ;;
-    #_unused
-    (#_"int" FrameMap'''alignFrameSize-2 [#_"FrameMap" this, #_"int" size])
-)
-
-;;;
- ; A FrameMapBuilder is used to collect all information necessary to {@linkplain #buildFrameMap create} a FrameMap.
- ;;
-(defp FrameMapBuilder
-    ;;;
-     ; Reserves a spill slot in the frame of the method being compiled. The returned slot is aligned
-     ; on its natural alignment, i.e. an 8-byte spill slot is aligned at an 8-byte boundary, unless
-     ; overridden by a subclass.
-     ;
-     ; @param kind The kind of the spill slot to be reserved.
-     ; @return a spill slot denoting the reserved memory area
-     ;;
-    (#_"VirtualStackSlot" FrameMapBuilder'''allocateSpillSlot-2 [#_"FrameMapBuilder" this, #_"ValueKind" kind])
-    ;;;
-     ; Informs the frame map that the compiled code calls a particular method, which may need stack
-     ; space for outgoing arguments.
-     ;
-     ; @param cc The calling convention for the called method.
-     ;;
-    (#_"void" FrameMapBuilder'''callsMethod-2 [#_"FrameMapBuilder" this, #_"CallingConvention" cc])
-    ;;;
-     ; Creates a FrameMap based on the information collected by this FrameMapBuilder.
-     ;;
-    (#_"FrameMap" FrameMapBuilder'''buildFrameMap-2 [#_"FrameMapBuilder" this, #_"LIRGenerationResult" result])
-)
-
-(defp FrameMapBuilder0)
-
-;;;
- ; A FrameMapBuilder that allows access to the underlying FrameMap.
- ;;
-(defp FrameMapBuilderTool
-    ;;;
-     ; Returns the number of VirtualStackSlots created by this FrameMapBuilder.
-     ; Can be used as an upper bound for an array indexed by VirtualStackSlot#getId().
-     ;;
-    (#_"int" FrameMapBuilderTool'''getNumberOfStackSlots-1 [#_"FrameMapBuilderTool" this])
-    (#_"List<VirtualStackSlot>" FrameMapBuilderTool'''getStackSlots-1 [#_"FrameMapBuilderTool" this])
-    (#_"FrameMap" FrameMapBuilderTool'''getFrameMap-1 [#_"FrameMapBuilderTool" this])
-)
-
+(defp FrameMap)
+(defp FrameMapBuilder)
 (defp FrameState)
 (defp FrameStateAssignmentClosure)
 (defp FrameStateAssignmentPhase)
@@ -4844,7 +4695,6 @@ ZeroExtendNode'new-4
 (defp GraphBuilderInstance)
 (defp GraphBuilderPhase)
 (defp GraphEffectList)
-(defp GreedyInliningPolicy)
 (defp GuardLoweringPhase)
 (defp GuardNode)
 (defp GuardPhiNode)
@@ -4871,16 +4721,13 @@ ZeroExtendNode'new-4
     (#_"void" GuardedNode'''setGuard-2 [#_"GuardedNode" this, #_"GuardingNode" guard])
 )
 
-(defp GuardingNode
-)
-
+(defp GuardingNode)
 (defp HashSetNodeEventListener)
 
 ;;;
  ; Marker interface for nodes that accesses the heap.
  ;;
-(defp HeapAccess
-)
+(defp HeapAccess)
 
 (defp HeapBaseNode)
 (defp HighTier)
@@ -4903,8 +4750,7 @@ ZeroExtendNode'new-4
  ; Marker interface for nodes that contains other nodes. When the inputs to this node changes,
  ; users of this node should also be placed on the work list for canonicalization.
  ;;
-(defp IndirectCanonicalization
-)
+(defp IndirectCanonicalization)
 
 ;;;
  ; This class describes a value node that is an induction variable in a counted loop.
@@ -5043,11 +4889,7 @@ ZeroExtendNode'new-4
 (defp InliningData)
 (defp InliningIterator)
 (defp InliningPhase)
-
-(defp InliningPolicy
-    (#_"boolean" InliningPolicy'''continueInlining-2 [#_"InliningPolicy" this, #_"Graph" graph])
-    (#_"Decision" InliningPolicy'''isWorthInlining-5 [#_"InliningPolicy" this, #_"Replacements" replacements, #_"MethodInvocation" invocation, #_"int" inliningDepth, #_"boolean" fullyProcessed])
-)
+(defp InliningPolicy)
 
 (defp InplaceUpdateClosure
     (#_"Node" InplaceUpdateClosure'''replacement-3 [#_"InplaceUpdateClosure" this, #_"Node" node, #_"EdgesType" type])
@@ -5071,8 +4913,7 @@ ZeroExtendNode'new-4
  ; IfNode. This avoids materializing the instanceof test as a boolean which is then retested
  ; by the IfNode.
  ;;
-(defp InstanceOfSnippetsTemplates
-)
+(defp InstanceOfSnippetsTemplates)
 
 (defp InstanceOfTemplates)
 
@@ -5384,8 +5225,7 @@ ZeroExtendNode'new-4
  ; comparing two {@link LocationIdentity} values for equality. Likewise, they must not use
  ; {@link java.util.IdentityHashMap}s with {@link LocationIdentity} values as keys.
  ;;
-(defp LocationIdentity
-)
+(defp LocationIdentity)
 
 (defp LocationSet)
 (defp LockEliminationPhase)
@@ -5506,8 +5346,7 @@ ZeroExtendNode'new-4
  ; by location identities (i.e. change a value at one or more locations that belong to these
  ; location identities).
  ;;
-(defp MemoryCheckpoint
-)
+(defp MemoryCheckpoint)
 
 (defp MemoryConstOp)
 (defp MemoryInputMap)
@@ -5533,8 +5372,7 @@ ZeroExtendNode'new-4
 ;;;
  ; This interface marks nodes that are part of the memory graph.
  ;;
-(defp MemoryNode
-)
+(defp MemoryNode)
 
 (defp MemoryOp)
 (defp MemoryOutputMap)
@@ -5563,16 +5401,14 @@ ZeroExtendNode'new-4
 ;;;
  ; Denotes monitor locking transition.
  ;;
-(defp MonitorEnter
-)
+(defp MonitorEnter)
 
 (defp MonitorEnterNode)
 
 ;;;
  ; Denotes monitor unlocking transition.
  ;;
-(defp MonitorExit
-)
+(defp MonitorExit)
 
 (defp MonitorExitNode)
 (defp MonitorIdNode)
@@ -5812,8 +5648,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Interface for nodes which have FrameState nodes as input.
  ;;
-(defp NodeWithState
-)
+(defp NodeWithState)
 
 (value-ns NodeWithState
     (defn #_"FrameState*" NodeWithState''states-1 [#_"NodeWithState" this]
@@ -5896,8 +5731,7 @@ ZeroExtendNode'new-4
  ; For a AbstractMergeNode, the order of the values corresponds to the order of the ends. For LoopBeginNodes,
  ; the first value corresponds to the loop's predecessor, while the rest of the values correspond to the LoopEndNodes.
  ;;
-(defp PhiNode
-)
+(defp PhiNode)
 
 (defp PhiValueVisitor
     ;;;
@@ -6019,18 +5853,10 @@ ZeroExtendNode'new-4
 (defp Scope)
 (defp SequentialStrategy)
 (defp SerialWriteBarrier)
-(defp SerializableBinaryFunction #_"<T>" #_(§ extends Function #_"<ArithmeticOpTable, BinaryOp<T>>")
-)
-
-(defp SerializableIntegerConvertFunction #_"<T>" #_(§ extends Function #_"<ArithmeticOpTable, IntegerConvertOp<T>>")
-)
-
-(defp SerializableShiftFunction #_"<T>" #_(§ extends Function #_"<ArithmeticOpTable, ShiftOp<T>>")
-)
-
-(defp SerializableUnaryFunction #_"<T>" #_(§ extends Function #_"<ArithmeticOpTable, UnaryOp<T>>")
-)
-
+(defp SerializableBinaryFunction #_"<T>" #_(§ extends Function #_"<ArithmeticOpTable, BinaryOp<T>>"))
+(defp SerializableIntegerConvertFunction #_"<T>" #_(§ extends Function #_"<ArithmeticOpTable, IntegerConvertOp<T>>"))
+(defp SerializableShiftFunction #_"<T>" #_(§ extends Function #_"<ArithmeticOpTable, ShiftOp<T>>"))
+(defp SerializableUnaryFunction #_"<T>" #_(§ extends Function #_"<ArithmeticOpTable, UnaryOp<T>>"))
 (defp ShiftNode)
 
 ;;;
@@ -6118,16 +5944,14 @@ ZeroExtendNode'new-4
  ; method that needs to be computed only once. The SnippetInfo should be created once per
  ; snippet and then cached.
  ;;
-(defp SnippetInfo
-)
+(defp SnippetInfo)
 
 (defp SnippetTemplate)
 
 ;;;
  ; Marker interface for a class that defines one or more Snippets.
  ;;
-(defp Snippets
-)
+(defp Snippets)
 
 (defp SpillRegistersNode)
 (defp SpillRegistersOp)
@@ -6240,8 +6064,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Marker interface for a LIR operation that is a conditional jump.
  ;;
-(defp StandardBranchOp
-)
+(defp StandardBranchOp)
 
 (defp StartNode)
 
@@ -6531,8 +6354,7 @@ ZeroExtendNode'new-4
  ;
  ; For some algorithms it is necessary or advantageous to see through these proxies.
  ;;
-(defp ValueProxy
-)
+(defp ValueProxy)
 
 (defp ValueProxyNode)
 (defp Values)
@@ -6628,8 +6450,7 @@ ZeroExtendNode'new-4
  ; regardless of whether this node had any interaction with virtualized nodes. This interface can
  ; therefore be used for object allocations, for which virtualization introduces new virtualized objects.
  ;;
-(defp VirtualizableAllocation
-)
+(defp VirtualizableAllocation)
 
 (defp VirtualizableInvokeMacroNode)
 
@@ -12979,69 +12800,48 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns AbstractInliningPolicy [InliningPolicy]
-    (def #_"float" AbstractInliningPolicy'RelevanceCapForInlining 1.0 #_"f")
-    (def #_"float" AbstractInliningPolicy'CapInheritedRelevance 1.0 #_"f")
+(value-ns InliningPolicy
+    (def #_"float" InliningPolicy'RelevanceCapForInlining 1.0 #_"f")
+    (def #_"float" InliningPolicy'CapInheritedRelevance 1.0 #_"f")
 
-    (defn #_"AbstractInliningPolicy" AbstractInliningPolicy'new-0 []
-        (AbstractInliningPolicy'class.)
-    )
-
-    (defn #_"double" AbstractInliningPolicy'computeMaximumSize-2 [#_"double" relevance, #_"int" configuredMaximum]
-        (* configuredMaximum (min AbstractInliningPolicy'RelevanceCapForInlining relevance))
-    )
-
-    (defn #_"double" AbstractInliningPolicy'determineInvokeProbability-1 [#_"InlineInfo" info]
-        (loop-when [#_"double" invokeProbability 0 #_"int" i 0] (< i (InlineInfo'''numberOfMethods-1 info)) => invokeProbability
+    (defn- #_"double" InliningPolicy'determineInvokeProbability-1 [#_"InlineInfo" info]
+        (loop-when [#_"double" probability 0 #_"int" i 0] (< i (InlineInfo'''numberOfMethods-1 info)) => probability
             (let [
                 #_"Inlineable" callee (InlineInfo'''inlineableElementAt-2 info, i)
-                invokeProbability
-                    (loop-when-recur [invokeProbability invokeProbability #_"ISeq" s (seq (Inlineable'''getInvokes-1 callee))]
+                probability
+                    (loop-when-recur [probability probability #_"ISeq" s (seq (Inlineable'''getInvokes-1 callee))]
                                      (some? s)
-                                     [(+ invokeProbability (Inlineable'''getProbability-2 callee, (first s))) (next s)]
-                                  => invokeProbability
+                                     [(+ probability (Inlineable'''getProbability-2 callee, (first s))) (next s)]
+                                  => probability
                     )
             ]
-                (recur invokeProbability (inc i))
+                (recur probability (inc i))
             )
         )
     )
-)
 
-(class-ns GreedyInliningPolicy [AbstractInliningPolicy, InliningPolicy]
-    (defn #_"GreedyInliningPolicy" GreedyInliningPolicy'new-0 []
-        (merge (GreedyInliningPolicy'class.) (AbstractInliningPolicy'new-0))
+    (defn- #_"double" InliningPolicy'computeMaximumSize-2 [#_"double" relevance, #_"int" configuredMaximum]
+        (* configuredMaximum (min InliningPolicy'RelevanceCapForInlining relevance))
     )
 
-    (defm GreedyInliningPolicy InliningPolicy
-        (#_"boolean" InliningPolicy'''continueInlining-2 [#_"GreedyInliningPolicy" this, #_"Graph" currentGraph]
-            (< (Graph''getNodeCount-1 currentGraph) GraalOptions'maximumDesiredSize)
-        )
+    (defn #_"boolean" InliningPolicy'continueInlining-1 [#_"Graph" graph]
+        (< (Graph''getNodeCount-1 graph) GraalOptions'maximumDesiredSize)
+    )
 
-        (#_"Decision" InliningPolicy'''isWorthInlining-5 [#_"GreedyInliningPolicy" this, #_"Replacements" replacements, #_"MethodInvocation" invocation, #_"int" inliningDepth, #_"boolean" fullyProcessed]
-            (cond
-                GraalOptions'inlineEverything                     Decision'YES
-                (InlineInfo'''shouldInline-1 (:callee invocation)) Decision'YES
-                :else
-                    (let [
-                        #_"int" nodes (InlineInfo'''determineNodeCount-1 (:callee invocation))
-                    ]
-                        (cond
-                            (< nodes GraalOptions'trivialInliningSize)
-                                Decision'YES
-                            ;; TODO invoked methods that are on important paths but not yet compiled -> will be compiled anyways
-                            ;; and it is likely that we are the only caller... might be useful to inline those methods but increases
-                            ;; bootstrap time (maybe those methods are also getting queued in the compilation queue concurrently)
-                            (and (pos? GraalOptions'limitInlinedInvokes) fullyProcessed
-                                (< GraalOptions'limitInlinedInvokes (AbstractInliningPolicy'determineInvokeProbability-1 (:callee invocation)))
-                            )
-                                Decision'NO
-                            (<= nodes (AbstractInliningPolicy'computeMaximumSize-2 (:relevance invocation), GraalOptions'maximumInliningSize))
-                                Decision'YES
-                            :else
-                                Decision'NO
-                        )
+    (defn #_"boolean" InliningPolicy'isWorthInlining-3 [#_"MethodInvocation" invocation, #_"int" inliningDepth, #_"boolean" fullyProcessed]
+        (or GraalOptions'inlineEverything (InlineInfo'''shouldInline-1 (:callee invocation))
+            (let [
+                #_"int" nodes (InlineInfo'''determineNodeCount-1 (:callee invocation))
+            ]
+                (or (< nodes GraalOptions'trivialInliningSize)
+                    ;; TODO invoked methods that are on important paths but not yet compiled -> will be compiled anyways
+                    ;; and it is likely that we are the only caller... might be useful to inline those methods but increases
+                    ;; bootstrap time (maybe those methods are also getting queued in the compilation queue concurrently)
+                    (and
+                        (not (and fullyProcessed (pos? GraalOptions'limitInlinedInvokes) (< GraalOptions'limitInlinedInvokes (InliningPolicy'determineInvokeProbability-1 (:callee invocation)))))
+                        (<= nodes (InliningPolicy'computeMaximumSize-2 (:relevance invocation), GraalOptions'maximumInliningSize))
                     )
+                )
             )
         )
     )
@@ -14225,12 +14025,12 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"Allocator" Allocator'new-2 [#_"LIR" lir, #_"FrameMapBuilderTool" frameMapBuilder]
+    (defn #_"Allocator" Allocator'new-2 [#_"LIR" lir, #_"FrameMapBuilder" frameMapBuilder]
         (merge (Allocator'class.)
             (hash-map
                 #_"LIR" :lir lir
-                #_"FrameMapBuilderTool" :frameMapBuilder frameMapBuilder
-                #_"StackInterval[]" :stackSlotMap (make-array StackInterval'iface (FrameMapBuilderTool'''getNumberOfStackSlots-1 frameMapBuilder))
+                #_"FrameMapBuilder" :frameMapBuilder frameMapBuilder
+                #_"StackInterval[]" :stackSlotMap (make-array StackInterval'iface (:numStackSlots frameMapBuilder))
                 ;; insert by from
                 #_"PriorityQueue<StackInterval>" :unhandled (ß PriorityQueue. (ß (a, b) -> (§ fun (- (:from a) (:from b)))))
                 ;; insert by to
@@ -14250,7 +14050,7 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"SlotSize" Allocator''forKind-2 [#_"Allocator" this, #_"ValueKind" kind]
-        (case (FrameMap''spillSlotSize-2 (FrameMapBuilderTool'''getFrameMap-1 (:frameMapBuilder this)), kind)
+        (case (FrameMap'spillSlotSize-1 kind)
             1 SlotSize'Size1
             2 SlotSize'Size2
             4 SlotSize'Size4
@@ -14325,7 +14125,7 @@ ZeroExtendNode'new-4
                     (let [
                         #_"VirtualStackSlotRange" slotRange virtualSlot
                     ]
-                        (FrameMap''allocateStackSlots-3 (FrameMapBuilderTool'''getFrameMap-1 (:frameMapBuilder this)), (:slots slotRange), (VirtualStackSlotRange''getObjects-1 slotRange))
+                        (FrameMap''allocateStackSlots-3 (:frameMap (:frameMapBuilder this)), (:slots slotRange), (VirtualStackSlotRange''getObjects-1 slotRange))
                     )
                     (let [
                         #_"StackSlot" slot (Allocator''findFreeSlot-2 this, virtualSlot)
@@ -14334,7 +14134,7 @@ ZeroExtendNode'new-4
                             ;; Free stack slot available. Note that we create a new one because the kind might not match.
                             (StackSlot/get (:kind current), (#_"StackSlot" .getRawOffset slot), (#_"StackSlot" .getRawAddFrameSize slot))
                             ;; Allocate new stack slot.
-                            (FrameMap''allocateSpillSlot-2 (FrameMapBuilderTool'''getFrameMap-1 (:frameMapBuilder this)), (#_"Value" .getValueKind virtualSlot))
+                            (FrameMap''allocateSpillSlot-2 (:frameMap (:frameMapBuilder this)), (#_"Value" .getValueKind virtualSlot))
                         )
                     )
                 )
@@ -14733,7 +14533,7 @@ ZeroExtendNode'new-4
                     (not (:hasForeignCall res))
                 )
             this (assoc this :frameContext (FrameContext'new-2 (some? nil), omit-frame?))
-            this (assoc this :compilationResult (CompilationResult'new-1 (FrameMap'''totalFrameSize-1 (:frameMap res))))
+            this (assoc this :compilationResult (CompilationResult'new-1 (FrameMap''totalFrameSize-1 (:frameMap res))))
         ]
             this
         )
@@ -18653,7 +18453,8 @@ ZeroExtendNode'new-4
 
     (defn- #_"boolean" PartialEscapeClosure''processVirtualizable-5 [#_"PartialEscapeClosure<T>" this, #_"ValueNode" node, #_"FixedNode" insertBefore, #_"T" state, #_"GraphEffectList" effects]
         (§ ass! (:tool this) (VirtualizerTool''reset-5 (:tool this), state, node, insertBefore, effects))
-        (PartialEscapeClosure''virtualize-3 this, node, (:tool this))
+        (Virtualizable'''virtualize-2 node, (:tool this))
+        true ;; request further processing
     )
 
     (defn- #_"FrameState" PartialEscapeClosure'getUniqueFramestate-2 [#_"NodeWithState" nodeWithState, #_"FrameState" frameState]
@@ -18907,11 +18708,6 @@ ZeroExtendNode'new-4
                 )
             )
         )
-    )
-
-    (defn #_"boolean" PartialEscapeClosure''virtualize-3 [#_"PartialEscapeClosure<T>" this, #_"ValueNode" node, #_"VirtualizerTool" vt]
-        (Virtualizable'''virtualize-2 node, vt)
-        true ;; request further processing
     )
 
     ;;;
@@ -20038,6 +19834,9 @@ ZeroExtendNode'new-4
                     #_"GraphBuilderInstance" :graphBuilderInstance builder
                     #_"OptimisticOptimizations" :optimisticOpts (:optimisticOpts builder)
                     #_"Graph" :graph graph
+                    ;;;
+                     ; The parsing context for the method that inlines the method being parsed by this context.
+                     ;;
                     #_"BytecodeParser" :parent parent
                     #_"IntrinsicContext" :intrinsicContext context
                     #_"BytecodeProvider" :bytecodeProvider bytecodeProvider
@@ -20439,17 +20238,6 @@ ZeroExtendNode'new-4
     )
 
     ;;;
-     ; Gets the inline depth of this context. A return value of 0 implies that this is the context for the parse root.
-     ;;
-    (defn #_"int" BytecodeParser''getDepth-1 [#_"BytecodeParser" this]
-        (loop-when-recur [#_"int" depth 0 #_"BytecodeParser" parent (BytecodeParser''getParent-1 this)]
-                         (some? parent)
-                         [(inc depth) (BytecodeParser''getParent-1 parent)]
-                      => depth
-        )
-    )
-
-    ;;;
      ; Gets a version of a given value that has a {@linkplain StampTool#isPointerNonNull(ValueNode) non-nil} stamp.
      ;;
     (defn #_"ValueNode" BytecodeParser''nullCheckedValue-3 [#_"BytecodeParser" this, #_"ValueNode" value, #_"DeoptimizationAction" action]
@@ -20570,77 +20358,9 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn #_"ValueNode" BytecodeParser''genLoadIndexed-4 [#_"BytecodeParser" this, #_"ValueNode" array, #_"ValueNode" index, #_"JavaKind" kind]
-        (LoadIndexedNode'create-3 array, index, kind)
-    )
-
     (defn #_"void" BytecodeParser''genStoreIndexed-5 [#_"BytecodeParser" this, #_"ValueNode" array, #_"ValueNode" index, #_"JavaKind" kind, #_"ValueNode" value]
         (BytecodeParser''add-2 this, (StoreIndexedNode'new-4 array, index, kind, value))
         nil
-    )
-
-    (defn #_"ValueNode" BytecodeParser''genIntegerAdd-3 [#_"BytecodeParser" this, #_"ValueNode" x, #_"ValueNode" y]
-        (AddNode'create-2 x, y)
-    )
-
-    (defn #_"ValueNode" BytecodeParser''genIntegerSub-3 [#_"BytecodeParser" this, #_"ValueNode" x, #_"ValueNode" y]
-        (SubNode'create-2 x, y)
-    )
-
-    (defn #_"ValueNode" BytecodeParser''genIntegerMul-3 [#_"BytecodeParser" this, #_"ValueNode" x, #_"ValueNode" y]
-        (MulNode'create-2 x, y)
-    )
-
-    (defn #_"ValueNode" BytecodeParser''genIntegerDiv-3 [#_"BytecodeParser" this, #_"ValueNode" x, #_"ValueNode" y]
-        (SignedDivNode'create-2 x, y)
-    )
-
-    (defn #_"ValueNode" BytecodeParser''genIntegerRem-3 [#_"BytecodeParser" this, #_"ValueNode" x, #_"ValueNode" y]
-        (SignedRemNode'create-2 x, y)
-    )
-
-    (defn #_"ValueNode" BytecodeParser''genNegateOp-2v [#_"BytecodeParser" this, #_"ValueNode" x]
-        (NegateNode'create-1 x)
-    )
-
-    (defn #_"ValueNode" BytecodeParser''genLeftShift-3 [#_"BytecodeParser" this, #_"ValueNode" x, #_"ValueNode" y]
-        (LeftShiftNode'create-2 x, y)
-    )
-
-    (defn #_"ValueNode" BytecodeParser''genRightShift-3 [#_"BytecodeParser" this, #_"ValueNode" x, #_"ValueNode" y]
-        (RightShiftNode'create-2 x, y)
-    )
-
-    (defn #_"ValueNode" BytecodeParser''genUnsignedRightShift-3 [#_"BytecodeParser" this, #_"ValueNode" x, #_"ValueNode" y]
-        (UnsignedRightShiftNode'create-2 x, y)
-    )
-
-    (defn #_"ValueNode" BytecodeParser''genAnd-3 [#_"BytecodeParser" this, #_"ValueNode" x, #_"ValueNode" y]
-        (AndNode'create-2 x, y)
-    )
-
-    (defn #_"ValueNode" BytecodeParser''genOr-3 [#_"BytecodeParser" this, #_"ValueNode" x, #_"ValueNode" y]
-        (OrNode'create-2 x, y)
-    )
-
-    (defn #_"ValueNode" BytecodeParser''genXor-3 [#_"BytecodeParser" this, #_"ValueNode" x, #_"ValueNode" y]
-        (XorNode'create-2 x, y)
-    )
-
-    (defn #_"ValueNode" BytecodeParser''genNormalizeCompare-3 [#_"BytecodeParser" this, #_"ValueNode" x, #_"ValueNode" y]
-        (NormalizeCompareNode'create-3 x, y, JavaKind/Int)
-    )
-
-    (defn #_"ValueNode" BytecodeParser''genNarrow-3v [#_"BytecodeParser" this, #_"ValueNode" input, #_"int" bitCount]
-        (NarrowNode'create-2 input, bitCount)
-    )
-
-    (defn #_"ValueNode" BytecodeParser''genSignExtend-3v [#_"BytecodeParser" this, #_"ValueNode" input, #_"int" bitCount]
-        (SignExtendNode'create-2 input, bitCount)
-    )
-
-    (defn #_"ValueNode" BytecodeParser''genZeroExtend-3v [#_"BytecodeParser" this, #_"ValueNode" input, #_"int" bitCount]
-        (ZeroExtendNode'create-2 input, bitCount)
     )
 
     (defn #_"void" BytecodeParser''genGoto-1 [#_"BytecodeParser" this]
@@ -20648,49 +20368,8 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn #_"LogicNode" BytecodeParser''genObjectEquals-3 [#_"BytecodeParser" this, #_"ValueNode" x, #_"ValueNode" y]
-        (ObjectEqualsNode'createCanonical-2 x, y)
-    )
-
-    (defn #_"LogicNode" BytecodeParser''genIntegerEquals-3 [#_"BytecodeParser" this, #_"ValueNode" x, #_"ValueNode" y]
-        (IntegerEqualsNode'create-3 nil, x, y)
-    )
-
-    (defn #_"LogicNode" BytecodeParser''genIntegerLessThan-3 [#_"BytecodeParser" this, #_"ValueNode" x, #_"ValueNode" y]
-        (IntegerLessThanNode'create-3 nil, x, y)
-    )
-
-    (defn #_"ValueNode" BytecodeParser''genUnique-2v [#_"BytecodeParser" this, #_"ValueNode" x]
-        (Graph''addOrUniqueWithInputs-2 (:graph this), x)
-    )
-
-    (defn #_"LogicNode" BytecodeParser''genUnique-2l [#_"BytecodeParser" this, #_"LogicNode" x]
-        (Graph''addOrUniqueWithInputs-2 (:graph this), x)
-    )
-
-    (defn #_"ValueNode" BytecodeParser''genIfNode-5 [#_"BytecodeParser" this, #_"LogicNode" logic, #_"FixedNode" falseSuccessor, #_"FixedNode" trueSuccessor, #_"double" d]
-        (IfNode'new-4f logic, falseSuccessor, trueSuccessor, d)
-    )
-
-    (defn #_"LogicNode" BytecodeParser''createInstanceOf-3 [#_"BytecodeParser" this, #_"TypeReference" type, #_"ValueNode" object]
-        (InstanceOfNode'create-2 type, object)
-    )
-
-    (defn #_"LogicNode" BytecodeParser''createInstanceOfAllowNull-3 [#_"BytecodeParser" this, #_"TypeReference" type, #_"ValueNode" object]
-        (InstanceOfNode'createAllowNull-2 type, object)
-    )
-
-    (defn #_"ValueNode" BytecodeParser''genConditional-2 [#_"BytecodeParser" this, #_"ValueNode" logic]
-        (ConditionalNode'create-1 (§ cast #_"LogicNode" logic))
-    )
-
-    (defn #_"NewInstanceNode" BytecodeParser''createNewInstance-2 [#_"BytecodeParser" this, #_"ResolvedJavaType" type]
-        (NewInstanceNode'new-1 type)
-    )
-
-    (defn #_"NewArrayNode" BytecodeParser''createNewArray-3 [#_"BytecodeParser" this, #_"ResolvedJavaType" elementType, #_"ValueNode" length]
-        (NewArrayNode'new-2 elementType, length)
-    )
+    (defn #_"ValueNode" BytecodeParser''genUnique-2v [#_"BytecodeParser" this, #_"ValueNode" x] (Graph''addOrUniqueWithInputs-2 (:graph this), x))
+    (defn #_"LogicNode" BytecodeParser''genUnique-2l [#_"BytecodeParser" this, #_"LogicNode" x] (Graph''addOrUniqueWithInputs-2 (:graph this), x))
 
     (defn #_"ValueNode" BytecodeParser''genLoadField-3 [#_"BytecodeParser" this, #_"ValueNode" receiver, #_"ResolvedJavaField" field]
         (let [
@@ -20701,10 +20380,6 @@ ZeroExtendNode'new-4
                 (LoadFieldNode'create-4 receiver, field, false, false)
             )
         )
-    )
-
-    (defn #_"StateSplitProxyNode" BytecodeParser''genVolatileFieldReadProxy-2 [#_"BytecodeParser" this, #_"ValueNode" fieldRead]
-        (StateSplitProxyNode'new-1 fieldRead)
     )
 
     (defn #_"void" BytecodeParser''genStoreField-4 [#_"BytecodeParser" this, #_"ValueNode" receiver, #_"ResolvedJavaField" field, #_"ValueNode" value]
@@ -20953,7 +20628,7 @@ ZeroExtendNode'new-4
                 ]
                     (if (and (#_"ResolvedJavaField" .isVolatile resolvedField) (satisfies? LoadFieldNode fieldRead))
                         (let [
-                            #_"StateSplitProxyNode" readProxy (BytecodeParser''append-2 this, (BytecodeParser''genVolatileFieldReadProxy-2 this, fieldRead))
+                            #_"StateSplitProxyNode" readProxy (BytecodeParser''append-2 this, (StateSplitProxyNode'new-1 fieldRead))
                         ]
                             (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), fieldKind, readProxy))
                             (StateSplit'''setStateAfter-2 readProxy, (FrameStateBuilder''create-3 (:frameState this), (:nextBCI (:stream this)), readProxy))
@@ -21030,8 +20705,7 @@ ZeroExtendNode'new-4
                             (BytecodeParser''append-2 this, (DeoptimizeNode'new-2 DeoptimizationAction/InvalidateRecompile, DeoptimizationReason/RuntimeConstraint))
                             true
                         )
-                        (and (not (#_"ResolvedJavaMethod" .isNative (:originalMethod intrinsic)))
-                            (BytecodeParser''canInlinePartialIntrinsicExit-1 this) GraalOptions'inlinePartialIntrinsicExitDuringParsing
+                        (and (not (#_"ResolvedJavaMethod" .isNative (:originalMethod intrinsic))) GraalOptions'inlinePartialIntrinsicExitDuringParsing
                             (do
                                 ;; Otherwise inline the original method. Any frame state created during the inlining
                                 ;; will exclude frame(s) in the intrinsic method (see FrameStateBuilder.create(int bci)).
@@ -21071,29 +20745,24 @@ ZeroExtendNode'new-4
      ;;
     (defn- #_"InlineInvokeInfo" BytecodeParser''tryInline-3 [#_"BytecodeParser" this, #_"ValueNode[]" args, #_"ResolvedJavaMethod" targetMethod]
         (when (or (BytecodeParser''parsingIntrinsic-1 this) (#_"ResolvedJavaMethod" .canBeInlined targetMethod))
-            (if false
-                (when (BytecodeParser''inline-5 this, targetMethod, targetMethod, nil, args)
-                    BytecodeParser'SUCCESSFULLY_INLINED
-                )
-                (loop [#_"ISeq" s (seq (:inlineInvokePlugins HotSpot'plugins))]
-                    (if (some? s)
-                        (let [
-                            #_"InlineInvokeInfo" inlineInfo (InlineInvokePlugin'''shouldInlineInvoke-4 (first s), this, targetMethod, args)
-                        ]
-                            (when (some? inlineInfo) => (recur (next s))
-                                (when (some? (:methodToInline inlineInfo)) => inlineInfo ;; do not inline, and do not ask the remaining plugins
-                                    (when (BytecodeParser''inline-5 this, targetMethod, (:methodToInline inlineInfo), (:intrinsicBytecodeProvider inlineInfo), args)
-                                        BytecodeParser'SUCCESSFULLY_INLINED
-                                    )
+            (loop [#_"ISeq" s (seq (:inlineInvokePlugins HotSpot'plugins))]
+                (if (some? s)
+                    (let [
+                        #_"InlineInvokeInfo" inlineInfo (InlineInvokePlugin'''shouldInlineInvoke-4 (first s), this, targetMethod, args)
+                    ]
+                        (when (some? inlineInfo) => (recur (next s))
+                            (when (some? (:methodToInline inlineInfo)) => inlineInfo ;; do not inline, and do not ask the remaining plugins
+                                (when (BytecodeParser''inline-5 this, targetMethod, (:methodToInline inlineInfo), (:intrinsicBytecodeProvider inlineInfo), args)
+                                    BytecodeParser'SUCCESSFULLY_INLINED
                                 )
                             )
                         )
-                        ;; There was no inline plugin with a definite answer to whether or not to inline.
-                        ;; If we're parsing an intrinsic, then we need to enforce the invariant here
-                        ;; that methods are always force inlined in intrinsics/snippets.
-                        (when (and (BytecodeParser''parsingIntrinsic-1 this) (BytecodeParser''inline-5 this, targetMethod, targetMethod, (:bytecodeProvider this), args))
-                            BytecodeParser'SUCCESSFULLY_INLINED
-                        )
+                    )
+                    ;; There was no inline plugin with a definite answer to whether or not to inline.
+                    ;; If we're parsing an intrinsic, then we need to enforce the invariant here
+                    ;; that methods are always force inlined in intrinsics/snippets.
+                    (when (and (BytecodeParser''parsingIntrinsic-1 this) (BytecodeParser''inline-5 this, targetMethod, targetMethod, (:bytecodeProvider this), args))
+                        BytecodeParser'SUCCESSFULLY_INLINED
                     )
                 )
             )
@@ -21212,7 +20881,7 @@ ZeroExtendNode'new-4
                 (let [
                     #_"ValueNode" receiver (nth args 0)
                     #_"TypeReference" checkedType (TypeReference'createTrusted-1 callingClass)
-                    #_"LogicNode" logic (BytecodeParser''genUnique-2l this, (BytecodeParser''createInstanceOf-3 this, checkedType, receiver))
+                    #_"LogicNode" logic (BytecodeParser''genUnique-2l this, (InstanceOfNode'create-2 checkedType, receiver))
                     #_"FixedGuardNode" fixedGuard (BytecodeParser''append-2 this, (FixedGuardNode'new-4 logic, DeoptimizationReason/ClassCastException, DeoptimizationAction/None, false))
                 ]
                     (aset args 0 (BytecodeParser''append-2 this, (PiNode'create-3 receiver, (StampFactory'object-2 checkedType, true), fixedGuard)))
@@ -21251,13 +20920,6 @@ ZeroExtendNode'new-4
             (InlineInvokePlugin'''notifyAfterInline-2 plugin, inlinedMethod)
         )
         nil
-    )
-
-    ;;;
-     ; Determines if a partial intrinsic exit (i.e. a call to the original method within an intrinsic) can be inlined.
-     ;;
-    (defn #_"boolean" BytecodeParser''canInlinePartialIntrinsicExit-1 [#_"BytecodeParser" this]
-        true
     )
 
     (defn #_"BytecodeParser" BytecodeParser''parseAndInlineCallee-4 [#_"BytecodeParser" this, #_"ResolvedJavaMethod" targetMethod, #_"ValueNode[]" args, #_"IntrinsicContext" calleeIntrinsicContext]
@@ -21341,11 +21003,11 @@ ZeroExtendNode'new-4
                     ;; the bytecode verifier doesn't check that the value is in the correct range
                     (when (or (< (:lowerBound stamp) (#_"JavaKind" .getMinValue returnKind)) (< (#_"JavaKind" .getMaxValue returnKind) (:upperBound stamp))) => value
                         (let [
-                            #_"ValueNode" narrow (BytecodeParser''append-2 this, (BytecodeParser''genNarrow-3v this, value, (#_"JavaKind" .getBitCount returnKind)))
+                            #_"ValueNode" narrow (BytecodeParser''append-2 this, (NarrowNode'create-2 value, (#_"JavaKind" .getBitCount returnKind)))
                         ]
                             (if (#_"JavaKind" .isUnsigned returnKind)
-                                (BytecodeParser''append-2 this, (BytecodeParser''genZeroExtend-3v this, narrow, 32))
-                                (BytecodeParser''append-2 this, (BytecodeParser''genSignExtend-3v this, narrow, 32))
+                                (BytecodeParser''append-2 this, (ZeroExtendNode'create-2 narrow, 32))
+                                (BytecodeParser''append-2 this, (SignExtendNode'create-2 narrow, 32))
                             )
                         )
                     )
@@ -21412,14 +21074,10 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"MonitorEnterNode" BytecodeParser''createMonitorEnterNode-3 [#_"BytecodeParser" this, #_"ValueNode" x, #_"MonitorIdNode" monitorId]
-        (MonitorEnterNode'new-2 x, monitorId)
-    )
-
     (defn #_"void" BytecodeParser''genMonitorEnter-3 [#_"BytecodeParser" this, #_"ValueNode" x, #_"int" bci]
         (let [
             #_"MonitorIdNode" monitorId (Graph''add-2 (:graph this), (MonitorIdNode'new-1 (FrameStateBuilder''lockDepth-2 (:frameState this), true)))
-            #_"MonitorEnterNode" monitorEnter (BytecodeParser''append-2 this, (BytecodeParser''createMonitorEnterNode-3 this, x, monitorId))
+            #_"MonitorEnterNode" monitorEnter (BytecodeParser''append-2 this, (MonitorEnterNode'new-2 x, monitorId))
         ]
             (§ ass! (:frameState this) (FrameStateBuilder''pushLock-3 (:frameState this), x, monitorId))
             (StateSplit'''setStateAfter-2 monitorEnter, (BytecodeParser''createFrameState-3 this, bci, monitorEnter))
@@ -21662,15 +21320,15 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"LogicNode" BytecodeParser''createLogicNode-4 [#_"BytecodeParser" this, #_"CanonicalCondition" condition, #_"ValueNode" a, #_"ValueNode" b]
+    (defn- #_"LogicNode" BytecodeParser'createLogicNode-3 [#_"CanonicalCondition" condition, #_"ValueNode" a, #_"ValueNode" b]
         (condp = condition
             CanonicalCondition'EQ
                 (if (= (ValueNode''getStackKind-1 a) JavaKind/Object)
-                    (BytecodeParser''genObjectEquals-3 this, a, b)
-                    (BytecodeParser''genIntegerEquals-3 this, a, b)
+                    (ObjectEqualsNode'createCanonical-2 a, b)
+                    (IntegerEqualsNode'create-3 nil, a, b)
                 )
             CanonicalCondition'LT
-                (BytecodeParser''genIntegerLessThan-3 this, a, b)
+                (IntegerLessThanNode'create-3 nil, a, b)
         )
     )
 
@@ -21693,7 +21351,7 @@ ZeroExtendNode'new-4
                 (let [
                     #_"CanonicalizedCondition" canon (Condition''canonicalize-1 condition)
                     [x y] (if (:mirror? canon) [y x] [x y])
-                    #_"LogicNode" logic (BytecodeParser''createLogicNode-4 this, (:canonicalCondition canon), x, y)
+                    #_"LogicNode" logic (BytecodeParser'createLogicNode-3 (:canonicalCondition canon), x, y)
                     [then else] (if (:negate? canon) [else then] [then else])
                     #_"double" probability (BytecodeParser'getProfileProbability-1 (:negate? canon))
                     probability (BytecodeParser''clampProbability-2 this, probability)
@@ -21821,7 +21479,7 @@ ZeroExtendNode'new-4
                                     #_"FixedNode" trueSuccessor (BytecodeParser''createTarget-5 this, trueBlock, (:frameState this), false, false)
                                     #_"FixedNode" falseSuccessor (BytecodeParser''createTarget-5 this, falseBlock, (:frameState this), false, true)
                                 ]
-                                    (BytecodeParser''append-2 this, (BytecodeParser''genIfNode-5 this, logic, trueSuccessor, falseSuccessor, probability))
+                                    (BytecodeParser''append-2 this, (IfNode'new-4f logic, trueSuccessor, falseSuccessor, probability))
                                     this
                                 )
                             )
@@ -21843,13 +21501,6 @@ ZeroExtendNode'new-4
     (defn #_"void" BytecodeParser''push-3 [#_"BytecodeParser" this, #_"JavaKind" slotKind, #_"ValueNode" value]
         (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), slotKind, value))
         nil
-    )
-
-    ;;;
-     ; Gets the parsing context for the method that inlines the method being parsed by this context.
-     ;;
-    (defn #_"BytecodeParser" BytecodeParser''getParent-1 [#_"BytecodeParser" this]
-        (:parent this)
     )
 
     ;;;
@@ -21936,7 +21587,7 @@ ZeroExtendNode'new-4
                     (when-not (NodePlugin'''handleLoadIndexed-5 (first s), this, array, index, kind)
                         (recur (next s))
                     )
-                    (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), kind, (BytecodeParser''append-2 this, (BytecodeParser''genLoadIndexed-4 this, array, index, kind))))
+                    (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), kind, (BytecodeParser''append-2 this, (LoadIndexedNode'create-3 array, index, kind))))
                 )
             )
         )
@@ -21967,9 +21618,9 @@ ZeroExtendNode'new-4
             #_"ValueNode" x (FrameStateBuilder''pop-2 (:frameState this), kind)
             #_"ValueNode" v
                 (condp =? opcode
-                    [Bytecodes'IADD Bytecodes'LADD] (BytecodeParser''genIntegerAdd-3 this, x, y)
-                    [Bytecodes'ISUB Bytecodes'LSUB] (BytecodeParser''genIntegerSub-3 this, x, y)
-                    [Bytecodes'IMUL Bytecodes'LMUL] (BytecodeParser''genIntegerMul-3 this, x, y)
+                    [Bytecodes'IADD Bytecodes'LADD] (AddNode'create-2 x, y)
+                    [Bytecodes'ISUB Bytecodes'LSUB] (SubNode'create-2 x, y)
+                    [Bytecodes'IMUL Bytecodes'LMUL] (MulNode'create-2 x, y)
                 )
         ]
             (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), kind, (BytecodeParser''append-2 this, v)))
@@ -21983,8 +21634,8 @@ ZeroExtendNode'new-4
             #_"ValueNode" x (FrameStateBuilder''pop-2 (:frameState this), kind)
             #_"ValueNode" v
                 (condp =? opcode
-                    [Bytecodes'IDIV Bytecodes'LDIV] (BytecodeParser''genIntegerDiv-3 this, x, y)
-                    [Bytecodes'IREM Bytecodes'LREM] (BytecodeParser''genIntegerRem-3 this, x, y)
+                    [Bytecodes'IDIV Bytecodes'LDIV] (SignedDivNode'create-2 x, y)
+                    [Bytecodes'IREM Bytecodes'LREM] (SignedRemNode'create-2 x, y)
                 )
         ]
             (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), kind, (BytecodeParser''append-2 this, v)))
@@ -21996,7 +21647,7 @@ ZeroExtendNode'new-4
         (let [
             #_"ValueNode" x (FrameStateBuilder''pop-2 (:frameState this), kind)
         ]
-            (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), kind, (BytecodeParser''append-2 this, (BytecodeParser''genNegateOp-2v this, x))))
+            (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), kind, (BytecodeParser''append-2 this, (NegateNode'create-1 x))))
         )
         nil
     )
@@ -22007,9 +21658,9 @@ ZeroExtendNode'new-4
             #_"ValueNode" x (FrameStateBuilder''pop-2 (:frameState this), kind)
             #_"ValueNode" v
                 (condp =? opcode
-                    [Bytecodes'ISHL  Bytecodes'LSHL ] (BytecodeParser''genLeftShift-3 this, x, s)
-                    [Bytecodes'ISHR  Bytecodes'LSHR ] (BytecodeParser''genRightShift-3 this, x, s)
-                    [Bytecodes'IUSHR Bytecodes'LUSHR] (BytecodeParser''genUnsignedRightShift-3 this, x, s)
+                    [Bytecodes'ISHL  Bytecodes'LSHL ] (LeftShiftNode'create-2 x, s)
+                    [Bytecodes'ISHR  Bytecodes'LSHR ] (RightShiftNode'create-2 x, s)
+                    [Bytecodes'IUSHR Bytecodes'LUSHR] (UnsignedRightShiftNode'create-2 x, s)
                 )
         ]
             (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), kind, (BytecodeParser''append-2 this, v)))
@@ -22023,9 +21674,9 @@ ZeroExtendNode'new-4
             #_"ValueNode" x (FrameStateBuilder''pop-2 (:frameState this), kind)
             #_"ValueNode" v
                 (condp =? opcode
-                    [Bytecodes'IAND Bytecodes'LAND] (BytecodeParser''genAnd-3 this, x, y)
-                    [Bytecodes'IOR  Bytecodes'LOR ] (BytecodeParser''genOr-3 this, x, y)
-                    [Bytecodes'IXOR Bytecodes'LXOR] (BytecodeParser''genXor-3 this, x, y)
+                    [Bytecodes'IAND Bytecodes'LAND] (AndNode'create-2 x, y)
+                    [Bytecodes'IOR  Bytecodes'LOR ] (OrNode'create-2 x, y)
+                    [Bytecodes'IXOR Bytecodes'LXOR] (XorNode'create-2 x, y)
                 )
         ]
             (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), kind, (BytecodeParser''append-2 this, v)))
@@ -22038,7 +21689,7 @@ ZeroExtendNode'new-4
             #_"ValueNode" y (FrameStateBuilder''pop-2 (:frameState this), kind)
             #_"ValueNode" x (FrameStateBuilder''pop-2 (:frameState this), kind)
         ]
-            (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), JavaKind/Int, (BytecodeParser''append-2 this, (BytecodeParser''genNormalizeCompare-3 this, x, y))))
+            (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), JavaKind/Int, (BytecodeParser''append-2 this, (NormalizeCompareNode'create-3 x, y, JavaKind/Int))))
         )
         nil
     )
@@ -22048,9 +21699,9 @@ ZeroExtendNode'new-4
             #_"ValueNode" input (FrameStateBuilder''pop-2 (:frameState this), from)
         ]
             (when-not (= from (#_"JavaKind" .getStackKind from))
-                (§ ass input (BytecodeParser''append-2 this, (BytecodeParser''genNarrow-3v this, input, (#_"JavaKind" .getBitCount from))))
+                (§ ass input (BytecodeParser''append-2 this, (NarrowNode'create-2 input, (#_"JavaKind" .getBitCount from))))
             )
-            (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), to, (BytecodeParser''append-2 this, (BytecodeParser''genSignExtend-3v this, input, (#_"JavaKind" .getBitCount to)))))
+            (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), to, (BytecodeParser''append-2 this, (SignExtendNode'create-2 input, (#_"JavaKind" .getBitCount to)))))
         )
         nil
     )
@@ -22060,9 +21711,9 @@ ZeroExtendNode'new-4
             #_"ValueNode" input (FrameStateBuilder''pop-2 (:frameState this), from)
         ]
             (when-not (= from (#_"JavaKind" .getStackKind from))
-                (§ ass input (BytecodeParser''append-2 this, (BytecodeParser''genNarrow-3v this, input, (#_"JavaKind" .getBitCount from))))
+                (§ ass input (BytecodeParser''append-2 this, (NarrowNode'create-2 input, (#_"JavaKind" .getBitCount from))))
             )
-            (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), to, (BytecodeParser''append-2 this, (BytecodeParser''genZeroExtend-3v this, input, (#_"JavaKind" .getBitCount to)))))
+            (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), to, (BytecodeParser''append-2 this, (ZeroExtendNode'create-2 input, (#_"JavaKind" .getBitCount to)))))
         )
         nil
     )
@@ -22071,7 +21722,7 @@ ZeroExtendNode'new-4
         (let [
             #_"ValueNode" input (FrameStateBuilder''pop-2 (:frameState this), from)
         ]
-            (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), to, (BytecodeParser''append-2 this, (BytecodeParser''genNarrow-3v this, input, (#_"JavaKind" .getBitCount to)))))
+            (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), to, (BytecodeParser''append-2 this, (NarrowNode'create-2 input, (#_"JavaKind" .getBitCount to)))))
         )
         nil
     )
@@ -22083,7 +21734,7 @@ ZeroExtendNode'new-4
             #_"ValueNode" x (FrameStateBuilder''loadLocal-3 (:frameState this), index, JavaKind/Int)
             #_"ValueNode" y (BytecodeParser''appendConstant-2 this, (JavaConstant/forInt delta))
         ]
-            (FrameStateBuilder''storeLocal-4 (:frameState this), index, JavaKind/Int, (BytecodeParser''append-2 this, (BytecodeParser''genIntegerAdd-3 this, x, y)))
+            (FrameStateBuilder''storeLocal-4 (:frameState this), index, JavaKind/Int, (BytecodeParser''append-2 this, (AddNode'create-2 x, y)))
         )
         nil
     )
@@ -22133,7 +21784,7 @@ ZeroExtendNode'new-4
                             (let [
                                 #_"ValueNode" castNode
                                     (let [
-                                        #_"LogicNode" logic (BytecodeParser''genUnique-2l this, (BytecodeParser''createInstanceOfAllowNull-3 this, checkedType, object))
+                                        #_"LogicNode" logic (BytecodeParser''genUnique-2l this, (InstanceOfNode'createAllowNull-2 checkedType, object))
                                     ]
                                         (if (LogicNode''isTautology-1 logic)
                                             object
@@ -22167,7 +21818,7 @@ ZeroExtendNode'new-4
                                 (recur this (next s))
                             )
                             (let [
-                                #_"LogicNode" instanceOfNode (BytecodeParser''createInstanceOf-3 this, resolvedType, object)
+                                #_"LogicNode" instanceOfNode (InstanceOfNode'create-2 resolvedType, object)
                                 #_"LogicNode" logic (BytecodeParser''genUnique-2l this, instanceOfNode)
                                 #_"int" next (:nextBCI (:stream this))
                                 #_"int" value (BytecodeStream''readUByte-2 (:stream this), next)
@@ -22193,7 +21844,7 @@ ZeroExtendNode'new-4
                                     )
                                     ;; Most frequent for value is IRETURN, followed by ISTORE.
                                     (do
-                                        (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), JavaKind/Int, (BytecodeParser''append-2 this, (BytecodeParser''genConditional-2 this, logic))))
+                                        (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), JavaKind/Int, (BytecodeParser''append-2 this, (ConditionalNode'create-1 (§ cast #_"LogicNode" logic)))))
                                         this
                                     )
                                 )
@@ -22207,7 +21858,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"void" BytecodeParser''genNewInstance-2t [#_"BytecodeParser" this, #_"JavaType" type]
         (when (and (instance? ResolvedJavaType type) (#_"ResolvedJavaType" .isInitialized type)) => (BytecodeParser''handleUnresolvedNewInstance-2 this, type)
-            (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), JavaKind/Object, (BytecodeParser''append-2 this, (BytecodeParser''createNewInstance-2 this, type))))
+            (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), JavaKind/Object, (BytecodeParser''append-2 this, (NewInstanceNode'new-1 type))))
         )
         nil
     )
@@ -22241,7 +21892,7 @@ ZeroExtendNode'new-4
             #_"ResolvedJavaType" elementType (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, (BytecodeParser'arrayTypeCodeToClass-1 typeCode))
             #_"ValueNode" length (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Int)
         ]
-            (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), JavaKind/Object, (BytecodeParser''append-2 this, (BytecodeParser''createNewArray-3 this, elementType, length))))
+            (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), JavaKind/Object, (BytecodeParser''append-2 this, (NewArrayNode'new-2 elementType, length))))
         )
         nil
     )
@@ -22252,7 +21903,7 @@ ZeroExtendNode'new-4
             #_"ValueNode" length (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Int)
         ]
             (when (instance? ResolvedJavaType type) => (BytecodeParser''handleUnresolvedNewObjectArray-3 this, type, length)
-                (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), JavaKind/Object, (BytecodeParser''append-2 this, (BytecodeParser''createNewArray-3 this, type, length))))
+                (§ ass! (:frameState this) (FrameStateBuilder''push-3 (:frameState this), JavaKind/Object, (BytecodeParser''append-2 this, (NewArrayNode'new-2 type, length))))
             )
         )
         nil
@@ -22362,7 +22013,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"double[]" BytecodeParser''switchProbability-3 [#_"BytecodeParser" this, #_"int" numberOfCases, #_"int" bci]
+    (defn- #_"double[]" BytecodeParser'switchProbability-2 [#_"int" numberOfCases, #_"int" bci]
         (let [
             #_"double[]" prob (double-array numberOfCases)
         ]
@@ -22379,7 +22030,7 @@ ZeroExtendNode'new-4
             #_"ValueNode" value (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Int)
             #_"int" nofCases (BytecodeSwitch'''numberOfCases-1 bs)
             #_"int" nofCasesPlusDefault (inc nofCases)
-            #_"double[]" keyProbabilities (BytecodeParser''switchProbability-3 this, nofCasesPlusDefault, bci)
+            #_"double[]" keyProbabilities (BytecodeParser'switchProbability-2 nofCasesPlusDefault, bci)
             #_"EconomicMap<Integer, SuccessorInfo>" bciToBlockSuccessorIndex (EconomicMap/create Equivalence/DEFAULT)
             _
                 (dotimes [#_"int" i (count (:successors (:currentBlock this)))]
@@ -23321,120 +22972,88 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns CallsiteHolder []
-    (defn #_"CallsiteHolder" CallsiteHolder'new-0 []
-        (CallsiteHolder'class.)
-    )
-)
-
 ;;;
- ; A CallsiteHolder whose graph has been copied already and thus can be modified without affecting
- ; the original (usually cached) version.
- ;
- ; An instance of this class is derived from an InlineableGraph and contains a subset of the information
- ; there: just the InvokeNodes from it. Such nodes are candidates for depth-first search of further
- ; inlining opportunities (thus the adjective "explorable" given to this class).
+ ; Information about a graph that will potentially be inlined, esp. tracking the invocations that will subject to inlining themselves.
  ;;
-(class-ns CallsiteHolderExplorable [CallsiteHolder]
-    (defn- #_"EconomicSet<ParameterNode>" CallsiteHolderExplorable''fixedParamsAt-2 [#_"CallsiteHolderExplorable" this, #_"BitSet" freshlyInstantiatedArguments]
-        (let [
-            #_"EconomicSet<ParameterNode>" params (EconomicSet/create Equivalence/IDENTITY)
-        ]
-            (when (and (some? freshlyInstantiatedArguments) (not (#_"BitSet" .isEmpty freshlyInstantiatedArguments))) => params
-                (doseq [#_"ParameterNode" param (Graph''getNodes-2 (:graph this), ParameterNode)]
-                    (when (#_"BitSet" .get freshlyInstantiatedArguments, (AbstractLocalNode''index-1 param))
-                        (#_"EconomicSet" .add params, param)
-                    )
-                )
-                params
-            )
+(class-ns CallsiteHolder []
+    (defn- #_"{ParameterNode}" CallsiteHolder'fixedParamsAt-2 [#_"Graph" graph, #_"BitSet" freshArgs]
+        (when (and (some? freshArgs) (not (#_"BitSet" .isEmpty freshArgs)))
+            (into #{} (filter #(#_"BitSet" .get freshArgs, (AbstractLocalNode''index-1 %)) (Graph''getNodes-2 graph, ParameterNode)))
         )
     )
 
-    (defn #_"CallsiteHolderExplorable" CallsiteHolderExplorable'new-5 [#_"Graph" graph, #_"double" probability, #_"double" relevance, #_"BitSet" freshlyInstantiatedArguments, #_"LinkedList<InvokeNode>" invokes]
+    (defn #_"CallsiteHolder" CallsiteHolder'new-4 [#_"Graph" graph, #_"double" probability, #_"double" relevance, #_"BitSet" freshArgs]
         (let [
-            #_"CallsiteHolderExplorable" this
-                (merge (CallsiteHolderExplorable'class.) (CallsiteHolder'new-0)
+            #_"CallsiteHolder" this
+                (merge (CallsiteHolder'class.)
                     (hash-map
                         ;;;
                          ; Graph in which inlining may be performed at one or more of the callsites containined in #remainingInvokes.
                          ;;
                         #_"Graph" :graph graph
-                        #_"LinkedList<InvokeNode>" :remainingInvokes (or invokes (InliningIterator''apply-1 (InliningIterator'new-1 graph)))
+                        #_"LinkedList<InvokeNode>" :remainingInvokes (InliningIterator''apply-1 (InliningIterator'new-1 graph))
                         #_"double" :probability probability
                         #_"double" :relevance relevance
                         ;;;
-                         ; Parameters for which the callsite targeting #graph() provides "fixed" arguments. That
-                         ; callsite isn't referenced by this instance. Instead, it belongs to the graph of the caller of
-                         ; this CallsiteHolderExplorable.
+                         ; Parameters for which the callsite targeting #graph() provides "fixed" arguments. That callsite isn't referenced
+                         ; by this instance. Instead, it belongs to the graph of the caller of this CallsiteHolderExplorable.
                          ;
-                         ; Constant arguments don't contribute to fixed-params: those params have been removed already,
-                         ; see InlineableGraph.
-                         ;
-                         ; Instead, fixed-params are those receiving freshly instantiated arguments (possibly
-                         ; instantiated several levels up in the call-hierarchy).
+                         ; Constant arguments don't contribute to fixed-params: those params have been removed already, see InlineableGraph.
+                         ; Instead, fixed-params are those receiving freshly instantiated arguments (possibly instantiated several levels
+                         ; up in the call-hierarchy).
                          ;;
-                        #_"EconomicSet<ParameterNode>" :fixedParams nil
+                        #_"{ParameterNode}" :fixedParams (CallsiteHolder'fixedParamsAt-2 graph, freshArgs)
                         #_"ToDoubleFunction<FixedNode>" :probabilities nil
                         #_"ComputeInliningRelevance" :computeInliningRelevance nil
                     )
                 )
-            this (assoc this :fixedParams (CallsiteHolderExplorable''fixedParamsAt-2 this, freshlyInstantiatedArguments))
-            this
-                (if (empty? (:remainingInvokes this))
-                    (let [
-                        this (assoc this :probabilities nil)
-                        this (assoc this :computeInliningRelevance nil)
-                    ]
-                        this
-                    )
-                    (let [
-                        this (assoc this :probabilities (FixedNodeProbabilityCache'new-0))
-                        this (assoc this :computeInliningRelevance (ComputeInliningRelevance'new-2 graph, (:probabilities this)))
-                    ]
-                        (CallsiteHolderExplorable''computeProbabilities-1 this)
-                        this
-                    )
-                )
         ]
-            this
+            (when (seq (:remainingInvokes this)) => this
+                (let [
+                    #_"ToDoubleFunction<FixedNode>" probabilities (FixedNodeProbabilityCache'new-0)
+                ]
+                    (assoc this :probabilities probabilities, :computeInliningRelevance (ComputeInliningRelevance''compute-1 (ComputeInliningRelevance'new-2 graph, probabilities)))
+                )
+            )
         )
     )
 
-    (defm CallsiteHolderExplorable CallsiteHolder
-        (#_"ResolvedJavaMethod" CallsiteHolder'''method-1 [#_"CallsiteHolderExplorable" this]
-            (when (some? (:graph this)) (:rootMethod (:graph this)))
-        )
-
-        (#_"boolean" CallsiteHolder'''hasRemainingInvokes-1 [#_"CallsiteHolderExplorable" this]
-            (seq (:remainingInvokes this))
-        )
-
-        (#_"Graph" CallsiteHolder'''graph-1 [#_"CallsiteHolderExplorable" this]
-            (:graph this)
-        )
+    ;;;
+     ; Gets the method associated with the {@linkplain #graph() graph} represented by this object.
+     ;;
+    (defn #_"ResolvedJavaMethod" CallsiteHolder''method-1 [#_"CallsiteHolder" this]
+        (when (some? (:graph this)) (:rootMethod (:graph this)))
     )
 
-    (defn #_"InvokeNode" CallsiteHolderExplorable''popInvoke-1 [#_"CallsiteHolderExplorable" this]
+    ;;;
+     ; The stack realized by InliningData grows upon InliningData#moveForward() deciding
+     ; to explore (depth-first) a callsite of the graph associated to this CallsiteHolder.
+     ; The list of not-yet-considered callsites is managed by CallsiteHolderExplorable,
+     ; and this method reports whether any such candidates remain.
+     ;;
+    (defn #_"boolean" CallsiteHolder''hasRemainingInvokes-1 [#_"CallsiteHolder" this]
+        (seq (:remainingInvokes this))
+    )
+
+    (defn #_"InvokeNode" CallsiteHolder''popInvoke-1 [#_"CallsiteHolder" this]
         (#_"LinkedList" .removeFirst (:remainingInvokes this))
     )
 
-    (defn #_"void" CallsiteHolderExplorable''pushInvoke-2 [#_"CallsiteHolderExplorable" this, #_"InvokeNode" invoke]
+    (defn #_"void" CallsiteHolder''pushInvoke-2 [#_"CallsiteHolder" this, #_"InvokeNode" invoke]
         (#_"LinkedList" .push (:remainingInvokes this), invoke)
         nil
     )
 
-    (defn #_"void" CallsiteHolderExplorable''computeProbabilities-1 [#_"CallsiteHolderExplorable" this]
-        (§ ass! (:computeInliningRelevance this) (ComputeInliningRelevance''compute-1 (:computeInliningRelevance this)))
-        nil
+    (defn #_"CallsiteHolder" CallsiteHolder''computeProbabilities-1 [#_"CallsiteHolder" this]
+        (update this :computeInliningRelevance ComputeInliningRelevance''compute-1)
     )
 
-    (defn #_"double" CallsiteHolderExplorable''invokeProbability-2 [#_"CallsiteHolderExplorable" this, #_"InvokeNode" invoke]
+    (defn #_"double" CallsiteHolder''invokeProbability-2 [#_"CallsiteHolder" this, #_"InvokeNode" invoke]
         (* (:probability this) (#_"ToDoubleFunction" .applyAsDouble (:probabilities this), invoke))
     )
 
-    (defn #_"double" CallsiteHolderExplorable''invokeRelevance-2 [#_"CallsiteHolderExplorable" this, #_"InvokeNode" invoke]
-        (* (min AbstractInliningPolicy'CapInheritedRelevance (:relevance this)) (ComputeInliningRelevance''getRelevance-2 (:computeInliningRelevance this), invoke))
+    (defn #_"double" CallsiteHolder''invokeRelevance-2 [#_"CallsiteHolder" this, #_"InvokeNode" invoke]
+        (* (min InliningPolicy'CapInheritedRelevance (:relevance this)) (ComputeInliningRelevance''getRelevance-2 (:computeInliningRelevance this), invoke))
     )
 )
 
@@ -26628,7 +26247,7 @@ ZeroExtendNode'new-4
                         )
                     ]
                         ;; move the later test up
-                        (ConditionalEliminationInstance''rewireGuards-6 this, otherGuard, outcome, nil, guardedValueStamp, rewirer)
+                        (GuardRewirer'''rewire-5 rewirer, otherGuard, outcome, guardedValueStamp, nil)
                     )
                 )
             )
@@ -26704,10 +26323,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"boolean" ConditionalEliminationInstance''rewireGuards-6 [#_"ConditionalEliminationInstance" this, #_"GuardingNode" guard, #_"boolean" result, #_"ValueNode" proxifiedInput, #_"Stamp" guardedValueStamp, #_"GuardRewirer" rewireGuardFunction]
-        (GuardRewirer'''rewire-5 rewireGuardFunction, guard, result, guardedValueStamp, proxifiedInput)
-    )
-
     (defn #_"boolean" ConditionalEliminationInstance''tryProveCondition-3 [#_"ConditionalEliminationInstance" this, #_"LogicNode" node, #_"GuardRewirer" rewireGuardFunction]
         (ConditionalEliminationInstance''tryProveGuardCondition-4 this, nil, node, rewireGuardFunction)
     )
@@ -26720,7 +26335,7 @@ ZeroExtendNode'new-4
                 ]
                     (when (some? constant) => (recur (ConditionalEliminationInstance''nextElement-2 this, infoElement))
                         ;; No proxified input and stamp required.
-                        (ConditionalEliminationInstance''rewireGuards-6 this, (:guard infoElement), (#_"JavaConstant" .asBoolean constant), nil, nil, rewireGuardFunction)
+                        (GuardRewirer'''rewire-5 rewireGuardFunction, (:guard infoElement), (#_"JavaConstant" .asBoolean constant), nil, nil)
                     )
                 )
                 (condp satisfies? node
@@ -26733,7 +26348,7 @@ ZeroExtendNode'new-4
                                     #_"TriState" result (UnaryOpLogicNode'''tryFold-2 node, (:stamp infoElement))
                                 ]
                                     (if (#_"TriState" .isKnown result)
-                                        (§ return (ConditionalEliminationInstance''rewireGuards-6 this, (:guard infoElement), (#_"TriState" .toBoolean result), (:proxifiedInput infoElement), (:stamp infoElement), rewireGuardFunction))
+                                        (§ return (GuardRewirer'''rewire-5 rewireGuardFunction, (:guard infoElement), (#_"TriState" .toBoolean result), (:stamp infoElement), (:proxifiedInput infoElement)))
                                         (recur (ConditionalEliminationInstance''nextElement-2 this, infoElement))
                                     )
                                 )
@@ -26747,7 +26362,7 @@ ZeroExtendNode'new-4
                                         #_"TriState" result (UnaryOpLogicNode'''tryFold-2 node, (#_"Pair" .getRight foldResult))
                                     ]
                                         (when (#_"TriState" .isKnown result)
-                                            (§ return (ConditionalEliminationInstance''rewireGuards-6 this, (:guard (#_"Pair" .getLeft foldResult)), (#_"TriState" .toBoolean result), (:proxifiedInput (#_"Pair" .getLeft foldResult)), (#_"Pair" .getRight foldResult), rewireGuardFunction))
+                                            (§ return (GuardRewirer'''rewire-5 rewireGuardFunction, (:guard (#_"Pair" .getLeft foldResult)), (#_"TriState" .toBoolean result), (#_"Pair" .getRight foldResult), (:proxifiedInput (#_"Pair" .getLeft foldResult))))
                                         )
                                     )
                                 )
@@ -26767,7 +26382,7 @@ ZeroExtendNode'new-4
                                     #_"TriState" result (BinaryOpLogicNode'''tryFold-3 node, (:stamp infoElement), (:stamp (:y node)))
                                 ]
                                     (if (#_"TriState" .isKnown result)
-                                        (§ return (ConditionalEliminationInstance''rewireGuards-6 this, (:guard infoElement), (#_"TriState" .toBoolean result), (:proxifiedInput infoElement), (:stamp infoElement), rewireGuardFunction))
+                                        (§ return (GuardRewirer'''rewire-5 rewireGuardFunction, (:guard infoElement), (#_"TriState" .toBoolean result), (:stamp infoElement), (:proxifiedInput infoElement)))
                                         (recur (ConditionalEliminationInstance''nextElement-2 this, infoElement))
                                     )
                                 )
@@ -26782,7 +26397,7 @@ ZeroExtendNode'new-4
                                             #_"TriState" result (BinaryOpLogicNode'''tryFold-3 node, (#_"Pair" .getRight foldResult), (:stamp (:y node)))
                                         ]
                                             (when (#_"TriState" .isKnown result)
-                                                (§ return (ConditionalEliminationInstance''rewireGuards-6 this, (:guard (#_"Pair" .getLeft foldResult)), (#_"TriState" .toBoolean result), (:proxifiedInput (#_"Pair" .getLeft foldResult)), (#_"Pair" .getRight foldResult), rewireGuardFunction))
+                                                (§ return (GuardRewirer'''rewire-5 rewireGuardFunction, (:guard (#_"Pair" .getLeft foldResult)), (#_"TriState" .toBoolean result), (#_"Pair" .getRight foldResult), (:proxifiedInput (#_"Pair" .getLeft foldResult))))
                                             )
                                         )
                                     )
@@ -26792,7 +26407,7 @@ ZeroExtendNode'new-4
                                         #_"TriState" result (BinaryOpLogicNode'''tryFold-3 node, (:stamp (:x node)), (:stamp infoElement))
                                     ]
                                         (if (#_"TriState" .isKnown result)
-                                            (§ return (ConditionalEliminationInstance''rewireGuards-6 this, (:guard infoElement), (#_"TriState" .toBoolean result), (:proxifiedInput infoElement), (:stamp infoElement), rewireGuardFunction))
+                                            (§ return (GuardRewirer'''rewire-5 rewireGuardFunction, (:guard infoElement), (#_"TriState" .toBoolean result), (:stamp infoElement), (:proxifiedInput infoElement)))
                                             (recur (ConditionalEliminationInstance''nextElement-2 this, infoElement))
                                         )
                                     )
@@ -26811,7 +26426,7 @@ ZeroExtendNode'new-4
                                         #_"TriState" result (BinaryOpLogicNode'''tryFold-3 node, sx, (:stamp (:y node)))
                                     ]
                                         (if (#_"TriState" .isKnown result)
-                                            (§ return (ConditionalEliminationInstance''rewireGuards-6 this, (:guard infoElement), (#_"TriState" .toBoolean result), (:proxifiedInput infoElement), sx, rewireGuardFunction))
+                                            (§ return (GuardRewirer'''rewire-5 rewireGuardFunction, (:guard infoElement), (#_"TriState" .toBoolean result), sx, (:proxifiedInput infoElement)))
                                             (recur (ConditionalEliminationInstance''nextElement-2 this, infoElement))
                                         )
                                     )
@@ -26859,7 +26474,7 @@ ZeroExtendNode'new-4
                         (ConditionalEliminationInstance''tryProveCondition-3 this, (:x node), (ß (guard, result, guardedValueStamp, newInput) ->
                             (§ fun #_"GuardRewirer'''rewire-5"
                                 (if (= result (not (:xNegated node)))
-                                    (ConditionalEliminationInstance''rewireGuards-6 this, guard, true, newInput, guardedValueStamp, rewireGuardFunction)
+                                    (GuardRewirer'''rewire-5 rewireGuardFunction, guard, true, guardedValueStamp, newInput)
                                     (ConditionalEliminationInstance''tryProveCondition-3 this, (:y node), (ß (innerGuard, innerResult, innerGuardedValueStamp, innerNewInput) ->
                                         (§ fun #_"GuardRewirer'''rewire-5"
                                             (let [
@@ -26872,7 +26487,7 @@ ZeroExtendNode'new-4
                                             ]
                                                 ;; Can only canonicalize if the guards are equal.
                                                 (and (= innerGuard guard)
-                                                    (ConditionalEliminationInstance''rewireGuards-6 this, guard, (§ xor innerResult (:yNegated node)), proxifiedInput, guardedValueStamp, rewireGuardFunction)
+                                                    (GuardRewirer'''rewire-5 rewireGuardFunction, guard, (§ xor innerResult (:yNegated node)), guardedValueStamp, proxifiedInput)
                                                 )
                                             )
                                         ))
@@ -28686,20 +28301,6 @@ ZeroExtendNode'new-4
             graph
         )
     )
-)
-
-(class-ns Decision []
-    (defn- #_"Decision" Decision'new-1 [#_"boolean" shouldInline]
-        (merge (Decision'class.)
-            (hash-map
-                #_"boolean" :shouldInline shouldInline
-                #_"String" :reason nil
-            )
-        )
-    )
-
-    (def #_"Decision" Decision'YES (Decision'new-1 true))
-    (def #_"Decision" Decision'NO (Decision'new-1 false))
 )
 
 ;;;
@@ -31146,7 +30747,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"boolean" NodeClass''equalEdges-4 [#_"NodeClass<T>" this, #_"Node" node, #_"Node" other, #_"long" mask]
+    (defn- #_"boolean" NodeClass'equalEdges-3 [#_"Node" node, #_"Node" other, #_"long" mask]
         (loop [mask mask]
             (or (zero? mask)
                 (let [
@@ -31173,11 +30774,11 @@ ZeroExtendNode'new-4
 
     #_unused
     (defn #_"boolean" NodeClass''equalSuccessors-3 [#_"NodeClass<T>" this, #_"Node" node, #_"Node" other]
-        (NodeClass''equalEdges-4 this, node, other, (:successorIteration this))
+        (NodeClass'equalEdges-3 node, other, (:successorIteration this))
     )
 
     (defn #_"boolean" NodeClass''equalInputs-3 [#_"NodeClass<T>" this, #_"Node" node, #_"Node" other]
-        (NodeClass''equalEdges-4 this, node, other, (:inputsIteration this))
+        (NodeClass'equalEdges-3 node, other, (:inputsIteration this))
     )
 
     (defn- #_"void" NodeClass'applyEdges-3 [#_"Node" node, #_"EdgeVisitor" consumer, #_"long" mask]
@@ -32887,7 +32488,7 @@ ZeroExtendNode'new-4
             )
             (let [
                 #_"int" verifiedEntryPosition (Assembler''position-1 asm)
-                #_"int" frameSize (FrameMap''frameSize-1 (:frameMap asm))
+                #_"int" frameSize (:frameSize (:frameMap asm))
             ]
                 (when-not (:isStub this)
                     (Compiler'emitStackOverflowCheck-1 asm)
@@ -32919,106 +32520,128 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"void" FrameContext''leave-2 [#_"FrameContext" this, #_"Assembler" asm]
         (when-not (:omitFrame this)
-            (Assembler''incrementq-3r asm, AMD64/rsp, (FrameMap''frameSize-1 (:frameMap asm)))
+            (Assembler''incrementq-3r asm, AMD64/rsp, (:frameSize (:frameMap asm)))
         )
         nil
     )
 )
 
+;;;
+ ; A FrameMapBuilder is used to collect all information necessary to {@linkplain #buildFrameMap create} a FrameMap.
+ ;;
 (class-ns FrameMapBuilder []
     (defn #_"FrameMapBuilder" FrameMapBuilder'new-0 []
-        (FrameMapBuilder'class.)
-    )
-)
-
-(class-ns FrameMapBuilderTool [FrameMapBuilder]
-    (defn #_"FrameMapBuilderTool" FrameMapBuilderTool'new-0 []
-        (merge (FrameMapBuilderTool'class.) (FrameMapBuilder'new-0))
-    )
-)
-
-;;;
- ; A FrameMapBuilder that records allocation.
- ;;
-(class-ns FrameMapBuilder0 [FrameMapBuilderTool, FrameMapBuilder]
-    (defn #_"FrameMapBuilder0" FrameMapBuilder0'new-1 [#_"FrameMap" frameMap]
-        (merge (FrameMapBuilder0'class.) (FrameMapBuilderTool'new-0)
+        (merge (FrameMapBuilder'class.)
             (hash-map
-                #_"FrameMap" :frameMap frameMap
+                #_"FrameMap" :frameMap (FrameMap'new-0)
                 #_"List<VirtualStackSlot>" :stackSlots (ArrayList.)
                 #_"List<CallingConvention>" :calls (ArrayList.)
+                ;;;
+                 ; The number of VirtualStackSlots created by this FrameMapBuilder.
+                 ; Can be used as an upper bound for an array indexed by VirtualStackSlot#getId().
+                 ;;
                 #_"int" :numStackSlots 0
             )
         )
     )
 
-    (defm FrameMapBuilder0 FrameMapBuilder
-        (#_"VirtualStackSlot" FrameMapBuilder'''allocateSpillSlot-2 [#_"FrameMapBuilder0" this, #_"ValueKind" kind]
-            (let [
-                #_"SimpleVirtualStackSlot" slot (SimpleVirtualStackSlot'new-2 (:numStackSlots this), kind)
-            ]
-                (§ ass! this (update this :numStackSlots inc))
-                (#_"List" .add (:stackSlots this), slot)
-                slot
-            )
+    ;;;
+     ; Reserves a spill slot in the frame of the method being compiled. The returned slot is aligned
+     ; on its natural alignment, i.e. an 8-byte spill slot is aligned at an 8-byte boundary, unless
+     ; overridden by a subclass.
+     ;
+     ; @param kind The kind of the spill slot to be reserved.
+     ; @return a spill slot denoting the reserved memory area
+     ;;
+    (defn #_"VirtualStackSlot" FrameMapBuilder''allocateSpillSlot-2 [#_"FrameMapBuilder" this, #_"ValueKind" kind]
+        (let [
+            #_"SimpleVirtualStackSlot" slot (SimpleVirtualStackSlot'new-2 (:numStackSlots this), kind)
+        ]
+            (§ ass! this (update this :numStackSlots inc))
+            (#_"List" .add (:stackSlots this), slot)
+            slot
         )
     )
 
-    (defm FrameMapBuilder0 FrameMapBuilderTool
-        (#_"FrameMap" FrameMapBuilderTool'''getFrameMap-1 [#_"FrameMapBuilder0" this]
-            (:frameMap this)
-        )
-
-        (#_"int" FrameMapBuilderTool'''getNumberOfStackSlots-1 [#_"FrameMapBuilder0" this]
-            (:numStackSlots this)
-        )
+    ;;;
+     ; Informs the frame map that the compiled code calls a particular method, which may need stack
+     ; space for outgoing arguments.
+     ;
+     ; @param cc The calling convention for the called method.
+     ;;
+    (defn #_"FrameMapBuilder" FrameMapBuilder''callsMethod-2 [#_"FrameMapBuilder" this, #_"CallingConvention" cc]
+        (#_"List" .add (:calls this), cc)
+        this
     )
 
-    (defm FrameMapBuilder0 FrameMapBuilder
-        (#_"void" FrameMapBuilder'''callsMethod-2 [#_"FrameMapBuilder0" this, #_"CallingConvention" cc]
-            (#_"List" .add (:calls this), cc)
-            nil
+    ;;;
+     ; Creates a FrameMap based on the information collected by this FrameMapBuilder.
+     ;;
+    (defn #_"FrameMap" FrameMapBuilder''buildFrameMap-2 [#_"FrameMapBuilder" this, #_"LIRGenerationResult" res]
+        (doseq [#_"CallingConvention" cc (:calls this)]
+            (FrameMap''callsMethod-2 (:frameMap this), cc)
         )
-
-        (#_"FrameMap" FrameMapBuilder'''buildFrameMap-2 [#_"FrameMapBuilder0" this, #_"LIRGenerationResult" res]
-            (doseq [#_"CallingConvention" cc (:calls this)]
-                (FrameMap''callsMethod-2 (:frameMap this), cc)
-            )
-            (FrameMap''finish-1 (:frameMap this))
-            (:frameMap this)
-        )
-    )
-
-    (defm FrameMapBuilder0 FrameMapBuilderTool
-        (#_"List<VirtualStackSlot>" FrameMapBuilderTool'''getStackSlots-1 [#_"FrameMapBuilder0" this]
-            (:stackSlots this)
-        )
-    )
-)
-
-(class-ns AMD64FrameMapBuilder [FrameMapBuilder0, FrameMapBuilderTool, FrameMapBuilder]
-    (defn #_"AMD64FrameMapBuilder" AMD64FrameMapBuilder'new-1 [#_"FrameMap" frameMap]
-        (merge (AMD64FrameMapBuilder'class.) (FrameMapBuilder0'new-1 frameMap))
+        (§ ass! (:frameMap this) (FrameMap''finish-1 (:frameMap this)))
+        (:frameMap this)
     )
 
     ;;;
      ; For non-leaf methods, RBP is preserved in the special stack slot required by the HotSpot
      ; runtime for walking/inspecting frames of such methods.
      ;;
-    (defn #_"StackSlot" AMD64FrameMapBuilder''allocateRBPSpillSlot-1 [#_"AMD64FrameMapBuilder" this]
-        (AMD64FrameMap''allocateRBPSpillSlot-1 (FrameMapBuilderTool'''getFrameMap-1 this))
+    (defn #_"StackSlot" FrameMapBuilder''allocateRBPSpillSlot-1 [#_"FrameMapBuilder" this]
+        (FrameMap''allocateRBPSpillSlot-1 (:frameMap this))
     )
 
-    (defn #_"void" AMD64FrameMapBuilder''freeRBPSpillSlot-1 [#_"AMD64FrameMapBuilder" this]
-        (§ ass! (FrameMapBuilderTool'''getFrameMap-1 this) (AMD64FrameMap''freeRBPSpillSlot-1 (FrameMapBuilderTool'''getFrameMap-1 this)))
-        nil
+    (defn #_"FrameMapBuilder" FrameMapBuilder''freeRBPSpillSlot-1 [#_"FrameMapBuilder" this]
+        (§ ass! (:frameMap this) (FrameMap''freeRBPSpillSlot-1 (:frameMap this)))
+        this
     )
 )
 
+;;;
+ ; This class is used to build the stack frame layout for a compiled method. A StackSlot is used to index slots of the frame
+ ; relative to the stack pointer. The frame size is only fixed after register allocation when all spill slots have been allocated.
+ ; Both the outgoing argument area and the spill are can grow until then. Therefore, outgoing arguments are indexed from the
+ ; stack pointer, while spill slots are indexed from the beginning of the frame (and the total frame size has to be added to get
+ ; the actual offset from the stack pointer).
+ ;
+ ; This is the format of an AMD64 stack frame:
+ ;
+ ;   Base       Contents
+ ;
+ ;            :                                :  -----
+ ;   caller   | incoming overflow argument n   |    ^
+ ;   frame    :     ...                        :    | positive
+ ;            | incoming overflow argument 0   |    | offsets
+ ;   ---------+--------------------------------+---------------------
+ ;            | return address                 |    |            ^
+ ;   current  +--------------------------------+    |            |    -----
+ ;   frame    |                                |    |            |      ^
+ ;            : callee save area               :    |            |      |
+ ;            |                                |    |            |      |
+ ;            +--------------------------------+    |            |      |
+ ;            | spill slot 0                   |    | negative   |      |
+ ;            :     ...                        :    v offsets    |      |
+ ;            | spill slot n                   |  -----        total  frame
+ ;            +--------------------------------+               frame  size
+ ;            | alignment padding              |               size     |
+ ;            +--------------------------------+  -----          |      |
+ ;            | outgoing overflow argument n   |    ^            |      |
+ ;            :     ...                        :    | positive   |      |
+ ;            | outgoing overflow argument 0   |    | offsets    v      v
+ ;    %sp-->  +--------------------------------+---------------------------
+ ;
+ ; The spill slot area also includes stack allocated memory blocks (ALLOCA blocks). The size of such a block may be greater than
+ ; the size of a normal spill slot or the word size.
+ ;
+ ; A runtime can reserve space at the beginning of the overflow argument area. The calling convention can specify that the first
+ ; overflow stack argument is not at offset 0, but at a specified offset. Use CodeCacheProvider#getMinimumOutgoingSize() to make sure
+ ; that call-free methods also have this space reserved. Then the VM can use the memory at offset 0 relative to the stack pointer.
+ ;;
 (class-ns FrameMap []
-    ;;;
-     ; Creates a new frame map for the specified method.
-     ;;
+    (def #_"int" FrameMap'RETURN_ADDRESS_SIZE (#_"Architecture" .getReturnAddressSize (.arch HotSpot'target)))
+
     (defn #_"FrameMap" FrameMap'new-0 []
         (merge (FrameMap'class.)
             (hash-map
@@ -33030,11 +32653,11 @@ ZeroExtendNode'new-4
                 ;;;
                  ; Initial size of the area occupied by spill slots and other stack-allocated memory blocks.
                  ;;
-                #_"int" :initialSpillSize 0
+                #_"int" :initialSpillSize FrameMap'RETURN_ADDRESS_SIZE
                 ;;;
                  ; Size of the area occupied by spill slots and other stack-allocated memory blocks.
                  ;;
-                #_"int" :spillSize 0
+                #_"int" :spillSize FrameMap'RETURN_ADDRESS_SIZE
                 ;;;
                  ; Size of the area occupied by outgoing overflow arguments. This value is adjusted as calling conventions for outgoing
                  ; calls are retrieved. On some platforms, there is a minimum outgoing size even if no overflow arguments are on the stack.
@@ -33048,70 +32671,67 @@ ZeroExtendNode'new-4
                  ; The list of stack slots allocated in this frame that are present in every reference map.
                  ;;
                 #_"List<StackSlot>" :objectStackSlots (ArrayList.)
+                ;;;
+                 ; For non-leaf methods, RBP is preserved in the special stack slot required by the HotSpot
+                 ; runtime for walking/inspecting frames of such methods.
+                 ;;
+                #_"StackSlot" :rbpSpillSlot nil
             )
         )
     )
 
-    (defn #_"int" FrameMap''returnAddressSize-1 [#_"FrameMap" this]
-        (#_"Architecture" .getReturnAddressSize (.arch HotSpot'target))
-    )
-
     ;;;
-     ; Gets the frame size of the compiled frame, not including the size of the
-     ; {@link Architecture#getReturnAddressSize() return address slot}.
-     ;
-     ; @return the size of the frame (in bytes)
-     ;;
-    (defn #_"int" FrameMap''frameSize-1 [#_"FrameMap" this]
-        (:frameSize this)
-    )
-
-    ;;;
-     ; Determines if any space is used in the frame apart from the
-     ; {@link Architecture#getReturnAddressSize() return address slot}.
+     ; Determines if any space is used in the frame apart from the {@link Architecture#getReturnAddressSize() return address slot}.
      ;;
     (defn #_"boolean" FrameMap''frameNeedsAllocating-1 [#_"FrameMap" this]
-        (let [
-            #_"int" unalignedFrameSize (- (:spillSize this) (FrameMap''returnAddressSize-1 this))
-        ]
-            (or (:hasOutgoingStackArguments this) (not= unalignedFrameSize 0))
-        )
-    )
-
-    (defm FrameMap FrameMap
-        (#_"int" FrameMap'''alignFrameSize-2 [#_"FrameMap" this, #_"int" size]
-            (NumUtil'roundUp-2i size, (.stackAlignment HotSpot'target))
-        )
+        (or (:hasOutgoingStackArguments this) (< FrameMap'RETURN_ADDRESS_SIZE (:spillSize this)))
     )
 
     ;;;
-     ; Computes the final size of this frame. After this method has been called, methods that change
-     ; the frame size cannot be called anymore, e.g. no more spill slots or outgoing arguments can
-     ; be requested.
+     ; Gets the total frame size of the compiled frame, including the size of the {@link Architecture#getReturnAddressSize() return address slot}.
      ;;
-    (defn #_"void" FrameMap''finish-1 [#_"FrameMap" this]
-        (§ ass! this (assoc this :frameSize (FrameMap'''currentFrameSize-1 this)))
-        (when (< (#_"RegisterConfig" .getMaximumFrameSize HotSpot'registerConfig) (:frameSize this))
-            (throw! (str "frame size (" (:frameSize this) ") exceeded maximum allowed frame size (" (#_"RegisterConfig" .getMaximumFrameSize HotSpot'registerConfig) ")"))
+    (defn #_"int" FrameMap''totalFrameSize-1 [#_"FrameMap" this]
+        (+ (:frameSize this) FrameMap'RETURN_ADDRESS_SIZE)
+    )
+
+    ;;;
+     ; Aligns the given frame size to the stack alignment size and return the aligned size.
+     ;;
+    (defn- #_"int" FrameMap''alignFrameSize-2 [#_"FrameMap" this, #_"int" size]
+        (- (NumUtil'roundUp-2i (+ size FrameMap'RETURN_ADDRESS_SIZE), (.stackAlignment HotSpot'target)) FrameMap'RETURN_ADDRESS_SIZE)
+    )
+
+    ;;;
+     ; Gets the current size of this frame. This is the size that would be returned by #frameSize() if #finish() were called now.
+     ;;
+    (defn #_"int" FrameMap''currentFrameSize-1 [#_"FrameMap" this]
+        (FrameMap''alignFrameSize-2 this, (- (+ (:outgoingSize this) (:spillSize this)) FrameMap'RETURN_ADDRESS_SIZE))
+    )
+
+    ;;;
+     ; Computes the final size of this frame. After this method has been called, methods that change the frame size cannot be called anymore,
+     ; e.g. no more spill slots or outgoing arguments can be requested.
+     ;;
+    (defn #_"FrameMap" FrameMap''finish-1 [#_"FrameMap" this]
+        (let [
+            this (assoc this :frameSize (FrameMap''currentFrameSize-1 this))
+        ]
+            (when (< (#_"RegisterConfig" .getMaximumFrameSize HotSpot'registerConfig) (:frameSize this))
+                (throw! (str "frame size (" (:frameSize this) ") exceeded maximum allowed frame size (" (#_"RegisterConfig" .getMaximumFrameSize HotSpot'registerConfig) ")"))
+            )
+            this
         )
-        nil
     )
 
     ;;;
      ; Computes the offset of a stack slot relative to the frame register.
-     ;
-     ; @param slot a stack slot
-     ; @return the offset of the stack slot
      ;;
     (defn #_"int" FrameMap''offsetForStackSlot-2 [#_"FrameMap" this, #_"StackSlot" slot]
-        (#_"StackSlot" .getOffset slot, (FrameMap'''totalFrameSize-1 this))
+        (#_"StackSlot" .getOffset slot, (FrameMap''totalFrameSize-1 this))
     )
 
     ;;;
-     ; Informs the frame map that the compiled code calls a particular method, which may need stack
-     ; space for outgoing arguments.
-     ;
-     ; @param cc The calling convention for the called method.
+     ; Informs the frame map that the compiled code calls a particular method, which may need stack space for outgoing arguments.
      ;;
     (defn #_"void" FrameMap''callsMethod-2 [#_"FrameMap" this, #_"CallingConvention" cc]
         (§ ass! this (FrameMap''reserveOutgoing-2 this, (#_"CallingConvention" .getStackSize cc)))
@@ -33147,10 +32767,10 @@ ZeroExtendNode'new-4
      ; Returns the spill slot size for the given ValueKind. The default value is the size in
      ; bytes for the target architecture.
      ;
-     ; @param kind the ValueKind to be stored in the spill slot.
+     ; @param kind The ValueKind to be stored in the spill slot.
      ; @return the size in bytes
      ;;
-    (defn #_"int" FrameMap''spillSlotSize-2 [#_"FrameMap" this, #_"ValueKind" kind]
+    (defn #_"int" FrameMap'spillSlotSize-1 [#_"ValueKind" kind]
         (#_"PlatformKind" .getSizeInBytes (#_"ValueKind" .getPlatformKind kind))
     )
 
@@ -33164,21 +32784,11 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"StackSlot" FrameMap''allocateSpillSlot-2 [#_"FrameMap" this, #_"ValueKind" kind]
         (let [
-            #_"int" size (FrameMap''spillSlotSize-2 this, kind)
+            #_"int" size (FrameMap'spillSlotSize-1 kind)
         ]
             (§ ass! this (assoc this :spillSize (NumUtil'roundUp-2i (+ (:spillSize this) size), size)))
             (FrameMap''allocateNewSpillSlot-3 this, kind, 0)
         )
-    )
-
-    ;;;
-     ; Returns the size of the stack slot range for {@code slots} objects.
-     ;
-     ; @param slots The number of slots.
-     ; @return the size in bytes
-     ;;
-    (defn #_"int" FrameMap''spillSlotRangeSize-2 [#_"FrameMap" this, #_"int" slots]
-        (* slots (.wordSize HotSpot'target))
     )
 
     ;;;
@@ -33194,119 +32804,45 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"StackSlot" FrameMap''allocateStackSlots-3 [#_"FrameMap" this, #_"int" n, #_"BitSet" objects]
         (when (pos? n)
-            (§ ass! this (assoc this :spillSize (+ (:spillSize this) (FrameMap''spillSlotRangeSize-2 this, n))))
+            (let [
+                #_"int" wordSize (.wordSize HotSpot'target)
+                #_"PlatformKind" wordKind (#_"Architecture" .getWordKind (.arch HotSpot'target))
+            ]
+                (§ ass! this (assoc this :spillSize (+ (:spillSize this) (* n wordSize))))
 
-            (when-not (#_"BitSet" .isEmpty objects) => (FrameMap''allocateNewSpillSlot-3 this, (LIRKind'value-1 (#_"Architecture" .getWordKind (.arch HotSpot'target))), 0)
-                (loop-when [#_"StackSlot" slot nil #_"int" i 0] (< i n) => slot
-                    (let [
-                        #_"StackSlot" objectSlot
-                            (when (#_"BitSet" .get objects, i)
-                                (let [
-                                    objectSlot (FrameMap''allocateNewSpillSlot-3 this, (LIRKind'reference-1 (#_"Architecture" .getWordKind (.arch HotSpot'target))), (* i (.wordSize HotSpot'target)))
-                                ]
-                                    (FrameMap''addObjectStackSlot-2 this, objectSlot)
-                                    objectSlot
+                (when-not (#_"BitSet" .isEmpty objects) => (FrameMap''allocateNewSpillSlot-3 this, (LIRKind'value-1 wordKind), 0)
+                    (loop-when [#_"StackSlot" slot nil #_"int" i 0] (< i n) => slot
+                        (let [
+                            #_"StackSlot" objectSlot
+                                (when (#_"BitSet" .get objects, i)
+                                    (let [
+                                        objectSlot (FrameMap''allocateNewSpillSlot-3 this, (LIRKind'reference-1 wordKind), (* i wordSize))
+                                    ]
+                                        (#_"List" .add (:objectStackSlots this), objectSlot)
+                                        objectSlot
+                                    )
                                 )
-                            )
-                        slot
-                            (when (zero? i) => slot
-                                (or objectSlot
-                                    (FrameMap''allocateNewSpillSlot-3 this, (LIRKind'value-1 (#_"Architecture" .getWordKind (.arch HotSpot'target))), 0)
+                            slot
+                                (when (zero? i) => slot
+                                    (or objectSlot
+                                        (FrameMap''allocateNewSpillSlot-3 this, (LIRKind'value-1 wordKind), 0)
+                                    )
                                 )
-                            )
-                    ]
-                        (recur slot (inc i))
+                        ]
+                            (recur slot (inc i))
+                        )
                     )
                 )
             )
         )
     )
 
-    (defn #_"void" FrameMap''addObjectStackSlot-2 [#_"FrameMap" this, #_"StackSlot" objectSlot]
-        (#_"List" .add (:objectStackSlots this), objectSlot)
-        nil
-    )
-)
-
-;;;
- ; AMD64 specific frame map.
- ;
- ; This is the format of an AMD64 stack frame:
- ;
- ;   Base       Contents
- ;
- ;            :                                :  -----
- ;   caller   | incoming overflow argument n   |    ^
- ;   frame    :     ...                        :    | positive
- ;            | incoming overflow argument 0   |    | offsets
- ;   ---------+--------------------------------+---------------------
- ;            | return address                 |    |            ^
- ;   current  +--------------------------------+    |            |    -----
- ;   frame    |                                |    |            |      ^
- ;            : callee save area               :    |            |      |
- ;            |                                |    |            |      |
- ;            +--------------------------------+    |            |      |
- ;            | spill slot 0                   |    | negative   |      |
- ;            :     ...                        :    v offsets    |      |
- ;            | spill slot n                   |  -----        total  frame
- ;            +--------------------------------+               frame  size
- ;            | alignment padding              |               size     |
- ;            +--------------------------------+  -----          |      |
- ;            | outgoing overflow argument n   |    ^            |      |
- ;            :     ...                        :    | positive   |      |
- ;            | outgoing overflow argument 0   |    | offsets    v      v
- ;    %sp-->  +--------------------------------+---------------------------
- ;
- ; The spill slot area also includes stack allocated memory blocks (ALLOCA blocks). The size of such
- ; a block may be greater than the size of a normal spill slot or the word size.
- ;
- ; A runtime can reserve space at the beginning of the overflow argument area. The calling
- ; convention can specify that the first overflow stack argument is not at offset 0, but at a
- ; specified offset. Use CodeCacheProvider#getMinimumOutgoingSize() to make sure that
- ; call-free methods also have this space reserved. Then the VM can use the memory at offset 0
- ; relative to the stack pointer.
- ;;
-(class-ns AMD64FrameMap [FrameMap]
-    (defn #_"AMD64FrameMap" AMD64FrameMap'new-0 []
-        (let [
-            #_"AMD64FrameMap" this
-                (merge (AMD64FrameMap'class.) (FrameMap'new-0)
-                    (hash-map
-                        #_"StackSlot" :rbpSpillSlot nil
-                    )
-                )
-            ;; (negative) offset relative to sp + total frame size
-            this (assoc this :initialSpillSize (FrameMap''returnAddressSize-1 this))
-            this (assoc this :spillSize (:initialSpillSize this))
-        ]
-            this
-        )
-    )
-
-    (defm AMD64FrameMap FrameMap
-        (#_"int" FrameMap'''totalFrameSize-1 [#_"AMD64FrameMap" this]
-            (+ (FrameMap''frameSize-1 this) (FrameMap''returnAddressSize-1 this))
-        )
-
-        (#_"int" FrameMap'''currentFrameSize-1 [#_"AMD64FrameMap" this]
-            (FrameMap'''alignFrameSize-2 this, (- (+ (:outgoingSize this) (:spillSize this)) (FrameMap''returnAddressSize-1 this)))
-        )
-
-        (#_"int" FrameMap'''alignFrameSize-2 [#_"AMD64FrameMap" this, #_"int" size]
-            (- (NumUtil'roundUp-2i (+ size (FrameMap''returnAddressSize-1 this)), (.stackAlignment HotSpot'target)) (FrameMap''returnAddressSize-1 this))
-        )
-    )
-
-    ;;;
-     ; For non-leaf methods, RBP is preserved in the special stack slot required by the HotSpot
-     ; runtime for walking/inspecting frames of such methods.
-     ;;
-    (defn #_"StackSlot" AMD64FrameMap''allocateRBPSpillSlot-1 [#_"AMD64FrameMap" this]
+    (defn #_"StackSlot" FrameMap''allocateRBPSpillSlot-1 [#_"FrameMap" this]
         (§ ass! this (assoc this :rbpSpillSlot (FrameMap''allocateSpillSlot-2 this, (LIRKind'value-1 AMD64Kind/QWORD))))
         (:rbpSpillSlot this)
     )
 
-    (defn #_"AMD64FrameMap" AMD64FrameMap''freeRBPSpillSlot-1 [#_"AMD64FrameMap" this]
+    (defn #_"FrameMap" FrameMap''freeRBPSpillSlot-1 [#_"FrameMap" this]
         (assoc this :spillSize (:initialSpillSize this))
     )
 )
@@ -33728,8 +33264,8 @@ ZeroExtendNode'new-4
         (let [
             #_"int" depth (count (:lockedObjects this))
         ]
-            (when (and includeParents (some? (BytecodeParser''getParent-1 (:parser this)))) => depth
-                (+ depth (FrameStateBuilder''lockDepth-2 (:frameState (BytecodeParser''getParent-1 (:parser this))), true))
+            (when (and includeParents (some? (:parent (:parser this)))) => depth
+                (+ depth (FrameStateBuilder''lockDepth-2 (:frameState (:parent (:parser this))), true))
             )
         )
     )
@@ -35031,6 +34567,13 @@ ZeroExtendNode'new-4
         )
     )
 
+    ;;;
+     ; Gets the inline depth of this context. A return value of 0 implies that this is the context for the parse root.
+     ;;
+    (defn- #_"int" InlineDuringParsingPlugin'getDepth-1 [#_"BytecodeParser" parser]
+        (loop-when-recur [#_"int" depth 0 parser (:parent parser)] (some? parser) [(inc depth) (:parent parser)] => depth)
+    )
+
     (defn- #_"boolean" InlineDuringParsingPlugin'checkInliningDepth-1 [#_"BytecodeParser" parser]
         (let [
             #_"int" nodeCount (Graph''getNodeCount-1 (:graph parser))
@@ -35041,7 +34584,7 @@ ZeroExtendNode'new-4
                     maxDepth
                 )
         ]
-            (< (BytecodeParser''getDepth-1 parser) maxDepth)
+            (< (InlineDuringParsingPlugin'getDepth-1 parser) maxDepth)
         )
     )
 
@@ -35262,22 +34805,20 @@ ZeroExtendNode'new-4
 )
 
 ;;;
- ; The space of inlining decisions is explored depth-first with the help of a stack realized by
- ; InliningData. At any point in time, the topmost element of that stack consists of:
+ ; The space of inlining decisions is explored depth-first with the help of a stack realized by InliningData.
+ ; At any point in time, the topmost element of that stack consists of:
  ;
  ; (1) the callsite under consideration is tracked as a MethodInvocation.
- ; (2) one or more CallsiteHolders, all of them associated to the callsite above. Why more
- ; than one? Depending on the type-profile for the receiver more than one concrete method may be
- ; feasible target.
+ ; (2) one or more CallsiteHolders, all of them associated to the callsite above. Why more than one?
+ ; Depending on the type-profile for the receiver more than one concrete method may be feasible target.
  ;
  ; The bottom element in the stack consists of:
  ;
- ; (1) a single MethodInvocation (the {@link MethodInvocation#isRoot root} one, i.e.
- ; the unknown caller of the root graph)
+ ; (1) a single MethodInvocation (the {@link MethodInvocation#isRoot root} one, i.e. the unknown caller of the root graph)
  ; (2) a single CallsiteHolder (the root one, for the method on which inlining was called)
  ;;
 (class-ns InliningData []
-    (defn #_"InliningData" InliningData'new-5 [#_"Graph" rootGraph, #_"PhaseContext" context, #_"CanonicalizerPhase" canonicalizer, #_"InliningPolicy" inliningPolicy, #_"LinkedList<InvokeNode>" rootInvokes]
+    (defn #_"InliningData" InliningData'new-3 [#_"Graph" rootGraph, #_"PhaseContext" context, #_"CanonicalizerPhase" canonicalizer]
         (let [
             #_"InliningData" this
                 (merge (InliningData'class.)
@@ -35289,14 +34830,13 @@ ZeroExtendNode'new-4
                         #_"ArrayDeque<MethodInvocation>" :invocationQueue (ArrayDeque.)
                         #_"PhaseContext" :context context
                         #_"CanonicalizerPhase" :canonicalizer canonicalizer
-                        #_"InliningPolicy" :inliningPolicy inliningPolicy
                         #_"Graph" :rootGraph rootGraph
                         #_"int" :maxGraphs 1
                     )
                 )
         ]
             (#_"ArrayDeque" .push (:invocationQueue this), (MethodInvocation'new-4 nil, 1.0, 1.0, nil))
-            (#_"ArrayDeque" .push (:graphQueue this), (CallsiteHolderExplorable'new-5 rootGraph, 1.0, 1.0, nil, rootInvokes))
+            (#_"ArrayDeque" .push (:graphQueue this), (CallsiteHolder'new-4 rootGraph, 1.0, 1.0, nil))
             this
         )
     )
@@ -35425,9 +34965,9 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"void" InliningData''doInline-3 [#_"InliningData" this, #_"CallsiteHolderExplorable" callerCallsiteHolder, #_"MethodInvocation" calleeInvocation]
+    (defn- #_"void" InliningData''doInline-3 [#_"InliningData" this, #_"CallsiteHolder" callerCallsiteHolder, #_"MethodInvocation" calleeInvocation]
         (let [
-            #_"Graph" callerGraph (CallsiteHolder'''graph-1 callerCallsiteHolder)
+            #_"Graph" callerGraph (:graph callerCallsiteHolder)
             #_"InlineInfo" calleeInfo (:callee calleeInvocation)
             #_"EconomicSet<Node>" canonicalizedNodes (EconomicSet/create Equivalence/IDENTITY)
             _ (#_"EconomicSet" .addAll canonicalizedNodes, (:nodeUsages (InlineInfo'''invoke-1 calleeInfo)))
@@ -35440,11 +34980,11 @@ ZeroExtendNode'new-4
             ;; process invokes that are possibly created during canonicalization
             (doseq [#_"Node" newNode (Graph''getNodesSince-2 callerGraph, mark)]
                 (when (satisfies? InvokeNode newNode)
-                    (CallsiteHolderExplorable''pushInvoke-2 callerCallsiteHolder, newNode)
+                    (CallsiteHolder''pushInvoke-2 callerCallsiteHolder, newNode)
                 )
             )
 
-            (CallsiteHolderExplorable''computeProbabilities-1 callerCallsiteHolder)
+            (§ ass! callerCallsiteHolder (CallsiteHolder''computeProbabilities-1 callerCallsiteHolder))
         )
         nil
     )
@@ -35453,18 +34993,17 @@ ZeroExtendNode'new-4
      ; This method attempts:
      ;
      ; (1) to inline at the callsite given by {@code calleeInvocation}, where that callsite belongs
-     ; to the CallsiteHolderExplorable at the top of the #graphQueue maintained in this class
+     ; to the CallsiteHolderExplorable at the top of the #graphQueue maintained in this class
      ; (2) otherwise, to devirtualize the callsite in question
      ;
      ; @return true iff inlining was actually performed
      ;;
     (defn- #_"boolean" InliningData''tryToInline-3 [#_"InliningData" this, #_"MethodInvocation" calleeInvocation, #_"int" inliningDepth]
         (let [
-            #_"CallsiteHolderExplorable" callerCallsiteHolder (InliningData''currentGraph-1 this)
+            #_"CallsiteHolder" callerCallsiteHolder (InliningData''currentGraph-1 this)
             #_"InlineInfo" calleeInfo (:callee calleeInvocation)
-            #_"Decision" decision (InliningPolicy'''isWorthInlining-5 (:inliningPolicy this), HotSpot'replacements, calleeInvocation, inliningDepth, true)
         ]
-            (if (:shouldInline decision)
+            (if (InliningPolicy'isWorthInlining-3 calleeInvocation, inliningDepth, true)
                 (do
                     (InliningData''doInline-3 this, callerCallsiteHolder, calleeInvocation)
                     true
@@ -35493,41 +35032,6 @@ ZeroExtendNode'new-4
     )
 
     ;;;
-     ; This method picks one of the callsites belonging to the current CallsiteHolderExplorable.
-     ; Provided the callsite qualifies to be analyzed for inlining, this method prepares a new
-     ; stack top in InliningData for such callsite, which comprises:
-     ;
-     ; - preparing a summary of feasible targets, i.e. preparing an InlineInfo
-     ; - based on it, preparing the stack top proper which consists of:
-     ;
-     ; -- one MethodInvocation
-     ; -- a CallsiteHolder for each feasible target
-     ;
-     ; The thus prepared "stack top" is needed by #moveForward() to explore the space of
-     ; inlining decisions (each decision one of: backtracking, delving, inlining).
-     ;
-     ; The InlineInfo used to get things rolling is kept around in the MethodInvocation,
-     ; it will be needed in case of inlining.
-     ;;
-    (defn- #_"InliningData" InliningData''processNextInvoke-1 [#_"InliningData" this]
-        (let [
-            #_"CallsiteHolderExplorable" callsiteHolder (InliningData''currentGraph-1 this)
-            #_"InvokeNode" invoke (CallsiteHolderExplorable''popInvoke-1 callsiteHolder)
-            #_"InlineInfo" info (InliningData''getInlineInfo-2 this, invoke)
-        ]
-            (when (some? info) => this
-                (InlineInfo'''populateInlinableElements-4 info, (:context this), (CallsiteHolder'''graph-1 (InliningData''currentGraph-1 this)), (:canonicalizer this))
-                (let [
-                    #_"double" invokeProbability (CallsiteHolderExplorable''invokeProbability-2 callsiteHolder, invoke)
-                    #_"double" invokeRelevance (CallsiteHolderExplorable''invokeRelevance-2 callsiteHolder, invoke)
-                ]
-                    (InliningData''pushInvocationAndGraphs-2 this, (MethodInvocation'new-4 info, invokeProbability, invokeRelevance, (InliningData'freshlyInstantiatedArguments-2 invoke, (:fixedParams callsiteHolder))))
-                )
-            )
-        )
-    )
-
-    ;;;
      ; Gets the freshly instantiated arguments.
      ;
      ; A freshly instantiated argument is either:
@@ -35538,7 +35042,7 @@ ZeroExtendNode'new-4
      ; @return the positions of freshly instantiated arguments in the argument list of the
      ;         {@code invoke}, or nil if no such positions exist.
      ;;
-    (defn #_"BitSet" InliningData'freshlyInstantiatedArguments-2 [#_"InvokeNode" invoke, #_"EconomicSet<ParameterNode>" fixedParams]
+    (defn- #_"BitSet" InliningData'freshlyInstantiatedArguments-2 [#_"InvokeNode" invoke, #_"{ParameterNode}" fixedParams]
         (loop-when [#_"BitSet" bits nil #_"int" i 0 #_"ISeq" s (seq (:arguments (:callTarget invoke)))] (some? s) => bits
             (let [
                 #_"ValueNode" arg (first s)
@@ -35557,6 +35061,41 @@ ZeroExtendNode'new-4
         )
     )
 
+    ;;;
+     ; This method picks one of the callsites belonging to the current CallsiteHolderExplorable.
+     ; Provided the callsite qualifies to be analyzed for inlining, this method prepares a new
+     ; stack top in InliningData for such callsite, which comprises:
+     ;
+     ; - preparing a summary of feasible targets, i.e. preparing an InlineInfo
+     ; - based on it, preparing the stack top proper which consists of:
+     ;
+     ; -- one MethodInvocation
+     ; -- a CallsiteHolder for each feasible target
+     ;
+     ; The thus prepared "stack top" is needed by #moveForward() to explore the space of
+     ; inlining decisions (each decision one of: backtracking, delving, inlining).
+     ;
+     ; The InlineInfo used to get things rolling is kept around in the MethodInvocation,
+     ; it will be needed in case of inlining.
+     ;;
+    (defn- #_"InliningData" InliningData''processNextInvoke-1 [#_"InliningData" this]
+        (let [
+            #_"CallsiteHolder" callsiteHolder (InliningData''currentGraph-1 this)
+            #_"InvokeNode" invoke (CallsiteHolder''popInvoke-1 callsiteHolder)
+            #_"InlineInfo" info (InliningData''getInlineInfo-2 this, invoke)
+        ]
+            (when (some? info) => this
+                (InlineInfo'''populateInlinableElements-4 info, (:context this), (:graph (InliningData''currentGraph-1 this)), (:canonicalizer this))
+                (let [
+                    #_"double" invokeProbability (CallsiteHolder''invokeProbability-2 callsiteHolder, invoke)
+                    #_"double" invokeRelevance (CallsiteHolder''invokeRelevance-2 callsiteHolder, invoke)
+                ]
+                    (InliningData''pushInvocationAndGraphs-2 this, (MethodInvocation'new-4 info, invokeProbability, invokeRelevance, (InliningData'freshlyInstantiatedArguments-2 invoke, (:fixedParams callsiteHolder))))
+                )
+            )
+        )
+    )
+
     (defn- #_"InliningData" InliningData''popInvocation-1 [#_"InliningData" this]
         (let [
             this (assoc this :maxGraphs (- (:maxGraphs this) (InlineInfo'''numberOfMethods-1 (:callee (#_"ArrayDeque" .peekFirst (:invocationQueue this))))))
@@ -35569,7 +35108,7 @@ ZeroExtendNode'new-4
     (defn #_"int" InliningData''countRecursiveInlining-2 [#_"InliningData" this, #_"ResolvedJavaMethod" method]
         (loop-when-recur [#_"int" n 0 #_"ISeq" s (seq (:graphQueue this))]
                          (some? s)
-                         [(if (= method (CallsiteHolder'''method-1 (first s))) (inc n) n) (next s)]
+                         [(if (= method (CallsiteHolder''method-1 (first s))) (inc n) n) (next s)]
                       => n
         )
     )
@@ -35612,13 +35151,13 @@ ZeroExtendNode'new-4
             #_"MethodInvocation" currentInvocation (InliningData''currentInvocation-1 this)
         ]
             (cond
-                (and (not (MethodInvocation''isRoot-1 currentInvocation)) (not (:shouldInline (InliningPolicy'''isWorthInlining-5 (:inliningPolicy this), HotSpot'replacements, currentInvocation, (InliningData''inliningDepth-1 this), false))))
+                (and (not (MethodInvocation''isRoot-1 currentInvocation)) (not (InliningPolicy'isWorthInlining-3 currentInvocation, (InliningData''inliningDepth-1 this), false)))
                     (do
                         (InliningData''popGraphs-2 this, (- (MethodInvocation''totalGraphs-1 currentInvocation) (:processedGraphs currentInvocation)))
                         (§ ass! this (InliningData''popInvocation-1 this))
                         false
                     )
-                (and (CallsiteHolder'''hasRemainingInvokes-1 (InliningData''currentGraph-1 this)) (InliningPolicy'''continueInlining-2 (:inliningPolicy this), (CallsiteHolder'''graph-1 (InliningData''currentGraph-1 this))))
+                (and (CallsiteHolder''hasRemainingInvokes-1 (InliningData''currentGraph-1 this)) (InliningPolicy'continueInlining-1 (:graph (InliningData''currentGraph-1 this))))
                     (do
                         (§ ass! this (InliningData''processNextInvoke-1 this))
                         false
@@ -35637,7 +35176,7 @@ ZeroExtendNode'new-4
                                         (§ ass! this (InliningData''popInvocation-1 this))
                                         (and (InliningData''tryToInline-3 this, currentInvocation, (inc (InliningData''inliningDepth-1 this)))
                                             ;; report real progress only if we inline into the root graph
-                                            (= (CallsiteHolder'''graph-1 (InliningData''currentGraph-1 this)) (:rootGraph this))
+                                            (= (:graph (InliningData''currentGraph-1 this)) (:rootGraph this))
                                         )
                                     )
                                 )
@@ -35757,7 +35296,7 @@ ZeroExtendNode'new-4
     (defm InliningPhase Phase
         (#_"Graph" Phase'''run-3 [#_"InliningPhase" this, #_"Graph" graph, #_"PhaseContext" context]
             (let [
-                #_"InliningData" data (InliningData'new-5 graph, context, (:canonicalizer this), (GreedyInliningPolicy'new-0), nil)
+                #_"InliningData" data (InliningData'new-3 graph, context, (:canonicalizer this))
             ]
                 (loop-when [#_"int" n 1] (InliningData''hasUnprocessedGraphs-1 data)
                     (when (or (InliningData''moveForward-1 data) (< n GraalOptions'methodInlineBailoutLimit))
@@ -38686,7 +38225,7 @@ ZeroExtendNode'new-4
             #_"FrameMapBuilder" frameMapBuilder (:frameMapBuilder (:res (:gen this)))
             #_"CallingConvention" invokeCc (#_"RegisterConfig" .getCallingConvention HotSpot'registerConfig, (LoweredCallTargetNode''callType-1 callTarget), (Stamp'''javaType-1 (:stamp invoke)), (LoweredCallTargetNode''signature-1 callTarget), HotSpot'valueKindFactory)
         ]
-            (FrameMapBuilder'''callsMethod-2 frameMapBuilder, invokeCc)
+            (§ ass! frameMapBuilder (FrameMapBuilder''callsMethod-2 frameMapBuilder, invokeCc))
 
             (let [
                 #_"Value[]" parameters (LIRBuilder''visitInvokeArguments-3 this, invokeCc, (:arguments callTarget))
@@ -38734,7 +38273,7 @@ ZeroExtendNode'new-4
 )
 
 (class-ns LIRGenerationResult []
-    (defn #_"LIRGenerationResult" LIRGenerationResult'new-3 [#_"LIR" lir, #_"FrameMapBuilder" frameMapBuilder, #_"CallingConvention" callingConvention]
+    (defn #_"LIRGenerationResult" LIRGenerationResult'new-2 [#_"LIR" lir, #_"CallingConvention" callingConvention]
         (merge (LIRGenerationResult'class.)
             (hash-map
                 #_"LIR" :lir lir
@@ -38743,7 +38282,7 @@ ZeroExtendNode'new-4
                  ;
                  ; Valid only prior calling #buildFrameMap.
                  ;;
-                #_"FrameMapBuilder" :frameMapBuilder frameMapBuilder
+                #_"FrameMapBuilder" :frameMapBuilder (FrameMapBuilder'new-0)
                 ;;;
                  ; FrameMap associated with this LIRGenerationResult.
                  ;
@@ -38767,11 +38306,7 @@ ZeroExtendNode'new-4
      ; called once. After calling it, #getFrameMapBuilder() can no longer be used.
      ;;
     (defn #_"LIRGenerationResult" LIRGenerationResult''buildFrameMap-1 [#_"LIRGenerationResult" this]
-        (assoc this :frameMap (FrameMapBuilder'''buildFrameMap-2 (:frameMapBuilder this), this))
-    )
-
-    (defn #_"LIRGenerationResult" LIRGenerationResult''setForeignCall-2 [#_"LIRGenerationResult" this, #_"boolean" hasForeignCall]
-        (assoc this :hasForeignCall hasForeignCall)
+        (assoc this :frameMap (FrameMapBuilder''buildFrameMap-2 (:frameMapBuilder this), this))
     )
 )
 
@@ -39240,7 +38775,8 @@ ZeroExtendNode'new-4
         (let [
             #_"CallingConvention" linkageCc (:outgoingCallingConvention linkage)
         ]
-            (FrameMapBuilder'''callsMethod-2 (:frameMapBuilder (:res this)), linkageCc)
+            (§ ass! (:frameMapBuilder (:res this)) (FrameMapBuilder''callsMethod-2 (:frameMapBuilder (:res this)), linkageCc))
+
             (let [
                 ;; move the arguments into the correct location
                 #_"Value[]" argLocations (make-array Value (count args))
@@ -39254,7 +38790,7 @@ ZeroExtendNode'new-4
                         )
                     )
             ]
-                (§ ass! (:res this) (LIRGenerationResult''setForeignCall-2 (:res this), true))
+                (§ ass! this (assoc-in this [:res :hasForeignCall] true))
                 (LIRGenerator''emitForeignCallOp-5 this, linkage, (#_"CallingConvention" .getReturn linkageCc), argLocations, (#_"Object" .clone (:temporaries linkage)))
 
                 (when-not (= (#_"CallingConvention" .getReturn linkageCc) Value/ILLEGAL)
@@ -39276,7 +38812,7 @@ ZeroExtendNode'new-4
                     AMD64Kind/DOUBLE
                 )
         ]
-            (FrameMapBuilder'''allocateSpillSlot-2 (:frameMapBuilder (:res this)), (LIRKind'value-1 kind))
+            (FrameMapBuilder''allocateSpillSlot-2 (:frameMapBuilder (:res this)), (LIRKind'value-1 kind))
         )
     )
 
@@ -39579,24 +39115,22 @@ ZeroExtendNode'new-4
 
     #_unused
     (defn #_"void" LIRGenerator''emitCCall-4 [#_"LIRGenerator" this, #_"long" address, #_"CallingConvention" nativeCallingConvention, #_"Value[]" args]
+        (§ ass! (:frameMapBuilder (:res this)) (FrameMapBuilder''callsMethod-2 (:frameMapBuilder (:res this)), nativeCallingConvention))
+        (LIRGenerator''emitMoveConstant-3 this, (#_"Register" .asValue AMD64/rax, (LIRKind'value-1 AMD64Kind/DWORD)), (JavaConstant/forInt 0))
         (let [
             #_"Value[]" argLocations (make-array Value (count args))
-        ]
-            (FrameMapBuilder'''callsMethod-2 (:frameMapBuilder (:res this)), nativeCallingConvention)
-            (LIRGenerator''emitMoveConstant-3 this, (#_"Register" .asValue AMD64/rax, (LIRKind'value-1 AMD64Kind/DWORD)), (JavaConstant/forInt 0))
-            (dotimes [#_"int" i (count args)]
-                (let [
-                    #_"AllocatableValue" loc (#_"CallingConvention" .getArgument nativeCallingConvention, i)
-                ]
-                    (LIRGenerator''emitMove-3 this, loc, (nth args i))
-                    (aset argLocations i loc)
+            _
+                (dotimes [#_"int" i (count args)]
+                    (let [
+                        #_"AllocatableValue" loc (#_"CallingConvention" .getArgument nativeCallingConvention, i)
+                    ]
+                        (LIRGenerator''emitMove-3 this, loc, (nth args i))
+                        (aset argLocations i loc)
+                    )
                 )
-            )
-            (let [
-                #_"Value" ptr (LIRGenerator''emitLoadConstant-3 this, (LIRKind'value-1 AMD64Kind/QWORD), (JavaConstant/forLong address))
-            ]
-                (LIRGenerator''append-2 this, (AMD64CCall'new-3 (#_"CallingConvention" .getReturn nativeCallingConvention), ptr, argLocations))
-            )
+            #_"Value" ptr (LIRGenerator''emitLoadConstant-3 this, (LIRKind'value-1 AMD64Kind/QWORD), (JavaConstant/forLong address))
+        ]
+            (LIRGenerator''append-2 this, (AMD64CCall'new-3 (#_"CallingConvention" .getReturn nativeCallingConvention), ptr, argLocations))
         )
         nil
     )
@@ -42269,7 +41803,7 @@ ZeroExtendNode'new-4
                 (§ ass! this (assoc this :locks (Arrays/copyOf (:locks this), (inc lockDepth))))
         )
         (when (nil? (nth (:locks this) lockDepth))
-            (aset (:locks this) lockDepth (FrameMapBuilder'''allocateSpillSlot-2 (:frameMapBuilder this), (:slotKind this)))
+            (aset (:locks this) lockDepth (FrameMapBuilder''allocateSpillSlot-2 (:frameMapBuilder this), (:slotKind this)))
         )
         (nth (:locks this) lockDepth)
     )
@@ -43263,8 +42797,8 @@ ZeroExtendNode'new-4
         (LSStackSlotAllocator'class.)
     )
 
-    (defn- #_"void" LSStackSlotAllocator'allocateStackSlots-2 [#_"FrameMapBuilderTool" builder, #_"LIRGenerationResult" res]
-        (when (pos? (FrameMapBuilderTool'''getNumberOfStackSlots-1 builder))
+    (defn- #_"void" LSStackSlotAllocator'allocateStackSlots-2 [#_"FrameMapBuilder" builder, #_"LIRGenerationResult" res]
+        (when (pos? (:numStackSlots builder))
             (Allocator''allocate-1 (Allocator'new-2 (:lir res), builder))
         )
         nil
@@ -44734,7 +44268,7 @@ ZeroExtendNode'new-4
                 (§ ass! interval (Interval''assignLocation-2 interval, (Interval''spillSlot-1 interval)))
             :else
                 (let [
-                    #_"VirtualStackSlot" slot (FrameMapBuilder'''allocateSpillSlot-2 (:frameMapBuilder this), (:kind interval))
+                    #_"VirtualStackSlot" slot (FrameMapBuilder''allocateSpillSlot-2 (:frameMapBuilder this), (:kind interval))
                 ]
                     (Interval''setSpillSlot-2 interval, slot)
                     (§ ass! interval (Interval''assignLocation-2 interval, slot))
@@ -49125,7 +48659,7 @@ ZeroExtendNode'new-4
  ; CallsiteHolders in that element represent feasible targets for the callsite in question.
  ;;
 (class-ns MethodInvocation []
-    (defn #_"MethodInvocation" MethodInvocation'new-4 [#_"InlineInfo" info, #_"double" probability, #_"double" relevance, #_"BitSet" freshlyInstantiatedArguments]
+    (defn #_"MethodInvocation" MethodInvocation'new-4 [#_"InlineInfo" info, #_"double" probability, #_"double" relevance, #_"BitSet" freshArgs]
         (merge (MethodInvocation'class.)
             (hash-map
                 #_"InlineInfo" :callee info
@@ -49140,11 +48674,11 @@ ZeroExtendNode'new-4
                  ; (1) an InliningData#isFreshInstantiation(ValueNode)
                  ; (2) a fixed-param of the graph containing the callsite (i.e. of {@code callee.graph()} that contains {@code callee.invoke})
                  ;
-                 ; Given those positions, the CallsiteHolderExplorable instantiated in #buildCallsiteHolderForElement(int) can determine
+                 ; Given those positions, the CallsiteHolderExplorable instantiated in #buildCallsiteHolderForElement(int) can determine
                  ; which of <i>its</i> parameters are fixed.
                  ;;
-                #_"BitSet" :freshlyInstantiatedArguments freshlyInstantiatedArguments
-                #_"int" :sizeFreshArgs (if (some? freshlyInstantiatedArguments) (#_"BitSet" .cardinality freshlyInstantiatedArguments) 0)
+                #_"BitSet" :freshArgs freshArgs
+                #_"int" :sizeFreshArgs (if (some? freshArgs) (#_"BitSet" .cardinality freshArgs) 0)
             )
         )
     )
@@ -49167,7 +48701,7 @@ ZeroExtendNode'new-4
             #_"double" invokeProbability (* (:probability this) (InlineInfo'''probabilityAt-2 (:callee this), index))
             #_"double" invokeRelevance (* (:relevance this) (InlineInfo'''relevanceAt-2 (:callee this), index))
         ]
-            (CallsiteHolderExplorable'new-5 (:graph elem), invokeProbability, invokeRelevance, (:freshlyInstantiatedArguments this), nil)
+            (CallsiteHolder'new-4 (:graph elem), invokeProbability, invokeRelevance, (:freshArgs this))
         )
     )
 )
@@ -49328,7 +48862,7 @@ ZeroExtendNode'new-4
             #_"Register" scratch (#_"RegisterArray" .get available, 0)
             #_"LIRKind" largest (LIRKind'value-1 (#_"Architecture" .getLargestStorableKind (.arch HotSpot'target), (#_"Register" .getRegisterCategory scratch)))
         ]
-            (RegisterBackupPair'new-2 scratch, (FrameMapBuilder'''allocateSpillSlot-2 (:frameMapBuilder this), largest))
+            (RegisterBackupPair'new-2 scratch, (FrameMapBuilder''allocateSpillSlot-2 (:frameMapBuilder this), largest))
         )
     )
 
@@ -49739,7 +49273,7 @@ ZeroExtendNode'new-4
                 #_"AllocatableValue" spillSlot (Interval''spillSlot-1 fromInterval)
             ]
                 (when (nil? spillSlot)
-                    (§ ass spillSlot (FrameMapBuilder'''allocateSpillSlot-2 (LinearScan''getFrameMapBuilder-1 (:allocator this)), (:kind fromInterval)))
+                    (§ ass spillSlot (FrameMapBuilder''allocateSpillSlot-2 (LinearScan''getFrameMapBuilder-1 (:allocator this)), (:kind fromInterval)))
                     (Interval''setSpillSlot-2 fromInterval, spillSlot)
                 )
                 (MoveResolver''spillInterval-4 this, spillCandidate, fromInterval, spillSlot)
@@ -49840,13 +49374,13 @@ ZeroExtendNode'new-4
 
     (defn #_"SSAMoveResolver" SSAMoveResolver'new-1 [#_"LinearScan" allocator]
         (let [
-            #_"FrameMapBuilderTool" frameMapBuilderTool (LinearScan''getFrameMapBuilder-1 allocator)
-            #_"FrameMap" frameMap (FrameMapBuilderTool'''getFrameMap-1 frameMapBuilderTool)
+            #_"FrameMapBuilder" frameMapBuilder (LinearScan''getFrameMapBuilder-1 allocator)
+            #_"FrameMap" frameMap (:frameMap frameMapBuilder)
         ]
             (merge (SSAMoveResolver'class.) (MoveResolver'new-1 allocator)
                 (hash-map
-                    #_"int[]" :stackBlocked (int-array (FrameMapBuilderTool'''getNumberOfStackSlots-1 frameMapBuilderTool))
-                    #_"int" :firstVirtualStackIndex (if (not (FrameMap''frameNeedsAllocating-1 frameMap)) 0 (inc (FrameMap'''currentFrameSize-1 frameMap)))
+                    #_"int[]" :stackBlocked (int-array (:numStackSlots frameMapBuilder))
+                    #_"int" :firstVirtualStackIndex (if (not (FrameMap''frameNeedsAllocating-1 frameMap)) 0 (inc (FrameMap''currentFrameSize-1 frameMap)))
                 )
             )
         )
@@ -49918,7 +49452,7 @@ ZeroExtendNode'new-4
                     #_"int" stackSpillCandidate 0
                     #_"Interval" fromInterval (MoveResolver''getMappingFrom-2 this, stackSpillCandidate)
                     ;; allocate new stack slot
-                    #_"VirtualStackSlot" spillSlot (FrameMapBuilder'''allocateSpillSlot-2 (LinearScan''getFrameMapBuilder-1 (:allocator this)), (:kind fromInterval))
+                    #_"VirtualStackSlot" spillSlot (FrameMapBuilder''allocateSpillSlot-2 (LinearScan''getFrameMapBuilder-1 (:allocator this)), (:kind fromInterval))
                 ]
                     (MoveResolver''spillInterval-4 this, stackSpillCandidate, fromInterval, spillSlot)
                 )
@@ -66583,7 +66117,7 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"int" RMEOptimization''getOffset-2 [#_"RMEOptimization" this, #_"StackSlot" stackSlot]
-        (#_"StackSlot" .getOffset stackSlot, (FrameMap'''totalFrameSize-1 (:frameMap this)))
+        (#_"StackSlot" .getOffset stackSlot, (FrameMap''totalFrameSize-1 (:frameMap this)))
     )
 
     ;;;
@@ -68008,7 +67542,7 @@ ZeroExtendNode'new-4
                 ;;;
                  ; The slot reserved for saving RBP.
                  ;;
-                #_"StackSlot" :reservedSlot (AMD64FrameMapBuilder''allocateRBPSpillSlot-1 (:frameMapBuilder (:res gen)))
+                #_"StackSlot" :reservedSlot (FrameMapBuilder''allocateRBPSpillSlot-1 (:frameMapBuilder (:res gen)))
             )
         )
     )
@@ -68024,7 +67558,7 @@ ZeroExtendNode'new-4
                 (if useStack
                     (:reservedSlot this)
                     (do
-                        (AMD64FrameMapBuilder''freeRBPSpillSlot-1 (:frameMapBuilder (:res (:gen this))))
+                        (§ ass! (:frameMapBuilder (:res (:gen this))) (FrameMapBuilder''freeRBPSpillSlot-1 (:frameMapBuilder (:res (:gen this)))))
                         (LIRGenerator''newVariable-2 (:gen this), (LIRKind'value-1 AMD64Kind/QWORD))
                     )
                 )
@@ -69026,12 +68560,12 @@ ZeroExtendNode'new-4
         (SimpleStackSlotAllocator'class.)
     )
 
-    (defn- #_"StackSlot" SimpleStackSlotAllocator'mapSimpleVirtualStackSlot-2 [#_"FrameMapBuilderTool" builder, #_"SimpleVirtualStackSlot" virtualStackSlot]
-        (FrameMap''allocateSpillSlot-2 (FrameMapBuilderTool'''getFrameMap-1 builder), (#_"Value" .getValueKind virtualStackSlot))
+    (defn- #_"StackSlot" SimpleStackSlotAllocator'mapSimpleVirtualStackSlot-2 [#_"FrameMapBuilder" builder, #_"SimpleVirtualStackSlot" virtualStackSlot]
+        (FrameMap''allocateSpillSlot-2 (:frameMap builder), (#_"Value" .getValueKind virtualStackSlot))
     )
 
-    (defn- #_"StackSlot" SimpleStackSlotAllocator'mapVirtualStackSlotRange-2 [#_"FrameMapBuilderTool" builder, #_"VirtualStackSlotRange" virtualStackSlot]
-        (FrameMap''allocateStackSlots-3 (FrameMapBuilderTool'''getFrameMap-1 builder), (:slots virtualStackSlot), (VirtualStackSlotRange''getObjects-1 virtualStackSlot))
+    (defn- #_"StackSlot" SimpleStackSlotAllocator'mapVirtualStackSlotRange-2 [#_"FrameMapBuilder" builder, #_"VirtualStackSlotRange" virtualStackSlot]
+        (FrameMap''allocateStackSlots-3 (:frameMap builder), (:slots virtualStackSlot), (VirtualStackSlotRange''getObjects-1 virtualStackSlot))
     )
 
     (defn #_"void" SimpleStackSlotAllocator''updateLIR-3 [#_"SimpleStackSlotAllocator" this, #_"LIRGenerationResult" res, #_"StackSlot[]" mapping]
@@ -69056,11 +68590,11 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn #_"void" SimpleStackSlotAllocator''allocateStackSlots-3 [#_"SimpleStackSlotAllocator" this, #_"FrameMapBuilderTool" builder, #_"LIRGenerationResult" res]
+    (defn #_"void" SimpleStackSlotAllocator''allocateStackSlots-3 [#_"SimpleStackSlotAllocator" this, #_"FrameMapBuilder" builder, #_"LIRGenerationResult" res]
         (let [
-            #_"StackSlot[]" mapping (make-array StackSlot (FrameMapBuilderTool'''getNumberOfStackSlots-1 builder))
+            #_"StackSlot[]" mapping (make-array StackSlot (:numStackSlots builder))
         ]
-            (doseq [#_"VirtualStackSlot" virtualSlot (FrameMapBuilderTool'''getStackSlots-1 builder)]
+            (doseq [#_"VirtualStackSlot" virtualSlot (:stackSlots builder)]
                 (let [
                     #_"StackSlot" slot
                         (condp satisfies? virtualSlot
@@ -75046,7 +74580,7 @@ ZeroExtendNode'new-4
             (let [
                 #_"int" end (NumUtil'roundUp-2i (* HotSpot'stackShadowPages 4 CodeUtil/K), HotSpot'vmPageSize)
                 ;; This is how far the previous frame's stack banging extended.
-                #_"int" frameSize (FrameMap''frameSize-1 (:frameMap asm))
+                #_"int" frameSize (:frameSize (:frameMap asm))
                 #_"int" end' (if (< HotSpot'vmPageSize frameSize) (+ end frameSize) end)
             ]
                 (loop-when-recur [#_"int" i end] (<= i end') [(+ i HotSpot'vmPageSize)]
@@ -75093,7 +74627,7 @@ ZeroExtendNode'new-4
             #_"Block[]" linearScanOrder (ComputeBlockOrder'computeLinearScanOrder-2 (count blocks), startBlock)
             #_"LIR" lir (LIR'new-3 (:cfg schedule), linearScanOrder, codeEmittingOrder)
             #_"CallingConvention" callingConvention (CodeUtil/getCallingConvention HotSpot'codeCache, HotSpotCallingConventionType/JavaCallee, (:rootMethod graph), HotSpot'valueKindFactory)
-            #_"LIRGenerationResult" res (LIRGenerationResult'new-3 lir, (AMD64FrameMapBuilder'new-1 (AMD64FrameMap'new-0)), callingConvention)
+            #_"LIRGenerationResult" res (LIRGenerationResult'new-2 lir, callingConvention)
             #_"LIRGenerator" gen (LIRGenerator'new-1 res)
             #_"LIRBuilder" builder (LIRBuilder'new-2 graph, gen)
         ]
