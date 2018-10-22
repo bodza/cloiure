@@ -266,7 +266,7 @@ AMD64ControlFlow'intCond-1
 AMD64ControlFlow'setcc-3
 AMD64DeoptimizeOp'new-0
 AMD64HotSpotRestoreRbpOp'PLACEHOLDER
-AMD64HotSpotReturnOp'new-4
+AMD64HotSpotReturnOp'new-3
 AMD64HotSpotStrategySwitchOp'new-5
 AMD64ImmOp''emitImmediate-4
 AMD64ImmOp''immediateSize-2
@@ -421,7 +421,6 @@ AddressNode'new-0
 AllocatableRegisters'new-3
 AllocatedObjectNode''setCommit-2
 AllocatedObjectNode'new-1
-AllocationStage'new-0
 Allocator''allocate-1
 Allocator'new-2
 And'new-2
@@ -1489,7 +1488,7 @@ ForeignCalls'new-0
 FrameContext''enter-2
 FrameContext''leave-2
 FrameContext'PATCHED_VERIFIED_ENTRY_POINT_INSTRUCTION_SIZE
-FrameContext'new-2
+FrameContext'new-1
 FrameMap''allocateNewSpillSlot-3
 FrameMap''allocateRBPSpillSlot-1
 FrameMap''allocateSpillSlot-2
@@ -1587,15 +1586,8 @@ GraalOptions'inlineDuringParsingMaxDepth
 GraalOptions'inlineEverything
 GraalOptions'inlinePartialIntrinsicExitDuringParsing
 GraalOptions'limitInlinedInvokes
-GraalOptions'lirOptConstantLoadOptimization
-GraalOptions'lirOptControlFlowOptimizer
-GraalOptions'lirOptEdgeMoveOptimizer
 GraalOptions'lirOptLSRAEliminateSpillMoves
 GraalOptions'lirOptLSRAOptimizeSpillPosition
-GraalOptions'lirOptLSStackSlotAllocator
-GraalOptions'lirOptNullCheckOptimizer
-GraalOptions'lirOptRedundantMoveElimination
-GraalOptions'lirOptStackMoveOptimizer
 GraalOptions'lirOptimization
 GraalOptions'loopMaxUnswitch
 GraalOptions'loopPeeling
@@ -2155,7 +2147,6 @@ LIRGenerationContext'new-4
 LIRGenerationPhase'new-0
 LIRGenerationResult''buildFrameMap-1
 LIRGenerationResult'new-2
-LIRGenerator''_emitForeignCall-3*
 LIRGenerator''append-2
 LIRGenerator''asAddressValue-2
 LIRGenerator''asAllocatable-2
@@ -2326,9 +2317,8 @@ LIRKindTool'getNarrowPointerKind-0
 LIRKindTool'getObjectKind-0
 LIRKindTool'getWordKind-0
 LIRPhaseContext'new-1
-LIRPhaseSuite''appendPhase-2
-LIRPhaseSuite'new-0
-LIRSuites'new-3
+LIRPhaseSuite'new-1*
+LIRSuites'new-0
 LIRValueUtil'isIntConstant-2
 LIRValueUtil'isJavaConstant-1
 LIRValueUtil'isStackSlotValue-1
@@ -2356,7 +2346,6 @@ LSResolveDataFlowPhase''resolveDataFlow-1
 LSResolveDataFlowPhase''resolveDataFlow0-3
 LSResolveDataFlowPhase''resolveFindInsertPos-4
 LSResolveDataFlowPhase'new-1
-LSStackSlotAllocator'new-0
 Label''addPatchAt-2
 Label''bind-2
 Label''isBound-1
@@ -3125,8 +3114,6 @@ Position''getInputType-1
 Position''initialize-3
 Position''set-3
 Position'new-3
-PostAllocationStage'new-0
-PreAllocationStage'new-0
 PrefetchAllocateNode'new-1
 Prefix'REX
 Prefix'REXB
@@ -3353,10 +3340,6 @@ SignedRemNode'create-2
 SignedRemNode'new-2
 Signedness'SIGNED
 Signedness'UNSIGNED
-SimpleStackSlotAllocator''allocateStackSlots-3
-SimpleStackSlotAllocator''updateLIR-3
-SimpleStackSlotAllocator'new-0
-SimpleVirtualStackSlot'new-2
 SingletonNodeWorkList'new-1
 SlotSize'Illegal
 SlotSize'Size1
@@ -3390,6 +3373,7 @@ StackInterval''setLocationHint-2
 StackInterval'new-2
 StackLeaOp'new-2
 StackMoveOptimizationPhase'new-0
+StackSlotAllocator'new-0
 Stamp''isEmpty-1
 Stamp''neverDistinct-2
 Stamp''tryImproveWith-2
@@ -3447,7 +3431,6 @@ SubNode'new-2
 SuccessorEdges'new-2
 SuccessorInfo'new-1
 Suites'createGraphBuilderSuite-0
-Suites'createLIRSuites-0
 Suites'createSuites-0
 Suites'new-3
 SwitchNode''defaultSuccessor-1
@@ -3600,8 +3583,6 @@ VirtualObjectNode''setObjectId-2
 VirtualObjectNode'new-2
 VirtualObjectState'new-2
 VirtualStackSlot'new-2
-VirtualStackSlotRange''getObjects-1
-VirtualStackSlotRange'new-4
 VirtualState'new-0
 VirtualizableInvokeMacroNode'new-5*
 VirtualizerTool''reset-5
@@ -4007,7 +3988,6 @@ ZeroExtendNode'new-4
 
 (defp AllocatableRegisters)
 (defp AllocatedObjectNode)
-(defp AllocationStage)
 (defp Allocator)
 (defp AnchoringNode)
 (defp And)
@@ -5120,7 +5100,6 @@ ZeroExtendNode'new-4
     (#_"void" LSResolveDataFlowPhase'''resolveCollectMappings-5 [#_"LSResolveDataFlowPhase" this, #_"Block" fromBlock, #_"Block" toBlock, #_"Block" midBlock, #_"MoveResolver" moveResolver])
 )
 
-(defp LSStackSlotAllocator)
 (defp Label)
 (defp LabelOp)
 (defp LabelRef)
@@ -5763,8 +5742,6 @@ ZeroExtendNode'new-4
 (defp PointerEqualsNode)
 (defp PointerEqualsOp)
 (defp Position)
-(defp PostAllocationStage)
-(defp PreAllocationStage)
 (defp PrefetchAllocateNode)
 (defp Primitive)
 (defp PrimitiveStamp)
@@ -5900,8 +5877,6 @@ ZeroExtendNode'new-4
 (defp SignExtendNode)
 (defp SignedDivNode)
 (defp SignedRemNode)
-(defp SimpleStackSlotAllocator)
-(defp SimpleVirtualStackSlot)
 
 ;;;
  ; This interface allows nodes to perform more complicated simplifications, in contrast to
@@ -5958,6 +5933,7 @@ ZeroExtendNode'new-4
 (defp StackInterval)
 (defp StackLeaOp)
 (defp StackMoveOptimizationPhase)
+(defp StackSlotAllocator)
 
 ;;;
  ; A stamp is the basis for a type system.
@@ -6407,7 +6383,6 @@ ZeroExtendNode'new-4
 
 (defp VirtualObjectState)
 (defp VirtualStackSlot)
-(defp VirtualStackSlotRange)
 
 ;;;
  ; Base class for nodes that contain "virtual" state, like FrameState and VirtualObjectState.
@@ -6498,7 +6473,7 @@ ZeroExtendNode'new-4
     (#_"ValueNode" VirtualizerTool'''getEntry-3 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject, #_"int" index])
     (#_"void" VirtualizerTool'''addLock-3 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject, #_"MonitorIdNode" monitorId])
     (#_"MonitorIdNode" VirtualizerTool'''removeLock-2 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject])
-    #_unused
+    #_unused
     (#_"boolean" VirtualizerTool'''getEnsureVirtualized-2 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject])
     ;;;
      ; Deletes the current node and replaces it with the given virtualized object.
@@ -6522,7 +6497,7 @@ ZeroExtendNode'new-4
      ; @param oldInput the old input value.
      ; @param replacement the new input value.
      ;;
-    #_unused
+    #_unused
     (#_"void" VirtualizerTool'''replaceFirstInput-3 [#_"VirtualizerTool" this, #_"Node" oldInput, #_"Node" replacement])
     ;;;
      ; Adds the given node to the graph.This action will only be performed when, and if, the changes are committed.
@@ -6542,7 +6517,7 @@ ZeroExtendNode'new-4
      ;
      ; @return true if materialization happened, false if not
      ;;
-    #_unused
+    #_unused
     (#_"boolean" VirtualizerTool'''ensureMaterialized-2 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject])
 )
 
@@ -7732,19 +7707,6 @@ ZeroExtendNode'new-4
     (def #_"boolean" GraalOptions'lsraOptimization false)
     ;; @Option "LSRA optimization: Only split but do not reassign."
     (def #_"boolean" GraalOptions'lsraOptSplitOnly false)
-
-    (def #_"boolean" GraalOptions'lirOptStackMoveOptimizer (and GraalOptions'lirOptimization true))
-
-    ;; @Option "Enable constant load optimization."
-    (def #_"boolean" GraalOptions'lirOptConstantLoadOptimization (and GraalOptions'lirOptimization true))
-
-    (def #_"boolean" GraalOptions'lirOptEdgeMoveOptimizer (and GraalOptions'lirOptimization true))
-    (def #_"boolean" GraalOptions'lirOptControlFlowOptimizer (and GraalOptions'lirOptimization true))
-    (def #_"boolean" GraalOptions'lirOptRedundantMoveElimination (and GraalOptions'lirOptimization true))
-    (def #_"boolean" GraalOptions'lirOptNullCheckOptimizer (and GraalOptions'lirOptimization true))
-
-    ;; @Option "Use linear scan stack slot allocation."
-    (def #_"boolean" GraalOptions'lirOptLSStackSlotAllocator (and GraalOptions'lirOptimization true))
 
     (def #_"int" GraalOptions'loopUnswitchMaxIncrease 500)
     (def #_"int" GraalOptions'loopUnswitchTrivial 10)
@@ -12253,7 +12215,7 @@ ZeroExtendNode'new-4
      ; There is no difference to a signed or unsigned {@link #zero}.
      ;;
     ; @WordFactoryOperation(opcode = WordFactoryOpcode'ZERO)
-    #_unused
+    #_unused
     (defn #_"Word" WordFactory'nullPointer-0 []
         (Word'box-1 0)
     )
@@ -13945,9 +13907,6 @@ ZeroExtendNode'new-4
  ; by a register allocator.
  ;;
 (class-ns Variable [#_"AllocatableValue"]
-    ;;;
-     ; Creates a new variable.
-     ;;
     (defn #_"Variable" Variable'new-2 [#_"ValueKind" kind, #_"int" index]
         (merge (Variable'class.) (AllocatableValue. kind)
             (hash-map
@@ -13971,35 +13930,6 @@ ZeroExtendNode'new-4
                 #_"int" :id id
             )
         )
-    )
-)
-
-;;;
- ; Represents a {@link VirtualStackSlot virtual stack slot} for a specific {@link ValueKind kind}.
- ;;
-(class-ns SimpleVirtualStackSlot [VirtualStackSlot, #_"AllocatableValue"]
-    (defn #_"SimpleVirtualStackSlot" SimpleVirtualStackSlot'new-2 [#_"int" id, #_"ValueKind" kind]
-        (merge (SimpleVirtualStackSlot'class.) (VirtualStackSlot'new-2 id, kind))
-    )
-)
-
-;;;
- ; Represents a {@link #getSlots() numbered} range of {@link VirtualStackSlot virtual stack slot}
- ; of size TargetDescription#wordSize.
- ;;
-(class-ns VirtualStackSlotRange [VirtualStackSlot, #_"AllocatableValue"]
-    #_unused
-    (defn #_"VirtualStackSlotRange" VirtualStackSlotRange'new-4 [#_"int" id, #_"int" slots, #_"BitSet" objects, #_"LIRKind" kind]
-        (merge (VirtualStackSlotRange'class.) (VirtualStackSlot'new-2 id, kind)
-            (hash-map
-                #_"BitSet" :objects (#_"Object" .clone objects)
-                #_"int" :slots slots
-            )
-        )
-    )
-
-    (defn #_"BitSet" VirtualStackSlotRange''getObjects-1 [#_"VirtualStackSlotRange" this]
-        (#_"Object" .clone (:objects this))
     )
 )
 
@@ -14100,7 +14030,7 @@ ZeroExtendNode'new-4
     ;;;
      ; Gets a free stack slot for {@code slot} or nil if there is none.
      ;;
-    (defn- #_"StackSlot" Allocator''findFreeSlot-2 [#_"Allocator" this, #_"SimpleVirtualStackSlot" slot]
+    (defn- #_"StackSlot" Allocator''findFreeSlot-2 [#_"Allocator" this, #_"VirtualStackSlot" slot]
         (let [
             #_"SlotSize" size (Allocator''forKind-2 this, (#_"Value" .getValueKind slot))
         ]
@@ -14116,30 +14046,22 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"void" Allocator''allocateSlot-2 [#_"Allocator" this, #_"StackInterval" current]
+    (defn- #_"void" Allocator''allocateSlot-2 [#_"Allocator" this, #_"StackInterval" interval]
         (let [
-            #_"VirtualStackSlot" virtualSlot (:operand current)
+            #_"VirtualStackSlot" virtualSlot (:operand interval)
             #_"StackSlot" location
-                (if (satisfies? VirtualStackSlotRange virtualSlot)
-                    ;; No reuse of ranges (yet).
-                    (let [
-                        #_"VirtualStackSlotRange" slotRange virtualSlot
-                    ]
-                        (FrameMap''allocateStackSlots-3 (:frameMap (:frameMapBuilder this)), (:slots slotRange), (VirtualStackSlotRange''getObjects-1 slotRange))
-                    )
-                    (let [
-                        #_"StackSlot" slot (Allocator''findFreeSlot-2 this, virtualSlot)
-                    ]
-                        (if (some? slot)
-                            ;; Free stack slot available. Note that we create a new one because the kind might not match.
-                            (StackSlot/get (:kind current), (#_"StackSlot" .getRawOffset slot), (#_"StackSlot" .getRawAddFrameSize slot))
-                            ;; Allocate new stack slot.
-                            (FrameMap''allocateSpillSlot-2 (:frameMap (:frameMapBuilder this)), (#_"Value" .getValueKind virtualSlot))
-                        )
+                (let [
+                    #_"StackSlot" slot (Allocator''findFreeSlot-2 this, virtualSlot)
+                ]
+                    (if (some? slot)
+                        ;; Free stack slot available. Note that we create a new one because the kind might not match.
+                        (StackSlot/get (:kind interval), (#_"StackSlot" .getRawOffset slot), (#_"StackSlot" .getRawAddFrameSize slot))
+                        ;; Allocate new stack slot.
+                        (FrameMap''allocateSpillSlot-2 (:frameMap (:frameMapBuilder this)), (#_"Value" .getValueKind virtualSlot))
                     )
                 )
         ]
-            (§ ass! current (StackInterval''setLocation-2 current, location))
+            (§ ass! interval (StackInterval''setLocation-2 interval, location))
         )
         nil
     )
@@ -14532,7 +14454,7 @@ ZeroExtendNode'new-4
                     (not (:hasArgInCallerFrame (:lir res)))
                     (not (:hasForeignCall res))
                 )
-            this (assoc this :frameContext (FrameContext'new-2 (some? nil), omit-frame?))
+            this (assoc this :frameContext (FrameContext'new-1 omit-frame?))
             this (assoc this :compilationResult (CompilationResult'new-1 (FrameMap''totalFrameSize-1 (:frameMap res))))
         ]
             this
@@ -16782,10 +16704,8 @@ ZeroExtendNode'new-4
                     )
                 )
         ]
-            (when-not (:isStub (:frameContext this))
-                (Assembler''recordMark-2 this, HotSpot'deoptHandlerEntryMark)
-                (AMD64Call'directCall-4 this, (ForeignCalls''lookupForeignCall-2 HotSpot'foreignCalls, ForeignCallDescriptor'DEOPTIMIZATION_HANDLER), nil, false)
-            )
+            (Assembler''recordMark-2 this, HotSpot'deoptHandlerEntryMark)
+            (AMD64Call'directCall-4 this, (ForeignCalls''lookupForeignCall-2 HotSpot'foreignCalls, ForeignCallDescriptor'DEOPTIMIZATION_HANDLER), nil, false)
             this
         )
     )
@@ -32256,7 +32176,7 @@ ZeroExtendNode'new-4
                 ;;;
                  ; The registers and stack slots defined/killed by the call.
                  ;;
-                #_"Value[]" :temporaries AllocatableValue/NONE
+                #_"Value[]" :temporaries AllocatableValue/NONE
             )
         )
     )
@@ -32465,10 +32385,9 @@ ZeroExtendNode'new-4
      ;;
     (def #_"int" FrameContext'PATCHED_VERIFIED_ENTRY_POINT_INSTRUCTION_SIZE 5)
 
-    (defn #_"FrameContext" FrameContext'new-2 [#_"boolean" isStub, #_"boolean" omitFrame]
+    (defn #_"FrameContext" FrameContext'new-1 [#_"boolean" omitFrame]
         (merge (FrameContext'class.)
             (hash-map
-                #_"boolean" :isStub isStub
                 #_"boolean" :omitFrame omitFrame
             )
         )
@@ -32483,17 +32402,13 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"void" FrameContext''enter-2 [#_"FrameContext" this, #_"Assembler" asm]
         (if (:omitFrame this)
-            (when-not (:isStub this)
-                (Assembler''nop-2 asm, FrameContext'PATCHED_VERIFIED_ENTRY_POINT_INSTRUCTION_SIZE)
-            )
+            (Assembler''nop-2 asm, FrameContext'PATCHED_VERIFIED_ENTRY_POINT_INSTRUCTION_SIZE)
             (let [
                 #_"int" verifiedEntryPosition (Assembler''position-1 asm)
                 #_"int" frameSize (:frameSize (:frameMap asm))
             ]
-                (when-not (:isStub this)
-                    (Compiler'emitStackOverflowCheck-1 asm)
-                )
-                (if (and (not (:isStub this)) (= (Assembler''position-1 asm) verifiedEntryPosition))
+                (Compiler'emitStackOverflowCheck-1 asm)
+                (if (= (Assembler''position-1 asm) verifiedEntryPosition)
                     (Assembler''subqWide-3 asm, AMD64/rsp, frameSize)
                     (Assembler''decrementq-3r asm, AMD64/rsp, frameSize)
                 )
@@ -32555,7 +32470,7 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"VirtualStackSlot" FrameMapBuilder''allocateSpillSlot-2 [#_"FrameMapBuilder" this, #_"ValueKind" kind]
         (let [
-            #_"SimpleVirtualStackSlot" slot (SimpleVirtualStackSlot'new-2 (:numStackSlots this), kind)
+            #_"VirtualStackSlot" slot (VirtualStackSlot'new-2 (:numStackSlots this), kind)
         ]
             (§ ass! this (update this :numStackSlots inc))
             (#_"List" .add (:stackSlots this), slot)
@@ -32802,6 +32717,7 @@ ZeroExtendNode'new-4
      ;            collector could see garbage object values.
      ; @return the first reserved stack slot (i.e. at the lowest address)
      ;;
+    #_unused
     (defn #_"StackSlot" FrameMap''allocateStackSlots-3 [#_"FrameMap" this, #_"int" n, #_"BitSet" objects]
         (when (pos? n)
             (let [
@@ -35575,7 +35491,7 @@ ZeroExtendNode'new-4
     (def #_"int" Interval'END_MARKER_OPERAND_NUMBER Integer/MIN_VALUE)
 
     (defn #_"Interval" Interval''assignLocation-2 [#_"Interval" this, #_"AllocatableValue" newLocation]
-        (assoc this :location (if (and (instance? RegisterValue newLocation) (= (#_"AllocatableValue" .getValueKind newLocation) LIRKind'Illegal) (not (= (:kind this) LIRKind'Illegal))) (#_"Register" .asValue (#_"RegisterValue" .getRegister newLocation), (:kind this)) newLocation))
+        (assoc this :location (if (and (instance? RegisterValue newLocation) (= (#_"Value" .getValueKind newLocation) LIRKind'Illegal) (not (= (:kind this) LIRKind'Illegal))) (#_"Register" .asValue (#_"RegisterValue" .getRegister newLocation), (:kind this)) newLocation))
     )
 
     ;;;
@@ -38232,7 +38148,7 @@ ZeroExtendNode'new-4
                 #_"Value" result (#_"CallingConvention" .getReturn invokeCc)
             ]
                 (condp satisfies? callTarget
-                    DirectCallTargetNode (LIRBuilder''emitDirectCall-5 this, callTarget, result, parameters, AllocatableValue/NONE)
+                    DirectCallTargetNode (LIRBuilder''emitDirectCall-5 this, callTarget, result, parameters, AllocatableValue/NONE)
                 )
                 (when-not (= result Value/ILLEGAL)
                     (LIRBuilder''setResult-3 this, invoke, (LIRGenerator''emitMove-2 (:gen this), result))
@@ -38599,7 +38515,7 @@ ZeroExtendNode'new-4
                     (assoc this :pollOnReturnScratchRegister (LIRGenerator''findPollOnReturnScratchRegister-1 this))
                 )
         ]
-            (LIRGenerator''append-2 this, (AMD64HotSpotReturnOp'new-4 operand, (some? nil), HotSpot'threadRegister, (:pollOnReturnScratchRegister this)))
+            (LIRGenerator''append-2 this, (AMD64HotSpotReturnOp'new-3 operand, HotSpot'threadRegister, (:pollOnReturnScratchRegister this)))
             this
         )
     )
@@ -38800,87 +38716,15 @@ ZeroExtendNode'new-4
         )
     )
 
-    ;;;
-     ; Allocate a stack slot for saving a register.
-     ;;
-    (defn- #_"VirtualStackSlot" LIRGenerator''allocateSaveRegisterLocation-2 [#_"LIRGenerator" this, #_"Register" register]
-        (let [
-            #_"PlatformKind" kind (#_"Architecture" .getLargestStorableKind (.arch HotSpot'target), (#_"Register" .getRegisterCategory register))
-            kind
-                (when (< 1 (#_"PlatformKind" .getVectorLength kind)) => kind
-                    ;; we don't use vector registers, so there is no need to save them
-                    AMD64Kind/DOUBLE
-                )
-        ]
-            (FrameMapBuilder''allocateSpillSlot-2 (:frameMapBuilder (:res this)), (LIRKind'value-1 kind))
-        )
-    )
-
-    ;;;
-     ; @param savedRegisters the registers saved by this operation which may be subject to pruning
-     ; @param savedRegisterLocations the slots to which the registers are saved
-     ;;
-    (defn- #_"AMD64SaveRegistersOp" LIRGenerator''emitSaveRegisters-3 [#_"LIRGenerator" this, #_"Register*" savedRegisters, #_"AllocatableValue[]" savedRegisterLocations]
-        (let [
-            #_"AMD64SaveRegistersOp" save (AMD64SaveRegistersOp'new-2 savedRegisters, savedRegisterLocations)
-        ]
-            (LIRGenerator''append-2 this, save)
-            save
-        )
-    )
-
-    ;;;
-     ; Adds a node to the graph that saves all allocatable registers to the stack.
-     ;
-     ; @return the register save node
-     ;;
-    (defn- #_"AMD64SaveRegistersOp" LIRGenerator''emitSaveAllRegisters-2 [#_"LIRGenerator" this, #_"Register*" savedRegisters]
-        (let [
-            #_"AllocatableValue[]" savedRegisterLocations (make-array AllocatableValue (count savedRegisters))
-        ]
-            (dotimes [#_"int" i (count savedRegisters)]
-                (aset savedRegisterLocations i (LIRGenerator''allocateSaveRegisterLocation-2 this, (nth savedRegisters i)))
-            )
-            (LIRGenerator''emitSaveRegisters-3 this, savedRegisters, savedRegisterLocations)
-        )
-    )
-
-    (defn- #_"void" LIRGenerator''emitRestoreRegisters-2 [#_"LIRGenerator" this, #_"AMD64SaveRegistersOp" save]
-        (LIRGenerator''append-2 this, (AMD64RestoreRegistersOp'new-2 (#_"Object" .clone (:slots save)), save))
-        nil
-    )
-
     (defn #_"Variable" LIRGenerator''emitForeignCall-3* [#_"LIRGenerator" this, #_"ForeignCallLinkage" linkage & #_"Value..." args]
-        (let [
-            #_"boolean" destroysRegisters (ForeignCallLinkage''destroysRegisters-1 linkage)
-            #_"AMD64SaveRegistersOp" save
-                (when (and destroysRegisters (some? nil))
-                    (let [
-                        #_"Register*" savedRegisters (#_"RegisterArray" .toArray (#_"RegisterConfig" .getAllocatableRegisters HotSpot'registerConfig))
-                    ]
-                        (LIRGenerator''emitSaveAllRegisters-2 this, savedRegisters)
-                    )
-                )
-            #_"Variable" result
-                (if (ForeignCallLinkage''needsJavaFrameAnchor-1 linkage)
-                    (let [
-                        #_"Register" thread HotSpot'threadRegister
-                    ]
-                        (LIRGenerator''append-2 this, (CRuntimeCallPrologueOp'new-2 HotSpot'threadLastJavaSpOffset, thread))
-                        (let [
-                            result (apply LIRGenerator''_emitForeignCall-3* this, linkage, args)
-                        ]
-                            (LIRGenerator''append-2 this, (CRuntimeCallEpilogueOp'new-4 HotSpot'threadLastJavaSpOffset, HotSpot'threadLastJavaFpOffset, HotSpot'threadLastJavaPcOffset, thread))
-                            result
-                        )
-                    )
-                    (apply LIRGenerator''_emitForeignCall-3* this, linkage, args)
-                )
-        ]
-            (when (and destroysRegisters (some? nil))
-                (LIRGenerator''emitRestoreRegisters-2 this, save)
+        (when (ForeignCallLinkage''needsJavaFrameAnchor-1 linkage) => (apply LIRGenerator''_emitForeignCall-3* this, linkage, args)
+            (LIRGenerator''append-2 this, (CRuntimeCallPrologueOp'new-2 HotSpot'threadLastJavaSpOffset, HotSpot'threadRegister))
+            (let [
+                #_"Variable" result (apply LIRGenerator''_emitForeignCall-3* this, linkage, args)
+            ]
+                (LIRGenerator''append-2 this, (CRuntimeCallEpilogueOp'new-4 HotSpot'threadLastJavaSpOffset, HotSpot'threadLastJavaFpOffset, HotSpot'threadLastJavaPcOffset, HotSpot'threadRegister))
+                result
             )
-            result
         )
     )
 
@@ -39151,7 +38995,7 @@ ZeroExtendNode'new-4
             input (LIRGenerator''asAllocatable-2 this, input)
             #_"Variable" result (LIRGenerator''newVariable-2 this, (LIRKind'combine-1* input))
         ]
-            (condp = (#_"AllocatableValue" .getPlatformKind input)
+            (condp = (#_"Value" .getPlatformKind input)
                 AMD64Kind/DWORD (LIRGenerator''append-2 this, (MOp'new-4 AMD64MOp'NEG, OperandSize'DWORD, result, input))
                 AMD64Kind/QWORD (LIRGenerator''append-2 this, (MOp'new-4 AMD64MOp'NEG, OperandSize'QWORD, result, input))
             )
@@ -39164,7 +39008,7 @@ ZeroExtendNode'new-4
             input (LIRGenerator''asAllocatable-2 this, input)
             #_"Variable" result (LIRGenerator''newVariable-2 this, (LIRKind'combine-1* input))
         ]
-            (condp = (#_"AllocatableValue" .getPlatformKind input)
+            (condp = (#_"Value" .getPlatformKind input)
                 AMD64Kind/DWORD (LIRGenerator''append-2 this, (MOp'new-4 AMD64MOp'NOT, OperandSize'DWORD, result, input))
                 AMD64Kind/QWORD (LIRGenerator''append-2 this, (MOp'new-4 AMD64MOp'NOT, OperandSize'QWORD, result, input))
             )
@@ -40407,10 +40251,10 @@ ZeroExtendNode'new-4
     (defm AMD64MultiStackMove LIRInstruction
         (#_"void" LIRInstruction'''emitCode-2 [#_"AMD64MultiStackMove" this, #_"Assembler" asm]
             (let [
-                #_"AMD64Kind" backupKind (#_"AllocatableValue" .getPlatformKind (:backupSlot this))
+                #_"AMD64Kind" backupKind (#_"Value" .getPlatformKind (:backupSlot this))
             ]
                 ;; backup scratch register
-                (AMD64Move'move-4 backupKind, asm, (:backupSlot this), (#_"Register" .asValue (:scratch this), (#_"AllocatableValue" .getValueKind (:backupSlot this))))
+                (AMD64Move'move-4 backupKind, asm, (:backupSlot this), (#_"Register" .asValue (:scratch this), (#_"Value" .getValueKind (:backupSlot this))))
                 (dotimes [#_"int" i (count (:results this))]
                     (let [
                         #_"Value" input (nth (:inputs this) i)
@@ -40418,11 +40262,11 @@ ZeroExtendNode'new-4
                     ]
                         ;; move stack slot
                         (AMD64Move'move-4 (#_"Value" .getPlatformKind input), asm, (#_"Register" .asValue (:scratch this), (#_"Value" .getValueKind input)), input)
-                        (AMD64Move'move-4 (#_"AllocatableValue" .getPlatformKind result), asm, result, (#_"Register" .asValue (:scratch this), (#_"AllocatableValue" .getValueKind result)))
+                        (AMD64Move'move-4 (#_"Value" .getPlatformKind result), asm, result, (#_"Register" .asValue (:scratch this), (#_"Value" .getValueKind result)))
                     )
                 )
                 ;; restore scratch register
-                (AMD64Move'move-4 backupKind, asm, (#_"Register" .asValue (:scratch this), (#_"AllocatableValue" .getValueKind (:backupSlot this))), (:backupSlot this))
+                (AMD64Move'move-4 backupKind, asm, (#_"Register" .asValue (:scratch this), (#_"Value" .getValueKind (:backupSlot this))), (:backupSlot this))
             )
             nil
         )
@@ -40493,18 +40337,19 @@ ZeroExtendNode'new-4
  ;;
 ; @LIROpcode
 (class-ns AMD64RestoreRegistersOp [LIRInstruction]
-    (defn #_"AMD64RestoreRegistersOp" AMD64RestoreRegistersOp'new-2 [#_"AllocatableValue[]" values, #_"AMD64SaveRegistersOp" save]
+    #_unused
+    (defn #_"AMD64RestoreRegistersOp" AMD64RestoreRegistersOp'new-2 [#_"AllocatableValue*" saveSlots, #_"AMD64SaveRegistersOp" saveOp]
         (merge (AMD64RestoreRegistersOp'class.) (LIRInstruction'new-0)
             (hash-map
                 ;;;
                  ; The slots from which the registers are restored.
                  ;;
                 ; @OperandMode'USE(OperandFlag'STACK)
-                #_"AllocatableValue[]" :slots values
+                #_"AllocatableValue*" :saveSlots saveSlots
                 ;;;
                  ; The operation that saved the registers restored by this operation.
                  ;;
-                #_"AMD64SaveRegistersOp" :save save
+                #_"AMD64SaveRegistersOp" :saveOp saveOp
             )
         )
     )
@@ -40517,11 +40362,11 @@ ZeroExtendNode'new-4
     (defm AMD64RestoreRegistersOp LIRInstruction
         (#_"void" LIRInstruction'''emitCode-2 [#_"AMD64RestoreRegistersOp" this, #_"Assembler" asm]
             (let [
-                #_"Register*" savedRegisters (:savedRegisters (:save this))
+                #_"Register*" savedRegisters (:savedRegisters (:saveOp this))
             ]
                 (dotimes [#_"int" i (count savedRegisters)]
                     (when (some? (nth savedRegisters i))
-                        (AMD64RestoreRegistersOp'restoreRegister-3 asm, (nth savedRegisters i), (nth (:slots this) i))
+                        (AMD64RestoreRegistersOp'restoreRegister-3 asm, (nth savedRegisters i), (nth (:saveSlots this) i))
                     )
                 )
             )
@@ -40537,9 +40382,10 @@ ZeroExtendNode'new-4
 (class-ns AMD64SaveRegistersOp [LIRInstruction]
     ;;;
      ; @param savedRegisters the registers saved by this operation which may be subject to {@linkplain #remove(EconomicSet) pruning}
-     ; @param savedRegisterLocations the slots to which the registers are saved
+     ; @param saveSlots the slots to which the registers are saved
      ;;
-    (defn #_"AMD64SaveRegistersOp" AMD64SaveRegistersOp'new-2 [#_"Register*" savedRegisters, #_"AllocatableValue[]" savedRegisterLocations]
+    #_unused
+    (defn #_"AMD64SaveRegistersOp" AMD64SaveRegistersOp'new-2 [#_"Register*" savedRegisters, #_"AllocatableValue*" saveSlots]
         (merge (AMD64SaveRegistersOp'class.) (LIRInstruction'new-0)
             (hash-map
                 ;;;
@@ -40550,7 +40396,7 @@ ZeroExtendNode'new-4
                  ; The slots to which the registers are saved.
                  ;;
                 ; @OperandMode'DEF(OperandFlag'STACK)
-                #_"AllocatableValue[]" :slots savedRegisterLocations
+                #_"AllocatableValue*" :saveSlots saveSlots
             )
         )
     )
@@ -40564,7 +40410,7 @@ ZeroExtendNode'new-4
         (#_"void" LIRInstruction'''emitCode-2 [#_"AMD64SaveRegistersOp" this, #_"Assembler" asm]
             (dotimes [#_"int" i (count (:savedRegisters this))]
                 (when (some? (nth (:savedRegisters this) i))
-                    (AMD64SaveRegistersOp'saveRegister-3 asm, (nth (:slots this) i), (nth (:savedRegisters this) i))
+                    (AMD64SaveRegistersOp'saveRegister-3 asm, (nth (:saveSlots this) i), (nth (:savedRegisters this) i))
                 )
             )
             nil
@@ -40660,13 +40506,13 @@ ZeroExtendNode'new-4
     (defm AMD64StackMove LIRInstruction
         (#_"void" LIRInstruction'''emitCode-2 [#_"AMD64StackMove" this, #_"Assembler" asm]
             (let [
-                #_"AMD64Kind" backupKind (#_"AllocatableValue" .getPlatformKind (:backupSlot this))
+                #_"AMD64Kind" backupKind (#_"Value" .getPlatformKind (:backupSlot this))
             ]
                 ;; backup scratch register
                 (AMD64Move'reg2stack-4 backupKind, asm, (:backupSlot this), (:scratch this))
                 ;; move stack slot
-                (AMD64Move'stack2reg-4 (#_"AllocatableValue" .getPlatformKind (ValueMoveOp'''getInput-1 this)), asm, (:scratch this), (ValueMoveOp'''getInput-1 this))
-                (AMD64Move'reg2stack-4 (#_"AllocatableValue" .getPlatformKind (MoveOp'''getResult-1 this)), asm, (MoveOp'''getResult-1 this), (:scratch this))
+                (AMD64Move'stack2reg-4 (#_"Value" .getPlatformKind (ValueMoveOp'''getInput-1 this)), asm, (:scratch this), (ValueMoveOp'''getInput-1 this))
+                (AMD64Move'reg2stack-4 (#_"Value" .getPlatformKind (MoveOp'''getResult-1 this)), asm, (MoveOp'''getResult-1 this), (:scratch this))
                 ;; restore scratch register
                 (AMD64Move'stack2reg-4 backupKind, asm, (:scratch this), (:backupSlot this))
             )
@@ -41461,12 +41307,11 @@ ZeroExtendNode'new-4
  ;;
 ; @LIROpcode
 (class-ns AMD64HotSpotReturnOp [EpilogueBlockEndOp, LIRInstruction, AMD64HotSpotRestoreRbpOp, BlockEndOp]
-    (defn #_"AMD64HotSpotReturnOp" AMD64HotSpotReturnOp'new-4 [#_"Value" value, #_"boolean" isStub, #_"Register" thread, #_"Register" scratchForSafepointOnReturn]
+    (defn #_"AMD64HotSpotReturnOp" AMD64HotSpotReturnOp'new-3 [#_"Value" value, #_"Register" thread, #_"Register" scratchForSafepointOnReturn]
         (merge (AMD64HotSpotReturnOp'class.) (EpilogueBlockEndOp'new-0)
             (hash-map
                 ; @OperandMode'USE({OperandFlag'REG, OperandFlag'ILLEGAL})
                 #_"Value" :value value
-                #_"boolean" :isStub isStub
                 #_"Register" :thread thread
                 #_"Register" :scratchForSafepointOnReturn scratchForSafepointOnReturn
             )
@@ -41476,10 +41321,8 @@ ZeroExtendNode'new-4
     (defm AMD64HotSpotReturnOp LIRInstruction
         (#_"void" LIRInstruction'''emitCode-2 [#_"AMD64HotSpotReturnOp" this, #_"Assembler" asm]
             (EpilogueBlockEndOp''leaveFrameAndRestoreRbp-2 this, asm)
-            (when-not (:isStub this)
-                ;; Every non-stub compile method must have a poll before the return.
-                (SafepointOp'emitCode-4 asm, true, (:thread this), (:scratchForSafepointOnReturn this))
-            )
+            ;; Every compiled method must have a poll before the return.
+            (SafepointOp'emitCode-4 asm, true, (:thread this), (:scratchForSafepointOnReturn this))
             (Assembler''ret-2 asm, 0)
             nil
         )
@@ -42679,136 +42522,61 @@ ZeroExtendNode'new-4
 )
 
 (class-ns LIRPhaseSuite [LIRPhase #_"<LIRPhaseContext>"]
-    (defn #_"LIRPhaseSuite" LIRPhaseSuite'new-0 []
+    (defn #_"LIRPhaseSuite" LIRPhaseSuite'new-1* [& #_"LIRPhase<LIRPhaseContext>..." phases]
         (merge (LIRPhaseSuite'class.)
             (hash-map
-                #_"List<LIRPhase<LIRPhaseContext>>" :phases (ArrayList.)
+                #_"LIRPhase<LIRPhaseContext>*" :phases phases
             )
         )
-    )
-
-    (defn #_"void" LIRPhaseSuite''appendPhase-2 [#_"LIRPhaseSuite" this, #_"LIRPhase<LIRPhaseContext>" phase]
-        (#_"List" .add (:phases this), phase)
-        nil
     )
 
     (defm LIRPhaseSuite LIRPhase
-        (#_"void" LIRPhase'''run-3 [#_"LIRPhaseSuite" this, #_"LIRGenerationResult" lirGenRes, #_"LIRPhaseContext" context]
+        (#_"void" LIRPhase'''run-3 [#_"LIRPhaseSuite" this, #_"LIRGenerationResult" res, #_"LIRPhaseContext" context]
             (doseq [#_"LIRPhase<LIRPhaseContext>" phase (:phases this)]
-                (LIRPhase'''run-3 phase, lirGenRes, context)
+                (LIRPhase'''run-3 phase, res, context)
             )
             nil
-        )
-    )
-)
-
-(class-ns AllocationStage [LIRPhaseSuite, LIRPhase #_"<LIRPhaseContext>"]
-    (defn #_"AllocationStage" AllocationStage'new-0 []
-        (let [
-            #_"AllocationStage" this (merge (AllocationStage'class.) (LIRPhaseSuite'new-0))
-        ]
-            (LIRPhaseSuite''appendPhase-2 this, (LinearScanPhase'new-0))
-
-            ;; build frame map
-            (if GraalOptions'lirOptLSStackSlotAllocator
-                (LIRPhaseSuite''appendPhase-2 this, (LSStackSlotAllocator'new-0))
-                (LIRPhaseSuite''appendPhase-2 this, (SimpleStackSlotAllocator'new-0))
-            )
-            this
-        )
-    )
-)
-
-(class-ns PostAllocationStage [LIRPhaseSuite, LIRPhase #_"<LIRPhaseContext>"]
-    (defn #_"PostAllocationStage" PostAllocationStage'new-0 []
-        (let [
-            #_"PostAllocationStage" this (merge (PostAllocationStage'class.) (LIRPhaseSuite'new-0))
-        ]
-            (when GraalOptions'lirOptEdgeMoveOptimizer
-                (LIRPhaseSuite''appendPhase-2 this, (EdgeMoveOptimizer'new-0))
-            )
-            (when GraalOptions'lirOptControlFlowOptimizer
-                (LIRPhaseSuite''appendPhase-2 this, (ControlFlowOptimizer'new-0))
-            )
-            (when GraalOptions'lirOptRedundantMoveElimination
-                (LIRPhaseSuite''appendPhase-2 this, (RedundantMoveElimination'new-0))
-            )
-            (when GraalOptions'lirOptNullCheckOptimizer
-                (LIRPhaseSuite''appendPhase-2 this, (NullCheckOptimizer'new-0))
-            )
-            this
-        )
-    )
-)
-
-(class-ns PreAllocationStage [LIRPhaseSuite, LIRPhase #_"<LIRPhaseContext>"]
-    (defn #_"PreAllocationStage" PreAllocationStage'new-0 []
-        (let [
-            #_"PreAllocationStage" this (merge (PreAllocationStage'class.) (LIRPhaseSuite'new-0))
-        ]
-            (when GraalOptions'lirOptConstantLoadOptimization
-                (LIRPhaseSuite''appendPhase-2 this, (ConstantLoadOptimization'new-0))
-            )
-            (LIRPhaseSuite''appendPhase-2 this, (SaveCalleeSaveRegisters'new-0))
-            this
         )
     )
 )
 
 (class-ns LIRSuites []
-    (defn #_"LIRSuites" LIRSuites'new-3 [#_"LIRPhaseSuite" preAllocStage, #_"LIRPhaseSuite" allocStage, #_"LIRPhaseSuite" postAllocStage]
+    (defn #_"LIRSuites" LIRSuites'new-0 []
         (merge (LIRSuites'class.)
             (hash-map
                 ;;;
                  ; PreAllocationPhases are executed between LIR generation and register allocation.
-                 ;
-                 ; Implementers can create new {@link LIRGenerator#newVariable variables},
-                 ; {@link LIRGenerationResult#getFrameMap stack slots} and {@link LIRGenerationResult#getFrameMapBuilder virtual stack slots}.
+                 ; Implementers can create new variables, stack slots and virtual stack slots.
                  ;;
-                #_"LIRPhaseSuite" :preAllocStage preAllocStage
+                #_"LIRPhaseSuite" :preAllocStage
+                    (LIRPhaseSuite'new-1*
+                        (ConstantLoadOptimization'new-0),
+                        (SaveCalleeSaveRegisters'new-0)
+                    )
                 ;;;
                  ; AllocationPhases are responsible for register allocation and translating VirtualStackSlots into StackSlots.
-                 ;
                  ; After the AllocationStage there should be no more Variables and VirtualStackSlots.
                  ;;
-                #_"LIRPhaseSuite" :allocStage allocStage
+                #_"LIRPhaseSuite" :allocStage
+                    (LIRPhaseSuite'new-1*
+                        (LinearScanPhase'new-0),
+                        (StackSlotAllocator'new-0)
+                    )
                 ;;;
                  ; PostAllocationPhases are executed after register allocation and before machine code generation.
-                 ;
                  ; A PostAllocationPhase must not introduce new Variables, VirtualStackSlots or StackSlots.
                  ; Blocks might be removed from LIR#codeEmittingOrder() by overwriting them with nil.
                  ;;
-                #_"LIRPhaseSuite" :postAllocStage postAllocStage
+                #_"LIRPhaseSuite" :postAllocStage
+                    (LIRPhaseSuite'new-1*
+                        (EdgeMoveOptimizer'new-0),
+                        (ControlFlowOptimizer'new-0),
+                        (RedundantMoveElimination'new-0),
+                        (NullCheckOptimizer'new-0),
+                        ;; note: this phase must be appended *after* RedundantMoveElimination
+                        (StackMoveOptimizationPhase'new-0)
+                    )
             )
-        )
-    )
-)
-
-;;;
- ; Linear Scan stack slot allocator.
- ;
- ; Remark: The analysis works under the assumption that a stack slot is no longer live after its last usage.
- ; If an {@link LIRInstruction instruction} transfers the raw address of the stack slot to another location,
- ; e.g. a registers, and this location is referenced later on, the {@link Use usage} of the stack slot must be
- ; marked with the OperandFlag#UNINITIALIZED. Otherwise the stack slot might be reused and its content destroyed.
- ;;
-(class-ns LSStackSlotAllocator [LIRPhase #_"<LIRPhaseContext>"] ;; AllocationPhase
-    (defn #_"LSStackSlotAllocator" LSStackSlotAllocator'new-0 []
-        (LSStackSlotAllocator'class.)
-    )
-
-    (defn- #_"void" LSStackSlotAllocator'allocateStackSlots-2 [#_"FrameMapBuilder" builder, #_"LIRGenerationResult" res]
-        (when (pos? (:numStackSlots builder))
-            (Allocator''allocate-1 (Allocator'new-2 (:lir res), builder))
-        )
-        nil
-    )
-
-    (defm LSStackSlotAllocator LIRPhase
-        (#_"void" LIRPhase'''run-3 [#_"LSStackSlotAllocator" this, #_"LIRGenerationResult" lirGenRes, #_"LIRPhaseContext" context]
-            (LSStackSlotAllocator'allocateStackSlots-2 (:frameMapBuilder lirGenRes), lirGenRes)
-            (§ ass! lirGenRes (LIRGenerationResult''buildFrameMap-1 lirGenRes))
-            nil
         )
     )
 )
@@ -48905,17 +48673,17 @@ ZeroExtendNode'new-4
         (cond
             (satisfies? AMD64AddressValue src)                                       (LeaOp'new-3 dst, src, OperandSize'QWORD)
             (satisfies? ConstantValue src)                                           (MoveFactory''createLoad-3 this, dst, (:constant src))
-            (or (instance? RegisterValue src) (LIRValueUtil'isStackSlotValue-1 dst)) (MoveFromRegOp'new-3 (#_"AllocatableValue" .getPlatformKind dst), dst, src)
-            :else                                                                    (MoveToRegOp'new-3 (#_"AllocatableValue" .getPlatformKind dst), dst, src)
+            (or (instance? RegisterValue src) (LIRValueUtil'isStackSlotValue-1 dst)) (MoveFromRegOp'new-3 (#_"Value" .getPlatformKind dst), dst, src)
+            :else                                                                    (MoveToRegOp'new-3 (#_"Value" .getPlatformKind dst), dst, src)
         )
     )
 
     (defn #_"LIRInstruction" MoveFactory''createStackMove-3 [#_"MoveFactory" this, #_"AllocatableValue" result, #_"AllocatableValue" input]
-        (case (#_"AMD64Kind" .getSizeInBytes (#_"AllocatableValue" .getPlatformKind result))
+        (case (#_"AMD64Kind" .getSizeInBytes (#_"Value" .getPlatformKind result))
             2 (AMD64PushPopStackMove'new-3 OperandSize'WORD, result, input)
             8 (AMD64PushPopStackMove'new-3 OperandSize'QWORD, result, input)
             (let [
-                #_"RegisterBackupPair" backup (MoveFactory''getScratchRegister-2 this, (#_"AllocatableValue" .getPlatformKind input))
+                #_"RegisterBackupPair" backup (MoveFactory''getScratchRegister-2 this, (#_"Value" .getPlatformKind input))
             ]
                 (AMD64StackMove'new-4 result, input, (:register backup), (:backupSlot backup))
             )
@@ -53431,8 +53199,8 @@ ZeroExtendNode'new-4
         )
     )
 
-    #_unused
     (defm LoopBeginNode AbstractMergeNode
+        #_unused
         (#_"AbstractEndNode" AbstractMergeNode'''phiPredecessorAt-2 [#_"LoopBeginNode" this, #_"int" index]
             (if (< index (AbstractMergeNode''forwardEndCount-1 this))
                 (AbstractMergeNode''forwardEndAt-2 this, index)
@@ -68555,70 +68323,6 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns SimpleStackSlotAllocator [LIRPhase #_"<LIRPhaseContext>"] ;; AllocationPhase
-    (defn #_"SimpleStackSlotAllocator" SimpleStackSlotAllocator'new-0 []
-        (SimpleStackSlotAllocator'class.)
-    )
-
-    (defn- #_"StackSlot" SimpleStackSlotAllocator'mapSimpleVirtualStackSlot-2 [#_"FrameMapBuilder" builder, #_"SimpleVirtualStackSlot" virtualStackSlot]
-        (FrameMap''allocateSpillSlot-2 (:frameMap builder), (#_"Value" .getValueKind virtualStackSlot))
-    )
-
-    (defn- #_"StackSlot" SimpleStackSlotAllocator'mapVirtualStackSlotRange-2 [#_"FrameMapBuilder" builder, #_"VirtualStackSlotRange" virtualStackSlot]
-        (FrameMap''allocateStackSlots-3 (:frameMap builder), (:slots virtualStackSlot), (VirtualStackSlotRange''getObjects-1 virtualStackSlot))
-    )
-
-    (defn #_"void" SimpleStackSlotAllocator''updateLIR-3 [#_"SimpleStackSlotAllocator" this, #_"LIRGenerationResult" res, #_"StackSlot[]" mapping]
-        (let [
-            #_"ValueProcedure" updateProc (ß (value, mode, flags) ->
-                (§ fun
-                    (when (satisfies? VirtualStackSlot value) => value
-                        (nth mapping (:id value))
-                    )
-                )
-            )
-        ]
-            (doseq [#_"Block" block (:reversePostOrder (:cfg (:lir res)))]
-                (doseq [#_"LIRInstruction" op (LIR''getLIRforBlock-2 (:lir res), block)]
-                    (LIRInstruction''forEachAlive-2v op, updateProc)
-                    (LIRInstruction''forEachInput-2v op, updateProc)
-                    (LIRInstruction''forEachOutput-2v op, updateProc)
-                    (LIRInstruction''forEachTemp-2v op, updateProc)
-                )
-            )
-        )
-        nil
-    )
-
-    (defn #_"void" SimpleStackSlotAllocator''allocateStackSlots-3 [#_"SimpleStackSlotAllocator" this, #_"FrameMapBuilder" builder, #_"LIRGenerationResult" res]
-        (let [
-            #_"StackSlot[]" mapping (make-array StackSlot (:numStackSlots builder))
-        ]
-            (doseq [#_"VirtualStackSlot" virtualSlot (:stackSlots builder)]
-                (let [
-                    #_"StackSlot" slot
-                        (condp satisfies? virtualSlot
-                            SimpleVirtualStackSlot (SimpleStackSlotAllocator'mapSimpleVirtualStackSlot-2 builder, virtualSlot)
-                            VirtualStackSlotRange  (SimpleStackSlotAllocator'mapVirtualStackSlotRange-2 builder, virtualSlot)
-                        )
-                ]
-                    (aset mapping (:id virtualSlot) slot)
-                )
-            )
-            (SimpleStackSlotAllocator''updateLIR-3 this, res, mapping)
-        )
-        nil
-    )
-
-    (defm SimpleStackSlotAllocator LIRPhase
-        (#_"void" LIRPhase'''run-3 [#_"SimpleStackSlotAllocator" this, #_"LIRGenerationResult" lirGenRes, #_"LIRPhaseContext" context]
-            (SimpleStackSlotAllocator''allocateStackSlots-3 this, (:frameMapBuilder lirGenRes), lirGenRes)
-            (§ ass! lirGenRes (LIRGenerationResult''buildFrameMap-1 lirGenRes))
-            nil
-        )
-    )
-)
-
 (class-ns SnippetInfo []
     (defn #_"SnippetInfo" SnippetInfo'new-2 [#_"ResolvedJavaMethod" method, #_"LocationIdentity[]" privateLocations]
         (merge (SnippetInfo'class.)
@@ -69293,6 +68997,30 @@ ZeroExtendNode'new-4
                     (§ ass! ops (StackMoveOptimizationPhase'process-1 ops))
                 )
             )
+            nil
+        )
+    )
+)
+
+;;;
+ ; Linear Scan stack slot allocator.
+ ;
+ ; Remark: The analysis works under the assumption that a stack slot is no longer live after its last usage.
+ ; If an {@link LIRInstruction instruction} transfers the raw address of the stack slot to another location,
+ ; e.g. a registers, and this location is referenced later on, the {@link Use usage} of the stack slot must be
+ ; marked with the OperandFlag#UNINITIALIZED. Otherwise the stack slot might be reused and its content destroyed.
+ ;;
+(class-ns StackSlotAllocator [LIRPhase #_"<LIRPhaseContext>"] ;; AllocationPhase
+    (defn #_"StackSlotAllocator" StackSlotAllocator'new-0 []
+        (StackSlotAllocator'class.)
+    )
+
+    (defm StackSlotAllocator LIRPhase
+        (#_"void" LIRPhase'''run-3 [#_"StackSlotAllocator" this, #_"LIRGenerationResult" res, #_"LIRPhaseContext" context]
+            (when (pos? (:numStackSlots (:frameMapBuilder res)))
+                (Allocator''allocate-1 (Allocator'new-2 (:lir res), (:frameMapBuilder res)))
+            )
+            (§ ass! res (LIRGenerationResult''buildFrameMap-1 res))
             nil
         )
     )
@@ -71517,18 +71245,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"LIRSuites" Suites'createLIRSuites-0 []
-        (let [
-            #_"LIRSuites" lirSuites (LIRSuites'new-3 (PreAllocationStage'new-0), (AllocationStage'new-0), (PostAllocationStage'new-0))
-        ]
-            (when GraalOptions'lirOptStackMoveOptimizer
-                ;; note: this phase must be inserted *after* RedundantMoveElimination
-                (LIRPhaseSuite''appendPhase-2 (:postAllocStage lirSuites), (StackMoveOptimizationPhase'new-0))
-            )
-            lirSuites
-        )
-    )
-
     (defn #_"Suites" Suites'new-3 [#_"PhaseSuite" highTier, #_"PhaseSuite" midTier, #_"PhaseSuite" lowTier]
         (merge (Suites'class.)
             (hash-map
@@ -72453,7 +72169,7 @@ ZeroExtendNode'new-4
                 #_"AllocatableValue" base (InstructionValueProcedure'''doValue-5 proc, op, (:base this), mode, AMD64AddressValue'flags)
                 #_"AllocatableValue" index (InstructionValueProcedure'''doValue-5 proc, op, (:index this), mode, AMD64AddressValue'flags)
             ]
-                (if (and (#_"AllocatableValue" .identityEquals (:base this), base) (#_"AllocatableValue" .identityEquals (:index this), index))
+                (if (and (#_"Value" .identityEquals (:base this), base) (#_"Value" .identityEquals (:index this), index))
                     this
                     (AMD64AddressValue'new-5 (#_"Value" .getValueKind this), base, index, (:scale this), (:displacement this))
                 )
@@ -72648,11 +72364,11 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"AllocatableValue" LIRKind'derivedBaseFromValue-1 [#_"AllocatableValue" value]
         (let [
-            #_"ValueKind" valueKind (#_"AllocatableValue" .getValueKind value)
+            #_"ValueKind" valueKind (#_"Value" .getValueKind value)
         ]
             (when (satisfies? LIRKind valueKind) => Value/ILLEGAL
                 (let [
-                    #_"LIRKind" kind (#_"AllocatableValue" .getValueKind value, LIRKind'iface)
+                    #_"LIRKind" kind (#_"Value" .getValueKind value, LIRKind'iface)
                 ]
                     (cond
                         (LIRKind''isValue-1 kind)            nil
@@ -72979,7 +72695,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    #_unused
     (defm VirtualizerTool VirtualizerTool
         (#_"boolean" VirtualizerTool'''getEnsureVirtualized-2 [#_"VirtualizerTool" this, #_"VirtualObjectNode" object]
             (:ensureVirtualized (nth (:objectStates (:state this)) (:oid object)))
@@ -73004,10 +72719,7 @@ ZeroExtendNode'new-4
             (§ ass! this (assoc this :deleted true))
             nil
         )
-    )
 
-    #_unused
-    (defm VirtualizerTool VirtualizerTool
         (#_"void" VirtualizerTool'''replaceFirstInput-3 [#_"VirtualizerTool" this, #_"Node" oldInput, #_"Node" replacement]
             (GraphEffectList''replaceFirstInput-4 (:effects this), (:current this), oldInput, replacement)
             nil
@@ -73065,7 +72777,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    #_unused
     (defm VirtualizerTool VirtualizerTool
         (#_"boolean" VirtualizerTool'''ensureMaterialized-2 [#_"VirtualizerTool" this, #_"VirtualObjectNode" object]
             (PartialEscapeClosure''ensureMaterialized-5 (:closure this), (:state this), (:oid object), (:position this), (:effects this))
@@ -74647,7 +74358,7 @@ ZeroExtendNode'new-4
 
     (defn #_"CompilationResult" Compiler'compileGraph-1 [#_"Graph" graph]
         (Compiler'emitFrontEnd-3 graph, OptimisticOptimizations'ALL, (Suites'createSuites-0))
-        (Compiler'emitBackEnd-2 graph, (Suites'createLIRSuites-0))
+        (Compiler'emitBackEnd-2 graph, (LIRSuites'new-0))
     )
 
     #_unused
