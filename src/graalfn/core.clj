@@ -1,5 +1,5 @@
 (ns graalfn.core
-    (:refer-clojure :only [* *ns* + - -> ->> / < <= = > >= aget and apply aset assoc bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean boolean-array byte byte-array case char comp compare cond condp conj cons contains? count dec declare defmacro defn defprotocol defrecord doseq dotimes double double-array empty? extend-protocol extend-type filter first get hash-map if-not import inc instance? int int-array into into-array iterate iterator-seq keys let letfn list locking long long-array loop make-array map mapcat max merge min neg? next nil? not not= ns-imports ns-unmap nth object-array or peek pop pos? quot reduce reify rem remove repeat rest run! satisfies? second seq sequential? short some some? sort-by sorted-map str subvec symbol symbol? take-while unsigned-bit-shift-right update update-in vals vary-meta vec vector? volatile! vreset! vswap! when-some while zero?])
+    (:refer-clojure :only [* *ns* + - -> ->> / < <= = > >= aget and apply aset assoc bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean boolean-array byte byte-array case char comp compare cond condp conj cons contains? count dec declare defmacro defn defprotocol defrecord doseq dotimes double double-array empty? extend-protocol extend-type filter first get hash-map hash-set if-not import inc instance? int int-array into into-array iterate iterator-seq key keys let letfn list locking long long-array loop make-array map mapcat max merge min neg? next nil? not not= ns-imports ns-unmap nth object-array or peek pop pos? quot reduce reify rem remove repeat rest run! satisfies? second seq sequential? short some some? sort-by sorted-map str subvec symbol symbol? take-while unsigned-bit-shift-right update update-in val vals vary-meta vec vector vector? volatile! vreset! vswap! when-some while zero?])
 )
 
 (defmacro § [& _])
@@ -152,7 +152,6 @@ InjectedNodeParameter
 Input
 InputType
 InstanceOfSnippets
-LIROpcode
 MetaspaceOperation
 MetaspaceOperation''opcode-1
 MonitorSnippets
@@ -749,7 +748,6 @@ BranchOp''jcc-4
 BranchOp'new-4
 BranchOp'new-4c
 BranchOp'new-4f
-BridgeMethodUtils'getAnnotation-2
 BytecodeLookupSwitch'new-2
 BytecodeParser''add-2
 BytecodeParser''addPush-3
@@ -1106,8 +1104,8 @@ CompressionNode''getEncoding-1
 CompressionNode'new-4
 CompressionOp'Compress
 CompressionOp'Uncompress
-ComputeBlockOrder'computeCodeEmittingOrder-2
-ComputeBlockOrder'computeLinearScanOrder-2
+ComputeBlockOrder'computeCodeEmittingOrder-1
+ComputeBlockOrder'computeLinearScanOrder-1
 ComputeInliningRelevance''compute-1
 ComputeInliningRelevance''getRelevance-2
 ComputeInliningRelevance'new-2
@@ -1231,7 +1229,6 @@ ConstantTree''getUsages-2
 ConstantTree''isLeafBlock-2
 ConstantTree''isMarked-2
 ConstantTree''markBlocks-1
-ConstantTree''size-1
 ConstantTree''traverseTreeWhileTrue-3
 ConstantTree'new-2
 ConstantTreeAnalyzer'analyze-2
@@ -1397,7 +1394,6 @@ ExplodeLoopNode''findLoopBegin-1
 ExplodeLoopNode'new-0
 FastAcquireBiasedLockNode'new-1
 FieldInfo'new-4
-FieldIntrospection'new-1
 FieldKey'new-2
 FieldLocationIdentity'new-1
 FieldRef''resolve-3
@@ -1419,7 +1415,7 @@ Fields'new-1
 Fields'translateInto-2
 FieldsCache''lookup-5
 FieldsCache'new-0
-FieldsScanner''scan-4
+FieldsScanner''scan-3
 FieldsScanner'new-0
 FinalClosure'new-1
 FinalFieldBarrierNode'new-1
@@ -2138,7 +2134,6 @@ LIRBuilder''visitLoopEnd-2
 LIRBuilder''visitMerge-2
 LIRBuilder''visitSafepointNode-2
 LIRBuilder'new-2
-LIRFieldsScanner''getOperandModeAnnotation-2
 LIRFieldsScanner'new-0
 LIRGenerationContext'new-4
 LIRGenerationPhase'new-0
@@ -2242,29 +2237,17 @@ LIRInsertionBuffer''finish-1
 LIRInsertionBuffer''init-2
 LIRInsertionBuffer''initialized-1
 LIRInsertionBuffer'new-0
-LIRInstruction''forEachAlive-2i
-LIRInstruction''forEachAlive-2v
-LIRInstruction''forEachInput-2i
-LIRInstruction''forEachInput-2v
-LIRInstruction''forEachOutput-2i
-LIRInstruction''forEachOutput-2v
-LIRInstruction''forEachRegisterHint-4i
-LIRInstruction''forEachRegisterHint-4v
-LIRInstruction''forEachTemp-2i
-LIRInstruction''forEachTemp-2v
+LIRInstruction''forEachAlive-2
+LIRInstruction''forEachInput-2
+LIRInstruction''forEachOutput-2
+LIRInstruction''forEachRegisterHint-4
+LIRInstruction''forEachTemp-2
 LIRInstruction''hasOperands-1
-LIRInstruction''isLoadConstantOp-1
-LIRInstruction''isMoveOp-1
-LIRInstruction''isValueMoveOp-1
 LIRInstruction''setId-2
-LIRInstruction''visitEachAlive-2i
-LIRInstruction''visitEachAlive-2v
-LIRInstruction''visitEachInput-2i
-LIRInstruction''visitEachInput-2v
-LIRInstruction''visitEachOutput-2i
-LIRInstruction''visitEachOutput-2v
-LIRInstruction''visitEachTemp-2i
-LIRInstruction''visitEachTemp-2v
+LIRInstruction''visitEachAlive-2
+LIRInstruction''visitEachInput-2
+LIRInstruction''visitEachOutput-2
+LIRInstruction''visitEachTemp-2
 LIRInstruction'addStackSlotsToTemporaries-2
 LIRInstruction'new-0
 LIRInstructionClass''forEachAlive-3
@@ -2278,11 +2261,6 @@ LIRInstructionClass''visitEachDef-3
 LIRInstructionClass''visitEachTemp-3
 LIRInstructionClass''visitEachUse-3
 LIRInstructionClass'new-1
-LIRInstructionFieldsScanner''scan-2
-LIRInstructionFieldsScanner'new-0
-LIRIntrospection'forEach-4
-LIRIntrospection'new-1
-LIRIntrospection'visitEach-4
 LIRKind''getReferenceCount-1
 LIRKind''isCompressedReference-2
 LIRKind''isDerivedReference-1
@@ -2888,11 +2866,7 @@ NodeClass''replaceFirstSuccessor-4
 NodeClass''unregisterAtInputsAsUsage-2
 NodeClass''unregisterAtSuccessorsAsPredecessor-2
 NodeClass''updateInputSuccInPlace-3
-NodeClass'LIST_MASK
-NodeClass'MAX_EDGES
-NodeClass'MAX_LIST_EDGES
 NodeClass'NEXT_EDGE
-NodeClass'OFFSET_MASK
 NodeClass'addGraphDuplicate-5
 NodeClass'new-2
 NodeClass'replaceFirstEdge-4
@@ -3806,12 +3780,6 @@ ZeroExtendNode'new-4
 (§ annotation Def   (§ value #_"OperandFlag[]" value OperandFlag'REG))
 
 ;;;
- ; Denotes an opcode name for an annotated LIRInstruction.
- ;;
-(§ annotation LIROpcode
-)
-
-;;;
  ; Links a method to a canonical operation represented by a WordFactoryOpcode val.
  ;;
 (§ annotation WordFactoryOperation
@@ -4334,8 +4302,8 @@ ZeroExtendNode'new-4
      ;
      ; @return the original CompositeValue or a copy with any modified values
      ;;
-    (#_"CompositeValue" CompositeValue'''forEachComponent-4 [#_"CompositeValue" this, #_"LIRInstruction" op, #_"OperandMode" mode, #_"InstructionValueProcedure" proc])
-    (#_"void" CompositeValue'''visitEachComponent-4 [#_"CompositeValue" this, #_"LIRInstruction" op, #_"OperandMode" mode, #_"InstructionValueConsumer" proc])
+    (#_"CompositeValue" CompositeValue'''forEachComponent-4 [#_"CompositeValue" this, #_"LIRInstruction" op, #_"OperandMode" mode, #_"ValueProcedure" proc])
+    (#_"void" CompositeValue'''visitEachComponent-4 [#_"CompositeValue" this, #_"LIRInstruction" op, #_"OperandMode" mode, #_"ValueConsumer" proc])
 )
 
 (defp CompressEncoding)
@@ -4596,7 +4564,6 @@ ZeroExtendNode'new-4
 (defp ExplodeLoopNode)
 (defp FastAcquireBiasedLockNode)
 (defp FieldInfo)
-(defp FieldIntrospection)
 (defp FieldKey)
 (defp FieldLocationIdentity)
 (defp FieldRef)
@@ -4895,42 +4862,6 @@ ZeroExtendNode'new-4
 )
 
 (defp Instantiation)
-
-;;;
- ; Functional interface for iterating over a list of values without modifying them.
- ; See InstructionValueProcedure for a version that can modify values.
- ;;
-; @FunctionalInterface
-(defp InstructionValueConsumer
-    ;;;
-     ; Iterator method to be overwritten.
-     ;
-     ; @param instruction The current instruction.
-     ; @param value The value that is iterated.
-     ; @param mode The operand mode for the value.
-     ; @param flags A set of flags for the value.
-     ;;
-    (#_"void" InstructionValueConsumer'''visitValue-5 [#_"InstructionValueConsumer" this, #_"LIRInstruction" instruction, #_"Value" value, #_"OperandMode" mode, #_"EnumSet<OperandFlag>" flags])
-)
-
-;;;
- ; Functional interface for iterating over a list of values, possibly returning a value to replace
- ; the old value.
- ;;
-; @FunctionalInterface
-(defp InstructionValueProcedure
-    ;;;
-     ; Iterator method to be overwritten.
-     ;
-     ; @param instruction The current instruction.
-     ; @param value The value that is iterated.
-     ; @param mode The operand mode for the value.
-     ; @param flags A set of flags for the value.
-     ; @return the new value to replace the value that was passed in
-     ;;
-    (#_"Value" InstructionValueProcedure'''doValue-5 [#_"InstructionValueProcedure" this, #_"LIRInstruction" instruction, #_"Value" value, #_"OperandMode" mode, #_"EnumSet<OperandFlag>" flags])
-)
-
 (defp IntList)
 (defp IntegerAddExactNode)
 (defp IntegerAddExactSplitNode)
@@ -5004,11 +4935,7 @@ ZeroExtendNode'new-4
 (defp KlassPointerStamp)
 (defp LIR)
 (defp LIRBuilder)
-
-(defp LIRFieldsScanner
-    (#_"EnumSet<OperandFlag>" LIRFieldsScanner'''getFlags-2 [#_"LIRFieldsScanner" this, #_"Field" field])
-)
-
+(defp LIRFieldsScanner)
 (defp LIRGenerationContext)
 (defp LIRGenerationPhase)
 (defp LIRGenerationResult)
@@ -5024,8 +4951,6 @@ ZeroExtendNode'new-4
 )
 
 (defp LIRInstructionClass)
-(defp LIRInstructionFieldsScanner)
-(defp LIRIntrospection)
 (defp LIRKind)
 
 (defp LIRLowerable
@@ -5067,7 +4992,7 @@ ZeroExtendNode'new-4
 )
 
 (defp LSLifetimeAnalysisPhase
-    (#_"void" LSLifetimeAnalysisPhase'''addRegisterHint-6 [#_"LSLifetimeAnalysisPhase" this, #_"LIRInstruction" op, #_"Value" targetValue, #_"OperandMode" mode, #_"EnumSet<OperandFlag>" flags, #_"boolean" hintAtDef])
+    (#_"void" LSLifetimeAnalysisPhase'''addRegisterHint-6 [#_"LSLifetimeAnalysisPhase" this, #_"LIRInstruction" op, #_"Value" targetValue, #_"OperandMode" mode, #_"{OperandFlag}" flags, #_"boolean" hintAtDef])
     ;;;
      ; Determines the register priority for an instruction's output/result operand.
      ;;
@@ -6247,23 +6172,20 @@ ZeroExtendNode'new-4
 (defp ValueCompareAndSwapNode)
 
 ;;;
- ; Non-modifying version of ValueProcedure.
+ ; Functional interface for iterating over a list of values without modifying them.
+ ; See ValueProcedure for a version that can modify values.
  ;;
 ; @FunctionalInterface
-(defp ValueConsumer #_(§ extends InstructionValueConsumer)
+(defp ValueConsumer
     ;;;
      ; Iterator method to be overwritten.
      ;
+     ; @param op The current instruction.
      ; @param value The value that is iterated.
      ; @param mode The operand mode for the value.
      ; @param flags A set of flags for the value.
      ;;
-    (#_"void" ValueConsumer'''visitValue-4 [#_"ValueConsumer" this, #_"Value" value, #_"OperandMode" mode, #_"EnumSet<OperandFlag>" flags])
-
-  #_(§ override! #_"void" InstructionValueConsumer'''visitValue-5 [#_"ValueConsumer" this, #_"LIRInstruction" instruction, #_"Value" value, #_"OperandMode" mode, #_"EnumSet<OperandFlag>" flags]
-        (ValueConsumer'''visitValue-4 this, value, mode, flags)
-        nil
-    )
+    (#_"void" ValueConsumer'''visitValue-5 [#_"ValueConsumer" this, #_"LIRInstruction" op, #_"Value" value, #_"OperandMode" mode, #_"{OperandFlag}" flags])
 )
 
 (defp ValueFieldInfo)
@@ -6292,23 +6214,20 @@ ZeroExtendNode'new-4
 (defp ValuePhiNode)
 
 ;;;
- ; Similar to InstructionValueProcedure but without an LIRInstruction parameter.
+ ; Functional interface for iterating over a list of values, possibly returning a value to replace the old value.
  ;;
 ; @FunctionalInterface
-(defp ValueProcedure #_(§ extends InstructionValueProcedure)
+(defp ValueProcedure
     ;;;
      ; Iterator method to be overwritten.
      ;
+     ; @param op The current instruction.
      ; @param value The value that is iterated.
      ; @param mode The operand mode for the value.
      ; @param flags A set of flags for the value.
      ; @return the new value to replace the value that was passed in
      ;;
-    (#_"Value" ValueProcedure'''doValue-4 [#_"ValueProcedure" this, #_"Value" value, #_"OperandMode" mode, #_"EnumSet<OperandFlag>" flags])
-
-  #_(§ override! #_"Value" InstructionValueProcedure'''doValue-5 [#_"ValueProcedure" this, #_"LIRInstruction" instruction, #_"Value" value, #_"OperandMode" mode, #_"EnumSet<OperandFlag>" flags]
-        (ValueProcedure'''doValue-4 this, value, mode, flags)
-    )
+    (#_"Value" ValueProcedure'''doValue-5 [#_"ValueProcedure" this, #_"LIRInstruction" op, #_"Value" value, #_"OperandMode" mode, #_"{OperandFlag}" flags])
 )
 
 ;;;
@@ -6787,72 +6706,6 @@ ZeroExtendNode'new-4
 )
 
 ;;;
- ; Utilities for working around the absence of method annotations and parameter annotations on
- ; bridge methods where the bridged methods have method annotations or parameter annotations.
- ; Not all Java compilers copy method annotations and parameter annotations to bridge methods.
- ;;
-(value-ns BridgeMethodUtils
-    ;;;
-     ; Gets the method bridged to by a {@linkplain ResolvedJavaMethod#isBridge() bridge} method. The
-     ; value returned is the method called by {@code method} that has the same name as {@code bridge}.
-     ;
-     ; @param bridge a bridge method
-     ; @return the method called by {@code bridge} whose name is the same as {@code bridge.getName()}
-     ;;
-    (defn- #_"ResolvedJavaMethod" BridgeMethodUtils'getBridgedMethod-1 [#_"ResolvedJavaMethod" bridge]
-        (let [
-            #_"Bytecode" code (ResolvedJavaMethodBytecode'new-1 bridge)
-            #_"BytecodeStream" stream (BytecodeStream'new-1 (Bytecode'''getCode-1 code))
-        ]
-            (loop-when [#_"boolean" miranda? false #_"int" opcode (BytecodeStream''currentBC-1 stream)] (not= opcode Bytecodes'END) => (throw! (str "Couldn't find method bridged by " (#_"ResolvedJavaMethod" .format bridge, "%R %H.\n(%P)")))
-                (when (any = opcode Bytecodes'INVOKEVIRTUAL Bytecodes'INVOKESPECIAL Bytecodes'INVOKESTATIC Bytecodes'INVOKEINTERFACE)
-                    (let [
-                        #_"int" cpi (BytecodeStream''readCPI-1 stream)
-                        #_"ConstantPool" cp (Bytecode'''getConstantPool-1 code)
-                    ]
-                        (#_"ConstantPool" .loadReferencedType cp, cpi, opcode)
-                        (let [
-                            #_"ResolvedJavaMethod" method (#_"ConstantPool" .lookupMethod cp, cpi, opcode)
-                        ]
-                            (cond
-                                (= (#_"ResolvedJavaMethod" .getName method) (#_"ResolvedJavaMethod" .getName bridge))
-                                    (§ return method)
-                                (and (= (#_"ResolvedJavaMethod" .getName method) "<init>") (= (#_"ResolvedJavaType" .getName (#_"ResolvedJavaMethod" .getDeclaringClass method)) "Ljava/lang/AbstractMethodError;"))
-                                    ;; AbstractMethodError constructor called
-                                    (§ ass miranda? true)
-                            )
-                        )
-                    )
-                )
-                (§ ass! stream (BytecodeStream''next-1 stream))
-                (recur miranda? (BytecodeStream''currentBC-1 stream))
-            )
-        )
-    )
-
-    ;;;
-     ; A helper for ResolvedJavaMethod#getAnnotation(Class) that handles the absence of
-     ; annotations on bridge methods where the bridged method has annotations.
-     ;;
-    (defn #_"<T extends Annotation> T" BridgeMethodUtils'getAnnotation-2 [#_"Class<T>" annotationClass, #_"ResolvedJavaMethod" method]
-        (let [
-            #_"T" a (#_"ResolvedJavaMethod" .getAnnotation method, annotationClass)
-        ]
-            (when (and (nil? a) (#_"ResolvedJavaMethod" .isBridge method))
-                (let [
-                    #_"ResolvedJavaMethod" bridged (BridgeMethodUtils'getBridgedMethod-1 method)
-                ]
-                    (when (some? bridged)
-                        (§ ass a (#_"ResolvedJavaMethod" .getAnnotation bridged, annotationClass))
-                    )
-                )
-            )
-            a
-        )
-    )
-)
-
-;;;
  ; Definitions of the standard Java bytecodes defined by
  ; <a href= "http://java.sun.com/docs/books/jvms/second_edition/html/VMSpecTOC.doc.html">Java Virtual Machine Specification</a>.
  ;;
@@ -7317,14 +7170,14 @@ ZeroExtendNode'new-4
     ;;;
      ; Find the highest likely unvisited successor block of a given block.
      ;;
-    (defn- #_"Block" ComputeBlockOrder'findAndMarkMostLikelySuccessor-2 [#_"Block" block, #_"BitSet" visitedBlocks]
+    (defn- #_"Block" ComputeBlockOrder'findAndMarkMostLikelySuccessor-2 [#_"Block" block, #_"BitSet" visited]
         (let [
             #_"Block" result
                 (loop-when [result nil #_"ISeq" s (seq (:successors block))] (some? s) => result
                     (let [
                         #_"Block" successor (first s)
                         result
-                            (when (and (not (#_"BitSet" .get visitedBlocks, (:id successor))) (<= (Block''getLoopDepth-1 block) (Block''getLoopDepth-1 successor)) (or (nil? result) (<= (:probability result) (:probability successor)))) => result
+                            (when (and (not (#_"BitSet" .get visited, (:id successor))) (<= (Block''getLoopDepth-1 block) (Block''getLoopDepth-1 successor)) (or (nil? result) (<= (:probability result) (:probability successor)))) => result
                                 successor
                             )
                     ]
@@ -7333,7 +7186,7 @@ ZeroExtendNode'new-4
                 )
         ]
             (when (some? result)
-                (#_"BitSet" .set visitedBlocks, (:id result))
+                (#_"BitSet" .set visited, (:id result))
             )
             result
         )
@@ -7342,10 +7195,10 @@ ZeroExtendNode'new-4
     ;;;
      ; Add successor blocks into the given work list if they are not already marked as visited.
      ;;
-    (defn- #_"void" ComputeBlockOrder'enqueueSuccessors-3 [#_"Block" block, #_"PriorityQueue<Block>" worklist, #_"BitSet" visitedBlocks]
+    (defn- #_"void" ComputeBlockOrder'enqueueSuccessors-3 [#_"Block" block, #_"PriorityQueue<Block>" worklist, #_"BitSet" visited]
         (doseq [#_"Block" successor (:successors block)]
-            (when-not (#_"BitSet" .get visitedBlocks, (:id successor))
-                (#_"BitSet" .set visitedBlocks, (:id successor))
+            (when-not (#_"BitSet" .get visited, (:id successor))
+                (#_"BitSet" .set visited, (:id successor))
                 (#_"PriorityQueue" .add worklist, successor)
             )
         )
@@ -7355,13 +7208,13 @@ ZeroExtendNode'new-4
     ;;;
      ; Add a linear path to the linear scan order greedily following the most likely successor.
      ;;
-    (defn- #_"Block" ComputeBlockOrder'addPathToLinearScanOrder-4 [#_"Block" block, #_"List<Block>" order, #_"PriorityQueue<Block>" worklist, #_"BitSet" visitedBlocks]
+    (defn- #_"Block" ComputeBlockOrder'addPathToLinearScanOrder-4 [#_"Block" block, #_"List<Block>" order, #_"PriorityQueue<Block>" worklist, #_"BitSet" visited]
         (§ ass! block (Block''setLinearScanNumber-2 block, (count order)))
         (#_"List" .add order, block)
         (let [
-            #_"Block" mostLikelySuccessor (ComputeBlockOrder'findAndMarkMostLikelySuccessor-2 block, visitedBlocks)
+            #_"Block" mostLikelySuccessor (ComputeBlockOrder'findAndMarkMostLikelySuccessor-2 block, visited)
         ]
-            (ComputeBlockOrder'enqueueSuccessors-3 block, worklist, visitedBlocks)
+            (ComputeBlockOrder'enqueueSuccessors-3 block, worklist, visited)
             (when (and (some? mostLikelySuccessor) (not (Block''isLoopHeader-1 mostLikelySuccessor)) (< 1 (count (:predecessors mostLikelySuccessor)))) => mostLikelySuccessor
                 ;; We are at a merge. Check probabilities of predecessors that are not yet scheduled.
                 (let [
@@ -7380,7 +7233,7 @@ ZeroExtendNode'new-4
                 ]
                     (when (< (/ (:probability block) ComputeBlockOrder'PENALTY_VERSUS_UNSCHEDULED) unscheduledSum) => mostLikelySuccessor
                         ;; Add this merge only after at least one additional predecessor gets scheduled.
-                        (#_"BitSet" .clear visitedBlocks, (:id mostLikelySuccessor))
+                        (#_"BitSet" .clear visited, (:id mostLikelySuccessor))
                         nil
                     )
                 )
@@ -7391,11 +7244,11 @@ ZeroExtendNode'new-4
     ;;;
      ; Iteratively adds paths to the linear scan block order.
      ;;
-    (defn- #_"void" ComputeBlockOrder'computeLinearScanOrder-3 [#_"List<Block>" order, #_"PriorityQueue<Block>" worklist, #_"BitSet" visitedBlocks]
+    (defn- #_"void" ComputeBlockOrder'computeLinearScanOrder-3 [#_"List<Block>" order, #_"PriorityQueue<Block>" worklist, #_"BitSet" visited]
         (while (seq worklist)
             (loop [#_"Block" path (#_"PriorityQueue" .poll worklist)]
                 (let [
-                    path (ComputeBlockOrder'addPathToLinearScanOrder-4 path, order, worklist, visitedBlocks)
+                    path (ComputeBlockOrder'addPathToLinearScanOrder-4 path, order, worklist, visited)
                 ]
                     (recur-if (some? path) [path])
                 )
@@ -7407,12 +7260,12 @@ ZeroExtendNode'new-4
     ;;;
      ; Initializes the priority queue used for the work list of blocks and adds the start block.
      ;;
-    (defn- #_"PriorityQueue<Block>" ComputeBlockOrder'initializeWorklist-2 [#_"Block" startBlock, #_"BitSet" visitedBlocks]
+    (defn- #_"PriorityQueue<Block>" ComputeBlockOrder'initializeWorklist-2 [#_"Block" startBlock, #_"BitSet" visited]
         (let [
             #_"PriorityQueue<Block>" result (PriorityQueue. ComputeBlockOrder'INITIAL_WORKLIST_CAPACITY, (BlockOrderComparator'new-0))
         ]
             (#_"PriorityQueue" .add result, startBlock)
-            (#_"BitSet" .set visitedBlocks, (:id startBlock))
+            (#_"BitSet" .set visited, (:id startBlock))
             result
         )
     )
@@ -7422,12 +7275,12 @@ ZeroExtendNode'new-4
      ;
      ; @return sorted list of blocks
      ;;
-    (defn #_"Block[]" ComputeBlockOrder'computeLinearScanOrder-2 [#_"int" blockCount, #_"Block" startBlock]
+    (defn #_"Block[]" ComputeBlockOrder'computeLinearScanOrder-1 [#_"Block" startBlock]
         (let [
             #_"List<Block>" order (ArrayList.)
-            #_"BitSet" visitedBlocks (BitSet. blockCount)
+            #_"BitSet" visited (BitSet.)
         ]
-            (ComputeBlockOrder'computeLinearScanOrder-3 order, (ComputeBlockOrder'initializeWorklist-2 startBlock, visitedBlocks), visitedBlocks)
+            (ComputeBlockOrder'computeLinearScanOrder-3 order, (ComputeBlockOrder'initializeWorklist-2 startBlock, visited), visited)
             (into-array Block'iface order)
         )
     )
@@ -7442,7 +7295,7 @@ ZeroExtendNode'new-4
     ;;;
      ; Add a linear path to the code emission order greedily following the most likely successor.
      ;;
-    (defn- #_"void" ComputeBlockOrder'addPathToCodeEmittingOrder-4 [#_"Block" block, #_"List<Block>" order, #_"PriorityQueue<Block>" worklist, #_"BitSet" visitedBlocks]
+    (defn- #_"void" ComputeBlockOrder'addPathToCodeEmittingOrder-4 [#_"Block" block, #_"List<Block>" order, #_"PriorityQueue<Block>" worklist, #_"BitSet" visited]
         (loop-when [block block] (some? block)
             ;; Skip loop headers if there is only a single loop end block to make
             ;; the backward jump be a conditional jump.
@@ -7472,9 +7325,9 @@ ZeroExtendNode'new-4
                 )
 
                 (let [
-                    #_"Block" mostLikelySuccessor (ComputeBlockOrder'findAndMarkMostLikelySuccessor-2 block, visitedBlocks)
+                    #_"Block" mostLikelySuccessor (ComputeBlockOrder'findAndMarkMostLikelySuccessor-2 block, visited)
                 ]
-                    (ComputeBlockOrder'enqueueSuccessors-3 block, worklist, visitedBlocks)
+                    (ComputeBlockOrder'enqueueSuccessors-3 block, worklist, visited)
                     (recur mostLikelySuccessor)
                 )
             )
@@ -7485,9 +7338,9 @@ ZeroExtendNode'new-4
     ;;;
      ; Iteratively adds paths to the code emission block order.
      ;;
-    (defn- #_"void" ComputeBlockOrder'computeCodeEmittingOrder-3 [#_"List<Block>" order, #_"PriorityQueue<Block>" worklist, #_"BitSet" visitedBlocks]
+    (defn- #_"void" ComputeBlockOrder'computeCodeEmittingOrder-3 [#_"List<Block>" order, #_"PriorityQueue<Block>" worklist, #_"BitSet" visited]
         (while (seq worklist)
-            (ComputeBlockOrder'addPathToCodeEmittingOrder-4 (#_"PriorityQueue" .poll worklist), order, worklist, visitedBlocks)
+            (ComputeBlockOrder'addPathToCodeEmittingOrder-4 (#_"PriorityQueue" .poll worklist), order, worklist, visited)
         )
         nil
     )
@@ -7497,12 +7350,12 @@ ZeroExtendNode'new-4
      ;
      ; @return sorted list of blocks
      ;;
-    (defn #_"Block[]" ComputeBlockOrder'computeCodeEmittingOrder-2 [#_"int" blockCount, #_"Block" startBlock]
+    (defn #_"Block[]" ComputeBlockOrder'computeCodeEmittingOrder-1 [#_"Block" startBlock]
         (let [
             #_"List<Block>" order (ArrayList.)
-            #_"BitSet" visitedBlocks (BitSet. blockCount)
+            #_"BitSet" visited (BitSet.)
         ]
-            (ComputeBlockOrder'computeCodeEmittingOrder-3 order, (ComputeBlockOrder'initializeWorklist-2 startBlock, visitedBlocks), visitedBlocks)
+            (ComputeBlockOrder'computeCodeEmittingOrder-3 order, (ComputeBlockOrder'initializeWorklist-2 startBlock, visited), visited)
             (into-array Block'iface order)
         )
     )
@@ -7535,7 +7388,7 @@ ZeroExtendNode'new-4
     (§ def #_"RegisterArray" RegisterAllocationConfig'allocatableRegisters
         (let [
             #_"RegisterArray" registers (#_"RegisterConfig" .getAllocatableRegisters HotSpot'registerConfig)
-            #_"BitSet" bits (BitSet. (#_"RegisterArray" .size registers))
+            #_"BitSet" bits (BitSet.)
             _
                 (doseq [#_"Register" reg registers]
                     (#_"BitSet" .set bits, (.number reg))
@@ -9603,7 +9456,7 @@ ZeroExtendNode'new-4
                     (let [
                         #_"JumpOp" jump (SSAUtil'phiOut-2 lir, pred)
                     ]
-                        (InstructionValueConsumer'''visitValue-5 valueConsumer, jump, (JumpOp''getOutgoingValue-2 jump, idx), nil, nil)
+                        (ValueConsumer'''visitValue-5 valueConsumer, jump, (JumpOp''getOutgoingValue-2 jump, idx), nil, nil)
                     )
                 )
             )
@@ -11111,7 +10964,7 @@ ZeroExtendNode'new-4
      ;            false if no such check is required
      ; @param inlineeMethod the actual method being inlined. Maybe be nil for snippets.
      ;;
-    (defn #_"UnmodifiableEconomicMap<Node, Node>" InliningUtil'inline-4 [#_"InvokeNode" invoke, #_"Graph" inlineGraph, #_"boolean" receiverNullCheck, #_"ResolvedJavaMethod" inlineeMethod]
+    (defn #_"void" InliningUtil'inline-4 [#_"InvokeNode" invoke, #_"Graph" inlineGraph, #_"boolean" receiverNullCheck, #_"ResolvedJavaMethod" inlineeMethod]
         (let [
             #_"FixedNode" invokeNode invoke
             #_"Graph" graph (:graph invokeNode)
@@ -11181,33 +11034,12 @@ ZeroExtendNode'new-4
                             )
                             (InliningUtil'finishInlining-5 invoke, graph, firstCFGNode, returnNodes, inlineGraph)
                             (GraphUtil'killCFG-1 invokeNode)
-
-                            duplicates
                         )
                     )
                 )
             )
         )
-    )
-
-    ; @SuppressWarnings("try")
-    (defn- #_"EconomicSet<Node>" InliningUtil'inlineForCanonicalization-5 [#_"InvokeNode" invoke, #_"Graph" inlineGraph, #_"boolean" receiverNullCheck, #_"ResolvedJavaMethod" inlineeMethod, #_"Consumer<UnmodifiableEconomicMap<Node, Node>>" duplicatesConsumer]
-        (let [
-            #_"HashSetNodeEventListener" listener (HashSetNodeEventListener'new-0)
-        ]
-            ;; This code assumes that Graph.addDuplicates doesn't trigger the NodeEventListener to track
-            ;; only nodes which were modified into the process of inlining the graph into the current graph.
-            (try (§ with [#_"NodeEventScope" _ (Graph''trackNodeEvents-2 (:graph invoke), listener)])
-                (let [
-                    #_"UnmodifiableEconomicMap<Node, Node>" duplicates (InliningUtil'inline-4 invoke, inlineGraph, receiverNullCheck, inlineeMethod)
-                ]
-                    (when (some? duplicatesConsumer)
-                        (#_"Consumer" .accept duplicatesConsumer, duplicates)
-                    )
-                )
-            )
-            (:nodes listener)
-        )
+        nil
     )
 
     ;;;
@@ -11217,8 +11049,18 @@ ZeroExtendNode'new-4
      ;
      ; @return the set of nodes to canonicalize
      ;;
+    ; @SuppressWarnings("try")
     (defn #_"EconomicSet<Node>" InliningUtil'inlineForCanonicalization-4 [#_"InvokeNode" invoke, #_"Graph" inlineGraph, #_"boolean" receiverNullCheck, #_"ResolvedJavaMethod" inlineeMethod]
-        (InliningUtil'inlineForCanonicalization-5 invoke, inlineGraph, receiverNullCheck, inlineeMethod, nil)
+        (let [
+            #_"HashSetNodeEventListener" listener (HashSetNodeEventListener'new-0)
+        ]
+            ;; This code assumes that Graph.addDuplicates doesn't trigger the NodeEventListener to track
+            ;; only nodes which were modified into the process of inlining the graph into the current graph.
+            (try (§ with [#_"NodeEventScope" _ (Graph''trackNodeEvents-2 (:graph invoke), listener)])
+                (InliningUtil'inline-4 invoke, inlineGraph, receiverNullCheck, inlineeMethod)
+            )
+            (:nodes listener)
+        )
     )
 
     (defn #_"void" InliningUtil'processMonitorId-2 [#_"FrameState" stateAfter, #_"MonitorIdNode" monitorIdNode]
@@ -13038,7 +12880,7 @@ ZeroExtendNode'new-4
         (AbstractTemplates'class.)
     )
 
-    (defn- #_"Method" AbstractTemplates'findMethod-3 [#_"Class<? extends Snippets>" declaringClass, #_"String" methodName]
+    (defn- #_"Method" AbstractTemplates'findMethod-3 [#_"Class<Snippets>" declaringClass, #_"String" methodName]
         (loop-when [#_"ISeq" s (seq (#_"Class" .getDeclaredMethods declaringClass))] (some? s)
             (let [
                 #_"Method" method (first s)
@@ -13053,7 +12895,7 @@ ZeroExtendNode'new-4
      ; and returns a SnippetInfo value describing it. There must be exactly one snippet method in
      ; {@code declaringClass}.
      ;;
-    (defn #_"SnippetInfo" AbstractTemplates'snippet-3* [#_"Class<? extends Snippets>" declaringClass, #_"String" methodName & #_"LocationIdentity..." privateLocations]
+    (defn #_"SnippetInfo" AbstractTemplates'snippet-3* [#_"Class<Snippets>" declaringClass, #_"String" methodName & #_"LocationIdentity..." privateLocations]
         (let [
             #_"ResolvedJavaMethod" method (#_"MetaAccessProvider" .lookupJavaMethod HotSpot'metaAccess, (AbstractTemplates'findMethod-3 declaringClass, methodName))
         ]
@@ -14113,29 +13955,29 @@ ZeroExtendNode'new-4
             )
         )
 
-        (loop-when-recur [#_"StackInterval" current (Allocator''activateNext-1 this)] (some? current) [(Allocator''activateNext-1 this)]
-            (Allocator''allocateSlot-2 this, current)
+        (loop-when-recur [#_"StackInterval" interval (Allocator''activateNext-1 this)] (some? interval) [(Allocator''activateNext-1 this)]
+            (Allocator''allocateSlot-2 this, interval)
         )
         nil
     )
 
     (defn- #_"void" Allocator''assignStackSlots-2 [#_"Allocator" this, #_"EconomicSet<LIRInstruction>" usePos]
         (let [
-            #_"Allocator" allocator this
-            #_"ValueProcedure" assignSlot
-                (reify ValueProcedure
-                    (#_"Value" ValueProcedure'''doValue-4 [#_"ValueProcedure" this, #_"Value" value, #_"OperandMode" mode, #_"EnumSet<OperandFlag>" flags]
+            #_"Allocator" owner this
+            #_"ValueProcedure" assignSlot
+                (reify ValueProcedure
+                    (#_"Value" ValueProcedure'''doValue-5 [#_"ValueProcedure" _this, #_"LIRInstruction" _op, #_"Value" value, #_"OperandMode" _mode, #_"{OperandFlag}" _flags]
                         (when (satisfies? VirtualStackSlot value) => value
-                            (:location (Allocator''get-2 allocator, value))
+                            (:location (Allocator''get-2 owner, value))
                         )
                     )
                 )
         ]
             (doseq [#_"LIRInstruction" op usePos]
-                (LIRInstruction''forEachInput-2v op, assignSlot)
-                (LIRInstruction''forEachAlive-2v op, assignSlot)
-                (LIRInstruction''forEachTemp-2v op, assignSlot)
-                (LIRInstruction''forEachOutput-2v op, assignSlot)
+                (LIRInstruction''forEachInput-2 op, assignSlot)
+                (LIRInstruction''forEachAlive-2 op, assignSlot)
+                (LIRInstruction''forEachTemp-2 op, assignSlot)
+                (LIRInstruction''forEachOutput-2 op, assignSlot)
             )
         )
         nil
@@ -17817,7 +17659,7 @@ ZeroExtendNode'new-4
         (let [
             #_"StackInterval" interval (FixPointIntervalBuilder''getOrCreateInterval-2 (:builder this), stackSlot)
         ]
-            (if (#_"EnumSet" .contains flags, OperandFlag'UNINITIALIZED)
+            (if (contains? flags OperandFlag'UNINITIALIZED)
                 (do
                     ;; Stack slot is marked uninitialized so we have to assume it is live all the time.
                     (§ ass! interval (StackInterval''addFrom-2 interval, 0))
@@ -17829,48 +17671,45 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn #_"BlockClosure" BlockClosure'new-2 [#_"FixPointIntervalBuilder" builder, #_"BitSet" set]
+    (defn #_"BlockClosure" BlockClosure'new-2 [#_"FixPointIntervalBuilder" builder, #_"BitSet" bits]
         (let [
             #_"BlockClosure" this
                 (merge (BlockClosure'class.)
                     (hash-map
                         #_"FixPointIntervalBuilder" :builder builder
-                        #_"BitSet" :currentSet set
-                        #_"InstructionValueConsumer" :defConsumer nil
-                        #_"InstructionValueConsumer" :useConsumer nil
+                        #_"BitSet" :currentSet bits
+                        #_"ValueConsumer" :defConsumer nil
+                        #_"ValueConsumer" :useConsumer nil
                     )
                 )
-            #_"BlockClosure" closure this
-            this
-                (assoc this :defConsumer
-                    (reify InstructionValueConsumer
-                        (#_"void" InstructionValueConsumer'''visitValue-5 [#_"InstructionValueConsumer" this, #_"LIRInstruction" op, #_"Value" operand, #_"OperandMode" mode, #_"EnumSet<OperandFlag>" flags]
-                            (when (satisfies? VirtualStackSlot operand)
-                                (BlockClosure''addDef-3 closure, operand, op)
-                                (BlockClosure''addRegisterHint-6 closure, op, operand, mode, flags, true)
-                                (#_"EconomicSet" .add (:usePos (:builder closure)), op)
-                                (#_"BitSet" .clear set, (:id operand))
-                            )
-                            nil
-                        )
-                    )
-                )
-            this
-                (assoc this :useConsumer
-                    (reify InstructionValueConsumer
-                        (#_"void" InstructionValueConsumer'''visitValue-5 [#_"InstructionValueConsumer" this, #_"LIRInstruction" op, #_"Value" operand, #_"OperandMode" mode, #_"EnumSet<OperandFlag>" flags]
-                            (when (satisfies? VirtualStackSlot operand)
-                                (BlockClosure''addUse-4 closure, operand, op, flags)
-                                (BlockClosure''addRegisterHint-6 closure, op, operand, mode, flags, false)
-                                (#_"EconomicSet" .add (:usePos (:builder closure)), op)
-                                (#_"BitSet" .set set, (:id operand))
-                            )
-                            nil
-                        )
-                    )
-                )
+            #_"BlockClosure" owner this
         ]
-            this
+            (assoc this
+                :defConsumer
+                    (reify ValueConsumer
+                        (#_"void" ValueConsumer'''visitValue-5 [#_"ValueConsumer" _this, #_"LIRInstruction" op, #_"Value" value, #_"OperandMode" mode, #_"{OperandFlag}" flags]
+                            (when (satisfies? VirtualStackSlot value)
+                                (BlockClosure''addDef-3 owner, value, op)
+                                (BlockClosure''addRegisterHint-6 owner, op, value, mode, flags, true)
+                                (#_"EconomicSet" .add (:usePos builder), op)
+                                (#_"BitSet" .clear bits, (:id value))
+                            )
+                            nil
+                        )
+                    )
+                :useConsumer
+                    (reify ValueConsumer
+                        (#_"void" ValueConsumer'''visitValue-5 [#_"ValueConsumer" _this, #_"LIRInstruction" op, #_"Value" value, #_"OperandMode" mode, #_"{OperandFlag}" flags]
+                            (when (satisfies? VirtualStackSlot value)
+                                (BlockClosure''addUse-4 owner, value, op, flags)
+                                (BlockClosure''addRegisterHint-6 owner, op, value, mode, flags, false)
+                                (#_"EconomicSet" .add (:usePos builder), op)
+                                (#_"BitSet" .set bits, (:id value))
+                            )
+                            nil
+                        )
+                    )
+            )
         )
     )
 
@@ -17879,21 +17718,22 @@ ZeroExtendNode'new-4
      ; Values that start or end at the current operation are not included.
      ;;
     (defn #_"void" BlockClosure''processInstructionBottomUp-2 [#_"BlockClosure" this, #_"LIRInstruction" op]
-        (LIRInstruction''visitEachTemp-2i op, (:defConsumer this))
-        (LIRInstruction''visitEachOutput-2i op, (:defConsumer this))
+        (LIRInstruction''visitEachTemp-2 op, (:defConsumer this))
+        (LIRInstruction''visitEachOutput-2 op, (:defConsumer this))
 
-        (LIRInstruction''visitEachAlive-2i op, (:useConsumer this))
-        (LIRInstruction''visitEachInput-2i op, (:useConsumer this))
+        (LIRInstruction''visitEachAlive-2 op, (:useConsumer this))
+        (LIRInstruction''visitEachInput-2 op, (:useConsumer this))
         nil
     )
 
     (defn #_"void" BlockClosure''addRegisterHint-6 [#_"BlockClosure" this, #_"LIRInstruction" op, #_"VirtualStackSlot" targetValue, #_"OperandMode" mode, #_"EnumSet<OperandFlag>" flags, #_"boolean" hintAtDef]
-        (when (#_"EnumSet" .contains flags, OperandFlag'HINT)
+        (when (contains? flags OperandFlag'HINT)
             (let [
                 #_"FixPointIntervalBuilder" builder (:builder this)
-                #_"InstructionValueProcedure" proc
-                    (reify InstructionValueProcedure
-                        (#_"Value" InstructionValueProcedure'''doValue-5 [#_"InstructionValueProcedure" this, #_"LIRInstruction" instruction, #_"Value" registerHint, #_"OperandMode" vaueMode, #_"EnumSet<OperandFlag>" valueFlags]
+            ]
+                (LIRInstruction''forEachRegisterHint-4 op, targetValue, mode,
+                    (reify ValueProcedure
+                        (#_"Value" ValueProcedure'''doValue-5 [#_"ValueProcedure" _this, #_"LIRInstruction" _op, #_"Value" registerHint, #_"OperandMode" _mode, #_"{OperandFlag}" _flags]
                             (when (satisfies? VirtualStackSlot registerHint)
                                 (let [
                                     #_"StackInterval" from (FixPointIntervalBuilder''getOrCreateInterval-2 builder, registerHint)
@@ -17904,14 +17744,12 @@ ZeroExtendNode'new-4
                                         (§ ass! to (StackInterval''setLocationHint-2 to, from))
                                         (§ ass! from (StackInterval''setLocationHint-2 from, to))
                                     )
-
                                     registerHint
                                 )
                             )
                         )
                     )
-            ]
-                (LIRInstruction''forEachRegisterHint-4i op, targetValue, mode, proc)
+                )
             )
         )
         nil
@@ -18672,17 +18510,18 @@ ZeroExtendNode'new-4
                         #_"AbstractEndNode" end (LoopBeginNode''forwardEnd-1 loopBegin)
                         #_"Block" loopPredecessor (Block''getFirstPredecessor-1 (:header _loop))
                         #_"int" length (count (:objectStates initialState))
-                        #_"BitSet" ensureVirtualized (BitSet. length)
-                    ]
-                        (dotimes [#_"int" i length]
-                            (let [
-                                #_"ObjectState" state (nth (:objectStates initialState) i)
-                            ]
-                                (when (and (some? state) (ObjectState''isVirtual-1 state) (:ensureVirtualized state))
-                                    (#_"BitSet" .set ensureVirtualized, i)
+                        #_"BitSet" ensureVirtualized (BitSet.)
+                        _
+                            (dotimes [#_"int" i length]
+                                (let [
+                                    #_"ObjectState" state (nth (:objectStates initialState) i)
+                                ]
+                                    (when (and (some? state) (ObjectState''isVirtual-1 state) (:ensureVirtualized state))
+                                        (#_"BitSet" .set ensureVirtualized, i)
+                                    )
                                 )
                             )
-                        )
+                    ]
                         (loop []
                             ;; propagate "ensureVirtualized" flag
                             (let [
@@ -22627,7 +22466,7 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"boolean" CLOptimization'isConstantLoad-1 [#_"LIRInstruction" op]
-        (and (LIRInstruction''isLoadConstantOp-1 op) (satisfies? Variable (MoveOp'''getResult-1 op)))
+        (and (satisfies? LoadConstantOp op) (satisfies? Variable (MoveOp'''getResult-1 op)))
     )
 
     ;;;
@@ -22635,39 +22474,42 @@ ZeroExtendNode'new-4
      ;;
     (defn- #_"void" CLOptimization''analyzeBlock-2 [#_"CLOptimization" this, #_"Block" block]
         (let [
-            #_"InstructionValueConsumer" loadConsumer (ß (instruction, value, mode, flags) ->
-                (§ fun
-                    (when (and (satisfies? Variable value) (not (#_"BitSet" .get (:phiConstants this), (:index value))))
-                        (if (not (#_"BitSet" .get (:defined this), (:index value)))
-                            (do
-                                (#_"BitSet" .set (:defined this), (:index value))
-                                (when (CLOptimization'isConstantLoad-1 instruction)
-                                    (VariableMap''put-3 (:map this), value, (DefUseTree'new-2 instruction, block))
+            #_"CLOptimization" owner this
+            #_"ValueConsumer" loadConsumer
+                (reify ValueConsumer
+                    (#_"void" ValueConsumer'''visitValue-5 [#_"ValueConsumer" _this, #_"LIRInstruction" op, #_"Value" value, #_"OperandMode" _mode, #_"{OperandFlag}" _flags]
+                        (when (and (satisfies? Variable value) (not (#_"BitSet" .get (:phiConstants owner), (:index value))))
+                            (if (not (#_"BitSet" .get (:defined owner), (:index value)))
+                                (do
+                                    (#_"BitSet" .set (:defined owner), (:index value))
+                                    (when (CLOptimization'isConstantLoad-1 op)
+                                        (VariableMap''put-3 (:map owner), value, (DefUseTree'new-2 op, block))
+                                    )
+                                )
+                                (do
+                                    ;; Variable is redefined: happens only for constant loads
+                                    ;; introduced by phi resolution -> ignore.
+                                    (VariableMap''remove-2 (:map owner), value)
+                                    (#_"BitSet" .set (:phiConstants owner), (:index value))
                                 )
                             )
-                            (do
-                                ;; Variable is redefined, this only happens for constant loads
-                                ;; introduced by phi resolution -> ignore.
-                                (VariableMap''remove-2 (:map this), value)
-                                (#_"BitSet" .set (:phiConstants this), (:index value))
+                        )
+                    )
+                )
+            #_"ValueConsumer" useConsumer
+                (reify ValueConsumer
+                    (#_"void" ValueConsumer'''visitValue-5 [#_"ValueConsumer" _this, #_"LIRInstruction" op, #_"Value" value, #_"OperandMode" _mode, #_"{OperandFlag}" _flags]
+                        (when (and (satisfies? Variable value) (not (#_"BitSet" .get (:phiConstants owner), (:index value))))
+                            (let [
+                                #_"DefUseTree" tree (VariableMap''get-2 (:map owner), value)
+                            ]
+                                (when (some? tree)
+                                    (DefUseTree''addUsage-4 tree, block, op, value)
+                                )
                             )
                         )
                     )
                 )
-            )
-            #_"InstructionValueConsumer" useConsumer (ß (instruction, value, mode, flags) ->
-                (§ fun
-                    (when (and (satisfies? Variable value) (not (#_"BitSet" .get (:phiConstants this), (:index value))))
-                        (let [
-                            #_"DefUseTree" tree (VariableMap''get-2 (:map this), value)
-                        ]
-                            (when (some? tree)
-                                (DefUseTree''addUsage-4 tree, block, instruction, value)
-                            )
-                        )
-                    )
-                )
-            )
         ]
             (loop-when-recur [#_"int" i 0 #_"ISeq" s (seq (LIR''getLIRforBlock-2 (:lir this), block))] (some? s) [(inc i) (next s)]
                 (let [
@@ -22675,9 +22517,9 @@ ZeroExtendNode'new-4
                 ]
                     ;; set instruction id to the index in the lir instruction list
                     (§ ass! op (LIRInstruction''setId-2 op, i))
-                    (LIRInstruction''visitEachOutput-2i op, loadConsumer)
-                    (LIRInstruction''visitEachInput-2i op, useConsumer)
-                    (LIRInstruction''visitEachAlive-2i op, useConsumer)
+                    (LIRInstruction''visitEachOutput-2 op, loadConsumer)
+                    (LIRInstruction''visitEachInput-2 op, useConsumer)
+                    (LIRInstruction''visitEachAlive-2 op, useConsumer)
                 )
             )
         )
@@ -26535,7 +26377,7 @@ ZeroExtendNode'new-4
         (merge (ConstantTreeAnalyzer'class.)
             (hash-map
                 #_"ConstantTree" :tree tree
-                #_"BitSet" :visited (BitSet. (ConstantTree''size-1 tree))
+                #_"BitSet" :visited (BitSet.)
             )
         )
     )
@@ -27340,7 +27182,7 @@ ZeroExtendNode'new-4
         (let [
             #_"Block[]" stack (make-array Block'iface (count (:reversePostOrder this)))
             _ (aset stack 0 (ControlFlowGraph''getStartBlock-1 this))
-            #_"BitSet" visited (BitSet. (count (:reversePostOrder this)))
+            #_"BitSet" visited (BitSet.)
             #_"DeferredExit[]" deferredExits (make-array DeferredExit'iface (count (:loops this)))
         ]
             (loop-when [#_"Object[]" values nil #_"int" j 0 #_"int" i 0] (<= 0 i)
@@ -28558,7 +28400,7 @@ ZeroExtendNode'new-4
             #_"BitSet" bitSet (get (:flags this) flag)
         ]
             (when (nil? bitSet)
-                (§ ass bitSet (BitSet. (count (:blocks this))))
+                (§ ass bitSet (BitSet.))
                 (#_"EnumMap" .put (:flags this), flag, bitSet)
             )
             (#_"BitSet" .set bitSet, (:id block))
@@ -28601,7 +28443,7 @@ ZeroExtendNode'new-4
             #_"BitSet" bitSet (get (:flags this) flag)
         ]
             (when (nil? bitSet)
-                (§ ass bitSet (BitSet. (count (:blocks this))))
+                (§ ass bitSet (BitSet.))
                 (#_"EnumMap" .put (:flags this), flag, bitSet)
             )
             (loop-when-recur [#_"Block" b block] (and (some? b) (not (#_"BitSet" .get bitSet, (:id b)))) [(:dominator b)]
@@ -28664,10 +28506,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"int" ConstantTree''size-1 [#_"ConstantTree" this]
-        (count (:blocks this))
-    )
-
     (defn #_"void" ConstantTree''traverseTreeWhileTrue-3 [#_"ConstantTree" this, #_"Block" block, #_"Predicate<Block>" action]
         (when (#_"Predicate" .test action, block)
             (loop-when-recur [#_"Block" dom (:firstDominated block)] (some? dom) [(:dominatedSibling dom)]
@@ -28700,12 +28538,12 @@ ZeroExtendNode'new-4
      ;;
     (defn- #_"boolean" EMOptimizer'same-2 [#_"LIRInstruction" op1, #_"LIRInstruction" op2]
         (cond
-            (and (LIRInstruction''isValueMoveOp-1 op1) (LIRInstruction''isValueMoveOp-1 op2))
+            (and (satisfies? ValueMoveOp op1) (satisfies? ValueMoveOp op2))
                 ;; these moves are exactly equal and can be optimized
                 (and (= (ValueMoveOp'''getInput-1 op1) (ValueMoveOp'''getInput-1 op2))
                      (= (MoveOp'''getResult-1 op1) (MoveOp'''getResult-1 op2))
                 )
-            (and (LIRInstruction''isLoadConstantOp-1 op1) (LIRInstruction''isLoadConstantOp-1 op2))
+            (and (satisfies? LoadConstantOp op1) (satisfies? LoadConstantOp op2))
                 ;; these moves are exactly equal and can be optimized
                 (and (= (LoadConstantOp'''getConstant-1 op1) (LoadConstantOp'''getConstant-1 op2))
                      (= (MoveOp'''getResult-1 op1) (MoveOp'''getResult-1 op2))
@@ -30164,10 +30002,10 @@ ZeroExtendNode'new-4
 )
 
 (class-ns ValueFieldInfo [FieldInfo, #_"Comparable" #_"<FieldInfo>"]
-    (defn #_"ValueFieldInfo" ValueFieldInfo'new-5 [#_"long" offset, #_"String" name, #_"Class" type, #_"Class" declaringClass, #_"EnumSet<OperandFlag>" flags]
+    (defn #_"ValueFieldInfo" ValueFieldInfo'new-5 [#_"long" offset, #_"String" name, #_"Class" type, #_"Class" declaringClass, #_"{OperandFlag}" flags]
         (merge (ValueFieldInfo'class.) (FieldInfo'new-4 offset, name, type, declaringClass)
             (hash-map
-                #_"EnumSet<OperandFlag>" :flags flags
+                #_"{OperandFlag}" :flags flags
             )
         )
     )
@@ -30176,11 +30014,11 @@ ZeroExtendNode'new-4
      ; Sorts non-array fields before array fields.
      ;;
     (§ override! #_"int" #_"Comparable." compareTo [#_"ValueFieldInfo" this, #_"FieldInfo" o]
-        (if (#_"Class" .isAssignableFrom LIRIntrospection'VALUE_ARRAY_CLASS, (:type o))
-            (when-not (#_"Class" .isAssignableFrom LIRIntrospection'VALUE_ARRAY_CLASS, (:type this))
+        (if (#_"Class" .isAssignableFrom (ß Value'array), (:type o))
+            (when-not (#_"Class" .isAssignableFrom (ß Value'array), (:type this))
                 (§ return -1)
             )
-            (when (#_"Class" .isAssignableFrom LIRIntrospection'VALUE_ARRAY_CLASS, (:type this))
+            (when (#_"Class" .isAssignableFrom (ß Value'array), (:type this))
                 (§ return 1)
             )
         )
@@ -30188,40 +30026,37 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns FieldIntrospection #_"<T>" []
-    (defn #_"FieldIntrospection" FieldIntrospection'new-1 [#_"Class<T>" clazz]
-        (merge (FieldIntrospection'class.)
-            (hash-map
-                #_"Class<T>" :class clazz
-                ;;;
-                 ; The set of fields in #clazz that do long belong to a more specific category.
-                 ;;
-                #_"Fields" :data nil
-            )
-        )
-    )
-)
-
-(class-ns LIRIntrospection #_"<T>" [FieldIntrospection #_"<T>"]
-    (def- #_"Class<Value>" LIRIntrospection'VALUE_CLASS Value)
-    (def- #_"Class<ConstantValue>" LIRIntrospection'CONSTANT_VALUE_CLASS ConstantValue'iface)
-    (def- #_"Class<Variable>" LIRIntrospection'VARIABLE_CLASS Variable'iface)
-    (def- #_"Class<RegisterValue>" LIRIntrospection'REGISTER_VALUE_CLASS RegisterValue)
-    (def- #_"Class<StackSlot>" LIRIntrospection'STACK_SLOT_CLASS StackSlot)
-    (def- #_"Class<Value[]>" LIRIntrospection'VALUE_ARRAY_CLASS (ß Value'array))
-
-    (defn #_"LIRIntrospection" LIRIntrospection'new-1 [#_"Class<T>" clazz]
-        (merge (LIRIntrospection'class.) (FieldIntrospection'new-1 clazz)
-            (hash-map
-                ;;;
-                 ; The component values in an LIRInstruction or CompositeValue.
-                 ;;
-                #_"Values" :values nil
+(class-ns LIRInstructionClass []
+    #_unused
+    (defn #_"LIRInstructionClass" LIRInstructionClass'new-1 [#_"Class" clazz]
+        (let [
+            #_"LIRFieldsScanner" ifs (FieldsScanner''scan-3 (LIRFieldsScanner'new-0), clazz, LIRInstruction'iface)
+        ]
+            (merge (LIRInstructionClass'class.)
+                (hash-map
+                    #_"Class" :class clazz
+                    ;;;
+                     ; The set of fields in #clazz that do long belong to a more specific category.
+                     ;;
+                    #_"Fields" :data (Fields'new-1 (:data ifs))
+                    ;;;
+                     ; The component values in an LIRInstruction or CompositeValue.
+                     ;;
+                    #_"Values" :values nil
+                    #_"Values" :uses (Values'new-1 (get (:valueAnnotations ifs) Use))
+                    #_"Values" :alives (Values'new-1 (get (:valueAnnotations ifs) Alive))
+                    #_"Values" :temps (Values'new-1 (get (:valueAnnotations ifs) Temp))
+                    #_"Values" :defs (Values'new-1 (get (:valueAnnotations ifs) Def))
+                )
             )
         )
     )
 
-    (defn #_"void" LIRIntrospection'forEach-4 [#_"LIRInstruction" op, #_"Values" values, #_"OperandMode" mode, #_"InstructionValueProcedure" proc]
+    (defn #_"boolean" LIRInstructionClass''hasOperands-1 [#_"LIRInstructionClass" this]
+        (or (seq (:offsets (:uses this))) (seq (:offsets (:alives this))) (seq (:offsets (:temps this))) (seq (:offsets (:defs this))))
+    )
+
+    (defn- #_"void" LIRInstructionClass'forEach-4 [#_"LIRInstruction" op, #_"Values" values, #_"OperandMode" mode, #_"ValueProcedure" proc]
         (dotimes [#_"int" i (count (:offsets values))]
             (if (< i (:directCount values))
                 (let [
@@ -30229,10 +30064,10 @@ ZeroExtendNode'new-4
                     #_"Value" newValue
                         (if (satisfies? CompositeValue value)
                             (CompositeValue'''forEachComponent-4 value, op, mode, proc)
-                            (InstructionValueProcedure'''doValue-5 proc, op, value, mode, (Values''getFlags-2 values, i))
+                            (ValueProcedure'''doValue-5 proc, op, value, mode, (Values''getFlags-2 values, i))
                         )
                 ]
-                    (when-not (#_"Value" .identityEquals value, newValue)
+                    (when-not (= value newValue)
                         (Values''setValue-4 values, op, i, newValue)
                     )
                 )
@@ -30245,10 +30080,10 @@ ZeroExtendNode'new-4
                             #_"Value" newValue
                                 (if (satisfies? CompositeValue value)
                                     (CompositeValue'''forEachComponent-4 value, op, mode, proc)
-                                    (InstructionValueProcedure'''doValue-5 proc, op, value, mode, (Values''getFlags-2 values, i))
+                                    (ValueProcedure'''doValue-5 proc, op, value, mode, (Values''getFlags-2 values, i))
                                 )
                         ]
-                            (when-not (#_"Value" .identityEquals value, newValue)
+                            (when-not (= value newValue)
                                 (aset valueArray j newValue)
                             )
                         )
@@ -30259,7 +30094,27 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn #_"void" LIRIntrospection'visitEach-4 [#_"LIRInstruction" op, #_"Values" values, #_"OperandMode" mode, #_"InstructionValueConsumer" proc]
+    (defn #_"void" LIRInstructionClass''forEachUse-3 [#_"LIRInstructionClass" this, #_"LIRInstruction" op, #_"ValueProcedure" proc]
+        (LIRInstructionClass'forEach-4 op, (:uses this), OperandMode'USE, proc)
+        nil
+    )
+
+    (defn #_"void" LIRInstructionClass''forEachAlive-3 [#_"LIRInstructionClass" this, #_"LIRInstruction" op, #_"ValueProcedure" proc]
+        (LIRInstructionClass'forEach-4 op, (:alives this), OperandMode'ALIVE, proc)
+        nil
+    )
+
+    (defn #_"void" LIRInstructionClass''forEachTemp-3 [#_"LIRInstructionClass" this, #_"LIRInstruction" op, #_"ValueProcedure" proc]
+        (LIRInstructionClass'forEach-4 op, (:temps this), OperandMode'TEMP, proc)
+        nil
+    )
+
+    (defn #_"void" LIRInstructionClass''forEachDef-3 [#_"LIRInstructionClass" this, #_"LIRInstruction" op, #_"ValueProcedure" proc]
+        (LIRInstructionClass'forEach-4 op, (:defs this), OperandMode'DEF, proc)
+        nil
+    )
+
+    (defn- #_"void" LIRInstructionClass'visitEach-4 [#_"LIRInstruction" op, #_"Values" values, #_"OperandMode" mode, #_"ValueConsumer" proc]
         (dotimes [#_"int" i (count (:offsets values))]
             (if (< i (:directCount values))
                 (let [
@@ -30267,7 +30122,7 @@ ZeroExtendNode'new-4
                 ]
                     (if (satisfies? CompositeValue value)
                         (CompositeValue'''visitEachComponent-4 value, op, mode, proc)
-                        (InstructionValueConsumer'''visitValue-5 proc, op, value, mode, (Values''getFlags-2 values, i))
+                        (ValueConsumer'''visitValue-5 proc, op, value, mode, (Values''getFlags-2 values, i))
                     )
                 )
                 (let [
@@ -30279,7 +30134,7 @@ ZeroExtendNode'new-4
                         ]
                             (if (satisfies? CompositeValue value)
                                 (CompositeValue'''visitEachComponent-4 value, op, mode, proc)
-                                (InstructionValueConsumer'''visitValue-5 proc, op, value, mode, (Values''getFlags-2 values, i))
+                                (ValueConsumer'''visitValue-5 proc, op, value, mode, (Values''getFlags-2 values, i))
                             )
                         )
                     )
@@ -30288,78 +30143,28 @@ ZeroExtendNode'new-4
         )
         nil
     )
-)
 
-(class-ns LIRInstructionClass #_"<T>" [LIRIntrospection #_"<T>", FieldIntrospection #_"<T>"]
-    #_unused
-    (defn #_"LIRInstructionClass" LIRInstructionClass'new-1 [#_"Class<T>" clazz]
-        (let [
-            #_"LIRInstructionFieldsScanner" ifs (LIRInstructionFieldsScanner''scan-2 (LIRInstructionFieldsScanner'new-0), clazz)
-            #_"LIRInstructionClass" this
-                (merge (LIRInstructionClass'class.) (LIRIntrospection'new-1 clazz)
-                    (hash-map
-                        #_"Values" :uses (Values'new-1 (get (:valueAnnotations ifs) Use))
-                        #_"Values" :alives (Values'new-1 (get (:valueAnnotations ifs) Alive))
-                        #_"Values" :temps (Values'new-1 (get (:valueAnnotations ifs) Temp))
-                        #_"Values" :defs (Values'new-1 (get (:valueAnnotations ifs) Def))
-                        #_"boolean" :isMoveOp (#_"Class" .isAssignableFrom MoveOp'iface, clazz)
-                        #_"boolean" :isValueMoveOp (#_"Class" .isAssignableFrom ValueMoveOp'iface, clazz)
-                        #_"boolean" :isLoadConstantOp (#_"Class" .isAssignableFrom LoadConstantOp'iface, clazz)
-                        #_"String" :opcodeConstant (:opcodeConstant ifs)
-                        #_"int" :opcodeIndex (if (some? (:opcodeField ifs)) (#_"ArrayList" .indexOf (:data ifs), (:opcodeField ifs)) -1)
-                    )
-                )
-            this (assoc this :data (Fields'new-1 (:data ifs)))
-        ]
-            this
-        )
-    )
-
-    (defn #_"boolean" LIRInstructionClass''hasOperands-1 [#_"LIRInstructionClass<T>" this]
-        (or (seq (:offsets (:uses this))) (seq (:offsets (:alives this))) (seq (:offsets (:temps this))) (seq (:offsets (:defs this))))
-    )
-
-    (defn #_"void" LIRInstructionClass''forEachUse-3 [#_"LIRInstructionClass<T>" this, #_"LIRInstruction" obj, #_"InstructionValueProcedure" proc]
-        (LIRIntrospection'forEach-4 obj, (:uses this), OperandMode'USE, proc)
+    (defn #_"void" LIRInstructionClass''visitEachUse-3 [#_"LIRInstructionClass" this, #_"LIRInstruction" op, #_"ValueConsumer" proc]
+        (LIRInstructionClass'visitEach-4 op, (:uses this), OperandMode'USE, proc)
         nil
     )
 
-    (defn #_"void" LIRInstructionClass''forEachAlive-3 [#_"LIRInstructionClass<T>" this, #_"LIRInstruction" obj, #_"InstructionValueProcedure" proc]
-        (LIRIntrospection'forEach-4 obj, (:alives this), OperandMode'ALIVE, proc)
+    (defn #_"void" LIRInstructionClass''visitEachAlive-3 [#_"LIRInstructionClass" this, #_"LIRInstruction" op, #_"ValueConsumer" proc]
+        (LIRInstructionClass'visitEach-4 op, (:alives this), OperandMode'ALIVE, proc)
         nil
     )
 
-    (defn #_"void" LIRInstructionClass''forEachTemp-3 [#_"LIRInstructionClass<T>" this, #_"LIRInstruction" obj, #_"InstructionValueProcedure" proc]
-        (LIRIntrospection'forEach-4 obj, (:temps this), OperandMode'TEMP, proc)
+    (defn #_"void" LIRInstructionClass''visitEachTemp-3 [#_"LIRInstructionClass" this, #_"LIRInstruction" op, #_"ValueConsumer" proc]
+        (LIRInstructionClass'visitEach-4 op, (:temps this), OperandMode'TEMP, proc)
         nil
     )
 
-    (defn #_"void" LIRInstructionClass''forEachDef-3 [#_"LIRInstructionClass<T>" this, #_"LIRInstruction" obj, #_"InstructionValueProcedure" proc]
-        (LIRIntrospection'forEach-4 obj, (:defs this), OperandMode'DEF, proc)
+    (defn #_"void" LIRInstructionClass''visitEachDef-3 [#_"LIRInstructionClass" this, #_"LIRInstruction" op, #_"ValueConsumer" proc]
+        (LIRInstructionClass'visitEach-4 op, (:defs this), OperandMode'DEF, proc)
         nil
     )
 
-    (defn #_"void" LIRInstructionClass''visitEachUse-3 [#_"LIRInstructionClass<T>" this, #_"LIRInstruction" obj, #_"InstructionValueConsumer" proc]
-        (LIRIntrospection'visitEach-4 obj, (:uses this), OperandMode'USE, proc)
-        nil
-    )
-
-    (defn #_"void" LIRInstructionClass''visitEachAlive-3 [#_"LIRInstructionClass<T>" this, #_"LIRInstruction" obj, #_"InstructionValueConsumer" proc]
-        (LIRIntrospection'visitEach-4 obj, (:alives this), OperandMode'ALIVE, proc)
-        nil
-    )
-
-    (defn #_"void" LIRInstructionClass''visitEachTemp-3 [#_"LIRInstructionClass<T>" this, #_"LIRInstruction" obj, #_"InstructionValueConsumer" proc]
-        (LIRIntrospection'visitEach-4 obj, (:temps this), OperandMode'TEMP, proc)
-        nil
-    )
-
-    (defn #_"void" LIRInstructionClass''visitEachDef-3 [#_"LIRInstructionClass<T>" this, #_"LIRInstruction" obj, #_"InstructionValueConsumer" proc]
-        (LIRIntrospection'visitEach-4 obj, (:defs this), OperandMode'DEF, proc)
-        nil
-    )
-
-    (defn #_"Value" LIRInstructionClass''forEachRegisterHint-4 [#_"LIRInstructionClass<T>" this, #_"LIRInstruction" obj, #_"OperandMode" mode, #_"InstructionValueProcedure" proc]
+    (defn #_"Value" LIRInstructionClass''forEachRegisterHint-4 [#_"LIRInstructionClass" this, #_"LIRInstruction" op, #_"OperandMode" mode, #_"ValueProcedure" proc]
         (let [
             #_"Values" hints
                 (condp = mode
@@ -30370,12 +30175,12 @@ ZeroExtendNode'new-4
         ]
             (when (some? hints)
                 (loop-when [#_"int" i 0] (< i (count (:offsets hints)))
-                    (or (when (<= (:directCount hints) i) => (InstructionValueProcedure'''doValue-5 proc, obj, (Values''getValue-3 hints, obj, i), nil, nil)
+                    (or (when (<= (:directCount hints) i) => (ValueProcedure'''doValue-5 proc, op, (Values''getValue-3 hints, op, i), nil, nil)
                             (let [
-                                #_"Value[]" hintValues (Values''getValue-3 hints, obj, i)
+                                #_"Value[]" hintValues (Values''getValue-3 hints, op, i)
                             ]
                                 (loop-when [#_"int" j 0] (< j (count hintValues))
-                                    (or (InstructionValueProcedure'''doValue-5 proc, obj, (nth hintValues j), nil, nil)
+                                    (or (ValueProcedure'''doValue-5 proc, op, (nth hintValues j), nil, nil)
                                         (recur (inc j))
                                     )
                                 )
@@ -30393,19 +30198,19 @@ ZeroExtendNode'new-4
  ; Metadata for every Node type. The metadata includes the offsets of fields annotated with Input and
  ; Successor as well as methods for iterating over such fields.
  ;;
-(class-ns NodeClass #_"<T>" [FieldIntrospection #_"<T>"]
-    (def #_"long" NodeClass'MAX_EDGES 8)
-    (def #_"long" NodeClass'MAX_LIST_EDGES 6)
-    (def #_"long" NodeClass'OFFSET_MASK 0xfc)
-    (def #_"long" NodeClass'LIST_MASK 0x01)
+(class-ns NodeClass []
+    (def- #_"long" NodeClass'MAX_EDGES 8)
+    (def- #_"long" NodeClass'MAX_LIST_EDGES 6)
+    (def- #_"long" NodeClass'OFFSET_MASK 0xfc)
+    (def- #_"long" NodeClass'LIST_MASK 0x01)
     (def #_"long" NodeClass'NEXT_EDGE 0x08)
 
-    (defn- #_"long" NodeClass'computeIterationMask-3 [#_"EdgesType" type, #_"int" directCount, #_"long[]" offsets]
+    (defn- #_"long" NodeClass'computeIterationMask-2 [#_"int" directCount, #_"long[]" offsets]
         (when (< NodeClass'MAX_EDGES (count offsets))
-            (throw! (str "Exceeded maximum of " NodeClass'MAX_EDGES " edges (" type ")"))
+            (throw! (str "Exceeded maximum of " NodeClass'MAX_EDGES " edges"))
         )
         (when (< NodeClass'MAX_LIST_EDGES (- (count offsets) directCount))
-            (throw! (str "Exceeded maximum of " NodeClass'MAX_LIST_EDGES " list edges (" type ")"))
+            (throw! (str "Exceeded maximum of " NodeClass'MAX_LIST_EDGES " list edges"))
         )
 
         (loop-when [#_"long" mask 0 #_"int" i (dec (count offsets))] (<= 0 i) => mask
@@ -30419,39 +30224,37 @@ ZeroExtendNode'new-4
     )
 
     #_unused
-    (defn #_"NodeClass" NodeClass'new-2 [#_"Class<T>" clazz, #_"NodeClass<? super T>" superNodeClass]
+    (defn #_"NodeClass" NodeClass'new-2 [#_"Class" clazz, #_"NodeClass" superNodeClass]
         (let [
-            #_"NodeClass" this
-                (merge (NodeClass'class.) (FieldIntrospection'new-1 clazz)
-                    (hash-map
-                        #_"InputEdges" :inputs nil
-                        #_"SuccessorEdges" :successors nil
-                        #_"NodeClass<? super T>" :superNodeClass superNodeClass
-                        #_"long" :inputsIteration 0
-                        #_"long" :successorIteration 0
-                        #_"boolean" :canonicalizable? (#_"Class" .isAssignableFrom Canonicalizable'iface, clazz)
-                        #_"boolean" :commutative? (#_"Class" .isAssignableFrom BinaryCommutative'iface, clazz)
-                        #_"boolean" :simplifiable? (#_"Class" .isAssignableFrom Simplifiable'iface, clazz)
-                        ;;;
-                         ; Determines if the node has no inputs, nor successors.
-                         ;;
-                        #_"boolean" :isLeafNode false
-                    )
-                )
-            #_"NodeFieldsScanner" fs (NodeFieldsScanner'new-1 superNodeClass)
-            _ (FieldsScanner''scan-4 fs, clazz, (#_"Class" .getSuperclass clazz), false)
-            this (assoc this :successors (SuccessorEdges'new-2 (:directSuccessors fs), (:successors fs)))
-            this (assoc this :successorIteration (NodeClass'computeIterationMask-3 (ß Fields''type-1 (:successors this)), (:directCount (:successors this)), (:offsets (:successors this))))
-            this (assoc this :inputs (InputEdges'new-2 (:directInputs fs), (:inputs fs)))
-            this (assoc this :inputsIteration (NodeClass'computeIterationMask-3 (ß Fields''type-1 (:inputs this)), (:directCount (:inputs this)), (:offsets (:inputs this))))
-            this (assoc this :data (Fields'new-1 (:data fs)))
-            this (assoc this :isLeafNode (zero? (+ (count (:offsets (:inputs this))) (count (:offsets (:successors this))))))
+            #_"NodeFieldsScanner" fs (FieldsScanner''scan-3 (NodeFieldsScanner'new-1 superNodeClass), clazz, (#_"Class" .getSuperclass clazz))
+            #_"InputEdges" inputs (InputEdges'new-2 (:directInputs fs), (:inputs fs))
+            #_"SuccessorEdges" successors (SuccessorEdges'new-2 (:directSuccessors fs), (:successors fs))
         ]
-            this
+            (merge (NodeClass'class.)
+                (hash-map
+                    #_"Class" :class clazz
+                    ;;;
+                     ; The set of fields in #clazz that do long belong to a more specific category.
+                     ;;
+                    #_"Fields" :data (Fields'new-1 (:data fs))
+                    #_"InputEdges" :inputs inputs
+                    #_"SuccessorEdges" :successors successors
+                    #_"NodeClass" :superNodeClass superNodeClass
+                    #_"long" :inputsIteration (NodeClass'computeIterationMask-2 (:directCount inputs), (:offsets inputs))
+                    #_"long" :successorIteration (NodeClass'computeIterationMask-2 (:directCount successors), (:offsets successors))
+                    #_"boolean" :canonicalizable? (#_"Class" .isAssignableFrom Canonicalizable'iface, clazz)
+                    #_"boolean" :commutative? (#_"Class" .isAssignableFrom BinaryCommutative'iface, clazz)
+                    #_"boolean" :simplifiable? (#_"Class" .isAssignableFrom Simplifiable'iface, clazz)
+                    ;;;
+                     ; Determines if the node has no inputs, nor successors.
+                     ;;
+                    #_"boolean" :isLeafNode (zero? (+ (count (:offsets inputs)) (count (:offsets successors))))
+                )
+            )
         )
     )
 
-    (defn #_"boolean" NodeClass''dataEquals-3 [#_"NodeClass<T>" this, #_"Node" a, #_"Node" b]
+    (defn #_"boolean" NodeClass''dataEquals-3 [#_"NodeClass" this, #_"Node" a, #_"Node" b]
         (loop-when [#_"int" i 0] (< i (count (:offsets (:data this)))) => true
             (let [
                 #_"Class" type (Fields''getType-2 (:data this), i)
@@ -30479,7 +30282,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"boolean" NodeClass''isValid-4 [#_"NodeClass<T>" this, #_"Position" pos, #_"NodeClass" from, #_"Edges" fromEdges]
+    (defn #_"boolean" NodeClass''isValid-4 [#_"NodeClass" this, #_"Position" pos, #_"NodeClass" from, #_"Edges" fromEdges]
         (or (= this from)
             (let [
                 #_"Edges" toEdges (NodeClass''getEdges-2 this, (:type fromEdges))
@@ -30545,7 +30348,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn #_"void" NodeClass''updateInputSuccInPlace-3 [#_"NodeClass<T>" this, #_"Node" node, #_"InplaceUpdateClosure" duplicationReplacement]
+    (defn #_"void" NodeClass''updateInputSuccInPlace-3 [#_"NodeClass" this, #_"Node" node, #_"InplaceUpdateClosure" duplicationReplacement]
         (NodeClass'updateEdgesInPlace-3 node, duplicationReplacement, (:inputs this))
         (NodeClass'updateEdgesInPlace-3 node, duplicationReplacement, (:successors this))
         nil
@@ -30554,7 +30357,7 @@ ZeroExtendNode'new-4
     ;;;
      ; Gets the input or successor edges defined by this node class.
      ;;
-    (defn #_"Edges" NodeClass''getEdges-2 [#_"NodeClass<T>" this, #_"EdgesType" type]
+    (defn #_"Edges" NodeClass''getEdges-2 [#_"NodeClass" this, #_"EdgesType" type]
         (if (= type EdgesType'Inputs) (:inputs this) (:successors this))
     )
 
@@ -30680,11 +30483,11 @@ ZeroExtendNode'new-4
     )
 
     #_unused
-    (defn #_"boolean" NodeClass''equalSuccessors-3 [#_"NodeClass<T>" this, #_"Node" node, #_"Node" other]
+    (defn #_"boolean" NodeClass''equalSuccessors-3 [#_"NodeClass" this, #_"Node" node, #_"Node" other]
         (NodeClass'equalEdges-3 node, other, (:successorIteration this))
     )
 
-    (defn #_"boolean" NodeClass''equalInputs-3 [#_"NodeClass<T>" this, #_"Node" node, #_"Node" other]
+    (defn #_"boolean" NodeClass''equalInputs-3 [#_"NodeClass" this, #_"Node" node, #_"Node" other]
         (NodeClass'equalEdges-3 node, other, (:inputsIteration this))
     )
 
@@ -30734,17 +30537,17 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn #_"void" NodeClass''applySuccessors-3 [#_"NodeClass<T>" this, #_"Node" node, #_"EdgeVisitor" consumer]
+    (defn #_"void" NodeClass''applySuccessors-3 [#_"NodeClass" this, #_"Node" node, #_"EdgeVisitor" consumer]
         (NodeClass'applyEdges-3 node, consumer, (:successorIteration this))
         nil
     )
 
-    (defn #_"void" NodeClass''applyInputs-3 [#_"NodeClass<T>" this, #_"Node" node, #_"EdgeVisitor" consumer]
+    (defn #_"void" NodeClass''applyInputs-3 [#_"NodeClass" this, #_"Node" node, #_"EdgeVisitor" consumer]
         (NodeClass'applyEdges-3 node, consumer, (:inputsIteration this))
         nil
     )
 
-    (defn #_"void" NodeClass''unregisterAtSuccessorsAsPredecessor-2 [#_"NodeClass<T>" this, #_"Node" node]
+    (defn #_"void" NodeClass''unregisterAtSuccessorsAsPredecessor-2 [#_"NodeClass" this, #_"Node" node]
         (loop-when-recur [#_"long" mask (:successorIteration this)] (not (zero? mask)) [(>>> mask NodeClass'NEXT_EDGE)]
             (let [
                 #_"long" offset (& mask NodeClass'OFFSET_MASK)
@@ -30780,7 +30583,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn #_"void" NodeClass''registerAtSuccessorsAsPredecessor-2 [#_"NodeClass<T>" this, #_"Node" node]
+    (defn #_"void" NodeClass''registerAtSuccessorsAsPredecessor-2 [#_"NodeClass" this, #_"Node" node]
         (loop-when-recur [#_"long" mask (:successorIteration this)] (not (zero? mask)) [(>>> mask NodeClass'NEXT_EDGE)]
             (let [
                 #_"long" offset (& mask NodeClass'OFFSET_MASK)
@@ -30814,11 +30617,11 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn #_"boolean" NodeClass''replaceFirstInput-4 [#_"NodeClass<T>" this, #_"Node" node, #_"Node" key, #_"Node" replacement]
+    (defn #_"boolean" NodeClass''replaceFirstInput-4 [#_"NodeClass" this, #_"Node" node, #_"Node" key, #_"Node" replacement]
         (NodeClass'replaceFirstEdge-4 node, key, replacement, (:inputsIteration this))
     )
 
-    (defn #_"boolean" NodeClass''replaceFirstSuccessor-4 [#_"NodeClass<T>" this, #_"Node" node, #_"Node" key, #_"Node" replacement]
+    (defn #_"boolean" NodeClass''replaceFirstSuccessor-4 [#_"NodeClass" this, #_"Node" node, #_"Node" key, #_"Node" replacement]
         (NodeClass'replaceFirstEdge-4 node, key, replacement, (:successorIteration this))
     )
 
@@ -30849,7 +30652,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"void" NodeClass''registerAtInputsAsUsage-2 [#_"NodeClass<T>" this, #_"Node" node]
+    (defn #_"void" NodeClass''registerAtInputsAsUsage-2 [#_"NodeClass" this, #_"Node" node]
         (loop-when-recur [#_"long" mask (:inputsIteration this)] (not (zero? mask)) [(>>> mask NodeClass'NEXT_EDGE)]
             (let [
                 #_"long" offset (& mask NodeClass'OFFSET_MASK)
@@ -30883,7 +30686,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn #_"void" NodeClass''unregisterAtInputsAsUsage-2 [#_"NodeClass<T>" this, #_"Node" node]
+    (defn #_"void" NodeClass''unregisterAtInputsAsUsage-2 [#_"NodeClass" this, #_"Node" node]
         (loop-when-recur [#_"long" mask (:inputsIteration this)] (not (zero? mask)) [(>>> mask NodeClass'NEXT_EDGE)]
             (let [
                 #_"long" offset (& mask NodeClass'OFFSET_MASK)
@@ -30944,7 +30747,7 @@ ZeroExtendNode'new-4
  ; Describes fields in a class, primarily for access via Unsafe.
  ;;
 (class-ns Fields []
-    (defn #_"Fields" Fields'new-1 [#_"ArrayList<? extends FieldInfo>" fields]
+    (defn #_"Fields" Fields'new-1 [#_"ArrayList<FieldInfo>" fields]
         (Collections/sort fields)
         (let [
             #_"int" n (count fields)
@@ -31043,7 +30846,7 @@ ZeroExtendNode'new-4
 )
 
 (class-ns Edges [Fields]
-    (defn #_"Edges" Edges'new-3 [#_"EdgesType" type, #_"int" directCount, #_"ArrayList<? extends FieldInfo>" edges]
+    (defn #_"Edges" Edges'new-3 [#_"EdgesType" type, #_"int" directCount, #_"ArrayList<FieldInfo>" edges]
         (merge (Edges'class.) (Fields'new-1 edges)
             (hash-map
                 #_"EdgesType" :type type
@@ -31313,19 +31116,13 @@ ZeroExtendNode'new-4
         (merge (Values'class.) (Fields'new-1 (:values mode))
             (hash-map
                 #_"int" :directCount (:directCount mode)
-                #_"EnumSet<OperandFlag>[]" :flags
-                    (let [
-                        a (make-array EnumSet (count (:values mode)))
-                        _ (dotimes [#_"int" i (count (:values mode))] (aset a i (:flags (nth (:values mode) i))))
-                    ]
-                        a
-                    )
+                #_"{OperandFlag}*" :flags* (map :flags (:values mode))
             )
         )
     )
 
-    (defn #_"EnumSet<OperandFlag>" Values''getFlags-2 [#_"Values" this, #_"int" i]
-        (nth (:flags this) i)
+    (defn #_"{OperandFlag}" Values''getFlags-2 [#_"Values" this, #_"int" i]
+        (nth (:flags* this) i)
     )
 
     (defn #_"Value" Values''getValue-3 [#_"Values" this, #_"Object" obj, #_"int" index]
@@ -31402,26 +31199,19 @@ ZeroExtendNode'new-4
      ; @param clazz the class at which to start scanning
      ; @param endClazz scanning stops when this class is encountered (i.e. {@code endClazz} is not scanned)
      ;;
-    (defn #_"void" FieldsScanner''scan-4 [#_"FieldsScanner" this, #_"Class" clazz, #_"Class" endClazz, #_"boolean" includeTransient]
+    (defn #_"FieldsScanner" FieldsScanner''scan-3 [#_"FieldsScanner" this, #_"Class" clazz, #_"Class" endClazz]
         (loop-when-recur clazz (not= clazz endClazz) (#_"Class" .getSuperclass clazz)
             (doseq [#_"Field" field (#_"Class" .getDeclaredFields clazz)]
                 (let [
                     #_"int" modifiers (#_"Field" .getModifiers field)
                 ]
-                    (when (and (not (Modifier/isStatic modifiers)) (or includeTransient (not (Modifier/isTransient modifiers))))
+                    (when (and (not (Modifier/isStatic modifiers)) (not (Modifier/isTransient modifiers)))
                         (FieldsScanner'''scanField-3 this, field, (.objectFieldOffset HotSpot'unsafe, field))
                     )
                 )
             )
         )
-        nil
-    )
-
-    (defm FieldsScanner FieldsScanner
-        (#_"void" FieldsScanner'''scanField-3 [#_"FieldsScanner" this, #_"Field" field, #_"long" offset]
-            (#_"ArrayList" .add (:data this), (FieldInfo'new-4 offset, (#_"Field" .getName field), (#_"Field" .getType field), (#_"Field" .getDeclaringClass field)))
-            nil
-        )
+        this
     )
 )
 
@@ -31429,134 +31219,45 @@ ZeroExtendNode'new-4
     (defn #_"LIRFieldsScanner" LIRFieldsScanner'new-0 []
         (merge (LIRFieldsScanner'class.) (FieldsScanner'new-0)
             (hash-map
-                #_"EconomicMap<Class<? extends Annotation>, OperandModeAnnotation>" :valueAnnotations (EconomicMap/create Equivalence/DEFAULT)
+                #_"{Class<Annotation> OperandModeAnnotation}" :valueAnnotations (into {} (map #(vector % (OperandModeAnnotation'new-0)) [ Use Alive Temp Def ]))
             )
         )
     )
 
-    (defn #_"OperandModeAnnotation" LIRFieldsScanner''getOperandModeAnnotation-2 [#_"LIRFieldsScanner" this, #_"Field" field]
-        (let [
-            #_"MapCursor<Class<? extends Annotation>, OperandModeAnnotation>" cursor (#_"EconomicMap" .getEntries (:valueAnnotations this))
-        ]
-            (loop-when [#_"OperandModeAnnotation" result nil] (#_"MapCursor" .advance cursor) => result
-                (let [
-                    result
-                        (when (some? (#_"Field" .getAnnotation field, (#_"MapCursor" .getKey cursor))) => result
-                            (#_"MapCursor" .getValue cursor)
-                        )
-                ]
-                    (recur result)
-                )
-            )
+    (defn- #_"OperandModeAnnotation" LIRFieldsScanner''getOperandModeAnnotation-2 [#_"LIRFieldsScanner" this, #_"Field" field]
+        (some #(when (some? (#_"Field" .getAnnotation field, (key %))) (val %)) (:valueAnnotations this))
+    )
+
+    (defn- #_"{OperandFlag}" LIRFieldsScanner'getFlags-1 [#_"Field" field]
+        (hash-set
+            (#_"Annotation" .value (#_"Field" .getAnnotation field, (some #(when (#_"Field" .isAnnotationPresent field, %) %) [ Use Alive Temp Def ])))
         )
     )
 
     (defm LIRFieldsScanner FieldsScanner
         (#_"void" FieldsScanner'''scanField-3 [#_"LIRFieldsScanner" this, #_"Field" field, #_"long" offset]
             (let [
+                #_"String" name (#_"Field" .getName field)
                 #_"Class" type (#_"Field" .getType field)
+                #_"Class" declaringClass (#_"Field" .getDeclaringClass field)
             ]
                 (cond
-                    (and (#_"Class" .isAssignableFrom LIRIntrospection'VALUE_CLASS, type) (not (#_"Class" .isAssignableFrom LIRIntrospection'CONSTANT_VALUE_CLASS, type)))
-                    (let [
-                        #_"OperandModeAnnotation" annotation (LIRFieldsScanner''getOperandModeAnnotation-2 this, field)
-                        #_"EnumSet<OperandFlag>" flags (LIRFieldsScanner'''getFlags-2 this, field)
-                    ]
-                        (#_"ArrayList" .add (:values annotation), (ValueFieldInfo'new-5 offset, (#_"Field" .getName field), type, (#_"Field" .getDeclaringClass field), flags))
-                        (§ ass annotation (update annotation :directCount inc))
-                    )
-                    (#_"Class" .isAssignableFrom LIRIntrospection'VALUE_ARRAY_CLASS, type)
-                    (let [
-                        #_"OperandModeAnnotation" annotation (LIRFieldsScanner''getOperandModeAnnotation-2 this, field)
-                        #_"EnumSet<OperandFlag>" flags (LIRFieldsScanner'''getFlags-2 this, field)
-                    ]
-                        (#_"ArrayList" .add (:values annotation), (ValueFieldInfo'new-5 offset, (#_"Field" .getName field), type, (#_"Field" .getDeclaringClass field), flags))
-                    )
+                    (and (#_"Class" .isAssignableFrom Value, type) (not (#_"Class" .isAssignableFrom ConstantValue'iface, type)))
+                        (let [
+                            #_"OperandModeAnnotation" annotation (LIRFieldsScanner''getOperandModeAnnotation-2 this, field)
+                        ]
+                            (#_"ArrayList" .add (:values annotation), (ValueFieldInfo'new-5 offset, name, type, declaringClass, (LIRFieldsScanner'getFlags-1 field)))
+                            (§ ass annotation (update annotation :directCount inc))
+                        )
+                    (#_"Class" .isAssignableFrom (ß Value'array), type)
+                        (let [
+                            #_"OperandModeAnnotation" annotation (LIRFieldsScanner''getOperandModeAnnotation-2 this, field)
+                        ]
+                            (#_"ArrayList" .add (:values annotation), (ValueFieldInfo'new-5 offset, name, type, declaringClass, (LIRFieldsScanner'getFlags-1 field)))
+                        )
                     :else
-                        (FieldsScanner'''scanField-3 (§ super #_"FieldsScanner"), field, offset)
+                        (#_"ArrayList" .add (:data this), (FieldInfo'new-4 offset, name, type, declaringClass))
                 )
-            )
-            nil
-        )
-    )
-)
-
-(class-ns LIRInstructionFieldsScanner [LIRFieldsScanner, FieldsScanner]
-    (defn #_"LIRInstructionFieldsScanner" LIRInstructionFieldsScanner'new-0 []
-        (let [
-            #_"LIRInstructionFieldsScanner" this
-                (merge (LIRInstructionFieldsScanner'class.) (LIRFieldsScanner'new-0)
-                    (hash-map
-                        #_"String" :opcodeConstant nil
-                        ;;;
-                         ; Field (if any) annotated by LIROpcode.
-                         ;;
-                        #_"FieldInfo" :opcodeField nil
-                    )
-                )
-        ]
-            (#_"EconomicMap" .put (:valueAnnotations this), Use, (OperandModeAnnotation'new-0))
-            (#_"EconomicMap" .put (:valueAnnotations this), Alive, (OperandModeAnnotation'new-0))
-            (#_"EconomicMap" .put (:valueAnnotations this), Temp, (OperandModeAnnotation'new-0))
-            (#_"EconomicMap" .put (:valueAnnotations this), Def, (OperandModeAnnotation'new-0))
-            this
-        )
-    )
-
-    (defm LIRInstructionFieldsScanner LIRFieldsScanner
-        (#_"EnumSet<OperandFlag>" LIRFieldsScanner'''getFlags-2 [#_"LIRInstructionFieldsScanner" this, #_"Field" field]
-            (let [
-                #_"EnumSet<OperandFlag>" result (EnumSet/noneOf OperandFlag)
-            ]
-                ;; Unfortunately, annotations cannot have class hierarchies or implement interfaces,
-                ;; so we have to duplicate the code for every operand mode.
-                ;; Unfortunately, annotations cannot have an EnumSet property, so we have to convert
-                ;; from arrays to EnumSet manually.
-                (cond
-                    (#_"Field" .isAnnotationPresent field, Use)
-                        (#_"EnumSet" .addAll result, (Arrays/asList (#_"Annotation" .value (#_"Field" .getAnnotation field, Use))))
-                    (#_"Field" .isAnnotationPresent field, Alive)
-                        (#_"EnumSet" .addAll result, (Arrays/asList (#_"Annotation" .value (#_"Field" .getAnnotation field, Alive))))
-                    (#_"Field" .isAnnotationPresent field, Temp)
-                        (#_"EnumSet" .addAll result, (Arrays/asList (#_"Annotation" .value (#_"Field" .getAnnotation field, Temp))))
-                    (#_"Field" .isAnnotationPresent field, Def)
-                        (#_"EnumSet" .addAll result, (Arrays/asList (#_"Annotation" .value (#_"Field" .getAnnotation field, Def))))
-                    :else
-                        (throw! "should not reach here")
-                )
-                result
-            )
-        )
-    )
-
-    (defn #_"LIRInstructionFieldsScanner" LIRInstructionFieldsScanner''scan-2 [#_"LIRInstructionFieldsScanner" this, #_"Class" clazz]
-        (let [
-            this
-                (when (some? (#_"Class" .getAnnotation clazz, LIROpcode)) => this
-                    (assoc this :opcodeConstant nil)
-                )
-            this (assoc this :opcodeField nil)
-        ]
-            (FieldsScanner''scan-4 (§ super LIRFieldsScanner'iface), clazz, LIRInstruction'iface, false)
-
-            (when (and (nil? (:opcodeConstant this)) (nil? (:opcodeField this))) => this
-                (let [
-                    this (assoc this :opcodeConstant (#_"Class" .getSimpleName clazz))
-                ]
-                    (when (#_"String" .endsWith (:opcodeConstant this), "Op") => this
-                        (assoc this :opcodeConstant (#_"String" .substring (:opcodeConstant this), 0, (- (count (:opcodeConstant this)) 2)))
-                    )
-                )
-            )
-        )
-    )
-
-    (defm LIRInstructionFieldsScanner FieldsScanner
-        (#_"void" FieldsScanner'''scanField-3 [#_"LIRInstructionFieldsScanner" this, #_"Field" field, #_"long" offset]
-            (FieldsScanner'''scanField-3 (§ super LIRFieldsScanner'iface), field, offset)
-
-            (when (some? (#_"Field" .getAnnotation field, LIROpcode))
-                (§ ass! this (assoc this :opcodeField (nth (:data this) (dec (count (:data this))))))
             )
             nil
         )
@@ -31665,7 +31366,7 @@ ZeroExtendNode'new-4
                         (when (#_"Class" .isAssignableFrom NodeSuccessorList'iface, type)
                             (throw! (str "suspicious node successor list field: " field))
                         )
-                        (FieldsScanner'''scanField-3 (§ super FieldsScanner'iface), field, offset)
+                        (#_"ArrayList" .add (:data this), (FieldInfo'new-4 offset, (#_"Field" .getName field), (#_"Field" .getType field), (#_"Field" .getDeclaringClass field)))
                     )
                 )
             )
@@ -31705,7 +31406,7 @@ ZeroExtendNode'new-4
      ;;
     (defn- #_"boolean" FixPointIntervalBuilder''updateOutBlock-2 [#_"FixPointIntervalBuilder" this, #_"Block" block]
         (let [
-            #_"BitSet" union (BitSet. (count (:stackSlotMap this)))
+            #_"BitSet" union (BitSet.)
         ]
             (doseq [#_"Block" succ (:successors block)]
                 (#_"BitSet" .or union, (BlockMap''get-2 (:liveInMap this), succ))
@@ -31803,7 +31504,7 @@ ZeroExtendNode'new-4
                 (#_"Deque" .add worklist, (nth blocks i))
             )
             (doseq [#_"Block" block (:reversePostOrder (:cfg (:lir this)))]
-                (BlockMap''put-3 (:liveInMap this), block, (BitSet. (count (:stackSlotMap this))))
+                (BlockMap''put-3 (:liveInMap this), block, (BitSet.))
             )
             (while (seq worklist)
                 (FixPointIntervalBuilder''processBlock-3 this, (#_"Deque" .poll worklist), worklist)
@@ -32051,7 +31752,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"MemoryMap0" FloatingReadPhase'mergeMemoryMaps-2 [#_"AbstractMergeNode" merge, #_"List<? extends MemoryMap>" states]
+    (defn #_"MemoryMap0" FloatingReadPhase'mergeMemoryMaps-2 [#_"AbstractMergeNode" merge, #_"List<MemoryMap>" states]
         (let [
             #_"MemoryMap0" newState (MemoryMap0'new-0)
         ]
@@ -34871,11 +34572,9 @@ ZeroExtendNode'new-4
     (defn- #_"void" InliningData''doInline-3 [#_"InliningData" this, #_"CallsiteHolder" callerCallsiteHolder, #_"MethodInvocation" calleeInvocation]
         (let [
             #_"Graph" callerGraph (:graph callerCallsiteHolder)
-            #_"InlineInfo" calleeInfo (:callee calleeInvocation)
             #_"EconomicSet<Node>" canonicalizedNodes (EconomicSet/create Equivalence/IDENTITY)
-            _ (#_"EconomicSet" .addAll canonicalizedNodes, (:nodeUsages (InlineInfo'''invoke-1 calleeInfo)))
-            #_"EconomicSet<Node>" parameterUsages (InlineInfo'''inline-1 calleeInfo)
-            _ (#_"EconomicSet" .addAll canonicalizedNodes, parameterUsages)
+            _ (#_"EconomicSet" .addAll canonicalizedNodes, (:nodeUsages (InlineInfo'''invoke-1 (:callee calleeInvocation))))
+            _ (#_"EconomicSet" .addAll canonicalizedNodes, (InlineInfo'''inline-1 (:callee calleeInvocation)))
             #_"int" mark (Graph''getMark-1 callerGraph)
         ]
             (CanonicalizerPhase''applyIncremental-3i (:canonicalizer this), callerGraph, canonicalizedNodes)
@@ -34902,21 +34601,16 @@ ZeroExtendNode'new-4
      ; @return true iff inlining was actually performed
      ;;
     (defn- #_"boolean" InliningData''tryToInline-3 [#_"InliningData" this, #_"MethodInvocation" calleeInvocation, #_"int" inliningDepth]
-        (let [
-            #_"CallsiteHolder" callerCallsiteHolder (InliningData''currentGraph-1 this)
-            #_"InlineInfo" calleeInfo (:callee calleeInvocation)
-        ]
-            (if (InliningPolicy'isWorthInlining-3 calleeInvocation, inliningDepth, true)
-                (do
-                    (InliningData''doInline-3 this, callerCallsiteHolder, calleeInvocation)
-                    true
+        (if (InliningPolicy'isWorthInlining-3 calleeInvocation, inliningDepth, true)
+            (do
+                (InliningData''doInline-3 this, (InliningData''currentGraph-1 this), calleeInvocation)
+                true
+            )
+            (do
+                (when (OptimisticOptimizations''devirtualizeInvokes-1 (:optimisticOpts (:context this)))
+                    (InlineInfo'''tryToDevirtualizeInvoke-1 (:callee calleeInvocation))
                 )
-                (do
-                    (when (OptimisticOptimizations''devirtualizeInvokes-1 (:optimisticOpts (:context this)))
-                        (InlineInfo'''tryToDevirtualizeInvoke-1 calleeInfo)
-                    )
-                    false
-                )
+                false
             )
         )
     )
@@ -35561,7 +35255,7 @@ ZeroExtendNode'new-4
 
     ;; returns true if this interval has a shadow copy on the stack that is always correct
     (defn #_"boolean" Interval''alwaysInMemory-1 [#_"Interval" this]
-        (and (#_"EnumSet" .contains SpillState'ALWAYS_IN_MEMORY, (Interval''spillState-1 this)) (not (Interval''canMaterialize-1 this)))
+        (and (contains? SpillState'ALWAYS_IN_MEMORY (Interval''spillState-1 this)) (not (Interval''canMaterialize-1 this)))
     )
 
     (defn #_"void" Interval''removeFirstUsePos-1 [#_"Interval" this]
@@ -36937,7 +36631,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"boolean" LinearScanWalker'isMove-3 [#_"LIRInstruction" op, #_"Interval" from, #_"Interval" to]
-        (and (LIRInstruction''isValueMoveOp-1 op)
+        (and (satisfies? ValueMoveOp op)
             (satisfies? Variable (ValueMoveOp'''getInput-1 op)) (= (ValueMoveOp'''getInput-1 op) (:operand from))
             (satisfies? Variable (MoveOp'''getResult-1 op)) (= (MoveOp'''getResult-1 op) (:operand to))
         )
@@ -39871,7 +39565,7 @@ ZeroExtendNode'new-4
     (defn #_"LIRInstruction" LIRInstruction'new-0 []
         (merge (LIRInstruction'class.)
             (hash-map
-                #_"LIRInstructionClass" :instructionClass nil
+                #_"LIRInstructionClass" :opClass nil
                 ;;;
                  ; Instruction id for register allocation.
                  ;;
@@ -39885,7 +39579,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"boolean" LIRInstruction''hasOperands-1 [#_"LIRInstruction" this]
-        (or (LIRInstructionClass''hasOperands-1 (:instructionClass this)) (LIRInstruction'''destroysCallerSavedRegisters-1 this))
+        (or (LIRInstructionClass''hasOperands-1 (:opClass this)) (LIRInstruction'''destroysCallerSavedRegisters-1 this))
     )
 
     (defm LIRInstruction LIRInstruction
@@ -39894,126 +39588,18 @@ ZeroExtendNode'new-4
         )
     )
 
-    ;; InstructionValueProcedures
-    (defn #_"void" LIRInstruction''forEachInput-2i [#_"LIRInstruction" this, #_"InstructionValueProcedure" proc]
-        (LIRInstructionClass''forEachUse-3 (:instructionClass this), this, proc)
-        nil
-    )
+    (defn #_"void" LIRInstruction''forEachInput-2  [#_"LIRInstruction" this, #_"ValueProcedure" proc] (LIRInstructionClass''forEachUse-3 (:opClass this), this, proc) nil)
+    (defn #_"void" LIRInstruction''forEachAlive-2  [#_"LIRInstruction" this, #_"ValueProcedure" proc] (LIRInstructionClass''forEachAlive-3 (:opClass this), this, proc) nil)
+    (defn #_"void" LIRInstruction''forEachTemp-2   [#_"LIRInstruction" this, #_"ValueProcedure" proc] (LIRInstructionClass''forEachTemp-3 (:opClass this), this, proc) nil)
+    (defn #_"void" LIRInstruction''forEachOutput-2 [#_"LIRInstruction" this, #_"ValueProcedure" proc] (LIRInstructionClass''forEachDef-3 (:opClass this), this, proc) nil)
 
-    (defn #_"void" LIRInstruction''forEachAlive-2i [#_"LIRInstruction" this, #_"InstructionValueProcedure" proc]
-        (LIRInstructionClass''forEachAlive-3 (:instructionClass this), this, proc)
-        nil
-    )
+    (defn #_"void" LIRInstruction''visitEachInput-2  [#_"LIRInstruction" this, #_"ValueConsumer" proc] (LIRInstructionClass''visitEachUse-3 (:opClass this), this, proc) nil)
+    (defn #_"void" LIRInstruction''visitEachAlive-2  [#_"LIRInstruction" this, #_"ValueConsumer" proc] (LIRInstructionClass''visitEachAlive-3 (:opClass this), this, proc) nil)
+    (defn #_"void" LIRInstruction''visitEachTemp-2   [#_"LIRInstruction" this, #_"ValueConsumer" proc] (LIRInstructionClass''visitEachTemp-3 (:opClass this), this, proc) nil)
+    (defn #_"void" LIRInstruction''visitEachOutput-2 [#_"LIRInstruction" this, #_"ValueConsumer" proc] (LIRInstructionClass''visitEachDef-3 (:opClass this), this, proc) nil)
 
-    (defn #_"void" LIRInstruction''forEachTemp-2i [#_"LIRInstruction" this, #_"InstructionValueProcedure" proc]
-        (LIRInstructionClass''forEachTemp-3 (:instructionClass this), this, proc)
-        nil
-    )
-
-    (defn #_"void" LIRInstruction''forEachOutput-2i [#_"LIRInstruction" this, #_"InstructionValueProcedure" proc]
-        (LIRInstructionClass''forEachDef-3 (:instructionClass this), this, proc)
-        nil
-    )
-
-    ;; ValueProcedures
-    (defn #_"void" LIRInstruction''forEachInput-2v [#_"LIRInstruction" this, #_"ValueProcedure" proc]
-        (LIRInstructionClass''forEachUse-3 (:instructionClass this), this, proc)
-        nil
-    )
-
-    (defn #_"void" LIRInstruction''forEachAlive-2v [#_"LIRInstruction" this, #_"ValueProcedure" proc]
-        (LIRInstructionClass''forEachAlive-3 (:instructionClass this), this, proc)
-        nil
-    )
-
-    (defn #_"void" LIRInstruction''forEachTemp-2v [#_"LIRInstruction" this, #_"ValueProcedure" proc]
-        (LIRInstructionClass''forEachTemp-3 (:instructionClass this), this, proc)
-        nil
-    )
-
-    (defn #_"void" LIRInstruction''forEachOutput-2v [#_"LIRInstruction" this, #_"ValueProcedure" proc]
-        (LIRInstructionClass''forEachDef-3 (:instructionClass this), this, proc)
-        nil
-    )
-
-    ;; InstructionValueConsumers
-    (defn #_"void" LIRInstruction''visitEachInput-2i [#_"LIRInstruction" this, #_"InstructionValueConsumer" proc]
-        (LIRInstructionClass''visitEachUse-3 (:instructionClass this), this, proc)
-        nil
-    )
-
-    (defn #_"void" LIRInstruction''visitEachAlive-2i [#_"LIRInstruction" this, #_"InstructionValueConsumer" proc]
-        (LIRInstructionClass''visitEachAlive-3 (:instructionClass this), this, proc)
-        nil
-    )
-
-    (defn #_"void" LIRInstruction''visitEachTemp-2i [#_"LIRInstruction" this, #_"InstructionValueConsumer" proc]
-        (LIRInstructionClass''visitEachTemp-3 (:instructionClass this), this, proc)
-        nil
-    )
-
-    (defn #_"void" LIRInstruction''visitEachOutput-2i [#_"LIRInstruction" this, #_"InstructionValueConsumer" proc]
-        (LIRInstructionClass''visitEachDef-3 (:instructionClass this), this, proc)
-        nil
-    )
-
-    ;; ValueConsumers
-    (defn #_"void" LIRInstruction''visitEachInput-2v [#_"LIRInstruction" this, #_"ValueConsumer" proc]
-        (LIRInstructionClass''visitEachUse-3 (:instructionClass this), this, proc)
-        nil
-    )
-
-    (defn #_"void" LIRInstruction''visitEachAlive-2v [#_"LIRInstruction" this, #_"ValueConsumer" proc]
-        (LIRInstructionClass''visitEachAlive-3 (:instructionClass this), this, proc)
-        nil
-    )
-
-    (defn #_"void" LIRInstruction''visitEachTemp-2v [#_"LIRInstruction" this, #_"ValueConsumer" proc]
-        (LIRInstructionClass''visitEachTemp-3 (:instructionClass this), this, proc)
-        nil
-    )
-
-    (defn #_"void" LIRInstruction''visitEachOutput-2v [#_"LIRInstruction" this, #_"ValueConsumer" proc]
-        (LIRInstructionClass''visitEachDef-3 (:instructionClass this), this, proc)
-        nil
-    )
-
-    (defn #_"Value" LIRInstruction''forEachRegisterHint-4i [#_"LIRInstruction" this, #_"Value" value, #_"OperandMode" mode, #_"InstructionValueProcedure" proc]
-        (LIRInstructionClass''forEachRegisterHint-4 (:instructionClass this), this, mode, proc)
-    )
-
-    (defn #_"Value" LIRInstruction''forEachRegisterHint-4v [#_"LIRInstruction" this, #_"Value" value, #_"OperandMode" mode, #_"ValueProcedure" proc]
-        (LIRInstructionClass''forEachRegisterHint-4 (:instructionClass this), this, mode, proc)
-    )
-
-    ;;;
-     ; Returns true if the instruction is a MoveOp.
-     ;
-     ; This function is preferred to {@code instanceof MoveOp} since the type check is more
-     ; expensive than reading a field from LIRInstructionClass.
-     ;;
-    (defn #_"boolean" LIRInstruction''isMoveOp-1 [#_"LIRInstruction" this]
-        (:isMoveOp (:instructionClass this))
-    )
-
-    ;;;
-     ; Returns true if the instruction is a ValueMoveOp.
-     ;
-     ; This function is preferred to {@code instanceof ValueMoveOp} since the type check is
-     ; more expensive than reading a field from LIRInstructionClass.
-     ;;
-    (defn #_"boolean" LIRInstruction''isValueMoveOp-1 [#_"LIRInstruction" this]
-        (:isValueMoveOp (:instructionClass this))
-    )
-
-    ;;;
-     ; Returns true if the instruction is a LoadConstantOp.
-     ;
-     ; This function is preferred to {@code instanceof LoadConstantOp} since the type check is
-     ; more expensive than reading a field from LIRInstructionClass.
-     ;;
-    (defn #_"boolean" LIRInstruction''isLoadConstantOp-1 [#_"LIRInstruction" this]
-        (:isLoadConstantOp (:instructionClass this))
+    (defn #_"Value" LIRInstruction''forEachRegisterHint-4 [#_"LIRInstruction" this, #_"Value" value, #_"OperandMode" mode, #_"ValueProcedure" proc]
+        (LIRInstructionClass''forEachRegisterHint-4 (:opClass this), this, mode, proc)
     )
 
     ;;;
@@ -40049,7 +39635,6 @@ ZeroExtendNode'new-4
     )
 )
 
-; @LIROpcode
 (class-ns AMD64ByteSwapOp [LIRInstruction]
     (defn #_"AMD64ByteSwapOp" AMD64ByteSwapOp'new-2 [#_"Value" result, #_"Value" input]
         (merge (AMD64ByteSwapOp'class.) (LIRInstruction'new-0)
@@ -40109,7 +39694,6 @@ ZeroExtendNode'new-4
     (defn #_"AMD64ClearRegisterOp" AMD64ClearRegisterOp'new-2 [#_"OperandSize" size, #_"AllocatableValue" result]
         (merge (AMD64ClearRegisterOp'class.) (LIRInstruction'new-0)
             (hash-map
-                ; @LIROpcode
                 #_"AMD64RMOp" :op (BinaryArithmetic''getRMOpcode-2 BinaryArithmetic'XOR, size)
                 #_"OperandSize" :size size
                 ; @OperandMode'DEF({OperandFlag'REG})
@@ -40126,7 +39710,6 @@ ZeroExtendNode'new-4
     )
 )
 
-; @LIROpcode
 (class-ns AMD64DeoptimizeOp [LIRInstruction, BlockEndOp]
     (defn #_"AMD64DeoptimizeOp" AMD64DeoptimizeOp'new-0 []
         (merge (AMD64DeoptimizeOp'class.) (LIRInstruction'new-0))
@@ -40140,7 +39723,6 @@ ZeroExtendNode'new-4
     )
 )
 
-; @LIROpcode
 (class-ns AMD64LFenceOp [LIRInstruction]
     (defn #_"AMD64LFenceOp" AMD64LFenceOp'new-0 []
         (merge (AMD64LFenceOp'class.) (LIRInstruction'new-0))
@@ -40166,7 +39748,6 @@ ZeroExtendNode'new-4
     (defn #_"AMD64MulDivOp" AMD64MulDivOp'new-6 [#_"AMD64MOp" opcode, #_"OperandSize" size, #_"LIRKind" resultKind, #_"AllocatableValue" highX, #_"AllocatableValue" lowX, #_"AllocatableValue" y]
         (merge (AMD64MulDivOp'class.) (LIRInstruction'new-0)
             (hash-map
-                ; @LIROpcode
                 #_"AMD64MOp" :opcode opcode
                 #_"OperandSize" :size size
                 ; @OperandMode'DEF({OperandFlag'REG})
@@ -40194,7 +39775,6 @@ ZeroExtendNode'new-4
     )
 )
 
-; @LIROpcode
 (class-ns AMD64MultiStackMove [LIRInstruction]
     (defn #_"AMD64MultiStackMove" AMD64MultiStackMove'new-4 [#_"AllocatableValue*" results, #_"Value*" inputs, #_"Register" scratch, #_"AllocatableValue" backupSlot]
         (merge (AMD64MultiStackMove'class.) (LIRInstruction'new-0)
@@ -40259,7 +39839,6 @@ ZeroExtendNode'new-4
     )
 )
 
-; @LIROpcode
 (class-ns AMD64PushPopStackMove [LIRInstruction, ValueMoveOp, MoveOp]
     (defn #_"AMD64PushPopStackMove" AMD64PushPopStackMove'new-3 [#_"OperandSize" size, #_"AllocatableValue" result, #_"AllocatableValue" input]
         (merge (AMD64PushPopStackMove'class.) (LIRInstruction'new-0)
@@ -40297,7 +39876,6 @@ ZeroExtendNode'new-4
 ;;;
  ; Restores registers from stack slots.
  ;;
-; @LIROpcode
 (class-ns AMD64RestoreRegistersOp [LIRInstruction]
     #_unused
     (defn #_"AMD64RestoreRegistersOp" AMD64RestoreRegistersOp'new-2 [#_"AllocatableValue*" saveSlots, #_"AMD64SaveRegistersOp" saveOp]
@@ -40340,7 +39918,6 @@ ZeroExtendNode'new-4
 ;;;
  ; Saves registers to stack slots.
  ;;
-; @LIROpcode
 (class-ns AMD64SaveRegistersOp [LIRInstruction]
     ;;;
      ; @param savedRegisters the registers saved by this operation which may be subject to {@linkplain #remove(EconomicSet) pruning}
@@ -40388,7 +39965,6 @@ ZeroExtendNode'new-4
     (defn #_"AMD64ShiftOp" AMD64ShiftOp'new-5 [#_"AMD64MOp" opcode, #_"OperandSize" size, #_"AllocatableValue" result, #_"AllocatableValue" x, #_"AllocatableValue" y]
         (merge (AMD64ShiftOp'class.) (LIRInstruction'new-0)
             (hash-map
-                ; @LIROpcode
                 #_"AMD64MOp" :opcode opcode
                 #_"OperandSize" :size size
                 ; @OperandMode'DEF({OperandFlag'REG, OperandFlag'HINT})
@@ -40410,7 +39986,6 @@ ZeroExtendNode'new-4
     )
 )
 
-; @LIROpcode
 (class-ns AMD64SignExtendOp [LIRInstruction]
     (defn #_"AMD64SignExtendOp" AMD64SignExtendOp'new-3 [#_"OperandSize" size, #_"LIRKind" resultKind, #_"AllocatableValue" input]
         (merge (AMD64SignExtendOp'class.) (LIRInstruction'new-0)
@@ -40437,7 +40012,6 @@ ZeroExtendNode'new-4
     )
 )
 
-; @LIROpcode
 (class-ns AMD64StackMove [LIRInstruction, ValueMoveOp, MoveOp]
     (defn #_"AMD64StackMove" AMD64StackMove'new-4 [#_"AllocatableValue" result, #_"AllocatableValue" input, #_"Register" scratch, #_"AllocatableValue" backupSlot]
         (merge (AMD64StackMove'class.) (LIRInstruction'new-0)
@@ -40486,7 +40060,6 @@ ZeroExtendNode'new-4
 ;;;
  ; Performs a hard-coded tail call to the specified target, which normally should be an InstalledCode instance.
  ;;
-; @LIROpcode
 (class-ns AMD64TailcallOp [LIRInstruction]
     (defn #_"AMD64TailcallOp" AMD64TailcallOp'new-2 [#_"Value[]" parameters, #_"Value" target]
         (merge (AMD64TailcallOp'class.) (LIRInstruction'new-0)
@@ -40529,7 +40102,6 @@ ZeroExtendNode'new-4
     )
 )
 
-; @LIROpcode
 (class-ns MoveFromRegOp [AbstractMoveOp, LIRInstruction, ValueMoveOp, MoveOp]
     (defn #_"MoveFromRegOp" MoveFromRegOp'new-3 [#_"AMD64Kind" moveKind, #_"AllocatableValue" result, #_"AllocatableValue" input]
         (merge (MoveFromRegOp'class.) (AbstractMoveOp'new-1 moveKind)
@@ -40555,7 +40127,6 @@ ZeroExtendNode'new-4
     )
 )
 
-; @LIROpcode
 (class-ns MoveToRegOp [AbstractMoveOp, LIRInstruction, ValueMoveOp, MoveOp]
     (defn #_"MoveToRegOp" MoveToRegOp'new-3 [#_"AMD64Kind" moveKind, #_"AllocatableValue" result, #_"AllocatableValue" input]
         (merge (MoveToRegOp'class.) (AbstractMoveOp'new-1 moveKind)
@@ -40581,7 +40152,6 @@ ZeroExtendNode'new-4
     )
 )
 
-; @LIROpcode
 (class-ns AtomicReadAndAddOp [LIRInstruction]
     (defn #_"AtomicReadAndAddOp" AtomicReadAndAddOp'new-4 [#_"AMD64Kind" accessKind, #_"AllocatableValue" result, #_"AMD64AddressValue" address, #_"AllocatableValue" delta]
         (merge (AtomicReadAndAddOp'class.) (LIRInstruction'new-0)
@@ -40612,7 +40182,6 @@ ZeroExtendNode'new-4
     )
 )
 
-; @LIROpcode
 (class-ns AtomicReadAndWriteOp [LIRInstruction]
     (defn #_"AtomicReadAndWriteOp" AtomicReadAndWriteOp'new-4 [#_"AMD64Kind" accessKind, #_"AllocatableValue" result, #_"AMD64AddressValue" address, #_"AllocatableValue" newValue]
         (merge (AtomicReadAndWriteOp'class.) (LIRInstruction'new-0)
@@ -40658,7 +40227,6 @@ ZeroExtendNode'new-4
     )
 )
 
-; @LIROpcode
 (class-ns BlackholeOp [LIRInstruction]
     (defn #_"BlackholeOp" BlackholeOp'new-1 [#_"Value" value]
         (merge (BlackholeOp'class.) (LIRInstruction'new-0)
@@ -40731,7 +40299,6 @@ ZeroExtendNode'new-4
     )
 )
 
-; @LIROpcode
 (class-ns CRuntimeCallEpilogueOp [LIRInstruction]
     (defn #_"CRuntimeCallEpilogueOp" CRuntimeCallEpilogueOp'new-4 [#_"int" threadLastJavaSpOffset, #_"int" threadLastJavaFpOffset, #_"int" threadLastJavaPcOffset, #_"Register" thread]
         (merge (CRuntimeCallEpilogueOp'class.) (LIRInstruction'new-0)
@@ -40755,7 +40322,6 @@ ZeroExtendNode'new-4
     )
 )
 
-; @LIROpcode
 (class-ns CRuntimeCallPrologueOp [LIRInstruction]
     (defn #_"CRuntimeCallPrologueOp" CRuntimeCallPrologueOp'new-2 [#_"int" threadLastJavaSpOffset, #_"Register" thread]
         (merge (CRuntimeCallPrologueOp'class.) (LIRInstruction'new-0)
@@ -40812,7 +40378,6 @@ ZeroExtendNode'new-4
     )
 )
 
-; @LIROpcode
 (class-ns DirectFarForeignCallOp [ForeignCallOp, CallOp, LIRInstruction]
     (defn #_"DirectFarForeignCallOp" DirectFarForeignCallOp'new-4 [#_"ForeignCallLinkage" callTarget, #_"Value" result, #_"Value[]" parameters, #_"Value[]" temps]
         (merge (DirectFarForeignCallOp'class.) (ForeignCallOp'new-4 callTarget, result, parameters, temps)
@@ -40832,7 +40397,6 @@ ZeroExtendNode'new-4
     )
 )
 
-; @LIROpcode
 (class-ns DirectNearForeignCallOp [ForeignCallOp, CallOp, LIRInstruction]
     (defn #_"DirectNearForeignCallOp" DirectNearForeignCallOp'new-4 [#_"ForeignCallLinkage" linkage, #_"Value" result, #_"Value[]" parameters, #_"Value[]" temps]
         (merge (DirectNearForeignCallOp'class.) (ForeignCallOp'new-4 linkage, result, parameters, temps))
@@ -40856,7 +40420,6 @@ ZeroExtendNode'new-4
     )
 )
 
-; @LIROpcode
 (class-ns DirectCallOp [MethodCallOp, CallOp, LIRInstruction]
     (defn #_"DirectCallOp" DirectCallOp'new-4 [#_"ResolvedJavaMethod" callTarget, #_"Value" result, #_"Value[]" parameters, #_"Value[]" temps]
         (merge (DirectCallOp'class.) (MethodCallOp'new-4 callTarget, result, parameters, temps))
@@ -40878,7 +40441,6 @@ ZeroExtendNode'new-4
  ; A direct call that complies with the conventions for such calls in HotSpot. It doesn't use an
  ; inline cache so it's just a patchable call site.
  ;;
-; @LIROpcode
 (class-ns DirectStaticCallOp [DirectCallOp, MethodCallOp, CallOp, LIRInstruction]
     (defn #_"DirectStaticCallOp" DirectStaticCallOp'new-5 [#_"ResolvedJavaMethod" target, #_"Value" result, #_"Value[]" parameters, #_"Value[]" temps, #_"InvokeKind" invokeKind]
         (merge (DirectStaticCallOp'class.) (DirectCallOp'new-4 target, result, parameters, temps)
@@ -40901,7 +40463,6 @@ ZeroExtendNode'new-4
  ; A direct call that complies with the conventions for such calls in HotSpot. In particular, for
  ; calls using an inline cache, a MOVE instruction is emitted just prior to the aligned direct call.
  ;;
-; @LIROpcode
 (class-ns DirectVirtualCallOp [DirectCallOp, MethodCallOp, CallOp, LIRInstruction]
     (defn #_"DirectVirtualCallOp" DirectVirtualCallOp'new-5 [#_"ResolvedJavaMethod" target, #_"Value" result, #_"Value[]" parameters, #_"Value[]" temps, #_"InvokeKind" invokeKind]
         (merge (DirectVirtualCallOp'class.) (DirectCallOp'new-4 target, result, parameters, temps)
@@ -40931,7 +40492,6 @@ ZeroExtendNode'new-4
     (defn #_"CommutativeTwoOp" CommutativeTwoOp'new-5 [#_"AMD64RMOp" opcode, #_"OperandSize" size, #_"AllocatableValue" result, #_"AllocatableValue" x, #_"AllocatableValue" y]
         (merge (CommutativeTwoOp'class.) (LIRInstruction'new-0)
             (hash-map
-                ; @LIROpcode
                 #_"AMD64RMOp" :opcode opcode
                 #_"OperandSize" :size size
                 ; @OperandMode'DEF({OperandFlag'REG, OperandFlag'HINT})
@@ -40963,7 +40523,6 @@ ZeroExtendNode'new-4
     )
 )
 
-; @LIROpcode
 (class-ns CompareAndSwapOp [LIRInstruction]
     (defn #_"CompareAndSwapOp" CompareAndSwapOp'new-5 [#_"AMD64Kind" accessKind, #_"AllocatableValue" result, #_"AMD64AddressValue" address, #_"AllocatableValue" cmpValue, #_"AllocatableValue" newValue]
         (merge (CompareAndSwapOp'class.) (LIRInstruction'new-0)
@@ -40995,7 +40554,6 @@ ZeroExtendNode'new-4
     )
 )
 
-; @LIROpcode
 (class-ns CondMoveOp [LIRInstruction]
     (defn #_"CondMoveOp" CondMoveOp'new-4 [#_"Variable" result, #_"Condition" condition, #_"AllocatableValue" trueValue, #_"Value" falseValue]
         (merge (CondMoveOp'class.) (LIRInstruction'new-0)
@@ -41020,7 +40578,6 @@ ZeroExtendNode'new-4
     )
 )
 
-; @LIROpcode
 (class-ns CondSetOp [LIRInstruction]
     (defn #_"CondSetOp" CondSetOp'new-2 [#_"Variable" result, #_"Condition" condition]
         (merge (CondSetOp'class.) (LIRInstruction'new-0)
@@ -41051,7 +40608,6 @@ ZeroExtendNode'new-4
     (defn #_"ConstOp" ConstOp'new-5a [#_"AMD64MIOp" opcode, #_"OperandSize" size, #_"AllocatableValue" result, #_"AllocatableValue" x, #_"int" y]
         (merge (ConstOp'class.) (LIRInstruction'new-0)
             (hash-map
-                ; @LIROpcode
                 #_"AMD64MIOp" :opcode opcode
                 #_"OperandSize" :size size
                 ; @OperandMode'DEF({OperandFlag'REG, OperandFlag'HINT})
@@ -41087,7 +40643,6 @@ ZeroExtendNode'new-4
     (defn #_"ConsumerConstOp" ConsumerConstOp'new-4 [#_"AMD64MIOp" opcode, #_"OperandSize" size, #_"AllocatableValue" x, #_"int" y]
         (merge (ConsumerConstOp'class.) (LIRInstruction'new-0)
             (hash-map
-                ; @LIROpcode
                 #_"AMD64MIOp" :opcode opcode
                 #_"OperandSize" :size size
                 ; @OperandMode'USE({OperandFlag'REG, OperandFlag'STACK})
@@ -41137,7 +40692,6 @@ ZeroExtendNode'new-4
     (defn #_"ConsumerOp" ConsumerOp'new-4 [#_"AMD64RMOp" opcode, #_"OperandSize" size, #_"AllocatableValue" x, #_"AllocatableValue" y]
         (merge (ConsumerOp'class.) (LIRInstruction'new-0)
             (hash-map
-                ; @LIROpcode
                 #_"AMD64RMOp" :opcode opcode
                 #_"OperandSize" :size size
                 ; @OperandMode'USE({OperandFlag'REG})
@@ -41170,7 +40724,6 @@ ZeroExtendNode'new-4
     (defn #_"DataOp" DataOp'new-5 [#_"AMD64RMOp" opcode, #_"OperandSize" size, #_"AllocatableValue" x, #_"Constant" y, #_"int" alignment]
         (merge (DataOp'class.) (LIRInstruction'new-0)
             (hash-map
-                ; @LIROpcode
                 #_"AMD64RMOp" :opcode opcode
                 #_"OperandSize" :size size
                 ; @OperandMode'USE({OperandFlag'REG})
@@ -41201,7 +40754,6 @@ ZeroExtendNode'new-4
     (defn #_"DataTwoOp" DataTwoOp'new-6 [#_"AMD64RMOp" opcode, #_"OperandSize" size, #_"AllocatableValue" result, #_"AllocatableValue" x, #_"JavaConstant" y, #_"int" alignment]
         (merge (DataTwoOp'class.) (LIRInstruction'new-0)
             (hash-map
-                ; @LIROpcode
                 #_"AMD64RMOp" :opcode opcode
                 #_"OperandSize" :size size
                 ; @OperandMode'DEF({OperandFlag'REG, OperandFlag'HINT})
@@ -41267,7 +40819,6 @@ ZeroExtendNode'new-4
 ;;;
  ; Returns from a function.
  ;;
-; @LIROpcode
 (class-ns AMD64HotSpotReturnOp [EpilogueBlockEndOp, LIRInstruction, AMD64HotSpotRestoreRbpOp, BlockEndOp]
     (defn #_"AMD64HotSpotReturnOp" AMD64HotSpotReturnOp'new-3 [#_"Value" value, #_"Register" thread, #_"Register" scratchForSafepointOnReturn]
         (merge (AMD64HotSpotReturnOp'class.) (EpilogueBlockEndOp'new-0)
@@ -41294,7 +40845,6 @@ ZeroExtendNode'new-4
 ;;;
  ; Removes the current frame and tail calls the uncommon trap routine.
  ;;
-; @LIROpcode
 (class-ns DeoptimizeCallerOp [EpilogueBlockEndOp, LIRInstruction, AMD64HotSpotRestoreRbpOp, BlockEndOp]
     (defn #_"DeoptimizeCallerOp" DeoptimizeCallerOp'new-0 []
         (merge (DeoptimizeCallerOp'class.) (EpilogueBlockEndOp'new-0))
@@ -41628,7 +41178,6 @@ ZeroExtendNode'new-4
     (defn #_"MOp" MOp'new-4 [#_"AMD64MOp" opcode, #_"OperandSize" size, #_"AllocatableValue" result, #_"AllocatableValue" value]
         (merge (MOp'class.) (LIRInstruction'new-0)
             (hash-map
-                ; @LIROpcode
                 #_"AMD64MOp" :opcode opcode
                 #_"OperandSize" :size size
                 ; @OperandMode'DEF({OperandFlag'REG, OperandFlag'HINT})
@@ -41655,7 +41204,6 @@ ZeroExtendNode'new-4
     (defn #_"MROp" MROp'new-4 [#_"AMD64MROp" opcode, #_"OperandSize" size, #_"AllocatableValue" result, #_"AllocatableValue" value]
         (merge (MROp'class.) (LIRInstruction'new-0)
             (hash-map
-                ; @LIROpcode
                 #_"AMD64MROp" :opcode opcode
                 #_"OperandSize" :size size
                 ; @OperandMode'DEF({OperandFlag'REG, OperandFlag'STACK})
@@ -41710,7 +41258,6 @@ ZeroExtendNode'new-4
     (defn #_"MemoryConstOp" MemoryConstOp'new-4 [#_"AMD64MIOp" opcode, #_"OperandSize" size, #_"AMD64AddressValue" x, #_"int" y]
         (merge (MemoryConstOp'class.) (LIRInstruction'new-0)
             (hash-map
-                ; @LIROpcode
                 #_"AMD64MIOp" :opcode opcode
                 #_"OperandSize" :size size
                 ; @OperandMode'USE({OperandFlag'COMPOSITE})
@@ -41763,7 +41310,6 @@ ZeroExtendNode'new-4
     (defn #_"MemoryMROp" MemoryMROp'new-4 [#_"AMD64MROp" opcode, #_"OperandSize" size, #_"AMD64AddressValue" x, #_"AllocatableValue" y]
         (merge (MemoryMROp'class.) (LIRInstruction'new-0)
             (hash-map
-                ; @LIROpcode
                 #_"AMD64MROp" :opcode opcode
                 #_"OperandSize" :size size
                 ; @OperandMode'USE({OperandFlag'COMPOSITE})
@@ -41795,7 +41341,6 @@ ZeroExtendNode'new-4
     (defn #_"MemoryOp" MemoryOp'new-4 [#_"AMD64RMOp" opcode, #_"OperandSize" size, #_"AllocatableValue" result, #_"AMD64AddressValue" input]
         (merge (MemoryOp'class.) (LIRInstruction'new-0)
             (hash-map
-                ; @LIROpcode
                 #_"AMD64RMOp" :opcode opcode
                 #_"OperandSize" :size size
                 ; @OperandMode'DEF({OperandFlag'REG})
@@ -41828,7 +41373,6 @@ ZeroExtendNode'new-4
     (defn #_"MemoryRMOp" MemoryRMOp'new-4 [#_"AMD64RMOp" opcode, #_"OperandSize" size, #_"AllocatableValue" x, #_"AMD64AddressValue" y]
         (merge (MemoryRMOp'class.) (LIRInstruction'new-0)
             (hash-map
-                ; @LIROpcode
                 #_"AMD64RMOp" :opcode opcode
                 #_"OperandSize" :size size
                 ; @OperandMode'USE({OperandFlag'REG})
@@ -41861,7 +41405,6 @@ ZeroExtendNode'new-4
     (defn #_"MemoryTwoOp" MemoryTwoOp'new-5 [#_"AMD64RMOp" opcode, #_"OperandSize" size, #_"AllocatableValue" result, #_"AllocatableValue" x, #_"AMD64AddressValue" y]
         (merge (MemoryTwoOp'class.) (LIRInstruction'new-0)
             (hash-map
-                ; @LIROpcode
                 #_"AMD64RMOp" :opcode opcode
                 #_"OperandSize" :size size
                 ; @OperandMode'DEF({OperandFlag'REG, OperandFlag'HINT})
@@ -41889,7 +41432,6 @@ ZeroExtendNode'new-4
     )
 )
 
-; @LIROpcode
 (class-ns MoveFromConstOp [LIRInstruction, LoadConstantOp, MoveOp]
     (defn #_"MoveFromConstOp" MoveFromConstOp'new-2 [#_"AllocatableValue" result, #_"JavaConstant" input]
         (merge (MoveFromConstOp'class.) (LIRInstruction'new-0)
@@ -42104,7 +41646,6 @@ ZeroExtendNode'new-4
     (defn #_"RMIOp" RMIOp'new-5 [#_"AMD64RMIOp" opcode, #_"OperandSize" size, #_"AllocatableValue" result, #_"AllocatableValue" x, #_"int" y]
         (merge (RMIOp'class.) (LIRInstruction'new-0)
             (hash-map
-                ; @LIROpcode
                 #_"AMD64RMIOp" :opcode opcode
                 #_"OperandSize" :size size
                 ; @OperandMode'DEF({OperandFlag'REG})
@@ -42134,7 +41675,6 @@ ZeroExtendNode'new-4
     (defn #_"RMOp" RMOp'new-4 [#_"AMD64RMOp" opcode, #_"OperandSize" size, #_"AllocatableValue" result, #_"AllocatableValue" value]
         (merge (RMOp'class.) (LIRInstruction'new-0)
             (hash-map
-                ; @LIROpcode
                 #_"AMD64RMOp" :opcode opcode
                 #_"OperandSize" :size size
                 ; @OperandMode'DEF({OperandFlag'REG})
@@ -42159,7 +41699,6 @@ ZeroExtendNode'new-4
 ;;;
  ; AMD64 rdtsc operation. The result is in EDX:EAX.
  ;;
-; @LIROpcode
 (class-ns ReadTimestampCounter [LIRInstruction]
     (defn #_"ReadTimestampCounter" ReadTimestampCounter'new-0 []
         (merge (ReadTimestampCounter'class.) (LIRInstruction'new-0)
@@ -42203,7 +41742,6 @@ ZeroExtendNode'new-4
 ;;;
  ; Emits a safepoint poll.
  ;;
-; @LIROpcode
 (class-ns SafepointOp [LIRInstruction]
     ;;;
      ; Tests if the polling page address can be reached from the code cache with 32-bit displacements.
@@ -42266,7 +41804,6 @@ ZeroExtendNode'new-4
     )
 )
 
-; @LIROpcode
 (class-ns SpillRegistersOp [LIRInstruction]
     (defn #_"SpillRegistersOp" SpillRegistersOp'new-0 []
         (merge (SpillRegistersOp'class.) (LIRInstruction'new-0))
@@ -42444,7 +41981,6 @@ ZeroExtendNode'new-4
     (defn #_"TwoOp" TwoOp'new-5 [#_"AMD64RMOp" opcode, #_"OperandSize" size, #_"AllocatableValue" result, #_"AllocatableValue" x, #_"AllocatableValue" y]
         (merge (TwoOp'class.) (LIRInstruction'new-0)
             (hash-map
-                ; @LIROpcode
                 #_"AMD64RMOp" :opcode opcode
                 #_"OperandSize" :size size
                 ; @OperandMode'DEF({OperandFlag'REG, OperandFlag'HINT})
@@ -42681,7 +42217,7 @@ ZeroExtendNode'new-4
     (defn #_"boolean" LSAssignLocationsPhase''assignLocations-2i [#_"LSAssignLocationsPhase" this, #_"LIRInstruction" op]
         (or
             ;; remove useless moves
-            (when (LIRInstruction''isMoveOp-1 op)
+            (when (satisfies? MoveOp op)
                 (let [
                     #_"AllocatableValue" result (MoveOp'''getResult-1 op)
                 ]
@@ -42694,23 +42230,23 @@ ZeroExtendNode'new-4
             )
 
             (let [
-                #_"LSAssignLocationsPhase" phase this
-                #_"InstructionValueProcedure" assignProc
-                    (reify InstructionValueProcedure
-                        (#_"Value" InstructionValueProcedure'''doValue-5 [#_"InstructionValueProcedure" this, #_"LIRInstruction" instruction, #_"Value" value, #_"OperandMode" mode, #_"EnumSet<OperandFlag>" flags]
+                #_"LSAssignLocationsPhase" owner this
+                #_"ValueProcedure" assignProc
+                    (reify ValueProcedure
+                        (#_"Value" ValueProcedure'''doValue-5 [#_"ValueProcedure" _this, #_"LIRInstruction" __op, #_"Value" value, #_"OperandMode" mode, #_"{OperandFlag}" _flags]
                             (when (satisfies? Variable value) => value
-                                (LSAssignLocationsPhase''colorLirOperand-4 phase, instruction, value, mode)
+                                (LSAssignLocationsPhase''colorLirOperand-4 owner, __op, value, mode)
                             )
                         )
                     )
             ]
-                (LIRInstruction''forEachInput-2i op, assignProc)
-                (LIRInstruction''forEachAlive-2i op, assignProc)
-                (LIRInstruction''forEachTemp-2i op, assignProc)
-                (LIRInstruction''forEachOutput-2i op, assignProc)
+                (LIRInstruction''forEachInput-2 op, assignProc)
+                (LIRInstruction''forEachAlive-2 op, assignProc)
+                (LIRInstruction''forEachTemp-2 op, assignProc)
+                (LIRInstruction''forEachOutput-2 op, assignProc)
 
                 ;; remove useless moves
-                (and (LIRInstruction''isValueMoveOp-1 op) (= (ValueMoveOp'''getInput-1 op) (MoveOp'''getResult-1 op)))
+                (and (satisfies? ValueMoveOp op) (= (ValueMoveOp'''getInput-1 op) (MoveOp'''getResult-1 op)))
             )
         )
     )
@@ -42911,16 +42447,17 @@ ZeroExtendNode'new-4
      ; Numbers all instructions in all blocks. The numbering follows the linear scan order.
      ;;
     (defn #_"void" LSLifetimeAnalysisPhase''numberInstructions-1 [#_"LSLifetimeAnalysisPhase" this]
-        (§ ass! (:allocator this) (LinearScan''initIntervals-1 (:allocator this)))
-
         (let [
-            #_"ValueConsumer" setVariableConsumer (ß (value, mode, flags) ->
-                (§ fun
-                    (when (satisfies? Variable value)
-                        (LinearScan'''getOrCreateInterval-2 (:allocator this), value)
+            _ (§ ass! (:allocator this) (LinearScan''initIntervals-1 (:allocator this)))
+            #_"LSLifetimeAnalysisPhase" owner this
+            #_"ValueConsumer" setVariableConsumer
+                (reify ValueConsumer
+                    (#_"void" ValueConsumer'''visitValue-5 [#_"ValueConsumer" _this, #_"LIRInstruction" _op, #_"Value" value, #_"OperandMode" _mode, #_"{OperandFlag}" _flags]
+                        (when (satisfies? Variable value)
+                            (LinearScan'''getOrCreateInterval-2 (:allocator owner), value)
+                        )
                     )
                 )
-            )
             ;; Assign IDs to LIR nodes and build a mapping, lirOps, from ID to LIRInstruction node.
             #_"int" n
                 (loop-when-recur [n 0 #_"ISeq" s (seq (LinearScan''sortedBlocks-1 (:allocator this)))]
@@ -42928,10 +42465,9 @@ ZeroExtendNode'new-4
                                  [(+ n (count (LIR''getLIRforBlock-2 (:lir (:allocator this)), (first s)))) (next s)]
                               => n
                 )
-        ]
             ;; initialize with correct length
-            (§ ass! (:allocator this) (LinearScan''initOpIdMaps-2 (:allocator this), n))
-
+            _ (§ ass! (:allocator this) (LinearScan''initOpIdMaps-2 (:allocator this), n))
+        ]
             (loop-when [#_"int" opId 0 #_"int" index 0 #_"ISeq" s (seq (LinearScan''sortedBlocks-1 (:allocator this)))] (some? s)
                 (let [
                     #_"Block" block (first s)
@@ -42949,8 +42485,8 @@ ZeroExtendNode'new-4
 
                                     (LinearScan''putOpIdMaps-4 (:allocator this), index, op, block)
 
-                                    (LIRInstruction''visitEachTemp-2v op, setVariableConsumer)
-                                    (LIRInstruction''visitEachOutput-2v op, setVariableConsumer)
+                                    (LIRInstruction''visitEachTemp-2 op, setVariableConsumer)
+                                    (LIRInstruction''visitEachOutput-2 op, setVariableConsumer)
 
                                     ;; numbering of lirOps by two
                                     (recur (+ opId 2) (inc index) (inc i))
@@ -42985,69 +42521,65 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"LSLifetimeAnalysisPhase" LSLifetimeAnalysisPhase''computeLocalLiveSets-1 [#_"LSLifetimeAnalysisPhase" this]
         (let [
-            #_"int" liveSize (LinearScan''liveSetSize-1 (:allocator this))
             this (assoc this :intervalInLoop (BitMap2D'new-2 (LinearScan''operandSize-1 (:allocator this)), (LinearScan''numLoops-1 (:allocator this))))
-            #_"BitSet" liveGenScratch (BitSet. liveSize)
-            #_"BitSet" liveKillScratch (BitSet. liveSize)
         ]
             ;; iterate all blocks
             (loop-when-recur [#_"ISeq" s (seq (LinearScan''sortedBlocks-1 (:allocator this)))] (some? s) [(next s)]
                 (let [
                     #_"Block" block (first s)
-                ]
-                    (#_"BitSet" .clear liveGenScratch)
-                    (#_"BitSet" .clear liveKillScratch)
-
-                    (let [
-                        #_"ValueConsumer" useConsumer (ß (operand, mode, flags) ->
-                            (§ fun
+                    #_"BitSet" liveGenScratch (BitSet.)
+                    #_"BitSet" liveKillScratch (BitSet.)
+                    #_"LSLifetimeAnalysisPhase" owner this
+                    #_"ValueConsumer" useConsumer
+                        (reify ValueConsumer
+                            (#_"void" ValueConsumer'''visitValue-5 [#_"ValueConsumer" _this, #_"LIRInstruction" _op, #_"Value" operand, #_"OperandMode" _mode, #_"{OperandFlag}" _flags]
                                 (when (satisfies? Variable operand)
                                     (let [
-                                        #_"int" operandNum (LinearScan''operandNumber-2 (:allocator this), operand)
+                                        #_"int" operandNum (LinearScan''operandNumber-2 (:allocator owner), operand)
                                     ]
                                         (when-not (nth liveKillScratch operandNum)
                                             (#_"BitSet" .set liveGenScratch, operandNum)
                                         )
                                         (when (some? (:loop block))
-                                            (BitMap2D''setBit-3 (:intervalInLoop this), operandNum, (:index (:loop block)))
+                                            (BitMap2D''setBit-3 (:intervalInLoop owner), operandNum, (:index (:loop block)))
                                         )
                                     )
                                 )
                             )
                         )
-                        #_"ValueConsumer" defConsumer (ß (operand, mode, flags) ->
-                            (§ fun
+                    #_"ValueConsumer" defConsumer
+                        (reify ValueConsumer
+                            (#_"void" ValueConsumer'''visitValue-5 [#_"ValueConsumer" _this, #_"LIRInstruction" _op, #_"Value" operand, #_"OperandMode" _mode, #_"{OperandFlag}" _flags]
                                 (when (satisfies? Variable operand)
                                     (let [
-                                        #_"int" varNum (LinearScan''operandNumber-2 (:allocator this), operand)
+                                        #_"int" varNum (LinearScan''operandNumber-2 (:allocator owner), operand)
                                     ]
                                         (#_"BitSet" .set liveKillScratch, varNum)
                                         (when (some? (:loop block))
-                                            (BitMap2D''setBit-3 (:intervalInLoop this), varNum, (:index (:loop block)))
+                                            (BitMap2D''setBit-3 (:intervalInLoop owner), varNum, (:index (:loop block)))
                                         )
                                     )
                                 )
                             )
                         )
+                ]
+                    ;; iterate all instructions of the block
+                    (doseq [#_"LIRInstruction" op (LIR''getLIRforBlock-2 (:lir (:allocator this)), block)]
+                        (LIRInstruction''visitEachInput-2 op, useConsumer)
+                        (LIRInstruction''visitEachAlive-2 op, useConsumer)
+
+                        (LIRInstruction''visitEachTemp-2 op, defConsumer)
+                        (LIRInstruction''visitEachOutput-2 op, defConsumer)
+                    )
+
+                    (let [
+                        #_"BlockData" blockSets (LinearScan''getBlockData-2 (:allocator this), block)
                     ]
-                        ;; iterate all instructions of the block
-                        (doseq [#_"LIRInstruction" op (LIR''getLIRforBlock-2 (:lir (:allocator this)), block)]
-                            (LIRInstruction''visitEachInput-2v op, useConsumer)
-                            (LIRInstruction''visitEachAlive-2v op, useConsumer)
-
-                            (LIRInstruction''visitEachTemp-2v op, defConsumer)
-                            (LIRInstruction''visitEachOutput-2v op, defConsumer)
-                        )
-
-                        (let [
-                            #_"BlockData" blockSets (LinearScan''getBlockData-2 (:allocator this), block)
-                        ]
-                            (§ ass! blockSets (assoc blockSets :liveGen (LSLifetimeAnalysisPhase'trimClone-1 liveGenScratch)))
-                            (§ ass! blockSets (assoc blockSets :liveKill (LSLifetimeAnalysisPhase'trimClone-1 liveKillScratch)))
-                            ;; sticky size, will get non-sticky in computeGlobalLiveSets
-                            (§ ass! blockSets (assoc blockSets :liveIn (BitSet. 0)))
-                            (§ ass! blockSets (assoc blockSets :liveOut (BitSet. 0)))
-                        )
+                        (§ ass! blockSets (assoc blockSets :liveGen (LSLifetimeAnalysisPhase'trimClone-1 liveGenScratch)))
+                        (§ ass! blockSets (assoc blockSets :liveKill (LSLifetimeAnalysisPhase'trimClone-1 liveKillScratch)))
+                        ;; sticky size, will get non-sticky in computeGlobalLiveSets
+                        (§ ass! blockSets (assoc blockSets :liveIn (BitSet. 0)))
+                        (§ ass! blockSets (assoc blockSets :liveOut (BitSet. 0)))
                     )
                 )
             )
@@ -43061,7 +42593,7 @@ ZeroExtendNode'new-4
     (defn #_"void" LSLifetimeAnalysisPhase''computeGlobalLiveSets-1 [#_"LSLifetimeAnalysisPhase" this]
         (let [
             #_"int" numBlocks (LinearScan''blockCount-1 (:allocator this))
-            #_"BitSet" scratch (BitSet. (LinearScan''liveSetSize-1 (:allocator this))) ;; scratch set for calculations
+            #_"BitSet" scratch (BitSet.) ;; scratch set for calculations
         ]
             ;; Perform a backward dataflow analysis to compute liveOut and liveIn for each block.
             ;; The loop is executed until a fixpoint is reached (no changes in an iteration).
@@ -43171,7 +42703,7 @@ ZeroExtendNode'new-4
      ;         Currently this can only be a JavaConstant.
      ;;
     (defn- #_"Constant" LSLifetimeAnalysisPhase'getMaterializedValue-3 [#_"LIRInstruction" op, #_"Value" operand, #_"Interval" interval]
-        (when (LIRInstruction''isLoadConstantOp-1 op)
+        (when (satisfies? LoadConstantOp op)
             ;; Check if the interval has any uses which would accept an stack location (priority == ShouldHaveRegister).
             ;; Rematerialization of such intervals can result in a degradation, because rematerialization always inserts
             ;; a constant load, even if the value is not needed in a register.
@@ -43243,25 +42775,30 @@ ZeroExtendNode'new-4
     )
 
     (defm LSLifetimeAnalysisPhase LSLifetimeAnalysisPhase
-        (#_"void" LSLifetimeAnalysisPhase'''addRegisterHint-6 [#_"LSLifetimeAnalysisPhase" this, #_"LIRInstruction" op, #_"Value" targetValue, #_"OperandMode" mode, #_"EnumSet<OperandFlag>" flags, #_"boolean" hintAtDef]
-            (when (and (#_"EnumSet" .contains flags, OperandFlag'HINT) (LinearScan'isVariableOrRegister-1 targetValue))
-                (LIRInstruction''forEachRegisterHint-4v op, targetValue, mode, (ß #_"ValueProcedure" (registerHint, valueMode, valueFlags) ->
-                    (§ fun
-                        (when (LinearScan'isVariableOrRegister-1 registerHint)
-                            (let [
-                                #_"Interval" from (LinearScan'''getOrCreateInterval-2 (:allocator this), registerHint)
-                                #_"Interval" to (LinearScan'''getOrCreateInterval-2 (:allocator this), targetValue)
-                            ]
-                                ;; hints always point from def to use
-                                (if hintAtDef
-                                    (§ ass! to (Interval''setLocationHint-2 to, from))
-                                    (§ ass! from (Interval''setLocationHint-2 from, to))
+        (#_"void" LSLifetimeAnalysisPhase'''addRegisterHint-6 [#_"LSLifetimeAnalysisPhase" this, #_"LIRInstruction" op, #_"Value" targetValue, #_"OperandMode" mode, #_"{OperandFlag}" flags, #_"boolean" hintAtDef]
+            (when (and (contains? flags OperandFlag'HINT) (LinearScan'isVariableOrRegister-1 targetValue))
+                (let [
+                    #_"LSLifetimeAnalysisPhase" owner this
+                ]
+                    (LIRInstruction''forEachRegisterHint-4 op, targetValue, mode,
+                        (reify ValueProcedure
+                            (#_"Value" ValueProcedure'''doValue-5 [#_"ValueProcedure" _this, #_"LIRInstruction" _op, #_"Value" registerHint, #_"OperandMode" _mode, #_"{OperandFlag}" _flags]
+                                (when (LinearScan'isVariableOrRegister-1 registerHint)
+                                    (let [
+                                        #_"Interval" from (LinearScan'''getOrCreateInterval-2 (:allocator owner), registerHint)
+                                        #_"Interval" to (LinearScan'''getOrCreateInterval-2 (:allocator owner), targetValue)
+                                    ]
+                                        ;; hints always point from def to use
+                                        (if hintAtDef
+                                            (§ ass! to (Interval''setLocationHint-2 to, from))
+                                            (§ ass! from (Interval''setLocationHint-2 from, to))
+                                        )
+                                        registerHint
+                                    )
                                 )
-
-                                registerHint
                             )
                         )
-                    ))
+                    )
                 )
             )
             nil
@@ -43276,7 +42813,7 @@ ZeroExtendNode'new-4
 
     (defm LSLifetimeAnalysisPhase LSLifetimeAnalysisPhase
         (#_"RegisterPriority" LSLifetimeAnalysisPhase'''registerPriorityOfOutputOperand-2 [#_"LSLifetimeAnalysisPhase" this, #_"LIRInstruction" op]
-            (if (and (LIRInstruction''isValueMoveOp-1 op) (LSLifetimeAnalysisPhase'optimizeMethodArgument-1 (ValueMoveOp'''getInput-1 op)))
+            (if (and (satisfies? ValueMoveOp op) (LSLifetimeAnalysisPhase'optimizeMethodArgument-1 (ValueMoveOp'''getInput-1 op)))
                 RegisterPriority'None
                 ;; all other operands require a register
                 RegisterPriority'MustHaveRegister
@@ -43288,7 +42825,7 @@ ZeroExtendNode'new-4
      ; Determines the priority which with an instruction's input operand will be allocated a register.
      ;;
     (defn #_"RegisterPriority" LSLifetimeAnalysisPhase'registerPriorityOfInputOperand-1 [#_"EnumSet<OperandFlag>" flags]
-        (if (#_"EnumSet" .contains flags, OperandFlag'STACK)
+        (if (contains? flags OperandFlag'STACK)
             RegisterPriority'ShouldHaveRegister
             ;; all other operands require a register
             RegisterPriority'MustHaveRegister
@@ -43300,7 +42837,7 @@ ZeroExtendNode'new-4
      ; of such moves is assigned the stack slot (which is in the caller's frame) as its spill slot.
      ;;
     (defn #_"void" LSLifetimeAnalysisPhase''handleMethodArguments-2 [#_"LSLifetimeAnalysisPhase" this, #_"LIRInstruction" op]
-        (when (and (LIRInstruction''isValueMoveOp-1 op) (LSLifetimeAnalysisPhase'optimizeMethodArgument-1 (ValueMoveOp'''getInput-1 op)))
+        (when (and (satisfies? ValueMoveOp op) (LSLifetimeAnalysisPhase'optimizeMethodArgument-1 (ValueMoveOp'''getInput-1 op)))
             (let [
                 #_"StackSlot" slot (ValueMoveOp'''getInput-1 op)
                 #_"Interval" interval (LinearScan''intervalFor-2v (:allocator this), (MoveOp'''getResult-1 op))
@@ -43315,50 +42852,55 @@ ZeroExtendNode'new-4
     (defm LSLifetimeAnalysisPhase LSLifetimeAnalysisPhase
         (#_"void" LSLifetimeAnalysisPhase'''buildIntervals-1 [#_"LSLifetimeAnalysisPhase" this]
             (let [
-                #_"InstructionValueConsumer" outputConsumer (ß (op, operand, mode, flags) ->
-                    (§ fun
-                        (when (LinearScan'isVariableOrRegister-1 operand)
-                            (LSLifetimeAnalysisPhase''addDef-5 this, operand, op, (LSLifetimeAnalysisPhase'''registerPriorityOfOutputOperand-2 this, op), (#_"Value" .getValueKind operand))
-                            (LSLifetimeAnalysisPhase'''addRegisterHint-6 this, op, operand, mode, flags, true)
-                        )
-                    )
-                )
-                #_"InstructionValueConsumer" tempConsumer (ß (op, operand, mode, flags) ->
-                    (§ fun
-                        (when (LinearScan'isVariableOrRegister-1 operand)
-                            (LSLifetimeAnalysisPhase''addTemp-5 this, operand, (:id op), RegisterPriority'MustHaveRegister, (#_"Value" .getValueKind operand))
-                            (LSLifetimeAnalysisPhase'''addRegisterHint-6 this, op, operand, mode, flags, false)
-                        )
-                    )
-                )
-                #_"InstructionValueConsumer" aliveConsumer (ß (op, operand, mode, flags) ->
-                    (§ fun
-                        (when (LinearScan'isVariableOrRegister-1 operand)
-                            (let [
-                                #_"RegisterPriority" p (LSLifetimeAnalysisPhase'registerPriorityOfInputOperand-1 flags)
-                                #_"int" opId (:id op)
-                                #_"int" blockFrom (LinearScan''getFirstLirInstructionId-2 (:allocator this), (LinearScan''blockForId-2 (:allocator this), opId))
-                            ]
-                                (LSLifetimeAnalysisPhase''addUse-6 this, operand, blockFrom, (inc opId), p, (#_"Value" .getValueKind operand))
-                                (LSLifetimeAnalysisPhase'''addRegisterHint-6 this, op, operand, mode, flags, false)
+                #_"LSLifetimeAnalysisPhase" owner this
+                #_"ValueConsumer" outputConsumer
+                    (reify ValueConsumer
+                        (#_"void" ValueConsumer'''visitValue-5 [#_"ValueConsumer" _this, #_"LIRInstruction" op, #_"Value" operand, #_"OperandMode" mode, #_"{OperandFlag}" flags]
+                            (when (LinearScan'isVariableOrRegister-1 operand)
+                                (LSLifetimeAnalysisPhase''addDef-5 owner, operand, op, (LSLifetimeAnalysisPhase'''registerPriorityOfOutputOperand-2 owner, op), (#_"Value" .getValueKind operand))
+                                (LSLifetimeAnalysisPhase'''addRegisterHint-6 owner, op, operand, mode, flags, true)
                             )
                         )
                     )
-                )
-                #_"InstructionValueConsumer" inputConsumer (ß (op, operand, mode, flags) ->
-                    (§ fun
-                        (when (LinearScan'isVariableOrRegister-1 operand)
-                            (let [
-                                #_"int" opId (:id op)
-                                #_"int" blockFrom (LinearScan''getFirstLirInstructionId-2 (:allocator this), (LinearScan''blockForId-2 (:allocator this), opId))
-                                #_"RegisterPriority" p (LSLifetimeAnalysisPhase'registerPriorityOfInputOperand-1 flags)
-                            ]
-                                (LSLifetimeAnalysisPhase''addUse-6 this, operand, blockFrom, opId, p, (#_"Value" .getValueKind operand))
-                                (LSLifetimeAnalysisPhase'''addRegisterHint-6 this, op, operand, mode, flags, false)
+                #_"ValueConsumer" tempConsumer
+                    (reify ValueConsumer
+                        (#_"void" ValueConsumer'''visitValue-5 [#_"ValueConsumer" _this, #_"LIRInstruction" op, #_"Value" operand, #_"OperandMode" mode, #_"{OperandFlag}" flags]
+                            (when (LinearScan'isVariableOrRegister-1 operand)
+                                (LSLifetimeAnalysisPhase''addTemp-5 owner, operand, (:id op), RegisterPriority'MustHaveRegister, (#_"Value" .getValueKind operand))
+                                (LSLifetimeAnalysisPhase'''addRegisterHint-6 owner, op, operand, mode, flags, false)
                             )
                         )
                     )
-                )
+                #_"ValueConsumer" aliveConsumer
+                    (reify ValueConsumer
+                        (#_"void" ValueConsumer'''visitValue-5 [#_"ValueConsumer" _this, #_"LIRInstruction" op, #_"Value" operand, #_"OperandMode" mode, #_"{OperandFlag}" flags]
+                            (when (LinearScan'isVariableOrRegister-1 operand)
+                                (let [
+                                    #_"RegisterPriority" p (LSLifetimeAnalysisPhase'registerPriorityOfInputOperand-1 flags)
+                                    #_"int" opId (:id op)
+                                    #_"int" blockFrom (LinearScan''getFirstLirInstructionId-2 (:allocator owner), (LinearScan''blockForId-2 (:allocator owner), opId))
+                                ]
+                                    (LSLifetimeAnalysisPhase''addUse-6 owner, operand, blockFrom, (inc opId), p, (#_"Value" .getValueKind operand))
+                                    (LSLifetimeAnalysisPhase'''addRegisterHint-6 owner, op, operand, mode, flags, false)
+                                )
+                            )
+                        )
+                    )
+                #_"ValueConsumer" inputConsumer
+                    (reify ValueConsumer
+                        (#_"void" ValueConsumer'''visitValue-5 [#_"ValueConsumer" _this, #_"LIRInstruction" op, #_"Value" operand, #_"OperandMode" mode, #_"{OperandFlag}" flags]
+                            (when (LinearScan'isVariableOrRegister-1 operand)
+                                (let [
+                                    #_"int" opId (:id op)
+                                    #_"int" blockFrom (LinearScan''getFirstLirInstructionId-2 (:allocator owner), (LinearScan''blockForId-2 (:allocator owner), opId))
+                                    #_"RegisterPriority" p (LSLifetimeAnalysisPhase'registerPriorityOfInputOperand-1 flags)
+                                ]
+                                    (LSLifetimeAnalysisPhase''addUse-6 owner, operand, blockFrom, opId, p, (#_"Value" .getValueKind operand))
+                                    (LSLifetimeAnalysisPhase'''addRegisterHint-6 owner, op, operand, mode, flags, false)
+                                )
+                            )
+                        )
+                    )
                 ;; create a list with all caller-save registers
                 #_"RegisterArray" callerSaveRegs (#_"RegisterConfig" .getCallerSaveRegisters HotSpot'registerConfig)
             ]
@@ -43401,10 +42943,10 @@ ZeroExtendNode'new-4
                                     )
                                 )
 
-                                (LIRInstruction''visitEachOutput-2i op, outputConsumer)
-                                (LIRInstruction''visitEachTemp-2i op, tempConsumer)
-                                (LIRInstruction''visitEachAlive-2i op, aliveConsumer)
-                                (LIRInstruction''visitEachInput-2i op, inputConsumer)
+                                (LIRInstruction''visitEachOutput-2 op, outputConsumer)
+                                (LIRInstruction''visitEachTemp-2 op, tempConsumer)
+                                (LIRInstruction''visitEachAlive-2 op, aliveConsumer)
+                                (LIRInstruction''visitEachInput-2 op, inputConsumer)
 
                                 ;; special steps for some instructions (especially moves)
                                 (LSLifetimeAnalysisPhase''handleMethodArguments-2 this, op)
@@ -43441,24 +42983,27 @@ ZeroExtendNode'new-4
     )
 
     (defm SSALinearScanLifetimeAnalysisPhase LSLifetimeAnalysisPhase
-        (#_"void" LSLifetimeAnalysisPhase'''addRegisterHint-6 [#_"SSALinearScanLifetimeAnalysisPhase" this, #_"LIRInstruction" op, #_"Value" targetValue, #_"OperandMode" mode, #_"EnumSet<OperandFlag>" flags, #_"boolean" hintAtDef]
+        (#_"void" LSLifetimeAnalysisPhase'''addRegisterHint-6 [#_"SSALinearScanLifetimeAnalysisPhase" this, #_"LIRInstruction" op, #_"Value" targetValue, #_"OperandMode" mode, #_"{OperandFlag}" flags, #_"boolean" hintAtDef]
             (LSLifetimeAnalysisPhase'''addRegisterHint-6 (§ super LSLifetimeAnalysisPhase'iface), op, targetValue, mode, flags, hintAtDef)
 
             (when (and hintAtDef (satisfies? LabelOp op))
                 (let [
                     #_"Interval" to (LinearScan'''getOrCreateInterval-2 (:allocator this), targetValue)
+                    #_"SSALinearScanLifetimeAnalysisPhase" owner this
                 ]
-                    (SSAUtil'forEachPhiRegisterHint-6 (:lir (:allocator this)), (LinearScan''blockForId-2 (:allocator this), (:id op)), op, targetValue, mode, (§ cast #_"ValueConsumer" (ß (registerHint, valueMode, valueFlags) ->
-                        (§ fun
-                            (when (LinearScan'isVariableOrRegister-1 registerHint)
-                                (let [
-                                    #_"Interval" from (LinearScan'''getOrCreateInterval-2 (:allocator this), registerHint)
-                                ]
-                                    (SSALinearScanLifetimeAnalysisPhase'setHint-3 op, to, from)
-                                    (SSALinearScanLifetimeAnalysisPhase'setHint-3 op, from, to)
+                    (SSAUtil'forEachPhiRegisterHint-6 (:lir (:allocator this)), (LinearScan''blockForId-2 (:allocator this), (:id op)), op, targetValue, mode,
+                        (reify ValueConsumer
+                            (#_"void" ValueConsumer'''visitValue-5 [#_"ValueConsumer" _this, #_"LIRInstruction" _op, #_"Value" registerHint, #_"OperandMode" _mode, #_"{OperandFlag}" _flags]
+                                (when (LinearScan'isVariableOrRegister-1 registerHint)
+                                    (let [
+                                        #_"Interval" from (LinearScan'''getOrCreateInterval-2 (:allocator owner), registerHint)
+                                    ]
+                                        (SSALinearScanLifetimeAnalysisPhase'setHint-3 op, to, from)
+                                        (SSALinearScanLifetimeAnalysisPhase'setHint-3 op, from, to)
+                                    )
                                 )
                             )
-                        )))
+                        )
                     )
                 )
             )
@@ -43741,7 +43286,7 @@ ZeroExtendNode'new-4
 
     (defn #_"void" LSResolveDataFlowPhase''resolveDataFlow0-3 [#_"LSResolveDataFlowPhase" this, #_"MoveResolver" moveResolver, #_"BitSet" blockCompleted]
         (let [
-            #_"BitSet" alreadyResolved (BitSet. (LinearScan''blockCount-1 (:allocator this)))
+            #_"BitSet" alreadyResolved (BitSet.)
         ]
             (doseq [#_"Block" fromBlock (LinearScan''sortedBlocks-1 (:allocator this))]
                 (when-not (#_"BitSet" .get blockCompleted, (:linearScanNumber fromBlock))
@@ -43773,7 +43318,7 @@ ZeroExtendNode'new-4
     (defn #_"void" LSResolveDataFlowPhase''resolveDataFlow-1 [#_"LSResolveDataFlowPhase" this]
         (let [
             #_"MoveResolver" moveResolver (LinearScan'''createMoveResolver-1 (:allocator this))
-            #_"BitSet" blockCompleted (BitSet. (LinearScan''blockCount-1 (:allocator this)))
+            #_"BitSet" blockCompleted (BitSet.)
         ]
             (LSResolveDataFlowPhase''optimizeEmptyBlocks-3 this, moveResolver, blockCompleted)
             (LSResolveDataFlowPhase''resolveDataFlow0-3 this, moveResolver, blockCompleted)
@@ -44069,6 +43614,7 @@ ZeroExtendNode'new-4
      ; These sets do not include any operands allocated as a result of creating
      ; {@linkplain #createDerivedInterval(Interval) derived intervals}.
      ;;
+    #_unused
     (defn #_"int" LinearScan''liveSetSize-1 [#_"LinearScan" this]
         (if (= (:firstDerivedIntervalIndex this) -1) (LinearScan''operandSize-1 this) (:firstDerivedIntervalIndex this))
     )
@@ -49983,7 +49529,7 @@ ZeroExtendNode'new-4
      ; @param edgesToCopy if {@code type} is in this set, the edges are copied otherwise they are cleared
      ;;
     (defn- #_"void" Node''copyOrClearEdgesForClone-4 [#_"Node" this, #_"Node" newNode, #_"EdgesType" type, #_"EnumSet<EdgesType>" edgesToCopy]
-        (if (#_"EnumSet" .contains edgesToCopy, type)
+        (if (contains? edgesToCopy type)
             (Edges''copy-3 (NodeClass''getEdges-2 (:nodeClass this), type), this, newNode)
             ;; the direct edges are already nil
             (Edges''initializeLists-3 (NodeClass''getEdges-2 (:nodeClass this), type), newNode, this)
@@ -65819,7 +65365,7 @@ ZeroExtendNode'new-4
      ; Returns true for a move instruction which is a candidate for elimination.
      ;;
     (defn- #_"boolean" RMEOptimization'isEligibleMove-1 [#_"LIRInstruction" op]
-        (and (LIRInstruction''isValueMoveOp-1 op)
+        (and (satisfies? ValueMoveOp op)
             ;; Moves with mismatching kinds are not moves, but memory loads/stores!
             (= (#_"Value" .getValueKind (ValueMoveOp'''getInput-1 op)) (#_"Value" .getValueKind (MoveOp'''getResult-1 op)))
         )
@@ -65984,42 +65530,38 @@ ZeroExtendNode'new-4
 
         (let [
             #_"int[]" valueNum (int-array [ initValueNum ])
-        ]
-            (when (LIRInstruction'''destroysCallerSavedRegisters-1 op)
-                (doseq [#_"Register" reg (:callerSaveRegs this)]
-                    (when (< (.number reg) (:numRegs this))
-                        ;; Kind.Object is the save default
-                        (§ aset! state (.number reg) (RMEOptimization'encodeValueNum-2 (nth valueNum 0), true))
-                        (aswap valueNum 0 inc)
-                    )
-                )
-            )
-
-            ;; Value procedure for the instruction's output and temp values.
-            (let [
-                #_"RMEOptimization" optimization this
-                #_"ValueConsumer" outputValueConsumer
-                    (reify ValueConsumer
-                        (#_"void" ValueConsumer'''visitValue-4 [#_"ValueConsumer" this, #_"Value" operand, #_"OperandMode" mode, #_"EnumSet<OperandFlag>" flags]
-                            (let [
-                                #_"int" i (RMEOptimization''getStateIdx-2 optimization, operand)
-                            ]
-                                (when (<= 0 i)
-                                    ;; Assign a unique number to the output or temp location.
-                                    (§ aset! state i (RMEOptimization'encodeValueNum-2 (nth valueNum 0), (not (LIRKind'isValue-1v operand))))
-                                    (aswap valueNum 0 inc)
-                                )
-                            )
-                            nil
+            _
+                (when (LIRInstruction'''destroysCallerSavedRegisters-1 op)
+                    (doseq [#_"Register" reg (:callerSaveRegs this)]
+                        (when (< (.number reg) (:numRegs this))
+                            ;; Kind.Object is the save default
+                            (§ aset! state (.number reg) (RMEOptimization'encodeValueNum-2 (nth valueNum 0), true))
+                            (aswap valueNum 0 inc)
                         )
                     )
-            ]
-                (LIRInstruction''visitEachTemp-2v op, outputValueConsumer)
-                ;; Semantically the output values are written _after_ the temp values.
-                (LIRInstruction''visitEachOutput-2v op, outputValueConsumer)
+                )
+            #_"RMEOptimization" owner this
+            #_"ValueConsumer" outputValueConsumer
+                (reify ValueConsumer
+                    (#_"void" ValueConsumer'''visitValue-5 [#_"ValueConsumer" _this, #_"LIRInstruction" _op, #_"Value" operand, #_"OperandMode" _mode, #_"EnumSet<OperandFlag>" _flags]
+                        (let [
+                            #_"int" i (RMEOptimization''getStateIdx-2 owner, operand)
+                        ]
+                            (when (<= 0 i)
+                                ;; Assign a unique number to the output or temp location.
+                                (§ aset! state i (RMEOptimization'encodeValueNum-2 (nth valueNum 0), (not (LIRKind'isValue-1v operand))))
+                                (aswap valueNum 0 inc)
+                            )
+                        )
+                        nil
+                    )
+                )
+        ]
+            (LIRInstruction''visitEachTemp-2 op, outputValueConsumer)
+            ;; Semantically the output values are written _after_ the temp values.
+            (LIRInstruction''visitEachOutput-2 op, outputValueConsumer)
 
-                (nth valueNum 0)
-            )
+            (nth valueNum 0)
         )
     )
 
@@ -71780,12 +71322,17 @@ ZeroExtendNode'new-4
 
     (defn- #_"void" UseEntry'replaceValue-3 [#_"LIRInstruction" op, #_"Value" oldValue, #_"Value" newValue]
         (let [
-            #_"ValueProcedure" proc (ß (value, mode, flags) -> (§ fun (if (#_"Value" .identityEquals value, oldValue) newValue value)))
+            #_"ValueProcedure" proc
+                (reify ValueProcedure
+                    (#_"Value" ValueProcedure'''doValue-5 [#_"ValueProcedure" _this, #_"LIRInstruction" _op, #_"Value" value, #_"OperandMode" _mode, #_"{OperandFlag}" _flags]
+                        (if (= value oldValue) newValue value)
+                    )
+                )
         ]
-            (LIRInstruction''forEachAlive-2v op, proc)
-            (LIRInstruction''forEachInput-2v op, proc)
-            (LIRInstruction''forEachOutput-2v op, proc)
-            (LIRInstruction''forEachTemp-2v op, proc)
+            (LIRInstruction''forEachAlive-2 op, proc)
+            (LIRInstruction''forEachInput-2 op, proc)
+            (LIRInstruction''forEachOutput-2 op, proc)
+            (LIRInstruction''forEachTemp-2 op, proc)
         )
         nil
     )
@@ -72057,7 +71604,7 @@ ZeroExtendNode'new-4
 )
 
 (class-ns AMD64AddressValue [CompositeValue, #_"Value"]
-    (def- #_"EnumSet<OperandFlag>" AMD64AddressValue'flags (ß EnumSet/of OperandFlag'REG, OperandFlag'ILLEGAL))
+    (def- #_"{OperandFlag}" AMD64AddressValue'flags #{ OperandFlag'REG OperandFlag'ILLEGAL })
 
     (defn #_"AMD64AddressValue" AMD64AddressValue'new-3 [#_"ValueKind" kind, #_"AllocatableValue" base, #_"int" displacement]
         (AMD64AddressValue'new-5 kind, base, Value/ILLEGAL, Scale'Times1, displacement)
@@ -72075,21 +71622,21 @@ ZeroExtendNode'new-4
     )
 
     (defm AMD64AddressValue CompositeValue
-        (#_"CompositeValue" CompositeValue'''forEachComponent-4 [#_"AMD64AddressValue" this, #_"LIRInstruction" op, #_"OperandMode" mode, #_"InstructionValueProcedure" proc]
+        (#_"CompositeValue" CompositeValue'''forEachComponent-4 [#_"AMD64AddressValue" this, #_"LIRInstruction" op, #_"OperandMode" mode, #_"ValueProcedure" proc]
             (let [
-                #_"AllocatableValue" base (InstructionValueProcedure'''doValue-5 proc, op, (:base this), mode, AMD64AddressValue'flags)
-                #_"AllocatableValue" index (InstructionValueProcedure'''doValue-5 proc, op, (:index this), mode, AMD64AddressValue'flags)
+                #_"AllocatableValue" base (ValueProcedure'''doValue-5 proc, op, (:base this), mode, AMD64AddressValue'flags)
+                #_"AllocatableValue" index (ValueProcedure'''doValue-5 proc, op, (:index this), mode, AMD64AddressValue'flags)
             ]
-                (if (and (#_"Value" .identityEquals (:base this), base) (#_"Value" .identityEquals (:index this), index))
+                (if (and (= (:base this) base) (= (:index this) index))
                     this
                     (AMD64AddressValue'new-5 (#_"Value" .getValueKind this), base, index, (:scale this), (:displacement this))
                 )
             )
         )
 
-        (#_"void" CompositeValue'''visitEachComponent-4 [#_"AMD64AddressValue" this, #_"LIRInstruction" op, #_"OperandMode" mode, #_"InstructionValueConsumer" proc]
-            (InstructionValueConsumer'''visitValue-5 proc, op, (:base this), mode, AMD64AddressValue'flags)
-            (InstructionValueConsumer'''visitValue-5 proc, op, (:index this), mode, AMD64AddressValue'flags)
+        (#_"void" CompositeValue'''visitEachComponent-4 [#_"AMD64AddressValue" this, #_"LIRInstruction" op, #_"OperandMode" mode, #_"ValueConsumer" proc]
+            (ValueConsumer'''visitValue-5 proc, op, (:base this), mode, AMD64AddressValue'flags)
+            (ValueConsumer'''visitValue-5 proc, op, (:index this), mode, AMD64AddressValue'flags)
             nil
         )
     )
@@ -73598,7 +73145,7 @@ ZeroExtendNode'new-4
     (defn- #_"void" WordOperationPlugin'processWordOperation-3 [#_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"ValueNode*" args]
         (let [
             #_"JavaKind" returnKind (#_"Signature" .getReturnKind (#_"ResolvedJavaMethod" .getSignature method))
-            #_"WordFactoryOperation" factoryOperation (BridgeMethodUtils'getAnnotation-2 WordFactoryOperation, method)
+            #_"WordFactoryOperation" factoryOperation (#_"ResolvedJavaMethod" .getAnnotation method, WordFactoryOperation)
         ]
             (or
                 (when (some? factoryOperation)
@@ -73623,7 +73170,7 @@ ZeroExtendNode'new-4
                 )
 
                 (let [
-                    #_"WordOperation" operation (BridgeMethodUtils'getAnnotation-2 WordOperation, method)
+                    #_"WordOperation" operation (#_"ResolvedJavaMethod" .getAnnotation method, WordOperation)
                 ]
                     (when (nil? operation)
                         (throw! (str "cannot call method on a word value: " (#_"ResolvedJavaMethod" .format method, "%H.\n(%p)")))
@@ -73728,7 +73275,7 @@ ZeroExtendNode'new-4
         (#_"boolean" NodePlugin'''handleInvoke-4 [#_"WordOperationPlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"ValueNode*" args]
             (and (WordTypes'isWordOperation-1 method)
                 (let [
-                    #_"MetaspaceOperation" operation (BridgeMethodUtils'getAnnotation-2 MetaspaceOperation, method)
+                    #_"MetaspaceOperation" operation (#_"ResolvedJavaMethod" .getAnnotation method, MetaspaceOperation)
                 ]
                     (if (some? operation)
                         (WordOperationPlugin'processMetaspaceOperation-4 parser, method, args, operation)
@@ -74245,8 +73792,8 @@ ZeroExtendNode'new-4
             #_"ScheduleResult" schedule (:lastSchedule graph)
             #_"Block[]" blocks (:reversePostOrder (:cfg schedule))
             #_"Block" startBlock (ControlFlowGraph''getStartBlock-1 (:cfg schedule))
-            #_"Block[]" codeEmittingOrder (ComputeBlockOrder'computeCodeEmittingOrder-2 (count blocks), startBlock)
-            #_"Block[]" linearScanOrder (ComputeBlockOrder'computeLinearScanOrder-2 (count blocks), startBlock)
+            #_"Block[]" codeEmittingOrder (ComputeBlockOrder'computeCodeEmittingOrder-1 startBlock)
+            #_"Block[]" linearScanOrder (ComputeBlockOrder'computeLinearScanOrder-1 startBlock)
             #_"LIR" lir (LIR'new-3 (:cfg schedule), linearScanOrder, codeEmittingOrder)
             #_"CallingConvention" callingConvention (CodeUtil/getCallingConvention HotSpot'codeCache, HotSpotCallingConventionType/JavaCallee, (:rootMethod graph), HotSpot'valueKindFactory)
             #_"LIRGenerationResult" res (LIRGenerationResult'new-2 lir, callingConvention)
