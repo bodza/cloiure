@@ -1,5 +1,5 @@
 (ns graalfn.core
-    (:refer-clojure :only [* *ns* + - -> ->> / < <= = > >= aget and apply aset assoc bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean boolean-array byte byte-array case char comp compare cond condp conj cons contains? count dec declare defmacro defn defprotocol defrecord delay dissoc doseq dotimes double double-array empty? extend-protocol extend-type filter first fn get hash-map hash-set if-not import inc instance? int int-array into into-array iterate iterator-seq key keys let letfn list locking long long-array loop make-array map mapcat max merge min neg? next nil? not not= ns-imports ns-unmap nth object-array or peek pop pos? quot reduce reify rem remove repeat rest reverse run! satisfies? second seq sequential? short some some? sort-by sorted-map str subvec symbol symbol? take-while unsigned-bit-shift-right update update-in val vals vary-meta vec vector vector? volatile! vreset! vswap! when-some while zero?])
+    (:refer-clojure :only [* *ns* + - -> ->> / < <= = > >= aget and apply aset assoc bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean boolean-array byte byte-array case char comp compare cond condp conj cons contains? count dec declare defmacro defn defprotocol defrecord delay dissoc doseq dotimes double double-array empty? extend-protocol extend-type false? filter first fn get hash-map hash-set if-not import inc instance? int int-array into into-array iterate iterator-seq key keys let letfn list locking long long-array loop make-array map mapcat max merge min neg? next nil? not not= ns-imports ns-unmap nth object-array or peek pop pos? quot reduce reify rem remove repeat rest reverse run! satisfies? second seq sequential? short some some? sort-by sorted-map str subvec symbol symbol? take-while true? unsigned-bit-shift-right update update-in val vals vary-meta vec vector vector? volatile! vreset! vswap! when-some while zero?])
 )
 
 (defmacro § [& _])
@@ -129,11 +129,11 @@
         AllocatableValue Constant ConstantPool ConstantReflectionProvider DeoptimizationAction DeoptimizationReason
         InvokeTarget JavaConstant JavaField JavaKind JavaMethod JavaType MemoryAccessProvider MetaAccessProvider
         PlatformKind PrimitiveConstant RawConstant ResolvedJavaField ResolvedJavaMethod ResolvedJavaType Signature
-        TriState VMConstant Value ValueKind
+        VMConstant Value ValueKind
     ]
     [jdk.vm.ci.runtime JVMCIBackend]
 
-    [org.graalvm.collections EconomicMap EconomicSet MapCursor UnmodifiableEconomicMap UnmodifiableMapCursor]
+    [org.graalvm.collections EconomicMap EconomicSet]
 
     [sun.misc Unsafe]
 )
@@ -2112,7 +2112,7 @@ LIRBuilder''visitInvokeArguments-3
 LIRBuilder''visitLoopEnd-2
 LIRBuilder''visitMerge-2
 LIRBuilder''visitSafepointNode-2
-LIRBuilder'new-2
+LIRBuilder'new-1
 LIRFieldsScanner'new-0
 LIRGenerationContext'new-4
 LIRGenerationPhase'new-0
@@ -2876,13 +2876,6 @@ NodeList'new-1
 NodeList'new-2i
 NodeList'new-2s
 NodeLoopInfo'new-0
-NodeMap''getAndGrow-2
-NodeMap''getKey-2
-NodeMap''isNew-2
-NodeMap''set-3
-NodeMap''setAndGrow-3
-NodeMap'new-1g
-NodeMap'new-1m
 NodeSuccessorList'new-1
 NodeSuccessorList'new-2i
 NodeSuccessorList'new-2s
@@ -3293,7 +3286,7 @@ Stamp''isEmpty-1
 Stamp''neverDistinct-2
 Stamp''tryImproveWith-2
 Stamp'new-0
-StampElement'new-2
+StampElement'new-2
 StampFactory'booleanFalse
 StampFactory'booleanTrue
 StampFactory'forConstant-1
@@ -4036,7 +4029,7 @@ ZeroExtendNode'new-4
 (defp BinaryOpLogicNode
     (#_"Stamp" BinaryOpLogicNode'''getSucceedingStampForX-4 [#_"BinaryOpLogicNode" this, #_"boolean" negated?, #_"Stamp" xStamp, #_"Stamp" yStamp])
     (#_"Stamp" BinaryOpLogicNode'''getSucceedingStampForY-4 [#_"BinaryOpLogicNode" this, #_"boolean" negated?, #_"Stamp" xStamp, #_"Stamp" yStamp])
-    (#_"TriState" BinaryOpLogicNode'''tryFold-3 [#_"BinaryOpLogicNode" this, #_"Stamp" xStamp, #_"Stamp" yStamp])
+    (#_"Boolean" BinaryOpLogicNode'''tryFold-3 [#_"BinaryOpLogicNode" this, #_"Stamp" xStamp, #_"Stamp" yStamp])
 )
 
 (defp BinaryStrategy)
@@ -5382,7 +5375,6 @@ ZeroExtendNode'new-4
 )
 
 (defp NodeLoopInfo)
-(defp NodeMap)
 
 (defp NodePlugin
     ;;;
@@ -5870,7 +5862,7 @@ ZeroExtendNode'new-4
     (#_"Stamp" Stamp'''improveWith-2 [#_"Stamp" this, #_"Stamp" other])
 )
 
-(defp StampElement)
+(defp StampElement)
 
 (defp StampInverter
     ;;;
@@ -6057,7 +6049,7 @@ ZeroExtendNode'new-4
 
 (defp UnaryOpLogicNode
     (#_"Stamp" UnaryOpLogicNode'''getSucceedingStampForValue-2 [#_"UnaryOpLogicNode" this, #_"boolean" negated?])
-    (#_"TriState" UnaryOpLogicNode'''tryFold-2 [#_"UnaryOpLogicNode" this, #_"Stamp" valueStamp])
+    (#_"Boolean" UnaryOpLogicNode'''tryFold-2 [#_"UnaryOpLogicNode" this, #_"Stamp" valueStamp])
 )
 
 (defp UnboxNode)
@@ -10746,13 +10738,13 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"void" InliningUtil'fixFrameStates-3 [#_"Graph" graph, #_"MergeNode" originalMerge, #_"PhiNode" returnPhi]
+    (defn- #_"void" InliningUtil'fixFrameStates-2 [#_"MergeNode" originalMerge, #_"PhiNode" returnPhi]
         ;; It is possible that some of the frame states that came from AFTER_BCI reference a Phi node
         ;; that was created to merge multiple returns. This can create cycles (see GR-3949 and GR-3957).
         ;; To detect this, we follow the control paths starting from the merge node,
         ;; split the Phi node inputs at merges and assign the proper input to each frame state.
         (let [
-            #_"NodeMap<Node>" seen (NodeMap'new-1g graph)
+            #_"{Node}" seen #{}
             #_"ArrayDeque<Node>" workList (ArrayDeque.)
             #_"ArrayDeque<ValueNode>" valueList (ArrayDeque.)
         ]
@@ -10764,7 +10756,7 @@ ZeroExtendNode'new-4
                     #_"ValueNode" currentValue (#_"ArrayDeque" .pop valueList)
                 ]
                     (when-not (contains? seen node)
-                        (#_"Map" .put seen, node, node)
+                        (§ ass! seen (conj seen node))
                         (when (and (satisfies? StateSplit node) (not= node originalMerge))
                             (let [
                                 #_"FrameState" state (:stateAfter node)
@@ -10845,7 +10837,7 @@ ZeroExtendNode'new-4
                             ]
                                 (§ ass! invokeNode (Node''replaceAtUsages-2 invokeNode, returnValue))
                                 (when (AbstractMergeNode''isPhiAtMerge-2 merge, returnValue)
-                                    (InliningUtil'fixFrameStates-3 graph, merge, (§ cast #_"PhiNode" returnValue))
+                                    (InliningUtil'fixFrameStates-2 merge, (§ cast #_"PhiNode" returnValue))
                                 )
                                 (§ ass! merge (FixedWithNextNode''setNext-2 merge, n))
                                 returnValue
@@ -11323,11 +11315,11 @@ ZeroExtendNode'new-4
                                             (if (satisfies? LoopBeginNode merge)
                                                 (let [
                                                     #_"EconomicMap<LoopExitNode, T>" loopExitState (NodeIteratorClosure'''processLoop-3 closure, merge, state)
-                                                    #_"MapCursor<LoopExitNode, T>" entry (#_"EconomicMap" .getEntries loopExitState)
+                                                    #_"MapCursor<LoopExitNode, T>" entry (#_"EconomicMap" ßgetEntries loopExitState)
                                                 ]
-                                                    (while (#_"MapCursor" .advance entry)
-                                                        (#_"EconomicMap" .put blockEndStates, (#_"MapCursor" .getKey entry), (#_"MapCursor" .getValue entry))
-                                                        (#_"Deque" .add nodeQueue, (#_"MapCursor" .getKey entry))
+                                                    (while (#_"MapCursor" .advance entry)
+                                                        (#_"EconomicMap" .put blockEndStates, (#_"MapCursor" .getKey entry), (#_"MapCursor" .getValue entry))
+                                                        (#_"Deque" .add nodeQueue, (#_"MapCursor" .getKey entry))
                                                     )
                                                 )
                                                 (let [
@@ -11433,7 +11425,7 @@ ZeroExtendNode'new-4
      ;
      ; This method returns false if no re-ordering is necessary in this micro-block.
      ;;
-    (defn- #_"boolean" GuardOrder'propagatePriority-3 [#_"MicroBlock" block, #_"NodeMap<GuardPriority>" priorities, #_"NodeBitMap" blockNodes]
+    (defn- #_"boolean" GuardOrder'propagatePriority-3 [#_"MicroBlock" block, #_"{Node GuardPriority}" priorities, #_"NodeBitMap" blockNodes]
         (let [
             [#_"GuardPriority" lowest #_"Node*" stack]
                 (loop-when [lowest (GuardPriority'highest-0) stack nil #_"NodeEntry" e (:head block)] (some? e) => [lowest stack]
@@ -11454,7 +11446,7 @@ ZeroExtendNode'new-4
                                         )
                                     stack (cons guard stack)
                                 ]
-                                    (NodeMap''set-3 priorities, guard, priority)
+                                    (§ ass! priorities (assoc priorities guard priority))
                                     [lowest stack]
                                 )
                             )
@@ -11482,7 +11474,7 @@ ZeroExtendNode'new-4
                                                 #_"GuardPriority" ip (get priorities input)
                                             ]
                                                 (when (or (nil? ip) (GuardPriority'isLowerPriorityThan-2 ip, priority)) => stack
-                                                    (NodeMap''set-3 priorities, input, priority)
+                                                    (§ ass! priorities (assoc priorities input priority))
                                                     (cons input stack)
                                                 )
                                             )
@@ -11537,7 +11529,7 @@ ZeroExtendNode'new-4
      ; {@code blockNodes} and {@code priorities} are temporary data-structures allocated once by the callers of this method.
      ; They should be in their "initial"/"empty" state when calling this method and when it returns.
      ;;
-    (defn- #_"MicroBlock" GuardOrder'resortGuards-3 [#_"MicroBlock" block, #_"NodeBitMap" blockNodes, #_"NodeMap<GuardPriority>" priorities]
+    (defn- #_"MicroBlock" GuardOrder'resortGuards-3 [#_"MicroBlock" block, #_"NodeBitMap" blockNodes, #_"{Node GuardPriority}" priorities]
         (when (GuardOrder'propagatePriority-3 block, priorities, blockNodes)
             (let [
                 #_"SortedSet<GuardNode>" availableGuards (ß TreeSet. (ß #_"Comparator" .thenComparingInt (#_"Comparator" .thenComparing (Comparator/comparing (§ ffun #_"Map" .get)), (ß GuardNode(§ ffun )StaticDeoptimizingNode'''computePriority-1)), (§ ffun #_"Object" .hashCode)))
@@ -11581,10 +11573,10 @@ ZeroExtendNode'new-4
      ; Note that this only changes the order of nodes within {@linkplain MicroBlock micro-blocks},
      ; nodes will not be moved from one micro-block to another.
      ;;
-    (defn #_"void" GuardOrder'resortGuards-2 [#_"Graph" graph, #_"NodeMap<MicroBlock>" entries]
+    (defn #_"void" GuardOrder'resortGuards-2 [#_"Graph" graph, #_"{Node MicroBlock}" entries]
         (let [
             #_"NodeBitMap" blockNodes (NodeBitMap'new-1 graph)
-            #_"NodeMap<GuardPriority>" priorities (NodeMap'new-1g graph)
+            #_"{Node GuardPriority}" priorities {}
         ]
             (doseq [#_"MicroBlock" block (into #{} (map #(get entries %) (Graph''getNodes-2 graph, GuardNode)))]
                 (let [
@@ -17688,7 +17680,7 @@ ZeroExtendNode'new-4
                          ; This alias map exists only once and is not part of the block state, so that during iterative
                          ; loop processing the alias of a node may be changed to another value.
                          ;;
-                        #_"NodeMap<ValueNode>" :aliases (NodeMap'new-1g (:graph cfg))
+                        #_"{Node ValueNode}" :aliases {}
                         ;;;
                          ; This set allows for a quick check whether a node has inputs that were replaced with "scalar" values.
                          ;;
@@ -17871,13 +17863,13 @@ ZeroExtendNode'new-4
                             #_"Node" node (first s)
                         ]
                             ;; reset the aliases (may be non-nil due to iterative loop processing)
-                            (NodeMap''set-3 (:aliases this), node, nil)
+                            (§ ass! (:aliases this) (assoc (:aliases this) node nil))
                             (when (satisfies? LoopExitNode node)
                                 (loop-when-recur [#_"ISeq" s (seq (LoopExitNode''proxies-1 node))] (some? s) [(next s)]
                                     (let [
                                         #_"ProxyNode" proxy (first s)
                                     ]
-                                        (NodeMap''set-3 (:aliases this), proxy, nil)
+                                        (§ ass! (:aliases this) (assoc (:aliases this) proxy nil))
                                         (§ ass! this (assoc this :changed? (or (:changed? this) (and (EffectsClosure'''processNode-5 this, proxy, state, effects, lastFixedNode) (EffectsClosure'isSignificantNode-1 node)))))
                                     )
                                 )
@@ -17995,7 +17987,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"void" EffectsClosure''addScalarAlias-3 [#_"EffectsClosure<T>" this, #_"ValueNode" node, #_"ValueNode" alias]
-        (NodeMap''set-3 (:aliases this), node, alias)
+        (§ ass! (:aliases this) (assoc (:aliases this) node alias))
         (doseq [#_"Node" usage (:nodeUsages node)]
             (when-not (NodeBitMap''isNew-2 (:hasScalarReplacedInputs this), usage)
                 (NodeBitMap''mark-2 (:hasScalarReplacedInputs this), usage)
@@ -18009,7 +18001,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"ValueNode" EffectsClosure''getScalarAlias-2 [#_"EffectsClosure<T>" this, #_"ValueNode" node]
-        (when (and (some? node) (Node''isAlive-1 node) (not (NodeMap''isNew-2 (:aliases this), node))) => node
+        (when (and (some? node) (Node''isAlive-1 node) (contains? (:aliases this) node)) => node
             (let [
                 #_"ValueNode" result (get (:aliases this) node)
             ]
@@ -18461,7 +18453,7 @@ ZeroExtendNode'new-4
                     ]
                         (if (satisfies? VirtualObjectNode alias)
                             (PartialEscapeClosure''addVirtualAlias-3 this, alias, phi)
-                            (NodeMap''set-3 (:aliases this), phi, nil)
+                            (§ ass! (:aliases this) (assoc (:aliases this) phi nil))
                         )
                     )
                 )
@@ -18556,7 +18548,7 @@ ZeroExtendNode'new-4
 
     (defn #_"ObjectState" PartialEscapeClosure''getObjectState-3 [#_"PartialEscapeClosure<T>" this, #_"PartialEscapeBlockState" state, #_"ValueNode" value]
         (when (some? value)
-            (if (and (Node''isAlive-1 value) (not (NodeMap''isNew-2 (:aliases this), value)))
+            (if (and (Node''isAlive-1 value) (contains? (:aliases this) value))
                 (let [
                     #_"ValueNode" object (get (:aliases this) value)
                 ]
@@ -18572,7 +18564,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"ValueNode" PartialEscapeClosure''getAlias-2 [#_"PartialEscapeClosure<T>" this, #_"ValueNode" value]
-        (if (and (some? value) (not (satisfies? VirtualObjectNode value)) (Node''isAlive-1 value) (not (NodeMap''isNew-2 (:aliases this), value)))
+        (if (and (some? value) (not (satisfies? VirtualObjectNode value)) (Node''isAlive-1 value) (contains? (:aliases this) value))
             (or (get (:aliases this) value)
                 value
             )
@@ -18611,7 +18603,7 @@ ZeroExtendNode'new-4
 
     (defn #_"void" PartialEscapeClosure''addVirtualAlias-3 [#_"PartialEscapeClosure<T>" this, #_"VirtualObjectNode" virtual, #_"ValueNode" node]
         (when (Node''isAlive-1 node)
-            (NodeMap''set-3 (:aliases this), node, virtual)
+            (§ ass! (:aliases this) (assoc (:aliases this) node virtual))
             (doseq [#_"Node" usage (:nodeUsages node)]
                 (PartialEscapeClosure''markVirtualUsages-2 this, usage)
             )
@@ -18954,19 +18946,19 @@ ZeroExtendNode'new-4
 
             (when (:hasValueProxies (:graph exitNode))
                 (let [
-                    #_"MapCursor<ReadCacheEntry, ValueNode>" entry (#_"EconomicMap" .getEntries (:readCache exitState))
+                    #_"MapCursor<ReadCacheEntry, ValueNode>" entry (#_"EconomicMap" ßgetEntries (:readCache exitState))
                 ]
-                    (while (#_"MapCursor" .advance entry)
-                        (when-not (= (get (:readCache initialState) (#_"MapCursor" .getKey entry)) (#_"MapCursor" .getValue entry))
+                    (while (#_"MapCursor" .advance entry)
+                        (when-not (= (get (:readCache initialState) (#_"MapCursor" .getKey entry)) (#_"MapCursor" .getValue entry))
                             (let [
-                                #_"ValueNode" value (PEReadEliminationBlockState''getReadCache-6 exitState, (:object (#_"MapCursor" .getKey entry)), (:identity (#_"MapCursor" .getKey entry)), (:index (#_"MapCursor" .getKey entry)), (:kind (#_"MapCursor" .getKey entry)), this)
+                                #_"ValueNode" value (PEReadEliminationBlockState''getReadCache-6 exitState, (:object (#_"MapCursor" .getKey entry)), (:identity (#_"MapCursor" .getKey entry)), (:index (#_"MapCursor" .getKey entry)), (:kind (#_"MapCursor" .getKey entry)), this)
                             ]
                                 (when-not (and (satisfies? ProxyNode value) (= (:loopExit value) exitNode))
                                     (let [
                                         #_"ProxyNode" proxy (ValueProxyNode'new-2 value, exitNode)
                                     ]
                                         (GraphEffectList''addFloatingNode-3 effects, proxy, "readCacheProxy")
-                                        (#_"EconomicMap" .put (:readCache exitState), (#_"MapCursor" .getKey entry), proxy)
+                                        (#_"EconomicMap" .put (:readCache exitState), (#_"MapCursor" .getKey entry), proxy)
                                     )
                                 )
                             )
@@ -19237,15 +19229,15 @@ ZeroExtendNode'new-4
         (#_"void" EffectsClosure'''processLoopExit-5 [#_"ReadEliminationClosure" this, #_"LoopExitNode" exitNode, #_"ReadEliminationBlockState" initialState, #_"ReadEliminationBlockState" exitState, #_"GraphEffectList" effects]
             (when (:hasValueProxies (:graph exitNode))
                 (let [
-                    #_"MapCursor<CacheEntry, ValueNode>" entry (#_"EconomicMap" .getEntries (:readCache exitState))
+                    #_"MapCursor<CacheEntry, ValueNode>" entry (#_"EconomicMap" ßgetEntries (:readCache exitState))
                 ]
-                    (while (#_"MapCursor" .advance entry)
-                        (when-not (= (get (:readCache initialState) (#_"MapCursor" .getKey entry)) (#_"MapCursor" .getValue entry))
+                    (while (#_"MapCursor" .advance entry)
+                        (when-not (= (get (:readCache initialState) (#_"MapCursor" .getKey entry)) (#_"MapCursor" .getValue entry))
                             (let [
-                                #_"ProxyNode" proxy (ValueProxyNode'new-2 (ReadEliminationBlockState''getCacheEntry-2 exitState, (#_"MapCursor" .getKey entry)), exitNode)
+                                #_"ProxyNode" proxy (ValueProxyNode'new-2 (ReadEliminationBlockState''getCacheEntry-2 exitState, (#_"MapCursor" .getKey entry)), exitNode)
                             ]
                                 (GraphEffectList''addFloatingNode-3 effects, proxy, "readCacheProxy")
-                                (#_"EconomicMap" .put (:readCache exitState), (#_"MapCursor" .getKey entry), proxy)
+                                (#_"EconomicMap" .put (:readCache exitState), (#_"MapCursor" .getKey entry), proxy)
                             )
                         )
                     )
@@ -22328,7 +22320,7 @@ ZeroExtendNode'new-4
             (hash-map
                 #_"LIR" :lir lir
                 #_"LIRGenerator" :lirGen lirGen
-                #_"VariableMap" :map (VariableMap'new-0)
+                #_"VariableMap" :variableMap (VariableMap'new-0)
                 #_"BitSet" :phiConstants (BitSet.)
                 #_"BitSet" :defined (BitSet.)
                 #_"BlockMap<LIRInsertionBuffer>" :insertionBuffers (BlockMap'new-1 (:cfg lir))
@@ -22353,13 +22345,13 @@ ZeroExtendNode'new-4
                                 (do
                                     (#_"BitSet" .set (:defined this), (:index value))
                                     (when (CLOptimization'isConstantLoad-1 op)
-                                        (VariableMap''put-3 (:map this), value, (DefUseTree'new-2 op, block))
+                                        (VariableMap''put-3 (:variableMap this), value, (DefUseTree'new-2 op, block))
                                     )
                                 )
                                 (do
                                     ;; Variable is redefined: happens only for constant loads
                                     ;; introduced by phi resolution -> ignore.
-                                    (VariableMap''remove-2 (:map this), value)
+                                    (VariableMap''remove-2 (:variableMap this), value)
                                     (#_"BitSet" .set (:phiConstants this), (:index value))
                                 )
                             )
@@ -22371,7 +22363,7 @@ ZeroExtendNode'new-4
                     (#_"void" ValueConsumer'''visitValue-5 [#_"ValueConsumer" _, #_"LIRInstruction" op, #_"Value" value, #_"OperandMode" _mode, #_"{OperandFlag}" _flags]
                         (when (and (satisfies? Variable value) (not (#_"BitSet" .get (:phiConstants this), (:index value))))
                             (let [
-                                #_"DefUseTree" tree (VariableMap''get-2 (:map this), value)
+                                #_"DefUseTree" tree (VariableMap''get-2 (:variableMap this), value)
                             ]
                                 (when (some? tree)
                                     (DefUseTree''addUsage-4 tree, block, op, value)
@@ -22521,9 +22513,9 @@ ZeroExtendNode'new-4
             (CLOptimization''analyzeBlock-2 this, b)
         )
         ;; remove all with only one use
-        (VariableMap''filter-2 (:map this), #(< 1 (DefUseTree''usageCount-1 %)))
+        (VariableMap''filter-2 (:variableMap this), #(< 1 (DefUseTree''usageCount-1 %)))
         ;; create ConstantTree
-        (VariableMap''forEach-2 (:map this), #(CLOptimization''createConstantTree-2 this, %))
+        (VariableMap''forEach-2 (:variableMap this), #(CLOptimization''createConstantTree-2 this, %))
         ;; insert moves, delete nil instructions and reset instruction ids
         (doseq [#_"Block" b (:reversePostOrder (:cfg (:lir this)))]
             (CLOptimization''rewriteBlock-2 this, b)
@@ -24137,11 +24129,11 @@ ZeroExtendNode'new-4
         (#_"LogicNode" LowerOp'''findSynonym-3 [#_"LowerOp" this, #_"ValueNode" forX, #_"ValueNode" forY]
             (when-not (= (GraphUtil'unproxify-1n forX) (GraphUtil'unproxify-1n forY)) => (LogicConstantNode'contradiction-0)
                 (let [
-                    #_"TriState" fold (LowerOp''tryFold-3 this, (:stamp forX), (:stamp forY))
+                    #_"Boolean" fold (LowerOp''tryFold-3 this, (:stamp forX), (:stamp forY))
                 ]
                     (cond
-                        (#_"TriState" .isTrue fold)  (LogicConstantNode'tautology-0)
-                        (#_"TriState" .isFalse fold) (LogicConstantNode'contradiction-0)
+                        (true? fold)  (LogicConstantNode'tautology-0)
+                        (false? fold) (LogicConstantNode'contradiction-0)
                         (satisfies? IntegerStamp (:stamp forY))
                             (let [
                                 #_"IntegerStamp" yStamp (:stamp forY)
@@ -24191,12 +24183,11 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"TriState" LowerOp''tryFold-3 [#_"LowerOp" this, #_"Stamp" xStamp, #_"Stamp" yStamp]
-        (when (and (satisfies? IntegerStamp xStamp) (satisfies? IntegerStamp yStamp)) => TriState/UNKNOWN
+    (defn #_"Boolean" LowerOp''tryFold-3 [#_"LowerOp" this, #_"Stamp" xStamp, #_"Stamp" yStamp]
+        (when (and (satisfies? IntegerStamp xStamp) (satisfies? IntegerStamp yStamp))
             (cond
-                (<    (LowerOp'''compare-3 this, (LowerOp'''upperBound-2 this, xStamp), (LowerOp'''lowerBound-2 this, yStamp)) 0) TriState/TRUE
-                (<= 0 (LowerOp'''compare-3 this, (LowerOp'''lowerBound-2 this, xStamp), (LowerOp'''upperBound-2 this, yStamp))  ) TriState/FALSE
-                :else                                                                                                          TriState/UNKNOWN
+                (<    (LowerOp'''compare-3 this, (LowerOp'''upperBound-2 this, xStamp), (LowerOp'''lowerBound-2 this, yStamp)) 0) true
+                (<= 0 (LowerOp'''compare-3 this, (LowerOp'''lowerBound-2 this, xStamp), (LowerOp'''upperBound-2 this, yStamp))  ) false
             )
         )
     )
@@ -25331,13 +25322,13 @@ ZeroExtendNode'new-4
 )
 
 (class-ns ConditionalEliminationInstance [RecursiveVisitor #_"<Integer>"]
-    (defn #_"ConditionalEliminationInstance" ConditionalEliminationInstance'new-3 [#_"Graph" graph, #_"BlockMap<List<Node>>" blockToNodes, #_"NodeMap<Block>" nodeToBlock]
+    (defn #_"ConditionalEliminationInstance" ConditionalEliminationInstance'new-3 [#_"Graph" graph, #_"BlockMap<List<Node>>" blockToNodes, #_"{Node Block}" nodeToBlock]
         (merge (ConditionalEliminationInstance'class.)
             (hash-map
                 #_"Graph" :graph graph
-                #_"NodeMap<InfoElement>" :map (NodeMap'new-1g graph)
+                #_"{Node InfoElement}" :ieMap {}
                 #_"BlockMap<List<Node>>" :blockToNodes blockToNodes
-                #_"NodeMap<Block>" :nodeToBlock nodeToBlock
+                #_"{Node Block}" :nodeToBlock nodeToBlock
                 #_"[Node]" :undo []
                 #_"EconomicMap<MergeNode, EconomicMap<ValuePhiNode, PhiInfoElement>>" :mergeMaps (EconomicMap/create)
                 ;;;
@@ -25353,7 +25344,7 @@ ZeroExtendNode'new-4
             #_"ValueNode" value (GraphUtil'skipPi-1 proxiedValue)
         ]
             (when (some? value)
-                (NodeMap''getAndGrow-2 (:map this), value)
+                (get (:ieMap this) value)
             )
         )
     )
@@ -25549,10 +25540,10 @@ ZeroExtendNode'new-4
             (let [
                 #_"DeoptimizingGuard" pendingGuard (first s)
                 #_"LogicNode" pendingCondition (DeoptimizingGuard'''getCondition-1 pendingGuard)
-                #_"TriState" result
+                #_"Boolean" result
                     (condp satisfies? pendingCondition
                         UnaryOpLogicNode
-                            (when (= (Unary'''getValue-1 pendingCondition) original) => TriState/UNKNOWN
+                            (when (= (Unary'''getValue-1 pendingCondition) original)
                                 (UnaryOpLogicNode'''tryFold-2 pendingCondition, stamp)
                             )
                         BinaryOpLogicNode
@@ -25563,19 +25554,19 @@ ZeroExtendNode'new-4
                                 (condp = original
                                     x (BinaryOpLogicNode'''tryFold-3 pendingCondition, stamp, (ConditionalEliminationInstance'getOtherSafeStamp-1 y))
                                     y (BinaryOpLogicNode'''tryFold-3 pendingCondition, (ConditionalEliminationInstance'getOtherSafeStamp-1 x), stamp)
-                                    (when (and (satisfies? IntegerEqualsNode pendingCondition) (satisfies? ConstantNode y) (satisfies? AndNode x) (= (:y x) y) (= (:x x) original)) => TriState/UNKNOWN
+                                    (when (and (satisfies? IntegerEqualsNode pendingCondition) (satisfies? ConstantNode y) (satisfies? AndNode x) (= (:y x) y) (= (:x x) original))
                                         (BinaryOpLogicNode'''tryFold-3 pendingCondition, (BinaryOp'''foldStamp-3 (:and (ArithmeticOpTable'forStamp-1 stamp)), stamp, (ConditionalEliminationInstance'getOtherSafeStamp-1 y)), (ConditionalEliminationInstance'getOtherSafeStamp-1 y))
                                     )
                                 )
                             )
-                        TriState/UNKNOWN
+                        nil
                     )
             ]
                 ;; The test can be folded using the information available,
                 ;; but it can only be moved up if we're sure there's no schedule dependence.
-                (or (and (#_"TriState" .isKnown result)
+                (or (and (some? result)
                         (ConditionalEliminationInstance''canScheduleAbove-4 this, (DeoptimizingGuard'''getCondition-1 thisGuard), pendingGuard, original)
-                        (ConditionalEliminationInstance'foldGuard-5 thisGuard, pendingGuard, (#_"TriState" .toBoolean result), stamp, guardRewirer)
+                        (ConditionalEliminationInstance'foldGuard-5 thisGuard, pendingGuard, result, stamp, guardRewirer)
                     )
                     (recur (next s))
                 )
@@ -25587,7 +25578,7 @@ ZeroExtendNode'new-4
         (when (and (some? stamp) (not (Stamp'''isUnrestricted-1 stamp))) => this
             (loop-when [#_"ValueNode" value maybeProxiedValue stamp stamp] (and (some? stamp) (some? value)) => this
                 (let [
-                    this (update this :map #(NodeMap''setAndGrow-3 %, value, (InfoElement'new-4 stamp, guard, (when (satisfies? PiNode value) value), (NodeMap''getAndGrow-2 %, value))))
+                    this (update this :ieMap #(assoc % value (InfoElement'new-4 stamp, guard, (when (satisfies? PiNode value) value), (get % value))))
                     this (update this :undo conj value)
                 ]
                     (cond
@@ -25641,10 +25632,10 @@ ZeroExtendNode'new-4
                         ]
                             (loop-when [#_"InfoElement" ie (ConditionalEliminationInstance''getInfoElements-2 this, value)] (some? ie)
                                 (let [
-                                    #_"TriState" result (UnaryOpLogicNode'''tryFold-2 node, (:stamp ie))
+                                    #_"Boolean" result (UnaryOpLogicNode'''tryFold-2 node, (:stamp ie))
                                 ]
-                                    (if (#_"TriState" .isKnown result)
-                                        (§ return (GuardRewirer'''rewire-5 guardRewirer, (:guard ie), (#_"TriState" .toBoolean result), (:stamp ie), (:proxifiedInput ie)))
+                                    (if (some? result)
+                                        (§ return (GuardRewirer'''rewire-5 guardRewirer, (:guard ie), result, (:stamp ie), (:proxifiedInput ie)))
                                         (recur (ConditionalEliminationInstance''nextElement-2 this, ie))
                                     )
                                 )
@@ -25655,10 +25646,10 @@ ZeroExtendNode'new-4
                             ]
                                 (when (some? _)
                                     (let [
-                                        #_"TriState" result (UnaryOpLogicNode'''tryFold-2 node, sx)
+                                        #_"Boolean" result (UnaryOpLogicNode'''tryFold-2 node, sx)
                                     ]
-                                        (when (#_"TriState" .isKnown result)
-                                            (§ return (GuardRewirer'''rewire-5 guardRewirer, (:guard ie), (#_"TriState" .toBoolean result), sx, (:proxifiedInput ie)))
+                                        (when (some? result)
+                                            (§ return (GuardRewirer'''rewire-5 guardRewirer, (:guard ie), result, sx, (:proxifiedInput ie)))
                                         )
                                     )
                                 )
@@ -25675,10 +25666,10 @@ ZeroExtendNode'new-4
                         (do
                             (loop-when [#_"InfoElement" ie (ConditionalEliminationInstance''getInfoElements-2 this, (:x node))] (some? ie)
                                 (let [
-                                    #_"TriState" result (BinaryOpLogicNode'''tryFold-3 node, (:stamp ie), (:stamp (:y node)))
+                                    #_"Boolean" result (BinaryOpLogicNode'''tryFold-3 node, (:stamp ie), (:stamp (:y node)))
                                 ]
-                                    (if (#_"TriState" .isKnown result)
-                                        (§ return (GuardRewirer'''rewire-5 guardRewirer, (:guard ie), (#_"TriState" .toBoolean result), (:stamp ie), (:proxifiedInput ie)))
+                                    (if (some? result)
+                                        (§ return (GuardRewirer'''rewire-5 guardRewirer, (:guard ie), result, (:stamp ie), (:proxifiedInput ie)))
                                         (recur (ConditionalEliminationInstance''nextElement-2 this, ie))
                                     )
                                 )
@@ -25687,19 +25678,19 @@ ZeroExtendNode'new-4
                             (if (satisfies? ConstantNode (:y node))
                                 (when-some [[#_"InfoElement" ie #_"Stamp" sx] (ConditionalEliminationInstance''recursiveFoldStamp-2 this, (:x node))]
                                     (let [
-                                        #_"TriState" result (BinaryOpLogicNode'''tryFold-3 node, sx, (:stamp (:y node)))
+                                        #_"Boolean" result (BinaryOpLogicNode'''tryFold-3 node, sx, (:stamp (:y node)))
                                     ]
-                                        (when (#_"TriState" .isKnown result)
-                                            (§ return (GuardRewirer'''rewire-5 guardRewirer, (:guard ie), (#_"TriState" .toBoolean result), sx, (:proxifiedInput ie)))
+                                        (when (some? result)
+                                            (§ return (GuardRewirer'''rewire-5 guardRewirer, (:guard ie), result, sx, (:proxifiedInput ie)))
                                         )
                                     )
                                 )
                                 (loop-when [#_"InfoElement" ie (ConditionalEliminationInstance''getInfoElements-2 this, (:y node))] (some? ie)
                                     (let [
-                                        #_"TriState" result (BinaryOpLogicNode'''tryFold-3 node, (:stamp (:x node)), (:stamp ie))
+                                        #_"Boolean" result (BinaryOpLogicNode'''tryFold-3 node, (:stamp (:x node)), (:stamp ie))
                                     ]
-                                        (if (#_"TriState" .isKnown result)
-                                            (§ return (GuardRewirer'''rewire-5 guardRewirer, (:guard ie), (#_"TriState" .toBoolean result), (:stamp ie), (:proxifiedInput ie)))
+                                        (if (some? result)
+                                            (§ return (GuardRewirer'''rewire-5 guardRewirer, (:guard ie), result, (:stamp ie), (:proxifiedInput ie)))
                                             (recur (ConditionalEliminationInstance''nextElement-2 this, ie))
                                         )
                                     )
@@ -25715,10 +25706,10 @@ ZeroExtendNode'new-4
                                 (loop-when [#_"InfoElement" ie (ConditionalEliminationInstance''getInfoElements-2 this, (:x (:x node)))] (some? ie)
                                     (let [
                                         #_"Stamp" sx (BinaryNode'''foldStamp-3 (:x node), (:stamp ie), (:stamp (:y (:x node))))
-                                        #_"TriState" result (BinaryOpLogicNode'''tryFold-3 node, sx, (:stamp (:y node)))
+                                        #_"Boolean" result (BinaryOpLogicNode'''tryFold-3 node, sx, (:stamp (:y node)))
                                     ]
-                                        (if (#_"TriState" .isKnown result)
-                                            (§ return (GuardRewirer'''rewire-5 guardRewirer, (:guard ie), (#_"TriState" .toBoolean result), sx, (:proxifiedInput ie)))
+                                        (if (some? result)
+                                            (§ return (GuardRewirer'''rewire-5 guardRewirer, (:guard ie), result, sx, (:proxifiedInput ie)))
                                             (recur (ConditionalEliminationInstance''nextElement-2 this, ie))
                                         )
                                     )
@@ -25781,7 +25772,7 @@ ZeroExtendNode'new-4
                                                     ]
                                                         ;; Can only canonicalize if the guards are equal.
                                                         (and (= innerGuard guard)
-                                                            (GuardRewirer'''rewire-5 guardRewirer, guard, (§ xor innerResult (:yNegated node)), guardedValueStamp, proxifiedInput)
+                                                            (GuardRewirer'''rewire-5 guardRewirer, guard, (ß xor innerResult (:yNegated node)), guardedValueStamp, proxifiedInput)
                                                         )
                                                     )
                                                 )
@@ -25803,16 +25794,16 @@ ZeroExtendNode'new-4
         ]
             (when (some? mergeMap)
                 (let [
-                    #_"MapCursor<ValuePhiNode, PhiInfoElement>" entries (#_"EconomicMap" .getEntries mergeMap)
+                    #_"MapCursor<ValuePhiNode, PhiInfoElement>" entries (#_"EconomicMap" ßgetEntries mergeMap)
                 ]
-                    (loop-when-recur [] (#_"MapCursor" .advance entries) []
+                    (loop-when-recur [] (#_"MapCursor" .advance entries) []
                         (let [
-                            #_"ValuePhiNode" phi (#_"MapCursor" .getKey entries)
+                            #_"ValuePhiNode" phi (#_"MapCursor" .getKey entries)
                         ]
                             ;; Phi might have been killed already via a conditional elimination in another branch.
                             (when-not (Node''isDeleted-1 phi)
                                 (let [
-                                    #_"PhiInfoElement" phiInfoElements (#_"MapCursor" .getValue entries)
+                                    #_"PhiInfoElement" phiInfoElements (#_"MapCursor" .getValue entries)
                                     #_"Stamp" bestPossibleStamp
                                         (loop-when [bestPossibleStamp nil #_"int" i 0] (< i (PhiNode''valueCount-1 phi)) => bestPossibleStamp
                                             (let [
@@ -26181,10 +26172,11 @@ ZeroExtendNode'new-4
                 (loop-when this (< mark (count (:undo this))) => this
                     (let [
                         [#_"Node" node this] [(peek (:undo this)) (update this :undo pop)]
+                        this
+                            (when (Node''isAlive-1 node) => this
+                                (update-in this [:ieMap node] :parent)
+                            )
                     ]
-                        (when (Node''isAlive-1 node)
-                            (NodeMap''set-3 (:map this), node, (:parent (get (:map this) node)))
-                        )
                         (recur this)
                     )
                 )
@@ -26206,7 +26198,7 @@ ZeroExtendNode'new-4
         (#_"Graph" Phase'''run-3 [#_"ConditionalEliminationPhase" this, #_"Graph" graph, #_"PhaseContext" context]
             (let [
                 #_"ControlFlowGraph" cfg (ControlFlowGraph'compute-5 graph, true, true, true, true)
-                [#_"BlockMap<List<Node>>" blockToNodes #_"NodeMap<Block>" nodeToBlock]
+                [#_"BlockMap<List<Node>>" blockToNodes #_"{Node Block}" nodeToBlock]
                     (when (:fullSchedule this) => [nil (:nodeToBlock cfg)]
                         (ControlFlowGraph''visitDominatorTree-3 cfg, (MoveGuardsUpwards'new-0), (:hasValueProxies graph))
                         (SchedulePhase'run-3 graph, SchedulingStrategy'EARLIEST_WITH_GUARD_ORDER, cfg)
@@ -26381,7 +26373,7 @@ ZeroExtendNode'new-4
         (merge (ControlFlowGraph'class.)
             (hash-map
                 #_"Graph" :graph graph
-                #_"NodeMap<Block>" :nodeToBlock (NodeMap'new-1g graph)
+                #_"{Node Block}" :nodeToBlock {}
                 ;;;
                  ; The list of blocks contained in this control flow graph.
                  ;
@@ -26395,7 +26387,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"ControlFlowGraph" ControlFlowGraph''setNodeToBlock-2 [#_"ControlFlowGraph" this, #_"NodeMap<Block>" nodeMap]
+    (defn #_"ControlFlowGraph" ControlFlowGraph''setNodeToBlock-2 [#_"ControlFlowGraph" this, #_"{Node Block}" nodeMap]
         (assoc this :nodeToBlock nodeMap)
     )
 
@@ -26409,7 +26401,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"void" ControlFlowGraph''identifyBlock-2 [#_"ControlFlowGraph" this, #_"Block" block]
         (loop [#_"FixedWithNextNode" node (:beginNode block)]
-            (NodeMap''set-3 (:nodeToBlock this), node, block)
+            (§ ass! (:nodeToBlock this) (assoc (:nodeToBlock this) node block))
             (let [
                 #_"FixedNode" _next (:next node)
             ]
@@ -26419,7 +26411,7 @@ ZeroExtendNode'new-4
                     FixedWithNextNode
                         (recur _next)
                     (do
-                        (NodeMap''set-3 (:nodeToBlock this), _next, block)
+                        (§ ass! (:nodeToBlock this) (assoc (:nodeToBlock this) _next block))
                         (§ ass! block (assoc block :endNode _next))
                     )
                 )
@@ -26428,7 +26420,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"void" ControlFlowGraph'computeLoopPredecessors-3 [#_"NodeMap<Block>" nodeMap, #_"Block" block, #_"LoopBeginNode" loopBeginNode]
+    (defn- #_"void" ControlFlowGraph'computeLoopPredecessors-3 [#_"{Node Block}" nodeMap, #_"Block" block, #_"LoopBeginNode" loopBeginNode]
         (let [
             #_"int" forwardEndCount (AbstractMergeNode''forwardEndCount-1 loopBeginNode)
             #_"LoopEndNode[]" loopEnds (LoopBeginNode''orderedLoopEnds-1 loopBeginNode)
@@ -26457,7 +26449,7 @@ ZeroExtendNode'new-4
                     (ControlFlowGraph''identifyBlock-2 this, (Block'new-1 (first s)))
                 )
             ;; Compute reverse post order.
-            #_"NodeMap<Block>" nodeMap (:nodeToBlock this)
+            #_"{Node Block}" nodeMap (:nodeToBlock this)
             #_"Block[]" stack (make-array Block'iface numBlocks)
             #_"Block" startBlock (ControlFlowGraph''blockFor-2 this, (:start (:graph this)))
             _ (aset stack 0 startBlock)
@@ -29004,10 +28996,10 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"<K, V> boolean" EffectsBlockState'isSubMapOf-2 [#_"EconomicMap<K, V>" superMap, #_"EconomicMap<K, V>" subMap]
         (or (= superMap subMap)
-            (loop-when [#_"UnmodifiableMapCursor<K, V>" cursor (#_"EconomicMap" .getEntries subMap)] (#_"UnmodifiableMapCursor" .advance cursor) => true
+            (loop-when [#_"UnmodifiableMapCursor<K, V>" cursor (#_"EconomicMap" ßgetEntries subMap)] (#_"UnmodifiableMapCursor" .advance cursor) => true
                 (let [
-                    #_"K" key (#_"UnmodifiableMapCursor" .getKey cursor)
-                    #_"V" value (#_"UnmodifiableMapCursor" .getValue cursor)
+                    #_"K" key (#_"UnmodifiableMapCursor" .getKey cursor)
+                    #_"V" value (#_"UnmodifiableMapCursor" .getValue cursor)
                     #_"V" otherValue (get superMap key)
                 ]
                     (and (or (= otherValue value) (= value otherValue)) ;; %% oops!
@@ -29430,7 +29422,6 @@ ZeroExtendNode'new-4
         ]
             (if (some? obj)
                 (:materializedValue obj)
-                ;; assert !scalarAliases.containsKey(cacheValue);
                 (EffectsClosure''getScalarAlias-2 closure, cacheValue)
             )
         )
@@ -30317,13 +30308,12 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn #_"EconomicMap<Node, Node>" NodeClass'addGraphDuplicate-5 [#_"Graph" graph, #_"Graph" oldGraph, #_"int" estimatedNodeCount, #_"Node*" nodes, #_"DuplicationReplacement" replacements]
+    (defn #_"EconomicMap<Node, Node>" NodeClass'addGraphDuplicate-5 [#_"Graph" graph, #_"Graph" oldGraph, #_"int" estimatedNodeCount, #_"Node*" nodes, #_"DuplicationReplacement" replacements]
         (let [
-            #_"int" denseThreshold (+ (Graph''getNodeCount-1 oldGraph) (>> (:nodesDeleted oldGraph) 4))
             #_"EconomicMap<Node, Node>" newNodes
-                (if (< denseThreshold estimatedNodeCount)
-                    (NodeMap'new-1g oldGraph) ;; use dense map
-                    (EconomicMap/create)      ;; use sparse map
+                (if (< (+ (Graph''getNodeCount-1 oldGraph) (>> (:nodesDeleted oldGraph) 4)) estimatedNodeCount)
+                    {} ;; use dense map
+                    (EconomicMap/create) ;; use sparse map
                 )
             _ (NodeClass'createNodeDuplicates-4 graph, nodes, replacements, newNodes)
             #_"InplaceUpdateClosure" replacementClosure
@@ -33242,12 +33232,12 @@ ZeroExtendNode'new-4
      ; @param replacementsMap the replacement map (can be nil if no replacement is to be performed)
      ; @return a map which associates the original nodes from {@code nodes} to their duplicates
      ;;
-    (defn #_"{Node Node}" Graph''addDuplicates-5m [#_"Graph" this, #_"Node*" newNodes, #_"Graph" oldGraph, #_"int" estimatedNodeCount, #_"EconomicMap<Node, Node>" replacementsMap]
-        (Graph''addDuplicates-5r this, newNodes, oldGraph, estimatedNodeCount, (when (some? replacementsMap) (MapReplacement'new-1 replacementsMap)))
+    (defn #_"{Node Node}" Graph''addDuplicates-5m [#_"Graph" this, #_"Node*" newNodes, #_"Graph" oldGraph, #_"int" estimatedNodeCount, #_"EconomicMap<Node, Node>" replacementsMap]
+        (Graph''addDuplicates-5r this, newNodes, oldGraph, estimatedNodeCount, (when (some? replacementsMap) (MapReplacement'new-1 replacementsMap)))
     )
 
-    (defn #_"EconomicMap<Node, Node>" Graph''addDuplicates-5r [#_"Graph" this, #_"Node*" newNodes, #_"Graph" oldGraph, #_"int" estimatedNodeCount, #_"DuplicationReplacement" replacements]
-        (NodeClass'addGraphDuplicate-5 this, oldGraph, estimatedNodeCount, newNodes, replacements)
+    (defn #_"EconomicMap<Node, Node>" Graph''addDuplicates-5r [#_"Graph" this, #_"Node*" newNodes, #_"Graph" oldGraph, #_"int" estimatedNodeCount, #_"DuplicationReplacement" replacements]
+        (NodeClass'addGraphDuplicate-5 this, oldGraph, estimatedNodeCount, newNodes, replacements)
     )
 
     (defn #_"boolean" Graph''isFrozen-1 [#_"Graph" this]
@@ -37199,13 +37189,13 @@ ZeroExtendNode'new-4
 )
 
 (class-ns LIRBuilder []
-    (defn #_"LIRBuilder" LIRBuilder'new-2 [#_"Graph" graph, #_"LIRGenerator" gen]
+    (defn #_"LIRBuilder" LIRBuilder'new-1 [#_"LIRGenerator" gen]
         (let [
             #_"LIRBuilder" this
                 (merge (LIRBuilder'class.)
                     (hash-map
                         #_"LIRGenerator" :gen gen
-                        #_"NodeMap<Value>" :nodeOperands (NodeMap'new-1g graph)
+                        #_"{Node Value}" :nodeOperands {}
                         #_"LockStackHolder" :lockStackHolder (LockStackHolder'new-1 (LockStack'new-2 (:frameMapBuilder (:res gen)), (LIRKind'value-1 AMD64Kind/QWORD)))
                         #_"ValueNode" :currentInstruction nil
                     )
@@ -37222,12 +37212,8 @@ ZeroExtendNode'new-4
      ; @return {@code operand}
      ;;
     (defn #_"Value" LIRBuilder''setResult-3 [#_"LIRBuilder" this, #_"ValueNode" node, #_"Value" operand]
-        (NodeMap''set-3 (:nodeOperands this), node, operand)
+        (§ ass! (:nodeOperands this) (assoc (:nodeOperands this) node operand))
         operand
-    )
-
-    (defn- #_"Value" LIRBuilder''getOperand-2 [#_"LIRBuilder" this, #_"Node" node]
-        (when (some? (:nodeOperands this)) (get (:nodeOperands this) node))
     )
 
     ;;;
@@ -37237,14 +37223,14 @@ ZeroExtendNode'new-4
      ; @param node A node that produces a result value.
      ;;
     (defn #_"Value" LIRBuilder''operand-2 [#_"LIRBuilder" this, #_"Node" node]
-        (LIRBuilder''getOperand-2 this, node)
+        (get (:nodeOperands this) node)
     )
 
     ;;;
      ; Returns true if there is an {@link Value operand} associated with the {@code node} in the current block.
      ;;
     (defn #_"boolean" LIRBuilder''hasOperand-2 [#_"LIRBuilder" this, #_"Node" node]
-        (some? (LIRBuilder''getOperand-2 this, node))
+        (some? (LIRBuilder''operand-2 this, node))
     )
 
     (defn #_"LabelRef" LIRBuilder''getLIRBlock-2 [#_"LIRBuilder" this, #_"FixedNode" node]
@@ -37265,7 +37251,7 @@ ZeroExtendNode'new-4
         (loop-when [#_"LIRKind" derivedKind (LIRGenerator'toRegisterKind-1 (Stamp'''getLIRKind-1 (:stamp phi))) #_"int" i 0] (and (< i (PhiNode''valueCount-1 phi)) (not (LIRKind''isUnknownReference-1 derivedKind))) => derivedKind
             (let [
                 #_"ValueNode" node (PhiNode''valueAt-2i phi, i)
-                #_"Value" value (LIRBuilder''getOperand-2 this, node)
+                #_"Value" value (LIRBuilder''operand-2 this, node)
                 ;; get ValueKind for input
                 #_"LIRKind" valueKind
                     (if (some? value)
@@ -37415,7 +37401,7 @@ ZeroExtendNode'new-4
             ]
                 (doseq [#_"Node" node nodes]
                     ;; => there can be cases in which the result of an instruction is already set before by other instructions
-                    (when (and (satisfies? ValueNode node) (nil? (LIRBuilder''getOperand-2 this, node)) (not (LIRBuilder''peephole-2 this, node)))
+                    (when (and (satisfies? ValueNode node) (nil? (LIRBuilder''operand-2 this, node)) (not (LIRBuilder''peephole-2 this, node)))
                         (§ ass! this (assoc this :currentInstruction node))
                         (LIRBuilder''emitNode-2 this, node)
                     )
@@ -45002,7 +44988,7 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"void" LoopFragment'markFloating-4 [#_"Deque<WorkListEntry>" workList, #_"Node" start, #_"NodeBitMap" loopNodes, #_"NodeBitMap" nonLoopNodes]
-        (when-not (#_"TriState" .isKnown (LoopFragment'isLoopNode-3 start, loopNodes, nonLoopNodes))
+        (when-not (some? (LoopFragment'isLoopNode-3 start, loopNodes, nonLoopNodes))
             (#_"Deque" .push workList, (WorkListEntry'new-2 start, loopNodes))
             (while (seq workList)
                 (let [
@@ -45011,10 +44997,10 @@ ZeroExtendNode'new-4
                     (if (seq (:usages currentEntry))
                         (let [
                             #_"Node" current (#_"Iterator" .next (:usages currentEntry))
-                            #_"TriState" result (LoopFragment'isLoopNode-3 current, loopNodes, nonLoopNodes)
+                            #_"Boolean" result (LoopFragment'isLoopNode-3 current, loopNodes, nonLoopNodes)
                         ]
-                            (if (#_"TriState" .isKnown result)
-                                (when (#_"TriState" .toBoolean result)
+                            (if (some? result)
+                                (when (true? result)
                                     (§ ass currentEntry (assoc currentEntry :isLoopNode true))
                                 )
                                 (#_"Deque" .push workList, (WorkListEntry'new-2 current, loopNodes))
@@ -45144,13 +45130,12 @@ ZeroExtendNode'new-4
         (LoopFragment'computeNodes-4 (NodeBitMap'new-1 graph), graph, blocks, earlyExits)
     )
 
-    (defn #_"TriState" LoopFragment'isLoopNode-3 [#_"Node" node, #_"NodeBitMap" loopNodes, #_"NodeBitMap" nonLoopNodes]
+    (defn #_"Boolean" LoopFragment'isLoopNode-3 [#_"Node" node, #_"NodeBitMap" loopNodes, #_"NodeBitMap" nonLoopNodes]
         (cond
-            (NodeBitMap''isMarked-2n loopNodes, node)                  TriState/TRUE
-            (NodeBitMap''isMarked-2n nonLoopNodes, node)               TriState/FALSE
+            (NodeBitMap''isMarked-2n loopNodes, node)                  true
+            (NodeBitMap''isMarked-2n nonLoopNodes, node)               false
             ;; phi nodes are treated the same as fixed nodes in this algorithm to break cycles
-            (or (satisfies? FixedNode node) (satisfies? PhiNode node)) TriState/FALSE
-            :else                                                      TriState/UNKNOWN
+            (or (satisfies? FixedNode node) (satisfies? PhiNode node)) false
         )
     )
 
@@ -46709,17 +46694,17 @@ ZeroExtendNode'new-4
 )
 
 (class-ns MapReplacement [DuplicationReplacement]
-    (defn #_"MapReplacement" MapReplacement'new-1 [#_"EconomicMap<Node, Node>" map]
+    (defn #_"MapReplacement" MapReplacement'new-1 [#_"EconomicMap<Node, Node>" dupeMap]
         (merge (MapReplacement'class.)
             (hash-map
-                #_"EconomicMap<Node, Node>" :map map
+                #_"EconomicMap<Node, Node>" :dupeMap dupeMap
             )
         )
     )
 
     (defm MapReplacement DuplicationReplacement
         (#_"Node" DuplicationReplacement'''replacement-2 [#_"MapReplacement" this, #_"Node" original]
-            (or (get (:map this) original) original)
+            (or (get (:dupeMap this) original) original)
         )
     )
 )
@@ -47525,7 +47510,7 @@ ZeroExtendNode'new-4
                                 (let [
                                     #_"PhiNode" phi (first s)
                                 ]
-                                    (NodeMap''set-3 (:aliases (:peClosure this)), phi, nil)
+                                    (§ ass! (:aliases (:peClosure this)) (assoc (:aliases (:peClosure this)) phi nil))
                                     (recur (or materialized? (and (NodeBitMap''isMarked-2n (:hasVirtualInputs (:peClosure this)), phi) (satisfies? ValuePhiNode phi) (PEMergeProcessor''processPhi-3 this, phi, states))) (next s))
                                 )
                             )
@@ -47584,13 +47569,13 @@ ZeroExtendNode'new-4
 
     (defn- #_"void" PEReadEliminationMergeProcessor''mergeReadCache-2 [#_"PEReadEliminationMergeProcessor" this, #_"List<PEReadEliminationBlockState>" states]
         (let [
-            #_"MapCursor<ReadCacheEntry, ValueNode>" cursor (#_"EconomicMap" .getEntries (:readCache (nth states 0)))
+            #_"MapCursor<ReadCacheEntry, ValueNode>" cursor (#_"EconomicMap" ßgetEntries (:readCache (nth states 0)))
         ]
-            (while (#_"MapCursor" .advance cursor)
+            (while (#_"MapCursor" .advance cursor)
                 (let [
-                    #_"ReadCacheEntry" key (#_"MapCursor" .getKey cursor)
+                    #_"ReadCacheEntry" key (#_"MapCursor" .getKey cursor)
                     [#_"ValueNode" value #_"boolean" phi]
-                        (loop-when [value (#_"MapCursor" .getValue cursor) phi false #_"int" i 1] (< i (count states)) => [value phi]
+                        (loop-when [value (#_"MapCursor" .getValue cursor) phi false #_"int" i 1] (< i (count states)) => [value phi]
                             (let [
                                 #_"ValueNode" other (get (:readCache (nth states i)) key)
                             ]
@@ -47699,13 +47684,13 @@ ZeroExtendNode'new-4
     (defm ReadEliminationMergeProcessor MergeProcessor
         (#_"void" MergeProcessor'''merge-2 [#_"ReadEliminationMergeProcessor" this, #_"List<ReadEliminationBlockState>" states]
             (let [
-                #_"MapCursor<CacheEntry, ValueNode>" cursor (#_"EconomicMap" .getEntries (:readCache (nth states 0)))
+                #_"MapCursor<CacheEntry, ValueNode>" cursor (#_"EconomicMap" ßgetEntries (:readCache (nth states 0)))
             ]
-                (while (#_"MapCursor" .advance cursor)
+                (while (#_"MapCursor" .advance cursor)
                     (let [
-                        #_"CacheEntry" key (#_"MapCursor" .getKey cursor)
+                        #_"CacheEntry" key (#_"MapCursor" .getKey cursor)
                         [#_"ValueNode" value #_"boolean" phi]
-                            (loop-when [value (#_"MapCursor" .getValue cursor) phi false #_"int" i 1] (< i (count states)) => [value phi]
+                            (loop-when [value (#_"MapCursor" .getValue cursor) phi false #_"int" i 1] (< i (count states)) => [value phi]
                                 (let [
                                     #_"ValueNode" other (get (:readCache (nth states i)) key)
                                 ]
@@ -60524,12 +60509,11 @@ ZeroExtendNode'new-4
             (when-not negated? (Stamp'''join-2 xStamp, yStamp))
         )
 
-        (#_"TriState" BinaryOpLogicNode'''tryFold-3 [#_"IntegerEqualsNode" this, #_"Stamp" xStamp, #_"Stamp" yStamp]
-            (when (and (satisfies? IntegerStamp xStamp) (satisfies? IntegerStamp yStamp)) => TriState/UNKNOWN
+        (#_"Boolean" BinaryOpLogicNode'''tryFold-3 [#_"IntegerEqualsNode" this, #_"Stamp" xStamp, #_"Stamp" yStamp]
+            (when (and (satisfies? IntegerStamp xStamp) (satisfies? IntegerStamp yStamp))
                 (cond
-                    (Stamp'''alwaysDistinct-2 xStamp, yStamp) TriState/FALSE
-                    (Stamp''neverDistinct-2 xStamp, yStamp)  TriState/TRUE
-                    :else                                    TriState/UNKNOWN
+                    (Stamp'''alwaysDistinct-2 xStamp, yStamp) false
+                    (Stamp''neverDistinct-2 xStamp, yStamp)   true
                 )
             )
         )
@@ -60592,7 +60576,7 @@ ZeroExtendNode'new-4
             (IntegerLowerThanNode''getSucceedingStampForX-7 this, (not negated?), (not negated?), yStamp, xStamp, (:y this), (:x this))
         )
 
-        (#_"TriState" BinaryOpLogicNode'''tryFold-3 [#_"IntegerLowerThanNode" this, #_"Stamp" xStamp, #_"Stamp" yStamp]
+        (#_"Boolean" BinaryOpLogicNode'''tryFold-3 [#_"IntegerLowerThanNode" this, #_"Stamp" xStamp, #_"Stamp" yStamp]
             (LowerOp''tryFold-3 (:op this), xStamp, yStamp)
         )
     )
@@ -60723,12 +60707,11 @@ ZeroExtendNode'new-4
             )
         )
 
-        (#_"TriState" BinaryOpLogicNode'''tryFold-3 [#_"PointerEqualsNode" this, #_"Stamp" xStamp, #_"Stamp" yStamp]
-            (when (and (satisfies? ObjectStamp xStamp) (satisfies? ObjectStamp yStamp)) => TriState/UNKNOWN
+        (#_"Boolean" BinaryOpLogicNode'''tryFold-3 [#_"PointerEqualsNode" this, #_"Stamp" xStamp, #_"Stamp" yStamp]
+            (when (and (satisfies? ObjectStamp xStamp) (satisfies? ObjectStamp yStamp))
                 (cond
-                    (Stamp'''alwaysDistinct-2 xStamp, yStamp) TriState/FALSE
-                    (Stamp''neverDistinct-2 xStamp, yStamp)  TriState/TRUE
-                    :else                                    TriState/UNKNOWN
+                    (Stamp'''alwaysDistinct-2 xStamp, yStamp) false
+                    (Stamp''neverDistinct-2 xStamp, yStamp)   true
                 )
             )
         )
@@ -60936,8 +60919,8 @@ ZeroExtendNode'new-4
             nil
         )
 
-        (#_"TriState" BinaryOpLogicNode'''tryFold-3 [#_"InstanceOfDynamicNode" this, #_"Stamp" xStamp, #_"Stamp" yStamp]
-            TriState/UNKNOWN
+        (#_"Boolean" BinaryOpLogicNode'''tryFold-3 [#_"InstanceOfDynamicNode" this, #_"Stamp" xStamp, #_"Stamp" yStamp]
+            nil
         )
     )
 )
@@ -61005,12 +60988,11 @@ ZeroExtendNode'new-4
             (IntegerTestNode'getSucceedingStamp-3 negated?, yStamp, xStamp)
         )
 
-        (#_"TriState" BinaryOpLogicNode'''tryFold-3 [#_"IntegerTestNode" this, #_"Stamp" xStamp, #_"Stamp" yStamp]
-            (when (and (satisfies? IntegerStamp xStamp) (satisfies? IntegerStamp yStamp)) => TriState/UNKNOWN
+        (#_"Boolean" BinaryOpLogicNode'''tryFold-3 [#_"IntegerTestNode" this, #_"Stamp" xStamp, #_"Stamp" yStamp]
+            (when (and (satisfies? IntegerStamp xStamp) (satisfies? IntegerStamp yStamp))
                 (cond
-                    (zero? (& (:upMask xStamp) (:upMask yStamp)))           TriState/TRUE
-                    (not (zero? (& (:downMask xStamp) (:downMask yStamp)))) TriState/FALSE
-                    :else                                                   TriState/UNKNOWN
+                    (zero? (& (:upMask xStamp) (:upMask yStamp)))           true
+                    (not (zero? (& (:downMask xStamp) (:downMask yStamp)))) false
                 )
             )
         )
@@ -61288,12 +61270,12 @@ ZeroExtendNode'new-4
                             ;; check whether !X => Y constant
                             (when (and (satisfies? UnaryOpLogicNode forX) (satisfies? UnaryOpLogicNode forY) (= (ShortCircuitOrNode'skipThroughPisAndProxies-1 (Unary'''getValue-1 forX)) (ShortCircuitOrNode'skipThroughPisAndProxies-1 (Unary'''getValue-1 forY)))) => this
                                 (let [
-                                    #_"TriState" fold (UnaryOpLogicNode'''tryFold-2 forY, (UnaryOpLogicNode'''getSucceedingStampForValue-2 forX, (not (:xNegated this))))
+                                    #_"Boolean" fold (UnaryOpLogicNode'''tryFold-2 forY, (UnaryOpLogicNode'''getSucceedingStampForValue-2 forX, (not (:xNegated this))))
                                 ]
-                                    (when (#_"TriState" .isKnown fold) => this
+                                    (when (some? fold) => this
                                         (cond
-                                            (bit-xor (#_"TriState" .toBoolean fold) (:yNegated this)) (LogicConstantNode'tautology-0)
-                                            (:xNegated this)                                          (LogicNegationNode'create-1 forX)
+                                            (ß xor fold (:yNegated this)) (LogicConstantNode'tautology-0)
+                                            (:xNegated this)              (LogicNegationNode'create-1 forX)
                                             :else                                                     forX
                                         )
                                     )
@@ -61451,10 +61433,10 @@ ZeroExtendNode'new-4
     (defm InstanceOfNode Virtualizable
         (#_"void" Virtualizable'''virtualize-2 [#_"InstanceOfNode" this, #_"VirtualizerTool" tool]
             (let [
-                #_"TriState" fold (UnaryOpLogicNode'''tryFold-2 this, (:stamp (VirtualizerTool'''getAlias-2 tool, (Unary'''getValue-1 this))))
+                #_"Boolean" fold (UnaryOpLogicNode'''tryFold-2 this, (:stamp (VirtualizerTool'''getAlias-2 tool, (Unary'''getValue-1 this))))
             ]
-                (when-not (= fold TriState/UNKNOWN)
-                    (VirtualizerTool'''replaceWithValue-2 tool, (LogicConstantNode'forBoolean-2 (#_"TriState" .isTrue fold), (:graph this)))
+                (when (some? fold)
+                    (VirtualizerTool'''replaceWithValue-2 tool, (LogicConstantNode'forBoolean-2 (true? fold), (:graph this)))
                 )
             )
             nil
@@ -61466,14 +61448,13 @@ ZeroExtendNode'new-4
             (when-not negated? (:checkedStamp this))
         )
 
-        (#_"TriState" UnaryOpLogicNode'''tryFold-2 [#_"InstanceOfNode" this, #_"Stamp" stamp]
-            (when (satisfies? ObjectStamp stamp) => TriState/UNKNOWN
+        (#_"Boolean" UnaryOpLogicNode'''tryFold-2 [#_"InstanceOfNode" this, #_"Stamp" stamp]
+            (when (satisfies? ObjectStamp stamp)
                 (cond
                     ;; The check can never succeed, the intersection of the two stamps is empty.
-                    (Stamp''isEmpty-1 (Stamp'''join-2 (:checkedStamp this), stamp))       TriState/FALSE
+                    (Stamp''isEmpty-1 (Stamp'''join-2 (:checkedStamp this), stamp))       false
                     ;; The check will always succeed, the union of the two stamps is equal to the checked stamp.
-                    (= (:checkedStamp this) (Stamp'''meet-2 (:checkedStamp this), stamp)) TriState/TRUE
-                    :else                                                                TriState/UNKNOWN
+                    (= (:checkedStamp this) (Stamp'''meet-2 (:checkedStamp this), stamp)) true
                 )
             )
         )
@@ -61529,10 +61510,10 @@ ZeroExtendNode'new-4
     (defm IsNullNode Virtualizable
         (#_"void" Virtualizable'''virtualize-2 [#_"IsNullNode" this, #_"VirtualizerTool" tool]
             (let [
-                #_"TriState" fold (UnaryOpLogicNode'''tryFold-2 this, (:stamp (VirtualizerTool'''getAlias-2 tool, (Unary'''getValue-1 this))))
+                #_"Boolean" fold (UnaryOpLogicNode'''tryFold-2 this, (:stamp (VirtualizerTool'''getAlias-2 tool, (Unary'''getValue-1 this))))
             ]
-                (when-not (= fold TriState/UNKNOWN)
-                    (VirtualizerTool'''replaceWithValue-2 tool, (LogicConstantNode'forBoolean-2 (#_"TriState" .isTrue fold), (:graph this)))
+                (when (some? fold)
+                    (VirtualizerTool'''replaceWithValue-2 tool, (LogicConstantNode'forBoolean-2 (true? fold), (:graph this)))
                 )
             )
             nil
@@ -61549,12 +61530,11 @@ ZeroExtendNode'new-4
             )
         )
 
-        (#_"TriState" UnaryOpLogicNode'''tryFold-2 [#_"IsNullNode" this, #_"Stamp" stamp]
-            (when (satisfies? ObjectStamp stamp) => TriState/UNKNOWN
+        (#_"Boolean" UnaryOpLogicNode'''tryFold-2 [#_"IsNullNode" this, #_"Stamp" stamp]
+            (when (satisfies? ObjectStamp stamp)
                 (cond
-                    (:always-nil? stamp) TriState/TRUE
-                    (:never-nil? stamp)  TriState/FALSE
-                    :else                TriState/UNKNOWN
+                    (:always-nil? stamp) true
+                    (:never-nil? stamp)  false
                 )
             )
         )
@@ -61573,11 +61553,11 @@ ZeroExtendNode'new-4
                     )
                 )
             this (assoc this :nodes (NodeInputList'new-2i this, (count mmap)))
-            #_"MapCursor<LocationIdentity, MemoryNode>" cursor (#_"EconomicMap" .getEntries mmap)
+            #_"MapCursor<LocationIdentity, MemoryNode>" cursor (#_"EconomicMap" ßgetEntries mmap)
             _
-                (loop-when-recur [#_"int" i 0] (#_"MapCursor" .advance cursor) [(inc i)]
-                    (#_"List" .add (:locationIdentities this), (#_"MapCursor" .getKey cursor))
-                    (NodeList''initialize-3 (:nodes this), i, (#_"MapCursor" .getValue cursor))
+                (loop-when-recur [#_"int" i 0] (#_"MapCursor" .advance cursor) [(inc i)]
+                    (#_"List" .add (:locationIdentities this), (#_"MapCursor" .getKey cursor))
+                    (NodeList''initialize-3 (:nodes this), i, (#_"MapCursor" .getValue cursor))
                 )
         ]
             this
@@ -63826,19 +63806,19 @@ ZeroExtendNode'new-4
 
                 (let [
                     #_"NodeLoopInfo<MemoryMap0>" loopInfo (ReentrantNodeIterator'processLoop-3 this, _loop, initialState)
-                    #_"UnmodifiableMapCursor<LoopEndNode, MemoryMap0>" endStateCursor (#_"EconomicMap" .getEntries (:endStates loopInfo))
+                    #_"UnmodifiableMapCursor<LoopEndNode, MemoryMap0>" endStateCursor (#_"EconomicMap" ßgetEntries (:endStates loopInfo))
                 ]
-                    (while (#_"UnmodifiableMapCursor" .advance endStateCursor)
+                    (while (#_"UnmodifiableMapCursor" .advance endStateCursor)
                         (let [
-                            #_"int" endIndex (AbstractMergeNode'''phiPredecessorIndex-2 _loop, (#_"UnmodifiableMapCursor" .getKey endStateCursor))
-                            #_"UnmodifiableMapCursor<LocationIdentity, MemoryPhiNode>" phiCursor (#_"EconomicMap" .getEntries phis)
+                            #_"int" endIndex (AbstractMergeNode'''phiPredecessorIndex-2 _loop, (#_"UnmodifiableMapCursor" .getKey endStateCursor))
+                            #_"UnmodifiableMapCursor<LocationIdentity, MemoryPhiNode>" phiCursor (#_"EconomicMap" ßgetEntries phis)
                         ]
-                            (while (#_"UnmodifiableMapCursor" .advance phiCursor)
+                            (while (#_"UnmodifiableMapCursor" .advance phiCursor)
                                 (let [
-                                    #_"LocationIdentity" key (#_"UnmodifiableMapCursor" .getKey phiCursor)
-                                    #_"PhiNode" phi (#_"UnmodifiableMapCursor" .getValue phiCursor)
+                                    #_"LocationIdentity" key (#_"UnmodifiableMapCursor" .getKey phiCursor)
+                                    #_"PhiNode" phi (#_"UnmodifiableMapCursor" .getValue phiCursor)
                                 ]
-                                    (PhiNode''initializeValueAt-3 phi, endIndex, (MemoryMap'''getLastLocationAccess-2 (#_"UnmodifiableMapCursor" .getValue endStateCursor), key))
+                                    (PhiNode''initializeValueAt-3 phi, endIndex, (MemoryMap'''getLastLocationAccess-2 (#_"UnmodifiableMapCursor" .getValue endStateCursor), key))
                                 )
                             )
                         )
@@ -63936,173 +63916,6 @@ ZeroExtendNode'new-4
                 #_"EconomicMap<LoopEndNode, T>" :endStates (EconomicMap/create)
                 #_"EconomicMap<LoopExitNode, T>" :exitStates (EconomicMap/create)
             )
-        )
-    )
-)
-
-(class-ns NodeMap #_"<T>" [#_"EconomicMap" #_"<Node, T>"]
-    (def- #_"int" NodeMap'MIN_REALLOC_SIZE 16)
-
-    (defn #_"NodeMap" NodeMap'new-1g [#_"Graph" graph]
-        (merge (NodeMap'class.)
-            (hash-map
-                #_"Graph" :graph graph
-                #_"Object[]" :values (make-array Object (count (:gNodes graph)))
-            )
-        )
-    )
-
-    (defn #_"NodeMap" NodeMap'new-1m [#_"NodeMap<T>" copyFrom]
-        (merge (NodeMap'class.)
-            (hash-map
-                #_"Graph" :graph (:graph copyFrom)
-                #_"Object[]" :values (Arrays/copyOf (:values copyFrom), (count (:values copyFrom)))
-            )
-        )
-    )
-
-    (§ override! #_"T" #_"Map." get [#_"NodeMap<T>" this, #_"Node" node]
-        (§ cast #_"T" (nth (:values this) (:nid node)))
-    )
-
-    (defn- #_"this" NodeMap''checkAndGrow-2 [#_"NodeMap<T>" this, #_"Node" node]
-        (when (NodeMap''isNew-2 this, node) => this
-            (assoc this :values (Arrays/copyOf (:values this), (max NodeMap'MIN_REALLOC_SIZE (quot (* (count (:gNodes (:graph this))) 3) 2))))
-        )
-    )
-
-    (defn #_"T" NodeMap''getAndGrow-2 [#_"NodeMap<T>" this, #_"Node" node]
-        (§ ass! this (NodeMap''checkAndGrow-2 this, node))
-        (§ cast #_"T" (nth (:values this) (:nid node)))
-    )
-
-    (§ override! #_"boolean" #_"Map." containsKey [#_"NodeMap<T>" this, #_"Node" node]
-        (and (= (:graph node) (:graph this)) (some? (get this node)))
-    )
-
-    (defn #_"void" NodeMap''set-3 [#_"NodeMap<T>" this, #_"Node" node, #_"T" value]
-        (aset (:values this) (:nid node) value)
-        nil
-    )
-
-    (defn #_"this" NodeMap''setAndGrow-3 [#_"NodeMap<T>" this, #_"Node" node, #_"T" value]
-        (let [
-            this (NodeMap''checkAndGrow-2 this, node)
-        ]
-            (NodeMap''set-3 this, node, value)
-            this
-        )
-    )
-
-    ;;;
-     ; @return the key for the entry at index {@code i}
-     ;;
-    (defn #_"Node" NodeMap''getKey-2 [#_"NodeMap<T>" this, #_"int" i]
-        (nth (:gNodes (:graph this)) i)
-    )
-
-    (defn #_"boolean" NodeMap''isNew-2 [#_"NodeMap<T>" this, #_"Node" node]
-        (<= (count (:values this)) (:nid node))
-    )
-
-    (§ override! #_"Iterable<Node>" #_"UnmodifiableEconomicMap." getKeys [#_"NodeMap<T>" this]
-        (reify Iterable #_"<Node>"
-            (#_"Iterator<Node>" iterator [#_"Iterable<Node>" _]
-                (let [
-                    #_"int'" v'i (volatile! 0)
-                ]
-                    (reify Iterator #_"<Node>"
-                        (defn- #_"void" Iterator'forward-0k []
-                            (while (and (< @v'i (count (:values this))) (or (nil? (NodeMap''getKey-2 this, @v'i)) (nil? (nth (:values this) @v'i))))
-                                (vswap! v'i inc)
-                            )
-                            nil
-                        )
-
-                        (#_"boolean" hasNext [#_"Iterator<Node>" _]
-                            (Iterator'forward-0k)
-                            (< @v'i (count (:values this)))
-                        )
-
-                        (#_"Node" next [#_"Iterator<Node>" _]
-                            (let [
-                                #_"Node" key (NodeMap''getKey-2 this, @v'i)
-                            ]
-                                (vswap! v'i inc)
-                                (Iterator'forward-0k)
-                                key
-                            )
-                        )
-                    )
-                )
-            )
-        )
-    )
-
-    (§ override! #_"Iterable<T>" #_"UnmodifiableEconomicMap." getValues [#_"NodeMap<T>" this]
-        (reify Iterable #_"<T>"
-            (#_"Iterator<T>" iterator [#_"Iterable<T>" _]
-                (let [
-                    #_"int'" v'i (volatile! 0)
-                ]
-                    (reify Iterator #_"<T>"
-                        (defn- #_"void" Iterator'forward-0v []
-                            (while (and (< @v'i (count (:values this))) (or (nil? (NodeMap''getKey-2 this, @v'i)) (nil? (nth (:values this) @v'i))))
-                                (vswap! v'i inc)
-                            )
-                            nil
-                        )
-
-                        (#_"boolean" hasNext [#_"Iterator<T>" _]
-                            (Iterator'forward-0v)
-                            (< @v'i (count (:values this)))
-                        )
-
-                        (#_"T" next [#_"Iterator<T>" _]
-                            (let [
-                                #_"T" value (nth (:values this) @v'i)
-                            ]
-                                (vswap! v'i inc)
-                                (Iterator'forward-0v)
-                                value
-                            )
-                        )
-                    )
-                )
-            )
-        )
-    )
-
-    (§ override! #_"MapCursor<Node, T>" #_"UnmodifiableEconomicMap." getEntries [#_"NodeMap<T>" this]
-        (let [
-            #_"int'" v'i (volatile! -1)
-        ]
-            (reify MapCursor #_"<Node, T>"
-                (#_"boolean" advance [#_"MapCursor<Node, T>" _]
-                    (vswap! v'i inc)
-                    (while (and (< @v'i (count (:values this))) (or (nil? (nth (:values this) @v'i)) (nil? (NodeMap''getKey-2 this, @v'i))))
-                        (vswap! v'i inc)
-                    )
-                    (< @v'i (count (:values this)))
-                )
-
-                (#_"Node" getKey [#_"MapCursor<Node, T>" _]
-                    (NodeMap''getKey-2 this, @v'i)
-                )
-
-                (#_"T" getValue [#_"MapCursor<Node, T>" _]
-                    (nth (:values this) @v'i)
-                )
-            )
-        )
-    )
-
-    (§ override! #_"T" #_"Map." put [#_"NodeMap<T>" this, #_"Node" key, #_"T" value]
-        (let [
-            #_"T" result (get this key)
-        ]
-            (NodeMap''set-3 this, key, value)
-            result
         )
     )
 )
@@ -65503,7 +65316,7 @@ ZeroExtendNode'new-4
         (merge (RawConditionalEliminationVisitor'class.)
             (hash-map
                 #_"Graph" :graph graph
-                #_"NodeMap<StampElement>" :stampMap (NodeMap'new-1g graph)
+                #_"{Node StampElement}" :stampMap {}
                 #_"[Node]" :undo []
                 #_"ScheduleResult" :schedule schedule
                 #_"BlockMap<Integer>" :blockActionStart (BlockMap'new-1 (:cfg schedule))
@@ -65514,7 +65327,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"Stamp" RawConditionalEliminationVisitor''getBestStamp-2 [#_"RawConditionalEliminationVisitor" this, #_"ValueNode" value]
         (let [
-            #_"StampElement" stampElement (NodeMap''getAndGrow-2 (:stampMap this), value)
+            #_"StampElement" stampElement (get (:stampMap this) value)
         ]
             (if (some? stampElement) (:stamp stampElement) (:stamp value))
         )
@@ -65522,7 +65335,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"this" RawConditionalEliminationVisitor''registerNewStamp-3 [#_"RawConditionalEliminationVisitor" this, #_"ValueNode" value, #_"Stamp" stamp]
         (-> this
-            (update :stampMap #(NodeMap''setAndGrow-3 %, value, (StampElement'new-2 stamp, (NodeMap''getAndGrow-2 %, value))))
+            (update-in [:stampMap value] #(StampElement'new-2 stamp, %))
             (update :undo conj value)
         )
     )
@@ -65569,15 +65382,15 @@ ZeroExtendNode'new-4
 
     (defn- #_"this" RawConditionalEliminationVisitor''registerCombinedStamps-2 [#_"RawConditionalEliminationVisitor" this, #_"MergeNode" node]
         (let [
-            #_"MapCursor<ValueNode, Stamp>" entries (#_"EconomicMap" .getEntries (get (:endMaps this) node))
+            #_"MapCursor<ValueNode, Stamp>" entries (#_"EconomicMap" ßgetEntries (get (:endMaps this) node))
         ]
-            (loop-when this (#_"MapCursor" .advance entries) => this
+            (loop-when this (#_"MapCursor" .advance entries) => this
                 (let [
-                    #_"ValueNode" value (#_"MapCursor" .getKey entries)
+                    #_"ValueNode" value (#_"MapCursor" .getKey entries)
                     ;; nodes from this map can be deleted when a loop dies
                     this
                         (when-not (Node''isDeleted-1 value) => this
-                            (RawConditionalEliminationVisitor''registerNewValueStamp-3 this, value, (#_"MapCursor" .getValue entries))
+                            (RawConditionalEliminationVisitor''registerNewValueStamp-3 this, value, (#_"MapCursor" .getValue entries))
                         )
                 ]
                     (recur this)
@@ -65625,25 +65438,25 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"TriState" RawConditionalEliminationVisitor''tryProveCondition-2 [#_"RawConditionalEliminationVisitor" this, #_"LogicNode" logic]
+    (defn- #_"Boolean" RawConditionalEliminationVisitor''tryProveCondition-2 [#_"RawConditionalEliminationVisitor" this, #_"LogicNode" logic]
         (condp = (RawConditionalEliminationVisitor''getBestStamp-2 this, logic)
-            StampFactory'booleanTrue  TriState/TRUE
-            StampFactory'booleanFalse TriState/FALSE
+            StampFactory'booleanTrue  true
+            StampFactory'booleanFalse false
             (condp satisfies? logic
                 UnaryOpLogicNode  (UnaryOpLogicNode'''tryFold-2 logic, (RawConditionalEliminationVisitor''getBestStamp-2 this, (Unary'''getValue-1 logic)))
                 BinaryOpLogicNode (BinaryOpLogicNode'''tryFold-3 logic, (RawConditionalEliminationVisitor''getBestStamp-2 this, (:x logic)), (RawConditionalEliminationVisitor''getBestStamp-2 this, (:y logic)))
-                TriState/UNKNOWN
+                nil
             )
         )
     )
 
     (defn- #_"this" RawConditionalEliminationVisitor''processIf-2 [#_"RawConditionalEliminationVisitor" this, #_"IfNode" node]
         (let [
-            #_"TriState" result (RawConditionalEliminationVisitor''tryProveCondition-2 this, (:logic node))
+            #_"Boolean" result (RawConditionalEliminationVisitor''tryProveCondition-2 this, (:logic node))
         ]
-            (when-not (= result TriState/UNKNOWN) => this
+            (when (some? result) => this
                 (let [
-                    #_"AbstractBeginNode" survivingSuccessor (IfNode''getSuccessor-2 node, (= result TriState/TRUE))
+                    #_"AbstractBeginNode" survivingSuccessor (IfNode''getSuccessor-2 node, (true? result))
                 ]
                     (§ ass! survivingSuccessor (Node''replaceAtUsages-2 survivingSuccessor, nil))
                     (Node''replaceAtPredecessor-2 survivingSuccessor, nil)
@@ -65692,18 +65505,18 @@ ZeroExtendNode'new-4
 
     (defn- #_"this" RawConditionalEliminationVisitor''processConditional-2 [#_"RawConditionalEliminationVisitor" this, #_"ConditionalNode" node]
         (let [
-            #_"TriState" result (RawConditionalEliminationVisitor''tryProveCondition-2 this, (:logic node))
+            #_"Boolean" result (RawConditionalEliminationVisitor''tryProveCondition-2 this, (:logic node))
         ]
-            (if (= result TriState/UNKNOWN)
+            (if (some? result)
+                (do
+                    (§ ass! node (Node''replaceAndDelete-2 node, (if (true? result) (:trueValue node) (:falseValue node))))
+                    this
+                )
                 (let [
                     #_"Stamp" trueStamp (RawConditionalEliminationVisitor''getBestStamp-2 this, (:trueValue node))
                     #_"Stamp" falseStamp (RawConditionalEliminationVisitor''getBestStamp-2 this, (:falseValue node))
                 ]
                     (RawConditionalEliminationVisitor''registerNewStamp-3 this, node, (Stamp'''meet-2 trueStamp, falseStamp))
-                )
-                (do
-                    (§ ass! node (Node''replaceAndDelete-2 node, (if (= result TriState/TRUE) (:trueValue node) (:falseValue node))))
-                    this
                 )
             )
         )
@@ -65719,8 +65532,8 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"Block" RawConditionalEliminationVisitor'getBlock-2 [#_"ValueNode" node, #_"NodeMap<Block>" blockToNodeMap]
-        (get blockToNodeMap (if (satisfies? PhiNode node) (:merge node) node))
+    (defn- #_"Block" RawConditionalEliminationVisitor'getBlock-2 [#_"ValueNode" node, #_"{Node Block}" nodeToBlockMap]
+        (get nodeToBlockMap (if (satisfies? PhiNode node) (:merge node) node))
     )
 
     (defn- #_"this" RawConditionalEliminationVisitor''processEnd-2 [#_"RawConditionalEliminationVisitor" this, #_"EndNode" node]
@@ -65729,8 +65542,8 @@ ZeroExtendNode'new-4
         ]
             (when (satisfies? MergeNode merge) => this
                 (let [
-                    #_"NodeMap<Block>" blockToNodeMap (:nodeToBlockMap (:schedule this))
-                    #_"Block" mergeBlock (get blockToNodeMap merge)
+                    #_"{Node Block}" nodeToBlockMap (:nodeToBlockMap (:schedule this))
+                    #_"Block" mergeBlock (get nodeToBlockMap merge)
                     #_"Block" mergeBlockDominator (:dominator mergeBlock)
                     #_"EconomicMap<ValueNode, Stamp>" currentEndMap (get (:endMaps this) merge)
                 ]
@@ -65759,7 +65572,7 @@ ZeroExtendNode'new-4
                             (let [
                                 #_"int" lastMark (count (:undo this))
                             ]
-                                (loop-when [#_"Block" currentBlock (get blockToNodeMap node)] (not= currentBlock mergeBlockDominator)
+                                (loop-when [#_"Block" currentBlock (get nodeToBlockMap node)] (not= currentBlock mergeBlockDominator)
                                     (let [
                                         #_"int" mark (BlockMap''get-2 (:blockActionStart this), currentBlock)
                                     ]
@@ -65767,9 +65580,9 @@ ZeroExtendNode'new-4
                                             (let [
                                                 #_"ValueNode" nodeWithNewStamp (nth (:undo this) i)
                                             ]
-                                                (when-not (or (Node''isDeleted-1 nodeWithNewStamp) (satisfies? LogicNode nodeWithNewStamp) (satisfies? ConstantNode nodeWithNewStamp) (NodeMap''isNew-2 blockToNodeMap, nodeWithNewStamp))
+                                                (when-not (or (Node''isDeleted-1 nodeWithNewStamp) (satisfies? LogicNode nodeWithNewStamp) (satisfies? ConstantNode nodeWithNewStamp) (not (contains? nodeToBlockMap nodeWithNewStamp)))
                                                     (let [
-                                                        #_"Block" block (RawConditionalEliminationVisitor'getBlock-2 nodeWithNewStamp, blockToNodeMap)
+                                                        #_"Block" block (RawConditionalEliminationVisitor'getBlock-2 nodeWithNewStamp, nodeToBlockMap)
                                                     ]
                                                         (when (or (nil? block) (<= (:id block) (:id mergeBlockDominator)))
                                                             ;; Node with new stamp in path to the merge block dominator and that
@@ -65859,10 +65672,11 @@ ZeroExtendNode'new-4
                 (loop-when this (< mark (count (:undo this))) => this
                     (let [
                         [#_"Node" node this] [(peek (:undo this)) (update this :undo pop)]
+                        this
+                            (when (Node''isAlive-1 node) => this
+                                (update-in this [:stampMap node] :parent)
+                            )
                     ]
-                        (when (Node''isAlive-1 node)
-                            (NodeMap''set-3 (:stampMap this), node, (:parent (get (:stampMap this) node)))
-                        )
                         (recur this)
                     )
                 )
@@ -66544,15 +66358,15 @@ ZeroExtendNode'new-4
             (hash-map
                 #_"ControlFlowGraph" :cfg cfg
                 #_"BlockMap<List<Node>>" :blockToNodesMap nil
-                #_"NodeMap<Block>" :nodeToBlockMap nil
+                #_"{Node Block}" :nodeToBlockMap nil
             )
         )
     )
 
-    (defn- #_"Node*" ScheduleInstance'processStackPhi-4 [#_"Node*" stack, #_"PhiNode" phi, #_"NodeMap<MicroBlock>" mapping, #_"NodeBitMap" visited]
+    (defn- #_"Node*" ScheduleInstance'processStackPhi-4 [#_"Node*" stack, #_"PhiNode" phi, #_"{Node MicroBlock}" mapping, #_"NodeBitMap" visited]
         (when (NodeBitMap''checkAndMarkInc-2 visited, phi) => stack
             (let [
-                _ (NodeMap''set-3 mapping, phi, (get mapping (:merge phi)))
+                _ (§ ass! mapping (assoc mapping phi (get mapping (:merge phi))))
             ]
                 (dotimes [#_"int" i (AbstractMergeNode''forwardEndCount-1 (:merge phi))]
                     (let [
@@ -66568,10 +66382,10 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"Node*" ScheduleInstance'processStackProxy-4 [#_"Node*" stack, #_"ProxyNode" proxy, #_"NodeMap<MicroBlock>" mapping, #_"NodeBitMap" visited]
+    (defn- #_"Node*" ScheduleInstance'processStackProxy-4 [#_"Node*" stack, #_"ProxyNode" proxy, #_"{Node MicroBlock}" mapping, #_"NodeBitMap" visited]
         (when (NodeBitMap''checkAndMarkInc-2 visited, proxy) => stack
             (let [
-                _ (NodeMap''set-3 mapping, proxy, (get mapping (:loopExit proxy)))
+                _ (§ ass! mapping (assoc mapping proxy (get mapping (:loopExit proxy))))
                 #_"Node" input (:value proxy)
             ]
                 (when (and (some? input) (nil? (get mapping input))) => stack
@@ -66585,7 +66399,7 @@ ZeroExtendNode'new-4
      ; Processes the inputs of given block. Pushes unprocessed inputs onto the stack. Returns nil if there
      ; were still unprocessed inputs, otherwise returns the earliest block given node can be scheduled in.
      ;;
-    (defn- #_"MicroBlock" ScheduleInstance'processInputs-4 [#_"MicroBlock" start, #_"Node*" stack, #_"Node" node, #_"NodeMap<MicroBlock>" mapping]
+    (defn- #_"MicroBlock" ScheduleInstance'processInputs-4 [#_"MicroBlock" start, #_"Node*" stack, #_"Node" node, #_"{Node MicroBlock}" mapping]
         (when-not (:isLeafNode (:nodeClass node)) => start
             (loop-when [#_"MicroBlock" earliest start #_"ISeq" s (seq (Node''inputs-1 node))] (some? s) => earliest
                 (let [
@@ -66603,7 +66417,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"void" ScheduleInstance'processStack-4 [#_"Node" node, #_"MicroBlock" start, #_"NodeMap<MicroBlock>" mapping, #_"NodeBitMap" visited]
+    (defn- #_"void" ScheduleInstance'processStack-4 [#_"Node" node, #_"MicroBlock" start, #_"{Node MicroBlock}" mapping, #_"NodeBitMap" visited]
         (loop [#_"Node*" stack (list node)]
             (let [
                 node (first stack)
@@ -66618,7 +66432,7 @@ ZeroExtendNode'new-4
                                 (when (some? earliest) => stack ;; We need to delay until inputs are processed.
                                     ;; Can immediately process and pop.
                                     (NodeBitMap''checkAndMarkInc-2 visited, node)
-                                    (NodeMap''set-3 mapping, node, earliest)
+                                    (§ ass! mapping (assoc mapping node earliest))
                                     (§ ass! earliest (MicroBlock''add-2 earliest, node))
                                     (next stack)
                                 )
@@ -66632,7 +66446,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"void" ScheduleInstance'processNodes-4 [#_"Node*" nodes, #_"MicroBlock" start, #_"NodeMap<MicroBlock>" mapping, #_"NodeBitMap" visited]
+    (defn- #_"void" ScheduleInstance'processNodes-4 [#_"Node*" nodes, #_"MicroBlock" start, #_"{Node MicroBlock}" mapping, #_"NodeBitMap" visited]
         (doseq [#_"Node" node nodes]
             (when (nil? (get mapping node))
                 (ScheduleInstance'processStack-4 node, start, mapping, visited)
@@ -66641,9 +66455,9 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"void" ScheduleInstance'scheduleEarliestIterative-6 [#_"ControlFlowGraph" cfg, #_"BlockMap<List<Node>>" blockToNodes, #_"NodeMap<Block>" nodeToBlock, #_"NodeBitMap" visited, #_"Graph" graph, #_"boolean" withGuardOrder]
+    (defn- #_"void" ScheduleInstance'scheduleEarliestIterative-6 [#_"ControlFlowGraph" cfg, #_"BlockMap<List<Node>>" blockToNodes, #_"{Node Block}" nodeToBlock, #_"NodeBitMap" visited, #_"Graph" graph, #_"boolean" withGuardOrder]
         (let [
-            #_"NodeMap<MicroBlock>" mapping (NodeMap'new-1g graph)
+            #_"{Node MicroBlock}" mapping {}
             ;; Initialize with fixed nodes.
             [#_"MicroBlock" start #_"int" nextId]
                 (loop-when [start nil nextId 1 #_"ISeq" s (seq (:reversePostOrder cfg))] (some? s) => [start nextId]
@@ -66655,7 +66469,7 @@ ZeroExtendNode'new-4
                                     #_"FixedNode" node (first s)
                                     #_"MicroBlock" microBlock (MicroBlock'new-1 nextId)
                                 ]
-                                    (NodeMap''set-3 mapping, node, microBlock)
+                                    (§ ass! mapping (assoc mapping node microBlock))
                                     (NodeBitMap''checkAndMarkInc-2 visited, node)
                                     (recur (or start microBlock) (inc nextId) (next s))
                                 )
@@ -66755,10 +66569,10 @@ ZeroExtendNode'new-4
                     #_"ArrayList<Node>" nodes (ArrayList.)
                 ]
                     (doseq [#_"FixedNode" node (AbstractBeginNode''getBlockNodes-1 (:beginNode block))]
-                        (NodeMap''set-3 nodeToBlock, node, block)
+                        (§ ass! nodeToBlock (assoc nodeToBlock node block))
                         (#_"ArrayList" .add nodes, node)
                         (loop-when-recur [#_"NodeEntry" _next (:head (get mapping node))] (some? _next) [(:next _next)]
-                            (NodeMap''set-3 nodeToBlock, (:node _next), block)
+                            (§ ass! nodeToBlock (assoc nodeToBlock (:node _next) block))
                             (#_"ArrayList" .add nodes, (:node _next))
                         )
                     )
@@ -66802,7 +66616,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"Block" ScheduleInstance'calcBlockForUsage-4 [#_"Node" node, #_"Node" usage, #_"Block" block, #_"NodeMap<Block>" mapping]
+    (defn- #_"Block" ScheduleInstance'calcBlockForUsage-4 [#_"Node" node, #_"Node" usage, #_"Block" block, #_"{Node Block}" mapping]
         (condp satisfies? usage
             PhiNode
                 ;; An input to a PhiNode is used at the end of the predecessor block that
@@ -66885,9 +66699,9 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"void" ScheduleInstance'selectLatestBlock-7 [#_"Node" currentNode, #_"Block" currentBlock, #_"Block" latestBlock, #_"NodeMap<Block>" currentNodeMap, #_"BlockMap<ArrayList<FloatingReadNode>>" watchListMap, #_"LocationIdentity" constrainingLocation, #_"BlockMap<List<Node>>" latestBlockToNodesMap]
+    (defn- #_"void" ScheduleInstance'selectLatestBlock-7 [#_"Node" currentNode, #_"Block" currentBlock, #_"Block" latestBlock, #_"{Node Block}" currentNodeMap, #_"BlockMap<ArrayList<FloatingReadNode>>" watchListMap, #_"LocationIdentity" constrainingLocation, #_"BlockMap<List<Node>>" latestBlockToNodesMap]
         (when-not (= currentBlock latestBlock)
-            (§ ass! currentNodeMap (NodeMap''setAndGrow-3 currentNodeMap, currentNode, latestBlock))
+            (§ ass! currentNodeMap (assoc currentNodeMap currentNode latestBlock))
 
             (when (and (some? constrainingLocation) (Block''canKill-2 latestBlock, constrainingLocation))
                 (when (nil? (BlockMap''get-2 watchListMap, latestBlock))
@@ -66901,7 +66715,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"void" ScheduleInstance'calcLatestBlock-8 [#_"Block" earliest, #_"SchedulingStrategy" strategy, #_"Node" node, #_"NodeMap<Block>" nodeMap, #_"LocationIdentity" constrainingLocation, #_"BlockMap<ArrayList<FloatingReadNode>>" watchListMap, #_"BlockMap<List<Node>>" latestBlockToNodesMap, #_"NodeBitMap" visited]
+    (defn- #_"void" ScheduleInstance'calcLatestBlock-8 [#_"Block" earliest, #_"SchedulingStrategy" strategy, #_"Node" node, #_"{Node Block}" nodeMap, #_"LocationIdentity" constrainingLocation, #_"BlockMap<ArrayList<FloatingReadNode>>" watchListMap, #_"BlockMap<List<Node>>" latestBlockToNodesMap, #_"NodeBitMap" visited]
         (let [
             #_"Block" latest
                 (when (Node''hasUsages-1 node) => earliest
@@ -66934,7 +66748,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"BlockMap<ArrayList<FloatingReadNode>>" ScheduleInstance''calcLatestBlocks-6 [#_"ScheduleInstance" this, #_"SchedulingStrategy" strategy, #_"NodeMap<Block>" currentNodeMap, #_"BlockMap<List<Node>>" earliestBlockToNodesMap, #_"NodeBitMap" visited, #_"BlockMap<List<Node>>" latestBlockToNodesMap]
+    (defn- #_"BlockMap<ArrayList<FloatingReadNode>>" ScheduleInstance''calcLatestBlocks-6 [#_"ScheduleInstance" this, #_"SchedulingStrategy" strategy, #_"{Node Block}" currentNodeMap, #_"BlockMap<List<Node>>" earliestBlockToNodesMap, #_"NodeBitMap" visited, #_"BlockMap<List<Node>>" latestBlockToNodesMap]
         (let [
             #_"BlockMap<ArrayList<FloatingReadNode>>" watchListMap (BlockMap'new-1 (:cfg this))
             #_"Block[]" reversePostOrder (:reversePostOrder (:cfg this))
@@ -66995,7 +66809,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"void" ScheduleInstance'sortIntoList-6 [#_"Node" node, #_"Block" block, #_"ArrayList<Node>" result, #_"NodeMap<Block>" nodeMap, #_"NodeBitMap" unprocessed, #_"Node" excludeNode]
+    (defn- #_"void" ScheduleInstance'sortIntoList-6 [#_"Node" node, #_"Block" block, #_"ArrayList<Node>" result, #_"{Node Block}" nodeMap, #_"NodeBitMap" unprocessed, #_"Node" excludeNode]
         (when-not (satisfies? PhiNode node)
             (NodeBitMap''clear-2 unprocessed, node)
             (doseq [#_"Node" input (Node''inputs-1 node)]
@@ -67014,7 +66828,7 @@ ZeroExtendNode'new-4
         (or (satisfies? ControlSplitNode endNode) (satisfies? ControlSinkNode endNode) (satisfies? AbstractEndNode endNode))
     )
 
-    (defn- #_"void" ScheduleInstance'checkWatchList-6a [#_"ArrayList<FloatingReadNode>" watchList, #_"LocationIdentity" location, #_"Block" block, #_"ArrayList<Node>" result, #_"NodeMap<Block>" nodeMap, #_"NodeBitMap" unprocessed]
+    (defn- #_"void" ScheduleInstance'checkWatchList-6a [#_"ArrayList<FloatingReadNode>" watchList, #_"LocationIdentity" location, #_"Block" block, #_"ArrayList<Node>" result, #_"{Node Block}" nodeMap, #_"NodeBitMap" unprocessed]
         (cond
             (:immutable location)
                 nil ;; Nothing to do. This can happen for an initialization write.
@@ -67051,7 +66865,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"void" ScheduleInstance'checkWatchList-6b [#_"Block" block, #_"NodeMap<Block>" nodeMap, #_"NodeBitMap" unprocessed, #_"ArrayList<Node>" result, #_"ArrayList<FloatingReadNode>" watchList, #_"Node" node]
+    (defn- #_"void" ScheduleInstance'checkWatchList-6b [#_"Block" block, #_"{Node Block}" nodeMap, #_"NodeBitMap" unprocessed, #_"ArrayList<Node>" result, #_"ArrayList<FloatingReadNode>" watchList, #_"Node" node]
         (when (seq watchList)
             ;; Check if this node kills a node in the watch list.
             (condp satisfies? node
@@ -67071,7 +66885,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"void" ScheduleInstance'sortNodesLatestWithinBlock-6b [#_"Block" block, #_"BlockMap<List<Node>>" earliestBlockToNodesMap, #_"BlockMap<List<Node>>" latestBlockToNodesMap, #_"NodeMap<Block>" nodeMap, #_"BlockMap<ArrayList<FloatingReadNode>>" watchListMap, #_"NodeBitMap" unprocessed]
+    (defn- #_"void" ScheduleInstance'sortNodesLatestWithinBlock-6b [#_"Block" block, #_"BlockMap<List<Node>>" earliestBlockToNodesMap, #_"BlockMap<List<Node>>" latestBlockToNodesMap, #_"{Node Block}" nodeMap, #_"BlockMap<ArrayList<FloatingReadNode>>" watchListMap, #_"NodeBitMap" unprocessed]
         (let [
             #_"List<Node>" earliestSorting (BlockMap''get-2 earliestBlockToNodesMap, block)
             #_"ArrayList<Node>" result (ArrayList.)
@@ -67148,7 +66962,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"void" ScheduleInstance'sortNodesLatestWithinBlock-6c [#_"ControlFlowGraph" cfg, #_"BlockMap<List<Node>>" earliestBlockToNodesMap, #_"BlockMap<List<Node>>" latestBlockToNodesMap, #_"NodeMap<Block>" currentNodeMap, #_"BlockMap<ArrayList<FloatingReadNode>>" watchListMap, #_"NodeBitMap" visited]
+    (defn- #_"void" ScheduleInstance'sortNodesLatestWithinBlock-6c [#_"ControlFlowGraph" cfg, #_"BlockMap<List<Node>>" earliestBlockToNodesMap, #_"BlockMap<List<Node>>" latestBlockToNodesMap, #_"{Node Block}" currentNodeMap, #_"BlockMap<ArrayList<FloatingReadNode>>" watchListMap, #_"NodeBitMap" visited]
         (doseq [#_"Block" block (:reversePostOrder cfg)]
             (ScheduleInstance'sortNodesLatestWithinBlock-6b block, earliestBlockToNodesMap, latestBlockToNodesMap, currentNodeMap, watchListMap, visited)
         )
@@ -67161,7 +66975,7 @@ ZeroExtendNode'new-4
                 (when (nil? (:cfg this)) => this
                     (assoc this :cfg (ControlFlowGraph'compute-5 graph, true, true, true, false))
                 )
-            #_"NodeMap<Block>" currentNodeMap (NodeMap'new-1g graph)
+            #_"{Node Block}" currentNodeMap {}
             #_"NodeBitMap" visited (NodeBitMap'new-1 graph)
             #_"BlockMap<List<Node>>" earliestBlockToNodesMap (BlockMap'new-1 (:cfg this))
             this (assoc this :nodeToBlockMap currentNodeMap)
@@ -67222,11 +67036,11 @@ ZeroExtendNode'new-4
 )
 
 (class-ns ScheduleResult []
-    (defn #_"ScheduleResult" ScheduleResult'new-3 [#_"ControlFlowGraph" cfg, #_"NodeMap<Block>" nodeToBlockMap, #_"BlockMap<List<Node>>" blockToNodesMap]
+    (defn #_"ScheduleResult" ScheduleResult'new-3 [#_"ControlFlowGraph" cfg, #_"{Node Block}" nodeToBlockMap, #_"BlockMap<List<Node>>" blockToNodesMap]
         (merge (ScheduleResult'class.)
             (hash-map
                 #_"ControlFlowGraph" :cfg cfg
-                #_"NodeMap<Block>" :nodeToBlockMap nodeToBlockMap
+                #_"{Node Block}" :nodeToBlockMap nodeToBlockMap
                 #_"BlockMap<List<Node>>" :blockToNodesMap blockToNodesMap
             )
         )
@@ -68168,12 +67982,12 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns StampElement []
-    (defn #_"StampElement" StampElement'new-2 [#_"Stamp" stamp, #_"StampElement" parent]
-        (merge (StampElement'class.)
+(class-ns StampElement []
+    (defn #_"StampElement" StampElement'new-2 [#_"Stamp" stamp, #_"StampElement" parent]
+        (merge (StampElement'class.)
             (hash-map
                 #_"Stamp" :stamp stamp
-                #_"StampElement" :parent parent
+                #_"StampElement" :parent parent
             )
         )
     )
@@ -73487,7 +73301,7 @@ ZeroExtendNode'new-4
             #_"CallingConvention" callingConvention (CodeUtil/getCallingConvention HotSpot'codeCache, HotSpotCallingConventionType/JavaCallee, (:rootMethod graph), HotSpot'valueKindFactory)
             #_"LIRGenerationResult" res (LIRGenerationResult'new-2 lir, callingConvention)
             #_"LIRGenerator" gen (LIRGenerator'new-1 res)
-            #_"LIRBuilder" builder (LIRBuilder'new-2 graph, gen)
+            #_"LIRBuilder" builder (LIRBuilder'new-1 gen)
         ]
             (LIRPhase'''run-3 (LIRGenerationPhase'new-0), res, (LIRGenerationContext'new-4 gen, builder, graph, schedule))
             (Compiler'emitLowLevel-3 res, gen, suites)
