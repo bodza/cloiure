@@ -1,5 +1,5 @@
 (ns graalfn.core
-    (:refer-clojure :only [* *ns* + - -> ->> / < <= = > >= aget and apply aset assoc bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean boolean-array byte byte-array case char comp compare cond condp conj cons contains? count dec declare defmacro defn defprotocol defrecord delay dissoc doseq dotimes double double-array empty? extend-protocol extend-type false? filter first fn get hash-map hash-set if-not import inc instance? int int-array into into-array iterate iterator-seq key keys let letfn list locking long long-array loop make-array map mapcat max merge min neg? next nil? not not= ns-imports ns-unmap nth object-array or peek pop pos? quot reduce reify rem remove repeat rest reverse run! satisfies? second seq sequential? short some some? sort-by sorted-map str subvec symbol symbol? take-while true? unsigned-bit-shift-right update update-in val vals vary-meta vec vector vector? volatile! vreset! vswap! when-some while zero?])
+    (:refer-clojure :only [* *ns* + - -> ->> / < <= = > >= aget and apply aset assoc assoc-in bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean boolean-array byte byte-array case char comp compare cond condp conj cons contains? count dec declare defmacro defn defprotocol defrecord delay dissoc doseq dotimes double double-array empty? extend-protocol extend-type false? filter first fn for get hash-map hash-set if-not import inc instance? int int-array into into-array iterate iterator-seq key keys let letfn list locking long long-array loop make-array map mapcat max merge min neg? next nil? not not= ns-imports ns-unmap nth object-array or peek pop pos? quot reduce reify rem remove repeat rest reverse run! satisfies? second seq sequential? short some some? sort-by sorted-map str subvec symbol symbol? take-while true? unsigned-bit-shift-right update update-in val vals vary-meta vec vector vector? volatile! vreset! vswap! when-some while zero?])
 )
 
 (defmacro § [& _])
@@ -108,7 +108,7 @@
     [java.nio ByteBuffer ByteOrder]
     [java.util
         AbstractList ArrayDeque ArrayList Arrays BitSet Collection Collections Comparator ConcurrentModificationException
-        Deque EnumMap EnumSet HashMap Iterator LinkedList List ListIterator Map Map$Entry NoSuchElementException PriorityQueue
+        Deque EnumMap EnumSet HashMap Iterator LinkedList List ListIterator Map NoSuchElementException PriorityQueue
         Queue Set SortedSet TreeSet
     ]
     [java.util.stream Stream Stream$Builder]
@@ -133,7 +133,7 @@
     ]
     [jdk.vm.ci.runtime JVMCIBackend]
 
-    [org.graalvm.collections EconomicMap EconomicSet]
+    [org.graalvm.collections EconomicMap EconomicSet]
 
     [sun.misc Unsafe]
 )
@@ -1500,8 +1500,6 @@ FrameState''monitorIdAt-2
 FrameState''nestedLockDepth-1
 FrameState''setOuterFrameState-2
 FrameState''stackAt-2
-FrameState''virtualObjectMappingAt-2
-FrameState''virtualObjectMappingCount-1
 FrameState'TWO_SLOT_MARKER
 FrameState'new-1
 FrameState'new-2
@@ -1610,8 +1608,8 @@ GraalOptions'zapStackOnMethodEntry
 Graph''add-2
 Graph''addAfterFixed-3
 Graph''addBeforeFixed-3
-Graph''addDuplicates-5m
-Graph''addDuplicates-5r
+Graph''addDuplicates-4m
+Graph''addDuplicates-4r
 Graph''addInputs-2
 Graph''addOrUniqueWithInputs-2
 Graph''freeze-1
@@ -1865,7 +1863,6 @@ InliningUtil'checkInvokeConditions-1
 InliningUtil'inline-4
 InliningUtil'inlineForCanonicalization-4
 InliningUtil'nonNullReceiver-1
-InliningUtil'processFrameState-8
 InliningUtil'processFrameStates-4
 InliningUtil'processMonitorId-2
 InputEdges''getInputType-2
@@ -2846,7 +2843,7 @@ NodeClass''unregisterAtInputsAsUsage-2
 NodeClass''unregisterAtSuccessorsAsPredecessor-2
 NodeClass''updateInputSuccInPlace-3
 NodeClass'NEXT_EDGE
-NodeClass'addGraphDuplicate-5
+NodeClass'addGraphDuplicate-4
 NodeClass'new-2
 NodeClass'replaceFirstEdge-4
 NodeClass'updateEdgesInPlace-3
@@ -3001,9 +2998,9 @@ PhaseSuite''appendPhase-2
 PhaseSuite''findPhase-2
 PhaseSuite''findPhase-3
 PhaseSuite'new-0
-PhiInfoElement''get-2
-PhiInfoElement''set-3
-PhiInfoElement'new-0
+PhiInfoElement''get-2
+PhiInfoElement''set-3
+PhiInfoElement'new-0
 PhiNode''addInput-2
 PhiNode''firstValue-1
 PhiNode''initializeValueAt-3
@@ -3118,7 +3115,6 @@ ReassociateMatch''getOtherValue-2
 ReassociateMatch''getValue-2
 RedundantMoveElimination'new-0
 ReentrantBlockIterator'apply-2
-ReentrantBlockIterator'apply-4
 ReentrantBlockIterator'processLoop-3
 ReentrantNodeIterator'apply-3
 ReentrantNodeIterator'processLoop-3
@@ -5367,7 +5363,7 @@ ZeroExtendNode'new-4
     (#_"T" NodeIteratorClosure'''processNode-3 [#_"NodeIteratorClosure<T>" this, #_"FixedNode" node, #_"T" currentState])
     (#_"T" NodeIteratorClosure'''merge-3 [#_"NodeIteratorClosure<T>" this, #_"AbstractMergeNode" merge, #_"List<T>" states])
     (#_"T" NodeIteratorClosure'''afterSplit-3 [#_"NodeIteratorClosure<T>" this, #_"AbstractBeginNode" node, #_"T" oldState])
-    (#_"EconomicMap<LoopExitNode, T>" NodeIteratorClosure'''processLoop-3 [#_"NodeIteratorClosure<T>" this, #_"LoopBeginNode" _loop, #_"T" initialState])
+    (#_"{LoopExitNode T}" NodeIteratorClosure'''processLoop-3 [#_"NodeIteratorClosure<T>" this, #_"LoopBeginNode" _loop, #_"T" initialState])
 )
 
 (defp NodeList
@@ -5541,7 +5537,7 @@ ZeroExtendNode'new-4
 
 (defp PhaseContext)
 (defp PhaseSuite)
-(defp PhiInfoElement)
+(defp PhiInfoElement)
 
 ;;;
  ; PhiNodes represent the merging of edges at a control flow merges (AbstractMergeNode or LoopBeginNode).
@@ -10904,7 +10900,7 @@ ZeroExtendNode'new-4
                                 )
                             )
                         ;; Instead, attach the inlining log of the child graph to the current inlining log.
-                        #_"EconomicMap<Node, Node>" duplicates (Graph''addDuplicates-5r graph, nodes, inlineGraph, (Graph''getNodeCount-1 inlineGraph), localReplacement)
+                        #_"{Node Node}" duplicates (Graph''addDuplicates-4r graph, nodes, inlineGraph, localReplacement)
                         #_"FrameState" stateAfter (:stateAfter invoke)
                     ]
                         (when (some? stateAfter)
@@ -10964,38 +10960,6 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn #_"void" InliningUtil'processFrameStates-4 [#_"InvokeNode" invoke, #_"Graph" inlineGraph, #_"EconomicMap<Node, Node>" duplicates, #_"boolean" alwaysDuplicateStateAfter]
-        (let [
-            #_"FrameState" stateAtReturn (:stateAfter invoke)
-            #_"JavaKind" invokeReturnKind (ValueNode''getStackKind-1 invoke)
-            #_"EconomicMap<Node, Node>" replacements (EconomicMap/create)
-            #_"FrameState" outerFrameState
-                (loop-when [outerFrameState nil #_"ISeq" s (seq (Graph''getNodes-2 inlineGraph, FrameState))] (some? s) => outerFrameState
-                    (let [
-                        #_"FrameState" frameState (get duplicates (first s))
-                        outerFrameState
-                            (when (and (some? frameState) (Node''isAlive-1 frameState)) => outerFrameState
-                                (let [
-                                    outerFrameState
-                                        (or outerFrameState
-                                            (FrameState''duplicateModifiedDuringCall-3 stateAtReturn, (:bci invoke), invokeReturnKind)
-                                        )
-                                ]
-                                    (InliningUtil'processFrameState-8 frameState, invoke, replacements, (:rootMethod inlineGraph), outerFrameState, alwaysDuplicateStateAfter, (:targetMethod (:callTarget invoke)), (:arguments (:callTarget invoke)))
-                                    outerFrameState
-                                )
-                            )
-                    ]
-                        (recur outerFrameState (next s))
-                    )
-                )
-        ]
-            ;; If processing the frame states replaced any nodes, update the duplicates map.
-            (#_"EconomicMap" .replaceAll duplicates, (fn [k v] (if (contains? replacements v) (get replacements v) v)))
-        )
-        nil
-    )
-
     (defn- #_"FrameState" InliningUtil'handleAfterBciFrameState-3 [#_"FrameState" frameState, #_"InvokeNode" invoke, #_"boolean" alwaysDuplicateStateAfter]
         (let [
             #_"FrameState" atReturn (:stateAfter invoke)
@@ -11016,9 +10980,9 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"FrameState" InliningUtil'processFrameState-8 [#_"FrameState" frameState, #_"InvokeNode" invoke, #_"EconomicMap<Node, Node>" replacements, #_"ResolvedJavaMethod" inlinedMethod, #_"FrameState" outerFrameState, #_"boolean" alwaysDuplicateStateAfter, #_"ResolvedJavaMethod" invokeTargetMethod, #_"List<ValueNode>" invokeArgsList]
+    (defn- #_"FrameState" InliningUtil'processFrameState-7 [#_"FrameState" frameState, #_"InvokeNode" invoke, #_"ResolvedJavaMethod" inlinedMethod, #_"FrameState" outerFrameState, #_"boolean" alwaysDuplicateStateAfter, #_"ResolvedJavaMethod" invokeTargetMethod, #_"List<ValueNode>" invokeArgsList]
         (let [
-            #_"FrameState" stateAtReturn (:stateAfter invoke)
+            #_"FrameState" atReturn (:stateAfter invoke)
             #_"JavaKind" invokeReturnKind (ValueNode''getStackKind-1 invoke)
         ]
             (condp = (:bci frameState)
@@ -11028,20 +10992,45 @@ ZeroExtendNode'new-4
                     ;; This is an intrinsic. Deoptimizing within an intrinsic must re-execute the intrinsified invocation.
                     (let [
                         #_"ValueNode[]" invokeArgs (if (empty? invokeArgsList) (make-array ValueNode'iface 0) (into-array ValueNode'iface invokeArgsList))
-                        #_"FrameState" stateBeforeCall (FrameState''duplicateModifiedBeforeCall-5 stateAtReturn, (:bci invoke), invokeReturnKind, (#_"Signature" .toParameterKinds (#_"ResolvedJavaMethod" .getSignature invokeTargetMethod), (not (#_"ResolvedJavaMethod" .isStatic invokeTargetMethod))), invokeArgs)
+                        #_"FrameState" beforeCall (FrameState''duplicateModifiedBeforeCall-5 atReturn, (:bci invoke), invokeReturnKind, (#_"Signature" .toParameterKinds (#_"ResolvedJavaMethod" .getSignature invokeTargetMethod), (not (#_"ResolvedJavaMethod" .isStatic invokeTargetMethod))), invokeArgs)
                     ]
-                        (§ ass! frameState (Node''replaceAndDelete-2 frameState, stateBeforeCall))
-                        stateBeforeCall
+                        (§ ass! frameState (Node''replaceAndDelete-2 frameState, beforeCall))
+                        beforeCall
                     )
-                (do
-                    ;; only handle the outermost frame states
-                    (when (nil? (:outerFrameState frameState))
-                        (§ ass! frameState (FrameState''setOuterFrameState-2 frameState, outerFrameState))
-                    )
-                    frameState
+                ;; only handle the outermost frame states
+                (when (nil? (:outerFrameState frameState)) => frameState
+                    (FrameState''setOuterFrameState-2 frameState, outerFrameState)
                 )
             )
         )
+    )
+
+    (defn #_"void" InliningUtil'processFrameStates-4 [#_"InvokeNode" invoke, #_"Graph" inlineGraph, #_"{Node Node}" duplicates, #_"boolean" alwaysDuplicateStateAfter]
+        (let [
+            #_"FrameState" atReturn (:stateAfter invoke)
+            #_"JavaKind" invokeReturnKind (ValueNode''getStackKind-1 invoke)
+        ]
+            (loop-when [#_"FrameState" outerFrameState nil #_"ISeq" s (seq (Graph''getNodes-2 inlineGraph, FrameState))] (some? s)
+                (let [
+                    #_"FrameState" frameState (get duplicates (first s))
+                    outerFrameState
+                        (when (and (some? frameState) (Node''isAlive-1 frameState)) => outerFrameState
+                            (let [
+                                outerFrameState
+                                    (or outerFrameState
+                                        (FrameState''duplicateModifiedDuringCall-3 atReturn, (:bci invoke), invokeReturnKind)
+                                    )
+                            ]
+                                (InliningUtil'processFrameState-7 frameState, invoke, (:rootMethod inlineGraph), outerFrameState, alwaysDuplicateStateAfter, (:targetMethod (:callTarget invoke)), (:arguments (:callTarget invoke)))
+                                outerFrameState
+                            )
+                        )
+                ]
+                    (recur outerFrameState (next s))
+                )
+            )
+        )
+        nil
     )
 
     ;;;
@@ -11054,33 +11043,36 @@ ZeroExtendNode'new-4
             #_"Graph" graph (:graph callTarget)
             #_"ValueNode" oldReceiver (nth (:arguments callTarget) 0)
             #_"ValueNode" newReceiver oldReceiver
-        ]
-            (when (= (ValueNode''getStackKind-1 newReceiver) JavaKind/Object)
-                (when (= (InvokeNode''getInvokeKind-1 invoke) InvokeKind'Special)
+            newReceiver
+                (when (= (ValueNode''getStackKind-1 newReceiver) JavaKind/Object) => newReceiver
                     (let [
-                        #_"Stamp" paramStamp (:stamp newReceiver)
-                        #_"Stamp" stamp (Stamp'''join-2 paramStamp, (StampFactory'object-1 (TypeReference'create-1 (#_"ResolvedJavaMethod" .getDeclaringClass (:targetMethod callTarget)))))
+                        newReceiver
+                            (when (= (InvokeNode''getInvokeKind-1 invoke) InvokeKind'Special) => newReceiver
+                                (let [
+                                    #_"Stamp" paramStamp (:stamp newReceiver)
+                                    #_"Stamp" stamp (Stamp'''join-2 paramStamp, (StampFactory'object-1 (TypeReference'create-1 (#_"ResolvedJavaMethod" .getDeclaringClass (:targetMethod callTarget)))))
+                                ]
+                                    (when-not (= stamp paramStamp) => newReceiver
+                                        ;; The verifier and previous optimizations guarantee unconditionally that the
+                                        ;; receiver is at least of the type of the method holder for a special invoke.
+                                        (Graph''add-2 graph, (PiNode'new-2 newReceiver, stamp))
+                                    )
+                                )
+                            )
                     ]
-                        (when-not (= stamp paramStamp)
-                            ;; The verifier and previous optimizations guarantee unconditionally that the
-                            ;; receiver is at least of the type of the method holder for a special invoke.
-                            (§ ass newReceiver (Graph''add-2 graph, (PiNode'new-2 newReceiver, stamp)))
+                        (when-not (StampTool'isPointerNeverNull-1 (:stamp newReceiver)) => newReceiver
+                            (let [
+                                #_"LogicNode" logic (Graph''add-2 graph, (IsNullNode'create-1 newReceiver))
+                                #_"FixedGuardNode" fixedGuard (Graph''add-2 graph, (FixedGuardNode'new-4 logic, DeoptimizationReason/NullCheckException, DeoptimizationAction/InvalidateReprofile, true))
+                                #_"PiNode" nonNullReceiver (Graph''add-2 graph, (PiNode'new-3 newReceiver, StampFactory'objectNonNullStamp, fixedGuard))
+                            ]
+                                (Graph''addBeforeFixed-3 graph, invoke, fixedGuard)
+                                nonNullReceiver
+                            )
                         )
                     )
                 )
-
-                (when-not (StampTool'isPointerNeverNull-1 (:stamp newReceiver))
-                    (let [
-                        #_"LogicNode" logic (Graph''add-2 graph, (IsNullNode'create-1 newReceiver))
-                        #_"FixedGuardNode" fixedGuard (Graph''add-2 graph, (FixedGuardNode'new-4 logic, DeoptimizationReason/NullCheckException, DeoptimizationAction/InvalidateReprofile, true))
-                        #_"PiNode" nonNullReceiver (Graph''add-2 graph, (PiNode'new-3 newReceiver, StampFactory'objectNonNullStamp, fixedGuard))
-                    ]
-                        (Graph''addBeforeFixed-3 graph, invoke, fixedGuard)
-                        (§ ass newReceiver nonNullReceiver)
-                    )
-                )
-            )
-
+        ]
             (when-not (= newReceiver oldReceiver)
                 (Node''replaceFirstInput-3 callTarget, oldReceiver, newReceiver)
             )
@@ -11098,7 +11090,7 @@ ZeroExtendNode'new-4
 )
 
 (value-ns ReentrantBlockIterator
-    (defn- #_"<T> boolean" ReentrantBlockIterator'allEndsVisited-3 [#_"EconomicMap<FixedNode, T>" states, #_"Block" current, #_"AbstractMergeNode" merge]
+    (defn- #_"<T> boolean" ReentrantBlockIterator'allEndsVisited-3 [#_"{FixedNode T}" states, #_"Block" current, #_"AbstractMergeNode" merge]
         (loop-when [#_"ISeq" s (seq (:ends merge))] (some? s) => true
             (let [
                 #_"AbstractEndNode" forwardEnd (first s)
@@ -11110,30 +11102,30 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"<T> Block" ReentrantBlockIterator'processMultipleSuccessors-5 [#_"BlockIteratorClosure<T>" closure, #_"Deque<Block>" blockQueue, #_"EconomicMap<FixedNode, T>" states, #_"T" state, #_"Block*" successors]
+    (defn- #_"<T> Block" ReentrantBlockIterator'processMultipleSuccessors-5 [#_"BlockIteratorClosure<T>" closure, #_"Deque<Block>" blockQueue, #_"{FixedNode T}" states, #_"T" state, #_"Block*" successors]
         (loop-when-recur [#_"int" i 1] (< i (count successors)) [(inc i)]
             (let [
                 #_"Block" successor (nth successors i)
             ]
                 (#_"Deque" .addFirst blockQueue, successor)
-                (#_"EconomicMap" .put states, (:beginNode successor), (BlockIteratorClosure'''cloneState-2 closure, state))
+                (§ ass! states (assoc states (:beginNode successor) (BlockIteratorClosure'''cloneState-2 closure, state)))
             )
         )
         (nth successors 0)
     )
 
-    (defn- #_"<T> ArrayList<T>" ReentrantBlockIterator'mergeStates-5 [#_"EconomicMap<FixedNode, T>" states, #_"T" state, #_"Block" current, #_"Block" successor, #_"AbstractMergeNode" merge]
+    (defn- #_"<T> ArrayList<T>" ReentrantBlockIterator'mergeStates-5 [#_"{FixedNode T}" states, #_"T" state, #_"Block" current, #_"Block" successor, #_"AbstractMergeNode" merge]
         (let [
             #_"ArrayList<T>" mergedStates (ArrayList.)
         ]
             (doseq [#_"Block" predecessor (:predecessors successor)]
-                (#_"ArrayList" .add mergedStates, (if (= predecessor current) state (#_"EconomicMap" .removeKey states, (:endNode predecessor))))
+                (#_"ArrayList" .add mergedStates, (if (= predecessor current) state (#_"EconomicMap" .removeKey states, (:endNode predecessor))))
             )
             mergedStates
         )
     )
 
-    (defn- #_"<T> void" ReentrantBlockIterator'recurseIntoLoop-5 [#_"BlockIteratorClosure<T>" closure, #_"Deque<Block>" blockQueue, #_"EconomicMap<FixedNode, T>" states, #_"T" state, #_"Block" successor]
+    (defn- #_"<T> void" ReentrantBlockIterator'recurseIntoLoop-5 [#_"BlockIteratorClosure<T>" closure, #_"Deque<Block>" blockQueue, #_"{FixedNode T}" states, #_"T" state, #_"Block" successor]
         ;; recurse into the loop
         (let [
             #_"Loop" _loop (:loop successor)
@@ -11143,7 +11135,7 @@ ZeroExtendNode'new-4
                 (let [
                     #_"Block" exit (first s)
                 ]
-                    (#_"EconomicMap" .put states, (:beginNode exit), (nth exitStates i))
+                    (§ ass! states (assoc states (:beginNode exit) (nth exitStates i)))
                     (#_"Deque" .addFirst blockQueue, exit)
                     (recur (inc i) (next s))
                 )
@@ -11152,20 +11144,18 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn #_"<T> EconomicMap<FixedNode, T>" ReentrantBlockIterator'apply-4 [#_"BlockIteratorClosure<T>" closure, #_"Block" start, #_"T" initialState, #_"fn boolean [Block]" f'stopAtBlock-1]
+    (defn- #_"<T> {FixedNode T}" ReentrantBlockIterator'apply-4 [#_"BlockIteratorClosure<T>" closure, #_"Block" start, #_"T" initialState, #_"fn boolean [Block]" f'stopAtBlock-1]
         (let [
-            #_"Deque<Block>" blockQueue (ArrayDeque.)
-            ;; States are stored on EndNodes before merges, and on BeginNodes after ControlSplitNodes.
-            #_"EconomicMap<FixedNode, T>" states (EconomicMap/create)
             #_"Graph" graph (:graph (:beginNode start))
+            #_"Deque<Block>" blockQueue (ArrayDeque.)
         ]
-            (loop [#_"Block" block start #_"T" state initialState]
+            ;; States are stored on EndNodes before merges, and on BeginNodes after ControlSplitNodes.
+            (loop [#_"Block" block start #_"T" state initialState #_"{FixedNode T}" states {}]
                 (let [
-                    [block state]
+                    [block state states]
                         (if (and (some? f'stopAtBlock-1) (f'stopAtBlock-1 block))
                             (do
-                                (#_"EconomicMap" .put states, (:beginNode block), state)
-                                [nil state]
+                                [nil state (assoc states (:beginNode block) state)]
                             )
                             (let [
                                 state (BlockIteratorClosure'''processBlock-3 closure, block, state)
@@ -11173,40 +11163,38 @@ ZeroExtendNode'new-4
                             ]
                                 (case (count successors)
                                     0
-                                        [nil state] ;; nothing to do...
+                                        [nil state states] ;; nothing to do...
                                     1
                                         (let [
                                             #_"Block" successor (nth successors 0)
                                         ]
                                             (cond
                                                 (Block''isLoopHeader-1 successor)
-                                                    (do
-                                                        (if (Block''isLoopEnd-1 block)
+                                                    (if (Block''isLoopEnd-1 block)
+                                                        (do
                                                             ;; nothing to do... loop ends only lead to loop begins we've already visited
-                                                            (#_"EconomicMap" .put states, (:endNode block), state)
-                                                            (ReentrantBlockIterator'recurseIntoLoop-5 closure, blockQueue, states, state, successor)
+                                                            [nil state (assoc states (:endNode block) state)]
                                                         )
-                                                        [nil state]
+                                                        (do
+                                                            (ReentrantBlockIterator'recurseIntoLoop-5 closure, blockQueue, states, state, successor)
+                                                            [nil state states]
+                                                        )
                                                     )
                                                 (satisfies? AbstractEndNode (:endNode block))
                                                     (let [
-                                                        #_"AbstractEndNode" end (:endNode block)
                                                         ;; add the end node and see if the merge is ready for processing
-                                                        #_"AbstractMergeNode" merge (AbstractEndNode'''merge-1 end)
+                                                        #_"AbstractMergeNode" merge (AbstractEndNode'''merge-1 (:endNode block))
                                                     ]
                                                         (if (ReentrantBlockIterator'allEndsVisited-3 states, block, merge)
-                                                            [successor (BlockIteratorClosure'''merge-3 closure, successor, (ReentrantBlockIterator'mergeStates-5 states, state, block, successor, merge))]
-                                                            (do
-                                                                (#_"EconomicMap" .put states, end, state)
-                                                                [nil state]
-                                                            )
+                                                            [successor (BlockIteratorClosure'''merge-3 closure, successor, (ReentrantBlockIterator'mergeStates-5 states, state, block, successor, merge)) states]
+                                                            [nil state (assoc states (:endNode block) state)]
                                                         )
                                                     )
                                                 :else
-                                                    [successor state]
+                                                    [successor state states]
                                             )
                                         )
-                                    [(ReentrantBlockIterator'processMultipleSuccessors-5 closure, blockQueue, states, state, successors) state]
+                                    [(ReentrantBlockIterator'processMultipleSuccessors-5 closure, blockQueue, states, state, successors) state states]
                                 )
                             )
                         )
@@ -11214,14 +11202,14 @@ ZeroExtendNode'new-4
                     ;; get next queued block
                     (cond
                         (some? block)
-                            (recur block state)
+                            (recur block state states)
                         (empty? blockQueue)
                             states
                         :else
                             (let [
                                 block (#_"Deque" .removeFirst blockQueue)
                             ]
-                                (recur block (#_"EconomicMap" .removeKey states, (:beginNode block)))
+                                (recur block (#_"EconomicMap" .removeKey states, (:beginNode block)) states)
                             )
                     )
                 )
@@ -11236,7 +11224,7 @@ ZeroExtendNode'new-4
 
     (defn #_"<T> BlockLoopInfo<T>" ReentrantBlockIterator'processLoop-3 [#_"BlockIteratorClosure<T>" closure, #_"Loop" _loop, #_"T" initialState]
         (let [
-            #_"EconomicMap<FixedNode, T>" blockEndStates (ReentrantBlockIterator'apply-4 closure, (:header _loop), initialState, #(not (or (= (:loop %) _loop) (Block''isLoopHeader-1 %))))
+            #_"{FixedNode T}" blockEndStates (ReentrantBlockIterator'apply-4 closure, (:header _loop), initialState, #(not (or (= (:loop %) _loop) (Block''isLoopHeader-1 %))))
             #_"Block[]" predecessors (:predecessors (:header _loop))
             #_"BlockLoopInfo<T>" info (BlockLoopInfo'new-2 (dec (count predecessors)), (count (:exits _loop)))
         ]
@@ -11262,109 +11250,109 @@ ZeroExtendNode'new-4
 )
 
 (value-ns ReentrantNodeIterator
-    (defn- #_"<T> EconomicMap<FixedNode, T>" ReentrantNodeIterator'apply-4 [#_"NodeIteratorClosure<T>" closure, #_"FixedNode" start, #_"T" initialState, #_"LoopBeginNode" boundary]
+    (defn- #_"<T> {FixedNode T}" ReentrantNodeIterator'apply-4 [#_"NodeIteratorClosure<T>" closure, #_"FixedNode" start, #_"T" initialState, #_"LoopBeginNode" boundary]
         (let [
             #_"Deque<AbstractBeginNode>" nodeQueue (ArrayDeque.)
-            #_"EconomicMap<FixedNode, T>" blockEndStates (EconomicMap/create)
         ]
-            (loop [#_"T" state initialState #_"FixedNode" node start]
+            (loop [#_"T" state initialState #_"FixedNode" node start #_"{FixedNode T}" ends {}]
                 (let [
-                    [state node]
-                        (loop-when [state state node node] (satisfies? FixedWithNextNode node) => [state node]
+                    [state node ends]
+                        (loop-when [state state node node ends ends] (satisfies? FixedWithNextNode node) => [state node ends]
                             (if (and (some? boundary) (satisfies? LoopExitNode node) (= (:loopBegin node) boundary))
-                                (do
-                                    (#_"EconomicMap" .put blockEndStates, node, state)
-                                    (recur state nil)
+                                (recur state nil (assoc ends node state))
+                                (recur (NodeIteratorClosure'''processNode-3 closure, node, state) (:next node) ends)
+                            )
+                        )
+                    _
+                        (when (some? node)
+                            (let [
+                                state (NodeIteratorClosure'''processNode-3 closure, node, state)
+                                #_"Node*" successors (Node''successors-1 node)
+                            ]
+                                (if (seq successors)
+                                    (let [
+                                        [#_"FixedNode" firstSuccessor & successors] successors
+                                    ]
+                                        (when (seq successors)
+                                            (loop [successors successors]
+                                                (let [
+                                                    [#_"AbstractBeginNode" successor & successors] successors
+                                                ]
+                                                    (§ ass! ends (assoc ends successor (NodeIteratorClosure'''afterSplit-3 closure, successor, state)))
+                                                    (#_"Deque" .add nodeQueue, successor)
+                                                    (recur-if (seq successors) [successors])
+                                                )
+                                            )
+                                            (§ ass state (NodeIteratorClosure'''afterSplit-3 closure, (§ cast #_"AbstractBeginNode" firstSuccessor), state))
+                                        )
+                                        (§ ass node firstSuccessor)
+                                        (§ continue )
+                                    )
+                                    (condp satisfies? node
+                                        LoopEndNode
+                                            (§ ass! ends (assoc ends node state))
+                                        EndNode
+                                            ;; add the end node and see if the merge is ready for processing
+                                            (let [
+                                                #_"AbstractMergeNode" merge (AbstractEndNode'''merge-1 node)
+                                            ]
+                                                (if (satisfies? LoopBeginNode merge)
+                                                    (let [
+                                                        #_"{LoopExitNode T}" loopExitState (NodeIteratorClosure'''processLoop-3 closure, merge, state)
+                                                    ]
+                                                        (loop-when [#_"ISeq" s (seq loopExitState)] (some? s)
+                                                            (let [
+                                                                #_"[LoopExitNode T]" e (first s)
+                                                            ]
+                                                                (§ ass! ends (assoc ends (key e) (val e)))
+                                                                (#_"Deque" .add nodeQueue, (key e))
+                                                                (recur (next s))
+                                                            )
+                                                        )
+                                                    )
+                                                    (let [
+                                                        #_"boolean" endsVisited
+                                                            (loop-when [#_"ISeq" s (seq (:ends merge))] (some? s) => true
+                                                                (let [
+                                                                    #_"AbstractEndNode" forwardEnd (first s)
+                                                                ]
+                                                                    (and (or (= forwardEnd node) (contains? ends forwardEnd))
+                                                                        (recur (next s))
+                                                                    )
+                                                                )
+                                                            )
+                                                    ]
+                                                        (if endsVisited
+                                                            (let [
+                                                                #_"ArrayList<T>" states (ArrayList.)
+                                                            ]
+                                                                (dotimes [#_"int" i (AbstractMergeNode''forwardEndCount-1 merge)]
+                                                                    (let [
+                                                                        #_"AbstractEndNode" forwardEnd (AbstractMergeNode''forwardEndAt-2 merge, i)
+                                                                    ]
+                                                                        (#_"ArrayList" .add states, (if (= forwardEnd node) state (#_"EconomicMap" .removeKey ends, forwardEnd)))
+                                                                    )
+                                                                )
+                                                                (§ ass state (NodeIteratorClosure'''merge-3 closure, merge, states))
+                                                                (§ ass node merge)
+                                                                (§ continue )
+                                                            )
+                                                            (§ ass! ends (assoc ends node state))
+                                                        )
+                                                    )
+                                                )
+                                            )
+                                        nil
+                                    )
                                 )
-                                (recur (NodeIteratorClosure'''processNode-3 closure, node, state) (:next node))
                             )
                         )
                 ]
-                    (when (some? node)
-                        (let [
-                            state (NodeIteratorClosure'''processNode-3 closure, node, state)
-                            #_"Node*" successors (Node''successors-1 node)
-                        ]
-                            (if (seq successors)
-                                (let [
-                                    [#_"FixedNode" firstSuccessor & successors] successors
-                                ]
-                                    (when (seq successors)
-                                        (loop [successors successors]
-                                            (let [
-                                                [#_"AbstractBeginNode" successor & successors] successors
-                                            ]
-                                                (#_"EconomicMap" .put blockEndStates, successor, (NodeIteratorClosure'''afterSplit-3 closure, successor, state))
-                                                (#_"Deque" .add nodeQueue, successor)
-                                                (recur-if (seq successors) [successors])
-                                            )
-                                        )
-                                        (§ ass state (NodeIteratorClosure'''afterSplit-3 closure, (§ cast #_"AbstractBeginNode" firstSuccessor), state))
-                                    )
-                                    (§ ass node firstSuccessor)
-                                    (§ continue )
-                                )
-                                (condp satisfies? node
-                                    LoopEndNode
-                                        (#_"EconomicMap" .put blockEndStates, node, state)
-                                    EndNode
-                                        ;; add the end node and see if the merge is ready for processing
-                                        (let [
-                                            #_"AbstractMergeNode" merge (AbstractEndNode'''merge-1 node)
-                                        ]
-                                            (if (satisfies? LoopBeginNode merge)
-                                                (let [
-                                                    #_"EconomicMap<LoopExitNode, T>" loopExitState (NodeIteratorClosure'''processLoop-3 closure, merge, state)
-                                                    #_"MapCursor<LoopExitNode, T>" entry (#_"EconomicMap" ßgetEntries loopExitState)
-                                                ]
-                                                    (while (#_"MapCursor" .advance entry)
-                                                        (#_"EconomicMap" .put blockEndStates, (#_"MapCursor" .getKey entry), (#_"MapCursor" .getValue entry))
-                                                        (#_"Deque" .add nodeQueue, (#_"MapCursor" .getKey entry))
-                                                    )
-                                                )
-                                                (let [
-                                                    #_"boolean" endsVisited
-                                                        (loop-when [#_"ISeq" s (seq (:ends merge))] (some? s) => true
-                                                            (let [
-                                                                #_"AbstractEndNode" forwardEnd (first s)
-                                                            ]
-                                                                (and (or (= forwardEnd node) (contains? blockEndStates forwardEnd))
-                                                                    (recur (next s))
-                                                                )
-                                                            )
-                                                        )
-                                                ]
-                                                    (if endsVisited
-                                                        (let [
-                                                            #_"ArrayList<T>" states (ArrayList.)
-                                                        ]
-                                                            (dotimes [#_"int" i (AbstractMergeNode''forwardEndCount-1 merge)]
-                                                                (let [
-                                                                    #_"AbstractEndNode" forwardEnd (AbstractMergeNode''forwardEndAt-2 merge, i)
-                                                                ]
-                                                                    (#_"ArrayList" .add states, (if (= forwardEnd node) state (#_"EconomicMap" .removeKey blockEndStates, forwardEnd)))
-                                                                )
-                                                            )
-                                                            (§ ass state (NodeIteratorClosure'''merge-3 closure, merge, states))
-                                                            (§ ass node merge)
-                                                            (§ continue )
-                                                        )
-                                                        (#_"EconomicMap" .put blockEndStates, node, state)
-                                                    )
-                                                )
-                                            )
-                                        )
-                                    nil
-                                )
-                            )
-                        )
-                    )
-
-                    (when (seq nodeQueue) => blockEndStates
+                    (when (seq nodeQueue) => ends
                         (let [
                             node (#_"Deque" .removeFirst nodeQueue)
                         ]
-                            (recur (#_"EconomicMap" .removeKey blockEndStates, node) node)
+                            (recur (#_"EconomicMap" .removeKey ends, node) node ends)
                         )
                     )
                 )
@@ -11379,17 +11367,17 @@ ZeroExtendNode'new-4
 
     (defn #_"<T> NodeLoopInfo<T>" ReentrantNodeIterator'processLoop-3 [#_"NodeIteratorClosure<T>" closure, #_"LoopBeginNode" _loop, #_"T" initialState]
         (let [
-            #_"EconomicMap<FixedNode, T>" blockEndStates (ReentrantNodeIterator'apply-4 closure, _loop, initialState, _loop)
+            #_"{FixedNode T}" blockEndStates (ReentrantNodeIterator'apply-4 closure, _loop, initialState, _loop)
             #_"NodeLoopInfo<T>" info (NodeLoopInfo'new-0)
         ]
             (doseq [#_"LoopEndNode" end (LoopBeginNode''loopEnds-1 _loop)]
                 (when (contains? blockEndStates end)
-                    (#_"EconomicMap" .put (:endStates info), end, (get blockEndStates end))
+                    (§ ass! (:endStates info) (assoc (:endStates info) end (get blockEndStates end)))
                 )
             )
             (doseq [#_"LoopExitNode" exit (LoopBeginNode''loopExits-1 _loop)]
                 (when (contains? blockEndStates exit)
-                    (#_"EconomicMap" .put (:exitStates info), exit, (get blockEndStates exit))
+                    (§ ass! (:exitStates info) (assoc (:exitStates info) exit (get blockEndStates exit)))
                 )
             )
             info
@@ -11532,7 +11520,7 @@ ZeroExtendNode'new-4
     (defn- #_"MicroBlock" GuardOrder'resortGuards-3 [#_"MicroBlock" block, #_"NodeBitMap" blockNodes, #_"{Node GuardPriority}" priorities]
         (when (GuardOrder'propagatePriority-3 block, priorities, blockNodes)
             (let [
-                #_"SortedSet<GuardNode>" availableGuards (ß TreeSet. (ß #_"Comparator" .thenComparingInt (#_"Comparator" .thenComparing (Comparator/comparing (§ ffun #_"Map" .get)), (ß GuardNode(§ ffun )StaticDeoptimizingNode'''computePriority-1)), (§ ffun #_"Object" .hashCode)))
+                #_"SortedSet<GuardNode>" availableGuards (ß TreeSet. (ß #_"Comparator" .thenComparingInt (#_"Comparator" .thenComparing (Comparator/comparing (§ ffun #_"Map" .get)), (ß GuardNode(§ ffun )StaticDeoptimizingNode'''computePriority-1)), (§ ffun #_"Object" .hashCode)))
                 #_"MicroBlock" newBlock (MicroBlock'new-1 (:id block))
                 #_"NodeBitMap" sorted blockNodes
                 _ (NodeBitMap''invert-1 sorted)
@@ -12797,18 +12785,18 @@ ZeroExtendNode'new-4
 (class-ns BoxingTemplates [AbstractTemplates]
     (defn #_"BoxingTemplates" BoxingTemplates'new-0 []
         (let [
-            #_"EnumMap<JavaKind, SnippetInfo>" boxSnippets (EnumMap. JavaKind)
-            #_"EnumMap<JavaKind, SnippetInfo>" unboxSnippets (EnumMap. JavaKind)
+            #_"EnumMap<JavaKind, SnippetInfo>" boxSnippets (EnumMap. JavaKind)
+            #_"EnumMap<JavaKind, SnippetInfo>" unboxSnippets (EnumMap. JavaKind)
             _
                 (doseq [#_"JavaKind" kind (list JavaKind/Boolean JavaKind/Byte JavaKind/Char JavaKind/Int JavaKind/Long JavaKind/Short)]
-                    (#_"EnumMap" .put boxSnippets,   kind, (AbstractTemplates'snippet-3* BoxingSnippets, (str (#_"JavaKind" .getJavaName kind) "ValueOf")))
-                    (#_"EnumMap" .put unboxSnippets, kind, (AbstractTemplates'snippet-3* BoxingSnippets, (str (#_"JavaKind" .getJavaName kind) "Value")))
+                    (§ ass! boxSnippets   (assoc boxSnippets   kind (AbstractTemplates'snippet-3* BoxingSnippets, (str (#_"JavaKind" .getJavaName kind) "ValueOf"))))
+                    (§ ass! unboxSnippets (assoc unboxSnippets kind (AbstractTemplates'snippet-3* BoxingSnippets, (str (#_"JavaKind" .getJavaName kind) "Value"))))
                 )
         ]
             (merge (BoxingTemplates'class.) (AbstractTemplates'new-0)
                 (hash-map
-                    #_"EnumMap<JavaKind, SnippetInfo>" :boxSnippets boxSnippets
-                    #_"EnumMap<JavaKind, SnippetInfo>" :unboxSnippets unboxSnippets
+                    #_"EnumMap<JavaKind, SnippetInfo>" :boxSnippets boxSnippets
+                    #_"EnumMap<JavaKind, SnippetInfo>" :unboxSnippets unboxSnippets
                 )
             )
         )
@@ -13462,39 +13450,31 @@ ZeroExtendNode'new-4
      ; Create a sign extend for {@code input}, or zero extend if {@code input} can be proven positive.
      ;;
     (defn- #_"ValueNode" AddressLowering'signExtend-2 [#_"ValueNode" input, #_"LoopEx" _loop]
-        (let [
-            #_"Graph" graph (:graph input)
-        ]
+        (or
             (when (satisfies? PhiNode input)
                 (let [
-                    #_"EconomicMap<Node, InductionVariable>" ivs (LoopEx''getInductionVariables-1 _loop)
-                    #_"InductionVariable" inductionVariable (get ivs input)
+                    #_"InductionVariable" iv (get (LoopEx''getInductionVariables-1 _loop) input)
                 ]
-                    (when (and (some? inductionVariable) (satisfies? BasicInductionVariable inductionVariable))
+                    (when (and (some? iv) (satisfies? BasicInductionVariable iv))
                         (let [
-                            #_"CountedLoopInfo" countedLoopInfo (:counted _loop)
-                            #_"IntegerStamp" initStamp (:stamp (InductionVariable'''initNode-1 inductionVariable))
+                            #_"CountedLoopInfo" cli (:counted _loop)
                         ]
-                            (when (IntegerStamp''isPositive-1 initStamp)
-                                (when (InductionVariable'''isConstantExtremum-1 inductionVariable)
-                                    (let [
-                                        #_"long" init (InductionVariable'''constantInit-1 inductionVariable)
-                                        #_"long" stride (InductionVariable'''constantStride-1 inductionVariable)
-                                        #_"long" extremum (InductionVariable'''constantExtremum-1 inductionVariable)
-                                    ]
-                                        (when (and (<= 0 init) (<= 0 extremum))
-                                            (let [
-                                                #_"long" shortestTrip (inc (quot (- extremum init) stride))
-                                            ]
-                                                (when (= (CountedLoopInfo''constantMaxTripCount-1 countedLoopInfo) shortestTrip)
-                                                    (§ return (Graph''add-2 graph, (ZeroExtendNode'new-4 input, AddressLowering'INT_BITS, AddressLowering'ADDRESS_BITS, true)))
-                                                )
+                            (when (IntegerStamp''isPositive-1 (:stamp (InductionVariable'''initNode-1 iv)))
+                                (or
+                                    (when (InductionVariable'''isConstantExtremum-1 iv)
+                                        (let [
+                                            #_"long" init (InductionVariable'''constantInit-1 iv)
+                                            #_"long" stride (InductionVariable'''constantStride-1 iv)
+                                            #_"long" extremum (InductionVariable'''constantExtremum-1 iv)
+                                        ]
+                                            (when (and (<= 0 init) (<= 0 extremum) (= (CountedLoopInfo''constantMaxTripCount-1 cli) (inc (quot (- extremum init) stride))))
+                                                (Graph''add-2 (:graph input), (ZeroExtendNode'new-4 input, AddressLowering'INT_BITS, AddressLowering'ADDRESS_BITS, true))
                                             )
                                         )
                                     )
-                                )
-                                (when (and (= (:iv countedLoopInfo) inductionVariable) (= (InductionVariable'''direction-1 inductionVariable) :Direction'Up) (some? (CountedLoopInfo''getOverFlowGuard-1 countedLoopInfo)))
-                                    (§ return (Graph''add-2 graph, (ZeroExtendNode'new-4 input, AddressLowering'INT_BITS, AddressLowering'ADDRESS_BITS, true)))
+                                    (when (and (= (:iv cli) iv) (= (InductionVariable'''direction-1 iv) :Direction'Up) (some? (CountedLoopInfo''getOverFlowGuard-1 cli)))
+                                        (Graph''add-2 (:graph input), (ZeroExtendNode'new-4 input, AddressLowering'INT_BITS, AddressLowering'ADDRESS_BITS, true))
+                                    )
                                 )
                             )
                         )
@@ -13508,9 +13488,8 @@ ZeroExtendNode'new-4
     ;;;
      ; Given that Add(a, cst) is always positive, performs the following: ZeroExtend(Add(a, cst)) -> Add(SignExtend(a), SignExtend(cst)).
      ;;
-    (defn- #_"void" AddressLowering'optimizeAdd-4 [#_"ZeroExtendNode" node, #_"ConstantNode" constant, #_"ValueNode" other, #_"LoopEx" _loop]
-        (§ ass! node (Node''replaceAtUsages-2 node, (Graph''add-2 (:graph node), (AddNode'new-2 (AddressLowering'signExtend-2 other, _loop), (ConstantNode'forLong-2 (#_"JavaConstant" .asInt (ValueNode''asJavaConstant-1 constant)), (:graph node))))))
-        nil
+    (defn- #_"ZeroExtendNode" AddressLowering'optimizeAdd-4 [#_"ZeroExtendNode" node, #_"ConstantNode" constant, #_"ValueNode" other, #_"LoopEx" _loop]
+        (Node''replaceAtUsages-2 node, (Graph''add-2 (:graph node), (AddNode'new-2 (AddressLowering'signExtend-2 other, _loop), (ConstantNode'forLong-2 (#_"JavaConstant" .asInt (ValueNode''asJavaConstant-1 constant)), (:graph node)))))
     )
 
     (defn- #_"boolean" AddressLowering'applicableToImplicitZeroExtend-1 [#_"ZeroExtendNode" node]
@@ -13530,8 +13509,8 @@ ZeroExtendNode'new-4
                             ]
                                 (when (satisfies? AddNode input)
                                     (cond
-                                        (satisfies? ConstantNode (:x input)) (AddressLowering'optimizeAdd-4 value, (:x input), (:y input), _loop)
-                                        (satisfies? ConstantNode (:y input)) (AddressLowering'optimizeAdd-4 value, (:y input), (:x input), _loop)
+                                        (satisfies? ConstantNode (:x input)) (§ ass! value (AddressLowering'optimizeAdd-4 value, (:x input), (:y input), _loop))
+                                        (satisfies? ConstantNode (:y input)) (§ ass! value (AddressLowering'optimizeAdd-4 value, (:y input), (:x input), _loop))
                                     )
                                 )
                             )
@@ -13689,7 +13668,7 @@ ZeroExtendNode'new-4
                  ; Highest instruction id.
                  ;;
                 #_"int" :maxOpId (Allocator'numberInstructions-2 lir, (:reversePostOrder (:cfg lir)))
-                #_"EnumMap<SlotSize, Deque<StackSlot>>" :freeSlots nil
+                #_"EnumMap<SlotSize, Deque<StackSlot>>" :freeSlots nil
             )
         )
     )
@@ -13726,7 +13705,7 @@ ZeroExtendNode'new-4
                 (if (some? (:freeSlots this))
                     (get (:freeSlots this) size)
                     (do
-                        (§ ass! this (assoc this :freeSlots (EnumMap. SlotSize)))
+                        (§ ass! this (assoc this :freeSlots (EnumMap. SlotSize)))
                         nil
                     )
                 )
@@ -13735,7 +13714,7 @@ ZeroExtendNode'new-4
                 (let [
                     freeList (ArrayDeque.)
                 ]
-                    (#_"EnumMap" .put (:freeSlots this), size, freeList)
+                    (§ ass! (:freeSlots this) (assoc (:freeSlots this) size freeList))
                     freeList
                 )
             )
@@ -14156,7 +14135,7 @@ ZeroExtendNode'new-4
                          ; The index of the block currently being emitted.
                          ;;
                         #_"int" :currentBlockIndex 0
-                        #_"EconomicMap<Constant, Data>" :dataCache (EconomicMap/create)
+                        #_"{Constant Data}" :dataCache {}
                         #_"CodeBuffer" :codeBuffer (CodeBuffer'new-1 (#_"Architecture" .getByteOrder (.arch HotSpot'target)))
                     )
                 )
@@ -16355,7 +16334,7 @@ ZeroExtendNode'new-4
             (let [
                 #_"Data" data (DataBuilder'createDataItem-1 constant)
             ]
-                (#_"EconomicMap" .put (:dataCache this), constant, data)
+                (§ ass! (:dataCache this) (assoc (:dataCache this) constant data))
                 data
             )
         )
@@ -16629,7 +16608,7 @@ ZeroExtendNode'new-4
         (if (some? (:jsrData this)) (:jsrReturnBci (:jsrData this)) -1)
     )
 
-    (defn #_"EconomicMap<JsrScope, BciBlock>" BciBlock''getJsrAlternatives-1 [#_"BciBlock" this]
+    (defn #_"{JsrScope BciBlock}" BciBlock''getJsrAlternatives-1 [#_"BciBlock" this]
         (when (some? (:jsrData this)) (:jsrAlternatives (:jsrData this)))
     )
 
@@ -16638,7 +16617,7 @@ ZeroExtendNode'new-4
             #_"JSRData" data (BciBlock''getOrCreateJSRData-1 this)
         ]
             (when (nil? (:jsrAlternatives data))
-                (§ ass! data (assoc data :jsrAlternatives (EconomicMap/create)))
+                (§ ass! data (assoc data :jsrAlternatives {}))
             )
         )
         nil
@@ -16934,7 +16913,7 @@ ZeroExtendNode'new-4
                                             ]
                                                 (§ ass! this (update this :blocksNotYetAssignedId inc))
                                                 (BciBlock''setJsrScope-2 clone, nextScope)
-                                                (#_"EconomicMap" .put (BciBlock''getJsrAlternatives-1 successor), nextScope, clone)
+                                                (§ ass! (BciBlock''getJsrAlternatives-1 successor) (assoc (BciBlock''getJsrAlternatives-1 successor) nextScope clone))
                                                 clone
                                             )
                                         )
@@ -17694,15 +17673,15 @@ ZeroExtendNode'new-4
                          ; Effects that can only be applied after the effects from within the loop have been applied and
                          ; that must be applied before any effect from after the loop is applied. E.g., updating phis.
                          ;;
-                        #_"EconomicMap<Loop, GraphEffectList>" :loopMergeEffects (EconomicMap/create)
+                        #_"{Loop GraphEffectList}" :loopMergeEffects {}
                         ;;;
                          ; The entry state of loops is needed when loop proxies are processed.
                          ;;
-                        #_"EconomicMap<LoopBeginNode, T>" :loopEntryStates (EconomicMap/create)
+                        #_"{LoopBeginNode T}" :loopEntryStates {}
                         ;;;
                          ; Intended to be used by read-eliminating phases based on the effects phase.
                          ;;
-                        #_"EconomicMap<Loop, LoopKillCache>" :loopLocationKillCache (EconomicMap/create)
+                        #_"{Loop LoopKillCache}" :loopLocationKillCache {}
                         #_"boolean" :changed? false
                     )
                 )
@@ -17949,8 +17928,8 @@ ZeroExtendNode'new-4
                                 (if (EffectsBlockState'''equivalentTo-2 (:newState mergeProcessor), lastMergedState)
                                     (do
                                         (§ ass! (BlockMap''get-2 (:blockEffects this), (:header _loop)) (EffectList''insertAll-3 (BlockMap''get-2 (:blockEffects this), (:header _loop)), (:mergeEffects mergeProcessor), 0))
-                                        (#_"EconomicMap" .put (:loopMergeEffects this), _loop, (:afterMergeEffects mergeProcessor))
-                                        (#_"EconomicMap" .put (:loopEntryStates this), (:beginNode (:header _loop)), loopEntryState)
+                                        (§ ass! (:loopMergeEffects this) (assoc (:loopMergeEffects this) _loop (:afterMergeEffects mergeProcessor)))
+                                        (§ ass! (:loopEntryStates this) (assoc (:loopEntryStates this) (:beginNode (:header _loop)) loopEntryState))
                                         (EffectsClosure'''processKilledLoopLocations-4 this, _loop, initialStateRemovedKilledLocations, (:newState mergeProcessor))
                                         (:exitStates info)
                                     )
@@ -18482,7 +18461,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"void" PartialEscapeClosure'processMaterializedAtLoopExit-7 [#_"LoopExitNode" exitNode, #_"GraphEffectList" effects, #_"EconomicMap<Integer, ProxyNode>" proxies, #_"int" object, #_"ObjectState" exitObjState, #_"ObjectState" initialObjState, #_"PartialEscapeBlockState" exitState]
+    (defn- #_"void" PartialEscapeClosure'processMaterializedAtLoopExit-7 [#_"LoopExitNode" exitNode, #_"GraphEffectList" effects, #_"{Integer ProxyNode}" proxies, #_"int" object, #_"ObjectState" exitObjState, #_"ObjectState" initialObjState, #_"PartialEscapeBlockState" exitState]
         (when (or (nil? initialObjState) (ObjectState''isVirtual-1 initialObjState))
             (let [
                 #_"ProxyNode" proxy (get proxies object)
@@ -18507,17 +18486,20 @@ ZeroExtendNode'new-4
         (#_"void" EffectsClosure'''processLoopExit-5 [#_"PartialEscapeClosure<T>" this, #_"LoopExitNode" exitNode, #_"T" initialState, #_"T" exitState, #_"GraphEffectList" effects]
             (when (:hasValueProxies (:graph exitNode))
                 (let [
-                    #_"EconomicMap<Integer, ProxyNode>" proxies (EconomicMap/create)
-                ]
-                    (doseq [#_"ProxyNode" proxy (LoopExitNode''proxies-1 exitNode)]
-                        (let [
-                            #_"ValueNode" alias (PartialEscapeClosure''getAlias-2 this, (:value proxy))
-                        ]
-                            (when (satisfies? VirtualObjectNode alias)
-                                (#_"EconomicMap" .put proxies, (:oid alias), proxy)
+                    #_"{Integer ProxyNode}" proxies
+                        (loop-when [proxies {} #_"ISeq" s (seq (LoopExitNode''proxies-1 exitNode))] (some? s) => proxies
+                            (let [
+                                #_"ProxyNode" proxy (first s)
+                                #_"ValueNode" alias (PartialEscapeClosure''getAlias-2 this, (:value proxy))
+                                proxies
+                                    (when (satisfies? VirtualObjectNode alias) => proxies
+                                        (assoc proxies (:oid alias) proxy)
+                                    )
+                            ]
+                                (recur proxies (next s))
                             )
                         )
-                    )
+                ]
                     (dotimes [#_"int" i (count (:objectStates exitState))]
                         (let [
                             #_"ObjectState" exitObjState (nth (:objectStates exitState) i)
@@ -18946,19 +18928,19 @@ ZeroExtendNode'new-4
 
             (when (:hasValueProxies (:graph exitNode))
                 (let [
-                    #_"MapCursor<ReadCacheEntry, ValueNode>" entry (#_"EconomicMap" ßgetEntries (:readCache exitState))
+                    #_"MapCursor<ReadCacheEntry, ValueNode>" entry (#_"EconomicMap" ßgetEntries (:readCache exitState))
                 ]
                     (while (#_"MapCursor" .advance entry)
-                        (when-not (= (get (:readCache initialState) (#_"MapCursor" .getKey entry)) (#_"MapCursor" .getValue entry))
+                        (when-not (= (get (:readCache initialState) (key entry)) (val entry))
                             (let [
-                                #_"ValueNode" value (PEReadEliminationBlockState''getReadCache-6 exitState, (:object (#_"MapCursor" .getKey entry)), (:identity (#_"MapCursor" .getKey entry)), (:index (#_"MapCursor" .getKey entry)), (:kind (#_"MapCursor" .getKey entry)), this)
+                                #_"ValueNode" value (PEReadEliminationBlockState''getReadCache-6 exitState, (:object (key entry)), (:identity (key entry)), (:index (key entry)), (:kind (key entry)), this)
                             ]
                                 (when-not (and (satisfies? ProxyNode value) (= (:loopExit value) exitNode))
                                     (let [
                                         #_"ProxyNode" proxy (ValueProxyNode'new-2 value, exitNode)
                                     ]
                                         (GraphEffectList''addFloatingNode-3 effects, proxy, "readCacheProxy")
-                                        (#_"EconomicMap" .put (:readCache exitState), (#_"MapCursor" .getKey entry), proxy)
+                                        (§ ass! (:readCache exitState) (assoc (:readCache exitState) (key entry) proxy))
                                     )
                                 )
                             )
@@ -18978,7 +18960,7 @@ ZeroExtendNode'new-4
                     (if (nil? loopKilledLocations)
                         (do
                             (§ ass loopKilledLocations (LoopKillCache'new-1 1)) ;; 1.visit
-                            (#_"EconomicMap" .put (:loopLocationKillCache this), _loop, loopKilledLocations)
+                            (§ ass! (:loopLocationKillCache this) (assoc (:loopLocationKillCache this) _loop loopKilledLocations))
                         )
                         (do
                             (if (< GraalOptions'readEliminationMaxLoopVisits (:visits loopKilledLocations))
@@ -19229,15 +19211,15 @@ ZeroExtendNode'new-4
         (#_"void" EffectsClosure'''processLoopExit-5 [#_"ReadEliminationClosure" this, #_"LoopExitNode" exitNode, #_"ReadEliminationBlockState" initialState, #_"ReadEliminationBlockState" exitState, #_"GraphEffectList" effects]
             (when (:hasValueProxies (:graph exitNode))
                 (let [
-                    #_"MapCursor<CacheEntry, ValueNode>" entry (#_"EconomicMap" ßgetEntries (:readCache exitState))
+                    #_"MapCursor<CacheEntry, ValueNode>" entry (#_"EconomicMap" ßgetEntries (:readCache exitState))
                 ]
                     (while (#_"MapCursor" .advance entry)
-                        (when-not (= (get (:readCache initialState) (#_"MapCursor" .getKey entry)) (#_"MapCursor" .getValue entry))
+                        (when-not (= (get (:readCache initialState) (key entry)) (val entry))
                             (let [
-                                #_"ProxyNode" proxy (ValueProxyNode'new-2 (ReadEliminationBlockState''getCacheEntry-2 exitState, (#_"MapCursor" .getKey entry)), exitNode)
+                                #_"ProxyNode" proxy (ValueProxyNode'new-2 (ReadEliminationBlockState''getCacheEntry-2 exitState, (key entry)), exitNode)
                             ]
                                 (GraphEffectList''addFloatingNode-3 effects, proxy, "readCacheProxy")
-                                (#_"EconomicMap" .put (:readCache exitState), (#_"MapCursor" .getKey entry), proxy)
+                                (§ ass! (:readCache exitState) (assoc (:readCache exitState) (key entry) proxy))
                             )
                         )
                     )
@@ -19255,7 +19237,7 @@ ZeroExtendNode'new-4
                     (if (nil? loopKilledLocations)
                         (do
                             (§ ass loopKilledLocations (LoopKillCache'new-1 1)) ;; 1.visit
-                            (#_"EconomicMap" .put (:loopLocationKillCache this), _loop, loopKilledLocations)
+                            (§ ass! (:loopLocationKillCache this) (assoc (:loopLocationKillCache this) _loop loopKilledLocations))
                         )
                         (do
                             (if (< GraalOptions'readEliminationMaxLoopVisits (:visits loopKilledLocations))
@@ -21640,10 +21622,10 @@ ZeroExtendNode'new-4
             #_"int" nofCases (BytecodeSwitch'''numberOfCases-1 bs)
             #_"int" nofCasesPlusDefault (inc nofCases)
             #_"double[]" keyProbabilities (BytecodeParser'switchProbability-2 nofCasesPlusDefault, bci)
-            #_"EconomicMap<Integer, SuccessorInfo>" bciToBlockSuccessorIndex (EconomicMap/create)
+            #_"{Integer SuccessorInfo}" bciToBlockSuccessorIndex {}
             _
                 (dotimes [#_"int" i (count (:successors (:currentBlock this)))]
-                    (#_"EconomicMap" .put bciToBlockSuccessorIndex, (:startBci (BciBlock''getSuccessor-2 (:currentBlock this), i)), (SuccessorInfo'new-1 i))
+                    (§ ass! bciToBlockSuccessorIndex (assoc bciToBlockSuccessorIndex (:startBci (BciBlock''getSuccessor-2 (:currentBlock this), i)) (SuccessorInfo'new-1 i)))
                 )
             #_"ArrayList<BciBlock>" actualSuccessors (ArrayList.)
             #_"int[]" keys (int-array nofCases)
@@ -21709,11 +21691,11 @@ ZeroExtendNode'new-4
             (when (<= 0 deoptSuccessorIndex)
                 (let [
                     #_"int[]" connectedCases (int-array nextSuccessorIndex)
+                    _
+                        (dotimes [#_"int" i nofCasesPlusDefault]
+                            (aswap connectedCases (nth keySuccessors i) inc)
+                        )
                 ]
-                    (dotimes [#_"int" i nofCasesPlusDefault]
-                        (aswap connectedCases (nth keySuccessors i) inc)
-                    )
-
                     (dotimes [#_"int" i nofCasesPlusDefault]
                         (when (= (nth keySuccessors i) deoptSuccessorIndex)
                             (let [
@@ -23176,10 +23158,10 @@ ZeroExtendNode'new-4
                 (merge (ClassfileBytecodeProvider'class.)
                     (hash-map
                         #_"ClassLoader" :loader nil
-                        #_"EconomicMap<Class, Classfile>" :classfiles (EconomicMap/create)
-                        #_"EconomicMap<String, Class>" :classes (EconomicMap/create)
-                        #_"EconomicMap<ResolvedJavaType, FieldsCache>" :fields (EconomicMap/create)
-                        #_"EconomicMap<ResolvedJavaType, MethodsCache>" :methods (EconomicMap/create)
+                        #_"{Class Classfile}" :classfiles {}
+                        #_"{String Class}" :classes {}
+                        #_"{ResolvedJavaType FieldsCache}" :fields {}
+                        #_"{ResolvedJavaType MethodsCache}" :methods {}
                     )
                 )
             this (assoc this :loader (or (#_"Class" .getClassLoader (#_"Object" .getClass this)) (ClassLoader/getSystemClassLoader)))
@@ -23211,7 +23193,7 @@ ZeroExtendNode'new-4
                         (let [
                             #_"Classfile" classfile (Classfile'new-3 type, (DataInputStream. in), this)
                         ]
-                            (#_"EconomicMap" .put (:classfiles this), c, classfile)
+                            (§ ass! (:classfiles this) (assoc (:classfiles this) c classfile))
                             classfile
                         )
                     )
@@ -23234,7 +23216,7 @@ ZeroExtendNode'new-4
                             )
                         #_"Class" c (Class/forName name, true, (:loader this))
                     ]
-                        (#_"EconomicMap" .put (:classes this), descriptor, c)
+                        (§ ass! (:classes this) (assoc (:classes this) descriptor c))
                         c
                     )
                 )
@@ -23264,7 +23246,7 @@ ZeroExtendNode'new-4
             ]
                 (when (nil? methodsCache)
                     (§ ass methodsCache (MethodsCache'new-0))
-                    (#_"EconomicMap" .put (:methods this), type, methodsCache)
+                    (§ ass! (:methods this) (assoc (:methods this) type methodsCache))
                 )
                 methodsCache
             )
@@ -23283,7 +23265,7 @@ ZeroExtendNode'new-4
             ]
                 (when (nil? fieldsCache)
                     (§ ass fieldsCache (FieldsCache'new-0))
-                    (#_"EconomicMap" .put (:fields this), type, fieldsCache)
+                    (§ ass! (:fields this) (assoc (:fields this) type fieldsCache))
                 )
                 fieldsCache
             )
@@ -24692,7 +24674,7 @@ ZeroExtendNode'new-4
                  ; Node relevances are pre-computed for all invokes if the graph contains loops.
                  ; If there are no loops, the computation happens lazily based on #rootScope.
                  ;;
-                #_"EconomicMap<FixedNode, Double>" :relevances nil
+                #_"{FixedNode Double}" :relevances nil
                 ;;;
                  ; This scope is non-nil if (and only if) there are no loops in the graph.
                  ; In this case, the root scope is used to compute invoke relevances on the fly.
@@ -24706,7 +24688,7 @@ ZeroExtendNode'new-4
      ; Determines the parent of the given loop and creates a Scope object for each one.
      ; This method will call itself recursively if no Scope for the parent loop exists.
      ;;
-    (defn- #_"Scope" ComputeInliningRelevance''createLoopScope-4 [#_"ComputeInliningRelevance" this, #_"LoopBeginNode" loopBegin, #_"EconomicMap<LoopBeginNode, Scope>" loops, #_"Scope" topScope]
+    (defn- #_"Scope" ComputeInliningRelevance''createLoopScope-4 [#_"ComputeInliningRelevance" this, #_"LoopBeginNode" loopBegin, #_"{LoopBeginNode Scope}" loops, #_"Scope" topScope]
         (or (get loops loopBegin)
             ;; look for the parent scope
             (let [
@@ -24733,7 +24715,7 @@ ZeroExtendNode'new-4
                     )
                 #_"Scope" scope (Scope'new-3 this, loopBegin, parent)
             ]
-                (#_"EconomicMap" .put loops, loopBegin, scope)
+                (§ ass! loops (assoc loops loopBegin scope))
                 scope
             )
         )
@@ -24749,10 +24731,10 @@ ZeroExtendNode'new-4
                 this (assoc this :rootScope nil)
                 this
                     (when (nil? (:relevances this)) => this
-                        (assoc this :relevances (EconomicMap/create))
+                        (assoc this :relevances {})
                     )
                 #_"NodeWorkList" workList (SingletonNodeWorkList'new-1 (:graph this))
-                #_"EconomicMap<LoopBeginNode, Scope>" loops (EconomicMap/create)
+                #_"{LoopBeginNode Scope}" loops {}
                 #_"Scope" topScope (Scope'new-3 this, (:start (:graph this)), nil)
             ]
                 (doseq [#_"LoopBeginNode" loopBegin (Graph''getNodes-2 (:graph this), LoopBeginNode)]
@@ -25330,7 +25312,7 @@ ZeroExtendNode'new-4
                 #_"BlockMap<List<Node>>" :blockToNodes blockToNodes
                 #_"{Node Block}" :nodeToBlock nodeToBlock
                 #_"[Node]" :undo []
-                #_"EconomicMap<MergeNode, EconomicMap<ValuePhiNode, PhiInfoElement>>" :mergeMaps (EconomicMap/create)
+                #_"{MergeNode {ValuePhiNode PhiInfoElement}}" :mergeMaps {}
                 ;;;
                  ; Tests which may be eliminated because post dominating tests to prove a broader condition.
                  ;;
@@ -25789,81 +25771,66 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"void" ConditionalEliminationInstance''introducePisForPhis-2 [#_"ConditionalEliminationInstance" this, #_"MergeNode" merge]
-        (let [
-            #_"EconomicMap<ValuePhiNode, PhiInfoElement>" mergeMap (get (:mergeMaps this) merge)
-        ]
-            (when (some? mergeMap)
+        (doseq [[#_"ValuePhiNode" phi #_"PhiInfoElement" phiInfoElements] (get (:mergeMaps this) merge)]
+            ;; Phi might have been killed already via a conditional elimination in another branch.
+            (when-not (Node''isDeleted-1 phi)
                 (let [
-                    #_"MapCursor<ValuePhiNode, PhiInfoElement>" entries (#_"EconomicMap" ßgetEntries mergeMap)
+                    #_"Stamp" bestPossibleStamp
+                        (loop-when [bestPossibleStamp nil #_"int" i 0] (< i (PhiNode''valueCount-1 phi)) => bestPossibleStamp
+                            (let [
+                                #_"ValueNode" valueAt (PhiNode''valueAt-2i phi, i)
+                                #_"InfoElement" ie (PhiInfoElement''get-2 phiInfoElements, (AbstractMergeNode''forwardEndAt-2 merge, i))
+                                #_"Stamp" curBestStamp
+                                    (when (some? ie) => (:stamp valueAt)
+                                        (Stamp'''join-2 (:stamp valueAt), (:stamp ie))
+                                    )
+                            ]
+                                (recur (if (some? bestPossibleStamp) (Stamp'''meet-2 bestPossibleStamp, curBestStamp) curBestStamp) (inc i))
+                            )
+                        )
                 ]
-                    (loop-when-recur [] (#_"MapCursor" .advance entries) []
+                    (when (some? (Stamp''tryImproveWith-2 (:stamp phi), bestPossibleStamp))
+                        ;; Need to be careful to not run into stamp update cycles with the iterative canonicalization.
                         (let [
-                            #_"ValuePhiNode" phi (#_"MapCursor" .getKey entries)
-                        ]
-                            ;; Phi might have been killed already via a conditional elimination in another branch.
-                            (when-not (Node''isDeleted-1 phi)
-                                (let [
-                                    #_"PhiInfoElement" phiInfoElements (#_"MapCursor" .getValue entries)
-                                    #_"Stamp" bestPossibleStamp
-                                        (loop-when [bestPossibleStamp nil #_"int" i 0] (< i (PhiNode''valueCount-1 phi)) => bestPossibleStamp
-                                            (let [
-                                                #_"ValueNode" valueAt (PhiNode''valueAt-2i phi, i)
-                                                #_"InfoElement" ie (PhiInfoElement''get-2 phiInfoElements, (AbstractMergeNode''forwardEndAt-2 merge, i))
-                                                #_"Stamp" curBestStamp
-                                                    (when (some? ie) => (:stamp valueAt)
-                                                        (Stamp'''join-2 (:stamp valueAt), (:stamp ie))
-                                                    )
-                                            ]
-                                                (recur (if (some? bestPossibleStamp) (Stamp'''meet-2 bestPossibleStamp, curBestStamp) curBestStamp) (inc i))
-                                            )
+                            #_"boolean" allow?
+                                (condp satisfies? bestPossibleStamp
+                                    ObjectStamp
+                                        ;; Always allow object stamps.
+                                        true
+                                    IntegerStamp
+                                        (or
+                                            (not= (IntegerStamp''isPositive-1 bestPossibleStamp) (IntegerStamp''isPositive-1 (:stamp phi)))
+                                            (not= (IntegerStamp''isNegative-1 bestPossibleStamp) (IntegerStamp''isNegative-1 (:stamp phi)))
+                                            (not= (IntegerStamp''isStrictlyPositive-1 bestPossibleStamp) (IntegerStamp''isStrictlyPositive-1 (:stamp phi)))
+                                            (not= (IntegerStamp''isStrictlyNegative-1 bestPossibleStamp) (IntegerStamp''isStrictlyNegative-1 (:stamp phi)))
+                                            (some? (Stamp'''asConstant-1 bestPossibleStamp))
+                                            (Stamp'''isUnrestricted-1 (:stamp phi))
                                         )
+                                    #_else
+                                        (some? (Stamp'''asConstant-1 bestPossibleStamp))
+                                )
+                        ]
+                            (when allow?
+                                (let [
+                                    #_"ValuePhiNode" newPhi (Graph''add-2 (:graph this), (ValuePhiNode'new-2 bestPossibleStamp, merge))
                                 ]
-                                    (when (some? (Stamp''tryImproveWith-2 (:stamp phi), bestPossibleStamp))
-                                        ;; Need to be careful to not run into stamp update cycles with the iterative canonicalization.
+                                    (dotimes [#_"int" i (PhiNode''valueCount-1 phi)]
                                         (let [
-                                            #_"boolean" allow?
-                                                (condp satisfies? bestPossibleStamp
-                                                    ObjectStamp
-                                                        ;; Always allow object stamps.
-                                                        true
-                                                    IntegerStamp
-                                                        (or
-                                                            (not= (IntegerStamp''isPositive-1 bestPossibleStamp) (IntegerStamp''isPositive-1 (:stamp phi)))
-                                                            (not= (IntegerStamp''isNegative-1 bestPossibleStamp) (IntegerStamp''isNegative-1 (:stamp phi)))
-                                                            (not= (IntegerStamp''isStrictlyPositive-1 bestPossibleStamp) (IntegerStamp''isStrictlyPositive-1 (:stamp phi)))
-                                                            (not= (IntegerStamp''isStrictlyNegative-1 bestPossibleStamp) (IntegerStamp''isStrictlyNegative-1 (:stamp phi)))
-                                                            (some? (Stamp'''asConstant-1 bestPossibleStamp))
-                                                            (Stamp'''isUnrestricted-1 (:stamp phi))
-                                                        )
-                                                    #_else
-                                                        (some? (Stamp'''asConstant-1 bestPossibleStamp))
+                                            #_"ValueNode" valueAt (PhiNode''valueAt-2i phi, i)
+                                            valueAt
+                                                (if (= (Stamp'''meet-2 bestPossibleStamp, (:stamp valueAt)) bestPossibleStamp)
+                                                    valueAt ;; Pi not required here.
+                                                    (let [
+                                                        #_"InfoElement" ie (PhiInfoElement''get-2 phiInfoElements, (AbstractMergeNode''forwardEndAt-2 merge, i))
+                                                    ]
+                                                        (Graph''maybeAddOrUnique-2 (:graph this), (PiNode'create-3 (or (:proxifiedInput ie) valueAt), (:stamp ie), (:guard ie)))
+                                                    )
                                                 )
                                         ]
-                                            (when allow?
-                                                (let [
-                                                    #_"ValuePhiNode" newPhi (Graph''add-2 (:graph this), (ValuePhiNode'new-2 bestPossibleStamp, merge))
-                                                ]
-                                                    (dotimes [#_"int" i (PhiNode''valueCount-1 phi)]
-                                                        (let [
-                                                            #_"ValueNode" valueAt (PhiNode''valueAt-2i phi, i)
-                                                            valueAt
-                                                                (if (= (Stamp'''meet-2 bestPossibleStamp, (:stamp valueAt)) bestPossibleStamp)
-                                                                    valueAt ;; Pi not required here.
-                                                                    (let [
-                                                                        #_"InfoElement" ie (PhiInfoElement''get-2 phiInfoElements, (AbstractMergeNode''forwardEndAt-2 merge, i))
-                                                                    ]
-                                                                        (Graph''maybeAddOrUnique-2 (:graph this), (PiNode'create-3 (or (:proxifiedInput ie) valueAt), (:stamp ie), (:guard ie)))
-                                                                    )
-                                                                )
-                                                        ]
-                                                            (PhiNode''addInput-2 newPhi, valueAt)
-                                                        )
-                                                    )
-                                                    (§ ass! phi (Node''replaceAtUsagesAndDelete-2 phi, newPhi))
-                                                )
-                                            )
+                                            (PhiNode''addInput-2 newPhi, valueAt)
                                         )
                                     )
+                                    (§ ass! phi (Node''replaceAtUsagesAndDelete-2 phi, newPhi))
                                 )
                             )
                         )
@@ -26071,7 +26038,7 @@ ZeroExtendNode'new-4
             #_"AbstractMergeNode" merge (AbstractEndNode'''merge-1 end)
         ]
             (when (satisfies? MergeNode merge) => this
-                (loop-when [#_"EconomicMap<ValuePhiNode, PhiInfoElement>" m (get (:mergeMaps this) merge) #_"ISeq" s (seq (AbstractMergeNode''valuePhis-1 merge))] (some? s)
+                (loop-when [#_"{ValuePhiNode PhiInfoElement}" m (get (:mergeMaps this) merge) #_"ISeq" s (seq (AbstractMergeNode''valuePhis-1 merge))] (some? s)
                     (let [
                         #_"ValuePhiNode" phi (first s)
                         m
@@ -26081,18 +26048,18 @@ ZeroExtendNode'new-4
                                 ]
                                     (when (some? (Stamp''tryImproveWith-2 (:stamp phi), stamp)) => (recur m (ConditionalEliminationInstance''nextElement-2 this, ie))
                                         (let [
-                                            m (or m (let [m (EconomicMap/create)] (#_"EconomicMap" .put (:mergeMaps this), merge, m) m))
-                                            #_"PhiInfoElement" pie
+                                            m (or m (let [m {}] (§ ass! (:mergeMaps this) (assoc (:mergeMaps this) merge m)) m))
+                                            #_"PhiInfoElement" pie
                                                 (or (get m phi)
                                                     (let [
-                                                        pie (PhiInfoElement'new-0)
+                                                        pie (PhiInfoElement'new-0)
                                                     ]
-                                                        (#_"EconomicMap" .put m, phi, pie)
+                                                        (§ ass! m (assoc m phi pie))
                                                         pie
                                                     )
                                                 )
                                         ]
-                                            (§ ass! pie (PhiInfoElement''set-3 pie, end, ie))
+                                            (§ ass! pie (PhiInfoElement''set-3 pie, end, ie))
                                             m
                                         )
                                     )
@@ -28246,7 +28213,7 @@ ZeroExtendNode'new-4
         (merge (DominatorOptimizationProblem'class.)
             (hash-map
                 #_"Block[]" :blocks (:reversePostOrder cfg)
-                #_"EnumMap<E, BitSet>" :flags (EnumMap. flagType)
+                #_"EnumMap<E, BitSet>" :flags (EnumMap. flagType)
                 #_"BlockMap<C>" :costs (BlockMap'new-1 cfg)
             )
         )
@@ -28261,7 +28228,7 @@ ZeroExtendNode'new-4
         ]
             (when (nil? bitSet)
                 (§ ass bitSet (BitSet.))
-                (#_"EnumMap" .put (:flags this), flag, bitSet)
+                (§ ass! (:flags this) (assoc (:flags this) flag bitSet))
             )
             (#_"BitSet" .set bitSet, (:id block))
         )
@@ -28304,7 +28271,7 @@ ZeroExtendNode'new-4
         ]
             (when (nil? bitSet)
                 (§ ass bitSet (BitSet.))
-                (#_"EnumMap" .put (:flags this), flag, bitSet)
+                (§ ass! (:flags this) (assoc (:flags this) flag bitSet))
             )
             (loop-when-recur [#_"Block" b block] (and (some? b) (not (#_"BitSet" .get bitSet, (:id b)))) [(:dominator b)]
                 ;; mark block
@@ -28815,8 +28782,8 @@ ZeroExtendNode'new-4
             (reify Effect
                 (#_"void" Effect'''apply-3 [#_"Effect" _, #_"Graph" graph, #_"ArrayList<Node>" obsoleteNodes]
                     (when (Node''isAlive-1 node)
-                        (dotimes [#_"int" i (FrameState''virtualObjectMappingCount-1 node)]
-                            (when (= (:object (FrameState''virtualObjectMappingAt-2 node, i)) (:object state))
+                        (dotimes [#_"int" i (count (:virtualObjectMappings node))]
+                            (when (= (:object (nth (:virtualObjectMappings node) i)) (:object state))
                                 (#_"List" .remove (:virtualObjectMappings node), i)
                             )
                         )
@@ -28994,16 +28961,15 @@ ZeroExtendNode'new-4
     ;;;
      ; Returns true if every value in subMap is also present in the superMap (according to "equals" semantics).
      ;;
-    (defn #_"<K, V> boolean" EffectsBlockState'isSubMapOf-2 [#_"EconomicMap<K, V>" superMap, #_"EconomicMap<K, V>" subMap]
+    (defn #_"<K, V> boolean" EffectsBlockState'isSubMapOf-2 [#_"{K V}" superMap, #_"{K V}" subMap]
         (or (= superMap subMap)
-            (loop-when [#_"UnmodifiableMapCursor<K, V>" cursor (#_"EconomicMap" ßgetEntries subMap)] (#_"UnmodifiableMapCursor" .advance cursor) => true
+            (loop-when [#_"ISeq" s (seq subMap)] (some? s) => true
                 (let [
-                    #_"K" key (#_"UnmodifiableMapCursor" .getKey cursor)
-                    #_"V" value (#_"UnmodifiableMapCursor" .getValue cursor)
-                    #_"V" otherValue (get superMap key)
+                    [#_"K" k #_"V" v] (first s)
+                    #_"V" v' (get superMap k)
                 ]
-                    (and (or (= otherValue value) (= value otherValue)) ;; %% oops!
-                        (recur cursor)
+                    (and (or (= v' v) (= v v')) ;; %% oops!
+                        (recur (next s))
                     )
                 )
             )
@@ -29352,7 +29318,7 @@ ZeroExtendNode'new-4
     (defn #_"PEReadEliminationBlockState" PEReadEliminationBlockState'new-0 []
         (merge (PEReadEliminationBlockState'class.) (PartialEscapeBlockState'new-0)
             (hash-map
-                #_"EconomicMap<ReadCacheEntry, ValueNode>" :readCache (EconomicMap/create)
+                #_"{ReadCacheEntry ValueNode}" :readCache {}
             )
         )
     )
@@ -29360,7 +29326,7 @@ ZeroExtendNode'new-4
     (defn #_"PEReadEliminationBlockState" PEReadEliminationBlockState'copy-1 [#_"PEReadEliminationBlockState" other]
         (merge (PEReadEliminationBlockState'class.) (PartialEscapeBlockState'copy-1 other)
             (hash-map
-                #_"EconomicMap<ReadCacheEntry, ValueNode>" :readCache (EconomicMap/create (:readCache other))
+                #_"{ReadCacheEntry ValueNode}" :readCache (:readCache other)
             )
         )
     )
@@ -29388,7 +29354,7 @@ ZeroExtendNode'new-4
                         (when (= declaredKind (PEReadEliminationBlockState'stampToJavaKind-1 (:stamp (nth values i))))
                             ;; We won't cache unaligned field writes upon instantiation unless we add
                             ;; support for non-array objects in PEReadEliminationClosure.processUnsafeLoad.
-                            (#_"EconomicMap" .put (:readCache this), (ReadCacheEntry'new-5 (FieldLocationIdentity'new-1 (VirtualInstanceNode''field-2 virtual, i)), representation, -1, declaredKind, false), (nth values i))
+                            (§ ass! (:readCache this) (assoc (:readCache this) (ReadCacheEntry'new-5 (FieldLocationIdentity'new-1 (VirtualInstanceNode''field-2 virtual, i)), representation, -1, declaredKind, false) (nth values i)))
                         )
                     )
                 )
@@ -29408,7 +29374,7 @@ ZeroExtendNode'new-4
             #_"ObjectState" obj (PartialEscapeClosure''getObjectState-3 closure, this, object)
             #_"ValueNode" cacheObject (if (some? obj) (:materializedValue obj) object)
         ]
-            (#_"EconomicMap" .put (:readCache this), (ReadCacheEntry'new-5 location, cacheObject, index, kind, overflowAccess), value)
+            (§ ass! (:readCache this) (assoc (:readCache this) (ReadCacheEntry'new-5 location, cacheObject, index, kind, overflowAccess) value))
         )
         nil
     )
@@ -29428,7 +29394,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"void" PEReadEliminationBlockState''killReadCache-1 [#_"PEReadEliminationBlockState" this]
-        (#_"EconomicMap" .clear (:readCache this))
+        (#_"EconomicMap" .clear (:readCache this))
         nil
     )
 
@@ -29457,7 +29423,7 @@ ZeroExtendNode'new-4
     (defn #_"ReadEliminationBlockState" ReadEliminationBlockState'new-0 []
         (merge (ReadEliminationBlockState'class.) (EffectsBlockState'new-0)
             (hash-map
-                #_"EconomicMap<CacheEntry, ValueNode>" :readCache (EconomicMap/create)
+                #_"{CacheEntry ValueNode}" :readCache {}
             )
         )
     )
@@ -29465,7 +29431,7 @@ ZeroExtendNode'new-4
     (defn #_"ReadEliminationBlockState" ReadEliminationBlockState'copy-1 [#_"ReadEliminationBlockState" other]
         (merge (ReadEliminationBlockState'class.) (EffectsBlockState'new-0)
             (hash-map
-                #_"EconomicMap<CacheEntry, ValueNode>" :readCache (EconomicMap/create (:readCache other))
+                #_"{CacheEntry ValueNode}" :readCache (:readCache other)
             )
         )
     )
@@ -29477,7 +29443,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"void" ReadEliminationBlockState''addCacheEntry-3 [#_"ReadEliminationBlockState" this, #_"CacheEntry" identifier, #_"ValueNode" value]
-        (#_"EconomicMap" .put (:readCache this), identifier, value)
+        (§ ass! (:readCache this) (assoc (:readCache this) identifier value))
         nil
     )
 
@@ -29486,7 +29452,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"void" ReadEliminationBlockState''killReadCache-1 [#_"ReadEliminationBlockState" this]
-        (#_"EconomicMap" .clear (:readCache this))
+        (#_"EconomicMap" .clear (:readCache this))
         nil
     )
 
@@ -30254,20 +30220,19 @@ ZeroExtendNode'new-4
         (if (= type EdgesType'Inputs) (:inputs this) (:successors this))
     )
 
-    (defn- #_"void" NodeClass'createNodeDuplicates-4 [#_"Graph" graph, #_"Node*" nodes, #_"DuplicationReplacement" replacements, #_"EconomicMap<Node, Node>" newNodes]
-        (doseq [#_"Node" node nodes]
-            (when (some? node)
+    (defn- #_"{Node Node}" NodeClass'createNodeDuplicates-3 [#_"Graph" graph, #_"Node*" nodes, #_"DuplicationReplacement" replacements]
+        (into {}
+            (for [#_"Node" node nodes :when (some? node)]
                 (let [
                     #_"Node" replacement (if (some? replacements) (DuplicationReplacement'''replacement-2 replacements, node) node)
                 ]
-                    (#_"EconomicMap" .put newNodes, node, (if (not= replacement node) replacement (Node''clone-3 node, graph, Node'WithAllEdges)))
+                    [node (if (= replacement node) (Node''clone-3 node, graph, Node'WithAllEdges) replacement)]
                 )
             )
         )
-        nil
     )
 
-    (defn- #_"void" NodeClass'transferEdges-6 [#_"Graph" graph, #_"DuplicationReplacement" replacements, #_"EconomicMap<Node, Node>" newNodes, #_"Node" oldNode, #_"Node" node, #_"EdgesType" type]
+    (defn- #_"void" NodeClass'transferEdges-6 [#_"Graph" graph, #_"DuplicationReplacement" replacements, #_"{Node Node}" newNodes, #_"Node" oldNode, #_"Node" node, #_"EdgesType" type]
         (let [
             #_"NodeClass" nodeClass (:nodeClass node)
             #_"NodeClass" oldNodeClass (:nodeClass oldNode)
@@ -30302,20 +30267,15 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"void" NodeClass'transferEdgesDifferentNodeClass-5 [#_"Graph" graph, #_"DuplicationReplacement" replacements, #_"EconomicMap<Node, Node>" newNodes, #_"Node" oldNode, #_"Node" node]
+    (defn- #_"void" NodeClass'transferEdgesDifferentNodeClass-5 [#_"Graph" graph, #_"DuplicationReplacement" replacements, #_"{Node Node}" newNodes, #_"Node" oldNode, #_"Node" node]
         (NodeClass'transferEdges-6 graph, replacements, newNodes, oldNode, node, EdgesType'Inputs)
         (NodeClass'transferEdges-6 graph, replacements, newNodes, oldNode, node, EdgesType'Successors)
         nil
     )
 
-    (defn #_"EconomicMap<Node, Node>" NodeClass'addGraphDuplicate-5 [#_"Graph" graph, #_"Graph" oldGraph, #_"int" estimatedNodeCount, #_"Node*" nodes, #_"DuplicationReplacement" replacements]
+    (defn #_"{Node Node}" NodeClass'addGraphDuplicate-4 [#_"Graph" graph, #_"Graph" oldGraph, #_"Node*" nodes, #_"DuplicationReplacement" replacements]
         (let [
-            #_"EconomicMap<Node, Node>" newNodes
-                (if (< (+ (Graph''getNodeCount-1 oldGraph) (>> (:nodesDeleted oldGraph) 4)) estimatedNodeCount)
-                    {} ;; use dense map
-                    (EconomicMap/create) ;; use sparse map
-                )
-            _ (NodeClass'createNodeDuplicates-4 graph, nodes, replacements, newNodes)
+            #_"{Node Node}" newNodes (NodeClass'createNodeDuplicates-3 graph, nodes, replacements)
             #_"InplaceUpdateClosure" replacementClosure
                 (reify InplaceUpdateClosure
                     (#_"Node" InplaceUpdateClosure'''replacement-3 [#_"InplaceUpdateClosure" _, #_"Node" node, #_"EdgesType" type]
@@ -31037,17 +30997,14 @@ ZeroExtendNode'new-4
         (FieldsCache'class.)
     )
 
-    (§ volatile #_"EconomicMap<FieldKey, ResolvedJavaField>" :instanceFields nil)
-    (§ volatile #_"EconomicMap<FieldKey, ResolvedJavaField>" :staticFields nil)
+    (§ volatile #_"{FieldKey ResolvedJavaField}" :instanceFields nil)
+    (§ volatile #_"{FieldKey ResolvedJavaField}" :staticFields nil)
 
-    (defn- #_"EconomicMap<FieldKey, ResolvedJavaField>" FieldsCache'createFieldMap-1 [#_"ResolvedJavaField*" fields]
-        (let [
-            #_"EconomicMap<FieldKey, ResolvedJavaField>" map (EconomicMap/create)
-        ]
-            (doseq [#_"ResolvedJavaField" f fields]
-                (#_"EconomicMap" .put map, (FieldKey'new-2 (#_"ResolvedJavaField" .getName f), (#_"JavaType" .getName (#_"ResolvedJavaField" .getType f))), f)
+    (defn- #_"{FieldKey ResolvedJavaField}" FieldsCache'createFieldMap-1 [#_"ResolvedJavaField*" fields]
+        (into {}
+            (for [#_"ResolvedJavaField" f fields]
+                [(FieldKey'new-2 (#_"ResolvedJavaField" .getName f), (#_"JavaType" .getName (#_"ResolvedJavaField" .getType f))) f]
             )
-            map
         )
     )
 
@@ -31446,7 +31403,7 @@ ZeroExtendNode'new-4
     (defn #_"FixedNodeProbabilityCache" FixedNodeProbabilityCache'new-0 []
         (merge (FixedNodeProbabilityCache'class.)
             (hash-map
-                #_"EconomicMap<FixedNode, Double>" :cache (EconomicMap/create)
+                #_"{FixedNode Double}" :cache {}
             )
         )
     )
@@ -31520,7 +31477,7 @@ ZeroExtendNode'new-4
                                 )
                             )
                     ]
-                        (#_"EconomicMap" .put (:cache this), node, probability)
+                        (§ ass! (:cache this) (assoc (:cache this) node probability))
                         probability
                     )
                 )
@@ -31682,7 +31639,7 @@ ZeroExtendNode'new-4
                             )
                         )
                 ]
-                    (#_"EconomicMap" .put (:lastMemorySnapshot newState), key, merged)
+                    (§ ass! (:lastMemorySnapshot newState) (assoc (:lastMemorySnapshot newState) key merged))
                 )
             )
             newState
@@ -33232,12 +33189,12 @@ ZeroExtendNode'new-4
      ; @param replacementsMap the replacement map (can be nil if no replacement is to be performed)
      ; @return a map which associates the original nodes from {@code nodes} to their duplicates
      ;;
-    (defn #_"{Node Node}" Graph''addDuplicates-5m [#_"Graph" this, #_"Node*" newNodes, #_"Graph" oldGraph, #_"int" estimatedNodeCount, #_"EconomicMap<Node, Node>" replacementsMap]
-        (Graph''addDuplicates-5r this, newNodes, oldGraph, estimatedNodeCount, (when (some? replacementsMap) (MapReplacement'new-1 replacementsMap)))
+    (defn #_"{Node Node}" Graph''addDuplicates-4m [#_"Graph" this, #_"Node*" newNodes, #_"Graph" oldGraph, #_"{Node Node}" replacementsMap]
+        (Graph''addDuplicates-4r this, newNodes, oldGraph, (when (some? replacementsMap) (MapReplacement'new-1 replacementsMap)))
     )
 
-    (defn #_"EconomicMap<Node, Node>" Graph''addDuplicates-5r [#_"Graph" this, #_"Node*" newNodes, #_"Graph" oldGraph, #_"int" estimatedNodeCount, #_"DuplicationReplacement" replacements]
-        (NodeClass'addGraphDuplicate-5 this, oldGraph, estimatedNodeCount, newNodes, replacements)
+    (defn #_"{Node Node}" Graph''addDuplicates-4r [#_"Graph" this, #_"Node*" newNodes, #_"Graph" oldGraph, #_"DuplicationReplacement" replacements]
+        (NodeClass'addGraphDuplicate-4 this, oldGraph, newNodes, replacements)
     )
 
     (defn #_"boolean" Graph''isFrozen-1 [#_"Graph" this]
@@ -37061,7 +37018,7 @@ ZeroExtendNode'new-4
     (defn #_"JSRData" JSRData'new-0 []
         (merge (JSRData'class.)
             (hash-map
-                #_"EconomicMap<JsrScope, BciBlock>" :jsrAlternatives nil
+                #_"{JsrScope BciBlock}" :jsrAlternatives nil
                 #_"JsrScope" :jsrScope JsrScope'EMPTY_SCOPE
                 #_"BciBlock" :jsrSuccessor nil
                 #_"int" :jsrReturnBci 0
@@ -44175,12 +44132,12 @@ ZeroExtendNode'new-4
      ;;
     (def #_"LocationIdentity" NamedLocationIdentity'ARRAY_LENGTH (NamedLocationIdentity'immutable-1 "[].length"))
 
-    (def- #_"EnumMap<JavaKind, LocationIdentity>" NamedLocationIdentity'ARRAY
+    (def- #_"EnumMap<JavaKind, LocationIdentity>" NamedLocationIdentity'ARRAY
         (let [
-            #_"EnumMap<JavaKind, LocationIdentity>" m (EnumMap. JavaKind)
+            #_"EnumMap<JavaKind, LocationIdentity>" m (EnumMap. JavaKind)
         ]
             (doseq [#_"JavaKind" kind (JavaKind/values)]
-                (#_"EnumMap" .put m, kind, (NamedLocationIdentity'mutable-1 (str "Array: " (#_"JavaKind" .getJavaName kind))))
+                (§ ass! m (assoc m kind (NamedLocationIdentity'mutable-1 (str "Array: " (#_"JavaKind" .getJavaName kind)))))
             )
             m
         )
@@ -44195,12 +44152,12 @@ ZeroExtendNode'new-4
         (get NamedLocationIdentity'ARRAY elementKind)
     )
 
-    (def- #_"EnumMap<JavaKind, LocationIdentity>" NamedLocationIdentity'UNBOX
+    (def- #_"EnumMap<JavaKind, LocationIdentity>" NamedLocationIdentity'UNBOX
         (let [
-            #_"EnumMap<JavaKind, LocationIdentity>" m (EnumMap. JavaKind)
+            #_"EnumMap<JavaKind, LocationIdentity>" m (EnumMap. JavaKind)
         ]
             (doseq [#_"JavaKind" kind (JavaKind/values)]
-                (#_"EnumMap" .put m, kind, (NamedLocationIdentity'immutable-1 (str "Unbox: " (#_"JavaKind" .getJavaName kind))))
+                (§ ass! m (assoc m kind (NamedLocationIdentity'immutable-1 (str "Unbox: " (#_"JavaKind" .getJavaName kind)))))
             )
             m
         )
@@ -44525,7 +44482,7 @@ ZeroExtendNode'new-4
                 #_"LoopFragmentWhole" :whole nil
                 #_"CountedLoopInfo" :counted nil
                 #_"LoopsData" :data data
-                #_"EconomicMap<Node, InductionVariable>" :ivs nil
+                #_"{Node InductionVariable}" :ivs nil
             )
         )
     )
@@ -44789,9 +44746,9 @@ ZeroExtendNode'new-4
      ;
      ; @return a map from node to induction variable
      ;;
-    (defn- #_"EconomicMap<Node, InductionVariable>" LoopEx'findInductionVariables-1 [#_"LoopEx" _loop]
+    (defn- #_"{Node InductionVariable}" LoopEx'findInductionVariables-1 [#_"LoopEx" _loop]
         (let [
-            #_"EconomicMap<Node, InductionVariable>" ivs (EconomicMap/create)
+            #_"{Node InductionVariable}" ivs {}
             #_"Queue<InductionVariable>" scanQueue (LinkedList.)
             #_"LoopBeginNode" loopBegin (LoopEx''loopBegin-1 _loop)
             #_"AbstractEndNode" forwardEnd (LoopBeginNode''forwardEnd-1 loopBegin)
@@ -44808,7 +44765,7 @@ ZeroExtendNode'new-4
                                 (let [
                                     #_"BasicInductionVariable" biv (BasicInductionVariable'new-5 _loop, phi, (PhiNode''valueAt-2n phi, forwardEnd), stride, backValue)
                                 ]
-                                    (#_"EconomicMap" .put ivs, phi, biv)
+                                    (§ ass! ivs (assoc ivs phi biv))
                                     (#_"Queue" .add scanQueue, biv)
                                 )
                             )
@@ -44857,7 +44814,7 @@ ZeroExtendNode'new-4
                                         )
                                 ]
                                     (when (some? iv)
-                                        (#_"EconomicMap" .put ivs, op, iv)
+                                        (§ ass! ivs (assoc ivs op iv))
                                         (#_"Queue" .offer scanQueue, iv)
                                     )
                                 )
@@ -44869,7 +44826,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"EconomicMap<Node, InductionVariable>" LoopEx''getInductionVariables-1 [#_"LoopEx" this]
+    (defn #_"{Node InductionVariable}" LoopEx''getInductionVariables-1 [#_"LoopEx" this]
         (when (nil? (:ivs this))
             (§ ass! this (assoc this :ivs (LoopEx'findInductionVariables-1 this)))
         )
@@ -44911,7 +44868,7 @@ ZeroExtendNode'new-4
                 #_"LoopFragment" :original original
                 #_"NodeBitMap" :nodes nil
                 #_"boolean" :nodesReady false
-                #_"EconomicMap<Node, Node>" :duplicationMap nil
+                #_"{Node Node}" :duplicationMap nil
             )
         )
     )
@@ -44934,7 +44891,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"void" LoopFragment''putDuplicatedNode-3 [#_"LoopFragment" this, #_"Node" oldNode, #_"Node" newNode]
-        (#_"EconomicMap" .put (:duplicationMap this), oldNode, newNode)
+        (§ ass! (:duplicationMap this) (assoc (:duplicationMap this) oldNode newNode))
         nil
     )
 
@@ -44977,7 +44934,7 @@ ZeroExtendNode'new-4
                     )
                 _ (LoopFragment'''beforeDuplication-1 this)
                 #_"Node*" nodeSeq (LoopFragment'''nodes-1 (:original this))
-                this (assoc this :duplicationMap (Graph''addDuplicates-5r (LoopFragment''graph-1 this), nodeSeq, (LoopFragment''graph-1 this), (count nodeSeq), dr))
+                this (assoc this :duplicationMap (Graph''addDuplicates-4r (LoopFragment''graph-1 this), nodeSeq, (LoopFragment''graph-1 this), dr))
                 _ (LoopFragment'''finishDuplication-1 this)
                 this (assoc this :nodes (NodeBitMap'new-1 (LoopFragment''graph-1 this)))
             ]
@@ -45269,7 +45226,7 @@ ZeroExtendNode'new-4
              ; In the unrolling case they will be used as the value that replace the loop-phis of the
              ; duplicated inside fragment.
              ;;
-            #_"EconomicMap<PhiNode, ValueNode>" :mergedInitializers nil
+            #_"{PhiNode ValueNode}" :mergedInitializers nil
         )
     )
 
@@ -45308,88 +45265,86 @@ ZeroExtendNode'new-4
         (let [
             #_"List<EndNode>" endsToMerge (LinkedList.)
             ;; map peel exits to the corresponding loop exits
-            #_"EconomicMap<AbstractEndNode, LoopEndNode>" reverseEnds (EconomicMap/create)
+            #_"{AbstractEndNode LoopEndNode}" reverseEnds {}
             #_"LoopBeginNode" loopBegin (LoopEx''loopBegin-1 (:loop (:original this)))
-        ]
-            (doseq [#_"LoopEndNode" le (LoopBeginNode''loopEnds-1 loopBegin)]
-                (let [
-                    #_"AbstractEndNode" duplicate (LoopFragment''getDuplicatedNode-2 this, le)
-                ]
-                    (when (some? duplicate)
-                        (#_"List" .add endsToMerge, (§ cast #_"EndNode" duplicate))
-                        (#_"EconomicMap" .put reverseEnds, duplicate, le)
+            _
+                (doseq [#_"LoopEndNode" le (LoopBeginNode''loopEnds-1 loopBegin)]
+                    (let [
+                        #_"AbstractEndNode" duplicate (LoopFragment''getDuplicatedNode-2 this, le)
+                    ]
+                        (when (some? duplicate)
+                            (#_"List" .add endsToMerge, (§ cast #_"EndNode" duplicate))
+                            (§ ass! reverseEnds (assoc reverseEnds duplicate le))
+                        )
                     )
                 )
-            )
-            (§ ass! this (assoc this :mergedInitializers (EconomicMap/create)))
-            (let [
-                #_"Graph" graph (LoopFragment''graph-1 this)
-            ]
-                (if (= (count endsToMerge) 1)
-                    (let [
-                        #_"AbstractEndNode" end (nth endsToMerge 0)
-                        #_"AbstractBeginNode" newExit (Graph''add-2 graph, (BeginNode'new-0))
-                    ]
-                        (Node''replaceAtPredecessor-2 end, newExit)
-                        (Node''safeDelete-1 end)
-                        newExit
-                    )
-                    (let [
-                        #_"AbstractMergeNode" newExitMerge (Graph''add-2 graph, (MergeNode'new-0))
-                        #_"AbstractBeginNode" newExit newExitMerge
-                        #_"FrameState" state (:stateAfter loopBegin)
-                        #_"FrameState" duplicateState
-                            (when (some? state)
-                                (let [
-                                    duplicateState (VirtualState'''duplicateWithVirtualState-1 state)
-                                ]
-                                    (StateSplit'''setStateAfter-2 newExitMerge, duplicateState)
-                                    duplicateState
-                                )
+            _ (§ ass! this (assoc this :mergedInitializers {}))
+            #_"Graph" graph (LoopFragment''graph-1 this)
+        ]
+            (if (= (count endsToMerge) 1)
+                (let [
+                    #_"AbstractEndNode" end (nth endsToMerge 0)
+                    #_"AbstractBeginNode" newExit (Graph''add-2 graph, (BeginNode'new-0))
+                ]
+                    (Node''replaceAtPredecessor-2 end, newExit)
+                    (Node''safeDelete-1 end)
+                    newExit
+                )
+                (let [
+                    #_"AbstractMergeNode" newExitMerge (Graph''add-2 graph, (MergeNode'new-0))
+                    #_"AbstractBeginNode" newExit newExitMerge
+                    #_"FrameState" state (:stateAfter loopBegin)
+                    #_"FrameState" duplicateState
+                        (when (some? state)
+                            (let [
+                                duplicateState (VirtualState'''duplicateWithVirtualState-1 state)
+                            ]
+                                (StateSplit'''setStateAfter-2 newExitMerge, duplicateState)
+                                duplicateState
                             )
-                    ]
-                        (doseq [#_"EndNode" end endsToMerge]
-                            (AbstractMergeNode''addForwardEnd-2 newExitMerge, end)
                         )
+                ]
+                    (doseq [#_"EndNode" end endsToMerge]
+                        (AbstractMergeNode''addForwardEnd-2 newExitMerge, end)
+                    )
 
-                        (doseq [#_"PhiNode" phi (§ snap (AbstractMergeNode''phis-1 loopBegin))]
-                            (when-not (Node''hasNoUsages-1 phi)
-                                (let [
-                                    #_"PhiNode" firstPhi (LoopFragmentInside'patchPhi-3 graph, phi, newExitMerge)
-                                ]
-                                    (doseq [#_"AbstractEndNode" end (:ends newExitMerge)]
-                                        (let [
-                                            #_"LoopEndNode" loopEnd (get reverseEnds end)
-                                            #_"ValueNode" prim (LoopFragment'''prim-2 this, (PhiNode''valueAt-2n phi, loopEnd))
-                                        ]
-                                            (PhiNode''addInput-2 firstPhi, prim)
-                                        )
-                                    )
+                    (doseq [#_"PhiNode" phi (§ snap (AbstractMergeNode''phis-1 loopBegin))]
+                        (when-not (Node''hasNoUsages-1 phi)
+                            (let [
+                                #_"PhiNode" firstPhi (LoopFragmentInside'patchPhi-3 graph, phi, newExitMerge)
+                            ]
+                                (doseq [#_"AbstractEndNode" end (:ends newExitMerge)]
                                     (let [
-                                        #_"ValueNode" initializer firstPhi
+                                        #_"LoopEndNode" loopEnd (get reverseEnds end)
+                                        #_"ValueNode" prim (LoopFragment'''prim-2 this, (PhiNode''valueAt-2n phi, loopEnd))
                                     ]
-                                        (when (some? duplicateState)
-                                            ;; fix the merge's state after
-                                            (VirtualState'''applyToNonVirtual-2 duplicateState,
-                                                (§ proxy #_"NodeClosure" #_"<ValueNode>" (NodeClosure'new-0)
-                                                    (defm NodeClosure #_"<ValueNode>" NodeClosure
-                                                        (#_"void" NodeClosure'''apply-3 [#_"NodeClosure<ValueNode>" this, #_"Node" from, #_"ValueNode" node]
-                                                            (when (= node phi)
-                                                                (Node''replaceFirstInput-3 from, phi, firstPhi)
-                                                            )
-                                                            nil
+                                        (PhiNode''addInput-2 firstPhi, prim)
+                                    )
+                                )
+                                (let [
+                                    #_"ValueNode" initializer firstPhi
+                                ]
+                                    (when (some? duplicateState)
+                                        ;; fix the merge's state after
+                                        (VirtualState'''applyToNonVirtual-2 duplicateState,
+                                            (§ proxy #_"NodeClosure" #_"<ValueNode>" (NodeClosure'new-0)
+                                                (defm NodeClosure #_"<ValueNode>" NodeClosure
+                                                    (#_"void" NodeClosure'''apply-3 [#_"NodeClosure<ValueNode>" this, #_"Node" from, #_"ValueNode" node]
+                                                        (when (= node phi)
+                                                            (Node''replaceFirstInput-3 from, phi, firstPhi)
                                                         )
+                                                        nil
                                                     )
                                                 )
                                             )
                                         )
-                                        (#_"EconomicMap" .put (:mergedInitializers this), phi, initializer)
                                     )
+                                    (§ ass! (:mergedInitializers this) (assoc (:mergedInitializers this) phi initializer))
                                 )
                             )
                         )
-                        newExit
                     )
+                    newExit
                 )
             )
         )
@@ -45771,7 +45726,7 @@ ZeroExtendNode'new-4
             (let [
                 #_"LoopBeginNode" loopBegin (LoopEx''loopBegin-1 (:loop this))
                 #_"Graph" graph (LoopFragment''graph-1 this)
-                #_"EconomicMap<Node, Node>" seenNode (EconomicMap/create)
+                #_"{Node Node}" seenNode {}
             ]
                 (reify DuplicationReplacement
                     (#_"Node" DuplicationReplacement'''replacement-2 [#_"DuplicationReplacement" _, #_"Node" original]
@@ -45785,7 +45740,7 @@ ZeroExtendNode'new-4
                                 (let [
                                     #_"AbstractBeginNode" newValue (Graph''add-2 graph, (BeginNode'new-0))
                                 ]
-                                    (#_"EconomicMap" .put seenNode, original, newValue)
+                                    (§ ass! seenNode (assoc seenNode original newValue))
                                     (§ return newValue)
                                 )
                             )
@@ -45800,7 +45755,7 @@ ZeroExtendNode'new-4
                                 (let [
                                     #_"AbstractBeginNode" newValue (Graph''add-2 graph, (BeginNode'new-0))
                                 ]
-                                    (#_"EconomicMap" .put seenNode, original, newValue)
+                                    (§ ass! seenNode (assoc seenNode original newValue))
                                     (§ return newValue)
                                 )
                             )
@@ -45815,7 +45770,7 @@ ZeroExtendNode'new-4
                                 (let [
                                     #_"EndNode" newValue (Graph''add-2 graph, (EndNode'new-0))
                                 ]
-                                    (#_"EconomicMap" .put seenNode, original, newValue)
+                                    (§ ass! seenNode (assoc seenNode original newValue))
                                     (§ return newValue)
                                 )
                             )
@@ -46305,7 +46260,7 @@ ZeroExtendNode'new-4
             #_"LoopsData" this
                 (merge (LoopsData'class.)
                     (hash-map
-                        #_"EconomicMap<LoopBeginNode, LoopEx>" :loopBeginToEx (EconomicMap/create)
+                        #_"{LoopBeginNode LoopEx}" :loopBeginToEx {}
                         #_"ControlFlowGraph" :cfg (ControlFlowGraph'compute-5 graph, true, true, true, true)
                         #_"List<LoopEx>" :loops (ArrayList.)
                     )
@@ -46316,7 +46271,7 @@ ZeroExtendNode'new-4
                         #_"LoopEx" ex (LoopEx'new-2 _loop, this)
                     ]
                         (#_"List" .add (:loops this), ex)
-                        (#_"EconomicMap" .put (:loopBeginToEx this), (LoopEx''loopBegin-1 ex), ex)
+                        (§ ass! (:loopBeginToEx this) (assoc (:loopBeginToEx this) (LoopEx''loopBegin-1 ex) ex))
                     )
                 )
         ]
@@ -46694,10 +46649,10 @@ ZeroExtendNode'new-4
 )
 
 (class-ns MapReplacement [DuplicationReplacement]
-    (defn #_"MapReplacement" MapReplacement'new-1 [#_"EconomicMap<Node, Node>" dupeMap]
+    (defn #_"MapReplacement" MapReplacement'new-1 [#_"{Node Node}" dupeMap]
         (merge (MapReplacement'class.)
             (hash-map
-                #_"EconomicMap<Node, Node>" :dupeMap dupeMap
+                #_"{Node Node}" :dupeMap dupeMap
             )
         )
     )
@@ -46820,7 +46775,7 @@ ZeroExtendNode'new-4
     (defn #_"MemoryMap0" MemoryMap0'new-0 []
         (merge (MemoryMap0'class.)
             (hash-map
-                #_"EconomicMap<LocationIdentity, MemoryNode>" :lastMemorySnapshot (EconomicMap/create)
+                #_"{LocationIdentity MemoryNode}" :lastMemorySnapshot {}
             )
         )
     )
@@ -46829,7 +46784,7 @@ ZeroExtendNode'new-4
         (let [
             #_"MemoryMap0" this (MemoryMap0'new-0)
         ]
-            (#_"EconomicMap" .put (:lastMemorySnapshot this), LocationIdentity'ANY, start)
+            (§ ass! (:lastMemorySnapshot this) (assoc (:lastMemorySnapshot this) LocationIdentity'ANY start))
             this
         )
     )
@@ -46837,7 +46792,7 @@ ZeroExtendNode'new-4
     (defn #_"MemoryMap0" MemoryMap0'copy-1 [#_"MemoryMap0" other]
         (merge (MemoryMap0'class.)
             (hash-map
-                #_"EconomicMap<LocationIdentity, MemoryNode>" :lastMemorySnapshot (EconomicMap/create (:lastMemorySnapshot other))
+                #_"{LocationIdentity MemoryNode}" :lastMemorySnapshot (:lastMemorySnapshot other)
             )
         )
     )
@@ -46920,9 +46875,9 @@ ZeroExtendNode'new-4
         (merge (PEMergeProcessor'class.) (MergeProcessor'new-1 mergeBlock)
             (hash-map
                 #_"PartialEscapeClosure<T>" :peClosure peClosure
-                #_"EconomicMap<Object, ValuePhiNode>" :materializedPhis nil
-                #_"EconomicMap<ValueNode, ValuePhiNode[]>" :valuePhis nil
-                #_"EconomicMap<ValuePhiNode, VirtualObjectNode>" :valueObjectVirtuals nil
+                #_"{Object ValuePhiNode}" :materializedPhis nil
+                #_"{ValueNode ValuePhiNode[]}" :valuePhis nil
+                #_"{ValuePhiNode VirtualObjectNode}" :valueObjectVirtuals nil
                 ;; merge will only be called multiple times for loop headers
                 #_"boolean" :needsCaching (Block''isLoopHeader-1 mergeBlock)
             )
@@ -46931,14 +46886,14 @@ ZeroExtendNode'new-4
 
     (defn- #_"<T> PhiNode" PEMergeProcessor''getPhiCached-3 [#_"PEMergeProcessor<T>" this, #_"T" virtual, #_"Stamp" stamp]
         (when (nil? (:materializedPhis this))
-            (§ ass! this (assoc this :materializedPhis (EconomicMap/create)))
+            (§ ass! this (assoc this :materializedPhis {}))
         )
         (let [
             #_"ValuePhiNode" result (get (:materializedPhis this) virtual)
         ]
             (when (nil? result)
                 (§ ass result (MergeProcessor''createValuePhi-2 this, stamp))
-                (#_"EconomicMap" .put (:materializedPhis this), virtual, result)
+                (§ ass! (:materializedPhis this) (assoc (:materializedPhis this) virtual result))
             )
             result
         )
@@ -46953,14 +46908,14 @@ ZeroExtendNode'new-4
 
     (defn- #_"PhiNode[]" PEMergeProcessor''getValuePhisCached-3 [#_"PEMergeProcessor<T>" this, #_"ValueNode" key, #_"int" entryCount]
         (when (nil? (:valuePhis this))
-            (§ ass! this (assoc this :valuePhis (EconomicMap/create)))
+            (§ ass! this (assoc this :valuePhis {}))
         )
         (let [
             #_"ValuePhiNode[]" result (get (:valuePhis this) key)
         ]
             (when (nil? result)
                 (§ ass result (make-array ValuePhiNode'iface entryCount))
-                (#_"EconomicMap" .put (:valuePhis this), key, result)
+                (§ ass! (:valuePhis this) (assoc (:valuePhis this) key result))
             )
             result
         )
@@ -46975,14 +46930,14 @@ ZeroExtendNode'new-4
 
     (defn- #_"VirtualObjectNode" PEMergeProcessor''getValueObjectVirtualCached-3 [#_"PEMergeProcessor<T>" this, #_"ValuePhiNode" phi, #_"VirtualObjectNode" virtual]
         (when (nil? (:valueObjectVirtuals this))
-            (§ ass! this (assoc this :valueObjectVirtuals (EconomicMap/create)))
+            (§ ass! this (assoc this :valueObjectVirtuals {}))
         )
         (let [
             #_"VirtualObjectNode" result (get (:valueObjectVirtuals this) phi)
         ]
             (when (nil? result)
                 (§ ass result (VirtualObjectNode'''duplicate-1 virtual))
-                (#_"EconomicMap" .put (:valueObjectVirtuals this), phi, result)
+                (§ ass! (:valueObjectVirtuals this) (assoc (:valueObjectVirtuals this) phi result))
             )
             result
         )
@@ -47558,7 +47513,7 @@ ZeroExtendNode'new-4
                             (dotimes [#_"int" i (count values)]
                                 (MergeProcessor''setPhiInput-4 this, phiNode, i, (nth values i))
                             )
-                            (#_"EconomicMap" .put (:readCache (:newState this)), (ReadCacheEntry'new-5 location, phi, index, kind, overflowAccess), phiNode)
+                            (§ ass! (:readCache (:newState this)) (assoc (:readCache (:newState this)) (ReadCacheEntry'new-5 location, phi, index, kind, overflowAccess) phiNode))
                         )
                     )
                 )
@@ -47569,13 +47524,13 @@ ZeroExtendNode'new-4
 
     (defn- #_"void" PEReadEliminationMergeProcessor''mergeReadCache-2 [#_"PEReadEliminationMergeProcessor" this, #_"List<PEReadEliminationBlockState>" states]
         (let [
-            #_"MapCursor<ReadCacheEntry, ValueNode>" cursor (#_"EconomicMap" ßgetEntries (:readCache (nth states 0)))
+            #_"MapCursor<ReadCacheEntry, ValueNode>" cursor (#_"EconomicMap" ßgetEntries (:readCache (nth states 0)))
         ]
             (while (#_"MapCursor" .advance cursor)
                 (let [
-                    #_"ReadCacheEntry" key (#_"MapCursor" .getKey cursor)
+                    #_"ReadCacheEntry" key (key cursor)
                     [#_"ValueNode" value #_"boolean" phi]
-                        (loop-when [value (#_"MapCursor" .getValue cursor) phi false #_"int" i 1] (< i (count states)) => [value phi]
+                        (loop-when [value (val cursor) phi false #_"int" i 1] (< i (count states)) => [value phi]
                             (let [
                                 #_"ValueNode" other (get (:readCache (nth states i)) key)
                             ]
@@ -47596,10 +47551,10 @@ ZeroExtendNode'new-4
                                 (dotimes [#_"int" i (count states)]
                                     (MergeProcessor''setPhiInput-4 this, phiNode, i, (PEReadEliminationBlockState''getReadCache-6 (nth states i), (:object key), (:identity key), (:index key), (:kind key), (:peClosure this)))
                                 )
-                                (#_"EconomicMap" .put (:readCache (:newState this)), key, phiNode)
+                                (§ ass! (:readCache (:newState this)) (assoc (:readCache (:newState this)) key phiNode))
                             )
                         (some? value)
-                            (#_"EconomicMap" .put (:readCache (:newState this)), key, value)
+                            (§ ass! (:readCache (:newState this)) (assoc (:readCache (:newState this)) key value))
                     )
                 )
             )
@@ -47631,7 +47586,7 @@ ZeroExtendNode'new-4
     (defn #_"ReadEliminationMergeProcessor" ReadEliminationMergeProcessor'new-1 [#_"Block" mergeBlock]
         (merge (ReadEliminationMergeProcessor'class.) (MergeProcessor'new-1 mergeBlock)
             (hash-map
-                #_"EconomicMap<Object, ValuePhiNode>" :materializedPhis (EconomicMap/create)
+                #_"{Object ValuePhiNode}" :materializedPhis {}
             )
         )
     )
@@ -47641,7 +47596,7 @@ ZeroExtendNode'new-4
             (let [
                 #_"ValuePhiNode" result (MergeProcessor''createValuePhi-2 this, stamp)
             ]
-                (#_"EconomicMap" .put (:materializedPhis this), virtual, result)
+                (§ ass! (:materializedPhis this) (assoc (:materializedPhis this) virtual result))
                 result
             )
         )
@@ -47684,13 +47639,13 @@ ZeroExtendNode'new-4
     (defm ReadEliminationMergeProcessor MergeProcessor
         (#_"void" MergeProcessor'''merge-2 [#_"ReadEliminationMergeProcessor" this, #_"List<ReadEliminationBlockState>" states]
             (let [
-                #_"MapCursor<CacheEntry, ValueNode>" cursor (#_"EconomicMap" ßgetEntries (:readCache (nth states 0)))
+                #_"MapCursor<CacheEntry, ValueNode>" cursor (#_"EconomicMap" ßgetEntries (:readCache (nth states 0)))
             ]
                 (while (#_"MapCursor" .advance cursor)
                     (let [
-                        #_"CacheEntry" key (#_"MapCursor" .getKey cursor)
+                        #_"CacheEntry" key (key cursor)
                         [#_"ValueNode" value #_"boolean" phi]
-                            (loop-when [value (#_"MapCursor" .getValue cursor) phi false #_"int" i 1] (< i (count states)) => [value phi]
+                            (loop-when [value (val cursor) phi false #_"int" i 1] (< i (count states)) => [value phi]
                                 (let [
                                     #_"ValueNode" other (get (:readCache (nth states i)) key)
                                 ]
@@ -47811,17 +47766,14 @@ ZeroExtendNode'new-4
         (MethodsCache'class.)
     )
 
-    (§ volatile #_"EconomicMap<MethodKey, ResolvedJavaMethod>" :constructors nil)
-    (§ volatile #_"EconomicMap<MethodKey, ResolvedJavaMethod>" :methods nil)
+    (§ volatile #_"{MethodKey ResolvedJavaMethod}" :constructors nil)
+    (§ volatile #_"{MethodKey ResolvedJavaMethod}" :methods nil)
 
-    (defn- #_"EconomicMap<MethodKey, ResolvedJavaMethod>" MethodsCache'createMethodMap-1 [#_"ResolvedJavaMethod*" methods]
-        (let [
-            #_"EconomicMap<MethodKey, ResolvedJavaMethod>" map (EconomicMap/create)
-        ]
-            (doseq [#_"ResolvedJavaMethod" m methods]
-                (#_"EconomicMap" .put map, (MethodKey'new-2 (#_"ResolvedJavaMethod" .getName m), (#_"Signature" .toMethodDescriptor (#_"ResolvedJavaMethod" .getSignature m))), m)
+    (defn- #_"{MethodKey ResolvedJavaMethod}" MethodsCache'createMethodMap-1 [#_"ResolvedJavaMethod*" methods]
+        (into {}
+            (for [#_"ResolvedJavaMethod" m methods]
+                [(MethodKey'new-2 (#_"ResolvedJavaMethod" .getName m), (#_"Signature" .toMethodDescriptor (#_"ResolvedJavaMethod" .getSignature m))) m]
             )
-            map
         )
     )
 
@@ -48072,15 +48024,14 @@ ZeroExtendNode'new-4
                         (when (satisfies? IfNode end)
                             (let [
                                 ;; Check if we can move guards upwards.
-                                #_"EconomicMap<LogicNode, GuardNode>" trueGuards (EconomicMap/create)
-                                _
-                                    (doseq [#_"GuardNode" guard (AbstractBeginNode''guards-1 (:trueSuccessor end))]
-                                        (let [
-                                            #_"LogicNode" logic (DeoptimizingGuard'''getCondition-1 guard)
+                                #_"{LogicNode GuardNode}" trueGuards
+                                    (into {}
+                                        (for [
+                                            #_"GuardNode" guard (AbstractBeginNode''guards-1 (:trueSuccessor end))
+                                            :let [#_"LogicNode" logic (DeoptimizingGuard'''getCondition-1 guard)]
+                                            :when (Node''hasMoreThanOneUsage-1 logic)
                                         ]
-                                            (when (Node''hasMoreThanOneUsage-1 logic)
-                                                (#_"EconomicMap" .put trueGuards, logic, guard)
-                                            )
+                                            [logic guard]
                                         )
                                     )
                             ]
@@ -50535,7 +50486,7 @@ ZeroExtendNode'new-4
      ; @param oldMerge the merge being removed
      ; @param phiValues the values of the phi at the merge, keyed by the merge ends
      ;;
-    (defn- #_"void" IfNode''connectEnds-6 [#_"IfNode" this, #_"List<EndNode>" ends, #_"EconomicMap<AbstractEndNode, ValueNode>" phiValues, #_"AbstractBeginNode" successor, #_"AbstractMergeNode" oldMerge, #_"SimplifierTool" tool]
+    (defn- #_"void" IfNode''connectEnds-6 [#_"IfNode" this, #_"List<EndNode>" ends, #_"{AbstractEndNode ValueNode}" phiValues, #_"AbstractBeginNode" successor, #_"AbstractMergeNode" oldMerge, #_"SimplifierTool" tool]
         (when (seq ends)
             (if (= (count ends) 1)
                 (let [
@@ -50560,9 +50511,12 @@ ZeroExtendNode'new-4
                         #_"FrameState" stateAfter (:stateAfter oldMerge)
                     ]
                         (when (some? stateAfter)
-                            (§ ass stateAfter (FrameState''duplicate-1 stateAfter))
-                            (Node''replaceFirstInput-3 stateAfter, oldPhi, newPhi)
-                            (StateSplit'''setStateAfter-2 newMerge, stateAfter)
+                            (let [
+                                stateAfter (FrameState''duplicate-1 stateAfter)
+                            ]
+                                (Node''replaceFirstInput-3 stateAfter, oldPhi, newPhi)
+                                (StateSplit'''setStateAfter-2 newMerge, stateAfter)
+                            )
                         )
 
                         (§ ass! newMerge (FixedWithNextNode''setNext-2 newMerge, successor))
@@ -50695,25 +50649,25 @@ ZeroExtendNode'new-4
                                                     (let [
                                                         #_"List<EndNode>" falseEnds (ArrayList.)
                                                         #_"List<EndNode>" trueEnds (ArrayList.)
-                                                        #_"EconomicMap<AbstractEndNode, ValueNode>" phiValues (EconomicMap/create)
+                                                        #_"{AbstractEndNode ValueNode}" phiValues {}
                                                         #_"AbstractBeginNode" oldFalseSuccessor (:falseSuccessor this)
                                                         #_"AbstractBeginNode" oldTrueSuccessor (:trueSuccessor this)
                                                         _ (§ ass! this (IfNode''setFalseSuccessor-2 this, nil))
                                                         _ (§ ass! this (IfNode''setTrueSuccessor-2 this, nil))
                                                         #_"Iterator<EndNode>" ends (#_"List" .iterator mergePredecessors)
-                                                    ]
-                                                        (dotimes [#_"int" i (count xs)]
-                                                            (let [
-                                                                #_"EndNode" end (#_"Iterator" .next ends)
-                                                            ]
-                                                                (#_"EconomicMap" .put phiValues, end, (PhiNode''valueAt-2n phi, end))
-                                                                (if (Condition''foldCondition-3c (:condition compare), (nth xs i), (nth ys i))
-                                                                    (#_"List" .add trueEnds, end)
-                                                                    (#_"List" .add falseEnds, end)
+                                                        _
+                                                            (dotimes [#_"int" i (count xs)]
+                                                                (let [
+                                                                    #_"EndNode" end (#_"Iterator" .next ends)
+                                                                ]
+                                                                    (§ ass! phiValues (assoc phiValues end (PhiNode''valueAt-2n phi, end)))
+                                                                    (if (Condition''foldCondition-3c (:condition compare), (nth xs i), (nth ys i))
+                                                                        (#_"List" .add trueEnds, end)
+                                                                        (#_"List" .add falseEnds, end)
+                                                                    )
                                                                 )
                                                             )
-                                                        )
-
+                                                    ]
                                                         (IfNode''connectEnds-6 this, falseEnds, phiValues, oldFalseSuccessor, merge, tool)
                                                         (IfNode''connectEnds-6 this, trueEnds, phiValues, oldTrueSuccessor, merge, tool)
 
@@ -51753,7 +51707,7 @@ ZeroExtendNode'new-4
                                 (and (some? optionalArrayLength)
                                     (let [
                                         #_"int" arrayLength optionalArrayLength
-                                        #_"Map<Integer, List<Integer>>" reverseArrayMapping (HashMap.)
+                                        #_"Map<Integer, List<Integer>>" reverseArrayMapping (HashMap.)
                                     ]
                                         (and
                                             (loop-when [#_"int" i 0] (< i arrayLength) => true
@@ -51764,7 +51718,7 @@ ZeroExtendNode'new-4
                                                     (and (some? elementConstant) (= (#_"JavaConstant" .getJavaKind elementConstant) JavaKind/Int)
                                                         ;; The value loaded from the array is the old switch key, the index into the array is
                                                         ;; the new switch key. We build a mapping from the old switch key to new keys.
-                                                        (#_"List" .add (#_"Map" .computeIfAbsent reverseArrayMapping, (#_"JavaConstant" .asInt elementConstant), (fn [_] (ArrayList.))), i)
+                                                        (#_"List" .add (#_"Map" .computeIfAbsent reverseArrayMapping, (#_"JavaConstant" .asInt elementConstant), (fn [_] (ArrayList.))), i)
                                                         (recur (inc i))
                                                     )
                                                 )
@@ -51776,7 +51730,7 @@ ZeroExtendNode'new-4
                                             ]
                                                 (dotimes [#_"int" i (count (:keys this))]
                                                     (let [
-                                                        #_"List<Integer>" newKeys (#_"Map" .get reverseArrayMapping, (nth (:keys this) i))
+                                                        #_"List<Integer>" newKeys (get reverseArrayMapping (nth (:keys this) i))
                                                     ]
                                                         ;; => The switch case is unreachable, we can ignore it.
                                                         (when (seq newKeys)
@@ -61542,22 +61496,21 @@ ZeroExtendNode'new-4
 )
 
 (class-ns MemoryMapNode [FloatingNode, ValueNode, Node, MemoryMap, MemoryNode, LIRLowerable]
-    (defn #_"MemoryMapNode" MemoryMapNode'new-1 [#_"EconomicMap<LocationIdentity, MemoryNode>" mmap]
+    (defn #_"MemoryMapNode" MemoryMapNode'new-1 [#_"{LocationIdentity MemoryNode}" mmap]
         (let [
             #_"MemoryMapNode" this
                 (merge (MemoryMapNode'class.) (FloatingNode'new-1 VoidStamp'instance)
                     (hash-map
                         #_"List<LocationIdentity>" :locationIdentities (ArrayList.)
                         ; @Input(InputType'Memory)
-                        #_"NodeInputList<ValueNode>" :nodes nil
+                        #_"NodeInputList<ValueNode>" :nodes (NodeInputList'new-2i (ß this), (count mmap))
                     )
                 )
-            this (assoc this :nodes (NodeInputList'new-2i this, (count mmap)))
-            #_"MapCursor<LocationIdentity, MemoryNode>" cursor (#_"EconomicMap" ßgetEntries mmap)
+            #_"MapCursor<LocationIdentity, MemoryNode>" cursor (#_"EconomicMap" ßgetEntries mmap)
             _
                 (loop-when-recur [#_"int" i 0] (#_"MapCursor" .advance cursor) [(inc i)]
-                    (#_"List" .add (:locationIdentities this), (#_"MapCursor" .getKey cursor))
-                    (NodeList''initialize-3 (:nodes this), i, (#_"MapCursor" .getValue cursor))
+                    (#_"List" .add (:locationIdentities this), (key cursor))
+                    (NodeList''initialize-3 (:nodes this), i, (val cursor))
                 )
         ]
             this
@@ -63257,51 +63210,37 @@ ZeroExtendNode'new-4
                 )
             )
         )
-        (let [
-            #_"FrameState" this
-                (merge (FrameState'class.) (VirtualState'new-0)
-                    (hash-map
-                        ;;;
-                         ; Size of the local variables.
-                         ;;
-                        #_"int" :localsSize localsSize
-                        ;;;
-                         ; Current size (height) of the stack.
-                         ;;
-                        #_"int" :stackSize stackSize
-                        #_"boolean" :duringCall duringCall
-                        ; @OptionalInput
-                        #_"FrameState" :outerFrameState outerFrameState
-                        ;;;
-                         ; Contains the locals, the expressions and the locked objects, in this order.
-                         ;;
-                        ; @OptionalInput
-                        #_"NodeInputList<ValueNode>" :values nil
-                        ; @Input
-                        #_"NodeInputList<MonitorIdNode>" :monitorIds nil
-                        ; @OptionalInput
-                        #_"NodeInputList<EscapeObjectState>" :virtualObjectMappings nil
-                        ;;;
-                         ; The bytecode index to which this frame state applies.
-                         ;;
-                        #_"int" :bci bci
-                        ;;;
-                         ; The bytecode to which this frame state applies.
-                         ;;
-                        #_"Bytecode" :code code
-                    )
-                )
-            this (assoc this :values (NodeInputList'new-2i this, (+ localsSize stackSize lockSize)))
-            this
-                (when (seq monitorIds) => this
-                    (assoc this :monitorIds (NodeInputList'new-2s this, monitorIds))
-                )
-            this
-                (when (seq virtualObjectMappings) => this
-                    (assoc this :virtualObjectMappings (NodeInputList'new-2s this, virtualObjectMappings))
-                )
-        ]
-            this
+        (merge (FrameState'class.) (VirtualState'new-0)
+            (hash-map
+                ;;;
+                 ; Size of the local variables.
+                 ;;
+                #_"int" :localsSize localsSize
+                ;;;
+                 ; Current size (height) of the stack.
+                 ;;
+                #_"int" :stackSize stackSize
+                #_"boolean" :duringCall duringCall
+                ; @OptionalInput
+                #_"FrameState" :outerFrameState outerFrameState
+                ;;;
+                 ; Contains the locals, the expressions and the locked objects, in this order.
+                 ;;
+                ; @OptionalInput
+                #_"NodeInputList<ValueNode>" :values (NodeInputList'new-2i (ß this), (+ localsSize stackSize lockSize))
+                ; @Input
+                #_"NodeInputList<MonitorIdNode>" :monitorIds (when (seq monitorIds) (NodeInputList'new-2s (ß this), monitorIds))
+                ; @OptionalInput
+                #_"NodeInputList<EscapeObjectState>" :virtualObjectMappings (when (seq virtualObjectMappings) (NodeInputList'new-2s (ß this), virtualObjectMappings))
+                ;;;
+                 ; The bytecode index to which this frame state applies.
+                 ;;
+                #_"int" :bci bci
+                ;;;
+                 ; The bytecode to which this frame state applies.
+                 ;;
+                #_"Bytecode" :code code
+            )
         )
     )
 
@@ -63376,20 +63315,12 @@ ZeroExtendNode'new-4
         (let [
             this
                 (when (nil? (:virtualObjectMappings this)) => this
-                    (assoc this :virtualObjectMappings (NodeInputList'new-1 this))
+                    (assoc this :virtualObjectMappings (NodeInputList'new-1 this))
                 )
         ]
             (#_"List" .add (:virtualObjectMappings this), virtualObject)
             this
         )
-    )
-
-    (defn #_"int" FrameState''virtualObjectMappingCount-1 [#_"FrameState" this]
-        (if (some? (:virtualObjectMappings this)) (count (:virtualObjectMappings this)) 0)
-    )
-
-    (defn #_"EscapeObjectState" FrameState''virtualObjectMappingAt-2 [#_"FrameState" this, #_"int" i]
-        (nth (:virtualObjectMappings this) i)
     )
 
     ;;;
@@ -63631,22 +63562,18 @@ ZeroExtendNode'new-4
             (* oldState (ControlSplitNode'''probability-2 (:predecessor node), node))
         )
 
-        (#_"EconomicMap<LoopExitNode, Double>" NodeIteratorClosure'''processLoop-3 [#_"ComputeLoopFrequenciesClosure" this, #_"LoopBeginNode" _loop, #_"Double" initialState]
+        (#_"{LoopExitNode Double}" NodeIteratorClosure'''processLoop-3 [#_"ComputeLoopFrequenciesClosure" this, #_"LoopBeginNode" _loop, #_"Double" initialState]
             (let [
-                #_"EconomicMap<LoopExitNode, Double>" exitStates (:exitStates (ReentrantNodeIterator'processLoop-3 this, _loop, 1.0))
+                #_"{LoopExitNode Double}" exitStates (:exitStates (ReentrantNodeIterator'processLoop-3 this, _loop, 1.0))
                 #_"double" exitProbability (reduce + 0.0 (vals exitStates))
                 exitProbability (max ControlFlowGraph'MIN_PROBABILITY (min exitProbability 1.0))
                 #_"double" loopFrequency (/ 1.0 exitProbability)
+                _ (§ ass! _loop (LoopBeginNode''setLoopFrequency-2 _loop, loopFrequency))
+                #_"double" adjustmentFactor (* initialState loopFrequency)
             ]
-                (§ ass! _loop (LoopBeginNode''setLoopFrequency-2 _loop, loopFrequency))
+                (#_"EconomicMap" .replaceAll exitStates, #(ControlFlowGraph'multiplyProbabilities-2 %2, adjustmentFactor))
 
-                (let [
-                    #_"double" adjustmentFactor (* initialState loopFrequency)
-                ]
-                    (#_"EconomicMap" .replaceAll exitStates, #(ControlFlowGraph'multiplyProbabilities-2 %2, adjustmentFactor))
-
-                    exitStates
-                )
+                exitStates
             )
         )
     )
@@ -63721,10 +63648,10 @@ ZeroExtendNode'new-4
 
     (defn- #_"void" FloatingReadClosure'processIdentity-3 [#_"LocationIdentity" location, #_"MemoryCheckpoint" checkpoint, #_"MemoryMap0" state]
         (when (LocationIdentity''isAny-1 location)
-            (#_"EconomicMap" .clear (:lastMemorySnapshot state))
+            (#_"EconomicMap" .clear (:lastMemorySnapshot state))
         )
         (when-not (:immutable location)
-            (#_"EconomicMap" .put (:lastMemorySnapshot state), location, checkpoint)
+            (§ ass! (:lastMemorySnapshot state) (assoc (:lastMemorySnapshot state) location checkpoint))
         )
         nil
     )
@@ -63769,16 +63696,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"void" FloatingReadClosure'createMemoryPhi-4 [#_"LoopBeginNode" _loop, #_"MemoryMap0" initialState, #_"EconomicMap<LocationIdentity, MemoryPhiNode>" phis, #_"LocationIdentity" location]
-        (let [
-            #_"MemoryPhiNode" phi (Graph''add-2 (:graph _loop), (MemoryPhiNode'new-2 _loop, location))
-        ]
-            (PhiNode''addInput-2 phi, (MemoryMap'''getLastLocationAccess-2 initialState, location))
-            (#_"EconomicMap" .put phis, location, phi)
-        )
-        nil
-    )
-
     (defm FloatingReadClosure NodeIteratorClosure
         (#_"MemoryMap0" NodeIteratorClosure'''merge-3 [#_"FloatingReadClosure" this, #_"AbstractMergeNode" merge, #_"List<MemoryMap0>" states]
             (FloatingReadPhase'mergeMemoryMaps-2 merge, states)
@@ -63788,7 +63705,7 @@ ZeroExtendNode'new-4
             (MemoryMap0'copy-1 oldState)
         )
 
-        (#_"EconomicMap<LoopExitNode, MemoryMap0>" NodeIteratorClosure'''processLoop-3 [#_"FloatingReadClosure" this, #_"LoopBeginNode" _loop, #_"MemoryMap0" initialState]
+        (#_"{LoopExitNode MemoryMap0}" NodeIteratorClosure'''processLoop-3 [#_"FloatingReadClosure" this, #_"LoopBeginNode" _loop, #_"MemoryMap0" initialState]
             (let [
                 #_"{LocationIdentity}" modifiedLocations (get (:modifiedInLoops this) _loop)
                 modifiedLocations
@@ -63796,35 +63713,37 @@ ZeroExtendNode'new-4
                         ;; create phis for all locations if ANY is modified in the loop
                         (into modifiedLocations (keys (:lastMemorySnapshot initialState)))
                     )
-                #_"EconomicMap<LocationIdentity, MemoryPhiNode>" phis (EconomicMap/create)
-                _
-                    (doseq [#_"LocationIdentity" location modifiedLocations]
-                        (FloatingReadClosure'createMemoryPhi-4 _loop, initialState, phis, location)
-                    )
-            ]
-                (#_"EconomicMap" .putAll (:lastMemorySnapshot initialState), phis)
-
-                (let [
-                    #_"NodeLoopInfo<MemoryMap0>" loopInfo (ReentrantNodeIterator'processLoop-3 this, _loop, initialState)
-                    #_"UnmodifiableMapCursor<LoopEndNode, MemoryMap0>" endStateCursor (#_"EconomicMap" ßgetEntries (:endStates loopInfo))
-                ]
-                    (while (#_"UnmodifiableMapCursor" .advance endStateCursor)
-                        (let [
-                            #_"int" endIndex (AbstractMergeNode'''phiPredecessorIndex-2 _loop, (#_"UnmodifiableMapCursor" .getKey endStateCursor))
-                            #_"UnmodifiableMapCursor<LocationIdentity, MemoryPhiNode>" phiCursor (#_"EconomicMap" ßgetEntries phis)
-                        ]
-                            (while (#_"UnmodifiableMapCursor" .advance phiCursor)
-                                (let [
-                                    #_"LocationIdentity" key (#_"UnmodifiableMapCursor" .getKey phiCursor)
-                                    #_"PhiNode" phi (#_"UnmodifiableMapCursor" .getValue phiCursor)
-                                ]
-                                    (PhiNode''initializeValueAt-3 phi, endIndex, (MemoryMap'''getLastLocationAccess-2 (#_"UnmodifiableMapCursor" .getValue endStateCursor), key))
-                                )
+                #_"{LocationIdentity MemoryPhiNode}" phis
+                    (into {}
+                        (for [#_"LocationIdentity" location modifiedLocations]
+                            (let [
+                                #_"MemoryPhiNode" phi (Graph''add-2 (:graph _loop), (MemoryPhiNode'new-2 _loop, location))
+                            ]
+                                (PhiNode''addInput-2 phi, (MemoryMap'''getLastLocationAccess-2 initialState, location))
+                                [location phi]
                             )
                         )
                     )
-                    (:exitStates loopInfo)
+                _ (#_"EconomicMap" .putAll (:lastMemorySnapshot initialState), phis)
+                #_"NodeLoopInfo<MemoryMap0>" loopInfo (ReentrantNodeIterator'processLoop-3 this, _loop, initialState)
+                #_"UnmodifiableMapCursor<LoopEndNode, MemoryMap0>" endStateCursor (#_"EconomicMap" ßgetEntries (:endStates loopInfo))
+            ]
+                (while (#_"UnmodifiableMapCursor" .advance endStateCursor)
+                    (let [
+                        #_"int" endIndex (AbstractMergeNode'''phiPredecessorIndex-2 _loop, (#_"UnmodifiableMapCursor" .getKey endStateCursor))
+                        #_"UnmodifiableMapCursor<LocationIdentity, MemoryPhiNode>" phiCursor (#_"EconomicMap" ßgetEntries phis)
+                    ]
+                        (while (#_"UnmodifiableMapCursor" .advance phiCursor)
+                            (let [
+                                #_"LocationIdentity" key (#_"UnmodifiableMapCursor" .getKey phiCursor)
+                                #_"PhiNode" phi (#_"UnmodifiableMapCursor" .getValue phiCursor)
+                            ]
+                                (PhiNode''initializeValueAt-3 phi, endIndex, (MemoryMap'''getLastLocationAccess-2 (#_"UnmodifiableMapCursor" .getValue endStateCursor), key))
+                            )
+                        )
+                    )
                 )
+                (:exitStates loopInfo)
             )
         )
     )
@@ -63903,7 +63822,7 @@ ZeroExtendNode'new-4
             oldState
         )
 
-        (#_"EconomicMap<LoopExitNode, FrameState>" NodeIteratorClosure'''processLoop-3 [#_"FrameStateAssignmentClosure" this, #_"LoopBeginNode" _loop, #_"FrameState" initialState]
+        (#_"{LoopExitNode FrameState}" NodeIteratorClosure'''processLoop-3 [#_"FrameStateAssignmentClosure" this, #_"LoopBeginNode" _loop, #_"FrameState" initialState]
             (:exitStates (ReentrantNodeIterator'processLoop-3 this, _loop, initialState))
         )
     )
@@ -63913,8 +63832,8 @@ ZeroExtendNode'new-4
     (defn #_"NodeLoopInfo" NodeLoopInfo'new-0 []
         (merge (NodeLoopInfo'class.)
             (hash-map
-                #_"EconomicMap<LoopEndNode, T>" :endStates (EconomicMap/create)
-                #_"EconomicMap<LoopExitNode, T>" :exitStates (EconomicMap/create)
+                #_"{LoopEndNode T}" :endStates {}
+                #_"{LoopExitNode T}" :exitStates {}
             )
         )
     )
@@ -64628,31 +64547,21 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns PhiInfoElement []
-    (defn #_"PhiInfoElement" PhiInfoElement'new-0 []
-        (merge (PhiInfoElement'class.)
+(class-ns PhiInfoElement []
+    (defn #_"PhiInfoElement" PhiInfoElement'new-0 []
+        (merge (PhiInfoElement'class.)
             (hash-map
-                #_"EconomicMap<EndNode, InfoElement>" :infoElements nil
+                #_"{EndNode InfoElement}" :infoElements {}
             )
         )
     )
 
-    (defn #_"this" PhiInfoElement''set-3 [#_"PhiInfoElement" this, #_"EndNode" end, #_"InfoElement" infoElement]
-        (let [
-            this
-                (when (nil? (:infoElements this)) => this
-                    (assoc this :infoElements (EconomicMap/create))
-                )
-        ]
-            (#_"EconomicMap" .put (:infoElements this), end, infoElement)
-            this
-        )
+    (defn #_"this" PhiInfoElement''set-3 [#_"PhiInfoElement" this, #_"EndNode" end, #_"InfoElement" infoElement]
+        (assoc-in this [:infoElements end] infoElement)
     )
 
-    (defn #_"InfoElement" PhiInfoElement''get-2 [#_"PhiInfoElement" this, #_"EndNode" end]
-        (when (some? (:infoElements this))
-            (get (:infoElements this) end)
-        )
+    (defn #_"InfoElement" PhiInfoElement''get-2 [#_"PhiInfoElement" this, #_"EndNode" end]
+        (get (:infoElements this) end)
     )
 )
 
@@ -64856,7 +64765,7 @@ ZeroExtendNode'new-4
     (defn #_"RMEOptimization" RMEOptimization'new-1 [#_"FrameMap" frameMap]
         (merge (RMEOptimization'class.)
             (hash-map
-                #_"EconomicMap<Block, BlockStates>" :blockData (EconomicMap/create)
+                #_"{Block BlockStates}" :blockData {}
                 #_"RegisterArray" :callerSaveRegs nil
                 ;;;
                  ; Contains the register number for registers which can be optimized and -1 for the others.
@@ -64866,7 +64775,7 @@ ZeroExtendNode'new-4
                  ; A map from the StackSlot {@link #getOffset offset} to an index into the state.
                  ; StackSlots of different kinds that map to the same location will map to the same index.
                  ;;
-                #_"EconomicMap<Integer, Integer>" :stackIndices (EconomicMap/create)
+                #_"{Integer Integer}" :stackIndices {}
                 #_"int" :numRegs 0
                 #_"FrameMap" :frameMap frameMap
             )
@@ -64927,7 +64836,7 @@ ZeroExtendNode'new-4
                                                             #_"Integer" offset (RMEOptimization''getOffset-2 this, dest)
                                                         ]
                                                             (when (and (not (contains? (:stackIndices this) offset)) (< (count (:stackIndices this)) maxStackLocations))
-                                                                (#_"EconomicMap" .put (:stackIndices this), offset, (count (:stackIndices this)))
+                                                                (§ ass! (:stackIndices this) (assoc (:stackIndices this) offset (count (:stackIndices this))))
                                                             )
                                                             this
                                                         )
@@ -64947,7 +64856,7 @@ ZeroExtendNode'new-4
             #_"int" numLocations (+ (:numRegs this) (count (:stackIndices this)))
             _
                 (doseq [#_"Block" block blocks]
-                    (#_"EconomicMap" .put (:blockData this), block, (BlockStates'new-1 numLocations))
+                    (§ ass! (:blockData this) (assoc (:blockData this) block (BlockStates'new-1 numLocations)))
                 )
         ]
             this
@@ -65320,7 +65229,7 @@ ZeroExtendNode'new-4
                 #_"[Node]" :undo []
                 #_"ScheduleResult" :schedule schedule
                 #_"BlockMap<Integer>" :blockActionStart (BlockMap'new-1 (:cfg schedule))
-                #_"EconomicMap<MergeNode, EconomicMap<ValueNode, Stamp>>" :endMaps (EconomicMap/create)
+                #_"{MergeNode {ValueNode Stamp}}" :endMaps {}
             )
         )
     )
@@ -65382,15 +65291,15 @@ ZeroExtendNode'new-4
 
     (defn- #_"this" RawConditionalEliminationVisitor''registerCombinedStamps-2 [#_"RawConditionalEliminationVisitor" this, #_"MergeNode" node]
         (let [
-            #_"MapCursor<ValueNode, Stamp>" entries (#_"EconomicMap" ßgetEntries (get (:endMaps this) node))
+            #_"MapCursor<ValueNode, Stamp>" entries (#_"EconomicMap" ßgetEntries (get (:endMaps this) node))
         ]
             (loop-when this (#_"MapCursor" .advance entries) => this
                 (let [
-                    #_"ValueNode" value (#_"MapCursor" .getKey entries)
+                    #_"ValueNode" value (key entries)
                     ;; nodes from this map can be deleted when a loop dies
                     this
                         (when-not (Node''isDeleted-1 value) => this
-                            (RawConditionalEliminationVisitor''registerNewValueStamp-3 this, value, (#_"MapCursor" .getValue entries))
+                            (RawConditionalEliminationVisitor''registerNewValueStamp-3 this, value, (val entries))
                         )
                 ]
                     (recur this)
@@ -65545,11 +65454,11 @@ ZeroExtendNode'new-4
                     #_"{Node Block}" nodeToBlockMap (:nodeToBlockMap (:schedule this))
                     #_"Block" mergeBlock (get nodeToBlockMap merge)
                     #_"Block" mergeBlockDominator (:dominator mergeBlock)
-                    #_"EconomicMap<ValueNode, Stamp>" currentEndMap (get (:endMaps this) merge)
+                    #_"{ValueNode Stamp}" currentEndMap (get (:endMaps this) merge)
                 ]
                     (when (or (nil? currentEndMap) (seq currentEndMap)) => this
                         (let [
-                            #_"EconomicMap<ValueNode, Stamp>" endMap (EconomicMap/create)
+                            #_"{ValueNode Stamp}" endMap {}
                         ]
                             ;; process phis
                             (doseq [#_"ValuePhiNode" phi (AbstractMergeNode''valuePhis-1 merge)]
@@ -65563,7 +65472,7 @@ ZeroExtendNode'new-4
                                             )
                                     ]
                                         (when-not (= bestStamp (:stamp phi))
-                                            (#_"EconomicMap" .put endMap, phi, bestStamp)
+                                            (§ ass! endMap (assoc endMap phi bestStamp))
                                         )
                                     )
                                 )
@@ -65604,7 +65513,7 @@ ZeroExtendNode'new-4
                                                                     )
                                                             ]
                                                                 (when (some? (Stamp''tryImproveWith-2 (:stamp nodeWithNewStamp), bestStamp)) ;; => No point in registering the stamp.
-                                                                    (#_"EconomicMap" .put endMap, nodeWithNewStamp, bestStamp)
+                                                                    (§ ass! endMap (assoc endMap nodeWithNewStamp bestStamp))
                                                                 )
                                                             )
                                                         )
@@ -65617,7 +65526,7 @@ ZeroExtendNode'new-4
                                     )
                                 )
 
-                                (#_"EconomicMap" .put (:endMaps this), merge, endMap)
+                                (§ ass! (:endMaps this) (assoc (:endMaps this) merge endMap))
                                 this
                             )
                         )
@@ -66486,8 +66395,8 @@ ZeroExtendNode'new-4
                     (when (seq guards)
                         ;; Now process guards.
                         (when (and GraalOptions'guardPriorities withGuardOrder) => (ScheduleInstance'processNodes-4 guards, start, mapping, visited)
-                            ;; 'EnumMap.values' returns values in "natural" key order.
-                            (doseq [#_"GuardNode*" guards' (#_"EnumMap" .values (reduce #(let [#_"GuardPriority" p (StaticDeoptimizingNode'''computePriority-1 %2)] (assoc %1 p (conj (vec (get %1 p)) %2))) (sorted-map) guards))]
+                            ;; 'EnumMap.values' returns values in "natural" key order.
+                            (doseq [#_"GuardNode*" guards' (#_"EnumMap" .values (reduce #(let [#_"GuardPriority" p (StaticDeoptimizingNode'''computePriority-1 %2)] (assoc %1 p (conj (vec (get %1 p)) %2))) (sorted-map) guards))]
                                 (ScheduleInstance'processNodes-4 guards', start, mapping, visited)
                             )
                             (GuardOrder'resortGuards-2 graph, mapping)
@@ -67250,7 +67159,7 @@ ZeroExtendNode'new-4
                 InvokeNode
                 (do
                     ;; process the invoke and queue its successors
-                    (#_"EconomicMap" .put (:relevances (:relevance this)), node, (Scope''computeInvokeRelevance-2 this, node))
+                    (§ ass! (:relevances (:relevance this)) (assoc (:relevances (:relevance this)) node (Scope''computeInvokeRelevance-2 this, node)))
                     (NodeWorkList''addAll-2 workList, (Node''successors-1 node))
                 )
                 LoopBeginNode
@@ -67374,9 +67283,7 @@ ZeroExtendNode'new-4
             #_"Signature" signature (#_"ResolvedJavaMethod" .getSignature method)
             ;; copy snippet graph replacing constant parameters with given arguments
             #_"Graph" snippetCopy (Graph'new-1 (:rootMethod snippetGraph))
-            #_"EconomicMap<Node, Node>" nodeReplacements (EconomicMap/create)
-            _ (#_"EconomicMap" .put nodeReplacements, (:start snippetGraph), (:start snippetCopy))
-            _ (Graph''addDuplicates-5m snippetCopy, (Graph''getNodes-1 snippetGraph), snippetGraph, (Graph''getNodeCount-1 snippetGraph), nodeReplacements)
+            _ (Graph''addDuplicates-4m snippetCopy, (Graph''getNodes-1 snippetGraph), snippetGraph, { (:start snippetGraph) (:start snippetCopy) })
             ;; gather the template parameters
             #_"int" parameterCount (#_"Signature" .getParameterCount (#_"ResolvedJavaMethod" .getSignature (:method (:info args))), false)
             this (assoc this :parameters (make-array Object parameterCount))
@@ -67548,9 +67455,9 @@ ZeroExtendNode'new-4
      ;
      ; @return the map that will be used to bind arguments to parameters when inlining this template
      ;;
-    (defn- #_"EconomicMap<Node, Node>" SnippetTemplate''bind-3 [#_"SnippetTemplate" this, #_"Graph" replaceeGraph, #_"Arguments" args]
+    (defn- #_"{Node Node}" SnippetTemplate''bind-3 [#_"SnippetTemplate" this, #_"Graph" replaceeGraph, #_"Arguments" args]
         (let [
-            #_"EconomicMap<Node, Node>" replacements (EconomicMap/create)
+            #_"{Node Node}" replacements {}
         ]
             (loop-when-recur [#_"int" i 0] (< i (count (:parameters this))) [(inc i)]
                 (let [
@@ -67559,7 +67466,7 @@ ZeroExtendNode'new-4
                 ]
                     (condp instance? parameter
                         ParameterNode'iface
-                            (#_"EconomicMap" .put replacements, parameter, (if (satisfies? ValueNode argument) argument (ConstantNode'forConstant-2c (SnippetTemplate'forBoxed-2 argument, (ValueNode''getStackKind-1 parameter)), replaceeGraph)))
+                            (§ ass! replacements (assoc replacements parameter (if (satisfies? ValueNode argument) argument (ConstantNode'forConstant-2c (SnippetTemplate'forBoxed-2 argument, (ValueNode''getStackKind-1 parameter)), replaceeGraph))))
                         (ß ParameterNode'array)
                             (let [
                                 [#_"List" list #_"Object" array] (if (instance? List (:value argument)) [(:value argument) nil] [nil (:value argument)])
@@ -67569,7 +67476,7 @@ ZeroExtendNode'new-4
                                         #_"ParameterNode" param (nth parameter j)
                                         #_"Object" value (nth (or list array) j)
                                     ]
-                                        (#_"EconomicMap" .put replacements, param, (if (satisfies? ValueNode value) value (ConstantNode'forConstant-2c (SnippetTemplate'forBoxed-2 value, (ValueNode''getStackKind-1 param)), replaceeGraph)))
+                                        (§ ass! replacements (assoc replacements param (if (satisfies? ValueNode value) value (ConstantNode'forConstant-2c (SnippetTemplate'forBoxed-2 value, (ValueNode''getStackKind-1 param)), replaceeGraph))))
                                     )
                                 )
                             )
@@ -67581,8 +67488,8 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"{Node Node}" SnippetTemplate''inlineSnippet-4 [#_"SnippetTemplate" this, #_"Node" replacee, #_"Graph" replaceeGraph, #_"EconomicMap<Node, Node>" replacements]
-        (Graph''addDuplicates-5m replaceeGraph, (:nodes this), (:snippet this), (Graph''getNodeCount-1 (:snippet this)), replacements)
+    (defn- #_"{Node Node}" SnippetTemplate''inlineSnippet-4 [#_"SnippetTemplate" this, #_"Node" replacee, #_"Graph" replaceeGraph, #_"{Node Node}" replacements]
+        (Graph''addDuplicates-4m replaceeGraph, (:nodes this), (:snippet this), replacements)
     )
 
     (defn- #_"void" SnippetTemplate''rewireFrameStates-3 [#_"SnippetTemplate" this, #_"ValueNode" replacee, #_"{Node Node}" duplicates]
@@ -67706,8 +67613,7 @@ ZeroExtendNode'new-4
         (let [
             #_"StartNode" start (:start (:snippet this))
             #_"FixedNode" firstCFGNode (:next start)
-            #_"EconomicMap<Node, Node>" replacements (SnippetTemplate''bind-3 this, (:graph replacee), args)
-            _ (#_"EconomicMap" .put replacements, start, (AbstractBeginNode'prevBegin-1 replacee))
+            #_"{Node Node}" replacements (assoc (SnippetTemplate''bind-3 this, (:graph replacee), args) start (AbstractBeginNode'prevBegin-1 replacee))
             #_"{Node Node}" duplicates (SnippetTemplate''inlineSnippet-4 this, replacee, (:graph replacee), replacements)
         ]
             ;; re-wire the control flow graph around the replacee
@@ -67802,8 +67708,7 @@ ZeroExtendNode'new-4
         (let [
             #_"StartNode" start (:start (:snippet this))
             #_"FixedNode" firstCFGNode (:next start)
-            #_"EconomicMap<Node, Node>" replacements (SnippetTemplate''bind-3 this, (:graph replacee), args)
-            _ (#_"EconomicMap" .put replacements, start, (:guardAnchor lowerer))
+            #_"{Node Node}" replacements (assoc (SnippetTemplate''bind-3 this, (:graph replacee), args) start (:guardAnchor lowerer))
             #_"{Node Node}" duplicates (SnippetTemplate''inlineSnippet-4 this, replacee, (:graph replacee), replacements)
             #_"FixedWithNextNode" lastFixedNode (:lastFixedNode lowerer)
             #_"FixedNode" _next (:next lastFixedNode)
