@@ -18632,7 +18632,7 @@ ZeroExtendNode'new-4
                     true
                 )
                 (do
-                    (PEReadEliminationBlockState''addReadCache-8 state, unproxiedObject, location, index, kind, false, load, this)
+                    (§ ass! state (PEReadEliminationBlockState''addReadCache-8 state, unproxiedObject, location, index, kind, false, load, this))
                     false
                 )
             )
@@ -18642,7 +18642,7 @@ ZeroExtendNode'new-4
     (defn- #_"boolean" PEReadEliminationClosure''processLoadField-4 [#_"PEReadEliminationClosure" this, #_"LoadFieldNode" load, #_"PEReadEliminationBlockState" state, #_"GraphEffectList" effects]
         (if (AccessFieldNode''isVolatile-1 load)
             (do
-                (PEReadEliminationBlockState''killReadCache-1 state)
+                (§ ass! state (PEReadEliminationBlockState''killReadCache-1 state))
                 false
             )
             (PEReadEliminationClosure''processLoad-8 this, load, (:object load), (FieldLocationIdentity'new-1 (:field load)), -1, (#_"ResolvedJavaField" .getJavaKind (:field load)), state, effects)
@@ -18660,8 +18660,8 @@ ZeroExtendNode'new-4
                     true
                 )
         ]
-            (PEReadEliminationBlockState''killReadCache-3 state, location, index)
-            (PEReadEliminationBlockState''addReadCache-8 state, unproxiedObject, location, index, accessKind, overflowAccess, finalValue, this)
+            (§ ass! state (PEReadEliminationBlockState''killReadCache-3 state, location, index))
+            (§ ass! state (PEReadEliminationBlockState''addReadCache-8 state, unproxiedObject, location, index, accessKind, overflowAccess, finalValue, this))
             result
         )
     )
@@ -18669,7 +18669,7 @@ ZeroExtendNode'new-4
     (defn- #_"boolean" PEReadEliminationClosure''processStoreField-4 [#_"PEReadEliminationClosure" this, #_"StoreFieldNode" store, #_"PEReadEliminationBlockState" state, #_"GraphEffectList" effects]
         (if (AccessFieldNode''isVolatile-1 store)
             (do
-                (PEReadEliminationBlockState''killReadCache-1 state)
+                (§ ass! state (PEReadEliminationBlockState''killReadCache-1 state))
                 false
             )
             (let [
@@ -18724,8 +18724,8 @@ ZeroExtendNode'new-4
                     ]
                         (when (= elementKind JavaKind/Illegal) => elementKind
                             ;; Could not determine the actual access kind from stamp. Hence kill both.
-                            (PEReadEliminationBlockState''killReadCache-3 state, (NamedLocationIdentity'getArrayLocation-1 JavaKind/Boolean), index)
-                            (PEReadEliminationBlockState''killReadCache-3 state, (NamedLocationIdentity'getArrayLocation-1 JavaKind/Byte), index)
+                            (§ ass! state (PEReadEliminationBlockState''killReadCache-3 state, (NamedLocationIdentity'getArrayLocation-1 JavaKind/Boolean), index))
+                            (§ ass! state (PEReadEliminationBlockState''killReadCache-3 state, (NamedLocationIdentity'getArrayLocation-1 JavaKind/Byte), index))
                             (§ return false)
                         )
                     )
@@ -18735,7 +18735,7 @@ ZeroExtendNode'new-4
                 #_"LocationIdentity" arrayLocation (NamedLocationIdentity'getArrayLocation-1 elementKind)
             ]
                 (when (= index -1) => (PEReadEliminationClosure''processStore-10 this, store, (:array store), arrayLocation, index, elementKind, false, (:value store), state, effects)
-                    (PEReadEliminationBlockState''killReadCache-3 state, arrayLocation, -1)
+                    (§ ass! state (PEReadEliminationBlockState''killReadCache-3 state, arrayLocation, -1))
                     false
                 )
             )
@@ -18790,7 +18790,7 @@ ZeroExtendNode'new-4
                                 true
                             )
                             (do
-                                (PEReadEliminationBlockState''addReadCache-8 state, object, location, index, accessKind, (PEReadEliminationClosure'isOverflowAccess-2 accessKind, componentKind), load, this)
+                                (§ ass! state (PEReadEliminationBlockState''addReadCache-8 state, object, location, index, accessKind, (PEReadEliminationClosure'isOverflowAccess-2 accessKind, componentKind), load, this))
                                 false
                             )
                         )
@@ -18802,8 +18802,8 @@ ZeroExtendNode'new-4
 
     (defn- #_"void" PEReadEliminationClosure'processIdentity-2 [#_"PEReadEliminationBlockState" state, #_"LocationIdentity" location]
         (if (LocationIdentity''isAny-1 location)
-            (PEReadEliminationBlockState''killReadCache-1 state)
-            (PEReadEliminationBlockState''killReadCache-3 state, location, -1)
+            (§ ass! state (PEReadEliminationBlockState''killReadCache-1 state))
+            (§ ass! state (PEReadEliminationBlockState''killReadCache-3 state, location, -1))
         )
         nil
     )
@@ -18833,7 +18833,7 @@ ZeroExtendNode'new-4
                     )
                 )
                 (do
-                    (PEReadEliminationBlockState''killReadCache-1 state)
+                    (§ ass! state (PEReadEliminationBlockState''killReadCache-1 state))
                     false
                 )
             )
@@ -18910,10 +18910,10 @@ ZeroExtendNode'new-4
                         )
                 ]
                     (when (some? firstValues)
-                        (doseq [#_"ReadCacheEntry" entry (keys (:readCache initialState))]
-                            (when (some? (:object entry))
-                                (loop-when-recur [[#_"ValueNode" value #_"[...]" pair :as _] (get firstValues (:object entry))] (some? _) [pair]
-                                    (PEReadEliminationBlockState''addReadCache-8 initialState, value, (:identity entry), (:index entry), (:kind entry), (:overflowAccess entry), (get (:readCache initialState) entry), this)
+                        (doseq [#_"ReadCacheEntry" k (keys (:readCache initialState))]
+                            (when (some? (:object k))
+                                (loop-when-recur [[#_"ValueNode" value #_"[...]" pair :as _] (get firstValues (:object k))] (some? _) [pair]
+                                    (§ ass! initialState (PEReadEliminationBlockState''addReadCache-8 initialState, value, (:identity k), (:index k), (:kind k), (:overflowAccess k), (get (:readCache initialState) k), this))
                                 )
                             )
                         )
@@ -18927,21 +18927,17 @@ ZeroExtendNode'new-4
             (EffectsClosure'''processLoopExit-5 (§ super #_"PartialEscapeClosure"), exitNode, initialState, exitState, effects)
 
             (when (:hasValueProxies (:graph exitNode))
-                (let [
-                    #_"MapCursor<ReadCacheEntry, ValueNode>" entry (#_"EconomicMap" ßgetEntries (:readCache exitState))
-                ]
-                    (while (#_"MapCursor" .advance entry)
-                        (when-not (= (get (:readCache initialState) (key entry)) (val entry))
-                            (let [
-                                #_"ValueNode" value (PEReadEliminationBlockState''getReadCache-6 exitState, (:object (key entry)), (:identity (key entry)), (:index (key entry)), (:kind (key entry)), this)
-                            ]
-                                (when-not (and (satisfies? ProxyNode value) (= (:loopExit value) exitNode))
-                                    (let [
-                                        #_"ProxyNode" proxy (ValueProxyNode'new-2 value, exitNode)
-                                    ]
-                                        (GraphEffectList''addFloatingNode-3 effects, proxy, "readCacheProxy")
-                                        (§ ass! (:readCache exitState) (assoc (:readCache exitState) (key entry) proxy))
-                                    )
+                (doseq [[#_"ReadCacheEntry" k #_"ValueNode" v] (:readCache exitState)]
+                    (when-not (= (get (:readCache initialState) k) v)
+                        (let [
+                            #_"ValueNode" value (PEReadEliminationBlockState''getReadCache-6 exitState, (:object k), (:identity k), (:index k), (:kind k), this)
+                        ]
+                            (when-not (and (satisfies? ProxyNode value) (= (:loopExit value) exitNode))
+                                (let [
+                                    #_"ProxyNode" proxy (ValueProxyNode'new-2 value, exitNode)
+                                ]
+                                    (GraphEffectList''addFloatingNode-3 effects, proxy, "readCacheProxy")
+                                    (§ ass! (:readCache exitState) (assoc (:readCache exitState) k proxy))
                                 )
                             )
                         )
@@ -18973,11 +18969,11 @@ ZeroExtendNode'new-4
                                 (let [
                                     #_"EconomicSet<LocationIdentity>" forwardEndLiveLocations (EconomicSet/create)
                                 ]
-                                    (doseq [#_"ReadCacheEntry" entry (keys (:readCache initialState))]
-                                        (#_"EconomicSet" .add forwardEndLiveLocations, (:identity entry))
+                                    (doseq [#_"ReadCacheEntry" k (keys (:readCache initialState))]
+                                        (#_"EconomicSet" .add forwardEndLiveLocations, (:identity k))
                                     )
-                                    (doseq [#_"ReadCacheEntry" entry (keys (:readCache mergedStates))]
-                                        (#_"EconomicSet" .remove forwardEndLiveLocations, (:identity entry))
+                                    (doseq [#_"ReadCacheEntry" k (keys (:readCache mergedStates))]
+                                        (#_"EconomicSet" .remove forwardEndLiveLocations, (:identity k))
                                     )
                                     ;; every location that is alive before the loop but not after is killed by the loop
                                     (doseq [#_"LocationIdentity" location forwardEndLiveLocations]
@@ -19041,8 +19037,8 @@ ZeroExtendNode'new-4
 
     (defn- #_"void" ReadEliminationClosure'processIdentity-2 [#_"ReadEliminationBlockState" state, #_"LocationIdentity" location]
         (if (LocationIdentity''isAny-1 location)
-            (ReadEliminationBlockState''killReadCache-1 state)
-            (ReadEliminationBlockState''killReadCache-2 state, location)
+            (§ ass! state (ReadEliminationBlockState''killReadCache-1 state))
+            (§ ass! state (ReadEliminationBlockState''killReadCache-2 state, location))
         )
         nil
     )
@@ -19083,7 +19079,7 @@ ZeroExtendNode'new-4
                                         true
                                     )
                                     (do
-                                        (ReadEliminationBlockState''addCacheEntry-3 state, identifier, node)
+                                        (§ ass! state (ReadEliminationBlockState''addCacheEntry-3 state, identifier, node))
                                         false
                                     )
                                 )
@@ -19094,8 +19090,8 @@ ZeroExtendNode'new-4
                                     (when del?
                                         (GraphEffectList''deleteNode-2 effects, node)
                                     )
-                                    (ReadEliminationBlockState''killReadCache-2 state, (:identity identifier))
-                                    (ReadEliminationBlockState''addCacheEntry-3 state, identifier, value)
+                                    (§ ass! state (ReadEliminationBlockState''killReadCache-2 state, (:identity identifier)))
+                                    (§ ass! state (ReadEliminationBlockState''addCacheEntry-3 state, identifier, value))
                                     del?
                                 )
                             )
@@ -19115,7 +19111,7 @@ ZeroExtendNode'new-4
                                     true
                                 )
                                 (do
-                                    (ReadEliminationBlockState''addCacheEntry-3 state, identifier, node)
+                                    (§ ass! state (ReadEliminationBlockState''addCacheEntry-3 state, identifier, node))
                                     false
                                 )
                             )
@@ -19134,7 +19130,7 @@ ZeroExtendNode'new-4
                                 (GraphEffectList''deleteNode-2 effects, node)
                             )
                             (ReadEliminationClosure'processIdentity-2 state, (Access'''getLocationIdentity-1 node))
-                            (ReadEliminationBlockState''addCacheEntry-3 state, identifier, value)
+                            (§ ass! state (ReadEliminationBlockState''addCacheEntry-3 state, identifier, value))
                             del?
                         )
                         (do
@@ -19161,7 +19157,7 @@ ZeroExtendNode'new-4
                                                 true
                                             )
                                             (do
-                                                (ReadEliminationBlockState''addCacheEntry-3 state, identifier, node)
+                                                (§ ass! state (ReadEliminationBlockState''addCacheEntry-3 state, identifier, node))
                                                 false
                                             )
                                         )
@@ -19179,7 +19175,7 @@ ZeroExtendNode'new-4
                                             (GraphEffectList''deleteNode-2 effects, node)
                                         )
                                         (ReadEliminationClosure'processIdentity-2 state, (:locationIdentity node))
-                                        (ReadEliminationBlockState''addCacheEntry-3 state, identifier, value)
+                                        (§ ass! state (ReadEliminationBlockState''addCacheEntry-3 state, identifier, value))
                                         del?
                                     )
                                     (do
@@ -19210,17 +19206,13 @@ ZeroExtendNode'new-4
 
         (#_"void" EffectsClosure'''processLoopExit-5 [#_"ReadEliminationClosure" this, #_"LoopExitNode" exitNode, #_"ReadEliminationBlockState" initialState, #_"ReadEliminationBlockState" exitState, #_"GraphEffectList" effects]
             (when (:hasValueProxies (:graph exitNode))
-                (let [
-                    #_"MapCursor<CacheEntry, ValueNode>" entry (#_"EconomicMap" ßgetEntries (:readCache exitState))
-                ]
-                    (while (#_"MapCursor" .advance entry)
-                        (when-not (= (get (:readCache initialState) (key entry)) (val entry))
-                            (let [
-                                #_"ProxyNode" proxy (ValueProxyNode'new-2 (ReadEliminationBlockState''getCacheEntry-2 exitState, (key entry)), exitNode)
-                            ]
-                                (GraphEffectList''addFloatingNode-3 effects, proxy, "readCacheProxy")
-                                (§ ass! (:readCache exitState) (assoc (:readCache exitState) (key entry) proxy))
-                            )
+                (doseq [[#_"CacheEntry" k #_"ValueNode" v] (:readCache exitState)]
+                    (when-not (= (get (:readCache initialState) k) v)
+                        (let [
+                            #_"ProxyNode" proxy (ValueProxyNode'new-2 (ReadEliminationBlockState''getCacheEntry-2 exitState, k), exitNode)
+                        ]
+                            (GraphEffectList''addFloatingNode-3 effects, proxy, "readCacheProxy")
+                            (§ ass! (:readCache exitState) (assoc (:readCache exitState) k proxy))
                         )
                     )
                 )
@@ -19250,11 +19242,11 @@ ZeroExtendNode'new-4
                                 (let [
                                     #_"EconomicSet<LocationIdentity>" forwardEndLiveLocations (EconomicSet/create)
                                 ]
-                                    (doseq [#_"CacheEntry" entry (keys (:readCache initialState))]
-                                        (#_"EconomicSet" .add forwardEndLiveLocations, (CacheEntry'''getIdentity-1 entry))
+                                    (doseq [#_"CacheEntry" k (keys (:readCache initialState))]
+                                        (#_"EconomicSet" .add forwardEndLiveLocations, (CacheEntry'''getIdentity-1 k))
                                     )
-                                    (doseq [#_"CacheEntry" entry (keys (:readCache mergedStates))]
-                                        (#_"EconomicSet" .remove forwardEndLiveLocations, (CacheEntry'''getIdentity-1 entry))
+                                    (doseq [#_"CacheEntry" k (keys (:readCache mergedStates))]
+                                        (#_"EconomicSet" .remove forwardEndLiveLocations, (CacheEntry'''getIdentity-1 k))
                                     )
                                     ;; every location that is alive before the loop but not after is killed by the loop
                                     (doseq [#_"LocationIdentity" location forwardEndLiveLocations]
@@ -24652,12 +24644,12 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"boolean" CompressEncoding''hasBase-1 [#_"CompressEncoding" this]
-        (not= (:base this) 0)
+        (not (zero? (:base this)))
     )
 
     #_unused
     (defn #_"boolean" CompressEncoding''hasShift-1 [#_"CompressEncoding" this]
-        (not= (:shift this) 0)
+        (not (zero? (:shift this)))
     )
 )
 
@@ -24674,7 +24666,7 @@ ZeroExtendNode'new-4
                  ; Node relevances are pre-computed for all invokes if the graph contains loops.
                  ; If there are no loops, the computation happens lazily based on #rootScope.
                  ;;
-                #_"{FixedNode Double}" :relevances nil
+                #_"{FixedNode Double}" :relevances {}
                 ;;;
                  ; This scope is non-nil if (and only if) there are no loops in the graph.
                  ; In this case, the root scope is used to compute invoke relevances on the fly.
@@ -24729,10 +24721,6 @@ ZeroExtendNode'new-4
         (when (Graph''hasLoops-1 (:graph this)) => (assoc this :rootScope (Scope'new-3 this, (:start (:graph this)), nil))
             (let [
                 this (assoc this :rootScope nil)
-                this
-                    (when (nil? (:relevances this)) => this
-                        (assoc this :relevances {})
-                    )
                 #_"NodeWorkList" workList (SingletonNodeWorkList'new-1 (:graph this))
                 #_"{LoopBeginNode Scope}" loops {}
                 #_"Scope" topScope (Scope'new-3 this, (:start (:graph this)), nil)
@@ -25312,7 +25300,7 @@ ZeroExtendNode'new-4
                 #_"BlockMap<List<Node>>" :blockToNodes blockToNodes
                 #_"{Node Block}" :nodeToBlock nodeToBlock
                 #_"[Node]" :undo []
-                #_"{MergeNode {ValuePhiNode PhiInfoElement}}" :mergeMaps {}
+                #_"{MergeNode {ValuePhiNode PhiInfoElement}}" :mergeMaps {}
                 ;;;
                  ; Tests which may be eliminated because post dominating tests to prove a broader condition.
                  ;;
@@ -29318,7 +29306,7 @@ ZeroExtendNode'new-4
     (defn #_"PEReadEliminationBlockState" PEReadEliminationBlockState'new-0 []
         (merge (PEReadEliminationBlockState'class.) (PartialEscapeBlockState'new-0)
             (hash-map
-                #_"{ReadCacheEntry ValueNode}" :readCache {}
+                #_"{ReadCacheEntry ValueNode}" :readCache {}
             )
         )
     )
@@ -29326,7 +29314,7 @@ ZeroExtendNode'new-4
     (defn #_"PEReadEliminationBlockState" PEReadEliminationBlockState'copy-1 [#_"PEReadEliminationBlockState" other]
         (merge (PEReadEliminationBlockState'class.) (PartialEscapeBlockState'copy-1 other)
             (hash-map
-                #_"{ReadCacheEntry ValueNode}" :readCache (:readCache other)
+                #_"{ReadCacheEntry ValueNode}" :readCache (:readCache other)
             )
         )
     )
@@ -29369,14 +29357,14 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"void" PEReadEliminationBlockState''addReadCache-8 [#_"PEReadEliminationBlockState" this, #_"ValueNode" object, #_"LocationIdentity" location, #_"int" index, #_"JavaKind" kind, #_"boolean" overflowAccess, #_"ValueNode" value, #_"PartialEscapeClosure" closure]
+    (defn #_"PEReadEliminationBlockState" PEReadEliminationBlockState''addReadCache-8 [#_"PEReadEliminationBlockState" this, #_"ValueNode" object, #_"LocationIdentity" location, #_"int" index, #_"JavaKind" kind, #_"boolean" overflowAccess, #_"ValueNode" value, #_"PartialEscapeClosure" closure]
         (let [
             #_"ObjectState" obj (PartialEscapeClosure''getObjectState-3 closure, this, object)
             #_"ValueNode" cacheObject (if (some? obj) (:materializedValue obj) object)
         ]
             (§ ass! (:readCache this) (assoc (:readCache this) (ReadCacheEntry'new-5 location, cacheObject, index, kind, overflowAccess) value))
+            this
         )
-        nil
     )
 
     (defn #_"ValueNode" PEReadEliminationBlockState''getReadCache-6 [#_"PEReadEliminationBlockState" this, #_"ValueNode" object, #_"LocationIdentity" location, #_"int" index, #_"JavaKind" kind, #_"PartialEscapeClosure" closure]
@@ -29393,12 +29381,11 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"void" PEReadEliminationBlockState''killReadCache-1 [#_"PEReadEliminationBlockState" this]
-        (#_"EconomicMap" .clear (:readCache this))
-        nil
+    (defn #_"PEReadEliminationBlockState" PEReadEliminationBlockState''killReadCache-1 [#_"PEReadEliminationBlockState" this]
+        (assoc this :readCache {})
     )
 
-    (defn #_"void" PEReadEliminationBlockState''killReadCache-3 [#_"PEReadEliminationBlockState" this, #_"LocationIdentity" location, #_"int" index]
+    (defn #_"PEReadEliminationBlockState" PEReadEliminationBlockState''killReadCache-3 [#_"PEReadEliminationBlockState" this, #_"LocationIdentity" location, #_"int" index]
         (let [
             #_"Iterator<ReadCacheEntry>" it (#_"Iterable" .iterator (keys (:readCache this)))
         ]
@@ -29411,8 +29398,8 @@ ZeroExtendNode'new-4
                     )
                 )
             )
+            this
         )
-        nil
     )
 )
 
@@ -29423,7 +29410,7 @@ ZeroExtendNode'new-4
     (defn #_"ReadEliminationBlockState" ReadEliminationBlockState'new-0 []
         (merge (ReadEliminationBlockState'class.) (EffectsBlockState'new-0)
             (hash-map
-                #_"{CacheEntry ValueNode}" :readCache {}
+                #_"{CacheEntry ValueNode}" :readCache {}
             )
         )
     )
@@ -29431,7 +29418,7 @@ ZeroExtendNode'new-4
     (defn #_"ReadEliminationBlockState" ReadEliminationBlockState'copy-1 [#_"ReadEliminationBlockState" other]
         (merge (ReadEliminationBlockState'class.) (EffectsBlockState'new-0)
             (hash-map
-                #_"{CacheEntry ValueNode}" :readCache (:readCache other)
+                #_"{CacheEntry ValueNode}" :readCache (:readCache other)
             )
         )
     )
@@ -29442,21 +29429,19 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"void" ReadEliminationBlockState''addCacheEntry-3 [#_"ReadEliminationBlockState" this, #_"CacheEntry" identifier, #_"ValueNode" value]
-        (§ ass! (:readCache this) (assoc (:readCache this) identifier value))
-        nil
+    (defn #_"ReadEliminationBlockState" ReadEliminationBlockState''addCacheEntry-3 [#_"ReadEliminationBlockState" this, #_"CacheEntry" identifier, #_"ValueNode" value]
+        (assoc-in this [:readCache identifier] value)
     )
 
     (defn #_"ValueNode" ReadEliminationBlockState''getCacheEntry-2 [#_"ReadEliminationBlockState" this, #_"CacheEntry" identifier]
         (get (:readCache this) identifier)
     )
 
-    (defn #_"void" ReadEliminationBlockState''killReadCache-1 [#_"ReadEliminationBlockState" this]
-        (#_"EconomicMap" .clear (:readCache this))
-        nil
+    (defn #_"ReadEliminationBlockState" ReadEliminationBlockState''killReadCache-1 [#_"ReadEliminationBlockState" this]
+        (assoc this :readCache {})
     )
 
-    (defn #_"void" ReadEliminationBlockState''killReadCache-2 [#_"ReadEliminationBlockState" this, #_"LocationIdentity" location]
+    (defn #_"ReadEliminationBlockState" ReadEliminationBlockState''killReadCache-2 [#_"ReadEliminationBlockState" this, #_"LocationIdentity" location]
         (let [
             #_"Iterator<CacheEntry>" it (#_"Iterable" .iterator (keys (:readCache this)))
         ]
@@ -29465,8 +29450,8 @@ ZeroExtendNode'new-4
                     (#_"Iterator" .remove it)
                 )
             )
+            this
         )
-        nil
     )
 )
 
@@ -30997,8 +30982,8 @@ ZeroExtendNode'new-4
         (FieldsCache'class.)
     )
 
-    (§ volatile #_"{FieldKey ResolvedJavaField}" :instanceFields nil)
-    (§ volatile #_"{FieldKey ResolvedJavaField}" :staticFields nil)
+    (§ volatile #_"{FieldKey ResolvedJavaField}" :instanceFields nil)
+    (§ volatile #_"{FieldKey ResolvedJavaField}" :staticFields nil)
 
     (defn- #_"{FieldKey ResolvedJavaField}" FieldsCache'createFieldMap-1 [#_"ResolvedJavaField*" fields]
         (into {}
@@ -44868,7 +44853,7 @@ ZeroExtendNode'new-4
                 #_"LoopFragment" :original original
                 #_"NodeBitMap" :nodes nil
                 #_"boolean" :nodesReady false
-                #_"{Node Node}" :duplicationMap nil
+                #_"{Node Node}" :duplicationMap nil
             )
         )
     )
@@ -44890,9 +44875,8 @@ ZeroExtendNode'new-4
         (get (:duplicationMap this) node)
     )
 
-    (defn #_"void" LoopFragment''putDuplicatedNode-3 [#_"LoopFragment" this, #_"Node" oldNode, #_"Node" newNode]
-        (§ ass! (:duplicationMap this) (assoc (:duplicationMap this) oldNode newNode))
-        nil
+    (defn #_"LoopFragment" LoopFragment''putDuplicatedNode-3 [#_"LoopFragment" this, #_"Node" oldNode, #_"Node" newNode]
+        (assoc-in this [:duplicationMap oldNode] newNode)
     )
 
     (defn #_"boolean" LoopFragment''isDuplicate-1 [#_"LoopFragment" this]
@@ -45226,7 +45210,7 @@ ZeroExtendNode'new-4
              ; In the unrolling case they will be used as the value that replace the loop-phis of the
              ; duplicated inside fragment.
              ;;
-            #_"{PhiNode ValueNode}" :mergedInitializers nil
+            #_"{PhiNode ValueNode}" :mergedInitializers nil
         )
     )
 
@@ -45406,7 +45390,7 @@ ZeroExtendNode'new-4
                             (doseq [#_"LoopEndNode" end (LoopBeginNode''orderedLoopEnds-1 loopBegin)]
                                 (PhiNode''addInput-2 newPhi, (PhiNode''valueAt-2n phi, end))
                             )
-                            (LoopFragment''putDuplicatedNode-3 peel, phi, newPhi)
+                            (§ ass! peel (LoopFragment''putDuplicatedNode-3 peel, phi, newPhi))
                             (#_"List" .add newPhis, newPhi)
                             (doseq [#_"Node" usage (:nodeUsages phi)]
                                 ;; patch only usages that should use the new phi, i.e. usages that were peeled
@@ -46260,9 +46244,9 @@ ZeroExtendNode'new-4
             #_"LoopsData" this
                 (merge (LoopsData'class.)
                     (hash-map
-                        #_"{LoopBeginNode LoopEx}" :loopBeginToEx {}
                         #_"ControlFlowGraph" :cfg (ControlFlowGraph'compute-5 graph, true, true, true, true)
                         #_"List<LoopEx>" :loops (ArrayList.)
+                        #_"{LoopBeginNode LoopEx}" :loopBeginToEx {}
                     )
                 )
             _
@@ -47523,48 +47507,43 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"void" PEReadEliminationMergeProcessor''mergeReadCache-2 [#_"PEReadEliminationMergeProcessor" this, #_"List<PEReadEliminationBlockState>" states]
-        (let [
-            #_"MapCursor<ReadCacheEntry, ValueNode>" cursor (#_"EconomicMap" ßgetEntries (:readCache (nth states 0)))
-        ]
-            (while (#_"MapCursor" .advance cursor)
-                (let [
-                    #_"ReadCacheEntry" key (key cursor)
-                    [#_"ValueNode" value #_"boolean" phi]
-                        (loop-when [value (val cursor) phi false #_"int" i 1] (< i (count states)) => [value phi]
-                            (let [
-                                #_"ValueNode" other (get (:readCache (nth states i)) key)
-                            ]
-                                ;; e.g. unsafe loads/stores with different access kinds have different stamps although location,
-                                ;; object and offset are the same, in this case we cannot create a phi nor can we set a common value
-                                (when (and (some? other) (Stamp'''isCompatible-2s (:stamp value), (:stamp other))) => [nil false]
-                                    (recur value (or phi (not (= other value))) (inc i))
-                                )
+        (doseq [[#_"ReadCacheEntry" k #_"ValueNode" v] (:readCache (nth states 0))]
+            (let [
+                [#_"ValueNode" value #_"boolean" phi?]
+                    (loop-when [value v phi? false #_"int" i 1] (< i (count states)) => [value phi?]
+                        (let [
+                            #_"ValueNode" other (get (:readCache (nth states i)) k)
+                        ]
+                            ;; e.g. unsafe loads/stores with different access kinds have different stamps although location,
+                            ;; object and offset are the same, in this case we cannot create a phi nor can we set a common value
+                            (when (and (some? other) (Stamp'''isCompatible-2s (:stamp value), (:stamp other))) => [nil false]
+                                (recur value (or phi? (not (= other value))) (inc i))
                             )
                         )
-                ]
-                    (cond
-                        phi
-                            (let [
-                                #_"PhiNode" phiNode (PEMergeProcessor''getPhi-3 this, key, (Stamp'''unrestricted-1 (:stamp value)))
-                            ]
-                                (GraphEffectList''addFloatingNode-3 (:mergeEffects this), phiNode, "mergeReadCache")
-                                (dotimes [#_"int" i (count states)]
-                                    (MergeProcessor''setPhiInput-4 this, phiNode, i, (PEReadEliminationBlockState''getReadCache-6 (nth states i), (:object key), (:identity key), (:index key), (:kind key), (:peClosure this)))
-                                )
-                                (§ ass! (:readCache (:newState this)) (assoc (:readCache (:newState this)) key phiNode))
-                            )
-                        (some? value)
-                            (§ ass! (:readCache (:newState this)) (assoc (:readCache (:newState this)) key value))
                     )
+            ]
+                (cond
+                    phi?
+                        (let [
+                            #_"PhiNode" phi (PEMergeProcessor''getPhi-3 this, k, (Stamp'''unrestricted-1 (:stamp value)))
+                        ]
+                            (GraphEffectList''addFloatingNode-3 (:mergeEffects this), phi, "mergeReadCache")
+                            (dotimes [#_"int" i (count states)]
+                                (MergeProcessor''setPhiInput-4 this, phi, i, (PEReadEliminationBlockState''getReadCache-6 (nth states i), (:object k), (:identity k), (:index k), (:kind k), (:peClosure this)))
+                            )
+                            (§ ass! (:readCache (:newState this)) (assoc (:readCache (:newState this)) k phi))
+                        )
+                    (some? value)
+                        (§ ass! (:readCache (:newState this)) (assoc (:readCache (:newState this)) k value))
                 )
             )
-            ;; For object phis, see if there are known reads on all predecessors, for which we could create new phis.
-            (doseq [#_"PhiNode" phi (MergeProcessor''getPhis-1 this)]
-                (when (= (ValueNode''getStackKind-1 phi) JavaKind/Object)
-                    (doseq [#_"ReadCacheEntry" entry (keys (:readCache (nth states 0)))]
-                        (when (= (:object entry) (MergeProcessor''getPhiValueAt-3 this, phi, 0))
-                            (PEReadEliminationMergeProcessor''mergeReadCachePhi-7 this, phi, (:identity entry), (:index entry), (:kind entry), (:overflowAccess entry), states)
-                        )
+        )
+        ;; For object phis, see if there are known reads on all predecessors, for which we could create new phis.
+        (doseq [#_"PhiNode" phi (MergeProcessor''getPhis-1 this)]
+            (when (= (ValueNode''getStackKind-1 phi) JavaKind/Object)
+                (doseq [#_"ReadCacheEntry" k (keys (:readCache (nth states 0)))]
+                    (when (= (:object k) (MergeProcessor''getPhiValueAt-3 this, phi, 0))
+                        (PEReadEliminationMergeProcessor''mergeReadCachePhi-7 this, phi, (:identity k), (:index k), (:kind k), (:overflowAccess k), states)
                     )
                 )
             )
@@ -47627,7 +47606,7 @@ ZeroExtendNode'new-4
                             (dotimes [#_"int" i (count values)]
                                 (MergeProcessor''setPhiInput-4 this, phiNode, i, (nth values i))
                             )
-                            (ReadEliminationBlockState''addCacheEntry-3 (:newState this), newIdentifier, phiNode)
+                            (§ ass! (:newState this) (ReadEliminationBlockState''addCacheEntry-3 (:newState this), newIdentifier, phiNode))
                         )
                     )
                 )
@@ -47638,49 +47617,44 @@ ZeroExtendNode'new-4
 
     (defm ReadEliminationMergeProcessor MergeProcessor
         (#_"void" MergeProcessor'''merge-2 [#_"ReadEliminationMergeProcessor" this, #_"List<ReadEliminationBlockState>" states]
-            (let [
-                #_"MapCursor<CacheEntry, ValueNode>" cursor (#_"EconomicMap" ßgetEntries (:readCache (nth states 0)))
-            ]
-                (while (#_"MapCursor" .advance cursor)
-                    (let [
-                        #_"CacheEntry" key (key cursor)
-                        [#_"ValueNode" value #_"boolean" phi]
-                            (loop-when [value (val cursor) phi false #_"int" i 1] (< i (count states)) => [value phi]
-                                (let [
-                                    #_"ValueNode" other (get (:readCache (nth states i)) key)
-                                ]
-                                    ;; e.g. unsafe loads/stores with different access kinds have different stamps although location,
-                                    ;; object and offset are the same, in this case we cannot create a phi nor can we set a common value
-                                    (when (and (some? other) (Stamp'''isCompatible-2s (:stamp value), (:stamp other))) => [nil false]
-                                        (recur value (or phi (not (= other value))) (inc i))
-                                    )
+            (doseq [[#_"CacheEntry" k #_"ValueNode" v] (:readCache (nth states 0))]
+                (let [
+                    [#_"ValueNode" value #_"boolean" phi?]
+                        (loop-when [value v phi? false #_"int" i 1] (< i (count states)) => [value phi?]
+                            (let [
+                                #_"ValueNode" other (get (:readCache (nth states i)) k)
+                            ]
+                                ;; e.g. unsafe loads/stores with different access kinds have different stamps although location,
+                                ;; object and offset are the same, in this case we cannot create a phi nor can we set a common value
+                                (when (and (some? other) (Stamp'''isCompatible-2s (:stamp value), (:stamp other))) => [nil false]
+                                    (recur value (or phi? (not (= other value))) (inc i))
                                 )
                             )
-                    ]
-                        (cond
-                            phi
-                                (let [
-                                    #_"PhiNode" phiNode (ReadEliminationMergeProcessor''getCachedPhi-3 this, key, (Stamp'''unrestricted-1 (:stamp value)))
-                                ]
-                                    (GraphEffectList''addFloatingNode-3 (:mergeEffects this), phiNode, "mergeReadCache")
-                                    (dotimes [#_"int" i (count states)]
-                                        (MergeProcessor''setPhiInput-4 this, phiNode, i, (ReadEliminationBlockState''getCacheEntry-2 (nth states i), key))
-                                    )
-                                    (ReadEliminationBlockState''addCacheEntry-3 (:newState this), key, phiNode)
-                                )
-                            (some? value)
-                                ;; there is the same value on all branches
-                                (ReadEliminationBlockState''addCacheEntry-3 (:newState this), key, value)
                         )
+                ]
+                    (cond
+                        phi?
+                            (let [
+                                #_"PhiNode" phi (ReadEliminationMergeProcessor''getCachedPhi-3 this, k, (Stamp'''unrestricted-1 (:stamp value)))
+                            ]
+                                (GraphEffectList''addFloatingNode-3 (:mergeEffects this), phi, "mergeReadCache")
+                                (dotimes [#_"int" i (count states)]
+                                    (MergeProcessor''setPhiInput-4 this, phi, i, (ReadEliminationBlockState''getCacheEntry-2 (nth states i), k))
+                                )
+                                (§ ass! (:newState this) (ReadEliminationBlockState''addCacheEntry-3 (:newState this), k, phi))
+                            )
+                        (some? value)
+                            ;; there is the same value on all branches
+                            (§ ass! (:newState this) (ReadEliminationBlockState''addCacheEntry-3 (:newState this), k, value))
                     )
                 )
-                ;; For object phis, see if there are known reads on all predecessors, for which we could create new phis.
-                (doseq [#_"PhiNode" phi (MergeProcessor''getPhis-1 this)]
-                    (when (= (ValueNode''getStackKind-1 phi) JavaKind/Object)
-                        (doseq [#_"CacheEntry" entry (keys (:readCache (nth states 0)))]
-                            (when (= (:object entry) (MergeProcessor''getPhiValueAt-3 this, phi, 0))
-                                (ReadEliminationMergeProcessor''mergeReadCachePhi-4 this, phi, entry, states)
-                            )
+            )
+            ;; For object phis, see if there are known reads on all predecessors, for which we could create new phis.
+            (doseq [#_"PhiNode" phi (MergeProcessor''getPhis-1 this)]
+                (when (= (ValueNode''getStackKind-1 phi) JavaKind/Object)
+                    (doseq [#_"CacheEntry" k (keys (:readCache (nth states 0)))]
+                        (when (= (:object k) (MergeProcessor''getPhiValueAt-3 this, phi, 0))
+                            (ReadEliminationMergeProcessor''mergeReadCachePhi-4 this, phi, k, states)
                         )
                     )
                 )
