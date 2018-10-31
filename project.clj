@@ -5,6 +5,7 @@
                    [org.clojure/core.rrb-vector "0.0.11"]
                    [org.clojure/data.priority-map "0.0.10"]
                    [org.flatland/ordered "1.5.6"]
+                   [org.graalvm/graal-sdk "1.0.0-rc1"] ; oops!
                    [org.openjdk.jol/jol-core "0.9"]
                    [org.openjdk.jol/jol-cli "0.9"]
                    [com.clojure-goes-fast/clj-java-decompiler "0.1.0"]
