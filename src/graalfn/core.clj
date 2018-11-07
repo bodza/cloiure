@@ -1,6 +1,6 @@
 (ns graalfn.core
-    (:refer-clojure :only [* *ns* + - -> ->> / < <= = > >= aget and apply aset assoc assoc-in bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean boolean-array byte byte-array case char comp compare concat cond condp conj cons contains? count dec declare defmacro defn defprotocol defrecord delay disj dissoc doseq dotimes double double-array empty? extend-protocol extend-type false? filter first fn for get hash-map hash-set if-not import inc instance? int int-array into into-array iterate iterator-seq key keys let letfn list locking long long-array loop make-array map mapcat max merge min neg? next nil? not not= ns-imports ns-unmap nth object-array or peek pop pos? quot reduce reify rem remove repeat rest reverse run! satisfies? second seq sequential? set short some some? sort sort-by sorted-map sorted-set str #_subvec symbol symbol? take-while true? unsigned-bit-shift-right update update-in val vals vary-meta #_vec #_vector vector? volatile! vreset! vswap! when-some while zero?])
-    (:require [clojure.core.rrb-vector :refer [#_catvec subvec vec vector #_vector-of]] [flatland.ordered.map :refer [ordered-map]] [flatland.ordered.set :refer [ordered-set]])
+    (:refer-clojure :only [* *ns* + - -> ->> / < <= = > >= aget and apply aset assoc assoc-in bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean boolean-array byte byte-array case char comp compare concat cond condp conj cons contains? count dec declare defmacro defn defprotocol defrecord delay disj dissoc doseq dotimes double double-array empty? extend-protocol extend-type false? filter first fn for get hash-map hash-set if-not import inc instance? int int-array into into-array iterate iterator-seq key keys let letfn list locking long long-array loop make-array map mapcat mapv max merge min neg? next nil? not not= ns-imports ns-unmap nth object-array or peek pop pos? quot reduce reify rem remove repeat rest reverse run! satisfies? second seq sequential? set short some some? sort sort-by sorted-map sorted-set str #_subvec symbol symbol? take-while true? unsigned-bit-shift-right update update-in val vals vary-meta #_vec #_vector vector? volatile! vreset! vswap! when-some while zero?])
+    (:require [clojure.core.rrb-vector :refer [catvec subvec vec vector #_vector-of]] [flatland.ordered.map :refer [ordered-map]] [flatland.ordered.set :refer [ordered-set]])
 )
 
 (defmacro § [& _])
@@ -619,7 +619,6 @@ BciBlock''setJsrReturnBci-2
 BciBlock''setJsrScope-2
 BciBlock''setJsrSuccessor-2
 BciBlock''setRetSuccessor-2
-BciBlock'copy-1
 BciBlock'new-1
 BciBlockMapping''build-2
 BciBlockMapping'create-2
@@ -701,9 +700,6 @@ BlockClosure''processInstructionBottomUp-2
 BlockClosure'new-2
 BlockData'new-0
 BlockLoopInfo'new-0
-BlockMap''get-2
-BlockMap''put-3
-BlockMap'new-1
 BlockScope''doBlockStart-1
 BlockScope'new-2
 BlockStates'new-1
@@ -1192,7 +1188,6 @@ ControlFlowAnchorNode'new-0
 ControlFlowGraph''blockFor-2
 ControlFlowGraph''computePostdominators-1
 ControlFlowGraph''getStartBlock-1
-ControlFlowGraph''setNodeToBlock-2
 ControlFlowGraph''visitDominatorTree-3
 ControlFlowGraph''visitDominatorTreeDefault-2
 ControlFlowGraph''visitDominatorTreeDeferLoopExits-2
@@ -1602,7 +1597,6 @@ Graph''setAfterFixReadPhase-2
 Graph''setAfterFloatingReadPhase-2
 Graph''setGuardsStage-2
 Graph''setHasValueProxies-2
-Graph''setLastSchedule-2
 Graph''setStart-2
 Graph''trackNodeEvents-2
 Graph''unregister-2
@@ -3092,13 +3086,9 @@ Scale'Times4
 Scale'Times8
 Scale'fromInt-1
 Scale'fromShift-1
-ScheduleInstance''run-3
-ScheduleInstance'new-0
-ScheduleInstance'new-1
-SchedulePhase'new-0
+ScheduleInstance'new-3
+ScheduleInstance''run-1
 SchedulePhase'new-1
-SchedulePhase'run-3
-ScheduleResult''nodesFor-2
 ScheduleResult'new-3
 ScheduledNodeIterator''insert-3
 ScheduledNodeIterator''processNodes-3
@@ -3922,7 +3912,6 @@ ZeroExtendNode'new-4
 )
 
 (defp BlockLoopInfo)
-(defp BlockMap)
 (defp BlockScope)
 (defp BlockStates)
 (defp BoxNode)
@@ -4831,7 +4820,6 @@ ZeroExtendNode'new-4
  ;;
 (defp LinearScan
     (#_"MoveResolver" LinearScan'''createMoveResolver-1 [#_"LinearScan" this])
-    (#_"void" LinearScan'''initBlockData-2 [#_"LinearScan" this, #_"Block" block])
     (#_"Interval" LinearScan'''getOrCreateInterval-2 [#_"LinearScan" this, #_"AllocatableValue" operand])
     (#_"void" LinearScan'''beforeSpillMoveElimination-1 [#_"LinearScan" this])
     (#_"LSLifetimeAnalysisPhase" LinearScan'''createLifetimeAnalysisPhase-1 [#_"LinearScan" this])
@@ -16496,7 +16484,7 @@ ZeroExtendNode'new-4
                 #_"boolean" :isLoopHeader false
                 #_"int" :loopId 0
                 #_"int" :loopEnd 0
-                #_"List<BciBlock>" :successors (ArrayList.)
+                #_"BciBlock*" :bciSuccessors nil
                 #_"int" :predecessorCount 0
                 #_"boolean" :visited false
                 #_"boolean" :active false
@@ -16506,21 +16494,8 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"BciBlock" BciBlock'copy-1 [#_"BciBlock" other]
-        (let [
-            #_"BciBlock" this (#_"Object" .clone (§ super #_"Object"))
-            this
-                (when (some? (:jsrData this)) => this
-                    (assoc this :jsrData (#_"Object" .clone (:jsrData this)))
-                )
-            this (assoc this :successors (ArrayList. (:successors other)))
-        ]
-            this
-        )
-    )
-
     (defn #_"BciBlock" BciBlock''getSuccessor-2 [#_"BciBlock" this, #_"int" index]
-        (nth (:successors this) index)
+        (nth (:bciSuccessors this) index)
     )
 
     (defn- #_"JSRData" BciBlock''getOrCreateJSRData-1 [#_"BciBlock" this]
@@ -16530,9 +16505,9 @@ ZeroExtendNode'new-4
         (:jsrData this)
     )
 
-    (defn #_"void" BciBlock''setEndsWithRet-1 [#_"BciBlock" this]
+    (defn #_"this" BciBlock''setEndsWithRet-1 [#_"BciBlock" this]
         (§ ass! (:endsWithRet (BciBlock''getOrCreateJSRData-1 this)) true)
-        nil
+        this
     )
 
     (defn #_"JsrScope" BciBlock''getJsrScope-1 [#_"BciBlock" this]
@@ -16543,9 +16518,9 @@ ZeroExtendNode'new-4
         (and (some? (:jsrData this)) (:endsWithRet (:jsrData this)))
     )
 
-    (defn #_"void" BciBlock''setRetSuccessor-2 [#_"BciBlock" this, #_"BciBlock" bciBlock]
+    (defn #_"this" BciBlock''setRetSuccessor-2 [#_"BciBlock" this, #_"BciBlock" bciBlock]
         (§ ass! (:retSuccessor (BciBlock''getOrCreateJSRData-1 this)) bciBlock)
-        nil
+        this
     )
 
     (defn #_"BciBlock" BciBlock''getRetSuccessor-1 [#_"BciBlock" this]
@@ -16564,7 +16539,7 @@ ZeroExtendNode'new-4
         (when (some? (:jsrData this)) (:jsrAlternatives (:jsrData this)))
     )
 
-    (defn #_"void" BciBlock''initJsrAlternatives-1 [#_"BciBlock" this]
+    (defn #_"this" BciBlock''initJsrAlternatives-1 [#_"BciBlock" this]
         (let [
             #_"JSRData" data (BciBlock''getOrCreateJSRData-1 this)
         ]
@@ -16572,44 +16547,43 @@ ZeroExtendNode'new-4
                 (§ ass! data (assoc data :jsrAlternatives {}))
             )
         )
-        nil
+        this
     )
 
-    (defn #_"void" BciBlock''setJsrScope-2 [#_"BciBlock" this, #_"JsrScope" nextScope]
+    (defn #_"this" BciBlock''setJsrScope-2 [#_"BciBlock" this, #_"JsrScope" nextScope]
         (§ ass! (:jsrScope (BciBlock''getOrCreateJSRData-1 this)) nextScope)
-        nil
+        this
     )
 
-    (defn #_"void" BciBlock''setJsrSuccessor-2 [#_"BciBlock" this, #_"BciBlock" clone]
+    (defn #_"this" BciBlock''setJsrSuccessor-2 [#_"BciBlock" this, #_"BciBlock" clone]
         (§ ass! (:jsrSuccessor (BciBlock''getOrCreateJSRData-1 this)) clone)
-        nil
+        this
     )
 
-    (defn #_"void" BciBlock''setJsrReturnBci-2 [#_"BciBlock" this, #_"int" bci]
+    (defn #_"this" BciBlock''setJsrReturnBci-2 [#_"BciBlock" this, #_"int" bci]
         (§ ass! (:jsrReturnBci (BciBlock''getOrCreateJSRData-1 this)) bci)
-        nil
+        this
     )
 
     (defn #_"this" BciBlock''setId-2 [#_"BciBlock" this, #_"int" id]
         (assoc this :id id)
     )
 
-    (defn #_"void" BciBlock''addSuccessor-2 [#_"BciBlock" this, #_"BciBlock" sux]
-        (#_"List" .add (:successors this), sux)
+    (defn #_"this" BciBlock''addSuccessor-2 [#_"BciBlock" this, #_"BciBlock" sux]
+        (§ ass! this (update this :bciSuccessors #(conj (vec %) sux)))
         (§ ass sux (update sux :predecessorCount inc))
-        nil
+        this
     )
 
-    (defn #_"void" BciBlock''clearSucccessors-1 [#_"BciBlock" this]
-        (loop-when-recur [#_"ISeq" s (seq (:successors this))] (some? s) [(next s)]
+    (defn #_"this" BciBlock''clearSucccessors-1 [#_"BciBlock" this]
+        (loop-when-recur [#_"ISeq" s (seq (:bciSuccessors this))] (some? s) [(next s)]
             (let [
                 #_"BciBlock" sux (first s)
             ]
                 (§ ass! sux (update sux :predecessorCount dec))
             )
         )
-        (#_"List" .clear (:successors this))
-        nil
+        (assoc this :bciSuccessors nil)
     )
 )
 
@@ -16652,9 +16626,6 @@ ZeroExtendNode'new-4
     (def- #_"int" BciBlockMapping'LOOP_HEADER_MAX_CAPACITY Long/SIZE)
     (def- #_"int" BciBlockMapping'LOOP_HEADER_INITIAL_CAPACITY 4)
 
-    ;;;
-     ; Creates a new BlockMap instance from {@code code}.
-     ;;
     (defn- #_"BciBlockMapping" BciBlockMapping'new-1 [#_"Bytecode" code]
         (merge (BciBlockMapping'class.)
             (hash-map
@@ -16698,13 +16669,13 @@ ZeroExtendNode'new-4
                     ]
                         (§ ass! this (update this :blocksNotYetAssignedId inc))
                         (§ ass newBlock (assoc newBlock :endBci (:endBci oldBlock)))
-                        (doseq [#_"BciBlock" oldSuccessor (:successors oldBlock)]
-                            (BciBlock''addSuccessor-2 newBlock, oldSuccessor)
+                        (doseq [#_"BciBlock" oldSuccessor (:bciSuccessors oldBlock)]
+                            (§ ass! newBlock (BciBlock''addSuccessor-2 newBlock, oldSuccessor))
                         )
 
                         (§ ass oldBlock (assoc oldBlock :endBci (dec startBci)))
-                        (BciBlock''clearSucccessors-1 oldBlock)
-                        (BciBlock''addSuccessor-2 oldBlock, newBlock)
+                        (§ ass! oldBlock (BciBlock''clearSucccessors-1 oldBlock))
+                        (§ ass! oldBlock (BciBlock''addSuccessor-2 oldBlock, newBlock))
 
                         (loop-when-recur [#_"int" i startBci] (<= i (:endBci newBlock)) [(inc i)]
                             (§ aset! blockMap i newBlock)
@@ -16718,7 +16689,7 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"void" BciBlockMapping'addSuccessor-3 [#_"BciBlock*" blockMap, #_"int" predBci, #_"BciBlock" sux]
-        (BciBlock''addSuccessor-2 (nth blockMap predBci), sux)
+        (§ ass! (nth blockMap predBci) (BciBlock''addSuccessor-2 (nth blockMap predBci), sux))
         nil
     )
 
@@ -16803,8 +16774,8 @@ ZeroExtendNode'new-4
                                 (let [
                                     #_"BciBlock" b1 (BciBlockMapping''makeBlock-3 this, blockMap, target)
                                 ]
-                                    (BciBlock''setJsrSuccessor-2 block, b1)
-                                    (BciBlock''setJsrReturnBci-2 block, (:nextBCI stream))
+                                    (§ ass! block (BciBlock''setJsrSuccessor-2 block, b1))
+                                    (§ ass! block (BciBlock''setJsrReturnBci-2 block, (:nextBCI stream)))
                                     (BciBlockMapping'addSuccessor-3 blockMap, bci, b1)
                                 )
                             )
@@ -16812,7 +16783,7 @@ ZeroExtendNode'new-4
                         )
                         Bytecodes'RET
                         (do
-                            (BciBlock''setEndsWithRet-1 block)
+                            (§ ass! block (BciBlock''setEndsWithRet-1 block))
                             nil
                         )
                        [Bytecodes'INVOKEINTERFACE Bytecodes'INVOKESPECIAL Bytecodes'INVOKESTATIC Bytecodes'INVOKEVIRTUAL Bytecodes'INVOKEDYNAMIC]
@@ -16834,11 +16805,11 @@ ZeroExtendNode'new-4
             #_"JsrScope" scope (BciBlock''getJsrScope-1 block)
         ]
             (when (BciBlock''endsWithRet-1 block)
-                (BciBlock''setRetSuccessor-2 block, (nth blockMap (JsrScope''nextReturnAddress-1 scope)))
-                (BciBlock''addSuccessor-2 block, (BciBlock''getRetSuccessor-1 block))
+                (§ ass! block (BciBlock''setRetSuccessor-2 block, (nth blockMap (JsrScope''nextReturnAddress-1 scope))))
+                (§ ass! block (BciBlock''addSuccessor-2 block, (BciBlock''getRetSuccessor-1 block)))
             )
             (when (or (some? (BciBlock''getJsrSuccessor-1 block)) (not (JsrScope''isEmpty-1 scope)))
-                (loop-when-recur [#_"int" i 0] (< i (count (:successors block))) [(inc i)]
+                (loop-when-recur [#_"int" i 0] (< i (count (:bciSuccessors block))) [(inc i)]
                     (let [
                         #_"BciBlock" successor (BciBlock''getSuccessor-2 block, i)
                         #_"JsrScope" nextScope scope
@@ -16860,31 +16831,31 @@ ZeroExtendNode'new-4
                                     (if (and (some? (BciBlock''getJsrAlternatives-1 successor)) (contains? (BciBlock''getJsrAlternatives-1 successor) nextScope))
                                         (get (BciBlock''getJsrAlternatives-1 successor) nextScope)
                                         (do
-                                            (BciBlock''initJsrAlternatives-1 successor)
+                                            (§ ass! successor (BciBlock''initJsrAlternatives-1 successor))
                                             (let [
-                                                clone (BciBlock'copy-1 successor)
+                                                clone (§ snap successor)
                                             ]
                                                 (§ ass! this (update this :blocksNotYetAssignedId inc))
-                                                (BciBlock''setJsrScope-2 clone, nextScope)
+                                                (§ ass! clone (BciBlock''setJsrScope-2 clone, nextScope))
                                                 (§ ass! (BciBlock''getJsrAlternatives-1 successor) (assoc (BciBlock''getJsrAlternatives-1 successor) nextScope clone))
                                                 clone
                                             )
                                         )
                                     )
                             ]
-                                (#_"List" .set (:successors block), i, clone)
+                                (§ ass! block (update block :bciSuccessors #(assoc (vec %) i clone)))
                                 (when (= successor (BciBlock''getJsrSuccessor-1 block))
-                                    (BciBlock''setJsrSuccessor-2 block, clone)
+                                    (§ ass! block (BciBlock''setJsrSuccessor-2 block, clone))
                                 )
                                 (when (= successor (BciBlock''getRetSuccessor-1 block))
-                                    (BciBlock''setRetSuccessor-2 block, clone)
+                                    (§ ass! block (BciBlock''setRetSuccessor-2 block, clone))
                                 )
                             )
                         )
                     )
                 )
             )
-            (doseq [#_"BciBlock" successor (:successors block)]
+            (doseq [#_"BciBlock" successor (:bciSuccessors block)]
                 (when-not (#_"ArrayList" .contains (:jsrVisited this), successor)
                     (§ ass! this (BciBlockMapping''createJsrAlternatives-3 this, blockMap, successor))
                 )
@@ -16900,7 +16871,7 @@ ZeroExtendNode'new-4
             (let [
                 _ (§ ass! block (assoc block :visited true))
                 #_"long" loops
-                    (loop-when-recur [loops (:nLoops block) #_"ISeq" s (seq (:successors block))]
+                    (loop-when-recur [loops (:nLoops block) #_"ISeq" s (seq (:bciSuccessors block))]
                                      (some? s)
                                      ;; Recursively process successors.
                                      [(| loops (BciBlockMapping''fixLoopBits-2b this, (first s))) (next s)]
@@ -16987,7 +16958,7 @@ ZeroExtendNode'new-4
 
                 (let [
                     #_"long" loops
-                        (loop-when [loops 0 #_"ISeq" s (seq (:successors block))] (some? s) => loops
+                        (loop-when [loops 0 #_"ISeq" s (seq (:bciSuccessors block))] (some? s) => loops
                             (let [
                                 #_"BciBlock" successor (first s)
                                 ;; Recursively process successors.
@@ -17585,52 +17556,44 @@ ZeroExtendNode'new-4
 
 (class-ns EffectsClosure #_"<T implements EffectsBlockState<T>>" [BlockIteratorClosure #_"<T>"]
     (defn #_"EffectsClosure" EffectsClosure'new-2 [#_"ScheduleResult" schedule, #_"ControlFlowGraph" cfg]
-        (let [
-            #_"EffectsClosure" this
-                (merge (EffectsClosure'class.)
-                    (hash-map
-                        #_"ControlFlowGraph" :cfg cfg
-                        #_"ScheduleResult" :schedule schedule
-                        ;;;
-                         ; If a node has an alias, this means that it was replaced with another node during analysis.
-                         ; Nodes can be replaced by normal ("scalar") nodes, e.g. a LoadIndexedNode with a ConstantNode,
-                         ; or by virtual nodes, e.g. a NewInstanceNode with a VirtualInstanceNode. A node was replaced
-                         ; with a virtual value iff the alias is a subclass of VirtualObjectNode.
-                         ;
-                         ; This alias map exists only once and is not part of the block state, so that during iterative
-                         ; loop processing the alias of a node may be changed to another value.
-                         ;;
-                        #_"{Node ValueNode}" :aliases {}
-                        ;;;
-                         ; This set allows for a quick check whether a node has inputs that were replaced with "scalar" values.
-                         ;;
-                        #_"NodeBitMap" :hasScalarReplacedInputs (NodeBitMap'new-1 (:graph cfg))
-                        ;;;
-                         ; The effects accumulated during analysis of nodes. They may be cleared and re-filled during
-                         ; iterative loop processing.
-                         ;;
-                        #_"BlockMap<GraphEffectList>" :blockEffects (BlockMap'new-1 cfg)
-                        ;;;
-                         ; Effects that can only be applied after the effects from within the loop have been applied and
-                         ; that must be applied before any effect from after the loop is applied. E.g., updating phis.
-                         ;;
-                        #_"{Loop GraphEffectList}" :loopMergeEffects {}
-                        ;;;
-                         ; The entry state of loops is needed when loop proxies are processed.
-                         ;;
-                        #_"{LoopBeginNode T}" :loopEntryStates {}
-                        ;;;
-                         ; Intended to be used by read-eliminating phases based on the effects phase.
-                         ;;
-                        #_"{Loop LoopKillCache}" :loopLocationKillCache {}
-                        #_"boolean" :changed? false
-                    )
-                )
-        ]
-            (doseq [#_"Block" block (:reversePostOrder cfg)]
-                (BlockMap''put-3 (:blockEffects this), block, (GraphEffectList'new-0))
+        (merge (EffectsClosure'class.)
+            (hash-map
+                #_"ControlFlowGraph" :cfg cfg
+                #_"ScheduleResult" :schedule schedule
+                ;;;
+                 ; If a node has an alias, this means that it was replaced with another node during analysis.
+                 ; Nodes can be replaced by normal ("scalar") nodes, e.g. a LoadIndexedNode with a ConstantNode,
+                 ; or by virtual nodes, e.g. a NewInstanceNode with a VirtualInstanceNode. A node was replaced
+                 ; with a virtual value iff the alias is a subclass of VirtualObjectNode.
+                 ;
+                 ; This alias map exists only once and is not part of the block state, so that during iterative
+                 ; loop processing the alias of a node may be changed to another value.
+                 ;;
+                #_"{Node ValueNode}" :aliases {}
+                ;;;
+                 ; This set allows for a quick check whether a node has inputs that were replaced with "scalar" values.
+                 ;;
+                #_"NodeBitMap" :hasScalarReplacedInputs (NodeBitMap'new-1 (:graph cfg))
+                ;;;
+                 ; The effects accumulated during analysis of nodes. They may be cleared and re-filled during
+                 ; iterative loop processing.
+                 ;;
+                #_"{Block GraphEffectList}" :blockEffects (into {} (for [#_"Block" block (:reversePostOrder cfg)] [block (GraphEffectList'new-0)]))
+                ;;;
+                 ; Effects that can only be applied after the effects from within the loop have been applied and
+                 ; that must be applied before any effect from after the loop is applied. E.g., updating phis.
+                 ;;
+                #_"{Loop GraphEffectList}" :loopMergeEffects {}
+                ;;;
+                 ; The entry state of loops is needed when loop proxies are processed.
+                 ;;
+                #_"{LoopBeginNode T}" :loopEntryStates {}
+                ;;;
+                 ; Intended to be used by read-eliminating phases based on the effects phase.
+                 ;;
+                #_"{Loop LoopKillCache}" :loopLocationKillCache {}
+                #_"boolean" :changed? false
             )
-            this
         )
     )
 
@@ -17654,7 +17617,7 @@ ZeroExtendNode'new-4
 
                         (#_"Void" BlockIteratorClosure'''processBlock-3 [#_"BlockIteratorClosure<Void>" _, #_"Block" block, #_"Void" currentState]
                             (let [
-                                #_"GraphEffectList" effects (BlockMap''get-2 (:blockEffects this), block)
+                                #_"GraphEffectList" effects (get (:blockEffects this) block)
                             ]
                                 (when (and (some? effects) (not (EffectList''isEmpty-1 effects)))
                                     (#_"ArrayList" .add effectList, effects)
@@ -17762,7 +17725,7 @@ ZeroExtendNode'new-4
         (#_"T" BlockIteratorClosure'''processBlock-3 [#_"EffectsClosure<T>" this, #_"Block" block, #_"T" state]
             (when-not (EffectsBlockState''isDead-1 state) => state
                 (let [
-                    #_"GraphEffectList" effects (BlockMap''get-2 (:blockEffects this), block)
+                    #_"GraphEffectList" effects (get (:blockEffects this) block)
                 ]
                     ;; If we enter an if branch that is known to be unreachable, we mark it as dead and
                     ;; cease to do any more analysis on it. At merges, these dead branches will be ignored.
@@ -17780,7 +17743,7 @@ ZeroExtendNode'new-4
                     )
 
                     ;; a lastFixedNode is needed in case we want to insert fixed nodes
-                    (loop-when [#_"FixedWithNextNode" lastFixedNode nil #_"ISeq" s (seq (if (some? (:schedule this)) (BlockMap''get-2 (:blockToNodesMap (:schedule this)), block) (Block''getNodes-1 block)))] (some? s)
+                    (loop-when [#_"FixedWithNextNode" lastFixedNode nil #_"ISeq" s (seq (if (some? (:schedule this)) (get (:block->nodes (:schedule this)) block) (Block''getNodes-1 block)))] (some? s)
                         (let [
                             #_"Node" node (first s)
                         ]
@@ -17795,7 +17758,7 @@ ZeroExtendNode'new-4
                                         (§ ass! this (assoc this :changed? (or (:changed? this) (and (EffectsClosure'''processNode-5 this, proxy, state, effects, lastFixedNode) (EffectsClosure'isSignificantNode-1 node)))))
                                     )
                                 )
-                                (EffectsClosure'''processLoopExit-5 this, node, (get (:loopEntryStates this) (:loopBegin node)), state, (BlockMap''get-2 (:blockEffects this), block))
+                                (EffectsClosure'''processLoopExit-5 this, node, (get (:loopEntryStates this) (:loopBegin node)), state, (get (:blockEffects this) block))
                             )
                             (§ ass! this (assoc this :changed? (or (:changed? this) (and (EffectsClosure'''processNode-5 this, node, state, effects, lastFixedNode) (EffectsClosure'isSignificantNode-1 node)))))
                             (when-not (EffectsBlockState''isDead-1 state)
@@ -17814,8 +17777,8 @@ ZeroExtendNode'new-4
                 #_"MergeProcessor<T>" processor (EffectsClosure'''createMergeProcessor-2 this, merge)
             ]
                 (EffectsClosure''doMergeWithoutDead-3 this, processor, states)
-                (EffectList''addAll-2 (BlockMap''get-2 (:blockEffects this), merge), (:mergeEffects processor))
-                (EffectList''addAll-2 (BlockMap''get-2 (:blockEffects this), merge), (:afterMergeEffects processor))
+                (EffectList''addAll-2 (get (:blockEffects this) merge), (:mergeEffects processor))
+                (EffectList''addAll-2 (get (:blockEffects this) merge), (:afterMergeEffects processor))
                 (:newState processor)
             )
         )
@@ -17858,16 +17821,16 @@ ZeroExtendNode'new-4
 
                             (if (EffectsBlockState'''equivalentTo-2 (:newState mergeProcessor), lastMergedState)
                                 (do
-                                    (§ ass! (BlockMap''get-2 (:blockEffects this), (:header _loop)) (EffectList''insertAll-3 (BlockMap''get-2 (:blockEffects this), (:header _loop)), (:mergeEffects mergeProcessor), 0))
-                                    (§ ass! (:loopMergeEffects this) (assoc (:loopMergeEffects this) _loop (:afterMergeEffects mergeProcessor)))
-                                    (§ ass! (:loopEntryStates this) (assoc (:loopEntryStates this) (:beginNode (:header _loop)) loopEntryState))
+                                    (§ ass! this (update-in this [:blockEffects (:header _loop)] EffectList''insertAll-3 (:mergeEffects mergeProcessor), 0))
+                                    (§ ass! this (assoc-in this [:loopMergeEffects _loop] (:afterMergeEffects mergeProcessor)))
+                                    (§ ass! this (assoc-in this [:loopEntryStates (:beginNode (:header _loop))] loopEntryState))
                                     (EffectsClosure'''processKilledLoopLocations-4 this, _loop, initialStateRemovedKilledLocations, (:newState mergeProcessor))
                                     (:exitStates info)
                                 )
                                 (do
                                     (§ ass lastMergedState (:newState mergeProcessor))
                                     (doseq [#_"Block" block (:loopBlocks _loop)]
-                                        (EffectList'''clear-1 (BlockMap''get-2 (:blockEffects this), block))
+                                        (EffectList'''clear-1 (get (:blockEffects this) block))
                                     )
                                     (recur (inc iteration))
                                 )
@@ -17957,7 +17920,7 @@ ZeroExtendNode'new-4
                     delta
                         (loop-when [delta delta #_"ISeq" s (seq (:reversePostOrder (:cfg this)))] (some? s) => delta
                             (let [
-                                #_"GraphEffectList" effects (BlockMap''get-2 (:blockEffects this), (first s))
+                                #_"GraphEffectList" effects (get (:blockEffects this) (first s))
                             ]
                                 (recur (if (some? effects) (+ delta (:virtualizationDelta effects)) delta) (next s))
                             )
@@ -18336,7 +18299,7 @@ ZeroExtendNode'new-4
                                 #_"ObjectState" state (nth (:objectStates initialState) i)
                             ]
                                 (when (and (some? state) (ObjectState''isVirtual-1 state) (not (#_"BitSet" .get ensureVirtualized, i)))
-                                    (PartialEscapeBlockState''materializeBefore-4 initialState, end, (nth (:virtualObjects this) i), (BlockMap''get-2 (:blockEffects this), loopPredecessor))
+                                    (PartialEscapeBlockState''materializeBefore-4 initialState, end, (nth (:virtualObjects this) i), (get (:blockEffects this) loopPredecessor))
                                 )
                             )
                         )
@@ -19217,25 +19180,6 @@ ZeroExtendNode'new-4
                 #_"[T]" :exitStates []
             )
         )
-    )
-)
-
-(class-ns BlockMap #_"<T>" []
-    (defn #_"BlockMap" BlockMap'new-1 [#_"ControlFlowGraph" cfg]
-        (merge (BlockMap'class.)
-            (hash-map
-                #_"T[]" :data (§ cast #_"T[]" (make-array Object (count (:reversePostOrder cfg))))
-            )
-        )
-    )
-
-    (defn #_"T" BlockMap''get-2 [#_"BlockMap<T>" this, #_"Block" block]
-        (nth (:data this) (:id block))
-    )
-
-    (defn #_"void" BlockMap''put-3 [#_"BlockMap<T>" this, #_"Block" block, #_"T" value]
-        (aset (:data this) (:id block) value)
-        nil
     )
 )
 
@@ -20836,7 +20780,7 @@ ZeroExtendNode'new-4
             #_"int" targetAtStart (BytecodeStream''readUByte-2 (:stream this), (:startBci nextBlock))
         ]
             ;; If this is an empty block, skip it.
-            (BytecodeParser''appendGoto-2 this, (if (and (= targetAtStart Bytecodes'GOTO) (= (:predecessorCount nextBlock) 1)) (nth (:successors nextBlock) 0) nextBlock))
+            (BytecodeParser''appendGoto-2 this, (if (and (= targetAtStart Bytecodes'GOTO) (= (:predecessorCount nextBlock) 1)) (nth (:bciSuccessors nextBlock) 0) nextBlock))
         )
         nil
     )
@@ -21501,7 +21445,7 @@ ZeroExtendNode'new-4
             #_"double[]" keyProbabilities (BytecodeParser'switchProbability-2 nofCasesPlusDefault, bci)
             #_"{Integer SuccessorInfo}" bciToBlockSuccessorIndex {}
             _
-                (dotimes [#_"int" i (count (:successors (:currentBlock this)))]
+                (dotimes [#_"int" i (count (:bciSuccessors (:currentBlock this)))]
                     (§ ass! bciToBlockSuccessorIndex (assoc bciToBlockSuccessorIndex (:startBci (BciBlock''getSuccessor-2 (:currentBlock this), i)) (SuccessorInfo'new-1 i)))
                 )
             #_"ArrayList<BciBlock>" actualSuccessors (ArrayList.)
@@ -22182,7 +22126,7 @@ ZeroExtendNode'new-4
                 #_"VariableMap" :variableMap (VariableMap'new-0)
                 #_"BitSet" :phiConstants (BitSet.)
                 #_"BitSet" :defined (BitSet.)
-                #_"BlockMap<LIRInsertionBuffer>" :insertionBuffers (BlockMap'new-1 (:cfg lir))
+                #_"{Block LIRInsertionBuffer}" :insertionBuffers {}
             )
         )
     )
@@ -22253,11 +22197,11 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"LIRInsertionBuffer" CLOptimization''getInsertionBuffer-2 [#_"CLOptimization" this, #_"Block" block]
-        (or (BlockMap''get-2 (:insertionBuffers this), block)
+        (or (get (:insertionBuffers this) block)
             (let [
                 #_"LIRInsertionBuffer" buffer (LIRInsertionBuffer'new-0)
             ]
-                (BlockMap''put-3 (:insertionBuffers this), block, buffer)
+                (§ ass! this (assoc-in this [:insertionBuffers block] buffer))
                 (LIRInsertionBuffer''init-2 buffer, (LIR''getLIRforBlock-2 (:lir this), block))
             )
         )
@@ -22335,7 +22279,7 @@ ZeroExtendNode'new-4
     (defn- #_"void" CLOptimization''rewriteBlock-2 [#_"CLOptimization" this, #_"Block" block]
         ;; insert moves
         (let [
-            #_"LIRInsertionBuffer" buffer (BlockMap''get-2 (:insertionBuffers this), block)
+            #_"LIRInsertionBuffer" buffer (get (:insertionBuffers this) block)
         ]
             (when (some? buffer)
                 (§ ass! buffer (LIRInsertionBuffer''finish-1 buffer))
@@ -25167,13 +25111,13 @@ ZeroExtendNode'new-4
 )
 
 (class-ns ConditionalEliminationInstance [RecursiveVisitor #_"<Integer>"]
-    (defn #_"ConditionalEliminationInstance" ConditionalEliminationInstance'new-3 [#_"Graph" graph, #_"BlockMap<List<Node>>" blockToNodes, #_"{Node Block}" nodeToBlock]
+    (defn #_"ConditionalEliminationInstance" ConditionalEliminationInstance'new-3 [#_"Graph" graph, #_"{Block Node*}" block->nodes, #_"{Node Block}" node->block]
         (merge (ConditionalEliminationInstance'class.)
             (hash-map
                 #_"Graph" :graph graph
                 #_"{Node InfoElement}" :ieMap {}
-                #_"BlockMap<List<Node>>" :blockToNodes blockToNodes
-                #_"{Node Block}" :nodeToBlock nodeToBlock
+                #_"{Block Node*}" :block->nodes block->nodes
+                #_"{Node Block}" :node->block node->block
                 #_"[Node]" :undo []
                 #_"{MergeNode {ValuePhiNode PhiInfoElement}}" :mergeMaps {}
                 ;;;
@@ -25236,14 +25180,14 @@ ZeroExtendNode'new-4
 
     (defn- #_"boolean" ConditionalEliminationInstance''canScheduleAbove-4 [#_"ConditionalEliminationInstance" this, #_"Node" test, #_"Node" target, #_"ValueNode" knownToBeAbove]
         (let [
-            #_"Block" targetBlock (get (:nodeToBlock this) target)
-            #_"Block" testBlock (get (:nodeToBlock this) test)
+            #_"Block" targetBlock (get (:node->block this) target)
+            #_"Block" testBlock (get (:node->block this) test)
         ]
             (or
                 (when (and (some? targetBlock) (some? testBlock))
                     (cond
                         (= targetBlock testBlock)
-                            (loop-when [#_"ISeq" s (seq (BlockMap''get-2 (:blockToNodes this), targetBlock))] (some? s)
+                            (loop-when [#_"ISeq" s (seq (get (:block->nodes this) targetBlock))] (some? s)
                                 (condp = (first s)
                                     test   true
                                     target nil
@@ -25977,8 +25921,8 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"this" ConditionalEliminationInstance''processNodes-2 [#_"ConditionalEliminationInstance" this, #_"Block" block]
-        (if (some? (:blockToNodes this))
-            (reduce ConditionalEliminationInstance''processNode-2 this (filter Node''isAlive-1 (BlockMap''get-2 (:blockToNodes this), block)))
+        (if (some? (:block->nodes this))
+            (reduce ConditionalEliminationInstance''processNode-2 this (filter Node''isAlive-1 (get (:block->nodes this) block)))
             (ConditionalEliminationInstance''processBlock-2 this, block)
         )
     )
@@ -26028,14 +25972,14 @@ ZeroExtendNode'new-4
         (#_"Graph" Phase'''run-3 [#_"ConditionalEliminationPhase" this, #_"Graph" graph, #_"PhaseContext" context]
             (let [
                 #_"ControlFlowGraph" cfg (ControlFlowGraph'compute-5 graph, true, true, true, true)
-                [#_"BlockMap<List<Node>>" blockToNodes #_"{Node Block}" nodeToBlock]
-                    (when (:fullSchedule this) => [nil (:nodeToBlock cfg)]
+                [cfg #_"{Block Node*}" block->nodes #_"{Node Block}" node->block]
+                    (when (:fullSchedule this) => [cfg nil (:node->block cfg)]
                         (ControlFlowGraph''visitDominatorTree-3 cfg, (MoveGuardsUpwards'new-0), (:hasValueProxies graph))
-                        (SchedulePhase'run-3 graph, :SchedulingStrategy'EARLIEST_WITH_GUARD_ORDER, cfg)
-                        [(:blockToNodesMap (:lastSchedule graph)) (:nodeToBlockMap (:lastSchedule graph))]
+                        (§ ass! graph (ScheduleInstance''run-1 (ScheduleInstance'new-3 cfg, graph, :SchedulingStrategy'EARLIEST_WITH_GUARD_ORDER)))
+                        [(:cfg (:lastSchedule graph)) (:block->nodes (:lastSchedule graph)) (:node->block (:lastSchedule graph))]
                     )
             ]
-                (ControlFlowGraph''visitDominatorTree-3 cfg, (ConditionalEliminationInstance'new-3 graph, blockToNodes, nodeToBlock), (:hasValueProxies graph))
+                (ControlFlowGraph''visitDominatorTree-3 cfg, (ConditionalEliminationInstance'new-3 graph, block->nodes, node->block), (:hasValueProxies graph))
                 graph
             )
         )
@@ -26133,7 +26077,7 @@ ZeroExtendNode'new-4
                     [(:probability block) (into usages usagesBlock) 1]
                 )
         ]
-            (ConstantTree''setCost-3 (:tree this), block, (NodeCost'new-3 bestCost, usages, numMat))
+            (§ ass! (:tree this) (ConstantTree''setCost-3 (:tree this), block, (NodeCost'new-3 bestCost, usages, numMat)))
         )
         nil
     )
@@ -26203,7 +26147,7 @@ ZeroExtendNode'new-4
         (merge (ControlFlowGraph'class.)
             (hash-map
                 #_"Graph" :graph graph
-                #_"{Node Block}" :nodeToBlock {}
+                #_"{Node Block}" :node->block {}
                 ;;;
                  ; The list of blocks contained in this control flow graph.
                  ;
@@ -26211,18 +26155,14 @@ ZeroExtendNode'new-4
                  ; to a reverse post order traversal of the control flow graph.
                  ;;
                 #_"Block[]" :reversePostOrder nil
-                #_"List<Loop>" :loops nil
+                #_"Loop*" :loops nil
                 #_"int" :maxDominatorDepth 0
             )
         )
     )
 
-    (defn #_"this" ControlFlowGraph''setNodeToBlock-2 [#_"ControlFlowGraph" this, #_"{Node Block}" nodeMap]
-        (assoc this :nodeToBlock nodeMap)
-    )
-
     (defn #_"Block" ControlFlowGraph''blockFor-2 [#_"ControlFlowGraph" this, #_"Node" node]
-        (get (:nodeToBlock this) node)
+        (get (:node->block this) node)
     )
 
     (defn #_"Block" ControlFlowGraph''getStartBlock-1 [#_"ControlFlowGraph" this]
@@ -26231,7 +26171,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"void" ControlFlowGraph''identifyBlock-2 [#_"ControlFlowGraph" this, #_"Block" block]
         (loop [#_"FixedWithNextNode" node (:beginNode block)]
-            (§ ass! (:nodeToBlock this) (assoc (:nodeToBlock this) node block))
+            (§ ass! (:node->block this) (assoc (:node->block this) node block))
             (let [
                 #_"FixedNode" _next (:next node)
             ]
@@ -26241,28 +26181,11 @@ ZeroExtendNode'new-4
                     FixedWithNextNode
                         (recur _next)
                     (do
-                        (§ ass! (:nodeToBlock this) (assoc (:nodeToBlock this) _next block))
+                        (§ ass! (:node->block this) (assoc (:node->block this) _next block))
                         (§ ass! block (assoc block :endNode _next))
                     )
                 )
             )
-        )
-        nil
-    )
-
-    (defn- #_"void" ControlFlowGraph'computeLoopPredecessors-3 [#_"{Node Block}" nodeMap, #_"Block" block, #_"LoopBeginNode" loopBeginNode]
-        (let [
-            #_"int" forwardEndCount (AbstractMergeNode''forwardEndCount-1 loopBeginNode)
-            #_"LoopEndNode[]" loopEnds (LoopBeginNode''orderedLoopEnds-1 loopBeginNode)
-            #_"Block[]" predecessors (make-array Block'iface (+ forwardEndCount (count loopEnds)))
-        ]
-            (dotimes [#_"int" i forwardEndCount]
-                (aset predecessors i (get nodeMap (AbstractMergeNode''forwardEndAt-2 loopBeginNode, i)))
-            )
-            (dotimes [#_"int" i (count loopEnds)]
-                (aset predecessors (+ i forwardEndCount) (get nodeMap (nth loopEnds i)))
-            )
-            (§ ass! block (Block''setPredecessors-2 block, predecessors))
         )
         nil
     )
@@ -26279,7 +26202,7 @@ ZeroExtendNode'new-4
                     (ControlFlowGraph''identifyBlock-2 this, (Block'new-1 (first s)))
                 )
             ;; Compute reverse post order.
-            #_"{Node Block}" nodeMap (:nodeToBlock this)
+            #_"{Node Block}" node->block (:node->block this)
             #_"Block[]" stack (make-array Block'iface numBlocks)
             #_"Block" startBlock (ControlFlowGraph''blockFor-2 this, (:start (:graph this)))
             _ (aset stack 0 startBlock)
@@ -26298,7 +26221,7 @@ ZeroExtendNode'new-4
                                         (condp satisfies? end
                                             EndNode
                                                 (let [
-                                                    #_"Block" suxBlock (get nodeMap (AbstractEndNode'''merge-1 end))
+                                                    #_"Block" suxBlock (get node->block (AbstractEndNode'''merge-1 end))
                                                 ]
                                                     (when (= (:id suxBlock) ControlFlowGraph'BLOCK_ID_INITIAL)
                                                         (§ ass tos (inc tos))
@@ -26309,12 +26232,12 @@ ZeroExtendNode'new-4
                                                 )
                                             IfNode
                                                 (let [
-                                                    #_"Block" trueSucc (get nodeMap (:trueSuccessor end))
+                                                    #_"Block" trueSucc (get node->block (:trueSuccessor end))
                                                 ]
                                                     (§ ass tos (inc tos))
                                                     (aset stack tos trueSucc)
                                                     (let [
-                                                        #_"Block" falseSucc (get nodeMap (:falseSuccessor end))
+                                                        #_"Block" falseSucc (get node->block (:falseSuccessor end))
                                                     ]
                                                         (§ ass tos (inc tos))
                                                         (aset stack tos falseSucc)
@@ -26330,7 +26253,7 @@ ZeroExtendNode'new-4
                                                 )
                                             LoopEndNode
                                                 (do
-                                                    (§ ass! block (Block''setSuccessors-2 block, (into-array Block'iface [ (get nodeMap (:loopBegin end)) ])))
+                                                    (§ ass! block (Block''setSuccessors-2 block, (into-array Block'iface [ (get node->block (:loopBegin end)) ])))
                                                     tos
                                                 )
                                             ControlSinkNode
@@ -26345,7 +26268,7 @@ ZeroExtendNode'new-4
                                                     tos
                                                         (loop-when [tos tos #_"ISeq" s (seq (Node''successors-1 end))] (some? s) => tos
                                                             (let [
-                                                                #_"Block" sux (get nodeMap (first s))
+                                                                #_"Block" sux (get node->block (first s))
                                                                 tos (inc tos)
                                                             ]
                                                                 (aset stack tos sux)
@@ -26368,14 +26291,26 @@ ZeroExtendNode'new-4
                                     ]
                                         (condp satisfies? beginNode
                                             LoopBeginNode
-                                                (ControlFlowGraph'computeLoopPredecessors-3 nodeMap, block, beginNode)
+                                                (let [
+                                                    #_"int" n (AbstractMergeNode''forwardEndCount-1 beginNode)
+                                                    #_"LoopEndNode[]" loopEnds (LoopBeginNode''orderedLoopEnds-1 beginNode)
+                                                    #_"Block[]" predecessors (make-array Block'iface (+ n (count loopEnds)))
+                                                ]
+                                                    (dotimes [#_"int" i n]
+                                                        (aset predecessors i (get node->block (AbstractMergeNode''forwardEndAt-2 beginNode, i)))
+                                                    )
+                                                    (dotimes [#_"int" i (count loopEnds)]
+                                                        (aset predecessors (+ i n) (get node->block (nth loopEnds i)))
+                                                    )
+                                                    (§ ass! block (Block''setPredecessors-2 block, predecessors))
+                                                )
                                             MergeNode
                                                 (let [
                                                     #_"int" n (AbstractMergeNode''forwardEndCount-1 beginNode)
                                                     #_"Block[]" predecessors (make-array Block'iface n)
                                                 ]
                                                     (dotimes [#_"int" i n]
-                                                        (aset predecessors i (get nodeMap (AbstractMergeNode''forwardEndAt-2 beginNode, i)))
+                                                        (aset predecessors i (get node->block (AbstractMergeNode''forwardEndAt-2 beginNode, i)))
                                                     )
                                                     (§ ass! block (Block''setPredecessors-2 block, predecessors))
                                                 )
@@ -26489,56 +26424,57 @@ ZeroExtendNode'new-4
 
     (defn- #_"this" ControlFlowGraph''computeLoopInformation-1 [#_"ControlFlowGraph" this]
         (let [
-            this (assoc this :loops (ArrayList.))
-        ]
-            (when (Graph''hasLoops-1 (:graph this))
-                (let [
-                    #_"Block[]" stack (make-array Block'iface (count (:reversePostOrder this)))
-                ]
-                    (doseq [#_"Block" block (:reversePostOrder this)]
-                        (let [
-                            #_"AbstractBeginNode" beginNode (:beginNode block)
-                        ]
-                            (when (satisfies? LoopBeginNode beginNode)
-                                (let [
-                                    #_"Loop" parent (:loop block)
-                                    #_"Loop" _loop (Loop'new-3 parent, (count (:loops this)), block)
-                                    _
-                                        (when (some? parent)
-                                            (§ ass! parent (update parent :children #(conj (vec %) _loop)))
-                                        )
-                                    _ (#_"List" .add (:loops this), _loop)
-                                    _ (§ ass! block (Block''setLoop-2 block, _loop))
-                                    _loop (update _loop :loopBlocks conj block)
-                                ]
-                                    (doseq [#_"LoopEndNode" end (LoopBeginNode''loopEnds-1 beginNode)]
-                                        (ControlFlowGraph'computeLoopBlocks-4 (get (:nodeToBlock this) end), _loop, stack, true)
-                                    )
-
-                                    (when-not (= (:guardsStage (:graph this)) :GuardsStage'AFTER_FSA)
-                                        (doseq [#_"LoopExitNode" exit (LoopBeginNode''loopExits-1 beginNode)]
-                                            (let [
-                                                #_"Block" exitBlock (get (:nodeToBlock this) exit)
-                                            ]
-                                                (ControlFlowGraph'computeLoopBlocks-4 (Block''getFirstPredecessor-1 exitBlock), _loop, stack, true)
-                                                (Loop''addExit-2 _loop, exitBlock)
+            this (assoc this :loops [])
+            this
+                (when (Graph''hasLoops-1 (:graph this)) => this
+                    (let [
+                        #_"Block[]" stack (make-array Block'iface (count (:reversePostOrder this)))
+                    ]
+                        (doseq [#_"Block" block (:reversePostOrder this)]
+                            (let [
+                                #_"AbstractBeginNode" beginNode (:beginNode block)
+                            ]
+                                (when (satisfies? LoopBeginNode beginNode)
+                                    (let [
+                                        #_"Loop" parent (:loop block)
+                                        #_"Loop" _loop (Loop'new-3 parent, (count (:loops this)), block)
+                                        _
+                                            (when (some? parent)
+                                                (§ ass! parent (update parent :children #(conj (vec %) _loop)))
                                             )
+                                        _ (§ ass! this (update this :loops conj _loop))
+                                        _ (§ ass! block (Block''setLoop-2 block, _loop))
+                                        _loop (update _loop :loopBlocks conj block)
+                                    ]
+                                        (doseq [#_"LoopEndNode" end (LoopBeginNode''loopEnds-1 beginNode)]
+                                            (ControlFlowGraph'computeLoopBlocks-4 (get (:node->block this) end), _loop, stack, true)
                                         )
 
-                                        ;; The following loop can add new blocks to the end of the loop's block list.
-                                        (doseq [#_"Block" b (:loopBlocks _loop) #_"Block" s (:successors b)]
-                                            (when-not (or (= (:loop s) _loop) (and (satisfies? LoopExitNode (:beginNode s)) (= (:loopBegin (:beginNode s)) beginNode)))
-                                                (ControlFlowGraph'computeLoopBlocks-4 s, _loop, stack, false)
+                                        (when-not (= (:guardsStage (:graph this)) :GuardsStage'AFTER_FSA)
+                                            (doseq [#_"LoopExitNode" exit (LoopBeginNode''loopExits-1 beginNode)]
+                                                (let [
+                                                    #_"Block" exitBlock (get (:node->block this) exit)
+                                                ]
+                                                    (ControlFlowGraph'computeLoopBlocks-4 (Block''getFirstPredecessor-1 exitBlock), _loop, stack, true)
+                                                    (Loop''addExit-2 _loop, exitBlock)
+                                                )
+                                            )
+
+                                            ;; The following loop can add new blocks to the end of the loop's block list.
+                                            (doseq [#_"Block" b (:loopBlocks _loop) #_"Block" s (:successors b)]
+                                                (when-not (or (= (:loop s) _loop) (and (satisfies? LoopExitNode (:beginNode s)) (= (:loopBegin (:beginNode s)) beginNode)))
+                                                    (ControlFlowGraph'computeLoopBlocks-4 s, _loop, stack, false)
+                                                )
                                             )
                                         )
                                     )
                                 )
                             )
                         )
+                        this
                     )
                 )
-            )
-
+        ]
             ;; Compute the loop exit blocks after FSA.
             (when (= (:guardsStage (:graph this)) :GuardsStage'AFTER_FSA)
                 (doseq [#_"Block" b (:reversePostOrder this)]
@@ -26554,9 +26490,9 @@ ZeroExtendNode'new-4
                                     )
                                     ;; succ also has a loop, might be a child loop
                                     ;;
-                                    ;; if it is a child loop, we do not exit a loop. if it is a loop
-                                    ;; different than b.loop and not a child loop, it must be a parent
-                                    ;; loop, thus we exit all loops between b.loop and succ.loop
+                                    ;; if it is a child loop, we do not exit a loop. if it is a loop different than
+                                    ;; b.loop and not a child loop, it must be a parent loop, thus we exit all loops
+                                    ;; between b.loop and succ.loop
                                     ;;
                                     ;; if we exit multiple loops immediately after each other, the bytecode parser
                                     ;; might generate loop exit nodes after another and the CFG will identify them
@@ -28062,7 +27998,7 @@ ZeroExtendNode'new-4
             (hash-map
                 #_"Block[]" :blocks (:reversePostOrder cfg)
                 #_"{Flags BitSet}" :flags {}
-                #_"BlockMap<NodeCost>" :costs (BlockMap'new-1 cfg)
+                #_"{Block NodeCost}" :costs {}
                 #_"{int [UseEntry]}" :usageMap (reduce #(assoc %1 (:id (:block %2)) (conj (vec (get %1 (:id (:block %2)))) %2)) {} (:uses tree))
             )
         )
@@ -28099,15 +28035,14 @@ ZeroExtendNode'new-4
      ; Returns the cost object associated with {@code block}. Might return nil if not set.
      ;;
     (defn #_"NodeCost" ConstantTree''getCost-2 [#_"ConstantTree" this, #_"Block" block]
-        (BlockMap''get-2 (:costs this), block)
+        (get (:costs this) block)
     )
 
     ;;;
      ; Sets the cost for a {@code block}.
      ;;
-    (defn #_"void" ConstantTree''setCost-3 [#_"ConstantTree" this, #_"Block" block, #_"NodeCost" cost]
-        (BlockMap''put-3 (:costs this), block, cost)
-        nil
+    (defn #_"this" ConstantTree''setCost-3 [#_"ConstantTree" this, #_"Block" block, #_"NodeCost" cost]
+        (assoc-in this [:costs block] cost)
     )
 
     ;;;
@@ -28142,7 +28077,7 @@ ZeroExtendNode'new-4
             (let [
                 #_"NodeCost" cost (NodeCost'new-3 (:probability block), (ConstantTree''getUsages-2 this, block), 1)
             ]
-                (ConstantTree''setCost-3 this, block, cost)
+                (§ ass! this (ConstantTree''setCost-3 this, block, cost))
                 cost
             )
         )
@@ -28267,10 +28202,10 @@ ZeroExtendNode'new-4
                                         )
                                         (do
                                             ;; insert the instruction at the beginning of the current block
-                                            (#_"ArrayList" .add (LIR''getLIRforBlock-2 (:lir this), block), 1, op)
+                                            (§ ass! (LIR''getLIRforBlock-2 (:lir this), block) (let [% (LIR''getLIRforBlock-2 (:lir this), block)] (apply vector (first %) op (next %))))
                                             ;; delete the instructions at the end of all predecessors
                                             (dotimes [#_"int" i n]
-                                                (§ ass! (nth (:edgeInstructionSeqences this) i) (pop (nth (:edgeInstructionSeqences this) i)))
+                                                (§ ass! this (update this :edgeInstructionSeqences update i pop))
                                             )
                                             (recur)
                                         )
@@ -28346,10 +28281,10 @@ ZeroExtendNode'new-4
                                             )
                                             (do
                                                 ;; insert the instruction at the end of the current block
-                                                (#_"ArrayList" .add (LIR''getLIRforBlock-2 (:lir this), block), insertAt, op)
+                                                (§ ass! (LIR''getLIRforBlock-2 (:lir this), block) (let [% (LIR''getLIRforBlock-2 (:lir this), block)] (catvec (subvec % 0 insertAt) [ op ] (subvec % insertAt))))
                                                 ;; delete the instructions at the beginning of all successors
                                                 (dotimes [#_"int" i n]
-                                                    (§ ass! (nth (:edgeInstructionSeqences this) i) (subvec (nth (:edgeInstructionSeqences this) i) 1))
+                                                    (§ ass! this (update this :edgeInstructionSeqences update i subvec 1))
                                                 )
                                                 (recur (inc insertAt))
                                             )
@@ -30804,7 +30739,7 @@ ZeroExtendNode'new-4
         (merge (Values'class.) (Fields'new-1 (:values mode))
             (hash-map
                 #_"int" :directCount (:directCount mode)
-                #_"{OperandFlag}*" :flags* (map :flags (:values mode))
+                #_"{OperandFlag}*" :flags* (mapv :flags (:values mode))
             )
         )
     )
@@ -31070,8 +31005,8 @@ ZeroExtendNode'new-4
                 #_"LIR" :lir lir
                 #_"StackInterval[]" :stackSlotMap stackSlotMap
                 #_"int" :maxOpId maxOpId
-                #_"BlockMap<BitSet>" :liveInMap (BlockMap'new-1 (:cfg lir))
-                #_"BlockMap<BitSet>" :liveOutMap (BlockMap'new-1 (:cfg lir))
+                #_"{Block BitSet}" :liveInMap {}
+                #_"{Block BitSet}" :liveOutMap {}
                 #_"{LIRInstruction}" :usePos #{}
             )
         )
@@ -31094,14 +31029,14 @@ ZeroExtendNode'new-4
             #_"BitSet" union (BitSet.)
         ]
             (doseq [#_"Block" succ (:successors block)]
-                (#_"BitSet" .or union, (BlockMap''get-2 (:liveInMap this), succ))
+                (#_"BitSet" .or union, (get (:liveInMap this) succ))
             )
             (let [
-                #_"BitSet" outSet (BlockMap''get-2 (:liveOutMap this), block)
+                #_"BitSet" outSet (get (:liveOutMap this) block)
             ]
                 ;; check if changed
                 (when-not (and (some? outSet) (= union outSet)) => false
-                    (BlockMap''put-3 (:liveOutMap this), block, union)
+                    (§ ass! this (assoc-in this [:liveOutMap block] union))
                     true
                 )
             )
@@ -31147,7 +31082,7 @@ ZeroExtendNode'new-4
             (let [
                 #_"[LIRInstruction]" ops (LIR''getLIRforBlock-2 (:lir this), block)
                 ;; get out set and mark intervals
-                #_"BitSet" outSet (BlockMap''get-2 (:liveOutMap this), block)
+                #_"BitSet" outSet (get (:liveOutMap this) block)
             ]
                 (FixPointIntervalBuilder''markOutInterval-3 this, outSet, (FixPointIntervalBuilder'getBlockEnd-1 ops))
 
@@ -31167,7 +31102,7 @@ ZeroExtendNode'new-4
                     (let [
                         #_"BitSet" inSet (:currentSet closure)
                     ]
-                        (BlockMap''put-3 (:liveInMap this), block, inSet)
+                        (§ ass! this (assoc-in this [:liveInMap block] inSet))
                         (FixPointIntervalBuilder''markInInterval-3 this, inSet, (FixPointIntervalBuilder'getBlockBegin-1 ops))
                     )
                 )
@@ -31189,7 +31124,7 @@ ZeroExtendNode'new-4
                 (#_"Deque" .add worklist, (nth blocks i))
             )
             (doseq [#_"Block" block (:reversePostOrder (:cfg (:lir this)))]
-                (BlockMap''put-3 (:liveInMap this), block, (BitSet.))
+                (§ ass! this (assoc-in this [:liveInMap block] (BitSet.)))
             )
             (while (seq worklist)
                 (FixPointIntervalBuilder''processBlock-3 this, (#_"Deque" .poll worklist), worklist)
@@ -33030,10 +32965,6 @@ ZeroExtendNode'new-4
 
     (defn #_"this" Graph''freeze-1 [#_"Graph" this]
         (assoc this :frozen true)
-    )
-
-    (defn #_"this" Graph''setLastSchedule-2 [#_"Graph" this, #_"ScheduleResult" result]
-        (assoc this :lastSchedule result)
     )
 
     #_unused
@@ -36899,7 +36830,7 @@ ZeroExtendNode'new-4
                  ; Map from block to LIRInstructions.
                  ; Note that we are using ArrayList instead of List to avoid interface dispatch.
                  ;;
-                #_"BlockMap<[LIRInstruction]>" :lirInstructions (BlockMap'new-1 cfg)
+                #_"{Block [LIRInstruction]}" :lirInstructions {}
                 ;;;
                  ; Determines if any of the parameters to the method are passed via the stack where the parameters
                  ; are located in the caller's frame.
@@ -36916,12 +36847,11 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"[LIRInstruction]" LIR''getLIRforBlock-2 [#_"LIR" this, #_"Block" block]
-        (BlockMap''get-2 (:lirInstructions this), block)
+        (get (:lirInstructions this) block)
     )
 
     (defn #_"this" LIR''setLIRforBlock-3 [#_"LIR" this, #_"Block" block, #_"[LIRInstruction]" ops]
-        (BlockMap''put-3 (:lirInstructions this), block, ops)
-        this
+        (assoc-in this [:lirInstructions block] ops)
     )
 
     (defn #_"this" LIR''setHasArgInCallerFrame-1 [#_"LIR" this]
@@ -37126,7 +37056,7 @@ ZeroExtendNode'new-4
     )
 
     ; @SuppressWarnings("try")
-    (defn #_"this" LIRBuilder''doBlock-4 [#_"LIRBuilder" this, #_"Block" block, #_"Graph" graph, #_"BlockMap<List<Node>>" blockMap]
+    (defn #_"this" LIRBuilder''doBlock-4 [#_"LIRBuilder" this, #_"Block" block, #_"Graph" graph, #_"{Block Node*}" blockMap]
         (try (§ with [#_"BlockScope" _ (LIRGenerator''getBlockScope-2 (:gen this), block)])
             (if (= block (ControlFlowGraph''getStartBlock-1 (:cfg (:lir (:res (:gen this))))))
                 (LIRBuilder''emitPrologue-2 this, graph)
@@ -37140,7 +37070,7 @@ ZeroExtendNode'new-4
                 )
             )
             (LIRBuilder''doBlockPrologue-2 this, block)
-            (doseq [#_"Node" node (BlockMap''get-2 blockMap, block)]
+            (doseq [#_"Node" node (get blockMap block)]
                 ;; => there can be cases in which the result of an instruction is already set before by other instructions
                 (when (and (satisfies? ValueNode node) (nil? (LIRBuilder''operand-2 this, node)) (not (LIRBuilder''peephole-2 this, node)))
                     (§ ass! this (assoc this :currentInstruction node))
@@ -37447,7 +37377,7 @@ ZeroExtendNode'new-4
     (defm LIRGenerationPhase LIRPhase
         (#_"void" LIRPhase'''run-3 [#_"LIRGenerationPhase" this, #_"LIRGenerationResult" res, #_"LIRGenerationContext" context]
             (doseq [#_"Block" block (:reversePostOrder (:cfg (:lir res)))]
-                (§ ass! (:nodeLirBuilder context) (LIRBuilder''doBlock-4 (:nodeLirBuilder context), block, (:graph context), (:blockToNodesMap (:schedule context))))
+                (§ ass! (:nodeLirBuilder context) (LIRBuilder''doBlock-4 (:nodeLirBuilder context), block, (:graph context), (:block->nodes (:schedule context))))
             )
             (LIRGenerator''beforeRegisterAllocation-1 (:lirGen context))
             nil
@@ -42056,30 +41986,26 @@ ZeroExtendNode'new-4
             (loop-when [#_"int" opId 0 #_"int" index 0 #_"ISeq" s (seq (LinearScan''sortedBlocks-1 (:allocator this)))] (some? s)
                 (let [
                     #_"Block" block (first s)
-                ]
-                    (LinearScan'''initBlockData-2 (:allocator this), block)
+                    _ (§ ass! (:allocator this) (LinearScan''initBlockData-2 (:allocator this), block))
+                    #_"[LIRInstruction]" ops (LIR''getLIRforBlock-2 (:lir (:allocator this)), block)
+                    [opId index]
+                        (loop-when [opId opId index index #_"int" i 0] (< i (count ops)) => [opId index]
+                            (let [
+                                #_"LIRInstruction" op (nth ops i)
+                            ]
+                                (§ ass! op (LIRInstruction''setId-2 op, opId))
 
-                    (let [
-                        #_"[LIRInstruction]" ops (LIR''getLIRforBlock-2 (:lir (:allocator this)), block)
-                        [opId index]
-                            (loop-when [opId opId index index #_"int" i 0] (< i (count ops)) => [opId index]
-                                (let [
-                                    #_"LIRInstruction" op (nth ops i)
-                                ]
-                                    (§ ass! op (LIRInstruction''setId-2 op, opId))
+                                (LinearScan''putOpIdMaps-4 (:allocator this), index, op, block)
 
-                                    (LinearScan''putOpIdMaps-4 (:allocator this), index, op, block)
+                                (LIRInstruction''visitEachTemp-2 op, setVariableConsumer)
+                                (LIRInstruction''visitEachOutput-2 op, setVariableConsumer)
 
-                                    (LIRInstruction''visitEachTemp-2 op, setVariableConsumer)
-                                    (LIRInstruction''visitEachOutput-2 op, setVariableConsumer)
-
-                                    ;; numbering of lirOps by two
-                                    (recur (+ opId 2) (inc index) (inc i))
-                                )
+                                ;; numbering of lirOps by two
+                                (recur (+ opId 2) (inc index) (inc i))
                             )
-                    ]
-                        (recur opId index (next s))
-                    )
+                        )
+                ]
+                    (recur opId index (next s))
                 )
             )
         )
@@ -42969,7 +42895,7 @@ ZeroExtendNode'new-4
                         #_"RegisterAttributes[]" :registerAttributes (#_"RegisterConfig" .getAttributesMap HotSpot'registerConfig)
                         #_"RegisterArray" :registers (#_"Architecture" .getRegisters (.arch HotSpot'target))
                         #_"MoveFactory" :moveFactory moveFactory
-                        #_"BlockMap<BlockData>" :blockData (BlockMap'new-1 (:cfg (:lir res)))
+                        #_"{Block BlockData}" :blockData {}
                         ;;;
                          ; List of blocks in linear-scan order. This is only correct as long as the CFG does not change.
                          ;;
@@ -43058,14 +42984,11 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"BlockData" LinearScan''getBlockData-2 [#_"LinearScan" this, #_"Block" block]
-        (BlockMap''get-2 (:blockData this), block)
+        (get (:blockData this) block)
     )
 
-    (defm LinearScan LinearScan
-        (#_"void" LinearScan'''initBlockData-2 [#_"LinearScan" this, #_"Block" block]
-            (BlockMap''put-3 (:blockData this), block, (BlockData'new-0))
-            nil
-        )
+    (defn #_"this" LinearScan''initBlockData-2 [#_"LinearScan" this, #_"Block" block]
+        (assoc-in this [:blockData block] (BlockData'new-0))
     )
 
     (def #_"fn boolean [Interval]" LinearScan'isPrecoloredInterval-1 #(instance? RegisterValue (:operand %)))
@@ -43585,11 +43508,11 @@ ZeroExtendNode'new-4
                             #_"BciBlock" block (nth (:blocks this) i)
                             #_"boolean" blockChanged (zero? iteration)
                             blockChanged
-                                (when (seq (:successors block)) => blockChanged
+                                (when (seq (:bciSuccessors block)) => blockChanged
                                     (let [
                                         #_"int" o'cardinality (LocalLiveness'''liveOutCardinality-2 this, (:id block))
                                     ]
-                                        (doseq [#_"BciBlock" sux (:successors block)]
+                                        (doseq [#_"BciBlock" sux (:bciSuccessors block)]
                                             (LocalLiveness'''propagateLiveness-3 this, (:id block), (:id sux))
                                         )
                                         (or blockChanged (not= o'cardinality (LocalLiveness'''liveOutCardinality-2 this, (:id block))))
@@ -45855,7 +45778,7 @@ ZeroExtendNode'new-4
                 (let [
                     #_"LoopsData" data (LoopsData'new-1 graph)
                 ]
-                    (doseq [#_"LoopEx" _loop (:loops data)]
+                    (doseq [#_"LoopEx" _loop (:loopExs data)]
                         (when (LoopPolicies'''shouldPeel-3 (:policies this), _loop, (:cfg data))
                             (LoopTransformations'peel-1 _loop)
                         )
@@ -45880,7 +45803,7 @@ ZeroExtendNode'new-4
                     (let [
                         #_"LoopsData" dataUnswitch (LoopsData'new-1 graph)
                         #_"boolean" unswitched?
-                            (loop-when [#_"ISeq" s (seq (:loops dataUnswitch))] (some? s) => false
+                            (loop-when [#_"ISeq" s (seq (:loopExs dataUnswitch))] (some? s) => false
                                 (let [
                                     #_"LoopEx" _loop (first s)
                                 ]
@@ -45936,7 +45859,7 @@ ZeroExtendNode'new-4
                         )
                     )
                 )
-                (doseq [#_"LoopEx" _loop (:loops loops) #_"LoopEndNode" loopEnd (LoopBeginNode''loopEnds-1 (LoopEx''loopBegin-1 _loop))]
+                (doseq [#_"LoopEx" _loop (:loopExs loops) #_"LoopEndNode" loopEnd (LoopBeginNode''loopEnds-1 (LoopEx''loopBegin-1 _loop))]
                     (loop-when [#_"Block" b (ControlFlowGraph''blockFor-2 (:cfg loops), loopEnd)] (not= b (:header (:loop _loop)))
                         (or
                             (loop-when [#_"ISeq" s (seq (Block''getNodes-1 b))] (some? s)
@@ -45985,23 +45908,17 @@ ZeroExtendNode'new-4
 (class-ns LoopsData []
     (defn #_"LoopsData" LoopsData'new-1 [#_"Graph" graph]
         (let [
+            #_"ControlFlowGraph" cfg (ControlFlowGraph'compute-5 graph, true, true, true, true)
             #_"LoopsData" this
                 (merge (LoopsData'class.)
                     (hash-map
-                        #_"ControlFlowGraph" :cfg (ControlFlowGraph'compute-5 graph, true, true, true, true)
-                        #_"List<LoopEx>" :loops (ArrayList.)
-                        #_"{LoopBeginNode LoopEx}" :loopBeginToEx {}
+                        #_"ControlFlowGraph" :cfg cfg
+                        #_"LoopEx*" :loopExs nil
+                        #_"{LoopBeginNode LoopEx}" :loopBeginToEx nil
                     )
                 )
-            _
-                (doseq [#_"Loop" _loop (:loops (:cfg this))]
-                    (let [
-                        #_"LoopEx" ex (LoopEx'new-2 _loop, this)
-                    ]
-                        (#_"List" .add (:loops this), ex)
-                        (§ ass! (:loopBeginToEx this) (assoc (:loopBeginToEx this) (LoopEx''loopBegin-1 ex) ex))
-                    )
-                )
+            this (assoc this :loopExs (mapv #(LoopEx'new-2 %, this) (:loops cfg)))
+            this (assoc this :loopBeginToEx (into {} (map #(vector (LoopEx''loopBegin-1 %) %) (:loopExs this))))
         ]
             this
         )
@@ -46012,11 +45929,11 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"LoopEx*" LoopsData''countedLoops-1 [#_"LoopsData" this]
-        (filter LoopEx''isCounted-1 (:loops this))
+        (filter LoopEx''isCounted-1 (:loopExs this))
     )
 
     (defn #_"void" LoopsData''detectedCountedLoops-1 [#_"LoopsData" this]
-        (doseq [#_"LoopEx" _loop (:loops this)]
+        (doseq [#_"LoopEx" _loop (:loopExs this)]
             (LoopEx''detectCounted-1 _loop)
         )
         nil
@@ -46026,7 +45943,7 @@ ZeroExtendNode'new-4
      ; Deletes any nodes created within the scope of this object that have no usages.
      ;;
     (defn #_"void" LoopsData''deleteUnusedNodes-1 [#_"LoopsData" this]
-        (doseq [#_"LoopEx" _loop (:loops this)]
+        (doseq [#_"LoopEx" _loop (:loopExs this)]
             (LoopEx''deleteUnusedNodes-1 _loop)
         )
         nil
@@ -46219,7 +46136,7 @@ ZeroExtendNode'new-4
         (merge (LoweringRound'class.)
             (hash-map
                 #_"LoweringPhase" :phase phase
-                #_"SchedulePhase" :schedulePhase (SchedulePhase'new-0)
+                #_"SchedulePhase" :schedulePhase (SchedulePhase'new-1 (if GraalOptions'optScheduleOutOfLoops :SchedulingStrategy'LATEST_OUT_OF_LOOPS :SchedulingStrategy'LATEST))
                 #_"ScheduleResult" :schedule nil
             )
         )
@@ -46246,7 +46163,7 @@ ZeroExtendNode'new-4
         ;; Lower the instructions of this block.
         (let [
             #_"LoweringTool" lowerer
-                (loop-when [lowerer (LoweringTool'new-4 (:phase this), startAnchor, activeGuards, (:beginNode block)) #_"ISeq" s (seq (ScheduleResult''nodesFor-2 (:schedule this), block))] (some? s) => lowerer
+                (loop-when [lowerer (LoweringTool'new-4 (:phase this), startAnchor, activeGuards, (:beginNode block)) #_"ISeq" s (seq (get (:block->nodes (:schedule this)) block))] (some? s) => lowerer
                     (let [
                         #_"Node" node (first s)
                     ]
@@ -46731,7 +46648,7 @@ ZeroExtendNode'new-4
                             (when (satisfies? VirtualObjectNode entry) => [materialized? entry]
                                 (let [
                                     #_"Block" predecessor (MergeProcessor''getPredecessor-2 this, i)
-                                    materialized? (or materialized? (PartialEscapeClosure''ensureMaterialized-5 (:peClosure this), (nth states i), (:oid entry), (:endNode predecessor), (BlockMap''get-2 (:blockEffects (:peClosure this)), predecessor)))
+                                    materialized? (or materialized? (PartialEscapeClosure''ensureMaterialized-5 (:peClosure this), (nth states i), (:oid entry), (:endNode predecessor), (get (:blockEffects (:peClosure this)) predecessor)))
                                     entry
                                         (when (ObjectState''isVirtual-1 (nth (:objectStates (nth states i)) object)) => entry
                                             (let [
@@ -46920,7 +46837,7 @@ ZeroExtendNode'new-4
                                 ;; we can materialize if not all inputs are "ensureVirtualized"
                                 (§ ass! (nth (:objectStates (nth states i)) (f'getObject-1 i)) (ObjectState''setEnsureVirtualized-2 (nth (:objectStates (nth states i)) (f'getObject-1 i)), false))
                             )
-                            (PartialEscapeClosure''ensureMaterialized-5 (:peClosure this), (nth states i), (f'getObject-1 i), (:endNode predecessor), (BlockMap''get-2 (:blockEffects (:peClosure this)), predecessor))
+                            (PartialEscapeClosure''ensureMaterialized-5 (:peClosure this), (nth states i), (f'getObject-1 i), (:endNode predecessor), (get (:blockEffects (:peClosure this)) predecessor))
                             (MergeProcessor''setPhiInput-4 this, materializedValuePhi, i, (:materializedValue (nth (:objectStates (nth states i)) (f'getObject-1 i))))
                         )
                     )
@@ -47050,7 +46967,7 @@ ZeroExtendNode'new-4
                                                 (§ ass! objectState (ObjectState''setEnsureVirtualized-2 objectState, false))
                                             )
                                             (or materialized?
-                                                (PartialEscapeClosure''ensureMaterialized-5 (:peClosure this), (nth states i), (:oid (nth objects i)), (:endNode predecessor), (BlockMap''get-2 (:blockEffects (:peClosure this)), predecessor))
+                                                (PartialEscapeClosure''ensureMaterialized-5 (:peClosure this), (nth states i), (:oid (nth objects i)), (:endNode predecessor), (get (:blockEffects (:peClosure this)) predecessor))
                                             )
                                         )
                                     )
@@ -47147,7 +47064,7 @@ ZeroExtendNode'new-4
                                                                                             ;; we can materialize if not all inputs are "ensureVirtualized"
                                                                                             (§ ass! obj (ObjectState''setEnsureVirtualized-2 obj, false))
                                                                                         )
-                                                                                        [(or materialized? (PartialEscapeClosure''ensureMaterialized-5 (:peClosure this), (nth states i), object, (:endNode predecessor), (BlockMap''get-2 (:blockEffects (:peClosure this)), predecessor))) (nth (:objectStates (nth states i)) object)]
+                                                                                        [(or materialized? (PartialEscapeClosure''ensureMaterialized-5 (:peClosure this), (nth states i), object, (:endNode predecessor), (get (:blockEffects (:peClosure this)) predecessor))) (nth (:objectStates (nth states i)) object)]
                                                                                     )
                                                                                 )
                                                                         ]
@@ -53790,7 +53707,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"this" CommitAllocationNode''addLocks-2 [#_"CommitAllocationNode" this, #_"MonitorIdNode*" monitorIds]
-        (#_"List" .addAll (:locks this), monitorIds)
+        (#_"List" .addAll (:locks this), monitorIds)
         (update this :lockIndexes conj (count (:locks this)))
     )
 
@@ -54108,7 +54025,7 @@ ZeroExtendNode'new-4
                                         ]
                                             (when (nth used i)
                                                 (§ ass! virtualObjects (conj virtualObjects virtualObject))
-                                                (§ ass! locks (into locks (CommitAllocationNode''getLocks-2 this, i)))
+                                                (§ ass! locks (into locks (CommitAllocationNode''getLocks-2 this, i)))
                                                 (§ ass! lockIndexes (conj lockIndexes (count locks)))
                                                 (§ ass! values (into values (#_"List" .subList (:values this), j, (+ j n))))
                                                 (§ ass! ensureVirtual (conj ensureVirtual (nth (:ensureVirtual this) i)))
@@ -54118,11 +54035,11 @@ ZeroExtendNode'new-4
                                     )
                             ]
                                 (#_"List" .clear (:virtualObjects this))
-                                (#_"List" .addAll (:virtualObjects this), virtualObjects)
+                                (#_"List" .addAll (:virtualObjects this), virtualObjects)
                                 (#_"List" .clear (:locks this))
-                                (#_"List" .addAll (:locks this), locks)
+                                (#_"List" .addAll (:locks this), locks)
                                 (#_"List" .clear (:values this))
-                                (#_"List" .addAll (:values this), values)
+                                (#_"List" .addAll (:values this), values)
                                 (§ ass! this (assoc this :lockIndexes lockIndexes))
                                 (§ ass! this (assoc this :ensureVirtual ensureVirtual))
                             )
@@ -63665,7 +63582,7 @@ ZeroExtendNode'new-4
                                     #_"LIRInstruction" ins (nth ops i)
                                     ins
                                         (when (and (satisfies? ImplicitNullCheck ins) (satisfies? NullCheck ins') (ImplicitNullCheck'''makeNullCheckFor-3 ins, (NullCheck'''getCheckedValue-1 ins'), (.implicitNullCheckLimit HotSpot'target))) => ins
-                                            (#_"ArrayList" .remove ops, (dec i))
+                                            (§ ass! ops (catvec (subvec ops 0 (dec i)) (subvec ops i)))
                                             (if (< i (count ops)) (nth ops i) ins)
                                         )
                                 ]
@@ -64827,7 +64744,7 @@ ZeroExtendNode'new-4
                 #_"{Node StampElement}" :stampMap {}
                 #_"[Node]" :undo []
                 #_"ScheduleResult" :schedule schedule
-                #_"BlockMap<Integer>" :blockActionStart (BlockMap'new-1 (:cfg schedule))
+                #_"{Block Integer}" :blockActionStart {}
                 #_"{MergeNode {ValueNode Stamp}}" :endMaps {}
             )
         )
@@ -65036,8 +64953,8 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"Block" RawConditionalEliminationVisitor'getBlock-2 [#_"ValueNode" node, #_"{Node Block}" nodeToBlockMap]
-        (get nodeToBlockMap (if (satisfies? PhiNode node) (:merge node) node))
+    (defn- #_"Block" RawConditionalEliminationVisitor'getBlock-2 [#_"ValueNode" node, #_"{Node Block}" node->block]
+        (get node->block (if (satisfies? PhiNode node) (:merge node) node))
     )
 
     (defn- #_"this" RawConditionalEliminationVisitor''processEnd-2 [#_"RawConditionalEliminationVisitor" this, #_"EndNode" node]
@@ -65046,8 +64963,8 @@ ZeroExtendNode'new-4
         ]
             (when (satisfies? MergeNode merge) => this
                 (let [
-                    #_"{Node Block}" nodeToBlockMap (:nodeToBlockMap (:schedule this))
-                    #_"Block" mergeBlock (get nodeToBlockMap merge)
+                    #_"{Node Block}" node->block (:node->block (:schedule this))
+                    #_"Block" mergeBlock (get node->block merge)
                     #_"Block" mergeBlockDominator (:dominator mergeBlock)
                     #_"{ValueNode Stamp}" currentEndMap (get (:endMaps this) merge)
                 ]
@@ -65076,17 +64993,17 @@ ZeroExtendNode'new-4
                             (let [
                                 #_"int" lastMark (count (:undo this))
                             ]
-                                (loop-when [#_"Block" currentBlock (get nodeToBlockMap node)] (not= currentBlock mergeBlockDominator)
+                                (loop-when [#_"Block" currentBlock (get node->block node)] (not= currentBlock mergeBlockDominator)
                                     (let [
-                                        #_"int" mark (BlockMap''get-2 (:blockActionStart this), currentBlock)
+                                        #_"int" mark (get (:blockActionStart this) currentBlock)
                                     ]
                                         (loop-when [#_"int" i (dec lastMark)] (<= mark i)
                                             (let [
                                                 #_"ValueNode" nodeWithNewStamp (nth (:undo this) i)
                                             ]
-                                                (when-not (or (Node''isDeleted-1 nodeWithNewStamp) (satisfies? LogicNode nodeWithNewStamp) (satisfies? ConstantNode nodeWithNewStamp) (not (contains? nodeToBlockMap nodeWithNewStamp)))
+                                                (when-not (or (Node''isDeleted-1 nodeWithNewStamp) (satisfies? LogicNode nodeWithNewStamp) (satisfies? ConstantNode nodeWithNewStamp) (not (contains? node->block nodeWithNewStamp)))
                                                     (let [
-                                                        #_"Block" block (RawConditionalEliminationVisitor'getBlock-2 nodeWithNewStamp, nodeToBlockMap)
+                                                        #_"Block" block (RawConditionalEliminationVisitor'getBlock-2 nodeWithNewStamp, node->block)
                                                     ]
                                                         (when (or (nil? block) (<= (:id block) (:id mergeBlockDominator)))
                                                             ;; Node with new stamp in path to the merge block dominator and that
@@ -65159,8 +65076,8 @@ ZeroExtendNode'new-4
             (let [
                 #_"int" mark (count (:undo this))
             ]
-                (BlockMap''put-3 (:blockActionStart this), block, mark)
-                (doseq [#_"Node" node (BlockMap''get-2 (:blockToNodesMap (:schedule this)), block)]
+                (§ ass! this (assoc-in this [:blockActionStart block] mark))
+                (doseq [#_"Node" node (get (:block->nodes (:schedule this)) block)]
                     (when (Node''isAlive-1 node)
                         (§ ass! this (RawConditionalEliminationVisitor''processNode-2 this, node))
                     )
@@ -65320,7 +65237,7 @@ ZeroExtendNode'new-4
                 (let [
                     #_"LoopsData" dataReassociate (LoopsData'new-1 graph)
                     #_"boolean" changed?
-                        (loop-when-recur [changed? false #_"ISeq" s (seq (:loops dataReassociate))]
+                        (loop-when-recur [changed? false #_"ISeq" s (seq (:loopExs dataReassociate))]
                                         (some? s)
                                         [(or changed? (LoopEx''reassociateInvariants-1 (first s))) (next s)]
                                     => changed?
@@ -65847,22 +65764,21 @@ ZeroExtendNode'new-4
 (class-ns ScheduleInstance []
     (def- #_"double" ScheduleInstance'IMPLICIT_NULL_CHECK_OPPORTUNITY_PROBABILITY_FACTOR 2)
 
-    (defn #_"ScheduleInstance" ScheduleInstance'new-0 []
-        (ScheduleInstance'new-1 nil)
-    )
-
-    (defn #_"ScheduleInstance" ScheduleInstance'new-1 [#_"ControlFlowGraph" cfg]
+    (defn #_"ScheduleInstance" ScheduleInstance'new-3 [#_"ControlFlowGraph" cfg, #_"Graph" graph, #_"SchedulingStrategy" strategy]
         (merge (ScheduleInstance'class.)
             (hash-map
-                #_"ControlFlowGraph" :cfg cfg
-                #_"BlockMap<List<Node>>" :blockToNodesMap nil
-                #_"{Node Block}" :nodeToBlockMap nil
+                #_"ControlFlowGraph" :cfg (or cfg (ControlFlowGraph'compute-5 graph, true, true, true, false))
+                #_"Graph" :graph graph
+                #_"SchedulingStrategy" :strategy strategy
+                #_"NodeBitMap" :agenda (NodeBitMap'new-1 graph)
+                #_"{Block Node*}" :block->nodes nil
+                #_"{Node Block}" :node->block nil
             )
         )
     )
 
-    (defn- #_"Node*" ScheduleInstance'processStackPhi-4 [#_"Node*" stack, #_"PhiNode" phi, #_"{Node MicroBlock}" mapping, #_"NodeBitMap" visited]
-        (when (NodeBitMap''checkAndMarkInc-2 visited, phi) => stack
+    (defn- #_"Node*" ScheduleInstance'processStackPhi-4 [#_"Node*" stack, #_"PhiNode" phi, #_"{Node MicroBlock}" mapping, #_"NodeBitMap" agenda]
+        (when (NodeBitMap''checkAndMarkInc-2 agenda, phi) => stack
             (let [
                 _ (§ ass! mapping (assoc mapping phi (get mapping (:merge phi))))
             ]
@@ -65880,8 +65796,8 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"Node*" ScheduleInstance'processStackProxy-4 [#_"Node*" stack, #_"ProxyNode" proxy, #_"{Node MicroBlock}" mapping, #_"NodeBitMap" visited]
-        (when (NodeBitMap''checkAndMarkInc-2 visited, proxy) => stack
+    (defn- #_"Node*" ScheduleInstance'processStackProxy-4 [#_"Node*" stack, #_"ProxyNode" proxy, #_"{Node MicroBlock}" mapping, #_"NodeBitMap" agenda]
+        (when (NodeBitMap''checkAndMarkInc-2 agenda, proxy) => stack
             (let [
                 _ (§ ass! mapping (assoc mapping proxy (get mapping (:loopExit proxy))))
                 #_"Node" input (:value proxy)
@@ -65915,21 +65831,21 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"void" ScheduleInstance'processStack-4 [#_"Node" node, #_"MicroBlock" start, #_"{Node MicroBlock}" mapping, #_"NodeBitMap" visited]
+    (defn- #_"void" ScheduleInstance'processStack-4 [#_"Node" node, #_"MicroBlock" start, #_"{Node MicroBlock}" mapping, #_"NodeBitMap" agenda]
         (loop [#_"Node*" stack (list node)]
             (let [
                 node (first stack)
                 stack
                     (condp satisfies? node
-                        PhiNode   (ScheduleInstance'processStackPhi-4 (next stack), node, mapping, visited)
-                        ProxyNode (ScheduleInstance'processStackProxy-4 (next stack), node, mapping, visited)
+                        PhiNode   (ScheduleInstance'processStackPhi-4 (next stack), node, mapping, agenda)
+                        ProxyNode (ScheduleInstance'processStackProxy-4 (next stack), node, mapping, agenda)
                         (when (nil? (get mapping node)) => (next stack)
                             (let [
                                 #_"MicroBlock" earliest (ScheduleInstance'processInputs-4 start, stack, node, mapping)
                             ]
                                 (when (some? earliest) => stack ;; We need to delay until inputs are processed.
                                     ;; Can immediately process and pop.
-                                    (NodeBitMap''checkAndMarkInc-2 visited, node)
+                                    (NodeBitMap''checkAndMarkInc-2 agenda, node)
                                     (§ ass! mapping (assoc mapping node earliest))
                                     (§ ass! earliest (MicroBlock''add-2 earliest, node))
                                     (next stack)
@@ -65944,65 +65860,64 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"void" ScheduleInstance'processNodes-4 [#_"Node*" nodes, #_"MicroBlock" start, #_"{Node MicroBlock}" mapping, #_"NodeBitMap" visited]
+    (defn- #_"void" ScheduleInstance'processNodes-4 [#_"Node*" nodes, #_"MicroBlock" start, #_"{Node MicroBlock}" mapping, #_"NodeBitMap" agenda]
         (doseq [#_"Node" node nodes]
             (when (nil? (get mapping node))
-                (ScheduleInstance'processStack-4 node, start, mapping, visited)
+                (ScheduleInstance'processStack-4 node, start, mapping, agenda)
             )
         )
         nil
     )
 
-    (defn- #_"void" ScheduleInstance'scheduleEarliestIterative-6 [#_"ControlFlowGraph" cfg, #_"BlockMap<List<Node>>" blockToNodes, #_"{Node Block}" nodeToBlock, #_"NodeBitMap" visited, #_"Graph" graph, #_"boolean" withGuardOrder]
+    (defn- #_"[this {Block Node*} {Node Block}]" ScheduleInstance''scheduleEarliestIterative-1 [#_"ScheduleInstance" this]
         (let [
-            #_"{Node MicroBlock}" mapping {}
             ;; Initialize with fixed nodes.
-            [#_"MicroBlock" start #_"int" nextId]
-                (loop-when [start nil nextId 1 #_"ISeq" s (seq (:reversePostOrder cfg))] (some? s) => [start nextId]
+            [#_"MicroBlock" start #_"{Node MicroBlock}" mapping]
+                (loop-when [start nil mapping {} #_"int" i 1 #_"ISeq" s (seq (:reversePostOrder (:cfg this)))] (some? s) => [start mapping]
                     (let [
                         #_"Block" block (first s)
-                        [start nextId]
-                            (loop-when [start start nextId nextId #_"ISeq" s (seq (AbstractBeginNode''getBlockNodes-1 (:beginNode block)))] (some? s) => [start nextId]
+                        [start mapping i]
+                            (loop-when [start start mapping mapping i i #_"ISeq" s (seq (AbstractBeginNode''getBlockNodes-1 (:beginNode block)))] (some? s) => [start mapping i]
                                 (let [
                                     #_"FixedNode" node (first s)
-                                    #_"MicroBlock" microBlock (MicroBlock'new-1 nextId)
+                                    #_"MicroBlock" microBlock (MicroBlock'new-1 i)
+                                    mapping (assoc mapping node microBlock)
                                 ]
-                                    (§ ass! mapping (assoc mapping node microBlock))
-                                    (NodeBitMap''checkAndMarkInc-2 visited, node)
-                                    (recur (or start microBlock) (inc nextId) (next s))
+                                    (NodeBitMap''checkAndMarkInc-2 (:agenda this), node)
+                                    (recur (or start microBlock) mapping (inc i) (next s))
                                 )
                             )
                     ]
-                        (recur start nextId (next s))
+                        (recur start mapping i (next s))
                     )
                 )
         ]
-            (when (GuardsStage'allowsFloatingGuards-1 (:guardsStage graph))
+            (when (GuardsStage'allowsFloatingGuards-1 (:guardsStage (:graph this)))
                 (let [
-                    #_"GuardNode*" guards (Graph''getNodes-2 graph, GuardNode)
+                    #_"GuardNode*" guards (Graph''getNodes-2 (:graph this), GuardNode)
                 ]
                     (when (seq guards)
                         ;; Now process guards.
-                        (when (and GraalOptions'guardPriorities withGuardOrder) => (ScheduleInstance'processNodes-4 guards, start, mapping, visited)
+                        (when (and GraalOptions'guardPriorities (= (:strategy this) :SchedulingStrategy'EARLIEST_WITH_GUARD_ORDER)) => (ScheduleInstance'processNodes-4 guards, start, mapping, (:agenda this))
                             ;; 'EnumMap.values' returns values in "natural" key order.
                             (doseq [#_"GuardNode*" guards' (vals (reduce #(let [#_"GuardPriority" p (StaticDeoptimizingNode'''computePriority-1 %2)] (assoc %1 p (conj (vec (get %1 p)) %2))) (sorted-map) guards))]
-                                (ScheduleInstance'processNodes-4 guards', start, mapping, visited)
+                                (ScheduleInstance'processNodes-4 guards', start, mapping, (:agenda this))
                             )
-                            (GuardOrder'resortGuards-2 graph, mapping)
+                            (GuardOrder'resortGuards-2 (:graph this), mapping)
                         )
                     )
                 )
             )
             ;; Now process inputs of fixed nodes.
-            (doseq [#_"Block" b (:reversePostOrder cfg) #_"FixedNode" n (AbstractBeginNode''getBlockNodes-1 (:beginNode b))]
-                (ScheduleInstance'processNodes-4 (Node''inputs-1 n), start, mapping, visited)
+            (doseq [#_"Block" b (:reversePostOrder (:cfg this)) #_"FixedNode" n (AbstractBeginNode''getBlockNodes-1 (:beginNode b))]
+                (ScheduleInstance'processNodes-4 (Node''inputs-1 n), start, mapping, (:agenda this))
             )
-            (when (< (:counter visited) (Graph''getNodeCount-1 graph))
+            (when (< (:counter (:agenda this)) (Graph''getNodeCount-1 (:graph this)))
                 ;; Visit back input edges of loop phis.
                 (loop []
                     (let [
                         [#_"boolean" unmarked? #_"boolean" changed?]
-                            (loop-when [unmarked? false changed? false #_"ISeq" s (seq (Graph''getNodes-2 graph, LoopBeginNode))] (some? s) => [unmarked? changed?]
+                            (loop-when [unmarked? false changed? false #_"ISeq" s (seq (Graph''getNodes-2 (:graph this), LoopBeginNode))] (some? s) => [unmarked? changed?]
                                 (let [
                                     #_"LoopBeginNode" loopBegin (first s)
                                     [unmarked? changed?]
@@ -66010,13 +65925,13 @@ ZeroExtendNode'new-4
                                             (let [
                                                 #_"PhiNode" phi (first s)
                                                 [unmarked? changed?]
-                                                    (when (NodeBitMap''isMarked-2n visited, phi) => [true changed?]
+                                                    (when (NodeBitMap''isMarked-2n (:agenda this), phi) => [true changed?]
                                                         (loop-when [unmarked? unmarked? changed? changed? #_"int" i 0] (< i (:nextEndIndex loopBegin)) => [unmarked? changed?]
                                                             (let [
                                                                 #_"Node" node (PhiNode''valueAt-2i phi, (+ i (AbstractMergeNode''forwardEndCount-1 loopBegin)))
                                                                 changed?
                                                                     (when (and (some? node) (nil? (get mapping node))) => changed?
-                                                                        (ScheduleInstance'processStack-4 node, start, mapping, visited)
+                                                                        (ScheduleInstance'processStack-4 node, start, mapping, (:agenda this))
                                                                         true
                                                                     )
                                                             ]
@@ -66039,46 +65954,59 @@ ZeroExtendNode'new-4
                 )
             )
             ;; Check for dead nodes.
-            (when (< (:counter visited) (Graph''getNodeCount-1 graph))
-                (doseq [#_"Node" node (Graph''getNodes-1 graph)]
-                    (when-not (NodeBitMap''isMarked-2n visited, node)
+            (when (< (:counter (:agenda this)) (Graph''getNodeCount-1 (:graph this)))
+                (doseq [#_"Node" node (Graph''getNodes-1 (:graph this))]
+                    (when-not (NodeBitMap''isMarked-2n (:agenda this), node)
                         (Node''clearInputs-1 node)
                         (Node''markDeleted-1 node)
                     )
                 )
             )
-            (doseq [#_"Block" block (:reversePostOrder cfg)]
-                (let [
-                    #_"FixedNode" fixedNode (:endNode block)
-                ]
-                    (when (satisfies? ControlSplitNode fixedNode)
+            (let [
+                mapping
+                    (loop-when [mapping mapping #_"ISeq" s (seq (:reversePostOrder (:cfg this)))] (some? s) => mapping
                         (let [
-                            #_"AbstractBeginNode" primarySuccessor (ControlSplitNode'''getPrimarySuccessor-1 fixedNode)
+                            #_"FixedNode" fixedNode (:endNode (first s))
+                            mapping
+                                (when (satisfies? ControlSplitNode fixedNode) => mapping
+                                    (let [
+                                        #_"AbstractBeginNode" primarySuccessor (ControlSplitNode'''getPrimarySuccessor-1 fixedNode)
+                                    ]
+                                        (when (some? primarySuccessor) => mapping
+                                            (update mapping fixedNode MicroBlock''prependChildrenTo-2 (get mapping primarySuccessor))
+                                        )
+                                    )
+                                )
                         ]
-                            (when (some? primarySuccessor)
-                                (§ ass! (get mapping fixedNode) (MicroBlock''prependChildrenTo-2 (get mapping fixedNode), (get mapping primarySuccessor)))
-                            )
+                            (recur mapping (next s))
                         )
                     )
-                )
-            )
-            (doseq [#_"Block" block (:reversePostOrder cfg)]
-                (let [
-                    #_"ArrayList<Node>" nodes (ArrayList.)
-                ]
-                    (doseq [#_"FixedNode" node (AbstractBeginNode''getBlockNodes-1 (:beginNode block))]
-                        (§ ass! nodeToBlock (assoc nodeToBlock node block))
-                        (#_"ArrayList" .add nodes, node)
-                        (loop-when-recur [#_"NodeEntry" _next (:head (get mapping node))] (some? _next) [(:next _next)]
-                            (§ ass! nodeToBlock (assoc nodeToBlock (:node _next) block))
-                            (#_"ArrayList" .add nodes, (:node _next))
+                [#_"{Node Block}" node->block #_"{Block Node*}" block->nodes]
+                    (loop-when [node->block {} block->nodes {} #_"ISeq" s (seq (:reversePostOrder (:cfg this)))] (some? s) => [node->block block->nodes]
+                        (let [
+                            #_"Block" block (first s)
+                            [node->block #_"Node*" nodes]
+                                (loop-when [node->block node->block nodes nil #_"ISeq" s' (seq (AbstractBeginNode''getBlockNodes-1 (:beginNode block)))] (some? s') => [node->block nodes]
+                                    (let [
+                                        #_"FixedNode" node (first s')
+                                        [node->block nodes]
+                                            (loop-when-recur [node->block (assoc node->block node block) nodes (conj (vec nodes) node) #_"NodeEntry" e (:head (get mapping node))]
+                                                             (some? e)
+                                                             [(assoc node->block (:node e) block) (conj (vec nodes) (:node e)) (:next e)]
+                                                          => [node->block nodes]
+                                            )
+                                    ]
+                                        (recur node->block nodes (next s'))
+                                    )
+                                )
+                        ]
+                            (recur node->block (assoc block->nodes block nodes) (next s))
                         )
                     )
-                    (BlockMap''put-3 blockToNodes, block, nodes)
-                )
+            ]
+                [this block->nodes node->block]
             )
         )
-        nil
     )
 
     (defn- #_"void" ScheduleInstance'fillKillSet-2 [#_"LocationSet" killed, #_"Node*" nodes]
@@ -66184,41 +66112,39 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"boolean" ScheduleInstance'isImplicitNullOpportunity-2 [#_"FloatingReadNode" floatingReadNode, #_"Block" block]
+    (defn- #_"boolean" ScheduleInstance'isImplicitNullOpportunity-2 [#_"FloatingReadNode" floatingRead, #_"Block" block]
         (let [
             #_"Node" pred (:predecessor (:beginNode block))
         ]
             (and (satisfies? IfNode pred) (satisfies? IsNullNode (:logic pred))
-                (= (ScheduleInstance'getUnproxifiedUncompressed-1 (AddressNode'''getBase-1 (Access'''getAddress-1 floatingReadNode)))
+                (= (ScheduleInstance'getUnproxifiedUncompressed-1 (AddressNode'''getBase-1 (Access'''getAddress-1 floatingRead)))
                    (ScheduleInstance'getUnproxifiedUncompressed-1 (Unary'''getValue-1 (:logic pred)))
                 )
             )
         )
     )
 
-    (defn- #_"void" ScheduleInstance'selectLatestBlock-7 [#_"Node" currentNode, #_"Block" currentBlock, #_"Block" latestBlock, #_"{Node Block}" currentNodeMap, #_"BlockMap<ArrayList<FloatingReadNode>>" watchListMap, #_"LocationIdentity" constrainingLocation, #_"BlockMap<List<Node>>" latestBlockToNodesMap]
-        (when-not (= currentBlock latestBlock)
-            (§ ass! currentNodeMap (assoc currentNodeMap currentNode latestBlock))
-
-            (when (and (some? constrainingLocation) (Block''canKill-2 latestBlock, constrainingLocation))
-                (when (nil? (BlockMap''get-2 watchListMap, latestBlock))
-                    (BlockMap''put-3 watchListMap, latestBlock, (ArrayList.))
+    (defn- #_"[{Block Node*} {Block FloatingReadNode*}]" ScheduleInstance'selectLatestBlock-7 [#_"Node" node, #_"Block" earliest, #_"Block" latest, #_"{Node Block}" node->block, #_"{Block Node*}" block->nodes, #_"{Block FloatingReadNode*}" watchMap, #_"LocationIdentity" location]
+        (let [
+            watchMap
+                (when-not (= earliest latest) => watchMap
+                    (§ ass! node->block (assoc node->block node latest))
+                    (when (and (some? location) (Block''canKill-2 latest, location)) => watchMap
+                        (update watchMap latest #(conj (vec %) (§ cast #_"FloatingReadNode" node)))
+                    )
                 )
-                (#_"ArrayList" .add (BlockMap''get-2 watchListMap, latestBlock), (§ cast #_"FloatingReadNode" currentNode))
-            )
+        ]
+            [(update block->nodes latest #(conj (vec %) node)) watchMap]
         )
-
-        (#_"List" .add (BlockMap''get-2 latestBlockToNodesMap, latestBlock), currentNode)
-        nil
     )
 
-    (defn- #_"void" ScheduleInstance'calcLatestBlock-8 [#_"Block" earliest, #_"SchedulingStrategy" strategy, #_"Node" node, #_"{Node Block}" nodeMap, #_"LocationIdentity" constrainingLocation, #_"BlockMap<ArrayList<FloatingReadNode>>" watchListMap, #_"BlockMap<List<Node>>" latestBlockToNodesMap, #_"NodeBitMap" visited]
+    (defn- #_"[{Block Node*} {Block FloatingReadNode*}]" ScheduleInstance'calcLatestBlock-7 [#_"Node" node, #_"Block" earliest, #_"{Node Block}" node->block, #_"{Block Node*}" block->nodes, #_"{Block FloatingReadNode*}" watchMap, #_"SchedulingStrategy" strategy, #_"LocationIdentity" location]
         (let [
             #_"Block" latest
                 (when (Node''hasUsages-1 node) => earliest
                     (let [
                         latest
-                            (loop-when-recur [latest nil #_"ISeq" s (seq (:nodeUsages node))] (some? s) [(ScheduleInstance'calcBlockForUsage-4 node, (first s), latest, nodeMap) (next s)] => latest)
+                            (loop-when-recur [latest nil #_"ISeq" s (seq (:nodeUsages node))] (some? s) [(ScheduleInstance'calcBlockForUsage-4 node, (first s), latest, node->block) (next s)] => latest)
                         latest
                             (when (any = strategy :SchedulingStrategy'FINAL_SCHEDULE :SchedulingStrategy'LATEST_OUT_OF_LOOPS) => latest
                                 (loop-when [latest latest #_"Block" block latest] (and (< (Block''getLoopDepth-1 earliest) (Block''getLoopDepth-1 block)) (not= block (:dominator earliest))) => latest
@@ -66233,33 +66159,28 @@ ZeroExtendNode'new-4
                                 )
                             )
                     ]
-                        (when (and (not= latest earliest) (not= latest (:dominator earliest)) (some? constrainingLocation)) => latest
-                            (ScheduleInstance'checkKillsBetween-3 earliest, latest, constrainingLocation)
+                        (when (and (not= latest earliest) (not= latest (:dominator earliest)) (some? location)) => latest
+                            (ScheduleInstance'checkKillsBetween-3 earliest, latest, location)
                         )
                     )
                 )
             ? (and (not= latest earliest) (satisfies? FloatingReadNode node) (ScheduleInstance'isImplicitNullOpportunity-2 node, earliest) (< (:probability earliest) (* (:probability latest) ScheduleInstance'IMPLICIT_NULL_CHECK_OPPORTUNITY_PROBABILITY_FACTOR)))
         ]
-            (ScheduleInstance'selectLatestBlock-7 node, earliest, (if ? earliest latest), nodeMap, watchListMap, constrainingLocation, latestBlockToNodesMap)
+            (ScheduleInstance'selectLatestBlock-7 node, earliest, (if ? earliest latest), node->block, block->nodes, watchMap, location)
         )
-        nil
     )
 
-    (defn- #_"BlockMap<ArrayList<FloatingReadNode>>" ScheduleInstance''calcLatestBlocks-6 [#_"ScheduleInstance" this, #_"SchedulingStrategy" strategy, #_"{Node Block}" currentNodeMap, #_"BlockMap<List<Node>>" earliestBlockToNodesMap, #_"NodeBitMap" visited, #_"BlockMap<List<Node>>" latestBlockToNodesMap]
-        (let [
-            #_"BlockMap<ArrayList<FloatingReadNode>>" watchListMap (BlockMap'new-1 (:cfg this))
-            #_"Block[]" reversePostOrder (:reversePostOrder (:cfg this))
-        ]
-            (loop-when-recur [#_"int" j (dec (count reversePostOrder))] (<= 0 j) [(dec j)]
-                (let [
-                    #_"Block" block (nth reversePostOrder j)
-                    #_"List<Node>" blockToNodes (BlockMap''get-2 earliestBlockToNodesMap, block)
-                ]
-                    (loop-when [#_"LocationSet" killed nil #_"int" i' (count blockToNodes) #_"int" i (dec i')] (<= 0 i)
+    (defn- #_"[this {Block Node*} {Block FloatingReadNode*}]" ScheduleInstance''calcLatestBlocks-3 [#_"ScheduleInstance" this, #_"{Block Node*}" earliest, #_"{Node Block}" node->block]
+        (loop-when [#_"{Block Node*}" latest {} #_"{Block FloatingReadNode*}" watchMap {} #_"int" j (dec (count (:reversePostOrder (:cfg this))))] (<= 0 j) => [this latest watchMap]
+            (let [
+                #_"Block" block (nth (:reversePostOrder (:cfg this)) j)
+                #_"Node*" nodes (get earliest block)
+                [latest watchMap]
+                    (loop-when [latest latest watchMap watchMap #_"LocationSet" killed nil #_"int" i' (count nodes) #_"int" i (dec i')] (<= 0 i) => [latest watchMap]
                         (let [
-                            #_"Node" node (nth blockToNodes i)
-                            [killed i']
-                                (when-not (satisfies? FixedNode node) => [killed i'] ;; For these nodes, the earliest is at the same time the latest block.
+                            #_"Node" node (nth nodes i)
+                            [latest watchMap killed i']
+                                (when-not (satisfies? FixedNode node) => [latest watchMap killed i'] ;; For these nodes, the earliest is at the same time the latest block.
                                     (let [
                                         [killed i' #_"LocationIdentity" constrainingLocation #_"Block" latestBlock]
                                             (when (satisfies? FloatingReadNode node) => [killed i' nil nil]
@@ -66276,7 +66197,7 @@ ZeroExtendNode'new-4
                                                                     (let [
                                                                         killed (or killed (LocationSet'new-0))
                                                                     ]
-                                                                        (ScheduleInstance'fillKillSet-2 killed, (#_"List" .subList blockToNodes, (inc i), i'))
+                                                                        (ScheduleInstance'fillKillSet-2 killed, (subvec (vec nodes) (inc i) i'))
                                                                         ;; Earliest block kills location => we need to stay within earliest block.
                                                                         [killed i (when (LocationSet''contains-2 killed, location) block)]
                                                                     )
@@ -66287,31 +66208,32 @@ ZeroExtendNode'new-4
                                                     )
                                                 )
                                             )
+                                        [latest watchMap]
+                                            (if (nil? latestBlock)
+                                                ;; We are not constraint within earliest block => calculate optimized schedule.
+                                                (ScheduleInstance'calcLatestBlock-7 node, block, node->block, latest, watchMap, (:strategy this), constrainingLocation)
+                                                (ScheduleInstance'selectLatestBlock-7 node, block, latestBlock, node->block, latest, watchMap, constrainingLocation)
+                                            )
                                     ]
-                                        (if (nil? latestBlock)
-                                            ;; We are not constraint within earliest block => calculate optimized schedule.
-                                            (ScheduleInstance'calcLatestBlock-8 block, strategy, node, currentNodeMap, constrainingLocation, watchListMap, latestBlockToNodesMap, visited)
-                                            (ScheduleInstance'selectLatestBlock-7 node, block, latestBlock, currentNodeMap, watchListMap, constrainingLocation, latestBlockToNodesMap)
-                                        )
-                                        [killed i']
+                                        [latest watchMap killed i']
                                     )
                                 )
                         ]
-                            (recur killed i' (dec i))
+                            (recur latest watchMap killed i' (dec i))
                         )
                     )
-                )
+            ]
+                (recur latest watchMap (dec j))
             )
-            watchListMap
         )
     )
 
-    (defn- #_"void" ScheduleInstance'sortIntoList-6 [#_"Node" node, #_"Block" block, #_"ArrayList<Node>" result, #_"{Node Block}" nodeMap, #_"NodeBitMap" unprocessed, #_"Node" excludeNode]
+    (defn- #_"void" ScheduleInstance'sortIntoList-6 [#_"Node" node, #_"Block" block, #_"ArrayList<Node>" result, #_"{Node Block}" node->block, #_"NodeBitMap" agenda, #_"Node" exclude]
         (when-not (satisfies? PhiNode node)
-            (NodeBitMap''clear-2 unprocessed, node)
+            (NodeBitMap''clear-2 agenda, node)
             (doseq [#_"Node" input (Node''inputs-1 node)]
-                (when (and (= (get nodeMap input) block) (NodeBitMap''isMarked-2n unprocessed, input) (not= input excludeNode))
-                    (ScheduleInstance'sortIntoList-6 input, block, result, nodeMap, unprocessed, excludeNode)
+                (when (and (= (get node->block input) block) (NodeBitMap''isMarked-2n agenda, input) (not= input exclude))
+                    (ScheduleInstance'sortIntoList-6 input, block, result, node->block, agenda, exclude)
                 )
             )
             (when-not (satisfies? ProxyNode node) ;; skip proxy nodes
@@ -66321,48 +66243,46 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"boolean" ScheduleInstance'isFixedEnd-1 [#_"FixedNode" endNode]
-        (or (satisfies? ControlSplitNode endNode) (satisfies? ControlSinkNode endNode) (satisfies? AbstractEndNode endNode))
+    (defn- #_"boolean" ScheduleInstance'isFixedEnd-1 [#_"FixedNode" end]
+        (or (satisfies? ControlSplitNode end) (satisfies? ControlSinkNode end) (satisfies? AbstractEndNode end))
     )
 
-    (defn- #_"void" ScheduleInstance'checkWatchList-6a [#_"ArrayList<FloatingReadNode>" watchList, #_"LocationIdentity" location, #_"Block" block, #_"ArrayList<Node>" result, #_"{Node Block}" nodeMap, #_"NodeBitMap" unprocessed]
+    (defn- #_"FloatingReadNode*" ScheduleInstance'checkWatchList-6a [#_"FloatingReadNode*" watchList, #_"LocationIdentity" location, #_"Block" block, #_"ArrayList<Node>" result, #_"{Node Block}" node->block, #_"NodeBitMap" agenda]
         (cond
             (:immutable location)
-                nil ;; Nothing to do. This can happen for an initialization write.
+                watchList ;; Nothing to do. This can happen for an initialization write.
             (LocationIdentity''isAny-1 location)
                 (do
                     (doseq [#_"FloatingReadNode" r watchList]
-                        (when (NodeBitMap''isMarked-2n unprocessed, r)
-                            (ScheduleInstance'sortIntoList-6 r, block, result, nodeMap, unprocessed, nil)
+                        (when (NodeBitMap''isMarked-2n agenda, r)
+                            (ScheduleInstance'sortIntoList-6 r, block, result, node->block, agenda, nil)
                         )
                     )
-                    (#_"ArrayList" .clear watchList)
+                    nil
                 )
             :else
-                (loop-when [#_"int" i 0] (< i (count watchList))
-                    (let [
-                        #_"FloatingReadNode" r (nth watchList i)
-                    ]
-                        (when (NodeBitMap''isMarked-2n unprocessed, r)
-                            (if (LocationIdentity''overlaps-2 location, (Access'''getLocationIdentity-1 r))
-                                (ScheduleInstance'sortIntoList-6 r, block, result, nodeMap, unprocessed, nil)
-                                (§ continue (inc i))
-                            )
-                        )
+                (let [
+                    rofl- #(let [#_"[FloatingReadNode]" v (vec %1)] (pop (assoc v %2 (peek v))))
+                ]
+                    (loop-when [watchList watchList #_"int" i 0] (< i (count watchList)) => watchList
                         (let [
-                            #_"int" end (dec (count watchList))
+                            #_"FloatingReadNode" r (nth watchList i)
+                            [watchList i]
+                                (when (NodeBitMap''isMarked-2n agenda, r) => [(rofl- watchList i) i]
+                                    (when (LocationIdentity''overlaps-2 location, (Access'''getLocationIdentity-1 r)) => [watchList (inc i)]
+                                        (ScheduleInstance'sortIntoList-6 r, block, result, node->block, agenda, nil)
+                                        [(rofl- watchList i) i]
+                                    )
+                                )
                         ]
-                            (#_"ArrayList" .set watchList, i, (nth watchList end))
-                            (#_"ArrayList" .remove watchList, end)
-                            (recur i)
+                            (recur watchList i)
                         )
                     )
                 )
         )
-        nil
     )
 
-    (defn- #_"void" ScheduleInstance'checkWatchList-6b [#_"Block" block, #_"{Node Block}" nodeMap, #_"NodeBitMap" unprocessed, #_"ArrayList<Node>" result, #_"ArrayList<FloatingReadNode>" watchList, #_"Node" node]
+    (defn- #_"FloatingReadNode*" ScheduleInstance'checkWatchList-6b [#_"FloatingReadNode*" watchList, #_"Block" block, #_"{Node Block}" node->block, #_"NodeBitMap" agenda, #_"ArrayList<Node>" nodes, #_"Node" node]
         (when (seq watchList)
             ;; Check if this node kills a node in the watch list.
             (condp satisfies? node
@@ -66370,138 +66290,107 @@ ZeroExtendNode'new-4
                     (let [
                         #_"LocationIdentity" location (Single'''getLocationIdentity-1 node)
                     ]
-                        (ScheduleInstance'checkWatchList-6a watchList, location, block, result, nodeMap, unprocessed)
+                        (ScheduleInstance'checkWatchList-6a watchList, location, block, nodes, node->block, agenda)
                     )
                 Multi
-                    (doseq [#_"LocationIdentity" location (Multi'''getLocationIdentities-1 node)]
-                        (ScheduleInstance'checkWatchList-6a watchList, location, block, result, nodeMap, unprocessed)
+                    (do
+                        (doseq [#_"LocationIdentity" location (Multi'''getLocationIdentities-1 node)]
+                            (§ ass! watchList (ScheduleInstance'checkWatchList-6a watchList, location, block, nodes, node->block, agenda))
+                        )
+                        watchList
                     )
-                nil
+                watchList
             )
         )
-        nil
     )
 
-    (defn- #_"void" ScheduleInstance'sortNodesLatestWithinBlock-6b [#_"Block" block, #_"BlockMap<List<Node>>" earliestBlockToNodesMap, #_"BlockMap<List<Node>>" latestBlockToNodesMap, #_"{Node Block}" nodeMap, #_"BlockMap<ArrayList<FloatingReadNode>>" watchListMap, #_"NodeBitMap" unprocessed]
+    (defn- #_"[this {Block Node*}]" ScheduleInstance''sortNodesLatestWithinBlock-6 [#_"ScheduleInstance" this, #_"Block" block, #_"{Block Node*}" earliest, #_"{Block Node*}" latest, #_"{Node Block}" node->block, #_"{Block FloatingReadNode*}" watchMap]
         (let [
-            #_"List<Node>" earliestSorting (BlockMap''get-2 earliestBlockToNodesMap, block)
-            #_"ArrayList<Node>" result (ArrayList.)
-            #_"ArrayList<FloatingReadNode>" watchList (when (some? watchListMap) (BlockMap''get-2 watchListMap, block))
-            #_"AbstractBeginNode" beginNode (:beginNode block)
-        ]
-            (when (satisfies? LoopExitNode beginNode)
-                (doseq [#_"ProxyNode" proxy (LoopExitNode''proxies-1 beginNode)]
-                    (NodeBitMap''clear-2 unprocessed, proxy)
-                    (let [
-                        #_"ValueNode" value (:value proxy)
-                    ]
-                        ;; if multiple proxies reference the same value, schedule the value of a proxy once
-                        (when (and (some? value) (= (get nodeMap value) block) (NodeBitMap''isMarked-2n unprocessed, value))
-                            (ScheduleInstance'sortIntoList-6 value, block, result, nodeMap, unprocessed, nil)
+            #_"ArrayList<Node>" nodes (ArrayList.)
+            nodes
+                (when (satisfies? LoopExitNode (:beginNode block)) => nodes
+                    (doseq [#_"ProxyNode" proxy (LoopExitNode''proxies-1 (:beginNode block))]
+                        (NodeBitMap''clear-2 (:agenda this), proxy)
+                        (let [
+                            #_"ValueNode" value (:value proxy)
+                        ]
+                            ;; if multiple proxies reference the same value, schedule the value of a proxy once
+                            (when (and (some? value) (= (get node->block value) block) (NodeBitMap''isMarked-2n (:agenda this), value))
+                                (ScheduleInstance'sortIntoList-6 value, block, nodes, node->block, (:agenda this), nil)
+                            )
                         )
                     )
+                    nodes
                 )
-            )
-            (let [
-                #_"FixedNode" endNode (:endNode block)
-                ;; Only if the end node is either a control split or an end node,
-                ;; we need to force it to be the last node in the schedule.
-                #_"FixedNode" fixedEndNode (when (ScheduleInstance'isFixedEnd-1 endNode) endNode)
-            ]
-                (loop-when [watchList watchList #_"ISeq" s (seq earliestSorting)] (some? s)
-                    (let [
-                        #_"Node" node (first s)
-                        watchList
-                            (when-not (= node fixedEndNode) => watchList
-                                (cond
-                                    (satisfies? FixedNode node)
+            #_"FixedNode" endNode (:endNode block)
+            ;; Only if the end node is either a control split or an end node,
+            ;; we need to force it to be the last node in the schedule.
+            #_"FixedNode" fixedEndNode (when (ScheduleInstance'isFixedEnd-1 endNode) endNode)
+        ]
+            (loop-when [#_"FloatingReadNode*" watchList (get watchMap block) #_"ISeq" s (seq (get earliest block))] (some? s)
+                (let [
+                    #_"Node" node (first s)
+                    watchList
+                        (when-not (= node fixedEndNode) => watchList
+                            (cond
+                                (satisfies? FixedNode node)
+                                    (let [
+                                        watchList (ScheduleInstance'checkWatchList-6b watchList, block, node->block, (:agenda this), nodes, node)
+                                    ]
+                                        (ScheduleInstance'sortIntoList-6 node, block, nodes, node->block, (:agenda this), nil)
+                                        watchList
+                                    )
+                                (and (= (get node->block node) block) (satisfies? FloatingReadNode node))
+                                    (if (ScheduleInstance'isImplicitNullOpportunity-2 node, block)
                                         (do
-                                            (ScheduleInstance'checkWatchList-6b block, nodeMap, unprocessed, result, watchList, node)
-                                            (ScheduleInstance'sortIntoList-6 node, block, result, nodeMap, unprocessed, nil)
+                                            ;; Schedule at the beginning of the block.
+                                            (ScheduleInstance'sortIntoList-6 node, block, nodes, node->block, (:agenda this), nil)
                                             watchList
                                         )
-                                    (and (= (get nodeMap node) block) (satisfies? FloatingReadNode node))
-                                        (if (ScheduleInstance'isImplicitNullOpportunity-2 node, block)
-                                            (do
-                                                ;; Schedule at the beginning of the block.
-                                                (ScheduleInstance'sortIntoList-6 node, block, result, nodeMap, unprocessed, nil)
-                                                watchList
-                                            )
-                                            (when (Block''canKill-2 block, (Access'''getLocationIdentity-1 node)) => watchList
-                                                ;; This read can be killed in this block, add to watch list.
-                                                (let [
-                                                    watchList (or watchList (ArrayList.))
-                                                ]
-                                                    (#_"ArrayList" .add watchList, node)
-                                                    watchList
-                                                )
-                                            )
+                                        (when (Block''canKill-2 block, (Access'''getLocationIdentity-1 node)) => watchList
+                                            ;; This read can be killed in this block, add to watch list.
+                                            (conj (vec watchList) node)
                                         )
-                                    :else
-                                        watchList
-                                )
+                                    )
+                                :else
+                                    watchList
+                            )
+                        )
+                ]
+                    (recur watchList (next s))
+                )
+            )
+            (doseq [#_"Node" node (get latest block)]
+                (when (NodeBitMap''isMarked-2n (:agenda this), node)
+                    (ScheduleInstance'sortIntoList-6 node, block, nodes, node->block, (:agenda this), fixedEndNode)
+                )
+            )
+            (when (and (some? endNode) (NodeBitMap''isMarked-2n (:agenda this), endNode))
+                (ScheduleInstance'sortIntoList-6 endNode, block, nodes, node->block, (:agenda this), nil)
+            )
+            [this (assoc latest block nodes)]
+        )
+    )
+
+    (defn #_"Graph" ScheduleInstance''run-1 [#_"ScheduleInstance" this]
+        (let [
+            [this #_"{Block Node*}" earliest #_"{Node Block}" node->block] (ScheduleInstance''scheduleEarliestIterative-1 this)
+            this
+                (when-not (SchedulingStrategy'isEarliest-1 (:strategy this)) => (assoc this :block->nodes earliest)
+                    ;; For non-earliest schedules, we need to do a second pass.
+                    (let [
+                        [this #_"{Block Node*}" latest #_"{Block FloatingReadNode*}" watchMap] (ScheduleInstance''calcLatestBlocks-3 this, earliest, node->block)
+                        _
+                            (doseq [#_"Block" block (:reversePostOrder (:cfg this))]
+                                (§ ass! [this latest] (ScheduleInstance''sortNodesLatestWithinBlock-6 this, block, earliest, latest, node->block, watchMap))
                             )
                     ]
-                        (recur watchList (next s))
+                        (assoc this :block->nodes latest)
                     )
                 )
-                (doseq [#_"Node" node (BlockMap''get-2 latestBlockToNodesMap, block)]
-                    (when (NodeBitMap''isMarked-2n unprocessed, node)
-                        (ScheduleInstance'sortIntoList-6 node, block, result, nodeMap, unprocessed, fixedEndNode)
-                    )
-                )
-                (when (and (some? endNode) (NodeBitMap''isMarked-2n unprocessed, endNode))
-                    (ScheduleInstance'sortIntoList-6 endNode, block, result, nodeMap, unprocessed, nil)
-                )
-                (BlockMap''put-3 latestBlockToNodesMap, block, result)
-            )
-        )
-        nil
-    )
-
-    (defn- #_"void" ScheduleInstance'sortNodesLatestWithinBlock-6c [#_"ControlFlowGraph" cfg, #_"BlockMap<List<Node>>" earliestBlockToNodesMap, #_"BlockMap<List<Node>>" latestBlockToNodesMap, #_"{Node Block}" currentNodeMap, #_"BlockMap<ArrayList<FloatingReadNode>>" watchListMap, #_"NodeBitMap" visited]
-        (doseq [#_"Block" block (:reversePostOrder cfg)]
-            (ScheduleInstance'sortNodesLatestWithinBlock-6b block, earliestBlockToNodesMap, latestBlockToNodesMap, currentNodeMap, watchListMap, visited)
-        )
-        nil
-    )
-
-    (defn #_"this" ScheduleInstance''run-3 [#_"ScheduleInstance" this, #_"Graph" graph, #_"SchedulingStrategy" selectedStrategy]
-        (let [
-            this
-                (when (nil? (:cfg this)) => this
-                    (assoc this :cfg (ControlFlowGraph'compute-5 graph, true, true, true, false))
-                )
-            #_"{Node Block}" currentNodeMap {}
-            #_"NodeBitMap" visited (NodeBitMap'new-1 graph)
-            #_"BlockMap<List<Node>>" earliestBlockToNodesMap (BlockMap'new-1 (:cfg this))
-            this (assoc this :nodeToBlockMap currentNodeMap)
-            this (assoc this :blockToNodesMap earliestBlockToNodesMap)
+            this (assoc this :node->block node->block)
         ]
-            (ScheduleInstance'scheduleEarliestIterative-6 (:cfg this), earliestBlockToNodesMap, currentNodeMap, visited, graph, (= selectedStrategy :SchedulingStrategy'EARLIEST_WITH_GUARD_ORDER))
-
-            (let [
-                this
-                    (when-not (SchedulingStrategy'isEarliest-1 selectedStrategy) => this
-                        ;; For non-earliest schedules, we need to do a second pass.
-                        (let [
-                            #_"BlockMap<List<Node>>" latestBlockToNodesMap (BlockMap'new-1 (:cfg this))
-                            _
-                                (doseq [#_"Block" block (:reversePostOrder (:cfg this))]
-                                    (BlockMap''put-3 latestBlockToNodesMap, block, (ArrayList.))
-                                )
-                            #_"BlockMap<ArrayList<FloatingReadNode>>" watchListMap (ScheduleInstance''calcLatestBlocks-6 this, selectedStrategy, currentNodeMap, earliestBlockToNodesMap, visited, latestBlockToNodesMap)
-                        ]
-                            (ScheduleInstance'sortNodesLatestWithinBlock-6c (:cfg this), earliestBlockToNodesMap, latestBlockToNodesMap, currentNodeMap, watchListMap, visited)
-
-                            (assoc this :blockToNodesMap latestBlockToNodesMap)
-                        )
-                    )
-                _ (§ ass! (:cfg this) (ControlFlowGraph''setNodeToBlock-2 (:cfg this), currentNodeMap))
-                _ (§ ass! graph (Graph''setLastSchedule-2 graph, (ScheduleResult'new-3 (:cfg this), (:nodeToBlockMap this), (:blockToNodesMap this))))
-            ]
-                this
-            )
+            (assoc (:graph this) :lastSchedule (ScheduleResult'new-3 (assoc (:cfg this) :node->block node->block), (:node->block this), (:block->nodes this)))
         )
     )
 )
@@ -66515,36 +66404,22 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"SchedulePhase" SchedulePhase'new-0 []
-        (SchedulePhase'new-1 (if GraalOptions'optScheduleOutOfLoops :SchedulingStrategy'LATEST_OUT_OF_LOOPS :SchedulingStrategy'LATEST))
-    )
-
     (defm SchedulePhase Phase
         (#_"Graph" Phase'''run-3 [#_"SchedulePhase" this, #_"Graph" graph, #_"PhaseContext" context]
-            (§ ass! instance (ScheduleInstance''run-3 (ScheduleInstance'new-0), graph, (:selectedStrategy this)))
-            graph
+            (ScheduleInstance''run-1 (ScheduleInstance'new-3 nil, graph, (:selectedStrategy this)))
         )
-    )
-
-    (defn #_"void" SchedulePhase'run-3 [#_"Graph" graph, #_"SchedulingStrategy" strategy, #_"ControlFlowGraph" cfg]
-        (§ ass! instance (ScheduleInstance''run-3 (ScheduleInstance'new-1 cfg), graph, strategy))
-        nil
     )
 )
 
 (class-ns ScheduleResult []
-    (defn #_"ScheduleResult" ScheduleResult'new-3 [#_"ControlFlowGraph" cfg, #_"{Node Block}" nodeToBlockMap, #_"BlockMap<List<Node>>" blockToNodesMap]
+    (defn #_"ScheduleResult" ScheduleResult'new-3 [#_"ControlFlowGraph" cfg, #_"{Node Block}" node->block, #_"{Block Node*}" block->nodes]
         (merge (ScheduleResult'class.)
             (hash-map
                 #_"ControlFlowGraph" :cfg cfg
-                #_"{Node Block}" :nodeToBlockMap nodeToBlockMap
-                #_"BlockMap<List<Node>>" :blockToNodesMap blockToNodesMap
+                #_"{Node Block}" :node->block node->block
+                #_"{Block Node*}" :block->nodes block->nodes
             )
         )
-    )
-
-    (defn #_"List<Node>" ScheduleResult''nodesFor-2 [#_"ScheduleResult" this, #_"Block" block]
-        (BlockMap''get-2 (:blockToNodesMap this), block)
     )
 )
 
@@ -66562,7 +66437,7 @@ ZeroExtendNode'new-4
     (defn #_"void" ScheduledNodeIterator''processNodes-3 [#_"ScheduledNodeIterator" this, #_"Block" block, #_"ScheduleResult" schedule]
         (§ ass! this (assoc this :lastFixed (:beginNode block)))
         (§ ass! this (assoc this :reconnect nil))
-        (§ ass! this (assoc this :iterator (#_"List" .listIterator (ScheduleResult''nodesFor-2 schedule, block))))
+        (§ ass! this (assoc this :iterator (#_"List" .listIterator (get (:block->nodes schedule) block))))
 
         (loop-when-recur [] (#_"ListIterator" .hasNext (:iterator this)) []
             (let [
