@@ -114,8 +114,8 @@
     [java.lang.reflect AnnotatedElement Constructor Field Method Modifier]
     [java.nio ByteBuffer ByteOrder]
     [java.util
-        AbstractList ArrayDeque ArrayList Arrays BitSet Collections Comparator Deque Iterator LinkedList
-        List ListIterator NoSuchElementException PriorityQueue Queue
+        AbstractList ArrayDeque ArrayList Arrays BitSet Comparator Deque Iterator LinkedList List ListIterator
+        NoSuchElementException PriorityQueue Queue
     ]
     [java.util.stream Stream Stream$Builder]
 
@@ -1308,7 +1308,6 @@ EffectList''insertAll-3
 EffectList''isEmpty-1
 EffectList''size-1
 EffectList'new-0
-EffectsBlockState'copy-1
 EffectsBlockState'isSubMapOf-2
 EffectsBlockState'new-0
 EffectsClosure''addScalarAlias-3
@@ -1342,13 +1341,10 @@ Fields''copy-3
 Fields''getBoolean-3
 Fields''getByte-3
 Fields''getChar-3
-Fields''getDeclaringClass-2
 Fields''getInt-3
 Fields''getLong-3
-Fields''getName-2
 Fields''getObject-3
 Fields''getShort-3
-Fields''getType-2
 Fields''isSame-3
 Fields''putObject-4
 Fields'new-1
@@ -1814,8 +1810,6 @@ InliningUtil'inlineForCanonicalization-4
 InliningUtil'nonNullReceiver-1
 InliningUtil'processFrameStates-4
 InliningUtil'processMonitorId-2
-InputEdges''getInputType-2
-InputEdges''isOptional-2
 InputEdges'new-2
 InputEdges'translateInto-2
 InputInfo'new-6
@@ -2845,7 +2839,6 @@ PEReadEliminationBlockState''addReadCache-8
 PEReadEliminationBlockState''getReadCache-6
 PEReadEliminationBlockState''killReadCache-1
 PEReadEliminationBlockState''killReadCache-3
-PEReadEliminationBlockState'copy-1
 PEReadEliminationBlockState'new-0
 PEReadEliminationClosure'new-1
 PEReadEliminationMergeProcessor'new-2
@@ -2859,7 +2852,6 @@ PartialEscapeBlockState''removeLock-2
 PartialEscapeBlockState''resetObjectStates-2
 PartialEscapeBlockState''setEntry-4
 PartialEscapeBlockState''updateMaterializedValue-3
-PartialEscapeBlockState'copy-1
 PartialEscapeBlockState'identicalObjectStates-1
 PartialEscapeBlockState'identicalObjectStates-2
 PartialEscapeBlockState'new-0
@@ -2975,7 +2967,6 @@ ReadEliminationBlockState''addCacheEntry-3
 ReadEliminationBlockState''getCacheEntry-2
 ReadEliminationBlockState''killReadCache-1
 ReadEliminationBlockState''killReadCache-2
-ReadEliminationBlockState'copy-1
 ReadEliminationBlockState'new-0
 ReadEliminationClosure'new-2
 ReadEliminationMergeProcessor''getCachedPhi-3
@@ -3878,7 +3869,6 @@ ZeroExtendNode'new-4
     (#_"T" BlockIteratorClosure'''getInitialState-1 [#_"BlockIteratorClosure<T>" this])
     (#_"T" BlockIteratorClosure'''processBlock-3 [#_"BlockIteratorClosure<T>" this, #_"Block" block, #_"T" currentState])
     (#_"T" BlockIteratorClosure'''merge-3 [#_"BlockIteratorClosure<T>" this, #_"Block" merge, #_"T*" states])
-    (#_"T" BlockIteratorClosure'''cloneState-2 [#_"BlockIteratorClosure<T>" this, #_"T" oldState])
     (#_"T*" BlockIteratorClosure'''processLoop-3 [#_"BlockIteratorClosure<T>" this, #_"Loop" _loop, #_"T" initialState])
 )
 
@@ -4285,12 +4275,11 @@ ZeroExtendNode'new-4
 
 (defp Effect
     (#_"boolean" Effect'''isCfgKill-1 [#_"Effect" this])
-    (#_"void" Effect'''apply-3 [#_"Effect" this, #_"Graph" graph, #_"List<Node>" obsoleteNodes])
+    (#_"[Node]" Effect'''apply-3 [#_"Effect" this, #_"Graph" graph, #_"[Node]" obsoleteNodes])
 )
 
 ;;;
- ; An EffectList can be used to maintain a list of Effects and backtrack to a previous
- ; state by truncating the list.
+ ; An EffectList can be used to maintain a list of Effects and backtrack to a previous state by truncating the list.
  ;;
 (defp EffectList
     (#_"void" EffectList'''clear-1 [#_"EffectList" this])
@@ -11002,7 +10991,7 @@ ZeroExtendNode'new-4
                 #_"Block" successor (nth successors i)
             ]
                 (#_"Deque" .addFirst blockQueue, successor)
-                (§ ass! states (assoc states (:beginNode successor) (BlockIteratorClosure'''cloneState-2 closure, state)))
+                (§ ass! states (assoc states (:beginNode successor) state))
             )
         )
         (nth successors 0)
@@ -11127,7 +11116,7 @@ ZeroExtendNode'new-4
                         #_"T" endState (get blockEndStates (:endNode (nth predecessors i)))
                     ]
                         ;; make sure all end states are unique objects
-                        (§ ass! (:endStates info) (conj' (:endStates info) (BlockIteratorClosure'''cloneState-2 closure, endState)))
+                        (§ ass! (:endStates info) (conj' (:endStates info) endState))
                     )
                 )
             _
@@ -11136,7 +11125,7 @@ ZeroExtendNode'new-4
                         #_"T" exitState (get blockEndStates (:beginNode loopExit))
                     ]
                         ;; make sure all exit states are unique objects
-                        (§ ass! (:exitStates info) (conj' (:exitStates info) (BlockIteratorClosure'''cloneState-2 closure, exitState)))
+                        (§ ass! (:exitStates info) (conj' (:exitStates info) exitState))
                     )
                 )
         ]
@@ -17536,9 +17525,7 @@ ZeroExtendNode'new-4
 
         (#_"void" EffectsClosure'''applyEffects-1 [#_"EffectsClosure" this]
             (let [
-                #_"Graph" graph (:graph (:cfg this))
-                #_"List<Node>" obsoleteNodes (ArrayList.)
-                #_"List<GraphEffectList>" effectList (ArrayList.)
+                #_"GraphEffectList*'" v'effectLists (volatile! nil)
                 ;; Effects are applied during a ordered iteration over the blocks to apply them in the correct order,
                 ;; e.g. apply the effect that adds a node to the graph before the node is used.
                 #_"BlockIteratorClosure<Void>" closure
@@ -17552,7 +17539,7 @@ ZeroExtendNode'new-4
                                 #_"GraphEffectList" effects (get (:blockEffects this) block)
                             ]
                                 (when (and (some? effects) (not (EffectList''isEmpty-1 effects)))
-                                    (#_"List" .add effectList, effects)
+                                    (vswap! v'effectLists conj' effects)
                                 )
                                 currentState
                             )
@@ -17562,17 +17549,13 @@ ZeroExtendNode'new-4
                             nil
                         )
 
-                        (#_"Void" BlockIteratorClosure'''cloneState-2 [#_"BlockIteratorClosure<Void>" _, #_"Void" oldState]
-                            oldState
-                        )
-
                         (#_"Void*" BlockIteratorClosure'''processLoop-3 [#_"BlockIteratorClosure<Void>" self, #_"Loop" _loop, #_"Void" initialState]
                             (let [
                                 #_"BlockLoopInfo<Void>" info (ReentrantBlockIterator'processLoop-3 self, _loop, initialState)
                                 #_"GraphEffectList" effects (get (:loopMergeEffects this) _loop)
                             ]
                                 (when (and (some? effects) (not (EffectList''isEmpty-1 effects)))
-                                    (#_"List" .add effectList, effects)
+                                    (vswap! v'effectLists conj' effects)
                                 )
                                 (:exitStates info)
                             )
@@ -17581,18 +17564,17 @@ ZeroExtendNode'new-4
             ]
                 (ReentrantBlockIterator'apply-2 closure, (ControlFlowGraph''getStartBlock-1 (:cfg this)))
 
-                (doseq [#_"GraphEffectList" effects effectList]
-                    (EffectList''apply-4 effects, graph, obsoleteNodes, false)
-                )
-                ;; Effects that modify the cfg (e.g. removing a branch for an if that got a constant condition)
-                ;; need to be performed after all other effects, because they change phi value indexes.
-                (doseq [#_"GraphEffectList" effects effectList]
-                    (EffectList''apply-4 effects, graph, obsoleteNodes, true)
-                )
-                (doseq [#_"Node" node obsoleteNodes]
-                    (when (and (Node''isAlive-1 node) (Node''hasNoUsages-1 node))
-                        (§ ass! node (Node''replaceAtUsages-2 node, nil))
-                        (GraphUtil'killWithUnusedFloatingInputs-1 node)
+                (let [
+                    #_"Node*" obsoleteNodes (reduce #(EffectList''apply-4 %2, (:graph (:cfg this)), %1, false) nil @v'effectLists)
+                    ;; Effects that modify the cfg (e.g. removing a branch for an if that got a constant condition)
+                    ;; need to be performed after all other effects, because they change phi value indexes.
+                    obsoleteNodes (reduce #(EffectList''apply-4 %2, (:graph (:cfg this)), %1, true) obsoleteNodes @v'effectLists)
+                ]
+                    (doseq [#_"Node" node obsoleteNodes]
+                        (when (and (Node''isAlive-1 node) (Node''hasNoUsages-1 node))
+                            (§ ass! node (Node''replaceAtUsages-2 node, nil))
+                            (GraphUtil'killWithUnusedFloatingInputs-1 node)
+                        )
                     )
                 )
             )
@@ -17732,9 +17714,9 @@ ZeroExtendNode'new-4
                 ;; loops and do the first iteration with the (possible) changes from outer loops. If there
                 ;; are no changes we only have to do 1 iteration and are done.
                 (let [
-                    #_"EffectsBlockState" initialStateRemovedKilledLocations (EffectsClosure'''stripKilledLoopLocations-3 this, _loop, (BlockIteratorClosure'''cloneState-2 this, initialState))
+                    #_"EffectsBlockState" initialStateRemovedKilledLocations (EffectsClosure'''stripKilledLoopLocations-3 this, _loop, initialState)
                     #_"EffectsBlockState" loopEntryState initialStateRemovedKilledLocations
-                    #_"EffectsBlockState" lastMergedState (BlockIteratorClosure'''cloneState-2 this, initialStateRemovedKilledLocations)
+                    #_"EffectsBlockState" lastMergedState initialStateRemovedKilledLocations
                     _ (EffectsClosure'''processInitialLoopState-3 this, _loop, lastMergedState)
                     #_"MergeProcessor" mergeProcessor (EffectsClosure'''createMergeProcessor-2 this, (:header _loop))
                 ]
@@ -17747,7 +17729,7 @@ ZeroExtendNode'new-4
                     ;; more generic, e.g. adding phis instead of non-phi values.
                     (loop-when [#_"int" iteration 0] (< iteration 10) => (throw! (str "too many iterations at " _loop))
                         (let [
-                            #_"BlockLoopInfo<EffectsBlockState>" info (ReentrantBlockIterator'processLoop-3 this, _loop, (BlockIteratorClosure'''cloneState-2 this, lastMergedState))
+                            #_"BlockLoopInfo<EffectsBlockState>" info (ReentrantBlockIterator'processLoop-3 this, _loop, lastMergedState)
                         ]
                             (EffectsClosure''doMergeWithoutDead-3 this, mergeProcessor, (cons initialStateRemovedKilledLocations (:endStates info)))
 
@@ -17843,10 +17825,6 @@ ZeroExtendNode'new-4
     (defm PartialEscapeClosure BlockIteratorClosure
         (#_"PartialEscapeBlockState" BlockIteratorClosure'''getInitialState-1 [#_"PartialEscapeClosure" this]
             (PartialEscapeBlockState'new-0)
-        )
-
-        (#_"PartialEscapeBlockState" BlockIteratorClosure'''cloneState-2 [#_"PartialEscapeClosure" this, #_"PartialEscapeBlockState" state]
-            (PartialEscapeBlockState'copy-1 state)
         )
     )
 
@@ -18650,10 +18628,6 @@ ZeroExtendNode'new-4
         (#_"PEReadEliminationBlockState" BlockIteratorClosure'''getInitialState-1 [#_"PEReadEliminationClosure" this]
             (PEReadEliminationBlockState'new-0)
         )
-
-        (#_"PEReadEliminationBlockState" BlockIteratorClosure'''cloneState-2 [#_"PEReadEliminationClosure" this, #_"PEReadEliminationBlockState" other]
-            (PEReadEliminationBlockState'copy-1 other)
-        )
     )
 
     (defm PEReadEliminationClosure EffectsClosure
@@ -18834,10 +18808,6 @@ ZeroExtendNode'new-4
     (defm ReadEliminationClosure BlockIteratorClosure
         (#_"ReadEliminationBlockState" BlockIteratorClosure'''getInitialState-1 [#_"ReadEliminationClosure" this]
             (ReadEliminationBlockState'new-0)
-        )
-
-        (#_"ReadEliminationBlockState" BlockIteratorClosure'''cloneState-2 [#_"ReadEliminationClosure" this, #_"ReadEliminationBlockState" other]
-            (ReadEliminationBlockState'copy-1 other)
         )
     )
 
@@ -19290,26 +19260,16 @@ ZeroExtendNode'new-4
             ]
                 (when-not (zero? exits) => (FixedTarget'new-2 target, state)
                     (let [
-                        #_"List<BciBlock>" exitLoops (ArrayList.)
-                        exits
-                            (loop [exits exits #_"int" i 0]
+                        #_"BciBlock*" exitLoops
+                            (loop [exitLoops nil exits exits #_"int" i 0]
                                 (let [
                                     #_"long" lMask (<< 1 i)
-                                    exits
-                                        (when-not (zero? (& exits lMask)) => exits
-                                            (#_"List" .add exitLoops, (nth (:loopHeaders (:blockMap this)) i))
-                                            (& exits (bit-not lMask))
+                                    [exitLoops exits]
+                                        (when-not (zero? (& exits lMask)) => [exitLoops exits]
+                                            [(conj' exitLoops (nth (:loopHeaders (:blockMap this)) i)) (& exits (bit-not lMask))]
                                         )
                                 ]
-                                    (recur-if (not (zero? exits)) [exits (inc i)] => exits)
-                                )
-                            )
-                        _
-                            (Collections/sort exitLoops,
-                                (reify Comparator #_"<BciBlock>"
-                                    (#_"int" compare [#_"Comparator<BciBlock>" _, #_"BciBlock" b1, #_"BciBlock" b2]
-                                        (- (Long/bitCount (:nLoops b2)) (Long/bitCount (:nLoops b1)))
-                                    )
+                                    (recur-if (not (zero? exits)) [exitLoops exits (inc i)] => (sort-by #(Long/bitCount (:nLoops %)) (comp - compare) exitLoops))
                                 )
                             )
                         #_"FrameStateBuilder" newState (FrameStateBuilder'copy-1 state)
@@ -20499,7 +20459,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"this" BytecodeParser''genIntegerSwitch-6 [#_"BytecodeParser" this, #_"ValueNode" value, #_"List<BciBlock>" actualSuccessors, #_"int[]" keys, #_"double[]" keyProbabilities, #_"int[]" keySuccessors]
+    (defn #_"this" BytecodeParser''genIntegerSwitch-6 [#_"BytecodeParser" this, #_"ValueNode" value, #_"BciBlock*" actualSuccessors, #_"int[]" keys, #_"double[]" keyProbabilities, #_"int[]" keySuccessors]
         (if (satisfies? ConstantNode value)
             (let [
                 #_"int" constantValue (#_"JavaConstant" .asInt (:value value))
@@ -21371,7 +21331,7 @@ ZeroExtendNode'new-4
                 (dotimes [#_"int" i (count (:bciSuccessors (:currentBlock this)))]
                     (§ ass! bciToBlockSuccessorIndex (assoc bciToBlockSuccessorIndex (:startBci (BciBlock''getSuccessor-2 (:currentBlock this), i)) (SuccessorInfo'new-1 i)))
                 )
-            #_"List<BciBlock>" actualSuccessors (ArrayList.)
+            #_"BciBlock*" actualSuccessors nil
             #_"int[]" keys (int-array nofCases)
             #_"int[]" keySuccessors (int-array nofCasesPlusDefault)
             [#_"int" deoptSuccessorIndex #_"int" nextSuccessorIndex]
@@ -21385,7 +21345,7 @@ ZeroExtendNode'new-4
                                 (let [
                                     [deoptSuccessorIndex nextSuccessorIndex]
                                         (when (neg? deoptSuccessorIndex) => [deoptSuccessorIndex nextSuccessorIndex]
-                                            (#_"List" .add actualSuccessors, nil)
+                                            (§ ass! actualSuccessors (conj' actualSuccessors nil))
                                             [nextSuccessorIndex (inc nextSuccessorIndex)]
                                         )
                                 ]
@@ -21397,7 +21357,7 @@ ZeroExtendNode'new-4
                                     #_"SuccessorInfo" info (get bciToBlockSuccessorIndex targetBci)
                                     [info nextSuccessorIndex]
                                         (when (neg? (:actualIndex info)) => [info nextSuccessorIndex]
-                                            (#_"List" .add actualSuccessors, (BciBlock''getSuccessor-2 (:currentBlock this), (:blockIndex info)))
+                                            (§ ass! actualSuccessors (conj' actualSuccessors (BciBlock''getSuccessor-2 (:currentBlock this), (:blockIndex info))))
                                             [(assoc info :actualIndex nextSuccessorIndex) (inc nextSuccessorIndex)]
                                         )
                                 ]
@@ -24490,20 +24450,13 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"void" ComputeInliningRelevance'truncate-2 [#_"List<FixedNode>" pathBeginNodes, #_"int" pathBeginCount]
-        (loop-when-recur [#_"int" i (- (count pathBeginNodes) pathBeginCount)] (pos? i) [(dec i)]
-            (#_"List" .remove pathBeginNodes, (dec (count pathBeginNodes)))
-        )
-        nil
-    )
-
     ;;;
      ; Returns the most probable loop exit. If multiple successors share the maximum probability,
      ; one is returned and the others are enqueued in pathBeginNodes.
      ;;
-    (defn- #_"Node" ComputeInliningRelevance''getMaxProbabilityLoopExit-3 [#_"ComputeInliningRelevance" this, #_"LoopBeginNode" loopBegin, #_"List<FixedNode>" pathBeginNodes]
+    (defn- #_"Node" ComputeInliningRelevance''getMaxProbabilityLoopExit-3 [#_"ComputeInliningRelevance" this, #_"LoopBeginNode" loopBegin, #_"[FixedNode]" pathBeginNodes]
         (let [
-            #_"int" pathBeginCount (count pathBeginNodes)
+            #_"int" n (count pathBeginNodes)
         ]
             (loop-when [#_"Node" maxSux nil #_"double" maxProbability 0.0 #_"ISeq" s (seq (LoopBeginNode''loopExits-1 loopBegin))] (some? s) => maxSux
                 (let [
@@ -24512,12 +24465,12 @@ ZeroExtendNode'new-4
                     [maxSux maxProbability]
                         (if (< maxProbability probability)
                             (do
-                                (ComputeInliningRelevance'truncate-2 pathBeginNodes, pathBeginCount)
+                                (§ ass! pathBeginNodes (subvec pathBeginNodes 0 n))
                                 [sux probability]
                             )
                             (do
                                 (when (= probability maxProbability)
-                                    (#_"List" .add pathBeginNodes, sux)
+                                    (§ ass! pathBeginNodes (conj' pathBeginNodes sux))
                                 )
                                 [maxSux maxProbability]
                             )
@@ -24537,9 +24490,9 @@ ZeroExtendNode'new-4
      ; Returns the most probable successor. If multiple successors share the maximum probability,
      ; one is returned and the others are enqueued in pathBeginNodes.
      ;;
-    (defn- #_"Node" ComputeInliningRelevance'getMaxProbabilitySux-2 [#_"ControlSplitNode" controlSplit, #_"List<FixedNode>" pathBeginNodes]
+    (defn- #_"Node" ComputeInliningRelevance'getMaxProbabilitySux-2 [#_"ControlSplitNode" controlSplit, #_"[FixedNode]" pathBeginNodes]
         (let [
-            #_"int" pathBeginCount (count pathBeginNodes)
+            #_"int" n (count pathBeginNodes)
         ]
             (loop-when [#_"Node" maxSux nil #_"double" maxProbability 0.0 #_"ISeq" s (seq (Node''successors-1 controlSplit))] (some? s) => maxSux
                 (let [
@@ -24548,12 +24501,12 @@ ZeroExtendNode'new-4
                     [maxSux maxProbability]
                         (if (< maxProbability probability)
                             (do
-                                (ComputeInliningRelevance'truncate-2 pathBeginNodes, pathBeginCount)
+                                (§ ass! pathBeginNodes (subvec pathBeginNodes 0 n))
                                 [sux probability]
                             )
                             (do
                                 (when (= probability maxProbability)
-                                    (#_"List" .add pathBeginNodes, sux)
+                                    (§ ass! pathBeginNodes (conj' pathBeginNodes sux))
                                 )
                                 [maxSux maxProbability]
                             )
@@ -24570,41 +24523,36 @@ ZeroExtendNode'new-4
      ; During iteration, the method returns immediately once a loop exit is discovered.
      ;;
     (defn- #_"double" ComputeInliningRelevance''computeFastPathMinProbability-2 [#_"ComputeInliningRelevance" this, #_"FixedNode" scopeStart]
-        (let [
-            #_"List<FixedNode>" pathBeginNodes (ArrayList.)
-            _ (#_"List" .add pathBeginNodes, scopeStart)
-        ]
-            (loop [#_"double" minPathProbability ((:f'probabilities-1 this) scopeStart)]
-                (let [
-                    minPathProbability
-                        (loop [#_"Node" node (#_"List" .remove pathBeginNodes, (dec (count pathBeginNodes))) minPathProbability minPathProbability]
-                            (let [
-                                [node minPathProbability]
-                                    (cond
-                                        (and (satisfies? LoopBeginNode scopeStart) (satisfies? LoopExitNode node) (some #(= % node) (LoopBeginNode''loopExits-1 scopeStart)))
-                                            (§ return minPathProbability)
-                                        (and (satisfies? LoopBeginNode node) (not= node scopeStart))
-                                            (let [
-                                                node (ComputeInliningRelevance''getMaxProbabilityLoopExit-3 this, node, pathBeginNodes)
-                                            ]
-                                                [node (ComputeInliningRelevance''getMinPathProbability-3 this, node, minPathProbability)]
-                                            )
-                                        (satisfies? ControlSplitNode node)
-                                            (let [
-                                                node (ComputeInliningRelevance'getMaxProbabilitySux-2 node, pathBeginNodes)
-                                            ]
-                                                [node (ComputeInliningRelevance''getMinPathProbability-3 this, node, minPathProbability)]
-                                            )
-                                        :else
-                                            [(first (Node''successors-1 node)) minPathProbability]
-                                    )
-                            ]
-                                (recur-if (some? node) [node minPathProbability] => minPathProbability)
-                            )
+        (loop [#_"[FixedNode]" pathBeginNodes [ scopeStart ] #_"double" minPathProbability ((:f'probabilities-1 this) scopeStart)]
+            (let [
+                [pathBeginNodes minPathProbability]
+                    (loop [#_"Node" node (peek' pathBeginNodes) pathBeginNodes (pop' pathBeginNodes) minPathProbability minPathProbability]
+                        (let [
+                            [node minPathProbability]
+                                (cond
+                                    (and (satisfies? LoopBeginNode scopeStart) (satisfies? LoopExitNode node) (some #(= % node) (LoopBeginNode''loopExits-1 scopeStart)))
+                                        (§ return minPathProbability)
+                                    (and (satisfies? LoopBeginNode node) (not= node scopeStart))
+                                        (let [
+                                            node (ComputeInliningRelevance''getMaxProbabilityLoopExit-3 this, node, pathBeginNodes)
+                                        ]
+                                            [node (ComputeInliningRelevance''getMinPathProbability-3 this, node, minPathProbability)]
+                                        )
+                                    (satisfies? ControlSplitNode node)
+                                        (let [
+                                            node (ComputeInliningRelevance'getMaxProbabilitySux-2 node, pathBeginNodes)
+                                        ]
+                                            [node (ComputeInliningRelevance''getMinPathProbability-3 this, node, minPathProbability)]
+                                        )
+                                    :else
+                                        [(first (Node''successors-1 node)) minPathProbability]
+                                )
+                        ]
+                            (recur-if (some? node) [node pathBeginNodes minPathProbability] => [pathBeginNodes minPathProbability])
                         )
-                ]
-                    (recur-if (seq pathBeginNodes) [minPathProbability] => minPathProbability)
-                )
+                    )
+            ]
+                (recur-if (seq pathBeginNodes) [pathBeginNodes minPathProbability] => minPathProbability)
             )
         )
     )
@@ -28356,17 +28304,17 @@ ZeroExtendNode'new-4
         (zero? (:size this))
     )
 
-    (defn #_"void" EffectList''apply-4 [#_"EffectList" this, #_"Graph" graph, #_"List<Node>" obsoleteNodes, #_"boolean" cfgKills]
+    (defn #_"[Node]" EffectList''apply-4 [#_"EffectList" this, #_"Graph" graph, #_"[Node]" obsoleteNodes, #_"boolean" cfgKills]
         (dotimes [#_"int" i (EffectList''size-1 this)]
             (let [
                 #_"Effect" effect (nth (:effects this) i)
             ]
                 (when (= (Effect'''isCfgKill-1 effect) cfgKills)
-                    (Effect'''apply-3 effect, graph, obsoleteNodes)
+                    (§ ass! obsoleteNodes (Effect'''apply-3 effect, graph, obsoleteNodes))
                 )
             )
         )
-        nil
+        obsoleteNodes
     )
 )
 
@@ -28391,8 +28339,8 @@ ZeroExtendNode'new-4
     )
 
     ;;;
-     ; Adds the given fixed node to the graph's control flow, before position (so that the original
-     ; predecessor of position will then be node's predecessor).
+     ; Adds the given fixed node to the graph's control flow, before position (so that the original predecessor of
+     ; position will then be node's predecessor).
      ;
      ; @param node The fixed node to be added to the graph.
      ; @param position The fixed node before which the node should be added.
@@ -28400,9 +28348,9 @@ ZeroExtendNode'new-4
     (defn #_"void" GraphEffectList''addFixedNodeBefore-3 [#_"GraphEffectList" this, #_"FixedWithNextNode" node, #_"FixedNode" position]
         (EffectList''add-3 this, "add fixed node",
             (reify Effect
-                (#_"void" Effect'''apply-3 [#_"Effect" _, #_"Graph" graph, #_"List<Node>" obsoleteNodes]
+                (#_"[Node]" Effect'''apply-3 [#_"Effect" _, #_"Graph" graph, #_"[Node]" obsoleteNodes]
                     (Graph''addBeforeFixed-3 graph, position, (Graph''add-2 graph, node))
-                    nil
+                    obsoleteNodes
                 )
 
                 (#_"boolean" Effect'''isCfgKill-1 [#_"Effect" _]
@@ -28425,10 +28373,10 @@ ZeroExtendNode'new-4
     (defn #_"void" GraphEffectList''addFloatingNode-3 [#_"GraphEffectList" this, #_"ValueNode" node, #_"String" cause]
         (EffectList''add-3 this, "add floating node",
             (reify Effect
-                (#_"void" Effect'''apply-3 [#_"Effect" _, #_"Graph" graph, #_"List<Node>" obsoleteNodes]
+                (#_"[Node]" Effect'''apply-3 [#_"Effect" _, #_"Graph" graph, #_"[Node]" obsoleteNodes]
                     (Graph''addInputs-2 graph, node)
                     (Graph''add-2 graph, node)
-                    nil
+                    obsoleteNodes
                 )
 
                 (#_"boolean" Effect'''isCfgKill-1 [#_"Effect" _]
@@ -28449,9 +28397,9 @@ ZeroExtendNode'new-4
     (defn #_"void" GraphEffectList''initializePhiInput-4 [#_"GraphEffectList" this, #_"PhiNode" node, #_"int" index, #_"ValueNode" value]
         (EffectList''add-3 this, "set phi input",
             (reify Effect
-                (#_"void" Effect'''apply-3 [#_"Effect" _, #_"Graph" graph, #_"List<Node>" obsoleteNodes]
+                (#_"[Node]" Effect'''apply-3 [#_"Effect" _, #_"Graph" graph, #_"[Node]" obsoleteNodes]
                     (PhiNode''initializeValueAt-3 node, index, (Graph''addOrUniqueWithInputs-2 graph, value))
-                    nil
+                    obsoleteNodes
                 )
 
                 (#_"boolean" Effect'''isCfgKill-1 [#_"Effect" _]
@@ -28472,7 +28420,7 @@ ZeroExtendNode'new-4
     (defn #_"void" GraphEffectList''addVirtualMapping-3 [#_"GraphEffectList" this, #_"FrameState" node, #_"EscapeObjectState" state]
         (EffectList''add-3 this, "add virtual mapping",
             (reify Effect
-                (#_"void" Effect'''apply-3 [#_"Effect" _, #_"Graph" graph, #_"List<Node>" obsoleteNodes]
+                (#_"[Node]" Effect'''apply-3 [#_"Effect" _, #_"Graph" graph, #_"[Node]" obsoleteNodes]
                     (when (Node''isAlive-1 node)
                         (dotimes [#_"int" i (count (:virtualObjectMappings node))]
                             (when (= (:object (nth (:virtualObjectMappings node) i)) (:object state))
@@ -28481,7 +28429,7 @@ ZeroExtendNode'new-4
                         )
                         (§ ass! node (FrameState''addVirtualObjectMapping-2 node, (Graph''addOrUniqueWithInputs-2 graph, state)))
                     )
-                    nil
+                    obsoleteNodes
                 )
 
                 (#_"boolean" Effect'''isCfgKill-1 [#_"Effect" _]
@@ -28500,12 +28448,11 @@ ZeroExtendNode'new-4
     (defn #_"void" GraphEffectList''deleteNode-2 [#_"GraphEffectList" this, #_"Node" node]
         (EffectList''add-3 this, "delete fixed node",
             (reify Effect
-                (#_"void" Effect'''apply-3 [#_"Effect" _, #_"Graph" graph, #_"List<Node>" obsoleteNodes]
+                (#_"[Node]" Effect'''apply-3 [#_"Effect" _, #_"Graph" graph, #_"[Node]" obsoleteNodes]
                     (when (satisfies? FixedWithNextNode node)
                         (GraphUtil'unlinkFixedNode-1 node)
                     )
-                    (#_"List" .add obsoleteNodes, node)
-                    nil
+                    (conj' obsoleteNodes node)
                 )
 
                 (#_"boolean" Effect'''isCfgKill-1 [#_"Effect" _]
@@ -28519,9 +28466,9 @@ ZeroExtendNode'new-4
     (defn #_"void" GraphEffectList''killIfBranch-3 [#_"GraphEffectList" this, #_"IfNode" ifNode, #_"boolean" constantCondition]
         (EffectList''add-3 this, "kill if branch",
             (reify Effect
-                (#_"void" Effect'''apply-3 [#_"Effect" _, #_"Graph" graph, #_"List<Node>" obsoleteNodes]
+                (#_"[Node]" Effect'''apply-3 [#_"Effect" _, #_"Graph" graph, #_"[Node]" obsoleteNodes]
                     (Graph''removeSplitPropagate-3 graph, ifNode, (IfNode''getSuccessor-2 ifNode, constantCondition))
-                    nil
+                    obsoleteNodes
                 )
 
                 (#_"boolean" Effect'''isCfgKill-1 [#_"Effect" _]
@@ -28535,11 +28482,11 @@ ZeroExtendNode'new-4
     (defn #_"void" GraphEffectList''replaceWithSink-3 [#_"GraphEffectList" this, #_"FixedWithNextNode" node, #_"ControlSinkNode" sink]
         (EffectList''add-3 this, "kill if branch",
             (reify Effect
-                (#_"void" Effect'''apply-3 [#_"Effect" _, #_"Graph" graph, #_"List<Node>" obsoleteNodes]
+                (#_"[Node]" Effect'''apply-3 [#_"Effect" _, #_"Graph" graph, #_"[Node]" obsoleteNodes]
                     (Graph''add-2 graph, sink)
                     (Node''replaceAtPredecessor-2 node, sink)
                     (GraphUtil'killCFG-1 node)
-                    nil
+                    obsoleteNodes
                 )
 
                 (#_"boolean" Effect'''isCfgKill-1 [#_"Effect" _]
@@ -28562,7 +28509,7 @@ ZeroExtendNode'new-4
     (defn #_"void" GraphEffectList''replaceAtUsages-4 [#_"GraphEffectList" this, #_"ValueNode" node, #_"ValueNode" replacement, #_"FixedNode" insertBefore]
         (EffectList''add-3 this, "replace at usages",
             (reify Effect
-                (#_"void" Effect'''apply-3 [#_"Effect" _, #_"Graph" graph, #_"List<Node>" obsoleteNodes]
+                (#_"[Node]" Effect'''apply-3 [#_"Effect" _, #_"Graph" graph, #_"[Node]" obsoleteNodes]
                     (let [
                         #_"ValueNode" replacementNode (Graph''addOrUniqueWithInputs-2 graph, replacement)
                     ]
@@ -28581,9 +28528,8 @@ ZeroExtendNode'new-4
                         (when (satisfies? FixedWithNextNode node)
                             (GraphUtil'unlinkFixedNode-1 node)
                         )
-                        (#_"List" .add obsoleteNodes, node)
+                        (conj' obsoleteNodes node)
                     )
-                    nil
                 )
 
                 (#_"boolean" Effect'''isCfgKill-1 [#_"Effect" _]
@@ -28604,11 +28550,11 @@ ZeroExtendNode'new-4
     (defn #_"void" GraphEffectList''replaceFirstInput-4 [#_"GraphEffectList" this, #_"Node" node, #_"Node" oldInput, #_"Node" newInput]
         (EffectList''add-3 this, "replace first input",
             (reify Effect
-                (#_"void" Effect'''apply-3 [#_"Effect" _, #_"Graph" graph, #_"List<Node>" obsoleteNodes]
+                (#_"[Node]" Effect'''apply-3 [#_"Effect" _, #_"Graph" graph, #_"[Node]" obsoleteNodes]
                     (when (Node''isAlive-1 node)
                         (Node''replaceFirstInput-3 node, oldInput, newInput)
                     )
-                    nil
+                    obsoleteNodes
                 )
 
                 (#_"boolean" Effect'''isCfgKill-1 [#_"Effect" _]
@@ -28624,20 +28570,11 @@ ZeroExtendNode'new-4
     (defn #_"EffectsBlockState" EffectsBlockState'new-0 []
         (merge (EffectsBlockState'class.)
             (hash-map
-                ;; emtpy
-                #_"boolean" :dead? false
-            )
-        )
-    )
-
-    (defn #_"EffectsBlockState" EffectsBlockState'copy-1 [#_"EffectsBlockState" other]
-        (merge (EffectsBlockState'class.)
-            (hash-map
                 ;;;
                  ; This flag specifies whether this block is unreachable, which can happen during analysis
                  ; if conditions turn constant or nodes canonicalize to cfg sinks.
                  ;;
-                #_"boolean" :dead? (:dead? other)
+                #_"boolean" :dead? false
             )
         )
     )
@@ -28670,14 +28607,6 @@ ZeroExtendNode'new-4
                  ; Entries in this array may be nil if the corresponding virtual object is not alive or reachable currently.
                  ;;
                 #_"ObjectState[]" :objectStates (make-array ObjectState'iface 0)
-            )
-        )
-    )
-
-    (defn #_"PartialEscapeBlockState" PartialEscapeBlockState'copy-1 [#_"PartialEscapeBlockState" other]
-        (merge (PartialEscapeBlockState'class.) (EffectsBlockState'copy-1 other)
-            (hash-map
-                #_"ObjectState[]" :objectStates (:objectStates other)
             )
         )
     )
@@ -28817,7 +28746,7 @@ ZeroExtendNode'new-4
 
             (EffectList''add-3 materializeEffects, "materializeBefore",
                 (reify Effect
-                    (#_"void" Effect'''apply-3 [#_"Effect" _, #_"Graph" graph, #_"List<Node>" obsoleteNodes]
+                    (#_"[Node]" Effect'''apply-3 [#_"Effect" _, #_"Graph" graph, #_"[Node]" obsoleteNodes]
                         (doseq [#_"ValueNode" alloc otherAllocations]
                             (let [
                                 #_"ValueNode" otherAllocation (Graph''addOrUniqueWithInputs-2 graph, alloc)
@@ -28863,7 +28792,7 @@ ZeroExtendNode'new-4
                                 )
                             )
                         )
-                        nil
+                        obsoleteNodes
                     )
 
                     (#_"boolean" Effect'''isCfgKill-1 [#_"Effect" _]
@@ -28930,14 +28859,6 @@ ZeroExtendNode'new-4
         (merge (PEReadEliminationBlockState'class.) (PartialEscapeBlockState'new-0)
             (hash-map
                 #_"{ReadCacheEntry ValueNode}" :readCache {}
-            )
-        )
-    )
-
-    (defn #_"PEReadEliminationBlockState" PEReadEliminationBlockState'copy-1 [#_"PEReadEliminationBlockState" other]
-        (merge (PEReadEliminationBlockState'class.) (PartialEscapeBlockState'copy-1 other)
-            (hash-map
-                #_"{ReadCacheEntry ValueNode}" :readCache (:readCache other)
             )
         )
     )
@@ -29034,14 +28955,6 @@ ZeroExtendNode'new-4
         (merge (ReadEliminationBlockState'class.) (EffectsBlockState'new-0)
             (hash-map
                 #_"{CacheEntry ValueNode}" :readCache {}
-            )
-        )
-    )
-
-    (defn #_"ReadEliminationBlockState" ReadEliminationBlockState'copy-1 [#_"ReadEliminationBlockState" other]
-        (merge (ReadEliminationBlockState'class.) (EffectsBlockState'new-0)
-            (hash-map
-                #_"{CacheEntry ValueNode}" :readCache (:readCache other)
             )
         )
     )
@@ -29724,7 +29637,7 @@ ZeroExtendNode'new-4
     (defn #_"boolean" NodeClass''dataEquals-3 [#_"NodeClass" this, #_"Node" a, #_"Node" b]
         (loop-when [#_"int" i 0] (< i (count (:offsets (:data this)))) => true
             (let [
-                #_"Class" type (Fields''getType-2 (:data this), i)
+                #_"Class" type (nth (:types (:data this)) i)
             ]
                 (and
                     (if (#_"Class" .isPrimitive type)
@@ -30207,9 +30120,9 @@ ZeroExtendNode'new-4
  ; Describes fields in a class, primarily for access via Unsafe.
  ;;
 (class-ns Fields []
-    (defn #_"Fields" Fields'new-1 [#_"List<FieldInfo>" fields]
-        (Collections/sort fields)
+    (defn #_"Fields" Fields'new-1 [#_"FieldInfo*" fields]
         (let [
+            fields (sort fields)
             #_"int" n (count fields)
             #_"Fields" this
                 (merge (Fields'class.)
@@ -30236,11 +30149,10 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"void" Fields'translateInto-2 [#_"Fields" fields, #_"List<FieldInfo>" infos]
-        (dotimes [#_"int" i (count (:offsets fields))]
-            (#_"List" .add infos, (FieldInfo'new-4 (nth (:offsets fields) i), (nth (:names fields) i), (nth (:types fields) i), (nth (:declaringClasses fields) i)))
+    (defn #_"[FieldInfo]" Fields'translateInto-2 [#_"[FieldInfo]" infos, #_"Fields" fields]
+        (into' infos
+            (map FieldInfo'new-4 (:offsets fields) (:names fields) (:types fields) (:declaringClasses fields))
         )
-        nil
     )
 
     ;;;
@@ -30279,18 +30191,6 @@ ZeroExtendNode'new-4
         (= (nth (:offsets other) index) (nth (:offsets this) index))
     )
 
-    (defn #_"String" Fields''getName-2 [#_"Fields" this, #_"int" index]
-        (nth (:names this) index)
-    )
-
-    (defn #_"Class" Fields''getType-2 [#_"Fields" this, #_"int" index]
-        (nth (:types this) index)
-    )
-
-    (defn #_"Class" Fields''getDeclaringClass-2 [#_"Fields" this, #_"int" index]
-        (nth (:declaringClasses this) index)
-    )
-
     (defn #_"boolean" Fields''getBoolean-3 [#_"Fields" this, #_"Object" o, #_"int" i] (.getBoolean HotSpot'unsafe, o, (nth (:offsets this) i)))
     (defn #_"byte"    Fields''getByte-3    [#_"Fields" this, #_"Object" o, #_"int" i] (.getByte    HotSpot'unsafe, o, (nth (:offsets this) i)))
     (defn #_"short"   Fields''getShort-3   [#_"Fields" this, #_"Object" o, #_"int" i] (.getShort   HotSpot'unsafe, o, (nth (:offsets this) i)))
@@ -30319,11 +30219,10 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"void" Edges'translateInto-2 [#_"Edges" edges, #_"List<EdgeInfo>" infos]
-        (dotimes [#_"int" i (count (:offsets edges))]
-            (#_"List" .add infos, (EdgeInfo'new-4 (nth (:offsets edges) i), (Fields''getName-2 edges, i), (Fields''getType-2 edges, i), (Fields''getDeclaringClass-2 edges, i)))
+    (defn #_"[EdgeInfo]" Edges'translateInto-2 [#_"[EdgeInfo]" infos, #_"Edges" edges]
+        (into' infos
+            (map EdgeInfo'new-4 (:offsets edges) (:names edges) (:types edges) (:declaringClasses edges))
         )
-        nil
     )
 
     (defn #_"Node" Edges'getNodeUnsafe-2 [#_"Node" node, #_"long" offset]
@@ -30417,8 +30316,8 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"void" Edges''verifyUpdateValid-4 [#_"Edges" this, #_"Node" node, #_"int" index, #_"Object" newValue]
-        (when (and (some? newValue) (not (#_"Class" .isAssignableFrom (Fields''getType-2 this, index), (#_"Object" .getClass newValue))))
-            (throw (IllegalArgumentException. (str "Can not assign " (#_"Object" .getClass newValue) " to " (Fields''getType-2 this, index) " in " node)))
+        (when (and (some? newValue) (not (#_"Class" .isAssignableFrom (nth (:types this) index), (#_"Object" .getClass newValue))))
+            (throw (IllegalArgumentException. (str "Can not assign " (#_"Object" .getClass newValue) " to " (nth (:types this) index) " in " node)))
         )
         nil
     )
@@ -30537,19 +30436,10 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"void" InputEdges'translateInto-2 [#_"InputEdges" inputs, #_"List<InputInfo>" infos]
-        (dotimes [#_"int" i (count (:offsets inputs))]
-            (#_"List" .add infos, (InputInfo'new-6 (nth (:offsets inputs) i), (Fields''getName-2 inputs, i), (Fields''getType-2 inputs, i), (Fields''getDeclaringClass-2 inputs, i), (nth (:inputTypes inputs) i), (InputEdges''isOptional-2 inputs, i)))
+    (defn #_"[InputInfo]" InputEdges'translateInto-2 [#_"[InputInfo]" infos, #_"InputEdges" inputs]
+        (into' infos
+            (map InputInfo'new-6 (:offsets inputs) (:names inputs) (:types inputs) (:declaringClasses inputs) (:inputTypes inputs) (:isOptional inputs))
         )
-        nil
-    )
-
-    (defn #_"InputType" InputEdges''getInputType-2 [#_"InputEdges" this, #_"int" index]
-        (nth (:inputTypes this) index)
-    )
-
-    (defn #_"boolean" InputEdges''isOptional-2 [#_"InputEdges" this, #_"int" index]
-        (nth (:isOptional this) index)
     )
 
     (defm InputEdges Edges
@@ -30724,7 +30614,7 @@ ZeroExtendNode'new-4
 )
 
 (class-ns NodeFieldsScanner [FieldsScanner]
-    (defn #_"NodeFieldsScanner" NodeFieldsScanner'new-1 [#_"NodeClass" superNodeClass]
+    (defn #_"NodeFieldsScanner" NodeFieldsScanner'new-1 [#_"NodeClass" super]
         (let [
             #_"NodeFieldsScanner" this
                 (merge (NodeFieldsScanner'class.) (FieldsScanner'new-0)
@@ -30735,20 +30625,16 @@ ZeroExtendNode'new-4
                         #_"int" :directSuccessors 0
                     )
                 )
-            this
-                (when (some? superNodeClass) => this
-                    (InputEdges'translateInto-2 (:inputs superNodeClass), (:inputs this))
-                    (Edges'translateInto-2 (:successors superNodeClass), (:successors this))
-                    (Fields'translateInto-2 (:data superNodeClass), (:data this))
-                    (let [
-                        this (assoc this :directInputs (:directCount (:inputs superNodeClass)))
-                        this (assoc this :directSuccessors (:directCount (:successors superNodeClass)))
-                    ]
-                        this
-                    )
-                )
         ]
-            this
+            (when (some? super) => this
+                (-> this
+                    (update :inputs InputEdges'translateInto-2 (:inputs     super))
+                    (update :successors  Edges'translateInto-2 (:successors super))
+                    (update :data       Fields'translateInto-2 (:data       super))
+                    (assoc  :directInputs        (:directCount (:inputs     super)))
+                    (assoc  :directSuccessors    (:directCount (:successors super)))
+                )
+            )
         )
     )
 
@@ -63589,7 +63475,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"InputType" Position''getInputType-1 [#_"Position" this]
-        (InputEdges''getInputType-2 (:edges this), (:index this))
+        (nth (:inputTypes (:edges this)) (:index this))
     )
 
     (defn #_"void" Position''set-3 [#_"Position" this, #_"Node" node, #_"Node" value]
@@ -66695,11 +66581,13 @@ ZeroExtendNode'new-4
         ]
             (when (< 1 n) => ops
                 (let [
-                    #_"int" i (:begin m)
-                    ops (assoc' ops i (AMD64MultiStackMove'new-4 (:dst m), (:src m), (:reg m), (:slot m)))
+                    #_"int" i (:begin m) n (+ i n)
                 ]
-                    (Collections/fill (#_"List" .subList ops, (inc i), (+ i n)), nil)
-                    ops
+                    (loop-when-recur [ops (assoc' ops i (AMD64MultiStackMove'new-4 (:dst m), (:src m), (:reg m), (:slot m))) i (inc i)]
+                                     (< i n)
+                                     [(assoc' ops i nil) (inc i)]
+                                  => ops
+                    )
                 )
             )
         )
