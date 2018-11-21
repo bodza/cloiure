@@ -116,8 +116,8 @@
     [java.lang.reflect AnnotatedElement Constructor Field Method Modifier]
     [java.nio ByteBuffer ByteOrder]
     [java.util
-        AbstractList ArrayDeque Arrays BitSet Comparator Deque Iterator List ListIterator
-        NoSuchElementException PriorityQueue Queue
+        AbstractList Arrays BitSet Comparator Iterator List ListIterator NoSuchElementException
+        PriorityQueue Queue
     ]
     [java.util.stream Stream Stream$Builder]
 
@@ -1346,9 +1346,8 @@ Fields'new-1
 FieldsCache''lookup-5
 FieldsCache'new-0
 FinalFieldBarrierNode'new-1
-FixPointIntervalBuilder''build-1
+FixPointIntervalBuilder'build-3
 FixPointIntervalBuilder''getOrCreateInterval-2
-FixPointIntervalBuilder'new-3
 FixReadsClosure'new-0
 FixReadsPhase'new-1
 FixedAccessNode''setNullCheck-2
@@ -1788,8 +1787,7 @@ InliningData''inliningDepth-1
 InliningData''moveForward-1
 InliningData'isFreshInstantiation-1
 InliningData'new-3
-InliningIterator''apply-1
-InliningIterator'new-1
+InliningIterator'apply-1
 InliningPhase'new-1
 InliningPolicy'CapInheritedRelevance
 InliningPolicy'RelevanceCapForInlining
@@ -1975,6 +1973,8 @@ IsNullNode'create-1
 IsNullNode'new-1
 IsNullNode'tryCanonicalize-1
 IterativeConditionalEliminationPhase'new-2
+IterativeNodeWorkList''add-2
+IterativeNodeWorkList''addAll-2
 IterativeNodeWorkList'new-3
 JSRData'new-0
 JVMCI'backend
@@ -2740,9 +2740,6 @@ NodeEventListener'new-0
 NodeEventScope'new-2
 NodeFieldsScanner'new-1
 NodeFieldsScanner''scan-3
-NodeFlood''add-2
-NodeFlood''isMarked-2
-NodeFlood'new-0
 NodeInputList'new-1
 NodeInputList'new-2i
 NodeInputList'new-2s
@@ -2757,8 +2754,6 @@ NodeLoopInfo'new-0
 NodeSuccessorList'new-1
 NodeSuccessorList'new-2i
 NodeSuccessorList'new-2s
-NodeWorkList''addAll-2
-NodeWorkList'new-2
 NonMaterializationUsageReplacer'new-5
 NormalizeCompareNode'create-3
 NormalizeCompareNode'new-3
@@ -3078,6 +3073,8 @@ SignedDivNode'new-2
 SignedRemNode'create-2
 SignedRemNode'new-2
 Signedness'SET
+SingletonNodeWorkList''add-2
+SingletonNodeWorkList''addAll-2
 SingletonNodeWorkList'new-1
 SlotSize'SET
 SmallLocalLiveness'new-3
@@ -5146,7 +5143,6 @@ ZeroExtendNode'new-4
 
 (defp NodeEventScope)
 (defp NodeFieldsScanner)
-(defp NodeFlood)
 (defp NodeInputList)
 
 (defp NodeIteratorClosure #_"<T>"
@@ -5258,10 +5254,6 @@ ZeroExtendNode'new-4
     (defn #_"FrameState*" NodeWithState''states-1 [#_"NodeWithState" this]
         (filter #(satisfies? FrameState %) (Node''inputs-1 this))
     )
-)
-
-(defp NodeWorkList
-    (#_"void" NodeWorkList'''add-2 [#_"NodeWorkList" this, #_"Node" node])
 )
 
 (defp NonMaterializationUsageReplacer)
@@ -6955,7 +6947,7 @@ ZeroExtendNode'new-4
      ;;
     (defn- #_"void" ComputeBlockOrder'computeLinearScanOrder-3 [#_"[Block]" order, #_"PriorityQueue<Block>" worklist, #_"BitSet" visited]
         (while (seq worklist)
-            (loop [#_"Block" path (#_"PriorityQueue" .poll worklist)]
+            (loop [#_"Block" path (#_"PriorityQueue" .pollFirst worklist)]
                 (let [
                     path (ComputeBlockOrder'addPathToLinearScanOrder-4 path, order, worklist, visited)
                 ]
@@ -7069,7 +7061,7 @@ ZeroExtendNode'new-4
      ;;
     (defn- #_"void" ComputeBlockOrder'computeCodeEmittingOrder-3 [#_"[Block]" order, #_"PriorityQueue<Block>" worklist, #_"BitSet" visited]
         (while (seq worklist)
-            (ComputeBlockOrder'addPathToCodeEmittingOrder-4 (#_"PriorityQueue" .poll worklist), order, worklist, visited)
+            (ComputeBlockOrder'addPathToCodeEmittingOrder-4 (#_"PriorityQueue" .pollFirst worklist), order, worklist, visited)
         )
         nil
     )
@@ -13519,7 +13511,7 @@ ZeroExtendNode'new-4
                  ; Highest instruction id.
                  ;;
                 #_"int" :maxOpId (Allocator'numberInstructions-2 lir, (:reversePostOrder (:cfg lir)))
-                #_"{SlotSize Deque<StackSlot>}" :freeSlots {}
+                #_"{SlotSize (StackSlot)}" :freeSlots {}
             )
         )
     )
@@ -13539,46 +13531,47 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"{LIRInstruction}" Allocator''buildIntervals-1 [#_"Allocator" this]
-        (FixPointIntervalBuilder''build-1 (FixPointIntervalBuilder'new-3 (:lir this), (:stackSlotMap this), (:maxOpId this)))
+        (FixPointIntervalBuilder'build-3 (:lir this), (:stackSlotMap this), (:maxOpId this))
     )
 
     ;;;
      ; Gets a free stack slot for {@code slot} or nil if there is none.
      ;;
-    (defn- #_"StackSlot" Allocator''findFreeSlot-2 [#_"Allocator" this, #_"VirtualStackSlot" slot]
+    (defn- #_"[StackSlot this]" Allocator''findFreeSlot-2 [#_"Allocator" this, #_"VirtualStackSlot" slot]
         (let [
             #_"SlotSize" size (Allocator'forKind-1 (#_"Value" .getValueKind slot))
         ]
-            (when-not (= size :SlotSize'Illegal)
+            (when-not (= size :SlotSize'Illegal) => [nil this]
                 (let [
-                    #_"Deque<StackSlot>" freeList (get (:freeSlots this) size)
+                    #_"(StackSlot)" freeList (get (:freeSlots this) size)
                 ]
-                    (when (some? freeList)
-                        (#_"Deque" .pollLast freeList)
+                    (when (some? freeList) => [nil this]
+                        [(first freeList) (update-in this [:freeSlots size] next)]
                     )
                 )
             )
         )
     )
 
-    (defn- #_"void" Allocator''allocateSlot-2 [#_"Allocator" this, #_"StackInterval" interval]
+    (defn- #_"[this StackInterval]" Allocator''allocateSlot-2 [#_"Allocator" this, #_"StackInterval" interval]
         (let [
             #_"VirtualStackSlot" virtualSlot (:operand interval)
-            #_"StackSlot" location
+            [this #_"StackSlot" location]
                 (let [
-                    #_"StackSlot" slot (Allocator''findFreeSlot-2 this, virtualSlot)
+                    [#_"StackSlot" slot this] (Allocator''findFreeSlot-2 this, virtualSlot)
                 ]
-                    (if (some? slot)
-                        ;; Free stack slot available. Note that we create a new one because the kind might not match.
-                        (StackSlot/get (:kind interval), (#_"StackSlot" .getRawOffset slot), (#_"StackSlot" .getRawAddFrameSize slot))
-                        ;; Allocate new stack slot.
-                        (FrameMap''allocateSpillSlot-2 (:frameMap (:frameMapBuilder this)), (#_"Value" .getValueKind virtualSlot))
-                    )
+                    [this
+                        (if (some? slot)
+                            ;; Free stack slot available. Note that we create a new one because the kind might not match.
+                            (StackSlot/get (:kind interval), (#_"StackSlot" .getRawOffset slot), (#_"StackSlot" .getRawAddFrameSize slot))
+                            ;; Allocate new stack slot.
+                            (FrameMap''allocateSpillSlot-2 (:frameMap (:frameMapBuilder this)), (#_"Value" .getValueKind virtualSlot))
+                        )
+                    ]
                 )
         ]
-            (§ ass! interval (StackInterval''setLocation-2 interval, location))
+            [this (StackInterval''setLocation-2 interval, location)]
         )
-        nil
     )
 
     ;;;
@@ -13596,35 +13589,21 @@ ZeroExtendNode'new-4
     ;;;
      ; Adds a stack slot to the list of free slots.
      ;;
-    (defn- #_"void" Allocator''freeSlot-2 [#_"Allocator" this, #_"StackSlot" slot]
+    (defn- #_"this" Allocator''freeSlot-2 [#_"Allocator" this, #_"StackSlot" slot]
         (let [
             #_"SlotSize" size (Allocator'forKind-1 (#_"StackSlot" .getValueKind slot))
         ]
-            (when-not (= size :SlotSize'Illegal)
-                (let [
-                    #_"Deque<StackSlot>" freeList
-                        (or (get (:freeSlots this) size)
-                            (let [
-                                freeList (ArrayDeque.)
-                            ]
-                                (§ ass! (:freeSlots this) (assoc (:freeSlots this) size freeList))
-                                freeList
-                            )
-                        )
-                ]
-                    (#_"Deque" .addLast freeList, slot)
-                )
+            (when-not (= size :SlotSize'Illegal) => this
+                (update-in this [:freeSlots size] #(cons slot %))
             )
         )
-        nil
     )
 
     ;;;
      ; Finishes {@code interval} by adding its location to the list of free stack slots.
      ;;
-    (defn- #_"void" Allocator''finished-2 [#_"Allocator" this, #_"StackInterval" interval]
+    (defn- #_"this" Allocator''finished-2 [#_"Allocator" this, #_"StackInterval" interval]
         (Allocator''freeSlot-2 this, (:location interval))
-        nil
     )
 
     ;;;
@@ -13633,11 +13612,11 @@ ZeroExtendNode'new-4
     (defn- #_"StackInterval" Allocator''activateNext-1 [#_"Allocator" this]
         (when (seq (:unhandled this))
             (let [
-                #_"StackInterval" _next (#_"PriorityQueue" .poll (:unhandled this))
+                #_"StackInterval" _next (#_"PriorityQueue" .pollFirst (:unhandled this))
             ]
                 ;; finish handled intervals
                 (loop-when-recur [#_"int" id (:from _next)] (< (Allocator''activePeekId-1 this) id) [id]
-                    (Allocator''finished-2 this, (#_"PriorityQueue" .poll (:active this)))
+                    (§ ass! this (Allocator''finished-2 this, (#_"PriorityQueue" .pollFirst (:active this))))
                 )
                 (#_"PriorityQueue" .add (:active this), _next)
                 _next
@@ -13645,7 +13624,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"void" Allocator''allocateStackSlots-1 [#_"Allocator" this]
+    (defn- #_"this" Allocator''allocateStackSlots-1 [#_"Allocator" this]
         ;; create unhandled lists
         (doseq [#_"StackInterval" interval (:stackSlotMap this)]
             (when (some? interval)
@@ -13654,9 +13633,9 @@ ZeroExtendNode'new-4
         )
 
         (loop-when-recur [#_"StackInterval" interval (Allocator''activateNext-1 this)] (some? interval) [(Allocator''activateNext-1 this)]
-            (Allocator''allocateSlot-2 this, interval)
+            (§ ass! [this interval] (Allocator''allocateSlot-2 this, interval))
         )
-        nil
+        this
     )
 
     (defn- #_"void" Allocator''assignStackSlots-2 [#_"Allocator" this, #_"{LIRInstruction}" usePos]
@@ -13684,7 +13663,7 @@ ZeroExtendNode'new-4
         (let [
             #_"{LIRInstruction}" usePos (Allocator''buildIntervals-1 this)
         ]
-            (Allocator''allocateStackSlots-1 this)
+            (§ ass! this (Allocator''allocateStackSlots-1 this))
             (Allocator''assignStackSlots-2 this, usePos)
         )
         nil
@@ -22254,7 +22233,7 @@ ZeroExtendNode'new-4
                          ; Graph in which inlining may be performed at one or more of the callsites containined in #remainingInvokes.
                          ;;
                         #_"Graph" :graph graph
-                        #_"(InvokeNode)" :remainingInvokes (InliningIterator''apply-1 (InliningIterator'new-1 graph))
+                        #_"(InvokeNode)" :remainingInvokes (InliningIterator'apply-1 graph)
                         #_"double" :probability probability
                         #_"double" :relevance relevance
                         ;;;
@@ -22352,7 +22331,7 @@ ZeroExtendNode'new-4
                 #_"CanonicalizerPhase" :phase phase
                 #_"int" :newNodesMark newNodesMark
                 #_"Node*" :initWorkingSet workingSet
-                #_"NodeWorkList" :workList nil
+                #_"IterativeNodeWorkList" :workList nil
                 #_"Tool" :tool nil
             )
         )
@@ -22367,7 +22346,7 @@ ZeroExtendNode'new-4
         (and (Node''isAlive-1 node) (ValueNode'''inferStamp-1 node)
             (do
                 (doseq [#_"Node" usage (:nodeUsages node)]
-                    (NodeWorkList'''add-2 (:workList this), usage)
+                    (§ ass! (:workList this) (IterativeNodeWorkList''add-2 (:workList this), usage))
                 )
                 true
             )
@@ -22397,7 +22376,7 @@ ZeroExtendNode'new-4
                                 (or (CanonicalizerInstance''tryCanonicalize-3 this, node, (:nodeClass node))
                                     (do
                                         (doseq [#_"Node" usage (:nodeUsages node)]
-                                            (NodeWorkList'''add-2 (:workList this), usage)
+                                            (§ ass! (:workList this) (IterativeNodeWorkList''add-2 (:workList this), usage))
                                         )
                                         false
                                     )
@@ -22417,28 +22396,28 @@ ZeroExtendNode'new-4
             #_"NodeEventListener" listener
                 (§ proxy #_"NodeEventListener" (NodeEventListener'new-0)
                     (#_"void" NodeEventListener'''nodeAdded-2 [#_"NodeEventListener" _, #_"Node" node]
-                        (NodeWorkList'''add-2 (:workList instance), node)
+                        (§ ass! (:workList instance) (IterativeNodeWorkList''add-2 (:workList instance), node))
                         nil
                     )
 
                     (#_"void" NodeEventListener'''inputChanged-2 [#_"NodeEventListener" _, #_"Node" node]
-                        (NodeWorkList'''add-2 (:workList instance), node)
+                        (§ ass! (:workList instance) (IterativeNodeWorkList''add-2 (:workList instance), node))
                         (when (satisfies? IndirectCanonicalization node)
                             (doseq [#_"Node" usage (:nodeUsages node)]
-                                (NodeWorkList'''add-2 (:workList instance), usage)
+                                (§ ass! (:workList instance) (IterativeNodeWorkList''add-2 (:workList instance), usage))
                             )
                         )
                         nil
                     )
 
                     (#_"void" NodeEventListener'''usagesDroppedToZero-2 [#_"NodeEventListener" _, #_"Node" node]
-                        (NodeWorkList'''add-2 (:workList instance), node)
+                        (§ ass! (:workList instance) (IterativeNodeWorkList''add-2 (:workList instance), node))
                         nil
                     )
                 )
         ]
             (try (§ with [#_"NodeEventScope" _ (Graph''trackNodeEvents-2 graph, listener)])
-                (doseq [#_"Node" node (:workList this)]
+                (doseq [#_"Node" node (:workList this)]
                     (CanonicalizerInstance''processNode-2 this, node)
                 )
             )
@@ -22457,11 +22436,11 @@ ZeroExtendNode'new-4
                     (§ ass! this (assoc this :workList (IterativeNodeWorkList'new-3 graph, whole-graph?, CanonicalizerInstance'MAX_ITERATION_PER_NODE)))
                     (do
                         (§ ass! this (assoc this :workList (IterativeNodeWorkList'new-3 graph, false, CanonicalizerInstance'MAX_ITERATION_PER_NODE)))
-                        (NodeWorkList''addAll-2 (:workList this), (:initWorkingSet this))
+                        (§ ass! (:workList this) (IterativeNodeWorkList''addAll-2 (:workList this), (:initWorkingSet this)))
                     )
                 )
                 (when-not whole-graph?
-                    (NodeWorkList''addAll-2 (:workList this), (Graph''getNodesSince-2 graph, (:newNodesMark this)))
+                    (§ ass! (:workList this) (IterativeNodeWorkList''addAll-2 (:workList this), (Graph''getNodesSince-2 graph, (:newNodesMark this))))
                 )
                 (§ ass! this (assoc this :tool (Tool'new-1 this)))
                 (CanonicalizerInstance''processWorkSet-2 this, graph)
@@ -24388,16 +24367,16 @@ ZeroExtendNode'new-4
         (when (Graph''hasLoops-1 (:graph this)) => (assoc this :rootScope (Scope'new-3 this, (:start (:graph this)), nil))
             (let [
                 this (assoc this :rootScope nil)
-                #_"NodeWorkList" workList (SingletonNodeWorkList'new-1 (:graph this))
+                #_"SingletonNodeWorkList" workList (SingletonNodeWorkList'new-1 (:graph this))
                 #_"{LoopBeginNode Scope}" loops {}
                 #_"Scope" topScope (Scope'new-3 this, (:start (:graph this)), nil)
             ]
                 (doseq [#_"LoopBeginNode" loopBegin (Graph''getNodes-2 (:graph this), LoopBeginNode)]
                     (ComputeInliningRelevance''createLoopScope-4 this, loopBegin, loops, topScope)
                 )
-                (Scope''process-2 topScope, workList)
+                (§ ass! [topScope workList] (Scope''process-2 topScope, workList))
                 (doseq [#_"Scope" scope (vals loops)]
-                    (Scope''process-2 scope, workList)
+                    (§ ass! [scope workList] (Scope''process-2 scope, workList))
                 )
                 this
             )
@@ -24959,7 +24938,7 @@ ZeroExtendNode'new-4
                 ;;;
                  ; Tests which may be eliminated because post dominating tests to prove a broader condition.
                  ;;
-                #_"Deque<DeoptimizingGuard>" :pendingTests (ArrayDeque.)
+                #_"(DeoptimizingGuard)" :pendingTests nil
             )
         )
     )
@@ -25533,7 +25512,7 @@ ZeroExtendNode'new-4
                 )
         ]
             (when (satisfies? DeoptimizingGuard guard)
-                (#_"Deque" .addFirst (:pendingTests this), guard)
+                (§ ass! this (update this :pendingTests #(cons guard %)))
             )
             (ConditionalEliminationInstance''registerCondition-4 this, logic, negated?, guard)
         )
@@ -25711,7 +25690,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"this" ConditionalEliminationInstance''processNode-2 [#_"ConditionalEliminationInstance" this, #_"Node" node]
         (when (and (satisfies? NodeWithState node) (not (satisfies? GuardingNode node)))
-            (#_"Deque" .clear (:pendingTests this))
+            (§ ass! this (assoc this :pendingTests nil))
         )
         (when (satisfies? MergeNode node)
             (ConditionalEliminationInstance''introducePisForPhis-2 this, node)
@@ -25761,7 +25740,7 @@ ZeroExtendNode'new-4
                 #_"int" mark (count (:undo this))
             ]
                 ;; For now conservatively collect guards only within the same block.
-                (#_"Deque" .clear (:pendingTests this))
+                (§ ass! this (assoc this :pendingTests nil))
                 (§ ass! this (ConditionalEliminationInstance''processNodes-2 this, block))
                 mark
             )
@@ -25910,13 +25889,6 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"void" ConstantTreeAnalyzer''filteredPush-3 [#_"ConstantTreeAnalyzer" this, #_"Deque<Block>" worklist, #_"Block" block]
-        (when (ConstantTreeAnalyzer''isMarked-2 this, block)
-            (#_"Deque" .offerLast worklist, block)
-        )
-        nil
-    )
-
     ;;;
      ; Queues all relevant blocks for {@linkplain #process processing}.
      ;
@@ -25926,22 +25898,20 @@ ZeroExtendNode'new-4
      ; @param startBlock The start block of the dominator subtree.
      ;;
     (defn- #_"void" ConstantTreeAnalyzer''analyzeBlocks-2 [#_"ConstantTreeAnalyzer" this, #_"Block" startBlock]
-        (let [
-            #_"Deque<Block>" worklist (ArrayDeque.)
-        ]
-            (loop-when-recur [#_"Block" block startBlock] (some? block) [(#_"Deque" .pollLast worklist)]
-                (cond
-                    (ConstantTreeAnalyzer''isLeafBlock-2 this, block) (ConstantTreeAnalyzer''leafCost-2 this, block)
-                    (#_"BitSet" .get (:visited this), (:id block))    (ConstantTreeAnalyzer''process-2 this, block)
-                    :else
-                        (do ;; If not yet visited (and not a leaf block), process all children first!
-                            (#_"Deque" .offerLast worklist, block)
-                            (loop-when-recur [#_"Block" dominated (:firstDominated block)] (some? dominated) [(:dominatedSibling dominated)]
-                                (ConstantTreeAnalyzer''filteredPush-3 this, worklist, dominated)
+        (loop-when [#_"Block" block startBlock #_"(Block)" stack nil] (some? block)
+            (let [
+                stack
+                    (cond
+                        (ConstantTreeAnalyzer''isLeafBlock-2 this, block) (do (ConstantTreeAnalyzer''leafCost-2 this, block) stack)
+                        (#_"BitSet" .get (:visited this), (:id block))    (do (ConstantTreeAnalyzer''process-2 this, block) stack)
+                        :else
+                            (do ;; If not yet visited (and not a leaf block), process all children first!
+                                (#_"BitSet" .set (:visited this), (:id block))
+                                (->> (:firstDominated block) (iterate :dominatedSibling) (take-while some?) (filter #(ConstantTreeAnalyzer''isMarked-2 this, %)) (cons block) (into stack))
                             )
-                            (#_"BitSet" .set (:visited this), (:id block))
-                        )
-                )
+                    )
+            ]
+                (recur (first stack) (next stack))
             )
         )
         nil
@@ -27415,82 +27385,74 @@ ZeroExtendNode'new-4
         (DeadCodeEliminationPhase'new-1 :Optionality'Required)
     )
 
-    (defn- #_"void" DeadCodeEliminationPhase'iterateSuccessorsAndInputs-1 [#_"NodeFlood" flood]
-        (let [
-            #_"EdgeVisitor" consumer
-                (reify EdgeVisitor
-                    (#_"Node" EdgeVisitor'''apply-3 [#_"EdgeVisitor" _, #_"Node" source, #_"Node" target]
-                        (§ ass! flood (NodeFlood''add-2 flood, target))
-                        target
-                    )
-                )
-        ]
-            (doseq [#_"Node" current flood]
-                (if (satisfies? AbstractEndNode current)
-                    (§ ass! flood (NodeFlood''add-2 flood, (AbstractEndNode'''merge-1 current)))
-                    (do
-                        (Node''applySuccessors-2 current, consumer)
-                        (Node''applyInputs-2 current, consumer)
-                    )
-                )
-            )
-        )
-        nil
-    )
-
-    (defn- #_"void" DeadCodeEliminationPhase'deleteNodes-2 [#_"NodeFlood" flood, #_"Graph" graph]
-        (let [
-            #_"EdgeVisitor" consumer
-                (reify EdgeVisitor
-                    (#_"Node" EdgeVisitor'''apply-3 [#_"EdgeVisitor" _, #_"Node" source, #_"Node" target]
-                        (when (and (Node''isAlive-1 target) (NodeFlood''isMarked-2 flood, target)) => target
-                            (Node''removeUsage-2 target, source)
-                        )
-                    )
-                )
-        ]
-            (doseq [#_"Node" node (Graph''getNodes-1 graph)]
-                (when-not (NodeFlood''isMarked-2 flood, node)
-                    (Node''markDeleted-1 node)
-                    (Node''applyInputs-2 node, consumer)
-                )
-            )
-        )
-        nil
-    )
-
     (defm DeadCodeEliminationPhase Phase
         (#_"Graph" Phase'''run-3 [#_"DeadCodeEliminationPhase" this, #_"Graph" graph, #_"PhaseContext" context]
             (when-not (and (:optional this) GraalOptions'reduceDCE)
                 (let [
-                    #_"NodeFlood" flood (NodeFlood'new-0)
                     #_"int" totalNodeCount (Graph''getNodeCount-1 graph)
-                ]
-                    (§ ass! flood (NodeFlood''add-2 flood, (:start graph)))
-                    (DeadCodeEliminationPhase'iterateSuccessorsAndInputs-1 flood)
-                    (let [
-                        #_"boolean" changed?
-                            (loop-when [changed? false #_"seq" s (seq (Graph''getNodes-2 graph, GuardNode))] (some? s) => changed?
-                                (let [
-                                    #_"GuardNode" guard (first s)
-                                    changed?
-                                        (when (NodeFlood''isMarked-2 flood, (FloatingAnchoredNode''getAnchor-1 guard)) => changed?
-                                            (§ ass! flood (NodeFlood''add-2 flood, guard))
-                                            true
-                                        )
-                                ]
-                                    (recur changed? (next s))
+                    #_"{Node}'" v'flood (volatile! #{ (:start graph) })
+                    mark- (fn #_"{Node}" [#_"{Node}" flood, #_"Node" node] (if (some? node) (conj flood node) flood))
+                    #_"EdgeVisitor" marker
+                        (reify EdgeVisitor
+                            (#_"Node" EdgeVisitor'''apply-3 [#_"EdgeVisitor" _, #_"Node" source, #_"Node" target]
+                                (vswap! v'flood mark- target)
+                                target
+                            )
+                        )
+                    _
+                        (doseq [#_"Node" node @v'flood]
+                            (if (satisfies? AbstractEndNode node)
+                                (vswap! v'flood mark- (AbstractEndNode'''merge-1 node))
+                                (do
+                                    (Node''applySuccessors-2 node, marker)
+                                    (Node''applyInputs-2 node, marker)
                                 )
                             )
-                    ]
-                        (when changed?
-                            (DeadCodeEliminationPhase'iterateSuccessorsAndInputs-1 flood)
                         )
-                        (if (= totalNodeCount (:totalMarkedCount flood))
-                            ;; all nodes are live => nothing more to do
-                            nil
-                            ;; some nodes are not marked alive and therefore dead => proceed
-                            (DeadCodeEliminationPhase'deleteNodes-2 flood, graph)
+                    #_"boolean" changed?
+                        (loop-when [changed? false #_"seq" s (seq (Graph''getNodes-2 graph, GuardNode))] (some? s) => changed?
+                            (let [
+                                #_"GuardNode" guard (first s)
+                                changed?
+                                    (when (contains? @v'flood (FloatingAnchoredNode''getAnchor-1 guard)) => changed?
+                                        (vswap! v'flood mark- guard)
+                                        true
+                                    )
+                            ]
+                                (recur changed? (next s))
+                            )
+                        )
+                    _
+                        (when changed?
+                            (doseq [#_"Node" node @v'flood]
+                                (if (satisfies? AbstractEndNode node)
+                                    (vswap! v'flood mark- (AbstractEndNode'''merge-1 node))
+                                    (do
+                                        (Node''applySuccessors-2 node, marker)
+                                        (Node''applyInputs-2 node, marker)
+                                    )
+                                )
+                            )
+                        )
+                ]
+                    (when-not (= (count @v'flood) totalNodeCount)
+                        ;; some nodes are not marked alive and therefore dead
+                        (let [
+                            #_"EdgeVisitor" eraser
+                                (reify EdgeVisitor
+                                    (#_"Node" EdgeVisitor'''apply-3 [#_"EdgeVisitor" _, #_"Node" source, #_"Node" target]
+                                        (when (and (Node''isAlive-1 target) (contains? @v'flood target)) => target
+                                            (Node''removeUsage-2 target, source)
+                                        )
+                                    )
+                                )
+                        ]
+                            (doseq [#_"Node" node (Graph''getNodes-1 graph)]
+                                (when-not (contains? @v'flood node)
+                                    (Node''markDeleted-1 node)
+                                    (Node''applyInputs-2 node, eraser)
+                                )
+                            )
                         )
                     )
                 )
@@ -30566,10 +30528,9 @@ ZeroExtendNode'new-4
  ; Calculates the stack intervals using a worklist-based backwards data-flow analysis.
  ;;
 (class-ns FixPointIntervalBuilder []
-    (defn #_"FixPointIntervalBuilder" FixPointIntervalBuilder'new-3 [#_"LIR" lir, #_"StackInterval[]" stackSlotMap, #_"int" maxOpId]
+    (defn- #_"FixPointIntervalBuilder" FixPointIntervalBuilder'new-2 [#_"StackInterval[]" stackSlotMap, #_"int" maxOpId]
         (merge (FixPointIntervalBuilder'class.)
             (hash-map
-                #_"LIR" :lir lir
                 #_"StackInterval[]" :stackSlotMap stackSlotMap
                 #_"int" :maxOpId maxOpId
                 #_"{Block BitSet}" :liveInMap {}
@@ -30644,59 +30605,44 @@ ZeroExtendNode'new-4
         (inc (:id (nth ops (dec (count ops)))))
     )
 
-    (defn- #_"void" FixPointIntervalBuilder''processBlock-3 [#_"FixPointIntervalBuilder" this, #_"Block" block, #_"Deque<Block>" worklist]
-        (when (FixPointIntervalBuilder''updateOutBlock-2 this, block)
-            (let [
-                #_"[LIRInstruction]" ops (LIR''getLIRforBlock-2 (:lir this), block)
-                ;; get out set and mark intervals
-                #_"BitSet" outSet (get (:liveOutMap this) block)
-            ]
-                (FixPointIntervalBuilder''markOutInterval-3 this, outSet, (FixPointIntervalBuilder'getBlockEnd-1 ops))
-
-                ;; process instructions
-                (let [
-                    #_"BlockClosure" closure (BlockClosure'new-2 this, (#_"Object" .clone outSet))
-                ]
-                    (loop-when-recur [#_"int" i (dec (count ops))] (<= 0 i) [(dec i)]
-                        (BlockClosure''processInstructionBottomUp-2 closure, (nth ops i))
-                    )
-
-                    ;; add predecessors to work list
-                    (doseq [#_"Block" b (:predecessors block)]
-                        (#_"Deque" .add worklist, b)
-                    )
-                    ;; set in set and mark intervals
-                    (let [
-                        #_"BitSet" inSet (:currentSet closure)
-                    ]
-                        (§ ass! this (assoc-in this [:liveInMap block] inSet))
-                        (FixPointIntervalBuilder''markInInterval-3 this, inSet, (FixPointIntervalBuilder'getBlockBegin-1 ops))
-                    )
-                )
-            )
-        )
-        nil
-    )
-
     ;;;
      ; Builds the lifetime intervals for {@link VirtualStackSlot virtual stack slots}, sets up #stackSlotMap
      ; and returns a set of use positions, i.e. instructions that contain virtual stack slots.
      ;;
-    (defn #_"{LIRInstruction}" FixPointIntervalBuilder''build-1 [#_"FixPointIntervalBuilder" this]
+    (defn #_"{LIRInstruction}" FixPointIntervalBuilder'build-3 [#_"LIR" lir, #_"StackInterval[]" stackSlotMap, #_"int" maxOpId]
         (let [
-            #_"Deque<Block>" worklist (ArrayDeque.)
-            #_"Block[]" blocks (:reversePostOrder (:cfg (:lir this)))
+            #_"FixPointIntervalBuilder" builder (FixPointIntervalBuilder'new-2 stackSlotMap, maxOpId)
+            builder (reduce #(assoc-in %1 [:liveInMap %2] (BitSet.)) builder (:reversePostOrder (:cfg lir)))
         ]
-            (loop-when-recur [#_"int" i (dec (count blocks))] (<= 0 i) [(dec i)]
-                (#_"Deque" .add worklist, (nth blocks i))
+            (loop-when [builder builder #_"queue [Block]" queue (reverse (:reversePostOrder (:cfg lir)))] (seq queue) => (:usePos builder)
+                (let [
+                    [#_"Block" block & queue] queue
+                    [builder queue]
+                        (when (FixPointIntervalBuilder''updateOutBlock-2 builder, block) => [builder queue]
+                            (let [
+                                #_"[LIRInstruction]" ops (LIR''getLIRforBlock-2 lir, block)
+                                ;; get out set and mark intervals
+                                #_"BitSet" outSet (get (:liveOutMap builder) block)
+                                _ (FixPointIntervalBuilder''markOutInterval-3 builder, outSet, (FixPointIntervalBuilder'getBlockEnd-1 ops))
+                                ;; process instructions
+                                #_"BlockClosure" closure (BlockClosure'new-2 builder, (#_"Object" .clone outSet))
+                                _
+                                    (loop-when-recur [#_"int" i (dec (count ops))] (<= 0 i) [(dec i)]
+                                        (BlockClosure''processInstructionBottomUp-2 closure, (nth ops i))
+                                    )
+                                ;; set in set and mark intervals
+                                #_"BitSet" inSet (:currentSet closure)
+                                builder (assoc-in builder [:liveInMap block] inSet)
+                                _ (FixPointIntervalBuilder''markInInterval-3 builder, inSet, (FixPointIntervalBuilder'getBlockBegin-1 ops))
+                            ]
+                                ;; add predecessors to work list
+                                [builder (into' queue (:predecessors block))]
+                            )
+                        )
+                ]
+                    (recur builder queue)
+                )
             )
-            (doseq [#_"Block" block (:reversePostOrder (:cfg (:lir this)))]
-                (§ ass! this (assoc-in this [:liveInMap block] (BitSet.)))
-            )
-            (while (seq worklist)
-                (FixPointIntervalBuilder''processBlock-3 this, (#_"Deque" .poll worklist), worklist)
-            )
-            (:usePos this)
         )
     )
 )
@@ -33919,94 +33865,77 @@ ZeroExtendNode'new-4
  ; the InvokeNodes with MethodCallTargetNode. Such list of callsites is returned by #apply().
  ;;
 (class-ns InliningIterator []
-    (defn #_"InliningIterator" InliningIterator'new-1 [#_"Graph" graph]
+    (defn- #_"InliningIterator" InliningIterator'new-0 []
         (merge (InliningIterator'class.)
             (hash-map
-                #_"StartNode" :start (:start graph)
-                #_"Deque<FixedNode>" :nodeQueue (ArrayDeque.)
-                #_"{Node}" :queuedNodes #{}
+                #_"queue [FixedNode]" :nodeQueue nil
+                #_"{Node}" :visitedNodes #{}
             )
-        )
-    )
-
-    (defn- #_"void" InliningIterator''forcedQueue-2 [#_"InliningIterator" this, #_"Node" node]
-        (§ ass! (:queuedNodes this) (conj (:queuedNodes this) node))
-        (#_"Deque" .addFirst (:nodeQueue this), node)
-        nil
-    )
-
-    (defn- #_"FixedNode" InliningIterator''nextQueuedNode-1 [#_"InliningIterator" this]
-        (when (seq (:nodeQueue this))
-            (#_"Deque" .removeFirst (:nodeQueue this))
         )
     )
 
     (defn- #_"boolean" InliningIterator''visitedAllEnds-2 [#_"InliningIterator" this, #_"AbstractMergeNode" merge]
         (loop-when [#_"int" i 0] (< i (AbstractMergeNode''forwardEndCount-1 merge)) => true
-            (and (contains? (:queuedNodes this) (AbstractMergeNode''forwardEndAt-2 merge, i))
+            (and (contains? (:visitedNodes this) (AbstractMergeNode''forwardEndAt-2 merge, i))
                 (recur (inc i))
             )
         )
     )
 
-    (defn- #_"void" InliningIterator''queueMerge-2 [#_"InliningIterator" this, #_"AbstractEndNode" end]
+    (defn- #_"this" InliningIterator''queueMerge-2 [#_"InliningIterator" this, #_"AbstractEndNode" end]
         (let [
             #_"AbstractMergeNode" merge (AbstractEndNode'''merge-1 end)
         ]
-            (when (and (not (contains? (:queuedNodes this) merge)) (InliningIterator''visitedAllEnds-2 this, merge))
-                (§ ass! (:queuedNodes this) (conj (:queuedNodes this) merge))
-                (#_"Deque" .add (:nodeQueue this), merge)
+            (when (and (not (contains? (:visitedNodes this) merge)) (InliningIterator''visitedAllEnds-2 this, merge)) => this
+                (-> this
+                    (update :nodeQueue conj' merge)
+                    (update :visitedNodes conj merge)
+                )
             )
         )
-        nil
     )
 
-    (defn- #_"void" InliningIterator''queue-2 [#_"InliningIterator" this, #_"Node" node]
-        (when (and (some? node) (not (contains? (:queuedNodes this) node)))
-            (InliningIterator''forcedQueue-2 this, node)
-        )
-        nil
-    )
-
-    (defn- #_"void" InliningIterator''queueSuccessors-2 [#_"InliningIterator" this, #_"FixedNode" x]
-        (doseq [#_"Node" node (Node''successors-1 x)]
-            (InliningIterator''queue-2 this, node)
-        )
-        nil
-    )
-
-    (defn #_"InvokeNode*" InliningIterator''apply-1 [#_"InliningIterator" this]
-        (InliningIterator''forcedQueue-2 this, (:start this))
-
-        (loop-when [#_"InvokeNode*" invokes nil #_"FixedNode" node (InliningIterator''nextQueuedNode-1 this)] (some? node) => invokes
+    (defn- #_"this" InliningIterator''queueSuccessors-2 [#_"InliningIterator" this, #_"FixedNode" node]
+        (loop-when [this this #_"seq" s (seq (Node''successors-1 node))] (some? s) => this
             (let [
-                invokes
-                    (if (and (satisfies? InvokeNode node) (satisfies? MethodCallTargetNode (:callTarget node)))
-                        (let [
-                            invokes
-                                (when-not (= node (:start this)) => invokes
-                                    (conj' invokes node)
-                                )
-                        ]
-                            (InliningIterator''queueSuccessors-2 this, node)
-                            invokes
-                        )
-                        (do
-                            (condp satisfies? node
-                                LoopBeginNode     (InliningIterator''queueSuccessors-2 this, node)
-                                LoopEndNode       nil ;; nothing to do
-                                AbstractMergeNode (InliningIterator''queueSuccessors-2 this, node)
-                                FixedWithNextNode (InliningIterator''queueSuccessors-2 this, node)
-                                EndNode           (InliningIterator''queueMerge-2 this, node)
-                                ControlSinkNode   nil ;; nothing to do
-                                ControlSplitNode  (InliningIterator''queueSuccessors-2 this, node)
-                                nil
-                            )
-                            invokes
+                #_"Node" successor (first s)
+                this
+                    (when (and (some? successor) (not (contains? (:visitedNodes this) successor))) => this
+                        (-> this
+                            (update :nodeQueue #(cons successor %))
+                            (update :visitedNodes conj successor)
                         )
                     )
             ]
-                (recur invokes (InliningIterator''nextQueuedNode-1 this))
+                (recur this (next s))
+            )
+        )
+    )
+
+    (defn #_"InvokeNode*" InliningIterator'apply-1 [#_"Graph" graph]
+        (loop-when [#_"InvokeNode*" invokes nil #_"FixedNode" node (:start graph) #_"InliningIterator" it (InliningIterator'new-0)] (some? node) => invokes
+            (let [
+                [it invokes]
+                    (if (and (satisfies? InvokeNode node) (satisfies? MethodCallTargetNode (:callTarget node)))
+                        [(InliningIterator''queueSuccessors-2 it, node) (if (= node (:start graph)) invokes (conj' invokes node))]
+                        (let [
+                            it
+                                (condp satisfies? node
+                                    LoopBeginNode     (InliningIterator''queueSuccessors-2 it, node)
+                                    LoopEndNode       it ;; nothing to do
+                                    AbstractMergeNode (InliningIterator''queueSuccessors-2 it, node)
+                                    FixedWithNextNode (InliningIterator''queueSuccessors-2 it, node)
+                                    EndNode           (InliningIterator''queueMerge-2 it, node)
+                                    ControlSinkNode   it ;; nothing to do
+                                    ControlSplitNode  (InliningIterator''queueSuccessors-2 it, node)
+                                                      it
+                                )
+                        ]
+                            [it invokes]
+                        )
+                    )
+            ]
+                (recur invokes (first (:nodeQueue it)) (update it :nodeQueue next))
             )
         )
     )
@@ -47772,42 +47701,6 @@ ZeroExtendNode'new-4
             (§ ass! (:nodeEventListener (:graph this)) nil)
         )
         nil
-    )
-)
-
-(class-ns NodeFlood [#_"Iterable" #_"<Node>"]
-    (defn #_"NodeFlood" NodeFlood'new-0 []
-        (merge (NodeFlood'class.)
-            (hash-map
-                #_"{Node}" :visited #{}
-                #_"Queue<Node>" :worklist (ArrayDeque.)
-                #_"int" :totalMarkedCount 0
-            )
-        )
-    )
-
-    (defn #_"this" NodeFlood''add-2 [#_"NodeFlood" this, #_"Node" node]
-        (when (and (some? node) (not (contains? (:visited this) node))) => this
-            (§ ass! (:visited this) (conj (:visited this) node))
-            (#_"Queue" .add (:worklist this), node)
-            (update this :totalMarkedCount inc)
-        )
-    )
-
-    (defn #_"boolean" NodeFlood''isMarked-2 [#_"NodeFlood" this, #_"Node" node]
-        (contains? (:visited this) node)
-    )
-
-    (§ override! #_"Iterator<Node>" #_"Iterable." iterator [#_"NodeFlood" this]
-        (reify Iterator #_"<Node>"
-            (#_"boolean" hasNext [#_"Iterator<Node>" _]
-                (not (#_"Queue" .isEmpty (:worklist this)))
-            )
-
-            (#_"Node" next [#_"Iterator<Node>" _]
-                (#_"Queue" .remove (:worklist this))
-            )
-        )
     )
 )
 
@@ -62529,121 +62422,109 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns NodeWorkList [#_"Iterable" #_"<Node>"]
-    (defn #_"NodeWorkList" NodeWorkList'new-2 [#_"Graph" graph, #_"boolean" fill?]
-        (let [
-            #_"NodeWorkList" this
-                (merge (NodeWorkList'class.)
-                    (hash-map
-                        #_"Queue<Node>" :worklist (ArrayDeque.)
-                    )
-                )
-        ]
-            (when fill?
-                (doseq [#_"Node" node (Graph''getNodes-1 graph)]
-                    (#_"Queue" .add (:worklist this), node)
-                )
-            )
-            this
-        )
-    )
-
-    (defn #_"void" NodeWorkList''addAll-2 [#_"NodeWorkList" this, #_"Node*" nodes]
-        (doseq [#_"Node" node nodes]
-            (when (Node''isAlive-1 node)
-                (NodeWorkList'''add-2 this, node)
-            )
-        )
-        nil
-    )
-)
-
-(class-ns IterativeNodeWorkList [NodeWorkList, #_"Iterable" #_"<Node>"]
+(class-ns IterativeNodeWorkList [#_"Iterable" #_"<Node>"]
     (defn #_"IterativeNodeWorkList" IterativeNodeWorkList'new-3 [#_"Graph" graph, #_"boolean" fill?, #_"int" iterationLimitPerNode]
-        (merge (IterativeNodeWorkList'class.) (NodeWorkList'new-2 graph, fill?)
+        (merge (IterativeNodeWorkList'class.)
             (hash-map
+                #_"queue [Node]" :worklist (when fill? (Graph''getNodes-1 graph))
                 #_"int" :iterationLimit (int (Long/min (* (Graph''getNodeCount-1 graph) (long iterationLimitPerNode)), Integer/MAX_VALUE))
             )
         )
     )
 
+    (defn #_"this" IterativeNodeWorkList''add-2 [#_"IterativeNodeWorkList" this, #_"Node" node]
+        (when (some? node)
+            (when-not (some #(= % node) (:worklist this))
+                (§ ass! (:worklist this) (conj' (:worklist this) node))
+            )
+        )
+        this
+    )
+
+    (defn #_"this" IterativeNodeWorkList''addAll-2 [#_"IterativeNodeWorkList" this, #_"Node*" nodes]
+        (doseq [#_"Node" node nodes]
+            (when (Node''isAlive-1 node)
+                (§ ass! this (IterativeNodeWorkList''add-2 this, node))
+            )
+        )
+        this
+    )
+
     (§ override! #_"Iterator<Node>" #_"Iterable." iterator [#_"IterativeNodeWorkList" this]
         (reify Iterator #_"<Node>"
-            (defn- #_"void" Iterator'dropDeleted-0i []
-                (while (and (not (#_"Queue" .isEmpty (:worklist this))) (Node''isDeleted-1 (#_"Queue" .peek (:worklist this))))
-                    (#_"Queue" .remove (:worklist this))
-                )
-                nil
-            )
-
             (#_"boolean" hasNext [#_"Iterator<Node>" _]
-                (Iterator'dropDeleted-0i)
-                (and (pos? (:iterationLimit this)) (not (#_"Queue" .isEmpty (:worklist this))))
+                (while (and (seq (:worklist this)) (Node''isDeleted-1 (first (:worklist this))))
+                    (§ ass! (:worklist this) (next (:worklist this)))
+                )
+                (and (pos? (:iterationLimit this)) (seq (:worklist this)))
             )
 
             (#_"Node" next [#_"Iterator<Node>" _]
-                (try
-                    (when-not (pos? (:iterationLimit this))
-                        (throw (NoSuchElementException.))
-                    )
-                    (finally
-                        (§ ass this (update this :iterationLimit dec))
-                    )
+                (when (pos? (:iterationLimit this)) => (throw (NoSuchElementException.))
+                    (§ ass this (update this :iterationLimit dec))
                 )
-                (Iterator'dropDeleted-0i)
-                (#_"Queue" .remove (:worklist this))
+                (while (and (seq (:worklist this)) (Node''isDeleted-1 (first (:worklist this))))
+                    (§ ass! (:worklist this) (next (:worklist this)))
+                )
+                (let [
+                    #_"Node" node (first (:worklist this))
+                ]
+                    (§ ass! (:worklist this) (next (:worklist this)))
+                    node
+                )
             )
-        )
-    )
-
-    (defm IterativeNodeWorkList NodeWorkList
-        (#_"void" NodeWorkList'''add-2 [#_"IterativeNodeWorkList" this, #_"Node" node]
-            (when (some? node)
-                (or (some #(= % node) (:worklist this)) (#_"Queue" .add (:worklist this), node))
-            )
-            nil
         )
     )
 )
 
-(class-ns SingletonNodeWorkList [NodeWorkList, #_"Iterable" #_"<Node>"]
+(class-ns SingletonNodeWorkList [#_"Iterable" #_"<Node>"]
     (defn #_"SingletonNodeWorkList" SingletonNodeWorkList'new-1 [#_"Graph" graph]
-        (merge (SingletonNodeWorkList'class.) (NodeWorkList'new-2 graph, false)
+        (merge (SingletonNodeWorkList'class.)
             (hash-map
+                #_"queue [Node]" :worklist nil
                 #_"{Node}" :visited #{}
             )
         )
     )
 
-    (defm SingletonNodeWorkList NodeWorkList
-        (#_"void" NodeWorkList'''add-2 [#_"SingletonNodeWorkList" this, #_"Node" node]
-            (when (some? node)
-                (when-not (contains? (:visited this) node)
-                    (§ ass! (:visited this) (conj (:visited this) node))
-                    (#_"Queue" .add (:worklist this), node)
-                )
+    (defn #_"this" SingletonNodeWorkList''add-2 [#_"SingletonNodeWorkList" this, #_"Node" node]
+        (when (some? node)
+            (when-not (contains? (:visited this) node)
+                (§ ass! (:visited this) (conj (:visited this) node))
+                (§ ass! (:worklist this) (conj' (:worklist this) node))
             )
-            nil
         )
+        this
+    )
+
+    (defn #_"this" SingletonNodeWorkList''addAll-2 [#_"SingletonNodeWorkList" this, #_"Node*" nodes]
+        (doseq [#_"Node" node nodes]
+            (when (Node''isAlive-1 node)
+                (§ ass! this (SingletonNodeWorkList''add-2 this, node))
+            )
+        )
+        this
     )
 
     (§ override! #_"Iterator<Node>" #_"Iterable." iterator [#_"SingletonNodeWorkList" this]
         (reify Iterator #_"<Node>"
-            (defn- #_"void" Iterator'dropDeleted-0s []
-                (while (and (not (#_"Queue" .isEmpty (:worklist this))) (Node''isDeleted-1 (#_"Queue" .peek (:worklist this))))
-                    (#_"Queue" .remove (:worklist this))
-                )
-                nil
-            )
-
             (#_"boolean" hasNext [#_"Iterator<Node>" _]
-                (Iterator'dropDeleted-0s)
-                (not (#_"Queue" .isEmpty (:worklist this)))
+                (while (and (seq (:worklist this)) (Node''isDeleted-1 (first (:worklist this))))
+                    (§ ass! (:worklist this) (next (:worklist this)))
+                )
+                (seq (:worklist this))
             )
 
             (#_"Node" next [#_"Iterator<Node>" _]
-                (Iterator'dropDeleted-0s)
-                (#_"Queue" .remove (:worklist this))
+                (while (and (seq (:worklist this)) (Node''isDeleted-1 (first (:worklist this))))
+                    (§ ass! (:worklist this) (next (:worklist this)))
+                )
+                (let [
+                    #_"Node" node
+                ]
+                    (§ ass! (:worklist this) (next (:worklist this)))
+                    node
+                )
             )
         )
     )
@@ -65661,7 +65542,7 @@ ZeroExtendNode'new-4
 ;;;
  ; A scope holds information for the contents of one loop or of the root of the method.
  ;
- ; It does not include child loops, i.e. the iteration in #process(NodeWorkList)
+ ; It does not include child loops, i.e. the iteration in #process(SingletonNodeWorkList)
  ; explicitly excludes the nodes of child loops.
  ;;
 (class-ns Scope []
@@ -65706,32 +65587,34 @@ ZeroExtendNode'new-4
      ; all fixed nodes. Child loops are skipped by going from loop entries directly to the loop
      ; exits. Processing stops at loop exits of the current loop.
      ;;
-    (defn #_"void" Scope''process-2 [#_"Scope" this, #_"NodeWorkList" workList]
-        (NodeWorkList''addAll-2 workList, (Node''successors-1 (:start this)))
-
-        (doseq [#_"Node" node workList]
-            (condp satisfies? node
-                InvokeNode
-                (do
-                    ;; process the invoke and queue its successors
-                    (§ ass! (:relevances (:relevance this)) (assoc (:relevances (:relevance this)) node (Scope''computeInvokeRelevance-2 this, node)))
-                    (NodeWorkList''addAll-2 workList, (Node''successors-1 node))
-                )
-                LoopBeginNode
-                    ;; skip child loops by advancing over the loop exits
-                    (doseq [#_"LoopExitNode" exit (LoopBeginNode''loopExits-1 node)]
-                        (NodeWorkList'''add-2 workList, (:next exit))
+    (defn #_"[this SingletonNodeWorkList]" Scope''process-2 [#_"Scope" this, #_"SingletonNodeWorkList" workList]
+        (let [
+            workList (SingletonNodeWorkList''addAll-2 workList, (Node''successors-1 (:start this)))
+        ]
+            (doseq [#_"Node" node workList]
+                (condp satisfies? node
+                    InvokeNode
+                    (do
+                        ;; process the invoke and queue its successors
+                        (§ ass! (:relevances (:relevance this)) (assoc (:relevances (:relevance this)) node (Scope''computeInvokeRelevance-2 this, node)))
+                        (§ ass! workList (SingletonNodeWorkList''addAll-2 workList, (Node''successors-1 node)))
                     )
-                LoopEndNode       nil ;; nothing to do
-                LoopExitNode      nil ;; nothing to do
-                FixedWithNextNode (NodeWorkList'''add-2 workList, (:next node))
-                EndNode           (NodeWorkList'''add-2 workList, (AbstractEndNode'''merge-1 node))
-                ControlSinkNode   nil ;; nothing to do
-                ControlSplitNode  (NodeWorkList''addAll-2 workList, (Node''successors-1 node))
-                nil
+                    LoopBeginNode
+                        ;; skip child loops by advancing over the loop exits
+                        (doseq [#_"LoopExitNode" exit (LoopBeginNode''loopExits-1 node)]
+                            (§ ass! workList (SingletonNodeWorkList''add-2 workList, (:next exit)))
+                        )
+                    LoopEndNode       nil ;; nothing to do
+                    LoopExitNode      nil ;; nothing to do
+                    FixedWithNextNode (§ ass! workList (SingletonNodeWorkList''add-2 workList, (:next node)))
+                    EndNode           (§ ass! workList (SingletonNodeWorkList''add-2 workList, (AbstractEndNode'''merge-1 node)))
+                    ControlSinkNode   nil ;; nothing to do
+                    ControlSplitNode  (§ ass! workList (SingletonNodeWorkList''addAll-2 workList, (Node''successors-1 node)))
+                    nil
+                )
             )
+            [this workList]
         )
-        nil
     )
 
     ;;;
@@ -69053,12 +68936,12 @@ ZeroExtendNode'new-4
         )
 
         (#_"void" SimplifierTool'''addToWorkList-2n [#_"Tool" this, #_"Node" node]
-            (NodeWorkList'''add-2 (:workList (:instance this)), node)
+            (§ ass! (:workList (:instance this)) (IterativeNodeWorkList''add-2 (:workList (:instance this)), node))
             nil
         )
 
         (#_"void" SimplifierTool'''addToWorkList-2s [#_"Tool" this, #_"Node*" nodes]
-            (NodeWorkList''addAll-2 (:workList (:instance this)), nodes)
+            (§ ass! (:workList (:instance this)) (IterativeNodeWorkList''addAll-2 (:workList (:instance this)), nodes))
             nil
         )
 
