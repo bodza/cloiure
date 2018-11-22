@@ -117,7 +117,6 @@
     [java.nio ByteBuffer ByteOrder]
     [java.util
         AbstractList Arrays BitSet Comparator Iterator List ListIterator NoSuchElementException
-        PriorityQueue Queue
     ]
     [java.util.stream Stream Stream$Builder]
 
@@ -978,7 +977,6 @@ CanonicalCondition'EQ
 CanonicalCondition'LT
 CanonicalizableLocation'foldIndirection-3
 CanonicalizableLocation'new-1
-CanonicalizerInstance''tryCanonicalize-3
 CanonicalizerInstance'new-3
 CanonicalizerPhase''applyIncremental-3i
 CanonicalizerPhase''applyIncremental-3m
@@ -1973,9 +1971,6 @@ IsNullNode'create-1
 IsNullNode'new-1
 IsNullNode'tryCanonicalize-1
 IterativeConditionalEliminationPhase'new-2
-IterativeNodeWorkList''add-2
-IterativeNodeWorkList''addAll-2
-IterativeNodeWorkList'new-3
 JSRData'new-0
 JVMCI'backend
 JVMCI'runtime
@@ -3073,9 +3068,6 @@ SignedDivNode'new-2
 SignedRemNode'create-2
 SignedRemNode'new-2
 Signedness'SET
-SingletonNodeWorkList''add-2
-SingletonNodeWorkList''addAll-2
-SingletonNodeWorkList'new-1
 SlotSize'SET
 SmallLocalLiveness'new-3
 SnippetAnchorNode'new-0
@@ -3171,7 +3163,6 @@ SwitchStrategy''registerEffort-4
 SwitchStrategy'getBestStrategy-3
 SwitchStrategy'new-1
 TableSwitchOp'new-6
-Tool'new-1
 Transition'SET
 TwoOp'new-5
 TwoSlotMarker'new-0
@@ -4644,7 +4635,6 @@ ZeroExtendNode'new-4
 (defp InvokeNode)
 (defp IsNullNode)
 (defp IterativeConditionalEliminationPhase)
-(defp IterativeNodeWorkList)
 (defp JSRData)
 (defp JavaReadNode)
 (defp JavaWriteNode)
@@ -5520,7 +5510,6 @@ ZeroExtendNode'new-4
     (#_"LocationIdentity" Single'''getLocationIdentity-1 [#_"Single" this])
 )
 
-(defp SingletonNodeWorkList)
 (defp SmallLocalLiveness)
 (defp SnippetAnchorNode)
 
@@ -5763,7 +5752,6 @@ ZeroExtendNode'new-4
 )
 
 (defp TableSwitchOp)
-(defp Tool)
 (defp TwoOp)
 (defp TwoSlotMarker)
 
@@ -6857,11 +6845,6 @@ ZeroExtendNode'new-4
  ;;
 (value-ns ComputeBlockOrder
     ;;;
-     ; The initial capacities of the worklists used for iteratively finding the block order.
-     ;;
-    (def- #_"int" ComputeBlockOrder'INITIAL_WORKLIST_CAPACITY 10)
-
-    ;;;
      ; Divisor used for degrading the probability of the current path versus unscheduled paths at
      ; a merge node when calculating the linear scan order. A high value means that predecessors
      ; of merge nodes are more likely to be scheduled before the merge node.
@@ -6871,56 +6854,79 @@ ZeroExtendNode'new-4
     ;;;
      ; Find the highest likely unvisited successor block of a given block.
      ;;
-    (defn- #_"Block" ComputeBlockOrder'findAndMarkMostLikelySuccessor-2 [#_"Block" block, #_"BitSet" visited]
+    (defn- #_"Block" ComputeBlockOrder'findAndMarkMostLikelySuccessor-2 [#_"Block" block, #_"{int}" visited]
         (let [
-            #_"Block" result
-                (loop-when [result nil #_"seq" s (seq (:successors block))] (some? s) => result
+            #_"Block" mls
+                (loop-when [mls nil #_"seq" s (seq (:successors block))] (some? s) => mls
                     (let [
                         #_"Block" successor (first s)
-                        result
-                            (when (and (not (#_"BitSet" .get visited, (:id successor))) (<= (Block''getLoopDepth-1 block) (Block''getLoopDepth-1 successor)) (or (nil? result) (<= (:probability result) (:probability successor)))) => result
+                        mls
+                            (when (and (not (contains? visited (:id successor))) (<= (Block''getLoopDepth-1 block) (Block''getLoopDepth-1 successor)) (or (nil? mls) (<= (:probability mls) (:probability successor)))) => mls
                                 successor
                             )
                     ]
-                        (recur result (next s))
+                        (recur mls (next s))
                     )
                 )
         ]
-            (when (some? result)
-                (#_"BitSet" .set visited, (:id result))
+            (when (some? mls)
+                (§ ass! visited (conj visited (:id mls)))
             )
-            result
+            mls
+        )
+    )
+
+    (def- #_"double" ComputeBlockOrder'EPSILON 1e-6)
+
+    ;;;
+     ; Comparator for sorting blocks based on loop depth and probability.
+     ;;
+    (defn- #_"int" ComputeBlockOrder'compare-2 [#_"Block" a, #_"Block" b]
+        (or
+            ;; Loop blocks before any loop exit block. The only exception are blocks that are (almost) impossible to reach.
+            (when (and (< ComputeBlockOrder'EPSILON (:probability a)) (< ComputeBlockOrder'EPSILON (:probability b)))
+                (let [
+                    #_"int" diff (- (Block''getLoopDepth-1 b) (Block''getLoopDepth-1 a))
+                ]
+                    (when-not (zero? diff)
+                        diff
+                    )
+                )
+            )
+
+            ;; Blocks with high probability before blocks with low probability.
+            (if (< (:probability b) (:probability a)) -1 1)
         )
     )
 
     ;;;
      ; Add successor blocks into the given work list if they are not already marked as visited.
      ;;
-    (defn- #_"void" ComputeBlockOrder'enqueueSuccessors-3 [#_"Block" block, #_"PriorityQueue<Block>" worklist, #_"BitSet" visited]
+    (defn- #_"[sorted Block* {int}]" ComputeBlockOrder'enqueueSuccessors-3 [#_"Block" block, #_"sorted Block*" worklist, #_"{int}" visited]
         (doseq [#_"Block" successor (:successors block)]
-            (when-not (#_"BitSet" .get visited, (:id successor))
-                (#_"BitSet" .set visited, (:id successor))
-                (#_"PriorityQueue" .add worklist, successor)
+            (when-not (contains? visited (:id successor))
+                (§ ass! visited (conj visited (:id successor)))
+                (§ ass! worklist (cons successor worklist))
             )
         )
-        nil
+        [(sort ComputeBlockOrder'compare-2 worklist) visited]
     )
 
     ;;;
      ; Add a linear path to the linear scan order greedily following the most likely successor.
      ;;
-    (defn- #_"Block" ComputeBlockOrder'addPathToLinearScanOrder-4 [#_"Block" block, #_"[Block]" order, #_"PriorityQueue<Block>" worklist, #_"BitSet" visited]
+    (defn- #_"[Block [Block] sorted Block* {int}]" ComputeBlockOrder'addPathToLinearScanOrder-4 [#_"Block" block, #_"[Block]" order, #_"sorted Block*" worklist, #_"{int}" visited]
         (let [
-            _ (§ ass! block (Block''setLinearScanNumber-2 block, (count order)))
-            _ (§ ass! order (conj' order block))
-            #_"Block" mostLikelySuccessor (ComputeBlockOrder'findAndMarkMostLikelySuccessor-2 block, visited)
+            block (Block''setLinearScanNumber-2 block, (count order))
+            order (conj' order block)
+            #_"Block" mls (ComputeBlockOrder'findAndMarkMostLikelySuccessor-2 block, visited)
+            [worklist visited] (ComputeBlockOrder'enqueueSuccessors-3 block, worklist, visited)
         ]
-            (ComputeBlockOrder'enqueueSuccessors-3 block, worklist, visited)
-            (when (and (some? mostLikelySuccessor) (not (Block''isLoopHeader-1 mostLikelySuccessor)) (< 1 (count (:predecessors mostLikelySuccessor)))) => mostLikelySuccessor
+            (when (and (some? mls) (not (Block''isLoopHeader-1 mls)) (< 1 (count (:predecessors mls)))) => [mls order worklist visited]
                 ;; We are at a merge. Check probabilities of predecessors that are not yet scheduled.
                 (let [
                     #_"double" unscheduledSum
-                        (loop-when [unscheduledSum 0.0 #_"seq" s (seq (:predecessors mostLikelySuccessor))] (some? s) => unscheduledSum
+                        (loop-when [unscheduledSum 0.0 #_"seq" s (seq (:predecessors mls))] (some? s) => unscheduledSum
                             (let [
                                 #_"Block" pred (first s)
                                 unscheduledSum
@@ -6932,66 +6938,12 @@ ZeroExtendNode'new-4
                             )
                         )
                 ]
-                    (when (< (/ (:probability block) ComputeBlockOrder'PENALTY_VERSUS_UNSCHEDULED) unscheduledSum) => mostLikelySuccessor
+                    (when (< (/ (:probability block) ComputeBlockOrder'PENALTY_VERSUS_UNSCHEDULED) unscheduledSum) => [mls order worklist visited]
                         ;; Add this merge only after at least one additional predecessor gets scheduled.
-                        (#_"BitSet" .clear visited, (:id mostLikelySuccessor))
-                        nil
+                        [nil order worklist (disj visited (:id mls))]
                     )
                 )
             )
-        )
-    )
-
-    ;;;
-     ; Iteratively adds paths to the linear scan block order.
-     ;;
-    (defn- #_"void" ComputeBlockOrder'computeLinearScanOrder-3 [#_"[Block]" order, #_"PriorityQueue<Block>" worklist, #_"BitSet" visited]
-        (while (seq worklist)
-            (loop [#_"Block" path (#_"PriorityQueue" .pollFirst worklist)]
-                (let [
-                    path (ComputeBlockOrder'addPathToLinearScanOrder-4 path, order, worklist, visited)
-                ]
-                    (recur-if (some? path) [path])
-                )
-            )
-        )
-        nil
-    )
-
-    (def- #_"double" ComputeBlockOrder'EPSILON 1e-6)
-
-    ;;;
-     ; Initializes the priority queue used for the work list of blocks and adds the start block.
-     ;;
-    (defn- #_"PriorityQueue<Block>" ComputeBlockOrder'initializeWorklist-2 [#_"Block" startBlock, #_"BitSet" visited]
-        (let [
-            #_"PriorityQueue<Block>" queue
-                (PriorityQueue. ComputeBlockOrder'INITIAL_WORKLIST_CAPACITY,
-                    ;;;
-                     ; Comparator for sorting blocks based on loop depth and probability.
-                     ;;
-                    (fn #_"int" [#_"Block" a, #_"Block" b]
-                        (or
-                            ;; Loop blocks before any loop exit block. The only exception are blocks that are (almost) impossible to reach.
-                            (when (and (< ComputeBlockOrder'EPSILON (:probability a)) (< ComputeBlockOrder'EPSILON (:probability b)))
-                                (let [
-                                    #_"int" diff (- (Block''getLoopDepth-1 b) (Block''getLoopDepth-1 a))
-                                ]
-                                    (when-not (zero? diff)
-                                        diff
-                                    )
-                                )
-                            )
-
-                            ;; Blocks with high probability before blocks with low probability.
-                            (if (< (:probability b) (:probability a)) -1 1)
-                        )
-                    )
-                )
-            _ (#_"PriorityQueue" .add queue, startBlock)
-        ]
-            (#_"BitSet" .set visited, (:id startBlock))
-            queue
         )
     )
 
@@ -7003,9 +6955,17 @@ ZeroExtendNode'new-4
     (defn #_"Block[]" ComputeBlockOrder'computeLinearScanOrder-1 [#_"Block" start]
         (let [
             #_"[Block]" order []
-            #_"BitSet" visited (BitSet.)
+            #_"{int}" visited #{ (:id start) }
         ]
-            (ComputeBlockOrder'computeLinearScanOrder-3 order, (ComputeBlockOrder'initializeWorklist-2 start, visited), visited)
+            (loop-when-recur [#_"sorted Block*" worklist (list start)] (seq worklist) [worklist]
+                (loop [#_"Block" block (first worklist) worklist (next worklist)]
+                    (let [
+                        _ (§ ass! [block order worklist visited] (ComputeBlockOrder'addPathToLinearScanOrder-4 block, order, worklist, visited))
+                    ]
+                        (recur-if (some? block) [block worklist])
+                    )
+                )
+            )
             (into-array Block'iface order)
         )
     )
@@ -7020,50 +6980,42 @@ ZeroExtendNode'new-4
     ;;;
      ; Add a linear path to the code emission order greedily following the most likely successor.
      ;;
-    (defn- #_"void" ComputeBlockOrder'addPathToCodeEmittingOrder-4 [#_"Block" block, #_"[Block]" order, #_"PriorityQueue<Block>" worklist, #_"BitSet" visited]
-        (loop-when [block block] (some? block)
-            ;; Skip loop headers if there is only a single loop end block to make
-            ;; the backward jump be a conditional jump.
-            (when-not (ComputeBlockOrder'skipLoopHeader-1 block)
-                ;; Align unskipped loop headers as they are the target of the backward jump.
-                (when (Block''isLoopHeader-1 block)
-                    (§ ass! block (Block''setAlign-2 block, true))
-                )
-                (§ ass! order (conj' order block))
-            )
-
-            (when (and (Block''isLoopEnd-1 block) (ComputeBlockOrder'skipLoopHeader-1 (:header (:loop block))))
-                ;; This is the only loop end of a skipped loop header.
-                ;; Add the header immediately afterwards.
-                (§ ass! order (conj' order (:header (:loop block))))
-
-                ;; Make sure the loop successors of the loop header are aligned,
-                ;; as they are the target of the backward jump.
-                (doseq [#_"Block" successor (:successors (:header (:loop block)))]
-                    (when (= (Block''getLoopDepth-1 successor) (Block''getLoopDepth-1 block))
-                        (§ ass! successor (Block''setAlign-2 successor, true))
-                    )
-                )
-            )
-
+    (defn- #_"[[Block] sorted Block* {int}]" ComputeBlockOrder'addPathToCodeEmittingOrder-4 [#_"Block" block, #_"[Block]" order, #_"sorted Block*" worklist, #_"{int}" visited]
+        (loop-when [block block order order worklist worklist visited visited] (some? block) => [order worklist visited]
             (let [
-                #_"Block" mostLikelySuccessor (ComputeBlockOrder'findAndMarkMostLikelySuccessor-2 block, visited)
+                ;; Skip loop headers if there is only a single loop end block to make
+                ;; the backward jump be a conditional jump.
+                order
+                    (when-not (ComputeBlockOrder'skipLoopHeader-1 block) => order
+                        ;; Align unskipped loop headers as they are the target of the backward jump.
+                        (when (Block''isLoopHeader-1 block)
+                            (§ ass! block (Block''setAlign-2 block, true))
+                        )
+                        (conj' order block)
+                    )
+                order
+                    (when (and (Block''isLoopEnd-1 block) (ComputeBlockOrder'skipLoopHeader-1 (:header (:loop block)))) => order
+                        (let [
+                            ;; This is the only loop end of a skipped loop header.
+                            ;; Add the header immediately afterwards.
+                            order (conj' order (:header (:loop block)))
+                        ]
+                            ;; Make sure the loop successors of the loop header are aligned,
+                            ;; as they are the target of the backward jump.
+                            (doseq [#_"Block" successor (:successors (:header (:loop block)))]
+                                (when (= (Block''getLoopDepth-1 successor) (Block''getLoopDepth-1 block))
+                                    (§ ass! successor (Block''setAlign-2 successor, true))
+                                )
+                            )
+                            order
+                        )
+                    )
+                #_"Block" mls (ComputeBlockOrder'findAndMarkMostLikelySuccessor-2 block, visited)
+                [worklist visited] (ComputeBlockOrder'enqueueSuccessors-3 block, worklist, visited)
             ]
-                (ComputeBlockOrder'enqueueSuccessors-3 block, worklist, visited)
-                (recur mostLikelySuccessor)
+                (recur mls order worklist visited)
             )
         )
-        nil
-    )
-
-    ;;;
-     ; Iteratively adds paths to the code emission block order.
-     ;;
-    (defn- #_"void" ComputeBlockOrder'computeCodeEmittingOrder-3 [#_"[Block]" order, #_"PriorityQueue<Block>" worklist, #_"BitSet" visited]
-        (while (seq worklist)
-            (ComputeBlockOrder'addPathToCodeEmittingOrder-4 (#_"PriorityQueue" .pollFirst worklist), order, worklist, visited)
-        )
-        nil
     )
 
     ;;;
@@ -7074,9 +7026,11 @@ ZeroExtendNode'new-4
     (defn #_"Block[]" ComputeBlockOrder'computeCodeEmittingOrder-1 [#_"Block" start]
         (let [
             #_"[Block]" order []
-            #_"BitSet" visited (BitSet.)
+            #_"{int}" visited #{ (:id start) }
         ]
-            (ComputeBlockOrder'computeCodeEmittingOrder-3 order, (ComputeBlockOrder'initializeWorklist-2 start, visited), visited)
+            (loop-when-recur [#_"sorted Block*" worklist (list start)] (seq worklist) [worklist]
+                (§ ass! [order worklist visited] (ComputeBlockOrder'addPathToCodeEmittingOrder-4 (first worklist), order, (next worklist), visited))
+            )
             (into-array Block'iface order)
         )
     )
@@ -12400,7 +12354,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (§ override! #_"boolean" #_"List." add [#_"NodeList" this, #_"Node" node]
+    (§ override! #_"boolean" #_"NodeList." add [#_"NodeList" this, #_"Node" node]
         (let [
             #_"int" n (count (:nodes this))
         ]
@@ -12422,7 +12376,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (§ override! #_"Node" #_"List." set [#_"NodeList" this, #_"int" index, #_"Node" node]
+    (§ override! #_"Node" #_"NodeList." set [#_"NodeList" this, #_"int" index, #_"Node" node]
         (let [
             #_"Node" oldValue (nth (:nodes this) index)
         ]
@@ -12448,7 +12402,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (§ override! #_"void" #_"List." clear [#_"NodeList" this]
+    (§ override! #_"void" #_"NodeList." clear [#_"NodeList" this]
         (dotimes [#_"int" i (:size this)]
             (NodeList'''update-3 this, (nth (:nodes this) i), nil)
         )
@@ -12465,7 +12419,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (§ override! #_"boolean" #_"List." remove [#_"NodeList" this, #_"Object" node]
+    (§ override! #_"boolean" #_"NodeList." remove [#_"NodeList" this, #_"Object" node]
         (let [
             #_"int" i (loop-when-recur [i 0] (and (< i (:size this)) (not= (nth (:nodes this) i) node)) [(inc i)] => i)
         ]
@@ -12485,7 +12439,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (§ override! #_"Node" #_"List." remove [#_"NodeList" this, #_"int" index]
+    (§ override! #_"Node" #_"NodeList." remove [#_"NodeList" this, #_"int" index]
         (let [
             #_"Node" oldValue (nth (:nodes this) index)
         ]
@@ -12529,7 +12483,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (§ override! #_"int" #_"List." indexOf [#_"NodeList" this, #_"Object" node]
+    (§ override! #_"int" #_"NodeList." indexOf [#_"NodeList" this, #_"Object" node]
         (loop-when [#_"int" i 0] (< i (:size this)) => -1
             (if (= (nth (:nodes this) i) node)
                 i
@@ -12538,13 +12492,13 @@ ZeroExtendNode'new-4
         )
     )
 
-    (§ override! #_"boolean" #_"List." contains [#_"NodeList" this, #_"Object" o]
-        (not= (#_"List" .indexOf this, o) -1)
+    (§ override! #_"boolean" #_"NodeList." contains [#_"NodeList" this, #_"Object" o]
+        (not= (#_"NodeList" .indexOf this, o) -1)
     )
 
-    (§ override! #_"boolean" #_"List." addAll [#_"NodeList" this, #_"Iterable<Node>" nodes]
+    (§ override! #_"boolean" #_"NodeList." addAll [#_"NodeList" this, #_"Iterable<Node>" nodes]
         (doseq [#_"Node" node nodes]
-            (#_"List" .add this, node)
+            (#_"NodeList" .add this, node)
         )
         true
     )
@@ -13502,10 +13456,8 @@ ZeroExtendNode'new-4
                 #_"LIR" :lir lir
                 #_"FrameMapBuilder" :frameMapBuilder frameMapBuilder
                 #_"StackInterval[]" :stackSlotMap (make-array StackInterval'iface (:numStackSlots frameMapBuilder))
-                ;; insert by from
-                #_"PriorityQueue<StackInterval>" :unhandled (PriorityQueue. #(- (:from %1) (:from %2)))
-                ;; insert by to
-                #_"PriorityQueue<StackInterval>" :active (PriorityQueue. #(- (:to %1) (:to %2)))
+                #_"sorted StackInterval*" :unhandled nil ;; insert by from
+                #_"sorted StackInterval*" :active nil    ;; insert by to
                 #_"Block[]" :sortedBlocks (:reversePostOrder (:cfg lir))
                 ;;;
                  ; Highest instruction id.
@@ -13580,7 +13532,7 @@ ZeroExtendNode'new-4
      ;;
     (defn- #_"int" Allocator''activePeekId-1 [#_"Allocator" this]
         (let [
-            #_"StackInterval" interval (#_"PriorityQueue" .peek (:active this))
+            #_"StackInterval" interval (first (:active this))
         ]
             (if (some? interval) (:to interval) Integer/MAX_VALUE)
         )
@@ -13612,30 +13564,33 @@ ZeroExtendNode'new-4
     (defn- #_"StackInterval" Allocator''activateNext-1 [#_"Allocator" this]
         (when (seq (:unhandled this))
             (let [
-                #_"StackInterval" _next (#_"PriorityQueue" .pollFirst (:unhandled this))
+                #_"StackInterval" _next (first (:unhandled this))
+                _ (§ ass! this (update this :unhandled next))
+                _
+                    (loop-when-recur [] (< (Allocator''activePeekId-1 this) (:from _next)) []
+                        (let [
+                            #_"StackInterval" interval (first (:active this))
+                            _ (§ ass! this (update this :active next))
+                        ]
+                            (§ ass! this (Allocator''finished-2 this, interval))
+                        )
+                    )
+                _ (§ ass! this (update this :active #(sort-by :to (cons _next %))))
             ]
-                ;; finish handled intervals
-                (loop-when-recur [#_"int" id (:from _next)] (< (Allocator''activePeekId-1 this) id) [id]
-                    (§ ass! this (Allocator''finished-2 this, (#_"PriorityQueue" .pollFirst (:active this))))
-                )
-                (#_"PriorityQueue" .add (:active this), _next)
                 _next
             )
         )
     )
 
     (defn- #_"this" Allocator''allocateStackSlots-1 [#_"Allocator" this]
-        ;; create unhandled lists
-        (doseq [#_"StackInterval" interval (:stackSlotMap this)]
-            (when (some? interval)
-                (#_"PriorityQueue" .add (:unhandled this), interval)
+        (let [
+            this (update this :unhandled #(sort-by :from (concat % (remove nil? (:stackSlotMap this)))))
+        ]
+            (loop-when-recur [#_"StackInterval" interval (Allocator''activateNext-1 this)] (some? interval) [(Allocator''activateNext-1 this)]
+                (§ ass! [this interval] (Allocator''allocateSlot-2 this, interval))
             )
+            this
         )
-
-        (loop-when-recur [#_"StackInterval" interval (Allocator''activateNext-1 this)] (some? interval) [(Allocator''activateNext-1 this)]
-            (§ ass! [this interval] (Allocator''allocateSlot-2 this, interval))
-        )
-        this
     )
 
     (defn- #_"void" Allocator''assignStackSlots-2 [#_"Allocator" this, #_"{LIRInstruction}" usePos]
@@ -22324,128 +22279,60 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns CanonicalizerInstance [Phase]
+(class-ns CanonicalizerInstance [Phase, SimplifierTool, CanonicalizerTool]
     (defn #_"CanonicalizerInstance" CanonicalizerInstance'new-3 [#_"CanonicalizerPhase" phase, #_"Node*" workingSet, #_"int" newNodesMark]
         (merge (CanonicalizerInstance'class.)
             (hash-map
                 #_"CanonicalizerPhase" :phase phase
-                #_"int" :newNodesMark newNodesMark
                 #_"Node*" :initWorkingSet workingSet
-                #_"IterativeNodeWorkList" :workList nil
-                #_"Tool" :tool nil
+                #_"int" :newNodesMark newNodesMark
+                #_"ordered {Node}" :worklist nil
             )
         )
     )
 
-    ;;;
-     ; Calls ValueNode#inferStamp() on the node and if it returns true (which means that the stamp has changed),
-     ; re-queues the node's usages. If the stamp has changed, then this method also checks
-     ; if the stamp now describes a constant integer value, in which case the node is replaced with a constant.
-     ;;
-    (defn- #_"boolean" CanonicalizerInstance''tryInferStamp-2 [#_"CanonicalizerInstance" this, #_"ValueNode" node]
-        (and (Node''isAlive-1 node) (ValueNode'''inferStamp-1 node)
-            (do
-                (doseq [#_"Node" usage (:nodeUsages node)]
-                    (§ ass! (:workList this) (IterativeNodeWorkList''add-2 (:workList this), usage))
-                )
-                true
-            )
+    (defn- #_"ordered {Node}" CanonicalizerInstance'add-2 [#_"ordered {Node}" worklist, #_"Node" node]
+        (if (some? node) (conj worklist node) worklist)
+    )
+
+    (defn- #_"ordered {Node}" CanonicalizerInstance'addAll-2 [#_"ordered {Node}" worklist, #_"Node*" nodes]
+        (reduce CanonicalizerInstance'add-2 worklist (filter Node''isAlive-1 nodes))
+    )
+
+    (defm CanonicalizerInstance SimplifierTool
+        (#_"void" SimplifierTool'''deleteBranch-2 [#_"CanonicalizerInstance" this, #_"Node" branch]
+            (Node''replaceFirstSuccessor-3 (:predecessor branch), branch, nil)
+            (GraphUtil'killCFG-1 branch)
+            nil
+        )
+
+        (#_"void" SimplifierTool'''addToWorkList-2n [#_"CanonicalizerInstance" this, #_"Node" node]
+            (§ ass! (:worklist this) (CanonicalizerInstance'add-2 (:worklist this), node))
+            nil
+        )
+
+        (#_"void" SimplifierTool'''addToWorkList-2s [#_"CanonicalizerInstance" this, #_"Node*" nodes]
+            (§ ass! (:worklist this) (CanonicalizerInstance'addAll-2 (:worklist this), nodes))
+            nil
+        )
+
+        (#_"void" SimplifierTool'''removeIfUnused-2 [#_"CanonicalizerInstance" this, #_"Node" node]
+            (GraphUtil'tryKillUnused-1 node)
+            nil
         )
     )
 
-    ;;;
-     ; @return true if the graph was changed
-     ;;
-    (defn- #_"boolean" CanonicalizerInstance''processNode-2 [#_"CanonicalizerInstance" this, #_"Node" node]
-        (and (Node''isAlive-1 node)
-            (or (GraphUtil'tryKillUnused-1 node)
-                (CanonicalizerInstance''tryCanonicalize-3 this, node, (:nodeClass node))
-                (and (satisfies? ValueNode node)
-                    (let [
-                        #_"boolean" improved? (CanonicalizerInstance''tryInferStamp-2 this, node)
-                        #_"Constant" constant (Stamp'''asConstant-1 (:stamp node))
-                    ]
-                        (if (and (some? constant) (not (satisfies? ConstantNode node)))
-                            (do
-                                (Node''replaceAtUsages-3 node, :InputType'Value, (ConstantNode'forConstant-3s (:stamp node), constant, (:graph node)))
-                                (GraphUtil'tryKillUnused-1 node)
-                                true
-                            )
-                            (and improved?
-                                ;; the improved stamp may enable additional canonicalization
-                                (or (CanonicalizerInstance''tryCanonicalize-3 this, node, (:nodeClass node))
-                                    (do
-                                        (doseq [#_"Node" usage (:nodeUsages node)]
-                                            (§ ass! (:workList this) (IterativeNodeWorkList''add-2 (:workList this), usage))
-                                        )
-                                        false
-                                    )
-                                )
-                            )
-                        )
-                    )
-                )
-            )
+    (defm CanonicalizerInstance CanonicalizerTool
+        (#_"boolean" CanonicalizerTool'''canonicalizeReads-1 [#_"CanonicalizerInstance" this]
+            true
         )
-    )
 
-    ; @SuppressWarnings("try")
-    (defn- #_"void" CanonicalizerInstance''processWorkSet-2 [#_"CanonicalizerInstance" this, #_"Graph" graph]
-        (let [
-            #_"CanonicalizerInstance" instance this
-            #_"NodeEventListener" listener
-                (§ proxy #_"NodeEventListener" (NodeEventListener'new-0)
-                    (#_"void" NodeEventListener'''nodeAdded-2 [#_"NodeEventListener" _, #_"Node" node]
-                        (§ ass! (:workList instance) (IterativeNodeWorkList''add-2 (:workList instance), node))
-                        nil
-                    )
-
-                    (#_"void" NodeEventListener'''inputChanged-2 [#_"NodeEventListener" _, #_"Node" node]
-                        (§ ass! (:workList instance) (IterativeNodeWorkList''add-2 (:workList instance), node))
-                        (when (satisfies? IndirectCanonicalization node)
-                            (doseq [#_"Node" usage (:nodeUsages node)]
-                                (§ ass! (:workList instance) (IterativeNodeWorkList''add-2 (:workList instance), usage))
-                            )
-                        )
-                        nil
-                    )
-
-                    (#_"void" NodeEventListener'''usagesDroppedToZero-2 [#_"NodeEventListener" _, #_"Node" node]
-                        (§ ass! (:workList instance) (IterativeNodeWorkList''add-2 (:workList instance), node))
-                        nil
-                    )
-                )
-        ]
-            (try (§ with [#_"NodeEventScope" _ (Graph''trackNodeEvents-2 graph, listener)])
-                (doseq [#_"Node" node (:workList this)]
-                    (CanonicalizerInstance''processNode-2 this, node)
-                )
-            )
+        (#_"boolean" CanonicalizerTool'''allUsagesAvailable-1 [#_"CanonicalizerInstance" this]
+            true
         )
-        nil
-    )
 
-    (def- #_"int" CanonicalizerInstance'MAX_ITERATION_PER_NODE 10)
-
-    (defm CanonicalizerInstance Phase
-        (#_"Graph" Phase'''run-3 [#_"CanonicalizerInstance" this, #_"Graph" graph, #_"PhaseContext" context]
-            (let [
-                #_"boolean" whole-graph? (zero? (:newNodesMark this))
-            ]
-                (if (nil? (:initWorkingSet this))
-                    (§ ass! this (assoc this :workList (IterativeNodeWorkList'new-3 graph, whole-graph?, CanonicalizerInstance'MAX_ITERATION_PER_NODE)))
-                    (do
-                        (§ ass! this (assoc this :workList (IterativeNodeWorkList'new-3 graph, false, CanonicalizerInstance'MAX_ITERATION_PER_NODE)))
-                        (§ ass! (:workList this) (IterativeNodeWorkList''addAll-2 (:workList this), (:initWorkingSet this)))
-                    )
-                )
-                (when-not whole-graph?
-                    (§ ass! (:workList this) (IterativeNodeWorkList''addAll-2 (:workList this), (Graph''getNodesSince-2 graph, (:newNodesMark this))))
-                )
-                (§ ass! this (assoc this :tool (Tool'new-1 this)))
-                (CanonicalizerInstance''processWorkSet-2 this, graph)
-                graph
-            )
+        (#_"Integer" CanonicalizerTool'''smallestCompareWidth-1 [#_"CanonicalizerInstance" this]
+            (Lowerer'smallestCompareWidth-0)
         )
     )
 
@@ -22487,7 +22374,7 @@ ZeroExtendNode'new-4
                     :else
                     (do
                         ;; when removing a fixed node, new canonicalization opportunities for its successor may arise
-                        (SimplifierTool'''addToWorkList-2n (:tool this), (:next node))
+                        (SimplifierTool'''addToWorkList-2n this, (:next node))
                         (cond
                             (nil? canonical)
                             (do
@@ -22515,13 +22402,13 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"boolean" CanonicalizerInstance''tryCanonicalize-3 [#_"CanonicalizerInstance" this, #_"Node" node, #_"NodeClass" nodeClass]
+    (defn- #_"boolean" CanonicalizerInstance''tryCanonicalize-3 [#_"CanonicalizerInstance" this, #_"Node" node, #_"NodeClass" nodeClass]
         (or
             (and (:canonicalizable? nodeClass)
                 (let [
                     #_"Node" canonical
                         (let [
-                            canonical (Canonicalizable'''canonical-2 node, (:tool this))
+                            canonical (Canonicalizable'''canonical-2 node, this)
                         ]
                             (when (and (= canonical node) (:commutative? nodeClass)) => canonical
                                 (Binary'''maybeCommuteInputs-1 node)
@@ -22533,9 +22420,117 @@ ZeroExtendNode'new-4
             )
             (and (:simplifiable? nodeClass)
                 (do
-                    (§ ass! node (Simplifiable'''simplify-2 node, (:tool this)))
+                    (§ ass! node (Simplifiable'''simplify-2 node, this))
                     (Node''isDeleted-1 node)
                 )
+            )
+        )
+    )
+
+    ;;;
+     ; Calls ValueNode#inferStamp() on the node and if it returns true (which means that the stamp has changed),
+     ; re-queues the node's usages. If the stamp has changed, then this method also checks
+     ; if the stamp now describes a constant integer value, in which case the node is replaced with a constant.
+     ;;
+    (defn- #_"boolean" CanonicalizerInstance''tryInferStamp-2 [#_"CanonicalizerInstance" this, #_"ValueNode" node]
+        (and (Node''isAlive-1 node) (ValueNode'''inferStamp-1 node)
+            (do
+                (doseq [#_"Node" usage (:nodeUsages node)]
+                    (§ ass! (:worklist this) (CanonicalizerInstance'add-2 (:worklist this), usage))
+                )
+                true
+            )
+        )
+    )
+
+    ;;;
+     ; @return true if the graph was changed
+     ;;
+    (defn- #_"boolean" CanonicalizerInstance''processNode-2 [#_"CanonicalizerInstance" this, #_"Node" node]
+        (and (Node''isAlive-1 node)
+            (or (GraphUtil'tryKillUnused-1 node)
+                (CanonicalizerInstance''tryCanonicalize-3 this, node, (:nodeClass node))
+                (and (satisfies? ValueNode node)
+                    (let [
+                        #_"boolean" improved? (CanonicalizerInstance''tryInferStamp-2 this, node)
+                        #_"Constant" constant (Stamp'''asConstant-1 (:stamp node))
+                    ]
+                        (if (and (some? constant) (not (satisfies? ConstantNode node)))
+                            (do
+                                (Node''replaceAtUsages-3 node, :InputType'Value, (ConstantNode'forConstant-3s (:stamp node), constant, (:graph node)))
+                                (GraphUtil'tryKillUnused-1 node)
+                                true
+                            )
+                            (and improved?
+                                ;; the improved stamp may enable additional canonicalization
+                                (or (CanonicalizerInstance''tryCanonicalize-3 this, node, (:nodeClass node))
+                                    (do
+                                        (doseq [#_"Node" usage (:nodeUsages node)]
+                                            (§ ass! (:worklist this) (CanonicalizerInstance'add-2 (:worklist this), usage))
+                                        )
+                                        false
+                                    )
+                                )
+                            )
+                        )
+                    )
+                )
+            )
+        )
+    )
+
+    ; @SuppressWarnings("try")
+    (defn- #_"void" CanonicalizerInstance''processWorkSet-2 [#_"CanonicalizerInstance" this, #_"Graph" graph]
+        (let [
+            #_"NodeEventListener" listener
+                (§ proxy #_"NodeEventListener" (NodeEventListener'new-0)
+                    (#_"void" NodeEventListener'''nodeAdded-2 [#_"NodeEventListener" _, #_"Node" node]
+                        (§ ass! (:worklist this) (CanonicalizerInstance'add-2 (:worklist this), node))
+                        nil
+                    )
+
+                    (#_"void" NodeEventListener'''inputChanged-2 [#_"NodeEventListener" _, #_"Node" node]
+                        (§ ass! (:worklist this) (CanonicalizerInstance'add-2 (:worklist this), node))
+                        (when (satisfies? IndirectCanonicalization node)
+                            (doseq [#_"Node" usage (:nodeUsages node)]
+                                (§ ass! (:worklist this) (CanonicalizerInstance'add-2 (:worklist this), usage))
+                            )
+                        )
+                        nil
+                    )
+
+                    (#_"void" NodeEventListener'''usagesDroppedToZero-2 [#_"NodeEventListener" _, #_"Node" node]
+                        (§ ass! (:worklist this) (CanonicalizerInstance'add-2 (:worklist this), node))
+                        nil
+                    )
+                )
+        ]
+            (try (§ with [#_"NodeEventScope" _ (Graph''trackNodeEvents-2 graph, listener)])
+                (doseq [#_"Node" node (remove Node''isDeleted-1 (:worklist this))]
+                    (CanonicalizerInstance''processNode-2 this, node)
+                )
+            )
+        )
+        nil
+    )
+
+    (defm CanonicalizerInstance Phase
+        (#_"Graph" Phase'''run-3 [#_"CanonicalizerInstance" this, #_"Graph" graph, #_"PhaseContext" context]
+            (let [
+                #_"boolean" whole-graph? (zero? (:newNodesMark this))
+                _ (§ ass! this (assoc this :worklist (ordered-set)))
+                _
+                    (cond
+                        (some? (:initWorkingSet this)) (§ ass! (:worklist this) (CanonicalizerInstance'addAll-2 (:worklist this), (:initWorkingSet this)))
+                        whole-graph?                   (§ ass! (:worklist this) (CanonicalizerInstance'addAll-2 (:worklist this), (Graph''getNodes-1 graph)))
+                    )
+                _
+                    (when-not whole-graph?
+                        (§ ass! (:worklist this) (CanonicalizerInstance'addAll-2 (:worklist this), (Graph''getNodesSince-2 graph, (:newNodesMark this))))
+                    )
+                _ (CanonicalizerInstance''processWorkSet-2 this, graph)
+            ]
+                graph
             )
         )
     )
@@ -24364,21 +24359,26 @@ ZeroExtendNode'new-4
      ; most computation happens lazily.
      ;;
     (defn #_"this" ComputeInliningRelevance''compute-1 [#_"ComputeInliningRelevance" this]
-        (when (Graph''hasLoops-1 (:graph this)) => (assoc this :rootScope (Scope'new-3 this, (:start (:graph this)), nil))
-            (let [
-                this (assoc this :rootScope nil)
-                #_"SingletonNodeWorkList" workList (SingletonNodeWorkList'new-1 (:graph this))
-                #_"{LoopBeginNode Scope}" loops {}
-                #_"Scope" topScope (Scope'new-3 this, (:start (:graph this)), nil)
-            ]
-                (doseq [#_"LoopBeginNode" loopBegin (Graph''getNodes-2 (:graph this), LoopBeginNode)]
-                    (ComputeInliningRelevance''createLoopScope-4 this, loopBegin, loops, topScope)
+        (let [
+            #_"Scope" topScope (Scope'new-3 this, (:start (:graph this)), nil)
+        ]
+            (when (Graph''hasLoops-1 (:graph this)) => (assoc this :rootScope topScope)
+                (let [
+                    this (assoc this :rootScope nil)
+                    #_"{LoopBeginNode Scope}" loops {}
+                    _
+                        (doseq [#_"LoopBeginNode" loopBegin (Graph''getNodes-2 (:graph this), LoopBeginNode)]
+                            (ComputeInliningRelevance''createLoopScope-4 this, loopBegin, loops, topScope)
+                        )
+                    #_"{Node}" visited #{}
+                    _ (§ ass! [topScope visited] (Scope''process-2 topScope, visited))
+                    _
+                        (doseq [#_"Scope" scope (vals loops)]
+                            (§ ass! [scope visited] (Scope''process-2 scope, visited))
+                        )
+                ]
+                    this
                 )
-                (§ ass! [topScope workList] (Scope''process-2 topScope, workList))
-                (doseq [#_"Scope" scope (vals loops)]
-                    (§ ass! [scope workList] (Scope''process-2 scope, workList))
-                )
-                this
             )
         )
     )
@@ -28347,7 +28347,7 @@ ZeroExtendNode'new-4
                     (when (Node''isAlive-1 node)
                         (dotimes [#_"int" i (count (:virtualObjectMappings node))]
                             (when (= (:object (nth (:virtualObjectMappings node) i)) (:object state))
-                                (#_"List" .remove (:virtualObjectMappings node), i)
+                                (#_"NodeList" .remove (:virtualObjectMappings node), i)
                             )
                         )
                         (§ ass! node (FrameState''addVirtualObjectMapping-2 node, (Graph''addOrUniqueWithInputs-2 graph, state)))
@@ -28694,12 +28694,12 @@ ZeroExtendNode'new-4
                                 _
                                     (doseq [#_"AllocatedObjectNode" obj objects]
                                         (Graph''add-2 graph, obj)
-                                        (#_"List" .add (:virtualObjects commit), (:virtualObject obj))
+                                        (#_"NodeList" .add (:virtualObjects commit), (:virtualObject obj))
                                         (§ ass! obj (AllocatedObjectNode''setCommit-2 obj, commit))
                                     )
                                 _
                                     (doseq [#_"ValueNode" value values]
-                                        (#_"List" .add (:comValues commit), (Graph''addOrUniqueWithInputs-2 graph, value))
+                                        (#_"NodeList" .add (:comValues commit), (Graph''addOrUniqueWithInputs-2 graph, value))
                                     )
                                 _
                                     (doseq [#_"MonitorIdNode*" monitorIds locks]
@@ -28710,7 +28710,7 @@ ZeroExtendNode'new-4
                             ]
                                 (dotimes [#_"int" i (count (:comValues commit))]
                                     (when (contains? materializedValues (nth (:comValues commit) i))
-                                        (#_"List" .set (:comValues commit), i, (:virtualObject (nth (:comValues commit) i)))
+                                        (#_"NodeList" .set (:comValues commit), i, (:virtualObject (nth (:comValues commit) i)))
                                     )
                                 )
                             )
@@ -29567,7 +29567,7 @@ ZeroExtendNode'new-4
                     #_"Node" oldNode (nth list i)
                 ]
                     (when (some? oldNode)
-                        (#_"List" .set result, i, (InplaceUpdateClosure'''replacement-3 duplicationReplacement, oldNode, type))
+                        (#_"NodeList" .set result, i, (InplaceUpdateClosure'''replacement-3 duplicationReplacement, oldNode, type))
                     )
                 )
             )
@@ -44068,7 +44068,8 @@ ZeroExtendNode'new-4
                 ]
                     (if (seq (:usages e))
                         (let [
-                            #_"Node" node (#_"Iterator" .next (:usages e))
+                            #_"Node" node (first (:usages e))
+                            _ (§ ass! e (update e :usages next))
                             #_"Boolean" loop? (LoopFragment'isLoopNode-3 node, loopNodes, nonLoopNodes)
                             stack
                                 (when (some? loop?) => (cons (WorkListEntry'new-2 node, loopNodes) stack)
@@ -49374,18 +49375,17 @@ ZeroExtendNode'new-4
                                                     ;; Sanity check that both ends are not followed by a merge without frame state.
                                                     (or (IfNode'checkFrameState-1 (:trueSuccessor this)) (IfNode'checkFrameState-1 (:falseSuccessor this)))
                                                     (let [
-                                                        #_"{AbstractEndNode ValueNode}" phiValues {}
-                                                        #_"AbstractBeginNode" oldFalseSuccessor (:falseSuccessor this)
-                                                        #_"AbstractBeginNode" oldTrueSuccessor (:trueSuccessor this)
+                                                        #_"AbstractBeginNode" o'falseSuccessor (:falseSuccessor this)
+                                                        #_"AbstractBeginNode" o'trueSuccessor (:trueSuccessor this)
                                                         _ (§ ass! this (IfNode''setFalseSuccessor-2 this, nil))
                                                         _ (§ ass! this (IfNode''setTrueSuccessor-2 this, nil))
-                                                        #_"Iterator<EndNode>" ends (#_"List" .iterator mergePredecessors)
+                                                        #_"{AbstractEndNode ValueNode}" phiValues {}
                                                         #_"[EndNode]" falseEnds []
                                                         #_"[EndNode]" trueEnds []
                                                         _
-                                                            (dotimes [#_"int" i (count xs)]
+                                                            (loop-when-recur [#_"seq" s (seq mergePredecessors) #_"int" i 0] (< i (count xs)) [(next s) (inc i)]
                                                                 (let [
-                                                                    #_"EndNode" end (#_"Iterator" .next ends)
+                                                                    #_"EndNode" end (first s)
                                                                 ]
                                                                     (§ ass! phiValues (assoc phiValues end (PhiNode''valueAt-2n phi, end)))
                                                                     (if (Condition''foldCondition-3c (:condition compare), (nth xs i), (nth ys i))
@@ -49395,8 +49395,8 @@ ZeroExtendNode'new-4
                                                                 )
                                                             )
                                                     ]
-                                                        (IfNode''connectEnds-6 this, falseEnds, phiValues, oldFalseSuccessor, merge, tool)
-                                                        (IfNode''connectEnds-6 this, trueEnds, phiValues, oldTrueSuccessor, merge, tool)
+                                                        (IfNode''connectEnds-6 this, falseEnds, phiValues, o'falseSuccessor, merge, tool)
+                                                        (IfNode''connectEnds-6 this, trueEnds, phiValues, o'trueSuccessor, merge, tool)
 
                                                         (when (= (:trueSuccessorProbability this) 0.0)
                                                             (doseq [#_"AbstractEndNode" endNode trueEnds]
@@ -49410,13 +49410,13 @@ ZeroExtendNode'new-4
                                                             )
                                                         )
 
-                                                        ;; Remove obsolete ends only after processing all ends, otherwise oldTrueSuccessor or
-                                                        ;; oldFalseSuccessor might have been removed if it is a LoopExitNode.
+                                                        ;; Remove obsolete ends only after processing all ends, otherwise o'trueSuccessor or
+                                                        ;; o'falseSuccessor might have been removed if it is a LoopExitNode.
                                                         (when (empty? falseEnds)
-                                                            (GraphUtil'killCFG-1 oldFalseSuccessor)
+                                                            (GraphUtil'killCFG-1 o'falseSuccessor)
                                                         )
                                                         (when (empty? trueEnds)
-                                                            (GraphUtil'killCFG-1 oldTrueSuccessor)
+                                                            (GraphUtil'killCFG-1 o'trueSuccessor)
                                                         )
                                                         (GraphUtil'killCFG-1 merge)
 
@@ -50219,7 +50219,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"void" SwitchNode''setBlockSuccessor-3 [#_"SwitchNode" this, #_"int" i, #_"AbstractBeginNode" s]
-        (#_"List" .set (:successors this), i, s)
+        (#_"NodeList" .set (:successors this), i, s)
         nil
     )
 
@@ -50369,7 +50369,7 @@ ZeroExtendNode'new-4
                 )
             ;; Collect dead successors. Successors have to be cleaned before adding the new node to the graph.
             #_"AbstractBeginNode*" deadSuccessors (§ snap (let [_ (apply hash-set newSuccessors)] (remove #(contains? _ %) (:successors this))))
-            _ (#_"List" .clear (:successors this))
+            _ (#_"NodeList" .clear (:successors this))
             ;; Create the new switch node. This is done before removing dead successors as 'killCFG' could edit
             ;; some of the inputs (e.g. if 'newValue' is a loop-phi of the loop that dies while removing successors).
             #_"SwitchNode" newSwitch (Graph''add-2 (:graph this), (IntegerSwitchNode'new-5a newValue, (into-array AbstractBeginNode'iface newSuccessors), newKeys, newKeyProbabilities, newKeySuccessors))
@@ -50756,11 +50756,11 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"int" AbstractMergeNode''forwardEndIndex-2 [#_"AbstractMergeNode" this, #_"EndNode" end]
-        (#_"List" .indexOf (:ends this), end)
+        (#_"NodeList" .indexOf (:ends this), end)
     )
 
     (defn #_"void" AbstractMergeNode''addForwardEnd-2 [#_"AbstractMergeNode" this, #_"EndNode" end]
-        (#_"List" .add (:ends this), end)
+        (#_"NodeList" .add (:ends this), end)
         nil
     )
 
@@ -50817,7 +50817,7 @@ ZeroExtendNode'new-4
 
     (defm AbstractMergeNode AbstractMergeNode
         (#_"void" AbstractMergeNode'''deleteEnd-2 [#_"AbstractMergeNode" this, #_"AbstractEndNode" end]
-            (#_"List" .remove (:ends this), end)
+            (#_"NodeList" .remove (:ends this), end)
             nil
         )
 
@@ -51894,7 +51894,7 @@ ZeroExtendNode'new-4
                             (let [
                                 receiver (Lowerer'createNullCheckedValue-3 receiver, this, lowerer)
                             ]
-                                (#_"List" .set parameters, 0, receiver)
+                                (#_"NodeList" .set parameters, 0, receiver)
                                 receiver
                             )
                         )
@@ -52827,12 +52827,12 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"this" CommitAllocationNode''addLocks-2 [#_"CommitAllocationNode" this, #_"MonitorIdNode*" monitorIds]
-        (#_"List" .addAll (:locks this), monitorIds)
+        (#_"NodeList" .addAll (:locks this), monitorIds)
         (update this :lockIndexes conj' (count (:locks this)))
     )
 
     (defn #_"MonitorIdNode*" CommitAllocationNode''getLocks-2 [#_"CommitAllocationNode" this, #_"int" i]
-        (#_"List" .subList (:locks this), (nth (:lockIndexes this) i), (nth (:lockIndexes this) (inc i)))
+        (#_"NodeList" .subList (:locks this), (nth (:lockIndexes this) i), (nth (:lockIndexes this) (inc i)))
     )
 
     ;;;
@@ -52903,7 +52903,7 @@ ZeroExtendNode'new-4
         ]
             (doseq [#_"Node" usage (:nodeUsages this)]
                 (if (satisfies? AllocatedObjectNode usage)
-                    (§ ass! usage (Node''replaceAtUsagesAndDelete-2 usage, (nth allocations (#_"List" .indexOf (:virtualObjects this), (:virtualObject usage)))))
+                    (§ ass! usage (Node''replaceAtUsagesAndDelete-2 usage, (nth allocations (#_"NodeList" .indexOf (:virtualObjects this), (:virtualObject usage)))))
                     (Node''replaceAtUsages-3 this, :InputType'Memory, (peek' enters))
                 )
             )
@@ -52968,7 +52968,7 @@ ZeroExtendNode'new-4
                                             #_"ValueNode" value (nth (:comValues this) valuePos)
                                             value
                                                 (when (satisfies? VirtualObjectNode value) => value
-                                                    (nth allocations (#_"List" .indexOf (:virtualObjects this), value))
+                                                    (nth allocations (#_"NodeList" .indexOf (:virtualObjects this), value))
                                                 )
                                         ]
                                             (cond
@@ -53015,7 +53015,7 @@ ZeroExtendNode'new-4
                                     (when (#_"BitSet" .get omittedValues, valuePos)
                                         (let [
                                             #_"ValueNode" value (nth (:comValues this) valuePos)
-                                            #_"ValueNode" allocValue (nth allocations (#_"List" .indexOf (:virtualObjects this), value))
+                                            #_"ValueNode" allocValue (nth allocations (#_"NodeList" .indexOf (:virtualObjects this), value))
                                         ]
                                             (when-not (and (satisfies? ConstantNode allocValue) (#_"Constant" .isDefaultForKind (:value allocValue)))
                                                 (let [
@@ -53070,7 +53070,7 @@ ZeroExtendNode'new-4
                     #_"VirtualObjectNode" virtualObject (nth (:virtualObjects this) i)
                     #_"int" n (VirtualObjectNode'''entryCount-1 virtualObject)
                 ]
-                    (VirtualizerTool'''createVirtualObject-5 tool, virtualObject, (into-array ValueNode'iface (#_"List" .subList (:comValues this), j, (+ j n))), (CommitAllocationNode''getLocks-2 this, i), (nth (:ensureVirtual this) i))
+                    (VirtualizerTool'''createVirtualObject-5 tool, virtualObject, (into-array ValueNode'iface (#_"NodeList" .subList (:comValues this), j, (+ j n))), (CommitAllocationNode''getLocks-2 this, i), (nth (:ensureVirtual this) i))
                     (recur (+ j n) (inc i))
                 )
             )
@@ -53085,7 +53085,7 @@ ZeroExtendNode'new-4
                 #_"boolean[]" used (boolean-array (count (:virtualObjects this)))
                 #_"int" usedCount
                     (loop-when [usedCount 0 #_"seq" s (seq (filter #(satisfies? AllocatedObjectNode %) (:nodeUsages this)))] (some? s) => usedCount
-                        (aset used (#_"List" .indexOf (:virtualObjects this), (:virtualObject (first s))) true)
+                        (aset used (#_"NodeList" .indexOf (:virtualObjects this), (:virtualObject (first s))) true)
                         (recur (inc usedCount) (next s))
                     )
             ]
@@ -53111,7 +53111,7 @@ ZeroExtendNode'new-4
                                                     (when (nth used objIndex) => [usedCount progress?]
                                                         (loop-when [usedCount usedCount progress? progress? #_"int" i 0] (< i (VirtualObjectNode'''entryCount-1 virtualObject)) => [usedCount progress?]
                                                             (let [
-                                                                #_"int" index (#_"List" .indexOf (:virtualObjects this), (nth (:comValues this) (+ valuePos i)))
+                                                                #_"int" index (#_"NodeList" .indexOf (:virtualObjects this), (nth (:comValues this) (+ valuePos i)))
                                                                 [usedCount progress?]
                                                                     (when (and (not= index -1) (not (nth used index))) => [usedCount progress?]
                                                                         (aset used index true)
@@ -53148,7 +53148,7 @@ ZeroExtendNode'new-4
                                                 (§ ass! virtualObjects (conj' virtualObjects virtualObject))
                                                 (§ ass! locks (into' locks (CommitAllocationNode''getLocks-2 this, i)))
                                                 (§ ass! lockIndexes (conj' lockIndexes (count locks)))
-                                                (§ ass! values (into' values (#_"List" .subList (:comValues this), j, (+ j n))))
+                                                (§ ass! values (into' values (#_"NodeList" .subList (:comValues this), j, (+ j n))))
                                                 (§ ass! ensureVirtual (conj' ensureVirtual (nth (:ensureVirtual this) i)))
                                             )
                                             (recur this (+ j n) (inc i))
@@ -60211,14 +60211,14 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"void" PhiNode''initializeValueAt-3 [#_"PhiNode" this, #_"int" i, #_"ValueNode" x]
         (while (<= (count (:phiValues this)) i)
-            (#_"List" .add (:phiValues this), nil)
+            (#_"NodeList" .add (:phiValues this), nil)
         )
-        (#_"List" .set (:phiValues this), i, x)
+        (#_"NodeList" .set (:phiValues this), i, x)
         nil
     )
 
     (defn #_"void" PhiNode''setValueAt-3i [#_"PhiNode" this, #_"int" i, #_"ValueNode" x]
-        (#_"List" .set (:phiValues this), i, x)
+        (#_"NodeList" .set (:phiValues this), i, x)
         nil
     )
 
@@ -60241,12 +60241,12 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"void" PhiNode''addInput-2 [#_"PhiNode" this, #_"ValueNode" x]
-        (#_"List" .add (:phiValues this), x)
+        (#_"NodeList" .add (:phiValues this), x)
         nil
     )
 
     (defn #_"void" PhiNode''removeInput-2 [#_"PhiNode" this, #_"int" index]
-        (#_"List" .remove (:phiValues this), index)
+        (#_"NodeList" .remove (:phiValues this), index)
         nil
     )
 
@@ -61930,7 +61930,7 @@ ZeroExtendNode'new-4
                     (assoc this :virtualObjectMappings (NodeInputList'new-1 (ß this)))
                 )
         ]
-            (#_"List" .add (:virtualObjectMappings this), virtualObject)
+            (#_"NodeList" .add (:virtualObjectMappings this), virtualObject)
             this
         )
     )
@@ -62417,114 +62417,6 @@ ZeroExtendNode'new-4
             (hash-map
                 #_"{LoopEndNode T}" :endStates {}
                 #_"{LoopExitNode T}" :exitStates {}
-            )
-        )
-    )
-)
-
-(class-ns IterativeNodeWorkList [#_"Iterable" #_"<Node>"]
-    (defn #_"IterativeNodeWorkList" IterativeNodeWorkList'new-3 [#_"Graph" graph, #_"boolean" fill?, #_"int" iterationLimitPerNode]
-        (merge (IterativeNodeWorkList'class.)
-            (hash-map
-                #_"queue [Node]" :worklist (when fill? (Graph''getNodes-1 graph))
-                #_"int" :iterationLimit (int (Long/min (* (Graph''getNodeCount-1 graph) (long iterationLimitPerNode)), Integer/MAX_VALUE))
-            )
-        )
-    )
-
-    (defn #_"this" IterativeNodeWorkList''add-2 [#_"IterativeNodeWorkList" this, #_"Node" node]
-        (when (some? node)
-            (when-not (some #(= % node) (:worklist this))
-                (§ ass! (:worklist this) (conj' (:worklist this) node))
-            )
-        )
-        this
-    )
-
-    (defn #_"this" IterativeNodeWorkList''addAll-2 [#_"IterativeNodeWorkList" this, #_"Node*" nodes]
-        (doseq [#_"Node" node nodes]
-            (when (Node''isAlive-1 node)
-                (§ ass! this (IterativeNodeWorkList''add-2 this, node))
-            )
-        )
-        this
-    )
-
-    (§ override! #_"Iterator<Node>" #_"Iterable." iterator [#_"IterativeNodeWorkList" this]
-        (reify Iterator #_"<Node>"
-            (#_"boolean" hasNext [#_"Iterator<Node>" _]
-                (while (and (seq (:worklist this)) (Node''isDeleted-1 (first (:worklist this))))
-                    (§ ass! (:worklist this) (next (:worklist this)))
-                )
-                (and (pos? (:iterationLimit this)) (seq (:worklist this)))
-            )
-
-            (#_"Node" next [#_"Iterator<Node>" _]
-                (when (pos? (:iterationLimit this)) => (throw (NoSuchElementException.))
-                    (§ ass this (update this :iterationLimit dec))
-                )
-                (while (and (seq (:worklist this)) (Node''isDeleted-1 (first (:worklist this))))
-                    (§ ass! (:worklist this) (next (:worklist this)))
-                )
-                (let [
-                    #_"Node" node (first (:worklist this))
-                ]
-                    (§ ass! (:worklist this) (next (:worklist this)))
-                    node
-                )
-            )
-        )
-    )
-)
-
-(class-ns SingletonNodeWorkList [#_"Iterable" #_"<Node>"]
-    (defn #_"SingletonNodeWorkList" SingletonNodeWorkList'new-1 [#_"Graph" graph]
-        (merge (SingletonNodeWorkList'class.)
-            (hash-map
-                #_"queue [Node]" :worklist nil
-                #_"{Node}" :visited #{}
-            )
-        )
-    )
-
-    (defn #_"this" SingletonNodeWorkList''add-2 [#_"SingletonNodeWorkList" this, #_"Node" node]
-        (when (some? node)
-            (when-not (contains? (:visited this) node)
-                (§ ass! (:visited this) (conj (:visited this) node))
-                (§ ass! (:worklist this) (conj' (:worklist this) node))
-            )
-        )
-        this
-    )
-
-    (defn #_"this" SingletonNodeWorkList''addAll-2 [#_"SingletonNodeWorkList" this, #_"Node*" nodes]
-        (doseq [#_"Node" node nodes]
-            (when (Node''isAlive-1 node)
-                (§ ass! this (SingletonNodeWorkList''add-2 this, node))
-            )
-        )
-        this
-    )
-
-    (§ override! #_"Iterator<Node>" #_"Iterable." iterator [#_"SingletonNodeWorkList" this]
-        (reify Iterator #_"<Node>"
-            (#_"boolean" hasNext [#_"Iterator<Node>" _]
-                (while (and (seq (:worklist this)) (Node''isDeleted-1 (first (:worklist this))))
-                    (§ ass! (:worklist this) (next (:worklist this)))
-                )
-                (seq (:worklist this))
-            )
-
-            (#_"Node" next [#_"Iterator<Node>" _]
-                (while (and (seq (:worklist this)) (Node''isDeleted-1 (first (:worklist this))))
-                    (§ ass! (:worklist this) (next (:worklist this)))
-                )
-                (let [
-                    #_"Node" node
-                ]
-                    (§ ass! (:worklist this) (next (:worklist this)))
-                    node
-                )
             )
         )
     )
@@ -63118,7 +63010,7 @@ ZeroExtendNode'new-4
     (defn #_"void" Position''set-3 [#_"Position" this, #_"Node" node, #_"Node" value]
         (if (< (:index this) (:directCount (:edges this)))
             (Edges''setNode-4 (:edges this), node, (:index this), value)
-            (#_"List" .set (Edges'getNodeList-3 node, (:offsets (:edges this)), (:index this)), (:subIndex this), value)
+            (#_"NodeList" .set (Edges'getNodeList-3 node, (:offsets (:edges this)), (:index this)), (:subIndex this), value)
         )
         nil
     )
@@ -65542,8 +65434,8 @@ ZeroExtendNode'new-4
 ;;;
  ; A scope holds information for the contents of one loop or of the root of the method.
  ;
- ; It does not include child loops, i.e. the iteration in #process(SingletonNodeWorkList)
- ; explicitly excludes the nodes of child loops.
+ ; It does not include child loops, i.e. the iteration in #process() explicitly excludes
+ ; the nodes of child loops.
  ;;
 (class-ns Scope []
     (defn #_"Scope" Scope'new-3 [#_"ComputeInliningRelevance" relevance, #_"FixedNode" start, #_"Scope" parent]
@@ -65587,33 +65479,35 @@ ZeroExtendNode'new-4
      ; all fixed nodes. Child loops are skipped by going from loop entries directly to the loop
      ; exits. Processing stops at loop exits of the current loop.
      ;;
-    (defn #_"[this SingletonNodeWorkList]" Scope''process-2 [#_"Scope" this, #_"SingletonNodeWorkList" workList]
+    (defn #_"[this {Node}]" Scope''process-2 [#_"Scope" this, #_"{Node}" visited]
         (let [
-            workList (SingletonNodeWorkList''addAll-2 workList, (Node''successors-1 (:start this)))
+            add- (fn #_"{Node}" [#_"{Node}" visited, #_"Node" node] (if (some? node) (conj visited node) visited))
+            add* (fn #_"{Node}" [#_"{Node}" visited, #_"Node*" nodes] (reduce add- visited (filter Node''isAlive-1 nodes)))
+            visited (add* visited (Node''successors-1 (:start this)))
         ]
-            (doseq [#_"Node" node workList]
+            (doseq [#_"Node" node (remove Node''isDeleted-1 visited)]
                 (condp satisfies? node
                     InvokeNode
                     (do
                         ;; process the invoke and queue its successors
                         (§ ass! (:relevances (:relevance this)) (assoc (:relevances (:relevance this)) node (Scope''computeInvokeRelevance-2 this, node)))
-                        (§ ass! workList (SingletonNodeWorkList''addAll-2 workList, (Node''successors-1 node)))
+                        (§ ass! visited (add* visited (Node''successors-1 node)))
                     )
                     LoopBeginNode
                         ;; skip child loops by advancing over the loop exits
                         (doseq [#_"LoopExitNode" exit (LoopBeginNode''loopExits-1 node)]
-                            (§ ass! workList (SingletonNodeWorkList''add-2 workList, (:next exit)))
+                            (§ ass! visited (add- visited (:next exit)))
                         )
                     LoopEndNode       nil ;; nothing to do
                     LoopExitNode      nil ;; nothing to do
-                    FixedWithNextNode (§ ass! workList (SingletonNodeWorkList''add-2 workList, (:next node)))
-                    EndNode           (§ ass! workList (SingletonNodeWorkList''add-2 workList, (AbstractEndNode'''merge-1 node)))
+                    FixedWithNextNode (§ ass! visited (add- visited (:next node)))
+                    EndNode           (§ ass! visited (add- visited (AbstractEndNode'''merge-1 node)))
                     ControlSinkNode   nil ;; nothing to do
-                    ControlSplitNode  (§ ass! workList (SingletonNodeWorkList''addAll-2 workList, (Node''successors-1 node)))
+                    ControlSplitNode  (§ ass! visited (add* visited (Node''successors-1 node)))
                     nil
                 )
             )
-            [this workList]
+            [this visited]
         )
     )
 
@@ -68919,53 +68813,6 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns Tool [SimplifierTool, CanonicalizerTool]
-    (defn #_"Tool" Tool'new-1 [#_"CanonicalizerInstance" instance]
-        (merge (Tool'class.)
-            (hash-map
-                #_"CanonicalizerInstance" :instance instance
-            )
-        )
-    )
-
-    (defm Tool SimplifierTool
-        (#_"void" SimplifierTool'''deleteBranch-2 [#_"Tool" this, #_"Node" branch]
-            (Node''replaceFirstSuccessor-3 (:predecessor branch), branch, nil)
-            (GraphUtil'killCFG-1 branch)
-            nil
-        )
-
-        (#_"void" SimplifierTool'''addToWorkList-2n [#_"Tool" this, #_"Node" node]
-            (§ ass! (:workList (:instance this)) (IterativeNodeWorkList''add-2 (:workList (:instance this)), node))
-            nil
-        )
-
-        (#_"void" SimplifierTool'''addToWorkList-2s [#_"Tool" this, #_"Node*" nodes]
-            (§ ass! (:workList (:instance this)) (IterativeNodeWorkList''addAll-2 (:workList (:instance this)), nodes))
-            nil
-        )
-
-        (#_"void" SimplifierTool'''removeIfUnused-2 [#_"Tool" this, #_"Node" node]
-            (GraphUtil'tryKillUnused-1 node)
-            nil
-        )
-    )
-
-    (defm Tool CanonicalizerTool
-        (#_"boolean" CanonicalizerTool'''canonicalizeReads-1 [#_"Tool" this]
-            true
-        )
-
-        (#_"boolean" CanonicalizerTool'''allUsagesAvailable-1 [#_"Tool" this]
-            true
-        )
-
-        (#_"Integer" CanonicalizerTool'''smallestCompareWidth-1 [#_"Tool" this]
-            (Lowerer'smallestCompareWidth-0)
-        )
-    )
-)
-
 ;;;
  ; This class represents a reference to a Java type and whether this reference is referring only
  ; to the represented type or also to its sub types in the class hierarchy. When creating a type
@@ -69335,7 +69182,7 @@ ZeroExtendNode'new-4
                 #_"AbstractMergeNode" merge (:predecessor deopt)
                 ;; Process each predecessor at the merge, unpacking the reasons and speculations as needed.
                 #_"ValueNode" reason (:actionAndReason deopt)
-                [#_"List<ValueNode>" reasons #_"int" expectedPhis]
+                [#_"NodeList<ValueNode>" reasons #_"int" expectedPhis]
                     (condp satisfies? reason
                         ValuePhiNode (when (= (:merge reason) merge) [(§ snap (:phiValues reason)) 1])
                         ConstantNode [nil 0]
@@ -69345,7 +69192,7 @@ ZeroExtendNode'new-4
                 (when (some? expectedPhis)
                     (let [
                         #_"ValueNode" speculation (:speculation deopt)
-                        [#_"List<ValueNode>" speculations expectedPhis]
+                        [#_"NodeList<ValueNode>" speculations expectedPhis]
                             (when (satisfies? ValuePhiNode speculation) => [nil expectedPhis]
                                 (when (= (:merge speculation) merge)
                                     [(§ snap (:phiValues speculation)) (inc expectedPhis)]
