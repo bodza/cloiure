@@ -4953,7 +4953,7 @@ ZeroExtendNode'new-4
  ; The main workhorse for merging states, both for loops and for normal merges.
  ;;
 (defp MergeProcessor
-    (#_"void" MergeProcessor'''merge-2 [#_"MergeProcessor" this, #_"EffectsBlockState*" states])
+    (#_"this" MergeProcessor'''merge-2 [#_"MergeProcessor" this, #_"EffectsBlockState*" states])
 )
 
 (defp MethodCallOp)
@@ -13097,7 +13097,7 @@ ZeroExtendNode'new-4
     (defn #_"AllocatableRegisters" AllocatableRegisters'new-3 [#_"RegisterArray" allocatableRegisters, #_"int" minRegisterNumber, #_"int" maxRegisterNumber]
         (merge (AllocatableRegisters'class.)
             (hash-map
-                #_"[Register]" :allocatableRegisters (#_"RegisterArray" .toArray allocatableRegisters)
+                #_"[Register]" :allocatableRegisters (vec (#_"RegisterArray" .toArray allocatableRegisters))
                 #_"int" :minRegisterNumber minRegisterNumber
                 #_"int" :maxRegisterNumber maxRegisterNumber
             )
@@ -13163,7 +13163,7 @@ ZeroExtendNode'new-4
             (hash-map
                 #_"LIR" :lir lir
                 #_"FrameMapBuilder" :frameMapBuilder frameMapBuilder
-                #_"[StackInterval]" :stackSlotMap (make-array StackInterval'iface (:numStackSlots frameMapBuilder))
+                #_"{int StackInterval}" :stackSlotMap {}
                 #_"sorted StackInterval*" :unhandled nil ;; insert by from
                 #_"sorted StackInterval*" :active nil    ;; insert by to
                 #_"[Block]" :sortedBlocks (:reversePostOrder (:cfg lir))
@@ -13174,10 +13174,6 @@ ZeroExtendNode'new-4
                 #_"{SlotSize (StackSlot)}" :freeSlots {}
             )
         )
-    )
-
-    (defn- #_"StackInterval" Allocator''get-2 [#_"Allocator" this, #_"VirtualStackSlot" stackSlot]
-        (nth (:stackSlotMap this) (:id stackSlot))
     )
 
     (defn- #_"SlotSize" Allocator'forKind-1 [#_"ValueKind" kind]
@@ -13292,7 +13288,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"this" Allocator''allocateStackSlots-1 [#_"Allocator" this]
         (let [
-            this (update this :unhandled #(sort-by :from (concat % (remove nil? (:stackSlotMap this)))))
+            this (update this :unhandled #(sort-by :from (concat % (remove nil? (vals (:stackSlotMap this))))))
         ]
             (loop-when-recur [#_"StackInterval" interval (Allocator''activateNext-1 this)] (some? interval) [(Allocator''activateNext-1 this)]
                 (§ ass! [this interval] (Allocator''allocateSlot-2 this, interval))
@@ -13307,7 +13303,7 @@ ZeroExtendNode'new-4
                 (reify ValueProcedure
                     (#_"Value" ValueProcedure'''doValue-5 [#_"ValueProcedure" _, #_"LIRInstruction" _op, #_"Value" value, #_"OperandMode" _mode, #_"{OperandFlag}" _flags]
                         (when (satisfies? VirtualStackSlot value) => value
-                            (:location (Allocator''get-2 this, value))
+                            (:location (get (:stackSlotMap this) (:id value)))
                         )
                     )
                 )
@@ -17112,45 +17108,43 @@ ZeroExtendNode'new-4
         (not (or (satisfies? CommitAllocationNode node) (satisfies? AllocatedObjectNode node) (satisfies? BoxNode node)))
     )
 
-    (defn- #_"void" EffectsClosure''doMergeWithoutDead-3 [#_"EffectsClosure" this, #_"MergeProcessor" mergeProcessor, #_"EffectsBlockState*" states]
+    (defn- #_"MergeProcessor" EffectsClosure''doMergeWithoutDead-3 [#_"EffectsClosure" this, #_"MergeProcessor" processor, #_"EffectsBlockState*" states]
         (let [
-            #_"int" alive
-                (loop-when-recur [alive 0 #_"seq" s (seq states)]
-                                 (some? s)
-                                 [(if (:dead? (first s)) alive (inc alive)) (next s)]
-                              => alive
-                )
+            #_"int" alive (count (remove :dead? states))
         ]
             (cond
                 (zero? alive)
-                    (§ ass! mergeProcessor (MergeProcessor''setNewState-2 mergeProcessor, (nth states 0)))
+                    (MergeProcessor''setNewState-2 processor, (nth states 0))
                 (= alive (count states))
                     (let [
                         #_"[int]" stateIndexes (vec (range alive))
                     ]
-                        (§ ass! mergeProcessor (MergeProcessor''setStateIndexes-2 mergeProcessor, stateIndexes))
-                        (§ ass! mergeProcessor (MergeProcessor''setNewState-2 mergeProcessor, (BlockIteratorClosure'''getInitialState-1 this)))
-                        (MergeProcessor'''merge-2 mergeProcessor, states)
+                        (-> processor
+                            (MergeProcessor''setStateIndexes-2 stateIndexes)
+                            (MergeProcessor''setNewState-2 (BlockIteratorClosure'''getInitialState-1 this))
+                            (MergeProcessor'''merge-2 states)
+                        )
                     )
                 :else
                     (let [
+                        #_"[int]" stateIndexes []
                         #_"[EffectsBlockState]" aliveStates []
-                        #_"[int]" stateIndexes (int-array alive)
                         _
                             (dotimes [#_"int" i (count states)]
                                 (when-not (:dead? (nth states i))
-                                    (§ ass! stateIndexes (assoc' stateIndexes (count aliveStates) i))
+                                    (§ ass! stateIndexes (conj' stateIndexes i))
                                     (§ ass! aliveStates (conj' aliveStates (nth states i)))
                                 )
                             )
                     ]
-                        (§ ass! mergeProcessor (MergeProcessor''setStateIndexes-2 mergeProcessor, stateIndexes))
-                        (§ ass! mergeProcessor (MergeProcessor''setNewState-2 mergeProcessor, (BlockIteratorClosure'''getInitialState-1 this)))
-                        (MergeProcessor'''merge-2 mergeProcessor, aliveStates)
+                        (-> processor
+                            (MergeProcessor''setStateIndexes-2 stateIndexes)
+                            (MergeProcessor''setNewState-2 (BlockIteratorClosure'''getInitialState-1 this))
+                            (MergeProcessor'''merge-2 aliveStates)
+                        )
                     )
             )
         )
-        nil
     )
 
     (defm EffectsClosure BlockIteratorClosure
@@ -17208,7 +17202,7 @@ ZeroExtendNode'new-4
             (let [
                 #_"MergeProcessor" processor (EffectsClosure'''createMergeProcessor-2 this, merge)
             ]
-                (EffectsClosure''doMergeWithoutDead-3 this, processor, states)
+                (§ ass! processor (EffectsClosure''doMergeWithoutDead-3 this, processor, states))
                 (EffectList''addAll-2 (get (:blockEffects this) merge), (:mergeEffects processor))
                 (EffectList''addAll-2 (get (:blockEffects this) merge), (:afterMergeEffects processor))
                 (:newState processor)
@@ -17236,7 +17230,7 @@ ZeroExtendNode'new-4
                     #_"EffectsBlockState" loopEntryState initialStateRemovedKilledLocations
                     #_"EffectsBlockState" lastMergedState initialStateRemovedKilledLocations
                     _ (EffectsClosure'''processInitialLoopState-3 this, _loop, lastMergedState)
-                    #_"MergeProcessor" mergeProcessor (EffectsClosure'''createMergeProcessor-2 this, (:header _loop))
+                    #_"MergeProcessor" processor (EffectsClosure'''createMergeProcessor-2 this, (:header _loop))
                 ]
                     ;; Iterative loop processing: we take the predecessor state as the loop's starting state,
                     ;; processing the loop contents, merge the states of all loop ends, and check whether the
@@ -17248,19 +17242,18 @@ ZeroExtendNode'new-4
                     (loop-when [#_"int" iteration 0] (< iteration 10) => (throw! (str "too many iterations at " _loop))
                         (let [
                             #_"BlockLoopInfo<EffectsBlockState>" info (ReentrantBlockIterator'processLoop-3 this, _loop, lastMergedState)
+                            _ (§ ass! processor (EffectsClosure''doMergeWithoutDead-3 this, processor, (cons initialStateRemovedKilledLocations (:endStates info))))
                         ]
-                            (EffectsClosure''doMergeWithoutDead-3 this, mergeProcessor, (cons initialStateRemovedKilledLocations (:endStates info)))
-
-                            (if (EffectsBlockState'''equivalentTo-2 (:newState mergeProcessor), lastMergedState)
+                            (if (EffectsBlockState'''equivalentTo-2 (:newState processor), lastMergedState)
                                 (do
-                                    (§ ass! this (update-in this [:blockEffects (:header _loop)] EffectList''insertAll-3 (:mergeEffects mergeProcessor), 0))
-                                    (§ ass! this (assoc-in this [:loopMergeEffects _loop] (:afterMergeEffects mergeProcessor)))
+                                    (§ ass! this (update-in this [:blockEffects (:header _loop)] EffectList''insertAll-3 (:mergeEffects processor), 0))
+                                    (§ ass! this (assoc-in this [:loopMergeEffects _loop] (:afterMergeEffects processor)))
                                     (§ ass! this (assoc-in this [:loopEntryStates (:beginNode (:header _loop))] loopEntryState))
-                                    (EffectsClosure'''processKilledLoopLocations-4 this, _loop, initialStateRemovedKilledLocations, (:newState mergeProcessor))
+                                    (EffectsClosure'''processKilledLoopLocations-4 this, _loop, initialStateRemovedKilledLocations, (:newState processor))
                                     (:exitStates info)
                                 )
                                 (do
-                                    (§ ass lastMergedState (:newState mergeProcessor))
+                                    (§ ass lastMergedState (:newState processor))
                                     (doseq [#_"Block" block (:loopBlocks _loop)]
                                         (EffectList'''clear-1 (get (:blockEffects this) block))
                                     )
@@ -18645,10 +18638,10 @@ ZeroExtendNode'new-4
             (hash-map
                 ;; The state at block entry for global dataflow analysis.
                 ;; It contains a global value number for each location to optimize.
-                #_"[int]" :entryState (int-array stateSize)
+                #_"[int]" :entryState (vec (repeat stateSize 0))
                 ;; The state at block exit for global dataflow analysis.
                 ;; It contains a global value number for each location to optimize.
-                #_"[int]" :exitState (int-array stateSize)
+                #_"[int]" :exitState (vec (repeat stateSize 0))
                 ;; The starting number for global value numbering in this block.
                 #_"int" :entryValueNum 0
             )
@@ -18722,46 +18715,27 @@ ZeroExtendNode'new-4
     )
 
     ;;;
-     ; Creates the frame state after the start node of a graph for an {@link IntrinsicContext
-     ; intrinsic} that is the parse root (either for root compiling or for post-parse inlining).
+     ; Creates the frame state after the start node of a graph for an {@link IntrinsicContext intrinsic}
+     ; that is the parse root (either for root compiling or for post-parse inlining).
      ;;
     (defn- #_"FrameState" BytecodeParser''createStateAfterStartOfReplacementGraph-1 [#_"BytecodeParser" this]
         (if (IntrinsicContext''isPostParseInlined-1 (:intrinsicContext this))
             (Graph''add-2 (:graph this), (FrameState'new-1 BytecodeFrame/BEFORE_BCI))
             (let [
-                #_"ResolvedJavaMethod" original (:originalMethod (:intrinsicContext this))
-                #_"[ValueNode]" locals
-                    (if (or (= (#_"ResolvedJavaMethod" .getMaxLocals original) (count (:locals (:frameState this)))) (#_"ResolvedJavaMethod" .isNative original))
+                f'local #(let [#_"ValueNode" node (nth (:locals (:frameState this)) %)] (when-not (= node FrameState'TWO_SLOT_MARKER) node))
+                #_"ResolvedJavaMethod" o'method (:originalMethod (:intrinsicContext this))
+                #_"int" m (#_"ResolvedJavaMethod" .getMaxLocals o'method)
+                #_"ValueNode*" locals
+                    (if (or (= (count (:locals (:frameState this))) m) (#_"ResolvedJavaMethod" .isNative o'method))
+                        (map f'local (range m))
                         (let [
-                            locals (make-array ValueNode'iface (#_"ResolvedJavaMethod" .getMaxLocals original))
-                            _
-                                (dotimes [#_"int" i (count locals)]
-                                    (let [
-                                        #_"ValueNode" node (nth (:locals (:frameState this)) i)
-                                    ]
-                                        (§ ass! locals (assoc' locals i (when-not (= node FrameState'TWO_SLOT_MARKER) node)))
-                                    )
-                                )
+                            #_"int" n (#_"Signature" .getParameterCount (#_"ResolvedJavaMethod" .getSignature o'method), (not (#_"ResolvedJavaMethod" .isStatic o'method)))
                         ]
-                            locals
-                        )
-                        (let [
-                            locals (make-array ValueNode'iface (#_"ResolvedJavaMethod" .getMaxLocals original))
-                            #_"int" n (#_"Signature" .getParameterCount (#_"ResolvedJavaMethod" .getSignature original), (not (#_"ResolvedJavaMethod" .isStatic original)))
-                            _
-                                (dotimes [#_"int" i n]
-                                    (let [
-                                        #_"ValueNode" param (nth (:locals (:frameState this)) i)
-                                    ]
-                                        (§ ass! locals (assoc' locals i (when-not (= param FrameState'TWO_SLOT_MARKER) param)))
-                                    )
-                                )
-                        ]
-                            locals
+                            (concat (map f'local (range n)) (repeat (- m n) nil))
                         )
                     )
             ]
-                (Graph''add-2 (:graph this), (FrameState'new-9a nil, (ResolvedJavaMethodBytecode'new-1 original), 0, locals, nil, 0, nil, nil, false))
+                (Graph''add-2 (:graph this), (FrameState'new-9a nil, (ResolvedJavaMethodBytecode'new-1 o'method), 0, locals, nil, 0, nil, nil, false))
             )
         )
     )
@@ -19491,15 +19465,15 @@ ZeroExtendNode'new-4
      ;;
     (defn- #_"boolean" BytecodeParser''tryFastInlineAccessor-3 [#_"BytecodeParser" this, #_"ResolvedJavaMethod" targetMethod, #_"[ValueNode]" args]
         (let [
-            #_"[byte]" bytecode (#_"ResolvedJavaMethod" .getCode targetMethod)
+            #_"[byte]" code (vec (#_"ResolvedJavaMethod" .getCode targetMethod))
         ]
-            (and (some? bytecode) (= (count bytecode) BytecodeParser'ACCESSOR_BYTECODE_LENGTH) (= (Bytes'beU1-2 bytecode, 0) Bytecodes'ALOAD_0) (= (Bytes'beU1-2 bytecode, 1) Bytecodes'GETFIELD)
+            (and (some? code) (= (count code) BytecodeParser'ACCESSOR_BYTECODE_LENGTH) (= (Bytes'beU1-2 code, 0) Bytecodes'ALOAD_0) (= (Bytes'beU1-2 code, 1) Bytecodes'GETFIELD)
                 (let [
-                    #_"int" b4 (Bytes'beU1-2 bytecode, 4)
+                    #_"int" b4 (Bytes'beU1-2 code, 4)
                 ]
                     (and (<= Bytecodes'IRETURN b4 Bytecodes'ARETURN)
                         (let [
-                            #_"int" cpi (Bytes'beU2-2 bytecode, 2)
+                            #_"int" cpi (Bytes'beU2-2 code, 2)
                             #_"JavaField" field (#_"ConstantPool" .lookupField (#_"ResolvedJavaMethod" .getConstantPool targetMethod), cpi, targetMethod, Bytecodes'GETFIELD)
                         ]
                             (and (instance? ResolvedJavaField field)
@@ -30060,10 +30034,10 @@ ZeroExtendNode'new-4
  ; Calculates the stack intervals using a worklist-based backwards data-flow analysis.
  ;;
 (class-ns FixPointIntervalBuilder []
-    (defn- #_"FixPointIntervalBuilder" FixPointIntervalBuilder'new-2 [#_"[StackInterval]" stackSlotMap, #_"int" maxOpId]
+    (defn- #_"FixPointIntervalBuilder" FixPointIntervalBuilder'new-2 [#_"{int StackInterval}" stackSlotMap, #_"int" maxOpId]
         (merge (FixPointIntervalBuilder'class.)
             (hash-map
-                #_"[StackInterval]" :stackSlotMap stackSlotMap
+                #_"{int StackInterval}" :stackSlotMap stackSlotMap
                 #_"int" :maxOpId maxOpId
                 #_"{Block BitSet}" :liveInMap {}
                 #_"{Block BitSet}" :liveOutMap {}
@@ -30072,58 +30046,49 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"StackInterval" FixPointIntervalBuilder''get-2 [#_"FixPointIntervalBuilder" this, #_"VirtualStackSlot" stackSlot]
-        (nth (:stackSlotMap this) (:id stackSlot))
-    )
-
-    (defn- #_"void" FixPointIntervalBuilder''put-3 [#_"FixPointIntervalBuilder" this, #_"VirtualStackSlot" stackSlot, #_"StackInterval" interval]
-        (§ ass! (:stackSlotMap this) (assoc' (:stackSlotMap this) (:id stackSlot) interval))
-        nil
-    )
-
     ;;;
      ; Merge outSet with in-set of successors.
      ;;
     (defn- #_"boolean" FixPointIntervalBuilder''updateOutBlock-2 [#_"FixPointIntervalBuilder" this, #_"Block" block]
         (let [
             #_"BitSet" union (BitSet.)
-        ]
-            (doseq [#_"Block" succ (:successors block)]
-                (#_"BitSet" .or union, (get (:liveInMap this) succ))
-            )
-            (let [
-                #_"BitSet" outSet (get (:liveOutMap this) block)
-            ]
-                ;; check if changed
-                (when-not (and (some? outSet) (= union outSet)) => false
-                    (§ ass! this (assoc-in this [:liveOutMap block] union))
-                    true
+            _
+                (doseq [#_"Block" succ (:successors block)]
+                    (#_"BitSet" .or union, (get (:liveInMap this) succ))
                 )
+            #_"BitSet" outSet (get (:liveOutMap this) block)
+        ]
+            ;; check if changed
+            (when-not (and (some? outSet) (= union outSet)) => false
+                (§ ass! this (assoc-in this [:liveOutMap block] union))
+                true
             )
         )
     )
 
-    (defn- #_"void" FixPointIntervalBuilder''markOutInterval-3 [#_"FixPointIntervalBuilder" this, #_"BitSet" outSet, #_"int" blockEndOpId]
-        (loop-when-recur [#_"int" i (#_"BitSet" .nextSetBit outSet, 0)] (<= 0 i) [(#_"BitSet" .nextSetBit outSet, (inc i))]
-            (§ ass! (nth (:stackSlotMap this) i) (StackInterval''addTo-2 (nth (:stackSlotMap this) i), blockEndOpId))
+    (defn- #_"this" FixPointIntervalBuilder''markOutInterval-3 [#_"FixPointIntervalBuilder" this, #_"BitSet" outSet, #_"int" blockEndOpId]
+        (loop-when-recur [this this #_"int" i (#_"BitSet" .nextSetBit outSet, 0)]
+                         (<= 0 i)
+                         [(update-in this [:stackSlotMap i] StackInterval''addTo-2 blockEndOpId) (#_"BitSet" .nextSetBit outSet, (inc i))]
+                      => this
         )
-        nil
     )
 
-    (defn- #_"void" FixPointIntervalBuilder''markInInterval-3 [#_"FixPointIntervalBuilder" this, #_"BitSet" inSet, #_"int" blockFirstOpId]
-        (loop-when-recur [#_"int" i (#_"BitSet" .nextSetBit inSet, 0)] (<= 0 i) [(#_"BitSet" .nextSetBit inSet, (inc i))]
-            (§ ass! (nth (:stackSlotMap this) i) (StackInterval''addFrom-2 (nth (:stackSlotMap this) i), blockFirstOpId))
+    (defn- #_"this" FixPointIntervalBuilder''markInInterval-3 [#_"FixPointIntervalBuilder" this, #_"BitSet" inSet, #_"int" blockFirstOpId]
+        (loop-when-recur [this this #_"int" i (#_"BitSet" .nextSetBit inSet, 0)]
+                         (<= 0 i)
+                         [(update-in this [:stackSlotMap i] StackInterval''addFrom-2 blockFirstOpId) (#_"BitSet" .nextSetBit inSet, (inc i))]
+                      => this
         )
-        nil
     )
 
     (defn #_"StackInterval" FixPointIntervalBuilder''getOrCreateInterval-2 [#_"FixPointIntervalBuilder" this, #_"VirtualStackSlot" stackSlot]
         (let [
-            #_"StackInterval" interval (FixPointIntervalBuilder''get-2 this, stackSlot)
+            #_"StackInterval" interval (get (:stackSlotMap this) (:id stackSlot))
         ]
             (when (nil? interval)
                 (§ ass interval (StackInterval'new-2 stackSlot, (#_"Value" .getValueKind stackSlot)))
-                (FixPointIntervalBuilder''put-3 this, stackSlot, interval)
+                (§ ass! this (assoc-in this [:stackSlotMap (:id stackSlot)] interval))
             )
             interval
         )
@@ -30155,9 +30120,9 @@ ZeroExtendNode'new-4
                                 #_"[LIRInstruction]" ops (LIR''getLIRforBlock-2 lir, block)
                                 ;; get out set and mark intervals
                                 #_"BitSet" outSet (get (:liveOutMap builder) block)
-                                _ (FixPointIntervalBuilder''markOutInterval-3 builder, outSet, (FixPointIntervalBuilder'getBlockEnd-1 ops))
+                                builder (FixPointIntervalBuilder''markOutInterval-3 builder, outSet, (FixPointIntervalBuilder'getBlockEnd-1 ops))
                                 ;; process instructions
-                                #_"BlockClosure" closure (BlockClosure'new-2 builder, (#_"Object" .clone outSet))
+                                #_"BlockClosure" closure (BlockClosure'new-2 builder, outSet)
                                 _
                                     (loop-when-recur [#_"int" i (dec (count ops))] (<= 0 i) [(dec i)]
                                         (BlockClosure''processInstructionBottomUp-2 closure, (nth ops i))
@@ -30165,7 +30130,7 @@ ZeroExtendNode'new-4
                                 ;; set in set and mark intervals
                                 #_"BitSet" inSet (:currentSet closure)
                                 builder (assoc-in builder [:liveInMap block] inSet)
-                                _ (FixPointIntervalBuilder''markInInterval-3 builder, inSet, (FixPointIntervalBuilder'getBlockBegin-1 ops))
+                                builder (FixPointIntervalBuilder''markInInterval-3 builder, inSet, (FixPointIntervalBuilder'getBlockBegin-1 ops))
                             ]
                                 ;; add predecessors to work list
                                 [builder (into' queue (:predecessors block))]
@@ -31143,12 +31108,12 @@ ZeroExtendNode'new-4
         (hash-map
             #_"BytecodeParser" :parser nil
             #_"Bytecode" :bytecode nil
+            #_"[ValueNode]" :locals nil
+            #_"[ValueNode]" :stack nil
             ;;;
              ; Current size (height) of the stack.
              ;;
             #_"int" :stackSize 0
-            #_"[ValueNode]" :locals nil
-            #_"[ValueNode]" :stack nil
             #_"[ValueNode]" :lockedObjects nil
             #_"[MonitorIdNode]" :monitorIds nil
             #_"Graph" :graph nil
@@ -31162,21 +31127,21 @@ ZeroExtendNode'new-4
     )
 
     ;;;
-     ; Creates a new frame state builder for the given code attribute, method and the given target graph.
+     ; Creates a new frame state builder for the given bytecode and the given target graph.
      ;
-     ; @param code the bytecode in which the frame exists
-     ; @param graph the target graph of Graal nodes created by the builder
+     ; @param bytecode the bytecode in which the frame exists
+     ; @param graph the target graph of nodes to be created by the builder
      ;;
-    (defn #_"FrameStateBuilder" FrameStateBuilder'new-3c [#_"BytecodeParser" parser, #_"Bytecode" code, #_"Graph" graph]
+    (defn #_"FrameStateBuilder" FrameStateBuilder'new-3c [#_"BytecodeParser" parser, #_"Bytecode" bytecode, #_"Graph" graph]
         (let [
             #_"FrameStateBuilder" this
                 (merge (FrameStateBuilder'class.)
                     (FrameStateBuilder'init-0)
                 )
             this (assoc this :parser parser)
-            this (assoc this :bytecode code)
-            this (assoc this :locals (make-array ValueNode'iface (Bytecode'''getMaxLocals-1 code)))
-            this (assoc this :stack (make-array ValueNode'iface (max 1 (Bytecode'''getMaxStackSize-1 code))))
+            this (assoc this :bytecode bytecode)
+            this (assoc this :locals (make-array ValueNode'iface (Bytecode'''getMaxLocals-1 bytecode)))
+            this (assoc this :stack (make-array ValueNode'iface (max 1 (Bytecode'''getMaxStackSize-1 bytecode))))
             this (assoc this :lockedObjects [])
             this (assoc this :monitorIds [])
             this (assoc this :graph graph)
@@ -31204,9 +31169,9 @@ ZeroExtendNode'new-4
                 )
             this (assoc this :parser (:parser other))
             this (assoc this :bytecode (:bytecode other))
-            this (assoc this :stackSize (:stackSize other))
             this (assoc this :locals (:locals other))
             this (assoc this :stack (:stack other))
+            this (assoc this :stackSize (:stackSize other))
             this (assoc this :lockedObjects (:lockedObjects other))
             this (assoc this :monitorIds (:monitorIds other))
             this (assoc this :graph (:graph other))
@@ -31303,25 +31268,27 @@ ZeroExtendNode'new-4
      ; @param pushedValues if non-nil, values to #push(JavaKind, ValueNode) to the stack before creating the FrameState
      ;;
     (defn #_"FrameState" FrameStateBuilder''create-6 [#_"FrameStateBuilder" this, #_"int" bci, #_"BytecodeParser" parent, #_"boolean" duringCall, #_"JavaKind*" pushedSlotKinds, #_"[ValueNode]" pushedValues]
-        (when (and (nil? (:outerFrameState this)) (some? parent))
-            (§ ass! this (assoc this :outerFrameState (FrameStateBuilder''create-6 (:frameState parent), (BytecodeParser''bci-1 parent), (BytecodeParser''getNonIntrinsicAncestor-1 parent), true, nil, nil)))
-        )
-        (when-not (= bci BytecodeFrame/INVALID_FRAMESTATE_BCI) => (throw! "should not reach here")
-            (if (some? pushedValues)
-                (let [
-                    #_"int" o'stackSize (:stackSize this)
-                ]
-                    (dotimes [#_"int" i (count pushedValues)]
-                        (§ ass! this (FrameStateBuilder''push-3 this, (nth pushedSlotKinds i), (nth pushedValues i)))
-                    )
+        (let [
+            _
+                (when (and (nil? (:outerFrameState this)) (some? parent))
+                    (§ ass! this (assoc this :outerFrameState (FrameStateBuilder''create-6 (:frameState parent), (BytecodeParser''bci-1 parent), (BytecodeParser''getNonIntrinsicAncestor-1 parent), true, nil, nil)))
+                )
+        ]
+            (when-not (= bci BytecodeFrame/INVALID_FRAMESTATE_BCI) => (throw! "should not reach here")
+                (if (some? pushedValues)
                     (let [
+                        #_"int" o'stackSize (:stackSize this)
+                        _
+                            (dotimes [#_"int" i (count pushedValues)]
+                                (§ ass! this (FrameStateBuilder''push-3 this, (nth pushedSlotKinds i), (nth pushedValues i)))
+                            )
                         #_"FrameState" res (Graph''add-2 (:graph this), (FrameState'new-9a (:outerFrameState this), (:bytecode this), bci, (:locals this), (:stack this), (:stackSize this), (:lockedObjects this), (:monitorIds this), duringCall))
+                        _ (§ ass! this (assoc this :stackSize o'stackSize))
                     ]
-                        (§ ass! this (assoc this :stackSize o'stackSize))
                         res
                     )
+                    (Graph''add-2 (:graph this), (FrameState'new-9a (:outerFrameState this), (:bytecode this), bci, (:locals this), (:stack this), (:stackSize this), (:lockedObjects this), (:monitorIds this), duringCall))
                 )
-                (Graph''add-2 (:graph this), (FrameState'new-9a (:outerFrameState this), (:bytecode this), bci, (:locals this), (:stack this), (:stackSize this), (:lockedObjects this), (:monitorIds this), duringCall))
             )
         )
     )
@@ -31490,13 +31457,9 @@ ZeroExtendNode'new-4
      ; @param object the object whose monitor will be locked.
      ;;
     (defn #_"this" FrameStateBuilder''pushLock-3 [#_"FrameStateBuilder" this, #_"ValueNode" object, #_"MonitorIdNode" monitorId]
-        (let [
-            this (assoc this :lockedObjects (Arrays/copyOf (:lockedObjects this), (inc (count (:lockedObjects this)))))
-            this (assoc this :monitorIds (Arrays/copyOf (:monitorIds this), (inc (count (:monitorIds this)))))
-        ]
-            (§ ass! (:lockedObjects this) (assoc' (:lockedObjects this) (dec (count (:lockedObjects this))) object))
-            (§ ass! (:monitorIds this) (assoc' (:monitorIds this) (dec (count (:monitorIds this))) monitorId))
-            this
+        (-> this
+            (update :lockedObjects conj' object)
+            (update :monitorIds conj' monitorId)
         )
     )
 
@@ -31506,17 +31469,17 @@ ZeroExtendNode'new-4
      ; @return the object whose monitor was removed from the locks list
      ;;
     (defn #_"ValueNode" FrameStateBuilder''popLock-1 [#_"FrameStateBuilder" this]
-        (try
-            (nth (:lockedObjects this) (dec (count (:lockedObjects this))))
-            (finally
-                (§ ass! this (assoc this :lockedObjects (if (= (count (:lockedObjects this)) 1) [] (Arrays/copyOf (:lockedObjects this), (dec (count (:lockedObjects this)))))))
-                (§ ass! this (assoc this :monitorIds (if (= (count (:monitorIds this)) 1) [] (Arrays/copyOf (:monitorIds this), (dec (count (:monitorIds this)))))))
-            )
+        (let [
+            #_"ValueNode" object (peek' (:lockedObjects this))
+            _ (§ ass! this (update this :lockedObjects pop'))
+            _ (§ ass! this (update this :monitorIds pop'))
+        ]
+            object
         )
     )
 
     (defn #_"MonitorIdNode" FrameStateBuilder''peekMonitorId-1 [#_"FrameStateBuilder" this]
-        (nth (:monitorIds this) (dec (count (:monitorIds this))))
+        (peek' (:monitorIds this))
     )
 
     (defn #_"int" FrameStateBuilder''lockDepth-2 [#_"FrameStateBuilder" this, #_"boolean" includeParents]
@@ -41086,8 +41049,6 @@ ZeroExtendNode'new-4
                                         (#_"BitSet" .or liveIn, (:liveOut blockSets))
                                         (#_"BitSet" .andNot liveIn, (:liveKill blockSets))
                                         (#_"BitSet" .or liveIn, (:liveGen blockSets))
-
-                                        (#_"Object" .clone liveIn) ;; trimToSize()
                                     )
                                 )
                                 (recur changed? (dec i))
@@ -45845,7 +45806,7 @@ ZeroExtendNode'new-4
      ; @param statesList the predecessor block states of the merge
      ;;
     (defm PartialEscapeMergeProcessor MergeProcessor
-        (#_"void" MergeProcessor'''merge-2 [#_"PartialEscapeMergeProcessor" this, #_"PartialEscapeBlockState*" _states]
+        (#_"this" MergeProcessor'''merge-2 [#_"PartialEscapeMergeProcessor" this, #_"PartialEscapeBlockState*" _states]
             (let [
                 #_"[PartialEscapeBlockState]" states (make-array PartialEscapeBlockState'iface (count _states))
                 _
@@ -45950,8 +45911,8 @@ ZeroExtendNode'new-4
                         (recur-if materialized? [])
                     )
                 )
+                this
             )
-            nil
         )
     )
 )
@@ -46040,11 +46001,13 @@ ZeroExtendNode'new-4
     )
 
     (defm PEReadEliminationMergeProcessor MergeProcessor
-        (#_"void" MergeProcessor'''merge-2 [#_"PEReadEliminationMergeProcessor" this, #_"PEReadEliminationBlockState*" states]
-            (MergeProcessor'''merge-2 (§ super #_"PartialEscapeMergeProcessor"), states)
-
-            (PEReadEliminationMergeProcessor''mergeReadCache-2 this, states)
-            nil
+        (#_"this" MergeProcessor'''merge-2 [#_"PEReadEliminationMergeProcessor" this, #_"PEReadEliminationBlockState*" states]
+            (let [
+                this (MergeProcessor'''merge-2 (§ super #_"PartialEscapeMergeProcessor"), states)
+            ]
+                (PEReadEliminationMergeProcessor''mergeReadCache-2 this, states)
+                this
+            )
         )
     )
 )
@@ -46104,50 +46067,54 @@ ZeroExtendNode'new-4
     )
 
     (defm ReadEliminationMergeProcessor MergeProcessor
-        (#_"void" MergeProcessor'''merge-2 [#_"ReadEliminationMergeProcessor" this, #_"ReadEliminationBlockState*" states]
-            (doseq [[#_"CacheEntry" k #_"ValueNode" v] (:readCache (nth states 0))]
-                (let [
-                    [#_"ValueNode" value #_"boolean" phi?]
-                        (loop-when [value v phi? false #_"int" i 1] (< i (count states)) => [value phi?]
-                            (let [
-                                #_"ValueNode" other (get (:readCache (nth states i)) k)
-                            ]
-                                ;; e.g. unsafe loads/stores with different access kinds have different stamps although location,
-                                ;; object and offset are the same, in this case we cannot create a phi nor can we set a common value
-                                (when (and (some? other) (Stamp'''isCompatible-2s (:stamp value), (:stamp other))) => [nil false]
-                                    (recur value (or phi? (not (= other value))) (inc i))
+        (#_"this" MergeProcessor'''merge-2 [#_"ReadEliminationMergeProcessor" this, #_"ReadEliminationBlockState*" states]
+            (let [
+                _
+                    (doseq [[#_"CacheEntry" k #_"ValueNode" v] (:readCache (nth states 0))]
+                        (let [
+                            [#_"ValueNode" value #_"boolean" phi?]
+                                (loop-when [value v phi? false #_"int" i 1] (< i (count states)) => [value phi?]
+                                    (let [
+                                        #_"ValueNode" other (get (:readCache (nth states i)) k)
+                                    ]
+                                        ;; e.g. unsafe loads/stores with different access kinds have different stamps although location,
+                                        ;; object and offset are the same, in this case we cannot create a phi nor can we set a common value
+                                        (when (and (some? other) (Stamp'''isCompatible-2s (:stamp value), (:stamp other))) => [nil false]
+                                            (recur value (or phi? (not (= other value))) (inc i))
+                                        )
+                                    )
                                 )
+                        ]
+                            (cond
+                                phi?
+                                    (let [
+                                        #_"PhiNode" phi (ReadEliminationMergeProcessor''getCachedPhi-3 this, k, (Stamp'''unrestricted-1 (:stamp value)))
+                                    ]
+                                        (GraphEffectList''addFloatingNode-3 (:mergeEffects this), phi, "mergeReadCache")
+                                        (dotimes [#_"int" i (count states)]
+                                            (MergeProcessor''setPhiInput-4 this, phi, i, (ReadEliminationBlockState''getCacheEntry-2 (nth states i), k))
+                                        )
+                                        (§ ass! (:newState this) (ReadEliminationBlockState''addCacheEntry-3 (:newState this), k, phi))
+                                    )
+                                (some? value)
+                                    ;; there is the same value on all branches
+                                    (§ ass! (:newState this) (ReadEliminationBlockState''addCacheEntry-3 (:newState this), k, value))
                             )
                         )
-                ]
-                    (cond
-                        phi?
-                            (let [
-                                #_"PhiNode" phi (ReadEliminationMergeProcessor''getCachedPhi-3 this, k, (Stamp'''unrestricted-1 (:stamp value)))
-                            ]
-                                (GraphEffectList''addFloatingNode-3 (:mergeEffects this), phi, "mergeReadCache")
-                                (dotimes [#_"int" i (count states)]
-                                    (MergeProcessor''setPhiInput-4 this, phi, i, (ReadEliminationBlockState''getCacheEntry-2 (nth states i), k))
-                                )
-                                (§ ass! (:newState this) (ReadEliminationBlockState''addCacheEntry-3 (:newState this), k, phi))
-                            )
-                        (some? value)
-                            ;; there is the same value on all branches
-                            (§ ass! (:newState this) (ReadEliminationBlockState''addCacheEntry-3 (:newState this), k, value))
                     )
-                )
-            )
-            ;; For object phis, see if there are known reads on all predecessors, for which we could create new phis.
-            (doseq [#_"PhiNode" phi (MergeProcessor''getPhis-1 this)]
-                (when (= (ValueNode''getStackKind-1 phi) JavaKind/Object)
-                    (doseq [#_"CacheEntry" k (keys (:readCache (nth states 0)))]
-                        (when (= (:object k) (MergeProcessor''getPhiValueAt-3 this, phi, 0))
-                            (ReadEliminationMergeProcessor''mergeReadCachePhi-4 this, phi, k, states)
+            ]
+                ;; For object phis, see if there are known reads on all predecessors, for which we could create new phis.
+                (doseq [#_"PhiNode" phi (MergeProcessor''getPhis-1 this)]
+                    (when (= (ValueNode''getStackKind-1 phi) JavaKind/Object)
+                        (doseq [#_"CacheEntry" k (keys (:readCache (nth states 0)))]
+                            (when (= (:object k) (MergeProcessor''getPhiValueAt-3 this, phi, 0))
+                                (ReadEliminationMergeProcessor''mergeReadCachePhi-4 this, phi, k, states)
+                            )
                         )
                     )
                 )
+                this
             )
-            nil
         )
     )
 )
@@ -62730,12 +62697,9 @@ ZeroExtendNode'new-4
         (if object? (- valueNum) valueNum)
     )
 
-    (defn- #_"void" RMEOptimization'clearValues-2 [#_"[int]" state, #_"int" defNum]
-        (dotimes [#_"int" i (count state)]
-            ;; Let the killed values assume to be object references: it's the save default.
-            (§ ass! state (assoc' state i (RMEOptimization'encodeValueNum-2 (+ defNum i), true)))
-        )
-        nil
+    (defn- #_"[int]" RMEOptimization'clearValues-2 [#_"[int]" state, #_"int" defNum]
+        ;; Let the killed values assume to be object references: it's the save default.
+        (mapv #(RMEOptimization'encodeValueNum-2 (+ defNum %), true) (range (count state)))
     )
 
     ;; Pseudo value for a not yet assigned location.
@@ -62751,7 +62715,7 @@ ZeroExtendNode'new-4
     ;;;
      ; The state merge function for dataflow joins.
      ;;
-    (defn- #_"boolean" RMEOptimization'mergeState-3 [#_"[int]" dst*, #_"[int]" src*, #_"int" defNum]
+    (defn- #_"boolean" RMEOptimization'mergeState-3 [#_"[int]" dst*, #_"[int]" src*, #_"int" defNum]
         (loop-when [#_"boolean" changed? false #_"int" i 0] (< i (count src*)) => changed?
             (let [
                 #_"int" phiNum (+ defNum i)
@@ -62766,13 +62730,6 @@ ZeroExtendNode'new-4
                 (recur changed? (inc i))
             )
         )
-    )
-
-    (defn- #_"void" RMEOptimization'copyState-2 [#_"[int]" dst*, #_"int*" src*]
-        (dotimes [#_"int" i (count src*)]
-            (§ ass! dst* (assoc' dst* i (nth src* i)))
-        )
-        nil
     )
 
     ;;;
@@ -62814,14 +62771,14 @@ ZeroExtendNode'new-4
         )
 
         (let [
-            #_"[int]" valueNum (int-array [ initValueNum ])
+            #_"int'" v'valueNum (volatile! initValueNum)
             _
                 (when (LIRInstruction'''destroysCallerSavedRegisters-1 op)
                     (doseq [#_"Register" reg (:callerSaveRegs this)]
                         (when (< (.number reg) (:numRegs this))
                             ;; Kind.Object is the save default
-                            (§ ass! state (assoc' state (.number reg) (RMEOptimization'encodeValueNum-2 (nth valueNum 0), true)))
-                            (§ ass! valueNum (update' valueNum 0 inc))
+                            (§ ass! state (assoc' state (.number reg) (RMEOptimization'encodeValueNum-2 @v'valueNum, true)))
+                            (vswap! v'valueNum inc)
                         )
                     )
                 )
@@ -62833,8 +62790,8 @@ ZeroExtendNode'new-4
                         ]
                             (when (<= 0 i)
                                 ;; Assign a unique number to the output or temp location.
-                                (§ ass! state (assoc' state i (RMEOptimization'encodeValueNum-2 (nth valueNum 0), (not (LIRKind'isValue-1v operand)))))
-                                (§ ass! valueNum (update' valueNum 0 inc))
+                                (§ ass! state (assoc' state i (RMEOptimization'encodeValueNum-2 @v'valueNum, (not (LIRKind'isValue-1v operand)))))
+                                (vswap! v'valueNum inc)
                             )
                         )
                         nil
@@ -62845,7 +62802,7 @@ ZeroExtendNode'new-4
             ;; Semantically the output values are written _after_ the temp values.
             (LIRInstruction''visitEachOutput-2 op, outputValueConsumer)
 
-            (nth valueNum 0)
+            @v'valueNum
         )
     )
 
@@ -62884,7 +62841,7 @@ ZeroExtendNode'new-4
                                                 ;; block (after the invoke, which throws the exception),
                                                 ;; and in reality such moves are not in the control flow in case of an exception.
                                                 ;; So we assume a save default for exception handler blocks.
-                                                (RMEOptimization'clearValues-2 (:entryState data), valueNum)
+                                                (§ ass! (:entryState data) (RMEOptimization'clearValues-2 (:entryState data), valueNum))
                                                 false
                                             )
                                             ;; Merge the states of predecessor blocks.
@@ -62900,19 +62857,15 @@ ZeroExtendNode'new-4
                                         (when (or newState (zero? iteration)) => [valueNum changed?]
                                             ;; Derive the exit state from the entry state by iterating through all instructions of the block.
                                             (let [
-                                                #_"[int]" iterState (:exitState data)
+                                                #_"[int]" state (§ snap (:exitState data))
+                                                valueNum
+                                                    (loop-when-recur [valueNum valueNum #_"seq" s (seq (LIR''getLIRforBlock-2 lir, block))]
+                                                                     (some? s)
+                                                                     [(RMEOptimization''updateState-4 this, state, (first s), valueNum) (next s)]
+                                                                  => valueNum
+                                                    )
                                             ]
-                                                (RMEOptimization'copyState-2 iterState, (:entryState data))
-                                                (let [
-                                                    valueNum
-                                                        (loop-when-recur [valueNum valueNum #_"seq" s (seq (LIR''getLIRforBlock-2 lir, block))]
-                                                                         (some? s)
-                                                                         [(RMEOptimization''updateState-4 this, iterState, (first s), valueNum) (next s)]
-                                                                      => valueNum
-                                                        )
-                                                ]
-                                                    [valueNum true]
-                                                )
+                                                [valueNum true]
                                             )
                                         )
                                 ]
@@ -62946,7 +62899,7 @@ ZeroExtendNode'new-4
                 #_"[int]" state (:entryState data)
                 ;; add the values which are "consumed" by clearValues and mergeState in solveDataFlow
                 [ops #_"boolean" hasDead]
-                    (loop-when [ops ops hasDead false #_"int" j (+ (:entryValueNum data) (count (:entryState data))) #_"int" i 0] (< i (count ops)) => [ops hasDead]
+                    (loop-when [ops ops hasDead false #_"int" j (+ (:entryValueNum data) (count state)) #_"int" i 0] (< i (count ops)) => [ops hasDead]
                         (let [
                             #_"LIRInstruction" op (nth ops i)
                             [ops hasDead]
@@ -62983,14 +62936,14 @@ ZeroExtendNode'new-4
             this (RMEOptimization''initBlockData-2 this, lir)
             ;; Compute a table of the registers which are eligible for move optimization.
             ;; Unallocatable registers should never be optimized.
-            this (assoc this :eligibleRegs (int-array (:numRegs this)))
-            _ (Arrays/fill (:eligibleRegs this), -1)
-        ]
-            (doseq [#_"Register" reg (#_"RegisterConfig" .getAllocatableRegisters HotSpot'registerConfig)]
-                (when (< (.number reg) (:numRegs this))
-                    (§ ass! (:eligibleRegs this) (assoc' (:eligibleRegs this) (.number reg) (.number reg)))
+            this (assoc this :eligibleRegs (vec (repeat (:numRegs this) -1)))
+            _
+                (doseq [#_"Register" reg (#_"RegisterConfig" .getAllocatableRegisters HotSpot'registerConfig)]
+                    (when (< (.number reg) (:numRegs this))
+                        (§ ass! (:eligibleRegs this) (assoc' (:eligibleRegs this) (.number reg) (.number reg)))
+                    )
                 )
-            )
+        ]
             (when (RMEOptimization''solveDataFlow-2 this, lir)
                 (RMEOptimization''eliminateMoves-2 this, lir)
             )
@@ -63727,11 +63680,10 @@ ZeroExtendNode'new-4
      ; @param binding specifies the list to be updated
      ; @param i the interval to remove
      ;;
-    (defn #_"this" RegisterBindingLists''remove-3 [#_"RegisterBindingLists" this, #_"RegisterBinding" binding, #_"Interval" i]
+    (defn #_"this" RegisterBindingLists''remove-3 [#_"RegisterBindingLists" this, #_"RegisterBinding" binding, #_"Interval" interval]
         (let [
-            #_"Interval" list (RegisterBindingLists''get-2 this, binding)
             [#_"Interval" prev #_"Interval" cur]
-                (loop-when-recur [prev nil cur list] (not= cur i) [cur (:next cur)] => [prev cur])
+                (loop-when-recur [prev nil cur (RegisterBindingLists''get-2 this, binding)] (not= cur interval) [cur (:next cur)] => [prev cur])
         ]
             (if (nil? prev)
                 (§ ass! this (RegisterBindingLists''set-3 this, binding, (:next cur)))
@@ -63746,15 +63698,14 @@ ZeroExtendNode'new-4
     (defn #_"RegisterMap" RegisterMap'new-1 [#_"Architecture" arch]
         (merge (RegisterMap'class.)
             (hash-map
-                #_"[Variable]" :regValues (make-array Variable'iface (#_"RegisterArray" .size (#_"Architecture" .getRegisters arch)))
+                #_"[Variable]" :regValues (vec (repeat (#_"RegisterArray" .size (#_"Architecture" .getRegisters arch)) nil))
                 #_"Architecture" :arch arch
             )
         )
     )
 
-    (defn #_"void" RegisterMap''put-3 [#_"RegisterMap" this, #_"Register" reg, #_"Variable" value]
-        (§ ass! (:regValues this) (assoc' (:regValues this) (.number reg) value))
-        nil
+    (defn #_"this" RegisterMap''put-3 [#_"RegisterMap" this, #_"Register" reg, #_"Variable" value]
+        (update this :regValues assoc' (.number reg) value)
     )
 
     (defn #_"void" RegisterMap''forEach-2 [#_"RegisterMap" this, #_"fn void [Register Variable]" f'consumer-2]
@@ -63901,7 +63852,7 @@ ZeroExtendNode'new-4
         )
 
         (#_"[byte]" Bytecode'''getCode-1 [#_"ResolvedJavaMethodBytecode" this]
-            (#_"ResolvedJavaMethod" .getCode (:method this))
+            (vec (#_"ResolvedJavaMethod" .getCode (:method this)))
         )
 
         (#_"int" Bytecode'''getCodeSize-1 [#_"ResolvedJavaMethodBytecode" this]
@@ -63960,28 +63911,26 @@ ZeroExtendNode'new-4
 
     (defn- #_"RegisterMap" SaveCalleeSaveRegisters'saveAtEntry-4 [#_"LIR" lir, #_"LIRGenerator" lirGen, #_"RegisterArray" calleeSaveRegisters, #_"Architecture" arch]
         (let [
-            #_"Block" startBlock (ControlFlowGraph''getStartBlock-1 (:cfg lir))
-            #_"[LIRInstruction]" ops (LIR''getLIRforBlock-2 lir, startBlock)
+            #_"[LIRInstruction]" ops (LIR''getLIRforBlock-2 lir, (ControlFlowGraph''getStartBlock-1 (:cfg lir)))
             #_"LIRInsertionBuffer" buffer (LIRInsertionBuffer''init-2 (LIRInsertionBuffer'new-0), ops)
             #_"LabelOp" entry (nth ops 0)
-            #_"[RegisterValue]" savedRegisterValues (make-array RegisterValue (#_"RegisterArray" .size calleeSaveRegisters))
             #_"RegisterMap" saveMap (RegisterMap'new-1 arch)
-        ]
-            (loop-when [#_"int" i 0 #_"seq" s (seq calleeSaveRegisters)] (some? s)
-                (let [
-                    #_"Register" register (first s)
-                    #_"PlatformKind" registerPlatformKind (#_"Architecture" .getLargestStorableKind arch, (#_"Register" .getRegisterCategory register))
-                    #_"LIRKind" lirKind (LIRKind'value-1 registerPlatformKind)
-                    #_"RegisterValue" registerValue (#_"Register" .asValue register, lirKind)
-                    #_"Variable" saveVariable (LIRGenerator''newVariable-2 lirGen, lirKind)
-                    #_"LIRInstruction" save (MoveFactory'createMove-2 saveVariable, registerValue)
-                ]
-                    (§ ass! buffer (LIRInsertionBuffer''append-3 buffer, 1, save))
-                    (RegisterMap''put-3 saveMap, register, saveVariable)
-                    (§ ass! savedRegisterValues (assoc' savedRegisterValues i registerValue))
-                    (recur (inc i) (next s))
+            #_"[RegisterValue]" savedRegisterValues
+                (loop-when [savedRegisterValues [] #_"seq" s (seq calleeSaveRegisters)] (some? s) => savedRegisterValues
+                    (let [
+                        #_"Register" register (first s)
+                        #_"PlatformKind" registerPlatformKind (#_"Architecture" .getLargestStorableKind arch, (#_"Register" .getRegisterCategory register))
+                        #_"LIRKind" lirKind (LIRKind'value-1 registerPlatformKind)
+                        #_"RegisterValue" registerValue (#_"Register" .asValue register, lirKind)
+                        #_"Variable" saveVariable (LIRGenerator''newVariable-2 lirGen, lirKind)
+                        #_"LIRInstruction" save (MoveFactory'createMove-2 saveVariable, registerValue)
+                    ]
+                        (§ ass! buffer (LIRInsertionBuffer''append-3 buffer, 1, save))
+                        (§ ass! saveMap (RegisterMap''put-3 saveMap, register, saveVariable))
+                        (recur (conj' savedRegisterValues registerValue) (next s))
+                    )
                 )
-            )
+        ]
             (§ ass! entry (LabelOp''addIncomingValues-2 entry, savedRegisterValues))
             (§ ass! buffer (LIRInsertionBuffer''finish-1 buffer))
             saveMap
@@ -65033,12 +64982,12 @@ ZeroExtendNode'new-4
  ; constants to the snippet's ConstantParameter parameters.
  ;;
 (class-ns SnippetTemplate []
-    (defn- #_"void" SnippetTemplate'explodeLoops-1 [#_"Graph" snippetCopy]
+    (defn- #_"void" SnippetTemplate'explodeLoops-1 [#_"Graph" snippet]
         ;; do any required loop explosion
         (loop []
             (let [
                 #_"boolean" exploded? false
-                #_"ExplodeLoopNode" explodeLoop (first (Graph''getNodes-2 snippetCopy, ExplodeLoopNode))
+                #_"ExplodeLoopNode" explodeLoop (first (Graph''getNodes-2 snippet, ExplodeLoopNode))
             ]
                 (when (some? explodeLoop) ;; earlier canonicalization may have removed the loop altogether
                     (let [
@@ -65046,11 +64995,11 @@ ZeroExtendNode'new-4
                     ]
                         (when (some? loopBegin)
                             (let [
-                                #_"LoopEx" _loop (LoopsData''loop-2 (LoopsData'new-1 snippetCopy), loopBegin)
-                                #_"int" mark (Graph''getMark-1 snippetCopy)
+                                #_"LoopEx" _loop (LoopsData''loop-2 (LoopsData'new-1 snippet), loopBegin)
+                                #_"int" mark (Graph''getMark-1 snippet)
                             ]
                                 (LoopTransformations'fullUnroll-2 _loop, (CanonicalizerPhase'new-0))
-                                (CanonicalizerPhase''applyIncremental-3m (CanonicalizerPhase'new-0), snippetCopy, mark)
+                                (CanonicalizerPhase''applyIncremental-3m (CanonicalizerPhase'new-0), snippet, mark)
                                 (LoopEx''deleteUnusedNodes-1 _loop)
                             )
                         )
@@ -65107,57 +65056,59 @@ ZeroExtendNode'new-4
                         #_"Node*" :snippetNodes nil
                     )
                 )
-            #_"Graph" snippetGraph (Replacements'createSnippet-1 (:method (:info args)))
-            #_"ResolvedJavaMethod" method (:rootMethod snippetGraph)
-            #_"Signature" signature (#_"ResolvedJavaMethod" .getSignature method)
+            #_"ResolvedJavaMethod" method (:method (:info args))
+            #_"Graph" graph (Replacements'createSnippet-1 method)
             ;; copy snippet graph replacing constant parameters with given arguments
-            #_"Graph" snippetCopy (Graph'new-1 (:rootMethod snippetGraph))
-            _ (Graph''addDuplicates-4m snippetCopy, (Graph''getNodes-1 snippetGraph), snippetGraph, { (:start snippetGraph) (:start snippetCopy) })
+            #_"Graph" snippet (Graph'new-1 method)
+            _ (Graph''addDuplicates-4m snippet, (Graph''getNodes-1 graph), graph, { (:start graph) (:start snippet) })
             ;; gather the template parameters
-            #_"int" parameterCount (#_"Signature" .getParameterCount (#_"ResolvedJavaMethod" .getSignature (:method (:info args))), false)
-            this (assoc this :parameters (make-array Object parameterCount))
-            _
-                (loop-when-recur [#_"int" i 0] (< i parameterCount) [(inc i)]
-                    (§ ass! (:parameters this) (assoc' (:parameters this) i (or (Graph''getParameter-2 snippetCopy, i) "UNUSED_PARAMETER"))) ;; parameter value was eliminated
-                )
-            _ (SnippetTemplate'explodeLoops-1 snippetCopy)
-            ;; perform lowering on the snippet
-            snippetCopy
-                (when-not (GuardsStage'allowsFloatingGuards-1 (:guardsStage args)) => snippetCopy
-                    (Phase'''run-3 (GuardLoweringPhase'new-0), snippetCopy, nil)
-                )
-            snippetCopy (Graph''setGuardsStage-2 snippetCopy, (:guardsStage args))
-            snippetCopy (Phase'''run-3 (LoweringPhase'new-2 (CanonicalizerPhase'new-0), (:loweringStage args)), snippetCopy, nil)
-            #_"ValueNode*" placeholderStampedNodes
-                (for [#_"Node" node (Graph''getNodes-1 snippetCopy) :when (and (satisfies? ValueNode node) (= (:stamp node) PlaceholderStamp'SINGLETON))]
-                    node
-                )
-            #_"StateSplit*" sideEffectNodes nil
-            _
-                (doseq [#_"Node" node (Graph''getNodes-1 snippetCopy)]
-                    (when (satisfies? StateSplit node)
-                        (let [
-                            #_"FrameState" frameState (:stateAfter node)
-                        ]
-                            (when (StateSplit'''hasSideEffect-1 node)
-                                (§ ass! sideEffectNodes (conj' sideEffectNodes node))
-                            )
-                            (when (some? frameState)
-                                (StateSplit'''setStateAfter-2 node, nil)
-                            )
+            this
+                (assoc this :parameters
+                    (vec
+                        (for [#_"int" i (range (#_"Signature" .getParameterCount (#_"ResolvedJavaMethod" .getSignature method), false))]
+                            (or (Graph''getParameter-2 snippet, i) "UNUSED_PARAMETER") ;; parameter value was eliminated
                         )
                     )
                 )
-            #_"DeoptimizingNode*" deoptNodes
-                (for [#_"Node" node (Graph''getNodes-1 snippetCopy) :when (and (satisfies? DeoptimizingNode node) (DeoptimizingNode'''canDeoptimize-1 node))]
+            _ (SnippetTemplate'explodeLoops-1 snippet)
+            ;; perform lowering on the snippet
+            snippet
+                (when-not (GuardsStage'allowsFloatingGuards-1 (:guardsStage args)) => snippet
+                    (Phase'''run-3 (GuardLoweringPhase'new-0), snippet, nil)
+                )
+            snippet (Graph''setGuardsStage-2 snippet, (:guardsStage args))
+            snippet (Phase'''run-3 (LoweringPhase'new-2 (CanonicalizerPhase'new-0), (:loweringStage args)), snippet, nil)
+            #_"ValueNode*" placeholderStampedNodes
+                (for [#_"Node" node (Graph''getNodes-1 snippet) :when (and (satisfies? ValueNode node) (= (:stamp node) PlaceholderStamp'SINGLETON))]
                     node
                 )
-            snippetCopy (Phase'''run-3 (DeadCodeEliminationPhase'new-1 :Optionality'Required), snippetCopy, nil)
-            snippetCopy (Phase'''run-3 (FloatingReadPhase'new-2 true, true), snippetCopy, nil)
-            snippetCopy (Phase'''run-3 (RemoveValueProxyPhase'new-0), snippetCopy, nil)
-            #_"MemoryAnchorNode" anchor (Graph''add-2 snippetCopy, (MemoryAnchorNode'new-0))
-            _ (Node''replaceAtUsages-3 (:start snippetCopy), :InputType'Memory, anchor)
-            this (assoc this :snippet snippetCopy)
+            #_"StateSplit*" sideEffectNodes
+                (loop-when [sideEffectNodes nil #_"seq" s (seq (Graph''getNodes-1 snippet))] (some? s) => sideEffectNodes
+                    (let [
+                        #_"Node" node (first s)
+                        sideEffectNodes
+                            (when (satisfies? StateSplit node) => sideEffectNodes
+                                (when (some? (:stateAfter node))
+                                    (StateSplit'''setStateAfter-2 node, nil)
+                                )
+                                (when (StateSplit'''hasSideEffect-1 node) => sideEffectNodes
+                                    (conj' sideEffectNodes node)
+                                )
+                            )
+                    ]
+                        (recur sideEffectNodes (next s))
+                    )
+                )
+            #_"DeoptimizingNode*" deoptNodes
+                (for [#_"Node" node (Graph''getNodes-1 snippet) :when (and (satisfies? DeoptimizingNode node) (DeoptimizingNode'''canDeoptimize-1 node))]
+                    node
+                )
+            snippet (Phase'''run-3 (DeadCodeEliminationPhase'new-1 :Optionality'Required), snippet, nil)
+            snippet (Phase'''run-3 (FloatingReadPhase'new-2 true, true), snippet, nil)
+            snippet (Phase'''run-3 (RemoveValueProxyPhase'new-0), snippet, nil)
+            #_"MemoryAnchorNode" anchor (Graph''add-2 snippet, (MemoryAnchorNode'new-0))
+            _ (Node''replaceAtUsages-3 (:start snippet), :InputType'Memory, anchor)
+            this (assoc this :snippet snippet)
             #_"StartNode" start (:start (:snippet this))
             this
                 (if (Node''hasNoUsages-1 anchor)
@@ -65201,7 +65152,7 @@ ZeroExtendNode'new-4
                     ]
                         (if needsAnchor
                             (do
-                                (Graph''addAfterFixed-3 snippetCopy, (:start snippetCopy), anchor)
+                                (Graph''addAfterFixed-3 snippet, (:start snippet), anchor)
                                 (assoc this :memoryAnchor anchor)
                             )
                             (do
@@ -65948,23 +65899,24 @@ ZeroExtendNode'new-4
             #_"ResolvedJavaType" type (#_"ResolvedJavaType" .findLeastCommonAncestor a, b)
         ]
             (when (and (#_"ResolvedJavaType" .isJavaLangObject type) (#_"ResolvedJavaType" .isInterface a) (#_"ResolvedJavaType" .isInterface b)) => type
-                ;; Both types are incompatible interfaces => search for first possible common
-                ;; ancestor match among super interfaces.
+                ;; Both types are incompatible interfaces => search for first possible common ancestor match among super interfaces.
                 (let [
-                    #_"[ResolvedJavaType]" a* (#_"ResolvedJavaType" .getInterfaces a)
-                    #_"[ResolvedJavaType]" b* (#_"ResolvedJavaType" .getInterfaces b)
+                    #_"ResolvedJavaType*" a* (#_"ResolvedJavaType" .getInterfaces a)
+                    #_"ResolvedJavaType*" b* (#_"ResolvedJavaType" .getInterfaces b)
                 ]
                     (loop-when [#_"int" i 0] (< i (count a*)) => type
-                        (loop-when [#_"int" j 0] (< j (count b*))
-                            (let [
-                                #_"ResolvedJavaType" leastCommon (AbstractObjectStamp'meetTypes-2 (nth a* i), (nth b* j))
-                            ]
-                                (when (#_"ResolvedJavaType" .isInterface leastCommon) => (recur (inc j))
-                                    (§ return leastCommon)
+                        (or
+                            (loop-when [#_"int" j 0] (< j (count b*))
+                                (let [
+                                    #_"ResolvedJavaType" leastCommon (AbstractObjectStamp'meetTypes-2 (nth a* i), (nth b* j))
+                                ]
+                                    (when (#_"ResolvedJavaType" .isInterface leastCommon) => (recur (inc j))
+                                        leastCommon
+                                    )
                                 )
                             )
+                            (recur (inc i))
                         )
-                        (recur (inc i))
                     )
                 )
             )
@@ -67157,28 +67109,28 @@ ZeroExtendNode'new-4
                     (cond
                         (Stamp''isEmpty-1 a) a
                         (Stamp''isEmpty-1 b) b
-                        (or (Stamp''isEmpty-1 a)        (Stamp''isEmpty-1 b))        (Stamp'''empty-1 a)
+                        (or (Stamp''isEmpty-1 a)         (Stamp''isEmpty-1 b))         (Stamp'''empty-1 a)
                         (or (Stamp'''isUnrestricted-1 a) (Stamp'''isUnrestricted-1 b)) (Stamp'''unrestricted-1 a)
                         :else
                             (let [
                                 #_"JavaKind" javaKind (Stamp'''getStackKind-1 a)
-                                #_"[long]" xExtremes (§ array (:lowerBound a), (:upperBound a) )
-                                #_"[long]" yExtremes (§ array (:lowerBound b), (:upperBound b) )
+                                #_"long*" xExtremes [ (:lowerBound a), (:upperBound a) ]
+                                #_"long*" yExtremes [ (:lowerBound b), (:upperBound b) ]
                                 [#_"long" lower #_"long" upper]
-                                    (loop-when [lower Long/MAX_VALUE upper Long/MIN_VALUE #_"seq" s (seq xExtremes)] (some? s) => [lower upper]
+                                    (loop-when [lower Long/MAX_VALUE upper Long/MIN_VALUE #_"seq" x* (seq xExtremes)] (some? x*) => [lower upper]
                                         (let [
-                                            #_"long" x (first s)
+                                            #_"long" x (first x*)
                                             [lower upper]
-                                                (loop-when [lower lower upper upper #_"seq" s (seq yExtremes)] (some? s) => [lower upper]
+                                                (loop-when [lower lower upper upper #_"seq" y* (seq yExtremes)] (some? y*) => [lower upper]
                                                     (let [
-                                                        #_"long" y (first s)
+                                                        #_"long" y (first y*)
                                                         #_"long" z (MulHigh'multiplyHigh-3 x, y, javaKind)
                                                     ]
-                                                        (recur (min lower z) (max upper z) (next s))
+                                                        (recur (min lower z) (max upper z) (next y*))
                                                     )
                                                 )
                                         ]
-                                            (recur lower upper (next s))
+                                            (recur lower upper (next x*))
                                         )
                                     )
                             ]
@@ -67219,12 +67171,12 @@ ZeroExtendNode'new-4
                 )
             )
 
-            (defn- #_"[long]" UMulHigh'getUnsignedExtremes-1 [#_"IntegerStamp" stamp]
+            (defn- #_"[long long]" UMulHigh'getUnsignedExtremes-1 [#_"IntegerStamp" stamp]
                 (if (and (< (:lowerBound stamp) 0) (<= 0 (:upperBound stamp)))
                     ;; If -1 and 0 are both in the signed range, then we can't say anything
                     ;; about the unsigned range, so we have to return [0, MAX_UNSIGNED].
-                    (long-array [ 0, -1 ])
-                    (long-array [ (:lowerBound stamp), (:upperBound stamp) ])
+                    [ 0, -1 ]
+                    [ (:lowerBound stamp), (:upperBound stamp) ]
                 )
             )
 
@@ -67244,23 +67196,23 @@ ZeroExtendNode'new-4
                             ;; functions, while the values themselves are unsigned.
                             (let [
                                 #_"JavaKind" javaKind (Stamp'''getStackKind-1 a)
-                                #_"[long]" xExtremes (UMulHigh'getUnsignedExtremes-1 a)
-                                #_"[long]" yExtremes (UMulHigh'getUnsignedExtremes-1 b)
+                                #_"long*" xExtremes (UMulHigh'getUnsignedExtremes-1 a)
+                                #_"long*" yExtremes (UMulHigh'getUnsignedExtremes-1 b)
                                 [#_"long" lower #_"long" upper]
-                                    (loop-when [lower Long/MAX_VALUE upper Long/MIN_VALUE #_"seq" s (seq xExtremes)] (some? s) => [lower upper]
+                                    (loop-when [lower Long/MAX_VALUE upper Long/MIN_VALUE #_"seq" x* (seq xExtremes)] (some? x*) => [lower upper]
                                         (let [
-                                            #_"long" x (first s)
+                                            #_"long" x (first x*)
                                             [lower upper]
-                                                (loop-when [lower lower upper upper #_"seq" s (seq yExtremes)] (some? s) => [lower upper]
+                                                (loop-when [lower lower upper upper #_"seq" y* (seq yExtremes)] (some? y*) => [lower upper]
                                                     (let [
-                                                        #_"long" y (first s)
+                                                        #_"long" y (first y*)
                                                         #_"long" z (UMulHigh'multiplyHighUnsigned-3 x, y, javaKind)
                                                     ]
-                                                        (recur (min lower z) (max upper z) (next s))
+                                                        (recur (min lower z) (max upper z) (next y*))
                                                     )
                                                 )
                                         ]
-                                            (recur lower upper (next s))
+                                            (recur lower upper (next x*))
                                         )
                                     )
                             ]
@@ -68016,7 +67968,7 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"int" PrimitiveStrategy''getSliceEnd-3 [#_"PrimitiveStrategy" this, #_"SwitchClosure" closure, #_"int" pos]
         (let [
-            #_"[JavaConstant]" a (:keyConstants this)
+            #_"JavaConstant*" a (:keyConstants this)
         ]
             (loop-when-recur [#_"int" i pos]
                              (and (< i (dec (count a)))
@@ -68037,24 +67989,17 @@ ZeroExtendNode'new-4
     (def- #_"double" BinaryStrategy'MIN_PROBABILITY 0.00001)
 
     (defn #_"BinaryStrategy" BinaryStrategy'new-2 [#_"[double]" keyProbabilities, #_"[JavaConstant]" keyConstants]
-        (let [
-            #_"BinaryStrategy" this
-                (merge (BinaryStrategy'class.) (PrimitiveStrategy'new-2 keyProbabilities, keyConstants)
-                    (hash-map
-                        #_"[double]" :probabilitySums (double-array (inc (count keyProbabilities)))
+        (merge (BinaryStrategy'class.) (PrimitiveStrategy'new-2 keyProbabilities, keyConstants)
+            (hash-map
+                #_"[double]" :probabilitySums
+                    (loop-when [#_"double" sum 0.0 #_"[double]" sum+ [ 0.0 ] #_"int" i 0] (< i (count keyProbabilities)) => sum+
+                        (let [
+                            sum (+ sum (max BinaryStrategy'MIN_PROBABILITY (nth keyProbabilities i)))
+                        ]
+                            (recur sum (conj' sum+ sum) (inc i))
+                        )
                     )
-                )
-            _
-                (loop-when [#_"double" sum 0.0 #_"int" i 0] (< i (count keyConstants))
-                    (let [
-                        sum (+ sum (max BinaryStrategy'MIN_PROBABILITY (nth keyProbabilities i)))
-                    ]
-                        (§ ass! (:probabilitySums this) (assoc' (:probabilitySums this) (inc i) sum))
-                        (recur sum (inc i))
-                    )
-                )
-        ]
-            this
+            )
         )
     )
 
@@ -68188,23 +68133,10 @@ ZeroExtendNode'new-4
  ;;
 (class-ns RangesStrategy [PrimitiveStrategy, SwitchStrategy]
     (defn #_"RangesStrategy" RangesStrategy'new-2 [#_"[double]" keyProbabilities, #_"[JavaConstant]" keyConstants]
-        (let [
-            #_"RangesStrategy" this
-                (merge (RangesStrategy'class.) (PrimitiveStrategy'new-2 keyProbabilities, keyConstants)
-                    (hash-map
-                        #_"[Integer]" :indexes (let [#_"int" n (count keyConstants) a (make-array Integer n) _ (dotimes [#_"int" i n] (§ ass! a (assoc' a i i)))] a)
-                    )
-                )
-            _
-                (Arrays/sort (:indexes this),
-                    (reify Comparator #_"<Integer>"
-                        (#_"int" compare [#_"Comparator<Integer>" _, #_"Integer" i1, #_"Integer" i2]
-                            (cond (< (nth keyProbabilities i1) (nth keyProbabilities i2)) 1 (> (nth keyProbabilities i1) (nth keyProbabilities i2)) -1 :else 0)
-                        )
-                    )
-                )
-        ]
-            this
+        (merge (RangesStrategy'class.) (PrimitiveStrategy'new-2 keyProbabilities, keyConstants)
+            (hash-map
+                #_"[Integer]" :indexes (vec (sort-by #(nth keyProbabilities %) (comp - compare) (range (count keyProbabilities))))
+            )
         )
     )
 
@@ -68274,24 +68206,11 @@ ZeroExtendNode'new-4
  ;;
 (class-ns SequentialStrategy [SwitchStrategy]
     (defn #_"SequentialStrategy" SequentialStrategy'new-2 [#_"[double]" keyProbabilities, #_"[Constant]" keyConstants]
-        (let [
-            #_"SequentialStrategy" this
-                (merge (SequentialStrategy'class.) (SwitchStrategy'new-1 keyProbabilities)
-                    (hash-map
-                        #_"[Integer]" :indexes (let [#_"int" n (count keyConstants) a (make-array Integer n) _ (dotimes [#_"int" i n] (§ ass! a (assoc' a i i)))] a)
-                        #_"[Constant]" :keyConstants keyConstants
-                    )
-                )
-            _
-                (Arrays/sort (:indexes this),
-                    (reify Comparator #_"<Integer>"
-                        (#_"int" compare [#_"Comparator<Integer>" _, #_"Integer" i1, #_"Integer" i2]
-                            (cond (< (nth keyProbabilities i1) (nth keyProbabilities i2)) 1 (> (nth keyProbabilities i1) (nth keyProbabilities i2)) -1 :else 0)
-                        )
-                    )
-                )
-        ]
-            this
+        (merge (SequentialStrategy'class.) (SwitchStrategy'new-1 keyProbabilities)
+            (hash-map
+                #_"[Constant]" :keyConstants keyConstants
+                #_"[Integer]" :indexes (vec (sort-by #(nth keyProbabilities %) (comp - compare) (range (count keyProbabilities))))
+            )
         )
     )
 
