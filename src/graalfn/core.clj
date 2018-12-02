@@ -714,67 +714,16 @@ BytecodeLookupSwitch'new-2
 BytecodeParser''add-2
 BytecodeParser''addPush-3
 BytecodeParser''append-2
-BytecodeParser''appendConstant-2
-BytecodeParser''appendInvoke-4
 BytecodeParser''bci-1
 BytecodeParser''build-3
 BytecodeParser''buildRootMethod-1
-BytecodeParser''cleanupFinalGraph-1
-BytecodeParser''createInvoke-4
-BytecodeParser''createNonInlinedInvoke-7
-BytecodeParser''emitCheckForInvokeSuperSpecial-2
-BytecodeParser''genGoto-1
-BytecodeParser''genIf-4
-BytecodeParser''genIf-5
-BytecodeParser''genIntegerSwitch-6
-BytecodeParser''genInvokeDynamic-2
-BytecodeParser''genInvokeDynamic-3
-BytecodeParser''genInvokeInterface-2
-BytecodeParser''genInvokeInterface-3
-BytecodeParser''genInvokeSpecial-2
-BytecodeParser''genInvokeSpecial-3
-BytecodeParser''genInvokeStatic-2
-BytecodeParser''genInvokeStatic-3
-BytecodeParser''genInvokeVirtual-2
-BytecodeParser''genInvokeVirtual-3
-BytecodeParser''genJsr-2
-BytecodeParser''genLoadField-3
-BytecodeParser''genMonitorEnter-3
-BytecodeParser''genMonitorExit-4
-BytecodeParser''genRet-2
-BytecodeParser''genReturn-3
-BytecodeParser''genStoreField-4
-BytecodeParser''genUnique-2l
-BytecodeParser''genUnique-2v
 BytecodeParser''getInvokeKind-1
 BytecodeParser''getInvokeReturnStamp-1
 BytecodeParser''getInvokeReturnType-1
 BytecodeParser''getNonIntrinsicAncestor-1
-BytecodeParser''handleUnresolvedCheckCast-3
-BytecodeParser''handleUnresolvedInstanceOf-3
-BytecodeParser''handleUnresolvedInvoke-3
-BytecodeParser''handleUnresolvedLoadConstant-2
-BytecodeParser''handleUnresolvedLoadField-3
-BytecodeParser''handleUnresolvedNewInstance-2
-BytecodeParser''handleUnresolvedNewObjectArray-3
-BytecodeParser''handleUnresolvedStoreField-4
-BytecodeParser''isNeverExecutedCode-2
-BytecodeParser''iterateBytecodesForBlock-2
-BytecodeParser''loadLocal-3
-BytecodeParser''loadLocalObject-2
-BytecodeParser''nullCheckedValue-2
-BytecodeParser''nullCheckedValue-3
-BytecodeParser''parseAndInlineCallee-4
 BytecodeParser''parsingIntrinsic-1
-BytecodeParser''processBlock-2
-BytecodeParser''processBytecode-3
 BytecodeParser''push-3
-BytecodeParser''setCurrentFrameState-2
-BytecodeParser''setStateAfter-2
-BytecodeParser''storeLocal-3
 BytecodeParser'new-5
-BytecodeParser'notifyAfterInline-1
-BytecodeParser'notifyBeforeInline-1
 BytecodeStream''currentBC-1
 BytecodeStream''endBCI-1
 BytecodeStream''next-1
@@ -18668,44 +18617,36 @@ ZeroExtendNode'new-4
         )
     )
 
+    ;;;
+     ; Gets the index of the bytecode instruction currently being parsed.
+     ;;
+    (defn #_"int" BytecodeParser''bci-1 [#_"BytecodeParser" this]
+        (:curBCI (:stream this))
+    )
+
+    ;;;
+     ; Determines if this parsing context is within the bytecode of an intrinsic or a method inlined by an intrinsic.
+     ;;
+    (defn #_"boolean" BytecodeParser''parsingIntrinsic-1 [#_"BytecodeParser" this]
+        (some? (:intrinsicContext this))
+    )
+
+    ;;;
+     ; Gets the first ancestor parsing context that is not parsing a {@linkplain #parsingIntrinsic() intrinsic}.
+     ;;
+    (defn #_"BytecodeParser" BytecodeParser''getNonIntrinsicAncestor-1 [#_"BytecodeParser" this]
+        (loop-when-recur [#_"BytecodeParser" ancestor (:parent this)]
+                         (and (some? ancestor) (BytecodeParser''parsingIntrinsic-1 ancestor))
+                         [(:parent ancestor)]
+                      => ancestor
+        )
+    )
+
     (defn- #_"FrameState" BytecodeParser''createFrameState-3 [#_"BytecodeParser" this, #_"int" bci, #_"StateSplit" forStateSplit]
         (when (and (some? (:currentBlock this)) (< (:endBci (:currentBlock this)) bci))
             (FrameStateBuilder''clearNonLiveLocals-4 (:frameState this), (:currentBlock this), (:liveness this), false)
         )
         (FrameStateBuilder''create-3 (:frameState this), bci, forStateSplit)
-    )
-
-    ;;;
-     ; Creates the frame state after the start node of a graph for an {@link IntrinsicContext intrinsic}
-     ; that is the parse root (either for root compiling or for post-parse inlining).
-     ;;
-    (defn- #_"FrameState" BytecodeParser''createStateAfterStartOfReplacementGraph-1 [#_"BytecodeParser" this]
-        (if (IntrinsicContext''isPostParseInlined-1 (:intrinsicContext this))
-            (Graph''add-2 (:graph this), (FrameState'new-1 BytecodeFrame/BEFORE_BCI))
-            (let [
-                f'local #(let [#_"ValueNode" node (nth (:locals (:frameState this)) %)] (when-not (= node FrameState'TWO_SLOT_MARKER) node))
-                #_"ResolvedJavaMethod" o'method (:originalMethod (:intrinsicContext this))
-                #_"int" m (#_"ResolvedJavaMethod" .getMaxLocals o'method)
-                #_"ValueNode*" locals
-                    (if (or (= (count (:locals (:frameState this))) m) (#_"ResolvedJavaMethod" .isNative o'method))
-                        (map f'local (range m))
-                        (let [
-                            #_"int" n (#_"Signature" .getParameterCount (#_"ResolvedJavaMethod" .getSignature o'method), (not (#_"ResolvedJavaMethod" .isStatic o'method)))
-                        ]
-                            (concat (map f'local (range n)) (repeat (- m n) nil))
-                        )
-                    )
-            ]
-                (Graph''add-2 (:graph this), (FrameState'new-9a nil, (ResolvedJavaMethodBytecode'new-1 o'method), 0, locals, nil, 0, nil, nil, false))
-            )
-        )
-    )
-
-    (defn- #_"ValueNode" BytecodeParser''synchronizedObject-3 [#_"BytecodeParser" this, #_"FrameStateBuilder" state, #_"ResolvedJavaMethod" target]
-        (if (#_"ResolvedJavaMethod" .isStatic target)
-            (BytecodeParser''appendConstant-2 this, (#_"ConstantReflectionProvider" .asJavaClass HotSpot'constantReflection, (#_"ResolvedJavaMethod" .getDeclaringClass target)))
-            (FrameStateBuilder''loadLocal-3 state, 0, JavaKind/Object)
-        )
     )
 
     (defn- #_"FixedTarget" BytecodeParser''checkLoopExit-4 [#_"BytecodeParser" this, #_"FixedNode" target, #_"BciBlock" targetBlock, #_"FrameStateBuilder" state]
@@ -18846,6 +18787,10 @@ ZeroExtendNode'new-4
         (BytecodeParser''createTarget-5 this, block, state, false, false)
     )
 
+    (defn- #_"boolean" BytecodeParser''isNeverExecutedCode-2 [#_"BytecodeParser" this, #_"double" probability]
+        (and (zero? probability) (OptimisticOptimizations''removeNeverExecutedCode-1 (:optimisticOpts this)))
+    )
+
     (defn- #_"FixedNode" BytecodeParser''createTarget-4 [#_"BytecodeParser" this, #_"double" probability, #_"BciBlock" block, #_"FrameStateBuilder" state]
         (if (BytecodeParser''isNeverExecutedCode-2 this, probability)
             (Graph''add-2 (:graph this), (DeoptimizeNode'new-2 DeoptimizationAction/InvalidateReprofile, DeoptimizationReason/UnreachedCode))
@@ -18860,91 +18805,15 @@ ZeroExtendNode'new-4
         (BeginNode'begin-1 (BytecodeParser''createTarget-4 this, probability, block, state))
     )
 
-    (defn- #_"this" BytecodeParser''appendGoto-2 [#_"BytecodeParser" this, #_"BciBlock" successor]
-        (let [
-            #_"FixedNode" targetInstr (BytecodeParser''createTarget-5 this, successor, (:frameState this), true, true)
-        ]
-            (when (and (some? (:lastInstr this)) (not= (:lastInstr this) targetInstr)) => this
-                (update this :lastInstr FixedWithNextNode''setNext-2 targetInstr)
-            )
-        )
-    )
-
-    (defn #_"this" BytecodeParser''build-3 [#_"BytecodeParser" this, #_"FixedWithNextNode" startInstruction, #_"FrameStateBuilder" startFrameState]
-        ;; compute the block map, setup exception handlers and get the entrypoint(s)
-        (let [
-            this (assoc this :blockMap (BciBlockMapping'create-2 (:stream this), (:bytecode this)))
-            this (assoc this :firstInstructions {})
-            this (assoc this :entryStates {})
-            this
-                (when-not (#_"ResolvedJavaMethod" .isStatic (:method this)) => this
-                    (assoc this :originalReceiver (FrameStateBuilder''loadLocal-3 startFrameState, 0, JavaKind/Object))
-                )
-            this (assoc this :liveness (LocalLiveness'compute-4 (:stream this), (:blocks (:blockMap this)), (#_"ResolvedJavaMethod" .getMaxLocals (:method this)), (:nextLoop (:blockMap this))))
-            this (assoc this :lastInstr startInstruction)
-            this (BytecodeParser''setCurrentFrameState-2 this, startFrameState)
-            this (update this :stream BytecodeStream''setBCI-2 0)
-            #_"BciBlock" startBlock (:startBlock (:blockMap this))
-        ]
-            (when (nil? (:parent this))
-                (let [
-                    #_"StartNode" startNode (:start (:graph this))
-                ]
-                    (cond
-                        (#_"ResolvedJavaMethod" .isSynchronized (:method this))
-                            (StateSplit'''setStateAfter-2 startNode, (BytecodeParser''createFrameState-3 this, BytecodeFrame/BEFORE_BCI, startNode))
-                        (BytecodeParser''parsingIntrinsic-1 this)
-                            (when (nil? (:stateAfter startNode))
-                                (StateSplit'''setStateAfter-2 startNode, (BytecodeParser''createStateAfterStartOfReplacementGraph-1 this))
-                            )
-                        :else
-                            (do
-                                (FrameStateBuilder''clearNonLiveLocals-4 (:frameState this), startBlock, (:liveness this), true)
-                                (StateSplit'''setStateAfter-2 startNode, (BytecodeParser''createFrameState-3 this, (BytecodeParser''bci-1 this), startNode))
-                            )
-                    )
-                )
-            )
-
-            (let [
-                this
-                    (when (#_"ResolvedJavaMethod" .isSynchronized (:method this)) => this
-                        ;; add a monitor enter to the start block
-                        (let [
-                            this (assoc this :methodSynchronizedObject (BytecodeParser''synchronizedObject-3 this, (:frameState this), (:method this)))
-                        ]
-                            (FrameStateBuilder''clearNonLiveLocals-4 (:frameState this), startBlock, (:liveness this), true)
-                            (BytecodeParser''genMonitorEnter-3 this, (:methodSynchronizedObject this), (BytecodeParser''bci-1 this))
-                            this
-                        )
-                    )
-                this (assoc this :currentBlock (:startBlock (:blockMap this)))
-                this (assoc-in this [:entryStates (:id startBlock)] (:frameState this))
-                this
-                    (if (:isLoopHeader startBlock)
-                        (BytecodeParser''appendGoto-2 this, startBlock)
-                        (assoc-in this [:firstInstructions (:id startBlock)] (:lastInstr this))
-                    )
-            ]
-                (reduce BytecodeParser''processBlock-2 this (:blocks (:blockMap this)))
-            )
-        )
-    )
-
-    ; @SuppressWarnings("try")
-    (defn #_"this" BytecodeParser''buildRootMethod-1 [#_"BytecodeParser" this]
-        (let [
-            #_"FrameStateBuilder" startFrameState (FrameStateBuilder'new-3c this, (:bytecode this), (:graph this))
-            _ (FrameStateBuilder''initializeForMethodStart-1 startFrameState)
-            _
-                (try (§ with [#_"IntrinsicScope" _ (when (some? (:intrinsicContext this)) (IntrinsicScope'new-1 this))])
-                    (§ ass! this (BytecodeParser''build-3 this, (:start (:graph this)), startFrameState))
-                )
-            this (BytecodeParser''cleanupFinalGraph-1 this)
-        ]
-            (ComputeLoopFrequenciesClosure'compute-1 (:graph this))
-            this
-        )
+    ;;;
+     ; Creates a snap shot of the current frame state with the BCI of the instruction after the one currently
+     ; being parsed and assigns it to a given {@linkplain StateSplit#hasSideEffect() side effect} node.
+     ;
+     ; @param sideEffect a side effect node just appended to the graph
+     ;;
+    (defn- #_"void" BytecodeParser''setStateAfter-2 [#_"BytecodeParser" this, #_"StateSplit" sideEffect]
+        (StateSplit'''setStateAfter-2 sideEffect, (BytecodeParser''createFrameState-3 this, (:nextBCI (:stream this)), sideEffect))
+        nil
     )
 
     ;;;
@@ -18969,6 +18838,19 @@ ZeroExtendNode'new-4
     )
 
     ;;;
+     ; Pushes a given value to the frame state stack using an explicit kind. This should be used
+     ; when {@code value.getJavaKind()} is different from the kind that the bytecode instruction
+     ; currently being parsed pushes to the stack.
+     ;
+     ; @param kind the kind to use when type checking this operation
+     ; @param value the value to push to the stack. The value must already have been
+     ;            {@linkplain #append(ValueNode) appended}.
+     ;;
+    (defn #_"this" BytecodeParser''push-3 [#_"BytecodeParser" this, #_"JavaKind" slotKind, #_"ValueNode" value]
+        (update this :frameState FrameStateBuilder''push-3 slotKind, value)
+    )
+
+    ;;;
      ; Adds a node with a non-void kind to the graph, pushes it to the stack. If the returned node is a StateSplit
      ; with a nil {@linkplain StateSplit#stateAfter() frame state}, the frame state is initialized.
      ;
@@ -18980,7 +18862,7 @@ ZeroExtendNode'new-4
         (let [
             value (if (some? (:graph value)) value (BytecodeParser''append-2 this, value))
         ]
-            (BytecodeParser''push-3 this, kind, value)
+            (§ ass! this (BytecodeParser''push-3 this, kind, value))
             (when (and (satisfies? StateSplit value) (nil? (:stateAfter value)) (StateSplit'''hasSideEffect-1 value))
                 (BytecodeParser''setStateAfter-2 this, value)
             )
@@ -18988,58 +18870,15 @@ ZeroExtendNode'new-4
         )
     )
 
+    #_unused
     (defn #_"Stamp" BytecodeParser''getInvokeReturnStamp-1 [#_"BytecodeParser" this]
         (StampFactory'forDeclaredType-2 (BytecodeParser''getInvokeReturnType-1 this), false)
     )
 
     ;;;
-     ; Gets a version of a given value that has a {@linkplain StampTool#isPointerNonNull(ValueNode) non-nil} stamp.
-     ;;
-    (defn #_"ValueNode" BytecodeParser''nullCheckedValue-3 [#_"BytecodeParser" this, #_"ValueNode" value, #_"DeoptimizationAction" action]
-        (when-not (StampTool'isPointerNeverNull-1 (:stamp value)) => value
-            (let [
-                #_"LogicNode" logic (Graph''add-2 (:graph this), (IsNullNode'create-1 value))
-                #_"Stamp" stamp (Stamp'''join-2 (:stamp value), StampFactory'objectNonNullStamp)
-                #_"FixedGuardNode" fixedGuard (BytecodeParser''append-2 this, (FixedGuardNode'new-4 logic, DeoptimizationReason/NullCheckException, action, true))
-                #_"ValueNode" nonNullReceiver (Graph''addOrUniqueWithInputs-2 (:graph this), (PiNode'create-3 value, stamp, fixedGuard))
-            ]
-                ;; TODO Propogating the non-nil into the frame state would remove subsequent nil-checks on the same value.
-                ;;
-                ;; frameState.replace(value, nonNullReceiver);
-                nonNullReceiver
-            )
-        )
-    )
-
-    (defn #_"ValueNode" BytecodeParser''nullCheckedValue-2 [#_"BytecodeParser" this, #_"ValueNode" value]
-        (BytecodeParser''nullCheckedValue-3 this, value, DeoptimizationAction/InvalidateReprofile)
-    )
-
-    (defn #_"this" BytecodeParser''cleanupFinalGraph-1 [#_"BytecodeParser" this]
-        (let [
-            this (update this :graph GraphUtil'normalizeLoops-1)
-        ]
-            ;; Remove dead parameters.
-            (doseq [#_"ParameterNode" param (Graph''getNodes-2 (:graph this), ParameterNode)]
-                (when (Node''hasNoUsages-1 param)
-                    (Node''safeDelete-1 param)
-                )
-            )
-            ;; Remove redundant begin nodes.
-            (doseq [#_"BeginNode" beginNode (Graph''getNodes-2 (:graph this), BeginNode)]
-                (when (and (not (satisfies? ControlSplitNode (:predecessor beginNode))) (not (Node''hasUsages-1 beginNode)))
-                    (GraphUtil'unlinkFixedNode-1 beginNode)
-                    (Node''safeDelete-1 beginNode)
-                )
-            )
-            this
-        )
-    )
-
-    ;;;
      ; @param type the unresolved type of the constant
      ;;
-    (defn #_"this" BytecodeParser''handleUnresolvedLoadConstant-2 [#_"BytecodeParser" this, #_"JavaType" type]
+    (defn- #_"this" BytecodeParser''handleUnresolvedLoadConstant-2 [#_"BytecodeParser" this, #_"JavaType" type]
         (BytecodeParser''append-2 this, (DeoptimizeNode'new-2 DeoptimizationAction/InvalidateRecompile, DeoptimizationReason/Unresolved))
         this
     )
@@ -19048,17 +18887,16 @@ ZeroExtendNode'new-4
      ; @param type the unresolved type of the type check
      ; @param object the object value whose type is being checked against {@code type}
      ;;
-    (defn #_"void" BytecodeParser''handleUnresolvedCheckCast-3 [#_"BytecodeParser" this, #_"JavaType" type, #_"ValueNode" object]
+    (defn- #_"this" BytecodeParser''handleUnresolvedCheckCast-3 [#_"BytecodeParser" this, #_"JavaType" type, #_"ValueNode" object]
         (BytecodeParser''append-2 this, (FixedGuardNode'new-3 (Graph''addOrUniqueWithInputs-2 (:graph this), (IsNullNode'create-1 object)), DeoptimizationReason/Unresolved, DeoptimizationAction/InvalidateRecompile))
-        (§ ass! this (update this :frameState FrameStateBuilder''push-3 JavaKind/Object, (BytecodeParser''appendConstant-2 this, JavaConstant/NULL_POINTER)))
-        nil
+        (update this :frameState FrameStateBuilder''push-3 JavaKind/Object, (ConstantNode'forConstant-2c JavaConstant/NULL_POINTER, (:graph this)))
     )
 
     ;;;
      ; @param type the unresolved type of the type check
      ; @param object the object value whose type is being checked against {@code type}
      ;;
-    (defn #_"this" BytecodeParser''handleUnresolvedInstanceOf-3 [#_"BytecodeParser" this, #_"JavaType" type, #_"ValueNode" object]
+    (defn- #_"this" BytecodeParser''handleUnresolvedInstanceOf-3 [#_"BytecodeParser" this, #_"JavaType" type, #_"ValueNode" object]
         (let [
             #_"AbstractBeginNode" successor (Graph''add-2 (:graph this), (BeginNode'new-0))
             #_"DeoptimizeNode" deopt (Graph''add-2 (:graph this), (DeoptimizeNode'new-2 DeoptimizationAction/InvalidateRecompile, DeoptimizationReason/Unresolved))
@@ -19067,7 +18905,7 @@ ZeroExtendNode'new-4
             (let [
                 this (assoc this :lastInstr successor)
             ]
-                (update this :frameState FrameStateBuilder''push-3 JavaKind/Int, (BytecodeParser''appendConstant-2 this, JavaConstant/INT_0))
+                (update this :frameState FrameStateBuilder''push-3 JavaKind/Int, (ConstantNode'forConstant-2c JavaConstant/INT_0, (:graph this)))
             )
         )
     )
@@ -19075,27 +18913,27 @@ ZeroExtendNode'new-4
     ;;;
      ; @param type the type being instantiated
      ;;
-    (defn #_"void" BytecodeParser''handleUnresolvedNewInstance-2 [#_"BytecodeParser" this, #_"JavaType" type]
+    (defn- #_"this" BytecodeParser''handleUnresolvedNewInstance-2 [#_"BytecodeParser" this, #_"JavaType" type]
         (BytecodeParser''append-2 this, (DeoptimizeNode'new-2 DeoptimizationAction/InvalidateRecompile, DeoptimizationReason/Unresolved))
-        nil
+        this
     )
 
     ;;;
      ; @param type the type of the array being instantiated
      ; @param length the length of the array
      ;;
-    (defn #_"void" BytecodeParser''handleUnresolvedNewObjectArray-3 [#_"BytecodeParser" this, #_"JavaType" type, #_"ValueNode" length]
+    (defn- #_"this" BytecodeParser''handleUnresolvedNewObjectArray-3 [#_"BytecodeParser" this, #_"JavaType" type, #_"ValueNode" length]
         (BytecodeParser''append-2 this, (DeoptimizeNode'new-2 DeoptimizationAction/InvalidateRecompile, DeoptimizationReason/Unresolved))
-        nil
+        this
     )
 
     ;;;
      ; @param field the unresolved field
      ; @param receiver the object containing the field or nil if {@code field} is static
      ;;
-    (defn #_"void" BytecodeParser''handleUnresolvedLoadField-3 [#_"BytecodeParser" this, #_"JavaField" field, #_"ValueNode" receiver]
+    (defn- #_"this" BytecodeParser''handleUnresolvedLoadField-3 [#_"BytecodeParser" this, #_"JavaField" field, #_"ValueNode" receiver]
         (BytecodeParser''append-2 this, (DeoptimizeNode'new-2 DeoptimizationAction/InvalidateRecompile, DeoptimizationReason/Unresolved))
-        nil
+        this
     )
 
     ;;;
@@ -19103,43 +18941,28 @@ ZeroExtendNode'new-4
      ; @param value the value being stored to the field
      ; @param receiver the object containing the field or nil if {@code field} is static
      ;;
-    (defn #_"void" BytecodeParser''handleUnresolvedStoreField-4 [#_"BytecodeParser" this, #_"JavaField" field, #_"ValueNode" value, #_"ValueNode" receiver]
+    (defn- #_"this" BytecodeParser''handleUnresolvedStoreField-4 [#_"BytecodeParser" this, #_"JavaField" field, #_"ValueNode" value, #_"ValueNode" receiver]
         (BytecodeParser''append-2 this, (DeoptimizeNode'new-2 DeoptimizationAction/InvalidateRecompile, DeoptimizationReason/Unresolved))
-        nil
+        this
     )
 
-    (defn #_"void" BytecodeParser''handleUnresolvedInvoke-3 [#_"BytecodeParser" this, #_"JavaMethod" javaMethod, #_"InvokeKind" invokeKind]
+    (defn- #_"this" BytecodeParser''handleUnresolvedInvoke-3 [#_"BytecodeParser" this, #_"JavaMethod" javaMethod, #_"InvokeKind" invokeKind]
         (BytecodeParser''append-2 this, (DeoptimizeNode'new-2 DeoptimizationAction/InvalidateRecompile, DeoptimizationReason/Unresolved))
-        nil
+        this
     )
 
-    (defn #_"void" BytecodeParser''genGoto-1 [#_"BytecodeParser" this]
-        (§ ass! this (BytecodeParser''appendGoto-2 this, (BciBlock''getSuccessor-2 (:currentBlock this), 0)))
-        nil
-    )
-
-    (defn #_"ValueNode" BytecodeParser''genUnique-2v [#_"BytecodeParser" this, #_"ValueNode" x] (Graph''addOrUniqueWithInputs-2 (:graph this), x))
-    (defn #_"LogicNode" BytecodeParser''genUnique-2l [#_"BytecodeParser" this, #_"LogicNode" x] (Graph''addOrUniqueWithInputs-2 (:graph this), x))
-
-    (defn #_"ValueNode" BytecodeParser''genLoadField-3 [#_"BytecodeParser" this, #_"ValueNode" receiver, #_"ResolvedJavaField" field]
+    (defn- #_"this" BytecodeParser''appendGoto-2 [#_"BytecodeParser" this, #_"BciBlock" successor]
         (let [
-            #_"Stamp" stamp (Plugins''getOverridingStamp-4 HotSpot'plugins, this, (#_"ResolvedJavaField" .getType field), false)
+            #_"FixedNode" targetInstr (BytecodeParser''createTarget-5 this, successor, (:frameState this), true, true)
         ]
-            (if (some? stamp)
-                (LoadFieldNode'createOverrideStamp-5 stamp, receiver, field, false, false)
-                (LoadFieldNode'create-4 receiver, field, false, false)
+            (when (and (some? (:lastInstr this)) (not= (:lastInstr this) targetInstr)) => this
+                (update this :lastInstr FixedWithNextNode''setNext-2 targetInstr)
             )
         )
     )
 
-    (defn #_"void" BytecodeParser''genStoreField-4 [#_"BytecodeParser" this, #_"ValueNode" receiver, #_"ResolvedJavaField" field, #_"ValueNode" value]
-        (let [
-            #_"StoreFieldNode" storeFieldNode (StoreFieldNode'new-3 receiver, field, value)
-        ]
-            (BytecodeParser''append-2 this, storeFieldNode)
-            (StateSplit'''setStateAfter-2 storeFieldNode, (BytecodeParser''createFrameState-3 this, (:nextBCI (:stream this)), storeFieldNode))
-        )
-        nil
+    (defn- #_"this" BytecodeParser''genGoto-1 [#_"BytecodeParser" this]
+        (BytecodeParser''appendGoto-2 this, (BciBlock''getSuccessor-2 (:currentBlock this), 0))
     )
 
     ;;;
@@ -19215,120 +19038,38 @@ ZeroExtendNode'new-4
         (#_"ConstantPool" .lookupConstant (:constantPool this), cpi)
     )
 
-    (defn #_"void" BytecodeParser''genInvokeStatic-3 [#_"BytecodeParser" this, #_"int" cpi, #_"int" opcode]
-        (BytecodeParser''genInvokeStatic-2 this, (BytecodeParser''lookupMethod-3 this, cpi, opcode))
-        nil
+    (defn- #_"LogicNode" BytecodeParser''genUnique-2 [#_"BytecodeParser" this, #_"LogicNode" x]
+        (Graph''addOrUniqueWithInputs-2 (:graph this), x)
     )
 
-    (defn #_"void" BytecodeParser''genInvokeStatic-2 [#_"BytecodeParser" this, #_"JavaMethod" target]
-        (if (and (BytecodeParser'callTargetIsResolved-1 target) (or (#_"ResolvedJavaType" .isInitialized (#_"ResolvedJavaMethod" .getDeclaringClass target)) (not GraalOptions'resolveClassBeforeStaticInvoke)))
-            (let [
-                #_"InvokeNode" invoke (BytecodeParser''appendInvoke-4 this, :InvokeKind'Static, target, (FrameStateBuilder''popArguments-2 (:frameState this), (#_"Signature" .getParameterCount (#_"ResolvedJavaMethod" .getSignature target), false)))
-            ]
-                (when (some? invoke)
-                    (§ ass! invoke (InvokeNode''setClassInit-2 invoke, nil))
-                )
-            )
-            (BytecodeParser''handleUnresolvedInvoke-3 this, target, :InvokeKind'Static)
-        )
-        nil
-    )
-
-    (defn #_"void" BytecodeParser''genInvokeInterface-3 [#_"BytecodeParser" this, #_"int" cpi, #_"int" opcode]
-        (BytecodeParser''genInvokeInterface-2 this, (BytecodeParser''lookupMethod-3 this, cpi, opcode))
-        nil
-    )
-
-    (defn #_"void" BytecodeParser''genInvokeInterface-2 [#_"BytecodeParser" this, #_"JavaMethod" target]
-        (if (BytecodeParser'callTargetIsResolved-1 target)
-            (BytecodeParser''appendInvoke-4 this, :InvokeKind'Interface, target, (FrameStateBuilder''popArguments-2 (:frameState this), (#_"Signature" .getParameterCount (#_"JavaMethod" .getSignature target), true)))
-            (BytecodeParser''handleUnresolvedInvoke-3 this, target, :InvokeKind'Interface)
-        )
-        nil
-    )
-
-    (defn #_"void" BytecodeParser''genInvokeDynamic-3 [#_"BytecodeParser" this, #_"int" cpi, #_"int" opcode]
-        (BytecodeParser''genInvokeDynamic-2 this, (BytecodeParser''lookupMethod-3 this, cpi, opcode))
-        nil
-    )
-
-    (defn- #_"boolean" BytecodeParser''genDynamicInvokeHelper-4 [#_"BytecodeParser" this, #_"ResolvedJavaMethod" target, #_"int" cpi, #_"int" opcode]
+    ;;;
+     ; Checks that the class of the receiver of an Bytecodes#INVOKESPECIAL in a method
+     ; declared in an interface (i.e. a default method) is assignable to the interface.
+     ; If not, then deoptimize so that the interpreter can throw an IllegalAccessError.
+     ;
+     ; This is a check not performed by the verifier and so must be performed at runtime.
+     ;
+     ; @param args arguments to an Bytecodes#INVOKESPECIAL implementing a direct call to a method in a super class
+     ;;
+    (defn- #_"[ValueNode]" BytecodeParser''emitCheckForInvokeSuperSpecial-2 [#_"BytecodeParser" this, #_"[ValueNode]" args]
         (let [
-            #_"JavaConstant" appendix (#_"ConstantPool" .lookupAppendix (:constantPool this), cpi, opcode)
-            _
-                (when (some? appendix)
-                    (§ ass! this (update this :frameState FrameStateBuilder''push-3 JavaKind/Object, (ConstantNode'forConstant-2c appendix, (:graph this))))
+            #_"ResolvedJavaType" callingClass (#_"ResolvedJavaMethod" .getDeclaringClass (:method this))
+            callingClass
+                (when (some? (#_"ResolvedJavaType" .getHostClass callingClass)) => callingClass
+                    (#_"ResolvedJavaType" .getHostClass callingClass)
                 )
-            #_"boolean" hasReceiver (and (not= opcode Bytecodes'INVOKEDYNAMIC) (not (#_"ResolvedJavaMethod" .isStatic target)))
-            #_"[ValueNode]" args (FrameStateBuilder''popArguments-2 (:frameState this), (#_"Signature" .getParameterCount (#_"ResolvedJavaMethod" .getSignature target), hasReceiver))
         ]
-            (BytecodeParser''appendInvoke-4 this, (if hasReceiver :InvokeKind'Virtual :InvokeKind'Static), target, args)
-
-            true
-        )
-    )
-
-    (defn #_"void" BytecodeParser''genInvokeDynamic-2 [#_"BytecodeParser" this, #_"JavaMethod" target]
-        (when-not (and (instance? ResolvedJavaMethod target) (BytecodeParser''genDynamicInvokeHelper-4 this, target, (BytecodeStream''readCPI4-1 (:stream this)), Bytecodes'INVOKEDYNAMIC))
-            (BytecodeParser''handleUnresolvedInvoke-3 this, target, :InvokeKind'Static)
-        )
-        nil
-    )
-
-    (defn #_"void" BytecodeParser''genInvokeVirtual-3 [#_"BytecodeParser" this, #_"int" cpi, #_"int" opcode]
-        (BytecodeParser''genInvokeVirtual-2 this, (BytecodeParser''lookupMethod-3 this, cpi, opcode))
-        nil
-    )
-
-    (defn- #_"boolean" BytecodeParser''genInvokeVirtualHelper-2 [#_"BytecodeParser" this, #_"JavaMethod" target]
-        (and (BytecodeParser'callTargetIsResolved-1 target)
-            (let [
-                #_"int" cpi (BytecodeStream''readCPI-1 (:stream this))
-            ]
-                (or (BytecodeParser''genDynamicInvokeHelper-4 this, target, cpi, Bytecodes'INVOKEVIRTUAL)
-                    (let [
-                        #_"[ValueNode]" args (FrameStateBuilder''popArguments-2 (:frameState this), (#_"Signature" .getParameterCount (#_"JavaMethod" .getSignature target), true))
-                    ]
-                        (BytecodeParser''appendInvoke-4 this, :InvokeKind'Virtual, target, args)
-                        true
-                    )
+            (when (#_"ResolvedJavaType" .isInterface callingClass) => args
+                (let [
+                    #_"ValueNode" receiver (nth args 0)
+                    #_"TypeReference" checkedType (TypeReference'createTrusted-1 callingClass)
+                    #_"LogicNode" logic (BytecodeParser''genUnique-2 this, (InstanceOfNode'create-2 checkedType, receiver))
+                    #_"FixedGuardNode" fixedGuard (BytecodeParser''append-2 this, (FixedGuardNode'new-4 logic, DeoptimizationReason/ClassCastException, DeoptimizationAction/None, false))
+                ]
+                    (assoc' args 0 (BytecodeParser''append-2 this, (PiNode'create-3 receiver, (StampFactory'object-2 checkedType, true), fixedGuard)))
                 )
             )
         )
-    )
-
-    (defn #_"void" BytecodeParser''genInvokeVirtual-2 [#_"BytecodeParser" this, #_"JavaMethod" target]
-        (when-not (BytecodeParser''genInvokeVirtualHelper-2 this, target)
-            (BytecodeParser''handleUnresolvedInvoke-3 this, target, :InvokeKind'Virtual)
-        )
-        nil
-    )
-
-    (defn #_"void" BytecodeParser''genInvokeSpecial-3 [#_"BytecodeParser" this, #_"int" cpi, #_"int" opcode]
-        (BytecodeParser''genInvokeSpecial-2 this, (BytecodeParser''lookupMethod-3 this, cpi, opcode))
-        nil
-    )
-
-    (defn #_"void" BytecodeParser''genInvokeSpecial-2 [#_"BytecodeParser" this, #_"JavaMethod" target]
-        (if (BytecodeParser'callTargetIsResolved-1 target)
-            (BytecodeParser''appendInvoke-4 this, :InvokeKind'Special, target, (FrameStateBuilder''popArguments-2 (:frameState this), (#_"Signature" .getParameterCount (#_"JavaMethod" .getSignature target), true)))
-            (BytecodeParser''handleUnresolvedInvoke-3 this, target, :InvokeKind'Special)
-        )
-        nil
-    )
-
-    ;;;
-     ; Gets the kind of invocation currently being parsed.
-     ;;
-    (defn #_"InvokeKind" BytecodeParser''getInvokeKind-1 [#_"BytecodeParser" this]
-        (when (some? (:currentInvoke this)) (:kind (:currentInvoke this)))
-    )
-
-    ;;;
-     ; Gets the return type of the invocation currently being parsed.
-     ;;
-    (defn #_"JavaType" BytecodeParser''getInvokeReturnType-1 [#_"BytecodeParser" this]
-        (when (some? (:currentInvoke this)) (:returnType (:currentInvoke this)))
     )
 
     (defn- #_"boolean" BytecodeParser''tryNodePluginForInvocation-3 [#_"BytecodeParser" this, #_"[ValueNode]" args, #_"ResolvedJavaMethod" targetMethod]
@@ -19341,67 +19082,17 @@ ZeroExtendNode'new-4
         )
     )
 
-    ;;;
-     ; Gets the receiver value with optional nil-check.
-     ;;
-    (defn- #_"ValueNode" BytecodeParser''getReceiver-3 [#_"BytecodeParser" this, #_"[ValueNode]" args, #_"boolean" nil-check?]
-        (when nil-check? => (nth args 0)
-            (let [
-                #_"ValueNode" value (BytecodeParser''nullCheckedValue-2 this, (nth args 0))
-            ]
-                (when-not (= value (nth args 0))
-                    (§ ass! args (assoc' args 0 value))
-                )
-                value
-            )
-        )
-    )
-
-    (defn- #_"void" BytecodeParser''genGetField-3r [#_"BytecodeParser" this, #_"ResolvedJavaField" resolvedField, #_"ValueNode" receiver]
-        (or
-            (loop-when [#_"seq" s (seq (:nodePlugins HotSpot'plugins))] (some? s)
-                (when (NodePlugin'''handleLoadField-4 (first s), this, receiver, resolvedField) => (recur (next s))
-                    :done
-                )
-            )
-            (let [
-                #_"ValueNode" fieldRead (BytecodeParser''append-2 this, (BytecodeParser''genLoadField-3 this, receiver, resolvedField))
-            ]
-                (when (and (= (#_"ResolvedJavaType" .getName (#_"ResolvedJavaField" .getDeclaringClass resolvedField)) "Ljava/lang/ref/Reference;") (= (#_"ResolvedJavaField" .getName resolvedField) "referent"))
-                    (BytecodeParser''append-2 this, (MembarNode'new-2 0, (FieldLocationIdentity'new-1 resolvedField)))
-                )
-                (let [
-                    #_"JavaKind" fieldKind (#_"ResolvedJavaField" .getJavaKind resolvedField)
-                ]
-                    (if (and (#_"ResolvedJavaField" .isVolatile resolvedField) (satisfies? LoadFieldNode fieldRead))
-                        (let [
-                            #_"StateSplitProxyNode" readProxy (BytecodeParser''append-2 this, (StateSplitProxyNode'new-1 fieldRead))
-                        ]
-                            (§ ass! this (update this :frameState FrameStateBuilder''push-3 fieldKind, readProxy))
-                            (StateSplit'''setStateAfter-2 readProxy, (FrameStateBuilder''create-3 (:frameState this), (:nextBCI (:stream this)), readProxy))
-                        )
-                        (§ ass! this (update this :frameState FrameStateBuilder''push-3 fieldKind, fieldRead))
-                    )
-                )
-            )
+    (defn- #_"void" BytecodeParser'notifyBeforeInline-1 [#_"ResolvedJavaMethod" inlinedMethod]
+        (doseq [#_"InlineInvokePlugin" plugin (:inlineInvokePlugins HotSpot'plugins)]
+            (InlineInvokePlugin'''notifyBeforeInline-2 plugin, inlinedMethod)
         )
         nil
     )
 
-    (defn- #_"void" BytecodeParser''genGetField-3f [#_"BytecodeParser" this, #_"JavaField" field, #_"ValueNode" receiver]
-        (when (instance? ResolvedJavaField field) => (BytecodeParser''handleUnresolvedLoadField-3 this, field, receiver)
-            (BytecodeParser''genGetField-3r this, field, receiver)
+    (defn- #_"void" BytecodeParser'notifyAfterInline-1 [#_"ResolvedJavaMethod" inlinedMethod]
+        (doseq [#_"InlineInvokePlugin" plugin (:inlineInvokePlugins HotSpot'plugins)]
+            (InlineInvokePlugin'''notifyAfterInline-2 plugin, inlinedMethod)
         )
-        nil
-    )
-
-    (defn- #_"void" BytecodeParser''genGetField-4 [#_"BytecodeParser" this, #_"int" cpi, #_"int" opcode, #_"ValueNode" receiver]
-        (BytecodeParser''genGetField-3f this, (BytecodeParser''lookupField-3 this, cpi, opcode), receiver)
-        nil
-    )
-
-    (defn- #_"void" BytecodeParser''genGetField-3i [#_"BytecodeParser" this, #_"int" cpi, #_"int" opcode]
-        (BytecodeParser''genGetField-4 this, cpi, opcode, (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Object))
         nil
     )
 
@@ -19426,7 +19117,7 @@ ZeroExtendNode'new-4
                         ]
                             (and (instance? ResolvedJavaField field)
                                 (do
-                                    (BytecodeParser''genGetField-3r this, field, (BytecodeParser''getReceiver-3 this, args, true))
+                                    (§ ass! this (BytecodeParser''genGetField-3r this, field, (BytecodeParser''getReceiver-3 this, args, true)))
                                     (BytecodeParser'notifyBeforeInline-1 targetMethod)
                                     (BytecodeParser'notifyAfterInline-1 targetMethod)
                                     true
@@ -19435,6 +19126,59 @@ ZeroExtendNode'new-4
                         )
                     )
                 )
+            )
+        )
+    )
+
+    (defn- #_"this" BytecodeParser''parseAndInlineCallee-4 [#_"BytecodeParser" this, #_"ResolvedJavaMethod" targetMethod, #_"[ValueNode]" args, #_"IntrinsicContext" calleeIntrinsicContext]
+        (try (§ with [#_"IntrinsicScope" _ (when (and (some? calleeIntrinsicContext) (not (BytecodeParser''parsingIntrinsic-1 this))) (IntrinsicScope'new-3 this, (#_"Signature" .toParameterKinds (#_"ResolvedJavaMethod" .getSignature targetMethod), (not (#_"ResolvedJavaMethod" .isStatic targetMethod))), args))])
+            (let [
+                #_"BytecodeParser" parser (BytecodeParser'new-5 (:graphBuilderInstance this), (:graph this), this, targetMethod, calleeIntrinsicContext)
+                #_"FrameStateBuilder" startFrameState (FrameStateBuilder'new-3c parser, (:bytecode parser), (:graph this))
+                _
+                    (when-not (#_"ResolvedJavaMethod" .isStatic targetMethod)
+                        (§ ass! args (update' args 0 #(BytecodeParser''nullCheckedValue-2 this, %)))
+                    )
+                _ (FrameStateBuilder''initializeFromArgumentsArray-2 startFrameState, args)
+                parser (BytecodeParser''build-3 parser, (:lastInstr this), startFrameState)
+                this
+                    (when (some? (:returnDataList parser)) => (assoc this :lastInstr nil) ;; Callee does not return.
+                        (let [
+                            [this #_"MergeNode" merge #_"ValueNode" calleeReturnValue]
+                                (if (= (count (:returnDataList parser)) 1)
+                                    ;; Callee has a single return, we can continue parsing at that point.
+                                    (let [
+                                        #_"ReturnToCallerData" singleReturnData (nth (:returnDataList parser) 0)
+                                        this (assoc this :lastInstr (:beforeReturnNode singleReturnData))
+                                    ]
+                                        [this nil (:returnValue singleReturnData)]
+                                    )
+                                    ;; Callee has multiple returns, we need to insert a control flow merge.
+                                    (let [
+                                        merge (Graph''add-2 (:graph this), (MergeNode'new-0))
+                                        calleeReturnValue (ValueMergeUtil'mergeValueProducers-4 merge, (:returnDataList parser), :beforeReturnNode, :returnValue)
+                                    ]
+                                        [this merge calleeReturnValue]
+                                    )
+                                )
+                        ]
+                            (when (some? calleeReturnValue)
+                                (§ ass! this (update this :frameState FrameStateBuilder''push-3 (-> (#_"ResolvedJavaMethod" .getSignature targetMethod) (#_"Signature" .getReturnKind) (#_"JavaKind" .getStackKind)), calleeReturnValue))
+                            )
+                            (when (some? merge) => this
+                                (StateSplit'''setStateAfter-2 merge, (BytecodeParser''createFrameState-3 this, (:nextBCI (:stream this)), merge))
+                                (assoc this :lastInstr merge)
+                            )
+                        )
+                    )
+            ]
+                ;; Propagate any side effects into the caller when parsing intrinsics.
+                (when (and (SideEffectsState'''isAfterSideEffect-1 (:frameState parser)) (BytecodeParser''parsingIntrinsic-1 this))
+                    (doseq [#_"StateSplit" sideEffect (SideEffectsState'''sideEffects-1 (:frameState parser))]
+                        (§ ass! this (update this :frameState SideEffectsState'''addSideEffect-2 sideEffect))
+                    )
+                )
+                this
             )
         )
     )
@@ -19516,7 +19260,34 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"InvokeNode" BytecodeParser''appendInvoke-4 [#_"BytecodeParser" this, #_"InvokeKind" initialInvokeKind, #_"ResolvedJavaMethod" initialTargetMethod, #_"[ValueNode]" args]
+    (defn- #_"InvokeNode" BytecodeParser''createInvoke-4 [#_"BytecodeParser" this, #_"int" invokeBci, #_"CallTargetNode" callTarget, #_"JavaKind" resultType]
+        (let [
+            #_"InvokeNode" invoke (BytecodeParser''append-2 this, (InvokeNode'new-2 callTarget, invokeBci))
+        ]
+            (§ ass! this (update this :frameState FrameStateBuilder''pushReturn-3 resultType, invoke))
+            (StateSplit'''setStateAfter-2 invoke, (BytecodeParser''createFrameState-3 this, (:nextBCI (:stream this)), invoke))
+            invoke
+        )
+    )
+
+    (defn- #_"InvokeNode" BytecodeParser''createNonInlinedInvoke-7 [#_"BytecodeParser" this, #_"int" invokeBci, #_"ValueNode*" invokeArgs, #_"ResolvedJavaMethod" targetMethod, #_"InvokeKind" invokeKind, #_"JavaKind" resultType, #_"JavaType" returnType]
+        (let [
+            #_"Stamp" returnStamp
+                (or (Plugins''getOverridingStamp-4 HotSpot'plugins, this, returnType, false)
+                    (StampFactory'forDeclaredType-2 returnType, false)
+                )
+            #_"MethodCallTargetNode" callTarget (Graph''add-2 (:graph this), (MethodCallTargetNode'new-4 invokeKind, targetMethod, invokeArgs, returnStamp))
+            #_"InvokeNode" invoke (BytecodeParser''createInvoke-4 this, invokeBci, callTarget, resultType)
+        ]
+            (doseq [#_"InlineInvokePlugin" plugin (:inlineInvokePlugins HotSpot'plugins)]
+                (InlineInvokePlugin'''notifyNotInlined-4 plugin, this, targetMethod, invoke)
+            )
+
+            invoke
+        )
+    )
+
+    (defn- #_"InvokeNode" BytecodeParser''appendInvoke-4 [#_"BytecodeParser" this, #_"InvokeKind" initialInvokeKind, #_"ResolvedJavaMethod" initialTargetMethod, #_"[ValueNode]" args]
         (let [
             [#_"ResolvedJavaMethod" targetMethod #_"InvokeKind" invokeKind]
                 (when (InvokeKind''isIndirect-1 initialInvokeKind) => [initialTargetMethod initialInvokeKind]
@@ -19534,7 +19305,7 @@ ZeroExtendNode'new-4
             returnType (#_"JavaType" .resolve returnType, (#_"ResolvedJavaMethod" .getDeclaringClass targetMethod))
         ]
             (when (and (= initialInvokeKind :InvokeKind'Special) (not (#_"ResolvedJavaMethod" .isConstructor targetMethod)))
-                (BytecodeParser''emitCheckForInvokeSuperSpecial-2 this, args)
+                (§ ass! args (BytecodeParser''emitCheckForInvokeSuperSpecial-2 this, args))
             )
             (try
                 (§ ass! this (assoc this :currentInvoke (CurrentInvoke'new-3 args, invokeKind, returnType)))
@@ -19607,129 +19378,205 @@ ZeroExtendNode'new-4
         )
     )
 
-    ;;;
-     ; Checks that the class of the receiver of an Bytecodes#INVOKESPECIAL in a method
-     ; declared in an interface (i.e. a default method) is assignable to the interface.
-     ; If not, then deoptimize so that the interpreter can throw an IllegalAccessError.
-     ;
-     ; This is a check not performed by the verifier and so must be performed at runtime.
-     ;
-     ; @param args arguments to an Bytecodes#INVOKESPECIAL implementing a direct call to a method in a super class
-     ;;
-    (defn #_"void" BytecodeParser''emitCheckForInvokeSuperSpecial-2 [#_"BytecodeParser" this, #_"[ValueNode]" args]
-        (let [
-            #_"ResolvedJavaType" callingClass (#_"ResolvedJavaMethod" .getDeclaringClass (:method this))
-            callingClass
-                (when (some? (#_"ResolvedJavaType" .getHostClass callingClass)) => callingClass
-                    (#_"ResolvedJavaType" .getHostClass callingClass)
-                )
-        ]
-            (when (#_"ResolvedJavaType" .isInterface callingClass)
-                (let [
-                    #_"ValueNode" receiver (nth args 0)
-                    #_"TypeReference" checkedType (TypeReference'createTrusted-1 callingClass)
-                    #_"LogicNode" logic (BytecodeParser''genUnique-2l this, (InstanceOfNode'create-2 checkedType, receiver))
-                    #_"FixedGuardNode" fixedGuard (BytecodeParser''append-2 this, (FixedGuardNode'new-4 logic, DeoptimizationReason/ClassCastException, DeoptimizationAction/None, false))
-                ]
-                    (§ ass! args (assoc' args 0 (BytecodeParser''append-2 this, (PiNode'create-3 receiver, (StampFactory'object-2 checkedType, true), fixedGuard))))
-                )
-            )
-        )
-        nil
-    )
-
-    (defn #_"InvokeNode" BytecodeParser''createNonInlinedInvoke-7 [#_"BytecodeParser" this, #_"int" invokeBci, #_"ValueNode*" invokeArgs, #_"ResolvedJavaMethod" targetMethod, #_"InvokeKind" invokeKind, #_"JavaKind" resultType, #_"JavaType" returnType]
-        (let [
-            #_"Stamp" returnStamp
-                (or (Plugins''getOverridingStamp-4 HotSpot'plugins, this, returnType, false)
-                    (StampFactory'forDeclaredType-2 returnType, false)
-                )
-            #_"MethodCallTargetNode" callTarget (Graph''add-2 (:graph this), (MethodCallTargetNode'new-4 invokeKind, targetMethod, invokeArgs, returnStamp))
-            #_"InvokeNode" invoke (BytecodeParser''createInvoke-4 this, invokeBci, callTarget, resultType)
-        ]
-            (doseq [#_"InlineInvokePlugin" plugin (:inlineInvokePlugins HotSpot'plugins)]
-                (InlineInvokePlugin'''notifyNotInlined-4 plugin, this, targetMethod, invoke)
-            )
-
-            invoke
-        )
-    )
-
-    (defn #_"void" BytecodeParser'notifyBeforeInline-1 [#_"ResolvedJavaMethod" inlinedMethod]
-        (doseq [#_"InlineInvokePlugin" plugin (:inlineInvokePlugins HotSpot'plugins)]
-            (InlineInvokePlugin'''notifyBeforeInline-2 plugin, inlinedMethod)
-        )
-        nil
-    )
-
-    (defn #_"void" BytecodeParser'notifyAfterInline-1 [#_"ResolvedJavaMethod" inlinedMethod]
-        (doseq [#_"InlineInvokePlugin" plugin (:inlineInvokePlugins HotSpot'plugins)]
-            (InlineInvokePlugin'''notifyAfterInline-2 plugin, inlinedMethod)
-        )
-        nil
-    )
-
-    (defn #_"this" BytecodeParser''parseAndInlineCallee-4 [#_"BytecodeParser" this, #_"ResolvedJavaMethod" targetMethod, #_"[ValueNode]" args, #_"IntrinsicContext" calleeIntrinsicContext]
-        (try (§ with [#_"IntrinsicScope" _ (when (and (some? calleeIntrinsicContext) (not (BytecodeParser''parsingIntrinsic-1 this))) (IntrinsicScope'new-3 this, (#_"Signature" .toParameterKinds (#_"ResolvedJavaMethod" .getSignature targetMethod), (not (#_"ResolvedJavaMethod" .isStatic targetMethod))), args))])
+    (defn- #_"this" BytecodeParser''genInvokeStatic-2 [#_"BytecodeParser" this, #_"JavaMethod" target]
+        (if (and (BytecodeParser'callTargetIsResolved-1 target) (or (#_"ResolvedJavaType" .isInitialized (#_"ResolvedJavaMethod" .getDeclaringClass target)) (not GraalOptions'resolveClassBeforeStaticInvoke)))
             (let [
-                #_"BytecodeParser" parser (BytecodeParser'new-5 (:graphBuilderInstance this), (:graph this), this, targetMethod, calleeIntrinsicContext)
-                #_"FrameStateBuilder" startFrameState (FrameStateBuilder'new-3c parser, (:bytecode parser), (:graph this))
-                _
-                    (when-not (#_"ResolvedJavaMethod" .isStatic targetMethod)
-                        (§ ass! args (update' args 0 #(BytecodeParser''nullCheckedValue-2 this, %)))
-                    )
-                _ (FrameStateBuilder''initializeFromArgumentsArray-2 startFrameState, args)
-                parser (BytecodeParser''build-3 parser, (:lastInstr this), startFrameState)
-                this
-                    (when (some? (:returnDataList parser)) => (assoc this :lastInstr nil) ;; Callee does not return.
-                        (let [
-                            [this #_"MergeNode" merge #_"ValueNode" calleeReturnValue]
-                                (if (= (count (:returnDataList parser)) 1)
-                                    ;; Callee has a single return, we can continue parsing at that point.
-                                    (let [
-                                        #_"ReturnToCallerData" singleReturnData (nth (:returnDataList parser) 0)
-                                        this (assoc this :lastInstr (:beforeReturnNode singleReturnData))
-                                    ]
-                                        [this nil (:returnValue singleReturnData)]
-                                    )
-                                    ;; Callee has multiple returns, we need to insert a control flow merge.
-                                    (let [
-                                        merge (Graph''add-2 (:graph this), (MergeNode'new-0))
-                                        calleeReturnValue (ValueMergeUtil'mergeValueProducers-4 merge, (:returnDataList parser), :beforeReturnNode, :returnValue)
-                                    ]
-                                        [this merge calleeReturnValue]
-                                    )
-                                )
-                        ]
-                            (when (some? calleeReturnValue)
-                                (§ ass! this (update this :frameState FrameStateBuilder''push-3 (-> (#_"ResolvedJavaMethod" .getSignature targetMethod) (#_"Signature" .getReturnKind) (#_"JavaKind" .getStackKind)), calleeReturnValue))
-                            )
-                            (when (some? merge) => this
-                                (StateSplit'''setStateAfter-2 merge, (BytecodeParser''createFrameState-3 this, (:nextBCI (:stream this)), merge))
-                                (assoc this :lastInstr merge)
-                            )
-                        )
-                    )
+                #_"InvokeNode" invoke (BytecodeParser''appendInvoke-4 this, :InvokeKind'Static, target, (FrameStateBuilder''popArguments-2 (:frameState this), (#_"Signature" .getParameterCount (#_"ResolvedJavaMethod" .getSignature target), false)))
             ]
-                ;; Propagate any side effects into the caller when parsing intrinsics.
-                (when (and (SideEffectsState'''isAfterSideEffect-1 (:frameState parser)) (BytecodeParser''parsingIntrinsic-1 this))
-                    (doseq [#_"StateSplit" sideEffect (SideEffectsState'''sideEffects-1 (:frameState parser))]
-                        (§ ass! this (update this :frameState SideEffectsState'''addSideEffect-2 sideEffect))
-                    )
+                (when (some? invoke)
+                    (§ ass! invoke (InvokeNode''setClassInit-2 invoke, nil))
                 )
                 this
+            )
+            (BytecodeParser''handleUnresolvedInvoke-3 this, target, :InvokeKind'Static)
+        )
+    )
+
+    (defn- #_"this" BytecodeParser''genInvokeStatic-3 [#_"BytecodeParser" this, #_"int" cpi, #_"int" opcode]
+        (BytecodeParser''genInvokeStatic-2 this, (BytecodeParser''lookupMethod-3 this, cpi, opcode))
+    )
+
+    (defn- #_"this" BytecodeParser''genInvokeInterface-2 [#_"BytecodeParser" this, #_"JavaMethod" target]
+        (when (BytecodeParser'callTargetIsResolved-1 target) => (BytecodeParser''handleUnresolvedInvoke-3 this, target, :InvokeKind'Interface)
+            (BytecodeParser''appendInvoke-4 this, :InvokeKind'Interface, target, (FrameStateBuilder''popArguments-2 (:frameState this), (#_"Signature" .getParameterCount (#_"JavaMethod" .getSignature target), true)))
+            this
+        )
+    )
+
+    (defn- #_"this" BytecodeParser''genInvokeInterface-3 [#_"BytecodeParser" this, #_"int" cpi, #_"int" opcode]
+        (BytecodeParser''genInvokeInterface-2 this, (BytecodeParser''lookupMethod-3 this, cpi, opcode))
+    )
+
+    (defn- #_"boolean" BytecodeParser''genDynamicInvokeHelper-4 [#_"BytecodeParser" this, #_"ResolvedJavaMethod" target, #_"int" cpi, #_"int" opcode]
+        (let [
+            #_"JavaConstant" appendix (#_"ConstantPool" .lookupAppendix (:constantPool this), cpi, opcode)
+            _
+                (when (some? appendix)
+                    (§ ass! this (update this :frameState FrameStateBuilder''push-3 JavaKind/Object, (ConstantNode'forConstant-2c appendix, (:graph this))))
+                )
+            #_"boolean" hasReceiver (and (not= opcode Bytecodes'INVOKEDYNAMIC) (not (#_"ResolvedJavaMethod" .isStatic target)))
+            #_"[ValueNode]" args (FrameStateBuilder''popArguments-2 (:frameState this), (#_"Signature" .getParameterCount (#_"ResolvedJavaMethod" .getSignature target), hasReceiver))
+        ]
+            (BytecodeParser''appendInvoke-4 this, (if hasReceiver :InvokeKind'Virtual :InvokeKind'Static), target, args)
+
+            true
+        )
+    )
+
+    (defn- #_"this" BytecodeParser''genInvokeDynamic-2 [#_"BytecodeParser" this, #_"JavaMethod" target]
+        (when-not (and (instance? ResolvedJavaMethod target) (BytecodeParser''genDynamicInvokeHelper-4 this, target, (BytecodeStream''readCPI4-1 (:stream this)), Bytecodes'INVOKEDYNAMIC)) => this
+            (BytecodeParser''handleUnresolvedInvoke-3 this, target, :InvokeKind'Static)
+        )
+    )
+
+    (defn- #_"this" BytecodeParser''genInvokeDynamic-3 [#_"BytecodeParser" this, #_"int" cpi, #_"int" opcode]
+        (BytecodeParser''genInvokeDynamic-2 this, (BytecodeParser''lookupMethod-3 this, cpi, opcode))
+    )
+
+    (defn- #_"boolean" BytecodeParser''genInvokeVirtualHelper-2 [#_"BytecodeParser" this, #_"JavaMethod" target]
+        (and (BytecodeParser'callTargetIsResolved-1 target)
+            (let [
+                #_"int" cpi (BytecodeStream''readCPI-1 (:stream this))
+            ]
+                (or (BytecodeParser''genDynamicInvokeHelper-4 this, target, cpi, Bytecodes'INVOKEVIRTUAL)
+                    (let [
+                        #_"[ValueNode]" args (FrameStateBuilder''popArguments-2 (:frameState this), (#_"Signature" .getParameterCount (#_"JavaMethod" .getSignature target), true))
+                    ]
+                        (BytecodeParser''appendInvoke-4 this, :InvokeKind'Virtual, target, args)
+                        true
+                    )
+                )
             )
         )
     )
 
-    (defn #_"InvokeNode" BytecodeParser''createInvoke-4 [#_"BytecodeParser" this, #_"int" invokeBci, #_"CallTargetNode" callTarget, #_"JavaKind" resultType]
-        (let [
-            #_"InvokeNode" invoke (BytecodeParser''append-2 this, (InvokeNode'new-2 callTarget, invokeBci))
-        ]
-            (§ ass! this (update this :frameState FrameStateBuilder''pushReturn-3 resultType, invoke))
-            (StateSplit'''setStateAfter-2 invoke, (BytecodeParser''createFrameState-3 this, (:nextBCI (:stream this)), invoke))
-            invoke
+    (defn- #_"this" BytecodeParser''genInvokeVirtual-2 [#_"BytecodeParser" this, #_"JavaMethod" target]
+        (when-not (BytecodeParser''genInvokeVirtualHelper-2 this, target) => this
+            (BytecodeParser''handleUnresolvedInvoke-3 this, target, :InvokeKind'Virtual)
         )
+    )
+
+    (defn- #_"this" BytecodeParser''genInvokeVirtual-3 [#_"BytecodeParser" this, #_"int" cpi, #_"int" opcode]
+        (BytecodeParser''genInvokeVirtual-2 this, (BytecodeParser''lookupMethod-3 this, cpi, opcode))
+    )
+
+    (defn- #_"this" BytecodeParser''genInvokeSpecial-2 [#_"BytecodeParser" this, #_"JavaMethod" target]
+        (when (BytecodeParser'callTargetIsResolved-1 target) => (BytecodeParser''handleUnresolvedInvoke-3 this, target, :InvokeKind'Special)
+            (BytecodeParser''appendInvoke-4 this, :InvokeKind'Special, target, (FrameStateBuilder''popArguments-2 (:frameState this), (#_"Signature" .getParameterCount (#_"JavaMethod" .getSignature target), true)))
+            this
+        )
+    )
+
+    (defn- #_"this" BytecodeParser''genInvokeSpecial-3 [#_"BytecodeParser" this, #_"int" cpi, #_"int" opcode]
+        (BytecodeParser''genInvokeSpecial-2 this, (BytecodeParser''lookupMethod-3 this, cpi, opcode))
+    )
+
+    ;;;
+     ; Gets the kind of invocation currently being parsed.
+     ;;
+    #_unused
+    (defn #_"InvokeKind" BytecodeParser''getInvokeKind-1 [#_"BytecodeParser" this]
+        (when (some? (:currentInvoke this)) (:kind (:currentInvoke this)))
+    )
+
+    ;;;
+     ; Gets the return type of the invocation currently being parsed.
+     ;;
+    (defn #_"JavaType" BytecodeParser''getInvokeReturnType-1 [#_"BytecodeParser" this]
+        (when (some? (:currentInvoke this)) (:returnType (:currentInvoke this)))
+    )
+
+    ;;;
+     ; Gets a version of a given value that has a {@linkplain StampTool#isPointerNonNull(ValueNode) non-nil} stamp.
+     ;;
+    (defn- #_"ValueNode" BytecodeParser''nullCheckedValue-3 [#_"BytecodeParser" this, #_"ValueNode" value, #_"DeoptimizationAction" action]
+        (when-not (StampTool'isPointerNeverNull-1 (:stamp value)) => value
+            (let [
+                #_"LogicNode" logic (Graph''add-2 (:graph this), (IsNullNode'create-1 value))
+                #_"Stamp" stamp (Stamp'''join-2 (:stamp value), StampFactory'objectNonNullStamp)
+                #_"FixedGuardNode" fixedGuard (BytecodeParser''append-2 this, (FixedGuardNode'new-4 logic, DeoptimizationReason/NullCheckException, action, true))
+                #_"ValueNode" nonNullReceiver (Graph''addOrUniqueWithInputs-2 (:graph this), (PiNode'create-3 value, stamp, fixedGuard))
+            ]
+                ;; TODO Propogating the non-nil into the frame state would remove subsequent nil-checks on the same value.
+                ;;
+                ;; frameState.replace(value, nonNullReceiver);
+                nonNullReceiver
+            )
+        )
+    )
+
+    (defn- #_"ValueNode" BytecodeParser''nullCheckedValue-2 [#_"BytecodeParser" this, #_"ValueNode" value]
+        (BytecodeParser''nullCheckedValue-3 this, value, DeoptimizationAction/InvalidateReprofile)
+    )
+
+    ;;;
+     ; Gets the receiver value with optional nil-check.
+     ;;
+    (defn- #_"ValueNode" BytecodeParser''getReceiver-3 [#_"BytecodeParser" this, #_"[ValueNode]" args, #_"boolean" nil-check?]
+        (when nil-check? => (nth args 0)
+            (let [
+                #_"ValueNode" value (BytecodeParser''nullCheckedValue-2 this, (nth args 0))
+            ]
+                (when-not (= value (nth args 0))
+                    (§ ass! args (assoc' args 0 value))
+                )
+                value
+            )
+        )
+    )
+
+    (defn- #_"ValueNode" BytecodeParser''genLoadField-3 [#_"BytecodeParser" this, #_"ValueNode" receiver, #_"ResolvedJavaField" field]
+        (let [
+            #_"Stamp" stamp (Plugins''getOverridingStamp-4 HotSpot'plugins, this, (#_"ResolvedJavaField" .getType field), false)
+        ]
+            (if (some? stamp)
+                (LoadFieldNode'createOverrideStamp-5 stamp, receiver, field, false, false)
+                (LoadFieldNode'create-4 receiver, field, false, false)
+            )
+        )
+    )
+
+    (defn- #_"this" BytecodeParser''genGetField-3r [#_"BytecodeParser" this, #_"ResolvedJavaField" resolvedField, #_"ValueNode" receiver]
+        (or
+            (loop-when [#_"seq" s (seq (:nodePlugins HotSpot'plugins))] (some? s)
+                (when (NodePlugin'''handleLoadField-4 (first s), this, receiver, resolvedField) => (recur (next s))
+                    this
+                )
+            )
+            (let [
+                #_"ValueNode" fieldRead (BytecodeParser''append-2 this, (BytecodeParser''genLoadField-3 this, receiver, resolvedField))
+                _
+                    (when (and (= (#_"ResolvedJavaType" .getName (#_"ResolvedJavaField" .getDeclaringClass resolvedField)) "Ljava/lang/ref/Reference;") (= (#_"ResolvedJavaField" .getName resolvedField) "referent"))
+                        (BytecodeParser''append-2 this, (MembarNode'new-2 0, (FieldLocationIdentity'new-1 resolvedField)))
+                    )
+                #_"JavaKind" fieldKind (#_"ResolvedJavaField" .getJavaKind resolvedField)
+            ]
+                (if (and (#_"ResolvedJavaField" .isVolatile resolvedField) (satisfies? LoadFieldNode fieldRead))
+                    (let [
+                        #_"StateSplitProxyNode" readProxy (BytecodeParser''append-2 this, (StateSplitProxyNode'new-1 fieldRead))
+                    ]
+                        (§ ass! this (update this :frameState FrameStateBuilder''push-3 fieldKind, readProxy))
+                        (StateSplit'''setStateAfter-2 readProxy, (FrameStateBuilder''create-3 (:frameState this), (:nextBCI (:stream this)), readProxy))
+                        this
+                    )
+                    (update this :frameState FrameStateBuilder''push-3 fieldKind, fieldRead)
+                )
+            )
+        )
+    )
+
+    (defn- #_"this" BytecodeParser''genGetField-3f [#_"BytecodeParser" this, #_"JavaField" field, #_"ValueNode" receiver]
+        (when (instance? ResolvedJavaField field) => (BytecodeParser''handleUnresolvedLoadField-3 this, field, receiver)
+            (BytecodeParser''genGetField-3r this, field, receiver)
+        )
+    )
+
+    (defn- #_"this" BytecodeParser''genGetField-4 [#_"BytecodeParser" this, #_"int" cpi, #_"int" opcode, #_"ValueNode" receiver]
+        (BytecodeParser''genGetField-3f this, (BytecodeParser''lookupField-3 this, cpi, opcode), receiver)
+    )
+
+    (defn- #_"this" BytecodeParser''genGetField-3i [#_"BytecodeParser" this, #_"int" cpi, #_"int" opcode]
+        (BytecodeParser''genGetField-4 this, cpi, opcode, (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Object))
     )
 
     (defn- #_"ValueNode" BytecodeParser''processReturnValue-3 [#_"BytecodeParser" this, #_"ValueNode" value, #_"JavaKind" kind]
@@ -19757,28 +19604,65 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"void" BytecodeParser''synchronizedEpilogue-4 [#_"BytecodeParser" this, #_"int" bci, #_"ValueNode" currentReturnValue, #_"JavaKind" currentReturnValueKind]
-        (when (#_"ResolvedJavaMethod" .isSynchronized (:method this))
-            (when (some? currentReturnValue)
-                (§ ass! this (update this :frameState FrameStateBuilder''push-3 currentReturnValueKind, currentReturnValue))
-            )
-            (BytecodeParser''genMonitorExit-4 this, (:methodSynchronizedObject this), currentReturnValue, bci)
+    (defn- #_"this" BytecodeParser''genMonitorEnter-3 [#_"BytecodeParser" this, #_"ValueNode" x, #_"int" bci]
+        (let [
+            #_"MonitorIdNode" monitorId (Graph''add-2 (:graph this), (MonitorIdNode'new-1 (FrameStateBuilder''lockDepth-2 (:frameState this), true)))
+            #_"MonitorEnterNode" monitorEnter (BytecodeParser''append-2 this, (MonitorEnterNode'new-2 x, monitorId))
+            this (update this :frameState FrameStateBuilder''pushLock-3 x, monitorId)
+        ]
+            (StateSplit'''setStateAfter-2 monitorEnter, (BytecodeParser''createFrameState-3 this, bci, monitorEnter))
+            this
         )
-        (when-not (zero? (FrameStateBuilder''lockDepth-2 (:frameState this), false))
-            (throw! "unbalanced monitors: too few exits exiting frame")
-        )
-        nil
     )
 
-    (defn- #_"void" BytecodeParser''beforeReturn-3 [#_"BytecodeParser" this, #_"ValueNode" x, #_"JavaKind" kind]
+    (defn- #_"this" BytecodeParser''genMonitorExit-4 [#_"BytecodeParser" this, #_"ValueNode" x, #_"ValueNode" escapedReturnValue, #_"int" bci]
+        (let [
+            _
+                (when (zero? (FrameStateBuilder''lockDepth-2 (:frameState this), false))
+                    (throw! "unbalanced monitors: too many exits")
+                )
+            #_"MonitorIdNode" monitorId (FrameStateBuilder''peekMonitorId-1 (:frameState this))
+            #_"ValueNode" lockedObject (FrameStateBuilder''popLock-1 (:frameState this))
+            _
+                (when-not (= (GraphUtil'originalValue-1 lockedObject) (GraphUtil'originalValue-1 x))
+                    (throw! (str "unbalanced monitors: mismatch at monitorexit, " (GraphUtil'originalValue-1 x) " != " (GraphUtil'originalValue-1 lockedObject)))
+                )
+            #_"MonitorExitNode" monitorExit (BytecodeParser''append-2 this, (MonitorExitNode'new-3 lockedObject, monitorId, escapedReturnValue))
+        ]
+            (StateSplit'''setStateAfter-2 monitorExit, (BytecodeParser''createFrameState-3 this, bci, monitorExit))
+            this
+        )
+    )
+
+    (defn- #_"this" BytecodeParser''synchronizedEpilogue-4 [#_"BytecodeParser" this, #_"int" bci, #_"ValueNode" currentReturnValue, #_"JavaKind" currentReturnValueKind]
+        (let [
+            this
+                (when (#_"ResolvedJavaMethod" .isSynchronized (:method this)) => this
+                    (let [
+                        this
+                            (when (some? currentReturnValue) => this
+                                (update this :frameState FrameStateBuilder''push-3 currentReturnValueKind, currentReturnValue)
+                            )
+                    ]
+                        (BytecodeParser''genMonitorExit-4 this, (:methodSynchronizedObject this), currentReturnValue, bci)
+                    )
+                )
+        ]
+            (when-not (zero? (FrameStateBuilder''lockDepth-2 (:frameState this), false))
+                (throw! "unbalanced monitors: too few exits exiting frame")
+            )
+            this
+        )
+    )
+
+    (defn- #_"this" BytecodeParser''beforeReturn-3 [#_"BytecodeParser" this, #_"ValueNode" x, #_"JavaKind" kind]
         (when (:finalBarrierRequired this)
             (BytecodeParser''append-2 this, (FinalFieldBarrierNode'new-1 (:originalReceiver this)))
         )
         (BytecodeParser''synchronizedEpilogue-4 this, BytecodeFrame/AFTER_BCI, x, kind)
-        nil
     )
 
-    (defn #_"this" BytecodeParser''genReturn-3 [#_"BytecodeParser" this, #_"ValueNode" returnVal, #_"JavaKind" returnKind]
+    (defn- #_"this" BytecodeParser''genReturn-3 [#_"BytecodeParser" this, #_"ValueNode" returnVal, #_"JavaKind" returnKind]
         (when (and (BytecodeParser''parsingIntrinsic-1 this) (satisfies? StateSplit returnVal) (StateSplit'''hasSideEffect-1 returnVal))
             (let [
                 #_"FrameState" stateAfter (:stateAfter returnVal)
@@ -19795,8 +19679,8 @@ ZeroExtendNode'new-4
         (let [
             #_"ValueNode" realReturnVal (BytecodeParser''processReturnValue-3 this, returnVal, returnKind)
             this (update this :frameState FrameStateBuilder''clearStack-1)
+            this (BytecodeParser''beforeReturn-3 this, realReturnVal, returnKind)
         ]
-            (BytecodeParser''beforeReturn-3 this, realReturnVal, returnKind)
             (if (some? (:parent this))
                 (let [
                     this (update this :returnDataList conj' (ReturnToCallerData'new-2 realReturnVal, (:lastInstr this)))
@@ -19811,37 +19695,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"void" BytecodeParser''genMonitorEnter-3 [#_"BytecodeParser" this, #_"ValueNode" x, #_"int" bci]
-        (let [
-            #_"MonitorIdNode" monitorId (Graph''add-2 (:graph this), (MonitorIdNode'new-1 (FrameStateBuilder''lockDepth-2 (:frameState this), true)))
-            #_"MonitorEnterNode" monitorEnter (BytecodeParser''append-2 this, (MonitorEnterNode'new-2 x, monitorId))
-        ]
-            (§ ass! this (update this :frameState FrameStateBuilder''pushLock-3 x, monitorId))
-            (StateSplit'''setStateAfter-2 monitorEnter, (BytecodeParser''createFrameState-3 this, bci, monitorEnter))
-        )
-        nil
-    )
-
-    (defn #_"void" BytecodeParser''genMonitorExit-4 [#_"BytecodeParser" this, #_"ValueNode" x, #_"ValueNode" escapedReturnValue, #_"int" bci]
-        (when (zero? (FrameStateBuilder''lockDepth-2 (:frameState this), false))
-            (throw! "unbalanced monitors: too many exits")
-        )
-        (let [
-            #_"MonitorIdNode" monitorId (FrameStateBuilder''peekMonitorId-1 (:frameState this))
-            #_"ValueNode" lockedObject (FrameStateBuilder''popLock-1 (:frameState this))
-        ]
-            (when-not (= (GraphUtil'originalValue-1 lockedObject) (GraphUtil'originalValue-1 x))
-                (throw! (str "unbalanced monitors: mismatch at monitorexit, " (GraphUtil'originalValue-1 x) " != " (GraphUtil'originalValue-1 lockedObject)))
-            )
-            (let [
-                #_"MonitorExitNode" monitorExit (BytecodeParser''append-2 this, (MonitorExitNode'new-3 lockedObject, monitorId, escapedReturnValue))
-            ]
-                (StateSplit'''setStateAfter-2 monitorExit, (BytecodeParser''createFrameState-3 this, bci, monitorExit))
-            )
-        )
-        nil
-    )
-
     (defn- #_"ConstantNode" BytecodeParser''getJsrConstant-2 [#_"BytecodeParser" this, #_"long" bci]
         (let [
             #_"JavaConstant" nextBciConstant (RawConstant. bci)
@@ -19850,7 +19703,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"void" BytecodeParser''genJsr-2 [#_"BytecodeParser" this, #_"int" dest]
+    (defn- #_"this" BytecodeParser''genJsr-2 [#_"BytecodeParser" this, #_"int" dest]
         (let [
             #_"BciBlock" successor (BciBlock''getJsrSuccessor-1 (:currentBlock this))
             #_"JsrScope" scope (BciBlock''getJsrScope-1 (:currentBlock this))
@@ -19862,13 +19715,15 @@ ZeroExtendNode'new-4
             (when-not (= (JsrScope''nextReturnAddress-1 (BciBlock''getJsrScope-1 successor)) nextBci)
                 (throw! "unstructured control flow (internal limitation)")
             )
-            (§ ass! this (update this :frameState FrameStateBuilder''push-3 JavaKind/Object, (BytecodeParser''getJsrConstant-2 this, nextBci)))
-            (§ ass! this (BytecodeParser''appendGoto-2 this, successor))
+            (let [
+                this (update this :frameState FrameStateBuilder''push-3 JavaKind/Object, (BytecodeParser''getJsrConstant-2 this, nextBci))
+            ]
+                (BytecodeParser''appendGoto-2 this, successor)
+            )
         )
-        nil
     )
 
-    (defn #_"void" BytecodeParser''genRet-2 [#_"BytecodeParser" this, #_"int" localIndex]
+    (defn- #_"this" BytecodeParser''genRet-2 [#_"BytecodeParser" this, #_"int" localIndex]
         (let [
             #_"BciBlock" successor (BciBlock''getRetSuccessor-1 (:currentBlock this))
             #_"ValueNode" local (FrameStateBuilder''loadLocal-3 (:frameState this), localIndex, JavaKind/Object)
@@ -19879,10 +19734,9 @@ ZeroExtendNode'new-4
         ]
             (BytecodeParser''append-2 this, (FixedGuardNode'new-3 guard, DeoptimizationReason/JavaSubroutineMismatch, DeoptimizationAction/InvalidateReprofile))
             (when (= (BciBlock''getJsrScope-1 successor) (JsrScope''pop-1 scope)) => (throw! "unstructured control flow (ret leaves more than one scope)")
-                (§ ass! this (BytecodeParser''appendGoto-2 this, successor))
+                (BytecodeParser''appendGoto-2 this, successor)
             )
         )
-        nil
     )
 
     ;;;
@@ -19891,18 +19745,10 @@ ZeroExtendNode'new-4
      ; @return an array of size successorCount with the accumulated probability for each successor
      ;;
     (defn- #_"[double]" BytecodeParser'successorProbabilites-3 [#_"int" successorCount, #_"int*" keySuccessors, #_"double*" keyProbabilities]
-        (let [
-            #_"[double]" probability (vec (repeat successorCount 0.0))
-            _
-                (dotimes [#_"int" i (count keySuccessors)]
-                    (§ ass! probability (update' probability (nth keySuccessors i) + (nth keyProbabilities i)))
-                )
-        ]
-            probability
-        )
+        (reduce #(update' %1 (nth keySuccessors %2) + (nth keyProbabilities %2)) (vec (repeat successorCount 0.0)) (range (count keySuccessors)))
     )
 
-    (defn #_"this" BytecodeParser''genIntegerSwitch-6 [#_"BytecodeParser" this, #_"ValueNode" value, #_"BciBlock*" actualSuccessors, #_"[int]" keys, #_"[double]" keyProbabilities, #_"[int]" keySuccessors]
+    (defn- #_"this" BytecodeParser''genIntegerSwitch-6 [#_"BytecodeParser" this, #_"ValueNode" value, #_"BciBlock*" actualSuccessors, #_"[int]" keys, #_"[double]" keyProbabilities, #_"[int]" keySuccessors]
         (if (satisfies? ConstantNode value)
             (let [
                 #_"int" constantValue (#_"JavaConstant" .asInt (:value value))
@@ -19922,10 +19768,6 @@ ZeroExtendNode'new-4
                 this
             )
         )
-    )
-
-    (defn #_"ConstantNode" BytecodeParser''appendConstant-2 [#_"BytecodeParser" this, #_"JavaConstant" constant]
-        (ConstantNode'forConstant-2c constant, (:graph this))
     )
 
     (defn- #_"this" BytecodeParser''updateLastInstruction-2 [#_"BytecodeParser" this, #_"ValueNode" node]
@@ -19958,100 +19800,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"void" BytecodeParser''setMergeStateAfter-3 [#_"BytecodeParser" this, #_"BciBlock" block, #_"FixedWithNextNode" firstInstruction]
-        (when (nil? (:stateAfter firstInstruction))
-            (StateSplit'''setStateAfter-2 firstInstruction, (BytecodeParser''createFrameState-3 this, (:startBci block), firstInstruction))
-        )
-        nil
-    )
-
-    (defn #_"this" BytecodeParser''processBlock-2 [#_"BytecodeParser" this, #_"BciBlock" block]
-        ;; ignore blocks that have no predecessors by the time their bytecodes are parsed
-        (let [
-            #_"FixedWithNextNode" firstInstruction (get (:firstInstructions this) (:id block))
-        ]
-            (when (some? firstInstruction) => this
-                (let [
-                    this (assoc this :lastInstr firstInstruction)
-                    this (assoc this :frameState (get (:entryStates this) (:id block)))
-                    this (BytecodeParser''setCurrentFrameState-2 this, (:frameState this))
-                    this (assoc this :currentBlock block)
-                ]
-                    (when (satisfies? AbstractMergeNode firstInstruction)
-                        (BytecodeParser''setMergeStateAfter-3 this, block, firstInstruction)
-                    )
-                    (BytecodeParser''iterateBytecodesForBlock-2 this, block)
-                )
-            )
-        )
-    )
-
-    (defn- #_"LoopBeginNode" BytecodeParser''appendLoopBegin-3 [#_"BytecodeParser" this, #_"FixedWithNextNode" fixedWithNext, #_"int" startBci]
-        (let [
-            #_"EndNode" preLoopEnd (Graph''add-2 (:graph this), (EndNode'new-0))
-            #_"LoopBeginNode" loopBegin (Graph''add-2 (:graph this), (LoopBeginNode'new-0))
-            loopBegin
-                (when (BytecodeParser''parsingIntrinsic-1 this) => loopBegin
-                    (LoopBeginNode''disableSafepoint-1 loopBegin)
-                )
-        ]
-            (§ ass! fixedWithNext (FixedWithNextNode''setNext-2 fixedWithNext, preLoopEnd))
-            ;; Add the single non-loop predecessor of the loop header.
-            (AbstractMergeNode''addForwardEnd-2 loopBegin, preLoopEnd)
-            loopBegin
-        )
-    )
-
-    (defn #_"this" BytecodeParser''iterateBytecodesForBlock-2 [#_"BytecodeParser" this, #_"BciBlock" block]
-        (let [
-            this
-                (if (:isLoopHeader block)
-                    ;; Create the loop header block, which later will merge the backward branches of the loop.
-                    (let [
-                        this (assoc this :controlFlowSplit true)
-                        #_"LoopBeginNode" loopBegin (BytecodeParser''appendLoopBegin-3 this, (:lastInstr this), (:startBci block))
-                        this (assoc this :lastInstr loopBegin)
-                    ]
-                        ;; Create phi functions for all local variables and operand stack slots.
-                        (FrameStateBuilder''insertLoopPhis-6 (:frameState this), (:liveness this), (:loopId block), loopBegin, false, false)
-                        (StateSplit'''setStateAfter-2 loopBegin, (BytecodeParser''createFrameState-3 this, (:startBci block), loopBegin))
-                        ;; We have seen all forward branches. All subsequent backward branches will merge to the
-                        ;; loop header. This ensures that the loop header has exactly one non-loop predecessor.
-                        (§ ass! this (assoc-in this [:firstInstructions (:id block)] loopBegin))
-                        ;; We need to preserve the frame state builder of the loop header so that we can merge
-                        ;; values for phi functions, so make a copy of it.
-                        (assoc-in this [:entryStates (:id block)] (FrameStateBuilder'copy-1 (:frameState this)))
-                    )
-                    (when (satisfies? MergeNode (:lastInstr this)) => this
-                        ;; All inputs of non-loop phi nodes are known by now. We can infer the stamp
-                        ;; for the phi, so that parsing continues with more precise type information.
-                        (FrameStateBuilder''inferPhiStamps-2 (:frameState this), (:lastInstr this))
-                        this
-                    )
-                )
-            #_"int" endBCI (BytecodeStream''endBCI-1 (:stream this))
-            this (update this :stream BytecodeStream''setBCI-2 (:startBci block))
-        ]
-            (loop-when [this this #_"int" bci (:startBci block)] (< bci endBCI) => this
-                (let [
-                    this (BytecodeParser''processBytecode-3 this, bci, (BytecodeStream''currentBC-1 (:stream this)))
-                ]
-                    (when (and (some? (:lastInstr this)) (nil? (:next (:lastInstr this)))) => this
-                        (let [
-                            this (update this :stream BytecodeStream''next-1)
-                            bci (:curBCI (:stream this))
-                        ]
-                            (when (< (:endBci block) bci endBCI) => (recur this bci)
-                                ;; we fell through to the next block, add a goto and break
-                                (BytecodeParser''appendGoto-2 this, (BciBlock''getSuccessor-2 block, 0))
-                            )
-                        )
-                    )
-                )
-            )
-        )
-    )
-
     (defn- #_"LogicNode" BytecodeParser'createLogicNode-3 [#_"CanonicalCondition" condition, #_"ValueNode" a, #_"ValueNode" b]
         (condp = condition
             CanonicalCondition'EQ
@@ -20064,45 +19812,14 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"double" BytecodeParser'getProfileProbability-1 [#_"boolean" negate?]
-        0.5
-    )
-
-    (defn- #_"double" BytecodeParser''clampProbability-2 [#_"BytecodeParser" this, #_"double" probability]
-        (when-not (OptimisticOptimizations''removeNeverExecutedCode-1 (:optimisticOpts this)) => probability
-            (case probability 0.0 0.0000001 1.0 0.999999 probability)
-        )
-    )
-
-    (defn #_"this" BytecodeParser''genIf-4 [#_"BytecodeParser" this, #_"ValueNode" x, #_"Condition" condition, #_"ValueNode" y]
-        (let [
-            #_"BciBlock" then (BciBlock''getSuccessor-2 (:currentBlock this), 0)
-            #_"BciBlock" else (BciBlock''getSuccessor-2 (:currentBlock this), 1)
-        ]
-            (when-not (= then else) => (BytecodeParser''appendGoto-2 this, then)
-                (let [
-                    #_"CanonicalizedCondition" canon (Condition''canonicalize-1 condition)
-                    [x y] (if (:mirror? canon) [y x] [x y])
-                    #_"LogicNode" logic (BytecodeParser'createLogicNode-3 (:canonicalCondition canon), x, y)
-                    [then else] (if (:negate? canon) [else then] [then else])
-                    #_"double" probability (BytecodeParser'getProfileProbability-1 (:negate? canon))
-                    probability (BytecodeParser''clampProbability-2 this, probability)
-                ]
-                    (BytecodeParser''genIf-5 this, logic, then, else, probability)
-                )
-            )
-        )
-    )
-
-    (defn- #_"void" BytecodeParser''genConstantTargetIf-4 [#_"BytecodeParser" this, #_"BciBlock" trueBlock, #_"BciBlock" falseBlock, #_"LogicNode" logic]
+    (defn- #_"this" BytecodeParser''genConstantTargetIf-4 [#_"BytecodeParser" this, #_"BciBlock" trueBlock, #_"BciBlock" falseBlock, #_"LogicNode" logic]
         (let [
             #_"BciBlock" nextBlock (if (:value logic) trueBlock falseBlock)
             #_"int" targetAtStart (BytecodeStream''readUByte-2 (:stream this), (:startBci nextBlock))
         ]
             ;; If this is an empty block, skip it.
-            (§ ass! this (BytecodeParser''appendGoto-2 this, (if (and (= targetAtStart Bytecodes'GOTO) (= (:predecessorCount nextBlock) 1)) (nth (:bciSuccessors nextBlock) 0) nextBlock)))
+            (BytecodeParser''appendGoto-2 this, (if (and (= targetAtStart Bytecodes'GOTO) (= (:predecessorCount nextBlock) 1)) (nth (:bciSuccessors nextBlock) 0) nextBlock))
         )
-        nil
     )
 
     (defn- #_"int" BytecodeParser''checkPositiveIntConstantPushed-2 [#_"BytecodeParser" this, #_"BciBlock" block]
@@ -20165,7 +19882,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"this" BytecodeParser''genIf-5 [#_"BytecodeParser" this, #_"LogicNode" logic, #_"BciBlock" trueBlock, #_"BciBlock" falseBlock, #_"double" probability]
+    (defn- #_"this" BytecodeParser''genIf-5 [#_"BytecodeParser" this, #_"LogicNode" logic, #_"BciBlock" trueBlock, #_"BciBlock" falseBlock, #_"double" probability]
         ;; Remove a logic negation node.
         (let [
             [logic trueBlock falseBlock probability]
@@ -20173,9 +19890,9 @@ ZeroExtendNode'new-4
                     [(Unary'''getValue-1 logic) falseBlock trueBlock (- 1.0 probability)]
                 )
         ]
-            (when-not (satisfies? LogicConstantNode logic) => (do (BytecodeParser''genConstantTargetIf-4 this, trueBlock, falseBlock, logic) this)
+            (when-not (satisfies? LogicConstantNode logic) => (BytecodeParser''genConstantTargetIf-4 this, trueBlock, falseBlock, logic)
                 (let [
-                    logic (if (nil? (:graph logic)) (BytecodeParser''genUnique-2l this, logic) logic)
+                    logic (if (nil? (:graph logic)) (BytecodeParser''genUnique-2 this, logic) logic)
                 ]
                     (cond
                         (BytecodeParser''isNeverExecutedCode-2 this, probability)
@@ -20219,43 +19936,37 @@ ZeroExtendNode'new-4
         )
     )
 
-    ;;;
-     ; Pushes a given value to the frame state stack using an explicit kind. This should be used
-     ; when {@code value.getJavaKind()} is different from the kind that the bytecode instruction
-     ; currently being parsed pushes to the stack.
-     ;
-     ; @param kind the kind to use when type checking this operation
-     ; @param value the value to push to the stack. The value must already have been
-     ;            {@linkplain #append(ValueNode) appended}.
-     ;;
-    (defn #_"void" BytecodeParser''push-3 [#_"BytecodeParser" this, #_"JavaKind" slotKind, #_"ValueNode" value]
-        (§ ass! this (update this :frameState FrameStateBuilder''push-3 slotKind, value))
-        nil
+    (defn- #_"double" BytecodeParser'getProfileProbability-1 [#_"boolean" negate?]
+        0.5
     )
 
-    ;;;
-     ; Creates a snap shot of the current frame state with the BCI of the instruction after the one currently
-     ; being parsed and assigns it to a given {@linkplain StateSplit#hasSideEffect() side effect} node.
-     ;
-     ; @param sideEffect a side effect node just appended to the graph
-     ;;
-    (defn #_"void" BytecodeParser''setStateAfter-2 [#_"BytecodeParser" this, #_"StateSplit" sideEffect]
-        (StateSplit'''setStateAfter-2 sideEffect, (BytecodeParser''createFrameState-3 this, (:nextBCI (:stream this)), sideEffect))
-        nil
+    (defn- #_"double" BytecodeParser''clampProbability-2 [#_"BytecodeParser" this, #_"double" probability]
+        (when-not (OptimisticOptimizations''removeNeverExecutedCode-1 (:optimisticOpts this)) => probability
+            (case probability 0.0 0.0000001 1.0 0.999999 probability)
+        )
     )
 
-    (defn #_"this" BytecodeParser''setCurrentFrameState-2 [#_"BytecodeParser" this, #_"FrameStateBuilder" frameState]
-        (assoc this :frameState frameState)
+    (defn- #_"this" BytecodeParser''genIf-4 [#_"BytecodeParser" this, #_"ValueNode" x, #_"Condition" condition, #_"ValueNode" y]
+        (let [
+            #_"BciBlock" then (BciBlock''getSuccessor-2 (:currentBlock this), 0)
+            #_"BciBlock" else (BciBlock''getSuccessor-2 (:currentBlock this), 1)
+        ]
+            (when-not (= then else) => (BytecodeParser''appendGoto-2 this, then)
+                (let [
+                    #_"CanonicalizedCondition" canon (Condition''canonicalize-1 condition)
+                    [x y] (if (:mirror? canon) [y x] [x y])
+                    #_"LogicNode" logic (BytecodeParser'createLogicNode-3 (:canonicalCondition canon), x, y)
+                    [then else] (if (:negate? canon) [else then] [then else])
+                    #_"double" probability (BytecodeParser'getProfileProbability-1 (:negate? canon))
+                    probability (BytecodeParser''clampProbability-2 this, probability)
+                ]
+                    (BytecodeParser''genIf-5 this, logic, then, else, probability)
+                )
+            )
+        )
     )
 
-    ;;;
-     ; Gets the index of the bytecode instruction currently being parsed.
-     ;;
-    (defn #_"int" BytecodeParser''bci-1 [#_"BytecodeParser" this]
-        (:curBCI (:stream this))
-    )
-
-    (defn #_"this" BytecodeParser''loadLocal-3 [#_"BytecodeParser" this, #_"int" index, #_"JavaKind" kind]
+    (defn- #_"this" BytecodeParser''loadLocal-3 [#_"BytecodeParser" this, #_"int" index, #_"JavaKind" kind]
         (let [
             #_"ValueNode" value (FrameStateBuilder''loadLocal-3 (:frameState this), index, kind)
         ]
@@ -20263,7 +19974,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"this" BytecodeParser''loadLocalObject-2 [#_"BytecodeParser" this, #_"int" index]
+    (defn- #_"this" BytecodeParser''loadLocalObject-2 [#_"BytecodeParser" this, #_"int" index]
         (let [
             #_"ValueNode" value (FrameStateBuilder''loadLocal-3 (:frameState this), index, JavaKind/Object)
             #_"int" nextBCI (:nextBCI (:stream this))
@@ -20274,19 +19985,17 @@ ZeroExtendNode'new-4
                     this (update this :stream BytecodeStream''next-1)
                 ]
                     (BytecodeParser''genGetField-4 this, (BytecodeStream''readCPI-1 (:stream this)), Bytecodes'GETFIELD, value)
-                    this
                 )
                 (update this :frameState FrameStateBuilder''push-3 JavaKind/Object, value)
             )
         )
     )
 
-    (defn #_"this" BytecodeParser''storeLocal-3 [#_"BytecodeParser" this, #_"JavaKind" kind, #_"int" index]
+    (defn- #_"this" BytecodeParser''storeLocal-3 [#_"BytecodeParser" this, #_"JavaKind" kind, #_"int" index]
         (let [
             #_"ValueNode" value (FrameStateBuilder''pop-2 (:frameState this), kind)
         ]
-            (§ ass! (:frameState this) (FrameStateBuilder''storeLocal-4 (:frameState this), index, kind, value))
-            this
+            (update this :frameState FrameStateBuilder''storeLocal-4 index, kind, value)
         )
     )
 
@@ -20296,12 +20005,11 @@ ZeroExtendNode'new-4
         ]
             (condp instance? constant
                 JavaType ;; this is a load of class constant which might be unresolved
-                    (if (instance? ResolvedJavaType constant)
-                        (update this :frameState FrameStateBuilder''push-3 JavaKind/Object, (BytecodeParser''appendConstant-2 this, (#_"ConstantReflectionProvider" .asJavaClass HotSpot'constantReflection, constant)))
-                        (BytecodeParser''handleUnresolvedLoadConstant-2 this, constant)
+                    (when (instance? ResolvedJavaType constant) => (BytecodeParser''handleUnresolvedLoadConstant-2 this, constant)
+                        (update this :frameState FrameStateBuilder''push-3 JavaKind/Object, (ConstantNode'forConstant-2c (#_"ConstantReflectionProvider" .asJavaClass HotSpot'constantReflection, constant), (:graph this)))
                     )
                 JavaConstant
-                    (update this :frameState FrameStateBuilder''push-3 (#_"JavaConstant" .getJavaKind constant), (BytecodeParser''appendConstant-2 this, constant))
+                    (update this :frameState FrameStateBuilder''push-3 (#_"JavaConstant" .getJavaKind constant), (ConstantNode'forConstant-2c constant, (:graph this)))
             )
         )
     )
@@ -20342,7 +20050,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"void" BytecodeParser''genArithmeticOp-3 [#_"BytecodeParser" this, #_"JavaKind" kind, #_"int" opcode]
+    (defn- #_"this" BytecodeParser''genArithmeticOp-3 [#_"BytecodeParser" this, #_"JavaKind" kind, #_"int" opcode]
         (let [
             #_"ValueNode" y (FrameStateBuilder''pop-2 (:frameState this), kind)
             #_"ValueNode" x (FrameStateBuilder''pop-2 (:frameState this), kind)
@@ -20353,12 +20061,11 @@ ZeroExtendNode'new-4
                     [Bytecodes'IMUL Bytecodes'LMUL] (MulNode'create-2 x, y)
                 )
         ]
-            (§ ass! this (update this :frameState FrameStateBuilder''push-3 kind, (BytecodeParser''append-2 this, v)))
+            (update this :frameState FrameStateBuilder''push-3 kind, (BytecodeParser''append-2 this, v))
         )
-        nil
     )
 
-    (defn- #_"void" BytecodeParser''genIntegerDivOp-3 [#_"BytecodeParser" this, #_"JavaKind" kind, #_"int" opcode]
+    (defn- #_"this" BytecodeParser''genIntegerDivOp-3 [#_"BytecodeParser" this, #_"JavaKind" kind, #_"int" opcode]
         (let [
             #_"ValueNode" y (FrameStateBuilder''pop-2 (:frameState this), kind)
             #_"ValueNode" x (FrameStateBuilder''pop-2 (:frameState this), kind)
@@ -20368,21 +20075,19 @@ ZeroExtendNode'new-4
                     [Bytecodes'IREM Bytecodes'LREM] (SignedRemNode'create-2 x, y)
                 )
         ]
-            (§ ass! this (update this :frameState FrameStateBuilder''push-3 kind, (BytecodeParser''append-2 this, v)))
+            (update this :frameState FrameStateBuilder''push-3 kind, (BytecodeParser''append-2 this, v))
         )
-        nil
     )
 
-    (defn- #_"void" BytecodeParser''genNegateOp-2k [#_"BytecodeParser" this, #_"JavaKind" kind]
+    (defn- #_"this" BytecodeParser''genNegateOp-2k [#_"BytecodeParser" this, #_"JavaKind" kind]
         (let [
             #_"ValueNode" x (FrameStateBuilder''pop-2 (:frameState this), kind)
         ]
-            (§ ass! this (update this :frameState FrameStateBuilder''push-3 kind, (BytecodeParser''append-2 this, (NegateNode'create-1 x))))
+            (update this :frameState FrameStateBuilder''push-3 kind, (BytecodeParser''append-2 this, (NegateNode'create-1 x)))
         )
-        nil
     )
 
-    (defn- #_"void" BytecodeParser''genShiftOp-3 [#_"BytecodeParser" this, #_"JavaKind" kind, #_"int" opcode]
+    (defn- #_"this" BytecodeParser''genShiftOp-3 [#_"BytecodeParser" this, #_"JavaKind" kind, #_"int" opcode]
         (let [
             #_"ValueNode" s (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Int)
             #_"ValueNode" x (FrameStateBuilder''pop-2 (:frameState this), kind)
@@ -20393,12 +20098,11 @@ ZeroExtendNode'new-4
                     [Bytecodes'IUSHR Bytecodes'LUSHR] (UnsignedRightShiftNode'create-2 x, s)
                 )
         ]
-            (§ ass! this (update this :frameState FrameStateBuilder''push-3 kind, (BytecodeParser''append-2 this, v)))
+            (update this :frameState FrameStateBuilder''push-3 kind, (BytecodeParser''append-2 this, v))
         )
-        nil
     )
 
-    (defn- #_"void" BytecodeParser''genLogicOp-3 [#_"BytecodeParser" this, #_"JavaKind" kind, #_"int" opcode]
+    (defn- #_"this" BytecodeParser''genLogicOp-3 [#_"BytecodeParser" this, #_"JavaKind" kind, #_"int" opcode]
         (let [
             #_"ValueNode" y (FrameStateBuilder''pop-2 (:frameState this), kind)
             #_"ValueNode" x (FrameStateBuilder''pop-2 (:frameState this), kind)
@@ -20409,69 +20113,63 @@ ZeroExtendNode'new-4
                     [Bytecodes'IXOR Bytecodes'LXOR] (XorNode'create-2 x, y)
                 )
         ]
-            (§ ass! this (update this :frameState FrameStateBuilder''push-3 kind, (BytecodeParser''append-2 this, v)))
+            (update this :frameState FrameStateBuilder''push-3 kind, (BytecodeParser''append-2 this, v))
         )
-        nil
     )
 
-    (defn- #_"void" BytecodeParser''genCompareOp-2 [#_"BytecodeParser" this, #_"JavaKind" kind]
+    (defn- #_"this" BytecodeParser''genCompareOp-2 [#_"BytecodeParser" this, #_"JavaKind" kind]
         (let [
             #_"ValueNode" y (FrameStateBuilder''pop-2 (:frameState this), kind)
             #_"ValueNode" x (FrameStateBuilder''pop-2 (:frameState this), kind)
         ]
-            (§ ass! this (update this :frameState FrameStateBuilder''push-3 JavaKind/Int, (BytecodeParser''append-2 this, (NormalizeCompareNode'create-3 x, y, JavaKind/Int))))
+            (update this :frameState FrameStateBuilder''push-3 JavaKind/Int, (BytecodeParser''append-2 this, (NormalizeCompareNode'create-3 x, y, JavaKind/Int)))
         )
-        nil
     )
 
-    (defn- #_"void" BytecodeParser''genSignExtend-3k [#_"BytecodeParser" this, #_"JavaKind" from, #_"JavaKind" to]
+    (defn- #_"this" BytecodeParser''genSignExtend-3k [#_"BytecodeParser" this, #_"JavaKind" from, #_"JavaKind" to]
         (let [
             #_"ValueNode" input (FrameStateBuilder''pop-2 (:frameState this), from)
         ]
             (when-not (= from (#_"JavaKind" .getStackKind from))
                 (§ ass input (BytecodeParser''append-2 this, (NarrowNode'create-2 input, (#_"JavaKind" .getBitCount from))))
             )
-            (§ ass! this (update this :frameState FrameStateBuilder''push-3 to, (BytecodeParser''append-2 this, (SignExtendNode'create-2 input, (#_"JavaKind" .getBitCount to)))))
+            (update this :frameState FrameStateBuilder''push-3 to, (BytecodeParser''append-2 this, (SignExtendNode'create-2 input, (#_"JavaKind" .getBitCount to))))
         )
-        nil
     )
 
-    (defn- #_"void" BytecodeParser''genZeroExtend-3k [#_"BytecodeParser" this, #_"JavaKind" from, #_"JavaKind" to]
+    (defn- #_"this" BytecodeParser''genZeroExtend-3k [#_"BytecodeParser" this, #_"JavaKind" from, #_"JavaKind" to]
         (let [
             #_"ValueNode" input (FrameStateBuilder''pop-2 (:frameState this), from)
         ]
             (when-not (= from (#_"JavaKind" .getStackKind from))
                 (§ ass input (BytecodeParser''append-2 this, (NarrowNode'create-2 input, (#_"JavaKind" .getBitCount from))))
             )
-            (§ ass! this (update this :frameState FrameStateBuilder''push-3 to, (BytecodeParser''append-2 this, (ZeroExtendNode'create-2 input, (#_"JavaKind" .getBitCount to)))))
+            (update this :frameState FrameStateBuilder''push-3 to, (BytecodeParser''append-2 this, (ZeroExtendNode'create-2 input, (#_"JavaKind" .getBitCount to))))
         )
-        nil
     )
 
-    (defn- #_"void" BytecodeParser''genNarrow-3k [#_"BytecodeParser" this, #_"JavaKind" from, #_"JavaKind" to]
+    (defn- #_"this" BytecodeParser''genNarrow-3k [#_"BytecodeParser" this, #_"JavaKind" from, #_"JavaKind" to]
         (let [
             #_"ValueNode" input (FrameStateBuilder''pop-2 (:frameState this), from)
         ]
-            (§ ass! this (update this :frameState FrameStateBuilder''push-3 to, (BytecodeParser''append-2 this, (NarrowNode'create-2 input, (#_"JavaKind" .getBitCount to)))))
+            (update this :frameState FrameStateBuilder''push-3 to, (BytecodeParser''append-2 this, (NarrowNode'create-2 input, (#_"JavaKind" .getBitCount to))))
         )
-        nil
     )
 
-    (defn- #_"void" BytecodeParser''genIncrement-1 [#_"BytecodeParser" this]
+    (defn- #_"this" BytecodeParser''genIncrement-1 [#_"BytecodeParser" this]
         (let [
             #_"int" index (BytecodeStream''readLocalIndex-1 (:stream this))
             #_"int" delta (BytecodeStream''readIncrement-1 (:stream this))
             #_"ValueNode" x (FrameStateBuilder''loadLocal-3 (:frameState this), index, JavaKind/Int)
-            #_"ValueNode" y (BytecodeParser''appendConstant-2 this, (JavaConstant/forInt delta))
+            #_"ValueNode" y (ConstantNode'forConstant-2c (JavaConstant/forInt delta), (:graph this))
         ]
-            (§ ass! (:frameState this) (FrameStateBuilder''storeLocal-4 (:frameState this), index, JavaKind/Int, (BytecodeParser''append-2 this, (AddNode'create-2 x, y))))
+            (update this :frameState FrameStateBuilder''storeLocal-4 index, JavaKind/Int, (BytecodeParser''append-2 this, (AddNode'create-2 x, y)))
         )
-        nil
     )
 
     (defn- #_"this" BytecodeParser''genIfZero-2 [#_"BytecodeParser" this, #_"Condition" cond]
         (let [
-            #_"ValueNode" y (BytecodeParser''appendConstant-2 this, JavaConstant/INT_0)
+            #_"ValueNode" y (ConstantNode'forConstant-2c JavaConstant/INT_0, (:graph this))
             #_"ValueNode" x (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Int)
         ]
             (BytecodeParser''genIf-4 this, x, cond, y)
@@ -20480,7 +20178,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"this" BytecodeParser''genIfNull-2 [#_"BytecodeParser" this, #_"Condition" cond]
         (let [
-            #_"ValueNode" y (BytecodeParser''appendConstant-2 this, JavaConstant/NULL_POINTER)
+            #_"ValueNode" y (ConstantNode'forConstant-2c JavaConstant/NULL_POINTER, (:graph this))
             #_"ValueNode" x (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Object)
         ]
             (BytecodeParser''genIf-4 this, x, cond, y)
@@ -20496,7 +20194,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"void" BytecodeParser''genCheckCast-1 [#_"BytecodeParser" this]
+    (defn- #_"this" BytecodeParser''genCheckCast-1 [#_"BytecodeParser" this]
         (let [
             #_"int" cpi (BytecodeStream''readCPI-1 (:stream this))
             #_"JavaType" type (BytecodeParser''lookupType-3 this, cpi, Bytecodes'CHECKCAST)
@@ -20508,13 +20206,13 @@ ZeroExtendNode'new-4
                 ]
                     (loop [#_"seq" s (seq (:nodePlugins HotSpot'plugins))]
                         (if (some? s)
-                            (when-not (NodePlugin'''handleCheckCast-4 (first s), this, object, (:type checkedType))
-                                (recur (next s))
+                            (when (NodePlugin'''handleCheckCast-4 (first s), this, object, (:type checkedType)) => (recur (next s))
+                                this
                             )
                             (let [
                                 #_"ValueNode" castNode
                                     (let [
-                                        #_"LogicNode" logic (BytecodeParser''genUnique-2l this, (InstanceOfNode'createAllowNull-2 checkedType, object))
+                                        #_"LogicNode" logic (BytecodeParser''genUnique-2 this, (InstanceOfNode'createAllowNull-2 checkedType, object))
                                     ]
                                         (if (LogicNode''isTautology-1 logic)
                                             object
@@ -20522,14 +20220,13 @@ ZeroExtendNode'new-4
                                         )
                                     )
                             ]
-                                (§ ass! this (update this :frameState FrameStateBuilder''push-3 JavaKind/Object, castNode))
+                                (update this :frameState FrameStateBuilder''push-3 JavaKind/Object, castNode)
                             )
                         )
                     )
                 )
             )
         )
-        nil
     )
 
     (defn- #_"this" BytecodeParser''genInstanceOf-1 [#_"BytecodeParser" this]
@@ -20549,7 +20246,7 @@ ZeroExtendNode'new-4
                             )
                             (let [
                                 #_"LogicNode" instanceOfNode (InstanceOfNode'create-2 resolvedType, object)
-                                #_"LogicNode" logic (BytecodeParser''genUnique-2l this, instanceOfNode)
+                                #_"LogicNode" logic (BytecodeParser''genUnique-2 this, instanceOfNode)
                                 #_"int" _next (:nextBCI (:stream this))
                                 #_"int" value (BytecodeStream''readUByte-2 (:stream this), _next)
                             ]
@@ -20580,16 +20277,14 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"void" BytecodeParser''genNewInstance-2t [#_"BytecodeParser" this, #_"JavaType" type]
+    (defn- #_"this" BytecodeParser''genNewInstance-2t [#_"BytecodeParser" this, #_"JavaType" type]
         (when (and (instance? ResolvedJavaType type) (#_"ResolvedJavaType" .isInitialized type)) => (BytecodeParser''handleUnresolvedNewInstance-2 this, type)
-            (§ ass! this (update this :frameState FrameStateBuilder''push-3 JavaKind/Object, (BytecodeParser''append-2 this, (NewInstanceNode'new-1 type))))
+            (update this :frameState FrameStateBuilder''push-3 JavaKind/Object, (BytecodeParser''append-2 this, (NewInstanceNode'new-1 type)))
         )
-        nil
     )
 
-    (defn- #_"void" BytecodeParser''genNewInstance-2i [#_"BytecodeParser" this, #_"int" cpi]
+    (defn- #_"this" BytecodeParser''genNewInstance-2i [#_"BytecodeParser" this, #_"int" cpi]
         (BytecodeParser''genNewInstance-2t this, (BytecodeParser''lookupType-3 this, cpi, Bytecodes'NEW))
-        nil
     )
 
     ;;;
@@ -20611,26 +20306,34 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"void" BytecodeParser''genNewPrimitiveArray-2 [#_"BytecodeParser" this, #_"int" typeCode]
+    (defn- #_"this" BytecodeParser''genNewPrimitiveArray-2 [#_"BytecodeParser" this, #_"int" typeCode]
         (let [
             #_"ResolvedJavaType" elementType (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, (BytecodeParser'arrayTypeCodeToClass-1 typeCode))
             #_"ValueNode" length (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Int)
         ]
-            (§ ass! this (update this :frameState FrameStateBuilder''push-3 JavaKind/Object, (BytecodeParser''append-2 this, (NewArrayNode'new-2 elementType, length))))
+            (update this :frameState FrameStateBuilder''push-3 JavaKind/Object, (BytecodeParser''append-2 this, (NewArrayNode'new-2 elementType, length)))
         )
-        nil
     )
 
-    (defn- #_"void" BytecodeParser''genNewObjectArray-2 [#_"BytecodeParser" this, #_"int" cpi]
+    (defn- #_"this" BytecodeParser''genNewObjectArray-2 [#_"BytecodeParser" this, #_"int" cpi]
         (let [
             #_"JavaType" type (BytecodeParser''lookupType-3 this, cpi, Bytecodes'ANEWARRAY)
             #_"ValueNode" length (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Int)
         ]
             (when (instance? ResolvedJavaType type) => (BytecodeParser''handleUnresolvedNewObjectArray-3 this, type, length)
-                (§ ass! this (update this :frameState FrameStateBuilder''push-3 JavaKind/Object, (BytecodeParser''append-2 this, (NewArrayNode'new-2 type, length))))
+                (update this :frameState FrameStateBuilder''push-3 JavaKind/Object, (BytecodeParser''append-2 this, (NewArrayNode'new-2 type, length)))
             )
         )
-        nil
+    )
+
+    (defn- #_"this" BytecodeParser''genStoreField-4 [#_"BytecodeParser" this, #_"ValueNode" receiver, #_"ResolvedJavaField" field, #_"ValueNode" value]
+        (let [
+            #_"StoreFieldNode" storeFieldNode (StoreFieldNode'new-3 receiver, field, value)
+        ]
+            (BytecodeParser''append-2 this, storeFieldNode)
+            (StateSplit'''setStateAfter-2 storeFieldNode, (BytecodeParser''createFrameState-3 this, (:nextBCI (:stream this)), storeFieldNode))
+            this
+        )
     )
 
     (defn- #_"this" BytecodeParser''genPutField-3f [#_"BytecodeParser" this, #_"JavaField" field, #_"ValueNode" value]
@@ -20641,19 +20344,20 @@ ZeroExtendNode'new-4
                 (or
                     (loop-when [#_"seq" s (seq (:nodePlugins HotSpot'plugins))] (some? s)
                         (when (NodePlugin'''handleStoreField-5 (first s), this, receiver, field, value) => (recur (next s))
-                            :done
+                            this
                         )
                     )
-                    (do
-                        (when (and (#_"ResolvedJavaField" .isFinal field) (#_"ResolvedJavaMethod" .isConstructor (:method this)))
-                            (§ ass! this (assoc this :finalBarrierRequired true))
-                        )
+                    (let [
+                        this
+                            (when (and (#_"ResolvedJavaField" .isFinal field) (#_"ResolvedJavaMethod" .isConstructor (:method this))) => this
+                                (assoc this :finalBarrierRequired true)
+                            )
+                    ]
                         (BytecodeParser''genStoreField-4 this, receiver, field, value)
                     )
                 )
             )
         )
-        this
     )
 
     (defn- #_"this" BytecodeParser''genPutField-2 [#_"BytecodeParser" this, #_"JavaField" field]
@@ -20678,63 +20382,58 @@ ZeroExtendNode'new-4
             )
         )
         (if (nil? value)
-            (BytecodeParser''handleUnresolvedLoadField-3 this, field, nil)
-            (BytecodeParser''handleUnresolvedStoreField-4 this, field, value, nil)
+            (§ ass! this (BytecodeParser''handleUnresolvedLoadField-3 this, field, nil))
+            (§ ass! this (BytecodeParser''handleUnresolvedStoreField-4 this, field, value, nil))
         )
         nil
     )
 
-    (defn- #_"void" BytecodeParser''genGetStatic-2 [#_"BytecodeParser" this, #_"JavaField" field]
+    (defn- #_"this" BytecodeParser''genGetStatic-2 [#_"BytecodeParser" this, #_"JavaField" field]
         (let [
             #_"ResolvedJavaField" resolvedField (BytecodeParser''resolveStaticFieldAccess-3 this, field, nil)
         ]
-            (when (some? resolvedField)
+            (when (some? resolvedField) => this
                 (or
                     ;; Javac does not allow the use of "$assertionsDisabled" for a field name as Eclipse does.
                     ;; In this case a suffix is added to the generated field.
                     (when (and (#_"ResolvedJavaField" .isSynthetic resolvedField) (#_"String" .startsWith (#_"ResolvedJavaField" .getName resolvedField), "$assertionsDisabled"))
-                        (§ ass! this (update this :frameState FrameStateBuilder''push-3 (#_"JavaField" .getJavaKind field), (ConstantNode'forBoolean-2 true, (:graph this))))
-                        :done
+                        (update this :frameState FrameStateBuilder''push-3 (#_"JavaField" .getJavaKind field), (ConstantNode'forBoolean-2 true, (:graph this)))
                     )
                     (loop-when [#_"seq" s (seq (:nodePlugins HotSpot'plugins))] (some? s)
                         (when (NodePlugin'''handleLoadStaticField-3 (first s), this, resolvedField) => (recur (next s))
-                            :done
+                            this
                         )
                     )
-                    (§ ass! this (update this :frameState FrameStateBuilder''push-3 (#_"JavaField" .getJavaKind field), (BytecodeParser''append-2 this, (BytecodeParser''genLoadField-3 this, nil, resolvedField))))
+                    (update this :frameState FrameStateBuilder''push-3 (#_"JavaField" .getJavaKind field), (BytecodeParser''append-2 this, (BytecodeParser''genLoadField-3 this, nil, resolvedField)))
                 )
             )
         )
-        nil
     )
 
-    (defn- #_"void" BytecodeParser''genGetStatic-3 [#_"BytecodeParser" this, #_"int" cpi, #_"int" opcode]
+    (defn- #_"this" BytecodeParser''genGetStatic-3 [#_"BytecodeParser" this, #_"int" cpi, #_"int" opcode]
         (BytecodeParser''genGetStatic-2 this, (BytecodeParser''lookupField-3 this, cpi, opcode))
-        nil
     )
 
-    (defn- #_"void" BytecodeParser''genPutStatic-2 [#_"BytecodeParser" this, #_"JavaField" field]
+    (defn- #_"this" BytecodeParser''genPutStatic-2 [#_"BytecodeParser" this, #_"JavaField" field]
         (let [
             #_"ValueNode" value (FrameStateBuilder''pop-2 (:frameState this), (#_"JavaField" .getJavaKind field))
             #_"ResolvedJavaField" resolvedField (BytecodeParser''resolveStaticFieldAccess-3 this, field, value)
         ]
-            (when (some? resolvedField)
+            (when (some? resolvedField) => this
                 (or
                     (loop-when [#_"seq" s (seq (:nodePlugins HotSpot'plugins))] (some? s)
                         (when (NodePlugin'''handleStoreStaticField-4 (first s), this, resolvedField, value) => (recur (next s))
-                            :done
+                            this
                         )
                     )
                     (BytecodeParser''genStoreField-4 this, nil, resolvedField, value)
                 )
             )
         )
-        nil
     )
 
-    (defn- #_"void" BytecodeParser''genPutStatic-3 [#_"BytecodeParser" this, #_"int" cpi, #_"int" opcode]
+    (defn- #_"this" BytecodeParser''genPutStatic-3 [#_"BytecodeParser" this, #_"int" cpi, #_"int" opcode]
         (BytecodeParser''genPutStatic-2 this, (BytecodeParser''lookupField-3 this, cpi, opcode))
-        nil
     )
 
     (defn- #_"[double]" BytecodeParser'switchProbability-2 [#_"int" numberOfCases, #_"int" bci]
@@ -20791,7 +20490,6 @@ ZeroExtendNode'new-4
                         (recur deoptSuccessorIndex nextSuccessorIndex (inc i))
                     )
                 )
-        ]
             ;; When the profile indicates a case is never taken, the above code will cause the case to
             ;; deopt should it be subsequently encountered. However, the case may share code with
             ;; another case that is taken according to the profile.
@@ -20814,98 +20512,95 @@ ZeroExtendNode'new-4
             ;;
             ;; The following code rewires deoptimization stub to existing resolved branch target if
             ;; the target is connected by more than 1 cases.
-            (when (<= 0 deoptSuccessorIndex)
-                (let [
-                    #_"[int]" connectedCases (vec (repeat nextSuccessorIndex 0))
-                    _
+            _
+                (when (<= 0 deoptSuccessorIndex)
+                    (let [
+                        #_"[int]" connectedCases (vec (repeat nextSuccessorIndex 0))
+                        _
+                            (dotimes [#_"int" i nofCasesPlusDefault]
+                                (§ ass! connectedCases (update' connectedCases (nth keySuccessors i) inc))
+                            )
+                    ]
                         (dotimes [#_"int" i nofCasesPlusDefault]
-                            (§ ass! connectedCases (update' connectedCases (nth keySuccessors i) inc))
-                        )
-                ]
-                    (dotimes [#_"int" i nofCasesPlusDefault]
-                        (when (= (nth keySuccessors i) deoptSuccessorIndex)
-                            (let [
-                                #_"int" targetBci (if (< i nofCases) (BytecodeSwitch''targetAt-2 bs, i) (BytecodeSwitch''defaultTarget-1 bs))
-                                #_"SuccessorInfo" info (get bciToBlockSuccessorIndex targetBci)
-                                #_"int" rewiredIndex (:actualIndex info)
-                            ]
-                                (when (and (<= 0 rewiredIndex) (< 1 (nth connectedCases rewiredIndex)))
-                                    (§ ass! keySuccessors (assoc' keySuccessors i (:actualIndex info)))
+                            (when (= (nth keySuccessors i) deoptSuccessorIndex)
+                                (let [
+                                    #_"int" targetBci (if (< i nofCases) (BytecodeSwitch''targetAt-2 bs, i) (BytecodeSwitch''defaultTarget-1 bs))
+                                    #_"SuccessorInfo" info (get bciToBlockSuccessorIndex targetBci)
+                                    #_"int" rewiredIndex (:actualIndex info)
+                                ]
+                                    (when (and (<= 0 rewiredIndex) (< 1 (nth connectedCases rewiredIndex)))
+                                        (§ ass! keySuccessors (assoc' keySuccessors i (:actualIndex info)))
+                                    )
                                 )
                             )
                         )
                     )
                 )
-            )
-
+        ]
             (BytecodeParser''genIntegerSwitch-6 this, value, actualSuccessors, keys, keyProbabilities, keySuccessors)
         )
     )
 
-    (defn #_"boolean" BytecodeParser''isNeverExecutedCode-2 [#_"BytecodeParser" this, #_"double" probability]
-        (and (zero? probability) (OptimisticOptimizations''removeNeverExecutedCode-1 (:optimisticOpts this)))
-    )
-
-    (defn #_"this" BytecodeParser''processBytecode-3 [#_"BytecodeParser" this, #_"int" bci, #_"int" opcode]
+    (defn- #_"this" BytecodeParser''processBytecode-3 [#_"BytecodeParser" this, #_"int" bci, #_"int" opcode]
         (condp =? opcode
-            Bytecodes'NOP             nil ;; nothing to do
-            Bytecodes'ACONST_NULL     (§ ass! this (update this :frameState FrameStateBuilder''push-3 JavaKind/Object, (BytecodeParser''appendConstant-2 this, JavaConstant/NULL_POINTER)))
+            Bytecodes'NOP             this ;; nothing to do
+            Bytecodes'ACONST_NULL     (update this :frameState FrameStateBuilder''push-3 JavaKind/Object, (ConstantNode'forConstant-2c JavaConstant/NULL_POINTER, (:graph this)))
            [Bytecodes'ICONST_M1
             Bytecodes'ICONST_0
             Bytecodes'ICONST_1
             Bytecodes'ICONST_2
             Bytecodes'ICONST_3
             Bytecodes'ICONST_4
-            Bytecodes'ICONST_5]       (§ ass! this (update this :frameState FrameStateBuilder''push-3 JavaKind/Int, (BytecodeParser''appendConstant-2 this, (JavaConstant/forInt (- opcode Bytecodes'ICONST_0)))))
+            Bytecodes'ICONST_5]       (update this :frameState FrameStateBuilder''push-3 JavaKind/Int, (ConstantNode'forConstant-2c (JavaConstant/forInt (- opcode Bytecodes'ICONST_0)), (:graph this)))
            [Bytecodes'LCONST_0
-            Bytecodes'LCONST_1]       (§ ass! this (update this :frameState FrameStateBuilder''push-3 JavaKind/Long, (BytecodeParser''appendConstant-2 this, (JavaConstant/forLong (- opcode Bytecodes'LCONST_0)))))
-            Bytecodes'BIPUSH          (§ ass! this (update this :frameState FrameStateBuilder''push-3 JavaKind/Int, (BytecodeParser''appendConstant-2 this, (JavaConstant/forInt (BytecodeStream''readByte-1 (:stream this))))))
-            Bytecodes'SIPUSH          (§ ass! this (update this :frameState FrameStateBuilder''push-3 JavaKind/Int, (BytecodeParser''appendConstant-2 this, (JavaConstant/forInt (BytecodeStream''readShort-1 (:stream this))))))
+            Bytecodes'LCONST_1]       (update this :frameState FrameStateBuilder''push-3 JavaKind/Long, (ConstantNode'forConstant-2c (JavaConstant/forLong (- opcode Bytecodes'LCONST_0)), (:graph this)))
+            Bytecodes'BIPUSH          (update this :frameState FrameStateBuilder''push-3 JavaKind/Int, (ConstantNode'forConstant-2c (JavaConstant/forInt (BytecodeStream''readByte-1 (:stream this))), (:graph this)))
+            Bytecodes'SIPUSH          (update this :frameState FrameStateBuilder''push-3 JavaKind/Int, (ConstantNode'forConstant-2c (JavaConstant/forInt (BytecodeStream''readShort-1 (:stream this))), (:graph this)))
            [Bytecodes'LDC
             Bytecodes'LDC_W
-            Bytecodes'LDC2_W]         (§ ass! this (BytecodeParser''genLoadConstant-3 this, (BytecodeStream''readCPI-1 (:stream this)), opcode))
-            Bytecodes'ILOAD           (§ ass! this (BytecodeParser''loadLocal-3 this, (BytecodeStream''readLocalIndex-1 (:stream this)), JavaKind/Int))
-            Bytecodes'LLOAD           (§ ass! this (BytecodeParser''loadLocal-3 this, (BytecodeStream''readLocalIndex-1 (:stream this)), JavaKind/Long))
-            Bytecodes'ALOAD           (§ ass! this (BytecodeParser''loadLocalObject-2 this, (BytecodeStream''readLocalIndex-1 (:stream this))))
+            Bytecodes'LDC2_W]         (BytecodeParser''genLoadConstant-3 this, (BytecodeStream''readCPI-1 (:stream this)), opcode)
+            Bytecodes'ILOAD           (BytecodeParser''loadLocal-3 this, (BytecodeStream''readLocalIndex-1 (:stream this)), JavaKind/Int)
+            Bytecodes'LLOAD           (BytecodeParser''loadLocal-3 this, (BytecodeStream''readLocalIndex-1 (:stream this)), JavaKind/Long)
+            Bytecodes'ALOAD           (BytecodeParser''loadLocalObject-2 this, (BytecodeStream''readLocalIndex-1 (:stream this)))
            [Bytecodes'ILOAD_0
             Bytecodes'ILOAD_1
             Bytecodes'ILOAD_2
-            Bytecodes'ILOAD_3]        (§ ass! this (BytecodeParser''loadLocal-3 this, (- opcode Bytecodes'ILOAD_0), JavaKind/Int))
+            Bytecodes'ILOAD_3]        (BytecodeParser''loadLocal-3 this, (- opcode Bytecodes'ILOAD_0), JavaKind/Int)
            [Bytecodes'LLOAD_0
             Bytecodes'LLOAD_1
             Bytecodes'LLOAD_2
-            Bytecodes'LLOAD_3]        (§ ass! this (BytecodeParser''loadLocal-3 this, (- opcode Bytecodes'LLOAD_0), JavaKind/Long))
+            Bytecodes'LLOAD_3]        (BytecodeParser''loadLocal-3 this, (- opcode Bytecodes'LLOAD_0), JavaKind/Long)
            [Bytecodes'ALOAD_0
             Bytecodes'ALOAD_1
             Bytecodes'ALOAD_2
-            Bytecodes'ALOAD_3]        (§ ass! this (BytecodeParser''loadLocalObject-2 this, (- opcode Bytecodes'ALOAD_0)))
-            Bytecodes'IALOAD          (§ ass! this (BytecodeParser''genLoadIndexed-2 this, JavaKind/Int))
-            Bytecodes'LALOAD          (§ ass! this (BytecodeParser''genLoadIndexed-2 this, JavaKind/Long))
-            Bytecodes'AALOAD          (§ ass! this (BytecodeParser''genLoadIndexed-2 this, JavaKind/Object))
-            Bytecodes'BALOAD          (§ ass! this (BytecodeParser''genLoadIndexed-2 this, JavaKind/Byte))
-            Bytecodes'CALOAD          (§ ass! this (BytecodeParser''genLoadIndexed-2 this, JavaKind/Char))
-            Bytecodes'SALOAD          (§ ass! this (BytecodeParser''genLoadIndexed-2 this, JavaKind/Short))
-            Bytecodes'ISTORE          (§ ass! this (BytecodeParser''storeLocal-3 this, JavaKind/Int, (BytecodeStream''readLocalIndex-1 (:stream this))))
-            Bytecodes'LSTORE          (§ ass! this (BytecodeParser''storeLocal-3 this, JavaKind/Long, (BytecodeStream''readLocalIndex-1 (:stream this))))
-            Bytecodes'ASTORE          (§ ass! this (BytecodeParser''storeLocal-3 this, JavaKind/Object, (BytecodeStream''readLocalIndex-1 (:stream this))))
+            Bytecodes'ALOAD_3]        (BytecodeParser''loadLocalObject-2 this, (- opcode Bytecodes'ALOAD_0))
+            Bytecodes'IALOAD          (BytecodeParser''genLoadIndexed-2 this, JavaKind/Int)
+            Bytecodes'LALOAD          (BytecodeParser''genLoadIndexed-2 this, JavaKind/Long)
+            Bytecodes'AALOAD          (BytecodeParser''genLoadIndexed-2 this, JavaKind/Object)
+            Bytecodes'BALOAD          (BytecodeParser''genLoadIndexed-2 this, JavaKind/Byte)
+            Bytecodes'CALOAD          (BytecodeParser''genLoadIndexed-2 this, JavaKind/Char)
+            Bytecodes'SALOAD          (BytecodeParser''genLoadIndexed-2 this, JavaKind/Short)
+            Bytecodes'ISTORE          (BytecodeParser''storeLocal-3 this, JavaKind/Int, (BytecodeStream''readLocalIndex-1 (:stream this)))
+            Bytecodes'LSTORE          (BytecodeParser''storeLocal-3 this, JavaKind/Long, (BytecodeStream''readLocalIndex-1 (:stream this)))
+            Bytecodes'ASTORE          (BytecodeParser''storeLocal-3 this, JavaKind/Object, (BytecodeStream''readLocalIndex-1 (:stream this)))
            [Bytecodes'ISTORE_0
             Bytecodes'ISTORE_1
             Bytecodes'ISTORE_2
-            Bytecodes'ISTORE_3]       (§ ass! this (BytecodeParser''storeLocal-3 this, JavaKind/Int, (- opcode Bytecodes'ISTORE_0)))
+            Bytecodes'ISTORE_3]       (BytecodeParser''storeLocal-3 this, JavaKind/Int, (- opcode Bytecodes'ISTORE_0))
            [Bytecodes'LSTORE_0
             Bytecodes'LSTORE_1
             Bytecodes'LSTORE_2
-            Bytecodes'LSTORE_3]       (§ ass! this (BytecodeParser''storeLocal-3 this, JavaKind/Long, (- opcode Bytecodes'LSTORE_0)))
+            Bytecodes'LSTORE_3]       (BytecodeParser''storeLocal-3 this, JavaKind/Long, (- opcode Bytecodes'LSTORE_0))
            [Bytecodes'ASTORE_0
             Bytecodes'ASTORE_1
             Bytecodes'ASTORE_2
-            Bytecodes'ASTORE_3]       (§ ass! this (BytecodeParser''storeLocal-3 this, JavaKind/Object, (- opcode Bytecodes'ASTORE_0)))
-            Bytecodes'IASTORE         (§ ass! this (BytecodeParser''genStoreIndexed-2 this, JavaKind/Int))
-            Bytecodes'LASTORE         (§ ass! this (BytecodeParser''genStoreIndexed-2 this, JavaKind/Long))
-            Bytecodes'AASTORE         (§ ass! this (BytecodeParser''genStoreIndexed-2 this, JavaKind/Object))
-            Bytecodes'BASTORE         (§ ass! this (BytecodeParser''genStoreIndexed-2 this, JavaKind/Byte))
-            Bytecodes'CASTORE         (§ ass! this (BytecodeParser''genStoreIndexed-2 this, JavaKind/Char))
-            Bytecodes'SASTORE         (§ ass! this (BytecodeParser''genStoreIndexed-2 this, JavaKind/Short))
+            Bytecodes'ASTORE_3]       (BytecodeParser''storeLocal-3 this, JavaKind/Object, (- opcode Bytecodes'ASTORE_0))
+            Bytecodes'IASTORE         (BytecodeParser''genStoreIndexed-2 this, JavaKind/Int)
+            Bytecodes'LASTORE         (BytecodeParser''genStoreIndexed-2 this, JavaKind/Long)
+            Bytecodes'AASTORE         (BytecodeParser''genStoreIndexed-2 this, JavaKind/Object)
+            Bytecodes'BASTORE         (BytecodeParser''genStoreIndexed-2 this, JavaKind/Byte)
+            Bytecodes'CASTORE         (BytecodeParser''genStoreIndexed-2 this, JavaKind/Char)
+            Bytecodes'SASTORE         (BytecodeParser''genStoreIndexed-2 this, JavaKind/Short)
            [Bytecodes'POP
             Bytecodes'POP2
             Bytecodes'DUP
@@ -20914,7 +20609,7 @@ ZeroExtendNode'new-4
             Bytecodes'DUP2
             Bytecodes'DUP2_X1
             Bytecodes'DUP2_X2
-            Bytecodes'SWAP]           (§ ass! this (update this :frameState FrameStateBuilder''stackOp-2 opcode))
+            Bytecodes'SWAP]           (update this :frameState FrameStateBuilder''stackOp-2 opcode)
            [Bytecodes'IADD
             Bytecodes'ISUB
             Bytecodes'IMUL]           (BytecodeParser''genArithmeticOp-3 this, JavaKind/Int, opcode)
@@ -20946,33 +20641,33 @@ ZeroExtendNode'new-4
             Bytecodes'I2S             (BytecodeParser''genSignExtend-3k this, JavaKind/Short, JavaKind/Int)
             Bytecodes'I2C             (BytecodeParser''genZeroExtend-3k this, JavaKind/Char, JavaKind/Int)
             Bytecodes'LCMP            (BytecodeParser''genCompareOp-2 this, JavaKind/Long)
-            Bytecodes'IFEQ            (§ ass! this (BytecodeParser''genIfZero-2 this, Condition'EQ))
-            Bytecodes'IFNE            (§ ass! this (BytecodeParser''genIfZero-2 this, Condition'NE))
-            Bytecodes'IFLT            (§ ass! this (BytecodeParser''genIfZero-2 this, Condition'LT))
-            Bytecodes'IFGE            (§ ass! this (BytecodeParser''genIfZero-2 this, Condition'GE))
-            Bytecodes'IFGT            (§ ass! this (BytecodeParser''genIfZero-2 this, Condition'GT))
-            Bytecodes'IFLE            (§ ass! this (BytecodeParser''genIfZero-2 this, Condition'LE))
-            Bytecodes'IF_ICMPEQ       (§ ass! this (BytecodeParser''genIfSame-3 this, JavaKind/Int, Condition'EQ))
-            Bytecodes'IF_ICMPNE       (§ ass! this (BytecodeParser''genIfSame-3 this, JavaKind/Int, Condition'NE))
-            Bytecodes'IF_ICMPLT       (§ ass! this (BytecodeParser''genIfSame-3 this, JavaKind/Int, Condition'LT))
-            Bytecodes'IF_ICMPGE       (§ ass! this (BytecodeParser''genIfSame-3 this, JavaKind/Int, Condition'GE))
-            Bytecodes'IF_ICMPGT       (§ ass! this (BytecodeParser''genIfSame-3 this, JavaKind/Int, Condition'GT))
-            Bytecodes'IF_ICMPLE       (§ ass! this (BytecodeParser''genIfSame-3 this, JavaKind/Int, Condition'LE))
-            Bytecodes'IF_ACMPEQ       (§ ass! this (BytecodeParser''genIfSame-3 this, JavaKind/Object, Condition'EQ))
-            Bytecodes'IF_ACMPNE       (§ ass! this (BytecodeParser''genIfSame-3 this, JavaKind/Object, Condition'NE))
+            Bytecodes'IFEQ            (BytecodeParser''genIfZero-2 this, Condition'EQ)
+            Bytecodes'IFNE            (BytecodeParser''genIfZero-2 this, Condition'NE)
+            Bytecodes'IFLT            (BytecodeParser''genIfZero-2 this, Condition'LT)
+            Bytecodes'IFGE            (BytecodeParser''genIfZero-2 this, Condition'GE)
+            Bytecodes'IFGT            (BytecodeParser''genIfZero-2 this, Condition'GT)
+            Bytecodes'IFLE            (BytecodeParser''genIfZero-2 this, Condition'LE)
+            Bytecodes'IF_ICMPEQ       (BytecodeParser''genIfSame-3 this, JavaKind/Int, Condition'EQ)
+            Bytecodes'IF_ICMPNE       (BytecodeParser''genIfSame-3 this, JavaKind/Int, Condition'NE)
+            Bytecodes'IF_ICMPLT       (BytecodeParser''genIfSame-3 this, JavaKind/Int, Condition'LT)
+            Bytecodes'IF_ICMPGE       (BytecodeParser''genIfSame-3 this, JavaKind/Int, Condition'GE)
+            Bytecodes'IF_ICMPGT       (BytecodeParser''genIfSame-3 this, JavaKind/Int, Condition'GT)
+            Bytecodes'IF_ICMPLE       (BytecodeParser''genIfSame-3 this, JavaKind/Int, Condition'LE)
+            Bytecodes'IF_ACMPEQ       (BytecodeParser''genIfSame-3 this, JavaKind/Object, Condition'EQ)
+            Bytecodes'IF_ACMPNE       (BytecodeParser''genIfSame-3 this, JavaKind/Object, Condition'NE)
             Bytecodes'GOTO            (BytecodeParser''genGoto-1 this)
             Bytecodes'JSR             (BytecodeParser''genJsr-2 this, (BytecodeStream''readBranchDest-1 (:stream this)))
             Bytecodes'RET             (BytecodeParser''genRet-2 this, (BytecodeStream''readLocalIndex-1 (:stream this)))
-            Bytecodes'TABLESWITCH     (§ ass! this (BytecodeParser''genSwitch-2 this, (BytecodeTableSwitch'new-2 (:stream this), (BytecodeParser''bci-1 this))))
-            Bytecodes'LOOKUPSWITCH    (§ ass! this (BytecodeParser''genSwitch-2 this, (BytecodeLookupSwitch'new-2 (:stream this), (BytecodeParser''bci-1 this))))
-            Bytecodes'IRETURN         (§ ass! this (BytecodeParser''genReturn-3 this, (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Int), JavaKind/Int))
-            Bytecodes'LRETURN         (§ ass! this (BytecodeParser''genReturn-3 this, (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Long), JavaKind/Long))
-            Bytecodes'ARETURN         (§ ass! this (BytecodeParser''genReturn-3 this, (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Object), JavaKind/Object))
-            Bytecodes'RETURN          (§ ass! this (BytecodeParser''genReturn-3 this, nil, JavaKind/Void))
+            Bytecodes'TABLESWITCH     (BytecodeParser''genSwitch-2 this, (BytecodeTableSwitch'new-2 (:stream this), (BytecodeParser''bci-1 this)))
+            Bytecodes'LOOKUPSWITCH    (BytecodeParser''genSwitch-2 this, (BytecodeLookupSwitch'new-2 (:stream this), (BytecodeParser''bci-1 this)))
+            Bytecodes'IRETURN         (BytecodeParser''genReturn-3 this, (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Int), JavaKind/Int)
+            Bytecodes'LRETURN         (BytecodeParser''genReturn-3 this, (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Long), JavaKind/Long)
+            Bytecodes'ARETURN         (BytecodeParser''genReturn-3 this, (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Object), JavaKind/Object)
+            Bytecodes'RETURN          (BytecodeParser''genReturn-3 this, nil, JavaKind/Void)
             Bytecodes'GETSTATIC       (BytecodeParser''genGetStatic-3 this, (BytecodeStream''readCPI-1 (:stream this)), opcode)
             Bytecodes'PUTSTATIC       (BytecodeParser''genPutStatic-3 this, (BytecodeStream''readCPI-1 (:stream this)), opcode)
             Bytecodes'GETFIELD        (BytecodeParser''genGetField-3i this, (BytecodeStream''readCPI-1 (:stream this)), opcode)
-            Bytecodes'PUTFIELD        (§ ass! this (BytecodeParser''genPutField-3i this, (BytecodeStream''readCPI-1 (:stream this)), opcode))
+            Bytecodes'PUTFIELD        (BytecodeParser''genPutField-3i this, (BytecodeStream''readCPI-1 (:stream this)), opcode)
             Bytecodes'INVOKEVIRTUAL   (BytecodeParser''genInvokeVirtual-3 this, (BytecodeStream''readCPI-1 (:stream this)), opcode)
             Bytecodes'INVOKESPECIAL   (BytecodeParser''genInvokeSpecial-3 this, (BytecodeStream''readCPI-1 (:stream this)), opcode)
             Bytecodes'INVOKESTATIC    (BytecodeParser''genInvokeStatic-3 this, (BytecodeStream''readCPI-1 (:stream this)), opcode)
@@ -20981,34 +20676,238 @@ ZeroExtendNode'new-4
             Bytecodes'NEW             (BytecodeParser''genNewInstance-2i this, (BytecodeStream''readCPI-1 (:stream this)))
             Bytecodes'NEWARRAY        (BytecodeParser''genNewPrimitiveArray-2 this, (BytecodeStream''readLocalIndex-1 (:stream this)))
             Bytecodes'ANEWARRAY       (BytecodeParser''genNewObjectArray-2 this, (BytecodeStream''readCPI-1 (:stream this)))
-            Bytecodes'ARRAYLENGTH     (§ ass! this (update this :frameState FrameStateBuilder''push-3 JavaKind/Int, (BytecodeParser''append-2 this, (ArrayLengthNode'create-1 (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Object)))))
+            Bytecodes'ARRAYLENGTH     (update this :frameState FrameStateBuilder''push-3 JavaKind/Int, (BytecodeParser''append-2 this, (ArrayLengthNode'create-1 (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Object))))
             Bytecodes'CHECKCAST       (BytecodeParser''genCheckCast-1 this)
-            Bytecodes'INSTANCEOF      (§ ass! this (BytecodeParser''genInstanceOf-1 this))
+            Bytecodes'INSTANCEOF      (BytecodeParser''genInstanceOf-1 this)
             Bytecodes'MONITORENTER    (BytecodeParser''genMonitorEnter-3 this, (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Object), (:nextBCI (:stream this)))
             Bytecodes'MONITOREXIT     (BytecodeParser''genMonitorExit-4 this, (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Object), nil, (:nextBCI (:stream this)))
-            Bytecodes'IFNULL          (§ ass! this (BytecodeParser''genIfNull-2 this, Condition'EQ))
-            Bytecodes'IFNONNULL       (§ ass! this (BytecodeParser''genIfNull-2 this, Condition'NE))
+            Bytecodes'IFNULL          (BytecodeParser''genIfNull-2 this, Condition'EQ)
+            Bytecodes'IFNONNULL       (BytecodeParser''genIfNull-2 this, Condition'NE)
             Bytecodes'GOTO_W          (BytecodeParser''genGoto-1 this)
             Bytecodes'JSR_W           (BytecodeParser''genJsr-2 this, (BytecodeStream''readBranchDest-1 (:stream this)))
         )
-        this
+    )
+
+    (defn- #_"LoopBeginNode" BytecodeParser''appendLoopBegin-3 [#_"BytecodeParser" this, #_"FixedWithNextNode" fixedWithNext, #_"int" startBci]
+        (let [
+            #_"EndNode" preLoopEnd (Graph''add-2 (:graph this), (EndNode'new-0))
+            #_"LoopBeginNode" loopBegin (Graph''add-2 (:graph this), (LoopBeginNode'new-0))
+            loopBegin
+                (when (BytecodeParser''parsingIntrinsic-1 this) => loopBegin
+                    (LoopBeginNode''disableSafepoint-1 loopBegin)
+                )
+        ]
+            (§ ass! fixedWithNext (FixedWithNextNode''setNext-2 fixedWithNext, preLoopEnd))
+            ;; Add the single non-loop predecessor of the loop header.
+            (AbstractMergeNode''addForwardEnd-2 loopBegin, preLoopEnd)
+            loopBegin
+        )
+    )
+
+    (defn- #_"this" BytecodeParser''iterateBytecodesForBlock-2 [#_"BytecodeParser" this, #_"BciBlock" block]
+        (let [
+            this
+                (if (:isLoopHeader block)
+                    ;; Create the loop header block, which later will merge the backward branches of the loop.
+                    (let [
+                        this (assoc this :controlFlowSplit true)
+                        #_"LoopBeginNode" loopBegin (BytecodeParser''appendLoopBegin-3 this, (:lastInstr this), (:startBci block))
+                        this (assoc this :lastInstr loopBegin)
+                    ]
+                        ;; Create phi functions for all local variables and operand stack slots.
+                        (FrameStateBuilder''insertLoopPhis-6 (:frameState this), (:liveness this), (:loopId block), loopBegin, false, false)
+                        (StateSplit'''setStateAfter-2 loopBegin, (BytecodeParser''createFrameState-3 this, (:startBci block), loopBegin))
+                        ;; We have seen all forward branches. All subsequent backward branches will merge to the
+                        ;; loop header. This ensures that the loop header has exactly one non-loop predecessor.
+                        (§ ass! this (assoc-in this [:firstInstructions (:id block)] loopBegin))
+                        ;; We need to preserve the frame state builder of the loop header so that we can merge
+                        ;; values for phi functions, so make a copy of it.
+                        (assoc-in this [:entryStates (:id block)] (FrameStateBuilder'copy-1 (:frameState this)))
+                    )
+                    (when (satisfies? MergeNode (:lastInstr this)) => this
+                        ;; All inputs of non-loop phi nodes are known by now. We can infer the stamp
+                        ;; for the phi, so that parsing continues with more precise type information.
+                        (FrameStateBuilder''inferPhiStamps-2 (:frameState this), (:lastInstr this))
+                        this
+                    )
+                )
+            #_"int" endBCI (BytecodeStream''endBCI-1 (:stream this))
+            this (update this :stream BytecodeStream''setBCI-2 (:startBci block))
+        ]
+            (loop-when [this this #_"int" bci (:startBci block)] (< bci endBCI) => this
+                (let [
+                    this (BytecodeParser''processBytecode-3 this, bci, (BytecodeStream''currentBC-1 (:stream this)))
+                ]
+                    (when (and (some? (:lastInstr this)) (nil? (:next (:lastInstr this)))) => this
+                        (let [
+                            this (update this :stream BytecodeStream''next-1)
+                            bci (:curBCI (:stream this))
+                        ]
+                            (when (< (:endBci block) bci endBCI) => (recur this bci)
+                                ;; we fell through to the next block, add a goto and break
+                                (BytecodeParser''appendGoto-2 this, (BciBlock''getSuccessor-2 block, 0))
+                            )
+                        )
+                    )
+                )
+            )
+        )
+    )
+
+    (defn- #_"void" BytecodeParser''setMergeStateAfter-3 [#_"BytecodeParser" this, #_"BciBlock" block, #_"FixedWithNextNode" firstInstruction]
+        (when (nil? (:stateAfter firstInstruction))
+            (StateSplit'''setStateAfter-2 firstInstruction, (BytecodeParser''createFrameState-3 this, (:startBci block), firstInstruction))
+        )
+        nil
+    )
+
+    (defn- #_"this" BytecodeParser''processBlock-2 [#_"BytecodeParser" this, #_"BciBlock" block]
+        ;; ignore blocks that have no predecessors by the time their bytecodes are parsed
+        (let [
+            #_"FixedWithNextNode" firstInstruction (get (:firstInstructions this) (:id block))
+        ]
+            (when (some? firstInstruction) => this
+                (let [
+                    this (assoc this :lastInstr firstInstruction)
+                    this (assoc this :frameState (get (:entryStates this) (:id block)))
+                    this (assoc this :currentBlock block)
+                ]
+                    (when (satisfies? AbstractMergeNode firstInstruction)
+                        (BytecodeParser''setMergeStateAfter-3 this, block, firstInstruction)
+                    )
+                    (BytecodeParser''iterateBytecodesForBlock-2 this, block)
+                )
+            )
+        )
     )
 
     ;;;
-     ; Determines if this parsing context is within the bytecode of an intrinsic or a method inlined by an intrinsic.
+     ; Creates the frame state after the start node of a graph for an {@link IntrinsicContext intrinsic}
+     ; that is the parse root (either for root compiling or for post-parse inlining).
      ;;
-    (defn #_"boolean" BytecodeParser''parsingIntrinsic-1 [#_"BytecodeParser" this]
-        (some? (:intrinsicContext this))
+    (defn- #_"FrameState" BytecodeParser''createStateAfterStartOfReplacementGraph-1 [#_"BytecodeParser" this]
+        (if (IntrinsicContext''isPostParseInlined-1 (:intrinsicContext this))
+            (Graph''add-2 (:graph this), (FrameState'new-1 BytecodeFrame/BEFORE_BCI))
+            (let [
+                f'local #(let [#_"ValueNode" node (nth (:locals (:frameState this)) %)] (when-not (= node FrameState'TWO_SLOT_MARKER) node))
+                #_"ResolvedJavaMethod" o'method (:originalMethod (:intrinsicContext this))
+                #_"int" m (#_"ResolvedJavaMethod" .getMaxLocals o'method)
+                #_"ValueNode*" locals
+                    (if (or (= (count (:locals (:frameState this))) m) (#_"ResolvedJavaMethod" .isNative o'method))
+                        (map f'local (range m))
+                        (let [
+                            #_"int" n (#_"Signature" .getParameterCount (#_"ResolvedJavaMethod" .getSignature o'method), (not (#_"ResolvedJavaMethod" .isStatic o'method)))
+                        ]
+                            (concat (map f'local (range n)) (repeat (- m n) nil))
+                        )
+                    )
+            ]
+                (Graph''add-2 (:graph this), (FrameState'new-9a nil, (ResolvedJavaMethodBytecode'new-1 o'method), 0, locals, nil, 0, nil, nil, false))
+            )
+        )
     )
 
-    ;;;
-     ; Gets the first ancestor parsing context that is not parsing a {@linkplain #parsingIntrinsic() intrinsic}.
-     ;;
-    (defn #_"BytecodeParser" BytecodeParser''getNonIntrinsicAncestor-1 [#_"BytecodeParser" this]
-        (loop-when-recur [#_"BytecodeParser" ancestor (:parent this)]
-                         (and (some? ancestor) (BytecodeParser''parsingIntrinsic-1 ancestor))
-                         [(:parent ancestor)]
-                      => ancestor
+    (defn- #_"ValueNode" BytecodeParser''synchronizedObject-3 [#_"BytecodeParser" this, #_"FrameStateBuilder" state, #_"ResolvedJavaMethod" target]
+        (if (#_"ResolvedJavaMethod" .isStatic target)
+            (ConstantNode'forConstant-2c (#_"ConstantReflectionProvider" .asJavaClass HotSpot'constantReflection, (#_"ResolvedJavaMethod" .getDeclaringClass target)), (:graph this))
+            (FrameStateBuilder''loadLocal-3 state, 0, JavaKind/Object)
+        )
+    )
+
+    (defn #_"this" BytecodeParser''build-3 [#_"BytecodeParser" this, #_"FixedWithNextNode" startInstruction, #_"FrameStateBuilder" startFrameState]
+        ;; compute the block map, setup exception handlers and get the entrypoint(s)
+        (let [
+            this (assoc this :blockMap (BciBlockMapping'create-2 (:stream this), (:bytecode this)))
+            this (assoc this :firstInstructions {})
+            this (assoc this :entryStates {})
+            this
+                (when-not (#_"ResolvedJavaMethod" .isStatic (:method this)) => this
+                    (assoc this :originalReceiver (FrameStateBuilder''loadLocal-3 startFrameState, 0, JavaKind/Object))
+                )
+            this (assoc this :liveness (LocalLiveness'compute-4 (:stream this), (:blocks (:blockMap this)), (#_"ResolvedJavaMethod" .getMaxLocals (:method this)), (:nextLoop (:blockMap this))))
+            this (assoc this :lastInstr startInstruction)
+            this (assoc this :frameState startFrameState)
+            this (update this :stream BytecodeStream''setBCI-2 0)
+            #_"BciBlock" startBlock (:startBlock (:blockMap this))
+        ]
+            (when (nil? (:parent this))
+                (let [
+                    #_"StartNode" startNode (:start (:graph this))
+                ]
+                    (cond
+                        (#_"ResolvedJavaMethod" .isSynchronized (:method this))
+                            (StateSplit'''setStateAfter-2 startNode, (BytecodeParser''createFrameState-3 this, BytecodeFrame/BEFORE_BCI, startNode))
+                        (BytecodeParser''parsingIntrinsic-1 this)
+                            (when (nil? (:stateAfter startNode))
+                                (StateSplit'''setStateAfter-2 startNode, (BytecodeParser''createStateAfterStartOfReplacementGraph-1 this))
+                            )
+                        :else
+                            (do
+                                (FrameStateBuilder''clearNonLiveLocals-4 (:frameState this), startBlock, (:liveness this), true)
+                                (StateSplit'''setStateAfter-2 startNode, (BytecodeParser''createFrameState-3 this, (BytecodeParser''bci-1 this), startNode))
+                            )
+                    )
+                )
+            )
+
+            (let [
+                this
+                    (when (#_"ResolvedJavaMethod" .isSynchronized (:method this)) => this
+                        ;; add a monitor enter to the start block
+                        (let [
+                            this (assoc this :methodSynchronizedObject (BytecodeParser''synchronizedObject-3 this, (:frameState this), (:method this)))
+                        ]
+                            (FrameStateBuilder''clearNonLiveLocals-4 (:frameState this), startBlock, (:liveness this), true)
+                            (BytecodeParser''genMonitorEnter-3 this, (:methodSynchronizedObject this), (BytecodeParser''bci-1 this))
+                        )
+                    )
+                this (assoc this :currentBlock (:startBlock (:blockMap this)))
+                this (assoc-in this [:entryStates (:id startBlock)] (:frameState this))
+                this
+                    (if (:isLoopHeader startBlock)
+                        (BytecodeParser''appendGoto-2 this, startBlock)
+                        (assoc-in this [:firstInstructions (:id startBlock)] (:lastInstr this))
+                    )
+            ]
+                (reduce BytecodeParser''processBlock-2 this (:blocks (:blockMap this)))
+            )
+        )
+    )
+
+    (defn- #_"this" BytecodeParser''cleanupFinalGraph-1 [#_"BytecodeParser" this]
+        (let [
+            this (update this :graph GraphUtil'normalizeLoops-1)
+        ]
+            ;; Remove dead parameters.
+            (doseq [#_"ParameterNode" param (Graph''getNodes-2 (:graph this), ParameterNode)]
+                (when (Node''hasNoUsages-1 param)
+                    (Node''safeDelete-1 param)
+                )
+            )
+            ;; Remove redundant begin nodes.
+            (doseq [#_"BeginNode" beginNode (Graph''getNodes-2 (:graph this), BeginNode)]
+                (when (and (not (satisfies? ControlSplitNode (:predecessor beginNode))) (not (Node''hasUsages-1 beginNode)))
+                    (GraphUtil'unlinkFixedNode-1 beginNode)
+                    (Node''safeDelete-1 beginNode)
+                )
+            )
+            this
+        )
+    )
+
+    ; @SuppressWarnings("try")
+    (defn #_"this" BytecodeParser''buildRootMethod-1 [#_"BytecodeParser" this]
+        (let [
+            #_"FrameStateBuilder" startFrameState (FrameStateBuilder'new-3c this, (:bytecode this), (:graph this))
+            _ (FrameStateBuilder''initializeForMethodStart-1 startFrameState)
+            _
+                (try (§ with [#_"IntrinsicScope" _ (when (some? (:intrinsicContext this)) (IntrinsicScope'new-1 this))])
+                    (§ ass! this (BytecodeParser''build-3 this, (:start (:graph this)), startFrameState))
+                )
+            this (BytecodeParser''cleanupFinalGraph-1 this)
+        ]
+            (ComputeLoopFrequenciesClosure'compute-1 (:graph this))
+            this
         )
     )
 )
@@ -32026,8 +31925,7 @@ ZeroExtendNode'new-4
             (let [
                 #_"BytecodeParser" parser (BytecodeParser'new-5 this, graph, nil, (:rootMethod graph), (:initialIntrinsicContext this))
             ]
-                (§ ass! parser (BytecodeParser''buildRootMethod-1 parser))
-                graph
+                (:graph (BytecodeParser''buildRootMethod-1 parser))
             )
         )
     )
@@ -32114,7 +32012,7 @@ ZeroExtendNode'new-4
         ]
             (and (some? constant)
                 (do
-                    (BytecodeParser''push-3 parser, (#_"ResolvedJavaField" .getJavaKind field), (Graph''add-2 (:graph parser), constant))
+                    (§ ass! parser (BytecodeParser''push-3 parser, (#_"ResolvedJavaField" .getJavaKind field), (Graph''add-2 (:graph parser), constant)))
                     true
                 )
             )
@@ -52636,8 +52534,7 @@ ZeroExtendNode'new-4
                     ShortCircuitOrNode
                         (when (and (:negated? this) (Node''hasNoUsages-1 this)) => this
                             (Graph''addAfterFixed-3 (:graph this), this, (Graph''add-2 (:graph this), (FixedGuardNode'new-5 (:y logic), (:reason this), (:action this), (:speculation this), (not (:yNegated logic)))))
-                            (§ ass! this (update this :graph Graph''replaceFixedWithFixed-3 this, (Graph''add-2 (:graph this), (FixedGuardNode'new-5 (:x logic), (:reason this), (:action this), (:speculation this), (not (:xNegated logic))))))
-                            this
+                            (update this :graph Graph''replaceFixedWithFixed-3 this, (Graph''add-2 (:graph this), (FixedGuardNode'new-5 (:x logic), (:reason this), (:action this), (:speculation this), (not (:xNegated logic)))))
                         )
                     this
                 )
@@ -52648,34 +52545,27 @@ ZeroExtendNode'new-4
     (defn- #_"DeoptimizeNode" FixedGuardNode''lowerToIf-1 [#_"FixedGuardNode" this]
         (let [
             #_"FixedNode" currentNext (:next this)
-        ]
-            (§ ass! this (FixedWithNextNode''setNext-2 this, nil))
-            (let [
-                #_"DeoptimizeNode" deopt (Graph''add-2 (:graph this), (DeoptimizeNode'new-3 (:action this), (:reason this), (:speculation this)))
-            ]
-                (DeoptBefore'''setStateBefore-2 deopt, (:stateBefore this))
-                (let [
-                    [#_"IfNode" ifNode #_"AbstractBeginNode" noDeoptSuccessor]
-                        (if (:negated? this)
-                            (let [
-                                ifNode (Graph''add-2 (:graph this), (IfNode'new-4f (:logic this), deopt, currentNext, 0))
-                            ]
-                                [ifNode (:falseSuccessor ifNode)]
-                            )
-                            (let [
-                                ifNode (Graph''add-2 (:graph this), (IfNode'new-4f (:logic this), currentNext, deopt, 1))
-                            ]
-                                [ifNode (:trueSuccessor ifNode)]
-                            )
-                        )
-                ]
-                    (§ ass! this (update this :predecessor FixedWithNextNode''setNext-2 ifNode))
-                    (§ ass! this (Node''replaceAtUsages-2 this, noDeoptSuccessor))
-                    (GraphUtil'killWithUnusedFloatingInputs-1 this)
-
-                    deopt
+            _ (§ ass! this (FixedWithNextNode''setNext-2 this, nil))
+            #_"DeoptimizeNode" deopt (Graph''add-2 (:graph this), (DeoptimizeNode'new-3 (:action this), (:reason this), (:speculation this)))
+            _ (DeoptBefore'''setStateBefore-2 deopt, (:stateBefore this))
+            [#_"IfNode" ifNode #_"AbstractBeginNode" noDeoptSuccessor]
+                (if (:negated? this)
+                    (let [
+                        ifNode (Graph''add-2 (:graph this), (IfNode'new-4f (:logic this), deopt, currentNext, 0))
+                    ]
+                        [ifNode (:falseSuccessor ifNode)]
+                    )
+                    (let [
+                        ifNode (Graph''add-2 (:graph this), (IfNode'new-4f (:logic this), currentNext, deopt, 1))
+                    ]
+                        [ifNode (:trueSuccessor ifNode)]
+                    )
                 )
-            )
+            _ (§ ass! this (update this :predecessor FixedWithNextNode''setNext-2 ifNode))
+            _ (§ ass! this (Node''replaceAtUsages-2 this, noDeoptSuccessor))
+            _ (GraphUtil'killWithUnusedFloatingInputs-1 this)
+        ]
+            deopt
         )
     )
 
@@ -56890,7 +56780,7 @@ ZeroExtendNode'new-4
 
     #_intrinsifier
     (defn #_"boolean" ClassGetHubNode'intrinsify-3 [#_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"ValueNode" clazz]
-        (BytecodeParser''push-3 parser, JavaKind/Object, (BytecodeParser''append-2 parser, (ClassGetHubNode'create-2 clazz, false)))
+        (§ ass! parser (BytecodeParser''push-3 parser, JavaKind/Object, (BytecodeParser''append-2 parser, (ClassGetHubNode'create-2 clazz, false))))
         true
     )
 
@@ -57700,7 +57590,7 @@ ZeroExtendNode'new-4
                     (PiNode'new-3 object, stamp, guard)
                 )
         ]
-            (BytecodeParser''push-3 parser, JavaKind/Object, (BytecodeParser''append-2 parser, value))
+            (§ ass! parser (BytecodeParser''push-3 parser, JavaKind/Object, (BytecodeParser''append-2 parser, value)))
             true
         )
     )
@@ -61134,8 +61024,7 @@ ZeroExtendNode'new-4
         (let [
             #_"FrameState" this (merge (FrameState'class.) (FrameState'new-8 nil, nil, bci, 0, (#_"JavaKind" .getSlotCount (ValueNode''getStackKind-1 returnValue)), false, nil, nil))
         ]
-            (§ ass! this (update this :fsValues assoc' 0 returnValue))
-            this
+            (update this :fsValues assoc' 0 returnValue)
         )
     )
 
@@ -62010,38 +61899,55 @@ ZeroExtendNode'new-4
             #_"HighTier" this (merge (HighTier'class.) (PhaseSuite'new-0))
             #_"CanonicalizerPhase" canonicalizer (CanonicalizerPhase'new-0)
             #_"LoopPolicies" loopPolicies (DefaultLoopPolicies'new-0)
+            this (PhaseSuite''appendPhase-2 this, canonicalizer)
+            this
+                (when GraalOptions'inline => this
+                    (let [
+                        this (PhaseSuite''appendPhase-2 this, (InliningPhase'new-1 canonicalizer))
+                        this (PhaseSuite''appendPhase-2 this, (DeadCodeEliminationPhase'new-1 :Optionality'Optional))
+                    ]
+                        this
+                    )
+                )
+            this
+                (when GraalOptions'optConvertDeoptsToGuards => this
+                    (PhaseSuite''appendPhase-2 this, (IncrementalCanonicalizerPhase'new-2 canonicalizer, (ConvertDeoptimizeToGuardPhase'new-0)))
+                )
+            this
+                (when GraalOptions'conditionalElimination => this
+                    (PhaseSuite''appendPhase-2 this, (IterativeConditionalEliminationPhase'new-2 canonicalizer, false))
+                )
+            this
+                (when GraalOptions'fullUnroll => this
+                    (PhaseSuite''appendPhase-2 this, (LoopFullUnrollPhase'new-2 canonicalizer, loopPolicies))
+                )
+            this
+                (when GraalOptions'optLoopTransform => this
+                    (let [
+                        this
+                            (when GraalOptions'loopPeeling => this
+                                (PhaseSuite''appendPhase-2 this, (LoopPeelingPhase'new-1 loopPolicies))
+                            )
+                        this
+                            (when GraalOptions'loopUnswitch => this
+                                (PhaseSuite''appendPhase-2 this, (LoopUnswitchingPhase'new-1 loopPolicies))
+                            )
+                    ]
+                        this
+                    )
+                )
+            this (PhaseSuite''appendPhase-2 this, canonicalizer)
+            this
+                (when GraalOptions'partialEscapeAnalysis => this
+                    (PhaseSuite''appendPhase-2 this, (PartialEscapePhase'new-2 true, canonicalizer))
+                )
+            this
+                (when GraalOptions'optReadElimination => this
+                    (PhaseSuite''appendPhase-2 this, (EarlyReadEliminationPhase'new-1 canonicalizer))
+                )
+            this (PhaseSuite''appendPhase-2 this, (RemoveValueProxyPhase'new-0))
+            this (PhaseSuite''appendPhase-2 this, (LoweringPhase'new-2 canonicalizer, :LoweringStage'HIGH_TIER))
         ]
-            (§ ass! this (PhaseSuite''appendPhase-2 this, canonicalizer))
-            (when GraalOptions'inline
-                (§ ass! this (PhaseSuite''appendPhase-2 this, (InliningPhase'new-1 canonicalizer)))
-                (§ ass! this (PhaseSuite''appendPhase-2 this, (DeadCodeEliminationPhase'new-1 :Optionality'Optional)))
-            )
-            (when GraalOptions'optConvertDeoptsToGuards
-                (§ ass! this (PhaseSuite''appendPhase-2 this, (IncrementalCanonicalizerPhase'new-2 canonicalizer, (ConvertDeoptimizeToGuardPhase'new-0))))
-            )
-            (when GraalOptions'conditionalElimination
-                (§ ass! this (PhaseSuite''appendPhase-2 this, (IterativeConditionalEliminationPhase'new-2 canonicalizer, false)))
-            )
-            (when GraalOptions'fullUnroll
-                (§ ass! this (PhaseSuite''appendPhase-2 this, (LoopFullUnrollPhase'new-2 canonicalizer, loopPolicies)))
-            )
-            (when GraalOptions'optLoopTransform
-                (when GraalOptions'loopPeeling
-                    (§ ass! this (PhaseSuite''appendPhase-2 this, (LoopPeelingPhase'new-1 loopPolicies)))
-                )
-                (when GraalOptions'loopUnswitch
-                    (§ ass! this (PhaseSuite''appendPhase-2 this, (LoopUnswitchingPhase'new-1 loopPolicies)))
-                )
-            )
-            (§ ass! this (PhaseSuite''appendPhase-2 this, canonicalizer))
-            (when GraalOptions'partialEscapeAnalysis
-                (§ ass! this (PhaseSuite''appendPhase-2 this, (PartialEscapePhase'new-2 true, canonicalizer)))
-            )
-            (when GraalOptions'optReadElimination
-                (§ ass! this (PhaseSuite''appendPhase-2 this, (EarlyReadEliminationPhase'new-1 canonicalizer)))
-            )
-            (§ ass! this (PhaseSuite''appendPhase-2 this, (RemoveValueProxyPhase'new-0)))
-            (§ ass! this (PhaseSuite''appendPhase-2 this, (LoweringPhase'new-2 canonicalizer, :LoweringStage'HIGH_TIER)))
             this
         )
     )
@@ -62091,18 +61997,16 @@ ZeroExtendNode'new-4
     (defn #_"LowTier" LowTier'new-0 []
         (let [
             #_"LowTier" this (merge (LowTier'class.) (PhaseSuite'new-0))
+            this (PhaseSuite''appendPhase-2 this, (LoweringPhase'new-2 (CanonicalizerPhase'new-0), :LoweringStage'LOW_TIER))
+            this (PhaseSuite''appendPhase-2 this, (ExpandLogicPhase'new-0))
+            this (PhaseSuite''appendPhase-2 this, (FixReadsPhase'new-1 (SchedulePhase'new-1 (if GraalOptions'stressTestEarlyReads :SchedulingStrategy'EARLIEST :SchedulingStrategy'LATEST_OUT_OF_LOOPS))))
+            this (PhaseSuite''appendPhase-2 this, (AddressLoweringPhase'new-1 (AddressLowering'new-1 HotSpot'heapBaseRegister)))
+            this (PhaseSuite''appendPhase-2 this, (CanonicalizerPhase'new-0))
+            this (PhaseSuite''appendPhase-2 this, (UseTrappingNullChecksPhase'new-0))
+            this (PhaseSuite''appendPhase-2 this, (DeadCodeEliminationPhase'new-1 :Optionality'Required))
+            this (PhaseSuite''appendPhase-2 this, (PropagateDeoptimizeProbabilityPhase'new-0))
+            this (PhaseSuite''appendPhase-2 this, (SchedulePhase'new-1 :SchedulingStrategy'FINAL_SCHEDULE))
         ]
-            (§ ass! this (PhaseSuite''appendPhase-2 this, (LoweringPhase'new-2 (CanonicalizerPhase'new-0), :LoweringStage'LOW_TIER)))
-            (§ ass! this (PhaseSuite''appendPhase-2 this, (ExpandLogicPhase'new-0)))
-            (§ ass! this (PhaseSuite''appendPhase-2 this, (FixReadsPhase'new-1 (SchedulePhase'new-1 (if GraalOptions'stressTestEarlyReads :SchedulingStrategy'EARLIEST :SchedulingStrategy'LATEST_OUT_OF_LOOPS)))))
-            (§ ass! this (PhaseSuite''appendPhase-2 this, (AddressLoweringPhase'new-1 (AddressLowering'new-1 HotSpot'heapBaseRegister))))
-
-            (§ ass! this (PhaseSuite''appendPhase-2 this, (CanonicalizerPhase'new-0)))
-
-            (§ ass! this (PhaseSuite''appendPhase-2 this, (UseTrappingNullChecksPhase'new-0)))
-            (§ ass! this (PhaseSuite''appendPhase-2 this, (DeadCodeEliminationPhase'new-1 :Optionality'Required)))
-            (§ ass! this (PhaseSuite''appendPhase-2 this, (PropagateDeoptimizeProbabilityPhase'new-0)))
-            (§ ass! this (PhaseSuite''appendPhase-2 this, (SchedulePhase'new-1 :SchedulingStrategy'FINAL_SCHEDULE)))
             this
         )
     )
@@ -62114,32 +62018,35 @@ ZeroExtendNode'new-4
             #_"MidTier" this (merge (MidTier'class.) (PhaseSuite'new-0))
             #_"CanonicalizerPhase" canonicalizer (CanonicalizerPhase'new-0)
             #_"LoopPolicies" loopPolicies (DefaultLoopPolicies'new-0)
-        ]
-            (§ ass! this (PhaseSuite''appendPhase-2 this, (LockEliminationPhase'new-0)))
-            (when GraalOptions'optFloatingReads
-                (§ ass! this (PhaseSuite''appendPhase-2 this, (IncrementalCanonicalizerPhase'new-2 canonicalizer, (FloatingReadPhase'new-0))))
-            )
-            (when GraalOptions'conditionalElimination
-                (§ ass! this (PhaseSuite''appendPhase-2 this, (IterativeConditionalEliminationPhase'new-2 canonicalizer, true)))
-            )
-            (§ ass! this (PhaseSuite''appendPhase-2 this, (LoopSafepointEliminationPhase'new-0)))
-            (§ ass! this (PhaseSuite''appendPhase-2 this, (LoopSafepointInsertionPhase'new-0)))
-            (§ ass! this (PhaseSuite''appendPhase-2 this, (GuardLoweringPhase'new-0)))
-            (§ ass! this (PhaseSuite''appendPhase-2 this, (LoweringPhase'new-2 canonicalizer, :LoweringStage'MID_TIER)))
-            (§ ass! this (PhaseSuite''appendPhase-2 this, (FrameStateAssignmentPhase'new-0)))
-            (when GraalOptions'optLoopTransform
-                (when GraalOptions'partialUnroll
-                    (§ ass! this (PhaseSuite''appendPhase-2 this, (LoopPartialUnrollPhase'new-2 loopPolicies, canonicalizer)))
+            this (PhaseSuite''appendPhase-2 this, (LockEliminationPhase'new-0))
+            this
+                (when GraalOptions'optFloatingReads => this
+                    (PhaseSuite''appendPhase-2 this, (IncrementalCanonicalizerPhase'new-2 canonicalizer, (FloatingReadPhase'new-0)))
                 )
-            )
-            (when GraalOptions'reassociateInvariants
-                (§ ass! this (PhaseSuite''appendPhase-2 this, (ReassociateInvariantPhase'new-0)))
-            )
-            (when GraalOptions'optDeoptimizationGrouping
-                (§ ass! this (PhaseSuite''appendPhase-2 this, (DeoptimizationGroupingPhase'new-0)))
-            )
-            (§ ass! this (PhaseSuite''appendPhase-2 this, canonicalizer))
-            (§ ass! this (PhaseSuite''appendPhase-2 this, (WriteBarrierAdditionPhase'new-0)))
+            this
+                (when GraalOptions'conditionalElimination => this
+                    (PhaseSuite''appendPhase-2 this, (IterativeConditionalEliminationPhase'new-2 canonicalizer, true))
+                )
+            this (PhaseSuite''appendPhase-2 this, (LoopSafepointEliminationPhase'new-0))
+            this (PhaseSuite''appendPhase-2 this, (LoopSafepointInsertionPhase'new-0))
+            this (PhaseSuite''appendPhase-2 this, (GuardLoweringPhase'new-0))
+            this (PhaseSuite''appendPhase-2 this, (LoweringPhase'new-2 canonicalizer, :LoweringStage'MID_TIER))
+            this (PhaseSuite''appendPhase-2 this, (FrameStateAssignmentPhase'new-0))
+            this
+                (when (and GraalOptions'optLoopTransform GraalOptions'partialUnroll) => this
+                    (PhaseSuite''appendPhase-2 this, (LoopPartialUnrollPhase'new-2 loopPolicies, canonicalizer))
+                )
+            this
+                (when GraalOptions'reassociateInvariants => this
+                    (PhaseSuite''appendPhase-2 this, (ReassociateInvariantPhase'new-0))
+                )
+            this
+                (when GraalOptions'optDeoptimizationGrouping => this
+                    (PhaseSuite''appendPhase-2 this, (DeoptimizationGroupingPhase'new-0))
+                )
+            this (PhaseSuite''appendPhase-2 this, canonicalizer)
+            this (PhaseSuite''appendPhase-2 this, (WriteBarrierAdditionPhase'new-0))
+        ]
             this
         )
     )
@@ -69922,7 +69829,7 @@ ZeroExtendNode'new-4
                                 (SnippetReflection'asObject-2c LocationIdentity'iface, (ValueNode''asJavaConstant-1 (nth args 2)))
                             )
                     ]
-                        (BytecodeParser''push-3 parser, returnKind, (BytecodeParser''add-2 parser, (ReadNode'new-4 address, location, KlassPointerStamp'KLASS, :BarrierType'NONE)))
+                        (§ ass! parser (BytecodeParser''push-3 parser, returnKind, (BytecodeParser''add-2 parser, (ReadNode'new-4 address, location, KlassPointerStamp'KLASS, :BarrierType'NONE))))
                     )
             )
         )
@@ -70004,12 +69911,12 @@ ZeroExtendNode'new-4
                         )
                         :WordFactoryOpcode'FROM_UNSIGNED
                         (do
-                            (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin'fromUnsigned-2 parser, (nth args 0)))
+                            (§ ass! parser (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin'fromUnsigned-2 parser, (nth args 0))))
                             :done
                         )
                         :WordFactoryOpcode'FROM_SIGNED
                         (do
-                            (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin'fromSigned-2 parser, (nth args 0)))
+                            (§ ass! parser (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin'fromSigned-2 parser, (nth args 0))))
                             :done
                         )
                         nil
@@ -70031,11 +69938,11 @@ ZeroExtendNode'new-4
                                 (BytecodeParser''addPush-3 parser, returnKind, (WordOperationPlugin'createBinaryNodeInstance-3 (WordOperation''node-1 operation), left, right))
                             )
                         :WordOpcode'COMPARISON
-                            (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin'comparisonOp-4 parser, (WordOperation''condition-1 operation), (nth args 0), (WordOperationPlugin'fromSigned-2 parser, (nth args 1))))
+                            (§ ass! parser (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin'comparisonOp-4 parser, (WordOperation''condition-1 operation), (nth args 0), (WordOperationPlugin'fromSigned-2 parser, (nth args 1)))))
                         :WordOpcode'IS_NULL
-                            (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin'comparisonOp-4 parser, Condition'EQ, (nth args 0), (ConstantNode'forIntegerKind-2 WordTypes'wordKind, 0)))
+                            (§ ass! parser (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin'comparisonOp-4 parser, Condition'EQ, (nth args 0), (ConstantNode'forIntegerKind-2 WordTypes'wordKind, 0))))
                         :WordOpcode'IS_NON_NULL
-                            (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin'comparisonOp-4 parser, Condition'NE, (nth args 0), (ConstantNode'forIntegerKind-2 WordTypes'wordKind, 0)))
+                            (§ ass! parser (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin'comparisonOp-4 parser, Condition'NE, (nth args 0), (ConstantNode'forIntegerKind-2 WordTypes'wordKind, 0))))
                         :WordOpcode'NOT
                             (BytecodeParser''addPush-3 parser, returnKind, (XorNode'new-2 (nth args 0), (BytecodeParser''add-2 parser, (ConstantNode'forIntegerKind-2 WordTypes'wordKind, -1))))
                        [:WordOpcode'READ_POINTER :WordOpcode'READ_OBJECT :WordOpcode'READ_BARRIERED]
@@ -70048,7 +69955,7 @@ ZeroExtendNode'new-4
                                         (SnippetReflection'asObject-2c LocationIdentity'iface, (ValueNode''asJavaConstant-1 (nth args 2)))
                                     )
                             ]
-                                (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin'readOp-5 parser, readKind, address, location, (WordOperation''opcode-1 operation)))
+                                (§ ass! parser (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin'readOp-5 parser, readKind, address, location, (WordOperation''opcode-1 operation))))
                             )
                         :WordOpcode'READ_HEAP
                             (let [
@@ -70056,7 +69963,7 @@ ZeroExtendNode'new-4
                                 #_"AddressNode" address (WordOperationPlugin'makeAddress-3 parser, (nth args 0), (nth args 1))
                                 #_"BarrierType" barrierType (SnippetReflection'asObject-2c BarrierType, (ValueNode''asJavaConstant-1 (nth args 2)))
                             ]
-                                (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin'readOp-6 parser, readKind, address, LocationIdentity'ANY, barrierType, true))
+                                (§ ass! parser (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin'readOp-6 parser, readKind, address, LocationIdentity'ANY, barrierType, true)))
                             )
                        [:WordOpcode'WRITE_POINTER :WordOpcode'WRITE_OBJECT :WordOpcode'WRITE_BARRIERED :WordOpcode'INITIALIZE]
                             (let [
@@ -70071,30 +69978,30 @@ ZeroExtendNode'new-4
                                 (WordOperationPlugin'writeOp-6 parser, writeKind, address, location, (nth args 2), (WordOperation''opcode-1 operation))
                             )
                         :WordOpcode'TO_RAW_VALUE
-                            (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin'toUnsigned-3 parser, (nth args 0), JavaKind/Long))
+                            (§ ass! parser (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin'toUnsigned-3 parser, (nth args 0), JavaKind/Long)))
                         :WordOpcode'FROM_OBJECT
                             (let [
                                 #_"WordCastNode" objectToTracked (BytecodeParser''add-2 parser, (WordCastNode'objectToWord-2 (nth args 0), WordTypes'wordKind))
                             ]
-                                (BytecodeParser''push-3 parser, returnKind, objectToTracked)
+                                (§ ass! parser (BytecodeParser''push-3 parser, returnKind, objectToTracked))
                             )
                         :WordOpcode'FROM_ADDRESS
                             (let [
                                 #_"WordCastNode" addressToWord (BytecodeParser''add-2 parser, (WordCastNode'addressToWord-2 (nth args 0), WordTypes'wordKind))
                             ]
-                                (BytecodeParser''push-3 parser, returnKind, addressToWord)
+                                (§ ass! parser (BytecodeParser''push-3 parser, returnKind, addressToWord))
                             )
                         :WordOpcode'TO_OBJECT
                             (let [
                                 #_"WordCastNode" wordToObject (BytecodeParser''add-2 parser, (WordCastNode'wordToObject-2 (nth args 0), WordTypes'wordKind))
                             ]
-                                (BytecodeParser''push-3 parser, returnKind, wordToObject)
+                                (§ ass! parser (BytecodeParser''push-3 parser, returnKind, wordToObject))
                             )
                         :WordOpcode'TO_OBJECT_NON_NULL
                             (let [
                                 #_"WordCastNode" wordToObjectNonNull (BytecodeParser''add-2 parser, (WordCastNode'wordToObjectNonNull-2 (nth args 0), WordTypes'wordKind))
                             ]
-                                (BytecodeParser''push-3 parser, returnKind, wordToObjectNonNull)
+                                (§ ass! parser (BytecodeParser''push-3 parser, returnKind, wordToObjectNonNull))
                             )
                         :WordOpcode'CAS_POINTER
                             (let [
@@ -70254,7 +70161,7 @@ ZeroExtendNode'new-4
         (#_"boolean" NodePlugin'''handleCheckCast-4 [#_"WordOperationPlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaType" type]
             (if (WordTypes'isWord-1j type)
                 (when (= (ValueNode''getStackKind-1 object) WordTypes'wordKind) => (throw! (str "cannot cast a non-word value to a word type: " (#_"ResolvedJavaType" .toJavaName type, true)))
-                    (BytecodeParser''push-3 parser, JavaKind/Object, object)
+                    (§ ass! parser (BytecodeParser''push-3 parser, JavaKind/Object, object))
                     true
                 )
                 (when (= (ValueNode''getStackKind-1 object) JavaKind/Object) => (throw! (str "cannot cast a word value to a non-word type: " (#_"ResolvedJavaType" .toJavaName type, true)))
