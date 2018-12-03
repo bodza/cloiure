@@ -403,8 +403,7 @@ AddressNode'new-0
 AllocatableRegisters'new-3
 AllocatedObjectNode''setCommit-2
 AllocatedObjectNode'new-1
-Allocator''allocate-1
-Allocator'new-2
+Allocator'allocate-1
 And'new-2
 AndNode'create-2
 AndNode'new-2
@@ -1277,7 +1276,7 @@ Fields'new-1
 FieldsCache''lookup-5
 FieldsCache'new-0
 FinalFieldBarrierNode'new-1
-FixPointIntervalBuilder'build-3
+FixPointIntervalBuilder'build-1
 FixPointIntervalBuilder''getOrCreateInterval-2
 FixReadsClosure'new-0
 FixReadsPhase'new-1
@@ -3000,8 +2999,6 @@ SpillState'ALWAYS_IN_MEMORY
 SpillState'SET
 StackInterval''addFrom-2
 StackInterval''addTo-2
-StackInterval''setLocation-2
-StackInterval''setLocationHint-2
 StackInterval'new-2
 StackLeaOp'new-2
 StackMoveOptimizationPhase'new-0
@@ -4534,7 +4531,7 @@ ZeroExtendNode'new-4
      ; @return true if a register was allocated to the {@code currentInterval} interval
      ;;
     (#_"boolean" IntervalWalker'''activateCurrent-2 [#_"IntervalWalker" this, #_"Interval" currentInterval])
-    (#_"void" IntervalWalker'''walk-1 [#_"IntervalWalker" this])
+    (#_"this" IntervalWalker'''walk-1 [#_"IntervalWalker" this])
 )
 
 (defp IntrinsicContext)
@@ -5396,8 +5393,8 @@ ZeroExtendNode'new-4
     ;;;
      ; Adds a node to the worklist independent of whether it has already been on the worklist.
      ;;
-    (#_"void" SimplifierTool'''addToWorkList-2n [#_"SimplifierTool" this, #_"Node" node])
-    (#_"void" SimplifierTool'''addToWorkList-2s [#_"SimplifierTool" this, #_"Node*" nodes])
+    (#_"this" SimplifierTool'''addToWorkList-2n [#_"SimplifierTool" this, #_"Node" node])
+    (#_"this" SimplifierTool'''addToWorkList-2s [#_"SimplifierTool" this, #_"Node*" nodes])
     (#_"void" SimplifierTool'''removeIfUnused-2 [#_"SimplifierTool" this, #_"Node" node])
 )
 
@@ -8552,7 +8549,7 @@ ZeroExtendNode'new-4
             #_"int" modulus (.wordSize HotSpot'target)
         ]
             (when-not (zero? (% offset modulus))
-                (Assembler''nop-2 asm, (- modulus (% offset modulus)))
+                (§ ass! asm (Assembler''nop-2 asm, (- modulus (% offset modulus))))
             )
         )
         nil
@@ -8567,37 +8564,37 @@ ZeroExtendNode'new-4
                 (if (some? scratch)
                     (do
                         ;; offset might not fit a 32-bit immediate, generate an indirect call with a 64-bit immediate
-                        (Assembler''movq-3rl asm, scratch, 0)
+                        (§ ass! asm (Assembler''movq-3rl asm, scratch, 0))
                         (let [
                             callPCOffset (Assembler''position-1 asm)
                         ]
-                            (Assembler''call-2 asm, scratch)
+                            (§ ass! asm (Assembler''call-2 asm, scratch))
                             callPCOffset
                         )
                     )
                     (let [
                         callPCOffset (Assembler''position-1 asm)
                     ]
-                        (Assembler''call-1 asm)
+                        (§ ass! asm (Assembler''call-1 asm))
                         callPCOffset
                     )
                 )
         ]
-            (Assembler''ensureUniquePC-1 asm)
+            (§ ass! asm (Assembler''ensureUniquePC-1 asm))
             callPCOffset
         )
     )
 
     (defn #_"void" AMD64Call'directJmp-2 [#_"Assembler" asm, #_"InvokeTarget" target]
-        (Assembler''jmp-3 asm, 0, true)
-        (Assembler''ensureUniquePC-1 asm)
+        (§ ass! asm (Assembler''jmp-3 asm, 0, true))
+        (§ ass! asm (Assembler''ensureUniquePC-1 asm))
         nil
     )
 
     #_unused
     (defn #_"void" AMD64Call'directConditionalJmp-3 [#_"Assembler" asm, #_"InvokeTarget" target, #_"ConditionFlag" cond]
-        (Assembler''jcc-4 asm, cond, 0, true)
-        (Assembler''ensureUniquePC-1 asm)
+        (§ ass! asm (Assembler''jcc-4 asm, cond, 0, true))
+        (§ ass! asm (Assembler''ensureUniquePC-1 asm))
         nil
     )
 )
@@ -8607,18 +8604,18 @@ ZeroExtendNode'new-4
         (if (instance? RegisterValue other)
             (condp =? (#_"Value" .getPlatformKind other)
                [AMD64Kind/BYTE AMD64Kind/WORD AMD64Kind/DWORD]
-                    (Assembler''cmovl-4rr asm, cond, (#_"RegisterValue" .getRegister result), (#_"RegisterValue" .getRegister other))
+                    (§ ass! asm (Assembler''cmovl-4rr asm, cond, (#_"RegisterValue" .getRegister result), (#_"RegisterValue" .getRegister other)))
                 AMD64Kind/QWORD
-                    (Assembler''cmovq-4rr asm, cond, (#_"RegisterValue" .getRegister result), (#_"RegisterValue" .getRegister other))
+                    (§ ass! asm (Assembler''cmovq-4rr asm, cond, (#_"RegisterValue" .getRegister result), (#_"RegisterValue" .getRegister other)))
             )
             (let [
                 #_"AMD64Address" addr (Assembler''asAddress-2 asm, other)
             ]
                 (condp =? (#_"Value" .getPlatformKind other)
                    [AMD64Kind/BYTE AMD64Kind/WORD AMD64Kind/DWORD]
-                        (Assembler''cmovl-4ra asm, cond, (#_"RegisterValue" .getRegister result), addr)
+                        (§ ass! asm (Assembler''cmovl-4ra asm, cond, (#_"RegisterValue" .getRegister result), addr))
                     AMD64Kind/QWORD
-                        (Assembler''cmovq-4ra asm, cond, (#_"RegisterValue" .getRegister result), addr)
+                        (§ ass! asm (Assembler''cmovq-4ra asm, cond, (#_"RegisterValue" .getRegister result), addr))
                 )
             )
         )
@@ -8628,9 +8625,9 @@ ZeroExtendNode'new-4
     (defn #_"void" AMD64ControlFlow'setcc-3 [#_"Assembler" asm, #_"Value" result, #_"ConditionFlag" cond]
         (condp =? (#_"Value" .getPlatformKind result)
            [AMD64Kind/BYTE AMD64Kind/WORD AMD64Kind/DWORD]
-                (Assembler''setl-3 asm, cond, (#_"RegisterValue" .getRegister result))
+                (§ ass! asm (Assembler''setl-3 asm, cond, (#_"RegisterValue" .getRegister result)))
             AMD64Kind/QWORD
-                (Assembler''setq-3 asm, cond, (#_"RegisterValue" .getRegister result))
+                (§ ass! asm (Assembler''setq-3 asm, cond, (#_"RegisterValue" .getRegister result)))
         )
         nil
     )
@@ -8661,9 +8658,9 @@ ZeroExtendNode'new-4
         (when-not (= (#_"RegisterValue" .getRegister input) (#_"RegisterValue" .getRegister result))
             (condp =? kind
                [AMD64Kind/BYTE AMD64Kind/WORD AMD64Kind/DWORD]
-                    (Assembler''movl-3rr asm, (#_"RegisterValue" .getRegister result), (#_"RegisterValue" .getRegister input))
+                    (§ ass! asm (Assembler''movl-3rr asm, (#_"RegisterValue" .getRegister result), (#_"RegisterValue" .getRegister input)))
                 AMD64Kind/QWORD
-                    (Assembler''movq-3rr asm, (#_"RegisterValue" .getRegister result), (#_"RegisterValue" .getRegister input))
+                    (§ ass! asm (Assembler''movq-3rr asm, (#_"RegisterValue" .getRegister result), (#_"RegisterValue" .getRegister input)))
             )
         )
         nil
@@ -8695,10 +8692,10 @@ ZeroExtendNode'new-4
             #_"AMD64Address" dst (Assembler''asAddress-2 asm, result)
         ]
             (condp = kind
-                AMD64Kind/BYTE  (Assembler''movb-3ar asm, dst, input)
-                AMD64Kind/WORD  (Assembler''movw-3ar asm, dst, input)
-                AMD64Kind/DWORD (Assembler''movl-3ar asm, dst, input)
-                AMD64Kind/QWORD (Assembler''movq-3ar asm, dst, input)
+                AMD64Kind/BYTE  (§ ass! asm (Assembler''movb-3ar asm, dst, input))
+                AMD64Kind/WORD  (§ ass! asm (Assembler''movw-3ar asm, dst, input))
+                AMD64Kind/DWORD (§ ass! asm (Assembler''movl-3ar asm, dst, input))
+                AMD64Kind/QWORD (§ ass! asm (Assembler''movq-3ar asm, dst, input))
             )
         )
         nil
@@ -8709,10 +8706,10 @@ ZeroExtendNode'new-4
             #_"AMD64Address" src (Assembler''asAddress-2 asm, input)
         ]
             (condp = kind
-                AMD64Kind/BYTE  (Assembler''movsbl-3ra asm, result, src)
-                AMD64Kind/WORD  (Assembler''movswl-3 asm, result, src)
-                AMD64Kind/DWORD (Assembler''movl-3ra asm, result, src)
-                AMD64Kind/QWORD (Assembler''movq-3ra asm, result, src)
+                AMD64Kind/BYTE  (§ ass! asm (Assembler''movsbl-3ra asm, result, src))
+                AMD64Kind/WORD  (§ ass! asm (Assembler''movswl-3 asm, result, src))
+                AMD64Kind/DWORD (§ ass! asm (Assembler''movl-3ra asm, result, src))
+                AMD64Kind/QWORD (§ ass! asm (Assembler''movq-3ra asm, result, src))
             )
         )
         nil
@@ -8727,33 +8724,33 @@ ZeroExtendNode'new-4
             JavaKind/Int
                 ;; Do not optimize with an XOR, as this instruction may be between a CMP and a Jcc,
                 ;; in which case the XOR will modify the condition flags and interfere with the Jcc.
-                (Assembler''movl-3ri asm, result, (#_"JavaConstant" .asInt input))
+                (§ ass! asm (Assembler''movl-3ri asm, result, (#_"JavaConstant" .asInt input)))
             JavaKind/Long
                 ;; Do not optimize with an XOR, as this instruction may be between a CMP and a Jcc,
                 ;; in which case the XOR will modify the condition flags and interfere with the Jcc.
                 (cond
                     (= (#_"JavaConstant" .asLong input) (int (#_"JavaConstant" .asLong input)))
                         ;; sign extended to long
-                        (Assembler''movslq-3ri asm, result, (int (#_"JavaConstant" .asLong input)))
+                        (§ ass! asm (Assembler''movslq-3ri asm, result, (int (#_"JavaConstant" .asLong input))))
                     (= (& (#_"JavaConstant" .asLong input) 0xffffffff) (#_"JavaConstant" .asLong input))
                         ;; zero extended to long
-                        (Assembler''movl-3ri asm, result, (int (#_"JavaConstant" .asLong input)))
+                        (§ ass! asm (Assembler''movl-3ri asm, result, (int (#_"JavaConstant" .asLong input))))
                     :else
-                        (Assembler''movq-3rl asm, result, (#_"JavaConstant" .asLong input))
+                        (§ ass! asm (Assembler''movq-3rl asm, result, (#_"JavaConstant" .asLong input)))
                 )
             JavaKind/Object
                 ;; Do not optimize with an XOR, as this instruction may be between a CMP and a Jcc,
                 ;; in which case the XOR will modify the condition flags and interfere with the Jcc.
                 (cond
                     (#_"JavaConstant" .isNull input)
-                        (Assembler''movq-3rl asm, result, 0)
+                        (§ ass! asm (Assembler''movq-3rl asm, result, 0))
                     (.inlineObjects HotSpot'target)
                     (do
-                        (Assembler''recordInlineDataInCode-2 asm, input)
-                        (Assembler''movq-3rl asm, result, 0xdeaddeaddeaddead)
+                        (§ ass! asm (Assembler''recordInlineDataInCode-2 asm, input))
+                        (§ ass! asm (Assembler''movq-3rl asm, result, 0xdeaddeaddeaddead))
                     )
                     :else
-                        (Assembler''movq-3ra asm, result, (Assembler''recordDataReferenceInCode-3c asm, input, 0))
+                        (§ ass! asm (Assembler''movq-3ra asm, result, (Assembler''recordDataReferenceInCode-3c asm, input, 0)))
                 )
         )
         nil
@@ -8784,8 +8781,8 @@ ZeroExtendNode'new-4
             (condp = (#_"Value" .getPlatformKind result)
                 AMD64Kind/BYTE  (AMD64MIOp''emit-5a AMD64MIOp'MOVB, asm, :OperandSize'BYTE, dest, (int imm))
                 AMD64Kind/WORD  (AMD64MIOp''emit-5a AMD64MIOp'MOV, asm, :OperandSize'WORD, dest, (int imm))
-                AMD64Kind/DWORD (Assembler''movl-3ai asm, dest, (int imm))
-                AMD64Kind/QWORD (Assembler''movlong-3 asm, dest, imm)
+                AMD64Kind/DWORD (§ ass! asm (Assembler''movl-3ai asm, dest, (int imm)))
+                AMD64Kind/QWORD (§ ass! asm (Assembler''movlong-3 asm, dest, imm))
             )
         )
         nil
@@ -11770,14 +11767,14 @@ ZeroExtendNode'new-4
 
     (defn #_"void" AMD64MIOp''emit-5r [#_"AMD64MIOp" this, #_"Assembler" asm, #_"OperandSize" size, #_"Register" dst, #_"int" imm]
         (AMD64Op''emitOpcode-6 this, asm, size, (Assembler'getRXB-2rr nil, dst), 0, (.encoding dst))
-        (Assembler''emitModRM-3ir asm, (:ext this), dst)
+        (§ ass! asm (Assembler''emitModRM-3ir asm, (:ext this), dst))
         (AMD64ImmOp''emitImmediate-4 this, asm, size, imm)
         nil
     )
 
     (defn #_"void" AMD64MIOp''emit-5a [#_"AMD64MIOp" this, #_"Assembler" asm, #_"OperandSize" size, #_"AMD64Address" dst, #_"int" imm]
         (AMD64Op''emitOpcode-6 this, asm, size, (Assembler'getRXB-2ra nil, dst), 0, 0)
-        (Assembler''emitOperandHelper-4i asm, (:ext this), dst, (AMD64ImmOp''immediateSize-2 this, size))
+        (§ ass! asm (Assembler''emitOperandHelper-4i asm, (:ext this), dst, (AMD64ImmOp''immediateSize-2 this, size)))
         (AMD64ImmOp''emitImmediate-4 this, asm, size, imm)
         nil
     )
@@ -11796,14 +11793,14 @@ ZeroExtendNode'new-4
 
     (defn #_"void" AMD64RMIOp''emit-6r [#_"AMD64RMIOp" this, #_"Assembler" asm, #_"OperandSize" size, #_"Register" dst, #_"Register" src, #_"int" imm]
         (AMD64Op''emitOpcode-6 this, asm, size, (Assembler'getRXB-2rr dst, src), (.encoding dst), (.encoding src))
-        (Assembler''emitModRM-3rr asm, dst, src)
+        (§ ass! asm (Assembler''emitModRM-3rr asm, dst, src))
         (AMD64ImmOp''emitImmediate-4 this, asm, size, imm)
         nil
     )
 
     (defn #_"void" AMD64RMIOp''emit-6a [#_"AMD64RMIOp" this, #_"Assembler" asm, #_"OperandSize" size, #_"Register" dst, #_"AMD64Address" src, #_"int" imm]
         (AMD64Op''emitOpcode-6 this, asm, size, (Assembler'getRXB-2ra dst, src), (.encoding dst), 0)
-        (Assembler''emitOperandHelper-4r asm, dst, src, (AMD64ImmOp''immediateSize-2 this, size))
+        (§ ass! asm (Assembler''emitOperandHelper-4r asm, dst, src, (AMD64ImmOp''immediateSize-2 this, size)))
         (AMD64ImmOp''emitImmediate-4 this, asm, size, imm)
         nil
     )
@@ -11834,13 +11831,13 @@ ZeroExtendNode'new-4
 
     (defn #_"void" AMD64MOp''emit-4r [#_"AMD64MOp" this, #_"Assembler" asm, #_"OperandSize" size, #_"Register" dst]
         (AMD64Op''emitOpcode-6 this, asm, size, (Assembler'getRXB-2rr nil, dst), 0, (.encoding dst))
-        (Assembler''emitModRM-3ir asm, (:ext this), dst)
+        (§ ass! asm (Assembler''emitModRM-3ir asm, (:ext this), dst))
         nil
     )
 
     (defn #_"void" AMD64MOp''emit-4a [#_"AMD64MOp" this, #_"Assembler" asm, #_"OperandSize" size, #_"AMD64Address" dst]
         (AMD64Op''emitOpcode-6 this, asm, size, (Assembler'getRXB-2ra nil, dst), 0, 0)
-        (Assembler''emitOperandHelper-4i asm, (:ext this), dst, 0)
+        (§ ass! asm (Assembler''emitOperandHelper-4i asm, (:ext this), dst, 0))
         nil
     )
 )
@@ -11869,14 +11866,14 @@ ZeroExtendNode'new-4
     (defm AMD64MROp AMD64RROp
         (#_"void" AMD64RROp'''emit-5 [#_"AMD64MROp" this, #_"Assembler" asm, #_"OperandSize" size, #_"Register" dst, #_"Register" src]
             (AMD64Op''emitOpcode-6 this, asm, size, (Assembler'getRXB-2rr src, dst), (.encoding src), (.encoding dst))
-            (Assembler''emitModRM-3rr asm, src, dst)
+            (§ ass! asm (Assembler''emitModRM-3rr asm, src, dst))
             nil
         )
     )
 
     (defn #_"void" AMD64MROp''emit-5 [#_"AMD64MROp" this, #_"Assembler" asm, #_"OperandSize" size, #_"AMD64Address" dst, #_"Register" src]
         (AMD64Op''emitOpcode-6 this, asm, size, (Assembler'getRXB-2ra src, dst), (.encoding src), 0)
-        (Assembler''emitOperandHelper-4r asm, src, dst, 0)
+        (§ ass! asm (Assembler''emitOperandHelper-4r asm, src, dst, 0))
         nil
     )
 )
@@ -11926,14 +11923,14 @@ ZeroExtendNode'new-4
     (defm AMD64RMOp AMD64RROp
         (#_"void" AMD64RROp'''emit-5 [#_"AMD64RMOp" this, #_"Assembler" asm, #_"OperandSize" size, #_"Register" dst, #_"Register" src]
             (AMD64Op''emitOpcode-6 this, asm, size, (Assembler'getRXB-2rr dst, src), (.encoding dst), (.encoding src))
-            (Assembler''emitModRM-3rr asm, dst, src)
+            (§ ass! asm (Assembler''emitModRM-3rr asm, dst, src))
             nil
         )
     )
 
     (defn #_"void" AMD64RMOp''emit-5 [#_"AMD64RMOp" this, #_"Assembler" asm, #_"OperandSize" size, #_"Register" dst, #_"AMD64Address" src]
         (AMD64Op''emitOpcode-6 this, asm, size, (Assembler'getRXB-2ra dst, src), (.encoding dst), 0)
-        (Assembler''emitOperandHelper-4r asm, dst, src, 0)
+        (§ ass! asm (Assembler''emitOperandHelper-4r asm, dst, src, 0))
         nil
     )
 )
@@ -12072,10 +12069,13 @@ ZeroExtendNode'new-4
 
     (defm AbstractInlineInfo InlineInfo
         (#_"this" InlineInfo'''populateInlinableElements-4 [#_"AbstractInlineInfo" this, #_"PhaseContext" context, #_"Graph" caller, #_"CanonicalizerPhase" canonicalizer]
-            (dotimes [#_"int" i (InlineInfo'''numberOfMethods-1 this)]
-                (§ ass! this (InlineInfo'''setInlinableElement-3 this, i, (InlineableGraph'new-4 (InlineInfo'''methodAt-2 this, i), (:invoke this), context, canonicalizer)))
+            (loop-when [this this #_"int" i 0] (< i (InlineInfo'''numberOfMethods-1 this)) => this
+                (let [
+                    this (InlineInfo'''setInlinableElement-3 this, i, (InlineableGraph'new-4 (InlineInfo'''methodAt-2 this, i), (:invoke this), context, canonicalizer))
+                ]
+                    (recur this (inc i))
+                )
             )
-            this
         )
 
         (#_"int" InlineInfo'''determineNodeCount-1 [#_"AbstractInlineInfo" this]
@@ -13073,40 +13073,10 @@ ZeroExtendNode'new-4
 )
 
 (class-ns Allocator []
-    ;;;
-     ; Numbers all instructions in all blocks.
-     ;
-     ; @return the id of the last operation
-     ;;
-    (defn- #_"int" Allocator'numberInstructions-2 [#_"LIR" lir, #_"Block*" sortedBlocks]
-        (loop-when [#_"int" opId 0 #_"seq" s (seq sortedBlocks)] (some? s) => (- opId 2)
-            (let [
-                #_"[LIRInstruction]" ops (LIR''getLIRforBlock-2 lir, (first s))
-                opId
-                    (loop-when [opId opId #_"int" i 0] (< i (count ops)) => opId
-                        (§ ass! (nth ops i) (LIRInstruction''setId-2 (nth ops i), opId))
-                        ;; numbering of lirOps by two
-                        (recur (+ opId 2) (inc i))
-                    )
-            ]
-                (recur opId (next s))
-            )
-        )
-    )
-
-    (defn #_"Allocator" Allocator'new-2 [#_"LIR" lir, #_"FrameMapBuilder" frameMapBuilder]
+    (defn- #_"Allocator" Allocator'new-1 [#_"FrameMapBuilder" frameMapBuilder]
         (merge (Allocator'class.)
             (hash-map
-                #_"LIR" :lir lir
                 #_"FrameMapBuilder" :frameMapBuilder frameMapBuilder
-                #_"{int StackInterval}" :stackSlotMap {}
-                #_"sorted StackInterval*" :unhandled nil ;; insert by from
-                #_"sorted StackInterval*" :active nil    ;; insert by to
-                #_"[Block]" :sortedBlocks (:reversePostOrder (:cfg lir))
-                ;;;
-                 ; Highest instruction id.
-                 ;;
-                #_"int" :maxOpId (Allocator'numberInstructions-2 lir, (:reversePostOrder (:cfg lir)))
                 #_"{SlotSize (StackSlot)}" :freeSlots {}
             )
         )
@@ -13122,23 +13092,19 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"{LIRInstruction}" Allocator''buildIntervals-1 [#_"Allocator" this]
-        (FixPointIntervalBuilder'build-3 (:lir this), (:stackSlotMap this), (:maxOpId this))
-    )
-
     ;;;
      ; Gets a free stack slot for {@code slot} or nil if there is none.
      ;;
-    (defn- #_"[StackSlot this]" Allocator''findFreeSlot-2 [#_"Allocator" this, #_"VirtualStackSlot" slot]
+    (defn- #_"[this StackSlot]" Allocator''findFreeSlot-2 [#_"Allocator" this, #_"VirtualStackSlot" slot]
         (let [
             #_"SlotSize" size (Allocator'forKind-1 (#_"Value" .getValueKind slot))
         ]
-            (when-not (= size :SlotSize'Illegal) => [nil this]
+            (when-not (= size :SlotSize'Illegal) => [this nil]
                 (let [
-                    #_"(StackSlot)" freeList (get (:freeSlots this) size)
+                    #_"(StackSlot)" slots (get (:freeSlots this) size)
                 ]
-                    (when (some? freeList) => [nil this]
-                        [(first freeList) (update-in this [:freeSlots size] next)]
+                    (when (some? slots) => [this nil]
+                        [(update-in this [:freeSlots size] next) (first slots)]
                     )
                 )
             )
@@ -13147,34 +13113,21 @@ ZeroExtendNode'new-4
 
     (defn- #_"[this StackInterval]" Allocator''allocateSlot-2 [#_"Allocator" this, #_"StackInterval" interval]
         (let [
-            #_"VirtualStackSlot" virtualSlot (:operand interval)
-            [this #_"StackSlot" location]
+            [this #_"StackSlot" slot]
                 (let [
-                    [#_"StackSlot" slot this] (Allocator''findFreeSlot-2 this, virtualSlot)
+                    [this slot] (Allocator''findFreeSlot-2 this, (:operand interval))
                 ]
                     [this
                         (if (some? slot)
                             ;; Free stack slot available. Note that we create a new one because the kind might not match.
                             (StackSlot/get (:kind interval), (#_"StackSlot" .getRawOffset slot), (#_"StackSlot" .getRawAddFrameSize slot))
                             ;; Allocate new stack slot.
-                            (FrameMap''allocateSpillSlot-2 (:frameMap (:frameMapBuilder this)), (#_"Value" .getValueKind virtualSlot))
+                            (FrameMap''allocateSpillSlot-2 (:frameMap (:frameMapBuilder this)), (#_"Value" .getValueKind (:operand interval)))
                         )
                     ]
                 )
         ]
-            [this (StackInterval''setLocation-2 interval, location)]
-        )
-    )
-
-    ;;;
-     ; Gets the lowest {@link StackInterval#to() end position} of all active intervals.
-     ; If there is none Integer#MAX_VALUE is returned.
-     ;;
-    (defn- #_"int" Allocator''activePeekId-1 [#_"Allocator" this]
-        (let [
-            #_"StackInterval" interval (first (:active this))
-        ]
-            (if (some? interval) (:to interval) Integer/MAX_VALUE)
+            [this (assoc interval :slot slot)]
         )
     )
 
@@ -13191,77 +13144,52 @@ ZeroExtendNode'new-4
         )
     )
 
-    ;;;
-     ; Finishes {@code interval} by adding its location to the list of free stack slots.
-     ;;
-    (defn- #_"this" Allocator''finished-2 [#_"Allocator" this, #_"StackInterval" interval]
-        (Allocator''freeSlot-2 this, (:location interval))
-    )
-
-    ;;;
-     ; Gets the next unhandled interval and finishes handled intervals.
-     ;;
-    (defn- #_"StackInterval" Allocator''activateNext-1 [#_"Allocator" this]
-        (when (seq (:unhandled this))
+    (defn- #_"this" Allocator''allocateStackSlots-2 [#_"Allocator" this, #_"{int StackInterval}" stackSlotMap]
+        (loop-when [this this #_"sorted StackInterval*" active nil #_"seq" s (seq (sort-by :from (vals stackSlotMap)))] (some? s) => this
             (let [
-                #_"StackInterval" _next (first (:unhandled this))
-                _ (§ ass! this (update this :unhandled next))
-                _
-                    (loop-when-recur [] (< (Allocator''activePeekId-1 this) (:from _next)) []
-                        (let [
-                            #_"StackInterval" interval (first (:active this))
-                            _ (§ ass! this (update this :active next))
-                        ]
-                            (§ ass! this (Allocator''finished-2 this, interval))
-                        )
+                #_"StackInterval" interval (first s)
+                [this active]
+                    (loop-when-recur [this this active active]
+                                     (and (some? active) (< (:to (first active)) (:from interval)))
+                                     [(Allocator''freeSlot-2 this, (:slot (first active))) (next active)]
+                                  => [this active]
                     )
-                _ (§ ass! this (update this :active #(sort-by :to (cons _next %))))
+                [this interval] (Allocator''allocateSlot-2 this, interval)
             ]
-                _next
+                (recur this (sort-by :to (cons interval active)) (next s))
             )
         )
     )
 
-    (defn- #_"this" Allocator''allocateStackSlots-1 [#_"Allocator" this]
+    (defn- #_"void" Allocator''assignStackSlots-3 [#_"Allocator" this, #_"{LIRInstruction}" usePos, #_"{int StackInterval}" stackSlotMap]
         (let [
-            this (update this :unhandled #(sort-by :from (concat % (remove nil? (vals (:stackSlotMap this))))))
-        ]
-            (loop-when-recur [#_"StackInterval" interval (Allocator''activateNext-1 this)] (some? interval) [(Allocator''activateNext-1 this)]
-                (§ ass! [this interval] (Allocator''allocateSlot-2 this, interval))
-            )
-            this
-        )
-    )
-
-    (defn- #_"void" Allocator''assignStackSlots-2 [#_"Allocator" this, #_"{LIRInstruction}" usePos]
-        (let [
-            #_"ValueProcedure" assignSlot
+            #_"ValueProcedure" f'assignSlot
                 (reify ValueProcedure
                     (#_"Value" ValueProcedure'''doValue-5 [#_"ValueProcedure" _, #_"LIRInstruction" _op, #_"Value" value, #_"OperandMode" _mode, #_"{OperandFlag}" _flags]
                         (when (satisfies? VirtualStackSlot value) => value
-                            (:location (get (:stackSlotMap this) (:id value)))
+                            (:slot (get stackSlotMap (:id value)))
                         )
                     )
                 )
         ]
             (doseq [#_"LIRInstruction" op usePos]
-                (LIRInstruction''forEachInput-2 op, assignSlot)
-                (LIRInstruction''forEachAlive-2 op, assignSlot)
-                (LIRInstruction''forEachTemp-2 op, assignSlot)
-                (LIRInstruction''forEachOutput-2 op, assignSlot)
+                (LIRInstruction''forEachInput-2 op, f'assignSlot)
+                (LIRInstruction''forEachAlive-2 op, f'assignSlot)
+                (LIRInstruction''forEachTemp-2 op, f'assignSlot)
+                (LIRInstruction''forEachOutput-2 op, f'assignSlot)
             )
         )
         nil
     )
 
-    (defn #_"this" Allocator''allocate-1 [#_"Allocator" this]
+    (defn #_"void" Allocator'allocate-1 [#_"LIR" lir, #_"FrameMapBuilder" frameMapBuilder]
         (let [
-            #_"{LIRInstruction}" usePos (Allocator''buildIntervals-1 this)
-            this (Allocator''allocateStackSlots-1 this)
+            #_"Allocator" allocator (Allocator'new-1 frameMapBuilder)
+            [#_"{LIRInstruction}" usePos #_"{int StackInterval}" stackSlotMap] (FixPointIntervalBuilder'build-1 lir)
         ]
-            (Allocator''assignStackSlots-2 this, usePos)
-            this
+            (Allocator''assignStackSlots-3 (Allocator''allocateStackSlots-2 allocator, stackSlotMap), usePos, stackSlotMap)
         )
+        nil
     )
 )
 
@@ -13655,13 +13583,15 @@ ZeroExtendNode'new-4
     (defn #_"int" Assembler'getRXB-2ra [#_"Register" reg, #_"AMD64Address" rm]
         (let [
             #_"int" rxb (>> (if (nil? reg) 0 (& (.encoding reg) 0x08)) 1)
+            rxb
+                (when-not (= (:index rm) Register/None) => rxb
+                    (| rxb (>> (& (.encoding (:index rm)) 0x08) 2))
+                )
+            rxb
+                (when-not (= (:base rm) Register/None) => rxb
+                    (| rxb (>> (& (.encoding (:base rm)) 0x08) 3))
+                )
         ]
-            (when-not (= (:index rm) Register/None)
-                (§ ass rxb (| rxb (>> (& (.encoding (:index rm)) 0x08) 2)))
-            )
-            (when-not (= (:base rm) Register/None)
-                (§ ass rxb (| rxb (>> (& (.encoding (:base rm)) 0x08) 3)))
-            )
             rxb
         )
     )
@@ -13671,9 +13601,8 @@ ZeroExtendNode'new-4
      ;
      ; Format: [ 11 reg r/m ]
      ;;
-    (defn #_"void" Assembler''emitModRM-3ir [#_"Assembler" this, #_"int" reg, #_"Register" rm]
-        (§ ass! this (Assembler''emitByte-2 this, (| 0xc0 (<< reg 3) (& (.encoding rm) 0x07))))
-        nil
+    (defn #_"this" Assembler''emitModRM-3ir [#_"Assembler" this, #_"int" reg, #_"Register" rm]
+        (Assembler''emitByte-2 this, (| 0xc0 (<< reg 3) (& (.encoding rm) 0x07)))
     )
 
     ;;;
@@ -13681,14 +13610,12 @@ ZeroExtendNode'new-4
      ;
      ; Format: [ 11 reg r/m ]
      ;;
-    (defn #_"void" Assembler''emitModRM-3rr [#_"Assembler" this, #_"Register" reg, #_"Register" rm]
+    (defn #_"this" Assembler''emitModRM-3rr [#_"Assembler" this, #_"Register" reg, #_"Register" rm]
         (Assembler''emitModRM-3ir this, (& (.encoding reg) 0x07), rm)
-        nil
     )
 
-    (defn #_"void" Assembler''emitOperandHelper-4r [#_"Assembler" this, #_"Register" reg, #_"AMD64Address" addr, #_"int" additionalInstructionSize]
+    (defn #_"this" Assembler''emitOperandHelper-4r [#_"Assembler" this, #_"Register" reg, #_"AMD64Address" addr, #_"int" additionalInstructionSize]
         (Assembler''emitOperandHelper-5i this, (Assembler'encode-1 reg), addr, false, additionalInstructionSize)
-        nil
     )
 
     ;;;
@@ -13696,14 +13623,12 @@ ZeroExtendNode'new-4
      ;
      ; @param force4Byte use 4 byte encoding for displacements that would normally fit in a byte
      ;;
-    (defn #_"void" Assembler''emitOperandHelper-5r [#_"Assembler" this, #_"Register" reg, #_"AMD64Address" addr, #_"boolean" force4Byte, #_"int" additionalInstructionSize]
+    (defn #_"this" Assembler''emitOperandHelper-5r [#_"Assembler" this, #_"Register" reg, #_"AMD64Address" addr, #_"boolean" force4Byte, #_"int" additionalInstructionSize]
         (Assembler''emitOperandHelper-5i this, (Assembler'encode-1 reg), addr, force4Byte, additionalInstructionSize)
-        nil
     )
 
-    (defn #_"void" Assembler''emitOperandHelper-4i [#_"Assembler" this, #_"int" reg, #_"AMD64Address" addr, #_"int" additionalInstructionSize]
+    (defn #_"this" Assembler''emitOperandHelper-4i [#_"Assembler" this, #_"int" reg, #_"AMD64Address" addr, #_"int" additionalInstructionSize]
         (Assembler''emitOperandHelper-5i this, reg, addr, false, additionalInstructionSize)
-        nil
     )
 
     ;;;
@@ -13715,7 +13640,7 @@ ZeroExtendNode'new-4
      ;            so that the start position of the next instruction can be computed even though
      ;            this instruction has not been completely emitted yet.
      ;;
-    (defn #_"void" Assembler''emitOperandHelper-5i [#_"Assembler" this, #_"int" reg, #_"AMD64Address" addr, #_"boolean" force4Byte, #_"int" additionalInstructionSize]
+    (defn #_"this" Assembler''emitOperandHelper-5i [#_"Assembler" this, #_"int" reg, #_"AMD64Address" addr, #_"boolean" force4Byte, #_"int" additionalInstructionSize]
         (let [
             #_"int" regenc (<< reg 3)
             #_"Register" base (:base addr)
@@ -13725,10 +13650,9 @@ ZeroExtendNode'new-4
         ]
             (cond
                 (= base AMD64/rip) ;; also matches addresses returned by getPlaceholder()
-                    (do
-                        ;; [00 000 101] disp32
-                        (§ ass! this (Assembler''emitByte-2 this, (| 0x05 regenc)))
-                        (§ ass! this (Assembler''emitInt-2 this, disp))
+                    (-> this ;; [00 000 101] disp32
+                        (Assembler''emitByte-2 (| 0x05 regenc))
+                        (Assembler''emitInt-2 disp)
                     )
                 (#_"Register" .isValid base)
                     (let [
@@ -13736,111 +13660,86 @@ ZeroExtendNode'new-4
                     ]
                         (cond
                             (#_"Register" .isValid index)
-                            (let [
-                                #_"int" indexenc (<< (Assembler'encode-1 index) 3)
-                            ]
-                                ;; [base + indexscale + disp]
-                                (cond
-                                    (and (zero? disp) (not (= base AMD64/rbp)) (not (= base AMD64/r13)))
-                                    (do
-                                        ;; [base + indexscale]
-                                        ;; [00 reg 100][ss index base]
-                                        (§ ass! this (Assembler''emitByte-2 this, (| 0x04 regenc)))
-                                        (§ ass! this (Assembler''emitByte-2 this, (| (<< (:shift scale) 6) indexenc baseenc)))
-                                    )
-                                    (and (NumUtil'isByte-1i disp) (not force4Byte))
-                                    (do
-                                        ;; [base + indexscale + imm8]
-                                        ;; [01 reg 100][ss index base] imm8
-                                        (§ ass! this (Assembler''emitByte-2 this, (| 0x44 regenc)))
-                                        (§ ass! this (Assembler''emitByte-2 this, (| (<< (:shift scale) 6) indexenc baseenc)))
-                                        (§ ass! this (Assembler''emitByte-2 this, (& disp 0xff)))
-                                    )
-                                    :else
-                                    (do
-                                        ;; [base + indexscale + disp32]
-                                        ;; [10 reg 100][ss index base] disp32
-                                        (§ ass! this (Assembler''emitByte-2 this, (| 0x84 regenc)))
-                                        (§ ass! this (Assembler''emitByte-2 this, (| (<< (:shift scale) 6) indexenc baseenc)))
-                                        (§ ass! this (Assembler''emitInt-2 this, disp))
+                                (let [
+                                    #_"int" indexenc (<< (Assembler'encode-1 index) 3)
+                                ]
+                                    ;; [base + indexscale + disp]
+                                    (cond
+                                        (and (zero? disp) (not (= base AMD64/rbp)) (not (= base AMD64/r13)))
+                                            (-> this ;; [base + indexscale] ;; [00 reg 100][ss index base]
+                                                (Assembler''emitByte-2 (| 0x04 regenc))
+                                                (Assembler''emitByte-2 (| (<< (:shift scale) 6) indexenc baseenc))
+                                            )
+                                        (and (NumUtil'isByte-1i disp) (not force4Byte))
+                                            (-> this ;; [base + indexscale + imm8] ;; [01 reg 100][ss index base] imm8
+                                                (Assembler''emitByte-2 (| 0x44 regenc))
+                                                (Assembler''emitByte-2 (| (<< (:shift scale) 6) indexenc baseenc))
+                                                (Assembler''emitByte-2 (& disp 0xff))
+                                            )
+                                        :else
+                                            (-> this ;; [base + indexscale + disp32] ;; [10 reg 100][ss index base] disp32
+                                                (Assembler''emitByte-2 (| 0x84 regenc))
+                                                (Assembler''emitByte-2 (| (<< (:shift scale) 6) indexenc baseenc))
+                                                (Assembler''emitInt-2 disp)
+                                            )
                                     )
                                 )
-                            )
                             (any = base AMD64/rsp AMD64/r12)
                                 ;; [rsp + disp]
                                 (cond
                                     (zero? disp)
-                                    (do
-                                        ;; [rsp]
-                                        ;; [00 reg 100][00 100 100]
-                                        (§ ass! this (Assembler''emitByte-2 this, (| 0x04 regenc)))
-                                        (§ ass! this (Assembler''emitByte-2 this, 0x24))
-                                    )
+                                        (-> this ;; [rsp] ;; [00 reg 100][00 100 100]
+                                            (Assembler''emitByte-2 (| 0x04 regenc))
+                                            (Assembler''emitByte-2 0x24)
+                                        )
                                     (and (NumUtil'isByte-1i disp) (not force4Byte))
-                                    (do
-                                        ;; [rsp + imm8]
-                                        ;; [01 reg 100][00 100 100] disp8
-                                        (§ ass! this (Assembler''emitByte-2 this, (| 0x44 regenc)))
-                                        (§ ass! this (Assembler''emitByte-2 this, 0x24))
-                                        (§ ass! this (Assembler''emitByte-2 this, (& disp 0xff)))
-                                    )
+                                        (-> this ;; [rsp + imm8] ;; [01 reg 100][00 100 100] disp8
+                                            (Assembler''emitByte-2 (| 0x44 regenc))
+                                            (Assembler''emitByte-2 0x24)
+                                            (Assembler''emitByte-2 (& disp 0xff))
+                                        )
                                     :else
-                                    (do
-                                        ;; [rsp + imm32]
-                                        ;; [10 reg 100][00 100 100] disp32
-                                        (§ ass! this (Assembler''emitByte-2 this, (| 0x84 regenc)))
-                                        (§ ass! this (Assembler''emitByte-2 this, 0x24))
-                                        (§ ass! this (Assembler''emitInt-2 this, disp))
-                                    )
+                                        (-> this ;; [rsp + imm32] ;; [10 reg 100][00 100 100] disp32
+                                            (Assembler''emitByte-2 (| 0x84 regenc))
+                                            (Assembler''emitByte-2 0x24)
+                                            (Assembler''emitInt-2 disp)
+                                        )
                                 )
                             :else
                                 ;; [base + disp]
                                 (cond
                                     (and (zero? disp) (not (= base AMD64/rbp)) (not (= base AMD64/r13)))
-                                    (do
-                                        ;; [base]
-                                        ;; [00 reg base]
-                                        (§ ass! this (Assembler''emitByte-2 this, (| 0x00 regenc baseenc)))
-                                    )
+                                        (-> this ;; [base] ;; [00 reg base]
+                                            (Assembler''emitByte-2 (| 0x00 regenc baseenc))
+                                        )
                                     (and (NumUtil'isByte-1i disp) (not force4Byte))
-                                    (do
-                                        ;; [base + disp8]
-                                        ;; [01 reg base] disp8
-                                        (§ ass! this (Assembler''emitByte-2 this, (| 0x40 regenc baseenc)))
-                                        (§ ass! this (Assembler''emitByte-2 this, (& disp 0xff)))
-                                    )
+                                        (-> this ;; [base + disp8] ;; [01 reg base] disp8
+                                            (Assembler''emitByte-2 (| 0x40 regenc baseenc))
+                                            (Assembler''emitByte-2 (& disp 0xff))
+                                        )
                                     :else
-                                    (do
-                                        ;; [base + disp32]
-                                        ;; [10 reg base] disp32
-                                        (§ ass! this (Assembler''emitByte-2 this, (| 0x80 regenc baseenc)))
-                                        (§ ass! this (Assembler''emitInt-2 this, disp))
-                                    )
+                                        (-> this ;; [base + disp32] ;; [10 reg base] disp32
+                                            (Assembler''emitByte-2 (| 0x80 regenc baseenc))
+                                            (Assembler''emitInt-2 disp)
+                                        )
                                 )
                         )
                     )
                 :else
                     (if (#_"Register" .isValid index)
-                        (let [
-                            #_"int" indexenc (<< (Assembler'encode-1 index) 3)
-                        ]
-                            ;; [indexscale + disp]
-                            ;; [00 reg 100][ss index 101] disp32
-                            (§ ass! this (Assembler''emitByte-2 this, (| 0x04 regenc)))
-                            (§ ass! this (Assembler''emitByte-2 this, (| (<< (:shift scale) 6) indexenc 0x05)))
-                            (§ ass! this (Assembler''emitInt-2 this, disp))
+                        (-> this ;; [indexscale + disp] ;; [00 reg 100][ss index 101] disp32
+                            (Assembler''emitByte-2 (| 0x04 regenc))
+                            (Assembler''emitByte-2 (| (<< (:shift scale) 6) (<< (Assembler'encode-1 index) 3) 0x05))
+                            (Assembler''emitInt-2 disp)
                         )
-                        (do
-                            ;; [disp] ABSOLUTE
-                            ;; [00 reg 100][00 100 101] disp32
-                            (§ ass! this (Assembler''emitByte-2 this, (| 0x04 regenc)))
-                            (§ ass! this (Assembler''emitByte-2 this, 0x25))
-                            (§ ass! this (Assembler''emitInt-2 this, disp))
+                        (-> this ;; [disp] ABSOLUTE ;; [00 reg 100][00 100 101] disp32
+                            (Assembler''emitByte-2 (| 0x04 regenc))
+                            (Assembler''emitByte-2 0x25)
+                            (Assembler''emitInt-2 disp)
                         )
                     )
             )
         )
-        nil
     )
 
     (defn- #_"int" Assembler''prefixAndEncode-3b [#_"Assembler" this, #_"int" regEnc, #_"boolean" byte-inst?]
@@ -13939,654 +13838,697 @@ ZeroExtendNode'new-4
         (<= Assembler'MinEncodingNeedsRex (.encoding reg))
     )
 
-    (defn- #_"void" Assembler''prefix-2 [#_"Assembler" this, #_"AMD64Address" adr]
-        (if (Assembler'needsRex-1 (:base adr))
-            (if (Assembler'needsRex-1 (:index adr))
-                (§ ass! this (Assembler''emitByte-2 this, Prefix'REXXB))
-                (§ ass! this (Assembler''emitByte-2 this, Prefix'REXB))
-            )
-            (when (Assembler'needsRex-1 (:index adr))
-                (§ ass! this (Assembler''emitByte-2 this, Prefix'REXX))
-            )
+    (defn- #_"this" Assembler''prefix-2 [#_"Assembler" this, #_"AMD64Address" adr]
+        (let [
+            #_"Integer" prefix
+                (if (Assembler'needsRex-1 (:base adr))
+                    (if (Assembler'needsRex-1 (:index adr))
+                        Prefix'REXXB
+                        Prefix'REXB
+                    )
+                    (when (Assembler'needsRex-1 (:index adr))
+                        Prefix'REXX
+                    )
+                )
+        ]
+            (when (some? prefix) (Assembler''emitByte-2 this, prefix))
         )
-        nil
     )
 
-    (defn- #_"void" Assembler''prefixq-2 [#_"Assembler" this, #_"AMD64Address" adr]
-        (if (Assembler'needsRex-1 (:base adr))
-            (if (Assembler'needsRex-1 (:index adr))
-                (§ ass! this (Assembler''emitByte-2 this, Prefix'REXWXB))
-                (§ ass! this (Assembler''emitByte-2 this, Prefix'REXWB))
-            )
-            (if (Assembler'needsRex-1 (:index adr))
-                (§ ass! this (Assembler''emitByte-2 this, Prefix'REXWX))
-                (§ ass! this (Assembler''emitByte-2 this, Prefix'REXW))
-            )
+    (defn- #_"this" Assembler''prefixq-2 [#_"Assembler" this, #_"AMD64Address" adr]
+        (let [
+            #_"int" prefix
+                (if (Assembler'needsRex-1 (:base adr))
+                    (if (Assembler'needsRex-1 (:index adr))
+                        Prefix'REXWXB
+                        Prefix'REXWB
+                    )
+                    (if (Assembler'needsRex-1 (:index adr))
+                        Prefix'REXWX
+                        Prefix'REXW
+                    )
+                )
+        ]
+            (Assembler''emitByte-2 this, prefix)
         )
-        nil
     )
 
-    (defn- #_"void" Assembler''prefix-4 [#_"Assembler" this, #_"AMD64Address" adr, #_"Register" reg, #_"boolean" byte-inst?]
-        (if (< (.encoding reg) 8)
-            (if (Assembler'needsRex-1 (:base adr))
-                (if (Assembler'needsRex-1 (:index adr))
-                    (§ ass! this (Assembler''emitByte-2 this, Prefix'REXXB))
-                    (§ ass! this (Assembler''emitByte-2 this, Prefix'REXB))
+    (defn- #_"this" Assembler''prefix-4 [#_"Assembler" this, #_"AMD64Address" adr, #_"Register" reg, #_"boolean" byte-inst?]
+        (let [
+            #_"Integer" prefix
+                (if (< (.encoding reg) 8)
+                    (if (Assembler'needsRex-1 (:base adr))
+                        (if (Assembler'needsRex-1 (:index adr))
+                            Prefix'REXXB
+                            Prefix'REXB
+                        )
+                        (cond
+                            (Assembler'needsRex-1 (:index adr))
+                                Prefix'REXX
+                            (and byte-inst? (<= 4 (.encoding reg)))
+                                Prefix'REX
+                        )
+                    )
+                    (if (Assembler'needsRex-1 (:base adr))
+                        (if (Assembler'needsRex-1 (:index adr))
+                            Prefix'REXRXB
+                            Prefix'REXRB
+                        )
+                        (if (Assembler'needsRex-1 (:index adr))
+                            Prefix'REXRX
+                            Prefix'REXR
+                        )
+                    )
                 )
-                (cond
-                    (Assembler'needsRex-1 (:index adr))
-                        (§ ass! this (Assembler''emitByte-2 this, Prefix'REXX))
-                    (and byte-inst? (<= 4 (.encoding reg)))
-                        (§ ass! this (Assembler''emitByte-2 this, Prefix'REX))
-                )
-            )
-            (if (Assembler'needsRex-1 (:base adr))
-                (if (Assembler'needsRex-1 (:index adr))
-                    (§ ass! this (Assembler''emitByte-2 this, Prefix'REXRXB))
-                    (§ ass! this (Assembler''emitByte-2 this, Prefix'REXRB))
-                )
-                (if (Assembler'needsRex-1 (:index adr))
-                    (§ ass! this (Assembler''emitByte-2 this, Prefix'REXRX))
-                    (§ ass! this (Assembler''emitByte-2 this, Prefix'REXR))
-                )
-            )
+        ]
+            (when (some? prefix) (Assembler''emitByte-2 this, prefix))
         )
-        nil
     )
 
-    (defn- #_"void" Assembler''prefix-3 [#_"Assembler" this, #_"AMD64Address" adr, #_"Register" reg]
+    (defn- #_"this" Assembler''prefix-3 [#_"Assembler" this, #_"AMD64Address" adr, #_"Register" reg]
         (Assembler''prefix-4 this, adr, reg, false)
-        nil
     )
 
-    (defn- #_"void" Assembler''prefixq-3 [#_"Assembler" this, #_"AMD64Address" adr, #_"Register" src]
-        (if (< (.encoding src) 8)
-            (if (Assembler'needsRex-1 (:base adr))
-                (if (Assembler'needsRex-1 (:index adr))
-                    (§ ass! this (Assembler''emitByte-2 this, Prefix'REXWXB))
-                    (§ ass! this (Assembler''emitByte-2 this, Prefix'REXWB))
+    (defn- #_"this" Assembler''prefixq-3 [#_"Assembler" this, #_"AMD64Address" adr, #_"Register" src]
+        (let [
+            #_"int" prefix
+                (if (< (.encoding src) 8)
+                    (if (Assembler'needsRex-1 (:base adr))
+                        (if (Assembler'needsRex-1 (:index adr))
+                            Prefix'REXWXB
+                            Prefix'REXWB
+                        )
+                        (if (Assembler'needsRex-1 (:index adr))
+                            Prefix'REXWX
+                            Prefix'REXW
+                        )
+                    )
+                    (if (Assembler'needsRex-1 (:base adr))
+                        (if (Assembler'needsRex-1 (:index adr))
+                            Prefix'REXWRXB
+                            Prefix'REXWRB
+                        )
+                        (if (Assembler'needsRex-1 (:index adr))
+                            Prefix'REXWRX
+                            Prefix'REXWR
+                        )
+                    )
                 )
-                (if (Assembler'needsRex-1 (:index adr))
-                    (§ ass! this (Assembler''emitByte-2 this, Prefix'REXWX))
-                    (§ ass! this (Assembler''emitByte-2 this, Prefix'REXW))
-                )
-            )
-            (if (Assembler'needsRex-1 (:base adr))
-                (if (Assembler'needsRex-1 (:index adr))
-                    (§ ass! this (Assembler''emitByte-2 this, Prefix'REXWRXB))
-                    (§ ass! this (Assembler''emitByte-2 this, Prefix'REXWRB))
-                )
-                (if (Assembler'needsRex-1 (:index adr))
-                    (§ ass! this (Assembler''emitByte-2 this, Prefix'REXWRX))
-                    (§ ass! this (Assembler''emitByte-2 this, Prefix'REXWR))
-                )
-            )
+        ]
+            (Assembler''emitByte-2 this, prefix)
         )
-        nil
     )
 
-    (defn #_"void" Assembler''addl-3ai [#_"Assembler" this, #_"AMD64Address" dst, #_"int" imm32]
+    (defn #_"this" Assembler''addl-3ai [#_"Assembler" this, #_"AMD64Address" dst, #_"int" imm32]
         (AMD64MIOp''emit-5a (BinaryArithmetic''getMIOpcode-3 BinaryArithmetic'ADD, :OperandSize'DWORD, (NumUtil'isByte-1i imm32)), this, :OperandSize'DWORD, dst, imm32)
-        nil
+        this
     )
 
-    (defn #_"void" Assembler''addl-3ri [#_"Assembler" this, #_"Register" dst, #_"int" imm32]
+    (defn #_"this" Assembler''addl-3ri [#_"Assembler" this, #_"Register" dst, #_"int" imm32]
         (AMD64MIOp''emit-5r (BinaryArithmetic''getMIOpcode-3 BinaryArithmetic'ADD, :OperandSize'DWORD, (NumUtil'isByte-1i imm32)), this, :OperandSize'DWORD, dst, imm32)
-        nil
+        this
     )
 
-    (defn #_"void" Assembler''addl-3rr [#_"Assembler" this, #_"Register" dst, #_"Register" src]
+    #_unused
+    (defn #_"this" Assembler''addl-3rr [#_"Assembler" this, #_"Register" dst, #_"Register" src]
         (AMD64RROp'''emit-5 (:rmOp BinaryArithmetic'ADD), this, :OperandSize'DWORD, dst, src)
-        nil
+        this
     )
 
-    (defn- #_"void" Assembler''addrNop4-1 [#_"Assembler" this]
-        ;; 4 bytes: NOP DWORD PTR [EAX+0]
-        (§ ass! this (Assembler''emitByte-2 this, 0x0f))
-        (§ ass! this (Assembler''emitByte-2 this, 0x1f))
-        (§ ass! this (Assembler''emitByte-2 this, 0x40)) ;; emitRm(cbuf, 0x1, EAXEnc, EAXEnc);
-        (§ ass! this (Assembler''emitByte-2 this, 0)) ;; 8-bits offset (1 byte)
-        nil
+    (defn- #_"this" Assembler''addrNop4-1 [#_"Assembler" this]
+        (-> this ;; 4 bytes: NOP DWORD PTR [EAX+0]
+            (Assembler''emitByte-2 0x0f)
+            (Assembler''emitByte-2 0x1f)
+            (Assembler''emitByte-2 0x40) ;; emitRm(cbuf, 0x1, EAXEnc, EAXEnc);
+            (Assembler''emitByte-2 0)    ;; 8-bits offset (1 byte)
+        )
     )
 
-    (defn- #_"void" Assembler''addrNop5-1 [#_"Assembler" this]
-        ;; 5 bytes: NOP DWORD PTR [EAX+EAX*0+0] 8-bits offset
-        (§ ass! this (Assembler''emitByte-2 this, 0x0f))
-        (§ ass! this (Assembler''emitByte-2 this, 0x1f))
-        (§ ass! this (Assembler''emitByte-2 this, 0x44)) ;; emitRm(cbuf, 0x1, EAXEnc, 0x4);
-        (§ ass! this (Assembler''emitByte-2 this, 0x00)) ;; emitRm(cbuf, 0x0, EAXEnc, EAXEnc);
-        (§ ass! this (Assembler''emitByte-2 this, 0)) ;; 8-bits offset (1 byte)
-        nil
+    (defn- #_"this" Assembler''addrNop5-1 [#_"Assembler" this]
+        (-> this ;; 5 bytes: NOP DWORD PTR [EAX+EAX*0+0] 8-bits offset
+            (Assembler''emitByte-2 0x0f)
+            (Assembler''emitByte-2 0x1f)
+            (Assembler''emitByte-2 0x44) ;; emitRm(cbuf, 0x1, EAXEnc, 0x4);
+            (Assembler''emitByte-2 0x00) ;; emitRm(cbuf, 0x0, EAXEnc, EAXEnc);
+            (Assembler''emitByte-2 0)    ;; 8-bits offset (1 byte)
+        )
     )
 
-    (defn- #_"void" Assembler''addrNop7-1 [#_"Assembler" this]
-        ;; 7 bytes: NOP DWORD PTR [EAX+0] 32-bits offset
-        (§ ass! this (Assembler''emitByte-2 this, 0x0f))
-        (§ ass! this (Assembler''emitByte-2 this, 0x1f))
-        (§ ass! this (Assembler''emitByte-2 this, 0x80)) ;; emitRm(cbuf, 0x2, EAXEnc, EAXEnc);
-        (§ ass! this (Assembler''emitInt-2 this, 0)) ;; 32-bits offset (4 bytes)
-        nil
+    (defn- #_"this" Assembler''addrNop7-1 [#_"Assembler" this]
+        (-> this ;; 7 bytes: NOP DWORD PTR [EAX+0] 32-bits offset
+            (Assembler''emitByte-2 0x0f)
+            (Assembler''emitByte-2 0x1f)
+            (Assembler''emitByte-2 0x80) ;; emitRm(cbuf, 0x2, EAXEnc, EAXEnc);
+            (Assembler''emitInt-2 0)     ;; 32-bits offset (4 bytes)
+        )
     )
 
-    (defn- #_"void" Assembler''addrNop8-1 [#_"Assembler" this]
-        ;; 8 bytes: NOP DWORD PTR [EAX+EAX*0+0] 32-bits offset
-        (§ ass! this (Assembler''emitByte-2 this, 0x0f))
-        (§ ass! this (Assembler''emitByte-2 this, 0x1f))
-        (§ ass! this (Assembler''emitByte-2 this, 0x84)) ;; emitRm(cbuf, 0x2, EAXEnc, 0x4);
-        (§ ass! this (Assembler''emitByte-2 this, 0x00)) ;; emitRm(cbuf, 0x0, EAXEnc, EAXEnc);
-        (§ ass! this (Assembler''emitInt-2 this, 0)) ;; 32-bits offset (4 bytes)
-        nil
+    (defn- #_"this" Assembler''addrNop8-1 [#_"Assembler" this]
+        (-> this ;; 8 bytes: NOP DWORD PTR [EAX+EAX*0+0] 32-bits offset
+            (Assembler''emitByte-2 0x0f)
+            (Assembler''emitByte-2 0x1f)
+            (Assembler''emitByte-2 0x84) ;; emitRm(cbuf, 0x2, EAXEnc, 0x4);
+            (Assembler''emitByte-2 0x00) ;; emitRm(cbuf, 0x0, EAXEnc, EAXEnc);
+            (Assembler''emitInt-2 0)     ;; 32-bits offset (4 bytes)
+        )
     )
 
     #_unused
-    (defn #_"void" Assembler''andl-3ri [#_"Assembler" this, #_"Register" dst, #_"int" imm32]
+    (defn #_"this" Assembler''andl-3ri [#_"Assembler" this, #_"Register" dst, #_"int" imm32]
         (AMD64MIOp''emit-5r (BinaryArithmetic''getMIOpcode-3 BinaryArithmetic'AND, :OperandSize'DWORD, (NumUtil'isByte-1i imm32)), this, :OperandSize'DWORD, dst, imm32)
-        nil
+        this
     )
 
     #_unused
-    (defn #_"void" Assembler''andl-3rr [#_"Assembler" this, #_"Register" dst, #_"Register" src]
+    (defn #_"this" Assembler''andl-3rr [#_"Assembler" this, #_"Register" dst, #_"Register" src]
         (AMD64RROp'''emit-5 (:rmOp BinaryArithmetic'AND), this, :OperandSize'DWORD, dst, src)
-        nil
+        this
     )
 
     #_unused
-    (defn #_"void" Assembler''bsfq-3 [#_"Assembler" this, #_"Register" dst, #_"Register" src]
+    (defn #_"this" Assembler''bsfq-3 [#_"Assembler" this, #_"Register" dst, #_"Register" src]
         (let [
             #_"int" encode (Assembler''prefixqAndEncode-3 this, (#_"Register" .encoding dst), (#_"Register" .encoding src))
         ]
-            (§ ass! this (Assembler''emitByte-2 this, 0x0f))
-            (§ ass! this (Assembler''emitByte-2 this, 0xbc))
-            (§ ass! this (Assembler''emitByte-2 this, (| 0xc0 encode)))
+            (reduce Assembler''emitByte-2 this, 0x0f 0xbc (| 0xc0 encode))
         )
-        nil
     )
 
     #_unused
-    (defn #_"void" Assembler''bsrl-3 [#_"Assembler" this, #_"Register" dst, #_"Register" src]
+    (defn #_"this" Assembler''bsrl-3 [#_"Assembler" this, #_"Register" dst, #_"Register" src]
         (let [
             #_"int" encode (Assembler''prefixAndEncode-3i this, (#_"Register" .encoding dst), (#_"Register" .encoding src))
         ]
-            (§ ass! this (Assembler''emitByte-2 this, 0x0f))
-            (§ ass! this (Assembler''emitByte-2 this, 0xbd))
-            (§ ass! this (Assembler''emitByte-2 this, (| 0xc0 encode)))
+            (reduce Assembler''emitByte-2 this, 0x0f 0xbd (| 0xc0 encode))
         )
-        nil
     )
 
-    (defn #_"void" Assembler''bswapl-2 [#_"Assembler" this, #_"Register" reg]
+    (defn #_"this" Assembler''bswapl-2 [#_"Assembler" this, #_"Register" reg]
         (let [
             #_"int" encode (Assembler''prefixAndEncode-2 this, (.encoding reg))
         ]
-            (§ ass! this (Assembler''emitByte-2 this, 0x0f))
-            (§ ass! this (Assembler''emitByte-2 this, (| 0xc8 encode)))
+            (-> this
+                (Assembler''emitByte-2 0x0f)
+                (Assembler''emitByte-2 (| 0xc8 encode))
+            )
         )
-        nil
     )
 
-    (defn #_"void" Assembler''cdql-1 [#_"Assembler" this]
-        (§ ass! this (Assembler''emitByte-2 this, 0x99))
-        nil
+    (defn #_"this" Assembler''cdql-1 [#_"Assembler" this]
+        (Assembler''emitByte-2 this, 0x99)
     )
 
-    (defn #_"void" Assembler''cmovl-4rr [#_"Assembler" this, #_"ConditionFlag" cc, #_"Register" dst, #_"Register" src]
+    (defn #_"this" Assembler''cmovl-4rr [#_"Assembler" this, #_"ConditionFlag" cc, #_"Register" dst, #_"Register" src]
         (let [
             #_"int" encode (Assembler''prefixAndEncode-3i this, (.encoding dst), (.encoding src))
         ]
-            (§ ass! this (Assembler''emitByte-2 this, 0x0f))
-            (§ ass! this (Assembler''emitByte-2 this, (| 0x40 (:value cc))))
-            (§ ass! this (Assembler''emitByte-2 this, (| 0xc0 encode)))
+            (-> this
+                (Assembler''emitByte-2 0x0f)
+                (Assembler''emitByte-2 (| 0x40 (:value cc)))
+                (Assembler''emitByte-2 (| 0xc0 encode))
+            )
         )
-        nil
     )
 
-    (defn #_"void" Assembler''cmovl-4ra [#_"Assembler" this, #_"ConditionFlag" cc, #_"Register" dst, #_"AMD64Address" src]
-        (Assembler''prefix-3 this, src, dst)
-        (§ ass! this (Assembler''emitByte-2 this, 0x0f))
-        (§ ass! this (Assembler''emitByte-2 this, (| 0x40 (:value cc))))
-        (Assembler''emitOperandHelper-4r this, dst, src, 0)
-        nil
+    (defn #_"this" Assembler''cmovl-4ra [#_"Assembler" this, #_"ConditionFlag" cc, #_"Register" dst, #_"AMD64Address" src]
+        (-> this
+            (Assembler''prefix-3 src, dst)
+            (Assembler''emitByte-2 0x0f)
+            (Assembler''emitByte-2 (| 0x40 (:value cc)))
+            (Assembler''emitOperandHelper-4r dst, src, 0)
+        )
     )
 
-    (defn #_"void" Assembler''cmpl-3ri [#_"Assembler" this, #_"Register" dst, #_"int" imm32]
+    (defn #_"this" Assembler''cmpl-3ri [#_"Assembler" this, #_"Register" dst, #_"int" imm32]
         (AMD64MIOp''emit-5r (BinaryArithmetic''getMIOpcode-3 BinaryArithmetic'CMP, :OperandSize'DWORD, (NumUtil'isByte-1i imm32)), this, :OperandSize'DWORD, dst, imm32)
-        nil
+        this
     )
 
     #_unused
-    (defn #_"void" Assembler''cmpl-3rr [#_"Assembler" this, #_"Register" dst, #_"Register" src]
+    (defn #_"this" Assembler''cmpl-3rr [#_"Assembler" this, #_"Register" dst, #_"Register" src]
         (AMD64RROp'''emit-5 (:rmOp BinaryArithmetic'CMP), this, :OperandSize'DWORD, dst, src)
-        nil
+        this
     )
 
     #_unused
-    (defn #_"void" Assembler''cmpl-3ra [#_"Assembler" this, #_"Register" dst, #_"AMD64Address" src]
+    (defn #_"this" Assembler''cmpl-3ra [#_"Assembler" this, #_"Register" dst, #_"AMD64Address" src]
         (AMD64RMOp''emit-5 (:rmOp BinaryArithmetic'CMP), this, :OperandSize'DWORD, dst, src)
-        nil
+        this
     )
 
     #_unused
-    (defn #_"void" Assembler''cmpl-3ai [#_"Assembler" this, #_"AMD64Address" dst, #_"int" imm32]
+    (defn #_"this" Assembler''cmpl-3ai [#_"Assembler" this, #_"AMD64Address" dst, #_"int" imm32]
         (AMD64MIOp''emit-5a (BinaryArithmetic''getMIOpcode-3 BinaryArithmetic'CMP, :OperandSize'DWORD, (NumUtil'isByte-1i imm32)), this, :OperandSize'DWORD, dst, imm32)
-        nil
+        this
     )
 
     ;; The 32-bit cmpxchg compares the value at adr with the contents of X86.rax,
     ;; and stores reg into adr if so; otherwise, the value at adr is loaded into X86.rax.
     ;; The ZF is set if the compared values were equal, and cleared otherwise.
-    (defn #_"void" Assembler''cmpxchgl-3 [#_"Assembler" this, #_"Register" reg, #_"AMD64Address" adr] ;; cmpxchg
-        (Assembler''prefix-3 this, adr, reg)
-        (§ ass! this (Assembler''emitByte-2 this, 0x0f))
-        (§ ass! this (Assembler''emitByte-2 this, 0xb1))
-        (Assembler''emitOperandHelper-4r this, reg, adr, 0)
-        nil
+    (defn #_"this" Assembler''cmpxchgl-3 [#_"Assembler" this, #_"Register" reg, #_"AMD64Address" adr] ;; cmpxchg
+        (-> this
+            (Assembler''prefix-3 adr, reg)
+            (Assembler''emitByte-2 0x0f)
+            (Assembler''emitByte-2 0xb1)
+            (Assembler''emitOperandHelper-4r reg, adr, 0)
+        )
     )
 
-    (defn #_"void" Assembler''decl-2a [#_"Assembler" this, #_"AMD64Address" dst]
-        (Assembler''prefix-2 this, dst)
-        (§ ass! this (Assembler''emitByte-2 this, 0xff))
-        (Assembler''emitOperandHelper-4i this, 1, dst, 0)
-        nil
-    )
-
-    #_unused
-    (defn #_"void" Assembler''hlt-1 [#_"Assembler" this]
-        (§ ass! this (Assembler''emitByte-2 this, 0xf4))
-        nil
+    (defn #_"this" Assembler''decl-2a [#_"Assembler" this, #_"AMD64Address" dst]
+        (-> this
+            (Assembler''prefix-2 dst)
+            (Assembler''emitByte-2 0xff)
+            (Assembler''emitOperandHelper-4i 1, dst, 0)
+        )
     )
 
     #_unused
-    (defn #_"void" Assembler''imull-4 [#_"Assembler" this, #_"Register" dst, #_"Register" src, #_"int" value]
+    (defn #_"this" Assembler''hlt-1 [#_"Assembler" this]
+        (Assembler''emitByte-2 this, 0xf4)
+    )
+
+    #_unused
+    (defn #_"this" Assembler''imull-4 [#_"Assembler" this, #_"Register" dst, #_"Register" src, #_"int" value]
         (if (NumUtil'isByte-1i value)
             (AMD64RMIOp''emit-6r AMD64RMIOp'IMUL_SX, this, :OperandSize'DWORD, dst, src, value)
             (AMD64RMIOp''emit-6r AMD64RMIOp'IMUL, this, :OperandSize'DWORD, dst, src, value)
         )
-        nil
+        this
     )
 
-    (defn #_"void" Assembler''incl-2a [#_"Assembler" this, #_"AMD64Address" dst]
-        (Assembler''prefix-2 this, dst)
-        (§ ass! this (Assembler''emitByte-2 this, 0xff))
-        (Assembler''emitOperandHelper-4i this, 0, dst, 0)
-        nil
+    (defn #_"this" Assembler''incl-2a [#_"Assembler" this, #_"AMD64Address" dst]
+        (-> this
+            (Assembler''prefix-2 dst)
+            (Assembler''emitByte-2 0xff)
+            (Assembler''emitOperandHelper-4i 0, dst, 0)
+        )
     )
 
-    (defn #_"void" Assembler''jcc-4 [#_"Assembler" this, #_"ConditionFlag" cc, #_"int" jumpTarget, #_"boolean" forceDisp32]
+    (defn #_"this" Assembler''jcc-4 [#_"Assembler" this, #_"ConditionFlag" cc, #_"int" jumpTarget, #_"boolean" forceDisp32]
         (let [
             #_"int" shortSize 2
             #_"int" longSize 6
             #_"long" disp (- jumpTarget (Assembler''position-1 this))
         ]
             (if (and (not forceDisp32) (NumUtil'isByte-1l (- disp shortSize)))
-                (do
-                    ;; 0111 tttn #8-bit disp
-                    (§ ass! this (Assembler''emitByte-2 this, (| 0x70 (:value cc))))
-                    (§ ass! this (Assembler''emitByte-2 this, (int (& (- disp shortSize) 0xff))))
+                (-> this ;; 0111 tttn #8-bit disp
+                    (Assembler''emitByte-2 (| 0x70 (:value cc)))
+                    (Assembler''emitByte-2 (int (& (- disp shortSize) 0xff)))
                 )
-                (do
-                    ;; 0000 1111 1000 tttn #32-bit disp
-                    (§ ass! this (Assembler''emitByte-2 this, 0x0f))
-                    (§ ass! this (Assembler''emitByte-2 this, (| 0x80 (:value cc))))
-                    (§ ass! this (Assembler''emitInt-2 this, (int (- disp longSize))))
+                (-> this ;; 0000 1111 1000 tttn #32-bit disp
+                    (Assembler''emitByte-2 0x0f)
+                    (Assembler''emitByte-2 (| 0x80 (:value cc)))
+                    (Assembler''emitInt-2 (int (- disp longSize)))
                 )
             )
         )
-        nil
     )
 
-    (defn #_"void" Assembler''jcc-3 [#_"Assembler" this, #_"ConditionFlag" cc, #_"Label" l]
+    (defn #_"this" Assembler''jcc-3 [#_"Assembler" this, #_"ConditionFlag" cc, #_"Label" l]
         (if (Label''isBound-1 l)
             (Assembler''jcc-4 this, cc, (:position l), false)
-            (do
-                ;; note: could eliminate cond. jumps to this jump if condition is the same however, seems to be rather unlikely case
-                ;; note: use jccb() if label to be bound is very close to get an 8-bit displacement
-                (§ ass! l (Label''addPatchAt-2 l, (Assembler''position-1 this)))
-                (§ ass! this (Assembler''emitByte-2 this, 0x0f))
-                (§ ass! this (Assembler''emitByte-2 this, (| 0x80 (:value cc))))
-                (§ ass! this (Assembler''emitInt-2 this, 0))
+            ;; note: could eliminate cond. jumps to this jump if condition is the same however, seems to be rather unlikely case
+            ;; note: use jccb() if label to be bound is very close to get an 8-bit displacement
+            (let [
+                _ (§ ass! l (Label''addPatchAt-2 l, (Assembler''position-1 this)))
+            ]
+                (-> this
+                    (Assembler''emitByte-2 0x0f)
+                    (Assembler''emitByte-2 (| 0x80 (:value cc)))
+                    (Assembler''emitInt-2 0)
+                )
             )
         )
-        nil
     )
 
-    (defn #_"void" Assembler''jccb-3 [#_"Assembler" this, #_"ConditionFlag" cc, #_"Label" l]
+    (defn #_"this" Assembler''jccb-3 [#_"Assembler" this, #_"ConditionFlag" cc, #_"Label" l]
         (if (Label''isBound-1 l)
             (let [
                 #_"int" shortSize 2
                 #_"int" entry (:position l)
                 #_"long" disp (- entry (Assembler''position-1 this))
             ]
-                ;; 0111 tttn #8-bit disp
-                (§ ass! this (Assembler''emitByte-2 this, (| 0x70 (:value cc))))
-                (§ ass! this (Assembler''emitByte-2 this, (int (& (- disp shortSize) 0xff))))
+                (-> this ;; 0111 tttn #8-bit disp
+                    (Assembler''emitByte-2 (| 0x70 (:value cc)))
+                    (Assembler''emitByte-2 (int (& (- disp shortSize) 0xff)))
+                )
             )
-            (do
-                (§ ass! l (Label''addPatchAt-2 l, (Assembler''position-1 this)))
-                (§ ass! this (Assembler''emitByte-2 this, (| 0x70 (:value cc))))
-                (§ ass! this (Assembler''emitByte-2 this, 0))
+            (let [
+                _ (§ ass! l (Label''addPatchAt-2 l, (Assembler''position-1 this)))
+            ]
+                (-> this
+                    (Assembler''emitByte-2 (| 0x70 (:value cc)))
+                    (Assembler''emitByte-2 0)
+                )
             )
         )
-        nil
     )
 
-    (defn #_"void" Assembler''jmp-3 [#_"Assembler" this, #_"int" jumpTarget, #_"boolean" forceDisp32]
+    (defn #_"this" Assembler''jmp-3 [#_"Assembler" this, #_"int" jumpTarget, #_"boolean" forceDisp32]
         (let [
             #_"int" shortSize 2
             #_"int" longSize 5
             #_"long" disp (- jumpTarget (Assembler''position-1 this))
         ]
             (if (and (not forceDisp32) (NumUtil'isByte-1l (- disp shortSize)))
-                (do
-                    (§ ass! this (Assembler''emitByte-2 this, 0xeb))
-                    (§ ass! this (Assembler''emitByte-2 this, (int (& (- disp shortSize) 0xff))))
+                (-> this
+                    (Assembler''emitByte-2 0xeb)
+                    (Assembler''emitByte-2 (int (& (- disp shortSize) 0xff)))
                 )
-                (do
-                    (§ ass! this (Assembler''emitByte-2 this, 0xe9))
-                    (§ ass! this (Assembler''emitInt-2 this, (int (- disp longSize))))
+                (-> this
+                    (Assembler''emitByte-2 0xe9)
+                    (Assembler''emitInt-2 (int (- disp longSize)))
                 )
             )
         )
-        nil
     )
 
-    (defn #_"void" Assembler''jmp-2l [#_"Assembler" this, #_"Label" l]
+    (defn #_"this" Assembler''jmp-2l [#_"Assembler" this, #_"Label" l]
         (if (Label''isBound-1 l)
             (Assembler''jmp-3 this, (:position l), false)
-            (do
-                ;; By default, forward jumps are always 32-bit displacements, since we can't yet know where the label will be bound.
-                ;; If you're sure that the forward jump will not run beyond 256 bytes, use jmpb to force an 8-bit displacement.
-                (§ ass! l (Label''addPatchAt-2 l, (Assembler''position-1 this)))
-                (§ ass! this (Assembler''emitByte-2 this, 0xe9))
-                (§ ass! this (Assembler''emitInt-2 this, 0))
+            ;; By default, forward jumps are always 32-bit displacements, since we can't yet know where the label will be bound.
+            ;; If you're sure that the forward jump will not run beyond 256 bytes, use jmpb to force an 8-bit displacement.
+            (let [
+                _ (§ ass! l (Label''addPatchAt-2 l, (Assembler''position-1 this)))
+            ]
+                (-> this
+                    (Assembler''emitByte-2 0xe9)
+                    (Assembler''emitInt-2 0)
+                )
             )
         )
-        nil
     )
 
-    (defn #_"void" Assembler''jmp-2r [#_"Assembler" this, #_"Register" entry]
+    (defn #_"this" Assembler''jmp-2r [#_"Assembler" this, #_"Register" entry]
         (let [
             #_"int" encode (Assembler''prefixAndEncode-2 this, (.encoding entry))
         ]
-            (§ ass! this (Assembler''emitByte-2 this, 0xff))
-            (§ ass! this (Assembler''emitByte-2 this, (| 0xe0 encode)))
+            (-> this
+                (Assembler''emitByte-2 0xff)
+                (Assembler''emitByte-2 (| 0xe0 encode))
+            )
         )
-        nil
     )
 
     #_unused
-    (defn #_"void" Assembler''jmp-2a [#_"Assembler" this, #_"AMD64Address" adr]
-        (Assembler''prefix-2 this, adr)
-        (§ ass! this (Assembler''emitByte-2 this, 0xff))
-        (Assembler''emitOperandHelper-4r this, AMD64/rsp, adr, 0)
-        nil
+    (defn #_"this" Assembler''jmp-2a [#_"Assembler" this, #_"AMD64Address" adr]
+        (-> this
+            (Assembler''prefix-2 adr)
+            (Assembler''emitByte-2 0xff)
+            (Assembler''emitOperandHelper-4r AMD64/rsp, adr, 0)
+        )
     )
 
     #_unused
-    (defn #_"void" Assembler''jmpb-2 [#_"Assembler" this, #_"Label" l]
+    (defn #_"this" Assembler''jmpb-2 [#_"Assembler" this, #_"Label" l]
         (if (Label''isBound-1 l)
             (let [
                 #_"int" shortSize 2
                 #_"int" entry (:position l)
                 #_"long" offs (- entry (Assembler''position-1 this))
             ]
-                (§ ass! this (Assembler''emitByte-2 this, 0xeb))
-                (§ ass! this (Assembler''emitByte-2 this, (int (& (- offs shortSize) 0xff))))
+                (-> this
+                    (Assembler''emitByte-2 0xeb)
+                    (Assembler''emitByte-2 (int (& (- offs shortSize) 0xff)))
+                )
             )
-            (do
-                (§ ass! l (Label''addPatchAt-2 l, (Assembler''position-1 this)))
-                (§ ass! this (Assembler''emitByte-2 this, 0xeb))
-                (§ ass! this (Assembler''emitByte-2 this, 0))
+            (let [
+                _ (§ ass! l (Label''addPatchAt-2 l, (Assembler''position-1 this)))
+            ]
+                (-> this
+                    (Assembler''emitByte-2 0xeb)
+                    (Assembler''emitByte-2 0)
+                )
             )
         )
-        nil
     )
 
-    (defn #_"void" Assembler''lead-3 [#_"Assembler" this, #_"Register" dst, #_"AMD64Address" src]
-        (Assembler''prefix-3 this, src, dst)
-        (§ ass! this (Assembler''emitByte-2 this, 0x8d))
-        (Assembler''emitOperandHelper-4r this, dst, src, 0)
-        nil
+    (defn #_"this" Assembler''lead-3 [#_"Assembler" this, #_"Register" dst, #_"AMD64Address" src]
+        (-> this
+            (Assembler''prefix-3 src, dst)
+            (Assembler''emitByte-2 0x8d)
+            (Assembler''emitOperandHelper-4r dst, src, 0)
+        )
     )
 
-    (defn #_"void" Assembler''leaq-3 [#_"Assembler" this, #_"Register" dst, #_"AMD64Address" src]
-        (Assembler''prefixq-3 this, src, dst)
-        (§ ass! this (Assembler''emitByte-2 this, 0x8d))
-        (Assembler''emitOperandHelper-4r this, dst, src, 0)
-        nil
+    (defn #_"this" Assembler''leaq-3 [#_"Assembler" this, #_"Register" dst, #_"AMD64Address" src]
+        (-> this
+            (Assembler''prefixq-3 src, dst)
+            (Assembler''emitByte-2 0x8d)
+            (Assembler''emitOperandHelper-4r dst, src, 0)
+        )
     )
 
-    (defn #_"void" Assembler''leave-1 [#_"Assembler" this]
-        (§ ass! this (Assembler''emitByte-2 this, 0xc9))
-        nil
+    (defn #_"this" Assembler''leave-1 [#_"Assembler" this]
+        (Assembler''emitByte-2 this, 0xc9)
     )
 
-    (defn #_"void" Assembler''lock-1 [#_"Assembler" this]
-        (§ ass! this (Assembler''emitByte-2 this, 0xf0))
-        nil
+    (defn #_"this" Assembler''lock-1 [#_"Assembler" this]
+        (Assembler''emitByte-2 this, 0xf0)
     )
 
     #_unused
-    (defn #_"void" Assembler''movb-3ai [#_"Assembler" this, #_"AMD64Address" dst, #_"int" imm8]
-        (Assembler''prefix-2 this, dst)
-        (§ ass! this (Assembler''emitByte-2 this, 0xc6))
-        (Assembler''emitOperandHelper-4i this, 0, dst, 1)
-        (§ ass! this (Assembler''emitByte-2 this, imm8))
-        nil
+    (defn #_"this" Assembler''movb-3ai [#_"Assembler" this, #_"AMD64Address" dst, #_"int" imm8]
+        (-> this
+            (Assembler''prefix-2 dst)
+            (Assembler''emitByte-2 0xc6)
+            (Assembler''emitOperandHelper-4i 0, dst, 1)
+            (Assembler''emitByte-2 imm8)
+        )
     )
 
-    (defn #_"void" Assembler''movb-3ar [#_"Assembler" this, #_"AMD64Address" dst, #_"Register" src]
-        (Assembler''prefix-4 this, dst, src, true)
-        (§ ass! this (Assembler''emitByte-2 this, 0x88))
-        (Assembler''emitOperandHelper-4r this, src, dst, 0)
-        nil
+    (defn #_"this" Assembler''movb-3ar [#_"Assembler" this, #_"AMD64Address" dst, #_"Register" src]
+        (-> this
+            (Assembler''prefix-4 dst, src, true)
+            (Assembler''emitByte-2 0x88)
+            (Assembler''emitOperandHelper-4r src, dst, 0)
+        )
     )
 
-    (defn #_"void" Assembler''movl-3ri [#_"Assembler" this, #_"Register" dst, #_"int" imm32]
+    (defn #_"this" Assembler''movl-3ri [#_"Assembler" this, #_"Register" dst, #_"int" imm32]
         (let [
             #_"int" encode (Assembler''prefixAndEncode-2 this, (.encoding dst))
         ]
-            (§ ass! this (Assembler''emitByte-2 this, (| 0xb8 encode)))
-            (§ ass! this (Assembler''emitInt-2 this, imm32))
+            (-> this
+                (Assembler''emitByte-2 (| 0xb8 encode))
+                (Assembler''emitInt-2 imm32)
+            )
         )
-        nil
     )
 
-    (defn #_"void" Assembler''movl-3rr [#_"Assembler" this, #_"Register" dst, #_"Register" src]
+    (defn #_"this" Assembler''movl-3rr [#_"Assembler" this, #_"Register" dst, #_"Register" src]
         (let [
             #_"int" encode (Assembler''prefixAndEncode-3i this, (.encoding dst), (.encoding src))
         ]
-            (§ ass! this (Assembler''emitByte-2 this, 0x8b))
-            (§ ass! this (Assembler''emitByte-2 this, (| 0xc0 encode)))
+            (-> this
+                (Assembler''emitByte-2 0x8b)
+                (Assembler''emitByte-2 (| 0xc0 encode))
+            )
         )
-        nil
     )
 
-    (defn #_"void" Assembler''movl-3ra [#_"Assembler" this, #_"Register" dst, #_"AMD64Address" src]
-        (Assembler''prefix-3 this, src, dst)
-        (§ ass! this (Assembler''emitByte-2 this, 0x8b))
-        (Assembler''emitOperandHelper-4r this, dst, src, 0)
-        nil
+    (defn #_"this" Assembler''movl-3ra [#_"Assembler" this, #_"Register" dst, #_"AMD64Address" src]
+        (-> this
+            (Assembler''prefix-3 src, dst)
+            (Assembler''emitByte-2 0x8b)
+            (Assembler''emitOperandHelper-4r dst, src, 0)
+        )
     )
 
     ;;;
      ; @param wide? use 4 byte encoding for displacements that would normally fit in a byte
      ;;
     #_unused
-    (defn #_"void" Assembler''movl-4 [#_"Assembler" this, #_"Register" dst, #_"AMD64Address" src, #_"boolean" wide?]
-        (Assembler''prefix-3 this, src, dst)
-        (§ ass! this (Assembler''emitByte-2 this, 0x8b))
-        (Assembler''emitOperandHelper-5r this, dst, src, wide?, 0)
-        nil
+    (defn #_"this" Assembler''movl-4 [#_"Assembler" this, #_"Register" dst, #_"AMD64Address" src, #_"boolean" wide?]
+        (-> this
+            (Assembler''prefix-3 src, dst)
+            (Assembler''emitByte-2 0x8b)
+            (Assembler''emitOperandHelper-5r dst, src, wide?, 0)
+        )
     )
 
-    (defn #_"void" Assembler''movl-3ai [#_"Assembler" this, #_"AMD64Address" dst, #_"int" imm32]
-        (Assembler''prefix-2 this, dst)
-        (§ ass! this (Assembler''emitByte-2 this, 0xc7))
-        (Assembler''emitOperandHelper-4i this, 0, dst, 4)
-        (§ ass! this (Assembler''emitInt-2 this, imm32))
-        nil
+    (defn #_"this" Assembler''movl-3ai [#_"Assembler" this, #_"AMD64Address" dst, #_"int" imm32]
+        (-> this
+            (Assembler''prefix-2 dst)
+            (Assembler''emitByte-2 0xc7)
+            (Assembler''emitOperandHelper-4i 0, dst, 4)
+            (Assembler''emitInt-2 imm32)
+        )
     )
 
-    (defn #_"void" Assembler''movl-3ar [#_"Assembler" this, #_"AMD64Address" dst, #_"Register" src]
-        (Assembler''prefix-3 this, dst, src)
-        (§ ass! this (Assembler''emitByte-2 this, 0x89))
-        (Assembler''emitOperandHelper-4r this, src, dst, 0)
-        nil
+    (defn #_"this" Assembler''movl-3ar [#_"Assembler" this, #_"AMD64Address" dst, #_"Register" src]
+        (-> this
+            (Assembler''prefix-3 dst, src)
+            (Assembler''emitByte-2 0x89)
+            (Assembler''emitOperandHelper-4r src, dst, 0)
+        )
     )
 
-    (defn #_"void" Assembler''movq-3ra [#_"Assembler" this, #_"Register" dst, #_"AMD64Address" src]
+    (defn #_"this" Assembler''movq-3ra [#_"Assembler" this, #_"Register" dst, #_"AMD64Address" src]
         (Assembler''movq-4 this, dst, src, false)
-        nil
     )
 
-    (defn #_"void" Assembler''movq-4 [#_"Assembler" this, #_"Register" dst, #_"AMD64Address" src, #_"boolean" wide]
-        (Assembler''prefixq-3 this, src, dst)
-        (§ ass! this (Assembler''emitByte-2 this, 0x8b))
-        (Assembler''emitOperandHelper-5r this, dst, src, wide, 0)
-        nil
+    (defn #_"this" Assembler''movq-4 [#_"Assembler" this, #_"Register" dst, #_"AMD64Address" src, #_"boolean" wide]
+        (-> this
+            (Assembler''prefixq-3 src, dst)
+            (Assembler''emitByte-2 0x8b)
+            (Assembler''emitOperandHelper-5r dst, src, wide, 0)
+        )
     )
 
-    (defn #_"void" Assembler''movq-3rr [#_"Assembler" this, #_"Register" dst, #_"Register" src]
+    (defn #_"this" Assembler''movq-3rr [#_"Assembler" this, #_"Register" dst, #_"Register" src]
         (let [
             #_"int" encode (Assembler''prefixqAndEncode-3 this, (.encoding dst), (.encoding src))
         ]
-            (§ ass! this (Assembler''emitByte-2 this, 0x8b))
-            (§ ass! this (Assembler''emitByte-2 this, (| 0xc0 encode)))
+            (-> this
+                (Assembler''emitByte-2 0x8b)
+                (Assembler''emitByte-2 (| 0xc0 encode))
+            )
         )
-        nil
     )
 
-    (defn #_"void" Assembler''movq-3ar [#_"Assembler" this, #_"AMD64Address" dst, #_"Register" src]
-        (Assembler''prefixq-3 this, dst, src)
-        (§ ass! this (Assembler''emitByte-2 this, 0x89))
-        (Assembler''emitOperandHelper-4r this, src, dst, 0)
-        nil
+    (defn #_"this" Assembler''movq-3ar [#_"Assembler" this, #_"AMD64Address" dst, #_"Register" src]
+        (-> this
+            (Assembler''prefixq-3 dst, src)
+            (Assembler''emitByte-2 0x89)
+            (Assembler''emitOperandHelper-4r src, dst, 0)
+        )
     )
 
-    (defn #_"void" Assembler''movsbl-3ra [#_"Assembler" this, #_"Register" dst, #_"AMD64Address" src]
-        (Assembler''prefix-3 this, src, dst)
-        (§ ass! this (Assembler''emitByte-2 this, 0x0f))
-        (§ ass! this (Assembler''emitByte-2 this, 0xbe))
-        (Assembler''emitOperandHelper-4r this, dst, src, 0)
-        nil
+    (defn #_"this" Assembler''movsbl-3ra [#_"Assembler" this, #_"Register" dst, #_"AMD64Address" src]
+        (-> this
+            (Assembler''prefix-3 src, dst)
+            (Assembler''emitByte-2 0x0f)
+            (Assembler''emitByte-2 0xbe)
+            (Assembler''emitOperandHelper-4r dst, src, 0)
+        )
     )
 
-    (defn #_"void" Assembler''movsbl-3rr [#_"Assembler" this, #_"Register" dst, #_"Register" src]
+    #_unused
+    (defn #_"this" Assembler''movsbl-3rr [#_"Assembler" this, #_"Register" dst, #_"Register" src]
         (let [
             #_"int" encode (Assembler''prefixAndEncode-5 this, (.encoding dst), false, (.encoding src), true)
         ]
-            (§ ass! this (Assembler''emitByte-2 this, 0x0f))
-            (§ ass! this (Assembler''emitByte-2 this, 0xbe))
-            (§ ass! this (Assembler''emitByte-2 this, (| 0xc0 encode)))
+            (-> this
+                (Assembler''emitByte-2 0x0f)
+                (Assembler''emitByte-2 0xbe)
+                (Assembler''emitByte-2 (| 0xc0 encode))
+            )
         )
-        nil
     )
 
     #_unused
-    (defn #_"void" Assembler''movsbq-3ra [#_"Assembler" this, #_"Register" dst, #_"AMD64Address" src]
-        (Assembler''prefixq-3 this, src, dst)
-        (§ ass! this (Assembler''emitByte-2 this, 0x0f))
-        (§ ass! this (Assembler''emitByte-2 this, 0xbe))
-        (Assembler''emitOperandHelper-4r this, dst, src, 0)
-        nil
+    (defn #_"this" Assembler''movsbq-3ra [#_"Assembler" this, #_"Register" dst, #_"AMD64Address" src]
+        (-> this
+            (Assembler''prefixq-3 src, dst)
+            (Assembler''emitByte-2 0x0f)
+            (Assembler''emitByte-2 0xbe)
+            (Assembler''emitOperandHelper-4r dst, src, 0)
+        )
     )
 
     #_unused
-    (defn #_"void" Assembler''movsbq-3rr [#_"Assembler" this, #_"Register" dst, #_"Register" src]
+    (defn #_"this" Assembler''movsbq-3rr [#_"Assembler" this, #_"Register" dst, #_"Register" src]
         (let [
             #_"int" encode (Assembler''prefixqAndEncode-3 this, (.encoding dst), (.encoding src))
         ]
-            (§ ass! this (Assembler''emitByte-2 this, 0x0f))
-            (§ ass! this (Assembler''emitByte-2 this, 0xbe))
-            (§ ass! this (Assembler''emitByte-2 this, (| 0xc0 encode)))
+            (-> this
+                (Assembler''emitByte-2 0x0f)
+                (Assembler''emitByte-2 0xbe)
+                (Assembler''emitByte-2 (| 0xc0 encode))
+            )
         )
-        nil
     )
 
-    (defn #_"void" Assembler''movswl-3 [#_"Assembler" this, #_"Register" dst, #_"AMD64Address" src]
-        (Assembler''prefix-3 this, src, dst)
-        (§ ass! this (Assembler''emitByte-2 this, 0x0f))
-        (§ ass! this (Assembler''emitByte-2 this, 0xbf))
-        (Assembler''emitOperandHelper-4r this, dst, src, 0)
-        nil
+    (defn #_"this" Assembler''movswl-3 [#_"Assembler" this, #_"Register" dst, #_"AMD64Address" src]
+        (-> this
+            (Assembler''prefix-3 src, dst)
+            (Assembler''emitByte-2 0x0f)
+            (Assembler''emitByte-2 0xbf)
+            (Assembler''emitOperandHelper-4r dst, src, 0)
+        )
     )
 
-    (defn #_"void" Assembler''movw-3ai [#_"Assembler" this, #_"AMD64Address" dst, #_"int" imm16]
-        (§ ass! this (Assembler''emitByte-2 this, 0x66)) ;; switch to 16-bit mode
-        (Assembler''prefix-2 this, dst)
-        (§ ass! this (Assembler''emitByte-2 this, 0xc7))
-        (Assembler''emitOperandHelper-4i this, 0, dst, 2)
-        (§ ass! this (Assembler''emitShort-2 this, imm16))
-        nil
+    #_unused
+    (defn #_"this" Assembler''movw-3ai [#_"Assembler" this, #_"AMD64Address" dst, #_"int" imm16]
+        (-> this
+            (Assembler''emitByte-2 0x66) ;; switch to 16-bit mode
+            (Assembler''prefix-2 dst)
+            (Assembler''emitByte-2 0xc7)
+            (Assembler''emitOperandHelper-4i 0, dst, 2)
+            (Assembler''emitShort-2 imm16)
+        )
     )
 
-    (defn #_"void" Assembler''movw-3ar [#_"Assembler" this, #_"AMD64Address" dst, #_"Register" src]
-        (§ ass! this (Assembler''emitByte-2 this, 0x66))
-        (Assembler''prefix-3 this, dst, src)
-        (§ ass! this (Assembler''emitByte-2 this, 0x89))
-        (Assembler''emitOperandHelper-4r this, src, dst, 0)
-        nil
+    (defn #_"this" Assembler''movw-3ar [#_"Assembler" this, #_"AMD64Address" dst, #_"Register" src]
+        (-> this
+            (Assembler''emitByte-2 0x66)
+            (Assembler''prefix-3 dst, src)
+            (Assembler''emitByte-2 0x89)
+            (Assembler''emitOperandHelper-4r src, dst, 0)
+        )
     )
 
-    (defn #_"void" Assembler''movzbl-3ra [#_"Assembler" this, #_"Register" dst, #_"AMD64Address" src]
-        (Assembler''prefix-3 this, src, dst)
-        (§ ass! this (Assembler''emitByte-2 this, 0x0f))
-        (§ ass! this (Assembler''emitByte-2 this, 0xb6))
-        (Assembler''emitOperandHelper-4r this, dst, src, 0)
-        nil
+    #_unused
+    (defn #_"this" Assembler''movzbl-3ra [#_"Assembler" this, #_"Register" dst, #_"AMD64Address" src]
+        (-> this
+            (Assembler''prefix-3 src, dst)
+            (Assembler''emitByte-2 0x0f)
+            (Assembler''emitByte-2 0xb6)
+            (Assembler''emitOperandHelper-4r dst, src, 0)
+        )
     )
 
-    (defn #_"void" Assembler''movzbl-3rr [#_"Assembler" this, #_"Register" dst, #_"Register" src]
+    (defn #_"this" Assembler''movzbl-3rr [#_"Assembler" this, #_"Register" dst, #_"Register" src]
         (AMD64RROp'''emit-5 AMD64RMOp'MOVZXB, this, :OperandSize'DWORD, dst, src)
-        nil
+        this
     )
 
-    (defn #_"void" Assembler''movzbq-3 [#_"Assembler" this, #_"Register" dst, #_"Register" src]
+    (defn #_"this" Assembler''movzbq-3 [#_"Assembler" this, #_"Register" dst, #_"Register" src]
         (AMD64RROp'''emit-5 AMD64RMOp'MOVZXB, this, :OperandSize'QWORD, dst, src)
-        nil
+        this
     )
 
     #_unused
-    (defn #_"void" Assembler''movzwl-3 [#_"Assembler" this, #_"Register" dst, #_"AMD64Address" src]
-        (Assembler''prefix-3 this, src, dst)
-        (§ ass! this (Assembler''emitByte-2 this, 0x0f))
-        (§ ass! this (Assembler''emitByte-2 this, 0xb7))
-        (Assembler''emitOperandHelper-4r this, dst, src, 0)
-        nil
+    (defn #_"this" Assembler''movzwl-3 [#_"Assembler" this, #_"Register" dst, #_"AMD64Address" src]
+        (-> this
+            (Assembler''prefix-3 src, dst)
+            (Assembler''emitByte-2 0x0f)
+            (Assembler''emitByte-2 0xb7)
+            (Assembler''emitOperandHelper-4r dst, src, 0)
+        )
     )
 
     #_unused
-    (defn #_"void" Assembler''negl-2 [#_"Assembler" this, #_"Register" dst]
+    (defn #_"this" Assembler''negl-2 [#_"Assembler" this, #_"Register" dst]
         (AMD64MOp''emit-4r AMD64MOp'NEG, this, :OperandSize'DWORD, dst)
-        nil
+        this
     )
 
     #_unused
-    (defn #_"void" Assembler''notl-2 [#_"Assembler" this, #_"Register" dst]
+    (defn #_"this" Assembler''notl-2 [#_"Assembler" this, #_"Register" dst]
         (AMD64MOp''emit-4r AMD64MOp'NOT, this, :OperandSize'DWORD, dst)
-        nil
+        this
     )
 
     #_unused
-    (defn #_"void" Assembler''notq-2 [#_"Assembler" this, #_"Register" dst]
+    (defn #_"this" Assembler''notq-2 [#_"Assembler" this, #_"Register" dst]
         (AMD64MOp''emit-4r AMD64MOp'NOT, this, :OperandSize'QWORD, dst)
-        nil
+        this
     )
 
     ;;;
      ; Emits a NOP instruction to advance the current PC.
      ;;
-    (defn #_"void" Assembler''ensureUniquePC-1 [#_"Assembler" this]
+    (defn #_"this" Assembler''ensureUniquePC-1 [#_"Assembler" this]
         (Assembler''nop-1 this)
-        nil
     )
 
-    (defn #_"void" Assembler''nop-1 [#_"Assembler" this]
+    (defn #_"this" Assembler''nop-1 [#_"Assembler" this]
         (Assembler''nop-2 this, 1)
-        nil
     )
 
-    (defn #_"void" Assembler''nop-2 [#_"Assembler" this, #_"int" n]
+    (defn #_"this" Assembler''nop-2 [#_"Assembler" this, #_"int" n]
         (cond
             Assembler'UseNormalNop
             (do
@@ -14595,6 +14537,7 @@ ZeroExtendNode'new-4
                 (dotimes [_ n]
                     (§ ass! this (Assembler''emitByte-2 this, 0x90))
                 )
+                this
             )
 
             Assembler'UseAddressNop
@@ -14603,7 +14546,7 @@ ZeroExtendNode'new-4
                 ;;
                 ;;  1: 0x90
                 ;;  2: 0x66 0x90
-                ;;  3: 0x66 0x66 0x90 (don't use "0x0f 0x1f 0x00" - need patching safe padding)
+                ;;  3: 0x66 0x66 0x90 (do not use "0x0f 0x1f 0x00" - need patching safe padding)
                 ;;  4: 0x0f 0x1f 0x40 0x00
                 ;;  5: 0x0f 0x1f 0x44 0x00 0x00
                 ;;  6: 0x66 0x0f 0x1f 0x44 0x00 0x00
@@ -14627,7 +14570,7 @@ ZeroExtendNode'new-4
                         (§ ass! this (Assembler''emitByte-2 this, 0x66))
                         (§ ass! this (Assembler''emitByte-2 this, 0x66))
                         (§ ass! this (Assembler''emitByte-2 this, 0x66))
-                        (Assembler''addrNop8-1 this)
+                        (§ ass! this (Assembler''addrNop8-1 this))
                     )
                 )
                 ;; Generate first nop for size between 21-12.
@@ -14638,36 +14581,36 @@ ZeroExtendNode'new-4
                             (§ ass! this (Assembler''emitByte-2 this, 0x66))
                             (§ ass! this (Assembler''emitByte-2 this, 0x66))
                             (§ ass! this (Assembler''emitByte-2 this, 0x66))
-                            (Assembler''addrNop8-1 this)
+                            (§ ass! this (Assembler''addrNop8-1 this))
                             (- n 11)
                         )
                         (20 19)
                         (do
                             (§ ass! this (Assembler''emitByte-2 this, 0x66))
                             (§ ass! this (Assembler''emitByte-2 this, 0x66))
-                            (Assembler''addrNop8-1 this)
+                            (§ ass! this (Assembler''addrNop8-1 this))
                             (- n 10)
                         )
                         (18 17)
                         (do
                             (§ ass! this (Assembler''emitByte-2 this, 0x66))
-                            (Assembler''addrNop8-1 this)
+                            (§ ass! this (Assembler''addrNop8-1 this))
                             (- n 9)
                         )
                         (16 15)
                         (do
-                            (Assembler''addrNop8-1 this)
+                            (§ ass! this (Assembler''addrNop8-1 this))
                             (- n 8)
                         )
                         (14 13)
                         (do
-                            (Assembler''addrNop7-1 this)
+                            (§ ass! this (Assembler''addrNop7-1 this))
                             (- n 7)
                         )
                         12
                         (do
                             (§ ass! this (Assembler''emitByte-2 this, 0x66))
-                            (Assembler''addrNop5-1 this)
+                            (§ ass! this (Assembler''addrNop5-1 this))
                             (- n 6)
                         )
                         n
@@ -14676,73 +14619,19 @@ ZeroExtendNode'new-4
 
                 ;; Generate second nop for size between 11-1.
                 (case n
-                    11
-                    (do
-                        (§ ass! this (Assembler''emitByte-2 this, 0x66))
-                        (§ ass! this (Assembler''emitByte-2 this, 0x66))
-                        (§ ass! this (Assembler''emitByte-2 this, 0x66))
-                        (Assembler''addrNop8-1 this)
-                        nil
-                    )
-                    10
-                    (do
-                        (§ ass! this (Assembler''emitByte-2 this, 0x66))
-                        (§ ass! this (Assembler''emitByte-2 this, 0x66))
-                        (Assembler''addrNop8-1 this)
-                        nil
-                    )
-                    9
-                    (do
-                        (§ ass! this (Assembler''emitByte-2 this, 0x66))
-                        (Assembler''addrNop8-1 this)
-                        nil
-                    )
-                    8
-                    (do
-                        (Assembler''addrNop8-1 this)
-                        nil
-                    )
-                    7
-                    (do
-                        (Assembler''addrNop7-1 this)
-                        nil
-                    )
-                    6
-                    (do
-                        (§ ass! this (Assembler''emitByte-2 this, 0x66))
-                        (Assembler''addrNop5-1 this)
-                        nil
-                    )
-                    5
-                    (do
-                        (Assembler''addrNop5-1 this)
-                        nil
-                    )
-                    4
-                    (do
-                        (Assembler''addrNop4-1 this)
-                        nil
-                    )
-                    3
-                    (do
-                        ;; Don't use "0x0f 0x1f 0x00" - need patching safe padding.
-                        (§ ass! this (Assembler''emitByte-2 this, 0x66))
-                        (§ ass! this (Assembler''emitByte-2 this, 0x66))
-                        (§ ass! this (Assembler''emitByte-2 this, 0x90))
-                        nil
-                    )
-                    2
-                    (do
-                        (§ ass! this (Assembler''emitByte-2 this, 0x66))
-                        (§ ass! this (Assembler''emitByte-2 this, 0x90))
-                        nil
-                    )
-                    1
-                    (do
-                        (§ ass! this (Assembler''emitByte-2 this, 0x90))
-                        nil
-                    )
-                    nil
+                    11 (-> this (Assembler''emitByte-2 0x66) (Assembler''emitByte-2 0x66) (Assembler''emitByte-2 0x66) (Assembler''addrNop8-1))
+                    10 (-> this (Assembler''emitByte-2 0x66) (Assembler''emitByte-2 0x66)                              (Assembler''addrNop8-1))
+                     9 (-> this (Assembler''emitByte-2 0x66)                                                           (Assembler''addrNop8-1))
+                     8 (-> this                                                                                        (Assembler''addrNop8-1))
+                     7 (-> this                                                                                        (Assembler''addrNop7-1))
+                     6 (-> this (Assembler''emitByte-2 0x66)                                                           (Assembler''addrNop5-1))
+                     5 (-> this                                                                                        (Assembler''addrNop5-1))
+                     4 (-> this                                                                                        (Assembler''addrNop4-1))
+                    ;; Do not use "0x0f 0x1f 0x00" - need patching safe padding.
+                     3 (-> this (Assembler''emitByte-2 0x66) (Assembler''emitByte-2 0x66) (Assembler''emitByte-2 0x90))
+                     2 (-> this (Assembler''emitByte-2 0x66) (Assembler''emitByte-2 0x90))
+                     1 (-> this (Assembler''emitByte-2 0x90))
+                           this
                 )
             )
 
@@ -14819,580 +14708,605 @@ ZeroExtendNode'new-4
                     )
                     nil
                 )
+                this
             )
         )
-        nil
     )
 
     #_unused
-    (defn #_"void" Assembler''orl-3rr [#_"Assembler" this, #_"Register" dst, #_"Register" src]
+    (defn #_"this" Assembler''orl-3rr [#_"Assembler" this, #_"Register" dst, #_"Register" src]
         (AMD64RROp'''emit-5 (:rmOp BinaryArithmetic'OR), this, :OperandSize'DWORD, dst, src)
-        nil
+        this
     )
 
     #_unused
-    (defn #_"void" Assembler''orl-3ri [#_"Assembler" this, #_"Register" dst, #_"int" imm32]
+    (defn #_"this" Assembler''orl-3ri [#_"Assembler" this, #_"Register" dst, #_"int" imm32]
         (AMD64MIOp''emit-5r (BinaryArithmetic''getMIOpcode-3 BinaryArithmetic'OR, :OperandSize'DWORD, (NumUtil'isByte-1i imm32)), this, :OperandSize'DWORD, dst, imm32)
-        nil
+        this
     )
 
     #_unused
-    (defn #_"void" Assembler''pop-2 [#_"Assembler" this, #_"Register" dst]
+    (defn #_"this" Assembler''pop-2 [#_"Assembler" this, #_"Register" dst]
         (let [
             #_"int" encode (Assembler''prefixAndEncode-2 this, (.encoding dst))
         ]
-            (§ ass! this (Assembler''emitByte-2 this, (| 0x58 encode)))
+            (Assembler''emitByte-2 this, (| 0x58 encode))
         )
-        nil
     )
 
-    (defn #_"void" Assembler''push-2 [#_"Assembler" this, #_"Register" src]
+    #_unused
+    (defn #_"this" Assembler''push-2 [#_"Assembler" this, #_"Register" src]
         (let [
             #_"int" encode (Assembler''prefixAndEncode-2 this, (.encoding src))
         ]
-            (§ ass! this (Assembler''emitByte-2 this, (| 0x50 encode)))
+            (Assembler''emitByte-2 this, (| 0x50 encode))
         )
-        nil
     )
 
-    (defn #_"void" Assembler''ret-2 [#_"Assembler" this, #_"int" imm16]
+    (defn #_"this" Assembler''ret-2 [#_"Assembler" this, #_"int" imm16]
         (if (zero? imm16)
-            (§ ass! this (Assembler''emitByte-2 this, 0xc3))
-            (do
-                (§ ass! this (Assembler''emitByte-2 this, 0xc2))
-                (§ ass! this (Assembler''emitShort-2 this, imm16))
+            (Assembler''emitByte-2 this, 0xc3)
+            (-> this
+                (Assembler''emitByte-2 0xc2)
+                (Assembler''emitShort-2 imm16)
             )
         )
-        nil
     )
 
     #_unused
-    (defn #_"void" Assembler''sarl-3 [#_"Assembler" this, #_"Register" dst, #_"int" imm8]
+    (defn #_"this" Assembler''sarl-3 [#_"Assembler" this, #_"Register" dst, #_"int" imm8]
         (let [
             #_"int" encode (Assembler''prefixAndEncode-2 this, (.encoding dst))
         ]
             (if (= imm8 1)
-                (do
-                    (§ ass! this (Assembler''emitByte-2 this, 0xd1))
-                    (§ ass! this (Assembler''emitByte-2 this, (| 0xf8 encode)))
+                (-> this
+                    (Assembler''emitByte-2 0xd1)
+                    (Assembler''emitByte-2 (| 0xf8 encode))
                 )
-                (do
-                    (§ ass! this (Assembler''emitByte-2 this, 0xc1))
-                    (§ ass! this (Assembler''emitByte-2 this, (| 0xf8 encode)))
-                    (§ ass! this (Assembler''emitByte-2 this, imm8))
+                (-> this
+                    (Assembler''emitByte-2 0xc1)
+                    (Assembler''emitByte-2 (| 0xf8 encode))
+                    (Assembler''emitByte-2 imm8)
                 )
             )
         )
-        nil
     )
 
     #_unused
-    (defn #_"void" Assembler''shll-3 [#_"Assembler" this, #_"Register" dst, #_"int" imm8]
+    (defn #_"this" Assembler''shll-3 [#_"Assembler" this, #_"Register" dst, #_"int" imm8]
         (let [
             #_"int" encode (Assembler''prefixAndEncode-2 this, (.encoding dst))
         ]
             (if (= imm8 1)
-                (do
-                    (§ ass! this (Assembler''emitByte-2 this, 0xd1))
-                    (§ ass! this (Assembler''emitByte-2 this, (| 0xe0 encode)))
+                (-> this
+                    (Assembler''emitByte-2 0xd1)
+                    (Assembler''emitByte-2 (| 0xe0 encode))
                 )
-                (do
-                    (§ ass! this (Assembler''emitByte-2 this, 0xc1))
-                    (§ ass! this (Assembler''emitByte-2 this, (| 0xe0 encode)))
-                    (§ ass! this (Assembler''emitByte-2 this, imm8))
+                (-> this
+                    (Assembler''emitByte-2 0xc1)
+                    (Assembler''emitByte-2 (| 0xe0 encode))
+                    (Assembler''emitByte-2 imm8)
                 )
             )
         )
-        nil
     )
 
     #_unused
-    (defn #_"void" Assembler''shll-2 [#_"Assembler" this, #_"Register" dst]
+    (defn #_"this" Assembler''shll-2 [#_"Assembler" this, #_"Register" dst]
         (let [
             #_"int" encode (Assembler''prefixAndEncode-2 this, (.encoding dst))
         ]
-            (§ ass! this (Assembler''emitByte-2 this, 0xd3))
-            (§ ass! this (Assembler''emitByte-2 this, (| 0xe0 encode)))
+            (-> this
+                (Assembler''emitByte-2 0xd3)
+                (Assembler''emitByte-2 (| 0xe0 encode))
+            )
         )
-        nil
     )
 
     #_unused
-    (defn #_"void" Assembler''shrl-3 [#_"Assembler" this, #_"Register" dst, #_"int" imm8]
+    (defn #_"this" Assembler''shrl-3 [#_"Assembler" this, #_"Register" dst, #_"int" imm8]
         (let [
             #_"int" encode (Assembler''prefixAndEncode-2 this, (.encoding dst))
         ]
-            (§ ass! this (Assembler''emitByte-2 this, 0xc1))
-            (§ ass! this (Assembler''emitByte-2 this, (| 0xe8 encode)))
-            (§ ass! this (Assembler''emitByte-2 this, imm8))
+            (-> this
+                (Assembler''emitByte-2 0xc1)
+                (Assembler''emitByte-2 (| 0xe8 encode))
+                (Assembler''emitByte-2 imm8)
+            )
         )
-        nil
     )
 
     #_unused
-    (defn #_"void" Assembler''shrl-2 [#_"Assembler" this, #_"Register" dst]
+    (defn #_"this" Assembler''shrl-2 [#_"Assembler" this, #_"Register" dst]
         (let [
             #_"int" encode (Assembler''prefixAndEncode-2 this, (.encoding dst))
         ]
-            (§ ass! this (Assembler''emitByte-2 this, 0xd3))
-            (§ ass! this (Assembler''emitByte-2 this, (| 0xe8 encode)))
+            (-> this
+                (Assembler''emitByte-2 0xd3)
+                (Assembler''emitByte-2 (| 0xe8 encode))
+            )
         )
-        nil
     )
 
-    (defn #_"void" Assembler''subl-3ai [#_"Assembler" this, #_"AMD64Address" dst, #_"int" imm32]
+    (defn #_"this" Assembler''subl-3ai [#_"Assembler" this, #_"AMD64Address" dst, #_"int" imm32]
         (AMD64MIOp''emit-5a (BinaryArithmetic''getMIOpcode-3 BinaryArithmetic'SUB, :OperandSize'DWORD, (NumUtil'isByte-1i imm32)), this, :OperandSize'DWORD, dst, imm32)
-        nil
+        this
     )
 
-    (defn #_"void" Assembler''subl-3ri [#_"Assembler" this, #_"Register" dst, #_"int" imm32]
+    (defn #_"this" Assembler''subl-3ri [#_"Assembler" this, #_"Register" dst, #_"int" imm32]
         (AMD64MIOp''emit-5r (BinaryArithmetic''getMIOpcode-3 BinaryArithmetic'SUB, :OperandSize'DWORD, (NumUtil'isByte-1i imm32)), this, :OperandSize'DWORD, dst, imm32)
-        nil
+        this
     )
 
-    (defn #_"void" Assembler''subl-3rr [#_"Assembler" this, #_"Register" dst, #_"Register" src]
+    #_unused
+    (defn #_"this" Assembler''subl-3rr [#_"Assembler" this, #_"Register" dst, #_"Register" src]
         (AMD64RROp'''emit-5 (:rmOp BinaryArithmetic'SUB), this, :OperandSize'DWORD, dst, src)
-        nil
+        this
     )
 
-    (defn #_"void" Assembler''testl-3ri [#_"Assembler" this, #_"Register" dst, #_"int" imm32]
-        ;; not using emitArith because test
-        ;; doesn't support sign-extension of
-        ;; 8bit operands
-        (let [
-            #_"int" encode (.encoding dst)
-        ]
-            (if (zero? encode)
-                (§ ass! this (Assembler''emitByte-2 this, 0xa9))
-                (do
-                    (§ ass encode (Assembler''prefixAndEncode-2 this, encode))
-                    (§ ass! this (Assembler''emitByte-2 this, 0xf7))
-                    (§ ass! this (Assembler''emitByte-2 this, (| 0xc0 encode)))
+    #_unused
+    (defn #_"this" Assembler''testl-3ri [#_"Assembler" this, #_"Register" dst, #_"int" imm32]
+        ;; not using emitArith because test doesn't support sign-extension of 8bit operands
+        (if (zero? (.encoding dst))
+            (-> this
+                (Assembler''emitByte-2 0xa9)
+                (Assembler''emitInt-2 imm32)
+            )
+            (let [
+                #_"int" encode (Assembler''prefixAndEncode-2 this, (.encoding dst))
+            ]
+                (-> this
+                    (Assembler''emitByte-2 0xf7)
+                    (Assembler''emitByte-2 (| 0xc0 encode))
+                    (Assembler''emitInt-2 imm32)
                 )
             )
-            (§ ass! this (Assembler''emitInt-2 this, imm32))
         )
-        nil
     )
 
-    (defn #_"void" Assembler''testl-3rr [#_"Assembler" this, #_"Register" dst, #_"Register" src]
+    #_unused
+    (defn #_"this" Assembler''testl-3rr [#_"Assembler" this, #_"Register" dst, #_"Register" src]
         (let [
             #_"int" encode (Assembler''prefixAndEncode-3i this, (.encoding dst), (.encoding src))
         ]
-            (§ ass! this (Assembler''emitByte-2 this, 0x85))
-            (§ ass! this (Assembler''emitByte-2 this, (| 0xc0 encode)))
+            (-> this
+                (Assembler''emitByte-2 0x85)
+                (Assembler''emitByte-2 (| 0xc0 encode))
+            )
         )
-        nil
     )
 
-    (defn #_"void" Assembler''testl-3ra [#_"Assembler" this, #_"Register" dst, #_"AMD64Address" src]
-        (Assembler''prefix-3 this, src, dst)
-        (§ ass! this (Assembler''emitByte-2 this, 0x85))
-        (Assembler''emitOperandHelper-4r this, dst, src, 0)
-        nil
+    (defn #_"this" Assembler''testl-3ra [#_"Assembler" this, #_"Register" dst, #_"AMD64Address" src]
+        (-> this
+            (Assembler''prefix-3 src, dst)
+            (Assembler''emitByte-2 0x85)
+            (Assembler''emitOperandHelper-4r dst, src, 0)
+        )
     )
 
     #_unused
-    (defn #_"void" Assembler''xorl-3 [#_"Assembler" this, #_"Register" dst, #_"Register" src]
+    (defn #_"this" Assembler''xorl-3 [#_"Assembler" this, #_"Register" dst, #_"Register" src]
         (AMD64RROp'''emit-5 (:rmOp BinaryArithmetic'XOR), this, :OperandSize'DWORD, dst, src)
-        nil
+        this
     )
 
-    (defn #_"void" Assembler''decl-2r [#_"Assembler" this, #_"Register" dst]
+    (defn #_"this" Assembler''decl-2r [#_"Assembler" this, #_"Register" dst]
         ;; Use two-byte form (one-byte form is a REX prefix in 64-bit mode).
         (let [
             #_"int" encode (Assembler''prefixAndEncode-2 this, (.encoding dst))
         ]
-            (§ ass! this (Assembler''emitByte-2 this, 0xff))
-            (§ ass! this (Assembler''emitByte-2 this, (| 0xc8 encode)))
+            (-> this
+                (Assembler''emitByte-2 0xff)
+                (Assembler''emitByte-2 (| 0xc8 encode))
+            )
         )
-        nil
     )
 
-    (defn #_"void" Assembler''incl-2r [#_"Assembler" this, #_"Register" dst]
+    (defn #_"this" Assembler''incl-2r [#_"Assembler" this, #_"Register" dst]
         ;; Use two-byte form (one-byte from is a REX prefix in 64-bit mode).
         (let [
             #_"int" encode (Assembler''prefixAndEncode-2 this, (.encoding dst))
         ]
-            (§ ass! this (Assembler''emitByte-2 this, 0xff))
-            (§ ass! this (Assembler''emitByte-2 this, (| 0xc0 encode)))
+            (-> this
+                (Assembler''emitByte-2 0xff)
+                (Assembler''emitByte-2 (| 0xc0 encode))
+            )
         )
-        nil
     )
 
-    (defn #_"void" Assembler''addq-3ri [#_"Assembler" this, #_"Register" dst, #_"int" imm32]
+    (defn #_"this" Assembler''addq-3ri [#_"Assembler" this, #_"Register" dst, #_"int" imm32]
         (AMD64MIOp''emit-5r (BinaryArithmetic''getMIOpcode-3 BinaryArithmetic'ADD, :OperandSize'QWORD, (NumUtil'isByte-1i imm32)), this, :OperandSize'QWORD, dst, imm32)
-        nil
+        this
     )
 
-    (defn #_"void" Assembler''addq-3ai [#_"Assembler" this, #_"AMD64Address" dst, #_"int" imm32]
+    (defn #_"this" Assembler''addq-3ai [#_"Assembler" this, #_"AMD64Address" dst, #_"int" imm32]
         (AMD64MIOp''emit-5a (BinaryArithmetic''getMIOpcode-3 BinaryArithmetic'ADD, :OperandSize'QWORD, (NumUtil'isByte-1i imm32)), this, :OperandSize'QWORD, dst, imm32)
-        nil
+        this
     )
 
-    (defn #_"void" Assembler''addq-3rr [#_"Assembler" this, #_"Register" dst, #_"Register" src]
+    (defn #_"this" Assembler''addq-3rr [#_"Assembler" this, #_"Register" dst, #_"Register" src]
         (AMD64RROp'''emit-5 (:rmOp BinaryArithmetic'ADD), this, :OperandSize'QWORD, dst, src)
-        nil
+        this
     )
 
     #_unused
-    (defn #_"void" Assembler''addq-3ar [#_"Assembler" this, #_"AMD64Address" dst, #_"Register" src]
+    (defn #_"this" Assembler''addq-3ar [#_"Assembler" this, #_"AMD64Address" dst, #_"Register" src]
         (AMD64MROp''emit-5 (:mrOp BinaryArithmetic'ADD), this, :OperandSize'QWORD, dst, src)
-        nil
+        this
     )
 
     #_unused
-    (defn #_"void" Assembler''andq-3 [#_"Assembler" this, #_"Register" dst, #_"int" imm32]
+    (defn #_"this" Assembler''andq-3 [#_"Assembler" this, #_"Register" dst, #_"int" imm32]
         (AMD64MIOp''emit-5r (BinaryArithmetic''getMIOpcode-3 BinaryArithmetic'AND, :OperandSize'QWORD, (NumUtil'isByte-1i imm32)), this, :OperandSize'QWORD, dst, imm32)
-        nil
+        this
     )
 
     #_unused
-    (defn #_"void" Assembler''bsrq-3 [#_"Assembler" this, #_"Register" dst, #_"Register" src]
+    (defn #_"this" Assembler''bsrq-3 [#_"Assembler" this, #_"Register" dst, #_"Register" src]
         (let [
             #_"int" encode (Assembler''prefixqAndEncode-3 this, (#_"Register" .encoding dst), (#_"Register" .encoding src))
         ]
-            (§ ass! this (Assembler''emitByte-2 this, 0x0f))
-            (§ ass! this (Assembler''emitByte-2 this, 0xbd))
-            (§ ass! this (Assembler''emitByte-2 this, (| 0xc0 encode)))
+            (-> this
+                (Assembler''emitByte-2 0x0f)
+                (Assembler''emitByte-2 0xbd)
+                (Assembler''emitByte-2 (| 0xc0 encode))
+            )
         )
-        nil
     )
 
-    (defn #_"void" Assembler''bswapq-2 [#_"Assembler" this, #_"Register" reg]
+    (defn #_"this" Assembler''bswapq-2 [#_"Assembler" this, #_"Register" reg]
         (let [
             #_"int" encode (Assembler''prefixqAndEncode-2 this, (.encoding reg))
         ]
-            (§ ass! this (Assembler''emitByte-2 this, 0x0f))
-            (§ ass! this (Assembler''emitByte-2 this, (| 0xc8 encode)))
+            (-> this
+                (Assembler''emitByte-2 0x0f)
+                (Assembler''emitByte-2 (| 0xc8 encode))
+            )
         )
-        nil
     )
 
-    (defn #_"void" Assembler''cdqq-1 [#_"Assembler" this]
-        (§ ass! this (Assembler''emitByte-2 this, Prefix'REXW))
-        (§ ass! this (Assembler''emitByte-2 this, 0x99))
-        nil
+    (defn #_"this" Assembler''cdqq-1 [#_"Assembler" this]
+        (-> this
+            (Assembler''emitByte-2 Prefix'REXW)
+            (Assembler''emitByte-2 0x99)
+        )
     )
 
-    (defn #_"void" Assembler''cmovq-4rr [#_"Assembler" this, #_"ConditionFlag" cc, #_"Register" dst, #_"Register" src]
+    (defn #_"this" Assembler''cmovq-4rr [#_"Assembler" this, #_"ConditionFlag" cc, #_"Register" dst, #_"Register" src]
         (let [
             #_"int" encode (Assembler''prefixqAndEncode-3 this, (.encoding dst), (.encoding src))
         ]
-            (§ ass! this (Assembler''emitByte-2 this, 0x0f))
-            (§ ass! this (Assembler''emitByte-2 this, (| 0x40 (:value cc))))
-            (§ ass! this (Assembler''emitByte-2 this, (| 0xc0 encode)))
+            (-> this
+                (Assembler''emitByte-2 0x0f)
+                (Assembler''emitByte-2 (| 0x40 (:value cc)))
+                (Assembler''emitByte-2 (| 0xc0 encode))
+            )
         )
-        nil
     )
 
-    (defn #_"void" Assembler''setb-3 [#_"Assembler" this, #_"ConditionFlag" cc, #_"Register" dst]
+    (defn #_"this" Assembler''setb-3 [#_"Assembler" this, #_"ConditionFlag" cc, #_"Register" dst]
         (let [
             #_"int" encode (Assembler''prefixAndEncode-3b this, (.encoding dst), true)
         ]
-            (§ ass! this (Assembler''emitByte-2 this, 0x0f))
-            (§ ass! this (Assembler''emitByte-2 this, (| 0x90 (:value cc))))
-            (§ ass! this (Assembler''emitByte-2 this, (| 0xc0 encode)))
+            (-> this
+                (Assembler''emitByte-2 0x0f)
+                (Assembler''emitByte-2 (| 0x90 (:value cc)))
+                (Assembler''emitByte-2 (| 0xc0 encode))
+            )
         )
-        nil
     )
 
-    (defn #_"void" Assembler''cmovq-4ra [#_"Assembler" this, #_"ConditionFlag" cc, #_"Register" dst, #_"AMD64Address" src]
-        (Assembler''prefixq-3 this, src, dst)
-        (§ ass! this (Assembler''emitByte-2 this, 0x0f))
-        (§ ass! this (Assembler''emitByte-2 this, (| 0x40 (:value cc))))
-        (Assembler''emitOperandHelper-4r this, dst, src, 0)
-        nil
+    (defn #_"this" Assembler''cmovq-4ra [#_"Assembler" this, #_"ConditionFlag" cc, #_"Register" dst, #_"AMD64Address" src]
+        (-> this
+            (Assembler''prefixq-3 src, dst)
+            (Assembler''emitByte-2 0x0f)
+            (Assembler''emitByte-2 (| 0x40 (:value cc)))
+            (Assembler''emitOperandHelper-4r dst, src, 0)
+        )
     )
 
-    (defn #_"void" Assembler''cmpq-3ri [#_"Assembler" this, #_"Register" dst, #_"int" imm32]
+    #_unused
+    (defn #_"this" Assembler''cmpq-3ri [#_"Assembler" this, #_"Register" dst, #_"int" imm32]
         (AMD64MIOp''emit-5r (BinaryArithmetic''getMIOpcode-3 BinaryArithmetic'CMP, :OperandSize'QWORD, (NumUtil'isByte-1i imm32)), this, :OperandSize'QWORD, dst, imm32)
-        nil
+        this
     )
 
-    (defn #_"void" Assembler''cmpq-3rr [#_"Assembler" this, #_"Register" dst, #_"Register" src]
+    (defn #_"this" Assembler''cmpq-3rr [#_"Assembler" this, #_"Register" dst, #_"Register" src]
         (AMD64RROp'''emit-5 (:rmOp BinaryArithmetic'CMP), this, :OperandSize'QWORD, dst, src)
-        nil
+        this
     )
 
-    (defn #_"void" Assembler''cmpq-3ra [#_"Assembler" this, #_"Register" dst, #_"AMD64Address" src]
+    (defn #_"this" Assembler''cmpq-3ra [#_"Assembler" this, #_"Register" dst, #_"AMD64Address" src]
         (AMD64RMOp''emit-5 (:rmOp BinaryArithmetic'CMP), this, :OperandSize'QWORD, dst, src)
-        nil
+        this
     )
 
-    (defn #_"void" Assembler''cmpxchgq-3 [#_"Assembler" this, #_"Register" reg, #_"AMD64Address" adr]
-        (Assembler''prefixq-3 this, adr, reg)
-        (§ ass! this (Assembler''emitByte-2 this, 0x0f))
-        (§ ass! this (Assembler''emitByte-2 this, 0xb1))
-        (Assembler''emitOperandHelper-4r this, reg, adr, 0)
-        nil
+    (defn #_"this" Assembler''cmpxchgq-3 [#_"Assembler" this, #_"Register" reg, #_"AMD64Address" adr]
+        (-> this
+            (Assembler''prefixq-3 adr, reg)
+            (Assembler''emitByte-2 0x0f)
+            (Assembler''emitByte-2 0xb1)
+            (Assembler''emitOperandHelper-4r reg, adr, 0)
+        )
     )
 
-    (defn #_"void" Assembler''decq-2r [#_"Assembler" this, #_"Register" dst]
+    (defn #_"this" Assembler''decq-2r [#_"Assembler" this, #_"Register" dst]
         ;; Use two-byte form (one-byte from is a REX prefix in 64-bit mode).
         (let [
             #_"int" encode (Assembler''prefixqAndEncode-2 this, (.encoding dst))
         ]
-            (§ ass! this (Assembler''emitByte-2 this, 0xff))
-            (§ ass! this (Assembler''emitByte-2 this, (| 0xc8 encode)))
+            (-> this
+                (Assembler''emitByte-2 0xff)
+                (Assembler''emitByte-2 (| 0xc8 encode))
+            )
         )
-        nil
     )
 
-    (defn #_"void" Assembler''decq-2a [#_"Assembler" this, #_"AMD64Address" dst]
+    (defn #_"this" Assembler''decq-2a [#_"Assembler" this, #_"AMD64Address" dst]
         (AMD64MOp''emit-4a AMD64MOp'DEC, this, :OperandSize'QWORD, dst)
-        nil
+        this
     )
 
     #_unused
-    (defn #_"void" Assembler''imulq-3 [#_"Assembler" this, #_"Register" dst, #_"Register" src]
+    (defn #_"this" Assembler''imulq-3 [#_"Assembler" this, #_"Register" dst, #_"Register" src]
         (let [
             #_"int" encode (Assembler''prefixqAndEncode-3 this, (.encoding dst), (.encoding src))
         ]
-            (§ ass! this (Assembler''emitByte-2 this, 0x0f))
-            (§ ass! this (Assembler''emitByte-2 this, 0xaf))
-            (§ ass! this (Assembler''emitByte-2 this, (| 0xc0 encode)))
+            (-> this
+                (Assembler''emitByte-2 0x0f)
+                (Assembler''emitByte-2 0xaf)
+                (Assembler''emitByte-2 (| 0xc0 encode))
+            )
         )
-        nil
     )
 
-    (defn #_"void" Assembler''incq-2r [#_"Assembler" this, #_"Register" dst]
+    (defn #_"this" Assembler''incq-2r [#_"Assembler" this, #_"Register" dst]
         ;; Don't use it directly. Use the macro incrementq() instead.
         ;; Use two-byte form (one-byte from is a REX prefix in 64-bit mode).
         (let [
             #_"int" encode (Assembler''prefixqAndEncode-2 this, (.encoding dst))
         ]
-            (§ ass! this (Assembler''emitByte-2 this, 0xff))
-            (§ ass! this (Assembler''emitByte-2 this, (| 0xc0 encode)))
+            (-> this
+                (Assembler''emitByte-2 0xff)
+                (Assembler''emitByte-2 (| 0xc0 encode))
+            )
         )
-        nil
     )
 
-    (defn #_"void" Assembler''incq-2a [#_"Assembler" this, #_"AMD64Address" dst]
+    (defn #_"this" Assembler''incq-2a [#_"Assembler" this, #_"AMD64Address" dst]
         (AMD64MOp''emit-4a AMD64MOp'INC, this, :OperandSize'QWORD, dst)
-        nil
+        this
     )
 
-    (defn #_"void" Assembler''movq-3rl [#_"Assembler" this, #_"Register" dst, #_"long" imm64]
+    (defn #_"this" Assembler''movq-3rl [#_"Assembler" this, #_"Register" dst, #_"long" imm64]
         (let [
             #_"int" encode (Assembler''prefixqAndEncode-2 this, (.encoding dst))
         ]
-            (§ ass! this (Assembler''emitByte-2 this, (| 0xb8 encode)))
-            (§ ass! this (Assembler''emitLong-2 this, imm64))
+            (-> this
+                (Assembler''emitByte-2 (| 0xb8 encode))
+                (Assembler''emitLong-2 imm64)
+            )
         )
-        nil
     )
 
-    (defn #_"void" Assembler''movslq-3ri [#_"Assembler" this, #_"Register" dst, #_"int" imm32]
+    (defn #_"this" Assembler''movslq-3ri [#_"Assembler" this, #_"Register" dst, #_"int" imm32]
         (let [
             #_"int" encode (Assembler''prefixqAndEncode-2 this, (.encoding dst))
         ]
-            (§ ass! this (Assembler''emitByte-2 this, 0xc7))
-            (§ ass! this (Assembler''emitByte-2 this, (| 0xc0 encode)))
-            (§ ass! this (Assembler''emitInt-2 this, imm32))
+            (-> this
+                (Assembler''emitByte-2 0xc7)
+                (Assembler''emitByte-2 (| 0xc0 encode))
+                (Assembler''emitInt-2 imm32)
+            )
         )
-        nil
     )
 
-    (defn #_"void" Assembler''movslq-3ai [#_"Assembler" this, #_"AMD64Address" dst, #_"int" imm32]
-        (Assembler''prefixq-2 this, dst)
-        (§ ass! this (Assembler''emitByte-2 this, 0xc7))
-        (Assembler''emitOperandHelper-4i this, 0, dst, 4)
-        (§ ass! this (Assembler''emitInt-2 this, imm32))
-        nil
+    (defn #_"this" Assembler''movslq-3ai [#_"Assembler" this, #_"AMD64Address" dst, #_"int" imm32]
+        (-> this
+            (Assembler''prefixq-2 dst)
+            (Assembler''emitByte-2 0xc7)
+            (Assembler''emitOperandHelper-4i 0, dst, 4)
+            (Assembler''emitInt-2 imm32)
+        )
     )
 
-    (defn #_"void" Assembler''movslq-3ra [#_"Assembler" this, #_"Register" dst, #_"AMD64Address" src]
-        (Assembler''prefixq-3 this, src, dst)
-        (§ ass! this (Assembler''emitByte-2 this, 0x63))
-        (Assembler''emitOperandHelper-4r this, dst, src, 0)
-        nil
+    (defn #_"this" Assembler''movslq-3ra [#_"Assembler" this, #_"Register" dst, #_"AMD64Address" src]
+        (-> this
+            (Assembler''prefixq-3 src, dst)
+            (Assembler''emitByte-2 0x63)
+            (Assembler''emitOperandHelper-4r dst, src, 0)
+        )
     )
 
-    (defn #_"void" Assembler''movslq-3rr [#_"Assembler" this, #_"Register" dst, #_"Register" src]
+    #_unused
+    (defn #_"this" Assembler''movslq-3rr [#_"Assembler" this, #_"Register" dst, #_"Register" src]
         (let [
             #_"int" encode (Assembler''prefixqAndEncode-3 this, (.encoding dst), (.encoding src))
         ]
-            (§ ass! this (Assembler''emitByte-2 this, 0x63))
-            (§ ass! this (Assembler''emitByte-2 this, (| 0xc0 encode)))
+            (-> this
+                (Assembler''emitByte-2 0x63)
+                (Assembler''emitByte-2 (| 0xc0 encode))
+            )
         )
-        nil
     )
 
     #_unused
-    (defn #_"void" Assembler''negq-2 [#_"Assembler" this, #_"Register" dst]
+    (defn #_"this" Assembler''negq-2 [#_"Assembler" this, #_"Register" dst]
         (let [
             #_"int" encode (Assembler''prefixqAndEncode-2 this, (.encoding dst))
         ]
-            (§ ass! this (Assembler''emitByte-2 this, 0xf7))
-            (§ ass! this (Assembler''emitByte-2 this, (| 0xd8 encode)))
+            (-> this
+                (Assembler''emitByte-2 0xf7)
+                (Assembler''emitByte-2 (| 0xd8 encode))
+            )
         )
-        nil
     )
 
     #_unused
-    (defn #_"void" Assembler''orq-3 [#_"Assembler" this, #_"Register" dst, #_"Register" src]
+    (defn #_"this" Assembler''orq-3 [#_"Assembler" this, #_"Register" dst, #_"Register" src]
         (AMD64RROp'''emit-5 (:rmOp BinaryArithmetic'OR), this, :OperandSize'QWORD, dst, src)
-        nil
+        this
     )
 
-    (defn #_"void" Assembler''shlq-3 [#_"Assembler" this, #_"Register" dst, #_"int" imm8]
+    (defn #_"this" Assembler''shlq-3 [#_"Assembler" this, #_"Register" dst, #_"int" imm8]
         (let [
             #_"int" encode (Assembler''prefixqAndEncode-2 this, (.encoding dst))
         ]
             (if (= imm8 1)
-                (do
-                    (§ ass! this (Assembler''emitByte-2 this, 0xd1))
-                    (§ ass! this (Assembler''emitByte-2 this, (| 0xe0 encode)))
+                (-> this
+                    (Assembler''emitByte-2 0xd1)
+                    (Assembler''emitByte-2 (| 0xe0 encode))
                 )
-                (do
-                    (§ ass! this (Assembler''emitByte-2 this, 0xc1))
-                    (§ ass! this (Assembler''emitByte-2 this, (| 0xe0 encode)))
-                    (§ ass! this (Assembler''emitByte-2 this, imm8))
+                (-> this
+                    (Assembler''emitByte-2 0xc1)
+                    (Assembler''emitByte-2 (| 0xe0 encode))
+                    (Assembler''emitByte-2 imm8)
                 )
             )
         )
-        nil
     )
 
     #_unused
-    (defn #_"void" Assembler''shlq-2 [#_"Assembler" this, #_"Register" dst]
+    (defn #_"this" Assembler''shlq-2 [#_"Assembler" this, #_"Register" dst]
         (let [
             #_"int" encode (Assembler''prefixqAndEncode-2 this, (.encoding dst))
         ]
-            (§ ass! this (Assembler''emitByte-2 this, 0xd3))
-            (§ ass! this (Assembler''emitByte-2 this, (| 0xe0 encode)))
+            (-> this
+                (Assembler''emitByte-2 0xd3)
+                (Assembler''emitByte-2 (| 0xe0 encode))
+            )
         )
-        nil
     )
 
-    (defn #_"void" Assembler''shrq-3 [#_"Assembler" this, #_"Register" dst, #_"int" imm8]
+    (defn #_"this" Assembler''shrq-3 [#_"Assembler" this, #_"Register" dst, #_"int" imm8]
         (let [
             #_"int" encode (Assembler''prefixqAndEncode-2 this, (.encoding dst))
         ]
             (if (= imm8 1)
-                (do
-                    (§ ass! this (Assembler''emitByte-2 this, 0xd1))
-                    (§ ass! this (Assembler''emitByte-2 this, (| 0xe8 encode)))
+                (-> this
+                    (Assembler''emitByte-2 0xd1)
+                    (Assembler''emitByte-2 (| 0xe8 encode))
                 )
-                (do
-                    (§ ass! this (Assembler''emitByte-2 this, 0xc1))
-                    (§ ass! this (Assembler''emitByte-2 this, (| 0xe8 encode)))
-                    (§ ass! this (Assembler''emitByte-2 this, imm8))
+                (-> this
+                    (Assembler''emitByte-2 0xc1)
+                    (Assembler''emitByte-2 (| 0xe8 encode))
+                    (Assembler''emitByte-2 imm8)
                 )
             )
         )
-        nil
     )
 
     #_unused
-    (defn #_"void" Assembler''shrq-2 [#_"Assembler" this, #_"Register" dst]
+    (defn #_"this" Assembler''shrq-2 [#_"Assembler" this, #_"Register" dst]
         (let [
             #_"int" encode (Assembler''prefixqAndEncode-2 this, (.encoding dst))
         ]
-            (§ ass! this (Assembler''emitByte-2 this, 0xd3))
-            (§ ass! this (Assembler''emitByte-2 this, (| 0xe8 encode)))
+            (-> this
+                (Assembler''emitByte-2 0xd3)
+                (Assembler''emitByte-2 (| 0xe8 encode))
+            )
         )
-        nil
     )
 
     #_unused
-    (defn #_"void" Assembler''sbbq-3 [#_"Assembler" this, #_"Register" dst, #_"Register" src]
+    (defn #_"this" Assembler''sbbq-3 [#_"Assembler" this, #_"Register" dst, #_"Register" src]
         (AMD64RROp'''emit-5 (:rmOp BinaryArithmetic'SBB), this, :OperandSize'QWORD, dst, src)
-        nil
+        this
     )
 
-    (defn #_"void" Assembler''subq-3ri [#_"Assembler" this, #_"Register" dst, #_"int" imm32]
+    (defn #_"this" Assembler''subq-3ri [#_"Assembler" this, #_"Register" dst, #_"int" imm32]
         (AMD64MIOp''emit-5r (BinaryArithmetic''getMIOpcode-3 BinaryArithmetic'SUB, :OperandSize'QWORD, (NumUtil'isByte-1i imm32)), this, :OperandSize'QWORD, dst, imm32)
-        nil
+        this
     )
 
-    (defn #_"void" Assembler''subq-3ai [#_"Assembler" this, #_"AMD64Address" dst, #_"int" imm32]
+    (defn #_"this" Assembler''subq-3ai [#_"Assembler" this, #_"AMD64Address" dst, #_"int" imm32]
         (AMD64MIOp''emit-5a (BinaryArithmetic''getMIOpcode-3 BinaryArithmetic'SUB, :OperandSize'QWORD, (NumUtil'isByte-1i imm32)), this, :OperandSize'QWORD, dst, imm32)
-        nil
+        this
     )
 
-    (defn #_"void" Assembler''subqWide-3 [#_"Assembler" this, #_"Register" dst, #_"int" imm32]
-        ;; don't use the sign-extending version, forcing a 32-bit immediate
+    (defn #_"this" Assembler''subqWide-3 [#_"Assembler" this, #_"Register" dst, #_"int" imm32]
+        ;; do not use the sign-extending version, forcing a 32-bit immediate
         (AMD64MIOp''emit-5r (BinaryArithmetic''getMIOpcode-3 BinaryArithmetic'SUB, :OperandSize'QWORD, false), this, :OperandSize'QWORD, dst, imm32)
-        nil
+        this
     )
 
-    (defn #_"void" Assembler''subq-3rr [#_"Assembler" this, #_"Register" dst, #_"Register" src]
+    (defn #_"this" Assembler''subq-3rr [#_"Assembler" this, #_"Register" dst, #_"Register" src]
         (AMD64RROp'''emit-5 (:rmOp BinaryArithmetic'SUB), this, :OperandSize'QWORD, dst, src)
-        nil
+        this
     )
 
-    (defn #_"void" Assembler''testq-3 [#_"Assembler" this, #_"Register" dst, #_"Register" src]
+    (defn #_"this" Assembler''testq-3 [#_"Assembler" this, #_"Register" dst, #_"Register" src]
         (let [
             #_"int" encode (Assembler''prefixqAndEncode-3 this, (.encoding dst), (.encoding src))
         ]
-            (§ ass! this (Assembler''emitByte-2 this, 0x85))
-            (§ ass! this (Assembler''emitByte-2 this, (| 0xc0 encode)))
+            (-> this
+                (Assembler''emitByte-2 0x85)
+                (Assembler''emitByte-2 (| 0xc0 encode))
+            )
         )
-        nil
     )
 
     #_unused
-    (defn #_"void" Assembler''btrq-3 [#_"Assembler" this, #_"Register" src, #_"int" imm8]
+    (defn #_"this" Assembler''btrq-3 [#_"Assembler" this, #_"Register" src, #_"int" imm8]
         (let [
             #_"int" encode (Assembler''prefixqAndEncode-2 this, (.encoding src))
         ]
-            (§ ass! this (Assembler''emitByte-2 this, 0x0f))
-            (§ ass! this (Assembler''emitByte-2 this, 0xba))
-            (§ ass! this (Assembler''emitByte-2 this, (| 0xf0 encode)))
-            (§ ass! this (Assembler''emitByte-2 this, imm8))
+            (reduce Assembler''emitByte-2 this, 0x0f 0xba (| 0xf0 encode) imm8)
         )
-        nil
     )
 
-    (defn #_"void" Assembler''xaddl-3 [#_"Assembler" this, #_"AMD64Address" dst, #_"Register" src]
-        (Assembler''prefix-3 this, dst, src)
-        (§ ass! this (Assembler''emitByte-2 this, 0x0f))
-        (§ ass! this (Assembler''emitByte-2 this, 0xc1))
-        (Assembler''emitOperandHelper-4r this, src, dst, 0)
-        nil
+    (defn #_"this" Assembler''xaddl-3 [#_"Assembler" this, #_"AMD64Address" dst, #_"Register" src]
+        (-> this
+            (Assembler''prefix-3 dst, src)
+            (Assembler''emitByte-2 0x0f)
+            (Assembler''emitByte-2 0xc1)
+            (Assembler''emitOperandHelper-4r src, dst, 0)
+        )
     )
 
-    (defn #_"void" Assembler''xaddq-3 [#_"Assembler" this, #_"AMD64Address" dst, #_"Register" src]
-        (Assembler''prefixq-3 this, dst, src)
-        (§ ass! this (Assembler''emitByte-2 this, 0x0f))
-        (§ ass! this (Assembler''emitByte-2 this, 0xc1))
-        (Assembler''emitOperandHelper-4r this, src, dst, 0)
-        nil
+    (defn #_"this" Assembler''xaddq-3 [#_"Assembler" this, #_"AMD64Address" dst, #_"Register" src]
+        (-> this
+            (Assembler''prefixq-3 dst, src)
+            (Assembler''emitByte-2 0x0f)
+            (Assembler''emitByte-2 0xc1)
+            (Assembler''emitOperandHelper-4r src, dst, 0)
+        )
     )
 
-    (defn #_"void" Assembler''xchgl-3 [#_"Assembler" this, #_"Register" dst, #_"AMD64Address" src]
-        (Assembler''prefix-3 this, src, dst)
-        (§ ass! this (Assembler''emitByte-2 this, 0x87))
-        (Assembler''emitOperandHelper-4r this, dst, src, 0)
-        nil
+    (defn #_"this" Assembler''xchgl-3 [#_"Assembler" this, #_"Register" dst, #_"AMD64Address" src]
+        (-> this
+            (Assembler''prefix-3 src, dst)
+            (Assembler''emitByte-2 0x87)
+            (Assembler''emitOperandHelper-4r dst, src, 0)
+        )
     )
 
-    (defn #_"void" Assembler''xchgq-3 [#_"Assembler" this, #_"Register" dst, #_"AMD64Address" src]
-        (Assembler''prefixq-3 this, src, dst)
-        (§ ass! this (Assembler''emitByte-2 this, 0x87))
-        (Assembler''emitOperandHelper-4r this, dst, src, 0)
-        nil
+    (defn #_"this" Assembler''xchgq-3 [#_"Assembler" this, #_"Register" dst, #_"AMD64Address" src]
+        (-> this
+            (Assembler''prefixq-3 src, dst)
+            (Assembler''emitByte-2 0x87)
+            (Assembler''emitOperandHelper-4r dst, src, 0)
+        )
     )
 
-    (defn #_"void" Assembler''membar-2 [#_"Assembler" this, #_"int" barriers]
-        (when (.isMP HotSpot'target)
+    (defn #_"this" Assembler''membar-2 [#_"Assembler" this, #_"int" barriers]
+        (when (.isMP HotSpot'target) => this
             ;; We only have to handle StoreLoad.
-            (when-not (zero? (& barriers MemoryBarriers/STORE_LOAD))
+            (when-not (zero? (& barriers MemoryBarriers/STORE_LOAD)) => this
                 ;; All usable chips support "locked" instructions which suffice as barriers,
                 ;; and are much faster than the alternative of using cpuid instruction.
                 ;; We use here a locked add [rsp],0. This is conveniently otherwise a no-op except
                 ;; for blowing flags. Any change to this code may need to revisit other places
                 ;; in the code where this idiom is used, in particular the orderAccess code.
-                (Assembler''lock-1 this)
-                (Assembler''addl-3ai this, (AMD64Address'new-2 AMD64/rsp, 0), 0) ;; Assert the lock# signal here.
+                (-> this
+                    (Assembler''lock-1)
+                    (Assembler''addl-3ai (AMD64Address'new-2 AMD64/rsp, 0), 0) ;; Assert the lock# signal here.
+                )
             )
         )
-        nil
     )
 
-    (defn #_"void" Assembler''patchJumpTarget-3 [#_"Assembler" this, #_"int" branch, #_"int" jumpTarget]
+    (defn #_"this" Assembler''patchJumpTarget-3 [#_"Assembler" this, #_"int" branch, #_"int" jumpTarget]
         (let [
             #_"int" op (Assembler''getByte-2 this, branch)
         ]
@@ -15403,7 +15317,7 @@ ZeroExtendNode'new-4
                         #_"int" jumpTableBase (- branch offsetToJumpTableBase)
                         #_"int" imm32 (- jumpTarget jumpTableBase)
                     ]
-                        (§ ass! this (Assembler''emitInt-3 this, imm32, branch))
+                        (Assembler''emitInt-3 this, imm32, branch)
                     )
                 (or (= op 0xeb) (= (& op 0xf0) 0x70))
                     ;; short offset operators (jmp and jcc)
@@ -15412,33 +15326,29 @@ ZeroExtendNode'new-4
                     ]
                         ;; Since a wrongly patched short branch can potentially lead to working but really bad
                         ;; behaving code we should always fail with an exception instead of having an assert.
-                        (when-not (NumUtil'isByte-1i imm8)
-                            (throw! (str "branch displacement out of range: " imm8))
+                        (when (NumUtil'isByte-1i imm8) => (throw! (str "branch displacement out of range: " imm8))
+                            (Assembler''emitByte-3 this, imm8, (inc branch))
                         )
-                        (§ ass! this (Assembler''emitByte-3 this, imm8, (inc branch)))
                     )
                 :else
                     (let [
                         #_"int" off (if (= op 0x0f) 2 1)
                         #_"int" imm32 (- jumpTarget (+ branch 4 off))
                     ]
-                        (§ ass! this (Assembler''emitInt-3 this, imm32, (+ branch off)))
+                        (Assembler''emitInt-3 this, imm32, (+ branch off))
                     )
             )
         )
-        nil
     )
 
-    (defn #_"void" Assembler''nullCheck-2 [#_"Assembler" this, #_"AMD64Address" address]
+    (defn #_"this" Assembler''nullCheck-2 [#_"Assembler" this, #_"AMD64Address" address]
         (Assembler''testl-3ra this, AMD64/rax, address)
-        nil
     )
 
-    (defn #_"void" Assembler''align-2 [#_"Assembler" this, #_"int" modulus]
-        (when-not (zero? (% (Assembler''position-1 this) modulus))
+    (defn #_"this" Assembler''align-2 [#_"Assembler" this, #_"int" modulus]
+        (when-not (zero? (% (Assembler''position-1 this) modulus)) => this
             (Assembler''nop-2 this, (- modulus (% (Assembler''position-1 this) modulus)))
         )
-        nil
     )
 
     ;;;
@@ -15446,20 +15356,22 @@ ZeroExtendNode'new-4
      ; all calls need patching anyway. Therefore, 0 is emitted as the call target, and the user is
      ; responsible to add the call address to the appropriate patching tables.
      ;;
-    (defn #_"void" Assembler''call-1 [#_"Assembler" this]
-        (§ ass! this (Assembler''emitByte-2 this, 0xe8))
-        (§ ass! this (Assembler''emitInt-2 this, 0))
-        nil
+    (defn #_"this" Assembler''call-1 [#_"Assembler" this]
+        (-> this
+            (Assembler''emitByte-2 0xe8)
+            (Assembler''emitInt-2 0)
+        )
     )
 
-    (defn #_"void" Assembler''call-2 [#_"Assembler" this, #_"Register" src]
+    (defn #_"this" Assembler''call-2 [#_"Assembler" this, #_"Register" src]
         (let [
             #_"int" encode (Assembler''prefixAndEncode-2 this, (.encoding src))
         ]
-            (§ ass! this (Assembler''emitByte-2 this, 0xff))
-            (§ ass! this (Assembler''emitByte-2 this, (| 0xd0 encode)))
+            (-> this
+                (Assembler''emitByte-2 0xff)
+                (Assembler''emitByte-2 (| 0xd0 encode))
+            )
         )
-        nil
     )
 
     ;;;
@@ -15472,62 +15384,70 @@ ZeroExtendNode'new-4
         (AMD64Address'new-5 AMD64/rip, Register/None, Scale'Times1, 0, pos)
     )
 
-    (defn- #_"void" Assembler''prefetchPrefix-2 [#_"Assembler" this, #_"AMD64Address" src]
-        (Assembler''prefix-2 this, src)
-        (§ ass! this (Assembler''emitByte-2 this, 0x0f))
-        nil
+    (defn- #_"this" Assembler''prefetchPrefix-2 [#_"Assembler" this, #_"AMD64Address" src]
+        (-> this
+            (Assembler''prefix-2 src)
+            (Assembler''emitByte-2 0x0f)
+        )
     )
 
-    (defn #_"void" Assembler''prefetchnta-2 [#_"Assembler" this, #_"AMD64Address" src]
-        (Assembler''prefetchPrefix-2 this, src)
-        (§ ass! this (Assembler''emitByte-2 this, 0x18))
-        (Assembler''emitOperandHelper-4i this, 0, src, 0)
-        nil
-    )
-
-    #_unused
-    (defn #_"void" Assembler''prefetchr-2 [#_"Assembler" this, #_"AMD64Address" src]
-        (Assembler''prefetchPrefix-2 this, src)
-        (§ ass! this (Assembler''emitByte-2 this, 0x0d))
-        (Assembler''emitOperandHelper-4i this, 0, src, 0)
-        nil
-    )
-
-    (defn #_"void" Assembler''prefetcht0-2 [#_"Assembler" this, #_"AMD64Address" src]
-        (Assembler''prefetchPrefix-2 this, src)
-        (§ ass! this (Assembler''emitByte-2 this, 0x18))
-        (Assembler''emitOperandHelper-4i this, 1, src, 0)
-        nil
+    (defn #_"this" Assembler''prefetchnta-2 [#_"Assembler" this, #_"AMD64Address" src]
+        (-> this
+            (Assembler''prefetchPrefix-2 src)
+            (Assembler''emitByte-2 0x18)
+            (Assembler''emitOperandHelper-4i 0, src, 0)
+        )
     )
 
     #_unused
-    (defn #_"void" Assembler''prefetcht1-2 [#_"Assembler" this, #_"AMD64Address" src]
-        (Assembler''prefetchPrefix-2 this, src)
-        (§ ass! this (Assembler''emitByte-2 this, 0x18))
-        (Assembler''emitOperandHelper-4i this, 2, src, 0)
-        nil
+    (defn #_"this" Assembler''prefetchr-2 [#_"Assembler" this, #_"AMD64Address" src]
+        (-> this
+            (Assembler''prefetchPrefix-2 src)
+            (Assembler''emitByte-2 0x0d)
+            (Assembler''emitOperandHelper-4i 0, src, 0)
+        )
     )
 
-    (defn #_"void" Assembler''prefetcht2-2 [#_"Assembler" this, #_"AMD64Address" src]
-        (Assembler''prefix-2 this, src)
-        (§ ass! this (Assembler''emitByte-2 this, 0x0f))
-        (§ ass! this (Assembler''emitByte-2 this, 0x18))
-        (Assembler''emitOperandHelper-4i this, 3, src, 0)
-        nil
+    (defn #_"this" Assembler''prefetcht0-2 [#_"Assembler" this, #_"AMD64Address" src]
+        (-> this
+            (Assembler''prefetchPrefix-2 src)
+            (Assembler''emitByte-2 0x18)
+            (Assembler''emitOperandHelper-4i 1, src, 0)
+        )
     )
 
-    (defn #_"void" Assembler''prefetchw-2 [#_"Assembler" this, #_"AMD64Address" src]
-        (Assembler''prefix-2 this, src)
-        (§ ass! this (Assembler''emitByte-2 this, 0x0f))
-        (§ ass! this (Assembler''emitByte-2 this, 0x0d))
-        (Assembler''emitOperandHelper-4i this, 1, src, 0)
-        nil
+    #_unused
+    (defn #_"this" Assembler''prefetcht1-2 [#_"Assembler" this, #_"AMD64Address" src]
+        (-> this
+            (Assembler''prefetchPrefix-2 src)
+            (Assembler''emitByte-2 0x18)
+            (Assembler''emitOperandHelper-4i 2, src, 0)
+        )
     )
 
-    (defn #_"void" Assembler''rdtsc-1 [#_"Assembler" this]
-        (§ ass! this (Assembler''emitByte-2 this, 0x0f))
-        (§ ass! this (Assembler''emitByte-2 this, 0x31))
-        nil
+    (defn #_"this" Assembler''prefetcht2-2 [#_"Assembler" this, #_"AMD64Address" src]
+        (-> this
+            (Assembler''prefix-2 src)
+            (Assembler''emitByte-2 0x0f)
+            (Assembler''emitByte-2 0x18)
+            (Assembler''emitOperandHelper-4i 3, src, 0)
+        )
+    )
+
+    (defn #_"this" Assembler''prefetchw-2 [#_"Assembler" this, #_"AMD64Address" src]
+        (-> this
+            (Assembler''prefix-2 src)
+            (Assembler''emitByte-2 0x0f)
+            (Assembler''emitByte-2 0x0d)
+            (Assembler''emitOperandHelper-4i 1, src, 0)
+        )
+    )
+
+    (defn #_"this" Assembler''rdtsc-1 [#_"Assembler" this]
+        (-> this
+            (Assembler''emitByte-2 0x0f)
+            (Assembler''emitByte-2 0x31)
+        )
     )
 
     ;;;
@@ -15535,170 +15455,164 @@ ZeroExtendNode'new-4
      ; to crash the program (debugging etc.).
      ;;
     #_unused
-    (defn #_"void" Assembler''illegal-1 [#_"Assembler" this]
-        (§ ass! this (Assembler''emitByte-2 this, 0x0f))
-        (§ ass! this (Assembler''emitByte-2 this, 0x0b))
-        nil
+    (defn #_"this" Assembler''illegal-1 [#_"Assembler" this]
+        (-> this
+            (Assembler''emitByte-2 0x0f)
+            (Assembler''emitByte-2 0x0b)
+        )
     )
 
-    (defn #_"void" Assembler''lfence-1 [#_"Assembler" this]
-        (§ ass! this (Assembler''emitByte-2 this, 0x0f))
-        (§ ass! this (Assembler''emitByte-2 this, 0xae))
-        (§ ass! this (Assembler''emitByte-2 this, 0xe8))
-        nil
+    (defn #_"this" Assembler''lfence-1 [#_"Assembler" this]
+        (-> this
+            (Assembler''emitByte-2 0x0f)
+            (Assembler''emitByte-2 0xae)
+            (Assembler''emitByte-2 0xe8)
+        )
     )
 
     ;; masm
 
-    (defn #_"void" Assembler''decrementq-3r [#_"Assembler" this, #_"Register" reg, #_"int" value]
+    (defn #_"this" Assembler''decrementq-3r [#_"Assembler" this, #_"Register" reg, #_"int" value]
         (cond
             (= value Integer/MIN_VALUE)           (Assembler''subq-3ri this, reg, value)
             (neg? value)                          (Assembler''incrementq-3r this, reg, (- value))
-            (zero? value)                         nil
+            (zero? value)                         this
             (and (= value 1) Assembler'UseIncDec) (Assembler''decq-2r this, reg)
             :else                                 (Assembler''subq-3ri this, reg, value)
         )
-        nil
     )
 
-    (defn #_"void" Assembler''decrementq-3a [#_"Assembler" this, #_"AMD64Address" dst, #_"int" value]
+    (defn #_"this" Assembler''decrementq-3a [#_"Assembler" this, #_"AMD64Address" dst, #_"int" value]
         (cond
             (= value Integer/MIN_VALUE)           (Assembler''subq-3ai this, dst, value)
             (neg? value)                          (Assembler''incrementq-3a this, dst, (- value))
-            (zero? value)                         nil
+            (zero? value)                         this
             (and (= value 1) Assembler'UseIncDec) (Assembler''decq-2a this, dst)
             :else                                 (Assembler''subq-3ai this, dst, value)
         )
-        nil
     )
 
-    (defn #_"void" Assembler''incrementq-3r [#_"Assembler" this, #_"Register" reg, #_"int" value]
+    (defn #_"this" Assembler''incrementq-3r [#_"Assembler" this, #_"Register" reg, #_"int" value]
         (cond
             (= value Integer/MIN_VALUE)           (Assembler''addq-3ri this, reg, value)
             (neg? value)                          (Assembler''decrementq-3r this, reg, (- value))
-            (zero? value)                         nil
+            (zero? value)                         this
             (and (= value 1) Assembler'UseIncDec) (Assembler''incq-2r this, reg)
             :else                                 (Assembler''addq-3ri this, reg, value)
         )
-        nil
     )
 
-    (defn #_"void" Assembler''incrementq-3a [#_"Assembler" this, #_"AMD64Address" dst, #_"int" value]
+    (defn #_"this" Assembler''incrementq-3a [#_"Assembler" this, #_"AMD64Address" dst, #_"int" value]
         (cond
             (= value Integer/MIN_VALUE)           (Assembler''addq-3ai this, dst, value)
             (neg? value)                          (Assembler''decrementq-3a this, dst, (- value))
-            (zero? value)                         nil
+            (zero? value)                         this
             (and (= value 1) Assembler'UseIncDec) (Assembler''incq-2a this, dst)
             :else                                 (Assembler''addq-3ai this, dst, value)
         )
-        nil
     )
 
-    (defn #_"void" Assembler''movptr-3ra [#_"Assembler" this, #_"Register" dst, #_"AMD64Address" src]
+    (defn #_"this" Assembler''movptr-3ra [#_"Assembler" this, #_"Register" dst, #_"AMD64Address" src]
         (Assembler''movq-3ra this, dst, src)
-        nil
     )
 
     #_unused
-    (defn #_"void" Assembler''movptr-3ar [#_"Assembler" this, #_"AMD64Address" dst, #_"Register" src]
+    (defn #_"this" Assembler''movptr-3ar [#_"Assembler" this, #_"AMD64Address" dst, #_"Register" src]
         (Assembler''movq-3ar this, dst, src)
-        nil
     )
 
     #_unused
-    (defn #_"void" Assembler''movptr-3ai [#_"Assembler" this, #_"AMD64Address" dst, #_"int" src]
+    (defn #_"this" Assembler''movptr-3ai [#_"Assembler" this, #_"AMD64Address" dst, #_"int" src]
         (Assembler''movslq-3ai this, dst, src)
-        nil
     )
 
-    (defn #_"void" Assembler''cmpptr-3rr [#_"Assembler" this, #_"Register" src1, #_"Register" src2]
+    (defn #_"this" Assembler''cmpptr-3rr [#_"Assembler" this, #_"Register" src1, #_"Register" src2]
         (Assembler''cmpq-3rr this, src1, src2)
-        nil
     )
 
     #_unused
-    (defn #_"void" Assembler''cmpptr-3ra [#_"Assembler" this, #_"Register" src1, #_"AMD64Address" src2]
+    (defn #_"this" Assembler''cmpptr-3ra [#_"Assembler" this, #_"Register" src1, #_"AMD64Address" src2]
         (Assembler''cmpq-3ra this, src1, src2)
-        nil
     )
 
     #_unused
-    (defn #_"void" Assembler''decrementl-2 [#_"Assembler" this, #_"Register" reg]
+    (defn #_"this" Assembler''decrementl-2 [#_"Assembler" this, #_"Register" reg]
         (Assembler''decrementl-3r this, reg, 1)
-        nil
     )
 
-    (defn #_"void" Assembler''decrementl-3r [#_"Assembler" this, #_"Register" reg, #_"int" value]
+    (defn #_"this" Assembler''decrementl-3r [#_"Assembler" this, #_"Register" reg, #_"int" value]
         (cond
             (= value Integer/MIN_VALUE)           (Assembler''subl-3ri this, reg, value)
             (neg? value)                          (Assembler''incrementl-3r this, reg, (- value))
-            (zero? value)                         nil
+            (zero? value)                         this
             (and (= value 1) Assembler'UseIncDec) (Assembler''decl-2r this, reg)
             :else                                 (Assembler''subl-3ri this, reg, value)
         )
-        nil
     )
 
-    (defn #_"void" Assembler''decrementl-3a [#_"Assembler" this, #_"AMD64Address" dst, #_"int" value]
+    (defn #_"this" Assembler''decrementl-3a [#_"Assembler" this, #_"AMD64Address" dst, #_"int" value]
         (cond
             (= value Integer/MIN_VALUE)           (Assembler''subl-3ai this, dst, value)
             (neg? value)                          (Assembler''incrementl-3a this, dst, (- value))
-            (zero? value)                         nil
+            (zero? value)                         this
             (and (= value 1) Assembler'UseIncDec) (Assembler''decl-2a this, dst)
             :else                                 (Assembler''subl-3ai this, dst, value)
         )
-        nil
     )
 
-    (defn #_"void" Assembler''incrementl-3r [#_"Assembler" this, #_"Register" reg, #_"int" value]
+    (defn #_"this" Assembler''incrementl-3r [#_"Assembler" this, #_"Register" reg, #_"int" value]
         (cond
             (= value Integer/MIN_VALUE)           (Assembler''addl-3ri this, reg, value)
             (neg? value)                          (Assembler''decrementl-3r this, reg, (- value))
-            (zero? value)                         nil
+            (zero? value)                         this
             (and (= value 1) Assembler'UseIncDec) (Assembler''incl-2r this, reg)
             :else                                 (Assembler''addl-3ri this, reg, value)
         )
-        nil
     )
 
-    (defn #_"void" Assembler''incrementl-3a [#_"Assembler" this, #_"AMD64Address" dst, #_"int" value]
+    (defn #_"this" Assembler''incrementl-3a [#_"Assembler" this, #_"AMD64Address" dst, #_"int" value]
         (cond
             (= value Integer/MIN_VALUE)           (Assembler''addl-3ai this, dst, value)
             (neg? value)                          (Assembler''decrementl-3a this, dst, (- value))
-            (zero? value)                         nil
+            (zero? value)                         this
             (and (= value 1) Assembler'UseIncDec) (Assembler''incl-2a this, dst)
             :else                                 (Assembler''addl-3ai this, dst, value)
         )
-        nil
     )
 
     ;;;
      ; Non-atomic write of a 64-bit constant to memory.
      ; Do not use if the address might be a volatile field!
      ;;
-    (defn #_"void" Assembler''movlong-3 [#_"Assembler" this, #_"AMD64Address" dst, #_"long" src]
+    (defn #_"this" Assembler''movlong-3 [#_"Assembler" this, #_"AMD64Address" dst, #_"long" src]
         (if (NumUtil'isInt-1 src)
-            (AMD64MIOp''emit-5a AMD64MIOp'MOV, this, :OperandSize'QWORD, dst, (int src))
+            (do
+                (AMD64MIOp''emit-5a AMD64MIOp'MOV, this, :OperandSize'QWORD, dst, (int src))
+                this
+            )
             (let [
                 #_"AMD64Address" high (AMD64Address'new-4 (:base dst), (:index dst), (:scale dst), (+ (:displacement dst) 4))
             ]
-                (Assembler''movl-3ai this, dst, (int (& src 0xffffffff)))
-                (Assembler''movl-3ai this, high, (int (>> src 32)))
+                (-> this
+                    (Assembler''movl-3ai dst, (int (& src 0xffffffff)))
+                    (Assembler''movl-3ai high, (int (>> src 32)))
+                )
             )
         )
-        nil
     )
 
-    (defn #_"void" Assembler''setl-3 [#_"Assembler" this, #_"ConditionFlag" cc, #_"Register" dst]
-        (Assembler''setb-3 this, cc, dst)
-        (Assembler''movzbl-3rr this, dst, dst)
-        nil
+    (defn #_"this" Assembler''setl-3 [#_"Assembler" this, #_"ConditionFlag" cc, #_"Register" dst]
+        (-> this
+            (Assembler''setb-3 cc, dst)
+            (Assembler''movzbl-3rr dst, dst)
+        )
     )
 
-    (defn #_"void" Assembler''setq-3 [#_"Assembler" this, #_"ConditionFlag" cc, #_"Register" dst]
-        (Assembler''setb-3 this, cc, dst)
-        (Assembler''movzbq-3 this, dst, dst)
-        nil
+    (defn #_"this" Assembler''setq-3 [#_"Assembler" this, #_"ConditionFlag" cc, #_"Register" dst]
+        (-> this
+            (Assembler''setb-3 cc, dst)
+            (Assembler''movzbq-3 dst, dst)
+        )
     )
 
     ;; crb
@@ -15707,11 +15621,10 @@ ZeroExtendNode'new-4
         (CompilationResult''recordMark-3 (:compilationResult this), (Assembler''position-1 this), id)
     )
 
-    (defn #_"void" Assembler''recordInlineDataInCode-2 [#_"Assembler" this, #_"Constant" data]
-        (when (instance? VMConstant data)
-            (§ ass! this (update this :compilationResult CompilationResult''recordDataPatch-3 (Assembler''position-1 this), (ConstantReference. data)))
+    (defn #_"this" Assembler''recordInlineDataInCode-2 [#_"Assembler" this, #_"Constant" data]
+        (when (instance? VMConstant data) => this
+            (update this :compilationResult CompilationResult''recordDataPatch-3 (Assembler''position-1 this), (ConstantReference. data))
         )
-        nil
     )
 
     (defn #_"AbstractAddress" Assembler''recordDataSectionReference-2 [#_"Assembler" this, #_"Data" data]
@@ -15777,28 +15690,30 @@ ZeroExtendNode'new-4
      ; Emits code for {@code lir} in its {@linkplain LIR#codeEmittingOrder() code emitting order}.
      ;;
     (defn #_"this" Assembler''assemble-1 [#_"Assembler" this]
-        (Assembler''align-2 this, HotSpot'codeEntryAlignment)
-        (Assembler''recordMark-2 this, HotSpot'verifiedEntryMark)
-
-        (FrameContext''enter-2 (:frameContext this), this)
         (let [
-            this
-                (loop-when [this this #_"seq" s (seq (:codeEmittingOrder (:lir this)))] (some? s) => this
-                    (let [
-                        #_"Block" block (first s)
-                    ]
-                        (when (some? block)
-                            (doseq [#_"LIRInstruction" op (LIR''getLIRforBlock-2 (:lir this), block)]
-                                (LIRInstruction'''emitCode-2 op, this)
-                            )
-                        )
-                        (recur (update this :currentBlockIndex inc) (next s))
-                    )
-                )
+            this (Assembler''align-2 this, HotSpot'codeEntryAlignment)
         ]
-            (Assembler''recordMark-2 this, HotSpot'deoptHandlerEntryMark)
-            (AMD64Call'directCall-4 this, (ForeignCalls''lookupForeignCall-2 HotSpot'foreignCalls, ForeignCallDescriptor'DEOPTIMIZATION_HANDLER), nil, false)
-            this
+            (Assembler''recordMark-2 this, HotSpot'verifiedEntryMark)
+            (FrameContext''enter-2 (:frameContext this), this)
+            (let [
+                this
+                    (loop-when [this this #_"seq" s (seq (:codeEmittingOrder (:lir this)))] (some? s) => this
+                        (let [
+                            #_"Block" block (first s)
+                        ]
+                            (when (some? block)
+                                (doseq [#_"LIRInstruction" op (LIR''getLIRforBlock-2 (:lir this), block)]
+                                    (LIRInstruction'''emitCode-2 op, this)
+                                )
+                            )
+                            (recur (update this :currentBlockIndex inc) (next s))
+                        )
+                    )
+            ]
+                (Assembler''recordMark-2 this, HotSpot'deoptHandlerEntryMark)
+                (AMD64Call'directCall-4 this, (ForeignCalls''lookupForeignCall-2 HotSpot'foreignCalls, ForeignCallDescriptor'DEOPTIMIZATION_HANDLER), nil, false)
+                this
+            )
         )
     )
 
@@ -15825,7 +15740,7 @@ ZeroExtendNode'new-4
                 #_"Label" target (if targetDefault (LabelRef''label-1 (:defaultTarget this)) (LabelRef''label-1 (nth (:keyTargets this) index)))
             ]
                 (if (nil? condition)
-                    (Assembler''jmp-2l (:asm this), target)
+                    (§ ass! (:asm this) (Assembler''jmp-2l (:asm this), target))
                     (BaseSwitchClosure'''conditionalJump-4 this, index, condition, target)
                 )
             )
@@ -15843,7 +15758,7 @@ ZeroExtendNode'new-4
                 :else
                 (do
                     (BaseSwitchClosure'''conditionalJump-4 this, index, condition, (LabelRef''label-1 (nth (:keyTargets this) index)))
-                    (Assembler''jmp-2l (:asm this), (LabelRef''label-1 (:defaultTarget this)))
+                    (§ ass! (:asm this) (Assembler''jmp-2l (:asm this), (LabelRef''label-1 (:defaultTarget this))))
                 )
             )
             nil
@@ -15883,12 +15798,12 @@ ZeroExtendNode'new-4
     (defm AMD64SwitchClosure AMD64SwitchClosure
         (#_"void" AMD64SwitchClosure'''emitComparison-2 [#_"AMD64SwitchClosure" this, #_"Constant" c]
             (condp = (#_"JavaConstant" .getJavaKind c)
-                JavaKind/Int  (Assembler''cmpl-3ri (:asm this), (:keyRegister this), (int (#_"JavaConstant" .asLong c)))
-                JavaKind/Long (Assembler''cmpq-3ra (:asm this), (:keyRegister this), (Assembler''asLongConstRef-2 (:asm this), c))
+                JavaKind/Int  (§ ass! (:asm this) (Assembler''cmpl-3ri (:asm this), (:keyRegister this), (int (#_"JavaConstant" .asLong c))))
+                JavaKind/Long (§ ass! (:asm this) (Assembler''cmpq-3ra (:asm this), (:keyRegister this), (Assembler''asLongConstRef-2 (:asm this), c)))
                 JavaKind/Object
                     (do
                         (AMD64Move'const2reg-3 (:asm this), (#_"RegisterValue" .getRegister (:scratch (:op this))), c)
-                        (Assembler''cmpptr-3rr (:asm this), (:keyRegister this), (#_"RegisterValue" .getRegister (:scratch (:op this))))
+                        (§ ass! (:asm this) (Assembler''cmpptr-3rr (:asm this), (:keyRegister this), (#_"RegisterValue" .getRegister (:scratch (:op this)))))
                     )
             )
             nil
@@ -15898,7 +15813,7 @@ ZeroExtendNode'new-4
     (defm AMD64SwitchClosure BaseSwitchClosure
         (#_"void" BaseSwitchClosure'''conditionalJump-4 [#_"AMD64SwitchClosure" this, #_"int" index, #_"Condition" condition, #_"Label" target]
             (AMD64SwitchClosure'''emitComparison-2 this, (nth (:keyConstants (:op this)) index))
-            (Assembler''jcc-3 (:asm this), (AMD64ControlFlow'intCond-1 condition), target)
+            (§ ass! (:asm this) (Assembler''jcc-3 (:asm this), (AMD64ControlFlow'intCond-1 condition), target))
             nil
         )
     )
@@ -15914,13 +15829,13 @@ ZeroExtendNode'new-4
             (when (instance? HotSpotMetaspaceConstant constant) => (AMD64SwitchClosure'''emitComparison-2 (§ super AMD64SwitchClosure'iface), constant)
                 (if (#_"HotSpotMetaspaceConstant" .isCompressed constant)
                     (do
-                        (Assembler''recordInlineDataInCode-2 (:asm this), constant)
-                        (Assembler''cmpl-3ri (:asm this), (:keyRegister this), 0xdeaddead)
+                        (§ ass! (:asm this) (Assembler''recordInlineDataInCode-2 (:asm this), constant))
+                        (§ ass! (:asm this) (Assembler''cmpl-3ri (:asm this), (:keyRegister this), 0xdeaddead))
                     )
                     (let [
                         #_"AMD64Address" addr (Assembler''recordDataReferenceInCode-3c (:asm this), constant, 8)
                     ]
-                        (Assembler''cmpq-3ra (:asm this), (:keyRegister this), addr)
+                        (§ ass! (:asm this) (Assembler''cmpq-3ra (:asm this), (:keyRegister this), addr))
                     )
                 )
             )
@@ -16024,18 +15939,20 @@ ZeroExtendNode'new-4
         (assoc this :id id)
     )
 
-    (defn #_"this" BciBlock''addSuccessor-2 [#_"BciBlock" this, #_"BciBlock" sux]
-        (§ ass! this (update this :bciSuccessors conj' sux))
-        (§ ass sux (update sux :predecessorCount inc))
-        this
+    (defn #_"this" BciBlock''addSuccessor-2 [#_"BciBlock" this, #_"BciBlock" successor]
+        (let [
+            _ (§ ass successor (update successor :predecessorCount inc))
+        ]
+            (update this :bciSuccessors conj' successor)
+        )
     )
 
     (defn #_"this" BciBlock''clearSucccessors-1 [#_"BciBlock" this]
         (loop-when-recur [#_"seq" s (seq (:bciSuccessors this))] (some? s) [(next s)]
             (let [
-                #_"BciBlock" sux (first s)
+                #_"BciBlock" successor (first s)
             ]
-                (§ ass! sux (update sux :predecessorCount dec))
+                (§ ass! successor (update successor :predecessorCount dec))
             )
         )
         (assoc this :bciSuccessors nil)
@@ -16256,58 +16173,64 @@ ZeroExtendNode'new-4
         (let [
             this (update this :jsrVisited conj block)
             #_"JsrScope" scope (BciBlock''getJsrScope-1 block)
-        ]
-            (when (BciBlock''endsWithRet-1 block)
-                (§ ass! block (BciBlock''setRetSuccessor-2 block, (nth mapping (JsrScope''nextReturnAddress-1 scope))))
-                (§ ass! block (BciBlock''addSuccessor-2 block, (BciBlock''getRetSuccessor-1 block)))
-            )
-            (when (or (some? (BciBlock''getJsrSuccessor-1 block)) (not (JsrScope''isEmpty-1 scope)))
-                (loop-when-recur [#_"int" i 0] (< i (count (:bciSuccessors block))) [(inc i)]
-                    (let [
-                        #_"BciBlock" successor (BciBlock''getSuccessor-2 block, i)
-                        #_"JsrScope" nextScope scope
-                        nextScope
-                            (when (= successor (BciBlock''getJsrSuccessor-1 block)) => nextScope
-                                (JsrScope''push-2 scope, (BciBlock''getJsrReturnBci-1 block))
-                            )
-                        nextScope
-                            (when (= successor (BciBlock''getRetSuccessor-1 block)) => nextScope
-                                (JsrScope''pop-1 scope)
-                            )
-                    ]
-                        (when-not (JsrScope''isPrefixOf-2 (BciBlock''getJsrScope-1 successor), nextScope)
-                            (throw! (str "unstructured control flow (" (BciBlock''getJsrScope-1 successor) " " nextScope ")"))
-                        )
-                        (when-not (JsrScope''isEmpty-1 nextScope)
-                            (let [
-                                #_"BciBlock" clone
-                                    (if (and (some? (BciBlock''getJsrAlternatives-1 successor)) (contains? (BciBlock''getJsrAlternatives-1 successor) nextScope))
-                                        (get (BciBlock''getJsrAlternatives-1 successor) nextScope)
-                                        (do
-                                            (§ ass! successor (BciBlock''initJsrAlternatives-1 successor))
-                                            (let [
-                                                clone (§ snap successor)
-                                            ]
-                                                (§ ass! this (update this :blocksNotYetAssignedId inc))
-                                                (§ ass! clone (BciBlock''setJsrScope-2 clone, nextScope))
-                                                (§ ass! (BciBlock''getJsrAlternatives-1 successor) (assoc (BciBlock''getJsrAlternatives-1 successor) nextScope clone))
-                                                clone
+            _
+                (when (BciBlock''endsWithRet-1 block)
+                    (§ ass! block (BciBlock''setRetSuccessor-2 block, (nth mapping (JsrScope''nextReturnAddress-1 scope))))
+                    (§ ass! block (BciBlock''addSuccessor-2 block, (BciBlock''getRetSuccessor-1 block)))
+                )
+            this
+                (when (or (some? (BciBlock''getJsrSuccessor-1 block)) (not (JsrScope''isEmpty-1 scope))) => this
+                    (loop-when [this this #_"int" i 0] (< i (count (:bciSuccessors block))) => this
+                        (let [
+                            #_"BciBlock" successor (BciBlock''getSuccessor-2 block, i)
+                            #_"JsrScope" nextScope scope
+                            nextScope
+                                (when (= successor (BciBlock''getJsrSuccessor-1 block)) => nextScope
+                                    (JsrScope''push-2 scope, (BciBlock''getJsrReturnBci-1 block))
+                                )
+                            nextScope
+                                (when (= successor (BciBlock''getRetSuccessor-1 block)) => nextScope
+                                    (JsrScope''pop-1 scope)
+                                )
+                            _
+                                (when-not (JsrScope''isPrefixOf-2 (BciBlock''getJsrScope-1 successor), nextScope)
+                                    (throw! (str "unstructured control flow (" (BciBlock''getJsrScope-1 successor) " " nextScope ")"))
+                                )
+                            this
+                                (when-not (JsrScope''isEmpty-1 nextScope) => this
+                                    (let [
+                                        [this #_"BciBlock" clone]
+                                            (if (and (some? (BciBlock''getJsrAlternatives-1 successor)) (contains? (BciBlock''getJsrAlternatives-1 successor) nextScope))
+                                                [this (get (BciBlock''getJsrAlternatives-1 successor) nextScope)]
+                                                (let [
+                                                    _ (§ ass! successor (BciBlock''initJsrAlternatives-1 successor))
+                                                    clone (§ snap successor)
+                                                    this (update this :blocksNotYetAssignedId inc)
+                                                    clone (BciBlock''setJsrScope-2 clone, nextScope)
+                                                ]
+                                                    (§ ass! (BciBlock''getJsrAlternatives-1 successor) (assoc (BciBlock''getJsrAlternatives-1 successor) nextScope clone))
+                                                    [this clone]
+                                                )
                                             )
-                                        )
+                                        _ (§ ass! block (update block :bciSuccessors assoc' i clone))
+                                        _
+                                            (when (= successor (BciBlock''getJsrSuccessor-1 block))
+                                                (§ ass! block (BciBlock''setJsrSuccessor-2 block, clone))
+                                            )
+                                        _
+                                            (when (= successor (BciBlock''getRetSuccessor-1 block))
+                                                (§ ass! block (BciBlock''setRetSuccessor-2 block, clone))
+                                            )
+                                    ]
+                                        this
                                     )
-                            ]
-                                (§ ass! block (update block :bciSuccessors assoc' i clone))
-                                (when (= successor (BciBlock''getJsrSuccessor-1 block))
-                                    (§ ass! block (BciBlock''setJsrSuccessor-2 block, clone))
                                 )
-                                (when (= successor (BciBlock''getRetSuccessor-1 block))
-                                    (§ ass! block (BciBlock''setRetSuccessor-2 block, clone))
-                                )
-                            )
+                        ]
+                            (recur this (inc i))
                         )
                     )
                 )
-            )
+        ]
             (loop-when [this this #_"seq" s (seq (:bciSuccessors block))] (some? s) => this
                 (let [
                     #_"BciBlock" successor (first s)
@@ -16820,7 +16743,7 @@ ZeroExtendNode'new-4
             (hash-map
                 #_"FixPointIntervalBuilder" :builder builder
                 #_"BitSet" :currentSet bits
-                #_"ValueConsumer" :defConsumer
+                #_"ValueConsumer" :f'defConsumer
                     (reify ValueConsumer
                         (#_"void" ValueConsumer'''visitValue-5 [#_"ValueConsumer" _, #_"LIRInstruction" op, #_"Value" value, #_"OperandMode" mode, #_"{OperandFlag}" flags]
                             (when (satisfies? VirtualStackSlot value)
@@ -16832,7 +16755,7 @@ ZeroExtendNode'new-4
                             nil
                         )
                     )
-                #_"ValueConsumer" :useConsumer
+                #_"ValueConsumer" :f'useConsumer
                     (reify ValueConsumer
                         (#_"void" ValueConsumer'''visitValue-5 [#_"ValueConsumer" _, #_"LIRInstruction" op, #_"Value" value, #_"OperandMode" mode, #_"{OperandFlag}" flags]
                             (when (satisfies? VirtualStackSlot value)
@@ -16853,11 +16776,11 @@ ZeroExtendNode'new-4
      ; Values that start or end at the current operation are not included.
      ;;
     (defn #_"void" BlockClosure''processInstructionBottomUp-2 [#_"BlockClosure" this, #_"LIRInstruction" op]
-        (LIRInstruction''visitEachTemp-2 op, (:defConsumer this))
-        (LIRInstruction''visitEachOutput-2 op, (:defConsumer this))
+        (LIRInstruction''visitEachTemp-2 op, (:f'defConsumer this))
+        (LIRInstruction''visitEachOutput-2 op, (:f'defConsumer this))
 
-        (LIRInstruction''visitEachAlive-2 op, (:useConsumer this))
-        (LIRInstruction''visitEachInput-2 op, (:useConsumer this))
+        (LIRInstruction''visitEachAlive-2 op, (:f'useConsumer this))
+        (LIRInstruction''visitEachInput-2 op, (:f'useConsumer this))
         nil
     )
 
@@ -16873,8 +16796,8 @@ ZeroExtendNode'new-4
                             ]
                                 ;; hints always point from def to use
                                 (if hintAtDef
-                                    (§ ass! to (StackInterval''setLocationHint-2 to, from))
-                                    (§ ass! from (StackInterval''setLocationHint-2 from, to))
+                                    (§ ass! to (StackInterval''setLocationHint-2 to, from))
+                                    (§ ass! from (StackInterval''setLocationHint-2 from, to))
                                 )
                                 registerHint
                             )
@@ -19161,10 +19084,11 @@ ZeroExtendNode'new-4
                                         [this merge calleeReturnValue]
                                     )
                                 )
+                            this
+                                (when (some? calleeReturnValue) => this
+                                    (update this :frameState FrameStateBuilder''push-3 (-> targetMethod (#_"ResolvedJavaMethod" .getSignature) (#_"Signature" .getReturnKind) (#_"JavaKind" .getStackKind)), calleeReturnValue)
+                                )
                         ]
-                            (when (some? calleeReturnValue)
-                                (§ ass! this (update this :frameState FrameStateBuilder''push-3 (-> (#_"ResolvedJavaMethod" .getSignature targetMethod) (#_"Signature" .getReturnKind) (#_"JavaKind" .getStackKind)), calleeReturnValue))
-                            )
                             (when (some? merge) => this
                                 (StateSplit'''setStateAfter-2 merge, (BytecodeParser''createFrameState-3 this, (:nextBCI (:stream this)), merge))
                                 (assoc this :lastInstr merge)
@@ -19173,12 +19097,9 @@ ZeroExtendNode'new-4
                     )
             ]
                 ;; Propagate any side effects into the caller when parsing intrinsics.
-                (when (and (SideEffectsState'''isAfterSideEffect-1 (:frameState parser)) (BytecodeParser''parsingIntrinsic-1 this))
-                    (doseq [#_"StateSplit" sideEffect (SideEffectsState'''sideEffects-1 (:frameState parser))]
-                        (§ ass! this (update this :frameState SideEffectsState'''addSideEffect-2 sideEffect))
-                    )
+                (when (and (SideEffectsState'''isAfterSideEffect-1 (:frameState parser)) (BytecodeParser''parsingIntrinsic-1 this)) => this
+                    (update this :frameState #(reduce SideEffectsState'''addSideEffect-2 % (SideEffectsState'''sideEffects-1 (:frameState parser))))
                 )
-                this
             )
         )
     )
@@ -19554,8 +19475,8 @@ ZeroExtendNode'new-4
                 (if (and (#_"ResolvedJavaField" .isVolatile resolvedField) (satisfies? LoadFieldNode fieldRead))
                     (let [
                         #_"StateSplitProxyNode" readProxy (BytecodeParser''append-2 this, (StateSplitProxyNode'new-1 fieldRead))
+                        this (update this :frameState FrameStateBuilder''push-3 fieldKind, readProxy)
                     ]
-                        (§ ass! this (update this :frameState FrameStateBuilder''push-3 fieldKind, readProxy))
                         (StateSplit'''setStateAfter-2 readProxy, (FrameStateBuilder''create-3 (:frameState this), (:nextBCI (:stream this)), readProxy))
                         this
                     )
@@ -20717,12 +20638,15 @@ ZeroExtendNode'new-4
                         ;; Create phi functions for all local variables and operand stack slots.
                         (FrameStateBuilder''insertLoopPhis-6 (:frameState this), (:liveness this), (:loopId block), loopBegin, false, false)
                         (StateSplit'''setStateAfter-2 loopBegin, (BytecodeParser''createFrameState-3 this, (:startBci block), loopBegin))
-                        ;; We have seen all forward branches. All subsequent backward branches will merge to the
-                        ;; loop header. This ensures that the loop header has exactly one non-loop predecessor.
-                        (§ ass! this (assoc-in this [:firstInstructions (:id block)] loopBegin))
-                        ;; We need to preserve the frame state builder of the loop header so that we can merge
-                        ;; values for phi functions, so make a copy of it.
-                        (assoc-in this [:entryStates (:id block)] (FrameStateBuilder'copy-1 (:frameState this)))
+                        (let [
+                            ;; We have seen all forward branches. All subsequent backward branches will merge to the
+                            ;; loop header. This ensures that the loop header has exactly one non-loop predecessor.
+                            this (assoc-in this [:firstInstructions (:id block)] loopBegin)
+                        ]
+                            ;; We need to preserve the frame state builder of the loop header so that we can merge
+                            ;; values for phi functions, so make a copy of it.
+                            (assoc-in this [:entryStates (:id block)] (FrameStateBuilder'copy-1 (:frameState this)))
+                        )
                     )
                     (when (satisfies? MergeNode (:lastInstr this)) => this
                         ;; All inputs of non-loop phi nodes are known by now. We can infer the stamp
@@ -20900,9 +20824,9 @@ ZeroExtendNode'new-4
         (let [
             #_"FrameStateBuilder" startFrameState (FrameStateBuilder'new-3c this, (:bytecode this), (:graph this))
             _ (FrameStateBuilder''initializeForMethodStart-1 startFrameState)
-            _
+            this
                 (try (§ with [#_"IntrinsicScope" _ (when (some? (:intrinsicContext this)) (IntrinsicScope'new-1 this))])
-                    (§ ass! this (BytecodeParser''build-3 this, (:start (:graph this)), startFrameState))
+                    (BytecodeParser''build-3 this, (:start (:graph this)), startFrameState)
                 )
             this (BytecodeParser''cleanupFinalGraph-1 this)
         ]
@@ -21344,7 +21268,7 @@ ZeroExtendNode'new-4
      ;;
     (defn- #_"void" CLOptimization''analyzeBlock-2 [#_"CLOptimization" this, #_"Block" block]
         (let [
-            #_"ValueConsumer" loadConsumer
+            #_"ValueConsumer" f'loadConsumer
                 (reify ValueConsumer
                     (#_"void" ValueConsumer'''visitValue-5 [#_"ValueConsumer" _, #_"LIRInstruction" op, #_"Value" value, #_"OperandMode" _mode, #_"{OperandFlag}" _flags]
                         (when (and (satisfies? Variable value) (not (#_"BitSet" .get (:phiConstants this), (:index value))))
@@ -21365,7 +21289,7 @@ ZeroExtendNode'new-4
                         )
                     )
                 )
-            #_"ValueConsumer" useConsumer
+            #_"ValueConsumer" f'useConsumer
                 (reify ValueConsumer
                     (#_"void" ValueConsumer'''visitValue-5 [#_"ValueConsumer" _, #_"LIRInstruction" op, #_"Value" value, #_"OperandMode" _mode, #_"{OperandFlag}" _flags]
                         (when (and (satisfies? Variable value) (not (#_"BitSet" .get (:phiConstants this), (:index value))))
@@ -21386,9 +21310,9 @@ ZeroExtendNode'new-4
                 ]
                     ;; set instruction id to the index in the lir instruction list
                     (§ ass! op (LIRInstruction''setId-2 op, i))
-                    (LIRInstruction''visitEachOutput-2 op, loadConsumer)
-                    (LIRInstruction''visitEachInput-2 op, useConsumer)
-                    (LIRInstruction''visitEachAlive-2 op, useConsumer)
+                    (LIRInstruction''visitEachOutput-2 op, f'loadConsumer)
+                    (LIRInstruction''visitEachInput-2 op, f'useConsumer)
+                    (LIRInstruction''visitEachAlive-2 op, f'useConsumer)
                 )
             )
         )
@@ -21731,14 +21655,12 @@ ZeroExtendNode'new-4
             nil
         )
 
-        (#_"void" SimplifierTool'''addToWorkList-2n [#_"CanonicalizerInstance" this, #_"Node" node]
-            (§ ass! this (update this :worklist CanonicalizerInstance'add-2 node))
-            nil
+        (#_"this" SimplifierTool'''addToWorkList-2n [#_"CanonicalizerInstance" this, #_"Node" node]
+            (update this :worklist CanonicalizerInstance'add-2 node)
         )
 
-        (#_"void" SimplifierTool'''addToWorkList-2s [#_"CanonicalizerInstance" this, #_"Node*" nodes]
-            (§ ass! this (update this :worklist CanonicalizerInstance'addAll-2 nodes))
-            nil
+        (#_"this" SimplifierTool'''addToWorkList-2s [#_"CanonicalizerInstance" this, #_"Node*" nodes]
+            (update this :worklist CanonicalizerInstance'addAll-2 nodes)
         )
 
         (#_"void" SimplifierTool'''removeIfUnused-2 [#_"CanonicalizerInstance" this, #_"Node" node]
@@ -21799,7 +21721,7 @@ ZeroExtendNode'new-4
                     :else
                     (do
                         ;; when removing a fixed node, new canonicalization opportunities for its successor may arise
-                        (SimplifierTool'''addToWorkList-2n this, (:next node))
+                        (§ ass! this (SimplifierTool'''addToWorkList-2n this, (:next node)))
                         (cond
                             (nil? canonical)
                             (do
@@ -21905,7 +21827,7 @@ ZeroExtendNode'new-4
     )
 
     ; @SuppressWarnings("try")
-    (defn- #_"void" CanonicalizerInstance''processWorkSet-2 [#_"CanonicalizerInstance" this, #_"Graph" graph]
+    (defn- #_"this" CanonicalizerInstance''processWorkSet-2 [#_"CanonicalizerInstance" this, #_"Graph" graph]
         (let [
             #_"NodeEventListener" listener
                 (§ proxy #_"NodeEventListener" (NodeEventListener'new-0)
@@ -21935,8 +21857,8 @@ ZeroExtendNode'new-4
                     (CanonicalizerInstance''processNode-2 this, node)
                 )
             )
+            this
         )
-        nil
     )
 
     (defm CanonicalizerInstance Phase
@@ -21953,7 +21875,7 @@ ZeroExtendNode'new-4
                     (when-not whole-graph?
                         (§ ass! this (update this :worklist CanonicalizerInstance'addAll-2 (Graph''getNodesSince-2 graph, (:newNodesMark this))))
                     )
-                _ (CanonicalizerInstance''processWorkSet-2 this, graph)
+                _ (§ ass! this (CanonicalizerInstance''processWorkSet-2 this, graph))
             ]
                 graph
             )
@@ -24490,7 +24412,7 @@ ZeroExtendNode'new-4
                     ;; - If C2 => !C1, 'mustDeopt' is true and we transform to ...; guard(C1); deopt;
                     ;; For the second case, the action of the deopt is copied from there:
                     _ (§ ass! thisGuard (assoc thisGuard :action action))
-                    #_"GuardRewirer" rewirer
+                    #_"GuardRewirer" f'rewirer
                         (reify GuardRewirer
                             (#_"boolean" GuardRewirer'''rewire-5 [#_"GuardRewirer" _, #_"GuardingNode" guard, #_"boolean" result, #_"Stamp" innerGuardedValueStamp, #_"ValueNode" newInput]
                                 ;; 'result' is 'outcome', 'guard' is 'otherGuard'
@@ -24516,7 +24438,7 @@ ZeroExtendNode'new-4
                         )
                 ]
                     ;; move the later test up
-                    (GuardRewirer'''rewire-5 rewirer, otherGuard, outcome, guardedValueStamp, nil)
+                    (GuardRewirer'''rewire-5 f'rewirer, otherGuard, outcome, guardedValueStamp, nil)
                 )
             )
         )
@@ -24938,10 +24860,11 @@ ZeroExtendNode'new-4
                         )
                     this
                 )
+            this
+                (when (satisfies? DeoptimizingGuard guard) => this
+                    (update this :pendingTests #(cons guard %))
+                )
         ]
-            (when (satisfies? DeoptimizingGuard guard)
-                (§ ass! this (update this :pendingTests #(cons guard %)))
-            )
             (ConditionalEliminationInstance''registerCondition-4 this, logic, negated?, guard)
         )
     )
@@ -25117,24 +25040,28 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"this" ConditionalEliminationInstance''processNode-2 [#_"ConditionalEliminationInstance" this, #_"Node" node]
-        (when (and (satisfies? NodeWithState node) (not (satisfies? GuardingNode node)))
-            (§ ass! this (assoc this :pendingTests nil))
-        )
-        (when (satisfies? MergeNode node)
-            (ConditionalEliminationInstance''introducePisForPhis-2 this, node)
-        )
-        (condp satisfies? node
-            AbstractBeginNode
-                (if (and (satisfies? LoopExitNode node) (:hasValueProxies (:graph this)))
-                    this ;; condition must not be used down this path
-                    (ConditionalEliminationInstance''processAbstractBegin-2 this, node)
+        (let [
+            this
+                (when (and (satisfies? NodeWithState node) (not (satisfies? GuardingNode node))) => this
+                    (assoc this :pendingTests nil)
                 )
-            FixedGuardNode      (ConditionalEliminationInstance''processFixedGuard-2      this, node)
-            GuardNode           (ConditionalEliminationInstance''processGuard-2           this, node)
-            ConditionAnchorNode (ConditionalEliminationInstance''processConditionAnchor-2 this, node)
-            IfNode              (ConditionalEliminationInstance''processIf-2              this, node)
-            EndNode             (ConditionalEliminationInstance''processEnd-2             this, node)
-                                this
+        ]
+            (when (satisfies? MergeNode node)
+                (ConditionalEliminationInstance''introducePisForPhis-2 this, node)
+            )
+            (condp satisfies? node
+                AbstractBeginNode
+                    (if (and (satisfies? LoopExitNode node) (:hasValueProxies (:graph this)))
+                        this ;; condition must not be used down this path
+                        (ConditionalEliminationInstance''processAbstractBegin-2 this, node)
+                    )
+                FixedGuardNode      (ConditionalEliminationInstance''processFixedGuard-2      this, node)
+                GuardNode           (ConditionalEliminationInstance''processGuard-2           this, node)
+                ConditionAnchorNode (ConditionalEliminationInstance''processConditionAnchor-2 this, node)
+                IfNode              (ConditionalEliminationInstance''processIf-2              this, node)
+                EndNode             (ConditionalEliminationInstance''processEnd-2             this, node)
+                                    this
+            )
         )
     )
 
@@ -25285,7 +25212,7 @@ ZeroExtendNode'new-4
      ; Calculates the cost of a {@code block}. It is assumed that all {@code children} have already
      ; been {@linkplain #process processed}.
      ;;
-    (defn- #_"void" ConstantTreeAnalyzer''process-2 [#_"ConstantTreeAnalyzer" this, #_"Block" block]
+    (defn- #_"this" ConstantTreeAnalyzer''process-2 [#_"ConstantTreeAnalyzer" this, #_"Block" block]
         (let [
             ;; collect children costs
             [#_"double" bestCost #_"[UseEntry]" usages #_"int" numMat]
@@ -25312,9 +25239,8 @@ ZeroExtendNode'new-4
                     [(:probability block) (into' usages usagesBlock) 1]
                 )
         ]
-            (§ ass! this (update this :tree ConstantTree''setCost-3 block, (NodeCost'new-3 bestCost, usages, numMat)))
+            (update this :tree ConstantTree''setCost-3 block, (NodeCost'new-3 bestCost, usages, numMat))
         )
-        nil
     )
 
     ;;;
@@ -25331,7 +25257,7 @@ ZeroExtendNode'new-4
                 stack
                     (cond
                         (ConstantTreeAnalyzer''isLeafBlock-2 this, block) (do (ConstantTreeAnalyzer''leafCost-2 this, block) stack)
-                        (#_"BitSet" .get (:visited this), (:id block))    (do (ConstantTreeAnalyzer''process-2 this, block) stack)
+                        (#_"BitSet" .get (:visited this), (:id block))    (do (§ ass! this (ConstantTreeAnalyzer''process-2 this, block)) stack)
                         :else
                             (do ;; If not yet visited (and not a leaf block), process all children first!
                                 (#_"BitSet" .set (:visited this), (:id block))
@@ -26710,7 +26636,7 @@ ZeroExtendNode'new-4
                     #_"int" totalNodeCount (Graph''getNodeCount-1 graph)
                     #_"{Node}'" v'flood (volatile! #{ (:start graph) })
                     mark- (fn #_"{Node}" [#_"{Node}" flood, #_"Node" node] (if (some? node) (conj flood node) flood))
-                    #_"EdgeVisitor" marker
+                    #_"EdgeVisitor" f'marker
                         (reify EdgeVisitor
                             (#_"Node" EdgeVisitor'''apply-3 [#_"EdgeVisitor" _, #_"Node" source, #_"Node" target]
                                 (vswap! v'flood mark- target)
@@ -26722,8 +26648,8 @@ ZeroExtendNode'new-4
                             (if (satisfies? AbstractEndNode node)
                                 (vswap! v'flood mark- (AbstractEndNode'''merge-1 node))
                                 (do
-                                    (Node''applySuccessors-2 node, marker)
-                                    (Node''applyInputs-2 node, marker)
+                                    (Node''applySuccessors-2 node, f'marker)
+                                    (Node''applyInputs-2 node, f'marker)
                                 )
                             )
                         )
@@ -26746,8 +26672,8 @@ ZeroExtendNode'new-4
                                 (if (satisfies? AbstractEndNode node)
                                     (vswap! v'flood mark- (AbstractEndNode'''merge-1 node))
                                     (do
-                                        (Node''applySuccessors-2 node, marker)
-                                        (Node''applyInputs-2 node, marker)
+                                        (Node''applySuccessors-2 node, f'marker)
+                                        (Node''applyInputs-2 node, f'marker)
                                     )
                                 )
                             )
@@ -26756,7 +26682,7 @@ ZeroExtendNode'new-4
                     (when-not (= (count @v'flood) totalNodeCount)
                         ;; some nodes are not marked alive and therefore dead
                         (let [
-                            #_"EdgeVisitor" eraser
+                            #_"EdgeVisitor" f'eraser
                                 (reify EdgeVisitor
                                     (#_"Node" EdgeVisitor'''apply-3 [#_"EdgeVisitor" _, #_"Node" source, #_"Node" target]
                                         (when (and (Node''isAlive-1 target) (contains? @v'flood target)) => target
@@ -26768,7 +26694,7 @@ ZeroExtendNode'new-4
                             (doseq [#_"Node" node (Graph''getNodes-1 graph)]
                                 (when-not (contains? @v'flood node)
                                     (Node''markDeleted-1 node)
-                                    (Node''applyInputs-2 node, eraser)
+                                    (Node''applyInputs-2 node, f'eraser)
                                 )
                             )
                         )
@@ -26989,12 +26915,12 @@ ZeroExtendNode'new-4
             nil
         )
 
-        (#_"void" SimplifierTool'''addToWorkList-2n [#_"DefaultSimplifierTool" this, #_"Node" node]
-            nil
+        (#_"this" SimplifierTool'''addToWorkList-2n [#_"DefaultSimplifierTool" this, #_"Node" node]
+            this
         )
 
-        (#_"void" SimplifierTool'''addToWorkList-2s [#_"DefaultSimplifierTool" this, #_"Node*" nodes]
-            nil
+        (#_"this" SimplifierTool'''addToWorkList-2s [#_"DefaultSimplifierTool" this, #_"Node*" nodes]
+            this
         )
     )
 
@@ -27825,7 +27751,7 @@ ZeroExtendNode'new-4
             obj (nth (:objectStates this) (:oid virtual))
             _ (PartialEscapeClosure'updateStatesForMaterialized-3 this, virtual, (:materializedValue obj))
         ]
-            (when (satisfies? AllocatedObjectNode representation) => (§ ass! otherAllocations (conj' otherAllocations representation))
+            (if (satisfies? AllocatedObjectNode representation)
                 (let [
                     _ (§ ass! objects (conj' objects representation))
                     _ (§ ass! locks (conj' locks (LockState'asList-1 (:lockState obj))))
@@ -27835,30 +27761,44 @@ ZeroExtendNode'new-4
                         (while (< (count values) (+ pos (count entries)))
                             (§ ass! values (conj' values nil))
                         )
-                    _
-                        (dotimes [#_"int" i (count entries)]
+                    this
+                        (loop-when [this this #_"int" i 0] (< i (count entries)) => this
                             (let [
                                 #_"ValueNode" entry (nth entries i)
-                            ]
-                                (when (satisfies? VirtualObjectNode entry) => (§ ass! values (assoc' values (+ pos i) entry))
-                                    (let [
-                                        #_"ObjectState" state (nth (:objectStates this) (:oid entry))
-                                        state
-                                            (when (ObjectState''isVirtual-1 state) => state
-                                                (§ ass! this (PartialEscapeBlockState''materializeWithCommit-8 this, fixed, entry, objects, locks, values, ensureVirtual, otherAllocations))
-                                                (nth (:objectStates this) (:oid entry))
-                                            )
-                                    ]
-                                        (§ ass! values (assoc' values (+ pos i) (:materializedValue state)))
+                                this
+                                    (if (satisfies? VirtualObjectNode entry)
+                                        (let [
+                                            #_"ObjectState" state (nth (:objectStates this) (:oid entry))
+                                            [this state]
+                                                (when (ObjectState''isVirtual-1 state) => [this state]
+                                                    (let [
+                                                        this (PartialEscapeBlockState''materializeWithCommit-8 this, fixed, entry, objects, locks, values, ensureVirtual, otherAllocations)
+                                                    ]
+                                                        [this (nth (:objectStates this) (:oid entry))]
+                                                    )
+                                                )
+                                        ]
+                                            (§ ass! values (assoc' values (+ pos i) (:materializedValue state)))
+                                            this
+                                        )
+                                        (do
+                                            (§ ass! values (assoc' values (+ pos i) entry))
+                                            this
+                                        )
                                     )
-                                )
+                            ]
+                                (recur this (inc i))
                             )
                         )
                 ]
-                    (§ ass! this (PartialEscapeBlockState'''objectMaterialized-4 this, virtual, (§ cast #_"AllocatedObjectNode" representation), (subvec values pos (+ pos (count entries)))))
+                    (PartialEscapeBlockState'''objectMaterialized-4 this, virtual, (§ cast #_"AllocatedObjectNode" representation), (subvec values pos (+ pos (count entries))))
+                )
+                (let [
+                    _ (§ ass! otherAllocations (conj' otherAllocations representation))
+                ]
+                    this
                 )
             )
-            this
         )
     )
 
@@ -27873,8 +27813,8 @@ ZeroExtendNode'new-4
             #_"[ValueNode]" values []
             #_"[Boolean]" ensureVirtual []
             #_"[ValueNode]" otherAllocations []
+            this (PartialEscapeBlockState''materializeWithCommit-8 this, fixed, virtual, objects, locks, values, ensureVirtual, otherAllocations)
         ]
-            (§ ass! this (PartialEscapeBlockState''materializeWithCommit-8 this, fixed, virtual, objects, locks, values, ensureVirtual, otherAllocations))
             (§ ass! effects (GraphEffects''addVirtualizationDelta-2 effects, (- (+ (count objects) (count otherAllocations)))))
             (§ ass! effects (GraphEffects''add-2 effects,
                 (reify Effect
@@ -29638,18 +29578,25 @@ ZeroExtendNode'new-4
      ; @param over scanning stops when this class is encountered (i.e. {@code over} is not scanned)
      ;;
     (defn #_"this" LIRFieldsScanner''scan-3 [#_"LIRFieldsScanner" this, #_"Class" from, #_"Class" over]
-        (loop-when-recur from (not= from over) (#_"Class" .getSuperclass from)
-            (doseq [#_"Field" field (#_"Class" .getDeclaredFields from)]
-                (let [
-                    #_"int" modifiers (#_"Field" .getModifiers field)
-                ]
-                    (when (and (not (Modifier/isStatic modifiers)) (not (Modifier/isTransient modifiers)))
-                        (§ ass! this (LIRFieldsScanner''scanField-3 this, field, (.objectFieldOffset HotSpot'unsafe, field)))
+        (loop-when [this this from from] (not= from over) => this
+            (let [
+                this
+                    (loop-when [this this #_"seq" s (seq (#_"Class" .getDeclaredFields from))] (some? s) => this
+                        (let [
+                            #_"Field" field (first s)
+                            #_"int" modifiers (#_"Field" .getModifiers field)
+                            this
+                                (when (and (not (Modifier/isStatic modifiers)) (not (Modifier/isTransient modifiers))) => this
+                                    (LIRFieldsScanner''scanField-3 this, field, (.objectFieldOffset HotSpot'unsafe, field))
+                                )
+                        ]
+                            (recur this (next s))
+                        )
                     )
-                )
+            ]
+                (recur this (#_"Class" .getSuperclass from))
             )
         )
-        this
     )
 )
 
@@ -29718,18 +29665,25 @@ ZeroExtendNode'new-4
      ; @param over scanning stops when this class is encountered (i.e. {@code over} is not scanned)
      ;;
     (defn #_"this" NodeFieldsScanner''scan-3 [#_"NodeFieldsScanner" this, #_"Class" from, #_"Class" over]
-        (loop-when-recur from (not= from over) (#_"Class" .getSuperclass from)
-            (doseq [#_"Field" field (#_"Class" .getDeclaredFields from)]
-                (let [
-                    #_"int" modifiers (#_"Field" .getModifiers field)
-                ]
-                    (when (and (not (Modifier/isStatic modifiers)) (not (Modifier/isTransient modifiers)))
-                        (§ ass! this (NodeFieldsScanner''scanField-3 this, field, (.objectFieldOffset HotSpot'unsafe, field)))
+        (loop-when [this this from from] (not= from over) => this
+            (let [
+                this
+                    (loop-when [this this #_"seq" s (seq (#_"Class" .getDeclaredFields from))] (some? s) => this
+                        (let [
+                            #_"Field" field (first s)
+                            #_"int" modifiers (#_"Field" .getModifiers field)
+                            this
+                                (when (and (not (Modifier/isStatic modifiers)) (not (Modifier/isTransient modifiers))) => this
+                                    (NodeFieldsScanner''scanField-3 this, field, (.objectFieldOffset HotSpot'unsafe, field))
+                                )
+                        ]
+                            (recur this (next s))
+                        )
                     )
-                )
+            ]
+                (recur this (#_"Class" .getSuperclass from))
             )
         )
-        this
     )
 )
 
@@ -29737,10 +29691,10 @@ ZeroExtendNode'new-4
  ; Calculates the stack intervals using a worklist-based backwards data-flow analysis.
  ;;
 (class-ns FixPointIntervalBuilder []
-    (defn- #_"FixPointIntervalBuilder" FixPointIntervalBuilder'new-2 [#_"{int StackInterval}" stackSlotMap, #_"int" maxOpId]
+    (defn- #_"FixPointIntervalBuilder" FixPointIntervalBuilder'new-1 [#_"int" maxOpId]
         (merge (FixPointIntervalBuilder'class.)
             (hash-map
-                #_"{int StackInterval}" :stackSlotMap stackSlotMap
+                #_"{int StackInterval}" :stackSlotMap {}
                 #_"int" :maxOpId maxOpId
                 #_"{Block BitSet}" :liveInMap {}
                 #_"{Block BitSet}" :liveOutMap {}
@@ -29806,15 +29760,37 @@ ZeroExtendNode'new-4
     )
 
     ;;;
+     ; Numbers all instructions in all blocks.
+     ;
+     ; @return the id of the last operation
+     ;;
+    (defn- #_"int" FixPointIntervalBuilder'numberInstructions-1 [#_"LIR" lir]
+        (loop-when [#_"int" opId 0 #_"seq" s (seq (:reversePostOrder (:cfg lir)))] (some? s) => (- opId 2)
+            (let [
+                #_"[LIRInstruction]" ops (LIR''getLIRforBlock-2 lir, (first s))
+                opId
+                    (loop-when [opId opId #_"int" i 0] (< i (count ops)) => opId
+                        (§ ass! (nth ops i) (LIRInstruction''setId-2 (nth ops i), opId))
+                        ;; numbering of lirOps by two
+                        (recur (+ opId 2) (inc i))
+                    )
+            ]
+                (recur opId (next s))
+            )
+        )
+    )
+
+    ;;;
      ; Builds the lifetime intervals for {@link VirtualStackSlot virtual stack slots}, sets up #stackSlotMap
      ; and returns a set of use positions, i.e. instructions that contain virtual stack slots.
      ;;
-    (defn #_"{LIRInstruction}" FixPointIntervalBuilder'build-3 [#_"LIR" lir, #_"[StackInterval]" stackSlotMap, #_"int" maxOpId]
+    (defn #_"[{LIRInstruction} {int StackInterval}]" FixPointIntervalBuilder'build-1 [#_"LIR" lir]
         (let [
-            #_"FixPointIntervalBuilder" builder (FixPointIntervalBuilder'new-2 stackSlotMap, maxOpId)
+            #_"int" maxOpId (FixPointIntervalBuilder'numberInstructions-1 lir)
+            #_"FixPointIntervalBuilder" builder (FixPointIntervalBuilder'new-1 maxOpId)
             builder (reduce #(assoc-in %1 [:liveInMap %2] (BitSet.)) builder (:reversePostOrder (:cfg lir)))
         ]
-            (loop-when [builder builder #_"queue [Block]" queue (reverse (:reversePostOrder (:cfg lir)))] (seq queue) => (:usePos builder)
+            (loop-when [builder builder #_"queue [Block]" queue (reverse (:reversePostOrder (:cfg lir)))] (seq queue) => [(:usePos builder) (:stackSlotMap builder)]
                 (let [
                     [#_"Block" block & queue] queue
                     [builder queue]
@@ -30415,22 +30391,22 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"void" FrameContext''enter-2 [#_"FrameContext" this, #_"Assembler" asm]
         (if (:omitFrame this)
-            (Assembler''nop-2 asm, FrameContext'PATCHED_VERIFIED_ENTRY_POINT_INSTRUCTION_SIZE)
+            (§ ass! asm (Assembler''nop-2 asm, FrameContext'PATCHED_VERIFIED_ENTRY_POINT_INSTRUCTION_SIZE))
             (let [
                 #_"int" verifiedEntryPosition (Assembler''position-1 asm)
                 #_"int" frameSize (:frameSize (:frameMap asm))
             ]
                 (Compiler'emitStackOverflowCheck-1 asm)
                 (if (= (Assembler''position-1 asm) verifiedEntryPosition)
-                    (Assembler''subqWide-3 asm, AMD64/rsp, frameSize)
-                    (Assembler''decrementq-3r asm, AMD64/rsp, frameSize)
+                    (§ ass! asm (Assembler''subqWide-3 asm, AMD64/rsp, frameSize))
+                    (§ ass! asm (Assembler''decrementq-3r asm, AMD64/rsp, frameSize))
                 )
                 (when GraalOptions'zapStackOnMethodEntry
                     (let [
                         #_"int" intSize 4
                     ]
                         (dotimes [#_"int" i (quot frameSize intSize)]
-                            (Assembler''movl-3ai asm, (AMD64Address'new-2 AMD64/rsp, (* i intSize)), 0xc1c1c1c1)
+                            (§ ass! asm (Assembler''movl-3ai asm, (AMD64Address'new-2 AMD64/rsp, (* i intSize)), 0xc1c1c1c1))
                         )
                     )
                 )
@@ -30448,7 +30424,7 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"void" FrameContext''leave-2 [#_"FrameContext" this, #_"Assembler" asm]
         (when-not (:omitFrame this)
-            (Assembler''incrementq-3r asm, AMD64/rsp, (:frameSize (:frameMap asm)))
+            (§ ass! asm (Assembler''incrementq-3r asm, AMD64/rsp, (:frameSize (:frameMap asm))))
         )
         nil
     )
@@ -30506,7 +30482,7 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"FrameMap" FrameMapBuilder''buildFrameMap-2 [#_"FrameMapBuilder" this, #_"LIRGenerationResult" res]
         (doseq [#_"CallingConvention" cc (:calls this)]
-            (FrameMap''callsMethod-2 (:frameMap this), cc)
+            (§ ass! (:frameMap this) (FrameMap''callsMethod-2 (:frameMap this), cc))
         )
         (§ ass! this (update this :frameMap FrameMap''finish-1))
         (:frameMap this)
@@ -30659,9 +30635,8 @@ ZeroExtendNode'new-4
     ;;;
      ; Informs the frame map that the compiled code calls a particular method, which may need stack space for outgoing arguments.
      ;;
-    (defn #_"void" FrameMap''callsMethod-2 [#_"FrameMap" this, #_"CallingConvention" cc]
-        (§ ass! this (FrameMap''reserveOutgoing-2 this, (#_"CallingConvention" .getStackSize cc)))
-        nil
+    (defn #_"this" FrameMap''callsMethod-2 [#_"FrameMap" this, #_"CallingConvention" cc]
+        (FrameMap''reserveOutgoing-2 this, (#_"CallingConvention" .getStackSize cc))
     )
 
     ;;;
@@ -30670,11 +30645,9 @@ ZeroExtendNode'new-4
      ; @param argsSize The amount of space (in bytes) to reserve for stack-based outgoing arguments.
      ;;
     (defn #_"this" FrameMap''reserveOutgoing-2 [#_"FrameMap" this, #_"int" argsSize]
-        (let [
-            this (assoc this :outgoingSize (max (:outgoingSize this) argsSize))
-            this (assoc this :hasOutgoingStackArguments (or (:hasOutgoingStackArguments this) (pos? argsSize)))
-        ]
-            this
+        (-> this
+            (update :outgoingSize max argsSize)
+            (update :hasOutgoingStackArguments #(or % (pos? argsSize)))
         )
     )
 
@@ -31553,9 +31526,9 @@ ZeroExtendNode'new-4
      ; Adds a new node to the graph.
      ;;
     (defn #_"Node" Graph''add-2 [#_"Graph" this, #_"Node" node]
-        (§ ass! node (assoc node :graph this))
-        (§ ass! this (Graph''register-2 this, node))
         (let [
+            _ (§ ass! node (assoc node :graph this))
+            _ (§ ass! this (Graph''register-2 this, node))
             #_"NodeClass<? implements Node>" c (:nodeClass node)
         ]
             (NodeClass''registerAtInputsAsUsage-2 c, node)
@@ -32888,12 +32861,14 @@ ZeroExtendNode'new-4
             this (update this :invocationQueue #(cons methodInvocation %))
             #_"int" n (InlineInfo'''numberOfMethods-1 (:callee methodInvocation))
             this (update this :maxGraphs + n)
-            _
-                (dotimes [#_"int" i n]
-                    (§ ass! this (update this :graphQueue #(cons (MethodInvocation''buildCallsiteHolderForElement-2 methodInvocation, i) %)))
-                )
         ]
-            this
+            (loop-when [this this #_"int" i 0] (< i n) => this
+                (let [
+                    this (update this :graphQueue #(cons (MethodInvocation''buildCallsiteHolderForElement-2 methodInvocation, i) %))
+                ]
+                    (recur this (inc i))
+                )
+            )
         )
     )
 
@@ -33428,6 +33403,99 @@ ZeroExtendNode'new-4
 (class-ns Interval []
     (def #_"int" Interval'END_MARKER_OPERAND_NUMBER Integer/MIN_VALUE)
 
+    (defn #_"Interval" Interval'new-4 [#_"AllocatableValue" operand, #_"int" operandNumber, #_"Interval" intervalEndMarker, #_"Range" rangeEndMarker]
+        (let [
+            #_"Interval" this
+                (merge (Interval'class.)
+                    (hash-map
+                        ;;;
+                         ; The register or variable for this interval prior to register allocation.
+                         ;;
+                        #_"AllocatableValue" :operand operand
+                        ;;;
+                         ; The operand number for this interval's {@linkplain #operand operand}.
+                         ;;
+                        #_"int" :operandNumber operandNumber
+                        ;;;
+                         ; The register or spill slot assigned to this interval.
+                         ; In case of a spilled interval which is re-materialized this is Value#ILLEGAL.
+                         ;;
+                        #_"AllocatableValue" :location (when (instance? RegisterValue operand) operand)
+                        ;;;
+                         ; The stack slot to which all splits of this interval are spilled if necessary.
+                         ;;
+                        #_"AllocatableValue" :spillSlot nil
+                        ;;;
+                         ; The kind of this interval.
+                         ;;
+                        #_"ValueKind" :kind LIRKind'Illegal
+                        ;;;
+                         ; The head of the list of ranges describing this interval. This list is sorted by
+                         ; {@linkplain LIRInstruction#id instruction ids}.
+                         ;;
+                        #_"Range" :first rangeEndMarker
+                        ;;;
+                         ; List of (use-positions, register-priorities) pairs, sorted by use-positions.
+                         ;;
+                        #_"UsePosList" :usePosList (UsePosList'new-1i 4)
+                        ;;;
+                         ; Iterator used to traverse the ranges of an interval.
+                         ;;
+                        #_"Range" :current rangeEndMarker
+                        ;;;
+                         ; Link to next interval in a sorted list of intervals that ends with LinearScan.intervalEndMarker.
+                         ;;
+                        #_"Interval" :next intervalEndMarker
+                        ;;;
+                         ; The linear-scan state of this interval.
+                         ;;
+                        #_"IntervalState" :state nil
+                        #_"int" :cachedTo -1 ;; cached value: to of last range (-1: not cached)
+                        ;;;
+                         ; The interval from which this one is derived. If this is a {@linkplain #isSplitParent() split parent}, it points to itself.
+                         ;;
+                        #_"Interval" :splitParent nil
+                        ;;;
+                         ; List of all intervals that are split off from this interval. This is only used if this is a {@linkplain #isSplitParent() split parent}.
+                         ;;
+                        #_"[Interval]" :splitChildren []
+                        ;;;
+                         ; Current split child that has been active or inactive last (always stored in split parents).
+                         ;;
+                        #_"Interval" :currentSplitChild nil
+                        ;;;
+                         ; Specifies if move is inserted between currentSplitChild and this interval when interval gets active the first time.
+                         ;;
+                        #_"boolean" :insertMoveWhenActivated false
+                        ;;;
+                         ; For spill move optimization.
+                         ;;
+                        #_"SpillState" :spillState :SpillState'NoDefinitionFound
+                        ;;;
+                         ; Position where this interval is defined (if defined only once).
+                         ;;
+                        #_"int" :spillDefinitionPos -1
+                        ;;;
+                         ; This interval should be assigned the same location as the hint interval.
+                         ;;
+                        #_"Interval" :locationHint nil
+                        ;;;
+                         ; The value with which a spilled child interval can be re-materialized. Currently this must be a Constant.
+                         ;;
+                        #_"Constant" :materializedValue nil
+                        ;;;
+                         ; The number of times #addMaterializationValue(Constant) is called.
+                         ;;
+                        #_"int" :numMaterializationValuesAdded 0
+                    )
+                )
+            this (assoc this :splitParent this)
+            this (assoc this :currentSplitChild this)
+        ]
+            this
+        )
+    )
+
     (defn #_"this" Interval''assignLocation-2 [#_"Interval" this, #_"AllocatableValue" newLocation]
         (assoc this :location (if (and (instance? RegisterValue newLocation) (= (#_"Value" .getValueKind newLocation) LIRKind'Illegal) (not (= (:kind this) LIRKind'Illegal))) (#_"Register" .asValue (#_"RegisterValue" .getRegister newLocation), (:kind this)) newLocation))
     )
@@ -33545,99 +33613,6 @@ ZeroExtendNode'new-4
 
     (defn #_"int" Interval''currentIntersectsAt-2 [#_"Interval" this, #_"Interval" it]
         (Range''intersectsAt-2 (:current this), (:current it))
-    )
-
-    (defn #_"Interval" Interval'new-4 [#_"AllocatableValue" operand, #_"int" operandNumber, #_"Interval" intervalEndMarker, #_"Range" rangeEndMarker]
-        (let [
-            #_"Interval" this
-                (merge (Interval'class.)
-                    (hash-map
-                        ;;;
-                         ; The register or variable for this interval prior to register allocation.
-                         ;;
-                        #_"AllocatableValue" :operand operand
-                        ;;;
-                         ; The operand number for this interval's {@linkplain #operand operand}.
-                         ;;
-                        #_"int" :operandNumber operandNumber
-                        ;;;
-                         ; The register or spill slot assigned to this interval.
-                         ; In case of a spilled interval which is re-materialized this is Value#ILLEGAL.
-                         ;;
-                        #_"AllocatableValue" :location (when (instance? RegisterValue operand) operand)
-                        ;;;
-                         ; The stack slot to which all splits of this interval are spilled if necessary.
-                         ;;
-                        #_"AllocatableValue" :spillSlot nil
-                        ;;;
-                         ; The kind of this interval.
-                         ;;
-                        #_"ValueKind" :kind LIRKind'Illegal
-                        ;;;
-                         ; The head of the list of ranges describing this interval. This list is sorted by
-                         ; {@linkplain LIRInstruction#id instruction ids}.
-                         ;;
-                        #_"Range" :first rangeEndMarker
-                        ;;;
-                         ; List of (use-positions, register-priorities) pairs, sorted by use-positions.
-                         ;;
-                        #_"UsePosList" :usePosList (UsePosList'new-1i 4)
-                        ;;;
-                         ; Iterator used to traverse the ranges of an interval.
-                         ;;
-                        #_"Range" :current rangeEndMarker
-                        ;;;
-                         ; Link to next interval in a sorted list of intervals that ends with LinearScan.intervalEndMarker.
-                         ;;
-                        #_"Interval" :next intervalEndMarker
-                        ;;;
-                         ; The linear-scan state of this interval.
-                         ;;
-                        #_"IntervalState" :state nil
-                        #_"int" :cachedTo -1 ;; cached value: to of last range (-1: not cached)
-                        ;;;
-                         ; The interval from which this one is derived. If this is a {@linkplain #isSplitParent() split parent}, it points to itself.
-                         ;;
-                        #_"Interval" :splitParent nil
-                        ;;;
-                         ; List of all intervals that are split off from this interval. This is only used if this is a {@linkplain #isSplitParent() split parent}.
-                         ;;
-                        #_"[Interval]" :splitChildren []
-                        ;;;
-                         ; Current split child that has been active or inactive last (always stored in split parents).
-                         ;;
-                        #_"Interval" :currentSplitChild nil
-                        ;;;
-                         ; Specifies if move is inserted between currentSplitChild and this interval when interval gets active the first time.
-                         ;;
-                        #_"boolean" :insertMoveWhenActivated false
-                        ;;;
-                         ; For spill move optimization.
-                         ;;
-                        #_"SpillState" :spillState :SpillState'NoDefinitionFound
-                        ;;;
-                         ; Position where this interval is defined (if defined only once).
-                         ;;
-                        #_"int" :spillDefinitionPos -1
-                        ;;;
-                         ; This interval should be assigned the same location as the hint interval.
-                         ;;
-                        #_"Interval" :locationHint nil
-                        ;;;
-                         ; The value with which a spilled child interval can be re-materialized. Currently this must be a Constant.
-                         ;;
-                        #_"Constant" :materializedValue nil
-                        ;;;
-                         ; The number of times #addMaterializationValue(Constant) is called.
-                         ;;
-                        #_"int" :numMaterializationValuesAdded 0
-                    )
-                )
-            this (assoc this :splitParent this)
-            this (assoc this :currentSplitChild this)
-        ]
-            this
-        )
     )
 
     ;;;
@@ -33838,22 +33813,23 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"void" Interval''addUsePos-3 [#_"Interval" this, #_"int" pos, #_"RegisterPriority" registerPriority]
+    (defn #_"this" Interval''addUsePos-3 [#_"Interval" this, #_"int" pos, #_"RegisterPriority" registerPriority]
         ;; do not add use positions for precolored intervals because they are never used
-        (when (and (not= registerPriority :RegisterPriority'None) (satisfies? Variable (:operand this)))
+        (when (and (not= registerPriority :RegisterPriority'None) (satisfies? Variable (:operand this))) => this
             ;; note: addUse is called in descending order, so list gets sorted automatically by just appending new use positions
             (let [
                 #_"int" len (UsePosList''size-1 (:usePosList this))
             ]
                 (cond
                     (or (zero? len) (< pos (UsePosList''usePos-2 (:usePosList this), (dec len))))
-                        (§ ass! this (update this :usePosList UsePosList''add-3 pos, registerPriority))
+                        (update this :usePosList UsePosList''add-3 pos, registerPriority)
                     (RegisterPriority'lessThan-2 (UsePosList''registerPriority-2 (:usePosList this), (dec len)), registerPriority)
-                        (§ ass! this (update this :usePosList UsePosList''setRegisterPriority-3 (dec len), registerPriority))
+                        (update this :usePosList UsePosList''setRegisterPriority-3 (dec len), registerPriority)
+                    :else
+                        this
                 )
             )
         )
-        nil
     )
 
     (defn #_"this" Interval''addRange-3 [#_"Interval" this, #_"int" from, #_"int" to]
@@ -33911,24 +33887,22 @@ ZeroExtendNode'new-4
             ;; split the ranges
             [#_"Range" prev #_"Range" cur]
                 (loop-when-recur [prev nil cur (:first this)] (and (not (Range''isEndMarker-1 cur)) (<= (:to cur) splitPos)) [cur (:next cur)] => [prev cur])
+            _
+                (if (< (:from cur) splitPos)
+                    (do
+                        (§ ass result (assoc result :first (Range'new-3 splitPos, (:to cur), (:next cur))))
+                        (§ ass! cur (assoc cur :to splitPos :next (:rangeEndMarker allocator)))
+                    )
+                    (do
+                        (§ ass result (assoc result :first cur))
+                        (§ ass! prev (assoc prev :next (:rangeEndMarker allocator)))
+                    )
+                )
+            result (assoc result :current (:first result))
+            _ (§ ass! this (assoc this :cachedTo -1)) ;; clear cached value
         ]
-            (if (< (:from cur) splitPos)
-                (do
-                    (§ ass result (assoc result :first (Range'new-3 splitPos, (:to cur), (:next cur))))
-                    (§ ass! cur (assoc cur :to splitPos :next (:rangeEndMarker allocator)))
-                )
-                (do
-                    (§ ass result (assoc result :first cur))
-                    (§ ass! prev (assoc prev :next (:rangeEndMarker allocator)))
-                )
-            )
-            (§ ass result (assoc result :current (:first result)))
-            (§ ass! this (assoc this :cachedTo -1)) ;; clear cached value
-
             ;; split list of use positions
-            (§ ass result (assoc result :usePosList (UsePosList''splitAt-2 (:usePosList this), splitPos)))
-
-            result
+            (assoc result :usePosList (UsePosList''splitAt-2 (:usePosList this), splitPos))
         )
     )
 
@@ -34028,18 +34002,13 @@ ZeroExtendNode'new-4
             true
         )
 
-        (#_"void" IntervalWalker'''walk-1 [#_"IntervalWalker" this]
-            (§ ass! this (IntervalWalker''walkTo-2 this, Integer/MAX_VALUE))
-            nil
+        (#_"this" IntervalWalker'''walk-1 [#_"IntervalWalker" this]
+            (IntervalWalker''walkTo-2 this, Integer/MAX_VALUE)
         )
     )
 
-    (defn #_"void" IntervalWalker''removeFromList-2 [#_"IntervalWalker" this, #_"Interval" interval]
-        (if (= (:state interval) :IntervalState'Active)
-            (§ ass! this (update this :activeLists RegisterBindingLists''remove-3 :RegisterBinding'Any, interval))
-            (§ ass! this (update this :inactiveLists RegisterBindingLists''remove-3 :RegisterBinding'Any, interval))
-        )
-        nil
+    (defn #_"this" IntervalWalker''removeFromList-2 [#_"IntervalWalker" this, #_"Interval" interval]
+        (update this (if (= (:state interval) :IntervalState'Active) :activeLists :inactiveLists) RegisterBindingLists''remove-3 :RegisterBinding'Any, interval)
     )
 
     (defn- #_"void" IntervalWalker''intervalMoved-4 [#_"IntervalWalker" this, #_"Interval" interval, #_"IntervalState" from, #_"IntervalState" to]
@@ -34048,11 +34017,11 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"void" IntervalWalker''walkTo-4 [#_"IntervalWalker" this, #_"IntervalState" state, #_"int" from, #_"RegisterBinding" binding]
+    (defn- #_"this" IntervalWalker''walkTo-4 [#_"IntervalWalker" this, #_"IntervalState" state, #_"int" from, #_"RegisterBinding" binding]
         (let [
             #_"Interval" prev (if (= state :IntervalState'Active) (RegisterBindingLists''get-2 (:activeLists this), binding) (RegisterBindingLists''get-2 (:inactiveLists this), binding))
         ]
-            (loop-when [#_"Interval" prevprev nil prev prev #_"Interval" _next prev] (<= (Interval''currentFrom-1 _next) from)
+            (loop-when [this this #_"Interval" prevprev nil prev prev #_"Interval" _next prev] (<= (Interval''currentFrom-1 _next) from) => this
                 (let [
                     #_"Interval" cur _next
                     _next (:next cur)
@@ -34063,63 +34032,63 @@ ZeroExtendNode'new-4
                     ;; also handle move from inactive list to active list
                     rangeHasChanged (or rangeHasChanged (and (= state :IntervalState'Inactive) (<= (Interval''currentFrom-1 cur) from)))
                 ]
-                    (when rangeHasChanged => (recur prev (:next cur) _next)
-                        ;; remove cur from list
-                        (if (nil? prevprev)
-                            (if (= state :IntervalState'Active)
-                                (§ ass! this (update this :activeLists RegisterBindingLists''set-3 binding, _next))
-                                (§ ass! this (update this :inactiveLists RegisterBindingLists''set-3 binding, _next))
-                            )
-                            (§ ass! prevprev (assoc prevprev :next _next))
-                        )
+                    (when rangeHasChanged => (recur this prev (:next cur) _next)
                         (let [
+                            ;; remove cur from list
+                            this
+                                (if (nil? prevprev)
+                                    (update this (if (= state :IntervalState'Active) :activeLists :inactiveLists) RegisterBindingLists''set-3 binding, _next)
+                                    (let [
+                                        _ (§ ass! prevprev (assoc prevprev :next _next))
+                                    ]
+                                        this
+                                    )
+                                )
                             prev _next
-                            [prevprev prev #_"IntervalState" newState]
+                            [this prevprev prev #_"IntervalState" newState]
                                 (if (Interval''currentAtEnd-1 cur)
                                     ;; move to handled state (not maintained as a list)
                                     (let [
                                         newState :IntervalState'Handled
+                                        _ (§ ass! cur (assoc cur :state newState))
                                     ]
-                                        (§ ass! cur (assoc cur :state newState))
-                                        [prevprev prev newState]
+                                        [this prevprev prev newState]
                                     )
                                     (let [
-                                        newState
+                                        [this newState]
                                             (if (<= (Interval''currentFrom-1 cur) from)
-                                                (do
+                                                (let [
                                                     ;; sort into active list
-                                                    (§ ass! this (update this :activeLists RegisterBindingLists''addToListSortedByCurrentFromPositions-3 binding, cur))
-                                                    :IntervalState'Active
+                                                    this (update this :activeLists RegisterBindingLists''addToListSortedByCurrentFromPositions-3 binding, cur)
+                                                ]
+                                                    [this :IntervalState'Active]
                                                 )
-                                                (do
+                                                (let [
                                                     ;; sort into inactive list
-                                                    (§ ass! this (update this :inactiveLists RegisterBindingLists''addToListSortedByCurrentFromPositions-3 binding, cur))
-                                                    :IntervalState'Inactive
+                                                    this (update this :inactiveLists RegisterBindingLists''addToListSortedByCurrentFromPositions-3 binding, cur)
+                                                ]
+                                                    [this :IntervalState'Inactive]
                                                 )
                                             )
+                                        _ (§ ass! cur (assoc cur :state newState))
                                     ]
-                                        (§ ass! cur (assoc cur :state newState))
-                                        (when (= prev cur) => [prevprev prev newState]
-                                            [prev (:next cur) newState]
+                                        (when (= prev cur) => [this prevprev prev newState]
+                                            [this prev (:next cur) newState]
                                         )
                                     )
                                 )
                         ]
                             (IntervalWalker''intervalMoved-4 this, cur, state, newState)
-                            (recur prevprev prev _next)
+                            (recur this prevprev prev _next)
                         )
                     )
                 )
             )
         )
-        nil
     )
 
-    (defn- #_"void" IntervalWalker''walkTo-3 [#_"IntervalWalker" this, #_"IntervalState" state, #_"int" from]
-        (doseq [#_"RegisterBinding" binding RegisterBinding'SET]
-            (IntervalWalker''walkTo-4 this, state, from, binding)
-        )
-        nil
+    (defn- #_"this" IntervalWalker''walkTo-3 [#_"IntervalWalker" this, #_"IntervalState" state, #_"int" from]
+        (reduce #(IntervalWalker''walkTo-4 %1, state, from, %2) this RegisterBinding'SET)
     )
 
     ;;;
@@ -34163,31 +34132,35 @@ ZeroExtendNode'new-4
      ; Note that for {@linkplain RegisterBinding#Fixed fixed} and {@linkplain RegisterBinding#Any any} intervals
      ; this is done in #nextInterval(int).
      ;;
-    (defn- #_"void" IntervalWalker''updateUnhandledStackIntervals-2 [#_"IntervalWalker" this, #_"int" opId]
+    (defn- #_"this" IntervalWalker''updateUnhandledStackIntervals-2 [#_"IntervalWalker" this, #_"int" opId]
         (let [
-            #_"Interval" interval
-                (loop-when [interval (RegisterBindingLists''get-2 (:unhandledLists this), :RegisterBinding'Stack)] (and (not (Interval''isEndMarker-1 interval)) (<= (Interval''from-1 interval) opId)) => interval
+            [this #_"Interval" interval]
+                (loop-when [this this interval (RegisterBindingLists''get-2 (:unhandledLists this), :RegisterBinding'Stack)] (and (not (Interval''isEndMarker-1 interval)) (<= (Interval''from-1 interval) opId)) => [this interval]
                     (let [
                         #_"Interval" _next (:next interval)
+                        this
+                            (if (< opId (Interval''to-1 interval))
+                                (let [
+                                    _ (§ ass! interval (assoc interval :state :IntervalState'Active))
+                                    this (update this :activeLists RegisterBindingLists''addToListSortedByCurrentFromPositions-3 :RegisterBinding'Stack, interval)
+                                ]
+                                    (IntervalWalker''intervalMoved-4 this, interval, :IntervalState'Unhandled, :IntervalState'Active)
+                                    this
+                                )
+                                (let [
+                                    _ (§ ass! interval (assoc interval :state :IntervalState'Handled))
+                                ]
+                                    (IntervalWalker''intervalMoved-4 this, interval, :IntervalState'Unhandled, :IntervalState'Handled)
+                                    this
+                                )
+                            )
                     ]
-                        (if (< opId (Interval''to-1 interval))
-                            (do
-                                (§ ass! interval (assoc interval :state :IntervalState'Active))
-                                (§ ass! this (update this :activeLists RegisterBindingLists''addToListSortedByCurrentFromPositions-3 :RegisterBinding'Stack, interval))
-                                (IntervalWalker''intervalMoved-4 this, interval, :IntervalState'Unhandled, :IntervalState'Active)
-                            )
-                            (do
-                                (§ ass! interval (assoc interval :state :IntervalState'Handled))
-                                (IntervalWalker''intervalMoved-4 this, interval, :IntervalState'Unhandled, :IntervalState'Handled)
-                            )
-                        )
-                        (recur _next)
+                        (recur this _next)
                     )
                 )
         ]
-            (§ ass! this (update this :unhandledLists RegisterBindingLists''set-3 :RegisterBinding'Stack, interval))
+            (update this :unhandledLists RegisterBindingLists''set-3 :RegisterBinding'Stack, interval)
         )
-        nil
     )
 
     ;;;
@@ -34204,34 +34177,39 @@ ZeroExtendNode'new-4
                         #_"int" opId (Interval''from-1 interval)
                         ;; set currentPosition prior to call of walkTo
                         this (assoc this :currentPosition opId)
-                    ]
                         ;; update unhandled stack intervals
-                        (IntervalWalker''updateUnhandledStackIntervals-2 this, opId)
-
+                        this (IntervalWalker''updateUnhandledStackIntervals-2 this, opId)
                         ;; call walkTo even if currentPosition == id
-                        (IntervalWalker''walkTo-3 this, :IntervalState'Active, opId)
-                        (IntervalWalker''walkTo-3 this, :IntervalState'Inactive, opId)
-
-                        (§ ass! interval (assoc interval :state :IntervalState'Active))
-                        (when (IntervalWalker'''activateCurrent-2 this, interval)
-                            (§ ass! this (update this :activeLists RegisterBindingLists''addToListSortedByCurrentFromPositions-3 (:currentBinding this), interval))
-                            (IntervalWalker''intervalMoved-4 this, interval, :IntervalState'Unhandled, :IntervalState'Active)
-                        )
+                        this (IntervalWalker''walkTo-3 this, :IntervalState'Active, opId)
+                        this (IntervalWalker''walkTo-3 this, :IntervalState'Inactive, opId)
+                        _ (§ ass! interval (assoc interval :state :IntervalState'Active))
+                        this
+                            (when (IntervalWalker'''activateCurrent-2 this, interval) => this
+                                (let [
+                                    this (update this :activeLists RegisterBindingLists''addToListSortedByCurrentFromPositions-3 (:currentBinding this), interval)
+                                ]
+                                    (IntervalWalker''intervalMoved-4 this, interval, :IntervalState'Unhandled, :IntervalState'Active)
+                                    this
+                                )
+                            )
+                    ]
                         (recur this (IntervalWalker''nextInterval-2 this, toOpId))
                     )
                 )
             ;; set currentPosition prior to call of walkTo
             this (assoc this :currentPosition toOpId)
         ]
-            (when (<= (:currentPosition this) (LinearScan''maxOpId-1 (:allocator this)))
-                ;; update unhandled stack intervals
-                (IntervalWalker''updateUnhandledStackIntervals-2 this, toOpId)
-
-                ;; call walkTo if still in range
-                (IntervalWalker''walkTo-3 this, :IntervalState'Active, toOpId)
-                (IntervalWalker''walkTo-3 this, :IntervalState'Inactive, toOpId)
+            (when (<= (:currentPosition this) (LinearScan''maxOpId-1 (:allocator this))) => this
+                (let [
+                    ;; update unhandled stack intervals
+                    this (IntervalWalker''updateUnhandledStackIntervals-2 this, toOpId)
+                    ;; call walkTo if still in range
+                    this (IntervalWalker''walkTo-3 this, :IntervalState'Active, toOpId)
+                    this (IntervalWalker''walkTo-3 this, :IntervalState'Inactive, toOpId)
+                ]
+                    this
+                )
             )
-            this
         )
     )
 )
@@ -34758,7 +34736,7 @@ ZeroExtendNode'new-4
 
     (defn #_"void" LinearScanWalker''splitAndSpillIntersectingIntervals-2 [#_"LinearScanWalker" this, #_"Register" reg]
         (doseq [#_"Interval" interval (nth (:spillIntervals this) (.number reg))]
-            (IntervalWalker''removeFromList-2 this, interval)
+            (§ ass! this (IntervalWalker''removeFromList-2 this, interval))
             (LinearScanWalker''splitAndSpillInterval-2 this, interval)
         )
         nil
@@ -35085,12 +35063,11 @@ ZeroExtendNode'new-4
     )
 
     (defm OptimizingLinearScanWalker IntervalWalker
-        (#_"void" IntervalWalker'''walk-1 [#_"OptimizingLinearScanWalker" this]
+        (#_"this" IntervalWalker'''walk-1 [#_"OptimizingLinearScanWalker" this]
             (doseq [#_"Block" block (:sortedBlocks (:allocator this))]
                 (OptimizingLinearScanWalker''optimizeBlock-2 this, block)
             )
             (IntervalWalker'''walk-1 (§ super LinearScanWalker'iface))
-            nil
         )
     )
 )
@@ -37836,8 +37813,8 @@ ZeroExtendNode'new-4
         (#_"void" LIRInstruction'''emitCode-2 [#_"AMD64ByteSwapOp" this, #_"Assembler" asm]
             (AMD64Move'move-3 asm, (:result this), (:input this))
             (condp = (#_"Value" .getPlatformKind (:input this))
-                AMD64Kind/DWORD (Assembler''bswapl-2 asm, (#_"RegisterValue" .getRegister (:result this)))
-                AMD64Kind/QWORD (Assembler''bswapq-2 asm, (#_"RegisterValue" .getRegister (:result this)))
+                AMD64Kind/DWORD (§ ass! asm (Assembler''bswapl-2 asm, (#_"RegisterValue" .getRegister (:result this))))
+                AMD64Kind/QWORD (§ ass! asm (Assembler''bswapq-2 asm, (#_"RegisterValue" .getRegister (:result this))))
             )
             nil
         )
@@ -37863,8 +37840,8 @@ ZeroExtendNode'new-4
             (let [
                 #_"Register" reg (#_"RegisterValue" .getRegister (:functionPtr this))
             ]
-                (Assembler''call-2 asm, reg)
-                (Assembler''ensureUniquePC-1 asm)
+                (§ ass! asm (Assembler''call-2 asm, reg))
+                (§ ass! asm (Assembler''ensureUniquePC-1 asm))
             )
             nil
         )
@@ -37915,7 +37892,7 @@ ZeroExtendNode'new-4
 
     (defm AMD64LFenceOp LIRInstruction
         (#_"void" LIRInstruction'''emitCode-2 [#_"AMD64LFenceOp" this, #_"Assembler" asm]
-            (Assembler''lfence-1 asm)
+            (§ ass! asm (Assembler''lfence-1 asm))
             nil
         )
     )
@@ -38014,10 +37991,10 @@ ZeroExtendNode'new-4
     (defm AMD64PrefetchOp LIRInstruction
         (#_"void" LIRInstruction'''emitCode-2 [#_"AMD64PrefetchOp" this, #_"Assembler" asm]
             (case (:instr this)
-                0 (Assembler''prefetchnta-2 asm, (AMD64AddressValue''toAddress-1 (:address this)))
-                1 (Assembler''prefetcht0-2 asm, (AMD64AddressValue''toAddress-1 (:address this)))
-                2 (Assembler''prefetcht2-2 asm, (AMD64AddressValue''toAddress-1 (:address this)))
-                3 (Assembler''prefetchw-2 asm, (AMD64AddressValue''toAddress-1 (:address this)))
+                0 (§ ass! asm (Assembler''prefetchnta-2 asm, (AMD64AddressValue''toAddress-1 (:address this))))
+                1 (§ ass! asm (Assembler''prefetcht0-2 asm, (AMD64AddressValue''toAddress-1 (:address this))))
+                2 (§ ass! asm (Assembler''prefetcht2-2 asm, (AMD64AddressValue''toAddress-1 (:address this))))
+                3 (§ ass! asm (Assembler''prefetchw-2 asm, (AMD64AddressValue''toAddress-1 (:address this))))
             )
             nil
         )
@@ -38189,8 +38166,8 @@ ZeroExtendNode'new-4
     (defm AMD64SignExtendOp LIRInstruction
         (#_"void" LIRInstruction'''emitCode-2 [#_"AMD64SignExtendOp" this, #_"Assembler" asm]
             (if (= (:size this) :OperandSize'DWORD)
-                (Assembler''cdql-1 asm)
-                (Assembler''cdqq-1 asm)
+                (§ ass! asm (Assembler''cdql-1 asm))
+                (§ ass! asm (Assembler''cdqq-1 asm))
             )
             nil
         )
@@ -38260,11 +38237,11 @@ ZeroExtendNode'new-4
     (defm AMD64TailcallOp LIRInstruction
         (#_"void" LIRInstruction'''emitCode-2 [#_"AMD64TailcallOp" this, #_"Assembler" asm]
             ;; destroy the current frame (now the return address is the top of stack)
-            (Assembler''leave-1 asm)
+            (§ ass! asm (Assembler''leave-1 asm))
 
             ;; jump to the target method
-            (Assembler''jmp-2r asm, (#_"RegisterValue" .getRegister (:target this)))
-            (Assembler''ensureUniquePC-1 asm)
+            (§ ass! asm (Assembler''jmp-2r asm, (#_"RegisterValue" .getRegister (:target this))))
+            (§ ass! asm (Assembler''ensureUniquePC-1 asm))
             nil
         )
     )
@@ -38356,11 +38333,11 @@ ZeroExtendNode'new-4
         (#_"void" LIRInstruction'''emitCode-2 [#_"AtomicReadAndAddOp" this, #_"Assembler" asm]
             (AMD64Move'move-4 (:accessKind this), asm, (:result this), (:delta this))
             (when (.isMP HotSpot'target)
-                (Assembler''lock-1 asm)
+                (§ ass! asm (Assembler''lock-1 asm))
             )
             (condp = (:accessKind this)
-                AMD64Kind/DWORD (Assembler''xaddl-3 asm, (AMD64AddressValue''toAddress-1 (:address this)), (#_"RegisterValue" .getRegister (:result this)))
-                AMD64Kind/QWORD (Assembler''xaddq-3 asm, (AMD64AddressValue''toAddress-1 (:address this)), (#_"RegisterValue" .getRegister (:result this)))
+                AMD64Kind/DWORD (§ ass! asm (Assembler''xaddl-3 asm, (AMD64AddressValue''toAddress-1 (:address this)), (#_"RegisterValue" .getRegister (:result this))))
+                AMD64Kind/QWORD (§ ass! asm (Assembler''xaddq-3 asm, (AMD64AddressValue''toAddress-1 (:address this)), (#_"RegisterValue" .getRegister (:result this))))
             )
             nil
         )
@@ -38386,8 +38363,8 @@ ZeroExtendNode'new-4
         (#_"void" LIRInstruction'''emitCode-2 [#_"AtomicReadAndWriteOp" this, #_"Assembler" asm]
             (AMD64Move'move-4 (:accessKind this), asm, (:result this), (:newValue this))
             (condp = (:accessKind this)
-                AMD64Kind/DWORD (Assembler''xchgl-3 asm, (#_"RegisterValue" .getRegister (:result this)), (AMD64AddressValue''toAddress-1 (:address this)))
-                AMD64Kind/QWORD (Assembler''xchgq-3 asm, (#_"RegisterValue" .getRegister (:result this)), (AMD64AddressValue''toAddress-1 (:address this)))
+                AMD64Kind/DWORD (§ ass! asm (Assembler''xchgl-3 asm, (#_"RegisterValue" .getRegister (:result this)), (AMD64AddressValue''toAddress-1 (:address this))))
+                AMD64Kind/QWORD (§ ass! asm (Assembler''xchgq-3 asm, (#_"RegisterValue" .getRegister (:result this)), (AMD64AddressValue''toAddress-1 (:address this))))
             )
             nil
         )
@@ -38466,11 +38443,11 @@ ZeroExtendNode'new-4
                     (if (< (:trueDestinationProbability this) 0.5)
                         (do
                             (BranchOp''jcc-4 this, asm, true, (:falseDestination this))
-                            (Assembler''jmp-2l asm, (LabelRef''label-1 (:trueDestination this)))
+                            (§ ass! asm (Assembler''jmp-2l asm, (LabelRef''label-1 (:trueDestination this))))
                         )
                         (do
                             (BranchOp''jcc-4 this, asm, false, (:trueDestination this))
-                            (Assembler''jmp-2l asm, (LabelRef''label-1 (:falseDestination this)))
+                            (§ ass! asm (Assembler''jmp-2l asm, (LabelRef''label-1 (:falseDestination this))))
                         )
                     )
             )
@@ -38479,7 +38456,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"void" BranchOp''jcc-4 [#_"BranchOp" this, #_"Assembler" asm, #_"boolean" negate?, #_"LabelRef" target]
-        (Assembler''jcc-3 asm, (if negate? (ConditionFlag''negate-1 (:condition this)) (:condition this)), (LabelRef''label-1 target))
+        (§ ass! asm (Assembler''jcc-3 asm, (if negate? (ConditionFlag''negate-1 (:condition this)) (:condition this)), (LabelRef''label-1 target)))
         nil
     )
 )
@@ -38499,9 +38476,9 @@ ZeroExtendNode'new-4
     (defm CRuntimeCallEpilogueOp LIRInstruction
         (#_"void" LIRInstruction'''emitCode-2 [#_"CRuntimeCallEpilogueOp" this, #_"Assembler" asm]
             ;; reset last Java frame
-            (Assembler''movslq-3ai asm, (AMD64Address'new-2 (:thread this), (:threadLastJavaSpOffset this)), 0)
-            (Assembler''movslq-3ai asm, (AMD64Address'new-2 (:thread this), (:threadLastJavaFpOffset this)), 0)
-            (Assembler''movslq-3ai asm, (AMD64Address'new-2 (:thread this), (:threadLastJavaPcOffset this)), 0)
+            (§ ass! asm (Assembler''movslq-3ai asm, (AMD64Address'new-2 (:thread this), (:threadLastJavaSpOffset this)), 0))
+            (§ ass! asm (Assembler''movslq-3ai asm, (AMD64Address'new-2 (:thread this), (:threadLastJavaFpOffset this)), 0))
+            (§ ass! asm (Assembler''movslq-3ai asm, (AMD64Address'new-2 (:thread this), (:threadLastJavaPcOffset this)), 0))
             nil
         )
     )
@@ -38520,7 +38497,7 @@ ZeroExtendNode'new-4
     (defm CRuntimeCallPrologueOp LIRInstruction
         (#_"void" LIRInstruction'''emitCode-2 [#_"CRuntimeCallPrologueOp" this, #_"Assembler" asm]
             ;; save last Java frame
-            (Assembler''movq-3ar asm, (AMD64Address'new-2 (:thread this), (:threadLastJavaSpOffset this)), AMD64/rsp)
+            (§ ass! asm (Assembler''movq-3ar asm, (AMD64Address'new-2 (:thread this), (:threadLastJavaSpOffset this)), AMD64/rsp))
             nil
         )
     )
@@ -38663,7 +38640,7 @@ ZeroExtendNode'new-4
             ;; at the instruction that loads the Klass from the inline cache.
             (Assembler''recordMark-2 asm, (if (= (:invokeKind this) :InvokeKind'Virtual) HotSpot'invokevirtualMark HotSpot'invokeinterfaceMark))
             ;; This must be emitted exactly like this to ensure, it's patchable.
-            (Assembler''movq-3rl asm, AMD64/rax, HotSpot'nonOopBits)
+            (§ ass! asm (Assembler''movq-3rl asm, AMD64/rax, HotSpot'nonOopBits))
             (DirectCallOp''emitCall-2 this, asm)
             nil
         )
@@ -38728,11 +38705,11 @@ ZeroExtendNode'new-4
     (defm CompareAndSwapOp LIRInstruction
         (#_"void" LIRInstruction'''emitCode-2 [#_"CompareAndSwapOp" this, #_"Assembler" asm]
             (when (.isMP HotSpot'target)
-                (Assembler''lock-1 asm)
+                (§ ass! asm (Assembler''lock-1 asm))
             )
             (condp = (:accessKind this)
-                AMD64Kind/DWORD (Assembler''cmpxchgl-3 asm, (#_"RegisterValue" .getRegister (:newValue this)), (AMD64AddressValue''toAddress-1 (:address this)))
-                AMD64Kind/QWORD (Assembler''cmpxchgq-3 asm, (#_"RegisterValue" .getRegister (:newValue this)), (AMD64AddressValue''toAddress-1 (:address this)))
+                AMD64Kind/DWORD (§ ass! asm (Assembler''cmpxchgl-3 asm, (#_"RegisterValue" .getRegister (:newValue this)), (AMD64AddressValue''toAddress-1 (:address this))))
+                AMD64Kind/QWORD (§ ass! asm (Assembler''cmpxchgq-3 asm, (#_"RegisterValue" .getRegister (:newValue this)), (AMD64AddressValue''toAddress-1 (:address this))))
             )
             nil
         )
@@ -38863,7 +38840,7 @@ ZeroExtendNode'new-4
 
     (defm VMConstOp LIRInstruction
         (#_"void" LIRInstruction'''emitCode-2 [#_"VMConstOp" this, #_"Assembler" asm]
-            (Assembler''recordInlineDataInCode-2 asm, (:c this))
+            (§ ass! asm (Assembler''recordInlineDataInCode-2 asm, (:c this)))
             (LIRInstruction'''emitCode-2 (§ super #_"ConsumerConstOp"), asm)
             nil
         )
@@ -38974,13 +38951,13 @@ ZeroExtendNode'new-4
         (if (instance? StackSlot savedRbp)
             (do
                 ;; restoring RBP from the stack must be done before the frame is removed
-                (Assembler''movq-3ra asm, AMD64/rbp, (Assembler''asAddress-2 asm, savedRbp))
+                (§ ass! asm (Assembler''movq-3ra asm, AMD64/rbp, (Assembler''asAddress-2 asm, savedRbp)))
             )
             (let [
                 #_"Register" framePointer (#_"RegisterValue" .getRegister savedRbp)
             ]
                 (when-not (= framePointer AMD64/rbp)
-                    (Assembler''movq-3rr asm, AMD64/rbp, framePointer)
+                    (§ ass! asm (Assembler''movq-3rr asm, AMD64/rbp, framePointer))
                 )
             )
         )
@@ -39021,7 +38998,7 @@ ZeroExtendNode'new-4
             (EpilogueBlockEndOp''leaveFrameAndRestoreRbp-2 this, asm)
             ;; Every compiled method must have a poll before the return.
             (SafepointOp'emitCode-4 asm, true, (:thread this), (:scratchForSafepointOnReturn this))
-            (Assembler''ret-2 asm, 0)
+            (§ ass! asm (Assembler''ret-2 asm, 0))
             nil
         )
     )
@@ -39061,7 +39038,7 @@ ZeroExtendNode'new-4
     (defm JumpOp LIRInstruction
         (#_"void" LIRInstruction'''emitCode-2 [#_"JumpOp" this, #_"Assembler" asm]
             (when-not (Assembler''isSuccessorEdge-2 asm, (:destination this))
-                (Assembler''jmp-2l asm, (LabelRef''label-1 (:destination this)))
+                (§ ass! asm (Assembler''jmp-2l asm, (LabelRef''label-1 (:destination this))))
             )
             nil
         )
@@ -39124,7 +39101,7 @@ ZeroExtendNode'new-4
     (defm LabelOp LIRInstruction
         (#_"void" LIRInstruction'''emitCode-2 [#_"LabelOp" this, #_"Assembler" asm]
             (when (:aligned? this)
-                (Assembler''align-2 asm, (* (.wordSize HotSpot'target) 2))
+                (§ ass! asm (Assembler''align-2 asm, (* (.wordSize HotSpot'target) 2)))
             )
             (Assembler''bind-2 asm, (:label this))
             nil
@@ -39148,8 +39125,8 @@ ZeroExtendNode'new-4
     (defm LeaOp LIRInstruction
         (#_"void" LIRInstruction'''emitCode-2 [#_"LeaOp" this, #_"Assembler" asm]
             (if (= (:size this) :OperandSize'QWORD)
-                (Assembler''leaq-3 asm, (#_"RegisterValue" .getRegister (:result this)), (AMD64AddressValue''toAddress-1 (:address this)))
-                (Assembler''lead-3 asm, (#_"RegisterValue" .getRegister (:result this)), (AMD64AddressValue''toAddress-1 (:address this)))
+                (§ ass! asm (Assembler''leaq-3 asm, (#_"RegisterValue" .getRegister (:result this)), (AMD64AddressValue''toAddress-1 (:address this))))
+                (§ ass! asm (Assembler''lead-3 asm, (#_"RegisterValue" .getRegister (:result this)), (AMD64AddressValue''toAddress-1 (:address this))))
             )
             nil
         )
@@ -39193,18 +39170,18 @@ ZeroExtendNode'new-4
                 (if (instance? RegisterValue (:result this))
                     (if compressed?
                         (do
-                            (Assembler''recordInlineDataInCode-2 asm, (:input this))
-                            (Assembler''movl-3ri asm, (#_"RegisterValue" .getRegister (:result this)), 0xdeaddead)
+                            (§ ass! asm (Assembler''recordInlineDataInCode-2 asm, (:input this)))
+                            (§ ass! asm (Assembler''movl-3ri asm, (#_"RegisterValue" .getRegister (:result this)), 0xdeaddead))
                         )
                         (do
-                            (Assembler''recordInlineDataInCode-2 asm, (:input this))
-                            (Assembler''movq-3rl asm, (#_"RegisterValue" .getRegister (:result this)), 0xdeaddeaddeaddead)
+                            (§ ass! asm (Assembler''recordInlineDataInCode-2 asm, (:input this)))
+                            (§ ass! asm (Assembler''movq-3rl asm, (#_"RegisterValue" .getRegister (:result this)), 0xdeaddeaddeaddead))
                         )
                     )
                     (when compressed? => (throw! "cannot store 64-bit constants to memory")
                         (do
-                            (Assembler''recordInlineDataInCode-2 asm, (:input this))
-                            (Assembler''movl-3ai asm, (Assembler''asAddress-2 asm, (:result this)), 0xdeaddead)
+                            (§ ass! asm (Assembler''recordInlineDataInCode-2 asm, (:input this)))
+                            (§ ass! asm (Assembler''movl-3ai asm, (Assembler''asAddress-2 asm, (:result this)), 0xdeaddead))
                         )
                     )
                 )
@@ -39244,14 +39221,14 @@ ZeroExtendNode'new-4
             ]
                 (if (.inlineObjects HotSpot'target)
                     (do
-                        (Assembler''recordInlineDataInCode-2 asm, (:input this))
+                        (§ ass! asm (Assembler''recordInlineDataInCode-2 asm, (:input this)))
                         (if (instance? RegisterValue (:result this))
                             (if compressed?
-                                (Assembler''movl-3ri asm, (#_"RegisterValue" .getRegister (:result this)), 0xdeaddead)
-                                (Assembler''movq-3rl asm, (#_"RegisterValue" .getRegister (:result this)), 0xdeaddeaddeaddead)
+                                (§ ass! asm (Assembler''movl-3ri asm, (#_"RegisterValue" .getRegister (:result this)), 0xdeaddead))
+                                (§ ass! asm (Assembler''movq-3rl asm, (#_"RegisterValue" .getRegister (:result this)), 0xdeaddeaddeaddead))
                             )
                             (if compressed?
-                                (Assembler''movl-3ai asm, (Assembler''asAddress-2 asm, (:result this)), 0xdeaddead)
+                                (§ ass! asm (Assembler''movl-3ai asm, (Assembler''asAddress-2 asm, (:result this)), 0xdeaddead))
                                 (throw! "cannot store 64-bit constants to memory")
                             )
                         )
@@ -39261,8 +39238,8 @@ ZeroExtendNode'new-4
                             #_"AMD64Address" address (Assembler''recordDataReferenceInCode-3c asm, (:input this), (if compressed? 4 8))
                         ]
                             (if compressed?
-                                (Assembler''movl-3ra asm, (#_"RegisterValue" .getRegister (:result this)), address)
-                                (Assembler''movq-3ra asm, (#_"RegisterValue" .getRegister (:result this)), address)
+                                (§ ass! asm (Assembler''movl-3ra asm, (#_"RegisterValue" .getRegister (:result this)), address))
+                                (§ ass! asm (Assembler''movq-3ra asm, (#_"RegisterValue" .getRegister (:result this)), address))
                             )
                         )
                     )
@@ -39390,7 +39367,7 @@ ZeroExtendNode'new-4
 
     (defm MembarOp LIRInstruction
         (#_"void" LIRInstruction'''emitCode-2 [#_"MembarOp" this, #_"Assembler" asm]
-            (Assembler''membar-2 asm, (:barriers this))
+            (§ ass! asm (Assembler''membar-2 asm, (:barriers this)))
             nil
         )
     )
@@ -39450,7 +39427,7 @@ ZeroExtendNode'new-4
 
     (defm MemoryVMConstOp LIRInstruction
         (#_"void" LIRInstruction'''emitCode-2 [#_"MemoryVMConstOp" this, #_"Assembler" asm]
-            (Assembler''recordInlineDataInCode-2 asm, (:c this))
+            (§ ass! asm (Assembler''recordInlineDataInCode-2 asm, (:c this)))
             (LIRInstruction'''emitCode-2 (§ super #_"MemoryConstOp"), asm)
             nil
         )
@@ -39671,7 +39648,7 @@ ZeroExtendNode'new-4
 
     (defm NullCheckOp LIRInstruction
         (#_"void" LIRInstruction'''emitCode-2 [#_"NullCheckOp" this, #_"Assembler" asm]
-            (Assembler''nullCheck-2 asm, (AMD64AddressValue''toAddress-1 (:address this)))
+            (§ ass! asm (Assembler''nullCheck-2 asm, (AMD64AddressValue''toAddress-1 (:address this))))
             nil
         )
     )
@@ -39734,10 +39711,10 @@ ZeroExtendNode'new-4
                         #_"Register" baseReg (PointerCompressionOp''getBaseRegister-1 this)
                     ]
                         (when-not (:never-nil? this)
-                            (Assembler''testq-3 asm, resReg, resReg)
-                            (Assembler''cmovq-4rr asm, ConditionFlag'Equal, resReg, baseReg)
+                            (§ ass! asm (Assembler''testq-3 asm, resReg, resReg))
+                            (§ ass! asm (Assembler''cmovq-4rr asm, ConditionFlag'Equal, resReg, baseReg))
                         )
-                        (Assembler''subq-3rr asm, resReg, baseReg)
+                        (§ ass! asm (Assembler''subq-3rr asm, resReg, baseReg))
                     )
                 )
 
@@ -39745,7 +39722,7 @@ ZeroExtendNode'new-4
                     #_"int" shift (PointerCompressionOp''getShift-1 this)
                 ]
                     (when-not (zero? shift)
-                        (Assembler''shrq-3 asm, resReg, shift)
+                        (§ ass! asm (Assembler''shrq-3 asm, resReg, shift))
                     )
                 )
             )
@@ -39768,23 +39745,23 @@ ZeroExtendNode'new-4
                 #_"int" shift (PointerCompressionOp''getShift-1 this)
             ]
                 (when-not (zero? shift)
-                    (Assembler''shlq-3 asm, resReg, shift)
+                    (§ ass! asm (Assembler''shlq-3 asm, resReg, shift))
                 )
 
                 (let [
                     #_"Register" baseReg (when (PointerCompressionOp'hasBase-1 (:encoding this)) (PointerCompressionOp''getBaseRegister-1 this))
                 ]
                     (when (some? baseReg)
-                        (when-not (:never-nil? this) => (Assembler''addq-3rr asm, resReg, baseReg)
+                        (when-not (:never-nil? this) => (§ ass! asm (Assembler''addq-3rr asm, resReg, baseReg))
                             (when (zero? shift)
                                 ;; if encoding.shift != 0, the flags are already set by the shlq
-                                (Assembler''testq-3 asm, resReg, resReg)
+                                (§ ass! asm (Assembler''testq-3 asm, resReg, resReg))
                             )
                             (let [
                                 #_"Label" done (Label'new-0)
                             ]
-                                (Assembler''jccb-3 asm, ConditionFlag'Equal, done)
-                                (Assembler''addq-3rr asm, resReg, baseReg)
+                                (§ ass! asm (Assembler''jccb-3 asm, ConditionFlag'Equal, done))
+                                (§ ass! asm (Assembler''addq-3rr asm, resReg, baseReg))
                                 (Assembler''bind-2 asm, done)
                             )
                         )
@@ -39871,7 +39848,7 @@ ZeroExtendNode'new-4
 
     (defm ReadTimestampCounter LIRInstruction
         (#_"void" LIRInstruction'''emitCode-2 [#_"ReadTimestampCounter" this, #_"Assembler" asm]
-            (Assembler''rdtsc-1 asm)
+            (§ ass! asm (Assembler''rdtsc-1 asm))
             nil
         )
     )
@@ -39891,7 +39868,7 @@ ZeroExtendNode'new-4
     (defm ReturnOp LIRInstruction
         (#_"void" LIRInstruction'''emitCode-2 [#_"ReturnOp" this, #_"Assembler" asm]
             (FrameContext''leave-2 (:frameContext asm), asm)
-            (Assembler''ret-2 asm, 0)
+            (§ ass! asm (Assembler''ret-2 asm, 0))
             nil
         )
     )
@@ -39930,24 +39907,24 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"void" SafepointOp'emitThreadLocalPoll-4 [#_"Assembler" asm, #_"boolean" atReturn, #_"Register" thread, #_"Register" scratch]
-        (Assembler''movptr-3ra asm, scratch, (AMD64Address'new-2 thread, HotSpot'threadPollingPageOffset))
+        (§ ass! asm (Assembler''movptr-3ra asm, scratch, (AMD64Address'new-2 thread, HotSpot'threadPollingPageOffset)))
         (Assembler''recordMark-2 asm, (if atReturn HotSpot'pollReturnFarMark HotSpot'pollFarMark))
-        (Assembler''testl-3ra asm, AMD64/rax, (AMD64Address'new-1 scratch))
+        (§ ass! asm (Assembler''testl-3ra asm, AMD64/rax, (AMD64Address'new-1 scratch)))
         nil
     )
 
     (defn- #_"void" SafepointOp'emitGlobalPoll-3 [#_"Assembler" asm, #_"boolean" atReturn, #_"Register" scratch]
         (if (SafepointOp'isPollingPageFar-0)
             (do
-                (Assembler''movq-3rl asm, scratch, HotSpot'safepointPollingAddress)
+                (§ ass! asm (Assembler''movq-3rl asm, scratch, HotSpot'safepointPollingAddress))
                 (Assembler''recordMark-2 asm, (if atReturn HotSpot'pollReturnFarMark HotSpot'pollFarMark))
-                (Assembler''testl-3ra asm, AMD64/rax, (AMD64Address'new-1 scratch))
+                (§ ass! asm (Assembler''testl-3ra asm, AMD64/rax, (AMD64Address'new-1 scratch)))
             )
             (do
                 (Assembler''recordMark-2 asm, (if atReturn HotSpot'pollReturnNearMark HotSpot'pollNearMark))
                 ;; The C++ code transforms the polling page offset into an RIP displacement
                 ;; to the real address at that offset in the polling page.
-                (Assembler''testl-3ra asm, AMD64/rax, (AMD64Address'new-2 AMD64/rip, 0))
+                (§ ass! asm (Assembler''testl-3ra asm, AMD64/rax, (AMD64Address'new-2 AMD64/rip, 0)))
             )
         )
         nil
@@ -39993,7 +39970,7 @@ ZeroExtendNode'new-4
 
     (defm StackLeaOp LIRInstruction
         (#_"void" LIRInstruction'''emitCode-2 [#_"StackLeaOp" this, #_"Assembler" asm]
-            (Assembler''leaq-3 asm, (#_"RegisterValue" .getRegister (:result this)), (Assembler''asAddress-2 asm, (:slot this)))
+            (§ ass! asm (Assembler''leaq-3 asm, (#_"RegisterValue" .getRegister (:result this)), (Assembler''asAddress-2 asm, (:slot this))))
             nil
         )
     )
@@ -40061,7 +40038,7 @@ ZeroExtendNode'new-4
                 #_"Register" scratchReg (#_"RegisterValue" .getRegister (:scratch this))
             ]
                 (when-not (= indexReg idxScratchReg)
-                    (Assembler''movl-3rr asm, idxScratchReg, indexReg)
+                    (§ ass! asm (Assembler''movl-3rr asm, idxScratchReg, indexReg))
                 )
 
                 ;; compare index against jump table bounds
@@ -40071,30 +40048,30 @@ ZeroExtendNode'new-4
                     (if (not= (:lowKey this) 0)
                         (do
                             ;; subtract the low value from the switch value
-                            (Assembler''subl-3ri asm, idxScratchReg, (:lowKey this))
-                            (Assembler''cmpl-3ri asm, idxScratchReg, (- highKey (:lowKey this)))
+                            (§ ass! asm (Assembler''subl-3ri asm, idxScratchReg, (:lowKey this)))
+                            (§ ass! asm (Assembler''cmpl-3ri asm, idxScratchReg, (- highKey (:lowKey this))))
                         )
-                        (Assembler''cmpl-3ri asm, idxScratchReg, highKey)
+                        (§ ass! asm (Assembler''cmpl-3ri asm, idxScratchReg, highKey))
                     )
 
                     ;; jump to default target if index is not within the jump table
                     (when (some? (:defaultTarget this))
-                        (Assembler''jcc-3 asm, ConditionFlag'Above, (LabelRef''label-1 (:defaultTarget this)))
+                        (§ ass! asm (Assembler''jcc-3 asm, ConditionFlag'Above, (LabelRef''label-1 (:defaultTarget this))))
                     )
 
                     ;; set scratch to address of jump table
-                    (Assembler''leaq-3 asm, scratchReg, (AMD64Address'new-2 AMD64/rip, 0))
+                    (§ ass! asm (Assembler''leaq-3 asm, scratchReg, (AMD64Address'new-2 AMD64/rip, 0)))
                     (let [
                         #_"int" afterLea (Assembler''position-1 asm)
                     ]
                         ;; load jump table entry into scratch and jump to it
-                        (Assembler''movslq-3ra asm, idxScratchReg, (AMD64Address'new-4 scratchReg, idxScratchReg, Scale'Times4, 0))
-                        (Assembler''addq-3rr asm, scratchReg, idxScratchReg)
-                        (Assembler''jmp-2r asm, scratchReg)
+                        (§ ass! asm (Assembler''movslq-3ra asm, idxScratchReg, (AMD64Address'new-4 scratchReg, idxScratchReg, Scale'Times4, 0)))
+                        (§ ass! asm (Assembler''addq-3rr asm, scratchReg, idxScratchReg))
+                        (§ ass! asm (Assembler''jmp-2r asm, scratchReg))
 
                         ;; inserting padding, so that jump table address is 4-byte aligned
                         (when-not (zero? (& (Assembler''position-1 asm) 0x3))
-                            (Assembler''nop-2 asm, (- 4 (& (Assembler''position-1 asm) 0x3)))
+                            (§ ass! asm (Assembler''nop-2 asm, (- 4 (& (Assembler''position-1 asm) 0x3))))
                         )
 
                         ;; patch LEA instruction above now that we know the position of the jump table
@@ -40271,7 +40248,7 @@ ZeroExtendNode'new-4
 
     (defn #_"void" Label''patchInstructions-2 [#_"Label" this, #_"Assembler" asm]
         (doseq [#_"int" i (:patchPositions this)]
-            (Assembler''patchJumpTarget-3 asm, i, (:position this))
+            (§ ass! asm (Assembler''patchJumpTarget-3 asm, i, (:position this)))
         )
         nil
     )
@@ -40374,7 +40351,7 @@ ZeroExtendNode'new-4
             )
 
             (let [
-                #_"ValueProcedure" assignProc
+                #_"ValueProcedure" f'assignProc
                     (reify ValueProcedure
                         (#_"Value" ValueProcedure'''doValue-5 [#_"ValueProcedure" _, #_"LIRInstruction" __op, #_"Value" value, #_"OperandMode" mode, #_"{OperandFlag}" _flags]
                             (when (satisfies? Variable value) => value
@@ -40383,10 +40360,10 @@ ZeroExtendNode'new-4
                         )
                     )
             ]
-                (LIRInstruction''forEachInput-2 op, assignProc)
-                (LIRInstruction''forEachAlive-2 op, assignProc)
-                (LIRInstruction''forEachTemp-2 op, assignProc)
-                (LIRInstruction''forEachOutput-2 op, assignProc)
+                (LIRInstruction''forEachInput-2 op, f'assignProc)
+                (LIRInstruction''forEachAlive-2 op, f'assignProc)
+                (LIRInstruction''forEachTemp-2 op, f'assignProc)
+                (LIRInstruction''forEachOutput-2 op, f'assignProc)
 
                 ;; remove useless moves
                 (and (satisfies? ValueMoveOp op) (= (ValueMoveOp'''getInput-1 op) (MoveOp'''getResult-1 op)))
@@ -40578,7 +40555,7 @@ ZeroExtendNode'new-4
     (defn #_"void" LSLifetimeAnalysisPhase''numberInstructions-1 [#_"LSLifetimeAnalysisPhase" this]
         (let [
             _ (§ ass! this (update this :allocator LinearScan''initIntervals-1))
-            #_"ValueConsumer" setVariableConsumer
+            #_"ValueConsumer" f'setVariableConsumer
                 (reify ValueConsumer
                     (#_"void" ValueConsumer'''visitValue-5 [#_"ValueConsumer" _, #_"LIRInstruction" _op, #_"Value" value, #_"OperandMode" _mode, #_"{OperandFlag}" _flags]
                         (when (satisfies? Variable value)
@@ -40610,8 +40587,8 @@ ZeroExtendNode'new-4
 
                                 (LinearScan''putOpIdMaps-4 (:allocator this), index, op, block)
 
-                                (LIRInstruction''visitEachTemp-2 op, setVariableConsumer)
-                                (LIRInstruction''visitEachOutput-2 op, setVariableConsumer)
+                                (LIRInstruction''visitEachTemp-2 op, f'setVariableConsumer)
+                                (LIRInstruction''visitEachOutput-2 op, f'setVariableConsumer)
 
                                 ;; numbering of lirOps by two
                                 (recur (+ opId 2) (inc index) (inc i))
@@ -40653,7 +40630,7 @@ ZeroExtendNode'new-4
                     #_"Block" block (first s)
                     #_"BitSet" liveGenScratch (BitSet.)
                     #_"BitSet" liveKillScratch (BitSet.)
-                    #_"ValueConsumer" useConsumer
+                    #_"ValueConsumer" f'useConsumer
                         (reify ValueConsumer
                             (#_"void" ValueConsumer'''visitValue-5 [#_"ValueConsumer" _, #_"LIRInstruction" _op, #_"Value" operand, #_"OperandMode" _mode, #_"{OperandFlag}" _flags]
                                 (when (satisfies? Variable operand)
@@ -40670,7 +40647,7 @@ ZeroExtendNode'new-4
                                 )
                             )
                         )
-                    #_"ValueConsumer" defConsumer
+                    #_"ValueConsumer" f'defConsumer
                         (reify ValueConsumer
                             (#_"void" ValueConsumer'''visitValue-5 [#_"ValueConsumer" _, #_"LIRInstruction" _op, #_"Value" operand, #_"OperandMode" _mode, #_"{OperandFlag}" _flags]
                                 (when (satisfies? Variable operand)
@@ -40688,11 +40665,11 @@ ZeroExtendNode'new-4
                 ]
                     ;; iterate all instructions of the block
                     (doseq [#_"LIRInstruction" op (LIR''getLIRforBlock-2 (:lir (:allocator this)), block)]
-                        (LIRInstruction''visitEachInput-2 op, useConsumer)
-                        (LIRInstruction''visitEachAlive-2 op, useConsumer)
+                        (LIRInstruction''visitEachInput-2 op, f'useConsumer)
+                        (LIRInstruction''visitEachAlive-2 op, f'useConsumer)
 
-                        (LIRInstruction''visitEachTemp-2 op, defConsumer)
-                        (LIRInstruction''visitEachOutput-2 op, defConsumer)
+                        (LIRInstruction''visitEachTemp-2 op, f'defConsumer)
+                        (LIRInstruction''visitEachOutput-2 op, f'defConsumer)
                     )
 
                     (let [
@@ -40791,7 +40768,7 @@ ZeroExtendNode'new-4
                 )
                 (§ ass! interval (Interval''addRange-3 interval, from, to))
                 ;; Register use position at even instruction id.
-                (Interval''addUsePos-3 interval, (& to (bit-not 1)), registerPriority)
+                (§ ass! interval (Interval''addUsePos-3 interval, (& to (bit-not 1)), registerPriority))
             )
         )
         nil
@@ -40806,7 +40783,7 @@ ZeroExtendNode'new-4
                     (§ ass! interval (Interval''setKind-2 interval, kind))
                 )
                 (§ ass! interval (Interval''addRange-3 interval, tempPos, (inc tempPos)))
-                (Interval''addUsePos-3 interval, tempPos, registerPriority)
+                (§ ass! interval (Interval''addUsePos-3 interval, tempPos, registerPriority))
                 (§ ass! interval (Interval''addMaterializationValue-2 interval, nil))
             )
         )
@@ -40874,12 +40851,12 @@ ZeroExtendNode'new-4
                             ;; Update the starting point (when a range is first created for a use, its start is the
                             ;; beginning of the current block until a def is encountered).
                             (§ ass r (assoc r :from defPos))
-                            (Interval''addUsePos-3 interval, defPos, registerPriority)
+                            (§ ass! interval (Interval''addUsePos-3 interval, defPos, registerPriority))
                         )
                         (do
                             ;; dead value - make vacuous interval also add register priority for dead intervals
                             (§ ass! interval (Interval''addRange-3 interval, defPos, (inc defPos)))
-                            (Interval''addUsePos-3 interval, defPos, registerPriority)
+                            (§ ass! interval (Interval''addUsePos-3 interval, defPos, registerPriority))
                         )
                     )
 
@@ -40969,7 +40946,7 @@ ZeroExtendNode'new-4
     (defm LSLifetimeAnalysisPhase LSLifetimeAnalysisPhase
         (#_"void" LSLifetimeAnalysisPhase'''buildIntervals-1 [#_"LSLifetimeAnalysisPhase" this]
             (let [
-                #_"ValueConsumer" outputConsumer
+                #_"ValueConsumer" f'outputConsumer
                     (reify ValueConsumer
                         (#_"void" ValueConsumer'''visitValue-5 [#_"ValueConsumer" _, #_"LIRInstruction" op, #_"Value" operand, #_"OperandMode" mode, #_"{OperandFlag}" flags]
                             (when (LinearScan'isVariableOrRegister-1 operand)
@@ -40978,7 +40955,7 @@ ZeroExtendNode'new-4
                             )
                         )
                     )
-                #_"ValueConsumer" tempConsumer
+                #_"ValueConsumer" f'tempConsumer
                     (reify ValueConsumer
                         (#_"void" ValueConsumer'''visitValue-5 [#_"ValueConsumer" _, #_"LIRInstruction" op, #_"Value" operand, #_"OperandMode" mode, #_"{OperandFlag}" flags]
                             (when (LinearScan'isVariableOrRegister-1 operand)
@@ -40987,7 +40964,7 @@ ZeroExtendNode'new-4
                             )
                         )
                     )
-                #_"ValueConsumer" aliveConsumer
+                #_"ValueConsumer" f'aliveConsumer
                     (reify ValueConsumer
                         (#_"void" ValueConsumer'''visitValue-5 [#_"ValueConsumer" _, #_"LIRInstruction" op, #_"Value" operand, #_"OperandMode" mode, #_"{OperandFlag}" flags]
                             (when (LinearScan'isVariableOrRegister-1 operand)
@@ -41002,7 +40979,7 @@ ZeroExtendNode'new-4
                             )
                         )
                     )
-                #_"ValueConsumer" inputConsumer
+                #_"ValueConsumer" f'inputConsumer
                     (reify ValueConsumer
                         (#_"void" ValueConsumer'''visitValue-5 [#_"ValueConsumer" _, #_"LIRInstruction" op, #_"Value" operand, #_"OperandMode" mode, #_"{OperandFlag}" flags]
                             (when (LinearScan'isVariableOrRegister-1 operand)
@@ -41039,7 +41016,11 @@ ZeroExtendNode'new-4
                                 ;; Add special use positions for loop-end blocks when the interval is used anywhere inside this loop.
                                 ;; It's possible that the block was part of a non-natural loop, so it might have an invalid loop index.
                                 (when (and (Block''isLoopEnd-1 block) (some? (:loop block)) (LSLifetimeAnalysisPhase''isIntervalInLoop-3 this, operandNum, (:index (:loop block))))
-                                    (Interval''addUsePos-3 (LinearScan''intervalFor-2i (:allocator this), operandNum), (inc blockTo), :RegisterPriority'LiveAtLoopEnd)
+                                    (let [
+                                        #_"Interval" interval (LinearScan''intervalFor-2i (:allocator this), operandNum)
+                                    ]
+                                        (§ ass! interval (Interval''addUsePos-3 interval, (inc blockTo), :RegisterPriority'LiveAtLoopEnd))
+                                    )
                                 )
                             )
                         )
@@ -41059,10 +41040,10 @@ ZeroExtendNode'new-4
                                     )
                                 )
 
-                                (LIRInstruction''visitEachOutput-2 op, outputConsumer)
-                                (LIRInstruction''visitEachTemp-2 op, tempConsumer)
-                                (LIRInstruction''visitEachAlive-2 op, aliveConsumer)
-                                (LIRInstruction''visitEachInput-2 op, inputConsumer)
+                                (LIRInstruction''visitEachOutput-2 op, f'outputConsumer)
+                                (LIRInstruction''visitEachTemp-2 op, f'tempConsumer)
+                                (LIRInstruction''visitEachAlive-2 op, f'aliveConsumer)
+                                (LIRInstruction''visitEachInput-2 op, f'inputConsumer)
 
                                 ;; special steps for some instructions (especially moves)
                                 (LSLifetimeAnalysisPhase''handleMethodArguments-2 this, op)
@@ -41304,7 +41285,7 @@ ZeroExtendNode'new-4
                         (LinearScanWalker'new-3 (:allocator this), precolored, notPrecolored)
                     )
             ]
-                (IntervalWalker'''walk-1 lsw)
+                (§ ass! lsw (IntervalWalker'''walk-1 lsw))
                 (LinearScanWalker''finishAllocation-1 lsw)
             )
             nil
@@ -41459,7 +41440,7 @@ ZeroExtendNode'new-4
                     #_"Block" phiOutBlock (if (some? midBlock) midBlock fromBlock)
                     #_"[LIRInstruction]" ops (LIR''getLIRforBlock-2 (:lir (:allocator this)), phiOutBlock)
                     #_"int" phiOutId (if (some? midBlock) fromBlockLastInstructionId (:id (nth ops (dec (count ops)))))
-                    #_"PhiValueVisitor" visitor
+                    #_"PhiValueVisitor" f'visitor
                         (reify PhiValueVisitor
                             (#_"void" PhiValueVisitor'''visit-3 [#_"PhiValueVisitor" _, #_"Value" phiIn, #_"Value" phiOut]
                                 (let [
@@ -41483,7 +41464,7 @@ ZeroExtendNode'new-4
                             )
                         )
                 ]
-                    (SSAUtil'forEachPhiValuePair-4 (:lir (:allocator this)), toBlock, phiOutBlock, visitor)
+                    (SSAUtil'forEachPhiValuePair-4 (:lir (:allocator this)), toBlock, phiOutBlock, f'visitor)
                     (§ ass! (:lir (:allocator this)) (SSAUtil'removePhiOut-2 (:lir (:allocator this)), phiOutBlock))
                 )
             )
@@ -43704,29 +43685,20 @@ ZeroExtendNode'new-4
     (defm LoopFragmentInside LoopFragment
         (#_"void" LoopFragment'''insertBefore-2 [#_"LoopFragmentInside" this, #_"LoopEx" _loop]
             (let [
-                #_"DuplicationReplacement" dataFixBefore
+                #_"DuplicationReplacement" f'dataFixBefore
                     (reify DuplicationReplacement
                         (#_"Node" DuplicationReplacement'''replacement-2 [#_"DuplicationReplacement" _, #_"Node" original]
                             (if (satisfies? ValueNode original) (LoopFragment'''prim-2 this, original) original)
                         )
                     )
+                _ (§ ass! this (LoopFragment''patchNodes-2 this, f'dataFixBefore))
+                #_"AbstractBeginNode" end (LoopFragmentInside''mergeEnds-1 this)
+                _ (LoopFragment''mergeEarlyExits-1 this)
+                _ (LoopFragmentInside''patchPeeling-2 (:original this), this)
+                #_"AbstractBeginNode" entry (LoopFragment''getDuplicatedNode-2 this, (LoopEx''loopBegin-1 _loop))
             ]
-                (§ ass! this (LoopFragment''patchNodes-2 this, dataFixBefore))
-
-                (let [
-                    #_"AbstractBeginNode" end (LoopFragmentInside''mergeEnds-1 this)
-                ]
-                    (LoopFragment''mergeEarlyExits-1 this)
-
-                    (LoopFragmentInside''patchPeeling-2 (:original this), this)
-
-                    (let [
-                        #_"AbstractBeginNode" entry (LoopFragment''getDuplicatedNode-2 this, (LoopEx''loopBegin-1 _loop))
-                    ]
-                        (Node''replaceAtPredecessor-2 (LoopEx''entryPoint-1 _loop), entry)
-                        (§ ass! end (FixedWithNextNode''setNext-2 end, (LoopEx''entryPoint-1 _loop)))
-                    )
-                )
+                (Node''replaceAtPredecessor-2 (LoopEx''entryPoint-1 _loop), entry)
+                (§ ass! end (FixedWithNextNode''setNext-2 end, (LoopEx''entryPoint-1 _loop)))
             )
             nil
         )
@@ -43799,89 +43771,81 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"void" LoopFragmentInside''insertWithinAfter-3 [#_"LoopFragmentInside" this, #_"LoopEx" _loop, #_"boolean" update-limit?]
         (let [
-            #_"DuplicationReplacement" dataFixWithinAfter
+            #_"DuplicationReplacement" f'dataFixWithinAfter
                 (reify DuplicationReplacement
                     (#_"Node" DuplicationReplacement'''replacement-2 [#_"DuplicationReplacement" _, #_"Node" original]
                         (if (satisfies? ValueNode original) (LoopFragmentInside''primAfter-2 this, original) original)
                     )
                 )
-        ]
-            (§ ass! this (LoopFragment''patchNodes-2 this, dataFixWithinAfter))
-
+            _ (§ ass! this (LoopFragment''patchNodes-2 this, f'dataFixWithinAfter))
             ;; collect any new back edges values before updating them since they might reference each other
-            (let [
-                #_"LoopBeginNode" mainLoopBegin (LoopEx''loopBegin-1 _loop)
-                #_"ValueNode*" backedgeValues
-                    (loop-when [backedgeValues nil #_"seq" s (seq (AbstractMergeNode''phis-1 mainLoopBegin))] (some? s) => backedgeValues
-                        (let [
-                            #_"PhiNode" phi (first s)
-                            #_"ValueNode" dupe (LoopFragment''getDuplicatedNode-2 this, (PhiNode''valueAt-2i phi, 1))
-                            dupe
-                                (when (and (nil? dupe) (AbstractMergeNode''isPhiAtMerge-2 mainLoopBegin, (PhiNode''valueAt-2i phi, 1))) => dupe
-                                    (PhiNode''valueAt-2i (PhiNode''valueAt-2i phi, 1), 1)
-                                )
-                        ]
-                            (recur (conj' backedgeValues dupe) (next s))
-                        )
-                    )
-                #_"int" index
-                    (loop-when [index 0 #_"seq" s (seq (AbstractMergeNode''phis-1 mainLoopBegin))] (some? s) => index
-                        (let [
-                            #_"ValueNode" dupe (nth backedgeValues index)
-                        ]
-                            (when (some? dupe)
-                                (PhiNode''setValueAt-3i (first s), 1, dupe)
+            #_"LoopBeginNode" mainLoopBegin (LoopEx''loopBegin-1 _loop)
+            #_"ValueNode*" backedgeValues
+                (loop-when [backedgeValues nil #_"seq" s (seq (AbstractMergeNode''phis-1 mainLoopBegin))] (some? s) => backedgeValues
+                    (let [
+                        #_"PhiNode" phi (first s)
+                        #_"ValueNode" dupe (LoopFragment''getDuplicatedNode-2 this, (PhiNode''valueAt-2i phi, 1))
+                        dupe
+                            (when (and (nil? dupe) (AbstractMergeNode''isPhiAtMerge-2 mainLoopBegin, (PhiNode''valueAt-2i phi, 1))) => dupe
+                                (PhiNode''valueAt-2i (PhiNode''valueAt-2i phi, 1), 1)
                             )
-                            (recur (inc index) (next s))
-                        )
+                    ]
+                        (recur (conj' backedgeValues dupe) (next s))
                     )
-            ]
-                (LoopFragmentInside''placeNewSegmentAndCleanup-2 this, _loop)
-
-                ;; remove any safepoints from the original copy leaving only the duplicated one
+                )
+            #_"int" index
+                (loop-when [index 0 #_"seq" s (seq (AbstractMergeNode''phis-1 mainLoopBegin))] (some? s) => index
+                    (let [
+                        #_"ValueNode" dupe (nth backedgeValues index)
+                    ]
+                        (when (some? dupe)
+                            (PhiNode''setValueAt-3i (first s), 1, dupe)
+                        )
+                        (recur (inc index) (next s))
+                    )
+                )
+            _ (LoopFragmentInside''placeNewSegmentAndCleanup-2 this, _loop)
+            ;; remove any safepoints from the original copy leaving only the duplicated one
+            _
                 (doseq [#_"SafepointNode" safepoint (filter #(satisfies? SafepointNode %) (LoopFragment'''nodes-1 (LoopEx''whole-1 _loop)))]
                     (Graph''removeFixed-2 (LoopFragment''graph-1 this), safepoint)
                 )
-
+            #_"int" unrollFactor (:unrollFactor mainLoopBegin)
+            #_"Graph" graph (:graph mainLoopBegin)
+        ]
+            (when update-limit?
+                ;; use the previous unrollFactor to update the exit condition to power of two
                 (let [
-                    #_"int" unrollFactor (:unrollFactor mainLoopBegin)
-                    #_"Graph" graph (:graph mainLoopBegin)
-                ]
-                    (when update-limit?
-                        ;; use the previous unrollFactor to update the exit condition to power of two
-                        (let [
-                            #_"InductionVariable" iv (:iv (:counted _loop))
-                            #_"CompareNode" compareNode (:logic (:ifNode (:counted _loop)))
-                            #_"ValueNode" compareBound
-                                (condp = (InductionVariable'''valueNode-1 iv)
-                                    (:x compareNode) (:y compareNode)
-                                    (:y compareNode) (:x compareNode)
-                                )
-                            #_"long" originalStride (if (= unrollFactor 1) (InductionVariable'''constantStride-1 iv) (quot (InductionVariable'''constantStride-1 iv) unrollFactor))
-                        ]
-                            (case (InductionVariable'''direction-1 iv)
-                                :Direction'Up
-                                (let [
-                                    #_"ConstantNode" above (Graph''add-2 graph, (ConstantNode'forIntegerStamp-2 (:stamp (InductionVariable'''initNode-1 iv)), (* unrollFactor originalStride)))
-                                    #_"ValueNode" limit (Graph''add-2 graph, (SubNode'new-2 compareBound, above))
-                                ]
-                                    (Node''replaceFirstInput-3 compareNode, compareBound, limit)
-                                )
-                                :Direction'Down
-                                (let [
-                                    #_"ConstantNode" above (Graph''add-2 graph, (ConstantNode'forIntegerStamp-2 (:stamp (InductionVariable'''initNode-1 iv)), (* unrollFactor (- originalStride))))
-                                    #_"ValueNode" limit (Graph''add-2 graph, (AddNode'new-2 compareBound, above))
-                                ]
-                                    (Node''replaceFirstInput-3 compareNode, compareBound, limit)
-                                )
-                                nil
-                            )
+                    #_"InductionVariable" iv (:iv (:counted _loop))
+                    #_"CompareNode" compareNode (:logic (:ifNode (:counted _loop)))
+                    #_"ValueNode" compareBound
+                        (condp = (InductionVariable'''valueNode-1 iv)
+                            (:x compareNode) (:y compareNode)
+                            (:y compareNode) (:x compareNode)
                         )
+                    #_"long" originalStride (if (= unrollFactor 1) (InductionVariable'''constantStride-1 iv) (quot (InductionVariable'''constantStride-1 iv) unrollFactor))
+                ]
+                    (case (InductionVariable'''direction-1 iv)
+                        :Direction'Up
+                        (let [
+                            #_"ConstantNode" above (Graph''add-2 graph, (ConstantNode'forIntegerStamp-2 (:stamp (InductionVariable'''initNode-1 iv)), (* unrollFactor originalStride)))
+                            #_"ValueNode" limit (Graph''add-2 graph, (SubNode'new-2 compareBound, above))
+                        ]
+                            (Node''replaceFirstInput-3 compareNode, compareBound, limit)
+                        )
+                        :Direction'Down
+                        (let [
+                            #_"ConstantNode" above (Graph''add-2 graph, (ConstantNode'forIntegerStamp-2 (:stamp (InductionVariable'''initNode-1 iv)), (* unrollFactor (- originalStride))))
+                            #_"ValueNode" limit (Graph''add-2 graph, (AddNode'new-2 compareBound, above))
+                        ]
+                            (Node''replaceFirstInput-3 compareNode, compareBound, limit)
+                        )
+                        nil
                     )
-                    (§ ass! mainLoopBegin (assoc mainLoopBegin :unrollFactor (* unrollFactor 2)))
-                    (§ ass! mainLoopBegin (update mainLoopBegin :loopFrequency #(/ % 2.0)))
                 )
             )
+            (§ ass! mainLoopBegin (assoc mainLoopBegin :unrollFactor (* unrollFactor 2)))
+            (§ ass! mainLoopBegin (update mainLoopBegin :loopFrequency #(/ % 2.0)))
         )
         nil
     )
@@ -47963,7 +47927,7 @@ ZeroExtendNode'new-4
                                     (Graph''addBeforeFixed-3 (:graph this), this, trueNext)
                                     (doseq [#_"Node" usage (:nodeUsages trueNext)]
                                         (when (Node''isAlive-1 usage)
-                                            (SimplifierTool'''addToWorkList-2n tool, usage)
+                                            (§ ass! tool (SimplifierTool'''addToWorkList-2n tool, usage))
                                         )
                                     )
                                     (recur)
@@ -48092,7 +48056,7 @@ ZeroExtendNode'new-4
             #_"AbstractBeginNode" trueBegin (:trueSuccessor this)
         ]
             (Graph''removeSplitPropagate-3 (:graph this), this, trueBegin)
-            (SimplifierTool'''addToWorkList-2n tool, trueBegin)
+            (§ ass! tool (SimplifierTool'''addToWorkList-2n tool, trueBegin))
             (when (some? (:logic this))
                 (GraphUtil'tryKillUnused-1 (:logic this))
             )
@@ -48102,7 +48066,7 @@ ZeroExtendNode'new-4
                         #_"Node" n (loop-when-recur [n end] (and (some? n) (satisfies? BeginNode (:predecessor n))) [(:predecessor n)] => n)
                     ]
                         (when (and (some? n) (satisfies? IfNode (:predecessor n)))
-                            (SimplifierTool'''addToWorkList-2n tool, (:predecessor n))
+                            (§ ass! tool (SimplifierTool'''addToWorkList-2n tool, (:predecessor n)))
                         )
                     )
                 )
@@ -48381,7 +48345,7 @@ ZeroExtendNode'new-4
                     )
                 )
             )
-            (SimplifierTool'''addToWorkList-2n tool, successor)
+            (§ ass! tool (SimplifierTool'''addToWorkList-2n tool, successor))
         )
         nil
     )
@@ -49000,12 +48964,12 @@ ZeroExtendNode'new-4
                     (if (:value (:logic this))
                         (do
                             (SimplifierTool'''deleteBranch-2 tool, (:falseSuccessor this))
-                            (SimplifierTool'''addToWorkList-2n tool, (:trueSuccessor this))
+                            (§ ass! tool (SimplifierTool'''addToWorkList-2n tool, (:trueSuccessor this)))
                             (Graph''removeSplit-3 (:graph this), this, (:trueSuccessor this))
                         )
                         (do
                             (SimplifierTool'''deleteBranch-2 tool, (:trueSuccessor this))
-                            (SimplifierTool'''addToWorkList-2n tool, (:falseSuccessor this))
+                            (§ ass! tool (SimplifierTool'''addToWorkList-2n tool, (:falseSuccessor this)))
                             (Graph''removeSplit-3 (:graph this), this, (:falseSuccessor this))
                         )
                     )
@@ -49180,12 +49144,12 @@ ZeroExtendNode'new-4
         (#_"this" Simplifiable'''simplify-2 [#_"IntegerAddExactSplitNode" this, #_"SimplifierTool" tool]
             (when-not (IntegerStamp'addCanOverflow-2 (:stamp (:x this)), (:stamp (:y this))) => this
                 (SimplifierTool'''deleteBranch-2 tool, (:overflowSuccessor this))
-                (SimplifierTool'''addToWorkList-2n tool, (:next this))
+                (§ ass! tool (SimplifierTool'''addToWorkList-2n tool, (:next this)))
                 (let [
                     #_"AddNode" replacement (Graph''add-2 (:graph this), (AddNode'new-2 (:x this), (:y this)))
                 ]
                     (Graph''replaceSplitWithFloating-4 (:graph this), this, replacement, (:next this))
-                    (SimplifierTool'''addToWorkList-2n tool, replacement)
+                    (§ ass! tool (SimplifierTool'''addToWorkList-2n tool, replacement))
                     this
                 )
             )
@@ -49208,12 +49172,12 @@ ZeroExtendNode'new-4
         (#_"this" Simplifiable'''simplify-2 [#_"IntegerMulExactSplitNode" this, #_"SimplifierTool" tool]
             (when-not (IntegerStamp'multiplicationCanOverflow-2 (:stamp (:x this)), (:stamp (:y this))) => this
                 (SimplifierTool'''deleteBranch-2 tool, (:overflowSuccessor this))
-                (SimplifierTool'''addToWorkList-2n tool, (:next this))
+                (§ ass! tool (SimplifierTool'''addToWorkList-2n tool, (:next this)))
                 (let [
                     #_"MulNode" replacement (Graph''add-2 (:graph this), (MulNode'new-2 (:x this), (:y this)))
                 ]
                     (Graph''replaceSplitWithFloating-4 (:graph this), this, replacement, (:next this))
-                    (SimplifierTool'''addToWorkList-2n tool, replacement)
+                    (§ ass! tool (SimplifierTool'''addToWorkList-2n tool, replacement))
                     this
                 )
             )
@@ -49236,12 +49200,12 @@ ZeroExtendNode'new-4
         (#_"this" Simplifiable'''simplify-2 [#_"IntegerSubExactSplitNode" this, #_"SimplifierTool" tool]
             (when-not (IntegerStamp'subtractionCanOverflow-2 (:stamp (:x this)), (:stamp (:y this))) => this
                 (SimplifierTool'''deleteBranch-2 tool, (:overflowSuccessor this))
-                (SimplifierTool'''addToWorkList-2n tool, (:next this))
+                (§ ass! tool (SimplifierTool'''addToWorkList-2n tool, (:next this)))
                 (let [
                     #_"SubNode" replacement (Graph''add-2 (:graph this), (SubNode'new-2 (:x this), (:y this)))
                 ]
                     (Graph''replaceSplitWithFloating-4 (:graph this), this, replacement, (:next this))
-                    (SimplifierTool'''addToWorkList-2n tool, replacement)
+                    (§ ass! tool (SimplifierTool'''addToWorkList-2n tool, replacement))
                     this
                 )
             )
@@ -49384,7 +49348,7 @@ ZeroExtendNode'new-4
                 (SimplifierTool'''deleteBranch-2 tool, successor)
             )
         )
-        (SimplifierTool'''addToWorkList-2n tool, (nth (:successorNodes this) survivingEdge))
+        (§ ass! tool (SimplifierTool'''addToWorkList-2n tool, (nth (:successorNodes this) survivingEdge)))
         (Graph''removeSplit-3 (:graph this), this, (nth (:successorNodes this) survivingEdge))
         nil
     )
@@ -49629,7 +49593,7 @@ ZeroExtendNode'new-4
             (cond
                 (= (count (:successorNodes this)) 1)
                 (do
-                    (SimplifierTool'''addToWorkList-2n tool, (SwitchNode''defaultSuccessor-1 this))
+                    (§ ass! tool (SimplifierTool'''addToWorkList-2n tool, (SwitchNode''defaultSuccessor-1 this)))
                     (Graph''removeSplitPropagate-3 (:graph this), this, (SwitchNode''defaultSuccessor-1 this))
                 )
                 (satisfies? ConstantNode (:value this))
@@ -49669,7 +49633,7 @@ ZeroExtendNode'new-4
                     (empty? newKeys)
                         (do
                             (when (some? tool)
-                                (SimplifierTool'''addToWorkList-2n tool, (SwitchNode''defaultSuccessor-1 this))
+                                (§ ass! tool (SimplifierTool'''addToWorkList-2n tool, (SwitchNode''defaultSuccessor-1 this)))
                             )
                             (Graph''removeSplitPropagate-3 (:graph this), this, (SwitchNode''defaultSuccessor-1 this))
                             true
@@ -49815,7 +49779,7 @@ ZeroExtendNode'new-4
                         (do
                             ;; This begin node can be removed and all guards moved up to the preceding begin node.
                             (AbstractBeginNode''prepareDelete-1 this)
-                            (SimplifierTool'''addToWorkList-2n tool, (:next this))
+                            (§ ass! tool (SimplifierTool'''addToWorkList-2n tool, (:next this)))
                             (Graph''removeFixed-2 (:graph this), this)
                         )
                 )
@@ -50040,7 +50004,7 @@ ZeroExtendNode'new-4
                                             #_"AbstractEndNode" end (nth (:ends this) (- n i))
                                         ]
                                             (when (some? tool)
-                                                (SimplifierTool'''addToWorkList-2n tool, end)
+                                                (§ ass! tool (SimplifierTool'''addToWorkList-2n tool, end))
                                             )
                                             (let [
                                                 #_"AbstractEndNode" newEnd
@@ -50065,7 +50029,7 @@ ZeroExtendNode'new-4
                                                 (Node''replaceAtPredecessor-2 end, newEnd)
                                                 (Node''safeDelete-1 end)
                                                 (when (some? tool)
-                                                    (SimplifierTool'''addToWorkList-2n tool, (:predecessor newEnd))
+                                                    (§ ass! tool (SimplifierTool'''addToWorkList-2n tool, (:predecessor newEnd)))
                                                 )
                                             )
                                         )
@@ -50108,7 +50072,7 @@ ZeroExtendNode'new-4
                                                 #_"ReturnNode" newReturn (Graph''add-2 (:graph this), (ReturnNode'new-1 (if (nil? returnValuePhi) (:result node) (PhiNode''valueAt-2n returnValuePhi, end))))
                                             ]
                                                 (when (some? tool)
-                                                    (SimplifierTool'''addToWorkList-2n tool, (:predecessor end))
+                                                    (§ ass! tool (SimplifierTool'''addToWorkList-2n tool, (:predecessor end)))
                                                 )
                                                 (Node''replaceAtPredecessor-2 end, newReturn)
                                             )
@@ -50455,7 +50419,7 @@ ZeroExtendNode'new-4
                                                     )
                                                 )
                                                 (when (some? tool)
-                                                    (SimplifierTool'''addToWorkList-2s tool, (:nodeUsages otherPhi))
+                                                    (§ ass! tool (SimplifierTool'''addToWorkList-2s tool, (:nodeUsages otherPhi)))
                                                 )
                                                 (§ ass! otherPhi (Node''replaceAtUsages-2 otherPhi, phi))
                                                 (GraphUtil'killWithUnusedFloatingInputs-1 otherPhi)
@@ -54993,7 +54957,7 @@ ZeroExtendNode'new-4
                                 this (assoc this :displacement (+ (:displacement this) (* (:value (:scale this)) addBy)))
                             ]
                                 (Node''replaceFirstInput-3 this, (:index this), (:x add))
-                                (SimplifierTool'''addToWorkList-2n tool, (:index this))
+                                (§ ass! tool (SimplifierTool'''addToWorkList-2n tool, (:index this)))
                                 this
                             )
                         )
@@ -62474,7 +62438,7 @@ ZeroExtendNode'new-4
                         )
                     )
                 )
-            #_"ValueConsumer" outputValueConsumer
+            #_"ValueConsumer" f'outputValueConsumer
                 (reify ValueConsumer
                     (#_"void" ValueConsumer'''visitValue-5 [#_"ValueConsumer" _, #_"LIRInstruction" _op, #_"Value" operand, #_"OperandMode" _mode, #_"{OperandFlag}" _flags]
                         (let [
@@ -62490,9 +62454,9 @@ ZeroExtendNode'new-4
                     )
                 )
         ]
-            (LIRInstruction''visitEachTemp-2 op, outputValueConsumer)
+            (LIRInstruction''visitEachTemp-2 op, f'outputValueConsumer)
             ;; Semantically the output values are written _after_ the temp values.
-            (LIRInstruction''visitEachOutput-2 op, outputValueConsumer)
+            (LIRInstruction''visitEachOutput-2 op, f'outputValueConsumer)
 
             @v'valueNum
         )
@@ -65191,11 +65155,10 @@ ZeroExtendNode'new-4
         (merge (StackInterval'class.)
             (hash-map
                 #_"VirtualStackSlot" :operand operand
-                #_"StackInterval" :hint nil
                 #_"ValueKind" :kind kind
                 #_"int" :from StackInterval'INVALID_START
                 #_"int" :to StackInterval'INVALID_END
-                #_"StackSlot" :location nil
+                #_"StackSlot" :slot nil
             )
         )
     )
@@ -65217,14 +65180,6 @@ ZeroExtendNode'new-4
                 )
             )
         )
-    )
-
-    (defn #_"this" StackInterval''setLocation-2 [#_"StackInterval" this, #_"StackSlot" location]
-        (assoc this :location location)
-    )
-
-    (defn #_"this" StackInterval''setLocationHint-2 [#_"StackInterval" this, #_"StackInterval" locationHint]
-        (assoc this :hint locationHint)
     )
 )
 
@@ -65325,11 +65280,7 @@ ZeroExtendNode'new-4
     (defm StackSlotAllocator LIRPhase
         (#_"void" LIRPhase'''run-3 [#_"StackSlotAllocator" this, #_"LIRGenerationResult" res, #_"LIRPhaseContext" context]
             (when (pos? (:numStackSlots (:frameMapBuilder res)))
-                (let [
-                    #_"Allocator" allocator (Allocator'new-2 (:lir res), (:frameMapBuilder res))
-                ]
-                    (§ ass! allocator (Allocator''allocate-1 allocator))
-                )
+                (Allocator'allocate-1 (:lir res), (:frameMapBuilder res))
             )
             (§ ass! res (LIRGenerationResult''buildFrameMap-1 res))
             nil
@@ -68086,17 +68037,17 @@ ZeroExtendNode'new-4
 
     (defn- #_"void" UseEntry'replaceValue-3 [#_"LIRInstruction" op, #_"Value" oldValue, #_"Value" newValue]
         (let [
-            #_"ValueProcedure" proc
+            #_"ValueProcedure" f'proc
                 (reify ValueProcedure
                     (#_"Value" ValueProcedure'''doValue-5 [#_"ValueProcedure" _, #_"LIRInstruction" _op, #_"Value" value, #_"OperandMode" _mode, #_"{OperandFlag}" _flags]
                         (if (= value oldValue) newValue value)
                     )
                 )
         ]
-            (LIRInstruction''forEachAlive-2 op, proc)
-            (LIRInstruction''forEachInput-2 op, proc)
-            (LIRInstruction''forEachOutput-2 op, proc)
-            (LIRInstruction''forEachTemp-2 op, proc)
+            (LIRInstruction''forEachAlive-2 op, f'proc)
+            (LIRInstruction''forEachInput-2 op, f'proc)
+            (LIRInstruction''forEachOutput-2 op, f'proc)
+            (LIRInstruction''forEachTemp-2 op, f'proc)
         )
         nil
     )
@@ -70506,7 +70457,7 @@ ZeroExtendNode'new-4
             ]
                 (loop-when-recur [#_"int" i end] (<= i end') [(+ i HotSpot'vmPageSize)]
                     ;; Need at least one stack bang at end of shadow zone.
-                    (Assembler''movl-3ar asm, (AMD64Address'new-2 AMD64/rsp, (- i)), AMD64/rax)
+                    (§ ass! asm (Assembler''movl-3ar asm, (AMD64Address'new-2 AMD64/rsp, (- i)), AMD64/rax))
                 )
             )
         )
