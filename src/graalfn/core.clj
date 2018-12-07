@@ -1,5 +1,5 @@
 (ns graalfn.core
-    (:refer-clojure :only [* *ns* + - -> ->> / < <= = > >= and apply assoc assoc-in bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean boolean-array byte byte-array case char comp compare concat cond condp conj cons contains? count dec declare defmacro defn defprotocol defrecord delay disj dissoc doseq dotimes double double-array empty? extend-protocol extend-type false? filter first fn for get hash-map hash-set if-not import inc instance? int int-array into into-array iterate iterator-seq key keys let letfn list locking long long-array loop make-array map mapcat mapv max merge min neg? next nil? not not= ns-imports ns-unmap nth nthnext object-array or peek pop pos? quot range reduce reify rem remove repeat rest reverse run! satisfies? second select-keys seq sequential? set short some some? sort sort-by sorted-map sorted-set str #_subvec symbol symbol? take take-while true? unsigned-bit-shift-right update update-in val vals vary-meta #_vec #_vector vector? volatile! vreset! vswap! when-some while zero?])
+    (:refer-clojure :only [* *ns* + - -> ->> / < <= = > >= and apply assoc assoc-in bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean boolean-array byte byte-array case char comp compare concat cond condp conj cons contains? count dec declare defmacro defn defprotocol defrecord delay disj dissoc doseq dotimes double double-array empty? extend-protocol extend-type false? filter first fn for get hash-map hash-set if-not import inc instance? int int-array into into-array iterate iterator-seq key keys let letfn list locking long long-array loop make-array map mapcat mapv max merge min neg? next nil? not not= ns-imports ns-unmap nth nthnext object-array or peek pop pos? quot range reduce reify rem remove repeat rest reverse run! satisfies? second select-keys seq sequential? set short some some? sort sort-by sorted-map sorted-set str #_subvec symbol symbol? take take-while true? unsigned-bit-shift-right update update-in val vals vary-meta #_vec #_vector vector? volatile! vreset! vswap! when-some while zero?])
     (:require [clojure.core.rrb-vector :refer [catvec subvec vec vector #_vector-of]] [flatland.ordered.map :refer [ordered-map]] [flatland.ordered.set :refer [ordered-set]])
 )
 
@@ -1003,8 +1003,9 @@ CompressEncoding''hasBase-1
 CompressEncoding''hasShift-1
 CompressEncoding'new-2
 CompressPointerOp'new-5
-CompressionNode''getEncoding-1
-CompressionNode'new-4
+CompressionNode'compress-2
+CompressionNode'new-3
+CompressionNode'uncompress-2
 CompressionOp'SET
 ComputeBlockOrder'computeCodeEmittingOrder-1
 ComputeBlockOrder'computeLinearScanOrder-1
@@ -1357,7 +1358,6 @@ FrameMapBuilder''freeRBPSpillSlot-1
 FrameMapBuilder'new-0
 FrameState''addVirtualObjectMapping-2
 FrameState''duplicate-1
-FrameState''duplicate-2
 FrameState''duplicateModified-4
 FrameState''duplicateModifiedBeforeCall-5
 FrameState''duplicateModifiedDuringCall-3
@@ -1372,8 +1372,8 @@ FrameState''stackAt-2
 FrameState'TWO_SLOT_MARKER
 FrameState'new-1
 FrameState'new-2
-FrameState'new-9a
-FrameState'new-9l
+FrameState'new-8a
+FrameState'new-9
 FrameStateAssignmentClosure'new-0
 FrameStateAssignmentPhase'new-0
 FrameStateBuilder''clearNonLiveLocals-4
@@ -1687,12 +1687,7 @@ HotSpot'verifiedEntryMark
 HotSpot'vmPageSize
 HotSpot'writeBarrierPostAddress
 HotSpot'writeBarrierPreAddress
-HotSpotCompressionNode'compress-2
-HotSpotCompressionNode'new-3
-HotSpotCompressionNode'uncompress-2
 HotSpotDirectCallTargetNode'new-6
-HotSpotNarrowOopStamp'compressed-2
-HotSpotNarrowOopStamp'mkStamp-3
 HotSpotNodePlugin'new-1
 HotSpotSwitchClosure'new-3
 HubGetClassNode'new-1
@@ -2576,8 +2571,8 @@ NarrowNode'create-2
 NarrowNode'create-3
 NarrowNode'new-2
 NarrowNode'new-3
-NarrowOopStamp''getEncoding-1
-NarrowOopStamp'new-5
+NarrowOopStamp'compressed-2
+NarrowOopStamp'mkStamp-3
 Neg'new-0
 NegateNode'create-1
 NegateNode'findSynonym-1
@@ -3775,7 +3770,6 @@ ZeroExtendNode'new-4
     (#_"ResolvedJavaMethod" Bytecode'''getMethod-1 [#_"Bytecode" this])
     (#_"[byte]" Bytecode'''getCode-1 [#_"Bytecode" this])
     (#_"int" Bytecode'''getCodeSize-1 [#_"Bytecode" this])
-    (#_"int" Bytecode'''getMaxStackSize-1 [#_"Bytecode" this])
     (#_"int" Bytecode'''getMaxLocals-1 [#_"Bytecode" this])
     (#_"ConstantPool" Bytecode'''getConstantPool-1 [#_"Bytecode" this])
 )
@@ -3953,16 +3947,7 @@ ZeroExtendNode'new-4
 
 (defp CompressEncoding)
 (defp CompressPointerOp)
-
-;;;
- ; Compress or uncompress an oop or metaspace pointer.
- ;;
-(defp CompressionNode
-    (#_"Constant" CompressionNode'''compress-2 [#_"CompressionNode" this, #_"Constant" constant])
-    (#_"Constant" CompressionNode'''uncompress-2 [#_"CompressionNode" this, #_"Constant" constant])
-    (#_"Stamp" CompressionNode'''mkStamp-2 [#_"CompressionNode" this, #_"Stamp" input])
-)
-
+(defp CompressionNode)
 (defp ComputeInliningRelevance)
 (defp ComputeLoopFrequenciesClosure)
 (defp ComputeLoopFrequencyPhase)
@@ -4288,9 +4273,7 @@ ZeroExtendNode'new-4
 
 (defp HeapBaseNode)
 (defp HighTier)
-(defp HotSpotCompressionNode)
 (defp HotSpotDirectCallTargetNode)
-(defp HotSpotNarrowOopStamp)
 (defp HotSpotNodePlugin)
 (defp HotSpotSwitchClosure)
 (defp HubGetClassNode)
@@ -4957,11 +4940,7 @@ ZeroExtendNode'new-4
 (defp NamedLocationIdentity)
 (defp Narrow)
 (defp NarrowNode)
-
-(defp NarrowOopStamp
-    (#_"Stamp" NarrowOopStamp'''uncompressed-1 [#_"NarrowOopStamp" this])
-)
-
+(defp NarrowOopStamp)
 (defp Neg)
 (defp NegateNode)
 (defp NewArrayNode)
@@ -11412,7 +11391,7 @@ ZeroExtendNode'new-4
 
     (defn #_"Stamp" Lowerer'loadStamp-3 [#_"Stamp" stamp, #_"JavaKind" kind, #_"boolean" compressible?]
         (if (Lowerer'useCompressedOops-2 kind, compressible?)
-            (HotSpotNarrowOopStamp'compressed-2 stamp, HotSpot'oopEncoding)
+            (NarrowOopStamp'compressed-2 stamp, HotSpot'oopEncoding)
             (condp =? kind
                 [JavaKind/Boolean JavaKind/Byte] (IntegerConvertOp'''foldStamp-4 (:narrow IntegerStamp'OPS), 32, 8, stamp)
                 [JavaKind/Char JavaKind/Short]   (IntegerConvertOp'''foldStamp-4 (:narrow IntegerStamp'OPS), 32, 16, stamp)
@@ -11422,7 +11401,7 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"ValueNode" Lowerer'newCompressionNode-2 [#_"CompressionOp" op, #_"ValueNode" value]
-        (HotSpotCompressionNode'new-3 op, value, HotSpot'oopEncoding)
+        (CompressionNode'new-3 op, value, HotSpot'oopEncoding)
     )
 
     (defn #_"ValueNode" Lowerer'implicitLoadConvert-4 [#_"Graph" graph, #_"JavaKind" kind, #_"ValueNode" value, #_"boolean" compressible?]
@@ -11477,7 +11456,7 @@ ZeroExtendNode'new-4
                 #_"LocationIdentity" hubLocation (if HotSpot'useCompressedClassPointers NamedLocationIdentity'COMPRESSED_HUB NamedLocationIdentity'HUB)
                 #_"FloatingReadNode" memoryRead (Graph''add-2 graph, (FloatingReadNode'new-6 address, hubLocation, nil, hubStamp, nil, :BarrierType'NONE))
             ]
-                (if HotSpot'useCompressedClassPointers (HotSpotCompressionNode'uncompress-2 memoryRead, HotSpot'klassEncoding) memoryRead)
+                (if HotSpot'useCompressedClassPointers (CompressionNode'uncompress-2 memoryRead, HotSpot'klassEncoding) memoryRead)
             )
         )
     )
@@ -12574,7 +12553,7 @@ ZeroExtendNode'new-4
             #_"ValueNode" expected (:value node)
             expected
                 (when (and (some? expected) (satisfies? NarrowOopStamp (:stamp expected))) => expected
-                    (HotSpotCompressionNode'uncompress-2 expected, (:oopEncoding this))
+                    (CompressionNode'uncompress-2 expected, (:oopEncoding this))
                 )
             #_"Arguments" args
                 (Arguments'new-4* (:g1PreWriteBarrier this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)),
@@ -12595,7 +12574,7 @@ ZeroExtendNode'new-4
             #_"ValueNode" expected (G1ReferentFieldReadBarrier''getExpectedObject-1 node)
             expected
                 (when (and (some? expected) (satisfies? NarrowOopStamp (:stamp expected))) => expected
-                    (HotSpotCompressionNode'uncompress-2 expected, (:oopEncoding this))
+                    (CompressionNode'uncompress-2 expected, (:oopEncoding this))
                 )
             #_"Arguments" args
                 (Arguments'new-4* (:g1ReferentReadBarrier this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)),
@@ -12616,7 +12595,7 @@ ZeroExtendNode'new-4
             (let [
                 #_"ValueNode" value
                     (when (satisfies? NarrowOopStamp (:stamp (:value node))) => (:value node)
-                        (HotSpotCompressionNode'uncompress-2 (:value node), (:oopEncoding this))
+                        (CompressionNode'uncompress-2 (:value node), (:oopEncoding this))
                     )
                 #_"Arguments" args
                     (Arguments'new-4* (:g1PostWriteBarrier this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)),
@@ -12753,7 +12732,7 @@ ZeroExtendNode'new-4
 
     (defn #_"boolean" AddressLowering''improveUncompression-4 [#_"AddressLowering" this, #_"AMD64AddressNode" addr, #_"CompressionNode" compression, #_"ValueNode" other]
         (let [
-            #_"CompressEncoding" encoding (CompressionNode''getEncoding-1 compression)
+            #_"CompressEncoding" encoding (:encoding compression)
             #_"Scale" scale (Scale'fromShift-1 (:shift encoding))
         ]
             (and (some? scale)
@@ -18546,10 +18525,14 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"FrameState" BytecodeParser''createFrameState-3 [#_"BytecodeParser" this, #_"int" bci, #_"StateSplit" forStateSplit]
-        (when (and (some? (:currentBlock this)) (< (:endBci (:currentBlock this)) bci))
-            (FrameStateBuilder''clearNonLiveLocals-4 (:frameState this), (:currentBlock this), (:liveness this), false)
+        (let [
+            _
+                (when (and (some? (:currentBlock this)) (< (:endBci (:currentBlock this)) bci))
+                    (§ ass! this (update this :frameState FrameStateBuilder''clearNonLiveLocals-4 (:currentBlock this), (:liveness this), false))
+                )
+        ]
+            (FrameStateBuilder''create-3 (:frameState this), bci, forStateSplit)
         )
-        (FrameStateBuilder''create-3 (:frameState this), bci, forStateSplit)
     )
 
     (defn- #_"FixedTarget" BytecodeParser''checkLoopExit-4 [#_"BytecodeParser" this, #_"FixedNode" target, #_"BciBlock" targetBlock, #_"FrameStateBuilder" state]
@@ -18578,23 +18561,21 @@ ZeroExtendNode'new-4
                                     #_"BciBlock" _loop (first s)
                                     #_"LoopBeginNode" loopBegin (get (:firstInstructions this) (:id _loop))
                                     #_"LoopExitNode" loopExit (Graph''add-2 (:graph this), (LoopExitNode'new-1 loopBegin))
+                                    _
+                                        (when (some? lastLoopExit)
+                                            (§ ass! lastLoopExit (FixedWithNextNode''setNext-2 lastLoopExit, loopExit))
+                                        )
+                                    firstLoopExit (or firstLoopExit loopExit)
+                                    lastLoopExit loopExit
+                                    _ (§ ass! newState (FrameStateBuilder''clearNonLiveLocals-4 newState, targetBlock, (:liveness this), true))
+                                    _ (§ ass! newState (FrameStateBuilder''insertLoopProxies-3 newState, loopExit, (get (:entryStates this) (:id _loop))))
+                                    _ (§ ass! loopExit (StateSplit'''setStateAfter-2 loopExit, (FrameStateBuilder''create-3 newState, (:startBci targetBlock), loopExit)))
                                 ]
-                                    (when (some? lastLoopExit)
-                                        (§ ass! lastLoopExit (FixedWithNextNode''setNext-2 lastLoopExit, loopExit))
-                                    )
-                                    (let [
-                                        firstLoopExit (or firstLoopExit loopExit)
-                                        lastLoopExit loopExit
-                                    ]
-                                        (FrameStateBuilder''clearNonLiveLocals-4 newState, targetBlock, (:liveness this), true)
-                                        (FrameStateBuilder''insertLoopProxies-3 newState, loopExit, (get (:entryStates this) (:id _loop)))
-                                        (§ ass! loopExit (StateSplit'''setStateAfter-2 loopExit, (FrameStateBuilder''create-3 newState, (:startBci targetBlock), loopExit)))
-                                        (recur firstLoopExit lastLoopExit (next s))
-                                    )
+                                    (recur firstLoopExit lastLoopExit (next s))
                                 )
                             )
+                        _ (§ ass! lastLoopExit (FixedWithNextNode''setNext-2 lastLoopExit, target))
                     ]
-                        (§ ass! lastLoopExit (FixedWithNextNode''setNext-2 lastLoopExit, target))
                         (FixedTarget'new-2 firstLoopExit, newState)
                     )
                 )
@@ -18619,9 +18600,8 @@ ZeroExtendNode'new-4
                 #_"FixedNode" result (:fixed target)
                 #_"FrameStateBuilder" currentEntryState (cond (not= (:state target) state) (:state target) canReuseState state :else (FrameStateBuilder'copy-1 state))
                 _ (§ ass! this (assoc-in this [:entryStates (:id block)] currentEntryState))
+                _ (§ ass! currentEntryState (FrameStateBuilder''clearNonLiveLocals-4 currentEntryState, block, (:liveness this), true))
             ]
-                (FrameStateBuilder''clearNonLiveLocals-4 currentEntryState, block, (:liveness this), true)
-
                 (§ return result)
             )
         )
@@ -19042,7 +19022,7 @@ ZeroExtendNode'new-4
                     (when-not (#_"ResolvedJavaMethod" .isStatic targetMethod)
                         (§ ass! args (update' args 0 #(BytecodeParser''nullCheckedValue-2 this, %)))
                     )
-                _ (FrameStateBuilder''initializeFromArgumentsArray-2 startFrameState, args)
+                startFrameState (FrameStateBuilder''initializeFromArgumentsArray-2 startFrameState, args)
                 parser (BytecodeParser''build-3 parser, (:lastInstr this), startFrameState)
                 this
                     (when (some? (:returnDataList parser)) => (assoc this :lastInstr nil) ;; Callee does not return.
@@ -20613,19 +20593,16 @@ ZeroExtendNode'new-4
                         this (assoc this :controlFlowSplit true)
                         #_"LoopBeginNode" loopBegin (BytecodeParser''appendLoopBegin-3 this, (:lastInstr this), (:startBci block))
                         this (assoc this :lastInstr loopBegin)
-                    ]
                         ;; Create phi functions for all local variables and operand stack slots.
-                        (FrameStateBuilder''insertLoopPhis-6 (:frameState this), (:liveness this), (:loopId block), loopBegin, false, false)
-                        (§ ass! loopBegin (StateSplit'''setStateAfter-2 loopBegin, (BytecodeParser''createFrameState-3 this, (:startBci block), loopBegin)))
-                        (let [
-                            ;; We have seen all forward branches. All subsequent backward branches will merge to the
-                            ;; loop header. This ensures that the loop header has exactly one non-loop predecessor.
-                            this (assoc-in this [:firstInstructions (:id block)] loopBegin)
-                        ]
-                            ;; We need to preserve the frame state builder of the loop header so that we can merge
-                            ;; values for phi functions, so make a copy of it.
-                            (assoc-in this [:entryStates (:id block)] (FrameStateBuilder'copy-1 (:frameState this)))
-                        )
+                        this (update this :frameState FrameStateBuilder''insertLoopPhis-6 (:liveness this), (:loopId block), loopBegin, false, false)
+                        _ (§ ass! loopBegin (StateSplit'''setStateAfter-2 loopBegin, (BytecodeParser''createFrameState-3 this, (:startBci block), loopBegin)))
+                        ;; We have seen all forward branches. All subsequent backward branches will merge to the
+                        ;; loop header. This ensures that the loop header has exactly one non-loop predecessor.
+                        this (assoc-in this [:firstInstructions (:id block)] loopBegin)
+                    ]
+                        ;; We need to preserve the frame state builder of the loop header so that we can merge
+                        ;; values for phi functions, so make a copy of it.
+                        (assoc-in this [:entryStates (:id block)] (FrameStateBuilder'copy-1 (:frameState this)))
                     )
                     (when (satisfies? MergeNode (:lastInstr this)) => this
                         ;; All inputs of non-loop phi nodes are known by now. We can infer the stamp
@@ -20705,7 +20682,7 @@ ZeroExtendNode'new-4
                         )
                     )
             ]
-                (Graph''add-2 (:graph this), (FrameState'new-9a nil, (ResolvedJavaMethodBytecode'new-1 o'method), 0, locals, nil, 0, nil, nil, false))
+                (Graph''add-2 (:graph this), (FrameState'new-8a nil, (ResolvedJavaMethodBytecode'new-1 o'method), 0, locals, nil, nil, nil, false))
             )
         )
     )
@@ -20732,48 +20709,51 @@ ZeroExtendNode'new-4
             this (assoc this :frameState startFrameState)
             this (update this :stream BytecodeStream''setBCI-2 0)
             #_"BciBlock" startBlock (:startBlock (:blockMap this))
-        ]
-            (when (nil? (:parent this))
-                (let [
-                    #_"StartNode" startNode (:start (:graph this))
-                ]
-                    (cond
-                        (#_"ResolvedJavaMethod" .isSynchronized (:method this))
-                            (§ ass! startNode (StateSplit'''setStateAfter-2 startNode, (BytecodeParser''createFrameState-3 this, BytecodeFrame/BEFORE_BCI, startNode)))
-                        (BytecodeParser''parsingIntrinsic-1 this)
-                            (when (nil? (:stateAfter startNode))
-                                (§ ass! startNode (StateSplit'''setStateAfter-2 startNode, (BytecodeParser''createStateAfterStartOfReplacementGraph-1 this)))
-                            )
-                        :else
-                            (do
-                                (FrameStateBuilder''clearNonLiveLocals-4 (:frameState this), startBlock, (:liveness this), true)
-                                (§ ass! startNode (StateSplit'''setStateAfter-2 startNode, (BytecodeParser''createFrameState-3 this, (BytecodeParser''bci-1 this), startNode)))
-                            )
-                    )
-                )
-            )
-
-            (let [
-                this
-                    (when (#_"ResolvedJavaMethod" .isSynchronized (:method this)) => this
-                        ;; add a monitor enter to the start block
-                        (let [
-                            this (assoc this :methodSynchronizedObject (BytecodeParser''synchronizedObject-3 this, (:frameState this), (:method this)))
-                        ]
-                            (FrameStateBuilder''clearNonLiveLocals-4 (:frameState this), startBlock, (:liveness this), true)
-                            (BytecodeParser''genMonitorEnter-3 this, (:methodSynchronizedObject this), (BytecodeParser''bci-1 this))
+            this
+                (when (nil? (:parent this)) => this
+                    (let [
+                        #_"StartNode" startNode (:start (:graph this))
+                    ]
+                        (cond
+                            (#_"ResolvedJavaMethod" .isSynchronized (:method this))
+                                (do
+                                    (§ ass! startNode (StateSplit'''setStateAfter-2 startNode, (BytecodeParser''createFrameState-3 this, BytecodeFrame/BEFORE_BCI, startNode)))
+                                    this
+                                )
+                            (BytecodeParser''parsingIntrinsic-1 this)
+                                (when (nil? (:stateAfter startNode)) => this
+                                    (§ ass! startNode (StateSplit'''setStateAfter-2 startNode, (BytecodeParser''createStateAfterStartOfReplacementGraph-1 this)))
+                                    this
+                                )
+                            :else
+                                (let [
+                                    this (update this :frameState FrameStateBuilder''clearNonLiveLocals-4 startBlock, (:liveness this), true)
+                                ]
+                                    (§ ass! startNode (StateSplit'''setStateAfter-2 startNode, (BytecodeParser''createFrameState-3 this, (BytecodeParser''bci-1 this), startNode)))
+                                    this
+                                )
                         )
                     )
-                this (assoc this :currentBlock (:startBlock (:blockMap this)))
-                this (assoc-in this [:entryStates (:id startBlock)] (:frameState this))
-                this
-                    (if (:isLoopHeader startBlock)
-                        (BytecodeParser''appendGoto-2 this, startBlock)
-                        (assoc-in this [:firstInstructions (:id startBlock)] (:lastInstr this))
+                )
+            this
+                (when (#_"ResolvedJavaMethod" .isSynchronized (:method this)) => this
+                    ;; add a monitor enter to the start block
+                    (let [
+                        this (assoc this :methodSynchronizedObject (BytecodeParser''synchronizedObject-3 this, (:frameState this), (:method this)))
+                        this (update this :frameState FrameStateBuilder''clearNonLiveLocals-4 startBlock, (:liveness this), true)
+                    ]
+                        (BytecodeParser''genMonitorEnter-3 this, (:methodSynchronizedObject this), (BytecodeParser''bci-1 this))
                     )
-            ]
-                (reduce BytecodeParser''processBlock-2 this (:blocks (:blockMap this)))
-            )
+                )
+            this (assoc this :currentBlock (:startBlock (:blockMap this)))
+            this (assoc-in this [:entryStates (:id startBlock)] (:frameState this))
+            this
+                (if (:isLoopHeader startBlock)
+                    (BytecodeParser''appendGoto-2 this, startBlock)
+                    (assoc-in this [:firstInstructions (:id startBlock)] (:lastInstr this))
+                )
+        ]
+            (reduce BytecodeParser''processBlock-2 this (:blocks (:blockMap this)))
         )
     )
 
@@ -20802,7 +20782,7 @@ ZeroExtendNode'new-4
     (defn #_"this" BytecodeParser''buildRootMethod-1 [#_"BytecodeParser" this]
         (let [
             #_"FrameStateBuilder" startFrameState (FrameStateBuilder'new-3c this, (:bytecode this), (:graph this))
-            _ (FrameStateBuilder''initializeForMethodStart-1 startFrameState)
+            startFrameState (FrameStateBuilder''initializeForMethodStart-1 startFrameState)
             this
                 (try (§ with [#_"IntrinsicScope" _ (when (some? (:intrinsicContext this)) (IntrinsicScope'new-1 this))])
                     (BytecodeParser''build-3 this, (:start (:graph this)), startFrameState)
@@ -22064,7 +22044,7 @@ ZeroExtendNode'new-4
 
     (defn #_"ClassfileBytecode" ClassfileBytecode'new-3 [#_"ResolvedJavaMethod" method, #_"DataInputStream" stream, #_"ClassfileConstantPool" constantPool]
         (let [
-            #_"int" maxStack (#_"DataInputStream" .readUnsignedShort stream)
+            _ (#_"DataInputStream" .readUnsignedShort stream)
             #_"int" maxLocals (#_"DataInputStream" .readUnsignedShort stream)
             #_"int" codeLength (#_"DataInputStream" .readInt stream)
             #_"[byte]" code (byte-array codeLength)
@@ -22078,7 +22058,6 @@ ZeroExtendNode'new-4
                     #_"ResolvedJavaMethod" :method method
                     #_"ClassfileConstantPool" :constantPool constantPool
                     #_"[byte]" :code code
-                    #_"int" :maxStack maxStack
                     #_"int" :maxLocals maxLocals
                 )
             )
@@ -22096,10 +22075,6 @@ ZeroExtendNode'new-4
 
         (#_"int" Bytecode'''getMaxLocals-1 [#_"ClassfileBytecode" this]
             (:maxLocals this)
-        )
-
-        (#_"int" Bytecode'''getMaxStackSize-1 [#_"ClassfileBytecode" this]
-            (:maxStack this)
         )
 
         (#_"ConstantPool" Bytecode'''getConstantPool-1 [#_"ClassfileBytecode" this]
@@ -27495,12 +27470,12 @@ ZeroExtendNode'new-4
             (reify Effect
                 (#_"[Node]" Effect'''apply-3 [#_"Effect" _, #_"Graph" graph, #_"[Node]" obsoleteNodes]
                     (when (Node''isAlive-1 node)
-                        (dotimes [#_"int" i (count (:virtualObjectMappings node))]
+                        (dotimes [#_"int" i (count (:virtualMappings node))]
                             (let [
-                                #_"Node" o'node (nth (:virtualObjectMappings node) i)
+                                #_"Node" o'node (nth (:virtualMappings node) i)
                             ]
                                 (when (= (:object o'node) (:object state))
-                                    (§ ass! node (update node :virtualObjectMappings dissoc' i))
+                                    (§ ass! node (update node :virtualMappings dissoc' i))
                                     (Node''updateUsages-3 node, o'node, nil)
                                 )
                             )
@@ -30743,10 +30718,6 @@ ZeroExtendNode'new-4
             #_"Bytecode" :bytecode nil
             #_"[ValueNode]" :locals nil
             #_"[ValueNode]" :stack nil
-            ;;;
-             ; Current size (height) of the stack.
-             ;;
-            #_"int" :stackSize 0
             #_"[ValueNode]" :lockedObjects nil
             #_"[MonitorIdNode]" :monitorIds nil
             #_"Graph" :graph nil
@@ -30773,8 +30744,8 @@ ZeroExtendNode'new-4
                 )
             this (assoc this :parser parser)
             this (assoc this :bytecode bytecode)
-            this (assoc this :locals (make-array ValueNode'iface (Bytecode'''getMaxLocals-1 bytecode)))
-            this (assoc this :stack (make-array ValueNode'iface (max 1 (Bytecode'''getMaxStackSize-1 bytecode))))
+            this (assoc this :locals (vec (repeat (Bytecode'''getMaxLocals-1 bytecode) nil)))
+            this (assoc this :stack [])
             this (assoc this :lockedObjects [])
             this (assoc this :monitorIds [])
             this (assoc this :graph graph)
@@ -30804,7 +30775,6 @@ ZeroExtendNode'new-4
             this (assoc this :bytecode (:bytecode other))
             this (assoc this :locals (:locals other))
             this (assoc this :stack (:stack other))
-            this (assoc this :stackSize (:stackSize other))
             this (assoc this :lockedObjects (:lockedObjects other))
             this (assoc this :monitorIds (:monitorIds other))
             this (assoc this :graph (:graph other))
@@ -30813,53 +30783,50 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"void" FrameStateBuilder''initializeFromArgumentsArray-2 [#_"FrameStateBuilder" this, #_"ValueNode*" arguments]
+    (defn #_"this" FrameStateBuilder''initializeFromArgumentsArray-2 [#_"FrameStateBuilder" this, #_"ValueNode*" arguments]
         (let [
             #_"ResolvedJavaMethod" method (FrameStateBuilder''getMethod-1 this)
-            [#_"int" i #_"int" j]
-                (when-not (#_"ResolvedJavaMethod" .isStatic method) => [0 0]
+            [this #_"int" i #_"int" j]
+                (when-not (#_"ResolvedJavaMethod" .isStatic method) => [this 0 0]
                     ;; set the receiver
-                    (§ ass! this (update this :locals assoc' 0 (nth arguments 0)))
-                    [1 1]
+                    [(update this :locals assoc' 0 (nth arguments 0)) 1 1]
                 )
             #_"Signature" sig (#_"ResolvedJavaMethod" .getSignature method)
         ]
-            (loop-when [i i j j #_"int" k 0] (< k (#_"Signature" .getParameterCount sig, false))
-                (§ ass! this (update this :locals assoc' j (nth arguments i)))
+            (loop-when [this this i i j j #_"int" k 0] (< k (#_"Signature" .getParameterCount sig, false)) => this
                 (let [
+                    this (update this :locals assoc' j (nth arguments i))
                     j (inc j)
-                    j
-                        (when (#_"JavaKind" .needsTwoSlots (#_"Signature" .getParameterKind sig, k)) => j
-                            (§ ass! this (update this :locals assoc' j FrameState'TWO_SLOT_MARKER))
-                            (inc j)
+                    [this j]
+                        (when (#_"JavaKind" .needsTwoSlots (#_"Signature" .getParameterKind sig, k)) => [this j]
+                            [(update this :locals assoc' j FrameState'TWO_SLOT_MARKER) (inc j)]
                         )
                 ]
-                    (recur (inc i) j (inc k))
+                    (recur this (inc i) j (inc k))
                 )
             )
         )
-        nil
     )
 
-    (defn #_"void" FrameStateBuilder''initializeForMethodStart-1 [#_"FrameStateBuilder" this]
+    (defn #_"this" FrameStateBuilder''initializeForMethodStart-1 [#_"FrameStateBuilder" this]
         (let [
             #_"ResolvedJavaMethod" method (FrameStateBuilder''getMethod-1 this)
             #_"ResolvedJavaType" originalType (#_"ResolvedJavaMethod" .getDeclaringClass method)
-            [#_"int" i #_"int" j]
-                (when-not (#_"ResolvedJavaMethod" .isStatic method) => [0 0]
+            [this #_"int" i #_"int" j]
+                (when-not (#_"ResolvedJavaMethod" .isStatic method) => [this 0 0]
                     (let [
                         #_"Stamp" receiverStamp
                             (or (Plugins''getOverridingStamp-4 HotSpot'plugins, (:parser this), originalType, true)
                                 (StampFactory'forDeclaredType-2 originalType, true)
                             )
+                        this (update this :locals assoc' 0 (Graph''addOrUniqueWithInputs-2 (:graph this), (ParameterNode'new-2 0, receiverStamp)))
                     ]
-                        (§ ass! this (update this :locals assoc' 0 (Graph''addOrUniqueWithInputs-2 (:graph this), (ParameterNode'new-2 0, receiverStamp))))
-                        [1 1]
+                        [this 1 1]
                     )
                 )
             #_"Signature" sig (#_"ResolvedJavaMethod" .getSignature method)
         ]
-            (loop-when [i i j j #_"int" k 0] (< k (#_"Signature" .getParameterCount sig, false))
+            (loop-when [this this i i j j #_"int" k 0] (< k (#_"Signature" .getParameterCount sig, false)) => this
                 (let [
                     #_"JavaType" type (#_"JavaType" .resolve (#_"Signature" .getParameterType sig, k, originalType), originalType)
                     #_"JavaKind" kind (#_"JavaType" .getJavaKind type)
@@ -30867,22 +30834,17 @@ ZeroExtendNode'new-4
                         (or (Plugins''getOverridingStamp-4 HotSpot'plugins, (:parser this), type, false)
                             (StampFactory'forDeclaredType-2 type, false)
                         )
+                    this (update this :locals assoc' j (Graph''addOrUniqueWithInputs-2 (:graph this), (ParameterNode'new-2 i, stamp)))
+                    j (inc j)
+                    [this j]
+                        (when (#_"JavaKind" .needsTwoSlots kind) => [this j]
+                            [(update this :locals assoc' j FrameState'TWO_SLOT_MARKER) (inc j)]
+                        )
                 ]
-                    (§ ass! this (update this :locals assoc' j (Graph''addOrUniqueWithInputs-2 (:graph this), (ParameterNode'new-2 i, stamp))))
-                    (let [
-                        j (inc j)
-                        j
-                            (when (#_"JavaKind" .needsTwoSlots kind) => j
-                                (§ ass! this (update this :locals assoc' j FrameState'TWO_SLOT_MARKER))
-                                (inc j)
-                            )
-                    ]
-                        (recur (inc i) j (inc k))
-                    )
+                    (recur this (inc i) j (inc k))
                 )
             )
         )
-        nil
     )
 
     (defn #_"ResolvedJavaMethod" FrameStateBuilder''getMethod-1 [#_"FrameStateBuilder" this]
@@ -30910,26 +30872,26 @@ ZeroExtendNode'new-4
             (when-not (= bci BytecodeFrame/INVALID_FRAMESTATE_BCI) => (throw! "should not reach here")
                 (if (some? pushedValues)
                     (let [
-                        #_"int" o'stackSize (:stackSize this)
+                        #_"[ValueNode]" o'stack (:stack this)
                         _
                             (dotimes [#_"int" i (count pushedValues)]
                                 (§ ass! this (FrameStateBuilder''push-3 this, (nth pushedSlotKinds i), (nth pushedValues i)))
                             )
-                        #_"FrameState" res (Graph''add-2 (:graph this), (FrameState'new-9a (:outerFrameState this), (:bytecode this), bci, (:locals this), (:stack this), (:stackSize this), (:lockedObjects this), (:monitorIds this), duringCall))
-                        _ (§ ass! this (assoc this :stackSize o'stackSize))
+                        #_"FrameState" res (Graph''add-2 (:graph this), (FrameState'new-8a (:outerFrameState this), (:bytecode this), bci, (:locals this), (:stack this), (:lockedObjects this), (:monitorIds this), duringCall))
+                        _ (§ ass! this (assoc this :stack o'stack))
                     ]
                         res
                     )
-                    (Graph''add-2 (:graph this), (FrameState'new-9a (:outerFrameState this), (:bytecode this), bci, (:locals this), (:stack this), (:stackSize this), (:lockedObjects this), (:monitorIds this), duringCall))
+                    (Graph''add-2 (:graph this), (FrameState'new-8a (:outerFrameState this), (:bytecode this), bci, (:locals this), (:stack this), (:lockedObjects this), (:monitorIds this), duringCall))
                 )
             )
         )
     )
 
     (defn #_"boolean" FrameStateBuilder''isCompatibleWith-2 [#_"FrameStateBuilder" this, #_"FrameStateBuilder" other]
-        (and (= (:stackSize this) (:stackSize other))
+        (and (= (count (:stack this)) (count (:stack other)))
             (loop [#_"int" i 0]
-                (if (< i (:stackSize this))
+                (if (< i (count (:stack this)))
                     (let [
                         #_"ValueNode" x (nth (:stack this) i)
                         #_"ValueNode" y (nth (:stack other) i)
@@ -30963,43 +30925,40 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"ValueNode" FrameStateBuilder''merge-4 [#_"FrameStateBuilder" this, #_"ValueNode" currentValue, #_"ValueNode" otherValue, #_"AbstractMergeNode" block]
-        (when (and (some? currentValue) (not (Node''isDeleted-1 currentValue)))
+    (defn- #_"ValueNode" FrameStateBuilder''merge-4 [#_"FrameStateBuilder" this, #_"ValueNode" value, #_"ValueNode" other, #_"AbstractMergeNode" block]
+        (when (and (some? value) (not (Node''isDeleted-1 value)))
             (cond
-                (AbstractMergeNode''isPhiAtMerge-2 block, currentValue)
+                (AbstractMergeNode''isPhiAtMerge-2 block, value)
                 (do
-                    (if (and (some? otherValue) (not= otherValue FrameState'TWO_SLOT_MARKER) (not (Node''isDeleted-1 otherValue)) (= (ValueNode''getStackKind-1 currentValue) (ValueNode''getStackKind-1 otherValue)))
-                        (§ ass! currentValue (PhiNode''addInput-2 currentValue, otherValue))
+                    (if (and (some? other) (not= other FrameState'TWO_SLOT_MARKER) (not (Node''isDeleted-1 other)) (= (ValueNode''getStackKind-1 value) (ValueNode''getStackKind-1 other)))
+                        (§ ass! value (PhiNode''addInput-2 value, other))
                         ;; This phi must be dead anyway, add input of correct stack kind to keep the graph invariants.
-                        (§ ass! currentValue (PhiNode''addInput-2 currentValue, (ConstantNode'defaultForKind-2 (ValueNode''getStackKind-1 currentValue), (:graph this))))
+                        (§ ass! value (PhiNode''addInput-2 value, (ConstantNode'defaultForKind-2 (ValueNode''getStackKind-1 value), (:graph this))))
                     )
-                    currentValue
+                    value
                 )
-                (= currentValue otherValue)
-                    currentValue
-                (or (= currentValue FrameState'TWO_SLOT_MARKER) (= otherValue FrameState'TWO_SLOT_MARKER))
+                (= value other)
+                    value
+                (or (= value FrameState'TWO_SLOT_MARKER) (= other FrameState'TWO_SLOT_MARKER))
                     nil
-                (and (some? otherValue) (not (Node''isDeleted-1 otherValue)) (= (ValueNode''getStackKind-1 currentValue) (ValueNode''getStackKind-1 otherValue)))
-                    (FrameStateBuilder''createValuePhi-4 this, currentValue, otherValue, block)
+                (and (some? other) (not (Node''isDeleted-1 other)) (= (ValueNode''getStackKind-1 value) (ValueNode''getStackKind-1 other)))
+                    (FrameStateBuilder''createValuePhi-4 this, value, other, block)
             )
         )
     )
 
-    (defn #_"this" FrameStateBuilder''merge-3 [#_"FrameStateBuilder" this, #_"AbstractMergeNode" block, #_"FrameStateBuilder" other]
-        (dotimes [#_"int" i (count (:locals this))]
-            (§ ass! this (update this :locals assoc' i (FrameStateBuilder''merge-4 this, (nth (:locals this) i), (nth (:locals other) i), block)))
-        )
-        (dotimes [#_"int" i (:stackSize this)]
-            (§ ass! this (update this :stack assoc' i (FrameStateBuilder''merge-4 this, (nth (:stack this) i), (nth (:stack other) i), block)))
-        )
-        (dotimes [#_"int" i (count (:lockedObjects this))]
-            (§ ass! this (update this :lockedObjects assoc' i (FrameStateBuilder''merge-4 this, (nth (:lockedObjects this) i), (nth (:lockedObjects other) i), block)))
-        )
-
-        (cond
-            (nil? (:sideEffects this))   (assoc this :sideEffects (:sideEffects other))
-            (some? (:sideEffects other)) (update this :sideEffects into' (:sideEffects other))
-            :else                        this
+    (defn #_"this" FrameStateBuilder''merge-3 [#_"FrameStateBuilder" this, #_"AbstractMergeNode" block, #_"FrameStateBuilder" that]
+        (let [
+            f'merge #(FrameStateBuilder''merge-4 this, %1, %2, block)
+            this (assoc this :locals        (mapv f'merge (:locals this) (:locals that)))
+            this (assoc this :stack         (mapv f'merge (:stack this) (:stack that)))
+            this (assoc this :lockedObjects (mapv f'merge (:lockedObjects this) (:lockedObjects that)))
+        ]
+            (cond
+                (nil? (:sideEffects this))  (assoc this :sideEffects (:sideEffects that))
+                (some? (:sideEffects that)) (update this :sideEffects into' (:sideEffects that))
+                :else                       this
+            )
         )
     )
 
@@ -31014,7 +30973,7 @@ ZeroExtendNode'new-4
         (dotimes [#_"int" i (count (:locals this))]
             (FrameStateBuilder'inferPhiStamp-2 block, (nth (:locals this) i))
         )
-        (dotimes [#_"int" i (:stackSize this)]
+        (dotimes [#_"int" i (count (:stack this))]
             (FrameStateBuilder'inferPhiStamp-2 block, (nth (:stack this) i))
         )
         (dotimes [#_"int" i (count (:lockedObjects this))]
@@ -31033,54 +30992,63 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"void" FrameStateBuilder''insertLoopPhis-6 [#_"FrameStateBuilder" this, #_"LocalLiveness" liveness, #_"int" loopId, #_"LoopBeginNode" loopBegin, #_"boolean" forcePhis, #_"boolean" stampFromValueForForcedPhis]
-        (dotimes [#_"int" i (count (:locals this))]
-            (let [
-                #_"boolean" changedInLoop (LocalLiveness'''localIsChangedInLoop-3 liveness, loopId, i)
-            ]
-                (when (or forcePhis changedInLoop)
-                    (§ ass! this (update this :locals assoc' i (FrameStateBuilder''createLoopPhi-4 this, loopBegin, (nth (:locals this) i), (and stampFromValueForForcedPhis (not changedInLoop)))))
+    (defn #_"this" FrameStateBuilder''insertLoopPhis-6 [#_"FrameStateBuilder" this, #_"LocalLiveness" liveness, #_"int" loopId, #_"LoopBeginNode" loopBegin, #_"boolean" forcePhis, #_"boolean" stampFromValueForForcedPhis]
+        (let [
+            this
+                (loop-when [this this #_"int" i 0] (< i (count (:locals this))) => this
+                    (let [
+                        #_"boolean" changedInLoop (LocalLiveness'''localIsChangedInLoop-3 liveness, loopId, i)
+                        this
+                            (when (or forcePhis changedInLoop) => this
+                                (update this :locals update' i #(FrameStateBuilder''createLoopPhi-4 this, loopBegin, %, (and stampFromValueForForcedPhis (not changedInLoop))))
+                            )
+                    ]
+                        (recur this (inc i))
+                    )
                 )
-            )
+            f'createLoopPhi #(FrameStateBuilder''createLoopPhi-4 this, loopBegin, %, false)
+            this (assoc this :stack         (mapv f'createLoopPhi (:stack this)))
+            this (assoc this :lockedObjects (mapv f'createLoopPhi (:lockedObjects this)))
+        ]
+            this
         )
-        (dotimes [#_"int" i (:stackSize this)]
-            (§ ass! this (update this :stack assoc' i (FrameStateBuilder''createLoopPhi-4 this, loopBegin, (nth (:stack this) i), false)))
-        )
-        (dotimes [#_"int" i (count (:lockedObjects this))]
-            (§ ass! this (update this :lockedObjects assoc' i (FrameStateBuilder''createLoopPhi-4 this, loopBegin, (nth (:lockedObjects this) i), false)))
-        )
-        nil
     )
 
-    (defn #_"void" FrameStateBuilder''insertLoopProxies-3 [#_"FrameStateBuilder" this, #_"LoopExitNode" loopExit, #_"FrameStateBuilder" loopEntryState]
-        (dotimes [#_"int" i (count (:locals this))]
-            (let [
-                #_"ValueNode" value (nth (:locals this) i)
-            ]
-                (when (and (some? value) (not= value FrameState'TWO_SLOT_MARKER) (or (not (FrameStateBuilder''contains-2 loopEntryState, value)) (AbstractMergeNode''isPhiAtMerge-2 (:loopBegin loopExit), value)))
-                    (§ ass! this (update this :locals assoc' i (ProxyNode'forValue-3 value, loopExit, (:graph this))))
+    (defn #_"this" FrameStateBuilder''insertLoopProxies-3 [#_"FrameStateBuilder" this, #_"LoopExitNode" loopExit, #_"FrameStateBuilder" loopEntryState]
+        (let [
+            _
+                (dotimes [#_"int" i (count (:locals this))]
+                    (let [
+                        #_"ValueNode" value (nth (:locals this) i)
+                    ]
+                        (when (and (some? value) (not= value FrameState'TWO_SLOT_MARKER) (or (not (FrameStateBuilder''contains-2 loopEntryState, value)) (AbstractMergeNode''isPhiAtMerge-2 (:loopBegin loopExit), value)))
+                            (§ ass! this (update this :locals assoc' i (ProxyNode'forValue-3 value, loopExit, (:graph this))))
+                        )
+                    )
                 )
-            )
-        )
-        (dotimes [#_"int" i (:stackSize this)]
-            (let [
-                #_"ValueNode" value (nth (:stack this) i)
-            ]
-                (when (and (some? value) (not= value FrameState'TWO_SLOT_MARKER) (or (not (FrameStateBuilder''contains-2 loopEntryState, value)) (AbstractMergeNode''isPhiAtMerge-2 (:loopBegin loopExit), value)))
-                    (§ ass! this (update this :stack assoc' i (ProxyNode'forValue-3 value, loopExit, (:graph this))))
+            _
+                (dotimes [#_"int" i (count (:stack this))]
+                    (let [
+                        #_"ValueNode" value (nth (:stack this) i)
+                    ]
+                        (when (and (some? value) (not= value FrameState'TWO_SLOT_MARKER) (or (not (FrameStateBuilder''contains-2 loopEntryState, value)) (AbstractMergeNode''isPhiAtMerge-2 (:loopBegin loopExit), value)))
+                            (§ ass! this (update this :stack assoc' i (ProxyNode'forValue-3 value, loopExit, (:graph this))))
+                        )
+                    )
                 )
-            )
-        )
-        (dotimes [#_"int" i (count (:lockedObjects this))]
-            (let [
-                #_"ValueNode" value (nth (:lockedObjects this) i)
-            ]
-                (when (and (some? value) (or (not (FrameStateBuilder''contains-2 loopEntryState, value)) (AbstractMergeNode''isPhiAtMerge-2 (:loopBegin loopExit), value)))
-                    (§ ass! this (update this :lockedObjects assoc' i (ProxyNode'forValue-3 value, loopExit, (:graph this))))
+            _
+                (dotimes [#_"int" i (count (:lockedObjects this))]
+                    (let [
+                        #_"ValueNode" value (nth (:lockedObjects this) i)
+                    ]
+                        (when (and (some? value) (or (not (FrameStateBuilder''contains-2 loopEntryState, value)) (AbstractMergeNode''isPhiAtMerge-2 (:loopBegin loopExit), value)))
+                            (§ ass! this (update this :lockedObjects assoc' i (ProxyNode'forValue-3 value, loopExit, (:graph this))))
+                        )
+                    )
                 )
-            )
+        ]
+            this
         )
-        nil
     )
 
     ;;;
@@ -31131,7 +31099,7 @@ ZeroExtendNode'new-4
                     (recur (inc i))
                 )
             )
-            (loop-when [#_"int" i 0] (< i (:stackSize this)) => false
+            (loop-when [#_"int" i 0] (< i (count (:stack this))) => false
                 (or (= (nth (:stack this) i) value)
                     (recur (inc i))
                 )
@@ -31144,11 +31112,11 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"void" FrameStateBuilder''clearNonLiveLocals-4 [#_"FrameStateBuilder" this, #_"BciBlock" block, #_"LocalLiveness" liveness, #_"boolean" liveIn]
+    (defn #_"this" FrameStateBuilder''clearNonLiveLocals-4 [#_"FrameStateBuilder" this, #_"BciBlock" block, #_"LocalLiveness" liveness, #_"boolean" liveIn]
         ;; If somebody is tempted to remove/disable this clearing code: it's possible to remove it for normal compilations,
         ;; but not for OSR, as dead object slots at the OSR entry aren't cleared then. It is also not enough to rely on
         ;; PiNodes with Kind.Illegal, because the conflicting branch might not have been parsed.
-        (when GraalOptions'optClearNonLiveLocals
+        (when GraalOptions'optClearNonLiveLocals => this
             (if liveIn
                 (dotimes [#_"int" i (count (:locals this))]
                     (when-not (LocalLiveness'''localIsLiveIn-3 liveness, block, i)
@@ -31161,8 +31129,8 @@ ZeroExtendNode'new-4
                     )
                 )
             )
+            this
         )
-        nil
     )
 
     ;;;
@@ -31175,41 +31143,41 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"this" FrameStateBuilder''storeLocal-4 [#_"FrameStateBuilder" this, #_"int" i, #_"JavaKind" slotKind, #_"ValueNode" x]
         (let [
-            _
-                (when (= (nth (:locals this) i) FrameState'TWO_SLOT_MARKER)
+            this
+                (when (= (nth (:locals this) i) FrameState'TWO_SLOT_MARKER) => this
                     ;; Writing the second slot of a two-slot value invalidates the first slot.
-                    (§ ass! this (update this :locals assoc' (dec i) nil))
+                    (update this :locals assoc' (dec i) nil)
                 )
-            _ (§ ass! this (update this :locals assoc' i x))
+            this (update this :locals assoc' i x)
         ]
             (cond
                 (#_"JavaKind" .needsTwoSlots slotKind)
-                (do
                     ;; Writing a two-slot value: mark the second slot.
-                    (§ ass! this (update this :locals assoc' (inc i) FrameState'TWO_SLOT_MARKER))
-                )
+                    (update this :locals assoc' (inc i) FrameState'TWO_SLOT_MARKER)
                 (and (< i (dec (count (:locals this)))) (= (nth (:locals this) (inc i)) FrameState'TWO_SLOT_MARKER))
-                (do
                     ;; Writing a one-slot value to an index previously occupied by a two-slot value: clear the old marker of the second slot.
-                    (§ ass! this (update this :locals assoc' (inc i) nil))
-                )
+                    (update this :locals assoc' (inc i) nil)
+                :else
+                    this
             )
-            this
         )
     )
 
     (defn- #_"this" FrameStateBuilder''xpush-2 [#_"FrameStateBuilder" this, #_"ValueNode" x]
-        (§ ass! this (update this :stack assoc' (:stackSize this) x))
-        (update this :stackSize inc)
+        (update this :stack conj' x)
     )
 
     (defn- #_"ValueNode" FrameStateBuilder''xpop-1 [#_"FrameStateBuilder" this]
-        (§ ass! this (update this :stackSize dec))
-        (nth (:stack this) (:stackSize this))
+        (let [
+            _ (peek' (:stack this))
+        ]
+            (§ ass! this (update this :stack pop'))
+            _
+        )
     )
 
     (defn- #_"ValueNode" FrameStateBuilder''xpeek-1 [#_"FrameStateBuilder" this]
-        (nth (:stack this) (dec (:stackSize this)))
+        (peek' (:stack this))
     )
 
     ;;;
@@ -31277,7 +31245,7 @@ ZeroExtendNode'new-4
      ; Clears all values on this stack.
      ;;
     (defn #_"this" FrameStateBuilder''clearStack-1 [#_"FrameStateBuilder" this]
-        (assoc this :stackSize 0)
+        (assoc this :stack [])
     )
 
     ;;;
@@ -35175,7 +35143,7 @@ ZeroExtendNode'new-4
                                                         #_"FrameStateBuilder" frameStateBuilder (:frameState (:parser this))
                                                     ]
                                                         (cond
-                                                            (not (zero? (:stackSize frameState)))
+                                                            (pos? (:stackSize frameState))
                                                                 (let [
                                                                     #_"ValueNode" returnVal (FrameState''stackAt-2 frameState, 0)
                                                                     ;; Swap the top-of-stack value with the return value.
@@ -54109,7 +54077,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"WriteNode" StoreHubNode'createWriteHub-3 [#_"Graph" graph, #_"ValueNode" object, #_"ValueNode" value]
         (let [
-            #_"ValueNode" writeValue (if HotSpot'useCompressedClassPointers (HotSpotCompressionNode'compress-2 value, HotSpot'klassEncoding) value)
+            #_"ValueNode" writeValue (if HotSpot'useCompressedClassPointers (CompressionNode'compress-2 value, HotSpot'klassEncoding) value)
             #_"AddressNode" address (Lowerer'createOffsetAddress-3 graph, object, HotSpot'hubOffset)
         ]
             (Graph''add-2 graph, (WriteNode'new-4 address, NamedLocationIdentity'HUB_WRITE, writeValue, :BarrierType'NONE))
@@ -59678,8 +59646,11 @@ ZeroExtendNode'new-4
     )
 )
 
+;;;
+ ; Compress or uncompress an oop or metaspace pointer.
+ ;;
 (class-ns CompressionNode [UnaryNode, FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", Canonicalizable, ConvertNode, LIRLowerable]
-    (defn #_"CompressionNode" CompressionNode'new-4 [#_"CompressionOp" op, #_"ValueNode" input, #_"Stamp" stamp, #_"CompressEncoding" encoding]
+    (defn- #_"CompressionNode" CompressionNode'new-4 [#_"CompressionOp" op, #_"ValueNode" input, #_"Stamp" stamp, #_"CompressEncoding" encoding]
         (merge (CompressionNode'class.) (UnaryNode'new-2 stamp, input)
             (hash-map
                 #_"CompressionOp" :op op
@@ -59688,34 +59659,61 @@ ZeroExtendNode'new-4
         )
     )
 
+    (defn #_"CompressionNode" CompressionNode'new-3 [#_"CompressionOp" op, #_"ValueNode" input, #_"CompressEncoding" encoding]
+        (CompressionNode'new-4 op, input, (NarrowOopStamp'mkStamp-3 op, (:stamp input), encoding), encoding)
+    )
+
+    (defn #_"CompressionNode" CompressionNode'compress-2 [#_"ValueNode" input, #_"CompressEncoding" encoding]
+        (Graph''add-2 (:graph input), (CompressionNode'new-3 :CompressionOp'Compress, input, encoding))
+    )
+
+    (defn #_"CompressionNode" CompressionNode'uncompress-2 [#_"ValueNode" input, #_"CompressEncoding" encoding]
+        (Graph''add-2 (:graph input), (CompressionNode'new-3 :CompressionOp'Uncompress, input, encoding))
+    )
+
+    (defn- #_"Constant" CompressionNode''compress-2 [#_"CompressionNode" this, #_"Constant" constant]
+        (if (= constant JavaConstant/NULL_POINTER)
+            HotSpotCompressedNullConstant/COMPRESSED_NULL
+            (condp instance? constant
+                HotSpotConstant (#_"HotSpotConstant" .compress constant)
+            )
+        )
+    )
+
+    (defn- #_"Constant" CompressionNode''uncompress-2 [#_"CompressionNode" this, #_"Constant" constant]
+        (condp instance? constant
+            HotSpotConstant (#_"HotSpotConstant" .uncompress constant)
+        )
+    )
+
+    (defn- #_"Stamp" CompressionNode''mkStamp-2 [#_"CompressionNode" this, #_"Stamp" input]
+        (NarrowOopStamp'mkStamp-3 (:op this), input, (:encoding this))
+    )
+
     (defm CompressionNode UnaryNode
         (#_"Stamp" UnaryNode'''foldStamp-2 [#_"CompressionNode" this, #_"Stamp" stamp]
-            (CompressionNode'''mkStamp-2 this, stamp)
+            (CompressionNode''mkStamp-2 this, stamp)
         )
     )
 
     (defm CompressionNode ConvertNode
         (#_"Constant" ConvertNode'''convert-2 [#_"CompressionNode" this, #_"Constant" constant]
             (condp = (:op this)
-                :CompressionOp'Compress   (CompressionNode'''compress-2 this, constant)
-                :CompressionOp'Uncompress (CompressionNode'''uncompress-2 this, constant)
+                :CompressionOp'Compress   (CompressionNode''compress-2 this, constant)
+                :CompressionOp'Uncompress (CompressionNode''uncompress-2 this, constant)
             )
         )
 
         (#_"Constant" ConvertNode'''reverse-2 [#_"CompressionNode" this, #_"Constant" constant]
             (condp = (:op this)
-                :CompressionOp'Compress   (CompressionNode'''uncompress-2 this, constant)
-                :CompressionOp'Uncompress (CompressionNode'''compress-2 this, constant)
+                :CompressionOp'Compress   (CompressionNode''uncompress-2 this, constant)
+                :CompressionOp'Uncompress (CompressionNode''compress-2 this, constant)
             )
         )
 
         (#_"boolean" ConvertNode'''isLossless-1 [#_"CompressionNode" this]
             true
         )
-    )
-
-    (defn #_"CompressEncoding" CompressionNode''getEncoding-1 [#_"CompressionNode" this]
-        (:encoding this)
     )
 
     (defm CompressionNode Unary
@@ -59766,41 +59764,6 @@ ZeroExtendNode'new-4
 
         (#_"boolean" ConvertNode'''preservesOrder-3 [#_"CompressionNode" this, #_"CanonicalCondition" op, #_"Constant" value]
             (ConvertNode'''preservesOrder-2 this, op)
-        )
-    )
-)
-
-(class-ns HotSpotCompressionNode [CompressionNode, UnaryNode, FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", Canonicalizable, ConvertNode, LIRLowerable]
-    (defn #_"HotSpotCompressionNode" HotSpotCompressionNode'new-3 [#_"CompressionOp" op, #_"ValueNode" input, #_"CompressEncoding" encoding]
-        (merge (HotSpotCompressionNode'class.) (CompressionNode'new-4 op, input, (HotSpotNarrowOopStamp'mkStamp-3 op, (:stamp input), encoding), encoding))
-    )
-
-    (defn #_"HotSpotCompressionNode" HotSpotCompressionNode'compress-2 [#_"ValueNode" input, #_"CompressEncoding" encoding]
-        (Graph''add-2 (:graph input), (HotSpotCompressionNode'new-3 :CompressionOp'Compress, input, encoding))
-    )
-
-    (defn #_"CompressionNode" HotSpotCompressionNode'uncompress-2 [#_"ValueNode" input, #_"CompressEncoding" encoding]
-        (Graph''add-2 (:graph input), (HotSpotCompressionNode'new-3 :CompressionOp'Uncompress, input, encoding))
-    )
-
-    (defm HotSpotCompressionNode CompressionNode
-        (#_"Constant" CompressionNode'''compress-2 [#_"HotSpotCompressionNode" this, #_"Constant" constant]
-            (if (= constant JavaConstant/NULL_POINTER)
-                HotSpotCompressedNullConstant/COMPRESSED_NULL
-                (condp instance? constant
-                    HotSpotConstant (#_"HotSpotConstant" .compress constant)
-                )
-            )
-        )
-
-        (#_"Constant" CompressionNode'''uncompress-2 [#_"HotSpotCompressionNode" this, #_"Constant" constant]
-            (condp instance? constant
-                HotSpotConstant (#_"HotSpotConstant" .uncompress constant)
-            )
-        )
-
-        (#_"Stamp" CompressionNode'''mkStamp-2 [#_"HotSpotCompressionNode" this, #_"Stamp" input]
-            (HotSpotNarrowOopStamp'mkStamp-3 (:op this), input, (:encoding this))
         )
     )
 )
@@ -60865,7 +60828,7 @@ ZeroExtendNode'new-4
      ;;
     (§ def #_"ValueNode" FrameState'TWO_SLOT_MARKER (TwoSlotMarker'new-0))
 
-    (defn- #_"FrameState" FrameState'new-8 [#_"FrameState" outerFrameState, #_"Bytecode" code, #_"int" bci, #_"int" localsSize, #_"int" stackSize, #_"boolean" duringCall, #_"MonitorIdNode*" monitorIds, #_"EscapeObjectState*" virtualObjectMappings]
+    (defn- #_"FrameState" FrameState'new-8i [#_"FrameState" outerFrameState, #_"Bytecode" code, #_"int" bci, #_"int" localsSize, #_"int" stackSize, #_"boolean" duringCall, #_"MonitorIdNode*" monitorIds, #_"EscapeObjectState*" virtualMappings]
         (when (some? code)
             ;; Make sure the bci is within range of the bytecodes. If the code size is 0 then allow any value, otherwise the
             ;; bci must be less than the code size. Any negative value is also allowed to represent special bytecode states.
@@ -60879,13 +60842,7 @@ ZeroExtendNode'new-4
         )
         (merge (FrameState'class.) (VirtualState'new-0)
             (hash-map
-                ;;;
-                 ; Size of the local variables.
-                 ;;
                 #_"int" :localsSize localsSize
-                ;;;
-                 ; Current size (height) of the stack.
-                 ;;
                 #_"int" :stackSize stackSize
                 #_"boolean" :duringCall duringCall
                 ; @OptionalInput
@@ -60898,7 +60855,7 @@ ZeroExtendNode'new-4
                 ; @Input
                 #_"[MonitorIdNode]" :monitorNodes (when (seq monitorIds) (vec monitorIds))
                 ; @OptionalInput
-                #_"[EscapeObjectState]" :virtualObjectMappings (when (seq virtualObjectMappings) (vec virtualObjectMappings))
+                #_"[EscapeObjectState]" :virtualMappings (when (seq virtualMappings) (vec virtualMappings))
                 ;;;
                  ; The bytecode index to which this frame state applies.
                  ;;
@@ -60911,9 +60868,9 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"FrameState" FrameState'new-9l [#_"FrameState" outerFrameState, #_"Bytecode" code, #_"int" bci, #_"ValueNode*" values, #_"int" localsSize, #_"int" stackSize, #_"boolean" duringCall, #_"MonitorIdNode*" monitorIds, #_"EscapeObjectState*" virtualObjectMappings]
+    (defn #_"FrameState" FrameState'new-9 [#_"FrameState" outerFrameState, #_"Bytecode" code, #_"int" bci, #_"ValueNode*" values, #_"int" localsSize, #_"int" stackSize, #_"boolean" duringCall, #_"MonitorIdNode*" monitorIds, #_"EscapeObjectState*" virtualMappings]
         (let [
-            #_"FrameState" this (FrameState'new-8 outerFrameState, code, bci, localsSize, stackSize, duringCall, monitorIds, virtualObjectMappings)
+            #_"FrameState" this (FrameState'new-8i outerFrameState, code, bci, localsSize, stackSize, duringCall, monitorIds, virtualMappings)
         ]
             (assoc this :fsValues (vec values))
         )
@@ -60921,7 +60878,7 @@ ZeroExtendNode'new-4
 
     (defn #_"FrameState" FrameState'new-1 [#_"int" bci]
         (let [
-            #_"FrameState" this (FrameState'new-8 nil, nil, bci, 0, 0, false, nil, nil)
+            #_"FrameState" this (FrameState'new-8i nil, nil, bci, 0, 0, false, nil, nil)
         ]
             (assoc this :fsValues [])
         )
@@ -60936,18 +60893,18 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"FrameState" FrameState'new-2 [#_"int" bci, #_"ValueNode" returnValue]
         (let [
-            #_"FrameState" this (FrameState'new-8 nil, nil, bci, 0, (#_"JavaKind" .getSlotCount (ValueNode''getStackKind-1 returnValue)), false, nil, nil)
+            #_"FrameState" this (FrameState'new-8i nil, nil, bci, 0, (#_"JavaKind" .getSlotCount (ValueNode''getStackKind-1 returnValue)), false, nil, nil)
         ]
             (assoc this :fsValues [ returnValue ])
         )
     )
 
-    (defn #_"FrameState" FrameState'new-9a [#_"FrameState" outerFrameState, #_"Bytecode" code, #_"int" bci, #_"ValueNode*" locals, #_"ValueNode*" stack, #_"int" stackSize, #_"ValueNode*" locks, #_"MonitorIdNode*" monitorIds, #_"boolean" duringCall]
+    (defn #_"FrameState" FrameState'new-8a [#_"FrameState" outerFrameState, #_"Bytecode" code, #_"int" bci, #_"ValueNode*" locals, #_"ValueNode*" stack, #_"ValueNode*" locks, #_"MonitorIdNode*" monitorIds, #_"boolean" duringCall]
         (let [
-            #_"FrameState" this (FrameState'new-8 outerFrameState, code, bci, (count locals), stackSize, duringCall, monitorIds, nil)
+            #_"FrameState" this (FrameState'new-8i outerFrameState, code, bci, (count locals), (count stack), duringCall, monitorIds, nil)
             slot- #(when-not (= % FrameState'TWO_SLOT_MARKER) %)
         ]
-            (assoc this :fsValues (vec (concat (map slot- locals) (map slot- (take stackSize stack)) locks)))
+            (assoc this :fsValues (vec (concat (map slot- locals) (map slot- stack) locks)))
         )
     )
 
@@ -60964,7 +60921,7 @@ ZeroExtendNode'new-4
 
     (defn #_"this" FrameState''addVirtualObjectMapping-2 [#_"FrameState" this, #_"EscapeObjectState" virtualObject]
         (let [
-            this (update this :virtualObjectMappings conj' virtualObject)
+            this (update this :virtualMappings conj' virtualObject)
         ]
             (Node''updateUsages-3 this, nil, virtualObject)
             this
@@ -60974,15 +60931,8 @@ ZeroExtendNode'new-4
     ;;;
      ; Gets a copy of this frame state.
      ;;
-    (defn #_"FrameState" FrameState''duplicate-2 [#_"FrameState" this, #_"int" newBci]
-        (Graph''add-2 (:graph this), (FrameState'new-9l (:outerFrameState this), (:bytecode this), newBci, (:fsValues this), (:localsSize this), (:stackSize this), (:duringCall this), (:monitorNodes this), (:virtualObjectMappings this)))
-    )
-
-    ;;;
-     ; Gets a copy of this frame state.
-     ;;
     (defn #_"FrameState" FrameState''duplicate-1 [#_"FrameState" this]
-        (FrameState''duplicate-2 this, (:bci this))
+        (Graph''add-2 (:graph this), (FrameState'new-9 (:outerFrameState this), (:bytecode this), (:bci this), (:fsValues this), (:localsSize this), (:stackSize this), (:duringCall this), (:monitorNodes this), (:virtualMappings this)))
     )
 
     ;;;
@@ -60991,14 +60941,14 @@ ZeroExtendNode'new-4
     (defm FrameState VirtualState
         (#_"FrameState" VirtualState'''duplicateWithVirtualState-1 [#_"FrameState" this]
             (let [
-                #_"FrameState" newOuterFrameState (:outerFrameState this)
-                newOuterFrameState (when (some? newOuterFrameState) (VirtualState'''duplicateWithVirtualState-1 newOuterFrameState))
-                #_"EscapeObjectState*" newVirtualMappings
-                    (when (some? (:virtualObjectMappings this))
-                        (map VirtualState'''duplicateWithVirtualState-1 (:virtualObjectMappings this))
+                #_"FrameState" outerFrameState (:outerFrameState this)
+                outerFrameState (when (some? outerFrameState) (VirtualState'''duplicateWithVirtualState-1 outerFrameState))
+                #_"EscapeObjectState*" virtualMappings
+                    (when (some? (:virtualMappings this))
+                        (map VirtualState'''duplicateWithVirtualState-1 (:virtualMappings this))
                     )
             ]
-                (Graph''add-2 (:graph this), (FrameState'new-9l newOuterFrameState, (:bytecode this), (:bci this), (:fsValues this), (:localsSize this), (:stackSize this), (:duringCall this), (:monitorNodes this), newVirtualMappings))
+                (Graph''add-2 (:graph this), (FrameState'new-9 outerFrameState, (:bytecode this), (:bci this), (:fsValues this), (:localsSize this), (:stackSize this), (:duringCall this), (:monitorNodes this), virtualMappings))
             )
         )
     )
@@ -61033,7 +60983,7 @@ ZeroExtendNode'new-4
             #_"int" stackSize (- (count values) (:localsSize this))
             values (catvec values (subvec (:fsValues this) (+ (:localsSize this) (:stackSize this))))
         ]
-            (Graph''add-2 graph, (FrameState'new-9l (:outerFrameState this), (:bytecode this), bci, values, (:localsSize this), stackSize, duringCall, (:monitorNodes this), (:virtualObjectMappings this)))
+            (Graph''add-2 graph, (FrameState'new-9 (:outerFrameState this), (:bytecode this), bci, values, (:localsSize this), stackSize, duringCall, (:monitorNodes this), (:virtualMappings this)))
         )
     )
 
@@ -61128,8 +61078,8 @@ ZeroExtendNode'new-4
                     )
                 )
             )
-            (when (some? (:virtualObjectMappings this))
-                (doseq [#_"EscapeObjectState" state (:virtualObjectMappings this)]
+            (when (some? (:virtualMappings this))
+                (doseq [#_"EscapeObjectState" state (:virtualMappings this)]
                     (VirtualState'''applyToNonVirtual-2 state, closure)
                 )
             )
@@ -61141,8 +61091,8 @@ ZeroExtendNode'new-4
 
         (#_"void" VirtualState'''applyToVirtual-2 [#_"FrameState" this, #_"VirtualClosure" closure]
             (VirtualClosure'''apply-2 closure, this)
-            (when (some? (:virtualObjectMappings this))
-                (doseq [#_"EscapeObjectState" state (:virtualObjectMappings this)]
+            (when (some? (:virtualMappings this))
+                (doseq [#_"EscapeObjectState" state (:virtualMappings this)]
                     (VirtualState'''applyToVirtual-2 state, closure)
                 )
             )
@@ -61155,7 +61105,7 @@ ZeroExtendNode'new-4
         (#_"boolean" VirtualState'''isPartOfThisState-2 [#_"FrameState" this, #_"VirtualState" state]
             (or (= state this)
                 (and (some? (:outerFrameState this)) (VirtualState'''isPartOfThisState-2 (:outerFrameState this), state))
-                (loop [#_"seq" s (seq (:virtualObjectMappings this))]
+                (loop [#_"seq" s (seq (:virtualMappings this))]
                     (and (some? s)
                         (or (VirtualState'''isPartOfThisState-2 (first s), state)
                             (recur (next s))
@@ -63427,10 +63377,6 @@ ZeroExtendNode'new-4
             (#_"ResolvedJavaMethod" .getCodeSize (:method this))
         )
 
-        (#_"int" Bytecode'''getMaxStackSize-1 [#_"ResolvedJavaMethodBytecode" this]
-            (#_"ResolvedJavaMethod" .getMaxStackSize (:method this))
-        )
-
         (#_"int" Bytecode'''getMaxLocals-1 [#_"ResolvedJavaMethodBytecode" this]
             (#_"ResolvedJavaMethod" .getMaxLocals (:method this))
         )
@@ -65625,7 +65571,7 @@ ZeroExtendNode'new-4
 )
 
 (class-ns NarrowOopStamp [AbstractObjectStamp, AbstractPointerStamp, Stamp]
-    (defn #_"NarrowOopStamp" NarrowOopStamp'new-5 [#_"ResolvedJavaType" type, #_"boolean" exact-type?, #_"boolean" never-nil?, #_"boolean" always-nil?, #_"CompressEncoding" encoding]
+    (defn- #_"NarrowOopStamp" NarrowOopStamp'new-5 [#_"ResolvedJavaType" type, #_"boolean" exact-type?, #_"boolean" never-nil?, #_"boolean" always-nil?, #_"CompressEncoding" encoding]
         (merge (NarrowOopStamp'class.) (AbstractObjectStamp'new-4 type, exact-type?, never-nil?, always-nil?)
             (hash-map
                 #_"CompressEncoding" :encoding encoding
@@ -65633,19 +65579,43 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defm NarrowOopStamp NarrowOopStamp
-        (#_"Stamp" NarrowOopStamp'''uncompressed-1 [#_"NarrowOopStamp" this]
-            (ObjectStamp'new-4 (:type this), (AbstractObjectStamp''isExactType-1 this), (:never-nil? this), (:always-nil? this))
+    (defm NarrowOopStamp AbstractObjectStamp
+        (#_"AbstractObjectStamp" AbstractObjectStamp'''copyWith-5 [#_"NarrowOopStamp" this, #_"ResolvedJavaType" type, #_"boolean" exact-type?, #_"boolean" never-nil?, #_"boolean" always-nil?]
+            (NarrowOopStamp'new-5 type, exact-type?, never-nil?, always-nil?, (:encoding this))
         )
     )
 
-    (defn #_"CompressEncoding" NarrowOopStamp''getEncoding-1 [#_"NarrowOopStamp" this]
-        (:encoding this)
+    (defn #_"Stamp" NarrowOopStamp'compressed-2 [#_"AbstractObjectStamp" stamp, #_"CompressEncoding" encoding]
+        (NarrowOopStamp'new-5 (:type stamp), (AbstractObjectStamp''isExactType-1 stamp), (:never-nil? stamp), (:always-nil? stamp), encoding)
+    )
+
+    (defn- #_"Stamp" NarrowOopStamp''uncompressed-1 [#_"NarrowOopStamp" this]
+        (ObjectStamp'new-4 (:type this), (AbstractObjectStamp''isExactType-1 this), (:never-nil? this), (:always-nil? this))
     )
 
     (defm NarrowOopStamp Stamp
         (#_"LIRKind" Stamp'''getLIRKind-1 [#_"NarrowOopStamp" this]
             (LIRKindTool'getNarrowOopKind-0)
+        )
+
+        (#_"Constant" Stamp'''readConstant-4 [#_"NarrowOopStamp" this, #_"MemoryAccessProvider" provider, #_"Constant" base, #_"long" displacement]
+            (try
+                (#_"HotSpotMemoryAccessProvider" .readNarrowOopConstant provider, base, displacement)
+                (catch IllegalArgumentException _
+                    nil
+                )
+            )
+        )
+
+        (#_"JavaConstant" Stamp'''asConstant-1 [#_"NarrowOopStamp" this]
+            (when (:always-nil? this) HotSpotCompressedNullConstant/COMPRESSED_NULL)
+        )
+
+        (#_"boolean" Stamp'''isCompatible-2c [#_"NarrowOopStamp" this, #_"Constant" other]
+            (if (instance? HotSpotObjectConstant other)
+                (#_"HotSpotObjectConstant" .isCompressed other)
+                true
+            )
         )
 
         (#_"boolean" Stamp'''isCompatible-2s [#_"NarrowOopStamp" this, #_"Stamp" other]
@@ -65656,55 +65626,17 @@ ZeroExtendNode'new-4
             )
         )
     )
-)
 
-(class-ns HotSpotNarrowOopStamp [NarrowOopStamp, AbstractObjectStamp, AbstractPointerStamp, Stamp]
-    (defn- #_"HotSpotNarrowOopStamp" HotSpotNarrowOopStamp'new-5 [#_"ResolvedJavaType" type, #_"boolean" exact-type?, #_"boolean" never-nil?, #_"boolean" always-nil?, #_"CompressEncoding" encoding]
-        (merge (HotSpotNarrowOopStamp'class.) (NarrowOopStamp'new-5 type, exact-type?, never-nil?, always-nil?, encoding))
-    )
-
-    (defm HotSpotNarrowOopStamp AbstractObjectStamp
-        (#_"AbstractObjectStamp" AbstractObjectStamp'''copyWith-5 [#_"HotSpotNarrowOopStamp" this, #_"ResolvedJavaType" type, #_"boolean" exact-type?, #_"boolean" never-nil?, #_"boolean" always-nil?]
-            (HotSpotNarrowOopStamp'new-5 type, exact-type?, never-nil?, always-nil?, (NarrowOopStamp''getEncoding-1 this))
-        )
-    )
-
-    (defn #_"Stamp" HotSpotNarrowOopStamp'compressed-2 [#_"AbstractObjectStamp" stamp, #_"CompressEncoding" encoding]
-        (HotSpotNarrowOopStamp'new-5 (:type stamp), (AbstractObjectStamp''isExactType-1 stamp), (:never-nil? stamp), (:always-nil? stamp), encoding)
-    )
-
-    (defm HotSpotNarrowOopStamp Stamp
-        (#_"Constant" Stamp'''readConstant-4 [#_"HotSpotNarrowOopStamp" this, #_"MemoryAccessProvider" provider, #_"Constant" base, #_"long" displacement]
-            (try
-                (#_"HotSpotMemoryAccessProvider" .readNarrowOopConstant provider, base, displacement)
-                (catch IllegalArgumentException _
-                    nil
-                )
-            )
-        )
-
-        (#_"JavaConstant" Stamp'''asConstant-1 [#_"HotSpotNarrowOopStamp" this]
-            (when (:always-nil? this) HotSpotCompressedNullConstant/COMPRESSED_NULL)
-        )
-
-        (#_"boolean" Stamp'''isCompatible-2c [#_"HotSpotNarrowOopStamp" this, #_"Constant" other]
-            (if (instance? HotSpotObjectConstant other)
-                (#_"HotSpotObjectConstant" .isCompressed other)
-                true
-            )
-        )
-    )
-
-    (defn #_"Stamp" HotSpotNarrowOopStamp'mkStamp-3 [#_"CompressionOp" op, #_"Stamp" input, #_"CompressEncoding" encoding]
+    (defn #_"Stamp" NarrowOopStamp'mkStamp-3 [#_"CompressionOp" op, #_"Stamp" input, #_"CompressEncoding" encoding]
         (condp = op
             :CompressionOp'Compress
                 (condp satisfies? input
-                    ObjectStamp       (HotSpotNarrowOopStamp'compressed-2 input, encoding) ;; compressed oop
-                    KlassPointerStamp (KlassPointerStamp''compressed-2 input, encoding)    ;; compressed klass pointer
+                    ObjectStamp       (NarrowOopStamp'compressed-2 input, encoding)     ;; compressed oop
+                    KlassPointerStamp (KlassPointerStamp''compressed-2 input, encoding) ;; compressed klass pointer
                 )
             :CompressionOp'Uncompress
                 (condp satisfies? input
-                    NarrowOopStamp    (NarrowOopStamp'''uncompressed-1 input)    ;; oop
+                    NarrowOopStamp    (NarrowOopStamp''uncompressed-1 input)    ;; oop
                     KlassPointerStamp (KlassPointerStamp''uncompressed-1 input) ;; metaspace pointer
                 )
         )
