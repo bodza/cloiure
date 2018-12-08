@@ -1,5 +1,5 @@
 (ns graalfn.core
-    (:refer-clojure :only [* *ns* + - -> ->> / < <= = > >= and apply assoc assoc-in bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean boolean-array byte byte-array case char comp compare concat cond condp conj cons contains? count dec declare defmacro defn defprotocol defrecord delay disj dissoc doseq dotimes double double-array empty? extend-protocol extend-type false? filter first fn for get hash-map hash-set if-not import inc instance? int int-array into into-array iterate iterator-seq key keys let letfn list locking long long-array loop make-array map mapcat mapv max merge min neg? next nil? not not= ns-imports ns-unmap nth nthnext object-array or peek pop pos? quot range reduce reify rem remove repeat rest reverse run! satisfies? second select-keys seq sequential? set short some some? sort sort-by sorted-map sorted-set str #_subvec symbol symbol? take take-while true? unsigned-bit-shift-right update update-in val vals vary-meta #_vec #_vector vector? volatile! vreset! vswap! when-some while zero?])
+    (:refer-clojure :only [* *ns* + - -> ->> / < <= = > >= and apply assoc assoc-in bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean byte byte-array case char comp compare concat cond condp conj cons contains? count dec declare defmacro defn defprotocol defrecord delay disj dissoc doseq dotimes double empty? extend-protocol extend-type false? filter first fn for get hash-map hash-set if-not import inc instance? int int-array into into-array iterate iterator-seq key keys lazy-cat let letfn list list* locking long long-array loop make-array map mapcat mapv max merge min neg? next nil? not not= ns-imports ns-unmap nth nthnext object-array or peek pop pos? quot range reduce reify rem remove repeat rest reverse run! satisfies? second select-keys seq sequential? set short some some? sort sort-by sorted-map sorted-set str #_subvec symbol symbol? take take-while true? unsigned-bit-shift-right update update-in val vals vary-meta #_vec #_vector vector? volatile! vreset! vswap! when-some while zero?])
     (:require [clojure.core.rrb-vector :refer [catvec subvec vec vector #_vector-of]] [flatland.ordered.map :refer [ordered-map]] [flatland.ordered.set :refer [ordered-set]])
 )
 
@@ -18,8 +18,8 @@
 (import
     [java.lang
         ArithmeticException Boolean Byte Character Class ClassLoader Double Error Float IllegalArgumentException IllegalStateException
-        IncompatibleClassChangeError IndexOutOfBoundsException Integer Iterable Long Math Module NoClassDefFoundError NoSuchFieldError
-        NoSuchMethodError Object Short String System UnsupportedClassVersionError Void
+        IncompatibleClassChangeError Integer Iterable Long Math Module NoClassDefFoundError NoSuchFieldError NoSuchMethodError Object
+        Short String System UnsupportedClassVersionError Void
     ]
 )
 
@@ -125,7 +125,7 @@
     [java.lang.reflect AnnotatedElement Constructor Field Method Modifier]
     [java.nio ByteBuffer ByteOrder]
     [java.util
-        Arrays BitSet Comparator Iterator List ListIterator NoSuchElementException
+        Arrays BitSet Comparator Iterator List ListIterator NoSuchElementException
     ]
     [java.util.stream Stream Stream$Builder]
 
@@ -1369,7 +1369,6 @@ FrameState''monitorIdAt-2
 FrameState''nestedLockDepth-1
 FrameState''setOuterFrameState-2
 FrameState''stackAt-2
-FrameState'TWO_SLOT_MARKER
 FrameState'new-1
 FrameState'new-2
 FrameState'new-8a
@@ -1378,7 +1377,6 @@ FrameStateAssignmentClosure'new-0
 FrameStateAssignmentPhase'new-0
 FrameStateBuilder''clearNonLiveLocals-4
 FrameStateBuilder''clearStack-1
-FrameStateBuilder''contains-2
 FrameStateBuilder''create-3
 FrameStateBuilder''create-6
 FrameStateBuilder''getMethod-1
@@ -1399,7 +1397,6 @@ FrameStateBuilder''pushLock-3
 FrameStateBuilder''pushReturn-3
 FrameStateBuilder''stackOp-2
 FrameStateBuilder''storeLocal-4
-FrameStateBuilder'copy-1
 FrameStateBuilder'new-3c
 FrameStateBuilder'new-3m
 G1PostWriteBarrier'new-4
@@ -1754,12 +1751,6 @@ Instantiation''asMaterialization-4
 Instantiation''initialize-4
 Instantiation''isInitialized-1
 Instantiation'new-0
-IntList''add-2
-IntList''get-2
-IntList''set-3
-IntList''setSize-2
-IntList'copy-3
-IntList'new-1
 IntegerAddExactNode'new-2
 IntegerAddExactSplitNode'new-5
 IntegerBelowNode'create-2
@@ -3043,7 +3034,6 @@ StoreIndexedNode'new-4
 StrategySwitchOp'new-5
 StringRef''getValue-2
 StringRef'new-1
-StubForeignCallNode''operands-2
 StubForeignCallNode'new-3*
 Sub'new-2
 SubNode'create-2
@@ -3068,7 +3058,6 @@ SwitchStrategy'new-1
 TableSwitchOp'new-6
 Transition'SET
 TwoOp'new-5
-TwoSlotMarker'new-0
 TypeCheckSnippetUtils'checkSecondarySubType-2
 TypeCheckSnippetUtils'checkUnknownSubType-2
 TypeReference''asExactReference-1
@@ -3144,7 +3133,7 @@ UsePosList''setRegisterPriority-3
 UsePosList''size-1
 UsePosList''splitAt-2
 UsePosList''usePos-2
-UsePosList'new-1i
+UsePosList'new-0
 UseTrappingNullChecksPhase'new-0
 Utf8'new-1
 VMConfigNode'cardTableAddress-0
@@ -4461,7 +4450,6 @@ ZeroExtendNode'new-4
 )
 
 (defp Instantiation)
-(defp IntList)
 (defp IntegerAddExactNode)
 (defp IntegerAddExactSplitNode)
 (defp IntegerBelowNode)
@@ -5626,7 +5614,6 @@ ZeroExtendNode'new-4
 
 (defp TableSwitchOp)
 (defp TwoOp)
-(defp TwoSlotMarker)
 
 ;;;
  ; Plugin for overriding types in the bytecode parser. This can be used to modify the standard
@@ -15758,7 +15745,7 @@ ZeroExtendNode'new-4
     (defm AMD64SwitchClosure BaseSwitchClosure
         (#_"this" BaseSwitchClosure'''conditionalJump-4 [#_"AMD64SwitchClosure" this, #_"int" index, #_"Condition" condition, #_"Label" target]
             (let [
-                this (AMD64SwitchClosure'''emitComparison-2 this, (nth (:keyConstants (:op this)) index))
+                this (AMD64SwitchClosure'''emitComparison-2 this, (nth (:constants (:op this)) index))
             ]
                 (update this :asm Assembler''jcc-3 (AMD64ControlFlow'intCond-1 condition), target)
             )
@@ -18554,7 +18541,7 @@ ZeroExtendNode'new-4
                                     (recur-if (not (zero? exits)) [exitLoops exits (inc i)] => (sort-by #(Long/bitCount (:nLoops %)) (comp - compare) exitLoops))
                                 )
                             )
-                        #_"FrameStateBuilder" newState (FrameStateBuilder'copy-1 state)
+                        #_"FrameStateBuilder" newState (§ snap state)
                         [#_"LoopExitNode" firstLoopExit #_"LoopExitNode" lastLoopExit]
                             (loop-when [firstLoopExit nil lastLoopExit nil #_"seq" s (seq exitLoops)] (some? s) => [firstLoopExit lastLoopExit]
                                 (let [
@@ -18598,7 +18585,7 @@ ZeroExtendNode'new-4
                 #_"FixedNode" targetNode (get (:firstInstructions this) (:id block))
                 #_"FixedTarget" target (BytecodeParser''checkLoopExit-4 this, targetNode, block, state)
                 #_"FixedNode" result (:fixed target)
-                #_"FrameStateBuilder" currentEntryState (cond (not= (:state target) state) (:state target) canReuseState state :else (FrameStateBuilder'copy-1 state))
+                #_"FrameStateBuilder" currentEntryState (cond (not= (:state target) state) (:state target) canReuseState state :else (§ snap state))
                 _ (§ ass! this (assoc-in this [:entryStates (:id block)] currentEntryState))
                 _ (§ ass! currentEntryState (FrameStateBuilder''clearNonLiveLocals-4 currentEntryState, block, (:liveness this), true))
             ]
@@ -19183,10 +19170,11 @@ ZeroExtendNode'new-4
             #_"JavaKind" resultType (#_"Signature" .getReturnKind (#_"ResolvedJavaMethod" .getSignature targetMethod))
             #_"JavaType" returnType (#_"Signature" .getReturnType (#_"ResolvedJavaMethod" .getSignature targetMethod), (#_"ResolvedJavaMethod" .getDeclaringClass (:method this)))
             returnType (#_"JavaType" .resolve returnType, (#_"ResolvedJavaMethod" .getDeclaringClass targetMethod))
+            _
+                (when (and (= initialInvokeKind :InvokeKind'Special) (not (#_"ResolvedJavaMethod" .isConstructor targetMethod)))
+                    (§ ass! args (BytecodeParser''emitCheckForInvokeSuperSpecial-2 this, args))
+                )
         ]
-            (when (and (= initialInvokeKind :InvokeKind'Special) (not (#_"ResolvedJavaMethod" .isConstructor targetMethod)))
-                (§ ass! args (BytecodeParser''emitCheckForInvokeSuperSpecial-2 this, args))
-            )
             (try
                 (§ ass! this (assoc this :currentInvoke (CurrentInvoke'new-3 args, invokeKind, returnType)))
                 (when (BytecodeParser''tryNodePluginForInvocation-3 this, args, targetMethod)
@@ -19624,11 +19612,11 @@ ZeroExtendNode'new-4
      ;
      ; @return an array of size successorCount with the accumulated probability for each successor
      ;;
-    (defn- #_"[double]" BytecodeParser'successorProbabilites-3 [#_"int" successorCount, #_"int*" keySuccessors, #_"double*" keyProbabilities]
-        (reduce #(update' %1 (nth keySuccessors %2) + (nth keyProbabilities %2)) (vec (repeat successorCount 0.0)) (range (count keySuccessors)))
+    (defn- #_"[double]" BytecodeParser'successorProbabilites-3 [#_"int" successorCount, #_"int*" keySuccessors, #_"double*" probabilities]
+        (reduce #(update' %1 (nth keySuccessors %2) + (nth probabilities %2)) (vec (repeat successorCount 0.0)) (range (count keySuccessors)))
     )
 
-    (defn- #_"this" BytecodeParser''genIntegerSwitch-6 [#_"BytecodeParser" this, #_"ValueNode" value, #_"BciBlock*" actualSuccessors, #_"[int]" keys, #_"[double]" keyProbabilities, #_"[int]" keySuccessors]
+    (defn- #_"this" BytecodeParser''genIntegerSwitch-6 [#_"BytecodeParser" this, #_"ValueNode" value, #_"BciBlock*" actualSuccessors, #_"[int]" keys, #_"[double]" probabilities, #_"[int]" keySuccessors]
         (if (satisfies? ConstantNode value)
             (let [
                 #_"int" constantValue (#_"JavaConstant" .asInt (:value value))
@@ -19638,8 +19626,8 @@ ZeroExtendNode'new-4
             )
             (let [
                 this (assoc this :controlFlowSplit true)
-                #_"[double]" successorProbabilities (BytecodeParser'successorProbabilites-3 (count actualSuccessors), keySuccessors, keyProbabilities)
-                #_"IntegerSwitchNode" switchNode (BytecodeParser''append-2 this, (IntegerSwitchNode'new-5i value, (count actualSuccessors), keys, keyProbabilities, keySuccessors))
+                #_"[double]" successorProbabilities (BytecodeParser'successorProbabilites-3 (count actualSuccessors), keySuccessors, probabilities)
+                #_"IntegerSwitchNode" switchNode (BytecodeParser''append-2 this, (IntegerSwitchNode'new-5i value, (count actualSuccessors), keys, probabilities, keySuccessors))
                 _
                     (dotimes [#_"int" i (count actualSuccessors)]
                         (§ ass! switchNode (SwitchNode''setBlockSuccessor-3 switchNode, i, (BytecodeParser''createBlockTarget-4 this, (nth successorProbabilities i), (nth actualSuccessors i), (:frameState this))))
@@ -20316,33 +20304,27 @@ ZeroExtendNode'new-4
         (BytecodeParser''genPutStatic-2 this, (BytecodeParser''lookupField-3 this, cpi, opcode))
     )
 
-    (defn- #_"[double]" BytecodeParser'switchProbability-2 [#_"int" numberOfCases, #_"int" bci]
-        (vec (repeat numberOfCases (/ 1.0 numberOfCases)))
-    )
-
-    (defn- #_"this" BytecodeParser''genSwitch-2 [#_"BytecodeParser" this, #_"BytecodeSwitch" bs]
+    (defn- #_"this" BytecodeParser''genSwitch-2 [#_"BytecodeParser" this, #_"BytecodeSwitch" switch]
         (let [
-            #_"int" bci (BytecodeParser''bci-1 this)
             #_"ValueNode" value (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Int)
-            #_"int" nofCases (BytecodeSwitch'''numberOfCases-1 bs)
-            #_"int" nofCasesPlusDefault (inc nofCases)
-            #_"[double]" keyProbabilities (BytecodeParser'switchProbability-2 nofCasesPlusDefault, bci)
+            #_"int" n (BytecodeSwitch'''numberOfCases-1 switch)
+            #_"[double]" probabilities (vec (repeat (inc n) (/ 1.0 (inc n))))
             #_"{Integer SuccessorInfo}" bciToBlockSuccessorIndex {}
             _
                 (dotimes [#_"int" i (count (:bciSuccessors (:currentBlock this)))]
                     (§ ass! bciToBlockSuccessorIndex (assoc bciToBlockSuccessorIndex (:startBci (BciBlock''getSuccessor-2 (:currentBlock this), i)) (SuccessorInfo'new-1 i)))
                 )
             #_"BciBlock*" actualSuccessors nil
-            #_"[int]" keys (vec (repeat nofCases 0))
-            #_"[int]" keySuccessors (vec (repeat nofCasesPlusDefault 0))
+            #_"[int]" keys (vec (repeat n 0))
+            #_"[int]" keySuccessors (vec (repeat (inc n) 0))
             [#_"int" deoptSuccessorIndex #_"int" nextSuccessorIndex]
-                (loop-when [deoptSuccessorIndex -1 nextSuccessorIndex 0 #_"int" i 0] (< i nofCasesPlusDefault) => [deoptSuccessorIndex nextSuccessorIndex]
-                    (when (< i nofCases)
-                        (§ ass! keys (assoc' keys i (BytecodeSwitch'''keyAt-2 bs, i)))
+                (loop-when [deoptSuccessorIndex -1 nextSuccessorIndex 0 #_"int" i 0] (< i (inc n)) => [deoptSuccessorIndex nextSuccessorIndex]
+                    (when (< i n)
+                        (§ ass! keys (assoc' keys i (BytecodeSwitch'''keyAt-2 switch, i)))
                     )
                     (let [
                         [deoptSuccessorIndex nextSuccessorIndex]
-                            (if (and (not (satisfies? ConstantNode value)) (BytecodeParser''isNeverExecutedCode-2 this, (nth keyProbabilities i)))
+                            (if (and (not (satisfies? ConstantNode value)) (BytecodeParser''isNeverExecutedCode-2 this, (nth probabilities i)))
                                 (let [
                                     [deoptSuccessorIndex nextSuccessorIndex]
                                         (when (neg? deoptSuccessorIndex) => [deoptSuccessorIndex nextSuccessorIndex]
@@ -20354,7 +20336,7 @@ ZeroExtendNode'new-4
                                     [deoptSuccessorIndex nextSuccessorIndex]
                                 )
                                 (let [
-                                    #_"int" targetBci (if (< i nofCases) (BytecodeSwitch''targetAt-2 bs, i) (BytecodeSwitch''defaultTarget-1 bs))
+                                    #_"int" targetBci (if (< i n) (BytecodeSwitch''targetAt-2 switch, i) (BytecodeSwitch''defaultTarget-1 switch))
                                     #_"SuccessorInfo" info (get bciToBlockSuccessorIndex targetBci)
                                     [info nextSuccessorIndex]
                                         (when (neg? (:actualIndex info)) => [info nextSuccessorIndex]
@@ -20397,14 +20379,14 @@ ZeroExtendNode'new-4
                     (let [
                         #_"[int]" connectedCases (vec (repeat nextSuccessorIndex 0))
                         _
-                            (dotimes [#_"int" i nofCasesPlusDefault]
+                            (dotimes [#_"int" i (inc n)]
                                 (§ ass! connectedCases (update' connectedCases (nth keySuccessors i) inc))
                             )
                     ]
-                        (dotimes [#_"int" i nofCasesPlusDefault]
+                        (dotimes [#_"int" i (inc n)]
                             (when (= (nth keySuccessors i) deoptSuccessorIndex)
                                 (let [
-                                    #_"int" targetBci (if (< i nofCases) (BytecodeSwitch''targetAt-2 bs, i) (BytecodeSwitch''defaultTarget-1 bs))
+                                    #_"int" targetBci (if (< i n) (BytecodeSwitch''targetAt-2 switch, i) (BytecodeSwitch''defaultTarget-1 switch))
                                     #_"SuccessorInfo" info (get bciToBlockSuccessorIndex targetBci)
                                     #_"int" rewiredIndex (:actualIndex info)
                                 ]
@@ -20417,7 +20399,7 @@ ZeroExtendNode'new-4
                     )
                 )
         ]
-            (BytecodeParser''genIntegerSwitch-6 this, value, actualSuccessors, keys, keyProbabilities, keySuccessors)
+            (BytecodeParser''genIntegerSwitch-6 this, value, actualSuccessors, keys, probabilities, keySuccessors)
         )
     )
 
@@ -20602,7 +20584,7 @@ ZeroExtendNode'new-4
                     ]
                         ;; We need to preserve the frame state builder of the loop header so that we can merge
                         ;; values for phi functions, so make a copy of it.
-                        (assoc-in this [:entryStates (:id block)] (FrameStateBuilder'copy-1 (:frameState this)))
+                        (assoc-in this [:entryStates (:id block)] (§ snap (:frameState this)))
                     )
                     (when (satisfies? MergeNode (:lastInstr this)) => this
                         ;; All inputs of non-loop phi nodes are known by now. We can infer the stamp
@@ -20669,7 +20651,7 @@ ZeroExtendNode'new-4
         (if (IntrinsicContext''isPostParseInlined-1 (:intrinsicContext this))
             (Graph''add-2 (:graph this), (FrameState'new-1 BytecodeFrame/BEFORE_BCI))
             (let [
-                f'local #(let [#_"ValueNode" node (nth (:locals (:frameState this)) %)] (when-not (= node FrameState'TWO_SLOT_MARKER) node))
+                f'local #(let [#_"ValueNode" node (nth (:locals (:frameState this)) %)] (when-not (= node :FrameState'TWO_SLOT_MARKER) node))
                 #_"ResolvedJavaMethod" o'method (:originalMethod (:intrinsicContext this))
                 #_"int" m (#_"ResolvedJavaMethod" .getMaxLocals o'method)
                 #_"ValueNode*" locals
@@ -22047,8 +22029,8 @@ ZeroExtendNode'new-4
             _ (#_"DataInputStream" .readUnsignedShort stream)
             #_"int" maxLocals (#_"DataInputStream" .readUnsignedShort stream)
             #_"int" codeLength (#_"DataInputStream" .readInt stream)
-            #_"[byte]" code (byte-array codeLength)
-            _ (#_"DataInputStream" .readFully stream, code)
+            #_"byte[]" code! (byte-array codeLength)
+            _ (#_"DataInputStream" .readFully stream, code!)
             #_"int" n (#_"DataInputStream" .readUnsignedShort stream)
             _ (Classfile'skipFully-2 stream, (* n ClassfileBytecode'EXCEPTION_HANDLER_TABLE_SIZE_IN_BYTES))
             _ (ClassfileBytecode'skipCodeAttributes-1 stream)
@@ -22057,7 +22039,7 @@ ZeroExtendNode'new-4
                 (hash-map
                     #_"ResolvedJavaMethod" :method method
                     #_"ClassfileConstantPool" :constantPool constantPool
-                    #_"[byte]" :code code
+                    #_"[byte]" :code (vec code!)
                     #_"int" :maxLocals maxLocals
                 )
             )
@@ -22652,7 +22634,7 @@ ZeroExtendNode'new-4
     (defn- #_"this" CodeBuffer''ensureSize-2 [#_"CodeBuffer" this, #_"int" n]
         (when (<= (#_"ByteBuffer" .limit (:data this)) n) => this
             (let [
-                #_"ByteBuffer" data (ByteBuffer/wrap (Arrays/copyOf (#_"ByteBuffer" .array (:data this)), (* n 4)))
+                #_"ByteBuffer" data (ByteBuffer/wrap (Arrays/copyOf (#_"ByteBuffer" .array (:data this)), (* n 4)))
             ]
                 (#_"ByteBuffer" .order data, (#_"ByteBuffer" .order (:data this)))
                 (#_"ByteBuffer" .position data, (#_"ByteBuffer" .position (:data this)))
@@ -26596,18 +26578,18 @@ ZeroExtendNode'new-4
                 (let [
                     #_"int" totalNodeCount (Graph''getNodeCount-1 graph)
                     #_"{Node}'" v'flood (volatile! #{ (:start graph) })
-                    mark- (fn #_"{Node}" [#_"{Node}" flood, #_"Node" node] (if (some? node) (conj flood node) flood))
+                    f'mark- (fn #_"{Node}" [#_"{Node}" flood, #_"Node" node] (if (some? node) (conj flood node) flood))
                     #_"EdgeVisitor" f'marker
                         (reify EdgeVisitor
                             (#_"Node" EdgeVisitor'''apply-3 [#_"EdgeVisitor" _, #_"Node" source, #_"Node" target]
-                                (vswap! v'flood mark- target)
+                                (vswap! v'flood f'mark- target)
                                 target
                             )
                         )
                     _
                         (doseq [#_"Node" node @v'flood]
                             (if (satisfies? AbstractEndNode node)
-                                (vswap! v'flood mark- (AbstractEndNode'''merge-1 node))
+                                (vswap! v'flood f'mark- (AbstractEndNode'''merge-1 node))
                                 (do
                                     (Node''applySuccessors-2 node, f'marker)
                                     (Node''applyInputs-2 node, f'marker)
@@ -26620,7 +26602,7 @@ ZeroExtendNode'new-4
                                 #_"GuardNode" guard (first s)
                                 changed?
                                     (when (contains? @v'flood (FloatingAnchoredNode''getAnchor-1 guard)) => changed?
-                                        (vswap! v'flood mark- guard)
+                                        (vswap! v'flood f'mark- guard)
                                         true
                                     )
                             ]
@@ -26631,7 +26613,7 @@ ZeroExtendNode'new-4
                         (when changed?
                             (doseq [#_"Node" node @v'flood]
                                 (if (satisfies? AbstractEndNode node)
-                                    (vswap! v'flood mark- (AbstractEndNode'''merge-1 node))
+                                    (vswap! v'flood f'mark- (AbstractEndNode'''merge-1 node))
                                     (do
                                         (Node''applySuccessors-2 node, f'marker)
                                         (Node''applyInputs-2 node, f'marker)
@@ -28172,8 +28154,8 @@ ZeroExtendNode'new-4
                 #_"SwitchStrategy" :strategy strategy
                 #_"int" :defaultEffort 0
                 #_"int" :defaultCount 0
-                #_"[int]" :keyEfforts (vec (repeat (count (:keyProbabilities strategy)) 0))
-                #_"[int]" :keyCounts (vec (repeat (count (:keyProbabilities strategy)) 0))
+                #_"[int]" :keyEfforts (vec (repeat (count (:probabilities strategy)) 0))
+                #_"[int]" :keyCounts (vec (repeat (count (:probabilities strategy)) 0))
                 #_"[LabelRef]" :keyTargets keyTargets
             )
         )
@@ -28207,9 +28189,9 @@ ZeroExtendNode'new-4
 
     (defn #_"double" EffortClosure''getAverageEffort-1 [#_"EffortClosure" this]
         (loop-when-recur [#_"double" effort 0.0 #_"double" defaultProbability 1.0 #_"int" i 0]
-                         (< i (count (:keyProbabilities (:strategy this))))
-                         [(+ effort (/ (* (nth (:keyEfforts this) i) (nth (:keyProbabilities (:strategy this)) i)) (nth (:keyCounts this) i)))
-                          (- defaultProbability (nth (:keyProbabilities (:strategy this)) i))
+                         (< i (count (:probabilities (:strategy this))))
+                         [(+ effort (/ (* (nth (:keyEfforts this) i) (nth (:probabilities (:strategy this)) i)) (nth (:keyCounts this) i)))
+                          (- defaultProbability (nth (:probabilities (:strategy this)) i))
                           (inc i)]
                       => (+ effort (/ (* (:defaultEffort this) defaultProbability) (:defaultCount this)))
         )
@@ -29306,7 +29288,7 @@ ZeroExtendNode'new-4
                 #_"int'" v'i (volatile! -1)
                 #_"int'" v'j (volatile! 0)
                 #_"boolean'" v'forward? (volatile! true)
-                forward-
+                f'orward
                     (fn #_"void" []
                         (vreset! v'forward? false)
                         (or
@@ -29338,14 +29320,14 @@ ZeroExtendNode'new-4
                 (reify Iterator #_"<Position>"
                     (#_"boolean" hasNext [#_"Iterator<Position>" _]
                         (when @v'forward?
-                            (forward-)
+                            (f'orward)
                         )
                         (< @v'i (count (:offsets this)))
                     )
 
                     (#_"Position" next [#_"Iterator<Position>" _]
                         (when @v'forward?
-                            (forward-)
+                            (f'orward)
                         )
                         (vreset! v'forward? true)
                         (Position'new-3 this, @v'i, (if (< @v'i (:directCount this)) -1 @v'j))
@@ -30156,7 +30138,7 @@ ZeroExtendNode'new-4
             #_"JavaType" returnType (ForeignCallLinkage'asJavaType-1 (:resultType descriptor))
             #_"[JavaType]" parameterTypes (mapv ForeignCallLinkage'asJavaType-1 (:argumentTypes descriptor))
         ]
-            (#_"RegisterConfig" .getCallingConvention HotSpot'registerConfig, ccType, returnType, parameterTypes, HotSpot'valueKindFactory)
+            (#_"RegisterConfig" .getCallingConvention HotSpot'registerConfig, ccType, returnType, (into-array JavaType parameterTypes), HotSpot'valueKindFactory)
         )
     )
 
@@ -30712,24 +30694,6 @@ ZeroExtendNode'new-4
 )
 
 (class-ns FrameStateBuilder [SideEffectsState]
-    (defn- #_"FrameStateBuilder" FrameStateBuilder'init-0 []
-        (hash-map
-            #_"BytecodeParser" :parser nil
-            #_"Bytecode" :bytecode nil
-            #_"[ValueNode]" :locals nil
-            #_"[ValueNode]" :stack nil
-            #_"[ValueNode]" :lockedObjects nil
-            #_"[MonitorIdNode]" :monitorIds nil
-            #_"Graph" :graph nil
-            #_"FrameState" :outerFrameState nil
-            ;;;
-             ; The closest {@link StateSplit#hasSideEffect() side-effect} predecessors. There will be more
-             ; than one when the current block contains no side-effects but merging predecessor blocks do.
-             ;;
-            #_"[StateSplit]" :sideEffects nil
-        )
-    )
-
     ;;;
      ; Creates a new frame state builder for the given bytecode and the given target graph.
      ;
@@ -30737,20 +30701,22 @@ ZeroExtendNode'new-4
      ; @param graph the target graph of nodes to be created by the builder
      ;;
     (defn #_"FrameStateBuilder" FrameStateBuilder'new-3c [#_"BytecodeParser" parser, #_"Bytecode" bytecode, #_"Graph" graph]
-        (let [
-            #_"FrameStateBuilder" this
-                (merge (FrameStateBuilder'class.)
-                    (FrameStateBuilder'init-0)
-                )
-            this (assoc this :parser parser)
-            this (assoc this :bytecode bytecode)
-            this (assoc this :locals (vec (repeat (Bytecode'''getMaxLocals-1 bytecode) nil)))
-            this (assoc this :stack [])
-            this (assoc this :lockedObjects [])
-            this (assoc this :monitorIds [])
-            this (assoc this :graph graph)
-        ]
-            this
+        (merge (FrameStateBuilder'class.)
+            (hash-map
+                #_"BytecodeParser" :parser parser
+                #_"Bytecode" :bytecode bytecode
+                #_"[ValueNode]" :locals (vec (repeat (Bytecode'''getMaxLocals-1 bytecode) nil))
+                #_"(ValueNode)" :stack nil
+                #_"[ValueNode]" :lockedObjects []
+                #_"[MonitorIdNode]" :monitorIds []
+                #_"Graph" :graph graph
+                #_"FrameState" :outerFrameState nil
+                ;;;
+                 ; The closest {@link StateSplit#hasSideEffect() side-effect} predecessors. There will be more
+                 ; than one when the current block contains no side-effects but merging predecessor blocks do.
+                 ;;
+                #_"[StateSplit]" :sideEffects nil
+            )
         )
     )
 
@@ -30763,24 +30729,6 @@ ZeroExtendNode'new-4
     #_unused
     (defn #_"FrameStateBuilder" FrameStateBuilder'new-3m [#_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"Graph" graph]
         (FrameStateBuilder'new-3c parser, (ResolvedJavaMethodBytecode'new-1 method), graph)
-    )
-
-    (defn #_"FrameStateBuilder" FrameStateBuilder'copy-1 [#_"FrameStateBuilder" other]
-        (let [
-            #_"FrameStateBuilder" this
-                (merge (FrameStateBuilder'class.)
-                    (FrameStateBuilder'init-0)
-                )
-            this (assoc this :parser (:parser other))
-            this (assoc this :bytecode (:bytecode other))
-            this (assoc this :locals (:locals other))
-            this (assoc this :stack (:stack other))
-            this (assoc this :lockedObjects (:lockedObjects other))
-            this (assoc this :monitorIds (:monitorIds other))
-            this (assoc this :graph (:graph other))
-        ]
-            this
-        )
     )
 
     (defn #_"this" FrameStateBuilder''initializeFromArgumentsArray-2 [#_"FrameStateBuilder" this, #_"ValueNode*" arguments]
@@ -30799,7 +30747,7 @@ ZeroExtendNode'new-4
                     j (inc j)
                     [this j]
                         (when (#_"JavaKind" .needsTwoSlots (#_"Signature" .getParameterKind sig, k)) => [this j]
-                            [(update this :locals assoc' j FrameState'TWO_SLOT_MARKER) (inc j)]
+                            [(update this :locals assoc' j :FrameState'TWO_SLOT_MARKER) (inc j)]
                         )
                 ]
                     (recur this (inc i) j (inc k))
@@ -30838,7 +30786,7 @@ ZeroExtendNode'new-4
                     j (inc j)
                     [this j]
                         (when (#_"JavaKind" .needsTwoSlots kind) => [this j]
-                            [(update this :locals assoc' j FrameState'TWO_SLOT_MARKER) (inc j)]
+                            [(update this :locals assoc' j :FrameState'TWO_SLOT_MARKER) (inc j)]
                         )
                 ]
                     (recur this (inc i) j (inc k))
@@ -30872,7 +30820,7 @@ ZeroExtendNode'new-4
             (when-not (= bci BytecodeFrame/INVALID_FRAMESTATE_BCI) => (throw! "should not reach here")
                 (if (some? pushedValues)
                     (let [
-                        #_"[ValueNode]" o'stack (:stack this)
+                        #_"(ValueNode)" o'stack (:stack this)
                         _
                             (dotimes [#_"int" i (count pushedValues)]
                                 (§ ass! this (FrameStateBuilder''push-3 this, (nth pushedSlotKinds i), (nth pushedValues i)))
@@ -30896,7 +30844,7 @@ ZeroExtendNode'new-4
                         #_"ValueNode" x (nth (:stack this) i)
                         #_"ValueNode" y (nth (:stack other) i)
                     ]
-                        (if (and (not= x y) (or (= x FrameState'TWO_SLOT_MARKER) (Node''isDeleted-1 x) (= y FrameState'TWO_SLOT_MARKER) (Node''isDeleted-1 y) (not= (ValueNode''getStackKind-1 x) (ValueNode''getStackKind-1 y))))
+                        (if (and (not= x y) (or (= x :FrameState'TWO_SLOT_MARKER) (Node''isDeleted-1 x) (= y :FrameState'TWO_SLOT_MARKER) (Node''isDeleted-1 y) (not= (ValueNode''getStackKind-1 x) (ValueNode''getStackKind-1 y))))
                             false
                             (recur (inc i))
                         )
@@ -30930,7 +30878,7 @@ ZeroExtendNode'new-4
             (cond
                 (AbstractMergeNode''isPhiAtMerge-2 block, value)
                 (do
-                    (if (and (some? other) (not= other FrameState'TWO_SLOT_MARKER) (not (Node''isDeleted-1 other)) (= (ValueNode''getStackKind-1 value) (ValueNode''getStackKind-1 other)))
+                    (if (and (some? other) (not= other :FrameState'TWO_SLOT_MARKER) (not (Node''isDeleted-1 other)) (= (ValueNode''getStackKind-1 value) (ValueNode''getStackKind-1 other)))
                         (§ ass! value (PhiNode''addInput-2 value, other))
                         ;; This phi must be dead anyway, add input of correct stack kind to keep the graph invariants.
                         (§ ass! value (PhiNode''addInput-2 value, (ConstantNode'defaultForKind-2 (ValueNode''getStackKind-1 value), (:graph this))))
@@ -30939,7 +30887,7 @@ ZeroExtendNode'new-4
                 )
                 (= value other)
                     value
-                (or (= value FrameState'TWO_SLOT_MARKER) (= other FrameState'TWO_SLOT_MARKER))
+                (or (= value :FrameState'TWO_SLOT_MARKER) (= other :FrameState'TWO_SLOT_MARKER))
                     nil
                 (and (some? other) (not (Node''isDeleted-1 other)) (= (ValueNode''getStackKind-1 value) (ValueNode''getStackKind-1 other)))
                     (FrameStateBuilder''createValuePhi-4 this, value, other, block)
@@ -30950,8 +30898,8 @@ ZeroExtendNode'new-4
     (defn #_"this" FrameStateBuilder''merge-3 [#_"FrameStateBuilder" this, #_"AbstractMergeNode" block, #_"FrameStateBuilder" that]
         (let [
             f'merge #(FrameStateBuilder''merge-4 this, %1, %2, block)
-            this (assoc this :locals        (mapv f'merge (:locals this) (:locals that)))
-            this (assoc this :stack         (mapv f'merge (:stack this) (:stack that)))
+            this (assoc this :locals        (mapv f'merge        (:locals this)        (:locals that)))
+            this (assoc this :stack         (map  f'merge         (:stack this)         (:stack that)))
             this (assoc this :lockedObjects (mapv f'merge (:lockedObjects this) (:lockedObjects that)))
         ]
             (cond
@@ -30962,28 +30910,28 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"void" FrameStateBuilder'inferPhiStamp-2 [#_"AbstractMergeNode" block, #_"ValueNode" node]
-        (when (AbstractMergeNode''isPhiAtMerge-2 block, node)
-            (ValueNode'''inferStamp-1 node)
+    (defn- #_"void" FrameStateBuilder'inferPhiStamp-2 [#_"AbstractMergeNode" block, #_"ValueNode" value]
+        (when (AbstractMergeNode''isPhiAtMerge-2 block, value)
+            (ValueNode'''inferStamp-1 value)
         )
         nil
     )
 
     (defn #_"void" FrameStateBuilder''inferPhiStamps-2 [#_"FrameStateBuilder" this, #_"AbstractMergeNode" block]
-        (dotimes [#_"int" i (count (:locals this))]
-            (FrameStateBuilder'inferPhiStamp-2 block, (nth (:locals this) i))
+        (doseq [#_"ValueNode" value (:locals this)]
+            (FrameStateBuilder'inferPhiStamp-2 block, value)
         )
-        (dotimes [#_"int" i (count (:stack this))]
-            (FrameStateBuilder'inferPhiStamp-2 block, (nth (:stack this) i))
+        (doseq [#_"ValueNode" value (:stack this)]
+            (FrameStateBuilder'inferPhiStamp-2 block, value)
         )
-        (dotimes [#_"int" i (count (:lockedObjects this))]
-            (FrameStateBuilder'inferPhiStamp-2 block, (nth (:lockedObjects this) i))
+        (doseq [#_"ValueNode" value (:lockedObjects this)]
+            (FrameStateBuilder'inferPhiStamp-2 block, value)
         )
         nil
     )
 
     (defn- #_"ValueNode" FrameStateBuilder''createLoopPhi-4 [#_"FrameStateBuilder" this, #_"AbstractMergeNode" block, #_"ValueNode" value, #_"boolean" stampFromValue]
-        (when (and (some? value) (not= value FrameState'TWO_SLOT_MARKER)) => value
+        (when (and (some? value) (not= value :FrameState'TWO_SLOT_MARKER)) => value
             (let [
                 #_"ValuePhiNode" phi (Graph''add-2 (:graph this), (ValuePhiNode'new-2 (if stampFromValue (:stamp value) (Stamp'''unrestricted-1 (:stamp value))), block))
             ]
@@ -31007,47 +30955,27 @@ ZeroExtendNode'new-4
                     )
                 )
             f'createLoopPhi #(FrameStateBuilder''createLoopPhi-4 this, loopBegin, %, false)
-            this (assoc this :stack         (mapv f'createLoopPhi (:stack this)))
+            this (assoc this :stack         (map  f'createLoopPhi (:stack this)))
             this (assoc this :lockedObjects (mapv f'createLoopPhi (:lockedObjects this)))
         ]
             this
         )
     )
 
+    (defn- #_"boolean" FrameStateBuilder''contains-2 [#_"FrameStateBuilder" this, #_"ValueNode" value]
+        (some #(= % value) (lazy-cat (:locals this) (:stack this) (:lockedObjects this) (:monitorIds this)))
+    )
+
     (defn #_"this" FrameStateBuilder''insertLoopProxies-3 [#_"FrameStateBuilder" this, #_"LoopExitNode" loopExit, #_"FrameStateBuilder" loopEntryState]
         (let [
-            _
-                (dotimes [#_"int" i (count (:locals this))]
-                    (let [
-                        #_"ValueNode" value (nth (:locals this) i)
-                    ]
-                        (when (and (some? value) (not= value FrameState'TWO_SLOT_MARKER) (or (not (FrameStateBuilder''contains-2 loopEntryState, value)) (AbstractMergeNode''isPhiAtMerge-2 (:loopBegin loopExit), value)))
-                            (§ ass! this (update this :locals assoc' i (ProxyNode'forValue-3 value, loopExit, (:graph this))))
-                        )
-                    )
-                )
-            _
-                (dotimes [#_"int" i (count (:stack this))]
-                    (let [
-                        #_"ValueNode" value (nth (:stack this) i)
-                    ]
-                        (when (and (some? value) (not= value FrameState'TWO_SLOT_MARKER) (or (not (FrameStateBuilder''contains-2 loopEntryState, value)) (AbstractMergeNode''isPhiAtMerge-2 (:loopBegin loopExit), value)))
-                            (§ ass! this (update this :stack assoc' i (ProxyNode'forValue-3 value, loopExit, (:graph this))))
-                        )
-                    )
-                )
-            _
-                (dotimes [#_"int" i (count (:lockedObjects this))]
-                    (let [
-                        #_"ValueNode" value (nth (:lockedObjects this) i)
-                    ]
-                        (when (and (some? value) (or (not (FrameStateBuilder''contains-2 loopEntryState, value)) (AbstractMergeNode''isPhiAtMerge-2 (:loopBegin loopExit), value)))
-                            (§ ass! this (update this :lockedObjects assoc' i (ProxyNode'forValue-3 value, loopExit, (:graph this))))
-                        )
+            f'proxy
+                (fn #_"ValueNode" [#_"ValueNode" value]
+                    (when (and (some? value) (not= value :FrameState'TWO_SLOT_MARKER) (or (not (FrameStateBuilder''contains-2 loopEntryState, value)) (AbstractMergeNode''isPhiAtMerge-2 (:loopBegin loopExit), value))) => value
+                        (ProxyNode'forValue-3 value, loopExit, (:graph this))
                     )
                 )
         ]
-            this
+            (-> this (update :locals #(mapv f'proxy %)) (update :stack #(map f'proxy %)) (update :lockedObjects #(mapv f'proxy %)))
         )
     )
 
@@ -31092,26 +31020,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"boolean" FrameStateBuilder''contains-2 [#_"FrameStateBuilder" this, #_"ValueNode" value]
-        (or
-            (loop-when [#_"int" i 0] (< i (count (:locals this))) => false
-                (or (= (nth (:locals this) i) value)
-                    (recur (inc i))
-                )
-            )
-            (loop-when [#_"int" i 0] (< i (count (:stack this))) => false
-                (or (= (nth (:stack this) i) value)
-                    (recur (inc i))
-                )
-            )
-            (loop-when [#_"int" i 0] (< i (count (:lockedObjects this))) => false
-                (or (= (nth (:lockedObjects this) i) value) (= (nth (:monitorIds this) i) value)
-                    (recur (inc i))
-                )
-            )
-        )
-    )
-
     (defn #_"this" FrameStateBuilder''clearNonLiveLocals-4 [#_"FrameStateBuilder" this, #_"BciBlock" block, #_"LocalLiveness" liveness, #_"boolean" liveIn]
         ;; If somebody is tempted to remove/disable this clearing code: it's possible to remove it for normal compilations,
         ;; but not for OSR, as dead object slots at the OSR entry aren't cleared then. It is also not enough to rely on
@@ -31137,68 +31045,51 @@ ZeroExtendNode'new-4
      ; Stores a given local variable at the specified index. If the value occupies two slots, then
      ; the next local variable index is also overwritten.
      ;
-     ; @param i the index at which to store
+     ; @param index the index at which to store
      ; @param slotKind the kind of the local variable from the point of view of the bytecodes
-     ; @param x the instruction which produces the value for the local
+     ; @param value the instruction which produces the value for the local
      ;;
-    (defn #_"this" FrameStateBuilder''storeLocal-4 [#_"FrameStateBuilder" this, #_"int" i, #_"JavaKind" slotKind, #_"ValueNode" x]
+    (defn #_"this" FrameStateBuilder''storeLocal-4 [#_"FrameStateBuilder" this, #_"int" index, #_"JavaKind" slotKind, #_"ValueNode" value]
         (let [
             this
-                (when (= (nth (:locals this) i) FrameState'TWO_SLOT_MARKER) => this
+                (when (= (nth (:locals this) index) :FrameState'TWO_SLOT_MARKER) => this
                     ;; Writing the second slot of a two-slot value invalidates the first slot.
-                    (update this :locals assoc' (dec i) nil)
+                    (update this :locals assoc' (dec index) nil)
                 )
-            this (update this :locals assoc' i x)
+            this (update this :locals assoc' index value)
         ]
             (cond
                 (#_"JavaKind" .needsTwoSlots slotKind)
                     ;; Writing a two-slot value: mark the second slot.
-                    (update this :locals assoc' (inc i) FrameState'TWO_SLOT_MARKER)
-                (and (< i (dec (count (:locals this)))) (= (nth (:locals this) (inc i)) FrameState'TWO_SLOT_MARKER))
+                    (update this :locals assoc' (inc index) :FrameState'TWO_SLOT_MARKER)
+                (and (< index (dec (count (:locals this)))) (= (nth (:locals this) (inc index)) :FrameState'TWO_SLOT_MARKER))
                     ;; Writing a one-slot value to an index previously occupied by a two-slot value: clear the old marker of the second slot.
-                    (update this :locals assoc' (inc i) nil)
+                    (update this :locals assoc' (inc index) nil)
                 :else
                     this
             )
         )
     )
 
-    (defn- #_"this" FrameStateBuilder''xpush-2 [#_"FrameStateBuilder" this, #_"ValueNode" x]
-        (update this :stack conj' x)
-    )
-
-    (defn- #_"ValueNode" FrameStateBuilder''xpop-1 [#_"FrameStateBuilder" this]
-        (let [
-            _ (peek' (:stack this))
-        ]
-            (§ ass! this (update this :stack pop'))
-            _
-        )
-    )
-
-    (defn- #_"ValueNode" FrameStateBuilder''xpeek-1 [#_"FrameStateBuilder" this]
-        (peek' (:stack this))
-    )
-
     ;;;
      ; Pushes an instruction onto the stack with the expected type.
      ;
      ; @param slotKind the kind of the stack element from the point of view of the bytecodes
-     ; @param x the instruction to push onto the stack
+     ; @param value the instruction to push onto the stack
      ;;
-    (defn #_"this" FrameStateBuilder''push-3 [#_"FrameStateBuilder" this, #_"JavaKind" slotKind, #_"ValueNode" x]
+    (defn #_"this" FrameStateBuilder''push-3 [#_"FrameStateBuilder" this, #_"JavaKind" slotKind, #_"ValueNode" value]
         (let [
-            this (FrameStateBuilder''xpush-2 this, x)
+            this (update this :stack #(cons value %))
         ]
             (when (#_"JavaKind" .needsTwoSlots slotKind) => this
-                (FrameStateBuilder''xpush-2 this, FrameState'TWO_SLOT_MARKER)
+                (update this :stack #(cons :FrameState'TWO_SLOT_MARKER %))
             )
         )
     )
 
-    (defn #_"this" FrameStateBuilder''pushReturn-3 [#_"FrameStateBuilder" this, #_"JavaKind" slotKind, #_"ValueNode" x]
+    (defn #_"this" FrameStateBuilder''pushReturn-3 [#_"FrameStateBuilder" this, #_"JavaKind" slotKind, #_"ValueNode" value]
         (when-not (= slotKind JavaKind/Void) => this
-            (FrameStateBuilder''push-3 this, slotKind, x)
+            (FrameStateBuilder''push-3 this, slotKind, value)
         )
     )
 
@@ -31209,10 +31100,16 @@ ZeroExtendNode'new-4
      ; @return the instruction on the top of the stack
      ;;
     (defn #_"ValueNode" FrameStateBuilder''pop-2 [#_"FrameStateBuilder" this, #_"JavaKind" slotKind]
-        (when (#_"JavaKind" .needsTwoSlots slotKind)
-            (FrameStateBuilder''xpop-1 this)
+        (let [
+            _
+                (when (#_"JavaKind" .needsTwoSlots slotKind)
+                    (§ ass! this (update this :stack next))
+                )
+            #_"[ValueNode]" value (first (:stack this))
+            _ (§ ass! this (update this :stack next))
+        ]
+            value
         )
-        (FrameStateBuilder''xpop-1 this)
     )
 
     ;;;
@@ -31220,24 +31117,26 @@ ZeroExtendNode'new-4
      ;
      ; @return an array containing the arguments off of the stack
      ;;
-    (defn #_"[ValueNode]" FrameStateBuilder''popArguments-2 [#_"FrameStateBuilder" this, #_"int" argSize]
-        (let [
-            #_"[ValueNode]" result (make-array ValueNode'iface argSize)
-            _
-                (loop-when-recur [#_"int" i (dec argSize)] (<= 0 i) [(dec i)]
-                    (let [
-                        #_"ValueNode" value (FrameStateBuilder''xpop-1 this)
-                        value
-                            (when (= value FrameState'TWO_SLOT_MARKER) => value
-                                ;; Ignore second slot of two-slot value.
-                                (FrameStateBuilder''xpop-1 this)
+    (defn #_"[ValueNode]" FrameStateBuilder''popArguments-2 [#_"FrameStateBuilder" this, #_"int" n]
+        (vec
+            (loop-when [#_"(ValueNode)" args nil #_"int" i 0] (< i n) => args
+                (let [
+                    #_"ValueNode" value (first (:stack this))
+                    _ (§ ass! this (update this :stack next))
+                    value
+                        (when (= value :FrameState'TWO_SLOT_MARKER) => value
+                            ;; Ignore second slot of two-slot value.
+                            (let [
+                                value (first (:stack this))
+                                _ (§ ass! this (update this :stack next))
+                            ]
+                                value
                             )
-                    ]
-                        (§ ass! result (assoc' result i value))
-                    )
+                        )
+                ]
+                    (recur (cons value args) (inc i))
                 )
-        ]
-            result
+            )
         )
     )
 
@@ -31245,7 +31144,7 @@ ZeroExtendNode'new-4
      ; Clears all values on this stack.
      ;;
     (defn #_"this" FrameStateBuilder''clearStack-1 [#_"FrameStateBuilder" this]
-        (assoc this :stack [])
+        (assoc this :stack nil)
     )
 
     ;;;
@@ -31253,99 +31152,22 @@ ZeroExtendNode'new-4
      ;
      ; @param opcode The Java bytecode.
      ;;
-    (defn #_"this" FrameStateBuilder''stackOp-2 [#_"FrameStateBuilder" this, #_"int" opcode]
+    (defn- #_"[ValueNode]" FrameStateBuilder'stackOp-2 [#_"(ValueNode)" s, #_"int" opcode]
         (condp = opcode
-            Bytecodes'POP
-                (let [
-                    #_"ValueNode" w1 (FrameStateBuilder''xpop-1 this)
-                ]
-                    this
-                )
-            Bytecodes'POP2
-                (let [
-                    #_"ValueNode" w1 (FrameStateBuilder''xpop-1 this)
-                    #_"ValueNode" w2 (FrameStateBuilder''xpop-1 this)
-                ]
-                    this
-                )
-            Bytecodes'DUP
-                (let [
-                    #_"ValueNode" w1 (FrameStateBuilder''xpeek-1 this)
-                    this (FrameStateBuilder''xpush-2 this, w1)
-                ]
-                    this
-                )
-            Bytecodes'DUP_X1
-                (let [
-                    #_"ValueNode" w1 (FrameStateBuilder''xpop-1 this)
-                    #_"ValueNode" w2 (FrameStateBuilder''xpop-1 this)
-                    this (FrameStateBuilder''xpush-2 this, w1)
-                    this (FrameStateBuilder''xpush-2 this, w2)
-                    this (FrameStateBuilder''xpush-2 this, w1)
-                ]
-                    this
-                )
-            Bytecodes'DUP_X2
-                (let [
-                    #_"ValueNode" w1 (FrameStateBuilder''xpop-1 this)
-                    #_"ValueNode" w2 (FrameStateBuilder''xpop-1 this)
-                    #_"ValueNode" w3 (FrameStateBuilder''xpop-1 this)
-                    this (FrameStateBuilder''xpush-2 this, w1)
-                    this (FrameStateBuilder''xpush-2 this, w3)
-                    this (FrameStateBuilder''xpush-2 this, w2)
-                    this (FrameStateBuilder''xpush-2 this, w1)
-                ]
-                    this
-                )
-            Bytecodes'DUP2
-                (let [
-                    #_"ValueNode" w1 (FrameStateBuilder''xpop-1 this)
-                    #_"ValueNode" w2 (FrameStateBuilder''xpop-1 this)
-                    this (FrameStateBuilder''xpush-2 this, w2)
-                    this (FrameStateBuilder''xpush-2 this, w1)
-                    this (FrameStateBuilder''xpush-2 this, w2)
-                    this (FrameStateBuilder''xpush-2 this, w1)
-                ]
-                    this
-                )
-            Bytecodes'DUP2_X1
-                (let [
-                    #_"ValueNode" w1 (FrameStateBuilder''xpop-1 this)
-                    #_"ValueNode" w2 (FrameStateBuilder''xpop-1 this)
-                    #_"ValueNode" w3 (FrameStateBuilder''xpop-1 this)
-                    this (FrameStateBuilder''xpush-2 this, w2)
-                    this (FrameStateBuilder''xpush-2 this, w1)
-                    this (FrameStateBuilder''xpush-2 this, w3)
-                    this (FrameStateBuilder''xpush-2 this, w2)
-                    this (FrameStateBuilder''xpush-2 this, w1)
-                ]
-                    this
-                )
-            Bytecodes'DUP2_X2
-                (let [
-                    #_"ValueNode" w1 (FrameStateBuilder''xpop-1 this)
-                    #_"ValueNode" w2 (FrameStateBuilder''xpop-1 this)
-                    #_"ValueNode" w3 (FrameStateBuilder''xpop-1 this)
-                    #_"ValueNode" w4 (FrameStateBuilder''xpop-1 this)
-                    this (FrameStateBuilder''xpush-2 this, w2)
-                    this (FrameStateBuilder''xpush-2 this, w1)
-                    this (FrameStateBuilder''xpush-2 this, w4)
-                    this (FrameStateBuilder''xpush-2 this, w3)
-                    this (FrameStateBuilder''xpush-2 this, w2)
-                    this (FrameStateBuilder''xpush-2 this, w1)
-                ]
-                    this
-                )
-            Bytecodes'SWAP
-                (let [
-                    #_"ValueNode" w1 (FrameStateBuilder''xpop-1 this)
-                    #_"ValueNode" w2 (FrameStateBuilder''xpop-1 this)
-                    this (FrameStateBuilder''xpush-2 this, w1)
-                    this (FrameStateBuilder''xpush-2 this, w2)
-                ]
-                    this
-                )
+            Bytecodes'POP     (next s)
+            Bytecodes'POP2    (next (next s))
+            Bytecodes'DUP     (cons (first s) s)
+            Bytecodes'DUP_X1  (let [[a b     & s] s] (list* a b a       s))
+            Bytecodes'DUP_X2  (let [[a b c   & s] s] (list* a b c a     s))
+            Bytecodes'DUP2    (let [[a b        ] s] (list* a b         s))
+            Bytecodes'DUP2_X1 (let [[a b c   & s] s] (list* a b c a b   s))
+            Bytecodes'DUP2_X2 (let [[a b c d & s] s] (list* a b c d a b s))
+            Bytecodes'SWAP    (let [[a b     & s] s] (list* b a         s))
         )
+    )
+
+    (defn #_"this" FrameStateBuilder''stackOp-2 [#_"FrameStateBuilder" this, #_"int" opcode]
+        (update this :stack FrameStateBuilder'stackOp-2 opcode)
     )
 
     (defm FrameStateBuilder SideEffectsState
@@ -33206,120 +33028,6 @@ ZeroExtendNode'new-4
 )
 
 ;;;
- ; An expandable and indexable list of {@code int}s.
- ;
- ; This class avoids the boxing/unboxing incurred by {@code List<Integer>}.
- ;;
-(class-ns IntList []
-    ;;;
-     ; Creates an int list with a specified initial array.
-     ;
-     ; @param array the initial array used for the list (no copy is made)
-     ; @param size the initial {@linkplain #size() size} of the list (must be less than or equal to {@code array.length})
-     ;;
-    (defn- #_"IntList" IntList'new-2 [#_"[int]" array, #_"int" size]
-        (merge (IntList'class.)
-            (hash-map
-                #_"[int]" :array array
-                #_"int" :size size
-            )
-        )
-    )
-
-    ;;;
-     ; Creates an int list with a specified initial capacity.
-     ;;
-    (defn #_"IntList" IntList'new-1 [#_"int" capacity]
-        (IntList'new-2 (int-array capacity), 0)
-    )
-
-    ;;;
-     ; Makes a new int list by copying a range from a given int list.
-     ;
-     ; @param other the list from which a range of values is to be copied into the new list
-     ; @param startIndex the index in {@code other} at which to start copying
-     ; @param length the number of values to copy from {@code other}
-     ; @param capacity the initial capacity of the new int list (must be greater or equal to {@code length})
-     ; @return a new int list whose {@linkplain #size() size} is {@code length}
-     ;;
-    (defn- #_"IntList" IntList'copy-4 [#_"IntList" other, #_"int" startIndex, #_"int" length, #_"int" capacity]
-        (if (zero? capacity)
-            (IntList'new-2 [], 0)
-            (let [
-                #_"[int]" array (int-array capacity)
-                _ (System/arraycopy (:array other), startIndex, array, 0, length)
-            ]
-                (IntList'new-2 array, length)
-            )
-        )
-    )
-
-    ;;;
-     ; Makes a new int list by copying a range from a given int list.
-     ;
-     ; @param other the list from which a range of values is to be copied into the new list
-     ; @param startIndex the index in {@code other} at which to start copying
-     ; @param length the number of values to copy from {@code other}
-     ; @return a new int list whose {@linkplain #size() size} and capacity is {@code length}
-     ;;
-    (defn #_"IntList" IntList'copy-3 [#_"IntList" other, #_"int" startIndex, #_"int" length]
-        (IntList'copy-4 other, startIndex, length, length)
-    )
-
-    ;;;
-     ; Appends a value to the end of this list, increasing its {@linkplain #size() size} by 1.
-     ;
-     ; @param value the value to append
-     ;;
-    (defn #_"this" IntList''add-2 [#_"IntList" this, #_"int" value]
-        (let [
-            this
-                (when (= (:size this) (count (:array this))) => this
-                    (assoc this :array (Arrays/copyOf (:array this), (inc (quot (* (:size this) 3) 2))))
-                )
-        ]
-            (§ ass! this (update this :array assoc' (:size this) value))
-            (update this :size inc)
-        )
-    )
-
-    ;;;
-     ; Gets the value in this list at a given index.
-     ;;
-    (defn #_"int" IntList''get-2 [#_"IntList" this, #_"int" index]
-        (when (< index (:size this)) => (throw (IndexOutOfBoundsException. (str "Index: " index ", Size: " (:size this))))
-            (nth (:array this) index)
-        )
-    )
-
-    ;;;
-     ; Sets a value at a given index in this list.
-     ;;
-    (defn #_"this" IntList''set-3 [#_"IntList" this, #_"int" index, #_"int" value]
-        (when (< index (:size this)) => (throw (IndexOutOfBoundsException. (str "Index: " index ", Size: " (:size this))))
-            (§ ass! this (update this :array assoc' index value))
-            this
-        )
-    )
-
-    ;;;
-     ; Adjusts the {@linkplain #size() size} of this int list.
-     ;
-     ; If {@code size < size()}, the size is changed to {@code size}. If {@code size > size()},
-     ; sufficient 0 elements are {@linkplain #add(int) added} until {@code size() == size}.
-     ;
-     ; @param size the new size of this int list
-     ;;
-    (defn #_"this" IntList''setSize-2 [#_"IntList" this, #_"int" size]
-        (cond
-            (< size (:size this)) (assoc this :size size)
-            (< (:size this) size) (assoc this :array (Arrays/copyOf (:array this), size))
-            :else                        this
-        )
-    )
-)
-
-;;;
  ; Represents an interval in the linear scan register allocator.
  ;;
 (class-ns Interval []
@@ -33359,7 +33067,7 @@ ZeroExtendNode'new-4
                         ;;;
                          ; List of (use-positions, register-priorities) pairs, sorted by use-positions.
                          ;;
-                        #_"UsePosList" :usePosList (UsePosList'new-1i 4)
+                        #_"UsePosList" :usePosList (UsePosList'new-0)
                         ;;;
                          ; Iterator used to traverse the ranges of an interval.
                          ;;
@@ -35358,11 +35066,11 @@ ZeroExtendNode'new-4
 )
 
 (class-ns KeyData []
-    (defn #_"KeyData" KeyData'new-3 [#_"int" key, #_"double" keyProbability, #_"int" keySuccessor]
+    (defn #_"KeyData" KeyData'new-3 [#_"int" key, #_"double" probability, #_"int" keySuccessor]
         (merge (KeyData'class.)
             (hash-map
                 #_"int" :key key
-                #_"double" :keyProbability keyProbability
+                #_"double" :probability probability
                 #_"int" :keySuccessor keySuccessor
             )
         )
@@ -35819,52 +35527,52 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"void" LIRBuilder''emitSwitch-2 [#_"LIRBuilder" this, #_"SwitchNode" node]
         (let [
-            #_"LabelRef" defaultTarget (LIRBuilder''getLIRBlock-2 this, (SwitchNode''defaultSuccessor-1 node))
-            #_"int" keyCount (count (:keys node))
+            #_"LabelRef" default (LIRBuilder''getLIRBlock-2 this, (SwitchNode''defaultSuccessor-1 node))
+            #_"int" n (count (:keys node))
         ]
-            (if (zero? keyCount)
-                (LIRGenerator''emitJump-2 (:gen this), defaultTarget)
+            (if (zero? n)
+                (LIRGenerator''emitJump-2 (:gen this), default)
                 (let [
                     #_"Variable" value (LIRGenerator''load-2 (:gen this), (LIRBuilder''operand-2 this, (:value node)))
                 ]
                     (cond
-                        (= keyCount 1)
+                        (= n 1)
                             (let [
                                 #_"double" probability (ControlSplitNode'''probability-2 node, (SwitchNode''keySuccessor-2 node, 0))
                                 #_"LIRKind" kind (Stamp'''getLIRKind-1 (:stamp (:value node)))
                                 #_"Value" key (LIRGenerator''emitConstant-3 (:gen this), kind, (SwitchNode'''keyAt-2 node, 0))
                             ]
-                                (LIRGenerator''emitCompareBranch-8 (:gen this), (#_"ValueKind" .getPlatformKind kind), (LIRGenerator''load-2 (:gen this), (LIRBuilder''operand-2 this, (:value node))), key, Condition'EQ, (LIRBuilder''getLIRBlock-2 this, (SwitchNode''keySuccessor-2 node, 0)), defaultTarget, probability)
+                                (LIRGenerator''emitCompareBranch-8 (:gen this), (#_"ValueKind" .getPlatformKind kind), (LIRGenerator''load-2 (:gen this), (LIRBuilder''operand-2 this, (:value node))), key, Condition'EQ, (LIRBuilder''getLIRBlock-2 this, (SwitchNode''keySuccessor-2 node, 0)), default, probability)
                             )
                         (and (satisfies? IntegerSwitchNode node) (SwitchNode'''isSorted-1 node))
                             (let [
-                                #_"[LabelRef]" keyTargets (make-array LabelRef'iface keyCount)
-                                #_"[JavaConstant]" keyConstants (make-array JavaConstant keyCount)
-                                #_"[double]" keyProbabilities (double-array keyCount)
-                                #_"JavaKind" keyKind (#_"JavaConstant" .getJavaKind (SwitchNode'''keyAt-2 node, 0))
+                                #_"[LabelRef]" targets []
+                                #_"[JavaConstant]" constants []
+                                #_"[double]" probabilities []
+                                _
+                                    (dotimes [#_"int" i n]
+                                        (§ ass! targets (conj' targets (LIRBuilder''getLIRBlock-2 this, (SwitchNode''keySuccessor-2 node, i))))
+                                        (§ ass! constants (conj' constants (SwitchNode'''keyAt-2 node, i)))
+                                        (§ ass! probabilities (conj' probabilities (SwitchNode''keyProbability-2 node, i)))
+                                    )
                             ]
-                                (dotimes [#_"int" i keyCount]
-                                    (§ ass! keyTargets (assoc' keyTargets i (LIRBuilder''getLIRBlock-2 this, (SwitchNode''keySuccessor-2 node, i))))
-                                    (§ ass! keyConstants (assoc' keyConstants i (SwitchNode'''keyAt-2 node, i)))
-                                    (§ ass! keyProbabilities (assoc' keyProbabilities i (SwitchNode''keyProbability-2 node, i)))
-                                )
-                                (LIRGenerator''emitStrategySwitch-6 (:gen this), keyConstants, keyProbabilities, keyTargets, defaultTarget, value)
+                                (LIRGenerator''emitStrategySwitch-6 (:gen this), constants, probabilities, targets, default, value)
                             )
                         :else
                             ;; keyKind != JavaKind.Int || !node.isSorted()
                             (let [
-                                #_"[LabelRef]" keyTargets (make-array LabelRef'iface keyCount)
-                                #_"[Constant]" keyConstants (make-array Constant keyCount)
-                                #_"[double]" keyProbabilities (double-array keyCount)
+                                #_"[LabelRef]" targets []
+                                #_"[Constant]" constants []
+                                #_"[double]" probabilities []
+                                _
+                                    (dotimes [#_"int" i n]
+                                        (§ ass! targets (conj' targets (LIRBuilder''getLIRBlock-2 this, (SwitchNode''keySuccessor-2 node, i))))
+                                        (§ ass! constants (conj' constants (SwitchNode'''keyAt-2 node, i)))
+                                        (§ ass! probabilities (conj' probabilities (SwitchNode''keyProbability-2 node, i)))
+                                    )
                             ]
-                                (dotimes [#_"int" i keyCount]
-                                    (§ ass! keyTargets (assoc' keyTargets i (LIRBuilder''getLIRBlock-2 this, (SwitchNode''keySuccessor-2 node, i))))
-                                    (§ ass! keyConstants (assoc' keyConstants i (SwitchNode'''keyAt-2 node, i)))
-                                    (§ ass! keyProbabilities (assoc' keyProbabilities i (SwitchNode''keyProbability-2 node, i)))
-                                )
-
                                 ;; hopefully only a few entries
-                                (LIRGenerator''emitStrategySwitch-5 (:gen this), (SequentialStrategy'new-2 keyProbabilities, keyConstants), value, keyTargets, defaultTarget)
+                                (LIRGenerator''emitStrategySwitch-5 (:gen this), (SequentialStrategy'new-2 constants, probabilities), value, targets, default)
                             )
                     )
                 )
@@ -35875,26 +35583,19 @@ ZeroExtendNode'new-4
 
     (defn- #_"[Value]" LIRBuilder''visitInvokeArguments-3 [#_"LIRBuilder" this, #_"CallingConvention" invokeCc, #_"ValueNode*" arguments]
         ;; for each argument, load it into the correct location
-        (let [
-            #_"[Value]" args (make-array Value (count arguments))
-            _
-                (loop-when [#_"int" i 0 #_"seq" s (seq arguments)] (some? s)
+        (loop-when [#_"[Value]" args [] #_"int" i 0 #_"seq" s (seq arguments)] (some? s) => args
+            (let [
+                #_"ValueNode" arg (first s)
+            ]
+                (when (some? arg) => (throw! "I thought we no longer have nil entries for two-slot types...")
                     (let [
-                        #_"ValueNode" arg (first s)
+                        #_"AllocatableValue" operand (#_"CallingConvention" .getArgument invokeCc, i)
                     ]
-                        (when (some? arg) => (throw! "I thought we no longer have nil entries for two-slot types...")
-                            (let [
-                                #_"AllocatableValue" operand (#_"CallingConvention" .getArgument invokeCc, i)
-                            ]
-                                (LIRGenerator''emitMove-3 (:gen this), operand, (LIRBuilder''operand-2 this, arg))
-                                (§ ass! args (assoc' args i operand))
-                                (recur (inc i) (next s))
-                            )
-                        )
+                        (LIRGenerator''emitMove-3 (:gen this), operand, (LIRBuilder''operand-2 this, arg))
+                        (recur (conj' args operand) (inc i) (next s))
                     )
                 )
-        ]
-            args
+            )
         )
     )
 
@@ -36499,43 +36200,35 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"void" LIRGenerator''emitStrategySwitch-5 [#_"LIRGenerator" this, #_"SwitchStrategy" strategy, #_"Variable" key, #_"[LabelRef]" keyTargets, #_"LabelRef" defaultTarget]
+    (defn #_"void" LIRGenerator''emitStrategySwitch-5 [#_"LIRGenerator" this, #_"SwitchStrategy" strategy, #_"Variable" key, #_"[LabelRef]" targets, #_"LabelRef" default]
         ;; a temp is needed for loading object constants
-        (LIRGenerator''append-2 this, (AMD64HotSpotStrategySwitchOp'new-5 strategy, keyTargets, defaultTarget, key, (if-not (LIRKind'isValue-1v key) (LIRGenerator''newVariable-2 this, (#_"Value" .getValueKind key)) Value/ILLEGAL)))
+        (LIRGenerator''append-2 this, (AMD64HotSpotStrategySwitchOp'new-5 strategy, targets, default, key, (if-not (LIRKind'isValue-1v key) (LIRGenerator''newVariable-2 this, (#_"Value" .getValueKind key)) Value/ILLEGAL)))
         nil
     )
 
-    (defn #_"void" LIRGenerator''emitTableSwitch-5 [#_"LIRGenerator" this, #_"int" lowKey, #_"LabelRef" defaultTarget, #_"[LabelRef]" targets, #_"Value" key]
-        (LIRGenerator''append-2 this, (TableSwitchOp'new-6 lowKey, defaultTarget, targets, key, (LIRGenerator''newVariable-2 this, (LIRKind'value-1 (#_"Architecture" .getWordKind (.arch HotSpot'target)))), (LIRGenerator''newVariable-2 this, (#_"Value" .getValueKind key))))
+    (defn #_"void" LIRGenerator''emitTableSwitch-5 [#_"LIRGenerator" this, #_"int" lowKey, #_"LabelRef" default, #_"[LabelRef]" targets, #_"Value" key]
+        (LIRGenerator''append-2 this, (TableSwitchOp'new-6 lowKey, default, targets, key, (LIRGenerator''newVariable-2 this, (LIRKind'value-1 (#_"Architecture" .getWordKind (.arch HotSpot'target)))), (LIRGenerator''newVariable-2 this, (#_"Value" .getValueKind key))))
         nil
     )
 
-    (defn #_"void" LIRGenerator''emitStrategySwitch-6 [#_"LIRGenerator" this, #_"[JavaConstant]" keyConstants, #_"[double]" keyProbabilities, #_"[LabelRef]" keyTargets, #_"LabelRef" defaultTarget, #_"Variable" value]
+    (defn #_"void" LIRGenerator''emitStrategySwitch-6 [#_"LIRGenerator" this, #_"[JavaConstant]" constants, #_"[double]" probabilities, #_"[LabelRef]" targets, #_"LabelRef" default, #_"Variable" value]
         (let [
-            #_"int" keyCount (count keyConstants)
-            #_"SwitchStrategy" strategy (SwitchStrategy'getBestStrategy-3 keyProbabilities, keyConstants, keyTargets)
-            #_"long" valueRange (inc (- (#_"JavaConstant" .asLong (nth keyConstants (dec keyCount))) (#_"JavaConstant" .asLong (nth keyConstants 0))))
-            #_"double" tableSwitchDensity (/ keyCount (double valueRange))
+            #_"SwitchStrategy" strategy (SwitchStrategy'getBestStrategy-3 constants, probabilities, targets)
+            #_"int" n (count constants)
+            #_"long" valueRange (inc (- (#_"JavaConstant" .asLong (nth constants (dec n))) (#_"JavaConstant" .asLong (nth constants 0))))
+            #_"double" density (/ n (double valueRange))
         ]
             ;; This heuristic tries to find a compromise between the effort for the best switch strategy
             ;; and the density of a tableswitch. If the effort for the strategy is at least 4, then a
             ;; tableswitch is preferred if better than a certain value that starts at 0.5 and lowers
             ;; gradually with additional effort.
-            (if (or (< (SwitchStrategy'''getAverageEffort-1 strategy) 4) (< tableSwitchDensity (/ 1.0 (Math/sqrt (SwitchStrategy'''getAverageEffort-1 strategy)))))
-                (LIRGenerator''emitStrategySwitch-5 this, strategy, value, keyTargets, defaultTarget)
+            (if (or (< (SwitchStrategy'''getAverageEffort-1 strategy) 4) (< density (/ 1.0 (Math/sqrt (SwitchStrategy'''getAverageEffort-1 strategy)))))
+                (LIRGenerator''emitStrategySwitch-5 this, strategy, value, targets, default)
                 (let [
-                    #_"int" minValue (#_"JavaConstant" .asInt (nth keyConstants 0))
-                    #_"[LabelRef]" targets (make-array LabelRef'iface (int valueRange))
-                    _
-                        (dotimes [#_"int" i valueRange]
-                            (§ ass! targets (assoc' targets i defaultTarget))
-                        )
-                    _
-                        (dotimes [#_"int" i keyCount]
-                            (§ ass! targets (assoc' targets (- (#_"JavaConstant" .asInt (nth keyConstants i)) minValue) (nth keyTargets i)))
-                        )
+                    #_"int" minValue (#_"JavaConstant" .asInt (nth constants 0))
+                    targets (reduce #(assoc' %1 (- (#_"JavaConstant" .asInt (nth constants %2)) minValue) (nth targets %2)) (vec (repeat (int valueRange) default)) (range n))
                 ]
-                    (LIRGenerator''emitTableSwitch-5 this, minValue, defaultTarget, targets, value)
+                    (LIRGenerator''emitTableSwitch-5 this, minValue, default, targets, value)
                 )
             )
         )
@@ -39938,7 +39631,7 @@ ZeroExtendNode'new-4
     (defn #_"StrategySwitchOp" StrategySwitchOp'new-5 [#_"SwitchStrategy" strategy, #_"[LabelRef]" keyTargets, #_"LabelRef" defaultTarget, #_"Value" key, #_"Value" scratch]
         (merge (StrategySwitchOp'class.) (LIRInstruction'new-0)
             (hash-map
-                #_"[Constant]" :keyConstants (:keyConstants strategy)
+                #_"[Constant]" :constants (:constants strategy)
                 #_"[LabelRef]" :keyTargets keyTargets
                 #_"LabelRef" :defaultTarget defaultTarget
                 ; @OperandMode'ALIVE({OperandFlag'REG})
@@ -49151,7 +48844,7 @@ ZeroExtendNode'new-4
      ; @param value the instruction that provides the value to be switched over
      ; @param successors the list of successors of this switch
      ;;
-    (defn #_"SwitchNode" SwitchNode'new-4 [#_"ValueNode" value, #_"AbstractBeginNode*" successors, #_"[int]" keySuccessors, #_"[double]" keyProbabilities]
+    (defn #_"SwitchNode" SwitchNode'new-4 [#_"ValueNode" value, #_"AbstractBeginNode*" successors, #_"[int]" keySuccessors, #_"[double]" probabilities]
         (merge (SwitchNode'class.) (ControlSplitNode'new-1 VoidStamp'instance)
             (hash-map
                 ; @Successor
@@ -49160,7 +48853,7 @@ ZeroExtendNode'new-4
                 #_"ValueNode" :value value
                 ;; do not change the contents of these arrays:
                 #_"[int]" :keySuccessors keySuccessors
-                #_"[double]" :keyProbabilities keyProbabilities
+                #_"[double]" :probabilities probabilities
             )
         )
     )
@@ -49175,7 +48868,7 @@ ZeroExtendNode'new-4
                 (let [
                     sum
                         (when (= (nth (:successorNodes this) (nth (:keySuccessors this) i)) successor) => sum
-                            (+ sum (nth (:keyProbabilities this) i))
+                            (+ sum (nth (:probabilities this) i))
                         )
                 ]
                     (recur sum (inc i))
@@ -49188,8 +48881,8 @@ ZeroExtendNode'new-4
                 [#_"double" sum #_"double" otherSum]
                     (loop-when [sum 0.0 otherSum 0.0 #_"int" i 0] (< i (count (:keySuccessors this))) => [sum otherSum]
                         (if (= (nth (:successorNodes this) (nth (:keySuccessors this) i)) successor)
-                            (recur (+ sum (nth (:keyProbabilities this) i)) otherSum (inc i))
-                            (recur sum (+ otherSum (nth (:keyProbabilities this) i)) (inc i))
+                            (recur (+ sum (nth (:probabilities this) i)) otherSum (inc i))
+                            (recur sum (+ otherSum (nth (:probabilities this) i)) (inc i))
                         )
                     )
             ]
@@ -49200,8 +48893,8 @@ ZeroExtendNode'new-4
                     ]
                         (dotimes [#_"int" i (count (:keySuccessors this))]
                             (if (= (nth (:successorNodes this) (nth (:keySuccessors this) i)) successor)
-                                (§ ass! this (update this :keyProbabilities update' i #(max 0.0 (+ % (/ (* delta %) sum)))))
-                                (§ ass! this (update this :keyProbabilities update' i #(max 0.0 (- % (/ (* delta %) otherSum)))))
+                                (§ ass! this (update this :probabilities update' i #(max 0.0 (+ % (/ (* delta %) sum)))))
+                                (§ ass! this (update this :probabilities update' i #(max 0.0 (- % (/ (* delta %) otherSum)))))
                             )
                         )
                         true
@@ -49233,7 +48926,7 @@ ZeroExtendNode'new-4
      ; Returns the probability of the key at the given index.
      ;;
     (defn #_"double" SwitchNode''keyProbability-2 [#_"SwitchNode" this, #_"int" index]
-        (nth (:keyProbabilities this) index)
+        (nth (:probabilities this) index)
     )
 
     ;;;
@@ -49289,16 +48982,16 @@ ZeroExtendNode'new-4
  ; The actual implementation of the switch will be decided by the backend.
  ;;
 (class-ns IntegerSwitchNode [SwitchNode, ControlSplitNode, FixedNode, ValueNode, Node, LIRLowerable, Simplifiable]
-    (defn #_"IntegerSwitchNode" IntegerSwitchNode'new-5a [#_"ValueNode" value, #_"[AbstractBeginNode]" successors, #_"[int]" keys, #_"[double]" keyProbabilities, #_"[int]" keySuccessors]
-        (merge (IntegerSwitchNode'class.) (SwitchNode'new-4 value, successors, keySuccessors, keyProbabilities)
+    (defn #_"IntegerSwitchNode" IntegerSwitchNode'new-5a [#_"ValueNode" value, #_"[AbstractBeginNode]" successors, #_"[int]" keys, #_"[double]" probabilities, #_"[int]" keySuccessors]
+        (merge (IntegerSwitchNode'class.) (SwitchNode'new-4 value, successors, keySuccessors, probabilities)
             (hash-map
                 #_"[int]" :keys keys
             )
         )
     )
 
-    (defn #_"IntegerSwitchNode" IntegerSwitchNode'new-5i [#_"ValueNode" value, #_"int" successorCount, #_"[int]" keys, #_"[double]" keyProbabilities, #_"[int]" keySuccessors]
-        (IntegerSwitchNode'new-5a value, (make-array AbstractBeginNode'iface successorCount), keys, keyProbabilities, keySuccessors)
+    (defn #_"IntegerSwitchNode" IntegerSwitchNode'new-5i [#_"ValueNode" value, #_"int" successorCount, #_"[int]" keys, #_"[double]" probabilities, #_"[int]" keySuccessors]
+        (IntegerSwitchNode'new-5a value, (make-array AbstractBeginNode'iface successorCount), keys, probabilities, keySuccessors)
     )
 
     (defm IntegerSwitchNode SwitchNode
@@ -49355,45 +49048,27 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"this" IntegerSwitchNode''doReplace-6 [#_"IntegerSwitchNode" this, #_"ValueNode" newValue, #_"KeyData*" newKeyDatas, #_"AbstractBeginNode*" newSuccessors, #_"int" newDefaultSuccessor, #_"double" newDefaultProbability]
+    (defn- #_"this" IntegerSwitchNode''doReplace-6 [#_"IntegerSwitchNode" this, #_"ValueNode" value, #_"KeyData*" keyDatas, #_"AbstractBeginNode*" successorNodes, #_"int" defaultSuccessor, #_"double" defaultProbability]
         (let [
             ;; Sort the new keys (invariant of the IntegerSwitchNode).
-            newKeyDatas (sort-by :key newKeyDatas)
+            keyDatas (sort-by :key keyDatas)
             ;; Create the final data arrays.
-            #_"int" newKeyCount (count newKeyDatas)
-            #_"[int]" newKeys (int-array newKeyCount)
-            #_"[double]" newKeyProbabilities (double-array (inc newKeyCount))
-            #_"[int]" newKeySuccessors (int-array (inc newKeyCount))
-            _
-                (dotimes [#_"int" i newKeyCount]
-                    (let [
-                        #_"KeyData" keyData (nth newKeyDatas i)
-                    ]
-                        (§ ass! newKeys (assoc' newKeys i (:key keyData)))
-                        (§ ass! newKeyProbabilities (assoc' newKeyProbabilities i (:keyProbability keyData)))
-                        (§ ass! newKeySuccessors (assoc' newKeySuccessors i (:keySuccessor keyData)))
-                    )
-                )
-            newKeySuccessors (assoc' newKeySuccessors newKeyCount newDefaultSuccessor)
-            newKeyProbabilities (assoc' newKeyProbabilities newKeyCount newDefaultProbability)
+            #_"[int]" keys (mapv :key keyDatas)
+            #_"[double]" probabilities (conj' (mapv :probability keyDatas) defaultProbability)
+            #_"[int]" successors (conj' (mapv :keySuccessor keyDatas) defaultSuccessor)
             ;; Normalize new probabilities so that they sum up to 1.
-            #_"double" totalProbability
-                (loop-when-recur [totalProbability 0.0 #_"seq" s (seq newKeyProbabilities)]
-                                 (some? s)
-                                 [(+ totalProbability (first s)) (next s)]
-                              => totalProbability
-                )
+            #_"double" total (reduce + 0.0 probabilities)
             _
-                (if (pos? totalProbability)
-                    (dotimes [#_"int" i (count newKeyProbabilities)]
-                        (§ ass! newKeyProbabilities (update' newKeyProbabilities i / totalProbability))
+                (if (pos? total)
+                    (dotimes [#_"int" i (count probabilities)]
+                        (§ ass! probabilities (update' probabilities i / total))
                     )
-                    (dotimes [#_"int" i (count newKeyProbabilities)]
-                        (§ ass! newKeyProbabilities (assoc' newKeyProbabilities i (/ 1.0 (count newKeyProbabilities))))
+                    (dotimes [#_"int" i (count probabilities)]
+                        (§ ass! probabilities (assoc' probabilities i (/ 1.0 (count probabilities))))
                     )
                 )
             ;; Collect dead successors. Successors have to be cleaned before adding the new node to the graph.
-            #_"AbstractBeginNode*" deadSuccessors (§ snap (let [_ (apply hash-set newSuccessors)] (remove #(contains? _ %) (:successorNodes this))))
+            #_"AbstractBeginNode*" deadSuccessors (§ snap (let [_ (apply hash-set successorNodes)] (remove #(contains? _ %) (:successorNodes this))))
             _
                 (doseq [#_"Node" node (:successorNodes this)]
                     (Node''updatePredecessor-3 this, node, nil)
@@ -49401,14 +49076,14 @@ ZeroExtendNode'new-4
             this (assoc this :successorNodes [])
             ;; Create the new switch node. This is done before removing dead successors as 'killCFG' could edit
             ;; some of the inputs (e.g. if 'newValue' is a loop-phi of the loop that dies while removing successors).
-            #_"SwitchNode" newSwitch (Graph''add-2 (:graph this), (IntegerSwitchNode'new-5a newValue, newSuccessors, newKeys, newKeyProbabilities, newKeySuccessors))
-            ;; remove dead successors
+            #_"SwitchNode" switch (Graph''add-2 (:graph this), (IntegerSwitchNode'new-5a value, successorNodes, keys, probabilities, successors))
+            ;; Remove dead successors.
             _
                 (doseq [#_"AbstractBeginNode" successor deadSuccessors]
                     (GraphUtil'killCFG-1 successor)
                 )
-            ;; replace ourselves with the new switch
-            this (update this :predecessor FixedWithNextNode''setNext-2 newSwitch)
+            ;; Replace ourselves with the new switch.
+            this (update this :predecessor FixedWithNextNode''setNext-2 switch)
         ]
             (GraphUtil'killWithUnusedFloatingInputs-1 this)
             this
@@ -49482,7 +49157,7 @@ ZeroExtendNode'new-4
                                                                 ;; We do not have detailed profiling information about the individual new keys,
                                                                 ;; so we have to assume they split the probability of the old key.
                                                                 (let [
-                                                                    #_"double" newKeyProbability (/ (nth (:keyProbabilities this) i) (count newKeys))
+                                                                    #_"double" newKeyProbability (/ (nth (:probabilities this) i) (count newKeys))
                                                                     #_"int" newKeySuccessor (IntegerSwitchNode'addNewSuccessor-2 (SwitchNode''keySuccessor-2 this, i), newSuccessors)
                                                                 ]
                                                                     (doseq [#_"int" newKey newKeys]
@@ -49493,7 +49168,7 @@ ZeroExtendNode'new-4
                                                         )
                                                     )
                                                 #_"int" newDefaultSuccessor (IntegerSwitchNode'addNewSuccessor-2 (SwitchNode''defaultSuccessor-1 this), newSuccessors)
-                                                #_"double" newDefaultProbability (nth (:keyProbabilities this) (dec (count (:keyProbabilities this))))
+                                                #_"double" newDefaultProbability (nth (:probabilities this) (dec (count (:probabilities this))))
                                                 ;; We remove the array load, but we still need to preserve exception semantics by keeping
                                                 ;; the bounds check. Fortunately the array length is a constant.
                                                 #_"LogicNode" boundsCheck (Graph''add-2 (:graph this), (IntegerBelowNode'new-2 newValue, (ConstantNode'forInt-2 arrayLength, (:graph this))))
@@ -49553,7 +49228,7 @@ ZeroExtendNode'new-4
                             (let [
                                 #_"int" newKeySuccessor (IntegerSwitchNode'addNewSuccessor-2 (SwitchNode''keySuccessor-2 this, i), newSuccessors)
                             ]
-                                (§ ass! newKeys (conj' newKeys (KeyData'new-3 (nth (:keys this) i), (nth (:keyProbabilities this) i), newKeySuccessor)))
+                                (§ ass! newKeys (conj' newKeys (KeyData'new-3 (nth (:keys this) i), (nth (:probabilities this) i), newKeySuccessor)))
                             )
                         )
                     )
@@ -49573,7 +49248,7 @@ ZeroExtendNode'new-4
                         (let [
                             #_"int" newDefaultSuccessor (IntegerSwitchNode'addNewSuccessor-2 (SwitchNode''defaultSuccessor-1 this), newSuccessors)
                         ]
-                            (§ ass! this (IntegerSwitchNode''doReplace-6 this, (:value this), newKeys, newSuccessors, newDefaultSuccessor, (nth (:keyProbabilities this) (dec (count (:keyProbabilities this))))))
+                            (§ ass! this (IntegerSwitchNode''doReplace-6 this, (:value this), newKeys, newSuccessors, newDefaultSuccessor, (nth (:probabilities this) (dec (count (:probabilities this))))))
                             true
                         )
                 )
@@ -52125,14 +51800,14 @@ ZeroExtendNode'new-4
     (defm CommitAllocationNode Simplifiable
         (#_"this" Simplifiable'''simplify-2 [#_"CommitAllocationNode" this, #_"SimplifierTool" tool]
             (let [
-                #_"[boolean]" used (boolean-array (count (:virtualObjects this)))
-                #_"int" usedCount
-                    (loop-when [usedCount 0 #_"seq" s (seq (filter #(satisfies? AllocatedObjectNode %) (:nodeUsages this)))] (some? s) => usedCount
-                        (§ ass! used (assoc' used (index-of (:virtualObjects this) (:virtualObject (first s))) true))
-                        (recur (inc usedCount) (next s))
+                [#_"[boolean]" used? #_"int" n]
+                    (loop [used? (vec (repeat (count (:virtualObjects this)) false)) n 0 #_"seq" s (seq (filter #(satisfies? AllocatedObjectNode %) (:nodeUsages this)))]
+                        (when (some? s) => [used? n]
+                            (recur (assoc' used? (index-of (:virtualObjects this) (:virtualObject (first s))) true) (inc n) (next s))
+                        )
                     )
             ]
-                (if (zero? usedCount)
+                (if (zero? n)
                     (let [
                         #_"Node*" inputSnapshot (§ snap (Node''inputs-1 this))
                     ]
@@ -52143,38 +51818,37 @@ ZeroExtendNode'new-4
                         this
                     )
                     (let [
-                        usedCount
-                            (loop [usedCount usedCount]
+                        [used? n]
+                            (loop [used? used? n n]
                                 (let [
-                                    [usedCount #_"boolean" progress?]
-                                        (loop-when [usedCount usedCount progress? false #_"int" valuePos 0 #_"int" objIndex 0] (< objIndex (count (:virtualObjects this))) => [usedCount progress?]
+                                    [used? n #_"boolean" progress?]
+                                        (loop-when [used? used? n n progress? false #_"int" valuePos 0 #_"int" objIndex 0] (< objIndex (count (:virtualObjects this))) => [used? n progress?]
                                             (let [
                                                 #_"VirtualObjectNode" virtualObject (nth (:virtualObjects this) objIndex)
-                                                [usedCount progress?]
-                                                    (when (nth used objIndex) => [usedCount progress?]
-                                                        (loop-when [usedCount usedCount progress? progress? #_"int" i 0] (< i (VirtualObjectNode'''entryCount-1 virtualObject)) => [usedCount progress?]
+                                                [used? n progress?]
+                                                    (when (nth used? objIndex) => [used? n progress?]
+                                                        (loop-when [used? used? n n progress? progress? #_"int" i 0] (< i (VirtualObjectNode'''entryCount-1 virtualObject)) => [used? n progress?]
                                                             (let [
                                                                 #_"int" index (index-of (:virtualObjects this) (nth (:comValues this) (+ valuePos i)))
-                                                                [usedCount progress?]
-                                                                    (when (and (not= index -1) (not (nth used index))) => [usedCount progress?]
-                                                                        (§ ass! used (assoc' used index true))
-                                                                        [(inc usedCount) true]
+                                                                [used? n progress?]
+                                                                    (when (and (not= index -1) (not (nth used? index))) => [used? n progress?]
+                                                                        [(assoc' used? index true) (inc n) true]
                                                                     )
                                                             ]
-                                                                (recur usedCount progress? (inc i))
+                                                                (recur used? n progress? (inc i))
                                                             )
                                                         )
                                                     )
                                             ]
-                                                (recur usedCount progress? (+ valuePos (VirtualObjectNode'''entryCount-1 virtualObject)) (inc objIndex))
+                                                (recur used? n progress? (+ valuePos (VirtualObjectNode'''entryCount-1 virtualObject)) (inc objIndex))
                                             )
                                         )
                                 ]
-                                    (recur-if progress? [usedCount] => usedCount)
+                                    (recur-if progress? [used? n] => [used? n])
                                 )
                             )
                     ]
-                        (when (< usedCount (count (:virtualObjects this))) => this
+                        (when (< n (count (:virtualObjects this))) => this
                             (let [
                                 #_"[VirtualObjectNode]" virtualObjects []
                                 #_"[MonitorIdNode]" lockNodes []
@@ -52187,7 +51861,7 @@ ZeroExtendNode'new-4
                                             #_"VirtualObjectNode" virtualObject (nth (:virtualObjects this) i)
                                             #_"int" n (VirtualObjectNode'''entryCount-1 virtualObject)
                                         ]
-                                            (when (nth used i)
+                                            (when (nth used? i)
                                                 (§ ass! virtualObjects (conj' virtualObjects virtualObject))
                                                 (§ ass! lockNodes (into' lockNodes (CommitAllocationNode''getLocks-2 this, i)))
                                                 (§ ass! lockIndexes (conj' lockIndexes (count lockNodes)))
@@ -54154,24 +53828,10 @@ ZeroExtendNode'new-4
     (defm StubForeignCallNode Multi
         (#_"LocationIdentity*" Multi'''getLocationIdentities-1 [#_"StubForeignCallNode" this]
             (let [
-                #_"[LocationIdentity]" killedLocations (ForeignCalls''getKilledLocations-2 HotSpot'foreignCalls, (:descriptor this))
-                killedLocations (Arrays/copyOf killedLocations, (inc (count killedLocations)))
+                #_"[LocationIdentity]" killedLocations (ForeignCalls''getKilledLocations-2 HotSpot'foreignCalls, (:descriptor this))
             ]
-                (§ ass! killedLocations (assoc' killedLocations (dec (count killedLocations)) NamedLocationIdentity'PENDING_EXCEPTION))
-                killedLocations
+                (conj' killedLocations NamedLocationIdentity'PENDING_EXCEPTION)
             )
-        )
-    )
-
-    (defn #_"[Value]" StubForeignCallNode''operands-2 [#_"StubForeignCallNode" this, #_"LIRBuilder" builder]
-        (let [
-            #_"[Value]" operands (make-array Value (count (:arguments this)))
-            _
-                (dotimes [#_"int" i (count operands)]
-                    (§ ass! operands (assoc' operands i (LIRBuilder''operand-2 builder, (nth (:arguments this) i))))
-                )
-        ]
-            operands
         )
     )
 
@@ -54179,7 +53839,7 @@ ZeroExtendNode'new-4
         (#_"void" LIRLowerable'''generate-2 [#_"StubForeignCallNode" this, #_"LIRBuilder" builder]
             (let [
                 #_"ForeignCallLinkage" linkage (ForeignCalls''lookupForeignCall-2 HotSpot'foreignCalls, (:descriptor this))
-                #_"Value*" operands (StubForeignCallNode''operands-2 this, builder)
+                #_"Value*" operands (map #(LIRBuilder''operand-2 builder, %) (:arguments this))
                 #_"Value" result (apply LIRGenerator''emitForeignCall-3* (:gen builder), linkage, operands)
             ]
                 (when (some? result)
@@ -60521,12 +60181,6 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns TwoSlotMarker [ValueNode, Node]
-    (defn #_"TwoSlotMarker" TwoSlotMarker'new-0 []
-        (merge (TwoSlotMarker'class.) (ValueNode'new-1 (StampFactory'forKind-1 JavaKind/Illegal)))
-    )
-)
-
 (class-ns VirtualObjectNode [ValueNode, Node, LIRLowerable]
     (defn #_"VirtualObjectNode" VirtualObjectNode'new-2 [#_"ResolvedJavaType" type, #_"boolean" hasIdentity]
         (merge (VirtualObjectNode'class.) (ValueNode'new-1 (StampFactory'objectNonNull-1 (TypeReference'createExactTrusted-1 type)))
@@ -60822,12 +60476,6 @@ ZeroExtendNode'new-4
  ; This can be used as debug or deoptimization information.
  ;;
 (class-ns FrameState [VirtualState, Node]
-    ;;;
-     ; Marker value for the second slot of values that occupy two local variable or expression stack slots.
-     ; The marker value is used by the bytecode parser, but replaced with nil in the #values of the FrameState.
-     ;;
-    (§ def #_"ValueNode" FrameState'TWO_SLOT_MARKER (TwoSlotMarker'new-0))
-
     (defn- #_"FrameState" FrameState'new-8i [#_"FrameState" outerFrameState, #_"Bytecode" code, #_"int" bci, #_"int" localsSize, #_"int" stackSize, #_"boolean" duringCall, #_"MonitorIdNode*" monitorIds, #_"EscapeObjectState*" virtualMappings]
         (when (some? code)
             ;; Make sure the bci is within range of the bytecodes. If the code size is 0 then allow any value, otherwise the
@@ -60899,18 +60547,18 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"FrameState" FrameState'new-8a [#_"FrameState" outerFrameState, #_"Bytecode" code, #_"int" bci, #_"ValueNode*" locals, #_"ValueNode*" stack, #_"ValueNode*" locks, #_"MonitorIdNode*" monitorIds, #_"boolean" duringCall]
+    (defn #_"FrameState" FrameState'new-8a [#_"FrameState" outerFrameState, #_"Bytecode" code, #_"int" bci, #_"ValueNode*" locals, #_"(ValueNode)" stack, #_"ValueNode*" locks, #_"MonitorIdNode*" monitorIds, #_"boolean" duringCall]
         (let [
             #_"FrameState" this (FrameState'new-8i outerFrameState, code, bci, (count locals), (count stack), duringCall, monitorIds, nil)
-            slot- #(when-not (= % FrameState'TWO_SLOT_MARKER) %)
+            f'slot #(when-not (= % :FrameState'TWO_SLOT_MARKER) %)
         ]
-            (assoc this :fsValues (vec (concat (map slot- locals) (map slot- stack) locks)))
+            (assoc this :fsValues (vec (concat (map f'slot locals) (map f'slot (reverse stack)) locks)))
         )
     )
 
-    (defn #_"this" FrameState''setOuterFrameState-2 [#_"FrameState" this, #_"FrameState" x]
-        (Node''updateUsages-3 this, (:outerFrameState this), x)
-        (assoc this :outerFrameState x)
+    (defn #_"this" FrameState''setOuterFrameState-2 [#_"FrameState" this, #_"FrameState" outer]
+        (Node''updateUsages-3 this, (:outerFrameState this), outer)
+        (assoc this :outerFrameState outer)
     )
 
     (defn #_"ResolvedJavaMethod" FrameState''getMethod-1 [#_"FrameState" this]
@@ -63138,13 +62786,13 @@ ZeroExtendNode'new-4
      ; Sets the list for a specified binding.
      ;
      ; @param binding specifies the list to be replaced
-     ; @param list a list of intervals whose binding is {@code binding}
+     ; @param interval a list of intervals whose binding is {@code binding}
      ;;
-    (defn #_"this" RegisterBindingLists''set-3 [#_"RegisterBindingLists" this, #_"RegisterBinding" binding, #_"Interval" list]
+    (defn #_"this" RegisterBindingLists''set-3 [#_"RegisterBindingLists" this, #_"RegisterBinding" binding, #_"Interval" interval]
         (condp = binding
-            :RegisterBinding'Any   (assoc this :any   list)
-            :RegisterBinding'Fixed (assoc this :fixed list)
-            :RegisterBinding'Stack (assoc this :stack list)
+            :RegisterBinding'Any   (assoc this :any   interval)
+            :RegisterBinding'Fixed (assoc this :fixed interval)
+            :RegisterBinding'Stack (assoc this :stack interval)
         )
     )
 
@@ -64100,16 +63748,16 @@ ZeroExtendNode'new-4
                 )
             :else
                 (let [
-                    rofl- #(pop' (assoc' %1 %2 (peek' %1)))
+                    f'rofl #(pop' (assoc' %1 %2 (peek' %1)))
                 ]
                     (loop-when [watchList (vec watchList) #_"int" i 0] (< i (count watchList)) => [this watchList]
                         (let [
                             #_"FloatingReadNode" r (nth watchList i)
                             [watchList i]
-                                (when (contains? (:agenda this) r) => [(rofl- watchList i) i]
+                                (when (contains? (:agenda this) r) => [(f'rofl watchList i) i]
                                     (when (LocationIdentity''overlaps-2 location, (Access'''getLocationIdentity-1 r)) => [watchList (inc i)]
                                         (§ ass! [this nodes] (Schedule''sortIntoList-5 this, nodes, r, block, nil))
-                                        [(rofl- watchList i) i]
+                                        [(f'rofl watchList i) i]
                                     )
                                 )
                         ]
@@ -64460,9 +64108,9 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"[this {Node}]" Scope''process-2 [#_"Scope" this, #_"{Node}" visited]
         (let [
-            add- (fn #_"{Node}" [#_"{Node}" visited, #_"Node" node] (if (some? node) (conj visited node) visited))
-            add* (fn #_"{Node}" [#_"{Node}" visited, #_"Node*" nodes] (reduce add- visited (filter Node''isAlive-1 nodes)))
-            visited (add* visited (Node''successors-1 (:start this)))
+            f'add- (fn #_"{Node}" [#_"{Node}" visited, #_"Node" node] (if (some? node) (conj visited node) visited))
+            f'add* (fn #_"{Node}" [#_"{Node}" visited, #_"Node*" nodes] (reduce f'add- visited (filter Node''isAlive-1 nodes)))
+            visited (f'add* visited (Node''successors-1 (:start this)))
         ]
             (doseq [#_"Node" node (remove Node''isDeleted-1 visited)]
                 (condp satisfies? node
@@ -64470,19 +64118,19 @@ ZeroExtendNode'new-4
                     (do
                         ;; process the invoke and queue its successors
                         (§ ass! (:relevances (:relevance this)) (assoc (:relevances (:relevance this)) node (Scope''computeInvokeRelevance-2 this, node)))
-                        (§ ass! visited (add* visited (Node''successors-1 node)))
+                        (§ ass! visited (f'add* visited (Node''successors-1 node)))
                     )
                     LoopBeginNode
                         ;; skip child loops by advancing over the loop exits
                         (doseq [#_"LoopExitNode" exit (LoopBeginNode''loopExits-1 node)]
-                            (§ ass! visited (add- visited (:next exit)))
+                            (§ ass! visited (f'add- visited (:next exit)))
                         )
                     LoopEndNode       nil ;; nothing to do
                     LoopExitNode      nil ;; nothing to do
-                    FixedWithNextNode (§ ass! visited (add- visited (:next node)))
-                    EndNode           (§ ass! visited (add- visited (AbstractEndNode'''merge-1 node)))
+                    FixedWithNextNode (§ ass! visited (f'add- visited (:next node)))
+                    EndNode           (§ ass! visited (f'add- visited (AbstractEndNode'''merge-1 node)))
                     ControlSinkNode   nil ;; nothing to do
-                    ControlSplitNode  (§ ass! visited (add* visited (Node''successors-1 node)))
+                    ControlSplitNode  (§ ass! visited (f'add* visited (Node''successors-1 node)))
                     nil
                 )
             )
@@ -67369,10 +67017,10 @@ ZeroExtendNode'new-4
 )
 
 (class-ns SwitchStrategy []
-    (defn #_"SwitchStrategy" SwitchStrategy'new-1 [#_"[double]" keyProbabilities]
+    (defn #_"SwitchStrategy" SwitchStrategy'new-1 [#_"[double]" probabilities]
         (merge (SwitchStrategy'class.)
             (hash-map
-                #_"[double]" :keyProbabilities keyProbabilities
+                #_"[double]" :probabilities probabilities
                 #_"double" :averageEffort -1
                 #_"EffortClosure" :effortClosure nil
             )
@@ -67415,20 +67063,20 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"[SwitchStrategy]" SwitchStrategy'getStrategies-3 [#_"[double]" keyProbabilities, #_"[JavaConstant]" keyConstants, #_"[LabelRef]" keyTargets]
+    (defn- #_"[SwitchStrategy]" SwitchStrategy'getStrategies-3 [#_"[JavaConstant]" constants, #_"[double]" probabilities, #_"[LabelRef]" targets]
         (let [
             #_"[SwitchStrategy]" strategies
                 [
-                    (SequentialStrategy'new-2 keyProbabilities, keyConstants),
-                    (RangesStrategy'new-2 keyProbabilities, keyConstants),
-                    (BinaryStrategy'new-2 keyProbabilities, keyConstants)
+                    (SequentialStrategy'new-2 constants, probabilities)
+                    (RangesStrategy'new-2     constants, probabilities)
+                    (BinaryStrategy'new-2     constants, probabilities)
                 ]
             _
                 (loop-when-recur [#_"seq" s (seq strategies)] (some? s) [(next s)]
                     (let [
                         #_"SwitchStrategy" strategy (first s)
                     ]
-                        (§ ass! strategy (assoc strategy :effortClosure (EffortClosure'new-2 strategy, keyTargets)))
+                        (§ ass! strategy (assoc strategy :effortClosure (EffortClosure'new-2 strategy, targets)))
                         (SwitchStrategy'''run-2 strategy, (:effortClosure strategy))
                         (§ ass! strategy (assoc strategy :averageEffort (EffortClosure''getAverageEffort-1 (:effortClosure strategy))))
                         (§ ass! strategy (assoc strategy :effortClosure nil))
@@ -67443,9 +67091,9 @@ ZeroExtendNode'new-4
      ; Creates all switch strategies for the given switch, evaluates them (based on average effort)
      ; and returns the best one.
      ;;
-    (defn #_"SwitchStrategy" SwitchStrategy'getBestStrategy-3 [#_"[double]" keyProbabilities, #_"[JavaConstant]" keyConstants, #_"[LabelRef]" keyTargets]
+    (defn #_"SwitchStrategy" SwitchStrategy'getBestStrategy-3 [#_"[JavaConstant]" constants, #_"[double]" probabilities, #_"[LabelRef]" targets]
         (let [
-            #_"SwitchStrategy*" strategies (SwitchStrategy'getStrategies-3 keyProbabilities, keyConstants, keyTargets)
+            #_"SwitchStrategy*" strategies (SwitchStrategy'getStrategies-3 constants, probabilities, targets)
         ]
             (loop-when [#_"double" bestEffort Integer/MAX_VALUE #_"SwitchStrategy" bestStrategy nil #_"seq" s (seq strategies)] (some? s) => bestStrategy
                 (let [
@@ -67466,10 +67114,10 @@ ZeroExtendNode'new-4
  ; Base class for strategies that rely on primitive integer keys.
  ;;
 (class-ns PrimitiveStrategy [SwitchStrategy]
-    (defn #_"PrimitiveStrategy" PrimitiveStrategy'new-2 [#_"[double]" keyProbabilities, #_"[JavaConstant]" keyConstants]
-        (merge (PrimitiveStrategy'class.) (SwitchStrategy'new-1 keyProbabilities)
+    (defn #_"PrimitiveStrategy" PrimitiveStrategy'new-2 [#_"[double]" probabilities, #_"[JavaConstant]" constants]
+        (merge (PrimitiveStrategy'class.) (SwitchStrategy'new-1 probabilities)
             (hash-map
-                #_"[JavaConstant]" :keyConstants keyConstants
+                #_"[JavaConstant]" :constants constants
             )
         )
     )
@@ -67479,7 +67127,7 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"int" PrimitiveStrategy''getSliceEnd-3 [#_"PrimitiveStrategy" this, #_"SwitchClosure" closure, #_"int" pos]
         (let [
-            #_"JavaConstant*" a (:keyConstants this)
+            #_"JavaConstant*" a (:constants this)
         ]
             (loop-when-recur [#_"int" i pos]
                              (and (< i (dec (count a)))
@@ -67499,13 +67147,13 @@ ZeroExtendNode'new-4
 (class-ns BinaryStrategy [PrimitiveStrategy, SwitchStrategy]
     (def- #_"double" BinaryStrategy'MIN_PROBABILITY 0.00001)
 
-    (defn #_"BinaryStrategy" BinaryStrategy'new-2 [#_"[double]" keyProbabilities, #_"[JavaConstant]" keyConstants]
-        (merge (BinaryStrategy'class.) (PrimitiveStrategy'new-2 keyProbabilities, keyConstants)
+    (defn #_"BinaryStrategy" BinaryStrategy'new-2 [#_"[JavaConstant]" constants, #_"[double]" probabilities]
+        (merge (BinaryStrategy'class.) (PrimitiveStrategy'new-2 probabilities, constants)
             (hash-map
                 #_"[double]" :probabilitySums
-                    (loop-when [#_"double" sum 0.0 #_"[double]" sum+ [ 0.0 ] #_"int" i 0] (< i (count keyProbabilities)) => sum+
+                    (loop-when [#_"double" sum 0.0 #_"[double]" sum+ [ 0.0 ] #_"int" i 0] (< i (count probabilities)) => sum+
                         (let [
-                            sum (+ sum (max BinaryStrategy'MIN_PROBABILITY (nth keyProbabilities i)))
+                            sum (+ sum (max BinaryStrategy'MIN_PROBABILITY (nth probabilities i)))
                         ]
                             (recur sum (conj' sum+ sum) (inc i))
                         )
@@ -67523,11 +67171,11 @@ ZeroExtendNode'new-4
     (defn- #_"this" BinaryStrategy''recurseBinarySwitch-5 [#_"BinaryStrategy" this, #_"SwitchClosure" closure, #_"int" left, #_"int" right, #_"int" depth]
         (let [
             #_"boolean" leftBorder (zero? left)
-            #_"boolean" rightBorder (= right (dec (count (:keyConstants this))))
+            #_"boolean" rightBorder (= right (dec (count (:constants this))))
         ]
             (if (= (inc left) right)
                 ;; only two possible values
-                (if (or leftBorder rightBorder (not= (inc (#_"JavaConstant" .asLong (nth (:keyConstants this) right))) (#_"JavaConstant" .asLong (nth (:keyConstants this) (inc right)))) (not= (inc (#_"JavaConstant" .asLong (nth (:keyConstants this) left))) (#_"JavaConstant" .asLong (nth (:keyConstants this) right))))
+                (if (or leftBorder rightBorder (not= (inc (#_"JavaConstant" .asLong (nth (:constants this) right))) (#_"JavaConstant" .asLong (nth (:constants this) (inc right)))) (not= (inc (#_"JavaConstant" .asLong (nth (:constants this) left))) (#_"JavaConstant" .asLong (nth (:constants this) right))))
                     (let [
                         _ (SwitchClosure'''conditionalJump-4 closure, left, Condition'EQ, false)
                         _ (§ ass depth (inc depth))
@@ -67591,7 +67239,7 @@ ZeroExtendNode'new-4
                                     )
                                     (let [
                                         this
-                                            (when-not (= (inc (#_"JavaConstant" .asLong (nth (:keyConstants this) middle))) (#_"JavaConstant" .asLong (nth (:keyConstants this) (inc middle)))) => this
+                                            (when-not (= (inc (#_"JavaConstant" .asLong (nth (:constants this) middle))) (#_"JavaConstant" .asLong (nth (:constants this) (inc middle)))) => this
                                                 (let [
                                                     _ (SwitchClosure'''conditionalJump-4 closure, (inc middle), Condition'LT, true)
                                                     _ (§ ass depth (inc depth))
@@ -67602,7 +67250,7 @@ ZeroExtendNode'new-4
                                             )
                                     ]
                                         (if (= (PrimitiveStrategy''getSliceEnd-3 this, closure, (inc middle)) right)
-                                            (if (or (= right (dec (count (:keyConstants this)))) (not= (inc (#_"JavaConstant" .asLong (nth (:keyConstants this) right))) (#_"JavaConstant" .asLong (nth (:keyConstants this) (inc right)))))
+                                            (if (or (= right (dec (count (:constants this)))) (not= (inc (#_"JavaConstant" .asLong (nth (:constants this) right))) (#_"JavaConstant" .asLong (nth (:constants this) (inc right)))))
                                                 (let [
                                                     _ (§ ass! closure (SwitchClosure'''conditionalJumpOrDefault-4 closure, right, Condition'LE, rightBorder))
                                                     _ (§ ass depth (inc depth))
@@ -67626,7 +67274,7 @@ ZeroExtendNode'new-4
                         (= (PrimitiveStrategy''getSliceEnd-3 this, closure, (inc middle)) right)
                             (let [
                                 this
-                                    (when (or rightBorder (not= (inc (#_"JavaConstant" .asLong (nth (:keyConstants this) right))) (#_"JavaConstant" .asLong (nth (:keyConstants this) (inc right))))) => this
+                                    (when (or rightBorder (not= (inc (#_"JavaConstant" .asLong (nth (:constants this) right))) (#_"JavaConstant" .asLong (nth (:constants this) (inc right))))) => this
                                         (let [
                                             _ (SwitchClosure'''conditionalJump-4 closure, right, Condition'GT, true)
                                             _ (§ ass depth (inc depth))
@@ -67660,7 +67308,7 @@ ZeroExtendNode'new-4
 
     (defm BinaryStrategy SwitchStrategy
         (#_"void" SwitchStrategy'''run-2 [#_"BinaryStrategy" this, #_"SwitchClosure" closure]
-            (§ ass! this (BinaryStrategy''recurseBinarySwitch-5 this, closure, 0, (dec (count (:keyConstants this))), 0))
+            (§ ass! this (BinaryStrategy''recurseBinarySwitch-5 this, closure, 0, (dec (count (:constants this))), 0))
             nil
         )
     )
@@ -67671,10 +67319,10 @@ ZeroExtendNode'new-4
  ; creates comparisons for these ranges.
  ;;
 (class-ns RangesStrategy [PrimitiveStrategy, SwitchStrategy]
-    (defn #_"RangesStrategy" RangesStrategy'new-2 [#_"[double]" keyProbabilities, #_"[JavaConstant]" keyConstants]
-        (merge (RangesStrategy'class.) (PrimitiveStrategy'new-2 keyProbabilities, keyConstants)
+    (defn #_"RangesStrategy" RangesStrategy'new-2 [#_"[JavaConstant]" constants, #_"[double]" probabilities]
+        (merge (RangesStrategy'class.) (PrimitiveStrategy'new-2 probabilities, constants)
             (hash-map
-                #_"[Integer]" :indexes (vec (sort-by #(nth keyProbabilities %) (comp - compare) (range (count keyProbabilities))))
+                #_"[Integer]" :indexes (vec (sort-by #(nth probabilities %) (comp - compare) (range (count probabilities))))
             )
         )
     )
@@ -67689,7 +67337,7 @@ ZeroExtendNode'new-4
                 (§ ass! this (SwitchStrategy''registerDefaultEffort-2 this, @v'depth))
                 (let [
                     [#_"int" start #_"int" end]
-                        (loop-when [start 0 end (PrimitiveStrategy''getSliceEnd-3 this, closure, start)] (not= end (dec (count (:keyConstants this)))) => [start end]
+                        (loop-when [start 0 end (PrimitiveStrategy''getSliceEnd-3 this, closure, start)] (not= end (dec (count (:constants this)))) => [start end]
                             (if (= start end)
                                 (do
                                     (SwitchClosure'''conditionalJump-4 closure, start, Condition'EQ, false)
@@ -67697,7 +67345,7 @@ ZeroExtendNode'new-4
                                     (§ ass! this (SwitchStrategy''registerEffort-4 this, start, end, @v'depth))
                                 )
                                 (do
-                                    (when (or (zero? start) (not= (inc (#_"JavaConstant" .asLong (nth (:keyConstants this) (dec start)))) (#_"JavaConstant" .asLong (nth (:keyConstants this) start))))
+                                    (when (or (zero? start) (not= (inc (#_"JavaConstant" .asLong (nth (:constants this) (dec start)))) (#_"JavaConstant" .asLong (nth (:constants this) start))))
                                         (SwitchClosure'''conditionalJump-4 closure, start, Condition'LT, true)
                                         (vswap! v'depth inc)
                                         (§ ass! this (SwitchStrategy''registerDefaultEffort-2 this, @v'depth))
@@ -67722,7 +67370,7 @@ ZeroExtendNode'new-4
                             (§ ass! this (SwitchStrategy''registerDefaultEffort-2 this, @v'depth))
                         )
                         (do
-                            (when (or (zero? start) (not= (inc (#_"JavaConstant" .asLong (nth (:keyConstants this) (dec start)))) (#_"JavaConstant" .asLong (nth (:keyConstants this) start))))
+                            (when (or (zero? start) (not= (inc (#_"JavaConstant" .asLong (nth (:constants this) (dec start)))) (#_"JavaConstant" .asLong (nth (:constants this) start))))
                                 (SwitchClosure'''conditionalJump-4 closure, start, Condition'LT, true)
                                 (vswap! v'depth inc)
                                 (§ ass! this (SwitchStrategy''registerDefaultEffort-2 this, @v'depth))
@@ -67744,24 +67392,24 @@ ZeroExtendNode'new-4
  ; This strategy orders the keys according to their probability and creates one equality comparison per key.
  ;;
 (class-ns SequentialStrategy [SwitchStrategy]
-    (defn #_"SequentialStrategy" SequentialStrategy'new-2 [#_"[double]" keyProbabilities, #_"[Constant]" keyConstants]
-        (merge (SequentialStrategy'class.) (SwitchStrategy'new-1 keyProbabilities)
+    (defn #_"SequentialStrategy" SequentialStrategy'new-2 [#_"[Constant]" constants, #_"[double]" probabilities]
+        (merge (SequentialStrategy'class.) (SwitchStrategy'new-1 probabilities)
             (hash-map
-                #_"[Constant]" :keyConstants keyConstants
-                #_"[Integer]" :indexes (vec (sort-by #(nth keyProbabilities %) (comp - compare) (range (count keyProbabilities))))
+                #_"[Constant]" :constants constants
+                #_"[Integer]" :indexes (vec (sort-by #(nth probabilities %) (comp - compare) (range (count probabilities))))
             )
         )
     )
 
     (defm SequentialStrategy SwitchStrategy
         (#_"void" SwitchStrategy'''run-2 [#_"SequentialStrategy" this, #_"SwitchClosure" closure]
-            (dotimes [#_"int" i (dec (count (:keyConstants this)))]
+            (dotimes [#_"int" i (dec (count (:constants this)))]
                 (SwitchClosure'''conditionalJump-4 closure, (nth (:indexes this) i), Condition'EQ, false)
                 (§ ass! this (SwitchStrategy''registerEffort-4 this, (nth (:indexes this) i), (nth (:indexes this) i), (inc i)))
             )
-            (§ ass! closure (SwitchClosure'''conditionalJumpOrDefault-4 closure, (nth (:indexes this) (dec (count (:keyConstants this)))), Condition'EQ, true))
-            (§ ass! this (SwitchStrategy''registerEffort-4 this, (nth (:indexes this) (dec (count (:keyConstants this)))), (nth (:indexes this) (dec (count (:keyConstants this)))), (count (:keyConstants this))))
-            (§ ass! this (SwitchStrategy''registerDefaultEffort-2 this, (count (:keyConstants this))))
+            (§ ass! closure (SwitchClosure'''conditionalJumpOrDefault-4 closure, (nth (:indexes this) (dec (count (:constants this)))), Condition'EQ, true))
+            (§ ass! this (SwitchStrategy''registerEffort-4 this, (nth (:indexes this) (dec (count (:constants this)))), (nth (:indexes this) (dec (count (:constants this)))), (count (:constants this))))
+            (§ ass! this (SwitchStrategy''registerDefaultEffort-2 this, (count (:constants this))))
             nil
         )
     )
@@ -67955,21 +67603,19 @@ ZeroExtendNode'new-4
  ; associated with the use position. The entries in the list are in descending order of use position.
  ;;
 (class-ns UsePosList []
-    (defn- #_"UsePosList" UsePosList'new-1l [#_"IntList" positions]
+    (defn- #_"UsePosList" UsePosList'new-1 [#_"[int]" positions]
         (merge (UsePosList'class.)
             (hash-map
-                #_"IntList" :positions positions
+                #_"[int]" :positions positions
             )
         )
     )
 
     ;;;
      ; Creates a use list.
-     ;
-     ; @param capacity the initial capacity of the list in terms of entries
      ;;
-    (defn #_"UsePosList" UsePosList'new-1i [#_"int" capacity]
-        (UsePosList'new-1l (IntList'new-1 (* capacity 2)))
+    (defn #_"UsePosList" UsePosList'new-0 []
+        (UsePosList'new-1 [])
     )
 
     ;;;
@@ -67982,16 +67628,11 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"UsePosList" UsePosList''splitAt-2 [#_"UsePosList" this, #_"int" at]
         (let [
-            [#_"int" i #_"int" n]
-                (loop-when-recur [i (dec (UsePosList''size-1 this)) n 0]
-                                 (and (<= 0 i) (< (UsePosList''usePos-2 this, i) at))
-                                 [(dec i) (+ n 2)]
-                              => [(<< (inc i) 1) n]
-                )
-            #_"IntList" o'positions (:positions this)
+            #_"int" i (loop-when-recur [i (dec (UsePosList''size-1 this))] (and (<= 0 i) (< (UsePosList''usePos-2 this, i) at)) [(dec i)] => (<< (inc i) 1))
+            #_"[int]" o'positions (:positions this)
+            _ (§ ass! this (update this :positions subvec i))
         ]
-            (§ ass! this (assoc this :positions (IntList'copy-3 (:positions this), i, n)))
-            (UsePosList'new-1l (IntList''setSize-2 o'positions, i))
+            (UsePosList'new-1 (subvec o'positions 0 i))
         )
     )
 
@@ -68002,7 +67643,7 @@ ZeroExtendNode'new-4
      ; @return the use position of entry {@code index} in this list
      ;;
     (defn #_"int" UsePosList''usePos-2 [#_"UsePosList" this, #_"int" index]
-        (IntList''get-2 (:positions this), (<< index 1))
+        (nth (:positions this) (<< index 1))
     )
 
     ;;;
@@ -68012,26 +67653,23 @@ ZeroExtendNode'new-4
      ; @return the register priority of entry {@code index} in this list
      ;;
     (defn #_"RegisterPriority" UsePosList''registerPriority-2 [#_"UsePosList" this, #_"int" index]
-        (nth (seq RegisterPriority'SET) (IntList''get-2 (:positions this), (inc (<< index 1))))
+        (nth (seq RegisterPriority'SET) (nth (:positions this) (inc (<< index 1))))
     )
 
-    (defn #_"this" UsePosList''add-3 [#_"UsePosList" this, #_"int" usePos, #_"RegisterPriority" registerPriority]
-        (-> this
-            (update :positions IntList''add-2 usePos)
-            (update :positions IntList''add-2 (RegisterPriority''ordinal-1 registerPriority))
-        )
+    (defn #_"this" UsePosList''add-3 [#_"UsePosList" this, #_"int" usePos, #_"RegisterPriority" priority]
+        (update this :positions conj' usePos (RegisterPriority''ordinal-1 priority))
     )
 
     (defn #_"int" UsePosList''size-1 [#_"UsePosList" this]
-        (>> (:size (:positions this)) 1)
+        (>> (count (:positions this)) 1)
     )
 
     (defn #_"this" UsePosList''removeLowestUsePos-1 [#_"UsePosList" this]
-        (update this :positions #(IntList''setSize-2 %, (- (:size %) 2)))
+        (update this :positions (comp pop' pop'))
     )
 
-    (defn #_"this" UsePosList''setRegisterPriority-3 [#_"UsePosList" this, #_"int" index, #_"RegisterPriority" registerPriority]
-        (update this :positions IntList''set-3 (inc (<< index 1)), (RegisterPriority''ordinal-1 registerPriority))
+    (defn #_"this" UsePosList''setRegisterPriority-3 [#_"UsePosList" this, #_"int" index, #_"RegisterPriority" priority]
+        (update this :positions assoc' (inc (<< index 1)) (RegisterPriority''ordinal-1 priority))
     )
 )
 
@@ -70438,12 +70076,12 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"HotSpotCompiledCode" Compiler'createCompiledCode-1 [#_"CompilationResult" result]
         (let [
-            #_"[byte]" code (:targetCode result)
+            #_"byte[]" code! (byte-array (:targetCode result))
             #_"int" codeSize (:targetCodeSize result)
-            #_"[Site]" sites (Compiler'getSortedSites-1 result)
+            #_"Site[]" sites! (into-array Site (Compiler'getSortedSites-1 result))
             #_"DataSection" section (:dataSection result)
-            #_"[byte]" data (byte-array (DataSection''getSectionSize-1 section))
-            #_"ByteBuffer" buffer (#_"ByteBuffer" .order (ByteBuffer/wrap data), (ByteOrder/nativeOrder))
+            #_"byte[]" data! (byte-array (DataSection''getSectionSize-1 section))
+            #_"ByteBuffer" buffer (#_"ByteBuffer" .order (ByteBuffer/wrap data!), (ByteOrder/nativeOrder))
             #_"Stream$Builder<DataPatch>" builder (Stream/builder)
             _
                 (DataSection''buildDataSection-3 section, buffer,
@@ -70455,10 +70093,10 @@ ZeroExtendNode'new-4
                     )
                 )
             #_"int" alignment (DataSection''getSectionAlignment-1 section)
-            #_"[DataPatch]" patches (#_"Stream" .toArray (#_"Stream$Builder" .build builder), #(make-array DataPatch %))
+            #_"DataPatch[]" patches! (#_"Stream" .toArray (#_"Stream$Builder" .build builder), #(make-array DataPatch %))
             #_"int" frameSize (:totalFrameSize result)
         ]
-            (HotSpotCompiledCode. nil, code, codeSize, sites, nil, nil, nil, data, alignment, patches, false, frameSize, nil)
+            (HotSpotCompiledCode. nil, code!, codeSize, sites!, nil, nil, nil, data!, alignment, patches!, false, frameSize, nil)
         )
     )
 
