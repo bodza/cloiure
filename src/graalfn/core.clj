@@ -1922,13 +1922,9 @@ LIR'getNextBlock-2
 LIR'new-3
 LIRBuilder''doBlock-4
 LIRBuilder''doBlockPrologue-2
-LIRBuilder''emitBranch-5
-LIRBuilder''emitCompareBranch-5
 LIRBuilder''emitConditional-2
 LIRBuilder''emitConditional-4
-LIRBuilder''emitConstantBranch-4
 LIRBuilder''emitIf-2
-LIRBuilder''emitIntegerTestBranch-5
 LIRBuilder''emitInvoke-2
 LIRBuilder''emitNode-2
 LIRBuilder''emitOverflowCheckBranch-5
@@ -2015,7 +2011,6 @@ LIRGenerator''emitShl-3
 LIRGenerator''emitShr-3
 LIRGenerator''emitSignExtend-4
 LIRGenerator''emitSignedDivRem-3
-LIRGenerator''emitStore-4a
 LIRGenerator''emitStore-4v
 LIRGenerator''emitStoreConst-4
 LIRGenerator''emitStrategySwitch-5
@@ -18403,7 +18398,7 @@ ZeroExtendNode'new-4
         ;; set up the list of LIR instructions
         (§ ass! (:lir (:res (:gen this))) (LIR''setLIRforBlock-3 (:lir (:res (:gen this))), (:currentBlock (:gen this)), []))
 
-        (LIRGenerator''append-2 (:gen this), (LabelOp'new-2 (Label'new-0), (:aligned? (:currentBlock (:gen this)))))
+        (§ ass! (:gen this) (LIRGenerator''append-2 (:gen this), (LabelOp'new-2 (Label'new-0), (:aligned? (:currentBlock (:gen this))))))
         nil
     )
 
@@ -35307,8 +35302,8 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"void" LIRBuilder''doBlockPrologue-2 [#_"LIRBuilder" this, #_"Block" block]
-        (when GraalOptions'mitigateSpeculativeExecutionAttacks
+    (defn #_"this" LIRBuilder''doBlockPrologue-2 [#_"LIRBuilder" this, #_"Block" block]
+        (when GraalOptions'mitigateSpeculativeExecutionAttacks => this
             (let [
                 #_"boolean" hasControlSplitPredecessor
                     (loop-when [#_"seq" s (seq (:predecessors block))] (some? s) => false
@@ -35317,12 +35312,11 @@ ZeroExtendNode'new-4
                         )
                     )
             ]
-                (when (or hasControlSplitPredecessor (empty? (:predecessors block)))
-                    (LIRGenerator''emitLFence-1 (:gen this))
+                (when (or hasControlSplitPredecessor (empty? (:predecessors block))) => this
+                    (update this :gen LIRGenerator''emitLFence-1)
                 )
             )
         )
-        nil
     )
 
     ; @SuppressWarnings("try")
@@ -35336,13 +35330,13 @@ ZeroExtendNode'new-4
                         (when (satisfies? AbstractMergeNode (:beginNode block)) => this
                             (let [
                                 #_"[LIRInstruction]" ops (LIR''getLIRforBlock-2 (:lir (:res (:gen this))), block)
+                                _ (§ ass! (nth ops 0) (LabelOp''setPhiValues-2 (nth ops 0), (LIRBuilder''createPhiIn-2 this, (:beginNode block))))
                             ]
-                                (§ ass! (nth ops 0) (LabelOp''setPhiValues-2 (nth ops 0), (LIRBuilder''createPhiIn-2 this, (:beginNode block))))
                                 this
                             )
                         )
                     )
-                _ (LIRBuilder''doBlockPrologue-2 this, block)
+                this (LIRBuilder''doBlockPrologue-2 this, block)
                 this
                     (loop-when [this this #_"seq" s (seq (get blockMap block))] (some? s) => this
                         (let [
@@ -35361,18 +35355,17 @@ ZeroExtendNode'new-4
                         )
                     )
             ]
-                (when-not (LIRGenerator''hasBlockEnd-2 (:gen this), block)
+                (when-not (LIRGenerator''hasBlockEnd-2 (:gen this), block) => this
                     (let [
                         #_"Node*" successors (Node''successors-1 (:endNode block))
                     ]
                         ;; If we have more than one successor, we cannot just use the first one.
                         ;; Since successors are unordered, this would be a random choice.
                         (when (= (count (:successors block)) 1) => (throw! (str "Block without BlockEndOp: " (:endNode block)))
-                            (LIRGenerator''emitJump-2 (:gen this), (LIRBuilder''getLIRBlock-2 this, (first successors)))
+                            (update this :gen LIRGenerator''emitJump-2 (LIRBuilder''getLIRBlock-2 this, (first successors)))
                         )
                     )
                 )
-                this
             )
         )
     )
@@ -35400,10 +35393,10 @@ ZeroExtendNode'new-4
                     )
                 )
             _ (§ ass! params (assoc' params (dec (count params)) (#_"Register" .asValue AMD64/rbp, (LIRKind'value-1 AMD64Kind/QWORD))))
-            _ (LIRGenerator''emitIncomingValues-2 (:gen this), params)
+            this (update this :gen LIRGenerator''emitIncomingValues-2 params)
             this (update this :gen LIRGenerator''emitSaveRbp-1)
+            this (update this :gen LIRGenerator''append-2 (:lockStack (:lockStackHolder this)))
         ]
-            (LIRGenerator''append-2 (:gen this), (:lockStack (:lockStackHolder this)))
             (doseq [#_"ParameterNode" param (Graph''getNodes-2 graph, ParameterNode)]
                 (LIRBuilder''setResult-3 this, param, (LIRGenerator''emitMove-2 (:gen this), (nth params (AbstractLocalNode''index-1 param))))
             )
@@ -35415,15 +35408,14 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn #_"void" LIRBuilder''visitEndNode-2 [#_"LIRBuilder" this, #_"AbstractEndNode" node]
+    (defn #_"this" LIRBuilder''visitEndNode-2 [#_"LIRBuilder" this, #_"AbstractEndNode" node]
         (let [
             #_"AbstractMergeNode" merge (AbstractEndNode'''merge-1 node)
             #_"JumpOp" jump (JumpOp'new-1 (LIRBuilder''getLIRBlock-2 this, merge))
             jump (JumpOp''setPhiValues-2 jump, (LIRBuilder''createPhiOut-3 this, merge, node))
         ]
-            (LIRGenerator''append-2 (:gen this), jump)
+            (update this :gen LIRGenerator''append-2 jump)
         )
-        nil
     )
 
     ;;;
@@ -35433,53 +35425,46 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn #_"void" LIRBuilder''visitSafepointNode-2 [#_"LIRBuilder" this, #_"SafepointNode" node]
-        (LIRGenerator''append-2 (:gen this), (SafepointOp'new-2 this, HotSpot'threadRegister))
-        nil
+    (defn #_"this" LIRBuilder''visitSafepointNode-2 [#_"LIRBuilder" this, #_"SafepointNode" node]
+        (update this :gen LIRGenerator''append-2 (SafepointOp'new-2 this, HotSpot'threadRegister))
     )
 
-    (defn- #_"void" LIRBuilder''emitNullCheckBranch-5 [#_"LIRBuilder" this, #_"IsNullNode" node, #_"LabelRef" trueSuccessor, #_"LabelRef" falseSuccessor, #_"double" trueSuccessorProbability]
+    (defn- #_"this" LIRBuilder''emitNullCheckBranch-5 [#_"LIRBuilder" this, #_"IsNullNode" node, #_"LabelRef" then, #_"LabelRef" else, #_"double" probability]
         (let [
             #_"LIRKind" kind (Stamp'''getLIRKind-1 (:stamp (Unary'''getValue-1 node)))
             #_"Value" nullValue (LIRGenerator''emitConstant-3 (:gen this), kind, JavaConstant/NULL_POINTER)
         ]
-            (LIRGenerator''emitCompareBranch-8 (:gen this), (#_"ValueKind" .getPlatformKind kind), (LIRBuilder''operand-2 this, (Unary'''getValue-1 node)), nullValue, Condition'EQ, trueSuccessor, falseSuccessor, trueSuccessorProbability)
+            (update this :gen LIRGenerator''emitCompareBranch-8 (#_"ValueKind" .getPlatformKind kind), (LIRBuilder''operand-2 this, (Unary'''getValue-1 node)), nullValue, Condition'EQ, then, else, probability)
         )
-        nil
     )
 
-    (defn #_"void" LIRBuilder''emitBranch-5 [#_"LIRBuilder" this, #_"LogicNode" node, #_"LabelRef" trueSuccessor, #_"LabelRef" falseSuccessor, #_"double" trueSuccessorProbability]
-        (condp satisfies? node
-            IsNullNode        (LIRBuilder''emitNullCheckBranch-5 this, node, trueSuccessor, falseSuccessor, trueSuccessorProbability)
-            CompareNode       (LIRBuilder''emitCompareBranch-5 this, node, trueSuccessor, falseSuccessor, trueSuccessorProbability)
-            LogicConstantNode (LIRBuilder''emitConstantBranch-4 this, (:value node), trueSuccessor, falseSuccessor)
-            IntegerTestNode   (LIRBuilder''emitIntegerTestBranch-5 this, node, trueSuccessor, falseSuccessor, trueSuccessorProbability)
-        )
-        nil
-    )
-
-    (defn #_"void" LIRBuilder''emitIf-2 [#_"LIRBuilder" this, #_"IfNode" node]
-        (LIRBuilder''emitBranch-5 this, (:logic node), (LIRBuilder''getLIRBlock-2 this, (:trueSuccessor node)), (LIRBuilder''getLIRBlock-2 this, (:falseSuccessor node)), (ControlSplitNode'''probability-2 node, (:trueSuccessor node)))
-        nil
-    )
-
-    (defn #_"void" LIRBuilder''emitCompareBranch-5 [#_"LIRBuilder" this, #_"CompareNode" compare, #_"LabelRef" trueSuccessor, #_"LabelRef" falseSuccessor, #_"double" trueSuccessorProbability]
+    (defn- #_"this" LIRBuilder''emitCompareBranch-5 [#_"LIRBuilder" this, #_"CompareNode" compare, #_"LabelRef" then, #_"LabelRef" else, #_"double" probability]
         (let [
             #_"PlatformKind" kind (#_"ValueKind" .getPlatformKind (Stamp'''getLIRKind-1 (:stamp (:x compare))))
         ]
-            (LIRGenerator''emitCompareBranch-8 (:gen this), kind, (LIRBuilder''operand-2 this, (:x compare)), (LIRBuilder''operand-2 this, (:y compare)), (:canonical (:condition compare)), trueSuccessor, falseSuccessor, trueSuccessorProbability)
+            (update this :gen LIRGenerator''emitCompareBranch-8 kind, (LIRBuilder''operand-2 this, (:x compare)), (LIRBuilder''operand-2 this, (:y compare)), (:canonical (:condition compare)), then, else, probability)
         )
-        nil
     )
 
-    (defn #_"void" LIRBuilder''emitIntegerTestBranch-5 [#_"LIRBuilder" this, #_"IntegerTestNode" test, #_"LabelRef" trueSuccessor, #_"LabelRef" falseSuccessor, #_"double" trueSuccessorProbability]
-        (LIRGenerator''emitIntegerTestBranch-6 (:gen this), (LIRBuilder''operand-2 this, (:x test)), (LIRBuilder''operand-2 this, (:y test)), trueSuccessor, falseSuccessor, trueSuccessorProbability)
-        nil
+    (defn- #_"this" LIRBuilder''emitConstantBranch-4 [#_"LIRBuilder" this, #_"boolean" value?, #_"LabelRef" then, #_"LabelRef" else]
+        (update this :gen LIRGenerator''emitJump-2 (if value? then else))
     )
 
-    (defn #_"void" LIRBuilder''emitConstantBranch-4 [#_"LIRBuilder" this, #_"boolean" value?, #_"LabelRef" trueSuccessor, #_"LabelRef" falseSuccessor]
-        (LIRGenerator''emitJump-2 (:gen this), (if value? trueSuccessor falseSuccessor))
-        nil
+    (defn- #_"this" LIRBuilder''emitIntegerTestBranch-5 [#_"LIRBuilder" this, #_"IntegerTestNode" test, #_"LabelRef" then, #_"LabelRef" else, #_"double" probability]
+        (update this :gen LIRGenerator''emitIntegerTestBranch-6 (LIRBuilder''operand-2 this, (:x test)), (LIRBuilder''operand-2 this, (:y test)), then, else, probability)
+    )
+
+    (defn- #_"this" LIRBuilder''emitBranch-5 [#_"LIRBuilder" this, #_"LogicNode" node, #_"LabelRef" then, #_"LabelRef" else, #_"double" probability]
+        (condp satisfies? node
+            IsNullNode        (LIRBuilder''emitNullCheckBranch-5 this, node, then, else, probability)
+            CompareNode       (LIRBuilder''emitCompareBranch-5 this, node, then, else, probability)
+            LogicConstantNode (LIRBuilder''emitConstantBranch-4 this, (:value node), then, else)
+            IntegerTestNode   (LIRBuilder''emitIntegerTestBranch-5 this, node, then, else, probability)
+        )
+    )
+
+    (defn #_"this" LIRBuilder''emitIf-2 [#_"LIRBuilder" this, #_"IfNode" node]
+        (LIRBuilder''emitBranch-5 this, (:logic node), (LIRBuilder''getLIRBlock-2 this, (:trueSuccessor node)), (LIRBuilder''getLIRBlock-2 this, (:falseSuccessor node)), (ControlSplitNode'''probability-2 node, (:trueSuccessor node)))
     )
 
     (defn #_"Variable" LIRBuilder''emitConditional-4 [#_"LIRBuilder" this, #_"LogicNode" node, #_"Value" trueValue, #_"Value" falseValue]
@@ -35514,9 +35499,8 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn #_"void" LIRBuilder''emitOverflowCheckBranch-5 [#_"LIRBuilder" this, #_"AbstractBeginNode" overflowSuccessor, #_"AbstractBeginNode" _next, #_"Stamp" stamp, #_"double" probability]
-        (LIRGenerator''emitOverflowCheckBranch-5 (:gen this), (LIRBuilder''getLIRBlock-2 this, overflowSuccessor), (LIRBuilder''getLIRBlock-2 this, _next), (Stamp'''getLIRKind-1 stamp), probability)
-        nil
+    (defn #_"this" LIRBuilder''emitOverflowCheckBranch-5 [#_"LIRBuilder" this, #_"AbstractBeginNode" overflowSuccessor, #_"AbstractBeginNode" _next, #_"Stamp" stamp, #_"double" probability]
+        (update this :gen LIRGenerator''emitOverflowCheckBranch-5 (LIRBuilder''getLIRBlock-2 this, overflowSuccessor), (LIRBuilder''getLIRBlock-2 this, _next), (Stamp'''getLIRKind-1 stamp), probability)
     )
 
     ;;;
@@ -35525,13 +35509,13 @@ ZeroExtendNode'new-4
      ;
      ; If the given switch does not contain int keys, it will always create a sequential implementation.
      ;;
-    (defn #_"void" LIRBuilder''emitSwitch-2 [#_"LIRBuilder" this, #_"SwitchNode" node]
+    (defn #_"this" LIRBuilder''emitSwitch-2 [#_"LIRBuilder" this, #_"SwitchNode" node]
         (let [
             #_"LabelRef" default (LIRBuilder''getLIRBlock-2 this, (SwitchNode''defaultSuccessor-1 node))
             #_"int" n (count (:keys node))
         ]
             (if (zero? n)
-                (LIRGenerator''emitJump-2 (:gen this), default)
+                (update this :gen LIRGenerator''emitJump-2 default)
                 (let [
                     #_"Variable" value (LIRGenerator''load-2 (:gen this), (LIRBuilder''operand-2 this, (:value node)))
                 ]
@@ -35542,7 +35526,7 @@ ZeroExtendNode'new-4
                                 #_"LIRKind" kind (Stamp'''getLIRKind-1 (:stamp (:value node)))
                                 #_"Value" key (LIRGenerator''emitConstant-3 (:gen this), kind, (SwitchNode'''keyAt-2 node, 0))
                             ]
-                                (LIRGenerator''emitCompareBranch-8 (:gen this), (#_"ValueKind" .getPlatformKind kind), (LIRGenerator''load-2 (:gen this), (LIRBuilder''operand-2 this, (:value node))), key, Condition'EQ, (LIRBuilder''getLIRBlock-2 this, (SwitchNode''keySuccessor-2 node, 0)), default, probability)
+                                (update this :gen LIRGenerator''emitCompareBranch-8 (#_"ValueKind" .getPlatformKind kind), (LIRGenerator''load-2 (:gen this), (LIRBuilder''operand-2 this, (:value node))), key, Condition'EQ, (LIRBuilder''getLIRBlock-2 this, (SwitchNode''keySuccessor-2 node, 0)), default, probability)
                             )
                         (and (satisfies? IntegerSwitchNode node) (SwitchNode'''isSorted-1 node))
                             (let [
@@ -35556,7 +35540,7 @@ ZeroExtendNode'new-4
                                         (§ ass! probabilities (conj' probabilities (SwitchNode''keyProbability-2 node, i)))
                                     )
                             ]
-                                (LIRGenerator''emitStrategySwitch-6 (:gen this), constants, probabilities, targets, default, value)
+                                (update this :gen LIRGenerator''emitStrategySwitch-6 constants, probabilities, targets, default, value)
                             )
                         :else
                             ;; keyKind != JavaKind.Int || !node.isSorted()
@@ -35572,13 +35556,12 @@ ZeroExtendNode'new-4
                                     )
                             ]
                                 ;; hopefully only a few entries
-                                (LIRGenerator''emitStrategySwitch-5 (:gen this), (SequentialStrategy'new-2 constants, probabilities), value, targets, default)
+                                (update this :gen LIRGenerator''emitStrategySwitch-5 (SequentialStrategy'new-2 constants, probabilities), value, targets, default)
                             )
                     )
                 )
             )
         )
-        nil
     )
 
     (defn- #_"[Value]" LIRBuilder''visitInvokeArguments-3 [#_"LIRBuilder" this, #_"CallingConvention" invokeCc, #_"ValueNode*" arguments]
@@ -35591,7 +35574,7 @@ ZeroExtendNode'new-4
                     (let [
                         #_"AllocatableValue" operand (#_"CallingConvention" .getArgument invokeCc, i)
                     ]
-                        (LIRGenerator''emitMove-3 (:gen this), operand, (LIRBuilder''operand-2 this, arg))
+                        (§ ass! (:gen this) (LIRGenerator''emitMove-3 (:gen this), operand, (LIRBuilder''operand-2 this, arg)))
                         (recur (conj' args operand) (inc i) (next s))
                     )
                 )
@@ -35599,35 +35582,35 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"void" LIRBuilder''emitDirectCall-5 [#_"LIRBuilder" this, #_"DirectCallTargetNode" callTarget, #_"Value" result, #_"[Value]" parameters, #_"[Value]" temporaries]
+    (defn- #_"this" LIRBuilder''emitDirectCall-5 [#_"LIRBuilder" this, #_"DirectCallTargetNode" callTarget, #_"Value" result, #_"[Value]" parameters, #_"[Value]" temporaries]
         (let [
             #_"InvokeKind" invokeKind (:invokeKind callTarget)
         ]
             (if (InvokeKind''isIndirect-1 invokeKind)
-                (LIRGenerator''append-2 (:gen this), (DirectVirtualCallOp'new-5 (:targetMethod callTarget), result, parameters, temporaries, invokeKind))
-                (LIRGenerator''append-2 (:gen this), (DirectStaticCallOp'new-5 (:targetMethod callTarget), result, parameters, temporaries, invokeKind))
+                (update this :gen LIRGenerator''append-2 (DirectVirtualCallOp'new-5 (:targetMethod callTarget), result, parameters, temporaries, invokeKind))
+                (update this :gen LIRGenerator''append-2 (DirectStaticCallOp'new-5 (:targetMethod callTarget), result, parameters, temporaries, invokeKind))
             )
         )
-        nil
     )
 
-    (defn #_"void" LIRBuilder''emitInvoke-2 [#_"LIRBuilder" this, #_"InvokeNode" invoke]
+    (defn #_"this" LIRBuilder''emitInvoke-2 [#_"LIRBuilder" this, #_"InvokeNode" invoke]
         (let [
             #_"LoweredCallTargetNode" callTarget (:callTarget invoke)
-            #_"FrameMapBuilder" frameMapBuilder (:frameMapBuilder (:res (:gen this)))
-            #_"CallingConvention" invokeCc (#_"RegisterConfig" .getCallingConvention HotSpot'registerConfig, (:callType callTarget), (Stamp'''javaType-1 (:stamp invoke)), (:signature callTarget), HotSpot'valueKindFactory)
-            _ (§ ass! frameMapBuilder (FrameMapBuilder''callsMethod-2 frameMapBuilder, invokeCc))
+            #_"CallingConvention" invokeCc (#_"RegisterConfig" .getCallingConvention HotSpot'registerConfig, (:callType callTarget), (Stamp'''javaType-1 (:stamp invoke)), (into-array JavaType (:signature callTarget)), HotSpot'valueKindFactory)
+            this (update-in this [:gen :res :frameMapBuilder] FrameMapBuilder''callsMethod-2 invokeCc)
             #_"Value" result (#_"CallingConvention" .getReturn invokeCc)
             #_"[Value]" parameters (LIRBuilder''visitInvokeArguments-3 this, invokeCc, (:arguments callTarget))
+            this
+                (condp satisfies? callTarget
+                    DirectCallTargetNode (LIRBuilder''emitDirectCall-5 this, callTarget, result, parameters, [])
+                )
+            _
+                (when-not (= result Value/ILLEGAL)
+                    (LIRBuilder''setResult-3 this, invoke, (LIRGenerator''emitMove-2 (:gen this), result))
+                )
         ]
-            (condp satisfies? callTarget
-                DirectCallTargetNode (LIRBuilder''emitDirectCall-5 this, callTarget, result, parameters, [])
-            )
-            (when-not (= result Value/ILLEGAL)
-                (LIRBuilder''setResult-3 this, invoke, (LIRGenerator''emitMove-2 (:gen this), result))
-            )
+            this
         )
-        nil
     )
 )
 
@@ -35654,7 +35637,7 @@ ZeroExtendNode'new-4
             (doseq [#_"Block" block (:reversePostOrder (:cfg (:lir res)))]
                 (§ ass! context (update context :nodeLirBuilder LIRBuilder''doBlock-4 block, (:graph context), (:block->nodes (:schedule context))))
             )
-            (LIRGenerator''beforeRegisterAllocation-1 (:lirGen context))
+            (§ ass! (:lirGen context) (LIRGenerator''beforeRegisterAllocation-1 (:lirGen context)))
             nil
         )
     )
@@ -35725,15 +35708,14 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"LIRInstruction" LIRGenerator''append-2 [#_"LIRGenerator" this, #_"LIRInstruction" op]
+    (defn #_"this" LIRGenerator''append-2 [#_"LIRGenerator" this, #_"LIRInstruction" op]
         (let [
             #_"[LIRInstruction]" ops (LIR''getLIRforBlock-2 (:lir (:res this)), (:currentBlock this))
+            _ (§ ass! ops (conj' ops op))
         ]
-            (§ ass! ops (conj' ops op))
-            (when (satisfies? AMD64HotSpotRestoreRbpOp op)
-                (§ ass! this (update this :epilogueOps conj' op))
+            (when (satisfies? AMD64HotSpotRestoreRbpOp op) => this
+                (update this :epilogueOps conj' op)
             )
-            op
         )
     )
 
@@ -35749,7 +35731,7 @@ ZeroExtendNode'new-4
             #_"Variable" result (LIRGenerator''newVariable-2 this, kind)
             #_"AMD64AddressValue" addressValue (LIRGenerator''asAddressValue-2 this, address)
         ]
-            (LIRGenerator''append-2 this, (AtomicReadAndAddOp'new-4 (#_"ValueKind" .getPlatformKind kind), result, addressValue, (LIRGenerator''asAllocatable-2 this, delta)))
+            (§ ass! this (LIRGenerator''append-2 this, (AtomicReadAndAddOp'new-4 (#_"ValueKind" .getPlatformKind kind), result, addressValue, (LIRGenerator''asAllocatable-2 this, delta))))
             result
         )
     )
@@ -35766,7 +35748,7 @@ ZeroExtendNode'new-4
             #_"Variable" result (LIRGenerator''newVariable-2 this, kind)
             #_"AMD64AddressValue" addressValue (LIRGenerator''asAddressValue-2 this, address)
         ]
-            (LIRGenerator''append-2 this, (AtomicReadAndWriteOp'new-4 (#_"ValueKind" .getPlatformKind kind), result, addressValue, (LIRGenerator''asAllocatable-2 this, newValue)))
+            (§ ass! this (LIRGenerator''append-2 this, (AtomicReadAndWriteOp'new-4 (#_"ValueKind" .getPlatformKind kind), result, addressValue, (LIRGenerator''asAllocatable-2 this, newValue))))
             result
         )
     )
@@ -35786,19 +35768,17 @@ ZeroExtendNode'new-4
         (let [
             #_"Variable" result (LIRGenerator''newVariable-2 this, (#_"Value" .getValueKind input))
         ]
-            (LIRGenerator''emitMove-3 this, result, input)
+            (§ ass! this (LIRGenerator''emitMove-3 this, result, input))
             result
         )
     )
 
-    (defn #_"void" LIRGenerator''emitMove-3 [#_"LIRGenerator" this, #_"AllocatableValue" dst, #_"Value" src]
+    (defn #_"this" LIRGenerator''emitMove-3 [#_"LIRGenerator" this, #_"AllocatableValue" dst, #_"Value" src]
         (LIRGenerator''append-2 this, (MoveFactory'createMove-2 dst, src))
-        nil
     )
 
-    (defn #_"void" LIRGenerator''emitMoveConstant-3 [#_"LIRGenerator" this, #_"AllocatableValue" dst, #_"Constant" src]
+    (defn #_"this" LIRGenerator''emitMoveConstant-3 [#_"LIRGenerator" this, #_"AllocatableValue" dst, #_"Constant" src]
         (LIRGenerator''append-2 this, (MoveFactory'createLoad-2 dst, src))
-        nil
     )
 
     (defn #_"Value" LIRGenerator''emitConstant-3 [#_"LIRGenerator" this, #_"LIRKind" kind, #_"Constant" constant]
@@ -35816,20 +35796,19 @@ ZeroExtendNode'new-4
         (let [
             #_"Variable" result (LIRGenerator''newVariable-2 this, (LIRKind'value-1 (#_"Architecture" .getWordKind (.arch HotSpot'target))))
         ]
-            (LIRGenerator''append-2 this, (StackLeaOp'new-2 result, stackslot))
+            (§ ass! this (LIRGenerator''append-2 this, (StackLeaOp'new-2 result, stackslot)))
             result
         )
     )
 
-    (defn #_"void" LIRGenerator''emitMembar-2 [#_"LIRGenerator" this, #_"int" barriers]
+    (defn #_"this" LIRGenerator''emitMembar-2 [#_"LIRGenerator" this, #_"int" barriers]
         (let [
             #_"int" necessaryBarriers (#_"Architecture" .requiredBarriers (.arch HotSpot'target), barriers)
         ]
-            (when (and (.isMP HotSpot'target) (not (zero? necessaryBarriers)))
+            (when (and (.isMP HotSpot'target) (not (zero? necessaryBarriers))) => this
                 (LIRGenerator''append-2 this, (MembarOp'new-1 necessaryBarriers))
             )
         )
-        nil
     )
 
     ;;;
@@ -35850,12 +35829,12 @@ ZeroExtendNode'new-4
         (let [
             #_"Variable" result (LIRGenerator''newVariable-2 this, kind)
         ]
-            (LIRGenerator''emitMoveConstant-3 this, result, constant)
+            (§ ass! this (LIRGenerator''emitMoveConstant-3 this, result, constant))
             result
         )
     )
 
-    (defn #_"void" LIRGenerator''emitNullCheck-2 [#_"LIRGenerator" this, #_"Value" address]
+    (defn #_"this" LIRGenerator''emitNullCheck-2 [#_"LIRGenerator" this, #_"Value" address]
         (if (= (#_"ValueKind" .getPlatformKind (#_"Value" .getValueKind address)) (#_"ValueKind" .getPlatformKind (LIRKindTool'getNarrowOopKind-0)))
             (let [
                 #_"CompressEncoding" encoding HotSpot'oopEncoding
@@ -35873,7 +35852,6 @@ ZeroExtendNode'new-4
             )
             (LIRGenerator''append-2 this, (NullCheckOp'new-1 (LIRGenerator''asAddressValue-2 this, address)))
         )
-        nil
     )
 
     (defn #_"Variable" LIRGenerator''emitLogicCompareAndSwap-6 [#_"LIRGenerator" this, #_"Value" address, #_"Value" expectedValue, #_"Value" newValue, #_"Value" trueValue, #_"Value" falseValue]
@@ -35882,16 +35860,12 @@ ZeroExtendNode'new-4
             #_"AMD64Kind" memKind (#_"ValueKind" .getPlatformKind kind)
             #_"AMD64AddressValue" addressValue (LIRGenerator''asAddressValue-2 this, address)
             #_"RegisterValue" raxRes (#_"Register" .asValue AMD64/rax, kind)
+            _ (§ ass! this (LIRGenerator''emitMove-3 this, raxRes, expectedValue))
+            _ (§ ass! this (LIRGenerator''append-2 this, (CompareAndSwapOp'new-5 memKind, raxRes, addressValue, raxRes, (LIRGenerator''asAllocatable-2 this, newValue))))
+            #_"Variable" result (LIRGenerator''newVariable-2 this, (#_"Value" .getValueKind trueValue))
+            _ (§ ass! this (LIRGenerator''append-2 this, (CondMoveOp'new-4 result, Condition'EQ, (LIRGenerator''asAllocatable-2 this, trueValue), falseValue)))
         ]
-            (LIRGenerator''emitMove-3 this, raxRes, expectedValue)
-            (LIRGenerator''append-2 this, (CompareAndSwapOp'new-5 memKind, raxRes, addressValue, raxRes, (LIRGenerator''asAllocatable-2 this, newValue)))
-
-            (let [
-                #_"Variable" result (LIRGenerator''newVariable-2 this, (#_"Value" .getValueKind trueValue))
-            ]
-                (LIRGenerator''append-2 this, (CondMoveOp'new-4 result, Condition'EQ, (LIRGenerator''asAllocatable-2 this, trueValue), falseValue))
-                result
-            )
+            result
         )
     )
 
@@ -35901,32 +35875,29 @@ ZeroExtendNode'new-4
             #_"AMD64Kind" memKind (#_"ValueKind" .getPlatformKind kind)
             #_"AMD64AddressValue" addressValue (LIRGenerator''asAddressValue-2 this, address)
             #_"RegisterValue" raxRes (#_"Register" .asValue AMD64/rax, kind)
+            _ (§ ass! this (LIRGenerator''emitMove-3 this, raxRes, expectedValue))
+            _ (§ ass! this (LIRGenerator''append-2 this, (CompareAndSwapOp'new-5 memKind, raxRes, addressValue, raxRes, (LIRGenerator''asAllocatable-2 this, newValue))))
+            #_"Variable" result (LIRGenerator''newVariable-2 this, kind)
+            _ (§ ass! this (LIRGenerator''emitMove-3 this, result, raxRes))
         ]
-            (LIRGenerator''emitMove-3 this, raxRes, expectedValue)
-            (LIRGenerator''append-2 this, (CompareAndSwapOp'new-5 memKind, raxRes, addressValue, raxRes, (LIRGenerator''asAllocatable-2 this, newValue)))
-            (let [
-                #_"Variable" result (LIRGenerator''newVariable-2 this, kind)
-            ]
-                (LIRGenerator''emitMove-3 this, result, raxRes)
-                result
-            )
+            result
         )
     )
 
     #_unused
-    (defn #_"void" LIRGenerator''emitCompareAndSwapBranch-9 [#_"LIRGenerator" this, #_"ValueKind" kind, #_"AMD64AddressValue" address, #_"Value" expectedValue, #_"Value" newValue, #_"Condition" condition, #_"LabelRef" trueLabel, #_"LabelRef" falseLabel, #_"double" trueLabelProbability]
+    (defn #_"this" LIRGenerator''emitCompareAndSwapBranch-9 [#_"LIRGenerator" this, #_"ValueKind" kind, #_"AMD64AddressValue" address, #_"Value" expectedValue, #_"Value" newValue, #_"Condition" condition, #_"LabelRef" trueLabel, #_"LabelRef" falseLabel, #_"double" trueLabelProbability]
         (let [
             #_"AMD64Kind" memKind (#_"ValueKind" .getPlatformKind kind)
             #_"RegisterValue" raxValue (#_"Register" .asValue AMD64/rax, kind)
+            this (LIRGenerator''emitMove-3 this, raxValue, expectedValue)
+            this (LIRGenerator''append-2 this, (CompareAndSwapOp'new-5 memKind, raxValue, address, raxValue, (LIRGenerator''asAllocatable-2 this, newValue)))
+            this (LIRGenerator''append-2 this, (BranchOp'new-4c condition, trueLabel, falseLabel, trueLabelProbability))
         ]
-            (LIRGenerator''emitMove-3 this, raxValue, expectedValue)
-            (LIRGenerator''append-2 this, (CompareAndSwapOp'new-5 memKind, raxValue, address, raxValue, (LIRGenerator''asAllocatable-2 this, newValue)))
-            (LIRGenerator''append-2 this, (BranchOp'new-4c condition, trueLabel, falseLabel, trueLabelProbability))
+            this
         )
-        nil
     )
 
-    (defn- #_"void" LIRGenerator''moveValueToThread-3 [#_"LIRGenerator" this, #_"Value" value, #_"int" offset]
+    (defn- #_"this" LIRGenerator''moveValueToThread-3 [#_"LIRGenerator" this, #_"Value" value, #_"int" offset]
         (let [
             #_"LIRKind" wordKind (LIRKind'value-1 (#_"Architecture" .getWordKind (.arch HotSpot'target)))
             #_"RegisterValue" thread (#_"Register" .asValue HotSpot'threadRegister, wordKind)
@@ -35934,30 +35905,31 @@ ZeroExtendNode'new-4
         ]
             (LIRGenerator''emitStore-4v this, (#_"Value" .getValueKind value), address, value)
         )
-        nil
     )
 
-    (defn- #_"void" LIRGenerator''moveDeoptValuesToThread-3 [#_"LIRGenerator" this, #_"Value" actionAndReason, #_"Value" speculation]
-        (LIRGenerator''moveValueToThread-3 this, actionAndReason, HotSpot'pendingDeoptimizationOffset)
-        (LIRGenerator''moveValueToThread-3 this, speculation, HotSpot'pendingFailedSpeculationOffset)
-        nil
+    (defn- #_"this" LIRGenerator''moveDeoptValuesToThread-3 [#_"LIRGenerator" this, #_"Value" actionAndReason, #_"Value" speculation]
+        (-> this
+            (LIRGenerator''moveValueToThread-3 actionAndReason, HotSpot'pendingDeoptimizationOffset)
+            (LIRGenerator''moveValueToThread-3 speculation, HotSpot'pendingFailedSpeculationOffset)
+        )
     )
 
-    (defn #_"void" LIRGenerator''emitDeoptimize-3 [#_"LIRGenerator" this, #_"Value" actionAndReason, #_"Value" speculation]
-        (LIRGenerator''moveDeoptValuesToThread-3 this, actionAndReason, speculation)
-        (LIRGenerator''append-2 this, (AMD64DeoptimizeOp'new-0))
-        nil
+    (defn #_"this" LIRGenerator''emitDeoptimize-3 [#_"LIRGenerator" this, #_"Value" actionAndReason, #_"Value" speculation]
+        (let [
+            this (LIRGenerator''moveDeoptValuesToThread-3 this, actionAndReason, speculation)
+        ]
+            (LIRGenerator''append-2 this, (AMD64DeoptimizeOp'new-0))
+        )
     )
 
-    (defn #_"void" LIRGenerator''emitDeoptimizeCaller-3 [#_"LIRGenerator" this, #_"DeoptimizationAction" action, #_"DeoptimizationReason" reason]
+    (defn #_"this" LIRGenerator''emitDeoptimizeCaller-3 [#_"LIRGenerator" this, #_"DeoptimizationAction" action, #_"DeoptimizationReason" reason]
         (let [
             #_"Value" actionAndReason (LIRGenerator''emitJavaConstant-2 this, (#_"MetaAccessProvider" .encodeDeoptActionAndReason HotSpot'metaAccess, action, reason, 0))
             #_"Value" nullValue (LIRGenerator''emitConstant-3 this, (LIRKind'reference-1 AMD64Kind/QWORD), JavaConstant/NULL_POINTER)
+            this (LIRGenerator''moveDeoptValuesToThread-3 this, actionAndReason, nullValue)
         ]
-            (LIRGenerator''moveDeoptValuesToThread-3 this, actionAndReason, nullValue)
             (LIRGenerator''append-2 this, (DeoptimizeCallerOp'new-0))
         )
-        nil
     )
 
     ;;;
@@ -35988,13 +35960,12 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"this" LIRGenerator''emitReturn-3 [#_"LIRGenerator" this, #_"JavaKind" kind, #_"Value" input]
         (let [
-            #_"AllocatableValue" operand
-                (when (some? input) => Value/ILLEGAL
+            [this #_"AllocatableValue" operand]
+                (when (some? input) => [this Value/ILLEGAL]
                     (let [
                         operand (LIRGenerator'resultOperandFor-2 kind, (#_"Value" .getValueKind input))
                     ]
-                        (LIRGenerator''emitMove-3 this, operand, input)
-                        operand
+                        [(LIRGenerator''emitMove-3 this, operand, input) operand]
                     )
                 )
             this
@@ -36003,7 +35974,6 @@ ZeroExtendNode'new-4
                 )
         ]
             (LIRGenerator''append-2 this, (AMD64HotSpotReturnOp'new-3 operand, HotSpot'threadRegister, (:pollOnReturnScratchRegister this)))
-            this
         )
     )
 
@@ -36045,23 +36015,21 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"void" LIRGenerator''emitIncomingValues-2 [#_"LIRGenerator" this, #_"[Value]" params]
+    (defn #_"this" LIRGenerator''emitIncomingValues-2 [#_"LIRGenerator" this, #_"[Value]" params]
         (let [
             #_"[LIRInstruction]" ops (LIR''getLIRforBlock-2 (:lir (:res this)), (:currentBlock this))
+            _ (§ ass! (nth ops 0) (assoc (nth ops 0) :incomingValues params))
         ]
-            (§ ass! (nth ops 0) (assoc (nth ops 0) :incomingValues params))
+            this
         )
-        nil
     )
 
-    (defn #_"void" LIRGenerator''emitJump-2 [#_"LIRGenerator" this, #_"LabelRef" label]
+    (defn #_"this" LIRGenerator''emitJump-2 [#_"LIRGenerator" this, #_"LabelRef" label]
         (LIRGenerator''append-2 this, (JumpOp'new-1 label))
-        nil
     )
 
-    (defn- #_"void" LIRGenerator''emitRawCompare-4 [#_"LIRGenerator" this, #_"PlatformKind" cmpKind, #_"Value" left, #_"Value" right]
+    (defn- #_"this" LIRGenerator''emitRawCompare-4 [#_"LIRGenerator" this, #_"PlatformKind" cmpKind, #_"Value" left, #_"Value" right]
         (LIRGenerator''emitCompareOp-4 this, cmpKind, (LIRGenerator''load-2 this, left), (LIRGenerator''loadNonConst-2 this, right))
-        nil
     )
 
     ;;;
@@ -36075,28 +36043,29 @@ ZeroExtendNode'new-4
     (defn- #_"Condition" LIRGenerator''emitCompare-5 [#_"LIRGenerator" this, #_"PlatformKind" cmpKind, #_"Value" a, #_"Value" b, #_"Condition" condition]
         (if (satisfies? Variable b)
             (do
-                (LIRGenerator''emitRawCompare-4 this, cmpKind, b, a)
+                (§ ass! this (LIRGenerator''emitRawCompare-4 this, cmpKind, b, a))
                 (Condition''mirror-1 condition)
             )
             (do
-                (LIRGenerator''emitRawCompare-4 this, cmpKind, a, b)
+                (§ ass! this (LIRGenerator''emitRawCompare-4 this, cmpKind, a, b))
                 condition
             )
         )
     )
 
-    (defn #_"void" LIRGenerator''emitCompareBranch-8 [#_"LIRGenerator" this, #_"PlatformKind" cmpKind, #_"Value" left, #_"Value" right, #_"Condition" cond, #_"LabelRef" trueLabel, #_"LabelRef" falseLabel, #_"double" trueLabelProbability]
-        (§ ass cond (LIRGenerator''emitCompare-5 this, cmpKind, left, right, cond))
-        (LIRGenerator''append-2 this, (BranchOp'new-4c cond, trueLabel, falseLabel, trueLabelProbability))
-        nil
+    (defn #_"this" LIRGenerator''emitCompareBranch-8 [#_"LIRGenerator" this, #_"PlatformKind" cmpKind, #_"Value" left, #_"Value" right, #_"Condition" cond, #_"LabelRef" trueLabel, #_"LabelRef" falseLabel, #_"double" trueLabelProbability]
+        (let [
+            _ (§ ass cond (LIRGenerator''emitCompare-5 this, cmpKind, left, right, cond))
+        ]
+            (LIRGenerator''append-2 this, (BranchOp'new-4c cond, trueLabel, falseLabel, trueLabelProbability))
+        )
     )
 
-    (defn #_"void" LIRGenerator''emitOverflowCheckBranch-5 [#_"LIRGenerator" this, #_"LabelRef" overflow, #_"LabelRef" noOverflow, #_"LIRKind" cmpLIRKind, #_"double" overflowProbability]
+    (defn #_"this" LIRGenerator''emitOverflowCheckBranch-5 [#_"LIRGenerator" this, #_"LabelRef" overflow, #_"LabelRef" noOverflow, #_"LIRKind" cmpLIRKind, #_"double" overflowProbability]
         (LIRGenerator''append-2 this, (BranchOp'new-4f ConditionFlag'Overflow, overflow, noOverflow, overflowProbability))
-        nil
     )
 
-    (defn- #_"void" LIRGenerator''emitIntegerTest-3 [#_"LIRGenerator" this, #_"Value" a, #_"Value" b]
+    (defn- #_"this" LIRGenerator''emitIntegerTest-3 [#_"LIRGenerator" this, #_"Value" a, #_"Value" b]
         (let [
             #_"OperandSize" size (if (= (#_"Value" .getPlatformKind a) AMD64Kind/QWORD) :OperandSize'QWORD :OperandSize'DWORD)
         ]
@@ -36111,39 +36080,39 @@ ZeroExtendNode'new-4
                     (LIRGenerator''append-2 this, (ConsumerOp'new-4 AMD64RMOp'TEST, size, (LIRGenerator''asAllocatable-2 this, a), (LIRGenerator''asAllocatable-2 this, b)))
             )
         )
-        nil
     )
 
-    (defn #_"void" LIRGenerator''emitIntegerTestBranch-6 [#_"LIRGenerator" this, #_"Value" left, #_"Value" right, #_"LabelRef" trueDestination, #_"LabelRef" falseDestination, #_"double" trueDestinationProbability]
-        (LIRGenerator''emitIntegerTest-3 this, left, right)
-        (LIRGenerator''append-2 this, (BranchOp'new-4c Condition'EQ, trueDestination, falseDestination, trueDestinationProbability))
-        nil
+    (defn #_"this" LIRGenerator''emitIntegerTestBranch-6 [#_"LIRGenerator" this, #_"Value" left, #_"Value" right, #_"LabelRef" trueDestination, #_"LabelRef" falseDestination, #_"double" trueDestinationProbability]
+        (let [
+            this (LIRGenerator''emitIntegerTest-3 this, left, right)
+        ]
+            (LIRGenerator''append-2 this, (BranchOp'new-4c Condition'EQ, trueDestination, falseDestination, trueDestinationProbability))
+        )
     )
 
     (defn #_"Variable" LIRGenerator''emitConditionalMove-7 [#_"LIRGenerator" this, #_"PlatformKind" cmpKind, #_"Value" left, #_"Value" right, #_"Condition" cond, #_"Value" trueValue, #_"Value" falseValue]
-        (§ ass cond (LIRGenerator''emitCompare-5 this, cmpKind, left, right, cond))
-
         (let [
+            _ (§ ass cond (LIRGenerator''emitCompare-5 this, cmpKind, left, right, cond))
             #_"Variable" result (LIRGenerator''newVariable-2 this, (#_"Value" .getValueKind trueValue))
         ]
             (cond
                 (and (LIRValueUtil'isIntConstant-2 trueValue, 1) (LIRValueUtil'isIntConstant-2 falseValue, 0))
-                    (LIRGenerator''append-2 this, (CondSetOp'new-2 result, cond))
+                    (§ ass! this (LIRGenerator''append-2 this, (CondSetOp'new-2 result, cond)))
                 (and (LIRValueUtil'isIntConstant-2 trueValue, 0) (LIRValueUtil'isIntConstant-2 falseValue, 1))
-                    (LIRGenerator''append-2 this, (CondSetOp'new-2 result, (Condition''negate-1 cond)))
+                    (§ ass! this (LIRGenerator''append-2 this, (CondSetOp'new-2 result, (Condition''negate-1 cond))))
                 :else
-                    (LIRGenerator''append-2 this, (CondMoveOp'new-4 result, cond, (LIRGenerator''load-2 this, trueValue), (LIRGenerator''loadNonConst-2 this, falseValue)))
+                    (§ ass! this (LIRGenerator''append-2 this, (CondMoveOp'new-4 result, cond, (LIRGenerator''load-2 this, trueValue), (LIRGenerator''loadNonConst-2 this, falseValue))))
             )
             result
         )
     )
 
     (defn #_"Variable" LIRGenerator''emitIntegerTestMove-5 [#_"LIRGenerator" this, #_"Value" left, #_"Value" right, #_"Value" trueValue, #_"Value" falseValue]
-        (LIRGenerator''emitIntegerTest-3 this, left, right)
+        (§ ass! this (LIRGenerator''emitIntegerTest-3 this, left, right))
         (let [
             #_"Variable" result (LIRGenerator''newVariable-2 this, (#_"Value" .getValueKind trueValue))
         ]
-            (LIRGenerator''append-2 this, (CondMoveOp'new-4 result, Condition'EQ, (LIRGenerator''load-2 this, trueValue), (LIRGenerator''loadNonConst-2 this, falseValue)))
+            (§ ass! this (LIRGenerator''append-2 this, (CondMoveOp'new-4 result, Condition'EQ, (LIRGenerator''load-2 this, trueValue), (LIRGenerator''loadNonConst-2 this, falseValue))))
             result
         )
     )
@@ -36151,7 +36120,7 @@ ZeroExtendNode'new-4
     ;;;
      ; Emits the single call operation at the heart of generating LIR for a {@linkplain #emitForeignCall(ForeignCallLinkage, Value...) foreign call}.
      ;;
-    (defn #_"void" LIRGenerator''emitForeignCallOp-5 [#_"LIRGenerator" this, #_"ForeignCallLinkage" linkage, #_"Value" result, #_"[Value]" arguments, #_"[Value]" temporaries]
+    (defn #_"this" LIRGenerator''emitForeignCallOp-5 [#_"LIRGenerator" this, #_"ForeignCallLinkage" linkage, #_"Value" result, #_"[Value]" arguments, #_"[Value]" temporaries]
         (let [
             #_"long" maxOffset (ForeignCallLinkage''getMaxCallTargetOffset-1 linkage)
         ]
@@ -36160,7 +36129,6 @@ ZeroExtendNode'new-4
                 (LIRGenerator''append-2 this, (DirectFarForeignCallOp'new-4 linkage, result, arguments, temporaries))
             )
         )
-        nil
     )
 
     (defn- #_"Variable" LIRGenerator''_emitForeignCall-3* [#_"LIRGenerator" this, #_"ForeignCallLinkage" linkage & #_"Value..." args]
@@ -36174,14 +36142,13 @@ ZeroExtendNode'new-4
                     (let [
                         #_"AllocatableValue" loc (#_"CallingConvention" .getArgument linkageCc, i)
                     ]
-                        (LIRGenerator''emitMove-3 this, loc, (nth args i))
+                        (§ ass! this (LIRGenerator''emitMove-3 this, loc, (nth args i)))
                         (§ ass! argLocations (assoc' argLocations i loc))
                     )
                 )
             _ (§ ass! this (assoc-in this [:res :hasForeignCall] true))
+            _ (§ ass! this (LIRGenerator''emitForeignCallOp-5 this, linkage, (#_"CallingConvention" .getReturn linkageCc), argLocations, (§ snap (:temporaries linkage))))
         ]
-            (LIRGenerator''emitForeignCallOp-5 this, linkage, (#_"CallingConvention" .getReturn linkageCc), argLocations, (§ snap (:temporaries linkage)))
-
             (when-not (= (#_"CallingConvention" .getReturn linkageCc) Value/ILLEGAL)
                 (LIRGenerator''emitMove-2 this, (#_"CallingConvention" .getReturn linkageCc))
             )
@@ -36190,28 +36157,26 @@ ZeroExtendNode'new-4
 
     (defn #_"Variable" LIRGenerator''emitForeignCall-3* [#_"LIRGenerator" this, #_"ForeignCallLinkage" linkage & #_"Value..." args]
         (when (ForeignCallLinkage''needsJavaFrameAnchor-1 linkage) => (apply LIRGenerator''_emitForeignCall-3* this, linkage, args)
-            (LIRGenerator''append-2 this, (CRuntimeCallPrologueOp'new-2 HotSpot'threadLastJavaSpOffset, HotSpot'threadRegister))
+            (§ ass! this (LIRGenerator''append-2 this, (CRuntimeCallPrologueOp'new-2 HotSpot'threadLastJavaSpOffset, HotSpot'threadRegister)))
             (let [
                 #_"Variable" result (apply LIRGenerator''_emitForeignCall-3* this, linkage, args)
             ]
-                (LIRGenerator''append-2 this, (CRuntimeCallEpilogueOp'new-4 HotSpot'threadLastJavaSpOffset, HotSpot'threadLastJavaFpOffset, HotSpot'threadLastJavaPcOffset, HotSpot'threadRegister))
+                (§ ass! this (LIRGenerator''append-2 this, (CRuntimeCallEpilogueOp'new-4 HotSpot'threadLastJavaSpOffset, HotSpot'threadLastJavaFpOffset, HotSpot'threadLastJavaPcOffset, HotSpot'threadRegister)))
                 result
             )
         )
     )
 
-    (defn #_"void" LIRGenerator''emitStrategySwitch-5 [#_"LIRGenerator" this, #_"SwitchStrategy" strategy, #_"Variable" key, #_"[LabelRef]" targets, #_"LabelRef" default]
+    (defn #_"this" LIRGenerator''emitStrategySwitch-5 [#_"LIRGenerator" this, #_"SwitchStrategy" strategy, #_"Variable" key, #_"[LabelRef]" targets, #_"LabelRef" default]
         ;; a temp is needed for loading object constants
         (LIRGenerator''append-2 this, (AMD64HotSpotStrategySwitchOp'new-5 strategy, targets, default, key, (if-not (LIRKind'isValue-1v key) (LIRGenerator''newVariable-2 this, (#_"Value" .getValueKind key)) Value/ILLEGAL)))
-        nil
     )
 
-    (defn #_"void" LIRGenerator''emitTableSwitch-5 [#_"LIRGenerator" this, #_"int" lowKey, #_"LabelRef" default, #_"[LabelRef]" targets, #_"Value" key]
+    (defn #_"this" LIRGenerator''emitTableSwitch-5 [#_"LIRGenerator" this, #_"int" lowKey, #_"LabelRef" default, #_"[LabelRef]" targets, #_"Value" key]
         (LIRGenerator''append-2 this, (TableSwitchOp'new-6 lowKey, default, targets, key, (LIRGenerator''newVariable-2 this, (LIRKind'value-1 (#_"Architecture" .getWordKind (.arch HotSpot'target)))), (LIRGenerator''newVariable-2 this, (#_"Value" .getValueKind key))))
-        nil
     )
 
-    (defn #_"void" LIRGenerator''emitStrategySwitch-6 [#_"LIRGenerator" this, #_"[JavaConstant]" constants, #_"[double]" probabilities, #_"[LabelRef]" targets, #_"LabelRef" default, #_"Variable" value]
+    (defn #_"this" LIRGenerator''emitStrategySwitch-6 [#_"LIRGenerator" this, #_"[JavaConstant]" constants, #_"[double]" probabilities, #_"[LabelRef]" targets, #_"LabelRef" default, #_"Variable" value]
         (let [
             #_"SwitchStrategy" strategy (SwitchStrategy'getBestStrategy-3 constants, probabilities, targets)
             #_"int" n (count constants)
@@ -36232,22 +36197,22 @@ ZeroExtendNode'new-4
                 )
             )
         )
-        nil
     )
 
     ;;;
      ; Called just before register allocation is performed on the LIR owned by this generator.
      ; Overriding implementations of this method must call the overridden method.
      ;;
-    (defn #_"void" LIRGenerator''beforeRegisterAllocation-1 [#_"LIRGenerator" this]
+    (defn #_"this" LIRGenerator''beforeRegisterAllocation-1 [#_"LIRGenerator" this]
         (let [
             #_"AllocatableValue" savedRbp (SaveRbp''finalize-2 (:saveRbp this), false)
+            _
+                (doseq [#_"AMD64HotSpotRestoreRbpOp" op (:epilogueOps this)]
+                    (§ ass! op (AMD64HotSpotRestoreRbpOp'''setSavedRbp-2 op, savedRbp))
+                )
         ]
-            (doseq [#_"AMD64HotSpotRestoreRbpOp" op (:epilogueOps this)]
-                (§ ass! op (AMD64HotSpotRestoreRbpOp'''setSavedRbp-2 op, savedRbp))
-            )
+            this
         )
-        nil
     )
 
     #_unused
@@ -36271,19 +36236,17 @@ ZeroExtendNode'new-4
         (let [
             #_"Variable" result (LIRGenerator''newVariable-2 this, (LIRKind'combine-1* input))
         ]
-            (LIRGenerator''append-2 this, (AMD64ByteSwapOp'new-2 result, input))
+            (§ ass! this (LIRGenerator''append-2 this, (AMD64ByteSwapOp'new-2 result, input)))
             result
         )
     )
 
-    (defn #_"void" LIRGenerator''emitBlackhole-2 [#_"LIRGenerator" this, #_"Value" operand]
+    (defn #_"this" LIRGenerator''emitBlackhole-2 [#_"LIRGenerator" this, #_"Value" operand]
         (LIRGenerator''append-2 this, (BlackholeOp'new-1 operand))
-        nil
     )
 
-    (defn #_"void" LIRGenerator''emitPrefetchAllocate-2 [#_"LIRGenerator" this, #_"Value" address]
+    (defn #_"this" LIRGenerator''emitPrefetchAllocate-2 [#_"LIRGenerator" this, #_"Value" address]
         (LIRGenerator''append-2 this, (AMD64PrefetchOp'new-2 (LIRGenerator''asAddressValue-2 this, address), HotSpot'allocatePrefetchInstr))
-        nil
     )
 
     (defn #_"Value" LIRGenerator''emitCompress-4 [#_"LIRGenerator" this, #_"Value" pointer, #_"CompressEncoding" encoding, #_"boolean" never-nil?]
@@ -36295,7 +36258,7 @@ ZeroExtendNode'new-4
                 (let [
                     #_"Variable" result (LIRGenerator''newVariable-2 this, (LIRKindTool'getNarrowOopKind-0))
                 ]
-                    (LIRGenerator''append-2 this, (CompressPointerOp'new-5 result, (LIRGenerator''asAllocatable-2 this, pointer), (#_"Register" .asValue HotSpot'heapBaseRegister), encoding, never-nil?))
+                    (§ ass! this (LIRGenerator''append-2 this, (CompressPointerOp'new-5 result, (LIRGenerator''asAllocatable-2 this, pointer), (#_"Register" .asValue HotSpot'heapBaseRegister), encoding, never-nil?)))
                     result
                 )
                 ;; metaspace pointer
@@ -36306,7 +36269,7 @@ ZeroExtendNode'new-4
                             (LIRGenerator''emitLoadConstant-3 this, (LIRKindTool'getWordKind-0), (JavaConstant/forLong (:base encoding)))
                         )
                 ]
-                    (LIRGenerator''append-2 this, (CompressPointerOp'new-5 result, (LIRGenerator''asAllocatable-2 this, pointer), base, encoding, never-nil?))
+                    (§ ass! this (LIRGenerator''append-2 this, (CompressPointerOp'new-5 result, (LIRGenerator''asAllocatable-2 this, pointer), base, encoding, never-nil?)))
                     result
                 )
             )
@@ -36322,7 +36285,7 @@ ZeroExtendNode'new-4
                 (let [
                     #_"Variable" result (LIRGenerator''newVariable-2 this, (LIRKindTool'getObjectKind-0))
                 ]
-                    (LIRGenerator''append-2 this, (UncompressPointerOp'new-5 result, (LIRGenerator''asAllocatable-2 this, pointer), (#_"Register" .asValue HotSpot'heapBaseRegister), encoding, never-nil?))
+                    (§ ass! this (LIRGenerator''append-2 this, (UncompressPointerOp'new-5 result, (LIRGenerator''asAllocatable-2 this, pointer), (#_"Register" .asValue HotSpot'heapBaseRegister), encoding, never-nil?)))
                     result
                 )
                 ;; metaspace pointer
@@ -36334,16 +36297,15 @@ ZeroExtendNode'new-4
                             (LIRGenerator''emitLoadConstant-3 this, uncompressedKind, (JavaConstant/forLong (:base encoding)))
                         )
                 ]
-                    (LIRGenerator''append-2 this, (UncompressPointerOp'new-5 result, (LIRGenerator''asAllocatable-2 this, pointer), base, encoding, never-nil?))
+                    (§ ass! this (LIRGenerator''append-2 this, (UncompressPointerOp'new-5 result, (LIRGenerator''asAllocatable-2 this, pointer), base, encoding, never-nil?)))
                     result
                 )
             )
         )
     )
 
-    (defn #_"void" LIRGenerator''emitLFence-1 [#_"LIRGenerator" this]
+    (defn #_"this" LIRGenerator''emitLFence-1 [#_"LIRGenerator" this]
         (LIRGenerator''append-2 this, (AMD64LFenceOp'new-0))
-        nil
     )
 
     (defn #_"this" LIRGenerator''setLockStackHolder-2 [#_"LIRGenerator" this, #_"LockStackHolder" lockStackHolder]
@@ -36375,8 +36337,8 @@ ZeroExtendNode'new-4
     (defn #_"this" LIRGenerator''emitSaveRbp-1 [#_"LIRGenerator" this]
         (let [
             #_"NoOp" placeholder (NoOp'new-2 (:currentBlock this), (count (LIR''getLIRforBlock-2 (:lir (:res this)), (:currentBlock this))))
+            this (LIRGenerator''append-2 this, placeholder)
         ]
-            (LIRGenerator''append-2 this, placeholder)
             (assoc this :saveRbp (SaveRbp'new-2 this, placeholder))
         )
     )
@@ -36391,8 +36353,8 @@ ZeroExtendNode'new-4
     (defn #_"Value" LIRGenerator''emitLoadConfigValue-3 [#_"LIRGenerator" this, #_"int" markId, #_"LIRKind" kind]
         (let [
             #_"Variable" result (LIRGenerator''newVariable-2 this, kind)
+            _ (§ ass! this (LIRGenerator''append-2 this, (LoadConfigValueOp'new-2 markId, result)))
         ]
-            (LIRGenerator''append-2 this, (LoadConfigValueOp'new-2 markId, result))
             result
         )
     )
@@ -36405,8 +36367,8 @@ ZeroExtendNode'new-4
     (defn #_"Value" LIRGenerator''emitRandomSeed-1 [#_"LIRGenerator" this]
         (let [
             #_"ReadTimestampCounter" timestamp (ReadTimestampCounter'new-0)
+            _ (§ ass! this (LIRGenerator''append-2 this, timestamp))
         ]
-            (LIRGenerator''append-2 this, timestamp)
             (LIRGenerator''emitMove-2 this, (:lowResult timestamp))
         )
     )
@@ -36418,31 +36380,28 @@ ZeroExtendNode'new-4
      ; @param address the target address of the call
      ;;
     #_unused
-    (defn #_"void" LIRGenerator''emitTailcall-3 [#_"LIRGenerator" this, #_"[Value]" args, #_"Value" address]
+    (defn #_"this" LIRGenerator''emitTailcall-3 [#_"LIRGenerator" this, #_"[Value]" args, #_"Value" address]
         (LIRGenerator''append-2 this, (AMD64TailcallOp'new-2 args, address))
-        nil
     )
 
     #_unused
-    (defn #_"void" LIRGenerator''emitCCall-4 [#_"LIRGenerator" this, #_"long" address, #_"CallingConvention" nativeCallingConvention, #_"[Value]" args]
-        (§ ass! (:frameMapBuilder (:res this)) (FrameMapBuilder''callsMethod-2 (:frameMapBuilder (:res this)), nativeCallingConvention))
-        (LIRGenerator''emitMoveConstant-3 this, (#_"Register" .asValue AMD64/rax, (LIRKind'value-1 AMD64Kind/DWORD)), (JavaConstant/forInt 0))
+    (defn #_"this" LIRGenerator''emitCCall-4 [#_"LIRGenerator" this, #_"long" address, #_"CallingConvention" nativeCallingConvention, #_"[Value]" args]
         (let [
-            #_"[Value]" argLocations (make-array Value (count args))
-            _
-                (dotimes [#_"int" i (count args)]
+            this (update-in this [:res :frameMapBuilder] FrameMapBuilder''callsMethod-2 nativeCallingConvention)
+            this (LIRGenerator''emitMoveConstant-3 this, (#_"Register" .asValue AMD64/rax, (LIRKind'value-1 AMD64Kind/DWORD)), (JavaConstant/forInt 0))
+            [this #_"[Value]" argLocations]
+                (loop-when [this this argLocations [] #_"int" i 0] (< i (count args)) => [this argLocations]
                     (let [
                         #_"AllocatableValue" loc (#_"CallingConvention" .getArgument nativeCallingConvention, i)
+                        this (LIRGenerator''emitMove-3 this, loc, (nth args i))
                     ]
-                        (LIRGenerator''emitMove-3 this, loc, (nth args i))
-                        (§ ass! argLocations (assoc' argLocations i loc))
+                        (recur this (conj' argLocations loc) (inc i))
                     )
                 )
             #_"Value" ptr (LIRGenerator''emitLoadConstant-3 this, (LIRKind'value-1 AMD64Kind/QWORD), (JavaConstant/forLong address))
         ]
             (LIRGenerator''append-2 this, (AMD64CCall'new-3 (#_"CallingConvention" .getReturn nativeCallingConvention), ptr, argLocations))
         )
-        nil
     )
 
     ;;;
@@ -36462,8 +36421,8 @@ ZeroExtendNode'new-4
             #_"Variable" result (LIRGenerator''newVariable-2 this, (LIRKind'combine-1* input))
         ]
             (condp = (#_"Value" .getPlatformKind input)
-                AMD64Kind/DWORD (LIRGenerator''append-2 this, (MOp'new-4 AMD64MOp'NEG, :OperandSize'DWORD, result, input))
-                AMD64Kind/QWORD (LIRGenerator''append-2 this, (MOp'new-4 AMD64MOp'NEG, :OperandSize'QWORD, result, input))
+                AMD64Kind/DWORD (§ ass! this (LIRGenerator''append-2 this, (MOp'new-4 AMD64MOp'NEG, :OperandSize'DWORD, result, input)))
+                AMD64Kind/QWORD (§ ass! this (LIRGenerator''append-2 this, (MOp'new-4 AMD64MOp'NEG, :OperandSize'QWORD, result, input)))
             )
             result
         )
@@ -36475,8 +36434,8 @@ ZeroExtendNode'new-4
             #_"Variable" result (LIRGenerator''newVariable-2 this, (LIRKind'combine-1* input))
         ]
             (condp = (#_"Value" .getPlatformKind input)
-                AMD64Kind/DWORD (LIRGenerator''append-2 this, (MOp'new-4 AMD64MOp'NOT, :OperandSize'DWORD, result, input))
-                AMD64Kind/QWORD (LIRGenerator''append-2 this, (MOp'new-4 AMD64MOp'NOT, :OperandSize'QWORD, result, input))
+                AMD64Kind/DWORD (§ ass! this (LIRGenerator''append-2 this, (MOp'new-4 AMD64MOp'NOT, :OperandSize'DWORD, result, input)))
+                AMD64Kind/QWORD (§ ass! this (LIRGenerator''append-2 this, (MOp'new-4 AMD64MOp'NOT, :OperandSize'QWORD, result, input)))
             )
             result
         )
@@ -36503,8 +36462,8 @@ ZeroExtendNode'new-4
             #_"Variable" result (LIRGenerator''newVariable-2 this, resultKind)
         ]
             (if commutative?
-                (LIRGenerator''append-2 this, (CommutativeTwoOp'new-5 op, size, result, a, b))
-                (LIRGenerator''append-2 this, (TwoOp'new-5 op, size, result, a, b))
+                (§ ass! this (LIRGenerator''append-2 this, (CommutativeTwoOp'new-5 op, size, result, a, b)))
+                (§ ass! this (LIRGenerator''append-2 this, (TwoOp'new-5 op, size, result, a, b)))
             )
             result
         )
@@ -36524,13 +36483,13 @@ ZeroExtendNode'new-4
                             #_"AMD64MOp" mop (LIRGenerator'getMOp-2 op, constant)
                         ]
                             (when (some? mop)
-                                (LIRGenerator''append-2 this, (MOp'new-4 mop, size, result, a))
+                                (§ ass! this (LIRGenerator''append-2 this, (MOp'new-4 mop, size, result, a)))
                                 (§ return result)
                             )
                         )
                     )
 
-                    (LIRGenerator''append-2 this, (ConstOp'new-5b op, size, result, a, constant))
+                    (§ ass! this (LIRGenerator''append-2 this, (ConstOp'new-5b op, size, result, a, constant)))
                     result
                 )
                 (LIRGenerator''emitBinaryVar-7 this, resultKind, (BinaryArithmetic''getRMOpcode-2 op, size), size, commutative?, a, (LIRGenerator''asAllocatable-2 this, b))
@@ -36550,7 +36509,7 @@ ZeroExtendNode'new-4
         (let [
             #_"Variable" result (LIRGenerator''newVariable-2 this, resultKind)
         ]
-            (LIRGenerator''append-2 this, (DataTwoOp'new-5 op, size, result, a, b))
+            (§ ass! this (LIRGenerator''append-2 this, (DataTwoOp'new-5 op, size, result, a, b)))
             result
         )
     )
@@ -36621,7 +36580,7 @@ ZeroExtendNode'new-4
             #_"Variable" result (LIRGenerator''newVariable-2 this, resultKind)
             #_"AMD64AddressValue" address (AMD64AddressValue'new-3 resultKind, (LIRGenerator''asAllocatable-2 this, base), offset)
         ]
-            (LIRGenerator''append-2 this, (LeaOp'new-3 result, address, size))
+            (§ ass! this (LIRGenerator''append-2 this, (LeaOp'new-3 result, address, size)))
             result
         )
     )
@@ -36674,7 +36633,7 @@ ZeroExtendNode'new-4
                     #_"AMD64RMIOp" op (if (NumUtil'isByte-1i imm) AMD64RMIOp'IMUL_SX AMD64RMIOp'IMUL)
                     #_"Variable" ret (LIRGenerator''newVariable-2 this, (LIRKind'combine-1* a, b))
                 ]
-                    (LIRGenerator''append-2 this, (RMIOp'new-5 op, size, ret, a, imm))
+                    (§ ass! this (LIRGenerator''append-2 this, (RMIOp'new-5 op, size, ret, a, imm)))
                     ret
                 )
                 (LIRGenerator''emitBinaryVar-7 this, (LIRKind'combine-1* a, b), AMD64RMOp'IMUL, size, true, a, (LIRGenerator''asAllocatable-2 this, b))
@@ -36704,15 +36663,16 @@ ZeroExtendNode'new-4
         (let [
             #_"RegisterValue" ret (#_"Register" .asValue reg, (#_"Value" .getValueKind value))
         ]
-            (LIRGenerator''emitMove-3 this, ret, value)
+            (§ ass! this (LIRGenerator''emitMove-3 this, ret, value))
             ret
         )
     )
 
     (defn- #_"Value" LIRGenerator''emitMulHigh-5 [#_"LIRGenerator" this, #_"AMD64MOp" opcode, #_"OperandSize" size, #_"Value" a, #_"Value" b]
         (let [
-            #_"AMD64MulDivOp" mulHigh (LIRGenerator''append-2 this, (AMD64MulDivOp'new-5 opcode, size, (LIRKind'combine-1* a, b), (LIRGenerator''moveToReg-3 this, AMD64/rax, a), (LIRGenerator''asAllocatable-2 this, b)))
+            #_"AMD64MulDivOp" mulHigh (AMD64MulDivOp'new-5 opcode, size, (LIRKind'combine-1* a, b), (LIRGenerator''moveToReg-3 this, AMD64/rax, a), (LIRGenerator''asAllocatable-2 this, b))
         ]
+            (§ ass! this (LIRGenerator''append-2 this, mulHigh))
             (LIRGenerator''emitMove-2 this, (:highResult mulHigh))
         )
     )
@@ -36736,7 +36696,7 @@ ZeroExtendNode'new-4
         (let [
             #_"Variable" result (LIRGenerator''newVariable-2 this, (LIRKind'combine-1* a))
         ]
-            (LIRGenerator''append-2 this, (MemoryTwoOp'new-5 op, size, result, a, location))
+            (§ ass! this (LIRGenerator''append-2 this, (MemoryTwoOp'new-5 op, size, result, a, location)))
             result
         )
     )
@@ -36746,7 +36706,7 @@ ZeroExtendNode'new-4
         (let [
             #_"Variable" result (LIRGenerator''newVariable-2 this, (LIRKind'value-1 kind))
         ]
-            (LIRGenerator''append-2 this, (MemoryOp'new-4 op, size, result, address))
+            (§ ass! this (LIRGenerator''append-2 this, (MemoryOp'new-4 op, size, result, address)))
             result
         )
     )
@@ -36758,10 +36718,10 @@ ZeroExtendNode'new-4
             #_"Variable" result (LIRGenerator''newVariable-2 this, (LIRKind'value-1 (if (<= resultBits 32) AMD64Kind/DWORD AMD64Kind/QWORD)))
         ]
             (condp = memoryKind
-                AMD64Kind/BYTE  (LIRGenerator''append-2 this, (MemoryOp'new-4 AMD64RMOp'MOVZXB, :OperandSize'DWORD, result, address))
-                AMD64Kind/WORD  (LIRGenerator''append-2 this, (MemoryOp'new-4 AMD64RMOp'MOVZX, :OperandSize'DWORD, result, address))
-                AMD64Kind/DWORD (LIRGenerator''append-2 this, (MemoryOp'new-4 AMD64RMOp'MOV, :OperandSize'DWORD, result, address))
-                AMD64Kind/QWORD (LIRGenerator''append-2 this, (MemoryOp'new-4 AMD64RMOp'MOV, :OperandSize'QWORD, result, address))
+                AMD64Kind/BYTE  (§ ass! this (LIRGenerator''append-2 this, (MemoryOp'new-4 AMD64RMOp'MOVZXB, :OperandSize'DWORD, result, address)))
+                AMD64Kind/WORD  (§ ass! this (LIRGenerator''append-2 this, (MemoryOp'new-4 AMD64RMOp'MOVZX, :OperandSize'DWORD, result, address)))
+                AMD64Kind/DWORD (§ ass! this (LIRGenerator''append-2 this, (MemoryOp'new-4 AMD64RMOp'MOV, :OperandSize'DWORD, result, address)))
+                AMD64Kind/QWORD (§ ass! this (LIRGenerator''append-2 this, (MemoryOp'new-4 AMD64RMOp'MOV, :OperandSize'QWORD, result, address)))
             )
             result
         )
@@ -36770,9 +36730,12 @@ ZeroExtendNode'new-4
     (defn- #_"AMD64MulDivOp" LIRGenerator''emitIDIV-4 [#_"LIRGenerator" this, #_"OperandSize" size, #_"Value" a, #_"Value" b]
         (let [
             #_"LIRKind" kind (LIRKind'combine-1* a, b)
-            #_"AMD64SignExtendOp" sx (LIRGenerator''append-2 this, (AMD64SignExtendOp'new-3 size, kind, (LIRGenerator''moveToReg-3 this, AMD64/rax, a)))
+            #_"AMD64SignExtendOp" sx (AMD64SignExtendOp'new-3 size, kind, (LIRGenerator''moveToReg-3 this, AMD64/rax, a))
+            _ (§ ass! this (LIRGenerator''append-2 this, sx))
+            #_"AMD64MulDivOp" op (AMD64MulDivOp'new-6 AMD64MOp'IDIV, size, kind, (:highResult sx), (:lowResult sx), (LIRGenerator''asAllocatable-2 this, b))
+            _ (§ ass! this (LIRGenerator''append-2 this, op))
         ]
-            (LIRGenerator''append-2 this, (AMD64MulDivOp'new-6 AMD64MOp'IDIV, size, kind, (:highResult sx), (:lowResult sx), (LIRGenerator''asAllocatable-2 this, b)))
+            op
         )
     )
 
@@ -36781,9 +36744,11 @@ ZeroExtendNode'new-4
             #_"LIRKind" kind (LIRKind'combine-1* a, b)
             #_"RegisterValue" rax (LIRGenerator''moveToReg-3 this, AMD64/rax, a)
             #_"RegisterValue" rdx (#_"Register" .asValue AMD64/rdx, kind)
+            _ (§ ass! this (LIRGenerator''append-2 this, (AMD64ClearRegisterOp'new-2 size, rdx)))
+            #_"AMD64MulDivOp" op (AMD64MulDivOp'new-6 AMD64MOp'DIV, size, kind, rdx, rax, (LIRGenerator''asAllocatable-2 this, b))
+            _ (§ ass! this (LIRGenerator''append-2 this, op))
         ]
-            (LIRGenerator''append-2 this, (AMD64ClearRegisterOp'new-2 size, rdx))
-            (LIRGenerator''append-2 this, (AMD64MulDivOp'new-6 AMD64MOp'DIV, size, kind, rdx, rax, (LIRGenerator''asAllocatable-2 this, b)))
+            op
         )
     )
 
@@ -36892,15 +36857,15 @@ ZeroExtendNode'new-4
                     #_"JavaConstant" c (:constant b)
                 ]
                     (if (= (#_"JavaConstant" .asLong c) 1)
-                        (LIRGenerator''append-2 this, (MOp'new-4 (:m1Op op), size, result, input))
+                        (§ ass! this (LIRGenerator''append-2 this, (MOp'new-4 (:m1Op op), size, result, input)))
                         ;; c is implicitly masked to 5 or 6 bits by the CPU, so casting it to (int)
                         ;; is always correct, even without the NumUtil.is32bit() test.
-                        (LIRGenerator''append-2 this, (ConstOp'new-5a (:miOp op), size, result, input, (int (#_"JavaConstant" .asLong c))))
+                        (§ ass! this (LIRGenerator''append-2 this, (ConstOp'new-5a (:miOp op), size, result, input, (int (#_"JavaConstant" .asLong c)))))
                     )
                 )
                 (do
-                    (LIRGenerator''emitMove-3 this, LIRGenerator'RCX_I, b)
-                    (LIRGenerator''append-2 this, (AMD64ShiftOp'new-5 (:mcOp op), size, result, input, LIRGenerator'RCX_I))
+                    (§ ass! this (LIRGenerator''emitMove-3 this, LIRGenerator'RCX_I, b))
+                    (§ ass! this (LIRGenerator''append-2 this, (AMD64ShiftOp'new-5 (:mcOp op), size, result, input, LIRGenerator'RCX_I)))
                 )
             )
             result
@@ -36948,7 +36913,7 @@ ZeroExtendNode'new-4
         (let [
             #_"Variable" result (LIRGenerator''newVariable-2 this, kind)
         ]
-            (LIRGenerator''append-2 this, (RMOp'new-4 op, size, result, (LIRGenerator''asAllocatable-2 this, input)))
+            (§ ass! this (LIRGenerator''append-2 this, (RMOp'new-4 op, size, result, (LIRGenerator''asAllocatable-2 this, input))))
             result
         )
     )
@@ -36958,7 +36923,7 @@ ZeroExtendNode'new-4
         (let [
             #_"Variable" result (LIRGenerator''newVariable-2 this, kind)
         ]
-            (LIRGenerator''append-2 this, (MROp'new-4 op, size, result, (LIRGenerator''asAllocatable-2 this, input)))
+            (§ ass! this (LIRGenerator''append-2 this, (MROp'new-4 op, size, result, (LIRGenerator''asAllocatable-2 this, input))))
             result
         )
     )
@@ -37000,7 +36965,7 @@ ZeroExtendNode'new-4
                     #_"Variable" result (LIRGenerator''newVariable-2 this, (LIRKind'combine-1* input))
                     #_"long" mask (CodeUtil/mask fromBits)
                 ]
-                    (LIRGenerator''append-2 this, (DataTwoOp'new-5 (BinaryArithmetic''getRMOpcode-2 BinaryArithmetic'AND, :OperandSize'QWORD), :OperandSize'QWORD, result, (LIRGenerator''asAllocatable-2 this, input), (JavaConstant/forLong mask)))
+                    (§ ass! this (LIRGenerator''append-2 this, (DataTwoOp'new-5 (BinaryArithmetic''getRMOpcode-2 BinaryArithmetic'AND, :OperandSize'QWORD), :OperandSize'QWORD, result, (LIRGenerator''asAllocatable-2 this, input), (JavaConstant/forLong mask))))
                     result
                 )
             :else
@@ -37019,7 +36984,7 @@ ZeroExtendNode'new-4
                             #_"Variable" result (LIRGenerator''newVariable-2 this, resultKind)
                             #_"JavaConstant" mask (if (< 32 toBits) (JavaConstant/forLong (CodeUtil/mask fromBits)) (JavaConstant/forInt (int (CodeUtil/mask fromBits))))
                         ]
-                            (LIRGenerator''append-2 this, (DataTwoOp'new-5 (BinaryArithmetic''getRMOpcode-2 BinaryArithmetic'AND, :OperandSize'DWORD), :OperandSize'DWORD, result, (LIRGenerator''asAllocatable-2 this, input), mask))
+                            (§ ass! this (LIRGenerator''append-2 this, (DataTwoOp'new-5 (BinaryArithmetic''getRMOpcode-2 BinaryArithmetic'AND, :OperandSize'DWORD), :OperandSize'DWORD, result, (LIRGenerator''asAllocatable-2 this, input), mask)))
                             result
                         )
                     )
@@ -37032,8 +36997,8 @@ ZeroExtendNode'new-4
             #_"Variable" result (LIRGenerator''newVariable-2 this, (#_"ValueKind" .changeType (LIRKind'combine-1* value), AMD64Kind/DWORD))
         ]
             (if (= (#_"Value" .getPlatformKind value) AMD64Kind/QWORD)
-                (LIRGenerator''append-2 this, (RMOp'new-4 AMD64RMOp'POPCNT, :OperandSize'QWORD, result, (LIRGenerator''asAllocatable-2 this, value)))
-                (LIRGenerator''append-2 this, (RMOp'new-4 AMD64RMOp'POPCNT, :OperandSize'DWORD, result, (LIRGenerator''asAllocatable-2 this, value)))
+                (§ ass! this (LIRGenerator''append-2 this, (RMOp'new-4 AMD64RMOp'POPCNT, :OperandSize'QWORD, result, (LIRGenerator''asAllocatable-2 this, value))))
+                (§ ass! this (LIRGenerator''append-2 this, (RMOp'new-4 AMD64RMOp'POPCNT, :OperandSize'DWORD, result, (LIRGenerator''asAllocatable-2 this, value))))
             )
             result
         )
@@ -37044,7 +37009,7 @@ ZeroExtendNode'new-4
         (let [
             #_"Variable" result (LIRGenerator''newVariable-2 this, (#_"ValueKind" .changeType (LIRKind'combine-1* value), AMD64Kind/DWORD))
         ]
-            (LIRGenerator''append-2 this, (RMOp'new-4 AMD64RMOp'BSF, :OperandSize'QWORD, result, (LIRGenerator''asAllocatable-2 this, value)))
+            (§ ass! this (LIRGenerator''append-2 this, (RMOp'new-4 AMD64RMOp'BSF, :OperandSize'QWORD, result, (LIRGenerator''asAllocatable-2 this, value))))
             result
         )
     )
@@ -37055,8 +37020,8 @@ ZeroExtendNode'new-4
             #_"Variable" result (LIRGenerator''newVariable-2 this, (#_"ValueKind" .changeType (LIRKind'combine-1* value), AMD64Kind/DWORD))
         ]
             (if (= (#_"Value" .getPlatformKind value) AMD64Kind/QWORD)
-                (LIRGenerator''append-2 this, (RMOp'new-4 AMD64RMOp'BSR, :OperandSize'QWORD, result, (LIRGenerator''asAllocatable-2 this, value)))
-                (LIRGenerator''append-2 this, (RMOp'new-4 AMD64RMOp'BSR, :OperandSize'DWORD, result, (LIRGenerator''asAllocatable-2 this, value)))
+                (§ ass! this (LIRGenerator''append-2 this, (RMOp'new-4 AMD64RMOp'BSR, :OperandSize'QWORD, result, (LIRGenerator''asAllocatable-2 this, value))))
+                (§ ass! this (LIRGenerator''append-2 this, (RMOp'new-4 AMD64RMOp'BSR, :OperandSize'DWORD, result, (LIRGenerator''asAllocatable-2 this, value))))
             )
             result
         )
@@ -37067,8 +37032,8 @@ ZeroExtendNode'new-4
             #_"Variable" result (LIRGenerator''newVariable-2 this, (#_"ValueKind" .changeType (LIRKind'combine-1* value), AMD64Kind/DWORD))
         ]
             (if (= (#_"Value" .getPlatformKind value) AMD64Kind/QWORD)
-                (LIRGenerator''append-2 this, (RMOp'new-4 AMD64RMOp'LZCNT, :OperandSize'QWORD, result, (LIRGenerator''asAllocatable-2 this, value)))
-                (LIRGenerator''append-2 this, (RMOp'new-4 AMD64RMOp'LZCNT, :OperandSize'DWORD, result, (LIRGenerator''asAllocatable-2 this, value)))
+                (§ ass! this (LIRGenerator''append-2 this, (RMOp'new-4 AMD64RMOp'LZCNT, :OperandSize'QWORD, result, (LIRGenerator''asAllocatable-2 this, value))))
+                (§ ass! this (LIRGenerator''append-2 this, (RMOp'new-4 AMD64RMOp'LZCNT, :OperandSize'DWORD, result, (LIRGenerator''asAllocatable-2 this, value))))
             )
             result
         )
@@ -37079,8 +37044,8 @@ ZeroExtendNode'new-4
             #_"Variable" result (LIRGenerator''newVariable-2 this, (#_"ValueKind" .changeType (LIRKind'combine-1* value), AMD64Kind/DWORD))
         ]
             (if (= (#_"Value" .getPlatformKind value) AMD64Kind/QWORD)
-                (LIRGenerator''append-2 this, (RMOp'new-4 AMD64RMOp'TZCNT, :OperandSize'QWORD, result, (LIRGenerator''asAllocatable-2 this, value)))
-                (LIRGenerator''append-2 this, (RMOp'new-4 AMD64RMOp'TZCNT, :OperandSize'DWORD, result, (LIRGenerator''asAllocatable-2 this, value)))
+                (§ ass! this (LIRGenerator''append-2 this, (RMOp'new-4 AMD64RMOp'TZCNT, :OperandSize'QWORD, result, (LIRGenerator''asAllocatable-2 this, value))))
+                (§ ass! this (LIRGenerator''append-2 this, (RMOp'new-4 AMD64RMOp'TZCNT, :OperandSize'DWORD, result, (LIRGenerator''asAllocatable-2 this, value))))
             )
             result
         )
@@ -37092,68 +37057,64 @@ ZeroExtendNode'new-4
             #_"Variable" result (LIRGenerator''newVariable-2 this, (LIRGenerator'toRegisterKind-1 kind))
         ]
             (condp = (#_"ValueKind" .getPlatformKind kind)
-                AMD64Kind/BYTE  (LIRGenerator''append-2 this, (MemoryOp'new-4 AMD64RMOp'MOVSXB, :OperandSize'DWORD, result, loadAddress))
-                AMD64Kind/WORD  (LIRGenerator''append-2 this, (MemoryOp'new-4 AMD64RMOp'MOVSX, :OperandSize'DWORD, result, loadAddress))
-                AMD64Kind/DWORD (LIRGenerator''append-2 this, (MemoryOp'new-4 AMD64RMOp'MOV, :OperandSize'DWORD, result, loadAddress))
-                AMD64Kind/QWORD (LIRGenerator''append-2 this, (MemoryOp'new-4 AMD64RMOp'MOV, :OperandSize'QWORD, result, loadAddress))
+                AMD64Kind/BYTE  (§ ass! this (LIRGenerator''append-2 this, (MemoryOp'new-4 AMD64RMOp'MOVSXB, :OperandSize'DWORD, result, loadAddress)))
+                AMD64Kind/WORD  (§ ass! this (LIRGenerator''append-2 this, (MemoryOp'new-4 AMD64RMOp'MOVSX, :OperandSize'DWORD, result, loadAddress)))
+                AMD64Kind/DWORD (§ ass! this (LIRGenerator''append-2 this, (MemoryOp'new-4 AMD64RMOp'MOV, :OperandSize'DWORD, result, loadAddress)))
+                AMD64Kind/QWORD (§ ass! this (LIRGenerator''append-2 this, (MemoryOp'new-4 AMD64RMOp'MOV, :OperandSize'QWORD, result, loadAddress)))
             )
             result
         )
     )
 
-    (defn #_"void" LIRGenerator''emitStoreConst-4 [#_"LIRGenerator" this, #_"AMD64Kind" kind, #_"AMD64AddressValue" address, #_"ConstantValue" value]
-        (let [
-            #_"Constant" c (:constant value)
-        ]
-            (cond
-                (JavaConstant/isNull c)
-                    (let [
-                        #_"OperandSize" size (if (= kind AMD64Kind/DWORD) :OperandSize'DWORD :OperandSize'QWORD)
-                    ]
-                        (LIRGenerator''append-2 this, (MemoryConstOp'new-4a AMD64MIOp'MOV, size, address, 0))
-                        (§ return )
-                    )
-                (instance? VMConstant c)
-                    ;; only 32-bit constants can be patched
-                    (when (and (= kind AMD64Kind/DWORD) (or (.inlineObjects HotSpot'target) (not (instance? JavaConstant c))))
-                        ;; if c is a JavaConstant, it's an oop, otherwise it's a metaspace constant
-                        (LIRGenerator''append-2 this, (MemoryVMConstOp'new-3 AMD64MIOp'MOV, address, c))
-                        (§ return )
-                    )
-                :else
-                    (let [
-                        [#_"AMD64MIOp" op #_"OperandSize" size #_"long" imm]
-                            (condp = kind
-                                AMD64Kind/BYTE  [AMD64MIOp'MOVB :OperandSize'BYTE  (#_"JavaConstant" .asInt  c)]
-                                AMD64Kind/WORD  [AMD64MIOp'MOV  :OperandSize'WORD  (#_"JavaConstant" .asInt  c)]
-                                AMD64Kind/DWORD [AMD64MIOp'MOV  :OperandSize'DWORD (#_"JavaConstant" .asInt  c)]
-                                AMD64Kind/QWORD [AMD64MIOp'MOV  :OperandSize'QWORD (#_"JavaConstant" .asLong c)]
-                            )
-                    ]
-                        (when (NumUtil'isInt-1 imm)
-                            (LIRGenerator''append-2 this, (MemoryConstOp'new-4a op, size, address, (int imm)))
-                            (§ return )
-                        )
-                    )
-            )
-
-            ;; fallback: load, then store
-            (LIRGenerator''emitStore-4a this, kind, address, (LIRGenerator''asAllocatable-2 this, value))
-        )
-        nil
-    )
-
-    (defn #_"void" LIRGenerator''emitStore-4a [#_"LIRGenerator" this, #_"AMD64Kind" kind, #_"AMD64AddressValue" address, #_"AllocatableValue" value]
+    (defn- #_"this" LIRGenerator''emitStore-4a [#_"LIRGenerator" this, #_"AMD64Kind" kind, #_"AMD64AddressValue" address, #_"AllocatableValue" value]
         (condp = kind
             AMD64Kind/BYTE  (LIRGenerator''append-2 this, (MemoryMROp'new-4 AMD64MROp'MOVB, :OperandSize'BYTE, address, value))
             AMD64Kind/WORD  (LIRGenerator''append-2 this, (MemoryMROp'new-4 AMD64MROp'MOV, :OperandSize'WORD, address, value))
             AMD64Kind/DWORD (LIRGenerator''append-2 this, (MemoryMROp'new-4 AMD64MROp'MOV, :OperandSize'DWORD, address, value))
             AMD64Kind/QWORD (LIRGenerator''append-2 this, (MemoryMROp'new-4 AMD64MROp'MOV, :OperandSize'QWORD, address, value))
         )
-        nil
     )
 
-    (defn #_"void" LIRGenerator''emitStore-4v [#_"LIRGenerator" this, #_"ValueKind" lirKind, #_"Value" address, #_"Value" input]
+    (defn #_"this" LIRGenerator''emitStoreConst-4 [#_"LIRGenerator" this, #_"AMD64Kind" kind, #_"AMD64AddressValue" address, #_"ConstantValue" value]
+        (let [
+            #_"Constant" c (:constant value)
+        ]
+            (or
+                (cond
+                    (JavaConstant/isNull c)
+                        (let [
+                            #_"OperandSize" size (if (= kind AMD64Kind/DWORD) :OperandSize'DWORD :OperandSize'QWORD)
+                        ]
+                            (LIRGenerator''append-2 this, (MemoryConstOp'new-4a AMD64MIOp'MOV, size, address, 0))
+                        )
+                    (instance? VMConstant c)
+                        ;; only 32-bit constants can be patched
+                        (when (and (= kind AMD64Kind/DWORD) (or (.inlineObjects HotSpot'target) (not (instance? JavaConstant c))))
+                            ;; if c is a JavaConstant, it's an oop, otherwise it's a metaspace constant
+                            (LIRGenerator''append-2 this, (MemoryVMConstOp'new-3 AMD64MIOp'MOV, address, c))
+                        )
+                    :else
+                        (let [
+                            [#_"AMD64MIOp" op #_"OperandSize" size #_"long" imm]
+                                (condp = kind
+                                    AMD64Kind/BYTE  [AMD64MIOp'MOVB :OperandSize'BYTE  (#_"JavaConstant" .asInt  c)]
+                                    AMD64Kind/WORD  [AMD64MIOp'MOV  :OperandSize'WORD  (#_"JavaConstant" .asInt  c)]
+                                    AMD64Kind/DWORD [AMD64MIOp'MOV  :OperandSize'DWORD (#_"JavaConstant" .asInt  c)]
+                                    AMD64Kind/QWORD [AMD64MIOp'MOV  :OperandSize'QWORD (#_"JavaConstant" .asLong c)]
+                                )
+                        ]
+                            (when (NumUtil'isInt-1 imm)
+                                (LIRGenerator''append-2 this, (MemoryConstOp'new-4a op, size, address, (int imm)))
+                            )
+                        )
+                )
+                ;; fallback: load, then store
+                (LIRGenerator''emitStore-4a this, kind, address, (LIRGenerator''asAllocatable-2 this, value))
+            )
+        )
+    )
+
+    (defn #_"this" LIRGenerator''emitStore-4v [#_"LIRGenerator" this, #_"ValueKind" lirKind, #_"Value" address, #_"Value" input]
         (let [
             #_"AMD64AddressValue" storeAddress (LIRGenerator''asAddressValue-2 this, address)
             #_"AMD64Kind" kind (#_"ValueKind" .getPlatformKind lirKind)
@@ -37163,10 +37124,9 @@ ZeroExtendNode'new-4
                 (LIRGenerator''emitStore-4a this, kind, storeAddress, (LIRGenerator''asAllocatable-2 this, input))
             )
         )
-        nil
     )
 
-    (defn #_"void" LIRGenerator''emitCompareOp-4 [#_"LIRGenerator" this, #_"AMD64Kind" cmpKind, #_"Variable" left, #_"Value" right]
+    (defn #_"this" LIRGenerator''emitCompareOp-4 [#_"LIRGenerator" this, #_"AMD64Kind" cmpKind, #_"Variable" left, #_"Value" right]
         (let [
             #_"OperandSize" size
                 (condp = cmpKind
@@ -37183,30 +37143,18 @@ ZeroExtendNode'new-4
                     ]
                         (cond
                             (JavaConstant/isNull c)
-                                (do
-                                    (LIRGenerator''append-2 this, (ConsumerOp'new-4 AMD64RMOp'TEST, size, left, left))
-                                    :done
-                                )
+                                (LIRGenerator''append-2 this, (ConsumerOp'new-4 AMD64RMOp'TEST, size, left, left))
                             (instance? VMConstant c)
-                                (do
-                                    (if (= size :OperandSize'DWORD)
-                                        (LIRGenerator''append-2 this, (VMConstOp'new-3 (BinaryArithmetic''getMIOpcode-3 BinaryArithmetic'CMP, :OperandSize'DWORD, false), left, c))
-                                        (LIRGenerator''append-2 this, (DataOp'new-4 (BinaryArithmetic''getRMOpcode-2 BinaryArithmetic'CMP, size), size, left, c))
-                                    )
-                                    :done
+                                (if (= size :OperandSize'DWORD)
+                                    (LIRGenerator''append-2 this, (VMConstOp'new-3 (BinaryArithmetic''getMIOpcode-3 BinaryArithmetic'CMP, :OperandSize'DWORD, false), left, c))
+                                    (LIRGenerator''append-2 this, (DataOp'new-4 (BinaryArithmetic''getRMOpcode-2 BinaryArithmetic'CMP, size), size, left, c))
                                 )
                             (instance? JavaConstant c)
                                 (cond
                                     (#_"JavaConstant" .isDefaultForKind c)
-                                        (do
-                                            (LIRGenerator''append-2 this, (ConsumerOp'new-4 (if (= size :OperandSize'BYTE) AMD64RMOp'TESTB AMD64RMOp'TEST), size, left, left))
-                                            :done
-                                        )
+                                        (LIRGenerator''append-2 this, (ConsumerOp'new-4 (if (= size :OperandSize'BYTE) AMD64RMOp'TESTB AMD64RMOp'TEST), size, left, left))
                                     (NumUtil'is32bit-1 (#_"JavaConstant" .asLong c))
-                                        (do
-                                            (LIRGenerator''append-2 this, (ConsumerConstOp'new-4b BinaryArithmetic'CMP, size, left, (int (#_"JavaConstant" .asLong c))))
-                                            :done
-                                        )
+                                        (LIRGenerator''append-2 this, (ConsumerConstOp'new-4b BinaryArithmetic'CMP, size, left, (int (#_"JavaConstant" .asLong c))))
                                 )
                         )
                     )
@@ -37215,7 +37163,6 @@ ZeroExtendNode'new-4
                 (LIRGenerator''append-2 this, (ConsumerOp'new-4 (BinaryArithmetic''getRMOpcode-2 BinaryArithmetic'CMP, size), size, left, (LIRGenerator''asAllocatable-2 this, right)))
             )
         )
-        nil
     )
 )
 
@@ -37281,16 +37228,15 @@ ZeroExtendNode'new-4
                 (when (< (count (:indexAndCount this)) newSize) => this
                     (assoc this :indexAndCount (Arrays/copyOf (:indexAndCount this), (* newSize 2)))
                 )
+            this (update this :indexAndCount assoc' oldSize index)
+            this (update this :indexAndCount assoc' (inc oldSize) count)
         ]
-            (§ ass! this (update this :indexAndCount assoc' oldSize index))
-            (§ ass! this (update this :indexAndCount assoc' (inc oldSize) count))
             (assoc this :indexAndCountSize newSize)
         )
     )
 
-    (defn- #_"void" LIRInsertionBuffer''setCountAt-3 [#_"LIRInsertionBuffer" this, #_"int" i, #_"int" value]
-        (§ ass! this (update this :indexAndCount assoc' (inc (<< i 1)) value))
-        nil
+    (defn- #_"this" LIRInsertionBuffer''setCountAt-3 [#_"LIRInsertionBuffer" this, #_"int" i, #_"int" value]
+        (update this :indexAndCount assoc' (inc (<< i 1)) value)
     )
 
     (defn- #_"int" LIRInsertionBuffer''countAt-2 [#_"LIRInsertionBuffer" this, #_"int" i]
@@ -37309,10 +37255,7 @@ ZeroExtendNode'new-4
             this
                 (if (or (neg? i) (< (LIRInsertionBuffer''indexAt-2 this, i) index))
                     (LIRInsertionBuffer''appendNew-3 this, index, 1)
-                    (do
-                        (LIRInsertionBuffer''setCountAt-3 this, i, (inc (LIRInsertionBuffer''countAt-2 this, i)))
-                        this
-                    )
+                    (LIRInsertionBuffer''setCountAt-3 this, i, (inc (LIRInsertionBuffer''countAt-2 this, i)))
                 )
         ]
             (update this :ops conj' op)
@@ -47134,7 +47077,7 @@ ZeroExtendNode'new-4
 
     (defm AbstractEndNode LIRLowerable
         (#_"void" LIRLowerable'''generate-2 [#_"AbstractEndNode" this, #_"LIRBuilder" builder]
-            (LIRBuilder''visitEndNode-2 builder, this)
+            (§ ass! builder (LIRBuilder''visitEndNode-2 builder, this))
             nil
         )
     )
@@ -47308,7 +47251,7 @@ ZeroExtendNode'new-4
                 #_"Value" actionAndReason (LIRGenerator''emitJavaConstant-2 (:gen builder), (#_"MetaAccessProvider" .encodeDeoptActionAndReason HotSpot'metaAccess, (:action this), (:reason this), (:debugId this)))
                 #_"Value" speculationValue (LIRGenerator''emitJavaConstant-2 (:gen builder), (:speculation this))
             ]
-                (LIRGenerator''emitDeoptimize-3 (:gen builder), actionAndReason, speculationValue)
+                (§ ass! (:gen builder) (LIRGenerator''emitDeoptimize-3 (:gen builder), actionAndReason, speculationValue))
             )
             nil
         )
@@ -47355,7 +47298,7 @@ ZeroExtendNode'new-4
 
     (defm DynamicDeoptimizeNode LIRLowerable
         (#_"void" LIRLowerable'''generate-2 [#_"DynamicDeoptimizeNode" this, #_"LIRBuilder" builder]
-            (LIRGenerator''emitDeoptimize-3 (:gen builder), (LIRBuilder''operand-2 builder, (:actionAndReason this)), (LIRBuilder''operand-2 builder, (:speculation this)))
+            (§ ass! (:gen builder) (LIRGenerator''emitDeoptimize-3 (:gen builder), (LIRBuilder''operand-2 builder, (:actionAndReason this)), (LIRBuilder''operand-2 builder, (:speculation this))))
             nil
         )
     )
@@ -47391,7 +47334,7 @@ ZeroExtendNode'new-4
 
     (defm DeoptimizeCallerNode LIRLowerable
         (#_"void" LIRLowerable'''generate-2 [#_"DeoptimizeCallerNode" this, #_"LIRBuilder" builder]
-            (LIRGenerator''emitDeoptimizeCaller-3 (:gen builder), (:action this), (:reason this))
+            (§ ass! (:gen builder) (LIRGenerator''emitDeoptimizeCaller-3 (:gen builder), (:action this), (:reason this)))
             nil
         )
     )
@@ -47501,7 +47444,7 @@ ZeroExtendNode'new-4
 
     (defm IfNode LIRLowerable
         (#_"void" LIRLowerable'''generate-2 [#_"IfNode" this, #_"LIRBuilder" builder]
-            (LIRBuilder''emitIf-2 builder, this)
+            (§ ass! builder (LIRBuilder''emitIf-2 builder, this))
             nil
         )
     )
@@ -48717,7 +48660,7 @@ ZeroExtendNode'new-4
     (defm IntegerExactArithmeticSplitNode LIRLowerable
         (#_"void" LIRLowerable'''generate-2 [#_"IntegerExactArithmeticSplitNode" this, #_"LIRBuilder" builder]
             (LIRBuilder''setResult-3 builder, this, (IntegerExactArithmeticSplitNode'''generateArithmetic-2 this, builder))
-            (LIRBuilder''emitOverflowCheckBranch-5 builder, (:overflowSuccessor this), (IntegerExactArithmeticSplitNode''getNext-1 this), (:stamp this), (ControlSplitNode'''probability-2 this, (:overflowSuccessor this)))
+            (§ ass! builder (LIRBuilder''emitOverflowCheckBranch-5 builder, (:overflowSuccessor this), (IntegerExactArithmeticSplitNode''getNext-1 this), (:stamp this), (ControlSplitNode'''probability-2 this, (:overflowSuccessor this))))
             nil
         )
     )
@@ -49015,7 +48958,7 @@ ZeroExtendNode'new-4
 
     (defm IntegerSwitchNode LIRLowerable
         (#_"void" LIRLowerable'''generate-2 [#_"IntegerSwitchNode" this, #_"LIRBuilder" builder]
-            (LIRBuilder''emitSwitch-2 builder, this)
+            (§ ass! builder (LIRBuilder''emitSwitch-2 builder, this))
             nil
         )
     )
@@ -50615,7 +50558,7 @@ ZeroExtendNode'new-4
 
     (defm InvokeNode LIRLowerable
         (#_"void" LIRLowerable'''generate-2 [#_"InvokeNode" this, #_"LIRBuilder" builder]
-            (LIRBuilder''emitInvoke-2 builder, this)
+            (§ ass! builder (LIRBuilder''emitInvoke-2 builder, this))
             nil
         )
     )
@@ -51427,7 +51370,7 @@ ZeroExtendNode'new-4
 
     (defm BindToRegisterNode LIRLowerable
         (#_"void" LIRLowerable'''generate-2 [#_"BindToRegisterNode" this, #_"LIRBuilder" builder]
-            (LIRGenerator''append-2 (:gen builder), (BindToRegisterOp'new-1 (LIRGenerator''asAllocatable-2 (:gen builder), (LIRBuilder''operand-2 builder, (:value this)))))
+            (§ ass! (:gen builder) (LIRGenerator''append-2 (:gen builder), (BindToRegisterOp'new-1 (LIRGenerator''asAllocatable-2 (:gen builder), (LIRBuilder''operand-2 builder, (:value this))))))
             nil
         )
     )
@@ -51446,7 +51389,7 @@ ZeroExtendNode'new-4
 
     (defm BlackholeNode LIRLowerable
         (#_"void" LIRLowerable'''generate-2 [#_"BlackholeNode" this, #_"LIRBuilder" builder]
-            (LIRGenerator''emitBlackhole-2 (:gen builder), (LIRBuilder''operand-2 builder, (:value this)))
+            (§ ass! (:gen builder) (LIRGenerator''emitBlackhole-2 (:gen builder), (LIRBuilder''operand-2 builder, (:value this))))
             nil
         )
     )
@@ -52561,7 +52504,7 @@ ZeroExtendNode'new-4
             (let [
                 #_"LIRKind" writeKind (Stamp'''getLIRKind-1 (:stamp (:value this)))
             ]
-                (LIRGenerator''emitStore-4v (:gen builder), writeKind, (LIRBuilder''operand-2 builder, (:address this)), (LIRBuilder''operand-2 builder, (:value this)))
+                (§ ass! (:gen builder) (LIRGenerator''emitStore-4v (:gen builder), writeKind, (LIRBuilder''operand-2 builder, (:address this)), (LIRBuilder''operand-2 builder, (:value this))))
             )
             nil
         )
@@ -53147,7 +53090,7 @@ ZeroExtendNode'new-4
 
     (defm NullCheckNode LIRLowerable
         (#_"void" LIRLowerable'''generate-2 [#_"NullCheckNode" this, #_"LIRBuilder" builder]
-            (LIRGenerator''emitNullCheck-2 (:gen builder), (LIRBuilder''operand-2 builder, (:object this)))
+            (§ ass! (:gen builder) (LIRGenerator''emitNullCheck-2 (:gen builder), (LIRBuilder''operand-2 builder, (:object this))))
             nil
         )
     )
@@ -53175,7 +53118,7 @@ ZeroExtendNode'new-4
 
     (defm SafepointNode LIRLowerable
         (#_"void" LIRLowerable'''generate-2 [#_"SafepointNode" this, #_"LIRBuilder" builder]
-            (LIRBuilder''visitSafepointNode-2 builder, this)
+            (§ ass! builder (LIRBuilder''visitSafepointNode-2 builder, this))
             nil
         )
     )
@@ -53362,7 +53305,7 @@ ZeroExtendNode'new-4
             (let [
                 #_"AllocatableValue" obj (LIRGenerator''newVariable-2 (:gen builder), (LIRKind'unknownReference-1 (#_"Architecture" .getWordKind (.arch HotSpot'target))))
             ]
-                (LIRGenerator''emitMove-3 (:gen builder), obj, (LIRBuilder''operand-2 builder, (:object this)))
+                (§ ass! (:gen builder) (LIRGenerator''emitMove-3 (:gen builder), obj, (LIRBuilder''operand-2 builder, (:object this))))
                 (LIRBuilder''setResult-3 builder, this, obj)
             )
             nil
@@ -53595,7 +53538,7 @@ ZeroExtendNode'new-4
 
     (defm MembarNode LIRLowerable
         (#_"void" LIRLowerable'''generate-2 [#_"MembarNode" this, #_"LIRBuilder" builder]
-            (LIRGenerator''emitMembar-2 (:gen builder), (:barriers this))
+            (§ ass! (:gen builder) (LIRGenerator''emitMembar-2 (:gen builder), (:barriers this)))
             nil
         )
     )
@@ -53637,7 +53580,7 @@ ZeroExtendNode'new-4
 
     (defm PrefetchAllocateNode LIRLowerable
         (#_"void" LIRLowerable'''generate-2 [#_"PrefetchAllocateNode" this, #_"LIRBuilder" builder]
-            (LIRGenerator''emitPrefetchAllocate-2 (:gen builder), (LIRBuilder''operand-2 builder, (:address this)))
+            (§ ass! (:gen builder) (LIRGenerator''emitPrefetchAllocate-2 (:gen builder), (LIRBuilder''operand-2 builder, (:address this))))
             nil
         )
     )
@@ -53684,7 +53627,7 @@ ZeroExtendNode'new-4
                 #_"Value" result (#_"Register" .asValue (:register this), kind)
             ]
                 (when (:incoming this)
-                    (LIRGenerator''emitIncomingValues-2 (:gen builder), [ result ])
+                    (§ ass! (:gen builder) (LIRGenerator''emitIncomingValues-2 (:gen builder), [ result ]))
                 )
                 (when-not (:directUse this)
                     (§ ass result (LIRGenerator''emitMove-2 (:gen builder), result))
@@ -53728,7 +53671,7 @@ ZeroExtendNode'new-4
 
     (defm SpillRegistersNode LIRLowerable
         (#_"void" LIRLowerable'''generate-2 [#_"SpillRegistersNode" this, #_"LIRBuilder" builder]
-            (LIRGenerator''append-2 (:gen builder), (SpillRegistersOp'new-0))
+            (§ ass! (:gen builder) (LIRGenerator''append-2 (:gen builder), (SpillRegistersOp'new-0)))
             nil
         )
     )
@@ -54380,7 +54323,7 @@ ZeroExtendNode'new-4
                     (let [
                         #_"AllocatableValue" result (LIRGenerator''newVariable-2 (:gen builder), kind)
                     ]
-                        (LIRGenerator''emitMove-3 (:gen builder), result, value)
+                        (§ ass! (:gen builder) (LIRGenerator''emitMove-3 (:gen builder), result, value))
                         (LIRBuilder''setResult-3 builder, this, result)
                     )
                 )
