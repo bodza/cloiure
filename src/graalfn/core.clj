@@ -19,7 +19,7 @@
     [java.lang
         ArithmeticException Boolean Byte Character Class ClassLoader Double Error Float IllegalArgumentException IllegalStateException
         IncompatibleClassChangeError Integer Iterable Long Math Module NoClassDefFoundError NoSuchFieldError NoSuchMethodError Object
-        Short String System UnsupportedClassVersionError Void
+        Short String UnsupportedClassVersionError Void
     ]
 )
 
@@ -442,7 +442,7 @@ Assembler''call-1
 Assembler''call-2
 Assembler''cdql-1
 Assembler''cdqq-1
-Assembler''close-2
+Assembler''close-1
 Assembler''cmovl-4ra
 Assembler''cmovl-4rr
 Assembler''cmovq-4ra
@@ -953,7 +953,7 @@ ClassfileConstant'resolveField-5
 ClassfileConstant'resolveMethod-5
 ClassfileConstantPool''get-3
 ClassfileConstantPool'new-2
-CodeBuffer''close-2
+CodeBuffer''close-1
 CodeBuffer''emitByte-2
 CodeBuffer''emitByte-3
 CodeBuffer''emitInt-2
@@ -1926,7 +1926,6 @@ LIRBuilder''emitConditional-2
 LIRBuilder''emitConditional-4
 LIRBuilder''emitIf-2
 LIRBuilder''emitInvoke-2
-LIRBuilder''emitNode-2
 LIRBuilder''emitOverflowCheckBranch-5
 LIRBuilder''emitPrologue-2
 LIRBuilder''emitSwitch-2
@@ -2107,23 +2106,10 @@ LSAllocationPhase'new-0
 LSAssignLocationsPhase''assignLocations-2i
 LSAssignLocationsPhase''colorLirOperand-4
 LSAssignLocationsPhase'new-1
-LSEliminateSpillMovePhase''eliminateSpillMoves-2
 LSEliminateSpillMovePhase'new-1
-LSLifetimeAnalysisPhase''addTemp-5
-LSLifetimeAnalysisPhase''changeSpillDefinitionPos-5
-LSLifetimeAnalysisPhase''computeGlobalLiveSets-1
-LSLifetimeAnalysisPhase''computeLocalLiveSets-1
-LSLifetimeAnalysisPhase''handleMethodArguments-2
-LSLifetimeAnalysisPhase''isIntervalInLoop-3
-LSLifetimeAnalysisPhase''numberInstructions-1
 LSLifetimeAnalysisPhase'new-1
-LSLifetimeAnalysisPhase'registerPriorityOfInputOperand-1
 LSOptimizeSpillPositionPhase'new-1
 LSRegisterAllocationPhase'new-1
-LSResolveDataFlowPhase''optimizeEmptyBlocks-3
-LSResolveDataFlowPhase''resolveDataFlow-1
-LSResolveDataFlowPhase''resolveDataFlow0-3
-LSResolveDataFlowPhase''resolveFindInsertPos-4
 LSResolveDataFlowPhase'new-1
 Label''addPatchAt-2
 Label''bind-2
@@ -2142,25 +2128,22 @@ LeaOp'new-3
 LeftShiftNode'create-2
 LeftShiftNode'new-2
 LessThanOp'new-0
-LinearScan''allocate-2
+LinearScan'allocate-3
 LinearScan''assignSpillSlot-2
 LinearScan''attributes-2
 LinearScan''blockAt-2
 LinearScan''blockCount-1
 LinearScan''blockForId-2
 LinearScan''coversBlockBegin-3
-LinearScan''createAssignLocationsPhase-1
 LinearScan''createDerivedInterval-2
-LinearScan''createInterval-2
-LinearScan''createOptimizeSpillPositionPhase-1
-LinearScan''createRegisterAllocationPhase-1
+LinearScan''createMoveResolver-1
 LinearScan''createUnhandledLists-3
 LinearScan''getBlockData-2
 LinearScan''getFirstLirInstructionId-2
 LinearScan''getLastLirInstructionId-2
+LinearScan''getOrCreateInterval-2
 LinearScan''hasCall-2
 LinearScan''initBlockData-2
-LinearScan''initIntervals-1
 LinearScan''initOpIdMaps-2
 LinearScan''instructionForId-2
 LinearScan''intervalFor-2i
@@ -2169,14 +2152,11 @@ LinearScan''isBlockBegin-2
 LinearScan''isCallerSave-2
 LinearScan''isMaterialized-4
 LinearScan''isProcessed-2
-LinearScan''liveSetSize-1
 LinearScan''maxOpId-1
 LinearScan''numLoops-1
 LinearScan''operandNumber-2
 LinearScan''operandSize-1
 LinearScan''putOpIdMaps-4
-LinearScan''sortIntervalsAfterAllocation-1
-LinearScan''sortIntervalsBeforeAllocation-1
 LinearScan''splitChildAtOpId-4
 LinearScan'DOMINATOR_SPILL_MOVE_ID
 LinearScan'addToList-3
@@ -2897,16 +2877,9 @@ ReturnOp'new-1
 ReturnToCallerData'new-2
 RightShiftNode'create-2
 RightShiftNode'new-2
-SSALinearScan'new-3
-SSALinearScanEliminateSpillMovePhase'new-1
-SSALinearScanLifetimeAnalysisPhase'new-1
-SSALinearScanLifetimeAnalysisPhase'setHint-3
-SSALinearScanResolveDataFlowPhase'new-1
 SSAMoveResolver'new-1
 SSAUtil'forEachPhiRegisterHint-6
 SSAUtil'forEachPhiValuePair-4
-SSAUtil'phiIn-2
-SSAUtil'phiOut-2
 SSAUtil'removePhiIn-2
 SSAUtil'removePhiOut-2
 SafepointNode'new-0
@@ -4530,7 +4503,7 @@ ZeroExtendNode'new-4
 (defp LIRKind)
 
 (defp LIRLowerable
-    (#_"void" LIRLowerable'''generate-2 [#_"LIRLowerable" this, #_"LIRBuilder" builder])
+    (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"LIRLowerable" this, #_"LIRBuilder" builder])
 )
 
 (defp LIRLowerableAccess
@@ -4554,40 +4527,11 @@ ZeroExtendNode'new-4
 )
 
 (defp LSAssignLocationsPhase)
-
-(defp LSEliminateSpillMovePhase
-    ;;;
-     ; @return the index of the first instruction that is of interest for #eliminateSpillMoves
-     ;;
-    (#_"int" LSEliminateSpillMovePhase'''firstInstructionOfInterest-1 [#_"LSEliminateSpillMovePhase" this])
-    ;;;
-     ; @param block The block {@code move} is located in.
-     ; @param move Spill move.
-     ;;
-    (#_"boolean" LSEliminateSpillMovePhase'''canEliminateSpillMove-3 [#_"LSEliminateSpillMovePhase" this, #_"Block" block, #_"MoveOp" move])
-)
-
-(defp LSLifetimeAnalysisPhase
-    (#_"void" LSLifetimeAnalysisPhase'''addRegisterHint-6 [#_"LSLifetimeAnalysisPhase" this, #_"LIRInstruction" op, #_"Value" targetValue, #_"OperandMode" mode, #_"{OperandFlag}" flags, #_"boolean" hintAtDef])
-    ;;;
-     ; Determines the register priority for an instruction's output/result operand.
-     ;;
-    (#_"RegisterPriority" LSLifetimeAnalysisPhase'''registerPriorityOfOutputOperand-2 [#_"LSLifetimeAnalysisPhase" this, #_"LIRInstruction" op])
-    (#_"void" LSLifetimeAnalysisPhase'''buildIntervals-1 [#_"LSLifetimeAnalysisPhase" this])
-)
-
+(defp LSEliminateSpillMovePhase)
+(defp LSLifetimeAnalysisPhase)
 (defp LSOptimizeSpillPositionPhase)
 (defp LSRegisterAllocationPhase)
-
-;;;
- ; Phase 6: resolve data flow
- ;
- ; Insert moves at edges between blocks if intervals have been split.
- ;;
-(defp LSResolveDataFlowPhase
-    (#_"void" LSResolveDataFlowPhase'''resolveCollectMappings-5 [#_"LSResolveDataFlowPhase" this, #_"Block" fromBlock, #_"Block" toBlock, #_"Block" midBlock, #_"MoveResolver" moveResolver])
-)
-
+(defp LSResolveDataFlowPhase)
 (defp Label)
 (defp LabelOp)
 (defp LabelRef)
@@ -4605,20 +4549,7 @@ ZeroExtendNode'new-4
   #_(§ override #_"ValueNode" Proxy'''getOriginalNode-1 [#_"LimitedValueProxy" this])
 )
 
-;;;
- ; An implementation of the linear scan register allocator algorithm described in
- ; <a href="http://doi.acm.org/10.1145/1064979.1064998">"Optimized Interval Splitting in a Linear Scan Register Allocator"</a>
- ; by Christian Wimmer and Hanspeter Moessenboeck.
- ;;
-(defp LinearScan
-    (#_"MoveResolver" LinearScan'''createMoveResolver-1 [#_"LinearScan" this])
-    (#_"Interval" LinearScan'''getOrCreateInterval-2 [#_"LinearScan" this, #_"AllocatableValue" operand])
-    (#_"this" LinearScan'''beforeSpillMoveElimination-1 [#_"LinearScan" this])
-    (#_"LSLifetimeAnalysisPhase" LinearScan'''createLifetimeAnalysisPhase-1 [#_"LinearScan" this])
-    (#_"LSResolveDataFlowPhase" LinearScan'''createResolveDataFlowPhase-1 [#_"LinearScan" this])
-    (#_"LSEliminateSpillMovePhase" LinearScan'''createSpillMoveEliminationPhase-1 [#_"LinearScan" this])
-)
-
+(defp LinearScan)
 (defp LinearScanPhase)
 
 (defp LinearScanWalker
@@ -5264,10 +5195,6 @@ ZeroExtendNode'new-4
 (defp ReturnOp)
 (defp ReturnToCallerData)
 (defp RightShiftNode)
-(defp SSALinearScan)
-(defp SSALinearScanEliminateSpillMovePhase)
-(defp SSALinearScanLifetimeAnalysisPhase)
-(defp SSALinearScanResolveDataFlowPhase)
 (defp SSAMoveResolver)
 (defp SafepointNode)
 (defp SafepointOp)
@@ -8920,7 +8847,7 @@ ZeroExtendNode'new-4
  ;   ...
  ;;
 (value-ns SSAUtil
-    (defn #_"LabelOp" SSAUtil'phiIn-2 [#_"LIR" lir, #_"Block" block]
+    (defn- #_"LabelOp" SSAUtil'phiIn-2 [#_"LIR" lir, #_"Block" block]
         (nth (LIR''getLIRforBlock-2 lir, block) 0)
     )
 
@@ -8929,7 +8856,7 @@ ZeroExtendNode'new-4
         lir
     )
 
-    (defn #_"JumpOp" SSAUtil'phiOut-2 [#_"LIR" lir, #_"Block" block]
+    (defn- #_"JumpOp" SSAUtil'phiOut-2 [#_"LIR" lir, #_"Block" block]
         (peek' (LIR''getLIRforBlock-2 lir, block))
     )
 
@@ -13515,12 +13442,9 @@ ZeroExtendNode'new-4
 
     ;;;
      ; Closes this assembler. No extra data can be written to this assembler after this call.
-     ;
-     ; @param trim? if true, then a copy of the underlying byte array up to (but not including) {@code position()} is returned
-     ; @return the data in this buffer or a trimmed copy if {@code trim?} is true
      ;;
-    (defn #_"[byte]" Assembler''close-2 [#_"Assembler" this, #_"boolean" trim?]
-        (CodeBuffer''close-2 (:codeBuffer this), trim?)
+    (defn #_"[byte]" Assembler''close-1 [#_"Assembler" this]
+        (CodeBuffer''close-1 (:codeBuffer this))
     )
 
     (defn #_"this" Assembler''bind-2 [#_"Assembler" this, #_"Label" l]
@@ -15646,7 +15570,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"CompilationResult" Assembler''finish-1 [#_"Assembler" this]
-        (§ ass! this (update this :compilationResult CompilationResult''setTargetCode-3 (Assembler''close-2 this, false), (Assembler''position-1 this)))
+        (§ ass! this (update this :compilationResult CompilationResult''setTargetCode-3 (Assembler''close-1 this), (Assembler''position-1 this)))
         (CompilationResult''close-1 (:compilationResult this))
     )
 )
@@ -16678,7 +16602,7 @@ ZeroExtendNode'new-4
                             (when (satisfies? VirtualStackSlot value)
                                 (BlockClosure''addDef-3 (ß this), value, op)
                                 (BlockClosure''addRegisterHint-6 (ß this), op, value, mode, flags, true)
-                                (§ ass! builder (update builder :usePos conj op))
+                                (§ ass! builder (update builder :opUsePos conj op))
                                 (#_"BitSet" .clear bits, (:id value))
                             )
                             nil
@@ -16690,7 +16614,7 @@ ZeroExtendNode'new-4
                             (when (satisfies? VirtualStackSlot value)
                                 (BlockClosure''addUse-4 (ß this), value, op, flags)
                                 (BlockClosure''addRegisterHint-6 (ß this), op, value, mode, flags, false)
-                                (§ ass! builder (update builder :usePos conj op))
+                                (§ ass! builder (update builder :opUsePos conj op))
                                 (#_"BitSet" .set bits, (:id value))
                             )
                             nil
@@ -22732,19 +22656,10 @@ ZeroExtendNode'new-4
 
     ;;;
      ; Closes this buffer. Any further operations on a closed buffer will result in a NullPointerException.
-     ;
-     ; @param trim? if true, then a copy of the underlying byte array up to (but not including) {@code position()} is returned
-     ; @return the data in this buffer or a trimmed copy if {@code trim?} is true
      ;;
-    (defn #_"[byte]" CodeBuffer''close-2 [#_"CodeBuffer" this, #_"boolean" trim?]
+    (defn #_"[byte]" CodeBuffer''close-1 [#_"CodeBuffer" this]
         (let [
-            #_"[byte]" a (#_"ByteBuffer" .array (:data this))
-            a
-                (when trim? => a
-                    ;; Make a copy even if a.length == data.position(),
-                    ;; since the API for trim? states a copy is always made.
-                    (Arrays/copyOf a, (#_"ByteBuffer" .position (:data this)))
-                )
+            #_"[byte]" a (vec (#_"ByteBuffer" .array (:data this)))
         ]
             (§ ass! this (assoc this :data nil))
             a
@@ -26351,7 +26266,7 @@ ZeroExtendNode'new-4
 
     (defm RawData Data
         (#_"void" Data'''emit-3 [#_"RawData" this, #_"ByteBuffer" buffer, #_"Patches" patches]
-            (#_"ByteBuffer" .put buffer, (:raw this))
+            (#_"ByteBuffer" .put buffer, (byte-array (:raw this)))
             nil
         )
     )
@@ -29611,7 +29526,7 @@ ZeroExtendNode'new-4
                 #_"int" :maxOpId maxOpId
                 #_"{Block BitSet}" :liveInMap {}
                 #_"{Block BitSet}" :liveOutMap {}
-                #_"{LIRInstruction}" :usePos #{}
+                #_"{LIRInstruction}" :opUsePos #{}
             )
         )
     )
@@ -29703,7 +29618,7 @@ ZeroExtendNode'new-4
             #_"FixPointIntervalBuilder" builder (FixPointIntervalBuilder'new-1 maxOpId)
             builder (reduce #(assoc-in %1 [:liveInMap %2] (BitSet.)) builder (:reversePostOrder (:cfg lir)))
         ]
-            (loop-when [builder builder #_"queue [Block]" queue (reverse (:reversePostOrder (:cfg lir)))] (seq queue) => [(:usePos builder) (:stackSlotMap builder)]
+            (loop-when [builder builder #_"queue [Block]" queue (reverse (:reversePostOrder (:cfg lir)))] (seq queue) => [(:opUsePos builder) (:stackSlotMap builder)]
                 (let [
                     [#_"Block" block & queue] queue
                     [builder queue]
@@ -33847,10 +33762,10 @@ ZeroExtendNode'new-4
             (merge (LinearScanWalker'class.) (IntervalWalker'new-3 allocator, unhandledFixedFirst, unhandledAnyFirst)
                 (hash-map
                     #_"[Register]" :availableRegs nil
-                    #_"[int]" :usePos (int-array n)
-                    #_"[int]" :blockPos (int-array n)
+                    #_"[int]" :usePos (vec (repeat n 0))
+                    #_"[int]" :blockPos (vec (repeat n 0))
                     #_"[Interval*]" :spillIntervals (vec (repeat n nil))
-                    #_"MoveResolver" :moveResolver (LinearScan'''createMoveResolver-1 allocator) ;; for ordering spill moves
+                    #_"MoveResolver" :moveResolver (LinearScan''createMoveResolver-1 allocator) ;; for ordering spill moves
                     #_"int" :minReg 0
                     #_"int" :maxReg 0
                 )
@@ -34199,7 +34114,7 @@ ZeroExtendNode'new-4
             (if (= minSplitPos (Interval''from-1 interval))
                 (do
                     ;; the whole interval is never used, so spill it entirely to memory
-                    (LinearScan''assignSpillSlot-2 (:allocator this), interval)
+                    (§ ass! interval (LinearScan''assignSpillSlot-2 (:allocator this), interval))
                     (§ ass! this (LinearScanWalker'''handleSpillSlot-2 this, interval))
                     (LinearScanWalker''changeSpillState-3 this, interval, minSplitPos)
                     ;; Also kick parent intervals out of register to memory when they have no use position.
@@ -34213,7 +34128,7 @@ ZeroExtendNode'new-4
                                     ;; => do not go further back, because the register is actually used by the interval
                                     (when (= (Interval''firstUsage-2 parent, :RegisterPriority'ShouldHaveRegister) Integer/MAX_VALUE)
                                         ;; parent is never used, so kick it out of its assigned register
-                                        (LinearScan''assignSpillSlot-2 (:allocator this), parent)
+                                        (§ ass! parent (LinearScan''assignSpillSlot-2 (:allocator this), parent))
                                         (§ ass! this (LinearScanWalker'''handleSpillSlot-2 this, parent))
                                         parent
                                     )
@@ -34234,7 +34149,7 @@ ZeroExtendNode'new-4
                         )
                     #_"Interval" spilledPart (Interval''split-3 interval, optimalSplitPos, (:allocator this))
                 ]
-                    (LinearScan''assignSpillSlot-2 (:allocator this), spilledPart)
+                    (§ ass! spilledPart (LinearScan''assignSpillSlot-2 (:allocator this), spilledPart))
                     (§ ass! this (LinearScanWalker'''handleSpillSlot-2 this, spilledPart))
                     (LinearScanWalker''changeSpillState-3 this, spilledPart, optimalSplitPos)
                     (let [
@@ -34303,18 +34218,15 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"boolean" LinearScanWalker''allocFreeRegister-2 [#_"LinearScanWalker" this, #_"Interval" interval]
-        (§ ass! this (LinearScanWalker''initUseLists-2 this, true))
-        (§ ass! this (LinearScanWalker''freeExcludeActiveFixed-1 this))
-        (§ ass! this (LinearScanWalker''freeExcludeActiveAny-1 this))
-        (§ ass! this (LinearScanWalker''freeCollectInactiveFixed-2 this, interval))
-        (§ ass! this (LinearScanWalker''freeCollectInactiveAny-2 this, interval))
-        ;; freeCollectUnhandled(fixedKind, cur);
-
-        ;; usePos contains the start of the next interval that has this register assigned
-        ;; (either as a fixed register or a normal allocated register in the past)
-        ;; only intervals overlapping with cur are processed, non-overlapping invervals can be ignored safely
-
         (let [
+            _ (§ ass! this (LinearScanWalker''initUseLists-2 this, true))
+            _ (§ ass! this (LinearScanWalker''freeExcludeActiveFixed-1 this))
+            _ (§ ass! this (LinearScanWalker''freeExcludeActiveAny-1 this))
+            _ (§ ass! this (LinearScanWalker''freeCollectInactiveFixed-2 this, interval))
+            _ (§ ass! this (LinearScanWalker''freeCollectInactiveAny-2 this, interval))
+            ;; usePos contains the start of the next interval that has this register assigned
+            ;; (either as a fixed register or a normal allocated register in the past)
+            ;; only intervals overlapping with cur are processed, non-overlapping invervals can be ignored safely
             #_"Interval" locationHint (Interval''locationHint-2 interval, true)
             #_"Register" hint
                 (when (and (some? locationHint) (some? (:location locationHint)) (instance? RegisterValue (:location locationHint)))
@@ -34421,7 +34333,7 @@ ZeroExtendNode'new-4
                                 (recur this :RegisterPriority'MustHaveRegister)
                                 (do
                                     ;; assign a reasonable register and do a bailout in product mode to avoid errors
-                                    (LinearScan''assignSpillSlot-2 (:allocator this), interval)
+                                    (§ ass! interval (LinearScan''assignSpillSlot-2 (:allocator this), interval))
                                     (throw! "linear scan: no register found") ;; OutOfRegistersException
                                 )
                             )
@@ -35158,9 +35070,8 @@ ZeroExtendNode'new-4
      ;
      ; @return {@code operand}
      ;;
-    (defn #_"Value" LIRBuilder''setResult-3 [#_"LIRBuilder" this, #_"ValueNode" node, #_"Value" operand]
-        (§ ass! this (update this :nodeOperands assoc node operand))
-        operand
+    (defn #_"this" LIRBuilder''setResult-3 [#_"LIRBuilder" this, #_"ValueNode" node, #_"Value" operand]
+        (update this :nodeOperands assoc node operand)
     )
 
     ;;;
@@ -35218,7 +35129,7 @@ ZeroExtendNode'new-4
                 (let [
                     #_"Variable" value (LIRGenerator''newVariable-2 (:gen this), (LIRBuilder''getExactPhiKind-2 this, phi))
                 ]
-                    (LIRBuilder''setResult-3 this, phi, value)
+                    (§ ass! this (LIRBuilder''setResult-3 this, phi, value))
                     value
                 )
             )
@@ -35282,13 +35193,13 @@ ZeroExtendNode'new-4
                                         (condp = (:op divRem)
                                             :DivRemOp'DIV
                                             (do
-                                                (LIRBuilder''setResult-3 this, divRem, (nth pair 0))
-                                                (LIRBuilder''setResult-3 this, node, (nth pair 1))
+                                                (§ ass! this (LIRBuilder''setResult-3 this, divRem, (nth pair 0)))
+                                                (§ ass! this (LIRBuilder''setResult-3 this, node, (nth pair 1)))
                                             )
                                             :DivRemOp'REM
                                             (do
-                                                (LIRBuilder''setResult-3 this, divRem, (nth pair 1))
-                                                (LIRBuilder''setResult-3 this, node, (nth pair 0))
+                                                (§ ass! this (LIRBuilder''setResult-3 this, divRem, (nth pair 1)))
+                                                (§ ass! this (LIRBuilder''setResult-3 this, node, (nth pair 0)))
                                             )
                                         )
                                         true
@@ -35316,6 +35227,12 @@ ZeroExtendNode'new-4
                     (update this :gen LIRGenerator''emitLFence-1)
                 )
             )
+        )
+    )
+
+    (defn- #_"this" LIRBuilder''emitNode-2 [#_"LIRBuilder" this, #_"ValueNode" node]
+        (when (satisfies? LIRLowerable node) => (throw! (str "node is not LIRLowerable: " node))
+            (LIRLowerable'''generate-2 node, this)
         )
     )
 
@@ -35347,7 +35264,6 @@ ZeroExtendNode'new-4
                                         this (assoc this :currentInstruction node)
                                     ]
                                         (LIRBuilder''emitNode-2 this, node)
-                                        this
                                     )
                                 )
                         ]
@@ -35370,37 +35286,27 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"void" LIRBuilder''emitNode-2 [#_"LIRBuilder" this, #_"ValueNode" node]
-        (when (satisfies? LIRLowerable node) => (throw! (str "node is not LIRLowerable: " node))
-            (LIRLowerable'''generate-2 node, this)
-        )
-        nil
-    )
-
     (defn #_"this" LIRBuilder''emitPrologue-2 [#_"LIRBuilder" this, #_"Graph" graph]
         (let [
             #_"CallingConvention" args (:callingConvention (:res (:gen this)))
-            #_"[Value]" params (make-array Value (inc (#_"CallingConvention" .getArgumentCount args)))
-            _
-                (dotimes [#_"int" i (dec (count params))]
+            #_"int" n (#_"CallingConvention" .getArgumentCount args)
+            [this #_"[Value]" params]
+                (loop-when [this this params [] #_"int" i 0] (< i n) => [this (conj' params (#_"Register" .asValue AMD64/rbp, (LIRKind'value-1 AMD64Kind/QWORD)))]
                     (let [
                         #_"AllocatableValue" arg (#_"CallingConvention" .getArgument args, i)
+                        this
+                            (when (and (instance? StackSlot arg) (#_"StackSlot" .isInCallerFrame arg) (not (:hasArgInCallerFrame (:lir (:res (:gen this)))))) => this
+                                (update-in this [:gen :res :lir] LIR''setHasArgInCallerFrame-1)
+                            )
                     ]
-                        (§ ass! params (assoc' params i arg))
-                        (when (and (instance? StackSlot arg) (#_"StackSlot" .isInCallerFrame arg) (not (:hasArgInCallerFrame (:lir (:res (:gen this))))))
-                            (§ ass! (:lir (:res (:gen this))) (LIR''setHasArgInCallerFrame-1 (:lir (:res (:gen this)))))
-                        )
+                        (recur this (conj' params arg) (inc i))
                     )
                 )
-            _ (§ ass! params (assoc' params (dec (count params)) (#_"Register" .asValue AMD64/rbp, (LIRKind'value-1 AMD64Kind/QWORD))))
             this (update this :gen LIRGenerator''emitIncomingValues-2 params)
             this (update this :gen LIRGenerator''emitSaveRbp-1)
             this (update this :gen LIRGenerator''append-2 (:lockStack (:lockStackHolder this)))
         ]
-            (doseq [#_"ParameterNode" param (Graph''getNodes-2 graph, ParameterNode)]
-                (LIRBuilder''setResult-3 this, param, (LIRGenerator''emitMove-2 (:gen this), (nth params (AbstractLocalNode''index-1 param))))
-            )
-            this
+            (reduce #(LIRBuilder''setResult-3 %1, %2, (LIRGenerator''emitMove-2 (:gen %1), (nth params (AbstractLocalNode''index-1 %2)))) this (Graph''getNodes-2 graph, ParameterNode))
         )
     )
 
@@ -35489,14 +35395,13 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"void" LIRBuilder''emitConditional-2 [#_"LIRBuilder" this, #_"ConditionalNode" conditional]
+    (defn #_"this" LIRBuilder''emitConditional-2 [#_"LIRBuilder" this, #_"ConditionalNode" conditional]
         (let [
             #_"Value" trueValue (LIRBuilder''operand-2 this, (:trueValue conditional))
             #_"Value" falseValue (LIRBuilder''operand-2 this, (:falseValue conditional))
         ]
             (LIRBuilder''setResult-3 this, conditional, (LIRBuilder''emitConditional-4 this, (:logic conditional), trueValue, falseValue))
         )
-        nil
     )
 
     (defn #_"this" LIRBuilder''emitOverflowCheckBranch-5 [#_"LIRBuilder" this, #_"AbstractBeginNode" overflowSuccessor, #_"AbstractBeginNode" _next, #_"Stamp" stamp, #_"double" probability]
@@ -35604,8 +35509,8 @@ ZeroExtendNode'new-4
                 (condp satisfies? callTarget
                     DirectCallTargetNode (LIRBuilder''emitDirectCall-5 this, callTarget, result, parameters, [])
                 )
-            _
-                (when-not (= result Value/ILLEGAL)
+            this
+                (when-not (= result Value/ILLEGAL) => this
                     (LIRBuilder''setResult-3 this, invoke, (LIRGenerator''emitMove-2 (:gen this), result))
                 )
         ]
@@ -36134,16 +36039,15 @@ ZeroExtendNode'new-4
     (defn- #_"Variable" LIRGenerator''_emitForeignCall-3* [#_"LIRGenerator" this, #_"ForeignCallLinkage" linkage & #_"Value..." args]
         (let [
             #_"CallingConvention" linkageCc (:outgoingCallingConvention linkage)
-            _ (§ ass! (:frameMapBuilder (:res this)) (FrameMapBuilder''callsMethod-2 (:frameMapBuilder (:res this)), linkageCc))
+            _ (§ ass! this (update-in this [:res :frameMapBuilder] FrameMapBuilder''callsMethod-2 linkageCc))
             ;; move the arguments into the correct location
-            #_"[Value]" argLocations (make-array Value (count args))
-            _
-                (dotimes [#_"int" i (count args)]
+            [this #_"[Value]" argLocations]
+                (loop-when [this this argLocations [] #_"int" i 0] (< i (count args)) => [this argLocations]
                     (let [
                         #_"AllocatableValue" loc (#_"CallingConvention" .getArgument linkageCc, i)
+                        this (LIRGenerator''emitMove-3 this, loc, (nth args i))
                     ]
-                        (§ ass! this (LIRGenerator''emitMove-3 this, loc, (nth args i)))
-                        (§ ass! argLocations (assoc' argLocations i loc))
+                        (recur this (conj' argLocations loc) (inc i))
                     )
                 )
             _ (§ ass! this (assoc-in this [:res :hasForeignCall] true))
@@ -36157,11 +36061,11 @@ ZeroExtendNode'new-4
 
     (defn #_"Variable" LIRGenerator''emitForeignCall-3* [#_"LIRGenerator" this, #_"ForeignCallLinkage" linkage & #_"Value..." args]
         (when (ForeignCallLinkage''needsJavaFrameAnchor-1 linkage) => (apply LIRGenerator''_emitForeignCall-3* this, linkage, args)
-            (§ ass! this (LIRGenerator''append-2 this, (CRuntimeCallPrologueOp'new-2 HotSpot'threadLastJavaSpOffset, HotSpot'threadRegister)))
             (let [
+                _ (§ ass! this (LIRGenerator''append-2 this, (CRuntimeCallPrologueOp'new-2 HotSpot'threadLastJavaSpOffset, HotSpot'threadRegister)))
                 #_"Variable" result (apply LIRGenerator''_emitForeignCall-3* this, linkage, args)
+                _ (§ ass! this (LIRGenerator''append-2 this, (CRuntimeCallEpilogueOp'new-4 HotSpot'threadLastJavaSpOffset, HotSpot'threadLastJavaFpOffset, HotSpot'threadLastJavaPcOffset, HotSpot'threadRegister)))
             ]
-                (§ ass! this (LIRGenerator''append-2 this, (CRuntimeCallEpilogueOp'new-4 HotSpot'threadLastJavaSpOffset, HotSpot'threadLastJavaFpOffset, HotSpot'threadLastJavaPcOffset, HotSpot'threadRegister)))
                 result
             )
         )
@@ -37187,12 +37091,9 @@ ZeroExtendNode'new-4
                  ;;
                 #_"List<LIRInstruction>" :bufRef nil
                 ;;;
-                 ; List of insertion points. index and count are stored alternately: indexAndCount[i * 2]:
-                 ; the index into lir list where "count" ops should be inserted indexAndCount[i * 2 + 1]:
-                 ; the number of ops to be inserted at index
+                 ; Map of insertion points where index and count are kv pairs.
                  ;;
-                #_"[int]" :indexAndCount (int-array 8)
-                #_"int" :indexAndCountSize 0
+                #_"{int int}" :indexAndCount {}
                 ;;;
                  ; The LIROps to be inserted.
                  ;;
@@ -37212,53 +37113,14 @@ ZeroExtendNode'new-4
         (some? (:bufRef this))
     )
 
-    (defn- #_"int" LIRInsertionBuffer''numberOfInsertionPoints-1 [#_"LIRInsertionBuffer" this]
-        (>> (:indexAndCountSize this) 1)
-    )
-
-    (defn- #_"int" LIRInsertionBuffer''indexAt-2 [#_"LIRInsertionBuffer" this, #_"int" i]
-        (nth (:indexAndCount this) (<< i 1))
-    )
-
-    (defn- #_"this" LIRInsertionBuffer''appendNew-3 [#_"LIRInsertionBuffer" this, #_"int" index, #_"int" count]
-        (let [
-            #_"int" oldSize (:indexAndCountSize this)
-            #_"int" newSize (+ oldSize 2)
-            this
-                (when (< (count (:indexAndCount this)) newSize) => this
-                    (assoc this :indexAndCount (Arrays/copyOf (:indexAndCount this), (* newSize 2)))
-                )
-            this (update this :indexAndCount assoc' oldSize index)
-            this (update this :indexAndCount assoc' (inc oldSize) count)
-        ]
-            (assoc this :indexAndCountSize newSize)
-        )
-    )
-
-    (defn- #_"this" LIRInsertionBuffer''setCountAt-3 [#_"LIRInsertionBuffer" this, #_"int" i, #_"int" value]
-        (update this :indexAndCount assoc' (inc (<< i 1)) value)
-    )
-
-    (defn- #_"int" LIRInsertionBuffer''countAt-2 [#_"LIRInsertionBuffer" this, #_"int" i]
-        (nth (:indexAndCount this) (inc (<< i 1)))
-    )
-
     ;;;
      ; Enqueue a new instruction that will be appended to the instruction list when #finish() is called.
      ; The new instruction is added <b>before</b> the existing instruction with the given index.
-     ; This method can only be called with increasing values of index, e.g. once an instruction was
-     ; appended with index 4, subsequent instructions can only be appended with index 4 or higher.
      ;;
     (defn #_"this" LIRInsertionBuffer''append-3 [#_"LIRInsertionBuffer" this, #_"int" index, #_"LIRInstruction" op]
-        (let [
-            #_"int" i (dec (LIRInsertionBuffer''numberOfInsertionPoints-1 this))
-            this
-                (if (or (neg? i) (< (LIRInsertionBuffer''indexAt-2 this, i) index))
-                    (LIRInsertionBuffer''appendNew-3 this, index, 1)
-                    (LIRInsertionBuffer''setCountAt-3 this, i, (inc (LIRInsertionBuffer''countAt-2 this, i)))
-                )
-        ]
-            (update this :ops conj' op)
+        (-> this
+            (update-in [:indexAndCount index] #(inc (or % 0)))
+            (update :ops conj' op)
         )
     )
 
@@ -37269,35 +37131,37 @@ ZeroExtendNode'new-4
     (defn #_"this" LIRInsertionBuffer''finish-1 [#_"LIRInsertionBuffer" this]
         (when (seq (:ops this)) => (assoc this :bufRef nil)
             (let [
-                #_"int" n (count (:bufRef this))
+                #_"int" n (count (:ops this))
+                #_"int" i (count (:bufRef this))
                 ;; increase size of instructions list
                 _
-                    (dotimes [#_"int" i (count (:ops this))]
+                    (dotimes [#_"int" _ n]
                         (#_"List" .add (:bufRef this), nil)
                     )
+                #_"int" j (count (:bufRef this))
                 ;; insert ops from buffer into instructions list
                 _
-                    (loop-when [#_"int" op (dec (count (:ops this))) #_"int" from (dec n) #_"int" to (dec (count (:bufRef this))) #_"int" ip (dec (LIRInsertionBuffer''numberOfInsertionPoints-1 this))] (<= 0 ip)
+                    (loop-when [n (dec n) i (dec i) j (dec j) #_"seq" s (seq (sort-by first (comp - compare) (:indexAndCount this)))] (some? s)
                         (let [
-                            #_"int" index (LIRInsertionBuffer''indexAt-2 this, ip)
+                            [#_"int" index #_"int" _count] (first s)
                             ;; make room after insertion point
-                            [to from]
-                                (loop-when [to to from from] (<= index from) => [to from]
-                                    (#_"List" .set (:bufRef this), to, (nth (:bufRef this) from))
-                                    (recur (dec to) (dec from))
+                            [j i]
+                                (loop-when [j j i i] (<= index i) => [j i]
+                                    (#_"List" .set (:bufRef this), j, (nth (:bufRef this) i))
+                                    (recur (dec j) (dec i))
                                 )
                             ;; insert ops from buffer
-                            [to op]
-                                (loop-when [to to op op #_"int" i (LIRInsertionBuffer''countAt-2 this, ip)] (pos? i) => [to op]
-                                    (#_"List" .set (:bufRef this), to, (nth (:ops this) op))
-                                    (recur (dec to) (dec op) (dec i))
+                            [j n]
+                                (loop-when [j j n n _count _count] (pos? _count) => [j n]
+                                    (#_"List" .set (:bufRef this), j, (nth (:ops this) n))
+                                    (recur (dec j) (dec n) (dec _count))
                                 )
                         ]
-                            (recur op from to (dec ip))
+                            (recur n i j (next s))
                         )
                     )
             ]
-                (assoc this :indexAndCountSize 0, :ops [], :bufRef nil)
+                (assoc this :indexAndCount {}, :ops [], :bufRef nil)
             )
         )
     )
@@ -37350,33 +37214,9 @@ ZeroExtendNode'new-4
     ;;;
      ; Utility method to add stack arguments to a list of temporaries. Useful for modeling calling
      ; conventions that kill outgoing argument space.
-     ;
-     ; @return additional temporaries
      ;;
-    (defn #_"[Value]" LIRInstruction'addStackSlotsToTemporaries-2 [#_"Value*" parameters, #_"[Value]" temporaries]
-        (let [
-            #_"int" n (count (filter #(instance? StackSlot %) parameters))
-        ]
-            (when (pos? n) => temporaries
-                (let [
-                    #_"[Value]" t (Arrays/copyOf temporaries, (+ (count temporaries) n))
-                ]
-                    (loop-when [#_"int" i (count temporaries) #_"seq" s (seq parameters)] (some? s)
-                        (let [
-                            #_"Value" p (first s)
-                            i
-                                (when (instance? StackSlot p) => i
-                                    (§ ass! t (assoc' t i p))
-                                    (inc i)
-                                )
-                        ]
-                            (recur i (next s))
-                        )
-                    )
-                    t
-                )
-            )
-        )
+    (defn #_"[Value]" LIRInstruction'addStackSlotsToTemporaries-2 [#_"Value*" parameters, #_"[Value]" temporaries]
+        (into' temporaries (filter #(instance? StackSlot %) parameters))
     )
 )
 
@@ -39999,17 +39839,22 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defm LSEliminateSpillMovePhase LSEliminateSpillMovePhase
-        (#_"int" LSEliminateSpillMovePhase'''firstInstructionOfInterest-1 [#_"LSEliminateSpillMovePhase" this]
-            ;; skip the first because it is always a label
-            1
+    (defn- #_"boolean" LSEliminateSpillMovePhase''isPhiResolutionMove-4 [#_"LSEliminateSpillMovePhase" this, #_"Block" block, #_"MoveOp" move, #_"Interval" to]
+        (and (Interval''isSplitParent-1 to)
+             (zero? (& (Interval''from-1 to) 1))
+             (= (count (:successors block)) 1)
+             (satisfies? LabelOp (LinearScan''instructionForId-2 (:allocator this), (Interval''from-1 to)))
+             (= (nth (:successors block) 0) (LinearScan''blockForId-2 (:allocator this), (Interval''from-1 to)))
         )
+    )
 
-        (#_"boolean" LSEliminateSpillMovePhase'''canEliminateSpillMove-3 [#_"LSEliminateSpillMovePhase" this, #_"Block" block, #_"MoveOp" move]
-            (let [
-                #_"Interval" interval (LinearScan''intervalFor-2v (:allocator this), (MoveOp'''getResult-1 move))
-            ]
-                (and (not (instance? RegisterValue (:location interval))) (Interval''alwaysInMemory-1 interval))
+    (defn- #_"boolean" LSEliminateSpillMovePhase''canEliminateSpillMove-3 [#_"LSEliminateSpillMovePhase" this, #_"Block" block, #_"MoveOp" move]
+        (let [
+            #_"Interval" interval (LinearScan''intervalFor-2v (:allocator this), (MoveOp'''getResult-1 move))
+        ]
+            (and (not (instance? RegisterValue (:location interval))) (Interval''alwaysInMemory-1 interval)
+                ;; SSA Linear Scan might introduce moves to stack slots
+                (not (LSEliminateSpillMovePhase''isPhiResolutionMove-4 this, block, move, (LinearScan''intervalFor-2v (:allocator this), (MoveOp'''getResult-1 move))))
             )
         )
     )
@@ -40019,7 +39864,7 @@ ZeroExtendNode'new-4
     )
 
     ;; Called once before assignment of register numbers.
-    (defn #_"void" LSEliminateSpillMovePhase''eliminateSpillMoves-2 [#_"LSEliminateSpillMovePhase" this, #_"LIRGenerationResult" res]
+    (defn- #_"void" LSEliminateSpillMovePhase''eliminateSpillMoves-2 [#_"LSEliminateSpillMovePhase" this, #_"LIRGenerationResult" res]
         ;; Collect all intervals that must be stored after their definition. The list is sorted by Interval.spillDefinitionPos.
         (let [
             #_"LIRInsertionBuffer" buffer (LIRInsertionBuffer'new-0)
@@ -40030,7 +39875,7 @@ ZeroExtendNode'new-4
                     #_"[LIRInstruction]" ops (LIR''getLIRforBlock-2 (:lir (:allocator this)), block)
                     ;; Iterate all instructions of the block.
                     interval
-                        (loop-when [interval interval #_"int" i (LSEliminateSpillMovePhase'''firstInstructionOfInterest-1 this)] (< i (count ops)) => interval
+                        (loop-when [interval interval #_"int" i 0] (< i (count ops)) => interval
                             (let [
                                 #_"LIRInstruction" op (nth ops i)
                                 #_"int" opId (:id op)
@@ -40039,7 +39884,7 @@ ZeroExtendNode'new-4
                                         (do
                                             ;; Remove move from register to stack if the stack slot is guaranteed to be correct.
                                             ;; Only moves that have been inserted by LinearScan can be removed.
-                                            (when (and GraalOptions'lirOptLSRAEliminateSpillMoves (LSEliminateSpillMovePhase'''canEliminateSpillMove-3 this, block, op))
+                                            (when (and GraalOptions'lirOptLSRAEliminateSpillMoves (LSEliminateSpillMovePhase''canEliminateSpillMove-3 this, block, op))
                                                 ;; Move target is a stack slot that is always correct, so eliminate instruction.
                                                 ;; nil-instructions are deleted by assignRegNum
                                                 (§ ass! ops (assoc' ops i nil))
@@ -40088,35 +39933,6 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns SSALinearScanEliminateSpillMovePhase [LSEliminateSpillMovePhase, LSAllocationPhase]
-    (defn #_"SSALinearScanEliminateSpillMovePhase" SSALinearScanEliminateSpillMovePhase'new-1 [#_"LinearScan" allocator]
-        (merge (SSALinearScanEliminateSpillMovePhase'class.) (LSEliminateSpillMovePhase'new-1 allocator))
-    )
-
-    (defn- #_"boolean" SSALinearScanEliminateSpillMovePhase''isPhiResolutionMove-4 [#_"SSALinearScanEliminateSpillMovePhase" this, #_"Block" block, #_"MoveOp" move, #_"Interval" to]
-        (and (Interval''isSplitParent-1 to)
-             (zero? (& (Interval''from-1 to) 1))
-             (= (count (:successors block)) 1)
-             (satisfies? LabelOp (LinearScan''instructionForId-2 (:allocator this), (Interval''from-1 to)))
-             (= (nth (:successors block) 0) (LinearScan''blockForId-2 (:allocator this), (Interval''from-1 to)))
-        )
-    )
-
-    (defm SSALinearScanEliminateSpillMovePhase LSEliminateSpillMovePhase
-        (#_"int" LSEliminateSpillMovePhase'''firstInstructionOfInterest-1 [#_"SSALinearScanEliminateSpillMovePhase" this]
-            ;; also look at Labels as they define PHI values
-            0
-        )
-
-        (#_"boolean" LSEliminateSpillMovePhase'''canEliminateSpillMove-3 [#_"SSALinearScanEliminateSpillMovePhase" this, #_"Block" block, #_"MoveOp" move]
-            (and (LSEliminateSpillMovePhase'''canEliminateSpillMove-3 (§ super LSEliminateSpillMovePhase'iface), block, move)
-                ;; SSA Linear Scan might introduce moves to stack slots
-                (not (SSALinearScanEliminateSpillMovePhase''isPhiResolutionMove-4 this, block, move, (LinearScan''intervalFor-2v (:allocator this), (MoveOp'''getResult-1 move))))
-            )
-        )
-    )
-)
-
 (class-ns LSLifetimeAnalysisPhase [LSAllocationPhase]
     (defn #_"LSLifetimeAnalysisPhase" LSLifetimeAnalysisPhase'new-1 [#_"LinearScan" linearScan]
         (merge (LSLifetimeAnalysisPhase'class.) (LSAllocationPhase'new-0)
@@ -40130,21 +39946,21 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"boolean" LSLifetimeAnalysisPhase''isIntervalInLoop-3 [#_"LSLifetimeAnalysisPhase" this, #_"int" interval, #_"int" _loop]
+    (defn- #_"boolean" LSLifetimeAnalysisPhase''isIntervalInLoop-3 [#_"LSLifetimeAnalysisPhase" this, #_"int" interval, #_"int" _loop]
         (BitMap2D''at-3 (:intervalInLoop this), interval, _loop)
     )
 
     ;;;
      ; Numbers all instructions in all blocks. The numbering follows the linear scan order.
      ;;
-    (defn #_"this" LSLifetimeAnalysisPhase''numberInstructions-1 [#_"LSLifetimeAnalysisPhase" this]
+    (defn- #_"this" LSLifetimeAnalysisPhase''numberInstructions-1 [#_"LSLifetimeAnalysisPhase" this]
         (let [
-            this (update this :allocator LinearScan''initIntervals-1)
+            this (assoc-in this [:allocator :intervals] {})
             #_"ValueConsumer" f'setVariableConsumer
                 (reify ValueConsumer
                     (#_"void" ValueConsumer'''visitValue-5 [#_"ValueConsumer" _, #_"LIRInstruction" _op, #_"Value" value, #_"OperandMode" _mode, #_"{OperandFlag}" _flags]
                         (when (satisfies? Variable value)
-                            (LinearScan'''getOrCreateInterval-2 (:allocator this), value)
+                            (LinearScan''getOrCreateInterval-2 (:allocator this), value)
                         )
                         nil
                     )
@@ -40164,20 +39980,17 @@ ZeroExtendNode'new-4
                     #_"Block" block (first s)
                     this (update this :allocator LinearScan''initBlockData-2 block)
                     #_"[LIRInstruction]" ops (LIR''getLIRforBlock-2 (:lir (:allocator this)), block)
-                    [opId index]
-                        (loop-when [opId opId index index #_"int" i 0] (< i (count ops)) => [opId index]
+                    [this opId index]
+                        (loop-when [this this opId opId index index #_"int" i 0] (< i (count ops)) => [this opId index]
                             (let [
                                 #_"LIRInstruction" op (nth ops i)
+                                _ (§ ass! op (LIRInstruction''setId-2 op, opId))
+                                this (update this :allocator LinearScan''putOpIdMaps-4 index, op, block)
                             ]
-                                (§ ass! op (LIRInstruction''setId-2 op, opId))
-
-                                (LinearScan''putOpIdMaps-4 (:allocator this), index, op, block)
-
                                 (LIRInstruction''visitEachTemp-2 op, f'setVariableConsumer)
                                 (LIRInstruction''visitEachOutput-2 op, f'setVariableConsumer)
-
                                 ;; numbering of lirOps by two
-                                (recur (+ opId 2) (inc index) (inc i))
+                                (recur this (+ opId 2) (inc index) (inc i))
                             )
                         )
                 ]
@@ -40205,7 +40018,7 @@ ZeroExtendNode'new-4
     ;;;
      ; Computes local live sets (i.e. BlockData#liveGen and BlockData#liveKill) separately for each block.
      ;;
-    (defn #_"this" LSLifetimeAnalysisPhase''computeLocalLiveSets-1 [#_"LSLifetimeAnalysisPhase" this]
+    (defn- #_"this" LSLifetimeAnalysisPhase''computeLocalLiveSets-1 [#_"LSLifetimeAnalysisPhase" this]
         (let [
             this (assoc this :intervalInLoop (BitMap2D'new-2 (LinearScan''operandSize-1 (:allocator this)), (LinearScan''numLoops-1 (:allocator this))))
         ]
@@ -40277,7 +40090,7 @@ ZeroExtendNode'new-4
     ;;;
      ; Performs a backward dataflow analysis to compute global live sets (i.e. BlockData#liveIn and BlockData#liveOut) for each block.
      ;;
-    (defn #_"void" LSLifetimeAnalysisPhase''computeGlobalLiveSets-1 [#_"LSLifetimeAnalysisPhase" this]
+    (defn- #_"void" LSLifetimeAnalysisPhase''computeGlobalLiveSets-1 [#_"LSLifetimeAnalysisPhase" this]
         (let [
             #_"int" numBlocks (LinearScan''blockCount-1 (:allocator this))
             #_"BitSet" scratch (BitSet.) ;; scratch set for calculations
@@ -40348,7 +40161,7 @@ ZeroExtendNode'new-4
     (defn- #_"void" LSLifetimeAnalysisPhase''addUse-6 [#_"LSLifetimeAnalysisPhase" this, #_"AllocatableValue" operand, #_"int" from, #_"int" to, #_"RegisterPriority" registerPriority, #_"ValueKind" kind]
         (when (LinearScan''isProcessed-2 (:allocator this), operand)
             (let [
-                #_"Interval" interval (LinearScan'''getOrCreateInterval-2 (:allocator this), operand)
+                #_"Interval" interval (LinearScan''getOrCreateInterval-2 (:allocator this), operand)
             ]
                 (when-not (= kind LIRKind'Illegal)
                     (§ ass! interval (Interval''setKind-2 interval, kind))
@@ -40361,10 +40174,10 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn #_"void" LSLifetimeAnalysisPhase''addTemp-5 [#_"LSLifetimeAnalysisPhase" this, #_"AllocatableValue" operand, #_"int" tempPos, #_"RegisterPriority" registerPriority, #_"ValueKind" kind]
+    (defn- #_"void" LSLifetimeAnalysisPhase''addTemp-5 [#_"LSLifetimeAnalysisPhase" this, #_"AllocatableValue" operand, #_"int" tempPos, #_"RegisterPriority" registerPriority, #_"ValueKind" kind]
         (when (LinearScan''isProcessed-2 (:allocator this), operand)
             (let [
-                #_"Interval" interval (LinearScan'''getOrCreateInterval-2 (:allocator this), operand)
+                #_"Interval" interval (LinearScan''getOrCreateInterval-2 (:allocator this), operand)
             ]
                 (when-not (= kind LIRKind'Illegal)
                     (§ ass! interval (Interval''setKind-2 interval, kind))
@@ -40403,7 +40216,7 @@ ZeroExtendNode'new-4
     ;;;
      ; Eliminates moves from register to stack if the stack slot is known to be correct.
      ;;
-    (defn #_"void" LSLifetimeAnalysisPhase''changeSpillDefinitionPos-5 [#_"LSLifetimeAnalysisPhase" this, #_"LIRInstruction" op, #_"AllocatableValue" operand, #_"Interval" interval, #_"int" defPos]
+    (defn- #_"void" LSLifetimeAnalysisPhase''changeSpillDefinitionPos-5 [#_"LSLifetimeAnalysisPhase" this, #_"LIRInstruction" op, #_"AllocatableValue" operand, #_"Interval" interval, #_"int" defPos]
         (condp = (Interval''spillState-1 interval)
             :SpillState'NoDefinitionFound
                 (do
@@ -40425,14 +40238,13 @@ ZeroExtendNode'new-4
         (when (LinearScan''isProcessed-2 (:allocator this), operand)
             (let [
                 #_"int" defPos (:id op)
-                #_"Interval" interval (LinearScan'''getOrCreateInterval-2 (:allocator this), operand)
-            ]
-                (when-not (= kind LIRKind'Illegal)
-                    (§ ass! interval (Interval''setKind-2 interval, kind))
-                )
-                (let [
-                    #_"Range" r (:first interval)
-                ]
+                #_"Interval" interval (LinearScan''getOrCreateInterval-2 (:allocator this), operand)
+                _
+                    (when-not (= kind LIRKind'Illegal)
+                        (§ ass! interval (Interval''setKind-2 interval, kind))
+                    )
+                #_"Range" r (:first interval)
+                _
                     (if (<= (:from r) defPos)
                         (do
                             ;; Update the starting point (when a range is first created for a use, its start is the
@@ -40446,44 +40258,76 @@ ZeroExtendNode'new-4
                             (§ ass! interval (Interval''addUsePos-3 interval, defPos, registerPriority))
                         )
                     )
-
-                    (LSLifetimeAnalysisPhase''changeSpillDefinitionPos-5 this, op, operand, interval, defPos)
-                    (when (and (= registerPriority :RegisterPriority'None) (<= (SpillState''ordinal-1 (Interval''spillState-1 interval)) (SpillState''ordinal-1 :SpillState'StartInMemory)) (instance? StackSlot operand))
-                        ;; detection of method-parameters and roundfp-results
-                        (Interval''setSpillState-2 interval, :SpillState'StartInMemory)
-                    )
-                    (§ ass! interval (Interval''addMaterializationValue-2 interval, (LSLifetimeAnalysisPhase'getMaterializedValue-3 op, operand, interval)))
+            ]
+                (LSLifetimeAnalysisPhase''changeSpillDefinitionPos-5 this, op, operand, interval, defPos)
+                (when (and (= registerPriority :RegisterPriority'None) (<= (SpillState''ordinal-1 (Interval''spillState-1 interval)) (SpillState''ordinal-1 :SpillState'StartInMemory)) (instance? StackSlot operand))
+                    ;; detection of method-parameters and roundfp-results
+                    (Interval''setSpillState-2 interval, :SpillState'StartInMemory)
                 )
+                (§ ass! interval (Interval''addMaterializationValue-2 interval, (LSLifetimeAnalysisPhase'getMaterializedValue-3 op, operand, interval)))
             )
         )
         nil
     )
 
-    (defm LSLifetimeAnalysisPhase LSLifetimeAnalysisPhase
-        (#_"void" LSLifetimeAnalysisPhase'''addRegisterHint-6 [#_"LSLifetimeAnalysisPhase" this, #_"LIRInstruction" op, #_"Value" targetValue, #_"OperandMode" mode, #_"{OperandFlag}" flags, #_"boolean" hintAtDef]
-            (when (and (contains? flags :OperandFlag'HINT) (LinearScan'isVariableOrRegister-1 targetValue))
-                (LIRInstruction''forEachRegisterHint-4 op, targetValue, mode,
-                    (reify ValueProcedure
-                        (#_"Value" ValueProcedure'''doValue-5 [#_"ValueProcedure" _, #_"LIRInstruction" _op, #_"Value" registerHint, #_"OperandMode" _mode, #_"{OperandFlag}" _flags]
-                            (when (LinearScan'isVariableOrRegister-1 registerHint)
-                                (let [
-                                    #_"Interval" from (LinearScan'''getOrCreateInterval-2 (:allocator this), registerHint)
-                                    #_"Interval" to (LinearScan'''getOrCreateInterval-2 (:allocator this), targetValue)
-                                ]
-                                    ;; hints always point from def to use
+    (defn- #_"void" LSLifetimeAnalysisPhase'setHint-3 [#_"LIRInstruction" op, #_"Interval" target, #_"Interval" source]
+        (let [
+            #_"Interval" hint (Interval''locationHint-2 target, false)
+        ]
+            (when (or (nil? hint) (< (Interval''from-1 target) (Interval''from-1 hint)))
+                ;; Update hint if there was none or if the hint interval starts after the hinted interval.
+                (§ ass! target (Interval''setLocationHint-2 target, source))
+            )
+        )
+        nil
+    )
+
+    (defn- #_"void" LSLifetimeAnalysisPhase''addRegisterHint-6 [#_"LSLifetimeAnalysisPhase" this, #_"LIRInstruction" op, #_"Value" targetValue, #_"OperandMode" mode, #_"{OperandFlag}" flags, #_"boolean" hintAtDef]
+        (when (and (contains? flags :OperandFlag'HINT) (LinearScan'isVariableOrRegister-1 targetValue))
+            (LIRInstruction''forEachRegisterHint-4 op, targetValue, mode,
+                (reify ValueProcedure
+                    (#_"Value" ValueProcedure'''doValue-5 [#_"ValueProcedure" _, #_"LIRInstruction" _op, #_"Value" registerHint, #_"OperandMode" _mode, #_"{OperandFlag}" _flags]
+                        (when (LinearScan'isVariableOrRegister-1 registerHint)
+                            (let [
+                                #_"Interval" from (LinearScan''getOrCreateInterval-2 (:allocator this), registerHint)
+                                #_"Interval" to (LinearScan''getOrCreateInterval-2 (:allocator this), targetValue)
+                                ;; hints always point from def to use
+                                _
                                     (if hintAtDef
                                         (§ ass! to (Interval''setLocationHint-2 to, from))
                                         (§ ass! from (Interval''setLocationHint-2 from, to))
                                     )
-                                    registerHint
-                                )
+                            ]
+                                registerHint
                             )
                         )
                     )
                 )
             )
-            nil
         )
+
+        (when (and hintAtDef (satisfies? LabelOp op))
+            (let [
+                #_"Interval" to (LinearScan''getOrCreateInterval-2 (:allocator this), targetValue)
+            ]
+                (SSAUtil'forEachPhiRegisterHint-6 (:lir (:allocator this)), (LinearScan''blockForId-2 (:allocator this), (:id op)), op, targetValue, mode,
+                    (reify ValueConsumer
+                        (#_"void" ValueConsumer'''visitValue-5 [#_"ValueConsumer" _, #_"LIRInstruction" _op, #_"Value" registerHint, #_"OperandMode" _mode, #_"{OperandFlag}" _flags]
+                            (when (LinearScan'isVariableOrRegister-1 registerHint)
+                                (let [
+                                    #_"Interval" from (LinearScan''getOrCreateInterval-2 (:allocator this), registerHint)
+                                ]
+                                    (LSLifetimeAnalysisPhase'setHint-3 op, to, from)
+                                    (LSLifetimeAnalysisPhase'setHint-3 op, from, to)
+                                )
+                            )
+                            nil
+                        )
+                    )
+                )
+            )
+        )
+        nil
     )
 
     (defn- #_"boolean" LSLifetimeAnalysisPhase'optimizeMethodArgument-1 [#_"Value" value]
@@ -40492,8 +40336,22 @@ ZeroExtendNode'new-4
         (and (instance? StackSlot value) (#_"StackSlot" .isInCallerFrame value) (LIRKind'isValue-1v value))
     )
 
-    (defm LSLifetimeAnalysisPhase LSLifetimeAnalysisPhase
-        (#_"RegisterPriority" LSLifetimeAnalysisPhase'''registerPriorityOfOutputOperand-2 [#_"LSLifetimeAnalysisPhase" this, #_"LIRInstruction" op]
+    ;;;
+     ; Determines the priority which with an instruction's input operand will be allocated a register.
+     ;;
+    (defn- #_"RegisterPriority" LSLifetimeAnalysisPhase'registerPriorityOfInputOperand-1 [#_"{OperandFlag}" flags]
+        (if (contains? flags :OperandFlag'STACK)
+            :RegisterPriority'ShouldHaveRegister
+            ;; all other operands require a register
+            :RegisterPriority'MustHaveRegister
+        )
+    )
+
+    ;;;
+     ; Determines the register priority for an instruction's output/result operand.
+     ;;
+    (defn- #_"RegisterPriority" LSLifetimeAnalysisPhase''registerPriorityOfOutputOperand-2 [#_"LSLifetimeAnalysisPhase" this, #_"LIRInstruction" op]
+        (when-not (and (satisfies? LabelOp op) (LabelOp''isPhiIn-1 op)) => :RegisterPriority'None
             (if (and (satisfies? ValueMoveOp op) (LSLifetimeAnalysisPhase'optimizeMethodArgument-1 (ValueMoveOp'''getInput-1 op)))
                 :RegisterPriority'None
                 ;; all other operands require a register
@@ -40503,21 +40361,10 @@ ZeroExtendNode'new-4
     )
 
     ;;;
-     ; Determines the priority which with an instruction's input operand will be allocated a register.
-     ;;
-    (defn #_"RegisterPriority" LSLifetimeAnalysisPhase'registerPriorityOfInputOperand-1 [#_"{OperandFlag}" flags]
-        (if (contains? flags :OperandFlag'STACK)
-            :RegisterPriority'ShouldHaveRegister
-            ;; all other operands require a register
-            :RegisterPriority'MustHaveRegister
-        )
-    )
-
-    ;;;
      ; Optimizes moves related to incoming stack based arguments. The interval for the destination
      ; of such moves is assigned the stack slot (which is in the caller's frame) as its spill slot.
      ;;
-    (defn #_"void" LSLifetimeAnalysisPhase''handleMethodArguments-2 [#_"LSLifetimeAnalysisPhase" this, #_"LIRInstruction" op]
+    (defn- #_"void" LSLifetimeAnalysisPhase''handleMethodArguments-2 [#_"LSLifetimeAnalysisPhase" this, #_"LIRInstruction" op]
         (when (and (satisfies? ValueMoveOp op) (LSLifetimeAnalysisPhase'optimizeMethodArgument-1 (ValueMoveOp'''getInput-1 op)))
             (let [
                 #_"StackSlot" slot (ValueMoveOp'''getInput-1 op)
@@ -40530,128 +40377,126 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defm LSLifetimeAnalysisPhase LSLifetimeAnalysisPhase
-        (#_"void" LSLifetimeAnalysisPhase'''buildIntervals-1 [#_"LSLifetimeAnalysisPhase" this]
-            (let [
-                #_"ValueConsumer" f'outputConsumer
-                    (reify ValueConsumer
-                        (#_"void" ValueConsumer'''visitValue-5 [#_"ValueConsumer" _, #_"LIRInstruction" op, #_"Value" operand, #_"OperandMode" mode, #_"{OperandFlag}" flags]
-                            (when (LinearScan'isVariableOrRegister-1 operand)
-                                (LSLifetimeAnalysisPhase''addDef-5 this, operand, op, (LSLifetimeAnalysisPhase'''registerPriorityOfOutputOperand-2 this, op), (#_"Value" .getValueKind operand))
-                                (LSLifetimeAnalysisPhase'''addRegisterHint-6 this, op, operand, mode, flags, true)
-                            )
-                            nil
+    (defn- #_"void" LSLifetimeAnalysisPhase''buildIntervals-1 [#_"LSLifetimeAnalysisPhase" this]
+        (let [
+            #_"ValueConsumer" f'outputConsumer
+                (reify ValueConsumer
+                    (#_"void" ValueConsumer'''visitValue-5 [#_"ValueConsumer" _, #_"LIRInstruction" op, #_"Value" operand, #_"OperandMode" mode, #_"{OperandFlag}" flags]
+                        (when (LinearScan'isVariableOrRegister-1 operand)
+                            (LSLifetimeAnalysisPhase''addDef-5 this, operand, op, (LSLifetimeAnalysisPhase''registerPriorityOfOutputOperand-2 this, op), (#_"Value" .getValueKind operand))
+                            (LSLifetimeAnalysisPhase''addRegisterHint-6 this, op, operand, mode, flags, true)
                         )
-                    )
-                #_"ValueConsumer" f'tempConsumer
-                    (reify ValueConsumer
-                        (#_"void" ValueConsumer'''visitValue-5 [#_"ValueConsumer" _, #_"LIRInstruction" op, #_"Value" operand, #_"OperandMode" mode, #_"{OperandFlag}" flags]
-                            (when (LinearScan'isVariableOrRegister-1 operand)
-                                (LSLifetimeAnalysisPhase''addTemp-5 this, operand, (:id op), :RegisterPriority'MustHaveRegister, (#_"Value" .getValueKind operand))
-                                (LSLifetimeAnalysisPhase'''addRegisterHint-6 this, op, operand, mode, flags, false)
-                            )
-                            nil
-                        )
-                    )
-                #_"ValueConsumer" f'aliveConsumer
-                    (reify ValueConsumer
-                        (#_"void" ValueConsumer'''visitValue-5 [#_"ValueConsumer" _, #_"LIRInstruction" op, #_"Value" operand, #_"OperandMode" mode, #_"{OperandFlag}" flags]
-                            (when (LinearScan'isVariableOrRegister-1 operand)
-                                (let [
-                                    #_"RegisterPriority" p (LSLifetimeAnalysisPhase'registerPriorityOfInputOperand-1 flags)
-                                    #_"int" opId (:id op)
-                                    #_"int" blockFrom (LinearScan''getFirstLirInstructionId-2 (:allocator this), (LinearScan''blockForId-2 (:allocator this), opId))
-                                ]
-                                    (LSLifetimeAnalysisPhase''addUse-6 this, operand, blockFrom, (inc opId), p, (#_"Value" .getValueKind operand))
-                                    (LSLifetimeAnalysisPhase'''addRegisterHint-6 this, op, operand, mode, flags, false)
-                                )
-                            )
-                            nil
-                        )
-                    )
-                #_"ValueConsumer" f'inputConsumer
-                    (reify ValueConsumer
-                        (#_"void" ValueConsumer'''visitValue-5 [#_"ValueConsumer" _, #_"LIRInstruction" op, #_"Value" operand, #_"OperandMode" mode, #_"{OperandFlag}" flags]
-                            (when (LinearScan'isVariableOrRegister-1 operand)
-                                (let [
-                                    #_"int" opId (:id op)
-                                    #_"int" blockFrom (LinearScan''getFirstLirInstructionId-2 (:allocator this), (LinearScan''blockForId-2 (:allocator this), opId))
-                                    #_"RegisterPriority" p (LSLifetimeAnalysisPhase'registerPriorityOfInputOperand-1 flags)
-                                ]
-                                    (LSLifetimeAnalysisPhase''addUse-6 this, operand, blockFrom, opId, p, (#_"Value" .getValueKind operand))
-                                    (LSLifetimeAnalysisPhase'''addRegisterHint-6 this, op, operand, mode, flags, false)
-                                )
-                            )
-                            nil
-                        )
-                    )
-                ;; create a list with all caller-save registers
-                #_"RegisterArray" callerSaveRegs (#_"RegisterConfig" .getCallerSaveRegisters HotSpot'registerConfig)
-            ]
-                ;; iterate all blocks in reverse order
-                (loop-when-recur [#_"int" i (dec (LinearScan''blockCount-1 (:allocator this)))] (<= 0 i) [(dec i)]
-                    (let [
-                        #_"Block" block (LinearScan''blockAt-2 (:allocator this), i)
-                        #_"[LIRInstruction]" ops (LIR''getLIRforBlock-2 (:lir (:allocator this)), block)
-                        #_"int" blockFrom (LinearScan''getFirstLirInstructionId-2 (:allocator this), block)
-                        #_"int" blockTo (LinearScan''getLastLirInstructionId-2 (:allocator this), block)
-                        ;; update intervals for operands live at the end of this block
-                        #_"BitSet" live (:liveOut (LinearScan''getBlockData-2 (:allocator this), block))
-                    ]
-                        (loop-when-recur [#_"int" operandNum (#_"BitSet" .nextSetBit live, 0)] (<= 0 operandNum) [(#_"BitSet" .nextSetBit live, (inc operandNum))]
-                            (let [
-                                #_"AllocatableValue" operand (:operand (LinearScan''intervalFor-2i (:allocator this), operandNum))
-                            ]
-                                (LSLifetimeAnalysisPhase''addUse-6 this, operand, blockFrom, (+ blockTo 2), :RegisterPriority'None, LIRKind'Illegal)
-
-                                ;; Add special use positions for loop-end blocks when the interval is used anywhere inside this loop.
-                                ;; It's possible that the block was part of a non-natural loop, so it might have an invalid loop index.
-                                (when (and (Block''isLoopEnd-1 block) (some? (:loop block)) (LSLifetimeAnalysisPhase''isIntervalInLoop-3 this, operandNum, (:index (:loop block))))
-                                    (let [
-                                        #_"Interval" interval (LinearScan''intervalFor-2i (:allocator this), operandNum)
-                                    ]
-                                        (§ ass! interval (Interval''addUsePos-3 interval, (inc blockTo), :RegisterPriority'LiveAtLoopEnd))
-                                    )
-                                )
-                            )
-                        )
-
-                        ;; Iterate all instructions of the block in reverse order. Definitions of intervals are processed before uses.
-                        (loop-when-recur [#_"int" j (dec (count ops))] (<= 0 j) [(dec j)]
-                            (let [
-                                #_"LIRInstruction" op (nth ops j)
-                                #_"int" opId (:id op)
-                            ]
-                                ;; Add a temp range for each register if operation destroys caller-save registers.
-                                (when (LIRInstruction'''destroysCallerSavedRegisters-1 op)
-                                    (doseq [#_"Register" r callerSaveRegs]
-                                        (when (#_"RegisterAttributes" .isAllocatable (LinearScan''attributes-2 (:allocator this), r))
-                                            (LSLifetimeAnalysisPhase''addTemp-5 this, (#_"Register" .asValue r), opId, :RegisterPriority'None, LIRKind'Illegal)
-                                        )
-                                    )
-                                )
-
-                                (LIRInstruction''visitEachOutput-2 op, f'outputConsumer)
-                                (LIRInstruction''visitEachTemp-2 op, f'tempConsumer)
-                                (LIRInstruction''visitEachAlive-2 op, f'aliveConsumer)
-                                (LIRInstruction''visitEachInput-2 op, f'inputConsumer)
-
-                                ;; special steps for some instructions (especially moves)
-                                (LSLifetimeAnalysisPhase''handleMethodArguments-2 this, op)
-                            )
-                        )
+                        nil
                     )
                 )
+            #_"ValueConsumer" f'tempConsumer
+                (reify ValueConsumer
+                    (#_"void" ValueConsumer'''visitValue-5 [#_"ValueConsumer" _, #_"LIRInstruction" op, #_"Value" operand, #_"OperandMode" mode, #_"{OperandFlag}" flags]
+                        (when (LinearScan'isVariableOrRegister-1 operand)
+                            (LSLifetimeAnalysisPhase''addTemp-5 this, operand, (:id op), :RegisterPriority'MustHaveRegister, (#_"Value" .getValueKind operand))
+                            (LSLifetimeAnalysisPhase''addRegisterHint-6 this, op, operand, mode, flags, false)
+                        )
+                        nil
+                    )
+                )
+            #_"ValueConsumer" f'aliveConsumer
+                (reify ValueConsumer
+                    (#_"void" ValueConsumer'''visitValue-5 [#_"ValueConsumer" _, #_"LIRInstruction" op, #_"Value" operand, #_"OperandMode" mode, #_"{OperandFlag}" flags]
+                        (when (LinearScan'isVariableOrRegister-1 operand)
+                            (let [
+                                #_"RegisterPriority" p (LSLifetimeAnalysisPhase'registerPriorityOfInputOperand-1 flags)
+                                #_"int" opId (:id op)
+                                #_"int" blockFrom (LinearScan''getFirstLirInstructionId-2 (:allocator this), (LinearScan''blockForId-2 (:allocator this), opId))
+                            ]
+                                (LSLifetimeAnalysisPhase''addUse-6 this, operand, blockFrom, (inc opId), p, (#_"Value" .getValueKind operand))
+                                (LSLifetimeAnalysisPhase''addRegisterHint-6 this, op, operand, mode, flags, false)
+                            )
+                        )
+                        nil
+                    )
+                )
+            #_"ValueConsumer" f'inputConsumer
+                (reify ValueConsumer
+                    (#_"void" ValueConsumer'''visitValue-5 [#_"ValueConsumer" _, #_"LIRInstruction" op, #_"Value" operand, #_"OperandMode" mode, #_"{OperandFlag}" flags]
+                        (when (LinearScan'isVariableOrRegister-1 operand)
+                            (let [
+                                #_"int" opId (:id op)
+                                #_"int" blockFrom (LinearScan''getFirstLirInstructionId-2 (:allocator this), (LinearScan''blockForId-2 (:allocator this), opId))
+                                #_"RegisterPriority" p (LSLifetimeAnalysisPhase'registerPriorityOfInputOperand-1 flags)
+                            ]
+                                (LSLifetimeAnalysisPhase''addUse-6 this, operand, blockFrom, opId, p, (#_"Value" .getValueKind operand))
+                                (LSLifetimeAnalysisPhase''addRegisterHint-6 this, op, operand, mode, flags, false)
+                            )
+                        )
+                        nil
+                    )
+                )
+            ;; create a list with all caller-save registers
+            #_"RegisterArray" callerSaveRegs (#_"RegisterConfig" .getCallerSaveRegisters HotSpot'registerConfig)
+        ]
+            ;; iterate all blocks in reverse order
+            (loop-when-recur [#_"int" i (dec (LinearScan''blockCount-1 (:allocator this)))] (<= 0 i) [(dec i)]
+                (let [
+                    #_"Block" block (LinearScan''blockAt-2 (:allocator this), i)
+                    #_"[LIRInstruction]" ops (LIR''getLIRforBlock-2 (:lir (:allocator this)), block)
+                    #_"int" blockFrom (LinearScan''getFirstLirInstructionId-2 (:allocator this), block)
+                    #_"int" blockTo (LinearScan''getLastLirInstructionId-2 (:allocator this), block)
+                    ;; update intervals for operands live at the end of this block
+                    #_"BitSet" live (:liveOut (LinearScan''getBlockData-2 (:allocator this), block))
+                ]
+                    (loop-when-recur [#_"int" operandNum (#_"BitSet" .nextSetBit live, 0)] (<= 0 operandNum) [(#_"BitSet" .nextSetBit live, (inc operandNum))]
+                        (let [
+                            #_"AllocatableValue" operand (:operand (LinearScan''intervalFor-2i (:allocator this), operandNum))
+                        ]
+                            (LSLifetimeAnalysisPhase''addUse-6 this, operand, blockFrom, (+ blockTo 2), :RegisterPriority'None, LIRKind'Illegal)
 
-                ;; Add the range [0, 1] to all fixed intervals. The register allocator need not handle unhandled fixed intervals.
-                (doseq [#_"Interval" interval (:intervals (:allocator this))]
-                    (when (and (some? interval) (instance? RegisterValue (:operand interval)))
-                        (§ ass! interval (Interval''addRange-3 interval, 0, 1))
+                            ;; Add special use positions for loop-end blocks when the interval is used anywhere inside this loop.
+                            ;; It's possible that the block was part of a non-natural loop, so it might have an invalid loop index.
+                            (when (and (Block''isLoopEnd-1 block) (some? (:loop block)) (LSLifetimeAnalysisPhase''isIntervalInLoop-3 this, operandNum, (:index (:loop block))))
+                                (let [
+                                    #_"Interval" interval (LinearScan''intervalFor-2i (:allocator this), operandNum)
+                                ]
+                                    (§ ass! interval (Interval''addUsePos-3 interval, (inc blockTo), :RegisterPriority'LiveAtLoopEnd))
+                                )
+                            )
+                        )
+                    )
+
+                    ;; Iterate all instructions of the block in reverse order. Definitions of intervals are processed before uses.
+                    (loop-when-recur [#_"int" j (dec (count ops))] (<= 0 j) [(dec j)]
+                        (let [
+                            #_"LIRInstruction" op (nth ops j)
+                            #_"int" opId (:id op)
+                        ]
+                            ;; Add a temp range for each register if operation destroys caller-save registers.
+                            (when (LIRInstruction'''destroysCallerSavedRegisters-1 op)
+                                (doseq [#_"Register" r callerSaveRegs]
+                                    (when (#_"RegisterAttributes" .isAllocatable (LinearScan''attributes-2 (:allocator this), r))
+                                        (LSLifetimeAnalysisPhase''addTemp-5 this, (#_"Register" .asValue r), opId, :RegisterPriority'None, LIRKind'Illegal)
+                                    )
+                                )
+                            )
+
+                            (LIRInstruction''visitEachOutput-2 op, f'outputConsumer)
+                            (LIRInstruction''visitEachTemp-2 op, f'tempConsumer)
+                            (LIRInstruction''visitEachAlive-2 op, f'aliveConsumer)
+                            (LIRInstruction''visitEachInput-2 op, f'inputConsumer)
+
+                            ;; special steps for some instructions (especially moves)
+                            (LSLifetimeAnalysisPhase''handleMethodArguments-2 this, op)
+                        )
                     )
                 )
             )
-            nil
+
+            ;; Add the range [0, 1] to all fixed intervals. The register allocator need not handle unhandled fixed intervals.
+            (doseq [#_"Interval" interval (vals (:intervals (:allocator this)))]
+                (when (instance? RegisterValue (:operand interval))
+                    (§ ass! interval (Interval''addRange-3 interval, 0, 1))
+                )
+            )
         )
+        nil
     )
 
     (defm LSLifetimeAnalysisPhase LSAllocationPhase
@@ -40659,63 +40504,8 @@ ZeroExtendNode'new-4
             (§ ass! this (LSLifetimeAnalysisPhase''numberInstructions-1 this))
             (§ ass! this (LSLifetimeAnalysisPhase''computeLocalLiveSets-1 this))
             (LSLifetimeAnalysisPhase''computeGlobalLiveSets-1 this)
-            (LSLifetimeAnalysisPhase'''buildIntervals-1 this)
+            (LSLifetimeAnalysisPhase''buildIntervals-1 this)
             nil
-        )
-    )
-)
-
-(class-ns SSALinearScanLifetimeAnalysisPhase [LSLifetimeAnalysisPhase, LSAllocationPhase]
-    (defn #_"SSALinearScanLifetimeAnalysisPhase" SSALinearScanLifetimeAnalysisPhase'new-1 [#_"LinearScan" linearScan]
-        (merge (SSALinearScanLifetimeAnalysisPhase'class.) (LSLifetimeAnalysisPhase'new-1 linearScan))
-    )
-
-    (defm SSALinearScanLifetimeAnalysisPhase LSLifetimeAnalysisPhase
-        (#_"void" LSLifetimeAnalysisPhase'''addRegisterHint-6 [#_"SSALinearScanLifetimeAnalysisPhase" this, #_"LIRInstruction" op, #_"Value" targetValue, #_"OperandMode" mode, #_"{OperandFlag}" flags, #_"boolean" hintAtDef]
-            (LSLifetimeAnalysisPhase'''addRegisterHint-6 (§ super LSLifetimeAnalysisPhase'iface), op, targetValue, mode, flags, hintAtDef)
-
-            (when (and hintAtDef (satisfies? LabelOp op))
-                (let [
-                    #_"Interval" to (LinearScan'''getOrCreateInterval-2 (:allocator this), targetValue)
-                ]
-                    (SSAUtil'forEachPhiRegisterHint-6 (:lir (:allocator this)), (LinearScan''blockForId-2 (:allocator this), (:id op)), op, targetValue, mode,
-                        (reify ValueConsumer
-                            (#_"void" ValueConsumer'''visitValue-5 [#_"ValueConsumer" _, #_"LIRInstruction" _op, #_"Value" registerHint, #_"OperandMode" _mode, #_"{OperandFlag}" _flags]
-                                (when (LinearScan'isVariableOrRegister-1 registerHint)
-                                    (let [
-                                        #_"Interval" from (LinearScan'''getOrCreateInterval-2 (:allocator this), registerHint)
-                                    ]
-                                        (SSALinearScanLifetimeAnalysisPhase'setHint-3 op, to, from)
-                                        (SSALinearScanLifetimeAnalysisPhase'setHint-3 op, from, to)
-                                    )
-                                )
-                                nil
-                            )
-                        )
-                    )
-                )
-            )
-            nil
-        )
-    )
-
-    (defn #_"void" SSALinearScanLifetimeAnalysisPhase'setHint-3 [#_"LIRInstruction" op, #_"Interval" target, #_"Interval" source]
-        (let [
-            #_"Interval" hint (Interval''locationHint-2 target, false)
-        ]
-            (when (or (nil? hint) (< (Interval''from-1 target) (Interval''from-1 hint)))
-                ;; Update hint if there was none or if the hint interval starts after the hinted interval.
-                (§ ass! target (Interval''setLocationHint-2 target, source))
-            )
-        )
-        nil
-    )
-
-    (defm SSALinearScanLifetimeAnalysisPhase LSLifetimeAnalysisPhase
-        (#_"RegisterPriority" LSLifetimeAnalysisPhase'''registerPriorityOfOutputOperand-2 [#_"SSALinearScanLifetimeAnalysisPhase" this, #_"LIRInstruction" op]
-            (when-not (and (satisfies? LabelOp op) (LabelOp''isPhiIn-1 op)) => :RegisterPriority'None
-                (LSLifetimeAnalysisPhase'''registerPriorityOfOutputOperand-2 (§ super LSLifetimeAnalysisPhase'iface), op)
-            )
         )
     )
 )
@@ -40749,8 +40539,8 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"void" LSOptimizeSpillPositionPhase''optimizeInterval-4 [#_"LSOptimizeSpillPositionPhase" this, #_"[LIRInsertionBuffer]" insertionBuffers, #_"Interval" interval, #_"LIRGenerationResult" res]
-        (when (and (some? interval) (Interval''isSplitParent-1 interval) (= (Interval''spillState-1 interval) :SpillState'SpillInDominator))
+    (defn- #_"[LIRInsertionBuffer]" LSOptimizeSpillPositionPhase''optimizeInterval-4 [#_"LSOptimizeSpillPositionPhase" this, #_"[LIRInsertionBuffer]" buffers, #_"Interval" interval, #_"LIRGenerationResult" res]
+        (when (and (some? interval) (Interval''isSplitParent-1 interval) (= (Interval''spillState-1 interval) :SpillState'SpillInDominator)) => buffers
             (let [
                 #_"Block" defBlock (LinearScan''blockForId-2 (:allocator this), (Interval''spillDefinitionPos-1 interval))
                 [#_"Block" spillBlock #_"Interval" firstSpillChild]
@@ -40786,7 +40576,7 @@ ZeroExtendNode'new-4
                         )
                     )
             ]
-                (when (some? spillBlock) => (Interval''setSpillState-2 interval, :SpillState'StoreAtDefinition) ;; no spill interval
+                (when (some? spillBlock) => (do (Interval''setSpillState-2 interval, :SpillState'StoreAtDefinition) buffers) ;; no spill interval
                     ;; move out of loops
                     (let [
                         spillBlock
@@ -40805,17 +40595,17 @@ ZeroExtendNode'new-4
                     ]
                         (cond
                             (= defBlock spillBlock)                                ;; definition is the best choice
-                                (Interval''setSpillState-2 interval, :SpillState'StoreAtDefinition)
+                                (do (Interval''setSpillState-2 interval, :SpillState'StoreAtDefinition) buffers)
                             (<= (:probability defBlock) (:probability spillBlock)) ;; better spill block has the same probability -> do nothing
-                                (Interval''setSpillState-2 interval, :SpillState'StoreAtDefinition)
+                                (do (Interval''setSpillState-2 interval, :SpillState'StoreAtDefinition) buffers)
                             :else
                                 (let [
                                     #_"LIRInsertionBuffer" buffer
-                                        (or (nth insertionBuffers (:id spillBlock))
+                                        (or (nth buffers (:id spillBlock))
                                             (let [
                                                 buffer (LIRInsertionBuffer'new-0)
+                                                _ (§ ass! buffers (assoc' buffers (:id spillBlock) buffer))
                                             ]
-                                                (§ ass! insertionBuffers (assoc' insertionBuffers (:id spillBlock) buffer))
                                                 (LIRInsertionBuffer''init-2 buffer, (LIR''getLIRforBlock-2 (:lir (:allocator this)), spillBlock))
                                             )
                                         )
@@ -40823,29 +40613,26 @@ ZeroExtendNode'new-4
                                     #_"AllocatableValue" from (:location (Interval''getSplitChildAtOpId-4 interval, spillOpId, :OperandMode'DEF, (:allocator this)))
                                     #_"AllocatableValue" to (LinearScan'canonicalSpillOpr-1 interval)
                                     #_"LIRInstruction" move (MoveFactory'createMove-2 to, from)
-                                ]
-                                    (§ ass! move (LIRInstruction''setId-2 move, LinearScan'DOMINATOR_SPILL_MOVE_ID))
+                                    _ (§ ass! move (LIRInstruction''setId-2 move, LinearScan'DOMINATOR_SPILL_MOVE_ID))
                                     ;; We can use the insertion buffer directly because we always insert at position 1.
-                                    (§ ass! buffer (LIRInsertionBuffer''append-3 buffer, 1, move))
-
+                                    _ (§ ass! buffer (LIRInsertionBuffer''append-3 buffer, 1, move))
+                                ]
                                     (Interval''setSpillDefinitionPos-2 interval, spillOpId)
+                                    buffers
                                 )
                         )
                     )
                 )
             )
         )
-        nil
     )
 
     (defm LSOptimizeSpillPositionPhase LSAllocationPhase
         (#_"void" LSAllocationPhase'''run-2 [#_"LSOptimizeSpillPositionPhase" this, #_"LIRGenerationResult" res]
             (let [
-                #_"[LIRInsertionBuffer]" buffers (make-array LIRInsertionBuffer'iface (count (:linearScanOrder (:lir (:allocator this)))))
+                #_"[LIRInsertionBuffer]" buffers (vec (repeat (count (:linearScanOrder (:lir (:allocator this)))) nil))
+                buffers (reduce #(LSOptimizeSpillPositionPhase''optimizeInterval-4 this, %1, %2, res) buffers (vals (:intervals (:allocator this))))
             ]
-                (doseq [#_"Interval" interval (:intervals (:allocator this))]
-                    (LSOptimizeSpillPositionPhase''optimizeInterval-4 this, buffers, interval, res)
-                )
                 (doseq [#_"LIRInsertionBuffer" buffer buffers]
                     (when (some? buffer)
                         (§ ass! buffer (LIRInsertionBuffer''finish-1 buffer))
@@ -40885,6 +40672,11 @@ ZeroExtendNode'new-4
     )
 )
 
+;;;
+ ; Phase 6: resolve data flow
+ ;
+ ; Insert moves at edges between blocks if intervals have been split.
+ ;;
 (class-ns LSResolveDataFlowPhase [LSAllocationPhase]
     (defn #_"LSResolveDataFlowPhase" LSResolveDataFlowPhase'new-1 [#_"LinearScan" allocator]
         (merge (LSResolveDataFlowPhase'class.) (LSAllocationPhase'new-0)
@@ -40894,15 +40686,14 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defm LSResolveDataFlowPhase LSResolveDataFlowPhase
-        (#_"void" LSResolveDataFlowPhase'''resolveCollectMappings-5 [#_"LSResolveDataFlowPhase" this, #_"Block" fromBlock, #_"Block" toBlock, #_"Block" midBlock, #_"MoveResolver" moveResolver]
-            (let [
-                #_"int" toBlockFirstInstructionId (LinearScan''getFirstLirInstructionId-2 (:allocator this), toBlock)
-                #_"int" fromBlockLastInstructionId (inc (LinearScan''getLastLirInstructionId-2 (:allocator this), fromBlock))
-                #_"int" numOperands (LinearScan''operandSize-1 (:allocator this))
-                #_"BitSet" liveAtEdge (:liveIn (LinearScan''getBlockData-2 (:allocator this), toBlock))
-            ]
-                ;; visit all variables for which the liveAtEdge bit is set
+    (defn- #_"void" LSResolveDataFlowPhase''resolveCollectMappings-5 [#_"LSResolveDataFlowPhase" this, #_"Block" fromBlock, #_"Block" toBlock, #_"Block" midBlock, #_"MoveResolver" moveResolver]
+        (let [
+            #_"int" toBlockFirstInstructionId (LinearScan''getFirstLirInstructionId-2 (:allocator this), toBlock)
+            #_"int" fromBlockLastInstructionId (inc (LinearScan''getLastLirInstructionId-2 (:allocator this), fromBlock))
+            #_"int" numOperands (LinearScan''operandSize-1 (:allocator this))
+            #_"BitSet" liveAtEdge (:liveIn (LinearScan''getBlockData-2 (:allocator this), toBlock))
+            ;; visit all variables for which the liveAtEdge bit is set
+            _
                 (loop-when-recur [#_"int" operandNum (#_"BitSet" .nextSetBit liveAtEdge, 0)] (<= 0 operandNum) [(#_"BitSet" .nextSetBit liveAtEdge, (inc operandNum))]
                     (let [
                         #_"Interval" fromInterval (LinearScan''splitChildAtOpId-4 (:allocator this), (LinearScan''intervalFor-2i (:allocator this), operandNum), fromBlockLastInstructionId, :OperandMode'DEF)
@@ -40914,117 +40705,7 @@ ZeroExtendNode'new-4
                         )
                     )
                 )
-            )
-            nil
-        )
-    )
-
-    (defn #_"void" LSResolveDataFlowPhase''resolveFindInsertPos-4 [#_"LSResolveDataFlowPhase" this, #_"Block" fromBlock, #_"Block" toBlock, #_"MoveResolver" moveResolver]
-        (if (<= (count (:successors fromBlock)) 1)
-            (let [
-                #_"[LIRInstruction]" ops (LIR''getLIRforBlock-2 (:lir (:allocator this)), fromBlock)
-            ]
-                (if (satisfies? JumpOp (nth ops (dec (count ops))))
-                    (§ ass! moveResolver (MoveResolver''setInsertPosition-3 moveResolver, ops, (dec (count ops)))) ;; insert moves before branch
-                    (§ ass! moveResolver (MoveResolver''setInsertPosition-3 moveResolver, ops, (count ops)))
-                )
-            )
-            (§ ass! moveResolver (MoveResolver''setInsertPosition-3 moveResolver, (LIR''getLIRforBlock-2 (:lir (:allocator this)), toBlock), 1))
-        )
-        nil
-    )
-
-    (defn #_"void" LSResolveDataFlowPhase''optimizeEmptyBlocks-3 [#_"LSResolveDataFlowPhase" this, #_"MoveResolver" moveResolver, #_"BitSet" blockCompleted]
-        (doseq [#_"Block" block (:sortedBlocks (:allocator this))]
-            ;; check if block has only one predecessor and only one successor
-            (when (and (= (count (:predecessors block)) 1) (= (count (:successors block)) 1))
-                (let [
-                    #_"[LIRInstruction]" ops (LIR''getLIRforBlock-2 (:lir (:allocator this)), block)
-                ]
-                    ;; check if block is empty (only label and branch)
-                    (when (= (count ops) 2)
-                        (let [
-                            #_"Block" pred (nth (:predecessors block) 0)
-                            #_"Block" sux (nth (:successors block) 0)
-                        ]
-                            ;; prevent optimization of two consecutive blocks
-                            (when (and (not (#_"BitSet" .get blockCompleted, (:linearScanNumber pred))) (not (#_"BitSet" .get blockCompleted, (:linearScanNumber sux))))
-                                (#_"BitSet" .set blockCompleted, (:linearScanNumber block))
-
-                                ;; Directly resolve between pred and sux (without looking at the empty block between).
-                                (LSResolveDataFlowPhase'''resolveCollectMappings-5 this, pred, sux, block, moveResolver)
-                                (when (MoveResolver''hasMappings-1 moveResolver)
-                                    (§ ass! moveResolver (MoveResolver''setInsertPosition-3 moveResolver, ops, 1))
-                                    (§ ass! moveResolver (MoveResolver''resolveAndAppendMoves-1 moveResolver))
-                                )
-                            )
-                        )
-                    )
-                )
-            )
-        )
-        nil
-    )
-
-    (defn #_"void" LSResolveDataFlowPhase''resolveDataFlow0-3 [#_"LSResolveDataFlowPhase" this, #_"MoveResolver" moveResolver, #_"BitSet" blockCompleted]
-        (let [
-            #_"BitSet" alreadyResolved (BitSet.)
         ]
-            (doseq [#_"Block" fromBlock (:sortedBlocks (:allocator this))]
-                (when-not (#_"BitSet" .get blockCompleted, (:linearScanNumber fromBlock))
-                    (#_"BitSet" .clear alreadyResolved)
-                    (#_"BitSet" .or alreadyResolved, blockCompleted)
-
-                    (doseq [#_"Block" toBlock (:successors fromBlock)]
-                        ;; Check for duplicate edges between the same blocks (can happen with switch blocks).
-                        (when-not (#_"BitSet" .get alreadyResolved, (:linearScanNumber toBlock))
-                            (#_"BitSet" .set alreadyResolved, (:linearScanNumber toBlock))
-
-                            ;; collect all intervals that have been split between fromBlock and toBlock
-                            (LSResolveDataFlowPhase'''resolveCollectMappings-5 this, fromBlock, toBlock, nil, moveResolver)
-                            (when (MoveResolver''hasMappings-1 moveResolver)
-                                (LSResolveDataFlowPhase''resolveFindInsertPos-4 this, fromBlock, toBlock, moveResolver)
-                                (§ ass! moveResolver (MoveResolver''resolveAndAppendMoves-1 moveResolver))
-                            )
-                        )
-                    )
-                )
-            )
-        )
-        nil
-    )
-
-    ;;;
-     ; Inserts necessary moves (spilling or reloading) at edges between blocks for intervals that have been split.
-     ;;
-    (defn #_"void" LSResolveDataFlowPhase''resolveDataFlow-1 [#_"LSResolveDataFlowPhase" this]
-        (let [
-            #_"MoveResolver" moveResolver (LinearScan'''createMoveResolver-1 (:allocator this))
-            #_"BitSet" blockCompleted (BitSet.)
-        ]
-            (LSResolveDataFlowPhase''optimizeEmptyBlocks-3 this, moveResolver, blockCompleted)
-            (LSResolveDataFlowPhase''resolveDataFlow0-3 this, moveResolver, blockCompleted)
-        )
-        nil
-    )
-
-    (defm LSResolveDataFlowPhase LSAllocationPhase
-        (#_"void" LSAllocationPhase'''run-2 [#_"LSResolveDataFlowPhase" this, #_"LIRGenerationResult" _res]
-            (LSResolveDataFlowPhase''resolveDataFlow-1 this)
-            nil
-        )
-    )
-)
-
-(class-ns SSALinearScanResolveDataFlowPhase [LSResolveDataFlowPhase, LSAllocationPhase]
-    (defn #_"SSALinearScanResolveDataFlowPhase" SSALinearScanResolveDataFlowPhase'new-1 [#_"LinearScan" allocator]
-        (merge (SSALinearScanResolveDataFlowPhase'class.) (LSResolveDataFlowPhase'new-1 allocator))
-    )
-
-    (defm SSALinearScanResolveDataFlowPhase LSResolveDataFlowPhase
-        (#_"void" LSResolveDataFlowPhase'''resolveCollectMappings-5 [#_"SSALinearScanResolveDataFlowPhase" this, #_"Block" fromBlock, #_"Block" toBlock, #_"Block" midBlock, #_"MoveResolver" moveResolver]
-            (LSResolveDataFlowPhase'''resolveCollectMappings-5 (§ super LSResolveDataFlowPhase'iface), fromBlock, toBlock, midBlock, moveResolver)
-
             (when (< 1 (count (:predecessors toBlock)))
                 (let [
                     #_"int" toBlockFirstInstructionId (LinearScan''getFirstLirInstructionId-2 (:allocator this), toBlock)
@@ -41060,14 +40741,106 @@ ZeroExtendNode'new-4
                     (§ ass! (:lir (:allocator this)) (SSAUtil'removePhiOut-2 (:lir (:allocator this)), phiOutBlock))
                 )
             )
+        )
+        nil
+    )
+
+    (defn- #_"void" LSResolveDataFlowPhase''resolveFindInsertPos-4 [#_"LSResolveDataFlowPhase" this, #_"Block" fromBlock, #_"Block" toBlock, #_"MoveResolver" moveResolver]
+        (if (<= (count (:successors fromBlock)) 1)
+            (let [
+                #_"[LIRInstruction]" ops (LIR''getLIRforBlock-2 (:lir (:allocator this)), fromBlock)
+            ]
+                (if (satisfies? JumpOp (nth ops (dec (count ops))))
+                    (§ ass! moveResolver (MoveResolver''setInsertPosition-3 moveResolver, ops, (dec (count ops)))) ;; insert moves before branch
+                    (§ ass! moveResolver (MoveResolver''setInsertPosition-3 moveResolver, ops, (count ops)))
+                )
+            )
+            (§ ass! moveResolver (MoveResolver''setInsertPosition-3 moveResolver, (LIR''getLIRforBlock-2 (:lir (:allocator this)), toBlock), 1))
+        )
+        nil
+    )
+
+    (defn- #_"void" LSResolveDataFlowPhase''optimizeEmptyBlocks-3 [#_"LSResolveDataFlowPhase" this, #_"MoveResolver" moveResolver, #_"BitSet" blockCompleted]
+        (doseq [#_"Block" block (:sortedBlocks (:allocator this))]
+            ;; check if block has only one predecessor and only one successor
+            (when (and (= (count (:predecessors block)) 1) (= (count (:successors block)) 1))
+                (let [
+                    #_"[LIRInstruction]" ops (LIR''getLIRforBlock-2 (:lir (:allocator this)), block)
+                ]
+                    ;; check if block is empty (only label and branch)
+                    (when (= (count ops) 2)
+                        (let [
+                            #_"Block" pred (nth (:predecessors block) 0)
+                            #_"Block" sux (nth (:successors block) 0)
+                        ]
+                            ;; prevent optimization of two consecutive blocks
+                            (when (and (not (#_"BitSet" .get blockCompleted, (:linearScanNumber pred))) (not (#_"BitSet" .get blockCompleted, (:linearScanNumber sux))))
+                                (#_"BitSet" .set blockCompleted, (:linearScanNumber block))
+
+                                ;; Directly resolve between pred and sux (without looking at the empty block between).
+                                (LSResolveDataFlowPhase''resolveCollectMappings-5 this, pred, sux, block, moveResolver)
+                                (when (MoveResolver''hasMappings-1 moveResolver)
+                                    (§ ass! moveResolver (MoveResolver''setInsertPosition-3 moveResolver, ops, 1))
+                                    (§ ass! moveResolver (MoveResolver''resolveAndAppendMoves-1 moveResolver))
+                                )
+                            )
+                        )
+                    )
+                )
+            )
+        )
+        nil
+    )
+
+    ;;;
+     ; Inserts necessary moves (spilling or reloading) at edges between blocks for intervals that have been split.
+     ;;
+    (defn- #_"void" LSResolveDataFlowPhase''resolveDataFlow-1 [#_"LSResolveDataFlowPhase" this]
+        (let [
+            #_"MoveResolver" moveResolver (LinearScan''createMoveResolver-1 (:allocator this))
+            #_"BitSet" blockCompleted (BitSet.)
+            _ (LSResolveDataFlowPhase''optimizeEmptyBlocks-3 this, moveResolver, blockCompleted)
+            #_"BitSet" alreadyResolved (BitSet.)
+        ]
+            (doseq [#_"Block" fromBlock (:sortedBlocks (:allocator this))]
+                (when-not (#_"BitSet" .get blockCompleted, (:linearScanNumber fromBlock))
+                    (#_"BitSet" .clear alreadyResolved)
+                    (#_"BitSet" .or alreadyResolved, blockCompleted)
+
+                    (doseq [#_"Block" toBlock (:successors fromBlock)]
+                        ;; Check for duplicate edges between the same blocks (can happen with switch blocks).
+                        (when-not (#_"BitSet" .get alreadyResolved, (:linearScanNumber toBlock))
+                            (#_"BitSet" .set alreadyResolved, (:linearScanNumber toBlock))
+
+                            ;; collect all intervals that have been split between fromBlock and toBlock
+                            (LSResolveDataFlowPhase''resolveCollectMappings-5 this, fromBlock, toBlock, nil, moveResolver)
+                            (when (MoveResolver''hasMappings-1 moveResolver)
+                                (LSResolveDataFlowPhase''resolveFindInsertPos-4 this, fromBlock, toBlock, moveResolver)
+                                (§ ass! moveResolver (MoveResolver''resolveAndAppendMoves-1 moveResolver))
+                            )
+                        )
+                    )
+                )
+            )
+        )
+        nil
+    )
+
+    (defm LSResolveDataFlowPhase LSAllocationPhase
+        (#_"void" LSAllocationPhase'''run-2 [#_"LSResolveDataFlowPhase" this, #_"LIRGenerationResult" _res]
+            (LSResolveDataFlowPhase''resolveDataFlow-1 this)
             nil
         )
     )
 )
 
+;;;
+ ; An implementation of the linear scan register allocator algorithm described in
+ ; <a href="http://doi.acm.org/10.1145/1064979.1064998">"Optimized Interval Splitting in a Linear Scan Register Allocator"</a>
+ ; by Christian Wimmer and Hanspeter Moessenboeck.
+ ;;
 (class-ns LinearScan []
     (def #_"int" LinearScan'DOMINATOR_SPILL_MOVE_ID -2)
-    (def- #_"int" LinearScan'SPLIT_INTERVALS_CAPACITY_RIGHT_SHIFT 1)
 
     (defn #_"LinearScan" LinearScan'new-3 [#_"LIRGenerationResult" res, #_"MoveFactory" moveFactory, #_"[Block]" sortedBlocks]
         (let [
@@ -41076,7 +40849,7 @@ ZeroExtendNode'new-4
                     (hash-map
                         #_"LIR" :lir (:lir res)
                         #_"FrameMapBuilder" :frameMapBuilder (:frameMapBuilder res)
-                        #_"[RegisterAttributes]" :registerAttributes (#_"RegisterConfig" .getAttributesMap HotSpot'registerConfig)
+                        #_"[RegisterAttributes]" :registerAttributes (vec (#_"RegisterConfig" .getAttributesMap HotSpot'registerConfig))
                         #_"RegisterArray" :registers (#_"Architecture" .getRegisters (.arch HotSpot'target))
                         #_"MoveFactory" :moveFactory moveFactory
                         #_"{Block BlockData}" :blockData {}
@@ -41087,20 +40860,7 @@ ZeroExtendNode'new-4
                         ;;;
                          ; Map from {@linkplain #operandNumber(Value) operand numbers} to intervals.
                          ;;
-                        #_"[Interval]" :intervals nil
-                        ;;;
-                         ; The number of valid entries in #intervals.
-                         ;;
-                        #_"int" :intervalsSize 0
-                        ;;;
-                         ; The index of the first entry in #intervals for a
-                         ; {@linkplain #createDerivedInterval(Interval) derived interval}.
-                         ;;
-                        #_"int" :firstDerivedIntervalIndex -1
-                        ;;;
-                         ; Intervals sorted by Interval#from().
-                         ;;
-                        #_"[Interval]" :sortedIntervals nil
+                        #_"{int Interval}" :intervals nil
                         ;;;
                          ; Map from an instruction {@linkplain LIRInstruction#id id} to the instruction. Entries should
                          ; be retrieved with #instructionForId(int) as the id is not simply an index into this array.
@@ -41139,10 +40899,8 @@ ZeroExtendNode'new-4
         (:id (peek' (LIR''getLIRforBlock-2 (:lir this), block)))
     )
 
-    (defm LinearScan LinearScan
-        (#_"MoveResolver" LinearScan'''createMoveResolver-1 [#_"LinearScan" this]
-            (MoveResolver'new-1 this)
-        )
+    (defn #_"MoveResolver" LinearScan''createMoveResolver-1 [#_"LinearScan" this]
+        (SSAMoveResolver'new-1 this)
     )
 
     (defn #_"boolean" LinearScan'isVariableOrRegister-1 [#_"Value" value]
@@ -41189,31 +40947,21 @@ ZeroExtendNode'new-4
         (nth (:registerAttributes this) (.number reg))
     )
 
-    (defn #_"void" LinearScan''assignSpillSlot-2 [#_"LinearScan" this, #_"Interval" interval]
+    (defn #_"Interval" LinearScan''assignSpillSlot-2 [#_"LinearScan" this, #_"Interval" interval]
         ;; Assign the canonical spill slot of the parent (if a part of the interval is already spilled)
         ;; or allocate a new spill slot.
         (cond
             (Interval''canMaterialize-1 interval)
-                (§ ass! interval (Interval''assignLocation-2 interval, Value/ILLEGAL))
+                (Interval''assignLocation-2 interval, Value/ILLEGAL)
             (some? (Interval''spillSlot-1 interval))
-                (§ ass! interval (Interval''assignLocation-2 interval, (Interval''spillSlot-1 interval)))
+                (Interval''assignLocation-2 interval, (Interval''spillSlot-1 interval))
             :else
                 (let [
                     #_"VirtualStackSlot" slot (FrameMapBuilder''allocateSpillSlot-2 (:frameMapBuilder this), (:kind interval))
                 ]
                     (Interval''setSpillSlot-2 interval, slot)
-                    (§ ass! interval (Interval''assignLocation-2 interval, slot))
+                    (Interval''assignLocation-2 interval, slot)
                 )
-        )
-        nil
-    )
-
-    (defn #_"this" LinearScan''initIntervals-1 [#_"LinearScan" this]
-        (let [
-            this (assoc this :intervalsSize (LinearScan''operandSize-1 this))
-            this (assoc this :intervals (make-array Interval'iface (+ (:intervalsSize this) (>> (:intervalsSize this) LinearScan'SPLIT_INTERVALS_CAPACITY_RIGHT_SHIFT))))
-        ]
-            this
         )
     )
 
@@ -41223,11 +40971,11 @@ ZeroExtendNode'new-4
      ; @param operand the operand for the interval
      ; @return the created interval
      ;;
-    (defn #_"Interval" LinearScan''createInterval-2 [#_"LinearScan" this, #_"AllocatableValue" operand]
+    (defn- #_"Interval" LinearScan''createInterval-2 [#_"LinearScan" this, #_"AllocatableValue" operand]
         (let [
             #_"int" i (LinearScan''operandNumber-2 this, operand)
             #_"Interval" interval (Interval'new-4 operand, i, (:intervalEndMarker this), (:rangeEndMarker this))
-            _ (§ ass! this (update this :intervals assoc' i interval))
+            _ (§ ass! this (update this :intervals assoc i interval))
         ]
             interval
         )
@@ -41241,15 +40989,6 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"Interval" LinearScan''createDerivedInterval-2 [#_"LinearScan" this, #_"Interval" source]
         (let [
-            _
-                (when (= (:firstDerivedIntervalIndex this) -1)
-                    (§ ass! this (assoc this :firstDerivedIntervalIndex (:intervalsSize this)))
-                )
-            _
-                (when (= (:intervalsSize this) (count (:intervals this)))
-                    (§ ass! this (assoc this :intervals (Arrays/copyOf (:intervals this), (+ (count (:intervals this)) (>> (count (:intervals this)) LinearScan'SPLIT_INTERVALS_CAPACITY_RIGHT_SHIFT) 1))))
-                )
-            _ (§ ass! this (update this :intervalsSize inc))
             ;; note: these variables are not managed and must therefore never be inserted into the LIR
             #_"Variable" variable (Variable'new-2 (:kind source), (:numVariables this))
             _ (§ ass! this (update this :numVariables inc))
@@ -41267,32 +41006,20 @@ ZeroExtendNode'new-4
         (nth (:sortedBlocks this) index)
     )
 
-    ;;;
-     ; Gets the size of the BlockData#liveIn and BlockData#liveOut sets for a basic block.
-     ; These sets do not include any operands allocated as a result of creating
-     ; {@linkplain #createDerivedInterval(Interval) derived intervals}.
-     ;;
-    #_unused
-    (defn #_"int" LinearScan''liveSetSize-1 [#_"LinearScan" this]
-        (if (= (:firstDerivedIntervalIndex this) -1) (LinearScan''operandSize-1 this) (:firstDerivedIntervalIndex this))
-    )
-
     (defn #_"int" LinearScan''numLoops-1 [#_"LinearScan" this]
         (count (:loops (:cfg (:lir this))))
     )
 
-    (defn #_"Interval" LinearScan''intervalFor-2i [#_"LinearScan" this, #_"int" operandNumber]
-        (nth (:intervals this) operandNumber)
+    (defn #_"Interval" LinearScan''intervalFor-2i [#_"LinearScan" this, #_"int" i]
+        (get (:intervals this) i)
     )
 
     (defn #_"Interval" LinearScan''intervalFor-2v [#_"LinearScan" this, #_"Value" operand]
-        (nth (:intervals this) (LinearScan''operandNumber-2 this, operand))
+        (get (:intervals this) (LinearScan''operandNumber-2 this, operand))
     )
 
-    (defm LinearScan LinearScan
-        (#_"Interval" LinearScan'''getOrCreateInterval-2 [#_"LinearScan" this, #_"AllocatableValue" operand]
-            (or (LinearScan''intervalFor-2v this, operand) (LinearScan''createInterval-2 this, operand))
-        )
+    (defn #_"Interval" LinearScan''getOrCreateInterval-2 [#_"LinearScan" this, #_"AllocatableValue" operand]
+        (or (LinearScan''intervalFor-2v this, operand) (LinearScan''createInterval-2 this, operand))
     )
 
     (defn #_"this" LinearScan''initOpIdMaps-2 [#_"LinearScan" this, #_"int" n]
@@ -41304,10 +41031,11 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"void" LinearScan''putOpIdMaps-4 [#_"LinearScan" this, #_"int" index, #_"LIRInstruction" op, #_"Block" block]
-        (§ ass! this (update this :opIdToInstructionMap assoc' index op))
-        (§ ass! this (update this :opIdToBlockMap assoc' index block))
-        nil
+    (defn #_"this" LinearScan''putOpIdMaps-4 [#_"LinearScan" this, #_"int" index, #_"LIRInstruction" op, #_"Block" block]
+        (-> this
+            (update :opIdToInstructionMap assoc' index op)
+            (update :opIdToBlockMap assoc' index block)
+        )
     )
 
     ;;;
@@ -41381,22 +41109,20 @@ ZeroExtendNode'new-4
     (defn #_"[Interval Interval]" LinearScan''createUnhandledLists-3 [#_"LinearScan" this, #_"fn boolean [Interval]" f'isList1-1, #_"fn boolean [Interval]" f'isList2-1]
         (let [
             [#_"Interval" list1 #_"Interval" list2 #_"Interval" prev1 #_"Interval" prev2]
-                (loop-when [list1 (:intervalEndMarker this) list2 (:intervalEndMarker this) prev1 nil prev2 nil #_"int" i 0] (< i (count (:sortedIntervals this))) => [list1 list2 prev1 prev2]
+                (loop-when [list1 (:intervalEndMarker this) list2 (:intervalEndMarker this) prev1 nil prev2 nil #_"seq" s (seq (sort-by Interval''from-1 (vals (:intervals this))))] (some? s) => [list1 list2 prev1 prev2]
                     (let [
-                        #_"Interval" interval (nth (:sortedIntervals this) i)
+                        #_"Interval" interval (first s)
                         [list1 list2 prev1 prev2]
-                            (when (some? interval) => [list1 list2 prev1 prev2]
-                                (cond
-                                    (f'isList1-1 interval)
-                                        [(LinearScan'addToList-3 list1, prev1, interval) list2 interval prev2]
-                                    (or (nil? f'isList2-1) (f'isList2-1 interval))
-                                        [list1 (LinearScan'addToList-3 list2, prev2, interval) prev1 interval]
-                                    :else
-                                        [list1 list2 prev1 prev2]
-                                )
+                            (cond
+                                (f'isList1-1 interval)
+                                    [(LinearScan'addToList-3 list1, prev1, interval) list2 interval prev2]
+                                (or (nil? f'isList2-1) (f'isList2-1 interval))
+                                    [list1 (LinearScan'addToList-3 list2, prev2, interval) prev1 interval]
+                                :else
+                                    [list1 list2 prev1 prev2]
                             )
                     ]
-                        (recur list1 list2 prev1 prev2 (inc i))
+                        (recur list1 list2 prev1 prev2 (next s))
                     )
                 )
         ]
@@ -41407,69 +41133,6 @@ ZeroExtendNode'new-4
                 (§ ass! prev2 (assoc prev2 :next (:intervalEndMarker this)))
             )
             [list1 list2]
-        )
-    )
-
-    (defn #_"this" LinearScan''sortIntervalsBeforeAllocation-1 [#_"LinearScan" this]
-        (let [
-            #_"[Interval]" a (make-array Interval'iface (count (filter some? (:intervals this))))
-        ]
-            ;; special sorting algorithm: the original interval list is almost sorted, only
-            ;; some intervals are swapped, so this is much faster than a complete QuickSort
-            (loop-when [#_"int" i 0 #_"int" fromMax -1 #_"seq" s (seq (filter some? (:intervals this)))] (some? s)
-                (let [
-                    #_"Interval" interval (first s)
-                    #_"int" from (Interval''from-1 interval)
-                    [i fromMax]
-                        (if (<= fromMax from)
-                            (do
-                                (§ ass! a (assoc' a i interval))
-                                [(inc i) from]
-                            )
-                            ;; the assumption that the intervals are already sorted failed,
-                            ;; so this interval must be sorted in manually
-                            (do
-                                (loop-when-recur [#_"int" j (dec i)] (and (<= 0 j) (< from (Interval''from-1 (nth a j)))) [(dec j)] => (§ ass! a (assoc' a (inc j) interval))
-                                    (§ ass! a (assoc' a (inc j) (nth a j)))
-                                )
-                                [(inc i) fromMax]
-                            )
-                        )
-                ]
-                    (recur i fromMax (next s))
-                )
-            )
-            (assoc this :sortedIntervals a)
-        )
-    )
-
-    (defn #_"this" LinearScan''sortIntervalsAfterAllocation-1 [#_"LinearScan" this]
-        (when-not (= (:firstDerivedIntervalIndex this) -1) => this ;; no intervals have been added during allocation, so sorted list is already up to date
-            (let [
-                #_"[Interval]" oldList (:sortedIntervals this)
-                #_"[Interval]" newList (Arrays/copyOfRange (:intervals this), (:firstDerivedIntervalIndex this), (:intervalsSize this))
-                #_"int" oldLen (count oldList)
-                #_"int" newLen (count newList)
-                ;; conventional sort-algorithm for new intervals
-                _ (Arrays/sort newList, #(- (Interval''from-1 %1) (Interval''from-1 %2)))
-                ;; merge old and new list (both already sorted) into one combined list
-                #_"[Interval]" a (make-array Interval'iface (+ oldLen newLen))
-                _
-                    (loop-when [#_"int" oldIdx 0 #_"int" newIdx 0] (< (+ oldIdx newIdx) (count a))
-                        (if (or (<= newLen newIdx) (and (< oldIdx oldLen) (<= (Interval''from-1 (nth oldList oldIdx)) (Interval''from-1 (nth newList newIdx)))))
-                            (do
-                                (§ ass! a (assoc' a (+ oldIdx newIdx) (nth oldList oldIdx)))
-                                (recur (inc oldIdx) newIdx)
-                            )
-                            (do
-                                (§ ass! a (assoc' a (+ oldIdx newIdx) (nth newList newIdx)))
-                                (recur oldIdx (inc newIdx))
-                            )
-                        )
-                    )
-            ]
-                (assoc this :sortedIntervals a)
-            )
         )
     )
 
@@ -41502,84 +41165,23 @@ ZeroExtendNode'new-4
         (#_"RegisterAttributes" .isCallerSave (LinearScan''attributes-2 this, (#_"RegisterValue" .getRegister operand)))
     )
 
-    (defn #_"this" LinearScan''allocate-2 [#_"LinearScan" this, #_"LIRGenerationResult" res]
+    (defn #_"void" LinearScan'allocate-3 [#_"LIRGenerationResult" res, #_"MoveFactory" moveFactory, #_"[Block]" sortedBlocks]
         (let [
-            _ (LSAllocationPhase'''run-2 (LinearScan'''createLifetimeAnalysisPhase-1 this), res)
-            this (LinearScan''sortIntervalsBeforeAllocation-1 this)
-            _ (LSAllocationPhase'''run-2 (LinearScan''createRegisterAllocationPhase-1 this), res)
+            #_"LinearScan" allocator (LinearScan'new-3 res, moveFactory, sortedBlocks)
+            _ (LSAllocationPhase'''run-2 (LSLifetimeAnalysisPhase'new-1 allocator), res)
+            _ (LSAllocationPhase'''run-2 (LSRegisterAllocationPhase'new-1 allocator), res)
             _
                 (when GraalOptions'lirOptLSRAOptimizeSpillPosition
-                    (LSAllocationPhase'''run-2 (LinearScan''createOptimizeSpillPositionPhase-1 this), res)
+                    (LSAllocationPhase'''run-2 (LSOptimizeSpillPositionPhase'new-1 allocator), res)
                 )
-            _ (LSAllocationPhase'''run-2 (LinearScan'''createResolveDataFlowPhase-1 this), res)
-            this (LinearScan''sortIntervalsAfterAllocation-1 this)
-            this (LinearScan'''beforeSpillMoveElimination-1 this)
-        ]
-            (LSAllocationPhase'''run-2 (LinearScan'''createSpillMoveEliminationPhase-1 this), res)
-            (LSAllocationPhase'''run-2 (LinearScan''createAssignLocationsPhase-1 this), res)
-            this
-        )
-    )
-
-    (defm LinearScan LinearScan
-        (#_"this" LinearScan'''beforeSpillMoveElimination-1 [#_"LinearScan" this]
-            nil
-        )
-
-        (#_"LSLifetimeAnalysisPhase" LinearScan'''createLifetimeAnalysisPhase-1 [#_"LinearScan" this]
-            (LSLifetimeAnalysisPhase'new-1 this)
-        )
-    )
-
-    (defn #_"LSRegisterAllocationPhase" LinearScan''createRegisterAllocationPhase-1 [#_"LinearScan" this]
-        (LSRegisterAllocationPhase'new-1 this)
-    )
-
-    (defn #_"LSOptimizeSpillPositionPhase" LinearScan''createOptimizeSpillPositionPhase-1 [#_"LinearScan" this]
-        (LSOptimizeSpillPositionPhase'new-1 this)
-    )
-
-    (defm LinearScan LinearScan
-        (#_"LSResolveDataFlowPhase" LinearScan'''createResolveDataFlowPhase-1 [#_"LinearScan" this]
-            (LSResolveDataFlowPhase'new-1 this)
-        )
-
-        (#_"LSEliminateSpillMovePhase" LinearScan'''createSpillMoveEliminationPhase-1 [#_"LinearScan" this]
-            (LSEliminateSpillMovePhase'new-1 this)
-        )
-    )
-
-    (defn #_"LSAssignLocationsPhase" LinearScan''createAssignLocationsPhase-1 [#_"LinearScan" this]
-        (LSAssignLocationsPhase'new-1 this)
-    )
-)
-
-(class-ns SSALinearScan [LinearScan]
-    (defn #_"SSALinearScan" SSALinearScan'new-3 [#_"LIRGenerationResult" res, #_"MoveFactory" moveFactory, #_"[Block]" sortedBlocks]
-        (merge (SSALinearScan'class.) (LinearScan'new-3 res, moveFactory, sortedBlocks))
-    )
-
-    (defm SSALinearScan LinearScan
-        (#_"MoveResolver" LinearScan'''createMoveResolver-1 [#_"SSALinearScan" this]
-            (SSAMoveResolver'new-1 this)
-        )
-
-        (#_"LSLifetimeAnalysisPhase" LinearScan'''createLifetimeAnalysisPhase-1 [#_"SSALinearScan" this]
-            (SSALinearScanLifetimeAnalysisPhase'new-1 this)
-        )
-
-        (#_"LSResolveDataFlowPhase" LinearScan'''createResolveDataFlowPhase-1 [#_"SSALinearScan" this]
-            (SSALinearScanResolveDataFlowPhase'new-1 this)
-        )
-
-        (#_"LSEliminateSpillMovePhase" LinearScan'''createSpillMoveEliminationPhase-1 [#_"SSALinearScan" this]
-            (SSALinearScanEliminateSpillMovePhase'new-1 this)
-        )
-
-        (#_"this" LinearScan'''beforeSpillMoveElimination-1 [#_"SSALinearScan" this]
+            _ (LSAllocationPhase'''run-2 (LSResolveDataFlowPhase'new-1 allocator), res)
             ;; PHIs where the Out and In value matches (i.e. there is no resolution move) are falsely detected as errors.
-            (reduce #(update %1 :lir SSAUtil'removePhiIn-2 %2) this (filter #(< 1 (count (:predecessors %))) (:sortedBlocks this)))
+            allocator (reduce #(update %1 :lir SSAUtil'removePhiIn-2 %2) allocator (filter #(< 1 (count (:predecessors %))) (:sortedBlocks allocator)))
+        ]
+            (LSAllocationPhase'''run-2 (LSEliminateSpillMovePhase'new-1 allocator), res)
+            (LSAllocationPhase'''run-2 (LSAssignLocationsPhase'new-1 allocator), res)
         )
+        nil
     )
 )
 
@@ -41590,11 +41192,7 @@ ZeroExtendNode'new-4
 
     (defm LinearScanPhase LIRPhase
         (#_"void" LIRPhase'''run-3 [#_"LinearScanPhase" this, #_"LIRGenerationResult" res, #_"LIRPhaseContext" context]
-            (let [
-                #_"LinearScan" allocator (SSALinearScan'new-3 res, (:moveFactory (:lirGen context)), (:linearScanOrder (:lir res)))
-            ]
-                (§ ass! allocator (LinearScan''allocate-2 allocator, res))
-            )
+            (LinearScan'allocate-3 res, (:moveFactory (:lirGen context)), (:linearScanOrder (:lir res)))
             nil
         )
     )
@@ -46917,9 +46515,9 @@ ZeroExtendNode'new-4
     )
 
     (defm CallTargetNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"CallTargetNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"CallTargetNode" this, #_"LIRBuilder" builder]
             ;; nop
-            nil
+            builder
         )
     )
 
@@ -47076,9 +46674,8 @@ ZeroExtendNode'new-4
     )
 
     (defm AbstractEndNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"AbstractEndNode" this, #_"LIRBuilder" builder]
-            (§ ass! builder (LIRBuilder''visitEndNode-2 builder, this))
-            nil
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"AbstractEndNode" this, #_"LIRBuilder" builder]
+            (LIRBuilder''visitEndNode-2 builder, this)
         )
     )
 
@@ -47166,10 +46763,9 @@ ZeroExtendNode'new-4
     )
 
     (defm LoopEndNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"LoopEndNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"LoopEndNode" this, #_"LIRBuilder" builder]
             (LIRBuilder''visitLoopEnd-2 builder, this)
             (LIRLowerable'''generate-2 (§ super AbstractEndNode'iface), builder)
-            nil
         )
     )
 
@@ -47246,14 +46842,13 @@ ZeroExtendNode'new-4
     )
 
     (defm DeoptimizeNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"DeoptimizeNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"DeoptimizeNode" this, #_"LIRBuilder" builder]
             (let [
                 #_"Value" actionAndReason (LIRGenerator''emitJavaConstant-2 (:gen builder), (#_"MetaAccessProvider" .encodeDeoptActionAndReason HotSpot'metaAccess, (:action this), (:reason this), (:debugId this)))
                 #_"Value" speculationValue (LIRGenerator''emitJavaConstant-2 (:gen builder), (:speculation this))
             ]
-                (§ ass! (:gen builder) (LIRGenerator''emitDeoptimize-3 (:gen builder), actionAndReason, speculationValue))
+                (update builder :gen LIRGenerator''emitDeoptimize-3 actionAndReason, speculationValue)
             )
-            nil
         )
     )
 
@@ -47297,9 +46892,8 @@ ZeroExtendNode'new-4
     )
 
     (defm DynamicDeoptimizeNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"DynamicDeoptimizeNode" this, #_"LIRBuilder" builder]
-            (§ ass! (:gen builder) (LIRGenerator''emitDeoptimize-3 (:gen builder), (LIRBuilder''operand-2 builder, (:actionAndReason this)), (LIRBuilder''operand-2 builder, (:speculation this))))
-            nil
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"DynamicDeoptimizeNode" this, #_"LIRBuilder" builder]
+            (update builder :gen LIRGenerator''emitDeoptimize-3 (LIRBuilder''operand-2 builder, (:actionAndReason this)), (LIRBuilder''operand-2 builder, (:speculation this)))
         )
     )
 
@@ -47333,9 +46927,8 @@ ZeroExtendNode'new-4
     )
 
     (defm DeoptimizeCallerNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"DeoptimizeCallerNode" this, #_"LIRBuilder" builder]
-            (§ ass! (:gen builder) (LIRGenerator''emitDeoptimizeCaller-3 (:gen builder), (:action this), (:reason this)))
-            nil
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"DeoptimizeCallerNode" this, #_"LIRBuilder" builder]
+            (update builder :gen LIRGenerator''emitDeoptimizeCaller-3 (:action this), (:reason this))
         )
     )
 )
@@ -47357,12 +46950,11 @@ ZeroExtendNode'new-4
     )
 
     (defm ReturnNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"ReturnNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"ReturnNode" this, #_"LIRBuilder" builder]
             (if (nil? (:result this))
-                (§ ass! builder (update builder :gen LIRGenerator''emitReturn-3 JavaKind/Void, nil))
-                (§ ass! builder (update builder :gen LIRGenerator''emitReturn-3 (ValueNode''getStackKind-1 (:result this)), (LIRBuilder''operand-2 builder, (:result this))))
+                (update builder :gen LIRGenerator''emitReturn-3 JavaKind/Void, nil)
+                (update builder :gen LIRGenerator''emitReturn-3 (ValueNode''getStackKind-1 (:result this)), (LIRBuilder''operand-2 builder, (:result this)))
             )
-            nil
         )
     )
 
@@ -47443,9 +47035,8 @@ ZeroExtendNode'new-4
     )
 
     (defm IfNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"IfNode" this, #_"LIRBuilder" builder]
-            (§ ass! builder (LIRBuilder''emitIf-2 builder, this))
-            nil
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"IfNode" this, #_"LIRBuilder" builder]
+            (LIRBuilder''emitIf-2 builder, this)
         )
     )
 
@@ -48658,10 +48249,12 @@ ZeroExtendNode'new-4
     )
 
     (defm IntegerExactArithmeticSplitNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"IntegerExactArithmeticSplitNode" this, #_"LIRBuilder" builder]
-            (LIRBuilder''setResult-3 builder, this, (IntegerExactArithmeticSplitNode'''generateArithmetic-2 this, builder))
-            (§ ass! builder (LIRBuilder''emitOverflowCheckBranch-5 builder, (:overflowSuccessor this), (IntegerExactArithmeticSplitNode''getNext-1 this), (:stamp this), (ControlSplitNode'''probability-2 this, (:overflowSuccessor this))))
-            nil
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"IntegerExactArithmeticSplitNode" this, #_"LIRBuilder" builder]
+            (let [
+                builder (LIRBuilder''setResult-3 builder, this, (IntegerExactArithmeticSplitNode'''generateArithmetic-2 this, builder))
+            ]
+                (LIRBuilder''emitOverflowCheckBranch-5 builder, (:overflowSuccessor this), (IntegerExactArithmeticSplitNode''getNext-1 this), (:stamp this), (ControlSplitNode'''probability-2 this, (:overflowSuccessor this)))
+            )
         )
     )
 
@@ -48957,9 +48550,8 @@ ZeroExtendNode'new-4
     )
 
     (defm IntegerSwitchNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"IntegerSwitchNode" this, #_"LIRBuilder" builder]
-            (§ ass! builder (LIRBuilder''emitSwitch-2 builder, this))
-            nil
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"IntegerSwitchNode" this, #_"LIRBuilder" builder]
+            (LIRBuilder''emitSwitch-2 builder, this)
         )
     )
 
@@ -49284,9 +48876,9 @@ ZeroExtendNode'new-4
     )
 
     (defm AbstractBeginNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"AbstractBeginNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"AbstractBeginNode" this, #_"LIRBuilder" builder]
             ;; nop
-            nil
+            builder
         )
     )
 
@@ -49396,9 +48988,9 @@ ZeroExtendNode'new-4
     )
 
     (defm AbstractMergeNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"AbstractMergeNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"AbstractMergeNode" this, #_"LIRBuilder" builder]
             (LIRBuilder''visitMerge-2 builder, this)
-            nil
+            builder
         )
     )
 
@@ -49772,9 +49364,9 @@ ZeroExtendNode'new-4
     )
 
     (defm LoopBeginNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"LoopBeginNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"LoopBeginNode" this, #_"LIRBuilder" builder]
             ;; Nothing to emit, since this is node is used for structural purposes only.
-            nil
+            builder
         )
     )
 
@@ -50323,9 +49915,8 @@ ZeroExtendNode'new-4
     )
 
     (defm AtomicReadAndAddNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"AtomicReadAndAddNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"AtomicReadAndAddNode" this, #_"LIRBuilder" builder]
             (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitAtomicReadAndAdd-3 (:gen builder), (LIRBuilder''operand-2 builder, (:address this)), (LIRBuilder''operand-2 builder, (:delta this))))
-            nil
         )
     )
 )
@@ -50411,9 +50002,8 @@ ZeroExtendNode'new-4
     )
 
     (defm BeginLockScopeNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"BeginLockScopeNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"BeginLockScopeNode" this, #_"LIRBuilder" builder]
             (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitAddress-2 (:gen builder), (LIRGenerator''getLockSlot-2 (:gen builder), (:lockDepth this))))
-            nil
         )
     )
 )
@@ -50442,8 +50032,8 @@ ZeroExtendNode'new-4
     )
 
     (defm EndLockScopeNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"EndLockScopeNode" this, #_"LIRBuilder" builder]
-            nil
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"EndLockScopeNode" this, #_"LIRBuilder" builder]
+            builder
         )
     )
 )
@@ -50557,9 +50147,8 @@ ZeroExtendNode'new-4
     )
 
     (defm InvokeNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"InvokeNode" this, #_"LIRBuilder" builder]
-            (§ ass! builder (LIRBuilder''emitInvoke-2 builder, this))
-            nil
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"InvokeNode" this, #_"LIRBuilder" builder]
+            (LIRBuilder''emitInvoke-2 builder, this)
         )
     )
 
@@ -51228,9 +50817,9 @@ ZeroExtendNode'new-4
     )
 
     (defm AcquiredCASLockNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"AcquiredCASLockNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"AcquiredCASLockNode" this, #_"LIRBuilder" builder]
             ;; this is just a marker node, so it generates nothing
-            nil
+            builder
         )
     )
 )
@@ -51369,9 +50958,8 @@ ZeroExtendNode'new-4
     )
 
     (defm BindToRegisterNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"BindToRegisterNode" this, #_"LIRBuilder" builder]
-            (§ ass! (:gen builder) (LIRGenerator''append-2 (:gen builder), (BindToRegisterOp'new-1 (LIRGenerator''asAllocatable-2 (:gen builder), (LIRBuilder''operand-2 builder, (:value this))))))
-            nil
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"BindToRegisterNode" this, #_"LIRBuilder" builder]
+            (update builder :gen LIRGenerator''append-2 (BindToRegisterOp'new-1 (LIRGenerator''asAllocatable-2 (:gen builder), (LIRBuilder''operand-2 builder, (:value this)))))
         )
     )
 )
@@ -51388,9 +50976,8 @@ ZeroExtendNode'new-4
     )
 
     (defm BlackholeNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"BlackholeNode" this, #_"LIRBuilder" builder]
-            (§ ass! (:gen builder) (LIRGenerator''emitBlackhole-2 (:gen builder), (LIRBuilder''operand-2 builder, (:value this))))
-            nil
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"BlackholeNode" this, #_"LIRBuilder" builder]
+            (update builder :gen LIRGenerator''emitBlackhole-2 (LIRBuilder''operand-2 builder, (:value this)))
         )
     )
 )
@@ -51932,9 +51519,9 @@ ZeroExtendNode'new-4
     )
 
     (defm ControlFlowAnchorNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"ControlFlowAnchorNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"ControlFlowAnchorNode" this, #_"LIRBuilder" builder]
             ;; do nothing
-            nil
+            builder
         )
     )
 
@@ -51961,10 +51548,9 @@ ZeroExtendNode'new-4
     )
 
     (defm CurrentLockNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"CurrentLockNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"CurrentLockNode" this, #_"LIRBuilder" builder]
             ;; the register allocator cannot handle stack -> register moves, so we use an LEA here
             (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitAddress-2 (:gen builder), (LIRGenerator''getLockSlot-2 (:gen builder), (:lockDepth this))))
-            nil
         )
     )
 )
@@ -52388,7 +51974,7 @@ ZeroExtendNode'new-4
     )
 
     (defm LogicCompareAndSwapNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"LogicCompareAndSwapNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"LogicCompareAndSwapNode" this, #_"LIRBuilder" builder]
             (let [
                 #_"LIRKind" resultKind (Stamp'''getLIRKind-1 (:stamp this))
                 #_"Value" trueResult (LIRGenerator''emitConstant-3 (:gen builder), resultKind, JavaConstant/TRUE)
@@ -52397,7 +51983,6 @@ ZeroExtendNode'new-4
             ]
                 (LIRBuilder''setResult-3 builder, this, result)
             )
-            nil
         )
     )
 )
@@ -52416,9 +52001,8 @@ ZeroExtendNode'new-4
     )
 
     (defm ValueCompareAndSwapNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"ValueCompareAndSwapNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"ValueCompareAndSwapNode" this, #_"LIRBuilder" builder]
             (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitValueCompareAndSwap-4 (:gen builder), (LIRBuilder''operand-2 builder, (Access'''getAddress-1 this)), (LIRBuilder''operand-2 builder, (:expectedValue this)), (LIRBuilder''operand-2 builder, (AbstractCompareAndSwapNode''getNewValue-1 this))))
-            nil
         )
     )
 )
@@ -52500,13 +52084,12 @@ ZeroExtendNode'new-4
     )
 
     (defm WriteNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"WriteNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"WriteNode" this, #_"LIRBuilder" builder]
             (let [
                 #_"LIRKind" writeKind (Stamp'''getLIRKind-1 (:stamp (:value this)))
             ]
-                (§ ass! (:gen builder) (LIRGenerator''emitStore-4v (:gen builder), writeKind, (LIRBuilder''operand-2 builder, (:address this)), (LIRBuilder''operand-2 builder, (:value this))))
+                (update builder :gen LIRGenerator''emitStore-4v writeKind, (LIRBuilder''operand-2 builder, (:address this)), (LIRBuilder''operand-2 builder, (:value this)))
             )
-            nil
         )
     )
 
@@ -52569,13 +52152,12 @@ ZeroExtendNode'new-4
     )
 
     (defm ReadNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"ReadNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"ReadNode" this, #_"LIRBuilder" builder]
             (let [
                 #_"LIRKind" readKind (Stamp'''getLIRKind-1 (LIRLowerableAccess'''getAccessStamp-1 this))
             ]
                 (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitLoad-3 (:gen builder), readKind, (LIRBuilder''operand-2 builder, (:address this))))
             )
-            nil
         )
     )
 
@@ -52729,13 +52311,8 @@ ZeroExtendNode'new-4
     )
 
     (defm LoweredAtomicReadAndWriteNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"LoweredAtomicReadAndWriteNode" this, #_"LIRBuilder" builder]
-            (let [
-                #_"Value" result (LIRGenerator''emitAtomicReadAndWrite-3 (:gen builder), (LIRBuilder''operand-2 builder, (Access'''getAddress-1 this)), (LIRBuilder''operand-2 builder, (:newValue this)))
-            ]
-                (LIRBuilder''setResult-3 builder, this, result)
-            )
-            nil
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"LoweredAtomicReadAndWriteNode" this, #_"LIRBuilder" builder]
+            (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitAtomicReadAndWrite-3 (:gen builder), (LIRBuilder''operand-2 builder, (Access'''getAddress-1 this)), (LIRBuilder''operand-2 builder, (:newValue this))))
         )
     )
 
@@ -52888,9 +52465,8 @@ ZeroExtendNode'new-4
     )
 
     (defm SignedDivNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"SignedDivNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"SignedDivNode" this, #_"LIRBuilder" builder]
             (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitDiv-3 (:gen builder), (LIRBuilder''operand-2 builder, (:x this)), (LIRBuilder''operand-2 builder, (:y this))))
-            nil
         )
     )
 )
@@ -52961,9 +52537,8 @@ ZeroExtendNode'new-4
     )
 
     (defm SignedRemNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"SignedRemNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"SignedRemNode" this, #_"LIRBuilder" builder]
             (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitRem-3 (:gen builder), (LIRBuilder''operand-2 builder, (:x this)), (LIRBuilder''operand-2 builder, (:y this))))
-            nil
         )
     )
 )
@@ -53014,9 +52589,8 @@ ZeroExtendNode'new-4
     )
 
     (defm UnsignedDivNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"UnsignedDivNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"UnsignedDivNode" this, #_"LIRBuilder" builder]
             (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitUDiv-3 (:gen builder), (LIRBuilder''operand-2 builder, (:x this)), (LIRBuilder''operand-2 builder, (:y this))))
-            nil
         )
     )
 )
@@ -53068,9 +52642,8 @@ ZeroExtendNode'new-4
     )
 
     (defm UnsignedRemNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"UnsignedRemNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"UnsignedRemNode" this, #_"LIRBuilder" builder]
             (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitURem-3 (:gen builder), (LIRBuilder''operand-2 builder, (:x this)), (LIRBuilder''operand-2 builder, (:y this))))
-            nil
         )
     )
 )
@@ -53089,9 +52662,8 @@ ZeroExtendNode'new-4
     )
 
     (defm NullCheckNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"NullCheckNode" this, #_"LIRBuilder" builder]
-            (§ ass! (:gen builder) (LIRGenerator''emitNullCheck-2 (:gen builder), (LIRBuilder''operand-2 builder, (:object this))))
-            nil
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"NullCheckNode" this, #_"LIRBuilder" builder]
+            (update builder :gen LIRGenerator''emitNullCheck-2 (LIRBuilder''operand-2 builder, (:object this)))
         )
     )
 
@@ -53117,9 +52689,8 @@ ZeroExtendNode'new-4
     )
 
     (defm SafepointNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"SafepointNode" this, #_"LIRBuilder" builder]
-            (§ ass! builder (LIRBuilder''visitSafepointNode-2 builder, this))
-            nil
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"SafepointNode" this, #_"LIRBuilder" builder]
+            (LIRBuilder''visitSafepointNode-2 builder, this)
         )
     )
 
@@ -53175,9 +52746,9 @@ ZeroExtendNode'new-4
     )
 
     (defm FastAcquireBiasedLockNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"FastAcquireBiasedLockNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"FastAcquireBiasedLockNode" this, #_"LIRBuilder" builder]
             ;; this is just a marker node, so it generates nothing
-            nil
+            builder
         )
     )
 )
@@ -53227,9 +52798,8 @@ ZeroExtendNode'new-4
     )
 
     (defm FixedValueAnchorNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"FixedValueAnchorNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"FixedValueAnchorNode" this, #_"LIRBuilder" builder]
             (LIRBuilder''setResult-3 builder, this, (LIRBuilder''operand-2 builder, (:object this)))
-            nil
         )
     )
 
@@ -53301,14 +52871,13 @@ ZeroExtendNode'new-4
     )
 
     (defm GetObjectAddressNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"GetObjectAddressNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"GetObjectAddressNode" this, #_"LIRBuilder" builder]
             (let [
                 #_"AllocatableValue" obj (LIRGenerator''newVariable-2 (:gen builder), (LIRKind'unknownReference-1 (#_"Architecture" .getWordKind (.arch HotSpot'target))))
+                builder (update builder :gen LIRGenerator''emitMove-3 obj, (LIRBuilder''operand-2 builder, (:object this)))
             ]
-                (§ ass! (:gen builder) (LIRGenerator''emitMove-3 (:gen builder), obj, (LIRBuilder''operand-2 builder, (:object this))))
                 (LIRBuilder''setResult-3 builder, this, obj)
             )
-            nil
         )
     )
 )
@@ -53537,9 +53106,8 @@ ZeroExtendNode'new-4
     )
 
     (defm MembarNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"MembarNode" this, #_"LIRBuilder" builder]
-            (§ ass! (:gen builder) (LIRGenerator''emitMembar-2 (:gen builder), (:barriers this)))
-            nil
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"MembarNode" this, #_"LIRBuilder" builder]
+            (update builder :gen LIRGenerator''emitMembar-2 (:barriers this))
         )
     )
 )
@@ -53550,9 +53118,9 @@ ZeroExtendNode'new-4
     )
 
     (defm MemoryAnchorNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"MemoryAnchorNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"MemoryAnchorNode" this, #_"LIRBuilder" builder]
             ;; Nothing to emit, since this node is used for structural purposes only.
-            nil
+            builder
         )
     )
 
@@ -53579,9 +53147,8 @@ ZeroExtendNode'new-4
     )
 
     (defm PrefetchAllocateNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"PrefetchAllocateNode" this, #_"LIRBuilder" builder]
-            (§ ass! (:gen builder) (LIRGenerator''emitPrefetchAllocate-2 (:gen builder), (LIRBuilder''operand-2 builder, (:address this))))
-            nil
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"PrefetchAllocateNode" this, #_"LIRBuilder" builder]
+            (update builder :gen LIRGenerator''emitPrefetchAllocate-2 (LIRBuilder''operand-2 builder, (:address this)))
         )
     )
 )
@@ -53621,20 +53188,21 @@ ZeroExtendNode'new-4
     )
 
     (defm ReadRegisterNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"ReadRegisterNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"ReadRegisterNode" this, #_"LIRBuilder" builder]
             (let [
                 #_"LIRKind" kind (Stamp'''getLIRKind-1 (:stamp this))
                 #_"Value" result (#_"Register" .asValue (:register this), kind)
+                bulider
+                    (when (:incoming this) => builder
+                        (update builder :gen LIRGenerator''emitIncomingValues-2 [ result ])
+                    )
+                result
+                    (when-not (:directUse this) => result
+                        (LIRGenerator''emitMove-2 (:gen builder), result)
+                    )
             ]
-                (when (:incoming this)
-                    (§ ass! (:gen builder) (LIRGenerator''emitIncomingValues-2 (:gen builder), [ result ]))
-                )
-                (when-not (:directUse this)
-                    (§ ass result (LIRGenerator''emitMove-2 (:gen builder), result))
-                )
                 (LIRBuilder''setResult-3 builder, this, result)
             )
-            nil
         )
     )
 )
@@ -53670,9 +53238,8 @@ ZeroExtendNode'new-4
     )
 
     (defm SpillRegistersNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"SpillRegistersNode" this, #_"LIRBuilder" builder]
-            (§ ass! (:gen builder) (LIRGenerator''append-2 (:gen builder), (SpillRegistersOp'new-0)))
-            nil
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"SpillRegistersNode" this, #_"LIRBuilder" builder]
+            (update builder :gen LIRGenerator''append-2 (SpillRegistersOp'new-0))
         )
     )
 )
@@ -53779,17 +53346,16 @@ ZeroExtendNode'new-4
     )
 
     (defm StubForeignCallNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"StubForeignCallNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"StubForeignCallNode" this, #_"LIRBuilder" builder]
             (let [
                 #_"ForeignCallLinkage" linkage (ForeignCalls''lookupForeignCall-2 HotSpot'foreignCalls, (:descriptor this))
                 #_"Value*" operands (map #(LIRBuilder''operand-2 builder, %) (:arguments this))
                 #_"Value" result (apply LIRGenerator''emitForeignCall-3* (:gen builder), linkage, operands)
             ]
-                (when (some? result)
+                (when (some? result) => builder
                     (LIRBuilder''setResult-3 builder, this, result)
                 )
             )
-            nil
         )
     )
 )
@@ -54195,9 +53761,9 @@ ZeroExtendNode'new-4
     )
 
     (defm ValueAnchorNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"ValueAnchorNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"ValueAnchorNode" this, #_"LIRBuilder" builder]
             ;; Nothing to emit, since this node is used for structural purposes only.
-            nil
+            builder
         )
     )
 
@@ -54308,7 +53874,7 @@ ZeroExtendNode'new-4
     )
 
     (defm WordCastNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"WordCastNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"WordCastNode" this, #_"LIRBuilder" builder]
             (let [
                 #_"Value" value (LIRBuilder''operand-2 builder, (:input this))
                 #_"ValueKind" kind (Stamp'''getLIRKind-1 (:stamp this))
@@ -54322,13 +53888,12 @@ ZeroExtendNode'new-4
                     (LIRBuilder''setResult-3 builder, this, value)
                     (let [
                         #_"AllocatableValue" result (LIRGenerator''newVariable-2 (:gen builder), kind)
+                        builder (update builder :gen LIRGenerator''emitMove-3 result, value)
                     ]
-                        (§ ass! (:gen builder) (LIRGenerator''emitMove-3 (:gen builder), result, value))
                         (LIRBuilder''setResult-3 builder, this, result)
                     )
                 )
             )
-            nil
         )
     )
 )
@@ -54505,23 +54070,22 @@ ZeroExtendNode'new-4
     )
 
     (defm AMD64AddressNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"AMD64AddressNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"AMD64AddressNode" this, #_"LIRBuilder" builder]
             (let [
                 #_"AllocatableValue" baseValue (if (some? (:base this)) (LIRGenerator''asAllocatable-2 (:gen builder), (LIRBuilder''operand-2 builder, (:base this))) Value/ILLEGAL)
                 #_"AllocatableValue" indexValue (if (some? (:index this)) (LIRGenerator''asAllocatable-2 (:gen builder), (LIRBuilder''operand-2 builder, (:index this))) Value/ILLEGAL)
                 #_"AllocatableValue" baseReference (LIRKind'derivedBaseFromValue-1 baseValue)
                 #_"AllocatableValue" indexReference
                     (cond
-                        (nil? (:index this))           nil
-                        (= (:scale this) Scale'Times1) (LIRKind'derivedBaseFromValue-1 indexValue)
+                        (nil? (:index this))            nil
+                        (= (:scale this) Scale'Times1)  (LIRKind'derivedBaseFromValue-1 indexValue)
                         (LIRKind'isValue-1v indexValue) nil
-                        :else                          Value/ILLEGAL
+                        :else                           Value/ILLEGAL
                     )
                 #_"LIRKind" kind (LIRKind'combineDerived-3 (Stamp'''getLIRKind-1 (:stamp this)), baseReference, indexReference)
             ]
                 (LIRBuilder''setResult-3 builder, this, (AMD64AddressValue'new-5 kind, baseValue, indexValue, (:scale this), (:displacement this)))
             )
-            nil
         )
     )
 
@@ -55005,7 +54569,7 @@ ZeroExtendNode'new-4
     )
 
     (defm AddNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"AddNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"AddNode" this, #_"LIRBuilder" builder]
             (let [
                 #_"Value" op1 (LIRBuilder''operand-2 builder, (:x this))
                 #_"Value" op2 (LIRBuilder''operand-2 builder, (:y this))
@@ -55016,7 +54580,6 @@ ZeroExtendNode'new-4
             ]
                 (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitAdd-4 (:gen builder), op1, op2, false))
             )
-            nil
         )
     )
 )
@@ -55205,9 +54768,8 @@ ZeroExtendNode'new-4
     )
 
     (defm AndNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"AndNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"AndNode" this, #_"LIRBuilder" builder]
             (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitAnd-3 (:gen builder), (LIRBuilder''operand-2 builder, (:x this)), (LIRBuilder''operand-2 builder, (:y this))))
-            nil
         )
     )
 )
@@ -55218,14 +54780,13 @@ ZeroExtendNode'new-4
     )
 
     (defm IntegerMulHighNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"IntegerMulHighNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"IntegerMulHighNode" this, #_"LIRBuilder" builder]
             (let [
                 #_"Value" a (LIRBuilder''operand-2 builder, (:x this))
                 #_"Value" b (LIRBuilder''operand-2 builder, (:y this))
             ]
                 (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitMulHigh-3 (:gen builder), a, b))
             )
-            nil
         )
     )
 
@@ -55377,7 +54938,7 @@ ZeroExtendNode'new-4
     )
 
     (defm MulNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"MulNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"MulNode" this, #_"LIRBuilder" builder]
             (let [
                 #_"Value" op1 (LIRBuilder''operand-2 builder, (:x this))
                 #_"Value" op2 (LIRBuilder''operand-2 builder, (:y this))
@@ -55385,7 +54946,6 @@ ZeroExtendNode'new-4
             ]
                 (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitMul-4 (:gen builder), op1, op2, false))
             )
-            nil
         )
     )
 )
@@ -55531,9 +55091,8 @@ ZeroExtendNode'new-4
     )
 
     (defm OrNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"OrNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"OrNode" this, #_"LIRBuilder" builder]
             (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitOr-3 (:gen builder), (LIRBuilder''operand-2 builder, (:x this)), (LIRBuilder''operand-2 builder, (:y this))))
-            nil
         )
     )
 )
@@ -55561,9 +55120,8 @@ ZeroExtendNode'new-4
     )
 
     (defm RemNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"RemNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"RemNode" this, #_"LIRBuilder" builder]
             (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitRem-3 (:gen builder), (LIRBuilder''operand-2 builder, (:x this)), (LIRBuilder''operand-2 builder, (:y this))))
-            nil
         )
     )
 )
@@ -55699,9 +55257,8 @@ ZeroExtendNode'new-4
     )
 
     (defm SubNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"SubNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"SubNode" this, #_"LIRBuilder" builder]
             (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitSub-4 (:gen builder), (LIRBuilder''operand-2 builder, (:x this)), (LIRBuilder''operand-2 builder, (:y this)), false))
-            nil
         )
     )
 )
@@ -55779,14 +55336,13 @@ ZeroExtendNode'new-4
     )
 
     (defm UnsignedMulHighNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"UnsignedMulHighNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"UnsignedMulHighNode" this, #_"LIRBuilder" builder]
             (let [
                 #_"Value" a (LIRBuilder''operand-2 builder, (:x this))
                 #_"Value" b (LIRBuilder''operand-2 builder, (:y this))
             ]
                 (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitUMulHigh-3 (:gen builder), a, b))
             )
-            nil
         )
     )
 
@@ -55883,9 +55439,8 @@ ZeroExtendNode'new-4
     )
 
     (defm XorNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"XorNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"XorNode" this, #_"LIRBuilder" builder]
             (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitXor-3 (:gen builder), (LIRBuilder''operand-2 builder, (:x this)), (LIRBuilder''operand-2 builder, (:y this))))
-            nil
         )
     )
 )
@@ -56066,9 +55621,8 @@ ZeroExtendNode'new-4
     )
 
     (defm LeftShiftNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"LeftShiftNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"LeftShiftNode" this, #_"LIRBuilder" builder]
             (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitShl-3 (:gen builder), (LIRBuilder''operand-2 builder, (:x this)), (LIRBuilder''operand-2 builder, (:y this))))
-            nil
         )
     )
 )
@@ -56134,9 +55688,8 @@ ZeroExtendNode'new-4
     )
 
     (defm RightShiftNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"RightShiftNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"RightShiftNode" this, #_"LIRBuilder" builder]
             (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitShr-3 (:gen builder), (LIRBuilder''operand-2 builder, (:x this)), (LIRBuilder''operand-2 builder, (:y this))))
-            nil
         )
     )
 )
@@ -56210,9 +55763,8 @@ ZeroExtendNode'new-4
     )
 
     (defm UnsignedRightShiftNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"UnsignedRightShiftNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"UnsignedRightShiftNode" this, #_"LIRBuilder" builder]
             (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitUShr-3 (:gen builder), (LIRBuilder''operand-2 builder, (:x this)), (LIRBuilder''operand-2 builder, (:y this))))
-            nil
         )
     )
 )
@@ -56519,9 +56071,8 @@ ZeroExtendNode'new-4
     )
 
     (defm ConditionalNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"ConditionalNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"ConditionalNode" this, #_"LIRBuilder" builder]
             (LIRBuilder''emitConditional-2 builder, this)
-            nil
         )
     )
 )
@@ -56569,7 +56120,7 @@ ZeroExtendNode'new-4
     )
 
     (defm ConstantNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"ConstantNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"ConstantNode" this, #_"LIRBuilder" builder]
             (let [
                 #_"LIRKind" kind (Stamp'''getLIRKind-1 (:stamp this))
             ]
@@ -56578,7 +56129,6 @@ ZeroExtendNode'new-4
                     (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitConstant-3 (:gen builder), kind, (:value this)))
                 )
             )
-            nil
         )
     )
 
@@ -56988,13 +56538,12 @@ ZeroExtendNode'new-4
     )
 
     (defm FloatingReadNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"FloatingReadNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"FloatingReadNode" this, #_"LIRBuilder" builder]
             (let [
                 #_"LIRKind" readKind (Stamp'''getLIRKind-1 (:stamp this))
             ]
                 (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitLoad-3 (:gen builder), readKind, (LIRBuilder''operand-2 builder, (:address this))))
             )
-            nil
         )
     )
 
@@ -57092,11 +56641,10 @@ ZeroExtendNode'new-4
     )
 
     (defm PiNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"PiNode" this, #_"LIRBuilder" builder]
-            (when (LIRBuilder''hasOperand-2 builder, (:object this))
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"PiNode" this, #_"LIRBuilder" builder]
+            (when (LIRBuilder''hasOperand-2 builder, (:object this)) => builder
                 (LIRBuilder''setResult-3 builder, this, (LIRBuilder''operand-2 builder, (:object this)))
             )
-            nil
         )
     )
 
@@ -57307,9 +56855,8 @@ ZeroExtendNode'new-4
     )
 
     (defm HeapBaseNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"HeapBaseNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"HeapBaseNode" this, #_"LIRBuilder" builder]
             (LIRBuilder''setResult-3 builder, this, (#_"Register" .asValue (:heapBaseRegister this), (Stamp'''getLIRKind-1 (:stamp this))))
-            nil
         )
     )
 )
@@ -57538,8 +57085,8 @@ ZeroExtendNode'new-4
     )
 
     (defm BinaryOpLogicNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"BinaryOpLogicNode" this, #_"LIRBuilder" builder]
-            nil
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"BinaryOpLogicNode" this, #_"LIRBuilder" builder]
+            builder
         )
     )
 
@@ -58257,9 +57804,9 @@ ZeroExtendNode'new-4
     )
 
     (defm LogicConstantNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"LogicConstantNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"LogicConstantNode" this, #_"LIRBuilder" builder]
             ;; nothing to do
-            nil
+            builder
         )
     )
 )
@@ -58508,8 +58055,8 @@ ZeroExtendNode'new-4
     )
 
     (defm UnaryOpLogicNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"UnaryOpLogicNode" this, #_"LIRBuilder" builder]
-            nil
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"UnaryOpLogicNode" this, #_"LIRBuilder" builder]
+            builder
         )
     )
 
@@ -58692,9 +58239,9 @@ ZeroExtendNode'new-4
     )
 
     (defm IsNullNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"IsNullNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"IsNullNode" this, #_"LIRBuilder" builder]
             ;; Nothing to do.
-            nil
+            builder
         )
     )
 
@@ -58769,9 +58316,9 @@ ZeroExtendNode'new-4
     )
 
     (defm MemoryMapNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"MemoryMapNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"MemoryMapNode" this, #_"LIRBuilder" builder]
             ;; nothing to do...
-            nil
+            builder
         )
     )
 )
@@ -58788,9 +58335,8 @@ ZeroExtendNode'new-4
     )
 
     (defm OpaqueNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"OpaqueNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"OpaqueNode" this, #_"LIRBuilder" builder]
             (LIRBuilder''setResult-3 builder, this, (LIRBuilder''operand-2 builder, (:value this)))
-            nil
         )
     )
 )
@@ -59050,9 +58596,8 @@ ZeroExtendNode'new-4
     )
 
     (defm PointerCastNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"PointerCastNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"PointerCastNode" this, #_"LIRBuilder" builder]
             (LIRBuilder''setResult-3 builder, this, (LIRBuilder''operand-2 builder, (:input this)))
-            nil
         )
     )
 )
@@ -59091,8 +58636,8 @@ ZeroExtendNode'new-4
     )
 
     (defm GuardProxyNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"GuardProxyNode" this, #_"LIRBuilder" builder]
-            nil
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"GuardProxyNode" this, #_"LIRBuilder" builder]
+            builder
         )
     )
 
@@ -59165,9 +58710,8 @@ ZeroExtendNode'new-4
     )
 
     (defm RandomSeedNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"RandomSeedNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"RandomSeedNode" this, #_"LIRBuilder" builder]
             (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitRandomSeed-1 (:gen builder)))
-            nil
         )
     )
 )
@@ -59242,9 +58786,8 @@ ZeroExtendNode'new-4
     )
 
     (defm BitCountNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"BitCountNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"BitCountNode" this, #_"LIRBuilder" builder]
             (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitBitCount-2 (:gen builder), (LIRBuilder''operand-2 builder, (Unary'''getValue-1 this))))
-            nil
         )
     )
 )
@@ -59335,7 +58878,7 @@ ZeroExtendNode'new-4
     )
 
     (defm CompressionNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"CompressionNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"CompressionNode" this, #_"LIRBuilder" builder]
             (let [
                 #_"boolean" never-nil?
                     (if (satisfies? AbstractObjectStamp (:stamp (:value this)))
@@ -59352,7 +58895,6 @@ ZeroExtendNode'new-4
             ]
                 (LIRBuilder''setResult-3 builder, this, result)
             )
-            nil
         )
     )
 
@@ -59408,9 +58950,8 @@ ZeroExtendNode'new-4
     )
 
     (defm CountLeadingZerosNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"CountLeadingZerosNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"CountLeadingZerosNode" this, #_"LIRBuilder" builder]
             (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitCountLeadingZeros-2 (:gen builder), (LIRBuilder''operand-2 builder, (Unary'''getValue-1 this))))
-            nil
         )
     )
 )
@@ -59456,9 +58997,8 @@ ZeroExtendNode'new-4
     )
 
     (defm CountTrailingZerosNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"CountTrailingZerosNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"CountTrailingZerosNode" this, #_"LIRBuilder" builder]
             (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitCountTrailingZeros-2 (:gen builder), (LIRBuilder''operand-2 builder, (Unary'''getValue-1 this))))
-            nil
         )
     )
 )
@@ -59684,9 +59224,8 @@ ZeroExtendNode'new-4
     )
 
     (defm NarrowNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"NarrowNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"NarrowNode" this, #_"LIRBuilder" builder]
             (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitNarrow-3 (:gen builder), (LIRBuilder''operand-2 builder, (Unary'''getValue-1 this)), (IntegerConvertNode''getResultBits-1 this)))
-            nil
         )
     )
 
@@ -59768,9 +59307,8 @@ ZeroExtendNode'new-4
     )
 
     (defm SignExtendNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"SignExtendNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"SignExtendNode" this, #_"LIRBuilder" builder]
             (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitSignExtend-4 (:gen builder), (LIRBuilder''operand-2 builder, (Unary'''getValue-1 this)), (IntegerConvertNode''getInputBits-1 this), (IntegerConvertNode''getResultBits-1 this)))
-            nil
         )
     )
 )
@@ -59861,9 +59399,8 @@ ZeroExtendNode'new-4
     )
 
     (defm ZeroExtendNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"ZeroExtendNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"ZeroExtendNode" this, #_"LIRBuilder" builder]
             (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitZeroExtend-4 (:gen builder), (LIRBuilder''operand-2 builder, (Unary'''getValue-1 this)), (IntegerConvertNode''getInputBits-1 this), (IntegerConvertNode''getResultBits-1 this)))
-            nil
         )
     )
 
@@ -59947,9 +59484,8 @@ ZeroExtendNode'new-4
     )
 
     (defm NegateNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"NegateNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"NegateNode" this, #_"LIRBuilder" builder]
             (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitNegate-2 (:gen builder), (LIRBuilder''operand-2 builder, (Unary'''getValue-1 this))))
-            nil
         )
     )
 
@@ -59994,9 +59530,8 @@ ZeroExtendNode'new-4
     )
 
     (defm NotNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"NotNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"NotNode" this, #_"LIRBuilder" builder]
             (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitNot-2 (:gen builder), (LIRBuilder''operand-2 builder, (Unary'''getValue-1 this))))
-            nil
         )
     )
 
@@ -60077,9 +59612,8 @@ ZeroExtendNode'new-4
     )
 
     (defm VMConfigNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"VMConfigNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"VMConfigNode" this, #_"LIRBuilder" builder]
             (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitLoadConfigValue-3 (:gen builder), (:markId this), (Stamp'''getLIRKind-1 (:stamp this))))
-            nil
         )
     )
 
@@ -60117,9 +59651,9 @@ ZeroExtendNode'new-4
     )
 
     (defm MonitorIdNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"MonitorIdNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"MonitorIdNode" this, #_"LIRBuilder" builder]
             ;; nothing to do
-            nil
+            builder
         )
     )
 )
@@ -60157,9 +59691,9 @@ ZeroExtendNode'new-4
     )
 
     (defm VirtualObjectNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"VirtualObjectNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"VirtualObjectNode" this, #_"LIRBuilder" builder]
             ;; nothing to do...
-            nil
+            builder
         )
     )
 )
@@ -60185,9 +59719,9 @@ ZeroExtendNode'new-4
     )
 
     (defm VirtualArrayNode LIRLowerable
-        (#_"void" LIRLowerable'''generate-2 [#_"VirtualArrayNode" this, #_"LIRBuilder" builder]
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"VirtualArrayNode" this, #_"LIRBuilder" builder]
             ;; nothing to do...
-            nil
+            builder
         )
     )
 
