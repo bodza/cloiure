@@ -1,5 +1,5 @@
 (ns graalfn.core
-    (:refer-clojure :only [* *ns* + - -> ->> / < <= = > >= and apply assoc assoc-in bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean byte byte-array case char comp compare concat cond condp conj cons contains? count dec declare defmacro defn defprotocol defrecord delay disj dissoc doseq dotimes double empty? extend-protocol extend-type false? filter first fn for get hash-map hash-set if-not import inc instance? int into into-array iterate iterator-seq key keys lazy-cat let letfn list list* locking long loop make-array map mapcat mapv max merge min neg? next nil? not not= ns-imports ns-unmap nth nthnext object-array or peek pop pos? quot range reduce reify rem remove repeat repeatedly rest reverse run! satisfies? second select-keys seq sequential? set short some some? sort sort-by sorted-map sorted-set str #_subvec symbol symbol? take take-while true? unsigned-bit-shift-right update update-in val vals vary-meta #_vec #_vector vector? volatile! vreset! vswap! when-some while zero?])
+    (:refer-clojure :only [* *ns* + - -> ->> / < <= = > >= and apply assoc assoc-in bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean byte byte-array case char comp compare concat cond condp conj cons contains? count dec declare defmacro defn defprotocol defrecord delay disj dissoc doseq dotimes double empty? even? extend-protocol extend-type false? filter first fn for get hash-map hash-set if-not import inc instance? int into into-array iterate iterator-seq key keys lazy-cat let letfn list list* locking long loop make-array map mapcat mapv max merge min neg? next nil? not not= ns-imports ns-unmap nth nthnext object-array odd? or peek pop pos? quot range reduce reify rem remove repeat repeatedly rest reverse run! satisfies? second select-keys seq sequential? set short some some? sort sort-by sorted-map sorted-set str #_subvec symbol symbol? take take-while true? unsigned-bit-shift-right update update-in val vals vary-meta #_vec #_vector vector? volatile! vreset! vswap! when-some while zero?])
     (:require [clojure.core.rrb-vector :refer [catvec subvec vec vector #_vector-of]] [flatland.ordered.map :refer [ordered-map]] [flatland.ordered.set :refer [ordered-set]])
 )
 
@@ -18,8 +18,7 @@
 (import
     [java.lang
         ArithmeticException Boolean Byte Character Class ClassLoader Double Error Float IllegalArgumentException IllegalStateException
-        IncompatibleClassChangeError Integer Iterable Long Math Module NoClassDefFoundError NoSuchFieldError NoSuchMethodError Object
-        Short String UnsupportedClassVersionError Void
+        Integer Iterable Long Math Module Object Short String Void
     ]
 )
 
@@ -129,9 +128,9 @@
     ]
     [java.util.stream Stream Stream$Builder]
 
-    [jdk.vm.ci.amd64 AMD64 AMD64$CPUFeature AMD64Kind]
+    [jdk.vm.ci.amd64 AMD64 AMD64Kind]
     [jdk.vm.ci.code
-        Architecture BytecodeFrame CallingConvention CodeCacheProvider CodeUtil InstalledCode MemoryBarriers Register
+        Architecture CallingConvention CodeCacheProvider CodeUtil InstalledCode MemoryBarriers Register
         RegisterArray RegisterAttributes RegisterConfig RegisterValue StackSlot TargetDescription ValueKindFactory
     ]
     [jdk.vm.ci.code.site ConstantReference DataPatch DataSectionReference Mark #_Reference Site]
@@ -297,7 +296,7 @@ AMD64MulDivOp'new-5
 AMD64MulDivOp'new-6
 AMD64MultiStackMove'new-4
 AMD64Op''emitOpcode-6
-AMD64Op'new-6
+AMD64Op'new-5
 AMD64PrefetchOp'new-2
 AMD64PushPopStackMove'new-3
 AMD64RMIOp''emit-6a
@@ -323,10 +322,9 @@ AMD64RMOp'TESTB
 AMD64RMOp'TZCNT
 AMD64RMOp'new-1
 AMD64RMOp'new-2
-AMD64RMOp'new-3
-AMD64RMOp'new-4b
-AMD64RMOp'new-4f
-AMD64RROp'new-6
+AMD64RMOp'new-3b
+AMD64RMOp'new-4
+AMD64RROp'new-5
 AMD64RestoreRegistersOp'new-2
 AMD64SaveRegistersOp'new-2
 AMD64Shift'RCL
@@ -707,6 +705,11 @@ BoxingTemplates'new-0
 BranchOp'new-4
 BranchOp'new-4c
 BranchOp'new-4f
+BytecodeFrame'UNKNOWN_BCI
+BytecodeFrame'BEFORE_BCI
+BytecodeFrame'AFTER_BCI
+BytecodeFrame'INVALID_FRAMESTATE_BCI
+BytecodeFrame'isPlaceholderBci-1
 BytecodeLookupSwitch'new-2
 BytecodeParser''add-2
 BytecodeParser''addPush-3
@@ -1570,6 +1573,7 @@ HotSpot'allocatePrefetchInstr
 HotSpot'allocatePrefetchLines
 HotSpot'allocatePrefetchStepSize
 HotSpot'allocatePrefetchStyle
+HotSpot'amd64
 HotSpot'arrayBaseOffset-1
 HotSpot'arrayClassElementOffset
 HotSpot'arrayIndexScale-1
@@ -1680,6 +1684,8 @@ HotSpot'useTLAB
 HotSpot'valueKindFactory
 HotSpot'verifiedEntryMark
 HotSpot'vmPageSize
+HotSpot'wordKind
+HotSpot'wordSize
 HotSpot'writeBarrierPostAddress
 HotSpot'writeBarrierPreAddress
 HotSpotDirectCallTargetNode'new-6
@@ -2834,7 +2840,7 @@ RegisterBindingLists'new-3
 RegisterEffect'SET
 RegisterMap''forEach-2
 RegisterMap''put-3
-RegisterMap'new-1
+RegisterMap'new-0
 RegisterPriority'SET
 RegisterPriority'greaterEqual-2
 RegisterPriority'lessThan-2
@@ -3300,7 +3306,6 @@ WordTypes'isWord-1v
 WordTypes'isWordOperation-1
 WordTypes'klassPointer
 WordTypes'word
-WordTypes'wordKind
 WorkListEntry'new-2
 WriteBarrier'new-0
 WriteBarrierAdditionPhase'new-0
@@ -6055,6 +6060,11 @@ ZeroExtendNode'new-4
         )
     )
 
+    (def #_"Architecture" HotSpot'amd64 (.arch HotSpot'target))
+
+    (def #_"int"      HotSpot'wordSize (#_"Architecture" .getWordSize HotSpot'amd64))
+    (def #_"JavaKind" HotSpot'wordKind (JavaKind/fromWordSize HotSpot'wordSize))
+
     ;;;
      ; Special registers reserved by HotSpot for frequently used values.
      ;;
@@ -6065,7 +6075,7 @@ ZeroExtendNode'new-4
     (§ def #_"ValueKindFactory<LIRKind>" HotSpot'valueKindFactory
         (reify ValueKindFactory #_"<LIRKind>"
             (#_"LIRKind" getValueKind [#_"ValueKindFactory<LIRKind>" _, #_"JavaKind" javaKind]
-                (LIRKind'fromJavaKind-2 (.arch HotSpot'target), javaKind)
+                (LIRKind'fromJavaKind-2 HotSpot'amd64, javaKind)
             )
         )
     )
@@ -7266,7 +7276,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"Word" ReplacementsUtil'loadWordFromObject-2 [#_"Object" object, #_"int" offset]
-        (RawLoadNode'loadWordFromObjectIntrinsic-4 object, offset, LocationIdentity'ANY, (.wordJavaKind HotSpot'target))
+        (RawLoadNode'loadWordFromObjectIntrinsic-4 object, offset, LocationIdentity'ANY, HotSpot'wordKind)
     )
 
     ;;;
@@ -7598,7 +7608,7 @@ ZeroExtendNode'new-4
                                     ;; assuming both the stack pointer and page_size have their least
                                     ;; significant 2 bits cleared and page_size is a power of 2
                                     (let [
-                                        #_"Word" alignedMask (WordFactory'unsigned-1i (dec (.wordSize HotSpot'target)))
+                                        #_"Word" alignedMask (WordFactory'unsigned-1i (dec HotSpot'wordSize))
                                         #_"Word" stackPointer (Word''add-2i (ReplacementsUtil'registerAsWord-1 HotSpot'stackPointerRegister), HotSpot'stackBias)
                                     ]
                                         (when (Word''equal-2i (Word''and-2w (Word''subtract-2w currentMark, stackPointer), (Word''subtract-2i alignedMask, (.pageSize HotSpot'unsafe))), 0)
@@ -7774,7 +7784,7 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"int" NewObjectSnippets'instanceHeaderSize-0 []
-        (- (* 2 (.wordSize HotSpot'target)) (if HotSpot'useCompressedClassPointers 4 0))
+        (- (* 2 HotSpot'wordSize) (if HotSpot'useCompressedClassPointers 4 0))
     )
 
     ;;;
@@ -7951,7 +7961,7 @@ ZeroExtendNode'new-4
  ;;
 (value-ns TypeCheckSnippetUtils
     (defn- #_"KlassPointer" TypeCheckSnippetUtils'loadSecondarySupersElement-2 [#_"Word" metaspaceArray, #_"int" index]
-        (Word'klassPointerFromWord-1 (Word''readWord-3i metaspaceArray, (+ HotSpot'metaspaceArrayBaseOffset (* index (.wordSize HotSpot'target))), NamedLocationIdentity'SECONDARY_SUPERS_ELEMENT))
+        (Word'klassPointerFromWord-1 (Word''readWord-3i metaspaceArray, (+ HotSpot'metaspaceArrayBaseOffset (* index HotSpot'wordSize)), NamedLocationIdentity'SECONDARY_SUPERS_ELEMENT))
     )
 
     (defn- #_"boolean" TypeCheckSnippetUtils'checkSelfAndSupers-2 [#_"KlassPointer" t, #_"KlassPointer" s]
@@ -8050,7 +8060,7 @@ ZeroExtendNode'new-4
                             (if (Word''notEqual-2i indexValue, 0)
                                 (let [
                                     #_"Word" bufferAddress (Word''readWord-2i thread, HotSpot'g1SATBQueueBufferOffset)
-                                    #_"Word" nextIndex (Word''subtract-2i indexValue, (.wordSize HotSpot'target))
+                                    #_"Word" nextIndex (Word''subtract-2i indexValue, HotSpot'wordSize)
                                     #_"Word" logAddress (Word''add-2w bufferAddress, nextIndex)
                                 ]
                                     ;; Log the object to be marked as well as update the SATB's buffer next index.
@@ -8111,7 +8121,7 @@ ZeroExtendNode'new-4
                                     (if (Word''notEqual-2i indexValue, 0)
                                         (let [
                                             #_"Word" bufferAddress (Word''readWord-2i thread, HotSpot'g1CardQueueBufferOffset)
-                                            #_"Word" nextIndex (Word''subtract-2i indexValue, (.wordSize HotSpot'target))
+                                            #_"Word" nextIndex (Word''subtract-2i indexValue, HotSpot'wordSize)
                                             #_"Word" logAddress (Word''add-2w bufferAddress, nextIndex)
                                         ]
                                             ;; Log the object to be scanned as well as update the card queue's next index.
@@ -8151,8 +8161,6 @@ ZeroExtendNode'new-4
 )
 
 (value-ns WordTypes
-    (def #_"JavaKind" WordTypes'wordKind (.wordJavaKind HotSpot'target))
-
     (def #_"ResolvedJavaType" WordTypes'word         (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, Word'iface))
     (def #_"ResolvedJavaType" WordTypes'klassPointer (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, #_"KlassPointer" Word'iface))
 
@@ -8188,7 +8196,7 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"JavaKind" WordTypes'asKind-1 [#_"JavaType" type]
         (if (or (= type WordTypes'klassPointer) (WordTypes'isWord-1j type))
-            WordTypes'wordKind
+            HotSpot'wordKind
             (#_"JavaType" .getJavaKind type)
         )
     )
@@ -8199,7 +8207,7 @@ ZeroExtendNode'new-4
     (defn #_"Stamp" WordTypes'getWordStamp-1 [#_"ResolvedJavaType" type]
         (if (= type WordTypes'klassPointer)
             KlassPointerStamp'KLASS
-            (StampFactory'forKind-1 WordTypes'wordKind)
+            (StampFactory'forKind-1 HotSpot'wordKind)
         )
     )
 )
@@ -8360,8 +8368,8 @@ ZeroExtendNode'new-4
     (defn- #_"Assembler" AMD64Call'emitAlignmentForDirectCall-1 [#_"Assembler" asm]
         ;; make sure that the displacement word of the call ends up word aligned
         (let [
-            #_"int" offset (+ (Assembler''position-1 asm) (#_"Architecture" .getMachineCodeCallDisplacementOffset (.arch HotSpot'target)))
-            #_"int" modulus (.wordSize HotSpot'target)
+            #_"int" offset (+ (Assembler''position-1 asm) (#_"Architecture" .getMachineCodeCallDisplacementOffset HotSpot'amd64))
+            #_"int" modulus HotSpot'wordSize
         ]
             (when-not (zero? (% offset modulus)) => asm
                 (Assembler''nop-2 asm, (- modulus (% offset modulus)))
@@ -10185,6 +10193,35 @@ ZeroExtendNode'new-4
     )
 )
 
+(value-ns BytecodeFrame
+    ;;;
+     ; This BCI should be used for frame states that are built for code with no meaningful BCI.
+     ;;
+    (def #_"int" BytecodeFrame'UNKNOWN_BCI -5)
+    ;;;
+     ; The BCI for the state before starting to execute a method. Note that if the method is
+     ; synchronized, the monitor is not yet held.
+     ;;
+    (def #_"int" BytecodeFrame'BEFORE_BCI -2)
+    ;;;
+     ; The BCI for the state after finishing the execution of a method and returning normally.
+     ; Note that if the method was synchronized the monitor is already released.
+     ;;
+    (def #_"int" BytecodeFrame'AFTER_BCI -3)
+    ;;;
+     ; This BCI should be used for states that cannot be the target of a deoptimization, like
+     ; snippet frame states.
+     ;;
+    (def #_"int" BytecodeFrame'INVALID_FRAMESTATE_BCI -6)
+
+    ;;;
+     ; Determines if a given BCI matches one of the placeholder BCI constants defined in this class.
+     ;;
+    (defn #_"boolean" BytecodeFrame'isPlaceholderBci-1 [#_"int" bci]
+        (neg? bci)
+    )
+)
+
 (value-ns InliningUtil
     ;;;
      ; @return nil iff the check succeeds, otherwise a (non-nil) descriptive message
@@ -10344,7 +10381,7 @@ ZeroExtendNode'new-4
                 (let [
                     #_"Node*" nodes (remove #(or (= % start) (and (= % (:stateAfter start)) (Node''hasExactlyOneUsage-1 %)) (satisfies? ParameterNode %)) (Graph''getNodes-1 inlineGraph))
                     #_"ReturnNode*" returnNodes (filter #(satisfies? ReturnNode %) nodes)
-                    #_"InvokeNode*" partialIntrinsicExits (filter #(and (satisfies? InvokeNode %) (= (:bci %) BytecodeFrame/UNKNOWN_BCI)) nodes)
+                    #_"InvokeNode*" partialIntrinsicExits (filter #(and (satisfies? InvokeNode %) (= (:bci %) BytecodeFrame'UNKNOWN_BCI)) nodes)
                     #_"AbstractBeginNode" prevBegin (AbstractBeginNode'prevBegin-1 invokeNode)
                     #_"DuplicationReplacement" localReplacement
                         (reify DuplicationReplacement
@@ -10430,9 +10467,9 @@ ZeroExtendNode'new-4
             #_"JavaKind" invokeReturnKind (ValueNode''getStackKind-1 invoke)
         ]
             (condp = (:bci frameState)
-                BytecodeFrame/AFTER_BCI
+                BytecodeFrame'AFTER_BCI
                     (InliningUtil'handleAfterBciFrameState-3 frameState, invoke, alwaysDuplicateStateAfter)
-                BytecodeFrame/BEFORE_BCI
+                BytecodeFrame'BEFORE_BCI
                     ;; This is an intrinsic. Deoptimizing within an intrinsic must re-execute the intrinsified invocation.
                     (let [
                         #_"FrameState" beforeCall (FrameState''duplicateModifiedBeforeCall-5 atReturn, (:bci invoke), invokeReturnKind, (#_"Signature" .toParameterKinds (#_"ResolvedJavaMethod" .getSignature invokeTargetMethod), (not (#_"ResolvedJavaMethod" .isStatic invokeTargetMethod))), invokeArgs)
@@ -11113,7 +11150,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"AddressNode" Lowerer'createOffsetAddress-3 [#_"Graph" graph, #_"ValueNode" object, #_"long" offset]
-        (Graph''add-2 graph, (OffsetAddressNode'new-2 object, (ConstantNode'forIntegerKind-3 (.wordJavaKind HotSpot'target), offset, graph)))
+        (Graph''add-2 graph, (OffsetAddressNode'new-2 object, (ConstantNode'forIntegerKind-3 HotSpot'wordKind, offset, graph)))
     )
 
     (defn #_"AddressNode" Lowerer'createFieldAddress-3 [#_"Graph" graph, #_"ValueNode" object, #_"ResolvedJavaField" field]
@@ -11302,14 +11339,14 @@ ZeroExtendNode'new-4
     (defn #_"AddressNode" Lowerer'createArrayAddress-4 [#_"Graph" graph, #_"ValueNode" array, #_"JavaKind" elementKind, #_"ValueNode" index]
         (let [
             #_"ValueNode" wordIndex
-                (if (< 4 (.wordSize HotSpot'target))
-                    (Graph''add-2 graph, (SignExtendNode'new-2 index, (* (.wordSize HotSpot'target) 8)))
+                (if (< 4 HotSpot'wordSize)
+                    (Graph''add-2 graph, (SignExtendNode'new-2 index, (* HotSpot'wordSize 8)))
                     index
                 )
             #_"int" shift (CodeUtil/log2 (HotSpot'arrayIndexScale-1 elementKind))
             #_"ValueNode" scaledIndex (Graph''add-2 graph, (LeftShiftNode'new-2 wordIndex, (ConstantNode'forInt-2 shift, graph)))
             #_"int" base (HotSpot'arrayBaseOffset-1 elementKind)
-            #_"ValueNode" offset (Graph''add-2 graph, (AddNode'new-2 scaledIndex, (ConstantNode'forIntegerKind-3 (.wordJavaKind HotSpot'target), base, graph)))
+            #_"ValueNode" offset (Graph''add-2 graph, (AddNode'new-2 scaledIndex, (ConstantNode'forIntegerKind-3 HotSpot'wordKind, base, graph)))
         ]
             (Graph''add-2 graph, (OffsetAddressNode'new-2 array, offset))
         )
@@ -11425,7 +11462,7 @@ ZeroExtendNode'new-4
  ; Base class for AMD64 opcodes.
  ;;
 (class-ns AMD64Op []
-    (defn #_"AMD64Op" AMD64Op'new-6 [#_"int" prefix1, #_"int" prefix2, #_"int" op, #_"boolean" dstIsByte, #_"boolean" srcIsByte, #_"AMD64$CPUFeature" feature]
+    (defn #_"AMD64Op" AMD64Op'new-5 [#_"int" prefix1, #_"int" prefix2, #_"int" op, #_"boolean" dstIsByte, #_"boolean" srcIsByte]
         (merge (AMD64Op'class.)
             (hash-map
                 #_"int" :prefix1 prefix1
@@ -11433,7 +11470,6 @@ ZeroExtendNode'new-4
                 #_"int" :op op
                 #_"boolean" :dstIsByte dstIsByte
                 #_"boolean" :srcIsByte srcIsByte
-                #_"AMD64$CPUFeature" :feature feature
             )
         )
     )
@@ -11470,7 +11506,7 @@ ZeroExtendNode'new-4
  ;;
 (class-ns AMD64ImmOp [AMD64Op]
     (defn #_"AMD64ImmOp" AMD64ImmOp'new-5 [#_"int" prefix, #_"int" op, #_"boolean" immIsByte, #_"boolean" dstIsByte, #_"boolean" srcIsByte]
-        (merge (AMD64ImmOp'class.) (AMD64Op'new-6 0, prefix, op, dstIsByte, srcIsByte, nil)
+        (merge (AMD64ImmOp'class.) (AMD64Op'new-5 0, prefix, op, dstIsByte, srcIsByte)
             (hash-map
                 #_"boolean" :immIsByte immIsByte
             )
@@ -11575,7 +11611,7 @@ ZeroExtendNode'new-4
  ;;
 (class-ns AMD64MOp [AMD64Op]
     (defn #_"AMD64MOp" AMD64MOp'new-2 [#_"int" op, #_"int" ext]
-        (merge (AMD64MOp'class.) (AMD64Op'new-6 0, 0, op, false, false, nil)
+        (merge (AMD64MOp'class.) (AMD64Op'new-5 0, 0, op, false, false)
             (hash-map
                 #_"int" :ext ext
             )
@@ -11613,8 +11649,8 @@ ZeroExtendNode'new-4
 )
 
 (class-ns AMD64RROp [AMD64Op]
-    (defn #_"AMD64RROp" AMD64RROp'new-6 [#_"int" prefix1, #_"int" prefix2, #_"int" op, #_"boolean" dstIsByte, #_"boolean" srcIsByte, #_"AMD64$CPUFeature" feature]
-        (merge (AMD64RROp'class.) (AMD64Op'new-6 prefix1, prefix2, op, dstIsByte, srcIsByte, feature))
+    (defn #_"AMD64RROp" AMD64RROp'new-5 [#_"int" prefix1, #_"int" prefix2, #_"int" op, #_"boolean" dstIsByte, #_"boolean" srcIsByte]
+        (merge (AMD64RROp'class.) (AMD64Op'new-5 prefix1, prefix2, op, dstIsByte, srcIsByte))
     )
 )
 
@@ -11623,11 +11659,11 @@ ZeroExtendNode'new-4
  ;;
 (class-ns AMD64MROp [AMD64RROp, AMD64Op]
     (defn #_"AMD64MROp" AMD64MROp'new-1 [#_"int" op]
-        (merge (AMD64MROp'class.) (AMD64RROp'new-6 0, 0, op, false, false, nil))
+        (merge (AMD64MROp'class.) (AMD64RROp'new-5 0, 0, op, false, false))
     )
 
     (defn #_"AMD64MROp" AMD64MROp'new-3 [#_"int" op, #_"boolean" dstIsByte, #_"boolean" srcIsByte]
-        (merge (AMD64MROp'class.) (AMD64RROp'new-6 0, 0, op, dstIsByte, srcIsByte, nil))
+        (merge (AMD64MROp'class.) (AMD64RROp'new-5 0, 0, op, dstIsByte, srcIsByte))
     )
 
     (§ def #_"AMD64MROp" AMD64MROp'MOVB (AMD64MROp'new-3 0x88, true, true))
@@ -11659,42 +11695,42 @@ ZeroExtendNode'new-4
  ;;
 (class-ns AMD64RMOp [AMD64RROp, AMD64Op]
     (defn #_"AMD64RMOp" AMD64RMOp'new-1 [#_"int" op]
-        (merge (AMD64RMOp'class.) (AMD64RROp'new-6 0, 0, op, false, false, nil))
+        (merge (AMD64RMOp'class.) (AMD64RROp'new-5 0, 0, op, false, false))
     )
 
     (defn #_"AMD64RMOp" AMD64RMOp'new-2 [#_"int" prefix, #_"int" op]
-        (merge (AMD64RMOp'class.) (AMD64RROp'new-6 0, prefix, op, false, false, nil))
+        (merge (AMD64RMOp'class.) (AMD64RROp'new-5 0, prefix, op, false, false))
     )
 
-    (defn #_"AMD64RMOp" AMD64RMOp'new-3 [#_"int" op, #_"boolean" dstIsByte, #_"boolean" srcIsByte]
-        (merge (AMD64RMOp'class.) (AMD64RROp'new-6 0, 0, op, dstIsByte, srcIsByte, nil))
+    (defn #_"AMD64RMOp" AMD64RMOp'new-3b [#_"int" op, #_"boolean" dstIsByte, #_"boolean" srcIsByte]
+        (merge (AMD64RMOp'class.) (AMD64RROp'new-5 0, 0, op, dstIsByte, srcIsByte))
     )
 
-    (defn #_"AMD64RMOp" AMD64RMOp'new-4b [#_"int" prefix, #_"int" op, #_"boolean" dstIsByte, #_"boolean" srcIsByte]
-        (merge (AMD64RMOp'class.) (AMD64RROp'new-6 0, prefix, op, dstIsByte, srcIsByte, nil))
+    (defn #_"AMD64RMOp" AMD64RMOp'new-4 [#_"int" prefix, #_"int" op, #_"boolean" dstIsByte, #_"boolean" srcIsByte]
+        (merge (AMD64RMOp'class.) (AMD64RROp'new-5 0, prefix, op, dstIsByte, srcIsByte))
     )
 
-    (defn #_"AMD64RMOp" AMD64RMOp'new-4f [#_"int" prefix1, #_"int" prefix2, #_"int" op, #_"AMD64$CPUFeature" feature]
-        (merge (AMD64RMOp'class.) (AMD64RROp'new-6 prefix1, prefix2, op, false, false, feature))
+    (defn- #_"AMD64RMOp" AMD64RMOp'new-3p [#_"int" prefix1, #_"int" prefix2, #_"int" op]
+        (merge (AMD64RMOp'class.) (AMD64RROp'new-5 prefix1, prefix2, op, false, false))
     )
 
     (§ def #_"AMD64RMOp" AMD64RMOp'IMUL   (AMD64RMOp'new-2        0x0f, 0xaf))
     (§ def #_"AMD64RMOp" AMD64RMOp'BSF    (AMD64RMOp'new-2        0x0f, 0xbc))
     (§ def #_"AMD64RMOp" AMD64RMOp'BSR    (AMD64RMOp'new-2        0x0f, 0xbd))
-    (§ def #_"AMD64RMOp" AMD64RMOp'POPCNT (AMD64RMOp'new-4f 0xf3, 0x0f, 0xb8,              CPUFeature'POPCNT))
-    (§ def #_"AMD64RMOp" AMD64RMOp'TZCNT  (AMD64RMOp'new-4f 0xf3, 0x0f, 0xbc,              CPUFeature'BMI1))
-    (§ def #_"AMD64RMOp" AMD64RMOp'LZCNT  (AMD64RMOp'new-4f 0xf3, 0x0f, 0xbd,              CPUFeature'LZCNT))
-    (§ def #_"AMD64RMOp" AMD64RMOp'MOVZXB (AMD64RMOp'new-4b       0x0f, 0xb6, false, true))
+    (§ def #_"AMD64RMOp" AMD64RMOp'POPCNT (AMD64RMOp'new-3p 0xf3, 0x0f, 0xb8)) ;; requires CPUFeature'POPCNT
+    (§ def #_"AMD64RMOp" AMD64RMOp'TZCNT  (AMD64RMOp'new-3p 0xf3, 0x0f, 0xbc)) ;; requires CPUFeature'BMI1
+    (§ def #_"AMD64RMOp" AMD64RMOp'LZCNT  (AMD64RMOp'new-3p 0xf3, 0x0f, 0xbd)) ;; requires CPUFeature'LZCNT
+    (§ def #_"AMD64RMOp" AMD64RMOp'MOVZXB (AMD64RMOp'new-4        0x0f, 0xb6, false, true))
     (§ def #_"AMD64RMOp" AMD64RMOp'MOVZX  (AMD64RMOp'new-2        0x0f, 0xb7))
-    (§ def #_"AMD64RMOp" AMD64RMOp'MOVSXB (AMD64RMOp'new-4b       0x0f, 0xbe, false, true))
+    (§ def #_"AMD64RMOp" AMD64RMOp'MOVSXB (AMD64RMOp'new-4        0x0f, 0xbe, false, true))
     (§ def #_"AMD64RMOp" AMD64RMOp'MOVSX  (AMD64RMOp'new-2        0x0f, 0xbf))
     (§ def #_"AMD64RMOp" AMD64RMOp'MOVSXD (AMD64RMOp'new-1              0x63))
-    (§ def #_"AMD64RMOp" AMD64RMOp'MOVB   (AMD64RMOp'new-3              0x8a, true,  true))
+    (§ def #_"AMD64RMOp" AMD64RMOp'MOVB   (AMD64RMOp'new-3b             0x8a, true,  true))
     (§ def #_"AMD64RMOp" AMD64RMOp'MOV    (AMD64RMOp'new-1              0x8b))
 
     ;; TEST is documented as MR operation, but it's symmetric, and using it as RM operation is more convenient.
-    (§ def #_"AMD64RMOp" AMD64RMOp'TESTB  (AMD64RMOp'new-3             0x84, true, true))
-    (§ def #_"AMD64RMOp" AMD64RMOp'TEST   (AMD64RMOp'new-1             0x85))
+    (§ def #_"AMD64RMOp" AMD64RMOp'TESTB  (AMD64RMOp'new-3b             0x84, true, true))
+    (§ def #_"AMD64RMOp" AMD64RMOp'TEST   (AMD64RMOp'new-1              0x85))
 
     (defm AMD64RMOp AMD64RROp
         (#_"Assembler" AMD64RROp'''emit-5 [#_"AMD64RMOp" this, #_"Assembler" asm, #_"OperandSize" size, #_"Register" dst, #_"Register" src]
@@ -13251,7 +13287,7 @@ ZeroExtendNode'new-4
                          ; The index of the block currently being emitted.
                          ;;
                         #_"int" :currentBlockIndex 0
-                        #_"CodeBuffer" :codeBuffer (CodeBuffer'new-1 (#_"Architecture" .getByteOrder (.arch HotSpot'target)))
+                        #_"CodeBuffer" :codeBuffer (CodeBuffer'new-1 (#_"Architecture" .getByteOrder HotSpot'amd64))
                     )
                 )
             ;; Omit the frame if the method:
@@ -15139,7 +15175,7 @@ ZeroExtendNode'new-4
         (cond
             (JavaConstant/isNull constant)
                 (let [
-                    #_"int" size (if (= HotSpotCompressedNullConstant/COMPRESSED_NULL constant) 4 (.wordSize HotSpot'target))
+                    #_"int" size (if (= HotSpotCompressedNullConstant/COMPRESSED_NULL constant) 4 HotSpot'wordSize)
                 ]
                     (§ proxy #_"Data" (Data'new-2 size, size)
                         (#_"void" Data'''emit-3 [#_"Data" this, #_"ByteBuffer" buffer, #_"Patches" _patches]
@@ -15153,7 +15189,7 @@ ZeroExtendNode'new-4
                 )
             (and (instance? VMConstant constant) (instance? HotSpotConstant constant))
                 (let [
-                    #_"int" size (if (#_"HotSpotConstant" .isCompressed constant) 4 (.wordSize HotSpot'target))
+                    #_"int" size (if (#_"HotSpotConstant" .isCompressed constant) 4 HotSpot'wordSize)
                 ]
                     (§ proxy #_"Data" (Data'new-2 size, size)
                         (#_"void" Data'''emit-3 [#_"Data" this, #_"ByteBuffer" buffer, #_"Patches" patches]
@@ -15991,7 +16027,7 @@ ZeroExtendNode'new-4
                 (hash-map
                     #_"AMD64MIOp" :byteImmOp (AMD64MIOp'new-5 0x80, code,       true, true, true)
                     #_"AMD64MROp" :byteMrOp  (AMD64MROp'new-3       base,             true, true)
-                    #_"AMD64RMOp" :byteRmOp  (AMD64RMOp'new-3    (| base 0x02),       true, true)
+                    #_"AMD64RMOp" :byteRmOp  (AMD64RMOp'new-3b   (| base 0x02),       true, true)
                     #_"AMD64MIOp" :immOp     (AMD64MIOp'new-3 0x81, code,       false)
                     #_"AMD64MIOp" :immSxOp   (AMD64MIOp'new-3 0x83, code,       true)
                     #_"AMD64MROp" :mrOp      (AMD64MROp'new-1    (| base 0x01))
@@ -18856,7 +18892,7 @@ ZeroExtendNode'new-4
                                     ;; for this callsite. We also have to assume that the call needs an exception
                                     ;; edge. Finally, we know that this intrinsic is parsed for late inlining,
                                     ;; so the bci must be set to unknown, so that the inliner patches it later.
-                                    (§ ass invokeBci BytecodeFrame/UNKNOWN_BCI)
+                                    (§ ass invokeBci BytecodeFrame'UNKNOWN_BCI)
                                 )
                             _
                                 (if (#_"ResolvedJavaMethod" .isStatic originalMethod)
@@ -19167,7 +19203,7 @@ ZeroExtendNode'new-4
         (when (:finalBarrierRequired this)
             (BytecodeParser''append-2 this, (FinalFieldBarrierNode'new-1 (:originalReceiver this)))
         )
-        (BytecodeParser''synchronizedEpilogue-4 this, BytecodeFrame/AFTER_BCI, x, kind)
+        (BytecodeParser''synchronizedEpilogue-4 this, BytecodeFrame'AFTER_BCI, x, kind)
     )
 
     (defn- #_"this" BytecodeParser''genReturn-3 [#_"BytecodeParser" this, #_"ValueNode" returnVal, #_"JavaKind" returnKind]
@@ -19175,9 +19211,9 @@ ZeroExtendNode'new-4
             (let [
                 #_"FrameState" stateAfter (:stateAfter returnVal)
             ]
-                (when (= (:bci stateAfter) BytecodeFrame/AFTER_BCI) ;; => must be the return value from within a partial intrinsification
+                (when (= (:bci stateAfter) BytecodeFrame'AFTER_BCI) ;; => must be the return value from within a partial intrinsification
                     (let [
-                        stateAfter (Node''replaceAtUsages-2 stateAfter, (Graph''add-2 (:graph this), (FrameState'new-2 BytecodeFrame/AFTER_BCI, returnVal)))
+                        stateAfter (Node''replaceAtUsages-2 stateAfter, (Graph''add-2 (:graph this), (FrameState'new-2 BytecodeFrame'AFTER_BCI, returnVal)))
                     ]
                         (GraphUtil'killWithUnusedFloatingInputs-1 stateAfter)
                     )
@@ -20306,7 +20342,7 @@ ZeroExtendNode'new-4
      ;;
     (defn- #_"FrameState" BytecodeParser''createStateAfterStartOfReplacementGraph-1 [#_"BytecodeParser" this]
         (if (IntrinsicContext''isPostParseInlined-1 (:intrinsicContext this))
-            (Graph''add-2 (:graph this), (FrameState'new-1 BytecodeFrame/BEFORE_BCI))
+            (Graph''add-2 (:graph this), (FrameState'new-1 BytecodeFrame'BEFORE_BCI))
             (let [
                 f'local #(let [#_"ValueNode" node (nth (:locals (:frameState this)) %)] (when-not (= node :FrameState'TWO_SLOT_MARKER) node))
                 #_"ResolvedJavaMethod" o'method (:originalMethod (:intrinsicContext this))
@@ -20356,7 +20392,7 @@ ZeroExtendNode'new-4
                         (cond
                             (#_"ResolvedJavaMethod" .isSynchronized (:method this))
                                 (let [
-                                    _ (§ ass! startNode (StateSplit'''setStateAfter-2 startNode, (BytecodeParser''createFrameState-3 this, BytecodeFrame/BEFORE_BCI, startNode)))
+                                    _ (§ ass! startNode (StateSplit'''setStateAfter-2 startNode, (BytecodeParser''createFrameState-3 this, BytecodeFrame'BEFORE_BCI, startNode)))
                                 ]
                                     this
                                 )
@@ -21630,8 +21666,6 @@ ZeroExtendNode'new-4
 
     ;;;
      ; Creates a Classfile by parsing the class file bytes for {@code type} loadable from {@code context}.
-     ;
-     ; @throws NoClassDefFoundError if there is an IO error while parsing the class file
      ;;
     (defn #_"Classfile" Classfile'new-3 [#_"ResolvedJavaType" type, #_"DataInputStream" stream, #_"ClassfileBytecodeProvider" context]
         (let [
@@ -21640,7 +21674,7 @@ ZeroExtendNode'new-4
             #_"int" major (#_"DataInputStream" .readUnsignedShort stream)
             _
                 (when-not (<= Classfile'MAJOR_VERSION_JAVA_MIN major Classfile'MAJOR_VERSION_JAVA_MAX)
-                    (throw (UnsupportedClassVersionError. (str "unsupported class file version: " major "." minor)))
+                    (throw! (str "unsupported class file version: " major "." minor))
                 )
             #_"ClassfileConstantPool" cp (ClassfileConstantPool'new-2 stream, context)
             _ (Classfile'skipFully-2 stream, 6)                                                     ;; access_flags, this_class, super_class
@@ -21659,7 +21693,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"ClassfileBytecode" Classfile''getCode-3 [#_"Classfile" this, #_"String" name, #_"String" descriptor]
-        (loop-when [#_"seq" s (seq (:codeAttributes this))] (some? s) => (throw (NoSuchMethodError. (str (#_"ResolvedJavaType" .toJavaName (:type this)) "." name descriptor)))
+        (loop-when [#_"seq" s (seq (:codeAttributes this))] (some? s) => (throw! (str "NoSuchMethodError: " (#_"ResolvedJavaType" .toJavaName (:type this)) "." name descriptor))
             (let [
                 #_"ClassfileBytecode" code (first s)
                 #_"ResolvedJavaMethod" method (Bytecode'''getMethod-1 code)
@@ -21779,8 +21813,6 @@ ZeroExtendNode'new-4
 
     ;;;
      ; Gets a Classfile created by parsing the class file bytes for {@code c}.
-     ;
-     ; @throws NoClassDefFoundError if the class file cannot be found
      ;;
     (defn- #_"Classfile" ClassfileBytecodeProvider''getClassfile-2 [#_"ClassfileBytecodeProvider" this, #_"Class" c]
         (locking this
@@ -21789,7 +21821,7 @@ ZeroExtendNode'new-4
                     #_"ResolvedJavaType" type (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, c)
                     #_"InputStream" in (ClassfileBytecodeProvider'getClassfileAsStream-1 c)
                 ]
-                    (when (some? in) => (throw (NoClassDefFoundError. (#_"Class" .getName c)))
+                    (when (some? in) => (throw! (str "NoClassDefFoundError: " (#_"Class" .getName c)))
                         (let [
                             #_"Classfile" classfile (Classfile'new-3 type, (DataInputStream. in), this)
                             _ (§ ass! this (update this :classfiles assoc c classfile))
@@ -22013,10 +22045,10 @@ ZeroExtendNode'new-4
                             _ (§ ass! this (assoc this :method (ClassfileConstant'resolveMethod-5 (:context cp), cls, name, type, false)))
                         ]
                             (when (nil? (:method this))
-                                (throw (NoSuchMethodError. (str (#_"ResolvedJavaType" .toJavaName cls) "." name type)))
+                                (throw! (str "NoSuchMethodError: " (#_"ResolvedJavaType" .toJavaName cls) "." name type))
                             )
                             (when (or (not (#_"ResolvedJavaMethod" .isPublic (:method this))) (not (or (#_"ResolvedJavaType" .isInterface (#_"ResolvedJavaMethod" .getDeclaringClass (:method this))) (#_"ResolvedJavaType" .isJavaLangObject (#_"ResolvedJavaMethod" .getDeclaringClass (:method this))))))
-                                (throw (IncompatibleClassChangeError. (str "cannot invokeinterface " (#_"ResolvedJavaMethod" .format (:method this), "%H.\n(%P)%R"))))
+                                (throw! (str "IncompatibleClassChangeError: cannot invokeinterface " (:method this)))
                             )
                         )
                     (any = opcode Bytecodes'INVOKEVIRTUAL Bytecodes'INVOKESPECIAL)
@@ -22024,7 +22056,7 @@ ZeroExtendNode'new-4
                             _ (§ ass! this (assoc this :method (ClassfileConstant'resolveMethod-5 (:context cp), cls, name, type, false)))
                         ]
                             (when (nil? (:method this))
-                                (throw (NoSuchMethodError. (str (#_"ResolvedJavaType" .toJavaName cls) "." name type)))
+                                (throw! (str "NoSuchMethodError: " (#_"ResolvedJavaType" .toJavaName cls) "." name type))
                             )
                         )
                     :else
@@ -22032,7 +22064,7 @@ ZeroExtendNode'new-4
                             _ (§ ass! this (assoc this :method (ClassfileConstant'resolveMethod-5 (:context cp), cls, name, type, true)))
                         ]
                             (when (nil? (:method this))
-                                (throw (NoSuchMethodError. (str (#_"ResolvedJavaType" .toJavaName cls) "." name type)))
+                                (throw! (str "NoSuchMethodError: " (#_"ResolvedJavaType" .toJavaName cls) "." name type))
                             )
                         )
                 )
@@ -22073,7 +22105,7 @@ ZeroExtendNode'new-4
                 _ (§ ass! this (assoc this :field (ClassfileConstant'resolveField-5 (:context cp), cls, name, type, (any = opcode Bytecodes'GETSTATIC Bytecodes'PUTSTATIC))))
             ]
                 (when (nil? (:field this))
-                    (throw (NoSuchFieldError. (str (#_"ResolvedJavaType" .toJavaName cls) "." name " " type)))
+                    (throw! (str "NoSuchFieldError: " (#_"ResolvedJavaType" .toJavaName cls) "." name " " type))
                 )
             )
         )
@@ -29141,8 +29173,8 @@ ZeroExtendNode'new-4
 
     (defn- #_"this" NodeFieldsScanner''scanField-3 [#_"NodeFieldsScanner" this, #_"Field" field, #_"long" offset]
         (let [
-            #_"Input" inputAnnotation (#_"AnnotatedElement" .getAnnotation field, Input)
-            #_"OptionalInput" optionalInputAnnotation (#_"AnnotatedElement" .getAnnotation field, OptionalInput)
+            #_"Input" inputAnnotation (#_"Field" .getAnnotation field, Input)
+            #_"OptionalInput" optionalInputAnnotation (#_"Field" .getAnnotation field, OptionalInput)
             #_"String" name (#_"Field" .getName field)
             #_"Class" type (#_"Field" .getType field)
             #_"Class" declaringClass (#_"Field" .getDeclaringClass field)
@@ -29158,7 +29190,7 @@ ZeroExtendNode'new-4
                     ]
                         (update this :nfsInputs conj' (InputInfo'new-6 offset, name, type, declaringClass, inputType, (#_"Field" .isAnnotationPresent field, OptionalInput)))
                     )
-                (some? (#_"AnnotatedElement" .getAnnotation field, Successor))
+                (some? (#_"Field" .getAnnotation field, Successor))
                     (let [
                         this
                             (when-not (ß #_"Class" .isAssignableFrom NodeSuccessorList'iface, type) => this
@@ -29711,7 +29743,7 @@ ZeroExtendNode'new-4
             #_"ResolvedJavaType" javaType (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, type)
         ]
             (when (WordTypes'isWord-1j javaType) => javaType
-                (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, (#_"JavaKind" .toJavaClass WordTypes'wordKind))
+                (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, (#_"JavaKind" .toJavaClass HotSpot'wordKind))
             )
         )
     )
@@ -29797,8 +29829,7 @@ ZeroExtendNode'new-4
      ;;
     (defn- #_"this" ForeignCalls''register-7* [#_"ForeignCalls" this, #_"ForeignCallDescriptor" descriptor, #_"long" address, #_"RegisterEffect" effect, #_"Transition" transition, #_"boolean" reexecutable & #_"LocationIdentity..." killedLocations]
         (let [
-            #_"CallingConvention" callingConvention HotSpotCallingConventionType/NativeCall
-            #_"ForeignCallLinkage" linkage (apply ForeignCallLinkage'create-8* descriptor, address, effect, callingConvention, nil, transition, reexecutable, killedLocations)
+            #_"ForeignCallLinkage" linkage (apply ForeignCallLinkage'create-8* descriptor, address, effect, HotSpotCallingConventionType/NativeCall, nil, transition, reexecutable, killedLocations)
         ]
             (update this :foreignCalls assoc (:descriptor linkage) linkage)
         )
@@ -30047,7 +30078,7 @@ ZeroExtendNode'new-4
  ; that call-free methods also have this space reserved. Then the VM can use the memory at offset 0 relative to the stack pointer.
  ;;
 (class-ns FrameMap []
-    (def #_"int" FrameMap'RETURN_ADDRESS_SIZE (#_"Architecture" .getReturnAddressSize (.arch HotSpot'target)))
+    (def #_"int" FrameMap'RETURN_ADDRESS_SIZE (#_"Architecture" .getReturnAddressSize HotSpot'amd64))
 
     (defn #_"FrameMap" FrameMap'new-0 []
         (merge (FrameMap'class.)
@@ -30210,9 +30241,8 @@ ZeroExtendNode'new-4
     (defn #_"StackSlot" FrameMap''allocateStackSlots-3 [#_"FrameMap" this, #_"int" n, #_"BitSet" objects]
         (when (pos? n)
             (let [
-                #_"int" wordSize (.wordSize HotSpot'target)
-                #_"PlatformKind" wordKind (#_"Architecture" .getWordKind (.arch HotSpot'target))
-                _ (§ ass! this (assoc this :spillSize (+ (:spillSize this) (* n wordSize))))
+                #_"PlatformKind" wordKind (#_"Architecture" .getWordKind HotSpot'amd64)
+                _ (§ ass! this (assoc this :spillSize (+ (:spillSize this) (* n HotSpot'wordSize))))
             ]
                 (when-not (#_"BitSet" .isEmpty objects) => (FrameMap''allocateNewSpillSlot-3 this, (LIRKind'value-1 wordKind), 0)
                     (loop-when [#_"StackSlot" slot nil #_"int" i 0] (< i n) => slot
@@ -30220,7 +30250,7 @@ ZeroExtendNode'new-4
                             #_"StackSlot" objectSlot
                                 (when (#_"BitSet" .get objects, i)
                                     (let [
-                                        objectSlot (FrameMap''allocateNewSpillSlot-3 this, (LIRKind'reference-1 wordKind), (* i wordSize))
+                                        objectSlot (FrameMap''allocateNewSpillSlot-3 this, (LIRKind'reference-1 wordKind), (* i HotSpot'wordSize))
                                         _ (§ ass! (:objectStackSlots this) (conj' (:objectStackSlots this) objectSlot))
                                     ]
                                         objectSlot
@@ -30409,7 +30439,7 @@ ZeroExtendNode'new-4
                     (§ ass! this (assoc this :outerFrameState (FrameStateBuilder''create-6 (:frameState parent), (BytecodeParser''bci-1 parent), (BytecodeParser''getNonIntrinsicAncestor-1 parent), true, nil, nil)))
                 )
         ]
-            (when-not (= bci BytecodeFrame/INVALID_FRAMESTATE_BCI) => (throw! "should not reach here")
+            (when-not (= bci BytecodeFrame'INVALID_FRAMESTATE_BCI) => (throw! "should not reach here")
                 (if (some? pushedValues)
                     (let [
                         #_"(ValueNode)" o'stack (:stack this)
@@ -34082,7 +34112,7 @@ ZeroExtendNode'new-4
             (let [
                 #_"int" pos (Interval''from-1 interval)
             ]
-                (and (CodeUtil/isOdd pos)
+                (and (odd? pos)
                     ;; the current instruction is a call that blocks all registers
                     (< pos (LinearScan''maxOpId-1 (:allocator this))) (LinearScan''hasCall-2 (:allocator this), (inc pos)) (< (inc pos) (Interval''to-1 interval))
                 )
@@ -34125,7 +34155,7 @@ ZeroExtendNode'new-4
                             #_"int" endPos (Interval''to-1 interval)
                         ]
                             ;; => safety check that lirOpWithId is allowed
-                            (when-not (or (< (LinearScan''maxOpId-1 (:allocator this)) endPos) (CodeUtil/isOdd beginPos) (CodeUtil/isOdd endPos))
+                            (when-not (or (< (LinearScan''maxOpId-1 (:allocator this)) endPos) (odd? beginPos) (odd? endPos))
                                 ;; => 'interval' and registerHint are not connected with two moves
                                 (when (and (LinearScanWalker'isMove-3 (LinearScan''instructionForId-2 (:allocator this), beginPos), registerHint, interval) (LinearScanWalker'isMove-3 (LinearScan''instructionForId-2 (:allocator this), endPos), interval, registerHint))
                                     (let [
@@ -34387,7 +34417,7 @@ ZeroExtendNode'new-4
                     (when (SideEffectsState'''isAfterSideEffect-1 sideEffects)
                         ;; only the last side effect on any execution path in a replacement can inherit the stateAfter of the replaced node
                         (let [
-                            #_"FrameState" invalid (Graph''add-2 graph, (FrameState'new-1 BytecodeFrame/INVALID_FRAMESTATE_BCI))
+                            #_"FrameState" invalid (Graph''add-2 graph, (FrameState'new-1 BytecodeFrame'INVALID_FRAMESTATE_BCI))
                         ]
                             (doseq [#_"StateSplit" lastSideEffect (SideEffectsState'''sideEffects-1 sideEffects)]
                                 (§ ass! lastSideEffect (StateSplit'''setStateAfter-2 lastSideEffect, invalid))
@@ -34396,13 +34426,13 @@ ZeroExtendNode'new-4
                     )
                 _ (§ ass! sideEffects (SideEffectsState'''addSideEffect-2 sideEffects, forStateSplit))
             ]
-                (Graph''add-2 graph, (FrameState'new-1 BytecodeFrame/AFTER_BCI))
+                (Graph''add-2 graph, (FrameState'new-1 BytecodeFrame'AFTER_BCI))
             )
             (if (satisfies? AbstractMergeNode forStateSplit)
                 ;; merge nodes always need a frame state
                 (if (SideEffectsState'''isAfterSideEffect-1 sideEffects)
-                    (Graph''add-2 graph, (FrameState'new-1 BytecodeFrame/AFTER_BCI))  ;; a merge after one or more side effects
-                    (Graph''add-2 graph, (FrameState'new-1 BytecodeFrame/BEFORE_BCI)) ;; a merge before any side effects
+                    (Graph''add-2 graph, (FrameState'new-1 BytecodeFrame'AFTER_BCI))  ;; a merge after one or more side effects
+                    (Graph''add-2 graph, (FrameState'new-1 BytecodeFrame'BEFORE_BCI)) ;; a merge before any side effects
                 )
                 ;; other non-side-effects do not need a state
                 nil
@@ -34413,7 +34443,7 @@ ZeroExtendNode'new-4
 
 ;;;
  ; A scoped object for tasks to be performed after parsing an intrinsic such as processing
- ; {@linkplain BytecodeFrame#isPlaceholderBci(int) placeholder} frames states.
+ ; {@linkplain BytecodeFrame#isPlaceholderBci(int) placeholder} frame states.
  ;;
 (class-ns IntrinsicScope [#_"AutoCloseable"]
     ;;;
@@ -34463,13 +34493,13 @@ ZeroExtendNode'new-4
                                 (let [
                                     #_"FrameState" frameState node
                                 ]
-                                    (when (BytecodeFrame/isPlaceholderBci (:bci frameState)) => [this invalid?]
+                                    (when (BytecodeFrame'isPlaceholderBci-1 (:bci frameState)) => [this invalid?]
                                         (condp = (:bci frameState)
-                                            BytecodeFrame/AFTER_BCI
+                                            BytecodeFrame'AFTER_BCI
                                                 (if (nil? (BytecodeParser''getInvokeReturnType-1 (:parser this)))
                                                     ;; A frame state in a root compiled intrinsic.
                                                     (let [
-                                                        _ (§ ass! frameState (Node''replaceAndDelete-2 frameState, (Graph''add-2 graph, (FrameState'new-1 BytecodeFrame/INVALID_FRAMESTATE_BCI))))
+                                                        _ (§ ass! frameState (Node''replaceAndDelete-2 frameState, (Graph''add-2 graph, (FrameState'new-1 BytecodeFrame'INVALID_FRAMESTATE_BCI))))
                                                     ]
                                                         [this invalid?]
                                                     )
@@ -34500,7 +34530,7 @@ ZeroExtendNode'new-4
                                                                 ;; is invalid as it cannot be used to deoptimize to just after the call returns.
                                                                 ;; These invalid frame states are expected to be removed by later compilation stages.
                                                                 (let [
-                                                                    _ (§ ass! frameState (Node''replaceAndDelete-2 frameState, (Graph''add-2 graph, (FrameState'new-1 BytecodeFrame/INVALID_FRAMESTATE_BCI))))
+                                                                    _ (§ ass! frameState (Node''replaceAndDelete-2 frameState, (Graph''add-2 graph, (FrameState'new-1 BytecodeFrame'INVALID_FRAMESTATE_BCI))))
                                                                 ]
                                                                     true
                                                                 )
@@ -34508,7 +34538,7 @@ ZeroExtendNode'new-4
                                                         this
                                                     )
                                                 )
-                                            BytecodeFrame/BEFORE_BCI
+                                            BytecodeFrame'BEFORE_BCI
                                                 (let [
                                                     this
                                                         (when (nil? (:stateBefore this)) => this
@@ -35418,7 +35448,7 @@ ZeroExtendNode'new-4
 
     (defn #_"Variable" LIRGenerator''emitAddress-2 [#_"LIRGenerator" this, #_"AllocatableValue" stackslot]
         (let [
-            #_"Variable" result (LIRGenerator''newVariable-2 this, (LIRKind'value-1 (#_"Architecture" .getWordKind (.arch HotSpot'target))))
+            #_"Variable" result (LIRGenerator''newVariable-2 this, (LIRKind'value-1 (#_"Architecture" .getWordKind HotSpot'amd64)))
             _ (§ ass! this (LIRGenerator''append-2 this, (StackLeaOp'new-2 result, stackslot)))
         ]
             result
@@ -35427,7 +35457,7 @@ ZeroExtendNode'new-4
 
     (defn #_"this" LIRGenerator''emitMembar-2 [#_"LIRGenerator" this, #_"int" barriers]
         (let [
-            #_"int" necessaryBarriers (#_"Architecture" .requiredBarriers (.arch HotSpot'target), barriers)
+            #_"int" necessaryBarriers (#_"Architecture" .requiredBarriers HotSpot'amd64, barriers)
         ]
             (when (and (.isMP HotSpot'target) (not (zero? necessaryBarriers))) => this
                 (LIRGenerator''append-2 this, (MembarOp'new-1 necessaryBarriers))
@@ -35465,7 +35495,7 @@ ZeroExtendNode'new-4
                 #_"Value" uncompressed
                     (if (<= (:shift encoding) 3)
                         (let [
-                            #_"LIRKind" wordKind (LIRKind'unknownReference-1 (#_"Architecture" .getWordKind (.arch HotSpot'target)))
+                            #_"LIRKind" wordKind (LIRKind'unknownReference-1 (#_"Architecture" .getWordKind HotSpot'amd64))
                         ]
                             (AMD64AddressValue'new-5 wordKind, (#_"Register" .asValue HotSpot'heapBaseRegister, wordKind), (LIRGenerator''asAllocatable-2 this, address), (Scale'fromInt-1 (<< 1 (:shift encoding))), 0)
                         )
@@ -35523,7 +35553,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"this" LIRGenerator''moveValueToThread-3 [#_"LIRGenerator" this, #_"Value" value, #_"int" offset]
         (let [
-            #_"LIRKind" wordKind (LIRKind'value-1 (#_"Architecture" .getWordKind (.arch HotSpot'target)))
+            #_"LIRKind" wordKind (LIRKind'value-1 (#_"Architecture" .getWordKind HotSpot'amd64))
             #_"RegisterValue" thread (#_"Register" .asValue HotSpot'threadRegister, wordKind)
             #_"AMD64AddressValue" address (AMD64AddressValue'new-3 wordKind, thread, offset)
         ]
@@ -35799,7 +35829,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"this" LIRGenerator''emitTableSwitch-5 [#_"LIRGenerator" this, #_"int" lowKey, #_"LabelRef" default, #_"[LabelRef]" targets, #_"Value" key]
-        (LIRGenerator''append-2 this, (TableSwitchOp'new-6 lowKey, default, targets, key, (LIRGenerator''newVariable-2 this, (LIRKind'value-1 (#_"Architecture" .getWordKind (.arch HotSpot'target)))), (LIRGenerator''newVariable-2 this, (#_"Value" .getValueKind key))))
+        (LIRGenerator''append-2 this, (TableSwitchOp'new-6 lowKey, default, targets, key, (LIRGenerator''newVariable-2 this, (LIRKind'value-1 (#_"Architecture" .getWordKind HotSpot'amd64))), (LIRGenerator''newVariable-2 this, (#_"Value" .getValueKind key))))
     )
 
     (defn #_"this" LIRGenerator''emitStrategySwitch-6 [#_"LIRGenerator" this, #_"[JavaConstant]" constants, #_"[double]" probabilities, #_"[LabelRef]" targets, #_"LabelRef" default, #_"Variable" value]
@@ -35844,7 +35874,7 @@ ZeroExtendNode'new-4
     #_unused
     (defn #_"LIRKind" LIRGenerator'getAddressKind-3 [#_"Value" base, #_"long" displacement, #_"Value" index]
         (let [
-            #_"PlatformKind" wordKind (#_"Architecture" .getWordKind (.arch HotSpot'target))
+            #_"PlatformKind" wordKind (#_"Architecture" .getWordKind HotSpot'amd64)
         ]
             (cond
                 (and (LIRKind'isValue-1v base) (or (= index Value/ILLEGAL) (LIRKind'isValue-1v index)))
@@ -38275,7 +38305,7 @@ ZeroExtendNode'new-4
             (let [
                 asm
                     (when (:aligned? this) => asm
-                        (Assembler''align-2 asm, (* (.wordSize HotSpot'target) 2))
+                        (Assembler''align-2 asm, (* HotSpot'wordSize 2))
                     )
             ]
                 (Assembler''bind-2 asm, (:label this))
@@ -39052,7 +39082,7 @@ ZeroExtendNode'new-4
         (merge (SafepointOp'class.) (LIRInstruction'new-0)
             (hash-map
                 ; @OperandMode'TEMP({OperandFlag'REG, OperandFlag'ILLEGAL})
-                #_"AllocatableValue" :temp (if (or HotSpot'threadLocalHandshakes (SafepointOp'isPollingPageFar-0)) (LIRGenerator''newVariable-2 (:gen builder), (LIRKind'value-1 (#_"Architecture" .getWordKind (.arch HotSpot'target)))) Value/ILLEGAL) ;; => don't waste a register if it's unneeded
+                #_"AllocatableValue" :temp (if (or HotSpot'threadLocalHandshakes (SafepointOp'isPollingPageFar-0)) (LIRGenerator''newVariable-2 (:gen builder), (LIRKind'value-1 (#_"Architecture" .getWordKind HotSpot'amd64))) Value/ILLEGAL) ;; => don't waste a register if it's unneeded
                 #_"Register" :thread thread
             )
         )
@@ -40512,7 +40542,7 @@ ZeroExtendNode'new-4
                         #_"LIR" :lir (:lir res)
                         #_"FrameMapBuilder" :frameMapBuilder (:frameMapBuilder res)
                         #_"[RegisterAttributes]" :registerAttributes (vec (#_"RegisterConfig" .getAttributesMap HotSpot'registerConfig))
-                        #_"RegisterArray" :registers (#_"Architecture" .getRegisters (.arch HotSpot'target))
+                        #_"RegisterArray" :registers (#_"Architecture" .getRegisters HotSpot'amd64)
                         #_"MoveFactory" :moveFactory moveFactory
                         #_"{Block BlockData}" :blockData {}
                         ;;;
@@ -44701,7 +44731,7 @@ ZeroExtendNode'new-4
         (let [
             #_"RegisterArray" available (#_"RegisterConfig" .filterAllocatableRegisters HotSpot'registerConfig, kind, (#_"RegisterConfig" .getAllocatableRegisters HotSpot'registerConfig))
             #_"Register" scratch (#_"RegisterArray" .get available, 0)
-            #_"LIRKind" largest (LIRKind'value-1 (#_"Architecture" .getLargestStorableKind (.arch HotSpot'target), (#_"Register" .getRegisterCategory scratch)))
+            #_"LIRKind" largest (LIRKind'value-1 (#_"Architecture" .getLargestStorableKind HotSpot'amd64))
         ]
             (RegisterBackupPair'new-2 scratch, (FrameMapBuilder''allocateSpillSlot-2 (:frameMapBuilder this), largest))
         )
@@ -49475,7 +49505,7 @@ ZeroExtendNode'new-4
 
     #_intrinsifier
     (defn #_"BeginLockScopeNode" BeginLockScopeNode'new-1 [#_"int" lockDepth]
-        (BeginLockScopeNode'new-2 WordTypes'wordKind, lockDepth)
+        (BeginLockScopeNode'new-2 HotSpot'wordKind, lockDepth)
     )
 
     (defm BeginLockScopeNode StateSplit
@@ -51027,7 +51057,7 @@ ZeroExtendNode'new-4
 
     #_intrinsifier
     (defn #_"CurrentLockNode" CurrentLockNode'new-1 [#_"int" lockDepth]
-        (merge (CurrentLockNode'class.) (FixedWithNextNode'new-1 (StampFactory'forKind-1 WordTypes'wordKind))
+        (merge (CurrentLockNode'class.) (FixedWithNextNode'new-1 (StampFactory'forKind-1 HotSpot'wordKind))
             (hash-map
                 #_"int" :lockDepth lockDepth
             )
@@ -52360,7 +52390,7 @@ ZeroExtendNode'new-4
     (defm GetObjectAddressNode LIRLowerable
         (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"GetObjectAddressNode" this, #_"LIRBuilder" builder]
             (let [
-                #_"AllocatableValue" obj (LIRGenerator''newVariable-2 (:gen builder), (LIRKind'unknownReference-1 (#_"Architecture" .getWordKind (.arch HotSpot'target))))
+                #_"AllocatableValue" obj (LIRGenerator''newVariable-2 (:gen builder), (LIRKind'unknownReference-1 (#_"Architecture" .getWordKind HotSpot'amd64)))
                 builder (update builder :gen LIRGenerator''emitMove-3 obj, (LIRBuilder''operand-2 builder, (:object this)))
             ]
                 (LIRBuilder''setResult-3 builder, this, obj)
@@ -52403,7 +52433,7 @@ ZeroExtendNode'new-4
             (let [
                 #_"InvokeNode" invoke (MacroNode''replaceWithInvoke-1 this)
                 _
-                    (when (BytecodeFrame/isPlaceholderBci (:bci invoke))
+                    (when (BytecodeFrame'isPlaceholderBci-1 (:bci invoke))
                         (throw! (str (:graph this) ": cannot lower to invoke with placeholder BCI: " this))
                     )
                 _
@@ -52415,7 +52445,7 @@ ZeroExtendNode'new-4
                                 ;; One cause for this is that a MacroNode is created for a method that no longer
                                 ;; needs a MacroNode. For example, Class.getComponentType() only needs a MacroNode
                                 ;; prior to JDK9 as it was given a non-native implementation in JDK9.
-                                (throw! (str (#_"Class" .getSimpleName (#_"Object" .getClass this)) " macro created for call to " (#_"ResolvedJavaMethod" .format (:targetMethod this), "%h.\n(%p)") " in " (:graph this) " must be lowerable to a snippet or intrinsic graph. Maybe a macro node is not needed for this method in the current JDK?"))
+                                (throw! (str (#_"Class" .getSimpleName (#_"Object" .getClass this)) " macro created for call to " (:targetMethod this) " in " (:graph this) " must be lowerable to a snippet or intrinsic graph. Maybe a macro node is not needed for this method in the current JDK?"))
                             )
                         )
                     )
@@ -56390,7 +56420,7 @@ ZeroExtendNode'new-4
                 (let [
                     #_"Graph" graph (:graph this)
                     #_"AddressNode" address (Lowerer'createOffsetAddress-3 graph, (:hub this), HotSpot'classMirrorOffset)
-                    #_"FloatingReadNode" read (Graph''add-2 graph, (FloatingReadNode'new-6 address, NamedLocationIdentity'CLASS_MIRROR, nil, (StampFactory'forKind-1 (.wordJavaKind HotSpot'target)), nil, :BarrierType'NONE))
+                    #_"FloatingReadNode" read (Graph''add-2 graph, (FloatingReadNode'new-6 address, NamedLocationIdentity'CLASS_MIRROR, nil, (StampFactory'forKind-1 HotSpot'wordKind), nil, :BarrierType'NONE))
                     address (Lowerer'createOffsetAddress-3 graph, read, 0)
                     read (Graph''add-2 graph, (FloatingReadNode'new-6 address, NamedLocationIdentity'CLASS_MIRROR_HANDLE, nil, (:stamp this), nil, :BarrierType'NONE))
                 ]
@@ -59052,7 +59082,7 @@ ZeroExtendNode'new-4
         (#_"this" Lowerable'''lower-2 [#_"UnpackEndianHalfNode" this, #_"LoweringTool" lowerer]
             (let [
                 #_"ValueNode" result
-                    (when (= (= (#_"Architecture" .getByteOrder (.arch HotSpot'target)) ByteOrder/BIG_ENDIAN) (:firstHalf this)) => (:value this)
+                    (when (= (= (#_"Architecture" .getByteOrder HotSpot'amd64) ByteOrder/BIG_ENDIAN) (:firstHalf this)) => (:value this)
                         (Graph''add-2 (:graph this), (UnsignedRightShiftNode'new-2 (:value this), (ConstantNode'forInt-2 32, (:graph this))))
                     )
             ]
@@ -59439,7 +59469,7 @@ ZeroExtendNode'new-4
                 #_"int" codeSize (Bytecode'''getCodeSize-1 code)
             ]
                 (when (and (not (zero? codeSize)) (<= codeSize bci))
-                    (throw! (str "bci " bci " is out of range for " (#_"ResolvedJavaMethod" .format (Bytecode'''getMethod-1 code), "%H.\n(%p)") " " codeSize " bytes"))
+                    (throw! (str "bci " bci " is out of range for " (Bytecode'''getMethod-1 code) " " codeSize " bytes"))
                 )
             )
         )
@@ -59952,7 +59982,7 @@ ZeroExtendNode'new-4
                             (when (some? stateAfter) => state
                                 (let [
                                     state
-                                        (when-not (= (:bci stateAfter) BytecodeFrame/INVALID_FRAMESTATE_BCI)
+                                        (when-not (= (:bci stateAfter) BytecodeFrame'INVALID_FRAMESTATE_BCI)
                                             stateAfter
                                         )
                                     _ (§ ass! node (StateSplit'''setStateAfter-2 node, nil))
@@ -59989,7 +60019,7 @@ ZeroExtendNode'new-4
                     (when (= (nth states i) singleState)
                         (recur (inc i))
                     )
-                    (when (and (some? singleState) (not= (:bci singleState) BytecodeFrame/INVALID_FRAMESTATE_BCI))
+                    (when (and (some? singleState) (not= (:bci singleState) BytecodeFrame'INVALID_FRAMESTATE_BCI))
                         singleState
                     )
                 )
@@ -61831,11 +61861,10 @@ ZeroExtendNode'new-4
 )
 
 (class-ns RegisterMap []
-    (defn #_"RegisterMap" RegisterMap'new-1 [#_"Architecture" arch]
+    (defn #_"RegisterMap" RegisterMap'new-0 []
         (merge (RegisterMap'class.)
             (hash-map
-                #_"[Variable]" :regValues (vec (repeat (#_"RegisterArray" .size (#_"Architecture" .getRegisters arch)) nil))
-                #_"Architecture" :arch arch
+                #_"[Variable]" :regValues (vec (repeat (#_"RegisterArray" .size (#_"Architecture" .getRegisters HotSpot'amd64)) nil))
             )
         )
     )
@@ -61850,7 +61879,7 @@ ZeroExtendNode'new-4
                 #_"Variable" value (nth (:regValues this) i)
             ]
                 (when (some? value)
-                    (f'consumer-2 (#_"RegisterArray" .get (#_"Architecture" .getRegisters (:arch this)), i), value)
+                    (f'consumer-2 (#_"RegisterArray" .get (#_"Architecture" .getRegisters HotSpot'amd64), i), value)
                 )
             )
         )
@@ -61916,7 +61945,7 @@ ZeroExtendNode'new-4
                     #_"IntrinsicContext" intrinsic (:intrinsicContext parser)
                 ]
                     (when-not (IntrinsicContext''isCallToOriginal-2 intrinsic, method)
-                        (throw! (str "All non-recursive calls in the intrinsic " (#_"ResolvedJavaMethod" .format (:intrinsicMethod intrinsic), "%H.\n(%p)") " must be inlined or intrinsified: found call to " (#_"ResolvedJavaMethod" .format method, "%h.\n(%p)")))
+                        (throw! (str "All non-recursive calls in the intrinsic " (:intrinsicMethod intrinsic) " must be inlined or intrinsified: found call to " method))
                     )
                 )
             )
@@ -62046,17 +62075,17 @@ ZeroExtendNode'new-4
         (SaveCalleeSaveRegisters'class.)
     )
 
-    (defn- #_"RegisterMap" SaveCalleeSaveRegisters'saveAtEntry-4 [#_"LIR" lir, #_"LIRGenerator" lirGen, #_"RegisterArray" calleeSaveRegisters, #_"Architecture" arch]
+    (defn- #_"RegisterMap" SaveCalleeSaveRegisters'saveAtEntry-3 [#_"LIR" lir, #_"LIRGenerator" lirGen, #_"RegisterArray" calleeSaveRegisters]
         (let [
             #_"[LIRInstruction]" ops (get (:lirInstructions lir) (ControlFlowGraph''getStartBlock-1 (:cfg lir)))
             #_"LIRInsertionBuffer" buffer (LIRInsertionBuffer''init-2 (LIRInsertionBuffer'new-0), ops)
             #_"LabelOp" entry (nth ops 0)
-            #_"RegisterMap" saveMap (RegisterMap'new-1 arch)
+            #_"RegisterMap" saveMap (RegisterMap'new-0)
             #_"[RegisterValue]" savedRegisterValues
                 (loop-when [savedRegisterValues [] #_"seq" s (seq calleeSaveRegisters)] (some? s) => savedRegisterValues
                     (let [
                         #_"Register" register (first s)
-                        #_"PlatformKind" registerPlatformKind (#_"Architecture" .getLargestStorableKind arch, (#_"Register" .getRegisterCategory register))
+                        #_"PlatformKind" registerPlatformKind (#_"Architecture" .getLargestStorableKind HotSpot'amd64)
                         #_"LIRKind" lirKind (LIRKind'value-1 registerPlatformKind)
                         #_"RegisterValue" registerValue (#_"Register" .asValue register, lirKind)
                         #_"Variable" saveVariable (LIRGenerator''newVariable-2 lirGen, lirKind)
@@ -62099,7 +62128,7 @@ ZeroExtendNode'new-4
             ]
                 (when (and (some? calleeSaveRegisters) (not (zero? (#_"RegisterArray" .size calleeSaveRegisters))))
                     (let [
-                        #_"RegisterMap" savedRegisters (SaveCalleeSaveRegisters'saveAtEntry-4 (:lir res), (:lirGen context), calleeSaveRegisters, (.arch HotSpot'target))
+                        #_"RegisterMap" savedRegisters (SaveCalleeSaveRegisters'saveAtEntry-3 (:lir res), (:lirGen context), calleeSaveRegisters)
                     ]
                         (doseq [#_"Block" block (:codeEmittingOrder (:lir res))]
                             (when (and (some? block) (empty? (:successors block)))
@@ -68269,11 +68298,11 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"ValueNode" WordOperationPlugin'fromUnsigned-2 [#_"BytecodeParser" parser, #_"ValueNode" value]
-        (WordOperationPlugin'convert-4 parser, value, WordTypes'wordKind, true)
+        (WordOperationPlugin'convert-4 parser, value, HotSpot'wordKind, true)
     )
 
     (defn #_"ValueNode" WordOperationPlugin'fromSigned-2 [#_"BytecodeParser" parser, #_"ValueNode" value]
-        (WordOperationPlugin'convert-4 parser, value, WordTypes'wordKind, false)
+        (WordOperationPlugin'convert-4 parser, value, HotSpot'wordKind, false)
     )
 
     (defn #_"ValueNode" WordOperationPlugin'toUnsigned-3 [#_"BytecodeParser" parser, #_"ValueNode" value, #_"JavaKind" toKind]
@@ -68305,7 +68334,7 @@ ZeroExtendNode'new-4
                         (BytecodeParser''addPush-3 parser, returnKind, (ConditionalNode'create-3 isNull, (BytecodeParser''add-2 parser, (ConstantNode'forBoolean-1 true)), (BytecodeParser''add-2 parser, (ConstantNode'forBoolean-1 false))))
                     )
                 :MetaspaceOpcode'FROM_POINTER
-                    (BytecodeParser''addPush-3 parser, returnKind, (PointerCastNode'new-2 (StampFactory'forKind-1 WordTypes'wordKind), (nth args 0)))
+                    (BytecodeParser''addPush-3 parser, returnKind, (PointerCastNode'new-2 (StampFactory'forKind-1 HotSpot'wordKind), (nth args 0)))
                 :MetaspaceOpcode'TO_KLASS_POINTER
                     (BytecodeParser''addPush-3 parser, returnKind, (PointerCastNode'new-2 KlassPointerStamp'KLASS, (nth args 0)))
                 :MetaspaceOpcode'READ_KLASS_POINTER
@@ -68394,7 +68423,7 @@ ZeroExtendNode'new-4
                     (condp = (WordFactoryOperation''opcode-1 factoryOperation)
                         :WordFactoryOpcode'ZERO
                         (do
-                            (BytecodeParser''addPush-3 parser, returnKind, (ConstantNode'forIntegerKind-2 WordTypes'wordKind, 0))
+                            (BytecodeParser''addPush-3 parser, returnKind, (ConstantNode'forIntegerKind-2 HotSpot'wordKind, 0))
                             :done
                         )
                         :WordFactoryOpcode'FROM_UNSIGNED
@@ -68415,7 +68444,7 @@ ZeroExtendNode'new-4
                     #_"WordOperation" operation (#_"ResolvedJavaMethod" .getAnnotation method, WordOperation)
                 ]
                     (when (nil? operation)
-                        (throw! (str "cannot call method on a word value: " (#_"ResolvedJavaMethod" .format method, "%H.\n(%p)")))
+                        (throw! (str "cannot call method on a word value: " method))
                     )
                     (condp =? (WordOperation''opcode-1 operation)
                         :WordOpcode'NODE_CLASS
@@ -68428,11 +68457,11 @@ ZeroExtendNode'new-4
                         :WordOpcode'COMPARISON
                             (§ ass! parser (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin'comparisonOp-4 parser, (WordOperation''condition-1 operation), (nth args 0), (WordOperationPlugin'fromSigned-2 parser, (nth args 1)))))
                         :WordOpcode'IS_NULL
-                            (§ ass! parser (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin'comparisonOp-4 parser, Condition'EQ, (nth args 0), (ConstantNode'forIntegerKind-2 WordTypes'wordKind, 0))))
+                            (§ ass! parser (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin'comparisonOp-4 parser, Condition'EQ, (nth args 0), (ConstantNode'forIntegerKind-2 HotSpot'wordKind, 0))))
                         :WordOpcode'IS_NON_NULL
-                            (§ ass! parser (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin'comparisonOp-4 parser, Condition'NE, (nth args 0), (ConstantNode'forIntegerKind-2 WordTypes'wordKind, 0))))
+                            (§ ass! parser (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin'comparisonOp-4 parser, Condition'NE, (nth args 0), (ConstantNode'forIntegerKind-2 HotSpot'wordKind, 0))))
                         :WordOpcode'NOT
-                            (BytecodeParser''addPush-3 parser, returnKind, (XorNode'new-2 (nth args 0), (BytecodeParser''add-2 parser, (ConstantNode'forIntegerKind-2 WordTypes'wordKind, -1))))
+                            (BytecodeParser''addPush-3 parser, returnKind, (XorNode'new-2 (nth args 0), (BytecodeParser''add-2 parser, (ConstantNode'forIntegerKind-2 HotSpot'wordKind, -1))))
                        [:WordOpcode'READ_POINTER :WordOpcode'READ_OBJECT :WordOpcode'READ_BARRIERED]
                             (let [
                                 #_"JavaKind" readKind (WordTypes'asKind-1 (#_"Signature" .getReturnType (#_"ResolvedJavaMethod" .getSignature method), (#_"ResolvedJavaMethod" .getDeclaringClass method)))
@@ -68469,25 +68498,25 @@ ZeroExtendNode'new-4
                             (§ ass! parser (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin'toUnsigned-3 parser, (nth args 0), JavaKind/Long)))
                         :WordOpcode'FROM_OBJECT
                             (let [
-                                #_"WordCastNode" objectToTracked (BytecodeParser''add-2 parser, (WordCastNode'objectToWord-2 (nth args 0), WordTypes'wordKind))
+                                #_"WordCastNode" objectToTracked (BytecodeParser''add-2 parser, (WordCastNode'objectToWord-2 (nth args 0), HotSpot'wordKind))
                             ]
                                 (§ ass! parser (BytecodeParser''push-3 parser, returnKind, objectToTracked))
                             )
                         :WordOpcode'FROM_ADDRESS
                             (let [
-                                #_"WordCastNode" addressToWord (BytecodeParser''add-2 parser, (WordCastNode'addressToWord-2 (nth args 0), WordTypes'wordKind))
+                                #_"WordCastNode" addressToWord (BytecodeParser''add-2 parser, (WordCastNode'addressToWord-2 (nth args 0), HotSpot'wordKind))
                             ]
                                 (§ ass! parser (BytecodeParser''push-3 parser, returnKind, addressToWord))
                             )
                         :WordOpcode'TO_OBJECT
                             (let [
-                                #_"WordCastNode" wordToObject (BytecodeParser''add-2 parser, (WordCastNode'wordToObject-2 (nth args 0), WordTypes'wordKind))
+                                #_"WordCastNode" wordToObject (BytecodeParser''add-2 parser, (WordCastNode'wordToObject-2 (nth args 0), HotSpot'wordKind))
                             ]
                                 (§ ass! parser (BytecodeParser''push-3 parser, returnKind, wordToObject))
                             )
                         :WordOpcode'TO_OBJECT_NON_NULL
                             (let [
-                                #_"WordCastNode" wordToObjectNonNull (BytecodeParser''add-2 parser, (WordCastNode'wordToObjectNonNull-2 (nth args 0), WordTypes'wordKind))
+                                #_"WordCastNode" wordToObjectNonNull (BytecodeParser''add-2 parser, (WordCastNode'wordToObjectNonNull-2 (nth args 0), HotSpot'wordKind))
                             ]
                                 (§ ass! parser (BytecodeParser''push-3 parser, returnKind, wordToObjectNonNull))
                             )
@@ -68577,13 +68606,13 @@ ZeroExtendNode'new-4
         ]
             (if (satisfies? KlassPointerStamp componentStamp)
                 (LoadIndexedPointerNode'new-3 componentStamp, array, index)
-                (LoadIndexedNode'new-3 array, index, WordTypes'wordKind)
+                (LoadIndexedNode'new-3 array, index, HotSpot'wordKind)
             )
         )
     )
 
     (defn- #_"StoreIndexedNode" WordOperationPlugin'createStoreIndexedNode-3 [#_"ValueNode" array, #_"ValueNode" index, #_"ValueNode" value]
-        (StoreIndexedNode'new-4 array, index, WordTypes'wordKind, value)
+        (StoreIndexedNode'new-4 array, index, HotSpot'wordKind, value)
     )
 
     (defm WordOperationPlugin NodePlugin
@@ -68606,13 +68635,13 @@ ZeroExtendNode'new-4
             (and (= (#_"ResolvedJavaField" .getJavaKind field) JavaKind/Object)
                 (let [
                     #_"boolean" isWordField (WordTypes'isWord-1j (#_"ResolvedJavaField" .getType field))
-                    #_"boolean" isWordValue (= (ValueNode''getStackKind-1 value) WordTypes'wordKind)
+                    #_"boolean" isWordValue (= (ValueNode''getStackKind-1 value) HotSpot'wordKind)
                 ]
                     (cond
                         (and isWordField (not isWordValue))
-                            (throw! (str "cannot store a non-word value into a word field: " (#_"ResolvedJavaField" .format field, "%H.\n")))
+                            (throw! (str "cannot store a non-word value into a word field: " field))
                         (and (not isWordField) isWordValue)
-                            (throw! (str "cannot store a word value into a non-word field: " (#_"ResolvedJavaField" .format field, "%H.\n")))
+                            (throw! (str "cannot store a word value into a non-word field: " field))
                         :else
                             false ;; we never need to intercept the field store
                     )
@@ -68630,14 +68659,14 @@ ZeroExtendNode'new-4
             ]
                 (if (and (some? arrayType) (WordTypes'isWord-1j (#_"ResolvedJavaType" .getComponentType arrayType)))
                     (do
-                        (when-not (= (ValueNode''getStackKind-1 value) WordTypes'wordKind)
+                        (when-not (= (ValueNode''getStackKind-1 value) HotSpot'wordKind)
                             (throw! (str "cannot store a non-word value into a word array: " (#_"ResolvedJavaType" .toJavaName arrayType, true)))
                         )
                         (BytecodeParser''add-2 parser, (WordOperationPlugin'createStoreIndexedNode-3 array, index, value))
                         true
                     )
                     (do
-                        (when (and (= elementKind JavaKind/Object) (= (ValueNode''getStackKind-1 value) WordTypes'wordKind))
+                        (when (and (= elementKind JavaKind/Object) (= (ValueNode''getStackKind-1 value) HotSpot'wordKind))
                             (throw! (str "cannot store a word value into a non-word array: " (#_"ResolvedJavaType" .toJavaName arrayType, true)))
                         )
                         false
@@ -68648,7 +68677,7 @@ ZeroExtendNode'new-4
 
         (#_"boolean" NodePlugin'''handleCheckCast-4 [#_"WordOperationPlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaType" type]
             (if (WordTypes'isWord-1j type)
-                (when (= (ValueNode''getStackKind-1 object) WordTypes'wordKind) => (throw! (str "cannot cast a non-word value to a word type: " (#_"ResolvedJavaType" .toJavaName type, true)))
+                (when (= (ValueNode''getStackKind-1 object) HotSpot'wordKind) => (throw! (str "cannot cast a non-word value to a word type: " (#_"ResolvedJavaType" .toJavaName type, true)))
                     (§ ass! parser (BytecodeParser''push-3 parser, JavaKind/Object, object))
                     true
                 )
@@ -69083,7 +69112,7 @@ ZeroExtendNode'new-4
     )
 
     ;;;
-     ; Turns a CompilationResult into a CompiledCode that can be passed to the VM for installation.
+     ; Turns a CompilationResult into a CompiledCode that can be passed to the VM for installation.
      ;;
     (defn #_"HotSpotCompiledCode" Compiler'createCompiledCode-1 [#_"CompilationResult" result]
         (let [
@@ -69129,17 +69158,10 @@ ZeroExtendNode'new-4
 
 (§ package jdk.vm.ci.amd64
 
-import static jdk.vm.ci.code.MemoryBarriers.LOAD_LOAD
-import static jdk.vm.ci.code.MemoryBarriers.LOAD_STORE
-import static jdk.vm.ci.code.MemoryBarriers.STORE_STORE
-import static jdk.vm.ci.code.Register.SPECIAL
-
 import java.nio.ByteOrder
-import java.util.EnumSet
 
 import jdk.vm.ci.code.Architecture
 import jdk.vm.ci.code.Register
-import jdk.vm.ci.code.Register.RegisterCategory
 import jdk.vm.ci.code.RegisterArray
 import jdk.vm.ci.meta.JavaKind
 import jdk.vm.ci.meta.PlatformKind
@@ -69149,230 +69171,35 @@ import jdk.vm.ci.meta.PlatformKind
  ;;
 public class AMD64 extends Architecture
 (§
-    public static final RegisterCategory CPU = new RegisterCategory("CPU")
-
     ;; General purpose CPU registers
-    public static final Register rax = new Register(0, 0, "rax", CPU)
-    public static final Register rcx = new Register(1, 1, "rcx", CPU)
-    public static final Register rdx = new Register(2, 2, "rdx", CPU)
-    public static final Register rbx = new Register(3, 3, "rbx", CPU)
-    public static final Register rsp = new Register(4, 4, "rsp", CPU)
-    public static final Register rbp = new Register(5, 5, "rbp", CPU)
-    public static final Register rsi = new Register(6, 6, "rsi", CPU)
-    public static final Register rdi = new Register(7, 7, "rdi", CPU)
+    public static final Register rax = new Register(0, 0, "rax")
+    public static final Register rcx = new Register(1, 1, "rcx")
+    public static final Register rdx = new Register(2, 2, "rdx")
+    public static final Register rbx = new Register(3, 3, "rbx")
+    public static final Register rsp = new Register(4, 4, "rsp")
+    public static final Register rbp = new Register(5, 5, "rbp")
+    public static final Register rsi = new Register(6, 6, "rsi")
+    public static final Register rdi = new Register(7, 7, "rdi")
 
-    public static final Register r8  = new Register(8,  8,  "r8", CPU)
-    public static final Register r9  = new Register(9,  9,  "r9", CPU)
-    public static final Register r10 = new Register(10, 10, "r10", CPU)
-    public static final Register r11 = new Register(11, 11, "r11", CPU)
-    public static final Register r12 = new Register(12, 12, "r12", CPU)
-    public static final Register r13 = new Register(13, 13, "r13", CPU)
-    public static final Register r14 = new Register(14, 14, "r14", CPU)
-    public static final Register r15 = new Register(15, 15, "r15", CPU)
-
-    public static final Register[] cpuRegisters =
-    (§
-        rax, rcx, rdx, rbx, rsp, rbp, rsi, rdi,
-        r8, r9, r10, r11, r12, r13, r14, r15
-    )
-
-    public static final RegisterCategory XMM = new RegisterCategory("XMM")
-
-    ;; XMM registers
-    public static final Register xmm0 = new Register(16, 0, "xmm0", XMM)
-    public static final Register xmm1 = new Register(17, 1, "xmm1", XMM)
-    public static final Register xmm2 = new Register(18, 2, "xmm2", XMM)
-    public static final Register xmm3 = new Register(19, 3, "xmm3", XMM)
-    public static final Register xmm4 = new Register(20, 4, "xmm4", XMM)
-    public static final Register xmm5 = new Register(21, 5, "xmm5", XMM)
-    public static final Register xmm6 = new Register(22, 6, "xmm6", XMM)
-    public static final Register xmm7 = new Register(23, 7, "xmm7", XMM)
-
-    public static final Register xmm8  = new Register(24,  8, "xmm8",  XMM)
-    public static final Register xmm9  = new Register(25,  9, "xmm9",  XMM)
-    public static final Register xmm10 = new Register(26, 10, "xmm10", XMM)
-    public static final Register xmm11 = new Register(27, 11, "xmm11", XMM)
-    public static final Register xmm12 = new Register(28, 12, "xmm12", XMM)
-    public static final Register xmm13 = new Register(29, 13, "xmm13", XMM)
-    public static final Register xmm14 = new Register(30, 14, "xmm14", XMM)
-    public static final Register xmm15 = new Register(31, 15, "xmm15", XMM)
-
-    public static final Register xmm16 = new Register(32, 16, "xmm16", XMM)
-    public static final Register xmm17 = new Register(33, 17, "xmm17", XMM)
-    public static final Register xmm18 = new Register(34, 18, "xmm18", XMM)
-    public static final Register xmm19 = new Register(35, 19, "xmm19", XMM)
-    public static final Register xmm20 = new Register(36, 20, "xmm20", XMM)
-    public static final Register xmm21 = new Register(37, 21, "xmm21", XMM)
-    public static final Register xmm22 = new Register(38, 22, "xmm22", XMM)
-    public static final Register xmm23 = new Register(39, 23, "xmm23", XMM)
-
-    public static final Register xmm24 = new Register(40, 24, "xmm24", XMM)
-    public static final Register xmm25 = new Register(41, 25, "xmm25", XMM)
-    public static final Register xmm26 = new Register(42, 26, "xmm26", XMM)
-    public static final Register xmm27 = new Register(43, 27, "xmm27", XMM)
-    public static final Register xmm28 = new Register(44, 28, "xmm28", XMM)
-    public static final Register xmm29 = new Register(45, 29, "xmm29", XMM)
-    public static final Register xmm30 = new Register(46, 30, "xmm30", XMM)
-    public static final Register xmm31 = new Register(47, 31, "xmm31", XMM)
-
-    public static final Register[] xmmRegistersSSE =
-    (§
-        xmm0, xmm1, xmm2,  xmm3,  xmm4,  xmm5,  xmm6,  xmm7,
-        xmm8, xmm9, xmm10, xmm11, xmm12, xmm13, xmm14, xmm15
-    )
-
-    public static final Register[] xmmRegistersAVX512 =
-    (§
-        xmm0, xmm1, xmm2,  xmm3,  xmm4,  xmm5,  xmm6,  xmm7,
-        xmm8, xmm9, xmm10, xmm11, xmm12, xmm13, xmm14, xmm15,
-        xmm16, xmm17, xmm18, xmm19, xmm20, xmm21, xmm22, xmm23,
-        xmm24, xmm25, xmm26, xmm27, xmm28, xmm29, xmm30, xmm31
-    )
-
-    public static final RegisterCategory MASK = new RegisterCategory("MASK", false)
-
-    public static final Register k0 = new Register(48, 0, "k0", MASK)
-    public static final Register k1 = new Register(49, 1, "k1", MASK)
-    public static final Register k2 = new Register(50, 2, "k2", MASK)
-    public static final Register k3 = new Register(51, 3, "k3", MASK)
-    public static final Register k4 = new Register(52, 4, "k4", MASK)
-    public static final Register k5 = new Register(53, 5, "k5", MASK)
-    public static final Register k6 = new Register(54, 6, "k6", MASK)
-    public static final Register k7 = new Register(55, 7, "k7", MASK)
-
-    public static final RegisterArray valueRegistersSSE = new RegisterArray(
-        rax,  rcx,  rdx,   rbx,   rsp,   rbp,   rsi,   rdi,
-        r8,   r9,   r10,   r11,   r12,   r13,   r14,   r15,
-        xmm0, xmm1, xmm2,  xmm3,  xmm4,  xmm5,  xmm6,  xmm7,
-        xmm8, xmm9, xmm10, xmm11, xmm12, xmm13, xmm14, xmm15
-    )
-
-    public static final RegisterArray valueRegistersAVX512 = new RegisterArray(
-        rax,  rcx,  rdx,   rbx,   rsp,   rbp,   rsi,   rdi,
-        r8,   r9,   r10,   r11,   r12,   r13,   r14,   r15,
-        xmm0, xmm1, xmm2,  xmm3,  xmm4,  xmm5,  xmm6,  xmm7,
-        xmm8, xmm9, xmm10, xmm11, xmm12, xmm13, xmm14, xmm15,
-        xmm16, xmm17, xmm18, xmm19, xmm20, xmm21, xmm22, xmm23,
-        xmm24, xmm25, xmm26, xmm27, xmm28, xmm29, xmm30, xmm31,
-        k0, k1, k2, k3, k4, k5, k6, k7
-    )
+    public static final Register r8  = new Register(8,  8,  "r8")
+    public static final Register r9  = new Register(9,  9,  "r9")
+    public static final Register r10 = new Register(10, 10, "r10")
+    public static final Register r11 = new Register(11, 11, "r11")
+    public static final Register r12 = new Register(12, 12, "r12")
+    public static final Register r13 = new Register(13, 13, "r13")
+    public static final Register r14 = new Register(14, 14, "r14")
+    public static final Register r15 = new Register(15, 15, "r15")
 
     ;;;
      ; Register used to construct an instruction-relative address.
      ;;
-    public static final Register rip = new Register(56, -1, "rip", SPECIAL)
+    public static final Register rip = new Register(56, -1, "rip")
 
-    public static final RegisterArray allRegisters = new RegisterArray(
-        rax,  rcx,  rdx,   rbx,   rsp,   rbp,   rsi,   rdi,
-        r8,   r9,   r10,   r11,   r12,   r13,   r14,   r15,
-        xmm0, xmm1, xmm2,  xmm3,  xmm4,  xmm5,  xmm6,  xmm7,
-        xmm8, xmm9, xmm10, xmm11, xmm12, xmm13, xmm14, xmm15,
-        xmm16, xmm17, xmm18, xmm19, xmm20, xmm21, xmm22, xmm23,
-        xmm24, xmm25, xmm26, xmm27, xmm28, xmm29, xmm30, xmm31,
-        k0, k1, k2, k3, k4, k5, k6, k7,
-        rip
-    )
+    public static final RegisterArray allRegisters = new RegisterArray(rax, rcx, rdx, rbx, rsp, rbp, rsi, rdi, r8, r9, r10, r11, r12, r13, r14, r15, rip)
 
-    ;;;
-     ; Basic set of CPU features mirroring what is returned from the cpuid instruction. See:
-     ; {@code VM_Version::cpuFeatureFlags}.
-     ;;
-    public enum CPUFeature
+    public AMD64()
     (§
-        CX8,
-        CMOV,
-        FXSR,
-        HT,
-        MMX,
-        AMD_3DNOW_PREFETCH,
-        SSE,
-        SSE2,
-        SSE3,
-        SSSE3,
-        SSE4A,
-        SSE4_1,
-        SSE4_2,
-        POPCNT,
-        LZCNT,
-        TSC,
-        TSCINV,
-        AVX,
-        AVX2,
-        AES,
-        ERMS,
-        CLMUL,
-        BMI1,
-        BMI2,
-        RTM,
-        ADX,
-        AVX512F,
-        AVX512DQ,
-        AVX512PF,
-        AVX512ER,
-        AVX512CD,
-        AVX512BW,
-        AVX512VL,
-        SHA,
-        FMA
-    )
-
-    private final EnumSet<CPUFeature> features
-
-    ;;;
-     ; Set of flags to control code emission.
-     ;;
-    public enum Flag
-    (§
-        UseCountLeadingZerosInstruction,
-        UseCountTrailingZerosInstruction
-    )
-
-    private final EnumSet<Flag> flags
-
-    private final AMD64Kind largestKind
-
-    public AMD64(EnumSet<CPUFeature> features, EnumSet<Flag> flags)
-    (§
-        super("AMD64", AMD64Kind.QWORD, ByteOrder.LITTLE_ENDIAN, true, allRegisters, LOAD_LOAD | LOAD_STORE | STORE_STORE, 1, 8)
-        this.features = features
-        this.flags = flags
-        assert features.contains(CPUFeature.SSE2) (§ colon ) "minimum config for x64"
-
-        if (features.contains(CPUFeature.AVX512F))
-        (§
-            largestKind = AMD64Kind.V512_QWORD
-        )
-        else if (features.contains(CPUFeature.AVX))
-        (§
-            largestKind = AMD64Kind.V256_QWORD
-        )
-        else
-        (§
-            largestKind = AMD64Kind.V128_QWORD
-        )
-    )
-
-    public EnumSet<CPUFeature> getFeatures()
-    (§
-        return features
-    )
-
-    public EnumSet<Flag> getFlags()
-    (§
-        return flags
-    )
-
-    @Override
-    public RegisterArray getAvailableValueRegisters()
-    (§
-        if (features.contains(CPUFeature.AVX512F))
-        (§
-            return valueRegistersAVX512
-        )
-        else
-        (§
-            return valueRegistersSSE
-        )
+        super("AMD64", AMD64Kind.QWORD, ByteOrder.LITTLE_ENDIAN, true, allRegisters, MemoryBarriers.LOAD_LOAD | MemoryBarriers.LOAD_STORE | MemoryBarriers.STORE_STORE, 1, 8)
     )
 
     @Override
@@ -69391,53 +69218,15 @@ public class AMD64 extends Architecture
             case Long
             case Object
                 return AMD64Kind.QWORD
-            case Float
-                return AMD64Kind.SINGLE
-            case Double
-                return AMD64Kind.DOUBLE
             default
                 return null
         )
     )
 
     @Override
-    public boolean canStoreValue(RegisterCategory category, PlatformKind platformKind)
+    public AMD64Kind getLargestStorableKind()
     (§
-        AMD64Kind kind = (AMD64Kind) platformKind
-        if (kind.isInteger())
-        (§
-            return category.equals(CPU)
-        )
-        else if (kind.isXMM())
-        (§
-            return category.equals(XMM)
-        )
-        else
-        (§
-            assert kind.isMask()
-            return category.equals(MASK)
-        )
-    )
-
-    @Override
-    public AMD64Kind getLargestStorableKind(RegisterCategory category)
-    (§
-        if (category.equals(CPU))
-        (§
-            return AMD64Kind.QWORD
-        )
-        else if (category.equals(XMM))
-        (§
-            return largestKind
-        )
-        else if (category.equals(MASK))
-        (§
-            return AMD64Kind.MASK64
-        )
-        else
-        (§
-            return null
-        )
+        return AMD64Kind.QWORD
     )
 )
 )
@@ -69448,73 +69237,13 @@ import jdk.vm.ci.meta.PlatformKind
 
 public enum AMD64Kind implements PlatformKind
 (§
-    ;; scalar
-    BYTE(1),
-    WORD(2),
-    DWORD(4),
-    QWORD(8),
-    SINGLE(4),
-    DOUBLE(8),
-
-    ;; SSE2
-    V32_BYTE(4, BYTE),
-    V32_WORD(4, WORD),
-    V64_BYTE(8, BYTE),
-    V64_WORD(8, WORD),
-    V64_DWORD(8, DWORD),
-    V128_BYTE(16, BYTE),
-    V128_WORD(16, WORD),
-    V128_DWORD(16, DWORD),
-    V128_QWORD(16, QWORD),
-    V128_SINGLE(16, SINGLE),
-    V128_DOUBLE(16, DOUBLE),
-
-    ;; AVX
-    V256_BYTE(32, BYTE),
-    V256_WORD(32, WORD),
-    V256_DWORD(32, DWORD),
-    V256_QWORD(32, QWORD),
-    V256_SINGLE(32, SINGLE),
-    V256_DOUBLE(32, DOUBLE),
-
-    ;; AVX512
-    V512_BYTE(64, BYTE),
-    V512_WORD(64, WORD),
-    V512_DWORD(64, DWORD),
-    V512_QWORD(64, QWORD),
-    V512_SINGLE(64, SINGLE),
-    V512_DOUBLE(64, DOUBLE),
-
-    MASK8(1),
-    MASK16(2),
-    MASK32(4),
-    MASK64(8)
+    BYTE(1), WORD(2), DWORD(4), QWORD(8)
 
     private final int size
-    private final int vectorLength
-
-    private final AMD64Kind scalar
-    private final EnumKey<AMD64Kind> key = new EnumKey<>(this)
 
     AMD64Kind(int size)
     (§
         this.size = size
-        this.scalar = this
-        this.vectorLength = 1
-    )
-
-    AMD64Kind(int size, AMD64Kind scalar)
-    (§
-        this.size = size
-        this.scalar = scalar
-
-        assert size % scalar.size == 0
-        this.vectorLength = size / scalar.size
-    )
-
-    public AMD64Kind getScalar()
-    (§
-        return scalar
     )
 
     public int getSizeInBytes()
@@ -69524,12 +69253,7 @@ public enum AMD64Kind implements PlatformKind
 
     public int getVectorLength()
     (§
-        return vectorLength
-    )
-
-    public Key getKey()
-    (§
-        return key
+        return 1
     )
 
     public boolean isInteger()
@@ -69545,108 +69269,6 @@ public enum AMD64Kind implements PlatformKind
                 return false
         )
     )
-
-    public boolean isXMM()
-    (§
-        switch (this)
-        (§
-            case SINGLE
-            case DOUBLE
-            case V32_BYTE
-            case V32_WORD
-            case V64_BYTE
-            case V64_WORD
-            case V64_DWORD
-            case V128_BYTE
-            case V128_WORD
-            case V128_DWORD
-            case V128_QWORD
-            case V128_SINGLE
-            case V128_DOUBLE
-            case V256_BYTE
-            case V256_WORD
-            case V256_DWORD
-            case V256_QWORD
-            case V256_SINGLE
-            case V256_DOUBLE
-            case V512_BYTE
-            case V512_WORD
-            case V512_DWORD
-            case V512_QWORD
-            case V512_SINGLE
-            case V512_DOUBLE
-                return true
-            default
-                return false
-        )
-    )
-
-    public boolean isMask()
-    (§
-        switch (this)
-        (§
-            case MASK8
-            case MASK16
-            case MASK32
-            case MASK64
-                return true
-            default
-                return false
-        )
-    )
-
-    public char getTypeChar()
-    (§
-        switch (this)
-        (§
-            case BYTE
-                return (§ char "b")
-            case WORD
-                return (§ char "w")
-            case DWORD
-                return (§ char "d")
-            case QWORD
-                return (§ char "q")
-            case SINGLE
-                return (§ char "S")
-            case DOUBLE
-                return (§ char "D")
-            case V32_BYTE
-            case V32_WORD
-            case V64_BYTE
-            case V64_WORD
-            case V64_DWORD
-                return (§ char "v")
-            case V128_BYTE
-            case V128_WORD
-            case V128_DWORD
-            case V128_QWORD
-            case V128_SINGLE
-            case V128_DOUBLE
-                return (§ char "x")
-            case V256_BYTE
-            case V256_WORD
-            case V256_DWORD
-            case V256_QWORD
-            case V256_SINGLE
-            case V256_DOUBLE
-                return (§ char "y")
-            case V512_BYTE
-            case V512_WORD
-            case V512_DWORD
-            case V512_QWORD
-            case V512_SINGLE
-            case V512_DOUBLE
-                return (§ char "z")
-            case MASK8
-            case MASK16
-            case MASK32
-            case MASK64
-                return (§ char "k")
-            default
-                return (§ char "-")
-        )
-    )
 )
 )
 
@@ -69654,13 +69276,11 @@ public enum AMD64Kind implements PlatformKind
 
 import java.nio.ByteOrder
 
-import jdk.vm.ci.code.Register.RegisterCategory
 import jdk.vm.ci.meta.JavaKind
 import jdk.vm.ci.meta.PlatformKind
 
 ;;;
- ; Represents a CPU architecture, including information such as its endianness, CPU registers, word
- ; width, etc.
+ ; Represents a CPU architecture, including information such as its endianness, CPU registers, word width, etc.
  ;;
 public abstract class Architecture
 (§
@@ -69720,17 +69340,6 @@ public abstract class Architecture
     )
 
     ;;;
-     ; Converts this architecture to a string.
-     ;
-     ; @return the string representation of this architecture
-     ;;
-    @Override
-    public final String toString()
-    (§
-        return getName().toLowerCase()
-    )
-
-    ;;;
      ; Gets the natural size of words (typically registers and pointers) of this architecture, in
      ; bytes.
      ;;
@@ -69761,15 +69370,6 @@ public abstract class Architecture
     public RegisterArray getRegisters()
     (§
         return registers
-    )
-
-    ;;;
-     ; Gets a list of all registers available for storing values on this architecture. This may be a
-     ; subset of {@link #getRegisters()}, depending on the capabilities of this particular CPU.
-     ;;
-    public RegisterArray getAvailableValueRegisters()
-    (§
-        return getRegisters()
     )
 
     public ByteOrder getByteOrder()
@@ -69815,412 +69415,21 @@ public abstract class Architecture
     )
 
     ;;;
-     ; Determine whether a kind can be stored in a register of a given category.
+     ; Return the largest kind that can be stored in a register.
      ;
-     ; @param category the category of the register
-     ; @param kind the kind that should be stored in the register
+     ; @return the largest kind that can be stored in a register
      ;;
-    public abstract boolean canStoreValue(RegisterCategory category, PlatformKind kind)
-
-    ;;;
-     ; Return the largest kind that can be stored in a register of a given category.
-     ;
-     ; @param category the category of the register
-     ; @return the largest kind that can be stored in a register {@code category}
-     ;;
-    public abstract PlatformKind getLargestStorableKind(RegisterCategory category)
+    public abstract PlatformKind getLargestStorableKind()
 
     ;;;
      ; Return the {@link PlatformKind} that is used to store values of a given {@link JavaKind}.
      ;;
     public abstract PlatformKind getPlatformKind(JavaKind javaKind)
-
-    @Override
-    public final boolean equals(Object obj)
-    (§
-        if (obj == this)
-        (§
-            return true
-        )
-        if (obj instanceof Architecture)
-        (§
-            Architecture that = (Architecture) obj
-            if (this.name.equals(that.name))
-            (§
-                assert this.byteOrder.equals(that.byteOrder)
-                assert this.implicitMemoryBarriers == that.implicitMemoryBarriers
-                assert this.machineCodeCallDisplacementOffset == that.machineCodeCallDisplacementOffset
-                assert this.registers.equals(that.registers)
-                assert this.returnAddressSize == that.returnAddressSize
-                assert this.unalignedMemoryAccess == that.unalignedMemoryAccess
-                assert this.wordKind == that.wordKind
-                return true
-            )
-        )
-        return false
-    )
-
-    @Override
-    public final int hashCode()
-    (§
-        return name.hashCode()
-    )
 )
 )
 
 (§ package jdk.vm.ci.code
 
-import java.util.Arrays
-
-import jdk.vm.ci.meta.JavaKind
-import jdk.vm.ci.meta.JavaValue
-import jdk.vm.ci.meta.ResolvedJavaMethod
-import jdk.vm.ci.meta.Value
-
-;;;
- ; Represents the Java bytecode frame state(s) at a given position including {@link Value locations}
- ; where to find the local variables, operand stack values and locked objects of the bytecode
- ; frame(s).
- ;;
-public final class BytecodeFrame extends BytecodePosition
-(§
-    ;;;
-     ; An array of values representing how to reconstruct the state of the Java frame. This is array
-     ; is partitioned as follows:
-     ; <p>
-     ; <table summary="" border="1" cellpadding="5" frame="void" rules="all">
-     ; <tr>
-     ; <th>Start index (inclusive)</th>
-     ; <th>End index (exclusive)</th>
-     ; <th>Description</th>
-     ; </tr>
-     ; <tr>
-     ; <td>0</td>
-     ; <td>numLocals</td>
-     ; <td>Local variables</td>
-     ; </tr>
-     ; <tr>
-     ; <td>numLocals</td>
-     ; <td>numLocals + numStack</td>
-     ; <td>Operand stack</td>
-     ; </tr>
-     ; <tr>
-     ; <td>numLocals + numStack</td>
-     ; <td>values.length</td>
-     ; <td>Locked objects</td>
-     ; </tr>
-     ; </table>
-     ; <p>
-     ; Note that the number of locals and the number of stack slots may be smaller than the maximum
-     ; number of locals and stack slots as specified in the compiled method.
-     ;
-     ; This field is intentionally exposed as a mutable array that a compiler may modify (e.g.
-     ; during register allocation).
-     ;;
-    public final JavaValue[] values
-
-    ;;;
-     ; An array describing the Java kinds in {@link #values}. It records a kind for the locals and
-     ; the operand stack.
-     ;;
-    private final JavaKind[] slotKinds
-
-    ;;;
-     ; The number of locals in the values array.
-     ;;
-    public final int numLocals
-
-    ;;;
-     ; The number of stack slots in the values array.
-     ;;
-    public final int numStack
-
-    ;;;
-     ; The number of locks in the values array.
-     ;;
-    public final int numLocks
-
-    ;;;
-     ; True if this is a position inside an exception handler before the exception object has been
-     ; consumed. In this case, {@link #numStack} {@code == 1} and {@link #getStackValue(int)
-     ; getStackValue(0)} is the location of the exception object. If deoptimization happens at this
-     ; position, the interpreter will rethrow the exception instead of executing the bytecode
-     ; instruction at this position.
-     ;;
-    public final boolean rethrowException
-
-    ;;;
-     ; Specifies if this object represents a frame state in the middle of executing a call. If true,
-     ; the arguments to the call have been popped from the stack and the return value (for a
-     ; non-void call) has not yet been pushed.
-     ;;
-    public final boolean duringCall
-
-    ;;;
-     ; This BCI should be used for frame states that are built for code with no meaningful BCI.
-     ;;
-    public static final int UNKNOWN_BCI = -5
-
-    ;;;
-     ; The BCI for exception unwind. This is synthetic code and has no representation in bytecode.
-     ; In contrast with {@link #AFTER_EXCEPTION_BCI}, at this point, if the method is synchronized,
-     ; the monitor is still held.
-     ;;
-    public static final int UNWIND_BCI = -1
-
-    ;;;
-     ; The BCI for the state before starting to execute a method. Note that if the method is
-     ; synchronized, the monitor is not yet held.
-     ;;
-    public static final int BEFORE_BCI = -2
-
-    ;;;
-     ; The BCI for the state after finishing the execution of a method and returning normally. Note
-     ; that if the method was synchronized the monitor is already released.
-     ;;
-    public static final int AFTER_BCI = -3
-
-    ;;;
-     ; The BCI for exception unwind. This is synthetic code and has no representation in bytecode.
-     ; In contrast with {@link #UNWIND_BCI}, at this point, if the method is synchronized, the
-     ; monitor is already released.
-     ;;
-    public static final int AFTER_EXCEPTION_BCI = -4
-
-    ;;;
-     ; This BCI should be used for states that cannot be the target of a deoptimization, like
-     ; snippet frame states.
-     ;;
-    public static final int INVALID_FRAMESTATE_BCI = -6
-
-    ;;;
-     ; Determines if a given BCI matches one of the placeholder BCI constants defined in this class.
-     ;;
-    public static boolean isPlaceholderBci(int bci)
-    (§
-        return bci < 0
-    )
-
-    ;;;
-     ; Gets the name of a given placeholder BCI.
-     ;;
-    public static String getPlaceholderBciName(int bci)
-    (§
-        assert isPlaceholderBci(bci)
-        if (bci == BytecodeFrame.AFTER_BCI)
-        (§
-            return "AFTER_BCI"
-        )
-        else if (bci == BytecodeFrame.AFTER_EXCEPTION_BCI)
-        (§
-            return "AFTER_EXCEPTION_BCI"
-        )
-        else if (bci == BytecodeFrame.INVALID_FRAMESTATE_BCI)
-        (§
-            return "INVALID_FRAMESTATE_BCI"
-        )
-        else if (bci == BytecodeFrame.BEFORE_BCI)
-        (§
-            return "BEFORE_BCI"
-        )
-        else if (bci == BytecodeFrame.UNKNOWN_BCI)
-        (§
-            return "UNKNOWN_BCI"
-        )
-        else
-        (§
-            assert bci == BytecodeFrame.UNWIND_BCI
-            return "UNWIND_BCI"
-        )
-    )
-
-    ;;;
-     ; Creates a new frame object.
-     ;
-     ; @param caller the caller frame (which may be {@code null})
-     ; @param method the method
-     ; @param bci a BCI within the method
-     ; @param rethrowException specifies if the VM should re-throw the pending exception when
-     ;            deopt'ing using this frame
-     ; @param values the frame state {@link #values}.
-     ; @param slotKinds the kinds in {@code values}. This array is now owned by this object and must
-     ;            not be mutated by the caller.
-     ; @param numLocals the number of local variables
-     ; @param numStack the depth of the stack
-     ; @param numLocks the number of locked objects
-     ;;
-    public BytecodeFrame(BytecodeFrame caller, ResolvedJavaMethod method, int bci, boolean rethrowException, boolean duringCall, JavaValue[] values, JavaKind[] slotKinds, int numLocals, int numStack, int numLocks)
-    (§
-        super(caller, method, bci)
-        assert values != null
-        this.rethrowException = rethrowException
-        this.duringCall = duringCall
-        this.values = values
-        this.slotKinds = slotKinds
-        this.numLocals = numLocals
-        this.numStack = numStack
-        this.numLocks = numLocks
-        assert !rethrowException || numStack == 1 (§ colon ) "must have exception on top of the stack"
-    )
-
-    ;;;
-     ; Ensure that the frame state is formatted as expected by the JVM, with null or Illegal in the
-     ; slot following a double word item. This should really be checked in FrameState itself but
-     ; because of Word type rewriting and alternative backends that can't be done.
-     ;;
-    public boolean validateFormat()
-    (§
-        if (caller() != null)
-        (§
-            caller().validateFormat()
-        )
-        for (int i = 0(§ semi ) i < numLocals + numStack(§ semi ) i++)
-        (§
-            if (values[i] != null)
-            (§
-                JavaKind kind = slotKinds[i]
-                if (kind.needsTwoSlots())
-                (§
-                    assert slotKinds.length > i + 1 (§ colon ) String.format("missing second word %s", this)
-                    assert slotKinds[i + 1] == JavaKind.Illegal (§ colon ) this
-                )
-            )
-        )
-        return true
-    )
-
-    ;;;
-     ; Gets the kind of a local variable.
-     ;
-     ; @param i the local variable to query
-     ; @return the kind of local variable {@code i}
-     ; @throw {@link IndexOutOfBoundsException} if {@code i < 0 || i >= this.numLocals}
-     ;;
-    public JavaKind getLocalValueKind(int i)
-    (§
-        if (i < 0 || i >= numLocals)
-        (§
-            throw new IndexOutOfBoundsException()
-        )
-        return slotKinds[i]
-    )
-
-    ;;;
-     ; Gets the kind of a stack slot.
-     ;
-     ; @param i the local variable to query
-     ; @return the kind of stack slot {@code i}
-     ; @throw {@link IndexOutOfBoundsException} if {@code i < 0 || i >= this.numStack}
-     ;;
-    public JavaKind getStackValueKind(int i)
-    (§
-        if (i < 0 || i >= numStack)
-        (§
-            throw new IndexOutOfBoundsException()
-        )
-        return slotKinds[i + numLocals]
-    )
-
-    ;;;
-     ; Gets the value representing the specified local variable.
-     ;
-     ; @param i the local variable index
-     ; @return the value that can be used to reconstruct the local's current value
-     ; @throw {@link IndexOutOfBoundsException} if {@code i < 0 || i >= this.numLocals}
-     ;;
-    public JavaValue getLocalValue(int i)
-    (§
-        if (i < 0 || i >= numLocals)
-        (§
-            throw new IndexOutOfBoundsException()
-        )
-        return values[i]
-    )
-
-    ;;;
-     ; Gets the value representing the specified stack slot.
-     ;
-     ; @param i the stack index
-     ; @return the value that can be used to reconstruct the stack slot's current value
-     ; @throw {@link IndexOutOfBoundsException} if {@code i < 0 || i >= this.numStack}
-     ;;
-    public JavaValue getStackValue(int i)
-    (§
-        if (i < 0 || i >= numStack)
-        (§
-            throw new IndexOutOfBoundsException()
-        )
-        return values[i + numLocals]
-    )
-
-    ;;;
-     ; Gets the value representing the specified lock.
-     ;
-     ; @param i the lock index
-     ; @return the value that can be used to reconstruct the lock's current value
-     ; @throw {@link IndexOutOfBoundsException} if {@code i < 0 || i >= this.numLocks}
-     ;;
-    public JavaValue getLockValue(int i)
-    (§
-        if (i < 0 || i >= numLocks)
-        (§
-            throw new IndexOutOfBoundsException()
-        )
-        return values[i + numLocals + numStack]
-    )
-
-    ;;;
-     ; Gets the caller of this frame.
-     ;
-     ; @return {@code null} if this frame has no caller
-     ;;
-    public BytecodeFrame caller()
-    (§
-        return (BytecodeFrame) getCaller()
-    )
-
-    @Override
-    public int hashCode()
-    (§
-        return (numLocals + 1) (§ bit-xor ) (numStack + 11) (§ bit-xor ) (numLocks + 7)
-    )
-
-    @Override
-    public boolean equals(Object obj)
-    (§
-        if (this == obj)
-        (§
-            return true
-        )
-        if (obj instanceof BytecodeFrame && super.equals(obj))
-        (§
-            BytecodeFrame that = (BytecodeFrame) obj
-            if (this.duringCall == that.duringCall &&
-                this.rethrowException == that.rethrowException &&
-                this.numLocals == that.numLocals &&
-                this.numLocks == that.numLocks &&
-                this.numStack == that.numStack &&
-                Arrays.equals(this.values, that.values))
-                (§
-                return true
-            )
-            return true
-        )
-        return false
-    )
-
-    @Override
-    public String toString()
-    (§
-        return CodeUtil.append(new StringBuilder(100), this).toString()
-    )
-)
-)
-
-(§ package jdk.vm.ci.code
-
-import static jdk.vm.ci.code.ValueUtil.isAllocatableValue
-import static jdk.vm.ci.code.ValueUtil.isStackSlot
 import jdk.vm.ci.meta.AllocatableValue
 import jdk.vm.ci.meta.Value
 
@@ -70252,20 +69461,15 @@ public class CallingConvention
     ;;;
      ; Creates a description of the registers and stack locations used by a call.
      ;
-     ; @param stackSize amount of stack space (in bytes) required for the stack-based arguments of
-     ;            the call
-     ; @param returnLocation the location for the return value or {@link Value#ILLEGAL} if a void
-     ;            call
+     ; @param stackSize amount of stack space (in bytes) required for the stack-based arguments of the call
+     ; @param returnLocation the location for the return value or {@link Value#ILLEGAL} if a void call
      ; @param argumentLocations the ordered locations in which the arguments are placed
      ;;
     public CallingConvention(int stackSize, AllocatableValue returnLocation, AllocatableValue... argumentLocations)
     (§
-        assert argumentLocations != null
-        assert returnLocation != null
         this.argumentLocations = argumentLocations
         this.stackSize = stackSize
         this.returnLocation = returnLocation
-        assert verify()
     )
 
     ;;;
@@ -70311,171 +69515,12 @@ public class CallingConvention
         )
         return argumentLocations.clone()
     )
-
-    @Override
-    public String toString()
-    (§
-        StringBuilder sb = new StringBuilder()
-        sb.append("CallingConvention[")
-        String sep = ""
-        for (Value op (§ colon ) argumentLocations)
-        (§
-            sb.append(sep).append(op)
-            sep = ", "
-        )
-        if (!returnLocation.equals(Value.ILLEGAL))
-        (§
-            sb.append(" -> ").append(returnLocation)
-        )
-        sb.append("]")
-        return sb.toString()
-    )
-
-    private boolean verify()
-    (§
-        for (int i = 0(§ semi ) i < argumentLocations.length(§ semi ) i++)
-        (§
-            Value location = argumentLocations[i]
-            assert isStackSlot(location) || isAllocatableValue(location)
-        )
-        return true
-    )
 )
 )
 
 (§ package jdk.vm.ci.code
-
-import jdk.vm.ci.code.site.Call
-import jdk.vm.ci.code.site.Mark
-import jdk.vm.ci.meta.ResolvedJavaMethod
-import jdk.vm.ci.meta.SpeculationLog
-
-;;;
- ; Access to code cache related details and requirements.
- ;;
-public interface CodeCacheProvider
-(§
-    ;;;
-     ; Installs code for a given method based on a given compilation result without making it the
-     ; default implementation of the method.
-     ;
-     ; @param method a method implemented by the installed code
-     ; @param compiledCode the compiled code to be added
-     ; @param log the speculation log to be used
-     ; @param installedCode a predefined {@link InstalledCode} object to use as a reference to the
-     ;            installed code. If {@code null}, a new {@link InstalledCode} object will be
-     ;            created.
-     ; @return a reference to the ready-to-run code
-     ; @throws BailoutException if the code installation failed
-     ;;
-    default InstalledCode addCode(ResolvedJavaMethod method, CompiledCode compiledCode, SpeculationLog log, InstalledCode installedCode)
-    (§
-        return installCode(method, compiledCode, installedCode, log, false)
-    )
-
-    ;;;
-     ; Installs code for a given method based on a given compilation result and makes it the default
-     ; implementation of the method.
-     ;
-     ; @param method a method implemented by the installed code and for which the installed code
-     ;            becomes the default implementation
-     ; @param compiledCode the compiled code to be added
-     ; @return a reference to the ready-to-run code
-     ; @throws BailoutException if the code installation failed
-     ;;
-    default InstalledCode setDefaultCode(ResolvedJavaMethod method, CompiledCode compiledCode)
-    (§
-        return installCode(method, compiledCode, null, null, true)
-    )
-
-    ;;;
-     ; Installs code based on a given compilation result.
-     ;
-     ; @param method the method compiled to produce {@code compiledCode} or {@code null} if the
-     ;            input to {@code compResult} was not a {@link ResolvedJavaMethod}
-     ; @param compiledCode the compiled code to be added
-     ; @param installedCode a pre-allocated {@link InstalledCode} object to use as a reference to
-     ;            the installed code. If {@code null}, a new {@link InstalledCode} object will be
-     ;            created.
-     ; @param log the speculation log to be used
-     ; @param isDefault specifies if the installed code should be made the default implementation of
-     ;            {@code compRequest.getMethod()}. The default implementation for a method is the
-     ;            code executed for standard calls to the method. This argument is ignored if
-     ;            {@code compRequest == null}.
-     ; @return a reference to the compiled and ready-to-run installed code
-     ; @throws BailoutException if the code installation failed
-     ;;
-    InstalledCode installCode(ResolvedJavaMethod method, CompiledCode compiledCode, InstalledCode installedCode, SpeculationLog log, boolean isDefault)
-
-    ;;;
-     ; Invalidates {@code installedCode} such that {@link InvalidInstalledCodeException} will be
-     ; raised the next time {@code installedCode} is
-     ; {@linkplain InstalledCode#executeVarargs(Object...) executed}.
-     ;;
-    void invalidateInstalledCode(InstalledCode installedCode)
-
-    ;;;
-     ; Gets a name for a {@link Mark} mark.
-     ;;
-    default String getMarkName(Mark mark)
-    (§
-        return String.valueOf(mark.id)
-    )
-
-    ;;;
-     ; Gets a name for the {@linkplain Call#target target} of a {@link Call}.
-     ;;
-    default String getTargetName(Call call)
-    (§
-        return String.valueOf(call.target)
-    )
-
-    ;;;
-     ; Gets the register configuration to use when compiling a given method.
-     ;;
-    RegisterConfig getRegisterConfig()
-
-    ;;;
-     ; Minimum size of the stack area reserved for outgoing parameters. This area is reserved in all
-     ; cases, even when the compiled method has no regular call instructions.
-     ;
-     ; @return the minimum size of the outgoing parameter area in bytes
-     ;;
-    int getMinimumOutgoingSize()
-
-    ;;;
-     ; Gets a description of the target architecture.
-     ;;
-    TargetDescription getTarget()
-
-    ;;;
-     ; Create a new speculation log for the target runtime.
-     ;;
-    SpeculationLog createSpeculationLog()
-
-    ;;;
-     ; Returns the maximum absolute offset of a PC relative call to a given address from any
-     ; position in the code cache or -1 when not applicable. Intended for determining the required
-     ; size of address/offset fields.
-     ;;
-    long getMaxCallTargetOffset(long address)
-
-    ;;;
-     ; Determines if debug info should also be emitted at non-safepoint locations.
-     ;;
-    boolean shouldDebugNonSafepoints()
-)
-)
-
-(§ package jdk.vm.ci.code
-
-import java.util.ArrayList
-import java.util.Arrays
-import java.util.Collections
-import java.util.Map
 
 import jdk.vm.ci.meta.JavaType
-import jdk.vm.ci.meta.MetaUtil
 import jdk.vm.ci.meta.ResolvedJavaMethod
 import jdk.vm.ci.meta.Signature
 
@@ -70484,21 +69529,6 @@ import jdk.vm.ci.meta.Signature
  ;;
 public class CodeUtil
 (§
-    public static final String NEW_LINE = String.format("%n")
-
-    public static final int K = 1024
-    public static final int M = 1024 * 1024
-
-    public static boolean isOdd(int n)
-    (§
-        return (n & 1) == 1
-    )
-
-    public static boolean isEven(int n)
-    (§
-        return (n & 1) == 0
-    )
-
     ;;;
      ; Checks whether the specified integer is a power of two.
      ;
@@ -70523,14 +69553,13 @@ public class CodeUtil
 
     ;;;
      ; Computes the log (base 2) of the specified integer, rounding down. (E.g {@code log2(8) = 3},
-     ; {@code log2(21) = 4} )
+     ; {@code log2(21) = 4})
      ;
      ; @param val the value
      ; @return the log base 2 of the value
      ;;
     public static int log2(int val)
     (§
-        assert val > 0
         return (Integer.SIZE - 1) - Integer.numberOfLeadingZeros(val)
     )
 
@@ -70543,7 +69572,6 @@ public class CodeUtil
      ;;
     public static int log2(long val)
     (§
-        assert val > 0
         return (Long.SIZE - 1) - Long.numberOfLeadingZeros(val)
     )
 
@@ -70632,7 +69660,6 @@ public class CodeUtil
      ;;
     public static long mask(int bits)
     (§
-        assert 0 <= bits && bits <= 64
         if (bits == 64)
         (§
             return 0xffffffffffffffff #_"L"
@@ -70648,7 +69675,6 @@ public class CodeUtil
      ;;
     public static long minValue(int bits)
     (§
-        assert 0 < bits && bits <= 64
         return -1 #_"L" << (bits - 1)
     )
 
@@ -70657,276 +69683,7 @@ public class CodeUtil
      ;;
     public static long maxValue(int bits)
     (§
-        assert 0 < bits && bits <= 64
         return mask(bits - 1)
-    )
-
-    ;;;
-     ; Formats the values in a frame as a tabulated string.
-     ;
-     ; @param frame
-     ; @return the values in {@code frame} as a tabulated string
-     ;;
-    public static String tabulateValues(BytecodeFrame frame)
-    (§
-        int cols = Math.max(frame.numLocals, Math.max(frame.numStack, frame.numLocks))
-        assert cols > 0
-        ArrayList<Object> cells = new ArrayList<>()
-        cells.add("")
-        for (int i = 0(§ semi ) i < cols(§ semi ) i++)
-        (§
-            cells.add(i)
-        )
-        cols++
-        if (frame.numLocals != 0)
-        (§
-            cells.add("locals:")
-            cells.addAll(Arrays.asList(frame.values).subList(0, frame.numLocals))
-            cells.addAll(Collections.nCopies(cols - frame.numLocals - 1, ""))
-        )
-        if (frame.numStack != 0)
-        (§
-            cells.add("stack:")
-            cells.addAll(Arrays.asList(frame.values).subList(frame.numLocals, frame.numLocals + frame.numStack))
-            cells.addAll(Collections.nCopies(cols - frame.numStack - 1, ""))
-        )
-        if (frame.numLocks != 0)
-        (§
-            cells.add("locks:")
-            cells.addAll(Arrays.asList(frame.values).subList(frame.numLocals + frame.numStack, frame.values.length))
-            cells.addAll(Collections.nCopies(cols - frame.numLocks - 1, ""))
-        )
-        Object[] cellArray = cells.toArray()
-        for (int i = 0(§ semi ) i < cellArray.length(§ semi ) i++)
-        (§
-            if ((i % cols) != 0)
-            (§
-                cellArray[i] = "|" + cellArray[i]
-            )
-        )
-        return CodeUtil.tabulate(cellArray, cols, 1, 1)
-    )
-
-    ;;;
-     ; Formats a given table as a string. The value of each cell is produced by
-     ; {@link String#valueOf(Object)}.
-     ;
-     ; @param cells the cells of the table in row-major order
-     ; @param cols the number of columns per row
-     ; @param lpad the number of space padding inserted before each formatted cell value
-     ; @param rpad the number of space padding inserted after each formatted cell value
-     ; @return a string with one line per row and each column left-aligned
-     ;;
-    public static String tabulate(Object[] cells, int cols, int lpad, int rpad)
-    (§
-        int rows = (cells.length + (cols - 1)) / cols
-        int[] colWidths = new int[cols]
-        for (int col = 0(§ semi ) col < cols(§ semi ) col++)
-        (§
-            for (int row = 0(§ semi ) row < rows(§ semi ) row++)
-            (§
-                int index = col + (row * cols)
-                if (index < cells.length)
-                (§
-                    Object cell = cells[index]
-                    colWidths[col] = Math.max(colWidths[col], String.valueOf(cell).length())
-                )
-            )
-        )
-        StringBuilder sb = new StringBuilder()
-        String nl = NEW_LINE
-        for (int row = 0(§ semi ) row < rows(§ semi ) row++)
-        (§
-            for (int col = 0(§ semi ) col < cols(§ semi ) col++)
-            (§
-                int index = col + (row * cols)
-                if (index < cells.length)
-                (§
-                    for (int i = 0(§ semi ) i < lpad(§ semi ) i++)
-                    (§
-                        sb.append((§ char " "))
-                    )
-                    Object cell = cells[index]
-                    String s = String.valueOf(cell)
-                    int w = s.length()
-                    sb.append(s)
-                    while (w < colWidths[col])
-                    (§
-                        sb.append((§ char " "))
-                        w++
-                    )
-                    for (int i = 0(§ semi ) i < rpad(§ semi ) i++)
-                    (§
-                        sb.append((§ char " "))
-                    )
-                )
-            )
-            sb.append(nl)
-        )
-        return sb.toString()
-    )
-
-    ;;;
-     ; Appends a formatted code position to a {@link StringBuilder}.
-     ;
-     ; @param sb the {@link StringBuilder} to append to
-     ; @param pos the code position to format and append to {@code sb}
-     ; @return the value of {@code sb}
-     ;;
-    public static StringBuilder append(StringBuilder sb, BytecodePosition pos)
-    (§
-        MetaUtil.appendLocation(sb.append("at "), pos.getMethod(), pos.getBCI())
-        if (pos.getCaller() != null)
-        (§
-            sb.append(NEW_LINE)
-            append(sb, pos.getCaller())
-        )
-        return sb
-    )
-
-    ;;;
-     ; Appends a formatted frame to a {@link StringBuilder}.
-     ;
-     ; @param sb the {@link StringBuilder} to append to
-     ; @param frame the frame to format and append to {@code sb}
-     ; @return the value of {@code sb}
-     ;;
-    public static StringBuilder append(StringBuilder sb, BytecodeFrame frame)
-    (§
-        MetaUtil.appendLocation(sb.append("at "), frame.getMethod(), frame.getBCI())
-        assert sb.charAt(sb.length() - 1) == (§ char "]")
-        sb.deleteCharAt(sb.length() - 1)
-        sb.append(", duringCall: ").append(frame.duringCall).append(", rethrow: ").append(frame.rethrowException).append((§ char "]"))
-        if (frame.values != null && frame.values.length > 0)
-        (§
-            sb.append(NEW_LINE)
-            String table = tabulateValues(frame)
-            String[] rows = table.split(NEW_LINE)
-            for (int i = 0(§ semi ) i < rows.length(§ semi ) i++)
-            (§
-                String row = rows[i]
-                if (!row.trim().isEmpty())
-                (§
-                    sb.append("  ").append(row)
-                    if (i != rows.length - 1)
-                    (§
-                        sb.append(NEW_LINE)
-                    )
-                )
-            )
-        )
-        if (frame.caller() != null)
-        (§
-            sb.append(NEW_LINE)
-            append(sb, frame.caller())
-        )
-        else if (frame.getCaller() != null)
-        (§
-            sb.append(NEW_LINE)
-            append(sb, frame.getCaller())
-        )
-        return sb
-    )
-
-    public interface RefMapFormatter
-    (§
-        String formatStackSlot(int frameRefMapIndex)
-    )
-
-    ;;;
-     ; Formats a location present in a reference map.
-     ;;
-    public static class DefaultRefMapFormatter implements RefMapFormatter
-    (§
-        ;;;
-         ; The size of a stack slot.
-         ;;
-        public final int slotSize
-
-        ;;;
-         ; The register used as the frame pointer.
-         ;;
-        public final Register fp
-
-        ;;;
-         ; The offset (in bytes) from the slot pointed to by {@link #fp} to the slot corresponding
-         ; to bit 0 in the frame reference map.
-         ;;
-        public final int refMapToFPOffset
-
-        public DefaultRefMapFormatter(int slotSize, Register fp, int refMapToFPOffset)
-        (§
-            this.slotSize = slotSize
-            this.fp = fp
-            this.refMapToFPOffset = refMapToFPOffset
-        )
-
-        @Override
-        public String formatStackSlot(int frameRefMapIndex)
-        (§
-            int refMapOffset = frameRefMapIndex * slotSize
-            int fpOffset = refMapOffset + refMapToFPOffset
-            if (fpOffset >= 0)
-            (§
-                return fp + "+" + fpOffset
-            )
-            return fp.name + fpOffset
-        )
-    )
-
-    public static class NumberedRefMapFormatter implements RefMapFormatter
-    (§
-        public String formatStackSlot(int frameRefMapIndex)
-        (§
-            return "s" + frameRefMapIndex
-        )
-
-        public String formatRegister(int regRefMapIndex)
-        (§
-            return "r" + regRefMapIndex
-        )
-    )
-
-    ;;;
-     ; Appends a formatted debug info to a {@link StringBuilder}.
-     ;
-     ; @param sb the {@link StringBuilder} to append to
-     ; @param info the debug info to format and append to {@code sb}
-     ; @return the value of {@code sb}
-     ;;
-    public static StringBuilder append(StringBuilder sb, DebugInfo info, RefMapFormatter formatterArg)
-    (§
-        RefMapFormatter formatter = formatterArg
-        if (formatter == null)
-        (§
-            formatter = new NumberedRefMapFormatter()
-        )
-        String nl = NEW_LINE
-        ReferenceMap refMap = info.getReferenceMap()
-        if (refMap != null)
-        (§
-            sb.append(refMap.toString())
-        )
-        RegisterSaveLayout calleeSaveInfo = info.getCalleeSaveInfo()
-        if (calleeSaveInfo != null)
-        (§
-            sb.append("callee-save-info:").append(nl)
-            Map<Integer, Register> map = calleeSaveInfo.slotsToRegisters(true)
-            for (Map.Entry<Integer, Register> e (§ colon ) map.entrySet())
-            (§
-                sb.append("    ").append(e.getValue()).append(" -> ").append(formatter.formatStackSlot(e.getKey())).append(nl)
-            )
-        )
-        BytecodeFrame frame = info.frame()
-        if (frame != null)
-        (§
-            append(sb, frame)
-        )
-        else if (info.getBytecodePosition() != null)
-        (§
-            append(sb, info.getBytecodePosition())
-        )
-        return sb
     )
 
     ;;;
@@ -70955,127 +69712,6 @@ public class CodeUtil
 
         RegisterConfig registerConfig = codeCache.getRegisterConfig()
         return registerConfig.getCallingConvention(type, retType, argTypes, valueKindFactory)
-    )
-)
-)
-
-(§ package jdk.vm.ci.code
-
-;;;
- ; Represents a compiled instance of a method. It may have been invalidated or removed in the
- ; meantime.
- ;;
-public class InstalledCode
-(§
-    ;;;
-     ; Raw address address of entity representing this installed code.
-     ;;
-    protected long address
-
-    ;;;
-     ; Raw address of entryPoint of this installed code.
-     ;;
-    protected long entryPoint
-
-    ;;;
-     ; Counts how often the address field was reassigned.
-     ;;
-    protected long version
-
-    protected final String name
-
-    public InstalledCode(String name)
-    (§
-        this.name = name
-    )
-
-    ;;;
-     ; @return the address of entity representing this installed code.
-     ;;
-    public final long getAddress()
-    (§
-        return address
-    )
-
-    ;;;
-     ; @return the address of the normal entry point of the installed code.
-     ;;
-    public final long getEntryPoint()
-    (§
-        return entryPoint
-    )
-
-    ;;;
-     ; @return the version number of this installed code
-     ;;
-    public final long getVersion()
-    (§
-        return version
-    )
-
-    ;;;
-     ; Returns the name of this installed code.
-     ;;
-    public String getName()
-    (§
-        return name
-    )
-
-    ;;;
-     ; Returns the start address of this installed code if it is {@linkplain #isValid() valid}, 0
-     ; otherwise.
-     ;;
-    public long getStart()
-    (§
-        return 0
-    )
-
-    ;;;
-     ; @return true if the code represented by this object is still valid for invocation, false
-     ;         otherwise (may happen due to deopt, etc.)
-     ;;
-    public boolean isValid()
-    (§
-        return entryPoint != 0
-    )
-
-    ;;;
-     ; @return true if the code represented by this object still exists and might have live
-     ;         activations, false otherwise (may happen due to deopt, etc.)
-     ;;
-    public boolean isAlive()
-    (§
-        return address != 0
-    )
-
-    ;;;
-     ; Returns a copy of this installed code if it is {@linkplain #isValid() valid}, null otherwise.
-     ;;
-    public byte[] getCode()
-    (§
-        return null
-    )
-
-    ;;;
-     ; Invalidates this installed code such that any subsequent
-     ; {@linkplain #executeVarargs(Object...) invocation} will throw an
-     ; {@link InvalidInstalledCodeException} and all existing invocations will be deoptimized.
-     ;;
-    public void invalidate()
-    (§
-        throw new UnsupportedOperationException()
-    )
-
-    ;;;
-     ; Executes the installed code with a variable number of arguments.
-     ;
-     ; @param args the array of object arguments
-     ; @return the value returned by the executed code
-     ;;
-    @SuppressWarnings("unused")
-    public Object executeVarargs(Object... args) throws InvalidInstalledCodeException
-    (§
-        throw new UnsupportedOperationException()
     )
 )
 )
@@ -71169,16 +69805,6 @@ public class MemoryBarriers
     public static final int JMM_POST_VOLATILE_WRITE = STORE_LOAD | STORE_STORE
     public static final int JMM_PRE_VOLATILE_READ = 0
     public static final int JMM_POST_VOLATILE_READ = LOAD_LOAD | LOAD_STORE
-
-    public static String barriersString(int barriers)
-    (§
-        StringBuilder sb = new StringBuilder()
-        sb.append((barriers & LOAD_LOAD) != 0 ? "LOAD_LOAD " (§ colon ) "")
-        sb.append((barriers & LOAD_STORE) != 0 ? "LOAD_STORE " (§ colon ) "")
-        sb.append((barriers & STORE_LOAD) != 0 ? "STORE_LOAD " (§ colon ) "")
-        sb.append((barriers & STORE_STORE) != 0 ? "STORE_STORE " (§ colon ) "")
-        return sb.toString().trim()
-    )
 )
 )
 
@@ -71191,12 +69817,10 @@ import jdk.vm.ci.meta.ValueKind
  ;;
 public final class Register implements Comparable<Register>
 (§
-    public static final RegisterCategory SPECIAL = new RegisterCategory("SPECIAL")
-
     ;;;
      ; Invalid register.
      ;;
-    public static final Register None = new Register(-1, -1, "noreg", SPECIAL)
+    public static final Register None = new Register(-1, -1, "noreg")
 
     ;;;
      ; The identifier for this register that is unique across all the registers in a
@@ -71224,81 +69848,17 @@ public final class Register implements Comparable<Register>
     )
 
     ;;;
-     ; A platform specific register category that describes which values can be stored in a
-     ; register.
-     ;;
-    private final RegisterCategory registerCategory
-
-    ;;;
-     ; A platform specific register type that describes which values can be stored in a register.
-     ;;
-    public static class RegisterCategory
-    (§
-        private final String name
-        private final boolean mayContainReference
-
-        public RegisterCategory(String name)
-        (§
-            this(name, true)
-        )
-
-        public RegisterCategory(String name, boolean mayContainReference)
-        (§
-            this.name = name
-            this.mayContainReference = mayContainReference
-        )
-
-        @Override
-        public String toString()
-        (§
-            return name
-        )
-
-        @Override
-        public int hashCode()
-        (§
-            return 23 + name.hashCode()
-        )
-
-        @Override
-        public boolean equals(Object obj)
-        (§
-            if (obj instanceof RegisterCategory)
-            (§
-                RegisterCategory that = (RegisterCategory) obj
-                return this.name.equals(that.name)
-            )
-            return false
-        )
-    )
-
-    ;;;
      ; Creates a {@link Register} instance.
      ;
      ; @param number unique identifier for the register
      ; @param encoding the target machine encoding for the register
      ; @param name the mnemonic name for the register
-     ; @param registerCategory the register category
      ;;
-    public Register(int number, int encoding, String name, RegisterCategory registerCategory)
+    public Register(int number, int encoding, String name)
     (§
         this.number = number
         this.name = name
-        this.registerCategory = registerCategory
         this.encoding = encoding
-    )
-
-    public RegisterCategory getRegisterCategory()
-    (§
-        return registerCategory
-    )
-
-    ;;;
-     ; Determine whether this register needs to be part of the reference map.
-     ;;
-    public boolean mayContainReference()
-    (§
-        return registerCategory.mayContainReference
     )
 
     ;;;
@@ -71333,12 +69893,6 @@ public final class Register implements Comparable<Register>
     )
 
     @Override
-    public String toString()
-    (§
-        return name
-    )
-
-    @Override
     public int compareTo(Register o)
     (§
         if (number < o.number)
@@ -71351,36 +69905,12 @@ public final class Register implements Comparable<Register>
         )
         return 0
     )
-
-    @Override
-    public int hashCode()
-    (§
-        return 17 + name.hashCode()
-    )
-
-    @Override
-    public boolean equals(Object obj)
-    (§
-        if (obj instanceof Register)
-        (§
-            Register other = (Register) obj
-            if (number == other.number)
-            (§
-                assert name.equals(other.name)
-                assert encoding == other.encoding
-                assert registerCategory.equals(other.registerCategory)
-                return true
-            )
-        )
-        return false
-    )
 )
 )
 
 (§ package jdk.vm.ci.code
 
 import java.util.Arrays
-import java.util.Collection
 import java.util.Collections
 import java.util.Iterator
 import java.util.List
@@ -71396,11 +69926,6 @@ public final class RegisterArray implements Iterable<Register>
     public RegisterArray(Register... registers)
     (§
         this.registers = registers
-    )
-
-    public RegisterArray(Collection<Register> registers)
-    (§
-        this.registers = registers.toArray(new Register[registers.size()])
     )
 
     ;;;
@@ -71419,11 +69944,6 @@ public final class RegisterArray implements Iterable<Register>
     public Register get(int index)
     (§
         return registers[index]
-    )
-
-    public void addTo(Collection<Register> collection)
-    (§
-        collection.addAll(Arrays.asList(registers))
     )
 
     ;;;
@@ -71446,40 +69966,10 @@ public final class RegisterArray implements Iterable<Register>
     (§
         return Arrays.asList(registers).iterator()
     )
-
-    @Override
-    public int hashCode()
-    (§
-        if (hash == 0 && registers.length > 0)
-        (§
-            hash = Arrays.hashCode(registers)
-        )
-        return hash
-    )
-
-    @Override
-    public boolean equals(Object obj)
-    (§
-        if (obj instanceof RegisterArray)
-        (§
-            return Arrays.equals(registers, ((RegisterArray) obj).registers)
-        )
-        return false
-    )
-
-    @Override
-    public String toString()
-    (§
-        return Arrays.toString(registers)
-    )
 )
 )
 
 (§ package jdk.vm.ci.code
-
-import java.util.Arrays
-import java.util.Collections
-import java.util.List
 
 ;;;
  ; A collection of register attributes. The specific attribute values for a register may be local to
@@ -71497,46 +69987,6 @@ public class RegisterAttributes
         this.callerSave = isCallerSave
         this.calleeSave = isCalleeSave
         this.allocatable = isAllocatable
-    )
-
-    public static final RegisterAttributes NONE = new RegisterAttributes(false, false, false)
-
-    ;;;
-     ; Creates a map from register {@linkplain Register#number numbers} to register
-     ; {@linkplain RegisterAttributes attributes} for a given register configuration and set of
-     ; registers.
-     ;
-     ; @param registerConfig a register configuration
-     ; @param registers a set of registers
-     ; @return an array whose length is the max register number in {@code registers} plus 1. An
-     ;         element at index i holds the attributes of the register whose number is i.
-     ;;
-    public static RegisterAttributes[] createMap(RegisterConfig registerConfig, RegisterArray registers)
-    (§
-        RegisterAttributes[] map = new RegisterAttributes[registers.size()]
-        List<Register> callerSaveRegisters = registerConfig.getCallerSaveRegisters().asList()
-        List<Register> calleeSaveRegisters = registerConfig.getCalleeSaveRegisters() == null ? Collections.emptyList() (§ colon ) registerConfig.getCalleeSaveRegisters().asList()
-        List<Register> allocatableRegisters = registerConfig.getAllocatableRegisters().asList()
-        for (Register reg (§ colon ) registers)
-        (§
-            if (reg != null)
-            (§
-                RegisterAttributes attr = new RegisterAttributes(callerSaveRegisters.contains(reg), calleeSaveRegisters.contains(reg), allocatableRegisters.contains(reg))
-                if (map.length <= reg.number)
-                (§
-                    map = Arrays.copyOf(map, reg.number + 1)
-                )
-                map[reg.number] = attr
-            )
-        )
-        for (int i = 0(§ semi ) i < map.length(§ semi ) i++)
-        (§
-            if (map[i] == null)
-            (§
-                map[i] = NONE
-            )
-        )
-        return map
     )
 
     ;;;
@@ -71612,17 +70062,6 @@ public interface RegisterConfig
     CallingConvention getCallingConvention(Type type, JavaType returnType, JavaType[] parameterTypes, ValueKindFactory<?> valueKindFactory)
 
     ;;;
-     ; Gets the ordered set of registers that are can be used to pass parameters according to a
-     ; given calling convention.
-     ;
-     ; @param type the type of calling convention
-     ; @param kind specifies what kind of registers is being requested
-     ; @return the ordered set of registers that may be used to pass parameters in a call conforming
-     ;         to {@code type}
-     ;;
-    RegisterArray getCallingConventionRegisters(Type type, JavaKind kind)
-
-    ;;;
      ; Gets the set of all registers that might be used by the register allocator.
      ;
      ; To get the set of registers the register allocator is allowed to use see
@@ -71681,35 +70120,12 @@ public final class RegisterValue extends AllocatableValue
         this.reg = register
     )
 
-    @Override
-    public String toString()
-    (§
-        return getRegister().name + getKindSuffix()
-    )
-
     ;;;
      ; @return the register that contains the value
      ;;
     public Register getRegister()
     (§
         return reg
-    )
-
-    @Override
-    public int hashCode()
-    (§
-        return 29 * super.hashCode() + reg.hashCode()
-    )
-
-    @Override
-    public boolean equals(Object obj)
-    (§
-        if (obj instanceof RegisterValue)
-        (§
-            RegisterValue other = (RegisterValue) obj
-            return super.equals(obj) && reg.equals(other.reg)
-        )
-        return false
     )
 )
 )
@@ -71739,7 +70155,6 @@ public final class StackSlot extends AllocatableValue
      ;;
     public static StackSlot get(ValueKind<?> kind, int offset, boolean addFrameSize)
     (§
-        assert addFrameSize || offset >= 0
         return new StackSlot(kind, offset, addFrameSize)
     )
 
@@ -71761,9 +70176,7 @@ public final class StackSlot extends AllocatableValue
      ;;
     public int getOffset(int totalFrameSize)
     (§
-        assert totalFrameSize > 0 || !addFrameSize
         int result = offset + (addFrameSize ? totalFrameSize (§ colon ) 0)
-        assert result >= 0
         return result
     )
 
@@ -71782,29 +70195,11 @@ public final class StackSlot extends AllocatableValue
         return addFrameSize
     )
 
-    @Override
-    public String toString()
-    (§
-        if (!addFrameSize)
-        (§
-            return "out:" + offset + getKindSuffix()
-        )
-        else if (offset >= 0)
-        (§
-            return "in:" + offset + getKindSuffix()
-        )
-        else
-        (§
-            return "stack:" + (-offset) + getKindSuffix()
-        )
-    )
-
     ;;;
      ; Gets this stack slot used to pass an argument from the perspective of a caller.
      ;;
     public StackSlot asOutArg()
     (§
-        assert offset >= 0
         if (addFrameSize)
         (§
             return get(getValueKind(), offset, false)
@@ -71817,138 +70212,11 @@ public final class StackSlot extends AllocatableValue
      ;;
     public StackSlot asInArg()
     (§
-        assert offset >= 0
         if (!addFrameSize)
         (§
             return get(getValueKind(), offset, true)
         )
         return this
-    )
-
-    @Override
-    public int hashCode()
-    (§
-        final int prime = 37
-        int result = super.hashCode()
-        result = prime * result + (addFrameSize ? 1231 (§ colon ) 1237)
-        result = prime * result + offset
-        return result
-    )
-
-    @Override
-    public boolean equals(Object obj)
-    (§
-        if (obj instanceof StackSlot)
-        (§
-            StackSlot other = (StackSlot) obj
-            return super.equals(obj) && addFrameSize == other.addFrameSize && offset == other.offset
-        )
-        return false
-    )
-)
-)
-
-(§ package jdk.vm.ci.code
-
-import static jdk.vm.ci.meta.MetaUtil.identityHashCodeString
-
-import jdk.vm.ci.meta.JavaKind
-
-;;;
- ; Represents the target machine for a compiler, including the CPU architecture, the size of
- ; pointers and references, alignment of stacks, caches, etc.
- ;;
-public class TargetDescription
-(§
-    public final Architecture arch
-
-    ;;;
-     ; Specifies if this is a multi-processor system.
-     ;;
-    public final boolean isMP
-
-    ;;;
-     ; Specifies if this target supports encoding objects inline in the machine code.
-     ;;
-    public final boolean inlineObjects
-
-    ;;;
-     ; The machine word size on this target.
-     ;;
-    public final int wordSize
-
-    ;;;
-     ; The {@link JavaKind} to be used for representing raw pointers and CPU registers in Java code.
-     ;;
-    public final JavaKind wordJavaKind
-
-    ;;;
-     ; The stack alignment requirement of the platform. For example, from Appendix D of
-     ; <a href="http://www.intel.com/Assets/PDF/manual/248966.pdf">Intel 64 and IA-32 Architectures
-     ; Optimization Reference Manual</a>:
-     ;
-     ; <pre>
-     ;     "It is important to ensure that the stack frame is aligned to a
-     ;      16-byte boundary upon function entry to keep local __m128 data,
-     ;      parameters, and XMM register spill locations aligned throughout
-     ;      a function invocation."
-     ; </pre>
-     ;;
-    public final int stackAlignment
-
-    ;;;
-     ; Maximum constant displacement at which a memory access can no longer be an implicit null
-     ; check.
-     ;;
-    public final int implicitNullCheckLimit
-
-    public TargetDescription(Architecture arch, boolean isMP, int stackAlignment, int implicitNullCheckLimit, boolean inlineObjects)
-    (§
-        this.arch = arch
-        this.isMP = isMP
-        this.wordSize = arch.getWordSize()
-        this.wordJavaKind = JavaKind.fromWordSize(wordSize)
-        this.stackAlignment = stackAlignment
-        this.implicitNullCheckLimit = implicitNullCheckLimit
-        this.inlineObjects = inlineObjects
-
-        assert arch.getPlatformKind(wordJavaKind).equals(arch.getWordKind())
-    )
-
-    @Override
-    public final int hashCode()
-    (§
-        throw new UnsupportedOperationException()
-    )
-
-    @Override
-    public final boolean equals(Object obj)
-    (§
-        if (this == obj)
-        (§
-            return true
-        )
-        if (obj instanceof TargetDescription)
-        (§
-            TargetDescription that = (TargetDescription) obj
-            if (this.implicitNullCheckLimit == that.implicitNullCheckLimit &&
-                this.inlineObjects == that.inlineObjects &&
-                this.isMP == that.isMP &&
-                this.stackAlignment == that.stackAlignment &&
-                this.wordJavaKind.equals(that.wordJavaKind) &&
-                this.wordSize == that.wordSize &&
-                this.arch.equals(that.arch))
-                (§
-                return true
-            )
-        )
-        return false
-    )
-
-    @Override
-    public String toString()
-    (§
-        return identityHashCodeString(this)
     )
 )
 )
@@ -71969,8 +70237,6 @@ public interface ValueKindFactory<K extends ValueKind<K>>
 
 (§ package jdk.vm.ci.code.site
 
-import java.util.Objects
-
 import jdk.vm.ci.meta.VMConstant
 
 ;;;
@@ -71990,39 +70256,10 @@ public final class ConstantReference extends Reference
     (§
         return constant
     )
-
-    @Override
-    public String toString()
-    (§
-        return constant.toString()
-    )
-
-    @Override
-    public int hashCode()
-    (§
-        return constant.hashCode()
-    )
-
-    @Override
-    public boolean equals(Object obj)
-    (§
-        if (this == obj)
-        (§
-            return true
-        )
-        if (obj instanceof ConstantReference)
-        (§
-            ConstantReference that = (ConstantReference) obj
-            return Objects.equals(this.constant, that.constant)
-        )
-        return false
-    )
 )
 )
 
 (§ package jdk.vm.ci.code.site
-
-import java.util.Objects
 
 import jdk.vm.ci.meta.VMConstant
 
@@ -72049,37 +70286,6 @@ public final class DataPatch extends Site
         this.reference = reference
         this.note = note
     )
-
-    @Override
-    public String toString()
-    (§
-        if (note != null)
-        (§
-            return String.format("%d[<data patch referring to %s>, note: %s]", pcOffset, reference.toString(), note.toString())
-        )
-        else
-        (§
-            return String.format("%d[<data patch referring to %s>]", pcOffset, reference.toString())
-        )
-    )
-
-    @Override
-    public boolean equals(Object obj)
-    (§
-        if (this == obj)
-        (§
-            return true
-        )
-        if (obj instanceof DataPatch)
-        (§
-            DataPatch that = (DataPatch) obj
-            if (this.pcOffset == that.pcOffset && Objects.equals(this.reference, that.reference) && Objects.equals(this.note, that.note))
-            (§
-                return true
-            )
-        )
-        return false
-    )
 )
 )
 
@@ -72102,58 +70308,19 @@ public final class DataSectionReference extends Reference
 
     public int getOffset()
     (§
-        assert initialized
-
         return offset
     )
 
     public void setOffset(int offset)
     (§
-        assert !initialized
         initialized = true
 
         this.offset = offset
-    )
-
-    @Override
-    public int hashCode()
-    (§
-        return offset
-    )
-
-    @Override
-    public boolean equals(Object obj)
-    (§
-        if (this == obj)
-        (§
-            return true
-        )
-        if (obj instanceof DataSectionReference)
-        (§
-            DataSectionReference that = (DataSectionReference) obj
-            return this.offset == that.offset
-        )
-        return false
-    )
-
-    @Override
-    public String toString()
-    (§
-        if (initialized)
-        (§
-            return String.format("DataSection[0x%x]", offset)
-        )
-        else
-        (§
-            return "DataSection[?]"
-        )
     )
 )
 )
 
 (§ package jdk.vm.ci.code.site
-
-import java.util.Objects
 
 ;;;
  ; Associates arbitrary information with a position in machine code. For example, HotSpot specific
@@ -72178,41 +70345,6 @@ public final class Mark extends Site
         super(pcOffset)
         this.id = id
     )
-
-    @Override
-    public String toString()
-    (§
-        if (id == null)
-        (§
-            return String.format("%d[<mark>]", pcOffset)
-        )
-        else if (id instanceof Integer)
-        (§
-            return String.format("%d[<mark with id %s>]", pcOffset, Integer.toHexString((Integer) id))
-        )
-        else
-        (§
-            return String.format("%d[<mark with id %s>]", pcOffset, id.toString())
-        )
-    )
-
-    @Override
-    public boolean equals(Object obj)
-    (§
-        if (this == obj)
-        (§
-            return true
-        )
-        if (obj instanceof Mark)
-        (§
-            Mark that = (Mark) obj
-            if (this.pcOffset == that.pcOffset && Objects.equals(this.id, that.id))
-            (§
-                return true
-            )
-        )
-        return false
-    )
 )
 )
 
@@ -72221,19 +70353,12 @@ public final class Mark extends Site
 ;;;
  ; Represents some external data that is referenced by the code.
  ;;
-public abstract class Reference
+public abstract class Reference
 (§
-    @Override
-    public abstract int hashCode()
-
-    @Override
-    public abstract boolean equals(Object obj)
 )
 )
 
 (§ package jdk.vm.ci.code.site
-
-import static jdk.vm.ci.meta.MetaUtil.identityHashCodeString
 
 ;;;
  ; Represents a code position with associated additional information.
@@ -72249,27 +70374,11 @@ public abstract class Site
     (§
         this.pcOffset = pos
     )
-
-    @Override
-    public final int hashCode()
-    (§
-        throw new UnsupportedOperationException("hashCode")
-    )
-
-    @Override
-    public String toString()
-    (§
-        return identityHashCodeString(this)
-    )
-
-    @Override
-    public abstract boolean equals(Object obj)
 )
 )
 
 (§ package jdk.vm.ci.hotspot
 
-import jdk.vm.ci.code.CallingConvention
 import jdk.vm.ci.code.CallingConvention.Type
 
 public enum HotSpotCallingConventionType implements CallingConvention.Type
@@ -72295,161 +70404,9 @@ public enum HotSpotCallingConventionType implements CallingConvention.Type
      ;;
     public final boolean out
 
-    public static final Type[] VALUES = values()
-
     HotSpotCallingConventionType(boolean out)
     (§
         this.out = out
-    )
-)
-)
-
-(§ package jdk.vm.ci.hotspot
-
-import jdk.vm.ci.code.BytecodeFrame
-import jdk.vm.ci.code.CompiledCode
-import jdk.vm.ci.code.StackSlot
-import jdk.vm.ci.code.site.DataPatch
-import jdk.vm.ci.code.site.Infopoint
-import jdk.vm.ci.code.site.Site
-import jdk.vm.ci.meta.Assumptions.Assumption
-import jdk.vm.ci.meta.ResolvedJavaMethod
-
-;;;
- ; A {@link CompiledCode} with additional HotSpot-specific information required for installing the
- ; code in HotSpot's code cache.
- ;;
-public class HotSpotCompiledCode implements CompiledCode
-(§
-    ;;;
-     ; The name of this compilation unit.
-     ;;
-    protected final String name
-
-    ;;;
-     ; The buffer containing the emitted machine code.
-     ;;
-    protected final byte[] targetCode
-
-    ;;;
-     ; The leading number of bytes in {@link #targetCode} containing the emitted machine code.
-     ;;
-    protected final int targetCodeSize
-
-    ;;;
-     ; A list of code annotations describing special sites in {@link #targetCode}.
-     ;;
-    protected final Site[] sites
-
-    ;;;
-     ; A list of {@link Assumption} this code relies on.
-     ;;
-    protected final Assumption[] assumptions
-
-    ;;;
-     ; The list of the methods whose bytecodes were used as input to the compilation. If
-     ; {@code null}, then the compilation did not record method dependencies. Otherwise, the first
-     ; element of this array is the root method of the compilation.
-     ;;
-    protected final ResolvedJavaMethod[] methods
-
-    ;;;
-     ; A list of comments that will be included in code dumps.
-     ;;
-    protected final Comment[] comments
-
-    ;;;
-     ; The data section containing serialized constants for the emitted machine code.
-     ;;
-    protected final byte[] dataSection
-
-    ;;;
-     ; The minimum alignment of the data section.
-     ;;
-    protected final int dataSectionAlignment
-
-    ;;;
-     ; A list of relocations in the {@link #dataSection}.
-     ;;
-    protected final DataPatch[] dataSectionPatches
-
-    ;;;
-     ; A flag determining whether this code is immutable and position independent.
-     ;;
-    protected final boolean isImmutablePIC
-
-    ;;;
-     ; The total size of the stack frame of this compiled method.
-     ;;
-    protected final int totalFrameSize
-
-    ;;;
-     ; The deopt rescue slot. Must be non-null if there is a safepoint in the method.
-     ;;
-    protected final StackSlot deoptRescueSlot
-
-    public static class Comment
-    (§
-        public final String text
-        public final int pcOffset
-
-        public Comment(int pcOffset, String text)
-        (§
-            this.text = text
-            this.pcOffset = pcOffset
-        )
-    )
-
-    public HotSpotCompiledCode(String name, byte[] targetCode, int targetCodeSize, Site[] sites, Assumption[] assumptions, ResolvedJavaMethod[] methods, Comment[] comments, byte[] dataSection, int dataSectionAlignment, DataPatch[] dataSectionPatches, boolean isImmutablePIC, int totalFrameSize, StackSlot deoptRescueSlot)
-    (§
-        this.name = name
-        this.targetCode = targetCode
-        this.targetCodeSize = targetCodeSize
-        this.sites = sites
-        this.assumptions = assumptions
-        this.methods = methods
-
-        this.comments = comments
-        this.dataSection = dataSection
-        this.dataSectionAlignment = dataSectionAlignment
-        this.dataSectionPatches = dataSectionPatches
-        this.isImmutablePIC = isImmutablePIC
-        this.totalFrameSize = totalFrameSize
-        this.deoptRescueSlot = deoptRescueSlot
-
-        assert validateFrames()
-    )
-
-    public String getName()
-    (§
-        return name
-    )
-
-    @Override
-    public String toString()
-    (§
-        return name
-    )
-
-    ;;;
-     ; Ensure that all the frames passed into the VM are properly formatted with an empty or illegal
-     ; slot following double word slots.
-     ;;
-    private boolean validateFrames()
-    (§
-        for (Site site (§ colon ) sites)
-        (§
-            if (site instanceof Infopoint)
-            (§
-                Infopoint info = (Infopoint) site
-                if (info.debugInfo != null)
-                (§
-                    BytecodeFrame frame = info.debugInfo.frame()
-                    assert frame == null || frame.validateFormat()
-                )
-            )
-        )
-        return true
     )
 )
 )
@@ -72527,42 +70484,6 @@ public final class HotSpotCompressedNullConstant implements JavaConstant, HotSpo
     (§
         throw new IllegalArgumentException()
     )
-
-    @Override
-    public float asFloat()
-    (§
-        throw new IllegalArgumentException()
-    )
-
-    @Override
-    public double asDouble()
-    (§
-        throw new IllegalArgumentException()
-    )
-
-    @Override
-    public String toString()
-    (§
-        return JavaConstant.toString(this)
-    )
-
-    @Override
-    public String toValueString()
-    (§
-        return "null"
-    )
-
-    @Override
-    public int hashCode()
-    (§
-        return System.identityHashCode(this)
-    )
-
-    @Override
-    public boolean equals(Object o)
-    (§
-        return o instanceof HotSpotCompressedNullConstant
-    )
 )
 )
 
@@ -72594,7 +70515,6 @@ import jdk.vm.ci.meta.ConstantReflectionProvider
 import jdk.vm.ci.meta.JavaConstant
 import jdk.vm.ci.meta.JavaKind
 import jdk.vm.ci.meta.MemoryAccessProvider
-import jdk.vm.ci.meta.MethodHandleAccessProvider
 import jdk.vm.ci.meta.ResolvedJavaField
 import jdk.vm.ci.meta.ResolvedJavaType
 
@@ -72604,19 +70524,12 @@ import jdk.vm.ci.meta.ResolvedJavaType
 public class HotSpotConstantReflectionProvider implements ConstantReflectionProvider
 (§
     protected final HotSpotJVMCIRuntimeProvider runtime
-    protected final HotSpotMethodHandleAccessProvider methodHandleAccess
     protected final HotSpotMemoryAccessProviderImpl memoryAccess
 
     public HotSpotConstantReflectionProvider(HotSpotJVMCIRuntimeProvider runtime)
     (§
         this.runtime = runtime
-        this.methodHandleAccess = new HotSpotMethodHandleAccessProvider(this)
         this.memoryAccess = new HotSpotMemoryAccessProviderImpl(runtime)
-    )
-
-    public MethodHandleAccessProvider getMethodHandleAccess()
-    (§
-        return methodHandleAccess
     )
 
     @Override
@@ -72705,9 +70618,6 @@ public class HotSpotConstantReflectionProvider implements ConstantReflectionProv
                 return source.asInt() >= -128 && source.asInt() <= 127
             case Long
                 return source.asLong() >= -128 && source.asLong() <= 127
-            case Float
-            case Double
-                return false
             default
                 throw new IllegalArgumentException("unexpected kind " + source.getJavaKind())
         )
@@ -72735,11 +70645,6 @@ public class HotSpotConstantReflectionProvider implements ConstantReflectionProv
             return null
         )
         return JavaConstant.forBoxedPrimitive(((HotSpotObjectConstantImpl) source).object())
-    )
-
-    public JavaConstant forString(String value)
-    (§
-        return HotSpotObjectConstantImpl.forObject(value)
     )
 
     public JavaConstant forObject(Object value)
@@ -72817,646 +70722,6 @@ public class HotSpotConstantReflectionProvider implements ConstantReflectionProv
 
 (§ package jdk.vm.ci.hotspot
 
-import static jdk.vm.ci.common.InitTimer.timer
-
-import java.io.IOException
-import java.io.OutputStream
-import java.io.PrintStream
-import java.util.Collections
-import java.util.HashMap
-import java.util.List
-import java.util.Map
-import java.util.Objects
-import java.util.ServiceLoader
-import java.util.TreeMap
-
-import jdk.internal.misc.VM
-import jdk.vm.ci.code.Architecture
-import jdk.vm.ci.code.CompilationRequestResult
-import jdk.vm.ci.code.CompiledCode
-import jdk.vm.ci.code.InstalledCode
-import jdk.vm.ci.common.InitTimer
-import jdk.vm.ci.common.JVMCIError
-import jdk.vm.ci.hotspot.HotSpotJVMCICompilerFactory.CompilationLevel
-import jdk.vm.ci.meta.JavaKind
-import jdk.vm.ci.meta.JavaType
-import jdk.vm.ci.meta.ResolvedJavaType
-import jdk.vm.ci.runtime.JVMCI
-import jdk.vm.ci.runtime.JVMCIBackend
-import jdk.vm.ci.runtime.JVMCICompiler
-import jdk.vm.ci.runtime.JVMCICompilerFactory
-import jdk.vm.ci.services.JVMCIServiceLocator
-
-;;;
- ; HotSpot implementation of a JVMCI runtime.
- ;
- ; The initialization of this class is very fragile since it's initialized both through
- ; {@link JVMCI#initialize()} or through calling {@link HotSpotJVMCIRuntime#runtime()} and
- ; {@link HotSpotJVMCIRuntime#runtime()} is also called by {@link JVMCI#initialize()}. So this class
- ; can't have a static initializer and any required initialization must be done as part of
- ; {@link #runtime()}. This allows the initialization to funnel back through
- ; {@link JVMCI#initialize()} without deadlocking.
- ;;
-public final class HotSpotJVMCIRuntime implements HotSpotJVMCIRuntimeProvider
-(§
-    @SuppressWarnings("try")
-    static class DelayedInit
-    (§
-        private static final HotSpotJVMCIRuntime instance
-
-        static
-        (§
-            try (InitTimer t = timer("HotSpotJVMCIRuntime.<init>"))
-            (§
-                instance = new HotSpotJVMCIRuntime()
-            )
-        )
-    )
-
-    ;;;
-     ; Gets the singleton {@link HotSpotJVMCIRuntime} object.
-     ;;
-    public static HotSpotJVMCIRuntime runtime()
-    (§
-        JVMCI.initialize()
-        return DelayedInit.instance
-    )
-
-    ;;;
-     ; A list of all supported JVMCI options.
-     ;;
-    public enum Option
-    (§
-        Compiler(String.class, null, "Selects the system compiler. This must match the getCompilerName() value returned " +
-                                     "by a jdk.vm.ci.runtime.JVMCICompilerFactory provider. " +
-                                     "An empty string or the value \"null\" selects a compiler " +
-                                     "that will raise an exception upon receiving a compilation request."),
-        ;; Note: The following one is not used (see InitTimer.ENABLED). It is added here
-        ;; so that -XX:+JVMCIPrintProperties shows the option.
-        InitTimer(Boolean.class, false, "Specifies if initialization timing is enabled."),
-        PrintConfig(Boolean.class, false, "Prints VM configuration available via JVMCI."),
-        TraceMethodDataFilter(String.class, null,
-                        "Enables tracing of profiling info when read by JVMCI.",
-                        "Empty value: trace all methods",
-                        "Non-empty value: trace methods whose fully qualified name contains the value."),
-        UseProfilingInformation(Boolean.class, true, "")
-
-        ;;;
-         ; The prefix for system properties that are JVMCI options.
-         ;;
-        private static final String JVMCI_OPTION_PROPERTY_PREFIX = "jvmci."
-
-        ;;;
-         ; Marker for uninitialized flags.
-         ;;
-        private static final String UNINITIALIZED = "UNINITIALIZED"
-
-        private final Class<?> type
-        private Object value
-        private final Object defaultValue
-        private boolean isDefault
-        private final String[] helpLines
-
-        Option(Class<?> type, Object defaultValue, String... helpLines)
-        (§
-            assert Character.isUpperCase(name().charAt(0)) (§ colon ) "Option name must start with upper-case letter: " + name()
-            this.type = type
-            this.value = UNINITIALIZED
-            this.defaultValue = defaultValue
-            this.helpLines = helpLines
-        )
-
-        private Object getValue()
-        (§
-            if (value == UNINITIALIZED)
-            (§
-                String propertyValue = VM.getSavedProperty(getPropertyName())
-                if (propertyValue == null)
-                (§
-                    this.value = defaultValue
-                    this.isDefault = true
-                )
-                else
-                (§
-                    if (type == Boolean.class)
-                    (§
-                        this.value = Boolean.parseBoolean(propertyValue)
-                    )
-                    else if (type == String.class)
-                    (§
-                        this.value = propertyValue
-                    )
-                    else
-                    (§
-                        throw new JVMCIError("Unexpected option type " + type)
-                    )
-                    this.isDefault = false
-                )
-                ;; Saved properties should not be interned - let's be sure
-                assert value != UNINITIALIZED
-            )
-            return value
-        )
-
-        ;;;
-         ; Gets the name of system property from which this option gets its value.
-         ;;
-        public String getPropertyName()
-        (§
-            return JVMCI_OPTION_PROPERTY_PREFIX + name()
-        )
-
-        ;;;
-         ; Returns the option's value as boolean.
-         ;
-         ; @return option's value
-         ;;
-        public boolean getBoolean()
-        (§
-            return (boolean) getValue()
-        )
-
-        ;;;
-         ; Returns the option's value as String.
-         ;
-         ; @return option's value
-         ;;
-        public String getString()
-        (§
-            return (String) getValue()
-        )
-
-        private static final int PROPERTY_LINE_WIDTH = 80
-        private static final int PROPERTY_HELP_INDENT = 10
-
-        ;;;
-         ; Prints a description of the properties used to configure shared JVMCI code.
-         ;
-         ; @param out stream to print to
-         ;;
-        public static void printProperties(PrintStream out)
-        (§
-            out.println("[JVMCI properties]")
-            Option[] values = values()
-            for (Option option (§ colon ) values)
-            (§
-                Object value = option.getValue()
-                if (value instanceof String)
-                (§
-                    value = (§ char "\"") + String.valueOf(value) + (§ char "\"")
-                )
-
-                String name = option.getPropertyName()
-                String assign = option.isDefault ? "=" (§ colon ) ":="
-                String typeName = option.type.getSimpleName()
-                String linePrefix = String.format("%s %s %s ", name, assign, value)
-                int typeStartPos = PROPERTY_LINE_WIDTH - typeName.length()
-                int linePad = typeStartPos - linePrefix.length()
-                if (linePad > 0)
-                (§
-                    out.printf("%s%-" + linePad + "s[%s]%n", linePrefix, "", typeName)
-                )
-                else
-                (§
-                    out.printf("%s[%s]%n", linePrefix, typeName)
-                )
-                for (String line (§ colon ) option.helpLines)
-                (§
-                    out.printf("%" + PROPERTY_HELP_INDENT + "s%s%n", "", line)
-                )
-            )
-        )
-    )
-
-    public static HotSpotJVMCIBackendFactory findFactory(String architecture)
-    (§
-        for (HotSpotJVMCIBackendFactory factory (§ colon ) ServiceLoader.load(HotSpotJVMCIBackendFactory.class, ClassLoader.getSystemClassLoader()))
-        (§
-            if (factory.getArchitecture().equalsIgnoreCase(architecture))
-            (§
-                return factory
-            )
-        )
-
-        throw new JVMCIError("No JVMCI runtime available for the %s architecture", architecture)
-    )
-
-    ;;;
-     ; Gets the kind of a word value on the {@linkplain #getHostJVMCIBackend() host} backend.
-     ;;
-    public static JavaKind getHostWordKind()
-    (§
-        return runtime().getHostJVMCIBackend().getCodeCache().getTarget().wordJavaKind
-    )
-
-    protected final CompilerToVM compilerToVm
-
-    protected final HotSpotVMConfigStore configStore
-    protected final HotSpotVMConfig config
-    private final JVMCIBackend hostBackend
-
-    private final JVMCICompilerFactory compilerFactory
-    private final HotSpotJVMCICompilerFactory hsCompilerFactory
-    private volatile JVMCICompiler compiler
-    protected final HotSpotJVMCIMetaAccessContext metaAccessContext
-
-    ;;;
-     ; Stores the result of {@link HotSpotJVMCICompilerFactory#getCompilationLevelAdjustment} so
-     ; that it can be read from the VM.
-     ;;
-    @SuppressWarnings("unused")
-    private final int compilationLevelAdjustment
-
-    private final Map<Class<? extends Architecture>, JVMCIBackend> backends = new HashMap<>()
-
-    private volatile List<HotSpotVMEventListener> vmEventListeners
-
-    private Iterable<HotSpotVMEventListener> getVmEventListeners()
-    (§
-        if (vmEventListeners == null)
-        (§
-            synchronized (this)
-            (§
-                if (vmEventListeners == null)
-                (§
-                    vmEventListeners = JVMCIServiceLocator.getProviders(HotSpotVMEventListener.class)
-                )
-            )
-        )
-        return vmEventListeners
-    )
-
-    ;;;
-     ; Stores the result of {@link HotSpotJVMCICompilerFactory#getTrivialPrefixes()} so that it can
-     ; be read from the VM.
-     ;;
-    @SuppressWarnings("unused")
-    private final String[] trivialPrefixes
-
-    @SuppressWarnings("try")
-    private HotSpotJVMCIRuntime()
-    (§
-        compilerToVm = new CompilerToVM()
-
-        try (InitTimer t = timer("HotSpotVMConfig<init>"))
-        (§
-            configStore = new HotSpotVMConfigStore(compilerToVm)
-            config = new HotSpotVMConfig(configStore)
-        )
-
-        String hostArchitecture = config.getHostArchitectureName()
-
-        HotSpotJVMCIBackendFactory factory
-        try (InitTimer t = timer("find factory:", hostArchitecture))
-        (§
-            factory = findFactory(hostArchitecture)
-        )
-
-        try (InitTimer t = timer("create JVMCI backend:", hostArchitecture))
-        (§
-            hostBackend = registerBackend(factory.createJVMCIBackend(this, null))
-        )
-
-        metaAccessContext = new HotSpotJVMCIMetaAccessContext()
-
-        compilerFactory = HotSpotJVMCICompilerConfig.getCompilerFactory()
-        if (compilerFactory instanceof HotSpotJVMCICompilerFactory)
-        (§
-            hsCompilerFactory = (HotSpotJVMCICompilerFactory) compilerFactory
-            trivialPrefixes = hsCompilerFactory.getTrivialPrefixes()
-            switch (hsCompilerFactory.getCompilationLevelAdjustment())
-            (§
-                case None
-                    compilationLevelAdjustment = config.compLevelAdjustmentNone
-                    break
-                case ByHolder
-                    compilationLevelAdjustment = config.compLevelAdjustmentByHolder
-                    break
-                case ByFullSignature
-                    compilationLevelAdjustment = config.compLevelAdjustmentByFullSignature
-                    break
-                default
-                    compilationLevelAdjustment = config.compLevelAdjustmentNone
-                    break
-            )
-        )
-        else
-        (§
-            hsCompilerFactory = null
-            trivialPrefixes = null
-            compilationLevelAdjustment = config.compLevelAdjustmentNone
-        )
-
-        if (config.getFlag("JVMCIPrintProperties", Boolean.class))
-        (§
-            PrintStream out = new PrintStream(getLogStream())
-            Option.printProperties(out)
-            compilerFactory.printProperties(out)
-            System.exit(0)
-        )
-
-        if (Option.PrintConfig.getBoolean())
-        (§
-            printConfig(configStore, compilerToVm)
-        )
-    )
-
-    private JVMCIBackend registerBackend(JVMCIBackend backend)
-    (§
-        Class<? extends Architecture> arch = backend.getCodeCache().getTarget().arch.getClass()
-        JVMCIBackend oldValue = backends.put(arch, backend)
-        assert oldValue == null (§ colon ) "cannot overwrite existing backend for architecture " + arch.getSimpleName()
-        return backend
-    )
-
-    public ResolvedJavaType fromClass(Class<?> javaClass)
-    (§
-        return metaAccessContext.fromClass(javaClass)
-    )
-
-    public HotSpotVMConfigStore getConfigStore()
-    (§
-        return configStore
-    )
-
-    public HotSpotVMConfig getConfig()
-    (§
-        return config
-    )
-
-    public CompilerToVM getCompilerToVM()
-    (§
-        return compilerToVm
-    )
-
-    public JVMCICompiler getCompiler()
-    (§
-        if (compiler == null)
-        (§
-            synchronized (this)
-            (§
-                if (compiler == null)
-                (§
-                    compiler = compilerFactory.createCompiler(this)
-                )
-            )
-        )
-        return compiler
-    )
-
-    public JavaType lookupType(String name, HotSpotResolvedObjectType accessingType, boolean resolve)
-    (§
-        Objects.requireNonNull(accessingType, "cannot resolve type without an accessing class")
-        ;; If the name represents a primitive type we can short-circuit the lookup.
-        if (name.length() == 1)
-        (§
-            JavaKind kind = JavaKind.fromPrimitiveOrVoidTypeChar(name.charAt(0))
-            return fromClass(kind.toJavaClass())
-        )
-
-        ;; Resolve non-primitive types in the VM.
-        HotSpotResolvedObjectTypeImpl hsAccessingType = (HotSpotResolvedObjectTypeImpl) accessingType
-        final HotSpotResolvedObjectTypeImpl klass = compilerToVm.lookupType(name, hsAccessingType.mirror(), resolve)
-
-        if (klass == null)
-        (§
-            assert resolve == false
-            return HotSpotUnresolvedJavaType.create(this, name)
-        )
-        return klass
-    )
-
-    public JVMCIBackend getHostJVMCIBackend()
-    (§
-        return hostBackend
-    )
-
-    public <T extends Architecture> JVMCIBackend getJVMCIBackend(Class<T> arch)
-    (§
-        assert arch != Architecture.class
-        return backends.get(arch)
-    )
-
-    public Map<Class<? extends Architecture>, JVMCIBackend> getJVMCIBackends()
-    (§
-        return Collections.unmodifiableMap(backends)
-    )
-
-    ;;;
-     ; Called from the VM.
-     ;;
-    @SuppressWarnings("unused")
-    private int adjustCompilationLevel(Class<?> declaringClass, String name, String signature, boolean isOsr, int level)
-    (§
-        CompilationLevel curLevel
-        if (level == config.compilationLevelNone)
-        (§
-            curLevel = CompilationLevel.None
-        )
-        else if (level == config.compilationLevelSimple)
-        (§
-            curLevel = CompilationLevel.Simple
-        )
-        else if (level == config.compilationLevelLimitedProfile)
-        (§
-            curLevel = CompilationLevel.LimitedProfile
-        )
-        else if (level == config.compilationLevelFullProfile)
-        (§
-            curLevel = CompilationLevel.FullProfile
-        )
-        else if (level == config.compilationLevelFullOptimization)
-        (§
-            curLevel = CompilationLevel.FullOptimization
-        )
-        else
-        (§
-            throw JVMCIError.shouldNotReachHere()
-        )
-
-        switch (hsCompilerFactory.adjustCompilationLevel(declaringClass, name, signature, isOsr, curLevel))
-        (§
-            case None
-                return config.compilationLevelNone
-            case Simple
-                return config.compilationLevelSimple
-            case LimitedProfile
-                return config.compilationLevelLimitedProfile
-            case FullProfile
-                return config.compilationLevelFullProfile
-            case FullOptimization
-                return config.compilationLevelFullOptimization
-            default
-                return level
-        )
-    )
-
-    ;;;
-     ; Called from the VM.
-     ;;
-    @SuppressWarnings("unused")
-    private HotSpotCompilationRequestResult compileMethod(HotSpotResolvedJavaMethod method, int entryBCI, long jvmciEnv, int id)
-    (§
-        CompilationRequestResult result = getCompiler().compileMethod(new HotSpotCompilationRequest(method, entryBCI, jvmciEnv, id))
-        assert result != null (§ colon ) "compileMethod must always return something"
-        HotSpotCompilationRequestResult hsResult
-        if (result instanceof HotSpotCompilationRequestResult)
-        (§
-            hsResult = (HotSpotCompilationRequestResult) result
-        )
-        else
-        (§
-            Object failure = result.getFailure()
-            if (failure != null)
-            (§
-                boolean retry = false; // Be conservative with unknown compiler
-                hsResult = HotSpotCompilationRequestResult.failure(failure.toString(), retry)
-            )
-            else
-            (§
-                int inlinedBytecodes = -1
-                hsResult = HotSpotCompilationRequestResult.success(inlinedBytecodes)
-            )
-        )
-
-        return hsResult
-    )
-
-    ;;;
-     ; Shuts down the runtime.
-     ;
-     ; Called from the VM.
-     ;;
-    @SuppressWarnings("unused")
-    private void shutdown() throws Exception
-    (§
-        for (HotSpotVMEventListener vmEventListener (§ colon ) getVmEventListeners())
-        (§
-            vmEventListener.notifyShutdown()
-        )
-    )
-
-    ;;;
-     ; Notify on completion of a bootstrap.
-     ;
-     ; Called from the VM.
-     ;;
-    @SuppressWarnings("unused")
-    private void bootstrapFinished() throws Exception
-    (§
-        for (HotSpotVMEventListener vmEventListener (§ colon ) getVmEventListeners())
-        (§
-            vmEventListener.notifyBootstrapFinished()
-        )
-    )
-
-    ;;;
-     ; Notify on successful install into the CodeCache.
-     ;
-     ; @param hotSpotCodeCacheProvider
-     ; @param installedCode
-     ; @param compiledCode
-     ;;
-    void notifyInstall(HotSpotCodeCacheProvider hotSpotCodeCacheProvider, InstalledCode installedCode, CompiledCode compiledCode)
-    (§
-        for (HotSpotVMEventListener vmEventListener (§ colon ) getVmEventListeners())
-        (§
-            vmEventListener.notifyInstall(hotSpotCodeCacheProvider, installedCode, compiledCode)
-        )
-    )
-
-    private static void printConfigLine(CompilerToVM vm, String format, Object... args)
-    (§
-        String line = String.format(format, args)
-        byte[] lineBytes = line.getBytes()
-        vm.writeDebugOutput(lineBytes, 0, lineBytes.length)
-        vm.flushDebugOutput()
-    )
-
-    private static void printConfig(HotSpotVMConfigStore store, CompilerToVM vm)
-    (§
-        TreeMap<String, VMField> fields = new TreeMap<>(store.getFields())
-        for (VMField field (§ colon ) fields.values())
-        (§
-            if (!field.isStatic())
-            (§
-                printConfigLine(vm, "[vmconfig:instance field] %s %s {offset=%d[0x%x]}%n", field.type, field.name, field.offset, field.offset)
-            )
-            else
-            (§
-                String value = field.value == null ? "null" (§ colon ) field.value instanceof Boolean ? field.value.toString() (§ colon ) String.format("%d[0x%x]", field.value, field.value)
-                printConfigLine(vm, "[vmconfig:static field] %s %s = %s {address=0x%x}%n", field.type, field.name, value, field.address)
-            )
-        )
-        TreeMap<String, VMFlag> flags = new TreeMap<>(store.getFlags())
-        for (VMFlag flag (§ colon ) flags.values())
-        (§
-            printConfigLine(vm, "[vmconfig:flag] %s %s = %s%n", flag.type, flag.name, flag.value)
-        )
-        TreeMap<String, Long> addresses = new TreeMap<>(store.getAddresses())
-        for (Map.Entry<String, Long> e (§ colon ) addresses.entrySet())
-        (§
-            printConfigLine(vm, "[vmconfig:address] %s = %d[0x%x]%n", e.getKey(), e.getValue(), e.getValue())
-        )
-        TreeMap<String, Long> constants = new TreeMap<>(store.getConstants())
-        for (Map.Entry<String, Long> e (§ colon ) constants.entrySet())
-        (§
-            printConfigLine(vm, "[vmconfig:constant] %s = %d[0x%x]%n", e.getKey(), e.getValue(), e.getValue())
-        )
-        for (VMIntrinsicMethod e (§ colon ) store.getIntrinsics())
-        (§
-            printConfigLine(vm, "[vmconfig:intrinsic] %d = %s.%s %s%n", e.id, e.declaringClass, e.name, e.descriptor)
-        )
-    )
-
-    public OutputStream getLogStream()
-    (§
-        return new OutputStream()
-        (§
-            @Override
-            public void write(byte[] b, int off, int len) throws IOException
-            (§
-                if (b == null)
-                (§
-                    throw new NullPointerException()
-                )
-                else if (off < 0 || off > b.length || len < 0 || (off + len) > b.length || (off + len) < 0)
-                (§
-                    throw new IndexOutOfBoundsException()
-                )
-                else if (len == 0)
-                (§
-                    return
-                )
-                compilerToVm.writeDebugOutput(b, off, len)
-            )
-
-            @Override
-            public void write(int b) throws IOException
-            (§
-                write(new byte[] (§ (byte) b), 0, 1)
-            )
-
-            @Override
-            public void flush() throws IOException
-            (§
-                compilerToVm.flushDebugOutput()
-            )
-        )
-    )
-
-    ;;;
-     ; Collects the current values of all JVMCI benchmark counters, summed up over all threads.
-     ;;
-    public long[] collectCounters()
-    (§
-        return compilerToVm.collectCounters()
-    )
-)
-)
-
-(§ package jdk.vm.ci.hotspot
-
 import jdk.vm.ci.meta.Constant
 import jdk.vm.ci.meta.JavaConstant
 import jdk.vm.ci.meta.MemoryAccessProvider
@@ -73494,10 +70759,6 @@ public interface HotSpotMetaspaceConstant extends HotSpotConstant, VMConstant
 
 (§ package jdk.vm.ci.hotspot
 
-import java.lang.invoke.CallSite
-import java.util.Objects
-
-import jdk.vm.ci.meta.Assumptions
 import jdk.vm.ci.meta.JavaConstant
 import jdk.vm.ci.meta.ResolvedJavaType
 import jdk.vm.ci.meta.VMConstant
@@ -73526,12 +70787,6 @@ public interface HotSpotObjectConstant extends JavaConstant, HotSpotConstant, VM
     JavaConstant getClassLoader()
 
     ;;;
-     ; Gets the {@linkplain System#identityHashCode(Object) identity} has code for the object
-     ; represented by this constant.
-     ;;
-    int getIdentityHashCode()
-
-    ;;;
      ; Gets the result of {@link Class#getComponentType()} for the {@link Class} object represented
      ; by this constant.
      ;
@@ -73546,21 +70801,6 @@ public interface HotSpotObjectConstant extends JavaConstant, HotSpotConstant, VM
      ; @return {@code null} if this constant does not represent a {@link Class} object
      ;;
     JavaConstant getSuperclass()
-
-    ;;;
-     ; Gets the result of {@link CallSite#getTarget()} for the {@link CallSite} object represented
-     ; by this constant.
-     ;
-     ; @param assumptions used to register an assumption that the {@link CallSite}'s target does not
-     ;            change
-     ; @return {@code null} if this constant does not represent a {@link CallSite} object
-     ;;
-    JavaConstant getCallSiteTarget(Assumptions assumptions)
-
-    ;;;
-     ; Determines if this constant represents an {@linkplain String#intern() interned} string.
-     ;;
-    boolean isInternedString()
 
     ;;;
      ; Gets the object represented by this constant represents if it is of a given type.
@@ -73637,93 +70877,16 @@ public interface HotSpotResolvedJavaMethod extends ResolvedJavaMethod
     HotSpotResolvedObjectType getDeclaringClass()
 
     ;;;
-     ; Returns true if this method has a {@code ForceInline} annotation.
-     ;
-     ; @return true if ForceInline annotation present, false otherwise
-     ;;
-    boolean isForceInline()
-
-    ;;;
-     ; Returns true if this method has a {@code ReservedStackAccess} annotation.
-     ;
-     ; @return true if ReservedStackAccess annotation present, false otherwise
-     ;;
-    boolean hasReservedStackAccess()
-
-    ;;;
-     ; Manually adds a DontInline annotation to this method.
-     ;;
-    void setNotInlineable()
-
-    ;;;
-     ; Returns true if this method is one of the special methods that is ignored by security stack
-     ; walks.
+     ; Returns true if this method is one of the special methods that is ignored by security stack walks.
      ;
      ; @return true if special method ignored by security stack walks, false otherwise
      ;;
     boolean ignoredBySecurityStackWalk()
-
-    ResolvedJavaMethod uniqueConcreteMethod(HotSpotResolvedObjectType receiver)
-
-    ;;;
-     ; Returns whether this method has compiled code.
-     ;
-     ; @return true if this method has compiled code, false otherwise
-     ;;
-    boolean hasCompiledCode()
-
-    ;;;
-     ; @param level
-     ; @return true if the currently installed code was generated at {@code level}.
-     ;;
-    boolean hasCompiledCodeAtLevel(int level)
-
-    default boolean isDefault()
-    (§
-        if (isConstructor())
-        (§
-            return false
-        )
-        ;; Copied from java.lang.Method.isDefault()
-        int mask = Modifier.ABSTRACT | Modifier.PUBLIC | Modifier.STATIC
-        return ((getModifiers() & mask) == Modifier.PUBLIC) && getDeclaringClass().isInterface()
-    )
-
-    ;;;
-     ; Returns the offset of this method into the v-table. The method must have a v-table entry as
-     ; indicated by {@link #isInVirtualMethodTable(ResolvedJavaType)}, otherwise an exception is
-     ; thrown.
-     ;
-     ; @return the offset of this method into the v-table
-     ;;
-    int vtableEntryOffset(ResolvedJavaType resolved)
-
-    int intrinsicId()
-
-    ;;;
-     ; Determines if this method denotes itself as a candidate for intrinsification. As of JDK 9,
-     ; this is denoted by the {@code HotSpotIntrinsicCandidate} annotation. In earlier JDK versions,
-     ; this method returns true.
-     ;
-     ; @see <a href="https://bugs.openjdk.java.net/browse/JDK-8076112">JDK-8076112</a>
-     ;;
-    boolean isIntrinsicCandidate()
-
-    ;;;
-     ; Allocates a compile id for this method by asking the VM for one.
-     ;
-     ; @param entryBCI entry bci
-     ; @return compile id
-     ;;
-    int allocateCompileId(int entryBCI)
-
-    boolean hasCodeAtLevel(int entryBCI, int level)
 )
 )
 
 (§ package jdk.vm.ci.hotspot
 
-import jdk.vm.ci.meta.Assumptions.AssumptionResult
 import jdk.vm.ci.meta.Constant
 import jdk.vm.ci.meta.ConstantPool
 import jdk.vm.ci.meta.JavaConstant
@@ -73750,8 +70913,6 @@ public interface HotSpotResolvedObjectType extends ResolvedJavaType
     HotSpotResolvedObjectType getArrayClass()
 
     ResolvedJavaType getComponentType()
-
-    AssumptionResult<ResolvedJavaType> findLeafConcreteSubtype()
 
     HotSpotResolvedObjectType getSuperclass()
 
@@ -73780,20 +70941,6 @@ public interface HotSpotResolvedObjectType extends ResolvedJavaType
      ;;
     int instanceSize()
 
-    int getVtableLength()
-
-    @Override
-    AssumptionResult<ResolvedJavaMethod> findUniqueConcreteMethod(ResolvedJavaMethod method)
-
-    ;;;
-     ; Performs a fast-path check that this type is resolved in the context of a given accessing
-     ; class. A negative result does not mean this type is not resolved with respect to
-     ; {@code accessingClass}. That can only be determined by
-     ; {@linkplain HotSpotJVMCIRuntime#lookupType(String, HotSpotResolvedObjectType, boolean)
-     ; re-resolving} the type.
-     ;;
-    boolean isDefinitelyResolvedWithRespectTo(ResolvedJavaType accessingClass)
-
     ;;;
      ; Gets the metaspace Klass boxed in a {@link JavaConstant}.
      ;;
@@ -73804,12 +70951,6 @@ public interface HotSpotResolvedObjectType extends ResolvedJavaType
     int superCheckOffset()
 
     long prototypeMarkWord()
-
-    int layoutHelper()
-
-    long getFingerprint()
-
-    HotSpotResolvedObjectType getEnclosingType()
 
     ResolvedJavaMethod getClassInitializer()
 )
@@ -73915,7 +71056,6 @@ public class HotSpotVMConfigAccess
      ;;
     public <T> T getFieldOffset(String name, Class<T> type, String cppType, T notPresent)
     (§
-        assert type == Integer.class || type == Long.class
         VMField entry = getField(name, cppType, notPresent == null)
         if (entry == null)
         (§
@@ -74194,8 +71334,6 @@ public class HotSpotVMConfigAccess
  ;;
 public abstract class AllocatableValue extends Value implements JavaValue
 (§
-    public static final AllocatableValue[] NONE = (§)
-
     public AllocatableValue(ValueKind<?> kind)
     (§
         super(kind)
@@ -74211,8 +71349,6 @@ public abstract class AllocatableValue extends Value implements JavaValue
 public interface Constant
 (§
     boolean isDefaultForKind()
-
-    String toValueString()
 )
 )
 
@@ -74249,8 +71385,7 @@ public interface ConstantPool
      ; any of these checks fail, an unresolved field reference is returned.
      ;
      ; @param cpi the constant pool index
-     ; @param opcode the opcode of the instruction for which the lookup is being performed or
-     ;            {@code -1}
+     ; @param opcode the opcode of the instruction for which the lookup is being performed or {@code -1}
      ; @param method the method for which the lookup is being performed
      ; @return a reference to the field at {@code cpi} in this pool
      ; @throws ClassFormatError if the entry at {@code cpi} is not a field
@@ -74263,8 +71398,7 @@ public interface ConstantPool
      ; any of these checks fail, an unresolved method reference is returned.
      ;
      ; @param cpi the constant pool index
-     ; @param opcode the opcode of the instruction for which the lookup is being performed or
-     ;            {@code -1}
+     ; @param opcode the opcode of the instruction for which the lookup is being performed or {@code -1}
      ; @return a reference to the method at {@code cpi} in this pool
      ; @throws ClassFormatError if the entry at {@code cpi} is not a method
      ;;
@@ -74276,8 +71410,7 @@ public interface ConstantPool
      ; of these checks fail, an unresolved type reference is returned.
      ;
      ; @param cpi the constant pool index
-     ; @param opcode the opcode of the instruction for which the lookup is being performed or
-     ;            {@code -1}
+     ; @param opcode the opcode of the instruction for which the lookup is being performed or {@code -1}
      ; @return a reference to the compiler interface type
      ;;
     JavaType lookupType(int cpi, int opcode)
@@ -74291,19 +71424,10 @@ public interface ConstantPool
     String lookupUtf8(int cpi)
 
     ;;;
-     ; Looks up a method signature.
-     ;
-     ; @param cpi the constant pool index
-     ; @return the method signature at index {@code cpi} in this constant pool
-     ;;
-    Signature lookupSignature(int cpi)
-
-    ;;;
      ; Looks up a constant at the specified index.
      ;
      ; @param cpi the constant pool index
-     ; @return the {@code Constant} or {@code JavaType} instance representing the constant pool
-     ;         entry
+     ; @return the {@code Constant} or {@code JavaType} instance representing the constant pool entry
      ;;
     Object lookupConstant(int cpi)
 
@@ -74311,8 +71435,7 @@ public interface ConstantPool
      ; Looks up the appendix at the specified index.
      ;
      ; @param cpi the constant pool index
-     ; @param opcode the opcode of the instruction for which the lookup is being performed or
-     ;            {@code -1}
+     ; @param opcode the opcode of the instruction for which the lookup is being performed or {@code -1}
      ; @return the appendix if it exists and is resolved or {@code null}
      ;;
     JavaConstant lookupAppendix(int cpi, int opcode)
@@ -74320,8 +71443,6 @@ public interface ConstantPool
 )
 
 (§ package jdk.vm.ci.meta
-
-import java.lang.invoke.MethodHandle
 
 ;;;
  ; Reflection operations on values represented as {@linkplain JavaConstant constants}. All methods
@@ -74384,21 +71505,11 @@ public interface ConstantReflectionProvider
     JavaConstant unboxPrimitive(JavaConstant source)
 
     ;;;
-     ; Gets a string as a {@link JavaConstant}.
-     ;;
-    JavaConstant forString(String value)
-
-    ;;;
      ; Returns the {@link ResolvedJavaType} for a {@link Class} object (or any other object regarded
      ; as a class by the VM) encapsulated in the given constant. Returns {@code null} if the
      ; constant does not encapsulate a class, or if the type is not available at this point.
      ;;
     ResolvedJavaType asJavaType(Constant constant)
-
-    ;;;
-     ; Gets access to the internals of {@link MethodHandle}.
-     ;;
-    MethodHandleAccessProvider getMethodHandleAccess()
 
     ;;;
      ; Gets raw memory access.
@@ -74527,10 +71638,6 @@ public interface JavaConstant extends Constant, JavaValue
     PrimitiveConstant INT_2 = new PrimitiveConstant(JavaKind.Int, 2)
     PrimitiveConstant LONG_0 = new PrimitiveConstant(JavaKind.Long, 0 #_"L")
     PrimitiveConstant LONG_1 = new PrimitiveConstant(JavaKind.Long, 1 #_"L")
-    PrimitiveConstant FLOAT_0 = new PrimitiveConstant(JavaKind.Float, Float.floatToRawIntBits(0.0 #_"F"))
-    PrimitiveConstant FLOAT_1 = new PrimitiveConstant(JavaKind.Float, Float.floatToRawIntBits(1.0 #_"F"))
-    PrimitiveConstant DOUBLE_0 = new PrimitiveConstant(JavaKind.Double, Double.doubleToRawLongBits(0.0 #_"D"))
-    PrimitiveConstant DOUBLE_1 = new PrimitiveConstant(JavaKind.Double, Double.doubleToRawLongBits(1.0 #_"D"))
     PrimitiveConstant TRUE = new PrimitiveConstant(JavaKind.Boolean, 1 #_"L")
     PrimitiveConstant FALSE = new PrimitiveConstant(JavaKind.Boolean, 0 #_"L")
 
@@ -74605,84 +71712,6 @@ public interface JavaConstant extends Constant, JavaValue
      ; @return the constant value
      ;;
     long asLong()
-
-    ;;;
-     ; Returns the primitive float value this constant represents. The constant must have kind
-     ; {@link JavaKind#Float}.
-     ;
-     ; @return the constant value
-     ;;
-    float asFloat()
-
-    ;;;
-     ; Returns the primitive double value this constant represents. The constant must have kind
-     ; {@link JavaKind#Double}.
-     ;
-     ; @return the constant value
-     ;;
-    double asDouble()
-
-    default String toValueString()
-    (§
-        if (getJavaKind() == JavaKind.Illegal)
-        (§
-            return "illegal"
-        )
-        else
-        (§
-            return getJavaKind().format(asBoxedPrimitive())
-        )
-    )
-
-    static String toString(JavaConstant constant)
-    (§
-        if (constant.getJavaKind() == JavaKind.Illegal)
-        (§
-            return "illegal"
-        )
-        else
-        (§
-            return constant.getJavaKind().getJavaName() + "[" + constant.toValueString() + "]"
-        )
-    )
-
-    ;;;
-     ; Creates a boxed double constant.
-     ;
-     ; @param d the double value to box
-     ; @return a boxed copy of {@code value}
-     ;;
-    static PrimitiveConstant forDouble(double d)
-    (§
-        if (Double.compare(0.0 #_"D", d) == 0)
-        (§
-            return DOUBLE_0
-        )
-        if (Double.compare(d, 1.0 #_"D") == 0)
-        (§
-            return DOUBLE_1
-        )
-        return new PrimitiveConstant(JavaKind.Double, Double.doubleToRawLongBits(d))
-    )
-
-    ;;;
-     ; Creates a boxed float constant.
-     ;
-     ; @param f the float value to box
-     ; @return a boxed copy of {@code value}
-     ;;
-    static PrimitiveConstant forFloat(float f)
-    (§
-        if (Float.compare(f, 0.0 #_"F") == 0)
-        (§
-            return FLOAT_0
-        )
-        if (Float.compare(f, 1.0 #_"F") == 0)
-        (§
-            return FLOAT_1
-        )
-        return new PrimitiveConstant(JavaKind.Float, Float.floatToRawIntBits(f))
-    )
 
     ;;;
      ; Creates a boxed long constant.
@@ -74802,7 +71831,6 @@ public interface JavaConstant extends Constant, JavaValue
      ;;
     static PrimitiveConstant forPrimitiveInt(int bits, long i)
     (§
-        assert bits <= 64
         switch (bits)
         (§
             case 1
@@ -74852,14 +71880,6 @@ public interface JavaConstant extends Constant, JavaValue
         (§
             return forLong((Long) value)
         )
-        else if (value instanceof Float)
-        (§
-            return forFloat((Float) value)
-        )
-        else if (value instanceof Double)
-        (§
-            return forDouble((Double) value)
-        )
         else
         (§
             return null
@@ -74888,10 +71908,6 @@ public interface JavaConstant extends Constant, JavaValue
                 return forShort((short) 0)
             case Int
                 return INT_0
-            case Double
-                return DOUBLE_0
-            case Float
-                return FLOAT_0
             case Long
                 return LONG_0
             case Object
@@ -74904,9 +71920,6 @@ public interface JavaConstant extends Constant, JavaValue
 )
 
 (§ package jdk.vm.ci.meta
-
-import java.util.IllegalFormatException
-import java.util.UnknownFormatConversionException
 
 ;;;
  ; Represents a reference to a Java field, either resolved or unresolved fields. Fields, like
@@ -74934,97 +71947,13 @@ public interface JavaField
     )
 
     ;;;
-     ; Returns the {@link JavaType} object representing the class or interface that declares this
-     ; field.
+     ; Returns the {@link JavaType} object representing the class or interface that declares this field.
      ;;
     JavaType getDeclaringClass()
-
-    ;;;
-     ; Gets a string for this field formatted according to a given format specification. A format
-     ; specification is composed of characters that are to be copied verbatim to the result and
-     ; specifiers that denote an attribute of this field that is to be copied to the result. A
-     ; specifier is a single character preceded by a (§ char "%") character. The accepted specifiers and the
-     ; field attributes they denote are described below:
-     ;
-     ; <pre>
-     ;     Specifier | Description                                          | Example(s)
-     ;     ----------+------------------------------------------------------------------------------------------
-     ;     (§ char "T")       | Qualified type                                       | "int" "java.lang.String"
-     ;     (§ char "t")       | Unqualified type                                     | "int" "String"
-     ;     (§ char "H")       | Qualified holder                                     | "java.util.Map.Entry"
-     ;     (§ char "h")       | Unqualified holder                                   | "Entry"
-     ;     (§ char "n")       | Field name                                           | "age"
-     ;     (§ char "f")       | Indicator if field is unresolved, static or instance | "unresolved" "static" "instance"
-     ;     (§ char "%")       | A (§ char "%") character                                      | "%"
-     ; </pre>
-     ;
-     ; @param format a format specification
-     ; @return the result of formatting this field according to {@code format}
-     ; @throws IllegalFormatException if an illegal specifier is encountered in {@code format}
-     ;;
-    default String format(String format) throws IllegalFormatException
-    (§
-        StringBuilder sb = new StringBuilder()
-        int index = 0
-        JavaType type = getType()
-        while (index < format.length())
-        (§
-            char ch = format.charAt(index++)
-            if (ch == (§ char "%"))
-            (§
-                if (index >= format.length())
-                (§
-                    throw new UnknownFormatConversionException("An unquoted (§ char "%") character cannot terminate a field format specification")
-                )
-                char specifier = format.charAt(index++)
-                switch (specifier)
-                (§
-                    case (§ char "T")
-                    case (§ char "t")
-                    (§
-                        sb.append(type.toJavaName(specifier == (§ char "T")))
-                        break
-                    )
-                    case (§ char "H")
-                    case (§ char "h")
-                    (§
-                        sb.append(getDeclaringClass().toJavaName(specifier == (§ char "H")))
-                        break
-                    )
-                    case (§ char "n")
-                    (§
-                        sb.append(getName())
-                        break
-                    )
-                    case (§ char "f")
-                    (§
-                        sb.append(!(this instanceof ResolvedJavaField) ? "unresolved" (§ colon ) ((ResolvedJavaField) this).isStatic() ? "static" (§ colon ) "instance")
-                        break
-                    )
-                    case (§ char "%")
-                    (§
-                        sb.append((§ char "%"))
-                        break
-                    )
-                    default
-                    (§
-                        throw new UnknownFormatConversionException(String.valueOf(specifier))
-                    )
-                )
-            )
-            else
-            (§
-                sb.append(ch)
-            )
-        )
-        return sb.toString()
-    )
 )
 )
 
 (§ package jdk.vm.ci.meta
-
-import java.lang.reflect.Array
 
 ;;;
  ; Denotes the basic kinds of types in CRI, including the all the Java primitive types, for example,
@@ -75033,55 +71962,46 @@ import java.lang.reflect.Array
  ;;
 public enum JavaKind
 (§
-    ;;; The primitive boolean kind, represented as an int on the stack. */
-    Boolean((§ char "Z"), "boolean", 1, true, java.lang.Boolean.TYPE, java.lang.Boolean.class),
+    ;;; The primitive boolean kind, represented as an int on the stack.
+    Boolean("boolean", 1, true, java.lang.Boolean.TYPE, java.lang.Boolean.class),
 
-    ;;; The primitive byte kind, represented as an int on the stack. */
-    Byte((§ char "B"), "byte", 1, true, java.lang.Byte.TYPE, java.lang.Byte.class),
+    ;;; The primitive byte kind, represented as an int on the stack.
+    Byte("byte", 1, true, java.lang.Byte.TYPE, java.lang.Byte.class),
 
-    ;;; The primitive short kind, represented as an int on the stack. */
-    Short((§ char "S"), "short", 1, true, java.lang.Short.TYPE, java.lang.Short.class),
+    ;;; The primitive short kind, represented as an int on the stack.
+    Short("short", 1, true, java.lang.Short.TYPE, java.lang.Short.class),
 
-    ;;; The primitive char kind, represented as an int on the stack. */
-    Char((§ char "C"), "char", 1, true, java.lang.Character.TYPE, java.lang.Character.class),
+    ;;; The primitive char kind, represented as an int on the stack.
+    Char("char", 1, true, java.lang.Character.TYPE, java.lang.Character.class),
 
-    ;;; The primitive int kind, represented as an int on the stack. */
-    Int((§ char "I"), "int", 1, true, java.lang.Integer.TYPE, java.lang.Integer.class),
+    ;;; The primitive int kind, represented as an int on the stack.
+    Int("int", 1, true, java.lang.Integer.TYPE, java.lang.Integer.class),
 
-    ;;; The primitive float kind. */
-    Float((§ char "F"), "float", 1, false, java.lang.Float.TYPE, java.lang.Float.class),
+    ;;; The primitive long kind.
+    Long("long", 2, false, java.lang.Long.TYPE, java.lang.Long.class),
 
-    ;;; The primitive long kind. */
-    Long((§ char "J"), "long", 2, false, java.lang.Long.TYPE, java.lang.Long.class),
+    ;;; The Object kind, also used for arrays.
+    Object("Object", 1, false, null, null),
 
-    ;;; The primitive double kind. */
-    Double((§ char "D"), "double", 2, false, java.lang.Double.TYPE, java.lang.Double.class),
+    ;;; The void kind.
+    Void("void", 0, false, java.lang.Void.TYPE, java.lang.Void.class),
 
-    ;;; The Object kind, also used for arrays. */
-    Object((§ char "A"), "Object", 1, false, null, null),
+    ;;; The non-type.
+    Illegal("illegal", 0, false, null, null)
 
-    ;;; The void kind. */
-    Void((§ char "V"), "void", 0, false, java.lang.Void.TYPE, java.lang.Void.class),
-
-    ;;; The non-type. */
-    Illegal((§ char "-"), "illegal", 0, false, null, null)
-
-    private final char typeChar
     private final String javaName
     private final boolean isStackInt
     private final Class<?> primitiveJavaClass
     private final Class<?> boxedJavaClass
     private final int slotCount
 
-    JavaKind(char typeChar, String javaName, int slotCount, boolean isStackInt, Class<?> primitiveJavaClass, Class<?> boxedJavaClass)
+    JavaKind(String javaName, int slotCount, boolean isStackInt, Class<?> primitiveJavaClass, Class<?> boxedJavaClass)
     (§
-        this.typeChar = typeChar
         this.javaName = javaName
         this.slotCount = slotCount
         this.isStackInt = isStackInt
         this.primitiveJavaClass = primitiveJavaClass
         this.boxedJavaClass = boxedJavaClass
-        assert primitiveJavaClass == null || javaName.equals(primitiveJavaClass.getName())
     )
 
     ;;;
@@ -75102,18 +72022,6 @@ public enum JavaKind
     )
 
     ;;;
-     ; Returns the name of the kind as a single upper case character. For the void and primitive
-     ; kinds, this is the <i>FieldType</i> term in
-     ; <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.3.2-200">
-     ; table 4.3-A</a> of the JVM Specification. For {@link #Object}, the character {@code (§ char "A")} is
-     ; returned and for {@link #Illegal}, {@code (§ char "-")} is returned.
-     ;;
-    public char getTypeChar()
-    (§
-        return typeChar
-    )
-
-    ;;;
      ; Returns the name of this kind which will also be it Java programming language name if it is
      ; {@linkplain #isPrimitive() primitive} or {@code void}.
      ;;
@@ -75126,8 +72034,7 @@ public enum JavaKind
      ; Checks whether this type is a Java primitive type.
      ;
      ; @return {@code true} if this is {@link #Boolean}, {@link #Byte}, {@link #Char},
-     ;         {@link #Short}, {@link #Int}, {@link #Long}, {@link #Float}, {@link #Double}, or
-     ;         {@link #Void}.
+     ;         {@link #Short}, {@link #Int}, {@link #Long}, or {@link #Void}.
      ;;
     public boolean isPrimitive()
     (§
@@ -75169,16 +72076,6 @@ public enum JavaKind
     )
 
     ;;;
-     ; Checks whether this type is a Java primitive type representing a floating point number.
-     ;
-     ; @return {@code true} if this is {@link #Float} or {@link #Double}.
-     ;;
-    public boolean isNumericFloat()
-    (§
-        return this == JavaKind.Float || this == JavaKind.Double
-    )
-
-    ;;;
      ; Checks whether this represent an Object of some sort.
      ;
      ; @return {@code true} if this is {@link #Object}.
@@ -75186,23 +72083,6 @@ public enum JavaKind
     public boolean isObject()
     (§
         return this == JavaKind.Object
-    )
-
-    ;;;
-     ; Returns the kind corresponding to the Java type string.
-     ;
-     ; @param typeString the Java type string
-     ; @return the kind
-     ;;
-    public static JavaKind fromTypeString(String typeString)
-    (§
-        assert typeString.length() > 0
-        final char first = typeString.charAt(0)
-        if (first == (§ char "[") || first == (§ char "L"))
-        (§
-            return JavaKind.Object
-        )
-        return JavaKind.fromPrimitiveOrVoidTypeChar(first)
     )
 
     ;;;
@@ -75219,7 +72099,6 @@ public enum JavaKind
         )
         else
         (§
-            assert wordSizeInBytes == 4 (§ colon ) "Unsupported word size!"
             return JavaKind.Int
         )
     )
@@ -75227,7 +72106,7 @@ public enum JavaKind
     ;;;
      ; Returns the kind from the character describing a primitive or void.
      ;
-     ; @param ch the character for a void or primitive kind as returned by {@link #getTypeChar()}
+     ; @param ch the character for a void or primitive kind as returned by {@link #getTypeChar()}
      ; @return the kind
      ;;
     public static JavaKind fromPrimitiveOrVoidTypeChar(char ch)
@@ -75238,10 +72117,6 @@ public enum JavaKind
                 return Boolean
             case (§ char "C")
                 return Char
-            case (§ char "F")
-                return Float
-            case (§ char "D")
-                return Double
             case (§ char "B")
                 return Byte
             case (§ char "S")
@@ -75254,56 +72129,6 @@ public enum JavaKind
                 return Void
         )
         throw new IllegalArgumentException("unknown primitive or void type character: " + ch)
-    )
-
-    ;;;
-     ; Returns the Kind representing the given Java class.
-     ;
-     ; @param klass the class
-     ; @return the kind
-     ;;
-    public static JavaKind fromJavaClass(Class<?> klass)
-    (§
-        if (klass == Boolean.primitiveJavaClass)
-        (§
-            return Boolean
-        )
-        else if (klass == Byte.primitiveJavaClass)
-        (§
-            return Byte
-        )
-        else if (klass == Short.primitiveJavaClass)
-        (§
-            return Short
-        )
-        else if (klass == Char.primitiveJavaClass)
-        (§
-            return Char
-        )
-        else if (klass == Int.primitiveJavaClass)
-        (§
-            return Int
-        )
-        else if (klass == Long.primitiveJavaClass)
-        (§
-            return Long
-        )
-        else if (klass == Float.primitiveJavaClass)
-        (§
-            return Float
-        )
-        else if (klass == Double.primitiveJavaClass)
-        (§
-            return Double
-        )
-        else if (klass == Void.primitiveJavaClass)
-        (§
-            return Void
-        )
-        else
-        (§
-            return Object
-        )
     )
 
     ;;;
@@ -75327,130 +72152,6 @@ public enum JavaKind
     )
 
     ;;;
-     ; Converts this value type to a string.
-     ;;
-    @Override
-    public String toString()
-    (§
-        return javaName
-    )
-
-    ;;;
-     ; Marker interface for types that should be {@linkplain JavaKind#format(Object) formatted} with
-     ; their {@link Object#toString()} value. Calling {@link Object#toString()} on other objects
-     ; poses a security risk because it can potentially call user code.
-     ;;
-    public interface FormatWithToString
-    (§
-    )
-
-    ;;;
-     ; Classes for which invoking {@link Object#toString()} does not run user code.
-     ;;
-    private static boolean isToStringSafe(Class<?> c)
-    (§
-        return c == Boolean.class || c == Byte.class || c == Character.class || c == Short.class || c == Integer.class || c == Float.class || c == Long.class || c == Double.class
-    )
-
-    ;;;
-     ; Gets a formatted string for a given value of this kind.
-     ;
-     ; @param value a value of this kind
-     ; @return a formatted string for {@code value} based on this kind
-     ;;
-    public String format(Object value)
-    (§
-        if (isPrimitive())
-        (§
-            assert isToStringSafe(value.getClass())
-            return value.toString()
-        )
-        else
-        (§
-            if (value == null)
-            (§
-                return "null"
-            )
-            else
-            (§
-                if (value instanceof String)
-                (§
-                    String s = (String) value
-                    if (s.length() > 50)
-                    (§
-                        return "String:\"" + s.substring(0, 30) + "...\""
-                    )
-                    else
-                    (§
-                        return "String:\"" + s + (§ char "\"")
-                    )
-                )
-                else if (value instanceof JavaType)
-                (§
-                    return "JavaType:" + ((JavaType) value).toJavaName()
-                )
-                else if (value instanceof Enum)
-                (§
-                    return MetaUtil.getSimpleName(value.getClass(), true) + ":" + ((Enum<?>) value).name()
-                )
-                else if (value instanceof FormatWithToString)
-                (§
-                    return MetaUtil.getSimpleName(value.getClass(), true) + ":" + String.valueOf(value)
-                )
-                else if (value instanceof Class<?>)
-                (§
-                    return "Class:" + ((Class<?>) value).getName()
-                )
-                else if (isToStringSafe(value.getClass()))
-                (§
-                    return value.toString()
-                )
-                else if (value.getClass().isArray())
-                (§
-                    return formatArray(value)
-                )
-                else
-                (§
-                    return MetaUtil.getSimpleName(value.getClass(), true) + "@" + System.identityHashCode(value)
-                )
-            )
-        )
-    )
-
-    private static final int MAX_FORMAT_ARRAY_LENGTH = 5
-
-    private static String formatArray(Object array)
-    (§
-        Class<?> componentType = array.getClass().getComponentType()
-        assert componentType != null
-        int arrayLength = Array.getLength(array)
-        StringBuilder buf = new StringBuilder(MetaUtil.getSimpleName(componentType, true)).append((§ char "[")).append(arrayLength).append("]{")
-        int length = Math.min(MAX_FORMAT_ARRAY_LENGTH, arrayLength)
-        boolean primitive = componentType.isPrimitive()
-        for (int i = 0(§ semi ) i < length(§ semi ) i++)
-        (§
-            if (primitive)
-            (§
-                buf.append(Array.get(array, i))
-            )
-            else
-            (§
-                Object o = ((Object[]) array)[i]
-                buf.append(JavaKind.Object.format(o))
-            )
-            if (i != length - 1)
-            (§
-                buf.append(", ")
-            )
-        )
-        if (arrayLength != length)
-        (§
-            buf.append(", ...")
-        )
-        return buf.append((§ char "}")).toString()
-    )
-
-    ;;;
      ; Gets the minimum value that can be represented as a value of this kind.
      ;
      ; @return the minimum value represented as a {@code long}
@@ -75471,10 +72172,6 @@ public enum JavaKind
                 return java.lang.Integer.MIN_VALUE
             case Long
                 return java.lang.Long.MIN_VALUE
-            case Float
-                return java.lang.Float.floatToRawIntBits(java.lang.Float.MIN_VALUE)
-            case Double
-                return java.lang.Double.doubleToRawLongBits(java.lang.Double.MIN_VALUE)
             default
                 throw new IllegalArgumentException("illegal call to minValue on " + this)
         )
@@ -75501,10 +72198,6 @@ public enum JavaKind
                 return java.lang.Integer.MAX_VALUE
             case Long
                 return java.lang.Long.MAX_VALUE
-            case Float
-                return java.lang.Float.floatToRawIntBits(java.lang.Float.MAX_VALUE)
-            case Double
-                return java.lang.Double.doubleToRawLongBits(java.lang.Double.MAX_VALUE)
             default
                 throw new IllegalArgumentException("illegal call to maxValue on " + this)
         )
@@ -75543,12 +72236,8 @@ public enum JavaKind
             case Char
             case Short
                 return 16
-            case Float
-                return 32
             case Int
                 return 32
-            case Double
-                return 64
             case Long
                 return 64
             default
@@ -75559,9 +72248,6 @@ public enum JavaKind
 )
 
 (§ package jdk.vm.ci.meta
-
-import java.util.IllegalFormatException
-import java.util.UnknownFormatConversionException
 
 ;;;
  ; Represents a reference to a Java method, either resolved or unresolved. Methods, like fields and
@@ -75575,8 +72261,7 @@ public interface JavaMethod
     String getName()
 
     ;;;
-     ; Returns the {@link JavaType} object representing the class or interface that declares this
-     ; method.
+     ; Returns the {@link JavaType} object representing the class or interface that declares this method.
      ;;
     JavaType getDeclaringClass()
 
@@ -75584,110 +72269,6 @@ public interface JavaMethod
      ; Returns the signature of this method.
      ;;
     Signature getSignature()
-
-    ;;;
-     ; Gets a string for this method formatted according to a given format specification. A format
-     ; specification is composed of characters that are to be copied verbatim to the result and
-     ; specifiers that denote an attribute of this method that is to be copied to the result. A
-     ; specifier is a single character preceded by a (§ char "%") character. The accepted specifiers and the
-     ; method attributes they denote are described below:
-     ;
-     ; <pre>
-     ;     Specifier | Description                                          | Example(s)
-     ;     ----------+------------------------------------------------------------------------------------------
-     ;     (§ char "R")       | Qualified return type                                | "int" "java.lang.String"
-     ;     (§ char "r")       | Unqualified return type                              | "int" "String"
-     ;     (§ char "H")       | Qualified holder                                     | "java.util.Map.Entry"
-     ;     (§ char "h")       | Unqualified holder                                   | "Entry"
-     ;     (§ char "n")       | Method name                                          | "add"
-     ;     (§ char "P")       | Qualified parameter types, separated by ', '         | "int, java.lang.String"
-     ;     (§ char "p")       | Unqualified parameter types, separated by ', '       | "int, String"
-     ;     (§ char "f")       | Indicator if method is unresolved, static or virtual | "unresolved" "static" "virtual"
-     ;     (§ char "%")       | A (§ char "%") character                                      | "%"
-     ; </pre>
-     ;
-     ; @param format a format specification
-     ; @return the result of formatting this method according to {@code format}
-     ; @throws IllegalFormatException if an illegal specifier is encountered in {@code format}
-     ;;
-    default String format(String format) throws IllegalFormatException
-    (§
-        StringBuilder sb = new StringBuilder()
-        int index = 0
-        Signature sig = null
-        while (index < format.length())
-        (§
-            char ch = format.charAt(index++)
-            if (ch == (§ char "%"))
-            (§
-                if (index >= format.length())
-                (§
-                    throw new UnknownFormatConversionException("An unquoted (§ char "%") character cannot terminate a method format specification")
-                )
-                char specifier = format.charAt(index++)
-                switch (specifier)
-                (§
-                    case (§ char "R")
-                    case (§ char "r")
-                    (§
-                        if (sig == null)
-                        (§
-                            sig = getSignature()
-                        )
-                        sb.append(sig.getReturnType(null).toJavaName(specifier == (§ char "R")))
-                        break
-                    )
-                    case (§ char "H")
-                    case (§ char "h")
-                    (§
-                        sb.append(getDeclaringClass().toJavaName(specifier == (§ char "H")))
-                        break
-                    )
-                    case (§ char "n")
-                    (§
-                        sb.append(getName())
-                        break
-                    )
-                    case (§ char "P")
-                    case (§ char "p")
-                    (§
-                        if (sig == null)
-                        (§
-                            sig = getSignature()
-                        )
-                        for (int i = 0(§ semi ) i < sig.getParameterCount(false)(§ semi ) i++)
-                        (§
-                            if (i != 0)
-                            (§
-                                sb.append(", ")
-                            )
-                            sb.append(sig.getParameterType(i, null).toJavaName(specifier == (§ char "P")))
-                        )
-                        break
-                    )
-                    case (§ char "f")
-                    (§
-                        sb.append(!(this instanceof ResolvedJavaMethod) ? "unresolved" (§ colon ) ((ResolvedJavaMethod) this).isStatic() ? "static" (§ colon ) "virtual")
-                        break
-                    )
-                    case (§ char "%")
-                    (§
-                        sb.append((§ char "%"))
-                        break
-                    )
-                    default
-                    (§
-                        throw new UnknownFormatConversionException(String.valueOf(specifier))
-                    )
-                )
-            )
-            else
-            (§
-                sb.append(ch)
-            )
-        )
-        return sb.toString()
-    )
 )
 )
 
@@ -75712,28 +72293,6 @@ public interface JavaType
      ; </pre>
      ;;
     String getName()
-
-    ;;;
-     ; Returns an unqualified name of this type.
-     ;
-     ; <pre>
-     ;     "Object"
-     ;     "Integer"
-     ; </pre>
-     ;;
-    default String getUnqualifiedName()
-    (§
-        String name = getName()
-        if (name.indexOf((§ char "/")) != -1)
-        (§
-            name = name.substring(name.lastIndexOf((§ char "/")) + 1)
-        )
-        if (name.endsWith(";"))
-        (§
-            name = name.substring(0, name.length() - 1)
-        )
-        return name
-    )
 
     ;;;
      ; Checks whether this type is an array class.
@@ -75831,14 +72390,6 @@ public interface JavaType
         )
         return getJavaKind().getJavaName()
     )
-
-    ;;;
-     ; Returns this type's name in the same format as {@link Class#getName()}.
-     ;;
-    default String toClassName()
-    (§
-        return internalNameToJava(getName(), true, true)
-    )
 )
 )
 
@@ -75878,10 +72429,8 @@ public interface MemoryAccessProvider
 
 (§ package jdk.vm.ci.meta
 
-import java.lang.reflect.Constructor
 import java.lang.reflect.Executable
 import java.lang.reflect.Field
-import java.lang.reflect.Method
 
 ;;;
  ; Provides access to the metadata of a class typically provided in a class file.
@@ -75895,22 +72444,6 @@ public interface MetaAccessProvider
      ; @return the resolved Java type object
      ;;
     ResolvedJavaType lookupJavaType(Class<?> clazz)
-
-    ;;;
-     ; Returns the resolved Java types representing some given Java classes.
-     ;
-     ; @param classes the Java class objects
-     ; @return the resolved Java type objects
-     ;;
-    default ResolvedJavaType[] lookupJavaTypes(Class<?>[] classes)
-    (§
-        ResolvedJavaType[] result = new ResolvedJavaType[classes.length]
-        for (int i = 0(§ semi ) i < result.length(§ semi ) i++)
-        (§
-            result[i] = lookupJavaType(classes[i])
-        )
-        return result
-    )
 
     ;;;
      ; Provides the {@link ResolvedJavaMethod} for a {@link Method} or {@link Constructor} obtained
@@ -75929,22 +72462,6 @@ public interface MetaAccessProvider
      ; @return {@code null} if {@code constant.isNull() || !constant.kind.isObject()}
      ;;
     ResolvedJavaType lookupJavaType(JavaConstant constant)
-
-    ;;;
-     ; Returns the number of bytes occupied by this constant value or constant object.
-     ;
-     ; @param constant the constant whose bytes should be measured
-     ; @return the number of bytes occupied by this constant
-     ;;
-    long getMemorySize(JavaConstant constant)
-
-    ;;;
-     ; Parses a
-     ; <a href="http://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html#jvms-4.3.3">method
-     ; descriptor</a> into a {@link Signature}. The behavior of this method is undefined if the
-     ; method descriptor is not well formed.
-     ;;
-    Signature parseMethodDescriptor(String methodDescriptor)
 
     ;;;
      ; Encodes a deoptimization action and a deoptimization reason in an integer value.
@@ -75974,48 +72491,6 @@ public interface PlatformKind
 (§
     String name()
 
-    public interface Key
-    (§
-    )
-
-    class EnumKey<E extends Enum<E>> implements Key
-    (§
-        private final Enum<E> e
-
-        public EnumKey(Enum<E> e)
-        (§
-            this.e = e
-        )
-
-        @Override
-        public int hashCode()
-        (§
-            return e.ordinal()
-        )
-
-        @Override
-        public boolean equals(Object obj)
-        (§
-            if (obj == this)
-            (§
-                return true
-            )
-            if (obj instanceof EnumKey)
-            (§
-                EnumKey<?> that = (EnumKey<?>) obj
-                return this.e == that.e
-            )
-            return false
-        )
-    )
-
-    ;;;
-     ; Gets a value associated with this object that can be used as a stable key in a map. The
-     ; {@link Object#hashCode()} implementation of the returned value should be stable between VM
-     ; executions.
-     ;;
-    Key getKey()
-
     ;;;
      ; Get the size in bytes of this {@link PlatformKind}.
      ;;
@@ -76026,30 +72501,21 @@ public interface PlatformKind
      ; one, for SIMD types it may be higher.
      ;;
     int getVectorLength()
-
-    ;;;
-     ; Gets a single type char that identifies this type for use in debug output.
-     ;;
-    char getTypeChar()
 )
 )
 
 (§ package jdk.vm.ci.meta
 
-import java.nio.ByteBuffer
-
 ;;;
  ; Represents a primitive constant value, such as an integer or floating point number, within the
  ; compiler and across the compiler/runtime interface.
  ;;
-public class PrimitiveConstant implements JavaConstant, SerializableConstant
+public class PrimitiveConstant implements JavaConstant
 (§
     private final JavaKind kind
 
     ;;;
-     ; The boxed primitive value as a {@code long}. For {@code float} and {@code double} values,
-     ; this value is the result of {@link Float#floatToRawIntBits(float)} and
-     ; {@link Double#doubleToRawLongBits(double)} respectively.
+     ; The boxed primitive value as a {@code long}.
      ;;
     private final long primitive
 
@@ -76057,8 +72523,6 @@ public class PrimitiveConstant implements JavaConstant, SerializableConstant
     (§
         this.primitive = primitive
         this.kind = kind
-
-        assert kind.isPrimitive() || kind == JavaKind.Illegal
     )
 
     @Override
@@ -76082,36 +72546,19 @@ public class PrimitiveConstant implements JavaConstant, SerializableConstant
     @Override
     public boolean asBoolean()
     (§
-        assert getJavaKind() == JavaKind.Boolean
         return primitive != 0 #_"L"
     )
 
     @Override
     public int asInt()
     (§
-        assert getJavaKind().getStackKind() == JavaKind.Int (§ colon ) getJavaKind().getStackKind()
         return (int) primitive
     )
 
     @Override
     public long asLong()
     (§
-        assert getJavaKind().isNumericInteger()
         return primitive
-    )
-
-    @Override
-    public float asFloat()
-    (§
-        assert getJavaKind() == JavaKind.Float
-        return Float.intBitsToFloat((int) primitive)
-    )
-
-    @Override
-    public double asDouble()
-    (§
-        assert getJavaKind() == JavaKind.Double
-        return Double.longBitsToDouble(primitive)
     )
 
     @Override
@@ -76131,84 +72578,8 @@ public class PrimitiveConstant implements JavaConstant, SerializableConstant
                 return Integer.valueOf(asInt())
             case Long
                 return Long.valueOf(asLong())
-            case Float
-                return Float.valueOf(asFloat())
-            case Double
-                return Double.valueOf(asDouble())
             default
                 throw new IllegalArgumentException("unexpected kind " + getJavaKind())
-        )
-    )
-
-    @Override
-    public int getSerializedSize()
-    (§
-        return getJavaKind().getByteCount()
-    )
-
-    @Override
-    public void serialize(ByteBuffer buffer)
-    (§
-        switch (getJavaKind())
-        (§
-            case Byte
-            case Boolean
-                buffer.put((byte) primitive)
-                break
-            case Short
-                buffer.putShort((short) primitive)
-                break
-            case Char
-                buffer.putChar((char) primitive)
-                break
-            case Int
-                buffer.putInt(asInt())
-                break
-            case Long
-                buffer.putLong(asLong())
-                break
-            case Float
-                buffer.putFloat(asFloat())
-                break
-            case Double
-                buffer.putDouble(asDouble())
-                break
-            default
-                throw new IllegalArgumentException("unexpected kind " + getJavaKind())
-        )
-    )
-
-    @Override
-    public int hashCode()
-    (§
-        return (int) (primitive (§ bit-xor ) (primitive >>> 32)) * (getJavaKind().ordinal() + 31)
-    )
-
-    @Override
-    public boolean equals(Object o)
-    (§
-        if (o == this)
-        (§
-            return true
-        )
-        if (!(o instanceof PrimitiveConstant))
-        (§
-            return false
-        )
-        PrimitiveConstant other = (PrimitiveConstant) o
-        return this.kind.equals(other.kind) && this.primitive == other.primitive
-    )
-
-    @Override
-    public String toString()
-    (§
-        if (getJavaKind() == JavaKind.Illegal)
-        (§
-            return "illegal"
-        )
-        else
-        (§
-            return getJavaKind().getJavaName() + "[" + asBoxedPrimitive() + "|0x" + Long.toHexString(primitive) + "]"
         )
     )
 )
@@ -76227,14 +72598,11 @@ public class RawConstant extends PrimitiveConstant
 
 (§ package jdk.vm.ci.meta
 
-import java.lang.reflect.AnnotatedElement
-import java.lang.reflect.Modifier
-
 ;;;
  ; Represents a reference to a resolved Java field. Fields, like methods and types, are resolved
  ; through {@link ConstantPool constant pools}.
  ;;
-public interface ResolvedJavaField extends JavaField, ModifiersProvider, AnnotatedElement
+public interface ResolvedJavaField extends JavaField, ModifiersProvider
 (§
     ;;;
      ; {@inheritDoc}
@@ -76248,12 +72616,6 @@ public interface ResolvedJavaField extends JavaField, ModifiersProvider, Annotat
     (§
         return ModifiersProvider.super.isFinalFlagSet()
     )
-
-    ;;;
-     ; Determines if this field was injected by the VM. Such a field, for example, is not derived
-     ; from a class file.
-     ;;
-    boolean isInternal()
 
     ;;;
      ; Determines if this field is a synthetic field as defined by the Java Language Specification.
@@ -76270,18 +72632,11 @@ public interface ResolvedJavaField extends JavaField, ModifiersProvider, Annotat
 
 (§ package jdk.vm.ci.meta
 
-import java.lang.annotation.Annotation
-import java.lang.reflect.AnnotatedElement
-import java.lang.reflect.Array
-import java.lang.reflect.Method
-import java.lang.reflect.Modifier
-import java.lang.reflect.Type
-
 ;;;
  ; Represents a resolved Java method. Methods, like fields and types, are resolved through
  ; {@link ConstantPool constant pools}.
  ;;
-public interface ResolvedJavaMethod extends JavaMethod, InvokeTarget, ModifiersProvider, AnnotatedElement
+public interface ResolvedJavaMethod extends JavaMethod, InvokeTarget, ModifiersProvider
 (§
     ;;;
      ; Returns the bytecode of this method, if the method has code. The returned byte array does not
@@ -76315,11 +72670,6 @@ public interface ResolvedJavaMethod extends JavaMethod, InvokeTarget, ModifiersP
      ;;
     int getMaxLocals()
 
-    ;;;
-     ; Returns the maximum number of stack slots used in this method's bytecodes.
-     ;;
-    int getMaxStackSize()
-
     default boolean isFinal()
     (§
         return ModifiersProvider.super.isFinalFlagSet()
@@ -76330,35 +72680,6 @@ public interface ResolvedJavaMethod extends JavaMethod, InvokeTarget, ModifiersP
      ; Specification.
      ;;
     boolean isSynthetic()
-
-    ;;;
-     ; Checks that the method is a
-     ; <a href="http://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.6">varargs</a>
-     ; method.
-     ;
-     ; @return whether the method is a varargs method
-     ;;
-    boolean isVarArgs()
-
-    ;;;
-     ; Checks that the method is a
-     ; <a href="http://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.6">bridge</a>
-     ; method.
-     ;
-     ; @return whether the method is a bridge method
-     ;;
-    boolean isBridge()
-
-    ;;;
-     ; Returns {@code true} if this method is a default method; returns {@code false} otherwise.
-     ;
-     ; A default method is a public non-abstract instance method, that is, a non-static method with
-     ; a body, declared in an interface type.
-     ;
-     ; @return true if and only if this method is a default method as defined by the Java Language
-     ;         Specification.
-     ;;
-    boolean isDefault()
 
     ;;;
      ; Checks whether this method is a class initializer.
@@ -76383,43 +72704,6 @@ public interface ResolvedJavaMethod extends JavaMethod, InvokeTarget, ModifiersP
     boolean canBeStaticallyBound()
 
     ;;;
-     ; Returns the list of exception handlers for this method.
-     ;;
-    ExceptionHandler[] getExceptionHandlers()
-
-    ;;;
-     ; Returns a stack trace element for this method and a given bytecode index.
-     ;;
-    StackTraceElement asStackTraceElement(int bci)
-
-    ;;;
-     ; Returns an object that provides access to the profiling information recorded for this method.
-     ;;
-    default ProfilingInfo getProfilingInfo()
-    (§
-        return getProfilingInfo(true, true)
-    )
-
-    ;;;
-     ; Returns an object that provides access to the profiling information recorded for this method.
-     ;
-     ; @param includeNormal if true,
-     ;            {@linkplain ProfilingInfo#getDeoptimizationCount(DeoptimizationReason)
-     ;            deoptimization counts} will include deoptimization that happened during execution
-     ;            of standard non-osr methods.
-     ; @param includeOSR if true,
-     ;            {@linkplain ProfilingInfo#getDeoptimizationCount(DeoptimizationReason)
-     ;            deoptimization counts} will include deoptimization that happened during execution
-     ;            of on-stack-replacement methods.
-     ;;
-    ProfilingInfo getProfilingInfo(boolean includeNormal, boolean includeOSR)
-
-    ;;;
-     ; Invalidates the profiling information and restarts profiling upon the next invocation.
-     ;;
-    void reprofile()
-
-    ;;;
      ; Returns the constant pool of this method.
      ;;
     ConstantPool getConstantPool()
@@ -76427,7 +72711,7 @@ public interface ResolvedJavaMethod extends JavaMethod, InvokeTarget, ModifiersP
     ;;;
      ; A {@code Parameter} provides information about method parameters.
      ;;
-    class Parameter implements AnnotatedElement
+    class Parameter
     (§
         private final String name
         private final ResolvedJavaMethod method
@@ -76446,7 +72730,6 @@ public interface ResolvedJavaMethod extends JavaMethod, InvokeTarget, ModifiersP
          ;;
         public Parameter(String name, int modifiers, ResolvedJavaMethod method, int index)
         (§
-            assert name == null || !name.isEmpty()
             this.name = name
             this.modifiers = modifiers
             this.method = method
@@ -76454,7 +72737,7 @@ public interface ResolvedJavaMethod extends JavaMethod, InvokeTarget, ModifiersP
         )
 
         ;;;
-         ; Gets the name of the parameter. If the parameter's name is {@linkplain #isNamePresent()
+         ; Gets the name of the parameter. If the parameter's name is {@linkplain #isNamePresent()
          ; present}, then this method returns the name provided by the class file. Otherwise, this
          ; method synthesizes a name of the form argN, where N is the index of the parameter in the
          ; descriptor of the method which declares the parameter.
@@ -76499,88 +72782,11 @@ public interface ResolvedJavaMethod extends JavaMethod, InvokeTarget, ModifiersP
         )
 
         ;;;
-         ; Gets the formal type of the parameter.
-         ;;
-        public Type getParameterizedType()
-        (§
-            return method.getGenericParameterTypes()[index]
-        )
-
-        ;;;
          ; Gets the type of the parameter.
          ;;
         public JavaType getType()
         (§
             return method.getSignature().getParameterType(index, method.getDeclaringClass())
-        )
-
-        ;;;
-         ; Determines if the parameter has a name according to a {@literal MethodParameters} class
-         ; file attribute.
-         ;
-         ; @return true if and only if the parameter has a name according to the class file.
-         ;;
-        public boolean isNamePresent()
-        (§
-            return name != null
-        )
-
-        ;;;
-         ; Determines if the parameter represents a variable argument list.
-         ;;
-        public boolean isVarArgs()
-        (§
-            return method.isVarArgs() && index == method.getSignature().getParameterCount(false) - 1
-        )
-
-        public <T extends Annotation> T getAnnotation(Class<T> annotationClass)
-        (§
-            return method.getParameterAnnotations(annotationClass)[index]
-        )
-
-        public Annotation[] getAnnotations()
-        (§
-            return method.getParameterAnnotations()[index]
-        )
-
-        public Annotation[] getDeclaredAnnotations()
-        (§
-            return getAnnotations()
-        )
-
-        @Override
-        public String toString()
-        (§
-            Type type = getParameterizedType()
-            String typename = type.getTypeName()
-            if (isVarArgs())
-            (§
-                typename = typename.replaceFirst("\\[\\]$", "...")
-            )
-
-            final StringBuilder sb = new StringBuilder(Modifier.toString(getModifiers()))
-            if (sb.length() != 0)
-            (§
-                sb.append((§ char " "))
-            )
-            return sb.append(typename).append((§ char " ")).append(getName()).toString()
-        )
-
-        @Override
-        public boolean equals(Object obj)
-        (§
-            if (obj instanceof Parameter)
-            (§
-                Parameter other = (Parameter) obj
-                return (other.method.equals(method) && other.index == index)
-            )
-            return false
-        )
-
-        @Override
-        public int hashCode()
-        (§
-            return method.hashCode() (§ bit-xor ) index
         )
     )
 
@@ -76595,121 +72801,20 @@ public interface ResolvedJavaMethod extends JavaMethod, InvokeTarget, ModifiersP
     )
 
     ;;;
-     ; Returns an array of arrays that represent the annotations on the formal parameters, in
-     ; declaration order, of this method.
-     ;
-     ; @see Method#getParameterAnnotations()
-     ;;
-    Annotation[][] getParameterAnnotations()
-
-    ;;;
-     ; Returns an array of {@link Type} objects that represent the formal parameter types, in
-     ; declaration order, of this method.
-     ;
-     ; @see Method#getGenericParameterTypes()
-     ;;
-    Type[] getGenericParameterTypes()
-
-    ;;;
      ; Returns {@code true} if this method is not excluded from inlining and has associated Java
      ; bytecodes (@see {@link ResolvedJavaMethod#hasBytecodes()}).
      ;;
     boolean canBeInlined()
 
     ;;;
-     ; Determines if this method is targeted by a VM directive (e.g.,
-     ; {@code -XX:CompileCommand=dontinline,<pattern>}) or VM recognized annotation (e.g.,
-     ; {@code jdk.internal.vm.annotation.DontInline}) that specifies it should not be inlined.
-     ;;
-    boolean hasNeverInlineDirective()
-
-    ;;;
      ; Returns {@code true} if the inlining of this method should be forced.
      ;;
     boolean shouldBeInlined()
-
-    ;;;
-     ; Returns the LineNumberTable of this method or null if this method does not have a line
-     ; numbers table.
-     ;;
-    LineNumberTable getLineNumberTable()
-
-    ;;;
-     ; Returns the local variable table of this method or null if this method does not have a local
-     ; variable table.
-     ;;
-    LocalVariableTable getLocalVariableTable()
-
-    ;;;
-     ; Gets the encoding of (that is, a constant representing the value of) this method.
-     ;
-     ; @return a constant representing a reference to this method
-     ;;
-    Constant getEncoding()
-
-    ;;;
-     ; Checks if this method is present in the virtual table for subtypes of the specified
-     ; {@linkplain ResolvedJavaType type}.
-     ;
-     ; @return true is this method is present in the virtual table for subtypes of this type.
-     ;;
-    boolean isInVirtualMethodTable(ResolvedJavaType resolved)
-
-    ;;;
-     ; Gets the annotation of a particular type for a formal parameter of this method.
-     ;
-     ; @param annotationClass the Class object corresponding to the annotation type
-     ; @param parameterIndex the index of a formal parameter of {@code method}
-     ; @return the annotation of type {@code annotationClass} for the formal parameter present, else
-     ;         null
-     ; @throws IndexOutOfBoundsException if {@code parameterIndex} does not denote a formal
-     ;             parameter
-     ;;
-    default <T extends Annotation> T getParameterAnnotation(Class<T> annotationClass, int parameterIndex)
-    (§
-        if (parameterIndex >= 0)
-        (§
-            Annotation[][] parameterAnnotations = getParameterAnnotations()
-            for (Annotation a (§ colon ) parameterAnnotations[parameterIndex])
-            (§
-                if (a.annotationType() == annotationClass)
-                (§
-                    return annotationClass.cast(a)
-                )
-            )
-        )
-        return null
-    )
 
     default JavaType[] toParameterTypes()
     (§
         JavaType receiver = isStatic() || isConstructor() ? null (§ colon ) getDeclaringClass()
         return getSignature().toParameterTypes(receiver)
-    )
-
-    ;;;
-     ; Gets the annotations of a particular type for the formal parameters of this method.
-     ;
-     ; @param annotationClass the Class object corresponding to the annotation type
-     ; @return the annotation of type {@code annotationClass} (if any) for each formal parameter
-     ;         present
-     ;;
-    @SuppressWarnings("unchecked")
-    default <T extends Annotation> T[] getParameterAnnotations(Class<T> annotationClass)
-    (§
-        Annotation[][] parameterAnnotations = getParameterAnnotations()
-        T[] result = (T[]) Array.newInstance(annotationClass, parameterAnnotations.length)
-        for (int i = 0(§ semi ) i < parameterAnnotations.length(§ semi ) i++)
-        (§
-            for (Annotation a (§ colon ) parameterAnnotations[i])
-            (§
-                if (a.annotationType() == annotationClass)
-                (§
-                    result[i] = annotationClass.cast(a)
-                )
-            )
-        )
-        return result
     )
 
     ;;;
@@ -76722,70 +72827,23 @@ public interface ResolvedJavaMethod extends JavaMethod, InvokeTarget, ModifiersP
     (§
         return isConcrete() && !isNative()
     )
-
-    ;;;
-     ; Checks whether the method has a receiver parameter - i.e., whether it is not static.
-     ;
-     ; @return whether the method has a receiver parameter
-     ;;
-    default boolean hasReceiver()
-    (§
-        return !isStatic()
-    )
-
-    ;;;
-     ; Determines if this method is {@link java.lang.Object#Object()}.
-     ;;
-    default boolean isJavaLangObjectInit()
-    (§
-        return getDeclaringClass().isJavaLangObject() && getName().equals("<init>")
-    )
-
-    SpeculationLog getSpeculationLog()
 )
 )
 
 (§ package jdk.vm.ci.meta
 
-import java.lang.reflect.AnnotatedElement
-
-import jdk.vm.ci.meta.Assumptions.AssumptionResult
-
 ;;;
- ; Represents a resolved Java type. Types include primitives, objects, {@code void}, and arrays
- ; thereof. Types, like fields and methods, are resolved through {@link ConstantPool constant pools}
- ; .
+ ; Represents a resolved Java type. Types include primitives, objects, {@code void}, and arrays thereof.
+ ; Types, like fields and methods, are resolved through {@link ConstantPool constant pools}.
  ;;
-public interface ResolvedJavaType extends JavaType, ModifiersProvider, AnnotatedElement
+public interface ResolvedJavaType extends JavaType, ModifiersProvider
 (§
-    ;;;
-     ; Checks whether this type has a finalizer method.
-     ;
-     ; @return {@code true} if this class has a finalizer
-     ;;
-    boolean hasFinalizer()
-
-    ;;;
-     ; Checks whether this type has any finalizable subclasses so far. Any decisions based on this
-     ; information require the registration of a dependency, since this information may change.
-     ;
-     ; @return {@code true} if this class has any subclasses with finalizers
-     ;;
-    AssumptionResult<Boolean> hasFinalizableSubclass()
-
     ;;;
      ; Checks whether this type is an interface.
      ;
      ; @return {@code true} if this type is an interface
      ;;
     boolean isInterface()
-
-    ;;;
-     ; Checks whether this type is an instance class.
-     ;
-     ; @return {@code true} if this type is an instance class
-     ;;
-    boolean isInstanceClass()
 
     ;;;
      ; Checks whether this type is primitive.
@@ -76870,19 +72928,6 @@ public interface ResolvedJavaType extends JavaType, ModifiersProvider, Annotated
     ResolvedJavaType[] getInterfaces()
 
     ;;;
-     ; Gets the single implementor of this type. Calling this method on a non-interface type causes
-     ; an exception.
-     ; <p>
-     ; If the compiler uses the result of this method for its compilation, the usage must be guarded
-     ; because the verifier can not guarantee that the assigned type really implements this
-     ; interface. Additionally, class loading can invalidate the result of this method.
-     ;
-     ; @return {@code null} if there is no implementor, the implementor if there is only one, or
-     ;         {@code this} if there are more than one.
-     ;;
-    ResolvedJavaType getSingleImplementor()
-
-    ;;;
      ; Walks the class hierarchy upwards and returns the least common class that is a superclass of
      ; both the current and the given type.
      ;
@@ -76890,29 +72935,6 @@ public interface ResolvedJavaType extends JavaType, ModifiersProvider, Annotated
      ;         {@code null} if primitive types are involved.
      ;;
     ResolvedJavaType findLeastCommonAncestor(ResolvedJavaType otherType)
-
-    ;;;
-     ; Attempts to get a leaf concrete subclass of this type.
-     ; <p>
-     ; For an {@linkplain #isArray() array} type A, the leaf concrete subclass is A if the
-     ; {@linkplain #getElementalType() elemental} type of A is final (which includes primitive
-     ; types). Otherwise {@code null} is returned for A.
-     ; <p>
-     ; For a non-array type T, the result is the leaf concrete type in the current hierarchy of T.
-     ; <p>
-     ; A runtime may decide not to manage or walk a large hierarchy and so the result is
-     ; conservative. That is, a non-null result is guaranteed to be the leaf concrete class in T's
-     ; hierarchy <b>at the current point in time</b> but a null result does not necessarily imply
-     ; that there is no leaf concrete class in T's hierarchy.
-     ; <p>
-     ; If the compiler uses the result of this method for its compilation, it must register the
-     ; {@link AssumptionResult} in its {@link Assumptions} because dynamic class loading can
-     ; invalidate the result of this method.
-     ;
-     ; @return an {@link AssumptionResult} containing the leaf concrete subclass for this type as
-     ;         described above
-     ;;
-    AssumptionResult<ResolvedJavaType> findLeafConcreteSubtype()
 
     ResolvedJavaType getComponentType()
 
@@ -76932,7 +72954,7 @@ public interface ResolvedJavaType extends JavaType, ModifiersProvider, Annotated
      ; Resolves the method implementation for virtual dispatches on objects of this dynamic type.
      ; This resolution process only searches "up" the class hierarchy of this type. A broader search
      ; that also walks "down" the hierarchy is implemented by
-     ; {@link #findUniqueConcreteMethod(ResolvedJavaMethod)}. For interface types it returns null
+     ; {@link #findUniqueConcreteMethod(ResolvedJavaMethod)}. For interface types it returns null
      ; since no concrete object can be an interface.
      ;
      ; @param method the method to select the implementation of
@@ -76960,21 +72982,6 @@ public interface ResolvedJavaType extends JavaType, ModifiersProvider, Annotated
         )
         return resolvedMethod
     )
-
-    ;;;
-     ; Given a {@link ResolvedJavaMethod} A, returns a concrete {@link ResolvedJavaMethod} B that is
-     ; the only possible unique target for a virtual call on A(). Returns {@code null} if either no
-     ; such concrete method or more than one such method exists. Returns the method A if A is a
-     ; concrete method that is not overridden.
-     ; <p>
-     ; If the compiler uses the result of this method for its compilation, it must register an
-     ; assumption because dynamic class loading can invalidate the result of this method.
-     ;
-     ; @param method the method A for which a unique concrete target is searched
-     ; @return the unique concrete target or {@code null} if no such target exists or assumptions
-     ;         are not supported by this runtime
-     ;;
-    AssumptionResult<ResolvedJavaMethod> findUniqueConcreteMethod(ResolvedJavaMethod method)
 
     ;;;
      ; Returns the instance fields of this class, including
@@ -77008,26 +73015,6 @@ public interface ResolvedJavaType extends JavaType, ModifiersProvider, Annotated
     ResolvedJavaField findInstanceFieldWithOffset(long offset, JavaKind expectedKind)
 
     ;;;
-     ; Returns name of source file of this type.
-     ;;
-    String getSourceFileName()
-
-    ;;;
-     ; Returns {@code true} if the type is a local type.
-     ;;
-    boolean isLocal()
-
-    ;;;
-     ; Returns {@code true} if the type is a member type.
-     ;;
-    boolean isMember()
-
-    ;;;
-     ; Returns the enclosing type of this type, if it exists, or {@code null}.
-     ;;
-    ResolvedJavaType getEnclosingType()
-
-    ;;;
      ; Returns an array reflecting all the constructors declared by this type. This method is
      ; similar to {@link Class#getDeclaredConstructors()} in terms of returned constructors.
      ;;
@@ -77043,26 +73030,6 @@ public interface ResolvedJavaType extends JavaType, ModifiersProvider, Annotated
      ; Returns the {@code <clinit>} method for this class if there is one.
      ;;
     ResolvedJavaMethod getClassInitializer()
-
-    default ResolvedJavaMethod findMethod(String name, Signature signature)
-    (§
-        for (ResolvedJavaMethod method (§ colon ) getDeclaredMethods())
-        (§
-            if (method.getName().equals(name) && method.getSignature().equals(signature))
-            (§
-                return method
-            )
-        )
-        return null
-    )
-
-    ;;;
-     ; Returns true if this type is {@link Cloneable} and can be safely cloned by creating a normal
-     ; Java allocation and populating it from the fields returned by
-     ; {@link #getInstanceFields(boolean)}. Some types may require special handling by the platform
-     ; so they would to go through the normal {@link Object#clone} path.
-     ;;
-    boolean isCloneableWithAllocation()
 )
 )
 
@@ -77071,8 +73038,7 @@ public interface ResolvedJavaType extends JavaType, ModifiersProvider, Annotated
 ;;;
  ; Represents a method signature provided by the runtime.
  ;
- ; @see <a href="http://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html#jvms-4.3.3">Method
- ;      Descriptors</a>
+ ; @see <a href="http://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html#jvms-4.3.3">Method Descriptors</a>
  ;;
 public interface Signature
 (§
@@ -77216,8 +73182,6 @@ public interface VMConstant extends Constant
  ;;
 public abstract class Value
 (§
-    public static final Value[] NO_VALUES = new Value[0]
-
     public static final AllocatableValue ILLEGAL = new IllegalValue()
 
     private static final class IllegalValue extends AllocatableValue
@@ -77225,20 +73189,6 @@ public abstract class Value
         private IllegalValue()
         (§
             super(ValueKind.Illegal)
-        )
-
-        @Override
-        public String toString()
-        (§
-            return "-"
-        )
-
-        @Override
-        public boolean equals(Object other)
-        (§
-            ;; Due to de-serialization this object may exist multiple times. So we compare classes
-            ;; instead of the individual objects. (This anonymous class has always the same meaning)
-            return other instanceof IllegalValue
         )
     )
 
@@ -77252,15 +73202,6 @@ public abstract class Value
     protected Value(ValueKind<?> valueKind)
     (§
         this.valueKind = valueKind
-    )
-
-    ;;;
-     ; Returns a String representation of the kind, which should be the end of all
-     ; {@link #toString()} implementation of subclasses.
-     ;;
-    protected final String getKindSuffix()
-    (§
-        return "|" + valueKind.getKindSuffix()
     )
 
     public final ValueKind<?> getValueKind()
@@ -77280,34 +73221,6 @@ public abstract class Value
     (§
         return valueKind.getPlatformKind()
     )
-
-    @Override
-    public int hashCode()
-    (§
-        return 41 + valueKind.hashCode()
-    )
-
-    @Override
-    public boolean equals(Object obj)
-    (§
-        if (obj instanceof Value)
-        (§
-            Value that = (Value) obj
-            return valueKind.equals(that.valueKind)
-        )
-        return false
-    )
-
-    ;;;
-     ; Checks if this value is identical to {@code other}.
-     ;
-     ; Warning: Use with caution! Usually equivalence {@link #equals(Object)} is sufficient and
-     ; should be used.
-     ;;
-    public final boolean identityEquals(Value other)
-    (§
-        return this == other
-    )
 )
 )
 
@@ -77323,13 +73236,6 @@ public abstract class ValueKind<K extends ValueKind<K>>
     (§
         ILLEGAL
 
-        private final EnumKey<IllegalKind> key = new EnumKey<>(this)
-
-        public Key getKey()
-        (§
-            return key
-        )
-
         public int getSizeInBytes()
         (§
             return 0
@@ -77338,11 +73244,6 @@ public abstract class ValueKind<K extends ValueKind<K>>
         public int getVectorLength()
         (§
             return 0
-        )
-
-        public char getTypeChar()
-        (§
-            return (§ char "-")
         )
     )
 
@@ -77357,12 +73258,6 @@ public abstract class ValueKind<K extends ValueKind<K>>
         public IllegalValueKind changeType(PlatformKind newPlatformKind)
         (§
             return this
-        )
-
-        @Override
-        public String toString()
-        (§
-            return "ILLEGAL"
         )
     )
 
@@ -77388,70 +73283,5 @@ public abstract class ValueKind<K extends ValueKind<K>>
      ; override this to preserve the additional information added by the compiler.
      ;;
     public abstract K changeType(PlatformKind newPlatformKind)
-
-    ;;;
-     ; Returns a String representation of the kind, which will be included at the end of
-     ; {@link Value#toString()} implementation. Defaults to {@link #toString()} but can be
-     ; overridden to provide something more specific.
-     ;;
-    public String getKindSuffix()
-    (§
-        return toString()
-    )
-)
-)
-
-(§ package jdk.vm.ci.runtime
-
-import jdk.vm.ci.code.CodeCacheProvider
-import jdk.vm.ci.code.TargetDescription
-import jdk.vm.ci.code.stack.StackIntrospection
-import jdk.vm.ci.meta.ConstantReflectionProvider
-import jdk.vm.ci.meta.MetaAccessProvider
-
-;;;
- ; A JVMCI backend encapsulates the capabilities needed by a Java based compiler for compiling and
- ; installing code for a single compute unit within a JVM. In a JVM with support for heterogeneous
- ; computing, more than one backend may be exposed.
- ;;
-public class JVMCIBackend
-(§
-    private final MetaAccessProvider metaAccess
-    private final CodeCacheProvider codeCache
-    private final ConstantReflectionProvider constantReflection
-    private final StackIntrospection stackIntrospection
-
-    public JVMCIBackend(MetaAccessProvider metaAccess, CodeCacheProvider codeCache, ConstantReflectionProvider constantReflection, StackIntrospection stackIntrospection)
-    (§
-        this.metaAccess = metaAccess
-        this.codeCache = codeCache
-        this.constantReflection = constantReflection
-        this.stackIntrospection = stackIntrospection
-    )
-
-    public MetaAccessProvider getMetaAccess()
-    (§
-        return metaAccess
-    )
-
-    public CodeCacheProvider getCodeCache()
-    (§
-        return codeCache
-    )
-
-    public ConstantReflectionProvider getConstantReflection()
-    (§
-        return constantReflection
-    )
-
-    public TargetDescription getTarget()
-    (§
-        return codeCache.getTarget()
-    )
-
-    public StackIntrospection getStackIntrospection()
-    (§
-        return stackIntrospection
-    )
 )
 )
