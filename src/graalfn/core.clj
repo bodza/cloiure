@@ -69126,3 +69126,8332 @@ ZeroExtendNode'new-4
         (#_"CodeCacheProvider" .installCode HotSpot'codeCache, method, (Compiler'createCompiledCode-1 result), predefinedInstalledCode, nil, default?)
     )
 )
+
+(§ package jdk.vm.ci.amd64
+
+import static jdk.vm.ci.code.MemoryBarriers.LOAD_LOAD
+import static jdk.vm.ci.code.MemoryBarriers.LOAD_STORE
+import static jdk.vm.ci.code.MemoryBarriers.STORE_STORE
+import static jdk.vm.ci.code.Register.SPECIAL
+
+import java.nio.ByteOrder
+import java.util.EnumSet
+
+import jdk.vm.ci.code.Architecture
+import jdk.vm.ci.code.Register
+import jdk.vm.ci.code.Register.RegisterCategory
+import jdk.vm.ci.code.RegisterArray
+import jdk.vm.ci.meta.JavaKind
+import jdk.vm.ci.meta.PlatformKind
+
+;;;
+ ; Represents the AMD64 architecture.
+ ;;
+public class AMD64 extends Architecture
+(§
+    public static final RegisterCategory CPU = new RegisterCategory("CPU")
+
+    ;; General purpose CPU registers
+    public static final Register rax = new Register(0, 0, "rax", CPU)
+    public static final Register rcx = new Register(1, 1, "rcx", CPU)
+    public static final Register rdx = new Register(2, 2, "rdx", CPU)
+    public static final Register rbx = new Register(3, 3, "rbx", CPU)
+    public static final Register rsp = new Register(4, 4, "rsp", CPU)
+    public static final Register rbp = new Register(5, 5, "rbp", CPU)
+    public static final Register rsi = new Register(6, 6, "rsi", CPU)
+    public static final Register rdi = new Register(7, 7, "rdi", CPU)
+
+    public static final Register r8  = new Register(8,  8,  "r8", CPU)
+    public static final Register r9  = new Register(9,  9,  "r9", CPU)
+    public static final Register r10 = new Register(10, 10, "r10", CPU)
+    public static final Register r11 = new Register(11, 11, "r11", CPU)
+    public static final Register r12 = new Register(12, 12, "r12", CPU)
+    public static final Register r13 = new Register(13, 13, "r13", CPU)
+    public static final Register r14 = new Register(14, 14, "r14", CPU)
+    public static final Register r15 = new Register(15, 15, "r15", CPU)
+
+    public static final Register[] cpuRegisters =
+    (§
+        rax, rcx, rdx, rbx, rsp, rbp, rsi, rdi,
+        r8, r9, r10, r11, r12, r13, r14, r15
+    )
+
+    public static final RegisterCategory XMM = new RegisterCategory("XMM")
+
+    ;; XMM registers
+    public static final Register xmm0 = new Register(16, 0, "xmm0", XMM)
+    public static final Register xmm1 = new Register(17, 1, "xmm1", XMM)
+    public static final Register xmm2 = new Register(18, 2, "xmm2", XMM)
+    public static final Register xmm3 = new Register(19, 3, "xmm3", XMM)
+    public static final Register xmm4 = new Register(20, 4, "xmm4", XMM)
+    public static final Register xmm5 = new Register(21, 5, "xmm5", XMM)
+    public static final Register xmm6 = new Register(22, 6, "xmm6", XMM)
+    public static final Register xmm7 = new Register(23, 7, "xmm7", XMM)
+
+    public static final Register xmm8  = new Register(24,  8, "xmm8",  XMM)
+    public static final Register xmm9  = new Register(25,  9, "xmm9",  XMM)
+    public static final Register xmm10 = new Register(26, 10, "xmm10", XMM)
+    public static final Register xmm11 = new Register(27, 11, "xmm11", XMM)
+    public static final Register xmm12 = new Register(28, 12, "xmm12", XMM)
+    public static final Register xmm13 = new Register(29, 13, "xmm13", XMM)
+    public static final Register xmm14 = new Register(30, 14, "xmm14", XMM)
+    public static final Register xmm15 = new Register(31, 15, "xmm15", XMM)
+
+    public static final Register xmm16 = new Register(32, 16, "xmm16", XMM)
+    public static final Register xmm17 = new Register(33, 17, "xmm17", XMM)
+    public static final Register xmm18 = new Register(34, 18, "xmm18", XMM)
+    public static final Register xmm19 = new Register(35, 19, "xmm19", XMM)
+    public static final Register xmm20 = new Register(36, 20, "xmm20", XMM)
+    public static final Register xmm21 = new Register(37, 21, "xmm21", XMM)
+    public static final Register xmm22 = new Register(38, 22, "xmm22", XMM)
+    public static final Register xmm23 = new Register(39, 23, "xmm23", XMM)
+
+    public static final Register xmm24 = new Register(40, 24, "xmm24", XMM)
+    public static final Register xmm25 = new Register(41, 25, "xmm25", XMM)
+    public static final Register xmm26 = new Register(42, 26, "xmm26", XMM)
+    public static final Register xmm27 = new Register(43, 27, "xmm27", XMM)
+    public static final Register xmm28 = new Register(44, 28, "xmm28", XMM)
+    public static final Register xmm29 = new Register(45, 29, "xmm29", XMM)
+    public static final Register xmm30 = new Register(46, 30, "xmm30", XMM)
+    public static final Register xmm31 = new Register(47, 31, "xmm31", XMM)
+
+    public static final Register[] xmmRegistersSSE =
+    (§
+        xmm0, xmm1, xmm2,  xmm3,  xmm4,  xmm5,  xmm6,  xmm7,
+        xmm8, xmm9, xmm10, xmm11, xmm12, xmm13, xmm14, xmm15
+    )
+
+    public static final Register[] xmmRegistersAVX512 =
+    (§
+        xmm0, xmm1, xmm2,  xmm3,  xmm4,  xmm5,  xmm6,  xmm7,
+        xmm8, xmm9, xmm10, xmm11, xmm12, xmm13, xmm14, xmm15,
+        xmm16, xmm17, xmm18, xmm19, xmm20, xmm21, xmm22, xmm23,
+        xmm24, xmm25, xmm26, xmm27, xmm28, xmm29, xmm30, xmm31
+    )
+
+    public static final RegisterCategory MASK = new RegisterCategory("MASK", false)
+
+    public static final Register k0 = new Register(48, 0, "k0", MASK)
+    public static final Register k1 = new Register(49, 1, "k1", MASK)
+    public static final Register k2 = new Register(50, 2, "k2", MASK)
+    public static final Register k3 = new Register(51, 3, "k3", MASK)
+    public static final Register k4 = new Register(52, 4, "k4", MASK)
+    public static final Register k5 = new Register(53, 5, "k5", MASK)
+    public static final Register k6 = new Register(54, 6, "k6", MASK)
+    public static final Register k7 = new Register(55, 7, "k7", MASK)
+
+    public static final RegisterArray valueRegistersSSE = new RegisterArray(
+        rax,  rcx,  rdx,   rbx,   rsp,   rbp,   rsi,   rdi,
+        r8,   r9,   r10,   r11,   r12,   r13,   r14,   r15,
+        xmm0, xmm1, xmm2,  xmm3,  xmm4,  xmm5,  xmm6,  xmm7,
+        xmm8, xmm9, xmm10, xmm11, xmm12, xmm13, xmm14, xmm15
+    )
+
+    public static final RegisterArray valueRegistersAVX512 = new RegisterArray(
+        rax,  rcx,  rdx,   rbx,   rsp,   rbp,   rsi,   rdi,
+        r8,   r9,   r10,   r11,   r12,   r13,   r14,   r15,
+        xmm0, xmm1, xmm2,  xmm3,  xmm4,  xmm5,  xmm6,  xmm7,
+        xmm8, xmm9, xmm10, xmm11, xmm12, xmm13, xmm14, xmm15,
+        xmm16, xmm17, xmm18, xmm19, xmm20, xmm21, xmm22, xmm23,
+        xmm24, xmm25, xmm26, xmm27, xmm28, xmm29, xmm30, xmm31,
+        k0, k1, k2, k3, k4, k5, k6, k7
+    )
+
+    ;;;
+     ; Register used to construct an instruction-relative address.
+     ;;
+    public static final Register rip = new Register(56, -1, "rip", SPECIAL)
+
+    public static final RegisterArray allRegisters = new RegisterArray(
+        rax,  rcx,  rdx,   rbx,   rsp,   rbp,   rsi,   rdi,
+        r8,   r9,   r10,   r11,   r12,   r13,   r14,   r15,
+        xmm0, xmm1, xmm2,  xmm3,  xmm4,  xmm5,  xmm6,  xmm7,
+        xmm8, xmm9, xmm10, xmm11, xmm12, xmm13, xmm14, xmm15,
+        xmm16, xmm17, xmm18, xmm19, xmm20, xmm21, xmm22, xmm23,
+        xmm24, xmm25, xmm26, xmm27, xmm28, xmm29, xmm30, xmm31,
+        k0, k1, k2, k3, k4, k5, k6, k7,
+        rip
+    )
+
+    ;;;
+     ; Basic set of CPU features mirroring what is returned from the cpuid instruction. See:
+     ; {@code VM_Version::cpuFeatureFlags}.
+     ;;
+    public enum CPUFeature
+    (§
+        CX8,
+        CMOV,
+        FXSR,
+        HT,
+        MMX,
+        AMD_3DNOW_PREFETCH,
+        SSE,
+        SSE2,
+        SSE3,
+        SSSE3,
+        SSE4A,
+        SSE4_1,
+        SSE4_2,
+        POPCNT,
+        LZCNT,
+        TSC,
+        TSCINV,
+        AVX,
+        AVX2,
+        AES,
+        ERMS,
+        CLMUL,
+        BMI1,
+        BMI2,
+        RTM,
+        ADX,
+        AVX512F,
+        AVX512DQ,
+        AVX512PF,
+        AVX512ER,
+        AVX512CD,
+        AVX512BW,
+        AVX512VL,
+        SHA,
+        FMA
+    )
+
+    private final EnumSet<CPUFeature> features
+
+    ;;;
+     ; Set of flags to control code emission.
+     ;;
+    public enum Flag
+    (§
+        UseCountLeadingZerosInstruction,
+        UseCountTrailingZerosInstruction
+    )
+
+    private final EnumSet<Flag> flags
+
+    private final AMD64Kind largestKind
+
+    public AMD64(EnumSet<CPUFeature> features, EnumSet<Flag> flags)
+    (§
+        super("AMD64", AMD64Kind.QWORD, ByteOrder.LITTLE_ENDIAN, true, allRegisters, LOAD_LOAD | LOAD_STORE | STORE_STORE, 1, 8)
+        this.features = features
+        this.flags = flags
+        assert features.contains(CPUFeature.SSE2) (§ colon ) "minimum config for x64"
+
+        if (features.contains(CPUFeature.AVX512F))
+        (§
+            largestKind = AMD64Kind.V512_QWORD
+        )
+        else if (features.contains(CPUFeature.AVX))
+        (§
+            largestKind = AMD64Kind.V256_QWORD
+        )
+        else
+        (§
+            largestKind = AMD64Kind.V128_QWORD
+        )
+    )
+
+    public EnumSet<CPUFeature> getFeatures()
+    (§
+        return features
+    )
+
+    public EnumSet<Flag> getFlags()
+    (§
+        return flags
+    )
+
+    @Override
+    public RegisterArray getAvailableValueRegisters()
+    (§
+        if (features.contains(CPUFeature.AVX512F))
+        (§
+            return valueRegistersAVX512
+        )
+        else
+        (§
+            return valueRegistersSSE
+        )
+    )
+
+    @Override
+    public PlatformKind getPlatformKind(JavaKind javaKind)
+    (§
+        switch (javaKind)
+        (§
+            case Boolean
+            case Byte
+                return AMD64Kind.BYTE
+            case Short
+            case Char
+                return AMD64Kind.WORD
+            case Int
+                return AMD64Kind.DWORD
+            case Long
+            case Object
+                return AMD64Kind.QWORD
+            case Float
+                return AMD64Kind.SINGLE
+            case Double
+                return AMD64Kind.DOUBLE
+            default
+                return null
+        )
+    )
+
+    @Override
+    public boolean canStoreValue(RegisterCategory category, PlatformKind platformKind)
+    (§
+        AMD64Kind kind = (AMD64Kind) platformKind
+        if (kind.isInteger())
+        (§
+            return category.equals(CPU)
+        )
+        else if (kind.isXMM())
+        (§
+            return category.equals(XMM)
+        )
+        else
+        (§
+            assert kind.isMask()
+            return category.equals(MASK)
+        )
+    )
+
+    @Override
+    public AMD64Kind getLargestStorableKind(RegisterCategory category)
+    (§
+        if (category.equals(CPU))
+        (§
+            return AMD64Kind.QWORD
+        )
+        else if (category.equals(XMM))
+        (§
+            return largestKind
+        )
+        else if (category.equals(MASK))
+        (§
+            return AMD64Kind.MASK64
+        )
+        else
+        (§
+            return null
+        )
+    )
+)
+)
+
+(§ package jdk.vm.ci.amd64
+
+import jdk.vm.ci.meta.PlatformKind
+
+public enum AMD64Kind implements PlatformKind
+(§
+    ;; scalar
+    BYTE(1),
+    WORD(2),
+    DWORD(4),
+    QWORD(8),
+    SINGLE(4),
+    DOUBLE(8),
+
+    ;; SSE2
+    V32_BYTE(4, BYTE),
+    V32_WORD(4, WORD),
+    V64_BYTE(8, BYTE),
+    V64_WORD(8, WORD),
+    V64_DWORD(8, DWORD),
+    V128_BYTE(16, BYTE),
+    V128_WORD(16, WORD),
+    V128_DWORD(16, DWORD),
+    V128_QWORD(16, QWORD),
+    V128_SINGLE(16, SINGLE),
+    V128_DOUBLE(16, DOUBLE),
+
+    ;; AVX
+    V256_BYTE(32, BYTE),
+    V256_WORD(32, WORD),
+    V256_DWORD(32, DWORD),
+    V256_QWORD(32, QWORD),
+    V256_SINGLE(32, SINGLE),
+    V256_DOUBLE(32, DOUBLE),
+
+    ;; AVX512
+    V512_BYTE(64, BYTE),
+    V512_WORD(64, WORD),
+    V512_DWORD(64, DWORD),
+    V512_QWORD(64, QWORD),
+    V512_SINGLE(64, SINGLE),
+    V512_DOUBLE(64, DOUBLE),
+
+    MASK8(1),
+    MASK16(2),
+    MASK32(4),
+    MASK64(8)
+
+    private final int size
+    private final int vectorLength
+
+    private final AMD64Kind scalar
+    private final EnumKey<AMD64Kind> key = new EnumKey<>(this)
+
+    AMD64Kind(int size)
+    (§
+        this.size = size
+        this.scalar = this
+        this.vectorLength = 1
+    )
+
+    AMD64Kind(int size, AMD64Kind scalar)
+    (§
+        this.size = size
+        this.scalar = scalar
+
+        assert size % scalar.size == 0
+        this.vectorLength = size / scalar.size
+    )
+
+    public AMD64Kind getScalar()
+    (§
+        return scalar
+    )
+
+    public int getSizeInBytes()
+    (§
+        return size
+    )
+
+    public int getVectorLength()
+    (§
+        return vectorLength
+    )
+
+    public Key getKey()
+    (§
+        return key
+    )
+
+    public boolean isInteger()
+    (§
+        switch (this)
+        (§
+            case BYTE
+            case WORD
+            case DWORD
+            case QWORD
+                return true
+            default
+                return false
+        )
+    )
+
+    public boolean isXMM()
+    (§
+        switch (this)
+        (§
+            case SINGLE
+            case DOUBLE
+            case V32_BYTE
+            case V32_WORD
+            case V64_BYTE
+            case V64_WORD
+            case V64_DWORD
+            case V128_BYTE
+            case V128_WORD
+            case V128_DWORD
+            case V128_QWORD
+            case V128_SINGLE
+            case V128_DOUBLE
+            case V256_BYTE
+            case V256_WORD
+            case V256_DWORD
+            case V256_QWORD
+            case V256_SINGLE
+            case V256_DOUBLE
+            case V512_BYTE
+            case V512_WORD
+            case V512_DWORD
+            case V512_QWORD
+            case V512_SINGLE
+            case V512_DOUBLE
+                return true
+            default
+                return false
+        )
+    )
+
+    public boolean isMask()
+    (§
+        switch (this)
+        (§
+            case MASK8
+            case MASK16
+            case MASK32
+            case MASK64
+                return true
+            default
+                return false
+        )
+    )
+
+    public char getTypeChar()
+    (§
+        switch (this)
+        (§
+            case BYTE
+                return (§ char "b")
+            case WORD
+                return (§ char "w")
+            case DWORD
+                return (§ char "d")
+            case QWORD
+                return (§ char "q")
+            case SINGLE
+                return (§ char "S")
+            case DOUBLE
+                return (§ char "D")
+            case V32_BYTE
+            case V32_WORD
+            case V64_BYTE
+            case V64_WORD
+            case V64_DWORD
+                return (§ char "v")
+            case V128_BYTE
+            case V128_WORD
+            case V128_DWORD
+            case V128_QWORD
+            case V128_SINGLE
+            case V128_DOUBLE
+                return (§ char "x")
+            case V256_BYTE
+            case V256_WORD
+            case V256_DWORD
+            case V256_QWORD
+            case V256_SINGLE
+            case V256_DOUBLE
+                return (§ char "y")
+            case V512_BYTE
+            case V512_WORD
+            case V512_DWORD
+            case V512_QWORD
+            case V512_SINGLE
+            case V512_DOUBLE
+                return (§ char "z")
+            case MASK8
+            case MASK16
+            case MASK32
+            case MASK64
+                return (§ char "k")
+            default
+                return (§ char "-")
+        )
+    )
+)
+)
+
+(§ package jdk.vm.ci.code
+
+import java.nio.ByteOrder
+
+import jdk.vm.ci.code.Register.RegisterCategory
+import jdk.vm.ci.meta.JavaKind
+import jdk.vm.ci.meta.PlatformKind
+
+;;;
+ ; Represents a CPU architecture, including information such as its endianness, CPU registers, word
+ ; width, etc.
+ ;;
+public abstract class Architecture
+(§
+    ;;;
+     ; The architecture specific type of a native word.
+     ;;
+    private final PlatformKind wordKind
+
+    ;;;
+     ; The name of this architecture (e.g. "AMD64", "SPARCv9").
+     ;;
+    private final String name
+
+    ;;;
+     ; List of all available registers on this architecture. The index of each register in this list
+     ; is equal to its {@linkplain Register#number number}.
+     ;;
+    private final RegisterArray registers
+
+    ;;;
+     ; The byte ordering can be either little or big endian.
+     ;;
+    private final ByteOrder byteOrder
+
+    ;;;
+     ; Whether the architecture supports unaligned memory accesses.
+     ;;
+    private final boolean unalignedMemoryAccess
+
+    ;;;
+     ; Mask of the barrier constants denoting the barriers that are not required to be explicitly
+     ; inserted under this architecture.
+     ;;
+    private final int implicitMemoryBarriers
+
+    ;;;
+     ; Offset in bytes from the beginning of a call instruction to the displacement.
+     ;;
+    private final int machineCodeCallDisplacementOffset
+
+    ;;;
+     ; The size of the return address pushed to the stack by a call instruction. A value of 0
+     ; denotes that call linkage uses registers instead (e.g. SPARC).
+     ;;
+    private final int returnAddressSize
+
+    protected Architecture(String name, PlatformKind wordKind, ByteOrder byteOrder, boolean unalignedMemoryAccess, RegisterArray registers, int implicitMemoryBarriers, int nativeCallDisplacementOffset, int returnAddressSize)
+    (§
+        this.name = name
+        this.registers = registers
+        this.wordKind = wordKind
+        this.byteOrder = byteOrder
+        this.unalignedMemoryAccess = unalignedMemoryAccess
+        this.implicitMemoryBarriers = implicitMemoryBarriers
+        this.machineCodeCallDisplacementOffset = nativeCallDisplacementOffset
+        this.returnAddressSize = returnAddressSize
+    )
+
+    ;;;
+     ; Converts this architecture to a string.
+     ;
+     ; @return the string representation of this architecture
+     ;;
+    @Override
+    public final String toString()
+    (§
+        return getName().toLowerCase()
+    )
+
+    ;;;
+     ; Gets the natural size of words (typically registers and pointers) of this architecture, in
+     ; bytes.
+     ;;
+    public int getWordSize()
+    (§
+        return wordKind.getSizeInBytes()
+    )
+
+    public PlatformKind getWordKind()
+    (§
+        return wordKind
+    )
+
+    ;;;
+     ; Gets the name of this architecture.
+     ;;
+    public String getName()
+    (§
+        return name
+    )
+
+    ;;;
+     ; Gets the list of all registers that exist on this architecture. This contains all registers
+     ; that exist in the specification of this architecture. Not all of them may be available on
+     ; this particular architecture instance. The index of each register in this list is equal to
+     ; its {@linkplain Register#number number}.
+     ;;
+    public RegisterArray getRegisters()
+    (§
+        return registers
+    )
+
+    ;;;
+     ; Gets a list of all registers available for storing values on this architecture. This may be a
+     ; subset of {@link #getRegisters()}, depending on the capabilities of this particular CPU.
+     ;;
+    public RegisterArray getAvailableValueRegisters()
+    (§
+        return getRegisters()
+    )
+
+    public ByteOrder getByteOrder()
+    (§
+        return byteOrder
+    )
+
+    ;;;
+     ; @return true if the architecture supports unaligned memory accesses.
+     ;;
+    public boolean supportsUnalignedMemoryAccess()
+    (§
+        return unalignedMemoryAccess
+    )
+
+    ;;;
+     ; Gets the size of the return address pushed to the stack by a call instruction. A value of 0
+     ; denotes that call linkage uses registers instead.
+     ;;
+    public int getReturnAddressSize()
+    (§
+        return returnAddressSize
+    )
+
+    ;;;
+     ; Gets the offset in bytes from the beginning of a call instruction to the displacement.
+     ;;
+    public int getMachineCodeCallDisplacementOffset()
+    (§
+        return machineCodeCallDisplacementOffset
+    )
+
+    ;;;
+     ; Determines the barriers in a given barrier mask that are explicitly required on this
+     ; architecture.
+     ;
+     ; @param barriers a mask of the barrier constants
+     ; @return the value of {@code barriers} minus the barriers unnecessary on this architecture
+     ;;
+    public final int requiredBarriers(int barriers)
+    (§
+        return barriers & (§ bit-not )implicitMemoryBarriers
+    )
+
+    ;;;
+     ; Determine whether a kind can be stored in a register of a given category.
+     ;
+     ; @param category the category of the register
+     ; @param kind the kind that should be stored in the register
+     ;;
+    public abstract boolean canStoreValue(RegisterCategory category, PlatformKind kind)
+
+    ;;;
+     ; Return the largest kind that can be stored in a register of a given category.
+     ;
+     ; @param category the category of the register
+     ; @return the largest kind that can be stored in a register {@code category}
+     ;;
+    public abstract PlatformKind getLargestStorableKind(RegisterCategory category)
+
+    ;;;
+     ; Return the {@link PlatformKind} that is used to store values of a given {@link JavaKind}.
+     ;;
+    public abstract PlatformKind getPlatformKind(JavaKind javaKind)
+
+    @Override
+    public final boolean equals(Object obj)
+    (§
+        if (obj == this)
+        (§
+            return true
+        )
+        if (obj instanceof Architecture)
+        (§
+            Architecture that = (Architecture) obj
+            if (this.name.equals(that.name))
+            (§
+                assert this.byteOrder.equals(that.byteOrder)
+                assert this.implicitMemoryBarriers == that.implicitMemoryBarriers
+                assert this.machineCodeCallDisplacementOffset == that.machineCodeCallDisplacementOffset
+                assert this.registers.equals(that.registers)
+                assert this.returnAddressSize == that.returnAddressSize
+                assert this.unalignedMemoryAccess == that.unalignedMemoryAccess
+                assert this.wordKind == that.wordKind
+                return true
+            )
+        )
+        return false
+    )
+
+    @Override
+    public final int hashCode()
+    (§
+        return name.hashCode()
+    )
+)
+)
+
+(§ package jdk.vm.ci.code
+
+import java.util.Arrays
+
+import jdk.vm.ci.meta.JavaKind
+import jdk.vm.ci.meta.JavaValue
+import jdk.vm.ci.meta.ResolvedJavaMethod
+import jdk.vm.ci.meta.Value
+
+;;;
+ ; Represents the Java bytecode frame state(s) at a given position including {@link Value locations}
+ ; where to find the local variables, operand stack values and locked objects of the bytecode
+ ; frame(s).
+ ;;
+public final class BytecodeFrame extends BytecodePosition
+(§
+    ;;;
+     ; An array of values representing how to reconstruct the state of the Java frame. This is array
+     ; is partitioned as follows:
+     ; <p>
+     ; <table summary="" border="1" cellpadding="5" frame="void" rules="all">
+     ; <tr>
+     ; <th>Start index (inclusive)</th>
+     ; <th>End index (exclusive)</th>
+     ; <th>Description</th>
+     ; </tr>
+     ; <tr>
+     ; <td>0</td>
+     ; <td>numLocals</td>
+     ; <td>Local variables</td>
+     ; </tr>
+     ; <tr>
+     ; <td>numLocals</td>
+     ; <td>numLocals + numStack</td>
+     ; <td>Operand stack</td>
+     ; </tr>
+     ; <tr>
+     ; <td>numLocals + numStack</td>
+     ; <td>values.length</td>
+     ; <td>Locked objects</td>
+     ; </tr>
+     ; </table>
+     ; <p>
+     ; Note that the number of locals and the number of stack slots may be smaller than the maximum
+     ; number of locals and stack slots as specified in the compiled method.
+     ;
+     ; This field is intentionally exposed as a mutable array that a compiler may modify (e.g.
+     ; during register allocation).
+     ;;
+    public final JavaValue[] values
+
+    ;;;
+     ; An array describing the Java kinds in {@link #values}. It records a kind for the locals and
+     ; the operand stack.
+     ;;
+    private final JavaKind[] slotKinds
+
+    ;;;
+     ; The number of locals in the values array.
+     ;;
+    public final int numLocals
+
+    ;;;
+     ; The number of stack slots in the values array.
+     ;;
+    public final int numStack
+
+    ;;;
+     ; The number of locks in the values array.
+     ;;
+    public final int numLocks
+
+    ;;;
+     ; True if this is a position inside an exception handler before the exception object has been
+     ; consumed. In this case, {@link #numStack} {@code == 1} and {@link #getStackValue(int)
+     ; getStackValue(0)} is the location of the exception object. If deoptimization happens at this
+     ; position, the interpreter will rethrow the exception instead of executing the bytecode
+     ; instruction at this position.
+     ;;
+    public final boolean rethrowException
+
+    ;;;
+     ; Specifies if this object represents a frame state in the middle of executing a call. If true,
+     ; the arguments to the call have been popped from the stack and the return value (for a
+     ; non-void call) has not yet been pushed.
+     ;;
+    public final boolean duringCall
+
+    ;;;
+     ; This BCI should be used for frame states that are built for code with no meaningful BCI.
+     ;;
+    public static final int UNKNOWN_BCI = -5
+
+    ;;;
+     ; The BCI for exception unwind. This is synthetic code and has no representation in bytecode.
+     ; In contrast with {@link #AFTER_EXCEPTION_BCI}, at this point, if the method is synchronized,
+     ; the monitor is still held.
+     ;;
+    public static final int UNWIND_BCI = -1
+
+    ;;;
+     ; The BCI for the state before starting to execute a method. Note that if the method is
+     ; synchronized, the monitor is not yet held.
+     ;;
+    public static final int BEFORE_BCI = -2
+
+    ;;;
+     ; The BCI for the state after finishing the execution of a method and returning normally. Note
+     ; that if the method was synchronized the monitor is already released.
+     ;;
+    public static final int AFTER_BCI = -3
+
+    ;;;
+     ; The BCI for exception unwind. This is synthetic code and has no representation in bytecode.
+     ; In contrast with {@link #UNWIND_BCI}, at this point, if the method is synchronized, the
+     ; monitor is already released.
+     ;;
+    public static final int AFTER_EXCEPTION_BCI = -4
+
+    ;;;
+     ; This BCI should be used for states that cannot be the target of a deoptimization, like
+     ; snippet frame states.
+     ;;
+    public static final int INVALID_FRAMESTATE_BCI = -6
+
+    ;;;
+     ; Determines if a given BCI matches one of the placeholder BCI constants defined in this class.
+     ;;
+    public static boolean isPlaceholderBci(int bci)
+    (§
+        return bci < 0
+    )
+
+    ;;;
+     ; Gets the name of a given placeholder BCI.
+     ;;
+    public static String getPlaceholderBciName(int bci)
+    (§
+        assert isPlaceholderBci(bci)
+        if (bci == BytecodeFrame.AFTER_BCI)
+        (§
+            return "AFTER_BCI"
+        )
+        else if (bci == BytecodeFrame.AFTER_EXCEPTION_BCI)
+        (§
+            return "AFTER_EXCEPTION_BCI"
+        )
+        else if (bci == BytecodeFrame.INVALID_FRAMESTATE_BCI)
+        (§
+            return "INVALID_FRAMESTATE_BCI"
+        )
+        else if (bci == BytecodeFrame.BEFORE_BCI)
+        (§
+            return "BEFORE_BCI"
+        )
+        else if (bci == BytecodeFrame.UNKNOWN_BCI)
+        (§
+            return "UNKNOWN_BCI"
+        )
+        else
+        (§
+            assert bci == BytecodeFrame.UNWIND_BCI
+            return "UNWIND_BCI"
+        )
+    )
+
+    ;;;
+     ; Creates a new frame object.
+     ;
+     ; @param caller the caller frame (which may be {@code null})
+     ; @param method the method
+     ; @param bci a BCI within the method
+     ; @param rethrowException specifies if the VM should re-throw the pending exception when
+     ;            deopt'ing using this frame
+     ; @param values the frame state {@link #values}.
+     ; @param slotKinds the kinds in {@code values}. This array is now owned by this object and must
+     ;            not be mutated by the caller.
+     ; @param numLocals the number of local variables
+     ; @param numStack the depth of the stack
+     ; @param numLocks the number of locked objects
+     ;;
+    public BytecodeFrame(BytecodeFrame caller, ResolvedJavaMethod method, int bci, boolean rethrowException, boolean duringCall, JavaValue[] values, JavaKind[] slotKinds, int numLocals, int numStack, int numLocks)
+    (§
+        super(caller, method, bci)
+        assert values != null
+        this.rethrowException = rethrowException
+        this.duringCall = duringCall
+        this.values = values
+        this.slotKinds = slotKinds
+        this.numLocals = numLocals
+        this.numStack = numStack
+        this.numLocks = numLocks
+        assert !rethrowException || numStack == 1 (§ colon ) "must have exception on top of the stack"
+    )
+
+    ;;;
+     ; Ensure that the frame state is formatted as expected by the JVM, with null or Illegal in the
+     ; slot following a double word item. This should really be checked in FrameState itself but
+     ; because of Word type rewriting and alternative backends that can't be done.
+     ;;
+    public boolean validateFormat()
+    (§
+        if (caller() != null)
+        (§
+            caller().validateFormat()
+        )
+        for (int i = 0(§ semi ) i < numLocals + numStack(§ semi ) i++)
+        (§
+            if (values[i] != null)
+            (§
+                JavaKind kind = slotKinds[i]
+                if (kind.needsTwoSlots())
+                (§
+                    assert slotKinds.length > i + 1 (§ colon ) String.format("missing second word %s", this)
+                    assert slotKinds[i + 1] == JavaKind.Illegal (§ colon ) this
+                )
+            )
+        )
+        return true
+    )
+
+    ;;;
+     ; Gets the kind of a local variable.
+     ;
+     ; @param i the local variable to query
+     ; @return the kind of local variable {@code i}
+     ; @throw {@link IndexOutOfBoundsException} if {@code i < 0 || i >= this.numLocals}
+     ;;
+    public JavaKind getLocalValueKind(int i)
+    (§
+        if (i < 0 || i >= numLocals)
+        (§
+            throw new IndexOutOfBoundsException()
+        )
+        return slotKinds[i]
+    )
+
+    ;;;
+     ; Gets the kind of a stack slot.
+     ;
+     ; @param i the local variable to query
+     ; @return the kind of stack slot {@code i}
+     ; @throw {@link IndexOutOfBoundsException} if {@code i < 0 || i >= this.numStack}
+     ;;
+    public JavaKind getStackValueKind(int i)
+    (§
+        if (i < 0 || i >= numStack)
+        (§
+            throw new IndexOutOfBoundsException()
+        )
+        return slotKinds[i + numLocals]
+    )
+
+    ;;;
+     ; Gets the value representing the specified local variable.
+     ;
+     ; @param i the local variable index
+     ; @return the value that can be used to reconstruct the local's current value
+     ; @throw {@link IndexOutOfBoundsException} if {@code i < 0 || i >= this.numLocals}
+     ;;
+    public JavaValue getLocalValue(int i)
+    (§
+        if (i < 0 || i >= numLocals)
+        (§
+            throw new IndexOutOfBoundsException()
+        )
+        return values[i]
+    )
+
+    ;;;
+     ; Gets the value representing the specified stack slot.
+     ;
+     ; @param i the stack index
+     ; @return the value that can be used to reconstruct the stack slot's current value
+     ; @throw {@link IndexOutOfBoundsException} if {@code i < 0 || i >= this.numStack}
+     ;;
+    public JavaValue getStackValue(int i)
+    (§
+        if (i < 0 || i >= numStack)
+        (§
+            throw new IndexOutOfBoundsException()
+        )
+        return values[i + numLocals]
+    )
+
+    ;;;
+     ; Gets the value representing the specified lock.
+     ;
+     ; @param i the lock index
+     ; @return the value that can be used to reconstruct the lock's current value
+     ; @throw {@link IndexOutOfBoundsException} if {@code i < 0 || i >= this.numLocks}
+     ;;
+    public JavaValue getLockValue(int i)
+    (§
+        if (i < 0 || i >= numLocks)
+        (§
+            throw new IndexOutOfBoundsException()
+        )
+        return values[i + numLocals + numStack]
+    )
+
+    ;;;
+     ; Gets the caller of this frame.
+     ;
+     ; @return {@code null} if this frame has no caller
+     ;;
+    public BytecodeFrame caller()
+    (§
+        return (BytecodeFrame) getCaller()
+    )
+
+    @Override
+    public int hashCode()
+    (§
+        return (numLocals + 1) (§ bit-xor ) (numStack + 11) (§ bit-xor ) (numLocks + 7)
+    )
+
+    @Override
+    public boolean equals(Object obj)
+    (§
+        if (this == obj)
+        (§
+            return true
+        )
+        if (obj instanceof BytecodeFrame && super.equals(obj))
+        (§
+            BytecodeFrame that = (BytecodeFrame) obj
+            if (this.duringCall == that.duringCall &&
+                this.rethrowException == that.rethrowException &&
+                this.numLocals == that.numLocals &&
+                this.numLocks == that.numLocks &&
+                this.numStack == that.numStack &&
+                Arrays.equals(this.values, that.values))
+                (§
+                return true
+            )
+            return true
+        )
+        return false
+    )
+
+    @Override
+    public String toString()
+    (§
+        return CodeUtil.append(new StringBuilder(100), this).toString()
+    )
+)
+)
+
+(§ package jdk.vm.ci.code
+
+import static jdk.vm.ci.code.ValueUtil.isAllocatableValue
+import static jdk.vm.ci.code.ValueUtil.isStackSlot
+import jdk.vm.ci.meta.AllocatableValue
+import jdk.vm.ci.meta.Value
+
+;;;
+ ; A calling convention describes the locations in which the arguments for a call are placed and the
+ ; location in which the return value is placed if the call is not void.
+ ;;
+public class CallingConvention
+(§
+    ;;;
+     ; Marker interface denoting the type of a call for which a calling convention is requested.
+     ;;
+    public interface Type
+    (§
+    )
+
+    ;;;
+     ; The amount of stack space (in bytes) required for the stack-based arguments of the call.
+     ;;
+    private final int stackSize
+
+    private final AllocatableValue returnLocation
+
+    ;;;
+     ; The ordered locations in which the arguments are placed.
+     ;;
+    private final AllocatableValue[] argumentLocations
+
+    ;;;
+     ; Creates a description of the registers and stack locations used by a call.
+     ;
+     ; @param stackSize amount of stack space (in bytes) required for the stack-based arguments of
+     ;            the call
+     ; @param returnLocation the location for the return value or {@link Value#ILLEGAL} if a void
+     ;            call
+     ; @param argumentLocations the ordered locations in which the arguments are placed
+     ;;
+    public CallingConvention(int stackSize, AllocatableValue returnLocation, AllocatableValue... argumentLocations)
+    (§
+        assert argumentLocations != null
+        assert returnLocation != null
+        this.argumentLocations = argumentLocations
+        this.stackSize = stackSize
+        this.returnLocation = returnLocation
+        assert verify()
+    )
+
+    ;;;
+     ; Gets the location for the return value or {@link Value#ILLEGAL} if a void call.
+     ;;
+    public AllocatableValue getReturn()
+    (§
+        return returnLocation
+    )
+
+    ;;;
+     ; Gets the location for the {@code index}'th argument.
+     ;;
+    public AllocatableValue getArgument(int index)
+    (§
+        return argumentLocations[index]
+    )
+
+    ;;;
+     ; Gets the amount of stack space (in bytes) required for the stack-based arguments of the call.
+     ;;
+    public int getStackSize()
+    (§
+        return stackSize
+    )
+
+    ;;;
+     ; Gets the number of locations required for the arguments.
+     ;;
+    public int getArgumentCount()
+    (§
+        return argumentLocations.length
+    )
+
+    ;;;
+     ; Gets the locations required for the arguments.
+     ;;
+    public AllocatableValue[] getArguments()
+    (§
+        if (argumentLocations.length == 0)
+        (§
+            return argumentLocations
+        )
+        return argumentLocations.clone()
+    )
+
+    @Override
+    public String toString()
+    (§
+        StringBuilder sb = new StringBuilder()
+        sb.append("CallingConvention[")
+        String sep = ""
+        for (Value op (§ colon ) argumentLocations)
+        (§
+            sb.append(sep).append(op)
+            sep = ", "
+        )
+        if (!returnLocation.equals(Value.ILLEGAL))
+        (§
+            sb.append(" -> ").append(returnLocation)
+        )
+        sb.append("]")
+        return sb.toString()
+    )
+
+    private boolean verify()
+    (§
+        for (int i = 0(§ semi ) i < argumentLocations.length(§ semi ) i++)
+        (§
+            Value location = argumentLocations[i]
+            assert isStackSlot(location) || isAllocatableValue(location)
+        )
+        return true
+    )
+)
+)
+
+(§ package jdk.vm.ci.code
+
+import jdk.vm.ci.code.site.Call
+import jdk.vm.ci.code.site.Mark
+import jdk.vm.ci.meta.ResolvedJavaMethod
+import jdk.vm.ci.meta.SpeculationLog
+
+;;;
+ ; Access to code cache related details and requirements.
+ ;;
+public interface CodeCacheProvider
+(§
+    ;;;
+     ; Installs code for a given method based on a given compilation result without making it the
+     ; default implementation of the method.
+     ;
+     ; @param method a method implemented by the installed code
+     ; @param compiledCode the compiled code to be added
+     ; @param log the speculation log to be used
+     ; @param installedCode a predefined {@link InstalledCode} object to use as a reference to the
+     ;            installed code. If {@code null}, a new {@link InstalledCode} object will be
+     ;            created.
+     ; @return a reference to the ready-to-run code
+     ; @throws BailoutException if the code installation failed
+     ;;
+    default InstalledCode addCode(ResolvedJavaMethod method, CompiledCode compiledCode, SpeculationLog log, InstalledCode installedCode)
+    (§
+        return installCode(method, compiledCode, installedCode, log, false)
+    )
+
+    ;;;
+     ; Installs code for a given method based on a given compilation result and makes it the default
+     ; implementation of the method.
+     ;
+     ; @param method a method implemented by the installed code and for which the installed code
+     ;            becomes the default implementation
+     ; @param compiledCode the compiled code to be added
+     ; @return a reference to the ready-to-run code
+     ; @throws BailoutException if the code installation failed
+     ;;
+    default InstalledCode setDefaultCode(ResolvedJavaMethod method, CompiledCode compiledCode)
+    (§
+        return installCode(method, compiledCode, null, null, true)
+    )
+
+    ;;;
+     ; Installs code based on a given compilation result.
+     ;
+     ; @param method the method compiled to produce {@code compiledCode} or {@code null} if the
+     ;            input to {@code compResult} was not a {@link ResolvedJavaMethod}
+     ; @param compiledCode the compiled code to be added
+     ; @param installedCode a pre-allocated {@link InstalledCode} object to use as a reference to
+     ;            the installed code. If {@code null}, a new {@link InstalledCode} object will be
+     ;            created.
+     ; @param log the speculation log to be used
+     ; @param isDefault specifies if the installed code should be made the default implementation of
+     ;            {@code compRequest.getMethod()}. The default implementation for a method is the
+     ;            code executed for standard calls to the method. This argument is ignored if
+     ;            {@code compRequest == null}.
+     ; @return a reference to the compiled and ready-to-run installed code
+     ; @throws BailoutException if the code installation failed
+     ;;
+    InstalledCode installCode(ResolvedJavaMethod method, CompiledCode compiledCode, InstalledCode installedCode, SpeculationLog log, boolean isDefault)
+
+    ;;;
+     ; Invalidates {@code installedCode} such that {@link InvalidInstalledCodeException} will be
+     ; raised the next time {@code installedCode} is
+     ; {@linkplain InstalledCode#executeVarargs(Object...) executed}.
+     ;;
+    void invalidateInstalledCode(InstalledCode installedCode)
+
+    ;;;
+     ; Gets a name for a {@link Mark} mark.
+     ;;
+    default String getMarkName(Mark mark)
+    (§
+        return String.valueOf(mark.id)
+    )
+
+    ;;;
+     ; Gets a name for the {@linkplain Call#target target} of a {@link Call}.
+     ;;
+    default String getTargetName(Call call)
+    (§
+        return String.valueOf(call.target)
+    )
+
+    ;;;
+     ; Gets the register configuration to use when compiling a given method.
+     ;;
+    RegisterConfig getRegisterConfig()
+
+    ;;;
+     ; Minimum size of the stack area reserved for outgoing parameters. This area is reserved in all
+     ; cases, even when the compiled method has no regular call instructions.
+     ;
+     ; @return the minimum size of the outgoing parameter area in bytes
+     ;;
+    int getMinimumOutgoingSize()
+
+    ;;;
+     ; Gets a description of the target architecture.
+     ;;
+    TargetDescription getTarget()
+
+    ;;;
+     ; Create a new speculation log for the target runtime.
+     ;;
+    SpeculationLog createSpeculationLog()
+
+    ;;;
+     ; Returns the maximum absolute offset of a PC relative call to a given address from any
+     ; position in the code cache or -1 when not applicable. Intended for determining the required
+     ; size of address/offset fields.
+     ;;
+    long getMaxCallTargetOffset(long address)
+
+    ;;;
+     ; Determines if debug info should also be emitted at non-safepoint locations.
+     ;;
+    boolean shouldDebugNonSafepoints()
+)
+)
+
+(§ package jdk.vm.ci.code
+
+import java.util.ArrayList
+import java.util.Arrays
+import java.util.Collections
+import java.util.Map
+
+import jdk.vm.ci.meta.JavaType
+import jdk.vm.ci.meta.MetaUtil
+import jdk.vm.ci.meta.ResolvedJavaMethod
+import jdk.vm.ci.meta.Signature
+
+;;;
+ ; Miscellaneous collection of utility methods used by {@code jdk.vm.ci.code} and its clients.
+ ;;
+public class CodeUtil
+(§
+    public static final String NEW_LINE = String.format("%n")
+
+    public static final int K = 1024
+    public static final int M = 1024 * 1024
+
+    public static boolean isOdd(int n)
+    (§
+        return (n & 1) == 1
+    )
+
+    public static boolean isEven(int n)
+    (§
+        return (n & 1) == 0
+    )
+
+    ;;;
+     ; Checks whether the specified integer is a power of two.
+     ;
+     ; @param val the value to check
+     ; @return {@code true} if the value is a power of two; {@code false} otherwise
+     ;;
+    public static boolean isPowerOf2(int val)
+    (§
+        return val > 0 && (val & val - 1) == 0
+    )
+
+    ;;;
+     ; Checks whether the specified long is a power of two.
+     ;
+     ; @param val the value to check
+     ; @return {@code true} if the value is a power of two; {@code false} otherwise
+     ;;
+    public static boolean isPowerOf2(long val)
+    (§
+        return val > 0 && (val & val - 1) == 0
+    )
+
+    ;;;
+     ; Computes the log (base 2) of the specified integer, rounding down. (E.g {@code log2(8) = 3},
+     ; {@code log2(21) = 4} )
+     ;
+     ; @param val the value
+     ; @return the log base 2 of the value
+     ;;
+    public static int log2(int val)
+    (§
+        assert val > 0
+        return (Integer.SIZE - 1) - Integer.numberOfLeadingZeros(val)
+    )
+
+    ;;;
+     ; Computes the log (base 2) of the specified long, rounding down. (E.g {@code log2(8) = 3},
+     ; {@code log2(21) = 4})
+     ;
+     ; @param val the value
+     ; @return the log base 2 of the value
+     ;;
+    public static int log2(long val)
+    (§
+        assert val > 0
+        return (Long.SIZE - 1) - Long.numberOfLeadingZeros(val)
+    )
+
+    ;;;
+     ; Narrow an integer value to a given bit width, and return the result as a signed long.
+     ;
+     ; @param value the value
+     ; @param resultBits the result bit width
+     ; @return {@code value} interpreted as {@code resultBits} bit number, encoded as signed long
+     ;;
+    public static long narrow(long value, int resultBits)
+    (§
+        long ret = value & mask(resultBits)
+        return signExtend(ret, resultBits)
+    )
+
+    ;;;
+     ; Sign extend an integer.
+     ;
+     ; @param value the input value
+     ; @param inputBits the bit width of the input value
+     ; @return a signed long with the same value as the signed {@code inputBits}-bit number
+     ;         {@code value}
+     ;;
+    public static long signExtend(long value, int inputBits)
+    (§
+        if (inputBits < 64)
+        (§
+            if ((value >>> (inputBits - 1) & 1) == 1)
+            (§
+                return value | (-1 #_"L" << inputBits)
+            )
+            else
+            (§
+                return value & (§ bit-not )(-1 #_"L" << inputBits)
+            )
+        )
+        else
+        (§
+            return value
+        )
+    )
+
+    ;;;
+     ; Zero extend an integer.
+     ;
+     ; @param value the input value
+     ; @param inputBits the bit width of the input value
+     ; @return an unsigned long with the same value as the unsigned {@code inputBits}-bit number
+     ;         {@code value}
+     ;;
+    public static long zeroExtend(long value, int inputBits)
+    (§
+        if (inputBits < 64)
+        (§
+            return value & (§ bit-not )(-1 #_"L" << inputBits)
+        )
+        else
+        (§
+            return value
+        )
+    )
+
+    ;;;
+     ; Convert an integer to long.
+     ;
+     ; @param value the input value
+     ; @param inputBits the bit width of the input value
+     ; @param unsigned whether the values should be interpreted as signed or unsigned
+     ; @return a long with the same value as the {@code inputBits}-bit number {@code value}
+     ;;
+    public static long convert(long value, int inputBits, boolean unsigned)
+    (§
+        if (unsigned)
+        (§
+            return zeroExtend(value, inputBits)
+        )
+        else
+        (§
+            return signExtend(value, inputBits)
+        )
+    )
+
+    ;;;
+     ; Get a bitmask with the low {@code bits} bit set and the high {@code 64 - bits} bit clear.
+     ;;
+    public static long mask(int bits)
+    (§
+        assert 0 <= bits && bits <= 64
+        if (bits == 64)
+        (§
+            return 0xffffffffffffffff #_"L"
+        )
+        else
+        (§
+            return (1 #_"L" << bits) - 1
+        )
+    )
+
+    ;;;
+     ; Get the minimum value representable in a {@code bits} bit signed integer.
+     ;;
+    public static long minValue(int bits)
+    (§
+        assert 0 < bits && bits <= 64
+        return -1 #_"L" << (bits - 1)
+    )
+
+    ;;;
+     ; Get the maximum value representable in a {@code bits} bit signed integer.
+     ;;
+    public static long maxValue(int bits)
+    (§
+        assert 0 < bits && bits <= 64
+        return mask(bits - 1)
+    )
+
+    ;;;
+     ; Formats the values in a frame as a tabulated string.
+     ;
+     ; @param frame
+     ; @return the values in {@code frame} as a tabulated string
+     ;;
+    public static String tabulateValues(BytecodeFrame frame)
+    (§
+        int cols = Math.max(frame.numLocals, Math.max(frame.numStack, frame.numLocks))
+        assert cols > 0
+        ArrayList<Object> cells = new ArrayList<>()
+        cells.add("")
+        for (int i = 0(§ semi ) i < cols(§ semi ) i++)
+        (§
+            cells.add(i)
+        )
+        cols++
+        if (frame.numLocals != 0)
+        (§
+            cells.add("locals:")
+            cells.addAll(Arrays.asList(frame.values).subList(0, frame.numLocals))
+            cells.addAll(Collections.nCopies(cols - frame.numLocals - 1, ""))
+        )
+        if (frame.numStack != 0)
+        (§
+            cells.add("stack:")
+            cells.addAll(Arrays.asList(frame.values).subList(frame.numLocals, frame.numLocals + frame.numStack))
+            cells.addAll(Collections.nCopies(cols - frame.numStack - 1, ""))
+        )
+        if (frame.numLocks != 0)
+        (§
+            cells.add("locks:")
+            cells.addAll(Arrays.asList(frame.values).subList(frame.numLocals + frame.numStack, frame.values.length))
+            cells.addAll(Collections.nCopies(cols - frame.numLocks - 1, ""))
+        )
+        Object[] cellArray = cells.toArray()
+        for (int i = 0(§ semi ) i < cellArray.length(§ semi ) i++)
+        (§
+            if ((i % cols) != 0)
+            (§
+                cellArray[i] = "|" + cellArray[i]
+            )
+        )
+        return CodeUtil.tabulate(cellArray, cols, 1, 1)
+    )
+
+    ;;;
+     ; Formats a given table as a string. The value of each cell is produced by
+     ; {@link String#valueOf(Object)}.
+     ;
+     ; @param cells the cells of the table in row-major order
+     ; @param cols the number of columns per row
+     ; @param lpad the number of space padding inserted before each formatted cell value
+     ; @param rpad the number of space padding inserted after each formatted cell value
+     ; @return a string with one line per row and each column left-aligned
+     ;;
+    public static String tabulate(Object[] cells, int cols, int lpad, int rpad)
+    (§
+        int rows = (cells.length + (cols - 1)) / cols
+        int[] colWidths = new int[cols]
+        for (int col = 0(§ semi ) col < cols(§ semi ) col++)
+        (§
+            for (int row = 0(§ semi ) row < rows(§ semi ) row++)
+            (§
+                int index = col + (row * cols)
+                if (index < cells.length)
+                (§
+                    Object cell = cells[index]
+                    colWidths[col] = Math.max(colWidths[col], String.valueOf(cell).length())
+                )
+            )
+        )
+        StringBuilder sb = new StringBuilder()
+        String nl = NEW_LINE
+        for (int row = 0(§ semi ) row < rows(§ semi ) row++)
+        (§
+            for (int col = 0(§ semi ) col < cols(§ semi ) col++)
+            (§
+                int index = col + (row * cols)
+                if (index < cells.length)
+                (§
+                    for (int i = 0(§ semi ) i < lpad(§ semi ) i++)
+                    (§
+                        sb.append((§ char " "))
+                    )
+                    Object cell = cells[index]
+                    String s = String.valueOf(cell)
+                    int w = s.length()
+                    sb.append(s)
+                    while (w < colWidths[col])
+                    (§
+                        sb.append((§ char " "))
+                        w++
+                    )
+                    for (int i = 0(§ semi ) i < rpad(§ semi ) i++)
+                    (§
+                        sb.append((§ char " "))
+                    )
+                )
+            )
+            sb.append(nl)
+        )
+        return sb.toString()
+    )
+
+    ;;;
+     ; Appends a formatted code position to a {@link StringBuilder}.
+     ;
+     ; @param sb the {@link StringBuilder} to append to
+     ; @param pos the code position to format and append to {@code sb}
+     ; @return the value of {@code sb}
+     ;;
+    public static StringBuilder append(StringBuilder sb, BytecodePosition pos)
+    (§
+        MetaUtil.appendLocation(sb.append("at "), pos.getMethod(), pos.getBCI())
+        if (pos.getCaller() != null)
+        (§
+            sb.append(NEW_LINE)
+            append(sb, pos.getCaller())
+        )
+        return sb
+    )
+
+    ;;;
+     ; Appends a formatted frame to a {@link StringBuilder}.
+     ;
+     ; @param sb the {@link StringBuilder} to append to
+     ; @param frame the frame to format and append to {@code sb}
+     ; @return the value of {@code sb}
+     ;;
+    public static StringBuilder append(StringBuilder sb, BytecodeFrame frame)
+    (§
+        MetaUtil.appendLocation(sb.append("at "), frame.getMethod(), frame.getBCI())
+        assert sb.charAt(sb.length() - 1) == (§ char "]")
+        sb.deleteCharAt(sb.length() - 1)
+        sb.append(", duringCall: ").append(frame.duringCall).append(", rethrow: ").append(frame.rethrowException).append((§ char "]"))
+        if (frame.values != null && frame.values.length > 0)
+        (§
+            sb.append(NEW_LINE)
+            String table = tabulateValues(frame)
+            String[] rows = table.split(NEW_LINE)
+            for (int i = 0(§ semi ) i < rows.length(§ semi ) i++)
+            (§
+                String row = rows[i]
+                if (!row.trim().isEmpty())
+                (§
+                    sb.append("  ").append(row)
+                    if (i != rows.length - 1)
+                    (§
+                        sb.append(NEW_LINE)
+                    )
+                )
+            )
+        )
+        if (frame.caller() != null)
+        (§
+            sb.append(NEW_LINE)
+            append(sb, frame.caller())
+        )
+        else if (frame.getCaller() != null)
+        (§
+            sb.append(NEW_LINE)
+            append(sb, frame.getCaller())
+        )
+        return sb
+    )
+
+    public interface RefMapFormatter
+    (§
+        String formatStackSlot(int frameRefMapIndex)
+    )
+
+    ;;;
+     ; Formats a location present in a reference map.
+     ;;
+    public static class DefaultRefMapFormatter implements RefMapFormatter
+    (§
+        ;;;
+         ; The size of a stack slot.
+         ;;
+        public final int slotSize
+
+        ;;;
+         ; The register used as the frame pointer.
+         ;;
+        public final Register fp
+
+        ;;;
+         ; The offset (in bytes) from the slot pointed to by {@link #fp} to the slot corresponding
+         ; to bit 0 in the frame reference map.
+         ;;
+        public final int refMapToFPOffset
+
+        public DefaultRefMapFormatter(int slotSize, Register fp, int refMapToFPOffset)
+        (§
+            this.slotSize = slotSize
+            this.fp = fp
+            this.refMapToFPOffset = refMapToFPOffset
+        )
+
+        @Override
+        public String formatStackSlot(int frameRefMapIndex)
+        (§
+            int refMapOffset = frameRefMapIndex * slotSize
+            int fpOffset = refMapOffset + refMapToFPOffset
+            if (fpOffset >= 0)
+            (§
+                return fp + "+" + fpOffset
+            )
+            return fp.name + fpOffset
+        )
+    )
+
+    public static class NumberedRefMapFormatter implements RefMapFormatter
+    (§
+        public String formatStackSlot(int frameRefMapIndex)
+        (§
+            return "s" + frameRefMapIndex
+        )
+
+        public String formatRegister(int regRefMapIndex)
+        (§
+            return "r" + regRefMapIndex
+        )
+    )
+
+    ;;;
+     ; Appends a formatted debug info to a {@link StringBuilder}.
+     ;
+     ; @param sb the {@link StringBuilder} to append to
+     ; @param info the debug info to format and append to {@code sb}
+     ; @return the value of {@code sb}
+     ;;
+    public static StringBuilder append(StringBuilder sb, DebugInfo info, RefMapFormatter formatterArg)
+    (§
+        RefMapFormatter formatter = formatterArg
+        if (formatter == null)
+        (§
+            formatter = new NumberedRefMapFormatter()
+        )
+        String nl = NEW_LINE
+        ReferenceMap refMap = info.getReferenceMap()
+        if (refMap != null)
+        (§
+            sb.append(refMap.toString())
+        )
+        RegisterSaveLayout calleeSaveInfo = info.getCalleeSaveInfo()
+        if (calleeSaveInfo != null)
+        (§
+            sb.append("callee-save-info:").append(nl)
+            Map<Integer, Register> map = calleeSaveInfo.slotsToRegisters(true)
+            for (Map.Entry<Integer, Register> e (§ colon ) map.entrySet())
+            (§
+                sb.append("    ").append(e.getValue()).append(" -> ").append(formatter.formatStackSlot(e.getKey())).append(nl)
+            )
+        )
+        BytecodeFrame frame = info.frame()
+        if (frame != null)
+        (§
+            append(sb, frame)
+        )
+        else if (info.getBytecodePosition() != null)
+        (§
+            append(sb, info.getBytecodePosition())
+        )
+        return sb
+    )
+
+    ;;;
+     ; Create a calling convention from a {@link ResolvedJavaMethod}.
+     ;;
+    public static CallingConvention getCallingConvention(CodeCacheProvider codeCache, CallingConvention.Type type, ResolvedJavaMethod method, ValueKindFactory<?> valueKindFactory)
+    (§
+        Signature sig = method.getSignature()
+        JavaType retType = sig.getReturnType(null)
+        int sigCount = sig.getParameterCount(false)
+        JavaType[] argTypes
+        int argIndex = 0
+        if (!method.isStatic())
+        (§
+            argTypes = new JavaType[sigCount + 1]
+            argTypes[argIndex++] = method.getDeclaringClass()
+        )
+        else
+        (§
+            argTypes = new JavaType[sigCount]
+        )
+        for (int i = 0(§ semi ) i < sigCount(§ semi ) i++)
+        (§
+            argTypes[argIndex++] = sig.getParameterType(i, null)
+        )
+
+        RegisterConfig registerConfig = codeCache.getRegisterConfig()
+        return registerConfig.getCallingConvention(type, retType, argTypes, valueKindFactory)
+    )
+)
+)
+
+(§ package jdk.vm.ci.code
+
+;;;
+ ; Represents a compiled instance of a method. It may have been invalidated or removed in the
+ ; meantime.
+ ;;
+public class InstalledCode
+(§
+    ;;;
+     ; Raw address address of entity representing this installed code.
+     ;;
+    protected long address
+
+    ;;;
+     ; Raw address of entryPoint of this installed code.
+     ;;
+    protected long entryPoint
+
+    ;;;
+     ; Counts how often the address field was reassigned.
+     ;;
+    protected long version
+
+    protected final String name
+
+    public InstalledCode(String name)
+    (§
+        this.name = name
+    )
+
+    ;;;
+     ; @return the address of entity representing this installed code.
+     ;;
+    public final long getAddress()
+    (§
+        return address
+    )
+
+    ;;;
+     ; @return the address of the normal entry point of the installed code.
+     ;;
+    public final long getEntryPoint()
+    (§
+        return entryPoint
+    )
+
+    ;;;
+     ; @return the version number of this installed code
+     ;;
+    public final long getVersion()
+    (§
+        return version
+    )
+
+    ;;;
+     ; Returns the name of this installed code.
+     ;;
+    public String getName()
+    (§
+        return name
+    )
+
+    ;;;
+     ; Returns the start address of this installed code if it is {@linkplain #isValid() valid}, 0
+     ; otherwise.
+     ;;
+    public long getStart()
+    (§
+        return 0
+    )
+
+    ;;;
+     ; @return true if the code represented by this object is still valid for invocation, false
+     ;         otherwise (may happen due to deopt, etc.)
+     ;;
+    public boolean isValid()
+    (§
+        return entryPoint != 0
+    )
+
+    ;;;
+     ; @return true if the code represented by this object still exists and might have live
+     ;         activations, false otherwise (may happen due to deopt, etc.)
+     ;;
+    public boolean isAlive()
+    (§
+        return address != 0
+    )
+
+    ;;;
+     ; Returns a copy of this installed code if it is {@linkplain #isValid() valid}, null otherwise.
+     ;;
+    public byte[] getCode()
+    (§
+        return null
+    )
+
+    ;;;
+     ; Invalidates this installed code such that any subsequent
+     ; {@linkplain #executeVarargs(Object...) invocation} will throw an
+     ; {@link InvalidInstalledCodeException} and all existing invocations will be deoptimized.
+     ;;
+    public void invalidate()
+    (§
+        throw new UnsupportedOperationException()
+    )
+
+    ;;;
+     ; Executes the installed code with a variable number of arguments.
+     ;
+     ; @param args the array of object arguments
+     ; @return the value returned by the executed code
+     ;;
+    @SuppressWarnings("unused")
+    public Object executeVarargs(Object... args) throws InvalidInstalledCodeException
+    (§
+        throw new UnsupportedOperationException()
+    )
+)
+)
+
+(§ package jdk.vm.ci.code
+
+;;;
+ ; Constants and intrinsic definition for memory barriers.
+ ;
+ ; The documentation for each constant is taken from Doug Lea's
+ ; <a href="http://gee.cs.oswego.edu/dl/jmm/cookbook.html">The JSR-133 Cookbook for Compiler
+ ; Writers</a>.
+ ; <p>
+ ; The {@code JMM_*} constants capture the memory barriers necessary to implement the Java Memory
+ ; Model with respect to volatile field accesses. Their values are explained by this comment from
+ ; templateTable_i486.cpp in the HotSpot source code:
+ ;
+ ; <pre>
+ ; Volatile variables demand their effects be made known to all CPU's in
+ ; order.  Store buffers on most chips allow reads &amp; writes to reorder; the
+ ; JMM's ReadAfterWrite.java test fails in -Xint mode without some kind of
+ ; memory barrier (i.e., it's not sufficient that the interpreter does not
+ ; reorder volatile references, the hardware also must not reorder them).
+ ;
+ ; According to the new Java Memory Model (JMM):
+ ; (1) All volatiles are serialized wrt to each other.
+ ; ALSO reads &amp; writes act as acquire &amp; release, so:
+ ; (2) A read cannot let unrelated NON-volatile memory refs that happen after
+ ; the read float up to before the read.  It's OK for non-volatile memory refs
+ ; that happen before the volatile read to float down below it.
+ ; (3) Similarly, a volatile write cannot let unrelated NON-volatile memory refs
+ ; that happen BEFORE the write float down to after the write.  It's OK for
+ ; non-volatile memory refs that happen after the volatile write to float up
+ ; before it.
+ ;
+ ; We only put in barriers around volatile refs (they are expensive), not
+ ; _between_ memory refs (which would require us to track the flavor of the
+ ; previous memory refs).  Requirements (2) and (3) require some barriers
+ ; before volatile stores and after volatile loads.  These nearly cover
+ ; requirement (1) but miss the volatile-store-volatile-load case.  This final
+ ; case is placed after volatile-stores although it could just as well go
+ ; before volatile-loads.
+ ; </pre>
+ ;;
+public class MemoryBarriers
+(§
+    ;;;
+     ; The sequence {@code Load1; LoadLoad; Load2} ensures that {@code Load1}'s data are loaded
+     ; before data accessed by {@code Load2} and all subsequent load instructions are loaded. In
+     ; general, explicit {@code LoadLoad} barriers are needed on processors that perform speculative
+     ; loads and/or out-of-order processing in which waiting load instructions can bypass waiting
+     ; stores. On processors that guarantee to always preserve load ordering, these barriers amount
+     ; to no-ops.
+     ;;
+    public static final int LOAD_LOAD = 0x0001
+
+    ;;;
+     ; The sequence {@code Load1; LoadStore; Store2} ensures that {@code Load1}'s data are loaded
+     ; before all data associated with {@code Store2} and subsequent store instructions are flushed.
+     ; {@code LoadStore} barriers are needed only on those out-of-order processors in which waiting
+     ; store instructions can bypass loads.
+     ;;
+    public static final int LOAD_STORE = 0x0002
+
+    ;;;
+     ; The sequence {@code Store1; StoreLoad; Load2} ensures that {@code Store1}'s data are made
+     ; visible to other processors (i.e., flushed to main memory) before data accessed by
+     ; {@code Load2} and all subsequent load instructions are loaded. {@code StoreLoad} barriers
+     ; protect against a subsequent load incorrectly using {@code Store1}'s data value rather than
+     ; that from a more recent store to the same location performed by a different processor.
+     ; Because of this, on the processors discussed below, a {@code StoreLoad} is strictly necessary
+     ; only for separating stores from subsequent loads of the same location(s) as were stored
+     ; before the barrier. {@code StoreLoad} barriers are needed on nearly all recent
+     ; multiprocessors, and are usually the most expensive kind. Part of the reason they are
+     ; expensive is that they must disable mechanisms that ordinarily bypass cache to satisfy loads
+     ; from write-buffers. This might be implemented by letting the buffer fully flush, among other
+     ; possible stalls.
+     ;;
+    public static final int STORE_LOAD = 0x0004
+
+    ;;;
+     ; The sequence {@code Store1; StoreStore; Store2} ensures that {@code Store1}'s data are
+     ; visible to other processors (i.e., flushed to memory) before the data associated with
+     ; {@code Store2} and all subsequent store instructions. In general, {@code StoreStore} barriers
+     ; are needed on processors that do not otherwise guarantee strict ordering of flushes from
+     ; write buffers and/or caches to other processors or main memory.
+     ;;
+    public static final int STORE_STORE = 0x0008
+
+    public static final int JMM_PRE_VOLATILE_WRITE = LOAD_STORE | STORE_STORE
+    public static final int JMM_POST_VOLATILE_WRITE = STORE_LOAD | STORE_STORE
+    public static final int JMM_PRE_VOLATILE_READ = 0
+    public static final int JMM_POST_VOLATILE_READ = LOAD_LOAD | LOAD_STORE
+
+    public static String barriersString(int barriers)
+    (§
+        StringBuilder sb = new StringBuilder()
+        sb.append((barriers & LOAD_LOAD) != 0 ? "LOAD_LOAD " (§ colon ) "")
+        sb.append((barriers & LOAD_STORE) != 0 ? "LOAD_STORE " (§ colon ) "")
+        sb.append((barriers & STORE_LOAD) != 0 ? "STORE_LOAD " (§ colon ) "")
+        sb.append((barriers & STORE_STORE) != 0 ? "STORE_STORE " (§ colon ) "")
+        return sb.toString().trim()
+    )
+)
+)
+
+(§ package jdk.vm.ci.code
+
+import jdk.vm.ci.meta.ValueKind
+
+;;;
+ ; Represents a target machine register.
+ ;;
+public final class Register implements Comparable<Register>
+(§
+    public static final RegisterCategory SPECIAL = new RegisterCategory("SPECIAL")
+
+    ;;;
+     ; Invalid register.
+     ;;
+    public static final Register None = new Register(-1, -1, "noreg", SPECIAL)
+
+    ;;;
+     ; The identifier for this register that is unique across all the registers in a
+     ; {@link Architecture}. A valid register has {@code number >= 0}.
+     ;;
+    public final int number
+
+    ;;;
+     ; The mnemonic of this register.
+     ;;
+    public final String name
+
+    ;;;
+     ; The actual encoding in a target machine instruction for this register, which may or may not
+     ; be the same as {@link #number}.
+     ;;
+    public final int encoding
+
+    ;;;
+     ; The assembler calls this method to get the register's encoding.
+     ;;
+    public int encoding()
+    (§
+        return encoding
+    )
+
+    ;;;
+     ; A platform specific register category that describes which values can be stored in a
+     ; register.
+     ;;
+    private final RegisterCategory registerCategory
+
+    ;;;
+     ; A platform specific register type that describes which values can be stored in a register.
+     ;;
+    public static class RegisterCategory
+    (§
+        private final String name
+        private final boolean mayContainReference
+
+        public RegisterCategory(String name)
+        (§
+            this(name, true)
+        )
+
+        public RegisterCategory(String name, boolean mayContainReference)
+        (§
+            this.name = name
+            this.mayContainReference = mayContainReference
+        )
+
+        @Override
+        public String toString()
+        (§
+            return name
+        )
+
+        @Override
+        public int hashCode()
+        (§
+            return 23 + name.hashCode()
+        )
+
+        @Override
+        public boolean equals(Object obj)
+        (§
+            if (obj instanceof RegisterCategory)
+            (§
+                RegisterCategory that = (RegisterCategory) obj
+                return this.name.equals(that.name)
+            )
+            return false
+        )
+    )
+
+    ;;;
+     ; Creates a {@link Register} instance.
+     ;
+     ; @param number unique identifier for the register
+     ; @param encoding the target machine encoding for the register
+     ; @param name the mnemonic name for the register
+     ; @param registerCategory the register category
+     ;;
+    public Register(int number, int encoding, String name, RegisterCategory registerCategory)
+    (§
+        this.number = number
+        this.name = name
+        this.registerCategory = registerCategory
+        this.encoding = encoding
+    )
+
+    public RegisterCategory getRegisterCategory()
+    (§
+        return registerCategory
+    )
+
+    ;;;
+     ; Determine whether this register needs to be part of the reference map.
+     ;;
+    public boolean mayContainReference()
+    (§
+        return registerCategory.mayContainReference
+    )
+
+    ;;;
+     ; Gets this register as a {@linkplain RegisterValue value} with a specified kind.
+     ;
+     ; @param kind the specified kind
+     ; @return the {@link RegisterValue}
+     ;;
+    public RegisterValue asValue(ValueKind<?> kind)
+    (§
+        return new RegisterValue(kind, this)
+    )
+
+    ;;;
+     ; Gets this register as a {@linkplain RegisterValue value} with no particular kind.
+     ;
+     ; @return a {@link RegisterValue} with {@link ValueKind#Illegal} kind.
+     ;;
+    public RegisterValue asValue()
+    (§
+        return asValue(ValueKind.Illegal)
+    )
+
+    ;;;
+     ; Determines if this is a valid register.
+     ;
+     ; @return {@code true} iff this register is valid
+     ;;
+    public boolean isValid()
+    (§
+        return number >= 0
+    )
+
+    @Override
+    public String toString()
+    (§
+        return name
+    )
+
+    @Override
+    public int compareTo(Register o)
+    (§
+        if (number < o.number)
+        (§
+            return -1
+        )
+        if (number > o.number)
+        (§
+            return 1
+        )
+        return 0
+    )
+
+    @Override
+    public int hashCode()
+    (§
+        return 17 + name.hashCode()
+    )
+
+    @Override
+    public boolean equals(Object obj)
+    (§
+        if (obj instanceof Register)
+        (§
+            Register other = (Register) obj
+            if (number == other.number)
+            (§
+                assert name.equals(other.name)
+                assert encoding == other.encoding
+                assert registerCategory.equals(other.registerCategory)
+                return true
+            )
+        )
+        return false
+    )
+)
+)
+
+(§ package jdk.vm.ci.code
+
+import java.util.Arrays
+import java.util.Collection
+import java.util.Collections
+import java.util.Iterator
+import java.util.List
+
+;;;
+ ; An immutable ordered list of registers. Only required because Java lacks immutable arrays.
+ ;;
+public final class RegisterArray implements Iterable<Register>
+(§
+    private final Register[] registers
+    private int hash
+
+    public RegisterArray(Register... registers)
+    (§
+        this.registers = registers
+    )
+
+    public RegisterArray(Collection<Register> registers)
+    (§
+        this.registers = registers.toArray(new Register[registers.size()])
+    )
+
+    ;;;
+     ; Gets the number of registers.
+     ;;
+    public int size()
+    (§
+        return registers.length
+    )
+
+    ;;;
+     ; Gets the register at a given index.
+     ;
+     ; @param index the index of the register to retrieve
+     ;;
+    public Register get(int index)
+    (§
+        return registers[index]
+    )
+
+    public void addTo(Collection<Register> collection)
+    (§
+        collection.addAll(Arrays.asList(registers))
+    )
+
+    ;;;
+     ; Gets an immutable view of the registers as a list.
+     ;;
+    public List<Register> asList()
+    (§
+        return Collections.unmodifiableList(Arrays.asList(registers))
+    )
+
+    ;;;
+     ; Gets a copy of the registers as an array.
+     ;;
+    public Register[] toArray()
+    (§
+        return registers.clone()
+    )
+
+    public Iterator<Register> iterator()
+    (§
+        return Arrays.asList(registers).iterator()
+    )
+
+    @Override
+    public int hashCode()
+    (§
+        if (hash == 0 && registers.length > 0)
+        (§
+            hash = Arrays.hashCode(registers)
+        )
+        return hash
+    )
+
+    @Override
+    public boolean equals(Object obj)
+    (§
+        if (obj instanceof RegisterArray)
+        (§
+            return Arrays.equals(registers, ((RegisterArray) obj).registers)
+        )
+        return false
+    )
+
+    @Override
+    public String toString()
+    (§
+        return Arrays.toString(registers)
+    )
+)
+)
+
+(§ package jdk.vm.ci.code
+
+import java.util.Arrays
+import java.util.Collections
+import java.util.List
+
+;;;
+ ; A collection of register attributes. The specific attribute values for a register may be local to
+ ; a compilation context. For example, a {@link RegisterConfig} in use during a compilation will
+ ; determine which registers are callee saved.
+ ;;
+public class RegisterAttributes
+(§
+    private final boolean callerSave
+    private final boolean calleeSave
+    private final boolean allocatable
+
+    public RegisterAttributes(boolean isCallerSave, boolean isCalleeSave, boolean isAllocatable)
+    (§
+        this.callerSave = isCallerSave
+        this.calleeSave = isCalleeSave
+        this.allocatable = isAllocatable
+    )
+
+    public static final RegisterAttributes NONE = new RegisterAttributes(false, false, false)
+
+    ;;;
+     ; Creates a map from register {@linkplain Register#number numbers} to register
+     ; {@linkplain RegisterAttributes attributes} for a given register configuration and set of
+     ; registers.
+     ;
+     ; @param registerConfig a register configuration
+     ; @param registers a set of registers
+     ; @return an array whose length is the max register number in {@code registers} plus 1. An
+     ;         element at index i holds the attributes of the register whose number is i.
+     ;;
+    public static RegisterAttributes[] createMap(RegisterConfig registerConfig, RegisterArray registers)
+    (§
+        RegisterAttributes[] map = new RegisterAttributes[registers.size()]
+        List<Register> callerSaveRegisters = registerConfig.getCallerSaveRegisters().asList()
+        List<Register> calleeSaveRegisters = registerConfig.getCalleeSaveRegisters() == null ? Collections.emptyList() (§ colon ) registerConfig.getCalleeSaveRegisters().asList()
+        List<Register> allocatableRegisters = registerConfig.getAllocatableRegisters().asList()
+        for (Register reg (§ colon ) registers)
+        (§
+            if (reg != null)
+            (§
+                RegisterAttributes attr = new RegisterAttributes(callerSaveRegisters.contains(reg), calleeSaveRegisters.contains(reg), allocatableRegisters.contains(reg))
+                if (map.length <= reg.number)
+                (§
+                    map = Arrays.copyOf(map, reg.number + 1)
+                )
+                map[reg.number] = attr
+            )
+        )
+        for (int i = 0(§ semi ) i < map.length(§ semi ) i++)
+        (§
+            if (map[i] == null)
+            (§
+                map[i] = NONE
+            )
+        )
+        return map
+    )
+
+    ;;;
+     ; @return {@code true} if a register is available for use by a register allocator otherwise
+     ;         {@code false}
+     ;;
+    public boolean isAllocatable()
+    (§
+        return allocatable
+    )
+
+    ;;;
+     ; @return {@code true} if a register whose value preservation (if required) across a call is
+     ;         the responsibility of the callee otherwise {@code false}
+     ;;
+    public boolean isCalleeSave()
+    (§
+        return calleeSave
+    )
+
+    ;;;
+     ; @return {@code true} if a register whose value preservation (if required) across a call is
+     ;         the responsibility of the caller otherwise {@code false}
+     ;;
+    public boolean isCallerSave()
+    (§
+        return callerSave
+    )
+)
+)
+
+(§ package jdk.vm.ci.code
+
+import jdk.vm.ci.code.CallingConvention.Type
+import jdk.vm.ci.meta.JavaKind
+import jdk.vm.ci.meta.JavaType
+import jdk.vm.ci.meta.PlatformKind
+import jdk.vm.ci.meta.ValueKind
+
+;;;
+ ; A register configuration binds roles and {@linkplain RegisterAttributes attributes} to physical
+ ; registers.
+ ;;
+public interface RegisterConfig
+(§
+    ;;;
+     ; Gets the register to be used for returning a value of a given kind.
+     ;;
+    Register getReturnRegister(JavaKind kind)
+
+    ;;;
+     ; Gets the maximum allowed size of the frame.
+     ;;
+    default int getMaximumFrameSize()
+    (§
+        return Integer.MAX_VALUE
+    )
+
+    ;;;
+     ; Gets the register used as the frame pointer. Spill slots and outgoing stack-based arguments
+     ; are addressed relative to this register.
+     ;;
+    Register getFrameRegister()
+
+    ;;;
+     ; Gets the calling convention describing how arguments are passed.
+     ;
+     ; @param type the type of calling convention being requested
+     ; @param returnType the return type (can be null for methods returning {@code void})
+     ; @param parameterTypes the types of the arguments of the call
+     ; @param valueKindFactory the factory to create custom {@link ValueKind ValueKinds}
+     ;;
+    CallingConvention getCallingConvention(Type type, JavaType returnType, JavaType[] parameterTypes, ValueKindFactory<?> valueKindFactory)
+
+    ;;;
+     ; Gets the ordered set of registers that are can be used to pass parameters according to a
+     ; given calling convention.
+     ;
+     ; @param type the type of calling convention
+     ; @param kind specifies what kind of registers is being requested
+     ; @return the ordered set of registers that may be used to pass parameters in a call conforming
+     ;         to {@code type}
+     ;;
+    RegisterArray getCallingConventionRegisters(Type type, JavaKind kind)
+
+    ;;;
+     ; Gets the set of all registers that might be used by the register allocator.
+     ;
+     ; To get the set of registers the register allocator is allowed to use see
+     ; {@link RegisterAllocationConfig#getAllocatableRegisters()}
+     ;;
+    RegisterArray getAllocatableRegisters()
+
+    ;;;
+     ; Filters a set of registers and returns only those that can be used by the register allocator
+     ; for a value of a particular kind.
+     ;;
+    RegisterArray filterAllocatableRegisters(PlatformKind kind, RegisterArray registers)
+
+    ;;;
+     ; Gets the registers whose values must be preserved by a method across any call it makes.
+     ;;
+    RegisterArray getCallerSaveRegisters()
+
+    ;;;
+     ; Gets the registers whose values must be preserved by the callee.
+     ;;
+    RegisterArray getCalleeSaveRegisters()
+
+    ;;;
+     ; Gets a map from register {@linkplain Register#number numbers} to register
+     ; {@linkplain RegisterAttributes attributes} for this register configuration.
+     ;
+     ; @return an array where an element at index i holds the attributes of the register whose
+     ;         number is i
+     ;;
+    RegisterAttributes[] getAttributesMap()
+
+    ;;;
+     ; Determines if all {@link #getAllocatableRegisters() allocatable} registers are
+     ; {@link #getCallerSaveRegisters() caller saved}.
+     ;;
+    boolean areAllAllocatableRegistersCallerSaved()
+)
+)
+
+(§ package jdk.vm.ci.code
+
+import jdk.vm.ci.meta.AllocatableValue
+import jdk.vm.ci.meta.ValueKind
+
+;;;
+ ; Denotes a register that stores a value of a fixed kind.
+ ;;
+public final class RegisterValue extends AllocatableValue
+(§
+    private final Register reg
+
+    protected RegisterValue(ValueKind<?> kind, Register register)
+    (§
+        super(kind)
+        this.reg = register
+    )
+
+    @Override
+    public String toString()
+    (§
+        return getRegister().name + getKindSuffix()
+    )
+
+    ;;;
+     ; @return the register that contains the value
+     ;;
+    public Register getRegister()
+    (§
+        return reg
+    )
+
+    @Override
+    public int hashCode()
+    (§
+        return 29 * super.hashCode() + reg.hashCode()
+    )
+
+    @Override
+    public boolean equals(Object obj)
+    (§
+        if (obj instanceof RegisterValue)
+        (§
+            RegisterValue other = (RegisterValue) obj
+            return super.equals(obj) && reg.equals(other.reg)
+        )
+        return false
+    )
+)
+)
+
+(§ package jdk.vm.ci.code
+
+import jdk.vm.ci.meta.AllocatableValue
+import jdk.vm.ci.meta.ValueKind
+
+;;;
+ ; Represents a compiler spill slot or an outgoing stack-based argument in a method's frame or an
+ ; incoming stack-based argument in a method's {@linkplain #isInCallerFrame() caller's frame}.
+ ;;
+public final class StackSlot extends AllocatableValue
+(§
+    private final int offset
+    private final boolean addFrameSize
+
+    ;;;
+     ; Gets a {@link StackSlot} instance representing a stack slot at a given index holding a value
+     ; of a given kind.
+     ;
+     ; @param kind The kind of the value stored in the stack slot.
+     ; @param offset The offset of the stack slot (in bytes)
+     ; @param addFrameSize Specifies if the offset is relative to the stack pointer, or the
+     ;            beginning of the frame (stack pointer + total frame size).
+     ;;
+    public static StackSlot get(ValueKind<?> kind, int offset, boolean addFrameSize)
+    (§
+        assert addFrameSize || offset >= 0
+        return new StackSlot(kind, offset, addFrameSize)
+    )
+
+    ;;;
+     ; Private constructor to enforce use of {@link #get(ValueKind, int, boolean)} so that a cache
+     ; can be used.
+     ;;
+    private StackSlot(ValueKind<?> kind, int offset, boolean addFrameSize)
+    (§
+        super(kind)
+        this.offset = offset
+        this.addFrameSize = addFrameSize
+    )
+
+    ;;;
+     ; Gets the offset of this stack slot, relative to the stack pointer.
+     ;
+     ; @return The offset of this slot (in bytes).
+     ;;
+    public int getOffset(int totalFrameSize)
+    (§
+        assert totalFrameSize > 0 || !addFrameSize
+        int result = offset + (addFrameSize ? totalFrameSize (§ colon ) 0)
+        assert result >= 0
+        return result
+    )
+
+    public boolean isInCallerFrame()
+    (§
+        return addFrameSize && offset >= 0
+    )
+
+    public int getRawOffset()
+    (§
+        return offset
+    )
+
+    public boolean getRawAddFrameSize()
+    (§
+        return addFrameSize
+    )
+
+    @Override
+    public String toString()
+    (§
+        if (!addFrameSize)
+        (§
+            return "out:" + offset + getKindSuffix()
+        )
+        else if (offset >= 0)
+        (§
+            return "in:" + offset + getKindSuffix()
+        )
+        else
+        (§
+            return "stack:" + (-offset) + getKindSuffix()
+        )
+    )
+
+    ;;;
+     ; Gets this stack slot used to pass an argument from the perspective of a caller.
+     ;;
+    public StackSlot asOutArg()
+    (§
+        assert offset >= 0
+        if (addFrameSize)
+        (§
+            return get(getValueKind(), offset, false)
+        )
+        return this
+    )
+
+    ;;;
+     ; Gets this stack slot used to pass an argument from the perspective of a callee.
+     ;;
+    public StackSlot asInArg()
+    (§
+        assert offset >= 0
+        if (!addFrameSize)
+        (§
+            return get(getValueKind(), offset, true)
+        )
+        return this
+    )
+
+    @Override
+    public int hashCode()
+    (§
+        final int prime = 37
+        int result = super.hashCode()
+        result = prime * result + (addFrameSize ? 1231 (§ colon ) 1237)
+        result = prime * result + offset
+        return result
+    )
+
+    @Override
+    public boolean equals(Object obj)
+    (§
+        if (obj instanceof StackSlot)
+        (§
+            StackSlot other = (StackSlot) obj
+            return super.equals(obj) && addFrameSize == other.addFrameSize && offset == other.offset
+        )
+        return false
+    )
+)
+)
+
+(§ package jdk.vm.ci.code
+
+import static jdk.vm.ci.meta.MetaUtil.identityHashCodeString
+
+import jdk.vm.ci.meta.JavaKind
+
+;;;
+ ; Represents the target machine for a compiler, including the CPU architecture, the size of
+ ; pointers and references, alignment of stacks, caches, etc.
+ ;;
+public class TargetDescription
+(§
+    public final Architecture arch
+
+    ;;;
+     ; Specifies if this is a multi-processor system.
+     ;;
+    public final boolean isMP
+
+    ;;;
+     ; Specifies if this target supports encoding objects inline in the machine code.
+     ;;
+    public final boolean inlineObjects
+
+    ;;;
+     ; The machine word size on this target.
+     ;;
+    public final int wordSize
+
+    ;;;
+     ; The {@link JavaKind} to be used for representing raw pointers and CPU registers in Java code.
+     ;;
+    public final JavaKind wordJavaKind
+
+    ;;;
+     ; The stack alignment requirement of the platform. For example, from Appendix D of
+     ; <a href="http://www.intel.com/Assets/PDF/manual/248966.pdf">Intel 64 and IA-32 Architectures
+     ; Optimization Reference Manual</a>:
+     ;
+     ; <pre>
+     ;     "It is important to ensure that the stack frame is aligned to a
+     ;      16-byte boundary upon function entry to keep local __m128 data,
+     ;      parameters, and XMM register spill locations aligned throughout
+     ;      a function invocation."
+     ; </pre>
+     ;;
+    public final int stackAlignment
+
+    ;;;
+     ; Maximum constant displacement at which a memory access can no longer be an implicit null
+     ; check.
+     ;;
+    public final int implicitNullCheckLimit
+
+    public TargetDescription(Architecture arch, boolean isMP, int stackAlignment, int implicitNullCheckLimit, boolean inlineObjects)
+    (§
+        this.arch = arch
+        this.isMP = isMP
+        this.wordSize = arch.getWordSize()
+        this.wordJavaKind = JavaKind.fromWordSize(wordSize)
+        this.stackAlignment = stackAlignment
+        this.implicitNullCheckLimit = implicitNullCheckLimit
+        this.inlineObjects = inlineObjects
+
+        assert arch.getPlatformKind(wordJavaKind).equals(arch.getWordKind())
+    )
+
+    @Override
+    public final int hashCode()
+    (§
+        throw new UnsupportedOperationException()
+    )
+
+    @Override
+    public final boolean equals(Object obj)
+    (§
+        if (this == obj)
+        (§
+            return true
+        )
+        if (obj instanceof TargetDescription)
+        (§
+            TargetDescription that = (TargetDescription) obj
+            if (this.implicitNullCheckLimit == that.implicitNullCheckLimit &&
+                this.inlineObjects == that.inlineObjects &&
+                this.isMP == that.isMP &&
+                this.stackAlignment == that.stackAlignment &&
+                this.wordJavaKind.equals(that.wordJavaKind) &&
+                this.wordSize == that.wordSize &&
+                this.arch.equals(that.arch))
+                (§
+                return true
+            )
+        )
+        return false
+    )
+
+    @Override
+    public String toString()
+    (§
+        return identityHashCodeString(this)
+    )
+)
+)
+
+(§ package jdk.vm.ci.code
+
+import jdk.vm.ci.meta.JavaKind
+import jdk.vm.ci.meta.ValueKind
+
+;;;
+ ; Can be implemented by compilers to create custom {@link ValueKind} subclasses.
+ ;;
+public interface ValueKindFactory<K extends ValueKind<K>>
+(§
+    K getValueKind(JavaKind javaKind)
+)
+)
+
+(§ package jdk.vm.ci.code.site
+
+import java.util.Objects
+
+import jdk.vm.ci.meta.VMConstant
+
+;;;
+ ; Represents an embedded {@link VMConstant} in the code or data section that needs to be
+ ; {@link DataPatch patched} by the VM (e.g. an embedded pointer to a Java object).
+ ;;
+public final class ConstantReference extends Reference
+(§
+    private final VMConstant constant
+
+    public ConstantReference(VMConstant constant)
+    (§
+        this.constant = constant
+    )
+
+    public VMConstant getConstant()
+    (§
+        return constant
+    )
+
+    @Override
+    public String toString()
+    (§
+        return constant.toString()
+    )
+
+    @Override
+    public int hashCode()
+    (§
+        return constant.hashCode()
+    )
+
+    @Override
+    public boolean equals(Object obj)
+    (§
+        if (this == obj)
+        (§
+            return true
+        )
+        if (obj instanceof ConstantReference)
+        (§
+            ConstantReference that = (ConstantReference) obj
+            return Objects.equals(this.constant, that.constant)
+        )
+        return false
+    )
+)
+)
+
+(§ package jdk.vm.ci.code.site
+
+import java.util.Objects
+
+import jdk.vm.ci.meta.VMConstant
+
+;;;
+ ; Represents a code site that references some data. The associated data can be either a
+ ; {@link DataSectionReference reference} to the data section, or it may be an inlined
+ ; {@link VMConstant} that needs to be patched.
+ ;;
+public final class DataPatch extends Site
+(§
+    public Reference reference
+    public Object note
+
+    public DataPatch(int pcOffset, Reference reference)
+    (§
+        super(pcOffset)
+        this.reference = reference
+        this.note = null
+    )
+
+    public DataPatch(int pcOffset, Reference reference, Object note)
+    (§
+        super(pcOffset)
+        this.reference = reference
+        this.note = note
+    )
+
+    @Override
+    public String toString()
+    (§
+        if (note != null)
+        (§
+            return String.format("%d[<data patch referring to %s>, note: %s]", pcOffset, reference.toString(), note.toString())
+        )
+        else
+        (§
+            return String.format("%d[<data patch referring to %s>]", pcOffset, reference.toString())
+        )
+    )
+
+    @Override
+    public boolean equals(Object obj)
+    (§
+        if (this == obj)
+        (§
+            return true
+        )
+        if (obj instanceof DataPatch)
+        (§
+            DataPatch that = (DataPatch) obj
+            if (this.pcOffset == that.pcOffset && Objects.equals(this.reference, that.reference) && Objects.equals(this.note, that.note))
+            (§
+                return true
+            )
+        )
+        return false
+    )
+)
+)
+
+(§ package jdk.vm.ci.code.site
+
+;;;
+ ; Represents a pointer to some location in the data section that should be {@link DataPatch
+ ; patched} into the code.
+ ;;
+public final class DataSectionReference extends Reference
+(§
+    private boolean initialized
+    private int offset
+
+    public DataSectionReference()
+    (§
+        ;; will be set after the data section layout is fixed
+        offset = 0xDEADDEAD
+    )
+
+    public int getOffset()
+    (§
+        assert initialized
+
+        return offset
+    )
+
+    public void setOffset(int offset)
+    (§
+        assert !initialized
+        initialized = true
+
+        this.offset = offset
+    )
+
+    @Override
+    public int hashCode()
+    (§
+        return offset
+    )
+
+    @Override
+    public boolean equals(Object obj)
+    (§
+        if (this == obj)
+        (§
+            return true
+        )
+        if (obj instanceof DataSectionReference)
+        (§
+            DataSectionReference that = (DataSectionReference) obj
+            return this.offset == that.offset
+        )
+        return false
+    )
+
+    @Override
+    public String toString()
+    (§
+        if (initialized)
+        (§
+            return String.format("DataSection[0x%x]", offset)
+        )
+        else
+        (§
+            return "DataSection[?]"
+        )
+    )
+)
+)
+
+(§ package jdk.vm.ci.code.site
+
+import java.util.Objects
+
+;;;
+ ; Associates arbitrary information with a position in machine code. For example, HotSpot specific
+ ; code in a compiler backend may use this to denote the position of a safepoint, exception handler
+ ; entry point, verified entry point etc.
+ ;;
+public final class Mark extends Site
+(§
+    ;;;
+     ; An object denoting extra semantic information about the machine code position of this mark.
+     ;;
+    public final Object id
+
+    ;;;
+     ; Creates a mark that associates {@code id} with the machine code position {@code pcOffset}.
+     ;
+     ; @param pcOffset
+     ; @param id
+     ;;
+    public Mark(int pcOffset, Object id)
+    (§
+        super(pcOffset)
+        this.id = id
+    )
+
+    @Override
+    public String toString()
+    (§
+        if (id == null)
+        (§
+            return String.format("%d[<mark>]", pcOffset)
+        )
+        else if (id instanceof Integer)
+        (§
+            return String.format("%d[<mark with id %s>]", pcOffset, Integer.toHexString((Integer) id))
+        )
+        else
+        (§
+            return String.format("%d[<mark with id %s>]", pcOffset, id.toString())
+        )
+    )
+
+    @Override
+    public boolean equals(Object obj)
+    (§
+        if (this == obj)
+        (§
+            return true
+        )
+        if (obj instanceof Mark)
+        (§
+            Mark that = (Mark) obj
+            if (this.pcOffset == that.pcOffset && Objects.equals(this.id, that.id))
+            (§
+                return true
+            )
+        )
+        return false
+    )
+)
+)
+
+(§ package jdk.vm.ci.code.site
+
+;;;
+ ; Represents some external data that is referenced by the code.
+ ;;
+public abstract class Reference
+(§
+    @Override
+    public abstract int hashCode()
+
+    @Override
+    public abstract boolean equals(Object obj)
+)
+)
+
+(§ package jdk.vm.ci.code.site
+
+import static jdk.vm.ci.meta.MetaUtil.identityHashCodeString
+
+;;;
+ ; Represents a code position with associated additional information.
+ ;;
+public abstract class Site
+(§
+    ;;;
+     ; The position (or offset) of this site with respect to the start of the target method.
+     ;;
+    public final int pcOffset
+
+    public Site(int pos)
+    (§
+        this.pcOffset = pos
+    )
+
+    @Override
+    public final int hashCode()
+    (§
+        throw new UnsupportedOperationException("hashCode")
+    )
+
+    @Override
+    public String toString()
+    (§
+        return identityHashCodeString(this)
+    )
+
+    @Override
+    public abstract boolean equals(Object obj)
+)
+)
+
+(§ package jdk.vm.ci.hotspot
+
+import jdk.vm.ci.code.CallingConvention
+import jdk.vm.ci.code.CallingConvention.Type
+
+public enum HotSpotCallingConventionType implements CallingConvention.Type
+(§
+    ;;;
+     ; A request for the outgoing argument locations at a call site to Java code.
+     ;;
+    JavaCall(true),
+
+    ;;;
+     ; A request for the incoming argument locations.
+     ;;
+    JavaCallee(false),
+
+    ;;;
+     ; A request for the outgoing argument locations at a call site to external native code that
+     ; complies with the platform ABI.
+     ;;
+    NativeCall(true)
+
+    ;;;
+     ; Determines if this is a request for the outgoing argument locations at a call site.
+     ;;
+    public final boolean out
+
+    public static final Type[] VALUES = values()
+
+    HotSpotCallingConventionType(boolean out)
+    (§
+        this.out = out
+    )
+)
+)
+
+(§ package jdk.vm.ci.hotspot
+
+import jdk.vm.ci.code.BytecodeFrame
+import jdk.vm.ci.code.CompiledCode
+import jdk.vm.ci.code.StackSlot
+import jdk.vm.ci.code.site.DataPatch
+import jdk.vm.ci.code.site.Infopoint
+import jdk.vm.ci.code.site.Site
+import jdk.vm.ci.meta.Assumptions.Assumption
+import jdk.vm.ci.meta.ResolvedJavaMethod
+
+;;;
+ ; A {@link CompiledCode} with additional HotSpot-specific information required for installing the
+ ; code in HotSpot's code cache.
+ ;;
+public class HotSpotCompiledCode implements CompiledCode
+(§
+    ;;;
+     ; The name of this compilation unit.
+     ;;
+    protected final String name
+
+    ;;;
+     ; The buffer containing the emitted machine code.
+     ;;
+    protected final byte[] targetCode
+
+    ;;;
+     ; The leading number of bytes in {@link #targetCode} containing the emitted machine code.
+     ;;
+    protected final int targetCodeSize
+
+    ;;;
+     ; A list of code annotations describing special sites in {@link #targetCode}.
+     ;;
+    protected final Site[] sites
+
+    ;;;
+     ; A list of {@link Assumption} this code relies on.
+     ;;
+    protected final Assumption[] assumptions
+
+    ;;;
+     ; The list of the methods whose bytecodes were used as input to the compilation. If
+     ; {@code null}, then the compilation did not record method dependencies. Otherwise, the first
+     ; element of this array is the root method of the compilation.
+     ;;
+    protected final ResolvedJavaMethod[] methods
+
+    ;;;
+     ; A list of comments that will be included in code dumps.
+     ;;
+    protected final Comment[] comments
+
+    ;;;
+     ; The data section containing serialized constants for the emitted machine code.
+     ;;
+    protected final byte[] dataSection
+
+    ;;;
+     ; The minimum alignment of the data section.
+     ;;
+    protected final int dataSectionAlignment
+
+    ;;;
+     ; A list of relocations in the {@link #dataSection}.
+     ;;
+    protected final DataPatch[] dataSectionPatches
+
+    ;;;
+     ; A flag determining whether this code is immutable and position independent.
+     ;;
+    protected final boolean isImmutablePIC
+
+    ;;;
+     ; The total size of the stack frame of this compiled method.
+     ;;
+    protected final int totalFrameSize
+
+    ;;;
+     ; The deopt rescue slot. Must be non-null if there is a safepoint in the method.
+     ;;
+    protected final StackSlot deoptRescueSlot
+
+    public static class Comment
+    (§
+        public final String text
+        public final int pcOffset
+
+        public Comment(int pcOffset, String text)
+        (§
+            this.text = text
+            this.pcOffset = pcOffset
+        )
+    )
+
+    public HotSpotCompiledCode(String name, byte[] targetCode, int targetCodeSize, Site[] sites, Assumption[] assumptions, ResolvedJavaMethod[] methods, Comment[] comments, byte[] dataSection, int dataSectionAlignment, DataPatch[] dataSectionPatches, boolean isImmutablePIC, int totalFrameSize, StackSlot deoptRescueSlot)
+    (§
+        this.name = name
+        this.targetCode = targetCode
+        this.targetCodeSize = targetCodeSize
+        this.sites = sites
+        this.assumptions = assumptions
+        this.methods = methods
+
+        this.comments = comments
+        this.dataSection = dataSection
+        this.dataSectionAlignment = dataSectionAlignment
+        this.dataSectionPatches = dataSectionPatches
+        this.isImmutablePIC = isImmutablePIC
+        this.totalFrameSize = totalFrameSize
+        this.deoptRescueSlot = deoptRescueSlot
+
+        assert validateFrames()
+    )
+
+    public String getName()
+    (§
+        return name
+    )
+
+    @Override
+    public String toString()
+    (§
+        return name
+    )
+
+    ;;;
+     ; Ensure that all the frames passed into the VM are properly formatted with an empty or illegal
+     ; slot following double word slots.
+     ;;
+    private boolean validateFrames()
+    (§
+        for (Site site (§ colon ) sites)
+        (§
+            if (site instanceof Infopoint)
+            (§
+                Infopoint info = (Infopoint) site
+                if (info.debugInfo != null)
+                (§
+                    BytecodeFrame frame = info.debugInfo.frame()
+                    assert frame == null || frame.validateFormat()
+                )
+            )
+        )
+        return true
+    )
+)
+)
+
+(§ package jdk.vm.ci.hotspot
+
+import jdk.vm.ci.meta.Constant
+import jdk.vm.ci.meta.JavaConstant
+import jdk.vm.ci.meta.JavaKind
+
+;;;
+ ; The compressed representation of the {@link JavaConstant#NULL_POINTER null constant}.
+ ;;
+public final class HotSpotCompressedNullConstant implements JavaConstant, HotSpotConstant
+(§
+    public static final JavaConstant COMPRESSED_NULL = new HotSpotCompressedNullConstant()
+
+    private HotSpotCompressedNullConstant()
+    (§
+    )
+
+    public JavaKind getJavaKind()
+    (§
+        return JavaKind.Object
+    )
+
+    @Override
+    public boolean isNull()
+    (§
+        return true
+    )
+
+    @Override
+    public boolean isCompressed()
+    (§
+        return true
+    )
+
+    public Constant compress()
+    (§
+        throw new IllegalArgumentException()
+    )
+
+    public Constant uncompress()
+    (§
+        return NULL_POINTER
+    )
+
+    @Override
+    public boolean isDefaultForKind()
+    (§
+        return true
+    )
+
+    @Override
+    public Object asBoxedPrimitive()
+    (§
+        throw new IllegalArgumentException()
+    )
+
+    @Override
+    public int asInt()
+    (§
+        throw new IllegalArgumentException()
+    )
+
+    @Override
+    public boolean asBoolean()
+    (§
+        throw new IllegalArgumentException()
+    )
+
+    @Override
+    public long asLong()
+    (§
+        throw new IllegalArgumentException()
+    )
+
+    @Override
+    public float asFloat()
+    (§
+        throw new IllegalArgumentException()
+    )
+
+    @Override
+    public double asDouble()
+    (§
+        throw new IllegalArgumentException()
+    )
+
+    @Override
+    public String toString()
+    (§
+        return JavaConstant.toString(this)
+    )
+
+    @Override
+    public String toValueString()
+    (§
+        return "null"
+    )
+
+    @Override
+    public int hashCode()
+    (§
+        return System.identityHashCode(this)
+    )
+
+    @Override
+    public boolean equals(Object o)
+    (§
+        return o instanceof HotSpotCompressedNullConstant
+    )
+)
+)
+
+(§ package jdk.vm.ci.hotspot
+
+import jdk.vm.ci.meta.Constant
+
+;;;
+ ; Marker interface for hotspot specific constants.
+ ;;
+public interface HotSpotConstant extends Constant
+(§
+    boolean isCompressed()
+
+    Constant compress()
+
+    Constant uncompress()
+)
+)
+
+(§ package jdk.vm.ci.hotspot
+
+import java.lang.reflect.Array
+import java.util.Objects
+
+import jdk.vm.ci.common.JVMCIError
+import jdk.vm.ci.meta.Constant
+import jdk.vm.ci.meta.ConstantReflectionProvider
+import jdk.vm.ci.meta.JavaConstant
+import jdk.vm.ci.meta.JavaKind
+import jdk.vm.ci.meta.MemoryAccessProvider
+import jdk.vm.ci.meta.MethodHandleAccessProvider
+import jdk.vm.ci.meta.ResolvedJavaField
+import jdk.vm.ci.meta.ResolvedJavaType
+
+;;;
+ ; HotSpot implementation of {@link ConstantReflectionProvider}.
+ ;;
+public class HotSpotConstantReflectionProvider implements ConstantReflectionProvider
+(§
+    protected final HotSpotJVMCIRuntimeProvider runtime
+    protected final HotSpotMethodHandleAccessProvider methodHandleAccess
+    protected final HotSpotMemoryAccessProviderImpl memoryAccess
+
+    public HotSpotConstantReflectionProvider(HotSpotJVMCIRuntimeProvider runtime)
+    (§
+        this.runtime = runtime
+        this.methodHandleAccess = new HotSpotMethodHandleAccessProvider(this)
+        this.memoryAccess = new HotSpotMemoryAccessProviderImpl(runtime)
+    )
+
+    public MethodHandleAccessProvider getMethodHandleAccess()
+    (§
+        return methodHandleAccess
+    )
+
+    @Override
+    public MemoryAccessProvider getMemoryAccessProvider()
+    (§
+        return memoryAccess
+    )
+
+    @Override
+    public Boolean constantEquals(Constant x, Constant y)
+    (§
+        if (x == y)
+        (§
+            return true
+        )
+        else if (x instanceof HotSpotObjectConstantImpl)
+        (§
+            return y instanceof HotSpotObjectConstantImpl && ((HotSpotObjectConstantImpl) x).object() == ((HotSpotObjectConstantImpl) y).object()
+        )
+        else
+        (§
+            return Objects.equals(x, y)
+        )
+    )
+
+    @Override
+    public Integer readArrayLength(JavaConstant array)
+    (§
+        if (array == null || array.getJavaKind() != JavaKind.Object || array.isNull())
+        (§
+            return null
+        )
+
+        Object arrayObject = ((HotSpotObjectConstantImpl) array).object()
+        if (!arrayObject.getClass().isArray())
+        (§
+            return null
+        )
+        return Array.getLength(arrayObject)
+    )
+
+    @Override
+    public JavaConstant readArrayElement(JavaConstant array, int index)
+    (§
+        if (array == null || array.getJavaKind() != JavaKind.Object || array.isNull())
+        (§
+            return null
+        )
+        Object a = ((HotSpotObjectConstantImpl) array).object()
+
+        if (!a.getClass().isArray() || index < 0 || index >= Array.getLength(a))
+        (§
+            return null
+        )
+
+        if (a instanceof Object[])
+        (§
+            Object element = ((Object[]) a)[index]
+            return HotSpotObjectConstantImpl.forObject(element)
+        )
+        else
+        (§
+            return JavaConstant.forBoxedPrimitive(Array.get(a, index))
+        )
+    )
+
+    ;;;
+     ; Check if the constant is a boxed value that is guaranteed to be cached by the platform.
+     ; Otherwise the generated code might be the only reference to the boxed value and since object
+     ; references from nmethods are weak this can cause GC problems.
+     ;
+     ; @param source
+     ; @return true if the box is cached
+     ;;
+    private static boolean isBoxCached(JavaConstant source)
+    (§
+        switch (source.getJavaKind())
+        (§
+            case Boolean
+                return true
+            case Char
+                return source.asInt() <= 127
+            case Byte
+            case Short
+            case Int
+                return source.asInt() >= -128 && source.asInt() <= 127
+            case Long
+                return source.asLong() >= -128 && source.asLong() <= 127
+            case Float
+            case Double
+                return false
+            default
+                throw new IllegalArgumentException("unexpected kind " + source.getJavaKind())
+        )
+    )
+
+    @Override
+    public JavaConstant boxPrimitive(JavaConstant source)
+    (§
+        if (source == null || !source.getJavaKind().isPrimitive() || !isBoxCached(source))
+        (§
+            return null
+        )
+        return HotSpotObjectConstantImpl.forObject(source.asBoxedPrimitive())
+    )
+
+    @Override
+    public JavaConstant unboxPrimitive(JavaConstant source)
+    (§
+        if (source == null || !source.getJavaKind().isObject())
+        (§
+            return null
+        )
+        if (source.isNull())
+        (§
+            return null
+        )
+        return JavaConstant.forBoxedPrimitive(((HotSpotObjectConstantImpl) source).object())
+    )
+
+    public JavaConstant forString(String value)
+    (§
+        return HotSpotObjectConstantImpl.forObject(value)
+    )
+
+    public JavaConstant forObject(Object value)
+    (§
+        return HotSpotObjectConstantImpl.forObject(value)
+    )
+
+    @Override
+    public ResolvedJavaType asJavaType(Constant constant)
+    (§
+        if (constant instanceof HotSpotObjectConstant)
+        (§
+            Object obj = ((HotSpotObjectConstantImpl) constant).object()
+            if (obj instanceof Class)
+            (§
+                return runtime.getHostJVMCIBackend().getMetaAccess().lookupJavaType((Class<?>) obj)
+            )
+        )
+        if (constant instanceof HotSpotMetaspaceConstant)
+        (§
+            MetaspaceWrapperObject obj = HotSpotMetaspaceConstantImpl.getMetaspaceObject(constant)
+            if (obj instanceof HotSpotResolvedObjectTypeImpl)
+            (§
+                return (ResolvedJavaType) obj
+            )
+        )
+        return null
+    )
+
+    public JavaConstant readFieldValue(ResolvedJavaField field, JavaConstant receiver)
+    (§
+        HotSpotResolvedJavaField hotspotField = (HotSpotResolvedJavaField) field
+        if (hotspotField.isStatic())
+        (§
+            HotSpotResolvedJavaType holder = (HotSpotResolvedJavaType) hotspotField.getDeclaringClass()
+            if (holder.isInitialized())
+            (§
+                return memoryAccess.readFieldValue(hotspotField, holder.mirror())
+            )
+        )
+        else
+        (§
+            if (receiver.isNonNull())
+            (§
+                Object object = ((HotSpotObjectConstantImpl) receiver).object()
+                if (hotspotField.isInObject(object))
+                (§
+                    return memoryAccess.readFieldValue(hotspotField, object)
+                )
+            )
+        )
+        return null
+    )
+
+    @Override
+    public JavaConstant asJavaClass(ResolvedJavaType type)
+    (§
+        return HotSpotObjectConstantImpl.forObject(((HotSpotResolvedJavaType) type).mirror())
+    )
+
+    @Override
+    public Constant asObjectHub(ResolvedJavaType type)
+    (§
+        if (type instanceof HotSpotResolvedObjectType)
+        (§
+            return ((HotSpotResolvedObjectType) type).klass()
+        )
+        else
+        (§
+            throw JVMCIError.unimplemented()
+        )
+    )
+)
+)
+
+(§ package jdk.vm.ci.hotspot
+
+import static jdk.vm.ci.common.InitTimer.timer
+
+import java.io.IOException
+import java.io.OutputStream
+import java.io.PrintStream
+import java.util.Collections
+import java.util.HashMap
+import java.util.List
+import java.util.Map
+import java.util.Objects
+import java.util.ServiceLoader
+import java.util.TreeMap
+
+import jdk.internal.misc.VM
+import jdk.vm.ci.code.Architecture
+import jdk.vm.ci.code.CompilationRequestResult
+import jdk.vm.ci.code.CompiledCode
+import jdk.vm.ci.code.InstalledCode
+import jdk.vm.ci.common.InitTimer
+import jdk.vm.ci.common.JVMCIError
+import jdk.vm.ci.hotspot.HotSpotJVMCICompilerFactory.CompilationLevel
+import jdk.vm.ci.meta.JavaKind
+import jdk.vm.ci.meta.JavaType
+import jdk.vm.ci.meta.ResolvedJavaType
+import jdk.vm.ci.runtime.JVMCI
+import jdk.vm.ci.runtime.JVMCIBackend
+import jdk.vm.ci.runtime.JVMCICompiler
+import jdk.vm.ci.runtime.JVMCICompilerFactory
+import jdk.vm.ci.services.JVMCIServiceLocator
+
+;;;
+ ; HotSpot implementation of a JVMCI runtime.
+ ;
+ ; The initialization of this class is very fragile since it's initialized both through
+ ; {@link JVMCI#initialize()} or through calling {@link HotSpotJVMCIRuntime#runtime()} and
+ ; {@link HotSpotJVMCIRuntime#runtime()} is also called by {@link JVMCI#initialize()}. So this class
+ ; can't have a static initializer and any required initialization must be done as part of
+ ; {@link #runtime()}. This allows the initialization to funnel back through
+ ; {@link JVMCI#initialize()} without deadlocking.
+ ;;
+public final class HotSpotJVMCIRuntime implements HotSpotJVMCIRuntimeProvider
+(§
+    @SuppressWarnings("try")
+    static class DelayedInit
+    (§
+        private static final HotSpotJVMCIRuntime instance
+
+        static
+        (§
+            try (InitTimer t = timer("HotSpotJVMCIRuntime.<init>"))
+            (§
+                instance = new HotSpotJVMCIRuntime()
+            )
+        )
+    )
+
+    ;;;
+     ; Gets the singleton {@link HotSpotJVMCIRuntime} object.
+     ;;
+    public static HotSpotJVMCIRuntime runtime()
+    (§
+        JVMCI.initialize()
+        return DelayedInit.instance
+    )
+
+    ;;;
+     ; A list of all supported JVMCI options.
+     ;;
+    public enum Option
+    (§
+        Compiler(String.class, null, "Selects the system compiler. This must match the getCompilerName() value returned " +
+                                     "by a jdk.vm.ci.runtime.JVMCICompilerFactory provider. " +
+                                     "An empty string or the value \"null\" selects a compiler " +
+                                     "that will raise an exception upon receiving a compilation request."),
+        ;; Note: The following one is not used (see InitTimer.ENABLED). It is added here
+        ;; so that -XX:+JVMCIPrintProperties shows the option.
+        InitTimer(Boolean.class, false, "Specifies if initialization timing is enabled."),
+        PrintConfig(Boolean.class, false, "Prints VM configuration available via JVMCI."),
+        TraceMethodDataFilter(String.class, null,
+                        "Enables tracing of profiling info when read by JVMCI.",
+                        "Empty value: trace all methods",
+                        "Non-empty value: trace methods whose fully qualified name contains the value."),
+        UseProfilingInformation(Boolean.class, true, "")
+
+        ;;;
+         ; The prefix for system properties that are JVMCI options.
+         ;;
+        private static final String JVMCI_OPTION_PROPERTY_PREFIX = "jvmci."
+
+        ;;;
+         ; Marker for uninitialized flags.
+         ;;
+        private static final String UNINITIALIZED = "UNINITIALIZED"
+
+        private final Class<?> type
+        private Object value
+        private final Object defaultValue
+        private boolean isDefault
+        private final String[] helpLines
+
+        Option(Class<?> type, Object defaultValue, String... helpLines)
+        (§
+            assert Character.isUpperCase(name().charAt(0)) (§ colon ) "Option name must start with upper-case letter: " + name()
+            this.type = type
+            this.value = UNINITIALIZED
+            this.defaultValue = defaultValue
+            this.helpLines = helpLines
+        )
+
+        private Object getValue()
+        (§
+            if (value == UNINITIALIZED)
+            (§
+                String propertyValue = VM.getSavedProperty(getPropertyName())
+                if (propertyValue == null)
+                (§
+                    this.value = defaultValue
+                    this.isDefault = true
+                )
+                else
+                (§
+                    if (type == Boolean.class)
+                    (§
+                        this.value = Boolean.parseBoolean(propertyValue)
+                    )
+                    else if (type == String.class)
+                    (§
+                        this.value = propertyValue
+                    )
+                    else
+                    (§
+                        throw new JVMCIError("Unexpected option type " + type)
+                    )
+                    this.isDefault = false
+                )
+                ;; Saved properties should not be interned - let's be sure
+                assert value != UNINITIALIZED
+            )
+            return value
+        )
+
+        ;;;
+         ; Gets the name of system property from which this option gets its value.
+         ;;
+        public String getPropertyName()
+        (§
+            return JVMCI_OPTION_PROPERTY_PREFIX + name()
+        )
+
+        ;;;
+         ; Returns the option's value as boolean.
+         ;
+         ; @return option's value
+         ;;
+        public boolean getBoolean()
+        (§
+            return (boolean) getValue()
+        )
+
+        ;;;
+         ; Returns the option's value as String.
+         ;
+         ; @return option's value
+         ;;
+        public String getString()
+        (§
+            return (String) getValue()
+        )
+
+        private static final int PROPERTY_LINE_WIDTH = 80
+        private static final int PROPERTY_HELP_INDENT = 10
+
+        ;;;
+         ; Prints a description of the properties used to configure shared JVMCI code.
+         ;
+         ; @param out stream to print to
+         ;;
+        public static void printProperties(PrintStream out)
+        (§
+            out.println("[JVMCI properties]")
+            Option[] values = values()
+            for (Option option (§ colon ) values)
+            (§
+                Object value = option.getValue()
+                if (value instanceof String)
+                (§
+                    value = (§ char "\"") + String.valueOf(value) + (§ char "\"")
+                )
+
+                String name = option.getPropertyName()
+                String assign = option.isDefault ? "=" (§ colon ) ":="
+                String typeName = option.type.getSimpleName()
+                String linePrefix = String.format("%s %s %s ", name, assign, value)
+                int typeStartPos = PROPERTY_LINE_WIDTH - typeName.length()
+                int linePad = typeStartPos - linePrefix.length()
+                if (linePad > 0)
+                (§
+                    out.printf("%s%-" + linePad + "s[%s]%n", linePrefix, "", typeName)
+                )
+                else
+                (§
+                    out.printf("%s[%s]%n", linePrefix, typeName)
+                )
+                for (String line (§ colon ) option.helpLines)
+                (§
+                    out.printf("%" + PROPERTY_HELP_INDENT + "s%s%n", "", line)
+                )
+            )
+        )
+    )
+
+    public static HotSpotJVMCIBackendFactory findFactory(String architecture)
+    (§
+        for (HotSpotJVMCIBackendFactory factory (§ colon ) ServiceLoader.load(HotSpotJVMCIBackendFactory.class, ClassLoader.getSystemClassLoader()))
+        (§
+            if (factory.getArchitecture().equalsIgnoreCase(architecture))
+            (§
+                return factory
+            )
+        )
+
+        throw new JVMCIError("No JVMCI runtime available for the %s architecture", architecture)
+    )
+
+    ;;;
+     ; Gets the kind of a word value on the {@linkplain #getHostJVMCIBackend() host} backend.
+     ;;
+    public static JavaKind getHostWordKind()
+    (§
+        return runtime().getHostJVMCIBackend().getCodeCache().getTarget().wordJavaKind
+    )
+
+    protected final CompilerToVM compilerToVm
+
+    protected final HotSpotVMConfigStore configStore
+    protected final HotSpotVMConfig config
+    private final JVMCIBackend hostBackend
+
+    private final JVMCICompilerFactory compilerFactory
+    private final HotSpotJVMCICompilerFactory hsCompilerFactory
+    private volatile JVMCICompiler compiler
+    protected final HotSpotJVMCIMetaAccessContext metaAccessContext
+
+    ;;;
+     ; Stores the result of {@link HotSpotJVMCICompilerFactory#getCompilationLevelAdjustment} so
+     ; that it can be read from the VM.
+     ;;
+    @SuppressWarnings("unused")
+    private final int compilationLevelAdjustment
+
+    private final Map<Class<? extends Architecture>, JVMCIBackend> backends = new HashMap<>()
+
+    private volatile List<HotSpotVMEventListener> vmEventListeners
+
+    private Iterable<HotSpotVMEventListener> getVmEventListeners()
+    (§
+        if (vmEventListeners == null)
+        (§
+            synchronized (this)
+            (§
+                if (vmEventListeners == null)
+                (§
+                    vmEventListeners = JVMCIServiceLocator.getProviders(HotSpotVMEventListener.class)
+                )
+            )
+        )
+        return vmEventListeners
+    )
+
+    ;;;
+     ; Stores the result of {@link HotSpotJVMCICompilerFactory#getTrivialPrefixes()} so that it can
+     ; be read from the VM.
+     ;;
+    @SuppressWarnings("unused")
+    private final String[] trivialPrefixes
+
+    @SuppressWarnings("try")
+    private HotSpotJVMCIRuntime()
+    (§
+        compilerToVm = new CompilerToVM()
+
+        try (InitTimer t = timer("HotSpotVMConfig<init>"))
+        (§
+            configStore = new HotSpotVMConfigStore(compilerToVm)
+            config = new HotSpotVMConfig(configStore)
+        )
+
+        String hostArchitecture = config.getHostArchitectureName()
+
+        HotSpotJVMCIBackendFactory factory
+        try (InitTimer t = timer("find factory:", hostArchitecture))
+        (§
+            factory = findFactory(hostArchitecture)
+        )
+
+        try (InitTimer t = timer("create JVMCI backend:", hostArchitecture))
+        (§
+            hostBackend = registerBackend(factory.createJVMCIBackend(this, null))
+        )
+
+        metaAccessContext = new HotSpotJVMCIMetaAccessContext()
+
+        compilerFactory = HotSpotJVMCICompilerConfig.getCompilerFactory()
+        if (compilerFactory instanceof HotSpotJVMCICompilerFactory)
+        (§
+            hsCompilerFactory = (HotSpotJVMCICompilerFactory) compilerFactory
+            trivialPrefixes = hsCompilerFactory.getTrivialPrefixes()
+            switch (hsCompilerFactory.getCompilationLevelAdjustment())
+            (§
+                case None
+                    compilationLevelAdjustment = config.compLevelAdjustmentNone
+                    break
+                case ByHolder
+                    compilationLevelAdjustment = config.compLevelAdjustmentByHolder
+                    break
+                case ByFullSignature
+                    compilationLevelAdjustment = config.compLevelAdjustmentByFullSignature
+                    break
+                default
+                    compilationLevelAdjustment = config.compLevelAdjustmentNone
+                    break
+            )
+        )
+        else
+        (§
+            hsCompilerFactory = null
+            trivialPrefixes = null
+            compilationLevelAdjustment = config.compLevelAdjustmentNone
+        )
+
+        if (config.getFlag("JVMCIPrintProperties", Boolean.class))
+        (§
+            PrintStream out = new PrintStream(getLogStream())
+            Option.printProperties(out)
+            compilerFactory.printProperties(out)
+            System.exit(0)
+        )
+
+        if (Option.PrintConfig.getBoolean())
+        (§
+            printConfig(configStore, compilerToVm)
+        )
+    )
+
+    private JVMCIBackend registerBackend(JVMCIBackend backend)
+    (§
+        Class<? extends Architecture> arch = backend.getCodeCache().getTarget().arch.getClass()
+        JVMCIBackend oldValue = backends.put(arch, backend)
+        assert oldValue == null (§ colon ) "cannot overwrite existing backend for architecture " + arch.getSimpleName()
+        return backend
+    )
+
+    public ResolvedJavaType fromClass(Class<?> javaClass)
+    (§
+        return metaAccessContext.fromClass(javaClass)
+    )
+
+    public HotSpotVMConfigStore getConfigStore()
+    (§
+        return configStore
+    )
+
+    public HotSpotVMConfig getConfig()
+    (§
+        return config
+    )
+
+    public CompilerToVM getCompilerToVM()
+    (§
+        return compilerToVm
+    )
+
+    public JVMCICompiler getCompiler()
+    (§
+        if (compiler == null)
+        (§
+            synchronized (this)
+            (§
+                if (compiler == null)
+                (§
+                    compiler = compilerFactory.createCompiler(this)
+                )
+            )
+        )
+        return compiler
+    )
+
+    public JavaType lookupType(String name, HotSpotResolvedObjectType accessingType, boolean resolve)
+    (§
+        Objects.requireNonNull(accessingType, "cannot resolve type without an accessing class")
+        ;; If the name represents a primitive type we can short-circuit the lookup.
+        if (name.length() == 1)
+        (§
+            JavaKind kind = JavaKind.fromPrimitiveOrVoidTypeChar(name.charAt(0))
+            return fromClass(kind.toJavaClass())
+        )
+
+        ;; Resolve non-primitive types in the VM.
+        HotSpotResolvedObjectTypeImpl hsAccessingType = (HotSpotResolvedObjectTypeImpl) accessingType
+        final HotSpotResolvedObjectTypeImpl klass = compilerToVm.lookupType(name, hsAccessingType.mirror(), resolve)
+
+        if (klass == null)
+        (§
+            assert resolve == false
+            return HotSpotUnresolvedJavaType.create(this, name)
+        )
+        return klass
+    )
+
+    public JVMCIBackend getHostJVMCIBackend()
+    (§
+        return hostBackend
+    )
+
+    public <T extends Architecture> JVMCIBackend getJVMCIBackend(Class<T> arch)
+    (§
+        assert arch != Architecture.class
+        return backends.get(arch)
+    )
+
+    public Map<Class<? extends Architecture>, JVMCIBackend> getJVMCIBackends()
+    (§
+        return Collections.unmodifiableMap(backends)
+    )
+
+    ;;;
+     ; Called from the VM.
+     ;;
+    @SuppressWarnings("unused")
+    private int adjustCompilationLevel(Class<?> declaringClass, String name, String signature, boolean isOsr, int level)
+    (§
+        CompilationLevel curLevel
+        if (level == config.compilationLevelNone)
+        (§
+            curLevel = CompilationLevel.None
+        )
+        else if (level == config.compilationLevelSimple)
+        (§
+            curLevel = CompilationLevel.Simple
+        )
+        else if (level == config.compilationLevelLimitedProfile)
+        (§
+            curLevel = CompilationLevel.LimitedProfile
+        )
+        else if (level == config.compilationLevelFullProfile)
+        (§
+            curLevel = CompilationLevel.FullProfile
+        )
+        else if (level == config.compilationLevelFullOptimization)
+        (§
+            curLevel = CompilationLevel.FullOptimization
+        )
+        else
+        (§
+            throw JVMCIError.shouldNotReachHere()
+        )
+
+        switch (hsCompilerFactory.adjustCompilationLevel(declaringClass, name, signature, isOsr, curLevel))
+        (§
+            case None
+                return config.compilationLevelNone
+            case Simple
+                return config.compilationLevelSimple
+            case LimitedProfile
+                return config.compilationLevelLimitedProfile
+            case FullProfile
+                return config.compilationLevelFullProfile
+            case FullOptimization
+                return config.compilationLevelFullOptimization
+            default
+                return level
+        )
+    )
+
+    ;;;
+     ; Called from the VM.
+     ;;
+    @SuppressWarnings("unused")
+    private HotSpotCompilationRequestResult compileMethod(HotSpotResolvedJavaMethod method, int entryBCI, long jvmciEnv, int id)
+    (§
+        CompilationRequestResult result = getCompiler().compileMethod(new HotSpotCompilationRequest(method, entryBCI, jvmciEnv, id))
+        assert result != null (§ colon ) "compileMethod must always return something"
+        HotSpotCompilationRequestResult hsResult
+        if (result instanceof HotSpotCompilationRequestResult)
+        (§
+            hsResult = (HotSpotCompilationRequestResult) result
+        )
+        else
+        (§
+            Object failure = result.getFailure()
+            if (failure != null)
+            (§
+                boolean retry = false; // Be conservative with unknown compiler
+                hsResult = HotSpotCompilationRequestResult.failure(failure.toString(), retry)
+            )
+            else
+            (§
+                int inlinedBytecodes = -1
+                hsResult = HotSpotCompilationRequestResult.success(inlinedBytecodes)
+            )
+        )
+
+        return hsResult
+    )
+
+    ;;;
+     ; Shuts down the runtime.
+     ;
+     ; Called from the VM.
+     ;;
+    @SuppressWarnings("unused")
+    private void shutdown() throws Exception
+    (§
+        for (HotSpotVMEventListener vmEventListener (§ colon ) getVmEventListeners())
+        (§
+            vmEventListener.notifyShutdown()
+        )
+    )
+
+    ;;;
+     ; Notify on completion of a bootstrap.
+     ;
+     ; Called from the VM.
+     ;;
+    @SuppressWarnings("unused")
+    private void bootstrapFinished() throws Exception
+    (§
+        for (HotSpotVMEventListener vmEventListener (§ colon ) getVmEventListeners())
+        (§
+            vmEventListener.notifyBootstrapFinished()
+        )
+    )
+
+    ;;;
+     ; Notify on successful install into the CodeCache.
+     ;
+     ; @param hotSpotCodeCacheProvider
+     ; @param installedCode
+     ; @param compiledCode
+     ;;
+    void notifyInstall(HotSpotCodeCacheProvider hotSpotCodeCacheProvider, InstalledCode installedCode, CompiledCode compiledCode)
+    (§
+        for (HotSpotVMEventListener vmEventListener (§ colon ) getVmEventListeners())
+        (§
+            vmEventListener.notifyInstall(hotSpotCodeCacheProvider, installedCode, compiledCode)
+        )
+    )
+
+    private static void printConfigLine(CompilerToVM vm, String format, Object... args)
+    (§
+        String line = String.format(format, args)
+        byte[] lineBytes = line.getBytes()
+        vm.writeDebugOutput(lineBytes, 0, lineBytes.length)
+        vm.flushDebugOutput()
+    )
+
+    private static void printConfig(HotSpotVMConfigStore store, CompilerToVM vm)
+    (§
+        TreeMap<String, VMField> fields = new TreeMap<>(store.getFields())
+        for (VMField field (§ colon ) fields.values())
+        (§
+            if (!field.isStatic())
+            (§
+                printConfigLine(vm, "[vmconfig:instance field] %s %s {offset=%d[0x%x]}%n", field.type, field.name, field.offset, field.offset)
+            )
+            else
+            (§
+                String value = field.value == null ? "null" (§ colon ) field.value instanceof Boolean ? field.value.toString() (§ colon ) String.format("%d[0x%x]", field.value, field.value)
+                printConfigLine(vm, "[vmconfig:static field] %s %s = %s {address=0x%x}%n", field.type, field.name, value, field.address)
+            )
+        )
+        TreeMap<String, VMFlag> flags = new TreeMap<>(store.getFlags())
+        for (VMFlag flag (§ colon ) flags.values())
+        (§
+            printConfigLine(vm, "[vmconfig:flag] %s %s = %s%n", flag.type, flag.name, flag.value)
+        )
+        TreeMap<String, Long> addresses = new TreeMap<>(store.getAddresses())
+        for (Map.Entry<String, Long> e (§ colon ) addresses.entrySet())
+        (§
+            printConfigLine(vm, "[vmconfig:address] %s = %d[0x%x]%n", e.getKey(), e.getValue(), e.getValue())
+        )
+        TreeMap<String, Long> constants = new TreeMap<>(store.getConstants())
+        for (Map.Entry<String, Long> e (§ colon ) constants.entrySet())
+        (§
+            printConfigLine(vm, "[vmconfig:constant] %s = %d[0x%x]%n", e.getKey(), e.getValue(), e.getValue())
+        )
+        for (VMIntrinsicMethod e (§ colon ) store.getIntrinsics())
+        (§
+            printConfigLine(vm, "[vmconfig:intrinsic] %d = %s.%s %s%n", e.id, e.declaringClass, e.name, e.descriptor)
+        )
+    )
+
+    public OutputStream getLogStream()
+    (§
+        return new OutputStream()
+        (§
+            @Override
+            public void write(byte[] b, int off, int len) throws IOException
+            (§
+                if (b == null)
+                (§
+                    throw new NullPointerException()
+                )
+                else if (off < 0 || off > b.length || len < 0 || (off + len) > b.length || (off + len) < 0)
+                (§
+                    throw new IndexOutOfBoundsException()
+                )
+                else if (len == 0)
+                (§
+                    return
+                )
+                compilerToVm.writeDebugOutput(b, off, len)
+            )
+
+            @Override
+            public void write(int b) throws IOException
+            (§
+                write(new byte[] (§ (byte) b), 0, 1)
+            )
+
+            @Override
+            public void flush() throws IOException
+            (§
+                compilerToVm.flushDebugOutput()
+            )
+        )
+    )
+
+    ;;;
+     ; Collects the current values of all JVMCI benchmark counters, summed up over all threads.
+     ;;
+    public long[] collectCounters()
+    (§
+        return compilerToVm.collectCounters()
+    )
+)
+)
+
+(§ package jdk.vm.ci.hotspot
+
+import jdk.vm.ci.meta.Constant
+import jdk.vm.ci.meta.JavaConstant
+import jdk.vm.ci.meta.MemoryAccessProvider
+
+;;;
+ ; HotSpot specific extension of {@link MemoryAccessProvider}.
+ ;;
+public interface HotSpotMemoryAccessProvider extends MemoryAccessProvider
+(§
+    ;;;
+     ; @throws IllegalArgumentException if the address computed from {@code base} and
+     ;             {@code displacement} does not denote a location holding a narrow oop
+     ;;
+    JavaConstant readNarrowOopConstant(Constant base, long displacement)
+
+    Constant readKlassPointerConstant(Constant base, long displacement)
+
+    Constant readNarrowKlassPointerConstant(Constant base, long displacement)
+
+    Constant readMethodPointerConstant(Constant base, long displacement)
+)
+)
+
+(§ package jdk.vm.ci.hotspot
+
+import jdk.vm.ci.meta.VMConstant
+
+public interface HotSpotMetaspaceConstant extends HotSpotConstant, VMConstant
+(§
+    HotSpotResolvedObjectType asResolvedJavaType()
+
+    HotSpotResolvedJavaMethod asResolvedJavaMethod()
+)
+)
+
+(§ package jdk.vm.ci.hotspot
+
+import java.lang.invoke.CallSite
+import java.util.Objects
+
+import jdk.vm.ci.meta.Assumptions
+import jdk.vm.ci.meta.JavaConstant
+import jdk.vm.ci.meta.ResolvedJavaType
+import jdk.vm.ci.meta.VMConstant
+
+;;;
+ ; Represents a constant non-{@code null} object reference, within the compiler and across the
+ ; compiler/runtime interface.
+ ;;
+public interface HotSpotObjectConstant extends JavaConstant, HotSpotConstant, VMConstant
+(§
+    JavaConstant compress()
+
+    JavaConstant uncompress()
+
+    ;;;
+     ; Gets the resolved Java type of the object represented by this constant.
+     ;;
+    HotSpotResolvedObjectType getType()
+
+    ;;;
+     ; Gets the result of {@link Class#getClassLoader()} for the {@link Class} object represented by
+     ; this constant.
+     ;
+     ; @return {@code null} if this constant does not represent a {@link Class} object
+     ;;
+    JavaConstant getClassLoader()
+
+    ;;;
+     ; Gets the {@linkplain System#identityHashCode(Object) identity} has code for the object
+     ; represented by this constant.
+     ;;
+    int getIdentityHashCode()
+
+    ;;;
+     ; Gets the result of {@link Class#getComponentType()} for the {@link Class} object represented
+     ; by this constant.
+     ;
+     ; @return {@code null} if this constant does not represent a {@link Class} object
+     ;;
+    JavaConstant getComponentType()
+
+    ;;;
+     ; Gets the result of {@link Class#getSuperclass()} for the {@link Class} object represented by
+     ; this constant.
+     ;
+     ; @return {@code null} if this constant does not represent a {@link Class} object
+     ;;
+    JavaConstant getSuperclass()
+
+    ;;;
+     ; Gets the result of {@link CallSite#getTarget()} for the {@link CallSite} object represented
+     ; by this constant.
+     ;
+     ; @param assumptions used to register an assumption that the {@link CallSite}'s target does not
+     ;            change
+     ; @return {@code null} if this constant does not represent a {@link CallSite} object
+     ;;
+    JavaConstant getCallSiteTarget(Assumptions assumptions)
+
+    ;;;
+     ; Determines if this constant represents an {@linkplain String#intern() interned} string.
+     ;;
+    boolean isInternedString()
+
+    ;;;
+     ; Gets the object represented by this constant represents if it is of a given type.
+     ;
+     ; @param type the expected type of the object represented by this constant. If the object is
+     ;            required to be of this type, then wrap the call to this method in
+     ;            {@link Objects#requireNonNull(Object)}.
+     ; @return the object value represented by this constant if it is an
+     ;         {@link ResolvedJavaType#isInstance(JavaConstant) instance of} {@code type} otherwise
+     ;         {@code null}
+     ;;
+    <T> T asObject(Class<T> type)
+
+    ;;;
+     ; Gets the object represented by this constant represents if it is of a given type.
+     ;
+     ; @param type the expected type of the object represented by this constant. If the object is
+     ;            required to be of this type, then wrap the call to this method in
+     ;            {@link Objects#requireNonNull(Object)}.
+     ; @return the object value represented by this constant if it is an
+     ;         {@link ResolvedJavaType#isInstance(JavaConstant) instance of} {@code type} otherwise
+     ;         {@code null}
+     ;;
+    Object asObject(ResolvedJavaType type)
+)
+)
+
+(§ package jdk.vm.ci.hotspot
+
+import jdk.vm.ci.meta.ResolvedJavaField
+
+;;;
+ ; Represents a field in a HotSpot type.
+ ;;
+public interface HotSpotResolvedJavaField extends ResolvedJavaField
+(§
+    ;;;
+     ; Determines if a given object contains this field.
+     ;
+     ; @return true iff this is a non-static field and its declaring class is assignable from
+     ;         {@code object}'s class
+     ;;
+    boolean isInObject(Object object)
+
+    int offset()
+
+    ;;;
+     ; Determines if this field should be treated as a constant.
+     ;;
+    boolean isStable()
+)
+)
+
+(§ package jdk.vm.ci.hotspot
+
+import java.lang.reflect.Modifier
+
+import jdk.vm.ci.meta.JavaMethod
+import jdk.vm.ci.meta.ResolvedJavaMethod
+import jdk.vm.ci.meta.ResolvedJavaType
+
+;;;
+ ; Implementation of {@link JavaMethod} for resolved HotSpot methods.
+ ;;
+public interface HotSpotResolvedJavaMethod extends ResolvedJavaMethod
+(§
+    ;;;
+     ; Returns true if this method has a {@code CallerSensitive} annotation.
+     ;
+     ; @return true if CallerSensitive annotation present, false otherwise
+     ;;
+    boolean isCallerSensitive()
+
+    HotSpotResolvedObjectType getDeclaringClass()
+
+    ;;;
+     ; Returns true if this method has a {@code ForceInline} annotation.
+     ;
+     ; @return true if ForceInline annotation present, false otherwise
+     ;;
+    boolean isForceInline()
+
+    ;;;
+     ; Returns true if this method has a {@code ReservedStackAccess} annotation.
+     ;
+     ; @return true if ReservedStackAccess annotation present, false otherwise
+     ;;
+    boolean hasReservedStackAccess()
+
+    ;;;
+     ; Manually adds a DontInline annotation to this method.
+     ;;
+    void setNotInlineable()
+
+    ;;;
+     ; Returns true if this method is one of the special methods that is ignored by security stack
+     ; walks.
+     ;
+     ; @return true if special method ignored by security stack walks, false otherwise
+     ;;
+    boolean ignoredBySecurityStackWalk()
+
+    ResolvedJavaMethod uniqueConcreteMethod(HotSpotResolvedObjectType receiver)
+
+    ;;;
+     ; Returns whether this method has compiled code.
+     ;
+     ; @return true if this method has compiled code, false otherwise
+     ;;
+    boolean hasCompiledCode()
+
+    ;;;
+     ; @param level
+     ; @return true if the currently installed code was generated at {@code level}.
+     ;;
+    boolean hasCompiledCodeAtLevel(int level)
+
+    default boolean isDefault()
+    (§
+        if (isConstructor())
+        (§
+            return false
+        )
+        ;; Copied from java.lang.Method.isDefault()
+        int mask = Modifier.ABSTRACT | Modifier.PUBLIC | Modifier.STATIC
+        return ((getModifiers() & mask) == Modifier.PUBLIC) && getDeclaringClass().isInterface()
+    )
+
+    ;;;
+     ; Returns the offset of this method into the v-table. The method must have a v-table entry as
+     ; indicated by {@link #isInVirtualMethodTable(ResolvedJavaType)}, otherwise an exception is
+     ; thrown.
+     ;
+     ; @return the offset of this method into the v-table
+     ;;
+    int vtableEntryOffset(ResolvedJavaType resolved)
+
+    int intrinsicId()
+
+    ;;;
+     ; Determines if this method denotes itself as a candidate for intrinsification. As of JDK 9,
+     ; this is denoted by the {@code HotSpotIntrinsicCandidate} annotation. In earlier JDK versions,
+     ; this method returns true.
+     ;
+     ; @see <a href="https://bugs.openjdk.java.net/browse/JDK-8076112">JDK-8076112</a>
+     ;;
+    boolean isIntrinsicCandidate()
+
+    ;;;
+     ; Allocates a compile id for this method by asking the VM for one.
+     ;
+     ; @param entryBCI entry bci
+     ; @return compile id
+     ;;
+    int allocateCompileId(int entryBCI)
+
+    boolean hasCodeAtLevel(int entryBCI, int level)
+)
+)
+
+(§ package jdk.vm.ci.hotspot
+
+import jdk.vm.ci.meta.Assumptions.AssumptionResult
+import jdk.vm.ci.meta.Constant
+import jdk.vm.ci.meta.ConstantPool
+import jdk.vm.ci.meta.JavaConstant
+import jdk.vm.ci.meta.JavaKind
+import jdk.vm.ci.meta.JavaType
+import jdk.vm.ci.meta.ResolvedJavaMethod
+import jdk.vm.ci.meta.ResolvedJavaType
+
+;;;
+ ; Implementation of {@link JavaType} for resolved non-primitive HotSpot classes.
+ ;;
+public interface HotSpotResolvedObjectType extends ResolvedJavaType
+(§
+    ;;;
+     ; Gets the JVMCI mirror for a {@link Class} object.
+     ;
+     ; @return the {@link HotSpotResolvedJavaType} corresponding to {@code javaClass}
+     ;;
+    static HotSpotResolvedObjectType fromObjectClass(Class<?> javaClass)
+    (§
+        return HotSpotResolvedObjectTypeImpl.fromObjectClass(javaClass)
+    )
+
+    HotSpotResolvedObjectType getArrayClass()
+
+    ResolvedJavaType getComponentType()
+
+    AssumptionResult<ResolvedJavaType> findLeafConcreteSubtype()
+
+    HotSpotResolvedObjectType getSuperclass()
+
+    HotSpotResolvedObjectType[] getInterfaces()
+
+    HotSpotResolvedObjectType getSupertype()
+
+    HotSpotResolvedObjectType findLeastCommonAncestor(ResolvedJavaType otherType)
+
+    default boolean isPrimitive()
+    (§
+        return false
+    )
+
+    default JavaKind getJavaKind()
+    (§
+        return JavaKind.Object
+    )
+
+    ConstantPool getConstantPool()
+
+    ;;;
+     ; Gets the instance size of this type. If an instance of this type cannot be fast path
+     ; allocated, then the returned value is negative (its absolute value gives the size). Must not
+     ; be called if this is an array or interface type.
+     ;;
+    int instanceSize()
+
+    int getVtableLength()
+
+    @Override
+    AssumptionResult<ResolvedJavaMethod> findUniqueConcreteMethod(ResolvedJavaMethod method)
+
+    ;;;
+     ; Performs a fast-path check that this type is resolved in the context of a given accessing
+     ; class. A negative result does not mean this type is not resolved with respect to
+     ; {@code accessingClass}. That can only be determined by
+     ; {@linkplain HotSpotJVMCIRuntime#lookupType(String, HotSpotResolvedObjectType, boolean)
+     ; re-resolving} the type.
+     ;;
+    boolean isDefinitelyResolvedWithRespectTo(ResolvedJavaType accessingClass)
+
+    ;;;
+     ; Gets the metaspace Klass boxed in a {@link JavaConstant}.
+     ;;
+    Constant klass()
+
+    boolean isPrimaryType()
+
+    int superCheckOffset()
+
+    long prototypeMarkWord()
+
+    int layoutHelper()
+
+    long getFingerprint()
+
+    HotSpotResolvedObjectType getEnclosingType()
+
+    ResolvedJavaMethod getClassInitializer()
+)
+)
+
+(§ package jdk.vm.ci.hotspot
+
+import jdk.vm.ci.common.JVMCIError
+
+;;;
+ ; Access to VM configuration data.
+ ;;
+public class HotSpotVMConfigAccess
+(§
+    ;;;
+     ; Gets the available configuration data.
+     ;;
+    public HotSpotVMConfigStore getStore()
+    (§
+        return store
+    )
+
+    ;;;
+     ; Gets the address of a C++ symbol.
+     ;
+     ; @param name name of C++ symbol
+     ; @param notPresent if non-null and the symbol is not present then this value is returned
+     ; @return the address of the symbol
+     ; @throws JVMCIError if the symbol is not present and {@code notPresent == null}
+     ;;
+    public long getAddress(String name, Long notPresent)
+    (§
+        Long entry = store.vmAddresses.get(name)
+        if (entry == null)
+        (§
+            if (notPresent != null)
+            (§
+                return notPresent
+            )
+            throw new JVMCIError("expected VM symbol not found: " + name)
+        )
+        return entry
+    )
+
+    ;;;
+     ; Gets the address of a C++ symbol.
+     ;
+     ; @param name name of C++ symbol
+     ; @return the address of the symbol
+     ; @throws JVMCIError if the symbol is not present
+     ;;
+    public long getAddress(String name)
+    (§
+        return getAddress(name, null)
+    )
+
+    ;;;
+     ; Gets the value of a C++ constant.
+     ;
+     ; @param name name of the constant (e.g., {@code "frame::arg_reg_save_area_bytes"})
+     ; @param type the boxed type to which the constant value will be converted
+     ; @param notPresent if non-null and the constant is not present then this value is returned
+     ; @return the constant value converted to {@code type}
+     ; @throws JVMCIError if the constant is not present and {@code notPresent == null}
+     ;;
+    public <T> T getConstant(String name, Class<T> type, T notPresent)
+    (§
+        Long c = store.vmConstants.get(name)
+        if (c == null)
+        (§
+            if (notPresent != null)
+            (§
+                return notPresent
+            )
+            throw new JVMCIError("expected VM constant not found: " + name)
+        )
+        return type.cast(convertValue(name, type, c, null))
+    )
+
+    ;;;
+     ; Gets the value of a C++ constant.
+     ;
+     ; @param name name of the constant (e.g., {@code "frame::arg_reg_save_area_bytes"})
+     ; @param type the boxed type to which the constant value will be converted
+     ; @return the constant value converted to {@code type}
+     ; @throws JVMCIError if the constant is not present
+     ;;
+    public <T> T getConstant(String name, Class<T> type)
+    (§
+        return getConstant(name, type, null)
+    )
+
+    ;;;
+     ; Gets the offset of a non-static C++ field.
+     ;
+     ; @param name fully qualified name of the field
+     ; @param type the boxed type to which the offset value will be converted (must be
+     ;            {@link Integer} or {@link Long})
+     ; @param cppType if non-null, the expected C++ type of the field (e.g., {@code "HeapWord*"})
+     ; @param notPresent if non-null and the field is not present then this value is returned
+     ; @return the offset in bytes of the requested field
+     ; @throws JVMCIError if the field is static or not present and {@code notPresent} is null
+     ;;
+    public <T> T getFieldOffset(String name, Class<T> type, String cppType, T notPresent)
+    (§
+        assert type == Integer.class || type == Long.class
+        VMField entry = getField(name, cppType, notPresent == null)
+        if (entry == null)
+        (§
+            return notPresent
+        )
+        if (entry.address != 0)
+        (§
+            throw new JVMCIError("cannot get offset of static field " + name)
+        )
+        return type.cast(convertValue(name, type, entry.offset, cppType))
+    )
+
+    ;;;
+     ; Gets the offset of a non-static C++ field.
+     ;
+     ; @param name fully qualified name of the field
+     ; @param type the boxed type to which the offset value will be converted (must be
+     ;            {@link Integer} or {@link Long})
+     ; @param cppType if non-null, the expected C++ type of the field (e.g., {@code "HeapWord*"})
+     ; @return the offset in bytes of the requested field
+     ; @throws JVMCIError if the field is static or not present
+     ;;
+    public <T> T getFieldOffset(String name, Class<T> type, String cppType)
+    (§
+        return getFieldOffset(name, type, cppType, null)
+    )
+
+    ;;;
+     ; Gets the offset of a non-static C++ field.
+     ;
+     ; @param name fully qualified name of the field
+     ; @param type the boxed type to which the offset value will be converted (must be
+     ;            {@link Integer} or {@link Long})
+     ; @return the offset in bytes of the requested field
+     ; @throws JVMCIError if the field is static or not present
+     ;;
+    public <T> T getFieldOffset(String name, Class<T> type)
+    (§
+        return getFieldOffset(name, type, null, null)
+    )
+
+    ;;;
+     ; Gets the address of a static C++ field.
+     ;
+     ; @param name fully qualified name of the field
+     ; @param cppType if non-null, the expected C++ type of the field (e.g., {@code "HeapWord*"})
+     ; @param notPresent if non-null and the field is not present then this value is returned
+     ; @return the address of the requested field
+     ; @throws JVMCIError if the field is not static or not present and {@code notPresent} is null
+     ;;
+    public long getFieldAddress(String name, String cppType, Long notPresent)
+    (§
+        VMField entry = getField(name, cppType, notPresent == null)
+        if (entry == null)
+        (§
+            return notPresent
+        )
+        if (entry.address == 0)
+        (§
+            throw new JVMCIError(name + " is not a static field")
+        )
+        return entry.address
+    )
+
+    ;;;
+     ; Gets the address of a static C++ field.
+     ;
+     ; @param name fully qualified name of the field
+     ; @param cppType if non-null, the expected C++ type of the field (e.g., {@code "HeapWord*"})
+     ; @return the address of the requested field
+     ; @throws JVMCIError if the field is not static or not present
+     ;;
+    public long getFieldAddress(String name, String cppType)
+    (§
+        return getFieldAddress(name, cppType, null)
+    )
+
+    ;;;
+     ; Gets the value of a static C++ field.
+     ;
+     ; @param name fully qualified name of the field
+     ; @param type the boxed type to which the constant value will be converted
+     ; @param cppType if non-null, the expected C++ type of the field (e.g., {@code "HeapWord*"})
+     ; @param notPresent if non-null and the field is not present then this value is returned
+     ; @return the value of the requested field
+     ; @throws JVMCIError if the field is not static or not present and {@code notPresent} is null
+     ;;
+    public <T> T getFieldValue(String name, Class<T> type, String cppType, T notPresent)
+    (§
+        VMField entry = getField(name, cppType, notPresent == null)
+        if (entry == null)
+        (§
+            return notPresent
+        )
+        if (entry.value == null)
+        (§
+            throw new JVMCIError(name + " is not a static field")
+        )
+        return type.cast(convertValue(name, type, entry.value, cppType))
+    )
+
+    ;;;
+     ; Gets the value of a static C++ field.
+     ;
+     ; @param name fully qualified name of the field
+     ; @param type the boxed type to which the constant value will be converted
+     ; @param cppType if non-null, the expected C++ type of the field (e.g., {@code "HeapWord*"})
+     ; @return the value of the requested field
+     ; @throws JVMCIError if the field is not static or not present
+     ;;
+    public <T> T getFieldValue(String name, Class<T> type, String cppType)
+    (§
+        return getFieldValue(name, type, cppType, null)
+    )
+
+    ;;;
+     ; Gets the value of a static C++ field.
+     ;
+     ; @param name fully qualified name of the field
+     ; @param type the boxed type to which the constant value will be converted
+     ; @return the value of the requested field
+     ; @throws JVMCIError if the field is not static or not present
+     ;;
+    public <T> T getFieldValue(String name, Class<T> type)
+    (§
+        return getFieldValue(name, type, null, null)
+    )
+
+    ;;;
+     ; Gets a C++ field.
+     ;
+     ; @param name fully qualified name of the field
+     ; @param cppType if non-null, the expected C++ type of the field (e.g., {@code "HeapWord*"})
+     ; @param required specifies if the field must be present
+     ; @return the field
+     ; @throws JVMCIError if the field is not present and {@code required == true}
+     ;;
+    private VMField getField(String name, String cppType, boolean required)
+    (§
+        VMField entry = store.vmFields.get(name)
+        if (entry == null)
+        (§
+            if (!required)
+            (§
+                return null
+            )
+            throw new JVMCIError("expected VM field not found: " + name)
+        )
+
+        ;; Make sure the native type is still the type we expect.
+        if (cppType != null && !cppType.equals(entry.type))
+        (§
+            throw new JVMCIError("expected type " + cppType + " but VM field " + name + " is of type " + entry.type)
+        )
+        return entry
+    )
+
+    ;;;
+     ; Gets a VM flag value.
+     ;
+     ; @param name name of the flag (e.g., {@code "CompileTheWorldStartAt"})
+     ; @param type the boxed type to which the flag's value will be converted
+     ; @return the flag's value converted to {@code type} or {@code notPresent} if the flag is not
+     ;         present
+     ; @throws JVMCIError if the flag is not present
+     ;;
+    public <T> T getFlag(String name, Class<T> type)
+    (§
+        return getFlag(name, type, null)
+    )
+
+    ;;;
+     ; Gets a VM flag value.
+     ;
+     ; @param name name of the flag (e.g., {@code "CompileTheWorldStartAt"})
+     ; @param type the boxed type to which the flag's value will be converted
+     ; @param notPresent if non-null and the flag is not present then this value is returned
+     ; @return the flag's value converted to {@code type} or {@code notPresent} if the flag is not
+     ;         present
+     ; @throws JVMCIError if the flag is not present and {@code notPresent == null}
+     ;;
+    public <T> T getFlag(String name, Class<T> type, T notPresent)
+    (§
+        VMFlag entry = store.vmFlags.get(name)
+        Object value
+        String cppType
+        if (entry == null)
+        (§
+            ;; Fall back to VM call
+            value = store.compilerToVm.getFlagValue(name)
+            if (value == store.compilerToVm)
+            (§
+                if (notPresent != null)
+                (§
+                    return notPresent
+                )
+                throw new JVMCIError("expected VM flag not found: " + name)
+            )
+            else
+            (§
+                cppType = null
+            )
+        )
+        else
+        (§
+            value = entry.value
+            cppType = entry.type
+        )
+        return type.cast(convertValue(name, type, value, cppType))
+    )
+
+    private static <T> Object convertValue(String name, Class<T> toType, Object value, String cppType) throws JVMCIError
+    (§
+        if (toType == Boolean.class)
+        (§
+            if (value instanceof String)
+            (§
+                return Boolean.valueOf((String) value)
+            )
+            else if (value instanceof Boolean)
+            (§
+                return value
+            )
+            else if (value instanceof Long)
+            (§
+                return ((long) value) != 0
+            )
+        )
+        else if (toType == Byte.class)
+        (§
+            if (value instanceof Long)
+            (§
+                return (byte) (long) value
+            )
+        )
+        else if (toType == Integer.class)
+        (§
+            if (value instanceof Integer)
+            (§
+                return value
+            )
+            else if (value instanceof Long)
+            (§
+                return (int) (long) value
+            )
+        )
+        else if (toType == String.class)
+        (§
+            if (value == null || value instanceof String)
+            (§
+                return value
+            )
+        )
+        else if (toType == Long.class)
+        (§
+            return value
+        )
+
+        throw new JVMCIError("cannot convert " + name + " of type " + value.getClass().getSimpleName() + (cppType == null ? "" (§ colon ) " [" + cppType + "]") + " to " + toType.getSimpleName())
+    )
+
+    private final HotSpotVMConfigStore store
+
+    public HotSpotVMConfigAccess(HotSpotVMConfigStore store)
+    (§
+        this.store = store
+    )
+)
+)
+
+(§ package jdk.vm.ci.meta
+
+;;;
+ ; Common base class for values that are stored in some location that's managed by the register
+ ; allocator (e.g. register, stack slot).
+ ;;
+public abstract class AllocatableValue extends Value implements JavaValue
+(§
+    public static final AllocatableValue[] NONE = (§)
+
+    public AllocatableValue(ValueKind<?> kind)
+    (§
+        super(kind)
+    )
+)
+)
+
+(§ package jdk.vm.ci.meta
+
+;;;
+ ; Represents a compile-time constant (boxed) value within the compiler.
+ ;;
+public interface Constant
+(§
+    boolean isDefaultForKind()
+
+    String toValueString()
+)
+)
+
+(§ package jdk.vm.ci.meta
+
+;;;
+ ; Represents the runtime representation of the constant pool that is used by the compiler when
+ ; parsing bytecode. Provides methods to look up a constant pool entry without performing
+ ; resolution. They are used during compilation.
+ ;;
+public interface ConstantPool
+(§
+    ;;;
+     ; Returns the number of entries the constant pool.
+     ;
+     ; @return number of entries in the constant pool
+     ;;
+    int length()
+
+    ;;;
+     ; Ensures that the type referenced by the specified constant pool entry is loaded and
+     ; initialized. This can be used to compile time resolve a type. It works for field, method, or
+     ; type constant pool entries.
+     ;
+     ; @param cpi the index of the constant pool entry that references the type
+     ; @param opcode the opcode of the instruction that references the type
+     ;;
+    void loadReferencedType(int cpi, int opcode)
+
+    ;;;
+     ; Looks up a reference to a field. If {@code opcode} is non-negative, then resolution checks
+     ; specific to the bytecode it denotes are performed if the field is already resolved. Checks
+     ; for some bytecodes require the method that contains the bytecode to be specified. Should
+     ; any of these checks fail, an unresolved field reference is returned.
+     ;
+     ; @param cpi the constant pool index
+     ; @param opcode the opcode of the instruction for which the lookup is being performed or
+     ;            {@code -1}
+     ; @param method the method for which the lookup is being performed
+     ; @return a reference to the field at {@code cpi} in this pool
+     ; @throws ClassFormatError if the entry at {@code cpi} is not a field
+     ;;
+    JavaField lookupField(int cpi, ResolvedJavaMethod method, int opcode)
+
+    ;;;
+     ; Looks up a reference to a method. If {@code opcode} is non-negative, then resolution checks
+     ; specific to the bytecode it denotes are performed if the method is already resolved. Should
+     ; any of these checks fail, an unresolved method reference is returned.
+     ;
+     ; @param cpi the constant pool index
+     ; @param opcode the opcode of the instruction for which the lookup is being performed or
+     ;            {@code -1}
+     ; @return a reference to the method at {@code cpi} in this pool
+     ; @throws ClassFormatError if the entry at {@code cpi} is not a method
+     ;;
+    JavaMethod lookupMethod(int cpi, int opcode)
+
+    ;;;
+     ; Looks up a reference to a type. If {@code opcode} is non-negative, then resolution checks
+     ; specific to the bytecode it denotes are performed if the type is already resolved. Should any
+     ; of these checks fail, an unresolved type reference is returned.
+     ;
+     ; @param cpi the constant pool index
+     ; @param opcode the opcode of the instruction for which the lookup is being performed or
+     ;            {@code -1}
+     ; @return a reference to the compiler interface type
+     ;;
+    JavaType lookupType(int cpi, int opcode)
+
+    ;;;
+     ; Looks up an Utf8 string.
+     ;
+     ; @param cpi the constant pool index
+     ; @return the Utf8 string at index {@code cpi} in this constant pool
+     ;;
+    String lookupUtf8(int cpi)
+
+    ;;;
+     ; Looks up a method signature.
+     ;
+     ; @param cpi the constant pool index
+     ; @return the method signature at index {@code cpi} in this constant pool
+     ;;
+    Signature lookupSignature(int cpi)
+
+    ;;;
+     ; Looks up a constant at the specified index.
+     ;
+     ; @param cpi the constant pool index
+     ; @return the {@code Constant} or {@code JavaType} instance representing the constant pool
+     ;         entry
+     ;;
+    Object lookupConstant(int cpi)
+
+    ;;;
+     ; Looks up the appendix at the specified index.
+     ;
+     ; @param cpi the constant pool index
+     ; @param opcode the opcode of the instruction for which the lookup is being performed or
+     ;            {@code -1}
+     ; @return the appendix if it exists and is resolved or {@code null}
+     ;;
+    JavaConstant lookupAppendix(int cpi, int opcode)
+)
+)
+
+(§ package jdk.vm.ci.meta
+
+import java.lang.invoke.MethodHandle
+
+;;;
+ ; Reflection operations on values represented as {@linkplain JavaConstant constants}. All methods
+ ; in this interface require the VM to access the actual object encapsulated in
+ ; {@link JavaKind#Object object} constants. This access is not always possible, depending on kind
+ ; of VM and the state that the VM is in. Therefore, all methods can return {@code null} at any
+ ; time, to indicate that the result is not available at this point. The caller is responsible to
+ ; check for {@code null} results and handle them properly, e.g., not perform an optimization.
+ ;;
+public interface ConstantReflectionProvider
+(§
+    ;;;
+     ; Compares two constants for equality. The equality relationship is symmetric. Returns
+     ; {@link Boolean#TRUE true} if the two constants represent the same run time value,
+     ; {@link Boolean#FALSE false} if they are different. Returns {@code null} if the constants
+     ; cannot be compared at this point.
+     ;;
+    Boolean constantEquals(Constant x, Constant y)
+
+    ;;;
+     ; Returns the length of the array constant. Returns {@code null} if the constant is not an
+     ; array, or if the array length is not available at this point.
+     ;;
+    Integer readArrayLength(JavaConstant array)
+
+    ;;;
+     ; Reads a value from the given array at the given index. Returns {@code null} if the constant
+     ; is not an array, if the index is out of bounds, or if the value is not available at this
+     ; point.
+     ;;
+    JavaConstant readArrayElement(JavaConstant array, int index)
+
+    ;;;
+     ; Gets the current value of this field for a given object, if available.
+     ;
+     ; There is no guarantee that the same value will be returned by this method for a field unless
+     ; the field is considered to be constant by the runtime.
+     ;
+     ; @param receiver object from which this field's value is to be read. This value is ignored if
+     ;            this field is static.
+     ; @return the value of this field or {@code null} if the value is not available (e.g., because
+     ;         the field holder is not yet initialized).
+     ;;
+    JavaConstant readFieldValue(ResolvedJavaField field, JavaConstant receiver)
+
+    ;;;
+     ; Converts the given {@link JavaKind#isPrimitive() primitive} constant to a boxed
+     ; {@link JavaKind#Object object} constant, according to the Java boxing rules. Returns
+     ; {@code null} if the source is is not a primitive constant, or the boxed value is not
+     ; available at this point.
+     ;;
+    JavaConstant boxPrimitive(JavaConstant source)
+
+    ;;;
+     ; Converts the given {@link JavaKind#Object object} constant to a {@link JavaKind#isPrimitive()
+     ; primitive} constant, according to the Java unboxing rules. Returns {@code null} if the source
+     ; is is not an object constant that can be unboxed, or the unboxed value is not available at
+     ; this point.
+     ;;
+    JavaConstant unboxPrimitive(JavaConstant source)
+
+    ;;;
+     ; Gets a string as a {@link JavaConstant}.
+     ;;
+    JavaConstant forString(String value)
+
+    ;;;
+     ; Returns the {@link ResolvedJavaType} for a {@link Class} object (or any other object regarded
+     ; as a class by the VM) encapsulated in the given constant. Returns {@code null} if the
+     ; constant does not encapsulate a class, or if the type is not available at this point.
+     ;;
+    ResolvedJavaType asJavaType(Constant constant)
+
+    ;;;
+     ; Gets access to the internals of {@link MethodHandle}.
+     ;;
+    MethodHandleAccessProvider getMethodHandleAccess()
+
+    ;;;
+     ; Gets raw memory access.
+     ;;
+    MemoryAccessProvider getMemoryAccessProvider()
+
+    ;;;
+     ; Gets the runtime representation of the {@link Class} object of this type.
+     ;;
+    JavaConstant asJavaClass(ResolvedJavaType type)
+
+    ;;;
+     ; Gets the runtime representation of the "hub" of this type--that is, the closest part of the
+     ; type representation which is typically stored in the object header.
+     ;;
+    Constant asObjectHub(ResolvedJavaType type)
+)
+)
+
+(§ package jdk.vm.ci.meta
+
+;;;
+ ; Specifies the action that should be taken by the runtime in case a certain deoptimization is
+ ; triggered.
+ ;;
+public enum DeoptimizationAction
+(§
+    ;;;
+     ; Do not invalidate the machine code. This is typically used when deoptimizing at a point where
+     ; it's highly likely nothing will change the likelihood of the deoptimization happening again.
+     ; For example, a compiled array allocation where the size is negative.
+     ;;
+    None(false),
+
+    ;;;
+     ; Do not invalidate the machine code, but schedule a recompilation if this deoptimization is
+     ; triggered too often.
+     ;;
+    RecompileIfTooManyDeopts(true),
+
+    ;;;
+     ; Invalidate the machine code and reset the profiling information.
+     ;;
+    InvalidateReprofile(true),
+
+    ;;;
+     ; Invalidate the machine code and immediately schedule a recompilation. This is typically used
+     ; when deoptimizing to resolve an unresolved symbol in which case extra profiling is not
+     ; required to determine that the deoptimization will not re-occur.
+     ;;
+    InvalidateRecompile(true),
+
+    ;;;
+     ; Invalidate the machine code and stop compiling the outermost method of this compilation.
+     ;;
+    InvalidateStopCompiling(true)
+
+    private final boolean invalidatesCompilation
+
+    DeoptimizationAction(boolean invalidatesCompilation)
+    (§
+        this.invalidatesCompilation = invalidatesCompilation
+    )
+
+    public boolean doesInvalidateCompilation()
+    (§
+        return invalidatesCompilation
+    )
+)
+)
+
+(§ package jdk.vm.ci.meta
+
+;;;
+ ; Enumeration of reasons for why a deoptimization is happening.
+ ;;
+public enum DeoptimizationReason
+(§
+    None,
+    NullCheckException,
+    BoundsCheckException,
+    ClassCastException,
+    ArrayStoreException,
+    UnreachedCode,
+    TypeCheckedInliningViolated,
+    OptimizedTypeCheckViolated,
+    NotCompiledExceptionHandler,
+    Unresolved,
+    JavaSubroutineMismatch,
+    ArithmeticException,
+    RuntimeConstraint,
+    LoopLimitCheck,
+    Aliasing,
+    TransferToInterpreter,
+)
+)
+
+(§ package jdk.vm.ci.meta
+
+;;;
+ ; Represents the resolved target of an invocation.
+ ;;
+public interface InvokeTarget
+(§
+)
+)
+
+(§ package jdk.vm.ci.meta
+
+;;;
+ ; Represents a constant (boxed) value, such as an integer, floating point number, or object
+ ; reference, within the compiler and across the compiler/runtime interface. Exports a set of
+ ; {@code JavaConstant} instances that represent frequently used constant values, such as
+ ; {@link #NULL_POINTER}.
+ ;;
+public interface JavaConstant extends Constant, JavaValue
+(§
+    ;;
+     ; Using a larger cache for integers leads to only a slight increase in cache hit ratio which is
+     ; not enough to justify the impact on startup time.
+     ;;
+    JavaConstant NULL_POINTER = new NullConstant()
+    PrimitiveConstant INT_MINUS_1 = new PrimitiveConstant(JavaKind.Int, -1)
+    PrimitiveConstant INT_0 = new PrimitiveConstant(JavaKind.Int, 0)
+    PrimitiveConstant INT_1 = new PrimitiveConstant(JavaKind.Int, 1)
+    PrimitiveConstant INT_2 = new PrimitiveConstant(JavaKind.Int, 2)
+    PrimitiveConstant LONG_0 = new PrimitiveConstant(JavaKind.Long, 0 #_"L")
+    PrimitiveConstant LONG_1 = new PrimitiveConstant(JavaKind.Long, 1 #_"L")
+    PrimitiveConstant FLOAT_0 = new PrimitiveConstant(JavaKind.Float, Float.floatToRawIntBits(0.0 #_"F"))
+    PrimitiveConstant FLOAT_1 = new PrimitiveConstant(JavaKind.Float, Float.floatToRawIntBits(1.0 #_"F"))
+    PrimitiveConstant DOUBLE_0 = new PrimitiveConstant(JavaKind.Double, Double.doubleToRawLongBits(0.0 #_"D"))
+    PrimitiveConstant DOUBLE_1 = new PrimitiveConstant(JavaKind.Double, Double.doubleToRawLongBits(1.0 #_"D"))
+    PrimitiveConstant TRUE = new PrimitiveConstant(JavaKind.Boolean, 1 #_"L")
+    PrimitiveConstant FALSE = new PrimitiveConstant(JavaKind.Boolean, 0 #_"L")
+
+    ;;;
+     ; Returns the Java kind of this constant.
+     ;;
+    JavaKind getJavaKind()
+
+    ;;;
+     ; Checks whether this constant is null.
+     ;
+     ; @return {@code true} if this constant is the null constant
+     ;;
+    boolean isNull()
+
+    static boolean isNull(Constant c)
+    (§
+        if (c instanceof JavaConstant)
+        (§
+            return ((JavaConstant) c).isNull()
+        )
+        else
+        (§
+            return false
+        )
+    )
+
+    ;;;
+     ; Checks whether this constant is non-null.
+     ;
+     ; @return {@code true} if this constant is a primitive, or an object constant that is not null
+     ;;
+    default boolean isNonNull()
+    (§
+        return !isNull()
+    )
+
+    ;;;
+     ; Checks whether this constant is the default value for its kind (null, 0, 0.0, false).
+     ;
+     ; @return {@code true} if this constant is the default value for its kind
+     ;;
+    boolean isDefaultForKind()
+
+    ;;;
+     ; Returns the value of this constant as a boxed Java value.
+     ;
+     ; @return the value of this constant
+     ;;
+    Object asBoxedPrimitive()
+
+    ;;;
+     ; Returns the primitive int value this constant represents. The constant must have a
+     ; {@link JavaKind#getStackKind()} of {@link JavaKind#Int}.
+     ;
+     ; @return the constant value
+     ;;
+    int asInt()
+
+    ;;;
+     ; Returns the primitive boolean value this constant represents. The constant must have kind
+     ; {@link JavaKind#Boolean}.
+     ;
+     ; @return the constant value
+     ;;
+    boolean asBoolean()
+
+    ;;;
+     ; Returns the primitive long value this constant represents. The constant must have kind
+     ; {@link JavaKind#Long}, a {@link JavaKind#getStackKind()} of {@link JavaKind#Int}.
+     ;
+     ; @return the constant value
+     ;;
+    long asLong()
+
+    ;;;
+     ; Returns the primitive float value this constant represents. The constant must have kind
+     ; {@link JavaKind#Float}.
+     ;
+     ; @return the constant value
+     ;;
+    float asFloat()
+
+    ;;;
+     ; Returns the primitive double value this constant represents. The constant must have kind
+     ; {@link JavaKind#Double}.
+     ;
+     ; @return the constant value
+     ;;
+    double asDouble()
+
+    default String toValueString()
+    (§
+        if (getJavaKind() == JavaKind.Illegal)
+        (§
+            return "illegal"
+        )
+        else
+        (§
+            return getJavaKind().format(asBoxedPrimitive())
+        )
+    )
+
+    static String toString(JavaConstant constant)
+    (§
+        if (constant.getJavaKind() == JavaKind.Illegal)
+        (§
+            return "illegal"
+        )
+        else
+        (§
+            return constant.getJavaKind().getJavaName() + "[" + constant.toValueString() + "]"
+        )
+    )
+
+    ;;;
+     ; Creates a boxed double constant.
+     ;
+     ; @param d the double value to box
+     ; @return a boxed copy of {@code value}
+     ;;
+    static PrimitiveConstant forDouble(double d)
+    (§
+        if (Double.compare(0.0 #_"D", d) == 0)
+        (§
+            return DOUBLE_0
+        )
+        if (Double.compare(d, 1.0 #_"D") == 0)
+        (§
+            return DOUBLE_1
+        )
+        return new PrimitiveConstant(JavaKind.Double, Double.doubleToRawLongBits(d))
+    )
+
+    ;;;
+     ; Creates a boxed float constant.
+     ;
+     ; @param f the float value to box
+     ; @return a boxed copy of {@code value}
+     ;;
+    static PrimitiveConstant forFloat(float f)
+    (§
+        if (Float.compare(f, 0.0 #_"F") == 0)
+        (§
+            return FLOAT_0
+        )
+        if (Float.compare(f, 1.0 #_"F") == 0)
+        (§
+            return FLOAT_1
+        )
+        return new PrimitiveConstant(JavaKind.Float, Float.floatToRawIntBits(f))
+    )
+
+    ;;;
+     ; Creates a boxed long constant.
+     ;
+     ; @param i the long value to box
+     ; @return a boxed copy of {@code value}
+     ;;
+    static PrimitiveConstant forLong(long i)
+    (§
+        if (i == 0)
+        (§
+            return LONG_0
+        )
+        else if (i == 1)
+        (§
+            return LONG_1
+        )
+        else
+        (§
+            return new PrimitiveConstant(JavaKind.Long, i)
+        )
+    )
+
+    ;;;
+     ; Creates a boxed integer constant.
+     ;
+     ; @param i the integer value to box
+     ; @return a boxed copy of {@code value}
+     ;;
+    static PrimitiveConstant forInt(int i)
+    (§
+        switch (i)
+        (§
+            case -1
+                return INT_MINUS_1
+            case 0
+                return INT_0
+            case 1
+                return INT_1
+            case 2
+                return INT_2
+            default
+                return new PrimitiveConstant(JavaKind.Int, i)
+        )
+    )
+
+    ;;;
+     ; Creates a boxed byte constant.
+     ;
+     ; @param i the byte value to box
+     ; @return a boxed copy of {@code value}
+     ;;
+    static PrimitiveConstant forByte(byte i)
+    (§
+        return new PrimitiveConstant(JavaKind.Byte, i)
+    )
+
+    ;;;
+     ; Creates a boxed boolean constant.
+     ;
+     ; @param i the boolean value to box
+     ; @return a boxed copy of {@code value}
+     ;;
+    static PrimitiveConstant forBoolean(boolean i)
+    (§
+        return i ? TRUE (§ colon ) FALSE
+    )
+
+    ;;;
+     ; Creates a boxed char constant.
+     ;
+     ; @param i the char value to box
+     ; @return a boxed copy of {@code value}
+     ;;
+    static PrimitiveConstant forChar(char i)
+    (§
+        return new PrimitiveConstant(JavaKind.Char, i)
+    )
+
+    ;;;
+     ; Creates a boxed short constant.
+     ;
+     ; @param i the short value to box
+     ; @return a boxed copy of {@code value}
+     ;;
+    static PrimitiveConstant forShort(short i)
+    (§
+        return new PrimitiveConstant(JavaKind.Short, i)
+    )
+
+    ;;;
+     ; Creates a {@link JavaConstant} from a primitive integer of a certain kind.
+     ;;
+    static PrimitiveConstant forIntegerKind(JavaKind kind, long i)
+    (§
+        switch (kind)
+        (§
+            case Boolean
+                return forBoolean(i != 0)
+            case Byte
+                return forByte((byte) i)
+            case Short
+                return forShort((short) i)
+            case Char
+                return forChar((char) i)
+            case Int
+                return forInt((int) i)
+            case Long
+                return forLong(i)
+            default
+                throw new IllegalArgumentException("not an integer kind: " + kind)
+        )
+    )
+
+    ;;;
+     ; Creates a {@link JavaConstant} from a primitive integer of a certain width.
+     ;;
+    static PrimitiveConstant forPrimitiveInt(int bits, long i)
+    (§
+        assert bits <= 64
+        switch (bits)
+        (§
+            case 1
+                return forBoolean(i != 0)
+            case 8
+                return forByte((byte) i)
+            case 16
+                return forShort((short) i)
+            case 32
+                return forInt((int) i)
+            case 64
+                return forLong(i)
+            default
+                throw new IllegalArgumentException("unsupported integer width: " + bits)
+        )
+    )
+
+    ;;;
+     ; Creates a boxed constant for the given boxed primitive value.
+     ;
+     ; @param value the Java boxed value
+     ; @return the primitive constant holding the {@code value}
+     ;;
+    static PrimitiveConstant forBoxedPrimitive(Object value)
+    (§
+        if (value instanceof Boolean)
+        (§
+            return forBoolean((Boolean) value)
+        )
+        else if (value instanceof Byte)
+        (§
+            return forByte((Byte) value)
+        )
+        else if (value instanceof Character)
+        (§
+            return forChar((Character) value)
+        )
+        else if (value instanceof Short)
+        (§
+            return forShort((Short) value)
+        )
+        else if (value instanceof Integer)
+        (§
+            return forInt((Integer) value)
+        )
+        else if (value instanceof Long)
+        (§
+            return forLong((Long) value)
+        )
+        else if (value instanceof Float)
+        (§
+            return forFloat((Float) value)
+        )
+        else if (value instanceof Double)
+        (§
+            return forDouble((Double) value)
+        )
+        else
+        (§
+            return null
+        )
+    )
+
+    static PrimitiveConstant forIllegal()
+    (§
+        return new PrimitiveConstant(JavaKind.Illegal, 0)
+    )
+
+    ;;;
+     ; Returns a constant with the default value for the given kind.
+     ;;
+    static JavaConstant defaultForKind(JavaKind kind)
+    (§
+        switch (kind)
+        (§
+            case Boolean
+                return FALSE
+            case Byte
+                return forByte((byte) 0)
+            case Char
+                return forChar((char) 0)
+            case Short
+                return forShort((short) 0)
+            case Int
+                return INT_0
+            case Double
+                return DOUBLE_0
+            case Float
+                return FLOAT_0
+            case Long
+                return LONG_0
+            case Object
+                return NULL_POINTER
+            default
+                throw new IllegalArgumentException(kind.toString())
+        )
+    )
+)
+)
+
+(§ package jdk.vm.ci.meta
+
+import java.util.IllegalFormatException
+import java.util.UnknownFormatConversionException
+
+;;;
+ ; Represents a reference to a Java field, either resolved or unresolved fields. Fields, like
+ ; methods and types, are resolved through {@link ConstantPool constant pools}.
+ ;;
+public interface JavaField
+(§
+    ;;;
+     ; Returns the name of this field.
+     ;;
+    String getName()
+
+    ;;;
+     ; Returns a {@link JavaType} object that identifies the declared type for this field.
+     ;;
+    JavaType getType()
+
+    ;;;
+     ; Returns the kind of this field. This is the same as calling {@link #getType}.
+     ; {@link JavaType#getJavaKind getJavaKind}.
+     ;;
+    default JavaKind getJavaKind()
+    (§
+        return getType().getJavaKind()
+    )
+
+    ;;;
+     ; Returns the {@link JavaType} object representing the class or interface that declares this
+     ; field.
+     ;;
+    JavaType getDeclaringClass()
+
+    ;;;
+     ; Gets a string for this field formatted according to a given format specification. A format
+     ; specification is composed of characters that are to be copied verbatim to the result and
+     ; specifiers that denote an attribute of this field that is to be copied to the result. A
+     ; specifier is a single character preceded by a (§ char "%") character. The accepted specifiers and the
+     ; field attributes they denote are described below:
+     ;
+     ; <pre>
+     ;     Specifier | Description                                          | Example(s)
+     ;     ----------+------------------------------------------------------------------------------------------
+     ;     (§ char "T")       | Qualified type                                       | "int" "java.lang.String"
+     ;     (§ char "t")       | Unqualified type                                     | "int" "String"
+     ;     (§ char "H")       | Qualified holder                                     | "java.util.Map.Entry"
+     ;     (§ char "h")       | Unqualified holder                                   | "Entry"
+     ;     (§ char "n")       | Field name                                           | "age"
+     ;     (§ char "f")       | Indicator if field is unresolved, static or instance | "unresolved" "static" "instance"
+     ;     (§ char "%")       | A (§ char "%") character                                      | "%"
+     ; </pre>
+     ;
+     ; @param format a format specification
+     ; @return the result of formatting this field according to {@code format}
+     ; @throws IllegalFormatException if an illegal specifier is encountered in {@code format}
+     ;;
+    default String format(String format) throws IllegalFormatException
+    (§
+        StringBuilder sb = new StringBuilder()
+        int index = 0
+        JavaType type = getType()
+        while (index < format.length())
+        (§
+            char ch = format.charAt(index++)
+            if (ch == (§ char "%"))
+            (§
+                if (index >= format.length())
+                (§
+                    throw new UnknownFormatConversionException("An unquoted (§ char "%") character cannot terminate a field format specification")
+                )
+                char specifier = format.charAt(index++)
+                switch (specifier)
+                (§
+                    case (§ char "T")
+                    case (§ char "t")
+                    (§
+                        sb.append(type.toJavaName(specifier == (§ char "T")))
+                        break
+                    )
+                    case (§ char "H")
+                    case (§ char "h")
+                    (§
+                        sb.append(getDeclaringClass().toJavaName(specifier == (§ char "H")))
+                        break
+                    )
+                    case (§ char "n")
+                    (§
+                        sb.append(getName())
+                        break
+                    )
+                    case (§ char "f")
+                    (§
+                        sb.append(!(this instanceof ResolvedJavaField) ? "unresolved" (§ colon ) ((ResolvedJavaField) this).isStatic() ? "static" (§ colon ) "instance")
+                        break
+                    )
+                    case (§ char "%")
+                    (§
+                        sb.append((§ char "%"))
+                        break
+                    )
+                    default
+                    (§
+                        throw new UnknownFormatConversionException(String.valueOf(specifier))
+                    )
+                )
+            )
+            else
+            (§
+                sb.append(ch)
+            )
+        )
+        return sb.toString()
+    )
+)
+)
+
+(§ package jdk.vm.ci.meta
+
+import java.lang.reflect.Array
+
+;;;
+ ; Denotes the basic kinds of types in CRI, including the all the Java primitive types, for example,
+ ; {@link JavaKind#Int} for {@code int} and {@link JavaKind#Object} for all object types. A kind has
+ ; a single character short name, a Java name, and a set of flags further describing its behavior.
+ ;;
+public enum JavaKind
+(§
+    ;;; The primitive boolean kind, represented as an int on the stack. */
+    Boolean((§ char "Z"), "boolean", 1, true, java.lang.Boolean.TYPE, java.lang.Boolean.class),
+
+    ;;; The primitive byte kind, represented as an int on the stack. */
+    Byte((§ char "B"), "byte", 1, true, java.lang.Byte.TYPE, java.lang.Byte.class),
+
+    ;;; The primitive short kind, represented as an int on the stack. */
+    Short((§ char "S"), "short", 1, true, java.lang.Short.TYPE, java.lang.Short.class),
+
+    ;;; The primitive char kind, represented as an int on the stack. */
+    Char((§ char "C"), "char", 1, true, java.lang.Character.TYPE, java.lang.Character.class),
+
+    ;;; The primitive int kind, represented as an int on the stack. */
+    Int((§ char "I"), "int", 1, true, java.lang.Integer.TYPE, java.lang.Integer.class),
+
+    ;;; The primitive float kind. */
+    Float((§ char "F"), "float", 1, false, java.lang.Float.TYPE, java.lang.Float.class),
+
+    ;;; The primitive long kind. */
+    Long((§ char "J"), "long", 2, false, java.lang.Long.TYPE, java.lang.Long.class),
+
+    ;;; The primitive double kind. */
+    Double((§ char "D"), "double", 2, false, java.lang.Double.TYPE, java.lang.Double.class),
+
+    ;;; The Object kind, also used for arrays. */
+    Object((§ char "A"), "Object", 1, false, null, null),
+
+    ;;; The void kind. */
+    Void((§ char "V"), "void", 0, false, java.lang.Void.TYPE, java.lang.Void.class),
+
+    ;;; The non-type. */
+    Illegal((§ char "-"), "illegal", 0, false, null, null)
+
+    private final char typeChar
+    private final String javaName
+    private final boolean isStackInt
+    private final Class<?> primitiveJavaClass
+    private final Class<?> boxedJavaClass
+    private final int slotCount
+
+    JavaKind(char typeChar, String javaName, int slotCount, boolean isStackInt, Class<?> primitiveJavaClass, Class<?> boxedJavaClass)
+    (§
+        this.typeChar = typeChar
+        this.javaName = javaName
+        this.slotCount = slotCount
+        this.isStackInt = isStackInt
+        this.primitiveJavaClass = primitiveJavaClass
+        this.boxedJavaClass = boxedJavaClass
+        assert primitiveJavaClass == null || javaName.equals(primitiveJavaClass.getName())
+    )
+
+    ;;;
+     ; Returns the number of stack slots occupied by this kind according to the Java bytecodes
+     ; specification.
+     ;;
+    public int getSlotCount()
+    (§
+        return this.slotCount
+    )
+
+    ;;;
+     ; Returns whether this kind occupied two stack slots.
+     ;;
+    public boolean needsTwoSlots()
+    (§
+        return this.slotCount == 2
+    )
+
+    ;;;
+     ; Returns the name of the kind as a single upper case character. For the void and primitive
+     ; kinds, this is the <i>FieldType</i> term in
+     ; <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.3.2-200">
+     ; table 4.3-A</a> of the JVM Specification. For {@link #Object}, the character {@code (§ char "A")} is
+     ; returned and for {@link #Illegal}, {@code (§ char "-")} is returned.
+     ;;
+    public char getTypeChar()
+    (§
+        return typeChar
+    )
+
+    ;;;
+     ; Returns the name of this kind which will also be it Java programming language name if it is
+     ; {@linkplain #isPrimitive() primitive} or {@code void}.
+     ;;
+    public String getJavaName()
+    (§
+        return javaName
+    )
+
+    ;;;
+     ; Checks whether this type is a Java primitive type.
+     ;
+     ; @return {@code true} if this is {@link #Boolean}, {@link #Byte}, {@link #Char},
+     ;         {@link #Short}, {@link #Int}, {@link #Long}, {@link #Float}, {@link #Double}, or
+     ;         {@link #Void}.
+     ;;
+    public boolean isPrimitive()
+    (§
+        return primitiveJavaClass != null
+    )
+
+    ;;;
+     ; Returns the kind that represents this kind when on the Java operand stack.
+     ;
+     ; @return the kind used on the operand stack
+     ;;
+    public JavaKind getStackKind()
+    (§
+        if (isStackInt)
+        (§
+            return Int
+        )
+        return this
+    )
+
+    ;;;
+     ; Checks whether this type is a Java primitive type representing an integer number.
+     ;
+     ; @return {@code true} if the stack kind is {@link #Int} or {@link #Long}.
+     ;;
+    public boolean isNumericInteger()
+    (§
+        return isStackInt || this == JavaKind.Long
+    )
+
+    ;;;
+     ; Checks whether this type is a Java primitive type representing an unsigned number.
+     ;
+     ; @return {@code true} if the kind is {@link #Boolean} or {@link #Char}.
+     ;;
+    public boolean isUnsigned()
+    (§
+        return this == JavaKind.Boolean || this == JavaKind.Char
+    )
+
+    ;;;
+     ; Checks whether this type is a Java primitive type representing a floating point number.
+     ;
+     ; @return {@code true} if this is {@link #Float} or {@link #Double}.
+     ;;
+    public boolean isNumericFloat()
+    (§
+        return this == JavaKind.Float || this == JavaKind.Double
+    )
+
+    ;;;
+     ; Checks whether this represent an Object of some sort.
+     ;
+     ; @return {@code true} if this is {@link #Object}.
+     ;;
+    public boolean isObject()
+    (§
+        return this == JavaKind.Object
+    )
+
+    ;;;
+     ; Returns the kind corresponding to the Java type string.
+     ;
+     ; @param typeString the Java type string
+     ; @return the kind
+     ;;
+    public static JavaKind fromTypeString(String typeString)
+    (§
+        assert typeString.length() > 0
+        final char first = typeString.charAt(0)
+        if (first == (§ char "[") || first == (§ char "L"))
+        (§
+            return JavaKind.Object
+        )
+        return JavaKind.fromPrimitiveOrVoidTypeChar(first)
+    )
+
+    ;;;
+     ; Returns the kind of a word given the size of a word in bytes.
+     ;
+     ; @param wordSizeInBytes the size of a word in bytes
+     ; @return the kind representing a word value
+     ;;
+    public static JavaKind fromWordSize(int wordSizeInBytes)
+    (§
+        if (wordSizeInBytes == 8)
+        (§
+            return JavaKind.Long
+        )
+        else
+        (§
+            assert wordSizeInBytes == 4 (§ colon ) "Unsupported word size!"
+            return JavaKind.Int
+        )
+    )
+
+    ;;;
+     ; Returns the kind from the character describing a primitive or void.
+     ;
+     ; @param ch the character for a void or primitive kind as returned by {@link #getTypeChar()}
+     ; @return the kind
+     ;;
+    public static JavaKind fromPrimitiveOrVoidTypeChar(char ch)
+    (§
+        switch (ch)
+        (§
+            case (§ char "Z")
+                return Boolean
+            case (§ char "C")
+                return Char
+            case (§ char "F")
+                return Float
+            case (§ char "D")
+                return Double
+            case (§ char "B")
+                return Byte
+            case (§ char "S")
+                return Short
+            case (§ char "I")
+                return Int
+            case (§ char "J")
+                return Long
+            case (§ char "V")
+                return Void
+        )
+        throw new IllegalArgumentException("unknown primitive or void type character: " + ch)
+    )
+
+    ;;;
+     ; Returns the Kind representing the given Java class.
+     ;
+     ; @param klass the class
+     ; @return the kind
+     ;;
+    public static JavaKind fromJavaClass(Class<?> klass)
+    (§
+        if (klass == Boolean.primitiveJavaClass)
+        (§
+            return Boolean
+        )
+        else if (klass == Byte.primitiveJavaClass)
+        (§
+            return Byte
+        )
+        else if (klass == Short.primitiveJavaClass)
+        (§
+            return Short
+        )
+        else if (klass == Char.primitiveJavaClass)
+        (§
+            return Char
+        )
+        else if (klass == Int.primitiveJavaClass)
+        (§
+            return Int
+        )
+        else if (klass == Long.primitiveJavaClass)
+        (§
+            return Long
+        )
+        else if (klass == Float.primitiveJavaClass)
+        (§
+            return Float
+        )
+        else if (klass == Double.primitiveJavaClass)
+        (§
+            return Double
+        )
+        else if (klass == Void.primitiveJavaClass)
+        (§
+            return Void
+        )
+        else
+        (§
+            return Object
+        )
+    )
+
+    ;;;
+     ; Returns the Java class representing this kind.
+     ;
+     ; @return the Java class
+     ;;
+    public Class<?> toJavaClass()
+    (§
+        return primitiveJavaClass
+    )
+
+    ;;;
+     ; Returns the Java class for instances of boxed values of this kind.
+     ;
+     ; @return the Java class
+     ;;
+    public Class<?> toBoxedJavaClass()
+    (§
+        return boxedJavaClass
+    )
+
+    ;;;
+     ; Converts this value type to a string.
+     ;;
+    @Override
+    public String toString()
+    (§
+        return javaName
+    )
+
+    ;;;
+     ; Marker interface for types that should be {@linkplain JavaKind#format(Object) formatted} with
+     ; their {@link Object#toString()} value. Calling {@link Object#toString()} on other objects
+     ; poses a security risk because it can potentially call user code.
+     ;;
+    public interface FormatWithToString
+    (§
+    )
+
+    ;;;
+     ; Classes for which invoking {@link Object#toString()} does not run user code.
+     ;;
+    private static boolean isToStringSafe(Class<?> c)
+    (§
+        return c == Boolean.class || c == Byte.class || c == Character.class || c == Short.class || c == Integer.class || c == Float.class || c == Long.class || c == Double.class
+    )
+
+    ;;;
+     ; Gets a formatted string for a given value of this kind.
+     ;
+     ; @param value a value of this kind
+     ; @return a formatted string for {@code value} based on this kind
+     ;;
+    public String format(Object value)
+    (§
+        if (isPrimitive())
+        (§
+            assert isToStringSafe(value.getClass())
+            return value.toString()
+        )
+        else
+        (§
+            if (value == null)
+            (§
+                return "null"
+            )
+            else
+            (§
+                if (value instanceof String)
+                (§
+                    String s = (String) value
+                    if (s.length() > 50)
+                    (§
+                        return "String:\"" + s.substring(0, 30) + "...\""
+                    )
+                    else
+                    (§
+                        return "String:\"" + s + (§ char "\"")
+                    )
+                )
+                else if (value instanceof JavaType)
+                (§
+                    return "JavaType:" + ((JavaType) value).toJavaName()
+                )
+                else if (value instanceof Enum)
+                (§
+                    return MetaUtil.getSimpleName(value.getClass(), true) + ":" + ((Enum<?>) value).name()
+                )
+                else if (value instanceof FormatWithToString)
+                (§
+                    return MetaUtil.getSimpleName(value.getClass(), true) + ":" + String.valueOf(value)
+                )
+                else if (value instanceof Class<?>)
+                (§
+                    return "Class:" + ((Class<?>) value).getName()
+                )
+                else if (isToStringSafe(value.getClass()))
+                (§
+                    return value.toString()
+                )
+                else if (value.getClass().isArray())
+                (§
+                    return formatArray(value)
+                )
+                else
+                (§
+                    return MetaUtil.getSimpleName(value.getClass(), true) + "@" + System.identityHashCode(value)
+                )
+            )
+        )
+    )
+
+    private static final int MAX_FORMAT_ARRAY_LENGTH = 5
+
+    private static String formatArray(Object array)
+    (§
+        Class<?> componentType = array.getClass().getComponentType()
+        assert componentType != null
+        int arrayLength = Array.getLength(array)
+        StringBuilder buf = new StringBuilder(MetaUtil.getSimpleName(componentType, true)).append((§ char "[")).append(arrayLength).append("]{")
+        int length = Math.min(MAX_FORMAT_ARRAY_LENGTH, arrayLength)
+        boolean primitive = componentType.isPrimitive()
+        for (int i = 0(§ semi ) i < length(§ semi ) i++)
+        (§
+            if (primitive)
+            (§
+                buf.append(Array.get(array, i))
+            )
+            else
+            (§
+                Object o = ((Object[]) array)[i]
+                buf.append(JavaKind.Object.format(o))
+            )
+            if (i != length - 1)
+            (§
+                buf.append(", ")
+            )
+        )
+        if (arrayLength != length)
+        (§
+            buf.append(", ...")
+        )
+        return buf.append((§ char "}")).toString()
+    )
+
+    ;;;
+     ; Gets the minimum value that can be represented as a value of this kind.
+     ;
+     ; @return the minimum value represented as a {@code long}
+     ;;
+    public long getMinValue()
+    (§
+        switch (this)
+        (§
+            case Boolean
+                return 0
+            case Byte
+                return java.lang.Byte.MIN_VALUE
+            case Char
+                return java.lang.Character.MIN_VALUE
+            case Short
+                return java.lang.Short.MIN_VALUE
+            case Int
+                return java.lang.Integer.MIN_VALUE
+            case Long
+                return java.lang.Long.MIN_VALUE
+            case Float
+                return java.lang.Float.floatToRawIntBits(java.lang.Float.MIN_VALUE)
+            case Double
+                return java.lang.Double.doubleToRawLongBits(java.lang.Double.MIN_VALUE)
+            default
+                throw new IllegalArgumentException("illegal call to minValue on " + this)
+        )
+    )
+
+    ;;;
+     ; Gets the maximum value that can be represented as a value of this kind.
+     ;
+     ; @return the maximum value represented as a {@code long}
+     ;;
+    public long getMaxValue()
+    (§
+        switch (this)
+        (§
+            case Boolean
+                return 1
+            case Byte
+                return java.lang.Byte.MAX_VALUE
+            case Char
+                return java.lang.Character.MAX_VALUE
+            case Short
+                return java.lang.Short.MAX_VALUE
+            case Int
+                return java.lang.Integer.MAX_VALUE
+            case Long
+                return java.lang.Long.MAX_VALUE
+            case Float
+                return java.lang.Float.floatToRawIntBits(java.lang.Float.MAX_VALUE)
+            case Double
+                return java.lang.Double.doubleToRawLongBits(java.lang.Double.MAX_VALUE)
+            default
+                throw new IllegalArgumentException("illegal call to maxValue on " + this)
+        )
+    )
+
+    ;;;
+     ; Number of bytes that are necessary to represent a value of this kind.
+     ;
+     ; @return the number of bytes
+     ;;
+    public int getByteCount()
+    (§
+        if (this == Boolean)
+        (§
+            return 1
+        )
+        else
+        (§
+            return getBitCount() >> 3
+        )
+    )
+
+    ;;;
+     ; Number of bits that are necessary to represent a value of this kind.
+     ;
+     ; @return the number of bits
+     ;;
+    public int getBitCount()
+    (§
+        switch (this)
+        (§
+            case Boolean
+                return 1
+            case Byte
+                return 8
+            case Char
+            case Short
+                return 16
+            case Float
+                return 32
+            case Int
+                return 32
+            case Double
+                return 64
+            case Long
+                return 64
+            default
+                throw new IllegalArgumentException("illegal call to bits on " + this)
+        )
+    )
+)
+)
+
+(§ package jdk.vm.ci.meta
+
+import java.util.IllegalFormatException
+import java.util.UnknownFormatConversionException
+
+;;;
+ ; Represents a reference to a Java method, either resolved or unresolved. Methods, like fields and
+ ; types, are resolved through {@link ConstantPool constant pools}.
+ ;;
+public interface JavaMethod
+(§
+    ;;;
+     ; Returns the name of this method.
+     ;;
+    String getName()
+
+    ;;;
+     ; Returns the {@link JavaType} object representing the class or interface that declares this
+     ; method.
+     ;;
+    JavaType getDeclaringClass()
+
+    ;;;
+     ; Returns the signature of this method.
+     ;;
+    Signature getSignature()
+
+    ;;;
+     ; Gets a string for this method formatted according to a given format specification. A format
+     ; specification is composed of characters that are to be copied verbatim to the result and
+     ; specifiers that denote an attribute of this method that is to be copied to the result. A
+     ; specifier is a single character preceded by a (§ char "%") character. The accepted specifiers and the
+     ; method attributes they denote are described below:
+     ;
+     ; <pre>
+     ;     Specifier | Description                                          | Example(s)
+     ;     ----------+------------------------------------------------------------------------------------------
+     ;     (§ char "R")       | Qualified return type                                | "int" "java.lang.String"
+     ;     (§ char "r")       | Unqualified return type                              | "int" "String"
+     ;     (§ char "H")       | Qualified holder                                     | "java.util.Map.Entry"
+     ;     (§ char "h")       | Unqualified holder                                   | "Entry"
+     ;     (§ char "n")       | Method name                                          | "add"
+     ;     (§ char "P")       | Qualified parameter types, separated by ', '         | "int, java.lang.String"
+     ;     (§ char "p")       | Unqualified parameter types, separated by ', '       | "int, String"
+     ;     (§ char "f")       | Indicator if method is unresolved, static or virtual | "unresolved" "static" "virtual"
+     ;     (§ char "%")       | A (§ char "%") character                                      | "%"
+     ; </pre>
+     ;
+     ; @param format a format specification
+     ; @return the result of formatting this method according to {@code format}
+     ; @throws IllegalFormatException if an illegal specifier is encountered in {@code format}
+     ;;
+    default String format(String format) throws IllegalFormatException
+    (§
+        StringBuilder sb = new StringBuilder()
+        int index = 0
+        Signature sig = null
+        while (index < format.length())
+        (§
+            char ch = format.charAt(index++)
+            if (ch == (§ char "%"))
+            (§
+                if (index >= format.length())
+                (§
+                    throw new UnknownFormatConversionException("An unquoted (§ char "%") character cannot terminate a method format specification")
+                )
+                char specifier = format.charAt(index++)
+                switch (specifier)
+                (§
+                    case (§ char "R")
+                    case (§ char "r")
+                    (§
+                        if (sig == null)
+                        (§
+                            sig = getSignature()
+                        )
+                        sb.append(sig.getReturnType(null).toJavaName(specifier == (§ char "R")))
+                        break
+                    )
+                    case (§ char "H")
+                    case (§ char "h")
+                    (§
+                        sb.append(getDeclaringClass().toJavaName(specifier == (§ char "H")))
+                        break
+                    )
+                    case (§ char "n")
+                    (§
+                        sb.append(getName())
+                        break
+                    )
+                    case (§ char "P")
+                    case (§ char "p")
+                    (§
+                        if (sig == null)
+                        (§
+                            sig = getSignature()
+                        )
+                        for (int i = 0(§ semi ) i < sig.getParameterCount(false)(§ semi ) i++)
+                        (§
+                            if (i != 0)
+                            (§
+                                sb.append(", ")
+                            )
+                            sb.append(sig.getParameterType(i, null).toJavaName(specifier == (§ char "P")))
+                        )
+                        break
+                    )
+                    case (§ char "f")
+                    (§
+                        sb.append(!(this instanceof ResolvedJavaMethod) ? "unresolved" (§ colon ) ((ResolvedJavaMethod) this).isStatic() ? "static" (§ colon ) "virtual")
+                        break
+                    )
+                    case (§ char "%")
+                    (§
+                        sb.append((§ char "%"))
+                        break
+                    )
+                    default
+                    (§
+                        throw new UnknownFormatConversionException(String.valueOf(specifier))
+                    )
+                )
+            )
+            else
+            (§
+                sb.append(ch)
+            )
+        )
+        return sb.toString()
+    )
+)
+)
+
+(§ package jdk.vm.ci.meta
+
+import static jdk.vm.ci.meta.MetaUtil.internalNameToJava
+
+;;;
+ ; Represents a resolved or unresolved type. Types include primitives, objects, {@code void}, and
+ ; arrays thereof.
+ ;;
+public interface JavaType
+(§
+    ;;;
+     ; Returns the name of this type in internal form. The following are examples of strings
+     ; returned by this method:
+     ;
+     ; <pre>
+     ;     "Ljava/lang/Object;"
+     ;     "I"
+     ;     "[[B"
+     ; </pre>
+     ;;
+    String getName()
+
+    ;;;
+     ; Returns an unqualified name of this type.
+     ;
+     ; <pre>
+     ;     "Object"
+     ;     "Integer"
+     ; </pre>
+     ;;
+    default String getUnqualifiedName()
+    (§
+        String name = getName()
+        if (name.indexOf((§ char "/")) != -1)
+        (§
+            name = name.substring(name.lastIndexOf((§ char "/")) + 1)
+        )
+        if (name.endsWith(";"))
+        (§
+            name = name.substring(0, name.length() - 1)
+        )
+        return name
+    )
+
+    ;;;
+     ; Checks whether this type is an array class.
+     ;
+     ; @return {@code true} if this type is an array class
+     ;;
+    default boolean isArray()
+    (§
+        return getComponentType() != null
+    )
+
+    ;;;
+     ; For array types, gets the type of the components, or {@code null} if this is not an array
+     ; type. This method is analogous to {@link Class#getComponentType()}.
+     ;;
+    JavaType getComponentType()
+
+    ;;;
+     ; Gets the elemental type for this given type. The elemental type is the corresponding zero
+     ; dimensional type of an array type. For example, the elemental type of {@code int[][][]} is
+     ; {@code int}. A non-array type is its own elemental type.
+     ;;
+    default JavaType getElementalType()
+    (§
+        JavaType t = this
+        while (t.getComponentType() != null)
+        (§
+            t = t.getComponentType()
+        )
+        return t
+    )
+
+    ;;;
+     ; Gets the array class type representing an array with elements of this type.
+     ;;
+    JavaType getArrayClass()
+
+    ;;;
+     ; Gets the {@link JavaKind} of this type.
+     ;;
+    JavaKind getJavaKind()
+
+    ;;;
+     ; Resolves this type to a {@link ResolvedJavaType}.
+     ;
+     ; @param accessingClass the context of resolution (must not be null)
+     ; @return the resolved Java type
+     ; @throws LinkageError if the resolution failed
+     ; @throws NullPointerException if {@code accessingClass} is {@code null}
+     ;;
+    ResolvedJavaType resolve(ResolvedJavaType accessingClass)
+
+    ;;;
+     ; Gets the Java programming language name for this type. The following are examples of strings
+     ; returned by this method:
+     ;
+     ; <pre>
+     ;      java.lang.Object
+     ;      int
+     ;      boolean[][]
+     ; </pre>
+     ;
+     ; @return the Java name corresponding to this type
+     ;;
+    default String toJavaName()
+    (§
+        return internalNameToJava(getName(), true, false)
+    )
+
+    ;;;
+     ; Gets the Java programming language name for this type. The following are examples of strings
+     ; returned by this method:
+     ;
+     ; <pre>
+     ;     qualified == true:
+     ;         java.lang.Object
+     ;         int
+     ;         boolean[][]
+     ;     qualified == false:
+     ;         Object
+     ;         int
+     ;         boolean[][]
+     ; </pre>
+     ;
+     ; @param qualified specifies if the package prefix of this type should be included in the
+     ;            returned name
+     ; @return the Java name corresponding to this type
+     ;;
+    default String toJavaName(boolean qualified)
+    (§
+        JavaKind kind = getJavaKind()
+        if (kind == JavaKind.Object)
+        (§
+            return internalNameToJava(getName(), qualified, false)
+        )
+        return getJavaKind().getJavaName()
+    )
+
+    ;;;
+     ; Returns this type's name in the same format as {@link Class#getName()}.
+     ;;
+    default String toClassName()
+    (§
+        return internalNameToJava(getName(), true, true)
+    )
+)
+)
+
+(§ package jdk.vm.ci.meta
+
+;;;
+ ; Provides memory access operations for the target VM.
+ ;;
+public interface MemoryAccessProvider
+(§
+    ;;;
+     ; Reads a primitive value using a base address and a displacement.
+     ;
+     ; @param kind the {@link JavaKind} of the returned {@link JavaConstant} object
+     ; @param base the base address from which the value is read
+     ; @param displacement the displacement within the object in bytes
+     ; @param bits the number of bits to read from memory
+     ; @return the read value encapsulated in a {@link JavaConstant} object of {@link JavaKind} kind
+     ; @throws IllegalArgumentException if the read is out of bounds of the object or {@code kind}
+     ;             is {@link JavaKind#Void} or not {@linkplain JavaKind#isPrimitive() primitive}
+     ;             kind or {@code bits} is not 8, 16, 32 or 64
+     ;;
+    JavaConstant readPrimitiveConstant(JavaKind kind, Constant base, long displacement, int bits) throws IllegalArgumentException
+
+    ;;;
+     ; Reads a Java {@link Object} value using a base address and a displacement.
+     ;
+     ; @param base the base address from which the value is read
+     ; @param displacement the displacement within the object in bytes
+     ; @return the read value encapsulated in a {@link Constant} object
+     ; @throws IllegalArgumentException if the address computed from {@code base} and
+     ;             {@code displacement} does not denote a location holding an {@code Object} value
+     ;;
+    JavaConstant readObjectConstant(Constant base, long displacement)
+)
+)
+
+(§ package jdk.vm.ci.meta
+
+import java.lang.reflect.Constructor
+import java.lang.reflect.Executable
+import java.lang.reflect.Field
+import java.lang.reflect.Method
+
+;;;
+ ; Provides access to the metadata of a class typically provided in a class file.
+ ;;
+public interface MetaAccessProvider
+(§
+    ;;;
+     ; Returns the resolved Java type representing a given Java class.
+     ;
+     ; @param clazz the Java class object
+     ; @return the resolved Java type object
+     ;;
+    ResolvedJavaType lookupJavaType(Class<?> clazz)
+
+    ;;;
+     ; Returns the resolved Java types representing some given Java classes.
+     ;
+     ; @param classes the Java class objects
+     ; @return the resolved Java type objects
+     ;;
+    default ResolvedJavaType[] lookupJavaTypes(Class<?>[] classes)
+    (§
+        ResolvedJavaType[] result = new ResolvedJavaType[classes.length]
+        for (int i = 0(§ semi ) i < result.length(§ semi ) i++)
+        (§
+            result[i] = lookupJavaType(classes[i])
+        )
+        return result
+    )
+
+    ;;;
+     ; Provides the {@link ResolvedJavaMethod} for a {@link Method} or {@link Constructor} obtained
+     ; via reflection.
+     ;;
+    ResolvedJavaMethod lookupJavaMethod(Executable reflectionMethod)
+
+    ;;;
+     ; Provides the {@link ResolvedJavaField} for a {@link Field} obtained via reflection.
+     ;;
+    ResolvedJavaField lookupJavaField(Field reflectionField)
+
+    ;;;
+     ; Returns the resolved Java type of the given {@link JavaConstant} object.
+     ;
+     ; @return {@code null} if {@code constant.isNull() || !constant.kind.isObject()}
+     ;;
+    ResolvedJavaType lookupJavaType(JavaConstant constant)
+
+    ;;;
+     ; Returns the number of bytes occupied by this constant value or constant object.
+     ;
+     ; @param constant the constant whose bytes should be measured
+     ; @return the number of bytes occupied by this constant
+     ;;
+    long getMemorySize(JavaConstant constant)
+
+    ;;;
+     ; Parses a
+     ; <a href="http://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html#jvms-4.3.3">method
+     ; descriptor</a> into a {@link Signature}. The behavior of this method is undefined if the
+     ; method descriptor is not well formed.
+     ;;
+    Signature parseMethodDescriptor(String methodDescriptor)
+
+    ;;;
+     ; Encodes a deoptimization action and a deoptimization reason in an integer value.
+     ;
+     ; @param debugId an integer that can be used to track the origin of a deoptimization at
+     ;            runtime. There is no guarantee that the runtime will use this value. The runtime
+     ;            may even keep fewer than 32 bits.
+     ;
+     ; @return the encoded value as an integer
+     ;;
+    JavaConstant encodeDeoptActionAndReason(DeoptimizationAction action, DeoptimizationReason reason, int debugId)
+
+    DeoptimizationReason decodeDeoptReason(JavaConstant constant)
+
+    DeoptimizationAction decodeDeoptAction(JavaConstant constant)
+
+    int decodeDebugId(JavaConstant constant)
+)
+)
+
+(§ package jdk.vm.ci.meta
+
+;;;
+ ; Represents a platform-specific low-level type for values.
+ ;;
+public interface PlatformKind
+(§
+    String name()
+
+    public interface Key
+    (§
+    )
+
+    class EnumKey<E extends Enum<E>> implements Key
+    (§
+        private final Enum<E> e
+
+        public EnumKey(Enum<E> e)
+        (§
+            this.e = e
+        )
+
+        @Override
+        public int hashCode()
+        (§
+            return e.ordinal()
+        )
+
+        @Override
+        public boolean equals(Object obj)
+        (§
+            if (obj == this)
+            (§
+                return true
+            )
+            if (obj instanceof EnumKey)
+            (§
+                EnumKey<?> that = (EnumKey<?>) obj
+                return this.e == that.e
+            )
+            return false
+        )
+    )
+
+    ;;;
+     ; Gets a value associated with this object that can be used as a stable key in a map. The
+     ; {@link Object#hashCode()} implementation of the returned value should be stable between VM
+     ; executions.
+     ;;
+    Key getKey()
+
+    ;;;
+     ; Get the size in bytes of this {@link PlatformKind}.
+     ;;
+    int getSizeInBytes()
+
+    ;;;
+     ; Returns how many primitive values fit in this {@link PlatformKind}. For scalar types this is
+     ; one, for SIMD types it may be higher.
+     ;;
+    int getVectorLength()
+
+    ;;;
+     ; Gets a single type char that identifies this type for use in debug output.
+     ;;
+    char getTypeChar()
+)
+)
+
+(§ package jdk.vm.ci.meta
+
+import java.nio.ByteBuffer
+
+;;;
+ ; Represents a primitive constant value, such as an integer or floating point number, within the
+ ; compiler and across the compiler/runtime interface.
+ ;;
+public class PrimitiveConstant implements JavaConstant, SerializableConstant
+(§
+    private final JavaKind kind
+
+    ;;;
+     ; The boxed primitive value as a {@code long}. For {@code float} and {@code double} values,
+     ; this value is the result of {@link Float#floatToRawIntBits(float)} and
+     ; {@link Double#doubleToRawLongBits(double)} respectively.
+     ;;
+    private final long primitive
+
+    protected PrimitiveConstant(JavaKind kind, long primitive)
+    (§
+        this.primitive = primitive
+        this.kind = kind
+
+        assert kind.isPrimitive() || kind == JavaKind.Illegal
+    )
+
+    @Override
+    public JavaKind getJavaKind()
+    (§
+        return kind
+    )
+
+    @Override
+    public boolean isNull()
+    (§
+        return false
+    )
+
+    @Override
+    public boolean isDefaultForKind()
+    (§
+        return primitive == 0
+    )
+
+    @Override
+    public boolean asBoolean()
+    (§
+        assert getJavaKind() == JavaKind.Boolean
+        return primitive != 0 #_"L"
+    )
+
+    @Override
+    public int asInt()
+    (§
+        assert getJavaKind().getStackKind() == JavaKind.Int (§ colon ) getJavaKind().getStackKind()
+        return (int) primitive
+    )
+
+    @Override
+    public long asLong()
+    (§
+        assert getJavaKind().isNumericInteger()
+        return primitive
+    )
+
+    @Override
+    public float asFloat()
+    (§
+        assert getJavaKind() == JavaKind.Float
+        return Float.intBitsToFloat((int) primitive)
+    )
+
+    @Override
+    public double asDouble()
+    (§
+        assert getJavaKind() == JavaKind.Double
+        return Double.longBitsToDouble(primitive)
+    )
+
+    @Override
+    public Object asBoxedPrimitive()
+    (§
+        switch (getJavaKind())
+        (§
+            case Byte
+                return Byte.valueOf((byte) primitive)
+            case Boolean
+                return Boolean.valueOf(asBoolean())
+            case Short
+                return Short.valueOf((short) primitive)
+            case Char
+                return Character.valueOf((char) primitive)
+            case Int
+                return Integer.valueOf(asInt())
+            case Long
+                return Long.valueOf(asLong())
+            case Float
+                return Float.valueOf(asFloat())
+            case Double
+                return Double.valueOf(asDouble())
+            default
+                throw new IllegalArgumentException("unexpected kind " + getJavaKind())
+        )
+    )
+
+    @Override
+    public int getSerializedSize()
+    (§
+        return getJavaKind().getByteCount()
+    )
+
+    @Override
+    public void serialize(ByteBuffer buffer)
+    (§
+        switch (getJavaKind())
+        (§
+            case Byte
+            case Boolean
+                buffer.put((byte) primitive)
+                break
+            case Short
+                buffer.putShort((short) primitive)
+                break
+            case Char
+                buffer.putChar((char) primitive)
+                break
+            case Int
+                buffer.putInt(asInt())
+                break
+            case Long
+                buffer.putLong(asLong())
+                break
+            case Float
+                buffer.putFloat(asFloat())
+                break
+            case Double
+                buffer.putDouble(asDouble())
+                break
+            default
+                throw new IllegalArgumentException("unexpected kind " + getJavaKind())
+        )
+    )
+
+    @Override
+    public int hashCode()
+    (§
+        return (int) (primitive (§ bit-xor ) (primitive >>> 32)) * (getJavaKind().ordinal() + 31)
+    )
+
+    @Override
+    public boolean equals(Object o)
+    (§
+        if (o == this)
+        (§
+            return true
+        )
+        if (!(o instanceof PrimitiveConstant))
+        (§
+            return false
+        )
+        PrimitiveConstant other = (PrimitiveConstant) o
+        return this.kind.equals(other.kind) && this.primitive == other.primitive
+    )
+
+    @Override
+    public String toString()
+    (§
+        if (getJavaKind() == JavaKind.Illegal)
+        (§
+            return "illegal"
+        )
+        else
+        (§
+            return getJavaKind().getJavaName() + "[" + asBoxedPrimitive() + "|0x" + Long.toHexString(primitive) + "]"
+        )
+    )
+)
+)
+
+(§ package jdk.vm.ci.meta
+
+public class RawConstant extends PrimitiveConstant
+(§
+    public RawConstant(long rawValue)
+    (§
+        super(JavaKind.Int, rawValue)
+    )
+)
+)
+
+(§ package jdk.vm.ci.meta
+
+import java.lang.reflect.AnnotatedElement
+import java.lang.reflect.Modifier
+
+;;;
+ ; Represents a reference to a resolved Java field. Fields, like methods and types, are resolved
+ ; through {@link ConstantPool constant pools}.
+ ;;
+public interface ResolvedJavaField extends JavaField, ModifiersProvider, AnnotatedElement
+(§
+    ;;;
+     ; {@inheritDoc}
+     ; <p>
+     ; Only the {@linkplain Modifier#fieldModifiers() field flags} specified in the JVM
+     ; specification will be included in the returned mask.
+     ;;
+    int getModifiers()
+
+    default boolean isFinal()
+    (§
+        return ModifiersProvider.super.isFinalFlagSet()
+    )
+
+    ;;;
+     ; Determines if this field was injected by the VM. Such a field, for example, is not derived
+     ; from a class file.
+     ;;
+    boolean isInternal()
+
+    ;;;
+     ; Determines if this field is a synthetic field as defined by the Java Language Specification.
+     ;;
+    boolean isSynthetic()
+
+    ;;;
+     ; Returns the {@link ResolvedJavaType} object representing the class or interface that declares
+     ; this field.
+     ;;
+    ResolvedJavaType getDeclaringClass()
+)
+)
+
+(§ package jdk.vm.ci.meta
+
+import java.lang.annotation.Annotation
+import java.lang.reflect.AnnotatedElement
+import java.lang.reflect.Array
+import java.lang.reflect.Method
+import java.lang.reflect.Modifier
+import java.lang.reflect.Type
+
+;;;
+ ; Represents a resolved Java method. Methods, like fields and types, are resolved through
+ ; {@link ConstantPool constant pools}.
+ ;;
+public interface ResolvedJavaMethod extends JavaMethod, InvokeTarget, ModifiersProvider, AnnotatedElement
+(§
+    ;;;
+     ; Returns the bytecode of this method, if the method has code. The returned byte array does not
+     ; contain breakpoints or non-Java bytecodes. This may return null if the
+     ; {@link #getDeclaringClass() holder} is not {@link ResolvedJavaType#isLinked() linked}.
+     ;
+     ; The contained constant pool indices may not be the ones found in the original class file but
+     ; they can be used with the JVMCI API (e.g. methods in {@link ConstantPool}).
+     ;
+     ; @return the bytecode of the method, or {@code null} if {@code getCodeSize() == 0} or if the
+     ;         code is not ready.
+     ;;
+    byte[] getCode()
+
+    ;;;
+     ; Returns the size of the bytecode of this method, if the method has code. This is equivalent
+     ; to {@link #getCode()}. {@code length} if the method has code.
+     ;
+     ; @return the size of the bytecode in bytes, or 0 if no bytecode is available
+     ;;
+    int getCodeSize()
+
+    ;;;
+     ; Returns the {@link ResolvedJavaType} object representing the class or interface that declares
+     ; this method.
+     ;;
+    ResolvedJavaType getDeclaringClass()
+
+    ;;;
+     ; Returns the maximum number of locals used in this method's bytecodes.
+     ;;
+    int getMaxLocals()
+
+    ;;;
+     ; Returns the maximum number of stack slots used in this method's bytecodes.
+     ;;
+    int getMaxStackSize()
+
+    default boolean isFinal()
+    (§
+        return ModifiersProvider.super.isFinalFlagSet()
+    )
+
+    ;;;
+     ; Determines if this method is a synthetic method as defined by the Java Language
+     ; Specification.
+     ;;
+    boolean isSynthetic()
+
+    ;;;
+     ; Checks that the method is a
+     ; <a href="http://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.6">varargs</a>
+     ; method.
+     ;
+     ; @return whether the method is a varargs method
+     ;;
+    boolean isVarArgs()
+
+    ;;;
+     ; Checks that the method is a
+     ; <a href="http://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.6">bridge</a>
+     ; method.
+     ;
+     ; @return whether the method is a bridge method
+     ;;
+    boolean isBridge()
+
+    ;;;
+     ; Returns {@code true} if this method is a default method; returns {@code false} otherwise.
+     ;
+     ; A default method is a public non-abstract instance method, that is, a non-static method with
+     ; a body, declared in an interface type.
+     ;
+     ; @return true if and only if this method is a default method as defined by the Java Language
+     ;         Specification.
+     ;;
+    boolean isDefault()
+
+    ;;;
+     ; Checks whether this method is a class initializer.
+     ;
+     ; @return {@code true} if the method is a class initializer
+     ;;
+    boolean isClassInitializer()
+
+    ;;;
+     ; Checks whether this method is a constructor.
+     ;
+     ; @return {@code true} if the method is a constructor
+     ;;
+    boolean isConstructor()
+
+    ;;;
+     ; Checks whether this method can be statically bound (usually, that means it is final or
+     ; private or static, but not abstract, or the declaring class is final).
+     ;
+     ; @return {@code true} if this method can be statically bound
+     ;;
+    boolean canBeStaticallyBound()
+
+    ;;;
+     ; Returns the list of exception handlers for this method.
+     ;;
+    ExceptionHandler[] getExceptionHandlers()
+
+    ;;;
+     ; Returns a stack trace element for this method and a given bytecode index.
+     ;;
+    StackTraceElement asStackTraceElement(int bci)
+
+    ;;;
+     ; Returns an object that provides access to the profiling information recorded for this method.
+     ;;
+    default ProfilingInfo getProfilingInfo()
+    (§
+        return getProfilingInfo(true, true)
+    )
+
+    ;;;
+     ; Returns an object that provides access to the profiling information recorded for this method.
+     ;
+     ; @param includeNormal if true,
+     ;            {@linkplain ProfilingInfo#getDeoptimizationCount(DeoptimizationReason)
+     ;            deoptimization counts} will include deoptimization that happened during execution
+     ;            of standard non-osr methods.
+     ; @param includeOSR if true,
+     ;            {@linkplain ProfilingInfo#getDeoptimizationCount(DeoptimizationReason)
+     ;            deoptimization counts} will include deoptimization that happened during execution
+     ;            of on-stack-replacement methods.
+     ;;
+    ProfilingInfo getProfilingInfo(boolean includeNormal, boolean includeOSR)
+
+    ;;;
+     ; Invalidates the profiling information and restarts profiling upon the next invocation.
+     ;;
+    void reprofile()
+
+    ;;;
+     ; Returns the constant pool of this method.
+     ;;
+    ConstantPool getConstantPool()
+
+    ;;;
+     ; A {@code Parameter} provides information about method parameters.
+     ;;
+    class Parameter implements AnnotatedElement
+    (§
+        private final String name
+        private final ResolvedJavaMethod method
+        private final int modifiers
+        private final int index
+
+        ;;;
+         ; Constructor for {@code Parameter}.
+         ;
+         ; @param name the name of the parameter or {@code null} if there is no
+         ;            {@literal MethodParameters} class file attribute providing a non-empty name
+         ;            for the parameter
+         ; @param modifiers the modifier flags for the parameter
+         ; @param method the method which defines this parameter
+         ; @param index the index of the parameter
+         ;;
+        public Parameter(String name, int modifiers, ResolvedJavaMethod method, int index)
+        (§
+            assert name == null || !name.isEmpty()
+            this.name = name
+            this.modifiers = modifiers
+            this.method = method
+            this.index = index
+        )
+
+        ;;;
+         ; Gets the name of the parameter. If the parameter's name is {@linkplain #isNamePresent()
+         ; present}, then this method returns the name provided by the class file. Otherwise, this
+         ; method synthesizes a name of the form argN, where N is the index of the parameter in the
+         ; descriptor of the method which declares the parameter.
+         ;
+         ; @return the name of the parameter, either provided by the class file or synthesized if
+         ;         the class file does not provide a name
+         ;;
+        public String getName()
+        (§
+            if (name == null)
+            (§
+                return "arg" + index
+            )
+            else
+            (§
+                return name
+            )
+        )
+
+        ;;;
+         ; Gets the method declaring the parameter.
+         ;;
+        public ResolvedJavaMethod getDeclaringMethod()
+        (§
+            return method
+        )
+
+        ;;;
+         ; Get the modifier flags for the parameter.
+         ;;
+        public int getModifiers()
+        (§
+            return modifiers
+        )
+
+        ;;;
+         ; Gets the kind of the parameter.
+         ;;
+        public JavaKind getKind()
+        (§
+            return method.getSignature().getParameterKind(index)
+        )
+
+        ;;;
+         ; Gets the formal type of the parameter.
+         ;;
+        public Type getParameterizedType()
+        (§
+            return method.getGenericParameterTypes()[index]
+        )
+
+        ;;;
+         ; Gets the type of the parameter.
+         ;;
+        public JavaType getType()
+        (§
+            return method.getSignature().getParameterType(index, method.getDeclaringClass())
+        )
+
+        ;;;
+         ; Determines if the parameter has a name according to a {@literal MethodParameters} class
+         ; file attribute.
+         ;
+         ; @return true if and only if the parameter has a name according to the class file.
+         ;;
+        public boolean isNamePresent()
+        (§
+            return name != null
+        )
+
+        ;;;
+         ; Determines if the parameter represents a variable argument list.
+         ;;
+        public boolean isVarArgs()
+        (§
+            return method.isVarArgs() && index == method.getSignature().getParameterCount(false) - 1
+        )
+
+        public <T extends Annotation> T getAnnotation(Class<T> annotationClass)
+        (§
+            return method.getParameterAnnotations(annotationClass)[index]
+        )
+
+        public Annotation[] getAnnotations()
+        (§
+            return method.getParameterAnnotations()[index]
+        )
+
+        public Annotation[] getDeclaredAnnotations()
+        (§
+            return getAnnotations()
+        )
+
+        @Override
+        public String toString()
+        (§
+            Type type = getParameterizedType()
+            String typename = type.getTypeName()
+            if (isVarArgs())
+            (§
+                typename = typename.replaceFirst("\\[\\]$", "...")
+            )
+
+            final StringBuilder sb = new StringBuilder(Modifier.toString(getModifiers()))
+            if (sb.length() != 0)
+            (§
+                sb.append((§ char " "))
+            )
+            return sb.append(typename).append((§ char " ")).append(getName()).toString()
+        )
+
+        @Override
+        public boolean equals(Object obj)
+        (§
+            if (obj instanceof Parameter)
+            (§
+                Parameter other = (Parameter) obj
+                return (other.method.equals(method) && other.index == index)
+            )
+            return false
+        )
+
+        @Override
+        public int hashCode()
+        (§
+            return method.hashCode() (§ bit-xor ) index
+        )
+    )
+
+    ;;;
+     ; Returns an array of {@code Parameter} objects that represent all the parameters to this
+     ; method. Returns an array of length 0 if this method has no parameters. Returns {@code null}
+     ; if the parameter information is unavailable.
+     ;;
+    default Parameter[] getParameters()
+    (§
+        return null
+    )
+
+    ;;;
+     ; Returns an array of arrays that represent the annotations on the formal parameters, in
+     ; declaration order, of this method.
+     ;
+     ; @see Method#getParameterAnnotations()
+     ;;
+    Annotation[][] getParameterAnnotations()
+
+    ;;;
+     ; Returns an array of {@link Type} objects that represent the formal parameter types, in
+     ; declaration order, of this method.
+     ;
+     ; @see Method#getGenericParameterTypes()
+     ;;
+    Type[] getGenericParameterTypes()
+
+    ;;;
+     ; Returns {@code true} if this method is not excluded from inlining and has associated Java
+     ; bytecodes (@see {@link ResolvedJavaMethod#hasBytecodes()}).
+     ;;
+    boolean canBeInlined()
+
+    ;;;
+     ; Determines if this method is targeted by a VM directive (e.g.,
+     ; {@code -XX:CompileCommand=dontinline,<pattern>}) or VM recognized annotation (e.g.,
+     ; {@code jdk.internal.vm.annotation.DontInline}) that specifies it should not be inlined.
+     ;;
+    boolean hasNeverInlineDirective()
+
+    ;;;
+     ; Returns {@code true} if the inlining of this method should be forced.
+     ;;
+    boolean shouldBeInlined()
+
+    ;;;
+     ; Returns the LineNumberTable of this method or null if this method does not have a line
+     ; numbers table.
+     ;;
+    LineNumberTable getLineNumberTable()
+
+    ;;;
+     ; Returns the local variable table of this method or null if this method does not have a local
+     ; variable table.
+     ;;
+    LocalVariableTable getLocalVariableTable()
+
+    ;;;
+     ; Gets the encoding of (that is, a constant representing the value of) this method.
+     ;
+     ; @return a constant representing a reference to this method
+     ;;
+    Constant getEncoding()
+
+    ;;;
+     ; Checks if this method is present in the virtual table for subtypes of the specified
+     ; {@linkplain ResolvedJavaType type}.
+     ;
+     ; @return true is this method is present in the virtual table for subtypes of this type.
+     ;;
+    boolean isInVirtualMethodTable(ResolvedJavaType resolved)
+
+    ;;;
+     ; Gets the annotation of a particular type for a formal parameter of this method.
+     ;
+     ; @param annotationClass the Class object corresponding to the annotation type
+     ; @param parameterIndex the index of a formal parameter of {@code method}
+     ; @return the annotation of type {@code annotationClass} for the formal parameter present, else
+     ;         null
+     ; @throws IndexOutOfBoundsException if {@code parameterIndex} does not denote a formal
+     ;             parameter
+     ;;
+    default <T extends Annotation> T getParameterAnnotation(Class<T> annotationClass, int parameterIndex)
+    (§
+        if (parameterIndex >= 0)
+        (§
+            Annotation[][] parameterAnnotations = getParameterAnnotations()
+            for (Annotation a (§ colon ) parameterAnnotations[parameterIndex])
+            (§
+                if (a.annotationType() == annotationClass)
+                (§
+                    return annotationClass.cast(a)
+                )
+            )
+        )
+        return null
+    )
+
+    default JavaType[] toParameterTypes()
+    (§
+        JavaType receiver = isStatic() || isConstructor() ? null (§ colon ) getDeclaringClass()
+        return getSignature().toParameterTypes(receiver)
+    )
+
+    ;;;
+     ; Gets the annotations of a particular type for the formal parameters of this method.
+     ;
+     ; @param annotationClass the Class object corresponding to the annotation type
+     ; @return the annotation of type {@code annotationClass} (if any) for each formal parameter
+     ;         present
+     ;;
+    @SuppressWarnings("unchecked")
+    default <T extends Annotation> T[] getParameterAnnotations(Class<T> annotationClass)
+    (§
+        Annotation[][] parameterAnnotations = getParameterAnnotations()
+        T[] result = (T[]) Array.newInstance(annotationClass, parameterAnnotations.length)
+        for (int i = 0(§ semi ) i < parameterAnnotations.length(§ semi ) i++)
+        (§
+            for (Annotation a (§ colon ) parameterAnnotations[i])
+            (§
+                if (a.annotationType() == annotationClass)
+                (§
+                    result[i] = annotationClass.cast(a)
+                )
+            )
+        )
+        return result
+    )
+
+    ;;;
+     ; Checks whether the method has bytecodes associated with it. Methods without bytecodes are
+     ; either abstract or native methods.
+     ;
+     ; @return whether the definition of this method is Java bytecodes
+     ;;
+    default boolean hasBytecodes()
+    (§
+        return isConcrete() && !isNative()
+    )
+
+    ;;;
+     ; Checks whether the method has a receiver parameter - i.e., whether it is not static.
+     ;
+     ; @return whether the method has a receiver parameter
+     ;;
+    default boolean hasReceiver()
+    (§
+        return !isStatic()
+    )
+
+    ;;;
+     ; Determines if this method is {@link java.lang.Object#Object()}.
+     ;;
+    default boolean isJavaLangObjectInit()
+    (§
+        return getDeclaringClass().isJavaLangObject() && getName().equals("<init>")
+    )
+
+    SpeculationLog getSpeculationLog()
+)
+)
+
+(§ package jdk.vm.ci.meta
+
+import java.lang.reflect.AnnotatedElement
+
+import jdk.vm.ci.meta.Assumptions.AssumptionResult
+
+;;;
+ ; Represents a resolved Java type. Types include primitives, objects, {@code void}, and arrays
+ ; thereof. Types, like fields and methods, are resolved through {@link ConstantPool constant pools}
+ ; .
+ ;;
+public interface ResolvedJavaType extends JavaType, ModifiersProvider, AnnotatedElement
+(§
+    ;;;
+     ; Checks whether this type has a finalizer method.
+     ;
+     ; @return {@code true} if this class has a finalizer
+     ;;
+    boolean hasFinalizer()
+
+    ;;;
+     ; Checks whether this type has any finalizable subclasses so far. Any decisions based on this
+     ; information require the registration of a dependency, since this information may change.
+     ;
+     ; @return {@code true} if this class has any subclasses with finalizers
+     ;;
+    AssumptionResult<Boolean> hasFinalizableSubclass()
+
+    ;;;
+     ; Checks whether this type is an interface.
+     ;
+     ; @return {@code true} if this type is an interface
+     ;;
+    boolean isInterface()
+
+    ;;;
+     ; Checks whether this type is an instance class.
+     ;
+     ; @return {@code true} if this type is an instance class
+     ;;
+    boolean isInstanceClass()
+
+    ;;;
+     ; Checks whether this type is primitive.
+     ;
+     ; @return {@code true} if this type is primitive
+     ;;
+    boolean isPrimitive()
+
+    ;;
+     ; The setting of the final bit for types is a bit confusing since arrays are marked as final.
+     ; This method provides a semantically equivalent test that appropriate for types.
+     ;;
+    default boolean isLeaf()
+    (§
+        return getElementalType().isFinalFlagSet()
+    )
+
+    ;;;
+     ; Checks whether this type is initialized. If a type is initialized it implies that it was
+     ; {@link #isLinked() linked} and that the static initializer has run.
+     ;
+     ; @return {@code true} if this type is initialized
+     ;;
+    boolean isInitialized()
+
+    ;;;
+     ; Initializes this type.
+     ;;
+    void initialize()
+
+    ;;;
+     ; Checks whether this type is linked and verified. When a type is linked the static initializer
+     ; has not necessarily run. An {@link #isInitialized() initialized} type is always linked.
+     ;
+     ; @return {@code true} if this type is linked
+     ;;
+    boolean isLinked()
+
+    ;;;
+     ; Determines if this type is either the same as, or is a superclass or superinterface of, the
+     ; type represented by the specified parameter. This method is identical to
+     ; {@link Class#isAssignableFrom(Class)} in terms of the value return for this type.
+     ;;
+    boolean isAssignableFrom(ResolvedJavaType other)
+
+    ;;;
+     ; Returns the {@link ResolvedJavaType} object representing the host class of this VM anonymous
+     ; class (as opposed to the unrelated concept specified by {@link Class#isAnonymousClass()}) or
+     ; {@code null} if this object does not represent a VM anonymous class.
+     ;;
+    ResolvedJavaType getHostClass()
+
+    ;;;
+     ; Returns true if this type is exactly the type {@link java.lang.Object}.
+     ;;
+    default boolean isJavaLangObject()
+    (§
+        ;; Removed assertion due to https://bugs.eclipse.org/bugs/show_bug.cgi?id=434442
+        return getSuperclass() == null && !isInterface() && getJavaKind() == JavaKind.Object
+    )
+
+    ;;;
+     ; Checks whether the specified object is an instance of this type.
+     ;
+     ; @param obj the object to test
+     ; @return {@code true} if the object is an instance of this type
+     ;;
+    boolean isInstance(JavaConstant obj)
+
+    ;;;
+     ; Gets the super class of this type. If this type represents either the {@code Object} class,
+     ; an interface, a primitive type, or void, then null is returned. If this object represents an
+     ; array class then the type object representing the {@code Object} class is returned.
+     ;;
+    ResolvedJavaType getSuperclass()
+
+    ;;;
+     ; Gets the interfaces implemented or extended by this type. This method is analogous to
+     ; {@link Class#getInterfaces()} and as such, only returns the interfaces directly implemented
+     ; or extended by this type.
+     ;;
+    ResolvedJavaType[] getInterfaces()
+
+    ;;;
+     ; Gets the single implementor of this type. Calling this method on a non-interface type causes
+     ; an exception.
+     ; <p>
+     ; If the compiler uses the result of this method for its compilation, the usage must be guarded
+     ; because the verifier can not guarantee that the assigned type really implements this
+     ; interface. Additionally, class loading can invalidate the result of this method.
+     ;
+     ; @return {@code null} if there is no implementor, the implementor if there is only one, or
+     ;         {@code this} if there are more than one.
+     ;;
+    ResolvedJavaType getSingleImplementor()
+
+    ;;;
+     ; Walks the class hierarchy upwards and returns the least common class that is a superclass of
+     ; both the current and the given type.
+     ;
+     ; @return the least common type that is a super type of both the current and the given type, or
+     ;         {@code null} if primitive types are involved.
+     ;;
+    ResolvedJavaType findLeastCommonAncestor(ResolvedJavaType otherType)
+
+    ;;;
+     ; Attempts to get a leaf concrete subclass of this type.
+     ; <p>
+     ; For an {@linkplain #isArray() array} type A, the leaf concrete subclass is A if the
+     ; {@linkplain #getElementalType() elemental} type of A is final (which includes primitive
+     ; types). Otherwise {@code null} is returned for A.
+     ; <p>
+     ; For a non-array type T, the result is the leaf concrete type in the current hierarchy of T.
+     ; <p>
+     ; A runtime may decide not to manage or walk a large hierarchy and so the result is
+     ; conservative. That is, a non-null result is guaranteed to be the leaf concrete class in T's
+     ; hierarchy <b>at the current point in time</b> but a null result does not necessarily imply
+     ; that there is no leaf concrete class in T's hierarchy.
+     ; <p>
+     ; If the compiler uses the result of this method for its compilation, it must register the
+     ; {@link AssumptionResult} in its {@link Assumptions} because dynamic class loading can
+     ; invalidate the result of this method.
+     ;
+     ; @return an {@link AssumptionResult} containing the leaf concrete subclass for this type as
+     ;         described above
+     ;;
+    AssumptionResult<ResolvedJavaType> findLeafConcreteSubtype()
+
+    ResolvedJavaType getComponentType()
+
+    default ResolvedJavaType getElementalType()
+    (§
+        ResolvedJavaType t = this
+        while (t.isArray())
+        (§
+            t = t.getComponentType()
+        )
+        return t
+    )
+
+    ResolvedJavaType getArrayClass()
+
+    ;;;
+     ; Resolves the method implementation for virtual dispatches on objects of this dynamic type.
+     ; This resolution process only searches "up" the class hierarchy of this type. A broader search
+     ; that also walks "down" the hierarchy is implemented by
+     ; {@link #findUniqueConcreteMethod(ResolvedJavaMethod)}. For interface types it returns null
+     ; since no concrete object can be an interface.
+     ;
+     ; @param method the method to select the implementation of
+     ; @param callerType the caller or context type used to perform access checks
+     ; @return the link-time resolved method (might be abstract) or {@code null} if it is either a
+     ;         signature polymorphic method or can not be linked.
+     ;;
+    ResolvedJavaMethod resolveMethod(ResolvedJavaMethod method, ResolvedJavaType callerType)
+
+    ;;;
+     ; A convenience wrapper for {@link #resolveMethod(ResolvedJavaMethod, ResolvedJavaType)} that
+     ; only returns non-abstract methods.
+     ;
+     ; @param method the method to select the implementation of
+     ; @param callerType the caller or context type used to perform access checks
+     ; @return the concrete method that would be selected at runtime, or {@code null} if there is no
+     ;         concrete implementation of {@code method} in this type or any of its superclasses
+     ;;
+    default ResolvedJavaMethod resolveConcreteMethod(ResolvedJavaMethod method, ResolvedJavaType callerType)
+    (§
+        ResolvedJavaMethod resolvedMethod = resolveMethod(method, callerType)
+        if (resolvedMethod == null || resolvedMethod.isAbstract())
+        (§
+            return null
+        )
+        return resolvedMethod
+    )
+
+    ;;;
+     ; Given a {@link ResolvedJavaMethod} A, returns a concrete {@link ResolvedJavaMethod} B that is
+     ; the only possible unique target for a virtual call on A(). Returns {@code null} if either no
+     ; such concrete method or more than one such method exists. Returns the method A if A is a
+     ; concrete method that is not overridden.
+     ; <p>
+     ; If the compiler uses the result of this method for its compilation, it must register an
+     ; assumption because dynamic class loading can invalidate the result of this method.
+     ;
+     ; @param method the method A for which a unique concrete target is searched
+     ; @return the unique concrete target or {@code null} if no such target exists or assumptions
+     ;         are not supported by this runtime
+     ;;
+    AssumptionResult<ResolvedJavaMethod> findUniqueConcreteMethod(ResolvedJavaMethod method)
+
+    ;;;
+     ; Returns the instance fields of this class, including
+     ; {@linkplain ResolvedJavaField#isInternal() internal} fields. A zero-length array is returned
+     ; for array and primitive types. The order of fields returned by this method is stable. That
+     ; is, for a single JVM execution the same order is returned each time this method is called. It
+     ; is also the "natural" order, which means that the JVM would expect the fields in this order
+     ; if no specific order is given.
+     ;
+     ; @param includeSuperclasses if true, then instance fields for the complete hierarchy of this
+     ;            type are included in the result
+     ; @return an array of instance fields
+     ;;
+    ResolvedJavaField[] getInstanceFields(boolean includeSuperclasses)
+
+    ;;;
+     ; Returns the static fields of this class, including {@linkplain ResolvedJavaField#isInternal()
+     ; internal} fields. A zero-length array is returned for array and primitive types. The order of
+     ; fields returned by this method is stable. That is, for a single JVM execution the same order
+     ; is returned each time this method is called.
+     ;;
+    ResolvedJavaField[] getStaticFields()
+
+    ;;;
+     ; Returns the instance field of this class (or one of its super classes) at the given offset,
+     ; or {@code null} if there is no such field.
+     ;
+     ; @param offset the offset of the field to look for
+     ; @return the field with the given offset, or {@code null} if there is no such field.
+     ;;
+    ResolvedJavaField findInstanceFieldWithOffset(long offset, JavaKind expectedKind)
+
+    ;;;
+     ; Returns name of source file of this type.
+     ;;
+    String getSourceFileName()
+
+    ;;;
+     ; Returns {@code true} if the type is a local type.
+     ;;
+    boolean isLocal()
+
+    ;;;
+     ; Returns {@code true} if the type is a member type.
+     ;;
+    boolean isMember()
+
+    ;;;
+     ; Returns the enclosing type of this type, if it exists, or {@code null}.
+     ;;
+    ResolvedJavaType getEnclosingType()
+
+    ;;;
+     ; Returns an array reflecting all the constructors declared by this type. This method is
+     ; similar to {@link Class#getDeclaredConstructors()} in terms of returned constructors.
+     ;;
+    ResolvedJavaMethod[] getDeclaredConstructors()
+
+    ;;;
+     ; Returns an array reflecting all the methods declared by this type. This method is similar to
+     ; {@link Class#getDeclaredMethods()} in terms of returned methods.
+     ;;
+    ResolvedJavaMethod[] getDeclaredMethods()
+
+    ;;;
+     ; Returns the {@code <clinit>} method for this class if there is one.
+     ;;
+    ResolvedJavaMethod getClassInitializer()
+
+    default ResolvedJavaMethod findMethod(String name, Signature signature)
+    (§
+        for (ResolvedJavaMethod method (§ colon ) getDeclaredMethods())
+        (§
+            if (method.getName().equals(name) && method.getSignature().equals(signature))
+            (§
+                return method
+            )
+        )
+        return null
+    )
+
+    ;;;
+     ; Returns true if this type is {@link Cloneable} and can be safely cloned by creating a normal
+     ; Java allocation and populating it from the fields returned by
+     ; {@link #getInstanceFields(boolean)}. Some types may require special handling by the platform
+     ; so they would to go through the normal {@link Object#clone} path.
+     ;;
+    boolean isCloneableWithAllocation()
+)
+)
+
+(§ package jdk.vm.ci.meta
+
+;;;
+ ; Represents a method signature provided by the runtime.
+ ;
+ ; @see <a href="http://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html#jvms-4.3.3">Method
+ ;      Descriptors</a>
+ ;;
+public interface Signature
+(§
+    ;;;
+     ; Returns the number of parameters in this signature, adding 1 for a receiver if requested.
+     ;
+     ; @param receiver true if 1 is to be added to the result for a receiver
+     ; @return the number of parameters; + 1 iff {@code receiver == true}
+     ;;
+    int getParameterCount(boolean receiver)
+
+    ;;;
+     ; Gets the parameter type at the specified position.
+     ;
+     ; @param index the index into the parameters, with {@code 0} indicating the first parameter
+     ; @param accessingClass the context of the type lookup. If non-null, its class loader is used
+     ;            for resolving the type. If {@code null}, then the type returned is either
+     ;            unresolved or a resolved type whose resolution is context free (e.g., a primitive
+     ;            type or a type in a java.* package).
+     ; @return the {@code index}'th parameter type
+     ; @throws LinkageError if {@code accessingClass != null} and resolution fails
+     ;
+     ;;
+    JavaType getParameterType(int index, ResolvedJavaType accessingClass)
+
+    ;;;
+     ; Gets the parameter kind at the specified position. This is the same as calling
+     ; {@link #getParameterType}. {@link JavaType#getJavaKind getJavaKind}.
+     ;
+     ; @param index the index into the parameters, with {@code 0} indicating the first parameter
+     ; @return the kind of the parameter at the specified position
+     ;;
+    default JavaKind getParameterKind(int index)
+    (§
+        return getParameterType(index, null).getJavaKind()
+    )
+
+    ;;;
+     ; Gets the return type of this signature.
+     ;
+     ; @param accessingClass the context of the type lookup. If non-null, its class loader is used
+     ;            for resolving the type. If {@code null}, then the type returned is either
+     ;            unresolved or a resolved type whose resolution is context free (e.g., a primitive
+     ;            type or a type in a java.* package).
+     ; @return the return type
+     ; @throws LinkageError if {@code accessingClass != null} and resolution fails
+     ;;
+    JavaType getReturnType(ResolvedJavaType accessingClass)
+
+    ;;;
+     ; Gets the return kind of this signature. This is the same as calling {@link #getReturnType}.
+     ; {@link JavaType#getJavaKind getJavaKind}.
+     ;;
+    default JavaKind getReturnKind()
+    (§
+        return getReturnType(null).getJavaKind()
+    )
+
+    ;;;
+     ; Gets the
+     ; <a href="http://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html#jvms-4.3.3">method
+     ; descriptor</a> corresponding to this signature. For example:
+     ;
+     ; <pre>
+     ; (ILjava/lang/String;D)V
+     ; </pre>
+     ;
+     ; @return the signature as a string
+     ;;
+    default String toMethodDescriptor()
+    (§
+        StringBuilder sb = new StringBuilder("(")
+        for (int i = 0(§ semi ) i < getParameterCount(false)(§ semi ) ++i)
+        (§
+            sb.append(getParameterType(i, null).getName())
+        )
+        sb.append((§ char ")")).append(getReturnType(null).getName())
+        return sb.toString()
+    )
+
+    default JavaType[] toParameterTypes(JavaType receiverType)
+    (§
+        int args = getParameterCount(false)
+        JavaType[] result
+        int i = 0
+        if (receiverType != null)
+        (§
+            result = new JavaType[args + 1]
+            result[0] = receiverType
+            i = 1
+        )
+        else
+        (§
+            result = new JavaType[args]
+        )
+        for (int j = 0(§ semi ) j < args(§ semi ) j++)
+        (§
+            result[i + j] = getParameterType(j, null)
+        )
+        return result
+    )
+
+    default JavaKind[] toParameterKinds(boolean receiver)
+    (§
+        int args = getParameterCount(false)
+        JavaKind[] result
+        int i = 0
+        if (receiver)
+        (§
+            result = new JavaKind[args + 1]
+            result[0] = JavaKind.Object
+            i = 1
+        )
+        else
+        (§
+            result = new JavaKind[args]
+        )
+        for (int j = 0(§ semi ) j < args(§ semi ) j++)
+        (§
+            result[i + j] = getParameterKind(j)
+        )
+        return result
+    )
+)
+)
+
+(§ package jdk.vm.ci.meta
+
+;;;
+ ; Represents a constant that needs to be patched at runtime by the VM.
+ ;;
+public interface VMConstant extends Constant
+(§
+)
+)
+
+(§ package jdk.vm.ci.meta
+
+;;;
+ ; Abstract base class for values.
+ ;;
+public abstract class Value
+(§
+    public static final Value[] NO_VALUES = new Value[0]
+
+    public static final AllocatableValue ILLEGAL = new IllegalValue()
+
+    private static final class IllegalValue extends AllocatableValue
+    (§
+        private IllegalValue()
+        (§
+            super(ValueKind.Illegal)
+        )
+
+        @Override
+        public String toString()
+        (§
+            return "-"
+        )
+
+        @Override
+        public boolean equals(Object other)
+        (§
+            ;; Due to de-serialization this object may exist multiple times. So we compare classes
+            ;; instead of the individual objects. (This anonymous class has always the same meaning)
+            return other instanceof IllegalValue
+        )
+    )
+
+    private final ValueKind<?> valueKind
+
+    ;;;
+     ; Initializes a new value of the specified kind.
+     ;
+     ; @param valueKind the kind
+     ;;
+    protected Value(ValueKind<?> valueKind)
+    (§
+        this.valueKind = valueKind
+    )
+
+    ;;;
+     ; Returns a String representation of the kind, which should be the end of all
+     ; {@link #toString()} implementation of subclasses.
+     ;;
+    protected final String getKindSuffix()
+    (§
+        return "|" + valueKind.getKindSuffix()
+    )
+
+    public final ValueKind<?> getValueKind()
+    (§
+        return valueKind
+    )
+
+    public final <K extends ValueKind<K>> K getValueKind(Class<K> cls)
+    (§
+        return cls.cast(valueKind)
+    )
+
+    ;;;
+     ; Returns the platform specific kind used to store this value.
+     ;;
+    public final PlatformKind getPlatformKind()
+    (§
+        return valueKind.getPlatformKind()
+    )
+
+    @Override
+    public int hashCode()
+    (§
+        return 41 + valueKind.hashCode()
+    )
+
+    @Override
+    public boolean equals(Object obj)
+    (§
+        if (obj instanceof Value)
+        (§
+            Value that = (Value) obj
+            return valueKind.equals(that.valueKind)
+        )
+        return false
+    )
+
+    ;;;
+     ; Checks if this value is identical to {@code other}.
+     ;
+     ; Warning: Use with caution! Usually equivalence {@link #equals(Object)} is sufficient and
+     ; should be used.
+     ;;
+    public final boolean identityEquals(Value other)
+    (§
+        return this == other
+    )
+)
+)
+
+(§ package jdk.vm.ci.meta
+
+;;;
+ ; Represents the type of {@link Value values}. This class can be extended by compilers to track
+ ; additional information about values.
+ ;;
+public abstract class ValueKind<K extends ValueKind<K>>
+(§
+    private enum IllegalKind implements PlatformKind
+    (§
+        ILLEGAL
+
+        private final EnumKey<IllegalKind> key = new EnumKey<>(this)
+
+        public Key getKey()
+        (§
+            return key
+        )
+
+        public int getSizeInBytes()
+        (§
+            return 0
+        )
+
+        public int getVectorLength()
+        (§
+            return 0
+        )
+
+        public char getTypeChar()
+        (§
+            return (§ char "-")
+        )
+    )
+
+    private static class IllegalValueKind extends ValueKind<IllegalValueKind>
+    (§
+        IllegalValueKind()
+        (§
+            super(IllegalKind.ILLEGAL)
+        )
+
+        @Override
+        public IllegalValueKind changeType(PlatformKind newPlatformKind)
+        (§
+            return this
+        )
+
+        @Override
+        public String toString()
+        (§
+            return "ILLEGAL"
+        )
+    )
+
+    ;;;
+     ; The non-type.
+     ;;
+    public static final ValueKind<?> Illegal = new IllegalValueKind()
+
+    private final PlatformKind platformKind
+
+    public ValueKind(PlatformKind platformKind)
+    (§
+        this.platformKind = platformKind
+    )
+
+    public final PlatformKind getPlatformKind()
+    (§
+        return platformKind
+    )
+
+    ;;;
+     ; Create a new {@link ValueKind} with a different {@link PlatformKind}. Subclasses must
+     ; override this to preserve the additional information added by the compiler.
+     ;;
+    public abstract K changeType(PlatformKind newPlatformKind)
+
+    ;;;
+     ; Returns a String representation of the kind, which will be included at the end of
+     ; {@link Value#toString()} implementation. Defaults to {@link #toString()} but can be
+     ; overridden to provide something more specific.
+     ;;
+    public String getKindSuffix()
+    (§
+        return toString()
+    )
+)
+)
+
+(§ package jdk.vm.ci.runtime
+
+import jdk.vm.ci.code.CodeCacheProvider
+import jdk.vm.ci.code.TargetDescription
+import jdk.vm.ci.code.stack.StackIntrospection
+import jdk.vm.ci.meta.ConstantReflectionProvider
+import jdk.vm.ci.meta.MetaAccessProvider
+
+;;;
+ ; A JVMCI backend encapsulates the capabilities needed by a Java based compiler for compiling and
+ ; installing code for a single compute unit within a JVM. In a JVM with support for heterogeneous
+ ; computing, more than one backend may be exposed.
+ ;;
+public class JVMCIBackend
+(§
+    private final MetaAccessProvider metaAccess
+    private final CodeCacheProvider codeCache
+    private final ConstantReflectionProvider constantReflection
+    private final StackIntrospection stackIntrospection
+
+    public JVMCIBackend(MetaAccessProvider metaAccess, CodeCacheProvider codeCache, ConstantReflectionProvider constantReflection, StackIntrospection stackIntrospection)
+    (§
+        this.metaAccess = metaAccess
+        this.codeCache = codeCache
+        this.constantReflection = constantReflection
+        this.stackIntrospection = stackIntrospection
+    )
+
+    public MetaAccessProvider getMetaAccess()
+    (§
+        return metaAccess
+    )
+
+    public CodeCacheProvider getCodeCache()
+    (§
+        return codeCache
+    )
+
+    public ConstantReflectionProvider getConstantReflection()
+    (§
+        return constantReflection
+    )
+
+    public TargetDescription getTarget()
+    (§
+        return codeCache.getTarget()
+    )
+
+    public StackIntrospection getStackIntrospection()
+    (§
+        return stackIntrospection
+    )
+)
+)
