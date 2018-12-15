@@ -153,7 +153,6 @@
 (declare
 Alive
 BarrierType
-BoxingSnippets
 Def
 Flags
 GraalDirectives'UNLIKELY_PROBABILITY
@@ -726,12 +725,6 @@ BlockLoopInfo'new-0
 BlockScope''doBlockStart-1
 BlockScope'new-2
 BlockStates'new-1
-BoxNode''createVirtualBoxingNode-1
-BoxNode'new-3
-BoxingSnippets'canonicalizeBoxing-1
-BoxingTemplates''lower-3b
-BoxingTemplates''lower-3u
-BoxingTemplates'new-0
 BranchOp'new-4
 BranchOp'new-4c
 BranchOp'new-4f
@@ -2383,7 +2376,6 @@ LoweredAtomicReadAndWriteNode'new-4
 LoweredCallTargetNode'new-6
 Lowerer'arrayInitializationBarrier-1
 Lowerer'arrayStoreBarrierType-1
-Lowerer'boxingSnippets
 Lowerer'createArrayAddress-4
 Lowerer'createFieldAddress-3
 Lowerer'createNullCheck-3
@@ -2559,7 +2551,6 @@ NamedLocationIdentity'SECONDARY_SUPER_CACHE
 NamedLocationIdentity'TLAB_END
 NamedLocationIdentity'TLAB_TOP
 NamedLocationIdentity'getArrayLocation-1
-NamedLocationIdentity'getUnboxLocation-1
 NamedLocationIdentity'immutable-1
 NamedLocationIdentity'mutable-1
 Narrow'new-0
@@ -2964,7 +2955,6 @@ SnippetAnchorNode'new-0
 SnippetInfo'new-2
 SnippetReflection'asObject-2c
 SnippetReflection'asObject-2t
-SnippetReflection'forBoxed-2
 SnippetReflection'forObject-1
 SnippetTemplate''instantiate-3
 SnippetTemplate''instantiate-5
@@ -3068,8 +3058,6 @@ UnaryNode'new-2
 UnaryOp'new-1
 UnaryOpLogicNode''getSucceedingStampForValue-3
 UnaryOpLogicNode'new-1
-UnboxNode'create-2
-UnboxNode'new-2
 UncompressPointerOp'new-5
 UnpackEndianHalfNode'create-2
 UnpackEndianHalfNode'new-2
@@ -3170,8 +3158,6 @@ VariableMap''remove-2
 VariableMap'new-0
 VirtualArrayNode'entryIndexForOffset-4
 VirtualArrayNode'new-2
-VirtualBoxingNode''getBoxedValue-2
-VirtualBoxingNode'new-2
 VirtualInstanceNode''field-2
 VirtualInstanceNode''fieldIndex-2
 VirtualInstanceNode''getFields-1
@@ -3737,8 +3723,6 @@ ZeroExtendNode'new-4
 (defp BlockLoopInfo)
 (defp BlockScope)
 (defp BlockStates)
-(defp BoxNode)
-(defp BoxingTemplates)
 (defp BranchOp)
 
 ;;;
@@ -5560,7 +5544,6 @@ ZeroExtendNode'new-4
     (#_"Boolean" UnaryOpLogicNode'''tryFold-2 [#_"UnaryOpLogicNode" this, #_"Stamp" valueStamp])
 )
 
-(defp UnboxNode)
 (defp UncompressPointerOp)
 (defp UnpackEndianHalfNode)
 
@@ -5671,7 +5654,6 @@ ZeroExtendNode'new-4
 (defp Variable)
 (defp VariableMap)
 (defp VirtualArrayNode)
-(defp VirtualBoxingNode)
 
 (defp VirtualClosure
     (#_"void" VirtualClosure'''apply-2 [#_"VirtualClosure" this, #_"VirtualState" vs])
@@ -7459,9 +7441,9 @@ ZeroExtendNode'new-4
  ;;
 (value-ns SnippetReflection
     ;;;
-     ; Creates a boxed {@link JavaKind#Object object} constant.
+     ; Creates a boxed {@link JavaKind#Object object} constant.
      ;
-     ; @param object the object value to box
+     ; @param object the object value to box
      ; @return a constant containing {@code object}
      ;;
     (defn #_"JavaConstant" SnippetReflection'forObject-1 [#_"Object" object]
@@ -7498,21 +7480,6 @@ ZeroExtendNode'new-4
     (defn #_"<T> T" SnippetReflection'asObject-2c [#_"Class<T>" type, #_"JavaConstant" constant]
         (when-not (#_"JavaConstant" .isNull constant)
             (#_"HotSpotObjectConstant" .asObject constant, type)
-        )
-    )
-
-    ;;;
-     ; Creates a boxed constant for the given kind from an Object. The object needs to be of the
-     ; Java boxed type corresponding to the kind.
-     ;
-     ; @param kind the kind of the constant to create
-     ; @param value the Java boxed value: a Byte instance for JavaKind#Byte, etc.
-     ; @return the boxed copy of {@code value}
-     ;;
-    (defn #_"JavaConstant" SnippetReflection'forBoxed-2 [#_"JavaKind" kind, #_"Object" value]
-        (if (= kind JavaKind/Object)
-            (SnippetReflection'forObject-1 value)
-            (JavaConstant/forBoxedPrimitive value)
         )
     )
 )
@@ -11396,54 +11363,10 @@ ZeroExtendNode'new-4
     )
 )
 
-(value-ns BoxingSnippets (§ implements Snippets)
-    (§ snippet! #_"Object" #_"BoxingSnippets" "booleanValueOf" [#_"boolean" value] (Placeholder'piCastToSnippetReplaceeStamp-1 (Boolean/valueOf value)))
-    (§ snippet! #_"Object" #_"BoxingSnippets" "byteValueOf"    [#_"byte" value]    (Placeholder'piCastToSnippetReplaceeStamp-1 (Byte/valueOf value)))
-    (§ snippet! #_"Object" #_"BoxingSnippets" "charValueOf"    [#_"char" value]    (Placeholder'piCastToSnippetReplaceeStamp-1 (Character/valueOf value)))
-    (§ snippet! #_"Object" #_"BoxingSnippets" "intValueOf"     [#_"int" value]     (Placeholder'piCastToSnippetReplaceeStamp-1 (Integer/valueOf value)))
-    (§ snippet! #_"Object" #_"BoxingSnippets" "longValueOf"    [#_"long" value]    (Placeholder'piCastToSnippetReplaceeStamp-1 (Long/valueOf value)))
-    (§ snippet! #_"Object" #_"BoxingSnippets" "shortValueOf"   [#_"short" value]   (Placeholder'piCastToSnippetReplaceeStamp-1 (Short/valueOf value)))
-
-    (§ snippet! #_"boolean" #_"BoxingSnippets" "booleanValue" [#_"Boolean" value]   (#_"Boolean" .booleanValue value))
-    (§ snippet! #_"byte"    #_"BoxingSnippets" "byteValue"    [#_"Byte" value]      (#_"Byte" .byteValue value))
-    (§ snippet! #_"char"    #_"BoxingSnippets" "charValue"    [#_"Character" value] (#_"Character" .charValue value))
-    (§ snippet! #_"int"     #_"BoxingSnippets" "intValue"     [#_"Integer" value]   (#_"Integer" .intValue value))
-    (§ snippet! #_"long"    #_"BoxingSnippets" "longValue"    [#_"Long" value]      (#_"Long" .longValue value))
-    (§ snippet! #_"short"   #_"BoxingSnippets" "shortValue"   [#_"Short" value]     (#_"Short" .shortValue value))
-
-    (defn #_"FloatingNode" BoxingSnippets'canonicalizeBoxing-1 [#_"BoxNode" box]
-        (let [
-            #_"ValueNode" value (Unary'''getValue-1 box)
-        ]
-            (when (satisfies? ConstantNode value)
-                (let [
-                    #_"JavaConstant" sourceConstant (ValueNode''asJavaConstant-1 value)
-                    sourceConstant
-                        (when (and (not= (#_"JavaConstant" .getJavaKind sourceConstant) (:boxingKind box)) (#_"JavaKind" .isNumericInteger (#_"JavaConstant" .getJavaKind sourceConstant))) => sourceConstant
-                            (condp = (:boxingKind box)
-                                JavaKind/Boolean (JavaConstant/forBoolean (not (zero? (#_"JavaConstant" .asLong sourceConstant))))
-                                JavaKind/Byte    (JavaConstant/forByte          (byte (#_"JavaConstant" .asLong sourceConstant)))
-                                JavaKind/Char    (JavaConstant/forChar          (char (#_"JavaConstant" .asLong sourceConstant)))
-                                JavaKind/Short   (JavaConstant/forShort        (short (#_"JavaConstant" .asLong sourceConstant)))
-                                                 sourceConstant
-                            )
-                        )
-                    #_"JavaConstant" boxedConstant (#_"ConstantReflectionProvider" .boxPrimitive HotSpot'constantReflection, sourceConstant)
-                ]
-                    (when (and (some? boxedConstant) (= (#_"JavaConstant" .getJavaKind sourceConstant) (:boxingKind box)))
-                        (ConstantNode'forConstant-2c boxedConstant, (:graph box))
-                    )
-                )
-            )
-        )
-    )
-)
-
 ;;;
  ; Provides a capability for replacing a higher node with one or more lower level nodes.
  ;;
 (value-ns Lowerer
-    (§ def #_"BoxingTemplates"       Lowerer'boxingSnippets       (BoxingTemplates'new-0))
     (§ def #_"InstanceOfTemplates"   Lowerer'instanceofSnippets   (InstanceOfTemplates'new-0))
     (§ def #_"NewObjectTemplates"    Lowerer'newObjectSnippets    (NewObjectTemplates'new-0))
     (§ def #_"MonitorTemplates"      Lowerer'monitorSnippets      (MonitorTemplates'new-1 HotSpot'useFastLocking))
@@ -12355,59 +12278,6 @@ ZeroExtendNode'new-4
         ]
             (SnippetInfo'new-2 method, privateLocations)
         )
-    )
-)
-
-(class-ns BoxingTemplates [AbstractTemplates]
-    (defn #_"BoxingTemplates" BoxingTemplates'new-0 []
-        (let [
-            #_"{JavaKind SnippetInfo}" boxSnippets {}
-            #_"{JavaKind SnippetInfo}" unboxSnippets {}
-            _
-                (doseq [#_"JavaKind" kind (list JavaKind/Boolean JavaKind/Byte JavaKind/Char JavaKind/Int JavaKind/Long JavaKind/Short)]
-                    (§ ass! boxSnippets   (assoc boxSnippets   kind (AbstractTemplates'snippet-3* BoxingSnippets, (str (#_"JavaKind" .getJavaName kind) "ValueOf"))))
-                    (§ ass! unboxSnippets (assoc unboxSnippets kind (AbstractTemplates'snippet-3* BoxingSnippets, (str (#_"JavaKind" .getJavaName kind) "Value"))))
-                )
-        ]
-            (merge (BoxingTemplates'class.) (AbstractTemplates'new-0)
-                (hash-map
-                    #_"{JavaKind SnippetInfo}" :boxSnippets boxSnippets
-                    #_"{JavaKind SnippetInfo}" :unboxSnippets unboxSnippets
-                )
-            )
-        )
-    )
-
-    (defn #_"void" BoxingTemplates''lower-3b [#_"BoxingTemplates" this, #_"BoxNode" box, #_"LoweringTool" lowerer]
-        (let [
-            #_"FloatingNode" canonical (BoxingSnippets'canonicalizeBoxing-1 box)
-        ]
-            ;; if in AOT mode, we don't want to embed boxed constants.
-            (if (some? canonical)
-                (§ ass! box (update box :graph Graph''replaceFixedWithFloating-3 box, canonical))
-                (let [
-                    #_"Arguments" args
-                        (Arguments'new-4* (get (:boxSnippets this) (:boxingKind box)), (:guardsStage (:graph box)), (:loweringStage (:phase lowerer)),
-                            (Unary'''getValue-1 box)
-                        )
-                ]
-                    (SnippetTemplate''instantiate-3 (SnippetTemplate'new-2 args, box), box, args)
-                )
-            )
-        )
-        nil
-    )
-
-    (defn #_"void" BoxingTemplates''lower-3u [#_"BoxingTemplates" this, #_"UnboxNode" unbox, #_"LoweringTool" lowerer]
-        (let [
-            #_"Arguments" args
-                (Arguments'new-4* (get (:unboxSnippets this) (:boxingKind unbox)), (:guardsStage (:graph unbox)), (:loweringStage (:phase lowerer)),
-                    (Unary'''getValue-1 unbox)
-                )
-        ]
-            (SnippetTemplate''instantiate-3 (SnippetTemplate'new-2 args, unbox), unbox, args)
-        )
-        nil
     )
 )
 
@@ -16840,11 +16710,11 @@ ZeroExtendNode'new-4
     )
 
     ;;;
-     ; Changes to CommitAllocationNodes, AllocatedObjectNodes and BoxNodes are not considered to be "important".
+     ; Changes to CommitAllocationNodes and AllocatedObjectNodes are not considered to be "important".
      ; If only changes to those nodes are discovered during analysis, the effects need not be applied.
      ;;
     (defn- #_"boolean" EffectsClosure'isSignificantNode-1 [#_"Node" node]
-        (not (or (satisfies? CommitAllocationNode node) (satisfies? AllocatedObjectNode node) (satisfies? BoxNode node)))
+        (not (or (satisfies? CommitAllocationNode node) (satisfies? AllocatedObjectNode node)))
     )
 
     (defn- #_"MergeProcessor" EffectsClosure''doMergeWithoutDead-3 [#_"EffectsClosure" this, #_"MergeProcessor" processor, #_"EffectsBlockState*" states]
@@ -17799,10 +17669,6 @@ ZeroExtendNode'new-4
         (PEReadEliminationClosure''processLoad-8 this, length, (:array length), NamedLocationIdentity'ARRAY_LENGTH, -1, JavaKind/Int, state, effects)
     )
 
-    (defn- #_"boolean" PEReadEliminationClosure''processUnbox-4 [#_"PEReadEliminationClosure" this, #_"UnboxNode" unbox, #_"PEReadEliminationBlockState" state, #_"GraphEffects" effects]
-        (PEReadEliminationClosure''processLoad-8 this, unbox, (Unary'''getValue-1 unbox), (NamedLocationIdentity'getUnboxLocation-1 (:boxingKind unbox)), -1, (:boxingKind unbox), state, effects)
-    )
-
     (defn- #_"boolean" PEReadEliminationClosure'isOverflowAccess-2 [#_"JavaKind" accessKind, #_"JavaKind" declaredKind]
         (cond
             (= accessKind declaredKind)
@@ -17915,7 +17781,6 @@ ZeroExtendNode'new-4
                     LoadIndexedNode  (PEReadEliminationClosure''processLoadIndexed-4 this, node, state, effects)
                     StoreIndexedNode (PEReadEliminationClosure''processStoreIndexed-4 this, node, state, effects)
                     ArrayLengthNode  (PEReadEliminationClosure''processArrayLength-4 this, node, state, effects)
-                    UnboxNode        (PEReadEliminationClosure''processUnbox-4 this, node, state, effects)
                     RawLoadNode      (PEReadEliminationClosure''processUnsafeLoad-4 this, node, state, effects)
                     RawStoreNode     (PEReadEliminationClosure''processUnsafeStore-4 this, node, state, effects)
                     Single
@@ -41513,18 +41378,6 @@ ZeroExtendNode'new-4
         (get NamedLocationIdentity'ARRAY elementKind)
     )
 
-    (def- #_"{JavaKind LocationIdentity}" NamedLocationIdentity'UNBOX
-        (into {}
-            (for [#_"JavaKind" kind (JavaKind/values)]
-                [kind (NamedLocationIdentity'immutable-1 (str "Unbox: " (#_"JavaKind" .getJavaName kind)))]
-            )
-        )
-    )
-
-    (defn #_"LocationIdentity" NamedLocationIdentity'getUnboxLocation-1 [#_"JavaKind" elementKind]
-        (get NamedLocationIdentity'UNBOX elementKind)
-    )
-
     (def #_"LocationIdentity" NamedLocationIdentity'TLAB_TOP (NamedLocationIdentity'mutable-1 "TlabTop"))
     (def #_"LocationIdentity" NamedLocationIdentity'TLAB_END (NamedLocationIdentity'mutable-1 "TlabEnd"))
 
@@ -47816,108 +47669,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"boolean" IfNode''isUnboxedFrom-3 [#_"IfNode" this, #_"ValueNode" x, #_"ValueNode" src]
-        (or (= x src)
-            (condp satisfies? x
-                UnboxNode (IfNode''isUnboxedFrom-3 this, (Unary'''getValue-1 x), src)
-                PiNode    (IfNode''isUnboxedFrom-3 this, (Proxy'''getOriginalNode-1 x), src)
-                LoadFieldNode
-                    (let [
-                        #_"ValueNode" value (Unary'''getValue-1 x)
-                    ]
-                        (and (= (Stamp'''javaType-1 (:stamp value)) (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, Integer))
-                            (IfNode''isUnboxedFrom-3 this, value, src)
-                        )
-                    )
-                false
-            )
-        )
-    )
-
-    ;;;
-     ; Attempts to replace the following pattern:
-     ;
-     ; Integer x = ...;
-     ; Integer y = ...;
-     ; if ((x == y) || x.equals(y)) { ... }
-     ;
-     ; with:
-     ;
-     ; Integer x = ...;
-     ; Integer y = ...;
-     ; if (x.equals(y)) { ... }
-     ;
-     ; whenever the probability that the reference check will pass is relatively small.
-     ;
-     ; See GR-1315 for more information.
-     ;;
-    (defn- #_"boolean" IfNode''tryEliminateBoxedReferenceEquals-2 [#_"IfNode" this, #_"SimplifierTool" tool]
-        (and (satisfies? ObjectEqualsNode (:logic this))
-            (let [
-                #_"ValueNode" x (:x (:logic this))
-                #_"ValueNode" y (:y (:logic this))
-                #_"ResolvedJavaType" integerType (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, Integer)
-            ]
-                (and
-                    ;; At least one argument for reference equal must be a boxed primitive.
-                    (or (= (Stamp'''javaType-1 (:stamp x)) integerType) (= (Stamp'''javaType-1 (:stamp y)) integerType))
-                    ;; The reference equality check is usually more efficient compared to a boxing check.
-                    ;; The success of the reference equals must therefore be relatively rare, otherwise
-                    ;; it makes no sense to eliminate it.
-                    (<= (:trueSuccessorProbability this) 0.4)
-                    ;; True branch must be empty.
-                    (and (or (satisfies? BeginNode (:trueSuccessor this)) (satisfies? LoopExitNode (:trueSuccessor this)))
-                        (satisfies? EndNode (:next (:trueSuccessor this))) ;; Empty true branch.
-                    )
-                    ;; False branch must only check the unboxed values.
-                    (let [
-                        [#_"UnboxNode" unbox #_"FixedGuardNode" unboxCheck]
-                            (loop-when [unbox nil unboxCheck nil #_"seq" s (seq (AbstractBeginNode''getBlockNodes-1 (:falseSuccessor this)))] (some? s) => [unbox unboxCheck]
-                                (let [
-                                    #_"FixedNode" node (first s)
-                                ]
-                                    (when (or (satisfies? BeginNode node) (satisfies? UnboxNode node) (satisfies? FixedGuardNode node) (satisfies? EndNode node) (satisfies? LoadFieldNode node) (satisfies? LoopExitNode node))
-                                        (let [
-                                            unbox
-                                                (when (satisfies? UnboxNode node) => unbox
-                                                    (when (nil? unbox) => (§ return nil)
-                                                        node
-                                                    )
-                                                )
-                                        ]
-                                            (let [
-                                                unboxCheck
-                                                    (when (and (satisfies? FixedGuardNode node) (satisfies? IntegerEqualsNode (:logic node))) => unboxCheck
-                                                        (let [
-                                                            #_"IntegerEqualsNode" equals (:logic node)
-                                                        ]
-                                                            (when (or (and (IfNode''isUnboxedFrom-3 this, (:x equals), x) (IfNode''isUnboxedFrom-3 this, (:y equals), y)) (and (IfNode''isUnboxedFrom-3 this, (:x equals), y) (IfNode''isUnboxedFrom-3 this, (:y equals), x))) => unboxCheck
-                                                                node
-                                                            )
-                                                        )
-                                                    )
-                                            ]
-                                                (recur unbox unboxCheck (next s))
-                                            )
-                                        )
-                                    )
-                                )
-                            )
-                    ]
-                        (and (some? unbox) (some? unboxCheck)
-                            (let [
-                                ;; Falsify the reference check.
-                                _ (§ ass! this (IfNode''setCondition-2 this, (Graph''addOrUniqueWithInputs-2 (:graph this), (LogicConstantNode'contradiction-0))))
-                            ]
-                                true
-                            )
-                        )
-                    )
-                )
-            )
-        )
-    )
-
     (defm IfNode Simplifiable
         (#_"this" Simplifiable'''simplify-2 [#_"IfNode" this, #_"SimplifierTool" tool]
             (let [
@@ -47995,9 +47746,6 @@ ZeroExtendNode'new-4
                                 )
                             )
                         )
-                    )
-                    (when (IfNode''tryEliminateBoxedReferenceEquals-2 this, tool)
-                        :done
                     )
                 )
                 this
@@ -50796,67 +50544,6 @@ ZeroExtendNode'new-4
     )
 )
 
-;;;
- ; This node represents the boxing of a primitive value. This corresponds to a call to the valueOf
- ; methods in Integer, Long, etc.
- ;;
-(class-ns BoxNode [FixedWithNextNode, FixedNode, ValueNode, Node, VirtualizableAllocation, Virtualizable, Lowerable, Unary #_"<ValueNode>", Canonicalizable]
-    (defn #_"BoxNode" BoxNode'new-3 [#_"ValueNode" value, #_"ResolvedJavaType" resultType, #_"JavaKind" boxingKind]
-        (merge (BoxNode'class.) (FixedWithNextNode'new-1 (StampFactory'objectNonNull-1 (TypeReference'createExactTrusted-1 resultType)))
-            (hash-map
-                ; @Input
-                #_"ValueNode" :value value
-                #_"JavaKind" :boxingKind boxingKind
-            )
-        )
-    )
-
-    (defm BoxNode Unary
-        (#_"ValueNode" Unary'''getValue-1 [#_"BoxNode" this]
-            (:value this)
-        )
-    )
-
-    (defm BoxNode Lowerable
-        (#_"this" Lowerable'''lower-2 [#_"BoxNode" this, #_"LoweringTool" lowerer]
-            (BoxingTemplates''lower-3b Lowerer'boxingSnippets, this, lowerer)
-            this
-        )
-    )
-
-    (defm BoxNode Unary
-        (#_"ValueNode" Unary'''canonical-3 [#_"BoxNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
-            (when-not (and (CanonicalizerTool'''allUsagesAvailable-1 tool) (Node''hasNoUsages-1 this))
-                this
-            )
-        )
-    )
-
-    (defm BoxNode Canonicalizable
-        (#_"ValueNode" Canonicalizable'''canonical-2 [#_"BoxNode" this, #_"CanonicalizerTool" tool]
-            (Unary'''canonical-3 this, tool, (Unary'''getValue-1 this))
-        )
-    )
-
-    (defn #_"VirtualBoxingNode" BoxNode''createVirtualBoxingNode-1 [#_"BoxNode" this]
-        (VirtualBoxingNode'new-2 (StampTool'typeOrNull-1 (:stamp this)), (:boxingKind this))
-    )
-
-    (defm BoxNode Virtualizable
-        (#_"VirtualizerTool" Virtualizable'''virtualize-2 [#_"BoxNode" this, #_"VirtualizerTool" tool]
-            (let [
-                #_"ValueNode" alias (VirtualizerTool'''getAlias-2 tool, (Unary'''getValue-1 this))
-                #_"VirtualBoxingNode" newVirtual (BoxNode''createVirtualBoxingNode-1 this)
-            ]
-                (-> tool
-                    (VirtualizerTool'''createVirtualObject-5 newVirtual, [ alias ], nil, false)
-                    (VirtualizerTool'''replaceWithVirtual-2 newVirtual)
-                )
-            )
-        )
-    )
-)
-
 (class-ns CommitAllocationNode [FixedWithNextNode, FixedNode, ValueNode, Node, VirtualizableAllocation, Virtualizable, Lowerable, Simplifiable, Single, MemoryCheckpoint, MemoryNode]
     (defn #_"CommitAllocationNode" CommitAllocationNode'new-0 []
         (merge (CommitAllocationNode'class.) (FixedWithNextNode'new-1 VoidStamp'instance)
@@ -53177,88 +52864,6 @@ ZeroExtendNode'new-4
                     (LIRBuilder''setResult-3 builder, this, result)
                 )
             )
-        )
-    )
-)
-
-(class-ns UnboxNode [FixedWithNextNode, FixedNode, ValueNode, Node, Virtualizable, Lowerable, Unary #_"<ValueNode>", Canonicalizable]
-    (defm UnboxNode Unary
-        (#_"ValueNode" Unary'''getValue-1 [#_"UnboxNode" this]
-            (:value this)
-        )
-    )
-
-    (defn #_"UnboxNode" UnboxNode'new-2 [#_"ValueNode" value, #_"JavaKind" boxingKind]
-        (merge (UnboxNode'class.) (FixedWithNextNode'new-1 (StampFactory'forKind-1 (#_"JavaKind" .getStackKind boxingKind)))
-            (hash-map
-                ; @Input
-                #_"ValueNode" :value value
-                #_"JavaKind" :boxingKind boxingKind
-            )
-        )
-    )
-
-    (defn- #_"ValueNode" UnboxNode'findSynonym-2 [#_"ValueNode" value, #_"JavaKind" boxingKind]
-        (cond
-            (satisfies? ConstantNode value)
-                (let [
-                    #_"JavaConstant" unboxed (#_"ConstantReflectionProvider" .unboxPrimitive HotSpot'constantReflection, (ValueNode''asJavaConstant-1 value))
-                ]
-                    (when (and (some? unboxed) (= (#_"JavaConstant" .getJavaKind unboxed) boxingKind))
-                        (ConstantNode'forConstant-1 unboxed)
-                    )
-                )
-            (satisfies? BoxNode value)
-                (when (= boxingKind (:boxingKind value))
-                    (Unary'''getValue-1 value)
-                )
-        )
-    )
-
-    #_unused
-    (defn #_"ValueNode" UnboxNode'create-2 [#_"ValueNode" value, #_"JavaKind" boxingKind]
-        (or (UnboxNode'findSynonym-2 value, boxingKind) (UnboxNode'new-2 value, boxingKind))
-    )
-
-    (defm UnboxNode Lowerable
-        (#_"this" Lowerable'''lower-2 [#_"UnboxNode" this, #_"LoweringTool" lowerer]
-            (BoxingTemplates''lower-3u Lowerer'boxingSnippets, this, lowerer)
-            this
-        )
-    )
-
-    (defm UnboxNode Virtualizable
-        (#_"VirtualizerTool" Virtualizable'''virtualize-2 [#_"UnboxNode" this, #_"VirtualizerTool" tool]
-            (let [
-                #_"ValueNode" alias (VirtualizerTool'''getAlias-2 tool, (Unary'''getValue-1 this))
-            ]
-                (when (satisfies? VirtualObjectNode alias) => tool
-                    (let [
-                        #_"ResolvedJavaType" objectType (VirtualObjectNode'''type-1 alias)
-                        #_"ResolvedJavaType" expectedType (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, (#_"JavaKind" .toBoxedJavaClass (:boxingKind this)))
-                    ]
-                        (when (= objectType expectedType) => tool
-                            (VirtualizerTool'''replaceWithValue-2 tool, (VirtualizerTool'''getEntry-3 tool, alias, 0))
-                        )
-                    )
-                )
-            )
-        )
-    )
-
-    (defm UnboxNode Unary
-        (#_"ValueNode" Unary'''canonical-3 [#_"UnboxNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
-            (when-not (and (CanonicalizerTool'''allUsagesAvailable-1 tool) (Node''hasNoUsages-1 this) (StampTool'isPointerNeverNull-1 (:stamp value)))
-                (or (UnboxNode'findSynonym-2 value, (:boxingKind this))
-                    this
-                )
-            )
-        )
-    )
-
-    (defm UnboxNode Canonicalizable
-        (#_"ValueNode" Canonicalizable'''canonical-2 [#_"UnboxNode" this, #_"CanonicalizerTool" tool]
-            (Unary'''canonical-3 this, tool, (Unary'''getValue-1 this))
         )
     )
 )
@@ -57304,29 +56909,9 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"void" ObjectEqualsNode''virtualizeNonVirtualComparison-4 [#_"ObjectEqualsNode" this, #_"VirtualObjectNode" virtual, #_"ValueNode" other, #_"VirtualizerTool" tool]
-        (let [
-            _
-                (when (and (satisfies? VirtualBoxingNode virtual) (satisfies? ConstantNode other) (= (:boxingKind virtual) JavaKind/Boolean))
-                    (let [
-                        #_"JavaConstant" otherUnboxed (#_"ConstantReflectionProvider" .unboxPrimitive HotSpot'constantReflection, (ValueNode''asJavaConstant-1 other))
-                    ]
-                        (if (and (some? otherUnboxed) (= (#_"JavaConstant" .getJavaKind otherUnboxed) JavaKind/Boolean))
-                            (let [
-                                #_"int" expectedValue (if (#_"JavaConstant" .asBoolean otherUnboxed) 1 0)
-                                #_"IntegerEqualsNode" equals (IntegerEqualsNode'new-2 (VirtualBoxingNode''getBoxedValue-2 virtual, tool), (ConstantNode'forInt-2 expectedValue, (:graph this)))
-                            ]
-                                (§ ass! tool (VirtualizerTool'''addNode-2 tool, equals))
-                                (§ ass! tool (VirtualizerTool'''replaceWithValue-2 tool, equals))
-                            )
-                            (§ ass! tool (VirtualizerTool'''replaceWithValue-2 tool, (LogicConstantNode'contradiction-1 (:graph this))))
-                        )
-                    )
-                )
-        ]
-            (when (:hasIdentity virtual)
-                ;; one of them is virtual: they can never be the same objects
-                (§ ass! tool (VirtualizerTool'''replaceWithValue-2 tool, (LogicConstantNode'contradiction-1 (:graph this))))
-            )
+        (when (:hasIdentity virtual)
+            ;; one of them is virtual: they can never be the same objects
+            (§ ass! tool (VirtualizerTool'''replaceWithValue-2 tool, (LogicConstantNode'contradiction-1 (:graph this))))
         )
         nil
     )
@@ -59643,30 +59228,6 @@ ZeroExtendNode'new-4
         (#_"ValueNode" VirtualObjectNode'''getMaterializedRepresentation-4 [#_"VirtualInstanceNode" this, #_"FixedNode" fixed, #_"[ValueNode]" entries, #_"LockState" locks]
             (AllocatedObjectNode'new-1 this)
         )
-    )
-)
-
-(class-ns VirtualBoxingNode [VirtualInstanceNode, VirtualObjectNode, ValueNode, Node, LIRLowerable]
-    (defn #_"VirtualBoxingNode" VirtualBoxingNode'new-2 [#_"ResolvedJavaType" type, #_"JavaKind" boxingKind]
-        (merge (VirtualBoxingNode'class.) (VirtualInstanceNode'new-2 type, false)
-            (hash-map
-                #_"JavaKind" :boxingKind boxingKind
-            )
-        )
-    )
-
-    (defm VirtualBoxingNode VirtualObjectNode
-        (#_"VirtualBoxingNode" VirtualObjectNode'''duplicate-1 [#_"VirtualBoxingNode" this]
-            (VirtualBoxingNode'new-2 (VirtualObjectNode'''type-1 this), (:boxingKind this))
-        )
-
-        (#_"ValueNode" VirtualObjectNode'''getMaterializedRepresentation-4 [#_"VirtualBoxingNode" this, #_"FixedNode" fixed, #_"ValueNode*" entries, #_"LockState" locks]
-            (BoxNode'new-3 (nth entries 0), (VirtualObjectNode'''type-1 this), (:boxingKind this))
-        )
-    )
-
-    (defn #_"ValueNode" VirtualBoxingNode''getBoxedValue-2 [#_"VirtualBoxingNode" this, #_"VirtualizerTool" tool]
-        (VirtualizerTool'''getEntry-3 tool, this, 0)
     )
 )
 
@@ -63643,21 +63204,6 @@ ZeroExtendNode'new-4
     )
 
     ;;;
-     ; Converts a Java boxed value to a JavaConstant of the right kind. This adjusts for the
-     ; limitation that a Local's kind is a {@linkplain JavaKind#getStackKind() stack kind}
-     ; and so cannot be used for re-boxing primitives smaller than an int.
-     ;
-     ; @param argument a Java boxed value
-     ; @param localKind the kind of the Local to which {@code argument} will be bound
-     ;;
-    (defn- #_"JavaConstant" SnippetTemplate'forBoxed-2 [#_"Object" argument, #_"JavaKind" localKind]
-        (if (= localKind JavaKind/Int)
-            (JavaConstant/forBoxedPrimitive argument)
-            (SnippetReflection'forBoxed-2 localKind, argument)
-        )
-    )
-
-    ;;;
      ; Gets the instantiation-time bindings to this template's parameters.
      ;
      ; @return the map that will be used to bind arguments to parameters when inlining this template
@@ -63670,13 +63216,13 @@ ZeroExtendNode'new-4
                 replacements
                     (condp instance? parameter
                         ParameterNode'iface
-                            (assoc replacements parameter (if (satisfies? ValueNode argument) argument (ConstantNode'forConstant-2c (SnippetTemplate'forBoxed-2 argument, (ValueNode''getStackKind-1 parameter)), replaceeGraph)))
+                            (assoc replacements parameter (if (satisfies? ValueNode argument) argument (throw! (str "non più boxe per " argument))))
                         (ß ParameterNode'array)
                             (loop-when [replacements replacements #_"int" j 0] (< j (count parameter)) => replacements
                                 (let [
                                     #_"ParameterNode" param (nth parameter j)
                                     #_"Object" value (nth (:value argument) j)
-                                    replacements (assoc replacements param (if (satisfies? ValueNode value) value (ConstantNode'forConstant-2c (SnippetTemplate'forBoxed-2 value, (ValueNode''getStackKind-1 param)), replaceeGraph)))
+                                    replacements (assoc replacements param (if (satisfies? ValueNode value) value (throw! (str "non più boxe per " value))))
                                 ]
                                     (recur replacements (inc j))
                                 )
@@ -70154,12 +69700,6 @@ public final class HotSpotCompressedNullConstant implements JavaConstant, HotSpo
     )
 
     @Override
-    public Object asBoxedPrimitive()
-    (§
-        throw new IllegalArgumentException()
-    )
-
-    @Override
     public int asInt()
     (§
         throw new IllegalArgumentException()
@@ -70284,59 +69824,8 @@ public class HotSpotConstantReflectionProvider implements ConstantReflectionProv
         )
         else
         (§
-            return JavaConstant.forBoxedPrimitive(Array.get(a, index))
+            return JavaConstant.forBoxedPrimitive(Array.get(a, index))
         )
-    )
-
-    ;;;
-     ; Check if the constant is a boxed value that is guaranteed to be cached by the platform.
-     ; Otherwise the generated code might be the only reference to the boxed value and since object
-     ; references from nmethods are weak this can cause GC problems.
-     ;
-     ; @param source
-     ; @return true if the box is cached
-     ;;
-    private static boolean isBoxCached(JavaConstant source)
-    (§
-        switch (source.getJavaKind())
-        (§
-            case Boolean
-                return true
-            case Char
-                return source.asInt() <= 127
-            case Byte
-            case Short
-            case Int
-                return source.asInt() >= -128 && source.asInt() <= 127
-            case Long
-                return source.asLong() >= -128 && source.asLong() <= 127
-            default
-                throw new IllegalArgumentException("unexpected kind " + source.getJavaKind())
-        )
-    )
-
-    @Override
-    public JavaConstant boxPrimitive(JavaConstant source)
-    (§
-        if (source == null || !source.getJavaKind().isPrimitive() || !isBoxCached(source))
-        (§
-            return null
-        )
-        return HotSpotObjectConstantImpl.forObject(source.asBoxedPrimitive())
-    )
-
-    @Override
-    public JavaConstant unboxPrimitive(JavaConstant source)
-    (§
-        if (source == null || !source.getJavaKind().isObject())
-        (§
-            return null
-        )
-        if (source.isNull())
-        (§
-            return null
-        )
-        return JavaConstant.forBoxedPrimitive(((HotSpotObjectConstantImpl) source).object())
     )
 
     public JavaConstant forObject(Object value)
@@ -70634,7 +70123,7 @@ public interface HotSpotResolvedObjectType extends ResolvedJavaType
     int instanceSize()
 
     ;;;
-     ; Gets the metaspace Klass boxed in a {@link JavaConstant}.
+     ; Gets the metaspace Klass boxed in a {@link JavaConstant}.
      ;;
     Constant klass()
 
@@ -70703,7 +70192,7 @@ public class HotSpotVMConfigAccess
      ; Gets the value of a C++ constant.
      ;
      ; @param name name of the constant (e.g., {@code "frame::arg_reg_save_area_bytes"})
-     ; @param type the boxed type to which the constant value will be converted
+     ; @param type the boxed type to which the constant value will be converted
      ; @param notPresent if non-null and the constant is not present then this value is returned
      ; @return the constant value converted to {@code type}
      ; @throws JVMCIError if the constant is not present and {@code notPresent == null}
@@ -70726,7 +70215,7 @@ public class HotSpotVMConfigAccess
      ; Gets the value of a C++ constant.
      ;
      ; @param name name of the constant (e.g., {@code "frame::arg_reg_save_area_bytes"})
-     ; @param type the boxed type to which the constant value will be converted
+     ; @param type the boxed type to which the constant value will be converted
      ; @return the constant value converted to {@code type}
      ; @throws JVMCIError if the constant is not present
      ;;
@@ -70739,7 +70228,7 @@ public class HotSpotVMConfigAccess
      ; Gets the offset of a non-static C++ field.
      ;
      ; @param name fully qualified name of the field
-     ; @param type the boxed type to which the offset value will be converted (must be
+     ; @param type the boxed type to which the offset value will be converted (must be
      ;            {@link Integer} or {@link Long})
      ; @param cppType if non-null, the expected C++ type of the field (e.g., {@code "HeapWord*"})
      ; @param notPresent if non-null and the field is not present then this value is returned
@@ -70764,7 +70253,7 @@ public class HotSpotVMConfigAccess
      ; Gets the offset of a non-static C++ field.
      ;
      ; @param name fully qualified name of the field
-     ; @param type the boxed type to which the offset value will be converted (must be
+     ; @param type the boxed type to which the offset value will be converted (must be
      ;            {@link Integer} or {@link Long})
      ; @param cppType if non-null, the expected C++ type of the field (e.g., {@code "HeapWord*"})
      ; @return the offset in bytes of the requested field
@@ -70779,7 +70268,7 @@ public class HotSpotVMConfigAccess
      ; Gets the offset of a non-static C++ field.
      ;
      ; @param name fully qualified name of the field
-     ; @param type the boxed type to which the offset value will be converted (must be
+     ; @param type the boxed type to which the offset value will be converted (must be
      ;            {@link Integer} or {@link Long})
      ; @return the offset in bytes of the requested field
      ; @throws JVMCIError if the field is static or not present
@@ -70829,7 +70318,7 @@ public class HotSpotVMConfigAccess
      ; Gets the value of a static C++ field.
      ;
      ; @param name fully qualified name of the field
-     ; @param type the boxed type to which the constant value will be converted
+     ; @param type the boxed type to which the constant value will be converted
      ; @param cppType if non-null, the expected C++ type of the field (e.g., {@code "HeapWord*"})
      ; @param notPresent if non-null and the field is not present then this value is returned
      ; @return the value of the requested field
@@ -70853,7 +70342,7 @@ public class HotSpotVMConfigAccess
      ; Gets the value of a static C++ field.
      ;
      ; @param name fully qualified name of the field
-     ; @param type the boxed type to which the constant value will be converted
+     ; @param type the boxed type to which the constant value will be converted
      ; @param cppType if non-null, the expected C++ type of the field (e.g., {@code "HeapWord*"})
      ; @return the value of the requested field
      ; @throws JVMCIError if the field is not static or not present
@@ -70867,7 +70356,7 @@ public class HotSpotVMConfigAccess
      ; Gets the value of a static C++ field.
      ;
      ; @param name fully qualified name of the field
-     ; @param type the boxed type to which the constant value will be converted
+     ; @param type the boxed type to which the constant value will be converted
      ; @return the value of the requested field
      ; @throws JVMCIError if the field is not static or not present
      ;;
@@ -70909,7 +70398,7 @@ public class HotSpotVMConfigAccess
      ; Gets a VM flag value.
      ;
      ; @param name name of the flag (e.g., {@code "CompileTheWorldStartAt"})
-     ; @param type the boxed type to which the flag's value will be converted
+     ; @param type the boxed type to which the flag's value will be converted
      ; @return the flag's value converted to {@code type} or {@code notPresent} if the flag is not
      ;         present
      ; @throws JVMCIError if the flag is not present
@@ -70923,7 +70412,7 @@ public class HotSpotVMConfigAccess
      ; Gets a VM flag value.
      ;
      ; @param name name of the flag (e.g., {@code "CompileTheWorldStartAt"})
-     ; @param type the boxed type to which the flag's value will be converted
+     ; @param type the boxed type to which the flag's value will be converted
      ; @param notPresent if non-null and the flag is not present then this value is returned
      ; @return the flag's value converted to {@code type} or {@code notPresent} if the flag is not
      ;         present
@@ -71036,7 +70525,7 @@ public abstract class AllocatableValue extends Value implements JavaValue
 (§ package jdk.vm.ci.meta
 
 ;;;
- ; Represents a compile-time constant (boxed) value within the compiler.
+ ; Represents a compile-time constant (boxed) value within the compiler.
  ;;
 public interface Constant
 (§
@@ -71181,22 +70670,6 @@ public interface ConstantReflectionProvider
     JavaConstant readFieldValue(ResolvedJavaField field, JavaConstant receiver)
 
     ;;;
-     ; Converts the given {@link JavaKind#isPrimitive() primitive} constant to a boxed
-     ; {@link JavaKind#Object object} constant, according to the Java boxing rules. Returns
-     ; {@code null} if the source is is not a primitive constant, or the boxed value is not
-     ; available at this point.
-     ;;
-    JavaConstant boxPrimitive(JavaConstant source)
-
-    ;;;
-     ; Converts the given {@link JavaKind#Object object} constant to a {@link JavaKind#isPrimitive()
-     ; primitive} constant, according to the Java unboxing rules. Returns {@code null} if the source
-     ; is is not an object constant that can be unboxed, or the unboxed value is not available at
-     ; this point.
-     ;;
-    JavaConstant unboxPrimitive(JavaConstant source)
-
-    ;;;
      ; Returns the {@link ResolvedJavaType} for a {@link Class} object (or any other object regarded
      ; as a class by the VM) encapsulated in the given constant. Returns {@code null} if the
      ; constant does not encapsulate a class, or if the type is not available at this point.
@@ -71312,7 +70785,7 @@ public interface InvokeTarget
 (§ package jdk.vm.ci.meta
 
 ;;;
- ; Represents a constant (boxed) value, such as an integer, floating point number, or object
+ ; Represents a constant (boxed) value, such as an integer, floating point number, or object
  ; reference, within the compiler and across the compiler/runtime interface. Exports a set of
  ; {@code JavaConstant} instances that represent frequently used constant values, such as
  ; {@link #NULL_POINTER}.
@@ -71375,13 +70848,6 @@ public interface JavaConstant extends Constant, JavaValue
     boolean isDefaultForKind()
 
     ;;;
-     ; Returns the value of this constant as a boxed Java value.
-     ;
-     ; @return the value of this constant
-     ;;
-    Object asBoxedPrimitive()
-
-    ;;;
      ; Returns the primitive int value this constant represents. The constant must have a
      ; {@link JavaKind#getStackKind()} of {@link JavaKind#Int}.
      ;
@@ -71406,10 +70872,10 @@ public interface JavaConstant extends Constant, JavaValue
     long asLong()
 
     ;;;
-     ; Creates a boxed long constant.
+     ; Creates a boxed long constant.
      ;
-     ; @param i the long value to box
-     ; @return a boxed copy of {@code value}
+     ; @param i the long value to box
+     ; @return a boxed copy of {@code value}
      ;;
     static PrimitiveConstant forLong(long i)
     (§
@@ -71428,10 +70894,10 @@ public interface JavaConstant extends Constant, JavaValue
     )
 
     ;;;
-     ; Creates a boxed integer constant.
+     ; Creates a boxed integer constant.
      ;
-     ; @param i the integer value to box
-     ; @return a boxed copy of {@code value}
+     ; @param i the integer value to box
+     ; @return a boxed copy of {@code value}
      ;;
     static PrimitiveConstant forInt(int i)
     (§
@@ -71451,10 +70917,10 @@ public interface JavaConstant extends Constant, JavaValue
     )
 
     ;;;
-     ; Creates a boxed byte constant.
+     ; Creates a boxed byte constant.
      ;
-     ; @param i the byte value to box
-     ; @return a boxed copy of {@code value}
+     ; @param i the byte value to box
+     ; @return a boxed copy of {@code value}
      ;;
     static PrimitiveConstant forByte(byte i)
     (§
@@ -71462,10 +70928,10 @@ public interface JavaConstant extends Constant, JavaValue
     )
 
     ;;;
-     ; Creates a boxed boolean constant.
+     ; Creates a boxed boolean constant.
      ;
-     ; @param i the boolean value to box
-     ; @return a boxed copy of {@code value}
+     ; @param i the boolean value to box
+     ; @return a boxed copy of {@code value}
      ;;
     static PrimitiveConstant forBoolean(boolean i)
     (§
@@ -71473,10 +70939,10 @@ public interface JavaConstant extends Constant, JavaValue
     )
 
     ;;;
-     ; Creates a boxed char constant.
+     ; Creates a boxed char constant.
      ;
-     ; @param i the char value to box
-     ; @return a boxed copy of {@code value}
+     ; @param i the char value to box
+     ; @return a boxed copy of {@code value}
      ;;
     static PrimitiveConstant forChar(char i)
     (§
@@ -71484,10 +70950,10 @@ public interface JavaConstant extends Constant, JavaValue
     )
 
     ;;;
-     ; Creates a boxed short constant.
+     ; Creates a boxed short constant.
      ;
-     ; @param i the short value to box
-     ; @return a boxed copy of {@code value}
+     ; @param i the short value to box
+     ; @return a boxed copy of {@code value}
      ;;
     static PrimitiveConstant forShort(short i)
     (§
@@ -71537,44 +71003,6 @@ public interface JavaConstant extends Constant, JavaValue
                 return forLong(i)
             default
                 throw new IllegalArgumentException("unsupported integer width: " + bits)
-        )
-    )
-
-    ;;;
-     ; Creates a boxed constant for the given boxed primitive value.
-     ;
-     ; @param value the Java boxed value
-     ; @return the primitive constant holding the {@code value}
-     ;;
-    static PrimitiveConstant forBoxedPrimitive(Object value)
-    (§
-        if (value instanceof Boolean)
-        (§
-            return forBoolean((Boolean) value)
-        )
-        else if (value instanceof Byte)
-        (§
-            return forByte((Byte) value)
-        )
-        else if (value instanceof Character)
-        (§
-            return forChar((Character) value)
-        )
-        else if (value instanceof Short)
-        (§
-            return forShort((Short) value)
-        )
-        else if (value instanceof Integer)
-        (§
-            return forInt((Integer) value)
-        )
-        else if (value instanceof Long)
-        (§
-            return forLong((Long) value)
-        )
-        else
-        (§
-            return null
         )
     )
 
@@ -71655,45 +71083,43 @@ public interface JavaField
 public enum JavaKind
 (§
     ;;; The primitive boolean kind, represented as an int on the stack.
-    Boolean("boolean", 1, true, java.lang.Boolean.TYPE, java.lang.Boolean.class),
+    Boolean("boolean", 1, true, java.lang.Boolean.TYPE),
 
     ;;; The primitive byte kind, represented as an int on the stack.
-    Byte("byte", 1, true, java.lang.Byte.TYPE, java.lang.Byte.class),
+    Byte("byte", 1, true, java.lang.Byte.TYPE),
 
     ;;; The primitive short kind, represented as an int on the stack.
-    Short("short", 1, true, java.lang.Short.TYPE, java.lang.Short.class),
+    Short("short", 1, true, java.lang.Short.TYPE),
 
     ;;; The primitive char kind, represented as an int on the stack.
-    Char("char", 1, true, java.lang.Character.TYPE, java.lang.Character.class),
+    Char("char", 1, true, java.lang.Character.TYPE),
 
     ;;; The primitive int kind, represented as an int on the stack.
-    Int("int", 1, true, java.lang.Integer.TYPE, java.lang.Integer.class),
+    Int("int", 1, true, java.lang.Integer.TYPE),
 
     ;;; The primitive long kind.
-    Long("long", 2, false, java.lang.Long.TYPE, java.lang.Long.class),
+    Long("long", 2, false, java.lang.Long.TYPE),
 
     ;;; The Object kind, also used for arrays.
-    Object("Object", 1, false, null, null),
+    Object("Object", 1, false, null),
 
     ;;; The void kind.
-    Void("void", 0, false, java.lang.Void.TYPE, java.lang.Void.class),
+    Void("void", 0, false, java.lang.Void.TYPE),
 
     ;;; The non-type.
-    Illegal("illegal", 0, false, null, null)
+    Illegal("illegal", 0, false, null)
 
     private final String javaName
     private final boolean isStackInt
     private final Class<?> primitiveJavaClass
-    private final Class<?> boxedJavaClass
     private final int slotCount
 
-    JavaKind(String javaName, int slotCount, boolean isStackInt, Class<?> primitiveJavaClass, Class<?> boxedJavaClass)
+    JavaKind(String javaName, int slotCount, boolean isStackInt, Class<?> primitiveJavaClass)
     (§
         this.javaName = javaName
         this.slotCount = slotCount
         this.isStackInt = isStackInt
         this.primitiveJavaClass = primitiveJavaClass
-        this.boxedJavaClass = boxedJavaClass
     )
 
     ;;;
@@ -71813,16 +71239,6 @@ public enum JavaKind
     public Class<?> toJavaClass()
     (§
         return primitiveJavaClass
-    )
-
-    ;;;
-     ; Returns the Java class for instances of boxed values of this kind.
-     ;
-     ; @return the Java class
-     ;;
-    public Class<?> toBoxedJavaClass()
-    (§
-        return boxedJavaClass
     )
 
     ;;;
@@ -72167,7 +71583,7 @@ public class PrimitiveConstant implements JavaConstant
     private final JavaKind kind
 
     ;;;
-     ; The boxed primitive value as a {@code long}.
+     ; The boxed primitive value as a {@code long}.
      ;;
     private final long primitive
 
@@ -72211,28 +71627,6 @@ public class PrimitiveConstant implements JavaConstant
     public long asLong()
     (§
         return primitive
-    )
-
-    @Override
-    public Object asBoxedPrimitive()
-    (§
-        switch (getJavaKind())
-        (§
-            case Byte
-                return Byte.valueOf((byte) primitive)
-            case Boolean
-                return Boolean.valueOf(asBoolean())
-            case Short
-                return Short.valueOf((short) primitive)
-            case Char
-                return Character.valueOf((char) primitive)
-            case Int
-                return Integer.valueOf(asInt())
-            case Long
-                return Long.valueOf(asLong())
-            default
-                throw new IllegalArgumentException("unexpected kind " + getJavaKind())
-        )
     )
 )
 )
