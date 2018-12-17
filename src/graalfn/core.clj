@@ -136,7 +136,7 @@
     ]
     [jdk.vm.ci.meta
         Constant ConstantPool ConstantReflectionProvider DeoptimizationAction DeoptimizationReason InvokeTarget
-        JavaConstant JavaField JavaKind JavaMethod JavaType MemoryAccessProvider MetaAccessProvider PrimitiveConstant
+        JavaConstant JavaField JavaMethod JavaType MemoryAccessProvider MetaAccessProvider PrimitiveConstant
         RawConstant ResolvedJavaField ResolvedJavaMethod ResolvedJavaType Signature VMConstant
     ]
     [jdk.vm.ci.runtime JVMCIBackend]
@@ -1911,6 +1911,21 @@ IterativeConditionalEliminationPhase'new-2
 JSRData'new-0
 JVMCI'backend
 JVMCI'runtime
+JavaKind'getBitCount-1
+JavaKind'getByteCount-1
+JavaKind'getJavaName-1
+JavaKind'getMaxValue-1
+JavaKind'getMinValue-1
+JavaKind'getSlotCount-1
+JavaKind'getStackKind-1
+JavaKind'isNumericInteger-1
+JavaKind'isObject-1
+JavaKind'isPrimitive-1
+JavaKind'isUnsigned-1
+JavaKind'needsTwoSlots-1
+JavaKind'toJavaClass-1
+JavaKind'SET
+JavaKind'fromPrimitiveOrVoidTypeChar-1
 JavaReadNode'new-5
 JavaWriteNode'new-6
 JsrScope''isEmpty-1
@@ -5863,6 +5878,189 @@ ZeroExtendNode'new-4
 (defp ZeroExtendNode)
 
 ;;;
+ ; Denotes the basic kinds of types including all the Java primitive types,
+ ; e.g. {@link JavaKind#Int} for {@code int} and {@link JavaKind#Object} for all object types.
+ ; A kind has a single character short name, a Java name, and a set of flags further describing its behavior.
+ ;;
+(value-ns JavaKind
+    (def #_"ordered {JavaKind}" JavaKind'SET
+        (ordered-set
+            :JavaKind'Boolean ;;; The primitive boolean kind, represented as an int on the stack.
+            :JavaKind'Byte    ;;; The primitive byte kind, represented as an int on the stack.
+            :JavaKind'Short   ;;; The primitive short kind, represented as an int on the stack.
+            :JavaKind'Char    ;;; The primitive char kind, represented as an int on the stack.
+            :JavaKind'Int     ;;; The primitive int kind, represented as an int on the stack.
+            :JavaKind'Long    ;;; The primitive long kind.
+            :JavaKind'Object  ;;; The Object kind, also used for arrays.
+            :JavaKind'Void    ;;; The void kind.
+            :JavaKind'Illegal ;;; The non-type.
+        )
+    )
+
+    ;;;
+     ; Returns the kind from the character describing a primitive or void.
+     ;;
+    (defn #_"JavaKind" JavaKind'fromPrimitiveOrVoidTypeChar-1 [#_"char" x]
+        (case x
+            \Z :JavaKind'Boolean
+            \B :JavaKind'Byte
+            \S :JavaKind'Short
+            \C :JavaKind'Char
+            \I :JavaKind'Int
+            \J :JavaKind'Long
+            \V :JavaKind'Void
+        )
+    )
+
+    ;;;
+     ; Returns the number of stack slots occupied by this kind according to the Java bytecodes specification.
+     ;;
+    (defn #_"int" JavaKind'getSlotCount-1 [#_"JavaKind" kind]
+        (case kind :JavaKind'Long 2 (:JavaKind'Void :JavaKind'Illegal) 0 1)
+    )
+
+    ;;;
+     ; Returns whether this kind occupied two stack slots.
+     ;;
+    (defn #_"boolean" JavaKind'needsTwoSlots-1 [#_"JavaKind" kind]
+        (= (JavaKind'getSlotCount-1 kind) 2)
+    )
+
+    ;;;
+     ; Returns the name of this kind which will also be its Java programming language name if it is
+     ; {@linkplain #isPrimitive() primitive} or {@code void}.
+     ;;
+    (defn #_"String" JavaKind'getJavaName-1 [#_"JavaKind" kind]
+        (case kind
+            :JavaKind'Boolean "boolean"
+            :JavaKind'Byte    "byte"
+            :JavaKind'Short   "short"
+            :JavaKind'Char    "char"
+            :JavaKind'Int     "int"
+            :JavaKind'Long    "long"
+            :JavaKind'Object  "Object"
+            :JavaKind'Void    "void"
+            :JavaKind'Illegal "illegal"
+        )
+    )
+
+    ;;;
+     ; Returns the Java class representing this kind.
+     ;;
+    (defn #_"Class" JavaKind'toJavaClass-1 [#_"JavaKind" kind]
+        (case kind
+            :JavaKind'Boolean Boolean/TYPE
+            :JavaKind'Byte       Byte/TYPE
+            :JavaKind'Short     Short/TYPE
+            :JavaKind'Char  Character/TYPE
+            :JavaKind'Int     Integer/TYPE
+            :JavaKind'Long       Long/TYPE
+            :JavaKind'Void       Void/TYPE
+            nil
+        )
+    )
+
+    ;;;
+     ; Checks whether this type is a Java primitive type.
+     ;
+     ; @return {@code true} if this is {@link #Boolean}, {@link #Byte}, {@link #Char}, {@link #Short}, {@link #Int}, {@link #Long}, or {@link #Void}
+     ;;
+    (defn #_"boolean" JavaKind'isPrimitive-1 [#_"JavaKind" kind]
+        (some? (JavaKind'toJavaClass-1 kind))
+    )
+
+    (defn- #_"boolean" JavaKind'isStackInt-1 [#_"JavaKind" kind]
+        (case kind (:JavaKind'Boolean :JavaKind'Byte :JavaKind'Short :JavaKind'Char :JavaKind'Int) true false)
+    )
+
+    ;;;
+     ; Returns the kind that represents this kind when on the Java operand stack.
+     ;;
+    (defn #_"JavaKind" JavaKind'getStackKind-1 [#_"JavaKind" kind]
+        (if (JavaKind'isStackInt-1 kind) :JavaKind'Int kind)
+    )
+
+    ;;;
+     ; Checks whether this type is a Java primitive type representing an integer number.
+     ;
+     ; @return {@code true} if the stack kind is {@link #Int} or {@link #Long}
+     ;;
+    (defn #_"boolean" JavaKind'isNumericInteger-1 [#_"JavaKind" kind]
+        (or (JavaKind'isStackInt-1 kind) (= kind :JavaKind'Long))
+    )
+
+    ;;;
+     ; Checks whether this type is a Java primitive type representing an unsigned number.
+     ;
+     ; @return {@code true} if the kind is {@link #Boolean} or {@link #Char}
+     ;;
+    (defn #_"boolean" JavaKind'isUnsigned-1 [#_"JavaKind" kind]
+        (any = kind :JavaKind'Boolean :JavaKind'Char)
+    )
+
+    ;;;
+     ; Checks whether this represent an Object of some sort.
+     ;
+     ; @return {@code true} if this is {@link #Object}
+     ;;
+    (defn #_"boolean" JavaKind'isObject-1 [#_"JavaKind" kind]
+        (= kind :JavaKind'Object)
+    )
+
+    ;;;
+     ; Gets the minimum value that can be represented as a value of this kind.
+     ;
+     ; @return the minimum value represented as a {@code long}
+     ;;
+    (defn #_"long" JavaKind'getMinValue-1 [#_"JavaKind" kind]
+        (case kind
+            :JavaKind'Boolean 0
+            :JavaKind'Byte      Byte/MIN_VALUE
+            :JavaKind'Short    Short/MIN_VALUE
+            :JavaKind'Char (long Character/MIN_VALUE)
+            :JavaKind'Int    Integer/MIN_VALUE
+            :JavaKind'Long      Long/MIN_VALUE
+        )
+    )
+
+    ;;;
+     ; Gets the maximum value that can be represented as a value of this kind.
+     ;
+     ; @return the maximum value represented as a {@code long}
+     ;;
+    (defn #_"long" JavaKind'getMaxValue-1 [#_"JavaKind" kind]
+        (case kind
+            :JavaKind'Boolean 1
+            :JavaKind'Byte      Byte/MAX_VALUE
+            :JavaKind'Short    Short/MAX_VALUE
+            :JavaKind'Char (long Character/MAX_VALUE)
+            :JavaKind'Int    Integer/MAX_VALUE
+            :JavaKind'Long      Long/MAX_VALUE
+        )
+    )
+
+    ;;;
+     ; Number of bits that are necessary to represent a value of this kind.
+     ;;
+    (defn #_"int" JavaKind'getBitCount-1 [#_"JavaKind" kind]
+        (case kind
+            :JavaKind'Boolean                1
+            :JavaKind'Byte                   8
+           (:JavaKind'Char :JavaKind'Short) 16
+            :JavaKind'Int                   32
+            :JavaKind'Long                  64
+        )
+    )
+
+    ;;;
+     ; Number of bytes that are necessary to represent a value of this kind.
+     ;;
+    (defn #_"int" JavaKind'getByteCount-1 [#_"JavaKind" kind]
+        (if (= kind :JavaKind'Boolean) 1 (>> (JavaKind'getBitCount-1 kind) 3))
+    )
+)
+
+;;;
  ; Represents a target machine register.
  ;;
 (class-ns Register [#_"Comparable" #_"<Register>"]
@@ -6049,10 +6247,10 @@ ZeroExtendNode'new-4
             [#_"int" stackSize #_"[AllocatableValue]" locations]
                 (loop-when [stackSize 0 locations (vec (repeat (count parameterTypes) nil)) #_"int" i 0] (< i (count parameterTypes)) => [stackSize locations]
                     (let [
-                        #_"JavaKind" kind (#_"JavaKind" .getStackKind (#_"JavaType" .getJavaKind (nth parameterTypes i)))
+                        #_"JavaKind" kind (JavaKind'getStackKind-1 (#_"JavaType" .getJavaKind (nth parameterTypes i)))
                         locations
-                            (condp =? kind
-                                [JavaKind/Boolean JavaKind/Byte JavaKind/Short JavaKind/Char JavaKind/Int JavaKind/Long JavaKind/Object]
+                            (case kind
+                                (:JavaKind'Boolean :JavaKind'Byte :JavaKind'Short :JavaKind'Char :JavaKind'Int :JavaKind'Long :JavaKind'Object)
                                     (when (< i (count parameterRegisters)) => locations
                                         (assoc' locations i (Register''asValue-2 (nth parameterRegisters i), (ValueKind'fromJavaKind-1 kind)))
                                     )
@@ -6073,10 +6271,10 @@ ZeroExtendNode'new-4
                 )
             #_"AllocatableValue" returnLocation
                 (let [
-                    #_"JavaKind" kind (if (some? returnType) (#_"JavaType" .getJavaKind returnType) JavaKind/Void)
+                    #_"JavaKind" kind (if (some? returnType) (#_"JavaType" .getJavaKind returnType) :JavaKind'Void)
                 ]
-                    (when-not (= kind JavaKind/Void) => Value'ILLEGAL
-                        (Register''asValue-2 RegisterConfig'returnRegister, (ValueKind'fromJavaKind-1 (#_"JavaKind" .getStackKind kind)))
+                    (when-not (= kind :JavaKind'Void) => Value'ILLEGAL
+                        (Register''asValue-2 RegisterConfig'returnRegister, (ValueKind'fromJavaKind-1 (JavaKind'getStackKind-1 kind)))
                     )
                 )
         ]
@@ -6236,12 +6434,12 @@ ZeroExtendNode'new-4
     ;;;
      ; Return the {@link WordSize} that is used to store values of a given {@link JavaKind}.
      ;;
-    (defn #_"WordSize" AMD64'getWordSize-1 [#_"JavaKind" javaKind]
-        (condp =? javaKind
-           [JavaKind/Boolean JavaKind/Byte] :WordSize'8bits
-           [JavaKind/Short JavaKind/Char]   :WordSize'16bits
-            JavaKind/Int                    :WordSize'32bits
-           [JavaKind/Long JavaKind/Object]  :WordSize'64bits
+    (defn #_"WordSize" AMD64'getWordSize-1 [#_"JavaKind" kind]
+        (case kind
+           (:JavaKind'Boolean :JavaKind'Byte) :WordSize'8bits
+           (:JavaKind'Short :JavaKind'Char)   :WordSize'16bits
+            :JavaKind'Int                     :WordSize'32bits
+           (:JavaKind'Long :JavaKind'Object)  :WordSize'64bits
         )
     )
 
@@ -6501,26 +6699,26 @@ ZeroExtendNode'new-4
     (def #_"int" Unsafe'ARRAY_OBJECT_INDEX_SCALE  (peep Unsafe "ARRAY_OBJECT_INDEX_SCALE"))
 
     (defn #_"int" HotSpot'arrayBaseOffset-1 [#_"JavaKind" kind]
-        (condp = kind
-            JavaKind/Boolean Unsafe'ARRAY_BOOLEAN_BASE_OFFSET
-            JavaKind/Byte    Unsafe'ARRAY_BYTE_BASE_OFFSET
-            JavaKind/Short   Unsafe'ARRAY_SHORT_BASE_OFFSET
-            JavaKind/Char    Unsafe'ARRAY_CHAR_BASE_OFFSET
-            JavaKind/Int     Unsafe'ARRAY_INT_BASE_OFFSET
-            JavaKind/Long    Unsafe'ARRAY_LONG_BASE_OFFSET
-            JavaKind/Object  Unsafe'ARRAY_OBJECT_BASE_OFFSET
+        (case kind
+            :JavaKind'Boolean Unsafe'ARRAY_BOOLEAN_BASE_OFFSET
+            :JavaKind'Byte    Unsafe'ARRAY_BYTE_BASE_OFFSET
+            :JavaKind'Short   Unsafe'ARRAY_SHORT_BASE_OFFSET
+            :JavaKind'Char    Unsafe'ARRAY_CHAR_BASE_OFFSET
+            :JavaKind'Int     Unsafe'ARRAY_INT_BASE_OFFSET
+            :JavaKind'Long    Unsafe'ARRAY_LONG_BASE_OFFSET
+            :JavaKind'Object  Unsafe'ARRAY_OBJECT_BASE_OFFSET
         )
     )
 
     (defn #_"int" HotSpot'arrayIndexScale-1 [#_"JavaKind" kind]
-        (condp = kind
-            JavaKind/Boolean Unsafe'ARRAY_BOOLEAN_INDEX_SCALE
-            JavaKind/Byte    Unsafe'ARRAY_BYTE_INDEX_SCALE
-            JavaKind/Short   Unsafe'ARRAY_SHORT_INDEX_SCALE
-            JavaKind/Char    Unsafe'ARRAY_CHAR_INDEX_SCALE
-            JavaKind/Int     Unsafe'ARRAY_INT_INDEX_SCALE
-            JavaKind/Long    Unsafe'ARRAY_LONG_INDEX_SCALE
-            JavaKind/Object  Unsafe'ARRAY_OBJECT_INDEX_SCALE
+        (case kind
+            :JavaKind'Boolean Unsafe'ARRAY_BOOLEAN_INDEX_SCALE
+            :JavaKind'Byte    Unsafe'ARRAY_BYTE_INDEX_SCALE
+            :JavaKind'Short   Unsafe'ARRAY_SHORT_INDEX_SCALE
+            :JavaKind'Char    Unsafe'ARRAY_CHAR_INDEX_SCALE
+            :JavaKind'Int     Unsafe'ARRAY_INT_INDEX_SCALE
+            :JavaKind'Long    Unsafe'ARRAY_LONG_INDEX_SCALE
+            :JavaKind'Object  Unsafe'ARRAY_OBJECT_INDEX_SCALE
         )
     )
 
@@ -7778,7 +7976,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"Word" ReplacementsUtil'loadWordFromObject-2 [#_"Object" object, #_"int" offset]
-        (RawLoadNode'loadWordFromObjectIntrinsic-4 object, offset, LocationIdentity'ANY, JavaKind/Long)
+        (RawLoadNode'loadWordFromObjectIntrinsic-4 object, offset, LocationIdentity'ANY, :JavaKind'Long)
     )
 
     ;;;
@@ -8697,7 +8895,7 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"JavaKind" WordTypes'asKind-1 [#_"JavaType" type]
         (if (or (= type WordTypes'klassPointer) (WordTypes'isWord-1j type))
-            JavaKind/Long
+            :JavaKind'Long
             (#_"JavaType" .getJavaKind type)
         )
     )
@@ -8708,7 +8906,7 @@ ZeroExtendNode'new-4
     (defn #_"Stamp" WordTypes'getWordStamp-1 [#_"ResolvedJavaType" type]
         (if (= type WordTypes'klassPointer)
             KlassPointerStamp'KLASS
-            (StampFactory'forKind-1 JavaKind/Long)
+            (StampFactory'forKind-1 :JavaKind'Long)
         )
     )
 )
@@ -9003,12 +9201,12 @@ ZeroExtendNode'new-4
         ;; because they don't match in all cases. For example, an object constant can be loaded to
         ;; a long register when unsafe casts occurred (e.g. for a write barrier where arithmetic
         ;; operations are then performed on the pointer).
-        (condp = (#_"JavaKind" .getStackKind (#_"JavaConstant" .getJavaKind input))
-            JavaKind/Int
+        (case (JavaKind'getStackKind-1 (#_"JavaConstant" .getJavaKind input))
+            :JavaKind'Int
                 ;; Do not optimize with an XOR, as this instruction may be between a CMP and a Jcc,
                 ;; in which case the XOR will modify the condition flags and interfere with the Jcc.
                 (Assembler''movl-3ri asm, result, (#_"JavaConstant" .asInt input))
-            JavaKind/Long
+            :JavaKind'Long
                 ;; Do not optimize with an XOR, as this instruction may be between a CMP and a Jcc,
                 ;; in which case the XOR will modify the condition flags and interfere with the Jcc.
                 (cond
@@ -9021,7 +9219,7 @@ ZeroExtendNode'new-4
                     :else
                         (Assembler''movq-3rl asm, result, (#_"JavaConstant" .asLong input))
                 )
-            JavaKind/Object
+            :JavaKind'Object
                 ;; Do not optimize with an XOR, as this instruction may be between a CMP and a Jcc,
                 ;; in which case the XOR will modify the condition flags and interfere with the Jcc.
                 (cond
@@ -9039,11 +9237,11 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"boolean" AMD64Move'canMoveConst2Stack-1 [#_"JavaConstant" input]
-        (condp = (#_"JavaKind" .getStackKind (#_"JavaConstant" .getJavaKind input))
-            JavaKind/Int    true
-            JavaKind/Long   true
-            JavaKind/Object (#_"JavaConstant" .isNull input)
-                            false
+        (case (JavaKind'getStackKind-1 (#_"JavaConstant" .getJavaKind input))
+            :JavaKind'Int    true
+            :JavaKind'Long   true
+            :JavaKind'Object (#_"JavaConstant" .isNull input)
+                             false
         )
     )
 
@@ -9051,10 +9249,10 @@ ZeroExtendNode'new-4
         (let [
             #_"AMD64Address" dest (Assembler''asAddress-2 asm, result)
             #_"long" imm
-                (condp = (#_"JavaKind" .getStackKind (#_"JavaConstant" .getJavaKind input))
-                    JavaKind/Int  (#_"JavaConstant" .asInt input)
-                    JavaKind/Long (#_"JavaConstant" .asLong input)
-                    JavaKind/Object
+                (case (JavaKind'getStackKind-1 (#_"JavaConstant" .getJavaKind input))
+                    :JavaKind'Int  (#_"JavaConstant" .asInt input)
+                    :JavaKind'Long (#_"JavaConstant" .asLong input)
+                    :JavaKind'Object
                         (when (#_"JavaConstant" .isNull input) => (throw! "non-nil object constants must be in register")
                             0
                         )
@@ -9201,7 +9399,7 @@ ZeroExtendNode'new-4
             (let [
                 #_"JavaConstant" jc (:constant value)
             ]
-                (and (some? jc) (#_"JavaKind" .isNumericInteger (#_"JavaConstant" .getJavaKind jc))
+                (and (some? jc) (JavaKind'isNumericInteger-1 (#_"JavaConstant" .getJavaKind jc))
                     (= (#_"JavaConstant" .asLong jc) expected)
                 )
             )
@@ -10118,7 +10316,7 @@ ZeroExtendNode'new-4
             #_"int" lower (- (Long/numberOfLeadingZeros (& (:upMask stamp) mask)) adjust)
             #_"int" upper (- (Long/numberOfLeadingZeros (& (:downMask stamp) mask)) adjust)
         ]
-            (StampFactory'forInteger-3k JavaKind/Int, lower, upper)
+            (StampFactory'forInteger-3k :JavaKind'Int, lower, upper)
         )
     )
 
@@ -10128,7 +10326,7 @@ ZeroExtendNode'new-4
             #_"int" lower (Long/numberOfTrailingZeros (& (:upMask stamp) mask))
             #_"int" upper (Long/numberOfTrailingZeros (& (:downMask stamp) mask))
         ]
-            (StampFactory'forInteger-3k JavaKind/Int, lower, upper)
+            (StampFactory'forInteger-3k :JavaKind'Int, lower, upper)
         )
     )
 
@@ -11025,7 +11223,7 @@ ZeroExtendNode'new-4
             #_"ValueNode" oldReceiver (nth (:arguments callTarget) 0)
             #_"ValueNode" newReceiver oldReceiver
             newReceiver
-                (when (= (ValueNode''getStackKind-1 newReceiver) JavaKind/Object) => newReceiver
+                (when (= (ValueNode''getStackKind-1 newReceiver) :JavaKind'Object) => newReceiver
                     (let [
                         newReceiver
                             (when (= (InvokeNode''getInvokeKind-1 invoke) :InvokeKind'Special) => newReceiver
@@ -11607,7 +11805,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"AddressNode" Lowerer'createOffsetAddress-3 [#_"Graph" graph, #_"ValueNode" object, #_"long" offset]
-        (Graph''add-2 graph, (OffsetAddressNode'new-2 object, (ConstantNode'forIntegerKind-3 JavaKind/Long, offset, graph)))
+        (Graph''add-2 graph, (OffsetAddressNode'new-2 object, (ConstantNode'forIntegerKind-3 :JavaKind'Long, offset, graph)))
     )
 
     (defn #_"AddressNode" Lowerer'createFieldAddress-3 [#_"Graph" graph, #_"ValueNode" object, #_"ResolvedJavaField" field]
@@ -11643,30 +11841,30 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"BarrierType" Lowerer'fieldLoadBarrierType-1 [#_"ResolvedJavaField" field]
-        (if (and HotSpot'useG1GC (= (#_"HotSpotResolvedJavaField" .getJavaKind field) JavaKind/Object) (= (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, java.lang.ref.Reference) (#_"HotSpotResolvedJavaField" .getDeclaringClass field)) (= (#_"HotSpotResolvedJavaField" .getName field) "referent"))
+        (if (and HotSpot'useG1GC (= (#_"HotSpotResolvedJavaField" .getJavaKind field) :JavaKind'Object) (= (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, java.lang.ref.Reference) (#_"HotSpotResolvedJavaField" .getDeclaringClass field)) (= (#_"HotSpotResolvedJavaField" .getName field) "referent"))
             :BarrierType'PRECISE
             :BarrierType'NONE
         )
     )
 
     (defn #_"BarrierType" Lowerer'fieldStoreBarrierType-1 [#_"ResolvedJavaField" field]
-        (if (= (#_"ResolvedJavaField" .getJavaKind field) JavaKind/Object) :BarrierType'IMPRECISE :BarrierType'NONE)
+        (if (= (#_"ResolvedJavaField" .getJavaKind field) :JavaKind'Object) :BarrierType'IMPRECISE :BarrierType'NONE)
     )
 
     (defn #_"BarrierType" Lowerer'arrayStoreBarrierType-1 [#_"JavaKind" elementKind]
-        (if (= elementKind JavaKind/Object) :BarrierType'PRECISE :BarrierType'NONE)
+        (if (= elementKind :JavaKind'Object) :BarrierType'PRECISE :BarrierType'NONE)
     )
 
     (defn #_"BarrierType" Lowerer'fieldInitializationBarrier-1 [#_"JavaKind" entryKind]
-        (if (and (= entryKind JavaKind/Object) (not HotSpot'useDeferredInitBarriers)) :BarrierType'IMPRECISE :BarrierType'NONE)
+        (if (and (= entryKind :JavaKind'Object) (not HotSpot'useDeferredInitBarriers)) :BarrierType'IMPRECISE :BarrierType'NONE)
     )
 
     (defn #_"BarrierType" Lowerer'arrayInitializationBarrier-1 [#_"JavaKind" entryKind]
-        (if (and (= entryKind JavaKind/Object) (not HotSpot'useDeferredInitBarriers)) :BarrierType'PRECISE :BarrierType'NONE)
+        (if (and (= entryKind :JavaKind'Object) (not HotSpot'useDeferredInitBarriers)) :BarrierType'PRECISE :BarrierType'NONE)
     )
 
     (defn #_"BarrierType" Lowerer'storeBarrierType-2 [#_"ValueNode" object, #_"ValueNode" value]
-        (when (and (= (ValueNode''getStackKind-1 value) JavaKind/Object) (= (ValueNode''getStackKind-1 object) JavaKind/Object)) => :BarrierType'NONE
+        (when (and (= (ValueNode''getStackKind-1 value) :JavaKind'Object) (= (ValueNode''getStackKind-1 object) :JavaKind'Object)) => :BarrierType'NONE
             (let [
                 #_"ResolvedJavaType" type (StampTool'typeOrNull-1 (:stamp object))
             ]
@@ -11676,16 +11874,16 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"boolean" Lowerer'useCompressedOops-2 [#_"JavaKind" kind, #_"boolean" compressible?]
-        (and (= kind JavaKind/Object) compressible? HotSpot'useCompressedOops)
+        (and (= kind :JavaKind'Object) compressible? HotSpot'useCompressedOops)
     )
 
     (defn #_"Stamp" Lowerer'loadStamp-3 [#_"Stamp" stamp, #_"JavaKind" kind, #_"boolean" compressible?]
         (if (Lowerer'useCompressedOops-2 kind, compressible?)
             (NarrowOopStamp'compressed-2 stamp, HotSpot'oopEncoding)
-            (condp =? kind
-                [JavaKind/Boolean JavaKind/Byte] (IntegerConvertOp'''foldStamp-4 (:narrow IntegerStamp'OPS), 32, 8, stamp)
-                [JavaKind/Char JavaKind/Short]   (IntegerConvertOp'''foldStamp-4 (:narrow IntegerStamp'OPS), 32, 16, stamp)
-                                                 stamp
+            (case kind
+                (:JavaKind'Boolean :JavaKind'Byte) (IntegerConvertOp'''foldStamp-4 (:narrow IntegerStamp'OPS), 32, 8, stamp)
+                (:JavaKind'Char :JavaKind'Short)   (IntegerConvertOp'''foldStamp-4 (:narrow IntegerStamp'OPS), 32, 16, stamp)
+                                                   stamp
             )
         )
     )
@@ -11698,10 +11896,10 @@ ZeroExtendNode'new-4
         (let [
             #_"ValueNode" ret
                 (when-not (Lowerer'useCompressedOops-2 kind, compressible?) => (Lowerer'newCompressionNode-2 :CompressionOp'Uncompress, value)
-                    (condp =? kind
-                        [JavaKind/Byte JavaKind/Short]   (SignExtendNode'new-2 value, 32)
-                        [JavaKind/Boolean JavaKind/Char] (ZeroExtendNode'new-2 value, 32)
-                                                         value
+                    (case kind
+                        (:JavaKind'Byte :JavaKind'Short)   (SignExtendNode'new-2 value, 32)
+                        (:JavaKind'Boolean :JavaKind'Char) (ZeroExtendNode'new-2 value, 32)
+                                                           value
                     )
                 )
         ]
@@ -11719,10 +11917,10 @@ ZeroExtendNode'new-4
         (let [
             #_"ValueNode" ret
                 (when-not (Lowerer'useCompressedOops-2 kind, compressible?) => (Lowerer'newCompressionNode-2 :CompressionOp'Compress, value)
-                    (condp =? kind
-                        [JavaKind/Boolean JavaKind/Byte] (NarrowNode'new-2 value, 8)
-                        [JavaKind/Char JavaKind/Short]   (NarrowNode'new-2 value, 16)
-                                                         value
+                    (case kind
+                        (:JavaKind'Boolean :JavaKind'Byte) (NarrowNode'new-2 value, 8)
+                        (:JavaKind'Char :JavaKind'Short)   (NarrowNode'new-2 value, 16)
+                                                           value
                     )
                 )
         ]
@@ -11803,7 +12001,7 @@ ZeroExtendNode'new-4
             #_"int" shift (NumUtil'log2-1 (HotSpot'arrayIndexScale-1 elementKind))
             #_"ValueNode" scaledIndex (Graph''add-2 graph, (LeftShiftNode'new-2 wordIndex, (ConstantNode'forInt-2 shift, graph)))
             #_"int" base (HotSpot'arrayBaseOffset-1 elementKind)
-            #_"ValueNode" offset (Graph''add-2 graph, (AddNode'new-2 scaledIndex, (ConstantNode'forIntegerKind-3 JavaKind/Long, base, graph)))
+            #_"ValueNode" offset (Graph''add-2 graph, (AddNode'new-2 scaledIndex, (ConstantNode'forIntegerKind-3 :JavaKind'Long, base, graph)))
         ]
             (Graph''add-2 graph, (OffsetAddressNode'new-2 array, offset))
         )
@@ -12871,7 +13069,7 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"ValueNode" AddressLowering'improveConstDisp-6 [#_"AMD64AddressNode" address, #_"ValueNode" original, #_"JavaConstant" constant, #_"ValueNode" other, #_"int" shift, #_"boolean" negateExtractedDisplacement]
-        (when (#_"JavaKind" .isNumericInteger (#_"JavaConstant" .getJavaKind constant)) => original
+        (when (JavaKind'isNumericInteger-1 (#_"JavaConstant" .getJavaKind constant)) => original
             (when (AddressLowering'updateDisplacement-3 address, (<< (#_"JavaConstant" .asLong constant) shift), negateExtractedDisplacement) => original
                 other
             )
@@ -15836,10 +16034,10 @@ ZeroExtendNode'new-4
 
     (defm AMD64SwitchClosure AMD64SwitchClosure
         (#_"this" AMD64SwitchClosure'''emitComparison-2 [#_"AMD64SwitchClosure" this, #_"Constant" c]
-            (condp = (#_"JavaConstant" .getJavaKind c)
-                JavaKind/Int  (update this :asm Assembler''cmpl-3ri (:keyRegister this), (int (#_"JavaConstant" .asLong c)))
-                JavaKind/Long (update this :asm Assembler''cmpq-3ra (:keyRegister this), (Assembler''asLongConstRef-2 (:asm this), c))
-                JavaKind/Object
+            (case (#_"JavaConstant" .getJavaKind c)
+                :JavaKind'Int  (update this :asm Assembler''cmpl-3ri (:keyRegister this), (int (#_"JavaConstant" .asLong c)))
+                :JavaKind'Long (update this :asm Assembler''cmpq-3ra (:keyRegister this), (Assembler''asLongConstRef-2 (:asm this), c))
+                :JavaKind'Object
                     (let [
                         this (update this :asm AMD64Move'const2reg-3 (:reg (:scratch (:op this))), c)
                         this (update this :asm Assembler''cmpptr-3rr (:keyRegister this), (:reg (:scratch (:op this))))
@@ -17912,7 +18110,7 @@ ZeroExtendNode'new-4
         (let [
             #_"ResolvedJavaType" type (StampTool'typeOrNull-1 (:stamp array))
         ]
-            (when (and (some? type) (#_"ResolvedJavaType" .isArray type)) => JavaKind/Illegal
+            (when (and (some? type) (#_"ResolvedJavaType" .isArray type)) => :JavaKind'Illegal
                 (#_"ResolvedJavaType" .getJavaKind (#_"ResolvedJavaType" .getComponentType type))
             )
         )
@@ -17925,11 +18123,11 @@ ZeroExtendNode'new-4
                 ;; BALOAD (with elementKind being Byte) can be used to retrieve values from boolean arrays.
                 #_"JavaKind" elementKind (:elementKind load)
                 elementKind
-                    (when (= elementKind JavaKind/Byte) => elementKind
+                    (when (= elementKind :JavaKind'Byte) => elementKind
                         (let [
                             elementKind (PEReadEliminationClosure'getElementKindFromStamp-1 (:array load))
                         ]
-                            (when (= elementKind JavaKind/Illegal) => elementKind
+                            (when (= elementKind :JavaKind'Illegal) => elementKind
                                 (§ return false)
                             )
                         )
@@ -17946,14 +18144,14 @@ ZeroExtendNode'new-4
             ;; BASTORE (with elementKind being Byte) can be used to store values in boolean arrays.
             #_"JavaKind" elementKind (:elementKind store)
             elementKind
-                (when (= elementKind JavaKind/Byte) => elementKind
+                (when (= elementKind :JavaKind'Byte) => elementKind
                     (let [
                         elementKind (PEReadEliminationClosure'getElementKindFromStamp-1 (:array store))
                     ]
-                        (when (= elementKind JavaKind/Illegal) => elementKind
+                        (when (= elementKind :JavaKind'Illegal) => elementKind
                             ;; Could not determine the actual access kind from stamp. Hence kill both.
-                            (§ ass! state (PEReadEliminationBlockState''killReadCache-3 state, (NamedLocationIdentity'getArrayLocation-1 JavaKind/Boolean), index))
-                            (§ ass! state (PEReadEliminationBlockState''killReadCache-3 state, (NamedLocationIdentity'getArrayLocation-1 JavaKind/Byte), index))
+                            (§ ass! state (PEReadEliminationBlockState''killReadCache-3 state, (NamedLocationIdentity'getArrayLocation-1 :JavaKind'Boolean), index))
+                            (§ ass! state (PEReadEliminationBlockState''killReadCache-3 state, (NamedLocationIdentity'getArrayLocation-1 :JavaKind'Byte), index))
                             (§ return false)
                         )
                     )
@@ -17968,24 +18166,15 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"boolean" PEReadEliminationClosure''processArrayLength-4 [#_"PEReadEliminationClosure" this, #_"ArrayLengthNode" length, #_"PEReadEliminationBlockState" state, #_"GraphEffects" effects]
-        (PEReadEliminationClosure''processLoad-8 this, length, (:array length), NamedLocationIdentity'ARRAY_LENGTH, -1, JavaKind/Int, state, effects)
+        (PEReadEliminationClosure''processLoad-8 this, length, (:array length), NamedLocationIdentity'ARRAY_LENGTH, -1, :JavaKind'Int, state, effects)
     )
 
     (defn- #_"boolean" PEReadEliminationClosure'isOverflowAccess-2 [#_"JavaKind" accessKind, #_"JavaKind" declaredKind]
         (cond
-            (= accessKind declaredKind)
-                false
-            (= accessKind JavaKind/Object)
-                (condp = declaredKind
-                    JavaKind/Object false
-                    JavaKind/Long   false
-                    JavaKind/Double (throw! "should not reach here")
-                                    true
-                )
-            (#_"JavaKind" .isPrimitive declaredKind)
-                (< (#_"JavaKind" .getBitCount declaredKind) (#_"JavaKind" .getBitCount accessKind))
-            :else
-                true
+            (= accessKind declaredKind)           false
+            (= accessKind :JavaKind'Object)       (case declaredKind (:JavaKind'Object :JavaKind'Long) false true)
+            (JavaKind'isPrimitive-1 declaredKind) (< (JavaKind'getBitCount-1 declaredKind) (JavaKind'getBitCount-1 accessKind))
+            :else                                 true
         )
     )
 
@@ -18118,7 +18307,7 @@ ZeroExtendNode'new-4
                                     #_"PhiNode" phi (first s)
                                     #_"ValueNode" value (nth (:phiValues phi) 0)
                                     firstValues
-                                        (when (and (some? value) (#_"JavaKind" .isObject (ValueNode''getStackKind-1 phi))) => firstValues
+                                        (when (and (some? value) (JavaKind'isObject-1 (ValueNode''getStackKind-1 phi))) => firstValues
                                             (let [
                                                 firstValues (or firstValues {})
                                                 value (GraphUtil'unproxify-1n value)
@@ -18923,7 +19112,7 @@ ZeroExtendNode'new-4
      ;;
     (defn- #_"this" BytecodeParser''handleUnresolvedCheckCast-3 [#_"BytecodeParser" this, #_"JavaType" type, #_"ValueNode" object]
         (BytecodeParser''append-2 this, (FixedGuardNode'new-3 (Graph''addOrUniqueWithInputs-2 (:graph this), (IsNullNode'create-1 object)), DeoptimizationReason/Unresolved, DeoptimizationAction/InvalidateRecompile))
-        (update this :frameState FrameStateBuilder''push-3 JavaKind/Object, (ConstantNode'forConstant-2c JavaConstant/NULL_POINTER, (:graph this)))
+        (update this :frameState FrameStateBuilder''push-3 :JavaKind'Object, (ConstantNode'forConstant-2c JavaConstant/NULL_POINTER, (:graph this)))
     )
 
     ;;;
@@ -18939,7 +19128,7 @@ ZeroExtendNode'new-4
             (let [
                 this (assoc this :lastInstr successor)
             ]
-                (update this :frameState FrameStateBuilder''push-3 JavaKind/Int, (ConstantNode'forConstant-2c JavaConstant/INT_0, (:graph this)))
+                (update this :frameState FrameStateBuilder''push-3 :JavaKind'Int, (ConstantNode'forConstant-2c JavaConstant/INT_0, (:graph this)))
             )
         )
     )
@@ -19198,7 +19387,7 @@ ZeroExtendNode'new-4
                                 )
                             this
                                 (when (some? calleeReturnValue) => this
-                                    (update this :frameState FrameStateBuilder''push-3 (-> targetMethod (#_"ResolvedJavaMethod" .getSignature) (#_"Signature" .getReturnKind) (#_"JavaKind" .getStackKind)), calleeReturnValue)
+                                    (update this :frameState FrameStateBuilder''push-3 (JavaKind'getStackKind-1 (#_"Signature" .getReturnKind (#_"ResolvedJavaMethod" .getSignature targetMethod))), calleeReturnValue)
                                 )
                         ]
                             (when (some? merge) => this
@@ -19440,7 +19629,7 @@ ZeroExtendNode'new-4
             #_"JavaConstant" appendix (#_"ConstantPool" .lookupAppendix (:constantPool this), cpi, opcode)
             _
                 (when (some? appendix)
-                    (§ ass! this (update this :frameState FrameStateBuilder''push-3 JavaKind/Object, (ConstantNode'forConstant-2c appendix, (:graph this))))
+                    (§ ass! this (update this :frameState FrameStateBuilder''push-3 :JavaKind'Object, (ConstantNode'forConstant-2c appendix, (:graph this))))
                 )
             #_"boolean" hasReceiver (and (not= opcode Bytecodes'INVOKEDYNAMIC) (not (#_"ResolvedJavaMethod" .isStatic target)))
             #_"[ValueNode]" args (FrameStateBuilder''popArguments-2 (:frameState this), (#_"Signature" .getParameterCount (#_"ResolvedJavaMethod" .getSignature target), hasReceiver))
@@ -19604,7 +19793,7 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"this" BytecodeParser''genGetField-3i [#_"BytecodeParser" this, #_"int" cpi, #_"int" opcode]
-        (BytecodeParser''genGetField-4 this, cpi, opcode, (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Object))
+        (BytecodeParser''genGetField-4 this, cpi, opcode, (FrameStateBuilder''pop-2 (:frameState this), :JavaKind'Object))
     )
 
     (defn- #_"ValueNode" BytecodeParser''processReturnValue-3 [#_"BytecodeParser" this, #_"ValueNode" value, #_"JavaKind" kind]
@@ -19617,11 +19806,11 @@ ZeroExtendNode'new-4
                     #_"IntegerStamp" stamp (:stamp value)
                 ]
                     ;; the bytecode verifier doesn't check that the value is in the correct range
-                    (when (or (< (:lowerBound stamp) (#_"JavaKind" .getMinValue returnKind)) (< (#_"JavaKind" .getMaxValue returnKind) (:upperBound stamp))) => value
+                    (when (or (< (:lowerBound stamp) (JavaKind'getMinValue-1 returnKind)) (< (JavaKind'getMaxValue-1 returnKind) (:upperBound stamp))) => value
                         (let [
-                            #_"ValueNode" narrow (BytecodeParser''append-2 this, (NarrowNode'create-2 value, (#_"JavaKind" .getBitCount returnKind)))
+                            #_"ValueNode" narrow (BytecodeParser''append-2 this, (NarrowNode'create-2 value, (JavaKind'getBitCount-1 returnKind)))
                         ]
-                            (if (#_"JavaKind" .isUnsigned returnKind)
+                            (if (JavaKind'isUnsigned-1 returnKind)
                                 (BytecodeParser''append-2 this, (ZeroExtendNode'create-2 narrow, 32))
                                 (BytecodeParser''append-2 this, (SignExtendNode'create-2 narrow, 32))
                             )
@@ -19744,7 +19933,7 @@ ZeroExtendNode'new-4
                 (throw! "unstructured control flow (internal limitation)")
             )
             (let [
-                this (update this :frameState FrameStateBuilder''push-3 JavaKind/Object, (BytecodeParser''getJsrConstant-2 this, nextBci))
+                this (update this :frameState FrameStateBuilder''push-3 :JavaKind'Object, (BytecodeParser''getJsrConstant-2 this, nextBci))
             ]
                 (BytecodeParser''appendGoto-2 this, successor)
             )
@@ -19832,7 +20021,7 @@ ZeroExtendNode'new-4
     (defn- #_"LogicNode" BytecodeParser'createLogicNode-3 [#_"CanonicalCondition" condition, #_"ValueNode" a, #_"ValueNode" b]
         (condp = condition
             CanonicalCondition'EQ
-                (if (= (ValueNode''getStackKind-1 a) JavaKind/Object)
+                (if (= (ValueNode''getStackKind-1 a) :JavaKind'Object)
                     (ObjectEqualsNode'createCanonical-2 a, b)
                     (IntegerEqualsNode'create-3 nil, a, b)
                 )
@@ -19871,9 +20060,9 @@ ZeroExtendNode'new-4
                 )
         ]
             (if genReturn
-                (BytecodeParser''genReturn-3 this, conditionalNode, (#_"JavaKind" .getStackKind (#_"Signature" .getReturnKind (#_"ResolvedJavaMethod" .getSignature (:method this)))))
+                (BytecodeParser''genReturn-3 this, conditionalNode, (JavaKind'getStackKind-1 (#_"Signature" .getReturnKind (#_"ResolvedJavaMethod" .getSignature (:method this)))))
                 (let [
-                    this (update this :frameState FrameStateBuilder''push-3 JavaKind/Int, conditionalNode)
+                    this (update this :frameState FrameStateBuilder''push-3 :JavaKind'Int, conditionalNode)
                     this (BytecodeParser''appendGoto-2 this, (BciBlock''getSuccessor-2 trueBlock, 0))
                 ]
                     (update this :stream BytecodeStream''setBCI-2 oldBci)
@@ -20023,7 +20212,7 @@ ZeroExtendNode'new-4
                 ]
                     (BytecodeParser''genGetField-4 this, (BytecodeStream''readCPI-1 (:stream this)), Bytecodes'GETFIELD, value)
                 )
-                (update this :frameState FrameStateBuilder''push-3 JavaKind/Object, value)
+                (update this :frameState FrameStateBuilder''push-3 :JavaKind'Object, value)
             )
         )
     )
@@ -20043,7 +20232,7 @@ ZeroExtendNode'new-4
             (condp instance? constant
                 JavaType ;; this is a load of class constant which might be unresolved
                     (when (instance? ResolvedJavaType constant) => (BytecodeParser''handleUnresolvedLoadConstant-2 this, constant)
-                        (update this :frameState FrameStateBuilder''push-3 JavaKind/Object, (ConstantNode'forConstant-2c (#_"ConstantReflectionProvider" .asJavaClass HotSpot'constantReflection, constant), (:graph this)))
+                        (update this :frameState FrameStateBuilder''push-3 :JavaKind'Object, (ConstantNode'forConstant-2c (#_"ConstantReflectionProvider" .asJavaClass HotSpot'constantReflection, constant), (:graph this)))
                     )
                 JavaConstant
                     (update this :frameState FrameStateBuilder''push-3 (#_"JavaConstant" .getJavaKind constant), (ConstantNode'forConstant-2c constant, (:graph this)))
@@ -20053,8 +20242,8 @@ ZeroExtendNode'new-4
 
     (defn- #_"this" BytecodeParser''genLoadIndexed-2 [#_"BytecodeParser" this, #_"JavaKind" kind]
         (let [
-            #_"ValueNode" index (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Int)
-            #_"ValueNode" array (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Object)
+            #_"ValueNode" index (FrameStateBuilder''pop-2 (:frameState this), :JavaKind'Int)
+            #_"ValueNode" array (FrameStateBuilder''pop-2 (:frameState this), :JavaKind'Object)
         ]
             (loop [#_"seq" s (seq (:nodePlugins HotSpot'plugins))]
                 (if (some? s)
@@ -20070,8 +20259,8 @@ ZeroExtendNode'new-4
     (defn- #_"this" BytecodeParser''genStoreIndexed-2 [#_"BytecodeParser" this, #_"JavaKind" kind]
         (let [
             #_"ValueNode" value (FrameStateBuilder''pop-2 (:frameState this), kind)
-            #_"ValueNode" index (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Int)
-            #_"ValueNode" array (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Object)
+            #_"ValueNode" index (FrameStateBuilder''pop-2 (:frameState this), :JavaKind'Int)
+            #_"ValueNode" array (FrameStateBuilder''pop-2 (:frameState this), :JavaKind'Object)
         ]
             (loop [#_"seq" s (seq (:nodePlugins HotSpot'plugins))]
                 (if (some? s)
@@ -20126,7 +20315,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"this" BytecodeParser''genShiftOp-3 [#_"BytecodeParser" this, #_"JavaKind" kind, #_"int" opcode]
         (let [
-            #_"ValueNode" s (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Int)
+            #_"ValueNode" s (FrameStateBuilder''pop-2 (:frameState this), :JavaKind'Int)
             #_"ValueNode" x (FrameStateBuilder''pop-2 (:frameState this), kind)
             #_"ValueNode" v
                 (condp =? opcode
@@ -20159,7 +20348,7 @@ ZeroExtendNode'new-4
             #_"ValueNode" y (FrameStateBuilder''pop-2 (:frameState this), kind)
             #_"ValueNode" x (FrameStateBuilder''pop-2 (:frameState this), kind)
         ]
-            (update this :frameState FrameStateBuilder''push-3 JavaKind/Int, (BytecodeParser''append-2 this, (NormalizeCompareNode'create-3 x, y, JavaKind/Int)))
+            (update this :frameState FrameStateBuilder''push-3 :JavaKind'Int, (BytecodeParser''append-2 this, (NormalizeCompareNode'create-3 x, y, :JavaKind'Int)))
         )
     )
 
@@ -20167,11 +20356,11 @@ ZeroExtendNode'new-4
         (let [
             #_"ValueNode" input (FrameStateBuilder''pop-2 (:frameState this), from)
             _
-                (when-not (= from (#_"JavaKind" .getStackKind from))
-                    (§ ass input (BytecodeParser''append-2 this, (NarrowNode'create-2 input, (#_"JavaKind" .getBitCount from))))
+                (when-not (= from (JavaKind'getStackKind-1 from))
+                    (§ ass input (BytecodeParser''append-2 this, (NarrowNode'create-2 input, (JavaKind'getBitCount-1 from))))
                 )
         ]
-            (update this :frameState FrameStateBuilder''push-3 to, (BytecodeParser''append-2 this, (SignExtendNode'create-2 input, (#_"JavaKind" .getBitCount to))))
+            (update this :frameState FrameStateBuilder''push-3 to, (BytecodeParser''append-2 this, (SignExtendNode'create-2 input, (JavaKind'getBitCount-1 to))))
         )
     )
 
@@ -20179,11 +20368,11 @@ ZeroExtendNode'new-4
         (let [
             #_"ValueNode" input (FrameStateBuilder''pop-2 (:frameState this), from)
             _
-                (when-not (= from (#_"JavaKind" .getStackKind from))
-                    (§ ass input (BytecodeParser''append-2 this, (NarrowNode'create-2 input, (#_"JavaKind" .getBitCount from))))
+                (when-not (= from (JavaKind'getStackKind-1 from))
+                    (§ ass input (BytecodeParser''append-2 this, (NarrowNode'create-2 input, (JavaKind'getBitCount-1 from))))
                 )
         ]
-            (update this :frameState FrameStateBuilder''push-3 to, (BytecodeParser''append-2 this, (ZeroExtendNode'create-2 input, (#_"JavaKind" .getBitCount to))))
+            (update this :frameState FrameStateBuilder''push-3 to, (BytecodeParser''append-2 this, (ZeroExtendNode'create-2 input, (JavaKind'getBitCount-1 to))))
         )
     )
 
@@ -20191,7 +20380,7 @@ ZeroExtendNode'new-4
         (let [
             #_"ValueNode" input (FrameStateBuilder''pop-2 (:frameState this), from)
         ]
-            (update this :frameState FrameStateBuilder''push-3 to, (BytecodeParser''append-2 this, (NarrowNode'create-2 input, (#_"JavaKind" .getBitCount to))))
+            (update this :frameState FrameStateBuilder''push-3 to, (BytecodeParser''append-2 this, (NarrowNode'create-2 input, (JavaKind'getBitCount-1 to))))
         )
     )
 
@@ -20202,14 +20391,14 @@ ZeroExtendNode'new-4
             #_"ValueNode" x (nth (:locals (:frameState this)) index)
             #_"ValueNode" y (ConstantNode'forConstant-2c (JavaConstant/forInt delta), (:graph this))
         ]
-            (update this :frameState FrameStateBuilder''storeLocal-4 index, JavaKind/Int, (BytecodeParser''append-2 this, (AddNode'create-2 x, y)))
+            (update this :frameState FrameStateBuilder''storeLocal-4 index, :JavaKind'Int, (BytecodeParser''append-2 this, (AddNode'create-2 x, y)))
         )
     )
 
     (defn- #_"this" BytecodeParser''genIfZero-2 [#_"BytecodeParser" this, #_"Condition" cond]
         (let [
             #_"ValueNode" y (ConstantNode'forConstant-2c JavaConstant/INT_0, (:graph this))
-            #_"ValueNode" x (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Int)
+            #_"ValueNode" x (FrameStateBuilder''pop-2 (:frameState this), :JavaKind'Int)
         ]
             (BytecodeParser''genIf-4 this, x, cond, y)
         )
@@ -20218,7 +20407,7 @@ ZeroExtendNode'new-4
     (defn- #_"this" BytecodeParser''genIfNull-2 [#_"BytecodeParser" this, #_"Condition" cond]
         (let [
             #_"ValueNode" y (ConstantNode'forConstant-2c JavaConstant/NULL_POINTER, (:graph this))
-            #_"ValueNode" x (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Object)
+            #_"ValueNode" x (FrameStateBuilder''pop-2 (:frameState this), :JavaKind'Object)
         ]
             (BytecodeParser''genIf-4 this, x, cond, y)
         )
@@ -20237,7 +20426,7 @@ ZeroExtendNode'new-4
         (let [
             #_"int" cpi (BytecodeStream''readCPI-1 (:stream this))
             #_"JavaType" type (BytecodeParser''lookupType-3 this, cpi, Bytecodes'CHECKCAST)
-            #_"ValueNode" object (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Object)
+            #_"ValueNode" object (FrameStateBuilder''pop-2 (:frameState this), :JavaKind'Object)
         ]
             (when (instance? ResolvedJavaType type) => (BytecodeParser''handleUnresolvedCheckCast-3 this, type, object)
                 (let [
@@ -20259,7 +20448,7 @@ ZeroExtendNode'new-4
                                         )
                                     )
                             ]
-                                (update this :frameState FrameStateBuilder''push-3 JavaKind/Object, castNode)
+                                (update this :frameState FrameStateBuilder''push-3 :JavaKind'Object, castNode)
                             )
                         )
                     )
@@ -20272,7 +20461,7 @@ ZeroExtendNode'new-4
         (let [
             #_"int" cpi (BytecodeStream''readCPI-1 (:stream this))
             #_"JavaType" type (BytecodeParser''lookupType-3 this, cpi, Bytecodes'INSTANCEOF)
-            #_"ValueNode" object (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Object)
+            #_"ValueNode" object (FrameStateBuilder''pop-2 (:frameState this), :JavaKind'Object)
         ]
             (when (instance? ResolvedJavaType type) => (BytecodeParser''handleUnresolvedInstanceOf-3 this, type, object)
                 (let [
@@ -20306,7 +20495,7 @@ ZeroExtendNode'new-4
                                         )
                                     )
                                     ;; Most frequent for value is IRETURN, followed by ISTORE.
-                                    (update this :frameState FrameStateBuilder''push-3 JavaKind/Int, (BytecodeParser''append-2 this, (ConditionalNode'create-1 (§ cast #_"LogicNode" logic))))
+                                    (update this :frameState FrameStateBuilder''push-3 :JavaKind'Int, (BytecodeParser''append-2 this, (ConditionalNode'create-1 (§ cast #_"LogicNode" logic))))
                                 )
                             )
                         )
@@ -20318,7 +20507,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"this" BytecodeParser''genNewInstance-2t [#_"BytecodeParser" this, #_"JavaType" type]
         (when (and (instance? ResolvedJavaType type) (#_"ResolvedJavaType" .isInitialized type)) => (BytecodeParser''handleUnresolvedNewInstance-2 this, type)
-            (update this :frameState FrameStateBuilder''push-3 JavaKind/Object, (BytecodeParser''append-2 this, (NewInstanceNode'new-1 type)))
+            (update this :frameState FrameStateBuilder''push-3 :JavaKind'Object, (BytecodeParser''append-2 this, (NewInstanceNode'new-1 type)))
         )
     )
 
@@ -20348,19 +20537,19 @@ ZeroExtendNode'new-4
     (defn- #_"this" BytecodeParser''genNewPrimitiveArray-2 [#_"BytecodeParser" this, #_"int" typeCode]
         (let [
             #_"ResolvedJavaType" elementType (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, (BytecodeParser'arrayTypeCodeToClass-1 typeCode))
-            #_"ValueNode" length (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Int)
+            #_"ValueNode" length (FrameStateBuilder''pop-2 (:frameState this), :JavaKind'Int)
         ]
-            (update this :frameState FrameStateBuilder''push-3 JavaKind/Object, (BytecodeParser''append-2 this, (NewArrayNode'new-2 elementType, length)))
+            (update this :frameState FrameStateBuilder''push-3 :JavaKind'Object, (BytecodeParser''append-2 this, (NewArrayNode'new-2 elementType, length)))
         )
     )
 
     (defn- #_"this" BytecodeParser''genNewObjectArray-2 [#_"BytecodeParser" this, #_"int" cpi]
         (let [
             #_"JavaType" type (BytecodeParser''lookupType-3 this, cpi, Bytecodes'ANEWARRAY)
-            #_"ValueNode" length (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Int)
+            #_"ValueNode" length (FrameStateBuilder''pop-2 (:frameState this), :JavaKind'Int)
         ]
             (when (instance? ResolvedJavaType type) => (BytecodeParser''handleUnresolvedNewObjectArray-3 this, type, length)
-                (update this :frameState FrameStateBuilder''push-3 JavaKind/Object, (BytecodeParser''append-2 this, (NewArrayNode'new-2 type, length)))
+                (update this :frameState FrameStateBuilder''push-3 :JavaKind'Object, (BytecodeParser''append-2 this, (NewArrayNode'new-2 type, length)))
             )
         )
     )
@@ -20377,7 +20566,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"this" BytecodeParser''genPutField-3f [#_"BytecodeParser" this, #_"JavaField" field, #_"ValueNode" value]
         (let [
-            #_"ValueNode" receiver (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Object)
+            #_"ValueNode" receiver (FrameStateBuilder''pop-2 (:frameState this), :JavaKind'Object)
         ]
             (when (instance? ResolvedJavaField field) => (BytecodeParser''handleUnresolvedStoreField-4 this, field, value, receiver)
                 (or
@@ -20477,7 +20666,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"this" BytecodeParser''genSwitch-2 [#_"BytecodeParser" this, #_"BytecodeSwitch" switch]
         (let [
-            #_"ValueNode" value (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Int)
+            #_"ValueNode" value (FrameStateBuilder''pop-2 (:frameState this), :JavaKind'Int)
             #_"int" n (BytecodeSwitch'''numberOfCases-1 switch)
             #_"[double]" probabilities (vec (repeat (inc n) (/ 1.0 (inc n))))
             #_"{Integer SuccessorInfo}" bciToBlockSuccessorIndex {}
@@ -20584,63 +20773,63 @@ ZeroExtendNode'new-4
     (defn- #_"this" BytecodeParser''processBytecode-3 [#_"BytecodeParser" this, #_"int" bci, #_"int" opcode]
         (condp =? opcode
             Bytecodes'NOP             this ;; nothing to do
-            Bytecodes'ACONST_NULL     (update this :frameState FrameStateBuilder''push-3 JavaKind/Object, (ConstantNode'forConstant-2c JavaConstant/NULL_POINTER, (:graph this)))
+            Bytecodes'ACONST_NULL     (update this :frameState FrameStateBuilder''push-3 :JavaKind'Object, (ConstantNode'forConstant-2c JavaConstant/NULL_POINTER, (:graph this)))
            [Bytecodes'ICONST_M1
             Bytecodes'ICONST_0
             Bytecodes'ICONST_1
             Bytecodes'ICONST_2
             Bytecodes'ICONST_3
             Bytecodes'ICONST_4
-            Bytecodes'ICONST_5]       (update this :frameState FrameStateBuilder''push-3 JavaKind/Int, (ConstantNode'forConstant-2c (JavaConstant/forInt (- opcode Bytecodes'ICONST_0)), (:graph this)))
+            Bytecodes'ICONST_5]       (update this :frameState FrameStateBuilder''push-3 :JavaKind'Int, (ConstantNode'forConstant-2c (JavaConstant/forInt (- opcode Bytecodes'ICONST_0)), (:graph this)))
            [Bytecodes'LCONST_0
-            Bytecodes'LCONST_1]       (update this :frameState FrameStateBuilder''push-3 JavaKind/Long, (ConstantNode'forConstant-2c (JavaConstant/forLong (- opcode Bytecodes'LCONST_0)), (:graph this)))
-            Bytecodes'BIPUSH          (update this :frameState FrameStateBuilder''push-3 JavaKind/Int, (ConstantNode'forConstant-2c (JavaConstant/forInt (BytecodeStream''readByte-1 (:stream this))), (:graph this)))
-            Bytecodes'SIPUSH          (update this :frameState FrameStateBuilder''push-3 JavaKind/Int, (ConstantNode'forConstant-2c (JavaConstant/forInt (BytecodeStream''readShort-1 (:stream this))), (:graph this)))
+            Bytecodes'LCONST_1]       (update this :frameState FrameStateBuilder''push-3 :JavaKind'Long, (ConstantNode'forConstant-2c (JavaConstant/forLong (- opcode Bytecodes'LCONST_0)), (:graph this)))
+            Bytecodes'BIPUSH          (update this :frameState FrameStateBuilder''push-3 :JavaKind'Int, (ConstantNode'forConstant-2c (JavaConstant/forInt (BytecodeStream''readByte-1 (:stream this))), (:graph this)))
+            Bytecodes'SIPUSH          (update this :frameState FrameStateBuilder''push-3 :JavaKind'Int, (ConstantNode'forConstant-2c (JavaConstant/forInt (BytecodeStream''readShort-1 (:stream this))), (:graph this)))
            [Bytecodes'LDC
             Bytecodes'LDC_W
             Bytecodes'LDC2_W]         (BytecodeParser''genLoadConstant-3 this, (BytecodeStream''readCPI-1 (:stream this)), opcode)
-            Bytecodes'ILOAD           (BytecodeParser''loadLocal-3 this, (BytecodeStream''readLocalIndex-1 (:stream this)), JavaKind/Int)
-            Bytecodes'LLOAD           (BytecodeParser''loadLocal-3 this, (BytecodeStream''readLocalIndex-1 (:stream this)), JavaKind/Long)
+            Bytecodes'ILOAD           (BytecodeParser''loadLocal-3 this, (BytecodeStream''readLocalIndex-1 (:stream this)), :JavaKind'Int)
+            Bytecodes'LLOAD           (BytecodeParser''loadLocal-3 this, (BytecodeStream''readLocalIndex-1 (:stream this)), :JavaKind'Long)
             Bytecodes'ALOAD           (BytecodeParser''loadLocalObject-2 this, (BytecodeStream''readLocalIndex-1 (:stream this)))
            [Bytecodes'ILOAD_0
             Bytecodes'ILOAD_1
             Bytecodes'ILOAD_2
-            Bytecodes'ILOAD_3]        (BytecodeParser''loadLocal-3 this, (- opcode Bytecodes'ILOAD_0), JavaKind/Int)
+            Bytecodes'ILOAD_3]        (BytecodeParser''loadLocal-3 this, (- opcode Bytecodes'ILOAD_0), :JavaKind'Int)
            [Bytecodes'LLOAD_0
             Bytecodes'LLOAD_1
             Bytecodes'LLOAD_2
-            Bytecodes'LLOAD_3]        (BytecodeParser''loadLocal-3 this, (- opcode Bytecodes'LLOAD_0), JavaKind/Long)
+            Bytecodes'LLOAD_3]        (BytecodeParser''loadLocal-3 this, (- opcode Bytecodes'LLOAD_0), :JavaKind'Long)
            [Bytecodes'ALOAD_0
             Bytecodes'ALOAD_1
             Bytecodes'ALOAD_2
             Bytecodes'ALOAD_3]        (BytecodeParser''loadLocalObject-2 this, (- opcode Bytecodes'ALOAD_0))
-            Bytecodes'IALOAD          (BytecodeParser''genLoadIndexed-2 this, JavaKind/Int)
-            Bytecodes'LALOAD          (BytecodeParser''genLoadIndexed-2 this, JavaKind/Long)
-            Bytecodes'AALOAD          (BytecodeParser''genLoadIndexed-2 this, JavaKind/Object)
-            Bytecodes'BALOAD          (BytecodeParser''genLoadIndexed-2 this, JavaKind/Byte)
-            Bytecodes'CALOAD          (BytecodeParser''genLoadIndexed-2 this, JavaKind/Char)
-            Bytecodes'SALOAD          (BytecodeParser''genLoadIndexed-2 this, JavaKind/Short)
-            Bytecodes'ISTORE          (BytecodeParser''storeLocal-3 this, JavaKind/Int, (BytecodeStream''readLocalIndex-1 (:stream this)))
-            Bytecodes'LSTORE          (BytecodeParser''storeLocal-3 this, JavaKind/Long, (BytecodeStream''readLocalIndex-1 (:stream this)))
-            Bytecodes'ASTORE          (BytecodeParser''storeLocal-3 this, JavaKind/Object, (BytecodeStream''readLocalIndex-1 (:stream this)))
+            Bytecodes'IALOAD          (BytecodeParser''genLoadIndexed-2 this, :JavaKind'Int)
+            Bytecodes'LALOAD          (BytecodeParser''genLoadIndexed-2 this, :JavaKind'Long)
+            Bytecodes'AALOAD          (BytecodeParser''genLoadIndexed-2 this, :JavaKind'Object)
+            Bytecodes'BALOAD          (BytecodeParser''genLoadIndexed-2 this, :JavaKind'Byte)
+            Bytecodes'CALOAD          (BytecodeParser''genLoadIndexed-2 this, :JavaKind'Char)
+            Bytecodes'SALOAD          (BytecodeParser''genLoadIndexed-2 this, :JavaKind'Short)
+            Bytecodes'ISTORE          (BytecodeParser''storeLocal-3 this, :JavaKind'Int, (BytecodeStream''readLocalIndex-1 (:stream this)))
+            Bytecodes'LSTORE          (BytecodeParser''storeLocal-3 this, :JavaKind'Long, (BytecodeStream''readLocalIndex-1 (:stream this)))
+            Bytecodes'ASTORE          (BytecodeParser''storeLocal-3 this, :JavaKind'Object, (BytecodeStream''readLocalIndex-1 (:stream this)))
            [Bytecodes'ISTORE_0
             Bytecodes'ISTORE_1
             Bytecodes'ISTORE_2
-            Bytecodes'ISTORE_3]       (BytecodeParser''storeLocal-3 this, JavaKind/Int, (- opcode Bytecodes'ISTORE_0))
+            Bytecodes'ISTORE_3]       (BytecodeParser''storeLocal-3 this, :JavaKind'Int, (- opcode Bytecodes'ISTORE_0))
            [Bytecodes'LSTORE_0
             Bytecodes'LSTORE_1
             Bytecodes'LSTORE_2
-            Bytecodes'LSTORE_3]       (BytecodeParser''storeLocal-3 this, JavaKind/Long, (- opcode Bytecodes'LSTORE_0))
+            Bytecodes'LSTORE_3]       (BytecodeParser''storeLocal-3 this, :JavaKind'Long, (- opcode Bytecodes'LSTORE_0))
            [Bytecodes'ASTORE_0
             Bytecodes'ASTORE_1
             Bytecodes'ASTORE_2
-            Bytecodes'ASTORE_3]       (BytecodeParser''storeLocal-3 this, JavaKind/Object, (- opcode Bytecodes'ASTORE_0))
-            Bytecodes'IASTORE         (BytecodeParser''genStoreIndexed-2 this, JavaKind/Int)
-            Bytecodes'LASTORE         (BytecodeParser''genStoreIndexed-2 this, JavaKind/Long)
-            Bytecodes'AASTORE         (BytecodeParser''genStoreIndexed-2 this, JavaKind/Object)
-            Bytecodes'BASTORE         (BytecodeParser''genStoreIndexed-2 this, JavaKind/Byte)
-            Bytecodes'CASTORE         (BytecodeParser''genStoreIndexed-2 this, JavaKind/Char)
-            Bytecodes'SASTORE         (BytecodeParser''genStoreIndexed-2 this, JavaKind/Short)
+            Bytecodes'ASTORE_3]       (BytecodeParser''storeLocal-3 this, :JavaKind'Object, (- opcode Bytecodes'ASTORE_0))
+            Bytecodes'IASTORE         (BytecodeParser''genStoreIndexed-2 this, :JavaKind'Int)
+            Bytecodes'LASTORE         (BytecodeParser''genStoreIndexed-2 this, :JavaKind'Long)
+            Bytecodes'AASTORE         (BytecodeParser''genStoreIndexed-2 this, :JavaKind'Object)
+            Bytecodes'BASTORE         (BytecodeParser''genStoreIndexed-2 this, :JavaKind'Byte)
+            Bytecodes'CASTORE         (BytecodeParser''genStoreIndexed-2 this, :JavaKind'Char)
+            Bytecodes'SASTORE         (BytecodeParser''genStoreIndexed-2 this, :JavaKind'Short)
            [Bytecodes'POP
             Bytecodes'POP2
             Bytecodes'DUP
@@ -20652,58 +20841,58 @@ ZeroExtendNode'new-4
             Bytecodes'SWAP]           (update this :frameState FrameStateBuilder''stackOp-2 opcode)
            [Bytecodes'IADD
             Bytecodes'ISUB
-            Bytecodes'IMUL]           (BytecodeParser''genArithmeticOp-3 this, JavaKind/Int, opcode)
+            Bytecodes'IMUL]           (BytecodeParser''genArithmeticOp-3 this, :JavaKind'Int, opcode)
            [Bytecodes'IDIV
-            Bytecodes'IREM]           (BytecodeParser''genIntegerDivOp-3 this, JavaKind/Int, opcode)
+            Bytecodes'IREM]           (BytecodeParser''genIntegerDivOp-3 this, :JavaKind'Int, opcode)
            [Bytecodes'LADD
             Bytecodes'LSUB
-            Bytecodes'LMUL]           (BytecodeParser''genArithmeticOp-3 this, JavaKind/Long, opcode)
+            Bytecodes'LMUL]           (BytecodeParser''genArithmeticOp-3 this, :JavaKind'Long, opcode)
            [Bytecodes'LDIV
-            Bytecodes'LREM]           (BytecodeParser''genIntegerDivOp-3 this, JavaKind/Long, opcode)
-            Bytecodes'INEG            (BytecodeParser''genNegateOp-2k this, JavaKind/Int)
-            Bytecodes'LNEG            (BytecodeParser''genNegateOp-2k this, JavaKind/Long)
+            Bytecodes'LREM]           (BytecodeParser''genIntegerDivOp-3 this, :JavaKind'Long, opcode)
+            Bytecodes'INEG            (BytecodeParser''genNegateOp-2k this, :JavaKind'Int)
+            Bytecodes'LNEG            (BytecodeParser''genNegateOp-2k this, :JavaKind'Long)
            [Bytecodes'ISHL
             Bytecodes'ISHR
-            Bytecodes'IUSHR]          (BytecodeParser''genShiftOp-3 this, JavaKind/Int, opcode)
+            Bytecodes'IUSHR]          (BytecodeParser''genShiftOp-3 this, :JavaKind'Int, opcode)
            [Bytecodes'IAND
             Bytecodes'IOR
-            Bytecodes'IXOR]           (BytecodeParser''genLogicOp-3 this, JavaKind/Int, opcode)
+            Bytecodes'IXOR]           (BytecodeParser''genLogicOp-3 this, :JavaKind'Int, opcode)
            [Bytecodes'LSHL
             Bytecodes'LSHR
-            Bytecodes'LUSHR]          (BytecodeParser''genShiftOp-3 this, JavaKind/Long, opcode)
+            Bytecodes'LUSHR]          (BytecodeParser''genShiftOp-3 this, :JavaKind'Long, opcode)
            [Bytecodes'LAND
             Bytecodes'LOR
-            Bytecodes'LXOR]           (BytecodeParser''genLogicOp-3 this, JavaKind/Long, opcode)
+            Bytecodes'LXOR]           (BytecodeParser''genLogicOp-3 this, :JavaKind'Long, opcode)
             Bytecodes'IINC            (BytecodeParser''genIncrement-1 this)
-            Bytecodes'L2I             (BytecodeParser''genNarrow-3k this, JavaKind/Long, JavaKind/Int)
-            Bytecodes'I2L             (BytecodeParser''genSignExtend-3k this, JavaKind/Int, JavaKind/Long)
-            Bytecodes'I2B             (BytecodeParser''genSignExtend-3k this, JavaKind/Byte, JavaKind/Int)
-            Bytecodes'I2S             (BytecodeParser''genSignExtend-3k this, JavaKind/Short, JavaKind/Int)
-            Bytecodes'I2C             (BytecodeParser''genZeroExtend-3k this, JavaKind/Char, JavaKind/Int)
-            Bytecodes'LCMP            (BytecodeParser''genCompareOp-2 this, JavaKind/Long)
+            Bytecodes'L2I             (BytecodeParser''genNarrow-3k this, :JavaKind'Long, :JavaKind'Int)
+            Bytecodes'I2L             (BytecodeParser''genSignExtend-3k this, :JavaKind'Int, :JavaKind'Long)
+            Bytecodes'I2B             (BytecodeParser''genSignExtend-3k this, :JavaKind'Byte, :JavaKind'Int)
+            Bytecodes'I2S             (BytecodeParser''genSignExtend-3k this, :JavaKind'Short, :JavaKind'Int)
+            Bytecodes'I2C             (BytecodeParser''genZeroExtend-3k this, :JavaKind'Char, :JavaKind'Int)
+            Bytecodes'LCMP            (BytecodeParser''genCompareOp-2 this, :JavaKind'Long)
             Bytecodes'IFEQ            (BytecodeParser''genIfZero-2 this, Condition'EQ)
             Bytecodes'IFNE            (BytecodeParser''genIfZero-2 this, Condition'NE)
             Bytecodes'IFLT            (BytecodeParser''genIfZero-2 this, Condition'LT)
             Bytecodes'IFGE            (BytecodeParser''genIfZero-2 this, Condition'GE)
             Bytecodes'IFGT            (BytecodeParser''genIfZero-2 this, Condition'GT)
             Bytecodes'IFLE            (BytecodeParser''genIfZero-2 this, Condition'LE)
-            Bytecodes'IF_ICMPEQ       (BytecodeParser''genIfSame-3 this, JavaKind/Int, Condition'EQ)
-            Bytecodes'IF_ICMPNE       (BytecodeParser''genIfSame-3 this, JavaKind/Int, Condition'NE)
-            Bytecodes'IF_ICMPLT       (BytecodeParser''genIfSame-3 this, JavaKind/Int, Condition'LT)
-            Bytecodes'IF_ICMPGE       (BytecodeParser''genIfSame-3 this, JavaKind/Int, Condition'GE)
-            Bytecodes'IF_ICMPGT       (BytecodeParser''genIfSame-3 this, JavaKind/Int, Condition'GT)
-            Bytecodes'IF_ICMPLE       (BytecodeParser''genIfSame-3 this, JavaKind/Int, Condition'LE)
-            Bytecodes'IF_ACMPEQ       (BytecodeParser''genIfSame-3 this, JavaKind/Object, Condition'EQ)
-            Bytecodes'IF_ACMPNE       (BytecodeParser''genIfSame-3 this, JavaKind/Object, Condition'NE)
+            Bytecodes'IF_ICMPEQ       (BytecodeParser''genIfSame-3 this, :JavaKind'Int, Condition'EQ)
+            Bytecodes'IF_ICMPNE       (BytecodeParser''genIfSame-3 this, :JavaKind'Int, Condition'NE)
+            Bytecodes'IF_ICMPLT       (BytecodeParser''genIfSame-3 this, :JavaKind'Int, Condition'LT)
+            Bytecodes'IF_ICMPGE       (BytecodeParser''genIfSame-3 this, :JavaKind'Int, Condition'GE)
+            Bytecodes'IF_ICMPGT       (BytecodeParser''genIfSame-3 this, :JavaKind'Int, Condition'GT)
+            Bytecodes'IF_ICMPLE       (BytecodeParser''genIfSame-3 this, :JavaKind'Int, Condition'LE)
+            Bytecodes'IF_ACMPEQ       (BytecodeParser''genIfSame-3 this, :JavaKind'Object, Condition'EQ)
+            Bytecodes'IF_ACMPNE       (BytecodeParser''genIfSame-3 this, :JavaKind'Object, Condition'NE)
             Bytecodes'GOTO            (BytecodeParser''genGoto-1 this)
             Bytecodes'JSR             (BytecodeParser''genJsr-2 this, (BytecodeStream''readBranchDest-1 (:stream this)))
             Bytecodes'RET             (BytecodeParser''genRet-2 this, (BytecodeStream''readLocalIndex-1 (:stream this)))
             Bytecodes'TABLESWITCH     (BytecodeParser''genSwitch-2 this, (BytecodeTableSwitch'new-2 (:stream this), (BytecodeParser''bci-1 this)))
             Bytecodes'LOOKUPSWITCH    (BytecodeParser''genSwitch-2 this, (BytecodeLookupSwitch'new-2 (:stream this), (BytecodeParser''bci-1 this)))
-            Bytecodes'IRETURN         (BytecodeParser''genReturn-3 this, (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Int), JavaKind/Int)
-            Bytecodes'LRETURN         (BytecodeParser''genReturn-3 this, (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Long), JavaKind/Long)
-            Bytecodes'ARETURN         (BytecodeParser''genReturn-3 this, (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Object), JavaKind/Object)
-            Bytecodes'RETURN          (BytecodeParser''genReturn-3 this, nil, JavaKind/Void)
+            Bytecodes'IRETURN         (BytecodeParser''genReturn-3 this, (FrameStateBuilder''pop-2 (:frameState this), :JavaKind'Int), :JavaKind'Int)
+            Bytecodes'LRETURN         (BytecodeParser''genReturn-3 this, (FrameStateBuilder''pop-2 (:frameState this), :JavaKind'Long), :JavaKind'Long)
+            Bytecodes'ARETURN         (BytecodeParser''genReturn-3 this, (FrameStateBuilder''pop-2 (:frameState this), :JavaKind'Object), :JavaKind'Object)
+            Bytecodes'RETURN          (BytecodeParser''genReturn-3 this, nil, :JavaKind'Void)
             Bytecodes'GETSTATIC       (BytecodeParser''genGetStatic-3 this, (BytecodeStream''readCPI-1 (:stream this)), opcode)
             Bytecodes'PUTSTATIC       (BytecodeParser''genPutStatic-3 this, (BytecodeStream''readCPI-1 (:stream this)), opcode)
             Bytecodes'GETFIELD        (BytecodeParser''genGetField-3i this, (BytecodeStream''readCPI-1 (:stream this)), opcode)
@@ -20716,11 +20905,11 @@ ZeroExtendNode'new-4
             Bytecodes'NEW             (BytecodeParser''genNewInstance-2i this, (BytecodeStream''readCPI-1 (:stream this)))
             Bytecodes'NEWARRAY        (BytecodeParser''genNewPrimitiveArray-2 this, (BytecodeStream''readLocalIndex-1 (:stream this)))
             Bytecodes'ANEWARRAY       (BytecodeParser''genNewObjectArray-2 this, (BytecodeStream''readCPI-1 (:stream this)))
-            Bytecodes'ARRAYLENGTH     (update this :frameState FrameStateBuilder''push-3 JavaKind/Int, (BytecodeParser''append-2 this, (ArrayLengthNode'create-1 (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Object))))
+            Bytecodes'ARRAYLENGTH     (update this :frameState FrameStateBuilder''push-3 :JavaKind'Int, (BytecodeParser''append-2 this, (ArrayLengthNode'create-1 (FrameStateBuilder''pop-2 (:frameState this), :JavaKind'Object))))
             Bytecodes'CHECKCAST       (BytecodeParser''genCheckCast-1 this)
             Bytecodes'INSTANCEOF      (BytecodeParser''genInstanceOf-1 this)
-            Bytecodes'MONITORENTER    (BytecodeParser''genMonitorEnter-3 this, (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Object), (:nextBCI (:stream this)))
-            Bytecodes'MONITOREXIT     (BytecodeParser''genMonitorExit-4 this, (FrameStateBuilder''pop-2 (:frameState this), JavaKind/Object), nil, (:nextBCI (:stream this)))
+            Bytecodes'MONITORENTER    (BytecodeParser''genMonitorEnter-3 this, (FrameStateBuilder''pop-2 (:frameState this), :JavaKind'Object), (:nextBCI (:stream this)))
+            Bytecodes'MONITOREXIT     (BytecodeParser''genMonitorExit-4 this, (FrameStateBuilder''pop-2 (:frameState this), :JavaKind'Object), nil, (:nextBCI (:stream this)))
             Bytecodes'IFNULL          (BytecodeParser''genIfNull-2 this, Condition'EQ)
             Bytecodes'IFNONNULL       (BytecodeParser''genIfNull-2 this, Condition'NE)
             Bytecodes'GOTO_W          (BytecodeParser''genGoto-1 this)
@@ -22322,7 +22511,7 @@ ZeroExtendNode'new-4
         (locking this
             (or (get (:classes this) descriptor)
                 (if (= (count descriptor) 1)
-                    (#_"JavaKind" .toJavaClass (JavaKind/fromPrimitiveOrVoidTypeChar (nth descriptor 0)))
+                    (JavaKind'toJavaClass-1 (JavaKind'fromPrimitiveOrVoidTypeChar-1 (nth descriptor 0)))
                     (let [
                         #_"int" dims (loop-when-recur [dims 0] (= (nth descriptor dims) (§ char "[")) [(inc dims)] => dims)
                         #_"String" name
@@ -23121,21 +23310,21 @@ ZeroExtendNode'new-4
                                             (condp satisfies? node
                                                 LeftShiftNode
                                                     (when (satisfies? ConstantNode (:y node))
-                                                        (if (= (ValueNode''getStackKind-1 (:x node)) JavaKind/Int)
+                                                        (if (= (ValueNode''getStackKind-1 (:x node)) :JavaKind'Int)
                                                             (IntegerTestNode'new-2 (:x node), (ConstantNode'forInt-1 (>>> -1 amount)))
                                                             (IntegerTestNode'new-2 (:x node), (ConstantNode'forLong-1 (>>> -1 amount)))
                                                         )
                                                     )
                                                 RightShiftNode
                                                     (when (and (satisfies? ConstantNode (:y node)) (IntegerStamp''isPositive-1 (:stamp (:x node))))
-                                                        (if (= (ValueNode''getStackKind-1 (:x node)) JavaKind/Int)
+                                                        (if (= (ValueNode''getStackKind-1 (:x node)) :JavaKind'Int)
                                                             (IntegerTestNode'new-2 (:x node), (ConstantNode'forInt-1 (<< -1 amount)))
                                                             (IntegerTestNode'new-2 (:x node), (ConstantNode'forLong-1 (<< -1 amount)))
                                                         )
                                                     )
                                                 UnsignedRightShiftNode
                                                     (when (satisfies? ConstantNode (:y node))
-                                                        (if (= (ValueNode''getStackKind-1 (:x node)) JavaKind/Int)
+                                                        (if (= (ValueNode''getStackKind-1 (:x node)) :JavaKind'Int)
                                                             (IntegerTestNode'new-2 (:x node), (ConstantNode'forInt-1 (<< -1 amount)))
                                                             (IntegerTestNode'new-2 (:x node), (ConstantNode'forLong-1 (<< -1 amount)))
                                                         )
@@ -24195,8 +24384,8 @@ ZeroExtendNode'new-4
      ; @return true if the comparison is known to be true, false if the comparison is known to be false
      ;;
     (defn #_"boolean" Condition''foldCondition-3p [#_"Condition" this, #_"PrimitiveConstant" lp, #_"PrimitiveConstant" rp]
-        (condp =? (#_"PrimitiveConstant" .getJavaKind lp)
-           [JavaKind/Boolean JavaKind/Byte JavaKind/Char JavaKind/Short JavaKind/Int]
+        (case (#_"PrimitiveConstant" .getJavaKind lp)
+           (:JavaKind'Boolean :JavaKind'Byte :JavaKind'Char :JavaKind'Short :JavaKind'Int)
             (let [
                 #_"int" x (#_"PrimitiveConstant" .asInt lp)
                 #_"int" y (#_"PrimitiveConstant" .asInt rp)
@@ -24214,7 +24403,7 @@ ZeroExtendNode'new-4
                     Condition'BT (UnsignedMath'belowThan-2i x, y)
                 )
             )
-            JavaKind/Long
+            :JavaKind'Long
             (let [
                 #_"long" x (#_"PrimitiveConstant" .asLong lp)
                 #_"long" y (#_"PrimitiveConstant" .asLong rp)
@@ -28008,11 +28197,11 @@ ZeroExtendNode'new-4
     (defn- #_"JavaKind" PEReadEliminationBlockState'stampToJavaKind-1 [#_"Stamp" stamp]
         (if (satisfies? IntegerStamp stamp)
             (case (:bits stamp)
-                 1 JavaKind/Boolean
-                 8 JavaKind/Byte
-                16 (if (IntegerStamp''isPositive-1 stamp) JavaKind/Char JavaKind/Short)
-                32 JavaKind/Int
-                64 JavaKind/Long
+                 1 :JavaKind'Boolean
+                 8 :JavaKind'Byte
+                16 (if (IntegerStamp''isPositive-1 stamp) :JavaKind'Char :JavaKind'Short)
+                32 :JavaKind'Int
+                64 :JavaKind'Long
             )
             (Stamp'''getStackKind-1 stamp)
         )
@@ -30227,7 +30416,7 @@ ZeroExtendNode'new-4
             #_"ResolvedJavaType" javaType (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, type)
         ]
             (when (WordTypes'isWord-1j javaType) => javaType
-                (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, (#_"JavaKind" .toJavaClass JavaKind/Long))
+                (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, (JavaKind'toJavaClass-1 :JavaKind'Long))
             )
         )
     )
@@ -30838,7 +31027,7 @@ ZeroExtendNode'new-4
                     this (update this :locals assoc' j (nth arguments i))
                     j (inc j)
                     [this j]
-                        (when (#_"JavaKind" .needsTwoSlots (#_"Signature" .getParameterKind sig, k)) => [this j]
+                        (when (JavaKind'needsTwoSlots-1 (#_"Signature" .getParameterKind sig, k)) => [this j]
                             [(update this :locals assoc' j :FrameState'TWO_SLOT_MARKER) (inc j)]
                         )
                 ]
@@ -30877,7 +31066,7 @@ ZeroExtendNode'new-4
                     this (update this :locals assoc' j (Graph''addOrUniqueWithInputs-2 (:graph this), (ParameterNode'new-2 i, stamp)))
                     j (inc j)
                     [this j]
-                        (when (#_"JavaKind" .needsTwoSlots kind) => [this j]
+                        (when (JavaKind'needsTwoSlots-1 kind) => [this j]
                             [(update this :locals assoc' j :FrameState'TWO_SLOT_MARKER) (inc j)]
                         )
                 ]
@@ -31146,7 +31335,7 @@ ZeroExtendNode'new-4
             this (update this :locals assoc' index value)
         ]
             (cond
-                (#_"JavaKind" .needsTwoSlots slotKind)
+                (JavaKind'needsTwoSlots-1 slotKind)
                     ;; Writing a two-slot value: mark the second slot.
                     (update this :locals assoc' (inc index) :FrameState'TWO_SLOT_MARKER)
                 (and (< index (dec (count (:locals this)))) (= (nth (:locals this) (inc index)) :FrameState'TWO_SLOT_MARKER))
@@ -31168,14 +31357,14 @@ ZeroExtendNode'new-4
         (let [
             this (update this :stack #(cons value %))
         ]
-            (when (#_"JavaKind" .needsTwoSlots slotKind) => this
+            (when (JavaKind'needsTwoSlots-1 slotKind) => this
                 (update this :stack #(cons :FrameState'TWO_SLOT_MARKER %))
             )
         )
     )
 
     (defn #_"this" FrameStateBuilder''pushReturn-3 [#_"FrameStateBuilder" this, #_"JavaKind" slotKind, #_"ValueNode" value]
-        (when-not (= slotKind JavaKind/Void) => this
+        (when-not (= slotKind :JavaKind'Void) => this
             (FrameStateBuilder''push-3 this, slotKind, value)
         )
     )
@@ -31189,7 +31378,7 @@ ZeroExtendNode'new-4
     (defn #_"ValueNode" FrameStateBuilder''pop-2 [#_"FrameStateBuilder" this, #_"JavaKind" slotKind]
         (let [
             _
-                (when (#_"JavaKind" .needsTwoSlots slotKind)
+                (when (JavaKind'needsTwoSlots-1 slotKind)
                     (§ ass! this (update this :stack next))
                 )
             #_"[ValueNode]" value (first (:stack this))
@@ -34988,7 +35177,7 @@ ZeroExtendNode'new-4
                                                                 ]
                                                                     invalid?
                                                                 )
-                                                            (= returnKind JavaKind/Void)
+                                                            (= returnKind :JavaKind'Void)
                                                                 ;; An intrinsic for a void method.
                                                                 (let [
                                                                     _ (§ ass! frameState (Node''replaceAndDelete-2 frameState, (FrameStateBuilder''create-3 frameStateBuilder, (:nextBCI (:stream (:parser this))), nil)))
@@ -38551,7 +38740,7 @@ ZeroExtendNode'new-4
  ;;
 (class-ns DataTwoOp [LIRInstruction]
     (defn #_"DataTwoOp" DataTwoOp'new-5 [#_"AMD64RMOp" opcode, #_"WordSize" size, #_"AllocatableValue" result, #_"AllocatableValue" x, #_"JavaConstant" y]
-        (DataTwoOp'new-6 opcode, size, result, x, y, (#_"JavaKind" .getByteCount (#_"JavaConstant" .getJavaKind y)))
+        (DataTwoOp'new-6 opcode, size, result, x, y, (JavaKind'getByteCount-1 (#_"JavaConstant" .getJavaKind y)))
     )
 
     (defn #_"DataTwoOp" DataTwoOp'new-6 [#_"AMD64RMOp" opcode, #_"WordSize" size, #_"AllocatableValue" result, #_"AllocatableValue" x, #_"JavaConstant" y, #_"int" alignment]
@@ -41621,8 +41810,8 @@ ZeroExtendNode'new-4
 
     (def- #_"{JavaKind LocationIdentity}" NamedLocationIdentity'ARRAY
         (into {}
-            (for [#_"JavaKind" kind (JavaKind/values)]
-                [kind (NamedLocationIdentity'mutable-1 (str "Array: " (#_"JavaKind" .getJavaName kind)))]
+            (for [#_"JavaKind" kind JavaKind'SET]
+                [kind (NamedLocationIdentity'mutable-1 (str "Array: " (JavaKind'getJavaName-1 kind)))]
             )
         )
     )
@@ -44332,7 +44521,7 @@ ZeroExtendNode'new-4
                                     #_"JavaKind" otherKind (ValueNode''getStackKind-1 (nth entries i))
                                     #_"JavaKind" entryKind (VirtualObjectNode'''entryKind-2 virtual, i)
                                 ]
-                                    (when (and (= entryKind JavaKind/Int) (#_"JavaKind" .needsTwoSlots otherKind)) => (recur twoSlotKinds (inc i))
+                                    (when (and (= entryKind :JavaKind'Int) (JavaKind'needsTwoSlots-1 otherKind)) => (recur twoSlotKinds (inc i))
                                         (let [
                                             twoSlotKinds (or twoSlotKinds (vec (repeat entryCount nil)))
                                         ]
@@ -44431,7 +44620,7 @@ ZeroExtendNode'new-4
                                         (let [
                                             _ (§ ass! this (update this :mergeEffects GraphEffects''addFloatingNode-2 phi))
                                             materialized?
-                                                (if (= (VirtualObjectNode'''entryKind-2 virtual, i) JavaKind/Object)
+                                                (if (= (VirtualObjectNode'''entryKind-2 virtual, i) :JavaKind'Object)
                                                     (or materialized? (PartialEscapeMergeProcessor''mergeObjectEntry-5 this, f'getObject-1, states, phi, i))
                                                     (loop-when [#_"int" j 0] (< j (count states)) => materialized?
                                                         (let [
@@ -44459,7 +44648,7 @@ ZeroExtendNode'new-4
                 )
                 ;; not compatible: materialize in all predecessors
                 (let [
-                    #_"PhiNode" materializedValuePhi (MergeProcessor''createValuePhi-2 this, (StampFactory'forKind-1 JavaKind/Object))
+                    #_"PhiNode" materializedValuePhi (MergeProcessor''createValuePhi-2 this, (StampFactory'forKind-1 :JavaKind'Object))
                     _
                         (dotimes [#_"int" i (count states)]
                             (let [
@@ -44680,7 +44869,7 @@ ZeroExtendNode'new-4
                                                             )
                                                         :else
                                                             (let [
-                                                                #_"PhiNode" materializedValuePhi (MergeProcessor''createValuePhi-2 this, (StampFactory'forKind-1 JavaKind/Object))
+                                                                #_"PhiNode" materializedValuePhi (MergeProcessor''createValuePhi-2 this, (StampFactory'forKind-1 :JavaKind'Object))
                                                                 this (update this :mergeEffects GraphEffects''addFloatingNode-2 materializedValuePhi)
                                                                 [this materialized?]
                                                                     (loop-when [this this materialized? materialized? #_"int" i 0] (< i (count states)) => [this materialized?]
@@ -44814,7 +45003,7 @@ ZeroExtendNode'new-4
                 )
         ]
             ;; For object phis, see if there are known reads on all predecessors, for which we could create new phis.
-            (doseq [#_"PhiNode" phi (MergeProcessor''getPhis-1 this) :when (= (ValueNode''getStackKind-1 phi) JavaKind/Object)]
+            (doseq [#_"PhiNode" phi (MergeProcessor''getPhis-1 this) :when (= (ValueNode''getStackKind-1 phi) :JavaKind'Object)]
                 (doseq [#_"ReadCacheEntry" k (keys (:readCache (nth states 0))) :when (= (:object k) (MergeProcessor''getPhiValueAt-3 this, phi, 0))]
                     (§ ass! this (PEReadEliminationMergeProcessor''mergeReadCachePhi-7 this, phi, (:identity k), (:index k), (:kind k), (:overflowAccess k), states))
                 )
@@ -44924,7 +45113,7 @@ ZeroExtendNode'new-4
                     )
             ]
                 ;; For object phis, see if there are known reads on all predecessors, for which we could create new phis.
-                (doseq [#_"PhiNode" phi (MergeProcessor''getPhis-1 this) :when (= (ValueNode''getStackKind-1 phi) JavaKind/Object)]
+                (doseq [#_"PhiNode" phi (MergeProcessor''getPhis-1 this) :when (= (ValueNode''getStackKind-1 phi) :JavaKind'Object)]
                     (doseq [#_"CacheEntry" k (keys (:readCache (nth states 0))) :when (= (:object k) (MergeProcessor''getPhiValueAt-3 this, phi, 0))]
                         (§ ass! this (ReadEliminationMergeProcessor''mergeReadCachePhi-4 this, phi, k, states))
                     )
@@ -45157,9 +45346,9 @@ ZeroExtendNode'new-4
                 HotSpotObjectConstant    (KlassPointerStamp''isCompressed-1 constant)
                 HotSpotMetaspaceConstant (KlassPointerStamp''isCompressed-1 constant)
                 JavaConstant
-                    (condp = (#_"JavaConstant" .getJavaKind constant)
-                        JavaKind/Long   (NumUtil'isInt-1 (#_"JavaConstant" .asLong constant))
-                        JavaKind/Object (#_"JavaConstant" .isNull constant)
+                    (case (#_"JavaConstant" .getJavaKind constant)
+                        :JavaKind'Long   (NumUtil'isInt-1 (#_"JavaConstant" .asLong constant))
+                        :JavaKind'Object (#_"JavaConstant" .isNull constant)
                         true
                     )
                 false
@@ -47101,7 +47290,7 @@ ZeroExtendNode'new-4
                                             (let [
                                                 #_"JavaConstant" positive (ValueNode''asJavaConstant-1 (:x lessThan2))
                                                 below
-                                                    (when (and (some? positive) (pos? (UnsignedLong''asLong-1 positive)) (< (UnsignedLong''asLong-1 positive) (#_"JavaKind" .getMaxValue (#_"JavaConstant" .getJavaKind positive))))
+                                                    (when (and (some? positive) (pos? (UnsignedLong''asLong-1 positive)) (< (UnsignedLong''asLong-1 positive) (JavaKind'getMaxValue-1 (#_"JavaConstant" .getJavaKind positive))))
                                                         (Graph''add-2 (:graph this), (IntegerBelowNode'new-2 (:x lessThan), (ConstantNode'forIntegerStamp-3 (:stamp (:x lessThan2)), (inc (UnsignedLong''asLong-1 positive)), (:graph this))))
                                                     )
                                             ]
@@ -47163,7 +47352,7 @@ ZeroExtendNode'new-4
         (cond
             (not (= (ValueNode''getStackKind-1 trueValue) (ValueNode''getStackKind-1 falseValue)))
                 nil
-            (not (any = (ValueNode''getStackKind-1 trueValue) JavaKind/Int JavaKind/Long))
+            (not (any = (ValueNode''getStackKind-1 trueValue) :JavaKind'Int :JavaKind'Long))
                 nil
             (and (satisfies? ConstantNode trueValue) (satisfies? ConstantNode falseValue))
                 (Graph''add-2 (:graph this), (ConditionalNode'new-3 (:logic this), trueValue, falseValue))
@@ -48487,7 +48676,7 @@ ZeroExtendNode'new-4
                                                     #_"JavaConstant" elementConstant (#_"ConstantReflectionProvider" .readArrayElement HotSpot'constantReflection, arrayConstant, i)
                                                 ]
                                                     ;; => Loading a constant value can be denied by the VM.
-                                                    (and (some? elementConstant) (= (#_"JavaConstant" .getJavaKind elementConstant) JavaKind/Int)
+                                                    (and (some? elementConstant) (= (#_"JavaConstant" .getJavaKind elementConstant) :JavaKind'Int)
                                                         (let [
                                                             ;; The value loaded from the array is the old switch key, the index into the array is
                                                             ;; the new switch key. We build a mapping from the old switch key to new keys.
@@ -49803,7 +49992,7 @@ ZeroExtendNode'new-4
 
     #_intrinsifier
     (defn #_"BeginLockScopeNode" BeginLockScopeNode'new-1 [#_"int" lockDepth]
-        (BeginLockScopeNode'new-2 JavaKind/Long, lockDepth)
+        (BeginLockScopeNode'new-2 :JavaKind'Long, lockDepth)
     )
 
     (defm BeginLockScopeNode StateSplit
@@ -50031,7 +50220,7 @@ ZeroExtendNode'new-4
 (class-ns UnsafeCompareAndSwapNode [AbstractMemoryCheckpoint, AbstractStateSplit, FixedWithNextNode, FixedNode, ValueNode, Node, StateSplit, NodeWithState, MemoryCheckpoint, MemoryNode, Lowerable, Single]
     #_unused
     (defn #_"UnsafeCompareAndSwapNode" UnsafeCompareAndSwapNode'new-6 [#_"ValueNode" object, #_"ValueNode" offset, #_"ValueNode" expected, #_"ValueNode" newValue, #_"JavaKind" javaKind, #_"LocationIdentity" locationIdentity]
-        (merge (UnsafeCompareAndSwapNode'class.) (AbstractMemoryCheckpoint'new-1 (StampFactory'forKind-1 (#_"JavaKind" .getStackKind JavaKind/Boolean)))
+        (merge (UnsafeCompareAndSwapNode'class.) (AbstractMemoryCheckpoint'new-1 (StampFactory'forKind-1 (JavaKind'getStackKind-1 :JavaKind'Boolean)))
             (hash-map
                 ; @Input
                 #_"ValueNode" :object object
@@ -50152,7 +50341,7 @@ ZeroExtendNode'new-4
             #_"ValueNode" array (Lowerer'createNullCheckedValue-3 (:array this), this, lowerer)
             #_"GuardingNode" boundsCheck (Lowerer'getBoundsCheck-3 this, array, lowerer)
             #_"LogicNode" logic
-                (when (and (= (:elementKind this) JavaKind/Object) (not (StampTool'isPointerAlwaysNull-1 (:stamp (:value this)))))
+                (when (and (= (:elementKind this) :JavaKind'Object) (not (StampTool'isPointerAlwaysNull-1 (:stamp (:value this)))))
                     ;; Array store check.
                     (let [
                         #_"TypeReference" arrayType (StampTool'typeReferenceOrNull-1 (:stamp array))
@@ -50210,12 +50399,12 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"JavaKind" LoadIndexedNode'determinePreciseArrayElementType-2 [#_"ValueNode" array, #_"JavaKind" kind]
-        (when (= kind JavaKind/Byte) => kind
+        (when (= kind :JavaKind'Byte) => kind
             (let [
                 #_"ResolvedJavaType" type (:type (:stamp array))
             ]
-                (when (and (some? type) (#_"ResolvedJavaType" .isArray type) (some? (#_"ResolvedJavaType" .getComponentType type)) (= (#_"ResolvedJavaType" .getJavaKind (#_"ResolvedJavaType" .getComponentType type)) JavaKind/Boolean)) => kind
-                    JavaKind/Boolean
+                (when (and (some? type) (#_"ResolvedJavaType" .isArray type) (some? (#_"ResolvedJavaType" .getComponentType type)) (= (#_"ResolvedJavaType" .getJavaKind (#_"ResolvedJavaType" .getComponentType type)) :JavaKind'Boolean)) => kind
+                    :JavaKind'Boolean
                 )
             )
         )
@@ -50225,7 +50414,7 @@ ZeroExtendNode'new-4
         (let [
             #_"ResolvedJavaType" type (StampTool'typeOrNull-1 (:stamp array))
         ]
-            (if (and (= kind JavaKind/Object) (some? type) (#_"ResolvedJavaType" .isArray type))
+            (if (and (= kind :JavaKind'Object) (some? type) (#_"ResolvedJavaType" .isArray type))
                 (StampFactory'object-1 (TypeReference'createTrusted-1 (#_"ResolvedJavaType" .getComponentType type)))
                 (StampFactory'forKind-1 (LoadIndexedNode'determinePreciseArrayElementType-2 array, kind))
             )
@@ -50309,7 +50498,7 @@ ZeroExtendNode'new-4
 
 (class-ns LoadIndexedPointerNode [LoadIndexedNode, AccessIndexedNode, AccessArrayNode, FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable, Virtualizable, Canonicalizable]
     (defn #_"LoadIndexedPointerNode" LoadIndexedPointerNode'new-3 [#_"Stamp" stamp, #_"ValueNode" array, #_"ValueNode" index]
-        (merge (LoadIndexedPointerNode'class.) (LoadIndexedNode'new-4 stamp, array, index, JavaKind/Illegal))
+        (merge (LoadIndexedPointerNode'class.) (LoadIndexedNode'new-4 stamp, array, index, :JavaKind'Illegal))
     )
 
     (defm LoadIndexedPointerNode ValueNode
@@ -51022,7 +51211,7 @@ ZeroExtendNode'new-4
                                                             )
                                                     ]
                                                         (when (some? address)
-                                                            (Graph''addBeforeFixed-3 (:graph this), this, (Graph''add-2 (:graph this), (WriteNode'new-4 address, LocationIdentity'INIT, (Lowerer'implicitStoreConvert-3 (:graph this), JavaKind/Object, allocValue), barrierType)))
+                                                            (Graph''addBeforeFixed-3 (:graph this), this, (Graph''add-2 (:graph this), (WriteNode'new-4 address, LocationIdentity'INIT, (Lowerer'implicitStoreConvert-3 (:graph this), :JavaKind'Object, allocValue), barrierType)))
                                                         )
                                                     )
                                                 )
@@ -51173,7 +51362,7 @@ ZeroExtendNode'new-4
 
     #_intrinsifier
     (defn #_"ComputeObjectAddressNode" ComputeObjectAddressNode'new-2 [#_"ValueNode" obj, #_"ValueNode" offset]
-        (merge (ComputeObjectAddressNode'class.) (FixedWithNextNode'new-1 (StampFactory'forKind-1 JavaKind/Long))
+        (merge (ComputeObjectAddressNode'class.) (FixedWithNextNode'new-1 (StampFactory'forKind-1 :JavaKind'Long))
             (hash-map
                 ; @Input
                 #_"ValueNode" :object obj
@@ -51293,7 +51482,7 @@ ZeroExtendNode'new-4
 
     #_intrinsifier
     (defn #_"CurrentLockNode" CurrentLockNode'new-1 [#_"int" lockDepth]
-        (merge (CurrentLockNode'class.) (FixedWithNextNode'new-1 (StampFactory'forKind-1 JavaKind/Long))
+        (merge (CurrentLockNode'class.) (FixedWithNextNode'new-1 (StampFactory'forKind-1 :JavaKind'Long))
             (hash-map
                 #_"int" :lockDepth lockDepth
             )
@@ -51723,7 +51912,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"LogicCompareAndSwapNode" LogicCompareAndSwapNode'new-5 [#_"AddressNode" address, #_"LocationIdentity" location, #_"ValueNode" expectedValue, #_"ValueNode" newValue, #_"BarrierType" barrierType]
-        (merge (LogicCompareAndSwapNode'class.) (AbstractCompareAndSwapNode'new-6 address, location, expectedValue, newValue, barrierType, (StampFactory'forKind-1 (#_"JavaKind" .getStackKind JavaKind/Boolean))))
+        (merge (LogicCompareAndSwapNode'class.) (AbstractCompareAndSwapNode'new-6 address, location, expectedValue, newValue, barrierType, (StampFactory'forKind-1 (JavaKind'getStackKind-1 :JavaKind'Boolean))))
     )
 
     (defm LogicCompareAndSwapNode LIRLowerable
@@ -52615,7 +52804,7 @@ ZeroExtendNode'new-4
  ;;
 (class-ns GetObjectAddressNode [FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable]
     (defn #_"GetObjectAddressNode" GetObjectAddressNode'new-1 [#_"ValueNode" obj]
-        (merge (GetObjectAddressNode'class.) (FixedWithNextNode'new-1 (StampFactory'forKind-1 JavaKind/Long))
+        (merge (GetObjectAddressNode'class.) (FixedWithNextNode'new-1 (StampFactory'forKind-1 :JavaKind'Long))
             (hash-map
                 ; @Input
                 #_"ValueNode" :object obj
@@ -52710,7 +52899,7 @@ ZeroExtendNode'new-4
                     (let [
                         _ (§ ass! invoke (StateSplit'''setStateAfter-2 invoke, (FrameState''duplicate-1 (:stateAfter this))))
                     ]
-                        (when-not (= (ValueNode''getStackKind-1 this) JavaKind/Void)
+                        (when-not (= (ValueNode''getStackKind-1 this) :JavaKind'Void)
                             (Node''replaceFirstInput-3 (:stateAfter invoke), this, invoke)
                         )
                     )
@@ -53185,14 +53374,14 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"RawLoadNode" RawLoadNode'new-4 [#_"ValueNode" object, #_"ValueNode" offset, #_"JavaKind" accessKind, #_"LocationIdentity" location]
-        (merge (RawLoadNode'class.) (UnsafeAccessNode'new-6 (StampFactory'forKind-1 (#_"JavaKind" .getStackKind accessKind)), object, offset, accessKind, location, false))
+        (merge (RawLoadNode'class.) (UnsafeAccessNode'new-6 (StampFactory'forKind-1 (JavaKind'getStackKind-1 accessKind)), object, offset, accessKind, location, false))
     )
 
     (defn- #_"boolean" RawLoadNode''addReadBarrier-1 [#_"RawLoadNode" this]
         (and HotSpot'useG1GC
             (= (:guardsStage (:graph this)) :GuardsStage'FIXED_DEOPTS)
-            (= (ValueNode''getStackKind-1 (:object this)) JavaKind/Object)
-            (= (:accessKind this) JavaKind/Object)
+            (= (ValueNode''getStackKind-1 (:object this)) :JavaKind'Object)
+            (= (:accessKind this) :JavaKind'Object)
             (not (StampTool'isPointerAlwaysNull-1 (:stamp (:object this))))
             (let [
                 #_"ResolvedJavaType" type (StampTool'typeOrNull-1 (:stamp (:object this)))
@@ -53203,7 +53392,7 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"ValueNode" RawLoadNode'performBooleanCoercionIfNecessary-2 [#_"ValueNode" readValue, #_"JavaKind" readKind]
-        (when (= readKind JavaKind/Boolean) => readValue
+        (when (= readKind :JavaKind'Boolean) => readValue
             (let [
                 #_"Graph" graph (:graph readValue)
                 #_"IntegerEqualsNode" eq (Graph''add-2 graph, (IntegerEqualsNode'new-2 readValue, (ConstantNode'forInt-2 0, graph)))
@@ -53215,7 +53404,7 @@ ZeroExtendNode'new-4
 
     (defn #_"ReadNode" RawLoadNode''createUnsafeRead-2 [#_"RawLoadNode" this, #_"GuardingNode" guard]
         (let [
-            #_"boolean" compressible? (= (:accessKind this) JavaKind/Object)
+            #_"boolean" compressible? (= (:accessKind this) :JavaKind'Object)
             #_"JavaKind" readKind (:accessKind this)
             #_"Stamp" loadStamp (Lowerer'loadStamp-3 (:stamp this), readKind, compressible?)
             #_"AddressNode" address (Lowerer'createUnsafeAddress-3 (:graph this), (:object this), (:offset this))
@@ -53373,7 +53562,7 @@ ZeroExtendNode'new-4
     (defm RawStoreNode Lowerable
         (#_"this" Lowerable'''lower-2 [#_"RawStoreNode" this, #_"LoweringTool" lowerer]
             (let [
-                #_"boolean" compressible? (= (ValueNode''getStackKind-1 (:value this)) JavaKind/Object)
+                #_"boolean" compressible? (= (ValueNode''getStackKind-1 (:value this)) :JavaKind'Object)
                 #_"ValueNode" value (Lowerer'implicitStoreConvert-4 (:graph this), (:accessKind this), (:value this), compressible?)
                 #_"AddressNode" address (Lowerer'createUnsafeAddress-3 (:graph this), (:object this), (:offset this))
                 #_"WriteNode" write (Graph''add-2 (:graph this), (WriteNode'new-4 address, (:locationIdentity this), value, (RawStoreNode''unsafeStoreBarrierType-1 this)))
@@ -53537,7 +53726,7 @@ ZeroExtendNode'new-4
                     (cond
                         (#_"JavaConstant" .isNull (ValueNode''asJavaConstant-1 (:input this)))
                             (ConstantNode'forIntegerStamp-2 (:stamp this), 0)
-                        (and (-> (ValueNode''asJavaConstant-1 (:input this)) (#_"JavaConstant" .getJavaKind) (#_"JavaKind" .isNumericInteger))
+                        (and (JavaKind'isNumericInteger-1 (#_"JavaConstant" .getJavaKind (ValueNode''asJavaConstant-1 (:input this))))
                             (zero? (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 (:input this))))
                         )
                             (ConstantNode'forConstant-2s (:stamp this), JavaConstant/NULL_POINTER)
@@ -54326,7 +54515,7 @@ ZeroExtendNode'new-4
         ]
             (when (and (some? xConst) (some? yConst))
                 (try
-                    (if (= (#_"JavaConstant" .getJavaKind xConst) JavaKind/Int)
+                    (if (= (#_"JavaConstant" .getJavaKind xConst) :JavaKind'Int)
                         (ConstantNode'forInt-1 (Math/addExact (#_"JavaConstant" .asInt xConst), (#_"JavaConstant" .asInt yConst)))
                         (ConstantNode'forLong-1 (Math/addExact (#_"JavaConstant" .asLong xConst), (#_"JavaConstant" .asLong yConst)))
                     )
@@ -54395,7 +54584,7 @@ ZeroExtendNode'new-4
                     #_"Constant" c (:value forY)
                 ]
                     (when-not (BinaryOp'''isNeutral-2 op, c) => forX
-                        (when (and (instance? PrimitiveConstant c) (#_"JavaKind" .isNumericInteger (#_"PrimitiveConstant" .getJavaKind c)))
+                        (when (and (instance? PrimitiveConstant c) (JavaKind'isNumericInteger-1 (#_"PrimitiveConstant" .getJavaKind c)))
                             (let [
                                 #_"long" rawY (#_"PrimitiveConstant" .asLong c)
                             ]
@@ -54472,7 +54661,7 @@ ZeroExtendNode'new-4
             (let [
                 #_"Constant" constant (:value forY)
             ]
-                (when (and (instance? PrimitiveConstant constant) (#_"JavaKind" .isNumericInteger (#_"PrimitiveConstant" .getJavaKind constant)) (any = (#_"PrimitiveConstant" .asLong constant) 0 1)) => self
+                (when (and (instance? PrimitiveConstant constant) (JavaKind'isNumericInteger-1 (#_"PrimitiveConstant" .getJavaKind constant)) (any = (#_"PrimitiveConstant" .asLong constant) 0 1)) => self
                     (ConstantNode'forIntegerStamp-2 (:stamp self), 0)
                 )
             )
@@ -54516,7 +54705,7 @@ ZeroExtendNode'new-4
                     (§ return forX)
                 )
 
-                (when (and (instance? PrimitiveConstant c) (#_"JavaKind" .isNumericInteger (#_"PrimitiveConstant" .getJavaKind c)))
+                (when (and (instance? PrimitiveConstant c) (JavaKind'isNumericInteger-1 (#_"PrimitiveConstant" .getJavaKind c)))
                     (let [
                         #_"ValueNode" result (MulNode'canonical-3 stamp, forX, (#_"PrimitiveConstant" .asLong c))
                     ]
@@ -54655,7 +54844,7 @@ ZeroExtendNode'new-4
             #_"JavaConstant" yConst (ValueNode''asJavaConstant-1 forY)
         ]
             (try
-                (if (= (#_"JavaConstant" .getJavaKind xConst) JavaKind/Int)
+                (if (= (#_"JavaConstant" .getJavaKind xConst) :JavaKind'Int)
                     (ConstantNode'forInt-1 (Math/multiplyExact (#_"JavaConstant" .asInt xConst), (#_"JavaConstant" .asInt yConst)))
                     (ConstantNode'forLong-1 (Math/multiplyExact (#_"JavaConstant" .asLong xConst), (#_"JavaConstant" .asLong yConst)))
                 )
@@ -54723,7 +54912,7 @@ ZeroExtendNode'new-4
                     (if (BinaryOp'''isNeutral-2 op, c)
                         forX
                         (do
-                            (when (and (instance? PrimitiveConstant c) (#_"JavaKind" .isNumericInteger (#_"PrimitiveConstant" .getJavaKind c)))
+                            (when (and (instance? PrimitiveConstant c) (JavaKind'isNumericInteger-1 (#_"PrimitiveConstant" .getJavaKind c)))
                                 (let [
                                     #_"long" rawY (#_"PrimitiveConstant" .asLong c)
                                     #_"long" mask (NumUtil'mask-1 (PrimitiveStamp'getBits-1 stamp))
@@ -54876,7 +55065,7 @@ ZeroExtendNode'new-4
                                 )
                             )
                         )
-                        (when (and (instance? PrimitiveConstant c) (#_"JavaKind" .isNumericInteger (#_"PrimitiveConstant" .getJavaKind c)))
+                        (when (and (instance? PrimitiveConstant c) (JavaKind'isNumericInteger-1 (#_"PrimitiveConstant" .getJavaKind c)))
                             (let [
                                 #_"long" i (#_"PrimitiveConstant" .asLong c)
                             ]
@@ -54970,7 +55159,7 @@ ZeroExtendNode'new-4
             #_"JavaConstant" yConst (ValueNode''asJavaConstant-1 forY)
         ]
             (try
-                (if (= (#_"JavaConstant" .getJavaKind xConst) JavaKind/Int)
+                (if (= (#_"JavaConstant" .getJavaKind xConst) :JavaKind'Int)
                     (ConstantNode'forInt-1 (Math/subtractExact (#_"JavaConstant" .asInt xConst), (#_"JavaConstant" .asInt yConst)))
                     (ConstantNode'forLong-1 (Math/subtractExact (#_"JavaConstant" .asLong xConst), (#_"JavaConstant" .asLong yConst)))
                 )
@@ -55028,7 +55217,7 @@ ZeroExtendNode'new-4
             (let [
                 #_"Constant" constant (:value forY)
             ]
-                (when (and (instance? PrimitiveConstant constant) (#_"JavaKind" .isNumericInteger (#_"PrimitiveConstant" .getJavaKind constant)) (any = (#_"PrimitiveConstant" .asLong constant) 0 1)) => self
+                (when (and (instance? PrimitiveConstant constant) (JavaKind'isNumericInteger-1 (#_"PrimitiveConstant" .getJavaKind constant)) (any = (#_"PrimitiveConstant" .asLong constant) 0 1)) => self
                     (ConstantNode'forIntegerStamp-2 (:stamp self), 0)
                 )
             )
@@ -55076,7 +55265,7 @@ ZeroExtendNode'new-4
                     (if (BinaryOp'''isNeutral-2 op, c)
                         forX
                         (do
-                            (when (and (instance? PrimitiveConstant c) (#_"JavaKind" .isNumericInteger (#_"PrimitiveConstant" .getJavaKind c)))
+                            (when (and (instance? PrimitiveConstant c) (JavaKind'isNumericInteger-1 (#_"PrimitiveConstant" .getJavaKind c)))
                                 (let [
                                     #_"long" mask (NumUtil'mask-1 (PrimitiveStamp'getBits-1 stamp))
                                 ]
@@ -55261,7 +55450,7 @@ ZeroExtendNode'new-4
                                     )
                                 )
                             (and (or (satisfies? RightShiftNode forX) (satisfies? UnsignedRightShiftNode forX)) (= amount amount'))
-                                (if (= (Stamp'''getStackKind-1 stamp) JavaKind/Long)
+                                (if (= (Stamp'''getStackKind-1 stamp) :JavaKind'Long)
                                     (§ return (AndNode'new-2 (:x forX), (ConstantNode'forLong-1 (<< -1 amount))))
                                     (§ return (AndNode'new-2 (:x forX), (ConstantNode'forInt-1 (<< -1 amount))))
                                 )
@@ -55402,7 +55591,7 @@ ZeroExtendNode'new-4
                                             )
                                         )
                                     (and (satisfies? LeftShiftNode forX) (= amount otherAmount))
-                                        (if (= (Stamp'''getStackKind-1 stamp) JavaKind/Long)
+                                        (if (= (Stamp'''getStackKind-1 stamp) :JavaKind'Long)
                                             (§ return (AndNode'new-2 (:x forX), (ConstantNode'forLong-1 (>>> -1 amount))))
                                             (§ return (AndNode'new-2 (:x forX), (ConstantNode'forInt-1 (>>> -1 amount))))
                                         )
@@ -55508,7 +55697,7 @@ ZeroExtendNode'new-4
 
     #_intrinsifier
     (defn #_"boolean" ClassGetHubNode'intrinsify-3 [#_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"ValueNode" clazz]
-        (§ ass! parser (BytecodeParser''push-3 parser, JavaKind/Object, (BytecodeParser''append-2 parser, (ClassGetHubNode'create-2 clazz, false))))
+        (§ ass! parser (BytecodeParser''push-3 parser, :JavaKind'Object, (BytecodeParser''append-2 parser, (ClassGetHubNode'create-2 clazz, false))))
         true
     )
 
@@ -55708,7 +55897,7 @@ ZeroExtendNode'new-4
                                 ]
                                     (when (some? constant)
                                         (let [
-                                            #_"IntegerStamp" bounds (StampFactory'forInteger-3k (#_"JavaConstant" .getJavaKind constant), (#_"JavaKind" .getMinValue (#_"JavaConstant" .getJavaKind constant)), (#_"JavaConstant" .asLong constant))
+                                            #_"IntegerStamp" bounds (StampFactory'forInteger-3k (#_"JavaConstant" .getJavaKind constant), (JavaKind'getMinValue-1 (#_"JavaConstant" .getJavaKind constant)), (#_"JavaConstant" .asLong constant))
                                         ]
                                             (§ ass valueStamp (Stamp'''join-2 valueStamp, bounds))
                                         )
@@ -55724,7 +55913,7 @@ ZeroExtendNode'new-4
                                 ]
                                     (when (some? constant)
                                         (let [
-                                            #_"IntegerStamp" bounds (StampFactory'forInteger-3k (#_"JavaConstant" .getJavaKind constant), (#_"JavaConstant" .asLong constant), (#_"JavaKind" .getMaxValue (#_"JavaConstant" .getJavaKind constant)))
+                                            #_"IntegerStamp" bounds (StampFactory'forInteger-3k (#_"JavaConstant" .getJavaKind constant), (#_"JavaConstant" .asLong constant), (JavaKind'getMaxValue-1 (#_"JavaConstant" .getJavaKind constant)))
                                         ]
                                             (§ ass valueStamp (Stamp'''join-2 valueStamp, bounds))
                                         )
@@ -55815,9 +56004,9 @@ ZeroExtendNode'new-4
 
     (defn #_"ConstantNode" ConstantNode'forConstant-2c [#_"JavaConstant" constant, #_"Graph" graph]
         (cond
-            (and (= (#_"JavaKind" .getStackKind (#_"JavaConstant" .getJavaKind constant)) JavaKind/Int) (not= (#_"JavaConstant" .getJavaKind constant) JavaKind/Int))
+            (and (= (JavaKind'getStackKind-1 (#_"JavaConstant" .getJavaKind constant)) :JavaKind'Int) (not= (#_"JavaConstant" .getJavaKind constant) :JavaKind'Int))
                 (ConstantNode'forInt-2 (#_"JavaConstant" .asInt constant), graph)
-            (= (#_"JavaConstant" .getJavaKind constant) JavaKind/Object)
+            (= (#_"JavaConstant" .getJavaKind constant) :JavaKind'Object)
                 (Graph''add-2 graph, (ConstantNode'new-2 constant, (StampFactory'forConstant-1 constant)))
             :else
                 (Graph''add-2 graph, (ConstantNode'createPrimitive-1 constant))
@@ -55826,9 +56015,9 @@ ZeroExtendNode'new-4
 
     (defn #_"ConstantNode" ConstantNode'forConstant-3c [#_"JavaConstant" constant, #_"int" stableDimension, #_"boolean" isDefaultStable]
         (cond
-            (and (= (#_"JavaKind" .getStackKind (#_"JavaConstant" .getJavaKind constant)) JavaKind/Int) (not= (#_"JavaConstant" .getJavaKind constant) JavaKind/Int))
+            (and (= (JavaKind'getStackKind-1 (#_"JavaConstant" .getJavaKind constant)) :JavaKind'Int) (not= (#_"JavaConstant" .getJavaKind constant) :JavaKind'Int))
                 (ConstantNode'forInt-1 (#_"JavaConstant" .asInt constant))
-            (= (#_"JavaConstant" .getJavaKind constant) JavaKind/Object)
+            (= (#_"JavaConstant" .getJavaKind constant) :JavaKind'Object)
                 (ConstantNode'new-4 constant, (StampFactory'forConstant-1 constant), stableDimension, isDefaultStable)
             :else
                 (ConstantNode'createPrimitive-1 constant)
@@ -56031,16 +56220,16 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"ConstantNode" ConstantNode'forIntegerKind-3 [#_"JavaKind" kind, #_"long" value, #_"Graph" graph]
-        (condp =? kind
-           [JavaKind/Byte JavaKind/Short JavaKind/Int] (ConstantNode'forInt-2 (int value), graph)
-            JavaKind/Long                              (ConstantNode'forLong-2 value, graph)
+        (case kind
+           (:JavaKind'Byte :JavaKind'Short :JavaKind'Int) (ConstantNode'forInt-2 (int value), graph)
+            :JavaKind'Long                                (ConstantNode'forLong-2 value, graph)
         )
     )
 
     (defn #_"ConstantNode" ConstantNode'forIntegerKind-2 [#_"JavaKind" kind, #_"long" value]
-        (condp =? kind
-           [JavaKind/Byte JavaKind/Short JavaKind/Int] (ConstantNode'createPrimitive-1 (JavaConstant/forInt (int value)))
-            JavaKind/Long                              (ConstantNode'createPrimitive-1 (JavaConstant/forLong value))
+        (case kind
+           (:JavaKind'Byte :JavaKind'Short :JavaKind'Int) (ConstantNode'createPrimitive-1 (JavaConstant/forInt (int value)))
+            :JavaKind'Long                                (ConstantNode'createPrimitive-1 (JavaConstant/forLong value))
         )
     )
 
@@ -56049,10 +56238,10 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"ConstantNode" ConstantNode'defaultForKind-1 [#_"JavaKind" kind]
-        (condp =? kind
-           [JavaKind/Boolean JavaKind/Byte JavaKind/Char JavaKind/Short JavaKind/Int] (ConstantNode'forInt-1 0)
-            JavaKind/Long                                                             (ConstantNode'forLong-1 0)
-            JavaKind/Object                                                           (ConstantNode'forConstant-1 JavaConstant/NULL_POINTER)
+        (case kind
+           (:JavaKind'Boolean :JavaKind'Byte :JavaKind'Char :JavaKind'Short :JavaKind'Int) (ConstantNode'forInt-1 0)
+            :JavaKind'Long                                                                 (ConstantNode'forLong-1 0)
+            :JavaKind'Object                                                               (ConstantNode'forConstant-1 JavaConstant/NULL_POINTER)
             nil
         )
     )
@@ -56311,7 +56500,7 @@ ZeroExtendNode'new-4
                 (or (PiNode'canonical-3 object, stamp, guard)
                     (PiNode'new-3 object, stamp, guard)
                 )
-            _ (§ ass! parser (BytecodeParser''push-3 parser, JavaKind/Object, (BytecodeParser''append-2 parser, value)))
+            _ (§ ass! parser (BytecodeParser''push-3 parser, :JavaKind'Object, (BytecodeParser''append-2 parser, value)))
         ]
             true
         )
@@ -56574,7 +56763,7 @@ ZeroExtendNode'new-4
                 (let [
                     #_"Graph" graph (:graph this)
                     #_"AddressNode" address (Lowerer'createOffsetAddress-3 graph, (:hub this), HotSpot'classMirrorOffset)
-                    #_"FloatingReadNode" read (Graph''add-2 graph, (FloatingReadNode'new-6 address, NamedLocationIdentity'CLASS_MIRROR, nil, (StampFactory'forKind-1 JavaKind/Long), nil, :BarrierType'NONE))
+                    #_"FloatingReadNode" read (Graph''add-2 graph, (FloatingReadNode'new-6 address, NamedLocationIdentity'CLASS_MIRROR, nil, (StampFactory'forKind-1 :JavaKind'Long), nil, :BarrierType'NONE))
                     address (Lowerer'createOffsetAddress-3 graph, read, 0)
                     read (Graph''add-2 graph, (FloatingReadNode'new-6 address, NamedLocationIdentity'CLASS_MIRROR_HANDLE, nil, (:stamp this), nil, :BarrierType'NONE))
                 ]
@@ -57267,7 +57456,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"boolean" InstanceOfDynamicNode''isMirror-1 [#_"InstanceOfDynamicNode" this]
-        (= (ValueNode''getStackKind-1 (:x this)) JavaKind/Object)
+        (= (ValueNode''getStackKind-1 (:x this)) :JavaKind'Object)
     )
 
     #_unused
@@ -57284,7 +57473,7 @@ ZeroExtendNode'new-4
                 )
                 (let [
                     this
-                        (when (= (Stamp'''getStackKind-1 (:stamp (:x this))) JavaKind/Object) => this
+                        (when (= (Stamp'''getStackKind-1 (:stamp (:x this))) :JavaKind'Object) => this
                             (InstanceOfDynamicNode''setMirror-2 this, (Graph''add-2 (:graph this), (ClassGetHubNode'new-1 (:x this))))
                         )
                 ]
@@ -58348,7 +58537,7 @@ ZeroExtendNode'new-4
 (class-ns RandomSeedNode [FloatingNode, ValueNode, Node, LIRLowerable]
     #_unused
     (defn #_"RandomSeedNode" RandomSeedNode'new-0 []
-        (merge (RandomSeedNode'class.) (FloatingNode'new-1 (StampFactory'forKind-1 JavaKind/Int)))
+        (merge (RandomSeedNode'class.) (FloatingNode'new-1 (StampFactory'forKind-1 :JavaKind'Int)))
     )
 
     (defm RandomSeedNode LIRLowerable
@@ -58412,7 +58601,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"Stamp" BitCountNode'computeStamp-2 [#_"Stamp" stamp, #_"ValueNode" value]
-        (StampFactory'forInteger-3k JavaKind/Int, (Long/bitCount (:downMask stamp)), (Long/bitCount (:upMask stamp)))
+        (StampFactory'forInteger-3k :JavaKind'Int, (Long/bitCount (:downMask stamp)), (Long/bitCount (:upMask stamp)))
     )
 
     (defm BitCountNode Unary
@@ -58421,7 +58610,7 @@ ZeroExtendNode'new-4
                 (let [
                     #_"JavaConstant" constant (ValueNode''asJavaConstant-1 value)
                 ]
-                    (ConstantNode'forInt-1 (if (= (ValueNode''getStackKind-1 value) JavaKind/Int) (Integer/bitCount (#_"JavaConstant" .asInt constant)) (Long/bitCount (#_"JavaConstant" .asLong constant))))
+                    (ConstantNode'forInt-1 (if (= (ValueNode''getStackKind-1 value) :JavaKind'Int) (Integer/bitCount (#_"JavaConstant" .asInt constant)) (Long/bitCount (#_"JavaConstant" .asLong constant))))
                 )
             )
         )
@@ -58575,7 +58764,7 @@ ZeroExtendNode'new-4
             (let [
                 #_"JavaConstant" constant (ValueNode''asJavaConstant-1 value)
             ]
-                (if (= (ValueNode''getStackKind-1 value) JavaKind/Int)
+                (if (= (ValueNode''getStackKind-1 value) :JavaKind'Int)
                     (ConstantNode'forInt-1 (Integer/numberOfLeadingZeros (#_"JavaConstant" .asInt constant)))
                     (ConstantNode'forInt-1 (Long/numberOfLeadingZeros (#_"JavaConstant" .asLong constant)))
                 )
@@ -58622,7 +58811,7 @@ ZeroExtendNode'new-4
             (let [
                 #_"JavaConstant" constant (ValueNode''asJavaConstant-1 value)
             ]
-                (if (= (ValueNode''getStackKind-1 value) JavaKind/Int)
+                (if (= (ValueNode''getStackKind-1 value) :JavaKind'Int)
                     (ConstantNode'forInt-1 (Integer/numberOfTrailingZeros (#_"JavaConstant" .asInt constant)))
                     (ConstantNode'forInt-1 (Long/numberOfTrailingZeros (#_"JavaConstant" .asLong constant)))
                 )
@@ -59189,7 +59378,7 @@ ZeroExtendNode'new-4
  ;;
 (class-ns UnpackEndianHalfNode [UnaryNode, FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", Canonicalizable, Lowerable]
     (defn #_"UnpackEndianHalfNode" UnpackEndianHalfNode'new-2 [#_"ValueNode" value, #_"boolean" firstHalf]
-        (merge (UnpackEndianHalfNode'class.) (UnaryNode'new-2 (StampFactory'forKind-1 JavaKind/Int), value)
+        (merge (UnpackEndianHalfNode'class.) (UnaryNode'new-2 (StampFactory'forKind-1 :JavaKind'Int), value)
             (hash-map
                 #_"boolean" :firstHalf firstHalf
             )
@@ -59198,7 +59387,7 @@ ZeroExtendNode'new-4
 
     (defn #_"ValueNode" UnpackEndianHalfNode'create-2 [#_"ValueNode" value, #_"boolean" firstHalf]
         (if (and (satisfies? ConstantNode value) (#_"Constant" .isDefaultForKind (:value value)))
-            (ConstantNode'defaultForKind-1 JavaKind/Int)
+            (ConstantNode'defaultForKind-1 :JavaKind'Int)
             (UnpackEndianHalfNode'new-2 value, firstHalf)
         )
     )
@@ -59220,7 +59409,7 @@ ZeroExtendNode'new-4
                         (Graph''add-2 (:graph this), (UnsignedRightShiftNode'new-2 (:value this), (ConstantNode'forInt-2 32, (:graph this))))
                     )
             ]
-                (Node''replaceAtUsagesAndDelete-2 this, (IntegerConvertNode'convert-3g result, (StampFactory'forKind-1 JavaKind/Int), (:graph this)))
+                (Node''replaceAtUsagesAndDelete-2 this, (IntegerConvertNode'convert-3g result, (StampFactory'forKind-1 :JavaKind'Int), (:graph this)))
             )
         )
     )
@@ -59234,7 +59423,7 @@ ZeroExtendNode'new-4
 
     #_intrinsifier
     (defn #_"VMConfigNode" VMConfigNode'new-0 []
-        (merge (VMConfigNode'class.) (FloatingNode'new-1 (StampFactory'forKind-1 JavaKind/Boolean))
+        (merge (VMConfigNode'class.) (FloatingNode'new-1 (StampFactory'forKind-1 :JavaKind'Boolean))
             (hash-map
                 #_"int" :markId 0
             )
@@ -59381,9 +59570,9 @@ ZeroExtendNode'new-4
                 (when (and (= (ByteOrder/nativeOrder) ByteOrder/BIG_ENDIAN) (#_"ResolvedJavaType" .isPrimitive componentType)) => constantOffset
                     ;; on big endian, we expect the value to be correctly aligned in memory
                     (let [
-                        #_"int" componentByteCount (#_"JavaKind" .getByteCount (#_"ResolvedJavaType" .getJavaKind componentType))
+                        #_"int" componentByteCount (JavaKind'getByteCount-1 (#_"ResolvedJavaType" .getJavaKind componentType))
                     ]
-                        (- constantOffset (- componentByteCount (min componentByteCount (+ 4 (#_"JavaKind" .getByteCount expectedEntryKind)))))
+                        (- constantOffset (- componentByteCount (min componentByteCount (+ 4 (JavaKind'getByteCount-1 expectedEntryKind)))))
                     )
                 )
             #_"long" index (- offset baseOffset)
@@ -59636,7 +59825,7 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"FrameState" FrameState'new-2 [#_"int" bci, #_"ValueNode" returnValue]
         (let [
-            #_"FrameState" this (FrameState'new-8i nil, nil, bci, 0, (#_"JavaKind" .getSlotCount (ValueNode''getStackKind-1 returnValue)), false, nil, nil)
+            #_"FrameState" this (FrameState'new-8i nil, nil, bci, 0, (JavaKind'getSlotCount-1 (ValueNode''getStackKind-1 returnValue)), false, nil, nil)
         ]
             (assoc this :fsValues [ returnValue ])
         )
@@ -59705,7 +59894,7 @@ ZeroExtendNode'new-4
         (let [
             #_"[ValueNode]" values (subvec (:fsValues this) 0 (+ (:localsSize this) (:stackSize this)))
             values
-                (when-not (= popKind JavaKind/Void) => values
+                (when-not (= popKind :JavaKind'Void) => values
                     (if (some? (FrameState''stackAt-2 this, (dec (:stackSize this))))
                         (-> values pop')
                         (-> values pop' pop')
@@ -59716,7 +59905,7 @@ ZeroExtendNode'new-4
                     (let [
                         values (conj' values (nth pushedValues i))
                         values
-                            (when (#_"JavaKind" .needsTwoSlots (nth pushedSlotKinds i)) => values
+                            (when (JavaKind'needsTwoSlots-1 (nth pushedSlotKinds i)) => values
                                 (conj' values nil)
                             )
                     ]
@@ -60264,7 +60453,7 @@ ZeroExtendNode'new-4
                     #_"[ValueNode]" entries (§ snap (:entries this))
                     _
                         (dotimes [#_"int" i (count entries)]
-                            (when (= (ValueNode''asJavaConstant-1 (nth entries i)) (JavaConstant/defaultForKind (#_"JavaKind" .getStackKind (VirtualObjectNode'''entryKind-2 virtual, i))))
+                            (when (= (ValueNode''asJavaConstant-1 (nth entries i)) (JavaConstant/defaultForKind (JavaKind'getStackKind-1 (VirtualObjectNode'''entryKind-2 virtual, i))))
                                 (§ ass! entries (assoc' entries i nil))
                             )
                         )
@@ -63920,7 +64109,7 @@ ZeroExtendNode'new-4
         )
 
         (#_"JavaKind" Stamp'''getStackKind-1 [#_"AbstractPointerStamp" this]
-            JavaKind/Illegal
+            :JavaKind'Illegal
         )
     )
 )
@@ -63963,7 +64152,7 @@ ZeroExtendNode'new-4
         )
 
         (#_"JavaKind" Stamp'''getStackKind-1 [#_"AbstractObjectStamp" this]
-            JavaKind/Object
+            :JavaKind'Object
         )
 
         (#_"ResolvedJavaType" Stamp'''javaType-1 [#_"AbstractObjectStamp" this]
@@ -64283,7 +64472,7 @@ ZeroExtendNode'new-4
 
         (#_"boolean" Stamp'''isCompatible-2c [#_"ObjectStamp" this, #_"Constant" constant]
             (and (instance? JavaConstant constant)
-                (#_"JavaKind" .isObject (#_"JavaConstant" .getJavaKind constant))
+                (JavaKind'isObject-1 (#_"JavaConstant" .getJavaKind constant))
             )
         )
 
@@ -64489,7 +64678,7 @@ ZeroExtendNode'new-4
         )
 
         (#_"boolean" Stamp'''isCompatible-2c [#_"RawPointerStamp" this, #_"Constant" constant]
-            (and (instance? PrimitiveConstant constant) (#_"JavaKind" .isNumericInteger (#_"PrimitiveConstant" .getJavaKind constant)))
+            (and (instance? PrimitiveConstant constant) (JavaKind'isNumericInteger-1 (#_"PrimitiveConstant" .getJavaKind constant)))
         )
 
         (#_"Constant" Stamp'''readConstant-4 [#_"RawPointerStamp" this, #_"MemoryAccessProvider" provider, #_"Constant" base, #_"long" displacement]
@@ -64673,7 +64862,7 @@ ZeroExtendNode'new-4
         )
 
         (#_"JavaKind" Stamp'''getStackKind-1 [#_"IntegerStamp" this]
-            (if (< 32 (:bits this)) JavaKind/Long JavaKind/Int)
+            (if (< 32 (:bits this)) :JavaKind'Long :JavaKind'Int)
         )
 
         (#_"ValueKind" Stamp'''getValueKind-1 [#_"IntegerStamp" this]
@@ -64759,7 +64948,7 @@ ZeroExtendNode'new-4
 
         (#_"boolean" Stamp'''isCompatible-2c [#_"IntegerStamp" this, #_"Constant" constant]
             (and (instance? PrimitiveConstant constant)
-                (#_"JavaKind" .isNumericInteger (#_"PrimitiveConstant" .getJavaKind constant))
+                (JavaKind'isNumericInteger-1 (#_"PrimitiveConstant" .getJavaKind constant))
             )
         )
     )
@@ -65212,7 +65401,7 @@ ZeroExtendNode'new-4
 
         (§ proxy #_"MulHigh" (MulHigh'new-2 true, true)
             (defn- #_"long" MulHigh'multiplyHigh-3 [#_"long" x, #_"long" y, #_"JavaKind" javaKind]
-                (if (= javaKind JavaKind/Int)
+                (if (= javaKind :JavaKind'Int)
                     (>> (* x y) 32)
                     (let [
                         #_"long" x0 (& x 0xffffffff)
@@ -65277,7 +65466,7 @@ ZeroExtendNode'new-4
 
         (§ proxy #_"UMulHigh" (UMulHigh'new-2 true, true)
             (defn- #_"long" UMulHigh'multiplyHighUnsigned-3 [#_"long" x, #_"long" y, #_"JavaKind" javaKind]
-                (if (= javaKind JavaKind/Int)
+                (if (= javaKind :JavaKind'Int)
                     (let [
                         #_"long" xl (& x 0xffffffff)
                         #_"long" yl (& y 0xffffffff)
@@ -65484,7 +65673,7 @@ ZeroExtendNode'new-4
 
                 (#_"boolean" BinaryOp'''isNeutral-2 [#_"And" _, #_"Constant" value]
                     (let [
-                        #_"long" mask (NumUtil'mask-1 (#_"JavaKind" .getBitCount (#_"PrimitiveConstant" .getJavaKind value)))
+                        #_"long" mask (NumUtil'mask-1 (JavaKind'getBitCount-1 (#_"PrimitiveConstant" .getJavaKind value)))
                     ]
                         (= (& (#_"PrimitiveConstant" .asLong value) mask) mask)
                     )
@@ -65547,8 +65736,8 @@ ZeroExtendNode'new-4
             (defm Shl ShiftOp
                 (#_"Constant" ShiftOp'''foldConstant-3 [#_"Shl" _, #_"Constant" value, #_"int" amount]
                     (condp = (#_"PrimitiveConstant" .getJavaKind value)
-                        JavaKind/Int  (JavaConstant/forInt (<< (#_"PrimitiveConstant" .asInt value) amount))
-                        JavaKind/Long (JavaConstant/forLong (<< (#_"PrimitiveConstant" .asLong value) amount))
+                        :JavaKind'Int  (JavaConstant/forInt (<< (#_"PrimitiveConstant" .asInt value) amount))
+                        :JavaKind'Long (JavaConstant/forLong (<< (#_"PrimitiveConstant" .asLong value) amount))
                     )
                 )
 
@@ -65612,8 +65801,8 @@ ZeroExtendNode'new-4
             (defm Shr ShiftOp
                 (#_"Constant" ShiftOp'''foldConstant-3 [#_"Shr" _, #_"Constant" value, #_"int" amount]
                     (condp = (#_"PrimitiveConstant" .getJavaKind value)
-                        JavaKind/Int  (JavaConstant/forInt (>> (#_"PrimitiveConstant" .asInt value) amount))
-                        JavaKind/Long (JavaConstant/forLong (>> (#_"PrimitiveConstant" .asLong value) amount))
+                        :JavaKind'Int  (JavaConstant/forInt (>> (#_"PrimitiveConstant" .asInt value) amount))
+                        :JavaKind'Long (JavaConstant/forLong (>> (#_"PrimitiveConstant" .asLong value) amount))
                     )
                 )
 
@@ -65652,8 +65841,8 @@ ZeroExtendNode'new-4
             (defm UShr ShiftOp
                 (#_"Constant" ShiftOp'''foldConstant-3 [#_"UShr" _, #_"Constant" value, #_"int" amount]
                     (condp = (#_"PrimitiveConstant" .getJavaKind value)
-                        JavaKind/Int  (JavaConstant/forInt (>>> (#_"PrimitiveConstant" .asInt value) amount))
-                        JavaKind/Long (JavaConstant/forLong (>>> (#_"PrimitiveConstant" .asLong value) amount))
+                        :JavaKind'Int  (JavaConstant/forInt (>>> (#_"PrimitiveConstant" .asInt value) amount))
+                        :JavaKind'Long (JavaConstant/forLong (>>> (#_"PrimitiveConstant" .asLong value) amount))
                     )
                 )
 
@@ -65824,7 +66013,7 @@ ZeroExtendNode'new-4
 
     (defm IllegalStamp Stamp
         (#_"JavaKind" Stamp'''getStackKind-1 [#_"IllegalStamp" this]
-            JavaKind/Illegal
+            :JavaKind'Illegal
         )
 
         (#_"ValueKind" Stamp'''getValueKind-1 [#_"IllegalStamp" this]
@@ -65864,7 +66053,7 @@ ZeroExtendNode'new-4
         )
 
         (#_"boolean" Stamp'''isCompatible-2c [#_"IllegalStamp" this, #_"Constant" constant]
-            (and (instance? PrimitiveConstant constant) (= (#_"PrimitiveConstant" .getJavaKind constant) JavaKind/Illegal))
+            (and (instance? PrimitiveConstant constant) (= (#_"PrimitiveConstant" .getJavaKind constant) :JavaKind'Illegal))
         )
 
         (#_"boolean" Stamp'''hasValues-1 [#_"IllegalStamp" this]
@@ -65901,7 +66090,7 @@ ZeroExtendNode'new-4
         )
 
         (#_"JavaKind" Stamp'''getStackKind-1 [#_"VoidStamp" this]
-            JavaKind/Void
+            :JavaKind'Void
         )
 
         (#_"Stamp" Stamp'''improveWith-2 [#_"VoidStamp" this, #_"Stamp" other]
@@ -66964,7 +67153,7 @@ ZeroExtendNode'new-4
         (let [
             #_"WordSize" wordSize (AMD64'getWordSize-1 javaKind)
         ]
-            (if (#_"JavaKind" .isObject javaKind) (ValueKind'reference-1 wordSize) (ValueKind'value-1 wordSize))
+            (if (JavaKind'isObject-1 javaKind) (ValueKind'reference-1 wordSize) (ValueKind'value-1 wordSize))
         )
     )
 
@@ -67299,25 +67488,25 @@ ZeroExtendNode'new-4
                 #_"ValueNode" newValue (when (some? value) (PartialEscapeClosure''getAliasAndResolve-3 (:closure this), (:state this), value))
                 #_"ValueNode" oldValue (VirtualizerTool'''getEntry-3 this, virtual, index)
                 #_"boolean" canVirtualize
-                    (or (= entryKind accessKind) (and (= entryKind (#_"JavaKind" .getStackKind accessKind)) (satisfies? VirtualInstanceNode virtual))
+                    (or (= entryKind accessKind) (and (= entryKind (JavaKind'getStackKind-1 accessKind)) (satisfies? VirtualInstanceNode virtual))
                         ;; Special case: If the entryKind is long, allow arbitrary kinds as long as a value of the
                         ;; same kind is already there. This can only happen if some other node initialized the entry with
                         ;; a value of a different kind. One example where this happens is the Truffle NewFrameNode.
-                        (and (= entryKind JavaKind/Long) (= (ValueNode''getStackKind-1 oldValue) (ValueNode''getStackKind-1 newValue)) (#_"JavaKind" .isPrimitive (ValueNode''getStackKind-1 oldValue)))
+                        (and (= entryKind :JavaKind'Long) (= (ValueNode''getStackKind-1 oldValue) (ValueNode''getStackKind-1 newValue)) (JavaKind'isPrimitive-1 (ValueNode''getStackKind-1 oldValue)))
                         ;; Special case: Allow storing a single long or double value into two consecutive int slots.
-                        (and (= entryKind JavaKind/Int) (= accessKind JavaKind/Long) (zero? (% offset 8)) (not (= (VirtualObjectNode'''entryIndexForOffset-3 virtual, (+ offset 4), JavaKind/Int) -1)))
+                        (and (= entryKind :JavaKind'Int) (= accessKind :JavaKind'Long) (zero? (% offset 8)) (not (= (VirtualObjectNode'''entryIndexForOffset-3 virtual, (+ offset 4), :JavaKind'Int) -1)))
                     )
             ]
                 (when canVirtualize => false ;; should only occur if there are mismatches between the entry and access kind
                     (let [
                         _ (§ ass! this (update this :state PartialEscapeBlockState''setEntry-4 (:oid virtual), index, newValue))
                         _
-                            (when (= entryKind JavaKind/Int)
+                            (when (= entryKind :JavaKind'Int)
                                 (cond
-                                    (#_"JavaKind" .needsTwoSlots accessKind)
+                                    (JavaKind'needsTwoSlots-1 accessKind)
                                         ;; storing double word value two int slots
                                         (§ ass! this (update this :state PartialEscapeBlockState''setEntry-4 (:oid virtual), (inc index), (VirtualizerTool''getIllegalConstant-1 this)))
-                                    (= (ValueNode''getStackKind-1 oldValue) JavaKind/Long)
+                                    (= (ValueNode''getStackKind-1 oldValue) :JavaKind'Long)
                                         ;; splitting double word constant by storing over it with an int
                                         (let [
                                             #_"ValueNode" secondHalf (UnpackEndianHalfNode'create-2 oldValue, false)
@@ -68215,18 +68404,18 @@ ZeroExtendNode'new-4
     (defn- #_"ValueNode" WordOperationPlugin'convert-4 [#_"BytecodeParser" parser, #_"ValueNode" value, #_"JavaKind" toKind, #_"boolean" unsigned?]
         (cond
             (= (ValueNode''getStackKind-1 value) toKind) value
-            (= toKind JavaKind/Int)                      (BytecodeParser''add-2 parser, (NarrowNode'new-2 value, 32))
+            (= toKind :JavaKind'Int)                     (BytecodeParser''add-2 parser, (NarrowNode'new-2 value, 32))
             unsigned?                                    (BytecodeParser''add-2 parser, (ZeroExtendNode'new-2 value, 64))
             :else                                        (BytecodeParser''add-2 parser, (SignExtendNode'new-2 value, 64))
         )
     )
 
     (defn #_"ValueNode" WordOperationPlugin'fromUnsigned-2 [#_"BytecodeParser" parser, #_"ValueNode" value]
-        (WordOperationPlugin'convert-4 parser, value, JavaKind/Long, true)
+        (WordOperationPlugin'convert-4 parser, value, :JavaKind'Long, true)
     )
 
     (defn #_"ValueNode" WordOperationPlugin'fromSigned-2 [#_"BytecodeParser" parser, #_"ValueNode" value]
-        (WordOperationPlugin'convert-4 parser, value, JavaKind/Long, false)
+        (WordOperationPlugin'convert-4 parser, value, :JavaKind'Long, false)
     )
 
     (defn #_"ValueNode" WordOperationPlugin'toUnsigned-3 [#_"BytecodeParser" parser, #_"ValueNode" value, #_"JavaKind" toKind]
@@ -68258,7 +68447,7 @@ ZeroExtendNode'new-4
                         (BytecodeParser''addPush-3 parser, returnKind, (ConditionalNode'create-3 isNull, (BytecodeParser''add-2 parser, (ConstantNode'forBoolean-1 true)), (BytecodeParser''add-2 parser, (ConstantNode'forBoolean-1 false))))
                     )
                 :MetaspaceOpcode'FROM_POINTER
-                    (BytecodeParser''addPush-3 parser, returnKind, (PointerCastNode'new-2 (StampFactory'forKind-1 JavaKind/Long), (nth args 0)))
+                    (BytecodeParser''addPush-3 parser, returnKind, (PointerCastNode'new-2 (StampFactory'forKind-1 :JavaKind'Long), (nth args 0)))
                 :MetaspaceOpcode'TO_KLASS_POINTER
                     (BytecodeParser''addPush-3 parser, returnKind, (PointerCastNode'new-2 KlassPointerStamp'KLASS, (nth args 0)))
                 :MetaspaceOpcode'READ_KLASS_POINTER
@@ -68331,7 +68520,7 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"AbstractCompareAndSwapNode" WordOperationPlugin'casOp-6 [#_"JavaKind" writeKind, #_"JavaKind" returnKind, #_"AddressNode" address, #_"LocationIdentity" location, #_"ValueNode" expectedValue, #_"ValueNode" newValue]
-        (if (= returnKind JavaKind/Boolean)
+        (if (= returnKind :JavaKind'Boolean)
             (LogicCompareAndSwapNode'new-4 address, expectedValue, newValue, location)
             (ValueCompareAndSwapNode'new-4 address, expectedValue, newValue, location)
         )
@@ -68347,7 +68536,7 @@ ZeroExtendNode'new-4
                     (condp = (WordFactoryOperation''opcode-1 factoryOperation)
                         :WordFactoryOpcode'ZERO
                         (do
-                            (BytecodeParser''addPush-3 parser, returnKind, (ConstantNode'forIntegerKind-2 JavaKind/Long, 0))
+                            (BytecodeParser''addPush-3 parser, returnKind, (ConstantNode'forIntegerKind-2 :JavaKind'Long, 0))
                             :done
                         )
                         :WordFactoryOpcode'FROM_UNSIGNED
@@ -68374,18 +68563,18 @@ ZeroExtendNode'new-4
                         :WordOpcode'NODE_CLASS
                             (let [
                                 #_"ValueNode" left (nth args 0)
-                                #_"ValueNode" right (if (WordOperation''rightOperandIsInt-1 operation) (WordOperationPlugin'toUnsigned-3 parser, (nth args 1), JavaKind/Int) (WordOperationPlugin'fromSigned-2 parser, (nth args 1)))
+                                #_"ValueNode" right (if (WordOperation''rightOperandIsInt-1 operation) (WordOperationPlugin'toUnsigned-3 parser, (nth args 1), :JavaKind'Int) (WordOperationPlugin'fromSigned-2 parser, (nth args 1)))
                             ]
                                 (BytecodeParser''addPush-3 parser, returnKind, (WordOperationPlugin'createBinaryNodeInstance-3 (WordOperation''node-1 operation), left, right))
                             )
                         :WordOpcode'COMPARISON
                             (§ ass! parser (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin'comparisonOp-4 parser, (WordOperation''condition-1 operation), (nth args 0), (WordOperationPlugin'fromSigned-2 parser, (nth args 1)))))
                         :WordOpcode'IS_NULL
-                            (§ ass! parser (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin'comparisonOp-4 parser, Condition'EQ, (nth args 0), (ConstantNode'forIntegerKind-2 JavaKind/Long, 0))))
+                            (§ ass! parser (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin'comparisonOp-4 parser, Condition'EQ, (nth args 0), (ConstantNode'forIntegerKind-2 :JavaKind'Long, 0))))
                         :WordOpcode'IS_NON_NULL
-                            (§ ass! parser (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin'comparisonOp-4 parser, Condition'NE, (nth args 0), (ConstantNode'forIntegerKind-2 JavaKind/Long, 0))))
+                            (§ ass! parser (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin'comparisonOp-4 parser, Condition'NE, (nth args 0), (ConstantNode'forIntegerKind-2 :JavaKind'Long, 0))))
                         :WordOpcode'NOT
-                            (BytecodeParser''addPush-3 parser, returnKind, (XorNode'new-2 (nth args 0), (BytecodeParser''add-2 parser, (ConstantNode'forIntegerKind-2 JavaKind/Long, -1))))
+                            (BytecodeParser''addPush-3 parser, returnKind, (XorNode'new-2 (nth args 0), (BytecodeParser''add-2 parser, (ConstantNode'forIntegerKind-2 :JavaKind'Long, -1))))
                        [:WordOpcode'READ_POINTER :WordOpcode'READ_OBJECT :WordOpcode'READ_BARRIERED]
                             (let [
                                 #_"JavaKind" readKind (WordTypes'asKind-1 (#_"Signature" .getReturnType (#_"ResolvedJavaMethod" .getSignature method), (#_"ResolvedJavaMethod" .getDeclaringClass method)))
@@ -68419,28 +68608,28 @@ ZeroExtendNode'new-4
                                 (WordOperationPlugin'writeOp-6 parser, writeKind, address, location, (nth args 2), (WordOperation''opcode-1 operation))
                             )
                         :WordOpcode'TO_RAW_VALUE
-                            (§ ass! parser (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin'toUnsigned-3 parser, (nth args 0), JavaKind/Long)))
+                            (§ ass! parser (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin'toUnsigned-3 parser, (nth args 0), :JavaKind'Long)))
                         :WordOpcode'FROM_OBJECT
                             (let [
-                                #_"WordCastNode" objectToTracked (BytecodeParser''add-2 parser, (WordCastNode'objectToWord-2 (nth args 0), JavaKind/Long))
+                                #_"WordCastNode" objectToTracked (BytecodeParser''add-2 parser, (WordCastNode'objectToWord-2 (nth args 0), :JavaKind'Long))
                             ]
                                 (§ ass! parser (BytecodeParser''push-3 parser, returnKind, objectToTracked))
                             )
                         :WordOpcode'FROM_ADDRESS
                             (let [
-                                #_"WordCastNode" addressToWord (BytecodeParser''add-2 parser, (WordCastNode'addressToWord-2 (nth args 0), JavaKind/Long))
+                                #_"WordCastNode" addressToWord (BytecodeParser''add-2 parser, (WordCastNode'addressToWord-2 (nth args 0), :JavaKind'Long))
                             ]
                                 (§ ass! parser (BytecodeParser''push-3 parser, returnKind, addressToWord))
                             )
                         :WordOpcode'TO_OBJECT
                             (let [
-                                #_"WordCastNode" wordToObject (BytecodeParser''add-2 parser, (WordCastNode'wordToObject-2 (nth args 0), JavaKind/Long))
+                                #_"WordCastNode" wordToObject (BytecodeParser''add-2 parser, (WordCastNode'wordToObject-2 (nth args 0), :JavaKind'Long))
                             ]
                                 (§ ass! parser (BytecodeParser''push-3 parser, returnKind, wordToObject))
                             )
                         :WordOpcode'TO_OBJECT_NON_NULL
                             (let [
-                                #_"WordCastNode" wordToObjectNonNull (BytecodeParser''add-2 parser, (WordCastNode'wordToObjectNonNull-2 (nth args 0), JavaKind/Long))
+                                #_"WordCastNode" wordToObjectNonNull (BytecodeParser''add-2 parser, (WordCastNode'wordToObjectNonNull-2 (nth args 0), :JavaKind'Long))
                             ]
                                 (§ ass! parser (BytecodeParser''push-3 parser, returnKind, wordToObjectNonNull))
                             )
@@ -68530,13 +68719,13 @@ ZeroExtendNode'new-4
         ]
             (if (satisfies? KlassPointerStamp componentStamp)
                 (LoadIndexedPointerNode'new-3 componentStamp, array, index)
-                (LoadIndexedNode'new-3 array, index, JavaKind/Long)
+                (LoadIndexedNode'new-3 array, index, :JavaKind'Long)
             )
         )
     )
 
     (defn- #_"StoreIndexedNode" WordOperationPlugin'createStoreIndexedNode-3 [#_"ValueNode" array, #_"ValueNode" index, #_"ValueNode" value]
-        (StoreIndexedNode'new-4 array, index, JavaKind/Long, value)
+        (StoreIndexedNode'new-4 array, index, :JavaKind'Long, value)
     )
 
     (defm WordOperationPlugin NodePlugin
@@ -68556,10 +68745,10 @@ ZeroExtendNode'new-4
         )
 
         (#_"boolean" NodePlugin'''handleStoreField-5 [#_"WordOperationPlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaField" field, #_"ValueNode" value]
-            (and (= (#_"ResolvedJavaField" .getJavaKind field) JavaKind/Object)
+            (and (= (#_"ResolvedJavaField" .getJavaKind field) :JavaKind'Object)
                 (let [
                     #_"boolean" isWordField (WordTypes'isWord-1j (#_"ResolvedJavaField" .getType field))
-                    #_"boolean" isWordValue (= (ValueNode''getStackKind-1 value) JavaKind/Long)
+                    #_"boolean" isWordValue (= (ValueNode''getStackKind-1 value) :JavaKind'Long)
                 ]
                     (cond
                         (and isWordField (not isWordValue))
@@ -68583,14 +68772,14 @@ ZeroExtendNode'new-4
             ]
                 (if (and (some? arrayType) (WordTypes'isWord-1j (#_"ResolvedJavaType" .getComponentType arrayType)))
                     (do
-                        (when-not (= (ValueNode''getStackKind-1 value) JavaKind/Long)
+                        (when-not (= (ValueNode''getStackKind-1 value) :JavaKind'Long)
                             (throw! (str "cannot store a non-word value into a word array: " (#_"ResolvedJavaType" .toJavaName arrayType, true)))
                         )
                         (BytecodeParser''add-2 parser, (WordOperationPlugin'createStoreIndexedNode-3 array, index, value))
                         true
                     )
                     (do
-                        (when (and (= elementKind JavaKind/Object) (= (ValueNode''getStackKind-1 value) JavaKind/Long))
+                        (when (and (= elementKind :JavaKind'Object) (= (ValueNode''getStackKind-1 value) :JavaKind'Long))
                             (throw! (str "cannot store a word value into a non-word array: " (#_"ResolvedJavaType" .toJavaName arrayType, true)))
                         )
                         false
@@ -68601,11 +68790,11 @@ ZeroExtendNode'new-4
 
         (#_"boolean" NodePlugin'''handleCheckCast-4 [#_"WordOperationPlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaType" type]
             (if (WordTypes'isWord-1j type)
-                (when (= (ValueNode''getStackKind-1 object) JavaKind/Long) => (throw! (str "cannot cast a non-word value to a word type: " (#_"ResolvedJavaType" .toJavaName type, true)))
-                    (§ ass! parser (BytecodeParser''push-3 parser, JavaKind/Object, object))
+                (when (= (ValueNode''getStackKind-1 object) :JavaKind'Long) => (throw! (str "cannot cast a non-word value to a word type: " (#_"ResolvedJavaType" .toJavaName type, true)))
+                    (§ ass! parser (BytecodeParser''push-3 parser, :JavaKind'Object, object))
                     true
                 )
-                (when (= (ValueNode''getStackKind-1 object) JavaKind/Object) => (throw! (str "cannot cast a word value to a non-word type: " (#_"ResolvedJavaType" .toJavaName type, true)))
+                (when (= (ValueNode''getStackKind-1 object) :JavaKind'Object) => (throw! (str "cannot cast a word value to a non-word type: " (#_"ResolvedJavaType" .toJavaName type, true)))
                     false
                 )
             )
@@ -68615,7 +68804,7 @@ ZeroExtendNode'new-4
             (cond
                 (WordTypes'isWord-1j type)
                     (throw! (str "cannot use instanceof for word a type: " (#_"ResolvedJavaType" .toJavaName type, true)))
-                (not= (ValueNode''getStackKind-1 object) JavaKind/Object)
+                (not= (ValueNode''getStackKind-1 object) :JavaKind'Object)
                     (throw! (str "cannot use instanceof on a word value: " (#_"ResolvedJavaType" .toJavaName type, true)))
                 :else
                     false
@@ -68772,10 +68961,10 @@ ZeroExtendNode'new-4
 
     (defn #_"Stamp" StampFactory'forInteger-1k [#_"JavaKind" kind]
         (let [
-            #_"int" bits (#_"JavaKind" .getBitCount (#_"JavaKind" .getStackKind kind))
-            #_"long" mask (NumUtil'mask-1 (if (#_"JavaKind" .isUnsigned kind) (#_"JavaKind" .getBitCount kind) bits))
+            #_"int" bits (JavaKind'getBitCount-1 (JavaKind'getStackKind-1 kind))
+            #_"long" mask (NumUtil'mask-1 (if (JavaKind'isUnsigned-1 kind) (JavaKind'getBitCount-1 kind) bits))
         ]
-            (IntegerStamp'create-5 bits, (#_"JavaKind" .getMinValue kind), (#_"JavaKind" .getMaxValue kind), 0, mask)
+            (IntegerStamp'create-5 bits, (JavaKind'getMinValue-1 kind), (JavaKind'getMaxValue-1 kind), 0, mask)
         )
     )
 
@@ -68784,11 +68973,11 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"IntegerStamp" StampFactory'forInteger-3k [#_"JavaKind" kind, #_"long" lowerBound, #_"long" upperBound]
-        (StampFactory'forInteger-3i (#_"JavaKind" .getBitCount kind), lowerBound, upperBound)
+        (StampFactory'forInteger-3i (JavaKind'getBitCount-1 kind), lowerBound, upperBound)
     )
 
     (defn #_"IntegerStamp" StampFactory'forInteger-5 [#_"JavaKind" kind, #_"long" lowerBound, #_"long" upperBound, #_"long" downMask, #_"long" upMask]
-        (IntegerStamp'create-5 (#_"JavaKind" .getBitCount kind), lowerBound, upperBound, downMask, upMask)
+        (IntegerStamp'create-5 (JavaKind'getBitCount-1 kind), lowerBound, upperBound, downMask, upMask)
     )
 
     ;;;
@@ -68841,23 +69030,23 @@ ZeroExtendNode'new-4
         (let [
             #_"JavaKind" kind (#_"JavaConstant" .getJavaKind value)
         ]
-            (condp =? kind
-               [JavaKind/Boolean JavaKind/Byte JavaKind/Char JavaKind/Short JavaKind/Int JavaKind/Long]
+            (case kind
+               (:JavaKind'Boolean :JavaKind'Byte :JavaKind'Char :JavaKind'Short :JavaKind'Int :JavaKind'Long)
                     (let [
-                        #_"long" mask (& (#_"JavaConstant" .asLong value) (NumUtil'mask-1 (#_"JavaKind" .getBitCount kind)))
+                        #_"long" mask (& (#_"JavaConstant" .asLong value) (NumUtil'mask-1 (JavaKind'getBitCount-1 kind)))
                     ]
-                        (StampFactory'forInteger-5 (#_"JavaKind" .getStackKind kind), (#_"JavaConstant" .asLong value), (#_"JavaConstant" .asLong value), mask, mask)
+                        (StampFactory'forInteger-5 (JavaKind'getStackKind-1 kind), (#_"JavaConstant" .asLong value), (#_"JavaConstant" .asLong value), mask, mask)
                     )
-                JavaKind/Illegal
-                    (StampFactory'forKind-1 JavaKind/Illegal)
-                JavaKind/Object
+                :JavaKind'Illegal
+                    (StampFactory'forKind-1 :JavaKind'Illegal)
+                :JavaKind'Object
                     (if (#_"JavaConstant" .isNull value) StampFactory'objectAlwaysNullStamp StampFactory'objectNonNullStamp)
             )
         )
     )
 
     (defn #_"Stamp" StampFactory'forConstant-1 [#_"JavaConstant" value]
-        (when (= (#_"JavaConstant" .getJavaKind value) JavaKind/Object) => (StampFactory'forPrimitiveConstant-1 value)
+        (when (= (#_"JavaConstant" .getJavaKind value) :JavaKind'Object) => (StampFactory'forPrimitiveConstant-1 value)
             (let [
                 #_"ResolvedJavaType" type (when-not (#_"JavaConstant" .isNull value) (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, value))
             ]
@@ -68882,7 +69071,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"Stamp" StampFactory'forDeclaredType-2 [#_"JavaType" type, #_"boolean" never-nil?]
-        (if (and (= (#_"JavaType" .getJavaKind type) JavaKind/Object) (instance? ResolvedJavaType type))
+        (if (and (= (#_"JavaType" .getJavaKind type) :JavaKind'Object) (instance? ResolvedJavaType type))
             (StampFactory'object-2 (TypeReference'create-1 type), never-nil?)
             (StampFactory'forKind-1 (#_"JavaType" .getJavaKind type))
         )
@@ -68892,27 +69081,27 @@ ZeroExtendNode'new-4
     (def #_"Stamp" StampFactory'objectNonNullStamp    (ObjectStamp'new-4 nil, false, true, false))
     (def #_"Stamp" StampFactory'objectAlwaysNullStamp (ObjectStamp'new-4 nil, false, false, true))
 
-    (def #_"Stamp" StampFactory'nonNegativeInt (StampFactory'forInteger-5 JavaKind/Int, 0, Integer/MAX_VALUE, 0, Integer/MAX_VALUE))
-    (def #_"Stamp" StampFactory'booleanTrue    (StampFactory'forInteger-5 JavaKind/Boolean, -1, -1, 1, 1))
-    (def #_"Stamp" StampFactory'booleanFalse   (StampFactory'forInteger-5 JavaKind/Boolean, 0, 0, 0, 0))
+    (def #_"Stamp" StampFactory'nonNegativeInt (StampFactory'forInteger-5 :JavaKind'Int, 0, Integer/MAX_VALUE, 0, Integer/MAX_VALUE))
+    (def #_"Stamp" StampFactory'booleanTrue    (StampFactory'forInteger-5 :JavaKind'Boolean, -1, -1, 1, 1))
+    (def #_"Stamp" StampFactory'booleanFalse   (StampFactory'forInteger-5 :JavaKind'Boolean, 0, 0, 0, 0))
 
     (def #_"Stamp" StampFactory'rawPointer (RawPointerStamp'new-0))
 
     ;;;
      ; Return a stamp for a Java kind, as it would be represented on the bytecode stack.
      ;;
-    (def #_"{JavaKind Stamp}" StampFactory'forKind-1
+    (def #_"ordered {JavaKind Stamp}" StampFactory'forKind-1
         (ordered-map
-            JavaKind/Boolean (StampFactory'forInteger-1k JavaKind/Boolean)
-            JavaKind/Byte    (StampFactory'forInteger-1k JavaKind/Byte)
-            JavaKind/Short   (StampFactory'forInteger-1k JavaKind/Short)
-            JavaKind/Char    (StampFactory'forInteger-1k JavaKind/Char)
-            JavaKind/Int     (StampFactory'forInteger-1k JavaKind/Int)
-            JavaKind/Long    (§ oops! StampFactory'forInteger-1k JavaKind/Long)
+            :JavaKind'Boolean (StampFactory'forInteger-1k :JavaKind'Boolean)
+            :JavaKind'Byte    (StampFactory'forInteger-1k :JavaKind'Byte)
+            :JavaKind'Short   (StampFactory'forInteger-1k :JavaKind'Short)
+            :JavaKind'Char    (StampFactory'forInteger-1k :JavaKind'Char)
+            :JavaKind'Int     (StampFactory'forInteger-1k :JavaKind'Int)
+            :JavaKind'Long    (§ oops! StampFactory'forInteger-1k :JavaKind'Long)
 
-            JavaKind/Object  StampFactory'objectStamp
-            JavaKind/Void    VoidStamp'instance
-            JavaKind/Illegal IllegalStamp'instance
+            :JavaKind'Object  StampFactory'objectStamp
+            :JavaKind'Void    VoidStamp'instance
+            :JavaKind'Illegal IllegalStamp'instance
         )
     )
 )
@@ -69243,7 +69432,6 @@ public abstract class Site
 
 import jdk.vm.ci.meta.Constant
 import jdk.vm.ci.meta.JavaConstant
-import jdk.vm.ci.meta.JavaKind
 
 ;;;
  ; The compressed representation of the {@link JavaConstant#NULL_POINTER null constant}.
@@ -69258,7 +69446,7 @@ public final class HotSpotCompressedNullConstant implements JavaConstant, HotSpo
 
     public JavaKind getJavaKind()
     (§
-        return JavaKind.Object
+        return :JavaKind'Object
     )
 
     @Override
@@ -69335,7 +69523,6 @@ import jdk.vm.ci.common.JVMCIError
 import jdk.vm.ci.meta.Constant
 import jdk.vm.ci.meta.ConstantReflectionProvider
 import jdk.vm.ci.meta.JavaConstant
-import jdk.vm.ci.meta.JavaKind
 import jdk.vm.ci.meta.MemoryAccessProvider
 import jdk.vm.ci.meta.ResolvedJavaField
 import jdk.vm.ci.meta.ResolvedJavaType
@@ -69380,7 +69567,7 @@ public class HotSpotConstantReflectionProvider implements ConstantReflectionProv
     @Override
     public Integer readArrayLength(JavaConstant array)
     (§
-        if (array == null || array.getJavaKind() != JavaKind.Object || array.isNull())
+        if (array == null || array.getJavaKind() != :JavaKind'Object || array.isNull())
         (§
             return null
         )
@@ -69396,7 +69583,7 @@ public class HotSpotConstantReflectionProvider implements ConstantReflectionProv
     @Override
     public JavaConstant readArrayElement(JavaConstant array, int index)
     (§
-        if (array == null || array.getJavaKind() != JavaKind.Object || array.isNull())
+        if (array == null || array.getJavaKind() != :JavaKind'Object || array.isNull())
         (§
             return null
         )
@@ -69661,7 +69848,6 @@ public interface HotSpotResolvedJavaMethod extends ResolvedJavaMethod
 import jdk.vm.ci.meta.Constant
 import jdk.vm.ci.meta.ConstantPool
 import jdk.vm.ci.meta.JavaConstant
-import jdk.vm.ci.meta.JavaKind
 import jdk.vm.ci.meta.JavaType
 import jdk.vm.ci.meta.ResolvedJavaMethod
 import jdk.vm.ci.meta.ResolvedJavaType
@@ -69700,7 +69886,7 @@ public interface HotSpotResolvedObjectType extends ResolvedJavaType
 
     default JavaKind getJavaKind()
     (§
-        return JavaKind.Object
+        return :JavaKind'Object
     )
 
     ConstantPool getConstantPool()
@@ -70372,14 +70558,14 @@ public interface JavaConstant extends Constant, JavaValue
      ; not enough to justify the impact on startup time.
      ;;
     JavaConstant NULL_POINTER = new NullConstant()
-    PrimitiveConstant INT_MINUS_1 = new PrimitiveConstant(JavaKind.Int, -1)
-    PrimitiveConstant INT_0 = new PrimitiveConstant(JavaKind.Int, 0)
-    PrimitiveConstant INT_1 = new PrimitiveConstant(JavaKind.Int, 1)
-    PrimitiveConstant INT_2 = new PrimitiveConstant(JavaKind.Int, 2)
-    PrimitiveConstant LONG_0 = new PrimitiveConstant(JavaKind.Long, 0 #_"L")
-    PrimitiveConstant LONG_1 = new PrimitiveConstant(JavaKind.Long, 1 #_"L")
-    PrimitiveConstant TRUE = new PrimitiveConstant(JavaKind.Boolean, 1 #_"L")
-    PrimitiveConstant FALSE = new PrimitiveConstant(JavaKind.Boolean, 0 #_"L")
+    PrimitiveConstant INT_MINUS_1 = new PrimitiveConstant(:JavaKind'Int, -1)
+    PrimitiveConstant INT_0 = new PrimitiveConstant(:JavaKind'Int, 0)
+    PrimitiveConstant INT_1 = new PrimitiveConstant(:JavaKind'Int, 1)
+    PrimitiveConstant INT_2 = new PrimitiveConstant(:JavaKind'Int, 2)
+    PrimitiveConstant LONG_0 = new PrimitiveConstant(:JavaKind'Long, 0 #_"L")
+    PrimitiveConstant LONG_1 = new PrimitiveConstant(:JavaKind'Long, 1 #_"L")
+    PrimitiveConstant TRUE = new PrimitiveConstant(:JavaKind'Boolean, 1 #_"L")
+    PrimitiveConstant FALSE = new PrimitiveConstant(:JavaKind'Boolean, 0 #_"L")
 
     ;;;
      ; Returns the Java kind of this constant.
@@ -70464,7 +70650,7 @@ public interface JavaConstant extends Constant, JavaValue
         )
         else
         (§
-            return new PrimitiveConstant(JavaKind.Long, i)
+            return new PrimitiveConstant(:JavaKind'Long, i)
         )
     )
 
@@ -70487,7 +70673,7 @@ public interface JavaConstant extends Constant, JavaValue
             case 2
                 return INT_2
             default
-                return new PrimitiveConstant(JavaKind.Int, i)
+                return new PrimitiveConstant(:JavaKind'Int, i)
         )
     )
 
@@ -70499,7 +70685,7 @@ public interface JavaConstant extends Constant, JavaValue
      ;;
     static PrimitiveConstant forByte(byte i)
     (§
-        return new PrimitiveConstant(JavaKind.Byte, i)
+        return new PrimitiveConstant(:JavaKind'Byte, i)
     )
 
     ;;;
@@ -70521,7 +70707,7 @@ public interface JavaConstant extends Constant, JavaValue
      ;;
     static PrimitiveConstant forChar(char i)
     (§
-        return new PrimitiveConstant(JavaKind.Char, i)
+        return new PrimitiveConstant(:JavaKind'Char, i)
     )
 
     ;;;
@@ -70532,7 +70718,7 @@ public interface JavaConstant extends Constant, JavaValue
      ;;
     static PrimitiveConstant forShort(short i)
     (§
-        return new PrimitiveConstant(JavaKind.Short, i)
+        return new PrimitiveConstant(:JavaKind'Short, i)
     )
 
     ;;;
@@ -70583,7 +70769,7 @@ public interface JavaConstant extends Constant, JavaValue
 
     static PrimitiveConstant forIllegal()
     (§
-        return new PrimitiveConstant(JavaKind.Illegal, 0)
+        return new PrimitiveConstant(:JavaKind'Illegal, 0)
     )
 
     ;;;
@@ -70645,270 +70831,6 @@ public interface JavaField
      ; Returns the {@link JavaType} object representing the class or interface that declares this field.
      ;;
     JavaType getDeclaringClass()
-)
-)
-
-(§ package jdk.vm.ci.meta
-
-;;;
- ; Denotes the basic kinds of types in CRI, including the all the Java primitive types, for example,
- ; {@link JavaKind#Int} for {@code int} and {@link JavaKind#Object} for all object types. A kind has
- ; a single character short name, a Java name, and a set of flags further describing its behavior.
- ;;
-public enum JavaKind
-(§
-    ;;; The primitive boolean kind, represented as an int on the stack.
-    Boolean("boolean", 1, true, java.lang.Boolean.TYPE),
-
-    ;;; The primitive byte kind, represented as an int on the stack.
-    Byte("byte", 1, true, java.lang.Byte.TYPE),
-
-    ;;; The primitive short kind, represented as an int on the stack.
-    Short("short", 1, true, java.lang.Short.TYPE),
-
-    ;;; The primitive char kind, represented as an int on the stack.
-    Char("char", 1, true, java.lang.Character.TYPE),
-
-    ;;; The primitive int kind, represented as an int on the stack.
-    Int("int", 1, true, java.lang.Integer.TYPE),
-
-    ;;; The primitive long kind.
-    Long("long", 2, false, java.lang.Long.TYPE),
-
-    ;;; The Object kind, also used for arrays.
-    Object("Object", 1, false, null),
-
-    ;;; The void kind.
-    Void("void", 0, false, java.lang.Void.TYPE),
-
-    ;;; The non-type.
-    Illegal("illegal", 0, false, null)
-
-    private final String javaName
-    private final boolean isStackInt
-    private final Class<?> primitiveJavaClass
-    private final int slotCount
-
-    JavaKind(String javaName, int slotCount, boolean isStackInt, Class<?> primitiveJavaClass)
-    (§
-        this.javaName = javaName
-        this.slotCount = slotCount
-        this.isStackInt = isStackInt
-        this.primitiveJavaClass = primitiveJavaClass
-    )
-
-    ;;;
-     ; Returns the number of stack slots occupied by this kind according to the Java bytecodes
-     ; specification.
-     ;;
-    public int getSlotCount()
-    (§
-        return this.slotCount
-    )
-
-    ;;;
-     ; Returns whether this kind occupied two stack slots.
-     ;;
-    public boolean needsTwoSlots()
-    (§
-        return this.slotCount == 2
-    )
-
-    ;;;
-     ; Returns the name of this kind which will also be it Java programming language name if it is
-     ; {@linkplain #isPrimitive() primitive} or {@code void}.
-     ;;
-    public String getJavaName()
-    (§
-        return javaName
-    )
-
-    ;;;
-     ; Checks whether this type is a Java primitive type.
-     ;
-     ; @return {@code true} if this is {@link #Boolean}, {@link #Byte}, {@link #Char},
-     ;         {@link #Short}, {@link #Int}, {@link #Long}, or {@link #Void}.
-     ;;
-    public boolean isPrimitive()
-    (§
-        return primitiveJavaClass != null
-    )
-
-    ;;;
-     ; Returns the kind that represents this kind when on the Java operand stack.
-     ;
-     ; @return the kind used on the operand stack
-     ;;
-    public JavaKind getStackKind()
-    (§
-        if (isStackInt)
-        (§
-            return Int
-        )
-        return this
-    )
-
-    ;;;
-     ; Checks whether this type is a Java primitive type representing an integer number.
-     ;
-     ; @return {@code true} if the stack kind is {@link #Int} or {@link #Long}.
-     ;;
-    public boolean isNumericInteger()
-    (§
-        return isStackInt || this == JavaKind.Long
-    )
-
-    ;;;
-     ; Checks whether this type is a Java primitive type representing an unsigned number.
-     ;
-     ; @return {@code true} if the kind is {@link #Boolean} or {@link #Char}.
-     ;;
-    public boolean isUnsigned()
-    (§
-        return this == JavaKind.Boolean || this == JavaKind.Char
-    )
-
-    ;;;
-     ; Checks whether this represent an Object of some sort.
-     ;
-     ; @return {@code true} if this is {@link #Object}.
-     ;;
-    public boolean isObject()
-    (§
-        return this == JavaKind.Object
-    )
-
-    ;;;
-     ; Returns the kind from the character describing a primitive or void.
-     ;
-     ; @param ch the character for a void or primitive kind as returned by {@link #getTypeChar()}
-     ; @return the kind
-     ;;
-    public static JavaKind fromPrimitiveOrVoidTypeChar(char ch)
-    (§
-        switch (ch)
-        (§
-            case (§ char "Z")
-                return Boolean
-            case (§ char "C")
-                return Char
-            case (§ char "B")
-                return Byte
-            case (§ char "S")
-                return Short
-            case (§ char "I")
-                return Int
-            case (§ char "J")
-                return Long
-            case (§ char "V")
-                return Void
-        )
-        throw new IllegalArgumentException("unknown primitive or void type character: " + ch)
-    )
-
-    ;;;
-     ; Returns the Java class representing this kind.
-     ;
-     ; @return the Java class
-     ;;
-    public Class<?> toJavaClass()
-    (§
-        return primitiveJavaClass
-    )
-
-    ;;;
-     ; Gets the minimum value that can be represented as a value of this kind.
-     ;
-     ; @return the minimum value represented as a {@code long}
-     ;;
-    public long getMinValue()
-    (§
-        switch (this)
-        (§
-            case Boolean
-                return 0
-            case Byte
-                return java.lang.Byte.MIN_VALUE
-            case Char
-                return java.lang.Character.MIN_VALUE
-            case Short
-                return java.lang.Short.MIN_VALUE
-            case Int
-                return java.lang.Integer.MIN_VALUE
-            case Long
-                return java.lang.Long.MIN_VALUE
-            default
-                throw new IllegalArgumentException("illegal call to minValue on " + this)
-        )
-    )
-
-    ;;;
-     ; Gets the maximum value that can be represented as a value of this kind.
-     ;
-     ; @return the maximum value represented as a {@code long}
-     ;;
-    public long getMaxValue()
-    (§
-        switch (this)
-        (§
-            case Boolean
-                return 1
-            case Byte
-                return java.lang.Byte.MAX_VALUE
-            case Char
-                return java.lang.Character.MAX_VALUE
-            case Short
-                return java.lang.Short.MAX_VALUE
-            case Int
-                return java.lang.Integer.MAX_VALUE
-            case Long
-                return java.lang.Long.MAX_VALUE
-            default
-                throw new IllegalArgumentException("illegal call to maxValue on " + this)
-        )
-    )
-
-    ;;;
-     ; Number of bytes that are necessary to represent a value of this kind.
-     ;
-     ; @return the number of bytes
-     ;;
-    public int getByteCount()
-    (§
-        if (this == Boolean)
-        (§
-            return 1
-        )
-        else
-        (§
-            return getBitCount() >> 3
-        )
-    )
-
-    ;;;
-     ; Number of bits that are necessary to represent a value of this kind.
-     ;
-     ; @return the number of bits
-     ;;
-    public int getBitCount()
-    (§
-        switch (this)
-        (§
-            case Boolean
-                return 1
-            case Byte
-                return 8
-            case Char
-            case Short
-                return 16
-            case Int
-                return 32
-            case Long
-                return 64
-            default
-                throw new IllegalArgumentException("illegal call to bits on " + this)
-        )
-    )
 )
 )
 
@@ -71049,7 +70971,7 @@ public interface JavaType
     default String toJavaName(boolean qualified)
     (§
         JavaKind kind = getJavaKind()
-        if (kind == JavaKind.Object)
+        if (kind == :JavaKind'Object)
         (§
             return internalNameToJava(getName(), qualified, false)
         )
@@ -71212,7 +71134,7 @@ public class RawConstant extends PrimitiveConstant
 (§
     public RawConstant(long rawValue)
     (§
-        super(JavaKind.Int, rawValue)
+        super(:JavaKind'Int, rawValue)
     )
 )
 )
@@ -71523,7 +71445,7 @@ public interface ResolvedJavaType extends JavaType, ModifiersProvider
     default boolean isJavaLangObject()
     (§
         ;; Removed assertion due to https://bugs.eclipse.org/bugs/show_bug.cgi?id=434442
-        return getSuperclass() == null && !isInterface() && getJavaKind() == JavaKind.Object
+        return getSuperclass() == null && !isInterface() && getJavaKind() == :JavaKind'Object
     )
 
     ;;;
@@ -71770,7 +71692,7 @@ public interface Signature
         if (receiver)
         (§
             result = new JavaKind[args + 1]
-            result[0] = JavaKind.Object
+            result[0] = :JavaKind'Object
             i = 1
         )
         else
