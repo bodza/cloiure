@@ -1,5 +1,5 @@
 (ns graalfn.core
-    (:refer-clojure :only [* *ns* + - -> ->> / < <= = > >= and apply assoc assoc-in bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean byte byte-array case char comp compare concat cond condp conj cons contains? count dec declare defmacro defn defprotocol defrecord delay disj dissoc doseq dotimes double empty? even? extend-protocol extend-type false? filter first fn for get hash-map hash-set if-not import inc instance? int into into-array iterate iterator-seq key keys lazy-cat let letfn list list* locking long loop make-array map mapcat mapv max merge min neg? next nil? not not= ns-imports ns-unmap nth nthnext object-array odd? or peek pop pos? quot range reduce reify rem remove repeat repeatedly rest reverse run! satisfies? second select-keys seq sequential? set short some some? sort sort-by sorted-map sorted-set str #_subvec symbol symbol? take take-while true? unsigned-bit-shift-right update update-in val vals vary-meta #_vec #_vector vector? volatile! vreset! vswap! when-some while zero?])
+    (:refer-clojure :only [* *ns* + - -> ->> / < <= = > >= and apply assoc assoc-in bit-and bit-not bit-or bit-shift-left bit-shift-right bit-xor boolean byte byte-array case char comp compare concat cond condp conj cons contains? count dec declare dedupe defmacro defn defprotocol defrecord delay disj dissoc doseq dotimes double empty? even? extend-protocol extend-type false? filter first fn for get hash-map hash-set if-not import inc instance? int into into-array iterate iterator-seq key keys lazy-cat let letfn list list* locking long loop make-array map mapcat mapv max merge min neg? next nil? not not= ns-imports ns-unmap nth nthnext object-array odd? or peek pop pos? quot range reduce reify rem remove repeat repeatedly rest reverse run! satisfies? second select-keys seq sequential? set short some some? sort sort-by sorted-map sorted-set str #_subvec symbol symbol? take take-while true? unsigned-bit-shift-right update update-in val vals vary-meta #_vec #_vector vector? volatile! vreset! vswap! when-some while zero?])
     (:require [clojure.core.rrb-vector :refer [catvec subvec vec vector #_vector-of]] [flatland.ordered.map :refer [ordered-map]] [flatland.ordered.set :refer [ordered-set]])
 )
 
@@ -123,20 +123,16 @@
     [java.lang.ref #_Reference]
     [java.lang.reflect AnnotatedElement Constructor Field Method Modifier]
     [java.nio ByteBuffer ByteOrder]
-    [java.util
-        Arrays BitSet Comparator Iterator List ListIterator NoSuchElementException
-    ]
+    [java.util Arrays BitSet Comparator Iterator List ListIterator NoSuchElementException]
     [java.util.stream Stream Stream$Builder]
 
-    [jdk.vm.ci.code
-        CallingConvention CodeCacheProvider InstalledCode RegisterArray RegisterAttributes RegisterConfig
-    ]
+    [jdk.vm.ci.code CodeCacheProvider InstalledCode]
     [jdk.vm.ci.code.site ConstantReference DataPatch DataSectionReference Mark #_Reference Site]
     [jdk.vm.ci.hotspot
-        HotSpotCallingConventionType HotSpotCompiledCode HotSpotCompressedNullConstant HotSpotConstant
-        HotSpotConstantReflectionProvider HotSpotJVMCIRuntime HotSpotMemoryAccessProvider HotSpotMetaspaceConstant
-        HotSpotObjectConstant HotSpotResolvedJavaField HotSpotResolvedJavaMethod HotSpotResolvedObjectType
-        HotSpotVMConfigAccess
+        HotSpotCompiledCode HotSpotCompressedNullConstant HotSpotConstant HotSpotConstantReflectionProvider
+        HotSpotJVMCIRuntime HotSpotMemoryAccessProvider HotSpotMetaspaceConstant HotSpotObjectConstant
+        HotSpotResolvedJavaField HotSpotResolvedJavaMethod HotSpotResolvedObjectType HotSpotVMConfigAccess
+       
     ]
     [jdk.vm.ci.meta
         Constant ConstantPool ConstantReflectionProvider DeoptimizationAction DeoptimizationReason InvokeTarget
@@ -252,6 +248,7 @@ AMD64'rsi
 AMD64'rsp
 AMD64'stackAlignment
 AMD64'unalignedMemoryAccess
+AMD64'valueRegisters-0
 AMD64'wordSize
 AMD64Address'new-1
 AMD64Address'new-2
@@ -923,6 +920,8 @@ CLOptimization'apply-2
 CRuntimeCallEpilogueOp'new-4
 CRuntimeCallPrologueOp'new-2
 CacheEntry'new-2
+CallingConvention'new-3*
+CallingConventionType'SET
 CallOp'new-3
 CallTargetNode''setInvokeKind-2
 CallTargetNode''setTargetMethod-2
@@ -1671,7 +1670,6 @@ HotSpot'pollNearMark
 HotSpot'pollReturnFarMark
 HotSpot'pollReturnNearMark
 HotSpot'prototypeMarkWordOffset
-HotSpot'registerConfig
 HotSpot'replacements
 HotSpot'safepointPollingAddress
 HotSpot'secondarySuperCacheOffset
@@ -2018,7 +2016,7 @@ LIRGenerator''emitOverflowCheckBranch-4
 LIRGenerator''emitPrefetchAllocate-2
 LIRGenerator''emitRandomSeed-1
 LIRGenerator''emitRem-3
-LIRGenerator''emitReturn-3
+LIRGenerator''emitReturn-2
 LIRGenerator''emitRol-3
 LIRGenerator''emitRor-3
 LIRGenerator''emitSaveRbp-1
@@ -2101,7 +2099,6 @@ Label''bind-2
 Label''isBound-1
 Label''patchInstructions-2
 Label'new-0
-LabelOp''addIncomingValues-2
 LabelOp''isPhiIn-1
 LabelOp''setPhiValues-2
 LabelOp'new-2
@@ -2114,7 +2111,6 @@ LeftShiftNode'new-2
 LessThanOp'new-0
 LinearScan'allocate-3
 LinearScan''assignSpillSlot-2
-LinearScan''attributes-2
 LinearScan''blockAt-2
 LinearScan''blockCount-1
 LinearScan''blockForId-2
@@ -2132,7 +2128,6 @@ LinearScan''instructionForId-2
 LinearScan''intervalFor-2i
 LinearScan''intervalFor-2v
 LinearScan''isBlockBegin-2
-LinearScan''isCallerSave-2
 LinearScan''isMaterialized-4
 LinearScan''isProcessed-2
 LinearScan''maxOpId-1
@@ -2829,7 +2824,6 @@ Register''asValue-2
 Register''isValid-1
 Register'new-3
 Register'None
-RegisterAllocationConfig'allocatableRegisters
 RegisterAllocationConfig'getAllocatableRegisters-1
 RegisterBackupPair'new-2
 RegisterBinding'SET
@@ -2839,10 +2833,15 @@ RegisterBindingLists''get-2
 RegisterBindingLists''remove-3
 RegisterBindingLists''set-3
 RegisterBindingLists'new-3
+RegisterConfig'allocatableRegisters
+RegisterConfig'areAllAllocatableRegistersCallerSaved
+RegisterConfig'calleeSaveRegisters
+RegisterConfig'callerSaveRegisters
+RegisterConfig'filterAllocatableRegisters-2
+RegisterConfig'frameRegister
+RegisterConfig'getCallingConvention-3
+RegisterConfig'returnRegister
 RegisterEffect'SET
-RegisterMap''forEach-2
-RegisterMap''put-3
-RegisterMap'new-0
 RegisterPriority'SET
 RegisterPriority'greaterEqual-2
 RegisterPriority'lessThan-2
@@ -2880,7 +2879,6 @@ SSAUtil'removePhiOut-2
 SafepointNode'new-0
 SafepointOp'emitCode-4
 SafepointOp'new-2
-SaveCalleeSaveRegisters'new-0
 SaveRbp''finalize-2
 SaveRbp'new-2
 Scale'Times1
@@ -3808,6 +3806,7 @@ ZeroExtendNode'new-4
     (#_"LocationIdentity" CacheEntry'''getIdentity-1 [#_"CacheEntry" this])
 )
 
+(defp CallingConvention)
 (defp CallOp)
 (defp CallTargetNode)
 (defp CallsiteHolder)
@@ -5137,7 +5136,6 @@ ZeroExtendNode'new-4
 (defp Register)
 (defp RegisterBackupPair)
 (defp RegisterBindingLists)
-(defp RegisterMap)
 (defp RegisterValue)
 (defp Rem)
 (defp RemNode)
@@ -5151,7 +5149,6 @@ ZeroExtendNode'new-4
 (defp RightShiftNode)
 (defp SafepointNode)
 (defp SafepointOp)
-(defp SaveCalleeSaveRegisters)
 (defp SaveRbp)
 (defp Scale)
 (defp Schedule)
@@ -5931,6 +5928,163 @@ ZeroExtendNode'new-4
     )
 )
 
+(value-ns CallingConventionType
+    #_unused
+    (def #_"ordered {CallingConventionType}" CallingConventionType'SET
+        (ordered-set
+            ;;;
+             ; A request for the outgoing argument locations at a call site to Java code.
+             ;;
+            :CallingConventionType'JavaCall
+            ;;;
+             ; A request for the incoming argument locations.
+             ;;
+            :CallingConventionType'JavaCallee
+            ;;;
+             ; A request for the outgoing argument locations at a call site to external native code that
+             ; complies with the platform ABI.
+             ;;
+            :CallingConventionType'NativeCall
+        )
+    )
+)
+
+;;;
+ ; A calling convention describes the locations in which the arguments for a call are placed and the
+ ; location in which the return value is placed if the call is not void.
+ ;;
+(class-ns CallingConvention []
+    ;;;
+     ; Creates a description of the registers and stack locations used by a call.
+     ;;
+    (defn #_"CallingConvention" CallingConvention'new-3* [#_"int" stackSize, #_"AllocatableValue" returnLocation & #_"AllocatableValue..." argumentLocations]
+        (merge (CallingConvention'class.)
+            (hash-map
+                ;;;
+                 ; The amount of stack space (in bytes) required for the stack-based arguments of the call.
+                 ;;
+                #_"int" :stackSize stackSize
+                ;;;
+                 ; The location for the return value or {@link Value#ILLEGAL} if a void call.
+                 ;;
+                #_"AllocatableValue" :returnLocation returnLocation
+                ;;;
+                 ; The ordered locations in which the arguments are placed.
+                 ;;
+                #_"[AllocatableValue]" :argumentLocations (vec argumentLocations)
+            )
+        )
+    )
+)
+
+;;;
+ ; A register configuration binds roles and attributes to physical registers.
+ ;;
+(value-ns RegisterConfig
+    ;;;
+     ; The register used as the frame pointer. Spill slots and outgoing stack-based arguments
+     ; are addressed relative to this register.
+     ;;
+    (def #_"Register" RegisterConfig'frameRegister AMD64'rsp)
+
+    ;;;
+     ; The register to be used for returning a value.
+     ;;
+    (def #_"Register" RegisterConfig'returnRegister AMD64'rax)
+
+    ;;;
+     ; The set of registers that might be used by the register allocator.
+     ;
+     ; To get the set of registers the register allocator is allowed to use see
+     ; {@link RegisterAllocationConfig#getAllocatableRegisters()}.
+     ;;
+    (def #_"{Register}" RegisterConfig'allocatableRegisters
+        ;; omit reserved registers ;; omit heap base register
+        (set (remove #(or (contains? #{ AMD64'rsp, AMD64'r15 } %) (and HotSpot'useCompressedOops (= % AMD64'r12))) (§ soon AMD64'valueRegisters-0)))
+    )
+
+    ;;;
+     ; Filters a set of registers and returns only those that can be used by the register allocator
+     ; for a value of a particular size.
+     ;;
+    (defn #_"Register*" RegisterConfig'filterAllocatableRegisters-2 [#_"Register*" registers, #_"WordSize" size]
+        registers
+    )
+
+    (def- #_"[Register]" RegisterConfig'javaParameters   [ AMD64'rsi, AMD64'rdx, AMD64'rcx, AMD64'r8, AMD64'r9, AMD64'rdi ])
+    (def- #_"[Register]" RegisterConfig'nativeParameters [ AMD64'rdi, AMD64'rsi, AMD64'rdx, AMD64'rcx, AMD64'r8, AMD64'r9 ])
+
+    ;;;
+     ; The set of registers whose values must be preserved by a method across any call it makes.
+     ;
+     ; The caller saved registers always include all parameter registers.
+     ;;
+    (def #_"{Register}" RegisterConfig'callerSaveRegisters
+        (set (concat RegisterConfig'allocatableRegisters RegisterConfig'javaParameters RegisterConfig'nativeParameters))
+    )
+
+    ;;;
+     ; The set of registers whose values must be preserved by the callee.
+     ;;
+    #_unused
+    (def #_"{Register}" RegisterConfig'calleeSaveRegisters nil)
+
+    ;;;
+     ; Determines if all {@link #getAllocatableRegisters() allocatable} registers are
+     ; {@link #getCallerSaveRegisters() caller saved}.
+     ;;
+    (def #_"boolean" RegisterConfig'areAllAllocatableRegistersCallerSaved true)
+
+    ;;;
+     ; Gets the calling convention describing how arguments are passed.
+     ;
+     ; @param type the type of calling convention being requested
+     ; @param returnType the return type (can be null for methods returning {@code void})
+     ; @param parameterTypes the types of the arguments of the call
+     ;;
+    (defn #_"CallingConvention" RegisterConfig'getCallingConvention-3 [#_"CallingConventionType" type, #_"JavaType" returnType, #_"JavaType*" parameterTypes]
+        (let [
+            ;; On x64, parameter locations are the same whether viewed from the caller or callee perspective.
+            #_"[Register]" parameterRegisters (if (= type :CallingConventionType'NativeCall) RegisterConfig'nativeParameters RegisterConfig'javaParameters)
+            [#_"int" stackSize #_"[AllocatableValue]" locations]
+                (loop-when [stackSize 0 locations (vec (repeat (count parameterTypes) nil)) #_"int" i 0] (< i (count parameterTypes)) => [stackSize locations]
+                    (let [
+                        #_"JavaKind" kind (#_"JavaKind" .getStackKind (#_"JavaType" .getJavaKind (nth parameterTypes i)))
+                        locations
+                            (condp =? kind
+                                [JavaKind/Boolean JavaKind/Byte JavaKind/Short JavaKind/Char JavaKind/Int JavaKind/Long JavaKind/Object]
+                                    (when (< i (count parameterRegisters)) => locations
+                                        (assoc' locations i (Register''asValue-2 (nth parameterRegisters i), (ValueKind'fromJavaKind-1 kind)))
+                                    )
+                            )
+                        [stackSize locations]
+                            (when (nil? (nth locations i)) => [stackSize locations]
+                                (let [
+                                    #_"ValueKind" valueKind (ValueKind'fromJavaKind-1 kind)
+                                    locations (assoc' locations i (StackSlot'new-3 valueKind, stackSize, (= type :CallingConventionType'JavaCallee)))
+                                    stackSize (+ stackSize (max AMD64'wordSize (WordSize'inBytes-1 (:wordSize valueKind))))
+                                ]
+                                    [stackSize locations]
+                                )
+                            )
+                    ]
+                        (recur stackSize locations (inc i))
+                    )
+                )
+            #_"AllocatableValue" returnLocation
+                (let [
+                    #_"JavaKind" kind (if (some? returnType) (#_"JavaType" .getJavaKind returnType) JavaKind/Void)
+                ]
+                    (when-not (= kind JavaKind/Void) => Value'ILLEGAL
+                        (Register''asValue-2 RegisterConfig'returnRegister, (ValueKind'fromJavaKind-1 (#_"JavaKind" .getStackKind kind)))
+                    )
+                )
+        ]
+            (apply CallingConvention'new-3* stackSize, returnLocation, locations)
+        )
+    )
+)
+
 ;;;
  ; Constants and intrinsic definition for memory barriers.
  ;
@@ -6072,6 +6226,8 @@ ZeroExtendNode'new-4
         ]
     )
 
+    (defn #_"Register*" AMD64'valueRegisters-0 [] (remove #(= % AMD64'rip) AMD64'registers))
+
     ;;;
      ; The architecture specific size of a native word.
      ;;
@@ -6155,7 +6311,6 @@ ZeroExtendNode'new-4
     (def #_"JVMCIBackend"        JVMCI'backend (#_"HotSpotJVMCIRuntime" .getHostJVMCIBackend JVMCI'runtime))
 
     (def #_"CodeCacheProvider"          HotSpot'codeCache          (#_"JVMCIBackend"        .getCodeCache          JVMCI'backend))
-    (def #_"RegisterConfig"             HotSpot'registerConfig     (#_"CodeCacheProvider"   .getRegisterConfig     HotSpot'codeCache))
     (def #_"ConstantReflectionProvider" HotSpot'constantReflection (#_"JVMCIBackend"        .getConstantReflection JVMCI'backend))
     (def #_"MetaAccessProvider"         HotSpot'metaAccess         (#_"JVMCIBackend"        .getMetaAccess         JVMCI'backend))
 
@@ -6321,6 +6476,9 @@ ZeroExtendNode'new-4
     (def #_"int" HotSpot'pollReturnFarMark             (.getConstant HotSpot'config, "CodeInstaller::POLL_RETURN_FAR",                Integer))
     (def #_"int" HotSpot'cardTableAddressMark          (.getConstant HotSpot'config, "CodeInstaller::CARD_TABLE_ADDRESS",             Integer))
     (def #_"int" HotSpot'logOfHeapRegionGrainBytesMark (.getConstant HotSpot'config, "CodeInstaller::LOG_OF_HEAP_REGION_GRAIN_BYTES", Integer))
+
+    (def #_"boolean" HotSpot'useCountLeadingZerosInstruction  (.getFlag HotSpot'config, "UseCountLeadingZerosInstruction", Boolean))
+    (def #_"boolean" HotSpot'useCountTrailingZerosInstruction (.getFlag HotSpot'config, "UseCountTrailingZerosInstruction", Boolean))
 
     (defn- #_"?" peep [#_"Class" class #_"String" field] (let [#_"Field" f (.getDeclaredField class, field)] (.setAccessible f, true) (.get f, class)))
 
@@ -7052,7 +7210,7 @@ ZeroExtendNode'new-4
      ;
      ; Adopted from x86_64.ad.
      ;;
-    (def- #_"Register*" RegisterAllocationConfig'registerAllocationOrder
+    (def- #_"[Register]" RegisterAllocationConfig'registerAllocationOrder
         [
             AMD64'r10, AMD64'r11, AMD64'r8, AMD64'r9, AMD64'r12,
             AMD64'rcx, AMD64'rbx, AMD64'rdi, AMD64'rdx, AMD64'rsi, AMD64'rax, AMD64'rbp,
@@ -7063,15 +7221,11 @@ ZeroExtendNode'new-4
     ;;;
      ; The ordered set of registers that can be used by the register allocator.
      ;;
-    (§ def #_"RegisterArray" RegisterAllocationConfig'allocatableRegisters
-        (let [
-            #_"{int}" numbers (into #{} (map :number (#_"RegisterConfig" .getAllocatableRegisters HotSpot'registerConfig)))
-        ]
-            (RegisterArray. (for [#_"Register" reg RegisterAllocationConfig'registerAllocationOrder :when (contains? numbers (:number reg))] reg))
-        )
+    (def- #_"[Register]" RegisterAllocationConfig'allocatableRegisters
+        (vec (filter RegisterConfig'allocatableRegisters RegisterAllocationConfig'registerAllocationOrder))
     )
 
-    (defn- #_"AllocatableRegisters" RegisterAllocationConfig'createAllocatableRegisters-1 [#_"RegisterArray" registers]
+    (defn- #_"AllocatableRegisters" RegisterAllocationConfig'createAllocatableRegisters-1 [#_"Register*" registers]
         (loop-when [#_"int" min Integer/MAX_VALUE #_"int" max Integer/MIN_VALUE #_"seq" s (seq registers)] (some? s) => (AllocatableRegisters'new-3 registers, min, max)
             (let [
                 #_"int" n (:number (first s))
@@ -7087,7 +7241,7 @@ ZeroExtendNode'new-4
     #_memoize
     (defn #_"AllocatableRegisters" RegisterAllocationConfig'getAllocatableRegisters-1 [#_"WordSize" size]
         (let [
-            #_"RegisterArray" available (#_"RegisterConfig" .filterAllocatableRegisters HotSpot'registerConfig, size, RegisterAllocationConfig'allocatableRegisters)
+            #_"Register*" available (RegisterConfig'filterAllocatableRegisters-2 RegisterAllocationConfig'allocatableRegisters, size)
         ]
             (RegisterAllocationConfig'createAllocatableRegisters-1 available)
         )
@@ -13219,10 +13373,10 @@ ZeroExtendNode'new-4
 )
 
 (class-ns AllocatableRegisters []
-    (defn #_"AllocatableRegisters" AllocatableRegisters'new-3 [#_"RegisterArray" allocatableRegisters, #_"int" minRegisterNumber, #_"int" maxRegisterNumber]
+    (defn #_"AllocatableRegisters" AllocatableRegisters'new-3 [#_"Register*" allocatableRegisters, #_"int" minRegisterNumber, #_"int" maxRegisterNumber]
         (merge (AllocatableRegisters'class.)
             (hash-map
-                #_"[Register]" :allocatableRegisters (vec (#_"RegisterArray" .toArray allocatableRegisters))
+                #_"[Register]" :allocatableRegisters (vec allocatableRegisters)
                 #_"int" :minRegisterNumber minRegisterNumber
                 #_"int" :maxRegisterNumber maxRegisterNumber
             )
@@ -15562,7 +15716,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"AbstractAddress" Assembler''asAddress-2 [#_"Assembler" this, #_"Value" value]
-        (AMD64Address'new-2 (#_"RegisterConfig" .getFrameRegister HotSpot'registerConfig), (FrameMap''offsetForStackSlot-2 (:frameMap this), value))
+        (AMD64Address'new-2 RegisterConfig'frameRegister, (FrameMap''offsetForStackSlot-2 (:frameMap this), value))
     )
 
     ;;;
@@ -30056,13 +30210,13 @@ ZeroExtendNode'new-4
      ;            Deoptimization will not return to a point before a call that cannot be re-executed.
      ; @param killedLocations the memory locations killed by the call
      ;;
-    (defn #_"ForeignCallLinkage" ForeignCallLinkage'create-8* [#_"ForeignCallDescriptor" descriptor, #_"long" address, #_"RegisterEffect" effect, #_"CallingConvention$Type" outgoingCcType, #_"CallingConvention$Type" incomingCcType, #_"Transition" transition, #_"boolean" reexecutable & #_"LocationIdentity..." killedLocations]
+    (defn #_"ForeignCallLinkage" ForeignCallLinkage'create-8* [#_"ForeignCallDescriptor" descriptor, #_"long" address, #_"RegisterEffect" effect, #_"CallingConventionType" outgoingCcType, #_"CallingConventionType" incomingCcType, #_"Transition" transition, #_"boolean" reexecutable & #_"LocationIdentity..." killedLocations]
         (let [
             #_"CallingConvention" outgoingCc (ForeignCallLinkage'createCallingConvention-2 descriptor, outgoingCcType)
             #_"CallingConvention" incomingCc (when (some? incomingCcType) (ForeignCallLinkage'createCallingConvention-2 descriptor, incomingCcType))
             #_"ForeignCallLinkage" linkage (apply ForeignCallLinkage'new-8* descriptor, address, effect, transition, outgoingCc, incomingCc, reexecutable, killedLocations)
         ]
-            (when (= outgoingCcType HotSpotCallingConventionType/NativeCall) => linkage
+            (when (= outgoingCcType :CallingConventionType'NativeCall) => linkage
                 (assoc linkage :temporaries ForeignCalls'nativeABICallerSaveRegisters)
             )
         )
@@ -30081,12 +30235,12 @@ ZeroExtendNode'new-4
     ;;;
      ; Gets a calling convention for a given descriptor and call type.
      ;;
-    (defn #_"CallingConvention" ForeignCallLinkage'createCallingConvention-2 [#_"ForeignCallDescriptor" descriptor, #_"CallingConvention$Type" ccType]
+    (defn #_"CallingConvention" ForeignCallLinkage'createCallingConvention-2 [#_"ForeignCallDescriptor" descriptor, #_"CallingConventionType" type]
         (let [
             #_"JavaType" returnType (ForeignCallLinkage'asJavaType-1 (:resultType descriptor))
-            #_"[JavaType]" parameterTypes (mapv ForeignCallLinkage'asJavaType-1 (:argumentTypes descriptor))
+            #_"JavaType*" parameterTypes (map ForeignCallLinkage'asJavaType-1 (:argumentTypes descriptor))
         ]
-            (#_"RegisterConfig" .getCallingConvention HotSpot'registerConfig, ccType, returnType, (into-array JavaType parameterTypes))
+            (RegisterConfig'getCallingConvention-3 type, returnType, parameterTypes)
         )
     )
 
@@ -30139,11 +30293,7 @@ ZeroExtendNode'new-4
      ; Registers that must be saved across a foreign call into the runtime.
      ;;
     (def #_"[Value]" ForeignCalls'nativeABICallerSaveRegisters
-        (let [
-            #_"Register*" registers (#_"RegisterArray" .asList (#_"RegisterConfig" .getAllocatableRegisters HotSpot'registerConfig))
-        ]
-            (mapv Register''asValue-1 (remove #{ AMD64'rbp, AMD64'rbx, AMD64'r12, AMD64'r13, AMD64'r14, AMD64'r15 } registers))
-        )
+        (mapv Register''asValue-1 (disj RegisterConfig'allocatableRegisters AMD64'rbp, AMD64'rbx, AMD64'r12, AMD64'r13, AMD64'r14, AMD64'r15))
     )
 
     ;;;
@@ -30159,7 +30309,7 @@ ZeroExtendNode'new-4
      ;;
     (defn- #_"this" ForeignCalls''register-7* [#_"ForeignCalls" this, #_"ForeignCallDescriptor" descriptor, #_"long" address, #_"RegisterEffect" effect, #_"Transition" transition, #_"boolean" reexecutable & #_"LocationIdentity..." killedLocations]
         (let [
-            #_"ForeignCallLinkage" linkage (apply ForeignCallLinkage'create-8* descriptor, address, effect, HotSpotCallingConventionType/NativeCall, nil, transition, reexecutable, killedLocations)
+            #_"ForeignCallLinkage" linkage (apply ForeignCallLinkage'create-8* descriptor, address, effect, :CallingConventionType'NativeCall, nil, transition, reexecutable, killedLocations)
         ]
             (update this :foreignCalls assoc (:descriptor linkage) linkage)
         )
@@ -30479,14 +30629,7 @@ ZeroExtendNode'new-4
      ; e.g. no more spill slots or outgoing arguments can be requested.
      ;;
     (defn #_"this" FrameMap''finish-1 [#_"FrameMap" this]
-        (let [
-            this (assoc this :frameSize (FrameMap''currentFrameSize-1 this))
-        ]
-            (when (< (#_"RegisterConfig" .getMaximumFrameSize HotSpot'registerConfig) (:frameSize this))
-                (throw! (str "frame size (" (:frameSize this) ") exceeded maximum allowed frame size (" (#_"RegisterConfig" .getMaximumFrameSize HotSpot'registerConfig) ")"))
-            )
-            this
-        )
+        (assoc this :frameSize (FrameMap''currentFrameSize-1 this))
     )
 
     ;;;
@@ -30500,7 +30643,7 @@ ZeroExtendNode'new-4
      ; Informs the frame map that the compiled code calls a particular method, which may need stack space for outgoing arguments.
      ;;
     (defn #_"this" FrameMap''callsMethod-2 [#_"FrameMap" this, #_"CallingConvention" cc]
-        (FrameMap''reserveOutgoing-2 this, (#_"CallingConvention" .getStackSize cc))
+        (FrameMap''reserveOutgoing-2 this, (:stackSize cc))
     )
 
     ;;;
@@ -34430,7 +34573,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"boolean" LinearScanWalker''noAllocationPossible-2 [#_"LinearScanWalker" this, #_"Interval" interval]
-        (and (#_"RegisterConfig" .areAllAllocatableRegistersCallerSaved HotSpot'registerConfig)
+        (and RegisterConfig'areAllAllocatableRegistersCallerSaved
             ;; fast calculation of intervals that can never get a register because
             ;; the next instruction is a call that blocks all registers
             ;; note: this only works if a call kills all registers
@@ -35361,17 +35504,16 @@ ZeroExtendNode'new-4
     (defn #_"this" LIRBuilder''emitPrologue-2 [#_"LIRBuilder" this, #_"Graph" graph]
         (let [
             #_"CallingConvention" args (:callingConvention (:res (:gen this)))
-            #_"int" n (#_"CallingConvention" .getArgumentCount args)
             [this #_"[Value]" params]
-                (loop-when [this this params [] #_"int" i 0] (< i n) => [this (conj' params (Register''asValue-2 AMD64'rbp, (ValueKind'value-1 :WordSize'64bits)))]
+                (loop-when [this this params [] #_"seq" s (seq (:argumentLocations args))] (some? s) => [this (conj' params (Register''asValue-2 AMD64'rbp, (ValueKind'value-1 :WordSize'64bits)))]
                     (let [
-                        #_"AllocatableValue" arg (#_"CallingConvention" .getArgument args, i)
+                        #_"AllocatableValue" arg (first s)
                         this
                             (when (and (satisfies? StackSlot arg) (StackSlot''isInCallerFrame-1 arg) (not (:hasArgInCallerFrame (:lir (:res (:gen this)))))) => this
                                 (assoc-in this [:gen :res :lir :hasArgInCallerFrame] true)
                             )
                     ]
-                        (recur this (conj' params arg) (inc i))
+                        (recur this (conj' params arg) (next s))
                     )
                 )
             this (update this :gen LIRGenerator''emitIncomingValues-2 params)
@@ -35549,7 +35691,7 @@ ZeroExtendNode'new-4
             ]
                 (when (some? arg) => (throw! "I thought we no longer have nil entries for two-slot types...")
                     (let [
-                        #_"AllocatableValue" operand (#_"CallingConvention" .getArgument invokeCc, i)
+                        #_"AllocatableValue" operand (nth (:argumentLocations invokeCc) i)
                         _ (§ ass! (:gen this) (LIRGenerator''emitMove-3 (:gen this), operand, (LIRBuilder''operand-2 this, arg)))
                     ]
                         (recur (conj' args operand) (inc i) (next s))
@@ -35573,9 +35715,9 @@ ZeroExtendNode'new-4
     (defn #_"this" LIRBuilder''emitInvoke-2 [#_"LIRBuilder" this, #_"InvokeNode" invoke]
         (let [
             #_"LoweredCallTargetNode" callTarget (:callTarget invoke)
-            #_"CallingConvention" invokeCc (#_"RegisterConfig" .getCallingConvention HotSpot'registerConfig, (:callType callTarget), (Stamp'''javaType-1 (:stamp invoke)), (into-array JavaType (:signature callTarget)))
+            #_"CallingConvention" invokeCc (RegisterConfig'getCallingConvention-3 (:callType callTarget), (Stamp'''javaType-1 (:stamp invoke)), (:signature callTarget))
             this (update-in this [:gen :res :frameMapBuilder] FrameMapBuilder''callsMethod-2 invokeCc)
-            #_"Value" result (#_"CallingConvention" .getReturn invokeCc)
+            #_"Value" result (:returnLocation invokeCc)
             #_"[Value]" parameters (LIRBuilder''visitInvokeArguments-3 this, invokeCc, (:arguments callTarget))
             this
                 (condp satisfies? callTarget
@@ -35916,37 +36058,28 @@ ZeroExtendNode'new-4
     ;;;
      ; Gets the ABI specific operand used to return a value of a given kind from a method.
      ;
-     ; @param javaKind the kind of value being returned
      ; @param valueKind the backend type of the value being returned
      ; @return the operand representing the ABI defined location used return a value of kind {@code kind}
      ;;
-    (defn- #_"AllocatableValue" LIRGenerator'resultOperandFor-2 [#_"JavaKind" javaKind, #_"ValueKind" valueKind]
-        (Register''asValue-2 (#_"RegisterConfig" .getReturnRegister HotSpot'registerConfig, javaKind), valueKind)
+    (defn- #_"AllocatableValue" LIRGenerator'resultOperandFor-1 [#_"ValueKind" valueKind]
+        (Register''asValue-2 RegisterConfig'returnRegister, valueKind)
     )
 
     (defn- #_"Register" LIRGenerator'findPollOnReturnScratchRegister-0 []
-        (loop-when [#_"seq" s (seq (#_"RegisterConfig" .getAllocatableRegisters HotSpot'registerConfig))] (some? s) => (throw! "should not reach here")
-            (let [
-                #_"Register" r (first s)
-            ]
-                (when (and (not (= r (#_"RegisterConfig" .getReturnRegister HotSpot'registerConfig, JavaKind/Long))) (not (= r AMD64'rbp))) => (recur (next s))
-                    r
-                )
-            )
-        )
+        (nth (disj RegisterConfig'allocatableRegisters RegisterConfig'returnRegister, AMD64'rbp) 0)
     )
 
     ;;;
-     ; Emits a return instruction. Implementations need to insert a move if the input is not in the correct location.
+     ; Emits a return instruction. Implementations need to insert a move if the value is not in the correct location.
      ;;
-    (defn #_"this" LIRGenerator''emitReturn-3 [#_"LIRGenerator" this, #_"JavaKind" kind, #_"Value" input]
+    (defn #_"this" LIRGenerator''emitReturn-2 [#_"LIRGenerator" this, #_"Value" value]
         (let [
             [this #_"AllocatableValue" operand]
-                (when (some? input) => [this Value'ILLEGAL]
+                (when (some? value) => [this Value'ILLEGAL]
                     (let [
-                        operand (LIRGenerator'resultOperandFor-2 kind, (:valueKind input))
+                        operand (LIRGenerator'resultOperandFor-1 (:valueKind value))
                     ]
-                        [(LIRGenerator''emitMove-3 this, operand, input) operand]
+                        [(LIRGenerator''emitMove-3 this, operand, value) operand]
                     )
                 )
             this
@@ -36119,21 +36252,22 @@ ZeroExtendNode'new-4
         (let [
             #_"CallingConvention" linkageCc (:outgoingCallingConvention linkage)
             _ (§ ass! this (update-in this [:res :frameMapBuilder] FrameMapBuilder''callsMethod-2 linkageCc))
+            #_"Value" retLocation (:returnLocation linkageCc)
             ;; move the arguments into the correct location
             [this #_"[Value]" argLocations]
                 (loop-when [this this argLocations [] #_"int" i 0] (< i (count args)) => [this argLocations]
                     (let [
-                        #_"AllocatableValue" loc (#_"CallingConvention" .getArgument linkageCc, i)
+                        #_"AllocatableValue" loc (nth (:argumentLocations linkageCc) i)
                         this (LIRGenerator''emitMove-3 this, loc, (nth args i))
                     ]
                         (recur this (conj' argLocations loc) (inc i))
                     )
                 )
             _ (§ ass! this (assoc-in this [:res :hasForeignCall] true))
-            _ (§ ass! this (LIRGenerator''emitForeignCallOp-5 this, linkage, (#_"CallingConvention" .getReturn linkageCc), argLocations, (§ snap (:temporaries linkage))))
+            _ (§ ass! this (LIRGenerator''emitForeignCallOp-5 this, linkage, retLocation, argLocations, (§ snap (:temporaries linkage))))
         ]
-            (when-not (= (#_"CallingConvention" .getReturn linkageCc) Value'ILLEGAL)
-                (LIRGenerator''emitMove-2 this, (#_"CallingConvention" .getReturn linkageCc))
+            (when-not (= retLocation Value'ILLEGAL)
+                (LIRGenerator''emitMove-2 this, retLocation)
             )
         )
     )
@@ -36371,7 +36505,7 @@ ZeroExtendNode'new-4
             [this #_"[Value]" argLocations]
                 (loop-when [this this argLocations [] #_"int" i 0] (< i (count args)) => [this argLocations]
                     (let [
-                        #_"AllocatableValue" loc (#_"CallingConvention" .getArgument nativeCallingConvention, i)
+                        #_"AllocatableValue" loc (nth (:argumentLocations nativeCallingConvention) i)
                         this (LIRGenerator''emitMove-3 this, loc, (nth args i))
                     ]
                         (recur this (conj' argLocations loc) (inc i))
@@ -36379,7 +36513,7 @@ ZeroExtendNode'new-4
                 )
             #_"Value" ptr (LIRGenerator''emitLoadConstant-3 this, (ValueKind'value-1 :WordSize'64bits), (JavaConstant/forLong address))
         ]
-            (LIRGenerator''append-2 this, (AMD64CCall'new-3 (#_"CallingConvention" .getReturn nativeCallingConvention), ptr, argLocations))
+            (LIRGenerator''append-2 this, (AMD64CCall'new-3 (:returnLocation nativeCallingConvention), ptr, argLocations))
         )
     )
 
@@ -38594,12 +38728,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"this" LabelOp''addIncomingValues-2 [#_"LabelOp" this, #_"[Value]" values]
-        (when (seq (:incomingValues this)) => (assoc this :incomingValues values)
-            (update this :incomingValues catvec values)
-        )
-    )
-
     (defn #_"this" LabelOp''setPhiValues-2 [#_"LabelOp" this, #_"[Value]" values]
         (assoc this :incomingValues values, :numPhis (count values))
     )
@@ -39676,8 +39804,7 @@ ZeroExtendNode'new-4
                  ;;
                 #_"LIRPhaseSuite" :preAllocStage
                     (LIRPhaseSuite'new-1*
-                        (ConstantLoadOptimization'new-0),
-                        (SaveCalleeSaveRegisters'new-0)
+                        (ConstantLoadOptimization'new-0)
                     )
                 ;;;
                  ; AllocationPhases are responsible for register allocation and translating VirtualStackSlots into StackSlots.
@@ -40459,8 +40586,6 @@ ZeroExtendNode'new-4
                         nil
                     )
                 )
-            ;; create a list with all caller-save registers
-            #_"RegisterArray" callerSaveRegs (#_"RegisterConfig" .getCallerSaveRegisters HotSpot'registerConfig)
         ]
             ;; iterate all blocks in reverse order
             (loop-when-recur [#_"int" i (dec (LinearScan''blockCount-1 allocator))] (<= 0 i) [(dec i)]
@@ -40498,10 +40623,8 @@ ZeroExtendNode'new-4
                         ]
                             ;; Add a temp range for each register if operation destroys caller-save registers.
                             (when (LIRInstruction'''destroysCallerSavedRegisters-1 op)
-                                (doseq [#_"Register" r callerSaveRegs]
-                                    (when (#_"RegisterAttributes" .isAllocatable (LinearScan''attributes-2 allocator, r))
-                                        (LSLifetimeAnalysisPhase'addTemp-5 allocator, (Register''asValue-1 r), opId, :RegisterPriority'None, ValueKind'Illegal)
-                                    )
+                                (doseq [#_"Register" r RegisterConfig'callerSaveRegisters :when (contains? RegisterConfig'allocatableRegisters r)]
+                                    (LSLifetimeAnalysisPhase'addTemp-5 allocator, (Register''asValue-1 r), opId, :RegisterPriority'None, ValueKind'Illegal)
                                 )
                             )
 
@@ -40852,7 +40975,6 @@ ZeroExtendNode'new-4
                     (hash-map
                         #_"LIR" :lir (:lir res)
                         #_"FrameMapBuilder" :frameMapBuilder (:frameMapBuilder res)
-                        #_"[RegisterAttributes]" :registerAttributes (vec (#_"RegisterConfig" .getAttributesMap HotSpot'registerConfig))
                         #_"[Register]" :registers AMD64'registers
                         #_"MoveFactory" :moveFactory moveFactory
                         #_"{Block BlockData}" :blockData {}
@@ -40938,13 +41060,6 @@ ZeroExtendNode'new-4
 
     #_unused
     (def #_"fn boolean [Interval]" LinearScan'isStackInterval-1 #(not (satisfies? RegisterValue (:operand %))))
-
-    ;;;
-     ; Gets an object describing the attributes of a given register according to this register configuration.
-     ;;
-    (defn #_"RegisterAttributes" LinearScan''attributes-2 [#_"LinearScan" this, #_"Register" reg]
-        (nth (:registerAttributes this) (:number reg))
-    )
 
     (defn #_"Interval" LinearScan''assignSpillSlot-2 [#_"LinearScan" this, #_"Interval" interval]
         ;; Assign the canonical spill slot of the parent (if a part of the interval is already spilled)
@@ -41093,7 +41208,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"boolean" LinearScan''isProcessed-2 [#_"LinearScan" this, #_"Value" operand]
-        (or (not (satisfies? RegisterValue operand)) (#_"RegisterAttributes" .isAllocatable (LinearScan''attributes-2 this, (:reg operand))))
+        (or (not (satisfies? RegisterValue operand)) (contains? RegisterConfig'allocatableRegisters (:reg operand)))
     )
 
     ;; * Phase 5: actual register allocation
@@ -41159,11 +41274,6 @@ ZeroExtendNode'new-4
         ]
             (and (= (:location interval) Value'ILLEGAL) (Interval''canMaterialize-1 interval))
         )
-    )
-
-    #_unused
-    (defn #_"boolean" LinearScan''isCallerSave-2 [#_"LinearScan" this, #_"Value" operand]
-        (#_"RegisterAttributes" .isCallerSave (LinearScan''attributes-2 this, (:reg operand)))
     )
 
     (defn #_"void" LinearScan'allocate-3 [#_"LIRGenerationResult" res, #_"MoveFactory" moveFactory, #_"[Block]" sortedBlocks]
@@ -45028,8 +45138,7 @@ ZeroExtendNode'new-4
     #_memoize
     (defn #_"RegisterBackupPair" MoveFactory''getScratchRegister-2 [#_"MoveFactory" this, #_"WordSize" size]
         (let [
-            #_"RegisterArray" available (#_"RegisterConfig" .filterAllocatableRegisters HotSpot'registerConfig, size, (#_"RegisterConfig" .getAllocatableRegisters HotSpot'registerConfig))
-            #_"Register" scratch (#_"RegisterArray" .get available, 0)
+            #_"Register" scratch (nth (RegisterConfig'filterAllocatableRegisters-2 RegisterConfig'allocatableRegisters, size) 0)
             #_"ValueKind" largest (ValueKind'value-1 AMD64'largestStorable)
         ]
             (RegisterBackupPair'new-2 scratch, (FrameMapBuilder''allocateSpillSlot-2 (:frameMapBuilder this), largest))
@@ -46358,24 +46467,24 @@ ZeroExtendNode'new-4
 )
 
 (class-ns LoweredCallTargetNode [CallTargetNode, ValueNode, Node, LIRLowerable]
-    (defn #_"LoweredCallTargetNode" LoweredCallTargetNode'new-6 [#_"ValueNode*" arguments, #_"Stamp" returnStamp, #_"[JavaType]" signature, #_"ResolvedJavaMethod" target, #_"CallingConvention$Type" callType, #_"InvokeKind" invokeKind]
+    (defn #_"LoweredCallTargetNode" LoweredCallTargetNode'new-6 [#_"ValueNode*" arguments, #_"Stamp" returnStamp, #_"[JavaType]" signature, #_"ResolvedJavaMethod" target, #_"CallingConventionType" callType, #_"InvokeKind" invokeKind]
         (merge (LoweredCallTargetNode'class.) (CallTargetNode'new-4 arguments, target, invokeKind, returnStamp)
             (hash-map
                 #_"[JavaType]" :signature signature
-                #_"CallingConvention$Type" :callType callType
+                #_"CallingConventionType" :callType callType
             )
         )
     )
 )
 
 (class-ns DirectCallTargetNode [LoweredCallTargetNode, CallTargetNode, ValueNode, Node, LIRLowerable]
-    (defn #_"DirectCallTargetNode" DirectCallTargetNode'new-6 [#_"ValueNode*" arguments, #_"Stamp" returnStamp, #_"[JavaType]" signature, #_"ResolvedJavaMethod" target, #_"CallingConvention$Type" callType, #_"InvokeKind" invokeKind]
+    (defn #_"DirectCallTargetNode" DirectCallTargetNode'new-6 [#_"ValueNode*" arguments, #_"Stamp" returnStamp, #_"[JavaType]" signature, #_"ResolvedJavaMethod" target, #_"CallingConventionType" callType, #_"InvokeKind" invokeKind]
         (merge (DirectCallTargetNode'class.) (LoweredCallTargetNode'new-6 arguments, returnStamp, signature, target, callType, invokeKind))
     )
 )
 
 (class-ns HotSpotDirectCallTargetNode [DirectCallTargetNode, LoweredCallTargetNode, CallTargetNode, ValueNode, Node, LIRLowerable]
-    (defn #_"HotSpotDirectCallTargetNode" HotSpotDirectCallTargetNode'new-6 [#_"ValueNode*" arguments, #_"Stamp" returnStamp, #_"[JavaType]" signature, #_"ResolvedJavaMethod" target, #_"CallingConvention$Type" callType, #_"InvokeKind" invokeKind]
+    (defn #_"HotSpotDirectCallTargetNode" HotSpotDirectCallTargetNode'new-6 [#_"ValueNode*" arguments, #_"Stamp" returnStamp, #_"[JavaType]" signature, #_"ResolvedJavaMethod" target, #_"CallingConventionType" callType, #_"InvokeKind" invokeKind]
         (merge (HotSpotDirectCallTargetNode'class.) (DirectCallTargetNode'new-6 arguments, returnStamp, signature, target, callType, invokeKind))
     )
 )
@@ -46781,10 +46890,7 @@ ZeroExtendNode'new-4
 
     (defm ReturnNode LIRLowerable
         (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"ReturnNode" this, #_"LIRBuilder" builder]
-            (if (nil? (:result this))
-                (update builder :gen LIRGenerator''emitReturn-3 JavaKind/Void, nil)
-                (update builder :gen LIRGenerator''emitReturn-3 (ValueNode''getStackKind-1 (:result this)), (LIRBuilder''operand-2 builder, (:result this)))
-            )
+            (update builder :gen LIRGenerator''emitReturn-2 (when (some? (:result this)) (LIRBuilder''operand-2 builder, (:result this))))
         )
     )
 
@@ -46801,8 +46907,7 @@ ZeroExtendNode'new-4
 )
 
 ;;;
- ; The IfNode represents a branch that can go one of two directions depending on the outcome
- ; of a comparison.
+ ; The IfNode represents a branch that can go one of two directions depending on the outcome of a comparison.
  ;;
 (class-ns IfNode [ControlSplitNode, FixedNode, ValueNode, Node, Simplifiable, LIRLowerable]
     (defn #_"this" IfNode''setCondition-2 [#_"IfNode" this, #_"LogicNode" logic]
@@ -49849,7 +49954,7 @@ ZeroExtendNode'new-4
                             )
                         )
                     #_"[JavaType]" signature (#_"Signature" .toParameterTypes (#_"ResolvedJavaMethod" .getSignature (:targetMethod callTarget)), (when-not (MethodCallTargetNode''isStatic-1 callTarget) (#_"ResolvedJavaMethod" .getDeclaringClass (:targetMethod callTarget))))
-                    #_"LoweredCallTargetNode" loweredCallTarget (Graph''add-2 (:graph this), (HotSpotDirectCallTargetNode'new-6 parameters, (:returnStamp callTarget), signature, (:targetMethod callTarget), HotSpotCallingConventionType/JavaCall, (:invokeKind callTarget)))
+                    #_"LoweredCallTargetNode" loweredCallTarget (Graph''add-2 (:graph this), (HotSpotDirectCallTargetNode'new-6 parameters, (:returnStamp callTarget), signature, (:targetMethod callTarget), :CallingConventionType'JavaCall, (:invokeKind callTarget)))
                     _ (§ ass! callTarget (Node''replaceAndDelete-2 callTarget, loweredCallTarget))
                 ]
                     this
@@ -60709,7 +60814,6 @@ ZeroExtendNode'new-4
         (merge (RMEOptimization'class.)
             (hash-map
                 #_"{Block BlockStates}" :blockData {}
-                #_"RegisterArray" :callerSaveRegs nil
                 ;;;
                  ; Contains the register number for registers which can be optimized and -1 for the others.
                  ;;
@@ -60889,7 +60993,7 @@ ZeroExtendNode'new-4
             #_"int'" v'valueNum (volatile! initValueNum)
             _
                 (when (LIRInstruction'''destroysCallerSavedRegisters-1 op)
-                    (doseq [#_"Register" reg (:callerSaveRegs this)]
+                    (doseq [#_"Register" reg RegisterConfig'callerSaveRegisters]
                         (when (< (:number reg) (:numRegs this))
                             ;; Kind.Object is the save default
                             (§ ass! state (assoc' state (:number reg) (RMEOptimization'encodeValueNum-2 @v'valueNum, true)))
@@ -61047,15 +61151,19 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"this" RMEOptimization''doOptimize-2 [#_"RMEOptimization" this, #_"LIR" lir]
         (let [
-            this (assoc this :callerSaveRegs (#_"RegisterConfig" .getCallerSaveRegisters HotSpot'registerConfig))
             this (RMEOptimization''initBlockData-2 this, lir)
             ;; Compute a table of the registers which are eligible for move optimization.
             ;; Unallocatable registers should never be optimized.
-            this (assoc this :eligibleRegs (vec (repeat (:numRegs this) -1)))
-            _
-                (doseq [#_"Register" reg (#_"RegisterConfig" .getAllocatableRegisters HotSpot'registerConfig)]
-                    (when (< (:number reg) (:numRegs this))
-                        (§ ass! this (update this :eligibleRegs assoc' (:number reg) (:number reg)))
+            this
+                (loop-when [this (assoc this :eligibleRegs (vec (repeat (:numRegs this) -1))) #_"seq" s (seq RegisterConfig'allocatableRegisters)] (some? s) => this
+                    (let [
+                        #_"int" n (:number (first s))
+                        this
+                            (when (< n (:numRegs this)) => this
+                                (update this :eligibleRegs assoc' n n)
+                            )
+                    ]
+                        (recur this (next s))
                     )
                 )
         ]
@@ -61816,33 +61924,6 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns RegisterMap []
-    (defn #_"RegisterMap" RegisterMap'new-0 []
-        (merge (RegisterMap'class.)
-            (hash-map
-                #_"[Variable]" :regValues (vec (repeat (count AMD64'registers) nil))
-            )
-        )
-    )
-
-    (defn #_"this" RegisterMap''put-3 [#_"RegisterMap" this, #_"Register" reg, #_"Variable" value]
-        (update this :regValues assoc' (:number reg) value)
-    )
-
-    (defn #_"void" RegisterMap''forEach-2 [#_"RegisterMap" this, #_"fn void [Register Variable]" f'consumer-2]
-        (dotimes [#_"int" i (count (:regValues this))]
-            (let [
-                #_"Variable" value (nth (:regValues this) i)
-            ]
-                (when (some? value)
-                    (f'consumer-2 (nth AMD64'registers i), value)
-                )
-            )
-        )
-        nil
-    )
-)
-
 (class-ns RemoveValueProxyPhase [Phase]
     (defn #_"RemoveValueProxyPhase" RemoveValueProxyPhase'new-0 []
         (RemoveValueProxyPhase'class.)
@@ -62022,78 +62103,6 @@ ZeroExtendNode'new-4
                 #_"ValueNode" :returnValue returnValue
                 #_"FixedWithNextNode" :beforeReturnNode beforeReturnNode
             )
-        )
-    )
-)
-
-(class-ns SaveCalleeSaveRegisters [LIRPhase #_"<LIRPhaseContext>"] ;; PreAllocationPhase
-    (defn #_"SaveCalleeSaveRegisters" SaveCalleeSaveRegisters'new-0 []
-        (SaveCalleeSaveRegisters'class.)
-    )
-
-    (defn- #_"RegisterMap" SaveCalleeSaveRegisters'saveAtEntry-3 [#_"LIR" lir, #_"LIRGenerator" lirGen, #_"RegisterArray" calleeSaveRegisters]
-        (let [
-            #_"[LIRInstruction]" ops (get (:lirInstructions lir) (ControlFlowGraph''getStartBlock-1 (:cfg lir)))
-            #_"LIRInsertionBuffer" buffer (LIRInsertionBuffer''init-2 (LIRInsertionBuffer'new-0), ops)
-            #_"LabelOp" entry (nth ops 0)
-            #_"RegisterMap" saveMap (RegisterMap'new-0)
-            #_"[RegisterValue]" savedRegisterValues
-                (loop-when [savedRegisterValues [] #_"seq" s (seq calleeSaveRegisters)] (some? s) => savedRegisterValues
-                    (let [
-                        #_"Register" register (first s)
-                        #_"ValueKind" kind (ValueKind'value-1 AMD64'largestStorable)
-                        #_"RegisterValue" registerValue (Register''asValue-2 register, kind)
-                        #_"Variable" saveVariable (LIRGenerator''newVariable-2 lirGen, kind)
-                        #_"LIRInstruction" save (MoveFactory'createMove-2 saveVariable, registerValue)
-                        _ (§ ass! buffer (LIRInsertionBuffer''append-3 buffer, 1, save))
-                        _ (§ ass! saveMap (RegisterMap''put-3 saveMap, register, saveVariable))
-                    ]
-                        (recur (conj' savedRegisterValues registerValue) (next s))
-                    )
-                )
-            _ (§ ass! entry (LabelOp''addIncomingValues-2 entry, savedRegisterValues))
-            _ (§ ass! buffer (LIRInsertionBuffer''finish-1 buffer))
-        ]
-            saveMap
-        )
-    )
-
-    (defn- #_"void" SaveCalleeSaveRegisters'restoreAtExit-4 [#_"LIR" lir, #_"MoveFactory" moveFactory, #_"RegisterMap" calleeSaveRegisters, #_"Block" block]
-        (let [
-            #_"[LIRInstruction]" ops (get (:lirInstructions lir) block)
-            #_"int" i (dec (count ops))
-            #_"LIRInsertionBuffer" buffer (LIRInsertionBuffer''init-2 (LIRInsertionBuffer'new-0), ops)
-            _
-                (RegisterMap''forEach-2 calleeSaveRegisters,
-                    (fn #_"void" [#_"Register" register, #_"Variable" saved]
-                        (§ ass! buffer (LIRInsertionBuffer''append-3 buffer, i, (MoveFactory'createMove-2 (Register''asValue-2 register, (:valueKind saved)), saved)))
-                        nil
-                    )
-                )
-            _ (§ ass! buffer (LIRInsertionBuffer''finish-1 buffer))
-        ]
-        )
-        nil
-    )
-
-    (defm SaveCalleeSaveRegisters LIRPhase
-        (#_"void" LIRPhase'''run-3 [#_"SaveCalleeSaveRegisters" this, #_"LIRGenerationResult" res, #_"LIRPhaseContext" context]
-            (let [
-                #_"RegisterArray" calleeSaveRegisters (#_"RegisterConfig" .getCalleeSaveRegisters HotSpot'registerConfig)
-            ]
-                (when (and (some? calleeSaveRegisters) (not (zero? (#_"RegisterArray" .size calleeSaveRegisters))))
-                    (let [
-                        #_"RegisterMap" savedRegisters (SaveCalleeSaveRegisters'saveAtEntry-3 (:lir res), (:lirGen context), calleeSaveRegisters)
-                    ]
-                        (doseq [#_"Block" block (:codeEmittingOrder (:lir res))]
-                            (when (and (some? block) (empty? (:successors block)))
-                                (SaveCalleeSaveRegisters'restoreAtExit-4 (:lir res), (:moveFactory (:lirGen context)), savedRegisters, block)
-                            )
-                        )
-                    )
-                )
-            )
-            nil
         )
     )
 )
@@ -68968,14 +68977,17 @@ ZeroExtendNode'new-4
     ;;;
      ; Create a calling convention from a {@link ResolvedJavaMethod}.
      ;;
-    (defn- #_"CallingConvention" Compiler'getCallingConvention-2 [#_"CallingConvention$Type" type, #_"ResolvedJavaMethod" method]
+    (defn- #_"CallingConvention" Compiler'getCallingConvention-2 [#_"CallingConventionType" type, #_"ResolvedJavaMethod" method]
         (let [
             #_"Signature" sig (#_"ResolvedJavaMethod" .getSignature method)
-            #_"JavaType" retType (#_"Signature" .getReturnType sig, nil)
-            #_"[JavaType]" argTypes (if (#_"ResolvedJavaMethod" .isStatic method) [] [ (#_"ResolvedJavaMethod" .getDeclaringClass method) ])
-            argTypes (into' argTypes (map #(#_"Signature" .getParameterType sig, %, nil) (range (#_"Signature" .getParameterCount sig, false))))
+            #_"JavaType" returnType (#_"Signature" .getReturnType sig, nil)
+            #_"JavaType*" parameterTypes (map #(#_"Signature" .getParameterType sig, %, nil) (range (#_"Signature" .getParameterCount sig, false)))
+            parameterTypes
+                (when-not (#_"ResolvedJavaMethod" .isStatic method) => parameterTypes
+                    (cons (#_"ResolvedJavaMethod" .getDeclaringClass method) parameterTypes)
+                )
         ]
-            (#_"RegisterConfig" .getCallingConvention HotSpot'registerConfig, type, retType, (into-array JavaType argTypes))
+            (RegisterConfig'getCallingConvention-3 type, returnType, parameterTypes)
         )
     )
 
@@ -68984,7 +68996,7 @@ ZeroExtendNode'new-4
             #_"Schedule" schedule (:lastSchedule graph)
             #_"Block" start (ControlFlowGraph''getStartBlock-1 (:cfg schedule))
             #_"LIR" lir (LIR'new-3 (:cfg schedule), (ComputeBlockOrder'computeLinearScanOrder-1 start), (ComputeBlockOrder'computeCodeEmittingOrder-1 start))
-            #_"CallingConvention" callingConvention (Compiler'getCallingConvention-2 HotSpotCallingConventionType/JavaCallee, (:rootMethod graph))
+            #_"CallingConvention" callingConvention (Compiler'getCallingConvention-2 :CallingConventionType'JavaCallee, (:rootMethod graph))
             #_"LIRGenerationResult" res (LIRGenerationResult'new-2 lir, callingConvention)
             #_"LIRGenerator" gen (LIRGenerator'new-1 res)
             #_"LIRBuilder" builder (LIRBuilder'new-1 gen)
@@ -69083,286 +69095,6 @@ ZeroExtendNode'new-4
     (defn #_"InstalledCode" Compiler'createInstalledCode-4 [#_"ResolvedJavaMethod" method, #_"CompilationResult" result, #_"InstalledCode" predefinedInstalledCode, #_"boolean" default?]
         (#_"CodeCacheProvider" .installCode HotSpot'codeCache, method, (Compiler'createCompiledCode-1 result), predefinedInstalledCode, nil, default?)
     )
-)
-
-(§ package jdk.vm.ci.code
-
-import jdk.vm.ci.meta.AllocatableValue
-
-;;;
- ; A calling convention describes the locations in which the arguments for a call are placed and the
- ; location in which the return value is placed if the call is not void.
- ;;
-public class CallingConvention
-(§
-    ;;;
-     ; Marker interface denoting the type of a call for which a calling convention is requested.
-     ;;
-    public interface Type
-    (§
-    )
-
-    ;;;
-     ; The amount of stack space (in bytes) required for the stack-based arguments of the call.
-     ;;
-    private final int stackSize
-
-    private final AllocatableValue returnLocation
-
-    ;;;
-     ; The ordered locations in which the arguments are placed.
-     ;;
-    private final AllocatableValue[] argumentLocations
-
-    ;;;
-     ; Creates a description of the registers and stack locations used by a call.
-     ;
-     ; @param stackSize amount of stack space (in bytes) required for the stack-based arguments of the call
-     ; @param returnLocation the location for the return value or {@link Value#ILLEGAL} if a void call
-     ; @param argumentLocations the ordered locations in which the arguments are placed
-     ;;
-    public CallingConvention(int stackSize, AllocatableValue returnLocation, AllocatableValue... argumentLocations)
-    (§
-        this.argumentLocations = argumentLocations
-        this.stackSize = stackSize
-        this.returnLocation = returnLocation
-    )
-
-    ;;;
-     ; Gets the location for the return value or {@link Value#ILLEGAL} if a void call.
-     ;;
-    public AllocatableValue getReturn()
-    (§
-        return returnLocation
-    )
-
-    ;;;
-     ; Gets the location for the {@code index}'th argument.
-     ;;
-    public AllocatableValue getArgument(int index)
-    (§
-        return argumentLocations[index]
-    )
-
-    ;;;
-     ; Gets the amount of stack space (in bytes) required for the stack-based arguments of the call.
-     ;;
-    public int getStackSize()
-    (§
-        return stackSize
-    )
-
-    ;;;
-     ; Gets the number of locations required for the arguments.
-     ;;
-    public int getArgumentCount()
-    (§
-        return argumentLocations.length
-    )
-
-    ;;;
-     ; Gets the locations required for the arguments.
-     ;;
-    public AllocatableValue[] getArguments()
-    (§
-        if (argumentLocations.length == 0)
-        (§
-            return argumentLocations
-        )
-        return argumentLocations.clone()
-    )
-)
-)
-
-(§ package jdk.vm.ci.code
-
-import java.util.Arrays
-import java.util.Collections
-import java.util.Iterator
-import java.util.List
-
-;;;
- ; An immutable ordered list of registers. Only required because Java lacks immutable arrays.
- ;;
-public final class RegisterArray implements Iterable<Register>
-(§
-    private final Register[] registers
-    private int hash
-
-    public RegisterArray(Register... registers)
-    (§
-        this.registers = registers
-    )
-
-    ;;;
-     ; Gets the number of registers.
-     ;;
-    public int size()
-    (§
-        return registers.length
-    )
-
-    ;;;
-     ; Gets the register at a given index.
-     ;
-     ; @param index the index of the register to retrieve
-     ;;
-    public Register get(int index)
-    (§
-        return registers[index]
-    )
-
-    ;;;
-     ; Gets an immutable view of the registers as a list.
-     ;;
-    public List<Register> asList()
-    (§
-        return Collections.unmodifiableList(Arrays.asList(registers))
-    )
-
-    ;;;
-     ; Gets a copy of the registers as an array.
-     ;;
-    public Register[] toArray()
-    (§
-        return registers.clone()
-    )
-
-    public Iterator<Register> iterator()
-    (§
-        return Arrays.asList(registers).iterator()
-    )
-)
-)
-
-(§ package jdk.vm.ci.code
-
-;;;
- ; A collection of register attributes. The specific attribute values for a register may be local to
- ; a compilation context. For example, a {@link RegisterConfig} in use during a compilation will
- ; determine which registers are callee saved.
- ;;
-public class RegisterAttributes
-(§
-    private final boolean callerSave
-    private final boolean calleeSave
-    private final boolean allocatable
-
-    public RegisterAttributes(boolean isCallerSave, boolean isCalleeSave, boolean isAllocatable)
-    (§
-        this.callerSave = isCallerSave
-        this.calleeSave = isCalleeSave
-        this.allocatable = isAllocatable
-    )
-
-    ;;;
-     ; @return {@code true} if a register is available for use by a register allocator otherwise
-     ;         {@code false}
-     ;;
-    public boolean isAllocatable()
-    (§
-        return allocatable
-    )
-
-    ;;;
-     ; @return {@code true} if a register whose value preservation (if required) across a call is
-     ;         the responsibility of the callee otherwise {@code false}
-     ;;
-    public boolean isCalleeSave()
-    (§
-        return calleeSave
-    )
-
-    ;;;
-     ; @return {@code true} if a register whose value preservation (if required) across a call is
-     ;         the responsibility of the caller otherwise {@code false}
-     ;;
-    public boolean isCallerSave()
-    (§
-        return callerSave
-    )
-)
-)
-
-(§ package jdk.vm.ci.code
-
-import jdk.vm.ci.code.CallingConvention.Type
-import jdk.vm.ci.meta.JavaKind
-import jdk.vm.ci.meta.JavaType
-
-;;;
- ; A register configuration binds roles and {@linkplain RegisterAttributes attributes} to physical
- ; registers.
- ;;
-public interface RegisterConfig
-(§
-    ;;;
-     ; Gets the register to be used for returning a value of a given kind.
-     ;;
-    Register getReturnRegister(JavaKind kind)
-
-    ;;;
-     ; Gets the maximum allowed size of the frame.
-     ;;
-    default int getMaximumFrameSize()
-    (§
-        return Integer.MAX_VALUE
-    )
-
-    ;;;
-     ; Gets the register used as the frame pointer. Spill slots and outgoing stack-based arguments
-     ; are addressed relative to this register.
-     ;;
-    Register getFrameRegister()
-
-    ;;;
-     ; Gets the calling convention describing how arguments are passed.
-     ;
-     ; @param type the type of calling convention being requested
-     ; @param returnType the return type (can be null for methods returning {@code void})
-     ; @param parameterTypes the types of the arguments of the call
-     ;;
-    CallingConvention getCallingConvention(Type type, JavaType returnType, JavaType[] parameterTypes) (ValueKind'fromJavaKind-1 javaKind)
-
-    ;;;
-     ; Gets the set of all registers that might be used by the register allocator.
-     ;
-     ; To get the set of registers the register allocator is allowed to use see
-     ; {@link RegisterAllocationConfig#getAllocatableRegisters()}
-     ;;
-    RegisterArray getAllocatableRegisters()
-
-    ;;;
-     ; Filters a set of registers and returns only those that can be used by the register allocator
-     ; for a value of a particular kind.
-     ;;
-    RegisterArray filterAllocatableRegisters(WordSize kind, RegisterArray registers)
-
-    ;;;
-     ; Gets the registers whose values must be preserved by a method across any call it makes.
-     ;;
-    RegisterArray getCallerSaveRegisters()
-
-    ;;;
-     ; Gets the registers whose values must be preserved by the callee.
-     ;;
-    RegisterArray getCalleeSaveRegisters()
-
-    ;;;
-     ; Gets a map from register {@linkplain Register#number numbers} to register
-     ; {@linkplain RegisterAttributes attributes} for this register configuration.
-     ;
-     ; @return an array where an element at index i holds the attributes of the register whose
-     ;         number is i
-     ;;
-    RegisterAttributes[] getAttributesMap()
-
-    ;;;
-     ; Determines if all {@link #getAllocatableRegisters() allocatable} registers are
-     ; {@link #getCallerSaveRegisters() caller saved}.
-     ;;
-    boolean areAllAllocatableRegistersCallerSaved()
-)
 )
 
 (§ package jdk.vm.ci.code.site
@@ -69503,40 +69235,6 @@ public abstract class Site
     public Site(int pos)
     (§
         this.pcOffset = pos
-    )
-)
-)
-
-(§ package jdk.vm.ci.hotspot
-
-import jdk.vm.ci.code.CallingConvention.Type
-
-public enum HotSpotCallingConventionType implements CallingConvention.Type
-(§
-    ;;;
-     ; A request for the outgoing argument locations at a call site to Java code.
-     ;;
-    JavaCall(true),
-
-    ;;;
-     ; A request for the incoming argument locations.
-     ;;
-    JavaCallee(false),
-
-    ;;;
-     ; A request for the outgoing argument locations at a call site to external native code that
-     ; complies with the platform ABI.
-     ;;
-    NativeCall(true)
-
-    ;;;
-     ; Determines if this is a request for the outgoing argument locations at a call site.
-     ;;
-    public final boolean out
-
-    HotSpotCallingConventionType(boolean out)
-    (§
-        this.out = out
     )
 )
 )
