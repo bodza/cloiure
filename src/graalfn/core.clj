@@ -129,15 +129,16 @@
     [jdk.vm.ci.code CodeCacheProvider InstalledCode]
     [jdk.vm.ci.code.site ConstantReference DataPatch DataSectionReference Mark #_Reference Site]
     [jdk.vm.ci.hotspot
-        HotSpotCompiledCode HotSpotCompressedNullConstant HotSpotConstant HotSpotConstantReflectionProvider
-        HotSpotJVMCIRuntime HotSpotMemoryAccessProvider HotSpotMetaspaceConstant HotSpotObjectConstant
-        HotSpotResolvedJavaField HotSpotResolvedJavaMethod HotSpotResolvedObjectType HotSpotVMConfigAccess
+        HotSpotCompiledCode HotSpotConstantReflectionProvider HotSpotJVMCIRuntime
+        HotSpotMemoryAccessProvider HotSpotMetaspaceConstant HotSpotObjectConstant
+        HotSpotResolvedJavaField HotSpotResolvedJavaMethod HotSpotResolvedObjectType
+        HotSpotVMConfigAccess
        
     ]
     [jdk.vm.ci.meta
-        Constant ConstantPool ConstantReflectionProvider DeoptimizationAction DeoptimizationReason InvokeTarget
-        JavaConstant JavaField JavaMethod JavaType MemoryAccessProvider MetaAccessProvider PrimitiveConstant
-        RawConstant ResolvedJavaField ResolvedJavaMethod ResolvedJavaType Signature VMConstant
+        ConstantPool ConstantReflectionProvider DeoptimizationAction DeoptimizationReason
+        InvokeTarget JavaField JavaMethod JavaType MemoryAccessProvider MetaAccessProvider
+        ResolvedJavaField ResolvedJavaMethod ResolvedJavaType Signature
     ]
     [jdk.vm.ci.runtime JVMCIBackend]
 
@@ -724,10 +725,10 @@ BlockStates'new-1
 BranchOp'new-4
 BranchOp'new-4c
 BranchOp'new-4f
-BytecodeFrame'UNKNOWN_BCI
-BytecodeFrame'BEFORE_BCI
 BytecodeFrame'AFTER_BCI
+BytecodeFrame'BEFORE_BCI
 BytecodeFrame'INVALID_FRAMESTATE_BCI
+BytecodeFrame'UNKNOWN_BCI
 BytecodeFrame'isPlaceholderBci-1
 BytecodeLookupSwitch'new-2
 BytecodeParser''add-2
@@ -920,12 +921,12 @@ CLOptimization'apply-2
 CRuntimeCallEpilogueOp'new-4
 CRuntimeCallPrologueOp'new-2
 CacheEntry'new-2
-CallingConvention'new-3*
-CallingConventionType'SET
 CallOp'new-3
 CallTargetNode''setInvokeKind-2
 CallTargetNode''setTargetMethod-2
 CallTargetNode'new-4
+CallingConvention'new-3*
+CallingConventionType'SET
 CallsiteHolder''computeProbabilities-1
 CallsiteHolder''invokeProbability-2
 CallsiteHolder''invokeRelevance-2
@@ -1297,8 +1298,8 @@ Fields'new-1
 FieldsCache''lookup-5
 FieldsCache'new-0
 FinalFieldBarrierNode'new-1
-FixPointIntervalBuilder'build-1
 FixPointIntervalBuilder''getOrCreateInterval-2
+FixPointIntervalBuilder'build-1
 FixReadsClosure'new-0
 FixReadsPhase'new-1
 FixedAccessNode''setNullCheck-2
@@ -1571,16 +1572,16 @@ GuardLoweringPhase'new-0
 GuardNode'new-6
 GuardOrder'resortGuards-2
 GuardPhiNode'new-1
+GuardPriority'SET
 GuardPriority'highest-0
 GuardPriority'isHigherPriorityThan-2
 GuardPriority'isLowerPriorityThan-2
-GuardPriority'SET
 GuardProxyNode'new-2
+GuardsStage'SET
 GuardsStage'allowsFloatingGuards-1
 GuardsStage'areDeoptsFixed-1
 GuardsStage'areFrameStatesAtDeopts-1
 GuardsStage'areFrameStatesAtSideEffects-1
-GuardsStage'SET
 HashSetNodeEventListener''exclude-2
 HashSetNodeEventListener'new-0
 HashSetNodeEventListener'new-1
@@ -1892,8 +1893,8 @@ IntrinsicScope'new-3
 InvokeKind''hasReceiver-1
 InvokeKind''isIndirect-1
 InvokeKind''isInterface-1
-InvokeKind'new-1
 InvokeKind'MAP
+InvokeKind'new-1
 InvokeNode''getContextMethod-1
 InvokeNode''getContextType-1
 InvokeNode''getInvokeKind-1
@@ -1911,6 +1912,26 @@ IterativeConditionalEliminationPhase'new-2
 JSRData'new-0
 JVMCI'backend
 JVMCI'runtime
+JavaConstant''isNonNull-1
+JavaConstant'COMPRESSED_NULL
+JavaConstant'FALSE
+JavaConstant'INT_0
+JavaConstant'LONG_0
+JavaConstant'NULL_POINTER
+JavaConstant'TRUE
+JavaConstant'defaultForKind-1
+JavaConstant'forBoolean-1
+JavaConstant'forByte-1
+JavaConstant'forChar-1
+JavaConstant'forIllegal-0
+JavaConstant'forInt-1
+JavaConstant'forIntegerKind-2
+JavaConstant'forLong-1
+JavaConstant'forPrimitiveInt-2
+JavaConstant'forShort-1
+JavaConstant'isNull-1
+JavaKind'SET
+JavaKind'fromPrimitiveOrVoidTypeChar-1
 JavaKind'getBitCount-1
 JavaKind'getByteCount-1
 JavaKind'getJavaName-1
@@ -1924,8 +1945,6 @@ JavaKind'isPrimitive-1
 JavaKind'isUnsigned-1
 JavaKind'needsTwoSlots-1
 JavaKind'toJavaClass-1
-JavaKind'SET
-JavaKind'fromPrimitiveOrVoidTypeChar-1
 JavaReadNode'new-5
 JavaWriteNode'new-6
 JsrScope''isEmpty-1
@@ -1969,8 +1988,8 @@ LIRBuilder''visitLoopEnd-2
 LIRBuilder''visitMerge-2
 LIRBuilder''visitSafepointNode-2
 LIRBuilder'new-1
-LIRFieldsScanner'new-0
 LIRFieldsScanner''scan-3
+LIRFieldsScanner'new-0
 LIRGenerationContext'new-4
 LIRGenerationPhase'new-0
 LIRGenerationResult''buildFrameMap-1
@@ -2124,7 +2143,6 @@ LeaOp'new-3
 LeftShiftNode'create-2
 LeftShiftNode'new-2
 LessThanOp'new-0
-LinearScan'allocate-3
 LinearScan''assignSpillSlot-2
 LinearScan''blockAt-2
 LinearScan''blockCount-1
@@ -2153,6 +2171,7 @@ LinearScan''putOpIdMaps-4
 LinearScan''splitChildAtOpId-4
 LinearScan'DOMINATOR_SPILL_MOVE_ID
 LinearScan'addToList-3
+LinearScan'allocate-3
 LinearScan'canonicalSpillOpr-1
 LinearScan'isPrecoloredInterval-1
 LinearScan'isStackInterval-1
@@ -2207,8 +2226,8 @@ LoadIndexedNode'new-4
 LoadIndexedPointerNode'new-3
 LoadMetaspaceConstantOp'new-2
 LoadObjectConstantOp'new-2
-LocalLiveness''localIsLiveIn-3
 LocalLiveness''localIsChangedInLoop-3
+LocalLiveness''localIsLiveIn-3
 LocalLiveness''localIsLiveOut-3
 LocalLiveness'compute-4
 LocationIdentity''isAny-1
@@ -2618,8 +2637,8 @@ NodeEvent'SET
 NodeEventListener''event-3
 NodeEventListener'new-0
 NodeEventScope'new-2
-NodeFieldsScanner'new-1
 NodeFieldsScanner''scan-3
+NodeFieldsScanner'new-1
 NodeLoopInfo'new-0
 NonMaterializationUsageReplacer'new-5
 NormalizeCompareNode'create-3
@@ -2779,6 +2798,7 @@ Prefix'REXWXB
 Prefix'REXX
 Prefix'REXXB
 Primitive'new-2
+PrimitiveConstant'new-2
 PrimitiveStamp'getBits-1
 PrimitiveStamp'new-2
 PrimitiveStrategy''getSliceEnd-3
@@ -2804,6 +2824,7 @@ Range''isEndMarker-1
 Range'new-3
 RangesStrategy'new-2
 RawConditionalEliminationVisitor'new-2
+RawConstant'new-1
 RawEdgesIterator'new-2
 RawLoadNode''createUnsafeRead-2
 RawLoadNode'new-4
@@ -2834,11 +2855,11 @@ ReentrantBlockIterator'processLoop-3
 ReentrantNodeIterator'apply-3
 ReentrantNodeIterator'processLoop-3
 ReflectionGetCallerClassNode'new-5*
+Register'None
 Register''asValue-1
 Register''asValue-2
 Register''isValid-1
 Register'new-3
-Register'None
 RegisterAllocationConfig'getAllocatableRegisters-1
 RegisterBackupPair'new-2
 RegisterBinding'SET
@@ -2902,15 +2923,15 @@ Scale'Times4
 Scale'Times8
 Scale'fromInt-1
 Scale'fromShift-1
-Schedule'new-3
 Schedule''run-1
+Schedule'new-3
 SchedulePhase'new-1
 ScheduledNodeIterator''insert-3
 ScheduledNodeIterator''processNodes-3
 ScheduledNodeIterator''replaceCurrent-2
 ScheduledNodeIterator'new-0
-SchedulingStrategy'isEarliest-1
 SchedulingStrategy'SET
+SchedulingStrategy'isEarliest-1
 Scope''computeInvokeRelevance-2
 Scope''getFastPathMinProbability-1
 Scope''getScopeRelevanceWithinParent-1
@@ -3126,6 +3147,7 @@ ValueAnchorNode'new-1
 ValueCompareAndSwapNode'new-4
 ValueCompareAndSwapNode'new-5
 ValueFieldInfo'new-5
+ValueKind'Illegal
 ValueKind''changeSize-2
 ValueKind''getReferenceCount-1
 ValueKind''isCompressedReference-2
@@ -3135,7 +3157,6 @@ ValueKind''isUnknownReference-1
 ValueKind''isValue-1
 ValueKind''makeDerivedReference-2
 ValueKind''makeUnknownReference-1
-ValueKind'Illegal
 ValueKind'combine-1*
 ValueKind'combineDerived-3
 ValueKind'compressedReference-1
@@ -3337,13 +3358,13 @@ WordFactory'unsigned-1i
 WordFactory'unsigned-1l
 WordFactory'zero-0
 WordFactoryOpcode'SET
-WordSize'inBytes-1
 WordOpcode'SET
 WordOperationPlugin'fromSigned-2
 WordOperationPlugin'fromUnsigned-2
 WordOperationPlugin'makeAddress-3
 WordOperationPlugin'new-0
 WordOperationPlugin'toUnsigned-3
+WordSize'inBytes-1
 WordTypes'asKind-1
 WordTypes'getWordStamp-1
 WordTypes'isWord-1j
@@ -3935,6 +3956,7 @@ ZeroExtendNode'new-4
     (#_"void" CompositeValue'''visitEachComponent-4 [#_"CompositeValue" this, #_"LIRInstruction" op, #_"OperandMode" mode, #_"ValueConsumer" proc])
 )
 
+(defp CompressedNullConstant)
 (defp CompressEncoding)
 (defp CompressPointerOp)
 (defp CompressionNode)
@@ -3950,6 +3972,17 @@ ZeroExtendNode'new-4
 (defp ConditionalEliminationInstance)
 (defp ConditionalEliminationPhase)
 (defp ConditionalNode)
+
+;;;
+ ; Represents a compile-time constant (boxed) value within the compiler.
+ ;;
+(defp Constant
+    ;;;
+     ; Checks whether this constant is the default value for its kind (null, 0, 0.0, false).
+     ;;
+    (#_"boolean" Constant'''isDefaultForKind-1 [#_"Constant" this])
+)
+
 (defp ConstOp)
 (defp ConstantLoadOptimization)
 (defp ConstantNode)
@@ -4263,6 +4296,16 @@ ZeroExtendNode'new-4
 
 (defp HeapBaseNode)
 (defp HighTier)
+
+;;;
+ ; Marker interface for HotSpot specific constants.
+ ;;
+(defp HotSpotConstant
+    (#_"boolean" HotSpotConstant'''isCompressed-1 [#_"HotSpotConstant" this])
+    (#_"Constant" HotSpotConstant'''compress-1 [#_"HotSpotConstant" this])
+    (#_"Constant" HotSpotConstant'''uncompress-1 [#_"HotSpotConstant" this])
+)
+
 (defp HotSpotDirectCallTargetNode)
 (defp HotSpotNodePlugin)
 (defp HotSpotSwitchClosure)
@@ -4509,6 +4552,135 @@ ZeroExtendNode'new-4
 (defp IsNullNode)
 (defp IterativeConditionalEliminationPhase)
 (defp JSRData)
+
+;;;
+ ; Represents a constant (boxed) value, such as an integer, floating point number, or object
+ ; reference, within the compiler and across the compiler/runtime interface.
+ ;;
+(defp JavaConstant
+    ;;;
+     ; Returns the Java kind of this constant.
+     ;;
+    (#_"JavaKind" JavaConstant'''getJavaKind-1 [#_"JavaConstant" this])
+    ;;;
+     ; Checks whether this constant is the null constant.
+     ;;
+    (#_"boolean" JavaConstant'''isNull-1 [#_"JavaConstant" this])
+    ;;;
+     ; Returns the primitive boolean value this constant represents.
+     ;;
+    (#_"boolean" JavaConstant'''asBoolean-1 [#_"JavaConstant" this])
+    ;;;
+     ; Returns the primitive int value this constant represents.
+     ;;
+    (#_"int" JavaConstant'''asInt-1 [#_"JavaConstant" this])
+    ;;;
+     ; Returns the primitive long value this constant represents.
+     ;;
+    (#_"long" JavaConstant'''asLong-1 [#_"JavaConstant" this])
+)
+
+(value-ns JavaConstant
+    ;;;
+     ; Checks whether this constant is non-null, that is a primitive, or an object constant that is not null.
+     ;;
+    (defn #_"boolean" JavaConstant''isNonNull-1 [#_"JavaConstant" this]
+        (not (JavaConstant'''isNull-1 this))
+    )
+
+    (defn #_"boolean" JavaConstant'isNull-1 [#_"Constant" c]
+        (and (satisfies? JavaConstant c) (JavaConstant'''isNull-1 c))
+    )
+
+    ;;;
+     ; Creates a boxed boolean constant.
+     ;;
+    (defn #_"PrimitiveConstant" JavaConstant'forBoolean-1 [#_"boolean" i]
+        (if i JavaConstant'TRUE JavaConstant'FALSE)
+    )
+
+    ;;;
+     ; Creates a boxed byte constant.
+     ;;
+    (defn #_"PrimitiveConstant" JavaConstant'forByte-1 [#_"byte" i]
+        (PrimitiveConstant'new-2 :JavaKind'Byte, i)
+    )
+
+    ;;;
+     ; Creates a boxed short constant.
+     ;;
+    (defn #_"PrimitiveConstant" JavaConstant'forShort-1 [#_"short" i]
+        (PrimitiveConstant'new-2 :JavaKind'Short, i)
+    )
+
+    ;;;
+     ; Creates a boxed char constant.
+     ;;
+    (defn #_"PrimitiveConstant" JavaConstant'forChar-1 [#_"char" i]
+        (PrimitiveConstant'new-2 :JavaKind'Char, i)
+    )
+
+    ;;;
+     ; Creates a boxed integer constant.
+     ;;
+    (defn #_"PrimitiveConstant" JavaConstant'forInt-1 [#_"int" i]
+        (if (zero? i) JavaConstant'INT_0 (PrimitiveConstant'new-2 :JavaKind'Int, i))
+    )
+
+    ;;;
+     ; Creates a boxed long constant.
+     ;;
+    (defn #_"PrimitiveConstant" JavaConstant'forLong-1 [#_"long" i]
+        (if (zero? i) JavaConstant'LONG_0 (PrimitiveConstant'new-2 :JavaKind'Long, i))
+    )
+
+    ;;;
+     ; Creates a {@link JavaConstant} from a primitive integer of a certain kind.
+     ;;
+    (defn #_"PrimitiveConstant" JavaConstant'forIntegerKind-2 [#_"JavaKind" kind, #_"long" i]
+        (case kind
+            :JavaKind'Boolean (JavaConstant'forBoolean-1 (not (zero? i)))
+            :JavaKind'Byte    (JavaConstant'forByte-1          (byte i))
+            :JavaKind'Short   (JavaConstant'forShort-1        (short i))
+            :JavaKind'Char    (JavaConstant'forChar-1          (char i))
+            :JavaKind'Int     (JavaConstant'forInt-1            (int i))
+            :JavaKind'Long    (JavaConstant'forLong-1                i)
+        )
+    )
+
+    ;;;
+     ; Creates a {@link JavaConstant} from a primitive integer of a certain width.
+     ;;
+    (defn #_"PrimitiveConstant" JavaConstant'forPrimitiveInt-2 [#_"int" bits, #_"long" i]
+        (case bits
+             1 (JavaConstant'forBoolean-1 (not (zero? i)))
+             8 (JavaConstant'forByte-1          (byte i))
+            16 (JavaConstant'forShort-1        (short i))
+            32 (JavaConstant'forInt-1            (int i))
+            64 (JavaConstant'forLong-1                i)
+        )
+    )
+
+    (defn #_"PrimitiveConstant" JavaConstant'forIllegal-0 []
+        (PrimitiveConstant'new-2 :JavaKind'Illegal, 0)
+    )
+
+    ;;;
+     ; Returns a constant with the default value for the given kind.
+     ;;
+    (defn #_"JavaConstant" JavaConstant'defaultForKind-1 [#_"JavaKind" kind]
+        (case kind
+            :JavaKind'Boolean JavaConstant'FALSE
+            :JavaKind'Byte    (JavaConstant'forByte-1   (byte 0))
+            :JavaKind'Short   (JavaConstant'forShort-1 (short 0))
+            :JavaKind'Char    (JavaConstant'forChar-1   (char 0))
+            :JavaKind'Int     JavaConstant'INT_0
+            :JavaKind'Long    JavaConstant'LONG_0
+            :JavaKind'Object  JavaConstant'NULL_POINTER
+        )
+    )
+)
+
 (defp JavaReadNode)
 (defp JavaWriteNode)
 (defp JsrScope)
@@ -5023,6 +5195,7 @@ ZeroExtendNode'new-4
 (defp NullCheckNode)
 (defp NullCheckOp)
 (defp NullCheckOptimizer)
+(defp NullConstant)
 (defp ObjectEqualsNode)
 (defp ObjectEqualsOp)
 (defp ObjectStamp)
@@ -5104,6 +5277,7 @@ ZeroExtendNode'new-4
 (defp Position)
 (defp PrefetchAllocateNode)
 (defp Primitive)
+(defp PrimitiveConstant)
 (defp PrimitiveStamp)
 (defp PrimitiveStrategy)
 (defp ProcessFrame)
@@ -5127,6 +5301,7 @@ ZeroExtendNode'new-4
 (defp Range)
 (defp RangesStrategy)
 (defp RawConditionalEliminationVisitor)
+(defp RawConstant)
 (defp RawEdgesIterator)
 (defp RawLoadNode)
 (defp RawMonitorEnterNode)
@@ -5411,7 +5586,7 @@ ZeroExtendNode'new-4
 
 (value-ns StaticDeoptimizingNode
     (defn #_"GuardPriority" StaticDeoptimizingNode''computePriority-1 [#_"StaticDeoptimizingNode" this]
-        (if (and (some? (:speculation this)) (#_"JavaConstant" .isNonNull (:speculation this)))
+        (if (and (some? (:speculation this)) (JavaConstant''isNonNull-1 (:speculation this)))
             :GuardPriority'Speculation
             (condp =? (:action this)
                 [DeoptimizationAction/InvalidateReprofile DeoptimizationAction/InvalidateRecompile]                                    :GuardPriority'Profile
@@ -5604,6 +5779,12 @@ ZeroExtendNode'new-4
 (defp UseTrappingNullChecksPhase)
 (defp Utf8)
 (defp VMConfigNode)
+
+;;;
+ ; Represents a constant that needs to be patched at runtime by the VM.
+ ;;
+(defp VMConstant)
+
 (defp VMConstOp)
 (defp Value)
 (defp ValueAnchorNode)
@@ -6057,6 +6238,126 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"int" JavaKind'getByteCount-1 [#_"JavaKind" kind]
         (if (= kind :JavaKind'Boolean) 1 (>> (JavaKind'getBitCount-1 kind) 3))
+    )
+)
+
+;;;
+ ; The implementation type of the {@link JavaConstant#NULL_POINTER null constant}.
+ ;;
+(class-ns NullConstant [JavaConstant, Constant]
+    (defn- #_"NullConstant" NullConstant'new-0 []
+        (NullConstant'class.)
+    )
+
+    (def #_"JavaConstant" JavaConstant'NULL_POINTER (NullConstant'new-0))
+
+    (defm NullConstant JavaConstant
+        (#_"JavaKind" JavaConstant'''getJavaKind-1 [#_"NullConstant" this]
+            :JavaKind'Object
+        )
+
+        (#_"boolean" JavaConstant'''isNull-1 [#_"NullConstant" this]
+            true
+        )
+    )
+
+    (defm NullConstant Constant
+        (#_"boolean" Constant'''isDefaultForKind-1 [#_"NullConstant" this]
+            true
+        )
+    )
+)
+
+;;;
+ ; The compressed representation of the {@link JavaConstant#NULL_POINTER null constant}.
+ ;;
+(class-ns CompressedNullConstant [JavaConstant, HotSpotConstant, Constant]
+    (defn- #_"CompressedNullConstant" CompressedNullConstant'new-0 []
+        (CompressedNullConstant'class.)
+    )
+
+    (def #_"JavaConstant" JavaConstant'COMPRESSED_NULL (CompressedNullConstant'new-0))
+
+    (defm CompressedNullConstant JavaConstant
+        (#_"JavaKind" JavaConstant'''getJavaKind-1 [#_"CompressedNullConstant" this]
+            :JavaKind'Object
+        )
+
+        (#_"boolean" JavaConstant'''isNull-1 [#_"CompressedNullConstant" this]
+            true
+        )
+    )
+
+    (defm CompressedNullConstant HotSpotConstant
+        (#_"boolean" HotSpotConstant'''isCompressed-1 [#_"CompressedNullConstant" this]
+            true
+        )
+
+        (#_"Constant" HotSpotConstant'''uncompress-1 [#_"CompressedNullConstant" this]
+            JavaConstant'NULL_POINTER
+        )
+    )
+
+    (defm CompressedNullConstant Constant
+        (#_"boolean" Constant'''isDefaultForKind-1 [#_"CompressedNullConstant" this]
+            true
+        )
+    )
+)
+
+;;;
+ ; Represents a primitive constant value.
+ ;;
+(class-ns PrimitiveConstant [JavaConstant, Constant]
+    (defn #_"PrimitiveConstant" PrimitiveConstant'new-2 [#_"JavaKind" kind, #_"long" primitive]
+        (merge (PrimitiveConstant'class.)
+            (hash-map
+                #_"JavaKind" :kind kind
+                ;;;
+                 ; The boxed primitive value as a {@code long}.
+                 ;;
+                #_"long" :primitive primitive
+            )
+        )
+    )
+
+    (def #_"PrimitiveConstant" JavaConstant'INT_0  (PrimitiveConstant'new-2 :JavaKind'Int,     0))
+    (def #_"PrimitiveConstant" JavaConstant'LONG_0 (PrimitiveConstant'new-2 :JavaKind'Long,    0))
+    (def #_"PrimitiveConstant" JavaConstant'FALSE  (PrimitiveConstant'new-2 :JavaKind'Boolean, 0))
+    (def #_"PrimitiveConstant" JavaConstant'TRUE   (PrimitiveConstant'new-2 :JavaKind'Boolean, 1))
+
+    (defm PrimitiveConstant JavaConstant
+        (#_"JavaKind" JavaConstant'''getJavaKind-1 [#_"PrimitiveConstant" this]
+            (:kind this)
+        )
+
+        (#_"boolean" JavaConstant'''isNull-1 [#_"PrimitiveConstant" this]
+            false
+        )
+
+        (#_"boolean" JavaConstant'''asBoolean-1 [#_"PrimitiveConstant" this]
+            (not (zero? (:primitive this)))
+        )
+
+        (#_"int" JavaConstant'''asInt-1 [#_"PrimitiveConstant" this]
+            (int (:primitive this))
+        )
+
+        (#_"long" JavaConstant'''asLong-1 [#_"PrimitiveConstant" this]
+            (:primitive this)
+        )
+    )
+
+    (defm PrimitiveConstant Constant
+        (#_"boolean" Constant'''isDefaultForKind-1 [#_"PrimitiveConstant" this]
+            (zero? (:primitive this))
+        )
+    )
+)
+
+(class-ns RawConstant [PrimitiveConstant]
+    (defn #_"RawConstant" RawConstant'new-1 [#_"long" rawValue]
+        (merge (RawConstant'class.) (PrimitiveConstant'new-2 :JavaKind'Int, rawValue))
     )
 )
 
@@ -7799,7 +8100,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"boolean" ConstantFields'isStableFieldValueConstant-3 [#_"ResolvedJavaField" field, #_"JavaConstant" value, #_"JavaConstant" receiver]
-        (or (not (#_"JavaConstant" .isDefaultForKind value))
+        (or (not (Constant'''isDefaultForKind-1 value))
             (and (not (#_"ResolvedJavaField" .isStatic field))
                 (#_"ResolvedJavaType" .isInstance ConstantFields'hotSpotType, receiver)
             )
@@ -7813,7 +8114,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"boolean" ConstantFields'isFinalFieldValueConstant-3 [#_"ResolvedJavaField" field, #_"JavaConstant" value, #_"JavaConstant" receiver]
-        (or GraalOptions'trustFinalDefaultFields (not (#_"JavaConstant" .isDefaultForKind value))
+        (or GraalOptions'trustFinalDefaultFields (not (Constant'''isDefaultForKind-1 value))
             (and (not (#_"ResolvedJavaField" .isStatic field))
                 (#_"ResolvedJavaType" .isInstance ConstantFields'nodeClassType, receiver)
             )
@@ -7850,7 +8151,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"ConstantNode" ConstantFields'tryConstantFold-2 [#_"ResolvedJavaField" field, #_"JavaConstant" receiver]
-        (when (or (#_"ResolvedJavaField" .isStatic field) (and (some? receiver) (not (#_"JavaConstant" .isNull receiver))))
+        (when (or (#_"ResolvedJavaField" .isStatic field) (and (some? receiver) (not (JavaConstant'''isNull-1 receiver))))
             (ConstantFields'readConstantField-2 field, receiver)
         )
     )
@@ -7886,7 +8187,7 @@ ZeroExtendNode'new-4
      ;;
     #_unused
     (defn #_"Object" SnippetReflection'asObject-2t [#_"ResolvedJavaType" type, #_"JavaConstant" constant]
-        (when-not (#_"JavaConstant" .isNull constant)
+        (when-not (JavaConstant'''isNull-1 constant)
             (#_"HotSpotObjectConstant" .asObject constant, type)
         )
     )
@@ -7902,7 +8203,7 @@ ZeroExtendNode'new-4
      ;         {@link Class#isInstance(Object) instance of} {@code type} otherwise nil
      ;;
     (defn #_"<T> T" SnippetReflection'asObject-2c [#_"Class<T>" type, #_"JavaConstant" constant]
-        (when-not (#_"JavaConstant" .isNull constant)
+        (when-not (JavaConstant'''isNull-1 constant)
             (#_"HotSpotObjectConstant" .asObject constant, type)
         )
     )
@@ -9201,29 +9502,29 @@ ZeroExtendNode'new-4
         ;; because they don't match in all cases. For example, an object constant can be loaded to
         ;; a long register when unsafe casts occurred (e.g. for a write barrier where arithmetic
         ;; operations are then performed on the pointer).
-        (case (JavaKind'getStackKind-1 (#_"JavaConstant" .getJavaKind input))
+        (case (JavaKind'getStackKind-1 (JavaConstant'''getJavaKind-1 input))
             :JavaKind'Int
                 ;; Do not optimize with an XOR, as this instruction may be between a CMP and a Jcc,
                 ;; in which case the XOR will modify the condition flags and interfere with the Jcc.
-                (Assembler''movl-3ri asm, result, (#_"JavaConstant" .asInt input))
+                (Assembler''movl-3ri asm, result, (JavaConstant'''asInt-1 input))
             :JavaKind'Long
                 ;; Do not optimize with an XOR, as this instruction may be between a CMP and a Jcc,
                 ;; in which case the XOR will modify the condition flags and interfere with the Jcc.
                 (cond
-                    (= (#_"JavaConstant" .asLong input) (int (#_"JavaConstant" .asLong input)))
+                    (= (JavaConstant'''asLong-1 input) (int (JavaConstant'''asLong-1 input)))
                         ;; sign extended to long
-                        (Assembler''movslq-3ri asm, result, (int (#_"JavaConstant" .asLong input)))
-                    (= (& (#_"JavaConstant" .asLong input) 0xffffffff) (#_"JavaConstant" .asLong input))
+                        (Assembler''movslq-3ri asm, result, (int (JavaConstant'''asLong-1 input)))
+                    (= (& (JavaConstant'''asLong-1 input) 0xffffffff) (JavaConstant'''asLong-1 input))
                         ;; zero extended to long
-                        (Assembler''movl-3ri asm, result, (int (#_"JavaConstant" .asLong input)))
+                        (Assembler''movl-3ri asm, result, (int (JavaConstant'''asLong-1 input)))
                     :else
-                        (Assembler''movq-3rl asm, result, (#_"JavaConstant" .asLong input))
+                        (Assembler''movq-3rl asm, result, (JavaConstant'''asLong-1 input))
                 )
             :JavaKind'Object
                 ;; Do not optimize with an XOR, as this instruction may be between a CMP and a Jcc,
                 ;; in which case the XOR will modify the condition flags and interfere with the Jcc.
                 (cond
-                    (#_"JavaConstant" .isNull input)
+                    (JavaConstant'''isNull-1 input)
                         (Assembler''movq-3rl asm, result, 0)
                     AMD64'inlineObjects
                         (-> asm
@@ -9237,10 +9538,10 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"boolean" AMD64Move'canMoveConst2Stack-1 [#_"JavaConstant" input]
-        (case (JavaKind'getStackKind-1 (#_"JavaConstant" .getJavaKind input))
+        (case (JavaKind'getStackKind-1 (JavaConstant'''getJavaKind-1 input))
             :JavaKind'Int    true
             :JavaKind'Long   true
-            :JavaKind'Object (#_"JavaConstant" .isNull input)
+            :JavaKind'Object (JavaConstant'''isNull-1 input)
                              false
         )
     )
@@ -9249,11 +9550,11 @@ ZeroExtendNode'new-4
         (let [
             #_"AMD64Address" dest (Assembler''asAddress-2 asm, result)
             #_"long" imm
-                (case (JavaKind'getStackKind-1 (#_"JavaConstant" .getJavaKind input))
-                    :JavaKind'Int  (#_"JavaConstant" .asInt input)
-                    :JavaKind'Long (#_"JavaConstant" .asLong input)
+                (case (JavaKind'getStackKind-1 (JavaConstant'''getJavaKind-1 input))
+                    :JavaKind'Int  (JavaConstant'''asInt-1 input)
+                    :JavaKind'Long (JavaConstant'''asLong-1 input)
                     :JavaKind'Object
-                        (when (#_"JavaConstant" .isNull input) => (throw! "non-nil object constants must be in register")
+                        (when (JavaConstant'''isNull-1 input) => (throw! "non-nil object constants must be in register")
                             0
                         )
                 )
@@ -9391,7 +9692,7 @@ ZeroExtendNode'new-4
 
 (value-ns LIRValueUtil
     (defn #_"boolean" LIRValueUtil'isJavaConstant-1 [#_"Value" value]
-        (and (satisfies? ConstantValue value) (instance? JavaConstant (:constant value)))
+        (and (satisfies? ConstantValue value) (satisfies? JavaConstant (:constant value)))
     )
 
     (defn #_"boolean" LIRValueUtil'isIntConstant-2 [#_"Value" value, #_"long" expected]
@@ -9399,8 +9700,8 @@ ZeroExtendNode'new-4
             (let [
                 #_"JavaConstant" jc (:constant value)
             ]
-                (and (some? jc) (JavaKind'isNumericInteger-1 (#_"JavaConstant" .getJavaKind jc))
-                    (= (#_"JavaConstant" .asLong jc) expected)
+                (and (some? jc) (JavaKind'isNumericInteger-1 (JavaConstant'''getJavaKind-1 jc))
+                    (= (JavaConstant'''asLong-1 jc) expected)
                 )
             )
         )
@@ -9540,11 +9841,11 @@ ZeroExtendNode'new-4
  ;;
 (value-ns MathUtil
     (defn- #_"boolean" MathUtil'isConstantOne-1 [#_"ValueNode" v1]
-        (and (satisfies? ConstantNode v1) (satisfies? IntegerStamp (:stamp v1)) (= (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 v1)) 1))
+        (and (satisfies? ConstantNode v1) (satisfies? IntegerStamp (:stamp v1)) (= (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 v1)) 1))
     )
 
     (defn- #_"boolean" MathUtil'isConstantZero-1 [#_"ValueNode" v1]
-        (and (satisfies? ConstantNode v1) (satisfies? IntegerStamp (:stamp v1)) (zero? (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 v1))))
+        (and (satisfies? ConstantNode v1) (satisfies? IntegerStamp (:stamp v1)) (zero? (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 v1))))
     )
 
     (defn #_"ValueNode" MathUtil'add-3 [#_"Graph" graph, #_"ValueNode" v1, #_"ValueNode" v2]
@@ -11834,7 +12135,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"AddressNode" Lowerer'createUnsafeAddress-3 [#_"Graph" graph, #_"ValueNode" object, #_"ValueNode" offset]
-        (if (and (satisfies? ConstantNode object) (#_"Constant" .isDefaultForKind (:value object)))
+        (if (and (satisfies? ConstantNode object) (Constant'''isDefaultForKind-1 (:value object)))
             (Graph''addOrUniqueWithInputs-2 graph, (OffsetAddressNode'create-1 offset))
             (Graph''add-2 graph, (OffsetAddressNode'new-2 object, offset))
         )
@@ -11977,7 +12278,7 @@ ZeroExtendNode'new-4
 
     (defn #_"GuardingNode" Lowerer'createNullCheck-3 [#_"ValueNode" object, #_"FixedNode" before, #_"LoweringTool" lowerer]
         (when-not (StampTool'isPointerNeverNull-1 (:stamp object))
-            (LoweringTool''createGuard-7 lowerer, before, (Graph''add-2 (:graph before), (IsNullNode'create-1 object)), DeoptimizationReason/NullCheckException, DeoptimizationAction/InvalidateReprofile, JavaConstant/NULL_POINTER, true)
+            (LoweringTool''createGuard-7 lowerer, before, (Graph''add-2 (:graph before), (IsNullNode'create-1 object)), DeoptimizationReason/NullCheckException, DeoptimizationAction/InvalidateReprofile, JavaConstant'NULL_POINTER, true)
         )
     )
 
@@ -13069,8 +13370,8 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"ValueNode" AddressLowering'improveConstDisp-6 [#_"AMD64AddressNode" address, #_"ValueNode" original, #_"JavaConstant" constant, #_"ValueNode" other, #_"int" shift, #_"boolean" negateExtractedDisplacement]
-        (when (JavaKind'isNumericInteger-1 (#_"JavaConstant" .getJavaKind constant)) => original
-            (when (AddressLowering'updateDisplacement-3 address, (<< (#_"JavaConstant" .asLong constant) shift), negateExtractedDisplacement) => original
+        (when (JavaKind'isNumericInteger-1 (JavaConstant'''getJavaKind-1 constant)) => original
+            (when (AddressLowering'updateDisplacement-3 address, (<< (JavaConstant'''asLong-1 constant) shift), negateExtractedDisplacement) => original
                 other
             )
         )
@@ -13254,7 +13555,7 @@ ZeroExtendNode'new-4
 
                 (and (satisfies? LeftShiftNode index) (satisfies? ConstantNode (:y index))
                     (let [
-                        #_"int" amount (+ (:shift (:scale addr)) (#_"JavaConstant" .asInt (ValueNode''asJavaConstant-1 (:y index))))
+                        #_"int" amount (+ (:shift (:scale addr)) (JavaConstant'''asInt-1 (ValueNode''asJavaConstant-1 (:y index))))
                         #_"Scale" scale (Scale'fromShift-1 amount)
                     ]
                         (and (some? scale)
@@ -13364,7 +13665,7 @@ ZeroExtendNode'new-4
      ; Given that Add(a, cst) is always positive, performs the following: ZeroExtend(Add(a, cst)) -> Add(SignExtend(a), SignExtend(cst)).
      ;;
     (defn- #_"ZeroExtendNode" AddressLowering'optimizeAdd-4 [#_"ZeroExtendNode" node, #_"ConstantNode" constant, #_"ValueNode" other, #_"LoopEx" _loop]
-        (Node''replaceAtUsages-2 node, (Graph''add-2 (:graph node), (AddNode'new-2 (AddressLowering'signExtend-2 other, _loop), (ConstantNode'forLong-2 (#_"JavaConstant" .asInt (ValueNode''asJavaConstant-1 constant)), (:graph node)))))
+        (Node''replaceAtUsages-2 node, (Graph''add-2 (:graph node), (AddNode'new-2 (AddressLowering'signExtend-2 other, _loop), (ConstantNode'forLong-2 (JavaConstant'''asInt-1 (ValueNode''asJavaConstant-1 constant)), (:graph node)))))
     )
 
     (defn- #_"boolean" AddressLowering'applicableToImplicitZeroExtend-1 [#_"ZeroExtendNode" node]
@@ -13477,7 +13778,7 @@ ZeroExtendNode'new-4
  ; Common base class for values that are stored in some location that's managed by the register
  ; allocator (e.g. register, stack slot).
  ;;
-(class-ns AllocatableValue [Value, #_"JavaValue"]
+(class-ns AllocatableValue [Value]
     (defn #_"AllocatableValue" AllocatableValue'new-1 [#_"ValueKind" kind]
         (merge (AllocatableValue'class.) (Value'new-1 kind))
     )
@@ -13487,7 +13788,7 @@ ZeroExtendNode'new-4
  ; Represents a value that is yet to be bound to a machine location (such as a RegisterValue or StackSlot)
  ; by a register allocator.
  ;;
-(class-ns Variable [AllocatableValue, Value, #_"JavaValue"]
+(class-ns Variable [AllocatableValue, Value]
     (defn #_"Variable" Variable'new-2 [#_"ValueKind" kind, #_"int" index]
         (merge (Variable'class.) (AllocatableValue'new-1 kind)
             (hash-map
@@ -13503,7 +13804,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Denotes a register that stores a value of a fixed kind.
  ;;
-(class-ns RegisterValue [AllocatableValue, Value, #_"JavaValue"]
+(class-ns RegisterValue [AllocatableValue, Value]
     (defn #_"RegisterValue" RegisterValue'new-2 [#_"ValueKind" kind, #_"Register" reg]
         (merge (RegisterValue'class.) (AllocatableValue'new-1 kind)
             (hash-map
@@ -13517,7 +13818,7 @@ ZeroExtendNode'new-4
  ; Represents a compiler spill slot or an outgoing stack-based argument in a method's frame or
  ; an incoming stack-based argument in a method's {@linkplain #isInCallerFrame() caller's frame}.
  ;;
-(class-ns StackSlot [AllocatableValue, Value, #_"JavaValue"]
+(class-ns StackSlot [AllocatableValue, Value]
     ;;;
      ; Creates a {@link StackSlot} instance representing a stack slot at a given index holding a value
      ; of a given kind.
@@ -13560,7 +13861,7 @@ ZeroExtendNode'new-4
  ; VirtualStackSlots are stack slots that are not yet fixed to specific frame offset. They
  ; are replaced by real StackSlots with a fixed position in the frame before code emission.
  ;;
-(class-ns VirtualStackSlot [AllocatableValue, Value, #_"JavaValue"]
+(class-ns VirtualStackSlot [AllocatableValue, Value]
     (defn #_"VirtualStackSlot" VirtualStackSlot'new-2 [#_"int" id, #_"ValueKind" kind]
         (merge (VirtualStackSlot'class.) (AllocatableValue'new-1 kind)
             (hash-map
@@ -15843,7 +16144,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"this" Assembler''recordInlineDataInCode-2 [#_"Assembler" this, #_"Constant" data]
-        (when (instance? VMConstant data) => this
+        (when (satisfies? VMConstant data) => this
             (update this :compilationResult CompilationResult''recordDataPatch-3 (Assembler''position-1 this), (ConstantReference. data))
         )
     )
@@ -15860,9 +16161,9 @@ ZeroExtendNode'new-4
 
     (defn- #_"Data" Assembler'createDataItem-1 [#_"Constant" constant]
         (cond
-            (JavaConstant/isNull constant)
+            (JavaConstant'isNull-1 constant)
                 (let [
-                    #_"int" size (if (= HotSpotCompressedNullConstant/COMPRESSED_NULL constant) 4 (WordSize'inBytes-1 AMD64'wordSize))
+                    #_"int" size (if (= JavaConstant'COMPRESSED_NULL constant) 4 (WordSize'inBytes-1 AMD64'wordSize))
                 ]
                     (§ proxy #_"Data" (Data'new-2 size, size)
                         (#_"void" Data'''emit-3 [#_"Data" this, #_"ByteBuffer" buffer, #_"Patches" _patches]
@@ -15874,9 +16175,9 @@ ZeroExtendNode'new-4
                         )
                     )
                 )
-            (and (instance? VMConstant constant) (instance? HotSpotConstant constant))
+            (and (satisfies? VMConstant constant) (satisfies? HotSpotConstant constant))
                 (let [
-                    #_"int" size (if (#_"HotSpotConstant" .isCompressed constant) 4 (WordSize'inBytes-1 AMD64'wordSize))
+                    #_"int" size (if (HotSpotConstant'''isCompressed-1 constant) 4 (WordSize'inBytes-1 AMD64'wordSize))
                 ]
                     (§ proxy #_"Data" (Data'new-2 size, size)
                         (#_"void" Data'''emit-3 [#_"Data" this, #_"ByteBuffer" buffer, #_"Patches" patches]
@@ -16034,8 +16335,8 @@ ZeroExtendNode'new-4
 
     (defm AMD64SwitchClosure AMD64SwitchClosure
         (#_"this" AMD64SwitchClosure'''emitComparison-2 [#_"AMD64SwitchClosure" this, #_"Constant" c]
-            (case (#_"JavaConstant" .getJavaKind c)
-                :JavaKind'Int  (update this :asm Assembler''cmpl-3ri (:keyRegister this), (int (#_"JavaConstant" .asLong c)))
+            (case (JavaConstant'''getJavaKind-1 c)
+                :JavaKind'Int  (update this :asm Assembler''cmpl-3ri (:keyRegister this), (int (JavaConstant'''asLong-1 c)))
                 :JavaKind'Long (update this :asm Assembler''cmpq-3ra (:keyRegister this), (Assembler''asLongConstRef-2 (:asm this), c))
                 :JavaKind'Object
                     (let [
@@ -16067,7 +16368,7 @@ ZeroExtendNode'new-4
     (defm HotSpotSwitchClosure AMD64SwitchClosure
         (#_"this" AMD64SwitchClosure'''emitComparison-2 [#_"HotSpotSwitchClosure" this, #_"Constant" constant]
             (when (instance? HotSpotMetaspaceConstant constant) => (AMD64SwitchClosure'''emitComparison-2 (§ super AMD64SwitchClosure'iface), constant)
-                (if (#_"HotSpotMetaspaceConstant" .isCompressed constant)
+                (if (HotSpotConstant'''isCompressed-1 constant)
                     (let [
                         this (update this :asm Assembler''recordInlineDataInCode-2 constant)
                     ]
@@ -18119,7 +18420,7 @@ ZeroExtendNode'new-4
     (defn- #_"boolean" PEReadEliminationClosure''processLoadIndexed-4 [#_"PEReadEliminationClosure" this, #_"LoadIndexedNode" load, #_"PEReadEliminationBlockState" state, #_"GraphEffects" effects]
         (and (satisfies? ConstantNode (AccessIndexedNode''index-1 load))
             (let [
-                #_"int" index (#_"JavaConstant" .asInt (:value (AccessIndexedNode''index-1 load)))
+                #_"int" index (JavaConstant'''asInt-1 (:value (AccessIndexedNode''index-1 load)))
                 ;; BALOAD (with elementKind being Byte) can be used to retrieve values from boolean arrays.
                 #_"JavaKind" elementKind (:elementKind load)
                 elementKind
@@ -18140,7 +18441,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"boolean" PEReadEliminationClosure''processStoreIndexed-4 [#_"PEReadEliminationClosure" this, #_"StoreIndexedNode" store, #_"PEReadEliminationBlockState" state, #_"GraphEffects" effects]
         (let [
-            #_"int" index (if (satisfies? ConstantNode (AccessIndexedNode''index-1 store)) (#_"JavaConstant" .asInt (:value (AccessIndexedNode''index-1 store))) -1)
+            #_"int" index (if (satisfies? ConstantNode (AccessIndexedNode''index-1 store)) (JavaConstant'''asInt-1 (:value (AccessIndexedNode''index-1 store))) -1)
             ;; BASTORE (with elementKind being Byte) can be used to store values in boolean arrays.
             #_"JavaKind" elementKind (:elementKind store)
             elementKind
@@ -18187,7 +18488,7 @@ ZeroExtendNode'new-4
                     (let [
                         #_"JavaKind" accessKind (:accessKind load)
                         #_"JavaKind" componentKind (#_"ResolvedJavaType" .getJavaKind (#_"ResolvedJavaType" .getComponentType type))
-                        #_"long" offset (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 (:offset load)))
+                        #_"long" offset (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 (:offset load)))
                         #_"int" index (VirtualArrayNode'entryIndexForOffset-4 offset, accessKind, (#_"ResolvedJavaType" .getComponentType type), Integer/MAX_VALUE)
                         #_"ValueNode" object (GraphUtil'unproxify-1n (:object load))
                         #_"LocationIdentity" location (NamedLocationIdentity'getArrayLocation-1 componentKind)
@@ -18231,7 +18532,7 @@ ZeroExtendNode'new-4
                 ]
                     (if (satisfies? ConstantNode (:offset store))
                         (let [
-                            #_"long" offset (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 (:offset store)))
+                            #_"long" offset (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 (:offset store)))
                             #_"boolean" overflowAccess (PEReadEliminationClosure'isOverflowAccess-2 accessKind, componentKind)
                             #_"int" index (if overflowAccess -1 (VirtualArrayNode'entryIndexForOffset-4 offset, accessKind, (#_"ResolvedJavaType" .getComponentType type), Integer/MAX_VALUE))
                         ]
@@ -19112,7 +19413,7 @@ ZeroExtendNode'new-4
      ;;
     (defn- #_"this" BytecodeParser''handleUnresolvedCheckCast-3 [#_"BytecodeParser" this, #_"JavaType" type, #_"ValueNode" object]
         (BytecodeParser''append-2 this, (FixedGuardNode'new-3 (Graph''addOrUniqueWithInputs-2 (:graph this), (IsNullNode'create-1 object)), DeoptimizationReason/Unresolved, DeoptimizationAction/InvalidateRecompile))
-        (update this :frameState FrameStateBuilder''push-3 :JavaKind'Object, (ConstantNode'forConstant-2c JavaConstant/NULL_POINTER, (:graph this)))
+        (update this :frameState FrameStateBuilder''push-3 :JavaKind'Object, (ConstantNode'forConstant-2c JavaConstant'NULL_POINTER, (:graph this)))
     )
 
     ;;;
@@ -19128,7 +19429,7 @@ ZeroExtendNode'new-4
             (let [
                 this (assoc this :lastInstr successor)
             ]
-                (update this :frameState FrameStateBuilder''push-3 :JavaKind'Int, (ConstantNode'forConstant-2c JavaConstant/INT_0, (:graph this)))
+                (update this :frameState FrameStateBuilder''push-3 :JavaKind'Int, (ConstantNode'forConstant-2c JavaConstant'INT_0, (:graph this)))
             )
         )
     )
@@ -19914,7 +20215,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"ConstantNode" BytecodeParser''getJsrConstant-2 [#_"BytecodeParser" this, #_"long" bci]
         (let [
-            #_"JavaConstant" nextBciConstant (RawConstant. bci)
+            #_"JavaConstant" nextBciConstant (RawConstant'new-1 bci)
         ]
             (Graph''add-2 (:graph this), (ConstantNode'new-2 nextBciConstant, (StampFactory'forPrimitiveConstant-1 nextBciConstant)))
         )
@@ -19968,7 +20269,7 @@ ZeroExtendNode'new-4
     (defn- #_"this" BytecodeParser''genIntegerSwitch-6 [#_"BytecodeParser" this, #_"ValueNode" value, #_"BciBlock*" actualSuccessors, #_"[int]" keys, #_"[double]" probabilities, #_"[int]" keySuccessors]
         (if (satisfies? ConstantNode value)
             (let [
-                #_"int" constantValue (#_"JavaConstant" .asInt (:value value))
+                #_"int" constantValue (JavaConstant'''asInt-1 (:value value))
                 #_"int" i (loop-when-recur [i 0] (and (< i (count keys)) (not (= (nth keys i) constantValue))) [(inc i)] => i)
             ]
                 (BytecodeParser''appendGoto-2 this, (nth actualSuccessors (nth keySuccessors i)))
@@ -20234,8 +20535,8 @@ ZeroExtendNode'new-4
                     (when (instance? ResolvedJavaType constant) => (BytecodeParser''handleUnresolvedLoadConstant-2 this, constant)
                         (update this :frameState FrameStateBuilder''push-3 :JavaKind'Object, (ConstantNode'forConstant-2c (#_"ConstantReflectionProvider" .asJavaClass HotSpot'constantReflection, constant), (:graph this)))
                     )
-                JavaConstant
-                    (update this :frameState FrameStateBuilder''push-3 (#_"JavaConstant" .getJavaKind constant), (ConstantNode'forConstant-2c constant, (:graph this)))
+                JavaConstant'iface
+                    (update this :frameState FrameStateBuilder''push-3 (JavaConstant'''getJavaKind-1 constant), (ConstantNode'forConstant-2c constant, (:graph this)))
             )
         )
     )
@@ -20389,7 +20690,7 @@ ZeroExtendNode'new-4
             #_"int" index (BytecodeStream''readLocalIndex-1 (:stream this))
             #_"int" delta (BytecodeStream''readIncrement-1 (:stream this))
             #_"ValueNode" x (nth (:locals (:frameState this)) index)
-            #_"ValueNode" y (ConstantNode'forConstant-2c (JavaConstant/forInt delta), (:graph this))
+            #_"ValueNode" y (ConstantNode'forConstant-2c (JavaConstant'forInt-1 delta), (:graph this))
         ]
             (update this :frameState FrameStateBuilder''storeLocal-4 index, :JavaKind'Int, (BytecodeParser''append-2 this, (AddNode'create-2 x, y)))
         )
@@ -20397,7 +20698,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"this" BytecodeParser''genIfZero-2 [#_"BytecodeParser" this, #_"Condition" cond]
         (let [
-            #_"ValueNode" y (ConstantNode'forConstant-2c JavaConstant/INT_0, (:graph this))
+            #_"ValueNode" y (ConstantNode'forConstant-2c JavaConstant'INT_0, (:graph this))
             #_"ValueNode" x (FrameStateBuilder''pop-2 (:frameState this), :JavaKind'Int)
         ]
             (BytecodeParser''genIf-4 this, x, cond, y)
@@ -20406,7 +20707,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"this" BytecodeParser''genIfNull-2 [#_"BytecodeParser" this, #_"Condition" cond]
         (let [
-            #_"ValueNode" y (ConstantNode'forConstant-2c JavaConstant/NULL_POINTER, (:graph this))
+            #_"ValueNode" y (ConstantNode'forConstant-2c JavaConstant'NULL_POINTER, (:graph this))
             #_"ValueNode" x (FrameStateBuilder''pop-2 (:frameState this), :JavaKind'Object)
         ]
             (BytecodeParser''genIf-4 this, x, cond, y)
@@ -20773,18 +21074,18 @@ ZeroExtendNode'new-4
     (defn- #_"this" BytecodeParser''processBytecode-3 [#_"BytecodeParser" this, #_"int" bci, #_"int" opcode]
         (condp =? opcode
             Bytecodes'NOP             this ;; nothing to do
-            Bytecodes'ACONST_NULL     (update this :frameState FrameStateBuilder''push-3 :JavaKind'Object, (ConstantNode'forConstant-2c JavaConstant/NULL_POINTER, (:graph this)))
+            Bytecodes'ACONST_NULL     (update this :frameState FrameStateBuilder''push-3 :JavaKind'Object, (ConstantNode'forConstant-2c JavaConstant'NULL_POINTER, (:graph this)))
            [Bytecodes'ICONST_M1
             Bytecodes'ICONST_0
             Bytecodes'ICONST_1
             Bytecodes'ICONST_2
             Bytecodes'ICONST_3
             Bytecodes'ICONST_4
-            Bytecodes'ICONST_5]       (update this :frameState FrameStateBuilder''push-3 :JavaKind'Int, (ConstantNode'forConstant-2c (JavaConstant/forInt (- opcode Bytecodes'ICONST_0)), (:graph this)))
+            Bytecodes'ICONST_5]       (update this :frameState FrameStateBuilder''push-3 :JavaKind'Int, (ConstantNode'forConstant-2c (JavaConstant'forInt-1 (- opcode Bytecodes'ICONST_0)), (:graph this)))
            [Bytecodes'LCONST_0
-            Bytecodes'LCONST_1]       (update this :frameState FrameStateBuilder''push-3 :JavaKind'Long, (ConstantNode'forConstant-2c (JavaConstant/forLong (- opcode Bytecodes'LCONST_0)), (:graph this)))
-            Bytecodes'BIPUSH          (update this :frameState FrameStateBuilder''push-3 :JavaKind'Int, (ConstantNode'forConstant-2c (JavaConstant/forInt (BytecodeStream''readByte-1 (:stream this))), (:graph this)))
-            Bytecodes'SIPUSH          (update this :frameState FrameStateBuilder''push-3 :JavaKind'Int, (ConstantNode'forConstant-2c (JavaConstant/forInt (BytecodeStream''readShort-1 (:stream this))), (:graph this)))
+            Bytecodes'LCONST_1]       (update this :frameState FrameStateBuilder''push-3 :JavaKind'Long, (ConstantNode'forConstant-2c (JavaConstant'forLong-1 (- opcode Bytecodes'LCONST_0)), (:graph this)))
+            Bytecodes'BIPUSH          (update this :frameState FrameStateBuilder''push-3 :JavaKind'Int, (ConstantNode'forConstant-2c (JavaConstant'forInt-1 (BytecodeStream''readByte-1 (:stream this))), (:graph this)))
+            Bytecodes'SIPUSH          (update this :frameState FrameStateBuilder''push-3 :JavaKind'Int, (ConstantNode'forConstant-2c (JavaConstant'forInt-1 (BytecodeStream''readShort-1 (:stream this))), (:graph this)))
            [Bytecodes'LDC
             Bytecodes'LDC_W
             Bytecodes'LDC2_W]         (BytecodeParser''genLoadConstant-3 this, (BytecodeStream''readCPI-1 (:stream this)), opcode)
@@ -22878,8 +23179,8 @@ ZeroExtendNode'new-4
                 ClassfileConstant'CONSTANT_Methodref          (MethodRef'new-1 stream)
                 ClassfileConstant'CONSTANT_InterfaceMethodref (InterfaceMethodRef'new-1 stream)
                 ClassfileConstant'CONSTANT_String             (StringRef'new-1 stream)
-                ClassfileConstant'CONSTANT_Integer            (Primitive'new-2 tag, (JavaConstant/forInt (#_"DataInputStream" .readInt stream)))
-                ClassfileConstant'CONSTANT_Long               (Primitive'new-2 tag, (JavaConstant/forLong (#_"DataInputStream" .readLong stream)))
+                ClassfileConstant'CONSTANT_Integer            (Primitive'new-2 tag, (JavaConstant'forInt-1 (#_"DataInputStream" .readInt stream)))
+                ClassfileConstant'CONSTANT_Long               (Primitive'new-2 tag, (JavaConstant'forLong-1 (#_"DataInputStream" .readLong stream)))
                 ClassfileConstant'CONSTANT_NameAndType        (NameAndType'new-1 stream)
                 ClassfileConstant'CONSTANT_Utf8               (Utf8'new-1 (#_"DataInputStream" .readUTF stream))
                 ClassfileConstant'CONSTANT_MethodHandle
@@ -23241,7 +23542,7 @@ ZeroExtendNode'new-4
                 #_"ValueNode" a (:x normalizeNode)
                 #_"ValueNode" b (:y normalizeNode)
             ]
-                (condp = (#_"PrimitiveConstant" .asLong constant)
+                (condp = (JavaConstant'''asLong-1 constant)
                     0 (IntegerEqualsNode'create-3   smallestCompareWidth, a, b)
                     1 (IntegerLessThanNode'create-3 smallestCompareWidth, b, a)
                    -1 (IntegerLessThanNode'create-3 smallestCompareWidth, a, b)
@@ -23287,7 +23588,7 @@ ZeroExtendNode'new-4
 
         (#_"LogicNode" CompareOp'''canonicalizeSymmetricConstant-6 [#_"IntegerEqualsOp" this, #_"Integer" smallestCompareWidth, #_"CanonicalCondition" condition, #_"Constant" constant, #_"ValueNode" node, #_"boolean" mirrored?]
             (or
-                (when (instance? PrimitiveConstant constant)
+                (when (satisfies? PrimitiveConstant constant)
                     (or
                         (cond
                             (or (and (= (UnsignedLong''asLong-1 constant)  1) (= (:upperBound (:stamp node)) 1) (= (:lowerBound (:stamp node))  0))
@@ -23305,7 +23606,7 @@ ZeroExtendNode'new-4
                                     (and (satisfies? ShiftNode node) (satisfies? IntegerStamp (:stamp node)))
                                         (let [
                                             #_"int" mask (ShiftNode''getShiftAmountMask-1 node)
-                                            #_"int" amount (& (#_"JavaConstant" .asInt (ValueNode''asJavaConstant-1 (:y node))) mask)
+                                            #_"int" amount (& (JavaConstant'''asInt-1 (ValueNode''asJavaConstant-1 (:y node))) mask)
                                         ]
                                             (condp satisfies? node
                                                 LeftShiftNode
@@ -23428,7 +23729,7 @@ ZeroExtendNode'new-4
                                 (when (and (ValueNode''isJavaConstant-1 forX) (not (satisfies? ConstantNode forY)))
                                     ;; bring the constant on the right
                                     (let [
-                                        #_"long" xValue (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 forX))
+                                        #_"long" xValue (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 forX))
                                     ]
                                         (when-not (= xValue (LowerOp'''maxValue-2 this, bits))
                                             ;; c < x <=> !(c >= x) <=> !(x <= c) <=> !(x < c + 1)
@@ -23439,7 +23740,7 @@ ZeroExtendNode'new-4
                                 (cond
                                     (ValueNode''isJavaConstant-1 forY)
                                         (let [
-                                            #_"long" yValue (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 forY))
+                                            #_"long" yValue (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 forY))
                                         ]
                                             (when (= yValue (LowerOp'''maxValue-2 this, bits))
                                                 ;; x < MAX <=> x != MAX
@@ -23654,7 +23955,7 @@ ZeroExtendNode'new-4
             (let [
                 #_"ValueNode" a (if mirrored? (:y normalizeNode) (:x normalizeNode))
                 #_"ValueNode" b (if mirrored? (:x normalizeNode) (:y normalizeNode))
-                #_"long" cst (if mirrored? (- (#_"PrimitiveConstant" .asLong constant)) (#_"PrimitiveConstant" .asLong constant))
+                #_"long" cst (if mirrored? (- (JavaConstant'''asLong-1 constant)) (JavaConstant'''asLong-1 constant))
             ]
                 (cond
                     (= cst 0)   (IntegerLessThanNode'create-3 smallestCompareWidth, a, b)
@@ -23677,9 +23978,9 @@ ZeroExtendNode'new-4
                     (let [
                         [#_"ValueNode" vx #_"ValueNode" vy #_"boolean" negate?]
                             (cond
-                                (#_"Constant" .isDefaultForKind (:value forY))
+                                (Constant'''isDefaultForKind-1 (:value forY))
                                     [(:x forX) (:y forX) false] ;; (x - y) < 0 when x - y is known not to underflow <=> x < y
-                                (and (ValueNode''isJavaConstant-1 forY) (= (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 forY)) 1))
+                                (and (ValueNode''isJavaConstant-1 forY) (= (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 forY)) 1))
                                     [(:y forX) (:x forX) true]  ;; (x - y) < 1 when x - y is known not to underflow <=> !(y < x)
                             )
                     ]
@@ -23712,7 +24013,7 @@ ZeroExtendNode'new-4
                             (cond
                                 (satisfies? AddNode forX)
                                     (when (ValueNode''isJavaConstant-1 (:y forX))
-                                        (§ ass xResidue (- (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 (:y forX))) min))
+                                        (§ ass xResidue (- (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 (:y forX))) min))
                                         (§ ass left (:x forX))
                                     )
                                 (ValueNode''isJavaConstant-1 forX)
@@ -23728,7 +24029,7 @@ ZeroExtendNode'new-4
                                     (cond
                                         (satisfies? AddNode forY)
                                             (when (ValueNode''isJavaConstant-1 (:y forY))
-                                                (§ ass yResidue (- (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 (:y forY))) min))
+                                                (§ ass yResidue (- (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 (:y forY))) min))
                                                 (§ ass right (:x forY))
                                             )
                                         (ValueNode''isJavaConstant-1 forY)
@@ -23738,13 +24039,13 @@ ZeroExtendNode'new-4
                                 (when (and (or (some? right) (some? rightCst)) (or (and (zero? xResidue) (some? left)) (and (zero? yResidue) (some? right))))
                                     (cond
                                         (nil? left)
-                                            (§ ass left (ConstantNode'forIntegerBits-2l bits, (- (#_"JavaConstant" .asLong leftCst) min)))
+                                            (§ ass left (ConstantNode'forIntegerBits-2l bits, (- (JavaConstant'''asLong-1 leftCst) min)))
                                         (not= xResidue 0)
                                             (§ ass left (AddNode'create-2 left, (ConstantNode'forIntegerBits-2l bits, xResidue)))
                                     )
                                     (cond
                                         (nil? right)
-                                            (§ ass right (ConstantNode'forIntegerBits-2l bits, (- (#_"JavaConstant" .asLong rightCst) min)))
+                                            (§ ass right (ConstantNode'forIntegerBits-2l bits, (- (JavaConstant'''asLong-1 rightCst) min)))
                                         (not= yResidue 0)
                                             (§ ass right (AddNode'create-2 right, (ConstantNode'forIntegerBits-2l bits, yResidue)))
                                     )
@@ -24357,11 +24658,10 @@ ZeroExtendNode'new-4
      ;
      ; @param lt the constant on the left side of the comparison
      ; @param rt the constant on the right side of the comparison
-     ; @return Boolean#TRUE if the comparison is known to be true,
-     ;         Boolean#FALSE if the comparison is known to be false
+     ; @return true if the comparison is known to be true, false if the comparison is known to be false
      ;;
     (defn #_"boolean" Condition''foldCondition-3c [#_"Condition" this, #_"Constant" lt, #_"Constant" rt]
-        (if (instance? PrimitiveConstant lt)
+        (if (satisfies? PrimitiveConstant lt)
             (Condition''foldCondition-3p this, lt, rt)
             (let [
                 #_"Boolean" equal (#_"ConstantReflectionProvider" .constantEquals HotSpot'constantReflection, lt, rt)
@@ -24384,11 +24684,11 @@ ZeroExtendNode'new-4
      ; @return true if the comparison is known to be true, false if the comparison is known to be false
      ;;
     (defn #_"boolean" Condition''foldCondition-3p [#_"Condition" this, #_"PrimitiveConstant" lp, #_"PrimitiveConstant" rp]
-        (case (#_"PrimitiveConstant" .getJavaKind lp)
+        (case (JavaConstant'''getJavaKind-1 lp)
            (:JavaKind'Boolean :JavaKind'Byte :JavaKind'Char :JavaKind'Short :JavaKind'Int)
             (let [
-                #_"int" x (#_"PrimitiveConstant" .asInt lp)
-                #_"int" y (#_"PrimitiveConstant" .asInt rp)
+                #_"int" x (JavaConstant'''asInt-1 lp)
+                #_"int" y (JavaConstant'''asInt-1 rp)
             ]
                 (condp = this
                     Condition'EQ (= x y)
@@ -24405,8 +24705,8 @@ ZeroExtendNode'new-4
             )
             :JavaKind'Long
             (let [
-                #_"long" x (#_"PrimitiveConstant" .asLong lp)
-                #_"long" y (#_"PrimitiveConstant" .asLong rp)
+                #_"long" x (JavaConstant'''asLong-1 lp)
+                #_"long" y (JavaConstant'''asLong-1 rp)
             ]
                 (condp = this
                     Condition'EQ (= x y)
@@ -24890,7 +25190,7 @@ ZeroExtendNode'new-4
                 ]
                     (when (some? constant) => (recur (ConditionalEliminationInstance''nextElement-2 this, infoElement))
                         ;; No proxified input and stamp required.
-                        (GuardRewirer'''rewire-5 guardRewirer, (:guard infoElement), (#_"JavaConstant" .asBoolean constant), nil, nil)
+                        (GuardRewirer'''rewire-5 guardRewirer, (:guard infoElement), (JavaConstant'''asBoolean-1 constant), nil, nil)
                     )
                 )
                 (condp satisfies? node
@@ -26610,7 +26910,7 @@ ZeroExtendNode'new-4
      ;;
     (defn- #_"long" CountedLoopInfo''rawConstantMaxTripCount-1 [#_"CountedLoopInfo" this]
         (let [
-            #_"long" endValue (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 (:end this)))
+            #_"long" endValue (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 (:end this)))
             #_"long" initValue (InductionVariable'''constantInit-1 (:iv this))
             [#_"long" range #_"long" absStride]
                 (if (= (InductionVariable'''direction-1 (:iv this)) :Direction'Up)
@@ -26678,7 +26978,7 @@ ZeroExtendNode'new-4
                             (Graph''add-2 graph, (IntegerLessThanNode'new-2 (:end this), (if (:oneOff this) (MathUtil'add-3 graph, v1, one) v1)))
                         )
                     )
-                #_"GuardingNode" overflowGuard (Graph''add-2 graph, (GuardNode'new-6 cond, (AbstractBeginNode'prevBegin-1 (LoopEx''entryPoint-1 (:loop this))), DeoptimizationReason/LoopLimitCheck, DeoptimizationAction/InvalidateRecompile, true, JavaConstant/NULL_POINTER))
+                #_"GuardingNode" overflowGuard (Graph''add-2 graph, (GuardNode'new-6 cond, (AbstractBeginNode'prevBegin-1 (LoopEx''entryPoint-1 (:loop this))), DeoptimizationReason/LoopLimitCheck, DeoptimizationAction/InvalidateRecompile, true, JavaConstant'NULL_POINTER))
                 _ (§ ass! (LoopEx''loopBegin-1 (:loop this)) (LoopBeginNode''setOverflowGuard-2 (LoopEx''loopBegin-1 (:loop this)), overflowGuard))
             ]
                 overflowGuard
@@ -32169,13 +32469,13 @@ ZeroExtendNode'new-4
         )
 
         (#_"long" InductionVariable'''constantInit-1 [#_"BasicInductionVariable" this]
-            (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 (:init this)))
+            (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 (:init this)))
         )
 
         (#_"long" InductionVariable'''constantStride-1 [#_"BasicInductionVariable" this]
             (condp satisfies? (:op this)
-                AddNode    (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 (:rawStride this)))
-                SubNode (- (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 (:rawStride this))))
+                AddNode    (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 (:rawStride this)))
+                SubNode (- (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 (:rawStride this))))
             )
         )
 
@@ -32349,7 +32649,7 @@ ZeroExtendNode'new-4
         )
 
         (#_"long" InductionVariable'''constantInit-1 [#_"DerivedOffsetInductionVariable" this]
-            (DerivedOffsetInductionVariable''op-3l this, (InductionVariable'''constantInit-1 (:base this)), (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 (:offset this))))
+            (DerivedOffsetInductionVariable''op-3l this, (InductionVariable'''constantInit-1 (:base this)), (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 (:offset this))))
         )
 
         (#_"long" InductionVariable'''constantStride-1 [#_"DerivedOffsetInductionVariable" this]
@@ -32379,7 +32679,7 @@ ZeroExtendNode'new-4
         )
 
         (#_"long" InductionVariable'''constantExtremum-1 [#_"DerivedOffsetInductionVariable" this]
-            (DerivedOffsetInductionVariable''op-3l this, (InductionVariable'''constantExtremum-1 (:base this)), (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 (:offset this))))
+            (DerivedOffsetInductionVariable''op-3l this, (InductionVariable'''constantExtremum-1 (:base this)), (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 (:offset this))))
         )
 
         (#_"void" InductionVariable'''deleteUnusedNodes-1 [#_"DerivedOffsetInductionVariable" this]
@@ -32437,11 +32737,11 @@ ZeroExtendNode'new-4
         )
 
         (#_"long" InductionVariable'''constantInit-1 [#_"DerivedScaledInductionVariable" this]
-            (* (InductionVariable'''constantInit-1 (:base this)) (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 (:scale this))))
+            (* (InductionVariable'''constantInit-1 (:base this)) (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 (:scale this))))
         )
 
         (#_"long" InductionVariable'''constantStride-1 [#_"DerivedScaledInductionVariable" this]
-            (* (InductionVariable'''constantStride-1 (:base this)) (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 (:scale this))))
+            (* (InductionVariable'''constantStride-1 (:base this)) (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 (:scale this))))
         )
 
         (#_"ValueNode" InductionVariable'''exitValueNode-1 [#_"DerivedScaledInductionVariable" this]
@@ -32453,7 +32753,7 @@ ZeroExtendNode'new-4
         )
 
         (#_"long" InductionVariable'''constantExtremum-1 [#_"DerivedScaledInductionVariable" this]
-            (* (InductionVariable'''constantExtremum-1 (:base this)) (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 (:scale this))))
+            (* (InductionVariable'''constantExtremum-1 (:base this)) (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 (:scale this))))
         )
 
         (#_"void" InductionVariable'''deleteUnusedNodes-1 [#_"DerivedScaledInductionVariable" this]
@@ -35741,7 +36041,7 @@ ZeroExtendNode'new-4
     (defn- #_"this" LIRBuilder''emitNullCheckBranch-5 [#_"LIRBuilder" this, #_"IsNullNode" node, #_"LabelRef" then, #_"LabelRef" else, #_"double" probability]
         (let [
             #_"ValueKind" kind (Stamp'''getValueKind-1 (:stamp (Unary'''getValue-1 node)))
-            #_"Value" nullValue (LIRGenerator''emitConstant-3 (:gen this), kind, JavaConstant/NULL_POINTER)
+            #_"Value" nullValue (LIRGenerator''emitConstant-3 (:gen this), kind, JavaConstant'NULL_POINTER)
         ]
             (update this :gen LIRGenerator''emitCompareBranch-8 (:wordSize kind), (LIRBuilder''operand-2 this, (Unary'''getValue-1 node)), nullValue, Condition'EQ, then, else, probability)
         )
@@ -35781,7 +36081,7 @@ ZeroExtendNode'new-4
             IsNullNode
                 (let [
                     #_"ValueKind" kind (Stamp'''getValueKind-1 (:stamp (Unary'''getValue-1 node)))
-                    #_"Value" nullValue (LIRGenerator''emitConstant-3 (:gen this), kind, JavaConstant/NULL_POINTER)
+                    #_"Value" nullValue (LIRGenerator''emitConstant-3 (:gen this), kind, JavaConstant'NULL_POINTER)
                 ]
                     (LIRGenerator''emitConditionalMove-7 (:gen this), (:wordSize kind), (LIRBuilder''operand-2 this, (Unary'''getValue-1 node)), nullValue, Condition'EQ, trueValue, falseValue)
                 )
@@ -36101,7 +36401,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"Value" LIRGenerator''emitJavaConstant-2 [#_"LIRGenerator" this, #_"JavaConstant" constant]
-        (LIRGenerator''emitConstant-3 this, (ValueKind'fromJavaKind-1 (#_"JavaConstant" .getJavaKind constant)), constant)
+        (LIRGenerator''emitConstant-3 this, (ValueKind'fromJavaKind-1 (JavaConstant'''getJavaKind-1 constant)), constant)
     )
 
     (defn #_"Variable" LIRGenerator''emitAddress-2 [#_"LIRGenerator" this, #_"AllocatableValue" stackslot]
@@ -36237,7 +36537,7 @@ ZeroExtendNode'new-4
     (defn #_"this" LIRGenerator''emitDeoptimizeCaller-3 [#_"LIRGenerator" this, #_"DeoptimizationAction" action, #_"DeoptimizationReason" reason]
         (let [
             #_"Value" actionAndReason (LIRGenerator''emitJavaConstant-2 this, (#_"MetaAccessProvider" .encodeDeoptActionAndReason HotSpot'metaAccess, action, reason, 0))
-            #_"Value" nullValue (LIRGenerator''emitConstant-3 this, (ValueKind'reference-1 :WordSize'64bits), JavaConstant/NULL_POINTER)
+            #_"Value" nullValue (LIRGenerator''emitConstant-3 this, (ValueKind'reference-1 :WordSize'64bits), JavaConstant'NULL_POINTER)
             this (LIRGenerator''moveDeoptValuesToThread-3 this, actionAndReason, nullValue)
         ]
             (LIRGenerator''append-2 this, (DeoptimizeCallerOp'new-0))
@@ -36375,10 +36675,10 @@ ZeroExtendNode'new-4
             #_"WordSize" size (if (= (:wordSize (:valueKind a)) :WordSize'64bits) :WordSize'64bits :WordSize'32bits)
         ]
             (cond
-                (and (LIRValueUtil'isJavaConstant-1 b) (NumUtil'is32bit-1 (#_"JavaConstant" .asLong (:constant b))))
-                    (LIRGenerator''append-2 this, (ConsumerConstOp'new-4a AMD64MIOp'TEST, size, (LIRGenerator''asAllocatable-2 this, a), (int (#_"JavaConstant" .asLong (:constant b)))))
-                (and (LIRValueUtil'isJavaConstant-1 a) (NumUtil'is32bit-1 (#_"JavaConstant" .asLong (:constant a))))
-                    (LIRGenerator''append-2 this, (ConsumerConstOp'new-4a AMD64MIOp'TEST, size, (LIRGenerator''asAllocatable-2 this, b), (int (#_"JavaConstant" .asLong (:constant a)))))
+                (and (LIRValueUtil'isJavaConstant-1 b) (NumUtil'is32bit-1 (JavaConstant'''asLong-1 (:constant b))))
+                    (LIRGenerator''append-2 this, (ConsumerConstOp'new-4a AMD64MIOp'TEST, size, (LIRGenerator''asAllocatable-2 this, a), (int (JavaConstant'''asLong-1 (:constant b)))))
+                (and (LIRValueUtil'isJavaConstant-1 a) (NumUtil'is32bit-1 (JavaConstant'''asLong-1 (:constant a))))
+                    (LIRGenerator''append-2 this, (ConsumerConstOp'new-4a AMD64MIOp'TEST, size, (LIRGenerator''asAllocatable-2 this, b), (int (JavaConstant'''asLong-1 (:constant a)))))
                 (satisfies? AllocatableValue b)
                     (LIRGenerator''append-2 this, (ConsumerOp'new-4 AMD64RMOp'TEST, size, (LIRGenerator''asAllocatable-2 this, b), (LIRGenerator''asAllocatable-2 this, a)))
                 :else
@@ -36486,7 +36786,7 @@ ZeroExtendNode'new-4
         (let [
             #_"SwitchStrategy" strategy (SwitchStrategy'getBestStrategy-3 constants, probabilities, targets)
             #_"int" n (count constants)
-            #_"long" valueRange (inc (- (#_"JavaConstant" .asLong (nth constants (dec n))) (#_"JavaConstant" .asLong (nth constants 0))))
+            #_"long" valueRange (inc (- (JavaConstant'''asLong-1 (nth constants (dec n))) (JavaConstant'''asLong-1 (nth constants 0))))
             #_"double" density (/ n (double valueRange))
         ]
             ;; This heuristic tries to find a compromise between the effort for the best switch strategy
@@ -36496,8 +36796,8 @@ ZeroExtendNode'new-4
             (if (or (< (SwitchStrategy'''getAverageEffort-1 strategy) 4) (< density (/ 1.0 (Math/sqrt (SwitchStrategy'''getAverageEffort-1 strategy)))))
                 (LIRGenerator''emitStrategySwitch-5 this, strategy, value, targets, default)
                 (let [
-                    #_"int" minValue (#_"JavaConstant" .asInt (nth constants 0))
-                    targets (reduce #(assoc' %1 (- (#_"JavaConstant" .asInt (nth constants %2)) minValue) (nth targets %2)) (vec (repeat (int valueRange) default)) (range n))
+                    #_"int" minValue (JavaConstant'''asInt-1 (nth constants 0))
+                    targets (reduce #(assoc' %1 (- (JavaConstant'''asInt-1 (nth constants %2)) minValue) (nth targets %2)) (vec (repeat (int valueRange) default)) (range n))
                 ]
                     (LIRGenerator''emitTableSwitch-5 this, minValue, default, targets, value)
                 )
@@ -36568,7 +36868,7 @@ ZeroExtendNode'new-4
                     #_"Variable" result (LIRGenerator''newVariable-2 this, (ValueKindTool'getNarrowPointerKind-0))
                     #_"AllocatableValue" base
                         (when (CompressEncoding''hasBase-1 encoding) => Value'ILLEGAL
-                            (LIRGenerator''emitLoadConstant-3 this, (ValueKindTool'getWordKind-0), (JavaConstant/forLong (:base encoding)))
+                            (LIRGenerator''emitLoadConstant-3 this, (ValueKindTool'getWordKind-0), (JavaConstant'forLong-1 (:base encoding)))
                         )
                     _ (§ ass! this (LIRGenerator''append-2 this, (CompressPointerOp'new-5 result, (LIRGenerator''asAllocatable-2 this, pointer), base, encoding, never-nil?)))
                 ]
@@ -36596,7 +36896,7 @@ ZeroExtendNode'new-4
                     #_"Variable" result (LIRGenerator''newVariable-2 this, uncompressedKind)
                     #_"AllocatableValue" base
                         (when (CompressEncoding''hasBase-1 encoding) => Value'ILLEGAL
-                            (LIRGenerator''emitLoadConstant-3 this, uncompressedKind, (JavaConstant/forLong (:base encoding)))
+                            (LIRGenerator''emitLoadConstant-3 this, uncompressedKind, (JavaConstant'forLong-1 (:base encoding)))
                         )
                     _ (§ ass! this (LIRGenerator''append-2 this, (UncompressPointerOp'new-5 result, (LIRGenerator''asAllocatable-2 this, pointer), base, encoding, never-nil?)))
                 ]
@@ -36623,9 +36923,9 @@ ZeroExtendNode'new-4
 
     (defn #_"AMD64AddressValue" LIRGenerator''asAddressValue-2 [#_"LIRGenerator" this, #_"Value" address]
         (when-not (satisfies? AMD64AddressValue address) => address
-            (when (instance? JavaConstant address)
+            (when (satisfies? JavaConstant address)
                 (let [
-                    #_"long" displacement (#_"JavaConstant" .asLong address)
+                    #_"long" displacement (JavaConstant'''asLong-1 address)
                 ]
                     (when (NumUtil'isInt-1 displacement)
                         (§ return (AMD64AddressValue'new-3 (:valueKind address), Value'ILLEGAL, (int displacement)))
@@ -36690,7 +36990,7 @@ ZeroExtendNode'new-4
     (defn #_"this" LIRGenerator''emitCCall-4 [#_"LIRGenerator" this, #_"long" address, #_"CallingConvention" nativeCallingConvention, #_"[Value]" args]
         (let [
             this (update-in this [:res :frameMapBuilder] FrameMapBuilder''callsMethod-2 nativeCallingConvention)
-            this (LIRGenerator''emitMoveConstant-3 this, (Register''asValue-2 AMD64'rax, (ValueKind'value-1 :WordSize'32bits)), (JavaConstant/forInt 0))
+            this (LIRGenerator''emitMoveConstant-3 this, (Register''asValue-2 AMD64'rax, (ValueKind'value-1 :WordSize'32bits)), (JavaConstant'forInt-1 0))
             [this #_"[Value]" argLocations]
                 (loop-when [this this argLocations [] #_"int" i 0] (< i (count args)) => [this argLocations]
                     (let [
@@ -36700,7 +37000,7 @@ ZeroExtendNode'new-4
                         (recur this (conj' argLocations loc) (inc i))
                     )
                 )
-            #_"Value" ptr (LIRGenerator''emitLoadConstant-3 this, (ValueKind'value-1 :WordSize'64bits), (JavaConstant/forLong address))
+            #_"Value" ptr (LIRGenerator''emitLoadConstant-3 this, (ValueKind'value-1 :WordSize'64bits), (JavaConstant'forLong-1 address))
         ]
             (LIRGenerator''append-2 this, (AMD64CCall'new-3 (:returnLocation nativeCallingConvention), ptr, argLocations))
         )
@@ -36774,7 +37074,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"Variable" LIRGenerator''emitBinaryConst-8 [#_"LIRGenerator" this, #_"ValueKind" resultKind, #_"BinaryArithmetic" op, #_"WordSize" size, #_"boolean" commutative?, #_"AllocatableValue" a, #_"ConstantValue" b, #_"boolean" set-flags?]
         (let [
-            #_"long" value (#_"JavaConstant" .asLong (:constant b))
+            #_"long" value (JavaConstant'''asLong-1 (:constant b))
         ]
             (if (NumUtil'isInt-1 value)
                 (let [
@@ -36891,7 +37191,7 @@ ZeroExtendNode'new-4
             (do
                 (when (and (LIRValueUtil'isJavaConstant-1 b) (not set-flags?))
                     (let [
-                        #_"long" displacement (#_"JavaConstant" .asLong (:constant b))
+                        #_"long" displacement (JavaConstant'''asLong-1 (:constant b))
                     ]
                         (when (and (NumUtil'isInt-1 displacement) (not= displacement 1) (not= displacement -1))
                             (§ return (LIRGenerator''emitBaseOffsetLea-5 this, resultKind, a, (int displacement), :WordSize'32bits))
@@ -36904,7 +37204,7 @@ ZeroExtendNode'new-4
             (do
                 (when (and (LIRValueUtil'isJavaConstant-1 b) (not set-flags?))
                     (let [
-                        #_"long" displacement (#_"JavaConstant" .asLong (:constant b))
+                        #_"long" displacement (JavaConstant'''asLong-1 (:constant b))
                     ]
                         (when (and (NumUtil'isInt-1 displacement) (not= displacement 1) (not= displacement -1))
                             (§ return (LIRGenerator''emitBaseOffsetLea-5 this, resultKind, a, (int displacement), :WordSize'64bits))
@@ -36925,7 +37225,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"Variable" LIRGenerator''emitIMULConst-4 [#_"LIRGenerator" this, #_"WordSize" size, #_"AllocatableValue" a, #_"ConstantValue" b]
         (let [
-            #_"long" value (#_"JavaConstant" .asLong (:constant b))
+            #_"long" value (JavaConstant'''asLong-1 (:constant b))
         ]
             (if (NumUtil'isInt-1 value)
                 (let [
@@ -37157,11 +37457,11 @@ ZeroExtendNode'new-4
                     (let [
                         #_"JavaConstant" c (:constant b)
                     ]
-                        (if (= (#_"JavaConstant" .asLong c) 1)
+                        (if (= (JavaConstant'''asLong-1 c) 1)
                             (§ ass! this (LIRGenerator''append-2 this, (MOp'new-4 (:m1Op op), size, result, input)))
                             ;; c is implicitly masked to 5 or 6 bits by the CPU, so casting it to (int)
                             ;; is always correct, even without the NumUtil.is32bit() test.
-                            (§ ass! this (LIRGenerator''append-2 this, (ConstOp'new-5a (:miOp op), size, result, input, (int (#_"JavaConstant" .asLong c)))))
+                            (§ ass! this (LIRGenerator''append-2 this, (ConstOp'new-5a (:miOp op), size, result, input, (int (JavaConstant'''asLong-1 c)))))
                         )
                     )
                     (let [
@@ -37267,7 +37567,7 @@ ZeroExtendNode'new-4
                 (let [
                     #_"Variable" result (LIRGenerator''newVariable-2 this, (ValueKind'combine-1* input))
                     #_"long" mask (NumUtil'mask-1 fromBits)
-                    _ (§ ass! this (LIRGenerator''append-2 this, (DataTwoOp'new-5 (BinaryArithmetic''getRMOpcode-2 BinaryArithmetic'AND, :WordSize'64bits), :WordSize'64bits, result, (LIRGenerator''asAllocatable-2 this, input), (JavaConstant/forLong mask))))
+                    _ (§ ass! this (LIRGenerator''append-2 this, (DataTwoOp'new-5 (BinaryArithmetic''getRMOpcode-2 BinaryArithmetic'AND, :WordSize'64bits), :WordSize'64bits, result, (LIRGenerator''asAllocatable-2 this, input), (JavaConstant'forLong-1 mask))))
                 ]
                     result
                 )
@@ -37285,7 +37585,7 @@ ZeroExtendNode'new-4
                         ;; odd bit count, fall back on manual masking
                         (let [
                             #_"Variable" result (LIRGenerator''newVariable-2 this, resultKind)
-                            #_"JavaConstant" mask (if (< 32 toBits) (JavaConstant/forLong (NumUtil'mask-1 fromBits)) (JavaConstant/forInt (int (NumUtil'mask-1 fromBits))))
+                            #_"JavaConstant" mask (if (< 32 toBits) (JavaConstant'forLong-1 (NumUtil'mask-1 fromBits)) (JavaConstant'forInt-1 (int (NumUtil'mask-1 fromBits))))
                             _ (§ ass! this (LIRGenerator''append-2 this, (DataTwoOp'new-5 (BinaryArithmetic''getRMOpcode-2 BinaryArithmetic'AND, :WordSize'32bits), :WordSize'32bits, result, (LIRGenerator''asAllocatable-2 this, input), mask)))
                         ]
                             result
@@ -37389,15 +37689,15 @@ ZeroExtendNode'new-4
         ]
             (or
                 (cond
-                    (JavaConstant/isNull c)
+                    (JavaConstant'isNull-1 c)
                         (let [
                             #_"WordSize" size' (if (= size :WordSize'32bits) size :WordSize'64bits)
                         ]
                             (LIRGenerator''append-2 this, (MemoryConstOp'new-4a AMD64MIOp'MOV, size', address, 0))
                         )
-                    (instance? VMConstant c)
+                    (satisfies? VMConstant c)
                         ;; only 32-bit constants can be patched
-                        (when (and (= size :WordSize'32bits) (or AMD64'inlineObjects (not (instance? JavaConstant c))))
+                        (when (and (= size :WordSize'32bits) (or AMD64'inlineObjects (not (satisfies? JavaConstant c))))
                             ;; if c is a JavaConstant, it's an oop, otherwise it's a metaspace constant
                             (LIRGenerator''append-2 this, (MemoryVMConstOp'new-3 AMD64MIOp'MOV, address, c))
                         )
@@ -37405,10 +37705,10 @@ ZeroExtendNode'new-4
                         (let [
                             [#_"AMD64MIOp" op #_"long" imm]
                                 (case size
-                                    :WordSize'8bits  [AMD64MIOp'MOVB (#_"JavaConstant" .asInt  c)]
-                                    :WordSize'16bits [AMD64MIOp'MOV  (#_"JavaConstant" .asInt  c)]
-                                    :WordSize'32bits [AMD64MIOp'MOV  (#_"JavaConstant" .asInt  c)]
-                                    :WordSize'64bits [AMD64MIOp'MOV  (#_"JavaConstant" .asLong c)]
+                                    :WordSize'8bits  [AMD64MIOp'MOVB (JavaConstant'''asInt-1  c)]
+                                    :WordSize'16bits [AMD64MIOp'MOV  (JavaConstant'''asInt-1  c)]
+                                    :WordSize'32bits [AMD64MIOp'MOV  (JavaConstant'''asInt-1  c)]
+                                    :WordSize'64bits [AMD64MIOp'MOV  (JavaConstant'''asLong-1 c)]
                                 )
                         ]
                             (when (NumUtil'isInt-1 imm)
@@ -37441,19 +37741,19 @@ ZeroExtendNode'new-4
                     #_"Constant" c (:constant right)
                 ]
                     (cond
-                        (JavaConstant/isNull c)
+                        (JavaConstant'isNull-1 c)
                             (LIRGenerator''append-2 this, (ConsumerOp'new-4 AMD64RMOp'TEST, size, left, left))
-                        (instance? VMConstant c)
+                        (satisfies? VMConstant c)
                             (if (= size :WordSize'32bits)
                                 (LIRGenerator''append-2 this, (VMConstOp'new-3 (BinaryArithmetic''getMIOpcode-3 BinaryArithmetic'CMP, size, false), left, c))
                                 (LIRGenerator''append-2 this, (DataOp'new-4    (BinaryArithmetic''getRMOpcode-2 BinaryArithmetic'CMP, size), size, left, c))
                             )
-                        (instance? JavaConstant c)
+                        (satisfies? JavaConstant c)
                             (cond
-                                (#_"JavaConstant" .isDefaultForKind c)
+                                (Constant'''isDefaultForKind-1 c)
                                     (LIRGenerator''append-2 this, (ConsumerOp'new-4 (if (= size :WordSize'8bits) AMD64RMOp'TESTB AMD64RMOp'TEST), size, left, left))
-                                (NumUtil'is32bit-1 (#_"JavaConstant" .asLong c))
-                                    (LIRGenerator''append-2 this, (ConsumerConstOp'new-4b BinaryArithmetic'CMP, size, left, (int (#_"JavaConstant" .asLong c))))
+                                (NumUtil'is32bit-1 (JavaConstant'''asLong-1 c))
+                                    (LIRGenerator''append-2 this, (ConsumerConstOp'new-4b BinaryArithmetic'CMP, size, left, (int (JavaConstant'''asLong-1 c))))
                             )
                     )
                 )
@@ -38740,7 +39040,7 @@ ZeroExtendNode'new-4
  ;;
 (class-ns DataTwoOp [LIRInstruction]
     (defn #_"DataTwoOp" DataTwoOp'new-5 [#_"AMD64RMOp" opcode, #_"WordSize" size, #_"AllocatableValue" result, #_"AllocatableValue" x, #_"JavaConstant" y]
-        (DataTwoOp'new-6 opcode, size, result, x, y, (JavaKind'getByteCount-1 (#_"JavaConstant" .getJavaKind y)))
+        (DataTwoOp'new-6 opcode, size, result, x, y, (JavaKind'getByteCount-1 (JavaConstant'''getJavaKind-1 y)))
     )
 
     (defn #_"DataTwoOp" DataTwoOp'new-6 [#_"AMD64RMOp" opcode, #_"WordSize" size, #_"AllocatableValue" result, #_"AllocatableValue" x, #_"JavaConstant" y, #_"int" alignment]
@@ -38997,7 +39297,7 @@ ZeroExtendNode'new-4
     (defm LoadMetaspaceConstantOp LIRInstruction
         (#_"Assembler" LIRInstruction'''emitCode-2 [#_"LoadMetaspaceConstantOp" this, #_"Assembler" asm]
             (let [
-                #_"boolean" compressed? (#_"HotSpotMetaspaceConstant" .isCompressed (:input this))
+                #_"boolean" compressed? (HotSpotConstant'''isCompressed-1 (:input this))
             ]
                 (if (satisfies? RegisterValue (:result this))
                     (if compressed?
@@ -39050,7 +39350,7 @@ ZeroExtendNode'new-4
     (defm LoadObjectConstantOp LIRInstruction
         (#_"Assembler" LIRInstruction'''emitCode-2 [#_"LoadObjectConstantOp" this, #_"Assembler" asm]
             (let [
-                #_"boolean" compressed? (#_"HotSpotObjectConstant" .isCompressed (:input this))
+                #_"boolean" compressed? (HotSpotConstant'''isCompressed-1 (:input this))
             ]
                 (if AMD64'inlineObjects
                     (let [
@@ -41858,7 +42158,7 @@ ZeroExtendNode'new-4
                     #_"TypeReference" constantType (StampTool'typeReferenceOrNull-1 (:stamp object))
                 ]
                     (when (and (some? constantType) (:exactReference constantType)) => read
-                        (ConstantNode'forConstant-2s (:stamp read), (#_"HotSpotMetaspaceConstant" .compress (#_"ConstantReflectionProvider" .asObjectHub HotSpot'constantReflection, (:type constantType))))
+                        (ConstantNode'forConstant-2s (:stamp read), (HotSpotConstant'''compress-1 (#_"ConstantReflectionProvider" .asObjectHub HotSpot'constantReflection, (:type constantType))))
                     )
                 )
             )
@@ -42377,7 +42677,7 @@ ZeroExtendNode'new-4
                 )
             LeftShiftNode
                 (when (and (= (:x op) base) (satisfies? ConstantNode (:y op)))
-                    (ConstantNode'forIntegerStamp-3 (:stamp base), (<< 1 (#_"JavaConstant" .asInt (ValueNode''asJavaConstant-1 (:y op)))), (:graph base))
+                    (ConstantNode'forIntegerStamp-3 (:stamp base), (<< 1 (JavaConstant'''asInt-1 (ValueNode''asJavaConstant-1 (:y op)))), (:graph base))
                 )
             nil
         )
@@ -44178,7 +44478,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"GuardingNode" LoweringTool''createGuard-5 [#_"LoweringTool" this, #_"FixedNode" before, #_"LogicNode" logic, #_"DeoptimizationReason" reason, #_"DeoptimizationAction" action]
-        (LoweringTool''createGuard-7 this, before, logic, reason, action, JavaConstant/NULL_POINTER, false)
+        (LoweringTool''createGuard-7 this, before, logic, reason, action, JavaConstant'NULL_POINTER, false)
     )
 
     (defn #_"GuardingNode" LoweringTool''createGuard-7 [#_"LoweringTool" this, #_"FixedNode" before, #_"LogicNode" logic, #_"DeoptimizationReason" reason, #_"DeoptimizationAction" action, #_"JavaConstant" speculation, #_"boolean" negated?]
@@ -44556,11 +44856,11 @@ ZeroExtendNode'new-4
                                                     (let [
                                                         #_"ValueNode" nextValue (ObjectState''getEntry-2 objectState, (inc i))
                                                     ]
-                                                        (and (satisfies? ConstantNode value) (= (:value value) JavaConstant/INT_0) (satisfies? ConstantNode nextValue) (= (:value nextValue) JavaConstant/INT_0)
+                                                        (and (satisfies? ConstantNode value) (= (:value value) JavaConstant'INT_0) (satisfies? ConstantNode nextValue) (= (:value nextValue) JavaConstant'INT_0)
                                                             (let [
                                                                 ;; rewrite to a zero constant of the larger kind
                                                                 _ (§ ass! (nth states j) (PartialEscapeBlockState''setEntry-4 (nth states j), object, i, (ConstantNode'defaultForKind-2 (nth twoSlotKinds i), (MergeProcessor''graph-1 this))))
-                                                                _ (§ ass! (nth states j) (PartialEscapeBlockState''setEntry-4 (nth states j), object, (inc i), (ConstantNode'forConstant-2c (JavaConstant/forIllegal), (MergeProcessor''graph-1 this))))
+                                                                _ (§ ass! (nth states j) (PartialEscapeBlockState''setEntry-4 (nth states j), object, (inc i), (ConstantNode'forConstant-2c (JavaConstant'forIllegal-0), (MergeProcessor''graph-1 this))))
                                                             ]
                                                                 true
                                                             )
@@ -44602,7 +44902,7 @@ ZeroExtendNode'new-4
                                         (let [
                                             i (inc i)
                                             _ (§ ass! phis (assoc' phis i nil))
-                                            _ (§ ass! values (assoc' values i (ConstantNode'forConstant-2c (JavaConstant/forIllegal), (MergeProcessor''graph-1 this))))
+                                            _ (§ ass! values (assoc' values i (ConstantNode'forConstant-2c (JavaConstant'forIllegal-0), (MergeProcessor''graph-1 this))))
                                         ]
                                             i
                                         )
@@ -45341,14 +45641,14 @@ ZeroExtendNode'new-4
      ; @return true if the constant can be used directly, false if the constant needs to be in a register
      ;;
     (defn #_"boolean" MoveFactory'canInlineConstant-1 [#_"Constant" constant]
-        (or (= constant HotSpotCompressedNullConstant/COMPRESSED_NULL)
+        (or (= constant JavaConstant'COMPRESSED_NULL)
             (condp instance? constant
                 HotSpotObjectConstant    (KlassPointerStamp''isCompressed-1 constant)
                 HotSpotMetaspaceConstant (KlassPointerStamp''isCompressed-1 constant)
-                JavaConstant
-                    (case (#_"JavaConstant" .getJavaKind constant)
-                        :JavaKind'Long   (NumUtil'isInt-1 (#_"JavaConstant" .asLong constant))
-                        :JavaKind'Object (#_"JavaConstant" .isNull constant)
+                JavaConstant'iface
+                    (case (JavaConstant'''getJavaKind-1 constant)
+                        :JavaKind'Long   (NumUtil'isInt-1 (JavaConstant'''asLong-1 constant))
+                        :JavaKind'Object (JavaConstant'''isNull-1 constant)
                         true
                     )
                 false
@@ -45362,8 +45662,8 @@ ZeroExtendNode'new-4
      ;;
     #_unused
     (defn #_"boolean" MoveFactory'allowConstantToStackMove-1 [#_"Constant" constant]
-        (condp instance? constant
-            HotSpotConstant (#_"HotSpotConstant" .isCompressed constant)
+        (condp satisfies? constant
+            HotSpotConstant (HotSpotConstant'''isCompressed-1 constant)
             JavaConstant    (AMD64Move'canMoveConst2Stack-1 constant)
                             true
         )
@@ -45391,13 +45691,13 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"LIRInstruction" MoveFactory'createLoad-2 [#_"AllocatableValue" dst, #_"Constant" src]
-        (condp instance? src
+        (condp satisfies? src
             JavaConstant (MoveFromConstOp'new-2 dst, src)
         )
     )
 
     (defn #_"LIRInstruction" MoveFactory'createLoad-2 [#_"AllocatableValue" dst, #_"Constant" src]
-        (when-not (= src HotSpotCompressedNullConstant/COMPRESSED_NULL) => (MoveFactory'createLoad-2 dst, JavaConstant/INT_0)
+        (when-not (= src JavaConstant'COMPRESSED_NULL) => (MoveFactory'createLoad-2 dst, JavaConstant'INT_0)
             (condp instance? src
                 HotSpotObjectConstant    (LoadObjectConstantOp'new-2 dst, src)
                 HotSpotMetaspaceConstant (LoadMetaspaceConstantOp'new-2 dst, src)
@@ -45407,13 +45707,13 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"LIRInstruction" MoveFactory'createStackLoad-2 [#_"AllocatableValue" dst, #_"Constant" src]
-        (condp instance? src
+        (condp satisfies? src
             JavaConstant (MoveFromConstOp'new-2 dst, src)
         )
     )
 
     (defn #_"LIRInstruction" MoveFactory'createStackLoad-2 [#_"AllocatableValue" dst, #_"Constant" src]
-        (when-not (= src HotSpotCompressedNullConstant/COMPRESSED_NULL) => (MoveFactory'createStackLoad-2 dst, JavaConstant/INT_0)
+        (when-not (= src JavaConstant'COMPRESSED_NULL) => (MoveFactory'createStackLoad-2 dst, JavaConstant'INT_0)
             (condp instance? src
                 HotSpotObjectConstant    (LoadObjectConstantOp'new-2 dst, src)
                 HotSpotMetaspaceConstant (LoadMetaspaceConstantOp'new-2 dst, src)
@@ -46577,7 +46877,7 @@ ZeroExtendNode'new-4
         (let [
             #_"JavaConstant" value (ValueNode''asJavaConstant-1 this)
         ]
-            (and (some? value) (#_"JavaConstant" .isNull value))
+            (and (some? value) (JavaConstant'''isNull-1 value))
         )
     )
 
@@ -46591,14 +46891,14 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"boolean" ValueNode''isJavaConstant-1 [#_"ValueNode" this]
-        (and (satisfies? ConstantNode this) (instance? JavaConstant (:value this)))
+        (and (satisfies? ConstantNode this) (satisfies? JavaConstant (:value this)))
     )
 
     (defn #_"JavaConstant" ValueNode''asJavaConstant-1 [#_"ValueNode" this]
         (let [
             #_"Constant" value (ValueNode''asConstant-1 this)
         ]
-            (when (instance? JavaConstant value)
+            (when (satisfies? JavaConstant value)
                 value
             )
         )
@@ -46945,7 +47245,7 @@ ZeroExtendNode'new-4
 
     #_intrinsifier
     (defn #_"DeoptimizeNode" DeoptimizeNode'new-2 [#_"DeoptimizationAction" action, #_"DeoptimizationReason" reason]
-        (DeoptimizeNode'new-5 action, reason, DeoptimizeNode'DEFAULT_DEBUG_ID, JavaConstant/NULL_POINTER, nil)
+        (DeoptimizeNode'new-5 action, reason, DeoptimizeNode'DEFAULT_DEBUG_ID, JavaConstant'NULL_POINTER, nil)
     )
 
     (defn #_"DeoptimizeNode" DeoptimizeNode'new-3 [#_"DeoptimizationAction" action, #_"DeoptimizationReason" reason, #_"JavaConstant" speculation]
@@ -47269,7 +47569,7 @@ ZeroExtendNode'new-4
                 #_"IntegerLessThanNode" lessThan (:logic this)
                 #_"Constant" y (Stamp'''asConstant-1 (:stamp (:y lessThan)))
             ]
-                (and (instance? PrimitiveConstant y) (zero? (UnsignedLong''asLong-1 y)) (satisfies? IfNode (:next (:falseSuccessor this)))
+                (and (satisfies? PrimitiveConstant y) (zero? (UnsignedLong''asLong-1 y)) (satisfies? IfNode (:next (:falseSuccessor this)))
                     (let [
                         #_"IfNode" ifNode2 (:next (:falseSuccessor this))
                     ]
@@ -47290,7 +47590,7 @@ ZeroExtendNode'new-4
                                             (let [
                                                 #_"JavaConstant" positive (ValueNode''asJavaConstant-1 (:x lessThan2))
                                                 below
-                                                    (when (and (some? positive) (pos? (UnsignedLong''asLong-1 positive)) (< (UnsignedLong''asLong-1 positive) (JavaKind'getMaxValue-1 (#_"JavaConstant" .getJavaKind positive))))
+                                                    (when (and (some? positive) (pos? (UnsignedLong''asLong-1 positive)) (< (UnsignedLong''asLong-1 positive) (JavaKind'getMaxValue-1 (JavaConstant'''getJavaKind-1 positive))))
                                                         (Graph''add-2 (:graph this), (IntegerBelowNode'new-2 (:x lessThan), (ConstantNode'forIntegerStamp-3 (:stamp (:x lessThan2)), (inc (UnsignedLong''asLong-1 positive)), (:graph this))))
                                                     )
                                             ]
@@ -47386,12 +47686,12 @@ ZeroExtendNode'new-4
                                 (let [
                                     [#_"IntegerLessThanNode" lessThan #_"IntegerEqualsNode" equals]
                                         (cond
-                                            (and (satisfies? IntegerLessThanNode (:logic this)) (satisfies? IntegerEqualsNode (:logic conditional)) (= (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 constant)) -1) (zero? (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 (:trueValue conditional)))) (= (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 (:falseValue conditional))) 1))
+                                            (and (satisfies? IntegerLessThanNode (:logic this)) (satisfies? IntegerEqualsNode (:logic conditional)) (= (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 constant)) -1) (zero? (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 (:trueValue conditional)))) (= (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 (:falseValue conditional))) 1))
                                                 [
                                                     (:logic this)
                                                     (:logic conditional)
                                                 ]
-                                            (and (satisfies? IntegerEqualsNode (:logic this)) (satisfies? IntegerLessThanNode (:logic conditional)) (zero? (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 constant))) (= (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 (:trueValue conditional))) -1) (= (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 (:falseValue conditional))) 1))
+                                            (and (satisfies? IntegerEqualsNode (:logic this)) (satisfies? IntegerLessThanNode (:logic conditional)) (zero? (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 constant))) (= (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 (:trueValue conditional))) -1) (= (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 (:falseValue conditional))) 1))
                                                 [
                                                     (:logic conditional)
                                                     (:logic this)
@@ -48549,7 +48849,7 @@ ZeroExtendNode'new-4
      ;;
     (defm IntegerSwitchNode SwitchNode
         (#_"JavaConstant" SwitchNode'''keyAt-2 [#_"IntegerSwitchNode" this, #_"int" i]
-            (JavaConstant/forInt (nth (:keys this) i))
+            (JavaConstant'forInt-1 (nth (:keys this) i))
         )
 
         (#_"boolean" SwitchNode'''equalKeys-2 [#_"IntegerSwitchNode" this, #_"SwitchNode" switchNode]
@@ -48676,11 +48976,11 @@ ZeroExtendNode'new-4
                                                     #_"JavaConstant" elementConstant (#_"ConstantReflectionProvider" .readArrayElement HotSpot'constantReflection, arrayConstant, i)
                                                 ]
                                                     ;; => Loading a constant value can be denied by the VM.
-                                                    (and (some? elementConstant) (= (#_"JavaConstant" .getJavaKind elementConstant) :JavaKind'Int)
+                                                    (and (some? elementConstant) (= (JavaConstant'''getJavaKind-1 elementConstant) :JavaKind'Int)
                                                         (let [
                                                             ;; The value loaded from the array is the old switch key, the index into the array is
                                                             ;; the new switch key. We build a mapping from the old switch key to new keys.
-                                                            _ (§ ass! reverseArrayMapping (update reverseArrayMapping (#_"JavaConstant" .asInt elementConstant) conj' i))
+                                                            _ (§ ass! reverseArrayMapping (update reverseArrayMapping (JavaConstant'''asInt-1 elementConstant) conj' i))
                                                         ]
                                                             (recur (inc i))
                                                         )
@@ -48745,7 +49045,7 @@ ZeroExtendNode'new-4
                     (Graph''removeSplitPropagate-3 (:graph this), this, (SwitchNode''defaultSuccessor-1 this))
                 )
                 (satisfies? ConstantNode (:value this))
-                    (SwitchNode''killOtherSuccessors-3 this, tool, (IntegerSwitchNode''successorIndexAtKey-2 this, (#_"JavaConstant" .asInt (ValueNode''asJavaConstant-1 (:value this)))))
+                    (SwitchNode''killOtherSuccessors-3 this, tool, (IntegerSwitchNode''successorIndexAtKey-2 this, (JavaConstant'''asInt-1 (ValueNode''asJavaConstant-1 (:value this)))))
                 (IntegerSwitchNode''tryOptimizeEnumSwitch-2 this, tool)
                     nil
                 (IntegerSwitchNode''tryRemoveUnreachableKeys-3 this, tool, (:stamp (:value this)))
@@ -49498,9 +49798,9 @@ ZeroExtendNode'new-4
                         (and (some? input) (satisfies? AddNode input) (satisfies? IntegerStamp (:stamp input)))
                             (cond
                                 (and (= (:x input) phi) (satisfies? ConstantNode (:y input)))
-                                    (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 (:y input)))
+                                    (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 (:y input)))
                                 (and (= (:y input) phi) (satisfies? ConstantNode (:x input)))
-                                    (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 (:x input)))
+                                    (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 (:x input)))
                                 :else
                                     LoopBeginNode'NO_INCREMENT
                             )
@@ -50439,9 +50739,9 @@ ZeroExtendNode'new-4
             ]
                 (when (and (some? arrayConstant) (pos? (:stableDimension array)))
                     (let [
-                        #_"JavaConstant" constant (#_"ConstantReflectionProvider" .readArrayElement HotSpot'constantReflection, arrayConstant, (#_"JavaConstant" .asInt (ValueNode''asJavaConstant-1 index)))
+                        #_"JavaConstant" constant (#_"ConstantReflectionProvider" .readArrayElement HotSpot'constantReflection, arrayConstant, (JavaConstant'''asInt-1 (ValueNode''asJavaConstant-1 index)))
                     ]
-                        (when (and (some? constant) (or (:isDefaultStable array) (not (#_"JavaConstant" .isDefaultForKind constant))))
+                        (when (and (some? constant) (or (:isDefaultStable array) (not (Constant'''isDefaultForKind-1 constant))))
                             (ConstantNode'forConstant-3c constant, (dec (:stableDimension array)), (:isDefaultStable array))
                         )
                     )
@@ -50470,7 +50770,7 @@ ZeroExtendNode'new-4
                 (when (satisfies? VirtualObjectNode array) => tool
                     (let [
                         #_"ValueNode" index (VirtualizerTool'''getAlias-2 tool, (AccessIndexedNode''index-1 this))
-                        #_"int" i (if (satisfies? ConstantNode index) (#_"JavaConstant" .asInt (ValueNode''asJavaConstant-1 index)) -1)
+                        #_"int" i (if (satisfies? ConstantNode index) (JavaConstant'''asInt-1 (ValueNode''asJavaConstant-1 index)) -1)
                     ]
                         (when (< -1 i (VirtualObjectNode'''entryCount-1 array)) => tool
                             (let [
@@ -50542,7 +50842,7 @@ ZeroExtendNode'new-4
                 (when (satisfies? VirtualObjectNode array) => tool
                     (let [
                         #_"ValueNode" index (VirtualizerTool'''getAlias-2 tool, (AccessIndexedNode''index-1 this))
-                        #_"int" i (if (satisfies? ConstantNode index) (#_"JavaConstant" .asInt (ValueNode''asJavaConstant-1 index)) -1)
+                        #_"int" i (if (satisfies? ConstantNode index) (JavaConstant'''asInt-1 (ValueNode''asJavaConstant-1 index)) -1)
                     ]
                         (when (< -1 i (VirtualObjectNode'''entryCount-1 array)) => tool
                             (let [
@@ -50847,7 +51147,7 @@ ZeroExtendNode'new-4
                 (let [
                     #_"JavaConstant" constantValue (ValueNode''asJavaConstant-1 array)
                 ]
-                    (when (and (some? constantValue) (#_"JavaConstant" .isNonNull constantValue))
+                    (when (and (some? constantValue) (JavaConstant''isNonNull-1 constantValue))
                         (let [
                             #_"Integer" constantLength (#_"ConstantReflectionProvider" .readArrayLength HotSpot'constantReflection, constantValue)
                         ]
@@ -51160,7 +51460,7 @@ ZeroExtendNode'new-4
                                             (cond
                                                 (nil? value)
                                                     (#_"BitSet" .set omittedValues, valuePos)
-                                                (not (and (satisfies? ConstantNode value) (#_"Constant" .isDefaultForKind (:value value))))
+                                                (not (and (satisfies? ConstantNode value) (Constant'''isDefaultForKind-1 (:value value))))
                                                     ;; Constant.illegal is always the defaultForKind, so it is skipped
                                                     (let [
                                                         #_"JavaKind" valueKind (ValueNode''getStackKind-1 value)
@@ -51202,7 +51502,7 @@ ZeroExtendNode'new-4
                                                 #_"ValueNode" value (nth (:comValues this) valuePos)
                                                 #_"ValueNode" allocValue (nth allocations (index-of (:virtualObjects this) value))
                                             ]
-                                                (when-not (and (satisfies? ConstantNode allocValue) (#_"Constant" .isDefaultForKind (:value allocValue)))
+                                                (when-not (and (satisfies? ConstantNode allocValue) (Constant'''isDefaultForKind-1 (:value allocValue)))
                                                     (let [
                                                         [#_"AddressNode" address #_"BarrierType" barrierType]
                                                             (if (satisfies? VirtualInstanceNode virtual)
@@ -51517,11 +51817,11 @@ ZeroExtendNode'new-4
 
 (class-ns FixedGuardNode [DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Simplifiable, GuardingNode, DeoptimizingGuard, StaticDeoptimizingNode, Lowerable]
     (defn #_"FixedGuardNode" FixedGuardNode'new-3 [#_"LogicNode" logic, #_"DeoptimizationReason" reason, #_"DeoptimizationAction" action]
-        (FixedGuardNode'new-5 logic, reason, action, JavaConstant/NULL_POINTER, false)
+        (FixedGuardNode'new-5 logic, reason, action, JavaConstant'NULL_POINTER, false)
     )
 
     (defn #_"FixedGuardNode" FixedGuardNode'new-4 [#_"LogicNode" logic, #_"DeoptimizationReason" reason, #_"DeoptimizationAction" action, #_"boolean" negated?]
-        (FixedGuardNode'new-5 logic, reason, action, JavaConstant/NULL_POINTER, negated?)
+        (FixedGuardNode'new-5 logic, reason, action, JavaConstant'NULL_POINTER, negated?)
     )
 
     (defn #_"FixedGuardNode" FixedGuardNode'new-5 [#_"LogicNode" logic, #_"DeoptimizationReason" reason, #_"DeoptimizationAction" action, #_"JavaConstant" speculation, #_"boolean" negated?]
@@ -51695,7 +51995,7 @@ ZeroExtendNode'new-4
             ]
                 (when (some? (ValueNode''asConstant-1 lengthAlias)) => tool
                     (let [
-                        #_"int" constantLength (#_"JavaConstant" .asInt (ValueNode''asJavaConstant-1 lengthAlias))
+                        #_"int" constantLength (JavaConstant'''asInt-1 (ValueNode''asJavaConstant-1 lengthAlias))
                     ]
                         (when (< -1 constantLength (VirtualizerTool'''getMaximumEntryCount-1 tool)) => tool
                             (let [
@@ -51919,8 +52219,8 @@ ZeroExtendNode'new-4
         (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"LogicCompareAndSwapNode" this, #_"LIRBuilder" builder]
             (let [
                 #_"ValueKind" resultKind (Stamp'''getValueKind-1 (:stamp this))
-                #_"Value" trueResult (LIRGenerator''emitConstant-3 (:gen builder), resultKind, JavaConstant/TRUE)
-                #_"Value" falseResult (LIRGenerator''emitConstant-3 (:gen builder), resultKind, JavaConstant/FALSE)
+                #_"Value" trueResult (LIRGenerator''emitConstant-3 (:gen builder), resultKind, JavaConstant'TRUE)
+                #_"Value" falseResult (LIRGenerator''emitConstant-3 (:gen builder), resultKind, JavaConstant'FALSE)
                 #_"Value" result (LIRGenerator''emitLogicCompareAndSwap-6 (:gen builder), (LIRBuilder''operand-2 builder, (Access'''getAddress-1 this)), (LIRBuilder''operand-2 builder, (:expectedValue this)), (LIRBuilder''operand-2 builder, (AbstractCompareAndSwapNode''getNewValue-1 this)), trueResult, falseResult)
             ]
                 (LIRBuilder''setResult-3 builder, this, result)
@@ -52129,7 +52429,7 @@ ZeroExtendNode'new-4
             ]
                 (when (and (satisfies? ConstantNode object) (not (ValueNode''isNullConstant-1 object)) (satisfies? ConstantNode (:offset address)))
                     (let [
-                        #_"long" displacement (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 (:offset address)))
+                        #_"long" displacement (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 (:offset address)))
                         #_"int" stableDimension (:stableDimension object)
                     ]
                         (when (or (:immutable location) (pos? stableDimension))
@@ -52137,7 +52437,7 @@ ZeroExtendNode'new-4
                                 #_"Constant" constant (Stamp'''readConstant-4 (:stamp read), (#_"ConstantReflectionProvider" .getMemoryAccessProvider HotSpot'constantReflection), (:value object), displacement)
                                 #_"boolean" isDefaultStable (or (:immutable location) (:isDefaultStable object))
                             ]
-                                (when (and (some? constant) (or isDefaultStable (not (#_"Constant" .isDefaultForKind constant))))
+                                (when (and (some? constant) (or isDefaultStable (not (Constant'''isDefaultForKind-1 constant))))
                                     (§ return (ConstantNode'forConstant-4 (:stamp read), constant, (max (dec stableDimension) 0), isDefaultStable))
                                 )
                             )
@@ -52354,15 +52654,15 @@ ZeroExtendNode'new-4
             (cond
                 (and (satisfies? ConstantNode forX) (satisfies? ConstantNode forY))
                     (let [
-                        #_"long" y (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 forY))
+                        #_"long" y (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 forY))
                     ]
                         (if (zero? y)
                             (§ return (or self (SignedDivNode'new-2 forX, forY))) ;; this will trap, can not canonicalize
-                            (§ return (ConstantNode'forIntegerStamp-2 stamp, (quot (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 forX)) y)))
+                            (§ return (ConstantNode'forIntegerStamp-2 stamp, (quot (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 forX)) y)))
                         )
                     )
                 (satisfies? ConstantNode forY)
-                    (§ return (SignedDivNode'canonical-2 forX, (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 forY))))
+                    (§ return (SignedDivNode'canonical-2 forX, (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 forY))))
             )
 
             ;; convert the expression ((a - a % b) / b) into (a / b)
@@ -52422,16 +52722,16 @@ ZeroExtendNode'new-4
         (cond
             (and (satisfies? ConstantNode forX) (satisfies? ConstantNode forY))
                 (let [
-                    #_"long" y (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 forY))
+                    #_"long" y (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 forY))
                 ]
                     (if (zero? y)
                         (or self (SignedRemNode'new-2 forX, forY)) ;; this will trap, can not canonicalize
-                        (ConstantNode'forIntegerStamp-2 stamp, (% (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 forX)) y))
+                        (ConstantNode'forIntegerStamp-2 stamp, (% (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 forX)) y))
                     )
                 )
             (and (satisfies? ConstantNode forY) (satisfies? IntegerStamp (:stamp forX)) (satisfies? IntegerStamp (:stamp forY)))
                 (let [
-                    #_"long" constY (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 forY))
+                    #_"long" constY (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 forY))
                     #_"IntegerStamp" xStamp (:stamp forX)
                     #_"IntegerStamp" yStamp (:stamp forY)
                 ]
@@ -52497,16 +52797,16 @@ ZeroExtendNode'new-4
             (cond
                 (and (satisfies? ConstantNode forX) (satisfies? ConstantNode forY))
                     (let [
-                        #_"long" yConst (NumUtil'zeroExtend-2 (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 forY)), bits)
+                        #_"long" yConst (NumUtil'zeroExtend-2 (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 forY)), bits)
                     ]
                         (if (zero? yConst)
                             (§ return (or self (UnsignedDivNode'new-2 forX, forY))) ;; this will trap, cannot canonicalize
-                            (§ return (ConstantNode'forIntegerStamp-2 stamp, (Long/divideUnsigned (NumUtil'zeroExtend-2 (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 forX)), bits), yConst)))
+                            (§ return (ConstantNode'forIntegerStamp-2 stamp, (Long/divideUnsigned (NumUtil'zeroExtend-2 (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 forX)), bits), yConst)))
                         )
                     )
                 (satisfies? ConstantNode forY)
                     (let [
-                        #_"long" c (NumUtil'zeroExtend-2 (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 forY)), bits)
+                        #_"long" c (NumUtil'zeroExtend-2 (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 forY)), bits)
                     ]
                         (when (= c 1)
                             (§ return forX)
@@ -52560,16 +52860,16 @@ ZeroExtendNode'new-4
             (cond
                 (and (satisfies? ConstantNode forX) (satisfies? ConstantNode forY))
                     (let [
-                        #_"long" yConst (NumUtil'zeroExtend-2 (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 forY)), bits)
+                        #_"long" yConst (NumUtil'zeroExtend-2 (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 forY)), bits)
                     ]
                         (if (zero? yConst)
                             (§ return (or self (UnsignedRemNode'new-2 forX, forY))) ;; this will trap, cannot canonicalize
-                            (§ return (ConstantNode'forIntegerStamp-2 stamp, (Long/remainderUnsigned (NumUtil'zeroExtend-2 (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 forX)), bits), yConst)))
+                            (§ return (ConstantNode'forIntegerStamp-2 stamp, (Long/remainderUnsigned (NumUtil'zeroExtend-2 (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 forX)), bits), yConst)))
                         )
                     )
                 (satisfies? ConstantNode forY)
                     (let [
-                        #_"long" c (NumUtil'zeroExtend-2 (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 forY)), bits)
+                        #_"long" c (NumUtil'zeroExtend-2 (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 forY)), bits)
                     ]
                         (cond
                             (= c 1)
@@ -53328,7 +53628,7 @@ ZeroExtendNode'new-4
             (when (and (not (:forceAnyLocation this)) (LocationIdentity''isAny-1 (:locationIdentity this))) => this
                 (when (satisfies? ConstantNode (:offset this))
                     (let [
-                        #_"long" constantOffset (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 (:offset this)))
+                        #_"long" constantOffset (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 (:offset this)))
                         ;; Try to canonicalize to a field access.
                         #_"ResolvedJavaType" receiverType (StampTool'typeOrNull-1 (:stamp (:object this)))
                     ]
@@ -53444,7 +53744,7 @@ ZeroExtendNode'new-4
                     ]
                         (when (satisfies? ConstantNode offset) => tool
                             (let [
-                                #_"int" i (VirtualObjectNode'''entryIndexForOffset-3 object, (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 offset)), (:accessKind this))
+                                #_"int" i (VirtualObjectNode'''entryIndexForOffset-3 object, (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 offset)), (:accessKind this))
                             ]
                                 (when-not (= i -1) => tool
                                     (let [
@@ -53493,11 +53793,11 @@ ZeroExtendNode'new-4
                                             ]
                                                 (when (pos? stableDimension)
                                                     (let [
-                                                        #_"long" offset (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 (:offset this)))
+                                                        #_"long" offset (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 (:offset this)))
                                                         #_"Constant" constant (Stamp'''readConstant-4 (:stamp this), (#_"ConstantReflectionProvider" .getMemoryAccessProvider HotSpot'constantReflection), array, offset)
                                                         #_"boolean" isDefaultStable (:isDefaultStable object)
                                                     ]
-                                                        (when (and (some? constant) (or isDefaultStable (not (#_"Constant" .isDefaultForKind constant))))
+                                                        (when (and (some? constant) (or isDefaultStable (not (Constant'''isDefaultForKind-1 constant))))
                                                             (ConstantNode'forConstant-4 (:stamp this), constant, (dec stableDimension), isDefaultStable)
                                                         )
                                                     )
@@ -53584,7 +53884,7 @@ ZeroExtendNode'new-4
                     ]
                         (when (satisfies? ConstantNode offset) => tool
                             (let [
-                                #_"long" off (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 offset))
+                                #_"long" off (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 offset))
                                 #_"int" i (VirtualObjectNode'''entryIndexForOffset-3 object, off, (:accessKind this))
                             ]
                                 (when (and (not= i -1) (VirtualizerTool'''setVirtualEntry-6 tool, object, i, (:value this), (:accessKind this), off)) => tool
@@ -53724,12 +54024,12 @@ ZeroExtendNode'new-4
                 (satisfies? ConstantNode (:input this))
                     ;; null pointers are uncritical for GC, so they can be constant folded
                     (cond
-                        (#_"JavaConstant" .isNull (ValueNode''asJavaConstant-1 (:input this)))
+                        (JavaConstant'''isNull-1 (ValueNode''asJavaConstant-1 (:input this)))
                             (ConstantNode'forIntegerStamp-2 (:stamp this), 0)
-                        (and (JavaKind'isNumericInteger-1 (#_"JavaConstant" .getJavaKind (ValueNode''asJavaConstant-1 (:input this))))
-                            (zero? (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 (:input this))))
+                        (and (JavaKind'isNumericInteger-1 (JavaConstant'''getJavaKind-1 (ValueNode''asJavaConstant-1 (:input this))))
+                            (zero? (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 (:input this))))
                         )
-                            (ConstantNode'forConstant-2s (:stamp this), JavaConstant/NULL_POINTER)
+                            (ConstantNode'forConstant-2s (:stamp this), JavaConstant'NULL_POINTER)
                         :else
                             this
                     )
@@ -53921,7 +54221,7 @@ ZeroExtendNode'new-4
                     ]
                         (when (and (not (LoopBeginNode''isSimpleLoop-1 loopNode)) (satisfies? ConstantNode (:y add))) => this
                             (let [
-                                #_"int" addBy (#_"JavaConstant" .asInt (ValueNode''asJavaConstant-1 (:y add)))
+                                #_"int" addBy (JavaConstant'''asInt-1 (ValueNode''asJavaConstant-1 (:y add)))
                                 this (assoc this :displacement (+ (:displacement this) (* (:value (:scale this)) addBy)))
                                 _ (Node''replaceFirstInput-3 this, (:index this), (:x add))
                                 _ (§ ass! tool (SimplifierTool'''addToWorkList-2n tool, (:index this)))
@@ -54515,9 +54815,9 @@ ZeroExtendNode'new-4
         ]
             (when (and (some? xConst) (some? yConst))
                 (try
-                    (if (= (#_"JavaConstant" .getJavaKind xConst) :JavaKind'Int)
-                        (ConstantNode'forInt-1 (Math/addExact (#_"JavaConstant" .asInt xConst), (#_"JavaConstant" .asInt yConst)))
-                        (ConstantNode'forLong-1 (Math/addExact (#_"JavaConstant" .asLong xConst), (#_"JavaConstant" .asLong yConst)))
+                    (if (= (JavaConstant'''getJavaKind-1 xConst) :JavaKind'Int)
+                        (ConstantNode'forInt-1 (Math/addExact (JavaConstant'''asInt-1 xConst), (JavaConstant'''asInt-1 yConst)))
+                        (ConstantNode'forLong-1 (Math/addExact (JavaConstant'''asLong-1 xConst), (JavaConstant'''asLong-1 yConst)))
                     )
                     (catch ArithmeticException _
                         nil ;; the operation will result in an overflow exception, so do not canonicalize
@@ -54542,7 +54842,7 @@ ZeroExtendNode'new-4
                                 )
                             )
                         (satisfies? ConstantNode forY)
-                            (when (zero? (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 forY)))
+                            (when (zero? (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 forY)))
                                 (§ return forX)
                             )
                     )
@@ -54584,9 +54884,9 @@ ZeroExtendNode'new-4
                     #_"Constant" c (:value forY)
                 ]
                     (when-not (BinaryOp'''isNeutral-2 op, c) => forX
-                        (when (and (instance? PrimitiveConstant c) (JavaKind'isNumericInteger-1 (#_"PrimitiveConstant" .getJavaKind c)))
+                        (when (and (satisfies? PrimitiveConstant c) (JavaKind'isNumericInteger-1 (JavaConstant'''getJavaKind-1 c)))
                             (let [
-                                #_"long" rawY (#_"PrimitiveConstant" .asLong c)
+                                #_"long" rawY (JavaConstant'''asLong-1 c)
                             ]
                                 (when (zero? (& rawY (NumUtil'mask-1 (PrimitiveStamp'getBits-1 stamp))))
                                     (§ return (ConstantNode'forIntegerStamp-2 stamp, 0))
@@ -54661,7 +54961,7 @@ ZeroExtendNode'new-4
             (let [
                 #_"Constant" constant (:value forY)
             ]
-                (when (and (instance? PrimitiveConstant constant) (JavaKind'isNumericInteger-1 (#_"PrimitiveConstant" .getJavaKind constant)) (any = (#_"PrimitiveConstant" .asLong constant) 0 1)) => self
+                (when (and (satisfies? PrimitiveConstant constant) (JavaKind'isNumericInteger-1 (JavaConstant'''getJavaKind-1 constant)) (any = (JavaConstant'''asLong-1 constant) 0 1)) => self
                     (ConstantNode'forIntegerStamp-2 (:stamp self), 0)
                 )
             )
@@ -54705,9 +55005,9 @@ ZeroExtendNode'new-4
                     (§ return forX)
                 )
 
-                (when (and (instance? PrimitiveConstant c) (JavaKind'isNumericInteger-1 (#_"PrimitiveConstant" .getJavaKind c)))
+                (when (and (satisfies? PrimitiveConstant c) (JavaKind'isNumericInteger-1 (JavaConstant'''getJavaKind-1 c)))
                     (let [
-                        #_"ValueNode" result (MulNode'canonical-3 stamp, forX, (#_"PrimitiveConstant" .asLong c))
+                        #_"ValueNode" result (MulNode'canonical-3 stamp, forX, (JavaConstant'''asLong-1 c))
                     ]
                         (when (some? result)
                             (§ return result)
@@ -54844,9 +55144,9 @@ ZeroExtendNode'new-4
             #_"JavaConstant" yConst (ValueNode''asJavaConstant-1 forY)
         ]
             (try
-                (if (= (#_"JavaConstant" .getJavaKind xConst) :JavaKind'Int)
-                    (ConstantNode'forInt-1 (Math/multiplyExact (#_"JavaConstant" .asInt xConst), (#_"JavaConstant" .asInt yConst)))
-                    (ConstantNode'forLong-1 (Math/multiplyExact (#_"JavaConstant" .asLong xConst), (#_"JavaConstant" .asLong yConst)))
+                (if (= (JavaConstant'''getJavaKind-1 xConst) :JavaKind'Int)
+                    (ConstantNode'forInt-1 (Math/multiplyExact (JavaConstant'''asInt-1 xConst), (JavaConstant'''asInt-1 yConst)))
+                    (ConstantNode'forLong-1 (Math/multiplyExact (JavaConstant'''asLong-1 xConst), (JavaConstant'''asLong-1 yConst)))
                 )
                 (catch ArithmeticException _
                     this ;; the operation will result in an overflow exception, so do not canonicalize
@@ -54864,7 +55164,7 @@ ZeroExtendNode'new-4
                     (§ return (IntegerMulExactNode''canonicalXconstant-3 this, forX, forY))
                 (satisfies? ConstantNode forY)
                     (let [
-                        #_"long" c (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 forY))
+                        #_"long" c (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 forY))
                     ]
                         (cond
                             (= c 1)
@@ -54912,9 +55212,9 @@ ZeroExtendNode'new-4
                     (if (BinaryOp'''isNeutral-2 op, c)
                         forX
                         (do
-                            (when (and (instance? PrimitiveConstant c) (JavaKind'isNumericInteger-1 (#_"PrimitiveConstant" .getJavaKind c)))
+                            (when (and (satisfies? PrimitiveConstant c) (JavaKind'isNumericInteger-1 (JavaConstant'''getJavaKind-1 c)))
                                 (let [
-                                    #_"long" rawY (#_"PrimitiveConstant" .asLong c)
+                                    #_"long" rawY (JavaConstant'''asLong-1 c)
                                     #_"long" mask (NumUtil'mask-1 (PrimitiveStamp'getBits-1 stamp))
                                 ]
                                     (when (= (& rawY mask) mask)
@@ -55065,9 +55365,9 @@ ZeroExtendNode'new-4
                                 )
                             )
                         )
-                        (when (and (instance? PrimitiveConstant c) (JavaKind'isNumericInteger-1 (#_"PrimitiveConstant" .getJavaKind c)))
+                        (when (and (satisfies? PrimitiveConstant c) (JavaKind'isNumericInteger-1 (JavaConstant'''getJavaKind-1 c)))
                             (let [
-                                #_"long" i (#_"PrimitiveConstant" .asLong c)
+                                #_"long" i (JavaConstant'''asLong-1 c)
                             ]
                                 (when (or (neg? i) (IntegerStamp''contains-2 (StampFactory'forKind-1 (ValueNode''getStackKind-1 forY)), (- i)))
                                     ;; Adding a negative is more friendly to the backend since adds are
@@ -55159,9 +55459,9 @@ ZeroExtendNode'new-4
             #_"JavaConstant" yConst (ValueNode''asJavaConstant-1 forY)
         ]
             (try
-                (if (= (#_"JavaConstant" .getJavaKind xConst) :JavaKind'Int)
-                    (ConstantNode'forInt-1 (Math/subtractExact (#_"JavaConstant" .asInt xConst), (#_"JavaConstant" .asInt yConst)))
-                    (ConstantNode'forLong-1 (Math/subtractExact (#_"JavaConstant" .asLong xConst), (#_"JavaConstant" .asLong yConst)))
+                (if (= (JavaConstant'''getJavaKind-1 xConst) :JavaKind'Int)
+                    (ConstantNode'forInt-1 (Math/subtractExact (JavaConstant'''asInt-1 xConst), (JavaConstant'''asInt-1 yConst)))
+                    (ConstantNode'forLong-1 (Math/subtractExact (JavaConstant'''asLong-1 xConst), (JavaConstant'''asLong-1 yConst)))
                 )
                 (catch ArithmeticException _
                     this ;; the operation will result in an overflow exception, so do not canonicalize
@@ -55175,7 +55475,7 @@ ZeroExtendNode'new-4
             (cond
                 (= (GraphUtil'unproxify-1n forX) (GraphUtil'unproxify-1n forY))                                            (ConstantNode'forIntegerStamp-2 (:stamp this), 0)
                 (and (satisfies? ConstantNode forX) (satisfies? ConstantNode forY))                                        (IntegerSubExactNode''canonicalXYconstant-3 this, forX, forY)
-                (and (satisfies? ConstantNode forY) (zero? (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 forY)))) forX
+                (and (satisfies? ConstantNode forY) (zero? (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 forY)))) forX
                 (IntegerStamp'subtractionCanOverflow-2 (:stamp (:x this)), (:stamp (:y this)))                             this
                 :else                                                                                                      (Canonicalizable'''canonical-2 (SubNode'new-2 (:x this), (:y this)), tool)
             )
@@ -55217,7 +55517,7 @@ ZeroExtendNode'new-4
             (let [
                 #_"Constant" constant (:value forY)
             ]
-                (when (and (instance? PrimitiveConstant constant) (JavaKind'isNumericInteger-1 (#_"PrimitiveConstant" .getJavaKind constant)) (any = (#_"PrimitiveConstant" .asLong constant) 0 1)) => self
+                (when (and (satisfies? PrimitiveConstant constant) (JavaKind'isNumericInteger-1 (JavaConstant'''getJavaKind-1 constant)) (any = (JavaConstant'''asLong-1 constant) 0 1)) => self
                     (ConstantNode'forIntegerStamp-2 (:stamp self), 0)
                 )
             )
@@ -55265,11 +55565,11 @@ ZeroExtendNode'new-4
                     (if (BinaryOp'''isNeutral-2 op, c)
                         forX
                         (do
-                            (when (and (instance? PrimitiveConstant c) (JavaKind'isNumericInteger-1 (#_"PrimitiveConstant" .getJavaKind c)))
+                            (when (and (satisfies? PrimitiveConstant c) (JavaKind'isNumericInteger-1 (JavaConstant'''getJavaKind-1 c)))
                                 (let [
                                     #_"long" mask (NumUtil'mask-1 (PrimitiveStamp'getBits-1 stamp))
                                 ]
-                                    (when (= (& (#_"PrimitiveConstant" .asLong c) mask) mask)
+                                    (when (= (& (JavaConstant'''asLong-1 c) mask) mask)
                                         (§ return (NotNode'new-1 forX))
                                     )
                                 )
@@ -55410,7 +55710,7 @@ ZeroExtendNode'new-4
 
     (defn #_"ValueNode" ShiftNode'canonical-4 [#_"ShiftOp" op, #_"Stamp" stamp, #_"ValueNode" forX, #_"ValueNode" forY]
         (when (and (satisfies? ConstantNode forX) (satisfies? ConstantNode forY))
-            (ConstantNode'forPrimitive-2s stamp, (ShiftOp'''foldConstant-3 op, (:value forX), (#_"JavaConstant" .asInt (ValueNode''asJavaConstant-1 forY))))
+            (ConstantNode'forPrimitive-2s stamp, (ShiftOp'''foldConstant-3 op, (:value forX), (JavaConstant'''asInt-1 (ValueNode''asJavaConstant-1 forY))))
         )
     )
 
@@ -55427,7 +55727,7 @@ ZeroExtendNode'new-4
     (defn- #_"ValueNode" LeftShiftNode'canonical-5 [#_"LeftShiftNode" self, #_"ShiftOp<Shl>" op, #_"Stamp" stamp, #_"ValueNode" forX, #_"ValueNode" forY]
         (when (satisfies? ConstantNode forY)
             (let [
-                #_"int" amount (#_"JavaConstant" .asInt (ValueNode''asJavaConstant-1 forY))
+                #_"int" amount (JavaConstant'''asInt-1 (ValueNode''asJavaConstant-1 forY))
                 #_"int" o'amount amount
                 #_"int" mask (ShiftOp'getShiftAmountMask-1 stamp)
                 amount (& amount mask)
@@ -55437,7 +55737,7 @@ ZeroExtendNode'new-4
                 )
                 (when (and (satisfies? ShiftNode forX) (satisfies? ConstantNode (:y forX)))
                     (let [
-                        #_"int" amount' (& (#_"JavaConstant" .asInt (ValueNode''asJavaConstant-1 (:y forX))) mask)
+                        #_"int" amount' (& (JavaConstant'''asInt-1 (ValueNode''asJavaConstant-1 (:y forX))) mask)
                     ]
                         (cond
                             (satisfies? LeftShiftNode forX)
@@ -55503,7 +55803,7 @@ ZeroExtendNode'new-4
             (UnsignedRightShiftNode'new-2 forX, forY)
             (when (satisfies? ConstantNode forY) => (or self (RightShiftNode'new-2 forX, forY))
                 (let [
-                    #_"int" amount (#_"JavaConstant" .asInt (ValueNode''asJavaConstant-1 forY))
+                    #_"int" amount (JavaConstant'''asInt-1 (ValueNode''asJavaConstant-1 forY))
                     #_"int" o'amount amount
                     #_"int" mask (ShiftOp'getShiftAmountMask-1 stamp)
                     amount (& amount mask)
@@ -55512,7 +55812,7 @@ ZeroExtendNode'new-4
                         forX
                         (if (and (satisfies? ShiftNode forX) (satisfies? ConstantNode (:y forX)) (satisfies? RightShiftNode forX))
                             (let [
-                                #_"int" total (+ amount (& (#_"JavaConstant" .asInt (ValueNode''asJavaConstant-1 (:y forX))) mask))
+                                #_"int" total (+ amount (& (JavaConstant'''asInt-1 (ValueNode''asJavaConstant-1 (:y forX))) mask))
                             ]
                                 (cond
                                     (= total (& total mask))                                (RightShiftNode'new-2 (:x forX), (ConstantNode'forInt-1 total))
@@ -55568,7 +55868,7 @@ ZeroExtendNode'new-4
     (defn- #_"ValueNode" UnsignedRightShiftNode'canonical-5 [#_"UnsignedRightShiftNode" self, #_"ShiftOp<UShr>" op, #_"Stamp" stamp, #_"ValueNode" forX, #_"ValueNode" forY]
         (when (satisfies? ConstantNode forY) => (or self (UnsignedRightShiftNode'new-2 forX, forY))
             (let [
-                #_"int" amount (#_"JavaConstant" .asInt (ValueNode''asJavaConstant-1 forY))
+                #_"int" amount (JavaConstant'''asInt-1 (ValueNode''asJavaConstant-1 forY))
                 #_"int" o'amount amount
                 #_"int" mask (ShiftOp'getShiftAmountMask-1 stamp)
                 amount (& amount mask)
@@ -55578,7 +55878,7 @@ ZeroExtendNode'new-4
                     (do
                         (when (and (satisfies? ShiftNode forX) (satisfies? ConstantNode (:y forX)))
                             (let [
-                                #_"int" otherAmount (& (#_"JavaConstant" .asInt (ValueNode''asJavaConstant-1 (:y forX))) mask)
+                                #_"int" otherAmount (& (JavaConstant'''asInt-1 (ValueNode''asJavaConstant-1 (:y forX))) mask)
                             ]
                                 (cond
                                     (satisfies? UnsignedRightShiftNode forX)
@@ -55661,7 +55961,7 @@ ZeroExtendNode'new-4
                     (let [
                         #_"ResolvedJavaType" exact (#_"ConstantReflectionProvider" .asJavaType HotSpot'constantReflection, (ValueNode''asJavaConstant-1 clazz))
                     ]
-                        (ConstantNode'forConstant-2s stamp, (if (#_"ResolvedJavaType" .isPrimitive exact) JavaConstant/NULL_POINTER (#_"ConstantReflectionProvider" .asObjectHub HotSpot'constantReflection, exact)))
+                        (ConstantNode'forConstant-2s stamp, (if (#_"ResolvedJavaType" .isPrimitive exact) JavaConstant'NULL_POINTER (#_"ConstantReflectionProvider" .asObjectHub HotSpot'constantReflection, exact)))
                     )
                 GetClassNode
                     (LoadHubNode'new-2 KlassPointerStamp'KLASS_NON_NULL, (:object clazz))
@@ -55710,7 +56010,7 @@ ZeroExtendNode'new-4
             (let [
                 #_"ResolvedJavaType" exact (#_"ConstantReflectionProvider" .asJavaType HotSpot'constantReflection, constant)
             ]
-                (if (#_"ResolvedJavaType" .isPrimitive exact) JavaConstant/NULL_POINTER (#_"ConstantReflectionProvider" .asObjectHub HotSpot'constantReflection, exact))
+                (if (#_"ResolvedJavaType" .isPrimitive exact) JavaConstant'NULL_POINTER (#_"ConstantReflectionProvider" .asObjectHub HotSpot'constantReflection, exact))
             )
         )
 
@@ -55808,14 +56108,14 @@ ZeroExtendNode'new-4
                     ;; this optimizes the case where a value from the range 0 - 1 is mapped to the range 0 - 1
                     (when (and (satisfies? ConstantNode trueValue) (satisfies? ConstantNode falseValue))
                         (let [
-                            #_"long" constTrueValue (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 trueValue))
-                            #_"long" constFalseValue (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 falseValue))
+                            #_"long" constTrueValue (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 trueValue))
+                            #_"long" constFalseValue (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 falseValue))
                         ]
                             (condp satisfies? logic
                                 IntegerEqualsNode
                                     (when (and (satisfies? ConstantNode (:y logic)) (satisfies? IntegerStamp (:stamp (:x logic))) (= (:upMask (:stamp (:x logic))) 1))
                                         (let [
-                                            #_"long" equalsY (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 (:y logic)))
+                                            #_"long" equalsY (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 (:y logic)))
                                         ]
                                             (cond
                                                 (zero? equalsY)
@@ -55845,7 +56145,7 @@ ZeroExtendNode'new-4
                                     ;; (value & 1) == 1 ? 1 : 0
                                     (when (satisfies? ConstantNode (:y logic))
                                         (let [
-                                            #_"long" testY (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 (:y logic)))
+                                            #_"long" testY (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 (:y logic)))
                                         ]
                                             (when (and (= testY 1) (zero? constTrueValue) (= constFalseValue 1))
                                                 (§ return (IntegerConvertNode'convertUnsigned-2 (AndNode'create-2 (:x logic), (:y logic)), stamp))
@@ -55858,7 +56158,7 @@ ZeroExtendNode'new-4
                     )
                     ;; convert a conditional add ((x < 0) ? (x + y) : x) into (x + (y & (x >> (bits - 1)))) to avoid the test
                     (when (satisfies? IntegerLessThanNode logic)
-                        (when (and (satisfies? ConstantNode (:y logic)) (#_"Constant" .isDefaultForKind (:value (:y logic))) (= falseValue (:x logic)) (satisfies? AddNode trueValue) (= (:x trueValue) falseValue))
+                        (when (and (satisfies? ConstantNode (:y logic)) (Constant'''isDefaultForKind-1 (:value (:y logic))) (= falseValue (:x logic)) (satisfies? AddNode trueValue) (= (:x trueValue) falseValue))
                             (AddNode'new-2 (:x trueValue), (AndNode'new-2 (RightShiftNode'new-2 (:x logic), (ConstantNode'forIntegerBits-2l 32, (dec (:bits (:stamp trueValue))))), (:y trueValue)))
                         )
                     )
@@ -55897,7 +56197,7 @@ ZeroExtendNode'new-4
                                 ]
                                     (when (some? constant)
                                         (let [
-                                            #_"IntegerStamp" bounds (StampFactory'forInteger-3k (#_"JavaConstant" .getJavaKind constant), (JavaKind'getMinValue-1 (#_"JavaConstant" .getJavaKind constant)), (#_"JavaConstant" .asLong constant))
+                                            #_"IntegerStamp" bounds (StampFactory'forInteger-3k (JavaConstant'''getJavaKind-1 constant), (JavaKind'getMinValue-1 (JavaConstant'''getJavaKind-1 constant)), (JavaConstant'''asLong-1 constant))
                                         ]
                                             (§ ass valueStamp (Stamp'''join-2 valueStamp, bounds))
                                         )
@@ -55913,7 +56213,7 @@ ZeroExtendNode'new-4
                                 ]
                                     (when (some? constant)
                                         (let [
-                                            #_"IntegerStamp" bounds (StampFactory'forInteger-3k (#_"JavaConstant" .getJavaKind constant), (#_"JavaConstant" .asLong constant), (JavaKind'getMaxValue-1 (#_"JavaConstant" .getJavaKind constant)))
+                                            #_"IntegerStamp" bounds (StampFactory'forInteger-3k (JavaConstant'''getJavaKind-1 constant), (JavaConstant'''asLong-1 constant), (JavaKind'getMaxValue-1 (JavaConstant'''getJavaKind-1 constant)))
                                         ]
                                             (§ ass valueStamp (Stamp'''join-2 valueStamp, bounds))
                                         )
@@ -56004,9 +56304,9 @@ ZeroExtendNode'new-4
 
     (defn #_"ConstantNode" ConstantNode'forConstant-2c [#_"JavaConstant" constant, #_"Graph" graph]
         (cond
-            (and (= (JavaKind'getStackKind-1 (#_"JavaConstant" .getJavaKind constant)) :JavaKind'Int) (not= (#_"JavaConstant" .getJavaKind constant) :JavaKind'Int))
-                (ConstantNode'forInt-2 (#_"JavaConstant" .asInt constant), graph)
-            (= (#_"JavaConstant" .getJavaKind constant) :JavaKind'Object)
+            (and (= (JavaKind'getStackKind-1 (JavaConstant'''getJavaKind-1 constant)) :JavaKind'Int) (not= (JavaConstant'''getJavaKind-1 constant) :JavaKind'Int))
+                (ConstantNode'forInt-2 (JavaConstant'''asInt-1 constant), graph)
+            (= (JavaConstant'''getJavaKind-1 constant) :JavaKind'Object)
                 (Graph''add-2 graph, (ConstantNode'new-2 constant, (StampFactory'forConstant-1 constant)))
             :else
                 (Graph''add-2 graph, (ConstantNode'createPrimitive-1 constant))
@@ -56015,9 +56315,9 @@ ZeroExtendNode'new-4
 
     (defn #_"ConstantNode" ConstantNode'forConstant-3c [#_"JavaConstant" constant, #_"int" stableDimension, #_"boolean" isDefaultStable]
         (cond
-            (and (= (JavaKind'getStackKind-1 (#_"JavaConstant" .getJavaKind constant)) :JavaKind'Int) (not= (#_"JavaConstant" .getJavaKind constant) :JavaKind'Int))
-                (ConstantNode'forInt-1 (#_"JavaConstant" .asInt constant))
-            (= (#_"JavaConstant" .getJavaKind constant) :JavaKind'Object)
+            (and (= (JavaKind'getStackKind-1 (JavaConstant'''getJavaKind-1 constant)) :JavaKind'Int) (not= (JavaConstant'''getJavaKind-1 constant) :JavaKind'Int))
+                (ConstantNode'forInt-1 (JavaConstant'''asInt-1 constant))
+            (= (JavaConstant'''getJavaKind-1 constant) :JavaKind'Object)
                 (ConstantNode'new-4 constant, (StampFactory'forConstant-1 constant), stableDimension, isDefaultStable)
             :else
                 (ConstantNode'createPrimitive-1 constant)
@@ -56042,7 +56342,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"ConstantNode" ConstantNode'forIntegerBits-3c [#_"int" bits, #_"JavaConstant" constant, #_"Graph" graph]
         (let [
-            #_"long" bounds (NumUtil'signExtend-2 (#_"JavaConstant" .asLong constant), bits)
+            #_"long" bounds (NumUtil'signExtend-2 (JavaConstant'''asLong-1 constant), bits)
         ]
             (Graph''add-2 graph, (ConstantNode'new-2 constant, (StampFactory'forInteger-3i bits, bounds, bounds)))
         )
@@ -56052,12 +56352,12 @@ ZeroExtendNode'new-4
      ; Returns a node for a constant integer that's not directly representable as Java primitive (e.g. short).
      ;;
     (defn #_"ConstantNode" ConstantNode'forIntegerBits-3l [#_"int" bits, #_"long" value, #_"Graph" graph]
-        (ConstantNode'forIntegerBits-3c bits, (JavaConstant/forPrimitiveInt bits, value), graph)
+        (ConstantNode'forIntegerBits-3c bits, (JavaConstant'forPrimitiveInt-2 bits, value), graph)
     )
 
     (defn- #_"ConstantNode" ConstantNode'forIntegerBits-2c [#_"int" bits, #_"JavaConstant" constant]
         (let [
-            #_"long" bounds (NumUtil'signExtend-2 (#_"JavaConstant" .asLong constant), bits)
+            #_"long" bounds (NumUtil'signExtend-2 (JavaConstant'''asLong-1 constant), bits)
         ]
             (ConstantNode'new-2 constant, (StampFactory'forInteger-3i bits, bounds, bounds))
         )
@@ -56067,7 +56367,7 @@ ZeroExtendNode'new-4
      ; Returns a node for a constant integer that's not directly representable as Java primitive (e.g. short).
      ;;
     (defn #_"ConstantNode" ConstantNode'forIntegerBits-2l [#_"int" bits, #_"long" value]
-        (ConstantNode'forIntegerBits-2c bits, (JavaConstant/forPrimitiveInt bits, value))
+        (ConstantNode'forIntegerBits-2c bits, (JavaConstant'forPrimitiveInt-2 bits, value))
     )
 
     ;;;
@@ -56113,7 +56413,7 @@ ZeroExtendNode'new-4
      ; @return a node for an long constant
      ;;
     (defn #_"ConstantNode" ConstantNode'forLong-2 [#_"long" i, #_"Graph" graph]
-        (Graph''add-2 graph, (ConstantNode'createPrimitive-1 (JavaConstant/forLong i)))
+        (Graph''add-2 graph, (ConstantNode'createPrimitive-1 (JavaConstant'forLong-1 i)))
     )
 
     ;;;
@@ -56123,7 +56423,7 @@ ZeroExtendNode'new-4
      ; @return a node for an long constant
      ;;
     (defn #_"ConstantNode" ConstantNode'forLong-1 [#_"long" i]
-        (ConstantNode'createPrimitive-1 (JavaConstant/forLong i))
+        (ConstantNode'createPrimitive-1 (JavaConstant'forLong-1 i))
     )
 
     ;;;
@@ -56133,7 +56433,7 @@ ZeroExtendNode'new-4
      ; @return a node for an integer constant
      ;;
     (defn #_"ConstantNode" ConstantNode'forInt-2 [#_"int" i, #_"Graph" graph]
-        (Graph''add-2 graph, (ConstantNode'createPrimitive-1 (JavaConstant/forInt i)))
+        (Graph''add-2 graph, (ConstantNode'createPrimitive-1 (JavaConstant'forInt-1 i)))
     )
 
     ;;;
@@ -56143,7 +56443,7 @@ ZeroExtendNode'new-4
      ; @return a node for an integer constant
      ;;
     (defn #_"ConstantNode" ConstantNode'forInt-1 [#_"int" i]
-        (ConstantNode'createPrimitive-1 (JavaConstant/forInt i))
+        (ConstantNode'createPrimitive-1 (JavaConstant'forInt-1 i))
     )
 
     ;;;
@@ -56153,7 +56453,7 @@ ZeroExtendNode'new-4
      ; @return a node representing the boolean
      ;;
     (defn #_"ConstantNode" ConstantNode'forBoolean-2 [#_"boolean" i, #_"Graph" graph]
-        (Graph''add-2 graph, (ConstantNode'createPrimitive-1 (JavaConstant/forInt (if i 1 0))))
+        (Graph''add-2 graph, (ConstantNode'createPrimitive-1 (JavaConstant'forInt-1 (if i 1 0))))
     )
 
     ;;;
@@ -56163,7 +56463,7 @@ ZeroExtendNode'new-4
      ; @return a node representing the boolean
      ;;
     (defn #_"ConstantNode" ConstantNode'forBoolean-1 [#_"boolean" i]
-        (ConstantNode'createPrimitive-1 (JavaConstant/forInt (if i 1 0)))
+        (ConstantNode'createPrimitive-1 (JavaConstant'forInt-1 (if i 1 0)))
     )
 
     ;;;
@@ -56174,7 +56474,7 @@ ZeroExtendNode'new-4
      ;;
     #_unused
     (defn #_"ConstantNode" ConstantNode'forByte-2 [#_"byte" i, #_"Graph" graph]
-        (Graph''add-2 graph, (ConstantNode'createPrimitive-1 (JavaConstant/forInt i)))
+        (Graph''add-2 graph, (ConstantNode'createPrimitive-1 (JavaConstant'forInt-1 i)))
     )
 
     ;;;
@@ -56185,7 +56485,7 @@ ZeroExtendNode'new-4
      ;;
     #_unused
     (defn #_"ConstantNode" ConstantNode'forChar-2 [#_"char" i, #_"Graph" graph]
-        (Graph''add-2 graph, (ConstantNode'createPrimitive-1 (JavaConstant/forInt i)))
+        (Graph''add-2 graph, (ConstantNode'createPrimitive-1 (JavaConstant'forInt-1 i)))
     )
 
     ;;;
@@ -56196,7 +56496,7 @@ ZeroExtendNode'new-4
      ;;
     #_unused
     (defn #_"ConstantNode" ConstantNode'forShort-2 [#_"short" i, #_"Graph" graph]
-        (Graph''add-2 graph, (ConstantNode'createPrimitive-1 (JavaConstant/forInt i)))
+        (Graph''add-2 graph, (ConstantNode'createPrimitive-1 (JavaConstant'forInt-1 i)))
     )
 
     ;;;
@@ -56228,8 +56528,8 @@ ZeroExtendNode'new-4
 
     (defn #_"ConstantNode" ConstantNode'forIntegerKind-2 [#_"JavaKind" kind, #_"long" value]
         (case kind
-           (:JavaKind'Byte :JavaKind'Short :JavaKind'Int) (ConstantNode'createPrimitive-1 (JavaConstant/forInt (int value)))
-            :JavaKind'Long                                (ConstantNode'createPrimitive-1 (JavaConstant/forLong value))
+           (:JavaKind'Byte :JavaKind'Short :JavaKind'Int) (ConstantNode'createPrimitive-1 (JavaConstant'forInt-1 (int value)))
+            :JavaKind'Long                                (ConstantNode'createPrimitive-1 (JavaConstant'forLong-1 value))
         )
     )
 
@@ -56241,7 +56541,7 @@ ZeroExtendNode'new-4
         (case kind
            (:JavaKind'Boolean :JavaKind'Byte :JavaKind'Char :JavaKind'Short :JavaKind'Int) (ConstantNode'forInt-1 0)
             :JavaKind'Long                                                                 (ConstantNode'forLong-1 0)
-            :JavaKind'Object                                                               (ConstantNode'forConstant-1 JavaConstant/NULL_POINTER)
+            :JavaKind'Object                                                               (ConstantNode'forConstant-1 JavaConstant'NULL_POINTER)
             nil
         )
     )
@@ -56779,20 +57079,20 @@ ZeroExtendNode'new-4
         )
 
         (#_"Constant" ConvertNode'''convert-2 [#_"HubGetClassNode" this, #_"Constant" constant]
-            (if (= JavaConstant/NULL_POINTER constant)
+            (if (= JavaConstant'NULL_POINTER constant)
                 constant
                 (#_"ConstantReflectionProvider" .asJavaClass HotSpot'constantReflection, (#_"ConstantReflectionProvider" .asJavaType HotSpot'constantReflection, constant))
             )
         )
 
         (#_"Constant" ConvertNode'''reverse-2 [#_"HubGetClassNode" this, #_"Constant" constant]
-            (if (= JavaConstant/NULL_POINTER constant)
+            (if (= JavaConstant'NULL_POINTER constant)
                 constant
                 (let [
                     #_"ResolvedJavaType" type (#_"ConstantReflectionProvider" .asJavaType HotSpot'constantReflection, constant)
                 ]
                     (if (#_"ResolvedJavaType" .isPrimitive type)
-                        JavaConstant/NULL_POINTER
+                        JavaConstant'NULL_POINTER
                         (#_"ConstantReflectionProvider" .asObjectHub HotSpot'constantReflection, type)
                     )
                 )
@@ -56990,13 +57290,13 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"LogicNode" CompareNode'tryConstantFold-3 [#_"CanonicalCondition" condition, #_"ValueNode" forX, #_"ValueNode" forY]
-        (when (and (satisfies? ConstantNode forX) (satisfies? ConstantNode forY) (or (some? HotSpot'constantReflection) (instance? PrimitiveConstant (:value forX))))
+        (when (and (satisfies? ConstantNode forX) (satisfies? ConstantNode forY) (or (some? HotSpot'constantReflection) (satisfies? PrimitiveConstant (:value forX))))
             (LogicConstantNode'forBoolean-1 (Condition''foldCondition-3c (:canonical condition), (:value forX), (:value forY)))
         )
     )
 
     (defn #_"LogicNode" CompareNode'tryConstantFoldPrimitive-3 [#_"CanonicalCondition" condition, #_"ValueNode" forX, #_"ValueNode" forY]
-        (when (and (instance? PrimitiveConstant (ValueNode''asConstant-1 forX)) (instance? PrimitiveConstant (ValueNode''asConstant-1 forY)))
+        (when (and (satisfies? PrimitiveConstant (ValueNode''asConstant-1 forX)) (satisfies? PrimitiveConstant (ValueNode''asConstant-1 forY)))
             (LogicConstantNode'forBoolean-1 (Condition''foldCondition-3p (:canonical condition), (ValueNode''asConstant-1 forX), (ValueNode''asConstant-1 forY)))
         )
     )
@@ -57531,7 +57831,7 @@ ZeroExtendNode'new-4
         (#_"ValueNode" Binary'''canonical-4 [#_"IntegerTestNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
             (cond
                 (and (satisfies? ConstantNode forX) (satisfies? ConstantNode forY))
-                    (LogicConstantNode'forBoolean-1 (zero? (& (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 forX)) (#_"JavaConstant" .asLong (ValueNode''asJavaConstant-1 forY)))))
+                    (LogicConstantNode'forBoolean-1 (zero? (& (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 forX)) (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 forY)))))
                 (and (satisfies? IntegerStamp (:stamp forX)) (satisfies? IntegerStamp (:stamp forY)))
                     (let [
                         #_"IntegerStamp" xStamp (:stamp forX)
@@ -58610,7 +58910,7 @@ ZeroExtendNode'new-4
                 (let [
                     #_"JavaConstant" constant (ValueNode''asJavaConstant-1 value)
                 ]
-                    (ConstantNode'forInt-1 (if (= (ValueNode''getStackKind-1 value) :JavaKind'Int) (Integer/bitCount (#_"JavaConstant" .asInt constant)) (Long/bitCount (#_"JavaConstant" .asLong constant))))
+                    (ConstantNode'forInt-1 (if (= (ValueNode''getStackKind-1 value) :JavaKind'Int) (Integer/bitCount (JavaConstant'''asInt-1 constant)) (Long/bitCount (JavaConstant'''asLong-1 constant))))
                 )
             )
         )
@@ -58649,17 +58949,17 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"Constant" CompressionNode''compress-2 [#_"CompressionNode" this, #_"Constant" constant]
-        (if (= constant JavaConstant/NULL_POINTER)
-            HotSpotCompressedNullConstant/COMPRESSED_NULL
-            (condp instance? constant
-                HotSpotConstant (#_"HotSpotConstant" .compress constant)
+        (if (= constant JavaConstant'NULL_POINTER)
+            JavaConstant'COMPRESSED_NULL
+            (condp satisfies? constant
+                HotSpotConstant (HotSpotConstant'''compress-1 constant)
             )
         )
     )
 
     (defn- #_"Constant" CompressionNode''uncompress-2 [#_"CompressionNode" this, #_"Constant" constant]
-        (condp instance? constant
-            HotSpotConstant (#_"HotSpotConstant" .uncompress constant)
+        (condp satisfies? constant
+            HotSpotConstant (HotSpotConstant'''uncompress-1 constant)
         )
     )
 
@@ -58765,8 +59065,8 @@ ZeroExtendNode'new-4
                 #_"JavaConstant" constant (ValueNode''asJavaConstant-1 value)
             ]
                 (if (= (ValueNode''getStackKind-1 value) :JavaKind'Int)
-                    (ConstantNode'forInt-1 (Integer/numberOfLeadingZeros (#_"JavaConstant" .asInt constant)))
-                    (ConstantNode'forInt-1 (Long/numberOfLeadingZeros (#_"JavaConstant" .asLong constant)))
+                    (ConstantNode'forInt-1 (Integer/numberOfLeadingZeros (JavaConstant'''asInt-1 constant)))
+                    (ConstantNode'forInt-1 (Long/numberOfLeadingZeros (JavaConstant'''asLong-1 constant)))
                 )
             )
         )
@@ -58812,8 +59112,8 @@ ZeroExtendNode'new-4
                 #_"JavaConstant" constant (ValueNode''asJavaConstant-1 value)
             ]
                 (if (= (ValueNode''getStackKind-1 value) :JavaKind'Int)
-                    (ConstantNode'forInt-1 (Integer/numberOfTrailingZeros (#_"JavaConstant" .asInt constant)))
-                    (ConstantNode'forInt-1 (Long/numberOfTrailingZeros (#_"JavaConstant" .asLong constant)))
+                    (ConstantNode'forInt-1 (Integer/numberOfTrailingZeros (JavaConstant'''asInt-1 constant)))
+                    (ConstantNode'forInt-1 (Long/numberOfTrailingZeros (JavaConstant'''asLong-1 constant)))
                 )
             )
         )
@@ -59386,7 +59686,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"ValueNode" UnpackEndianHalfNode'create-2 [#_"ValueNode" value, #_"boolean" firstHalf]
-        (if (and (satisfies? ConstantNode value) (#_"Constant" .isDefaultForKind (:value value)))
+        (if (and (satisfies? ConstantNode value) (Constant'''isDefaultForKind-1 (:value value)))
             (ConstantNode'defaultForKind-1 :JavaKind'Int)
             (UnpackEndianHalfNode'new-2 value, firstHalf)
         )
@@ -59394,7 +59694,7 @@ ZeroExtendNode'new-4
 
     (defm UnpackEndianHalfNode Unary
         (#_"Node" Unary'''canonical-3 [#_"UnpackEndianHalfNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
-            (if (and (satisfies? ConstantNode value) (#_"Constant" .isDefaultForKind (:value value)))
+            (if (and (satisfies? ConstantNode value) (Constant'''isDefaultForKind-1 (:value value)))
                 (ConstantNode'defaultForKind-1 (Stamp'''getStackKind-1 (:stamp this)))
                 this
             )
@@ -60453,7 +60753,7 @@ ZeroExtendNode'new-4
                     #_"[ValueNode]" entries (§ snap (:entries this))
                     _
                         (dotimes [#_"int" i (count entries)]
-                            (when (= (ValueNode''asJavaConstant-1 (nth entries i)) (JavaConstant/defaultForKind (JavaKind'getStackKind-1 (VirtualObjectNode'''entryKind-2 virtual, i))))
+                            (when (= (ValueNode''asJavaConstant-1 (nth entries i)) (JavaConstant'defaultForKind-1 (JavaKind'getStackKind-1 (VirtualObjectNode'''entryKind-2 virtual, i))))
                                 (§ ass! entries (assoc' entries i nil))
                             )
                         )
@@ -64105,7 +64405,7 @@ ZeroExtendNode'new-4
 
     (defm AbstractPointerStamp Stamp
         (#_"Constant" Stamp'''asConstant-1 [#_"AbstractPointerStamp" this]
-            (when (:always-nil? this) JavaConstant/NULL_POINTER)
+            (when (:always-nil? this) JavaConstant'NULL_POINTER)
         )
 
         (#_"JavaKind" Stamp'''getStackKind-1 [#_"AbstractPointerStamp" this]
@@ -64141,9 +64441,9 @@ ZeroExtendNode'new-4
 
         (#_"Stamp" Stamp'''constant-2 [#_"AbstractObjectStamp" this, #_"Constant" c]
             (let [
-                #_"ResolvedJavaType" constType (when-not (#_"JavaConstant" .isNull c) (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, c))
+                #_"ResolvedJavaType" constType (when-not (JavaConstant'''isNull-1 c) (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, c))
             ]
-                (AbstractObjectStamp'''copyWith-5 this, constType, (#_"JavaConstant" .isNonNull c), (#_"JavaConstant" .isNonNull c), (#_"JavaConstant" .isNull c))
+                (AbstractObjectStamp'''copyWith-5 this, constType, (JavaConstant''isNonNull-1 c), (JavaConstant''isNonNull-1 c), (JavaConstant'''isNull-1 c))
             )
         )
 
@@ -64415,12 +64715,12 @@ ZeroExtendNode'new-4
         )
 
         (#_"JavaConstant" Stamp'''asConstant-1 [#_"NarrowOopStamp" this]
-            (when (:always-nil? this) HotSpotCompressedNullConstant/COMPRESSED_NULL)
+            (when (:always-nil? this) JavaConstant'COMPRESSED_NULL)
         )
 
         (#_"boolean" Stamp'''isCompatible-2c [#_"NarrowOopStamp" this, #_"Constant" other]
             (if (instance? HotSpotObjectConstant other)
-                (#_"HotSpotObjectConstant" .isCompressed other)
+                (HotSpotConstant'''isCompressed-1 other)
                 true
             )
         )
@@ -64471,8 +64771,8 @@ ZeroExtendNode'new-4
         )
 
         (#_"boolean" Stamp'''isCompatible-2c [#_"ObjectStamp" this, #_"Constant" constant]
-            (and (instance? JavaConstant constant)
-                (JavaKind'isObject-1 (#_"JavaConstant" .getJavaKind constant))
+            (and (satisfies? JavaConstant constant)
+                (JavaKind'isObject-1 (JavaConstant'''getJavaKind-1 constant))
             )
         )
 
@@ -64559,16 +64859,16 @@ ZeroExtendNode'new-4
         (#_"boolean" Stamp'''isCompatible-2c [#_"KlassPointerStamp" this, #_"Constant" constant]
             (if (instance? HotSpotMetaspaceConstant constant)
                 (some? (#_"HotSpotMetaspaceConstant" .asResolvedJavaType constant))
-                (#_"Constant" .isDefaultForKind constant)
+                (Constant'''isDefaultForKind-1 constant)
             )
         )
 
         (#_"Stamp" Stamp'''constant-2 [#_"KlassPointerStamp" this, #_"Constant" constant]
             (if (KlassPointerStamp''isCompressed-1 this)
-                (when (= HotSpotCompressedNullConstant/COMPRESSED_NULL constant)
+                (when (= JavaConstant'COMPRESSED_NULL constant)
                     (§ return (KlassPointerStamp'new-3 false, true, (:encoding this)))
                 )
-                (when (= JavaConstant/NULL_POINTER constant)
+                (when (= JavaConstant'NULL_POINTER constant)
                     (§ return KlassPointerStamp'KLASS_ALWAYS_NULL)
                 )
             )
@@ -64582,7 +64882,7 @@ ZeroExtendNode'new-4
 
         (#_"Constant" Stamp'''asConstant-1 [#_"KlassPointerStamp" this]
             (if (and (:always-nil? this) (KlassPointerStamp''isCompressed-1 this))
-                HotSpotCompressedNullConstant/COMPRESSED_NULL
+                JavaConstant'COMPRESSED_NULL
                 (Stamp'''asConstant-1 (§ super AbstractPointerStamp'iface))
             )
         )
@@ -64678,7 +64978,7 @@ ZeroExtendNode'new-4
         )
 
         (#_"boolean" Stamp'''isCompatible-2c [#_"RawPointerStamp" this, #_"Constant" constant]
-            (and (instance? PrimitiveConstant constant) (JavaKind'isNumericInteger-1 (#_"PrimitiveConstant" .getJavaKind constant)))
+            (and (satisfies? PrimitiveConstant constant) (JavaKind'isNumericInteger-1 (JavaConstant'''getJavaKind-1 constant)))
         )
 
         (#_"Constant" Stamp'''readConstant-4 [#_"RawPointerStamp" this, #_"MemoryAccessProvider" provider, #_"Constant" base, #_"long" displacement]
@@ -64848,9 +65148,9 @@ ZeroExtendNode'new-4
         )
 
         (#_"Stamp" Stamp'''constant-2 [#_"IntegerStamp" this, #_"Constant" constant]
-            (when (instance? PrimitiveConstant constant) => this
+            (when (satisfies? PrimitiveConstant constant) => this
                 (let [
-                    #_"long" value (#_"PrimitiveConstant" .asLong constant)
+                    #_"long" value (JavaConstant'''asLong-1 constant)
                 ]
                     (StampFactory'forInteger-3i (:bits this), value, value)
                 )
@@ -64947,8 +65247,8 @@ ZeroExtendNode'new-4
         )
 
         (#_"boolean" Stamp'''isCompatible-2c [#_"IntegerStamp" this, #_"Constant" constant]
-            (and (instance? PrimitiveConstant constant)
-                (JavaKind'isNumericInteger-1 (#_"PrimitiveConstant" .getJavaKind constant))
+            (and (satisfies? PrimitiveConstant constant)
+                (JavaKind'isNumericInteger-1 (JavaConstant'''getJavaKind-1 constant))
             )
         )
     )
@@ -64993,11 +65293,11 @@ ZeroExtendNode'new-4
         (#_"JavaConstant" Stamp'''asConstant-1 [#_"IntegerStamp" this]
             (when (= (:lowerBound this) (:upperBound this))
                 (case (:bits this)
-                    1 (JavaConstant/forBoolean (not (zero? (:lowerBound this))))
-                    8 (JavaConstant/forByte          (byte (:lowerBound this)))
-                    16 (JavaConstant/forShort        (short (:lowerBound this)))
-                    32 (JavaConstant/forInt            (int (:lowerBound this)))
-                    64 (JavaConstant/forLong                (:lowerBound this))
+                    1 (JavaConstant'forBoolean-1 (not (zero? (:lowerBound this))))
+                    8 (JavaConstant'forByte-1          (byte (:lowerBound this)))
+                    16 (JavaConstant'forShort-1        (short (:lowerBound this)))
+                    32 (JavaConstant'forInt-1            (int (:lowerBound this)))
+                    64 (JavaConstant'forLong-1                (:lowerBound this))
                     nil
                 )
             )
@@ -65120,7 +65420,7 @@ ZeroExtendNode'new-4
         (§ proxy #_"Neg" (Neg'new-0)
             (defm Neg UnaryOp
                 (#_"Constant" UnaryOp'''foldConstant-2 [#_"Neg" _, #_"Constant" value]
-                    (JavaConstant/forIntegerKind (#_"PrimitiveConstant" .getJavaKind value), (- (#_"PrimitiveConstant" .asLong value)))
+                    (JavaConstant'forIntegerKind-2 (JavaConstant'''getJavaKind-1 value), (- (JavaConstant'''asLong-1 value)))
                 )
 
                 (#_"Stamp" UnaryOp'''foldStamp-2 [#_"Neg" _, #_"Stamp" stamp]
@@ -65150,7 +65450,7 @@ ZeroExtendNode'new-4
         (§ proxy #_"Add" (Add'new-2 true, true)
             (defm Add BinaryOp
                 (#_"Constant" BinaryOp'''foldConstant-3 [#_"Add" _, #_"Constant" a, #_"Constant" b]
-                    (JavaConstant/forIntegerKind (#_"PrimitiveConstant" .getJavaKind a), (+ (#_"PrimitiveConstant" .asLong a) (#_"PrimitiveConstant" .asLong b)))
+                    (JavaConstant'forIntegerKind-2 (JavaConstant'''getJavaKind-1 a), (+ (JavaConstant'''asLong-1 a) (JavaConstant'''asLong-1 b)))
                 )
 
                 (#_"Stamp" BinaryOp'''foldStamp-3 [#_"Add" _, #_"Stamp" a, #_"Stamp" b]
@@ -65198,7 +65498,7 @@ ZeroExtendNode'new-4
                 )
 
                 (#_"boolean" BinaryOp'''isNeutral-2 [#_"Add" _, #_"Constant" value]
-                    (zero? (#_"PrimitiveConstant" .asLong value))
+                    (zero? (JavaConstant'''asLong-1 value))
                 )
             )
         )
@@ -65206,7 +65506,7 @@ ZeroExtendNode'new-4
         (§ proxy #_"Sub" (Sub'new-2 true, false)
             (defm Sub BinaryOp
                 (#_"Constant" BinaryOp'''foldConstant-3 [#_"Sub" _, #_"Constant" a, #_"Constant" b]
-                    (JavaConstant/forIntegerKind (#_"PrimitiveConstant" .getJavaKind a), (- (#_"PrimitiveConstant" .asLong a) (#_"PrimitiveConstant" .asLong b)))
+                    (JavaConstant'forIntegerKind-2 (JavaConstant'''getJavaKind-1 a), (- (JavaConstant'''asLong-1 a) (JavaConstant'''asLong-1 b)))
                 )
 
                 (#_"Stamp" BinaryOp'''foldStamp-3 [#_"Sub" _, #_"Stamp" a, #_"Stamp" b]
@@ -65214,11 +65514,11 @@ ZeroExtendNode'new-4
                 )
 
                 (#_"boolean" BinaryOp'''isNeutral-2 [#_"Sub" _, #_"Constant" value]
-                    (zero? (#_"PrimitiveConstant" .asLong value))
+                    (zero? (JavaConstant'''asLong-1 value))
                 )
 
                 (#_"Constant" BinaryOp'''getZero-2 [#_"Sub" _, #_"Stamp" stamp]
-                    (JavaConstant/forPrimitiveInt (:bits stamp), 0)
+                    (JavaConstant'forPrimitiveInt-2 (:bits stamp), 0)
                 )
             )
         )
@@ -65226,7 +65526,7 @@ ZeroExtendNode'new-4
         (§ proxy #_"Mul" (Mul'new-2 true, true)
             (defm Mul BinaryOp
                 (#_"Constant" BinaryOp'''foldConstant-3 [#_"Mul" _, #_"Constant" a, #_"Constant" b]
-                    (JavaConstant/forIntegerKind (#_"PrimitiveConstant" .getJavaKind a), (* (#_"PrimitiveConstant" .asLong a) (#_"PrimitiveConstant" .asLong b)))
+                    (JavaConstant'forIntegerKind-2 (JavaConstant'''getJavaKind-1 a), (* (JavaConstant'''asLong-1 a) (JavaConstant'''asLong-1 b)))
                 )
 
                 (#_"Stamp" BinaryOp'''foldStamp-3 [#_"Mul" _, #_"Stamp" a, #_"Stamp" b]
@@ -65394,7 +65694,7 @@ ZeroExtendNode'new-4
                 )
 
                 (#_"boolean" BinaryOp'''isNeutral-2 [#_"Mul" _, #_"Constant" value]
-                    (= (#_"PrimitiveConstant" .asLong value) 1)
+                    (= (JavaConstant'''asLong-1 value) 1)
                 )
             )
         )
@@ -65421,7 +65721,7 @@ ZeroExtendNode'new-4
 
             (defm MulHigh BinaryOp
                 (#_"Constant" BinaryOp'''foldConstant-3 [#_"MulHigh" _, #_"Constant" a, #_"Constant" b]
-                    (JavaConstant/forIntegerKind (#_"PrimitiveConstant" .getJavaKind a), (MulHigh'multiplyHigh-3 (#_"PrimitiveConstant" .asLong a), (#_"PrimitiveConstant" .asLong b), (#_"PrimitiveConstant" .getJavaKind a)))
+                    (JavaConstant'forIntegerKind-2 (JavaConstant'''getJavaKind-1 a), (MulHigh'multiplyHigh-3 (JavaConstant'''asLong-1 a), (JavaConstant'''asLong-1 b), (JavaConstant'''getJavaKind-1 a)))
                 )
 
                 (#_"Stamp" BinaryOp'''foldStamp-3 [#_"MulHigh" _, #_"Stamp" a, #_"Stamp" b]
@@ -65501,7 +65801,7 @@ ZeroExtendNode'new-4
 
             (defm UMulHigh BinaryOp
                 (#_"Constant" BinaryOp'''foldConstant-3 [#_"UMulHigh" _, #_"Constant" a, #_"Constant" b]
-                    (JavaConstant/forIntegerKind (#_"PrimitiveConstant" .getJavaKind a), (UMulHigh'multiplyHighUnsigned-3 (#_"PrimitiveConstant" .asLong a), (#_"PrimitiveConstant" .asLong b), (#_"PrimitiveConstant" .getJavaKind a)))
+                    (JavaConstant'forIntegerKind-2 (JavaConstant'''getJavaKind-1 a), (UMulHigh'multiplyHighUnsigned-3 (JavaConstant'''asLong-1 a), (JavaConstant'''asLong-1 b), (JavaConstant'''getJavaKind-1 a)))
                 )
 
                 (#_"Stamp" BinaryOp'''foldStamp-3 [#_"UMulHigh" _, #_"Stamp" a, #_"Stamp" b]
@@ -65553,8 +65853,8 @@ ZeroExtendNode'new-4
         (§ proxy #_"Div" (Div'new-2 true, false)
             (defm Div BinaryOp
                 (#_"Constant" BinaryOp'''foldConstant-3 [#_"Div" _, #_"Constant" a, #_"Constant" b]
-                    (when-not (zero? (#_"PrimitiveConstant" .asLong b))
-                        (JavaConstant/forIntegerKind (#_"PrimitiveConstant" .getJavaKind a), (quot (#_"PrimitiveConstant" .asLong a) (#_"PrimitiveConstant" .asLong b)))
+                    (when-not (zero? (JavaConstant'''asLong-1 b))
+                        (JavaConstant'forIntegerKind-2 (JavaConstant'''getJavaKind-1 a), (quot (JavaConstant'''asLong-1 a) (JavaConstant'''asLong-1 b)))
                     )
                 )
 
@@ -65588,7 +65888,7 @@ ZeroExtendNode'new-4
                 )
 
                 (#_"boolean" BinaryOp'''isNeutral-2 [#_"Div" _, #_"Constant" value]
-                    (= (#_"PrimitiveConstant" .asLong value) 1)
+                    (= (JavaConstant'''asLong-1 value) 1)
                 )
             )
         )
@@ -65596,8 +65896,8 @@ ZeroExtendNode'new-4
         (§ proxy #_"Rem" (Rem'new-2 false, false)
             (defm Rem BinaryOp
                 (#_"Constant" BinaryOp'''foldConstant-3 [#_"Rem" _, #_"Constant" a, #_"Constant" b]
-                    (when-not (zero? (#_"PrimitiveConstant" .asLong b))
-                        (JavaConstant/forIntegerKind (#_"PrimitiveConstant" .getJavaKind a), (% (#_"PrimitiveConstant" .asLong a) (#_"PrimitiveConstant" .asLong b)))
+                    (when-not (zero? (JavaConstant'''asLong-1 b))
+                        (JavaConstant'forIntegerKind-2 (JavaConstant'''getJavaKind-1 a), (% (JavaConstant'''asLong-1 a) (JavaConstant'''asLong-1 b)))
                     )
                 )
 
@@ -65641,7 +65941,7 @@ ZeroExtendNode'new-4
         (§ proxy #_"Not" (Not'new-0)
             (defm Not UnaryOp
                 (#_"Constant" UnaryOp'''foldConstant-2 [#_"Not" _, #_"Constant" constant]
-                    (JavaConstant/forIntegerKind (#_"PrimitiveConstant" .getJavaKind constant), (bit-not (#_"PrimitiveConstant" .asLong constant)))
+                    (JavaConstant'forIntegerKind-2 (JavaConstant'''getJavaKind-1 constant), (bit-not (JavaConstant'''asLong-1 constant)))
                 )
 
                 (#_"Stamp" UnaryOp'''foldStamp-2 [#_"Not" _, #_"Stamp" stamp]
@@ -65660,7 +65960,7 @@ ZeroExtendNode'new-4
         (§ proxy #_"And" (And'new-2 true, true)
             (defm And BinaryOp
                 (#_"Constant" BinaryOp'''foldConstant-3 [#_"And" _, #_"Constant" a, #_"Constant" b]
-                    (JavaConstant/forIntegerKind (#_"PrimitiveConstant" .getJavaKind a), (& (#_"PrimitiveConstant" .asLong a) (#_"PrimitiveConstant" .asLong b)))
+                    (JavaConstant'forIntegerKind-2 (JavaConstant'''getJavaKind-1 a), (& (JavaConstant'''asLong-1 a) (JavaConstant'''asLong-1 b)))
                 )
 
                 (#_"Stamp" BinaryOp'''foldStamp-3 [#_"And" _, #_"Stamp" a, #_"Stamp" b]
@@ -65673,9 +65973,9 @@ ZeroExtendNode'new-4
 
                 (#_"boolean" BinaryOp'''isNeutral-2 [#_"And" _, #_"Constant" value]
                     (let [
-                        #_"long" mask (NumUtil'mask-1 (JavaKind'getBitCount-1 (#_"PrimitiveConstant" .getJavaKind value)))
+                        #_"long" mask (NumUtil'mask-1 (JavaKind'getBitCount-1 (JavaConstant'''getJavaKind-1 value)))
                     ]
-                        (= (& (#_"PrimitiveConstant" .asLong value) mask) mask)
+                        (= (& (JavaConstant'''asLong-1 value) mask) mask)
                     )
                 )
             )
@@ -65684,7 +65984,7 @@ ZeroExtendNode'new-4
         (§ proxy #_"Or" (Or'new-2 true, true)
             (defm Or BinaryOp
                 (#_"Constant" BinaryOp'''foldConstant-3 [#_"Or" _, #_"Constant" a, #_"Constant" b]
-                    (JavaConstant/forIntegerKind (#_"PrimitiveConstant" .getJavaKind a), (| (#_"PrimitiveConstant" .asLong a) (#_"PrimitiveConstant" .asLong b)))
+                    (JavaConstant'forIntegerKind-2 (JavaConstant'''getJavaKind-1 a), (| (JavaConstant'''asLong-1 a) (JavaConstant'''asLong-1 b)))
                 )
 
                 (#_"Stamp" BinaryOp'''foldStamp-3 [#_"Or" _, #_"Stamp" a, #_"Stamp" b]
@@ -65696,7 +65996,7 @@ ZeroExtendNode'new-4
                 )
 
                 (#_"boolean" BinaryOp'''isNeutral-2 [#_"Or" _, #_"Constant" value]
-                    (zero? (#_"PrimitiveConstant" .asLong value))
+                    (zero? (JavaConstant'''asLong-1 value))
                 )
             )
         )
@@ -65704,7 +66004,7 @@ ZeroExtendNode'new-4
         (§ proxy #_"Xor" (Xor'new-2 true, true)
             (defm Xor BinaryOp
                 (#_"Constant" BinaryOp'''foldConstant-3 [#_"Xor" _, #_"Constant" a, #_"Constant" b]
-                    (JavaConstant/forIntegerKind (#_"PrimitiveConstant" .getJavaKind a), (bit-xor (#_"PrimitiveConstant" .asLong a) (#_"PrimitiveConstant" .asLong b)))
+                    (JavaConstant'forIntegerKind-2 (JavaConstant'''getJavaKind-1 a), (bit-xor (JavaConstant'''asLong-1 a) (JavaConstant'''asLong-1 b)))
                 )
 
                 (#_"Stamp" BinaryOp'''foldStamp-3 [#_"Xor" _, #_"Stamp" a, #_"Stamp" b]
@@ -65723,11 +66023,11 @@ ZeroExtendNode'new-4
                 )
 
                 (#_"boolean" BinaryOp'''isNeutral-2 [#_"Xor" _, #_"Constant" value]
-                    (zero? (#_"PrimitiveConstant" .asLong value))
+                    (zero? (JavaConstant'''asLong-1 value))
                 )
 
                 (#_"Constant" BinaryOp'''getZero-2 [#_"Xor" _, #_"Stamp" stamp]
-                    (JavaConstant/forPrimitiveInt (:bits stamp), 0)
+                    (JavaConstant'forPrimitiveInt-2 (:bits stamp), 0)
                 )
             )
         )
@@ -65735,9 +66035,9 @@ ZeroExtendNode'new-4
         (§ proxy #_"Shl" (Shl'new-0)
             (defm Shl ShiftOp
                 (#_"Constant" ShiftOp'''foldConstant-3 [#_"Shl" _, #_"Constant" value, #_"int" amount]
-                    (condp = (#_"PrimitiveConstant" .getJavaKind value)
-                        :JavaKind'Int  (JavaConstant/forInt (<< (#_"PrimitiveConstant" .asInt value) amount))
-                        :JavaKind'Long (JavaConstant/forLong (<< (#_"PrimitiveConstant" .asLong value) amount))
+                    (condp = (JavaConstant'''getJavaKind-1 value)
+                        :JavaKind'Int  (JavaConstant'forInt-1 (<< (JavaConstant'''asInt-1 value) amount))
+                        :JavaKind'Long (JavaConstant'forLong-1 (<< (JavaConstant'''asLong-1 value) amount))
                     )
                 )
 
@@ -65800,9 +66100,9 @@ ZeroExtendNode'new-4
         (§ proxy #_"Shr" (Shr'new-0)
             (defm Shr ShiftOp
                 (#_"Constant" ShiftOp'''foldConstant-3 [#_"Shr" _, #_"Constant" value, #_"int" amount]
-                    (condp = (#_"PrimitiveConstant" .getJavaKind value)
-                        :JavaKind'Int  (JavaConstant/forInt (>> (#_"PrimitiveConstant" .asInt value) amount))
-                        :JavaKind'Long (JavaConstant/forLong (>> (#_"PrimitiveConstant" .asLong value) amount))
+                    (condp = (JavaConstant'''getJavaKind-1 value)
+                        :JavaKind'Int  (JavaConstant'forInt-1 (>> (JavaConstant'''asInt-1 value) amount))
+                        :JavaKind'Long (JavaConstant'forLong-1 (>> (JavaConstant'''asLong-1 value) amount))
                     )
                 )
 
@@ -65840,9 +66140,9 @@ ZeroExtendNode'new-4
         (§ proxy #_"UShr" (UShr'new-0)
             (defm UShr ShiftOp
                 (#_"Constant" ShiftOp'''foldConstant-3 [#_"UShr" _, #_"Constant" value, #_"int" amount]
-                    (condp = (#_"PrimitiveConstant" .getJavaKind value)
-                        :JavaKind'Int  (JavaConstant/forInt (>>> (#_"PrimitiveConstant" .asInt value) amount))
-                        :JavaKind'Long (JavaConstant/forLong (>>> (#_"PrimitiveConstant" .asLong value) amount))
+                    (condp = (JavaConstant'''getJavaKind-1 value)
+                        :JavaKind'Int  (JavaConstant'forInt-1 (>>> (JavaConstant'''asInt-1 value) amount))
+                        :JavaKind'Long (JavaConstant'forLong-1 (>>> (JavaConstant'''asLong-1 value) amount))
                     )
                 )
 
@@ -65880,7 +66180,7 @@ ZeroExtendNode'new-4
         (§ proxy #_"Abs" (Abs'new-0)
             (defm Abs UnaryOp
                 (#_"Constant" UnaryOp'''foldConstant-2 [#_"Abs" _, #_"Constant" constant]
-                    (JavaConstant/forIntegerKind (#_"PrimitiveConstant" .getJavaKind constant), (abs (#_"PrimitiveConstant" .asLong constant)))
+                    (JavaConstant'forIntegerKind-2 (JavaConstant'''getJavaKind-1 constant), (abs (JavaConstant'''asLong-1 constant)))
                 )
 
                 (#_"Stamp" UnaryOp'''foldStamp-2 [#_"Abs" _, #_"Stamp" stamp]
@@ -65905,7 +66205,7 @@ ZeroExtendNode'new-4
         (§ proxy #_"ZeroExtend" (ZeroExtend'new-0)
             (defm ZeroExtend IntegerConvertOp
                 (#_"Constant" IntegerConvertOp'''foldConstant-4 [#_"ZeroExtend" _, #_"int" inputBits, #_"int" resultBits, #_"Constant" constant]
-                    (JavaConstant/forPrimitiveInt resultBits, (NumUtil'zeroExtend-2 (#_"PrimitiveConstant" .asLong constant), inputBits))
+                    (JavaConstant'forPrimitiveInt-2 resultBits, (NumUtil'zeroExtend-2 (JavaConstant'''asLong-1 constant), inputBits))
                 )
 
                 (#_"Stamp" IntegerConvertOp'''foldStamp-4 [#_"ZeroExtend" _, #_"int" inputBits, #_"int" resultBits, #_"Stamp" stamp]
@@ -65936,7 +66236,7 @@ ZeroExtendNode'new-4
         (§ proxy #_"SignExtend" (SignExtend'new-0)
             (defm SignExtend IntegerConvertOp
                 (#_"Constant" IntegerConvertOp'''foldConstant-4 [#_"SignExtend" _, #_"int" inputBits, #_"int" resultBits, #_"Constant" constant]
-                    (JavaConstant/forPrimitiveInt resultBits, (NumUtil'signExtend-2 (#_"PrimitiveConstant" .asLong constant), inputBits))
+                    (JavaConstant'forPrimitiveInt-2 resultBits, (NumUtil'signExtend-2 (JavaConstant'''asLong-1 constant), inputBits))
                 )
 
                 (#_"Stamp" IntegerConvertOp'''foldStamp-4 [#_"SignExtend" _, #_"int" inputBits, #_"int" resultBits, #_"Stamp" stamp]
@@ -65968,7 +66268,7 @@ ZeroExtendNode'new-4
         (§ proxy #_"Narrow" (Narrow'new-0)
             (defm Narrow IntegerConvertOp
                 (#_"Constant" IntegerConvertOp'''foldConstant-4 [#_"Narrow" _, #_"int" inputBits, #_"int" resultBits, #_"Constant" constant]
-                    (JavaConstant/forPrimitiveInt resultBits, (NumUtil'narrow-2 (#_"PrimitiveConstant" .asLong constant), resultBits))
+                    (JavaConstant'forPrimitiveInt-2 resultBits, (NumUtil'narrow-2 (JavaConstant'''asLong-1 constant), resultBits))
                 )
 
                 (#_"Stamp" IntegerConvertOp'''foldStamp-4 [#_"Narrow" _, #_"int" inputBits, #_"int" resultBits, #_"Stamp" stamp]
@@ -66053,7 +66353,7 @@ ZeroExtendNode'new-4
         )
 
         (#_"boolean" Stamp'''isCompatible-2c [#_"IllegalStamp" this, #_"Constant" constant]
-            (and (instance? PrimitiveConstant constant) (= (#_"PrimitiveConstant" .getJavaKind constant) :JavaKind'Illegal))
+            (and (satisfies? PrimitiveConstant constant) (= (JavaConstant'''getJavaKind-1 constant) :JavaKind'Illegal))
         )
 
         (#_"boolean" Stamp'''hasValues-1 [#_"IllegalStamp" this]
@@ -66292,7 +66592,7 @@ ZeroExtendNode'new-4
         ]
             (loop-when-recur [#_"int" i pos]
                              (and (< i (dec (count a)))
-                                  (= (#_"JavaConstant" .asLong (nth a (inc i))) (inc (#_"JavaConstant" .asLong (nth a i))))
+                                  (= (JavaConstant'''asLong-1 (nth a (inc i))) (inc (JavaConstant'''asLong-1 (nth a i))))
                                   (SwitchClosure'''isSameTarget-3 closure, i, (inc i))
                              )
                              [(inc i)]
@@ -66336,7 +66636,7 @@ ZeroExtendNode'new-4
         ]
             (if (= (inc left) right)
                 ;; only two possible values
-                (if (or leftBorder rightBorder (not= (inc (#_"JavaConstant" .asLong (nth (:constants this) right))) (#_"JavaConstant" .asLong (nth (:constants this) (inc right)))) (not= (inc (#_"JavaConstant" .asLong (nth (:constants this) left))) (#_"JavaConstant" .asLong (nth (:constants this) right))))
+                (if (or leftBorder rightBorder (not= (inc (JavaConstant'''asLong-1 (nth (:constants this) right))) (JavaConstant'''asLong-1 (nth (:constants this) (inc right)))) (not= (inc (JavaConstant'''asLong-1 (nth (:constants this) left))) (JavaConstant'''asLong-1 (nth (:constants this) right))))
                     (let [
                         _ (SwitchClosure'''conditionalJump-4 closure, left, Condition'EQ, false)
                         _ (§ ass depth (inc depth))
@@ -66400,7 +66700,7 @@ ZeroExtendNode'new-4
                                     )
                                     (let [
                                         this
-                                            (when-not (= (inc (#_"JavaConstant" .asLong (nth (:constants this) middle))) (#_"JavaConstant" .asLong (nth (:constants this) (inc middle)))) => this
+                                            (when-not (= (inc (JavaConstant'''asLong-1 (nth (:constants this) middle))) (JavaConstant'''asLong-1 (nth (:constants this) (inc middle)))) => this
                                                 (let [
                                                     _ (SwitchClosure'''conditionalJump-4 closure, (inc middle), Condition'LT, true)
                                                     _ (§ ass depth (inc depth))
@@ -66411,7 +66711,7 @@ ZeroExtendNode'new-4
                                             )
                                     ]
                                         (if (= (PrimitiveStrategy''getSliceEnd-3 this, closure, (inc middle)) right)
-                                            (if (or (= right (dec (count (:constants this)))) (not= (inc (#_"JavaConstant" .asLong (nth (:constants this) right))) (#_"JavaConstant" .asLong (nth (:constants this) (inc right)))))
+                                            (if (or (= right (dec (count (:constants this)))) (not= (inc (JavaConstant'''asLong-1 (nth (:constants this) right))) (JavaConstant'''asLong-1 (nth (:constants this) (inc right)))))
                                                 (let [
                                                     _ (§ ass! closure (SwitchClosure'''conditionalJumpOrDefault-4 closure, right, Condition'LE, rightBorder))
                                                     _ (§ ass depth (inc depth))
@@ -66435,7 +66735,7 @@ ZeroExtendNode'new-4
                         (= (PrimitiveStrategy''getSliceEnd-3 this, closure, (inc middle)) right)
                             (let [
                                 this
-                                    (when (or rightBorder (not= (inc (#_"JavaConstant" .asLong (nth (:constants this) right))) (#_"JavaConstant" .asLong (nth (:constants this) (inc right))))) => this
+                                    (when (or rightBorder (not= (inc (JavaConstant'''asLong-1 (nth (:constants this) right))) (JavaConstant'''asLong-1 (nth (:constants this) (inc right))))) => this
                                         (let [
                                             _ (SwitchClosure'''conditionalJump-4 closure, right, Condition'GT, true)
                                             _ (§ ass depth (inc depth))
@@ -66504,7 +66804,7 @@ ZeroExtendNode'new-4
                                 (§ ass! this (SwitchStrategy''registerEffort-4 this, start, end, @v'depth))
                             )
                             (do
-                                (when (or (zero? start) (not= (inc (#_"JavaConstant" .asLong (nth (:constants this) (dec start)))) (#_"JavaConstant" .asLong (nth (:constants this) start))))
+                                (when (or (zero? start) (not= (inc (JavaConstant'''asLong-1 (nth (:constants this) (dec start)))) (JavaConstant'''asLong-1 (nth (:constants this) start))))
                                     (SwitchClosure'''conditionalJump-4 closure, start, Condition'LT, true)
                                     (vswap! v'depth inc)
                                     (§ ass! this (SwitchStrategy''registerDefaultEffort-2 this, @v'depth))
@@ -66531,7 +66831,7 @@ ZeroExtendNode'new-4
                     )
                     (let [
                         _
-                            (when (or (zero? start) (not= (inc (#_"JavaConstant" .asLong (nth (:constants this) (dec start)))) (#_"JavaConstant" .asLong (nth (:constants this) start))))
+                            (when (or (zero? start) (not= (inc (JavaConstant'''asLong-1 (nth (:constants this) (dec start)))) (JavaConstant'''asLong-1 (nth (:constants this) start))))
                                 (SwitchClosure'''conditionalJump-4 closure, start, Condition'LT, true)
                                 (vswap! v'depth inc)
                                 (§ ass! this (SwitchStrategy''registerDefaultEffort-2 this, @v'depth))
@@ -66917,7 +67217,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"void" UseTrappingNullChecksPhase'tryUseTrappingNullCheck-5 [#_"AbstractDeoptimizeNode" deopt, #_"Node" predecessor, #_"DeoptimizationReason" deoptimizationReason, #_"JavaConstant" speculation, #_"long" implicitNullCheckLimit]
         (when (and (any = deoptimizationReason DeoptimizationReason/NullCheckException DeoptimizationReason/UnreachedCode)
-                   (or (nil? speculation) (= speculation JavaConstant/NULL_POINTER))
+                   (or (nil? speculation) (= speculation JavaConstant'NULL_POINTER))
               )
             (condp satisfies? predecessor
                 AbstractMergeNode
@@ -66965,7 +67265,7 @@ ZeroExtendNode'new-4
                                     #_"ValueNode" thisSpeculation (if (some? speculations) (nth speculations i) speculation)
                                     i (if (some? speculations) (inc i) i)
                                 ]
-                                    (when (and (satisfies? ConstantNode thisReason) (satisfies? ConstantNode thisSpeculation) (= (:value thisSpeculation) JavaConstant/NULL_POINTER))
+                                    (when (and (satisfies? ConstantNode thisReason) (satisfies? ConstantNode thisSpeculation) (= (:value thisSpeculation) JavaConstant'NULL_POINTER))
                                         (UseTrappingNullChecksPhase'tryUseTrappingNullCheck-5 deopt, (:predecessor end), (#_"MetaAccessProvider" .decodeDeoptReason HotSpot'metaAccess, (ValueNode''asJavaConstant-1 thisReason)), nil, implicitNullCheckLimit)
                                     )
                                     (recur i (next s))
@@ -67463,7 +67763,7 @@ ZeroExtendNode'new-4
         (let [
             _
                 (when (nil? (:illegalConstant this))
-                    (§ ass! this (assoc this :illegalConstant (ConstantNode'forConstant-1 (JavaConstant/forIllegal))))
+                    (§ ass! this (assoc this :illegalConstant (ConstantNode'forConstant-1 (JavaConstant'forIllegal-0))))
                     (§ ass! this (VirtualizerTool'''addNode-2 this, (:illegalConstant this)))
                 )
         ]
@@ -67517,7 +67817,7 @@ ZeroExtendNode'new-4
                                 )
                             )
                         _
-                            (when (and (satisfies? ConstantNode oldValue) (= (:value oldValue) (JavaConstant/forIllegal)))
+                            (when (and (satisfies? ConstantNode oldValue) (= (:value oldValue) (JavaConstant'forIllegal-0)))
                                 ;; storing into second half of double, so replace previous value
                                 (let [
                                     #_"ValueNode" previous (VirtualizerTool'''getEntry-3 this, virtual, (dec index))
@@ -69028,29 +69328,29 @@ ZeroExtendNode'new-4
 
     (defn #_"Stamp" StampFactory'forPrimitiveConstant-1 [#_"JavaConstant" value]
         (let [
-            #_"JavaKind" kind (#_"JavaConstant" .getJavaKind value)
+            #_"JavaKind" kind (JavaConstant'''getJavaKind-1 value)
         ]
             (case kind
                (:JavaKind'Boolean :JavaKind'Byte :JavaKind'Char :JavaKind'Short :JavaKind'Int :JavaKind'Long)
                     (let [
-                        #_"long" mask (& (#_"JavaConstant" .asLong value) (NumUtil'mask-1 (JavaKind'getBitCount-1 kind)))
+                        #_"long" mask (& (JavaConstant'''asLong-1 value) (NumUtil'mask-1 (JavaKind'getBitCount-1 kind)))
                     ]
-                        (StampFactory'forInteger-5 (JavaKind'getStackKind-1 kind), (#_"JavaConstant" .asLong value), (#_"JavaConstant" .asLong value), mask, mask)
+                        (StampFactory'forInteger-5 (JavaKind'getStackKind-1 kind), (JavaConstant'''asLong-1 value), (JavaConstant'''asLong-1 value), mask, mask)
                     )
                 :JavaKind'Illegal
                     (StampFactory'forKind-1 :JavaKind'Illegal)
                 :JavaKind'Object
-                    (if (#_"JavaConstant" .isNull value) StampFactory'objectAlwaysNullStamp StampFactory'objectNonNullStamp)
+                    (if (JavaConstant'''isNull-1 value) StampFactory'objectAlwaysNullStamp StampFactory'objectNonNullStamp)
             )
         )
     )
 
     (defn #_"Stamp" StampFactory'forConstant-1 [#_"JavaConstant" value]
-        (when (= (#_"JavaConstant" .getJavaKind value) :JavaKind'Object) => (StampFactory'forPrimitiveConstant-1 value)
+        (when (= (JavaConstant'''getJavaKind-1 value) :JavaKind'Object) => (StampFactory'forPrimitiveConstant-1 value)
             (let [
-                #_"ResolvedJavaType" type (when-not (#_"JavaConstant" .isNull value) (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, value))
+                #_"ResolvedJavaType" type (when-not (JavaConstant'''isNull-1 value) (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, value))
             ]
-                (ObjectStamp'new-4 type, (#_"JavaConstant" .isNonNull value), (#_"JavaConstant" .isNonNull value), (#_"JavaConstant" .isNull value))
+                (ObjectStamp'new-4 type, (JavaConstant''isNonNull-1 value), (JavaConstant''isNonNull-1 value), (JavaConstant'''isNull-1 value))
             )
         )
     )
@@ -69288,22 +69588,20 @@ ZeroExtendNode'new-4
 
 (§ package jdk.vm.ci.code.site
 
-import jdk.vm.ci.meta.VMConstant
-
 ;;;
  ; Represents an embedded {@link VMConstant} in the code or data section that needs to be
  ; {@link DataPatch patched} by the VM (e.g. an embedded pointer to a Java object).
  ;;
 public final class ConstantReference extends Reference
 (§
-    private final VMConstant constant
+    private final #_"VMConstant" constant
 
-    public ConstantReference(VMConstant constant)
+    public ConstantReference(#_"VMConstant" constant)
     (§
         this.constant = constant
     )
 
-    public VMConstant getConstant()
+    public #_"VMConstant" getConstant()
     (§
         return constant
     )
@@ -69312,11 +69610,9 @@ public final class ConstantReference extends Reference
 
 (§ package jdk.vm.ci.code.site
 
-import jdk.vm.ci.meta.VMConstant
-
 ;;;
- ; Represents a code site that references some data. The associated data can be either a
- ; {@link DataSectionReference reference} to the data section, or it may be an inlined
+ ; Represents a code site that references some data. The associated data can be either
+ ; a {@link DataSectionReference reference} to the data section, or it may be an inlined
  ; {@link VMConstant} that needs to be patched.
  ;;
 public final class DataPatch extends Site
@@ -69430,99 +69726,11 @@ public abstract class Site
 
 (§ package jdk.vm.ci.hotspot
 
-import jdk.vm.ci.meta.Constant
-import jdk.vm.ci.meta.JavaConstant
-
-;;;
- ; The compressed representation of the {@link JavaConstant#NULL_POINTER null constant}.
- ;;
-public final class HotSpotCompressedNullConstant implements JavaConstant, HotSpotConstant
-(§
-    public static final JavaConstant COMPRESSED_NULL = new HotSpotCompressedNullConstant()
-
-    private HotSpotCompressedNullConstant()
-    (§
-    )
-
-    public JavaKind getJavaKind()
-    (§
-        return :JavaKind'Object
-    )
-
-    @Override
-    public boolean isNull()
-    (§
-        return true
-    )
-
-    @Override
-    public boolean isCompressed()
-    (§
-        return true
-    )
-
-    public Constant compress()
-    (§
-        throw new IllegalArgumentException()
-    )
-
-    public Constant uncompress()
-    (§
-        return NULL_POINTER
-    )
-
-    @Override
-    public boolean isDefaultForKind()
-    (§
-        return true
-    )
-
-    @Override
-    public int asInt()
-    (§
-        throw new IllegalArgumentException()
-    )
-
-    @Override
-    public boolean asBoolean()
-    (§
-        throw new IllegalArgumentException()
-    )
-
-    @Override
-    public long asLong()
-    (§
-        throw new IllegalArgumentException()
-    )
-)
-)
-
-(§ package jdk.vm.ci.hotspot
-
-import jdk.vm.ci.meta.Constant
-
-;;;
- ; Marker interface for hotspot specific constants.
- ;;
-public interface HotSpotConstant extends Constant
-(§
-    boolean isCompressed()
-
-    Constant compress()
-
-    Constant uncompress()
-)
-)
-
-(§ package jdk.vm.ci.hotspot
-
 import java.lang.reflect.Array
 import java.util.Objects
 
 import jdk.vm.ci.common.JVMCIError
-import jdk.vm.ci.meta.Constant
 import jdk.vm.ci.meta.ConstantReflectionProvider
-import jdk.vm.ci.meta.JavaConstant
 import jdk.vm.ci.meta.MemoryAccessProvider
 import jdk.vm.ci.meta.ResolvedJavaField
 import jdk.vm.ci.meta.ResolvedJavaType
@@ -69548,7 +69756,7 @@ public class HotSpotConstantReflectionProvider implements ConstantReflectionProv
     )
 
     @Override
-    public Boolean constantEquals(Constant x, Constant y)
+    public Boolean constantEquals(#_"Constant" x, #_"Constant" y)
     (§
         if (x == y)
         (§
@@ -69565,9 +69773,9 @@ public class HotSpotConstantReflectionProvider implements ConstantReflectionProv
     )
 
     @Override
-    public Integer readArrayLength(JavaConstant array)
+    public Integer readArrayLength(#_"JavaConstant" array)
     (§
-        if (array == null || array.getJavaKind() != :JavaKind'Object || array.isNull())
+        if (array == null || array.JavaConstant'''getJavaKind-1() != :JavaKind'Object || array.JavaConstant'''isNull-1())
         (§
             return null
         )
@@ -69581,9 +69789,9 @@ public class HotSpotConstantReflectionProvider implements ConstantReflectionProv
     )
 
     @Override
-    public JavaConstant readArrayElement(JavaConstant array, int index)
+    public #_"JavaConstant" readArrayElement(#_"JavaConstant" array, int index)
     (§
-        if (array == null || array.getJavaKind() != :JavaKind'Object || array.isNull())
+        if (array == null || array.JavaConstant'''getJavaKind-1() != :JavaKind'Object || array.JavaConstant'''isNull-1())
         (§
             return null
         )
@@ -69601,17 +69809,17 @@ public class HotSpotConstantReflectionProvider implements ConstantReflectionProv
         )
         else
         (§
-            return JavaConstant.forBoxedPrimitive(Array.get(a, index))
+            return JavaConstant.forBoxedPrimitive(Array.get(a, index))
         )
     )
 
-    public JavaConstant forObject(Object value)
+    public #_"JavaConstant" forObject(Object value)
     (§
         return HotSpotObjectConstantImpl.forObject(value)
     )
 
     @Override
-    public ResolvedJavaType asJavaType(Constant constant)
+    public ResolvedJavaType asJavaType(#_"Constant" constant)
     (§
         if (constant instanceof HotSpotObjectConstant)
         (§
@@ -69632,7 +69840,7 @@ public class HotSpotConstantReflectionProvider implements ConstantReflectionProv
         return null
     )
 
-    public JavaConstant readFieldValue(ResolvedJavaField field, JavaConstant receiver)
+    public #_"JavaConstant" readFieldValue(ResolvedJavaField field, #_"JavaConstant" receiver)
     (§
         HotSpotResolvedJavaField hotspotField = (HotSpotResolvedJavaField) field
         if (hotspotField.isStatic())
@@ -69645,7 +69853,7 @@ public class HotSpotConstantReflectionProvider implements ConstantReflectionProv
         )
         else
         (§
-            if (receiver.isNonNull())
+            if (receiver.JavaConstant''isNonNull-1())
             (§
                 Object object = ((HotSpotObjectConstantImpl) receiver).object()
                 if (hotspotField.isInObject(object))
@@ -69658,13 +69866,13 @@ public class HotSpotConstantReflectionProvider implements ConstantReflectionProv
     )
 
     @Override
-    public JavaConstant asJavaClass(ResolvedJavaType type)
+    public #_"JavaConstant" asJavaClass(ResolvedJavaType type)
     (§
         return HotSpotObjectConstantImpl.forObject(((HotSpotResolvedJavaType) type).mirror())
     )
 
     @Override
-    public Constant asObjectHub(ResolvedJavaType type)
+    public #_"Constant" asObjectHub(ResolvedJavaType type)
     (§
         if (type instanceof HotSpotResolvedObjectType)
         (§
@@ -69680,8 +69888,6 @@ public class HotSpotConstantReflectionProvider implements ConstantReflectionProv
 
 (§ package jdk.vm.ci.hotspot
 
-import jdk.vm.ci.meta.Constant
-import jdk.vm.ci.meta.JavaConstant
 import jdk.vm.ci.meta.MemoryAccessProvider
 
 ;;;
@@ -69693,21 +69899,19 @@ public interface HotSpotMemoryAccessProvider extends MemoryAccessProvider
      ; @throws IllegalArgumentException if the address computed from {@code base} and
      ;             {@code displacement} does not denote a location holding a narrow oop
      ;;
-    JavaConstant readNarrowOopConstant(Constant base, long displacement)
+    #_"JavaConstant" readNarrowOopConstant(#_"Constant" base, long displacement)
 
-    Constant readKlassPointerConstant(Constant base, long displacement)
+    #_"Constant" readKlassPointerConstant(#_"Constant" base, long displacement)
 
-    Constant readNarrowKlassPointerConstant(Constant base, long displacement)
+    #_"Constant" readNarrowKlassPointerConstant(#_"Constant" base, long displacement)
 
-    Constant readMethodPointerConstant(Constant base, long displacement)
+    #_"Constant" readMethodPointerConstant(#_"Constant" base, long displacement)
 )
 )
 
 (§ package jdk.vm.ci.hotspot
 
-import jdk.vm.ci.meta.VMConstant
-
-public interface HotSpotMetaspaceConstant extends HotSpotConstant, VMConstant
+public interface HotSpotMetaspaceConstant extends HotSpotConstant, VMConstant, Constant
 (§
     HotSpotResolvedObjectType asResolvedJavaType()
 
@@ -69717,20 +69921,14 @@ public interface HotSpotMetaspaceConstant extends HotSpotConstant, VMConstant
 
 (§ package jdk.vm.ci.hotspot
 
-import jdk.vm.ci.meta.JavaConstant
 import jdk.vm.ci.meta.ResolvedJavaType
-import jdk.vm.ci.meta.VMConstant
 
 ;;;
  ; Represents a constant non-{@code null} object reference, within the compiler and across the
  ; compiler/runtime interface.
  ;;
-public interface HotSpotObjectConstant extends JavaConstant, HotSpotConstant, VMConstant
+public interface HotSpotObjectConstant extends JavaConstant, HotSpotConstant, VMConstant, Constant
 (§
-    JavaConstant compress()
-
-    JavaConstant uncompress()
-
     ;;;
      ; Gets the resolved Java type of the object represented by this constant.
      ;;
@@ -69742,7 +69940,7 @@ public interface HotSpotObjectConstant extends JavaConstant, HotSpotConstant, VM
      ;
      ; @return {@code null} if this constant does not represent a {@link Class} object
      ;;
-    JavaConstant getClassLoader()
+    #_"JavaConstant" getClassLoader()
 
     ;;;
      ; Gets the result of {@link Class#getComponentType()} for the {@link Class} object represented
@@ -69750,7 +69948,7 @@ public interface HotSpotObjectConstant extends JavaConstant, HotSpotConstant, VM
      ;
      ; @return {@code null} if this constant does not represent a {@link Class} object
      ;;
-    JavaConstant getComponentType()
+    #_"JavaConstant" getComponentType()
 
     ;;;
      ; Gets the result of {@link Class#getSuperclass()} for the {@link Class} object represented by
@@ -69758,7 +69956,7 @@ public interface HotSpotObjectConstant extends JavaConstant, HotSpotConstant, VM
      ;
      ; @return {@code null} if this constant does not represent a {@link Class} object
      ;;
-    JavaConstant getSuperclass()
+    #_"JavaConstant" getSuperclass()
 
     ;;;
      ; Gets the object represented by this constant represents if it is of a given type.
@@ -69845,9 +70043,7 @@ public interface HotSpotResolvedJavaMethod extends ResolvedJavaMethod
 
 (§ package jdk.vm.ci.hotspot
 
-import jdk.vm.ci.meta.Constant
 import jdk.vm.ci.meta.ConstantPool
-import jdk.vm.ci.meta.JavaConstant
 import jdk.vm.ci.meta.JavaType
 import jdk.vm.ci.meta.ResolvedJavaMethod
 import jdk.vm.ci.meta.ResolvedJavaType
@@ -69901,7 +70097,7 @@ public interface HotSpotResolvedObjectType extends ResolvedJavaType
     ;;;
      ; Gets the metaspace Klass boxed in a {@link JavaConstant}.
      ;;
-    Constant klass()
+    #_"Constant" klass()
 
     boolean isPrimaryType()
 
@@ -70286,17 +70482,6 @@ public class HotSpotVMConfigAccess
 (§ package jdk.vm.ci.meta
 
 ;;;
- ; Represents a compile-time constant (boxed) value within the compiler.
- ;;
-public interface Constant
-(§
-    boolean isDefaultForKind()
-)
-)
-
-(§ package jdk.vm.ci.meta
-
-;;;
  ; Represents the runtime representation of the constant pool that is used by the compiler when
  ; parsing bytecode. Provides methods to look up a constant pool entry without performing
  ; resolution. They are used during compilation.
@@ -70380,7 +70565,7 @@ public interface ConstantPool
      ; @param opcode the opcode of the instruction for which the lookup is being performed or {@code -1}
      ; @return the appendix if it exists and is resolved or {@code null}
      ;;
-    JavaConstant lookupAppendix(int cpi, int opcode)
+    #_"JavaConstant" lookupAppendix(int cpi, int opcode)
 )
 )
 
@@ -70402,20 +70587,20 @@ public interface ConstantReflectionProvider
      ; {@link Boolean#FALSE false} if they are different. Returns {@code null} if the constants
      ; cannot be compared at this point.
      ;;
-    Boolean constantEquals(Constant x, Constant y)
+    Boolean constantEquals(#_"Constant" x, #_"Constant" y)
 
     ;;;
      ; Returns the length of the array constant. Returns {@code null} if the constant is not an
      ; array, or if the array length is not available at this point.
      ;;
-    Integer readArrayLength(JavaConstant array)
+    Integer readArrayLength(#_"JavaConstant" array)
 
     ;;;
      ; Reads a value from the given array at the given index. Returns {@code null} if the constant
      ; is not an array, if the index is out of bounds, or if the value is not available at this
      ; point.
      ;;
-    JavaConstant readArrayElement(JavaConstant array, int index)
+    #_"JavaConstant" readArrayElement(#_"JavaConstant" array, int index)
 
     ;;;
      ; Gets the current value of this field for a given object, if available.
@@ -70428,14 +70613,14 @@ public interface ConstantReflectionProvider
      ; @return the value of this field or {@code null} if the value is not available (e.g., because
      ;         the field holder is not yet initialized).
      ;;
-    JavaConstant readFieldValue(ResolvedJavaField field, JavaConstant receiver)
+    #_"JavaConstant" readFieldValue(ResolvedJavaField field, #_"JavaConstant" receiver)
 
     ;;;
      ; Returns the {@link ResolvedJavaType} for a {@link Class} object (or any other object regarded
      ; as a class by the VM) encapsulated in the given constant. Returns {@code null} if the
      ; constant does not encapsulate a class, or if the type is not available at this point.
      ;;
-    ResolvedJavaType asJavaType(Constant constant)
+    ResolvedJavaType asJavaType(#_"Constant" constant)
 
     ;;;
      ; Gets raw memory access.
@@ -70445,13 +70630,13 @@ public interface ConstantReflectionProvider
     ;;;
      ; Gets the runtime representation of the {@link Class} object of this type.
      ;;
-    JavaConstant asJavaClass(ResolvedJavaType type)
+    #_"JavaConstant" asJavaClass(ResolvedJavaType type)
 
     ;;;
      ; Gets the runtime representation of the "hub" of this type--that is, the closest part of the
      ; type representation which is typically stored in the object header.
      ;;
-    Constant asObjectHub(ResolvedJavaType type)
+    #_"Constant" asObjectHub(ResolvedJavaType type)
 )
 )
 
@@ -70540,263 +70725,6 @@ public enum DeoptimizationReason
  ;;
 public interface InvokeTarget
 (§
-)
-)
-
-(§ package jdk.vm.ci.meta
-
-;;;
- ; Represents a constant (boxed) value, such as an integer, floating point number, or object
- ; reference, within the compiler and across the compiler/runtime interface. Exports a set of
- ; {@code JavaConstant} instances that represent frequently used constant values, such as
- ; {@link #NULL_POINTER}.
- ;;
-public interface JavaConstant extends Constant, JavaValue
-(§
-    ;;
-     ; Using a larger cache for integers leads to only a slight increase in cache hit ratio which is
-     ; not enough to justify the impact on startup time.
-     ;;
-    JavaConstant NULL_POINTER = new NullConstant()
-    PrimitiveConstant INT_MINUS_1 = new PrimitiveConstant(:JavaKind'Int, -1)
-    PrimitiveConstant INT_0 = new PrimitiveConstant(:JavaKind'Int, 0)
-    PrimitiveConstant INT_1 = new PrimitiveConstant(:JavaKind'Int, 1)
-    PrimitiveConstant INT_2 = new PrimitiveConstant(:JavaKind'Int, 2)
-    PrimitiveConstant LONG_0 = new PrimitiveConstant(:JavaKind'Long, 0 #_"L")
-    PrimitiveConstant LONG_1 = new PrimitiveConstant(:JavaKind'Long, 1 #_"L")
-    PrimitiveConstant TRUE = new PrimitiveConstant(:JavaKind'Boolean, 1 #_"L")
-    PrimitiveConstant FALSE = new PrimitiveConstant(:JavaKind'Boolean, 0 #_"L")
-
-    ;;;
-     ; Returns the Java kind of this constant.
-     ;;
-    JavaKind getJavaKind()
-
-    ;;;
-     ; Checks whether this constant is null.
-     ;
-     ; @return {@code true} if this constant is the null constant
-     ;;
-    boolean isNull()
-
-    static boolean isNull(Constant c)
-    (§
-        if (c instanceof JavaConstant)
-        (§
-            return ((JavaConstant) c).isNull()
-        )
-        else
-        (§
-            return false
-        )
-    )
-
-    ;;;
-     ; Checks whether this constant is non-null.
-     ;
-     ; @return {@code true} if this constant is a primitive, or an object constant that is not null
-     ;;
-    default boolean isNonNull()
-    (§
-        return !isNull()
-    )
-
-    ;;;
-     ; Checks whether this constant is the default value for its kind (null, 0, 0.0, false).
-     ;
-     ; @return {@code true} if this constant is the default value for its kind
-     ;;
-    boolean isDefaultForKind()
-
-    ;;;
-     ; Returns the primitive int value this constant represents. The constant must have a
-     ; {@link JavaKind#getStackKind()} of {@link JavaKind#Int}.
-     ;
-     ; @return the constant value
-     ;;
-    int asInt()
-
-    ;;;
-     ; Returns the primitive boolean value this constant represents. The constant must have kind
-     ; {@link JavaKind#Boolean}.
-     ;
-     ; @return the constant value
-     ;;
-    boolean asBoolean()
-
-    ;;;
-     ; Returns the primitive long value this constant represents. The constant must have kind
-     ; {@link JavaKind#Long}, a {@link JavaKind#getStackKind()} of {@link JavaKind#Int}.
-     ;
-     ; @return the constant value
-     ;;
-    long asLong()
-
-    ;;;
-     ; Creates a boxed long constant.
-     ;
-     ; @param i the long value to box
-     ; @return a boxed copy of {@code value}
-     ;;
-    static PrimitiveConstant forLong(long i)
-    (§
-        if (i == 0)
-        (§
-            return LONG_0
-        )
-        else if (i == 1)
-        (§
-            return LONG_1
-        )
-        else
-        (§
-            return new PrimitiveConstant(:JavaKind'Long, i)
-        )
-    )
-
-    ;;;
-     ; Creates a boxed integer constant.
-     ;
-     ; @param i the integer value to box
-     ; @return a boxed copy of {@code value}
-     ;;
-    static PrimitiveConstant forInt(int i)
-    (§
-        switch (i)
-        (§
-            case -1
-                return INT_MINUS_1
-            case 0
-                return INT_0
-            case 1
-                return INT_1
-            case 2
-                return INT_2
-            default
-                return new PrimitiveConstant(:JavaKind'Int, i)
-        )
-    )
-
-    ;;;
-     ; Creates a boxed byte constant.
-     ;
-     ; @param i the byte value to box
-     ; @return a boxed copy of {@code value}
-     ;;
-    static PrimitiveConstant forByte(byte i)
-    (§
-        return new PrimitiveConstant(:JavaKind'Byte, i)
-    )
-
-    ;;;
-     ; Creates a boxed boolean constant.
-     ;
-     ; @param i the boolean value to box
-     ; @return a boxed copy of {@code value}
-     ;;
-    static PrimitiveConstant forBoolean(boolean i)
-    (§
-        return i ? TRUE (§ colon ) FALSE
-    )
-
-    ;;;
-     ; Creates a boxed char constant.
-     ;
-     ; @param i the char value to box
-     ; @return a boxed copy of {@code value}
-     ;;
-    static PrimitiveConstant forChar(char i)
-    (§
-        return new PrimitiveConstant(:JavaKind'Char, i)
-    )
-
-    ;;;
-     ; Creates a boxed short constant.
-     ;
-     ; @param i the short value to box
-     ; @return a boxed copy of {@code value}
-     ;;
-    static PrimitiveConstant forShort(short i)
-    (§
-        return new PrimitiveConstant(:JavaKind'Short, i)
-    )
-
-    ;;;
-     ; Creates a {@link JavaConstant} from a primitive integer of a certain kind.
-     ;;
-    static PrimitiveConstant forIntegerKind(JavaKind kind, long i)
-    (§
-        switch (kind)
-        (§
-            case Boolean
-                return forBoolean(i != 0)
-            case Byte
-                return forByte((byte) i)
-            case Short
-                return forShort((short) i)
-            case Char
-                return forChar((char) i)
-            case Int
-                return forInt((int) i)
-            case Long
-                return forLong(i)
-            default
-                throw new IllegalArgumentException("not an integer kind: " + kind)
-        )
-    )
-
-    ;;;
-     ; Creates a {@link JavaConstant} from a primitive integer of a certain width.
-     ;;
-    static PrimitiveConstant forPrimitiveInt(int bits, long i)
-    (§
-        switch (bits)
-        (§
-            case 1
-                return forBoolean(i != 0)
-            case 8
-                return forByte((byte) i)
-            case 16
-                return forShort((short) i)
-            case 32
-                return forInt((int) i)
-            case 64
-                return forLong(i)
-            default
-                throw new IllegalArgumentException("unsupported integer width: " + bits)
-        )
-    )
-
-    static PrimitiveConstant forIllegal()
-    (§
-        return new PrimitiveConstant(:JavaKind'Illegal, 0)
-    )
-
-    ;;;
-     ; Returns a constant with the default value for the given kind.
-     ;;
-    static JavaConstant defaultForKind(JavaKind kind)
-    (§
-        switch (kind)
-        (§
-            case Boolean
-                return FALSE
-            case Byte
-                return forByte((byte) 0)
-            case Char
-                return forChar((char) 0)
-            case Short
-                return forShort((short) 0)
-            case Int
-                return INT_0
-            case Long
-                return LONG_0
-            case Object
-                return NULL_POINTER
-            default
-                throw new IllegalArgumentException(kind.toString())
-        )
-    )
 )
 )
 
@@ -70970,12 +70898,12 @@ public interface JavaType
      ;;
     default String toJavaName(boolean qualified)
     (§
-        JavaKind kind = getJavaKind()
+        JavaKind kind = this.getJavaKind()
         if (kind == :JavaKind'Object)
         (§
             return internalNameToJava(getName(), qualified, false)
         )
-        return getJavaKind().getJavaName()
+        return kind.getJavaName()
     )
 )
 )
@@ -70999,7 +70927,7 @@ public interface MemoryAccessProvider
      ;             is {@link JavaKind#Void} or not {@linkplain JavaKind#isPrimitive() primitive}
      ;             kind or {@code bits} is not 8, 16, 32 or 64
      ;;
-    JavaConstant readPrimitiveConstant(JavaKind kind, Constant base, long displacement, int bits) throws IllegalArgumentException
+    #_"JavaConstant" readPrimitiveConstant(JavaKind kind, #_"Constant" base, long displacement, int bits) throws IllegalArgumentException
 
     ;;;
      ; Reads a Java {@link Object} value using a base address and a displacement.
@@ -71010,7 +70938,7 @@ public interface MemoryAccessProvider
      ; @throws IllegalArgumentException if the address computed from {@code base} and
      ;             {@code displacement} does not denote a location holding an {@code Object} value
      ;;
-    JavaConstant readObjectConstant(Constant base, long displacement)
+    #_"JavaConstant" readObjectConstant(#_"Constant" base, long displacement)
 )
 )
 
@@ -71048,7 +70976,7 @@ public interface MetaAccessProvider
      ;
      ; @return {@code null} if {@code constant.isNull() || !constant.kind.isObject()}
      ;;
-    ResolvedJavaType lookupJavaType(JavaConstant constant)
+    ResolvedJavaType lookupJavaType(#_"JavaConstant" constant)
 
     ;;;
      ; Encodes a deoptimization action and a deoptimization reason in an integer value.
@@ -71059,83 +70987,13 @@ public interface MetaAccessProvider
      ;
      ; @return the encoded value as an integer
      ;;
-    JavaConstant encodeDeoptActionAndReason(DeoptimizationAction action, DeoptimizationReason reason, int debugId)
+    #_"JavaConstant" encodeDeoptActionAndReason(DeoptimizationAction action, DeoptimizationReason reason, int debugId)
 
-    DeoptimizationReason decodeDeoptReason(JavaConstant constant)
+    DeoptimizationReason decodeDeoptReason(#_"JavaConstant" constant)
 
-    DeoptimizationAction decodeDeoptAction(JavaConstant constant)
+    DeoptimizationAction decodeDeoptAction(#_"JavaConstant" constant)
 
-    int decodeDebugId(JavaConstant constant)
-)
-)
-
-(§ package jdk.vm.ci.meta
-
-;;;
- ; Represents a primitive constant value, such as an integer or floating point number, within the
- ; compiler and across the compiler/runtime interface.
- ;;
-public class PrimitiveConstant implements JavaConstant
-(§
-    private final JavaKind kind
-
-    ;;;
-     ; The boxed primitive value as a {@code long}.
-     ;;
-    private final long primitive
-
-    protected PrimitiveConstant(JavaKind kind, long primitive)
-    (§
-        this.primitive = primitive
-        this.kind = kind
-    )
-
-    @Override
-    public JavaKind getJavaKind()
-    (§
-        return kind
-    )
-
-    @Override
-    public boolean isNull()
-    (§
-        return false
-    )
-
-    @Override
-    public boolean isDefaultForKind()
-    (§
-        return primitive == 0
-    )
-
-    @Override
-    public boolean asBoolean()
-    (§
-        return primitive != 0 #_"L"
-    )
-
-    @Override
-    public int asInt()
-    (§
-        return (int) primitive
-    )
-
-    @Override
-    public long asLong()
-    (§
-        return primitive
-    )
-)
-)
-
-(§ package jdk.vm.ci.meta
-
-public class RawConstant extends PrimitiveConstant
-(§
-    public RawConstant(long rawValue)
-    (§
-        super(:JavaKind'Int, rawValue)
-    )
+    int decodeDebugId(#_"JavaConstant" constant)
 )
 )
 
@@ -71454,7 +71312,7 @@ public interface ResolvedJavaType extends JavaType, ModifiersProvider
      ; @param obj the object to test
      ; @return {@code true} if the object is an instance of this type
      ;;
-    boolean isInstance(JavaConstant obj)
+    boolean isInstance(#_"JavaConstant" obj)
 
     ;;;
      ; Gets the super class of this type. If this type represents either the {@code Object} class,
@@ -71705,15 +71563,5 @@ public interface Signature
         )
         return result
     )
-)
-)
-
-(§ package jdk.vm.ci.meta
-
-;;;
- ; Represents a constant that needs to be patched at runtime by the VM.
- ;;
-public interface VMConstant extends Constant
-(§
 )
 )
