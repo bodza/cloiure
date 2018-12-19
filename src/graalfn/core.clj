@@ -255,7 +255,6 @@ AMD64Address'new-1
 AMD64Address'new-2
 AMD64Address'new-3
 AMD64Address'new-4
-AMD64Address'new-5
 AMD64AddressNode''canonicalizeIndex-2
 AMD64AddressNode''setBase-2
 AMD64AddressNode''setDisplacement-2
@@ -693,10 +692,6 @@ BindToRegisterNode'new-1
 BindToRegisterOp'new-1
 BitCountNode'computeStamp-2
 BitCountNode'new-1
-BitMap2D''at-3
-BitMap2D''clearBit-3
-BitMap2D''setBit-3
-BitMap2D'new-2
 BlackholeNode'new-1
 BlackholeOp'new-1
 Block''canKill-2
@@ -2855,7 +2850,6 @@ ReentrantBlockIterator'processLoop-3
 ReentrantNodeIterator'apply-3
 ReentrantNodeIterator'processLoop-3
 ReflectionGetCallerClassNode'new-5*
-Register'None
 Register''asValue-1
 Register''asValue-2
 Register''isValid-1
@@ -3744,7 +3738,6 @@ ZeroExtendNode'new-4
 (defp BindToRegisterNode)
 (defp BindToRegisterOp)
 (defp BitCountNode)
-(defp BitMap2D)
 (defp BlackholeNode)
 (defp BlackholeOp)
 (defp Block)
@@ -6392,11 +6385,6 @@ ZeroExtendNode'new-4
             )
         )
     )
-
-    ;;;
-     ; Invalid register.
-     ;;
-    (def #_"Register" Register'None (Register'new-3 -1, -1, "noreg"))
 
     ;;;
      ; Gets this register as a {@linkplain RegisterValue value} with a specified kind.
@@ -12758,59 +12746,38 @@ ZeroExtendNode'new-4
 (class-ns AMD64Address [AbstractAddress]
     ;;;
      ; Creates an AMD64Address with given base register, no scaling and no displacement.
-     ;
-     ; @param base the base register
      ;;
     (defn #_"AMD64Address" AMD64Address'new-1 [#_"Register" base]
-        (AMD64Address'new-4 base, Register'None, Scale'Times1, 0)
+        (AMD64Address'new-4 base, nil, Scale'Times1, 0)
     )
 
     ;;;
      ; Creates an AMD64Address with given base register, no scaling and a given displacement.
-     ;
-     ; @param base the base register
-     ; @param displacement the displacement
      ;;
     (defn #_"AMD64Address" AMD64Address'new-2 [#_"Register" base, #_"int" displacement]
-        (AMD64Address'new-4 base, Register'None, Scale'Times1, displacement)
+        (AMD64Address'new-4 base, nil, Scale'Times1, displacement)
     )
 
     ;;;
      ; Creates an AMD64Address with given base and index registers, scaling and 0 displacement.
-     ;
-     ; @param base the base register
-     ; @param index the index register
-     ; @param scale the scaling factor
      ;;
     #_unused
     (defn #_"AMD64Address" AMD64Address'new-3 [#_"Register" base, #_"Register" index, #_"Scale" scale]
-        (AMD64Address'new-5 base, index, scale, 0, -1)
+        (AMD64Address'new-4 base, index, scale, 0)
     )
 
     ;;;
      ; Creates an AMD64Address with given base and index registers, scaling and displacement.
-     ; This is the most general constructor.
-     ;
-     ; @param base the base register
-     ; @param index the index register
-     ; @param scale the scaling factor
-     ; @param displacement the displacement
      ;;
     (defn #_"AMD64Address" AMD64Address'new-4 [#_"Register" base, #_"Register" index, #_"Scale" scale, #_"int" displacement]
-        (AMD64Address'new-5 base, index, scale, displacement, -1)
-    )
-
-    (defn #_"AMD64Address" AMD64Address'new-5 [#_"Register" base, #_"Register" index, #_"Scale" scale, #_"int" displacement, #_"int" instructionStartPosition]
         (merge (AMD64Address'class.) (AbstractAddress'new-0)
             (hash-map
                 ;;;
                  ; Base register that defines the start of the address computation.
-                 ; If not present, is denoted by Register#None.
                  ;;
                 #_"Register" :base base
                 ;;;
                  ; Index register, the value of which (possibly scaled by #getScale) is added to #getBase.
-                 ; If not present, is denoted by Register#None.
                  ;;
                 #_"Register" :index index
                 ;;;
@@ -12821,11 +12788,6 @@ ZeroExtendNode'new-4
                  ; Optional additive displacement.
                  ;;
                 #_"int" :displacement displacement
-                ;;;
-                 ; The start of the instruction, i.e. the value that is used as the key for looking up placeholder
-                 ; patching information. Only used for {@link Assembler#getPlaceholder placeholder addresses}.
-                 ;;
-                #_"int" :instructionStartPosition instructionStartPosition
             )
         )
     )
@@ -14391,11 +14353,11 @@ ZeroExtendNode'new-4
         (let [
             #_"int" rxb (>> (if (nil? reg) 0 (& (:encoding reg) 0x08)) 1)
             rxb
-                (when-not (= (:index rm) Register'None) => rxb
+                (when (some? (:index rm)) => rxb
                     (| rxb (>> (& (:encoding (:index rm)) 0x08) 2))
                 )
             rxb
-                (when-not (= (:base rm) Register'None) => rxb
+                (when (some? (:base rm)) => rxb
                     (| rxb (>> (& (:encoding (:base rm)) 0x08) 3))
                 )
         ]
@@ -15905,8 +15867,8 @@ ZeroExtendNode'new-4
      ; @param pos The start of the instruction, i.e. the value that is used as the key
      ;            for looking up placeholder patching information.
      ;;
-    (defn #_"AMD64Address" Assembler'createPlaceholder-1 [#_"int" pos]
-        (AMD64Address'new-5 AMD64'rip, Register'None, Scale'Times1, 0, pos)
+    (defn #_"AMD64Address" Assembler'createPlaceholder-1 [#_"int" pos]
+        (AMD64Address'new-4 AMD64'rip, nil, Scale'Times1, 0)
     )
 
     (defn- #_"this" Assembler''prefetchPrefix-2 [#_"Assembler" this, #_"AMD64Address" src]
@@ -17050,28 +17012,6 @@ ZeroExtendNode'new-4
     (defn #_"AMD64RMOp" BinaryArithmetic''getRMOpcode-2 [#_"BinaryArithmetic" this, #_"WordSize" size]
         (if (= size :WordSize'8bits) (:byteRmOp this) (:rmOp this))
     )
-)
-
-;;;
- ; This class implements a two-dimensional bitmap.
- ;;
-(class-ns BitMap2D []
-    (defn #_"BitMap2D" BitMap2D'new-2 [#_"int" sizeInSlots, #_"int" bitsPerSlot]
-        (merge (BitMap2D'class.)
-            (hash-map
-                #_"BitSet" :bits (BitSet. (* sizeInSlots bitsPerSlot))
-                #_"int" :bitsPerSlot bitsPerSlot
-            )
-        )
-    )
-
-    (defn- #_"int" BitMap2D''bitIndex-3 [#_"BitMap2D" this, #_"int" i, #_"int" j]
-        (+ (* i (:bitsPerSlot this)) j)
-    )
-
-    (defn #_"boolean" BitMap2D''at-3       [#_"BitMap2D" this, #_"int" i, #_"int" j] (#_"BitSet" .get   (:bits this), (BitMap2D''bitIndex-3 this, i, j)))
-    (defn #_"void"    BitMap2D''setBit-3   [#_"BitMap2D" this, #_"int" i, #_"int" j] (#_"BitSet" .set   (:bits this), (BitMap2D''bitIndex-3 this, i, j)) nil)
-    (defn #_"void"    BitMap2D''clearBit-3 [#_"BitMap2D" this, #_"int" i, #_"int" j] (#_"BitSet" .clear (:bits this), (BitMap2D''bitIndex-3 this, i, j)) nil)
 )
 
 (class-ns Block []
@@ -40660,52 +40600,49 @@ ZeroExtendNode'new-4
     ;;;
      ; Computes local live sets (i.e. BlockData#liveGen and BlockData#liveKill) separately for each block.
      ;;
-    (defn- #_"BitMap2D" LSLifetimeAnalysisPhase'computeLocalLiveSets-1 [#_"LinearScan" allocator]
-        (let [
-            #_"BitMap2D" intervalInLoop (BitMap2D'new-2 (LinearScan''operandSize-1 allocator), (LinearScan''numLoops-1 allocator))
-        ]
-            ;; iterate all blocks
-            (loop-when-recur [#_"seq" s (seq (:sortedBlocks allocator))] (some? s) [(next s)]
-                (let [
-                    #_"Block" block (first s)
-                    #_"BitSet" liveGenScratch (BitSet.)
-                    #_"BitSet" liveKillScratch (BitSet.)
-                    #_"ValueConsumer" f'useConsumer
-                        (reify ValueConsumer
-                            (#_"void" ValueConsumer'''visitValue-5 [#_"ValueConsumer" _, #_"LIRInstruction" _op, #_"Value" operand, #_"OperandMode" _mode, #_"{OperandFlag}" _flags]
-                                (when (satisfies? Variable operand)
-                                    (let [
-                                        #_"int" operandNum (LinearScan''operandNumber-2 allocator, operand)
-                                    ]
-                                        (when-not (nth liveKillScratch operandNum)
-                                            (#_"BitSet" .set liveGenScratch, operandNum)
-                                        )
-                                        (when (some? (:loop block))
-                                            (BitMap2D''setBit-3 intervalInLoop, operandNum, (:index (:loop block)))
-                                        )
+    (defn- #_"{[int int]}" LSLifetimeAnalysisPhase'computeLocalLiveSets-1 [#_"LinearScan" allocator]
+        ;; iterate all blocks
+        (loop-when [#_"{[int int]}" intervalInLoop #{} #_"seq" s (seq (:sortedBlocks allocator))] (some? s) => intervalInLoop
+            (let [
+                #_"Block" block (first s)
+                #_"BitSet" liveGenScratch (BitSet.)
+                #_"BitSet" liveKillScratch (BitSet.)
+                #_"ValueConsumer" f'useConsumer
+                    (reify ValueConsumer
+                        (#_"void" ValueConsumer'''visitValue-5 [#_"ValueConsumer" _, #_"LIRInstruction" _op, #_"Value" operand, #_"OperandMode" _mode, #_"{OperandFlag}" _flags]
+                            (when (satisfies? Variable operand)
+                                (let [
+                                    #_"int" operandNum (LinearScan''operandNumber-2 allocator, operand)
+                                ]
+                                    (when-not (nth liveKillScratch operandNum)
+                                        (#_"BitSet" .set liveGenScratch, operandNum)
+                                    )
+                                    (when (some? (:loop block))
+                                        (§ ass! intervalInLoop (conj intervalInLoop [operandNum (:index (:loop block))]))
                                     )
                                 )
-                                nil
                             )
+                            nil
                         )
-                    #_"ValueConsumer" f'defConsumer
-                        (reify ValueConsumer
-                            (#_"void" ValueConsumer'''visitValue-5 [#_"ValueConsumer" _, #_"LIRInstruction" _op, #_"Value" operand, #_"OperandMode" _mode, #_"{OperandFlag}" _flags]
-                                (when (satisfies? Variable operand)
-                                    (let [
-                                        #_"int" varNum (LinearScan''operandNumber-2 allocator, operand)
-                                    ]
-                                        (#_"BitSet" .set liveKillScratch, varNum)
-                                        (when (some? (:loop block))
-                                            (BitMap2D''setBit-3 intervalInLoop, varNum, (:index (:loop block)))
-                                        )
+                    )
+                #_"ValueConsumer" f'defConsumer
+                    (reify ValueConsumer
+                        (#_"void" ValueConsumer'''visitValue-5 [#_"ValueConsumer" _, #_"LIRInstruction" _op, #_"Value" operand, #_"OperandMode" _mode, #_"{OperandFlag}" _flags]
+                            (when (satisfies? Variable operand)
+                                (let [
+                                    #_"int" varNum (LinearScan''operandNumber-2 allocator, operand)
+                                ]
+                                    (#_"BitSet" .set liveKillScratch, varNum)
+                                    (when (some? (:loop block))
+                                        (§ ass! intervalInLoop (conj intervalInLoop [varNum (:index (:loop block))]))
                                     )
                                 )
-                                nil
                             )
+                            nil
                         )
-                ]
-                    ;; iterate all instructions of the block
+                    )
+                ;; iterate all instructions of the block
+                _
                     (doseq [#_"LIRInstruction" op (get (:lirInstructions (:lir allocator)) block)]
                         (LIRInstruction''visitEachInput-2 op, f'useConsumer)
                         (LIRInstruction''visitEachAlive-2 op, f'useConsumer)
@@ -40713,19 +40650,15 @@ ZeroExtendNode'new-4
                         (LIRInstruction''visitEachTemp-2 op, f'defConsumer)
                         (LIRInstruction''visitEachOutput-2 op, f'defConsumer)
                     )
-
-                    (let [
-                        #_"BlockData" blockSets (LinearScan''getBlockData-2 allocator, block)
-                        _ (§ ass! blockSets (assoc blockSets :liveGen (LSLifetimeAnalysisPhase'trimClone-1 liveGenScratch)))
-                        _ (§ ass! blockSets (assoc blockSets :liveKill (LSLifetimeAnalysisPhase'trimClone-1 liveKillScratch)))
-                        ;; sticky size, will get non-sticky in computeGlobalLiveSets
-                        _ (§ ass! blockSets (assoc blockSets :liveIn (BitSet. 0)))
-                        _ (§ ass! blockSets (assoc blockSets :liveOut (BitSet. 0)))
-                    ]
-                    )
-                )
+                #_"BlockData" blockSets (LinearScan''getBlockData-2 allocator, block)
+                _ (§ ass! blockSets (assoc blockSets :liveGen (LSLifetimeAnalysisPhase'trimClone-1 liveGenScratch)))
+                _ (§ ass! blockSets (assoc blockSets :liveKill (LSLifetimeAnalysisPhase'trimClone-1 liveKillScratch)))
+                ;; sticky size, will get non-sticky in computeGlobalLiveSets
+                _ (§ ass! blockSets (assoc blockSets :liveIn (BitSet. 0)))
+                _ (§ ass! blockSets (assoc blockSets :liveOut (BitSet. 0)))
+            ]
+                (recur intervalInLoop (next s))
             )
-            intervalInLoop
         )
     )
 
@@ -41021,7 +40954,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"void" LSLifetimeAnalysisPhase'buildIntervals-2 [#_"LinearScan" allocator, #_"BitMap2D" intervalInLoop]
+    (defn- #_"void" LSLifetimeAnalysisPhase'buildIntervals-2 [#_"LinearScan" allocator, #_"{[int int]}" intervalInLoop]
         (let [
             #_"ValueConsumer" f'outputConsumer
                 (reify ValueConsumer
@@ -41094,7 +41027,7 @@ ZeroExtendNode'new-4
 
                             ;; Add special use positions for loop-end blocks when the interval is used anywhere inside this loop.
                             ;; It's possible that the block was part of a non-natural loop, so it might have an invalid loop index.
-                            (when (and (Block''isLoopEnd-1 block) (some? (:loop block)) (BitMap2D''at-3 intervalInLoop, operandNum, (:index (:loop block))))
+                            (when (and (Block''isLoopEnd-1 block) (some? (:loop block)) (contains? intervalInLoop [operandNum (:index (:loop block))]))
                                 (let [
                                     #_"Interval" interval (LinearScan''intervalFor-2i allocator, operandNum)
                                     _ (§ ass! interval (Interval''addUsePos-3 interval, (inc blockTo), :RegisterPriority'LiveAtLoopEnd))
@@ -41145,7 +41078,7 @@ ZeroExtendNode'new-4
             ;;;
              ; Bit set for each variable that is contained in each loop.
              ;;
-            #_"BitMap2D" intervalInLoop (LSLifetimeAnalysisPhase'computeLocalLiveSets-1 allocator)
+            #_"{[int int]}" intervalInLoop (LSLifetimeAnalysisPhase'computeLocalLiveSets-1 allocator)
         ]
             (LSLifetimeAnalysisPhase'computeGlobalLiveSets-1 allocator)
             (LSLifetimeAnalysisPhase'buildIntervals-2 allocator, intervalInLoop)
@@ -41609,6 +41542,7 @@ ZeroExtendNode'new-4
         (nth (:sortedBlocks this) index)
     )
 
+    #_unused
     (defn #_"int" LinearScan''numLoops-1 [#_"LinearScan" this]
         (count (:loops (:cfg (:lir this))))
     )
@@ -67339,7 +67273,7 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"Register" AMD64AddressValue'toRegister-1 [#_"AllocatableValue" value]
-        (if (= value Value'ILLEGAL) Register'None (:reg value))
+        (when-not (= value Value'ILLEGAL) (:reg value))
     )
 
     (defn #_"AMD64Address" AMD64AddressValue''toAddress-1 [#_"AMD64AddressValue" this]
@@ -69617,17 +69551,17 @@ public final class ConstantReference extends Reference
  ;;
 public final class DataPatch extends Site
 (§
-    public Reference reference
-    public Object note
+    public #_"Reference" reference
+    public #_"Object" note
 
-    public DataPatch(int pcOffset, Reference reference)
+    public DataPatch(#_"int" pcOffset, #_"Reference" reference)
     (§
         super(pcOffset)
         this.reference = reference
         this.note = null
     )
 
-    public DataPatch(int pcOffset, Reference reference, Object note)
+    public DataPatch(#_"int" pcOffset, #_"Reference" reference, #_"Object" note)
     (§
         super(pcOffset)
         this.reference = reference
@@ -69644,8 +69578,8 @@ public final class DataPatch extends Site
  ;;
 public final class DataSectionReference extends Reference
 (§
-    private boolean initialized
-    private int offset
+    private #_"boolean" initialized
+    private #_"int" offset
 
     public DataSectionReference()
     (§
@@ -69653,12 +69587,12 @@ public final class DataSectionReference extends Reference
         offset = 0xDEADDEAD
     )
 
-    public int getOffset()
+    public #_"int" getOffset()
     (§
         return offset
     )
 
-    public void setOffset(int offset)
+    public #_"void" setOffset(#_"int" offset)
     (§
         initialized = true
 
@@ -69679,7 +69613,7 @@ public final class Mark extends Site
     ;;;
      ; An object denoting extra semantic information about the machine code position of this mark.
      ;;
-    public final Object id
+    public final #_"Object" id
 
     ;;;
      ; Creates a mark that associates {@code id} with the machine code position {@code pcOffset}.
@@ -69687,7 +69621,7 @@ public final class Mark extends Site
      ; @param pcOffset
      ; @param id
      ;;
-    public Mark(int pcOffset, Object id)
+    public Mark(#_"int" pcOffset, #_"Object" id)
     (§
         super(pcOffset)
         this.id = id
@@ -69715,9 +69649,9 @@ public abstract class Site
     ;;;
      ; The position (or offset) of this site with respect to the start of the target method.
      ;;
-    public final int pcOffset
+    public final #_"int" pcOffset
 
-    public Site(int pos)
+    public Site(#_"int" pos)
     (§
         this.pcOffset = pos
     )
@@ -69740,17 +69674,17 @@ import jdk.vm.ci.meta.ResolvedJavaType
  ;;
 public class HotSpotConstantReflectionProvider implements ConstantReflectionProvider
 (§
-    protected final HotSpotJVMCIRuntimeProvider runtime
-    protected final HotSpotMemoryAccessProviderImpl memoryAccess
+    protected final #_"HotSpotJVMCIRuntimeProvider" runtime
+    protected final #_"HotSpotMemoryAccessProviderImpl" memoryAccess
 
-    public HotSpotConstantReflectionProvider(HotSpotJVMCIRuntimeProvider runtime)
+    public HotSpotConstantReflectionProvider(#_"HotSpotJVMCIRuntimeProvider" runtime)
     (§
         this.runtime = runtime
         this.memoryAccess = new HotSpotMemoryAccessProviderImpl(runtime)
     )
 
     @Override
-    public MemoryAccessProvider getMemoryAccessProvider()
+    public #_"MemoryAccessProvider" getMemoryAccessProvider()
     (§
         return memoryAccess
     )
@@ -69775,12 +69709,12 @@ public class HotSpotConstantReflectionProvider implements ConstantReflectionProv
     @Override
     public Integer readArrayLength(#_"JavaConstant" array)
     (§
-        if (array == null || array.JavaConstant'''getJavaKind-1() != :JavaKind'Object || array.JavaConstant'''isNull-1())
+        if (array == null || JavaConstant'''getJavaKind-1(array) != :JavaKind'Object || JavaConstant'''isNull-1(array))
         (§
             return null
         )
 
-        Object arrayObject = ((HotSpotObjectConstantImpl) array).object()
+        #_"Object" arrayObject = ((HotSpotObjectConstantImpl) array).object()
         if (!arrayObject.getClass().isArray())
         (§
             return null
@@ -69789,13 +69723,13 @@ public class HotSpotConstantReflectionProvider implements ConstantReflectionProv
     )
 
     @Override
-    public #_"JavaConstant" readArrayElement(#_"JavaConstant" array, int index)
+    public #_"JavaConstant" readArrayElement(#_"JavaConstant" array, #_"int" index)
     (§
-        if (array == null || array.JavaConstant'''getJavaKind-1() != :JavaKind'Object || array.JavaConstant'''isNull-1())
+        if (array == null || JavaConstant'''getJavaKind-1(array) != :JavaKind'Object || JavaConstant'''isNull-1(array))
         (§
             return null
         )
-        Object a = ((HotSpotObjectConstantImpl) array).object()
+        #_"Object" a = ((HotSpotObjectConstantImpl) array).object()
 
         if (!a.getClass().isArray() || index < 0 || index >= Array.getLength(a))
         (§
@@ -69804,26 +69738,26 @@ public class HotSpotConstantReflectionProvider implements ConstantReflectionProv
 
         if (a instanceof Object[])
         (§
-            Object element = ((Object[]) a)[index]
+            Object #_"element" = ((Object[]) a)[index]
             return HotSpotObjectConstantImpl.forObject(element)
         )
         else
         (§
-            return JavaConstant.forBoxedPrimitive(Array.get(a, index))
+            return JavaConstant.forBoxedPrimitive(Array.get(a, index))
         )
     )
 
-    public #_"JavaConstant" forObject(Object value)
+    public #_"JavaConstant" forObject(#_"Object" value)
     (§
         return HotSpotObjectConstantImpl.forObject(value)
     )
 
     @Override
-    public ResolvedJavaType asJavaType(#_"Constant" constant)
+    public #_"ResolvedJavaType" asJavaType(#_"Constant" constant)
     (§
         if (constant instanceof HotSpotObjectConstant)
         (§
-            Object obj = ((HotSpotObjectConstantImpl) constant).object()
+            #_"Object" obj = ((HotSpotObjectConstantImpl) constant).object()
             if (obj instanceof Class)
             (§
                 return runtime.getHostJVMCIBackend().getMetaAccess().lookupJavaType((Class<?>) obj)
@@ -69831,7 +69765,7 @@ public class HotSpotConstantReflectionProvider implements ConstantReflectionProv
         )
         if (constant instanceof HotSpotMetaspaceConstant)
         (§
-            MetaspaceWrapperObject obj = HotSpotMetaspaceConstantImpl.getMetaspaceObject(constant)
+            #_"MetaspaceWrapperObject" obj = HotSpotMetaspaceConstantImpl.getMetaspaceObject(constant)
             if (obj instanceof HotSpotResolvedObjectTypeImpl)
             (§
                 return (ResolvedJavaType) obj
@@ -69840,12 +69774,12 @@ public class HotSpotConstantReflectionProvider implements ConstantReflectionProv
         return null
     )
 
-    public #_"JavaConstant" readFieldValue(ResolvedJavaField field, #_"JavaConstant" receiver)
+    public #_"JavaConstant" readFieldValue(#_"ResolvedJavaField" field, #_"JavaConstant" receiver)
     (§
-        HotSpotResolvedJavaField hotspotField = (HotSpotResolvedJavaField) field
+        #_"HotSpotResolvedJavaField" hotspotField = (HotSpotResolvedJavaField) field
         if (hotspotField.isStatic())
         (§
-            HotSpotResolvedJavaType holder = (HotSpotResolvedJavaType) hotspotField.getDeclaringClass()
+            #_"HotSpotResolvedJavaType" holder = (HotSpotResolvedJavaType) hotspotField.getDeclaringClass()
             if (holder.isInitialized())
             (§
                 return memoryAccess.readFieldValue(hotspotField, holder.mirror())
@@ -69855,7 +69789,7 @@ public class HotSpotConstantReflectionProvider implements ConstantReflectionProv
         (§
             if (receiver.JavaConstant''isNonNull-1())
             (§
-                Object object = ((HotSpotObjectConstantImpl) receiver).object()
+                #_"Object" object = ((HotSpotObjectConstantImpl) receiver).object()
                 if (hotspotField.isInObject(object))
                 (§
                     return memoryAccess.readFieldValue(hotspotField, object)
@@ -69866,13 +69800,13 @@ public class HotSpotConstantReflectionProvider implements ConstantReflectionProv
     )
 
     @Override
-    public #_"JavaConstant" asJavaClass(ResolvedJavaType type)
+    public #_"JavaConstant" asJavaClass(#_"ResolvedJavaType" type)
     (§
         return HotSpotObjectConstantImpl.forObject(((HotSpotResolvedJavaType) type).mirror())
     )
 
     @Override
-    public #_"Constant" asObjectHub(ResolvedJavaType type)
+    public #_"Constant" asObjectHub(#_"ResolvedJavaType" type)
     (§
         if (type instanceof HotSpotResolvedObjectType)
         (§
@@ -69899,13 +69833,13 @@ public interface HotSpotMemoryAccessProvider extends MemoryAccessProvider
      ; @throws IllegalArgumentException if the address computed from {@code base} and
      ;             {@code displacement} does not denote a location holding a narrow oop
      ;;
-    #_"JavaConstant" readNarrowOopConstant(#_"Constant" base, long displacement)
+    #_"JavaConstant" readNarrowOopConstant(#_"Constant" base, #_"long" displacement)
 
-    #_"Constant" readKlassPointerConstant(#_"Constant" base, long displacement)
+    #_"Constant" readKlassPointerConstant(#_"Constant" base, #_"long" displacement)
 
-    #_"Constant" readNarrowKlassPointerConstant(#_"Constant" base, long displacement)
+    #_"Constant" readNarrowKlassPointerConstant(#_"Constant" base, #_"long" displacement)
 
-    #_"Constant" readMethodPointerConstant(#_"Constant" base, long displacement)
+    #_"Constant" readMethodPointerConstant(#_"Constant" base, #_"long" displacement)
 )
 )
 
@@ -69913,9 +69847,9 @@ public interface HotSpotMemoryAccessProvider extends MemoryAccessProvider
 
 public interface HotSpotMetaspaceConstant extends HotSpotConstant, VMConstant, Constant
 (§
-    HotSpotResolvedObjectType asResolvedJavaType()
+    #_"HotSpotResolvedObjectType" asResolvedJavaType()
 
-    HotSpotResolvedJavaMethod asResolvedJavaMethod()
+    #_"HotSpotResolvedJavaMethod" asResolvedJavaMethod()
 )
 )
 
@@ -69932,7 +69866,7 @@ public interface HotSpotObjectConstant extends JavaConstant, HotSpotConstant, VM
     ;;;
      ; Gets the resolved Java type of the object represented by this constant.
      ;;
-    HotSpotResolvedObjectType getType()
+    #_"HotSpotResolvedObjectType" getType()
 
     ;;;
      ; Gets the result of {@link Class#getClassLoader()} for the {@link Class} object represented by
@@ -69968,7 +69902,7 @@ public interface HotSpotObjectConstant extends JavaConstant, HotSpotConstant, VM
      ;         {@link ResolvedJavaType#isInstance(JavaConstant) instance of} {@code type} otherwise
      ;         {@code null}
      ;;
-    <T> T asObject(Class<T> type)
+    #_"<T> T" asObject(#_"Class<T>" type)
 
     ;;;
      ; Gets the object represented by this constant represents if it is of a given type.
@@ -69980,7 +69914,7 @@ public interface HotSpotObjectConstant extends JavaConstant, HotSpotConstant, VM
      ;         {@link ResolvedJavaType#isInstance(JavaConstant) instance of} {@code type} otherwise
      ;         {@code null}
      ;;
-    Object asObject(ResolvedJavaType type)
+    #_"Object" asObject(#_"ResolvedJavaType" type)
 )
 )
 
@@ -69999,14 +69933,14 @@ public interface HotSpotResolvedJavaField extends ResolvedJavaField
      ; @return true iff this is a non-static field and its declaring class is assignable from
      ;         {@code object}'s class
      ;;
-    boolean isInObject(Object object)
+    #_"boolean" isInObject(#_"Object" object)
 
-    int offset()
+    #_"int" offset()
 
     ;;;
      ; Determines if this field should be treated as a constant.
      ;;
-    boolean isStable()
+    #_"boolean" isStable()
 )
 )
 
@@ -70028,16 +69962,16 @@ public interface HotSpotResolvedJavaMethod extends ResolvedJavaMethod
      ;
      ; @return true if CallerSensitive annotation present, false otherwise
      ;;
-    boolean isCallerSensitive()
+    #_"boolean" isCallerSensitive()
 
-    HotSpotResolvedObjectType getDeclaringClass()
+    #_"HotSpotResolvedObjectType" getDeclaringClass()
 
     ;;;
      ; Returns true if this method is one of the special methods that is ignored by security stack walks.
      ;
      ; @return true if special method ignored by security stack walks, false otherwise
      ;;
-    boolean ignoredBySecurityStackWalk()
+    #_"boolean" ignoredBySecurityStackWalk()
 )
 )
 
@@ -70058,54 +69992,54 @@ public interface HotSpotResolvedObjectType extends ResolvedJavaType
      ;
      ; @return the {@link HotSpotResolvedJavaType} corresponding to {@code javaClass}
      ;;
-    static HotSpotResolvedObjectType fromObjectClass(Class<?> javaClass)
+    static #_"HotSpotResolvedObjectType" fromObjectClass(#_"Class<?>" javaClass)
     (§
         return HotSpotResolvedObjectTypeImpl.fromObjectClass(javaClass)
     )
 
-    HotSpotResolvedObjectType getArrayClass()
+    #_"HotSpotResolvedObjectType" getArrayClass()
 
-    ResolvedJavaType getComponentType()
+    #_"ResolvedJavaType" getComponentType()
 
-    HotSpotResolvedObjectType getSuperclass()
+    #_"HotSpotResolvedObjectType" getSuperclass()
 
-    HotSpotResolvedObjectType[] getInterfaces()
+    #_"HotSpotResolvedObjectType[]" getInterfaces()
 
-    HotSpotResolvedObjectType getSupertype()
+    #_"HotSpotResolvedObjectType" getSupertype()
 
-    HotSpotResolvedObjectType findLeastCommonAncestor(ResolvedJavaType otherType)
+    #_"HotSpotResolvedObjectType" findLeastCommonAncestor(#_"ResolvedJavaType" otherType)
 
-    default boolean isPrimitive()
+    default #_"boolean" isPrimitive()
     (§
         return false
     )
 
-    default JavaKind getJavaKind()
+    default #_"JavaKind" getJavaKind()
     (§
         return :JavaKind'Object
     )
 
-    ConstantPool getConstantPool()
+    #_"ConstantPool" getConstantPool()
 
     ;;;
      ; Gets the instance size of this type. If an instance of this type cannot be fast path
      ; allocated, then the returned value is negative (its absolute value gives the size). Must not
      ; be called if this is an array or interface type.
      ;;
-    int instanceSize()
+    #_"int" instanceSize()
 
     ;;;
      ; Gets the metaspace Klass boxed in a {@link JavaConstant}.
      ;;
     #_"Constant" klass()
 
-    boolean isPrimaryType()
+    #_"boolean" isPrimaryType()
 
-    int superCheckOffset()
+    #_"int" superCheckOffset()
 
-    long prototypeMarkWord()
+    #_"long" prototypeMarkWord()
 
-    ResolvedJavaMethod getClassInitializer()
+    #_"ResolvedJavaMethod" getClassInitializer()
 )
 )
 
@@ -70121,7 +70055,7 @@ public class HotSpotVMConfigAccess
     ;;;
      ; Gets the available configuration data.
      ;;
-    public HotSpotVMConfigStore getStore()
+    public #_"HotSpotVMConfigStore" getStore()
     (§
         return store
     )
@@ -70134,9 +70068,9 @@ public class HotSpotVMConfigAccess
      ; @return the address of the symbol
      ; @throws JVMCIError if the symbol is not present and {@code notPresent == null}
      ;;
-    public long getAddress(String name, Long notPresent)
+    public #_"long" getAddress(#_"String" name, #_"Long" notPresent)
     (§
-        Long entry = store.vmAddresses.get(name)
+        #_"Long" entry = store.vmAddresses.get(name)
         if (entry == null)
         (§
             if (notPresent != null)
@@ -70155,7 +70089,7 @@ public class HotSpotVMConfigAccess
      ; @return the address of the symbol
      ; @throws JVMCIError if the symbol is not present
      ;;
-    public long getAddress(String name)
+    public #_"long" getAddress(#_"String" name)
     (§
         return getAddress(name, null)
     )
@@ -70169,9 +70103,9 @@ public class HotSpotVMConfigAccess
      ; @return the constant value converted to {@code type}
      ; @throws JVMCIError if the constant is not present and {@code notPresent == null}
      ;;
-    public <T> T getConstant(String name, Class<T> type, T notPresent)
+    public #_"<T> T" getConstant(#_"String" name, #_"Class<T>" type, #_"T" notPresent)
     (§
-        Long c = store.vmConstants.get(name)
+        #_"Long" c = store.vmConstants.get(name)
         if (c == null)
         (§
             if (notPresent != null)
@@ -70191,7 +70125,7 @@ public class HotSpotVMConfigAccess
      ; @return the constant value converted to {@code type}
      ; @throws JVMCIError if the constant is not present
      ;;
-    public <T> T getConstant(String name, Class<T> type)
+    public #_"<T> T" getConstant(#_"String" name, #_"Class<T>" type)
     (§
         return getConstant(name, type, null)
     )
@@ -70207,9 +70141,9 @@ public class HotSpotVMConfigAccess
      ; @return the offset in bytes of the requested field
      ; @throws JVMCIError if the field is static or not present and {@code notPresent} is null
      ;;
-    public <T> T getFieldOffset(String name, Class<T> type, String cppType, T notPresent)
+    public #_"<T> T" getFieldOffset(#_"String" name, #_"Class<T>" type, #_"String" cppType, #_"T" notPresent)
     (§
-        VMField entry = getField(name, cppType, notPresent == null)
+        #_"VMField" entry = getField(name, cppType, notPresent == null)
         if (entry == null)
         (§
             return notPresent
@@ -70231,7 +70165,7 @@ public class HotSpotVMConfigAccess
      ; @return the offset in bytes of the requested field
      ; @throws JVMCIError if the field is static or not present
      ;;
-    public <T> T getFieldOffset(String name, Class<T> type, String cppType)
+    public #_"<T> T" getFieldOffset(#_"String" name, #_"Class<T>" type, #_"String" cppType)
     (§
         return getFieldOffset(name, type, cppType, null)
     )
@@ -70245,7 +70179,7 @@ public class HotSpotVMConfigAccess
      ; @return the offset in bytes of the requested field
      ; @throws JVMCIError if the field is static or not present
      ;;
-    public <T> T getFieldOffset(String name, Class<T> type)
+    public #_"<T> T" getFieldOffset(#_"String" name, #_"Class<T>" type)
     (§
         return getFieldOffset(name, type, null, null)
     )
@@ -70259,9 +70193,9 @@ public class HotSpotVMConfigAccess
      ; @return the address of the requested field
      ; @throws JVMCIError if the field is not static or not present and {@code notPresent} is null
      ;;
-    public long getFieldAddress(String name, String cppType, Long notPresent)
+    public #_"long" getFieldAddress(#_"String" name, #_"String" cppType, #_"Long" notPresent)
     (§
-        VMField entry = getField(name, cppType, notPresent == null)
+        #_"VMField" entry = getField(name, cppType, notPresent == null)
         if (entry == null)
         (§
             return notPresent
@@ -70281,7 +70215,7 @@ public class HotSpotVMConfigAccess
      ; @return the address of the requested field
      ; @throws JVMCIError if the field is not static or not present
      ;;
-    public long getFieldAddress(String name, String cppType)
+    public #_"long" getFieldAddress(#_"String" name, #_"String" cppType)
     (§
         return getFieldAddress(name, cppType, null)
     )
@@ -70296,9 +70230,9 @@ public class HotSpotVMConfigAccess
      ; @return the value of the requested field
      ; @throws JVMCIError if the field is not static or not present and {@code notPresent} is null
      ;;
-    public <T> T getFieldValue(String name, Class<T> type, String cppType, T notPresent)
+    public #_"<T> T" getFieldValue(#_"String" name, #_"Class<T>" type, #_"String" cppType, #_"T" notPresent)
     (§
-        VMField entry = getField(name, cppType, notPresent == null)
+        #_"VMField" entry = getField(name, cppType, notPresent == null)
         if (entry == null)
         (§
             return notPresent
@@ -70319,7 +70253,7 @@ public class HotSpotVMConfigAccess
      ; @return the value of the requested field
      ; @throws JVMCIError if the field is not static or not present
      ;;
-    public <T> T getFieldValue(String name, Class<T> type, String cppType)
+    public #_"<T> T" getFieldValue(#_"String" name, #_"Class<T>" type, #_"String" cppType)
     (§
         return getFieldValue(name, type, cppType, null)
     )
@@ -70332,7 +70266,7 @@ public class HotSpotVMConfigAccess
      ; @return the value of the requested field
      ; @throws JVMCIError if the field is not static or not present
      ;;
-    public <T> T getFieldValue(String name, Class<T> type)
+    public #_"<T> T" getFieldValue(#_"String" name, #_"Class<T>" type)
     (§
         return getFieldValue(name, type, null, null)
     )
@@ -70346,9 +70280,9 @@ public class HotSpotVMConfigAccess
      ; @return the field
      ; @throws JVMCIError if the field is not present and {@code required == true}
      ;;
-    private VMField getField(String name, String cppType, boolean required)
+    private #_"VMField" getField(#_"String" name, #_"String" cppType, #_"boolean" required)
     (§
-        VMField entry = store.vmFields.get(name)
+        #_"VMField" entry = store.vmFields.get(name)
         if (entry == null)
         (§
             if (!required)
@@ -70375,7 +70309,7 @@ public class HotSpotVMConfigAccess
      ;         present
      ; @throws JVMCIError if the flag is not present
      ;;
-    public <T> T getFlag(String name, Class<T> type)
+    public #_"<T> T" getFlag(#_"String" name, #_"Class<T>" type)
     (§
         return getFlag(name, type, null)
     )
@@ -70390,11 +70324,11 @@ public class HotSpotVMConfigAccess
      ;         present
      ; @throws JVMCIError if the flag is not present and {@code notPresent == null}
      ;;
-    public <T> T getFlag(String name, Class<T> type, T notPresent)
+    public #_"<T> T" getFlag(#_"String" name, #_"Class<T>" type, #_"T" notPresent)
     (§
-        VMFlag entry = store.vmFlags.get(name)
-        Object value
-        String cppType
+        #_"VMFlag" entry = store.vmFlags.get(name)
+        #_"Object" value
+        #_"String" cppType
         if (entry == null)
         (§
             ;; Fall back to VM call
@@ -70420,7 +70354,7 @@ public class HotSpotVMConfigAccess
         return type.cast(convertValue(name, type, value, cppType))
     )
 
-    private static <T> Object convertValue(String name, Class<T> toType, Object value, String cppType) throws JVMCIError
+    private static #_"<T> Object" convertValue(#_"String" name, #_"Class<T>" toType, #_"Object" value, #_"String" cppType) throws JVMCIError
     (§
         if (toType == Boolean.class)
         (§
@@ -70470,9 +70404,9 @@ public class HotSpotVMConfigAccess
         throw new JVMCIError("cannot convert " + name + " of type " + value.getClass().getSimpleName() + (cppType == null ? "" (§ colon ) " [" + cppType + "]") + " to " + toType.getSimpleName())
     )
 
-    private final HotSpotVMConfigStore store
+    private final #_"HotSpotVMConfigStore" store
 
-    public HotSpotVMConfigAccess(HotSpotVMConfigStore store)
+    public HotSpotVMConfigAccess(#_"HotSpotVMConfigStore" store)
     (§
         this.store = store
     )
@@ -70493,7 +70427,7 @@ public interface ConstantPool
      ;
      ; @return number of entries in the constant pool
      ;;
-    int length()
+    #_"int" length()
 
     ;;;
      ; Ensures that the type referenced by the specified constant pool entry is loaded and
@@ -70503,7 +70437,7 @@ public interface ConstantPool
      ; @param cpi the index of the constant pool entry that references the type
      ; @param opcode the opcode of the instruction that references the type
      ;;
-    void loadReferencedType(int cpi, int opcode)
+    #_"void" loadReferencedType(#_"int" cpi, #_"int" opcode)
 
     ;;;
      ; Looks up a reference to a field. If {@code opcode} is non-negative, then resolution checks
@@ -70517,7 +70451,7 @@ public interface ConstantPool
      ; @return a reference to the field at {@code cpi} in this pool
      ; @throws ClassFormatError if the entry at {@code cpi} is not a field
      ;;
-    JavaField lookupField(int cpi, ResolvedJavaMethod method, int opcode)
+    #_"JavaField" lookupField(#_"int" cpi, #_"ResolvedJavaMethod" method, #_"int" opcode)
 
     ;;;
      ; Looks up a reference to a method. If {@code opcode} is non-negative, then resolution checks
@@ -70529,7 +70463,7 @@ public interface ConstantPool
      ; @return a reference to the method at {@code cpi} in this pool
      ; @throws ClassFormatError if the entry at {@code cpi} is not a method
      ;;
-    JavaMethod lookupMethod(int cpi, int opcode)
+    #_"JavaMethod" lookupMethod(#_"int" cpi, #_"int" opcode)
 
     ;;;
      ; Looks up a reference to a type. If {@code opcode} is non-negative, then resolution checks
@@ -70540,7 +70474,7 @@ public interface ConstantPool
      ; @param opcode the opcode of the instruction for which the lookup is being performed or {@code -1}
      ; @return a reference to the compiler interface type
      ;;
-    JavaType lookupType(int cpi, int opcode)
+    #_"JavaType" lookupType(#_"int" cpi, #_"int" opcode)
 
     ;;;
      ; Looks up an Utf8 string.
@@ -70548,7 +70482,7 @@ public interface ConstantPool
      ; @param cpi the constant pool index
      ; @return the Utf8 string at index {@code cpi} in this constant pool
      ;;
-    String lookupUtf8(int cpi)
+    #_"String" lookupUtf8(#_"int" cpi)
 
     ;;;
      ; Looks up a constant at the specified index.
@@ -70556,7 +70490,7 @@ public interface ConstantPool
      ; @param cpi the constant pool index
      ; @return the {@code Constant} or {@code JavaType} instance representing the constant pool entry
      ;;
-    Object lookupConstant(int cpi)
+    #_"Object" lookupConstant(#_"int" cpi)
 
     ;;;
      ; Looks up the appendix at the specified index.
@@ -70565,7 +70499,7 @@ public interface ConstantPool
      ; @param opcode the opcode of the instruction for which the lookup is being performed or {@code -1}
      ; @return the appendix if it exists and is resolved or {@code null}
      ;;
-    #_"JavaConstant" lookupAppendix(int cpi, int opcode)
+    #_"JavaConstant" lookupAppendix(#_"int" cpi, #_"int" opcode)
 )
 )
 
@@ -70587,20 +70521,20 @@ public interface ConstantReflectionProvider
      ; {@link Boolean#FALSE false} if they are different. Returns {@code null} if the constants
      ; cannot be compared at this point.
      ;;
-    Boolean constantEquals(#_"Constant" x, #_"Constant" y)
+    #_"Boolean" constantEquals(#_"Constant" x, #_"Constant" y)
 
     ;;;
      ; Returns the length of the array constant. Returns {@code null} if the constant is not an
      ; array, or if the array length is not available at this point.
      ;;
-    Integer readArrayLength(#_"JavaConstant" array)
+    #_"Integer" readArrayLength(#_"JavaConstant" array)
 
     ;;;
      ; Reads a value from the given array at the given index. Returns {@code null} if the constant
      ; is not an array, if the index is out of bounds, or if the value is not available at this
      ; point.
      ;;
-    #_"JavaConstant" readArrayElement(#_"JavaConstant" array, int index)
+    #_"JavaConstant" readArrayElement(#_"JavaConstant" array, #_"int" index)
 
     ;;;
      ; Gets the current value of this field for a given object, if available.
@@ -70613,30 +70547,30 @@ public interface ConstantReflectionProvider
      ; @return the value of this field or {@code null} if the value is not available (e.g., because
      ;         the field holder is not yet initialized).
      ;;
-    #_"JavaConstant" readFieldValue(ResolvedJavaField field, #_"JavaConstant" receiver)
+    #_"JavaConstant" readFieldValue(#_"ResolvedJavaField" field, #_"JavaConstant" receiver)
 
     ;;;
      ; Returns the {@link ResolvedJavaType} for a {@link Class} object (or any other object regarded
      ; as a class by the VM) encapsulated in the given constant. Returns {@code null} if the
      ; constant does not encapsulate a class, or if the type is not available at this point.
      ;;
-    ResolvedJavaType asJavaType(#_"Constant" constant)
+    #_"ResolvedJavaType" asJavaType(#_"Constant" constant)
 
     ;;;
      ; Gets raw memory access.
      ;;
-    MemoryAccessProvider getMemoryAccessProvider()
+    #_"MemoryAccessProvider" getMemoryAccessProvider()
 
     ;;;
      ; Gets the runtime representation of the {@link Class} object of this type.
      ;;
-    #_"JavaConstant" asJavaClass(ResolvedJavaType type)
+    #_"JavaConstant" asJavaClass(#_"ResolvedJavaType" type)
 
     ;;;
      ; Gets the runtime representation of the "hub" of this type--that is, the closest part of the
      ; type representation which is typically stored in the object header.
      ;;
-    #_"Constant" asObjectHub(ResolvedJavaType type)
+    #_"Constant" asObjectHub(#_"ResolvedJavaType" type)
 )
 )
 
@@ -70678,14 +70612,14 @@ public enum DeoptimizationAction
      ;;
     InvalidateStopCompiling(true)
 
-    private final boolean invalidatesCompilation
+    private final #_"boolean" invalidatesCompilation
 
-    DeoptimizationAction(boolean invalidatesCompilation)
+    DeoptimizationAction(#_"boolean" invalidatesCompilation)
     (§
         this.invalidatesCompilation = invalidatesCompilation
     )
 
-    public boolean doesInvalidateCompilation()
+    public #_"boolean" doesInvalidateCompilation()
     (§
         return invalidatesCompilation
     )
@@ -70739,18 +70673,18 @@ public interface JavaField
     ;;;
      ; Returns the name of this field.
      ;;
-    String getName()
+    #_"String" getName()
 
     ;;;
      ; Returns a {@link JavaType} object that identifies the declared type for this field.
      ;;
-    JavaType getType()
+    #_"JavaType" getType()
 
     ;;;
      ; Returns the kind of this field. This is the same as calling {@link #getType}.
      ; {@link JavaType#getJavaKind getJavaKind}.
      ;;
-    default JavaKind getJavaKind()
+    default #_"JavaKind" getJavaKind()
     (§
         return getType().getJavaKind()
     )
@@ -70758,7 +70692,7 @@ public interface JavaField
     ;;;
      ; Returns the {@link JavaType} object representing the class or interface that declares this field.
      ;;
-    JavaType getDeclaringClass()
+    #_"JavaType" getDeclaringClass()
 )
 )
 
@@ -70773,17 +70707,17 @@ public interface JavaMethod
     ;;;
      ; Returns the name of this method.
      ;;
-    String getName()
+    #_"String" getName()
 
     ;;;
      ; Returns the {@link JavaType} object representing the class or interface that declares this method.
      ;;
-    JavaType getDeclaringClass()
+    #_"JavaType" getDeclaringClass()
 
     ;;;
      ; Returns the signature of this method.
      ;;
-    Signature getSignature()
+    #_"Signature" getSignature()
 )
 )
 
@@ -70807,14 +70741,14 @@ public interface JavaType
      ;     "[[B"
      ; </pre>
      ;;
-    String getName()
+    #_"String" getName()
 
     ;;;
      ; Checks whether this type is an array class.
      ;
      ; @return {@code true} if this type is an array class
      ;;
-    default boolean isArray()
+    default #_"boolean" isArray()
     (§
         return getComponentType() != null
     )
@@ -70823,16 +70757,16 @@ public interface JavaType
      ; For array types, gets the type of the components, or {@code null} if this is not an array
      ; type. This method is analogous to {@link Class#getComponentType()}.
      ;;
-    JavaType getComponentType()
+    #_"JavaType" getComponentType()
 
     ;;;
      ; Gets the elemental type for this given type. The elemental type is the corresponding zero
      ; dimensional type of an array type. For example, the elemental type of {@code int[][][]} is
      ; {@code int}. A non-array type is its own elemental type.
      ;;
-    default JavaType getElementalType()
+    default #_"JavaType" getElementalType()
     (§
-        JavaType t = this
+        #_"JavaType" t = this
         while (t.getComponentType() != null)
         (§
             t = t.getComponentType()
@@ -70843,12 +70777,12 @@ public interface JavaType
     ;;;
      ; Gets the array class type representing an array with elements of this type.
      ;;
-    JavaType getArrayClass()
+    #_"JavaType" getArrayClass()
 
     ;;;
      ; Gets the {@link JavaKind} of this type.
      ;;
-    JavaKind getJavaKind()
+    #_"JavaKind" getJavaKind()
 
     ;;;
      ; Resolves this type to a {@link ResolvedJavaType}.
@@ -70858,7 +70792,7 @@ public interface JavaType
      ; @throws LinkageError if the resolution failed
      ; @throws NullPointerException if {@code accessingClass} is {@code null}
      ;;
-    ResolvedJavaType resolve(ResolvedJavaType accessingClass)
+    #_"ResolvedJavaType" resolve(#_"ResolvedJavaType" accessingClass)
 
     ;;;
      ; Gets the Java programming language name for this type. The following are examples of strings
@@ -70872,7 +70806,7 @@ public interface JavaType
      ;
      ; @return the Java name corresponding to this type
      ;;
-    default String toJavaName()
+    default #_"String" toJavaName()
     (§
         return internalNameToJava(getName(), true, false)
     )
@@ -70896,9 +70830,9 @@ public interface JavaType
      ;            returned name
      ; @return the Java name corresponding to this type
      ;;
-    default String toJavaName(boolean qualified)
+    default #_"String" toJavaName(#_"boolean" qualified)
     (§
-        JavaKind kind = this.getJavaKind()
+        #_"JavaKind" kind = this.getJavaKind()
         if (kind == :JavaKind'Object)
         (§
             return internalNameToJava(getName(), qualified, false)
@@ -70927,7 +70861,7 @@ public interface MemoryAccessProvider
      ;             is {@link JavaKind#Void} or not {@linkplain JavaKind#isPrimitive() primitive}
      ;             kind or {@code bits} is not 8, 16, 32 or 64
      ;;
-    #_"JavaConstant" readPrimitiveConstant(JavaKind kind, #_"Constant" base, long displacement, int bits) throws IllegalArgumentException
+    #_"JavaConstant" readPrimitiveConstant(#_"JavaKind" kind, #_"Constant" base, #_"long" displacement, #_"int" bits) throws IllegalArgumentException
 
     ;;;
      ; Reads a Java {@link Object} value using a base address and a displacement.
@@ -70938,7 +70872,7 @@ public interface MemoryAccessProvider
      ; @throws IllegalArgumentException if the address computed from {@code base} and
      ;             {@code displacement} does not denote a location holding an {@code Object} value
      ;;
-    #_"JavaConstant" readObjectConstant(#_"Constant" base, long displacement)
+    #_"JavaConstant" readObjectConstant(#_"Constant" base, #_"long" displacement)
 )
 )
 
@@ -70958,25 +70892,25 @@ public interface MetaAccessProvider
      ; @param clazz the Java class object
      ; @return the resolved Java type object
      ;;
-    ResolvedJavaType lookupJavaType(Class<?> clazz)
+    #_"ResolvedJavaType" lookupJavaType(#_"Class<?>" clazz)
 
     ;;;
      ; Provides the {@link ResolvedJavaMethod} for a {@link Method} or {@link Constructor} obtained
      ; via reflection.
      ;;
-    ResolvedJavaMethod lookupJavaMethod(Executable reflectionMethod)
+    #_"ResolvedJavaMethod" lookupJavaMethod(#_"Executable" reflectionMethod)
 
     ;;;
      ; Provides the {@link ResolvedJavaField} for a {@link Field} obtained via reflection.
      ;;
-    ResolvedJavaField lookupJavaField(Field reflectionField)
+    #_"ResolvedJavaField" lookupJavaField(#_"Field" reflectionField)
 
     ;;;
      ; Returns the resolved Java type of the given {@link JavaConstant} object.
      ;
      ; @return {@code null} if {@code constant.isNull() || !constant.kind.isObject()}
      ;;
-    ResolvedJavaType lookupJavaType(#_"JavaConstant" constant)
+    #_"ResolvedJavaType" lookupJavaType(#_"JavaConstant" constant)
 
     ;;;
      ; Encodes a deoptimization action and a deoptimization reason in an integer value.
@@ -70987,13 +70921,13 @@ public interface MetaAccessProvider
      ;
      ; @return the encoded value as an integer
      ;;
-    #_"JavaConstant" encodeDeoptActionAndReason(DeoptimizationAction action, DeoptimizationReason reason, int debugId)
+    #_"JavaConstant" encodeDeoptActionAndReason(#_"DeoptimizationAction" action, #_"DeoptimizationReason" reason, #_"int" debugId)
 
-    DeoptimizationReason decodeDeoptReason(#_"JavaConstant" constant)
+    #_"DeoptimizationReason" decodeDeoptReason(#_"JavaConstant" constant)
 
-    DeoptimizationAction decodeDeoptAction(#_"JavaConstant" constant)
+    #_"DeoptimizationAction" decodeDeoptAction(#_"JavaConstant" constant)
 
-    int decodeDebugId(#_"JavaConstant" constant)
+    #_"int" decodeDebugId(#_"JavaConstant" constant)
 )
 )
 
@@ -71011,9 +70945,9 @@ public interface ResolvedJavaField extends JavaField, ModifiersProvider
      ; Only the {@linkplain Modifier#fieldModifiers() field flags} specified in the JVM
      ; specification will be included in the returned mask.
      ;;
-    int getModifiers()
+    #_"int" getModifiers()
 
-    default boolean isFinal()
+    default #_"boolean" isFinal()
     (§
         return ModifiersProvider.super.isFinalFlagSet()
     )
@@ -71021,13 +70955,13 @@ public interface ResolvedJavaField extends JavaField, ModifiersProvider
     ;;;
      ; Determines if this field is a synthetic field as defined by the Java Language Specification.
      ;;
-    boolean isSynthetic()
+    #_"boolean" isSynthetic()
 
     ;;;
      ; Returns the {@link ResolvedJavaType} object representing the class or interface that declares
      ; this field.
      ;;
-    ResolvedJavaType getDeclaringClass()
+    #_"ResolvedJavaType" getDeclaringClass()
 )
 )
 
@@ -71050,7 +70984,7 @@ public interface ResolvedJavaMethod extends JavaMethod, InvokeTarget, ModifiersP
      ; @return the bytecode of the method, or {@code null} if {@code getCodeSize() == 0} or if the
      ;         code is not ready.
      ;;
-    byte[] getCode()
+    #_"byte"[] getCode()
 
     ;;;
      ; Returns the size of the bytecode of this method, if the method has code. This is equivalent
@@ -71058,20 +70992,20 @@ public interface ResolvedJavaMethod extends JavaMethod, InvokeTarget, ModifiersP
      ;
      ; @return the size of the bytecode in bytes, or 0 if no bytecode is available
      ;;
-    int getCodeSize()
+    #_"int" getCodeSize()
 
     ;;;
      ; Returns the {@link ResolvedJavaType} object representing the class or interface that declares
      ; this method.
      ;;
-    ResolvedJavaType getDeclaringClass()
+    #_"ResolvedJavaType" getDeclaringClass()
 
     ;;;
      ; Returns the maximum number of locals used in this method's bytecodes.
      ;;
-    int getMaxLocals()
+    #_"int" getMaxLocals()
 
-    default boolean isFinal()
+    default #_"boolean" isFinal()
     (§
         return ModifiersProvider.super.isFinalFlagSet()
     )
@@ -71080,21 +71014,21 @@ public interface ResolvedJavaMethod extends JavaMethod, InvokeTarget, ModifiersP
      ; Determines if this method is a synthetic method as defined by the Java Language
      ; Specification.
      ;;
-    boolean isSynthetic()
+    #_"boolean" isSynthetic()
 
     ;;;
      ; Checks whether this method is a class initializer.
      ;
      ; @return {@code true} if the method is a class initializer
      ;;
-    boolean isClassInitializer()
+    #_"boolean" isClassInitializer()
 
     ;;;
      ; Checks whether this method is a constructor.
      ;
      ; @return {@code true} if the method is a constructor
      ;;
-    boolean isConstructor()
+    #_"boolean" isConstructor()
 
     ;;;
      ; Checks whether this method can be statically bound (usually, that means it is final or
@@ -71102,22 +71036,22 @@ public interface ResolvedJavaMethod extends JavaMethod, InvokeTarget, ModifiersP
      ;
      ; @return {@code true} if this method can be statically bound
      ;;
-    boolean canBeStaticallyBound()
+    #_"boolean" canBeStaticallyBound()
 
     ;;;
      ; Returns the constant pool of this method.
      ;;
-    ConstantPool getConstantPool()
+    #_"ConstantPool" getConstantPool()
 
     ;;;
      ; A {@code Parameter} provides information about method parameters.
      ;;
     class Parameter
     (§
-        private final String name
-        private final ResolvedJavaMethod method
-        private final int modifiers
-        private final int index
+        private final #_"String" name
+        private final #_"ResolvedJavaMethod" method
+        private final #_"int" modifiers
+        private final #_"int" index
 
         ;;;
          ; Constructor for {@code Parameter}.
@@ -71129,7 +71063,7 @@ public interface ResolvedJavaMethod extends JavaMethod, InvokeTarget, ModifiersP
          ; @param method the method which defines this parameter
          ; @param index the index of the parameter
          ;;
-        public Parameter(String name, int modifiers, ResolvedJavaMethod method, int index)
+        public Parameter(#_"String" name, #_"int" modifiers, #_"ResolvedJavaMethod" method, #_"int" index)
         (§
             this.name = name
             this.modifiers = modifiers
@@ -71146,7 +71080,7 @@ public interface ResolvedJavaMethod extends JavaMethod, InvokeTarget, ModifiersP
          ; @return the name of the parameter, either provided by the class file or synthesized if
          ;         the class file does not provide a name
          ;;
-        public String getName()
+        public #_"String" getName()
         (§
             if (name == null)
             (§
@@ -71161,7 +71095,7 @@ public interface ResolvedJavaMethod extends JavaMethod, InvokeTarget, ModifiersP
         ;;;
          ; Gets the method declaring the parameter.
          ;;
-        public ResolvedJavaMethod getDeclaringMethod()
+        public #_"ResolvedJavaMethod" getDeclaringMethod()
         (§
             return method
         )
@@ -71169,7 +71103,7 @@ public interface ResolvedJavaMethod extends JavaMethod, InvokeTarget, ModifiersP
         ;;;
          ; Get the modifier flags for the parameter.
          ;;
-        public int getModifiers()
+        public #_"int" getModifiers()
         (§
             return modifiers
         )
@@ -71177,7 +71111,7 @@ public interface ResolvedJavaMethod extends JavaMethod, InvokeTarget, ModifiersP
         ;;;
          ; Gets the kind of the parameter.
          ;;
-        public JavaKind getKind()
+        public #_"JavaKind" getKind()
         (§
             return method.getSignature().getParameterKind(index)
         )
@@ -71185,7 +71119,7 @@ public interface ResolvedJavaMethod extends JavaMethod, InvokeTarget, ModifiersP
         ;;;
          ; Gets the type of the parameter.
          ;;
-        public JavaType getType()
+        public #_"JavaType" getType()
         (§
             return method.getSignature().getParameterType(index, method.getDeclaringClass())
         )
@@ -71196,7 +71130,7 @@ public interface ResolvedJavaMethod extends JavaMethod, InvokeTarget, ModifiersP
      ; method. Returns an array of length 0 if this method has no parameters. Returns {@code null}
      ; if the parameter information is unavailable.
      ;;
-    default Parameter[] getParameters()
+    default #_"Parameter[]" getParameters()
     (§
         return null
     )
@@ -71205,16 +71139,16 @@ public interface ResolvedJavaMethod extends JavaMethod, InvokeTarget, ModifiersP
      ; Returns {@code true} if this method is not excluded from inlining and has associated Java
      ; bytecodes (@see {@link ResolvedJavaMethod#hasBytecodes()}).
      ;;
-    boolean canBeInlined()
+    #_"boolean" canBeInlined()
 
     ;;;
      ; Returns {@code true} if the inlining of this method should be forced.
      ;;
-    boolean shouldBeInlined()
+    #_"boolean" shouldBeInlined()
 
-    default JavaType[] toParameterTypes()
+    default #_"JavaType[]" toParameterTypes()
     (§
-        JavaType receiver = isStatic() || isConstructor() ? null (§ colon ) getDeclaringClass()
+        #_"JavaType" receiver = isStatic() || isConstructor() ? null (§ colon ) getDeclaringClass()
         return getSignature().toParameterTypes(receiver)
     )
 
@@ -71224,7 +71158,7 @@ public interface ResolvedJavaMethod extends JavaMethod, InvokeTarget, ModifiersP
      ;
      ; @return whether the definition of this method is Java bytecodes
      ;;
-    default boolean hasBytecodes()
+    default #_"boolean" hasBytecodes()
     (§
         return isConcrete() && !isNative()
     )
@@ -71244,20 +71178,20 @@ public interface ResolvedJavaType extends JavaType, ModifiersProvider
      ;
      ; @return {@code true} if this type is an interface
      ;;
-    boolean isInterface()
+    #_"boolean" isInterface()
 
     ;;;
      ; Checks whether this type is primitive.
      ;
      ; @return {@code true} if this type is primitive
      ;;
-    boolean isPrimitive()
+    #_"boolean" isPrimitive()
 
     ;;
      ; The setting of the final bit for types is a bit confusing since arrays are marked as final.
      ; This method provides a semantically equivalent test that appropriate for types.
      ;;
-    default boolean isLeaf()
+    default #_"boolean" isLeaf()
     (§
         return getElementalType().isFinalFlagSet()
     )
@@ -71268,12 +71202,12 @@ public interface ResolvedJavaType extends JavaType, ModifiersProvider
      ;
      ; @return {@code true} if this type is initialized
      ;;
-    boolean isInitialized()
+    #_"boolean" isInitialized()
 
     ;;;
      ; Initializes this type.
      ;;
-    void initialize()
+    #_"void" initialize()
 
     ;;;
      ; Checks whether this type is linked and verified. When a type is linked the static initializer
@@ -71281,26 +71215,26 @@ public interface ResolvedJavaType extends JavaType, ModifiersProvider
      ;
      ; @return {@code true} if this type is linked
      ;;
-    boolean isLinked()
+    #_"boolean" isLinked()
 
     ;;;
      ; Determines if this type is either the same as, or is a superclass or superinterface of, the
      ; type represented by the specified parameter. This method is identical to
      ; {@link Class#isAssignableFrom(Class)} in terms of the value return for this type.
      ;;
-    boolean isAssignableFrom(ResolvedJavaType other)
+    #_"boolean" isAssignableFrom(ResolvedJavaType other)
 
     ;;;
      ; Returns the {@link ResolvedJavaType} object representing the host class of this VM anonymous
      ; class (as opposed to the unrelated concept specified by {@link Class#isAnonymousClass()}) or
      ; {@code null} if this object does not represent a VM anonymous class.
      ;;
-    ResolvedJavaType getHostClass()
+    #_"ResolvedJavaType" getHostClass()
 
     ;;;
      ; Returns true if this type is exactly the type {@link java.lang.Object}.
      ;;
-    default boolean isJavaLangObject()
+    default #_"boolean" isJavaLangObject()
     (§
         ;; Removed assertion due to https://bugs.eclipse.org/bugs/show_bug.cgi?id=434442
         return getSuperclass() == null && !isInterface() && getJavaKind() == :JavaKind'Object
@@ -71312,21 +71246,21 @@ public interface ResolvedJavaType extends JavaType, ModifiersProvider
      ; @param obj the object to test
      ; @return {@code true} if the object is an instance of this type
      ;;
-    boolean isInstance(#_"JavaConstant" obj)
+    #_"boolean" isInstance(#_"JavaConstant" obj)
 
     ;;;
      ; Gets the super class of this type. If this type represents either the {@code Object} class,
      ; an interface, a primitive type, or void, then null is returned. If this object represents an
      ; array class then the type object representing the {@code Object} class is returned.
      ;;
-    ResolvedJavaType getSuperclass()
+    #_"ResolvedJavaType" getSuperclass()
 
     ;;;
      ; Gets the interfaces implemented or extended by this type. This method is analogous to
      ; {@link Class#getInterfaces()} and as such, only returns the interfaces directly implemented
      ; or extended by this type.
      ;;
-    ResolvedJavaType[] getInterfaces()
+    #_"ResolvedJavaType"[] getInterfaces()
 
     ;;;
      ; Walks the class hierarchy upwards and returns the least common class that is a superclass of
@@ -71335,13 +71269,13 @@ public interface ResolvedJavaType extends JavaType, ModifiersProvider
      ; @return the least common type that is a super type of both the current and the given type, or
      ;         {@code null} if primitive types are involved.
      ;;
-    ResolvedJavaType findLeastCommonAncestor(ResolvedJavaType otherType)
+    #_"ResolvedJavaType" findLeastCommonAncestor(ResolvedJavaType otherType)
 
-    ResolvedJavaType getComponentType()
+    #_"ResolvedJavaType" getComponentType()
 
-    default ResolvedJavaType getElementalType()
+    default #_"ResolvedJavaType" getElementalType()
     (§
-        ResolvedJavaType t = this
+        #_"ResolvedJavaType" t = this
         while (t.isArray())
         (§
             t = t.getComponentType()
@@ -71349,7 +71283,7 @@ public interface ResolvedJavaType extends JavaType, ModifiersProvider
         return t
     )
 
-    ResolvedJavaType getArrayClass()
+    #_"ResolvedJavaType" getArrayClass()
 
     ;;;
      ; Resolves the method implementation for virtual dispatches on objects of this dynamic type.
@@ -71363,7 +71297,7 @@ public interface ResolvedJavaType extends JavaType, ModifiersProvider
      ; @return the link-time resolved method (might be abstract) or {@code null} if it is either a
      ;         signature polymorphic method or can not be linked.
      ;;
-    ResolvedJavaMethod resolveMethod(ResolvedJavaMethod method, ResolvedJavaType callerType)
+    #_"ResolvedJavaMethod" resolveMethod(#_"ResolvedJavaMethod" method, #_"ResolvedJavaType" callerType)
 
     ;;;
      ; A convenience wrapper for {@link #resolveMethod(ResolvedJavaMethod, ResolvedJavaType)} that
@@ -71374,9 +71308,9 @@ public interface ResolvedJavaType extends JavaType, ModifiersProvider
      ; @return the concrete method that would be selected at runtime, or {@code null} if there is no
      ;         concrete implementation of {@code method} in this type or any of its superclasses
      ;;
-    default ResolvedJavaMethod resolveConcreteMethod(ResolvedJavaMethod method, ResolvedJavaType callerType)
+    default #_"ResolvedJavaMethod" resolveConcreteMethod(#_"ResolvedJavaMethod" method, #_"ResolvedJavaType" callerType)
     (§
-        ResolvedJavaMethod resolvedMethod = resolveMethod(method, callerType)
+        #_"ResolvedJavaMethod" resolvedMethod = resolveMethod(method, callerType)
         if (resolvedMethod == null || resolvedMethod.isAbstract())
         (§
             return null
@@ -71396,7 +71330,7 @@ public interface ResolvedJavaType extends JavaType, ModifiersProvider
      ;            type are included in the result
      ; @return an array of instance fields
      ;;
-    ResolvedJavaField[] getInstanceFields(boolean includeSuperclasses)
+    #_"ResolvedJavaField[]" getInstanceFields(#_"boolean" includeSuperclasses)
 
     ;;;
      ; Returns the static fields of this class, including {@linkplain ResolvedJavaField#isInternal()
@@ -71404,7 +71338,7 @@ public interface ResolvedJavaType extends JavaType, ModifiersProvider
      ; fields returned by this method is stable. That is, for a single JVM execution the same order
      ; is returned each time this method is called.
      ;;
-    ResolvedJavaField[] getStaticFields()
+    #_"ResolvedJavaField[]" getStaticFields()
 
     ;;;
      ; Returns the instance field of this class (or one of its super classes) at the given offset,
@@ -71413,24 +71347,24 @@ public interface ResolvedJavaType extends JavaType, ModifiersProvider
      ; @param offset the offset of the field to look for
      ; @return the field with the given offset, or {@code null} if there is no such field.
      ;;
-    ResolvedJavaField findInstanceFieldWithOffset(long offset, JavaKind expectedKind)
+    #_"ResolvedJavaField" findInstanceFieldWithOffset(#_"long" offset, #_"JavaKind" expectedKind)
 
     ;;;
      ; Returns an array reflecting all the constructors declared by this type. This method is
      ; similar to {@link Class#getDeclaredConstructors()} in terms of returned constructors.
      ;;
-    ResolvedJavaMethod[] getDeclaredConstructors()
+    #_"ResolvedJavaMethod[]" getDeclaredConstructors()
 
     ;;;
      ; Returns an array reflecting all the methods declared by this type. This method is similar to
      ; {@link Class#getDeclaredMethods()} in terms of returned methods.
      ;;
-    ResolvedJavaMethod[] getDeclaredMethods()
+    #_"ResolvedJavaMethod[]" getDeclaredMethods()
 
     ;;;
      ; Returns the {@code <clinit>} method for this class if there is one.
      ;;
-    ResolvedJavaMethod getClassInitializer()
+    #_"ResolvedJavaMethod" getClassInitializer()
 )
 )
 
@@ -71449,7 +71383,7 @@ public interface Signature
      ; @param receiver true if 1 is to be added to the result for a receiver
      ; @return the number of parameters; + 1 iff {@code receiver == true}
      ;;
-    int getParameterCount(boolean receiver)
+    #_"int" getParameterCount(#_"boolean" receiver)
 
     ;;;
      ; Gets the parameter type at the specified position.
@@ -71463,7 +71397,7 @@ public interface Signature
      ; @throws LinkageError if {@code accessingClass != null} and resolution fails
      ;
      ;;
-    JavaType getParameterType(int index, ResolvedJavaType accessingClass)
+    #_"JavaType" getParameterType(#_"int" index, #_"ResolvedJavaType" accessingClass)
 
     ;;;
      ; Gets the parameter kind at the specified position. This is the same as calling
@@ -71472,7 +71406,7 @@ public interface Signature
      ; @param index the index into the parameters, with {@code 0} indicating the first parameter
      ; @return the kind of the parameter at the specified position
      ;;
-    default JavaKind getParameterKind(int index)
+    default #_"JavaKind" getParameterKind(#_"int" index)
     (§
         return getParameterType(index, null).getJavaKind()
     )
@@ -71487,13 +71421,13 @@ public interface Signature
      ; @return the return type
      ; @throws LinkageError if {@code accessingClass != null} and resolution fails
      ;;
-    JavaType getReturnType(ResolvedJavaType accessingClass)
+    #_"JavaType" getReturnType(#_"ResolvedJavaType" accessingClass)
 
     ;;;
      ; Gets the return kind of this signature. This is the same as calling {@link #getReturnType}.
      ; {@link JavaType#getJavaKind getJavaKind}.
      ;;
-    default JavaKind getReturnKind()
+    default #_"JavaKind" getReturnKind()
     (§
         return getReturnType(null).getJavaKind()
     )
@@ -71509,9 +71443,9 @@ public interface Signature
      ;
      ; @return the signature as a string
      ;;
-    default String toMethodDescriptor()
+    default #_"String" toMethodDescriptor()
     (§
-        StringBuilder sb = new StringBuilder("(")
+        #_"StringBuilder" sb = new StringBuilder("(")
         for (int i = 0(§ semi ) i < getParameterCount(false)(§ semi ) ++i)
         (§
             sb.append(getParameterType(i, null).getName())
@@ -71520,11 +71454,11 @@ public interface Signature
         return sb.toString()
     )
 
-    default JavaType[] toParameterTypes(JavaType receiverType)
+    default #_"JavaType[]" toParameterTypes(#_"JavaType" receiverType)
     (§
-        int args = getParameterCount(false)
-        JavaType[] result
-        int i = 0
+        #_"int" args = getParameterCount(false)
+        #_"JavaType[]" result
+        #_"int" i = 0
         if (receiverType != null)
         (§
             result = new JavaType[args + 1]
@@ -71535,18 +71469,18 @@ public interface Signature
         (§
             result = new JavaType[args]
         )
-        for (int j = 0(§ semi ) j < args(§ semi ) j++)
+        for (#_"int" j = 0(§ semi ) j < args(§ semi ) j++)
         (§
             result[i + j] = getParameterType(j, null)
         )
         return result
     )
 
-    default JavaKind[] toParameterKinds(boolean receiver)
+    default #_"JavaKind[]" toParameterKinds(#_"boolean" receiver)
     (§
-        int args = getParameterCount(false)
-        JavaKind[] result
-        int i = 0
+        #_"int" args = getParameterCount(false)
+        #_"JavaKind[]" result
+        #_"int" i = 0
         if (receiver)
         (§
             result = new JavaKind[args + 1]
@@ -71557,7 +71491,7 @@ public interface Signature
         (§
             result = new JavaKind[args]
         )
-        for (int j = 0(§ semi ) j < args(§ semi ) j++)
+        for (#_"int" j = 0(§ semi ) j < args(§ semi ) j++)
         (§
             result[i + j] = getParameterKind(j)
         )
